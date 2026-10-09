@@ -93,7 +93,7 @@ readout names. They do not inflate pass, because the target itself also passes.
 - The other three arms, which are needed for the rank-flip test.
 - A fix for the `greatness` error: add "a derived word (great → greatness) is not credit" to
   `FAMILY_RULE_POETRY`, then rerun poetry v2.
-- Cost so far: v1 run $20.2, v2 run ~$20, sanity and prompt-only < $3, foil drafting (Opus 5.5)
+- Cost so far: v1 run $20.2, v2 run $30.2 (Gemini via OpenRouter), sanity and prompt-only < $3, foil drafting (Opus 5.5)
   a few dollars.
 
 Artifacts: `/workspace/root/ext/wsb-runs/{v1,v2}/s3d-rl600/`, `/workspace/root/ext/wsb-runs/b1/`
