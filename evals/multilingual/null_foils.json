@@ -1,0 +1,465 @@
+{
+ "family": "multilingual",
+ "about": "Near-miss foils for the plan-0012 null (wsbench.nulls); LLM-drafted by scripts/draft_null_foils.py (claude-opus-5-5), mechanically filtered, hand spot-checked.",
+ "items": {
+  "de-half-six": [
+   "four",
+   "twelve"
+  ],
+  "de-place-near-far": [
+   "wide"
+  ],
+  "de-place-up-down": [
+   "left",
+   "low"
+  ],
+  "de-size-big-small": [
+   "short"
+  ],
+  "es-half-four": [
+   "three",
+   "one",
+   "eight"
+  ],
+  "es-month-after-sep": [
+   "November",
+   "August",
+   "December"
+  ],
+  "es-place-near-far": [
+   "wide",
+   "deep"
+  ],
+  "es-size-big-small": [
+   "short",
+   "thin"
+  ],
+  "fr-month-after-may": [
+   "July",
+   "April",
+   "August"
+  ],
+  "fr-month-before-mar": [
+   "January",
+   "April",
+   "December"
+  ],
+  "fr-order-first-last": [
+   "second",
+   "next"
+  ],
+  "fr-place-near-far": [
+   "wide",
+   "deep"
+  ],
+  "fr-place-up-down": [
+   "left"
+  ],
+  "fr-size-big-small": [
+   "short"
+  ],
+  "pt-month-before-aug": [
+   "June",
+   "September",
+   "May"
+  ],
+  "pt-order-first-last": [
+   "second",
+   "next"
+  ],
+  "pt-place-near-far": [
+   "wide",
+   "deep"
+  ],
+  "pt-time-after-night": [
+   "morning",
+   "dawn",
+   "evening"
+  ],
+  "arabic-color-blood": [
+   "pink",
+   "orange",
+   "brown"
+  ],
+  "czech-opposite-tall": [
+   "low",
+   "small",
+   "long"
+  ],
+  "dutch-direction-left": [
+   "up",
+   "down",
+   "center"
+  ],
+  "filipino-opposite-up": [
+   "left",
+   "right"
+  ],
+  "french-family-nephew": [
+   "niece",
+   "cousin",
+   "grandson"
+  ],
+  "french-number-seven": [
+   "six",
+   "nine",
+   "ten"
+  ],
+  "french-season-summer": [
+   "winter",
+   "spring",
+   "harvest"
+  ],
+  "frn-month-after-jun": [
+   "August",
+   "May",
+   "September"
+  ],
+  "german-family-aunt": [
+   "uncle",
+   "cousin",
+   "grandmother"
+  ],
+  "italian-number-two": [
+   "four",
+   "one",
+   "five"
+  ],
+  "persian-color-blood": [
+   "orange",
+   "pink",
+   "purple"
+  ],
+  "polish-direction-left": [
+   "up",
+   "down",
+   "straight"
+  ],
+  "portuguese-direction-up": [
+   "left",
+   "right"
+  ],
+  "portuguese-season-spring": [
+   "autumn",
+   "winter",
+   "fall"
+  ],
+  "serbian-opposite-day": [
+   "evening",
+   "morning",
+   "dark"
+  ],
+  "spanish-number-three": [
+   "five",
+   "two",
+   "six"
+  ],
+  "turkish-opposite-fast": [
+   "late",
+   "lazy",
+   "heavy"
+  ],
+  "ukrainian-opposite-day": [
+   "evening",
+   "morning",
+   "dark"
+  ],
+  "b3-ml-de-capital-austria": [
+   "Salzburg",
+   "Graz",
+   "Berlin"
+  ],
+  "b3-ml-de-color-grass": [
+   "yellow",
+   "brown",
+   "blue"
+  ],
+  "b3-ml-de-color-sky": [
+   "gray",
+   "white",
+   "grey"
+  ],
+  "b3-ml-de-month-june": [
+   "August",
+   "May",
+   "September"
+  ],
+  "b3-ml-de-opposite-fast": [
+   "late",
+   "lazy"
+  ],
+  "b3-ml-de-sum-four": [
+   "three",
+   "five",
+   "six"
+  ],
+  "b3-ml-es-capital-france": [
+   "Lyon",
+   "Marseille",
+   "Brussels"
+  ],
+  "b3-ml-es-color-blood": [
+   "orange",
+   "pink",
+   "purple"
+  ],
+  "b3-ml-es-color-sky": [
+   "gray",
+   "white",
+   "purple"
+  ],
+  "b3-ml-es-day-monday": [
+   "Wednesday",
+   "Sunday",
+   "Thursday"
+  ],
+  "b3-ml-es-month-april": [
+   "June",
+   "March",
+   "July"
+  ],
+  "b3-ml-es-opposite-fast": [
+   "late",
+   "calm",
+   "lazy"
+  ],
+  "b3-ml-es-opposite-hot": [],
+  "b3-ml-fr-capital-england": [
+   "Manchester",
+   "Edinburgh",
+   "Oxford"
+  ],
+  "b3-ml-fr-color-blood": [
+   "pink",
+   "orange",
+   "purple"
+  ],
+  "b3-ml-fr-month-march": [
+   "May",
+   "February",
+   "June"
+  ],
+  "b3-ml-fr-opposite-big": [
+   "short"
+  ],
+  "b3-ml-fr-sum-five": [
+   "four",
+   "six",
+   "seven"
+  ],
+  "b3-ml-it-capital-france": [
+   "Lyon",
+   "Marseille",
+   "Rome"
+  ],
+  "b3-ml-it-color-grass": [
+   "yellow",
+   "brown",
+   "blue"
+  ],
+  "b3-ml-it-day-monday": [
+   "Wednesday",
+   "Sunday",
+   "Thursday"
+  ],
+  "b3-ml-it-opposite-big": [
+   "short",
+   "thin"
+  ],
+  "b3-ml-it-opposite-hot": [],
+  "b3-ml-it-sum-four": [
+   "three",
+   "five",
+   "six"
+  ],
+  "b3-ml-pt-capital-japan": [
+   "Kyoto",
+   "Osaka",
+   "Seoul"
+  ],
+  "b3-ml-pt-month-march": [
+   "May",
+   "February",
+   "June"
+  ],
+  "b3-ml-pt-opposite-big": [
+   "short",
+   "thin",
+   "narrow"
+  ],
+  "b3-ml-pt-opposite-hot": [
+   "warm",
+   "wet"
+  ],
+  "b3-ml-de-month-february": [
+   "April",
+   "January",
+   "May"
+  ],
+  "de-order-first-last": [
+   "second",
+   "next"
+  ],
+  "es-order-first-last": [
+   "second",
+   "next"
+  ],
+  "es-place-up-down": [
+   "under",
+   "low",
+   "left"
+  ],
+  "es-time-after-day": [
+   "evening",
+   "dusk",
+   "morning"
+  ],
+  "fr-color-night": [
+   "blue",
+   "gray",
+   "purple"
+  ],
+  "fr-month-after-jan": [
+   "March",
+   "December",
+   "April"
+  ],
+  "fr-time-after-night": [
+   "morning",
+   "dawn",
+   "sun"
+  ],
+  "fr-time-old-young": [
+   "new",
+   "fresh",
+   "modern"
+  ],
+  "pt-month-after-oct": [
+   "December",
+   "September",
+   "January"
+  ],
+  "pt-place-up-down": [
+   "under",
+   "low",
+   "bottom"
+  ],
+  "pt-size-big-small": [
+   "short",
+   "narrow"
+  ],
+  "pt-time-old-new": [
+   "young",
+   "modern",
+   "fresh"
+  ],
+  "danish-color-ocean": [
+   "green",
+   "turquoise",
+   "gray"
+  ],
+  "dutch-opposite-big": [
+   "short",
+   "thin"
+  ],
+  "estonian-opposite-open": [
+   "locked",
+   "sealed"
+  ],
+  "german-number-five": [
+   "seven",
+   "four",
+   "eight"
+  ],
+  "indonesian-color-grass": [
+   "yellow",
+   "blue",
+   "brown"
+  ],
+  "irish-opposite-big": [
+   "short",
+   "thin"
+  ],
+  "japanese-day-monday": [
+   "Wednesday",
+   "Sunday",
+   "Thursday"
+  ],
+  "korean-opposite-hot": [
+   "warm",
+   "wet"
+  ],
+  "slovak-opposite-young": [
+   "new",
+   "adult"
+  ],
+  "spanish-phase-water": [
+   "snow",
+   "steam",
+   "frost"
+  ],
+  "b3-ml-de-family-uncle": [
+   "cousin",
+   "nephew",
+   "grandfather"
+  ],
+  "b3-ml-de-opposite-hot": [
+   "warm",
+   "wet"
+  ],
+  "b3-ml-es-family-aunt": [
+   "cousin",
+   "niece",
+   "grandmother"
+  ],
+  "b3-ml-es-opposite-day": [
+   "evening",
+   "morning",
+   "dark"
+  ],
+  "b3-ml-es-sum-four": [
+   "three",
+   "five",
+   "six"
+  ],
+  "b3-ml-fr-family-uncle": [
+   "cousin",
+   "nephew",
+   "grandfather"
+  ],
+  "b3-ml-fr-opposite-hot": [
+   "warm",
+   "wet"
+  ],
+  "b3-ml-de-month-before-march": [
+   "January",
+   "April",
+   "December"
+  ],
+  "es-number-after-two": [
+   "four",
+   "one",
+   "five"
+  ],
+  "b3-ml-fr-double-five": [
+   "twelve",
+   "eight",
+   "fifteen"
+  ],
+  "fr-number-after-four": [
+   "six",
+   "three",
+   "seven"
+  ],
+  "pt-month-after-apr": [
+   "June",
+   "March",
+   "July"
+  ],
+  "pt-number-after-five": [
+   "seven",
+   "four",
+   "eight"
+  ]
+ }
+}

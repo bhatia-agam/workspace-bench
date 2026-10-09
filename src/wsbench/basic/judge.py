@@ -139,3 +139,68 @@ def judge_cells(
     if calls and not dry_run and n_unjudged == len(calls):
         raise JudgeConfigError(f"all {len(calls)} judge calls failed; nothing was scored")
     return JudgeOutcome(verdicts, n_unjudged=n_unjudged, n_empty=n_empty, n_calls=len(calls))
+
+
+NullKey = tuple[str, int, str]  # (item id, layer, "null:j" | "foil:j")
+
+
+@dataclass
+class NullOutcome:
+    verdicts: dict[NullKey, Verdict]
+    n_calls: int
+    n_failed: int
+
+
+def judge_null_cells(
+    groups: dict[CellKey, list[Cell]],
+    null_targets: dict[tuple[str, str], list[str]],
+    *,
+    kind: Kind,
+    judge: ResolvedJudge,
+    cache: Cache,
+    spend: Spend,
+    preflight: Preflighter,
+    concurrency: int,
+    rpm: float,
+    dry_run: bool,
+) -> NullOutcome:
+    """The null pass (plan 0012 §1.2): each (item, tag) -> targets in ``null_targets`` is judged
+    on the item's own cells exactly like the real call, in a SEPARATE batch whose keys
+    (``item|L<n>|tag``) never reach the real verdicts. Failures are only counted here: they
+    never raise and never touch the real outcome."""
+    calls: list[Call] = []
+    samples_of: dict[str, list[str]] = {}
+    for (item_id, layer), cells in groups.items():
+        samples = [s for c in cells for s in cell_samples(c)]
+        if not any(s.strip() for s in samples):
+            continue
+        for (nid, tag), tgts in null_targets.items():
+            if nid != item_id or not tgts:
+                continue
+            k = f"{cell_key((item_id, layer))}|{tag}"
+            samples_of[k] = samples
+            calls.append(Call(key=k, system=SYSTEM, user=render_user(tgts, kind, cells)))
+    results = run_calls(
+        calls,
+        schema=SCHEMA,
+        judge=judge,
+        prompt_version=PROMPT_VERSION,
+        cache=cache,
+        spend=spend,
+        concurrency=concurrency,
+        rpm=rpm,
+        dry_run=dry_run,
+        preflight=preflight.for_judge(judge),
+        temperature=0.0,
+    )
+    verdicts: dict[NullKey, Verdict] = {}
+    n_failed = 0
+    for c in calls:
+        r = results.get(c.key)
+        if r is None:
+            n_failed += 1
+            continue
+        head, tag = c.key.rsplit("|", 1)
+        item_id, layer = head.rsplit("|L", 1)
+        verdicts[(item_id, int(layer), tag)] = _verdict(r, samples_of[c.key])
+    return NullOutcome(verdicts, n_calls=len(calls), n_failed=n_failed)

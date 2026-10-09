@@ -5,13 +5,14 @@ from pathlib import Path
 from typing import Any
 
 from wsbench.banks import exact_targets, item_targets, load_bank
-from wsbench.basic.judge import CellKey, JudgeOutcome, judge_cells
-from wsbench.basic.prompts import PROMPT_VERSION
+from wsbench.basic.judge import CellKey, JudgeOutcome, NullOutcome, judge_cells, judge_null_cells
+from wsbench.basic.prompts import PROMPT_VERSION, cell_samples
 from wsbench.cache import Cache
 from wsbench.family import pass_rate_result, require_cells, tri_state
 from wsbench.judge_config import JudgeConfig
 from wsbench.llm import Spend
 from wsbench.mcjudge import Preflighter, item_scope, with_readout_count
+from wsbench.nulls import K_FOIL, bank_partners, load_foils, null_summary, surface_free
 from wsbench.readouts import Cell, load_readouts
 from wsbench.registry import REPO_ROOT, EvalSpec, JudgeArgs
 from wsbench.results import FamilyResult
@@ -59,7 +60,22 @@ def run_family(args: JudgeArgs, *, name: str, bank: Path) -> FamilyResult:
     missing = [k for k in expected if k not in groups]
     require_cells(name, missing, len(expected), args)
 
+    nulls_on = args.extra.get("null") == "on"
+    null_targets: dict[tuple[str, str], list[str]] = {}
+    partners: dict[str, list[str]] = {}
+    if nulls_on:
+        # partners come from the FULL bank, so items= / limit= runs see the same ones
+        partners = bank_partners(items, targets_of, family=name)
+        by_id = {it["id"]: it for it in items}
+        foils = load_foils(bank.parent / "null_foils.json")
+        for i in ids:
+            for j, p in enumerate(partners[i]):
+                null_targets[(i, f"null:{j}")] = targets_of(by_id[p])
+            for j, f in enumerate(foils.get(i, [])[:K_FOIL]):
+                null_targets[(i, f"foil:{j}")] = [f]
+
     spend = Spend()
+    null_outcome: NullOutcome | None = None
     with Cache(args.out / "cells.jsonl") as cache:
         outcome = judge_cells(
             groups,
@@ -73,8 +89,26 @@ def run_family(args: JudgeArgs, *, name: str, bank: Path) -> FamilyResult:
             rpm=args.rpm,
             dry_run=args.dry_run,
         )
+        if nulls_on:
+            null_outcome = judge_null_cells(
+                groups,
+                null_targets,
+                kind=rep.kind or "prose",
+                judge=args.judge,
+                cache=cache,
+                spend=spend,
+                preflight=Preflighter(args.dry_run),
+                concurrency=args.concurrency,
+                rpm=args.rpm,
+                dry_run=args.dry_run,
+            )
 
     rows = [_item_row(i, layers, groups, targets[i], outcome) for i in ids]
+    extras: dict[str, Any] = {"n_calls": outcome.n_calls}
+    if null_outcome is not None:
+        extras["nulls"] = null_extras(
+            ids, layers, groups, rows, null_targets, partners, null_outcome
+        )
     result = pass_rate_result(
         name=name,
         args=args,
@@ -90,9 +124,69 @@ def run_family(args: JudgeArgs, *, name: str, bank: Path) -> FamilyResult:
         spend=spend,
         chance_label=CHANCE_LABEL,
         config_extra={"layers_judged": layers},
-        extras={"n_calls": outcome.n_calls},
+        extras=extras,
     )
     return with_readout_count(result, scope, cells)
+
+
+def null_extras(
+    ids: list[str],
+    layers: list[int],
+    groups: dict[CellKey, list[Cell]],
+    rows: list[dict[str, Any]],
+    null_targets: dict[tuple[str, str], list[str]],
+    partners: dict[str, list[str]],
+    outcome: NullOutcome,
+) -> dict[str, Any]:
+    """Fold the null verdicts with the real item rule (any layer; a layer with no text is a
+    negative; a failed call with no pass is undecided) into rates, lifts and surface-free
+    shares. ``value`` is never touched; this lives in ``extras["nulls"]``."""
+    per: dict[str, dict[str, list[bool | None]]] = {"null": {}, "foil": {}}
+    credits: dict[str, list[bool]] = {"null": [], "foil": []}
+    detail: dict[str, dict[str, Any]] = {}
+    for (item_id, tag), tgts in sorted(null_targets.items()):
+        kind = tag.split(":")[0]
+        hit_layers: list[int] = []
+        undecided = False
+        for layer in layers:
+            cells = groups.get((item_id, layer))
+            if cells is None:
+                undecided = True
+                continue
+            if not any(s.strip() for c in cells for s in cell_samples(c)):
+                continue
+            v = outcome.verdicts.get((item_id, layer, tag))
+            if v is None:
+                undecided = True
+            elif v.expressed:
+                hit_layers.append(layer)
+                credits[kind].append(surface_free(tgts, v.quote))
+        passed = True if hit_layers else (None if undecided else False)
+        per[kind].setdefault(item_id, []).append(passed)
+        detail.setdefault(item_id, {})[tag] = {
+            "targets": tgts,
+            "pass": passed,
+            "layers": hit_layers,
+        }
+    decided = [r for r in rows if r["pass"] is not None]
+    value = sum(1.0 for r in decided if r["pass"]) / len(decided) if decided else None
+    out: dict[str, Any] = {"value": value}
+    for kind in ("null", "foil"):
+        sm = null_summary(per[kind])
+        out[f"{kind}_rate"] = sm["rate"]
+        out[f"{kind}_ci95"] = sm["ci95"]
+        out[f"{kind}_n_items"] = sm["n"]
+        out[f"lift_{kind}"] = (
+            value - sm["rate"] if value is not None and sm["rate"] is not None else None
+        )
+        cs = credits[kind]
+        out[f"{kind}_n_credits"] = len(cs)
+        out[f"{kind}_surface_free_share"] = sum(cs) / len(cs) if cs else None
+    out["n_null_calls"] = outcome.n_calls
+    out["null_failed"] = outcome.n_failed
+    out["null_partners"] = {i: partners.get(i, []) for i in ids}
+    out["items"] = detail
+    return out
 
 
 def _item_row(
