@@ -143,9 +143,10 @@ so far, and what a new item has to satisfy:
   measured uniform 0.126 and an analytic 0.149; an MC-only diagnostic, no longer drawn now that
   the family is regex-scored).
 - **A null you can compute.** A permutation over other items' answers, a decoy set matched in
-  magnitude, a role swap, a derangement foil. Only arithmetic_intermediates, chain_intermediates,
-  brew_intermediates and jlens_concept_pr carry one; the other families are the weakest here,
-  and adding an empirical null to each is open work (README §Open work).
+  magnitude, a role swap, a derangement foil. arithmetic_intermediates, chain_intermediates,
+  brew_intermediates and jlens_concept_pr carry one; the six bank families and the six regex
+  families compute one under `opts=null=on` (`extras.nulls`: random-partner null, near-miss
+  foils, lifts; `wsbench.nulls`). The other families are the weakest here (README §Open work).
 - **Controls in the bank, not just baselines.** Clean twins, don't-think twins, ab/ba direction
   pairs, off-trajectory colours: a control that shares the item's surface but not its answer is
   what separates reading from echoing.

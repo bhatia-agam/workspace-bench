@@ -6,7 +6,7 @@ from typing import Any
 
 from wsbench.banks import exact_targets, item_targets, load_bank
 from wsbench.basic.judge import CellKey, JudgeOutcome, NullOutcome, judge_cells, judge_null_cells
-from wsbench.basic.prompts import PROMPT_VERSION, cell_samples
+from wsbench.basic.prompts import FAMILY_RULES, PROMPT_VERSION, cell_samples, forbidden_line
 from wsbench.cache import Cache
 from wsbench.family import pass_rate_result, require_cells, tri_state
 from wsbench.judge_config import JudgeConfig
@@ -53,6 +53,8 @@ def run_family(args: JudgeArgs, *, name: str, bank: Path) -> FamilyResult:
     scope = item_scope(items, args)
     ids = [it["id"] for it in scope]
     targets = {it["id"]: targets_of(it) for it in scope}
+    family_rule = FAMILY_RULES.get(name, "")
+    forbidden = {it["id"]: forbidden_line(name, it) for it in scope}
     cells, rep = load_readouts(args.readouts, ids=ids, layers=args.layers)
     layers = args.layers if args.layers is not None else rep.layers
     groups = group_cells(cells)
@@ -80,6 +82,8 @@ def run_family(args: JudgeArgs, *, name: str, bank: Path) -> FamilyResult:
         outcome = judge_cells(
             groups,
             targets,
+            family_rule=family_rule,
+            forbidden=forbidden,
             kind=rep.kind or "prose",
             judge=args.judge,
             cache=cache,
@@ -93,6 +97,8 @@ def run_family(args: JudgeArgs, *, name: str, bank: Path) -> FamilyResult:
             null_outcome = judge_null_cells(
                 groups,
                 null_targets,
+                family_rule=family_rule,
+                forbidden=forbidden,
                 kind=rep.kind or "prose",
                 judge=args.judge,
                 cache=cache,

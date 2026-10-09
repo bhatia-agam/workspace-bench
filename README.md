@@ -96,32 +96,32 @@ commands with `PYTHONPATH=src`, because the editable install points at the main 
 **Association** — [`evals/association/README.md`](evals/association/README.md)
 - *What it is:* A scene implies a concept the text never names (a Portuguese carnival, a chess game, a childhood); does the lens name it at the final prompt token.
 - *Example:* "Os tambores começaram na avenida ao anoitecer, e as fantasias cobertas de plumas dançaram até o amanhecer." → target `carnaval`.
-- *Judged by:* the shared bank judge, one call per (item, layer): pass = a target concept is NAMED with a verbatim quote verified against one sample; item passes at any layer.
+- *Judged by:* the shared bank judge, one call per (item, layer): pass = a target concept's meaning is EXPRESSED in one sample (word, synonym, translation, paraphrase or depiction; not clues it could be inferred from) with a verbatim quote verified against that sample; item passes at any layer.
 
 **Basic readout** — [`evals/basic_readout/README.md`](evals/basic_readout/README.md)
 - *What it is:* The model's obvious next concept, in three flavours: an entity ("The athlete Muhammad Ali plays the sport of"), a computed value ("10 - 1 ="), or its own gated answer to a chat question ("What is your favorite card game?"); does the lens name it at the final prompt token.
 - *Example:* "The number 23 written out in words is" → target `twenty-three`.
-- *Judged by:* the shared bank judge, one call per (item, layer): pass = a target concept is NAMED with a verbatim quote verified against one sample; item passes at any layer.
+- *Judged by:* the shared bank judge, one call per (item, layer): pass = a target concept's meaning is EXPRESSED in one sample (word, synonym, translation, paraphrase or depiction; not clues it could be inferred from) with a verbatim quote verified against that sample; item passes at any layer.
 
 **Multihop** — [`evals/multihop/README.md`](evals/multihop/README.md)
 - *What it is:* A factual prompt whose answer needs one silent hop ("Fact: The chemical symbol for the element with atomic number 26 is" -> `Fe` via *iron*); does the lens name the bridge concept at the last word of the prompt.
 - *Example:* "Fact: The chemical symbol for the element with atomic number 26 is" → surface answer `Fe`; target (bridge) `iron`.
-- *Judged by:* the shared bank judge, one call per (item, layer): pass = a target concept is NAMED with a verbatim quote verified against one sample; item passes at any layer.
+- *Judged by:* the shared bank judge, one call per (item, layer): pass = the bridge's meaning is EXPRESSED in one sample (not clues it could be inferred from, and not the surface answer alone) with a verbatim quote verified against that sample; item passes at any layer.
 
 **Multilingual** — [`evals/multilingual/README.md`](evals/multilingual/README.md)
 - *What it is:* A non-English prompt with a one-word answer ("Sechs geteilt durch zwei ist" -> `drei`); does the lens name the concept, in any language, at the final prompt token.
 - *Example:* "Sechs geteilt durch zwei ist" → answer `drei`; target concept `three` (a readout saying *drei*, *three* or *三* all count).
-- *Judged by:* the shared bank judge, one call per (item, layer): pass = a target concept is NAMED with a verbatim quote verified against one sample; item passes at any layer.
+- *Judged by:* the shared bank judge, one call per (item, layer): pass = a target concept's meaning is EXPRESSED in one sample (word, synonym, translation, paraphrase or depiction; not clues it could be inferred from) with a verbatim quote verified against that sample; item passes at any layer.
 
 **Poetry** — [`evals/poetry/README.md`](evals/poetry/README.md)
 - *What it is:* A rhyming couplet cut before its last word ("...follow where he'd"); does the lens name the rhyme word (`led`) at the newline ending line one.
 - *Example:* "A rhyming couplet: The captain pointed at the route ahead, And told his crew to follow where he'd" → target `led`.
-- *Judged by:* the shared bank judge, one call per (item, layer): pass = a target concept is NAMED with a verbatim quote verified against one sample; item passes at any layer.
+- *Judged by:* the shared bank judge with this family's word rule, one call per (item, layer): pass = the target WORD itself (an inflection or translation, not a synonym or paraphrase) with a verbatim quote verified against one sample; item passes at any layer.
 
 **Typo** — [`evals/typo/README.md`](evals/typo/README.md)
 - *What it is:* A sentence ending in a misspelled word ("...the last day of Febuary"); does the lens name the corrected word (`February`) at the final prompt token.
 - *Example:* "Her birthday falls on the last day of Febuary" → target `February`.
-- *Judged by:* the shared bank judge, one call per (item, layer): pass = a target concept is NAMED with a verbatim quote verified against one sample; item passes at any layer.
+- *Judged by:* the shared bank judge with this family's word rule, one call per (item, layer): pass = the target WORD itself (an inflection or translation, correctly spelled; not a synonym or paraphrase) with a verbatim quote verified against one sample; item passes at any layer.
 
 **Directed modulation** — [`evals/directed_modulation/README.md`](evals/directed_modulation/README.md)
 - *What it is:* The model is told to think about a concept, not to think about it, or to hide a secret word or preference while copying an unrelated sentence; does the lens read the held concept at the positions where the model is writing.
@@ -289,8 +289,8 @@ never pinned.
 |---|---|---|
 | agentic_misalignment | claude-sonnet-5 | am-narrative-v1 |
 | arithmetic_intermediates | google/gemini-3.8-flash | arith-free-2026-09-23 (frozen cell) / arith-free-batched-2026-09-23 (`cells=all`, one call per item and layer) |
-| association | google/gemini-3.8-flash | bank-2026-09-16 |
-| basic_readout | google/gemini-3.8-flash | bank-2026-09-16 |
+| association | google/gemini-3.8-flash | bank-2026-10-09 |
+| basic_readout | google/gemini-3.8-flash | bank-2026-10-09 |
 | basic_readout_mt | regex; token bags via the summarizer (google/gemini-3.8-flash) | mt-regex-2026-09-23 (token bags: mt-regex-summarized-2026-09-23) |
 | brew_intermediates | google/gemini-3.8-flash | brew-2026-09-16 |
 | buggy_code | google/gemini-3.8-flash | buggy-score-2026-09-23 |
@@ -302,16 +302,16 @@ never pinned.
 | jlens_concept_pr | google/gemini-3.8-flash | jlens-pr-v2 |
 | moral_rationale | google/gemini-3.8-flash | ec-v1 |
 | multi_concept_directed_modulation | google/gemini-3.8-flash | mcdm-2026-09-16 |
-| multihop | google/gemini-3.8-flash | bank-2026-09-16 |
+| multihop | google/gemini-3.8-flash | bank-2026-10-09 |
 | multihop_mt | regex; token bags via the summarizer (google/gemini-3.8-flash) | mt-regex-2026-09-23 (token bags: mt-regex-summarized-2026-09-23) |
-| multilingual | google/gemini-3.8-flash | bank-2026-09-16 |
+| multilingual | google/gemini-3.8-flash | bank-2026-10-09 |
 | multilingual_mt | regex; token bags via the summarizer (google/gemini-3.8-flash) | mt-regex-2026-09-23 (token bags: mt-regex-summarized-2026-09-23) |
 | multilingual_multihop | regex; token bags via the summarizer (google/gemini-3.8-flash) | mt-regex-2026-09-23 (token bags: mt-regex-summarized-2026-09-23) |
 | multilingual_typo | regex; token bags via the summarizer (google/gemini-3.8-flash) | mt-regex-2026-09-23 (token bags: mt-regex-summarized-2026-09-23) |
-| poetry | google/gemini-3.8-flash | bank-2026-09-16 |
+| poetry | google/gemini-3.8-flash | bank-2026-10-09 |
 | relational_multihop | google/gemini-3.8-flash | rel-v1 |
 | role_bound_association | google/gemini-3.8-flash | oa-v1 |
-| typo | google/gemini-3.8-flash | bank-2026-09-16 |
+| typo | google/gemini-3.8-flash | bank-2026-10-09 |
 | typo_mt | regex; token bags via the summarizer (google/gemini-3.8-flash) | mt-regex-2026-09-23 (token bags: mt-regex-summarized-2026-09-23) |
 | user_modeling | google/gemini-3.8-flash | um-v2 |
 
@@ -399,6 +399,11 @@ If you use workspace-bench, please cite the repo and the write-up
 ## Open work
 
 Judge every arm with `wsbench run` against the frozen floors: the O-lens RL and SFT checkpoints,
-NLA RL and SFT, J-lens, R-Lens, logit lens and template lens. Add an empirical null to the
-families that have none; only arithmetic_intermediates (permutation), chain_intermediates
-(decoy), brew_intermediates (role swap) and jlens_concept_pr (derangement foil) carry one.
+NLA RL and SFT, J-lens, R-Lens, logit lens and template lens. Arithmetic_intermediates
+(permutation), chain_intermediates (decoy), brew_intermediates (role swap) and jlens_concept_pr
+(derangement foil) carry an empirical null; the six single-token bank families and the six
+regex families get one under `opts=null=on` (a seeded random-partner null, plus same-type
+near-miss foils from `evals/<family>/null_foils.json` for the bank families; `extras.nulls`,
+never the headline; plan 0012 §1). The rest have none yet. The multi-token regex contract
+matches authored forms only, so a paraphrase or a multi-phrase description cannot hit it;
+`opts=judge=mc` is the semantic alternative.
