@@ -220,6 +220,7 @@ def run_regex(args: JudgeArgs, *, name: str) -> FamilyResult:
             }
 
     rows: list[dict[str, Any]] = []
+    incomplete_of: dict[str, bool] = {}
     for item_id in ids:
         units = units_of[item_id]
         res = regex.item_result(hits_by.get(item_id, {}), units)
@@ -259,6 +260,7 @@ def run_regex(args: JudgeArgs, *, name: str) -> FamilyResult:
         if tokens:
             row["unsummarized_layers"] = item_unsummarized
         rows.append(row)
+        incomplete_of[item_id] = incomplete
     decided = [r for r in rows if r["pass"] is not None]
     roles = sorted({r for row in rows for r in (*row["roles"], *row["optional_roles"])})
     first_lang: dict[str, Counter[str]] = defaultdict(Counter)
@@ -325,7 +327,7 @@ def run_regex(args: JudgeArgs, *, name: str) -> FamilyResult:
             ),
             **({"mc": previous_mc} if previous_mc else {}),
             **(
-                {"nulls": _mt_null_extras(rows, null_units, null_hits_by, partners)}
+                {"nulls": _mt_null_extras(rows, incomplete_of, null_units, null_hits_by, partners)}
                 if nulls_on and not args.dry_run
                 else {}
             ),
@@ -362,12 +364,14 @@ def _mt_null_units(
 
 def _mt_null_extras(
     rows: list[dict[str, Any]],
+    incomplete_of: dict[str, bool],
     null_units: dict[str, list[list[regex.ScoredUnit]]],
     null_hits_by: dict[str, list[dict[int, dict[str, list[str]]]]],
     partners: dict[str, list[str]],
 ) -> dict[str, Any]:
     """Null pass per (item, partner) by the same rule as the item (some layer where every
-    required unit hits); undecided exactly when the real row is undecided without a pass."""
+    required unit hits) and the same tri-state: a null with no hit on an incomplete item
+    (missing / unsummarized layers) is undecided, whatever the real row scored."""
     per: dict[str, list[bool | None]] = {}
     for row in rows:
         i = row["id"]
@@ -375,7 +379,7 @@ def _mt_null_extras(
         for j, nu in enumerate(null_units.get(i, [])):
             layers = null_hits_by.get(i, [{}] * len(null_units[i]))[j]
             passed = regex.item_result(layers, nu)["pass"] if layers else False
-            draws.append(True if passed else (False if row["pass"] is not None else None))
+            draws.append(tri_state(bool(passed), incomplete_of.get(i, True)))
         per[i] = draws
     decided = [r for r in rows if r["pass"] is not None]
     value = sum(1.0 for r in decided if r["pass"]) / len(decided) if decided else None
@@ -386,6 +390,7 @@ def _mt_null_extras(
         "null_ci95": sm["ci95"],
         "null_n_items": sm["n"],
         "lift_null": value - sm["rate"] if value is not None and sm["rate"] is not None else None,
+        "null_unjudged": sum(d is None for ds in per.values() for d in ds),
         "null_partners": partners,
         "items": dict(per),
     }

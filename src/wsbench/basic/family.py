@@ -15,7 +15,7 @@ from wsbench.mcjudge import Preflighter, item_scope, with_readout_count
 from wsbench.nulls import K_FOIL, bank_partners, load_foils, null_summary, surface_free
 from wsbench.readouts import Cell, load_readouts
 from wsbench.registry import REPO_ROOT, EvalSpec, JudgeArgs
-from wsbench.results import FamilyResult
+from wsbench.results import FamilyResult, bootstrap_ci
 
 GROUP = "basic"
 CHANCE_LABEL = "no analytic floor (free text); the prompt-only baseline is the measured floor"
@@ -93,7 +93,7 @@ def run_family(args: JudgeArgs, *, name: str, bank: Path) -> FamilyResult:
             rpm=args.rpm,
             dry_run=args.dry_run,
         )
-        if nulls_on:
+        if nulls_on and not args.dry_run:
             null_outcome = judge_null_cells(
                 groups,
                 null_targets,
@@ -167,7 +167,8 @@ def null_extras(
             elif v.expressed:
                 hit_layers.append(layer)
                 credits[kind].append(surface_free(tgts, v.quote))
-        passed = True if hit_layers else (None if undecided else False)
+        judged_any = any((item_id, layer) in groups for layer in layers)
+        passed = tri_state(bool(hit_layers), undecided or not judged_any)
         per[kind].setdefault(item_id, []).append(passed)
         detail.setdefault(item_id, {})[tag] = {
             "targets": tgts,
@@ -185,11 +186,13 @@ def null_extras(
         out[f"lift_{kind}"] = (
             value - sm["rate"] if value is not None and sm["rate"] is not None else None
         )
-        cs = credits[kind]
+        cs = [1.0 if c else 0.0 for c in credits[kind]]
         out[f"{kind}_n_credits"] = len(cs)
         out[f"{kind}_surface_free_share"] = sum(cs) / len(cs) if cs else None
+        out[f"{kind}_surface_free_ci95"] = list(bootstrap_ci(cs)) if cs else None
     out["n_null_calls"] = outcome.n_calls
     out["null_failed"] = outcome.n_failed
+    out["null_unjudged"] = sum(d is None for k in per.values() for ds in k.values() for d in ds)
     out["null_partners"] = {i: partners.get(i, []) for i in ids}
     out["items"] = detail
     return out

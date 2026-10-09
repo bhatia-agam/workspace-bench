@@ -2,7 +2,7 @@
  "about": "Live sanity set for bank judge v2 (plan 0012 §2.3). Held out: no case reuses an example from the SYSTEM prompt. Run with scripts/bank_judge_sanity.py; every case must give `expect` 3/3, each repetition on a fresh cache.",
  "cases": [
   {"name": "narrower-instance", "family": "association", "targets": ["cat"], "kind": "prose", "samples": ["a kitten batting at a ball of yarn on the rug"], "expect": true},
-  {"name": "depicted-act", "family": "association", "targets": ["poison the rival"], "kind": "prose", "samples": ["she quietly swapped his pills so he never woke up"], "expect": true},
+  {"name": "depicted-act", "family": "association", "targets": ["poison the rival"], "kind": "prose", "samples": ["she stirred arsenic into her rival's tea and watched her drink it"], "expect": true},
   {"name": "combine-within-one-sample", "family": "association", "targets": ["the meeting room is booked twice"], "kind": "prose", "samples": ["double-booked | overlapping slots | same room"], "expect": true},
   {"name": "multilingual-in-language-answer", "family": "multilingual", "targets": ["three"], "kind": "prose", "samples": ["the answer is drei"], "expect": true},
   {"name": "multihop-target-beside-answer", "family": "multihop", "targets": ["6"], "surface_target": "carbon", "kind": "prose", "samples": ["carbon (atomic number 6)"], "expect": true},

@@ -9,8 +9,9 @@ from wsbench.basic import family as bfam
 from wsbench.basic import judge as bjudge
 from wsbench.basic.family import targets_of
 from wsbench.judge_config import JudgeConfig, resolve
+from wsbench.mc import fold
 from wsbench.multitoken import regex
-from wsbench.multitoken.family import _mt_null_units
+from wsbench.multitoken.family import _mt_null_extras, _mt_null_units
 from wsbench.nulls import bank_partners, derangements, null_summary, surface_free, word_in
 from wsbench.registry import JudgeArgs
 
@@ -50,12 +51,13 @@ def test_bank_partners_respect_the_constraints(name):
     assert p == bank_partners(items, targets_of, family=name)
     for i, ps in p.items():
         assert len(ps) == 3 and len(set(ps)) == 3 and i not in ps
-        own = {t.casefold() for t in targets_of(by_id[i])}
-        surface = str(by_id[i].get("target") or "").casefold()
+        own = {fold(t).strip() for t in targets_of(by_id[i])}
+        surface = fold(str(by_id[i].get("target") or "")).strip()
+        ctx = " ".join([by_id[i]["prompt"], *by_id[i].get("reference_concepts", [])])
         for q in ps:
             for t in targets_of(by_id[q]):
-                assert t.casefold() not in own and t.casefold() != surface
-                assert not word_in(t, by_id[i]["prompt"])
+                assert fold(t).strip() not in own and fold(t).strip() != surface
+                assert not word_in(t, ctx)
 
 
 def test_null_summary_averages_draws_then_items():
@@ -147,3 +149,43 @@ def test_mt_null_keeps_the_items_own_required_language():
     own_lang = [u for u in units_of[i] if u.role == "language"]
     for units in nu[i]:
         assert [u for u in units if u.role == "language"] == own_lang
+
+
+def test_mt_null_is_undecided_on_an_incomplete_item_even_when_the_real_row_passes():
+    units = [regex.ScoredUnit("concept", True, {"en": ["x"]})]
+    rows = [{"id": "a", "pass": True}, {"id": "b", "pass": False}]
+    hits = {"a": [{20: {"concept": []}}], "b": [{20: {"concept": []}, 36: {"concept": []}}]}
+    n = _mt_null_extras(rows, {"a": True, "b": False}, {"a": [units], "b": [units]}, hits, {})
+    assert n["items"] == {"a": [None], "b": [False]}
+    assert n["null_rate"] == 0.0 and n["null_n_items"] == 1 and n["null_unjudged"] == 1
+
+
+def test_bank_null_is_undecided_when_no_layer_was_read(tmp_path, monkeypatch):
+    monkeypatch.setattr(bjudge, "run_calls", lambda calls, **kw: {})
+    n = bfam.null_extras(
+        ["a"],
+        [20, 36],
+        {},
+        [{"id": "a", "pass": None}],
+        {("a", "null:0"): ["x"]},
+        {"a": ["b"]},
+        bjudge.NullOutcome({}, n_calls=0, n_failed=0),
+    )
+    assert n["items"]["a"]["null:0"]["pass"] is None and n["null_rate"] is None
+
+
+def test_partners_do_not_depend_on_the_item_scope(tmp_path, monkeypatch):
+    def fake_run_calls(calls, **kw):
+        return {c.key: {"expressed": False, "target": "", "quote": ""} for c in calls}
+
+    monkeypatch.setattr(bjudge, "run_calls", fake_run_calls)
+    bank = bfam.REPO_ROOT / "evals/association/items.json"
+    full = bfam.run_family(_args(tmp_path / "a", {"null": "on"}), name="association", bank=bank)
+    args = _args(tmp_path / "b", {"null": "on"})
+    one = bfam.run_family(
+        JudgeArgs(**{**args.__dict__, "items": ["chess"]}), name="association", bank=bank
+    )
+    assert (
+        one.extras["nulls"]["null_partners"]["chess"]
+        == (full.extras["nulls"]["null_partners"]["chess"])
+    )

@@ -92,6 +92,10 @@ verbatim-quote rule.
   graph item → allowed partners (shuffle the adjacency by seed, then run Hopcroft–Karp). The
   K=3 derangements must be edge-disjoint. If no perfect matching exists, raise `ValueError`
   naming the family. Never fall back silently.
+  **As built:** Kuhn's augmenting paths on one RNG seeded `"{family}:null"`. Edge-disjointness
+  is greedy: one matching after another, removing each one's edges. In principle that can
+  raise on a bank where 3 disjoint derangements exist. It passes on every current bank, and the
+  most constrained item has at least 91 allowed partners.
 - Synonyms and translations of the item's own target are not excluded. This is noted as an
   upward bias, which the surface-free statistic below separates out.
 - `null_rate` is the mean over j of the any-layer pass rate against partner j.
@@ -108,6 +112,15 @@ verbatim-quote rule.
   spot-checks 20 per family for both same-type-ness and prompt presence, and fixes any that
   fail.
 - `foil_rate` is the mean over the 3 foils.
+- **As built (2026-10-09).** Each item's foils are averaged first, then averaged over items. A
+  draft-then-verify loop (`scripts/draft_null_foils.py`) rejects foils that are synonyms of the
+  target or that the prompt states in any language. Some items are left with fewer than 3
+  foils:
+  - multilingual: 30 of 100 items are short, and 2 have none (antonym and number items, whose
+    obvious foils sit in the prompt)
+  - typo 3, multihop 2, association 1, poetry 1
+
+  An item with no foils leaves the foil denominator.
 
 **Surface-free credit (the leniency statistic).** For every null and foil credit, record
 whether the verified quote contains the credited string after `mc.fold`.
