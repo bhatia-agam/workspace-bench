@@ -104,6 +104,12 @@ prompt-only summaries (`gen-prompt-only-hard-mt`, layer 20, `judge_model` `regex
 recoverable, so these are high, not item-blind floors, and several lens arms sit below them
 (`multihop_mt`: s3d-rl600 0.32 against 0.69); read them as the text-leakage caveat above says.
 
+The six single-token bank entries were re-judged on 2026-10-09 under bank judge v2 (instrument
+`bank-2026-10-09`, plan 0012 §2) from the SAME summaries (`gen-prompt-only`, layer 20):
+association 0.29 -> 0.33, basic_readout 0.72 -> 0.71, multihop 0.90 -> 0.91, multilingual 0.76 ->
+0.77, poetry 0.71 -> 0.59, typo 1.00 -> 1.00. Poetry's drop is consistent with v2's word-only
+family rule (v1 also credited established synonyms), but the flipped items were not audited.
+
 The `poetry` and `user_modeling` entries were measured at the read sites those families used
 until 2026-09-23 (the final prompt token / the assistant-onset token); both families now read
 wider spans, and their prompt-only floors are being re-measured on the same spans.
