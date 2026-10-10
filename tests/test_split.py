@@ -38,3 +38,42 @@ def test_punct_positions_are_a_small_subset_of_the_span():
     for it in items:
         p, g = punct_positions(it["read"]), grid_positions(it["read"])
         assert set(p) <= set(g) and p[-1] == int(it["read"]["span"][1]) and len(p) <= 11
+
+
+def test_relational_protocols_pair_twins_and_count_empty_cells(tmp_path):
+    from wsbench.evals.relational_multihop import score
+    from wsbench.judge_config import JudgeConfig, resolve
+    from wsbench.registry import JudgeArgs
+
+    args = JudgeArgs(
+        readouts=tmp_path / "r.jsonl",
+        out=tmp_path,
+        judge=resolve(JudgeConfig(prompt_version="x")),
+        layers=None,
+        items=None,
+        limit=0,
+        allow_missing=False,
+        concurrency=1,
+        rpm=1.0,
+        dry_run=False,
+    )
+    scope = [{"id": f"rel-s{n}-{d}", "scene": f"s{n}"} for n in range(40) for d in "ab"]
+    rows = [{"id": it["id"], "layer": 28, "pass": True} for it in scope]
+    empty = [(it["id"], 32) for it in scope]
+    res = score.score(
+        args,
+        scope,
+        scope,
+        rows,
+        counts={"n_expected_cells": 160, "n_unjudged_cells": 0, "n_empty_cells": 80},
+        config={},
+        n_layers=2,
+        n_api_failed=0,
+        n_interp_missing=0,
+        empty_cells=empty,
+    )
+    lp = res.extras["layer_protocols"]
+    assert lp["band"] == [28, 32] and lp["fixed_layer"]["layer"] == 28
+    assert lp["n_dev_items"] % 2 == 0  # twins never straddle the split
+    # the empty layer counts as a judged negative: the dev rate at 32 is 0, not undefined
+    assert lp["n_dev_items"] + lp["n_test_items"] == 80
