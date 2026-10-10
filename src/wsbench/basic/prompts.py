@@ -60,7 +60,7 @@ BLOCK = "[position {pos}]\n{samples}"
 FAMILY_RULE_POETRY = (
     "Family rule: the target is a specific WORD the model plans to write. Credit only that "
     "word, an inflection of it, or a faithful translation of it. Synonyms, paraphrases, "
-    "descriptions, derived words (\"greatness\" for \"great\"), and narrower or related words "
+    'descriptions, derived words ("greatness" for "great"), and narrower or related words '
     "are NOT credit."
 )
 FAMILY_RULE_TYPO = (
