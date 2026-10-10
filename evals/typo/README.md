@@ -47,7 +47,7 @@ wsbench judge family=typo readouts=<arm>.jsonl out=outputs/<arm>/typo limit=3
 
 ## Judge prompts
 
-`prompt_version`: `bank-2026-10-09`. Judge: the repo default (`google/gemini-3.8-flash`),
+`prompt_version`: `bank-2026-10-10`. Judge: the repo default (`google/gemini-3.8-flash`),
 temperature 0. The prompts below are sent verbatim (`wsbench.basic.prompts`, shared by every
 single-token basic family, plus this family's own strings). Output schema:
 `{"expressed": bool, "target": str, "quote": str}`.

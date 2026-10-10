@@ -52,7 +52,7 @@ wsbench judge family=poetry readouts=<arm>.jsonl out=outputs/<arm>/poetry limit=
 
 ## Judge prompts
 
-`prompt_version`: `bank-2026-10-09`. Judge: the repo default (`google/gemini-3.8-flash`),
+`prompt_version`: `bank-2026-10-10`. Judge: the repo default (`google/gemini-3.8-flash`),
 temperature 0. The prompts below are sent verbatim (`wsbench.basic.prompts`, shared by every
 single-token basic family, plus this family's own strings). Output schema:
 `{"expressed": bool, "target": str, "quote": str}`.
@@ -124,5 +124,5 @@ The samples below are the lens's top VOCABULARY TOKENS, best first (one per line
 Family rule (`FAMILY_RULE_POETRY`):
 
 ```text
-Family rule: the target is a specific WORD the model plans to write. Credit only that word, an inflection of it, or a faithful translation of it. Synonyms, paraphrases, descriptions, and narrower or related words are NOT credit.
+Family rule: the target is a specific WORD the model plans to write. Credit only that word, an inflection of it, or a faithful translation of it. Synonyms, paraphrases, descriptions, derived words ("greatness" for "great"), and narrower or related words are NOT credit.
 ```

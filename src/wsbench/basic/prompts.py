@@ -7,7 +7,7 @@ from typing import Any
 from wsbench.llm import schema_block
 from wsbench.readouts import Cell, Kind
 
-PROMPT_VERSION = "bank-2026-10-09"
+PROMPT_VERSION = "bank-2026-10-10"
 
 SYSTEM = """You are judging readouts from an activation lens for an interpretability
 benchmark. You get one eval item: its TARGET concept(s) and the lens's readout samples at one
@@ -60,7 +60,8 @@ BLOCK = "[position {pos}]\n{samples}"
 FAMILY_RULE_POETRY = (
     "Family rule: the target is a specific WORD the model plans to write. Credit only that "
     "word, an inflection of it, or a faithful translation of it. Synonyms, paraphrases, "
-    "descriptions, and narrower or related words are NOT credit."
+    "descriptions, derived words (\"greatness\" for \"great\"), and narrower or related words "
+    "are NOT credit."
 )
 FAMILY_RULE_TYPO = (
     "Family rule: the target is the CORRECTLY spelled word. Credit only that word, an "

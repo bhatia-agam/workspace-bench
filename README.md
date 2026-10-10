@@ -289,8 +289,8 @@ never pinned.
 |---|---|---|
 | agentic_misalignment | claude-sonnet-5 | am-narrative-v1 |
 | arithmetic_intermediates | google/gemini-3.8-flash | arith-free-2026-09-23 (frozen cell) / arith-free-batched-2026-09-23 (`cells=all`, one call per item and layer) |
-| association | google/gemini-3.8-flash | bank-2026-10-09 |
-| basic_readout | google/gemini-3.8-flash | bank-2026-10-09 |
+| association | google/gemini-3.8-flash | bank-2026-10-10 |
+| basic_readout | google/gemini-3.8-flash | bank-2026-10-10 |
 | basic_readout_mt | regex; token bags via the summarizer (google/gemini-3.8-flash) | mt-regex-2026-09-23 (token bags: mt-regex-summarized-2026-09-23) |
 | brew_intermediates | google/gemini-3.8-flash | brew-2026-09-16 |
 | buggy_code | google/gemini-3.8-flash | buggy-score-2026-09-23 |
@@ -302,16 +302,16 @@ never pinned.
 | jlens_concept_pr | google/gemini-3.8-flash | jlens-pr-v2 |
 | moral_rationale | google/gemini-3.8-flash | ec-v1 |
 | multi_concept_directed_modulation | google/gemini-3.8-flash | mcdm-2026-09-16 |
-| multihop | google/gemini-3.8-flash | bank-2026-10-09 |
+| multihop | google/gemini-3.8-flash | bank-2026-10-10 |
 | multihop_mt | regex; token bags via the summarizer (google/gemini-3.8-flash) | mt-regex-2026-09-23 (token bags: mt-regex-summarized-2026-09-23) |
-| multilingual | google/gemini-3.8-flash | bank-2026-10-09 |
+| multilingual | google/gemini-3.8-flash | bank-2026-10-10 |
 | multilingual_mt | regex; token bags via the summarizer (google/gemini-3.8-flash) | mt-regex-2026-09-23 (token bags: mt-regex-summarized-2026-09-23) |
 | multilingual_multihop | regex; token bags via the summarizer (google/gemini-3.8-flash) | mt-regex-2026-09-23 (token bags: mt-regex-summarized-2026-09-23) |
 | multilingual_typo | regex; token bags via the summarizer (google/gemini-3.8-flash) | mt-regex-2026-09-23 (token bags: mt-regex-summarized-2026-09-23) |
-| poetry | google/gemini-3.8-flash | bank-2026-10-09 |
+| poetry | google/gemini-3.8-flash | bank-2026-10-10 |
 | relational_multihop | google/gemini-3.8-flash | rel-v1 |
 | role_bound_association | google/gemini-3.8-flash | oa-v1 |
-| typo | google/gemini-3.8-flash | bank-2026-10-09 |
+| typo | google/gemini-3.8-flash | bank-2026-10-10 |
 | typo_mt | regex; token bags via the summarizer (google/gemini-3.8-flash) | mt-regex-2026-09-23 (token bags: mt-regex-summarized-2026-09-23) |
 | user_modeling | google/gemini-3.8-flash | um-v2 |
 
