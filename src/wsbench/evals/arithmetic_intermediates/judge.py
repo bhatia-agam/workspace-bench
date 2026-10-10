@@ -63,6 +63,33 @@ def tolerance_ok(got: float, target: float, tol: str) -> bool:
     return abs(got - target) <= TOLERANCES[tol] * abs(target)
 
 
+def near_decoys(item: dict[str, Any]) -> list[float]:
+    """Plan 0012 §4.1: magnitude-adjacent wrong values for the item's scored intermediate
+    ``v = intermediates[0]``, placed OUTSIDE its tolerance band so a true hit never counts as a
+    decoy hit. With ``h`` the band's absolute half-width and ``d`` the decimals ``v`` is written
+    with, ``s = max(3h, 10^-d)`` and the decoys are ``v ± s``, ``v ± 2s`` (exact integer items:
+    ``v ± 1``, ``v ± 2``). A decoy is dropped when it flips the sign of a nonzero ``v``, sits in
+    ``intermediates[1]``'s band, equals the answer, or is a numeral of the prompt."""
+    raw = str(item["intermediates"][0])
+    v = float(raw)
+    tol = str(item["tolerance"])
+    d = len(raw.split(".")[1]) if "." in raw else 0
+    h = TOLERANCES[tol] * abs(v)
+    step = 1.0 if h == 0 and d == 0 else max(3 * h, 10.0**-d)
+    others = [float(x) for x in item["intermediates"][1:2]]
+    answer = float(item["answer"]) if item.get("answer") not in (None, "") else None
+    in_prompt = set(quantities(str(item.get("prompt", ""))))
+    out: list[float] = []
+    for k in (-2, -1, 1, 2):
+        x = round(v + k * step, d) if d else float(round(v + k * step))
+        if v != 0 and (x < 0) != (v < 0):
+            continue
+        if any(tolerance_ok(x, o, tol) for o in others) or x == answer or x in in_prompt:
+            continue
+        out.append(x)
+    return out
+
+
 def quantities(text: str) -> list[float]:
     """The numerals a readout writes (ASCII or fullwidth), with list markers ("2. foo") and step
     labels stripped as the source scorer does; used only to VERIFY that a value the judge names
@@ -312,6 +339,12 @@ def run(args: JudgeArgs) -> FamilyResult:
             if nulls[i] and judged
             else None
         )
+        decoys = near_decoys(it)
+        near = (
+            sum(any(tolerance_ok(x, n, tol[i]) for x in kept) for n in decoys) / len(decoys)
+            if decoys and judged
+            else None
+        )
         hits_at = sorted((v["layer"], v["pos"]) for v in judged if v["hit"])
         kind = (
             (
@@ -347,6 +380,8 @@ def run(args: JudgeArgs) -> FamilyResult:
                 "hit": hit,
                 "top1_hit": any(v.get("top1_hit") for v in judged),
                 "cross": cross,
+                "near_null": near,
+                "near_decoys": decoys,
                 "bands": bands,
                 "hits_at": hits_at,
                 "unjudged_at": sorted((v["layer"], v["pos"]) for v in verdicts if not v["judged"]),
@@ -405,6 +440,13 @@ def run(args: JudgeArgs) -> FamilyResult:
             "cross": cross_rate,
             "net": (value_rate - cross_rate)
             if value_rate is not None and cross_rate is not None
+            else None,
+            # plan 0012 §4.1: same kept values, same rule, against magnitude-adjacent decoys
+            "near_null": (
+                near_rate := mean(r["near_null"] for r in decided if r["near_null"] is not None)
+            ),
+            "near_net": (value_rate - near_rate)
+            if value_rate is not None and near_rate is not None
             else None,
             "top1_rate": rate(bool(r.get("top1_hit")) for r in decided),
             "committed_rate": rate(bool(c["values"]) for c in judged_cells),

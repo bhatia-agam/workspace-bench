@@ -457,3 +457,23 @@ def test_example_file_carries_the_every_position_regime(tmp_path, monkeypatch):
     assert r.counts["n_expected_cells"] - r.counts["n_missing_cells"] == len(rows)
     assert r.counts["n_empty_cells"] == 1
     assert r.extras["n_rows_off_cell"] == 0
+
+
+def test_near_decoys_sit_outside_the_true_band():
+    from wsbench.evals.arithmetic_intermediates.judge import near_decoys, tolerance_ok
+
+    it = {"intermediates": ["301"], "tolerance": "rel5pct", "answer": "4816", "prompt": "x 256"}
+    ds = near_decoys(it)
+    assert ds == [211.0, 346.0, 391.0]  # 256 is a prompt numeral, dropped
+    assert not any(tolerance_ok(d, 301.0, "rel5pct") for d in ds)
+    assert near_decoys({"intermediates": ["7"], "tolerance": "exact", "answer": "9"}) == [
+        5.0,
+        6.0,
+        8.0,
+    ]  # 9 is the answer, dropped
+    assert near_decoys({"intermediates": ["0.5"], "tolerance": "exact", "answer": ""}) == [
+        0.3,
+        0.4,
+        0.6,
+        0.7,
+    ]

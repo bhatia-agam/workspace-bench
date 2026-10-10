@@ -70,7 +70,12 @@ Example: `(271 - 322) * 14` → intermediate -51, answer -714.
   source kept apart by about four 2% tolerances; the 13 pairs that sit within the 5% used since
   2026-09-23 were dropped from the null sets),
   averaged over that set; `net = value −
-  cross`. `extras.per_variant` gives n / value / cross / net / tolerance / role per variant,
+  cross`. `extras.near_null` (plan 0012 §4.1) is the same rule against magnitude-adjacent
+  decoys of the item's own intermediate, placed outside its tolerance band: with `h` the band's
+  half-width and `d` the intermediate's decimals, `v ± s` and `v ± 2s` for `s = max(3h, 10^-d)`
+  (exact integer items: `v ± 1`, `v ± 2`), minus decoys that flip the sign, fall in the second
+  intermediate's band, equal the answer, or appear in the prompt; `near_net = value − near_null`.
+  It asks whether a readout that hits is reading THE value or spraying numbers of the right size. `extras.per_variant` gives n / value / cross / net / tolerance / role per variant,
   `extras.per_role` the structural vs comparison split; `extras.committed_rate` the calls that
   named anything. The prompt-only baseline is not item-blind here (the stock model computes the
   expression); its frozen entry is stamped `arith-free-2026-09-16`, stale against the current
