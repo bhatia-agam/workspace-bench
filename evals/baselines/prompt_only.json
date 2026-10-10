@@ -462,11 +462,11 @@
   "written": "2026-09-18T07:39:55+00:00"
  },
  "moral_rationale": {
-  "rate": 0.33,
+  "rate": 0.37,
   "saturated": false,
   "ci95": [
-   0.26,
-   0.395
+   0.305,
+   0.435
   ],
   "metric": "pass_rate",
   "higher_is_better": true,
@@ -479,10 +479,10 @@
    "n_empty_cells": 25
   },
   "judge_model": "google/gemini-3.8-flash",
-  "instrument": "ec-v2",
+  "instrument": "ec-v3",
   "layers_judged": null,
   "complete": false,
-  "written": "2026-10-10T02:56:37+00:00"
+  "written": "2026-10-10T03:17:02+00:00"
  },
  "relational_multihop": {
   "rate": 0.82,

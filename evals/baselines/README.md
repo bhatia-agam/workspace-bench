@@ -114,10 +114,11 @@ words): association 0.32, basic_readout 0.72, multihop 0.91, multilingual 0.77, 
 typo 1.00. Only poetry's prompt text changed; the 0.01 moves elsewhere are the judge's
 run-to-run spread at temperature 0, which is what two identical prompts re-asked cost.
 
-The `moral_rationale` floors were re-measured on 2026-10-10 under `ec-v2` (plan 0012 §3.2: stance
-rule + same-topic contrast option). Prompt-only 0.495 -> 0.33: the stance rule refuses the
-topic-only reasons a no-activation summary names. Lucky guessing RISES, blind 0.195 -> 0.268 and
-described 0.262 -> 0.384 (uniform 0.184): on the 72 committed items with a contrast, two options
+The `moral_rationale` floors were re-measured on 2026-10-10 under `ec-v3` (plan 0012 §3.2: stance
+rule, briefer wording allowed, + same-topic contrast option). Prompt-only 0.495 -> 0.37 (0.33
+under the stricter `ec-v2`): the stance rule refuses the
+topic-only reasons a no-activation summary names. Lucky guessing RISES, blind 0.195 -> 0.263 and
+described 0.262 -> 0.378 (uniform 0.184): on the 72 committed items with a contrast, two options
 now share the question's topic, so a guesser shown only the options can narrow to those two.
 Read ec-v2 arms against these floors, and the contrast pick rate against the same caveat. (The
 prompt-only run here counted 25 empty cells where the 2026-09-18 freeze counted 19; same summaries,
