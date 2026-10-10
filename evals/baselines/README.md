@@ -109,6 +109,10 @@ The six single-token bank entries were re-judged on 2026-10-09 under bank judge 
 association 0.29 -> 0.33, basic_readout 0.72 -> 0.71, multihop 0.90 -> 0.91, multilingual 0.76 ->
 0.77, poetry 0.71 -> 0.59, typo 1.00 -> 1.00. Poetry's drop is consistent with v2's word-only
 family rule (v1 also credited established synonyms), but the flipped items were not audited.
+Re-judged again on 2026-10-10 under `bank-2026-10-10` (the poetry rule also refuses derived
+words): association 0.32, basic_readout 0.72, multihop 0.91, multilingual 0.77, poetry 0.62,
+typo 1.00. Only poetry's prompt text changed; the 0.01 moves elsewhere are the judge's
+run-to-run spread at temperature 0, which is what two identical prompts re-asked cost.
 
 The `poetry` and `user_modeling` entries were measured at the read sites those families used
 until 2026-09-23 (the final prompt token / the assistant-onset token); both families now read
