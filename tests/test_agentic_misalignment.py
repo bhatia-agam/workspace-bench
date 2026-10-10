@@ -33,6 +33,7 @@ from wsbench.mcjudge import load_bank
 
 ROOT = Path(__file__).resolve().parents[1]
 GOLDEN = json.loads((ROOT / "tests/golden/agentic_misalignment_prompts.json").read_text())
+GOLDEN_V2 = json.loads((ROOT / "tests/golden/agentic_misalignment_prompts_v2.json").read_text())
 SCORING = json.loads((ROOT / "tests/golden/agentic_misalignment_scoring.json").read_text())
 EXAMPLE = ROOT / "examples/readouts/agentic_misalignment.jsonl"
 
@@ -92,7 +93,7 @@ def test_bank_shape():
 
 def test_spec_and_list(capsys):
     assert SPEC.judge.model == "claude-sonnet-5" and SPEC.judge.reasoning is None
-    assert SPEC.judge.prompt_version == "am-narrative-v1" == prompts.PROMPT_VERSION
+    assert SPEC.judge.prompt_version == "am-narrative-v1+am-design-v2" == prompts.PROMPT_VERSION
     assert SPEC.metric == "design_score" and SPEC.higher_is_better
     assert resolve(SPEC.judge, env={}).pinned and resolve(SPEC.judge, env={}).reasoning is None
     assert main(["list"]) == 0
@@ -109,10 +110,7 @@ def test_templates_match_source_goldens():
     assert t["CONSOLIDATE_PROMPT"] == CONSOLIDATE_PROMPT
     assert t["PARTIAL_PROMPT"] == PARTIAL_PROMPT
     # the source template is a str.format template ({{ }} escapes); ours renders by str.replace
-    assert (
-        t["DESIGN_SCORE_PROMPT"].replace("{{", "{").replace("}}", "}")
-        == prompts.DESIGN_SCORE_PROMPT
-    )
+    assert GOLDEN_V2["templates"]["DESIGN_SCORE_PROMPT"] == prompts.DESIGN_SCORE_PROMPT
     assert "{{" not in prompts.DESIGN_SCORE_PROMPT
     assert list(FAMILIES) == t["FAMILIES"] and t["NONE_OPTION"] == prompts.NONE_OPTION
     assert list(prompts.ORIGINS) == t["ORIGINS"] and t["READOUT_KIND"] == READOUT_KIND
@@ -121,6 +119,7 @@ def test_templates_match_source_goldens():
         "CONSOLIDATE_PROMPT",
         "PARTIAL_PROMPT",
         "DESIGN_SCORE_PROMPT",
+        "DESIGN_ACTION_BLOCK",
     }
 
 
@@ -135,10 +134,10 @@ def test_rendered_prompts_match_source_goldens():
     assert prompts.render_partial(3, 7, format_notes(NOTES)) == r["partial"]
     assert prompts.render_consolidate(format_notes(NOTES)) == r["consolidate"]
     it = next(i for i in load_bank("agentic_misalignment")["items"] if i["id"] == RH)
-    got = prompts.render_design_score(ACCOUNT, it["descriptor"], judge.scenario_of(it))
-    assert got == r["design_score"]
+    got = prompts.render_design_score(ACCOUNT, judge.load_targets()[RH], judge.scenario_of(it))
+    assert got == GOLDEN_V2["rendered"]["design_score"]
     assert "{" in got and "}" in got  # the JSON example survives with single braces
-    assert "reward hacking" not in ACCOUNT  # the descriptor came from the bank, not the account
+    assert "reward hacking" not in ACCOUNT  # the target came from targets.json, not the account
 
 
 def test_chunk_notes_matches_golden_and_source_tests():
@@ -406,7 +405,7 @@ def test_stage_sequencing_numbers_and_rows(tmp_path, fake_text, am_args):
     assert len(c_users) == 2
     bank = {it["id"]: it for it in load_bank("agentic_misalignment")["items"]}
     rh_c = next(u for u in c_users if f"ACCOUNT {RH}" in u)
-    assert bank[RH]["descriptor"] in rh_c and bank[RH]["system"][:200] in rh_c
+    assert judge.load_targets()[RH]["action"] in rh_c and bank[RH]["system"][:200] in rh_c
     assert ", ".join(FAMILIES) in rh_c
 
     rows = {r["id"]: r for r in res.rows}
@@ -438,7 +437,8 @@ def test_stage_sequencing_numbers_and_rows(tmp_path, fake_text, am_args):
     assert e["usage"] == {"calls": 14, "input_tokens": 70, "output_tokens": 28}
     assert res.config["stride"] == 1 and res.config["chunk_chars"] == 60000
     assert (
-        res.config["layers_read"] == [20, 36] and res.config["prompt_version"] == "am-narrative-v1"
+        res.config["layers_read"] == [20, 36]
+        and res.config["prompt_version"] == "am-narrative-v1+am-design-v2"
     )
 
     # cache: A/B/C keys, the "" Stage A result is cached, the failed call is not

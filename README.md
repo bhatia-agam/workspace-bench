@@ -287,7 +287,7 @@ never pinned.
 
 | family | judge model | prompt version |
 |---|---|---|
-| agentic_misalignment | claude-sonnet-5 | am-narrative-v1 |
+| agentic_misalignment | claude-sonnet-5 | am-narrative-v1+am-design-v2 |
 | arithmetic_intermediates | google/gemini-3.8-flash | arith-free-2026-09-23 (frozen cell) / arith-free-batched-2026-09-23 (`cells=all`, one call per item and layer) |
 | association | google/gemini-3.8-flash | bank-2026-10-10 |
 | basic_readout | google/gemini-3.8-flash | bank-2026-10-10 |
