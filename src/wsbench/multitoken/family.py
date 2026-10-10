@@ -37,6 +37,7 @@ from wsbench.nulls import bank_partners, null_summary
 from wsbench.readouts import Cell, load_readouts
 from wsbench.registry import REPO_ROOT, EvalSpec, JudgeArgs
 from wsbench.results import FamilyResult
+from wsbench.split import layer_protocols
 from wsbench.summarizer import SUMMARIZER_PROMPT_VERSION, aux_judge, render_bag, summarize
 
 __all__ = ["fold", "letter_index", "mt_family", "run_family", "run_mc", "run_regex", "verdict"]
@@ -326,6 +327,25 @@ def run_regex(args: JudgeArgs, *, name: str) -> FamilyResult:
                 else {}
             ),
             **({"mc": previous_mc} if previous_mc else {}),
+            # plan 0012 §5: report-only layer protocols (unsummarized layers are undecided)
+            **(
+                {
+                    "layer_protocols": layer_protocols(
+                        {
+                            r["id"]: {
+                                int(L): int(L) in set(r["passing_layers"])
+                                for L in r["layers"]
+                                if int(L) not in set(r.get("unsummarized_layers", []))
+                            }
+                            for r in rows
+                        },
+                        family=name,
+                        layers=layers,
+                    )
+                }
+                if not args.dry_run
+                else {}
+            ),
             **(
                 {"nulls": _mt_null_extras(rows, incomplete_of, null_units, null_hits_by, partners)}
                 if nulls_on and not args.dry_run

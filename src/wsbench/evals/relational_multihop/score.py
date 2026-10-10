@@ -5,6 +5,7 @@ from collections import defaultdict
 from wsbench.mcjudge import is_subset
 from wsbench.registry import JudgeArgs
 from wsbench.results import FamilyResult, bootstrap_ci, completeness
+from wsbench.split import layer_protocols
 
 from .prompts import N_MC_OPTIONS
 
@@ -43,6 +44,12 @@ def score(
         "n_cells_judged": len(rows),
         "n_cells_api_failed": n_api_failed,
         "n_cells_interp_missing": n_interp_missing,
+        # plan 0012 §5: report-only layer protocols
+        "layer_protocols": layer_protocols(
+            {i: {v["layer"]: bool(v["pass"]) for v in rows if v["id"] == i} for i in item_pass},
+            family="relational_multihop",
+            layers=sorted(by_layer),
+        ),
     }
     return FamilyResult(
         family="relational_multihop",

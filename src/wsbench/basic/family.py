@@ -16,6 +16,7 @@ from wsbench.nulls import K_FOIL, bank_partners, load_foils, null_summary, surfa
 from wsbench.readouts import Cell, load_readouts
 from wsbench.registry import REPO_ROOT, EvalSpec, JudgeArgs
 from wsbench.results import FamilyResult, bootstrap_ci
+from wsbench.split import layer_protocols
 
 GROUP = "basic"
 CHANCE_LABEL = "no analytic floor (free text); the prompt-only baseline is the measured floor"
@@ -111,6 +112,19 @@ def run_family(args: JudgeArgs, *, name: str, bank: Path) -> FamilyResult:
 
     rows = [_item_row(i, layers, groups, targets[i], outcome) for i in ids]
     extras: dict[str, Any] = {"n_calls": outcome.n_calls}
+    if not args.dry_run:  # plan 0012 §5: report-only, never the headline
+        extras["layer_protocols"] = layer_protocols(
+            {
+                r["id"]: {
+                    int(L): bool(v["expressed"])
+                    for L, v in r["layers"].items()
+                    if v.get("expressed") is not None
+                }
+                for r in rows
+            },
+            family=name,
+            layers=layers,
+        )
     if null_outcome is not None:
         extras["nulls"] = null_extras(
             ids, layers, groups, rows, null_targets, partners, null_outcome
