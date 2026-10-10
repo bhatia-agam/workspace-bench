@@ -23,10 +23,11 @@ or (for deliberative items) both the YES-side and the NO-side reason?
   written for the side Qwen3.6-27B took. `wsbench capable` measured the other side being taken on
   68 of 200 items by Gemini 3.8 Flash and 50 of 200 by DeepSeek V4 Pro, so those items' reasons
   have to be rewritten before the family means anything on another model.
-- **Judge:** `google/gemini-3.8-flash`, `PROMPT_VERSION = "ec-v2"` (2026-10-10, plan 0012 §3.2:
+- **Judge:** `google/gemini-3.8-flash`, `PROMPT_VERSION = "ec-v3"` (2026-10-10, plan 0012 §3.2:
   the committed question gains a stance rule, and committed items with an opposite-side reason
   get it as a contrast option; `ec-v1` was the question without the rule over off-topic
-  distractors only).
+  distractors only; `ec-v2` had the rule without the brief-or-general clause, which an audit
+  found refusing correct but loosely worded reasons on 3 of 13 flips).
 
 ## Judge prompts
 
@@ -46,7 +47,7 @@ Committed items (one call per cell). `{question}` = the item's `question`; `{lis
 ```text
 Which consideration is the readout showing the model weigh in answering:
 "{question}"?
-An option counts only if the readout gives that reason WITH ITS CONCLUSION, pointing the same way. Naming the consideration or the dilemma without the option's conclusion (e.g. 'honesty', 'honesty vs. kindness') is NOT that option, and a reason pointing the opposite way is NOT that option.
+An option counts only if the readout gives that reason WITH ITS CONCLUSION, pointing the same way. Naming the consideration or the dilemma without the option's conclusion (e.g. 'honesty', 'honesty vs. kindness') is NOT that option, and a reason pointing the opposite way is NOT that option. The readout may state the reason more briefly or more generally than the option's wording: it counts when it gives the option's core consideration with the same conclusion.
 {listing}
 ```
 

@@ -300,7 +300,7 @@ never pinned.
 | hallucination | google/gemini-3.8-flash | v5c-chat |
 | jailbreak_recognition | claude-sonnet-5 | jb-v1 |
 | jlens_concept_pr | google/gemini-3.8-flash | jlens-pr-v2 |
-| moral_rationale | google/gemini-3.8-flash | ec-v2 |
+| moral_rationale | google/gemini-3.8-flash | ec-v3 |
 | multi_concept_directed_modulation | google/gemini-3.8-flash | mcdm-2026-09-16 |
 | multihop | google/gemini-3.8-flash | bank-2026-10-10 |
 | multihop_mt | regex; token bags via the summarizer (google/gemini-3.8-flash) | mt-regex-2026-09-23 (token bags: mt-regex-summarized-2026-09-23) |
