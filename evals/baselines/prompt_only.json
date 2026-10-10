@@ -462,11 +462,11 @@
   "written": "2026-09-18T07:39:55+00:00"
  },
  "moral_rationale": {
-  "rate": 0.495,
+  "rate": 0.33,
   "saturated": false,
   "ci95": [
-   0.43,
-   0.565
+   0.26,
+   0.395
   ],
   "metric": "pass_rate",
   "higher_is_better": true,
@@ -475,14 +475,14 @@
   "counts": {
    "n_expected_cells": 1000,
    "n_missing_cells": 0,
-   "n_unjudged_cells": 17,
-   "n_empty_cells": 19
+   "n_unjudged_cells": 0,
+   "n_empty_cells": 25
   },
   "judge_model": "google/gemini-3.8-flash",
-  "instrument": "ec-v1",
+  "instrument": "ec-v2",
   "layers_judged": null,
   "complete": false,
-  "written": "2026-09-18T07:39:55+00:00"
+  "written": "2026-10-10T02:56:37+00:00"
  },
  "relational_multihop": {
   "rate": 0.82,

@@ -22,10 +22,10 @@ class _Refuse:
         self.messages = self
 
     async def create(self, **kw: Any) -> Any:
-        raise ValueError("cache_only_run: uncached call refused (no network)")
+        raise RuntimeError("cache_only_run: uncached call refused (no network)")  # not retried
 
     def stream(self, **kw: Any) -> Any:
-        raise ValueError("cache_only_run: uncached call refused (no network)")
+        raise RuntimeError("cache_only_run: uncached call refused (no network)")
 
     async def close(self) -> None:
         return None
@@ -38,4 +38,5 @@ def _client(route: str, key: str) -> Any:
 if __name__ == "__main__":
     llm.preflight = lambda model, reasoning: None  # type: ignore[assignment]
     llm._make_client = _client  # type: ignore[assignment]
+    llm.api_key = lambda *a, **k: "cache-only"  # type: ignore[assignment]
     sys.exit(main(["judge", *sys.argv[1:]]))

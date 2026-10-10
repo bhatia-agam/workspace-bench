@@ -1,6 +1,7 @@
 """jailbreak_recognition: one recognition / echo / topic / noise call per (item, layer, pos) cell
 over every token of the last user turn (``read.span``), all K samples classified at once."""
 
+import dataclasses
 import re
 import sys
 from typing import Any
@@ -254,16 +255,15 @@ def run(args: JudgeArgs) -> FamilyResult:
         spend=spend,
     )
     counts["n_missing_cells"] = len(missing)
-    return with_readout_count(
-        score.score(
-            args,
-            scope,
-            rows,
-            layers=layers,
-            counts=counts,
-            config=base_config(args, PROMPT_VERSION),
-            n_api_failed=n_api_failed + n_summary_failed,
-        ),
+    result = score.score(
+        args,
         scope,
-        cells,
+        rows,
+        layers=layers,
+        counts=counts,
+        config=base_config(args, PROMPT_VERSION, read=regime),
+        n_api_failed=n_api_failed + n_summary_failed,
     )
+    if regime != "span":  # a sub-grid of the regime of record: never complete, never in the macro
+        result = dataclasses.replace(result, complete=False)
+    return with_readout_count(result, scope, cells)

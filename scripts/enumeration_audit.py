@@ -3,7 +3,7 @@ same-type candidates (months, weekdays, seasons, colours, number words or numera
 
 A dev script, not part of the package; reads finished ``wsbench`` result dirs and the readouts
 they were judged from. The count is a screen, not a verdict: a listing sample may still single
-the target out.
+the target out. Prose arms only: a token bag's "sample" is one token, so it never lists 5.
 """
 
 import argparse
@@ -64,16 +64,29 @@ def bank_family(res: Path, rd: Path) -> dict[str, int]:
     return {"passing_cells": n_pass_cells, "enumerating": n_enum, **kinds}
 
 
+def readouts_by_pos(path: Path) -> dict[tuple[str, int, int], list[str]]:
+    out: dict[tuple[str, int, int], list[str]] = defaultdict(list)
+    for line in path.read_text().splitlines():
+        r = json.loads(line)
+        out[(r["id"], r["layer"], r["pos"])].extend(r.get("samples") or r.get("tokens") or [])
+    return out
+
+
 def numeric_family(res: Path, rd: Path) -> dict[str, int]:
+    """Passing cells whose OWN samples hold 5+ distinct numerals: arithmetic rows list their
+    hit cells as ``hits_at`` (layer, pos); chain's last-token rows list ``hitting_layers``."""
     d = json.loads((res / "results.json").read_text())
-    ro = readouts(rd)
+    by_pos = readouts_by_pos(rd)
+    by_layer = readouts(rd)
     n_pass = n_enum = 0
     for row in d["rows"]:
-        for at in row.get("hits_at") or []:
-            layer = at[0] if isinstance(at, list | tuple) else at
+        if row.get("hits_at"):
+            cells = [by_pos[(row["id"], int(L), int(p))] for L, p in row["hits_at"]]
+        else:
+            cells = [by_layer[(row["id"], int(L))] for L in row.get("hitting_layers") or []]
+        for samples in cells:
             n_pass += 1
-            if any(len(set(_NUM.findall(s))) >= 5 for s in ro[(row["id"], int(layer))]):
-                n_enum += 1
+            n_enum += any(len(set(_NUM.findall(s))) >= 5 for s in samples)
     return {"passing_cells": n_pass, "enumerating": n_enum}
 
 

@@ -23,6 +23,7 @@ def score(
     n_layers: int,
     n_api_failed: int,
     n_interp_missing: int,
+    empty_cells: list[tuple[str, int]] | None = None,
 ) -> FamilyResult:
     by_layer: dict[int, list[bool]] = defaultdict(list)
     item_pass: dict[str, bool] = defaultdict(bool)
@@ -45,10 +46,18 @@ def score(
         "n_cells_api_failed": n_api_failed,
         "n_cells_interp_missing": n_interp_missing,
         # plan 0012 §5: report-only layer protocols
+        # an empty cell is a judged negative, as in the headline; a/b twins share a split
         "layer_protocols": layer_protocols(
-            {i: {v["layer"]: bool(v["pass"]) for v in rows if v["id"] == i} for i in item_pass},
+            {
+                it["id"]: {
+                    **{L: False for i, L in empty_cells or [] if i == it["id"]},
+                    **{v["layer"]: bool(v["pass"]) for v in rows if v["id"] == it["id"]},
+                }
+                for it in scope
+            },
             family="relational_multihop",
-            layers=sorted(by_layer),
+            layers=sorted({*by_layer, *(L for _i, L in empty_cells or [])}),
+            group_of=lambda i: i.rsplit("-", 1)[0],
         ),
     }
     return FamilyResult(

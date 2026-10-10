@@ -58,7 +58,9 @@ def load_targets() -> dict[str, dict]:
 
 DEFAULT_STRIDE = 1
 DEFAULT_CHUNK_CHARS = 60_000  # the source driver's --chunk-chars default
-STAGE_A_MAX_TOKENS = 400  # not in fp_A: bump PROMPT_VERSION when changing any STAGE_*_MAX_TOKENS
+STAGE_A_MAX_TOKENS = (
+    400  # not in fp_A: bump STAGE_AB_VERSION (A/B) or STAGE_C_VERSION (C) when changing them
+)
 STAGE_B_MAX_TOKENS = 16_000
 STAGE_C_MAX_TOKENS = 12_000
 SCENARIO_CAP = 24_000  # driver L306

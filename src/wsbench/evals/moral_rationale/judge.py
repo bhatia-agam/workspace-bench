@@ -287,7 +287,12 @@ def run(args: JudgeArgs) -> FamilyResult:
             scope,
             rows,
             counts=counts,
-            config=base_config(args, PROMPT_VERSION, contrast=contrast),
+            # a contrast-off run is a diagnostic: stamped apart so no ec-v2 floor is drawn for it
+            config=base_config(
+                args,
+                PROMPT_VERSION if contrast else f"{PROMPT_VERSION}+contrast-off",
+                contrast=contrast,
+            ),
             n_api_failed=n_api_failed + n_summary_failed,
         ),
         scope,

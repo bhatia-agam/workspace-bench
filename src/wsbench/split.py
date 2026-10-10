@@ -62,6 +62,9 @@ def layer_protocols(
             else None,
         },
         "mid_any_layer": _rate(mid),
+        "mid_any_layer_test": _rate(
+            [any(m[L] for L in band if L in m) for m in test.values() if any(L in m for L in band)]
+        ),
         "n_dev_items": len(dev),
         "n_test_items": len(test),
     }

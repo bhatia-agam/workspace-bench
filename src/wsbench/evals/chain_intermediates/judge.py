@@ -214,9 +214,12 @@ def run(args: JudgeArgs) -> FamilyResult:
             "layer_protocols": layer_protocols(
                 {
                     i: {
-                        v["layer"]: bool(v["hit"])
-                        for v in judged
-                        if v["item"] == i and v["pos"] is None
+                        **{k[1]: False for k in empty if k[0] == i and len(k) == 2},
+                        **{
+                            v["layer"]: bool(v["hit"])
+                            for v in judged
+                            if v["item"] == i and v["pos"] is None
+                        },
                     }
                     for i in ids
                 },
