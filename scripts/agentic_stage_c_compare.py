@@ -47,7 +47,7 @@ def accounts(cells: Path) -> dict[str, str]:
     return out
 
 
-def call(client: OpenAI, model: str, user: str) -> str | None:
+def call(client: Any, model: str, user: str) -> str | None:
     for _ in range(4):
         try:
             r = client.chat.completions.create(
@@ -82,8 +82,22 @@ def main() -> None:
         sc = judge.scenario_of(it)
         jobs.append((lb, "v1", render_v1(text, it["descriptor"], sc)))
         jobs.append((lb, "v2", prompts.render_design_score(text, targets[lb], sc)))
-    with ThreadPoolExecutor(16) as ex:
-        raw = list(ex.map(lambda j: call(client, a.model, j[2]), jobs))
+    if a.model.startswith("claude-"):  # the judge's own Anthropic path (thinking on), e.g. via
+        # an `ant auth login` profile (ANTHROPIC_PROFILE); identical for v1 and v2
+        from wsbench import llm
+
+        raw: list[str | None] = [None] * len(jobs)
+        llm.stream_text(
+            [j[2] for j in jobs],
+            model=a.model,
+            on_result=lambda i, t: raw.__setitem__(i, t),
+            thinking=True,
+            max_tokens=judge.STAGE_C_MAX_TOKENS,
+            concurrency=32,
+        )
+    else:
+        with ThreadPoolExecutor(16) as ex:
+            raw = list(ex.map(lambda j: call(client, a.model, j[2]), jobs))
     rows: dict[str, dict[str, Any]] = {}
     for (lb, ver, _u), text in zip(jobs, raw, strict=True):
         parsed = prompts.parse_design_score(text) if text else None

@@ -21,7 +21,8 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   §Judges and the family READMEs). jlens runs all three stages on the default judge.
 - Override precedence and what `pinned_instrument` means: README §Judges (the bullets under
   the table); not restated here.
-- Routes by model id: `claude-*` -> Anthropic SDK (`ANTHROPIC_API_KEY`, structured output,
+- Routes by model id: `claude-*` -> Anthropic SDK (`ANTHROPIC_API_KEY`, or with no key and
+  `ANTHROPIC_PROFILE` set, the SDK's `ant auth login` profile; structured output,
   refusal -> `None`); else OpenRouter via the OpenAI SDK (`OPENROUTER_API_KEY`, `sk-or-…`).
   Shared: JSON-schema output, 11 jittered retries (`_ATTEMPTS = 12`) on 408/409/429/5xx/
   timeouts, process-wide thread-safe RPM pacer (`rpm=`, default 240), `preflight` fail-fast,

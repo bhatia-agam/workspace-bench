@@ -31,7 +31,8 @@ uv run wsbench list              # per family: group, items, metric, judge, prom
 ```
 
 Keys are read from the environment (export them, never commit them): `OPENROUTER_API_KEY=sk-or-...`
-for every Gemini family, `ANTHROPIC_API_KEY` for the two Claude-pinned ones.
+for every Gemini family, `ANTHROPIC_API_KEY` for the two Claude-pinned ones (or, with no key, `ANTHROPIC_PROFILE=<name>` to
+use an `ant auth login` profile).
 
 ### Score one arm end to end
 

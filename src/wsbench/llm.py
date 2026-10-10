@@ -63,9 +63,14 @@ def route(model: str) -> Route:
 def api_key(model: str) -> str:
     if route(model) == "anthropic":
         key = os.environ.get("ANTHROPIC_API_KEY", "")
-        if not key:
-            raise JudgeConfigError(f"ANTHROPIC_API_KEY is missing (needed for {model})")
-        return key
+        if key:
+            return key
+        if os.environ.get("ANTHROPIC_PROFILE"):
+            return ""  # "" = let the SDK resolve the named `ant auth login` profile
+        raise JudgeConfigError(
+            f"ANTHROPIC_API_KEY is missing (needed for {model}); or set ANTHROPIC_PROFILE to use "
+            "an `ant auth login` profile"
+        )
     key = os.environ.get("OPENROUTER_API_KEY", "")
     if not key.startswith("sk-or-"):
         raise JudgeConfigError("OPENROUTER_API_KEY is missing or not an OpenRouter key (sk-or-…)")
@@ -134,6 +139,8 @@ def _make_client(route: str, key: str) -> Any:
     if route == "anthropic":
         from anthropic import AsyncAnthropic
 
+        if not key:  # an `ant` profile (ANTHROPIC_PROFILE): the SDK reads its OAuth credentials
+            return AsyncAnthropic(max_retries=0)
         return AsyncAnthropic(api_key=key, max_retries=0)
     from openai import AsyncOpenAI
 
