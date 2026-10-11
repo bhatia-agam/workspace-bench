@@ -116,6 +116,15 @@ words): association 0.32, basic_readout 0.72, multihop 0.91, multilingual 0.77, 
 typo 1.00. Only poetry's prompt text changed; the 0.01 moves elsewhere are the judge's
 run-to-run spread at temperature 0, which is what two identical prompts re-asked cost.
 
+**Re-measured under Claude Opus 5.5 (2026-10-11, the new default judge).** Prompt-only, same
+summaries: association 0.32, basic_readout 0.59, multihop 0.91, multilingual 0.74, poetry 0.42,
+typo 1.00, moral_rationale 0.405, directed_modulation 0.19, buggy_code 3.71, conjunctive 0.24,
+relational_multihop 0.94, user_modeling 0.05. Lucky guessing: every option-list family re-run.
+NOT re-measured (no prompt-only summaries on disk at the current read sites): arithmetic,
+brew, chain and role_bound. `floors()` now also requires the entry's `judge_model` to be the
+family's judge, so those four Gemini-era floors are no longer drawn beside Opus 5.5 numbers.
+The multi-token entries are regex-scored and unaffected.
+
 The `moral_rationale` floors were re-measured on 2026-10-10 under `ec-v3` (plan 0012 §3.2: stance
 rule, briefer wording allowed, + same-topic contrast option). Prompt-only 0.495 -> 0.37 (0.33
 under the stricter `ec-v2`): the stance rule refuses the

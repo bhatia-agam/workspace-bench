@@ -90,10 +90,11 @@
   "written": "2026-09-23T04:38:29+00:00"
  },
  "directed_modulation": {
-  "rate": 0.21,
+  "rate": 0.19,
+  "saturated": false,
   "ci95": [
-   0.13,
-   0.29
+   0.12,
+   0.27
   ],
   "metric": "pass_rate",
   "higher_is_better": true,
@@ -105,13 +106,13 @@
    "n_unjudged_cells": 0,
    "n_empty_cells": 1
   },
-  "judge_model": "google/gemini-3.8-flash",
+  "judge_model": "claude-opus-5-5",
   "instrument": "dm-2026-09-16",
   "layers_judged": [
    20
   ],
   "complete": false,
-  "written": "2026-09-16T08:47:25+00:00"
+  "written": "2026-10-11T18:39:34+00:00"
  },
  "multihop": {
   "rate": 0.91,
@@ -389,29 +390,29 @@
   "written": "2026-09-18T07:39:55+00:00"
  },
  "buggy_code": {
-  "rate": 0.04,
+  "rate": 3.7142857142857144,
   "saturated": false,
   "ci95": [
-   0.0,
-   0.12
+   2.938775510204082,
+   4.551020408163265
   ],
-  "metric": "net_S2",
+  "metric": "score",
   "higher_is_better": true,
   "n_items": 49,
   "n_items_decided": null,
   "counts": {
    "n_expected_cells": 49,
    "n_missing_cells": 0,
-   "n_unjudged_cells": 1,
-   "n_empty_cells": 4
+   "n_unjudged_cells": 0,
+   "n_empty_cells": 5
   },
-  "judge_model": "google/gemini-3.8-flash",
-  "instrument": "buggy-2026-09-16",
+  "judge_model": "claude-opus-5-5",
+  "instrument": "buggy-score-2026-09-23",
   "layers_judged": [
    56
   ],
   "complete": false,
-  "written": "2026-09-18T07:39:55+00:00"
+  "written": "2026-10-11T18:39:34+00:00"
  },
  "chain_intermediates": {
   "rate": 0.025210084033613446,
@@ -439,11 +440,11 @@
   "written": "2026-09-18T07:39:55+00:00"
  },
  "conjunctive_association": {
-  "rate": 0.07,
+  "rate": 0.24,
   "saturated": false,
   "ci95": [
-   0.02,
-   0.13
+   0.16,
+   0.32
   ],
   "metric": "pass_rate",
   "higher_is_better": true,
@@ -452,14 +453,14 @@
   "counts": {
    "n_expected_cells": 100,
    "n_missing_cells": 0,
-   "n_unjudged_cells": 2,
+   "n_unjudged_cells": 0,
    "n_empty_cells": 0
   },
-  "judge_model": "google/gemini-3.8-flash",
+  "judge_model": "claude-opus-5-5",
   "instrument": "comp-v1",
   "layers_judged": null,
   "complete": false,
-  "written": "2026-09-18T07:39:55+00:00"
+  "written": "2026-10-11T18:39:34+00:00"
  },
  "moral_rationale": {
   "rate": 0.405,
@@ -485,11 +486,11 @@
   "written": "2026-10-11T18:32:34+00:00"
  },
  "relational_multihop": {
-  "rate": 0.82,
+  "rate": 0.94,
   "saturated": true,
   "ci95": [
-   0.74,
-   0.89
+   0.89,
+   0.98
   ],
   "metric": "pass_rate",
   "higher_is_better": true,
@@ -498,14 +499,14 @@
   "counts": {
    "n_expected_cells": 100,
    "n_missing_cells": 0,
-   "n_unjudged_cells": 4,
+   "n_unjudged_cells": 0,
    "n_empty_cells": 0
   },
-  "judge_model": "google/gemini-3.8-flash",
+  "judge_model": "claude-opus-5-5",
   "instrument": "rel-v1",
   "layers_judged": null,
   "complete": false,
-  "written": "2026-09-18T07:39:55+00:00"
+  "written": "2026-10-11T18:39:34+00:00"
  },
  "role_bound_association": {
   "rate": 1.0,
@@ -531,11 +532,11 @@
   "written": "2026-09-18T07:39:55+00:00"
  },
  "user_modeling": {
-  "rate": 0.07,
+  "rate": 0.05,
   "saturated": false,
   "ci95": [
-   0.03,
-   0.12
+   0.01,
+   0.09
   ],
   "metric": "pass_rate",
   "higher_is_better": true,
@@ -544,13 +545,13 @@
   "counts": {
    "n_expected_cells": 100,
    "n_missing_cells": 0,
-   "n_unjudged_cells": 4,
-   "n_empty_cells": 0
+   "n_unjudged_cells": 0,
+   "n_empty_cells": 6
   },
-  "judge_model": "google/gemini-3.8-flash",
+  "judge_model": "claude-opus-5-5",
   "instrument": "um-v2",
   "layers_judged": null,
   "complete": false,
-  "written": "2026-09-18T07:39:55+00:00"
+  "written": "2026-10-11T18:39:34+00:00"
  }
 }

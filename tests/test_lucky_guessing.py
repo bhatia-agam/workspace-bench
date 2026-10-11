@@ -288,7 +288,7 @@ def test_prompt_only_freeze_and_floors(tmp_path):
             complete=True,
             pinned_instrument=True,
             config={
-                "judge_model": "google/gemini-3.8-flash",
+                "judge_model": "claude-opus-5-5",
                 "prompt_version": version,
                 "layers_judged": [20],
                 **cfg,
@@ -378,3 +378,16 @@ def test_report_floor_columns(tmp_path, monkeypatch):
     head = table.splitlines()[0]
     assert "| lucky guess (blind / described) | prompt-only |" in head
     assert table.splitlines()[2].count("|") == head.count("|")
+
+
+def test_prompt_only_floor_from_another_judge_is_not_drawn(tmp_path):
+    import json
+
+    from wsbench.baselines import prompt_only as po
+
+    entry = {"rate": 0.5, "instrument": po.instrument_versions()["association"]}
+    dst = tmp_path / "po.json"
+    dst.write_text(json.dumps({"association": {**entry, "judge_model": "google/gemini-3.8-flash"}}))
+    assert po.floors(dst) == {}
+    dst.write_text(json.dumps({"association": {**entry, "judge_model": "claude-opus-5-5"}}))
+    assert set(po.floors(dst)) == {"association"}
