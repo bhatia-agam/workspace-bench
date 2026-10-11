@@ -46,7 +46,7 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   `item_scope` = bank ∩ `items=` then `limit=`; `base_config` / `base_counts`. `mc.py`: seeds,
   shuffles, `fold`, `letter_index` (a lone letter or a letter with its own option text).
   `summarizer.py`: token bag -> prose (prompt in `docs/summarizer.md`).
-- Shared judges: `basic/` (the bank judge, `bank_family(name, title)`; per-family strings `FAMILY_RULES` (poetry, typo) and `FORBIDDEN_TEMPLATE` (multihop) are added to that family's own `PROMPTS`; `opts=null=on` adds the plan-0012 nulls, `wsbench.nulls`) and `multitoken/`
+- Shared judges: `basic/` (the bank judge, `bank_family(name, title)`; per-family strings `FAMILY_RULES` (poetry, typo) and `FORBIDDEN_TEMPLATE` (multihop) are added to that family's own `PROMPTS`) and `multitoken/`
   (`mt_family(name, title, calls_per_arm=)`): its scorer of record is the deterministic regex
   contract `multitoken/regex.py` (a port of the source repo's `bank/matching.py` +
   `contract.py` + `conjunctive.py`; no call, `spend_usd` 0, `EvalSpec.scorer="regex"`, pinned by

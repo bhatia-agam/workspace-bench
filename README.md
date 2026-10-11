@@ -348,15 +348,12 @@ complete pass-rate families into a **macro** row and lists every exclusion with 
 path, spend, the judge overrides in force).
 
 **Report-only extras (plan 0012, never the headline).**
-- `extras.nulls` under `opts=null=on`: the mismatched-target random null, near-miss foils and
-  their lifts, for the bank and regex families.
 - `extras.layer_protocols` on the bank, regex, chain and relational families: a layer chosen on
   a hashed 30% dev split and scored on test, and the any-layer rule over the middle band
   (10%–85% of depth: layers 20–52 on the grid); see `wsbench.split`. The headline any-layer rate
   is a pass@k over layers.
 - `extras.pass_at_1` (directed_modulation, `summary`; user_modeling): the headline rule on each
   cell's first sample.
-- arithmetic `extras.near_null` / `near_net`.
 - moral `extras.contrast`.
 
 Cost: the `calls/arm` column of `wsbench list` per family. Every family caches per-cell
@@ -414,9 +411,6 @@ If you use workspace-bench, please cite the repo and the write-up
 Judge every arm with `wsbench run` against the frozen floors: the O-lens RL and SFT checkpoints,
 NLA RL and SFT, J-lens, R-Lens, logit lens and template lens. Arithmetic_intermediates
 (permutation), chain_intermediates (decoy), brew_intermediates (role swap) and jlens_concept_pr
-(derangement foil) carry an empirical null; the six single-token bank families and the six
-regex families get one under `opts=null=on` (a seeded random-partner null, plus same-type
-near-miss foils from `evals/<family>/null_foils.json` for the bank families; `extras.nulls`,
-never the headline; plan 0012 §1). The rest have none yet. The multi-token regex contract
+(derangement foil) carry an empirical null; the rest have none yet. The multi-token regex contract
 matches authored forms only, so a paraphrase or a multi-phrase description cannot hit it;
 `opts=judge=mc` is the semantic alternative.

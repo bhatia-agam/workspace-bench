@@ -33,7 +33,6 @@ from wsbench.multitoken import regex
 from wsbench.multitoken.options import judged_roles, option_sets
 from wsbench.multitoken.prompts import LETTERS, PROMPT_VERSION, SCHEMA, SYSTEM, render_user
 from wsbench.multitoken.regex import SCORER_VERSION, SUMMARIZED_SCORER_VERSION
-from wsbench.nulls import bank_partners, null_summary
 from wsbench.readouts import Cell, load_readouts
 from wsbench.registry import REPO_ROOT, EvalSpec, JudgeArgs
 from wsbench.results import FamilyResult
@@ -128,14 +127,6 @@ def run_regex(args: JudgeArgs, *, name: str) -> FamilyResult:
         units_of = {it["id"]: regex.scored_units(it, contract) for it in scope}
     except ValueError as e:
         fail(f"{name}: bank violates its own contract: {e}")
-    nulls_on = args.extra.get("null") == "on"
-    null_units: dict[str, list[list[regex.ScoredUnit]]] = {}
-    partners: dict[str, list[str]] = {}
-    if nulls_on:
-        try:
-            null_units, partners = _mt_null_units(items, contract, name, units_of)
-        except ValueError as e:
-            fail(f"{name}: {e}")
     cells, rep = load_readouts(args.readouts, ids=ids, layers=args.layers)
     layers = args.layers if args.layers is not None else rep.layers
     positions: dict[tuple[str, int], list[Cell]] = defaultdict(list)
@@ -188,7 +179,6 @@ def run_regex(args: JudgeArgs, *, name: str) -> FamilyResult:
     empty: set[tuple[str, int]] = set()
     unsummarized: set[tuple[str, int]] = set()  # a bag the summarizer failed on: undecided
     hits_by: dict[str, dict[int, dict[str, list[str]]]] = defaultdict(dict)
-    null_hits_by: dict[str, list[dict[int, dict[str, list[str]]]]] = {}
     source_by: dict[str, dict[int, dict[str, list[str]]]] = defaultdict(dict)
     for (item_id, layer), cs in sorted(positions.items()):
         cell = cs[0]
@@ -203,9 +193,6 @@ def run_regex(args: JudgeArgs, *, name: str) -> FamilyResult:
             continue
         units = units_of[item_id]
         hits_by[item_id][layer] = regex.layer_unit_hits(samples, units)
-        for j, nu in enumerate(null_units.get(item_id, [])):
-            per = null_hits_by.setdefault(item_id, [{} for _ in null_units[item_id]])
-            per[j][layer] = regex.layer_unit_hits(samples, nu)
         if tokens:
             raw_hits = regex.layer_unit_hits(_cell_samples(cell), units)
             summ_hits = (
@@ -346,74 +333,9 @@ def run_regex(args: JudgeArgs, *, name: str) -> FamilyResult:
                 if not args.dry_run
                 else {}
             ),
-            **(
-                {"nulls": _mt_null_extras(rows, incomplete_of, null_units, null_hits_by, partners)}
-                if nulls_on and not args.dry_run
-                else {}
-            ),
         },
     )
     return with_readout_count(result, scope, cells)
-
-
-def _mt_null_units(
-    items: list[dict[str, Any]],
-    contract: regex.BankContract,
-    name: str,
-    units_of: dict[str, list[regex.ScoredUnit]],
-) -> tuple[dict[str, list[list[regex.ScoredUnit]]], dict[str, list[str]]]:
-    """The random null of plan 0012 §1.1 for a regex family: per scoped item, one unit list per
-    partner = the partner's content units (language units excluded, required ones; all of them
-    when none is required) as REQUIRED, plus the item's own required language unit(s)."""
-    full = {it["id"]: regex.scored_units(it, contract) for it in items}
-
-    def content(i: str) -> list[regex.ScoredUnit]:
-        cu = [u for u in full[i] if u.role != "language"]
-        req = [u for u in cu if u.required] or cu
-        return [dataclasses.replace(u, required=True) for u in req]
-
-    partners = bank_partners(
-        items, lambda it: [f for u in content(it["id"]) for f in u.all_forms()], family=name
-    )
-    out: dict[str, list[list[regex.ScoredUnit]]] = {}
-    for i, own in units_of.items():
-        lang = [u for u in own if u.role == "language" and u.required]
-        out[i] = [[*content(p), *lang] for p in partners[i]]
-    return out, {i: partners[i] for i in units_of}
-
-
-def _mt_null_extras(
-    rows: list[dict[str, Any]],
-    incomplete_of: dict[str, bool],
-    null_units: dict[str, list[list[regex.ScoredUnit]]],
-    null_hits_by: dict[str, list[dict[int, dict[str, list[str]]]]],
-    partners: dict[str, list[str]],
-) -> dict[str, Any]:
-    """Null pass per (item, partner) by the same rule as the item (some layer where every
-    required unit hits) and the same tri-state: a null with no hit on an incomplete item
-    (missing / unsummarized layers) is undecided, whatever the real row scored."""
-    per: dict[str, list[bool | None]] = {}
-    for row in rows:
-        i = row["id"]
-        draws: list[bool | None] = []
-        for j, nu in enumerate(null_units.get(i, [])):
-            layers = null_hits_by.get(i, [{}] * len(null_units[i]))[j]
-            passed = regex.item_result(layers, nu)["pass"] if layers else False
-            draws.append(tri_state(bool(passed), incomplete_of.get(i, True)))
-        per[i] = draws
-    decided = [r for r in rows if r["pass"] is not None]
-    value = sum(1.0 for r in decided if r["pass"]) / len(decided) if decided else None
-    sm = null_summary(per)
-    return {
-        "value": value,
-        "null_rate": sm["rate"],
-        "null_ci95": sm["ci95"],
-        "null_n_items": sm["n"],
-        "lift_null": value - sm["rate"] if value is not None and sm["rate"] is not None else None,
-        "null_unjudged": sum(d is None for ds in per.values() for d in ds),
-        "null_partners": partners,
-        "items": dict(per),
-    }
 
 
 def _print_dry_run(

@@ -202,6 +202,15 @@ async def _openrouter_once(
     return _parse_object(resp.choices[0].message.content or "")
 
 
+# Models that reject thinking={"type": "disabled"} (thinking is always on): a no-thinking call
+# omits the parameter and asks for low effort instead, so the reply budget goes to the answer.
+_ALWAYS_THINK = ("claude-opus-5-5", "claude-fable-", "claude-mythos-", "claude-sonnet-5-5")
+
+
+def always_thinks(model: str) -> bool:
+    return model.startswith(_ALWAYS_THINK)
+
+
 async def _anthropic_once(
     client: Any,
     system: str,
@@ -219,7 +228,10 @@ async def _anthropic_once(
         max_tokens=max_tokens,
         system=[{"type": "text", "text": system, "cache_control": {"type": "ephemeral"}}],
         messages=[{"role": "user", "content": user}],
-        output_config={"format": {"type": "json_schema", "schema": schema["schema"]}},
+        output_config={
+            "format": {"type": "json_schema", "schema": schema["schema"]},
+            **({"effort": "low"} if always_thinks(model) else {}),
+        },
     )
     spend.calls += 1
     usage = getattr(resp, "usage", None)
@@ -464,12 +476,18 @@ async def _anthropic_text_once(
 ) -> str | None:
     budget = max_tokens
     while True:
+        if always_thinks(model):  # cannot disable: adaptive, low effort for "no thinking" stages
+            think: dict[str, Any] = {"thinking": {"type": "adaptive"}}
+            if not thinking:
+                think["output_config"] = {"effort": "low"}
+        else:
+            think = {"thinking": {"type": "adaptive" if thinking else "disabled"}}
         async with client.messages.stream(
             timeout=timeout,
             model=model,
             max_tokens=budget,
-            thinking={"type": "adaptive" if thinking else "disabled"},
             messages=[{"role": "user", "content": user}],
+            **think,
         ) as stream:
             resp = await stream.get_final_message()
         spend.calls += 1

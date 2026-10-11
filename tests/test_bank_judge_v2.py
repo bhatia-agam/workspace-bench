@@ -51,7 +51,7 @@ def test_family_rules_and_per_family_prompts():
     assert "overrides the rules" in P.SYSTEM and "NEVER combine" in P.SYSTEM
 
 
-def test_family_run_sends_the_rule_and_the_items_own_forbidden_answer(tmp_path, monkeypatch):
+def test_family_run_sends_the_items_own_forbidden_answer(tmp_path, monkeypatch):
     sent: list[str] = []
 
     def fake_run_calls(calls, **kw):
@@ -75,10 +75,9 @@ def test_family_run_sends_the_rule_and_the_items_own_forbidden_answer(tmp_path, 
         concurrency=1,
         rpm=1.0,
         dry_run=False,
-        extra={"null": "on"},
+        extra={},
     )
     bfam.run_family(args, name="multihop", bank=REPO / "evals/multihop/items.json")
     line = P.forbidden_line("multihop", it)
-    assert len(sent) == 7  # the real call + 3 random partners + 3 foils
-    assert all(line in u for u in sent)  # null calls keep the item's own forbidden answer
-    assert sum(u.startswith(f"targets: {json.dumps(bfam.targets_of(it))}") for u in sent) == 1
+    assert len(sent) == 1 and line in sent[0]
+    assert sent[0].startswith(f"targets: {json.dumps(bfam.targets_of(it))}")
