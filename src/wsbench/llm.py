@@ -215,6 +215,24 @@ def always_thinks(model: str) -> bool:
     return model.startswith(_ALWAYS_THINK)
 
 
+# JSON-schema keywords Anthropic structured outputs reject (OpenRouter accepted them): numeric
+# bounds. The prompts state every range in words, so dropping them from the schema is safe.
+_UNSUPPORTED_SCHEMA_KEYS = frozenset(
+    {"minimum", "maximum", "exclusiveMinimum", "exclusiveMaximum", "multipleOf"}
+)
+
+
+def anthropic_schema(schema: Any) -> Any:
+    """A copy of ``schema`` without the keywords the Anthropic route rejects."""
+    if isinstance(schema, dict):
+        return {
+            k: anthropic_schema(v) for k, v in schema.items() if k not in _UNSUPPORTED_SCHEMA_KEYS
+        }
+    if isinstance(schema, list):
+        return [anthropic_schema(v) for v in schema]
+    return schema
+
+
 async def _anthropic_once(
     client: Any,
     system: str,
@@ -233,7 +251,7 @@ async def _anthropic_once(
         system=[{"type": "text", "text": system, "cache_control": {"type": "ephemeral"}}],
         messages=[{"role": "user", "content": user}],
         output_config={
-            "format": {"type": "json_schema", "schema": schema["schema"]},
+            "format": {"type": "json_schema", "schema": anthropic_schema(schema["schema"])},
             **({"effort": "low"} if always_thinks(model) else {}),
         },
     )
