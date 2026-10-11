@@ -1,6 +1,11 @@
 # Plan 0012: all PRs, results (2026-10-10)
 
-This covers PR-A (B1 nulls + bank judge v2, detailed in `docs/b1_null_experiment.md`) and the
+**2026-10-11:** B1 (nulls) and B3 (arithmetic near null) were dropped and removed, and the default
+judge is now Claude Opus 5.5 for every family. All numbers below were judged before that switch
+(Gemini 3.8 Flash, Sonnet 5, Opus 5); they show the effect of the prompt changes, not Opus 5.5
+scores.
+
+This covers PR-A (bank judge v2) and the
 three PRs after it. It ends with what is not done.
 
 Everything is on `s3d-rl600` unless a row says otherwise. The arm is different where cached
@@ -105,19 +110,6 @@ Full three-stage run of am-design-v2 on s3d-rl600: 50,452 Stage A positions, 3 p
   - Defensible, but it is a calibration shift at the top of the scale, not only the removal of
     loose echoes seen on the AO arm.
 
-## Arithmetic near-number null (B3)
-
-- **Decoys** sit at `v ± s` and `v ± 2s`, with `s = max(3h, 10^-d)`: outside the tolerance band,
-  never on a prompt numeral or the answer.
-- **s3d** (Opus cache, `wsbench-pub` readouts, frozen cells):
-
-| value | cross (permutation null) | near_null | near_net |
-|---|---|---|---|
-| 0.305 | 0.064 | 0.082 | 0.224 |
-
-Wrong values of the right size barely score more than other items' values. So the hits are not
-the lens spraying plausible numbers.
-
 ## Enumeration screen (§4.2, prose arm, v2 bank verdicts)
 
 This is the share of passing cells whose sample lists 5 or more same-type candidates:
@@ -194,6 +186,20 @@ Columns:
 - The bank and regex rows were computed offline from the finished runs' rows with
   `wsbench.split.layer_protocols`. The new code emits the same object as
   `extras.layer_protocols` on every run.
+
+## Opus 5.5 refusal probes (2026-10-11)
+
+| family | sample | refused |
+|---|---|---|
+| agentic, Stage A positions | 150 random positions | 11 (7.3%) |
+| agentic, Stage A positions | 83 that Sonnet 5 refused | 27 |
+| agentic, Stage A positions | 150 that Opus 5 refused | 130 |
+| jailbreak cells | 495 (10 items, punct read) | 6 (1.2%) |
+
+For comparison, Sonnet 5 refused 83 of 50,452 agentic positions (0.16%), and Opus 5 refused 826.
+Any item with a refused Stage A position skips Stages B and C. At Opus 5.5's rate almost every
+agentic item would be blocked, so the family needs a refusal policy before an Opus 5.5 run
+means anything.
 
 ## Not done
 
