@@ -73,8 +73,12 @@ def main() -> None:
     bank = {it["id"]: it for it in load_bank("agentic_misalignment")["items"]}
     targets = judge.load_targets()
     acc = {k: v for k, v in accounts(a.cells).items() if k in bank}
-    client = OpenAI(
-        base_url="https://openrouter.ai/api/v1", api_key=os.environ["OPENROUTER_API_KEY"]
+    client = (
+        None
+        if a.model.startswith("claude-")
+        else OpenAI(
+            base_url="https://openrouter.ai/api/v1", api_key=os.environ["OPENROUTER_API_KEY"]
+        )
     )
     jobs: list[tuple[str, str, str]] = []
     for lb, text in sorted(acc.items()):
