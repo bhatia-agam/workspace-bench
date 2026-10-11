@@ -96,6 +96,14 @@ reply up to 64k; no system block, no schema).
   `{scenario}` = `f"{system}\n\n---\n\n{text}"[:24000]`. `max_tokens = 12000`, thinking
   on. Parsed by `parse_design_score` (below).
 
+**Refusals (2026-10-11, Camila).** A Stage A position the judge model refuses (its safety
+classifier, `stop_reason == "refusal"`) is a JUDGED position read as `"uninformative"`: cached as
+`{"result": "uninformative", "refused": true}` so it is never re-asked, counted per row in
+`n_refused_positions` and in `extras.n_refused_positions`, and the item still goes through B and
+C. Before this rule a refused position counted as a failure and the whole item skipped B and C; on
+s3d-rl600 Opus 5.5 refuses about 7% of Stage A positions, which would have blocked nearly every
+item. A Stage B or C refusal is still a failed call.
+
 **Sequencing:** four batches across all items, each preceded by a cache lookup — A (all
 uncached positions of all items), B-partials (multi-chunk items), B-consolidate, C. An item with
 any Stage A failure skips B and C in that run (nothing is cached for them); its failed

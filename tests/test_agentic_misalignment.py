@@ -248,11 +248,16 @@ class _Stream:
     async def get_final_message(self) -> Any:
         if isinstance(self.text, BaseException):
             raise self.text
+        if self.text == REFUSE:  # the judge's safety classifier declines this call
+            return SimpleNamespace(stop_reason="refusal", content=[], usage=None)
         return SimpleNamespace(
             stop_reason="end_turn",
             content=[SimpleNamespace(type="text", text=self.text)],
             usage=SimpleNamespace(input_tokens=5, output_tokens=2),
         )
+
+
+REFUSE = "<<refuse>>"
 
 
 class BadRequestError(Exception):
@@ -684,3 +689,24 @@ def test_cli_dry_run_on_example(tmp_path, capsys, monkeypatch):
     assert "stage A prompt for" in out and "design_score=None n=28" in out
     written = json.loads((tmp_path / "o" / "results.json").read_text())
     assert written["numbers"]["metric"] == "design_score" and written["rows"] == []
+
+
+def test_refused_stage_a_position_is_uninformative_not_blocking(tmp_path, fake_text, am_args):
+    """A Stage A refusal (Camila 2026-10-11) is a judged, uninformative position: the item still
+    reaches B and C, the refusal is cached (never re-asked) and counted."""
+
+    def responder(user, kw):
+        if stage_of(user) == "A" and tag_of(user) == f"{EX}:L20:p1":
+            return REFUSE
+        return _responder(user, kw)
+
+    fake = fake_text(responder)
+    args = am_args(_scripted(tmp_path), items=[RH, EX, CTL])
+    res = judge.run(args)
+    rows = {r["id"]: r for r in res.rows}
+    assert res.extras["n_refused_positions"] == 1 and rows[EX]["n_refused_positions"] == 1
+    assert rows[EX]["n_unjudged_positions"] == 0 and rows[EX]["account"] is not None
+    assert any(f"ACCOUNT {EX}" in u for u in fake.users("C"))
+    n_calls = len(fake.calls)
+    judge.run(args)  # everything cached, the refusal included
+    assert len(fake.calls) == n_calls

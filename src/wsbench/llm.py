@@ -202,6 +202,10 @@ async def _openrouter_once(
     return _parse_object(resp.choices[0].message.content or "")
 
 
+# What a free-text call returns for a model refusal when the caller passes mark_refusals=True
+# (agentic Stage A treats a refused position as uninformative; plan 0012, Camila 2026-10-11).
+REFUSED = "\x00refused\x00"
+
 # Models that reject thinking={"type": "disabled"} (thinking is always on): a no-thinking call
 # omits the parameter and asks for low effort instead, so the reply budget goes to the answer.
 _ALWAYS_THINK = ("claude-opus-5-5", "claude-fable-", "claude-mythos-", "claude-sonnet-5-5")
@@ -473,6 +477,7 @@ async def _anthropic_text_once(
     max_tokens: int,
     timeout: float,
     spend: Spend,
+    mark_refusals: bool = False,
 ) -> str | None:
     budget = max_tokens
     while True:
@@ -499,7 +504,7 @@ async def _anthropic_text_once(
         if stop == "refusal":
             spend.refusals += 1
             print(f"  llm refusal: {model}")
-            return None
+            return REFUSED if mark_refusals else None
         txt = "".join(b.text for b in resp.content if getattr(b, "type", None) == "text").strip()
         if not txt and stop == "max_tokens" and budget < _TEXT_BUDGET_CEILING:
             budget *= 2
@@ -517,6 +522,7 @@ async def _one_text(
     timeout: float,
     rpm: float,
     spend: Spend,
+    mark_refusals: bool = False,
 ) -> str | None:
     """Same backoff / fatal classification as :func:`_one`, for one free-text call."""
     user = user.encode("utf-8", "replace").decode("utf-8")
@@ -531,6 +537,7 @@ async def _one_text(
                 max_tokens=max_tokens,
                 timeout=timeout,
                 spend=spend,
+                mark_refusals=mark_refusals,
             )
         except Exception as e:
             name = type(e).__name__
@@ -565,10 +572,12 @@ async def stream_text_async(
     rpm: float = 240.0,
     timeout: float = 600.0,
     spend: Spend | None = None,
+    mark_refusals: bool = False,
 ) -> Spend:
     """Run user-only free-text prompts concurrently on the Anthropic route (no system block,
     no schema), handing each stripped text (or ``None`` = exhausted retries / non-transient
-    error / refusal) to ``on_result(index, text)`` as it lands. ``""`` is a valid result (the
+    error / refusal; with ``mark_refusals`` a refusal is :data:`REFUSED` instead) to
+    ``on_result(index, text)`` as it lands. ``""`` is a valid result (the
     source returns it after the 64k budget ceiling). Any non-``claude-*`` model raises
     :class:`JudgeConfigError`. Builds no client when there is nothing to call."""
     spend = spend or Spend()
@@ -592,6 +601,7 @@ async def stream_text_async(
                 timeout=timeout,
                 rpm=rpm,
                 spend=spend,
+                mark_refusals=mark_refusals,
             )
         return i, res
 
@@ -619,6 +629,7 @@ def stream_text(
     rpm: float = 240.0,
     timeout: float = 600.0,
     spend: Spend | None = None,
+    mark_refusals: bool = False,
 ) -> Spend:
     """Synchronous wrapper around :func:`stream_text_async` for the CLI and tests."""
     if _in_running_loop():
@@ -636,5 +647,6 @@ def stream_text(
             rpm=rpm,
             timeout=timeout,
             spend=spend,
+            mark_refusals=mark_refusals,
         )
     )

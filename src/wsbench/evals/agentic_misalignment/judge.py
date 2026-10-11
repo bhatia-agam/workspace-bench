@@ -126,16 +126,22 @@ def _batch(
     cache: Cache,
     spend: Spend,
     extra: Callable[[str, str], dict] | None = None,
+    refused: set[str] | None = None,
 ) -> dict[str, str | None]:
     """cache key -> text. Cached (non-failed) rows are reused; the rest go through
     :func:`llm.stream_text` in one batch. A landed text (incl. ``""``) is ``cache.put``
-    immediately as ``{"result": text, **extra(key, text)}``; ``None`` is never cached."""
+    immediately as ``{"result": text, **extra(key, text)}``; ``None`` is never cached. With a
+    ``refused`` set (Stage A), a model refusal is a judged position read as ``"uninformative"``:
+    cached as ``{"result": "uninformative", "refused": true}`` (never re-asked) and its key added
+    to ``refused`` (cached refusals included)."""
     out: dict[str, str | None] = {}
     pending: Calls = []
     for key, fp, user in calls:
         row = cache.get(key, fp)
         if row is not None:
             out[key] = row["result"]
+            if refused is not None and row.get("refused"):
+                refused.add(key)
         else:
             pending.append((key, fp, user))
     print(f"stage {stage}: {len(pending)} calls ({len(out)} cached, model={args.judge.model})")
@@ -144,6 +150,13 @@ def _batch(
 
     def on_result(i: int, text: str | None) -> None:
         key, fp, _user = pending[i]
+        if refused is not None and text == llm.REFUSED:
+            refused.add(key)
+            cache.put(key, fp, {"result": "uninformative", "refused": True})
+            out[key] = "uninformative"
+            return
+        if text == llm.REFUSED:  # not asked for; never cache the marker
+            text = None
         if text is not None:
             cache.put(key, fp, {"result": text, **(extra(key, text) if extra else {})})
         out[key] = text
@@ -157,6 +170,7 @@ def _batch(
         concurrency=args.concurrency,
         rpm=args.rpm,
         spend=spend,
+        mark_refusals=refused is not None,
     )
     for key, _fp, _u in pending:
         out.setdefault(key, None)
@@ -253,6 +267,9 @@ def run(args: JudgeArgs) -> FamilyResult:
             for (lb, pos) in a_user
             if (lb, pos) not in a_note
         ]
+        # a refused position is read as uninformative (Camila 2026-10-11): the judge's safety
+        # classifier declining one position must not block the whole item
+        refused_a: set[str] = set()
         a_res = _batch(
             "A",
             a_calls,
@@ -261,6 +278,7 @@ def run(args: JudgeArgs) -> FamilyResult:
             args=args,
             cache=cache,
             spend=spend,
+            refused=refused_a,
         )
         for lb, pos in a_user:
             if (lb, pos) in a_note:
@@ -401,6 +419,9 @@ def run(args: JudgeArgs) -> FamilyResult:
             "n_positions_read": len(positions.get(lb, [])),
             "n_informative": None,
             "n_unjudged_positions": n_none_a.get(lb, 0),
+            "n_refused_positions": sum(
+                1 for p in positions.get(lb, []) if f"A:{lb}:p{p}" in refused_a
+            ),
             "n_chunks": n_chunks.get(lb),
             "account": account.get(lb),
             **dict.fromkeys(PARSED_FIELDS),
@@ -434,18 +455,20 @@ def run(args: JudgeArgs) -> FamilyResult:
         skipped_rows=sum(rep.skipped.values()),
         spend=spend,
     )
+    result = score.score(
+        args,
+        scope,
+        records,
+        rows,
+        counts=counts,
+        config=config,
+        n_positions_read=sum(len(p) for p in positions.values()),
+        n_informative=n_informative,
+        usage=_usage(spend),
+    )
+    result.extras["n_refused_positions"] = len(refused_a)
     return with_readout_count(
-        score.score(
-            args,
-            scope,
-            records,
-            rows,
-            counts=counts,
-            config=config,
-            n_positions_read=sum(len(p) for p in positions.values()),
-            n_informative=n_informative,
-            usage=_usage(spend),
-        ),
+        result,
         [it for it in scope if it["arm"] == "misaligned"],
         cells,
     )
