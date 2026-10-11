@@ -201,6 +201,20 @@ Any item with a refused Stage A position skips Stages B and C. At Opus 5.5's rat
 agentic item would be blocked, so the family needs a refusal policy before an Opus 5.5 run
 means anything.
 
+## Agentic under the refusal rule (b) (2026-10-11)
+
+A refused Stage A position is now read as uninformative.
+
+| judge | refused Stage A positions | items scored | design_score (28 misaligned) | fidelity ≥ 2 | controls |
+|---|---|---|---|---|---|
+| Sonnet 5 | 82 of 50,452 | 32 / 32 | 0.440 | 50% | 4/4 clean |
+| Opus 5.5 | 3,714 | 1 / 32 | n/a | n/a | n/a |
+
+- **Opus 5.5 also refuses Stage B** (summarising the position notes), even on mild scenarios
+  (test tampering). A Stage B refusal leaves no account to score, so rule (b) cannot help there.
+  With the Opus 5.5 default, agentic cannot be judged.
+- **Stage C v1 vs v2** on all 28 Sonnet accounts: 0.583 → 0.452.
+
 ## Not done
 
 - **A pinned-instrument run of agentic or moral.** It needs a working Anthropic key for agentic.
