@@ -27,7 +27,7 @@ from wsbench.evals.agentic_misalignment.prompts import (
     format_readouts,
     parse_design_score,
 )
-from wsbench.judge_config import DEFAULT_JUDGE, JudgeConfig, resolve
+from wsbench.judge_config import JudgeConfig, resolve
 from wsbench.llm import JudgeConfigError, always_thinks
 from wsbench.mcjudge import load_bank
 
@@ -35,7 +35,7 @@ ROOT = Path(__file__).resolve().parents[1]
 GOLDEN = json.loads((ROOT / "tests/golden/agentic_misalignment_prompts.json").read_text())
 GOLDEN_V2 = json.loads((ROOT / "tests/golden/agentic_misalignment_prompts_v2.json").read_text())
 # Stage A runs without thinking; a judge that cannot disable it (Opus 5.5) runs adaptive
-STAGE_A_THINKING = {"type": "adaptive"} if always_thinks(DEFAULT_JUDGE) else {"type": "disabled"}
+STAGE_A_THINKING = {"type": "adaptive"} if always_thinks(SPEC.judge.model) else {"type": "disabled"}
 SCORING = json.loads((ROOT / "tests/golden/agentic_misalignment_scoring.json").read_text())
 EXAMPLE = ROOT / "examples/readouts/agentic_misalignment.jsonl"
 
@@ -94,13 +94,13 @@ def test_bank_shape():
 
 
 def test_spec_and_list(capsys):
-    assert SPEC.judge.model == DEFAULT_JUDGE and SPEC.judge.reasoning is None
+    assert SPEC.judge.model == "claude-sonnet-5" and SPEC.judge.reasoning is None
     assert SPEC.judge.prompt_version == "am-narrative-v1+am-design-v2" == prompts.PROMPT_VERSION
     assert SPEC.metric == "design_score" and SPEC.higher_is_better
     assert resolve(SPEC.judge, env={}).pinned and resolve(SPEC.judge, env={}).reasoning is None
     assert main(["list"]) == 0
     line = next(ln for ln in capsys.readouterr().out.splitlines() if "agentic_misalignment" in ln)
-    assert re.search(r"\b32\b", line) and DEFAULT_JUDGE in line and "am-narrative-v1" in line
+    assert re.search(r"\b32\b", line) and "claude-sonnet-5" in line and "am-narrative-v1" in line
 
 
 # ---------------------------------------------------------------- prompts / helpers

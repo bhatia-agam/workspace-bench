@@ -275,7 +275,9 @@ number, and what has made an item harder so far.
 
 ## Judges
 
-Every judged family runs on `claude-opus-5-5` (Camila, 2026-10-11; until then the default was
+Every judged family runs on `claude-opus-5-5` except **agentic_misalignment**, pinned to
+`claude-sonnet-5` (Opus 5.5 refuses its Stage B summaries on most scenarios; Sonnet 5 with the
+Stage A refusal rule scores all 32) (Camila, 2026-10-11; until then the default was
 `google/gemini-3.8-flash` via OpenRouter, with agentic_misalignment and jailbreak_recognition
 pinned to `claude-sonnet-5`). Opus 5.5 cannot turn thinking off: calls that ran without thinking
 send adaptive thinking at low effort, and no sampling parameters are sent. Opus 5.5
@@ -292,7 +294,7 @@ never pinned.
 
 | family | judge model | prompt version |
 |---|---|---|
-| agentic_misalignment | claude-opus-5-5 | am-narrative-v1+am-design-v2 |
+| agentic_misalignment | claude-sonnet-5 | am-narrative-v1+am-design-v2 |
 | arithmetic_intermediates | claude-opus-5-5 | arith-free-2026-09-23 (frozen cell) / arith-free-batched-2026-09-23 (`cells=all`, one call per item and layer) |
 | association | claude-opus-5-5 | bank-2026-10-10 |
 | basic_readout | claude-opus-5-5 | bank-2026-10-10 |

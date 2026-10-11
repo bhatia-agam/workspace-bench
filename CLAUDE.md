@@ -16,7 +16,8 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
 `<gen_dir>/<label>/L###.jsonl` layout (id = directory name, layer = filename).
 
 ## Judge layer (`llm.py`, `judge_config.py`)
-- Default judge `claude-opus-5-5` (Anthropic) for every family, agentic and jailbreak included
+- Default judge `claude-opus-5-5` (Anthropic) for every family except agentic_misalignment,
+  pinned to `claude-sonnet-5` (Opus 5.5 refuses its Stage B summaries); jailbreak follows the default
   (Camila 2026-10-11; before that Gemini 3.8 Flash via OpenRouter + Sonnet 5 pins). Opus 5.5
   cannot disable thinking: `llm.always_thinks` models get adaptive thinking + low effort where a
   call ran without thinking. jlens runs all three stages on the default judge. Tests script
