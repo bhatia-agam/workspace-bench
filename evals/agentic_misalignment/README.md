@@ -162,7 +162,7 @@ not take the misaligned action. They never enter the headline; they are the fals
 
 ## Judge
 
-`JudgeConfig(model="claude-sonnet-5", prompt_version="am-narrative-v1+am-design-v2", reasoning=None)` —
+`JudgeConfig(model=DEFAULT_JUDGE, prompt_version="am-narrative-v1+am-design-v2", reasoning=None)` (`claude-opus-5-5` since 2026-10-11; `claude-sonnet-5` before) —
 the judge of record and one of the repo's two non-default pins (jailbreak_recognition is the
 other). No Gemini agreement data exists
 for this family, so `judge_model=`/`WSBENCH_JUDGE_MODEL` overrides produce unpinned numbers

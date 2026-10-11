@@ -27,7 +27,7 @@ relation) without naming it; does the lens *state* the whole composition?
 - **Metric:** `pass_rate` = passes / n_items, n_items = in-scope items minus excluded-layer
   items; a failed call stays in the denominator as an `api_fail` row. `chance = 1/11` (single
   call, no grid).
-- **Judge:** `google/gemini-3.8-flash`, `PROMPT_VERSION = "comp-v1"`.
+- **Judge:** `claude-opus-5-5` (the repo default), `PROMPT_VERSION = "comp-v1"`.
 
 ## Judge prompts
 
@@ -131,7 +131,7 @@ Describe in plain language what this activation appears to encode.
 ## Instrument change (phase 2)
 
 The source script judged with `claude-opus-5` (its `--model` default). This port judges with the
-repo default, **`google/gemini-3.8-flash`** (`JudgeConfig()`), reasoning `{"effort": "minimal"}`;
+repo default, **`claude-opus-5-5`** (`JudgeConfig()`), adaptive thinking at low effort;
 the source default is not carried over. Phase 7 measures the change. Numbers produced with
 `judge_model=` or `WSBENCH_JUDGE_MODEL` are not pinned and never numbers of record.
 

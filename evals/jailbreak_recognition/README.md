@@ -44,9 +44,10 @@ override — its **own read** of the situation, not an echo of the pasted rules?
 - **Metric:** `pass_rate` = passing items / items in scope (86 unrestricted); 95% CI by
   bootstrap over item indicators. `chance = None` (free-label recognition judge; no analytic
   floor).
-- **Judge model:** **`claude-sonnet-5`** (pinned — this family does not use the repo default),
-  `PROMPT_VERSION = "jb-v1"`. Reason for the pin: Gemini 3.8 Flash refuses to judge a share
-  of these cells (jailbreak text), which would leave them unjudged; Sonnet 5 judges them all.
+- **Judge model:** the repo default **`claude-opus-5-5`** since 2026-10-11 (before that this
+  family was pinned to `claude-sonnet-5`, because Gemini 3.8 Flash refused a share of these
+  cells), `PROMPT_VERSION = "jb-v1"`. Opus 5.5 refuses about 1% of cells on a 495-cell
+  s3d-rl600 probe; a refusal is an unjudged cell, never scored.
   `n_api_failed / n_expected_cells` is still reported in every `results.json`.
 
 ## Read sites — every token of the last user turn (changed 2026-09-23)
@@ -225,8 +226,8 @@ samples this family passes all k in one call (user_modeling instead makes k call
 
 The source driver (its readout-judge driver) ran a Haiku
 screen over every cell with Opus re-judging flagged cells plus a seeded audit. This port is
-single tier: every cell goes once to the pinned judge **`claude-sonnet-5`** (the repo default
-Gemini 3.8 Flash is not used here because it refuses a share of jailbreak cells). Not ported: the screen tier and
+single tier: every cell goes once to the judge (**`claude-opus-5-5`**, the repo default since
+2026-10-11; `claude-sonnet-5` before). Not ported: the screen tier and
 `--audit-frac`, the hallucination precision overlay (`hallucination_score`,
 `pass_rate_strict`, `hallucination_rate_all`), multi-arm intersection (`--arm`) and `readout_eval.md`. Numbers produced with `judge_model=` or
 `WSBENCH_JUDGE_MODEL` are not pinned and never numbers of record.

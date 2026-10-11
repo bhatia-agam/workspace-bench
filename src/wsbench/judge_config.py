@@ -6,7 +6,7 @@ from typing import Literal
 
 from wsbench.llm import route
 
-DEFAULT_JUDGE = "google/gemini-3.8-flash"
+DEFAULT_JUDGE = "claude-opus-5-5"  # Camila 2026-10-11: Opus 5.5 judges every family
 DEFAULT_REASONING = {"effort": "minimal"}  # Gemini cannot turn reasoning off
 ENV_OVERRIDE = "WSBENCH_JUDGE_MODEL"
 

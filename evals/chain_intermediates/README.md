@@ -61,7 +61,7 @@ wsbench judge family=chain_intermediates readouts=<arm>.jsonl out=outputs/<arm>/
 
 ## Judge prompts
 
-`prompt_version`: `chain-free-2026-09-16`. Judge: the repo default (`google/gemini-3.8-flash`),
+`prompt_version`: `chain-free-2026-09-16`. Judge: the repo default (`claude-opus-5-5`),
 temperature 0. Output schema: `{"states_value": bool, "values": [int, ...], "basis":
 "arithmetic" | "stated_result" | "numeral_bag" | "none", "quote": str}`.
 

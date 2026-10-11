@@ -396,12 +396,12 @@ def test_stage_sequencing_models_and_numbers(tmp_path, fake_llm, jargs):
     kinds = ["pre" if u.startswith("Return") else stage_of[s] for s, u in fake.calls]
     # one judge for every stage -> a single preflight
     assert kinds == ["pre"] + ["A"] * 3 + ["B"] * 60 + ["P"] * 3
-    assert {kw["model"] for kw in st["A"] + st["B"] + st["P"]} == {"google/gemini-3.8-flash"}
-    assert all(
-        kw["extra_body"]["reasoning"] == {"effort": "minimal"} for kw in st["A"] + st["B"] + st["P"]
-    )
+    assert {kw["model"] for kw in st["A"] + st["B"] + st["P"]} == {"claude-opus-5-5"}
+    # the default judge is on the Anthropic route: no OpenRouter reasoning block
+    assert all("reasoning" not in kw["extra_body"] for kw in st["A"] + st["B"] + st["P"])
     assert all("temperature" not in kw for kw in st["A"] + st["B"])
-    assert all(kw["temperature"] == 0.0 for kw in st["P"])
+    # the Anthropic route sends no sampling params (Opus 5.5 rejects them)
+    assert all("temperature" not in kw for kw in st["P"])
     assert all(kw["max_tokens"] == 16000 for kw in st["A"] + st["B"] + st["P"])
     # Stage B: 10 content tokens x 3 cells for the real pass and the foil pass each
     b_users = [kw["messages"][1]["content"] for kw in st["B"]]
@@ -436,7 +436,7 @@ def test_stage_sequencing_models_and_numbers(tmp_path, fake_llm, jargs):
     assert row["passed"] is True and row["foil_status"] == "missing_p"
     assert row["foil_precision"] is None and row["foil_recall_at_10"] == 0.0
     assert row["n_content_tokens"] == 10 and row["n_tokens"] == 10 and row["family"] == "chat"
-    assert res.config["extract_model"] == "google/gemini-3.8-flash"
+    assert res.config["extract_model"] == "claude-opus-5-5"
     assert res.config["stage_p_temperature"] == 0.0 and res.config["stage_p_foil"] is False
     # resume: everything cached, no calls
     fake2 = fake_llm(_responder)

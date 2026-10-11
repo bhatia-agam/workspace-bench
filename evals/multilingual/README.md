@@ -46,7 +46,7 @@ wsbench judge family=multilingual readouts=<arm>.jsonl out=outputs/<arm>/multili
 
 ## Judge prompts
 
-`prompt_version`: `bank-2026-10-10`. Judge: the repo default (`google/gemini-3.8-flash`),
+`prompt_version`: `bank-2026-10-10`. Judge: the repo default (`claude-opus-5-5`),
 temperature 0. The prompts below are sent verbatim (`wsbench.basic.prompts`, shared by every
 single-token basic family, plus this family's own strings). Output schema:
 `{"expressed": bool, "target": str, "quote": str}`.

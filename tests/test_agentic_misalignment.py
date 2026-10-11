@@ -27,13 +27,15 @@ from wsbench.evals.agentic_misalignment.prompts import (
     format_readouts,
     parse_design_score,
 )
-from wsbench.judge_config import resolve
-from wsbench.llm import JudgeConfigError
+from wsbench.judge_config import DEFAULT_JUDGE, JudgeConfig, resolve
+from wsbench.llm import JudgeConfigError, always_thinks
 from wsbench.mcjudge import load_bank
 
 ROOT = Path(__file__).resolve().parents[1]
 GOLDEN = json.loads((ROOT / "tests/golden/agentic_misalignment_prompts.json").read_text())
 GOLDEN_V2 = json.loads((ROOT / "tests/golden/agentic_misalignment_prompts_v2.json").read_text())
+# Stage A runs without thinking; a judge that cannot disable it (Opus 5.5) runs adaptive
+STAGE_A_THINKING = {"type": "adaptive"} if always_thinks(DEFAULT_JUDGE) else {"type": "disabled"}
 SCORING = json.loads((ROOT / "tests/golden/agentic_misalignment_scoring.json").read_text())
 EXAMPLE = ROOT / "examples/readouts/agentic_misalignment.jsonl"
 
@@ -92,13 +94,13 @@ def test_bank_shape():
 
 
 def test_spec_and_list(capsys):
-    assert SPEC.judge.model == "claude-sonnet-5" and SPEC.judge.reasoning is None
+    assert SPEC.judge.model == DEFAULT_JUDGE and SPEC.judge.reasoning is None
     assert SPEC.judge.prompt_version == "am-narrative-v1+am-design-v2" == prompts.PROMPT_VERSION
     assert SPEC.metric == "design_score" and SPEC.higher_is_better
     assert resolve(SPEC.judge, env={}).pinned and resolve(SPEC.judge, env={}).reasoning is None
     assert main(["list"]) == 0
     line = next(ln for ln in capsys.readouterr().out.splitlines() if "agentic_misalignment" in ln)
-    assert re.search(r"\b32\b", line) and "claude-sonnet-5" in line and "am-narrative-v1" in line
+    assert re.search(r"\b32\b", line) and DEFAULT_JUDGE in line and "am-narrative-v1" in line
 
 
 # ---------------------------------------------------------------- prompts / helpers
@@ -352,7 +354,7 @@ def _label_in(text: str) -> str:
 def _responder(user, kw):
     stage = stage_of(user)
     if stage == "A":
-        assert kw["thinking"] == {"type": "disabled"} and kw["max_tokens"] == 400
+        assert kw["thinking"] == STAGE_A_THINKING and kw["max_tokens"] == 400
         tag = tag_of(user)
         if tag == f"{EX}:L20:p1":
             return None  # api failure -> EX skips B and C
@@ -620,7 +622,11 @@ def test_stride_and_layers(tmp_path, fake_text, am_args):
 def test_non_claude_judge_raises(tmp_path, fake_text, am_args, mk_args, monkeypatch):
     fake_text(_responder)
     monkeypatch.setenv("OPENROUTER_API_KEY", "sk-or-test")
-    args = mk_args(_scripted(tmp_path), items=[RH])  # the repo default judge (Gemini)
+    args = mk_args(
+        _scripted(tmp_path),
+        items=[RH],
+        judge=resolve(JudgeConfig(model="google/gemini-3.8-flash"), env={}),
+    )  # a non-claude judge
     assert args.judge.model != SPEC.judge.model
     with pytest.raises(JudgeConfigError, match="claude-"):
         judge.run(args)

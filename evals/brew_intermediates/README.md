@@ -78,7 +78,7 @@ wsbench judge family=brew_intermediates readouts=<arm>.jsonl out=outputs/<arm>/b
 
 ## Judge prompts
 
-`prompt_version`: `brew-2026-09-16`. Judge: the repo default (`google/gemini-3.8-flash`),
+`prompt_version`: `brew-2026-09-16`. Judge: the repo default (`claude-opus-5-5`),
 temperature 0. Output schema: `{"named": [colour, ...], "primary": colour | "none", "basis":
 "explicit" | "implied" | "none"}` over the palette ['gray', 'pink', 'blue', 'black', 'brown', 'white', 'red', 'green', 'purple', 'gold', 'orange', 'teal'].
 

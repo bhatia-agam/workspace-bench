@@ -3,14 +3,14 @@
 
 from pathlib import Path
 
-from wsbench.judge_config import JudgeConfig
+from wsbench.judge_config import DEFAULT_JUDGE, JudgeConfig
 from wsbench.registry import EvalSpec, register
 
 from . import judge
 from .prompts import PROMPT_VERSION
 
 # judge of record; one of the repo's two non-default pins (jailbreak_recognition is the other)
-JUDGE_MODEL = "claude-sonnet-5"
+JUDGE_MODEL = DEFAULT_JUDGE
 
 SPEC = register(
     EvalSpec(

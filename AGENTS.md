@@ -83,8 +83,9 @@ indices and need re-capturing.
 
 Two things are model-specific no matter what the gate says. Read positions are token indices, so
 any re-capture needs the new model's tokenizer. And the prompt-only and lucky-guessing floors in
-`evals/baselines/` were measured with Qwen3.6-27B and Gemini 3.8 Flash; re-measure them if you
-change either.
+`evals/baselines/` were measured with Qwen3.6-27B and Gemini 3.8 Flash (the judge until
+2026-10-11); they are being re-measured under Claude Opus 5.5. Re-measure them if you change
+either.
 
 ## Measured: two other models on the two model-specific families
 

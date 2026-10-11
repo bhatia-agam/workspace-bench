@@ -13,7 +13,7 @@ def test_family_default():
     assert r.model == DEFAULT_JUDGE
     assert r.source == "family"
     assert r.pinned is True
-    assert r.reasoning == DEFAULT_REASONING
+    assert r.reasoning is None  # Anthropic route: no OpenRouter reasoning block
 
 
 def test_precedence_flag_over_env_over_family():

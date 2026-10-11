@@ -4,8 +4,8 @@ Evals of whether an activation-reading lens surfaces what Qwen3.6-27B computes b
 writes. A lens reads the model's residual stream at a token position and produces either prose
 (an "O-lens": sampled sentences) or a top-10 token bag (a "J-lens": tokens with scores). Each eval
 pairs a frozen item bank with a judge that checks whether the readout carries the latent the item
-was built around, without echoing the prompt. Judging is Gemini 3.8 Flash via OpenRouter,
-except two families pinned to Claude and six scored by regex (see [Judges](#judges)). Judging
+was built around, without echoing the prompt. Judging is Claude Opus 5.5 (Anthropic) for every
+judged family, and six families are scored by regex (see [Judges](#judges)). Judging
 is the contract: a lens producer hands over one JSONL readout file per (family, arm) and
 `wsbench` scores it. The optional `wsbench produce` (the `gpu` extra) can generate those
 readouts for you.
@@ -30,9 +30,9 @@ uv run pytest -q                 # offline, no key needed
 uv run wsbench list              # per family: group, items, metric, judge, prompt version, calls/arm (approx), credit
 ```
 
-Keys are read from the environment (export them, never commit them): `OPENROUTER_API_KEY=sk-or-...`
-for every Gemini family, `ANTHROPIC_API_KEY` for the two Claude-pinned ones (or, with no key, `ANTHROPIC_PROFILE=<name>` to
-use an `ant auth login` profile).
+Keys are read from the environment (export them, never commit them): `ANTHROPIC_API_KEY` for
+the default judge (or, with no key, `ANTHROPIC_PROFILE=<name>` to use an `ant auth login`
+profile); `OPENROUTER_API_KEY=sk-or-...` only for a non-`claude-*` override or `wsbench capable`.
 
 ### Score one arm end to end
 
@@ -275,46 +275,50 @@ number, and what has made an item harder so far.
 
 ## Judges
 
-Every family runs on `google/gemini-3.8-flash` except two pins: **agentic_misalignment** stays on
-`claude-sonnet-5` (its judge of record, no Gemini agreement data) and **jailbreak_recognition**
-on `claude-sonnet-5` (Gemini refuses to judge a share of jailbreak cells). The prompt version is
+Every judged family runs on `claude-opus-5-5` (Camila, 2026-10-11; until then the default was
+`google/gemini-3.8-flash` via OpenRouter, with agentic_misalignment and jailbreak_recognition
+pinned to `claude-sonnet-5`). Opus 5.5 cannot turn thinking off: calls that ran without thinking
+send adaptive thinking at low effort, and no sampling parameters are sent. Opus 5.5
+refuses some cells (its safety classifiers) (a refusal is a failed call: never scored, counted unjudged); on
+s3d-rl600 that was about 7% of agentic Stage A positions and 1% of jailbreak cells. Numbers
+judged before 2026-10-11 are a different instrument. The prompt version is
 the instrument: bump it on any prompt edit, and a frozen baseline only applies to a matching
 version. The six multi-token families (`*_mt`, `multilingual_multihop`, `multilingual_typo`)
 are scored by the **regex** contract since 2026-09-23 (Camila: "regex on the multitoken please") —
 no call on prose readouts; token bags are first interpreted by the shared summarizer (`interp-v1`,
-`google/gemini-3.8-flash`, cached), which is the instrument for those arms
+`claude-opus-5-5`, cached), which is the instrument for those arms
 (`mt-regex-summarized-2026-09-23`). Their forced-choice judge of 2026-09-16 is `opts=judge=mc` and
 never pinned.
 
 | family | judge model | prompt version |
 |---|---|---|
-| agentic_misalignment | claude-sonnet-5 | am-narrative-v1+am-design-v2 |
-| arithmetic_intermediates | google/gemini-3.8-flash | arith-free-2026-09-23 (frozen cell) / arith-free-batched-2026-09-23 (`cells=all`, one call per item and layer) |
-| association | google/gemini-3.8-flash | bank-2026-10-10 |
-| basic_readout | google/gemini-3.8-flash | bank-2026-10-10 |
-| basic_readout_mt | regex; token bags via the summarizer (google/gemini-3.8-flash) | mt-regex-2026-09-23 (token bags: mt-regex-summarized-2026-09-23) |
-| brew_intermediates | google/gemini-3.8-flash | brew-2026-09-16 |
-| buggy_code | google/gemini-3.8-flash | buggy-score-2026-09-23 |
-| chain_intermediates | google/gemini-3.8-flash | chain-free-2026-09-16 |
-| conjunctive_association | google/gemini-3.8-flash | comp-v1 |
-| directed_modulation | google/gemini-3.8-flash | dm-2026-09-16 |
-| hallucination | google/gemini-3.8-flash | v5c-chat |
-| jailbreak_recognition | claude-sonnet-5 | jb-v1 |
-| jlens_concept_pr | google/gemini-3.8-flash | jlens-pr-v2 |
-| moral_rationale | google/gemini-3.8-flash | ec-v3 |
-| multi_concept_directed_modulation | google/gemini-3.8-flash | mcdm-2026-09-16 |
-| multihop | google/gemini-3.8-flash | bank-2026-10-10 |
-| multihop_mt | regex; token bags via the summarizer (google/gemini-3.8-flash) | mt-regex-2026-09-23 (token bags: mt-regex-summarized-2026-09-23) |
-| multilingual | google/gemini-3.8-flash | bank-2026-10-10 |
-| multilingual_mt | regex; token bags via the summarizer (google/gemini-3.8-flash) | mt-regex-2026-09-23 (token bags: mt-regex-summarized-2026-09-23) |
-| multilingual_multihop | regex; token bags via the summarizer (google/gemini-3.8-flash) | mt-regex-2026-09-23 (token bags: mt-regex-summarized-2026-09-23) |
-| multilingual_typo | regex; token bags via the summarizer (google/gemini-3.8-flash) | mt-regex-2026-09-23 (token bags: mt-regex-summarized-2026-09-23) |
-| poetry | google/gemini-3.8-flash | bank-2026-10-10 |
-| relational_multihop | google/gemini-3.8-flash | rel-v1 |
-| role_bound_association | google/gemini-3.8-flash | oa-v1 |
-| typo | google/gemini-3.8-flash | bank-2026-10-10 |
-| typo_mt | regex; token bags via the summarizer (google/gemini-3.8-flash) | mt-regex-2026-09-23 (token bags: mt-regex-summarized-2026-09-23) |
-| user_modeling | google/gemini-3.8-flash | um-v2 |
+| agentic_misalignment | claude-opus-5-5 | am-narrative-v1+am-design-v2 |
+| arithmetic_intermediates | claude-opus-5-5 | arith-free-2026-09-23 (frozen cell) / arith-free-batched-2026-09-23 (`cells=all`, one call per item and layer) |
+| association | claude-opus-5-5 | bank-2026-10-10 |
+| basic_readout | claude-opus-5-5 | bank-2026-10-10 |
+| basic_readout_mt | regex; token bags via the summarizer (claude-opus-5-5) | mt-regex-2026-09-23 (token bags: mt-regex-summarized-2026-09-23) |
+| brew_intermediates | claude-opus-5-5 | brew-2026-09-16 |
+| buggy_code | claude-opus-5-5 | buggy-score-2026-09-23 |
+| chain_intermediates | claude-opus-5-5 | chain-free-2026-09-16 |
+| conjunctive_association | claude-opus-5-5 | comp-v1 |
+| directed_modulation | claude-opus-5-5 | dm-2026-09-16 |
+| hallucination | claude-opus-5-5 | v5c-chat |
+| jailbreak_recognition | claude-opus-5-5 | jb-v1 |
+| jlens_concept_pr | claude-opus-5-5 | jlens-pr-v2 |
+| moral_rationale | claude-opus-5-5 | ec-v3 |
+| multi_concept_directed_modulation | claude-opus-5-5 | mcdm-2026-09-16 |
+| multihop | claude-opus-5-5 | bank-2026-10-10 |
+| multihop_mt | regex; token bags via the summarizer (claude-opus-5-5) | mt-regex-2026-09-23 (token bags: mt-regex-summarized-2026-09-23) |
+| multilingual | claude-opus-5-5 | bank-2026-10-10 |
+| multilingual_mt | regex; token bags via the summarizer (claude-opus-5-5) | mt-regex-2026-09-23 (token bags: mt-regex-summarized-2026-09-23) |
+| multilingual_multihop | regex; token bags via the summarizer (claude-opus-5-5) | mt-regex-2026-09-23 (token bags: mt-regex-summarized-2026-09-23) |
+| multilingual_typo | regex; token bags via the summarizer (claude-opus-5-5) | mt-regex-2026-09-23 (token bags: mt-regex-summarized-2026-09-23) |
+| poetry | claude-opus-5-5 | bank-2026-10-10 |
+| relational_multihop | claude-opus-5-5 | rel-v1 |
+| role_bound_association | claude-opus-5-5 | oa-v1 |
+| typo | claude-opus-5-5 | bank-2026-10-10 |
+| typo_mt | regex; token bags via the summarizer (claude-opus-5-5) | mt-regex-2026-09-23 (token bags: mt-regex-summarized-2026-09-23) |
+| user_modeling | claude-opus-5-5 | um-v2 |
 
 - Override precedence: `judge_model=` flag > `WSBENCH_JUDGE_MODEL` env > the family pin.
 - `pinned_instrument` is true only when the resolved model equals the family pin; a result
@@ -363,8 +367,8 @@ verdicts in `<out>/<family>/cells.jsonl`, so a re-run only pays for what is miss
 
 - **Qwen3.6-27B** (Alibaba) — the model being read; every bank's rollouts and responses are its
   outputs (see the model card for its licence).
-- **Judge models** — Gemini 3.8 Flash via OpenRouter (default judge), Claude Sonnet 5 (Anthropic;
-  agentic_misalignment and jailbreak_recognition). API terms only; no model outputs are
+- **Judge models** — Claude Opus 5.5 (Anthropic; the judge of every family since 2026-10-11;
+  earlier results used Gemini 3.8 Flash via OpenRouter and Claude Sonnet 5). API terms only; no model outputs are
   redistributed as data.
 - **Agentic misalignment** — Lynch et al. 2025, *Agentic Misalignment: How LLMs Could Be Insider
   Threats* (Anthropic, arXiv:2510.05179); code and prompt templates from

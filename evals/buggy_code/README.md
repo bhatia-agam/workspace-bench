@@ -81,7 +81,7 @@ wsbench judge family=buggy_code readouts=<arm>.jsonl out=outputs/<arm>/buggy_cod
 
 ## Judge prompts
 
-`prompt_version`: `buggy-score-2026-09-23`. Judge: the repo default (`google/gemini-3.8-flash`),
+`prompt_version`: `buggy-score-2026-09-23`. Judge: the repo default (`claude-opus-5-5`),
 temperature 0, both stages. Stage A schema: `{"claim": "bug|correct|none", "inferred": str,
 "quote": str}`; Stage B schema: `{"score": int 1-10, "why": str}`. Stage B's user message is
 `GRADE_USER` with `CAUSE_LINE` (and `BUG_LINE` on buggy items) spliced in when the item has a

@@ -16,9 +16,11 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
 `<gen_dir>/<label>/L###.jsonl` layout (id = directory name, layer = filename).
 
 ## Judge layer (`llm.py`, `judge_config.py`)
-- Default judge `google/gemini-3.8-flash` via OpenRouter, reasoning `{"effort": "minimal"}`.
-  Pins: agentic_misalignment + jailbreak_recognition -> `claude-sonnet-5` (reasons: README
-  §Judges and the family READMEs). jlens runs all three stages on the default judge.
+- Default judge `claude-opus-5-5` (Anthropic) for every family, agentic and jailbreak included
+  (Camila 2026-10-11; before that Gemini 3.8 Flash via OpenRouter + Sonnet 5 pins). Opus 5.5
+  cannot disable thinking: `llm.always_thinks` models get adaptive thinking + low effort where a
+  call ran without thinking. jlens runs all three stages on the default judge. Tests script
+  OpenRouter-shaped fakes; `tests/conftest.py` routes them through the OpenRouter path.
 - Override precedence and what `pinned_instrument` means: README §Judges (the bullets under
   the table); not restated here.
 - Routes by model id: `claude-*` -> Anthropic SDK (`ANTHROPIC_API_KEY`, or with no key and
