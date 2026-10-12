@@ -2080,9 +2080,9 @@
    "name": "br-imp-cardgame",
    "subfamily": "implicit",
    "prompt": "What is your favorite card game? Answer in one word.",
-   "target": "poker",
+   "target": "chess",
    "intermediates": [
-    "poker"
+    "chess"
    ],
    "units": [
     {
@@ -2090,7 +2090,7 @@
      "lang": "en",
      "headline": true,
      "match": [
-      "poker"
+      "chess"
      ]
     }
    ],
@@ -2109,9 +2109,9 @@
    "name": "br-imp-cartoonchara",
    "subfamily": "implicit",
    "prompt": "What is your favorite cartoon character? Answer in one word.",
-   "target": "spongebob",
+   "target": "snoopy",
    "intermediates": [
-    "spongebob"
+    "snoopy"
    ],
    "units": [
     {
@@ -2119,7 +2119,7 @@
      "lang": "en",
      "headline": true,
      "match": [
-      "spongebob"
+      "snoopy"
      ]
     }
    ],
@@ -2138,9 +2138,9 @@
    "name": "br-imp-chesspiece",
    "subfamily": "implicit",
    "prompt": "What is your favorite chess piece? Answer in one word.",
-   "target": "queen",
+   "target": "knight",
    "intermediates": [
-    "queen"
+    "knight"
    ],
    "units": [
     {
@@ -2148,7 +2148,7 @@
      "lang": "en",
      "headline": true,
      "match": [
-      "queen"
+      "knight"
      ]
     }
    ],
@@ -2225,9 +2225,9 @@
    "name": "br-imp-dayoftheweek",
    "subfamily": "implicit",
    "prompt": "What is your favorite day of the week? Answer in one word.",
-   "target": "friday",
+   "target": "saturday",
    "intermediates": [
-    "friday"
+    "saturday"
    ],
    "units": [
     {
@@ -2235,7 +2235,7 @@
      "lang": "en",
      "headline": true,
      "match": [
-      "friday"
+      "saturday"
      ]
     }
    ],
@@ -2312,9 +2312,9 @@
    "name": "br-imp-icecreamflav",
    "subfamily": "implicit",
    "prompt": "What is your favorite ice cream flavor? Answer in one word.",
-   "target": "chocolate",
+   "target": "vanilla",
    "intermediates": [
-    "chocolate"
+    "vanilla"
    ],
    "units": [
     {
@@ -2322,7 +2322,7 @@
      "lang": "en",
      "headline": true,
      "match": [
-      "chocolate"
+      "vanilla"
      ]
     }
    ],
@@ -2341,9 +2341,9 @@
    "name": "br-imp-kindofcookie",
    "subfamily": "implicit",
    "prompt": "What is your favorite kind of cookie? Answer in one word.",
-   "target": "chocolate",
+   "target": "chocolate-chip",
    "intermediates": [
-    "chocolate"
+    "chocolate-chip"
    ],
    "units": [
     {
@@ -2351,7 +2351,7 @@
      "lang": "en",
      "headline": true,
      "match": [
-      "chocolate"
+      "chocolate-chip"
      ]
     }
    ],
@@ -2399,9 +2399,9 @@
    "name": "br-imp-kindofweathe",
    "subfamily": "implicit",
    "prompt": "What is your favorite kind of weather? Answer in one word.",
-   "target": "sunny",
+   "target": "rainy",
    "intermediates": [
-    "sunny"
+    "rainy"
    ],
    "units": [
     {
@@ -2409,7 +2409,7 @@
      "lang": "en",
      "headline": true,
      "match": [
-      "sunny"
+      "rainy"
      ]
     }
    ],
@@ -2428,9 +2428,9 @@
    "name": "br-imp-moviegenre",
    "subfamily": "implicit",
    "prompt": "What is your favorite movie genre? Answer in one word.",
-   "target": "sci-fi",
+   "target": "science",
    "intermediates": [
-    "sci-fi"
+    "science"
    ],
    "units": [
     {
@@ -2438,7 +2438,7 @@
      "lang": "en",
      "headline": true,
      "match": [
-      "sci-fi"
+      "science"
      ]
     }
    ],
@@ -2573,9 +2573,9 @@
    "name": "br-imp-typeofmusic",
    "subfamily": "implicit",
    "prompt": "What is your favorite type of music? Answer in one word.",
-   "target": "jazz",
+   "target": "classical",
    "intermediates": [
-    "jazz"
+    "classical"
    ],
    "units": [
     {
@@ -2583,7 +2583,7 @@
      "lang": "en",
      "headline": true,
      "match": [
-      "jazz"
+      "classical"
      ]
     }
    ],
@@ -2747,9 +2747,9 @@
    "name": "br-imp-pet",
    "subfamily": "implicit",
    "prompt": "What is your favorite pet? Answer in one word.",
-   "target": "dog",
+   "target": "cat",
    "intermediates": [
-    "dog"
+    "cat"
    ],
    "units": [
     {
@@ -2757,7 +2757,7 @@
      "lang": "en",
      "headline": true,
      "match": [
-      "dog"
+      "cat"
      ]
     }
    ],
@@ -2805,9 +2805,9 @@
    "name": "br-imp-typeofbird",
    "subfamily": "implicit",
    "prompt": "What is your favorite type of bird? Answer in one word.",
-   "target": "owl",
+   "target": "hummingbird",
    "intermediates": [
-    "owl"
+    "hummingbird"
    ],
    "units": [
     {
@@ -2815,7 +2815,7 @@
      "lang": "en",
      "headline": true,
      "match": [
-      "owl"
+      "hummingbird"
      ]
     }
    ],
@@ -2834,9 +2834,9 @@
    "name": "br-imp-typeofdance",
    "subfamily": "implicit",
    "prompt": "What is your favorite type of dance? Answer in one word.",
-   "target": "salsa",
+   "target": "ballet",
    "intermediates": [
-    "salsa"
+    "ballet"
    ],
    "units": [
     {
@@ -2844,7 +2844,7 @@
      "lang": "en",
      "headline": true,
      "match": [
-      "salsa"
+      "ballet"
      ]
     }
    ],
@@ -2921,9 +2921,9 @@
    "name": "br-imp-dessert",
    "subfamily": "implicit",
    "prompt": "What is your favorite dessert? Answer in one word.",
-   "target": "chocolate",
+   "target": "cheesecake",
    "intermediates": [
-    "chocolate"
+    "cheesecake"
    ],
    "units": [
     {
@@ -2931,7 +2931,7 @@
      "lang": "en",
      "headline": true,
      "match": [
-      "chocolate"
+      "cheesecake"
      ]
     }
    ],
@@ -2950,9 +2950,9 @@
    "name": "br-imp-fruit",
    "subfamily": "implicit",
    "prompt": "What is your favorite fruit? Answer in one word.",
-   "target": "apple",
+   "target": "grapes",
    "intermediates": [
-    "apple"
+    "grapes"
    ],
    "units": [
     {
@@ -2960,7 +2960,7 @@
      "lang": "en",
      "headline": true,
      "match": [
-      "apple"
+      "grapes"
      ]
     }
    ],
@@ -2979,9 +2979,9 @@
    "name": "br-imp-season",
    "subfamily": "implicit",
    "prompt": "What is your favorite season? Answer in one word.",
-   "target": "autumn",
+   "target": "spring",
    "intermediates": [
-    "autumn"
+    "spring"
    ],
    "units": [
     {
@@ -2989,7 +2989,7 @@
      "lang": "en",
      "headline": true,
      "match": [
-      "autumn"
+      "spring"
      ]
     }
    ],
@@ -3004,5 +3004,6 @@
     ]
    }
   }
- ]
+ ],
+ "v4_port": "V4-Flash content (wsbench_v4_content.py): 100 -> 100 items"
 }
