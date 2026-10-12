@@ -9,6 +9,7 @@ from wsbench.llm import route
 DEFAULT_JUDGE = "google/gemini-3.8-flash"
 DEFAULT_REASONING = {"effort": "minimal"}  # Gemini cannot turn reasoning off
 ENV_OVERRIDE = "WSBENCH_JUDGE_MODEL"
+ANTHROPIC_EFFORT_ENV = "WSBENCH_ANTHROPIC_EFFORT"  # output_config.effort, recorded as reasoning
 
 
 @dataclass(frozen=True)
@@ -42,6 +43,8 @@ def resolve(
         reasoning: dict | None = config.reasoning
     elif route(model) == "openrouter":
         reasoning = dict(DEFAULT_REASONING)
+    elif env.get(ANTHROPIC_EFFORT_ENV):  # Anthropic route: optional output_config.effort
+        reasoning = {"effort": env[ANTHROPIC_EFFORT_ENV]}
     else:
         reasoning = None
     return ResolvedJudge(

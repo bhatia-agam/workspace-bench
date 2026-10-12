@@ -60,12 +60,21 @@ def route(model: str) -> Route:
     return "anthropic" if model.startswith("claude-") else "openrouter"
 
 
+# Models that reject ``thinking: {"type": "disabled"}`` at every effort: "thinking off" becomes
+# thinking omitted + low effort there.
+_NO_THINKING_OFF = ("claude-opus-5-5", "claude-fable-5", "claude-sonnet-5-5")
+
+
+def thinking_can_be_disabled(model: str) -> bool:
+    return not model.startswith(_NO_THINKING_OFF)
+
+
 def api_key(model: str) -> str:
+    """The Anthropic route returns "" when ANTHROPIC_API_KEY is unset: the SDK then resolves
+    credentials itself (an ``ant auth login`` profile, WIF, ...); a missing credential surfaces
+    as a fatal 401 on the first call, which the preflight catches."""
     if route(model) == "anthropic":
-        key = os.environ.get("ANTHROPIC_API_KEY", "")
-        if not key:
-            raise JudgeConfigError(f"ANTHROPIC_API_KEY is missing (needed for {model})")
-        return key
+        return os.environ.get("ANTHROPIC_API_KEY", "")
     key = os.environ.get("OPENROUTER_API_KEY", "")
     if not key.startswith("sk-or-"):
         raise JudgeConfigError("OPENROUTER_API_KEY is missing or not an OpenRouter key (sk-or-…)")
@@ -134,7 +143,9 @@ def _make_client(route: str, key: str) -> Any:
     if route == "anthropic":
         from anthropic import AsyncAnthropic
 
-        return AsyncAnthropic(api_key=key, max_retries=0)
+        if key:
+            return AsyncAnthropic(api_key=key, max_retries=0)
+        return AsyncAnthropic(max_retries=0)  # profile / WIF auto-discovery
     from openai import AsyncOpenAI
 
     return AsyncOpenAI(api_key=key, base_url=OPENROUTER, max_retries=0)
@@ -202,17 +213,21 @@ async def _anthropic_once(
     *,
     schema: dict[str, Any],
     model: str,
+    reasoning: dict[str, Any] | None,
     max_tokens: int,
     timeout: float,
     spend: Spend,
 ) -> dict[str, Any] | None:
+    output_config: dict[str, Any] = {"format": {"type": "json_schema", "schema": schema["schema"]}}
+    if reasoning and reasoning.get("effort"):
+        output_config["effort"] = reasoning["effort"]
     resp = await client.messages.create(
         timeout=timeout,
         model=model,
         max_tokens=max_tokens,
         system=[{"type": "text", "text": system, "cache_control": {"type": "ephemeral"}}],
         messages=[{"role": "user", "content": user}],
-        output_config={"format": {"type": "json_schema", "schema": schema["schema"]}},
+        output_config=output_config,
     )
     spend.calls += 1
     usage = getattr(resp, "usage", None)
@@ -262,6 +277,7 @@ async def _one(
                     user,
                     schema=schema,
                     model=model,
+                    reasoning=reasoning,
                     max_tokens=max_tokens,
                     timeout=timeout,
                     spend=spend,
@@ -457,12 +473,18 @@ async def _anthropic_text_once(
 ) -> str | None:
     budget = max_tokens
     while True:
+        if thinking:
+            mode: dict[str, Any] = {"thinking": {"type": "adaptive"}}
+        elif thinking_can_be_disabled(model):
+            mode = {"thinking": {"type": "disabled"}}
+        else:  # thinking cannot be turned off on this model: the nearest is low effort
+            mode = {"output_config": {"effort": "low"}}
         async with client.messages.stream(
             timeout=timeout,
             model=model,
             max_tokens=budget,
-            thinking={"type": "adaptive" if thinking else "disabled"},
             messages=[{"role": "user", "content": user}],
+            **mode,
         ) as stream:
             resp = await stream.get_final_message()
         spend.calls += 1
