@@ -282,8 +282,17 @@ def null_sets(items: list[dict[str, Any]]) -> None:
             print(f"  warn: {it['name']} has a null pool of {len(pool)} (< 8)", file=sys.stderr)
 
 
+# a twin-only variant is drawn through its partner's generator
+TWIN_DRAW = {"signpair": "absval", "subsubx": "subsub"}
+
+
 def gen_arith(n: int, rng: random.Random, tag: str, variants: list[str]) -> list[dict]:
-    units = [v for v in variants if v != "signpair" and v != "subsubx"]
+    """Exactly `n` items (fewer only if the draw budget runs out), every one of a requested
+    variant. A twin draw (absval/signpair, subsub/subsubx, frac/frac) keeps both twins only
+    when both are requested and both fit under `n`; a kept single twin gets `pair: null`.
+    Every item carries `pair` (twin name or null), as item-schema.md specifies."""
+    want = set(variants)
+    units = list(dict.fromkeys(TWIN_DRAW.get(v, v) for v in variants))
     out: list[dict[str, Any]] = []
     seen: set[str] = set()
     counters: dict[str, int] = {}
@@ -292,11 +301,17 @@ def gen_arith(n: int, rng: random.Random, tag: str, variants: list[str]) -> list
         tries += 1
         v = units[len(out) % len(units)] if tries % 3 else rng.choice(units)
         got = gen_unit(v, rng)
+        if not got:
+            continue
+        got = [g for g in got if g["variant"] in want]
+        if len(got) > n - len(out):
+            got = got[: n - len(out)]
         if not got or any(g["expr"] in seen or g["prompt"] in EXCLUDE for g in got):
             continue
         for g in got:
             counters[g["variant"]] = counters.get(g["variant"], 0) + 1
             g["name"] = f"{tag}-{g['variant']}-{counters[g['variant']]:03d}"
+            g["pair"] = None
             seen.add(g["expr"])
         if len(got) == 2:
             got[0]["pair"], got[1]["pair"] = got[1]["name"], got[0]["name"]

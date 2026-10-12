@@ -30,13 +30,17 @@ and `G` is
 
 - **Generate (LLM).** Prompt rule: "a `Fact: ...` sentence whose answer needs one silent hop
   through a famous BRIDGE entity that is never named in the prompt, ending exactly where the
-  one-word answer comes next (no trailing space). The bridge must not be the answer and the
+  one-word answer comes next. The bridge must not be the answer and the
   answer must not appear in the prompt." Fields: `prompt`, `target` (the one-word answer),
   `bridge`. Prefer relation types that sample robustly (capital, language, currency,
   continent, ocean, river, chemical symbol, author of, birthplace); avoid counting and
   letter-position hops. Assemble: `intermediates: [bridge]`, `target`, `source`,
-  `eval_render: "plain"`, `readout: {"kind": "last_word_token", "offsets": [-1]}` (`-2` when
-  the prompt ends with a space; `gate_hf.py` re-derives it for the subject tokenizer).
+  `eval_render: "plain"`, `readout: {"kind": "last_word_token", "offsets": [-1]}`. A
+  trailing space is ALLOWED (33 frozen items end in one, with `offsets: [-2]` so the read
+  site is the last word, not the bare space token); `gate_hf.py` re-derives the offset for
+  the subject tokenizer and `validate_bank.py --tokenizer` errors on a read site that is
+  whitespace. The `kind` label is cosmetic: the read plan treats `last_word_token` and
+  `final_prompt_token` identically (only `offsets` matters).
 - **Guards.** bridge != target; neither bridge nor target (nor an alias/translation of the
   bridge) in the prompt (*lint*, folded word-boundary); prompt starts with `Fact:`; one correct
   answer; dedupe on prompt and on target|bridge (*lint* warns on repeated latents and
@@ -59,6 +63,11 @@ and `G` is
 - **Gate.** capability question = `Continue this text...` + prompt; gold = `target`.
 - **Note.** The scored latent is the bridge, but the gate checks only the surface answer:
   pick bridges the answer cannot be produced without.
+- **Difficulty on small subjects.** Gating on a <= 2B model keeps only the easiest relation
+  templates (a 0.8B test kept 14 of 47 candidates, every bridge a country, 3 templates
+  covering half the set). Author across diverse relation types AND bridge types (country,
+  city, person, element, work, organism), run `wave_report.py mix` on the gated bank, and
+  report its template / latent mix next to any score (references/weak-model.md).
 
 ### multilingual
 
@@ -171,9 +180,11 @@ Common to all six (source: the hard-tier generator and its lint):
     whole-form match, and no form word of >= 4 letters (minus stopwords) among the prompt's words;
   - `match` == sorted flatten of `forms`; allowed form keys `{L2, en, zh}` when the family has a
     language, else `{en}` only;
-  - every non-zh form of a required multi-token unit has strict token count > 1 (the count is
-    min over {form, lower, title} x {bare, " "+form}); zh forms are exempt but dropped at
-    scoring when single-token;
+  - EVERY non-zh form of a required multi-token unit has strict token count > 1 (the count is
+    min over {form, lower, title} x {bare, " "+form}); *lint*, an ERROR per offending form
+    ("Austria" as a form is never creditable, so drop it rather than rely on another form);
+    zh forms are exempt but dropped at scoring when single-token;
+  - `mc[role].gold` is one of that unit's forms and is itself multi-token (*lint*);
   - cross-language collision: no form in one language may match a form of another language of
     the same concept after folding (catches Mars/Mars, México/Mexico; not differently spelt
     cognates, so check those by eye);
@@ -191,8 +202,9 @@ Common to all six (source: the hard-tier generator and its lint):
   only with exactly 4.
 - **Gate.** capability question per family (gating.md); bridges asked separately and graded
   against `bridges[].answers` only; every leg greedy-correct and >= 8/10.
-- **Finalize.** `consistency` = hits/10, `consistency_strict`, `consistency_greedy`,
-  `bridge_consistency`, `gate_variant: "chat"`, `probe_token_lens` stamped with the reading
+- **Finalize.** `consistency` = hits/10, `consistency_strict` (hits/10 by the deterministic
+  matcher alone, no LLM-grader rescue), `consistency_greedy`, `bridge_consistency`,
+  `gate_variant: "chat"` (`gate_hf.py` stamps all five), `probe_token_lens` stamped with the reading
   model's tokenizer (`gate_hf.py` does it), header `contract` copied from the frozen bank,
   `gate`, `frozen`. Quotas of the frozen banks: multihop_mt 2hop 65 / 3hop 30 / computed 5
   (computed was not viable); typo_mt novel 50 / realword 35 / arith 15; basic_readout_mt entity
@@ -203,7 +215,14 @@ Common to all six (source: the hard-tier generator and its lint):
 `bridge1`, 3hop `bridge1` + `bridge2`; `bridgeN.forms` = `{"en": [full multi-word name, ...]}`;
 `bridges[i] = {"question": "<English question whose answer is the bridge>", "units":
 ["bridgeN"], "answers": [every short way to name it, plus the forms]}`; `target`/`target_alts`
-= the next word(s). Apply the LEAK RULE strictly to category nouns.
+= the next word(s). Apply the LEAK RULE strictly to category nouns. *Lint* (ERROR): a bridge
+form may not contain, or be contained in, the target or a target_alt ("Thomas Edison" vs
+target "Thomas"; "Constantinople" vs alt "Baldwin I of Constantinople"), since a readout of
+the answer would credit the bridge; and no bridge `answers` entry may occur in its own
+`question` (a chained bridge2 question that names bridge1 must drop the shared short alias,
+e.g. "Barnard" from the answers of "Which astronomer is Barnard's Star named after?"). Three
+frozen multihop_mt items and one multilingual_multihop item trip these checks; they are
+known defects of the frozen bank, not a reason to relax the lint.
 
 ### multilingual_mt
 L2 description of a concrete object/animal/plant/tool/phenomenon; `target` = the L2 noun

@@ -39,6 +39,9 @@ grading free-form gate answers. Supply keys through the environment only
 | `scripts/gate_hf.py` | gate a candidate bank on an open-weights HF model; writes the passers stamped for that subject |
 | `scripts/moral_gate.py` | moral_rationale per-subject golds: elicit -> distil (LLM or your own file) -> commit -> gate |
 | `scripts/buggy_gate.py` | buggy_code: `verify` (execute both twins, fill `verified`) and `gate` (predicts the consequence, never volunteers the bug, no output leak) |
+| `scripts/merge_gated.py` | pool several gated waves of one family: summed candidate/pass counts for the OOC/cap decision, one deduped bank |
+| `scripts/wave_report.py` | `mix`: template / relation / latent mix and shared entities of a bank (fails over a cap); `fails`: failure pattern per item of a gated wave, to steer the next wave |
+| `references/weak-model.md` | calibrating to a NEW or WEAK subject: pilot probe, easier-but-valid knobs per family, diversity caps, adaptive waves, stopping rules, worked 0.8B/2B example |
 | `scripts/modal_gate.py` | OPTIONAL wrapper that runs `gate_hf.py` on a Modal GPU from your own Modal account |
 
 ## The workflow (every family)
@@ -46,13 +49,16 @@ grading free-form gate answers. Supply keys through the environment only
 ```
 0. read      evals/<family>/README.md and references/families.md#<family>
 1. generate  candidates  ->  cand/<family>.json   (generator, or LLM authoring + your guards)
-1b. stamp    multi-token families, multihop, brew only:
+1b. stamp    multi-token families, multihop, brew only, with the tokenizer of the bank's
+             DESTINATION: Qwen/Qwen3.6-27B for the public bank, the SUBJECT for a per-model
+             bank (the gate re-stamps passers with the subject anyway; stamping the
+             candidates the same way makes step 2 check the fields the gate will write):
                uv run --with transformers --with jinja2 python \
                  .claude/skills/wsb-new-questions/scripts/restamp.py \
-                 --family <family> --bank cand/<family>.json --tokenizer Qwen/Qwen3.6-27B
+                 --family <family> --bank cand/<family>.json --tokenizer <destination>
 2. validate  uv run --with transformers --with jinja2 python \
                .claude/skills/wsb-new-questions/scripts/validate_bank.py \
-               --family <family> --bank cand/<family>.json
+               --family <family> --bank cand/<family>.json --tokenizer <destination>
              fix every ERROR; read every warning
 3. gate      uv run --extra gpu --with pronouncing python \
                .claude/skills/wsb-new-questions/scripts/gate_hf.py \
@@ -64,8 +70,17 @@ grading free-form gate answers. Supply keys through the environment only
                  --out gated/<family>
              default GPU L40S (WSB_GATE_GPU=H100 for >= 9B; WSB_GATE_GPU=none plus
              --extra "--device cpu --dtype float32" runs a <= 2B subject on CPU)
-4. re-validate the gated bank WITH THE SUBJECT'S TOKENIZER
-               validate_bank.py --family <family> --bank gated/<family>/items.json \
+             --capacity N = how many candidates the family could EVER supply (e.g. the
+             distinct dilemmas you can author); the OOC rule then needs min(200, N) gated
+             candidates instead of 200 (gating.md section 6)
+3b. steer    wave_report.py fails --family <family> --gated gated/<family>; author the next
+             wave against the failure patterns (weak-model.md), then pool all waves:
+               merge_gated.py --family <family> --out gated/<family>_all gated/<family> \
+                 gated/<family>_w2 ... [--capacity N]
+             and check diversity: wave_report.py mix --family <family> \
+               --bank gated/<family>_all/items.json
+4. re-validate the gated (merged) bank WITH THE SUBJECT'S TOKENIZER
+               validate_bank.py --family <family> --bank gated/<family>_all/items.json \
                  --tokenizer <subject HF id>
 5. freeze    write it to a NEW file; never edit evals/<family>/items.json in place
 6. score     put the bank where the family loads it (a fork/branch or a shadow checkout,
@@ -82,6 +97,9 @@ Small models pass far fewer items than the 27B the frozen banks were built on. O
 author `ceil(target / expected_pass_rate * 1.3)` candidates, and gate at least
 `min(200, what the family can supply)` before declaring a family out of capability (gating.md
 section 6). For a 10-20 item smoke batch, expect a 0.8B-2B model to pass well under half.
+**For a new or weak subject, follow references/weak-model.md**: a 30-candidate pilot per
+family first, then waves sized from the pilot's pass rate, authored with that file's
+easier-but-valid knobs.
 
 ## Hard rules (the ones that silently break a bank)
 

@@ -29,7 +29,9 @@ MT_STEM = "My answer is:"  # the multi-token tier and its bridge questions
 FINAL_ANSWER = {"arithmetic_intermediates", "chain_intermediates", "brew_intermediates"}
 STRICT = {"chain_intermediates", "brew_intermediates"}  # 10/10 at T=0.8, top_p=0.95
 MC = {"conjunctive_association", "role_bound_association"}
-GREEDY_ONLY = {"relational_multihop"}  # greedy-correct, both items of a scene
+GREEDY_ONLY = {"relational_multihop"}
+# stamped as `gate_variant` (how the item was gated); every gate_hf.py gate is a chat render
+GATE_VARIANT = {"directed_modulation": "chat_dm"}  # greedy-correct, both items of a scene
 UNSUPPORTED = {
     "moral_rationale": "its golds are elicited from the subject: use moral_gate.py",
     "buggy_code": "needs execution checks and the volunteering gate: use buggy_gate.py",
@@ -61,11 +63,44 @@ def as_num(text: str) -> float | None:
         return None
 
 
-def quick_match(answer: str, golds: list[str], final: bool) -> bool:
+LEAD_IN = re.compile(
+    r"^(?:my (?:one-word )?answer is|the answer is|answer|it is|it's|that is|this is)\s*:?\s*",
+    re.I,
+)
+ARTICLE = re.compile(r"^(?:the|a|an)\s+", re.I)
+
+
+def answer_span(answer: str) -> str:
+    """The span a free-form answer commits to: its first sentence of its first line, markdown
+    bold removed. Later sentences (asides, 'While X and Y ...') never count."""
+    first = answer.replace("**", "").strip().split("\n", 1)[0]
+    return re.split(r"(?<=[^A-Z0-9.][.!?;])\s", first, maxsplit=1)[0]
+
+
+def anchored_match(answer: str, golds: list[str], ask: str = "") -> bool:
+    """A gold, word-aligned, inside the answer span. A gold that also occurs in the question
+    (an echo: 'built the Eiffel Tower' -> 'Eiffel') only counts when the whole span IS that
+    gold, so a wrong answer that repeats the question's words never passes."""
+    span = LEAD_IN.sub("", answer_span(answer).strip()).strip(" .,:;!?\"'*")
+    bare = norm(ARTICLE.sub("", span))
+    padded, q = f" {norm(span)} ", f" {norm(ask)} "
+    for g in map(str, golds):
+        ng = norm(g)
+        if not ng:
+            continue
+        if bare == norm(ARTICLE.sub("", g)):
+            return True
+        if f" {ng} " in padded and f" {ng} " not in q:
+            return True
+    return False
+
+
+def quick_match(answer: str, golds: list[str], final: bool, ask: str = "") -> bool:
     """``final`` families: a numeric gold must be the answer's LAST number, sign included
-    (plain string_match would accept 1386 for -1386); a colour gold is a whole-word match."""
+    (plain string_match would accept 1386 for -1386); a colour gold is a whole-word match.
+    Others: ``anchored_match`` (first-sentence span, echo-aware), not bare containment."""
     if not final:
-        return string_match(answer, golds)
+        return anchored_match(answer, golds, ask)
     nums = NUM.findall(answer.replace(",", ""))
     for g in map(str, golds):
         gv = as_num(g)
@@ -277,6 +312,8 @@ class Subject:
         torch.manual_seed(seed)
         order = sorted(range(len(prompts)), key=lambda i: len(prompts[i]))
         res: list[list[str]] = [[] for _ in prompts]
+        # per prompt, per output: True when no stop token came within max_new (cut off)
+        self.truncated: list[list[bool]] = [[] for _ in prompts]
         bs = max(1, batch // max(1, n))
         for s in range(0, len(order), bs):
             idx = order[s : s + bs]
@@ -304,6 +341,7 @@ class Subject:
                 cut = next((p for p, t in enumerate(row) if t in self.stops), len(row))
                 text = self.tok.decode(row[:cut], skip_special_tokens=True).strip()
                 res[idx[j // (n if temperature > 0 else 1)]].append(text)
+                self.truncated[idx[j // (n if temperature > 0 else 1)]].append(cut == len(row))
         return res
 
 
@@ -380,6 +418,17 @@ def brew_cells(it: dict[str, Any], tok: Any) -> None:
 # ------------------------------------------------------------------ main
 
 
+def ooc_status(n_eval: int, rate: float, capacity: int = 0) -> str:
+    """The OOC rule (gating.md section 6): < 3% over >= min(200, capacity) gated candidates.
+    Pool waves with merge_gated.py before deciding; one small wave is never enough."""
+    floor = min(200, capacity) if capacity else 200
+    if rate >= 0.03:
+        return "in-capability"
+    if n_eval >= floor:
+        return "ooc"
+    return "undetermined (gate >= min(200, capacity) candidates before calling OOC)"
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     ap.add_argument("--family", required=True)
@@ -398,6 +447,11 @@ def main() -> int:
         help="optional LLM grader for answers the string match rejects, e.g. "
         "google/gemini-3.8-flash (OPENROUTER_API_KEY) or a claude-* id "
         "(ANTHROPIC_API_KEY); empty = deterministic grading only",
+    )
+    ap.add_argument(
+        "--answer-stem",
+        default=None,
+        help="override the answer-stem prefill (default: the family's stem; '' = none)",
     )
     ap.add_argument(
         "--capacity",
@@ -435,8 +489,9 @@ def main() -> int:
             batch=a.batch,
             seed=0,
         )
-        for q, o in zip(group, outs, strict=True):
+        for q, o, tr in zip(group, outs, subj.truncated, strict=True):
             q["greedy"] = o[0]
+            q["truncated_greedy"] = tr[0]
 
     def hit(q: dict[str, Any], ans: str) -> bool | None:
         m = q["mode"]
@@ -450,7 +505,7 @@ def main() -> int:
         if final and states_intermediate(items[q["item"]], ans):
             q["leaks"] = q.get("leaks", 0) + 1
             return False  # it wrote the latent: a chain-of-thought rollout, never a pass
-        if quick_match(ans, q["golds"], final):
+        if quick_match(ans, q["golds"], final, q["ask"]):
             return True
         return None if a.grader and not final else False
 
@@ -472,8 +527,9 @@ def main() -> int:
             batch=a.batch,
             seed=7,
         )
-        for q, o in zip(group, outs, strict=True):
+        for q, o, tr in zip(group, outs, subj.truncated, strict=True):
             q["samples"] = o
+            q["truncated_samples"] = sum(tr)
     # 3. optional LLM grading of undecided answers
     if a.grader:
         from wsbench.capable.questions import Question
@@ -485,7 +541,7 @@ def main() -> int:
             if q["mode"] not in ("standard", "greedy"):
                 continue
             for i, ans in enumerate([q["greedy"], *q.get("samples", [])]):
-                if ans and not quick_match(ans, q["golds"], final):
+                if ans and not quick_match(ans, q["golds"], final, q["ask"]):
                     pend.append((q, i, ans))
         verdicts: dict[tuple[str, int], bool] = {}
         prompts = [
@@ -511,7 +567,8 @@ def main() -> int:
             ok_w = bool(w)
             if m == "own_poetry":
                 q["line_one_end"] = line_one_end(q["ask"])
-                q["rhymes"] = ok_w and rhymes(w, q["line_one_end"])
+                # an identity "rhyme" (repeating line one's last word) is not a rhyme
+                q["rhymes"] = ok_w and w != q["line_one_end"] and rhymes(w, q["line_one_end"])
                 ok_w = q["rhymes"]
             q["hits"], q["pass"] = hits, ok_w and hits >= need
             continue
@@ -524,6 +581,8 @@ def main() -> int:
         if m == "greedy":
             q["hits"], q["pass"] = None, q["greedy_ok"]
             continue
+        # strict = the deterministic matcher alone (no LLM grader rescue)
+        q["hits_strict"] = sum(bool(hit(q, s)) for s in q.get("samples", []))
         q["leaks"] = 0  # recount over greedy + samples (hit() was also called on the greedy)
         hits = sum(ok(i + 1, s) for i, s in enumerate(q.get("samples", [])))
         q["greedy_ok"] = ok(0, answers[0])
@@ -562,6 +621,10 @@ def main() -> int:
             it["consistency"] = main["hits"] / a.k
         if main:
             it["consistency_greedy"] = int(bool(main["greedy_ok"]))
+        if main and fam in MT_FAMILIES and main.get("hits_strict") is not None:
+            it["consistency_strict"] = main["hits_strict"] / a.k
+        if not is_list and fam not in FINAL_ANSWER:
+            it["gate_variant"] = GATE_VARIANT.get(fam, "chat")
         if fam in ("multihop_mt", "multilingual_multihop"):
             it["bridge_consistency"] = {
                 q["qid"].split(":")[1]: q["hits"] / a.k for q in legs if ":bridge" in q["qid"]
@@ -587,14 +650,7 @@ def main() -> int:
             it["pair_survived"] = it.get("pair") in names
     rate = sum(passed.values()) / max(1, len(passed))
     n_eval = len(passed)
-    floor = min(200, a.capacity) if a.capacity else 200
-    status = (
-        "ooc"
-        if n_eval >= floor and rate < 0.03
-        else "undetermined (gate >= min(200, capacity) candidates before calling OOC)"
-        if rate < 0.03
-        else "in-capability"
-    )
+    status = ooc_status(n_eval, rate, a.capacity)
     gate_note = (
         f"{a.model} behavioral, chat template (enable_thinking=False): greedy-correct "
         f"AND >= {need}/{a.k} @ T={temp} top_p={top_p}; gate_hf.py"

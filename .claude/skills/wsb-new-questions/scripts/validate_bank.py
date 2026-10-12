@@ -510,6 +510,31 @@ def check_guards(
             for lf in it.get("look_for_reasons", []):
                 if lf not in texts:
                     err(f"{k}: look_for_reasons entry is not one of reasons[].text")
+    for it in items:  # bridges: self-answering questions, forms that contain the target
+        k = item_key(it)
+        for br in it.get("bridges") or []:
+            for ans in br.get("answers", []):
+                if ans and occurs(str(ans), str(br.get("question", ""))):
+                    err(f"{k}: bridge answer {ans!r} appears in its own question")
+        targets = [str(t) for t in [it.get("target"), *(it.get("target_alts") or [])] if t]
+        if family in ("multihop_mt", "multilingual_multihop"):
+            for u in it.get("units", []):
+                if not str(u.get("role", "")).startswith("bridge"):
+                    continue
+                for lang, fs in (u.get("forms") or {}).items():
+                    for f in fs:
+                        hit = [t for t in targets if occurs(t, str(f)) or occurs(str(f), t)]
+                        if hit:
+                            err(
+                                f"{k}: unit {u.get('role')}[{lang}] form {f!r} contains or is "
+                                f"contained in the target {hit[0]!r} (a target readout would "
+                                "credit the bridge)"
+                            )
+        if family == "multihop":
+            for x in it.get("intermediates", []):
+                hit = [t for t in targets if occurs(t, str(x)) or occurs(str(x), t)]
+                if hit:
+                    err(f"{k}: intermediate {x!r} contains or is contained in target {hit[0]!r}")
     if family == "role_bound_association":
         pairs = Counter(it.get("pair_id") for it in items)
         bad = [p for p, n in pairs.items() if n != 2]
@@ -647,6 +672,42 @@ def gold_samples(family: str, it: dict[str, Any], units: list[Any] | None) -> li
 NULL_SAMPLE = "Light rain is expected over the weekend."
 
 
+def ntok(tok: Any, s: str) -> int:
+    """Strict token count: min over {s, lower, title} x {bare, leading space}."""
+    return min(
+        len(tok(v, add_special_tokens=False)["input_ids"])
+        for c in {s, s.lower(), s.title()}
+        for v in (c, " " + c)
+    )
+
+
+def check_multi_token(items: list[dict], tok: Any) -> None:
+    """EVERY non-zh form of a required multi-token unit must be multi-token under this
+    tokenizer (a 1-token form is never creditable, so it is dead weight that hides a unit
+    which might not survive), and each `mc[role].gold` must be one of that unit's forms and
+    multi-token (the MC judge shows it as the correct option)."""
+    for it in items:
+        k = item_key(it)
+        units = {u.get("role"): u for u in it.get("units", [])}
+        for role, u in units.items():
+            if not (u.get("required", True) and u.get("multi_token", True)):
+                continue
+            for lang, fs in (u.get("forms") or {}).items():
+                if lang == "zh":
+                    continue
+                single = [f for f in fs if ntok(tok, str(f)) <= 1]
+                if single:
+                    err(f"{k}: unit {role}[{lang}] has single-token form(s) {single[:3]}")
+        for role, m in (it.get("mc") or {}).items():
+            gold = str((m or {}).get("gold", ""))
+            u = units.get(role) or {}
+            forms = [str(f) for fs in (u.get("forms") or {}).values() for f in fs]
+            if gold not in forms:
+                err(f"{k}: mc[{role}].gold {gold!r} is not one of the unit's forms")
+            elif ntok(tok, gold) <= 1:
+                err(f"{k}: mc[{role}].gold {gold!r} is a single token")
+
+
 def build_readouts(
     shadow: Path, family: str, tokenizer: str, work: Path, items: list[dict]
 ) -> tuple[Path, Path] | None:
@@ -679,6 +740,8 @@ def build_readouts(
                 units_of[sid] = regex.scored_units(it, contract)
             except ValueError as e:
                 err(f"scored_units: {e}")
+    if family in MT_FAMILIES:
+        check_multi_token(items, tok)
     gold_p, null_p = work / "readouts_gold.jsonl", work / "readouts_null.jsonl"
     n_rows = 0
     with gold_p.open("w", encoding="utf-8") as g, null_p.open("w", encoding="utf-8") as z:

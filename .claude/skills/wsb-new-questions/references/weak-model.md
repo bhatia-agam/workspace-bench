@@ -1,0 +1,161 @@
+# Calibrating a bank to a new or weak subject
+
+The frozen banks were authored for, and gated on, Qwen3.6-27B. A 0.8B-4B subject passes a
+fraction of them, and what survives is the EASY tail: a handful of templates, famous entities,
+one latent type. A lens score on such a set measures "can the lens read `capital -> country`
+on this model", not the family. This file is the workflow that keeps a weak-model bank both
+passable and a faithful instance of the family's construct. It sits on top of SKILL.md's
+workflow (generate -> validate -> gate -> re-validate) and gating.md's criterion; nothing here
+relaxes a guard or the gate.
+
+## 0. The rule that does not bend
+
+"Easier" changes WHAT the item asks about (more frequent entities, shorter hops, smaller
+numbers, commoner words), never HOW it is built. Every easier item still needs:
+
+- the latent is necessary: no shortcut from a named entity to the answer, no fixed phrase,
+  no morphological derivative (Poland -> Polish) as more than a few items;
+- the latent is absent from the prompt (every spelling, alias, numeral, translation);
+- one defensible answer, scorable gold forms, the family's own guards (families.md);
+- the full gate (greedy-correct AND >= 8/10, every leg; 10/10 for chain and brew; no written
+  intermediate). Never lower `--min-pass`, never drop a bridge leg, never gate with thinking on.
+
+If the only way to pass is to break one of these, the family is out of capability for this
+subject: report it (section 6), do not ship a bank.
+
+## 1. Pilot probe first (per family, ~30 candidates)
+
+Before authoring a full set, gate a pilot of ~30 candidates per family drawn the way the full
+set will be drawn (mixed templates, mixed difficulty):
+
+```
+# author/generate 30 -> cand/<family>_pilot.json, validate, then
+modal run .claude/skills/wsb-new-questions/scripts/modal_gate.py \
+  --family <family> --bank cand/<family>_pilot.json --model <subject> --out gated/<family>_pilot
+uv run python .claude/skills/wsb-new-questions/scripts/wave_report.py fails \
+  --family <family> --gated gated/<family>_pilot
+```
+
+From `summary.json`: `pass_rate` p, and `want_more_candidates_for_100` (= ceil(missing / max(p,
+0.03) * 1.3)). Decide per family:
+
+| pilot pass rate | action |
+|---|---|
+| >= 40% | author the full set at the frozen difficulty; budget = target / p * 1.3 |
+| 10-40% | author with the easier knobs (section 2) for the weak legs; re-estimate after wave 1 |
+| 1-10% | pilot ONE easier wave of 30 first; if it stays < 10%, cap the target (e.g. 30-50) and say so |
+| 0 of 30 | look at `fails`: if answers are simply wrong (not truncated, not leaking, not mis-graded), try one easier pilot; 0 again -> stop at "undetermined" or keep gating to the OOC floor (min(200, capacity)) only if the family matters |
+
+A pilot is a wave: keep its gated dir and pool it later with `merge_gated.py`.
+
+## 2. Easier-but-valid knobs, per family
+
+| family | turn down (still valid) | never (breaks the construct) |
+|---|---|---|
+| multihop | top-frequency bridges (G20 countries, world capitals, famous people); relations the model knows (capital, language, currency, continent, chemical symbol, author of a top-50 book); one hop only | naming the bridge's own city/landmark when the bridge is the country's capital (shortcut); fixed phrases ("Stratford-upon-"); answer = derivative of the bridge for > 20% |
+| multihop_mt | 2hop only (drop 3hop); famous bridges with 2-4-word canonical names; targets that are well-known multi-word names | single-token forms; a bridge2 question that leaks bridge1's answer; long-tail facts the model cannot recall (they fail the bridge leg anyway) |
+| multilingual / _mt | the model's strongest L2s (check per-language pass in the pilot); concrete nouns over abstract ones | the target in the prompt in any script; the language name in the prompt |
+| typo / typo_mt | frequent words, one-character edits, typos that keep the first letters | a typo that is itself a word; a prompt that does not end with the misspelling |
+| association | high-frequency associates with one dominant answer | an associate that names the latent |
+| poetry | line-one end words with large, common rhyme sets (day, night, light, sun, tree, heart, rain); line two whose meaning strongly forces one common word | rhyme word already in line two; identity "rhymes" (the same word); end words with no CMU entry |
+| basic_readout | common categories with a dominant default answer | priming the target in the prompt |
+| arithmetic | small operands that still need a separate first step (2-digit, no carries, first value not an operand and not the answer); one variant at a time | a first value that is written in the prompt or equals the answer; single-step expressions (no intermediate) |
+| chain / brew | 2-3 steps instead of 4+; small starting numbers; fewer rule rows | steps whose intermediate is printed; ambiguous rule tables |
+| buggy_code | 5-7 line programs, one loop, small integers, bugs whose effect is a different number (off-by-one, wrong init) | comments or names that hint at the bug; programs that print the intermediate; nondeterminism |
+| role_bound | concrete everyday actions (paid, hired, treated, taught) with strongly distinct roles; tier A (action word allowed) before tier B | naming the roles; a scene decidable from prior plausibility alone; dropping one direction of a pair |
+| conjunctive | common concepts whose conjunction is unambiguous | blocklisted words; options that differ only in specificity |
+| relational | short scenes (3-4 people), common relations | > 50 scenes (golds collide with judge distractors) |
+| moral | questions with a dominant intuitive answer (committed class); short plain wording | dilemmas with a factual answer; leading wording that states the answer |
+
+Record the knob used in each item's `source` (e.g. `"... knob=frequent-bridges"`) so the
+mix report and readers can see what was turned down.
+
+## 3. Diversity for small gated sets
+
+A weak model's passers concentrate on its easiest template. Before scoring a bank:
+
+```
+uv run python .claude/skills/wsb-new-questions/scripts/wave_report.py mix \
+  --family <family> --bank gated/<family>_all/items.json --cap 0.2
+```
+
+It prints, and fails above the cap (default 20% of the bank, only checked from 5 items up):
+the per-item type fields that exist (`subfamily`, `variant`, `tier`, `domain`, ...), the
+prompt template (first 8 words with names and numbers masked), the scored latent, and the
+entities named in more than one prompt. Fix by authoring the next wave AWAY from the dominant
+template / latent type (and, at selection time, cap each template at the cap), not by
+dropping the hard items. Report the final mix next to the score.
+
+Plan the mix at authoring time: give the author a rotating relation/domain list and a quota
+per relation (e.g. multihop: 8 relation types x bridge types {country, city, person, element,
+work, organism}), and pass an ALREADY-TAKEN list of latents.
+
+## 4. Adaptive waves: failure pattern -> what to change
+
+`wave_report.py fails` assigns each gated item one pattern. Change the next wave by pattern:
+
+| pattern | means | next wave |
+|---|---|---|
+| greedy wrong | the model does not know / cannot compute it | easier knob for that template (section 2); stop authoring that template if it stays wrong |
+| greedy right, samples inconsistent | borderline knowledge | more frequent entities, or one fewer hop / step; do not lower the bar |
+| bridges known, composition fails | the model knows each fact but does not compose them silently | shorter hops (2hop), more common relations; this is the real capability limit, record it |
+| surface right, a bridge leg fails | the answer is reachable without the bridge (shortcut) or the bridge question is bad | check the item for a shortcut and drop it; else reword the bridge question / add answer aliases |
+| cot_leak (wrote the intermediate) | it computes out loud | keep the answer stem; prefer expressions whose intermediate is not natural to write; never accept the item |
+| truncated | answer cut at max_new | read `gate.json`; a verbose model needs the answer stem (it is on by default) or a shorter question, not a bigger budget for a final-answer family |
+| poetry: greedy word does not rhyme | the model writes a non-rhyme or repeats | end words with big common rhyme sets; line two that forces the rhyme harder |
+| poetry: rhymes but unstable | two rhymes compete | constrain line two's meaning to one word |
+| mc: no parsable letter | it answers in prose | check the gate.json answers; if widespread, report it (the MC ask already says "letter only") |
+| mc: wrong or unstable letter | the scene does not convey the relation to this model | concrete actions, distinct roles, tier A |
+
+## 5. The weak-model gate (already in the scripts; know what it does)
+
+- thinking OFF, chat template, the source answer stems (`My one-word answer is:` /
+  `My answer is:`; none for final-number families, which say "Reply with only the final
+  number");
+- anchored grading: the gold must be in the answer's first sentence; an echo of a question
+  word only counts as the whole answer (gating.md section 4);
+- sign-aware last-number rule and CoT-leak rejection for arithmetic / chain / brew;
+- `truncated_greedy` / `truncated_samples` recorded per question;
+- model-specific golds: poetry (its own rhyme), basic_readout implicit (its own favourite),
+  moral (its side and reasons, `moral_gate.py`), MC letters parsed strictly;
+- read 20 gate answers per family yourself before trusting a rate.
+
+## 6. Honest stopping rules
+
+- Pool every wave (`merge_gated.py`), then: OOC = < 3% over >= min(200, capacity) pooled
+  candidates; capped = the budget is spent below target; undetermined = < 3% but the floor
+  is not reached. Ship OOC / undetermined families with NO bank.
+- Report, next to every score: target, pooled n gated, n passed, pass rate per wave, final n,
+  status, the knobs used, and the `mix` summary. A lens result on a capped 20-item bank is
+  reported as such, never as the family's rate.
+
+## 7. Worked example (Qwen3.5-0.8B, fresh-agent test runs)
+
+Round 1 (multihop, multihop_mt, arithmetic on Qwen3.5-0.8B, Modal L40S):
+
+| family | wave | gated | passed | rate | note |
+|---|---|---|---|---|---|
+| multihop | w1 | 23 | 7 | 30% | bridges all countries |
+| multihop | w2 | 24 | 7 | 29% | 12 greedy-wrong (landmark -> capital), 5 inconsistent |
+| multihop | pooled | 47 | 14 | 30% | in-capability; mix: 14 country latents, top template 21% (over cap) |
+| multihop_mt | w1 | 16 | 0 | 0% | long-tail 3hop bridges; 6 "bridges known, composition fails" |
+| multihop_mt | w2 | 13 | 5 | 38% | 2hop, famous bridges |
+| arithmetic | w1+w2 | 195 | 0 | 0% | greedy wrong 87% ("(86 - 35) - 7" -> 10): undetermined, no bank |
+
+Commands of one wave (multihop):
+
+```
+uv run --with transformers --with jinja2 python .claude/skills/wsb-new-questions/scripts/validate_bank.py \
+  --family multihop --bank cand/multihop_w2.json --tokenizer Qwen/Qwen3.5-0.8B
+WSB_GATE_GPU=L40S modal run .claude/skills/wsb-new-questions/scripts/modal_gate.py \
+  --family multihop --bank cand/multihop_w2.json --model Qwen/Qwen3.5-0.8B --out gated/multihop_w2
+uv run python .claude/skills/wsb-new-questions/scripts/wave_report.py fails --family multihop --gated gated/multihop_w2
+uv run python .claude/skills/wsb-new-questions/scripts/merge_gated.py --family multihop \
+  --out gated/multihop_all gated/multihop gated/multihop_w2
+uv run python .claude/skills/wsb-new-questions/scripts/wave_report.py mix --family multihop \
+  --bank gated/multihop_all/items.json
+uv run --with transformers --with jinja2 python .claude/skills/wsb-new-questions/scripts/validate_bank.py \
+  --family multihop --bank gated/multihop_all/items.json --tokenizer Qwen/Qwen3.5-0.8B
+```
+
+Round 2 (poetry, role_bound, moral, buggy, one multi-token family on Qwen3.5-2B) is pending; add its per-wave rows here.

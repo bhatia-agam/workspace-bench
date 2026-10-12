@@ -86,7 +86,7 @@ A unit:
 **arithmetic_intermediates** (header: `family`, `source`, `variants` {variant: {shape, tolerance,
 cell, role, n_items}}, `read`). Item: `variant`, `expr`, `first_op`, `first_value`,
 `intermediates` (every scored step as a string; `intermediates[0]` is the headline the judge
-scores), `answer`, `operands`, `single_token_reachable`, `name`, `pair` (twin name or null),
+scores), `answer`, `operands`, `single_token_reachable`, `name`, `pair` (twin name or null; `gen_deterministic.py` writes it on every item, null for non-twin variants and for a twin whose partner was not requested; the frozen bank omits it on non-twin variants, which loads the same),
 `prompt` = `Compute {expr}. Reply with only the final number, nothing else.`, `null_set` (names
 of same-variant items in THIS bank used as the permutation null), `tolerance` (`exact` or
 `rel5pct`), `cell` {layer, pos} (the variant's pre-registered frozen cell), `role`

@@ -40,8 +40,10 @@ uses the capability questions above for every subject, so rates are comparable a
 
 ## 3. Criterion
 
-- **Greedy-correct AND >= 8 of K=10 samples** at temperature 0.7, top_p 1.0, max 64 new
-  tokens (MC: 8 tokens; own-gold modes: 16).
+- **Greedy-correct AND >= 8 of K=10 samples** at temperature 0.7, top_p 1.0, max 96 new
+  tokens (final-number families 32; MC 8; own-gold modes 16). `gate.json` records
+  `truncated_greedy` / `truncated_samples` (no stop token within the budget): a truncated
+  answer is graded on what was written, so read those before trusting a fail.
 - **STRICT** (chain, brew): greedy-correct AND 10/10 at T=0.8, top_p 0.95.
 - **GREEDY_ONLY** (relational): greedy-correct, and both items of a scene.
 - **No written intermediate** (arithmetic, chain, brew): a rollout that states an
@@ -54,8 +56,14 @@ uses the capability questions above for every subject, so rates are comparable a
 
 ## 4. Grading
 
-1. **Deterministic first.** `string_match`: NFKD, casefold, combining marks dropped, every
-   non-word run -> space, then word-aligned containment of any gold. For arithmetic, chain and
+1. **Deterministic first.** `anchored_match` (in `gate_hf.py`): fold (NFKD, casefold,
+   combining marks dropped, every non-word run -> space), take the answer's SPAN = the first
+   sentence of its first line with markdown bold removed, and accept a gold that occurs
+   word-aligned inside that span. A gold that also occurs in the question (an echo, e.g.
+   alias "Eiffel" for a question about the Eiffel Tower) counts only when the whole span is
+   that gold. Plain containment over the whole answer passed a wrong verbose answer 10/10
+   ("The Eiffel Tower was built by the Eiffel Tower Company ...") and counted asides
+   ("While Pablo Picasso and Braque ...") after a wrong first sentence. For arithmetic, chain and
    brew use the **sign-aware final-answer rule**: a numeric gold must equal the answer's LAST
    number with its sign (`-1386` != `1386`; `string_match` alone would accept it because the
    minus is punctuation); a colour gold is a whole-word match.
@@ -107,8 +115,21 @@ item count):
    candidates by default, 3,000 for arithmetic, 0 for families without a generator) and by a
    round budget that doubles each round (400, 800, ...).
 4. **OOC** (out of capability): the family's pass rate is < 3% over >= `min(200, capacity)`
-   gated candidates (capacity = what the family can ever supply). An OOC family ships an empty
-   bank and is reported as OOC, never scored.
+   gated candidates (capacity = what the family can ever supply; pass it as
+   `gate_hf.py --capacity N`, e.g. the number of distinct dilemmas or programs you could ever
+   author, so a family that cannot reach 200 candidates can still be called). An OOC family
+   ships an empty bank and is reported as OOC, never scored.
+   **Pool the waves before deciding.** Each `gate_hf.py` run judges only its own wave, so
+   three waves of 60 each read "undetermined". Merge them:
+   `merge_gated.py --family F --out gated/F_all gated/F gated/F_w2 gated/F_w3 [--capacity N]`
+   sums candidates and passes over the waves, applies the rule to the pooled counts, dedupes
+   items (id and folded prompt; arithmetic null sets are recomputed over the pool) and writes
+   one `items.json` + `summary.json`. Score and report the merged bank, not a single wave.
+   **A family where everything fails** (e.g. Qwen3.5-0.8B: 0 of 195 arithmetic candidates;
+   87% answered wrong at greedy) is OOC once the pooled count reaches the floor, else
+   "undetermined": either gate more (after trying the easier knobs in weak-model.md) or stop
+   and record it as undetermined with its pooled n. Write NO bank for it, never pad it with
+   ungated items, and put the status row next to every published score.
 5. **Capped**: the cap is spent (or the generator exhausted) and the target is not met. Ship
    the shortfall honestly (report n), or an empty bank if the recipe demands equal counts; never
    pad with ungated items.
