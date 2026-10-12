@@ -202,10 +202,27 @@ def test_empty_prompts_build_no_client(monkeypatch):
     assert spend.calls == 0
 
 
-def test_missing_key_raises(monkeypatch):
+def test_missing_key_uses_profile(fast, monkeypatch):
+    """No ANTHROPIC_API_KEY: the client is built with key "" (SDK credential auto-discovery)."""
     monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
-    with pytest.raises(JudgeConfigError):
-        stream_text(["u"], model=CLAUDE, on_result=lambda i, r: None, thinking=False, max_tokens=1)
+    seen: list[str] = []
+    fake = FakeAnthropicStream(["ok"])
+
+    def make(route: str, key: str) -> FakeAnthropicStream:
+        seen.append(key)
+        return fake
+
+    monkeypatch.setattr(llm, "_make_client", make)
+    stream_text(["u"], model=CLAUDE, on_result=lambda i, r: None, thinking=False, max_tokens=1)
+    assert seen == [""]
+
+
+def test_thinking_off_on_model_that_cannot_disable(keys, fast, monkeypatch):
+    """claude-opus-5-5 400s on thinking disabled: "off" becomes thinking omitted + low effort."""
+    fake = FakeAnthropicStream(["a note"])
+    _collect(["u"], fake, monkeypatch, model="claude-opus-5-5", thinking=False)
+    kw = fake.calls[0]
+    assert "thinking" not in kw and kw["output_config"] == {"effort": "low"}
 
 
 def test_bad_concurrency_and_rpm(keys, monkeypatch):

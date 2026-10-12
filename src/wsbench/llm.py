@@ -61,16 +61,11 @@ def route(model: str) -> Route:
 
 
 def api_key(model: str) -> str:
+    """The Anthropic route returns "" when ANTHROPIC_API_KEY is unset: the SDK then resolves
+    credentials itself (an ``ant auth login`` profile, WIF, ...); a missing credential surfaces
+    as a fatal 401 on the first call, which the preflight catches."""
     if route(model) == "anthropic":
-        key = os.environ.get("ANTHROPIC_API_KEY", "")
-        if key:
-            return key
-        if os.environ.get("ANTHROPIC_PROFILE"):
-            return ""  # "" = let the SDK resolve the named `ant auth login` profile
-        raise JudgeConfigError(
-            f"ANTHROPIC_API_KEY is missing (needed for {model}); or set ANTHROPIC_PROFILE to use "
-            "an `ant auth login` profile"
-        )
+        return os.environ.get("ANTHROPIC_API_KEY", "")
     key = os.environ.get("OPENROUTER_API_KEY", "")
     if not key.startswith("sk-or-"):
         raise JudgeConfigError("OPENROUTER_API_KEY is missing or not an OpenRouter key (sk-or-…)")
@@ -139,9 +134,9 @@ def _make_client(route: str, key: str) -> Any:
     if route == "anthropic":
         from anthropic import AsyncAnthropic
 
-        if not key:  # an `ant` profile (ANTHROPIC_PROFILE): the SDK reads its OAuth credentials
-            return AsyncAnthropic(max_retries=0)
-        return AsyncAnthropic(api_key=key, max_retries=0)
+        if key:
+            return AsyncAnthropic(api_key=key, max_retries=0)
+        return AsyncAnthropic(max_retries=0)  # profile / WIF auto-discovery
     from openai import AsyncOpenAI
 
     return AsyncOpenAI(api_key=key, base_url=OPENROUTER, max_retries=0)
@@ -240,10 +235,14 @@ async def _anthropic_once(
     *,
     schema: dict[str, Any],
     model: str,
+    reasoning: dict[str, Any] | None,
     max_tokens: int,
     timeout: float,
     spend: Spend,
 ) -> dict[str, Any] | None:
+    output_config: dict[str, Any] = {"format": {"type": "json_schema", "schema": schema["schema"]}}
+    if reasoning and reasoning.get("effort"):
+        output_config["effort"] = reasoning["effort"]
     resp = await client.messages.create(
         timeout=timeout,
         model=model,
@@ -251,8 +250,13 @@ async def _anthropic_once(
         system=[{"type": "text", "text": system, "cache_control": {"type": "ephemeral"}}],
         messages=[{"role": "user", "content": user}],
         output_config={
+            **output_config,
             "format": {"type": "json_schema", "schema": anthropic_schema(schema["schema"])},
-            **({"effort": "low"} if always_thinks(model) else {}),
+            **(
+                {"effort": "low"}
+                if always_thinks(model) and "effort" not in output_config
+                else {}
+            ),
         },
     )
     spend.calls += 1
@@ -303,6 +307,7 @@ async def _one(
                     user,
                     schema=schema,
                     model=model,
+                    reasoning=reasoning,
                     max_tokens=max_tokens,
                     timeout=timeout,
                     spend=spend,

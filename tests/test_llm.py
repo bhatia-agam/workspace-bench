@@ -123,8 +123,8 @@ def test_api_key_missing_and_malformed(monkeypatch):
     monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
     with pytest.raises(JudgeConfigError):
         llm.api_key(GEMINI)
-    with pytest.raises(JudgeConfigError):
-        llm.api_key(CLAUDE)
+    # no ANTHROPIC_API_KEY: "" -> the SDK resolves an `ant auth login` profile / WIF itself
+    assert llm.api_key(CLAUDE) == ""
     monkeypatch.setenv("OPENROUTER_API_KEY", "sk-proj-not-openrouter")
     with pytest.raises(JudgeConfigError):
         llm.api_key(GEMINI)
@@ -324,9 +324,21 @@ def test_anthropic_success(keys, fast, monkeypatch):
     assert kw["model"] == CLAUDE and kw["max_tokens"] == 16000
     assert kw["system"] == [{"type": "text", "text": "sys", "cache_control": {"type": "ephemeral"}}]
     assert kw["messages"] == [{"role": "user", "content": "usr"}]
-    assert kw["output_config"] == {"format": {"type": "json_schema", "schema": SCHEMA["schema"]}}
+    # Anthropic route: reasoning["effort"] -> output_config.effort (WSBENCH_ANTHROPIC_EFFORT)
+    assert kw["output_config"] == {
+        "format": {"type": "json_schema", "schema": SCHEMA["schema"]},
+        "effort": "x",
+    }
     assert "reasoning" not in kw and "extra_body" not in kw
     assert fake.closed
+
+
+def test_anthropic_no_effort_by_default(keys, fast, monkeypatch):
+    fake = FakeAnthropic([_claude_response('{"a": 1}')])
+    _collect([("sys", "usr")], CLAUDE, fake, monkeypatch)
+    assert fake.calls[0]["output_config"] == {
+        "format": {"type": "json_schema", "schema": SCHEMA["schema"]}
+    }
 
 
 def test_anthropic_refusal(keys, fast, monkeypatch):

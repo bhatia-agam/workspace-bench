@@ -53,3 +53,14 @@ def test_reasoning_defaults_per_route():
 def test_aux_models_default_empty():
     assert dict(JudgeConfig().aux_models) == {}
     assert JudgeConfig().prompt_version == "v1"
+
+
+def test_anthropic_effort_env():
+    from wsbench.judge_config import ANTHROPIC_EFFORT_ENV, JudgeConfig, resolve
+
+    cfg = JudgeConfig()
+    env = {"WSBENCH_JUDGE_MODEL": "claude-opus-5-5", ANTHROPIC_EFFORT_ENV: "low"}
+    assert resolve(cfg, env=env).reasoning == {"effort": "low"}
+    assert resolve(cfg, flag="claude-opus-5-5").reasoning is None
+    # the OpenRouter default is untouched by the Anthropic knob
+    assert resolve(cfg, env={ANTHROPIC_EFFORT_ENV: "low"}).reasoning == {"effort": "minimal"}
