@@ -4,11 +4,11 @@
  "read_cells": {
   "python": {
    "anchor": "eof",
-   "layer": 60
+   "layer": 39
   },
   "nonpython": {
    "anchor": "eof",
-   "layer": 56
+   "layer": 39
   }
  },
  "read": "one cell per item: the EOF anchor (last token of the bare program), layer 60 for python and 56 for the other languages; bare render, nothing asked",
@@ -910,5 +910,6 @@
    "n_lines": 13,
    "lang_group": "nonpython"
   }
- ]
+ ],
+ "v4_port": "read_cells layers 60/56 -> 39"
 }
