@@ -1,0 +1,115 @@
+# Model-capability gating
+
+A gate asks the subject model the item's own question and keeps the item only if the model
+reliably computes the answer. It is what makes a lens miss interpretable: a lens that says
+nothing about an intermediate the model never computed is not wrong. `scripts/gate_hf.py`
+implements everything here for open-weights HF models; `wsbench capable` is the API-model
+equivalent (OpenRouter, reasoning effort minimal, so it is not a raw continuation).
+
+## 1. Render
+
+- The subject's own chat template, one user turn holding the capability question,
+  `add_generation_prompt=True`, **`enable_thinking=False`**, no system prompt. This is
+  `wsbench.produce.render._chat`, the render the read plan uses.
+- Prefill only where the family's read plan prefills: basic_readout implicit `My one-word
+  answer is:` (the leading-space whole word then sits at the answer site), brew `Answer:` (the
+  source gate also banned the end-of-turn tokens at every step).
+- Stop at EOS, `<|im_end|>`, `<|endoftext|>` or the template's end-of-turn token; decode with
+  special tokens skipped; strip.
+- Never gate a reasoning model with thinking on and never on a raw `Human:/Assistant:` string:
+  it emits `<think>` and you measure that token instead of the answer.
+
+## 2. Questions (from `wsbench.capable.questions`, plus fixes)
+
+| family | question | gold |
+|---|---|---|
+| association | `This text describes something it never names. Reply with the single word or short phrase that names it, and nothing else.` + prompt | referent |
+| basic_readout, multihop, multilingual, poetry, *_mt (non-typo), relational | `Continue this text. Reply with the continuation only — the next word or short phrase, nothing else, no punctuation of your own.` + prompt | `target` + `target_alts` (else `intermediates`); relational: gold / gold_alt |
+| typo, typo_mt, multilingual_typo | `The last word of this text is misspelled. Reply with that word spelled correctly, and nothing else.` | correction |
+| multihop_mt, multilingual_multihop bridges | `bridges[i].question` as-is | `bridges[i].answers` |
+| arithmetic, chain, brew | the bank prompt as-is | **`answer`** (capable uses `intermediates` here; that is a bug `gate_hf.py` fixes) |
+| conjunctive, role_bound | stimulus + `Which option best describes what the text implies?` + lettered `mc_options` (seeded shuffle per id) + `Reply with the letter only.` | the gold's letter |
+| directed_modulation | the prompt | compliance (copies the carrier, never names the concept) |
+| user_modeling | the conversation + `Based on that conversation, what is the user's <label>?` | `attr` |
+| buggy_code | code + `What happens when this program is run? State the output or the failure in one line.` | `verified` |
+| moral_rationale | the stimulus | the side the subject commits to (golds elicited, families.md) |
+
+The original 27B gates used family-specific templates (e.g. `Complete this text with the missing
+final word or phrase: "<prompt>___"`, answer stem `My answer is:`); the per-model recipe below
+uses the capability questions above for every subject, so rates are comparable across models.
+
+## 3. Criterion
+
+- **Greedy-correct AND >= 8 of K=10 samples** at temperature 0.7, top_p 1.0, max 64 new
+  tokens (MC: 8 tokens; own-gold modes: 16).
+- **STRICT** (chain, brew): greedy-correct AND 10/10 at T=0.8, top_p 0.95.
+- **GREEDY_ONLY** (relational): greedy-correct, and both items of a scene.
+- Multi-leg items need EVERY leg (surface answer and every bridge; both arithmetic twins).
+- Sample only questions whose greedy answer passed (saves 90% of compute on small models).
+- An undecided grade (failed grader call) is a fail, never a pass.
+
+## 4. Grading
+
+1. **Deterministic first.** `string_match`: NFKD, casefold, combining marks dropped, every
+   non-word run -> space, then word-aligned containment of any gold. For arithmetic, chain and
+   brew use the **sign-aware final-answer rule**: a numeric gold must equal the answer's LAST
+   number with its sign (`-1386` != `1386`; `string_match` alone would accept it because the
+   minus is punctuation); a colour gold is a whole-word match.
+2. **Optional LLM grader** for answers the string match rejects (`--grader <model>`), with the
+   repo's grade prompt (`wsbench.capable.run.GRADE_SYSTEM`: same word or value, inflection,
+   established synonym/alias, faithful translation, same quantity written differently; a longer
+   answer containing it is correct; merely related is not). Memoize per (question, answer) and
+   stop grading once the item is decided. Not used for the final-answer families.
+3. **MC**: the first standalone option letter at the start of the answer.
+4. Read 20 graded answers per family by eye before trusting the rate (small models wrap the
+   answer in prose, repeat the prompt, or answer a different question).
+
+## 5. Model-specific golds and re-stamping
+
+- **poetry**: the subject's greedy first word must equal the first word of >= 8/10 samples and
+  rhyme with line one's last word (CMU rhyming part, else the last two letters); it replaces
+  `intermediates`.
+- **basic_readout implicit**: majority first word under the answer-stem prefill (>= 8/10, greedy
+  agreeing) becomes `target`, `intermediates`, `units[0].match`.
+- **moral_rationale**: elicit -> distil -> commit (families.md); everything in `reasons`,
+  `look_for_reasons`, `commit_*`, `gate_*` is per subject.
+- **multi-token families**: re-stamp `probe_token_lens` with the SUBJECT's tokenizer (strict
+  count: min over {form, lower, title} x {bare, leading space}); an item whose required
+  multi-token unit keeps no form with count > 1 in some non-zh language is ineligible (dropped).
+  Skip only if the subject provably shares the reference tokenizer (Qwen3.5 and Qwen3.6 do).
+- **multihop**: `readout.offsets` = -2 if the subject's last prompt token is whitespace, else -1.
+- **brew**: recompute `eval_positions`/`regions` on the subject's `chat + "Answer:"` render;
+  verify the tail cells (assistant header newline, end of think block, the colon) by decoding
+  them for a new template family.
+- **arithmetic**: prune `null_set` to surviving items, set `pair_survived`; the frozen `cell`
+  is the 27B's pre-registered cell, so for another model report the every-position read
+  (`opts=cells=all`) rather than the frozen cell.
+- Stamp `consistency` (hits/K), `consistency_greedy`, `bridge_consistency`, and the header
+  `gate` sentence naming the subject and the rule.
+
+## 6. Out of capability, caps, equal counts
+
+The recipe used for per-model banks (one bank per subject, every family at the frozen bank's
+item count):
+
+1. **Pool order**: frozen-bank items first (in bank order), then unused candidates the family's
+   own generator produced, then newly authored candidates in the original style with the
+   original guards. Candidates are subject-independent; gate each only once per subject.
+2. **Equal-count target** = the frozen bank's item count (100 for most families, 120 chain,
+   200 moral, 596 arithmetic, 49 buggy, 98 multilingual_multihop). Select bank passers first,
+   then new passers in a seeded shuffle, up to the target.
+3. **Generation ask per round**: `want = ceil(missing / max(pass_rate, 0.03) * 1.3)`, at least
+   enough to reach 200 gated candidates, capped by what is left of the family's cap (1,500 new
+   candidates by default, 3,000 for arithmetic, 0 for families without a generator) and by a
+   round budget that doubles each round (400, 800, ...).
+4. **OOC** (out of capability): the family's pass rate is < 3% over >= `min(200, capacity)`
+   gated candidates (capacity = what the family can ever supply). An OOC family ships an empty
+   bank and is reported as OOC, never scored.
+5. **Capped**: the cap is spent (or the generator exhausted) and the target is not met. Ship
+   the shortfall honestly (report n), or an empty bank if the recipe demands equal counts; never
+   pad with ungated items.
+6. Families with no checkable answer (directed_modulation, multi_concept_directed_modulation,
+   user_modeling, hallucination) are kept as-is or re-run per their own protocol.
+
+Report per family: target, n gated, n passed, pass rate, n selected, status
+(full / ooc / capped), so a reader can tell "the lens failed" from "the model could not".
