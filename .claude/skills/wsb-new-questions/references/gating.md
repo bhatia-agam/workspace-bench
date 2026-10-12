@@ -44,6 +44,10 @@ uses the capability questions above for every subject, so rates are comparable a
   tokens (MC: 8 tokens; own-gold modes: 16).
 - **STRICT** (chain, brew): greedy-correct AND 10/10 at T=0.8, top_p 0.95.
 - **GREEDY_ONLY** (relational): greedy-correct, and both items of a scene.
+- **No written intermediate** (arithmetic, chain, brew): a rollout that states an
+  intermediate (as a numeral, or brew's first colour) is a leak; one leaking rollout fails the
+  item. Small models often answer with a worked chain (`a - b = x, x * c = y`), which looks
+  correct to a final-number grader.
 - Multi-leg items need EVERY leg (surface answer and every bridge; both arithmetic twins).
 - Sample only questions whose greedy answer passed (saves 90% of compute on small models).
 - An undecided grade (failed grader call) is a fail, never a pass.
@@ -71,7 +75,7 @@ uses the capability questions above for every subject, so rates are comparable a
   `intermediates`.
 - **basic_readout implicit**: majority first word under the answer-stem prefill (>= 8/10, greedy
   agreeing) becomes `target`, `intermediates`, `units[0].match`.
-- **moral_rationale**: elicit -> distil -> commit (families.md); everything in `reasons`,
+- **moral_rationale**: elicit -> distil -> commit (`scripts/moral_gate.py`; families.md); everything in `reasons`,
   `look_for_reasons`, `commit_*`, `gate_*` is per subject.
 - **multi-token families**: re-stamp `probe_token_lens` with the SUBJECT's tokenizer (strict
   count: min over {form, lower, title} x {bare, leading space}); an item whose required

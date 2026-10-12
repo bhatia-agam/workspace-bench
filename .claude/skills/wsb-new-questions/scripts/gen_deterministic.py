@@ -19,6 +19,7 @@ from typing import Any
 
 # ------------------------------------------------------------------ arithmetic
 
+EXCLUDE: set[str] = set()  # prompts of the frozen bank (and --exclude files): never re-emitted
 RENDER = "Compute {expr}. Reply with only the final number, nothing else."
 # variant -> (shape, tolerance, frozen cell, role); copied from the frozen bank header
 VARIANTS: dict[str, tuple[str, str, dict[str, int], str]] = {
@@ -291,7 +292,7 @@ def gen_arith(n: int, rng: random.Random, tag: str, variants: list[str]) -> list
         tries += 1
         v = units[len(out) % len(units)] if tries % 3 else rng.choice(units)
         got = gen_unit(v, rng)
-        if not got or any(g["expr"] in seen for g in got):
+        if not got or any(g["expr"] in seen or g["prompt"] in EXCLUDE for g in got):
             continue
         for g in got:
             counters[g["variant"]] = counters.get(g["variant"], 0) + 1
@@ -411,7 +412,7 @@ def gen_chain(n: int, rng: random.Random, tag: str) -> list[dict[str, Any]]:
     while len(out) < n:
         depth = 3 if rng.random() < 36 / 120 else 2
         it = chain_item(rng, depth)
-        if it and it["prompt"] not in seen:
+        if it and it["prompt"] not in seen and it["prompt"] not in EXCLUDE:
             seen.add(it["prompt"])
             it["name"] = f"chain-{tag}-d{depth}p-{len(out):04d}"
             out.append(it)
@@ -486,7 +487,7 @@ def gen_brew(n: int, rng: random.Random, tag: str, tokenizer: str) -> list[dict[
     out, seen = [], set()
     while len(out) < n:
         it = brew_item(rng)
-        if it and it["prompt"] not in seen:
+        if it and it["prompt"] not in seen and it["prompt"] not in EXCLUDE:
             seen.add(it["prompt"])
             it["name"] = f"brew-{tag}-r10d2-{len(out):04d}"
             out.append(it)
@@ -526,8 +527,21 @@ def main() -> int:
         "gate_hf.py, which stamps them for the subject)",
     )
     ap.add_argument("--out", required=True, type=Path)
+    ap.add_argument(
+        "--exclude",
+        nargs="*",
+        type=Path,
+        default=[],
+        help="earlier candidate/bank files whose prompts must not be re-emitted "
+        "(the frozen evals/<family>/items.json is always excluded)",
+    )
     a = ap.parse_args()
     rng = random.Random(a.seed)
+    for path in [Path("evals") / a.family / "items.json", *a.exclude]:
+        if path.exists():
+            EXCLUDE.update(it["prompt"] for it in json.loads(path.read_text())["items"])
+        elif path == Path("evals") / a.family / "items.json":
+            print("warn: run from the repo root so the frozen bank is excluded", file=sys.stderr)
     if a.family == "arithmetic_intermediates":
         vs = [v.strip() for v in a.variants.split(",") if v.strip()]
         bad = [v for v in vs if v not in VARIANTS]

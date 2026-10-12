@@ -24,13 +24,15 @@ from typing import Any
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from validate_bank import LIST_BANKS, MT_FAMILIES, load_any, make_shadow
 
-ANSWER_STEM = "My one-word answer is:"  # basic_readout implicit items (the plan's prefill)
+ANSWER_STEM = "My one-word answer is:"  # single-token answers; basic_readout implicit prefill
+MT_STEM = "My answer is:"  # the multi-token tier and its bridge questions
 FINAL_ANSWER = {"arithmetic_intermediates", "chain_intermediates", "brew_intermediates"}
 STRICT = {"chain_intermediates", "brew_intermediates"}  # 10/10 at T=0.8, top_p=0.95
 MC = {"conjunctive_association", "role_bound_association"}
 GREEDY_ONLY = {"relational_multihop"}  # greedy-correct, both items of a scene
 UNSUPPORTED = {
-    "moral_rationale": "its golds are elicited from the subject (SKILL.md, moral_rationale)",
+    "moral_rationale": "its golds are elicited from the subject: use moral_gate.py",
+    "buggy_code": "needs execution checks and the volunteering gate: use buggy_gate.py",
     "multi_concept_directed_modulation": "no capability gate: the sentence is prefilled",
     "user_modeling": "kept as-is in the reference recipe; use `wsbench capable` to check",
 }
@@ -75,13 +77,34 @@ def quick_match(answer: str, golds: list[str], final: bool) -> bool:
     return False
 
 
+def states_intermediate(item: dict[str, Any], answer: str) -> bool:
+    """Computational families: does the answer write an intermediate (the source gates'
+    max_leak = 0)? Numbers: a standalone numeral equal to it (sign-aware, within 1e-6);
+    brew colours: the committed (first) colour is the intermediate."""
+    inters = [str(x) for x in item.get("intermediates", [])]
+    nums = [as_num(n) for n in NUM.findall(answer.replace(",", ""))]
+    for x in inters:
+        xv = as_num(x)
+        if xv is None:
+            words = re.findall(r"[a-z]+", answer.lower())
+            if words and words[0] == x.lower():
+                return True
+        elif any(v is not None and abs(v - xv) <= 1e-6 * max(1.0, abs(xv)) for v in nums):
+            return True
+    return False
+
+
 def first_word(text: str) -> str:
     m = re.search(r"[^\W\d_][\w'-]*|\d+", text)
     return m.group(0).casefold().strip("'-") if m else ""
 
 
 def mc_letter(text: str) -> str:
-    m = re.match(r"\s*\(?([A-P])\)?(?![a-z])", text)
+    """The option letter: a bare letter (``B``, ``(B)``, ``B.``) or a letter followed by its own
+    bracket/colon/period (``B) envy``, ``B: envy``); a pronoun ("I think ...", "A tree")
+    is not a letter."""
+    t = text.strip()
+    m = re.fullmatch(r"\(?([A-P])\)?[.:]?", t) or re.match(r"\(?([A-P])(?:\)|[.:])\s", t)
     return m.group(1) if m else ""
 
 
@@ -130,7 +153,9 @@ def mc_ask(it: dict[str, Any]) -> tuple[str, str]:
     return ask, letters[opts.index(it["gold_label"])]
 
 
-def build_questions(family: str, items: dict[str, dict[str, Any]]) -> list[dict[str, Any]]:
+def build_questions(
+    family: str, items: dict[str, dict[str, Any]], stem: str | None = None
+) -> list[dict[str, Any]]:
     from wsbench.capable.questions import build
 
     out: list[dict[str, Any]] = []
@@ -161,11 +186,33 @@ def build_questions(family: str, items: dict[str, dict[str, Any]]) -> list[dict[
         for k, it in items.items():
             q(k, it["prompt"], [it["carrier"]], "dm", max_new=64)
     else:
+        # answer stems as in the source gates: "My answer is:" for the multi-token tier and
+        # its bridge questions, "My one-word answer is:" for single-token answers, none for the
+        # computational families (they say "Reply with only the final number")
+        if stem is None:
+            stem_ = (
+                ""
+                if family in FINAL_ANSWER
+                else MT_STEM
+                if family in MT_FAMILIES or family in GREEDY_ONLY
+                else ANSWER_STEM
+            )
+        else:
+            stem_ = stem
         for c in build(family):
             golds = list(c.golds)
             if family in FINAL_ANSWER:  # capable's golds are the intermediates for these
                 golds = [str(items[c.id.split(":bridge")[0]]["answer"])]
-            q(c.id, c.ask, golds, "greedy" if family in GREEDY_ONLY else "standard")
+            mode = "greedy" if family in GREEDY_ONLY else "standard"
+            leg_stem = MT_STEM if ":bridge" in c.id and stem is None else stem_
+            q(
+                c.id,
+                c.ask,
+                golds,
+                mode,
+                prefill=leg_stem,
+                max_new=32 if family in FINAL_ANSWER else 96,
+            )
         if family == "basic_readout":
             for k, it in items.items():
                 if it.get("subfamily") == "implicit":
@@ -210,6 +257,10 @@ class Subject:
         if prefill:
             ids += self.tok(prefill, add_special_tokens=False)["input_ids"]
         return ids
+
+    def render_raw(self, text: str) -> list[int]:
+        """A raw continuation render (no chat template; BOS as the tokenizer adds it)."""
+        return list(self.tok(text)["input_ids"])
 
     def generate(
         self,
@@ -367,7 +418,7 @@ def main() -> int:
 
     items_l = raw_items if is_list else load_bank(shadow / "evals" / fam / "items.json")[1]
     items = {key_of(fam, it): it for it in items_l}
-    qs = build_questions(fam, items)
+    qs = build_questions(fam, items, a.answer_stem)
     print(f"{fam}: {len(items)} items, {len(qs)} questions; loading {a.model}")
     subj = Subject(a.model, a.device, a.dtype)
     final = fam in FINAL_ANSWER
@@ -396,6 +447,9 @@ def main() -> int:
             return norm(ans) == norm(it["carrier"]) and not string_match(ans, [it["concept"]])
         if m in ("own_poetry", "own_implicit"):
             return None  # decided after sampling, against the greedy word
+        if final and states_intermediate(items[q["item"]], ans):
+            q["leaks"] = q.get("leaks", 0) + 1
+            return False  # it wrote the latent: a chain-of-thought rollout, never a pass
         if quick_match(ans, q["golds"], final):
             return True
         return None if a.grader and not final else False
@@ -470,8 +524,11 @@ def main() -> int:
         if m == "greedy":
             q["hits"], q["pass"] = None, q["greedy_ok"]
             continue
+        q["leaks"] = 0  # recount over greedy + samples (hit() was also called on the greedy)
         hits = sum(ok(i + 1, s) for i, s in enumerate(q.get("samples", [])))
-        q["hits"], q["pass"] = hits, q["greedy_ok"] and hits >= need
+        q["greedy_ok"] = ok(0, answers[0])
+        q["hits"] = hits
+        q["pass"] = q["greedy_ok"] and hits >= need and (not final or q["leaks"] == 0)
     # 5. item verdicts (every leg must pass; relational: both items of a scene)
     by_item: dict[str, list[dict[str, Any]]] = {}
     for q in qs:

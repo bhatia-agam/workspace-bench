@@ -302,7 +302,20 @@ def numeral_in(value: Any, text: str) -> bool:
     return bool(re.search(r"(?<![\d.])" + re.escape(bare) + r"(?![\d]|\.\d)", text))
 
 
-def norm_prompt(s: str) -> str:
+EXACT_DEDUPE = {
+    "arithmetic_intermediates",
+    "chain_intermediates",
+    "brew_intermediates",
+    "buggy_code",
+    "relational_multihop",
+}
+
+
+def norm_prompt(s: str, family: str = "") -> str:
+    """Dedupe key: words after folding; for the symbol-bearing families only whitespace is
+    normalised (`(a - b) - c` and `a - (b - c)` are different items)."""
+    if family in EXACT_DEDUPE:
+        return " ".join(str(s).split())
     return " ".join(re.findall(r"\w+", fold(s)))
 
 
@@ -370,19 +383,24 @@ def check_schema(
                     "a different instrument"
                 )
     req = REQUIRED.get(family, [])
+    soft_missing: dict[str, int] = {}
     common = set.intersection(*(set(i) for i in f_items)) if f_items else set()
     for it in items:
         missing = [k for k in req if k not in it]
         if missing:
             err(f"{item_key(it)}: missing required field(s) {missing}")
-        soft = sorted(common - set(it) - set(req) - {"id"})
-        if soft:
-            warn(f"{item_key(it)}: lacks {soft} (present on every frozen item)")
+        for f in sorted(common - set(it) - set(req) - {"id"}):
+            soft_missing[f] = soft_missing.get(f, 0) + 1
         for k in req:
             if k in it and f_items and k in f_items[0]:
                 a, b = type(it[k]).__name__, type(f_items[0][k]).__name__
                 if a != b and not {a, b} <= {"int", "float"}:
                     err(f"{item_key(it)}.{k}: type {a}, frozen bank uses {b}")
+    if soft_missing:
+        warn(
+            f"fields on every frozen item but missing here (provenance/gate records; fill "
+            f"what applies): {soft_missing}"
+        )
     ids = [item_key(it) for it in items]
     dup = [k for k, n in Counter(ids).items() if n > 1]
     if dup:
@@ -499,6 +517,7 @@ def check_guards(
             err(f"pair_id(s) without exactly two items (ab + ba): {bad[:5]}")
     if family == "arithmetic_intermediates":
         by_name = {str(it.get("name")): it for it in items}
+        small_null: list[str] = []
         for it in items:
             k = item_key(it)
             outside = [n for n in it.get("null_set", []) if n not in by_name]
@@ -512,15 +531,20 @@ def check_guards(
             if wrong:
                 err(f"{k}: null_set names items of another variant: {wrong[:3]}")
             if len(it.get("null_set", [])) < 8:
-                warn(f"{k}: null_set has {len(it.get('null_set', []))} items (< 8: noisy null)")
+                small_null.append(k)
             if it.get("pair") and it["pair"] not in by_name:
                 warn(f"{k}: twin {it['pair']!r} is not in this bank")
+        if small_null:
+            warn(
+                f"{len(small_null)} item(s) have a null_set < 8 (noisy permutation null; "
+                f"grow the variant): {small_null[:5]}"
+            )
     # dedupe within the new bank and against the frozen one
     seen: dict[str, str] = {}
-    frozen = {norm_prompt(prompt_text(family, it)): item_key(it) for it in f_items}
+    frozen = {norm_prompt(prompt_text(family, it), family): item_key(it) for it in f_items}
     frozen_words = [(item_key(it), words(prompt_text(family, it))) for it in f_items]
     for it in items:
-        k, p = item_key(it), norm_prompt(prompt_text(family, it))
+        k, p = item_key(it), norm_prompt(prompt_text(family, it), family)
         if not p:
             continue
         if p in seen and family not in ("directed_modulation",):

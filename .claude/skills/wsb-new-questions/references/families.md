@@ -38,10 +38,24 @@ and `G` is
   `eval_render: "plain"`, `readout: {"kind": "last_word_token", "offsets": [-1]}` (`-2` when
   the prompt ends with a space; `gate_hf.py` re-derives it for the subject tokenizer).
 - **Guards.** bridge != target; neither bridge nor target (nor an alias/translation of the
-  bridge) in the prompt (*lint*, folded word-boundary); prompt starts with `Fact:`; the bridge
-  is necessary (the answer must not be guessable from the surface words alone); one correct
+  bridge) in the prompt (*lint*, folded word-boundary); prompt starts with `Fact:`; one correct
   answer; dedupe on prompt and on target|bridge (*lint* warns on repeated latents and
   near-duplicates of frozen prompts).
+- **The bridge must be necessary** (check each item by hand; these are the failures a fresh
+  author makes):
+  - no SHORTCUT from a named entity straight to the answer: "the capital of the country where
+    the Brandenburg Gate stands" -> Berlin is answerable from the landmark's city without the
+    country; "born in Stratford-upon-" -> Avon completes a fixed phrase; "the river through
+    the city of the Eiffel Tower" names Paris's landmark, fine only because the bridge IS the
+    city (then the city is the latent, not the country);
+  - avoid answers that are a morphological derivative of the bridge (Poland -> Polish,
+    Hungary -> Hungarian, Vietnam -> Vietnamese) in more than a few items: a reader maps the
+    clue to the answer through the name's form;
+  - the clue must identify the bridge uniquely ("the country whose flag shows a red maple
+    leaf"), not merely a category.
+- **Diversity.** No relation template ("the language spoken in the country whose capital is
+  X") for more than ~20% of a batch; mix capital / language / currency / continent / ocean /
+  river / chemical symbol / first name / birthplace / author / inventor.
 - **Gate.** capability question = `Continue this text...` + prompt; gold = `target`.
 - **Note.** The scored latent is the bridge, but the gate checks only the surface answer:
   pick bridges the answer cannot be produced without.
@@ -239,9 +253,11 @@ L2 answer itself) + `language` unit.
   operands (absval<->signpair, subsub<->subsubx, frac p/q<->q/p) with `pair`; `null_set` =
   same-variant items of this bank separated by > 8% and > 5% (any distinct value under `exact`).
 - **Gate.** the bare prompt in chat (thinking off); sign-aware last-number match against
-  `answer`; greedy + >= 8/10 at T=0.7 (the source used T=0.8, top_p 0.95 and also rejected any
-  rollout stating an intermediate: read the gate answers for that); twins survive together and
-  `null_set`/`pair_survived` are pruned to survivors (`gate_hf.py`).
+  `answer`; greedy + >= 8/10; any rollout that WRITES an intermediate (a chain of thought such
+  as `123 - 204 = -81\n-81 * 59 = -4779`) is a leak and fails the item (the source's
+  `max_leak = 0`); twins survive together and `null_set`/`pair_survived` are pruned to
+  survivors (`gate_hf.py` does all of this). Small models (<= 2B) pass almost none: gate
+  >= 200 candidates before calling the family out of capability.
 
 ### chain_intermediates
 - **Generate.** `gen_deterministic.py --family chain_intermediates ...`: plain steps (add/sub
@@ -249,8 +265,8 @@ L2 answer itself) + `language` unit.
   start/intermediates/answer pairwise distinct, seed-LAST `prompt`.
 - **Guards.** no intermediate or answer appears as a numeral of either prompt order (*lint*);
   4 distractors per slot (start, answer, off-by-one/two, a prompt constant).
-- **Gate.** STRICT: greedy + 10/10 at T=0.8, top_p 0.95; first/last-number match against
-  `answer`.
+- **Gate.** STRICT: greedy + 10/10 at T=0.8, top_p 0.95; last-number match against
+  `answer`; a rollout writing an intermediate fails the item.
 
 ### brew_intermediates
 - **Generate.** `gen_deterministic.py --family brew_intermediates ...` (single mode, 10 rows,
@@ -272,10 +288,20 @@ L2 answer itself) + `language` unit.
   real result into `verified` in the bank's exact format; outputs differ; single-line stdout;
   raising items print nothing; no `random`/`time`/IO/`eval`; non-Python only if you can compile
   and run it. Add `twin` fields.
-- **Gate.** the model predicts the executed consequence when asked (>= 4/6) and NEVER volunteers
-  the bug in raw continuations of the bare program (judge 11 continuations; <= 2 hits =
-  "tolerant", 0 = "strict"), and no continuation prints the buggy stdout. `gate_hf.py` covers
-  only the first half (with `--grader`).
+- **Verify.** `uv run python .claude/skills/wsb-new-questions/scripts/buggy_gate.py verify
+  --bank cand/buggy.json` executes every Python program twice and rewrites `verified` from the
+  real run (multi-line stdout joined with ` | `, the bank's convention); it fails on
+  nondeterminism, forbidden imports/IO, prints from raising items, and a buggy output equal to
+  its twin's. (All 36 Python programs of the frozen bank pass it unchanged.)
+- **Gate.** `buggy_gate.py gate --bank ... --model <subject> --out gated/buggy [--judge <llm>]`:
+  consequence (chat "What does this program print? Reply with only the exact stdout, nothing
+  else.", greedy + 5 samples at T=0.8/0.95, >= 4/6 exact normalized stdout, or the exception
+  name for raising items); volunteering (raw continuation of the bare program, greedy + 10
+  samples; a continuation that names, fixes or simulates the bug is a hit; 0 hits = `strict`,
+  <= 2 = `tolerant`, more = fail; with `--judge` an LLM decides, without it a
+  trouble-vocabulary proxy only flags items and you must read `gate.json`); output leak (no
+  continuation contains the buggy stdout). A failed buggy item drops its clean twin.
+  `gate_hf.py` does not gate buggy_code.
 
 ### multi_concept_directed_modulation
 Frozen templates (head `Think about %s. Now write this sentence: "%s"\n`, control `Read
@@ -352,8 +378,15 @@ is prefilled); check write compliance of the producer.
   deliberative: 2+ competing considerations, `look_for_reasons` = top yes-side + top no-side,
   `must_surface_both: true`); never invent reasons. 3) Commit: greedy answer to `stimulus`
   (max 8 tokens); `gate_pass` = a clean one-word yes/no that agrees with the elicited majority
-  (any clean token for deliberative). Drop `gate_pass: false` items. Not automated by
-  `gate_hf.py`.
+  (any clean token for deliberative). Drop `gate_pass: false` items.
+- **Commands.** `uv run --extra gpu python .claude/skills/wsb-new-questions/scripts/moral_gate.py
+  --bank cand/moral.json --model <subject> --out gated/moral [--distiller <llm id>]`. Without
+  `--distiller` it stops after the GPU stage and writes `distil_requests.json` (one system +
+  user prompt per topic): distil them with any LLM (or yourself) into `distilled.json`
+  (`{topic_id: {classification, reasons:[{text, supports, terms, frequency}], yes_count,
+  no_count, other_count, notes}}`) and rerun with `--distilled gated/moral/distilled.json` (no
+  GPU). A deliberative topic that lacks a yes-side or a no-side reason is demoted to committed
+  (the judge needs exactly one of each). `gate_hf.py` does not gate moral_rationale.
 
 ## Not authorable as text
 
