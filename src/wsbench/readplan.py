@@ -124,6 +124,19 @@ def resolve(rule: dict[str, Any], tokens: list[str]) -> list[int]:
 
 def _from_last_sentence_start(tokens: list[str]) -> list[int]:
     n = len(tokens)
+    if "<｜User｜>" in tokens:  # DeepSeek-V4 subject (v4-flash-subject branch): no im_end
+        u0 = max(i for i, t in enumerate(tokens) if t == "<｜User｜>")
+        u1 = next((i for i in range(u0 + 1, n) if tokens[i] == "<｜Assistant｜>"), n)
+        body = list(range(u0 + 1, u1))
+        if not body:
+            return list(range(u1, n))
+        i = body[-1] - 1
+        while i > body[0]:
+            if re.search(r"[.!?]\s*$", _clean(tokens[i])):
+                break
+            i -= 1
+        start = i + 1 if i > body[0] else body[0]
+        return list(range(start, n))
     ends = [i for i, t in enumerate(tokens) if t == "<|im_end|>"]
     starts = [
         i
@@ -380,7 +393,9 @@ def plan(family: str) -> list[ReadSpec]:
                 family,
                 it["id"],
                 "chat_prefill",
-                {"kind": "last_n", "n": 12},
+                # v4-flash-subject: the 12 = the sentence's Qwen token count; read exactly the
+                # target sentence on any tokenizer instead
+                {"kind": "suffix_text", "text": header["target_sentence"]},
                 [int(x) for x in header["layers"]],
                 text=it["prompt"],
                 prefill=header["target_sentence"],
