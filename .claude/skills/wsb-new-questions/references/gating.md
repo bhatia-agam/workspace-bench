@@ -84,13 +84,21 @@ uses the capability questions above for every subject, so rates are comparable a
    brew use the **sign-aware final-answer rule**: a numeric gold must equal the answer's LAST
    number with its sign (`-1386` != `1386`; `string_match` alone would accept it because the
    minus is punctuation); a colour gold is a whole-word match.
-   **L2 answers** (multilingual, multilingual_mt, multilingual_multihop surface legs): an
-   answer that matches the item's English gloss (intermediates, en concept forms) and not the
+   **L2 answers** (multilingual, multilingual_mt, multilingual_multihop, multilingual_typo
+   surface legs): an answer that matches the item's English gloss (intermediates, the en forms
+   of the concept / correction unit) and not the
    L2 target is a deterministic FAIL, never sent to the LLM grader ("three" for "drei"), and
    the grader prompt for these legs adds that a translation into another language is wrong.
    **Final-number families**: an answer whose only number is the first intermediate is
    recorded as `stopped` (it stopped after step 1), apart from a chain-of-thought `leak`;
-   both fail.
+   both fail. On a 4B per-model chain build, 57-63% of failures were `stopped` and only 2-3%
+   true leaks: a weak subject mostly computes one step and answers it, so a wave dominated by
+   `stopped` needs fewer steps (`--easy`), not a different prompt.
+5. **Re-grading without re-decoding**: `gate_hf.py --reuse <earlier gate.json>` takes the
+   decoded greedy answers and samples of every question whose id AND text are unchanged,
+   re-grades everything with the current rules, and loads the model only if something new
+   must be decoded (a grader fix, an added variant, new items). Use it after any change to
+   grading, and to add waves cheaply.
 2. **Optional LLM grader** for answers the string match rejects (`--grader <model>`), with the
    repo's grade prompt (`wsbench.capable.run.GRADE_SYSTEM`: same word or value, inflection,
    established synonym/alias, faithful translation, same quantity written differently; a longer

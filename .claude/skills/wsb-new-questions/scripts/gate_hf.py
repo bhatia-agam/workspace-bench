@@ -31,7 +31,7 @@ STRICT = {"chain_intermediates", "brew_intermediates"}  # 10/10 at T=0.8, top_p=
 MC = {"conjunctive_association", "role_bound_association"}
 GREEDY_ONLY = {"relational_multihop"}
 # the answer must be in the prompt's (L2) language: an English gloss is wrong, never graded up
-L2_ANSWER = {"multilingual", "multilingual_mt", "multilingual_multihop"}
+L2_ANSWER = {"multilingual", "multilingual_mt", "multilingual_multihop", "multilingual_typo"}
 L2_GRADE_NOTE = (
     "\n\nThis question is in a language other than English and its answer must be in that "
     "same language. An answer in another language (e.g. an English translation of the "
@@ -564,6 +564,13 @@ def main() -> int:
         help="override the answer-stem prefill (default: the family's stem; '' = none)",
     )
     ap.add_argument(
+        "--reuse",
+        type=Path,
+        default=None,
+        help="an earlier gate.json of the SAME bank: reuse its decoded answers (greedy and "
+        "samples, by question id) and only generate what is missing; re-grades everything",
+    )
+    ap.add_argument(
         "--capacity",
         type=int,
         default=0,
@@ -584,17 +591,35 @@ def main() -> int:
     items = {key_of(fam, it): it for it in items_l}
     qs = build_questions(fam, items, a.answer_stem)
     print(f"{fam}: {len(items)} items, {len(qs)} questions; loading {a.model}")
-    subj = Subject(a.model, a.device, a.dtype)
     final = fam in FINAL_ANSWER
+    old: dict[str, dict[str, Any]] = {}
+    if a.reuse is not None:
+        old = {q["qid"]: q for q in json.loads(a.reuse.read_text(encoding="utf-8"))}
+    _subj: list[Subject] = []
+
+    def get_subj() -> Subject:  # loaded only when something must be generated
+        if not _subj:
+            _subj.append(Subject(a.model, a.device, a.dtype))
+        return _subj[0]
 
     # 1. greedy; a stem that makes the subject stop at once (empty answer: small models end
     # the turn after "My answer is:") is dropped for that question, which is re-asked bare
-    greedy_pass(subj, qs, a.batch)
-    empty = [q for q in qs if not q["greedy"] and q["prefill"]]
+    gen_g = []
+    for q in qs:
+        o = old.get(q["qid"])
+        if o is not None and "greedy" in o and o.get("ask") == q["ask"]:
+            for f in ("greedy", "truncated_greedy", "prefill", "stem_dropped"):
+                if f in o:
+                    q[f] = o[f]
+        else:
+            gen_g.append(q)
+    if gen_g:
+        greedy_pass(get_subj(), gen_g, a.batch)
+    empty = [q for q in gen_g if not q["greedy"] and q["prefill"]]
     for q in empty:
         q["prefill"], q["stem_dropped"] = "", True
     if empty:
-        greedy_pass(subj, empty, a.batch)
+        greedy_pass(get_subj(), empty, a.batch)
 
     def hit(q: dict[str, Any], ans: str) -> bool | None:
         m = q["mode"]
@@ -628,6 +653,12 @@ def main() -> int:
     temp, top_p = (0.8, 0.95) if strict else (0.7, 1.0)
     need = a.k if strict else a.min_pass
     todo = [q for q in qs if q["mode"] != "greedy" and q["greedy_ok"] is not False]
+    for q in todo:  # --reuse: samples already decoded for this question
+        o = old.get(q["qid"])
+        if o is not None and o.get("samples") and o.get("ask") == q["ask"]:
+            q["samples"], q["truncated_samples"] = o["samples"], o.get("truncated_samples", 0)
+    todo = [q for q in todo if "samples" not in q]
+    subj = get_subj() if todo else None
     for mx in sorted({q["max_new"] for q in todo}):
         group = [q for q in todo if q["max_new"] == mx]
         outs = subj.generate(
@@ -744,7 +775,12 @@ def main() -> int:
             if tw in items and not passed.get(tw):
                 passed[k] = False
     # 6. stamp passers for this subject
-    tok = subj.tok
+    if _subj:
+        tok = _subj[0].tok
+    else:
+        from transformers import AutoTokenizer
+
+        tok = AutoTokenizer.from_pretrained(a.model)
     kept, dropped = [], {}
     for k, it in items.items():
         if not passed.get(k):

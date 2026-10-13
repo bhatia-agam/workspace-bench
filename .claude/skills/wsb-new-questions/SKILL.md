@@ -83,6 +83,8 @@ not cover (see the modal_script.py docstring).
              --capacity N = how many candidates the family could EVER supply (e.g. the
              distinct dilemmas you can author); the OOC rule then needs min(200, N) gated
              candidates instead of 200 (gating.md section 6)
+             after a grading change, re-grade a wave without decoding again:
+               gate_hf.py ... --reuse gated/<family>/gate.json
 3b. steer    wave_report.py fails --family <family> --gated gated/<family>; author the next
              wave against the failure patterns (weak-model.md), then pool all waves:
                merge_gated.py --family <family> --out gated/<family>_all gated/<family> \
