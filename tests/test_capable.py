@@ -243,3 +243,13 @@ def test_cli_writes_one_file_per_family(tmp_path, monkeypatch):
     written = json.loads((tmp_path / "poetry" / "capable.json").read_text())
     assert written["model"] == "m" and written["aggregate"]["gate_rate"] == 1.0
     assert written["threshold"] == 0.8 and written["greedy"] is True
+
+
+def test_no_cot_families_graded_on_final_answer():
+    """chain / brew / arithmetic ask for the FINAL answer; grading against `intermediates` marked
+    every right answer wrong."""
+    from wsbench.capable.questions import _final_answer
+
+    assert _final_answer({"answer": 2, "intermediates": ["11", "5"]}) == ["2"]
+    assert _final_answer({"answer": "black", "intermediates": ["green"]}) == ["black"]
+    assert _final_answer({"intermediates": ["7"]}) == ["7"]  # no answer field: unchanged rule

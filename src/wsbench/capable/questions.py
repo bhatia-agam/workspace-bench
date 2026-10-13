@@ -60,6 +60,18 @@ def _golds(item: dict) -> list[str]:
     return list(dict.fromkeys(out))
 
 
+def _final_answer(item: dict) -> list[str]:
+    """The no-chain-of-thought families (chain, brew, arithmetic) ask for the FINAL answer and keep
+    it under ``answer``; their ``intermediates`` are the silent latent, never what the model says.
+    Grading against ``intermediates`` marked a right answer wrong on every item."""
+    answer = item.get("answer")
+    if isinstance(answer, int | float) and not isinstance(answer, bool):
+        return [str(answer)]
+    if isinstance(answer, str) and answer:
+        return [answer]
+    return _golds(item)
+
+
 def _reference(item: dict) -> float | None:
     """What the bank recorded for Qwen3.6-27B: the sampled consistency, or a gate block's
     ``correct / n``, or a pass flag. ``None`` when the bank kept no rate."""
@@ -82,7 +94,11 @@ def _item_meta(item: dict) -> dict[str, Any]:
 
 
 def _asked(
-    family: str, instruction: str, *, skip: Callable[[dict], bool] | None = None
+    family: str,
+    instruction: str,
+    *,
+    skip: Callable[[dict], bool] | None = None,
+    golds_of: Callable[[dict], list[str]] = _golds,
 ) -> Callable[[], list[Question]]:
     """A family whose bank prompt is the stimulus and whose task is stated by ``instruction``
     (empty when the bank prompt already states it)."""
@@ -90,7 +106,7 @@ def _asked(
     def build() -> list[Question]:
         out = []
         for it in bank_items(family):
-            golds = _golds(it)
+            golds = golds_of(it)
             if golds and not (skip and skip(it)):
                 ask = f"{instruction}\n\n{it['prompt']}" if instruction else it["prompt"]
                 out.append(Question(it["id"], ask, golds, _reference(it), _item_meta(it)))
@@ -263,9 +279,9 @@ BUILDERS: dict[str, Callable[[], list[Question]]] = {
     "multilingual_multihop": _with_bridges("multilingual_multihop"),
     "multilingual_typo": _asked("multilingual_typo", CORRECT_SPELLING),
     "typo_mt": _asked("typo_mt", CORRECT_SPELLING),
-    "arithmetic_intermediates": _asked("arithmetic_intermediates", ""),
-    "chain_intermediates": _asked("chain_intermediates", ""),
-    "brew_intermediates": _asked("brew_intermediates", ""),
+    "arithmetic_intermediates": _asked("arithmetic_intermediates", "", golds_of=_final_answer),
+    "chain_intermediates": _asked("chain_intermediates", "", golds_of=_final_answer),
+    "brew_intermediates": _asked("brew_intermediates", "", golds_of=_final_answer),
     "relational_multihop": _relational,
     "conjunctive_association": _own_question("conjunctive_association", "gold_label"),
     "role_bound_association": _own_question("role_bound_association", "gold_label"),
