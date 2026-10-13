@@ -24,8 +24,9 @@ equivalent (OpenRouter, reasoning effort minimal, so it is not a raw continuatio
   multi-token families this departs from the frozen gate, which was chat-only, and
   `gate_variant` records it; bridge legs stay chat questions):
   each item is ALSO gated as a raw continuation of the bare prompt (no chat template, 8 new
-  tokens, the continuation must START with the gold; poetry: its first word is the own-rhyme
-  candidate). The item passes if the chat OR the plain variant passes, every other leg
+  tokens; the gold must start the continuation or be a whole word among the first 4 words of
+  its first line, so "Indian Rupee" passes for "rupee"; poetry: the first word of the first
+  line is the own-rhyme candidate). The item passes if the chat OR the plain variant passes, every other leg
   included, and `gate_variant` records which ("plain" preferred, since it is the render the
   lens reads). This is how the frozen banks were gated (`gate_variant` plain for 56-80% of
   these items). Weak subjects often fail the chat ask (they restate the prompt, or answer
@@ -83,6 +84,13 @@ uses the capability questions above for every subject, so rates are comparable a
    brew use the **sign-aware final-answer rule**: a numeric gold must equal the answer's LAST
    number with its sign (`-1386` != `1386`; `string_match` alone would accept it because the
    minus is punctuation); a colour gold is a whole-word match.
+   **L2 answers** (multilingual, multilingual_mt, multilingual_multihop surface legs): an
+   answer that matches the item's English gloss (intermediates, en concept forms) and not the
+   L2 target is a deterministic FAIL, never sent to the LLM grader ("three" for "drei"), and
+   the grader prompt for these legs adds that a translation into another language is wrong.
+   **Final-number families**: an answer whose only number is the first intermediate is
+   recorded as `stopped` (it stopped after step 1), apart from a chain-of-thought `leak`;
+   both fail.
 2. **Optional LLM grader** for answers the string match rejects (`--grader <model>`), with the
    repo's grade prompt (`wsbench.capable.run.GRADE_SYSTEM`: same word or value, inflection,
    established synonym/alias, faithful translation, same quantity written differently; a longer

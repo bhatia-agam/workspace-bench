@@ -81,7 +81,9 @@ uv run python .claude/skills/wsb-new-questions/scripts/wave_report.py mix \
 
 It prints, and fails above the cap (default 20% of the bank, checked from 3 items up; buggy
 counts buggy items only, moral counts topics; `category` (buggy), `relation` (multihop) and
-`domain` (moral) are capped, other type fields are informational):
+`domain` (moral) are capped, other type fields are informational; chain is capped on its step
+sequence (a 4B build collapsed to "add > add" for 26% of passers), and the shared prompt frame
+of the computational families is not capped):
 the per-item type fields that exist (`subfamily`, `variant`, `tier`, `domain`, ...), the
 prompt template (first 8 words with names and numbers masked), the scored latent, and the
 entities named in more than one prompt. Fix by authoring the next wave AWAY from the dominant
@@ -102,6 +104,7 @@ work, organism}), and pass an ALREADY-TAKEN list of latents.
 | greedy right, samples inconsistent | borderline knowledge | more frequent entities, or one fewer hop / step; do not lower the bar |
 | bridges known, composition fails | the model knows each fact but does not compose them silently | shorter hops (2hop), more common relations; this is the real capability limit, record it |
 | surface right, a bridge leg fails | the answer is reachable without the bridge (shortcut) or the bridge question is bad | check the item for a shortcut and drop it; else reword the bridge question / add answer aliases |
+| stopped after step 1 | it answered the first intermediate (computed one step, then stopped) | fewer steps (`--easy`, depth 2); a genuine capability limit, not a format issue |
 | cot_leak (wrote the intermediate) | it computes out loud | keep the answer stem; prefer expressions whose intermediate is not natural to write; never accept the item |
 | truncated | answer cut at max_new | read `gate.json`; a verbose model needs the answer stem (it is on by default) or a shorter question, not a bigger budget for a final-answer family |
 | poetry: greedy word does not rhyme | the model writes a non-rhyme or repeats | end words with big common rhyme sets; line two that forces the rhyme harder |

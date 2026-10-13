@@ -101,8 +101,18 @@ def cmd_mix(family: str, bank: Path, cap: float) -> int:
         if len(vals) >= n / 2:
             capped = f in CAPPED_FIELDS.get(family, set())
             show(f"field {f!r}{'' if capped else ' (not capped)'}", Counter(vals), check=capped)
+    if family == "chain_intermediates":  # its templates are the step sequences
+        seq = Counter(
+            " > ".join(map(str, it.get("kinds") or it.get("steps") or [])) for it in items
+        )
+        show("step sequence", seq)
     texts = [prompt_text(family, it) for it in items]
-    show("prompt template (first words, names/numbers masked)", Counter(map(skeleton, texts)))
+    fixed = family in ("chain_intermediates", "arithmetic_intermediates", "brew_intermediates")
+    show(  # the computational families share one prompt frame by design
+        "prompt template (first words, names/numbers masked)",
+        Counter(map(skeleton, texts)),
+        check=not fixed,
+    )
     lat = Counter(latent(family, it) for it in items)
     if any(lat):
         show("scored latent", lat, check=True)
@@ -125,6 +135,8 @@ def leg_pattern(q: dict[str, Any]) -> str:
     """Why one failed gate question failed."""
     if q.get("leaks"):
         return "cot_leak (wrote the intermediate)"
+    if q.get("stopped"):
+        return "stopped after step 1 (answered the first intermediate)"
     if q["mode"].startswith("own_poetry"):
         if not q.get("word"):
             return "poetry: no first word"

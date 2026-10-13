@@ -30,6 +30,13 @@ FINAL_ANSWER = {"arithmetic_intermediates", "chain_intermediates", "brew_interme
 STRICT = {"chain_intermediates", "brew_intermediates"}  # 10/10 at T=0.8, top_p=0.95
 MC = {"conjunctive_association", "role_bound_association"}
 GREEDY_ONLY = {"relational_multihop"}
+# the answer must be in the prompt's (L2) language: an English gloss is wrong, never graded up
+L2_ANSWER = {"multilingual", "multilingual_mt", "multilingual_multihop"}
+L2_GRADE_NOTE = (
+    "\n\nThis question is in a language other than English and its answer must be in that "
+    "same language. An answer in another language (e.g. an English translation of the "
+    "correct word) is INCORRECT."
+)
 # also gated as a raw continuation of the prompt (their read render is plain); typo families
 # are excluded (the continuation of a misspelling is not its correction)
 PLAIN_VARIANT = {
@@ -124,6 +131,26 @@ def quick_match(answer: str, golds: list[str], final: bool, ask: str = "") -> bo
     return False
 
 
+def stopped_at_first(item: dict[str, Any], answer: str) -> bool:
+    """The answer's only number is the FIRST intermediate: it stopped after step 1 (a wrong
+    answer, labelled apart from a chain-of-thought leak, which writes steps on the way)."""
+    inters = [str(x) for x in item.get("intermediates", [])]
+    nums = [as_num(n) for n in NUM.findall(answer.replace(",", ""))]
+    first = as_num(inters[0]) if inters else None
+    return first is not None and len(nums) == 1 and nums[0] is not None and nums[0] == first
+
+
+def english_glosses(item: dict[str, Any]) -> list[str]:
+    """English renderings of an L2 answer (multilingual intermediates, concept/correction en
+    forms) that must NOT count as the answer to an L2 prompt."""
+    out = [str(x) for x in item.get("intermediates", []) if str(x)]
+    for u in item.get("units", []) or []:
+        if u.get("role") in ("concept", "correction", "readout"):
+            out += [str(f) for f in (u.get("forms") or {}).get("en", [])]
+    tg = {norm(str(t)) for t in [item.get("target"), *(item.get("target_alts") or [])] if t}
+    return [g for g in dict.fromkeys(out) if norm(g) not in tg]
+
+
 def states_intermediate(item: dict[str, Any], answer: str) -> bool:
     """Computational families: does the answer write an intermediate (the source gates'
     max_leak = 0)? Numbers: a standalone numeral equal to it (sign-aware, within 1e-6);
@@ -153,12 +180,21 @@ def clean_answer(text: str) -> str:
     return text.strip()
 
 
+PLAIN_SPAN = 4  # words of the continuation's first line a plain gold may sit in
+
+
 def plain_match(answer: str, golds: list[str]) -> bool:
-    """Raw-continuation grading: the continuation STARTS with a gold (whole word; CJK golds
-    by prefix). A gold later in the text is a different continuation, not the answer."""
+    """Raw-continuation grading: the continuation starts with a gold (CJK golds by prefix),
+    or a gold is a whole word among the first PLAIN_SPAN words of its first line. A gold
+    later in the text is a different continuation, not the answer."""
     a = norm(answer)
+    head = " " + " ".join(norm(answer.split("\n", 1)[0]).split()[:PLAIN_SPAN]) + " "
     for g in map(norm, map(str, golds)):
-        if g and (a == g or a.startswith(g + " ") or (_CJK.search(g) and a.startswith(g))):
+        if not g:
+            continue
+        if a == g or a.startswith(g + " ") or (_CJK.search(g) and a.startswith(g)):
+            return True
+        if f" {g} " in head:  # "Indian Rupee" for "rupee": a whole word in the first words
             return True
     return False
 
@@ -572,10 +608,17 @@ def main() -> int:
         if m == "plain":
             return plain_match(ans, q["golds"])
         if final and states_intermediate(items[q["item"]], ans):
-            q["leaks"] = q.get("leaks", 0) + 1
+            if stopped_at_first(items[q["item"]], ans):
+                q["stopped"] = q.get("stopped", 0) + 1  # answered step 1: wrong, not a leak
+            else:
+                q["leaks"] = q.get("leaks", 0) + 1
             return False  # it wrote the latent: a chain-of-thought rollout, never a pass
         if quick_match(ans, q["golds"], final, q["ask"]):
             return True
+        if fam in L2_ANSWER and ":bridge" not in q["qid"]:
+            glosses = english_glosses(items[q["item"]])
+            if glosses and anchored_match(ans, glosses, q["ask"]):
+                return False  # answered in English, not in the prompt's language
         return None if a.grader and not final else False
 
     for q in qs:
@@ -614,7 +657,11 @@ def main() -> int:
                     pend.append((q, i, ans))
         verdicts: dict[tuple[str, int], bool] = {}
         prompts = [
-            (GRADE_SYSTEM, render_grade(Question(q["qid"], q["ask"], q["golds"]), ans))
+            (
+                GRADE_SYSTEM
+                + (L2_GRADE_NOTE if fam in L2_ANSWER and ":bridge" not in q["qid"] else ""),
+                render_grade(Question(q["qid"], q["ask"], q["golds"]), ans),
+            )
             for q, _i, ans in pend
         ]
 
@@ -654,7 +701,10 @@ def main() -> int:
             continue
         # strict = the deterministic matcher alone (no LLM grader rescue)
         q["hits_strict"] = sum(bool(hit(q, s)) for s in q.get("samples", []))
-        q["leaks"] = 0  # recount over greedy + samples (hit() was also called on the greedy)
+        q["leaks"], q["stopped"] = (
+            0,
+            0,
+        )  # recount over greedy + samples (hit() was also called on the greedy)
         hits = sum(ok(i + 1, s) for i, s in enumerate(q.get("samples", [])))
         q["greedy_ok"] = ok(0, answers[0])
         q["hits"] = hits
