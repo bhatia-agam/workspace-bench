@@ -39,11 +39,15 @@ def resolve(
         model, source = env_model, "env"
     else:
         model, source = config.model, "family"
-    if config.reasoning is not None:
+    if config.reasoning is not None and route(model) == route(config.model):
+        # explicit reasoning is written for its pinned model's route; an override onto the other
+        # route (e.g. hallucination's Gemini {"effort": "minimal"} -> claude-opus-5-5) re-derives
         reasoning: dict | None = config.reasoning
     elif route(model) == "openrouter":
         reasoning = dict(DEFAULT_REASONING)
-    elif env.get(ANTHROPIC_EFFORT_ENV):  # Anthropic route: optional output_config.effort
+    elif env.get(ANTHROPIC_EFFORT_ENV) and model != config.model:
+        # Anthropic override judge only: optional output_config.effort (a pinned Claude family
+        # stays exactly as pinned)
         reasoning = {"effort": env[ANTHROPIC_EFFORT_ENV]}
     else:
         reasoning = None

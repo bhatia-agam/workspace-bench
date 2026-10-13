@@ -64,3 +64,18 @@ def test_anthropic_effort_env():
     assert resolve(cfg, flag="claude-opus-5-5").reasoning is None
     # the OpenRouter default is untouched by the Anthropic knob
     assert resolve(cfg, env={ANTHROPIC_EFFORT_ENV: "low"}).reasoning == {"effort": "minimal"}
+
+
+def test_anthropic_route_ignores_openrouter_reasoning_and_keeps_pins():
+    from wsbench.judge_config import ANTHROPIC_EFFORT_ENV, JudgeConfig, resolve
+
+    # hallucination-style OpenRouter pin: never sent to an Anthropic override judge
+    hall = JudgeConfig(reasoning={"effort": "minimal"})
+    assert resolve(hall, flag="claude-opus-5-5").reasoning is None
+    assert resolve(hall, flag="claude-opus-5-5", env={ANTHROPIC_EFFORT_ENV: "low"}).reasoning == {
+        "effort": "low"
+    }
+    assert resolve(hall).reasoning == {"effort": "minimal"}  # its own Gemini route: unchanged
+    # a pinned Claude family is not touched by the effort knob
+    pinned = JudgeConfig(model="claude-sonnet-5", reasoning=None)
+    assert resolve(pinned, env={ANTHROPIC_EFFORT_ENV: "low"}).reasoning is None

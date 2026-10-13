@@ -486,3 +486,17 @@ def test_anthropic_schema_drops_numeric_bounds():
     out = llm.anthropic_schema(s)
     assert out["properties"]["score"] == {"type": "integer"} and out["required"] == ["score"]
     assert s["properties"]["score"]["minimum"] == 1  # the input is not mutated
+
+
+def test_anthropic_schema_drops_range_keywords(keys, fast, monkeypatch):
+    """Anthropic structured outputs 400 on integer minimum/maximum: they are stripped."""
+    from wsbench.llm import stream_json
+
+    ranged = schema_block("t", {"s": {"type": "integer", "minimum": 1, "maximum": 10}}, ["s"])
+    fake = FakeAnthropic([_claude_response('{"s": 4}')])
+    _install(monkeypatch, fake)
+    got: dict = {}
+    stream_json([("s", "u")], schema=ranged, model=CLAUDE, on_result=got.__setitem__)
+    sent = fake.calls[0]["output_config"]["format"]["schema"]
+    assert "minimum" not in json.dumps(sent) and "maximum" not in json.dumps(sent)
+    assert got == {0: {"s": 4}}

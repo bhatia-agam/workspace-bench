@@ -218,11 +218,12 @@ def test_missing_key_uses_profile(fast, monkeypatch):
 
 
 def test_thinking_off_on_model_that_cannot_disable(keys, fast, monkeypatch):
-    """claude-opus-5-5 400s on thinking disabled: "off" becomes thinking omitted + low effort."""
+    """claude-opus-5-5 400s on thinking disabled: "off" becomes adaptive thinking + low effort
+    (bench main's mapping, ``llm.always_thinks``)."""
     fake = FakeAnthropicStream(["a note"])
     _collect(["u"], fake, monkeypatch, model="claude-opus-5-5", thinking=False)
     kw = fake.calls[0]
-    assert "thinking" not in kw and kw["output_config"] == {"effort": "low"}
+    assert kw["thinking"] == {"type": "adaptive"} and kw["output_config"] == {"effort": "low"}
 
 
 def test_bad_concurrency_and_rpm(keys, monkeypatch):
@@ -331,3 +332,18 @@ def test_refusal_can_be_marked(keys, fast, monkeypatch):
         mark_refusals=True,
     )
     assert got == {0: llm.REFUSED}
+
+
+def test_truncated_text_retried_when_thinking_cannot_be_disabled(keys, fast, monkeypatch):
+    """claude-opus-5-5 thinks even when "off": a partial note at max_tokens is retried with a
+    doubled budget, not returned (and cached) as the answer."""
+    fake = FakeAnthropicStream([text_response("half a no", stop_reason="max_tokens"), "full note"])
+    got, _ = _collect(["u"], fake, monkeypatch, model="claude-opus-5-5", max_tokens=400)
+    assert got == {0: "full note"}
+    assert [c["max_tokens"] for c in fake.calls] == [400, 800]
+
+
+def test_partial_text_kept_when_thinking_was_off(keys, fast, monkeypatch):
+    fake = FakeAnthropicStream([text_response("short", stop_reason="max_tokens")])
+    got, _ = _collect(["u"], fake, monkeypatch, model=CLAUDE, max_tokens=400)
+    assert got == {0: "short"} and len(fake.calls) == 1
