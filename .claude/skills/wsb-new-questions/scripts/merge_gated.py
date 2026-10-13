@@ -29,6 +29,17 @@ def main() -> int:
     ap.add_argument("--family", required=True)
     ap.add_argument("--out", required=True, type=Path)
     ap.add_argument("--capacity", type=int, default=0, help="as for gate_hf.py")
+    ap.add_argument(
+        "--target",
+        type=int,
+        default=0,
+        help="wanted bank size; with --budget-spent a shortfall is reported as capped",
+    )
+    ap.add_argument(
+        "--budget-spent",
+        action="store_true",
+        help="no more waves will be gated (wave budget or generator exhausted)",
+    )
     ap.add_argument("waves", nargs="+", type=Path, help="gate_hf.py --out dirs, in wave order")
     a = ap.parse_args()
     fam, is_list = a.family, a.family in LIST_BANKS
@@ -67,6 +78,12 @@ def main() -> int:
             it["pair_survived"] = it.get("pair") in names
     rate = n_pass / max(1, n_items)
     status = ooc_status(n_items, rate, a.capacity)
+    if a.budget_spent and status != "ooc" and len(kept) < a.target:
+        status = f"capped ({len(kept)} of target {a.target}; was: {status})"
+    elif a.target and len(kept) < a.target and status == "in-capability":
+        status = (
+            f"in-capability, short of target ({len(kept)}/{a.target}): gate more or --budget-spent"
+        )
     a.out.mkdir(parents=True, exist_ok=True)
     if not is_list:
         header["gate"] = f"{header.get('gate', '')} [pooled over {len(a.waves)} waves]".strip()

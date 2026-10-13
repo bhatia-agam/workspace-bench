@@ -42,8 +42,8 @@ From `summary.json`: `pass_rate` p, and `want_more_candidates_for_100` (= ceil(m
 | pilot pass rate | action |
 |---|---|
 | >= 40% | author the full set at the frozen difficulty; budget = target / p * 1.3 |
-| 10-40% | author with the easier knobs (section 2) for the weak legs; re-estimate after wave 1 |
-| 1-10% | pilot ONE easier wave of 30 first; if it stays < 10%, cap the target (e.g. 30-50) and say so |
+| 10% to < 40% | author with the easier knobs (section 2) for the weak legs; re-estimate after wave 1 |
+| > 0 to < 10% | pilot ONE easier wave of 30 first; if it stays < 10%, cap the target (e.g. 30-50) and say so |
 | 0 of 30 | look at `fails`: if answers are simply wrong (not truncated, not leaking, not mis-graded), try one easier pilot; 0 again -> stop at "undetermined" or keep gating to the OOC floor (min(200, capacity)) only if the family matters |
 
 A pilot is a wave: keep its gated dir and pool it later with `merge_gated.py`.
@@ -52,8 +52,8 @@ A pilot is a wave: keep its gated dir and pool it later with `merge_gated.py`.
 
 | family | turn down (still valid) | never (breaks the construct) |
 |---|---|---|
-| multihop | top-frequency bridges (G20 countries, world capitals, famous people); relations the model knows (capital, language, currency, continent, chemical symbol, author of a top-50 book); one hop only | naming the bridge's own city/landmark when the bridge is the country's capital (shortcut); fixed phrases ("Stratford-upon-"); answer = derivative of the bridge for > 20% |
-| multihop_mt | 2hop only (drop 3hop); famous bridges with 2-4-word canonical names; targets that are well-known multi-word names | single-token forms; a bridge2 question that leaks bridge1's answer; long-tail facts the model cannot recall (they fail the bridge leg anyway) |
+| multihop | top-frequency bridges (G20 countries, famous people); relations the model knows (language, currency, capital, chemical symbol); `target_alts` for multi-word continuations ("pound sterling"); one hop only | a clue city whose own property is the answer (capital Tokyo -> continent Asia, Reykjavik -> Atlantic, London -> pound: the city alone gives it, the country is not needed); fixed phrases ("Stratford-upon-"); a first-word target of a multi-word answer ("South" for South America); answer = derivative of the bridge for > 20% |
+| multihop_mt | 2hop only (drop 3hop); famous bridges with 2-4-word canonical names; targets that are well-known multi-word names. Expect "bridges known, composition fails" to dominate on <= 1B subjects (Qwen3.5-0.8B: 4 of 86): that is the capability limit, record it as capped/undetermined | single-token forms; a bridge2 question that leaks bridge1's answer; long-tail facts the model cannot recall (they fail the bridge leg anyway) |
 | multilingual / _mt | the model's strongest L2s (check per-language pass in the pilot); concrete nouns over abstract ones | the target in the prompt in any script; the language name in the prompt |
 | typo / typo_mt | frequent words, one-character edits, typos that keep the first letters | a typo that is itself a word; a prompt that does not end with the misspelling |
 | association | high-frequency associates with one dominant answer | an associate that names the latent |
@@ -79,7 +79,9 @@ uv run python .claude/skills/wsb-new-questions/scripts/wave_report.py mix \
   --family <family> --bank gated/<family>_all/items.json --cap 0.2
 ```
 
-It prints, and fails above the cap (default 20% of the bank, only checked from 5 items up):
+It prints, and fails above the cap (default 20% of the bank, checked from 3 items up; buggy
+counts buggy items only, moral counts topics; `category` (buggy), `relation` (multihop) and
+`domain` (moral) are capped, other type fields are informational):
 the per-item type fields that exist (`subfamily`, `variant`, `tier`, `domain`, ...), the
 prompt template (first 8 words with names and numbers masked), the scored latent, and the
 entities named in more than one prompt. Fix by authoring the next wave AWAY from the dominant
@@ -106,6 +108,8 @@ work, organism}), and pass an ALREADY-TAKEN list of latents.
 | poetry: rhymes but unstable | two rhymes compete | constrain line two's meaning to one word |
 | mc: no parsable letter | it answers in prose | check the gate.json answers; if widespread, report it (the MC ask already says "letter only") |
 | mc: wrong or unstable letter | the scene does not convey the relation to this model | concrete actions, distinct roles, tier A |
+| mc: right in one option order only | position bias ("always B"); the gate asks both orders | nothing to author around; a note "greedy answered 'B' on 25/30" means the subject cannot do the MC task: stop (Qwen3.5-0.8B role_bound: 0 of 60) |
+| role_bound: one direction passes, its pair fails | the subject answers from priors (counter-stereotypical direction fails) | role-neutral actions help a 2B; a 0.8B still failed: record undetermined |
 
 ## 5. The weak-model gate (already in the scripts; know what it does)
 
@@ -175,3 +179,21 @@ Smoke checks on Qwen3.5-0.8B after the fixes: multihop 9/24 (6 of the 9 via the 
 variant), multihop_mt 4/13 (the stem fallback recovered items whose stemmed answer was
 empty), poetry 4/12 frozen couplets (plain_stripped), arithmetic `--easy` 1/40 (65% greedy
 wrong, 30% CoT leak: still out of reach for 0.8B).
+
+Round 3 (fresh agent, Qwen3.5-0.8B, this workflow end to end: pilot of 30, up to 3 waves
+steered by `fails`, `merge_gated`, `mix`, hand drops for shortcuts):
+
+| family | pilot | w2 | w3 | pooled | final | status / what steered the waves |
+|---|---|---|---|---|---|---|
+| poetry | 9/30 | 7/30 | 9/30 | 25/90 (28%) | 25 | in-capability; all via plain_stripped; w2/w3 cut line two right before a strong collocation |
+| multihop | 6/30 | 6/30 | 7/30 | 19/90 (21%) | 14 | in-capability; person/element/colour bridges all failed, so later waves used language/continent/river; 5 hand drops (3 capital->river shortcuts, derivative cap) |
+| moral | 24/30 | 9/24 | - | 33/54 (61%) | 27 (17 topics) | in-capability; w2 wrote yes-intuitive questions against the "No." bias; 6 incoherent topics dropped by hand |
+| buggy_code | 0/21 | 4/20 | 4/18 | 8/59 (14%) | 8 pairs | in-capability; pilot programs too long (it could not simulate `n * 2`), w2/w3 2-5 line string/branch programs |
+| multihop_mt | 3/30 | 0/30 | 1/26 | 4/86 (5%) | 4 | capped; 45 of 86 "bridges known, composition fails" |
+| role_bound | 0/30 | 0/30 | - | 0/60 | none | undetermined; stereotypical direction 13/15, counter-stereotypical 2/15, then greedy "B" on 22/30: position bias |
+
+Strict review of those banks found what the lints cannot: capital-city clues whose own
+property is the answer (Tokyo -> Asia, Reykjavik -> Atlantic), a first-word target
+("South"), buggy items whose output is a visible literal ("Ann Ann"), and a moral bank that
+commits "no" 23 of 27 times. They are the "never" column of section 2 and the read-by-eye
+step of the QA checklist; a weak-model bank is not done until a reviewer has read every item.

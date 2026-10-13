@@ -39,7 +39,17 @@ TYPE_FIELDS = (
 # the scored latent per family where it is not intermediates/bridge/target; "" = no latent cap
 # (moral repeats each topic in two formats by design; buggy's latent is per-program)
 LATENT_FIELD = {"role_bound_association": "action", "moral_rationale": "", "buggy_code": ""}
-ENTITY = re.compile(r"(?<![.!?:]\s)(?<!^)\b[A-Z][\w'-]+(?:\s+(?:of|the|de|von|[A-Z][\w'-]+))*")
+# a capitalised name not at a sentence or line start (line starts: poetry lines, code)
+ENTITY = re.compile(
+    r"(?<![.!?:]\s)(?<!^)(?<!\n)\b[A-Z][\w'-]+(?:\s+(?:of|the|de|von|[A-Z][\w'-]+))*"
+)
+# type fields that ARE capped (many possible values; the rest are informational)
+CAPPED_FIELDS = {
+    "buggy_code": {"category"},
+    "multihop": {"relation"},
+    "moral_rationale": {"domain"},
+}
+CODE_FAMILIES = {"buggy_code", "arithmetic_intermediates", "chain_intermediates"}
 SKELETON_WORDS = 8
 
 
@@ -65,6 +75,10 @@ def latent(family: str, it: dict[str, Any]) -> str:
 
 def cmd_mix(family: str, bank: Path, cap: float) -> int:
     _h, items, _l = load_any(bank)
+    if family == "buggy_code":  # clean twins mirror their buggy item: count the buggy ones
+        items = [it for it in items if it.get("src") != "clean"]
+    if family == "moral_rationale":  # one row per topic (each topic has a tf and a yn item)
+        items = list({str(it.get("topic_id")): it for it in items}.values())
     n = len(items)
     if not n:
         print("empty bank")
@@ -75,22 +89,26 @@ def cmd_mix(family: str, bank: Path, cap: float) -> int:
         nonlocal bad
         top = c.most_common(limit)
         share = top[0][1] / n if top else 0.0
-        flag = check and share > cap and n >= 5
+        flag = check and share > cap and n >= 3
         bad |= flag
         over = " OVER CAP" if flag else ""
         print(f"{title}: {len(c)} distinct over {n} items; largest {share:.0%}{over}")
         for k, v in top:
             print(f"   {v:3d}  {k}")
 
-    for f in TYPE_FIELDS:  # informational: a 2-valued field can never be under a 20% cap
+    for f in TYPE_FIELDS:  # informational unless capped: a 2-valued field can't be under 20%
         vals = [str(it[f]) for it in items if f in it]
-        if len(vals) == n:
-            show(f"field {f!r} (not capped)", Counter(vals), check=False)
+        if len(vals) >= n / 2:
+            capped = f in CAPPED_FIELDS.get(family, set())
+            show(f"field {f!r}{'' if capped else ' (not capped)'}", Counter(vals), check=capped)
     texts = [prompt_text(family, it) for it in items]
     show("prompt template (first words, names/numbers masked)", Counter(map(skeleton, texts)))
     lat = Counter(latent(family, it) for it in items)
     if any(lat):
         show("scored latent", lat, check=True)
+    if family in CODE_FAMILIES:
+        print("MIX " + ("FAIL (diversify the next wave; see weak-model.md)" if bad else "OK"))
+        return 1 if bad else 0
     ents: dict[str, set[str]] = defaultdict(set)
     for it, t in zip(items, texts, strict=True):
         for m in ENTITY.findall(t):
@@ -103,46 +121,101 @@ def cmd_mix(family: str, bank: Path, cap: float) -> int:
     return 1 if bad else 0
 
 
-def pattern(fam: str, legs: list[dict[str, Any]]) -> str:
-    """One failure pattern per item (first that applies)."""
-    main = next((q for q in legs if ":bridge" not in q["qid"]), legs[0])
-    bridges = [q for q in legs if ":bridge" in q["qid"]]
-    if all(q.get("pass") for q in legs):
-        return "pass"
-    if any(q.get("leaks") for q in legs):
+def leg_pattern(q: dict[str, Any]) -> str:
+    """Why one failed gate question failed."""
+    if q.get("leaks"):
         return "cot_leak (wrote the intermediate)"
-    if main.get("truncated_greedy"):
-        return "truncated (no stop token within max_new)"
-    if main["mode"] == "own_poetry":
-        if not main.get("word"):
+    if q["mode"].startswith("own_poetry"):
+        if not q.get("word"):
             return "poetry: no first word"
-        if not main.get("rhymes"):
+        if not q.get("rhymes"):
             return "poetry: greedy word does not rhyme"
         return "poetry: rhymes but unstable (< need samples agree)"
-    if main["mode"] == "mc":
+    if q["mode"] == "mc":
         from gate_hf import mc_letter
 
-        if not mc_letter(main.get("greedy", "")):
+        if not mc_letter(q.get("greedy", "")):
             return "mc: no parsable letter"
         return "mc: wrong or unstable letter"
-    if bridges and all(q.get("pass") for q in bridges) and not main.get("pass"):
-        return "bridges known, composition fails"
-    if bridges and main.get("pass"):
-        return "surface right, a bridge leg fails"
-    if not main.get("greedy_ok"):
+    if q.get("truncated_greedy") and not q.get("raw"):  # raw legs always run to max_new
+        return "truncated (no stop token within max_new)"
+    if not q.get("greedy_ok"):
         return "greedy wrong"
     return "greedy right, samples inconsistent"
 
 
+def pattern(k: str, legs: list[dict[str, Any]]) -> str:
+    """One pattern per item. The gate variants (chat `k`, raw `k:plain`) are alternatives: the
+    item passes when one of them and every other leg (bridges, reversed MC order) pass."""
+    variants = [q for q in legs if q["qid"] in (k, f"{k}:plain")] or legs[:1]
+    others = [q for q in legs if q not in variants]
+    v_ok = any(q.get("pass") for q in variants)
+    if v_ok and all(q.get("pass") for q in others):
+        via = next(q for q in variants if q.get("pass"))
+        return "pass (plain variant)" if via["qid"].endswith(":plain") else "pass"
+    rev = [q for q in others if q["qid"].endswith(":mc_reversed")]
+    if rev and v_ok != bool(rev[0].get("pass")):
+        return "mc: right in one option order only (position bias)"
+    bridges = [q for q in others if ":bridge" in q["qid"]]
+    if bridges and v_ok:
+        return "surface right, a bridge leg fails"
+    if bridges and all(q.get("pass") for q in bridges):
+        return "bridges known, composition fails"
+    best = max(variants, key=lambda q: q.get("hits") or 0)
+    tag = " [plain]" if best["qid"].endswith(":plain") else ""
+    return leg_pattern(best) + tag
+
+
+def buggy_pattern(r: dict[str, Any]) -> str:
+    if r.get("pass"):
+        return "pass"
+    got, _n = (int(x) for x in str(r.get("consequence_hits", "0/6")).split("/"))
+    if got < 4:
+        return "consequence: mispredicts the buggy output (< 4/6)"
+    if r.get("gate_tier") == "fail":
+        return "volunteers / fixes the bug in continuations"
+    if r.get("output_leak") is True:
+        return "continuations leak the buggy output"
+    return "undecided judge call"
+
+
+def moral_pattern(it: dict[str, Any]) -> str:
+    if it.get("gate_pass"):
+        return f"pass ({it.get('reason_class')}, commits {it.get('commit_direction')})"
+    if not it.get("look_for_reasons"):
+        return "no usable distilled reason"
+    if not (it.get("gate_committed_token") and it.get("commit_precise")):
+        return "no clean one-word yes/no commit"
+    if not it.get("gate_aligned"):
+        return "commit disagrees with the elicited majority"
+    if not it.get("gate_reason_side_ok"):
+        return "looked-for reason argues the other side"
+    return "other"
+
+
 def cmd_fails(fam: str, gated: Path) -> int:
-    qs = json.loads((gated / "gate.json").read_text(encoding="utf-8"))
-    by_item: dict[str, list[dict[str, Any]]] = defaultdict(list)
-    for q in qs:
-        by_item[q["item"]].append(q)
+    rows = json.loads((gated / "gate.json").read_text(encoding="utf-8"))
     pats: dict[str, list[str]] = defaultdict(list)
-    for k, legs in by_item.items():
-        pats[pattern(fam, legs)].append(k)
-    n = len(by_item)
+    if fam == "buggy_code":
+        for r in rows:
+            pats[buggy_pattern(r)].append(str(r["name"]))
+    elif fam == "moral_rationale":
+        for it in rows:
+            pats[moral_pattern(it)].append(str(it["id"]))
+    else:
+        by_item: dict[str, list[dict[str, Any]]] = defaultdict(list)
+        for q in rows:
+            by_item[q["item"]].append(q)
+        for k, legs in by_item.items():
+            pats[pattern(k, legs)].append(k)
+        if fam in ("role_bound_association", "conjunctive_association"):
+            from gate_hf import mc_letter
+
+            letters = Counter(mc_letter(q.get("greedy", "")) for q in rows if q["mode"] == "mc")
+            top, c = letters.most_common(1)[0] if letters else ("", 0)
+            if rows and c / max(1, sum(letters.values())) > 0.7:
+                print(f"note: greedy answered {top!r} on {c}/{sum(letters.values())} MC asks")
+    n = sum(len(v) for v in pats.values())
     for p, ks in sorted(pats.items(), key=lambda kv: -len(kv[1])):
         more = " ..." if len(ks) > 4 else ""
         print(f"{len(ks):4d} ({len(ks) / n:5.1%})  {p}: {', '.join(ks[:4])}{more}")

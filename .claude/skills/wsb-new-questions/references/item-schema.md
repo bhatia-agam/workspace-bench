@@ -23,6 +23,7 @@ authoring gate (provenance only, never read at scoring).
 | `name` | unique id | all |
 | `prompt` | the text, rendered verbatim with no chat template (`eval_render: "plain"`) | plan, capable |
 | `target` | the surface answer (multihop: the next word; multilingual: the L2 word) | capable (gold) |
+| `target_alts` (optional, multihop) | other accepted surface answers ("pound sterling" for "pound"); capable adds them to the gate golds | capable (gold) |
 | `intermediates` | the scored latent(s): multihop's bridge, multilingual's English gloss, poetry's rhyme word, typo's correction, association's referent | judge (targets), capable when no `target` |
 | `units` (basic_readout) | `[{"role":"readout","lang":"en","headline":true,"match":[...]}]`; `match` lists accepted spellings and wins over `intermediates` | judge |
 | `reference_concepts` (multilingual) | `[language, topic words]`, provenance | - |

@@ -26,7 +26,9 @@ grading free-form gate answers. Supply keys through the environment only
 (`OPENROUTER_API_KEY`, `ANTHROPIC_API_KEY`); never write a key into a file, a bank or a log.
 On Modal, put the key in a Modal secret you create once (`modal secret create anthropic
 ANTHROPIC_API_KEY=...`) and name it in `WSB_MODAL_SECRETS=anthropic` when you run
-`modal_gate.py` (for `--grader`) or `modal_script.py` (moral distil, buggy judge).
+`modal_gate.py` (for `--grader`) or `modal_script.py` (moral distil, buggy judge). Both also
+take `--runner <file.py>`, a launcher of your own for credential setups a Modal secret does
+not cover (see the modal_script.py docstring).
 
 ## Files in this skill
 
@@ -84,7 +86,7 @@ ANTHROPIC_API_KEY=...`) and name it in `WSB_MODAL_SECRETS=anthropic` when you ru
 3b. steer    wave_report.py fails --family <family> --gated gated/<family>; author the next
              wave against the failure patterns (weak-model.md), then pool all waves:
                merge_gated.py --family <family> --out gated/<family>_all gated/<family> \
-                 gated/<family>_w2 ... [--capacity N]
+                 gated/<family>_w2 ... [--capacity N] [--target T [--budget-spent]]
              and check diversity: wave_report.py mix --family <family> \
                --bank gated/<family>_all/items.json
 4. re-validate the gated (merged) bank WITH THE SUBJECT'S TOKENIZER

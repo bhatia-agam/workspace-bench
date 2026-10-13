@@ -47,6 +47,10 @@ and `G` is
   near-duplicates of frozen prompts).
 - **The bridge must be necessary** (check each item by hand; these are the failures a fresh
   author makes):
+  - no SHORTCUT from a clue city to the answer: when the bridge country is named through its
+    capital, ask for a COUNTRY property the city does not have by itself (language, currency
+    is borderline: "London -> pound"), never the city's own continent or ocean ("capital
+    Tokyo -> Asia", "Reykjavik -> Atlantic");
   - no SHORTCUT from a named entity straight to the answer: "the capital of the country where
     the Brandenburg Gate stands" -> Berlin is answerable from the landmark's city without the
     country; "born in Stratford-upon-" -> Avon completes a fixed phrase; "the river through
@@ -195,6 +199,9 @@ Common to all six (source: the hard-tier generator and its lint):
     cognates, so check those by eye);
   - echo guard (multilingual_mt `concept`, basic_readout_mt `readout`): no form may be hit by
     the bare L2 target itself ("radio" form vs target "radio" is an echo; "radio set" is fine);
+  - LEAK RULE (*lint*, ERROR): no alphabetic word of >= 4 letters of the target, a target_alt
+    or any non-language form occurs among the prompt's words (category nouns included). Nine
+    frozen multihop_mt items break it ("palace", "novel", "florence", ...): known defects;
   - prompt ends with no trailing whitespace and no final `.,;:!?"'`; `readout` is
     `final_prompt_token [-1]`;
   - dedupe on the folded target across the whole family (and against the frozen bank).
@@ -322,7 +329,11 @@ golds are `target` + `target_alts`; put a short correct answer the subject may g
   and run it. Add `twin` fields, and a `category` per buggy item (off-by-one, stale variable,
   aliasing, comparison, truncation/rounding, wrong init, ...): `wave_report.py mix` lists it.
   Small subjects pass mostly rounding/division bugs (a 2B kept 5 pairs, 4 of them rounding),
-  so set per-category quotas when authoring and report the category mix.
+  so set per-category quotas when authoring and report the category mix. Keep the latent
+  real: the consequence must need a step of execution (truthiness, aliasing, integer
+  division, a loop bound). An item whose buggy output is a plain copy of literals the reader
+  can see without noticing the bug (`print(first + " " + first)` -> "Ann Ann") passes a weak
+  subject but carries no latent; drop it.
 - **Verify.** `uv run python .claude/skills/wsb-new-questions/scripts/buggy_gate.py verify
   --bank cand/buggy.json` executes every Python program twice and rewrites `verified` from the
   real run (multi-line stdout joined with ` | `, the bank's convention); it fails on
@@ -431,6 +442,11 @@ is prefilled); check write compliance of the producer.
   Drop `gate_pass: false` items. `supports: "either"` reasons are kept (the frozen bank has
   18). Weak subjects may commit True to the chat_tf statement and No to the chat_yn question of
   one topic; deliberative items allow that, but read such topics and drop incoherent ones.
+  The side check trusts the distiller's `supports` tag, which follows the subject's own
+  stated answer; small subjects lead most elicitations with "No." whatever the question
+  (Qwen3.5-0.8B: 23 of 27 kept items commit no), so read every kept topic and balance the
+  bank's commit directions when authoring (write questions whose intuitive answer is yes).
+  `summary.json` reports items and topics; `--capacity` counts ITEMS.
   Validate the CANDIDATE bank before gating: `validate_bank.py` sees no `reasons` yet, skips
   the gate-written fields and stops after the guards; validate the gated bank in full.
 - **Commands.** `uv run --extra gpu python .claude/skills/wsb-new-questions/scripts/moral_gate.py

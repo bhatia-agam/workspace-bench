@@ -24,7 +24,7 @@ from pathlib import Path
 from typing import Any
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from gate_hf import Subject
+from gate_hf import Subject, ooc_status
 
 ELICIT_INSTR = (
     " First answer yes or no. Then, in one short sentence, state the single most important "
@@ -96,6 +96,9 @@ def main() -> int:
     ap.add_argument("--n", type=int, default=8, help="elicitation samples besides greedy")
     ap.add_argument("--distiller", default="", help="LLM id for stage 2 (key from env)")
     ap.add_argument("--distilled", type=Path, default=None, help="your own stage-2 output")
+    ap.add_argument(
+        "--capacity", type=int, default=0, help="ITEMS (not topics) you could ever supply (OOC)"
+    )
     a = ap.parse_args()
     a.out.mkdir(parents=True, exist_ok=True)
     items = json.loads(a.bank.read_text(encoding="utf-8"))
@@ -200,11 +203,12 @@ def main() -> int:
             f"--distilled."
         )
         return 0
-    kept, report = [], Counter()
+    kept, report, rows = [], Counter(), []
     for it in items:
         d = distilled.get(it["topic_id"])
         if not d:
             report["no_distillation"] += 1
+            rows.append({"id": it["id"], "topic_id": it["topic_id"], "gate_pass": False})
             continue
         reasons = [r for r in d.get("reasons", []) if r.get("supports") in ("yes", "no", "either")]
         klass, lf = look_for(reasons, str(d.get("classification", "committed")))
@@ -241,10 +245,15 @@ def main() -> int:
             }
         )
         report["pass" if it["gate_pass"] else "fail"] += 1
+        rows.append({k: v for k, v in it.items() if k.startswith(("gate", "commit", "reason"))})
+        rows[-1].update(id=it["id"], topic_id=it["topic_id"], look_for_reasons=lf)
         if it["gate_pass"]:
             kept.append(it)
     (a.out / "items.json").write_text(
         json.dumps(kept, indent=1, ensure_ascii=False), encoding="utf-8"
+    )
+    (a.out / "gate.json").write_text(  # every item's gate record (wave_report.py fails)
+        json.dumps(rows, indent=1, ensure_ascii=False), encoding="utf-8"
     )
     summary = {
         "family": "moral_rationale",
@@ -252,6 +261,9 @@ def main() -> int:
         "n_items": len(items),
         "n_pass": len(kept),
         "pass_rate": round(len(kept) / max(1, len(items)), 4),
+        "n_topics": len({it["topic_id"] for it in items}),
+        "n_topics_pass": len({it["topic_id"] for it in kept}),
+        "status": ooc_status(len(items), len(kept) / max(1, len(items)), a.capacity),
         **dict(report),
     }
     (a.out / "summary.json").write_text(json.dumps(summary, indent=1), encoding="utf-8")

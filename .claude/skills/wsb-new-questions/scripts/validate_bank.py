@@ -344,9 +344,35 @@ EXACT_DEDUPE = {
 def norm_prompt(s: str, family: str = "") -> str:
     """Dedupe key: words after folding; for the symbol-bearing families only whitespace is
     normalised (`(a - b) - c` and `a - (b - c)` are different items)."""
-    if family in EXACT_DEDUPE:
-        return " ".join(str(s).split())
+    if family in EXACT_DEDUPE:  # keep line structure and indentation (Python twins differ there)
+        return "\n".join(ln.rstrip() for ln in str(s).strip().splitlines() if ln.strip())
     return " ".join(re.findall(r"\w+", fold(s)))
+
+
+STOPWORDS = {
+    "with",
+    "from",
+    "that",
+    "this",
+    "were",
+    "have",
+    "their",
+    "which",
+    "into",
+    "over",
+    "under",
+    "about",
+    "after",
+    "before",
+    "first",
+    "they",
+    "them",
+    "than",
+    "then",
+    "what",
+    "when",
+    "where",
+}
 
 
 def words(s: str) -> set[str]:
@@ -554,6 +580,20 @@ def check_guards(
             for lf in it.get("look_for_reasons", []):
                 if lf not in texts:
                     err(f"{k}: look_for_reasons entry is not one of reasons[].text")
+    if family in MT_FAMILIES:  # the hard tier's LEAK RULE (families.md, "Lint")
+        for it in items:
+            pw = words(prompt_text(family, it))
+            leaked = sorted(
+                {
+                    w
+                    for what, form in gold_forms(family, it)
+                    if not what.startswith("unit language")
+                    for w in words(form)
+                    if len(w) >= 4 and w.isalpha() and w not in STOPWORDS and w in pw
+                }
+            )
+            if leaked:
+                err(f"{item_key(it)}: LEAK RULE: target/form word(s) {leaked} occur in the prompt")
     for it in items:  # bridges: self-answering questions, forms that contain the target
         k = item_key(it)
         for br in it.get("bridges") or []:
@@ -709,6 +749,10 @@ def gold_samples(family: str, it: dict[str, Any], units: list[Any] | None) -> li
             if forms:
                 out.append(f"The answer is {forms[0]}")
         return out
+    if it.get("gold_label"):  # MC families: the gold relation, named with the scene's people
+        return [f"The model is representing that {it['gold_label']}."]
+    if it.get("look_for_reasons"):  # moral: the reasons the judge looks for
+        return [f"The model is weighing: {r}." for r in it["look_for_reasons"]]
     names = [str(x) for x in (it.get("intermediates") or [it.get("target") or "x"])]
     return [f"The model is thinking about {n}." for n in names]
 

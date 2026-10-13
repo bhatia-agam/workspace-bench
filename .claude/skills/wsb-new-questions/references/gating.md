@@ -18,7 +18,11 @@ equivalent (OpenRouter, reasoning effort minimal, so it is not a raw continuatio
   says "Reply with only the final number"). Override with `--answer-stem` ('' = none). A
   small model sometimes ends its turn right after the stem (empty answer): `gate_hf.py`
   re-asks that question without the stem and marks it `stem_dropped` in `gate.json`.
-- **Plain variant** (poetry, multihop, multilingual: the families read on a `plain` render):
+- **Plain variant** (poetry, multihop, multilingual, and the non-typo multi-token families
+  multihop_mt, multilingual_mt, multilingual_multihop, basic_readout_mt: every family read on a
+  `plain` render except the typo ones, whose continuation is not the correction; for the
+  multi-token families this departs from the frozen gate, which was chat-only, and
+  `gate_variant` records it; bridge legs stay chat questions):
   each item is ALSO gated as a raw continuation of the bare prompt (no chat template, 8 new
   tokens, the continuation must START with the gold; poetry: its first word is the own-rhyme
   candidate). The item passes if the chat OR the plain variant passes, every other leg
@@ -137,6 +141,8 @@ item count):
    sums candidates and passes over the waves, applies the rule to the pooled counts, dedupes
    items (id and folded prompt; arithmetic null sets are recomputed over the pool) and writes
    one `items.json` + `summary.json`. Score and report the merged bank, not a single wave.
+   `--target T` reports a pool that is in capability but short of T, and with
+   `--budget-spent` (no more waves) the status becomes `capped (n of target T)`.
    **A family where everything fails** (e.g. Qwen3.5-0.8B: 0 of 195 arithmetic candidates;
    87% answered wrong at greedy) is OOC once the pooled count reaches the floor, else
    "undetermined": either gate more (after trying the easier knobs in weak-model.md) or stop

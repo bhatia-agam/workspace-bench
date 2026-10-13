@@ -30,7 +30,17 @@ FINAL_ANSWER = {"arithmetic_intermediates", "chain_intermediates", "brew_interme
 STRICT = {"chain_intermediates", "brew_intermediates"}  # 10/10 at T=0.8, top_p=0.95
 MC = {"conjunctive_association", "role_bound_association"}
 GREEDY_ONLY = {"relational_multihop"}
-PLAIN_VARIANT = {"poetry", "multihop", "multilingual"}  # also gated as a raw continuation
+# also gated as a raw continuation of the prompt (their read render is plain); typo families
+# are excluded (the continuation of a misspelling is not its correction)
+PLAIN_VARIANT = {
+    "poetry",
+    "multihop",
+    "multilingual",
+    "multihop_mt",
+    "multilingual_mt",
+    "multilingual_multihop",
+    "basic_readout_mt",
+}
 # stamped as `gate_variant` (how the item was gated); every gate_hf.py gate is a chat render
 GATE_VARIANT = {"directed_modulation": "chat_dm"}  # greedy-correct, both items of a scene
 UNSUPPORTED = {
@@ -131,6 +141,18 @@ def states_intermediate(item: dict[str, Any], answer: str) -> bool:
     return False
 
 
+ECHO = re.compile(r"^(?:\s*</?think>\s*)+|^\s*my (?:one-word )?answer is:?\s*", re.I)
+
+
+def clean_answer(text: str) -> str:
+    """Strip a literal leftover `</think>` (some small models emit it as text after the empty
+    think block) and an echo of the answer stem, both of which would hide the answer."""
+    prev = None
+    while prev != text:
+        prev, text = text, ECHO.sub("", text.strip())
+    return text.strip()
+
+
 def plain_match(answer: str, golds: list[str]) -> bool:
     """Raw-continuation grading: the continuation STARTS with a gold (whole word; CJK golds
     by prefix). A gold later in the text is a different continuation, not the answer."""
@@ -186,11 +208,15 @@ def key_of(family: str, it: dict[str, Any]) -> str:
     )
 
 
-def mc_ask(it: dict[str, Any]) -> tuple[str, str]:
+def mc_ask(it: dict[str, Any], reverse: bool = False) -> tuple[str, str]:
+    """Lettered MC ask (seeded shuffle per id); `reverse` asks the same options in the reverse
+    order, so a position-biased subject ("always B") cannot pass both."""
     opts = list(it.get("mc_options") or [it["gold_label"], it["contrast_label"]])
     if it["gold_label"] not in opts:
         opts = [it["gold_label"], *opts]
     random.Random(f"pm-mc|{it['id']}").shuffle(opts)
+    if reverse:
+        opts.reverse()
     letters = "ABCDEFGHIJKLMNOP"
     listing = "\n".join(f"({letters[i]}) {o}" for i, o in enumerate(opts))
     ask = (
@@ -226,6 +252,9 @@ def build_questions(
         for k, it in items.items():
             ask, gold = mc_ask(it)
             q(k, ask, [gold], "mc", max_new=8)
+            ask, gold = mc_ask(it, reverse=True)  # a second leg: both orders must pass
+            q(f"{k}:mc_reversed", ask, [gold], "mc", max_new=8)
+            out[-1]["item"] = k
     elif family == "poetry":
         for c in build(family):
             q(c.id, c.ask, [], "own_poetry", max_new=16)
@@ -362,7 +391,7 @@ class Subject:
             width = enc["input_ids"].shape[1]
             for j, row in enumerate(gen[:, width:].tolist()):
                 cut = next((p for p, t in enumerate(row) if t in self.stops), len(row))
-                text = self.tok.decode(row[:cut], skip_special_tokens=True).strip()
+                text = clean_answer(self.tok.decode(row[:cut], skip_special_tokens=True))
                 res[idx[j // (n if temperature > 0 else 1)]].append(text)
                 self.truncated[idx[j // (n if temperature > 0 else 1)]].append(cut == len(row))
         return res
@@ -601,8 +630,10 @@ def main() -> int:
     for q in qs:
         m, answers = q["mode"], [q["greedy"], *q.get("samples", [])]
         if m in ("own_poetry", "own_poetry_plain", "own_implicit"):
-            w = first_word(q["greedy"])
-            hits = sum(first_word(s) == w for s in q.get("samples", []))
+            # raw continuations: the first word of the FIRST line only (".\nThe ..." is no word)
+            fw = (lambda t: first_word(t.split("\n", 1)[0])) if q.get("raw") else first_word
+            w = fw(q["greedy"])
+            hits = sum(fw(s) == w for s in q.get("samples", []))
             q["word"] = w
             ok_w = bool(w)
             if m.startswith("own_poetry"):
@@ -713,8 +744,11 @@ def main() -> int:
     n_eval = len(passed)
     status = ooc_status(n_eval, rate, a.capacity)
     gate_note = (
-        f"{a.model} behavioral, chat template (enable_thinking=False): greedy-correct "
-        f"AND >= {need}/{a.k} @ T={temp} top_p={top_p}; gate_hf.py"
+        f"{a.model} behavioral, chat template (enable_thinking=False)"
+        + (" or raw plain continuation (per item: gate_variant)" if fam in PLAIN_VARIANT else "")
+        + f": greedy-correct AND >= {need}/{a.k} @ T={temp} top_p={top_p}"
+        + ("; MC asked in both option orders" if fam in MC else "")
+        + "; gate_hf.py"
     )
     out_bank: Any = kept if is_list else {**header, "gate": gate_note, "items": kept}
     (a.out / "items.json").write_text(

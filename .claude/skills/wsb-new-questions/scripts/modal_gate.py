@@ -7,8 +7,9 @@ GPU. Generic: your own Modal account, no secrets needed for deterministic gradin
 Extra flags for gate_hf.py go in --extra (a quoted string). An LLM grader (`--extra
 "--grader <id>"`) needs its key as a Modal secret: `modal secret create openrouter
 OPENROUTER_API_KEY=...` once, then run with `WSB_MODAL_SECRETS=openrouter` (comma list); never
-pass a key on the command line or bake it into the image. moral_gate.py and buggy_gate.py run
-through the sibling modal_script.py.
+pass a key on the command line or bake it into the image. --runner <file.py> as in
+modal_script.py (a custom launcher, optionally with setup_env). moral_gate.py and
+buggy_gate.py run through the sibling modal_script.py.
 """
 
 import json
@@ -54,23 +55,20 @@ app = modal.App("wsb-gate-hf", image=image)
 hf_cache = modal.Volume.from_name("wsb-gate-hf-cache", create_if_missing=True)
 
 
-def _run(argv: list[str]) -> dict[str, str]:
+def _run(argv: list[str], runner_text: str = "") -> dict[str, str]:
     import subprocess
 
-    os.environ["PYTHONPATH"] = "/repo/src"
-    os.environ["HF_HOME"] = "/cache"
-    p = subprocess.run(
-        [
-            "python",
-            "/repo/.claude/skills/wsb-new-questions/scripts/gate_hf.py",
-            *argv,
-            "--repo",
-            "/repo",
-            "--out",
-            "/tmp/out",
-        ],
-        cwd="/repo",
-    )
+    env = {**os.environ, "PYTHONPATH": "/repo/src", "HF_HOME": "/cache"}
+    script = "/repo/.claude/skills/wsb-new-questions/scripts/gate_hf.py"
+    cmd = ["python", script, *argv, "--repo", "/repo", "--out", "/tmp/out"]
+    if runner_text:  # same contract as modal_script.py --runner
+        Path("/tmp/runner.py").write_text(runner_text, encoding="utf-8")
+        cmd = ["python", "/tmp/runner.py", *cmd[1:]]
+        hooks: dict = {}
+        exec(compile(runner_text, "/tmp/runner.py", "exec"), hooks)
+        if callable(hooks.get("setup_env")):
+            env = hooks["setup_env"](env)
+    p = subprocess.run(cmd, cwd="/repo", env=env)
     hf_cache.commit()
     if p.returncode != 0:
         raise RuntimeError(f"gate_hf.py exited {p.returncode}")
@@ -85,15 +83,16 @@ def _run(argv: list[str]) -> dict[str, str]:
     volumes={"/cache": hf_cache},
     secrets=SECRETS,
 )
-def gate(argv: list[str], bank_text: str) -> dict[str, str]:
+def gate(argv: list[str], bank_text: str, runner_text: str = "") -> dict[str, str]:
     Path("/tmp/bank.json").write_text(bank_text)
-    return _run([*argv, "--bank", "/tmp/bank.json"])
+    return _run([*argv, "--bank", "/tmp/bank.json"], runner_text)
 
 
 @app.local_entrypoint()
-def main(family: str, bank: str, model: str, out: str, extra: str = "") -> None:
+def main(family: str, bank: str, model: str, out: str, extra: str = "", runner: str = "") -> None:
     argv = ["--family", family, "--model", model, *extra.split()]
-    res = gate.remote(argv, Path(bank).read_text(encoding="utf-8"))
+    rt = Path(runner).read_text(encoding="utf-8") if runner else ""
+    res = gate.remote(argv, Path(bank).read_text(encoding="utf-8"), rt)
     dst = Path(out)
     dst.mkdir(parents=True, exist_ok=True)
     for name, text in res.items():
