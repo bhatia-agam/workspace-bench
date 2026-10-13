@@ -258,3 +258,13 @@ def test_cli_all_skips_superseded(capsys, monkeypatch, real_families):
     seen.clear()
     assert main(["capable", "model=m", "families=multihop_mt", "dry_run=True"]) == 0
     assert seen == ["multihop_mt"]
+
+
+def test_no_cot_families_graded_on_final_answer():
+    """chain / brew / arithmetic ask for the FINAL answer; grading against `intermediates` marked
+    every right answer wrong."""
+    from wsbench.capable.questions import _final_answer
+
+    assert _final_answer({"answer": 2, "intermediates": ["11", "5"]}) == ["2"]
+    assert _final_answer({"answer": "black", "intermediates": ["green"]}) == ["black"]
+    assert _final_answer({"intermediates": ["7"]}) == ["7"]  # no answer field: unchanged rule

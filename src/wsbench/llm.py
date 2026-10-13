@@ -56,6 +56,17 @@ class Spend:
         return s
 
 
+# A self-hosted OpenAI-compatible endpoint for the non-Claude route (e.g. a vLLM server for a new
+# subject model under `wsbench capable`). Unset = OpenRouter, unchanged.
+OPENAI_BASE_ENV = "WSBENCH_OPENAI_BASE_URL"
+OPENAI_KEY_ENV = "WSBENCH_OPENAI_API_KEY"
+CHAT_TEMPLATE_KWARGS_ENV = "WSBENCH_CHAT_TEMPLATE_KWARGS"  # JSON object
+
+
+def _custom_base() -> str:
+    return os.environ.get(OPENAI_BASE_ENV, "")
+
+
 def route(model: str) -> Route:
     return "anthropic" if model.startswith("claude-") else "openrouter"
 
@@ -66,6 +77,11 @@ def api_key(model: str) -> str:
     as a fatal 401 on the first call, which the preflight catches."""
     if route(model) == "anthropic":
         return os.environ.get("ANTHROPIC_API_KEY", "")
+    if _custom_base():  # a self-hosted OpenAI-compatible server (vLLM etc.), not OpenRouter
+        key = os.environ.get(OPENAI_KEY_ENV, "")
+        if not key:
+            raise JudgeConfigError(f"{OPENAI_BASE_ENV} is set but {OPENAI_KEY_ENV} is empty")
+        return key
     key = os.environ.get("OPENROUTER_API_KEY", "")
     if not key.startswith("sk-or-"):
         raise JudgeConfigError("OPENROUTER_API_KEY is missing or not an OpenRouter key (sk-or-…)")
@@ -139,7 +155,7 @@ def _make_client(route: str, key: str) -> Any:
         return AsyncAnthropic(max_retries=0)  # profile / WIF auto-discovery
     from openai import AsyncOpenAI
 
-    return AsyncOpenAI(api_key=key, base_url=OPENROUTER, max_retries=0)
+    return AsyncOpenAI(api_key=key, base_url=_custom_base() or OPENROUTER, max_retries=0)
 
 
 # ---------------------------------------------------------------- one call
@@ -168,12 +184,17 @@ async def _openrouter_once(
     timeout: float,
     spend: Spend,
 ) -> dict[str, Any] | None:
-    extra_body: dict[str, Any] = {
-        "usage": {"include": True},
-        "provider": {"require_parameters": True},
-    }
-    if reasoning is not None:
-        extra_body["reasoning"] = reasoning
+    if _custom_base():
+        # a self-hosted server: no OpenRouter routing/usage/reasoning fields; optional
+        # chat-template kwargs (e.g. a reasoning model's thinking switch) instead
+        extra_body: dict[str, Any] = {}
+        kwargs_json = os.environ.get(CHAT_TEMPLATE_KWARGS_ENV, "")
+        if kwargs_json:
+            extra_body["chat_template_kwargs"] = json.loads(kwargs_json)
+    else:
+        extra_body = {"usage": {"include": True}, "provider": {"require_parameters": True}}
+        if reasoning is not None:
+            extra_body["reasoning"] = reasoning
     kwargs: dict[str, Any] = {}
     if temperature is not None:
         kwargs["temperature"] = temperature

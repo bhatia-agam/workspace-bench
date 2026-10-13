@@ -519,3 +519,25 @@ def test_anthropic_schema_keeps_properties_named_like_keywords():
     assert out["properties"]["format"] == {"type": "string"}
     assert out["properties"]["minimum"] == {"type": "integer"}
     assert out["required"] == ["format", "minimum"]
+
+
+def test_custom_openai_base_key_and_body(fast, monkeypatch):
+    """WSBENCH_OPENAI_BASE_URL: a self-hosted server — its own key (no sk-or check), no
+    OpenRouter routing/usage/reasoning fields, optional chat_template_kwargs."""
+    monkeypatch.delenv("OPENROUTER_API_KEY", raising=False)
+    monkeypatch.setenv("WSBENCH_OPENAI_BASE_URL", "http://vllm.local/v1")
+    monkeypatch.setenv("WSBENCH_OPENAI_API_KEY", "local-key")
+    monkeypatch.setenv("WSBENCH_CHAT_TEMPLATE_KWARGS", '{"thinking": false}')
+    assert llm.api_key("deepseek-v4-flash") == "local-key"
+    fake = FakeOpenRouter([_or_response('{"a": 1}')])
+    got, _ = _collect([("s", "u")], "deepseek-v4-flash", fake, monkeypatch,
+                      reasoning={"effort": "minimal"})  # fmt: skip
+    assert got == {0: {"a": 1}}
+    assert fake.calls[0]["extra_body"] == {"chat_template_kwargs": {"thinking": False}}
+
+
+def test_custom_openai_base_requires_key(monkeypatch):
+    monkeypatch.setenv("WSBENCH_OPENAI_BASE_URL", "http://vllm.local/v1")
+    monkeypatch.delenv("WSBENCH_OPENAI_API_KEY", raising=False)
+    with pytest.raises(JudgeConfigError):
+        llm.api_key("deepseek-v4-flash")
