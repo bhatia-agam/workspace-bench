@@ -316,3 +316,18 @@ def test_real_stream_signature():
 
     a = inspect.signature(AsyncMessages.stream).parameters
     assert {"thinking", "messages", "max_tokens", "model", "timeout"} <= set(a)
+
+
+def test_truncated_text_retried_when_thinking_cannot_be_disabled(keys, fast, monkeypatch):
+    """claude-opus-5-5 thinks even when "off": a partial note at max_tokens is retried with a
+    doubled budget, not returned (and cached) as the answer."""
+    fake = FakeAnthropicStream([text_response("half a no", stop_reason="max_tokens"), "full note"])
+    got, _ = _collect(["u"], fake, monkeypatch, model="claude-opus-5-5", max_tokens=400)
+    assert got == {0: "full note"}
+    assert [c["max_tokens"] for c in fake.calls] == [400, 800]
+
+
+def test_partial_text_kept_when_thinking_was_off(keys, fast, monkeypatch):
+    fake = FakeAnthropicStream([text_response("short", stop_reason="max_tokens")])
+    got, _ = _collect(["u"], fake, monkeypatch, model=CLAUDE, max_tokens=400)
+    assert got == {0: "short"} and len(fake.calls) == 1

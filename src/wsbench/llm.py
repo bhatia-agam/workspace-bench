@@ -206,6 +206,37 @@ async def _openrouter_once(
     return _parse_object(resp.choices[0].message.content or "")
 
 
+# JSON-schema keywords Anthropic structured outputs reject ("For 'integer' type, properties
+# maximum, minimum are not supported" — every buggy_code / arithmetic cell 400'd on 2026-09-26).
+# The judge prompts still state the ranges, and the parsers validate the values.
+_ANTHROPIC_UNSUPPORTED = frozenset(
+    {
+        "minimum",
+        "maximum",
+        "exclusiveMinimum",
+        "exclusiveMaximum",
+        "multipleOf",
+        "minLength",
+        "maxLength",
+        "pattern",
+        "format",
+        "minItems",
+        "maxItems",
+        "uniqueItems",
+    }
+)
+
+
+def _anthropic_schema(schema: Any) -> Any:
+    if isinstance(schema, dict):
+        return {
+            k: _anthropic_schema(v) for k, v in schema.items() if k not in _ANTHROPIC_UNSUPPORTED
+        }
+    if isinstance(schema, list):
+        return [_anthropic_schema(v) for v in schema]
+    return schema
+
+
 async def _anthropic_once(
     client: Any,
     system: str,
@@ -218,7 +249,9 @@ async def _anthropic_once(
     timeout: float,
     spend: Spend,
 ) -> dict[str, Any] | None:
-    output_config: dict[str, Any] = {"format": {"type": "json_schema", "schema": schema["schema"]}}
+    output_config: dict[str, Any] = {
+        "format": {"type": "json_schema", "schema": _anthropic_schema(schema["schema"])}
+    }
     if reasoning and reasoning.get("effort"):
         output_config["effort"] = reasoning["effort"]
     resp = await client.messages.create(
@@ -498,7 +531,10 @@ async def _anthropic_text_once(
             print(f"  llm refusal: {model}")
             return None
         txt = "".join(b.text for b in resp.content if getattr(b, "type", None) == "text").strip()
-        if not txt and stop == "max_tokens" and budget < _TEXT_BUDGET_CEILING:
+        # empty: thinking ate the budget. Partial text on a model whose thinking cannot be turned
+        # off is a truncated answer, not a short one — retry it rather than cache it.
+        truncated = not txt or not thinking_can_be_disabled(model)
+        if stop == "max_tokens" and truncated and budget < _TEXT_BUDGET_CEILING:
             budget *= 2
             continue
         return txt
