@@ -227,14 +227,24 @@ _ANTHROPIC_UNSUPPORTED = frozenset(
 )
 
 
+# keys whose value maps NAMES to subschemas: the names are data, never keywords to strip
+_NAME_MAPS = frozenset({"properties", "patternProperties", "$defs", "definitions"})
+
+
 def _anthropic_schema(schema: Any) -> Any:
-    if isinstance(schema, dict):
-        return {
-            k: _anthropic_schema(v) for k, v in schema.items() if k not in _ANTHROPIC_UNSUPPORTED
-        }
+    """Strip unsupported keywords at schema-object level only; a property NAMED like a keyword
+    (``format``, ``pattern``, ...) is kept, its subschema cleaned."""
     if isinstance(schema, list):
         return [_anthropic_schema(v) for v in schema]
-    return schema
+    if not isinstance(schema, dict):
+        return schema
+    out: dict[str, Any] = {}
+    for k, v in schema.items():
+        if k in _NAME_MAPS and isinstance(v, dict):
+            out[k] = {name: _anthropic_schema(sub) for name, sub in v.items()}
+        elif k not in _ANTHROPIC_UNSUPPORTED:
+            out[k] = _anthropic_schema(v)
+    return out
 
 
 async def _anthropic_once(
