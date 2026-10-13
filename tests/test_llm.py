@@ -500,3 +500,22 @@ def test_anthropic_schema_drops_range_keywords(keys, fast, monkeypatch):
     sent = fake.calls[0]["output_config"]["format"]["schema"]
     assert "minimum" not in json.dumps(sent) and "maximum" not in json.dumps(sent)
     assert got == {0: {"s": 4}}
+
+
+def test_anthropic_schema_keeps_properties_named_like_keywords():
+    from wsbench.llm import _anthropic_schema
+
+    schema = {
+        "type": "object",
+        "properties": {
+            "format": {"type": "string", "pattern": "^x"},
+            "minimum": {"type": "integer", "minimum": 0, "maximum": 9},
+        },
+        "required": ["format", "minimum"],
+        "additionalProperties": False,
+    }
+    out = _anthropic_schema(schema)
+    assert set(out["properties"]) == {"format", "minimum"}
+    assert out["properties"]["format"] == {"type": "string"}
+    assert out["properties"]["minimum"] == {"type": "integer"}
+    assert out["required"] == ["format", "minimum"]
