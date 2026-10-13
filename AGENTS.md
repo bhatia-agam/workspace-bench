@@ -41,6 +41,8 @@ misses.
 
 ## Which families port, and which need work
 
+**Step-by-step procedure for a new subject model: [`docs/porting_to_a_new_model.md`](docs/porting_to_a_new_model.md)** (re-gate every item, rewrite what fails, always re-target poetry and moral_rationale; worked example DeepSeek-V4-Flash).
+
 Three buckets, then the detail.
 
 **Usable as they are, once `capable` says the model does the task** (no bank edits): association,
