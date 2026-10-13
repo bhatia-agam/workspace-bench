@@ -25,7 +25,20 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from validate_bank import fold, item_key, load_any, prompt_text
 
 # item fields that already name a template / stratum in some families
-TYPE_FIELDS = ("relation", "subfamily", "variant", "stratum", "tier", "domain", "kind")
+TYPE_FIELDS = (
+    "relation",
+    "subfamily",
+    "variant",
+    "stratum",
+    "tier",
+    "domain",
+    "kind",
+    "category",
+    "failure_mode",
+)
+# the scored latent per family where it is not intermediates/bridge/target; "" = no latent cap
+# (moral repeats each topic in two formats by design; buggy's latent is per-program)
+LATENT_FIELD = {"role_bound_association": "action", "moral_rationale": "", "buggy_code": ""}
 ENTITY = re.compile(r"(?<![.!?:]\s)(?<!^)\b[A-Z][\w'-]+(?:\s+(?:of|the|de|von|[A-Z][\w'-]+))*")
 SKELETON_WORDS = 8
 
@@ -38,6 +51,9 @@ def skeleton(text: str) -> str:
 
 
 def latent(family: str, it: dict[str, Any]) -> str:
+    if family in LATENT_FIELD:
+        f = LATENT_FIELD[family]
+        return fold(str(it.get(f, ""))) if f else ""
     for k in ("intermediates", "bridge"):
         v = it.get(k)
         if isinstance(v, list) and v:
@@ -66,14 +82,15 @@ def cmd_mix(family: str, bank: Path, cap: float) -> int:
         for k, v in top:
             print(f"   {v:3d}  {k}")
 
-    for f in TYPE_FIELDS:
+    for f in TYPE_FIELDS:  # informational: a 2-valued field can never be under a 20% cap
         vals = [str(it[f]) for it in items if f in it]
         if len(vals) == n:
-            show(f"field {f!r}", Counter(vals))
+            show(f"field {f!r} (not capped)", Counter(vals), check=False)
     texts = [prompt_text(family, it) for it in items]
     show("prompt template (first words, names/numbers masked)", Counter(map(skeleton, texts)))
     lat = Counter(latent(family, it) for it in items)
-    show("scored latent", lat, check=True)
+    if any(lat):
+        show("scored latent", lat, check=True)
     ents: dict[str, set[str]] = defaultdict(set)
     for it, t in zip(items, texts, strict=True):
         for m in ENTITY.findall(t):

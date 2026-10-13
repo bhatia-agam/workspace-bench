@@ -11,9 +11,21 @@ equivalent (OpenRouter, reasoning effort minimal, so it is not a raw continuatio
 - The subject's own chat template, one user turn holding the capability question,
   `add_generation_prompt=True`, **`enable_thinking=False`**, no system prompt. This is
   `wsbench.produce.render._chat`, the render the read plan uses.
-- Prefill only where the family's read plan prefills: basic_readout implicit `My one-word
-  answer is:` (the leading-space whole word then sits at the answer site), brew `Answer:` (the
-  source gate also banned the end-of-turn tokens at every step).
+- Answer stems (prefilled after the assistant header), as in the source gates: `My answer
+  is:` for the multi-token tier, its bridge questions and relational; `My one-word answer is:`
+  for the other free-answer families (and basic_readout implicit, where the leading-space
+  whole word then sits at the answer site); none for arithmetic / chain / brew (their prompt
+  says "Reply with only the final number"). Override with `--answer-stem` ('' = none). A
+  small model sometimes ends its turn right after the stem (empty answer): `gate_hf.py`
+  re-asks that question without the stem and marks it `stem_dropped` in `gate.json`.
+- **Plain variant** (poetry, multihop, multilingual: the families read on a `plain` render):
+  each item is ALSO gated as a raw continuation of the bare prompt (no chat template, 8 new
+  tokens, the continuation must START with the gold; poetry: its first word is the own-rhyme
+  candidate). The item passes if the chat OR the plain variant passes, every other leg
+  included, and `gate_variant` records which ("plain" preferred, since it is the render the
+  lens reads). This is how the frozen banks were gated (`gate_variant` plain for 56-80% of
+  these items). Weak subjects often fail the chat ask (they restate the prompt, or answer
+  "the") while continuing the raw text correctly.
 - Stop at EOS, `<|im_end|>`, `<|endoftext|>` or the template's end-of-turn token; decode with
   special tokens skipped; strip.
 - Never gate a reasoning model with thinking on and never on a raw `Human:/Assistant:` string:

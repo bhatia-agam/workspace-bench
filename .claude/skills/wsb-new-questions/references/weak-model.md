@@ -59,8 +59,8 @@ A pilot is a wave: keep its gated dir and pool it later with `merge_gated.py`.
 | association | high-frequency associates with one dominant answer | an associate that names the latent |
 | poetry | line-one end words with large, common rhyme sets (day, night, light, sun, tree, heart, rain); line two whose meaning strongly forces one common word | rhyme word already in line two; identity "rhymes" (the same word); end words with no CMU entry |
 | basic_readout | common categories with a dominant default answer | priming the target in the prompt |
-| arithmetic | small operands that still need a separate first step (2-digit, no carries, first value not an operand and not the answer); one variant at a time | a first value that is written in the prompt or equals the answer; single-step expressions (no intermediate) |
-| chain / brew | 2-3 steps instead of 4+; small starting numbers; fewer rule rows | steps whose intermediate is printed; ambiguous rule tables |
+| arithmetic | `gen_deterministic.py --easy`: 1-2 digit operands for absval/signpair/sign/muladd/subsub/subsubx/addmul (`(6 + 4) * 4`, `57 - (9 - 4)`); every leak/separation guard still runs, so the first value is never an operand, the answer or a prompt numeral | a first value that is written in the prompt or equals the answer; single-step expressions (no intermediate) |
+| chain / brew | chain: `gen_deterministic.py --easy` (depth 2 only); brew: fewer rule rows | steps whose intermediate is printed; ambiguous rule tables |
 | buggy_code | 5-7 line programs, one loop, small integers, bugs whose effect is a different number (off-by-one, wrong init) | comments or names that hint at the bug; programs that print the intermediate; nondeterminism |
 | role_bound | concrete everyday actions (paid, hired, treated, taught) with strongly distinct roles; tier A (action word allowed) before tier B | naming the roles; a scene decidable from prior plausibility alone; dropping one direction of a pair |
 | conjunctive | common concepts whose conjunction is unambiguous | blocklisted words; options that differ only in specificity |
@@ -158,4 +158,20 @@ uv run --with transformers --with jinja2 python .claude/skills/wsb-new-questions
   --family multihop --bank gated/multihop_all/items.json --tokenizer Qwen/Qwen3.5-0.8B
 ```
 
-Round 2 (poetry, role_bound, moral, buggy, one multi-token family on Qwen3.5-2B) is pending; add its per-wave rows here.
+Round 2 (fresh agent, Qwen3.5-2B, items hand-authored, Modal L40S), then re-gated after the
+fixes in this file:
+
+| family | wave | gated | passed | rate | note |
+|---|---|---|---|---|---|
+| poetry | w1+w2, chat only | 66 | 1 | 1.5% | 2B repeats line two / starts a new line: a format failure |
+| poetry | w1 re-gated with plain_stripped | 41 | 18 | 44% | all 18 pass on the raw continuation (late, smile, breeze, ...) |
+| role_bound | w1 | 32 | 14 | 44% | 7 of 16 pairs atomic; every dropped pair failed the `ba` direction |
+| moral | w1 | 36 | 34 -> 31 | 86% | 3 dropped: committed reason argued the other side (now gated) |
+| buggy_code | w1+w2 | 44 buggy | 5 | 11% | 4 of 5 survivors are rounding/division bugs: low diversity |
+| basic_readout_mt | w1 | 19 | 7 | 37% | long-tail entities |
+| basic_readout_mt | w2 (famous-entity knob) | 22 | 17 | 77% | pooled 24 items, 24 templates, but entity subfamily only |
+
+Smoke checks on Qwen3.5-0.8B after the fixes: multihop 9/24 (6 of the 9 via the plain
+variant), multihop_mt 4/13 (the stem fallback recovered items whose stemmed answer was
+empty), poetry 4/12 frozen couplets (plain_stripped), arithmetic `--easy` 1/40 (65% greedy
+wrong, 30% CoT leak: still out of reach for 0.8B).

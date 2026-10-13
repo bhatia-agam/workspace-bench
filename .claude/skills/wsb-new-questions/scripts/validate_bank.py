@@ -233,10 +233,32 @@ REQUIRED: dict[str, list[str]] = {
         "lang_group",
         "verified",
         "bug_line",
-        "consequence_class",
     ],
     "multi_concept_directed_modulation": ["name", "prompt", "concepts", "stratum"],
 }
+# Fields only the per-subject gate writes: a CANDIDATE bank (none of them present) is linted
+# without them and stops after the guards; validate the gated bank for the full check.
+POST_GATE: dict[str, list[str]] = {
+    "moral_rationale": ["reason_class", "reasons", "look_for_reasons", "commit_direction"],
+}
+# Fields required only on buggy items (src != "clean"); clean twins carry none of them.
+BUGGY_ONLY = {"bug_line"}  # consequence_class is read with .get() (None = "none")
+
+
+def is_candidate(family: str, items: list[dict]) -> bool:
+    post = POST_GATE.get(family, [])
+    return bool(post) and not any(k in it for it in items for k in post)
+
+
+def required_for(family: str, it: dict, candidate: bool) -> list[str]:
+    req = [
+        k for k in REQUIRED.get(family, []) if not (candidate and k in POST_GATE.get(family, []))
+    ]
+    if family == "buggy_code" and it.get("src") == "clean":
+        req = [k for k in req if k not in BUGGY_ONLY]
+    return req
+
+
 REQUIRED_HEADER: dict[str, list[str]] = {
     **{f: ["family", "contract", "gate"] for f in MT_FAMILIES},
     "arithmetic_intermediates": ["family", "variants"],
@@ -291,6 +313,14 @@ def occurs(form: str, text: str) -> bool:
         return f in t
     parts = [re.escape(w) for w in re.split(r"[\s\-]+", f) if w]
     return bool(re.search(r"(?<![^\W_])" + r"[\s\-]+".join(parts) + r"(?![^\W_])", t))
+
+
+def stem_occurs(stem: str, text: str) -> bool:
+    """role_bound's blocklist rule: the stem as a PREFIX at a word start ('pay' flags
+    'payment' and 'pays', not the irregular 'paid': list those yourself). conjunctive lists
+    its inflections explicitly and is checked whole-word."""
+    f = fold(stem).strip()
+    return bool(f) and bool(re.search(r"(?<![^\W_])" + re.escape(f), fold(text)))
 
 
 def numeral_in(value: Any, text: str) -> bool:
@@ -382,18 +412,29 @@ def check_schema(
                     f"contract.{k}={c.get(k)} differs from the frozen bank ({fc.get(k)}): "
                     "a different instrument"
                 )
-    req = REQUIRED.get(family, [])
+    candidate = is_candidate(family, items)
+    if candidate:
+        print(
+            f"  note   candidate bank (no {POST_GATE[family]}): those gate-written fields are "
+            "not required yet; validate the gated bank for the full check"
+        )
     soft_missing: dict[str, int] = {}
     common = set.intersection(*(set(i) for i in f_items)) if f_items else set()
+    ref: dict[str, Any] = {}  # field -> first non-null frozen value (its type is the reference)
+    for fi in f_items:
+        for k, v in fi.items():
+            if v is not None:
+                ref.setdefault(k, v)
     for it in items:
+        req = required_for(family, it, candidate)
         missing = [k for k in req if k not in it]
         if missing:
             err(f"{item_key(it)}: missing required field(s) {missing}")
         for f in sorted(common - set(it) - set(req) - {"id"}):
             soft_missing[f] = soft_missing.get(f, 0) + 1
         for k in req:
-            if k in it and f_items and k in f_items[0]:
-                a, b = type(it[k]).__name__, type(f_items[0][k]).__name__
+            if k in it and it[k] is not None and k in ref:
+                a, b = type(it[k]).__name__, type(ref[k]).__name__
                 if a != b and not {a, b} <= {"int", "float"}:
                     err(f"{item_key(it)}.{k}: type {a}, frozen bank uses {b}")
     if soft_missing:
@@ -472,7 +513,10 @@ def check_guards(
             typo_fam = family in ("typo_mt", "multilingual_typo", "typo")
             if typo_fam and fold(form) == fold(it.get("typo_word", "")):
                 err(f"{k}: the correction equals the typo word")
-            if form and occurs(form, text):
+            if what == "blocklist" and family == "role_bound_association":
+                if form and stem_occurs(form, text):
+                    err(f"{k}: blocklisted {form!r} (or an inflection) appears in the stimulus")
+            elif form and occurs(form, text):
                 err(f"{k}: {what} {form!r} appears in the prompt (echo leak)")
         if family in ("chain_intermediates", "arithmetic_intermediates", "brew_intermediates"):
             for x in it.get("intermediates", []):
@@ -500,10 +544,10 @@ def check_guards(
             "'s"
         ):
             err(f"{k}: stimulus must end with the possessive 's (the read site)")
-        if family == "moral_rationale":
+        if family == "moral_rationale" and "reasons" in it:
             sides = {r.get("supports") for r in it.get("reasons", [])}
-            if not sides <= {"yes", "no"}:
-                err(f"{k}: reasons[].supports must be 'yes' or 'no'")
+            if not sides <= {"yes", "no", "either"}:
+                err(f"{k}: reasons[].supports must be 'yes', 'no' or 'either'")
             if it.get("reason_class") not in ("committed", "deliberative"):
                 err(f"{k}: reason_class must be committed or deliberative")
             texts = [r.get("text") for r in it.get("reasons", [])]
@@ -839,6 +883,12 @@ def main() -> int:
     if errors:
         print(f"\nFAIL: {len(errors)} error(s) before the scorer stage; fix them first.")
         return 1
+    if is_candidate(fam, items):
+        print(
+            f"\nPASS (candidate stage): {len(warnings)} warning(s). The read plan, judge and "
+            "capability checks need the gate-written fields: re-run on the gated bank."
+        )
+        return 0
 
     print("[3] shadow checkout + loaders")
     shadow = make_shadow(repo, fam, a.bank.resolve(), work)

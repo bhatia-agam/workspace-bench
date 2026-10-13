@@ -24,6 +24,9 @@ Everything here runs from a clone of this repo. No API key is needed for linting
 or deterministic gating; an LLM is needed only for authoring text items and (optionally) for
 grading free-form gate answers. Supply keys through the environment only
 (`OPENROUTER_API_KEY`, `ANTHROPIC_API_KEY`); never write a key into a file, a bank or a log.
+On Modal, put the key in a Modal secret you create once (`modal secret create anthropic
+ANTHROPIC_API_KEY=...`) and name it in `WSB_MODAL_SECRETS=anthropic` when you run
+`modal_gate.py` (for `--grader`) or `modal_script.py` (moral distil, buggy judge).
 
 ## Files in this skill
 
@@ -43,6 +46,7 @@ grading free-form gate answers. Supply keys through the environment only
 | `scripts/wave_report.py` | `mix`: template / relation / latent mix and shared entities of a bank (fails over a cap); `fails`: failure pattern per item of a gated wave, to steer the next wave |
 | `references/weak-model.md` | calibrating to a NEW or WEAK subject: pilot probe, easier-but-valid knobs per family, diversity caps, adaptive waves, stopping rules, worked 0.8B/2B example |
 | `scripts/modal_gate.py` | OPTIONAL wrapper that runs `gate_hf.py` on a Modal GPU from your own Modal account |
+| `scripts/modal_script.py` | OPTIONAL sibling that runs `moral_gate.py` / `buggy_gate.py` (GPU stage + LLM distil / judge) on Modal; keys via a Modal secret named in `WSB_MODAL_SECRETS` |
 
 ## The workflow (every family)
 
@@ -59,7 +63,9 @@ grading free-form gate answers. Supply keys through the environment only
 2. validate  uv run --with transformers --with jinja2 python \
                .claude/skills/wsb-new-questions/scripts/validate_bank.py \
                --family <family> --bank cand/<family>.json --tokenizer <destination>
-             fix every ERROR; read every warning
+             fix every ERROR; read every warning (moral_rationale candidates have no
+             gate-written fields yet: the validator says "candidate stage" and stops
+             after the guards; validate the gated bank in full)
 3. gate      uv run --extra gpu --with pronouncing python \
                .claude/skills/wsb-new-questions/scripts/gate_hf.py \
                --family <family> --bank cand/<family>.json --model <subject HF id> \
@@ -70,6 +76,8 @@ grading free-form gate answers. Supply keys through the environment only
                  --out gated/<family>
              default GPU L40S (WSB_GATE_GPU=H100 for >= 9B; WSB_GATE_GPU=none plus
              --extra "--device cpu --dtype float32" runs a <= 2B subject on CPU)
+             moral_rationale / buggy_code have their own gates (moral_gate.py,
+             buggy_gate.py; on Modal: modal_script.py --script <name> ...)
              --capacity N = how many candidates the family could EVER supply (e.g. the
              distinct dilemmas you can author); the OOC rule then needs min(200, N) gated
              candidates instead of 200 (gating.md section 6)
@@ -205,9 +213,11 @@ Gating:
 
 - A multihop prompt ending in a space with `offsets: [-1]` reads the space token, not the last
   word (validate catches it).
-- A multilingual-mt / multilingual-typo / basic-readout-mt `language` unit whose L2 forms are
-  the L2 target itself: the next-token answer then satisfies the language unit. The `language`
-  unit's L2 forms must be how the language names itself ("polski", "po polsku", "العربية").
+- The `language` unit's L2 forms differ by family, so copy the frozen bank's convention: in
+  multilingual_mt, multilingual_typo and basic_readout_mt (l2_factual) they ARE the L2
+  target and its inflections (every frozen item; the en/zh concept or correction unit is still
+  required, so the L2 word alone never passes); in multilingual_multihop (required false) they
+  are how the language names itself ("العربية", "بالعربية").
 - `zh` forms are exempt from the multi-token lint but are silently dropped at scoring when
   they are single tokens: do not rely on a `zh` form to keep a required unit alive.
 - Bridge `answers` (gate-only short names, "Simula") and unit `forms` (scored, multi-token,

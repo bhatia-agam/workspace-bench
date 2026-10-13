@@ -116,9 +116,14 @@ and `G` is
 - **Guards.** exactly three lines, line one ends with `,`, a single newline after line one
   (the read site; *lint* checks the render); line one's last word has a CMU rhyme set; the
   rhyme word rhymes with it and is absent from line two.
-- **Gate (model-specific gold).** `Continue this text...`; the subject's greedy first word must
-  equal the first word of >= 8/10 samples AND rhyme with line one's last word; that word
-  becomes `intermediates` (the authored word is only a hypothesis).
+- **Gate (model-specific gold).** Two variants, either may pass: chat `Continue this text...`,
+  and `plain_stripped` (a raw continuation of the prompt without its trailing space, the render
+  the lens reads). The subject's greedy first word must equal the first word of >= 8/10
+  samples AND rhyme with line one's last word (not the same word); that word becomes
+  `intermediates` (the authored word is only a hypothesis). Small chat models fail the chat
+  variant on format (they repeat line two or start a new line): Qwen3.5-2B passed 0/41 chat
+  but 18/41 plain_stripped on the same couplets. With the trailing space kept, the raw
+  continuation emits digits, which is why the plain variant strips it.
 
 ### basic_readout
 
@@ -228,7 +233,8 @@ known defects of the frozen bank, not a reason to relax the lint.
 L2 description of a concrete object/animal/plant/tool/phenomenon; `target` = the L2 noun
 (>= 8 letters or two words); `concept.forms = {"en": [two-word English names preferred],
 "zh": [...]}`; "the English gloss must be a DIFFERENT word from the L2 target (no loanwords like
-'radio')"; `language` unit with the language's self-name in L2.
+'radio')"; `language` unit = {en: language name, zh, L2: the L2 target and inflections} (the frozen
+convention).
 
 ### multilingual_multihop
 L2 fragment requiring an unnamed bridge entity to produce a final one-word L2 answer; obscure
@@ -241,7 +247,8 @@ multi-word name, zh}; `language` (required false) = how the language names itsel
 Last word = a subtle misspelling (one letter changed, dropped, doubled, or two adjacent letters
 swapped) of a long L2 word (>= 8 letters, prefer 10+); not a real L2 word nor a common
 lexicalised misspelling; `correction.forms = {L2: [target], "en": [2+ word phrases, never a lone
-word], "zh": [...]}`; `language` unit with the self-name. The prompt must END with `typo_word`.
+word], "zh": [...]}`; `language` unit = {en, zh, L2: the corrected L2 target and variants} (frozen convention).
+The prompt must END with `typo_word`.
 
 ### typo_mt
 `novel`: a novel subtle misspelling of a long English word (>= 9 letters), not a known
@@ -256,14 +263,19 @@ exactly two ADJACENT digits swapped, target = the true result as digits. `correc
 `entity`: `<subject phrase> is` whose answer is a multi-word or long proper name, no
 school-level facts, `readout.forms = {"en": [name, alts]}`; `l2_factual`: an L2 fragment whose
 answer is a proper name written in L2, `readout.forms = {"en": [...], "zh": [...]}` (never the
-L2 answer itself) + `language` unit.
+L2 answer itself) + `language` unit whose L2 forms are the L2 answer (frozen convention). Gate
+golds are `target` + `target_alts`; put a short correct answer the subject may give (e.g.
+"Sputnik" for "Sputnik 1") in `target_alts`, not as a single-token form.
 
 ## Computational
 
 ### arithmetic_intermediates
 - **Generate.** `gen_deterministic.py --family arithmetic_intermediates --n N --seed S --tag T
   --out cand/arith.json` (13 variants; fracsmall's space is exhausted and frac has about 16 new
-  items left; `--variants` restricts). Shapes, ranges, tolerances, frozen cells and roles are
+  items left; `--variants` restricts, twins included: a twin whose partner is not requested is
+  kept alone with `pair: null`; `--n` is exact). `--easy` (weak subjects) draws 1-2 digit
+  operands for absval/signpair/sign/muladd/subsub/subsubx/addmul under the same guards; the
+  header `source` records it. Shapes, ranges, tolerances, frozen cells and roles are
   in the script's `VARIANTS` table and the frozen header.
 - **Guards (in the generator).** exact `eval` re-check; no step equal to the answer or an
   operand; no step within tolerance of a famous constant (sqrt 2/3/5, phi, e, pi, 2pi, ln 2);
@@ -275,8 +287,9 @@ L2 answer itself) + `language` unit.
   `answer`; greedy + >= 8/10; any rollout that WRITES an intermediate (a chain of thought such
   as `123 - 204 = -81\n-81 * 59 = -4779`) is a leak and fails the item (the source's
   `max_leak = 0`); twins survive together and `null_set`/`pair_survived` are pruned to
-  survivors (`gate_hf.py` does all of this). Small models (<= 2B) pass almost none: gate
-  >= 200 candidates before calling the family out of capability.
+  survivors (`gate_hf.py` does all of this). Small models (<= 2B) pass almost none at the
+  frozen ranges (Qwen3.5-0.8B: 0 of 195): pilot `--easy` first, and pool waves with
+  `merge_gated.py` to >= 200 candidates before calling the family out of capability.
 
 ### chain_intermediates
 - **Generate.** `gen_deterministic.py --family chain_intermediates ...`: plain steps (add/sub
@@ -306,7 +319,10 @@ L2 answer itself) + `language` unit.
 - **Guards.** EXECUTE both twins (twice, different `PYTHONHASHSEED`, 5 s timeout) and copy the
   real result into `verified` in the bank's exact format; outputs differ; single-line stdout;
   raising items print nothing; no `random`/`time`/IO/`eval`; non-Python only if you can compile
-  and run it. Add `twin` fields.
+  and run it. Add `twin` fields, and a `category` per buggy item (off-by-one, stale variable,
+  aliasing, comparison, truncation/rounding, wrong init, ...): `wave_report.py mix` lists it.
+  Small subjects pass mostly rounding/division bugs (a 2B kept 5 pairs, 4 of them rounding),
+  so set per-category quotas when authoring and report the category mix.
 - **Verify.** `uv run python .claude/skills/wsb-new-questions/scripts/buggy_gate.py verify
   --bank cand/buggy.json` executes every Python program twice and rewrites `verified` from the
   real run (multi-line stdout joined with ` | `, the bank's convention); it fails on
@@ -315,12 +331,17 @@ L2 answer itself) + `language` unit.
 - **Gate.** `buggy_gate.py gate --bank ... --model <subject> --out gated/buggy [--judge <llm>]`:
   consequence (chat "What does this program print? Reply with only the exact stdout, nothing
   else.", greedy + 5 samples at T=0.8/0.95, >= 4/6 exact normalized stdout, or the exception
-  name for raising items); volunteering (raw continuation of the bare program, greedy + 10
+  name for raising items; the match ignores formatting, so `[6, 7, 8]` equals `6 7 8`);
+  volunteering (raw continuation of the bare program, greedy + 10
   samples; a continuation that names, fixes or simulates the bug is a hit; 0 hits = `strict`,
   <= 2 = `tolerant`, more = fail; with `--judge` an LLM decides, without it a
   trouble-vocabulary proxy only flags items and you must read `gate.json`); output leak (no
-  continuation contains the buggy stdout). A failed buggy item drops its clean twin.
-  `gate_hf.py` does not gate buggy_code.
+  continuation contains the buggy stdout; recorded as n/a when that stdout is already a
+  substring of the program, e.g. `70` in `[70, 95, 88]`, since repeating a literal is not a
+  leak). A failed buggy item drops its clean twin.
+  `gate_hf.py` does not gate buggy_code. On Modal: `modal_script.py --script buggy_gate.py
+  --stage gate --bank ... --out gated/buggy --extra "--model <subject> --judge <llm id>"`
+  (with `WSB_MODAL_SECRETS` naming the secret that holds the judge's key).
 
 ### multi_concept_directed_modulation
 Frozen templates (head `Think about %s. Now write this sentence: "%s"\n`, control `Read
@@ -367,8 +388,16 @@ is prefilled); check write compliance of the producer.
   words); both directions clean or drop the pair (atomic pairs: exactly two items per
   `pair_id`, *lint*); an LLM reading the open answer to "In one or two sentences, what is going
   on in this scenario?" must pick gold over contrast; the scene's raw continuation must not
-  already state the relation.
+  already state the relation. These two are optional authoring-time checks that no script
+  runs: give the bare scene to an independent LLM (not the author), ask the open question,
+  then ask it to choose between the two labels from its own answer; and read 3-5 raw
+  continuations of the scene from the subject for a sentence that names who did what to whom.
+  Record the outcome in `qa` (or `qa: "not_run"`).
 - **Gate (MC).** stimulus + the two labels lettered; greedy + >= 8/10 (`gate_hf.py` mode `mc`).
+  Pairs are atomic in the gate too: `gate_hf.py` keeps a pair only if BOTH directions pass (a
+  2B kept 7 of 16 pairs; every dropped pair failed the counter-stereotypical `ba` direction,
+  i.e. the model answered from priors). Weak subjects: tier A (action word allowed), concrete
+  roles, and scenes of 2-4 sentences.
 
 ### relational_multihop
 - **Generate (deterministic).** Professional pool (landlord, dentist, boss, coach, tutor,
@@ -397,14 +426,24 @@ is prefilled); check write compliance of the producer.
   deliberative: 2+ competing considerations, `look_for_reasons` = top yes-side + top no-side,
   `must_surface_both: true`); never invent reasons. 3) Commit: greedy answer to `stimulus`
   (max 8 tokens); `gate_pass` = a clean one-word yes/no that agrees with the elicited majority
-  (any clean token for deliberative). Drop `gate_pass: false` items.
+  (any clean token for deliberative) AND, for committed items, the looked-for reason argues the
+  committed side (`supports` == the commit direction or `either`; `gate_reason_side_ok`).
+  Drop `gate_pass: false` items. `supports: "either"` reasons are kept (the frozen bank has
+  18). Weak subjects may commit True to the chat_tf statement and No to the chat_yn question of
+  one topic; deliberative items allow that, but read such topics and drop incoherent ones.
+  Validate the CANDIDATE bank before gating: `validate_bank.py` sees no `reasons` yet, skips
+  the gate-written fields and stops after the guards; validate the gated bank in full.
 - **Commands.** `uv run --extra gpu python .claude/skills/wsb-new-questions/scripts/moral_gate.py
   --bank cand/moral.json --model <subject> --out gated/moral [--distiller <llm id>]`. Without
   `--distiller` it stops after the GPU stage and writes `distil_requests.json` (one system +
   user prompt per topic): distil them with any LLM (or yourself) into `distilled.json`
   (`{topic_id: {classification, reasons:[{text, supports, terms, frequency}], yes_count,
   no_count, other_count, notes}}`) and rerun with `--distilled gated/moral/distilled.json` (no
-  GPU). A deliberative topic that lacks a yes-side or a no-side reason is demoted to committed
+  GPU). On Modal, one container runs all three stages: `WSB_MODAL_SECRETS=<your secret>
+  modal run .claude/skills/wsb-new-questions/scripts/modal_script.py --script moral_gate.py
+  --bank cand/moral.json --out gated/moral --extra "--model <subject> --distiller <llm id>"`
+  (JSON already in `--out` is uploaded first, so a stage-3 re-run reuses `elicited.json`). A
+  deliberative topic that lacks a yes-side or a no-side reason is demoted to committed
   (the judge needs exactly one of each). `gate_hf.py` does not gate moral_rationale.
 
 ## Not authorable as text

@@ -79,7 +79,10 @@ A unit:
   multilingual_multihop `bridge_l2` (required false) + `bridge_native` {en, zh} (required) +
   `language` (required false); multilingual_typo `correction` {L2, en, zh} + `language`.
 - `language` unit: `"multi_token": false`; forms `{"en": ["Arabic"], "zh": ["阿拉伯语"],
-  "<L2>": [how the language names itself]}`. Never put the L2 target in it.
+  "<L2>": [...]}` where `<L2>` is the L2 TARGET and its inflections in multilingual_mt,
+  multilingual_typo and basic_readout_mt l2_factual (all frozen items, e.g. `"ar":
+  ["الساعة الرملية", "ساعة رملية"]`), and how the language names itself in
+  multilingual_multihop (`"ar": ["العربية", "بالعربية"]`).
 
 ## Computational
 

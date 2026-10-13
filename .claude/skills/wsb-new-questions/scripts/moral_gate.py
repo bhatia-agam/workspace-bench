@@ -215,6 +215,9 @@ def main() -> int:
         free = "split" if y == n else ("yes" if y > n else "no")
         token = direction in ("yes", "no")
         aligned = token if klass == "deliberative" else token and free in ("split", direction)
+        # committed: the reason we will look for must argue the side the subject commits to
+        top_side = next((r.get("supports") for r in reasons if lf and r["text"] == lf[0]), None)
+        side_ok = klass == "deliberative" or top_side in (direction, "either")
         if it.get("answer_format") == "true_false" and direction in ("yes", "no"):
             commit_answer = "True" if direction == "yes" else "False"
         else:
@@ -233,7 +236,8 @@ def main() -> int:
                 "commit_precise": precise,
                 "gate_committed_token": token,
                 "gate_aligned": aligned,
-                "gate_pass": bool(token and precise and aligned and lf),
+                "gate_reason_side_ok": side_ok,
+                "gate_pass": bool(token and precise and aligned and lf and side_ok),
             }
         )
         report["pass" if it["gate_pass"] else "fail"] += 1

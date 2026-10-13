@@ -30,6 +30,7 @@ FINAL_ANSWER = {"arithmetic_intermediates", "chain_intermediates", "brew_interme
 STRICT = {"chain_intermediates", "brew_intermediates"}  # 10/10 at T=0.8, top_p=0.95
 MC = {"conjunctive_association", "role_bound_association"}
 GREEDY_ONLY = {"relational_multihop"}
+PLAIN_VARIANT = {"poetry", "multihop", "multilingual"}  # also gated as a raw continuation
 # stamped as `gate_variant` (how the item was gated); every gate_hf.py gate is a chat render
 GATE_VARIANT = {"directed_modulation": "chat_dm"}  # greedy-correct, both items of a scene
 UNSUPPORTED = {
@@ -38,6 +39,7 @@ UNSUPPORTED = {
     "multi_concept_directed_modulation": "no capability gate: the sentence is prefilled",
     "user_modeling": "kept as-is in the reference recipe; use `wsbench capable` to check",
 }
+_CJK = re.compile(r"[\u3040-\u30ff\u3400-\u9fff\uac00-\ud7af]")
 NUM = re.compile(r"(?<![\w.])-?\d+(?:\.\d+)?(?![\w])")
 
 
@@ -125,6 +127,16 @@ def states_intermediate(item: dict[str, Any], answer: str) -> bool:
             if words and words[0] == x.lower():
                 return True
         elif any(v is not None and abs(v - xv) <= 1e-6 * max(1.0, abs(xv)) for v in nums):
+            return True
+    return False
+
+
+def plain_match(answer: str, golds: list[str]) -> bool:
+    """Raw-continuation grading: the continuation STARTS with a gold (whole word; CJK golds
+    by prefix). A gold later in the text is a different continuation, not the answer."""
+    a = norm(answer)
+    for g in map(norm, map(str, golds)):
+        if g and (a == g or a.startswith(g + " ") or (_CJK.search(g) and a.startswith(g))):
             return True
     return False
 
@@ -252,6 +264,17 @@ def build_questions(
             for k, it in items.items():
                 if it.get("subfamily") == "implicit":
                     q(k, it["prompt"], [], "own_implicit", prefill=ANSWER_STEM, max_new=16)
+    if family in PLAIN_VARIANT:
+        # the frozen banks' first gate variant: a raw continuation of the prompt, the same
+        # render the lens reads (eval_render "plain"); an item passes on plain OR chat
+        golds_of = {x["item"]: x["golds"] for x in out if ":bridge" not in x["qid"]}
+        for k, it in items.items():
+            mode = "own_poetry_plain" if family == "poetry" else "plain"
+            # a trailing space makes the next token a bare-space continuation (small models
+            # then emit digits); like the frozen gate's plain_stripped, ask without it
+            text = str(it["prompt"])
+            q(f"{k}:plain", text.rstrip(), golds_of.get(k, []), mode, max_new=8)
+            out[-1].update(item=k, raw=True, stripped=text != text.rstrip())
     return out
 
 
@@ -343,6 +366,28 @@ class Subject:
                 res[idx[j // (n if temperature > 0 else 1)]].append(text)
                 self.truncated[idx[j // (n if temperature > 0 else 1)]].append(cut == len(row))
         return res
+
+
+def render_q(subj: "Subject", q: dict[str, Any]) -> list[int]:
+    return subj.render_raw(q["ask"]) if q.get("raw") else subj.render(q["ask"], q["prefill"])
+
+
+def greedy_pass(subj: "Subject", qs: list[dict[str, Any]], batch: int) -> None:
+    """Greedy answer (and truncation flag) for every question, batched by max_new."""
+    for mx in sorted({q["max_new"] for q in qs}):
+        group = [q for q in qs if q["max_new"] == mx]
+        outs = subj.generate(
+            [render_q(subj, q) for q in group],
+            n=1,
+            temperature=0.0,
+            top_p=1.0,
+            max_new=mx,
+            batch=batch,
+            seed=0,
+        )
+        for q, o, tr in zip(group, outs, subj.truncated, strict=True):
+            q["greedy"] = o[0]
+            q["truncated_greedy"] = tr[0]
 
 
 # ------------------------------------------------------------------ per-subject stamping
@@ -477,21 +522,14 @@ def main() -> int:
     subj = Subject(a.model, a.device, a.dtype)
     final = fam in FINAL_ANSWER
 
-    # 1. greedy
-    for mx in sorted({q["max_new"] for q in qs}):
-        group = [q for q in qs if q["max_new"] == mx]
-        outs = subj.generate(
-            [subj.render(q["ask"], q["prefill"]) for q in group],
-            n=1,
-            temperature=0.0,
-            top_p=1.0,
-            max_new=mx,
-            batch=a.batch,
-            seed=0,
-        )
-        for q, o, tr in zip(group, outs, subj.truncated, strict=True):
-            q["greedy"] = o[0]
-            q["truncated_greedy"] = tr[0]
+    # 1. greedy; a stem that makes the subject stop at once (empty answer: small models end
+    # the turn after "My answer is:") is dropped for that question, which is re-asked bare
+    greedy_pass(subj, qs, a.batch)
+    empty = [q for q in qs if not q["greedy"] and q["prefill"]]
+    for q in empty:
+        q["prefill"], q["stem_dropped"] = "", True
+    if empty:
+        greedy_pass(subj, empty, a.batch)
 
     def hit(q: dict[str, Any], ans: str) -> bool | None:
         m = q["mode"]
@@ -500,8 +538,10 @@ def main() -> int:
         if m == "dm":
             it = items[q["item"]]
             return norm(ans) == norm(it["carrier"]) and not string_match(ans, [it["concept"]])
-        if m in ("own_poetry", "own_implicit"):
+        if m in ("own_poetry", "own_poetry_plain", "own_implicit"):
             return None  # decided after sampling, against the greedy word
+        if m == "plain":
+            return plain_match(ans, q["golds"])
         if final and states_intermediate(items[q["item"]], ans):
             q["leaks"] = q.get("leaks", 0) + 1
             return False  # it wrote the latent: a chain-of-thought rollout, never a pass
@@ -519,7 +559,7 @@ def main() -> int:
     for mx in sorted({q["max_new"] for q in todo}):
         group = [q for q in todo if q["max_new"] == mx]
         outs = subj.generate(
-            [subj.render(q["ask"], q["prefill"]) for q in group],
+            [render_q(subj, q) for q in group],
             n=a.k,
             temperature=temp,
             top_p=top_p,
@@ -560,12 +600,12 @@ def main() -> int:
     # 4. verdicts
     for q in qs:
         m, answers = q["mode"], [q["greedy"], *q.get("samples", [])]
-        if m in ("own_poetry", "own_implicit"):
+        if m in ("own_poetry", "own_poetry_plain", "own_implicit"):
             w = first_word(q["greedy"])
             hits = sum(first_word(s) == w for s in q.get("samples", []))
             q["word"] = w
             ok_w = bool(w)
-            if m == "own_poetry":
+            if m.startswith("own_poetry"):
                 q["line_one_end"] = line_one_end(q["ask"])
                 # an identity "rhyme" (repeating line one's last word) is not a rhyme
                 q["rhymes"] = ok_w and w != q["line_one_end"] and rhymes(w, q["line_one_end"])
@@ -592,13 +632,29 @@ def main() -> int:
     by_item: dict[str, list[dict[str, Any]]] = {}
     for q in qs:
         by_item.setdefault(q["item"], []).append(q)
-    passed = {k: all(q["pass"] for q in v) for k, v in by_item.items()}
+
+    def variant_legs(k: str, legs: list[dict[str, Any]]) -> list[dict[str, Any]]:
+        return [q for q in legs if q["qid"] in (k, f"{k}:plain")]
+
+    passed = {  # one gate variant (chat or plain) must pass, and every other leg
+        k: any(q["pass"] for q in variant_legs(k, v))
+        and all(q["pass"] for q in v if q not in variant_legs(k, v))
+        for k, v in by_item.items()
+    }
     if fam in GREEDY_ONLY:
         scenes: dict[str, list[str]] = {}
         for k, it in items.items():
             scenes.setdefault(str(it.get("scene")), []).append(k)
         for ks in scenes.values():
             both = all(passed.get(k) for k in ks)
+            for k in ks:
+                passed[k] = both
+    if fam == "role_bound_association":  # atomic pairs: both directions or neither
+        by_pair: dict[str, list[str]] = {}
+        for k, it in items.items():
+            by_pair.setdefault(str(it.get("pair_id")), []).append(k)
+        for ks in by_pair.values():
+            both = len(ks) == 2 and all(passed.get(k) for k in ks)
             for k in ks:
                 passed[k] = both
     if fam == "arithmetic_intermediates":  # twins survive together
@@ -616,7 +672,8 @@ def main() -> int:
         if not is_list:
             it.pop("id", None)
         legs = by_item.get(k, [])
-        main = next((q for q in legs if q["qid"] == k), legs[0] if legs else None)
+        plain = next((q for q in legs if q["qid"] == f"{k}:plain" and q["pass"]), None)
+        main = plain or next((q for q in legs if q["qid"] == k), legs[0] if legs else None)
         if main and main.get("hits") is not None:
             it["consistency"] = main["hits"] / a.k
         if main:
@@ -624,7 +681,11 @@ def main() -> int:
         if main and fam in MT_FAMILIES and main.get("hits_strict") is not None:
             it["consistency_strict"] = main["hits_strict"] / a.k
         if not is_list and fam not in FINAL_ANSWER:
-            it["gate_variant"] = GATE_VARIANT.get(fam, "chat")
+            it["gate_variant"] = (
+                ("plain_stripped" if plain.get("stripped") else "plain")
+                if plain
+                else GATE_VARIANT.get(fam, "chat")
+            )
         if fam in ("multihop_mt", "multilingual_multihop"):
             it["bridge_consistency"] = {
                 q["qid"].split(":")[1]: q["hits"] / a.k for q in legs if ":bridge" in q["qid"]

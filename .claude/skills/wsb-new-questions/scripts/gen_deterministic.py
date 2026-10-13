@@ -19,6 +19,7 @@ from typing import Any
 
 # ------------------------------------------------------------------ arithmetic
 
+EASY = False  # --easy: small-operand ranges (easy_unit)
 EXCLUDE: set[str] = set()  # prompts of the frozen bank (and --exclude files): never re-emitted
 RENDER = "Compute {expr}. Reply with only the final number, nothing else."
 # variant -> (shape, tolerance, frozen cell, role); copied from the frozen bank header
@@ -117,8 +118,48 @@ def arith_item(
     }
 
 
+EASY_VARIANTS = ("absval", "signpair", "sign", "muladd", "subsub", "subsubx", "addmul")
+
+
+def easy_unit(variant: str, rng: random.Random) -> list[dict[str, Any]] | None:
+    """--easy: the same shapes with 1-2 digit operands, for weak subjects. Every arith_item
+    guard still applies (the first value is never an operand, the answer or a numeral of the
+    prompt, and stays > GEN_SEP away from the answer), so the intermediate is still needed."""
+    r = rng.randint
+    if variant in ("absval", "signpair"):
+        a, c = r(5, 40), r(2, 9)
+        d = r(3, 19)
+        b = a + d
+        x = arith_item("absval", f"abs({a} - {b}) * {c}", [a, b, c], "abs", [d], d * c)
+        y = arith_item("signpair", f"({a} - {b}) * {c}", [a, b, c], "subtract", [-d], -d * c)
+        return [x, y] if x and y else None
+    if variant == "sign":
+        a, c = r(5, 40), r(2, 9)
+        b = a + r(2, 9)
+        x = arith_item("sign", f"({a} - {b}) * {c}", [a, b, c], "subtract", [a - b], (a - b) * c)
+        return [x] if x else None
+    if variant == "muladd":
+        a, b, c = r(3, 9), r(3, 9), r(2, 30)
+        x = arith_item("muladd", f"({a} * {b}) + {c}", [a, b, c], "multiply", [a * b], a * b + c)
+        return [x] if x else None
+    if variant in ("subsub", "subsubx"):
+        a, b, c = r(20, 60), r(6, 19), r(2, 9)
+        if a - b < 5 or b - c < 3:
+            return None
+        x = arith_item("subsub", f"({a} - {b}) - {c}", [a, b, c], "subtract", [a - b], a - b - c)
+        y = arith_item("subsubx", f"{a} - ({b} - {c})", [a, b, c], "subtract", [b - c], a - (b - c))
+        return [x, y] if x and y else None
+    if variant == "addmul":
+        a, b, c = r(2, 9), r(2, 9), r(2, 5)
+        x = arith_item("addmul", f"({a} + {b}) * {c}", [a, b, c], "add", [a + b], (a + b) * c)
+        return [x] if x else None
+    raise KeyError(variant)
+
+
 def gen_unit(variant: str, rng: random.Random) -> list[dict[str, Any]] | None:
     """One draw of a variant; twin variants return both twins (or None)."""
+    if EASY:
+        return easy_unit(variant, rng)
     r = rng.randint
     if variant in ("absval", "signpair"):
         a, b, c = r(111, 805), r(265, 997), r(3, 79)
@@ -425,7 +466,7 @@ def chain_item(rng: random.Random, depth: int) -> dict[str, Any] | None:
 def gen_chain(n: int, rng: random.Random, tag: str) -> list[dict[str, Any]]:
     out, seen = [], set()
     while len(out) < n:
-        depth = 3 if rng.random() < 36 / 120 else 2
+        depth = 2 if EASY else 3 if rng.random() < 36 / 120 else 2
         it = chain_item(rng, depth)
         if it and it["prompt"] not in seen and it["prompt"] not in EXCLUDE:
             seen.add(it["prompt"])
@@ -541,6 +582,13 @@ def main() -> int:
         help="brew only: HF id used to compute eval_positions/regions now (else run "
         "gate_hf.py, which stamps them for the subject)",
     )
+    ap.add_argument(
+        "--easy",
+        action="store_true",
+        help="weak subjects: arithmetic with 1-2 digit operands (variants "
+        + ",".join(EASY_VARIANTS)
+        + "), chain depth 2 only; every leak/separation guard still applies",
+    )
     ap.add_argument("--out", required=True, type=Path)
     ap.add_argument(
         "--exclude",
@@ -557,17 +605,23 @@ def main() -> int:
             EXCLUDE.update(it["prompt"] for it in json.loads(path.read_text())["items"])
         elif path == Path("evals") / a.family / "items.json":
             print("warn: run from the repo root so the frozen bank is excluded", file=sys.stderr)
+    global EASY
+    EASY = a.easy
+    source = f"gen_deterministic.py seed={a.seed} tag={a.tag}{' easy' * a.easy} (NOT gated)"
     if a.family == "arithmetic_intermediates":
         vs = [v.strip() for v in a.variants.split(",") if v.strip()]
-        bad = [v for v in vs if v not in VARIANTS]
+        if a.easy and a.variants == ",".join(VARIANTS):
+            vs = list(EASY_VARIANTS)
+        bad = [v for v in vs if v not in (EASY_VARIANTS if a.easy else VARIANTS)]
         if bad:
-            print(f"unknown variants {bad}; known {sorted(VARIANTS)}", file=sys.stderr)
+            known = EASY_VARIANTS if a.easy else sorted(VARIANTS)
+            print(f"unknown variants {bad}{' for --easy' * a.easy}; known {known}", file=sys.stderr)
             return 2
         items = gen_arith(a.n, rng, a.tag, vs)
         used = sorted({it["variant"] for it in items})
         header = {
             "family": "arithmetic_intermediates",
-            "source": f"gen_deterministic.py seed={a.seed} tag={a.tag} (NOT gated)",
+            "source": source,
             "variants": {
                 v: {
                     "shape": VARIANTS[v][0],
@@ -584,13 +638,13 @@ def main() -> int:
         items = gen_chain(a.n, rng, a.tag)
         header = {
             "family": "chain_intermediates",
-            "source": f"gen_deterministic.py seed={a.seed} tag={a.tag} (NOT gated)",
+            "source": source,
         }
     else:
         items = gen_brew(a.n, rng, a.tag, a.tokenizer)
         header = {
             "family": "brew_intermediates",
-            "source": f"gen_deterministic.py seed={a.seed} tag={a.tag} (NOT gated)",
+            "source": source,
         }
     a.out.parent.mkdir(parents=True, exist_ok=True)
     a.out.write_text(

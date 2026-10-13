@@ -4,9 +4,11 @@ GPU. Generic: your own Modal account, no secrets needed for deterministic gradin
     modal run .claude/skills/wsb-new-questions/scripts/modal_gate.py \\
         --family multihop --bank cand/multihop.json --model Qwen/Qwen3.5-0.8B --out gated/multihop
 
-Extra flags for gate_hf.py go in --extra (a quoted string). An LLM grader needs its key as a
-Modal secret (e.g. `modal secret create openrouter OPENROUTER_API_KEY=...`, then --secret
-openrouter); never bake keys into the image.
+Extra flags for gate_hf.py go in --extra (a quoted string). An LLM grader (`--extra
+"--grader <id>"`) needs its key as a Modal secret: `modal secret create openrouter
+OPENROUTER_API_KEY=...` once, then run with `WSB_MODAL_SECRETS=openrouter` (comma list); never
+pass a key on the command line or bake it into the image. moral_gate.py and buggy_gate.py run
+through the sibling modal_script.py.
 """
 
 import json
@@ -21,6 +23,11 @@ REPO = _HERE.parents[4] if len(_HERE.parents) > 4 else Path("/repo")
 # a small subject fits any GPU; set WSB_GATE_GPU=H100 (etc.) for >= 9B models
 GPU = os.environ.get("WSB_GATE_GPU", "L40S")  # "none" = CPU only (pass --extra "--device cpu")
 GPU_ARG = None if GPU.lower() == "none" else GPU
+SECRETS = [
+    modal.Secret.from_name(n.strip())
+    for n in os.environ.get("WSB_MODAL_SECRETS", "").split(",")
+    if n.strip()
+]
 
 image = (
     modal.Image.debian_slim(python_version="3.12")
@@ -70,7 +77,14 @@ def _run(argv: list[str]) -> dict[str, str]:
     return {f: Path("/tmp/out", f).read_text() for f in ("items.json", "gate.json", "summary.json")}
 
 
-@app.function(gpu=GPU_ARG, cpu=8.0, memory=32768, timeout=4 * 3600, volumes={"/cache": hf_cache})
+@app.function(
+    gpu=GPU_ARG,
+    cpu=8.0,
+    memory=32768,
+    timeout=4 * 3600,
+    volumes={"/cache": hf_cache},
+    secrets=SECRETS,
+)
 def gate(argv: list[str], bank_text: str) -> dict[str, str]:
     Path("/tmp/bank.json").write_text(bank_text)
     return _run([*argv, "--bank", "/tmp/bank.json"])

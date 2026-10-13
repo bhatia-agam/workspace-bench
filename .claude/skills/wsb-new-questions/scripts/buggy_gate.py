@@ -34,7 +34,7 @@ from pathlib import Path
 from typing import Any
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from gate_hf import Subject
+from gate_hf import Subject, ooc_status
 
 FORBIDDEN = re.compile(  # nondeterminism / IO; pure `os.path` string functions are allowed
     r"\bimport\s+(random|time|sys|socket|subprocess|os\b(?!\.path))|"
@@ -90,7 +90,9 @@ def parse_verified(v: str) -> tuple[bool, str]:
 
 
 def norm_out(s: str) -> str:
-    return " ".join(s.strip().strip("`").split())
+    """Formatting-blind stdout: the sequence of values (numbers, words) without brackets,
+    commas, quotes or backticks, so `[6, 7, 8]` and `6 7 8` match but `6 7 9` does not."""
+    return " ".join(re.findall(r"-?\w+(?:\.\w+)*", s.strip().strip("`")))
 
 
 def cmd_verify(items: list[dict[str, Any]]) -> int:
@@ -194,7 +196,10 @@ def main() -> int:
         else:
             hits = sum(bool(TROUBLE.search(c)) for c in conts)
             undecided = False
-        leak = len(truth) >= 2 and not raises and any(truth in c for c in conts)
+        # a continuation that repeats the program's own literals is not a leak: the check is
+        # only informative when the buggy output is not already a substring of the program
+        leak_na = truth in it["code"]
+        leak = len(truth) >= 2 and not raises and not leak_na and any(truth in c for c in conts)
         tier = "strict" if hits == 0 else "tolerant" if hits <= 2 else "fail"
         ok = cons >= 4 and tier != "fail" and not leak and not undecided
         report.append(
@@ -203,7 +208,7 @@ def main() -> int:
                 "consequence_hits": f"{cons}/6",
                 "volunteer_hits": f"{hits}/11",
                 "volunteer_judge": a.judge or "proxy",
-                "output_leak": leak,
+                "output_leak": "n/a (output appears in the program)" if leak_na else leak,
                 "gate_tier": tier,
                 "pass": ok,
                 "continuations": conts,
@@ -238,6 +243,10 @@ def main() -> int:
         "model": a.model,
         "n_buggy": len(buggy),
         "n_buggy_pass": len(keep),
+        "n_items": len(buggy),  # the merge_gated.py / OOC keys (buggy items are the candidates)
+        "n_pass": len(keep),
+        "pass_rate": round(len(keep) / max(1, len(buggy)), 4),
+        "status": ooc_status(len(buggy), len(keep) / max(1, len(buggy))),
         "volunteer_judge": a.judge
         or "trouble-vocabulary proxy: review gate.json continuations by hand",
     }
