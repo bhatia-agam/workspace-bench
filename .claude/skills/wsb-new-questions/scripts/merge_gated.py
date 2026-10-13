@@ -78,12 +78,11 @@ def main() -> int:
             it["pair_survived"] = it.get("pair") in names
     rate = n_pass / max(1, n_items)
     status = ooc_status(n_items, rate, a.capacity)
-    if a.budget_spent and status != "ooc" and len(kept) < a.target:
-        status = f"capped ({len(kept)} of target {a.target}; was: {status})"
-    elif a.target and len(kept) < a.target and status == "in-capability":
-        status = (
-            f"in-capability, short of target ({len(kept)}/{a.target}): gate more or --budget-spent"
-        )
+    # the unit of the target: buggy counts buggy items (each brings its clean twin along)
+    n_unit = sum(it.get("src") != "clean" for it in kept) if fam == "buggy_code" else len(kept)
+    if status == "in-capability" and a.target and n_unit < a.target:
+        short = f"in-capability, short of target ({n_unit}/{a.target}): gate more or --budget-spent"
+        status = f"capped ({n_unit} of target {a.target})" if a.budget_spent else short
     a.out.mkdir(parents=True, exist_ok=True)
     if not is_list:
         header["gate"] = f"{header.get('gate', '')} [pooled over {len(a.waves)} waves]".strip()
