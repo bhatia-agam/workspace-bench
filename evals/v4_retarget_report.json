@@ -1,0 +1,21 @@
+{
+ "poetry": {
+  "items": 100,
+  "gate_pass_v4": 10,
+  "retargeted": [
+   [
+    "b3-po-tune-june",
+    "noon",
+    "moon"
+   ]
+  ]
+ },
+ "moral_rationale": {
+  "items": 200,
+  "gate_pass_v4": 188,
+  "class_changed_vs_qwen": 38,
+  "side_changed_vs_qwen": 38,
+  "no_side_matched_reason": 9,
+  "deliberative": 24
+ }
+}
