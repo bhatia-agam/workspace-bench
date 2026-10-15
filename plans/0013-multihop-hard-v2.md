@@ -109,7 +109,7 @@ The gate runs Qwen3.6-27B on Modal through the HF `ModelBackend`, with the same 
 | S1 mechanical ablation | `drop_b1` = `"Fact: " + G1 + R1` (2-hop) / `"Fact: " + G1 + R1a + N2 + R2` (3-hop) | ≤4/20 AND greedy miss |
 | S1 authored ablations | `local_cue` (the final relation with a fully generic subject, answer type kept; it tests the category prior; lint: ends with the prompt's last 4 words, no D1 capitalized token/number, no bridge form); 3-hop `direct_b1_to_t` (B1 named + **the item's final relation**, with B2's relation removed, e.g. "Fact: Andrew Wyeth … the Brandywine village of"; lint: contains a B1 form, no B2 form, ends with the prompt's last 4 words) | each ≤4/20 AND greedy miss |
 | S2 adversary | ≤4 probes from an independent call (fresh context) that sees the prompt, the chain and T but NOT the S1 probes. It is given the audit's full shortcut taxonomy (local cue, skip a bridge by date/place, B1→T direct, bridge named or near-named, descriptor-is-T-fact, category prior, bridge not on the path) and returns probes plus `factual_issue`. **[rev 3]** Every probe must be an ablation of the prompt; a probe with a capitalised word or number not in the prompt is discarded | each ≤4/20 AND greedy miss; any `factual_issue` rejects |
-| ID check **[rev 3]** | for every **adversary probe that does not name B1** and reaches T: "which person/work/place is being described in it? infer it if not named. Answer with the name only" → each bridge it hides (for 3-hop: both bridges; the adversary's own `skips` label is not trusted). Scored on the answer line only | a hit is excused only when every hidden bridge is nameable (greedy or ≥5/10). Never applied to `drop_b1` / `local_cue`, and never to any probe that NAMES B1 |
+| ~~ID check~~ **[rev 3, withdrawn]** | (see below) | no shortcut probe is ever excused |
 
 Rules:
 - **A missing adversary row, zero S2 probes, or an API failure rejects the item (or retries it).
@@ -180,7 +180,8 @@ check the code against it:
   Probe keys are versioned (`S2adv3_j`).
 - **Relabel (Camila, 2026-10-15: keep as 2-hop).** A 3-hop item whose every real shortcut hides
   only one bridge, while the other bridge's own checks pass, is frozen as an honest 2-hop
-  through the load-bearing bridge (`relabel_b1` / `relabel_b2`). The decorative clue stays in
+  through the load-bearing bridge. Since the second code review only `relabel_b2` remains (see
+  "ID check withdrawn"). The decorative clue stays in
   the prompt; only the load-bearing bridge is scored.
   - `relabel_b2` example: Kant → Hume → Edinburgh, where "a skeptic who was born in" works
     without Kant.
@@ -197,18 +198,30 @@ check the code against it:
   - the gate run as G1 + recall first, with the adversary only on survivors.
   The bank reports its true-3-hop count beside the target. It is not padded.
 
+- **ID check withdrawn (second code review, 2026-10-15).** Every version of the ID excuse
+  leaked, and each patch exposed another hole:
+  - it could not tell a unique paraphrase from a class default (Tu Youyou, Piazzolla: both
+    confirmed shortcuts at 10/10);
+  - it matched bare surnames shared across bridges ("Minamoto");
+  - its "apart from B1" question was answered with T itself in about a third of replies.
+
+  So the gate is now strict: every shortcut probe that reaches T fails the item, and
+  `relabel_b1` (which needed the ID check to certify that B2 is off the path) is withdrawn. Under
+  the strict rule the first-round pools gave 47 items, below the floor, so a further 2-hop round
+  was generated.
+
 ### Outcome [rev 3]
 
-The frozen bank has **91 items**:
+The frozen bank has **70 items**:
 - **6 true 3-hop**, against the plan's target of ≥30;
-- 69 two-hop;
-- 16 two-hop items relabeled from 3-hop.
+- 59 two-hop;
+- 5 two-hop items relabeled from 3-hop (`relabel_b2` only).
 
-It drew on about 3,800 candidates, about 2,800 of them 3-hop. Fresh-eye reviews of every item
-dropped 10, each recorded with its probe evidence in global-workspace
-`scripts/oracle_lens_evals/multihop_v2/review_overrides.json`. A 2-hop-only top-up (483
-candidates, 48 passing) brought the bank over the 60-item floor once the code-review fixes had
-removed the misjudged relabels.
+It drew on about 4,500 candidates, about 2,800 of them 3-hop. The gate is strict: no shortcut
+probe is ever excused (see "ID check withdrawn"). Fresh-eye reviews of every item recorded 11
+overrides, each with its probe evidence, in global-workspace
+`scripts/oracle_lens_evals/multihop_v2/review_overrides.json`. Two 2-hop-only top-ups (483 and
+654 candidates) brought the bank over the 60-item floor.
 
 The 3-hop shortfall is structural for this model. Qwen3.6-27B answers about 20% of
 well-designed 3-hop prompts reliably without chain-of-thought, and in most of those the first

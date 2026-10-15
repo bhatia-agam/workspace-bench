@@ -5,15 +5,15 @@ written by the lens in one layer, and **every bridge is proved necessary**: the 
 reach the answer without it. Example: "Fact: the crusader monarch nicknamed 'Cœur de Lion', who first licensed jousting tournaments on English soil was succeeded on the throne by his younger brother, a monarch whose reign is best remembered for the" → bridges *Richard I of England* and
 *John of England*, answer Magna Carta.
 
-91 items (frozen 2026-10-15, plan 0013). This successor of `multihop_mt` exists because an
+70 items (frozen 2026-10-15, plan 0013). This successor of `multihop_mt` exists because an
 audit found 93/100 of that bank's items reachable while skipping a claimed bridge
 (`evals/multihop_mt/AUDIT_2026-10-15.md`). Plain render, one read position: the final prompt
 token, immediately before the answer word.
 
 **Composition.**
 - 6 true three-hop items.
-- 69 two-hop items.
-- 16 two-hop items relabeled from three-hop. Their prompt still contains a clue the gate
+- 59 two-hop items.
+- 5 two-hop items relabeled from three-hop. Their prompt still contains a clue the gate
   showed to be decorative (e.g. a first person whom the rest of the sentence already pins), so
   only the load-bearing bridge is scored. Each one's `relabel_reason` records the probes that
   decided it.
@@ -37,8 +37,8 @@ fill-in-the-blank question:
   - `local_cue`: the final relation only, with a generic subject;
   - three-hop only: bridge 1 NAMED with the final relation, skipping bridge 2;
   - 2–4 probes from an independent adversary call (ablations of the prompt only).
-  An adversary probe that hides bridge 1 by paraphrase is excused only when the model can
-  still name bridge 1 from it. Nothing else is excused.
+  No probe is ever excused. A three-hop item whose only shortcut is `drop_b1` (bridge 1 is
+  decorative) is frozen as a two-hop through bridge 2.
 - **No factual issue,** then a fresh-eye review of every item. Its decisions are applied as
   recorded overrides, each with its probe evidence.
 
