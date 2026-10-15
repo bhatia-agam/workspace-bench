@@ -5,7 +5,7 @@ writes. A lens reads the model's residual stream at a token position and produce
 (an "O-lens": sampled sentences) or a top-10 token bag (a "J-lens": tokens with scores). Each eval
 pairs a frozen item bank with a judge that checks whether the readout carries the latent the item
 was built around, without echoing the prompt. Judging is Gemini 3.8 Flash via OpenRouter,
-except two families pinned to Claude and six scored by regex (see [Judges](#judges)). Judging
+except two families pinned to Claude and seven scored by regex (see [Judges](#judges)). Judging
 is the contract: a lens producer hands over one JSONL readout file per (family, arm) and
 `wsbench` scores it. The optional `wsbench produce` (the `gpu` extra) can generate those
 readouts for you.
@@ -283,7 +283,7 @@ Every family runs on `google/gemini-3.8-flash` except two pins: **agentic_misali
 `claude-sonnet-5` (its judge of record, no Gemini agreement data) and **jailbreak_recognition**
 on `claude-sonnet-5` (Gemini refuses to judge a share of jailbreak cells). The prompt version is
 the instrument: bump it on any prompt edit, and a frozen baseline only applies to a matching
-version. The six multi-token families (`*_mt`, `multilingual_multihop`, `multilingual_typo`)
+version. The seven multi-token families (`*_mt`, `multihop_mt_v2`, `multilingual_multihop`, `multilingual_typo`)
 are scored by the **regex** contract since 2026-09-23 (Camila: "regex on the multitoken please") —
 no call on prose readouts; token bags are first interpreted by the shared summarizer (`interp-v1`,
 `google/gemini-3.8-flash`, cached), which is the instrument for those arms

@@ -31,15 +31,17 @@ fill-in-the-blank question:
 - **Recall:** bridge 1 from the prompt's own clue, and the last hop with its source named, each
   greedy hit AND ≥8/10. For three-hop items, bridge 2 is identified inside the full statement:
   greedy hit AND ≥5/10. That check also supplies the scored bridge's `bridge_consistency` on
-  relabeled items. `bridges[].question` holds the exact question asked.
+  relabeled items, so their scored bridge clears the lower ≥5/10 bar, not ≥8/10. `bridges[].question` holds the exact question asked.
 - **Shortcuts:** each probe must fail to reach the target (>4/20 or a greedy hit counts as
   reaching it):
   - `drop_b1`: bridge 1's clue replaced by a generic noun;
   - `local_cue`: the final relation only, with a generic subject;
   - three-hop only: bridge 1 NAMED with the final relation, skipping bridge 2;
   - 2–4 probes from an independent adversary call (ablations of the prompt only).
-  No probe is ever excused. A three-hop item whose only shortcut is `drop_b1` (bridge 1 is
-  decorative) is frozen as a two-hop through bridge 2.
+  No probe is ever excused. The one exception is not an excuse but a relabel: a three-hop item
+  whose only shortcut is `drop_b1` (bridge 1 is decorative) is frozen as a two-hop through
+  bridge 2. One relabel (`mh2-beckett-joyce-ulysses-q3`) came from a review override with its
+  own probe evidence, recorded in its `relabel_reason`.
 - **No factual issue,** then a fresh-eye review of every item. Its decisions are applied as
   recorded overrides, each with its probe evidence.
 
@@ -114,9 +116,8 @@ scorer reads.
   per role, `language_of_readout` (which language each unit surfaced in first), and `mc` (the
   forced-choice judge's number when `out/results.json` still holds one, so both instruments sit
   side by side without a call).
-- **Floors:** the prompt-only baseline was re-measured under this scorer on 2026-09-23
-  (`evals/baselines/README.md`); the MC lucky-guessing floor has no meaning without option lists
-  and is no longer drawn.
+- **Floors:** no floor is frozen for this family yet. There is no `multihop_mt_v2` entry in
+  `evals/baselines/prompt_only.json`, so `report` shows none until one is measured.
 
 ## Instrument history
 
