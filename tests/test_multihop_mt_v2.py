@@ -51,6 +51,21 @@ def test_every_item_carries_passing_gate_evidence():
             assert it["subfamily"] == "2hop" and it["relabel_reason"], it["name"]
 
 
+def test_the_strict_gate_holds_for_every_item():
+    """No stored shortcut probe reaches the target (greedy, or > 4/20), except the drop_b1 probe
+    that shows a relabeled item's dropped bridge is decorative (plan 0013 rev 3)."""
+    _header, items = _bank()
+    for it in items:
+        for sp in it["shortcut_probes"]:
+            hit = sp["greedy_pass"] or sp["n_pass"] > 4
+            excused = (
+                it.get("relabeled_from")
+                and sp["id"] == "S1_drop_b1"
+                and sp["hides"] == ["dropped_bridge"]
+            )
+            assert not hit or excused, (it["name"], sp["id"], sp["n_pass"])
+
+
 def test_registered():
     from wsbench.evals.multihop_mt_v2 import SPEC
 

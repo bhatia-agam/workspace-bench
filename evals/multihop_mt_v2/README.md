@@ -28,9 +28,10 @@ those, most are reachable through a direct link from the first bridge. Under the
 All probes run on Qwen3.6-27B, chat-templated with `enable_thinking=False`, using the
 fill-in-the-blank question:
 - **Correctness:** the prompt itself, greedy hit AND ≥16/20 at T=0.7.
-- **Recall:** each bridge from the prompt's own clue (`bridges[].question`), and the last hop
-  with its source named, each greedy hit AND ≥8/10. For three-hop items, also bridge 2
-  identified inside the full statement: greedy hit AND ≥5/10.
+- **Recall:** bridge 1 from the prompt's own clue, and the last hop with its source named, each
+  greedy hit AND ≥8/10. For three-hop items, bridge 2 is identified inside the full statement:
+  greedy hit AND ≥5/10. That check also supplies the scored bridge's `bridge_consistency` on
+  relabeled items. `bridges[].question` holds the exact question asked.
 - **Shortcuts:** each probe must fail to reach the target (>4/20 or a greedy hit counts as
   reaching it):
   - `drop_b1`: bridge 1's clue replaced by a generic noun;

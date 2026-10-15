@@ -147,7 +147,7 @@ check the code against it:
   - The new check's bar is ≥5/10 because the question is format-sensitive: Maupassant →
     Flaubert scores greedy-correct while some samples name B1. The causal evidence for both
     bridges comes from the ablations.
-- **The ID check (new).** An adversary probe can re-describe a bridge by another unique clue
+- **The ID check (new; SUPERSEDED, see "ID check withdrawn" below).** An adversary probe can re-describe a bridge by another unique clue
   ("the dome engineered in the 1420s without centering"), and reaching T from such a probe is
   not a shortcut. The excuse is limited to adversary probes that hide B1 without naming it.
   - The excuse was first also applied to `direct_b1_to_t` and B1-named S2 probes, on the theory
@@ -159,7 +159,7 @@ check the code against it:
     B1-named hits. Otherwise B1 → [B2] → T still runs through an unscored B2 (Uther → [Arthur] →
     Guinevere), and the item fails. Under the corrected rule, true 3-hop survivors fell from 27
     to 8.
-- **Code-review fixes (2026-10-15, before merge).**
+- **Code-review fixes (2026-10-15, before merge; SUPERSEDED by "ID check withdrawn").**
   - The `relabel_b1` guard first asked "which entity is described?" of B1-named probes, and the
     model answered B1, so the guard never fired. It now asks "apart from B1, which entity does it
     refer to?"
@@ -185,8 +185,8 @@ check the code against it:
   the prompt; only the load-bearing bridge is scored.
   - `relabel_b2` example: Kant → Hume → Edinburgh, where "a skeptic who was born in" works
     without Kant.
-  - `relabel_b1` example: Edward I → Edward II → Bannockburn, where Edward I links to
-    Bannockburn directly.
+  - `relabel_b1` example (SUPERSEDED, `relabel_b1` was withdrawn): Edward I → Edward II →
+    Bannockburn, where Edward I links to Bannockburn directly.
 - **Measured yield, and the push (Camila, 2026-10-15).** Of the first 628 candidates, 49
   survived (7.8%), but only **3 true 3-hop items of 409 (0.7%)**. The 3-hop losses are mostly
   composition: about 85% of 3-hop prompts score below 16/20, even when every hop is known at
@@ -296,8 +296,7 @@ Cost: about 1,500–2,500 candidates. With 20-sample probes the gate is ≈10k p
   - `readplan.py:219` (the final-token family list; otherwise `plan`/`produce` raise KeyError);
   - `capable/questions.py:261` (`_with_bridges`);
   - `baselines/lucky_guessing.py:68` (the description) and `:257` (the builder);
-  - the `MT` lists in `tests/test_mt_regex.py`, `tests/test_multitoken_family.py` and
-    `tests/test_capable.py`;
+  - the `MT` lists in `tests/test_mt_regex.py` and `tests/test_multitoken_family.py`;
   - the README family entry (three-line invariant, "Basic (multi-token)" group) and the Judges
     row (`README.md:306`).
 - **Sanctioned changes to pre-existing tests and goldens.** All are additive, so v1
