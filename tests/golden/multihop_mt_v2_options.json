@@ -1,0 +1,1162 @@
+{
+ "_meta": {
+  "source": "bank mc blocks (source repo hard_mt_mc_options.py, Opus-written confusables); order = sha256(f'{MC_SEED}|{name}|{role}') shuffle as in the source mc_judge (make_wsbench_goldens.py, plan 0013)",
+  "prompt_version": "mc-2026-09-16"
+ },
+ "options": {
+  "mh2-coeur-de-lion-brother-charter-q2": {
+   "bridge1": {
+    "options": [
+     "Henry II of England",
+     "Richard I of England",
+     "Edward I of England",
+     "Stephen of England",
+     "Henry III of England",
+     "cannot tell: the readout names none of these, or several of them"
+    ],
+    "gold_index": 1
+   },
+   "bridge2": {
+    "options": [
+     "John of England",
+     "Henry III of England",
+     "Stephen of England",
+     "Richard I of England",
+     "Edward I of England",
+     "cannot tell: the readout names none of these, or several of them"
+    ],
+    "gold_index": 0
+   }
+  },
+  "mh2-tippecanoe-grandson-number-r3": {
+   "bridge1": {
+    "options": [
+     "Zachary Taylor",
+     "Benjamin Harrison",
+     "John Tyler",
+     "William Henry Harrison",
+     "Millard Fillmore",
+     "cannot tell: the readout names none of these, or several of them"
+    ],
+    "gold_index": 3
+   },
+   "bridge2": {
+    "options": [
+     "Benjamin Harrison",
+     "Chester A. Arthur",
+     "Rutherford B. Hayes",
+     "James A. Garfield",
+     "William McKinley",
+     "cannot tell: the readout names none of these, or several of them"
+    ],
+    "gold_index": 0
+   }
+  },
+  "mh2-henry-james-pragmatism": {
+   "bridge1": {
+    "options": [
+     "Edith Wharton",
+     "William Dean Howells",
+     "Stephen Crane",
+     "Nathaniel Hawthorne",
+     "Henry James",
+     "cannot tell: the readout names none of these, or several of them"
+    ],
+    "gold_index": 4
+   },
+   "bridge2": {
+    "options": [
+     "John Dewey",
+     "Josiah Royce",
+     "George Santayana",
+     "Charles Sanders Peirce",
+     "William James",
+     "cannot tell: the readout names none of these, or several of them"
+    ],
+    "gold_index": 4
+   }
+  },
+  "mh2-castro-che-argentina": {
+   "bridge1": {
+    "options": [
+     "Camilo Cienfuegos",
+     "Hugo Chávez",
+     "Daniel Ortega",
+     "Fidel Castro",
+     "Fulgencio Batista",
+     "cannot tell: the readout names none of these, or several of them"
+    ],
+    "gold_index": 3
+   },
+   "bridge2": {
+    "options": [
+     "Subcomandante Marcos",
+     "Augusto Cesar Sandino",
+     "Che Guevara",
+     "Camilo Cienfuegos",
+     "Fidel Castro",
+     "cannot tell: the readout names none of these, or several of them"
+    ],
+    "gold_index": 2
+   }
+  },
+  "mh2-buena-vista-davis-confederacy": {
+   "bridge1": {
+    "options": [
+     "Franklin Pierce",
+     "Millard Fillmore",
+     "James K. Polk",
+     "Zachary Taylor",
+     "Winfield Scott",
+     "cannot tell: the readout names none of these, or several of them"
+    ],
+    "gold_index": 3
+   },
+   "bridge2": {
+    "options": [
+     "Judah P. Benjamin",
+     "John C. Breckinridge",
+     "Jefferson Davis",
+     "Alexander H. Stephens",
+     "Robert Toombs",
+     "cannot tell: the readout names none of these, or several of them"
+    ],
+    "gold_index": 2
+   }
+  },
+  "mh2-ray-tagore-gitanjali-q1": {
+   "bridge1": {
+    "options": [
+     "Mrinal Sen",
+     "Bimal Roy",
+     "Ritwik Ghatak",
+     "Satyajit Ray",
+     "Tapan Sinha",
+     "cannot tell: the readout names none of these, or several of them"
+    ],
+    "gold_index": 3
+   },
+   "bridge2": {
+    "options": [
+     "Kazi Nazrul Islam",
+     "Sarat Chandra Chattopadhyay",
+     "Bankim Chandra Chattopadhyay",
+     "Michael Madhusudan Dutt",
+     "Rabindranath Tagore",
+     "cannot tell: the readout names none of these, or several of them"
+    ],
+    "gold_index": 4
+   }
+  },
+  "mh2-faraday-davy-lamp": {
+   "bridge1": {
+    "options": [
+     "John Tyndall",
+     "James Clerk Maxwell",
+     "Michael Faraday",
+     "Humphry Davy",
+     "George Stephenson",
+     "cannot tell: the readout names none of these, or several of them"
+    ],
+    "gold_index": 2
+   },
+   "bridge2": {
+    "options": [
+     "John Dalton",
+     "Humphry Davy",
+     "George Stephenson",
+     "Michael Faraday",
+     "William Hyde Wollaston",
+     "cannot tell: the readout names none of these, or several of them"
+    ],
+    "gold_index": 1
+   }
+  },
+  "mh2-mahinda-father-campaign": {
+   "bridge1": {
+    "options": [
+     "Buddhaghosa",
+     "Moggaliputta Tissa",
+     "Upali Thera",
+     "Sanghamitta",
+     "Mahinda Thera",
+     "cannot tell: the readout names none of these, or several of them"
+    ],
+    "gold_index": 4
+   },
+   "bridge2": {
+    "options": [
+     "Kanishka",
+     "Bindusara",
+     "Ashoka Maurya",
+     "Samudragupta",
+     "Chandragupta Maurya",
+     "cannot tell: the readout names none of these, or several of them"
+    ],
+    "gold_index": 2
+   }
+  },
+  "mh2-1324-pilgrim-poet-builder": {
+   "bridge1": {
+    "options": [
+     "Mansa Musa",
+     "Askia Muhammad I",
+     "Sundiata Keita",
+     "Mansa Sulayman",
+     "Sunni Ali",
+     "cannot tell: the readout names none of these, or several of them"
+    ],
+    "gold_index": 0
+   }
+  },
+  "mh2-1896-victory-italian-general": {
+   "bridge1": {
+    "options": [
+     "Battle of Amba Alagi",
+     "Battle of Coatit",
+     "Battle of Maychew",
+     "Battle of Dogali",
+     "Battle of Adwa",
+     "cannot tell: the readout names none of these, or several of them"
+    ],
+    "gold_index": 4
+   }
+  },
+  "mh2-saratov-botanist-teacher": {
+   "bridge1": {
+    "options": [
+     "Nikolai Vavilov",
+     "Ivan Michurin",
+     "Sergei Chetverikov",
+     "Trofim Lysenko",
+     "Nikolai Koltsov",
+     "cannot tell: the readout names none of these, or several of them"
+    ],
+    "gold_index": 0
+   }
+  },
+  "mh2-yang-guifei-emperor-successor": {
+   "bridge1": {
+    "options": [
+     "Gaozong",
+     "Taizong",
+     "Xuanzong",
+     "Dezong",
+     "Daizong",
+     "cannot tell: the readout names none of these, or several of them"
+    ],
+    "gold_index": 2
+   }
+  },
+  "mh2-gaixia-victor-dynasty": {
+   "bridge1": {
+    "options": [
+     "Xiang Yu",
+     "Qin Shi Huang",
+     "Zhu Yuanzhang",
+     "Liu Bang",
+     "Liu Xiu",
+     "cannot tell: the readout names none of these, or several of them"
+    ],
+    "gold_index": 3
+   }
+  },
+  "mh2-wegener-greenland": {
+   "bridge1": {
+    "options": [
+     "Alfred Wegener",
+     "Fridtjof Nansen",
+     "Arthur Holmes",
+     "Knud Rasmussen",
+     "Emil Wiechert",
+     "cannot tell: the readout names none of these, or several of them"
+    ],
+    "gold_index": 0
+   }
+  },
+  "mh2-pankhurst-wspu": {
+   "bridge1": {
+    "options": [
+     "Emmeline Pankhurst",
+     "Millicent Fawcett",
+     "Charlotte Despard",
+     "Emily Davison",
+     "Annie Kenney",
+     "cannot tell: the readout names none of these, or several of them"
+    ],
+    "gold_index": 0
+   }
+  },
+  "mh2-telegram-founder-network": {
+   "bridge1": {
+    "options": [
+     "Dmitry Grishin",
+     "Eugene Kaspersky",
+     "Yuri Milner",
+     "Arkady Volozh",
+     "Pavel Durov",
+     "cannot tell: the readout names none of these, or several of them"
+    ],
+    "gold_index": 4
+   }
+  },
+  "mh2-schopenhauer-final-city": {
+   "bridge1": {
+    "options": [
+     "Eduard von Hartmann",
+     "Johann Gottlieb Fichte",
+     "Friedrich Nietzsche",
+     "Friedrich Schelling",
+     "Arthur Schopenhauer",
+     "cannot tell: the readout names none of these, or several of them"
+    ],
+    "gold_index": 4
+   }
+  },
+  "mh2-tesla-birth-village": {
+   "bridge1": {
+    "options": [
+     "Nikola Tesla",
+     "Thomas Edison",
+     "Guglielmo Marconi",
+     "Mihajlo Pupin",
+     "Charles Proteus Steinmetz",
+     "cannot tell: the readout names none of these, or several of them"
+    ],
+    "gold_index": 0
+   }
+  },
+  "mh2-maimonides-birthplace": {
+   "bridge1": {
+    "options": [
+     "Abraham ibn Ezra",
+     "Judah Halevi",
+     "Nachmanides",
+     "Moses Maimonides",
+     "Solomon ibn Gabirol",
+     "cannot tell: the readout names none of these, or several of them"
+    ],
+    "gold_index": 3
+   }
+  },
+  "mh2-ibn-khaldun-tunis": {
+   "bridge1": {
+    "options": [
+     "Ibn Taymiyyah",
+     "Ibn Khaldun",
+     "Ibn Battuta",
+     "Al-Maqrizi",
+     "Al-Masudi",
+     "cannot tell: the readout names none of these, or several of them"
+    ],
+    "gold_index": 1
+   }
+  },
+  "mh2-element109-partner": {
+   "bridge1": {
+    "options": [
+     "Irène Joliot-Curie",
+     "Lise Meitner",
+     "Marietta Blau",
+     "Maria Goeppert Mayer",
+     "Ida Noddack",
+     "cannot tell: the readout names none of these, or several of them"
+    ],
+    "gold_index": 1
+   }
+  },
+  "mh2-rand-novel": {
+   "bridge1": {
+    "options": [
+     "Isabel Paterson",
+     "Simone de Beauvoir",
+     "Ayn Rand",
+     "Rose Wilder Lane",
+     "Hannah Arendt",
+     "cannot tell: the readout names none of these, or several of them"
+    ],
+    "gold_index": 2
+   }
+  },
+  "mh2-raleigh-executed": {
+   "bridge1": {
+    "options": [
+     "Humphrey Gilbert",
+     "Francis Drake",
+     "Martin Frobisher",
+     "Walter Raleigh",
+     "John Hawkins",
+     "cannot tell: the readout names none of these, or several of them"
+    ],
+    "gold_index": 3
+   }
+  },
+  "mh2-lancastrian-usurper-son-victory": {
+   "bridge1": {
+    "options": [
+     "Henry IV of England",
+     "Richard II of England",
+     "Henry VI of England",
+     "Edward III of England",
+     "Edward II of England",
+     "cannot tell: the readout names none of these, or several of them"
+    ],
+    "gold_index": 0
+   }
+  },
+  "mh2-rasputin-nicholas-yekaterinburg-r2": {
+   "bridge1": {
+    "options": [
+     "Helena Blavatsky",
+     "John of Kronstadt",
+     "George Gurdjieff",
+     "Grigori Rasputin",
+     "Nizier Anthelme Philippe",
+     "cannot tell: the readout names none of these, or several of them"
+    ],
+    "gold_index": 3
+   }
+  },
+  "mh2-divine-comedy-guide-hero": {
+   "bridge1": {
+    "options": [
+     "Gaius Valerius Catullus",
+     "Publius Ovidius Naso",
+     "Publius Vergilius Maro",
+     "Quintus Horatius Flaccus",
+     "Titus Lucretius Carus",
+     "cannot tell: the readout names none of these, or several of them"
+    ],
+    "gold_index": 2
+   }
+  },
+  "mh2-beckett-joyce-ulysses-q3": {
+   "bridge1": {
+    "options": [
+     "Virginia Woolf",
+     "W. B. Yeats",
+     "James Joyce",
+     "Samuel Beckett",
+     "Ezra Pound",
+     "cannot tell: the readout names none of these, or several of them"
+    ],
+    "gold_index": 2
+   }
+  },
+  "mh2-bacon-novum-organum": {
+   "bridge1": {
+    "options": [
+     "Thomas Hobbes",
+     "Roger Bacon",
+     "Robert Boyle",
+     "René Descartes",
+     "Francis Bacon",
+     "cannot tell: the readout names none of these, or several of them"
+    ],
+    "gold_index": 4
+   }
+  },
+  "mh2-ellison-wright-native-son-q1": {
+   "bridge1": {
+    "options": [
+     "Zora Neale Hurston",
+     "James Baldwin",
+     "Langston Hughes",
+     "Chester Himes",
+     "Ralph Ellison",
+     "cannot tell: the readout names none of these, or several of them"
+    ],
+    "gold_index": 4
+   }
+  },
+  "mh2-cyrus-pasargadae": {
+   "bridge1": {
+    "options": [
+     "Cambyses II",
+     "Artaxerxes I",
+     "Cyrus the Great",
+     "Xerxes I",
+     "Darius the Great",
+     "cannot tell: the readout names none of these, or several of them"
+    ],
+    "gold_index": 2
+   }
+  },
+  "mh2-newton-leibniz-monads": {
+   "bridge1": {
+    "options": [
+     "René Descartes",
+     "Gottfried Wilhelm Leibniz",
+     "Nicolas Malebranche",
+     "Baruch Spinoza",
+     "Christian Wolff",
+     "cannot tell: the readout names none of these, or several of them"
+    ],
+    "gold_index": 1
+   }
+  },
+  "mh2-chanel-stravinsky-rite": {
+   "bridge1": {
+    "options": [
+     "Sergei Prokofiev",
+     "Claude Debussy",
+     "Béla Bartók",
+     "Igor Stravinsky",
+     "Maurice Ravel",
+     "cannot tell: the readout names none of these, or several of them"
+    ],
+    "gold_index": 3
+   }
+  },
+  "mh2-camus-sartre-treatise": {
+   "bridge1": {
+    "options": [
+     "Simone de Beauvoir",
+     "Gabriel Marcel",
+     "Jean-Paul Sartre",
+     "Maurice Merleau-Ponty",
+     "Albert Camus",
+     "cannot tell: the readout names none of these, or several of them"
+    ],
+    "gold_index": 2
+   }
+  },
+  "mh2-khayyam-birthplace": {
+   "bridge1": {
+    "options": [
+     "Nasir al-Din al-Tusi",
+     "Farid al-Din Attar",
+     "Abu Rayhan al-Biruni",
+     "Saadi Shirazi",
+     "Omar Khayyam",
+     "cannot tell: the readout names none of these, or several of them"
+    ],
+    "gold_index": 4
+   }
+  },
+  "mh2-beardsley-wilde-dorian-gray": {
+   "bridge1": {
+    "options": [
+     "Charles Ricketts",
+     "Walter Crane",
+     "Aubrey Beardsley",
+     "Arthur Rackham",
+     "Harry Clarke",
+     "cannot tell: the readout names none of these, or several of them"
+    ],
+    "gold_index": 2
+   }
+  },
+  "mh2-socrates-plato-academy-r0": {
+   "bridge1": {
+    "options": [
+     "Antisthenes",
+     "Diogenes of Sinope",
+     "Anaxagoras",
+     "Socrates",
+     "Protagoras",
+     "cannot tell: the readout names none of these, or several of them"
+    ],
+    "gold_index": 3
+   }
+  },
+  "mh2-gandhi-gokhale-society": {
+   "bridge1": {
+    "options": [
+     "Vallabhbhai Patel",
+     "Jawaharlal Nehru",
+     "Mahatma Gandhi",
+     "Bal Gangadhar Tilak",
+     "Subhas Chandra Bose",
+     "cannot tell: the readout names none of these, or several of them"
+    ],
+    "gold_index": 2
+   }
+  },
+  "mh2-holmes-doyle-spiritualism": {
+   "bridge1": {
+    "options": [
+     "Arthur Conan Doyle",
+     "G. K. Chesterton",
+     "Wilkie Collins",
+     "Bram Stoker",
+     "Robert Louis Stevenson",
+     "cannot tell: the readout names none of these, or several of them"
+    ],
+    "gold_index": 0
+   }
+  },
+  "mh2-seneca-nero-domus-aurea-q3": {
+   "bridge1": {
+    "options": [
+     "Emperor Domitian",
+     "Emperor Caligula",
+     "Emperor Tiberius",
+     "Emperor Nero",
+     "Emperor Vespasian",
+     "cannot tell: the readout names none of these, or several of them"
+    ],
+    "gold_index": 3
+   }
+  },
+  "mh2-alfred-athelstan-brunanburh-r3": {
+   "bridge1": {
+    "options": [
+     "Edward the Elder",
+     "Edmund Ironside",
+     "Æthelred the Unready",
+     "Alfred the Great",
+     "Offa of Mercia",
+     "cannot tell: the readout names none of these, or several of them"
+    ],
+    "gold_index": 3
+   }
+  },
+  "mh2-kylie-hutchence-inxs": {
+   "bridge1": {
+    "options": [
+     "Delta Goodrem",
+     "Natalie Imbruglia",
+     "Kylie Minogue",
+     "Sophie Ellis-Bextor",
+     "Tina Arena",
+     "cannot tell: the readout names none of these, or several of them"
+    ],
+    "gold_index": 2
+   }
+  },
+  "mh2-stalin-trotsky-mexico": {
+   "bridge1": {
+    "options": [
+     "Lev Kamenev",
+     "Leon Trotsky",
+     "Nikolai Bukharin",
+     "Felix Dzerzhinsky",
+     "Grigory Zinoviev",
+     "cannot tell: the readout names none of these, or several of them"
+    ],
+    "gold_index": 1
+   }
+  },
+  "mh2-shackleton-scott-terranova": {
+   "bridge1": {
+    "options": [
+     "Ernest Shackleton",
+     "Robert Peary",
+     "Douglas Mawson",
+     "Roald Amundsen",
+     "Robert Falcon Scott",
+     "cannot tell: the readout names none of these, or several of them"
+    ],
+    "gold_index": 4
+   }
+  },
+  "mh2-gates-allen-seahawks": {
+   "bridge1": {
+    "options": [
+     "Paul Allen",
+     "Steve Ballmer",
+     "Jeff Bezos",
+     "Bill Gates",
+     "Larry Ellison",
+     "cannot tell: the readout names none of these, or several of them"
+    ],
+    "gold_index": 3
+   }
+  },
+  "mh2-telephone-patentee-birthplace": {
+   "bridge1": {
+    "options": [
+     "Thomas Edison",
+     "Alexander Graham Bell",
+     "Elisha Gray",
+     "Guglielmo Marconi",
+     "Antonio Meucci",
+     "cannot tell: the readout names none of these, or several of them"
+    ],
+    "gold_index": 1
+   }
+  },
+  "mh2-brin-wojcicki-23andme": {
+   "bridge1": {
+    "options": [
+     "Marc Andreessen",
+     "Larry Page",
+     "Peter Thiel",
+     "Eric Schmidt",
+     "Sergey Brin",
+     "cannot tell: the readout names none of these, or several of them"
+    ],
+    "gold_index": 4
+   }
+  },
+  "mh2-relativity-birthplace": {
+   "bridge1": {
+    "options": [
+     "Erwin Schrödinger",
+     "Werner Heisenberg",
+     "Albert Einstein",
+     "Niels Bohr",
+     "Max Planck",
+     "cannot tell: the readout names none of these, or several of them"
+    ],
+    "gold_index": 2
+   }
+  },
+  "mh2-booker-washington-tuskegee": {
+   "bridge1": {
+    "options": [
+     "Mary McLeod Bethune",
+     "Frederick Douglass",
+     "Booker T. Washington",
+     "Marcus Garvey",
+     "W. E. B. Du Bois",
+     "cannot tell: the readout names none of these, or several of them"
+    ],
+    "gold_index": 2
+   }
+  },
+  "mh2-eiffel-birthplace": {
+   "bridge1": {
+    "options": [
+     "Henri Labrouste",
+     "Ferdinand de Lesseps",
+     "Charles Garnier",
+     "Gustave Eiffel",
+     "Victor Baltard",
+     "cannot tell: the readout names none of these, or several of them"
+    ],
+    "gold_index": 3
+   }
+  },
+  "mh2-humayun-babur-panipat": {
+   "bridge1": {
+    "options": [
+     "Humayun",
+     "Sher Shah Suri",
+     "Jahangir",
+     "Babur",
+     "Ibrahim Lodi",
+     "cannot tell: the readout names none of these, or several of them"
+    ],
+    "gold_index": 0
+   }
+  },
+  "mh2-reflections-paine-age": {
+   "bridge1": {
+    "options": [
+     "Ethan Allen",
+     "Philip Freneau",
+     "Joel Barlow",
+     "Thomas Paine",
+     "John Dickinson",
+     "cannot tell: the readout names none of these, or several of them"
+    ],
+    "gold_index": 3
+   }
+  },
+  "mh2-karate-kid-miyagi-morita": {
+   "bridge1": {
+    "options": [
+     "Terry Silver",
+     "Mr. Miyagi",
+     "John Kreese",
+     "Mr. Han",
+     "Master Splinter",
+     "cannot tell: the readout names none of these, or several of them"
+    ],
+    "gold_index": 1
+   }
+  },
+  "mh2-jivaka-buddha-lumbini": {
+   "bridge1": {
+    "options": [
+     "Mahavira",
+     "Guru Nanak",
+     "Bodhidharma",
+     "Gautama Buddha",
+     "Adi Shankara",
+     "cannot tell: the readout names none of these, or several of them"
+    ],
+    "gold_index": 3
+   }
+  },
+  "mh2-wedgwood-darwin-selection": {
+   "bridge1": {
+    "options": [
+     "Charles Darwin",
+     "Thomas Henry Huxley",
+     "Alfred Russel Wallace",
+     "Jean-Baptiste Lamarck",
+     "Charles Lyell",
+     "cannot tell: the readout names none of these, or several of them"
+    ],
+    "gold_index": 0
+   }
+  },
+  "mh2-stael-necker-king-r2": {
+   "bridge1": {
+    "options": [
+     "Olympe de Gouges",
+     "Madame Roland",
+     "Juliette Récamier",
+     "Germaine de Staël",
+     "Madame de Genlis",
+     "cannot tell: the readout names none of these, or several of them"
+    ],
+    "gold_index": 3
+   }
+  },
+  "mh2-lilienthal-wrights-dayton": {
+   "bridge1": {
+    "options": [
+     "Glenn Curtiss",
+     "Octave Chanute",
+     "Samuel Langley",
+     "Montgolfier brothers",
+     "Wright brothers",
+     "cannot tell: the readout names none of these, or several of them"
+    ],
+    "gold_index": 4
+   }
+  },
+  "mh2-otto-iii-gerbert-sylvester": {
+   "bridge1": {
+    "options": [
+     "Fulbert of Chartres",
+     "Hermann of Reichenau",
+     "Gerbert of Aurillac",
+     "Pope Gregory V",
+     "Abbo of Fleury",
+     "cannot tell: the readout names none of these, or several of them"
+    ],
+    "gold_index": 2
+   }
+  },
+  "mh2-ramdas-disciple-general": {
+   "bridge1": {
+    "options": [
+     "Sant Dnyaneshwar",
+     "Sant Namdev",
+     "Samarth Ramdas",
+     "Sant Tukaram",
+     "Sant Eknath",
+     "cannot tell: the readout names none of these, or several of them"
+    ],
+    "gold_index": 2
+   }
+  },
+  "mh2-yukawa-meson": {
+   "bridge1": {
+    "options": [
+     "Hideki Yukawa",
+     "Shoichi Sakata",
+     "Masatoshi Koshiba",
+     "Sin-Itiro Tomonaga",
+     "Yoshio Nishina",
+     "cannot tell: the readout names none of these, or several of them"
+    ],
+    "gold_index": 0
+   }
+  },
+  "mh2-marie-louise-metternich": {
+   "bridge1": {
+    "options": [
+     "Maria Leopoldina of Austria",
+     "Maria Carolina of Austria",
+     "Maria Ludovika of Austria-Este",
+     "Marie Antoinette",
+     "Marie Louise of Austria",
+     "cannot tell: the readout names none of these, or several of them"
+    ],
+    "gold_index": 4
+   }
+  },
+  "mh2-leonardo-francis-pavia": {
+   "bridge1": {
+    "options": [
+     "Henry VIII of England",
+     "Louis XII of France",
+     "Henry II of France",
+     "Charles V, Holy Roman Emperor",
+     "Francis I of France",
+     "cannot tell: the readout names none of these, or several of them"
+    ],
+    "gold_index": 4
+   }
+  },
+  "mh2-kublai-polo-venice": {
+   "bridge1": {
+    "options": [
+     "Giovanni da Pian del Carpine",
+     "William of Rubruck",
+     "Marco Polo",
+     "Ibn Battuta",
+     "Odoric of Pordenone",
+     "cannot tell: the readout names none of these, or several of them"
+    ],
+    "gold_index": 2
+   }
+  },
+  "mh2-brynhild-sigurd-fafnir": {
+   "bridge1": {
+    "options": [
+     "Sváva",
+     "Brynhild",
+     "Gudrun",
+     "Sigrún",
+     "Signy",
+     "cannot tell: the readout names none of these, or several of them"
+    ],
+    "gold_index": 1
+   }
+  },
+  "mh2-marvell-milton-paradise-lost": {
+   "bridge1": {
+    "options": [
+     "Alexander Pope",
+     "John Milton",
+     "John Dryden",
+     "Andrew Marvell",
+     "Edmund Spenser",
+     "cannot tell: the readout names none of these, or several of them"
+    ],
+    "gold_index": 1
+   }
+  },
+  "mh2-chancellery-architect-dictator-birthplace": {
+   "bridge1": {
+    "options": [
+     "Adolf Hitler",
+     "Benito Mussolini",
+     "Engelbert Dollfuss",
+     "Hermann Göring",
+     "Heinrich Himmler",
+     "cannot tell: the readout names none of these, or several of them"
+    ],
+    "gold_index": 0
+   }
+  },
+  "mh2-tusi-hulagu-baghdad": {
+   "bridge1": {
+    "options": [
+     "Mu'ayyad al-Din al-Urdi",
+     "Jamshid al-Kashi",
+     "Nasir al-Din al-Tusi",
+     "Qutb al-Din al-Shirazi",
+     "Ibn al-Shatir",
+     "cannot tell: the readout names none of these, or several of them"
+    ],
+    "gold_index": 2
+   }
+  },
+  "mh2-fanon-cesaire-negritude-q2": {
+   "bridge1": {
+    "options": [
+     "Frantz Fanon",
+     "Aimé Césaire",
+     "Albert Memmi",
+     "Édouard Glissant",
+     "Amílcar Cabral",
+     "cannot tell: the readout names none of these, or several of them"
+    ],
+    "gold_index": 0
+   }
+  },
+  "mh2-yoshitsune-yoritomo-kamakura-q2": {
+   "bridge1": {
+    "options": [
+     "Minamoto no Yoshitsune",
+     "Minamoto no Noriyori",
+     "Minamoto no Yoshinaka",
+     "Taira no Tomomori",
+     "Taira no Kiyomori",
+     "cannot tell: the readout names none of these, or several of them"
+    ],
+    "gold_index": 0
+   }
+  },
+  "mh2-jane-morris-arts-crafts": {
+   "bridge1": {
+    "options": [
+     "Charles Rennie Mackintosh",
+     "Charles Robert Ashbee",
+     "Augustus Pugin",
+     "Walter Crane",
+     "William Morris",
+     "cannot tell: the readout names none of these, or several of them"
+    ],
+    "gold_index": 4
+   }
+  },
+  "mh2-wallace-bruce-bannockburn": {
+   "bridge1": {
+    "options": [
+     "Malcolm III of Scotland",
+     "Robert the Bruce",
+     "John Balliol",
+     "William Wallace",
+     "David II of Scotland",
+     "cannot tell: the readout names none of these, or several of them"
+    ],
+    "gold_index": 1
+   }
+  },
+  "mh2-de-klerk-successor-autobiography": {
+   "bridge1": {
+    "options": [
+     "Desmond Tutu",
+     "Nelson Mandela",
+     "Walter Sisulu",
+     "Steve Biko",
+     "Oliver Tambo",
+     "cannot tell: the readout names none of these, or several of them"
+    ],
+    "gold_index": 1
+   }
+  },
+  "mh2-joao-pedro-cry": {
+   "bridge1": {
+    "options": [
+     "Pedro I of Brazil",
+     "Pedro II of Brazil",
+     "John VI of Portugal",
+     "José Bonifácio de Andrada",
+     "Miguel I of Portugal",
+     "cannot tell: the readout names none of these, or several of them"
+    ],
+    "gold_index": 0
+   }
+  },
+  "mh2-lewes-eliot-middlemarch-r0": {
+   "bridge1": {
+    "options": [
+     "Elizabeth Gaskell",
+     "Wilkie Collins",
+     "Charlotte Brontë",
+     "Anthony Trollope",
+     "George Eliot",
+     "cannot tell: the readout names none of these, or several of them"
+    ],
+    "gold_index": 4
+   }
+  },
+  "mh2-kuomintang-rival-birthplace": {
+   "bridge1": {
+    "options": [
+     "Mao Zedong",
+     "Liu Shaoqi",
+     "Zhou Enlai",
+     "Deng Xiaoping",
+     "Zhu De",
+     "cannot tell: the readout names none of these, or several of them"
+    ],
+    "gold_index": 0
+   }
+  },
+  "mh2-gutenberg-mainz": {
+   "bridge1": {
+    "options": [
+     "Aldus Manutius",
+     "Johann Fust",
+     "Nicolas Jenson",
+     "Johannes Gutenberg",
+     "William Caxton",
+     "cannot tell: the readout names none of these, or several of them"
+    ],
+    "gold_index": 3
+   }
+  },
+  "mh2-vishnu-consort-lakshmi": {
+   "bridge1": {
+    "options": [
+     "Lord Indra",
+     "Lord Vishnu",
+     "Lord Brahma",
+     "Lord Shiva",
+     "Lord Ganesha",
+     "cannot tell: the readout names none of these, or several of them"
+    ],
+    "gold_index": 1
+   }
+  },
+  "mh2-elisabeth-andrew-golden-bull": {
+   "bridge1": {
+    "options": [
+     "Agnes of Bohemia",
+     "Elizabeth of Hungary",
+     "Margaret of Hungary",
+     "Elizabeth of Portugal",
+     "Hedwig of Silesia",
+     "cannot tell: the readout names none of these, or several of them"
+    ],
+    "gold_index": 1
+   }
+  },
+  "mh2-wu-zetian-spouse": {
+   "bridge1": {
+    "options": [
+     "Princess Taiping",
+     "Empress Dowager Cixi",
+     "Shangguan Wan'er",
+     "Wu Zetian",
+     "Empress Lu Zhi",
+     "cannot tell: the readout names none of these, or several of them"
+    ],
+    "gold_index": 3
+   }
+  },
+  "mh2-diaz-madero-san-luis": {
+   "bridge1": {
+    "options": [
+     "Porfirio Díaz",
+     "Sebastián Lerdo de Tejada",
+     "Venustiano Carranza",
+     "Francisco I. Madero",
+     "Victoriano Huerta",
+     "cannot tell: the readout names none of these, or several of them"
+    ],
+    "gold_index": 0
+   }
+  },
+  "mh2-charles-iii-philip-v-r3": {
+   "bridge1": {
+    "options": [
+     "Charles III of Spain",
+     "Ferdinand VI",
+     "Louis XIV",
+     "Charles VI, Holy Roman Emperor",
+     "Philip V",
+     "cannot tell: the readout names none of these, or several of them"
+    ],
+    "gold_index": 4
+   }
+  },
+  "mh2-niemeyer-corbusier-ronchamp": {
+   "bridge1": {
+    "options": [
+     "Ludwig Mies van der Rohe",
+     "Oscar Niemeyer",
+     "Walter Gropius",
+     "Le Corbusier",
+     "Alvar Aalto",
+     "cannot tell: the readout names none of these, or several of them"
+    ],
+    "gold_index": 3
+   }
+  },
+  "mh2-melanchthon-luther-theses-q3": {
+   "bridge1": {
+    "options": [
+     "Martin Luther",
+     "Philipp Melanchthon",
+     "Huldrych Zwingli",
+     "Jan Hus",
+     "John Calvin",
+     "cannot tell: the readout names none of these, or several of them"
+    ],
+    "gold_index": 0
+   }
+  }
+ }
+}
