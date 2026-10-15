@@ -16817,36 +16817,6 @@
     }
    }
   ],
-  "mh2-castro-che-argentina": [
-   {
-    "role": "bridge1",
-    "required": true,
-    "forms": {
-     "en": [
-      "Fidel Castro"
-     ]
-    }
-   },
-   {
-    "role": "bridge2",
-    "required": true,
-    "forms": {
-     "en": [
-      "Che Guevara",
-      "Ernesto Guevara"
-     ]
-    }
-   },
-   {
-    "role": "target",
-    "required": false,
-    "forms": {
-     "en": [
-      "Argentine Republic"
-     ]
-    }
-   }
-  ],
   "mh2-buena-vista-davis-confederacy": [
    {
     "role": "bridge1",
@@ -16936,38 +16906,6 @@
      "en": [
       "miner's safety lamp",
       "safety lamp"
-     ]
-    }
-   }
-  ],
-  "mh2-mahinda-father-campaign": [
-   {
-    "role": "bridge1",
-    "required": true,
-    "forms": {
-     "en": [
-      "Mahinda Thera",
-      "Mahinda"
-     ]
-    }
-   },
-   {
-    "role": "bridge2",
-    "required": true,
-    "forms": {
-     "en": [
-      "Ashoka Maurya",
-      "Ashoka"
-     ]
-    }
-   },
-   {
-    "role": "target",
-    "required": false,
-    "forms": {
-     "en": [
-      "Kalinga",
-      "Kalinga War"
      ]
     }
    }
@@ -17064,6 +17002,70 @@
     }
    }
   ],
+  "mh2-wharton-age-of-innocence-s0": [
+   {
+    "role": "bridge1",
+    "required": true,
+    "forms": {
+     "en": [
+      "Edith Wharton",
+      "Edith Newbold Jones Wharton"
+     ]
+    }
+   },
+   {
+    "role": "target",
+    "required": false,
+    "forms": {
+     "en": [
+      "The Age of Innocence"
+     ]
+    }
+   }
+  ],
+  "mh2-rasputin-murderer-s0": [
+   {
+    "role": "bridge1",
+    "required": true,
+    "forms": {
+     "en": [
+      "Grigori Rasputin",
+      "Grigory Rasputin"
+     ]
+    }
+   },
+   {
+    "role": "target",
+    "required": false,
+    "forms": {
+     "en": [
+      "Felix Yusupov",
+      "Felix Felixovich Yusupov"
+     ]
+    }
+   }
+  ],
+  "mh2-jesuit-founder-pamplona-s3": [
+   {
+    "role": "bridge1",
+    "required": true,
+    "forms": {
+     "en": [
+      "Ignatius of Loyola",
+      "Saint Ignatius of Loyola"
+     ]
+    }
+   },
+   {
+    "role": "target",
+    "required": false,
+    "forms": {
+     "en": [
+      "Pamplona"
+     ]
+    }
+   }
+  ],
   "mh2-gaixia-victor-dynasty": [
    {
     "role": "bridge1",
@@ -17148,6 +17150,129 @@
     }
    }
   ],
+  "mh2-salieri-film-shaffer-s0": [
+   {
+    "role": "bridge1",
+    "required": true,
+    "forms": {
+     "en": [
+      "Amadeus"
+     ]
+    }
+   },
+   {
+    "role": "target",
+    "required": false,
+    "forms": {
+     "en": [
+      "Peter Shaffer"
+     ]
+    }
+   }
+  ],
+  "mh2-alexander-birthplace-s1": [
+   {
+    "role": "bridge1",
+    "required": true,
+    "forms": {
+     "en": [
+      "Alexander the Great",
+      "Alexander III of Macedon"
+     ]
+    }
+   },
+   {
+    "role": "target",
+    "required": false,
+    "forms": {
+     "en": [
+      "Pella"
+     ]
+    }
+   }
+  ],
+  "mh2-stresemann-briand-s2": [
+   {
+    "role": "bridge1",
+    "required": true,
+    "forms": {
+     "en": [
+      "Gustav Stresemann"
+     ]
+    }
+   },
+   {
+    "role": "target",
+    "required": false,
+    "forms": {
+     "en": [
+      "Aristide Briand"
+     ]
+    }
+   }
+  ],
+  "mh2-cantor-teacher-kronecker-s2": [
+   {
+    "role": "bridge1",
+    "required": true,
+    "forms": {
+     "en": [
+      "Georg Cantor"
+     ]
+    }
+   },
+   {
+    "role": "target",
+    "required": false,
+    "forms": {
+     "en": [
+      "Leopold Kronecker"
+     ]
+    }
+   }
+  ],
+  "mh2-bayes-price-s2": [
+   {
+    "role": "bridge1",
+    "required": true,
+    "forms": {
+     "en": [
+      "Thomas Bayes",
+      "Bayes"
+     ]
+    }
+   },
+   {
+    "role": "target",
+    "required": false,
+    "forms": {
+     "en": [
+      "Richard Price"
+     ]
+    }
+   }
+  ],
+  "mh2-lange-husband-taylor-s3": [
+   {
+    "role": "bridge1",
+    "required": true,
+    "forms": {
+     "en": [
+      "Dorothea Lange"
+     ]
+    }
+   },
+   {
+    "role": "target",
+    "required": false,
+    "forms": {
+     "en": [
+      "Paul Schuster Taylor",
+      "Paul S. Taylor"
+     ]
+    }
+   }
+  ],
   "mh2-schopenhauer-final-city": [
    {
     "role": "bridge1",
@@ -17164,6 +17289,96 @@
     "forms": {
      "en": [
       "Frankfurt am Main"
+     ]
+    }
+   }
+  ],
+  "mh2-traviata-fenice-s0": [
+   {
+    "role": "bridge1",
+    "required": true,
+    "forms": {
+     "en": [
+      "La traviata",
+      "Traviata"
+     ]
+    }
+   },
+   {
+    "role": "target",
+    "required": false,
+    "forms": {
+     "en": [
+      "Teatro La Fenice",
+      "La Fenice"
+     ]
+    }
+   }
+  ],
+  "mh2-kierkegaard-engagement-s1": [
+   {
+    "role": "bridge1",
+    "required": true,
+    "forms": {
+     "en": [
+      "Søren Kierkegaard",
+      "Soren Kierkegaard"
+     ]
+    }
+   },
+   {
+    "role": "target",
+    "required": false,
+    "forms": {
+     "en": [
+      "Regine Olsen",
+      "Regine Schlegel"
+     ]
+    }
+   }
+  ],
+  "mh2-don-giovanni-prague-s0": [
+   {
+    "role": "bridge1",
+    "required": true,
+    "forms": {
+     "en": [
+      "Don Giovanni",
+      "Il dissoluto punito, ossia il Don Giovanni"
+     ]
+    }
+   }
+  ],
+  "mh2-deltoro-birthplace-s0": [
+   {
+    "role": "bridge1",
+    "required": true,
+    "forms": {
+     "en": [
+      "Guillermo del Toro",
+      "del Toro"
+     ]
+    }
+   }
+  ],
+  "mh2-scout-founder-mafeking-s3": [
+   {
+    "role": "bridge1",
+    "required": true,
+    "forms": {
+     "en": [
+      "Robert Baden-Powell",
+      "Baden-Powell"
+     ]
+    }
+   },
+   {
+    "role": "target",
+    "required": false,
+    "forms": {
+     "en": [
+      "Mafeking",
+      "Mahikeng"
      ]
     }
    }
@@ -17213,6 +17428,74 @@
     }
    }
   ],
+  "mh2-last-stuart-favourite-s2": [
+   {
+    "role": "bridge1",
+    "required": true,
+    "forms": {
+     "en": [
+      "Queen Anne",
+      "Anne, Queen of Great Britain"
+     ]
+    }
+   },
+   {
+    "role": "target",
+    "required": false,
+    "forms": {
+     "en": [
+      "Sarah Churchill, Duchess of Marlborough",
+      "Sarah Jennings"
+     ]
+    }
+   }
+  ],
+  "mh2-ataturk-thessaloniki-s3": [
+   {
+    "role": "bridge1",
+    "required": true,
+    "forms": {
+     "en": [
+      "Mustafa Kemal Atatürk",
+      "Mustafa Kemal",
+      "Atatürk"
+     ]
+    }
+   },
+   {
+    "role": "target",
+    "required": false,
+    "forms": {
+     "en": [
+      "Thessaloniki",
+      "Salonica",
+      "Salonika",
+      "Thessalonica"
+     ]
+    }
+   }
+  ],
+  "mh2-cartier-bresson-teacher-lhote-s3": [
+   {
+    "role": "bridge1",
+    "required": true,
+    "forms": {
+     "en": [
+      "Henri Cartier-Bresson",
+      "Cartier-Bresson"
+     ]
+    }
+   },
+   {
+    "role": "target",
+    "required": false,
+    "forms": {
+     "en": [
+      "André Lhote"
+     ]
+    }
+   }
+  ],
   "mh2-element109-partner": [
    {
     "role": "bridge1",
@@ -17229,6 +17512,92 @@
     "forms": {
      "en": [
       "Otto Hahn"
+     ]
+    }
+   }
+  ],
+  "mh2-rowling-galbraith-s0": [
+   {
+    "role": "bridge1",
+    "required": true,
+    "forms": {
+     "en": [
+      "J. K. Rowling",
+      "Joanne Rowling"
+     ]
+    }
+   },
+   {
+    "role": "target",
+    "required": false,
+    "forms": {
+     "en": [
+      "Robert Galbraith"
+     ]
+    }
+   }
+  ],
+  "mh2-vermeer-delft-s0": [
+   {
+    "role": "bridge1",
+    "required": true,
+    "forms": {
+     "en": [
+      "Johannes Vermeer",
+      "Jan Vermeer"
+     ]
+    }
+   },
+   {
+    "role": "target",
+    "required": false,
+    "forms": {
+     "en": [
+      "Delft"
+     ]
+    }
+   }
+  ],
+  "mh2-zahrawi-encyclopedia-tasrif-s2": [
+   {
+    "role": "bridge1",
+    "required": true,
+    "forms": {
+     "en": [
+      "Abu al-Qasim al-Zahrawi",
+      "Albucasis"
+     ]
+    }
+   },
+   {
+    "role": "target",
+    "required": false,
+    "forms": {
+     "en": [
+      "Kitab al-Tasrif",
+      "Al-Tasrif",
+      "The Method of Medicine"
+     ]
+    }
+   }
+  ],
+  "mh2-ionesco-birth-romania-s3": [
+   {
+    "role": "bridge1",
+    "required": true,
+    "forms": {
+     "en": [
+      "Eugène Ionesco",
+      "Eugene Ionesco"
+     ]
+    }
+   },
+   {
+    "role": "target",
+    "required": false,
+    "forms": {
+     "en": [
+      "Rumania"
      ]
     }
    }
@@ -17277,6 +17646,50 @@
     }
    }
   ],
+  "mh2-qin-capital-s2": [
+   {
+    "role": "bridge1",
+    "required": true,
+    "forms": {
+     "en": [
+      "Qin Shi Huang",
+      "Ying Zheng"
+     ]
+    }
+   },
+   {
+    "role": "target",
+    "required": false,
+    "forms": {
+     "en": [
+      "Xianyang",
+      "Hsien-yang"
+     ]
+    }
+   }
+  ],
+  "mh2-baptizer-father-zechariah-s3": [
+   {
+    "role": "bridge1",
+    "required": true,
+    "forms": {
+     "en": [
+      "John the Baptist",
+      "Yahya ibn Zakariya"
+     ]
+    }
+   },
+   {
+    "role": "target",
+    "required": false,
+    "forms": {
+     "en": [
+      "Zechariah",
+      "Zacharias"
+     ]
+    }
+   }
+  ],
   "mh2-lancastrian-usurper-son-victory": [
    {
     "role": "bridge1",
@@ -17295,51 +17708,6 @@
      "en": [
       "Agincourt",
       "Azincourt"
-     ]
-    }
-   }
-  ],
-  "mh2-rasputin-nicholas-yekaterinburg-r2": [
-   {
-    "role": "bridge1",
-    "required": true,
-    "forms": {
-     "en": [
-      "Grigori Rasputin",
-      "Grigori Yefimovich Rasputin"
-     ]
-    }
-   },
-   {
-    "role": "target",
-    "required": false,
-    "forms": {
-     "en": [
-      "Yekaterinburg",
-      "Ekaterinburg",
-      "Sverdlovsk"
-     ]
-    }
-   }
-  ],
-  "mh2-divine-comedy-guide-hero": [
-   {
-    "role": "bridge1",
-    "required": true,
-    "forms": {
-     "en": [
-      "Publius Vergilius Maro",
-      "Virgil",
-      "Vergil"
-     ]
-    }
-   },
-   {
-    "role": "target",
-    "required": false,
-    "forms": {
-     "en": [
-      "Aeneas"
      ]
     }
    }
@@ -17383,26 +17751,6 @@
       "Novum Organum",
       "Novum Organum Scientiarum",
       "New Organon"
-     ]
-    }
-   }
-  ],
-  "mh2-ellison-wright-native-son-q1": [
-   {
-    "role": "bridge1",
-    "required": true,
-    "forms": {
-     "en": [
-      "Ralph Ellison"
-     ]
-    }
-   },
-   {
-    "role": "target",
-    "required": false,
-    "forms": {
-     "en": [
-      "Native Son"
      ]
     }
    }
@@ -17451,13 +17799,14 @@
     }
    }
   ],
-  "mh2-chanel-stravinsky-rite": [
+  "mh2-congress-founder-s3": [
    {
     "role": "bridge1",
     "required": true,
     "forms": {
      "en": [
-      "Igor Stravinsky"
+      "Indian National Congress",
+      "Congress Party"
      ]
     }
    },
@@ -17466,20 +17815,21 @@
     "required": false,
     "forms": {
      "en": [
-      "The Rite of Spring",
-      "Le Sacre du printemps"
+      "Allan Octavian Hume",
+      "A. O. Hume"
      ]
     }
    }
   ],
-  "mh2-camus-sartre-treatise": [
+  "mh2-seneca-tutor-of-s1": [
    {
     "role": "bridge1",
     "required": true,
     "forms": {
      "en": [
-      "Jean-Paul Sartre",
-      "Sartre"
+      "Seneca the Younger",
+      "Lucius Annaeus Seneca",
+      "Seneca"
      ]
     }
    },
@@ -17488,8 +17838,28 @@
     "required": false,
     "forms": {
      "en": [
-      "Being and Nothingness",
-      "L'Être et le néant"
+      "Nero Claudius Caesar Augustus Germanicus"
+     ]
+    }
+   }
+  ],
+  "mh2-dhritarashtra-wife-s1": [
+   {
+    "role": "bridge1",
+    "required": true,
+    "forms": {
+     "en": [
+      "Dhritarashtra",
+      "Dhritarāshtra"
+     ]
+    }
+   },
+   {
+    "role": "target",
+    "required": false,
+    "forms": {
+     "en": [
+      "Gandhari"
      ]
     }
    }
@@ -17517,13 +17887,15 @@
     }
    }
   ],
-  "mh2-beardsley-wilde-dorian-gray": [
+  "mh2-maximilian-carlota-s2": [
    {
     "role": "bridge1",
     "required": true,
     "forms": {
      "en": [
-      "Aubrey Beardsley"
+      "Maximilian I of Mexico",
+      "Emperor Maximilian",
+      "Ferdinand Maximilian"
      ]
     }
    },
@@ -17532,18 +17904,21 @@
     "required": false,
     "forms": {
      "en": [
-      "The Picture of Dorian Gray"
+      "Charlotte of Belgium",
+      "Empress Carlota"
      ]
     }
    }
   ],
-  "mh2-socrates-plato-academy-r0": [
+  "mh2-dante-virgil-aeneid-q1": [
    {
     "role": "bridge1",
     "required": true,
     "forms": {
      "en": [
-      "Socrates"
+      "Virgil",
+      "Publius Vergilius Maro",
+      "Vergil"
      ]
     }
    },
@@ -17552,19 +17927,20 @@
     "required": false,
     "forms": {
      "en": [
-      "Platonic Academy"
+      "Aeneid",
+      "Aeneis"
      ]
     }
    }
   ],
-  "mh2-gandhi-gokhale-society": [
+  "mh2-tipu-father-s2": [
    {
     "role": "bridge1",
     "required": true,
     "forms": {
      "en": [
-      "Mahatma Gandhi",
-      "Mohandas Karamchand Gandhi"
+      "Tipu Sultan",
+      "Tipu"
      ]
     }
    },
@@ -17573,19 +17949,19 @@
     "required": false,
     "forms": {
      "en": [
-      "Servants of India Society"
+      "Hyder Ali",
+      "Haidar Ali"
      ]
     }
    }
   ],
-  "mh2-holmes-doyle-spiritualism": [
+  "mh2-khomeini-successor-s2": [
    {
     "role": "bridge1",
     "required": true,
     "forms": {
      "en": [
-      "Arthur Conan Doyle",
-      "Sir Arthur Conan Doyle"
+      "Ruhollah Khomeini"
      ]
     }
    },
@@ -17594,30 +17970,8 @@
     "required": false,
     "forms": {
      "en": [
-      "Spiritualism",
-      "Modern Spiritualism"
-     ]
-    }
-   }
-  ],
-  "mh2-seneca-nero-domus-aurea-q3": [
-   {
-    "role": "bridge1",
-    "required": true,
-    "forms": {
-     "en": [
-      "Emperor Nero",
-      "Nero Claudius Caesar"
-     ]
-    }
-   },
-   {
-    "role": "target",
-    "required": false,
-    "forms": {
-     "en": [
-      "Domus Aurea",
-      "Golden House"
+      "Ali Khamenei",
+      "Sayyid Ali Hosseini Khamenei"
      ]
     }
    }
@@ -17663,14 +18017,14 @@
     }
    }
   ],
-  "mh2-stalin-trotsky-mexico": [
+  "mh2-wilhelm-doorn-s2": [
    {
     "role": "bridge1",
     "required": true,
     "forms": {
      "en": [
-      "Leon Trotsky",
-      "Lev Davidovich Bronstein"
+      "Wilhelm II",
+      "William II"
      ]
     }
    },
@@ -17679,8 +18033,32 @@
     "required": false,
     "forms": {
      "en": [
-      "Mexico City",
-      "Ciudad de México"
+      "Doorn",
+      "Huis Doorn"
+     ]
+    }
+   }
+  ],
+  "mh2-rubinstein-brothers": [
+   {
+    "role": "bridge1",
+    "required": true,
+    "forms": {
+     "en": [
+      "Nikolai Rubinstein",
+      "Nikolai Grigoryevich Rubinstein"
+     ]
+    }
+   },
+   {
+    "role": "target",
+    "required": false,
+    "forms": {
+     "en": [
+      "Saint Petersburg",
+      "St Petersburg",
+      "Leningrad",
+      "Petrograd"
      ]
     }
    }
@@ -17724,6 +18102,26 @@
     "forms": {
      "en": [
       "Seattle Seahawks"
+     ]
+    }
+   }
+  ],
+  "mh2-jacobite-time-travel-series-author-s2": [
+   {
+    "role": "bridge1",
+    "required": true,
+    "forms": {
+     "en": [
+      "Outlander"
+     ]
+    }
+   },
+   {
+    "role": "target",
+    "required": false,
+    "forms": {
+     "en": [
+      "Diana Gabaldon"
      ]
     }
    }
@@ -17824,57 +18222,36 @@
     }
    }
   ],
-  "mh2-humayun-babur-panipat": [
+  "mh2-toyota-founder-father-loom": [
    {
     "role": "bridge1",
     "required": true,
     "forms": {
      "en": [
-      "Humayun",
-      "Nasir-ud-din Humayun"
-     ]
-    }
-   },
-   {
-    "role": "target",
-    "required": false,
-    "forms": {
-     "en": [
-      "Panipat",
-      "First Battle of Panipat"
+      "Kiichiro Toyoda"
      ]
     }
    }
   ],
-  "mh2-reflections-paine-age": [
+  "mh2-babayaga-mortar-s1": [
    {
     "role": "bridge1",
     "required": true,
     "forms": {
      "en": [
-      "Thomas Paine",
-      "Tom Paine"
-     ]
-    }
-   },
-   {
-    "role": "target",
-    "required": false,
-    "forms": {
-     "en": [
-      "The Age of Reason"
+      "Baba Yaga"
      ]
     }
    }
   ],
-  "mh2-karate-kid-miyagi-morita": [
+  "mh2-streetcar-setting-s3": [
    {
     "role": "bridge1",
     "required": true,
     "forms": {
      "en": [
-      "Mr. Miyagi",
-      "Keisuke Miyagi"
+      "A Streetcar Named Desire",
+      "Streetcar Named Desire"
      ]
     }
    },
@@ -17883,52 +18260,7 @@
     "required": false,
     "forms": {
      "en": [
-      "Pat Morita",
-      "Noriyuki Morita"
-     ]
-    }
-   }
-  ],
-  "mh2-jivaka-buddha-lumbini": [
-   {
-    "role": "bridge1",
-    "required": true,
-    "forms": {
-     "en": [
-      "Gautama Buddha",
-      "Siddhartha Gautama",
-      "the Buddha"
-     ]
-    }
-   },
-   {
-    "role": "target",
-    "required": false,
-    "forms": {
-     "en": [
-      "Lumbini",
-      "Lumbinī"
-     ]
-    }
-   }
-  ],
-  "mh2-wedgwood-darwin-selection": [
-   {
-    "role": "bridge1",
-    "required": true,
-    "forms": {
-     "en": [
-      "Charles Darwin"
-     ]
-    }
-   },
-   {
-    "role": "target",
-    "required": false,
-    "forms": {
-     "en": [
-      "natural selection",
-      "evolution by natural selection"
+      "New Orleans"
      ]
     }
    }
@@ -17955,13 +18287,13 @@
     }
    }
   ],
-  "mh2-lilienthal-wrights-dayton": [
+  "mh2-adler-individual-psychology-s2": [
    {
     "role": "bridge1",
     "required": true,
     "forms": {
      "en": [
-      "Wright brothers"
+      "Alfred Adler"
      ]
     }
    },
@@ -17970,7 +18302,8 @@
     "required": false,
     "forms": {
      "en": [
-      "Dayton, Ohio"
+      "individual psychology",
+      "Adlerian psychology"
      ]
     }
    }
@@ -17997,14 +18330,13 @@
     }
    }
   ],
-  "mh2-ramdas-disciple-general": [
+  "mh2-auld-lang-syne-birthplace-s0": [
    {
     "role": "bridge1",
     "required": true,
     "forms": {
      "en": [
-      "Samarth Ramdas",
-      "Ramdas Swami"
+      "Robert Burns"
      ]
     }
    },
@@ -18013,7 +18345,28 @@
     "required": false,
     "forms": {
      "en": [
-      "Afzal Khan"
+      "Alloway"
+     ]
+    }
+   }
+  ],
+  "mh2-weston-cofounded-f64-s3": [
+   {
+    "role": "bridge1",
+    "required": true,
+    "forms": {
+     "en": [
+      "Edward Weston"
+     ]
+    }
+   },
+   {
+    "role": "target",
+    "required": false,
+    "forms": {
+     "en": [
+      "Group f/64",
+      "Group f.64"
      ]
     }
    }
@@ -18040,14 +18393,13 @@
     }
    }
   ],
-  "mh2-marie-louise-metternich": [
+  "mh2-american-gothic-museum-s0": [
    {
     "role": "bridge1",
     "required": true,
     "forms": {
      "en": [
-      "Marie Louise of Austria",
-      "Marie Louise"
+      "American Gothic"
      ]
     }
    },
@@ -18056,21 +18408,31 @@
     "required": false,
     "forms": {
      "en": [
-      "Klemens von Metternich",
-      "Klemens Wenzel von Metternich"
+      "Art Institute of Chicago"
      ]
     }
    }
   ],
-  "mh2-leonardo-francis-pavia": [
+  "mh2-andersen-birthplace-s0": [
    {
     "role": "bridge1",
     "required": true,
     "forms": {
      "en": [
-      "Francis I of France",
-      "Francis I",
-      "François I"
+      "Hans Christian Andersen",
+      "H. C. Andersen"
+     ]
+    }
+   }
+  ],
+  "mh2-epicycles-treatise-s0": [
+   {
+    "role": "bridge1",
+    "required": true,
+    "forms": {
+     "en": [
+      "Claudius Ptolemy",
+      "Ptolemy"
      ]
     }
    },
@@ -18079,31 +18441,21 @@
     "required": false,
     "forms": {
      "en": [
-      "Pavia"
+      "Almagest",
+      "Mathematike Syntaxis",
+      "Syntaxis Mathematica"
      ]
     }
    }
   ],
-  "mh2-kublai-polo-venice": [
+  "mh2-magic-flute-librettist-s0": [
    {
     "role": "bridge1",
     "required": true,
     "forms": {
      "en": [
-      "Marco Polo"
-     ]
-    }
-   }
-  ],
-  "mh2-brynhild-sigurd-fafnir": [
-   {
-    "role": "bridge1",
-    "required": true,
-    "forms": {
-     "en": [
-      "Brynhild",
-      "Brünnhilde",
-      "Brunhild"
+      "The Magic Flute",
+      "Die Zauberflöte"
      ]
     }
    },
@@ -18112,231 +18464,20 @@
     "required": false,
     "forms": {
      "en": [
-      "Fafnir",
-      "Fáfnir"
+      "Emanuel Schikaneder",
+      "Johann Joseph Schikaneder"
      ]
     }
    }
   ],
-  "mh2-marvell-milton-paradise-lost": [
+  "mh2-zwingli-zurich-s1": [
    {
     "role": "bridge1",
     "required": true,
     "forms": {
      "en": [
-      "John Milton"
-     ]
-    }
-   },
-   {
-    "role": "target",
-    "required": false,
-    "forms": {
-     "en": [
-      "Paradise Lost"
-     ]
-    }
-   }
-  ],
-  "mh2-chancellery-architect-dictator-birthplace": [
-   {
-    "role": "bridge1",
-    "required": true,
-    "forms": {
-     "en": [
-      "Adolf Hitler"
-     ]
-    }
-   },
-   {
-    "role": "target",
-    "required": false,
-    "forms": {
-     "en": [
-      "Braunau am Inn"
-     ]
-    }
-   }
-  ],
-  "mh2-tusi-hulagu-baghdad": [
-   {
-    "role": "bridge1",
-    "required": true,
-    "forms": {
-     "en": [
-      "Nasir al-Din al-Tusi",
-      "al-Tusi"
-     ]
-    }
-   }
-  ],
-  "mh2-fanon-cesaire-negritude-q2": [
-   {
-    "role": "bridge1",
-    "required": true,
-    "forms": {
-     "en": [
-      "Frantz Fanon",
-      "Fanon"
-     ]
-    }
-   },
-   {
-    "role": "target",
-    "required": false,
-    "forms": {
-     "en": [
-      "Négritude",
-      "Negritude"
-     ]
-    }
-   }
-  ],
-  "mh2-yoshitsune-yoritomo-kamakura-q2": [
-   {
-    "role": "bridge1",
-    "required": true,
-    "forms": {
-     "en": [
-      "Minamoto no Yoshitsune",
-      "Yoshitsune"
-     ]
-    }
-   },
-   {
-    "role": "target",
-    "required": false,
-    "forms": {
-     "en": [
-      "Kamakura shogunate",
-      "Kamakura bakufu"
-     ]
-    }
-   }
-  ],
-  "mh2-jane-morris-arts-crafts": [
-   {
-    "role": "bridge1",
-    "required": true,
-    "forms": {
-     "en": [
-      "William Morris"
-     ]
-    }
-   },
-   {
-    "role": "target",
-    "required": false,
-    "forms": {
-     "en": [
-      "Arts and Crafts movement",
-      "Arts and Crafts"
-     ]
-    }
-   }
-  ],
-  "mh2-wallace-bruce-bannockburn": [
-   {
-    "role": "bridge1",
-    "required": true,
-    "forms": {
-     "en": [
-      "Robert the Bruce",
-      "Robert I of Scotland"
-     ]
-    }
-   },
-   {
-    "role": "target",
-    "required": false,
-    "forms": {
-     "en": [
-      "Bannockburn"
-     ]
-    }
-   }
-  ],
-  "mh2-de-klerk-successor-autobiography": [
-   {
-    "role": "bridge1",
-    "required": true,
-    "forms": {
-     "en": [
-      "Nelson Mandela",
-      "Nelson Rolihlahla Mandela"
-     ]
-    }
-   },
-   {
-    "role": "target",
-    "required": false,
-    "forms": {
-     "en": [
-      "Long Walk to Freedom"
-     ]
-    }
-   }
-  ],
-  "mh2-joao-pedro-cry": [
-   {
-    "role": "bridge1",
-    "required": true,
-    "forms": {
-     "en": [
-      "Pedro I of Brazil",
-      "Dom Pedro I"
-     ]
-    }
-   },
-   {
-    "role": "target",
-    "required": false,
-    "forms": {
-     "en": [
-      "Independence or Death",
-      "Independência ou Morte"
-     ]
-    }
-   }
-  ],
-  "mh2-lewes-eliot-middlemarch-r0": [
-   {
-    "role": "bridge1",
-    "required": true,
-    "forms": {
-     "en": [
-      "George Eliot",
-      "Mary Ann Evans"
-     ]
-    }
-   },
-   {
-    "role": "target",
-    "required": false,
-    "forms": {
-     "en": [
-      "Middlemarch"
-     ]
-    }
-   }
-  ],
-  "mh2-kuomintang-rival-birthplace": [
-   {
-    "role": "bridge1",
-    "required": true,
-    "forms": {
-     "en": [
-      "Mao Zedong",
-      "Mao Tse-tung"
-     ]
-    }
-   },
-   {
-    "role": "target",
-    "required": false,
-    "forms": {
-     "en": [
-      "Shaoshan"
+      "Huldrych Zwingli",
+      "Ulrich Zwingli"
      ]
     }
    }
@@ -18376,6 +18517,27 @@
     }
    }
   ],
+  "mh2-benkei-master-brother-regime": [
+   {
+    "role": "bridge1",
+    "required": true,
+    "forms": {
+     "en": [
+      "Minamoto no Yoshitsune",
+      "Yoshitsune"
+     ]
+    }
+   },
+   {
+    "role": "target",
+    "required": false,
+    "forms": {
+     "en": [
+      "Kamakura"
+     ]
+    }
+   }
+  ],
   "mh2-elisabeth-andrew-golden-bull": [
    {
     "role": "bridge1",
@@ -18394,6 +18556,28 @@
      "en": [
       "Golden Bull of 1222",
       "Aranybulla"
+     ]
+    }
+   }
+  ],
+  "mh2-buddha-wife-s2": [
+   {
+    "role": "bridge1",
+    "required": true,
+    "forms": {
+     "en": [
+      "Siddhartha Gautama",
+      "Gautama Buddha"
+     ]
+    }
+   },
+   {
+    "role": "target",
+    "required": false,
+    "forms": {
+     "en": [
+      "Yasodhara",
+      "Yashodhara"
      ]
     }
    }
@@ -18420,13 +18604,15 @@
     }
    }
   ],
-  "mh2-diaz-madero-san-luis": [
+  "mh2-yogananda-guru-lahiri": [
    {
     "role": "bridge1",
     "required": true,
     "forms": {
      "en": [
-      "Porfirio Díaz"
+      "Paramahansa Yogananda",
+      "Yogananda",
+      "Mukunda Lal Ghosh"
      ]
     }
    },
@@ -18435,19 +18621,21 @@
     "required": false,
     "forms": {
      "en": [
-      "San Luis Potosí"
+      "Lahiri Mahasaya",
+      "Shyama Charan Lahiri"
      ]
     }
    }
   ],
-  "mh2-charles-iii-philip-v-r3": [
+  "mh2-shankara-advaita-s3": [
    {
     "role": "bridge1",
     "required": true,
     "forms": {
      "en": [
-      "Philip V",
-      "Felipe V"
+      "Adi Shankara",
+      "Adi Shankaracharya",
+      "Shankaracharya"
      ]
     }
    },
@@ -18456,52 +18644,8 @@
     "required": false,
     "forms": {
      "en": [
-      "War of the Spanish Succession",
-      "Guerra de Sucesión Española"
-     ]
-    }
-   }
-  ],
-  "mh2-niemeyer-corbusier-ronchamp": [
-   {
-    "role": "bridge1",
-    "required": true,
-    "forms": {
-     "en": [
-      "Le Corbusier",
-      "Charles-Édouard Jeanneret"
-     ]
-    }
-   },
-   {
-    "role": "target",
-    "required": false,
-    "forms": {
-     "en": [
-      "Ronchamp",
-      "Notre-Dame du Haut"
-     ]
-    }
-   }
-  ],
-  "mh2-melanchthon-luther-theses-q3": [
-   {
-    "role": "bridge1",
-    "required": true,
-    "forms": {
-     "en": [
-      "Martin Luther"
-     ]
-    }
-   },
-   {
-    "role": "target",
-    "required": false,
-    "forms": {
-     "en": [
-      "Ninety-five Theses",
-      "95 Theses",
-      "Disputation on the Power and Efficacy of Indulgences"
+      "Advaita Vedanta",
+      "Advaita"
      ]
     }
    }

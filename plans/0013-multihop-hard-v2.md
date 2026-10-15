@@ -109,7 +109,7 @@ The gate runs Qwen3.6-27B on Modal through the HF `ModelBackend`, with the same 
 | S1 mechanical ablation | `drop_b1` = `"Fact: " + G1 + R1` (2-hop) / `"Fact: " + G1 + R1a + N2 + R2` (3-hop) | ≤4/20 AND greedy miss |
 | S1 authored ablations | `local_cue` (the final relation with a fully generic subject, answer type kept; it tests the category prior; lint: ends with the prompt's last 4 words, no D1 capitalized token/number, no bridge form); 3-hop `direct_b1_to_t` (B1 named + **the item's final relation**, with B2's relation removed, e.g. "Fact: Andrew Wyeth … the Brandywine village of"; lint: contains a B1 form, no B2 form, ends with the prompt's last 4 words) | each ≤4/20 AND greedy miss |
 | S2 adversary | ≤4 probes from an independent call (fresh context) that sees the prompt, the chain and T but NOT the S1 probes. It is given the audit's full shortcut taxonomy (local cue, skip a bridge by date/place, B1→T direct, bridge named or near-named, descriptor-is-T-fact, category prior, bridge not on the path) and returns probes plus `factual_issue`. **[rev 3]** Every probe must be an ablation of the prompt; a probe with a capitalised word or number not in the prompt is discarded | each ≤4/20 AND greedy miss; any `factual_issue` rejects |
-| ID check **[rev 3]** | for every **adversary probe that hides B1 without naming it** and reaches T: "which person/work/place is being described in it? infer it if not named" → the bridge(s) the probe hides | a hit is excused only when every hidden bridge is nameable (greedy or ≥5/10). Never applied to `drop_b1` / `local_cue`, and never to any probe that NAMES B1 |
+| ID check **[rev 3]** | for every **adversary probe that does not name B1** and reaches T: "which person/work/place is being described in it? infer it if not named. Answer with the name only" → each bridge it hides (for 3-hop: both bridges; the adversary's own `skips` label is not trusted). Scored on the answer line only | a hit is excused only when every hidden bridge is nameable (greedy or ≥5/10). Never applied to `drop_b1` / `local_cue`, and never to any probe that NAMES B1 |
 
 Rules:
 - **A missing adversary row, zero S2 probes, or an API failure rejects the item (or retries it).
@@ -154,9 +154,19 @@ check the code against it:
     that the model reconstructs B2 from B1. The fresh-eye review of the 22 three-hop survivors
     showed that let direct links through: Indira Gandhi → Maruti 20/20, Yoshitsune → Kamakura
     20/20, Kiichiro Toyoda → loom 16/20.
-  - Naming B1 and reaching T shows that B1 → T is direct, whether or not B2 is nameable. Under
-    the corrected rule, true 3-hop survivors fell from 27 to 8, and most of the rest relabel as
-    honest 2-hops through B1.
+  - Naming B1 and reaching T is never *excused*. It is evidence that B2 is skippable, so the item
+    can only become `relabel_b1` (a 2-hop through B1), and only when B2 is NOT nameable from those
+    B1-named hits. Otherwise B1 → [B2] → T still runs through an unscored B2 (Uther → [Arthur] →
+    Guinevere), and the item fails. Under the corrected rule, true 3-hop survivors fell from 27
+    to 8.
+- **Code-review fixes (2026-10-15, before merge).**
+  - The `relabel_b1` guard first asked "which entity is described?" of B1-named probes, and the
+    model answered B1, so the guard never fired. It now asks "apart from B1, which entity does it
+    refer to?"
+  - ID replies are scored on the answer line only. Castro → Che → Argentina had been excused by a
+    bridge name in the model's trailing reasoning.
+  - Hidden bridges come from the probe text, never from the adversary's own `skips` label.
+  - ID rows are versioned `IDv3`.
   - If the generic `drop_b1` / `local_cue` reach T, the clue is not load-bearing, however the
     model got there. Example: "A sixteenth-century astronomer built his observatory on the
     island of" → Hven 20/20.
@@ -186,6 +196,23 @@ check the code against it:
   - 24 domains and 4 parallel generators;
   - the gate run as G1 + recall first, with the adversary only on survivors.
   The bank reports its true-3-hop count beside the target. It is not padded.
+
+### Outcome [rev 3]
+
+The frozen bank has **91 items**:
+- **6 true 3-hop**, against the plan's target of ≥30;
+- 69 two-hop;
+- 16 two-hop items relabeled from 3-hop.
+
+It drew on about 3,800 candidates, about 2,800 of them 3-hop. Fresh-eye reviews of every item
+dropped 10, each recorded with its probe evidence in global-workspace
+`scripts/oracle_lens_evals/multihop_v2/review_overrides.json`. A 2-hop-only top-up (483
+candidates, 48 passing) brought the bank over the 60-item floor once the code-review fixes had
+removed the misjudged relabels.
+
+The 3-hop shortfall is structural for this model. Qwen3.6-27B answers about 20% of
+well-designed 3-hop prompts reliably without chain-of-thought, and in most of those the first
+bridge has its own direct link to the answer.
 
 ## Seeds
 
@@ -225,7 +252,8 @@ Seeds get new `mh2-` names, so their ids never collide with v1 readouts.
 3. **`gate_modal.py`** runs the staged fan-out and writes `outputs/multihop_v2/gate.json`.
 4. **`finalize.py`**:
    - keeps every-stage passers;
-   - de-duplicates on bridges, targets and the descriptor's proper nouns;
+   - de-duplicates on bridges and targets, true 3-hop items first (descriptor proper nouns: not
+  implemented, because no duplicates were found by review);
    - fills the quotas, 3-hop first, ranked by G1 margin minus the worst shortcut score;
    - stamps `probe_token_lens` (`units`, `target`, `target_alts`) with the strict count from
      `make_ntok`;

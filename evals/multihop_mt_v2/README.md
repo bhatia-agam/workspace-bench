@@ -5,15 +5,15 @@ written by the lens in one layer, and **every bridge is proved necessary**: the 
 reach the answer without it. Example: "Fact: the crusader monarch nicknamed 'Cœur de Lion', who first licensed jousting tournaments on English soil was succeeded on the throne by his younger brother, a monarch whose reign is best remembered for the" → bridges *Richard I of England* and
 *John of England*, answer Magna Carta.
 
-82 items (frozen 2026-10-15, plan 0013). This successor of `multihop_mt` exists because an
+91 items (frozen 2026-10-15, plan 0013). This successor of `multihop_mt` exists because an
 audit found 93/100 of that bank's items reachable while skipping a claimed bridge
 (`evals/multihop_mt/AUDIT_2026-10-15.md`). Plain render, one read position: the final prompt
 token, immediately before the answer word.
 
 **Composition.**
-- 8 true three-hop items.
-- 26 two-hop items.
-- 48 two-hop items relabeled from three-hop. Their prompt still contains a clue the gate
+- 6 true three-hop items.
+- 69 two-hop items.
+- 16 two-hop items relabeled from three-hop. Their prompt still contains a clue the gate
   showed to be decorative (e.g. a first person whom the rest of the sentence already pins), so
   only the load-bearing bridge is scored. Each one's `relabel_reason` records the probes that
   decided it.
@@ -21,7 +21,7 @@ token, immediately before the answer word.
 The plan's target of at least 30 true three-hop items was **not met**. Qwen3.6-27B composes few
 three-hop chains without chain-of-thought: about 20% of three-hop prompts reach 16/20. Of
 those, most are reachable through a direct link from the first bridge. Under the gate below,
-about 0.4% of three-hop candidates survived.
+6 of about 2,800 three-hop candidates (~0.2%) survived as true three-hop.
 
 ## Gate (why every bridge is necessary)
 
@@ -82,7 +82,7 @@ scorer reads.
   a time — never a join of samples or of adjacent top-k tokens. (4) A unit hits at a layer when any
   of its forms hits any sample at that layer, in any listed language. (5) A layer passes the item
   when EVERY required unit hits there; the item passes at any layer.
-- **Scored units of this family:** `bridge1` (required) and `bridge2` (required, the 8 three-hop items), each an alias list in `en`; the bank's `include_target` contract adds an OPTIONAL `target` unit (the surface answer, `target` + `target_alts` minus single-token forms — `probe_token_lens.target_alts` stamps their counts) that feeds `any_hit`, never the pass.
+- **Scored units of this family:** `bridge1` (required) and `bridge2` (required, the 6 three-hop items), each an alias list in `en`; the bank's `include_target` contract adds an OPTIONAL `target` unit (the surface answer, `target` + `target_alts` minus single-token forms — `probe_token_lens.target_alts` stamps their counts) that feeds `any_hit`, never the pass.
 - **Token lenses — summarized first, then matched** (Camila, 2026-09-23 16:52: "for the token
   lenses on mt i thought we were doing an llm summarizer step?"). A strictly multi-token form can
   never equal one vocabulary token, so on the raw bag a required multi-token unit is unreachable
