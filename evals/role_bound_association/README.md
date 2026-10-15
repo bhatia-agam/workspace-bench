@@ -27,7 +27,7 @@ and not just the concepts?
   what to whom, so a summary of the text alone answers all three questions. Use the frozen
   number as a fairness flag on the bank, never as a floor a lens must clear (unchanged by the
   summarize-prompt regime: prompt-only never sees an activation).
-- **Judge:** `claude-opus-5-5` (the repo default), `PROMPT_VERSION = "oa-v1"`.
+- **Judge:** `google/gemini-3.8-flash`, `PROMPT_VERSION = "oa-v1"`.
 
 ## Judge prompts
 
@@ -177,7 +177,7 @@ You are shown the top-10 token readouts from an interpretability lens at oneposi
 ## Instrument change (phase 2)
 
 The source script judged with `claude-opus-5` (its `--model` default). This port judges with the
-repo default, **`claude-opus-5-5`** (`JudgeConfig()`), adaptive thinking at low effort;
+repo default, **`google/gemini-3.8-flash`** (`JudgeConfig()`), reasoning `{"effort": "minimal"}`;
 the source default is not carried over. Phase 7 measures the change. Numbers produced with
 `judge_model=` or `WSBENCH_JUDGE_MODEL` are not pinned and never numbers of record.
 

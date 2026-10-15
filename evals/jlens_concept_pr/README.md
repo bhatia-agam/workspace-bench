@@ -42,7 +42,7 @@ the labels, families and read positions plus the reference files above.
   zero); a PRESENT-but-empty row is scored as zero concepts ("lens silent"), carries
   `has_text = false` and counts in `n_empty_cells` — so the shared "empty cells <= 5% of
   expected" completeness rule applies here, which the source did not have.
-- **Models:** `JudgeConfig(model=DEFAULT_JUDGE /* claude-opus-5-5 */, prompt_version="jlens-pr-v2",
+- **Models:** `JudgeConfig(model="google/gemini-3.8-flash", prompt_version="jlens-pr-v2",
   reasoning={"effort": "minimal"})`. All three stages run on the family judge. **Instrument
   change (2026-09-16, Camila):** the source judge of record ran Stage A (concept extraction) on
   `deepseek/deepseek-v4-flash` with reasoning off; this repo runs it on Gemini 3.8 Flash like

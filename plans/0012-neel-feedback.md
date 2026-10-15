@@ -1,8 +1,12 @@
 # 0012 — Neel's 2026-10-02 feedback: the model-independent fixes
 
 **2026-10-11 (Camila): B1 (the nulls, §1 and the near-miss foils) and B3 (the arithmetic
-near-number null, §4.1) are dropped and removed from the branch.** Everything else stands; the
-default judge becomes Claude Opus 5.5 (§ Judge, below).
+near-number null, §4.1) are dropped and removed from the branch.** Everything else stands.
+
+**2026-10-15 (Camila): the Opus 5.5 default judge (§ Judge, below) is not adopted in the public
+version.** The default stays `google/gemini-3.8-flash`, with agentic_misalignment and
+jailbreak_recognition pinned to `claude-sonnet-5`, and the floors stay the Gemini ones. § Judge is
+kept as the record of the proposal.
 
 Source: `Workspace Bench Feedback.md` (Neel, at `92d763e`). This plan covers only the items
 that apply to Qwen3.6-27B as the bank stands.

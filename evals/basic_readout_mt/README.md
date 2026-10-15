@@ -19,7 +19,7 @@ The bank file is a frozen copy of the source repo's hard-tier bank; its `contrac
   deterministic, no judge call, `spend_usd` 0, `judge_model` `regex`. Token-bag readouts carry
   `scorer_version` `mt-regex-summarized-2026-09-23`: each bag is first interpreted by the shared
   summarizer (below), so for those arms the instrument is the summarizer model (`judge_model` =
-  `claude-opus-5-5`, `pinned_instrument` follows its pin, `spend_usd` counts its calls, a
+  `google/gemini-3.8-flash`, `pinned_instrument` follows its pin, `spend_usd` counts its calls, a
   failed summary leaves the item undecided). The scorer is `wsbench.multitoken.regex`, a port of
   the source repo's conjunctive bank scorer (`olens_suite/bank/matching.py`, `contract.py`,
   `conjunctive.py`, `olens_sglang/score_targets.py`); goldens computed by the source code pin it
@@ -105,7 +105,7 @@ wsbench judge family=basic_readout_mt readouts=<arm>.jsonl out=outputs/<arm>/bas
 Not the instrument of record since 2026-09-23 (see Instrument history); run with
 `opts=judge=mc` to obtain it beside the regex number.
 
-`prompt_version`: `mc-2026-09-16`. Judge: the repo default (`claude-opus-5-5`),
+`prompt_version`: `mc-2026-09-16`. Judge: the repo default (`google/gemini-3.8-flash`),
 temperature 0. Output schema: `{"choice": "A".."F", "quote": str}`. The user message is the
 `USER` template with the readout, one question (`QUESTION_UNIT` with the unit's role, or
 `QUESTION_LANGUAGE`) and the lettered options, `CANNOT` last.

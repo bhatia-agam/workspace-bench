@@ -63,7 +63,7 @@ wsbench judge family=directed_modulation readouts=<arm>.jsonl out=outputs/<arm>/
 
 ## Judge prompts
 
-`prompt_version`: `dm-2026-09-16`. Judge: the repo default (`claude-opus-5-5`),
+`prompt_version`: `dm-2026-09-16`. Judge: the repo default (`google/gemini-3.8-flash`),
 temperature 0. Seed 0, 4 distractors. Output schema: `{"choice": int,
 "form": exact|variant|synonym|translation|description|none, "basis":
 content_bound|instruction_narration|incidental|absent, "composition": full|partial|none,

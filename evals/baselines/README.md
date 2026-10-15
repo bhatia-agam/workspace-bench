@@ -15,9 +15,7 @@ fixes one (brew reshuffles per cell, so its order is a seeded one of its own); t
 a judge does not, and the gold is never the escape). Ported from the source repo's
 `lucky_guessing_baseline.py`.
 
-Variants, five draws per item at temperature 1.0 with the repo judge (`google/gemini-3.8-flash`
-for every entry frozen before 2026-10-11; the judge is now `claude-opus-5-5` and these floors
-have not been re-measured under it yet):
+Variants, five draws per item at temperature 1.0 with the repo judge (`google/gemini-3.8-flash`):
 
 - **blind**: the lists and nothing else.
 - **described**: one honest sentence saying what the family tests (the option domain, never the

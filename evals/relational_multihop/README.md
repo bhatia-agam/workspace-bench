@@ -19,7 +19,7 @@ Avery's ___") — read at its blank; does the lens hold the composed relation in
   `extras.any_of_layers_floor`.
 - **The prompt-only baseline measures 0.82**, because the cloze states both hops in the text;
   it bounds what the prompt gives away, not what a lens must clear.
-- **Judge:** `claude-opus-5-5` (the repo default), `PROMPT_VERSION = "rel-v1"`.
+- **Judge:** `google/gemini-3.8-flash`, `PROMPT_VERSION = "rel-v1"`.
 
 ## Judge prompts
 
@@ -139,7 +139,7 @@ You are shown the top-10 token readouts from an interpretability lens at oneposi
 ## Instrument change (phase 2)
 
 The source script judged with `claude-opus-5` (its `--model` default). This port judges with the
-repo default, **`claude-opus-5-5`** (`JudgeConfig()`), adaptive thinking at low effort;
+repo default, **`google/gemini-3.8-flash`** (`JudgeConfig()`), reasoning `{"effort": "minimal"}`;
 the source default is not carried over. Phase 7 measures the change. Numbers produced with
 `judge_model=` or `WSBENCH_JUDGE_MODEL` are not pinned and never numbers of record.
 

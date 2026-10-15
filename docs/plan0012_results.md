@@ -1,9 +1,12 @@
 # Plan 0012: all PRs, results (2026-10-10)
 
-**2026-10-11:** B1 (nulls) and B3 (arithmetic near null) were dropped and removed, and the default
-judge is now Claude Opus 5.5 for every family. All numbers below were judged before that switch
-(Gemini 3.8 Flash, Sonnet 5, Opus 5); they show the effect of the prompt changes, not Opus 5.5
-scores.
+**2026-10-11:** B1 (nulls) and B3 (arithmetic near null) were dropped and removed.
+
+**2026-10-15 (Camila):** the switch of the default judge to Claude Opus 5.5 is **not** adopted in
+the public version. The default stays `google/gemini-3.8-flash`, with agentic_misalignment and
+jailbreak_recognition pinned to `claude-sonnet-5`, and the floors stay those measured under
+Gemini. The judge numbers below (Gemini 3.8 Flash, Sonnet 5, Opus 5) show the effect of the prompt
+changes; the Opus 5.5 refusal probes are kept as a record.
 
 This covers PR-A (bank judge v2) and the
 three PRs after it. It ends with what is not done.

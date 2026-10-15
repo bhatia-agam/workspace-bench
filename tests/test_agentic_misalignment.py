@@ -27,7 +27,7 @@ from wsbench.evals.agentic_misalignment.prompts import (
     format_readouts,
     parse_design_score,
 )
-from wsbench.judge_config import JudgeConfig, resolve
+from wsbench.judge_config import resolve
 from wsbench.llm import JudgeConfigError, always_thinks
 from wsbench.mcjudge import load_bank
 
@@ -359,7 +359,7 @@ def _label_in(text: str) -> str:
 def _responder(user, kw):
     stage = stage_of(user)
     if stage == "A":
-        assert kw["thinking"] == STAGE_A_THINKING and kw["max_tokens"] == 400
+        assert kw["thinking"] == {"type": "disabled"} and kw["max_tokens"] == 400
         tag = tag_of(user)
         if tag == f"{EX}:L20:p1":
             return None  # api failure -> EX skips B and C
@@ -627,11 +627,7 @@ def test_stride_and_layers(tmp_path, fake_text, am_args):
 def test_non_claude_judge_raises(tmp_path, fake_text, am_args, mk_args, monkeypatch):
     fake_text(_responder)
     monkeypatch.setenv("OPENROUTER_API_KEY", "sk-or-test")
-    args = mk_args(
-        _scripted(tmp_path),
-        items=[RH],
-        judge=resolve(JudgeConfig(model="google/gemini-3.8-flash"), env={}),
-    )  # a non-claude judge
+    args = mk_args(_scripted(tmp_path), items=[RH])  # the repo default judge (Gemini)
     assert args.judge.model != SPEC.judge.model
     with pytest.raises(JudgeConfigError, match="claude-"):
         judge.run(args)

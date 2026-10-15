@@ -9,7 +9,7 @@ import pytest
 from wsbench import registry
 from wsbench.baselines import lucky_guessing as lg
 from wsbench.cli import main
-from wsbench.judge_config import JudgeConfig, resolve
+from wsbench.judge_config import DEFAULT_JUDGE, JudgeConfig, resolve
 from wsbench.mc import CANNOT
 
 REPO = Path(__file__).resolve().parents[1]
@@ -288,7 +288,7 @@ def test_prompt_only_freeze_and_floors(tmp_path):
             complete=True,
             pinned_instrument=True,
             config={
-                "judge_model": "claude-opus-5-5",
+                "judge_model": DEFAULT_JUDGE,
                 "prompt_version": version,
                 "layers_judged": [20],
                 **cfg,
@@ -387,7 +387,8 @@ def test_prompt_only_floor_from_another_judge_is_not_drawn(tmp_path):
 
     entry = {"rate": 0.5, "instrument": po.instrument_versions()["association"]}
     dst = tmp_path / "po.json"
-    dst.write_text(json.dumps({"association": {**entry, "judge_model": "google/gemini-3.8-flash"}}))
+    other = "some-other/judge-model"  # any judge that is not the family's own
+    dst.write_text(json.dumps({"association": {**entry, "judge_model": other}}))
     assert po.floors(dst) == {}
-    dst.write_text(json.dumps({"association": {**entry, "judge_model": "claude-opus-5-5"}}))
+    dst.write_text(json.dumps({"association": {**entry, "judge_model": DEFAULT_JUDGE}}))
     assert set(po.floors(dst)) == {"association"}

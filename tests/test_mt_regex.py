@@ -217,7 +217,7 @@ def test_run_regex_tokens_and_the_language_unit(tmp_path, fake_llm, monkeypatch)
     assert row["pass"] is True and row["passing_layers"] == [24]
     assert r.extras["passing_layers_by_source"] == {"bag_only": 1}
     assert r.config["prompt_version"] == SUMMARIZED_SCORER_VERSION
-    assert r.config["judge_model"] == "claude-opus-5-5" and r.pinned_instrument
+    assert r.config["judge_model"] == "google/gemini-3.8-flash" and r.pinned_instrument
     prose = tmp_path / "p.jsonl"
     prose.write_text(
         json.dumps({"id": it["id"], "layer": 20, "pos": 3, "samples": [concept]}) + "\n"
@@ -337,7 +337,7 @@ def test_tokens_are_summarized_then_matched(tmp_path, fake_llm, monkeypatch):
     assert r.extras["n_summaries"] == 2 and r.extras["n_summaries_cached"] == 0
     assert r.extras["n_calls"] == 2 and len(fake.calls) == 2
     assert r.config["prompt_version"] == SUMMARIZED_SCORER_VERSION
-    assert r.config["summarizer"] == "interp-v1" and r.config["judge_model"] == "claude-opus-5-5"
+    assert r.config["summarizer"] == "interp-v1" and r.config["judge_model"].startswith("google/")
     assert r.pinned_instrument and r.counts["n_unjudged_cells"] == 0
     # cached: the same bags in the same out dir -> no call, same verdicts
     r2 = fam.run_regex(_args(path, out, items=[it["id"]]), name="multilingual_mt")

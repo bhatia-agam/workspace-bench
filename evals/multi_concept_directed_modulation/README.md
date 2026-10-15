@@ -94,7 +94,7 @@ s3d RL600 read under the prefill regime (12 cells x 4 layers each) with the samp
 
 ## Judge prompts
 
-`prompt_version`: `mcdm-2026-09-16`. Judge: the repo default (`claude-opus-5-5`),
+`prompt_version`: `mcdm-2026-09-16`. Judge: the repo default (`google/gemini-3.8-flash`),
 temperature 0. Output schema: `{"picks": [{"choice": "A".."F", "quote": str}, ...]}`, an
 empty list meaning none. The user message is the `USER` template with the readout, `QUESTION`
 and the lettered candidates.

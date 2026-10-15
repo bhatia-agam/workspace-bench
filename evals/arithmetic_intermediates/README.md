@@ -121,7 +121,7 @@ wsbench judge family=arithmetic_intermediates readouts=<arm>.jsonl out=outputs/<
 `prompt_version`: `arith-free-2026-09-23` for the per-cell call (`cells=frozen`) and
 `arith-free-batched-2026-09-23` for the batched `cells=all` call — the two share their
 instructions and differ only in packaging, so they carry their own tags. Judge: the repo default
-(`claude-opus-5-5`; the Anthropic route sends no temperature). Per-cell output schema: `{"states_value": bool,
+(`google/gemini-3.8-flash`), temperature 0. Per-cell output schema: `{"states_value": bool,
 "values": [number, ...], "basis": "arithmetic" | "stated_result" | "numeral_bag" | "none",
 "quote": str}`.
 

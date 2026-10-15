@@ -94,7 +94,7 @@ def test_judges_table_pins():
     for s in _specs():
         assert s.name in judges and s.judge.prompt_version in judges, s.name
     assert "| agentic_misalignment | claude-sonnet-5 |" in judges
-    assert "| jailbreak_recognition | claude-opus-5-5 |" in judges
+    assert "| jailbreak_recognition | claude-sonnet-5 |" in judges
     assert (
         "deepseek" not in judges.lower().replace("deepseek v4 flash; changed", "")
         and "refuses" in judges

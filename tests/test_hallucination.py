@@ -374,8 +374,8 @@ def test_end_to_end_and_resume(tmp_path, fake_llm, mk_args):
     assert sorted(r["key"] for r in cached if r["key"].endswith(":V")) == sorted(
         r["key"] + ":V" for r in cached if not r["key"].endswith(":V")
     )
-    assert res.config["k"] == 3 and res.config["reasoning"] is None
-    assert res.config["judge_model"] == "claude-opus-5-5"
+    assert res.config["k"] == 3 and res.config["reasoning"] == {"effort": "minimal"}
+    assert res.config["judge_model"] == "google/gemini-3.8-flash"
     row = next(r for r in res.rows if r["pos"] == 23)
     assert set(row) == {"key", "id", "layer", "pos", "site_kind", "samples", "verdict"}
     assert row["key"] == "chat-dailydialog-0000__L036__p23" and len(row["samples"]) == 3

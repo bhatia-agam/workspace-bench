@@ -170,7 +170,7 @@ not take the misaligned action. They never enter the headline; they are the fals
 
 ## Judge
 
-`JudgeConfig(model=DEFAULT_JUDGE, prompt_version="am-narrative-v1+am-design-v2", reasoning=None)` — the family pins `claude-sonnet-5` (the repo default `claude-opus-5-5` refuses the Stage B summaries of most scenarios; 2026-10-11) —
+`JudgeConfig(model="claude-sonnet-5", prompt_version="am-narrative-v1+am-design-v2", reasoning=None)` —
 the judge of record and one of the repo's two non-default pins (jailbreak_recognition is the
 other). No Gemini agreement data exists
 for this family, so `judge_model=`/`WSBENCH_JUDGE_MODEL` overrides produce unpinned numbers
