@@ -132,8 +132,9 @@ Camila, 2026-10-20: one public repo where a user picks how much judging to pay f
 5. `standard` is unchanged in substance: identical cache fingerprints, calls,
    `numbers`/`complete`/`pinned`. The only addition is a `tier` key in `config` and `run.json`.
    The existing golden/results tests pass **unmodified**. The one sanctioned edit is adding
-   `"tier"` to the exact key-set assertion at tests/test_runner.py (run.json keys), plus any
-   other exact-config-key-set assertion, each named in the PR body. Any other edit to a
+   `"tier"` to the exact key-set assertions at tests/test_runner.py (run.json keys) and
+   tests/test_registry.py::test_repo_root_and_judge_args (`JudgeArgs` fields), each named in
+   the PR body. Any other edit to a
    pre-existing test is out of plan.
 5b. End-to-end through the CLI (offline, `run_calls`/LLM monkeypatched): `run ... tier=lite`
    writes results with `config.tier == "lite"` and jailbreak `complete=True`. Unit tests that

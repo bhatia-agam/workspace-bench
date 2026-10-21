@@ -21,7 +21,7 @@ SPEC = register(
         higher_is_better=True,
         run=judge.run,
         # every token of the last user turn (28,799 positions) x 5 layers, one call per cell
-        calls_per_arm="≈ 144k",
+        calls_per_arm="≈ 144k; lite ≈ 9.3k",
         sources="Zhao et al. 2024",
     )
 )

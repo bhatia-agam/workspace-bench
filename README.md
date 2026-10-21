@@ -64,7 +64,7 @@ Output layout: `<out>/<family>/results.json` (the result) and `cells.jsonl` (eve
 verdict, so a re-run only pays for what is missing); `<out>/summary.md` (the table) and
 `run.json` (per-family status and spend). Shared keys on `judge` and `run`: `layers=20,36`,
 `items=a,b`, `limit=N`, `allow_missing=True`, `dry_run=True`, `judge_model=`, `concurrency=`,
-`rpm=`, `opts=k=v`; `--help` prints a command's keys, `--show` the resolved config.
+`rpm=`, `opts=k=v`, `tier=lite|standard|max` (§Judges); `--help` prints a command's keys, `--show` the resolved config.
 
 **Judging is the contract; producing is optional.** `wsbench plan` writes, per family, one JSONL
 row per item saying what to render and how, which token positions to read and at which layers;
@@ -334,11 +334,57 @@ never pinned.
 | wrong_bridge_true | google/gemini-3.8-flash | bank-2026-10-10 |
 | user_modeling | google/gemini-3.8-flash | um-v2 |
 
-- Override precedence: `judge_model=` flag > `WSBENCH_JUDGE_MODEL` env > the family pin.
-- `pinned_instrument` is true only when the resolved model equals the family pin; a result
+- Override precedence: `judge_model=` flag > `WSBENCH_JUDGE_MODEL` env > the tier table below
+  (under `lite` and `standard`, the family pin in this table).
+- `pinned_instrument` is true only when the resolved model equals the tier's instrument for
+  that family (a `max` run of a Gemini family on Opus 5.5 is pinned; the same run under
+  `judge_model=google/gemini-3.8-flash` is not); a result
   judged by an override is never a number of record and can never be `complete`.
 - Aux models (the summarizer for token readouts) come from the family's `JudgeConfig.aux_models`
   and are not affected by the override.
+
+### Precision tiers
+
+`tier=lite|standard|max` on `run`, `judge`, `report` and `list` picks how much judging a run
+pays for (plan 0014). `standard` is the default and is the table above, unchanged. `plan` takes
+no tier: the read plan stays the full grid, so one set of readouts serves every tier.
+
+| tier | default judge (every LLM family, aux stages included) | pins kept | jailbreak read | agentic Stage A positions |
+|---|---|---|---|---|
+| `lite` | `google/gemini-3.8-flash` | jailbreak + agentic -> `claude-sonnet-5` | `read=lite` | `stride=8` |
+| `standard` (default) | `google/gemini-3.8-flash` | jailbreak + agentic -> `claude-sonnet-5` | `read=span` | stride 1 |
+| `max` | `claude-opus-5-5` | agentic only -> `claude-sonnet-5` (Opus 5.5 refuses Stage B) | `read=span` | stride 1 |
+
+- **Compare methods only within one tier.** A result carries `config.tier` (a file without
+  one reads as `standard`) and `run.json` a top-level `tier`; `summary.md` starts with a
+  `tier: X` line. `report` on a directory holding more than one tier prints the tiers found and
+  exits 2; `report tier=X` keeps that tier and writes `summary_<tier>.md`.
+- A result is `complete` only on its tier's instrument: jailbreak needs the tier's read
+  (`read=lite` under `lite`, `read=span` otherwise; `read=punct` is a diagnostic, complete in
+  no tier) and agentic the tier's stride. `opts=` still wins over the tier (`opts=read=span` on
+  a `lite` run is allowed), and the result is then off-tier (`complete=False`).
+- `max` moves every auxiliary stage (the summarizer, jlens Stage A) to `claude-opus-5-5` with
+  the main judge. The Anthropic route never sends `reasoning` and Opus 5.5 always thinks
+  (`effort: low`), so the explicit Gemini `{"effort": "minimal"}` of hallucination and jlens is
+  inert under `max`. The regex scorer of record is the regex scorer in every tier.
+- The tier never enters a cache fingerprint. A `lite` jailbreak run reuses the cached `span`
+  verdicts of its cells only from the same `cells.jsonl`: copy `<out>/jailbreak_recognition/cells.jsonl`
+  of a `standard` run into a fresh `out` rather than judging into the `standard` directory.
+- Floors follow the tier: the regex prompt-only floors show in every tier, the Gemini-judged
+  floors under `lite` / `standard` only, so under `max` the lucky-guess column is empty. Opus 5.5
+  floors are not frozen yet (a known gap), and `freeze kind=prompt_only` refuses a result that
+  is not `standard` (or a jailbreak result not read on `span`).
+
+**Cost per five-layer arm.** Worked out offline from token counts and list prices: `spend_usd`
+is 0 on the Anthropic route (it records tokens, not dollars).
+
+| tier | jailbreak_recognition | agentic_misalignment | every other family |
+|---|---|---|---|
+| `lite` | 9,295 cells, ≈ $83 of Sonnet 5 | stride 8, ≈ $40–50 of Sonnet 5 | Gemini, ≈ $20–30 |
+| `standard` | 143,995 cells, ≈ $1,282 of Sonnet 5 | ≈ $330 of Sonnet 5 | Gemini, ≈ $20–30 |
+| `max` | Opus 5.5, from the recorded tokens | ≈ $330 of Sonnet 5 | Opus 5.5, from the recorded tokens |
+
+Ranking evidence: see plan 0014 §6.
 
 Five families (user_modeling and the four in-house MC families) were judged with
 `claude-opus-5` in their source scripts and moved to Gemini 3.8 Flash in this repo.

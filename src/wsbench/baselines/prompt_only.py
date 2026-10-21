@@ -68,6 +68,11 @@ def freeze(run_dir: Path, dst: Path = FROZEN, *, source: Path | None = None) -> 
             raise ValueError(f"freeze: {path} is a subset run, not a baseline")
         if r.value is None:
             raise ValueError(f"freeze: {path} has no value")
+        tier = r.config.get("tier", "standard")
+        if tier != "standard":  # floors are not keyed by tier yet (plan 0014)
+            raise ValueError(f"freeze: {path} was judged under tier={tier}, not standard")
+        if r.family == "jailbreak_recognition" and r.config.get("read", "span") != "span":
+            raise ValueError(f"freeze: {path} was read with read={r.config['read']}, not span")
         if versions.get(r.family) != r.config.get("prompt_version"):
             raise ValueError(
                 f"freeze: {path} was judged with prompt_version "
@@ -95,6 +100,7 @@ def freeze(run_dir: Path, dst: Path = FROZEN, *, source: Path | None = None) -> 
             "instrument": r.config.get("prompt_version"),
             "layers_judged": r.config.get("layers_judged"),
             "complete": r.complete,
+            "tier": tier,
             "written": dt.datetime.now(dt.UTC).isoformat(timespec="seconds"),
         }
     if not frozen:

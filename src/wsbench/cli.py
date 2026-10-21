@@ -10,7 +10,7 @@ from pathlib import Path
 
 import pydra
 
-from wsbench import readplan, registry, runner
+from wsbench import readplan, registry, runner, tiers
 from wsbench.baselines import lucky_guessing, prompt_only
 from wsbench.capable import questions as capable_questions
 from wsbench.capable import run as capable_run
@@ -20,6 +20,7 @@ from wsbench.readouts import convert_gen_dir, convert_read_json
 from wsbench.registry import EvalSpec
 from wsbench.results import FamilyResult, macro, markdown_table, read_results
 from wsbench.runner import FamilyOutcome, parse_opts
+from wsbench.tiers import DEFAULT_TIER, family_opts, tier_config
 
 EXIT_USAGE = 2
 EXIT_JUDGE_CONFIG = 3
@@ -100,8 +101,10 @@ class JudgeOptions(Command):
         self.dry_run = False
         self.opts = None  # comma list of KEY=VALUE family options; a value cannot hold a comma
         self.opt: list[str] = []  # the parsed pairs; filled by finalize
+        self.tier = DEFAULT_TIER  # lite | standard | max (README §Judges)
 
     def finalize(self) -> None:
+        self.tier = tiers.check(str(self.tier))
         self.judge_model = str(self.judge_model or "") or None
         self.layers = _ints(self.layers)
         self.items = _strs(self.items)
@@ -115,6 +118,13 @@ class JudgeOptions(Command):
 
 
 class ListFamilies(Command):
+    def __init__(self) -> None:
+        super().__init__()
+        self.tier = DEFAULT_TIER  # the judge-model column follows the tier
+
+    def finalize(self) -> None:
+        self.tier = tiers.check(str(self.tier))
+
     def execute(self) -> int:
         if not registry.FAMILIES:
             print("no families registered yet")
@@ -125,7 +135,7 @@ class ListFamilies(Command):
                 s.group,
                 _n_items(s),
                 s.metric,
-                s.scorer or s.judge.model,
+                s.scorer or tier_config(s.judge, s.name, self.tier).model,
                 s.judge.prompt_version,
                 s.calls_per_arm or "?",
                 s.sources or "—",
@@ -159,8 +169,9 @@ class JudgeFamily(JudgeOptions):
         spec = registry.get(self.family)
         out = self.out or Path("outputs") / self.readouts.stem / spec.name
         try:
-            opts = parse_opts(self.opt)
-            judge = resolve(spec.judge, flag=self.judge_model, env=os.environ)
+            opts = {**family_opts(spec.name, self.tier), **parse_opts(self.opt)}
+            config = tier_config(spec.judge, spec.name, self.tier)
+            judge = resolve(config, flag=self.judge_model, env=os.environ)
             runner.judge_family(spec, self, self.readouts, out, judge=judge, opts=opts)
         except JudgeConfigError as e:
             print(f"judge config error: {e}", file=sys.stderr)
@@ -203,7 +214,7 @@ class RunFamilies(JudgeOptions):
             return code
         results = [o.result for o in outcomes if o.result is not None]
         notes = [o for o in outcomes if o.status != "ok"]
-        text = _write_summary(self.out, results, notes)
+        text = _write_summary(self.out, results, notes, tier=self.tier)
         manifest = runner.run_manifest(
             outcomes,
             started=started,
@@ -232,8 +243,10 @@ class ReportRuns(Command):
         self.dir = pydra.REQUIRED
         self.json = False
         self.floors = True  # the frozen lucky-guessing floors (evals/baselines) beside each family
+        self.tier = ""  # "" = detect from the results' config.tier; tier=X filters to one tier
 
     def finalize(self) -> None:
+        self.tier = tiers.check(str(self.tier)) if self.tier else ""
         self.dir = _path(self.dir)
         self.json = _bool(self.json)
         self.floors = _bool(self.floors)
@@ -247,18 +260,34 @@ class ReportRuns(Command):
         except ValueError as e:
             print(f"unreadable results: {e}", file=sys.stderr)
             return EXIT_USAGE
+        found = sorted({r.config.get("tier", DEFAULT_TIER) for r in results})
+        if self.tier:
+            tier = self.tier
+            results = [r for r in results if r.config.get("tier", DEFAULT_TIER) == tier]
+            summary = self.dir / f"summary_{tier}.md"
+        elif len(found) > 1:
+            print(
+                f"results from several tiers ({', '.join(found)}); methods are compared within "
+                "one tier: pass tier=<one of them>",
+                file=sys.stderr,
+            )
+            return EXIT_USAGE
+        else:
+            tier = found[0] if found else DEFAULT_TIER
+            summary = self.dir / "summary.md"
         m = macro(results)
-        floors = floor_columns() if self.floors else None
-        table = markdown_table(results, m, floors=floors)
-        (self.dir / "summary.md").write_text(table, encoding="utf-8")
+        floors = floor_columns(tier) if self.floors else None
+        table = f"tier: {tier}\n\n" + markdown_table(results, m, floors=floors)
+        summary.write_text(table, encoding="utf-8")
         if self.json:
-            raw = {"lucky_guessing": lucky_guessing.floors(), "prompt_only": prompt_only.floors()}
+            lucky, po = tier_floors(tier)
+            raw = {"lucky_guessing": lucky, "prompt_only": po}
             out = {"families": [r.to_json() for r in results], "macro": m, "floors": raw}
             print(json.dumps(out))
             return 0
         print(table, end="")
         print(f"macro: value={m['value']} families={m['families']} excluded={m['excluded']}")
-        print(f"wrote {self.dir / 'summary.md'}")
+        print(f"wrote {summary}")
         return 0
 
 
@@ -307,19 +336,48 @@ class ConvertReadJson(Command):
         return 0
 
 
-def floor_columns() -> dict[str, dict[str, str]]:
+_JUDGED = ("blind", "described")  # the lucky-guessing variants a judge model scored
+
+
+def tier_floors(tier: str = DEFAULT_TIER) -> tuple[dict[str, dict], dict[str, dict]]:
+    """The frozen (lucky-guessing, prompt-only) floors that apply under ``tier``. A blind /
+    described entry needs no ``model`` stamp or the tier's default model (``uniform`` always
+    applies); a prompt-only entry needs a regex / unstamped judge or the tier's family judge."""
+    default = tiers.TABLE[tier].default_model
+    lucky: dict[str, dict] = {}
+    for fam, e in lucky_guessing.floors().items():
+        kept = {
+            v: x for v, x in e.items() if v not in _JUDGED or x.get("model", default) == default
+        }
+        if kept:
+            lucky[fam] = kept
+    po = {}
+    for fam, e in prompt_only.floors().items():
+        spec = registry.FAMILIES.get(fam)
+        model = tier_config(spec.judge, fam, tier).model if spec else None
+        if e.get("judge_model") in (None, "regex", model):
+            po[fam] = e
+    return lucky, po
+
+
+def floor_columns(tier: str = DEFAULT_TIER) -> dict[str, dict[str, str]]:
     """The report's floor columns from the frozen baselines: lucky guessing (blind / described
-    means) and prompt-only (judged rate), each only where the stamp matches the instrument."""
+    means) and prompt-only (judged rate), each only where the stamp matches the instrument and
+    the judge model matches ``tier`` (:func:`tier_floors`)."""
 
     def f(v: object) -> str:
         return "—" if v is None else f"{float(v):.3f}"
 
-    lucky = {
-        fam: f"{f(e.get('blind', {}).get('mean'))} / {f(e.get('described', {}).get('mean'))}"
-        for fam, e in lucky_guessing.floors().items()
-    }
+    raw_lucky, raw_po = tier_floors(tier)
+    lucky = {}
+    for fam, e in lucky_guessing.floors().items():
+        kept = raw_lucky.get(fam, {})
+        if any(v in e for v in _JUDGED) and not any(v in kept for v in _JUDGED):
+            continue  # every judged variant is off-tier: no column entry, not "— / —"
+        blind, described = (f(kept.get(v, {}).get("mean")) for v in _JUDGED)
+        lucky[fam] = f"{blind} / {described}"
     po = {}
-    for fam, e in prompt_only.floors().items():
+    for fam, e in raw_po.items():
         note = " saturated" if fam in prompt_only.SATURATED else ""
         if e.get("higher_is_better") is False:
             note += " (lower is better)"
@@ -677,9 +735,13 @@ def _unknown(name: str) -> int:
 
 
 def _write_summary(
-    out: Path, results: list[FamilyResult], notes: list[FamilyOutcome] | None = None
+    out: Path,
+    results: list[FamilyResult],
+    notes: list[FamilyOutcome] | None = None,
+    *,
+    tier: str = DEFAULT_TIER,
 ) -> str:
-    text = markdown_table(results, macro(results))
+    text = f"tier: {tier}\n\n" + markdown_table(results, macro(results))
     if notes:
         text += "\n## skipped / failed\n"
         text += "".join(f"- {o.family}: {o.status} — {o.error}\n" for o in notes)

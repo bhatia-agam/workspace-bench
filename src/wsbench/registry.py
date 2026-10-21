@@ -8,6 +8,7 @@ from pathlib import Path
 
 from wsbench.judge_config import JudgeConfig, ResolvedJudge
 from wsbench.results import FamilyResult
+from wsbench.tiers import DEFAULT_TIER
 
 # src layout (uv-managed checkout); a wheel install would resolve to site-packages.
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -30,6 +31,7 @@ class JudgeArgs:
     dry_run: bool
     aux_models: Mapping[str, str] = field(default_factory=dict)  # e.g. {"summarizer": model}
     extra: dict[str, str] = field(default_factory=dict)  # family options from opts=key=value
+    tier: str = DEFAULT_TIER  # the precision tier (wsbench.tiers); stamped into config["tier"]
 
 
 @dataclass(frozen=True)

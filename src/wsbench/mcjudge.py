@@ -184,6 +184,7 @@ def base_config(args: JudgeArgs, prompt_version: str, **extra: Any) -> dict:
         "allow_missing": args.allow_missing,
         "items": args.items,
         "limit": args.limit,
+        "tier": args.tier,
         **extra,
     }
 

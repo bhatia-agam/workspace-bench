@@ -15,6 +15,7 @@ from wsbench.judge_config import ResolvedJudge, resolve
 from wsbench.llm import JudgeConfigError
 from wsbench.registry import EvalSpec, JudgeArgs
 from wsbench.results import FamilyResult, write_results
+from wsbench.tiers import family_opts, tier_config
 
 Status = Literal["ok", "skipped", "failed"]
 
@@ -40,6 +41,7 @@ class Options(Protocol):
     rpm: float
     dry_run: bool
     opt: list[str]
+    tier: str
 
 
 class RunOptions(Options, Protocol):
@@ -81,8 +83,9 @@ def judge_family(
         concurrency=args.concurrency,
         rpm=args.rpm,
         dry_run=args.dry_run,
-        aux_models=spec.judge.aux_models,
+        aux_models=tier_config(spec.judge, spec.name, args.tier).aux_models,
         extra=dict(opts),
+        tier=args.tier,
     )
     result = spec.run(jargs)
     path = write_results(out, result)
@@ -142,7 +145,8 @@ def run_families(
     """Judge ``specs`` from ``readouts_root/<family>.jsonl`` into ``out/<family>/``.
 
     Order of operations: parse ``opts=`` once (a bad pair is one ``SystemExit``, nothing
-    started); resolve every judge once; skip families with no readouts file; unless
+    started) and lay it over the tier's per-family opts; resolve every judge once against the
+    tier's instrument (flag > env > tier table); skip families with no readouts file; unless
     ``dry_run=True``, preflight each distinct judge model once (a failure aborts with exit 3
     before any thread starts); then run the rest in a ``ThreadPoolExecutor`` with
     ``min(len(runnable), family_workers)`` workers (1 under ``dry_run`` so printed prompts
@@ -154,7 +158,12 @@ def run_families(
     in-flight ones to finish their current batch (they are recorded normally)."""
     env = os.environ if env is None else env
     opts = parse_opts(args.opt)
-    judges = {s.name: resolve(s.judge, flag=args.judge_model, env=env) for s in specs}
+    # the tier's per-family opts first, the user's opts= over them (off-tier if they differ)
+    opts_for = {s.name: {**family_opts(s.name, args.tier), **opts} for s in specs}
+    judges = {
+        s.name: resolve(tier_config(s.judge, s.name, args.tier), flag=args.judge_model, env=env)
+        for s in specs
+    }
     outcomes: dict[str, FamilyOutcome] = {}
     runnable: list[tuple[EvalSpec, Path]] = []
     for s in specs:
@@ -166,7 +175,7 @@ def run_families(
         else:
             runnable.append((s, readouts))
     # a family with a deterministic scorer of record makes no call unless opts=judge=mc
-    needs_llm = [s for s, _r in runnable if not s.scorer or opts.get("judge") == "mc"]
+    needs_llm = [s for s, _r in runnable if not s.scorer or opts_for[s.name].get("judge") == "mc"]
     if needs_llm and not args.dry_run:
         try:
             _seed_preflights({s.name: judges[s.name] for s in needs_llm})
@@ -180,7 +189,9 @@ def run_families(
     futures: dict[Future[FamilyOutcome], str] = {}
     try:
         for s, readouts in runnable:
-            fut = executor.submit(_one, s, args, readouts, out / s.name, judges[s.name], opts)
+            fut = executor.submit(
+                _one, s, args, readouts, out / s.name, judges[s.name], opts_for[s.name]
+            )
             futures[fut] = s.name
         for fut in as_completed(futures):
             oc = fut.result()
@@ -254,4 +265,5 @@ def run_manifest(
         "families": families,
         "judge_overrides": {"flag": args.judge_model, "env": env.get("WSBENCH_JUDGE_MODEL")},
         "readouts_root": str(readouts_root),
+        "tier": args.tier,
     }

@@ -15,10 +15,19 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
 `wsbench convert-gen-dir gen_dir=GEN out=F.jsonl kind=prose|tokens` converts the in-house
 `<gen_dir>/<label>/L###.jsonl` layout (id = directory name, layer = filename).
 
-## Judge layer (`llm.py`, `judge_config.py`)
+## Judge layer (`llm.py`, `judge_config.py`, `tiers.py`)
 - Default judge `google/gemini-3.8-flash` via OpenRouter, reasoning `{"effort": "minimal"}`.
   Pins: agentic_misalignment + jailbreak_recognition -> `claude-sonnet-5` (reasons: README
-  §Judges and the family READMEs). jlens runs all three stages on the default judge.
+  §Judges and the family READMEs). jlens runs all three stages on the default judge. This is
+  the `standard` tier; README §Judges has the `lite` / `max` table.
+- Tier resolver (`tiers.py`, plan 0014): `tier_config(spec.judge, family, tier)` is the identity
+  for `lite` / `standard` and moves `model` + non-empty `aux_models` to `claude-opus-5-5` under
+  `max` (agentic keeps Sonnet). The two family-judge call sites (`runner.run_families`,
+  `cli.JudgeFamily.execute`) resolve `resolve(tier_config(...), flag=, env=)` and lay the user's
+  `opts=` over `family_opts(name, tier)` (lite: jailbreak `read=lite`, agentic
+  `stride=S_LITE`); `baseline` / `capable` take no tier. `JudgeArgs.tier` -> `base_config`
+  stamps `config["tier"]`; jailbreak / agentic completeness compare against `tier_read` /
+  `tier_stride`. The tier never enters a fingerprint.
 - Override precedence and what `pinned_instrument` means: README §Judges (the bullets under
   the table); not restated here.
 - Routes by model id: `claude-*` -> Anthropic SDK (`ANTHROPIC_API_KEY`, or with no key and
@@ -80,8 +89,10 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   `KeyboardInterrupt` (unstarted families cancelled, in-flight ones finish their batch), else
   3 > 2 > 0. Writes `summary.md` + `run.json` = `{started, finished, families: {name: {status,
   error?, results_path, value, complete, pinned_instrument, spend_usd, n_calls?}},
-  judge_overrides: {flag, env}, readouts_root}`.
-- `report dir=DIR [json=True]`: table with `(lower is better)`, `n (k no readouts)`, macro row (in-row
+  judge_overrides: {flag, env}, readouts_root, tier}`; `summary.md` starts with `tier: X`.
+- `report dir=DIR [tier=X] [json=True]`: refuses (exit 2) a directory of mixed `config.tier`
+  unless `tier=X` (which filters and writes `summary_<X>.md`); floors follow the tier
+  (`cli.tier_floors`). Table with `(lower is better)`, `n (k no readouts)`, macro row (in-row
   `excluded:` + "Not in macro:" footnotes); rewrites `summary.md`. Exit 2 = not a directory /
   unreadable results.
 

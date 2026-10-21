@@ -102,7 +102,8 @@ def test_fail_soft_statuses_run_json_and_summary(offline, tmp_path, capsys):
     assert "- absent: skipped — no readouts at" in summary
 
     run = json.loads((out / "run.json").read_text())
-    assert set(run) == {"started", "finished", "families", "judge_overrides", "readouts_root"}
+    keys = {"started", "finished", "families", "judge_overrides", "readouts_root", "tier"}
+    assert set(run) == keys
     assert run["judge_overrides"] == {"flag": None, "env": None}
     assert run["readouts_root"] == str(root)
     fams = run["families"]

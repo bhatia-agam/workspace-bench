@@ -69,7 +69,9 @@ positions it read, and there is no `max_positions` option. `rows[].n_prompt_posi
 max(pos) + 1` over the rows present is informational.
 
 Layers default to all layers present in the file; `layers=` restricts them. `opts=stride=N`
-keeps positions with `pos % N == 0` (default 1). `opts=chunk_chars=N` sets the Stage B
+keeps positions with `pos % N == 0` (default 1; `tier=lite` sets `stride=8`, plan 0014). A
+result is `complete` only when its stride is its tier's (8 under `lite`, 1 under `standard` /
+`max`), so a strided `standard` run is incomplete. `opts=chunk_chars=N` sets the Stage B
 consolidator budget per chunk (default 60000, the source default).
 
 ## Stages
@@ -181,6 +183,8 @@ per-stage thinking setting above governs.
 **Cost.** Stage A is one call per prompt position: ≈ 51k calls per AO arm over the 32 items
 (the source's O-lens capture); the source's J-lens capture capped positions per item at 1024 at
 capture time, so a J-lens arm is smaller. Stages B and C are 32 + a few partial calls each.
+Under `tier=lite` (stride 8) Stage A is ≈ 6.4k calls, ≈ $40–50 of Sonnet 5 per arm. `tier=max`
+keeps this family on `claude-sonnet-5` (Opus 5.5 refuses Stage B).
 
 ## Judge prompts
 

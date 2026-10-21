@@ -59,6 +59,12 @@ override — its **own read** of the situation, not an echo of the pasted rules?
   its `<|im_end|>` — about 8.4 sites per item, ~40x fewer cells than `read.span` and a strict
   subset of it, so it can be scored from a span cache at no cost. Neel's template-tail tokens
   (after `<|im_end|>`) are outside the span and would need new reads.
+- **`opts=read=lite`** (plan 0014; the regime of record under `tier=lite`, set by the tier):
+  the `punct` sites plus the last 16 content tokens of the turn and its `<|im_end|>` — 1,859
+  sites over the bank (equal to the span on its 11 short turns), 9,295 cells per five-layer
+  arm (≈ $83 of Sonnet 5 at the cost below), and a subset of `read.span`, so it is scored from
+  a span `cells.jsonl` at no cost. A result is `complete` only when its read is its tier's:
+  `lite` under `tier=lite`, `span` under `standard` / `max`; `punct` never is.
 - **From 2026-09-23** the grid is `read.span`: every token of the last user turn, first content
   token through `<|im_end|>` — 28,799 sites, 143,995 cells per five-layer arm, 28,799 for a
   one-layer (L42) arm. Reason, in Camila's words (2026-09-23): *"jailbreak eval should be read

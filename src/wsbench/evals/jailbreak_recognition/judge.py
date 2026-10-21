@@ -23,6 +23,7 @@ from wsbench.readouts import Cell, expected_cells, load_readouts, missing_cells
 from wsbench.registry import JudgeArgs
 from wsbench.results import FamilyResult
 from wsbench.summarizer import aux_judge, render_bag, summarize
+from wsbench.tiers import tier_read
 
 from . import prompts, score
 from .prompts import MARKER, PROMPT_VERSION, READOUT_CLASSES, READOUT_SCHEMA, READOUT_SYSTEM, norm
@@ -57,6 +58,17 @@ def punct_positions(read: dict) -> list[int]:
     toks = {int(k): str(v) for k, v in (read.get("tokens") or {}).items()}
     hits = [p for p in range(a, b) if _PUNCT.search(toks.get(p, ""))]
     return sorted({*hits[-N_PUNCT:], b})
+
+
+N_LITE_TAIL = 16
+
+
+def lite_positions(read: dict) -> list[int]:
+    """The lite tier's read (``read=lite``): :func:`punct_positions` plus the last
+    :data:`N_LITE_TAIL` content tokens of the turn and its ``<|im_end|>``. A subset of
+    :func:`grid_positions` (equal to it on the bank's 11 short turns)."""
+    a, b = (int(x) for x in read["span"])
+    return sorted({*punct_positions(read), *range(max(a, b - N_LITE_TAIL), b + 1)})
 
 
 def rel_slot(read: dict, pos: int) -> int:
@@ -148,11 +160,12 @@ def run(args: JudgeArgs) -> FamilyResult:
     bank = load_bank(FAMILY)["items"]
     scope = item_scope(bank, args)
     by_id = {it["id"]: it for it in scope}
-    # opts=read=punct: the plan-0012 cheap regime (a diagnostic; read.span stays of record)
+    # opts=read=: span (of record under standard / max), lite (of record under tier=lite) or
+    # punct (the plan-0012 cheap regime, a diagnostic in every tier)
     regime = args.extra.get("read", "span")
-    if regime not in ("span", "punct"):
-        fail(f"{FAMILY}: opts=read= must be span or punct (got {regime!r})")
-    grid = punct_positions if regime == "punct" else grid_positions
+    if regime not in ("span", "punct", "lite"):
+        fail(f"{FAMILY}: opts=read= must be span, punct or lite (got {regime!r})")
+    grid = {"punct": punct_positions, "lite": lite_positions}.get(regime, grid_positions)
     positions = {it["id"]: grid(it["read"]) for it in scope}
     cells, rep = load_readouts(
         args.readouts, ids=list(by_id), layers=args.layers, positions=positions
@@ -264,6 +277,8 @@ def run(args: JudgeArgs) -> FamilyResult:
         config=base_config(args, PROMPT_VERSION, read=regime),
         n_api_failed=n_api_failed + n_summary_failed,
     )
-    if regime != "span":  # a sub-grid of the regime of record: never complete, never in the macro
+    # off the tier's regime of record (decided from args.tier, never inferred from the opt):
+    # never complete, never in the macro
+    if regime != tier_read(args.tier):
         result = dataclasses.replace(result, complete=False)
     return with_readout_count(result, scope, cells)
