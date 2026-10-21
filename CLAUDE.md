@@ -93,8 +93,8 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
 - `report dir=DIR [tier=X] [json=True]`: refuses (exit 2) a directory of mixed `config.tier`
   unless `tier=X` (which filters and writes `summary_<X>.md`); floors follow the tier
   (`cli.tier_floors`). Table with `(lower is better)`, `n (k no readouts)`, macro row (in-row
-  `excluded:` + "Not in macro:" footnotes); rewrites `summary.md`. Exit 2 = not a directory /
-  unreadable results.
+  `excluded:` + "Not in macro:" footnotes); rewrites `summary.md` (or `summary_<X>.md` under `tier=X`). Exit 2 = not a
+  directory / unreadable results / mixed tiers without `tier=` / no results under `tier=X`.
 
 ## Results contract (`results.py`)
 README §Results contract is the single statement (schema, `complete`, the macro row); `results.py`

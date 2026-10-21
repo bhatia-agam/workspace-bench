@@ -264,6 +264,9 @@ class ReportRuns(Command):
         if self.tier:
             tier = self.tier
             results = [r for r in results if r.config.get("tier", DEFAULT_TIER) == tier]
+            if not results:
+                print(f"no results under tier={tier} (found: {', '.join(found)})", file=sys.stderr)
+                return EXIT_USAGE
             summary = self.dir / f"summary_{tier}.md"
         elif len(found) > 1:
             print(

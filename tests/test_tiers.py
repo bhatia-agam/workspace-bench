@@ -277,6 +277,15 @@ def test_cli_judge_max_and_bad_tier(tmp_path, monkeypatch, capsys):
     r = write_jsonl(tmp_path / "r.jsonl", [{"id": "a", "layer": 1, "pos": 1, "samples": ["x"]}])
     assert main(["judge", "family=stub", f"readouts={r}", f"out={tmp_path / 'o'}", "tier=max"]) == 0
     assert seen == [(MAX_JUDGE, {}, "max")]
+    root = tmp_path / "root"
+    root.mkdir()
+    r.rename(root / "stub.jsonl")
+    out = tmp_path / "run"
+    assert main(["run", "families=stub", f"readouts_root={root}", f"out={out}", "tier=max"]) == 0
+    assert seen[-1] == (MAX_JUDGE, {}, "max")
+    assert json.loads((out / "run.json").read_text())["tier"] == "max"
+    assert json.loads((out / "stub" / "results.json").read_text())["config"]["tier"] == "max"
+    r = root / "stub.jsonl"
     for cmd in (
         ["judge", "family=stub", f"readouts={r}", "tier=ultra"],
         ["run", "all=True", f"readouts_root={tmp_path}", f"out={tmp_path}", "tier=ultra"],
@@ -352,6 +361,8 @@ def test_report_mixed_tiers_detect_and_filter(tmp_path, capsys):
     write_results(old / "b", _result("b", None))
     assert main(["report", f"dir={old}", "floors=False"]) == 0
     assert (old / "summary.md").read_text().startswith("tier: standard\n\n")
+    assert main(["report", f"dir={old}", "tier=max", "floors=False"]) == 2  # nothing under max
+    assert "no results under tier=max (found: standard)" in capsys.readouterr().err
 
 
 def test_floors_follow_the_tier(tmp_path, monkeypatch, capsys, families):
@@ -412,7 +423,8 @@ def test_freeze_prompt_only_refuses_off_standard(tmp_path, families):
     write("typo", tier="lite")
     with pytest.raises(ValueError, match="tier=lite"):
         po.freeze(tmp_path / "run", tmp_path / "po.json")
-    assert main(["freeze", "kind=prompt_only", f"src={tmp_path / 'run'}", "dst=x.json"]) == 2
+    dst = tmp_path / "x.json"
+    assert main(["freeze", "kind=prompt_only", f"src={tmp_path / 'run'}", f"dst={dst}"]) == 2
     write("typo", tier="standard")
     write(JB, tier="standard", read="lite")
     with pytest.raises(ValueError, match="read=lite"):

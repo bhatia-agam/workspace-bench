@@ -373,7 +373,9 @@ no tier: the read plan stays the full grid, so one set of readouts serves every 
 - Floors follow the tier: the regex prompt-only floors show in every tier, the Gemini-judged
   floors under `lite` / `standard` only, so under `max` the lucky-guess column is empty. Opus 5.5
   floors are not frozen yet (a known gap), and `freeze kind=prompt_only` refuses a result that
-  is not `standard` (or a jailbreak result not read on `span`).
+  is not `standard` (or a jailbreak result not read on `span`). A prompt-only floor is matched
+  on judge model only, so a future jailbreak floor (frozen on `span`) would also show beside
+  `lite` numbers; read it as a `span` floor.
 
 **Cost per five-layer arm.** Worked out offline from token counts and list prices: `spend_usd`
 is 0 on the Anthropic route (it records tokens, not dollars).
