@@ -63,7 +63,8 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   `prompt_version`, and `report` shows a floor only while the stamp matches.
   `text_inversion` builds the anti-text-inversion subset (`evals/baselines/anti_text_inversion.json`,
   plan 0014): `anti_text_inversion=True` sets each family's `items` to it with
-  `JudgeArgs.scope`, which `is_subset` ignores; ungated / stale / empty families exit 2. API
+  `JudgeArgs.scope`, which `is_subset` ignores; ungated / empty families are skipped
+  (`NotInScope`, exit 0), a stale or missing entry fails (exit 2). API
   `reasoning_extraction` refusals are recorded once and never retried or reworded.
 - Per-family read regimes, pass rules and floors are documented in each `evals/<family>/README.md`
   (the source of truth); do not restate them here. Ten families keep their own `judge.py` +

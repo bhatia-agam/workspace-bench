@@ -430,7 +430,6 @@ class NotInScope(SystemExit):
     runner reports it as skipped, not failed."""
 
 
-MACRO_MIN_ITEMS = 20
 
 
 def subset(family: str, dst: Path = FROZEN) -> list[str]:
@@ -439,9 +438,9 @@ def subset(family: str, dst: Path = FROZEN) -> list[str]:
 
 
 def subset_entry(family: str, dst: Path = FROZEN) -> dict[str, Any]:
-    """The frozen ATI entry of ``family``. Refuses (SystemExit, the runner's failed/2) a family
-    that was not gated, whose entry was gated under another judge instrument, or with no
-    surviving item: running such a family on its full bank under the flag would be silent."""
+    """The frozen ATI entry of ``family``. A family the scope leaves out by design (not gated,
+    or no surviving item) raises ``NotInScope`` (skipped by the runner); a missing entry or one
+    gated under another judge instrument raises ``SystemExit`` (failed/2, re-gate)."""
     from wsbench import registry
 
     frozen = json.loads(dst.read_text(encoding="utf-8")) if dst.exists() else {}
