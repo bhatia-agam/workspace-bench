@@ -430,8 +430,6 @@ class NotInScope(SystemExit):
     runner reports it as skipped, not failed."""
 
 
-
-
 def subset(family: str, dst: Path = FROZEN) -> list[str]:
     """The frozen ATI ids of ``family`` (see ``subset_entry``)."""
     return list(subset_entry(family, dst)["ids"])
