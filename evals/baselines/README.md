@@ -198,3 +198,108 @@ Excluded, neither frozen nor shown:
   is precision against the J-lens top-10. A prompt-only description has its own invention rate
   (measured 0.53) and its own precision (0.19), but neither bounds a lens, and putting them in
   the floor column invites reading them in the wrong direction.
+
+## Anti-text-inversion subset (`anti_text_inversion.json`)
+
+Which items a strong reader of the prompt alone cannot answer. Claude Opus 5.5 is shown each
+item's prompt text (the item's render with the Qwen3.6-27B tokenizer, special tokens kept,
+decoded through its LAST read position; no activation) under the prompt-only template, three
+independent times (API default sampling and thinking). Each answer is written as a prose
+readout at the item's last read position, layer 44 (brew: every read cell; arithmetic: every
+position at its native layers, where the judge reads one frozen cell; buggy_code: its native
+layer), and judged by the family's own scorer of record with `judge_model=claude-opus-5-5`
+(regex families stay regex). One cell per item keeps it to one guess per draw: the Anthropic
+route runs the judge at T=1, so one answer copied into many cells would be pass@N.
+
+An item is in the subset iff all three draws are decided AND fail. Any pass makes it
+`invertible`; an undecided draw with no pass (judge failure, no usable answer) makes it
+`unverified`, not in the subset. buggy_code has no pass bit: a draw passes at a 1-10 score of
+6 or more (the rubric's "right consequence or right mechanism" band). Per-item verdicts come
+from each family's own rows (any row passes -> pass), checked against the family's reported
+rate. Plan: `plans/0014-anti-text-inversion.md`.
+
+The template (byte-identical to the stock-Qwen prompt-only floor's):
+
+```
+Below is a prompt that was given to a language model, cut off at a specific token. The token in question is the final token of the text below: {token!r}.
+
+<prompt>
+{prefix}
+</prompt>
+
+What would a language model be thinking about on this token? Please write me a summary for this token.
+```
+
+**API policy refusals.** The Anthropic API refuses many of these requests with
+`stop_reason=refusal`, `stop_details.category="reasoning_extraction"` ("restrictions on reverse
+engineering or duplicating model outputs"). Nearly every prompt whose prefix ends at an open
+assistant turn is refused. Refusals are recorded once and never retried or reworded: resampling
+or rephrasing until the classifier lets a request through would route around the policy. A
+refused draw is undecided. A family where more than 20% of items have a refused draw is not
+gated, because its answered items are a refusal-selected sample rather than the bank.
+
+Gated (2026-10-23, 149 items in total):
+
+| family | bank | ATI | invertible | unverified | Opus pass@1 (mean of 3) |
+|---|---|---|---|---|---|
+| association | 100 | 3 | 97 | 0 | 0.95 |
+| basic_readout | 100 | 10 | 90 | 0 | 0.85 |
+| basic_readout_mt | 100 | 2 | 97 | 1 | 0.93 |
+| buggy_code | 49 | 1 | 48 | 0 | 0.97 |
+| multihop | 100 | 0 | 100 | 0 | 1.00 |
+| multihop_mt | 100 | 7 | 93 | 0 | 0.90 |
+| multihop_mt_v2 | 70 | 1 | 69 | 0 | 0.96 |
+| multilingual | 100 | 0 | 100 | 0 | 1.00 |
+| multilingual_mt | 100 | 15 | 85 | 0 | 0.81 |
+| multilingual_multihop | 98 | 7 | 91 | 0 | 0.91 |
+| multilingual_typo | 100 | 2 | 98 | 0 | 0.95 |
+| poetry | 100 | 22 | 78 | 0 | 0.66 |
+| relational_multihop | 100 | 0 | 100 | 0 | 1.00 |
+| typo | 100 | 0 | 100 | 0 | 1.00 |
+| typo_mt | 100 | 2 | 98 | 0 | 0.94 |
+| wrong_bridge | 100 | 76 | 23 | 1 | 0.14 |
+| wrong_bridge_true | 100 | 1 | 98 | 1 | 0.98 |
+
+Not gated (`_not_gated`; the flag refuses these):
+
+| family | reason |
+|---|---|
+| hallucination | an invention rate over free generation, no item answer to invert |
+| jlens_concept_pr | precision against the J-lens top-10, not a bar a lens clears |
+| agentic_misalignment | a design score netted against foils, no item pass bit |
+| multi_concept_directed_modulation | the prompt dictates the concepts; prompt-only is 1.0 |
+| arithmetic_intermediates | policy refusal: 80% of items had a draw refused by the API (reasoning_extraction); the answered items are not the bank |
+| brew_intermediates | policy refusal: 100% of items had a draw refused by the API (reasoning_extraction); the answered items are not the bank |
+| chain_intermediates | policy refusal: 98% of items had a draw refused by the API (reasoning_extraction); the answered items are not the bank |
+| conjunctive_association | policy refusal: 100% of items had a draw refused by the API (reasoning_extraction); the answered items are not the bank |
+| directed_modulation | policy refusal: 63% of items had a draw refused by the API (reasoning_extraction); the answered items are not the bank |
+| jailbreak_recognition | policy refusal: 65% of items had a draw refused by the API (reasoning_extraction); the answered items are not the bank |
+| moral_rationale | policy refusal: 96% of items had a draw refused by the API (reasoning_extraction); the answered items are not the bank |
+| role_bound_association | policy refusal: 100% of items had a draw refused by the API (reasoning_extraction); the answered items are not the bank |
+| user_modeling | policy refusal: 100% of items had a draw refused by the API (reasoning_extraction); the answered items are not the bank |
+
+**Reading it.** Opus 5.5 recovers the answer from the text alone on most items of most families:
+its per-draw prompt-only rate is far above the stock-Qwen prompt-only floor (association 0.95
+against 0.32). The survivors are mostly model-specific labels (wrong_bridge, where Opus recalls
+the true fact but the target is Qwen's wrong bridge; basic_readout's preference items, such as
+the favourite chess piece) and poetry's planned rhyme word. Some are scorer technicalities
+rather than ignorance: Opus names the concept but not in a form the regex contract credits
+(multilingual_mt), or describes a scene without naming the target (association). The subset is
+"fails the family's scorer", the same bar a lens faces, not "Opus has no idea".
+
+```
+wsbench text-inversion stage=build                 # prompts (tokenizer only)
+wsbench text-inversion stage=ask                   # 3 Opus draws; ANTHROPIC_API_KEY unset -> ant profile
+wsbench text-inversion stage=readouts
+wsbench run families=<gated> readouts_root=outputs/baselines/text_inversion/readouts/draw<d> \
+    out=outputs/baselines/text_inversion/judged/draw<d> judge_model=claude-opus-5-5 layers=44 allow_missing=True
+wsbench run families=buggy_code ... judge_model=claude-opus-5-5 allow_missing=True   # native layers
+wsbench text-inversion stage=gate                  # -> this file
+wsbench run all=True readouts_root=DIR out=DIR anti_text_inversion=True
+```
+
+Under the flag each gated family's `items` is its subset and `results.json` carries
+`config.scope = "anti_text_inversion"` and `extras.ati_n_bank`; the subset alone does not make
+a run incomplete. A family whose current judge `prompt_version` differs from the entry's
+`instrument` is refused until re-gated. `report` leaves out the floor columns under this scope
+(they were measured on the full banks) and the macro skips families with fewer than 20 items.

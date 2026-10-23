@@ -10,6 +10,7 @@ from pathlib import Path
 from typing import Literal, Protocol
 
 from wsbench import llm, mcjudge
+from wsbench.baselines import text_inversion
 from wsbench.family import fail
 from wsbench.judge_config import ResolvedJudge, resolve
 from wsbench.llm import JudgeConfigError
@@ -39,6 +40,7 @@ class Options(Protocol):
     concurrency: int
     rpm: float
     dry_run: bool
+    anti_text_inversion: bool
     opt: list[str]
 
 
@@ -69,13 +71,19 @@ def judge_family(
     opts: Mapping[str, str],
 ) -> FamilyResult:
     """Run one family with an already-resolved judge and pre-parsed ``opts=``; write its
-    ``results.json`` and print the one-line summary."""
+    ``results.json`` and print the one-line summary. Under ``anti_text_inversion`` the family's
+    items are its frozen subset (``text_inversion.subset``, which exits for an ungated or stale
+    family) and the result is stamped with the scope."""
+    items, scope, ati = args.items, "", None
+    if getattr(args, "anti_text_inversion", False):
+        ati = text_inversion.subset_entry(spec.name)
+        items, scope = list(ati["ids"]), text_inversion.SCOPE
     jargs = JudgeArgs(
         readouts=readouts,
         out=out,
         judge=judge,
         layers=args.layers,
-        items=args.items,
+        items=items,
         limit=args.limit,
         allow_missing=args.allow_missing,
         concurrency=args.concurrency,
@@ -83,8 +91,13 @@ def judge_family(
         dry_run=args.dry_run,
         aux_models=spec.judge.aux_models,
         extra=dict(opts),
+        scope=scope,
     )
     result = spec.run(jargs)
+    if ati is not None:
+        result.config["scope"] = scope
+        result.extras["ati_n_bank"] = ati["n_bank"]
+        result.extras["ati_judge_model"] = ati["judge_model"]
     path = write_results(out, result)
     spend = result.counts.get("spend_usd", 0.0) or 0.0
     print(

@@ -1,6 +1,35 @@
 # 0014: anti-text-inversion subset (`anti_text_inversion=True`)
 
-Status: rev 1. Owner: Camila. Date: 2026-10-23.
+Status: implemented, rev 2 (folds in the plan critique and the first live run). Owner: Camila. Date: 2026-10-23.
+
+## Rev 2 changes
+
+- **Write policy (critique B3).** The Anthropic route drops `temperature`, so the Opus judge runs
+  at T=1 and the same answer copied into N cells is pass@N. Each draw's answer is now written at
+  the item's LAST read position only, at layer 44 (`layers=44`, `allow_missing=True`).
+  Exceptions: arithmetic (its default `cells=frozen` judge reads one pre-registered cell, so
+  every position at the item's native layers costs nothing) and brew (its rule counts emission
+  cells against off-trajectory colours; every read cell is written). buggy_code is written at its
+  per-item native layer, without `layers=`.
+- **Read-site token (B4).** Every row carries the producer's own `decoded[pos]` as `token`.
+- **Per-item verdicts (B1, B2).** Each family's item rule is applied by a gate-side adapter over
+  that family's own rows, and checked against the family's reported value. An item with no
+  usable answer in a draw is undecided in that draw, whatever its judge made of the missing cell.
+- **Pre-existing test touched (sanctioned):** `tests/test_registry.py::test_repo_root_and_judge_args`
+  pins `JudgeArgs`' exact field set; it gains `"scope"` (the new field) and nothing else.
+- **Not gated, added:** `multi_concept_directed_modulation` (the prompt dictates the concepts;
+  prompt-only is 1.0, already excluded from the prompt-only floor).
+- **Policy refusals (first live run).** The API refuses many prompt-only requests with
+  `stop_reason=refusal`, `stop_details.category="reasoning_extraction"` ("restrictions on
+  reverse engineering or duplicating model outputs"). Almost every prompt whose prefix ends at
+  an open assistant turn is refused: conjunctive and role_bound 100/100 items, user_modeling 95,
+  chain 116/120, moral 179/200, brew 90, DM 59, arithmetic 411/596, jailbreak 24/86. Plain-text
+  families are unaffected. Refusals are recorded once and **never retried or reworded**
+  (resampling or rephrasing until the classifier lets a request through would route around the
+  policy). A refused draw is undecided, so a refused item cannot enter the subset. A family
+  where more than 20% of items have a refused draw is **not gated** ("policy refusal"): its
+  answered items are a refusal-selected sample, not the bank. Whether to gate those families
+  another way is Camila's call.
 
 ## Why
 
@@ -37,10 +66,8 @@ FAIL the family's own scorer of record:
    the last read position's prefix contains every earlier read position's prefix, so this is the
    most informed (strictest) prompt-only reader of the item.
 3. **Readouts.** Each draw's answer is written as a prose readout (`samples: [answer]`) into
-   EVERY read position of the item at ONE layer (`L = 44`; families whose grid lacks 44 use
-   their own grid's middle layer — buggy_code / arithmetic 56, mcdm 52, the six-layer
-   association grid 44). Replicating the same text across positions means any-position equals
-   one answer, so the reader gets one guess per draw, exactly like the prompt-only floor.
+   the item's write cells (rev 2: the last read position at layer 44; see Rev 2 changes), so
+   the reader gets one guess per draw, like the prompt-only floor.
 4. **Scoring.** Each draw's readouts are judged by the family's own scorer of record with
    `judge_model=claude-opus-5-5` for every LLM-judged family (regex families stay regex) and
    `layers=<L>`. Per item, a draw is **pass** / **fail** / **undecided** (`rows[*]["pass"]`

@@ -30,6 +30,7 @@ class JudgeArgs:
     dry_run: bool
     aux_models: Mapping[str, str] = field(default_factory=dict)  # e.g. {"summarizer": model}
     extra: dict[str, str] = field(default_factory=dict)  # family options from opts=key=value
+    scope: str = ""  # "anti_text_inversion": `items` is that frozen subset, not a partial run
 
 
 @dataclass(frozen=True)

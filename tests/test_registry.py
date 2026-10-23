@@ -68,4 +68,5 @@ def test_repo_root_and_judge_args():
         "dry_run",
         "aux_models",
         "extra",
+        "scope",
     }
