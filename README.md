@@ -64,7 +64,9 @@ Output layout: `<out>/<family>/results.json` (the result) and `cells.jsonl` (eve
 verdict, so a re-run only pays for what is missing); `<out>/summary.md` (the table) and
 `run.json` (per-family status and spend). Shared keys on `judge` and `run`: `layers=20,36`,
 `items=a,b`, `limit=N`, `allow_missing=True`, `dry_run=True`, `judge_model=`, `concurrency=`,
-`rpm=`, `opts=k=v`; `--help` prints a command's keys, `--show` the resolved config.
+`rpm=`, `opts=k=v`, `anti_text_inversion=True` (judge each family only on the items Opus 5.5
+cannot answer from the prompt alone; see [Baselines](#baselines)); `--help` prints a command's
+keys, `--show` the resolved config.
 
 **Judging is the contract; producing is optional.** `wsbench plan` writes, per family, one JSONL
 row per item saying what to render and how, which token positions to read and at which layers;
@@ -270,6 +272,17 @@ each family, only while the floor's stamp matches the family's current prompt ve
 prompt-only floors of arithmetic_intermediates (stamp `arith-free-2026-09-16`) and buggy_code
 (metric `net_S2`, stamp `buggy-2026-09-16`) predate the current instruments and are not drawn
 until re-measured.
+
+**Anti-text-inversion subset.** `anti_text_inversion=True` on `judge` / `run` scores each family
+only on the items that Claude Opus 5.5, shown the prompt text and asked what the model is
+thinking (no activation), fails on all three of three draws under the family's own scorer. It
+keeps a lens from being credited for reading the prompt. The subset is frozen in
+`evals/baselines/anti_text_inversion.json` (`wsbench text-inversion stage=...` rebuilds it).
+Families not gated or with no surviving item are skipped under the flag (never run on the full
+bank); a family gated under another judge instrument fails until re-gated. Families with fewer
+than 20 surviving items are shown but left out of the macro, which today leaves wrong_bridge and
+poetry. Details and the per-family counts are in
+[`evals/baselines/README.md`](evals/baselines/README.md#anti-text-inversion-subset-anti_text_inversionjson).
 
 ## Porting to another model
 

@@ -11,14 +11,14 @@ from pathlib import Path
 import pydra
 
 from wsbench import readplan, registry, runner
-from wsbench.baselines import lucky_guessing, prompt_only
+from wsbench.baselines import lucky_guessing, prompt_only, text_inversion
 from wsbench.capable import questions as capable_questions
 from wsbench.capable import run as capable_run
 from wsbench.judge_config import JudgeConfig, resolve
 from wsbench.llm import JudgeConfigError
 from wsbench.readouts import convert_gen_dir, convert_read_json
 from wsbench.registry import EvalSpec
-from wsbench.results import FamilyResult, macro, markdown_table, read_results
+from wsbench.results import ATI_SCOPE, FamilyResult, macro, markdown_table, read_results
 from wsbench.runner import FamilyOutcome, parse_opts
 
 EXIT_USAGE = 2
@@ -98,6 +98,7 @@ class JudgeOptions(Command):
         self.concurrency = 64
         self.rpm = 240.0
         self.dry_run = False
+        self.anti_text_inversion = False  # judge each family on its frozen ATI subset only
         self.opts = None  # comma list of KEY=VALUE family options; a value cannot hold a comma
         self.opt: list[str] = []  # the parsed pairs; filled by finalize
 
@@ -110,6 +111,9 @@ class JudgeOptions(Command):
         self.concurrency = _int(self.concurrency)
         self.rpm = float(self.rpm)
         self.dry_run = _bool(self.dry_run)
+        self.anti_text_inversion = _bool(self.anti_text_inversion)
+        if self.anti_text_inversion and self.items is not None:
+            raise ValueError("anti_text_inversion=True picks the items itself; drop items=")
         self.opt = _strs(self.opts) or []
         self.opts = None
 
@@ -162,6 +166,14 @@ class JudgeFamily(JudgeOptions):
             opts = parse_opts(self.opt)
             judge = resolve(spec.judge, flag=self.judge_model, env=os.environ)
             runner.judge_family(spec, self, self.readouts, out, judge=judge, opts=opts)
+        except text_inversion.NotInScope as e:
+            print(f"skipped: {e.code}", file=sys.stderr)
+            return 0
+        except SystemExit as e:
+            if not isinstance(e.code, str):
+                raise
+            print(e.code, file=sys.stderr)
+            return EXIT_USAGE
         except JudgeConfigError as e:
             print(f"judge config error: {e}", file=sys.stderr)
             return EXIT_JUDGE_CONFIG
@@ -248,7 +260,10 @@ class ReportRuns(Command):
             print(f"unreadable results: {e}", file=sys.stderr)
             return EXIT_USAGE
         m = macro(results)
-        floors = floor_columns() if self.floors else None
+        # The frozen floors were measured on the full banks; on the ATI subset they do not apply
+        # (Opus prompt-only is 0 there by construction).
+        ati = any(r.config.get("scope") == ATI_SCOPE for r in results)
+        floors = floor_columns() if self.floors and not ati else None
         table = markdown_table(results, m, floors=floors)
         (self.dir / "summary.md").write_text(table, encoding="utf-8")
         if self.json:
@@ -640,6 +655,48 @@ class Freeze(Command):
         return 0
 
 
+class TextInversion(Command):
+    """The anti-text-inversion gate, one stage per call: ``stage=build`` (prompts; tokenizer),
+    ``ask`` (three Opus 5.5 prompt-only answers per item), ``readouts`` (draw readout files),
+    ``gate`` (judged draws -> ``evals/baselines/anti_text_inversion.json``). Judge each draw with
+    ``wsbench run`` in between (see ``evals/baselines/README.md``)."""
+
+    def __init__(self) -> None:
+        super().__init__()
+        self.stage = pydra.REQUIRED
+        self.out = ""
+        self.families = None
+        self.draws = text_inversion.DRAWS
+        self.concurrency = 64
+        self.dst = ""
+
+    def finalize(self) -> None:
+        self.stage = str(self.stage)
+        self.out = _path(self.out) if self.out else text_inversion.OUT
+        self.families = _strs(self.families)
+        self.draws = _int(self.draws)
+        self.concurrency = _int(self.concurrency)
+        self.dst = _path(self.dst) if self.dst else text_inversion.FROZEN
+
+    def execute(self) -> int:
+        if self.stage == "build":
+            text_inversion.build(self.out, self.families)
+        elif self.stage == "ask":
+            n = text_inversion.ask(self.out, self.draws, self.concurrency, self.families)
+            print(f"{n} answers failed or were refused (refusals are final)")
+        elif self.stage == "readouts":
+            print(text_inversion.write_readouts(self.out, self.draws))
+        elif self.stage == "gate":
+            frozen = text_inversion.gate(self.out, self.draws, self.dst)
+            for fam, e in frozen.items():
+                print(f"{fam}: {e['n_ati']}/{e['n_bank']} ATI ({e['n_invertible']} invertible)")
+            print(f"wrote {self.dst}")
+        else:
+            print(f"unknown stage {self.stage!r}; build | ask | readouts | gate", file=sys.stderr)
+            return EXIT_USAGE
+        return 0
+
+
 COMMANDS: dict[str, type[Command]] = {
     "list": ListFamilies,
     "judge": JudgeFamily,
@@ -650,6 +707,7 @@ COMMANDS: dict[str, type[Command]] = {
     "plan": Plan,
     "produce": Produce,
     "freeze": Freeze,
+    "text-inversion": TextInversion,
     "convert-gen-dir": ConvertGenDir,
     "convert-read-json": ConvertReadJson,
 }
