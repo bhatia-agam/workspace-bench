@@ -128,12 +128,23 @@ ATI_SCOPE = "anti_text_inversion"
 ATI_MACRO_MIN_ITEMS = 20  # an ATI family with fewer surviving items is shown, not averaged
 
 
-def macro(results: Sequence[FamilyResult]) -> dict:
-    """Mean ``value`` over complete pass-rate families; the rest are listed with a reason."""
+def macro(results: Sequence[FamilyResult], superseded: Mapping[str, str] | None = None) -> dict:
+    """Mean ``value`` over complete pass-rate families; the rest are listed with a reason.
+
+    A superseded family (``EvalSpec.superseded_by``; ``superseded`` defaults to the registry's
+    map) is always excluded, reason ``"superseded"``, whether or not its successor was run."""
+    if superseded is None:
+        from wsbench import registry  # lazy: registry imports this module
+
+        superseded = registry.superseded()
     included: list[FamilyResult] = []
     excluded: list[dict[str, str]] = []
     for r in results:
-        if r.metric != "pass_rate":
+        if r.family in superseded:
+            excluded.append(
+                {"family": r.family, "reason": "superseded", "by": superseded[r.family]}
+            )
+        elif r.metric != "pass_rate":
             excluded.append({"family": r.family, "reason": "metric"})
         elif not r.complete:
             excluded.append({"family": r.family, "reason": "incomplete"})
@@ -201,5 +212,7 @@ def markdown_table(
                 reason = e["reason"]
                 if reason == "metric" and e["family"] in by_family:
                     reason = f"metric ({by_family[e['family']].metric})"
+                elif reason == "superseded" and e.get("by"):
+                    reason = f"superseded by {e['by']}"
                 lines.append(f"- {e['family']}: {reason}")
     return "\n".join(lines) + "\n"

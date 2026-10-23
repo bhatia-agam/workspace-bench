@@ -54,7 +54,7 @@ MC_CHANCE_LABEL = (
 REGEX_JUDGE = ResolvedJudge(model=SCORER, reasoning=None, pinned=True, source="family")
 
 
-def mt_family(name: str, title: str, *, calls_per_arm: str) -> EvalSpec:
+def mt_family(name: str, title: str, *, calls_per_arm: str, superseded_by: str = "") -> EvalSpec:
     return EvalSpec(
         name=name,
         title=title,
@@ -68,6 +68,7 @@ def mt_family(name: str, title: str, *, calls_per_arm: str) -> EvalSpec:
         calls_per_arm=f"0 (regex); {calls_per_arm} with opts=judge=mc",
         sources="",
         scorer=SCORER,
+        superseded_by=superseded_by,
     )
 
 

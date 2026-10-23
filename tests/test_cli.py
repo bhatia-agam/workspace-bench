@@ -341,3 +341,41 @@ def test_string_bools_and_numeric_items(stub, readouts, tmp_path):
     assert main([*argv[:-1], "dry_run=true", "items=1,2", "layers=36"]) == 0
     c = read_results(out).config
     assert c["dry_run"] is True and c["items"] == ["1", "2"] and c["layers"] == [36]
+
+
+def test_run_all_skips_superseded_but_names_still_run(stub, readouts, tmp_path, capsys):
+    def old_run(args: JudgeArgs) -> FamilyResult:
+        return dataclasses.replace(_stub_run(args), family="old")
+
+    register(
+        EvalSpec(
+            name="old",
+            title="Old",
+            group="logic",
+            bank=Path("evals/old/items.json"),
+            judge=JudgeConfig(model=GEMINI),
+            metric="pass_rate",
+            higher_is_better=True,
+            run=old_run,
+            superseded_by="stub",
+        )
+    )
+    root = readouts.parent
+    (root / "old.jsonl").write_text(readouts.read_text())
+
+    out = tmp_path / "all"
+    assert main(["run", "all=True", f"readouts_root={root}", f"out={out}"]) == 0
+    assert (out / "stub" / "results.json").exists()
+    assert not (out / "old").exists()  # superseded: not part of "all"
+    assert "old" not in json.loads((out / "run.json").read_text())["families"]
+
+    out = tmp_path / "named"
+    assert main(["run", "families=old,stub", f"readouts_root={root}", f"out={out}"]) == 0
+    assert (out / "old" / "results.json").exists()  # an explicit name still runs
+    summary = (out / "summary.md").read_text()
+    assert "| old |" in summary and "old (superseded)" in summary  # ...but stays out of macro
+
+    out = tmp_path / "incl"
+    argv = ["run", "all=True", "include_superseded=True", f"readouts_root={root}", f"out={out}"]
+    assert main(argv) == 0
+    assert (out / "old" / "results.json").exists()

@@ -449,3 +449,25 @@ def test_gate_merge_keeps_skipped_families_and_takes_generators(tmp_path, two_fa
 def test_gate_refuses_design_exclusions(tmp_path, two_families):
     with pytest.raises(ValueError, match="excluded by design"):
         ti.gate(tmp_path, dst=None, families=["hallucination"])
+
+
+def test_gated_families_skip_superseded(real_families):
+    fams = ti.gated_families()
+    assert "multihop_mt" not in fams and "multihop_mt_v2" in fams
+
+
+def test_gate_carries_a_superseded_entry_over(tmp_path, two_families, monkeypatch):
+    monkeypatch.setattr(registry, "superseded", lambda: {"old": "fam"})
+    out = tmp_path / "o"
+    for d in range(3):
+        _answers(out, d, [("fam", i, "ok") for i in "abcde"] + [("refused", "x", "refusal")])
+        rows = [{"id": i, "pass": False} for i in "abcde"]
+        _results(out / "judged" / f"draw{d}" / "fam", "fam", rows, 0.0)
+    dst = tmp_path / "ati.json"
+    prior = {"instrument": "v1", "ids": ["q"], "n_bank": 9, "judge_model": "m"}
+    dst.write_text(json.dumps({"old": prior, "gone": prior}))
+    ti.gate(out, dst=dst)
+    written = json.loads(dst.read_text())
+    assert written["old"] == prior  # superseded: kept as frozen, not re-gated
+    assert "gone" not in written  # anything else is rebuilt from this gate run only
+    assert written["fam"]["ids"] == list("abcde")

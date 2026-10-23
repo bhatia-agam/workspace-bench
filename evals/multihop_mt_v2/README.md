@@ -123,6 +123,9 @@ scorer reads.
 
 - 2026-10-15: frozen with the regex contract of record. It has no readouts yet; until it does,
   it is never `complete` and never in the macro.
+- 2026-10-23: the default multihop multi-token family (plan 0015). It replaced `multihop_mt`,
+  which is now superseded: out of every `all` default and of the macro, runnable by name only.
+  A complete v2 result enters the macro in v1's place.
 
 ## Readouts
 

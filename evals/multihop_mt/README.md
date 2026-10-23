@@ -23,8 +23,16 @@ racehorse spent his breeding career at" → Claiborne Farm 10/10. The per-item t
 [`AUDIT_2026-10-15.md`](AUDIT_2026-10-15.md).
 
 The bank is frozen and unchanged. Its shortcut-gated successor is
-[`multihop_mt_v2`](../multihop_mt_v2/README.md) (plan 0013). Once v2 has readouts, v1 leaves
-the macro.
+[`multihop_mt_v2`](../multihop_mt_v2/README.md) (plan 0013).
+
+## Superseded (2026-10-23)
+
+`multihop_mt_v2` replaced this family as the default (plan 0015): `EvalSpec.superseded_by` is
+`multihop_mt_v2`, so v1 left the macro (listed with reason `superseded`, even when run by name)
+and every `all` default (`run all=True`, `plan`, `capable`, `baseline`, `text-inversion`). It
+stays registered and runnable by name (`families=multihop_mt`, or `run all=True
+include_superseded=True`), and its frozen anti-text-inversion subset is carried over by the gate
+rather than re-gated.
 
 ## Scoring
 

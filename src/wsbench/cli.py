@@ -126,7 +126,7 @@ class ListFamilies(Command):
         rows = [
             (
                 s.name,
-                s.group,
+                f"{s.group} (superseded by {s.superseded_by})" if s.superseded_by else s.group,
                 _n_items(s),
                 s.metric,
                 s.scorer or s.judge.model,
@@ -184,6 +184,7 @@ class RunFamilies(JudgeOptions):
     def __init__(self) -> None:
         super().__init__()
         self.all = False
+        self.include_superseded = False  # all=True also runs superseded families (multihop_mt)
         self.families = None
         self.readouts_root = pydra.REQUIRED
         self.out = pydra.REQUIRED
@@ -193,6 +194,7 @@ class RunFamilies(JudgeOptions):
     def finalize(self) -> None:
         super().finalize()
         self.all = _bool(self.all)
+        self.include_superseded = _bool(self.include_superseded)
         self.families = _strs(self.families)
         self.readouts_root = _path(self.readouts_root)
         self.out = _path(self.out)
@@ -202,7 +204,12 @@ class RunFamilies(JudgeOptions):
             raise ValueError("pass exactly one of all=True or families=a,b")
 
     def execute(self) -> int:
-        names = sorted(registry.FAMILIES) if self.all else list(self.families or [])
+        if self.all:
+            names = sorted(registry.FAMILIES)
+            if not self.include_superseded:
+                names = registry.drop_superseded(names)
+        else:
+            names = list(self.families or [])  # an explicit name runs even if superseded
         for n in names:
             if n not in registry.FAMILIES:
                 return _unknown(n)
@@ -373,7 +380,11 @@ class Baseline(Command):
         self.out = _path(self.out)
 
     def execute(self) -> int:
-        names = list(lucky_guessing.BUILDERS) if self.families == ["all"] else self.families
+        names = (
+            registry.drop_superseded(lucky_guessing.BUILDERS)
+            if self.families == ["all"]
+            else self.families
+        )
         unknown = [f for f in names if f not in lucky_guessing.BUILDERS]
         bad = [v for v in self.variant if v not in lucky_guessing.VARIANTS]
         if unknown or bad or not self.variant or self.draws < 1:
@@ -453,7 +464,11 @@ class Capable(Command):
         self.out = _path(self.out) if self.out else None
 
     def execute(self) -> int:
-        names = sorted(capable_questions.BUILDERS) if self.families == ["all"] else self.families
+        names = (
+            registry.drop_superseded(sorted(capable_questions.BUILDERS))
+            if self.families == ["all"]
+            else self.families
+        )
         unknown = [f for f in names if f not in capable_questions.BUILDERS]
         if unknown:
             for f in unknown:
@@ -526,7 +541,11 @@ class Plan(Command):
         self.limit = _int(self.limit)
 
     def execute(self) -> int:
-        names = readplan.families() if self.families == ["all"] else self.families
+        names = (
+            registry.drop_superseded(readplan.families())
+            if self.families == ["all"]
+            else self.families
+        )
         unknown = [f for f in names if f not in readplan.families()]
         if unknown:
             print(f"unknown families {unknown}; known {readplan.families()}", file=sys.stderr)

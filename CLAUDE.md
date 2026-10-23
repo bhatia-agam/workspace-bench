@@ -75,6 +75,10 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
 - `opts=key=value,k2=v2` fills `JudgeArgs.extra`; `aux_models` comes from the family `JudgeConfig`.
   `EvalSpec.calls_per_arm` / `.sources` feed `wsbench list`; every non-empty `sources` must
   appear verbatim in README §Credits and NOTICE.md (`tests/test_readme.py`).
+- `EvalSpec.superseded_by="<successor>"` retires a family without deleting it (plan 0015;
+  today only `multihop_mt` -> `multihop_mt_v2`): `results.macro` excludes it (reason
+  `superseded`) and every `all` default skips it via `registry.drop_superseded`; it stays
+  runnable by explicit name (`run` also takes `include_superseded=True`).
 
 ## Driver (`runner.py`, `cli.py`)
 - `run all=True|families=a,b readouts_root=DIR out=DIR [family_workers=3] [json=True]` reads

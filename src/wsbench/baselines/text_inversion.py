@@ -45,7 +45,8 @@ def gated_families() -> list[str]:
     from wsbench import registry
 
     registry.load_all()
-    return sorted(f for f in registry.FAMILIES if f not in NOT_GATED)
+    # superseded families (multihop_mt) are not re-gated; gate() carries their frozen entry over
+    return registry.drop_superseded(sorted(f for f in registry.FAMILIES if f not in NOT_GATED))
 
 
 def read_layer(family: str, grid: Iterable[int]) -> int:
@@ -357,7 +358,9 @@ def gate(
     """Fold ``judged/draw{d}/<family>/results.json`` into the frozen subset. A family with more
     than ``MAX_REFUSED_SHARE`` policy-refused items goes to ``_not_gated`` with its counts.
     With ``families`` (e.g. a second answerer for families the first one could not gate) only
-    those are gated and MERGED into the existing ``dst``; every entry records its ``answerer``."""
+    those are gated and MERGED into the existing ``dst``; every entry records its ``answerer``.
+    A full gate (no ``families``) skips superseded families and carries their existing ``dst``
+    entry over unchanged."""
     from wsbench import readplan, registry
 
     registry.load_all()
@@ -432,6 +435,11 @@ def gate(
         merged.update(frozen)
         dst.write_text(json.dumps(merged, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
     elif dst is not None:
+        # a superseded family is not re-gated: its last frozen entry is carried over unchanged
+        prior = json.loads(dst.read_text(encoding="utf-8")) if dst.exists() else {}
+        for fam in registry.superseded():
+            if fam in prior and fam not in frozen:
+                frozen[fam] = prior[fam]
         merged = {
             "_source": {
                 "answerer": f"{answerer} (each entry's `answerer` is authoritative)",
