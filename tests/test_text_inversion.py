@@ -429,3 +429,23 @@ def test_gate_families_merges_a_second_answerer(tmp_path, two_families):
     assert written["other"] == {"answerer": "claude-opus-5-5", "ids": ["z"]}  # untouched
     assert "fam" not in written["_not_gated"] and "keep" in written["_not_gated"]
     assert written["_source"] == {"answerer": "claude-opus-5-5"}
+
+
+def test_gate_merge_keeps_skipped_families_and_takes_generators(tmp_path, two_families):
+    dst = tmp_path / "ati.json"
+    dst.write_text(json.dumps({"_not_gated": {"fam": "opus refused", "refused": "opus refused"}}))
+    out = tmp_path / "o"
+    for d in range(3):
+        _answers(out, d, [("fam", i, "ok") for i in "abcde"] + [("refused", "x", "refusal")])
+    # nothing judged: "fam" is skipped and must keep its old reason; "refused" is re-refused
+    ti.gate(out, dst=dst, families=(f for f in ["fam", "refused"]), answerer="s")
+    ng = json.loads(dst.read_text())["_not_gated"]
+    assert ng["fam"] == "opus refused"
+    assert (
+        ng["refused"].startswith("opus refused; policy refusal") and "answerer s" in ng["refused"]
+    )
+
+
+def test_gate_refuses_design_exclusions(tmp_path, two_families):
+    with pytest.raises(ValueError, match="excluded by design"):
+        ti.gate(tmp_path, dst=None, families=["hallucination"])

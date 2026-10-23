@@ -278,14 +278,14 @@ Not gated (`_not_gated`; skipped under the flag, as are the families with no sur
 | jlens_concept_pr | precision against the J-lens top-10, not a bar a lens clears |
 | agentic_misalignment | a design score netted against foils, no item pass bit |
 | multi_concept_directed_modulation | the prompt dictates the concepts; prompt-only is 1.0 |
-| brew_intermediates | policy refusal: 56% of items had a draw refused by the API (reasoning_extraction, answerer claude-sonnet-5-5); the answered items are not the bank |
-| chain_intermediates | policy refusal: 34% of items had a draw refused by the API (reasoning_extraction, answerer claude-sonnet-5-5); the answered items are not the bank |
-| conjunctive_association | policy refusal: 100% of items had a draw refused by the API (reasoning_extraction, answerer claude-sonnet-5-5); the answered items are not the bank |
-| directed_modulation | policy refusal: 52% of items had a draw refused by the API (reasoning_extraction, answerer claude-sonnet-5-5); the answered items are not the bank |
-| jailbreak_recognition | policy refusal: 83% of items had a draw refused by the API (reasoning_extraction, answerer claude-sonnet-5-5); the answered items are not the bank |
-| moral_rationale | policy refusal: 90% of items had a draw refused by the API (reasoning_extraction, answerer claude-sonnet-5-5); the answered items are not the bank |
-| role_bound_association | policy refusal: 99% of items had a draw refused by the API (reasoning_extraction, answerer claude-sonnet-5-5); the answered items are not the bank |
-| user_modeling | policy refusal: 100% of items had a draw refused by the API (reasoning_extraction, answerer claude-sonnet-5-5); the answered items are not the bank |
+| brew_intermediates | policy refusal: 100% of items had a draw refused by the API (reasoning_extraction); the answered items are not the bank; policy refusal: 56% of items had a draw refused by the API (reasoning_extraction, answerer claude-sonnet-5-5); the answered items are not the bank |
+| chain_intermediates | policy refusal: 98% of items had a draw refused by the API (reasoning_extraction); the answered items are not the bank; policy refusal: 34% of items had a draw refused by the API (reasoning_extraction, answerer claude-sonnet-5-5); the answered items are not the bank |
+| conjunctive_association | policy refusal: 100% of items had a draw refused by the API (reasoning_extraction); the answered items are not the bank; policy refusal: 100% of items had a draw refused by the API (reasoning_extraction, answerer claude-sonnet-5-5); the answered items are not the bank |
+| directed_modulation | policy refusal: 63% of items had a draw refused by the API (reasoning_extraction); the answered items are not the bank; policy refusal: 52% of items had a draw refused by the API (reasoning_extraction, answerer claude-sonnet-5-5); the answered items are not the bank |
+| jailbreak_recognition | policy refusal: 65% of items had a draw refused by the API (reasoning_extraction); the answered items are not the bank; policy refusal: 83% of items had a draw refused by the API (reasoning_extraction, answerer claude-sonnet-5-5); the answered items are not the bank |
+| moral_rationale | policy refusal: 96% of items had a draw refused by the API (reasoning_extraction); the answered items are not the bank; policy refusal: 90% of items had a draw refused by the API (reasoning_extraction, answerer claude-sonnet-5-5); the answered items are not the bank |
+| role_bound_association | policy refusal: 100% of items had a draw refused by the API (reasoning_extraction); the answered items are not the bank; policy refusal: 99% of items had a draw refused by the API (reasoning_extraction, answerer claude-sonnet-5-5); the answered items are not the bank |
+| user_modeling | policy refusal: 100% of items had a draw refused by the API (reasoning_extraction); the answered items are not the bank; policy refusal: 100% of items had a draw refused by the API (reasoning_extraction, answerer claude-sonnet-5-5); the answered items are not the bank |
 
 **Reading it.** Opus 5.5 recovers the answer from the text alone on most items of most families:
 its per-draw prompt-only rate is far above the stock-Qwen prompt-only floor (association 0.95

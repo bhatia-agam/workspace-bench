@@ -361,10 +361,14 @@ def gate(
     from wsbench import readplan, registry
 
     registry.load_all()
+    fams = list(families) if families else None
+    excluded = sorted(set(fams or []) & set(NOT_GATED))
+    if excluded:
+        raise ValueError(f"gate: {excluded} are excluded by design (NOT_GATED), not gateable")
     frozen: dict[str, Any] = {}
     not_gated: dict[str, str] = {}
     answers = [latest_answers(out / "answers" / f"draw{d}.jsonl") for d in range(draws)]
-    for fam in list(families) if families else gated_families():
+    for fam in fams or gated_families():
         ids = [s.id for s in readplan.plan(fam)]
         share = refusal_share(out, fam, ids, draws)
         if share > MAX_REFUSED_SHARE:
@@ -414,19 +418,23 @@ def gate(
             "ids": ati,
             "draw_pass": draw_pass,
         }
-    if dst is not None and families:
+    if dst is not None and fams:
         merged = json.loads(dst.read_text(encoding="utf-8")) if dst.exists() else {}
         old = merged.get("_not_gated", {})
-        for fam in families:
-            old.pop(fam, None)
+        # only families this call decided are replaced; a skipped (unjudged) one keeps its
+        # existing entry or reason. A family refused again keeps the earlier answerer's reason.
+        for fam in set(frozen) | set(not_gated):
+            prior = old.pop(fam, None)
             merged.pop(fam, None)
+            if fam in not_gated and prior and prior != not_gated[fam]:
+                not_gated[fam] = f"{prior}; {not_gated[fam]}"
         merged["_not_gated"] = {**NOT_GATED, **old, **not_gated}
         merged.update(frozen)
         dst.write_text(json.dumps(merged, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
     elif dst is not None:
         merged = {
             "_source": {
-                "answerer": f"{ANSWERER} (each entry's `answerer` is authoritative)",
+                "answerer": f"{answerer} (each entry's `answerer` is authoritative)",
                 "draws": draws,
                 "template": TEMPLATE,
                 "prefix": "item render (wsbench.produce.render, Qwen3.6-27B tokenizer, special "
