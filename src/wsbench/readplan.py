@@ -80,6 +80,12 @@ class ReadSpec:
 #   suffix_text_then_tail       `suffix_text` plus every token after it (the chat tail)
 
 
+# DeepSeek-V4 chat-role tokens. Their bars are U+FF5C FULLWIDTH VERTICAL LINE, the model's actual
+# spelling; they are written as escapes so the character is explicit (and ruff RUF001-clean).
+V4_USER = "<\uff5cUser\uff5c>"
+V4_ASSISTANT = "<\uff5cAssistant\uff5c>"
+
+
 def _clean(tok: str) -> str:
     return tok.replace("Ġ", " ").replace("▁", " ").replace("Ċ", "\n")
 
@@ -124,9 +130,9 @@ def resolve(rule: dict[str, Any], tokens: list[str]) -> list[int]:
 
 def _from_last_sentence_start(tokens: list[str]) -> list[int]:
     n = len(tokens)
-    if "<｜User｜>" in tokens:  # DeepSeek-V4 subject (v4-flash-subject branch): no im_end
-        u0 = max(i for i, t in enumerate(tokens) if t == "<｜User｜>")
-        u1 = next((i for i in range(u0 + 1, n) if tokens[i] == "<｜Assistant｜>"), n)
+    if V4_USER in tokens:  # DeepSeek-V4 subject (v4-flash-subject branch): no im_end
+        u0 = max(i for i, t in enumerate(tokens) if t == V4_USER)
+        u1 = next((i for i in range(u0 + 1, n) if tokens[i] == V4_ASSISTANT), n)
         body = list(range(u0 + 1, u1))
         if not body:
             return list(range(u1, n))
