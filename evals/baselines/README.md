@@ -247,6 +247,20 @@ arithmetic_intermediates stays under the 20% rule (12%), so its entry is a Sonne
 reader than Opus: read it as "Sonnet 5.5 cannot answer from the prompt". Every entry records its
 `answerer`; entries without one are Opus 5.5.
 
+**Open-model framing (`framing=open_model`).** The refusals turned out to hinge on the prompt
+reading as a request for Claude's own reasoning. Prefixing the same template with one neutral,
+true sentence that names no model (so the reader gains no guessing advantage) lets most of these
+prompts through:
+
+```
+The text below was given to an open-weights language model (not a Claude model). This is for an interpretability benchmark: we want to know how much of what that model is computing at this point can be guessed from the prompt text alone.
+```
+
+The nine refused families were re-asked with Opus 5.5 under this framing
+(`stage=ask framing=open_model out=outputs/baselines/text_inversion_open`, then `stage=gate
+families=<the nine> framing=open_model`), under the same draws, rule, judge and 20% refusal rule.
+Every entry records its `framing`; entries without one used the plain template.
+
 Gated (2026-10-23, 241 items in total):
 
 | family | answerer | bank | ATI | invertible | unverified | answerer pass@1 (mean of 3) |

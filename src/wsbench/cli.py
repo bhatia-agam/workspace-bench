@@ -690,10 +690,12 @@ class TextInversion(Command):
         self.concurrency = 64
         self.dst = ""
         self.answerer = text_inversion.ANSWERER
+        self.framing = "plain"  # or "open_model" (text_inversion.FRAMINGS)
 
     def finalize(self) -> None:
         self.stage = str(self.stage)
         self.answerer = str(self.answerer)
+        self.framing = str(self.framing)
         self.out = _path(self.out) if self.out else text_inversion.OUT
         self.families = _strs(self.families)
         self.draws = _int(self.draws)
@@ -705,14 +707,19 @@ class TextInversion(Command):
             text_inversion.build(self.out, self.families)
         elif self.stage == "ask":
             n = text_inversion.ask(
-                self.out, self.draws, self.concurrency, self.families, self.answerer
+                self.out, self.draws, self.concurrency, self.families, self.answerer, self.framing
             )
             print(f"{n} answers failed or were refused (refusals are final)")
         elif self.stage == "readouts":
             print(text_inversion.write_readouts(self.out, self.draws))
         elif self.stage == "gate":
             frozen = text_inversion.gate(
-                self.out, self.draws, self.dst, families=self.families, answerer=self.answerer
+                self.out,
+                self.draws,
+                self.dst,
+                families=self.families,
+                answerer=self.answerer,
+                framing=self.framing,
             )
             for fam, e in frozen.items():
                 print(f"{fam}: {e['n_ati']}/{e['n_bank']} ATI ({e['n_invertible']} invertible)")

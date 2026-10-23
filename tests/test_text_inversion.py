@@ -471,3 +471,35 @@ def test_gate_carries_a_superseded_entry_over(tmp_path, two_families, monkeypatc
     assert written["old"] == prior  # superseded: kept as frozen, not re-gated
     assert "gone" not in written  # anything else is rebuilt from this gate run only
     assert written["fam"]["ids"] == list("abcde")
+
+
+def test_open_model_framing_prefixes_the_plain_template_and_is_recorded():
+    import asyncio
+
+    assert ti.FRAMINGS["open_model"] == ti.OPEN_MODEL_NOTE + ti.TEMPLATE
+    assert "Qwen" not in ti.OPEN_MODEL_NOTE  # names no model: no guessing advantage
+    seen: list[str] = []
+
+    class Msg:
+        stop_reason = "end_turn"
+        content = (SimpleNamespace(type="text", text="an answer"),)
+        usage = SimpleNamespace(output_tokens=3, input_tokens=5)
+
+    class Client:
+        class messages:  # noqa: N801
+            @staticmethod
+            async def create(**kw):
+                seen.append(kw["messages"][0]["content"])
+                return Msg()
+
+    row = {"family": "f", "id": "a", "prefix": "Fact: x is", "token": " is"}
+    r = asyncio.run(ti._ask_one(Client(), asyncio.Semaphore(1), row, 0, "m", "open_model"))
+    assert seen[0].startswith(ti.OPEN_MODEL_NOTE) and "Fact: x is" in seen[0]
+    assert (r["framing"], r["answerer"], r["answer"]) == ("open_model", "m", "an answer")
+    with pytest.raises(ValueError, match="framing"):
+        ti.ask(Path("unused"), framing="qwen")
+
+
+def test_open_model_note_is_verbatim_in_the_baselines_readme():
+    readme = (registry.REPO_ROOT / "evals" / "baselines" / "README.md").read_text()
+    assert ti.OPEN_MODEL_NOTE.strip() in readme

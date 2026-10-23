@@ -5,6 +5,7 @@ subset. See ``evals/baselines/README.md`` and ``plans/0014-anti-text-inversion.m
 import asyncio
 import datetime as dt
 import json
+import random
 from collections.abc import Iterable
 from pathlib import Path
 from typing import Any
@@ -16,6 +17,7 @@ OUT = REPO_ROOT / "outputs" / "baselines" / "text_inversion"
 ANSWERER = "claude-opus-5-5"
 DRAWS = 3
 MAX_TOKENS = 16000
+RATE_LIMIT_WAITS = 120  # 429 waits (30-60 s each) that do not count against ATTEMPTS
 ATTEMPTS = 12  # thinking shares the budget; a 200 with no text block is a failure
 # The source repo's `verbalizer.PROMPT_ONLY_SUMMARY_TEMPLATE`, byte-identical to the stock-Qwen
 # prompt-only floor so the two floors read the same question.
@@ -26,6 +28,15 @@ TEMPLATE = (
     "What would a language model be thinking about on this token? Please write me a summary "
     "for this token."
 )
+# The same question with a neutral note that the model is not Claude. Under TEMPLATE the API
+# refuses nearly every chat-tail prompt (reasoning_extraction); with this note most go through.
+# It names no model, so the reader gains no guessing advantage (Camila, 2026-10-23).
+OPEN_MODEL_NOTE = (
+    "The text below was given to an open-weights language model (not a Claude model). This is "
+    "for an interpretability benchmark: we want to know how much of what that model is "
+    "computing at this point can be guessed from the prompt text alone.\n\n"
+)
+FRAMINGS: dict[str, str] = {"plain": TEMPLATE, "open_model": OPEN_MODEL_NOTE + TEMPLATE}
 NOT_GATED: dict[str, str] = {
     "hallucination": "an invention rate over free generation, no item answer to invert",
     "jlens_concept_pr": "precision against the J-lens top-10, not a bar a lens clears",
@@ -112,12 +123,20 @@ def _text(msg: Any) -> str:
 
 
 async def _ask_one(
-    client: Any, sem: asyncio.Semaphore, row: dict[str, Any], draw: int, answerer: str = ANSWERER
+    client: Any,
+    sem: asyncio.Semaphore,
+    row: dict[str, Any],
+    draw: int,
+    answerer: str = ANSWERER,
+    framing: str = "plain",
 ) -> dict:
-    content = TEMPLATE.format(prefix=row["prefix"], token=row["token"])
+    content = FRAMINGS[framing].format(prefix=row["prefix"], token=row["token"])
     err = ""
+    n_waits = 0
     async with sem:
-        for attempt in range(ATTEMPTS):
+        attempt = -1
+        while attempt + 1 < ATTEMPTS:
+            attempt += 1
             try:
                 msg = await client.messages.create(
                     model=answerer,
@@ -126,6 +145,12 @@ async def _ask_one(
                 )
             except Exception as exc:  # retried, then recorded; never scores
                 err = f"{type(exc).__name__}: {exc}"[:300]
+                # a 429 is the shared org quota: wait it out without spending an attempt
+                if type(exc).__name__ == "RateLimitError" and n_waits < RATE_LIMIT_WAITS:
+                    n_waits += 1
+                    attempt -= 1
+                    await asyncio.sleep(30 + 30 * random.random())
+                    continue
                 await asyncio.sleep(min(60, 2 * 2**attempt))
                 continue
             text = _text(msg)
@@ -140,6 +165,7 @@ async def _ask_one(
                     "id": row["id"],
                     "draw": draw,
                     "answerer": answerer,
+                    "framing": framing,
                     "answer": "",
                     "refused": True,
                     "refusal_category": getattr(details, "category", None),
@@ -153,6 +179,7 @@ async def _ask_one(
                 "id": row["id"],
                 "draw": draw,
                 "answerer": answerer,
+                "framing": framing,
                 "answer": text,
                 "stop_reason": msg.stop_reason,
                 "out_tokens": msg.usage.output_tokens,
@@ -169,7 +196,12 @@ async def _ask_one(
 
 
 async def _ask(
-    out: Path, draws: int, concurrency: int, families: set[str] | None, answerer: str
+    out: Path,
+    draws: int,
+    concurrency: int,
+    families: set[str] | None,
+    answerer: str,
+    framing: str = "plain",
 ) -> int:
     from anthropic import AsyncAnthropic
 
@@ -180,12 +212,20 @@ async def _ask(
     client = AsyncAnthropic(max_retries=4, timeout=900)
     # Preflight on a neutral prompt outside the bank, so a resume never re-sends a bank prompt
     # (a refused one stays refused) and a policy refusal cannot masquerade as a dead credential.
-    try:
-        msg = await client.messages.create(
-            model=answerer, max_tokens=64, messages=[{"role": "user", "content": "Say OK."}]
-        )
-    except Exception as exc:
-        raise SystemExit(f"preflight failed, aborting before the batch: {exc}") from exc
+    from anthropic import RateLimitError
+
+    for attempt in range(RATE_LIMIT_WAITS + 1):
+        try:
+            msg = await client.messages.create(
+                model=answerer, max_tokens=64, messages=[{"role": "user", "content": "Say OK."}]
+            )
+            break
+        except RateLimitError as exc:  # a shared org quota, not a dead credential: wait it out
+            if attempt == RATE_LIMIT_WAITS:
+                raise SystemExit(f"preflight still rate-limited, aborting: {exc}") from exc
+            await asyncio.sleep(60)
+        except Exception as exc:
+            raise SystemExit(f"preflight failed, aborting before the batch: {exc}") from exc
     print(f"preflight OK: {_text(msg)[:40]!r}", flush=True)
     sem = asyncio.Semaphore(concurrency)
     n_fail = 0
@@ -195,7 +235,7 @@ async def _ask(
         done = {(r["family"], r["id"]) for r in rows if not r["error"] or is_refusal(r)}
         todo = [r for r in prompts if (r["family"], r["id"]) not in done]
         print(f"draw {d}: {len(todo)} to ask ({len(done)} cached)", flush=True)
-        tasks = [asyncio.create_task(_ask_one(client, sem, r, d, answerer)) for r in todo]
+        tasks = [asyncio.create_task(_ask_one(client, sem, r, d, answerer, framing)) for r in todo]
         with path.open("a", encoding="utf-8") as fh:
             for i, fut in enumerate(asyncio.as_completed(tasks), 1):
                 res = await fut
@@ -213,13 +253,16 @@ def ask(
     concurrency: int = 64,
     families: Iterable[str] | None = None,
     answerer: str = ANSWERER,
+    framing: str = "plain",
 ) -> int:
     """Three independent answers per item from ``answerer`` (default Opus 5.5), appended to
     ``answers/draw{d}.jsonl``; use a separate ``out`` per answerer.
     resumable (an item with an error-free answer is not re-asked). Auth: the Anthropic SDK's
     own discovery (run with ``ANTHROPIC_API_KEY`` unset to use the ``ant`` profile)."""
     fams = set(families) if families else None
-    return asyncio.run(_ask(out, draws, concurrency, fams, answerer))
+    if framing not in FRAMINGS:
+        raise ValueError(f"framing must be one of {sorted(FRAMINGS)}, not {framing!r}")
+    return asyncio.run(_ask(out, draws, concurrency, fams, answerer, framing))
 
 
 def is_refusal(r: dict[str, Any]) -> bool:
@@ -354,6 +397,7 @@ def gate(
     *,
     families: Iterable[str] | None = None,
     answerer: str = ANSWERER,
+    framing: str = "plain",
 ) -> dict[str, Any]:
     """Fold ``judged/draw{d}/<family>/results.json`` into the frozen subset. A family with more
     than ``MAX_REFUSED_SHARE`` policy-refused items goes to ``_not_gated`` with its counts.
@@ -377,7 +421,8 @@ def gate(
         if share > MAX_REFUSED_SHARE:
             not_gated[fam] = (
                 f"policy refusal: {share:.0%} of items had a draw refused by the API "
-                f"(reasoning_extraction, answerer {answerer}); the answered items are not the bank"
+                f"(reasoning_extraction, answerer {answerer}, framing {framing}); the answered "
+                f"items are not the bank"
             )
             print(f"  {fam}: {share:.0%} refused, not gated")
             continue
@@ -402,6 +447,7 @@ def gate(
         cfg = results[0]["config"]
         frozen[fam] = {
             "answerer": answerer,
+            "framing": framing,
             "instrument": registry.get(fam).judge.prompt_version,
             "judge_model": cfg.get("judge_model"),
             "layers_judged": cfg.get("layers_judged") or cfg.get("layers"),
