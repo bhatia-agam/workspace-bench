@@ -404,3 +404,48 @@ def test_judge_command_exit_codes_under_the_flag(offline, tmp_path, monkeypatch,
     assert main([*base, "family=ungated"]) == 0
     assert main([*base, "family=stale"]) == 2
     assert "re-gate" in capsys.readouterr().err
+
+
+def test_gate_families_merges_a_second_answerer(tmp_path, two_families):
+    dst = tmp_path / "ati.json"
+    dst.write_text(
+        json.dumps(
+            {
+                "_source": {"answerer": "claude-opus-5-5"},
+                "_not_gated": {"fam": "policy refusal: 90% (opus)", "keep": "policy refusal"},
+                "other": {"answerer": "claude-opus-5-5", "ids": ["z"]},
+            }
+        )
+    )
+    out = tmp_path / "o"
+    for d in range(3):
+        _answers(out, d, [("fam", i, "ok") for i in "abcde"])
+        rows = [{"id": i, "pass": i == "a"} for i in "abcde"]
+        _results(out / "judged" / f"draw{d}" / "fam", "fam", rows, 1 / 5)
+    frozen = ti.gate(out, dst=dst, families=["fam"], answerer="claude-sonnet-5-5")
+    assert frozen["fam"]["answerer"] == "claude-sonnet-5-5"
+    written = json.loads(dst.read_text())
+    assert written["fam"]["ids"] == ["b", "c", "d", "e"]
+    assert written["other"] == {"answerer": "claude-opus-5-5", "ids": ["z"]}  # untouched
+    assert "fam" not in written["_not_gated"] and "keep" in written["_not_gated"]
+    assert written["_source"] == {"answerer": "claude-opus-5-5"}
+
+
+def test_gate_merge_keeps_skipped_families_and_takes_generators(tmp_path, two_families):
+    dst = tmp_path / "ati.json"
+    dst.write_text(json.dumps({"_not_gated": {"fam": "opus refused", "refused": "opus refused"}}))
+    out = tmp_path / "o"
+    for d in range(3):
+        _answers(out, d, [("fam", i, "ok") for i in "abcde"] + [("refused", "x", "refusal")])
+    # nothing judged: "fam" is skipped and must keep its old reason; "refused" is re-refused
+    ti.gate(out, dst=dst, families=(f for f in ["fam", "refused"]), answerer="s")
+    ng = json.loads(dst.read_text())["_not_gated"]
+    assert ng["fam"] == "opus refused"
+    assert (
+        ng["refused"].startswith("opus refused; policy refusal") and "answerer s" in ng["refused"]
+    )
+
+
+def test_gate_refuses_design_exclusions(tmp_path, two_families):
+    with pytest.raises(ValueError, match="excluded by design"):
+        ti.gate(tmp_path, dst=None, families=["hallucination"])

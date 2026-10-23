@@ -65,7 +65,9 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   plan 0014): `anti_text_inversion=True` sets each family's `items` to it with
   `JudgeArgs.scope`, which `is_subset` ignores; ungated / empty families are skipped
   (`NotInScope`, exit 0), a stale or missing entry fails (exit 2). API
-  `reasoning_extraction` refusals are recorded once and never retried or reworded.
+  `reasoning_extraction` refusals are recorded once and never retried or reworded. A second
+  answerer (`answerer=`) gates families into the same file with `stage=gate families=...`
+  (merge); each entry records its `answerer` (none = Opus 5.5).
 - Per-family read regimes, pass rules and floors are documented in each `evals/<family>/README.md`
   (the source of truth); do not restate them here. Ten families keep their own `judge.py` +
   `score.py`: Camila's nine originals (agentic, jailbreak, hallucination, jlens_concept_pr,
