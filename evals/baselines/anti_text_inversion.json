@@ -15,15 +15,14 @@
   "jlens_concept_pr": "precision against the J-lens top-10, not a bar a lens clears",
   "agentic_misalignment": "a design score netted against foils, no item pass bit",
   "multi_concept_directed_modulation": "the prompt dictates the concepts; prompt-only is 1.0",
-  "arithmetic_intermediates": "policy refusal: 80% of items had a draw refused by the API (reasoning_extraction); the answered items are not the bank",
-  "brew_intermediates": "policy refusal: 100% of items had a draw refused by the API (reasoning_extraction); the answered items are not the bank",
-  "chain_intermediates": "policy refusal: 98% of items had a draw refused by the API (reasoning_extraction); the answered items are not the bank",
-  "conjunctive_association": "policy refusal: 100% of items had a draw refused by the API (reasoning_extraction); the answered items are not the bank",
-  "directed_modulation": "policy refusal: 63% of items had a draw refused by the API (reasoning_extraction); the answered items are not the bank",
-  "jailbreak_recognition": "policy refusal: 65% of items had a draw refused by the API (reasoning_extraction); the answered items are not the bank",
-  "moral_rationale": "policy refusal: 96% of items had a draw refused by the API (reasoning_extraction); the answered items are not the bank",
-  "role_bound_association": "policy refusal: 100% of items had a draw refused by the API (reasoning_extraction); the answered items are not the bank",
-  "user_modeling": "policy refusal: 100% of items had a draw refused by the API (reasoning_extraction); the answered items are not the bank"
+  "brew_intermediates": "policy refusal: 56% of items had a draw refused by the API (reasoning_extraction, answerer claude-sonnet-5-5); the answered items are not the bank",
+  "chain_intermediates": "policy refusal: 34% of items had a draw refused by the API (reasoning_extraction, answerer claude-sonnet-5-5); the answered items are not the bank",
+  "conjunctive_association": "policy refusal: 100% of items had a draw refused by the API (reasoning_extraction, answerer claude-sonnet-5-5); the answered items are not the bank",
+  "directed_modulation": "policy refusal: 52% of items had a draw refused by the API (reasoning_extraction, answerer claude-sonnet-5-5); the answered items are not the bank",
+  "jailbreak_recognition": "policy refusal: 83% of items had a draw refused by the API (reasoning_extraction, answerer claude-sonnet-5-5); the answered items are not the bank",
+  "moral_rationale": "policy refusal: 90% of items had a draw refused by the API (reasoning_extraction, answerer claude-sonnet-5-5); the answered items are not the bank",
+  "role_bound_association": "policy refusal: 99% of items had a draw refused by the API (reasoning_extraction, answerer claude-sonnet-5-5); the answered items are not the bank",
+  "user_modeling": "policy refusal: 100% of items had a draw refused by the API (reasoning_extraction, answerer claude-sonnet-5-5); the answered items are not the bank"
  },
  "association": {
   "instrument": "bank-2026-10-10",
@@ -8603,6 +8602,3104 @@
     true
    ],
    "album_performer-Q167554-birth_year": [
+    true,
+    true,
+    true
+   ]
+  }
+ },
+ "arithmetic_intermediates": {
+  "answerer": "claude-sonnet-5-5",
+  "instrument": "arith-free-2026-09-23",
+  "judge_model": "claude-opus-5-5",
+  "layers_judged": [
+   56,
+   60
+  ],
+  "n_bank": 596,
+  "n_ati": 95,
+  "n_invertible": 485,
+  "n_unverified": 16,
+  "refused_share": 0.12080536912751678,
+  "pass_at_1": [
+   0.8088,
+   0.8074,
+   0.8011
+  ],
+  "ids": [
+   "frac-000",
+   "frac-001",
+   "frac-002",
+   "frac-003",
+   "frac-006",
+   "frac-007",
+   "frac-008",
+   "frac-009",
+   "frac-010",
+   "frac-011",
+   "frac-014",
+   "frac-016",
+   "frac-017",
+   "frac-018",
+   "frac-020",
+   "frac-021",
+   "frac-023",
+   "frac-024",
+   "frac-025",
+   "frac-026",
+   "frac-027",
+   "frac-029",
+   "frac-030",
+   "frac-032",
+   "frac-033",
+   "frac-034",
+   "frac-036",
+   "frac-037",
+   "frac-038",
+   "frac-039",
+   "frac-042",
+   "frac-043",
+   "frac-046",
+   "frac-048",
+   "frac-050",
+   "frac-052",
+   "frac-053",
+   "frac-054",
+   "frac-055",
+   "frac-056",
+   "frac-057",
+   "frac-058",
+   "frac-060",
+   "frac-061",
+   "frac-064",
+   "frac-065",
+   "frac-066",
+   "frac-067",
+   "frac-068",
+   "frac-069",
+   "frac-072",
+   "frac-074",
+   "frac-076",
+   "frac-077",
+   "frac-078",
+   "frac-080",
+   "frac-081",
+   "frac-082",
+   "frac-083",
+   "frac-085",
+   "frac-086",
+   "frac-087",
+   "frac-088",
+   "frac-089",
+   "frac-090",
+   "frac-091",
+   "frac-092",
+   "frac-094",
+   "frac-095",
+   "frac-096",
+   "frac-097",
+   "frac-099",
+   "frac-100",
+   "frac-101",
+   "frac-102",
+   "frac-103",
+   "frac-104",
+   "frac-105",
+   "frac-106",
+   "frac-107",
+   "frac-108",
+   "frac-109",
+   "frac-110",
+   "frac-111",
+   "frac-114",
+   "frac-116",
+   "frac-117",
+   "frac-120",
+   "frac-122",
+   "frac-123",
+   "frac-126",
+   "frac-127",
+   "frac-128",
+   "frac-130",
+   "frac-131"
+  ],
+  "draw_pass": {
+   "absval-052": [
+    true,
+    true,
+    true
+   ],
+   "absval-065": [
+    true,
+    true,
+    null
+   ],
+   "absval-084": [
+    true,
+    true,
+    true
+   ],
+   "absval-093": [
+    true,
+    true,
+    true
+   ],
+   "absval-098": [
+    null,
+    null,
+    null
+   ],
+   "absval-330": [
+    null,
+    true,
+    true
+   ],
+   "absval-334": [
+    true,
+    true,
+    null
+   ],
+   "absval-336": [
+    true,
+    true,
+    true
+   ],
+   "absval-337": [
+    true,
+    true,
+    true
+   ],
+   "absval-338": [
+    true,
+    true,
+    true
+   ],
+   "absval-339": [
+    null,
+    true,
+    true
+   ],
+   "absval-340": [
+    null,
+    null,
+    null
+   ],
+   "absval-347": [
+    true,
+    true,
+    true
+   ],
+   "absval-348": [
+    true,
+    true,
+    true
+   ],
+   "absval-353": [
+    true,
+    true,
+    true
+   ],
+   "absval-354": [
+    true,
+    true,
+    true
+   ],
+   "absval-356": [
+    true,
+    true,
+    true
+   ],
+   "absval-357": [
+    true,
+    true,
+    true
+   ],
+   "absval-358": [
+    true,
+    true,
+    true
+   ],
+   "absval-359": [
+    true,
+    true,
+    null
+   ],
+   "absval-360": [
+    true,
+    true,
+    true
+   ],
+   "absval-361": [
+    true,
+    true,
+    true
+   ],
+   "absval-362": [
+    true,
+    true,
+    true
+   ],
+   "absval-363": [
+    true,
+    true,
+    true
+   ],
+   "absval-366": [
+    true,
+    true,
+    true
+   ],
+   "addmul-000": [
+    true,
+    true,
+    true
+   ],
+   "addmul-002": [
+    true,
+    true,
+    true
+   ],
+   "addmul-003": [
+    true,
+    true,
+    true
+   ],
+   "addmul-004": [
+    true,
+    true,
+    true
+   ],
+   "addmul-006": [
+    true,
+    true,
+    true
+   ],
+   "addmul-007": [
+    true,
+    true,
+    true
+   ],
+   "addmul-008": [
+    true,
+    true,
+    true
+   ],
+   "addmul-009": [
+    true,
+    true,
+    true
+   ],
+   "addmul-011": [
+    true,
+    true,
+    true
+   ],
+   "addmul-012": [
+    true,
+    true,
+    true
+   ],
+   "addmul-013": [
+    true,
+    true,
+    true
+   ],
+   "addmul-014": [
+    true,
+    true,
+    true
+   ],
+   "addmul-015": [
+    true,
+    true,
+    true
+   ],
+   "addmul-016": [
+    true,
+    true,
+    true
+   ],
+   "addmul-017": [
+    true,
+    true,
+    true
+   ],
+   "addmul-018": [
+    true,
+    true,
+    true
+   ],
+   "addmul-019": [
+    true,
+    true,
+    true
+   ],
+   "addmul-020": [
+    true,
+    true,
+    true
+   ],
+   "addmul-023": [
+    true,
+    true,
+    true
+   ],
+   "addmul-025": [
+    true,
+    true,
+    true
+   ],
+   "addmul-026": [
+    true,
+    true,
+    true
+   ],
+   "addmul-027": [
+    true,
+    true,
+    true
+   ],
+   "addmul-030": [
+    true,
+    true,
+    true
+   ],
+   "addmul-031": [
+    true,
+    true,
+    true
+   ],
+   "addmul-032": [
+    true,
+    true,
+    true
+   ],
+   "addmul-033": [
+    true,
+    true,
+    true
+   ],
+   "addmul-034": [
+    true,
+    true,
+    true
+   ],
+   "addmul-035": [
+    true,
+    true,
+    true
+   ],
+   "addmul-036": [
+    true,
+    true,
+    true
+   ],
+   "addmul-039": [
+    true,
+    true,
+    true
+   ],
+   "addmul-040": [
+    true,
+    true,
+    true
+   ],
+   "addmul-042": [
+    true,
+    true,
+    true
+   ],
+   "addmul-043": [
+    true,
+    true,
+    true
+   ],
+   "addmul-044": [
+    true,
+    true,
+    true
+   ],
+   "addmul-048": [
+    true,
+    true,
+    true
+   ],
+   "addmul-049": [
+    true,
+    true,
+    true
+   ],
+   "addmul-050": [
+    true,
+    true,
+    true
+   ],
+   "addmul-052": [
+    true,
+    true,
+    true
+   ],
+   "addmul-054": [
+    true,
+    true,
+    true
+   ],
+   "addmul-055": [
+    true,
+    true,
+    true
+   ],
+   "addmul-056": [
+    true,
+    true,
+    true
+   ],
+   "addmul-057": [
+    true,
+    true,
+    true
+   ],
+   "addmul-059": [
+    true,
+    true,
+    true
+   ],
+   "floordiv-205": [
+    true,
+    true,
+    true
+   ],
+   "floordiv-210": [
+    null,
+    null,
+    null
+   ],
+   "floordiv-215": [
+    true,
+    null,
+    true
+   ],
+   "floordiv-221": [
+    true,
+    true,
+    true
+   ],
+   "floordiv-224": [
+    true,
+    true,
+    true
+   ],
+   "floordiv-231": [
+    null,
+    null,
+    true
+   ],
+   "floordiv-232": [
+    true,
+    true,
+    true
+   ],
+   "floordiv-234": [
+    null,
+    null,
+    null
+   ],
+   "floordiv-239": [
+    null,
+    true,
+    true
+   ],
+   "floordiv-248": [
+    true,
+    true,
+    true
+   ],
+   "floordiv-410": [
+    null,
+    true,
+    true
+   ],
+   "floordiv-412": [
+    true,
+    null,
+    true
+   ],
+   "floordiv-414": [
+    true,
+    true,
+    true
+   ],
+   "floordiv-417": [
+    true,
+    null,
+    true
+   ],
+   "floordiv-419": [
+    true,
+    true,
+    true
+   ],
+   "floordiv-421": [
+    true,
+    null,
+    true
+   ],
+   "floordiv-426": [
+    true,
+    null,
+    null
+   ],
+   "floordiv-427": [
+    true,
+    true,
+    true
+   ],
+   "floordiv-428": [
+    true,
+    null,
+    null
+   ],
+   "floordiv-437": [
+    null,
+    true,
+    true
+   ],
+   "floordiv-439": [
+    true,
+    true,
+    true
+   ],
+   "frac-000": [
+    false,
+    false,
+    false
+   ],
+   "frac-001": [
+    false,
+    false,
+    false
+   ],
+   "frac-002": [
+    false,
+    false,
+    false
+   ],
+   "frac-003": [
+    false,
+    false,
+    false
+   ],
+   "frac-006": [
+    false,
+    false,
+    false
+   ],
+   "frac-007": [
+    false,
+    false,
+    false
+   ],
+   "frac-008": [
+    false,
+    false,
+    false
+   ],
+   "frac-009": [
+    false,
+    false,
+    false
+   ],
+   "frac-010": [
+    false,
+    false,
+    false
+   ],
+   "frac-011": [
+    false,
+    false,
+    false
+   ],
+   "frac-014": [
+    false,
+    false,
+    false
+   ],
+   "frac-015": [
+    false,
+    null,
+    false
+   ],
+   "frac-016": [
+    false,
+    false,
+    false
+   ],
+   "frac-017": [
+    false,
+    false,
+    false
+   ],
+   "frac-018": [
+    false,
+    false,
+    false
+   ],
+   "frac-019": [
+    false,
+    null,
+    false
+   ],
+   "frac-020": [
+    false,
+    false,
+    false
+   ],
+   "frac-021": [
+    false,
+    false,
+    false
+   ],
+   "frac-022": [
+    null,
+    null,
+    false
+   ],
+   "frac-023": [
+    false,
+    false,
+    false
+   ],
+   "frac-024": [
+    false,
+    false,
+    false
+   ],
+   "frac-025": [
+    false,
+    false,
+    false
+   ],
+   "frac-026": [
+    false,
+    false,
+    false
+   ],
+   "frac-027": [
+    false,
+    false,
+    false
+   ],
+   "frac-028": [
+    false,
+    true,
+    false
+   ],
+   "frac-029": [
+    false,
+    false,
+    false
+   ],
+   "frac-030": [
+    false,
+    false,
+    false
+   ],
+   "frac-031": [
+    null,
+    false,
+    false
+   ],
+   "frac-032": [
+    false,
+    false,
+    false
+   ],
+   "frac-033": [
+    false,
+    false,
+    false
+   ],
+   "frac-034": [
+    false,
+    false,
+    false
+   ],
+   "frac-035": [
+    true,
+    false,
+    null
+   ],
+   "frac-036": [
+    false,
+    false,
+    false
+   ],
+   "frac-037": [
+    false,
+    false,
+    false
+   ],
+   "frac-038": [
+    false,
+    false,
+    false
+   ],
+   "frac-039": [
+    false,
+    false,
+    false
+   ],
+   "frac-042": [
+    false,
+    false,
+    false
+   ],
+   "frac-043": [
+    false,
+    false,
+    false
+   ],
+   "frac-046": [
+    false,
+    false,
+    false
+   ],
+   "frac-047": [
+    true,
+    false,
+    false
+   ],
+   "frac-048": [
+    false,
+    false,
+    false
+   ],
+   "frac-049": [
+    true,
+    true,
+    false
+   ],
+   "frac-050": [
+    false,
+    false,
+    false
+   ],
+   "frac-051": [
+    false,
+    true,
+    false
+   ],
+   "frac-052": [
+    false,
+    false,
+    false
+   ],
+   "frac-053": [
+    false,
+    false,
+    false
+   ],
+   "frac-054": [
+    false,
+    false,
+    false
+   ],
+   "frac-055": [
+    false,
+    false,
+    false
+   ],
+   "frac-056": [
+    false,
+    false,
+    false
+   ],
+   "frac-057": [
+    false,
+    false,
+    false
+   ],
+   "frac-058": [
+    false,
+    false,
+    false
+   ],
+   "frac-059": [
+    null,
+    false,
+    null
+   ],
+   "frac-060": [
+    false,
+    false,
+    false
+   ],
+   "frac-061": [
+    false,
+    false,
+    false
+   ],
+   "frac-064": [
+    false,
+    false,
+    false
+   ],
+   "frac-065": [
+    false,
+    false,
+    false
+   ],
+   "frac-066": [
+    false,
+    false,
+    false
+   ],
+   "frac-067": [
+    false,
+    false,
+    false
+   ],
+   "frac-068": [
+    false,
+    false,
+    false
+   ],
+   "frac-069": [
+    false,
+    false,
+    false
+   ],
+   "frac-072": [
+    false,
+    false,
+    false
+   ],
+   "frac-073": [
+    false,
+    null,
+    false
+   ],
+   "frac-074": [
+    false,
+    false,
+    false
+   ],
+   "frac-075": [
+    false,
+    true,
+    false
+   ],
+   "frac-076": [
+    false,
+    false,
+    false
+   ],
+   "frac-077": [
+    false,
+    false,
+    false
+   ],
+   "frac-078": [
+    false,
+    false,
+    false
+   ],
+   "frac-079": [
+    false,
+    true,
+    true
+   ],
+   "frac-080": [
+    false,
+    false,
+    false
+   ],
+   "frac-081": [
+    false,
+    false,
+    false
+   ],
+   "frac-082": [
+    false,
+    false,
+    false
+   ],
+   "frac-083": [
+    false,
+    false,
+    false
+   ],
+   "frac-084": [
+    false,
+    false,
+    true
+   ],
+   "frac-085": [
+    false,
+    false,
+    false
+   ],
+   "frac-086": [
+    false,
+    false,
+    false
+   ],
+   "frac-087": [
+    false,
+    false,
+    false
+   ],
+   "frac-088": [
+    false,
+    false,
+    false
+   ],
+   "frac-089": [
+    false,
+    false,
+    false
+   ],
+   "frac-090": [
+    false,
+    false,
+    false
+   ],
+   "frac-091": [
+    false,
+    false,
+    false
+   ],
+   "frac-092": [
+    false,
+    false,
+    false
+   ],
+   "frac-093": [
+    false,
+    false,
+    null
+   ],
+   "frac-094": [
+    false,
+    false,
+    false
+   ],
+   "frac-095": [
+    false,
+    false,
+    false
+   ],
+   "frac-096": [
+    false,
+    false,
+    false
+   ],
+   "frac-097": [
+    false,
+    false,
+    false
+   ],
+   "frac-098": [
+    null,
+    false,
+    false
+   ],
+   "frac-099": [
+    false,
+    false,
+    false
+   ],
+   "frac-100": [
+    false,
+    false,
+    false
+   ],
+   "frac-101": [
+    false,
+    false,
+    false
+   ],
+   "frac-102": [
+    false,
+    false,
+    false
+   ],
+   "frac-103": [
+    false,
+    false,
+    false
+   ],
+   "frac-104": [
+    false,
+    false,
+    false
+   ],
+   "frac-105": [
+    false,
+    false,
+    false
+   ],
+   "frac-106": [
+    false,
+    false,
+    false
+   ],
+   "frac-107": [
+    false,
+    false,
+    false
+   ],
+   "frac-108": [
+    false,
+    false,
+    false
+   ],
+   "frac-109": [
+    false,
+    false,
+    false
+   ],
+   "frac-110": [
+    false,
+    false,
+    false
+   ],
+   "frac-111": [
+    false,
+    false,
+    false
+   ],
+   "frac-114": [
+    false,
+    false,
+    false
+   ],
+   "frac-115": [
+    true,
+    false,
+    false
+   ],
+   "frac-116": [
+    false,
+    false,
+    false
+   ],
+   "frac-117": [
+    false,
+    false,
+    false
+   ],
+   "frac-120": [
+    false,
+    false,
+    false
+   ],
+   "frac-121": [
+    false,
+    false,
+    true
+   ],
+   "frac-122": [
+    false,
+    false,
+    false
+   ],
+   "frac-123": [
+    false,
+    false,
+    false
+   ],
+   "frac-124": [
+    null,
+    false,
+    false
+   ],
+   "frac-125": [
+    false,
+    false,
+    null
+   ],
+   "frac-126": [
+    false,
+    false,
+    false
+   ],
+   "frac-127": [
+    false,
+    false,
+    false
+   ],
+   "frac-128": [
+    false,
+    false,
+    false
+   ],
+   "frac-129": [
+    true,
+    false,
+    false
+   ],
+   "frac-130": [
+    false,
+    false,
+    false
+   ],
+   "frac-131": [
+    false,
+    false,
+    false
+   ],
+   "fracadd-000": [
+    true,
+    true,
+    true
+   ],
+   "fracadd-006": [
+    true,
+    true,
+    null
+   ],
+   "fracadd-007": [
+    null,
+    true,
+    true
+   ],
+   "fracadd-008": [
+    true,
+    true,
+    true
+   ],
+   "fracadd-009": [
+    true,
+    true,
+    null
+   ],
+   "fracadd-012": [
+    true,
+    true,
+    true
+   ],
+   "fracadd-013": [
+    true,
+    true,
+    true
+   ],
+   "fracadd-014": [
+    true,
+    true,
+    true
+   ],
+   "fracadd-015": [
+    true,
+    true,
+    true
+   ],
+   "fracadd-016": [
+    true,
+    true,
+    true
+   ],
+   "fracadd-017": [
+    true,
+    true,
+    true
+   ],
+   "fracadd-018": [
+    true,
+    true,
+    true
+   ],
+   "fracadd-019": [
+    true,
+    true,
+    true
+   ],
+   "fracadd-020": [
+    true,
+    true,
+    true
+   ],
+   "fracadd-021": [
+    true,
+    true,
+    true
+   ],
+   "fracadd-026": [
+    true,
+    true,
+    true
+   ],
+   "fracadd-027": [
+    true,
+    true,
+    true
+   ],
+   "fracadd-028": [
+    true,
+    true,
+    true
+   ],
+   "fracadd-029": [
+    true,
+    true,
+    true
+   ],
+   "fracadd-030": [
+    true,
+    true,
+    true
+   ],
+   "fracadd-031": [
+    true,
+    true,
+    true
+   ],
+   "fracadd-032": [
+    true,
+    null,
+    true
+   ],
+   "fracadd-033": [
+    true,
+    true,
+    true
+   ],
+   "fracadd-034": [
+    true,
+    true,
+    true
+   ],
+   "fracadd-036": [
+    true,
+    true,
+    true
+   ],
+   "fracadd-037": [
+    true,
+    true,
+    true
+   ],
+   "fracadd-038": [
+    true,
+    true,
+    true
+   ],
+   "fracadd-039": [
+    true,
+    true,
+    true
+   ],
+   "fracadd-040": [
+    true,
+    true,
+    true
+   ],
+   "fracadd-042": [
+    true,
+    true,
+    true
+   ],
+   "fracadd-043": [
+    true,
+    true,
+    true
+   ],
+   "fracadd-044": [
+    true,
+    true,
+    true
+   ],
+   "fracadd-046": [
+    true,
+    true,
+    true
+   ],
+   "fracadd-047": [
+    true,
+    true,
+    true
+   ],
+   "fracadd-048": [
+    true,
+    true,
+    true
+   ],
+   "fracadd-049": [
+    true,
+    true,
+    true
+   ],
+   "fracadd-050": [
+    true,
+    true,
+    true
+   ],
+   "fracadd-051": [
+    true,
+    true,
+    true
+   ],
+   "fracadd-052": [
+    true,
+    true,
+    null
+   ],
+   "fracadd-053": [
+    true,
+    true,
+    true
+   ],
+   "fracadd-054": [
+    true,
+    true,
+    true
+   ],
+   "fracadd-055": [
+    true,
+    true,
+    true
+   ],
+   "fracadd-057": [
+    true,
+    true,
+    true
+   ],
+   "fracadd-058": [
+    true,
+    true,
+    true
+   ],
+   "fracadd-059": [
+    true,
+    true,
+    true
+   ],
+   "fracadd-060": [
+    true,
+    true,
+    true
+   ],
+   "fracadd-061": [
+    true,
+    true,
+    true
+   ],
+   "fracadd-062": [
+    true,
+    true,
+    true
+   ],
+   "fracadd-063": [
+    true,
+    true,
+    true
+   ],
+   "fracadd-064": [
+    true,
+    true,
+    true
+   ],
+   "fracadd-065": [
+    true,
+    true,
+    true
+   ],
+   "fracadd-067": [
+    true,
+    true,
+    true
+   ],
+   "fracadd-068": [
+    true,
+    true,
+    true
+   ],
+   "fracadd-069": [
+    true,
+    true,
+    true
+   ],
+   "fracadd-070": [
+    true,
+    true,
+    true
+   ],
+   "fracadd-071": [
+    true,
+    true,
+    true
+   ],
+   "fracadd-072": [
+    true,
+    true,
+    true
+   ],
+   "fracadd-073": [
+    true,
+    true,
+    true
+   ],
+   "fracadd-074": [
+    true,
+    true,
+    true
+   ],
+   "fracadd-075": [
+    true,
+    true,
+    true
+   ],
+   "fracadd-076": [
+    true,
+    true,
+    true
+   ],
+   "fracadd-077": [
+    true,
+    true,
+    true
+   ],
+   "fracadd-079": [
+    true,
+    true,
+    true
+   ],
+   "fraccomp-008": [
+    true,
+    true,
+    true
+   ],
+   "fraccomp-009": [
+    true,
+    true,
+    true
+   ],
+   "fraccomp-018": [
+    true,
+    true,
+    null
+   ],
+   "fraccomp-019": [
+    true,
+    true,
+    true
+   ],
+   "fraccomp-020": [
+    true,
+    true,
+    true
+   ],
+   "fraccomp-026": [
+    true,
+    true,
+    true
+   ],
+   "fraccomp-027": [
+    true,
+    true,
+    true
+   ],
+   "fraccomp-032": [
+    true,
+    null,
+    null
+   ],
+   "fraccomp-037": [
+    null,
+    true,
+    true
+   ],
+   "fraccomp-044": [
+    true,
+    true,
+    true
+   ],
+   "fraccomp-046": [
+    true,
+    true,
+    true
+   ],
+   "fraccomp-049": [
+    true,
+    true,
+    true
+   ],
+   "fraccomp-051": [
+    true,
+    true,
+    true
+   ],
+   "fraccomp-053": [
+    true,
+    null,
+    true
+   ],
+   "fraccomp-055": [
+    true,
+    true,
+    true
+   ],
+   "fraccomp-058": [
+    true,
+    true,
+    true
+   ],
+   "fraccomp-062": [
+    true,
+    null,
+    true
+   ],
+   "fraccomp-063": [
+    true,
+    true,
+    true
+   ],
+   "fraccomp-065": [
+    null,
+    true,
+    true
+   ],
+   "fraccomp-066": [
+    true,
+    true,
+    true
+   ],
+   "fraccomp-069": [
+    null,
+    null,
+    null
+   ],
+   "fraccomp-072": [
+    true,
+    true,
+    true
+   ],
+   "fraccomp-073": [
+    true,
+    true,
+    true
+   ],
+   "fraccomp-076": [
+    true,
+    true,
+    true
+   ],
+   "fraccomp-078": [
+    true,
+    true,
+    true
+   ],
+   "fraccomp-088": [
+    true,
+    true,
+    null
+   ],
+   "fraccomp-089": [
+    true,
+    true,
+    true
+   ],
+   "fraccomp-091": [
+    true,
+    true,
+    null
+   ],
+   "fraccomp-093": [
+    true,
+    true,
+    true
+   ],
+   "fraccomp-094": [
+    true,
+    true,
+    true
+   ],
+   "fraccomp-096": [
+    true,
+    true,
+    true
+   ],
+   "fraccomp-101": [
+    null,
+    null,
+    true
+   ],
+   "fraccomp-102": [
+    true,
+    true,
+    true
+   ],
+   "fraccomp-105": [
+    true,
+    true,
+    true
+   ],
+   "fraccomp-106": [
+    true,
+    true,
+    true
+   ],
+   "fraccomp-107": [
+    true,
+    true,
+    true
+   ],
+   "fraccomp-114": [
+    true,
+    true,
+    true
+   ],
+   "fraccomp-119": [
+    true,
+    true,
+    true
+   ],
+   "fraccomp-124": [
+    true,
+    true,
+    true
+   ],
+   "fraccomp-126": [
+    true,
+    true,
+    true
+   ],
+   "fraccomp-127": [
+    true,
+    true,
+    true
+   ],
+   "fraccomp-129": [
+    true,
+    true,
+    true
+   ],
+   "fraccomp-134": [
+    true,
+    true,
+    true
+   ],
+   "fraccomp-136": [
+    true,
+    null,
+    true
+   ],
+   "fracint-003": [
+    true,
+    true,
+    true
+   ],
+   "fracint-005": [
+    true,
+    true,
+    true
+   ],
+   "fracint-007": [
+    true,
+    true,
+    true
+   ],
+   "fracint-009": [
+    null,
+    true,
+    true
+   ],
+   "fracint-010": [
+    true,
+    true,
+    true
+   ],
+   "fracint-011": [
+    true,
+    true,
+    true
+   ],
+   "fracint-013": [
+    true,
+    true,
+    true
+   ],
+   "fracint-016": [
+    true,
+    true,
+    null
+   ],
+   "fracint-017": [
+    true,
+    true,
+    true
+   ],
+   "fracint-021": [
+    true,
+    true,
+    true
+   ],
+   "fracint-022": [
+    true,
+    true,
+    true
+   ],
+   "fracint-024": [
+    null,
+    true,
+    true
+   ],
+   "fracint-025": [
+    true,
+    true,
+    true
+   ],
+   "fracint-028": [
+    true,
+    null,
+    true
+   ],
+   "fracint-029": [
+    true,
+    true,
+    true
+   ],
+   "fracint-030": [
+    true,
+    true,
+    true
+   ],
+   "fracint-031": [
+    true,
+    true,
+    true
+   ],
+   "fracint-032": [
+    true,
+    true,
+    true
+   ],
+   "fracint-033": [
+    true,
+    true,
+    true
+   ],
+   "fracint-036": [
+    true,
+    true,
+    true
+   ],
+   "fracint-039": [
+    true,
+    true,
+    true
+   ],
+   "fracint-043": [
+    true,
+    true,
+    true
+   ],
+   "fracint-045": [
+    true,
+    true,
+    true
+   ],
+   "fracint-046": [
+    true,
+    true,
+    true
+   ],
+   "fracint-049": [
+    true,
+    true,
+    true
+   ],
+   "fracint-051": [
+    true,
+    true,
+    true
+   ],
+   "fracint-054": [
+    true,
+    true,
+    true
+   ],
+   "fracint-056": [
+    true,
+    true,
+    true
+   ],
+   "fracint-057": [
+    false,
+    true,
+    true
+   ],
+   "fracint-060": [
+    true,
+    true,
+    true
+   ],
+   "fracint-062": [
+    true,
+    true,
+    null
+   ],
+   "fracint-067": [
+    true,
+    true,
+    true
+   ],
+   "fracsmall-000": [
+    true,
+    true,
+    true
+   ],
+   "fracsmall-001": [
+    true,
+    true,
+    false
+   ],
+   "fracsmall-002": [
+    true,
+    true,
+    true
+   ],
+   "fracsmall-003": [
+    true,
+    true,
+    true
+   ],
+   "fracsmall-004": [
+    true,
+    true,
+    true
+   ],
+   "fracsmall-005": [
+    true,
+    false,
+    true
+   ],
+   "fracsmall-006": [
+    true,
+    true,
+    true
+   ],
+   "fracsmall-007": [
+    null,
+    true,
+    true
+   ],
+   "fracsmall-008": [
+    true,
+    true,
+    true
+   ],
+   "fracsmall-009": [
+    true,
+    true,
+    true
+   ],
+   "fracsmall-010": [
+    true,
+    true,
+    true
+   ],
+   "fracsmall-011": [
+    true,
+    true,
+    true
+   ],
+   "fracsmall-012": [
+    true,
+    true,
+    true
+   ],
+   "fracsmall-013": [
+    true,
+    true,
+    true
+   ],
+   "fracsmall-014": [
+    false,
+    false,
+    true
+   ],
+   "fracsmall-015": [
+    true,
+    true,
+    false
+   ],
+   "muladd-050": [
+    true,
+    true,
+    true
+   ],
+   "muladd-054": [
+    true,
+    true,
+    true
+   ],
+   "muladd-055": [
+    true,
+    true,
+    true
+   ],
+   "muladd-056": [
+    true,
+    true,
+    true
+   ],
+   "muladd-057": [
+    true,
+    true,
+    true
+   ],
+   "muladd-058": [
+    true,
+    true,
+    true
+   ],
+   "muladd-059": [
+    true,
+    true,
+    true
+   ],
+   "muladd-060": [
+    true,
+    true,
+    true
+   ],
+   "muladd-061": [
+    true,
+    null,
+    true
+   ],
+   "muladd-062": [
+    true,
+    true,
+    null
+   ],
+   "muladd-063": [
+    true,
+    true,
+    true
+   ],
+   "muladd-064": [
+    null,
+    true,
+    true
+   ],
+   "muladd-065": [
+    true,
+    null,
+    true
+   ],
+   "muladd-066": [
+    true,
+    true,
+    true
+   ],
+   "muladd-070": [
+    true,
+    true,
+    true
+   ],
+   "muladd-071": [
+    true,
+    true,
+    true
+   ],
+   "muladd-072": [
+    true,
+    true,
+    true
+   ],
+   "muladd-073": [
+    true,
+    true,
+    true
+   ],
+   "muladd-074": [
+    true,
+    true,
+    true
+   ],
+   "muladd-075": [
+    true,
+    true,
+    true
+   ],
+   "muladd-076": [
+    true,
+    true,
+    true
+   ],
+   "muladd-077": [
+    true,
+    true,
+    true
+   ],
+   "muladd-078": [
+    true,
+    true,
+    true
+   ],
+   "muladd-080": [
+    true,
+    true,
+    true
+   ],
+   "muladd-083": [
+    true,
+    true,
+    true
+   ],
+   "muladd-085": [
+    true,
+    true,
+    true
+   ],
+   "muladd-087": [
+    null,
+    true,
+    null
+   ],
+   "muladd-088": [
+    true,
+    true,
+    true
+   ],
+   "muladd-089": [
+    true,
+    true,
+    true
+   ],
+   "muladd-090": [
+    true,
+    true,
+    true
+   ],
+   "muladd-092": [
+    true,
+    true,
+    true
+   ],
+   "muladd-095": [
+    true,
+    true,
+    true
+   ],
+   "muladd-096": [
+    true,
+    true,
+    true
+   ],
+   "muladd-097": [
+    true,
+    true,
+    null
+   ],
+   "muladd-099": [
+    true,
+    true,
+    true
+   ],
+   "mulmid-000": [
+    true,
+    true,
+    true
+   ],
+   "mulmid-003": [
+    true,
+    true,
+    true
+   ],
+   "mulmid-006": [
+    true,
+    true,
+    true
+   ],
+   "mulmid-008": [
+    true,
+    true,
+    true
+   ],
+   "mulmid-011": [
+    true,
+    true,
+    true
+   ],
+   "mulmid-019": [
+    true,
+    true,
+    true
+   ],
+   "mulmid-020": [
+    true,
+    true,
+    true
+   ],
+   "mulmid-021": [
+    true,
+    true,
+    true
+   ],
+   "mulmid-022": [
+    true,
+    true,
+    true
+   ],
+   "mulmid-023": [
+    true,
+    true,
+    true
+   ],
+   "mulmid-028": [
+    true,
+    true,
+    true
+   ],
+   "mulmid-033": [
+    true,
+    true,
+    true
+   ],
+   "mulmid-036": [
+    true,
+    true,
+    true
+   ],
+   "mulmid-043": [
+    true,
+    true,
+    true
+   ],
+   "mulmid-044": [
+    true,
+    true,
+    true
+   ],
+   "mulmid-048": [
+    true,
+    true,
+    true
+   ],
+   "mulmid-051": [
+    true,
+    true,
+    true
+   ],
+   "mulmid-052": [
+    true,
+    true,
+    true
+   ],
+   "mulmid-055": [
+    true,
+    true,
+    true
+   ],
+   "mulmid-056": [
+    true,
+    true,
+    true
+   ],
+   "mulmid-064": [
+    true,
+    true,
+    true
+   ],
+   "mulmid-071": [
+    true,
+    true,
+    false
+   ],
+   "mulmid-072": [
+    true,
+    true,
+    true
+   ],
+   "mulmid-075": [
+    true,
+    true,
+    true
+   ],
+   "mulmid-076": [
+    true,
+    true,
+    true
+   ],
+   "mulmid-078": [
+    true,
+    true,
+    true
+   ],
+   "mulmid-079": [
+    true,
+    true,
+    true
+   ],
+   "mulmid-081": [
+    true,
+    true,
+    true
+   ],
+   "mulmid-082": [
+    true,
+    true,
+    true
+   ],
+   "mulmid-083": [
+    true,
+    true,
+    true
+   ],
+   "mulmid-085": [
+    true,
+    true,
+    true
+   ],
+   "mulmid-087": [
+    true,
+    true,
+    null
+   ],
+   "mulmid-089": [
+    true,
+    true,
+    true
+   ],
+   "sign-062": [
+    true,
+    true,
+    true
+   ],
+   "sign-063": [
+    true,
+    true,
+    null
+   ],
+   "sign-064": [
+    null,
+    true,
+    null
+   ],
+   "sign-065": [
+    true,
+    true,
+    true
+   ],
+   "sign-066": [
+    true,
+    true,
+    true
+   ],
+   "sign-067": [
+    null,
+    null,
+    null
+   ],
+   "sign-068": [
+    true,
+    true,
+    true
+   ],
+   "sign-069": [
+    true,
+    true,
+    true
+   ],
+   "sign-070": [
+    true,
+    true,
+    true
+   ],
+   "sign-072": [
+    true,
+    true,
+    true
+   ],
+   "sign-073": [
+    true,
+    true,
+    true
+   ],
+   "sign-074": [
+    null,
+    true,
+    true
+   ],
+   "sign-077": [
+    true,
+    true,
+    true
+   ],
+   "sign-078": [
+    true,
+    true,
+    null
+   ],
+   "sign-079": [
+    true,
+    true,
+    true
+   ],
+   "sign-080": [
+    true,
+    true,
+    true
+   ],
+   "sign-081": [
+    true,
+    true,
+    true
+   ],
+   "sign-082": [
+    true,
+    true,
+    true
+   ],
+   "sign-083": [
+    true,
+    true,
+    true
+   ],
+   "sign-084": [
+    true,
+    true,
+    true
+   ],
+   "sign-085": [
+    true,
+    true,
+    true
+   ],
+   "sign-086": [
+    true,
+    true,
+    true
+   ],
+   "sign-087": [
+    true,
+    true,
+    true
+   ],
+   "sign-088": [
+    true,
+    null,
+    true
+   ],
+   "sign-089": [
+    true,
+    true,
+    true
+   ],
+   "signpair-102": [
+    true,
+    true,
+    true
+   ],
+   "signpair-115": [
+    true,
+    true,
+    true
+   ],
+   "signpair-134": [
+    true,
+    true,
+    null
+   ],
+   "signpair-145": [
+    true,
+    null,
+    true
+   ],
+   "signpair-148": [
+    null,
+    null,
+    true
+   ],
+   "signpair-370": [
+    true,
+    true,
+    true
+   ],
+   "signpair-374": [
+    true,
+    true,
+    true
+   ],
+   "signpair-376": [
+    true,
+    true,
+    true
+   ],
+   "signpair-377": [
+    true,
+    true,
+    true
+   ],
+   "signpair-378": [
+    true,
+    true,
+    true
+   ],
+   "signpair-379": [
+    true,
+    true,
+    true
+   ],
+   "signpair-380": [
+    true,
+    true,
+    true
+   ],
+   "signpair-386": [
+    true,
+    true,
+    true
+   ],
+   "signpair-387": [
+    true,
+    true,
+    true
+   ],
+   "signpair-388": [
+    true,
+    true,
+    true
+   ],
+   "signpair-397": [
+    true,
+    true,
+    true
+   ],
+   "signpair-398": [
+    true,
+    true,
+    true
+   ],
+   "signpair-399": [
+    true,
+    true,
+    true
+   ],
+   "signpair-400": [
+    true,
+    true,
+    null
+   ],
+   "signpair-401": [
+    true,
+    true,
+    true
+   ],
+   "signpair-402": [
+    true,
+    true,
+    true
+   ],
+   "signpair-403": [
+    true,
+    true,
+    true
+   ],
+   "signpair-406": [
+    true,
+    null,
+    true
+   ],
+   "subsub-000": [
+    true,
+    true,
+    true
+   ],
+   "subsub-001": [
+    true,
+    true,
+    true
+   ],
+   "subsub-002": [
+    true,
+    true,
+    true
+   ],
+   "subsub-003": [
+    true,
+    true,
+    true
+   ],
+   "subsub-004": [
+    true,
+    true,
+    true
+   ],
+   "subsub-005": [
+    true,
+    true,
+    true
+   ],
+   "subsub-006": [
+    true,
+    true,
+    true
+   ],
+   "subsub-007": [
+    true,
+    true,
+    true
+   ],
+   "subsub-008": [
+    true,
+    true,
+    true
+   ],
+   "subsub-009": [
+    true,
+    true,
+    true
+   ],
+   "subsub-010": [
+    true,
+    true,
+    true
+   ],
+   "subsub-011": [
+    true,
+    true,
+    true
+   ],
+   "subsub-012": [
+    true,
+    true,
+    true
+   ],
+   "subsub-013": [
+    true,
+    true,
+    true
+   ],
+   "subsub-014": [
+    true,
+    true,
+    true
+   ],
+   "subsub-015": [
+    true,
+    true,
+    true
+   ],
+   "subsub-016": [
+    true,
+    true,
+    true
+   ],
+   "subsub-017": [
+    true,
+    true,
+    true
+   ],
+   "subsub-018": [
+    true,
+    true,
+    true
+   ],
+   "subsub-019": [
+    true,
+    true,
+    true
+   ],
+   "subsub-020": [
+    true,
+    true,
+    true
+   ],
+   "subsub-021": [
+    true,
+    true,
+    true
+   ],
+   "subsub-022": [
+    true,
+    true,
+    true
+   ],
+   "subsub-023": [
+    true,
+    true,
+    true
+   ],
+   "subsub-024": [
+    true,
+    true,
+    true
+   ],
+   "subsub-025": [
+    true,
+    true,
+    true
+   ],
+   "subsub-026": [
+    true,
+    true,
+    true
+   ],
+   "subsub-027": [
+    true,
+    true,
+    true
+   ],
+   "subsub-028": [
+    true,
+    true,
+    true
+   ],
+   "subsub-029": [
+    true,
+    true,
+    true
+   ],
+   "subsub-030": [
+    true,
+    true,
+    true
+   ],
+   "subsub-031": [
+    true,
+    true,
+    true
+   ],
+   "subsub-032": [
+    true,
+    true,
+    true
+   ],
+   "subsub-033": [
+    true,
+    true,
+    true
+   ],
+   "subsub-034": [
+    true,
+    true,
+    true
+   ],
+   "subsub-035": [
+    true,
+    true,
+    true
+   ],
+   "subsub-036": [
+    true,
+    true,
+    true
+   ],
+   "subsub-037": [
+    true,
+    true,
+    true
+   ],
+   "subsub-038": [
+    true,
+    true,
+    true
+   ],
+   "subsub-039": [
+    true,
+    true,
+    true
+   ],
+   "subsub-040": [
+    true,
+    true,
+    true
+   ],
+   "subsub-041": [
+    true,
+    true,
+    true
+   ],
+   "subsub-042": [
+    true,
+    true,
+    true
+   ],
+   "subsub-043": [
+    true,
+    true,
+    true
+   ],
+   "subsub-044": [
+    true,
+    true,
+    true
+   ],
+   "subsub-045": [
+    true,
+    true,
+    true
+   ],
+   "subsub-046": [
+    true,
+    true,
+    true
+   ],
+   "subsub-047": [
+    true,
+    true,
+    true
+   ],
+   "subsub-048": [
+    true,
+    true,
+    true
+   ],
+   "subsub-049": [
+    true,
+    true,
+    true
+   ],
+   "subsub-050": [
+    true,
+    true,
+    true
+   ],
+   "subsub-051": [
+    true,
+    true,
+    true
+   ],
+   "subsub-052": [
+    true,
+    true,
+    true
+   ],
+   "subsub-053": [
+    true,
+    true,
+    true
+   ],
+   "subsub-054": [
+    true,
+    true,
+    true
+   ],
+   "subsub-055": [
+    true,
+    true,
+    true
+   ],
+   "subsub-056": [
+    true,
+    true,
+    true
+   ],
+   "subsub-057": [
+    true,
+    true,
+    true
+   ],
+   "subsub-058": [
+    true,
+    true,
+    true
+   ],
+   "subsub-059": [
+    true,
+    true,
+    true
+   ],
+   "subsubx-000": [
+    true,
+    true,
+    true
+   ],
+   "subsubx-001": [
+    true,
+    true,
+    true
+   ],
+   "subsubx-002": [
+    true,
+    true,
+    true
+   ],
+   "subsubx-003": [
+    true,
+    true,
+    true
+   ],
+   "subsubx-004": [
+    true,
+    true,
+    true
+   ],
+   "subsubx-005": [
+    true,
+    true,
+    true
+   ],
+   "subsubx-006": [
+    true,
+    true,
+    true
+   ],
+   "subsubx-007": [
+    true,
+    true,
+    true
+   ],
+   "subsubx-008": [
+    true,
+    true,
+    true
+   ],
+   "subsubx-009": [
+    true,
+    true,
+    true
+   ],
+   "subsubx-010": [
+    true,
+    true,
+    true
+   ],
+   "subsubx-011": [
+    true,
+    true,
+    true
+   ],
+   "subsubx-012": [
+    true,
+    true,
+    true
+   ],
+   "subsubx-013": [
+    true,
+    true,
+    true
+   ],
+   "subsubx-014": [
+    true,
+    true,
+    true
+   ],
+   "subsubx-015": [
+    true,
+    true,
+    true
+   ],
+   "subsubx-016": [
+    null,
+    true,
+    true
+   ],
+   "subsubx-017": [
+    true,
+    true,
+    true
+   ],
+   "subsubx-018": [
+    true,
+    true,
+    true
+   ],
+   "subsubx-019": [
+    true,
+    true,
+    true
+   ],
+   "subsubx-020": [
+    true,
+    true,
+    true
+   ],
+   "subsubx-021": [
+    true,
+    true,
+    true
+   ],
+   "subsubx-022": [
+    true,
+    true,
+    true
+   ],
+   "subsubx-023": [
+    true,
+    true,
+    true
+   ],
+   "subsubx-024": [
+    true,
+    true,
+    true
+   ],
+   "subsubx-025": [
+    true,
+    true,
+    true
+   ],
+   "subsubx-026": [
+    true,
+    true,
+    true
+   ],
+   "subsubx-027": [
+    true,
+    true,
+    true
+   ],
+   "subsubx-028": [
+    true,
+    true,
+    true
+   ],
+   "subsubx-029": [
+    null,
+    true,
+    true
+   ],
+   "subsubx-030": [
+    true,
+    true,
+    true
+   ],
+   "subsubx-031": [
+    true,
+    true,
+    true
+   ],
+   "subsubx-032": [
+    true,
+    true,
+    true
+   ],
+   "subsubx-033": [
+    true,
+    true,
+    true
+   ],
+   "subsubx-034": [
+    true,
+    true,
+    true
+   ],
+   "subsubx-035": [
+    true,
+    true,
+    true
+   ],
+   "subsubx-036": [
+    true,
+    true,
+    true
+   ],
+   "subsubx-037": [
+    true,
+    true,
+    true
+   ],
+   "subsubx-038": [
+    true,
+    true,
+    true
+   ],
+   "subsubx-039": [
+    true,
+    true,
+    true
+   ],
+   "subsubx-040": [
+    true,
+    true,
+    true
+   ],
+   "subsubx-041": [
+    true,
+    true,
+    true
+   ],
+   "subsubx-042": [
+    true,
+    true,
+    true
+   ],
+   "subsubx-043": [
+    true,
+    true,
+    true
+   ],
+   "subsubx-044": [
+    true,
+    true,
+    true
+   ],
+   "subsubx-045": [
+    true,
+    true,
+    true
+   ],
+   "subsubx-046": [
+    true,
+    true,
+    true
+   ],
+   "subsubx-047": [
+    true,
+    true,
+    true
+   ],
+   "subsubx-048": [
+    true,
+    true,
+    true
+   ],
+   "subsubx-049": [
+    true,
+    true,
+    true
+   ],
+   "subsubx-050": [
+    true,
+    true,
+    true
+   ],
+   "subsubx-051": [
+    true,
+    true,
+    true
+   ],
+   "subsubx-052": [
+    true,
+    true,
+    true
+   ],
+   "subsubx-053": [
+    true,
+    true,
+    true
+   ],
+   "subsubx-054": [
+    true,
+    true,
+    true
+   ],
+   "subsubx-055": [
+    true,
+    true,
+    true
+   ],
+   "subsubx-056": [
+    true,
+    true,
+    true
+   ],
+   "subsubx-057": [
+    true,
+    true,
+    true
+   ],
+   "subsubx-058": [
+    true,
+    true,
+    true
+   ],
+   "subsubx-059": [
     true,
     true,
     true

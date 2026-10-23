@@ -110,14 +110,16 @@ def _text(msg: Any) -> str:
     return "".join(b.text for b in msg.content if getattr(b, "type", "") == "text").strip()
 
 
-async def _ask_one(client: Any, sem: asyncio.Semaphore, row: dict[str, Any], draw: int) -> dict:
+async def _ask_one(
+    client: Any, sem: asyncio.Semaphore, row: dict[str, Any], draw: int, answerer: str = ANSWERER
+) -> dict:
     content = TEMPLATE.format(prefix=row["prefix"], token=row["token"])
     err = ""
     async with sem:
         for attempt in range(ATTEMPTS):
             try:
                 msg = await client.messages.create(
-                    model=ANSWERER,
+                    model=answerer,
                     max_tokens=MAX_TOKENS,
                     messages=[{"role": "user", "content": content}],
                 )
@@ -136,6 +138,7 @@ async def _ask_one(client: Any, sem: asyncio.Semaphore, row: dict[str, Any], dra
                     "family": row["family"],
                     "id": row["id"],
                     "draw": draw,
+                    "answerer": answerer,
                     "answer": "",
                     "refused": True,
                     "refusal_category": getattr(details, "category", None),
@@ -148,6 +151,7 @@ async def _ask_one(client: Any, sem: asyncio.Semaphore, row: dict[str, Any], dra
                 "family": row["family"],
                 "id": row["id"],
                 "draw": draw,
+                "answerer": answerer,
                 "answer": text,
                 "stop_reason": msg.stop_reason,
                 "out_tokens": msg.usage.output_tokens,
@@ -163,7 +167,9 @@ async def _ask_one(client: Any, sem: asyncio.Semaphore, row: dict[str, Any], dra
     }
 
 
-async def _ask(out: Path, draws: int, concurrency: int, families: set[str] | None) -> int:
+async def _ask(
+    out: Path, draws: int, concurrency: int, families: set[str] | None, answerer: str
+) -> int:
     from anthropic import AsyncAnthropic
 
     prompts = load_jsonl(out / "prompts.jsonl")
@@ -175,7 +181,7 @@ async def _ask(out: Path, draws: int, concurrency: int, families: set[str] | Non
     # (a refused one stays refused) and a policy refusal cannot masquerade as a dead credential.
     try:
         msg = await client.messages.create(
-            model=ANSWERER, max_tokens=64, messages=[{"role": "user", "content": "Say OK."}]
+            model=answerer, max_tokens=64, messages=[{"role": "user", "content": "Say OK."}]
         )
     except Exception as exc:
         raise SystemExit(f"preflight failed, aborting before the batch: {exc}") from exc
@@ -188,7 +194,7 @@ async def _ask(out: Path, draws: int, concurrency: int, families: set[str] | Non
         done = {(r["family"], r["id"]) for r in rows if not r["error"] or is_refusal(r)}
         todo = [r for r in prompts if (r["family"], r["id"]) not in done]
         print(f"draw {d}: {len(todo)} to ask ({len(done)} cached)", flush=True)
-        tasks = [asyncio.create_task(_ask_one(client, sem, r, d)) for r in todo]
+        tasks = [asyncio.create_task(_ask_one(client, sem, r, d, answerer)) for r in todo]
         with path.open("a", encoding="utf-8") as fh:
             for i, fut in enumerate(asyncio.as_completed(tasks), 1):
                 res = await fut
@@ -205,11 +211,14 @@ def ask(
     draws: int = DRAWS,
     concurrency: int = 64,
     families: Iterable[str] | None = None,
+    answerer: str = ANSWERER,
 ) -> int:
-    """Three independent Opus answers per item, appended to ``answers/draw{d}.jsonl``;
+    """Three independent answers per item from ``answerer`` (default Opus 5.5), appended to
+    ``answers/draw{d}.jsonl``; use a separate ``out`` per answerer.
     resumable (an item with an error-free answer is not re-asked). Auth: the Anthropic SDK's
     own discovery (run with ``ANTHROPIC_API_KEY`` unset to use the ``ant`` profile)."""
-    return asyncio.run(_ask(out, draws, concurrency, set(families) if families else None))
+    fams = set(families) if families else None
+    return asyncio.run(_ask(out, draws, concurrency, fams, answerer))
 
 
 def is_refusal(r: dict[str, Any]) -> bool:
@@ -337,22 +346,31 @@ def refusal_share(out: Path, family: str, ids: list[str], draws: int = DRAWS) ->
     return refused / len(ids) if ids else 0.0
 
 
-def gate(out: Path = OUT, draws: int = DRAWS, dst: Path | None = FROZEN) -> dict[str, Any]:
+def gate(
+    out: Path = OUT,
+    draws: int = DRAWS,
+    dst: Path | None = FROZEN,
+    *,
+    families: Iterable[str] | None = None,
+    answerer: str = ANSWERER,
+) -> dict[str, Any]:
     """Fold ``judged/draw{d}/<family>/results.json`` into the frozen subset. A family with more
-    than ``MAX_REFUSED_SHARE`` policy-refused items goes to ``_not_gated`` with its counts."""
+    than ``MAX_REFUSED_SHARE`` policy-refused items goes to ``_not_gated`` with its counts.
+    With ``families`` (e.g. a second answerer for families the first one could not gate) only
+    those are gated and MERGED into the existing ``dst``; every entry records its ``answerer``."""
     from wsbench import readplan, registry
 
     registry.load_all()
     frozen: dict[str, Any] = {}
-    not_gated: dict[str, str] = dict(NOT_GATED)
+    not_gated: dict[str, str] = {}
     answers = [latest_answers(out / "answers" / f"draw{d}.jsonl") for d in range(draws)]
-    for fam in gated_families():
+    for fam in list(families) if families else gated_families():
         ids = [s.id for s in readplan.plan(fam)]
         share = refusal_share(out, fam, ids, draws)
         if share > MAX_REFUSED_SHARE:
             not_gated[fam] = (
                 f"policy refusal: {share:.0%} of items had a draw refused by the API "
-                f"(reasoning_extraction); the answered items are not the bank"
+                f"(reasoning_extraction, answerer {answerer}); the answered items are not the bank"
             )
             print(f"  {fam}: {share:.0%} refused, not gated")
             continue
@@ -376,6 +394,7 @@ def gate(out: Path = OUT, draws: int = DRAWS, dst: Path | None = FROZEN) -> dict
         inv = [i for i in ids if any(x is True for x in draw_pass[i])]
         cfg = results[0]["config"]
         frozen[fam] = {
+            "answerer": answerer,
             "instrument": registry.get(fam).judge.prompt_version,
             "judge_model": cfg.get("judge_model"),
             "layers_judged": cfg.get("layers_judged") or cfg.get("layers"),
@@ -395,10 +414,19 @@ def gate(out: Path = OUT, draws: int = DRAWS, dst: Path | None = FROZEN) -> dict
             "ids": ati,
             "draw_pass": draw_pass,
         }
-    if dst is not None:
+    if dst is not None and families:
+        merged = json.loads(dst.read_text(encoding="utf-8")) if dst.exists() else {}
+        old = merged.get("_not_gated", {})
+        for fam in families:
+            old.pop(fam, None)
+            merged.pop(fam, None)
+        merged["_not_gated"] = {**NOT_GATED, **old, **not_gated}
+        merged.update(frozen)
+        dst.write_text(json.dumps(merged, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
+    elif dst is not None:
         merged = {
             "_source": {
-                "answerer": ANSWERER,
+                "answerer": f"{ANSWERER} (each entry's `answerer` is authoritative)",
                 "draws": draws,
                 "template": TEMPLATE,
                 "prefix": "item render (wsbench.produce.render, Qwen3.6-27B tokenizer, special "
@@ -412,7 +440,7 @@ def gate(out: Path = OUT, draws: int = DRAWS, dst: Path | None = FROZEN) -> dict
                 "max_refused_share": MAX_REFUSED_SHARE,
                 "written": dt.datetime.now(dt.UTC).isoformat(timespec="seconds"),
             },
-            "_not_gated": not_gated,
+            "_not_gated": {**NOT_GATED, **not_gated},
             **frozen,
         }
         dst.write_text(json.dumps(merged, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")

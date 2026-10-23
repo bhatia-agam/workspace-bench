@@ -404,3 +404,28 @@ def test_judge_command_exit_codes_under_the_flag(offline, tmp_path, monkeypatch,
     assert main([*base, "family=ungated"]) == 0
     assert main([*base, "family=stale"]) == 2
     assert "re-gate" in capsys.readouterr().err
+
+
+def test_gate_families_merges_a_second_answerer(tmp_path, two_families):
+    dst = tmp_path / "ati.json"
+    dst.write_text(
+        json.dumps(
+            {
+                "_source": {"answerer": "claude-opus-5-5"},
+                "_not_gated": {"fam": "policy refusal: 90% (opus)", "keep": "policy refusal"},
+                "other": {"answerer": "claude-opus-5-5", "ids": ["z"]},
+            }
+        )
+    )
+    out = tmp_path / "o"
+    for d in range(3):
+        _answers(out, d, [("fam", i, "ok") for i in "abcde"])
+        rows = [{"id": i, "pass": i == "a"} for i in "abcde"]
+        _results(out / "judged" / f"draw{d}" / "fam", "fam", rows, 1 / 5)
+    frozen = ti.gate(out, dst=dst, families=["fam"], answerer="claude-sonnet-5-5")
+    assert frozen["fam"]["answerer"] == "claude-sonnet-5-5"
+    written = json.loads(dst.read_text())
+    assert written["fam"]["ids"] == ["b", "c", "d", "e"]
+    assert written["other"] == {"answerer": "claude-opus-5-5", "ids": ["z"]}  # untouched
+    assert "fam" not in written["_not_gated"] and "keep" in written["_not_gated"]
+    assert written["_source"] == {"answerer": "claude-opus-5-5"}

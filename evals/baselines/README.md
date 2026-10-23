@@ -238,27 +238,37 @@ or rephrasing until the classifier lets a request through would route around the
 refused draw is undecided. A family where more than 20% of items have a refused draw is not
 gated, because its answered items are a refusal-selected sample rather than the bank.
 
-Gated (2026-10-23, 146 items in total):
+**Second answerer for the refused families.** The nine families Opus could not gate were
+re-asked with Claude Sonnet 5.5 under the same template, draws, rule and judge
+(`wsbench text-inversion stage=ask answerer=claude-sonnet-5-5 out=outputs/baselines/text_inversion_sonnet`,
+then `stage=gate families=<the nine> answerer=claude-sonnet-5-5`, which merges into this file).
+Sonnet hits the same `reasoning_extraction` policy on most of them; only
+arithmetic_intermediates stays under the 20% rule (12%), so its entry is a Sonnet gate, a weaker
+reader than Opus: read it as "Sonnet 5.5 cannot answer from the prompt". Every entry records its
+`answerer`; entries without one are Opus 5.5.
 
-| family | bank | ATI | invertible | unverified | Opus pass@1 (mean of 3) |
-|---|---|---|---|---|---|
-| association | 100 | 3 | 97 | 0 | 0.95 |
-| basic_readout | 100 | 9 | 90 | 1 | 0.85 |
-| basic_readout_mt | 100 | 2 | 97 | 1 | 0.94 |
-| buggy_code | 49 | 0 | 48 | 1 | 0.99 |
-| multihop | 100 | 0 | 100 | 0 | 1.00 |
-| multihop_mt | 100 | 7 | 93 | 0 | 0.91 |
-| multihop_mt_v2 | 70 | 1 | 69 | 0 | 0.96 |
-| multilingual | 100 | 0 | 100 | 0 | 1.00 |
-| multilingual_mt | 100 | 15 | 85 | 0 | 0.81 |
-| multilingual_multihop | 98 | 7 | 91 | 0 | 0.91 |
-| multilingual_typo | 100 | 2 | 98 | 0 | 0.96 |
-| poetry | 100 | 21 | 78 | 1 | 0.66 |
-| relational_multihop | 100 | 0 | 100 | 0 | 1.00 |
-| typo | 100 | 0 | 100 | 0 | 1.00 |
-| typo_mt | 100 | 2 | 98 | 0 | 0.94 |
-| wrong_bridge | 100 | 76 | 23 | 1 | 0.14 |
-| wrong_bridge_true | 100 | 1 | 98 | 1 | 0.98 |
+Gated (2026-10-23, 241 items in total):
+
+| family | answerer | bank | ATI | invertible | unverified | answerer pass@1 (mean of 3) |
+|---|---|---|---|---|---|---|
+| association | Opus 5.5 | 100 | 3 | 97 | 0 | 0.95 |
+| basic_readout | Opus 5.5 | 100 | 9 | 90 | 1 | 0.85 |
+| basic_readout_mt | Opus 5.5 | 100 | 2 | 97 | 1 | 0.94 |
+| buggy_code | Opus 5.5 | 49 | 0 | 48 | 1 | 0.99 |
+| multihop | Opus 5.5 | 100 | 0 | 100 | 0 | 1.00 |
+| multihop_mt | Opus 5.5 | 100 | 7 | 93 | 0 | 0.91 |
+| multihop_mt_v2 | Opus 5.5 | 70 | 1 | 69 | 0 | 0.96 |
+| multilingual | Opus 5.5 | 100 | 0 | 100 | 0 | 1.00 |
+| multilingual_mt | Opus 5.5 | 100 | 15 | 85 | 0 | 0.81 |
+| multilingual_multihop | Opus 5.5 | 98 | 7 | 91 | 0 | 0.91 |
+| multilingual_typo | Opus 5.5 | 100 | 2 | 98 | 0 | 0.96 |
+| poetry | Opus 5.5 | 100 | 21 | 78 | 1 | 0.66 |
+| relational_multihop | Opus 5.5 | 100 | 0 | 100 | 0 | 1.00 |
+| typo | Opus 5.5 | 100 | 0 | 100 | 0 | 1.00 |
+| typo_mt | Opus 5.5 | 100 | 2 | 98 | 0 | 0.94 |
+| wrong_bridge | Opus 5.5 | 100 | 76 | 23 | 1 | 0.14 |
+| wrong_bridge_true | Opus 5.5 | 100 | 1 | 98 | 1 | 0.98 |
+| arithmetic_intermediates | Sonnet 5.5 | 596 | 95 | 485 | 16 | 0.81 |
 
 Not gated (`_not_gated`; skipped under the flag, as are the families with no surviving item):
 
@@ -268,15 +278,14 @@ Not gated (`_not_gated`; skipped under the flag, as are the families with no sur
 | jlens_concept_pr | precision against the J-lens top-10, not a bar a lens clears |
 | agentic_misalignment | a design score netted against foils, no item pass bit |
 | multi_concept_directed_modulation | the prompt dictates the concepts; prompt-only is 1.0 |
-| arithmetic_intermediates | policy refusal: 80% of items had a draw refused by the API (reasoning_extraction); the answered items are not the bank |
-| brew_intermediates | policy refusal: 100% of items had a draw refused by the API (reasoning_extraction); the answered items are not the bank |
-| chain_intermediates | policy refusal: 98% of items had a draw refused by the API (reasoning_extraction); the answered items are not the bank |
-| conjunctive_association | policy refusal: 100% of items had a draw refused by the API (reasoning_extraction); the answered items are not the bank |
-| directed_modulation | policy refusal: 63% of items had a draw refused by the API (reasoning_extraction); the answered items are not the bank |
-| jailbreak_recognition | policy refusal: 65% of items had a draw refused by the API (reasoning_extraction); the answered items are not the bank |
-| moral_rationale | policy refusal: 96% of items had a draw refused by the API (reasoning_extraction); the answered items are not the bank |
-| role_bound_association | policy refusal: 100% of items had a draw refused by the API (reasoning_extraction); the answered items are not the bank |
-| user_modeling | policy refusal: 100% of items had a draw refused by the API (reasoning_extraction); the answered items are not the bank |
+| brew_intermediates | policy refusal: 56% of items had a draw refused by the API (reasoning_extraction, answerer claude-sonnet-5-5); the answered items are not the bank |
+| chain_intermediates | policy refusal: 34% of items had a draw refused by the API (reasoning_extraction, answerer claude-sonnet-5-5); the answered items are not the bank |
+| conjunctive_association | policy refusal: 100% of items had a draw refused by the API (reasoning_extraction, answerer claude-sonnet-5-5); the answered items are not the bank |
+| directed_modulation | policy refusal: 52% of items had a draw refused by the API (reasoning_extraction, answerer claude-sonnet-5-5); the answered items are not the bank |
+| jailbreak_recognition | policy refusal: 83% of items had a draw refused by the API (reasoning_extraction, answerer claude-sonnet-5-5); the answered items are not the bank |
+| moral_rationale | policy refusal: 90% of items had a draw refused by the API (reasoning_extraction, answerer claude-sonnet-5-5); the answered items are not the bank |
+| role_bound_association | policy refusal: 99% of items had a draw refused by the API (reasoning_extraction, answerer claude-sonnet-5-5); the answered items are not the bank |
+| user_modeling | policy refusal: 100% of items had a draw refused by the API (reasoning_extraction, answerer claude-sonnet-5-5); the answered items are not the bank |
 
 **Reading it.** Opus 5.5 recovers the answer from the text alone on most items of most families:
 its per-draw prompt-only rate is far above the stock-Qwen prompt-only floor (association 0.95
@@ -303,7 +312,7 @@ Under the flag each gated family's `items` is its subset and `results.json` carr
 a run incomplete. A family whose current judge `prompt_version` differs from the entry's
 `instrument` fails (exit 2) until re-gated. `report` leaves out the floor columns under this
 scope (they were measured on the full banks) and the macro skips families with fewer than 20
-items: with the current subset that is the mean of wrong_bridge and poetry alone, so read the
-per-family rows. The Opus judge runs at T=1, so a fresh judge pass over the same answers can flip
+items: with the current subset that is the mean of wrong_bridge, poetry and
+arithmetic_intermediates alone, so read the per-family rows. The Opus judge runs at T=1, so a fresh judge pass over the same answers can flip
 an occasional verdict: a smoke re-judge of draw 0 before the final gate passed 1 of 76 wrong_bridge
 and 1 of 22 poetry items; on the final subset a fresh re-judge passed none.

@@ -657,8 +657,9 @@ class Freeze(Command):
 
 class TextInversion(Command):
     """The anti-text-inversion gate, one stage per call: ``stage=build`` (prompts; tokenizer),
-    ``ask`` (three Opus 5.5 prompt-only answers per item), ``readouts`` (draw readout files),
-    ``gate`` (judged draws -> ``evals/baselines/anti_text_inversion.json``). Judge each draw with
+    ``ask`` (three prompt-only answers per item from ``answerer``, default Opus 5.5), ``readouts``
+    (draw readout files), ``gate`` (judged draws -> ``evals/baselines/anti_text_inversion.json``;
+    with ``families=`` only those are gated and merged into the file). Judge each draw with
     ``wsbench run`` in between (see ``evals/baselines/README.md``)."""
 
     def __init__(self) -> None:
@@ -669,9 +670,11 @@ class TextInversion(Command):
         self.draws = text_inversion.DRAWS
         self.concurrency = 64
         self.dst = ""
+        self.answerer = text_inversion.ANSWERER
 
     def finalize(self) -> None:
         self.stage = str(self.stage)
+        self.answerer = str(self.answerer)
         self.out = _path(self.out) if self.out else text_inversion.OUT
         self.families = _strs(self.families)
         self.draws = _int(self.draws)
@@ -682,12 +685,16 @@ class TextInversion(Command):
         if self.stage == "build":
             text_inversion.build(self.out, self.families)
         elif self.stage == "ask":
-            n = text_inversion.ask(self.out, self.draws, self.concurrency, self.families)
+            n = text_inversion.ask(
+                self.out, self.draws, self.concurrency, self.families, self.answerer
+            )
             print(f"{n} answers failed or were refused (refusals are final)")
         elif self.stage == "readouts":
             print(text_inversion.write_readouts(self.out, self.draws))
         elif self.stage == "gate":
-            frozen = text_inversion.gate(self.out, self.draws, self.dst)
+            frozen = text_inversion.gate(
+                self.out, self.draws, self.dst, families=self.families, answerer=self.answerer
+            )
             for fam, e in frozen.items():
                 print(f"{fam}: {e['n_ati']}/{e['n_bank']} ATI ({e['n_invertible']} invertible)")
             print(f"wrote {self.dst}")
