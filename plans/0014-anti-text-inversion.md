@@ -81,7 +81,8 @@ FAIL the family's own scorer of record:
 
 ## Families
 
-Gated (pass-rate families + buggy_code): association, basic_readout, basic_readout_mt,
+Candidates (pass-rate families + buggy_code; rev 2: nine of them ended up refusal-not-gated,
+see Rev 2 changes): association, basic_readout, basic_readout_mt,
 brew_intermediates, buggy_code, chain_intermediates, conjunctive_association,
 directed_modulation, jailbreak_recognition, moral_rationale, multi_concept_directed_modulation,
 multihop, multihop_mt, multihop_mt_v2, multilingual, multilingual_mt, multilingual_multihop,
@@ -127,29 +128,30 @@ Frozen file shape:
 
 `wsbench run ... anti_text_inversion=True` and `wsbench judge ... anti_text_inversion=True`:
 
-- For each gated family, `items` = the frozen ATI ids (∩ any explicit `items=`, then `limit=`).
+- For each gated family, `items` = the frozen ATI ids (then `limit=`); an explicit `items=` is
+  rejected under the flag.
 - The scope is recorded in `results.json` `config.scope = "anti_text_inversion"` plus
-  `config.ati_n_bank`; ATI scope alone does NOT make `is_subset` true (it is a defined
+  `extras.ati_n_bank`; ATI scope alone does NOT make `is_subset` true (it is a defined
   benchmark variant, not a partial run), so `complete` keeps its meaning.
 - Stale guard: if the family's current `prompt_version` differs from the frozen entry's
   `instrument`, the run refuses that family (failed/2: "ATI subset was gated under instrument
   X; re-gate"). A judge_model difference is allowed (the subset is a property of the items
   given Opus's answers scored by the family rule) but recorded.
-- Families with `n_ati == 0` are skipped with reason "no item survives the gate".
-- `wsbench report` prints "scope: anti_text_inversion" and per-family `n_ati / n_bank`; the
-  macro is over gated families with `n_ati ≥ 20` (smaller families are shown, footnoted
-  "n<20, not in ATI macro"). The prompt-only floor column is NOT drawn under ATI scope (it was
+- Families not gated or with `n_ati == 0` are skipped (status `skipped`, exit 0), checked
+  before any judge preflight; a stale or missing entry fails (exit 2).
+- The macro is over gated families with `n_items ≥ 20` (smaller ones are listed as excluded,
+  "n<20 (ATI)"). The prompt-only floor column is NOT drawn under ATI scope (it was
   measured on the full bank; the Opus prompt-only rate on the subset is 0 by construction).
 
 ## Run
 
-1. `wsbench ati-build out=outputs/baselines/text_inversion` (CPU, tokenizer only).
-2. `wsbench ati-ask out=... draws=3 concurrency=64` (Opus, `ANTHROPIC_API_KEY` unset → ant
-   profile; preflight one call; refusals / empty answers counted).
-3. `wsbench ati-readouts out=...` then per draw `wsbench run families=<gated> readouts_root=
-   .../readouts/draw{d} out=.../judged/draw{d} judge_model=claude-opus-5-5 layers=<per family>`
-   (one `run` per layer group).
-4. `wsbench ati-gate out=...` → `evals/baselines/anti_text_inversion.json` + a per-family
+1. `wsbench text-inversion stage=build` (CPU, tokenizer only).
+2. `wsbench text-inversion stage=ask` (Opus, `ANTHROPIC_API_KEY` unset → ant profile;
+   neutral preflight; refusals recorded once, never re-asked).
+3. `wsbench text-inversion stage=readouts`, then per draw `wsbench run families=<gated>
+   readouts_root=.../readouts/draw{d} out=.../judged/draw{d} judge_model=claude-opus-5-5
+   layers=44 allow_missing=True` (buggy_code without `layers=`).
+4. `wsbench text-inversion stage=gate` → `evals/baselines/anti_text_inversion.json` + a per-family
    summary table (n_bank, n_ati, n_invertible, n_unverified, Opus pass@1 mean, pass@3).
 Smoke `limit=3` per family live before the full run. Runs in tmux `ati`, log under `logs/`.
 

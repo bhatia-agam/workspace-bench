@@ -8,7 +8,7 @@
   "rule": "ATI iff every draw is decided and fails the family's scorer of record; a policy-refused draw is undecided and never retried",
   "buggy_pass_score": 6,
   "max_refused_share": 0.2,
-  "written": "2026-10-23T06:10:46+00:00"
+  "written": "2026-10-23T06:23:34+00:00"
  },
  "_not_gated": {
   "hallucination": "an invention rate over free generation, no item answer to invert",
@@ -37,7 +37,7 @@
   "n_unverified": 0,
   "refused_share": 0.01,
   "pass_at_1": [
-   0.94,
+   0.9394,
    0.96,
    0.96
   ],
@@ -413,7 +413,7 @@
     true
    ],
    "bf2-volcano": [
-    true,
+    null,
     true,
     true
    ],
@@ -556,18 +556,17 @@
    44
   ],
   "n_bank": 100,
-  "n_ati": 10,
+  "n_ati": 9,
   "n_invertible": 90,
-  "n_unverified": 0,
+  "n_unverified": 1,
   "refused_share": 0.05,
   "pass_at_1": [
-   0.86,
-   0.8485,
-   0.84
+   0.8586,
+   0.8557,
+   0.8485
   ],
   "ids": [
    "br-imp-chesspiece",
-   "br-imp-flower",
    "br-imp-kindofberry",
    "br-imp-kindofpepper",
    "br-imp-typeofbird",
@@ -939,7 +938,7 @@
     true
    ],
    "br-imp-constellatio": [
-    true,
+    null,
     true,
     true
    ],
@@ -950,7 +949,7 @@
    ],
    "br-imp-flower": [
     false,
-    false,
+    null,
     false
    ],
    "br-imp-holiday": [
@@ -985,7 +984,7 @@
    ],
    "br-imp-programmingl": [
     true,
-    true,
+    null,
     true
    ],
    "br-imp-seacreature": [
@@ -996,7 +995,7 @@
    "br-imp-tree": [
     true,
     false,
-    false
+    null
    ],
    "br-imp-typeofcuisin": [
     true,
@@ -1093,8 +1092,8 @@
   "refused_share": 0.03,
   "pass_at_1": [
    0.9394,
-   0.9495,
-   0.9091
+   0.949,
+   0.9184
   ],
   "ids": [
    "brh-he-neptune-moon",
@@ -1204,7 +1203,7 @@
    "brh-ent-cur-vanuatu": [
     true,
     true,
-    false
+    null
    ],
    "brh-ent-currency-bhutan": [
     true,
@@ -1238,7 +1237,7 @@
    ],
    "brh-ent-drakensberg-summit": [
     true,
-    true,
+    null,
     true
    ],
    "brh-ent-euler-mascheroni-constant": [
@@ -1611,23 +1610,21 @@
    60
   ],
   "n_bank": 49,
-  "n_ati": 1,
+  "n_ati": 0,
   "n_invertible": 48,
-  "n_unverified": 0,
+  "n_unverified": 1,
   "refused_share": 0.1836734693877551,
   "pass_at_1": [
    0.9787,
-   0.9583,
-   0.9787
+   1.0,
+   0.9773
   ],
-  "ids": [
-   "py-simple-not-compound"
-  ],
+  "ids": [],
   "draw_pass": {
    "py-quantity-refund-credit": [
     true,
     null,
-    true
+    null
    ],
    "py-age-underflow": [
     true,
@@ -1696,7 +1693,7 @@
    ],
    "py-simple-not-compound": [
     false,
-    false,
+    null,
     false
    ],
    "py-inclusive-day-count": [
@@ -1712,7 +1709,7 @@
    "rust-move-after-use": [
     true,
     true,
-    true
+    null
    ],
    "rust-unwrap-parse": [
     true,
@@ -1762,7 +1759,7 @@
    "py-clean-validated-qty": [
     true,
     true,
-    true
+    null
    ],
    "py-clean-join-checked": [
     true,
@@ -1796,7 +1793,7 @@
    ],
    "py-clean-numeric-sort": [
     null,
-    true,
+    null,
     true
    ],
    "py-clean-ceil-pages": [
@@ -1846,7 +1843,7 @@
    ],
    "clean-c-int-div-intended": [
     true,
-    false,
+    null,
     true
    ],
    "clean-c-loop-bound-correct": [
@@ -2404,8 +2401,8 @@
   "refused_share": 0.03,
   "pass_at_1": [
    0.92,
-   0.89,
-   0.9
+   0.899,
+   0.9082
   ],
   "ids": [
    "mhh-akbar-dinilahi",
@@ -2505,7 +2502,7 @@
    "mhh-derbyshire-unit": [
     true,
     true,
-    true
+    null
    ],
    "mhh-endpermian-volcanic-province": [
     true,
@@ -2569,7 +2566,7 @@
    ],
    "mhh-lassell-uranian-moons": [
     true,
-    false,
+    null,
     true
    ],
    "mhh-laughton-korda-henry": [
@@ -2895,7 +2892,7 @@
    "mhh-barnard-lick": [
     true,
     true,
-    false
+    null
    ],
    "mhh-blinddoge-1204-latinruler": [
     true,
@@ -4359,9 +4356,9 @@
   "n_unverified": 0,
   "refused_share": 0.030612244897959183,
   "pass_at_1": [
-   0.9184,
-   0.9082,
-   0.898
+   0.9175,
+   0.9072,
+   0.8969
   ],
   "ids": [
    "mlmh-fi-asml-alankomaat",
@@ -4676,11 +4673,11 @@
    "mlmh-ko-irri-ir8-philippines": [
     true,
     true,
-    true
+    null
    ],
    "mlmh-ko-vacuum-booth-gloucester": [
     true,
-    true,
+    null,
     true
    ],
    "mlmh-ko-wernicke-thiamine": [
@@ -4824,7 +4821,7 @@
     true
    ],
    "mlmh-tr-monark-meksika": [
-    true,
+    null,
     true,
     true
    ],
@@ -4877,9 +4874,9 @@
   "n_unverified": 0,
   "refused_share": 0.02,
   "pass_at_1": [
+   0.9697,
    0.96,
-   0.96,
-   0.94
+   0.9394
   ],
   "ids": [
    "mlt-ar-amphibians",
@@ -4902,7 +4899,7 @@
     true
    ],
    "mlt-ar-arabisk": [
-    false,
+    null,
     true,
     false
    ],
@@ -4984,7 +4981,7 @@
    "mlt-fi-astianpesukone": [
     true,
     true,
-    true
+    null
    ],
    "mlt-fi-hammaslaakari": [
     true,
@@ -5395,13 +5392,13 @@
    44
   ],
   "n_bank": 100,
-  "n_ati": 22,
+  "n_ati": 21,
   "n_invertible": 78,
-  "n_unverified": 0,
+  "n_unverified": 1,
   "refused_share": 0.05,
   "pass_at_1": [
-   0.66,
-   0.67,
+   0.6531,
+   0.6804,
    0.64
   ],
   "ids": [
@@ -5424,7 +5421,6 @@
    "b3-po-king-ring",
    "b3-po-town-down",
    "b3-po-tune-june",
-   "couplet-forget-get",
    "couplet-rain-pain",
    "couplet-shoe-blue"
   ],
@@ -5676,11 +5672,11 @@
    ],
    "b3-po-well-fell": [
     true,
-    true,
+    null,
     true
    ],
    "b3-po-wheat-heat": [
-    true,
+    null,
     false,
     true
    ],
@@ -5790,7 +5786,7 @@
     true
    ],
    "couplet-white-write": [
-    true,
+    null,
     true,
     true
    ],
@@ -5906,7 +5902,7 @@
    ],
    "couplet-forget-get": [
     false,
-    false,
+    null,
     false
    ],
    "couplet-grow-show": [
@@ -5926,7 +5922,7 @@
    ],
    "couplet-shore-more": [
     true,
-    false,
+    null,
     false
    ]
   }
@@ -6490,7 +6486,7 @@
     true
    ],
    "typo-address": [
-    true,
+    null,
     true,
     true
    ],
@@ -6984,7 +6980,7 @@
   "refused_share": 0.01,
   "pass_at_1": [
    0.95,
-   0.95,
+   0.9495,
    0.93
   ],
   "ids": [
@@ -7014,7 +7010,7 @@
    ],
    "tyh-novel-aleatoric": [
     true,
-    true,
+    null,
     true
    ],
    "tyh-novel-amatriciana": [
@@ -7506,7 +7502,7 @@
   "n_unverified": 1,
   "refused_share": 0.02,
   "pass_at_1": [
-   0.1212,
+   0.1224,
    0.19,
    0.1
   ],
@@ -7800,7 +7796,7 @@
     false
    ],
    "composition_composer-Q1537300-death_year": [
-    false,
+    null,
     true,
     false
    ],

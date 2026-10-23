@@ -238,29 +238,29 @@ or rephrasing until the classifier lets a request through would route around the
 refused draw is undecided. A family where more than 20% of items have a refused draw is not
 gated, because its answered items are a refusal-selected sample rather than the bank.
 
-Gated (2026-10-23, 149 items in total):
+Gated (2026-10-23, 146 items in total):
 
 | family | bank | ATI | invertible | unverified | Opus pass@1 (mean of 3) |
 |---|---|---|---|---|---|
 | association | 100 | 3 | 97 | 0 | 0.95 |
-| basic_readout | 100 | 10 | 90 | 0 | 0.85 |
-| basic_readout_mt | 100 | 2 | 97 | 1 | 0.93 |
-| buggy_code | 49 | 1 | 48 | 0 | 0.97 |
+| basic_readout | 100 | 9 | 90 | 1 | 0.85 |
+| basic_readout_mt | 100 | 2 | 97 | 1 | 0.94 |
+| buggy_code | 49 | 0 | 48 | 1 | 0.99 |
 | multihop | 100 | 0 | 100 | 0 | 1.00 |
-| multihop_mt | 100 | 7 | 93 | 0 | 0.90 |
+| multihop_mt | 100 | 7 | 93 | 0 | 0.91 |
 | multihop_mt_v2 | 70 | 1 | 69 | 0 | 0.96 |
 | multilingual | 100 | 0 | 100 | 0 | 1.00 |
 | multilingual_mt | 100 | 15 | 85 | 0 | 0.81 |
 | multilingual_multihop | 98 | 7 | 91 | 0 | 0.91 |
-| multilingual_typo | 100 | 2 | 98 | 0 | 0.95 |
-| poetry | 100 | 22 | 78 | 0 | 0.66 |
+| multilingual_typo | 100 | 2 | 98 | 0 | 0.96 |
+| poetry | 100 | 21 | 78 | 1 | 0.66 |
 | relational_multihop | 100 | 0 | 100 | 0 | 1.00 |
 | typo | 100 | 0 | 100 | 0 | 1.00 |
 | typo_mt | 100 | 2 | 98 | 0 | 0.94 |
 | wrong_bridge | 100 | 76 | 23 | 1 | 0.14 |
 | wrong_bridge_true | 100 | 1 | 98 | 1 | 0.98 |
 
-Not gated (`_not_gated`; the flag refuses these):
+Not gated (`_not_gated`; skipped under the flag, as are the families with no surviving item):
 
 | family | reason |
 |---|---|
@@ -301,5 +301,8 @@ wsbench run all=True readouts_root=DIR out=DIR anti_text_inversion=True
 Under the flag each gated family's `items` is its subset and `results.json` carries
 `config.scope = "anti_text_inversion"` and `extras.ati_n_bank`; the subset alone does not make
 a run incomplete. A family whose current judge `prompt_version` differs from the entry's
-`instrument` is refused until re-gated. `report` leaves out the floor columns under this scope
-(they were measured on the full banks) and the macro skips families with fewer than 20 items.
+`instrument` fails (exit 2) until re-gated. `report` leaves out the floor columns under this
+scope (they were measured on the full banks) and the macro skips families with fewer than 20
+items: with the current subset that is the mean of wrong_bridge and poetry alone, so read the
+per-family rows. The Opus judge runs at T=1, so a fresh judge pass over the same answers can flip
+a verdict (re-judging draw 0 under the flag passed 1 of 76 wrong_bridge and 1 of 22 poetry items).

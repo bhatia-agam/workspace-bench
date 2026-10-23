@@ -166,6 +166,14 @@ class JudgeFamily(JudgeOptions):
             opts = parse_opts(self.opt)
             judge = resolve(spec.judge, flag=self.judge_model, env=os.environ)
             runner.judge_family(spec, self, self.readouts, out, judge=judge, opts=opts)
+        except text_inversion.NotInScope as e:
+            print(f"skipped: {e.code}", file=sys.stderr)
+            return 0
+        except SystemExit as e:
+            if not isinstance(e.code, str):
+                raise
+            print(e.code, file=sys.stderr)
+            return EXIT_USAGE
         except JudgeConfigError as e:
             print(f"judge config error: {e}", file=sys.stderr)
             return EXIT_JUDGE_CONFIG

@@ -171,10 +171,15 @@ async def _ask(out: Path, draws: int, concurrency: int, families: set[str] | Non
     ans_dir = out / "answers"
     ans_dir.mkdir(parents=True, exist_ok=True)
     client = AsyncAnthropic(max_retries=4, timeout=900)
-    probe = await _ask_one(client, asyncio.Semaphore(1), prompts[0], -1)
-    if probe["error"]:
-        raise SystemExit(f"preflight failed, aborting before the batch: {probe['error']}")
-    print(f"preflight OK: {probe['answer'][:100]!r}", flush=True)
+    # Preflight on a neutral prompt outside the bank, so a resume never re-sends a bank prompt
+    # (a refused one stays refused) and a policy refusal cannot masquerade as a dead credential.
+    try:
+        msg = await client.messages.create(
+            model=ANSWERER, max_tokens=64, messages=[{"role": "user", "content": "Say OK."}]
+        )
+    except Exception as exc:
+        raise SystemExit(f"preflight failed, aborting before the batch: {exc}") from exc
+    print(f"preflight OK: {_text(msg)[:40]!r}", flush=True)
     sem = asyncio.Semaphore(concurrency)
     n_fail = 0
     for d in range(draws):
@@ -210,7 +215,17 @@ def ask(
 def is_refusal(r: dict[str, Any]) -> bool:
     """A policy refusal: final, never re-asked (rows from before the ``refused`` field carry it
     only in the error text)."""
-    return bool(r.get("refused")) or "stop_reason=refusal" in r.get("error", "")
+    return (
+        bool(r.get("refused"))
+        or r.get("stop_reason") == "refusal"
+        or "stop_reason=refusal" in r.get("error", "")
+    )
+
+
+def usable(a: dict[str, Any] | None) -> bool:
+    """An answer that may be judged: present, error-free, non-empty and not a policy refusal (a
+    refusal can arrive with partial text and no error; it is still not an answer)."""
+    return a is not None and not a["error"] and bool(a["answer"]) and not is_refusal(a)
 
 
 def latest_answers(path: Path) -> dict[tuple[str, str], dict[str, Any]]:
@@ -253,7 +268,7 @@ def write_readouts(out: Path = OUT, draws: int = DRAWS) -> dict[str, list[int]]:
                 if fam not in handles:
                     handles[fam] = (root / f"{fam}.jsonl").open("w", encoding="utf-8")
                 a = ans.get((fam, p["id"]))
-                if a is None or a["error"] or not a["answer"]:
+                if not usable(a):
                     continue
                 cells = list(zip(p["positions"], p["tokens"], strict=True))
                 if fam not in ALL_POSITIONS:
@@ -288,7 +303,10 @@ def draw_verdicts(results_path: Path) -> dict[str, bool | None]:
     fam = d["family"]
     by_item: dict[str, list[bool | None]] = {}
     for r in d.get("rows", []):
-        iid = str(r.get("id", r.get("name", r.get("item"))))
+        raw = r.get("id", r.get("name", r.get("item")))
+        if raw is None:
+            raise ValueError(f"{fam}: a row has no id / name / item")
+        iid = str(raw)
         if fam == "buggy_code":
             s = r.get("score")
             v = None if s is None or not r.get("judged", True) else s >= BUGGY_PASS_SCORE
@@ -351,8 +369,7 @@ def gate(out: Path = OUT, draws: int = DRAWS, dst: Path | None = FROZEN) -> dict
         # with the missing cell, that draw is undecided, never a fail.
         for v, ans in zip(verdicts, answers, strict=True):
             for i in ids:
-                a = ans.get((fam, i))
-                if a is None or a["error"] or not a["answer"]:
+                if not usable(ans.get((fam, i))):
                     v[i] = None
         draw_pass = {i: [v.get(i) for v in verdicts] for i in ids}
         ati = [i for i in ids if all(x is False for x in draw_pass[i])]
@@ -406,6 +423,13 @@ def gate(out: Path = OUT, draws: int = DRAWS, dst: Path | None = FROZEN) -> dict
 
 
 SCOPE = "anti_text_inversion"
+
+
+class NotInScope(SystemExit):
+    """A family the ATI scope leaves out by design (not gated, or no surviving item): the
+    runner reports it as skipped, not failed."""
+
+
 MACRO_MIN_ITEMS = 20
 
 
@@ -423,7 +447,7 @@ def subset_entry(family: str, dst: Path = FROZEN) -> dict[str, Any]:
     frozen = json.loads(dst.read_text(encoding="utf-8")) if dst.exists() else {}
     not_gated = {**NOT_GATED, **frozen.get("_not_gated", {})}
     if family in not_gated:
-        raise SystemExit(f"{family}: not gated for {SCOPE} ({not_gated[family]})")
+        raise NotInScope(f"{family}: not gated for {SCOPE} ({not_gated[family]})")
     entry = frozen.get(family)
     if entry is None:
         raise SystemExit(f"{family}: no {SCOPE} entry in {dst.name}; run the gate first")
@@ -434,5 +458,5 @@ def subset_entry(family: str, dst: Path = FROZEN) -> dict[str, Any]:
             f"the family's instrument is {current!r}; re-gate"
         )
     if not entry["ids"]:
-        raise SystemExit(f"{family}: no item survives the {SCOPE} gate")
+        raise NotInScope(f"{family}: no item survives the {SCOPE} gate")
     return entry

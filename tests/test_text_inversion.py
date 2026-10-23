@@ -302,7 +302,7 @@ def test_run_flag_scopes_each_family_and_stamps_results(offline, tmp_path, monke
         r.complete = not mcjudge.is_subset(args)
         return r
 
-    for name in ("one", "two", "ungated"):
+    for name in ("one", "two", "ungated", "stale"):
         register(
             EvalSpec(
                 name=name,
@@ -321,28 +321,33 @@ def test_run_flag_scopes_each_family_and_stamps_results(offline, tmp_path, monke
     }
 
     def entry(family):
+        if family == "stale":
+            raise SystemExit("stale: re-gate")
         if family not in entries:
-            raise SystemExit(f"{family}: not gated for anti_text_inversion (test)")
+            raise ti.NotInScope(f"{family}: not gated for anti_text_inversion (test)")
         return entries[family]
 
     monkeypatch.setattr(ti, "subset_entry", entry)
     root, out = tmp_path / "r", tmp_path / "o"
     root.mkdir()
-    for n in ("one", "two", "ungated"):
+    for n in ("one", "two", "ungated", "stale"):
         (root / f"{n}.jsonl").write_text(
             json.dumps({"id": "a", "layer": 1, "pos": 0, "samples": ["x"]}) + "\n"
         )
     code = main(
         ["run", "all=True", f"readouts_root={root}", f"out={out}", "anti_text_inversion=True"]
     )
-    assert code == 2  # the ungated family fails soft
+    assert code == 2  # the stale family fails (re-gate); the ungated one is only skipped
+    assert "ungated" not in seen and "stale" not in seen  # neither reached its judge
     assert seen["one"].items == ["a", "b"] and seen["two"].items == ["c"]
     assert seen["one"].scope == "anti_text_inversion"
     res = json.loads((out / "one" / "results.json").read_text())
     assert res["config"]["scope"] == "anti_text_inversion"
     assert res["numbers"]["extras"]["ati_n_bank"] == 10
     assert res["complete"] is True
-    assert "ungated: failed — ungated: not gated" in (out / "summary.md").read_text()
+    summary = (out / "summary.md").read_text()
+    assert "- ungated: skipped — ungated: not gated" in summary
+    assert "- stale: failed — stale: re-gate" in summary
 
 
 def test_flag_and_items_are_exclusive(offline, tmp_path, capsys):
@@ -354,3 +359,48 @@ def test_flag_and_items_are_exclusive(offline, tmp_path, capsys):
 def test_template_is_verbatim_in_the_baselines_readme():
     readme = (registry.REPO_ROOT / "evals" / "baselines" / "README.md").read_text()
     assert f"```\n{ti.TEMPLATE}\n```" in readme
+
+
+def test_refusal_with_partial_text_is_not_usable():
+    row = {"answer": "The model has", "error": "", "refused": True, "stop_reason": "refusal"}
+    assert not ti.usable(row)
+    assert not ti.usable({**row, "refused": False})  # the stop_reason alone marks it
+    assert ti.usable({"answer": "x", "error": "", "stop_reason": "end_turn"})
+
+
+def test_draw_verdicts_requires_an_item_id(tmp_path):
+    p = _results(tmp_path / "r", "fam", [{"pass": True}], value=1.0)
+    with pytest.raises(ValueError, match="no id"):
+        ti.draw_verdicts(p)
+
+
+def test_judge_command_exit_codes_under_the_flag(offline, tmp_path, monkeypatch, capsys):
+    def run(args):
+        return _fr("x", 1, None)
+
+    for name in ("ungated", "stale"):
+        register(
+            EvalSpec(
+                name=name,
+                title=name,
+                group="logic",
+                bank=Path("x"),
+                judge=JudgeConfig(),
+                metric="pass_rate",
+                higher_is_better=True,
+                run=run,
+            )
+        )
+
+    def entry(family):
+        if family == "stale":
+            raise SystemExit("stale: re-gate")
+        raise ti.NotInScope(f"{family}: not gated")
+
+    monkeypatch.setattr(ti, "subset_entry", entry)
+    r = tmp_path / "r.jsonl"
+    r.write_text("")
+    base = ["judge", f"readouts={r}", f"out={tmp_path / 'o'}", "anti_text_inversion=True"]
+    assert main([*base, "family=ungated"]) == 0
+    assert main([*base, "family=stale"]) == 2
+    assert "re-gate" in capsys.readouterr().err

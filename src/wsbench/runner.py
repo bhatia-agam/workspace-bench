@@ -176,8 +176,21 @@ def run_families(
             msg = f"no readouts at {readouts}"
             print(f"{s.name}: skipped ({msg})")
             outcomes[s.name] = FamilyOutcome(s.name, "skipped", error=msg)
-        else:
-            runnable.append((s, readouts))
+            continue
+        if getattr(args, "anti_text_inversion", False):
+            # checked before any preflight: an out-of-scope family is skipped, a stale or
+            # missing subset entry fails (re-gate); neither spends a call
+            try:
+                text_inversion.subset_entry(s.name)
+            except text_inversion.NotInScope as e:
+                print(f"{s.name}: skipped ({e.code})")
+                outcomes[s.name] = FamilyOutcome(s.name, "skipped", error=str(e.code))
+                continue
+            except SystemExit as e:
+                print(f"{s.name}: failed ({e.code})", file=sys.stderr)
+                outcomes[s.name] = FamilyOutcome(s.name, "failed", error=str(e.code), exit_code=2)
+                continue
+        runnable.append((s, readouts))
     # a family with a deterministic scorer of record makes no call unless opts=judge=mc
     needs_llm = [s for s, _r in runnable if not s.scorer or opts.get("judge") == "mc"]
     if needs_llm and not args.dry_run:
