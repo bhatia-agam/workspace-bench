@@ -8,6 +8,11 @@ name the model's **own** answer for the category (its stable default, e.g. `baha
 PRs #552 + #560). **Not in the macro** (`not_in_macro="hillclimbing: not yet reviewed"`, plan
 0016) until reviewed; it runs in `all` and appears in every table.
 
+
+Note: the bank header's `contract.aggregation` ("plurality over writing positions x layers") is the
+source's pre-regex wording, copied verbatim with the frozen bank; the scorer of record is the
+regex any-cell rule described here.
+
 ## Bank
 
 `items.json` is the source bank's header plus its 98 scored `items`, unedited. The source file's
