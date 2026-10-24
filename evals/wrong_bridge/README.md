@@ -1,5 +1,7 @@
 # wrong_bridge
 
+> **V4-Flash branch:** `items.json` is re-labelled on DeepSeek-V4-Flash's own behaviour (21 items; Subject = DeepSeek-V4-Flash: every behavioural gate re-run on V4 (vLLM 0.31, TP1, BOS + raw prompt text, no chat template). MIN_SAMPLE_AGREE = 4 (the value the Qwen bank was frozen at; scripts/wrong_bridge/gate.py:19 says 6). Wikidata scrape and candidates reused from the Qwen build. Built by global-workspace scripts/v4_flash/newfam/wrong_bridge/.) The Qwen3.6-27B bank described below is kept as `items.qwen.json`; the gate wording below refers to it.
+
 Does the lens name the model's WRONG intermediate? A Wikidata two-hop prompt where Qwen3.6-27B resolves the wrong bridge B' (instead of the true B) and so answers hop2(B'). The scored latent is B'.
 
 Example: "Fact: The composer of Canon and Gigue in D died in the year" -> model answer `1750`

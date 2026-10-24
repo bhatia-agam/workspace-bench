@@ -1,5 +1,7 @@
 # wrong_bridge_true
 
+> **V4-Flash branch:** `items.json` is re-labelled on DeepSeek-V4-Flash's own behaviour (21 items; Subject = DeepSeek-V4-Flash: every behavioural gate re-run on V4 (vLLM 0.31, TP1, BOS + raw prompt text, no chat template). MIN_SAMPLE_AGREE = 4 (the value the Qwen bank was frozen at; scripts/wrong_bridge/gate.py:19 says 6). Wikidata scrape and candidates reused from the Qwen build. Built by global-workspace scripts/v4_flash/newfam/wrong_bridge/.) The Qwen3.6-27B bank described below is kept as `items.qwen.json`; the gate wording below refers to it.
+
 The true-bridge contrast of `wrong_bridge`: the same 100 items, ids and read sites, scored against the TRUE bridge B that the model failed to use. Read the two side by side: a lens that tracks what the model computed should name B' (wrong_bridge) more often than B (this family); a lens that reads world knowledge about the subject may name B.
 
 Example: "Fact: The composer of Canon and Gigue in D died in the year" -> model answer `1750`
