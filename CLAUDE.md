@@ -79,6 +79,8 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   dm_category_default (plan 0016) has its own regex `judge.py` with no LLM and no summarizer
   (token readouts are matched token by token, as in the source); its `PROMPTS` holds only the
   subject template, since `test_prompts_in_readme` requires every family to export one.
+  cutoff_confab also has its own `score.py`: an exact port of the source's per-option span
+  matcher with exclusive longest match (no call; one bank-wide layer at reply_start).
 - `opts=key=value,k2=v2` fills `JudgeArgs.extra`; `aux_models` comes from the family `JudgeConfig`.
   `EvalSpec.calls_per_arm` / `.sources` feed `wsbench list`; every non-empty `sources` must
   appear verbatim in README §Credits and NOTICE.md (`tests/test_readme.py`).
