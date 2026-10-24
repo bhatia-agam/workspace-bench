@@ -1,5 +1,7 @@
 # multihop_mt_v2
 
+> **V4-Flash branch:** `items.json` is re-labelled on DeepSeek-V4-Flash's own behaviour (100 items; every V4-dependent gate re-run on V4; built by global-workspace `scripts/v4_flash/newfam/multihop_mt_v2/`, issue #555). The Qwen3.6-27B bank described below is kept as `items.qwen.json` (and its toy readouts as `examples/readouts/multihop_mt_v2.qwen.jsonl`); `tests/golden/{mt_regex_units,multihop_mt_v2_options}.json` are regenerated on the V4 bank.
+
 A two- or three-hop factual prompt whose bridges are multi-token names. Every bridge must be
 written by the lens in one layer, and **every bridge is proved necessary**: the model cannot
 reach the answer without it. Example: "Fact: the crusader monarch nicknamed 'Cœur de Lion', who first licensed jousting tournaments on English soil was succeeded on the throne by his younger brother, a monarch whose reign is best remembered for the" → bridges *Richard I of England* and

@@ -16725,14 +16725,15 @@
   ]
  },
  "multihop_mt_v2": {
-  "mh2-coeur-de-lion-brother-charter-q2": [
+  "mh2-terracotta-qin-lisi-xunzi": [
    {
     "role": "bridge1",
     "required": true,
     "forms": {
      "en": [
-      "Richard I of England",
-      "Richard the Lionheart"
+      "Qin Shi Huang",
+      "Ying Zheng",
+      "First Emperor of Qin"
      ]
     }
    },
@@ -16741,8 +16742,7 @@
     "required": true,
     "forms": {
      "en": [
-      "John of England",
-      "John Lackland"
+      "Li Si"
      ]
     }
    },
@@ -16751,19 +16751,21 @@
     "required": false,
     "forms": {
      "en": [
-      "Magna Carta",
-      "Magna Carta Libertatum"
+      "Xunzi",
+      "Xun Kuang",
+      "Hsün Tzu"
      ]
     }
    }
   ],
-  "mh2-tippecanoe-grandson-number-r3": [
+  "mh2-sainte-chapelle-anjou-vespers": [
    {
     "role": "bridge1",
     "required": true,
     "forms": {
      "en": [
-      "William Henry Harrison"
+      "Louis IX of France",
+      "Louis IX"
      ]
     }
    },
@@ -16772,7 +16774,8 @@
     "required": true,
     "forms": {
      "en": [
-      "Benjamin Harrison"
+      "Charles of Anjou",
+      "Charles I of Anjou"
      ]
     }
    },
@@ -16781,19 +16784,19 @@
     "required": false,
     "forms": {
      "en": [
-      "23rd",
-      "twenty-third"
+      "Sicilian Vespers"
      ]
     }
    }
   ],
-  "mh2-henry-james-pragmatism": [
+  "mh2-curie-piezo": [
    {
     "role": "bridge1",
     "required": true,
     "forms": {
      "en": [
-      "Henry James"
+      "Marie Curie",
+      "Maria Skłodowska-Curie"
      ]
     }
    },
@@ -16802,7 +16805,7 @@
     "required": true,
     "forms": {
      "en": [
-      "William James"
+      "Pierre Curie"
      ]
     }
    },
@@ -16811,8 +16814,8 @@
     "required": false,
     "forms": {
      "en": [
-      "pragmatism",
-      "American pragmatism"
+      "piezoelectricity",
+      "piezoelectric effect"
      ]
     }
    }
@@ -16847,13 +16850,15 @@
     }
    }
   ],
-  "mh2-ray-tagore-gitanjali-q1": [
+  "mh2-alexander-i-nicholas-crimean-r3": [
    {
     "role": "bridge1",
     "required": true,
     "forms": {
      "en": [
-      "Satyajit Ray"
+      "Alexander I of Russia",
+      "Alexander I",
+      "Alexander Pavlovich"
      ]
     }
    },
@@ -16862,7 +16867,104 @@
     "required": true,
     "forms": {
      "en": [
-      "Rabindranath Tagore"
+      "Nicholas I of Russia",
+      "Nicholas I",
+      "Nikolai Pavlovich"
+     ]
+    }
+   },
+   {
+    "role": "target",
+    "required": false,
+    "forms": {
+     "en": [
+      "Crimean War"
+     ]
+    }
+   }
+  ],
+  "mh2-galen-marcus-aurelius-meditations": [
+   {
+    "role": "bridge1",
+    "required": true,
+    "forms": {
+     "en": [
+      "Galen of Pergamon",
+      "Galen",
+      "Aelius Galenus"
+     ]
+    }
+   },
+   {
+    "role": "bridge2",
+    "required": true,
+    "forms": {
+     "en": [
+      "Marcus Aurelius",
+      "Marcus Aurelius Antoninus"
+     ]
+    }
+   },
+   {
+    "role": "target",
+    "required": false,
+    "forms": {
+     "en": [
+      "Meditations",
+      "To Himself"
+     ]
+    }
+   }
+  ],
+  "mh2-tapestry-harold-stamford": [
+   {
+    "role": "bridge1",
+    "required": true,
+    "forms": {
+     "en": [
+      "William the Conqueror",
+      "William I"
+     ]
+    }
+   },
+   {
+    "role": "bridge2",
+    "required": true,
+    "forms": {
+     "en": [
+      "Harold Godwinson",
+      "Harold II"
+     ]
+    }
+   },
+   {
+    "role": "target",
+    "required": false,
+    "forms": {
+     "en": [
+      "Battle of Stamford Bridge"
+     ]
+    }
+   }
+  ],
+  "mh2-ray-tagore-gitanjali-q0": [
+   {
+    "role": "bridge1",
+    "required": true,
+    "forms": {
+     "en": [
+      "Satyajit Ray",
+      "Satyajit"
+     ]
+    }
+   },
+   {
+    "role": "bridge2",
+    "required": true,
+    "forms": {
+     "en": [
+      "Rabindranath Tagore",
+      "Tagore"
      ]
     }
    },
@@ -16872,19 +16974,19 @@
     "forms": {
      "en": [
       "Gitanjali",
-      "Gitanjali: Song Offerings"
+      "Song Offerings"
      ]
     }
    }
   ],
-  "mh2-faraday-davy-lamp": [
+  "mh2-joni-nash-hollies-r1": [
    {
     "role": "bridge1",
     "required": true,
     "forms": {
      "en": [
-      "Michael Faraday",
-      "Faraday"
+      "Joni Mitchell",
+      "Roberta Joan Anderson"
      ]
     }
    },
@@ -16893,9 +16995,7 @@
     "required": true,
     "forms": {
      "en": [
-      "Humphry Davy",
-      "Sir Humphry Davy",
-      "Davy"
+      "Graham Nash"
      ]
     }
    },
@@ -16904,20 +17004,29 @@
     "required": false,
     "forms": {
      "en": [
-      "miner's safety lamp",
-      "safety lamp"
+      "The Hollies"
      ]
     }
    }
   ],
-  "mh2-1324-pilgrim-poet-builder": [
+  "mh2-seleucus-chandragupta-chanakya-r3": [
    {
     "role": "bridge1",
     "required": true,
     "forms": {
      "en": [
-      "Mansa Musa",
-      "Musa I of Mali"
+      "Seleucus I Nicator",
+      "Seleucus Nicator"
+     ]
+    }
+   },
+   {
+    "role": "bridge2",
+    "required": true,
+    "forms": {
+     "en": [
+      "Chandragupta Maurya",
+      "Chandragupta"
      ]
     }
    },
@@ -16926,23 +17035,30 @@
     "required": false,
     "forms": {
      "en": [
-      "Abu Ishaq al-Sahili",
-      "al-Sahili",
-      "Abu Ishaq es-Saheli",
-      "Es-Saheli",
-      "es-Saheli"
+      "Chanakya",
+      "Kautilya",
+      "Vishnugupta"
      ]
     }
    }
   ],
-  "mh2-1896-victory-italian-general": [
+  "mh2-yamanaka-gurdon-frog": [
    {
     "role": "bridge1",
     "required": true,
     "forms": {
      "en": [
-      "Battle of Adwa",
-      "Battle of Adowa"
+      "Shinya Yamanaka"
+     ]
+    }
+   },
+   {
+    "role": "bridge2",
+    "required": true,
+    "forms": {
+     "en": [
+      "John Gurdon",
+      "Sir John Gurdon"
      ]
     }
    },
@@ -16951,8 +17067,919 @@
     "required": false,
     "forms": {
      "en": [
-      "Oreste Baratieri",
-      "Baratieri"
+      "Xenopus",
+      "African clawed frog"
+     ]
+    }
+   }
+  ],
+  "mh2-khadija-fatimah-ali": [
+   {
+    "role": "bridge1",
+    "required": true,
+    "forms": {
+     "en": [
+      "Khadija bint Khuwaylid",
+      "Khadija"
+     ]
+    }
+   },
+   {
+    "role": "bridge2",
+    "required": true,
+    "forms": {
+     "en": [
+      "Fatimah bint Muhammad",
+      "Fatimah",
+      "Fatima al-Zahra"
+     ]
+    }
+   },
+   {
+    "role": "target",
+    "required": false,
+    "forms": {
+     "en": [
+      "Ali ibn Abi Talib"
+     ]
+    }
+   }
+  ],
+  "mh2-racine-corneille-cid": [
+   {
+    "role": "bridge1",
+    "required": true,
+    "forms": {
+     "en": [
+      "Jean Racine",
+      "Racine"
+     ]
+    }
+   },
+   {
+    "role": "bridge2",
+    "required": true,
+    "forms": {
+     "en": [
+      "Pierre Corneille",
+      "Corneille"
+     ]
+    }
+   },
+   {
+    "role": "target",
+    "required": false,
+    "forms": {
+     "en": [
+      "Le Cid"
+     ]
+    }
+   }
+  ],
+  "mh2-young-india-editor-heir-speech": [
+   {
+    "role": "bridge1",
+    "required": true,
+    "forms": {
+     "en": [
+      "Mahatma Gandhi",
+      "Mohandas Karamchand Gandhi"
+     ]
+    }
+   },
+   {
+    "role": "bridge2",
+    "required": true,
+    "forms": {
+     "en": [
+      "Jawaharlal Nehru",
+      "Pandit Nehru"
+     ]
+    }
+   },
+   {
+    "role": "target",
+    "required": false,
+    "forms": {
+     "en": [
+      "Tryst with Destiny"
+     ]
+    }
+   }
+  ],
+  "mh2-volta-galvani-animal-electricity": [
+   {
+    "role": "bridge1",
+    "required": true,
+    "forms": {
+     "en": [
+      "Alessandro Volta"
+     ]
+    }
+   },
+   {
+    "role": "bridge2",
+    "required": true,
+    "forms": {
+     "en": [
+      "Luigi Galvani",
+      "Galvani"
+     ]
+    }
+   },
+   {
+    "role": "target",
+    "required": false,
+    "forms": {
+     "en": [
+      "animal electricity"
+     ]
+    }
+   }
+  ],
+  "mh2-coppola-sofia-translation": [
+   {
+    "role": "bridge1",
+    "required": true,
+    "forms": {
+     "en": [
+      "Francis Ford Coppola",
+      "Francis Coppola"
+     ]
+    }
+   },
+   {
+    "role": "bridge2",
+    "required": true,
+    "forms": {
+     "en": [
+      "Sofia Coppola",
+      "Sofia Carmina Coppola"
+     ]
+    }
+   },
+   {
+    "role": "target",
+    "required": false,
+    "forms": {
+     "en": [
+      "Lost in Translation"
+     ]
+    }
+   }
+  ],
+  "mh2-borges-bioy-casares": [
+   {
+    "role": "bridge1",
+    "required": true,
+    "forms": {
+     "en": [
+      "Jorge Luis Borges"
+     ]
+    }
+   },
+   {
+    "role": "bridge2",
+    "required": true,
+    "forms": {
+     "en": [
+      "Adolfo Bioy Casares"
+     ]
+    }
+   },
+   {
+    "role": "target",
+    "required": false,
+    "forms": {
+     "en": [
+      "The Invention of Morel",
+      "La invención de Morel"
+     ]
+    }
+   }
+  ],
+  "mh2-zuckerberg-sandberg-leanin": [
+   {
+    "role": "bridge1",
+    "required": true,
+    "forms": {
+     "en": [
+      "Mark Zuckerberg",
+      "Mark Elliot Zuckerberg"
+     ]
+    }
+   },
+   {
+    "role": "bridge2",
+    "required": true,
+    "forms": {
+     "en": [
+      "Sheryl Sandberg",
+      "Sheryl Kara Sandberg"
+     ]
+    }
+   },
+   {
+    "role": "target",
+    "required": false,
+    "forms": {
+     "en": [
+      "Lean In",
+      "Lean In: Women, Work, and the Will to Lead"
+     ]
+    }
+   }
+  ],
+  "mh2-gaga-bennett-sanfrancisco": [
+   {
+    "role": "bridge1",
+    "required": true,
+    "forms": {
+     "en": [
+      "Lady Gaga",
+      "Stefani Germanotta"
+     ]
+    }
+   },
+   {
+    "role": "bridge2",
+    "required": true,
+    "forms": {
+     "en": [
+      "Tony Bennett",
+      "Anthony Dominick Benedetto"
+     ]
+    }
+   },
+   {
+    "role": "target",
+    "required": false,
+    "forms": {
+     "en": [
+      "I Left My Heart in San Francisco"
+     ]
+    }
+   }
+  ],
+  "mh2-sriperumbudur-wife-birth-country": [
+   {
+    "role": "bridge1",
+    "required": true,
+    "forms": {
+     "en": [
+      "Rajiv Gandhi"
+     ]
+    }
+   },
+   {
+    "role": "bridge2",
+    "required": true,
+    "forms": {
+     "en": [
+      "Sonia Gandhi",
+      "Sonia Maino"
+     ]
+    }
+   },
+   {
+    "role": "target",
+    "required": false,
+    "forms": {
+     "en": [
+      "Italian Republic"
+     ]
+    }
+   }
+  ],
+  "mh2-ambedkar-dewey-pragmatism-q3": [
+   {
+    "role": "bridge1",
+    "required": true,
+    "forms": {
+     "en": [
+      "B. R. Ambedkar",
+      "Bhimrao Ramji Ambedkar",
+      "Babasaheb Ambedkar"
+     ]
+    }
+   },
+   {
+    "role": "bridge2",
+    "required": true,
+    "forms": {
+     "en": [
+      "John Dewey"
+     ]
+    }
+   },
+   {
+    "role": "target",
+    "required": false,
+    "forms": {
+     "en": [
+      "pragmatism"
+     ]
+    }
+   }
+  ],
+  "mh2-survey-vessel-captain-science": [
+   {
+    "role": "bridge1",
+    "required": true,
+    "forms": {
+     "en": [
+      "HMS Beagle",
+      "Beagle"
+     ]
+    }
+   },
+   {
+    "role": "bridge2",
+    "required": true,
+    "forms": {
+     "en": [
+      "Robert FitzRoy",
+      "Robert Fitzroy",
+      "Vice-Admiral Robert FitzRoy"
+     ]
+    }
+   },
+   {
+    "role": "target",
+    "required": false,
+    "forms": {
+     "en": [
+      "weather forecasting",
+      "meteorology"
+     ]
+    }
+   }
+  ],
+  "mh2-blomkamp-jackson-rotk-r0": [
+   {
+    "role": "bridge1",
+    "required": true,
+    "forms": {
+     "en": [
+      "Neill Blomkamp"
+     ]
+    }
+   },
+   {
+    "role": "bridge2",
+    "required": true,
+    "forms": {
+     "en": [
+      "Peter Jackson"
+     ]
+    }
+   },
+   {
+    "role": "target",
+    "required": false,
+    "forms": {
+     "en": [
+      "The Return of the King",
+      "The Lord of the Rings: The Return of the King"
+     ]
+    }
+   }
+  ],
+  "mh2-byron-lovelace-babbage": [
+   {
+    "role": "bridge1",
+    "required": true,
+    "forms": {
+     "en": [
+      "Lord Byron",
+      "George Gordon Byron"
+     ]
+    }
+   },
+   {
+    "role": "bridge2",
+    "required": true,
+    "forms": {
+     "en": [
+      "Ada Lovelace",
+      "Augusta Ada King"
+     ]
+    }
+   },
+   {
+    "role": "target",
+    "required": false,
+    "forms": {
+     "en": [
+      "Charles Babbage"
+     ]
+    }
+   }
+  ],
+  "mh2-merkel-kohl-reunification": [
+   {
+    "role": "bridge1",
+    "required": true,
+    "forms": {
+     "en": [
+      "Angela Merkel"
+     ]
+    }
+   },
+   {
+    "role": "bridge2",
+    "required": true,
+    "forms": {
+     "en": [
+      "Helmut Kohl"
+     ]
+    }
+   },
+   {
+    "role": "target",
+    "required": false,
+    "forms": {
+     "en": [
+      "German reunification",
+      "reunification of Germany",
+      "Deutsche Wiedervereinigung"
+     ]
+    }
+   }
+  ],
+  "mh2-thomas-klaus-mephisto": [
+   {
+    "role": "bridge1",
+    "required": true,
+    "forms": {
+     "en": [
+      "Thomas Mann",
+      "Paul Thomas Mann"
+     ]
+    }
+   },
+   {
+    "role": "bridge2",
+    "required": true,
+    "forms": {
+     "en": [
+      "Klaus Mann"
+     ]
+    }
+   },
+   {
+    "role": "target",
+    "required": false,
+    "forms": {
+     "en": [
+      "Mephisto"
+     ]
+    }
+   }
+  ],
+  "mh2-stefani-rossdale-bush": [
+   {
+    "role": "bridge1",
+    "required": true,
+    "forms": {
+     "en": [
+      "Gwen Stefani",
+      "Gwen Renée Stefani"
+     ]
+    }
+   },
+   {
+    "role": "bridge2",
+    "required": true,
+    "forms": {
+     "en": [
+      "Gavin Rossdale"
+     ]
+    }
+   }
+  ],
+  "mh2-ratzinger-wojtyla-krakow": [
+   {
+    "role": "bridge1",
+    "required": true,
+    "forms": {
+     "en": [
+      "Pope Benedict XVI",
+      "Joseph Ratzinger",
+      "Benedict XVI"
+     ]
+    }
+   },
+   {
+    "role": "bridge2",
+    "required": true,
+    "forms": {
+     "en": [
+      "Pope John Paul II",
+      "Karol Wojtyła",
+      "John Paul II"
+     ]
+    }
+   },
+   {
+    "role": "target",
+    "required": false,
+    "forms": {
+     "en": [
+      "Kraków",
+      "Cracow",
+      "Krakow"
+     ]
+    }
+   }
+  ],
+  "mh2-bab-bahaullah-aqdas-r3": [
+   {
+    "role": "bridge1",
+    "required": true,
+    "forms": {
+     "en": [
+      "the Báb",
+      "Siyyid ʻAlí Muhammad Shírází"
+     ]
+    }
+   },
+   {
+    "role": "bridge2",
+    "required": true,
+    "forms": {
+     "en": [
+      "Baháʼu'lláh",
+      "Mírzá Ḥusayn-ʻAlí Núrí"
+     ]
+    }
+   },
+   {
+    "role": "target",
+    "required": false,
+    "forms": {
+     "en": [
+      "Kitáb-i-Aqdas",
+      "Kitab-i-Aqdas",
+      "The Most Holy Book"
+     ]
+    }
+   }
+  ],
+  "mh2-ishmael-isaac-rebecca-r1": [
+   {
+    "role": "bridge1",
+    "required": true,
+    "forms": {
+     "en": [
+      "Ishmael",
+      "Isma'il"
+     ]
+    }
+   },
+   {
+    "role": "bridge2",
+    "required": true,
+    "forms": {
+     "en": [
+      "Yitzhak"
+     ]
+    }
+   },
+   {
+    "role": "target",
+    "required": false,
+    "forms": {
+     "en": [
+      "Rebekah",
+      "Rivka"
+     ]
+    }
+   }
+  ],
+  "mh2-daguerre-niepce-legras": [
+   {
+    "role": "bridge1",
+    "required": true,
+    "forms": {
+     "en": [
+      "Louis Daguerre",
+      "Louis-Jacques-Mandé Daguerre"
+     ]
+    }
+   },
+   {
+    "role": "bridge2",
+    "required": true,
+    "forms": {
+     "en": [
+      "Nicéphore Niépce",
+      "Joseph Nicéphore Niépce"
+     ]
+    }
+   },
+   {
+    "role": "target",
+    "required": false,
+    "forms": {
+     "en": [
+      "View from the Window at Le Gras",
+      "Point de vue du Gras"
+     ]
+    }
+   }
+  ],
+  "mh2-ganesha-kartikeya-peacock": [
+   {
+    "role": "bridge1",
+    "required": true,
+    "forms": {
+     "en": [
+      "Ganesha",
+      "Ganesh",
+      "Ganapati"
+     ]
+    }
+   },
+   {
+    "role": "bridge2",
+    "required": true,
+    "forms": {
+     "en": [
+      "Kartikeya",
+      "Murugan",
+      "Skanda"
+     ]
+    }
+   },
+   {
+    "role": "target",
+    "required": false,
+    "forms": {
+     "en": [
+      "peacock",
+      "Paravani"
+     ]
+    }
+   }
+  ],
+  "mh2-gainsbourg-bardot-vadim": [
+   {
+    "role": "bridge1",
+    "required": true,
+    "forms": {
+     "en": [
+      "Serge Gainsbourg"
+     ]
+    }
+   },
+   {
+    "role": "bridge2",
+    "required": true,
+    "forms": {
+     "en": [
+      "Brigitte Bardot"
+     ]
+    }
+   },
+   {
+    "role": "target",
+    "required": false,
+    "forms": {
+     "en": [
+      "Roger Vadim",
+      "Roger Vadim Plemiannikov"
+     ]
+    }
+   }
+  ],
+  "mh2-pitt-younger-elder-seven-years-war": [
+   {
+    "role": "bridge1",
+    "required": true,
+    "forms": {
+     "en": [
+      "William Pitt the Younger",
+      "Pitt the Younger"
+     ]
+    }
+   },
+   {
+    "role": "bridge2",
+    "required": true,
+    "forms": {
+     "en": [
+      "William Pitt the Elder",
+      "Pitt the Elder",
+      "William Pitt, 1st Earl of Chatham"
+     ]
+    }
+   },
+   {
+    "role": "target",
+    "required": false,
+    "forms": {
+     "en": [
+      "Seven Years' War",
+      "Seven Years War"
+     ]
+    }
+   }
+  ],
+  "mh2-qwerty-printer-senate": [
+   {
+    "role": "bridge1",
+    "required": true,
+    "forms": {
+     "en": [
+      "Christopher Latham Sholes",
+      "Christopher Sholes"
+     ]
+    }
+   }
+  ],
+  "mh2-tintinnabuli-elegy-subject": [
+   {
+    "role": "bridge1",
+    "required": true,
+    "forms": {
+     "en": [
+      "Arvo Pärt",
+      "Arvo Part"
+     ]
+    }
+   },
+   {
+    "role": "target",
+    "required": false,
+    "forms": {
+     "en": [
+      "Benjamin Britten",
+      "Britten",
+      "Edward Benjamin Britten"
+     ]
+    }
+   }
+  ],
+  "mh2-yang-guifei-emperor-successor": [
+   {
+    "role": "bridge1",
+    "required": true,
+    "forms": {
+     "en": [
+      "Xuanzong",
+      "Li Longji"
+     ]
+    }
+   },
+   {
+    "role": "target",
+    "required": false,
+    "forms": {
+     "en": [
+      "Suzong",
+      "Li Heng"
+     ]
+    }
+   }
+  ],
+  "mh2-ibn-khaldun-tunis": [
+   {
+    "role": "bridge1",
+    "required": true,
+    "forms": {
+     "en": [
+      "Ibn Khaldun",
+      "Abd al-Rahman ibn Khaldun"
+     ]
+    }
+   }
+  ],
+  "mh2-kusturica-birthplace": [
+   {
+    "role": "bridge1",
+    "required": true,
+    "forms": {
+     "en": [
+      "Emir Kusturica",
+      "Nemanja Kusturica"
+     ]
+    }
+   },
+   {
+    "role": "target",
+    "required": false,
+    "forms": {
+     "en": [
+      "Sarajevo"
+     ]
+    }
+   }
+  ],
+  "mh2-carroll-christ-church": [
+   {
+    "role": "bridge1",
+    "required": true,
+    "forms": {
+     "en": [
+      "Lewis Carroll",
+      "Charles Lutwidge Dodgson",
+      "Charles Dodgson"
+     ]
+    }
+   },
+   {
+    "role": "target",
+    "required": false,
+    "forms": {
+     "en": [
+      "Christ Church"
+     ]
+    }
+   }
+  ],
+  "mh2-fellini-wife-masina": [
+   {
+    "role": "bridge1",
+    "required": true,
+    "forms": {
+     "en": [
+      "Federico Fellini",
+      "Fellini"
+     ]
+    }
+   },
+   {
+    "role": "target",
+    "required": false,
+    "forms": {
+     "en": [
+      "Giulietta Masina"
+     ]
+    }
+   }
+  ],
+  "mh2-black-wednesday-mentor": [
+   {
+    "role": "bridge1",
+    "required": true,
+    "forms": {
+     "en": [
+      "George Soros",
+      "György Schwartz"
+     ]
+    }
+   },
+   {
+    "role": "target",
+    "required": false,
+    "forms": {
+     "en": [
+      "Karl Popper",
+      "Sir Karl Popper",
+      "Karl Raimund Popper"
+     ]
+    }
+   }
+  ],
+  "mh2-bell-jar-spouse": [
+   {
+    "role": "bridge1",
+    "required": true,
+    "forms": {
+     "en": [
+      "Sylvia Plath"
+     ]
+    }
+   },
+   {
+    "role": "target",
+    "required": false,
+    "forms": {
+     "en": [
+      "Ted Hughes",
+      "Edward James Hughes"
+     ]
+    }
+   }
+  ],
+  "mh2-madame-x-painter-s0": [
+   {
+    "role": "bridge1",
+    "required": true,
+    "forms": {
+     "en": [
+      "Madame X",
+      "Portrait of Madame X"
+     ]
+    }
+   },
+   {
+    "role": "target",
+    "required": false,
+    "forms": {
+     "en": [
+      "John Singer Sargent"
      ]
     }
    }
@@ -16978,36 +18005,26 @@
     }
    }
   ],
-  "mh2-rasputin-murderer-s0": [
+  "mh2-kelvin-belfast-s0": [
    {
     "role": "bridge1",
     "required": true,
     "forms": {
      "en": [
-      "Grigori Rasputin",
-      "Grigory Rasputin"
-     ]
-    }
-   },
-   {
-    "role": "target",
-    "required": false,
-    "forms": {
-     "en": [
-      "Felix Yusupov",
-      "Felix Felixovich Yusupov"
+      "William Thomson, Lord Kelvin",
+      "Lord Kelvin",
+      "William Thomson"
      ]
     }
    }
   ],
-  "mh2-jesuit-founder-pamplona-s3": [
+  "mh2-toy-story-studio-owner-s0": [
    {
     "role": "bridge1",
     "required": true,
     "forms": {
      "en": [
-      "Ignatius of Loyola",
-      "Saint Ignatius of Loyola"
+      "Pixar Animation Studios"
      ]
     }
    },
@@ -17016,19 +18033,21 @@
     "required": false,
     "forms": {
      "en": [
-      "Pamplona"
+      "Steve Jobs",
+      "Steven Paul Jobs"
      ]
     }
    }
   ],
-  "mh2-dasharatha-kaikeyi-t1": [
+  "mh2-ibn-arabi-burial-s1": [
    {
     "role": "bridge1",
     "required": true,
     "forms": {
      "en": [
-      "Dasharatha",
-      "Dasaratha"
+      "Muhyiddin Ibn Arabi",
+      "Ibn Arabi",
+      "Ibn al-Arabi"
      ]
     }
    },
@@ -17037,19 +18056,19 @@
     "required": false,
     "forms": {
      "en": [
-      "Kaikeyi"
+      "Dimashq"
      ]
     }
    }
   ],
-  "mh2-gaixia-victor-dynasty": [
+  "mh2-quadriga-gate-architect-s1": [
    {
     "role": "bridge1",
     "required": true,
     "forms": {
      "en": [
-      "Liu Bang",
-      "Emperor Gaozu of Han"
+      "Brandenburg Gate",
+      "Brandenburger Tor"
      ]
     }
    },
@@ -17058,20 +18077,19 @@
     "required": false,
     "forms": {
      "en": [
-      "Han dynasty",
-      "Western Han dynasty"
+      "Carl Gotthard Langhans"
      ]
     }
    }
   ],
-  "mh2-wegener-greenland": [
+  "mh2-earhart-husband-putnam-s1": [
    {
     "role": "bridge1",
     "required": true,
     "forms": {
      "en": [
-      "Alfred Wegener",
-      "Wegener"
+      "Amelia Earhart",
+      "Amelia Mary Earhart"
      ]
     }
    },
@@ -17080,39 +18098,32 @@
     "required": false,
     "forms": {
      "en": [
-      "Kalaallit Nunaat"
+      "George Palmer Putnam",
+      "George P. Putnam"
      ]
     }
    }
   ],
-  "mh2-pankhurst-wspu": [
+  "mh2-buber-jerusalem-s1": [
    {
     "role": "bridge1",
     "required": true,
     "forms": {
      "en": [
-      "Emmeline Pankhurst"
-     ]
-    }
-   },
-   {
-    "role": "target",
-    "required": false,
-    "forms": {
-     "en": [
-      "Women's Social and Political Union"
+      "Martin Buber",
+      "Mordechai Martin Buber"
      ]
     }
    }
   ],
-  "mh2-telegram-founder-network": [
+  "mh2-kierkegaard-engagement-s1": [
    {
     "role": "bridge1",
     "required": true,
     "forms": {
      "en": [
-      "Pavel Durov",
-      "Pavel Valeryevich Durov"
+      "Søren Kierkegaard",
+      "Soren Kierkegaard"
      ]
     }
    },
@@ -17121,18 +18132,19 @@
     "required": false,
     "forms": {
      "en": [
-      "VKontakte"
+      "Regine Olsen",
+      "Regine Schlegel"
      ]
     }
    }
   ],
-  "mh2-salieri-film-shaffer-s0": [
+  "mh2-dolly-duet-mentor-s1": [
    {
     "role": "bridge1",
     "required": true,
     "forms": {
      "en": [
-      "Amadeus"
+      "Dolly Parton"
      ]
     }
    },
@@ -17141,39 +18153,31 @@
     "required": false,
     "forms": {
      "en": [
-      "Peter Shaffer"
+      "Porter Wagoner"
      ]
     }
    }
   ],
-  "mh2-alexander-birthplace-s1": [
+  "mh2-wonderwall-writer-rival-band-s1": [
    {
     "role": "bridge1",
     "required": true,
     "forms": {
      "en": [
-      "Alexander the Great",
-      "Alexander III of Macedon"
-     ]
-    }
-   },
-   {
-    "role": "target",
-    "required": false,
-    "forms": {
-     "en": [
-      "Pella"
+      "Noel Gallagher",
+      "Noel Thomas David Gallagher"
      ]
     }
    }
   ],
-  "mh2-stresemann-briand-s2": [
+  "mh2-margaret-snowdon-s2": [
    {
     "role": "bridge1",
     "required": true,
     "forms": {
      "en": [
-      "Gustav Stresemann"
+      "Princess Margaret",
+      "Margaret Rose"
      ]
     }
    },
@@ -17182,18 +18186,22 @@
     "required": false,
     "forms": {
      "en": [
-      "Aristide Briand"
+      "Antony Armstrong-Jones",
+      "Lord Snowdon",
+      "Earl of Snowdon"
      ]
     }
    }
   ],
-  "mh2-cantor-teacher-kronecker-s2": [
+  "mh2-henry-tudor-queen-s2": [
    {
     "role": "bridge1",
     "required": true,
     "forms": {
      "en": [
-      "Georg Cantor"
+      "Henry VII of England",
+      "Henry Tudor",
+      "Henry VII"
      ]
     }
    },
@@ -17202,19 +18210,19 @@
     "required": false,
     "forms": {
      "en": [
-      "Leopold Kronecker"
+      "Elizabeth of York"
      ]
     }
    }
   ],
-  "mh2-bayes-price-s2": [
+  "mh2-cantor-halle-s2": [
    {
     "role": "bridge1",
     "required": true,
     "forms": {
      "en": [
-      "Thomas Bayes",
-      "Bayes"
+      "Georg Cantor",
+      "Georg Ferdinand Ludwig Philipp Cantor"
      ]
     }
    },
@@ -17223,18 +18231,19 @@
     "required": false,
     "forms": {
      "en": [
-      "Richard Price"
+      "Halle an der Saale"
      ]
     }
    }
   ],
-  "mh2-lange-husband-taylor-s3": [
+  "mh2-cramer-geneva-s2": [
    {
     "role": "bridge1",
     "required": true,
     "forms": {
      "en": [
-      "Dorothea Lange"
+      "Gabriel Cramer",
+      "Cramer"
      ]
     }
    },
@@ -17243,8 +18252,66 @@
     "required": false,
     "forms": {
      "en": [
-      "Paul Schuster Taylor",
-      "Paul S. Taylor"
+      "Genève",
+      "Genf"
+     ]
+    }
+   }
+  ],
+  "mh2-reza-mashhad-s3": [
+   {
+    "role": "bridge1",
+    "required": true,
+    "forms": {
+     "en": [
+      "Ali al-Ridha",
+      "Ali al-Rida",
+      "Ali ibn Musa al-Rida"
+     ]
+    }
+   },
+   {
+    "role": "target",
+    "required": false,
+    "forms": {
+     "en": [
+      "Mashhad",
+      "Meshed",
+      "Mashad"
+     ]
+    }
+   }
+  ],
+  "mh2-bach-leipzig-t0": [
+   {
+    "role": "bridge1",
+    "required": true,
+    "forms": {
+     "en": [
+      "Johann Sebastian Bach",
+      "J. S. Bach"
+     ]
+    }
+   }
+  ],
+  "mh2-levi-montalcini-ngf-t0": [
+   {
+    "role": "bridge1",
+    "required": true,
+    "forms": {
+     "en": [
+      "Rita Levi-Montalcini",
+      "Levi-Montalcini"
+     ]
+    }
+   },
+   {
+    "role": "target",
+    "required": false,
+    "forms": {
+     "en": [
+      "nerve growth factor",
+      "NGF"
      ]
     }
    }
@@ -17272,13 +18339,26 @@
     }
    }
   ],
-  "mh2-pizarro-lima-t0": [
+  "mh2-master-margarita-author-born-t0": [
    {
     "role": "bridge1",
     "required": true,
     "forms": {
      "en": [
-      "Francisco Pizarro"
+      "Mikhail Bulgakov",
+      "Bulgakov"
+     ]
+    }
+   }
+  ],
+  "mh2-jane-grey-husband-t0": [
+   {
+    "role": "bridge1",
+    "required": true,
+    "forms": {
+     "en": [
+      "Lady Jane Grey",
+      "Jane Grey"
      ]
     }
    },
@@ -17287,32 +18367,39 @@
     "required": false,
     "forms": {
      "en": [
-      "Ciudad de los Reyes"
+      "Guildford Dudley"
      ]
     }
    }
   ],
-  "mh2-rousseau-geneva-t1": [
+  "mh2-spectator-founder-play-t0": [
    {
     "role": "bridge1",
     "required": true,
     "forms": {
      "en": [
-      "Jean-Jacques Rousseau",
-      "Rousseau"
+      "Joseph Addison"
+     ]
+    }
+   },
+   {
+    "role": "target",
+    "required": false,
+    "forms": {
+     "en": [
+      "Cato"
      ]
     }
    }
   ],
-  "mh2-bolivar-caracas-t2": [
+  "mh2-bolivar-saenz-t0": [
    {
     "role": "bridge1",
     "required": true,
     "forms": {
      "en": [
       "Simón Bolívar",
-      "Simon Bolivar",
-      "Bolívar"
+      "Simon Bolivar"
      ]
     }
    },
@@ -17321,18 +18408,21 @@
     "required": false,
     "forms": {
      "en": [
-      "Santiago de León de Caracas"
+      "Manuela Sáenz",
+      "Manuelita Sáenz",
+      "Manuela Saenz"
      ]
     }
    }
   ],
-  "mh2-wesley-epworth-t3": [
+  "mh2-tsiolkovsky-kaluga-t0": [
    {
     "role": "bridge1",
     "required": true,
     "forms": {
      "en": [
-      "John Wesley"
+      "Konstantin Tsiolkovsky",
+      "Konstantin Eduardovich Tsiolkovsky"
      ]
     }
    },
@@ -17341,18 +18431,19 @@
     "required": false,
     "forms": {
      "en": [
-      "Epworth"
+      "Kaluga"
      ]
     }
    }
   ],
-  "mh2-schopenhauer-final-city": [
+  "mh2-lermontov-hero-t0": [
    {
     "role": "bridge1",
     "required": true,
     "forms": {
      "en": [
-      "Arthur Schopenhauer"
+      "Mikhail Lermontov",
+      "Lermontov"
      ]
     }
    },
@@ -17361,19 +18452,20 @@
     "required": false,
     "forms": {
      "en": [
-      "Frankfurt am Main"
+      "A Hero of Our Time",
+      "Geroy nashego vremeni"
      ]
     }
    }
   ],
-  "mh2-traviata-fenice-s0": [
+  "mh2-astrophel-zutphen-t0": [
    {
     "role": "bridge1",
     "required": true,
     "forms": {
      "en": [
-      "La traviata",
-      "Traviata"
+      "Philip Sidney",
+      "Sir Philip Sidney"
      ]
     }
    },
@@ -17382,20 +18474,18 @@
     "required": false,
     "forms": {
      "en": [
-      "Teatro La Fenice",
-      "La Fenice"
+      "Zutphen"
      ]
     }
    }
   ],
-  "mh2-kierkegaard-engagement-s1": [
+  "mh2-gropius-alma-mahler-t1": [
    {
     "role": "bridge1",
     "required": true,
     "forms": {
      "en": [
-      "Søren Kierkegaard",
-      "Soren Kierkegaard"
+      "Walter Gropius"
      ]
     }
    },
@@ -17404,20 +18494,21 @@
     "required": false,
     "forms": {
      "en": [
-      "Regine Olsen",
-      "Regine Schlegel"
+      "Alma Mahler",
+      "Alma Mahler-Werfel",
+      "Alma Schindler"
      ]
     }
    }
   ],
-  "mh2-oconnell-emancipation-t2": [
+  "mh2-bentham-ucl-t1": [
    {
     "role": "bridge1",
     "required": true,
     "forms": {
      "en": [
-      "Daniel O'Connell",
-      "O'Connell"
+      "Jeremy Bentham",
+      "Bentham"
      ]
     }
    },
@@ -17426,45 +18517,19 @@
     "required": false,
     "forms": {
      "en": [
-      "Catholic Emancipation",
-      "Roman Catholic Relief Act 1829",
-      "Catholic Relief Act"
+      "University College London"
      ]
     }
    }
   ],
-  "mh2-don-giovanni-prague-s0": [
+  "mh2-anselm-aosta-t1": [
    {
     "role": "bridge1",
     "required": true,
     "forms": {
      "en": [
-      "Don Giovanni",
-      "Il dissoluto punito, ossia il Don Giovanni"
-     ]
-    }
-   }
-  ],
-  "mh2-deltoro-birthplace-s0": [
-   {
-    "role": "bridge1",
-    "required": true,
-    "forms": {
-     "en": [
-      "Guillermo del Toro",
-      "del Toro"
-     ]
-    }
-   }
-  ],
-  "mh2-scout-founder-mafeking-s3": [
-   {
-    "role": "bridge1",
-    "required": true,
-    "forms": {
-     "en": [
-      "Robert Baden-Powell",
-      "Baden-Powell"
+      "Anselm of Canterbury",
+      "Saint Anselm"
      ]
     }
    },
@@ -17473,20 +18538,20 @@
     "required": false,
     "forms": {
      "en": [
-      "Mafeking",
-      "Mahikeng"
+      "Aosta",
+      "Aoste"
      ]
     }
    }
   ],
-  "mh2-bede-ecclesiastical-history-t1": [
+  "mh2-volga-caspian-t1": [
    {
     "role": "bridge1",
     "required": true,
     "forms": {
      "en": [
-      "the Venerable Bede",
-      "Saint Bede"
+      "Volga River",
+      "Volga"
      ]
     }
    },
@@ -17495,19 +18560,19 @@
     "required": false,
     "forms": {
      "en": [
-      "Ecclesiastical History of the English People",
-      "Historia ecclesiastica gentis Anglorum"
+      "Caspian Sea"
      ]
     }
    }
   ],
-  "mh2-tesla-birth-village": [
+  "mh2-monteverdi-poppea-t1": [
    {
     "role": "bridge1",
     "required": true,
     "forms": {
      "en": [
-      "Nikola Tesla"
+      "Claudio Monteverdi",
+      "Monteverdi"
      ]
     }
    },
@@ -17516,44 +18581,20 @@
     "required": false,
     "forms": {
      "en": [
-      "Smiljan"
+      "L'incoronazione di Poppea",
+      "The Coronation of Poppea"
      ]
     }
    }
   ],
-  "mh2-maimonides-birthplace": [
+  "mh2-dempsey-tunney-t2": [
    {
     "role": "bridge1",
     "required": true,
     "forms": {
      "en": [
-      "Moses Maimonides",
-      "Maimonides",
-      "Rambam"
-     ]
-    }
-   }
-  ],
-  "mh2-ibn-khaldun-tunis": [
-   {
-    "role": "bridge1",
-    "required": true,
-    "forms": {
-     "en": [
-      "Ibn Khaldun",
-      "Abd al-Rahman ibn Khaldun"
-     ]
-    }
-   }
-  ],
-  "mh2-last-stuart-favourite-s2": [
-   {
-    "role": "bridge1",
-    "required": true,
-    "forms": {
-     "en": [
-      "Queen Anne",
-      "Anne, Queen of Great Britain"
+      "Jack Dempsey",
+      "William Harrison Dempsey"
      ]
     }
    },
@@ -17562,21 +18603,19 @@
     "required": false,
     "forms": {
      "en": [
-      "Sarah Churchill, Duchess of Marlborough",
-      "Sarah Jennings"
+      "Gene Tunney",
+      "James Joseph Tunney"
      ]
     }
    }
   ],
-  "mh2-pear-garden-consort-s3": [
+  "mh2-paltrow-spouse-band-t2": [
    {
     "role": "bridge1",
     "required": true,
     "forms": {
      "en": [
-      "Emperor Xuanzong of Tang",
-      "Tang Xuanzong",
-      "Li Longji"
+      "Gwyneth Paltrow"
      ]
     }
    },
@@ -17585,21 +18624,19 @@
     "required": false,
     "forms": {
      "en": [
-      "Yang Guifei",
-      "Yang Yuhuan"
+      "Coldplay"
      ]
     }
    }
   ],
-  "mh2-ataturk-thessaloniki-s3": [
+  "mh2-russell-college-t2": [
    {
     "role": "bridge1",
     "required": true,
     "forms": {
      "en": [
-      "Mustafa Kemal Atatürk",
-      "Mustafa Kemal",
-      "Atatürk"
+      "Bill Russell",
+      "William Felton Russell"
      ]
     }
    },
@@ -17608,22 +18645,19 @@
     "required": false,
     "forms": {
      "en": [
-      "Thessaloniki",
-      "Salonica",
-      "Salonika",
-      "Thessalonica"
+      "University of San Francisco"
      ]
     }
    }
   ],
-  "mh2-cartier-bresson-teacher-lhote-s3": [
+  "mh2-mersenne-minims-t2": [
    {
     "role": "bridge1",
     "required": true,
     "forms": {
      "en": [
-      "Henri Cartier-Bresson",
-      "Cartier-Bresson"
+      "Marin Mersenne",
+      "Father Mersenne"
      ]
     }
    },
@@ -17632,19 +18666,20 @@
     "required": false,
     "forms": {
      "en": [
-      "André Lhote"
+      "Minims",
+      "Order of Minims",
+      "Minim Friars"
      ]
     }
    }
   ],
-  "mh2-sabre-dance-ethnicity-t0": [
+  "mh2-arthur-mitchell-dth-t3": [
    {
     "role": "bridge1",
     "required": true,
     "forms": {
      "en": [
-      "Aram Khachaturian",
-      "Aram Ilyich Khachaturian"
+      "Arthur Mitchell"
      ]
     }
    },
@@ -17653,19 +18688,18 @@
     "required": false,
     "forms": {
      "en": [
-      "Armenians"
+      "Dance Theatre of Harlem"
      ]
     }
    }
   ],
-  "mh2-fahrenheit-birthplace-t0": [
+  "mh2-lafayette-burial-t3": [
    {
     "role": "bridge1",
     "required": true,
     "forms": {
      "en": [
-      "Daniel Gabriel Fahrenheit",
-      "Daniel Fahrenheit"
+      "Gilbert du Motier, Marquis de Lafayette"
      ]
     }
    },
@@ -17674,20 +18708,19 @@
     "required": false,
     "forms": {
      "en": [
-      "Gdańsk",
-      "Danzig"
+      "Picpus",
+      "Picpus Cemetery"
      ]
     }
    }
   ],
-  "mh2-ibsen-incidental-music-t0": [
+  "mh2-benazir-zardari-t3": [
    {
     "role": "bridge1",
     "required": true,
     "forms": {
      "en": [
-      "Henrik Ibsen",
-      "Ibsen"
+      "Benazir Bhutto"
      ]
     }
    },
@@ -17696,19 +18729,31 @@
     "required": false,
     "forms": {
      "en": [
-      "Edvard Grieg"
+      "Asif Ali Zardari"
      ]
     }
    }
   ],
-  "mh2-mwalimu-ujamaa-t2": [
+  "mh2-murat-naples-t3": [
    {
     "role": "bridge1",
     "required": true,
     "forms": {
      "en": [
-      "Julius Nyerere",
-      "Nyerere"
+      "Joachim Murat",
+      "Joachim-Napoléon Murat"
+     ]
+    }
+   }
+  ],
+  "mh2-rastafari-emperor-capital-t3": [
+   {
+    "role": "bridge1",
+    "required": true,
+    "forms": {
+     "en": [
+      "Haile Selassie",
+      "Haile Selassie I"
      ]
     }
    },
@@ -17717,18 +18762,20 @@
     "required": false,
     "forms": {
      "en": [
-      "Ujamaa"
+      "Addis Ababa",
+      "Finfinne"
      ]
     }
    }
   ],
-  "mh2-jarry-ubu-t3": [
+  "mh2-gaixia-victor-dynasty": [
    {
     "role": "bridge1",
     "required": true,
     "forms": {
      "en": [
-      "Alfred Jarry"
+      "Liu Bang",
+      "Emperor Gaozu of Han"
      ]
     }
    },
@@ -17737,18 +18784,19 @@
     "required": false,
     "forms": {
      "en": [
-      "Ubu Roi"
+      "Han dynasty",
+      "Western Han dynasty"
      ]
     }
    }
   ],
-  "mh2-element109-partner": [
+  "mh2-pankhurst-wspu": [
    {
     "role": "bridge1",
     "required": true,
     "forms": {
      "en": [
-      "Lise Meitner"
+      "Emmeline Pankhurst"
      ]
     }
    },
@@ -17757,19 +18805,19 @@
     "required": false,
     "forms": {
      "en": [
-      "Otto Hahn"
+      "Women's Social and Political Union"
      ]
     }
    }
   ],
-  "mh2-may-imperial-t1": [
+  "mh2-monet-burial-giverny": [
    {
     "role": "bridge1",
     "required": true,
     "forms": {
      "en": [
-      "Brian May",
-      "Brian Harold May"
+      "Claude Monet",
+      "Oscar-Claude Monet"
      ]
     }
    },
@@ -17778,20 +18826,19 @@
     "required": false,
     "forms": {
      "en": [
-      "Imperial College London",
-      "Imperial College"
+      "Giverny"
      ]
     }
    }
   ],
-  "mh2-sun-yat-sen-burial-t2": [
+  "mh2-wilder-lubitsch": [
    {
     "role": "bridge1",
     "required": true,
     "forms": {
      "en": [
-      "Sun Yat-sen",
-      "Sun Zhongshan"
+      "Billy Wilder",
+      "Samuel Wilder"
      ]
     }
    },
@@ -17800,20 +18847,19 @@
     "required": false,
     "forms": {
      "en": [
-      "Nanjing",
-      "Nanking"
+      "Ernst Lubitsch"
      ]
     }
    }
   ],
-  "mh2-rowling-galbraith-s0": [
+  "mh2-ando-birth-island": [
    {
     "role": "bridge1",
     "required": true,
     "forms": {
      "en": [
-      "J. K. Rowling",
-      "Joanne Rowling"
+      "Momofuku Ando",
+      "Andō Momofuku"
      ]
     }
    },
@@ -17822,19 +18868,19 @@
     "required": false,
     "forms": {
      "en": [
-      "Robert Galbraith"
+      "Formosa"
      ]
     }
    }
   ],
-  "mh2-vermeer-delft-s0": [
+  "mh2-do-the-right-thing-alma-mater-s0": [
    {
     "role": "bridge1",
     "required": true,
     "forms": {
      "en": [
-      "Johannes Vermeer",
-      "Jan Vermeer"
+      "Spike Lee",
+      "Shelton Jackson Lee"
      ]
     }
    },
@@ -17843,7 +18889,28 @@
     "required": false,
     "forms": {
      "en": [
-      "Delft"
+      "Morehouse College"
+     ]
+    }
+   }
+  ],
+  "mh2-churchill-chartwell-s1": [
+   {
+    "role": "bridge1",
+    "required": true,
+    "forms": {
+     "en": [
+      "Winston Churchill",
+      "Sir Winston Churchill"
+     ]
+    }
+   },
+   {
+    "role": "target",
+    "required": false,
+    "forms": {
+     "en": [
+      "Chartwell"
      ]
     }
    }
@@ -17871,14 +18938,13 @@
     }
    }
   ],
-  "mh2-ionesco-birth-romania-s3": [
+  "mh2-haneke-amour-s2": [
    {
     "role": "bridge1",
     "required": true,
     "forms": {
      "en": [
-      "Eugène Ionesco",
-      "Eugene Ionesco"
+      "Michael Haneke"
      ]
     }
    },
@@ -17887,19 +18953,18 @@
     "required": false,
     "forms": {
      "en": [
-      "Rumania"
+      "Amour"
      ]
     }
    }
   ],
-  "mh2-disraeli-beaconsfield-t0": [
+  "mh2-goldeneye-bond-tv-series-s2": [
    {
     "role": "bridge1",
     "required": true,
     "forms": {
      "en": [
-      "Benjamin Disraeli",
-      "Disraeli"
+      "Pierce Brosnan"
      ]
     }
    },
@@ -17908,19 +18973,18 @@
     "required": false,
     "forms": {
      "en": [
-      "Beaconsfield"
+      "Remington Steele"
      ]
     }
    }
   ],
-  "mh2-rand-novel": [
+  "mh2-pascal-birthplace-s2": [
    {
     "role": "bridge1",
     "required": true,
     "forms": {
      "en": [
-      "Ayn Rand",
-      "Alisa Rosenbaum"
+      "Blaise Pascal"
      ]
     }
    },
@@ -17929,19 +18993,19 @@
     "required": false,
     "forms": {
      "en": [
-      "Atlas Shrugged"
+      "Clermont-Ferrand",
+      "Clermont"
      ]
     }
    }
   ],
-  "mh2-qin-capital-s2": [
+  "mh2-ehrlich-concept-s2": [
    {
     "role": "bridge1",
     "required": true,
     "forms": {
      "en": [
-      "Qin Shi Huang",
-      "Ying Zheng"
+      "Paul Ehrlich"
      ]
     }
    },
@@ -17950,20 +19014,20 @@
     "required": false,
     "forms": {
      "en": [
-      "Xianyang",
-      "Hsien-yang"
+      "magic bullet",
+      "Zauberkugel"
      ]
     }
    }
   ],
-  "mh2-baptizer-father-zechariah-s3": [
+  "mh2-capote-neighbour-s3": [
    {
     "role": "bridge1",
     "required": true,
     "forms": {
      "en": [
-      "John the Baptist",
-      "Yahya ibn Zakariya"
+      "Truman Capote",
+      "Truman Streckfus Persons"
      ]
     }
    },
@@ -17972,21 +19036,20 @@
     "required": false,
     "forms": {
      "en": [
-      "Zechariah",
-      "Zacharias"
+      "Harper Lee",
+      "Nelle Harper Lee"
      ]
     }
    }
   ],
-  "mh2-gold-mask-successor-t0": [
+  "mh2-batistuta-club-s3": [
    {
     "role": "bridge1",
     "required": true,
     "forms": {
      "en": [
-      "Tutankhamun",
-      "Tutankhaten",
-      "King Tut"
+      "Gabriel Batistuta",
+      "Batistuta"
      ]
     }
    },
@@ -17995,19 +19058,20 @@
     "required": false,
     "forms": {
      "en": [
-      "Kheperkheperure Ay"
+      "Fiorentina",
+      "ACF Fiorentina"
      ]
     }
    }
   ],
-  "mh2-hobbes-tutor-charles-t2": [
+  "mh2-dechirico-metaphysical-t0": [
    {
     "role": "bridge1",
     "required": true,
     "forms": {
      "en": [
-      "Thomas Hobbes",
-      "Hobbes"
+      "Giorgio de Chirico",
+      "de Chirico"
      ]
     }
    },
@@ -18016,20 +19080,21 @@
     "required": false,
     "forms": {
      "en": [
-      "Charles II of England",
-      "Charles II"
+      "Metaphysical painting",
+      "Pittura metafisica",
+      "Scuola metafisica"
      ]
     }
    }
   ],
-  "mh2-macbeth-duncan-t2": [
+  "mh2-may-imperial-t1": [
    {
     "role": "bridge1",
     "required": true,
     "forms": {
      "en": [
-      "Macbeth",
-      "Mac Bethad mac Findlaích"
+      "Brian May",
+      "Brian Harold May"
      ]
     }
    },
@@ -18038,20 +19103,20 @@
     "required": false,
     "forms": {
      "en": [
-      "Duncan I of Scotland",
-      "Duncan I"
+      "Imperial College London",
+      "Imperial College"
      ]
     }
    }
   ],
-  "mh2-rizal-first-novel-t2": [
+  "mh2-speer-memoir-t2": [
    {
     "role": "bridge1",
     "required": true,
     "forms": {
      "en": [
-      "José Rizal",
-      "Jose Rizal"
+      "Albert Speer",
+      "Speer"
      ]
     }
    },
@@ -18060,170 +19125,8 @@
     "required": false,
     "forms": {
      "en": [
-      "Noli Me Tángere",
-      "Noli Me Tangere"
-     ]
-    }
-   }
-  ],
-  "mh2-hamlet-author-wife-t0": [
-   {
-    "role": "bridge1",
-    "required": true,
-    "forms": {
-     "en": [
-      "William Shakespeare"
-     ]
-    }
-   },
-   {
-    "role": "target",
-    "required": false,
-    "forms": {
-     "en": [
-      "Anne Hathaway",
-      "Agnes Hathaway"
-     ]
-    }
-   }
-  ],
-  "mh2-las-casas-sepulveda-t3": [
-   {
-    "role": "bridge1",
-    "required": true,
-    "forms": {
-     "en": [
-      "Bartolomé de las Casas",
-      "Bartolome de las Casas"
-     ]
-    }
-   },
-   {
-    "role": "target",
-    "required": false,
-    "forms": {
-     "en": [
-      "Juan Ginés de Sepúlveda"
-     ]
-    }
-   }
-  ],
-  "mh2-beckett-joyce-ulysses-q3": [
-   {
-    "role": "bridge1",
-    "required": true,
-    "forms": {
-     "en": [
-      "James Joyce"
-     ]
-    }
-   },
-   {
-    "role": "target",
-    "required": false,
-    "forms": {
-     "en": [
-      "Ulysses"
-     ]
-    }
-   }
-  ],
-  "mh2-brigid-kildare-t3": [
-   {
-    "role": "bridge1",
-    "required": true,
-    "forms": {
-     "en": [
-      "Brigid of Ireland",
-      "Saint Brigid"
-     ]
-    }
-   },
-   {
-    "role": "target",
-    "required": false,
-    "forms": {
-     "en": [
-      "Kildare",
-      "Cill Dara"
-     ]
-    }
-   }
-  ],
-  "mh2-newton-leibniz-monads": [
-   {
-    "role": "bridge1",
-    "required": true,
-    "forms": {
-     "en": [
-      "Gottfried Wilhelm Leibniz",
-      "Gottfried Leibniz"
-     ]
-    }
-   },
-   {
-    "role": "target",
-    "required": false,
-    "forms": {
-     "en": [
-      "monads",
-      "monadology"
-     ]
-    }
-   }
-  ],
-  "mh2-dante-virgil-aeneid-q1": [
-   {
-    "role": "bridge1",
-    "required": true,
-    "forms": {
-     "en": [
-      "Virgil",
-      "Publius Vergilius Maro",
-      "Vergil"
-     ]
-    }
-   },
-   {
-    "role": "target",
-    "required": false,
-    "forms": {
-     "en": [
-      "Aeneid",
-      "Aeneis"
-     ]
-    }
-   }
-  ],
-  "mh2-otto-iii-gerbert-sylvester": [
-   {
-    "role": "bridge1",
-    "required": true,
-    "forms": {
-     "en": [
-      "Gerbert of Aurillac",
-      "Gerbert"
-     ]
-    }
-   },
-   {
-    "role": "target",
-    "required": false,
-    "forms": {
-     "en": [
-      "Sylvester II",
-      "Pope Sylvester II"
-     ]
-    }
-   }
-  ],
-  "mh2-kant-hume-edinburgh": [
-   {
-    "role": "bridge1",
-    "required": true,
-    "forms": {
-     "en": [
-      "David Hume"
+      "Inside the Third Reich",
+      "Erinnerungen"
      ]
     }
    }
