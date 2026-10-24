@@ -99,8 +99,11 @@ Smaller differences from the source run, all from the shared judge layer:
 - Opus 5.5 runs at its **default effort**, as the source did (`reasoning={"anthropic_effort":
   "default"}`; the public route's own default is `effort: low`). Live re-judge of the 1,650 source
   O-lens cells: at `effort: low` 0.800 (90.0% item agreement with the source, McNemar p = 0.035);
-  at default effort 0.827 (94.0% agreement, p = 0.18), within the judge's own run-to-run spread
-  (two port runs disagree on 14 items). Source 0.860.
+  at default effort 0.827 (diagnostic run 94.0% agreement, p = 0.18; official run through this
+  configuration 0.827, 139/150 = 92.7% agreement, p = 0.23), within the judge's own run-to-run
+  spread (low- and default-effort port runs disagree on 14 items). Source 0.860: the port sits
+  0.033 below it, marginally outside the plan's ±0.03 tolerance with item agreement above 90%
+  and no significant paired difference.
 - `max_tokens` is the route default (16000); the source used 6000.
 - A refused call is not re-asked with a reworded prompt. The source re-asked up to 3 times, then
   scored the cell as no signal. Here the cell is unjudged and the item is undecided unless another
