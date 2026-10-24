@@ -380,6 +380,8 @@ def draw_verdicts(results_path: Path) -> dict[str, bool | None]:
     fam = d["family"]
     by_item: dict[str, list[bool | None]] = {}
     for r in d.get("rows", []):
+        if r.get("excluded_from_rate"):
+            continue  # a control / non-headline row (e.g. introspection cross items): not gated
         raw = r.get("id", r.get("name", r.get("item")))
         if raw is None:
             raise ValueError(f"{fam}: a row has no id / name / item")

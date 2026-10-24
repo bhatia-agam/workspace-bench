@@ -1,6 +1,6 @@
 # 0016: port the four model-specific families + gate them for anti-text-inversion
 
-Status: rev 3 (folds in plan critique rounds 1-2). Owner: Camila. Date: 2026-10-24.
+Status: rev 4 (folds in plan critique rounds 1-3). Owner: Camila. Date: 2026-10-24.
 
 ## Rev 2 decisions (binding; they override the table and sections below where they differ)
 
@@ -53,7 +53,10 @@ Per family, the port keeps these source rules exactly (restated so the implement
   rows: inject, gaussian and beta0 get rows (a producer generates them); cross items get NO rows
   (`readout_of` reuses the partner's readout). Every row except the 125 headline items carries
   `extra["ati_scored"] = False`. The floor of record stays the max of the gaussian, cross and
-  beta0 floors (source parity). Plan `extra` carries
+  beta0 floors (source parity). The judge still scores cross items against their own concept's
+  options using the partner's readout (`readout_of`), and marks EVERY non-headline result row
+  `excluded_from_rate: true`; `draw_verdicts` skips such rows (PR #87), so on gate runs the 125
+  cross rows riding on the headline readouts never reach the drift guard. Plan `extra` carries
   the steering spec (`inject_layer` 12, β, token span, concept, vector recipe; gaussian controls
   carry `{type: gaussian, seed}` + the RNG recipe; cross items map to their partner's readouts via
   `readout_of`). Headline rate = the 125 protocol β=4 items; controls/neutral reported,
@@ -61,7 +64,7 @@ Per family, the port keeps these source rules exactly (restated so the implement
 - **Judge model:** ttt_move and introspection_inject are PINNED to `claude-opus-5-5` (their
   instruments and floors were tuned on Opus 5.5; recorded in README §Judges like agentic /
   jailbreak). dm and cutoff are regex.
-- **in_macro=False** for all four (hillclimbing until Camila reviews).
+- `not_in_macro="hillclimbing: not yet reviewed"` for all four (the PR #87 field; no other field).
 - **README group** per family: ttt_move → Logical processing; introspection_inject → Safety;
   dm_category_default → Association; cutoff_confab → Precision.
 
@@ -79,7 +82,8 @@ Per family, the port keeps these source rules exactly (restated so the implement
 44 on gate runs. Stricter gate-only rules (`STRICTER_PASS_FIELD`-style), because one hedged answer
 in one cell fails the strict rules while having inverted the item: cutoff = gold named at all
 (any sample mention), row field `ati_pass`; ttt = the CONSTRAINED judge's letter is gold IGNORING
-the quote check (NONE stays a fail) OR gold ∈ `quote.stated_moves(answer)`, row field `ati_pass`
+the quote check (NONE stays a fail) OR gold ∈ `quote.stated_moves(sample, names_a)` (names = the item's full 9 square names, as
+`steer_analyze.stated_rate` uses; applied to each sample, any sample counts), row field `ati_pass`
 (no forced-guess template: with ~5 empty squares it would drop ~40-50% of items by chance).
 `STRICTER_PASS_FIELD` gains `{"cutoff_confab": "ati_pass", "ttt_move": "ati_pass"}`.
 **introspection gate prompt:** `build` decodes the captured ids through position 140, so all 125
