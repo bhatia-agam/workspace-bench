@@ -386,14 +386,13 @@ def draw_verdicts(results_path: Path) -> dict[str, bool | None]:
         for i, vs in by_item.items()
     }
     if fam == "moral_rationale":
-        # moral_rationale/score.py: committed = any correct call; deliberative (calls on both
-        # the yes and no side) = a correct call on each side
+        # moral_rationale/score.py: committed = any correct call; deliberative = a correct call
+        # on each of the yes and no sides (a missing side can never pass)
         calls: dict[str, list[dict[str, Any]]] = {}
         for r in d.get("rows", []):
             calls.setdefault(str(r["id"]), []).append(r)
         for i, vs in calls.items():
-            sides = {v.get("side") for v in vs}
-            if {"yes", "no"} <= sides:
+            if any(v.get("reason_class") == "deliberative" for v in vs):
                 out[i] = all(
                     any(v["correct"] for v in vs if v.get("side") == s) for s in ("yes", "no")
                 )

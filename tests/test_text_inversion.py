@@ -528,14 +528,15 @@ def test_directed_modulation_adapter_is_the_strict_rule(tmp_path):
 
 def test_moral_adapter_needs_both_sides_for_deliberative_items(tmp_path):
     rows = [
-        {"id": "comm", "side": None, "correct": True},
-        {"id": "delib", "side": "yes", "correct": True},
-        {"id": "delib", "side": "no", "correct": False},
-        {"id": "both", "side": "yes", "correct": True},
-        {"id": "both", "side": "no", "correct": True},
+        {"id": "comm", "side": "committed", "reason_class": "committed", "correct": True},
+        {"id": "delib", "side": "yes", "reason_class": "deliberative", "correct": True},
+        {"id": "delib", "side": "no", "reason_class": "deliberative", "correct": False},
+        {"id": "both", "side": "yes", "reason_class": "deliberative", "correct": True},
+        {"id": "both", "side": "no", "reason_class": "deliberative", "correct": True},
+        {"id": "oneside", "side": "yes", "reason_class": "deliberative", "correct": True},
     ]
-    d = _results(tmp_path / "r", "moral_rationale", rows, value=2 / 3)
+    d = _results(tmp_path / "r", "moral_rationale", rows, value=2 / 4)
     raw = json.loads(d.read_text())
-    raw["n_items"] = 3
+    raw["n_items"] = 4
     d.write_text(json.dumps(raw))
-    assert ti.draw_verdicts(d) == {"comm": True, "delib": False, "both": True}
+    assert ti.draw_verdicts(d) == {"comm": True, "delib": False, "both": True, "oneside": False}

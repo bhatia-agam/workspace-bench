@@ -287,8 +287,8 @@ keeps a lens from being credited for reading the prompt. The subset is frozen in
 `evals/baselines/anti_text_inversion.json` (`wsbench text-inversion stage=...` rebuilds it).
 Families not gated or with no surviving item are skipped under the flag (never run on the full
 bank); a family gated under another judge instrument fails until re-gated. Families with fewer
-than 20 surviving items are shown but left out of the macro, which today leaves wrong_bridge,
-poetry, arithmetic_intermediates, directed_modulation and moral_rationale. `multihop_mt` keeps its frozen subset but is superseded
+than 20 surviving items are shown but left out of the macro, which today is the mean of
+wrong_bridge, poetry, arithmetic_intermediates, directed_modulation and moral_rationale. `multihop_mt` keeps its frozen subset but is superseded
 (out of the macro, not re-gated: a full gate carries its entry over). Details and the per-family
 counts are in
 [`evals/baselines/README.md`](evals/baselines/README.md#anti-text-inversion-subset-anti_text_inversionjson).
