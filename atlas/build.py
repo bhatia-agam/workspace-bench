@@ -116,6 +116,8 @@ SUBJECTS = {
         "qwen3.6-35b-a3b.{}.adapt.47f4087f",
         ("inv.end", "sft", "rl.i600"),
     ),
+    "kimi-k2": ("Kimi-K2 (reader lens)", "kimi-k2-instruct-0905", "{}.adapt.d162743b",
+                ("k2.ao.kimi-k2.klinear.s0.step13633", "k2.ao.kimi-k2.klinear.distill.s0", "k2.rl.kimi-k2.klinear.ddp600.s0.i600")),
     "qwen3.6-27b": ("Qwen3.6-27B (reference)", None, None, ()),
 }
 NG = WSB / "outputs/normal_gated"

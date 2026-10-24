@@ -134,7 +134,7 @@ ADAPTIVE = {  # key -> (label, subject key, olens_ckpts dir, adaptive_scores jso
         "OLMo-3.1-32B · adaptive",
         "olmo-3.1-32b",
         "olmo-3.1-32b-instruct",
-        "adaptive_scores_olmo-3.1-32b.json",
+        "adaptive_scores_olmo-3.1-32b-instruct.json",
         {"inverter": "olmo32b.inv.s6797", "student": "olmo32b.sft", "rl": "olmo32b.rl.i600"},
     ),
     "qwen3.6-35b-a3b": (
@@ -146,6 +146,17 @@ ADAPTIVE = {  # key -> (label, subject key, olens_ckpts dir, adaptive_scores jso
             "inverter": "qwen3.6-35b-a3b.inv.end",
             "student": "qwen3.6-35b-a3b.sft",
             "rl": "qwen3.6-35b-a3b.rl.i600",
+        },
+    ),
+    "kimi-k2": (
+        "Kimi-K2 · adaptive (reader lens)",
+        "kimi-k2",
+        "kimi-k2-instruct-0905",
+        "adaptive_scores_kimi-k2.json",
+        {
+            "inverter": "k2.ao.kimi-k2.klinear.s0.step13633",
+            "student": "k2.ao.kimi-k2.klinear.distill.s0",
+            "rl": "k2.rl.kimi-k2.klinear.ddp600.s0.i600",
         },
     ),
 }

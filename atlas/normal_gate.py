@@ -104,7 +104,8 @@ def grade(subject: str) -> None:
         for line in cache_p.read_text().split("\n"):
             if line.strip():
                 rec = json.loads(line)
-                cache[rec["k"]] = rec["v"]
+                if rec["v"] is not None:  # an unparsed reply is retried, never cached
+                    cache[rec["k"]] = rec["v"]
 
     def call(r: dict) -> bool | None:
         expected = "\n".join(f"- {g}" for g in r["golds"])
@@ -116,11 +117,13 @@ def grade(subject: str) -> None:
         for attempt in range(6):
             seen = session.pushed
             try:
-                m = session.create(model=GRADER, max_tokens=64, system=GRADE_SYSTEM,
+                m = session.create(model=GRADER, max_tokens=1024, system=GRADE_SYSTEM,
                                    messages=[{"role": "user", "content": user}])  # fmt: skip
                 text = "".join(b.text for b in m.content if b.type == "text")
                 hit = re.search(r"\{.*?\}", text, re.S)
-                v = bool(json.loads(hit.group(0))["correct"]) if hit else None
+                if not hit:
+                    continue
+                v = bool(json.loads(hit.group(0))["correct"])
                 with cache_p.open("a") as fh:
                     fh.write(json.dumps({"k": user, "v": v}) + "\n")
                 return v

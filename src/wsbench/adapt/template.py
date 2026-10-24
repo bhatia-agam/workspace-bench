@@ -34,18 +34,25 @@ def markers(tok: Any) -> dict[str, Any]:
 
 
 def bos_prefix(tok: Any) -> list[int]:
-    """Token ids a raw (non-chat) render must start with: the BOS the subject's own chat render
-    begins with, when the tokenizer does not add it by itself. Gemma-4: [<bos>] (without it the
-    model loops: "26 is 26 is"; Gemma audit, 0/698 plain legs passed). Qwen (no BOS token) and
-    OLMo (template doesn't start with one): [] — their renders are unchanged."""
-    bos = getattr(tok, "bos_token_id", None)
-    if bos is None:
-        return []
+    """Token ids a raw (non-chat) render must start with: the special tokens the subject's own
+    chat render opens with before its first role marker, when the tokenizer does not add them by
+    itself. Gemma-4: [<bos>] (without it the model loops: "26 is 26 is"; Gemma audit, 0/698 plain
+    legs passed); GLM-5.3: [[gMASK], <sop>]. Qwen, OLMo, Kimi (the render opens with a role
+    marker): [] — their renders are unchanged."""
     out = tok.apply_chat_template([{"role": "user", "content": SENTINEL}], tokenize=True,
                                   add_generation_prompt=True, enable_thinking=False)  # fmt: skip
     ids = list(out["input_ids"] if hasattr(out, "keys") else out)
+    special = set(getattr(tok, "all_special_ids", []) or [])
+    special |= {int(i) for i in getattr(tok, "added_tokens_decoder", {}) or {}}
+    start = markers(tok)["turn_start_id"]
+    lead: list[int] = []
+    for i in ids:
+        text = tok.decode([i], skip_special_tokens=False)
+        if i == start or i not in special or "system" in text or "user" in text:
+            break
+        lead.append(i)
     plain = tok("x", add_special_tokens=True)["input_ids"]
-    return [bos] if ids[:1] == [bos] and plain[:1] != [bos] else []
+    return [] if not lead or plain[: len(lead)] == lead else lead
 
 
 def stop_ids(tok: Any, gen_eos: Any = None) -> list[int]:
