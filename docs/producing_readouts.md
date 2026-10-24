@@ -140,6 +140,9 @@ runs fan that out over Modal.
   re-generating.
 - **Sampling.** The in-house arms used k=1, temperature 1.0, top-p 0.95, top-k 64, max 256 new
   tokens for prose lenses and top-10 for token lenses; the judges accept any k.
+- **Steering.** `introspection_inject` rows carry `extra.steering` (a concept or gaussian vector
+  added at layer 12 over a token span); the producer must apply it in the forward that is read.
+  `wsbench produce` does not and refuses those rows; the vector recipe is in the family README.
 - **Two families without text.** `hallucination` and `jlens_concept_pr` ship captured token ids
   and positions, not prompts: their banks are the model's own outputs, and they are read by
   re-feeding those ids.

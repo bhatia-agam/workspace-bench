@@ -110,7 +110,15 @@ class Producer:
 
     def read_spec(self, spec: ReadSpec, *, layers: Iterable[int] | None = None) -> list[Row]:
         """A read-plan row: its own render and positions rule; its layers unless the method has
-        fixed ones or the caller overrides."""
+        fixed ones or the caller overrides. A row whose ``extra.steering`` injects a vector
+        (introspection_inject) is refused: this producer cannot apply the steer."""
+        steer = (spec.extra or {}).get("steering") or {}
+        if steer.get("type", "none") != "none":
+            raise ValueError(
+                f"{spec.family}/{spec.id}: the plan row asks for a {steer['type']} injection at "
+                f"layer {steer.get('inject_layer')}; wsbench produce does not apply steering, "
+                "so produce these readouts with your own steered forward"
+            )
         rendered = render(spec, self.backend.tokenizer)
         return list(
             self._read_rendered(
