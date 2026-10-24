@@ -221,6 +221,9 @@ UNIQUE_LATENT = {
 CAPS: dict[str, tuple[tuple[str, ...], int]] = {
     "role_bound_association": (("role_a", "role_b"), 12),
     "relational_multihop": (("hop1", "hop2"), 20),  # one relation was 68% of the 9B bank (audit)
+    # one hidden colour piled up where the subject avoids saying it (audit 2026-10-23: OLMo-7B teal
+    # 25/100, Qwen3-8B purple 22/100): at most 20% of the bank per intermediate
+    "brew_intermediates": (("intermediates",), 20),
 }
 
 
