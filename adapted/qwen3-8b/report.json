@@ -62,11 +62,11 @@
    "n_original": 100,
    "n_original_gated": 100,
    "n_original_pass": 14,
-   "n_items": 10,
-   "n_new": 6,
-   "n_candidates_gated": 790,
+   "n_items": 18,
+   "n_new": 14,
+   "n_candidates_gated": 1190,
    "change": "new items from t0; kinship hop is sibling/parent/child: 62% -> 0%",
-   "note": "10/100: 's is one token in Qwen3 so the bank is valid, but scene pairs rarely both pass (37/390 items at t1, +0 scenes); ooc as on Qwen3.5-4B",
+   "note": "ooc (18 items): 2026-10-24 wave of 400 t0 candidates passed 50 items (12.5%); complete scene pairs are rare; bank 10 -> 18, cousin 12/18 over the cap share; stays out of the macro",
    "exclude_from_macro": true
   },
   "association": {
@@ -315,8 +315,8 @@
   }
  },
  "code": {
-  "git": "77fb350+dirty",
-  "adapt_sha256": "2a49e3ca66fd7ff0"
+  "git": "581f690+dirty",
+  "adapt_sha256": "35681e85cc6322ac"
  },
  "model": "qwen3-8b",
  "label": "Qwen3-8B",

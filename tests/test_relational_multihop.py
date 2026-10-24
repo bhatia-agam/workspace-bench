@@ -192,3 +192,13 @@ def test_dry_run_prints_and_makes_no_calls(tmp_path, mk_args, capsys, monkeypatc
     res = judge.run(mk_args(TOKENS, dry_run=True))
     out = capsys.readouterr().out
     assert "TOKEN READOUTS:" in out and "What is X" not in out  # summarizer prompt only
+
+
+def test_split_blank_last_piece_accepted(tmp_path):
+    # Gemma splits the possessive into "'" + "s": the read site is its last piece
+    cells, _ = load_readouts(
+        write_jsonl(
+            tmp_path / "g.jsonl", [{"id": A, "layer": 20, "pos": 9, "samples": ["x"], "token": "s"}]
+        )
+    )
+    assert [c.token for c in select_cells(cells)] == ["s"]

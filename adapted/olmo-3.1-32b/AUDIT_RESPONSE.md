@@ -27,3 +27,7 @@ Sanity 0.15–0.24 at 30–70% depth, close to OLMo-7B's lens. Floors: `floors/f
   - a `wsbench judge dry_run` expects 9,900 headline cells with 0 missing.
 - **Gate:** the originals were first gated in the wrong render (with a system turn), the 35B-A3B audit defect. They were re-gated in the read render (chat, no system turn, prefill `Answer:`, T=0.8 / top_p .95, greedy + 10/10): **38/100** pass. The family was then filled with 62 generated items at t0 (10 rows, depth 2; 67/289 candidates passed). It is now **full, 100 items**.
 - **Not done:** no independent audit of the generated brew items; there are no OLens readouts or scores on this family yet.
+
+## Addendum 2026-10-24: relational_multihop refill wave
+One more t0 generator wave (scene pairs atomic, per-relation cap 20). See report.json note for the
+yield; the bank stays below 60 items, so relational_multihop stays `ooc` and out of the macro.

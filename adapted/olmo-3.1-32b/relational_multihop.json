@@ -1146,5 +1146,57 @@
     "pass": true
    }
   }
+ },
+ {
+  "scene_key": "Sam-Aubrey-Sawyer-landlord-child",
+  "stimulus": "Sam's landlord is Aubrey. Aubrey's child is Sawyer. In other words, Sawyer is Sam's",
+  "names": [
+   "Sam",
+   "Aubrey",
+   "Sawyer"
+  ],
+  "hop1": "landlord",
+  "hop2": "child",
+  "gold": "landlord's child",
+  "gold_alt": "child of Sam's landlord",
+  "flipped": "child's landlord",
+  "id": "relational-t0-s24-0118-a",
+  "scene": "relational-t0-s24-0118",
+  "adapt": {
+   "origin": "generated",
+   "tier": "t0",
+   "knobs": {},
+   "change": "original rules (13 professional x 5 kinship relations)",
+   "gate": {
+    "rate": 1.0,
+    "pass": true
+   }
+  }
+ },
+ {
+  "scene_key": "Sam-Aubrey-Sawyer-landlord-child",
+  "stimulus": "Sam's child is Aubrey. Aubrey's landlord is Sawyer. In other words, Sawyer is Sam's",
+  "names": [
+   "Sam",
+   "Aubrey",
+   "Sawyer"
+  ],
+  "hop1": "child",
+  "hop2": "landlord",
+  "gold": "child's landlord",
+  "gold_alt": "landlord of Sam's child",
+  "flipped": "landlord's child",
+  "id": "relational-t0-s24-0118-b",
+  "scene": "relational-t0-s24-0118",
+  "adapt": {
+   "origin": "generated",
+   "tier": "t0",
+   "knobs": {},
+   "change": "original rules (13 professional x 5 kinship relations)",
+   "gate": {
+    "rate": 0.8,
+    "pass": true
+   }
+  }
  }
 ]

@@ -317,6 +317,22 @@ def _arith_pool_ok(items: list[dict]) -> list[dict]:
     return items
 
 
+def _check_blank(tok: Any, items: list[dict]) -> tuple[list[dict], list[str]]:
+    """relational reads the final token of the bare stimulus, which must lie inside its trailing
+    possessive "'s" (one token for Qwen; "'" + "s" for Gemma: the judge accepts the last piece).
+    Refuses on any item whose last token reaches outside the blank, never guesses."""
+    bad = []
+    for it in items:
+        text = it["stimulus"]
+        enc = tok(text, add_special_tokens=False, return_offsets_mapping=True)
+        start, end = enc["offset_mapping"][-1]
+        if not (text.endswith("'s") and end == len(text) and start >= len(text) - 2):
+            bad.append(str(it.get("id")))
+    if bad:
+        raise SystemExit(f"freeze: relational final token outside the blank 's: {bad[:5]}")
+    return items, []
+
+
 def restamp_tokens(model: str, family: str, items: list[dict]) -> tuple[list[dict], list[str]]:
     """For a subject whose tokenizer is not Qwen's (references/porting.md): re-count every
     multi-token family's ``probe_token_lens`` with the subject's tokenizer and drop items whose
@@ -330,12 +346,8 @@ def restamp_tokens(model: str, family: str, items: list[dict]) -> tuple[list[dic
     # tokenizer-tied fields this function does NOT re-derive: refuse rather than ship Qwen indices
     if family == "brew_intermediates":
         return _restamp_brew(tok, items)
-    one_s = len(tok("John's", add_special_tokens=False)["input_ids"]) == 2
-    if family == "relational_multihop" and items and not one_s:
-        raise SystemExit(
-            'freeze: relational reads at the blank "\'s", which is not one token for this '
-            "tokenizer; adapt BLANK_TOKEN / the read rule first"
-        )
+    if family == "relational_multihop":
+        return _check_blank(tok, items)
     if family == "arithmetic_intermediates":
         return _restamp_arith_cells(tok, items)
     if family not in MT and family != "multihop":

@@ -79,7 +79,8 @@ def select_cells(cells: list[Cell]) -> list[Cell]:
     out: list[Cell] = []
     for k in sorted(groups):
         last = max(groups[k], key=lambda c: c.pos)
-        if last.token is not None and last.token != BLANK_TOKEN:
+        # a tokenizer that splits the possessive (Gemma: "'" + "s") reads its last piece
+        if last.token is not None and not (last.token and BLANK_TOKEN.endswith(last.token)):
             raise ValueError(
                 f"{last.id} L{last.layer}: last read position {last.pos} is {last.token!r}, not "
                 f"the blank {BLANK_TOKEN!r} — these readouts were not captured at the "

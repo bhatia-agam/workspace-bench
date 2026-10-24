@@ -242,5 +242,213 @@
     "pass": true
    }
   }
+ },
+ {
+  "scene_key": "Remy-Hollis-Kai-dentist-cousin",
+  "stimulus": "Remy's dentist is Hollis. Hollis's cousin is Kai. In other words, Kai is Remy's",
+  "names": [
+   "Remy",
+   "Hollis",
+   "Kai"
+  ],
+  "hop1": "dentist",
+  "hop2": "cousin",
+  "gold": "dentist's cousin",
+  "gold_alt": "cousin of Remy's dentist",
+  "flipped": "cousin's dentist",
+  "id": "relational-t0-s24-0011-a",
+  "scene": "relational-t0-s24-0011",
+  "adapt": {
+   "origin": "generated",
+   "tier": "t0",
+   "knobs": {},
+   "change": "original rules (13 professional x 5 kinship relations)",
+   "gate": {
+    "rate": 0.9,
+    "pass": true
+   }
+  }
+ },
+ {
+  "scene_key": "Remy-Hollis-Kai-dentist-cousin",
+  "stimulus": "Remy's cousin is Hollis. Hollis's dentist is Kai. In other words, Kai is Remy's",
+  "names": [
+   "Remy",
+   "Hollis",
+   "Kai"
+  ],
+  "hop1": "cousin",
+  "hop2": "dentist",
+  "gold": "cousin's dentist",
+  "gold_alt": "dentist of Remy's cousin",
+  "flipped": "dentist's cousin",
+  "id": "relational-t0-s24-0011-b",
+  "scene": "relational-t0-s24-0011",
+  "adapt": {
+   "origin": "generated",
+   "tier": "t0",
+   "knobs": {},
+   "change": "original rules (13 professional x 5 kinship relations)",
+   "gate": {
+    "rate": 0.9,
+    "pass": true
+   }
+  }
+ },
+ {
+  "scene_key": "Alex-Charlie-Denver-dentist-spouse",
+  "stimulus": "Alex's dentist is Charlie. Charlie's spouse is Denver. In other words, Denver is Alex's",
+  "names": [
+   "Alex",
+   "Charlie",
+   "Denver"
+  ],
+  "hop1": "dentist",
+  "hop2": "spouse",
+  "gold": "dentist's spouse",
+  "gold_alt": "spouse of Alex's dentist",
+  "flipped": "spouse's dentist",
+  "id": "relational-t0-s24-0031-a",
+  "scene": "relational-t0-s24-0031",
+  "adapt": {
+   "origin": "generated",
+   "tier": "t0",
+   "knobs": {},
+   "change": "original rules (13 professional x 5 kinship relations)",
+   "gate": {
+    "rate": 1.0,
+    "pass": true
+   }
+  }
+ },
+ {
+  "scene_key": "Alex-Charlie-Denver-dentist-spouse",
+  "stimulus": "Alex's spouse is Charlie. Charlie's dentist is Denver. In other words, Denver is Alex's",
+  "names": [
+   "Alex",
+   "Charlie",
+   "Denver"
+  ],
+  "hop1": "spouse",
+  "hop2": "dentist",
+  "gold": "spouse's dentist",
+  "gold_alt": "dentist of Alex's spouse",
+  "flipped": "dentist's spouse",
+  "id": "relational-t0-s24-0031-b",
+  "scene": "relational-t0-s24-0031",
+  "adapt": {
+   "origin": "generated",
+   "tier": "t0",
+   "knobs": {},
+   "change": "original rules (13 professional x 5 kinship relations)",
+   "gate": {
+    "rate": 1.0,
+    "pass": true
+   }
+  }
+ },
+ {
+  "scene_key": "Remy-Denver-Shiloh-dentist-spouse",
+  "stimulus": "Remy's dentist is Denver. Denver's spouse is Shiloh. In other words, Shiloh is Remy's",
+  "names": [
+   "Remy",
+   "Denver",
+   "Shiloh"
+  ],
+  "hop1": "dentist",
+  "hop2": "spouse",
+  "gold": "dentist's spouse",
+  "gold_alt": "spouse of Remy's dentist",
+  "flipped": "spouse's dentist",
+  "id": "relational-t0-s24-0079-a",
+  "scene": "relational-t0-s24-0079",
+  "adapt": {
+   "origin": "generated",
+   "tier": "t0",
+   "knobs": {},
+   "change": "original rules (13 professional x 5 kinship relations)",
+   "gate": {
+    "rate": 0.8,
+    "pass": true
+   }
+  }
+ },
+ {
+  "scene_key": "Remy-Denver-Shiloh-dentist-spouse",
+  "stimulus": "Remy's spouse is Denver. Denver's dentist is Shiloh. In other words, Shiloh is Remy's",
+  "names": [
+   "Remy",
+   "Denver",
+   "Shiloh"
+  ],
+  "hop1": "spouse",
+  "hop2": "dentist",
+  "gold": "spouse's dentist",
+  "gold_alt": "dentist of Remy's spouse",
+  "flipped": "dentist's spouse",
+  "id": "relational-t0-s24-0079-b",
+  "scene": "relational-t0-s24-0079",
+  "adapt": {
+   "origin": "generated",
+   "tier": "t0",
+   "knobs": {},
+   "change": "original rules (13 professional x 5 kinship relations)",
+   "gate": {
+    "rate": 0.9,
+    "pass": true
+   }
+  }
+ },
+ {
+  "scene_key": "Marlowe-Jordan-Emerson-barber-cousin",
+  "stimulus": "Marlowe's barber is Jordan. Jordan's cousin is Emerson. In other words, Emerson is Marlowe's",
+  "names": [
+   "Marlowe",
+   "Jordan",
+   "Emerson"
+  ],
+  "hop1": "barber",
+  "hop2": "cousin",
+  "gold": "barber's cousin",
+  "gold_alt": "cousin of Marlowe's barber",
+  "flipped": "cousin's barber",
+  "id": "relational-t0-s24-0113-a",
+  "scene": "relational-t0-s24-0113",
+  "adapt": {
+   "origin": "generated",
+   "tier": "t0",
+   "knobs": {},
+   "change": "original rules (13 professional x 5 kinship relations)",
+   "gate": {
+    "rate": 1.0,
+    "pass": true
+   }
+  }
+ },
+ {
+  "scene_key": "Marlowe-Jordan-Emerson-barber-cousin",
+  "stimulus": "Marlowe's cousin is Jordan. Jordan's barber is Emerson. In other words, Emerson is Marlowe's",
+  "names": [
+   "Marlowe",
+   "Jordan",
+   "Emerson"
+  ],
+  "hop1": "cousin",
+  "hop2": "barber",
+  "gold": "cousin's barber",
+  "gold_alt": "barber of Marlowe's cousin",
+  "flipped": "barber's cousin",
+  "id": "relational-t0-s24-0113-b",
+  "scene": "relational-t0-s24-0113",
+  "adapt": {
+   "origin": "generated",
+   "tier": "t0",
+   "knobs": {},
+   "change": "original rules (13 professional x 5 kinship relations)",
+   "gate": {
+    "rate": 1.0,
+    "pass": true
+   }
+  }
  }
 ]
