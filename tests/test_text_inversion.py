@@ -606,3 +606,45 @@ def test_draw_verdicts_skips_excluded_from_rate_rows(tmp_path):
     ]
     p = _results(tmp_path / "r", "fam", rows, value=0.0)
     assert ti.draw_verdicts(p) == {"head": False}
+
+
+def test_construction_gated_families_take_the_whole_bank_without_answers(tmp_path, monkeypatch):
+    monkeypatch.setattr(ti, "CONSTRUCTION_GATED", {"fam": "G1 at construction"})
+    monkeypatch.setattr(
+        readplan, "plan", lambda f: [SimpleNamespace(id=i, extra={}) for i in ("a", "b")]
+    )
+    monkeypatch.setattr(
+        registry,
+        "get",
+        lambda f: SimpleNamespace(scorer="regex", judge=SimpleNamespace(prompt_version="v1")),
+    )
+    monkeypatch.setattr(registry, "load_all", lambda: None)
+    dst = tmp_path / "ati.json"
+    dst.write_text(json.dumps({"_not_gated": {"fam": "policy refusal: 84%"}}))
+    frozen = ti.gate(tmp_path / "no_answers", dst=dst, families=["fam"])
+    assert frozen["fam"]["ids"] == ["a", "b"] and frozen["fam"]["answerer"] == "construction"
+    written = json.loads(dst.read_text())
+    assert "fam" not in written["_not_gated"] and written["fam"]["n_ati"] == 2
+
+
+def test_construction_gated_families_are_never_asked():
+    names = ti.gated_families()
+    assert not set(ti.CONSTRUCTION_GATED) & set(names)
+
+
+def test_full_gate_carries_construction_entries_over(tmp_path, two_families, monkeypatch):
+    monkeypatch.setattr(registry, "superseded", lambda: {})
+    monkeypatch.setattr(ti, "CONSTRUCTION_GATED", {"built": "G1 at construction"})
+    out = tmp_path / "o"
+    for d in range(3):
+        _answers(out, d, [("fam", i, "ok") for i in "abcde"] + [("refused", "x", "refusal")])
+        rows = [{"id": i, "pass": False} for i in "abcde"]
+        _results(out / "judged" / f"draw{d}" / "fam", "fam", rows, 0.0)
+    dst = tmp_path / "ati.json"
+    prior = {"answerer": "construction", "instrument": "v1", "ids": ["q"], "n_ati": 1}
+    dst.write_text(json.dumps({"built": prior}))
+    ti.gate(out, dst=dst)
+    written = json.loads(dst.read_text())
+    assert written["built"] == prior  # never asked, never dropped by a full re-gate
+    assert "built" not in written["_not_gated"]
+    assert written["fam"]["ids"] == list("abcde")

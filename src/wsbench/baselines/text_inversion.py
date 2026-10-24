@@ -47,6 +47,16 @@ NOT_GATED: dict[str, str] = {
     "directed_modulation": "the instruction states the concept; items survived only because the "
     "scorer discounts instruction narration, not because the answer is hidden (Camila 2026-10-24)",
 }
+# Families whose banks were text-inversion gated when their items were selected (Camila,
+# 2026-10-24: "i gated them when i selected the eval questions"): every bank item already failed
+# Opus x3 + Sonnet prompt-only readers in the source repo (G1), so the whole bank is the subset
+# and the gate never asks about them (both are refused under this gate's prompt anyway).
+CONSTRUCTION_GATED: dict[str, str] = {
+    "ttt_move": "G1 at bank construction (source repo #551): Opus 5.5 x3 (Qwen-informed and plain "
+    "framings, recall and MC, both square namings) and Sonnet 5.5 all wrong on every bank board",
+    "cutoff_confab": "G1 at bank construction (source repo #553): Opus 5.5 x3 and Sonnet 5.5 "
+    "(recall and MC, informed and plain framings) all wrong on every bank item",
+}
 # buggy_code has no pass bit: a draw "gets it" at the rubric's 6-7 band or above (the right
 # consequence or the right mechanism; on a clean twin, no specific false bug claimed).
 BUGGY_PASS_SCORE = 6
@@ -88,7 +98,27 @@ def gated_families() -> list[str]:
 
     registry.load_all()
     # superseded families (multihop_mt) are not re-gated; gate() carries their frozen entry over
-    return registry.drop_superseded(sorted(f for f in registry.FAMILIES if f not in NOT_GATED))
+    names = (f for f in registry.FAMILIES if f not in NOT_GATED and f not in CONSTRUCTION_GATED)
+    return registry.drop_superseded(sorted(names))
+
+
+def construction_entry(family: str) -> dict[str, Any]:
+    """The whole bank as the subset of a ``CONSTRUCTION_GATED`` family (no answers asked)."""
+    from wsbench import readplan, registry
+
+    ids = [s.id for s in readplan.plan(family) if ati_scored(s)]
+    spec = registry.get(family)
+    return {
+        "answerer": "construction",
+        "gate": CONSTRUCTION_GATED[family],
+        "instrument": spec.judge.prompt_version,
+        "judge_model": spec.scorer or spec.judge.model,
+        "n_bank": len(ids),
+        "n_ati": len(ids),
+        "n_invertible": 0,
+        "n_unverified": 0,
+        "ids": ids,
+    }
 
 
 def read_layer(family: str, grid: Iterable[int]) -> int:
@@ -487,8 +517,11 @@ def gate(
         raise ValueError(f"gate: {excluded} are excluded by design (NOT_GATED), not gateable")
     frozen: dict[str, Any] = {}
     not_gated: dict[str, str] = {}
-    answers = [latest_answers(out / "answers" / f"draw{d}.jsonl") for d in range(draws)]
-    for fam in fams or gated_families():
+    asked = [f for f in (fams or gated_families()) if f not in CONSTRUCTION_GATED]
+    answers = (
+        [latest_answers(out / "answers" / f"draw{d}.jsonl") for d in range(draws)] if asked else []
+    )
+    for fam in asked:
         ids = [s.id for s in readplan.plan(fam) if ati_scored(s)]
         share = refusal_share(out, fam, ids, draws)
         if share > MAX_REFUSED_SHARE:
@@ -540,6 +573,12 @@ def gate(
             "ids": ati,
             "draw_pass": draw_pass,
         }
+    # construction-gated families are (re)written only when named in ``families``; a full gate
+    # carries their frozen entry over unchanged, like a superseded family's
+    for fam in CONSTRUCTION_GATED:
+        if fams is not None and fam in fams:
+            frozen[fam] = construction_entry(fam)
+            not_gated.pop(fam, None)
     if dst is not None and fams:
         merged = json.loads(dst.read_text(encoding="utf-8")) if dst.exists() else {}
         old = merged.get("_not_gated", {})
@@ -556,7 +595,7 @@ def gate(
     elif dst is not None:
         # a superseded family is not re-gated: its last frozen entry is carried over unchanged
         prior = json.loads(dst.read_text(encoding="utf-8")) if dst.exists() else {}
-        for fam in registry.superseded():
+        for fam in [*registry.superseded(), *CONSTRUCTION_GATED]:
             if fam in prior and fam not in frozen:
                 frozen[fam] = prior[fam]
         merged = {

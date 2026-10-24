@@ -73,7 +73,8 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   answerer (`answerer=`) gates families into the same file with `stage=gate families=...`
   (merge); each entry records its `answerer` (none = Opus 5.5) and `framing` (none = plain;
   `open_model` adds a neutral non-Claude note). chain_intermediates is gated on `any_of_3`
-  and ttt_move / cutoff_confab on `ati_pass` (`STRICTER_PASS_FIELD`); directed_modulation /
+  and ttt_move / cutoff_confab on `ati_pass` (`STRICTER_PASS_FIELD`; unused while they stay
+  `CONSTRUCTION_GATED`); directed_modulation /
   moral_rationale / jailbreak / user_modeling /
   conjunctive have their own item adapters (rowless items count as fails in `ROWLESS_IS_FAIL`
   families' denominators).
@@ -100,6 +101,9 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   four model-specific families until reviewed). `readplan` rule `offsets_from_end {ks}` reads
   several end offsets; a plan row with `extra["ati_scored"] = False` is never ATI-gated
   (`text_inversion.ati_scored`), so controls can ride in a family's plan.
+  `text_inversion.CONSTRUCTION_GATED` (ttt_move, cutoff_confab) lists families whose banks were
+  gated when their items were selected (source G1): the gate writes their whole bank
+  (`answerer: "construction"`) and never asks about them.
 
 ## Driver (`runner.py`, `cli.py`)
 - `run all=True|families=a,b readouts_root=DIR out=DIR [family_workers=3] [json=True]` reads
