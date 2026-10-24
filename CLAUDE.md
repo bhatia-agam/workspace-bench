@@ -73,7 +73,8 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   answerer (`answerer=`) gates families into the same file with `stage=gate families=...`
   (merge); each entry records its `answerer` (none = Opus 5.5) and `framing` (none = plain;
   `open_model` adds a neutral non-Claude note). chain_intermediates is gated on `any_of_3`
-  and ttt_move / cutoff_confab on `ati_pass` (`STRICTER_PASS_FIELD`); directed_modulation /
+  and ttt_move / cutoff_confab on `ati_pass` (`STRICTER_PASS_FIELD`; unused while they stay
+  `CONSTRUCTION_GATED`); directed_modulation /
   moral_rationale / jailbreak / user_modeling /
   conjunctive have their own item adapters (rowless items count as fails in `ROWLESS_IS_FAIL`
   families' denominators).
