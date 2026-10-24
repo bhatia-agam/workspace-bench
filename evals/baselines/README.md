@@ -244,7 +244,7 @@ re-asked with Claude Sonnet 5.5 under the same template, draws, rule and judge
 then `stage=gate families=<the nine> answerer=claude-sonnet-5-5`, which merges into this file).
 Sonnet hits the same `reasoning_extraction` policy on most of them;
 only arithmetic_intermediates stayed under the 20% rule (12%). That Sonnet entry has since been
-replaced by the Opus open-model gate below, so no current entry uses Sonnet; the tooling remains. Every entry records its
+replaced by the Opus open-model gate below. Every entry records its
 `answerer`; entries without one are Opus 5.5.
 
 **Open-model framing (`framing=open_model`).** The refusals turned out to hinge on the prompt
@@ -275,7 +275,20 @@ user_modeling (60%), conjunctive (94%) and role_bound (98%) stay ungated. Two fa
   credits only `content_bound` readouts and classes ones that narrate the instruction as
   `instruction_narration` (83% of Opus's answers), so prompt reading earns no credit there.
 
-Gated (2026-10-24, 357 items in total):
+**Sonnet under the open-model framing, for the last four.** Opus stayed refused on jailbreak,
+user_modeling, conjunctive and role_bound even with the note; Sonnet 5.5 under the same framing
+is refused on only 3-12% of their items, so those four are gated by Sonnet
+(`stage=ask answerer=claude-sonnet-5-5 framing=open_model
+out=outputs/baselines/text_inversion_sonnet_open`, then `stage=gate families=<the four>
+answerer=claude-sonnet-5-5 framing=open_model`): user_modeling 57/100, conjunctive 25/100,
+jailbreak 5/86, role_bound 1/100. Sonnet is a weaker reader than Opus, so read those four
+entries as "Sonnet 5.5 cannot answer from the prompt". With them every gateable family is
+gated; only the four design exclusions remain in `_not_gated`. The file is the merge of four
+passes (plain/Opus over every family, then `families=` merges of open_model/Opus and
+open_model/Sonnet); a gate run without `families=` rebuilds only the first pass and would drop
+the merged entries.
+
+Gated (2026-10-24, 445 items in total):
 
 | family | answerer | framing | bank | ATI | invertible | unverified | answerer pass@1 (mean of 3) |
 |---|---|---|---|---|---|---|---|
@@ -301,6 +314,10 @@ Gated (2026-10-24, 357 items in total):
 | chain_intermediates | Opus 5.5 | open_model | 120 | 0 | 120 | 0 | 1.00 |
 | directed_modulation | Opus 5.5 | open_model | 100 | 64 | 36 | 0 | 0.18 |
 | moral_rationale | Opus 5.5 | open_model | 200 | 36 | 164 | 0 | 0.65 |
+| jailbreak_recognition | Sonnet 5.5 | open_model | 86 | 5 | 79 | 2 | 0.83 |
+| user_modeling | Sonnet 5.5 | open_model | 100 | 57 | 38 | 5 | 0.34 |
+| conjunctive_association | Sonnet 5.5 | open_model | 100 | 25 | 71 | 4 | 0.63 |
+| role_bound_association | Sonnet 5.5 | open_model | 100 | 1 | 97 | 2 | 0.98 |
 
 Not gated (`_not_gated`; skipped under the flag, as are the families with no surviving item):
 
@@ -310,10 +327,6 @@ Not gated (`_not_gated`; skipped under the flag, as are the families with no sur
 | jlens_concept_pr | precision against the J-lens top-10, not a bar a lens clears |
 | agentic_misalignment | a design score netted against foils, no item pass bit |
 | multi_concept_directed_modulation | the prompt dictates the concepts; prompt-only is 1.0 |
-| conjunctive_association | policy refusal: 100% of items had a draw refused by the API (reasoning_extraction); the answered items are not the bank; policy refusal: 100% of items had a draw refused by the API (reasoning_extraction, answerer claude-sonnet-5-5); the answered items are not the bank; policy refusal: 94% of items had a draw refused by the API (reasoning_extraction, answerer claude-opus-5-5, framing open_model); the answered items are not the bank |
-| jailbreak_recognition | policy refusal: 65% of items had a draw refused by the API (reasoning_extraction); the answered items are not the bank; policy refusal: 83% of items had a draw refused by the API (reasoning_extraction, answerer claude-sonnet-5-5); the answered items are not the bank; policy refusal: 27% of items had a draw refused by the API (reasoning_extraction, answerer claude-opus-5-5, framing open_model); the answered items are not the bank |
-| role_bound_association | policy refusal: 100% of items had a draw refused by the API (reasoning_extraction); the answered items are not the bank; policy refusal: 99% of items had a draw refused by the API (reasoning_extraction, answerer claude-sonnet-5-5); the answered items are not the bank; policy refusal: 98% of items had a draw refused by the API (reasoning_extraction, answerer claude-opus-5-5, framing open_model); the answered items are not the bank |
-| user_modeling | policy refusal: 100% of items had a draw refused by the API (reasoning_extraction); the answered items are not the bank; policy refusal: 100% of items had a draw refused by the API (reasoning_extraction, answerer claude-sonnet-5-5); the answered items are not the bank; policy refusal: 60% of items had a draw refused by the API (reasoning_extraction, answerer claude-opus-5-5, framing open_model); the answered items are not the bank |
 
 **Reading it.** Opus 5.5 recovers the answer from the text alone on most items of most families:
 its per-draw prompt-only rate is far above the stock-Qwen prompt-only floor (association 0.95
@@ -341,7 +354,7 @@ a run incomplete. A family whose current judge `prompt_version` differs from the
 `instrument` fails (exit 2) until re-gated. `report` leaves out the floor columns under this
 scope (they were measured on the full banks) and the macro skips families with fewer than 20
 items: with the current subset the macro is the mean of wrong_bridge, poetry,
-arithmetic_intermediates, directed_modulation and moral_rationale alone, so read the per-family
-rows. The Opus judge runs at T=1, so a fresh judge pass over the same answers can flip
+arithmetic_intermediates, directed_modulation, moral_rationale, user_modeling and
+conjunctive_association alone, so read the per-family rows. The Opus judge runs at T=1, so a fresh judge pass over the same answers can flip
 an occasional verdict: a smoke re-judge of draw 0 before the final gate passed 1 of 76 wrong_bridge
 and 1 of 22 poetry items; on the final subset a fresh re-judge passed none.
