@@ -57,7 +57,10 @@ MAX_REFUSED_SHARE = 0.2
 # computes the chain from the text and ranks the final answer first, so it fails every item on
 # ranking alone while having inverted the intermediates. For the gate (only), a draw that names
 # any intermediate anywhere (`any_of_3`) counts as inverted: stricter than the family rule.
-STRICTER_PASS_FIELD = {"chain_intermediates": "any_of_3"}
+# ttt_move (plan 0016): one hedged answer fails the quote rule while naming the move, so for the
+# gate a draw counts as inverted when the judge's letter is the gold ignoring the quote check, or
+# the draw states the gold under quote.stated_moves (`ati_pass`).
+STRICTER_PASS_FIELD = {"chain_intermediates": "any_of_3", "ttt_move": "ati_pass"}
 ROWLESS_IS_FAIL = frozenset(
     {
         "moral_rationale",
