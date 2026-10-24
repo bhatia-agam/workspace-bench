@@ -64,6 +64,9 @@ readouts with your own steered forward.
 one steered token) are the source's diagnostics; they are never scored and a producer may skip
 them.
 
+Note: the bank's `spec` block (`read_layers` [20, 36, 44, 52, 60], chance "1/6") is the source's
+pre-grid header, carried verbatim with the frozen bank; the grid of record is the one below.
+
 ## Read grid
 
 Every unsteered position from just after the steered span through the last prompt token, × all
@@ -114,6 +117,11 @@ construction (source text readers 0.17–0.20, informed bound 0.2 in
 `extras.informed_text_bound`). On the anti-text-inversion gate the 375 Opus calls are i.i.d.
 draws of one question, so the gate only drops items whose gold Opus happens to favour; it adds
 little here, and a refusal would hit all 125 items at once.
+
+**Partial grids.** An unavailable cell is "no pick" (the source rule), so a unit with some cells
+unavailable and no hit is decided as a miss; only a unit with NO judged cell is undecided. Under
+`allow_missing=True` on a partial grid, units are decided on whatever cells exist and `complete`
+is false: read such a run as a lower bound, not a headline.
 
 ## Source numbers and port parity
 

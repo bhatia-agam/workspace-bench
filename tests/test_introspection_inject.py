@@ -207,3 +207,12 @@ def test_registered_readme_and_dry_run(tmp_path, capsys, monkeypatch):
     assert r.value is None and r.counts["n_missing_cells"] > 0
     assert "OPTIONS:" in capsys.readouterr().out
     json.dumps(r.extras)
+
+
+def test_a_unit_with_no_judged_cell_is_undecided(tmp_path, monkeypatch):
+    # every call unavailable (e.g. a one-cell ATI gate run whose call failed): never a decided fail
+    monkeypatch.setattr(judge, "run_calls", lambda calls, **kw: {c.key: None for c in calls})
+    r = judge.run(_args(tmp_path))
+    rows = {row["id"]: row for row in r.rows}
+    assert rows[HEAD]["pass"] is None
+    assert r.value is None
