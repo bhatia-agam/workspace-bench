@@ -264,6 +264,11 @@ commands with `PYTHONPATH=src`, because the editable install points at the main 
 - *Example:* item `chat-lmsys-0000`, read at the `,` after "French" in "covering widely spoken languages such as Chinese, English, French,"; J-lens top-10 at L44 = ` languages`, `languages`, `日本語`, `多国`, ` Chinese`, ` Languages`, `Languages`, `语种`, `中国的`, `language` → a readout whose concepts are {languages, Chinese, Japanese, multilingual} scores high precision; "AI assistant" or "help" in the same readout count against it.
 - *Judged by:* Stage A splits samples into concepts; Stage P grades each concept against the token set in / partial / out; precision = mean grade over all concepts; recall@10 = expected best grade over a 10-concept subset.
 
+**Post-cutoff confabulation** — [`evals/cutoff_confab/README.md`](evals/cutoff_confab/README.md)
+- *What it is:* Qwen gives a stable, specific and wrong answer to a short question about an event after its ~January-2025 knowledge cutoff (an answer Opus and Sonnet both miss); does the lens name that answer at the token right before the reply. Kept out of the macro until reviewed; Baseline C (stock Qwen given only the text) ties the lens at 0.486, so the family cannot separate reading the activation from decoder priors.
+- *Example:* "Which Kirin chipset powers the Huawei Mate XTs tri-fold phone launched in September 2025? …" → Qwen's answer `kirin 9100` (truth: Kirin 9020); options kirin 9100 / 9020 / 9000s / 9010 / 9200.
+- *Judged by:* no call: per-option regex forms with exclusive longest match count the samples naming each option at reply_start; an item passes when gold is named by strictly more samples than every other option (ties lose), at ONE layer chosen bank-wide (highest bank rate, ties to the earliest).
+
 ### Logical processing
 
 **Moral rationale** — [`evals/moral_rationale/README.md`](evals/moral_rationale/README.md)
@@ -344,6 +349,7 @@ record; token readouts are matched token by token, no summarizer).
 | buggy_code | google/gemini-3.8-flash | buggy-score-2026-09-23 |
 | chain_intermediates | google/gemini-3.8-flash | chain-free-2026-09-16 |
 | conjunctive_association | google/gemini-3.8-flash | comp-v1 |
+| cutoff_confab | regex (no call) | cutoff-regex-2026-10-23 |
 | directed_modulation | google/gemini-3.8-flash | dm-2026-09-16 |
 | dm_category_default (not in macro) | regex (no call) | dmcd-regex-2026-10-23 |
 | hallucination | google/gemini-3.8-flash | v5c-chat |

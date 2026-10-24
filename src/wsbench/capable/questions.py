@@ -290,6 +290,9 @@ NO_QUESTION: dict[str, str] = {
     "dm_category_default": "the gold is Qwen3.6-27B's OWN stable default for the category (G0: "
     "greedy = 7 of 10 samples = the named reveal): re-derive the defaults and re-run the "
     "Opus/Sonnet text gate (G1) for a new model",
+    "cutoff_confab": "the gate is a specific Qwen3.6-27B ERROR (a stable, wrong answer about an "
+    "event after its knowledge cutoff, missed by Opus and Sonnet): re-run the source G0/G1 gate "
+    "for a new model",
 }
 # What a family's capability check does NOT cover, and what to do about it.
 PARTIAL: dict[str, str] = {

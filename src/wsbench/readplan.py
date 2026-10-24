@@ -258,6 +258,23 @@ def plan(family: str) -> list[ReadSpec]:
             )
             for it in items
         ]
+    if family == "cutoff_confab":
+        _h, items = _bank(family)  # the 109 items; g3_leak_items are never planned
+        return [
+            ReadSpec(
+                family,
+                it["id"],
+                "chat",
+                {"kind": "offsets_from_end", "ks": [10, 2, 1]},
+                GRID,
+                text=it["user"],
+                extra={"sites": ["user_end", "think_close", "reply_start"]},
+                note="user_end (the last user-content token, -10), think_close (the </think> of "
+                "the empty thinking block, -2), reply_start (the last prompt token, -1); only "
+                "reply_start is scored",
+            )
+            for it in items
+        ]
     if family == "dm_category_default":
         _h, items = _bank(family)
         return [
