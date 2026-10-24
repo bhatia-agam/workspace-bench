@@ -128,21 +128,32 @@ ATI_SCOPE = "anti_text_inversion"
 ATI_MACRO_MIN_ITEMS = 20  # an ATI family with fewer surviving items is shown, not averaged
 
 
-def macro(results: Sequence[FamilyResult], superseded: Mapping[str, str] | None = None) -> dict:
+def macro(
+    results: Sequence[FamilyResult],
+    superseded: Mapping[str, str] | None = None,
+    held_out: Mapping[str, str] | None = None,
+) -> dict:
     """Mean ``value`` over complete pass-rate families; the rest are listed with a reason.
 
     A superseded family (``EvalSpec.superseded_by``; ``superseded`` defaults to the registry's
-    map) is always excluded, reason ``"superseded"``, whether or not its successor was run."""
-    if superseded is None:
+    map) is always excluded, reason ``"superseded"``, whether or not its successor was run. A
+    family with ``EvalSpec.not_in_macro`` (``held_out`` defaults to the registry's map) is
+    excluded with reason ``"not in macro"`` and its stated reason."""
+    if superseded is None or held_out is None:
         from wsbench import registry  # lazy: registry imports this module
 
-        superseded = registry.superseded()
+        superseded = registry.superseded() if superseded is None else superseded
+        held_out = registry.not_in_macro() if held_out is None else held_out
     included: list[FamilyResult] = []
     excluded: list[dict[str, str]] = []
     for r in results:
         if r.family in superseded:
             excluded.append(
                 {"family": r.family, "reason": "superseded", "by": superseded[r.family]}
+            )
+        elif r.family in held_out:
+            excluded.append(
+                {"family": r.family, "reason": "not in macro", "why": held_out[r.family]}
             )
         elif r.metric != "pass_rate":
             excluded.append({"family": r.family, "reason": "metric"})
@@ -214,5 +225,7 @@ def markdown_table(
                     reason = f"metric ({by_family[e['family']].metric})"
                 elif reason == "superseded" and e.get("by"):
                     reason = f"superseded by {e['by']}"
+                elif reason == "not in macro" and e.get("why"):
+                    reason = f"not in macro ({e['why']})"
                 lines.append(f"- {e['family']}: {reason}")
     return "\n".join(lines) + "\n"

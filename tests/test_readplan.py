@@ -172,3 +172,11 @@ def test_plan_all_skips_superseded_but_names_still_plan(tmp_path, real_families)
     assert len(written) == len(readplan.families()) - 1
     assert main(["plan", "families=multihop_mt", f"out={tmp_path / 'v1'}", "limit=1"]) == 0
     assert (tmp_path / "v1" / "multihop_mt.jsonl").exists()
+
+
+def test_offsets_from_end_reports_each_negative_offset():
+    toks = [f"t{i}" for i in range(52)]
+    assert readplan.resolve({"kind": "offsets_from_end", "ks": [10, 2, 1]}, toks) == [-10, -2, -1]
+    assert readplan.resolve({"kind": "offsets_from_end", "ks": [60, 1]}, toks) == [
+        -1
+    ]  # out of range dropped
