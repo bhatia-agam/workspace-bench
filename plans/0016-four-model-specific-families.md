@@ -1,19 +1,21 @@
 # 0016: port the four model-specific families + gate them for anti-text-inversion
 
-Status: rev 2 (folds in plan critique round 1). Owner: Camila. Date: 2026-10-24.
+Status: rev 3 (folds in plan critique rounds 1-2). Owner: Camila. Date: 2026-10-24.
 
 ## Rev 2 decisions (binding; they override the table and sections below where they differ)
 
 **Shared infrastructure PR first (PR-0), then one PR per family, then the ATI PR.**
 
 PR-0 (main session):
-- `EvalSpec.in_macro: bool = True` (+ `not_in_macro_reason`); `results.macro` excludes such
-  families with reason `hillclimbing` (it has no exclusion for this today); CLAUDE.md + test.
+- `EvalSpec.not_in_macro: str = ""` (the reason; empty = in the macro) + `registry.not_in_macro()`;
+  `results.macro` excludes such families with reason `"not in macro"` and the stated reason
+  (implemented in PR #87). The four families set `not_in_macro="hillclimbing: not yet reviewed"`.
 - `readplan.resolve` gains `offsets_from_end {ks}` (several negative offsets, reported negative),
   needed for cutoff_confab's (−10, −2, −1).
-- `text_inversion.gate` honours a per-family scored-id filter (`spec`-provided `ati_ids()` or the
-  plan's `extra["ati_scored"]`) so a family whose plan carries controls gates only its headline
-  items.
+- `text_inversion.ati_scored(row)`: `build` and `gate` skip plan rows with
+  `extra["ati_scored"] = False` (implemented in PR #87). A family judge must emit NO rows for
+  items with no readouts (true of every pass-rate family), so on gate runs only the gated items
+  reach `refusal_share` and the `draw_verdicts` drift guard.
 
 Per family, the port keeps these source rules exactly (restated so the implementer builds them):
 
@@ -22,12 +24,15 @@ Per family, the port keeps these source rules exactly (restated so the implement
   reply_start (−1); `offsets_from_end [10, 2, 1]`. Only reply_start feeds the pass. Cell pass is a
   STRICT win: gold named by > 0 samples AND strictly more samples than every other option (ties
   lose), exclusive longest match. **Headline = one layer chosen bank-wide** (the layer with the
-  highest bank rate at reply_start, ties to the earliest), not each item's best layer. Rows carry
+  highest bank rate at reply_start, ties to the earliest), not each item's best layer, **chosen only
+  among layers that have readouts** (a layer with no reply_start readout for any item is never a
+  candidate), so a partial-layer run (`layers=44`, every ATI gate run) uses its own layer. Rows carry
   the bank `id` and a tri-state `pass` at the chosen layer. README carries the source caveat that
   Baseline C (stock Qwen, text only) ties the lens (0.486), so the family cannot separate reading
   the activation from decoder priors.
 - **dm_category_default:** 98 items; k=2 per cell; carrier positions only (every token after the
-  generation prompt; no `<|im_end|>`). `chat_dm` must produce ids identical to the source's
+  generation prompt; no `<|im_end|>`), via the existing `suffix_text` positions rule exactly as
+  directed_modulation uses it. `chat_dm` must produce ids identical to the source's
   single-string tokenization of prompt+carrier: assert on all 98 items (if not identical, add a
   render that tokenizes the concatenation). Symmetric option units, public
   `multitoken.regex.unicode_word_matcher`; pass = gold hits any sample in any cell. Report the
@@ -36,12 +41,19 @@ Per family, the port keeps these source rules exactly (restated so the implement
   (read_pos = n_tokens − 1, the `\n\n` after `</think>`) × 11 layers; source readouts k=5,
   T=1.0, max_new 160. Options = empty squares in the source seeded order
   (`shuffled_options(empties, f"{id}|judge")`, lettered A–I) — port that function, do not use
-  public `mc.py` shuffles. NONE or a failed quote check is "no signal" = fail; port the full
-  quote rule (bare name only as the leading mention outside board restatements; reject quotes
-  naming 2+ options). Pass = right at any layer. `early_pos` null cells carried in plan `extra`.
-- **introspection_inject:** ship regenerated `input_ids` (source renderer) for the 5 prompts
-  (protocol trial-1 + 4 neutral) as `captured` extra; assert n_tokens = 141 and token strings at
-  117–140 for protocol; neutral has its own 9-position grid and inject span. Plan `extra` carries
+  public `mc.py` shuffles (the bank's `items[].options` already equals that order on all 150
+  items: assert it). NONE or a failed quote check is "no signal" = fail; port the full quote rule
+  (bare name only as the leading mention outside board restatements; reject quotes naming 2+
+  options). Pass = right at any layer, CONSTRAINED template only. `early_pos` null cells are
+  carried in plan `extra` ONLY, never as a read position. Rows also carry `ati_pass` (see ATI).
+- **introspection_inject:** the bank has 2,250 scored items (inject 1,250, gaussian 500, cross 500)
+  plus 12 `beta0_rows`. Ship regenerated `input_ids` (source renderer) for all 12 distinct renders
+  (protocol Trials 1–8 + 4 neutral) as `captured` extra; assert n_tokens = 141 and token strings at
+  117–140 for protocol Trial 1; neutral has its own 9-position grid (23–31) and inject span. Plan
+  rows: inject, gaussian and beta0 get rows (a producer generates them); cross items get NO rows
+  (`readout_of` reuses the partner's readout). Every row except the 125 headline items carries
+  `extra["ati_scored"] = False`. The floor of record stays the max of the gaussian, cross and
+  beta0 floors (source parity). Plan `extra` carries
   the steering spec (`inject_layer` 12, β, token span, concept, vector recipe; gaussian controls
   carry `{type: gaussian, seed}` + the RNG recipe; cross items map to their partner's readouts via
   `readout_of`). Headline rate = the 125 protocol β=4 items; controls/neutral reported,
@@ -66,8 +78,14 @@ Per family, the port keeps these source rules exactly (restated so the implement
 **ATI gate specifics:** answers are written at layer 44 (in every grid), so cutoff's bank layer is
 44 on gate runs. Stricter gate-only rules (`STRICTER_PASS_FIELD`-style), because one hedged answer
 in one cell fails the strict rules while having inverted the item: cutoff = gold named at all
-(any sample mention); ttt = the judge's unconstrained pick is gold OR the gold square name is
-stated. dm any-hit and introspection 6-way MC are used as is. If a family is > 20% refused under
+(any sample mention), row field `ati_pass`; ttt = the CONSTRAINED judge's letter is gold IGNORING
+the quote check (NONE stays a fail) OR gold ∈ `quote.stated_moves(answer)`, row field `ati_pass`
+(no forced-guess template: with ~5 empty squares it would drop ~40-50% of items by chance).
+`STRICTER_PASS_FIELD` gains `{"cutoff_confab": "ati_pass", "ttt_move": "ati_pass"}`.
+**introspection gate prompt:** `build` decodes the captured ids through position 140, so all 125
+headline items share ONE byte-identical prompt: the 375 Opus calls are i.i.d. draws of one question
+and the gate drops the items whose gold Opus tends to name; a refusal would hit every item at once.
+The README caveat says "identical across all 125 headline items". dm any-hit and introspection 6-way MC are used as is. If a family is > 20% refused under
 both Opus and Sonnet `open_model`, it goes to `_not_gated` and stays in the benchmark.
 
 ## Why
