@@ -97,7 +97,7 @@ def judge_family(
     if ati is not None:
         result.config["scope"] = scope
         result.extras["ati_n_bank"] = ati["n_bank"]
-        result.extras["ati_judge_model"] = ati["judge_model"]
+        result.extras["ati_judge_model"] = ati.get("judge_model")
     path = write_results(out, result)
     spend = result.counts.get("spend_usd", 0.0) or 0.0
     print(

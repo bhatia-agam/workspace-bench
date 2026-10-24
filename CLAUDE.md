@@ -100,6 +100,9 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   four model-specific families until reviewed). `readplan` rule `offsets_from_end {ks}` reads
   several end offsets; a plan row with `extra["ati_scored"] = False` is never ATI-gated
   (`text_inversion.ati_scored`), so controls can ride in a family's plan.
+  `text_inversion.CONSTRUCTION_GATED` (ttt_move, cutoff_confab) lists families whose banks were
+  gated when their items were selected (source G1): the gate writes their whole bank
+  (`answerer: "construction"`) and never asks about them.
 
 ## Driver (`runner.py`, `cli.py`)
 - `run all=True|families=a,b readouts_root=DIR out=DIR [family_workers=3] [json=True]` reads
