@@ -24,7 +24,7 @@ from wsbench.llm import Spend
 from wsbench.mc import fold
 from wsbench.mcjudge import Call, Preflighter, item_scope, run_calls, with_readout_count
 from wsbench.readouts import Cell, load_readouts
-from wsbench.registry import REPO_ROOT, JudgeArgs
+from wsbench.registry import JudgeArgs, bank_path
 from wsbench.results import FamilyResult
 
 from .prompts import (
@@ -40,7 +40,6 @@ from .prompts import (
 )
 
 NAME = "arithmetic_intermediates"
-BANK = REPO_ROOT / "evals" / NAME / "items.json"
 TOLERANCES = {"exact": 0.0, "rel0.5pct": 0.005, "rel1pct": 0.01, "rel2pct": 0.02, "rel5pct": 0.05}
 CHANCE_LABEL = (
     "no analytic floor (free recall); the measured floors are the permutation null over each "
@@ -181,7 +180,7 @@ def cell_grid(args: JudgeArgs) -> str:
 
 
 def run(args: JudgeArgs) -> FamilyResult:
-    header, items = load_bank(BANK)
+    header, items = load_bank(bank_path(NAME))
     scope = item_scope(items, args)
     ids = [it["id"] for it in scope]
     by_id = {it["id"]: it for it in scope}

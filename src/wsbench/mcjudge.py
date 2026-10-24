@@ -138,7 +138,7 @@ class Preflighter:
 
 
 def load_bank(family: str) -> list[dict]:
-    path = registry.REPO_ROOT / "evals" / family / "items.json"
+    path = registry.bank_path(family)
     return json.loads(path.read_text(encoding="utf-8"))
 
 

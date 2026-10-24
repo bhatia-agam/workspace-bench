@@ -7,7 +7,7 @@ from typing import Any
 
 from wsbench.banks import load_bank as load_bank_file
 from wsbench.mcjudge import load_bank as load_raw_bank
-from wsbench.registry import REPO_ROOT
+from wsbench.registry import bank_path
 
 CONTINUE = (
     "Continue this text. Reply with the continuation only — the next word or short phrase, "
@@ -43,7 +43,7 @@ def bank_items(family: str) -> list[dict]:
     raw = load_raw_bank(family)
     if isinstance(raw, list):
         return raw
-    _header, items = load_bank_file(REPO_ROOT / "evals" / family / "items.json")
+    _header, items = load_bank_file(bank_path(family))
     return items
 
 

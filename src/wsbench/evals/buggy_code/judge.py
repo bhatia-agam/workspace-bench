@@ -21,7 +21,7 @@ from wsbench.mcjudge import (
     with_readout_count,
 )
 from wsbench.readouts import Cell, load_readouts
-from wsbench.registry import REPO_ROOT, JudgeArgs
+from wsbench.registry import JudgeArgs, bank_path
 from wsbench.results import FamilyResult, bootstrap_ci, completeness
 
 from .prompts import (
@@ -37,7 +37,6 @@ from .prompts import (
 )
 
 NAME = "buggy_code"
-BANK = REPO_ROOT / "evals" / NAME / "items.json"
 CHANCE_LABEL = (
     "a lens that claims nothing about any program (score 1 on every buggy program, 5 on every "
     "clean twin), see extras.silent_floor"
@@ -70,7 +69,7 @@ def grade(res: dict[str, Any] | None) -> int | None:
 
 
 def run(args: JudgeArgs) -> FamilyResult:
-    header, items = load_bank(BANK)
+    header, items = load_bank(bank_path(NAME))
     scope = item_scope(items, args)
     ids = [it["id"] for it in scope]
     by_id = {it["id"]: it for it in scope}

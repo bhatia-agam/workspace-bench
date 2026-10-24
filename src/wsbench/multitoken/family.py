@@ -34,7 +34,7 @@ from wsbench.multitoken.options import judged_roles, option_sets
 from wsbench.multitoken.prompts import LETTERS, PROMPT_VERSION, SCHEMA, SYSTEM, render_user
 from wsbench.multitoken.regex import SCORER_VERSION, SUMMARIZED_SCORER_VERSION
 from wsbench.readouts import Cell, load_readouts
-from wsbench.registry import REPO_ROOT, EvalSpec, JudgeArgs
+from wsbench.registry import EvalSpec, JudgeArgs, bank_path
 from wsbench.results import FamilyResult
 from wsbench.summarizer import SUMMARIZER_PROMPT_VERSION, aux_judge, render_bag, summarize
 
@@ -118,7 +118,7 @@ def _previous_mc(out: Path) -> dict[str, Any] | None:
 
 
 def run_regex(args: JudgeArgs, *, name: str) -> FamilyResult:
-    header, items = load_bank(REPO_ROOT / "evals" / name / "items.json")
+    header, items = load_bank(bank_path(name))
     contract = regex.contract_for(header, str(header.get("family", name)))
     scope = item_scope(items, args)
     ids = [it["id"] for it in scope]
@@ -386,7 +386,7 @@ def verdict(
 def run_mc(args: JudgeArgs, *, name: str) -> FamilyResult:
     """The forced-choice judge, one call per (item, layer, unit). Not the instrument of record:
     the result is never pinned, so it is never ``complete`` and never enters the macro."""
-    _header, items = load_bank(REPO_ROOT / "evals" / name / "items.json")
+    _header, items = load_bank(bank_path(name))
     scope = item_scope(items, args)
     ids = [it["id"] for it in scope]
     by_id = {it["id"]: it for it in scope}

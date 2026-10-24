@@ -13,7 +13,7 @@ from wsbench.judge_config import JudgeConfig
 from wsbench.llm import Spend
 from wsbench.mcjudge import Preflighter, item_scope, with_readout_count
 from wsbench.readouts import Cell, load_readouts
-from wsbench.registry import REPO_ROOT, EvalSpec, JudgeArgs
+from wsbench.registry import EvalSpec, JudgeArgs, bank_path
 from wsbench.results import FamilyResult
 
 GROUP = "basic"
@@ -30,7 +30,7 @@ def bank_family(name: str, title: str, *, n_items: int = 100, n_layers: int = 11
         judge=JudgeConfig(prompt_version=PROMPT_VERSION),
         metric="pass_rate",
         higher_is_better=True,
-        run=lambda args: run_family(args, name=name, bank=REPO_ROOT / bank),
+        run=lambda args: run_family(args, name=name, bank=bank_path(name)),
         calls_per_arm=f"≈ {n_items * n_layers / 1000:.1f}k",
         sources="",
     )

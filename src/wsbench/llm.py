@@ -63,8 +63,12 @@ def route(model: str) -> Route:
 def api_key(model: str) -> str:
     if route(model) == "anthropic":
         key = os.environ.get("ANTHROPIC_API_KEY", "")
+        if not key and os.environ.get("ANTHROPIC_AUTH_TOKEN"):
+            return OAUTH_PREFIX + os.environ["ANTHROPIC_AUTH_TOKEN"]  # keyless OAuth bearer token
         if not key:
-            raise JudgeConfigError(f"ANTHROPIC_API_KEY is missing (needed for {model})")
+            raise JudgeConfigError(
+                f"ANTHROPIC_API_KEY (or ANTHROPIC_AUTH_TOKEN) is missing (needed for {model})"
+            )
         return key
     key = os.environ.get("OPENROUTER_API_KEY", "")
     if not key.startswith("sk-or-"):
@@ -129,11 +133,21 @@ def _backoff(attempt: int, status: int | None) -> float:
     return min(cap, 2.0 * 2**attempt) * (0.5 + random.random())
 
 
+OAUTH_PREFIX = "oauth:"  # api_key() marks an OAuth bearer token (ANTHROPIC_AUTH_TOKEN) with this
+
+
 def _make_client(route: str, key: str) -> Any:
     """The ONLY place SDK clients are built (tests monkeypatch this to inject fakes)."""
     if route == "anthropic":
         from anthropic import AsyncAnthropic
 
+        if key.startswith(OAUTH_PREFIX):  # keyless judges: bearer auth + the OAuth beta flag
+            return AsyncAnthropic(
+                auth_token=key[len(OAUTH_PREFIX) :],
+                api_key=None,
+                default_headers={"anthropic-beta": "oauth-2025-04-20"},
+                max_retries=0,
+            )
         return AsyncAnthropic(api_key=key, max_retries=0)
     from openai import AsyncOpenAI
 
@@ -195,6 +209,19 @@ async def _openrouter_once(
     return _parse_object(resp.choices[0].message.content or "")
 
 
+_UNSUPPORTED = {"minimum", "maximum", "exclusiveMinimum", "exclusiveMaximum", "multipleOf"}
+
+
+def anthropic_schema(node: Any) -> Any:
+    """The schema without the numeric bounds Anthropic structured output rejects (400); the
+    bounds stay in the prompt and in each family's ``validate``."""
+    if isinstance(node, dict):
+        return {k: anthropic_schema(v) for k, v in node.items() if k not in _UNSUPPORTED}
+    if isinstance(node, list):
+        return [anthropic_schema(v) for v in node]
+    return node
+
+
 async def _anthropic_once(
     client: Any,
     system: str,
@@ -212,7 +239,9 @@ async def _anthropic_once(
         max_tokens=max_tokens,
         system=[{"type": "text", "text": system, "cache_control": {"type": "ephemeral"}}],
         messages=[{"role": "user", "content": user}],
-        output_config={"format": {"type": "json_schema", "schema": schema["schema"]}},
+        output_config={
+            "format": {"type": "json_schema", "schema": anthropic_schema(schema["schema"])}
+        },
     )
     spend.calls += 1
     usage = getattr(resp, "usage", None)

@@ -1,0 +1,3383 @@
+{
+ "family": "multihop-hard",
+ "parent_family": "multihop-mt",
+ "contract": {
+  "multi_token": true,
+  "include_target": true,
+  "conjunctive_units": true
+ },
+ "gate": "Qwen3.6-27B behavioral, chat-templated capability question (enable_thinking=False, answer stem): greedy-verified AND >=8/10 @ temp 0.7; every bridge gate (English bridge question vs the gate-only `answers`) greedy + >=8/10. EVAL RENDER: plain prompt, readout at the final prompt token; scoring = conjunctive regex over units (all required units in one layer).",
+ "frozen": "2026-09-10",
+ "adapt": {
+  "model": "qwen3.5-2b",
+  "hf_id": "Qwen/Qwen3.5-2B",
+  "frozen": "2026-10-20"
+ },
+ "items": [
+  {
+   "name": "mhh-streptomycin-griseus",
+   "subfamily": "2hop",
+   "prompt": "Fact: The first antibiotic that proved effective against tuberculosis, isolated in 1943 in a soil microbiology laboratory at Rutgers, is made naturally by the actinobacterium",
+   "target": "Streptomyces griseus",
+   "target_alts": [
+    "S. griseus"
+   ],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "intermediates": [
+    "streptomycin"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "streptomycin"
+      ]
+     },
+     "match": [
+      "streptomycin"
+     ]
+    }
+   ],
+   "bridges": [
+    {
+     "question": "Which antibiotic, isolated in Selman Waksman's Rutgers laboratory in 1943, was the first effective drug against tuberculosis?",
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "streptomycin"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "consistency_strict": 1.0,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge1": 1.0
+   },
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       3
+      ]
+     }
+    },
+    "target": 7,
+    "target_alts": [
+     5
+    ]
+   },
+   "mc": {
+    "bridge1": {
+     "gold": "streptomycin",
+     "distractors": [
+      "kanamycin",
+      "neomycin",
+      "chloramphenicol",
+      "tetracycline"
+     ]
+    }
+   },
+   "id": "mhh-streptomycin-griseus",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 0.8,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "multihop-au-t1-w100c0-mhh-pride-prejudice-austen",
+   "subfamily": "2hop",
+   "prompt": "Fact: The 1813 novel in which Elizabeth Bennet spars with Mr Darcy was written by",
+   "target": "Jane Austen",
+   "target_alts": [
+    "Austen"
+   ],
+   "intermediates": [
+    "Pride and Prejudice"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Pride and Prejudice"
+      ]
+     },
+     "match": [
+      "Pride and Prejudice"
+     ]
+    }
+   ],
+   "bridges": [
+    {
+     "question": "Which 1813 novel features Elizabeth Bennet and Mr Darcy?",
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "Pride and Prejudice"
+     ]
+    }
+   ],
+   "mc": {
+    "bridge1": {
+     "gold": "Pride and Prejudice",
+     "distractors": [
+      "Sense and Sensibility",
+      "Jane Eyre",
+      "Emma",
+      "Middlemarch"
+     ]
+    }
+   },
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       3
+      ]
+     }
+    },
+    "target": 3,
+    "target_alts": [
+     2
+    ]
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "source": "authored (claude-opus-5-5) for qwen3.5-2b: 2hop only, with well-known bridges of 2-4 words (a famous building, ship, treaty, film, company) and common final relations (designer, founder, city, author).",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "2hop only, with well-known bridges of 2-4 words (a famous building, ship, treaty, film, company) and common final relations (designer, founder, city, author)."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 100,
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "multihop-au-t1-w100c0-mhh-westphalia-thirty-years-war",
+   "subfamily": "2hop",
+   "prompt": "Fact: The 1648 settlements negotiated at Osnabrück and Münster brought to an end the",
+   "target": "Thirty Years' War",
+   "target_alts": [
+    "Thirty Years War"
+   ],
+   "intermediates": [
+    "Peace of Westphalia"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Peace of Westphalia",
+       "Treaty of Westphalia"
+      ]
+     },
+     "match": [
+      "Peace of Westphalia",
+      "Treaty of Westphalia"
+     ]
+    }
+   ],
+   "bridges": [
+    {
+     "question": "What is the collective name of the 1648 treaties negotiated at Osnabrück and Münster?",
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "Peace of Westphalia",
+      "Treaty of Westphalia",
+      "Westphalia"
+     ]
+    }
+   ],
+   "mc": {
+    "bridge1": {
+     "gold": "Peace of Westphalia",
+     "distractors": [
+      "Peace of Augsburg",
+      "Treaty of Utrecht",
+      "Treaty of the Pyrenees",
+      "Peace of Prague"
+     ]
+    }
+   },
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       5,
+       5
+      ]
+     }
+    },
+    "target": 4,
+    "target_alts": [
+     3
+    ]
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "source": "authored (claude-opus-5-5) for qwen3.5-2b: 2hop only, with well-known bridges of 2-4 words (a famous building, ship, treaty, film, company) and common final relations (designer, founder, city, author).",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "2hop only, with well-known bridges of 2-4 words (a famous building, ship, treaty, film, company) and common final relations (designer, founder, city, author)."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 100,
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "multihop-au-t1-w100c0-mhh-magic-flute-mozart",
+   "subfamily": "2hop",
+   "prompt": "Fact: The 1791 Singspiel featuring the Queen of the Night and the bird-catcher Papageno was composed by",
+   "target": "Wolfgang Amadeus Mozart",
+   "target_alts": [
+    "Mozart",
+    "W. A. Mozart"
+   ],
+   "intermediates": [
+    "The Magic Flute"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "The Magic Flute",
+       "Die Zauberflöte"
+      ]
+     },
+     "match": [
+      "The Magic Flute",
+      "Die Zauberflöte"
+     ]
+    }
+   ],
+   "bridges": [
+    {
+     "question": "Which 1791 Singspiel features the Queen of the Night and Papageno?",
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "The Magic Flute",
+      "Die Zauberflöte"
+     ]
+    }
+   ],
+   "mc": {
+    "bridge1": {
+     "gold": "The Magic Flute",
+     "distractors": [
+      "Don Giovanni",
+      "The Marriage of Figaro",
+      "Fidelio",
+      "Così fan tutte"
+     ]
+    }
+   },
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       3,
+       6
+      ]
+     }
+    },
+    "target": 5,
+    "target_alts": [
+     1,
+     5
+    ]
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "source": "authored (claude-opus-5-5) for qwen3.5-2b: 2hop only, with well-known bridges of 2-4 words (a famous building, ship, treaty, film, company) and common final relations (designer, founder, city, author).",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "2hop only, with well-known bridges of 2-4 words (a famous building, ship, treaty, film, company) and common final relations (designer, founder, city, author)."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 100,
+    "gate": {
+     "rate": 0.9,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "multihop-au-t1-w100c1-mhh-starwars-lucas",
+   "subfamily": "2hop",
+   "prompt": "Fact: The 1977 space-opera film featuring Luke Skywalker, Princess Leia and Darth Vader was written and directed by",
+   "target": "George Lucas",
+   "target_alts": [
+    "Lucas",
+    "George Walton Lucas"
+   ],
+   "intermediates": [
+    "Star Wars"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Star Wars",
+       "A New Hope",
+       "Star Wars: Episode IV – A New Hope"
+      ]
+     },
+     "match": [
+      "Star Wars",
+      "A New Hope",
+      "Star Wars: Episode IV – A New Hope"
+     ]
+    }
+   ],
+   "bridges": [
+    {
+     "question": "Which 1977 space-opera film introduced Luke Skywalker, Princess Leia and Darth Vader?",
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "Star Wars",
+      "A New Hope",
+      "Star Wars: Episode IV – A New Hope"
+     ]
+    }
+   ],
+   "mc": {
+    "bridge1": {
+     "gold": "Star Wars",
+     "distractors": [
+      "Close Encounters of the Third Kind",
+      "Star Trek: The Motion Picture",
+      "Blade Runner",
+      "Flash Gordon"
+     ]
+    }
+   },
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       2,
+       3,
+       9
+      ]
+     }
+    },
+    "target": 2,
+    "target_alts": [
+     1,
+     3
+    ]
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "source": "authored (claude-opus-5-5) for qwen3.5-2b: 2hop only, with well-known bridges of 2-4 words (a famous building, ship, treaty, film, company) and common final relations (designer, founder, city, author).",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "2hop only, with well-known bridges of 2-4 words (a famous building, ship, treaty, film, company) and common final relations (designer, founder, city, author)."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 100,
+    "gate": {
+     "rate": 0.9,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "multihop-au-t1-w101c0-multihop-2hop-lotr-tolkien",
+   "subfamily": "2hop",
+   "prompt": "Fact: The epic fantasy novel in which the hobbit Frodo Baggins carries a cursed band to Mount Doom was written by",
+   "target": "J. R. R. Tolkien",
+   "target_alts": [
+    "Tolkien",
+    "J.R.R. Tolkien",
+    "John Ronald Reuel Tolkien"
+   ],
+   "intermediates": [
+    "The Lord of the Rings"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "The Lord of the Rings",
+       "Lord of the Rings"
+      ]
+     },
+     "match": [
+      "The Lord of the Rings",
+      "Lord of the Rings"
+     ]
+    }
+   ],
+   "bridges": [
+    {
+     "question": "Which epic fantasy novel follows Frodo Baggins on his quest to Mount Doom?",
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "The Lord of the Rings",
+      "Lord of the Rings",
+      "LOTR"
+     ]
+    }
+   ],
+   "mc": {
+    "bridge1": {
+     "gold": "The Lord of the Rings",
+     "distractors": [
+      "The Hobbit",
+      "The Chronicles of Narnia",
+      "A Song of Ice and Fire",
+      "The Wheel of Time"
+     ]
+    }
+   },
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       5,
+       4
+      ]
+     }
+    },
+    "target": 7,
+    "target_alts": [
+     1,
+     5,
+     5
+    ]
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "source": "authored (claude-opus-5-5) for qwen3.5-2b: 2hop only, with well-known bridges of 2-4 words (a famous building, ship, treaty, film, company) and common final relations (designer, founder, city, author).",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "2hop only, with well-known bridges of 2-4 words (a famous building, ship, treaty, film, company) and common final relations (designer, founder, city, author)."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 101,
+    "steer": "- Last wave: 4/40 passed.\n- Rejected by lint before gating: 3x units: bridge1 pads a one-word name with generic words (uncreditab; 1x natural:bridge1 'Titanic' is not creditable; 1x natural:bridge1 'Beagle' is not creditable; 1x natural:bridge1 'Virgin' is not creditable. Avoid these.\n- Failed (gold -> what the model wrote): Jørn Utzon -> model said 'Jørn Utzon' (2/10); Hall of Mirrors -> model said 'Palace of Versailles' (0/10); Orson Welles -> model said 'Dwight Griffith' (1/10); John D. Rockefeller -> model said 'John D. Rockefeller' (4/10); Shah Jahan -> model said 'Jahangir' (1/10); Vincent van Gogh -> model said 'Monet' (2/10); Joseph Strauss -> model said 'William H. H. H.' (0/10); John Pemberton -> model said 'Charles K. Wells' (0/10); Michael Crichton -> model said 'Stephen King' (1/10); Antoni Gaudí -> model said 'Francesco Borromini' (1/10); Neil Armstrong -> model said 'Neil Armstrong' (2/10); Henry Dunant -> model said 'Hermann von Helmholtz' (1/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): Jane Austen; Thirty Years' War; Wolfgang Amadeus Mozart; George Lucas",
+    "gate": {
+     "rate": 0.8,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "multihop-au-t1-w101c0-multihop-2hop-mobydick-melville",
+   "subfamily": "2hop",
+   "prompt": "Fact: The 1851 novel narrated by Ishmael about Captain Ahab's obsessive hunt for a white whale was written by",
+   "target": "Herman Melville",
+   "target_alts": [
+    "Melville"
+   ],
+   "intermediates": [
+    "Moby-Dick"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Moby-Dick",
+       "Moby Dick"
+      ]
+     },
+     "match": [
+      "Moby-Dick",
+      "Moby Dick"
+     ]
+    }
+   ],
+   "bridges": [
+    {
+     "question": "Which 1851 novel, narrated by Ishmael, tells of Captain Ahab's hunt?",
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "Moby-Dick",
+      "Moby Dick"
+     ]
+    }
+   ],
+   "mc": {
+    "bridge1": {
+     "gold": "Moby-Dick",
+     "distractors": [
+      "The Scarlet Letter",
+      "Uncle Tom's Cabin",
+      "The Last of the Mohicans",
+      "Adventures of Huckleberry Finn"
+     ]
+    }
+   },
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       4,
+       3
+      ]
+     }
+    },
+    "target": 3,
+    "target_alts": [
+     2
+    ]
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "source": "authored (claude-opus-5-5) for qwen3.5-2b: 2hop only, with well-known bridges of 2-4 words (a famous building, ship, treaty, film, company) and common final relations (designer, founder, city, author).",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "2hop only, with well-known bridges of 2-4 words (a famous building, ship, treaty, film, company) and common final relations (designer, founder, city, author)."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 101,
+    "steer": "- Last wave: 4/40 passed.\n- Rejected by lint before gating: 3x units: bridge1 pads a one-word name with generic words (uncreditab; 1x natural:bridge1 'Titanic' is not creditable; 1x natural:bridge1 'Beagle' is not creditable; 1x natural:bridge1 'Virgin' is not creditable. Avoid these.\n- Failed (gold -> what the model wrote): Jørn Utzon -> model said 'Jørn Utzon' (2/10); Hall of Mirrors -> model said 'Palace of Versailles' (0/10); Orson Welles -> model said 'Dwight Griffith' (1/10); John D. Rockefeller -> model said 'John D. Rockefeller' (4/10); Shah Jahan -> model said 'Jahangir' (1/10); Vincent van Gogh -> model said 'Monet' (2/10); Joseph Strauss -> model said 'William H. H. H.' (0/10); John Pemberton -> model said 'Charles K. Wells' (0/10); Michael Crichton -> model said 'Stephen King' (1/10); Antoni Gaudí -> model said 'Francesco Borromini' (1/10); Neil Armstrong -> model said 'Neil Armstrong' (2/10); Henry Dunant -> model said 'Hermann von Helmholtz' (1/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): Jane Austen; Thirty Years' War; Wolfgang Amadeus Mozart; George Lucas",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "multihop-au-t1-w101c0-multihop-2hop-quixote-cervantes",
+   "subfamily": "2hop",
+   "prompt": "Fact: The early-17th-century Spanish novel about a deluded country squire who tilts at windmills alongside his peasant companion Sancho Panza was written by",
+   "target": "Miguel de Cervantes",
+   "target_alts": [
+    "Cervantes",
+    "Miguel de Cervantes Saavedra"
+   ],
+   "intermediates": [
+    "Don Quixote"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Don Quixote",
+       "Don Quijote"
+      ]
+     },
+     "match": [
+      "Don Quixote",
+      "Don Quijote"
+     ]
+    }
+   ],
+   "bridges": [
+    {
+     "question": "Which early-17th-century Spanish novel features a man who tilts at windmills with Sancho Panza?",
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "Don Quixote",
+      "Don Quijote"
+     ]
+    }
+   ],
+   "mc": {
+    "bridge1": {
+     "gold": "Don Quixote",
+     "distractors": [
+      "Lazarillo de Tormes",
+      "Gargantua and Pantagruel",
+      "The Decameron",
+      "Gulliver's Travels"
+     ]
+    }
+   },
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       4,
+       4
+      ]
+     }
+    },
+    "target": 4,
+    "target_alts": [
+     2,
+     7
+    ]
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "source": "authored (claude-opus-5-5) for qwen3.5-2b: 2hop only, with well-known bridges of 2-4 words (a famous building, ship, treaty, film, company) and common final relations (designer, founder, city, author).",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "2hop only, with well-known bridges of 2-4 words (a famous building, ship, treaty, film, company) and common final relations (designer, founder, city, author)."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 101,
+    "steer": "- Last wave: 4/40 passed.\n- Rejected by lint before gating: 3x units: bridge1 pads a one-word name with generic words (uncreditab; 1x natural:bridge1 'Titanic' is not creditable; 1x natural:bridge1 'Beagle' is not creditable; 1x natural:bridge1 'Virgin' is not creditable. Avoid these.\n- Failed (gold -> what the model wrote): Jørn Utzon -> model said 'Jørn Utzon' (2/10); Hall of Mirrors -> model said 'Palace of Versailles' (0/10); Orson Welles -> model said 'Dwight Griffith' (1/10); John D. Rockefeller -> model said 'John D. Rockefeller' (4/10); Shah Jahan -> model said 'Jahangir' (1/10); Vincent van Gogh -> model said 'Monet' (2/10); Joseph Strauss -> model said 'William H. H. H.' (0/10); John Pemberton -> model said 'Charles K. Wells' (0/10); Michael Crichton -> model said 'Stephen King' (1/10); Antoni Gaudí -> model said 'Francesco Borromini' (1/10); Neil Armstrong -> model said 'Neil Armstrong' (2/10); Henry Dunant -> model said 'Hermann von Helmholtz' (1/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): Jane Austen; Thirty Years' War; Wolfgang Amadeus Mozart; George Lucas",
+    "gate": {
+     "rate": 0.9,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "multihop-au-t1-w101c1-multihop-2hop-harry-potter-rowling",
+   "subfamily": "2hop",
+   "prompt": "Fact: The fantasy novel series about a boy wizard who attends Hogwarts School of Witchcraft and Wizardry was written by",
+   "target": "J. K. Rowling",
+   "target_alts": [
+    "Rowling",
+    "JK Rowling",
+    "Joanne Rowling"
+   ],
+   "intermediates": [
+    "Harry Potter"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Harry Potter"
+      ]
+     },
+     "match": [
+      "Harry Potter"
+     ]
+    }
+   ],
+   "bridges": [
+    {
+     "question": "Which fantasy book series follows a boy wizard at Hogwarts?",
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "Harry Potter"
+     ]
+    }
+   ],
+   "mc": {
+    "bridge1": {
+     "gold": "Harry Potter",
+     "distractors": [
+      "The Chronicles of Narnia",
+      "Percy Jackson",
+      "His Dark Materials",
+      "The Hunger Games"
+     ]
+    }
+   },
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       2
+      ]
+     }
+    },
+    "target": 5,
+    "target_alts": [
+     1,
+     2,
+     3
+    ]
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "source": "authored (claude-opus-5-5) for qwen3.5-2b: 2hop only, with well-known bridges of 2-4 words (a famous building, ship, treaty, film, company) and common final relations (designer, founder, city, author).",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "2hop only, with well-known bridges of 2-4 words (a famous building, ship, treaty, film, company) and common final relations (designer, founder, city, author)."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 101,
+    "steer": "- Last wave: 4/40 passed.\n- Rejected by lint before gating: 3x units: bridge1 pads a one-word name with generic words (uncreditab; 1x natural:bridge1 'Titanic' is not creditable; 1x natural:bridge1 'Beagle' is not creditable; 1x natural:bridge1 'Virgin' is not creditable. Avoid these.\n- Failed (gold -> what the model wrote): Jørn Utzon -> model said 'Jørn Utzon' (2/10); Hall of Mirrors -> model said 'Palace of Versailles' (0/10); Orson Welles -> model said 'Dwight Griffith' (1/10); John D. Rockefeller -> model said 'John D. Rockefeller' (4/10); Shah Jahan -> model said 'Jahangir' (1/10); Vincent van Gogh -> model said 'Monet' (2/10); Joseph Strauss -> model said 'William H. H. H.' (0/10); John Pemberton -> model said 'Charles K. Wells' (0/10); Michael Crichton -> model said 'Stephen King' (1/10); Antoni Gaudí -> model said 'Francesco Borromini' (1/10); Neil Armstrong -> model said 'Neil Armstrong' (2/10); Henry Dunant -> model said 'Hermann von Helmholtz' (1/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): Jane Austen; Thirty Years' War; Wolfgang Amadeus Mozart; George Lucas",
+    "gate": {
+     "rate": 0.9,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "multihop-au-t1-w101c1-multihop-2hop-romeo-juliet-shakespeare",
+   "subfamily": "2hop",
+   "prompt": "Fact: The tragedy about two young star-crossed lovers from the feuding Montague and Capulet families of Verona was written by",
+   "target": "William Shakespeare",
+   "target_alts": [
+    "Shakespeare"
+   ],
+   "intermediates": [
+    "Romeo and Juliet"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Romeo and Juliet"
+      ]
+     },
+     "match": [
+      "Romeo and Juliet"
+     ]
+    }
+   ],
+   "bridges": [
+    {
+     "question": "Which tragedy concerns star-crossed lovers from the Montague and Capulet families?",
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "Romeo and Juliet"
+     ]
+    }
+   ],
+   "mc": {
+    "bridge1": {
+     "gold": "Romeo and Juliet",
+     "distractors": [
+      "Hamlet",
+      "Othello",
+      "Macbeth",
+      "King Lear"
+     ]
+    }
+   },
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       3
+      ]
+     }
+    },
+    "target": 2,
+    "target_alts": [
+     1
+    ]
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "source": "authored (claude-opus-5-5) for qwen3.5-2b: 2hop only, with well-known bridges of 2-4 words (a famous building, ship, treaty, film, company) and common final relations (designer, founder, city, author).",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "2hop only, with well-known bridges of 2-4 words (a famous building, ship, treaty, film, company) and common final relations (designer, founder, city, author)."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 101,
+    "steer": "- Last wave: 4/40 passed.\n- Rejected by lint before gating: 3x units: bridge1 pads a one-word name with generic words (uncreditab; 1x natural:bridge1 'Titanic' is not creditable; 1x natural:bridge1 'Beagle' is not creditable; 1x natural:bridge1 'Virgin' is not creditable. Avoid these.\n- Failed (gold -> what the model wrote): Jørn Utzon -> model said 'Jørn Utzon' (2/10); Hall of Mirrors -> model said 'Palace of Versailles' (0/10); Orson Welles -> model said 'Dwight Griffith' (1/10); John D. Rockefeller -> model said 'John D. Rockefeller' (4/10); Shah Jahan -> model said 'Jahangir' (1/10); Vincent van Gogh -> model said 'Monet' (2/10); Joseph Strauss -> model said 'William H. H. H.' (0/10); John Pemberton -> model said 'Charles K. Wells' (0/10); Michael Crichton -> model said 'Stephen King' (1/10); Antoni Gaudí -> model said 'Francesco Borromini' (1/10); Neil Armstrong -> model said 'Neil Armstrong' (2/10); Henry Dunant -> model said 'Hermann von Helmholtz' (1/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): Jane Austen; Thirty Years' War; Wolfgang Amadeus Mozart; George Lucas",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "multihop-au-t1-w101c1-multihop-2hop-back-to-the-future-zemeckis",
+   "subfamily": "2hop",
+   "prompt": "Fact: The 1985 film in which teenager Marty McFly travels to 1955 in Doc Brown's DeLorean was directed by",
+   "target": "Robert Zemeckis",
+   "target_alts": [
+    "Zemeckis"
+   ],
+   "intermediates": [
+    "Back to the Future"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Back to the Future"
+      ]
+     },
+     "match": [
+      "Back to the Future"
+     ]
+    }
+   ],
+   "bridges": [
+    {
+     "question": "Which 1985 film has Marty McFly travel to 1955 in a DeLorean?",
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "Back to the Future"
+     ]
+    }
+   ],
+   "mc": {
+    "bridge1": {
+     "gold": "Back to the Future",
+     "distractors": [
+      "Ghostbusters",
+      "The Terminator",
+      "Ferris Bueller's Day Off",
+      "The Karate Kid"
+     ]
+    }
+   },
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       4
+      ]
+     }
+    },
+    "target": 5,
+    "target_alts": [
+     4
+    ]
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "source": "authored (claude-opus-5-5) for qwen3.5-2b: 2hop only, with well-known bridges of 2-4 words (a famous building, ship, treaty, film, company) and common final relations (designer, founder, city, author).",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "2hop only, with well-known bridges of 2-4 words (a famous building, ship, treaty, film, company) and common final relations (designer, founder, city, author)."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 101,
+    "steer": "- Last wave: 4/40 passed.\n- Rejected by lint before gating: 3x units: bridge1 pads a one-word name with generic words (uncreditab; 1x natural:bridge1 'Titanic' is not creditable; 1x natural:bridge1 'Beagle' is not creditable; 1x natural:bridge1 'Virgin' is not creditable. Avoid these.\n- Failed (gold -> what the model wrote): Jørn Utzon -> model said 'Jørn Utzon' (2/10); Hall of Mirrors -> model said 'Palace of Versailles' (0/10); Orson Welles -> model said 'Dwight Griffith' (1/10); John D. Rockefeller -> model said 'John D. Rockefeller' (4/10); Shah Jahan -> model said 'Jahangir' (1/10); Vincent van Gogh -> model said 'Monet' (2/10); Joseph Strauss -> model said 'William H. H. H.' (0/10); John Pemberton -> model said 'Charles K. Wells' (0/10); Michael Crichton -> model said 'Stephen King' (1/10); Antoni Gaudí -> model said 'Francesco Borromini' (1/10); Neil Armstrong -> model said 'Neil Armstrong' (2/10); Henry Dunant -> model said 'Hermann von Helmholtz' (1/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): Jane Austen; Thirty Years' War; Wolfgang Amadeus Mozart; George Lucas",
+    "gate": {
+     "rate": 0.9,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "multihop-au-t1-w101c1-multihop-2hop-emancipation-proclamation-lincoln",
+   "subfamily": "2hop",
+   "prompt": "Fact: The 1863 executive order declaring freedom for enslaved people in the rebelling Confederate states was issued by President",
+   "target": "Abraham Lincoln",
+   "target_alts": [
+    "Lincoln"
+   ],
+   "intermediates": [
+    "Emancipation Proclamation"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Emancipation Proclamation"
+      ]
+     },
+     "match": [
+      "Emancipation Proclamation"
+     ]
+    }
+   ],
+   "bridges": [
+    {
+     "question": "Which 1863 executive order declared freedom for enslaved people in the Confederate states?",
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "Emancipation Proclamation"
+     ]
+    }
+   ],
+   "mc": {
+    "bridge1": {
+     "gold": "Emancipation Proclamation",
+     "distractors": [
+      "Gettysburg Address",
+      "Monroe Doctrine",
+      "Louisiana Purchase",
+      "Homestead Act"
+     ]
+    }
+   },
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       3
+      ]
+     }
+    },
+    "target": 2,
+    "target_alts": [
+     1
+    ]
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "source": "authored (claude-opus-5-5) for qwen3.5-2b: 2hop only, with well-known bridges of 2-4 words (a famous building, ship, treaty, film, company) and common final relations (designer, founder, city, author).",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "2hop only, with well-known bridges of 2-4 words (a famous building, ship, treaty, film, company) and common final relations (designer, founder, city, author)."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 101,
+    "steer": "- Last wave: 4/40 passed.\n- Rejected by lint before gating: 3x units: bridge1 pads a one-word name with generic words (uncreditab; 1x natural:bridge1 'Titanic' is not creditable; 1x natural:bridge1 'Beagle' is not creditable; 1x natural:bridge1 'Virgin' is not creditable. Avoid these.\n- Failed (gold -> what the model wrote): Jørn Utzon -> model said 'Jørn Utzon' (2/10); Hall of Mirrors -> model said 'Palace of Versailles' (0/10); Orson Welles -> model said 'Dwight Griffith' (1/10); John D. Rockefeller -> model said 'John D. Rockefeller' (4/10); Shah Jahan -> model said 'Jahangir' (1/10); Vincent van Gogh -> model said 'Monet' (2/10); Joseph Strauss -> model said 'William H. H. H.' (0/10); John Pemberton -> model said 'Charles K. Wells' (0/10); Michael Crichton -> model said 'Stephen King' (1/10); Antoni Gaudí -> model said 'Francesco Borromini' (1/10); Neil Armstrong -> model said 'Neil Armstrong' (2/10); Henry Dunant -> model said 'Hermann von Helmholtz' (1/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): Jane Austen; Thirty Years' War; Wolfgang Amadeus Mozart; George Lucas",
+    "gate": {
+     "rate": 0.8,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "multihop-au-t1-w101c2-multihop-mt-2hop-mockingbird-harper-lee",
+   "subfamily": "2hop",
+   "prompt": "Fact: The 1960 novel in which lawyer Atticus Finch defends Tom Robinson in Alabama, narrated by his daughter Scout, was written by",
+   "target": "Harper Lee",
+   "target_alts": [
+    "Lee",
+    "Nelle Harper Lee"
+   ],
+   "intermediates": [
+    "To Kill a Mockingbird"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "To Kill a Mockingbird"
+      ]
+     },
+     "match": [
+      "To Kill a Mockingbird"
+     ]
+    }
+   ],
+   "bridges": [
+    {
+     "question": "Which 1960 novel features lawyer Atticus Finch defending Tom Robinson, narrated by his daughter Scout?",
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "To Kill a Mockingbird"
+     ]
+    }
+   ],
+   "mc": {
+    "bridge1": {
+     "gold": "To Kill a Mockingbird",
+     "distractors": [
+      "The Catcher in the Rye",
+      "Of Mice and Men",
+      "The Grapes of Wrath",
+      "Invisible Man"
+     ]
+    }
+   },
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       5
+      ]
+     }
+    },
+    "target": 2,
+    "target_alts": [
+     1,
+     3
+    ]
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "source": "authored (claude-opus-5-5) for qwen3.5-2b: 2hop only, with well-known bridges of 2-4 words (a famous building, ship, treaty, film, company) and common final relations (designer, founder, city, author).",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "2hop only, with well-known bridges of 2-4 words (a famous building, ship, treaty, film, company) and common final relations (designer, founder, city, author)."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 101,
+    "steer": "- Last wave: 4/40 passed.\n- Rejected by lint before gating: 3x units: bridge1 pads a one-word name with generic words (uncreditab; 1x natural:bridge1 'Titanic' is not creditable; 1x natural:bridge1 'Beagle' is not creditable; 1x natural:bridge1 'Virgin' is not creditable. Avoid these.\n- Failed (gold -> what the model wrote): Jørn Utzon -> model said 'Jørn Utzon' (2/10); Hall of Mirrors -> model said 'Palace of Versailles' (0/10); Orson Welles -> model said 'Dwight Griffith' (1/10); John D. Rockefeller -> model said 'John D. Rockefeller' (4/10); Shah Jahan -> model said 'Jahangir' (1/10); Vincent van Gogh -> model said 'Monet' (2/10); Joseph Strauss -> model said 'William H. H. H.' (0/10); John Pemberton -> model said 'Charles K. Wells' (0/10); Michael Crichton -> model said 'Stephen King' (1/10); Antoni Gaudí -> model said 'Francesco Borromini' (1/10); Neil Armstrong -> model said 'Neil Armstrong' (2/10); Henry Dunant -> model said 'Hermann von Helmholtz' (1/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): Jane Austen; Thirty Years' War; Wolfgang Amadeus Mozart; George Lucas",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "multihop-au-t1-w101c2-multihop-mt-2hop-alice-wonderland-carroll",
+   "subfamily": "2hop",
+   "prompt": "Fact: The 1865 children's novel in which a girl follows a White Rabbit down a hole and meets the Mad Hatter was written by",
+   "target": "Lewis Carroll",
+   "target_alts": [
+    "Carroll",
+    "Charles Lutwidge Dodgson"
+   ],
+   "intermediates": [
+    "Alice in Wonderland"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Alice in Wonderland",
+       "Alice's Adventures in Wonderland"
+      ]
+     },
+     "match": [
+      "Alice in Wonderland",
+      "Alice's Adventures in Wonderland"
+     ]
+    }
+   ],
+   "bridges": [
+    {
+     "question": "Which 1865 children's novel features a girl who follows a White Rabbit down a hole and meets the Mad Hatter?",
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "Alice in Wonderland",
+      "Alice's Adventures in Wonderland"
+     ]
+    }
+   ],
+   "mc": {
+    "bridge1": {
+     "gold": "Alice in Wonderland",
+     "distractors": [
+      "Peter Pan",
+      "The Wind in the Willows",
+      "The Water-Babies",
+      "The Jungle Book"
+     ]
+    }
+   },
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       3,
+       5
+      ]
+     }
+    },
+    "target": 2,
+    "target_alts": [
+     1,
+     7
+    ]
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "source": "authored (claude-opus-5-5) for qwen3.5-2b: 2hop only, with well-known bridges of 2-4 words (a famous building, ship, treaty, film, company) and common final relations (designer, founder, city, author).",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "2hop only, with well-known bridges of 2-4 words (a famous building, ship, treaty, film, company) and common final relations (designer, founder, city, author)."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 101,
+    "steer": "- Last wave: 4/40 passed.\n- Rejected by lint before gating: 3x units: bridge1 pads a one-word name with generic words (uncreditab; 1x natural:bridge1 'Titanic' is not creditable; 1x natural:bridge1 'Beagle' is not creditable; 1x natural:bridge1 'Virgin' is not creditable. Avoid these.\n- Failed (gold -> what the model wrote): Jørn Utzon -> model said 'Jørn Utzon' (2/10); Hall of Mirrors -> model said 'Palace of Versailles' (0/10); Orson Welles -> model said 'Dwight Griffith' (1/10); John D. Rockefeller -> model said 'John D. Rockefeller' (4/10); Shah Jahan -> model said 'Jahangir' (1/10); Vincent van Gogh -> model said 'Monet' (2/10); Joseph Strauss -> model said 'William H. H. H.' (0/10); John Pemberton -> model said 'Charles K. Wells' (0/10); Michael Crichton -> model said 'Stephen King' (1/10); Antoni Gaudí -> model said 'Francesco Borromini' (1/10); Neil Armstrong -> model said 'Neil Armstrong' (2/10); Henry Dunant -> model said 'Hermann von Helmholtz' (1/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): Jane Austen; Thirty Years' War; Wolfgang Amadeus Mozart; George Lucas",
+    "gate": {
+     "rate": 0.8,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "multihop-au-t1-w101c2-multihop-mt-2hop-game-of-thrones-martin",
+   "subfamily": "2hop",
+   "prompt": "Fact: The HBO fantasy series featuring Jon Snow, Daenerys Targaryen and the Lannisters of Casterly Rock is adapted from novels by",
+   "target": "George R. R. Martin",
+   "target_alts": [
+    "George R.R. Martin",
+    "George Martin",
+    "Martin"
+   ],
+   "intermediates": [
+    "Game of Thrones"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Game of Thrones",
+       "A Song of Ice and Fire"
+      ]
+     },
+     "match": [
+      "Game of Thrones",
+      "A Song of Ice and Fire"
+     ]
+    }
+   ],
+   "bridges": [
+    {
+     "question": "Which HBO fantasy series features Jon Snow, Daenerys Targaryen and the Lannisters?",
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "Game of Thrones",
+      "A Song of Ice and Fire"
+     ]
+    }
+   ],
+   "mc": {
+    "bridge1": {
+     "gold": "Game of Thrones",
+     "distractors": [
+      "The Witcher",
+      "The Wheel of Time",
+      "Vikings",
+      "House of the Dragon"
+     ]
+    }
+   },
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       3,
+       6
+      ]
+     }
+    },
+    "target": 6,
+    "target_alts": [
+     5,
+     2,
+     1
+    ]
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "source": "authored (claude-opus-5-5) for qwen3.5-2b: 2hop only, with well-known bridges of 2-4 words (a famous building, ship, treaty, film, company) and common final relations (designer, founder, city, author).",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "2hop only, with well-known bridges of 2-4 words (a famous building, ship, treaty, film, company) and common final relations (designer, founder, city, author)."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 101,
+    "steer": "- Last wave: 4/40 passed.\n- Rejected by lint before gating: 3x units: bridge1 pads a one-word name with generic words (uncreditab; 1x natural:bridge1 'Titanic' is not creditable; 1x natural:bridge1 'Beagle' is not creditable; 1x natural:bridge1 'Virgin' is not creditable. Avoid these.\n- Failed (gold -> what the model wrote): Jørn Utzon -> model said 'Jørn Utzon' (2/10); Hall of Mirrors -> model said 'Palace of Versailles' (0/10); Orson Welles -> model said 'Dwight Griffith' (1/10); John D. Rockefeller -> model said 'John D. Rockefeller' (4/10); Shah Jahan -> model said 'Jahangir' (1/10); Vincent van Gogh -> model said 'Monet' (2/10); Joseph Strauss -> model said 'William H. H. H.' (0/10); John Pemberton -> model said 'Charles K. Wells' (0/10); Michael Crichton -> model said 'Stephen King' (1/10); Antoni Gaudí -> model said 'Francesco Borromini' (1/10); Neil Armstrong -> model said 'Neil Armstrong' (2/10); Henry Dunant -> model said 'Hermann von Helmholtz' (1/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): Jane Austen; Thirty Years' War; Wolfgang Amadeus Mozart; George Lucas",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "multihop-au-t1-w101c2-multihop-mt-2hop-toy-story-lasseter",
+   "subfamily": "2hop",
+   "prompt": "Fact: The 1995 Pixar film, the first fully computer-animated feature, starring the cowboy Woody and the space ranger Buzz Lightyear, was directed by",
+   "target": "John Lasseter",
+   "target_alts": [
+    "Lasseter",
+    "John Alan Lasseter"
+   ],
+   "intermediates": [
+    "Toy Story"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Toy Story"
+      ]
+     },
+     "match": [
+      "Toy Story"
+     ]
+    }
+   ],
+   "bridges": [
+    {
+     "question": "Which 1995 Pixar film starring Woody and Buzz Lightyear was the first fully computer-animated feature?",
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "Toy Story"
+     ]
+    }
+   ],
+   "mc": {
+    "bridge1": {
+     "gold": "Toy Story",
+     "distractors": [
+      "A Bug's Life",
+      "Shrek",
+      "Antz",
+      "Monsters, Inc."
+     ]
+    }
+   },
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       2
+      ]
+     }
+    },
+    "target": 3,
+    "target_alts": [
+     2,
+     4
+    ]
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "source": "authored (claude-opus-5-5) for qwen3.5-2b: 2hop only, with well-known bridges of 2-4 words (a famous building, ship, treaty, film, company) and common final relations (designer, founder, city, author).",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "2hop only, with well-known bridges of 2-4 words (a famous building, ship, treaty, film, company) and common final relations (designer, founder, city, author)."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 101,
+    "steer": "- Last wave: 4/40 passed.\n- Rejected by lint before gating: 3x units: bridge1 pads a one-word name with generic words (uncreditab; 1x natural:bridge1 'Titanic' is not creditable; 1x natural:bridge1 'Beagle' is not creditable; 1x natural:bridge1 'Virgin' is not creditable. Avoid these.\n- Failed (gold -> what the model wrote): Jørn Utzon -> model said 'Jørn Utzon' (2/10); Hall of Mirrors -> model said 'Palace of Versailles' (0/10); Orson Welles -> model said 'Dwight Griffith' (1/10); John D. Rockefeller -> model said 'John D. Rockefeller' (4/10); Shah Jahan -> model said 'Jahangir' (1/10); Vincent van Gogh -> model said 'Monet' (2/10); Joseph Strauss -> model said 'William H. H. H.' (0/10); John Pemberton -> model said 'Charles K. Wells' (0/10); Michael Crichton -> model said 'Stephen King' (1/10); Antoni Gaudí -> model said 'Francesco Borromini' (1/10); Neil Armstrong -> model said 'Neil Armstrong' (2/10); Henry Dunant -> model said 'Hermann von Helmholtz' (1/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): Jane Austen; Thirty Years' War; Wolfgang Amadeus Mozart; George Lucas",
+    "gate": {
+     "rate": 0.9,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "multihop-au-t1-w102c0-multihop-mt-2hop-great-expectations-dickens",
+   "subfamily": "2hop",
+   "prompt": "Fact: The 1861 novel in which the orphan Pip receives a fortune from a mysterious benefactor and visits the jilted Miss Havisham was written by",
+   "target": "Charles Dickens",
+   "target_alts": [
+    "Dickens",
+    "Charles John Huffam Dickens"
+   ],
+   "intermediates": [
+    "Great Expectations"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Great Expectations"
+      ]
+     },
+     "match": [
+      "Great Expectations"
+     ]
+    }
+   ],
+   "bridges": [
+    {
+     "question": "Which 1861 novel features the orphan Pip and the jilted Miss Havisham?",
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "Great Expectations"
+     ]
+    }
+   ],
+   "mc": {
+    "bridge1": {
+     "gold": "Great Expectations",
+     "distractors": [
+      "Oliver Twist",
+      "David Copperfield",
+      "Bleak House",
+      "Hard Times"
+     ]
+    }
+   },
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       2
+      ]
+     }
+    },
+    "target": 2,
+    "target_alts": [
+     1,
+     5
+    ]
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "source": "authored (claude-opus-5-5) for qwen3.5-2b: 2hop only, with well-known bridges of 2-4 words (a famous building, ship, treaty, film, company) and common final relations (designer, founder, city, author).",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "2hop only, with well-known bridges of 2-4 words (a famous building, ship, treaty, film, company) and common final relations (designer, founder, city, author)."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 102,
+    "steer": "- Last wave: 12/60 passed.\n- Rejected by lint before gating: 4x units: bridge1 pads a one-word name with generic words (uncreditab; 1x natural:bridge1 'Olympics' is not creditable; 1x leak: ['battle'] in prompt; 1x natural:bridge1 'Waterloo' is not creditable. Avoid these.\n- Failed (gold -> what the model wrote): Leo Tolstoy -> model said 'Dostoevsky' (7/10); Sandro Botticelli -> model said 'Giovanni Bellini' (0/10); New York City -> model said 'New York City' (7/10); United Arab Emirates -> model said 'United Arab Emirates' (4/10); South Dakota -> model said 'New York' (0/10); American Revolutionary War -> model said 'Seven Years War' (5/10); Thor Heyerdahl -> model said 'Rudolf A. M. M. M. M. M. M. M. M. M. M' (0/10); Shigeru Miyamoto -> model said 'Shigeru Miyamoto' (9/10); Christopher Wren -> model said 'Sir Christopher Wren' (9/10); Christopher Nolan -> model said 'David S. Goyer' (2/10); Quentin Tarantino -> model said 'Martin Scorsese' (0/10); Igor Stravinsky -> model said 'Camille Saint-Saëns' (0/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): J. R. R. Tolkien; Herman Melville; Miguel de Cervantes; J. K. Rowling; William Shakespeare; Robert Zemeckis; Abraham Lincoln; Harper Lee; Lewis Carroll; George R. R. Martin; John Lasseter; Henry Ford",
+    "gate": {
+     "rate": 0.9,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "multihop-au-t1-w102c0-multihop-mt-2hop-teen-spirit-cobain",
+   "subfamily": "2hop",
+   "prompt": "Fact: The 1991 grunge anthem from the album Nevermind, opening 'Load up on guns, bring your friends', was written by the band's frontman",
+   "target": "Kurt Cobain",
+   "target_alts": [
+    "Cobain",
+    "Kurt Donald Cobain"
+   ],
+   "intermediates": [
+    "Smells Like Teen Spirit"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Smells Like Teen Spirit"
+      ]
+     },
+     "match": [
+      "Smells Like Teen Spirit"
+     ]
+    }
+   ],
+   "bridges": [
+    {
+     "question": "Which 1991 grunge anthem from Nevermind opens with 'Load up on guns, bring your friends'?",
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "Smells Like Teen Spirit",
+      "Teen Spirit"
+     ]
+    }
+   ],
+   "mc": {
+    "bridge1": {
+     "gold": "Smells Like Teen Spirit",
+     "distractors": [
+      "Come as You Are",
+      "Black Hole Sun",
+      "Alive",
+      "Jeremy"
+     ]
+    }
+   },
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       4
+      ]
+     }
+    },
+    "target": 3,
+    "target_alts": [
+     2,
+     4
+    ]
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "source": "authored (claude-opus-5-5) for qwen3.5-2b: 2hop only, with well-known bridges of 2-4 words (a famous building, ship, treaty, film, company) and common final relations (designer, founder, city, author).",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "2hop only, with well-known bridges of 2-4 words (a famous building, ship, treaty, film, company) and common final relations (designer, founder, city, author)."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 102,
+    "steer": "- Last wave: 12/60 passed.\n- Rejected by lint before gating: 4x units: bridge1 pads a one-word name with generic words (uncreditab; 1x natural:bridge1 'Olympics' is not creditable; 1x leak: ['battle'] in prompt; 1x natural:bridge1 'Waterloo' is not creditable. Avoid these.\n- Failed (gold -> what the model wrote): Leo Tolstoy -> model said 'Dostoevsky' (7/10); Sandro Botticelli -> model said 'Giovanni Bellini' (0/10); New York City -> model said 'New York City' (7/10); United Arab Emirates -> model said 'United Arab Emirates' (4/10); South Dakota -> model said 'New York' (0/10); American Revolutionary War -> model said 'Seven Years War' (5/10); Thor Heyerdahl -> model said 'Rudolf A. M. M. M. M. M. M. M. M. M. M' (0/10); Shigeru Miyamoto -> model said 'Shigeru Miyamoto' (9/10); Christopher Wren -> model said 'Sir Christopher Wren' (9/10); Christopher Nolan -> model said 'David S. Goyer' (2/10); Quentin Tarantino -> model said 'Martin Scorsese' (0/10); Igor Stravinsky -> model said 'Camille Saint-Saëns' (0/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): J. R. R. Tolkien; Herman Melville; Miguel de Cervantes; J. K. Rowling; William Shakespeare; Robert Zemeckis; Abraham Lincoln; Harper Lee; Lewis Carroll; George R. R. Martin; John Lasseter; Henry Ford",
+    "gate": {
+     "rate": 0.8,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "multihop-au-t1-w102c1-multihop-mt-2hop-catcher-rye-salinger",
+   "subfamily": "2hop",
+   "prompt": "Fact: The 1951 novel narrated by the cynical teenager Holden Caulfield, who drifts around Manhattan after being expelled from prep school, was written by",
+   "target": "J. D. Salinger",
+   "target_alts": [
+    "Salinger",
+    "J.D. Salinger",
+    "Jerome David Salinger"
+   ],
+   "intermediates": [
+    "The Catcher in the Rye"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "The Catcher in the Rye",
+       "Catcher in the Rye"
+      ]
+     },
+     "match": [
+      "The Catcher in the Rye",
+      "Catcher in the Rye"
+     ]
+    }
+   ],
+   "bridges": [
+    {
+     "question": "Which 1951 novel is narrated by the teenager Holden Caulfield?",
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "The Catcher in the Rye",
+      "Catcher in the Rye"
+     ]
+    }
+   ],
+   "mc": {
+    "bridge1": {
+     "gold": "The Catcher in the Rye",
+     "distractors": [
+      "The Bell Jar",
+      "On the Road",
+      "A Separate Peace",
+      "Lord of the Flies"
+     ]
+    }
+   },
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       6,
+       5
+      ]
+     }
+    },
+    "target": 6,
+    "target_alts": [
+     2,
+     5,
+     4
+    ]
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "source": "authored (claude-opus-5-5) for qwen3.5-2b: 2hop only, with well-known bridges of 2-4 words (a famous building, ship, treaty, film, company) and common final relations (designer, founder, city, author).",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "2hop only, with well-known bridges of 2-4 words (a famous building, ship, treaty, film, company) and common final relations (designer, founder, city, author)."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 102,
+    "steer": "- Last wave: 12/60 passed.\n- Rejected by lint before gating: 4x units: bridge1 pads a one-word name with generic words (uncreditab; 1x natural:bridge1 'Olympics' is not creditable; 1x leak: ['battle'] in prompt; 1x natural:bridge1 'Waterloo' is not creditable. Avoid these.\n- Failed (gold -> what the model wrote): Leo Tolstoy -> model said 'Dostoevsky' (7/10); Sandro Botticelli -> model said 'Giovanni Bellini' (0/10); New York City -> model said 'New York City' (7/10); United Arab Emirates -> model said 'United Arab Emirates' (4/10); South Dakota -> model said 'New York' (0/10); American Revolutionary War -> model said 'Seven Years War' (5/10); Thor Heyerdahl -> model said 'Rudolf A. M. M. M. M. M. M. M. M. M. M' (0/10); Shigeru Miyamoto -> model said 'Shigeru Miyamoto' (9/10); Christopher Wren -> model said 'Sir Christopher Wren' (9/10); Christopher Nolan -> model said 'David S. Goyer' (2/10); Quentin Tarantino -> model said 'Martin Scorsese' (0/10); Igor Stravinsky -> model said 'Camille Saint-Saëns' (0/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): J. R. R. Tolkien; Herman Melville; Miguel de Cervantes; J. K. Rowling; William Shakespeare; Robert Zemeckis; Abraham Lincoln; Harper Lee; Lewis Carroll; George R. R. Martin; John Lasseter; Henry Ford",
+    "gate": {
+     "rate": 0.8,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "multihop-au-t1-w102c1-multihop-mt-2hop-grapes-wrath-steinbeck",
+   "subfamily": "2hop",
+   "prompt": "Fact: The 1939 novel following the Joad family as they flee the Oklahoma Dust Bowl for California was written by",
+   "target": "John Steinbeck",
+   "target_alts": [
+    "Steinbeck"
+   ],
+   "intermediates": [
+    "The Grapes of Wrath"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "The Grapes of Wrath",
+       "Grapes of Wrath"
+      ]
+     },
+     "match": [
+      "The Grapes of Wrath",
+      "Grapes of Wrath"
+     ]
+    }
+   ],
+   "bridges": [
+    {
+     "question": "Which 1939 novel follows the Joad family fleeing the Dust Bowl for California?",
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "The Grapes of Wrath",
+      "Grapes of Wrath"
+     ]
+    }
+   ],
+   "mc": {
+    "bridge1": {
+     "gold": "The Grapes of Wrath",
+     "distractors": [
+      "Tobacco Road",
+      "The Good Earth",
+      "Native Son",
+      "Light in August"
+     ]
+    }
+   },
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       4,
+       3
+      ]
+     }
+    },
+    "target": 3,
+    "target_alts": [
+     2
+    ]
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "source": "authored (claude-opus-5-5) for qwen3.5-2b: 2hop only, with well-known bridges of 2-4 words (a famous building, ship, treaty, film, company) and common final relations (designer, founder, city, author).",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "2hop only, with well-known bridges of 2-4 words (a famous building, ship, treaty, film, company) and common final relations (designer, founder, city, author)."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 102,
+    "steer": "- Last wave: 12/60 passed.\n- Rejected by lint before gating: 4x units: bridge1 pads a one-word name with generic words (uncreditab; 1x natural:bridge1 'Olympics' is not creditable; 1x leak: ['battle'] in prompt; 1x natural:bridge1 'Waterloo' is not creditable. Avoid these.\n- Failed (gold -> what the model wrote): Leo Tolstoy -> model said 'Dostoevsky' (7/10); Sandro Botticelli -> model said 'Giovanni Bellini' (0/10); New York City -> model said 'New York City' (7/10); United Arab Emirates -> model said 'United Arab Emirates' (4/10); South Dakota -> model said 'New York' (0/10); American Revolutionary War -> model said 'Seven Years War' (5/10); Thor Heyerdahl -> model said 'Rudolf A. M. M. M. M. M. M. M. M. M. M' (0/10); Shigeru Miyamoto -> model said 'Shigeru Miyamoto' (9/10); Christopher Wren -> model said 'Sir Christopher Wren' (9/10); Christopher Nolan -> model said 'David S. Goyer' (2/10); Quentin Tarantino -> model said 'Martin Scorsese' (0/10); Igor Stravinsky -> model said 'Camille Saint-Saëns' (0/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): J. R. R. Tolkien; Herman Melville; Miguel de Cervantes; J. K. Rowling; William Shakespeare; Robert Zemeckis; Abraham Lincoln; Harper Lee; Lewis Carroll; George R. R. Martin; John Lasseter; Henry Ford",
+    "gate": {
+     "rate": 0.8,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "multihop-au-t1-w102c1-multihop-mt-2hop-arc-triomphe-napoleon",
+   "subfamily": "2hop",
+   "prompt": "Fact: The monumental arch at the western end of the Champs-Élysées, honoring French armies, was commissioned in 1806 by",
+   "target": "Napoleon Bonaparte",
+   "target_alts": [
+    "Napoleon",
+    "Napoleon I",
+    "Bonaparte"
+   ],
+   "intermediates": [
+    "Arc de Triomphe"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Arc de Triomphe",
+       "Arc de Triomphe de l'Étoile"
+      ]
+     },
+     "match": [
+      "Arc de Triomphe",
+      "Arc de Triomphe de l'Étoile"
+     ]
+    }
+   ],
+   "bridges": [
+    {
+     "question": "Which monumental arch stands at the western end of the Champs-Élysées?",
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "Arc de Triomphe",
+      "Arc de Triomphe de l'Étoile"
+     ]
+    }
+   ],
+   "mc": {
+    "bridge1": {
+     "gold": "Arc de Triomphe",
+     "distractors": [
+      "Brandenburg Gate",
+      "Arch of Constantine",
+      "Marble Arch",
+      "Wellington Arch"
+     ]
+    }
+   },
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       5,
+       9
+      ]
+     }
+    },
+    "target": 4,
+    "target_alts": [
+     1,
+     2,
+     3
+    ]
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "source": "authored (claude-opus-5-5) for qwen3.5-2b: 2hop only, with well-known bridges of 2-4 words (a famous building, ship, treaty, film, company) and common final relations (designer, founder, city, author).",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "2hop only, with well-known bridges of 2-4 words (a famous building, ship, treaty, film, company) and common final relations (designer, founder, city, author)."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 102,
+    "steer": "- Last wave: 12/60 passed.\n- Rejected by lint before gating: 4x units: bridge1 pads a one-word name with generic words (uncreditab; 1x natural:bridge1 'Olympics' is not creditable; 1x leak: ['battle'] in prompt; 1x natural:bridge1 'Waterloo' is not creditable. Avoid these.\n- Failed (gold -> what the model wrote): Leo Tolstoy -> model said 'Dostoevsky' (7/10); Sandro Botticelli -> model said 'Giovanni Bellini' (0/10); New York City -> model said 'New York City' (7/10); United Arab Emirates -> model said 'United Arab Emirates' (4/10); South Dakota -> model said 'New York' (0/10); American Revolutionary War -> model said 'Seven Years War' (5/10); Thor Heyerdahl -> model said 'Rudolf A. M. M. M. M. M. M. M. M. M. M' (0/10); Shigeru Miyamoto -> model said 'Shigeru Miyamoto' (9/10); Christopher Wren -> model said 'Sir Christopher Wren' (9/10); Christopher Nolan -> model said 'David S. Goyer' (2/10); Quentin Tarantino -> model said 'Martin Scorsese' (0/10); Igor Stravinsky -> model said 'Camille Saint-Saëns' (0/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): J. R. R. Tolkien; Herman Melville; Miguel de Cervantes; J. K. Rowling; William Shakespeare; Robert Zemeckis; Abraham Lincoln; Harper Lee; Lewis Carroll; George R. R. Martin; John Lasseter; Henry Ford",
+    "gate": {
+     "rate": 0.9,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "multihop-au-t1-w102c1-multihop-mt-2hop-hagia-sophia-justinian",
+   "subfamily": "2hop",
+   "prompt": "Fact: The huge domed church completed in the Byzantine capital in 537, later a mosque and now a landmark of Istanbul, was commissioned by the emperor",
+   "target": "Justinian I",
+   "target_alts": [
+    "Justinian",
+    "Justinian the Great"
+   ],
+   "intermediates": [
+    "Hagia Sophia"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Hagia Sophia",
+       "Ayasofya"
+      ]
+     },
+     "match": [
+      "Hagia Sophia",
+      "Ayasofya"
+     ]
+    }
+   ],
+   "bridges": [
+    {
+     "question": "Which huge domed church was completed in the Byzantine capital in 537 and later became a mosque?",
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "Hagia Sophia",
+      "Ayasofya"
+     ]
+    }
+   ],
+   "mc": {
+    "bridge1": {
+     "gold": "Hagia Sophia",
+     "distractors": [
+      "Blue Mosque",
+      "Hagia Irene",
+      "Chora Church",
+      "Basilica of San Vitale"
+     ]
+    }
+   },
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       3,
+       3
+      ]
+     }
+    },
+    "target": 3,
+    "target_alts": [
+     2,
+     4
+    ]
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "source": "authored (claude-opus-5-5) for qwen3.5-2b: 2hop only, with well-known bridges of 2-4 words (a famous building, ship, treaty, film, company) and common final relations (designer, founder, city, author).",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "2hop only, with well-known bridges of 2-4 words (a famous building, ship, treaty, film, company) and common final relations (designer, founder, city, author)."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 102,
+    "steer": "- Last wave: 12/60 passed.\n- Rejected by lint before gating: 4x units: bridge1 pads a one-word name with generic words (uncreditab; 1x natural:bridge1 'Olympics' is not creditable; 1x leak: ['battle'] in prompt; 1x natural:bridge1 'Waterloo' is not creditable. Avoid these.\n- Failed (gold -> what the model wrote): Leo Tolstoy -> model said 'Dostoevsky' (7/10); Sandro Botticelli -> model said 'Giovanni Bellini' (0/10); New York City -> model said 'New York City' (7/10); United Arab Emirates -> model said 'United Arab Emirates' (4/10); South Dakota -> model said 'New York' (0/10); American Revolutionary War -> model said 'Seven Years War' (5/10); Thor Heyerdahl -> model said 'Rudolf A. M. M. M. M. M. M. M. M. M. M' (0/10); Shigeru Miyamoto -> model said 'Shigeru Miyamoto' (9/10); Christopher Wren -> model said 'Sir Christopher Wren' (9/10); Christopher Nolan -> model said 'David S. Goyer' (2/10); Quentin Tarantino -> model said 'Martin Scorsese' (0/10); Igor Stravinsky -> model said 'Camille Saint-Saëns' (0/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): J. R. R. Tolkien; Herman Melville; Miguel de Cervantes; J. K. Rowling; William Shakespeare; Robert Zemeckis; Abraham Lincoln; Harper Lee; Lewis Carroll; George R. R. Martin; John Lasseter; Henry Ford",
+    "gate": {
+     "rate": 0.9,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "multihop-au-t1-w102c2-multihop-mt-2hop-hunger-games-collins",
+   "subfamily": "2hop",
+   "prompt": "Fact: The 2008 dystopian novel in which Katniss Everdeen volunteers to take her younger sister's place in a televised fight to the death was written by",
+   "target": "Suzanne Collins",
+   "target_alts": [
+    "Collins"
+   ],
+   "intermediates": [
+    "The Hunger Games"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "The Hunger Games"
+      ]
+     },
+     "match": [
+      "The Hunger Games"
+     ]
+    }
+   ],
+   "bridges": [
+    {
+     "question": "Which 2008 dystopian novel features Katniss Everdeen volunteering for a televised fight to the death?",
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "The Hunger Games",
+      "Hunger Games"
+     ]
+    }
+   ],
+   "mc": {
+    "bridge1": {
+     "gold": "The Hunger Games",
+     "distractors": [
+      "Divergent",
+      "The Maze Runner",
+      "The Giver",
+      "Battle Royale"
+     ]
+    }
+   },
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       3
+      ]
+     }
+    },
+    "target": 2,
+    "target_alts": [
+     1
+    ]
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "source": "authored (claude-opus-5-5) for qwen3.5-2b: 2hop only, with well-known bridges of 2-4 words (a famous building, ship, treaty, film, company) and common final relations (designer, founder, city, author).",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "2hop only, with well-known bridges of 2-4 words (a famous building, ship, treaty, film, company) and common final relations (designer, founder, city, author)."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 102,
+    "steer": "- Last wave: 12/60 passed.\n- Rejected by lint before gating: 4x units: bridge1 pads a one-word name with generic words (uncreditab; 1x natural:bridge1 'Olympics' is not creditable; 1x leak: ['battle'] in prompt; 1x natural:bridge1 'Waterloo' is not creditable. Avoid these.\n- Failed (gold -> what the model wrote): Leo Tolstoy -> model said 'Dostoevsky' (7/10); Sandro Botticelli -> model said 'Giovanni Bellini' (0/10); New York City -> model said 'New York City' (7/10); United Arab Emirates -> model said 'United Arab Emirates' (4/10); South Dakota -> model said 'New York' (0/10); American Revolutionary War -> model said 'Seven Years War' (5/10); Thor Heyerdahl -> model said 'Rudolf A. M. M. M. M. M. M. M. M. M. M' (0/10); Shigeru Miyamoto -> model said 'Shigeru Miyamoto' (9/10); Christopher Wren -> model said 'Sir Christopher Wren' (9/10); Christopher Nolan -> model said 'David S. Goyer' (2/10); Quentin Tarantino -> model said 'Martin Scorsese' (0/10); Igor Stravinsky -> model said 'Camille Saint-Saëns' (0/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): J. R. R. Tolkien; Herman Melville; Miguel de Cervantes; J. K. Rowling; William Shakespeare; Robert Zemeckis; Abraham Lincoln; Harper Lee; Lewis Carroll; George R. R. Martin; John Lasseter; Henry Ford",
+    "gate": {
+     "rate": 0.9,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "multihop-au-t1-w102c2-multihop-mt-2hop-new-deal-fdr",
+   "subfamily": "2hop",
+   "prompt": "Fact: The 1930s package of American relief and recovery programs, including the Works Progress Administration and Social Security, was launched by President",
+   "target": "Franklin D. Roosevelt",
+   "target_alts": [
+    "Roosevelt",
+    "Franklin Roosevelt",
+    "FDR",
+    "Franklin Delano Roosevelt"
+   ],
+   "intermediates": [
+    "New Deal"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "New Deal",
+       "the New Deal"
+      ]
+     },
+     "match": [
+      "New Deal",
+      "the New Deal"
+     ]
+    }
+   ],
+   "bridges": [
+    {
+     "question": "What was the 1930s package of American programs that included the Works Progress Administration called?",
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "New Deal",
+      "the New Deal"
+     ]
+    }
+   ],
+   "mc": {
+    "bridge1": {
+     "gold": "New Deal",
+     "distractors": [
+      "Great Society",
+      "Square Deal",
+      "Fair Deal",
+      "New Frontier"
+     ]
+    }
+   },
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       2,
+       3
+      ]
+     }
+    },
+    "target": 4,
+    "target_alts": [
+     1,
+     2,
+     2,
+     4
+    ]
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "source": "authored (claude-opus-5-5) for qwen3.5-2b: 2hop only, with well-known bridges of 2-4 words (a famous building, ship, treaty, film, company) and common final relations (designer, founder, city, author).",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "2hop only, with well-known bridges of 2-4 words (a famous building, ship, treaty, film, company) and common final relations (designer, founder, city, author)."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 102,
+    "steer": "- Last wave: 12/60 passed.\n- Rejected by lint before gating: 4x units: bridge1 pads a one-word name with generic words (uncreditab; 1x natural:bridge1 'Olympics' is not creditable; 1x leak: ['battle'] in prompt; 1x natural:bridge1 'Waterloo' is not creditable. Avoid these.\n- Failed (gold -> what the model wrote): Leo Tolstoy -> model said 'Dostoevsky' (7/10); Sandro Botticelli -> model said 'Giovanni Bellini' (0/10); New York City -> model said 'New York City' (7/10); United Arab Emirates -> model said 'United Arab Emirates' (4/10); South Dakota -> model said 'New York' (0/10); American Revolutionary War -> model said 'Seven Years War' (5/10); Thor Heyerdahl -> model said 'Rudolf A. M. M. M. M. M. M. M. M. M. M' (0/10); Shigeru Miyamoto -> model said 'Shigeru Miyamoto' (9/10); Christopher Wren -> model said 'Sir Christopher Wren' (9/10); Christopher Nolan -> model said 'David S. Goyer' (2/10); Quentin Tarantino -> model said 'Martin Scorsese' (0/10); Igor Stravinsky -> model said 'Camille Saint-Saëns' (0/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): J. R. R. Tolkien; Herman Melville; Miguel de Cervantes; J. K. Rowling; William Shakespeare; Robert Zemeckis; Abraham Lincoln; Harper Lee; Lewis Carroll; George R. R. Martin; John Lasseter; Henry Ford",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "multihop-au-t2-w103c1-multihop-mt-2hop-wealth-of-nations-smith",
+   "subfamily": "2hop",
+   "prompt": "Fact: The 1776 treatise on the division of labor in a pin factory and the 'invisible hand' of the market, regarded as the founding text of classical economics, was written by",
+   "target": "Adam Smith",
+   "target_alts": [
+    "Smith"
+   ],
+   "intermediates": [
+    "The Wealth of Nations"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "The Wealth of Nations",
+       "Wealth of Nations",
+       "An Inquiry into the Nature and Causes of the Wealth of Nations"
+      ]
+     },
+     "match": [
+      "The Wealth of Nations",
+      "Wealth of Nations",
+      "An Inquiry into the Nature and Causes of the Wealth of Nations"
+     ]
+    }
+   ],
+   "bridges": [
+    {
+     "question": "Which 1776 treatise describes the pin factory and the 'invisible hand' of the market?",
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "The Wealth of Nations",
+      "Wealth of Nations",
+      "An Inquiry into the Nature and Causes of the Wealth of Nations"
+     ]
+    }
+   ],
+   "mc": {
+    "bridge1": {
+     "gold": "The Wealth of Nations",
+     "distractors": [
+      "Das Kapital",
+      "Leviathan",
+      "Principles of Political Economy",
+      "The General Theory of Employment, Interest and Money"
+     ]
+    }
+   },
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       4,
+       3,
+       12
+      ]
+     }
+    },
+    "target": 2,
+    "target_alts": [
+     1
+    ]
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "source": "authored (claude-opus-5-5) for qwen3.5-2b: 2hop, the bridge something a well-read adult knows at once, and the easiest final relation: the city, country, founder or author of the bridge.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t2",
+    "knobs": {
+     "brief": "2hop, the bridge something a well-read adult knows at once, and the easiest final relation: the city, country, founder or author of the bridge."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 103,
+    "steer": "- Last wave: 8/60 passed.\n- Rejected by lint before gating: 4x units: bridge1 pads a one-word name with generic words (uncreditab; 1x natural:bridge1 'Ring Cycle' is not creditable; 1x latent: bridge overlaps the answer ('Nobel Prize', 'Alfred Nobel'); 1x natural:bridge1 'Bounty' is not creditable. Avoid these.\n- Failed (gold -> what the model wrote): Ernest Hemingway -> model said 'Gabriel Garcia Marquez' (0/10); Margaret Mitchell -> model said 'Harper Lee' (1/10); Agatha Christie -> model said 'Agatha Christie' (1/10); A. A. Milne -> model said 'Winnie-the-Pooh' (0/10); Jim Henson -> model said 'Jim Henson' (3/10); Martin Scorsese -> model said 'Martin Scorsese' (1/10); Vince Gilligan -> model said 'David M. Malarkey' (0/10); Gene Roddenberry -> model said 'James T. Kirk' (2/10); Bob Dylan -> model said 'Bob Dylan' (2/10); Hieronymus Bosch -> model said 'Goya' (0/10); Eugène Delacroix -> model said 'Jean-Léon Gérôme' (2/10); Ferdinand de Lesseps -> model said 'Gabriel de Lattre de Tassigny' (0/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): Charles Dickens; Kurt Cobain; J. D. Salinger; John Steinbeck; Napoleon Bonaparte; Justinian I; Suzanne Collins; Franklin D. Roosevelt",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "multihop-au-t2-w103c2-multihop-mt-2hop-crime-punishment-dostoevsky",
+   "subfamily": "2hop",
+   "prompt": "Fact: The 1866 Russian novel in which the impoverished former student Raskolnikov murders an old pawnbroker with an axe was written by",
+   "target": "Fyodor Dostoevsky",
+   "target_alts": [
+    "Dostoevsky",
+    "Dostoyevsky",
+    "Fyodor Dostoyevsky",
+    "Fyodor Mikhailovich Dostoevsky"
+   ],
+   "intermediates": [
+    "Crime and Punishment"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Crime and Punishment"
+      ]
+     },
+     "match": [
+      "Crime and Punishment"
+     ]
+    }
+   ],
+   "bridges": [
+    {
+     "question": "Which 1866 Russian novel features Raskolnikov, who murders a pawnbroker?",
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "Crime and Punishment"
+     ]
+    }
+   ],
+   "mc": {
+    "bridge1": {
+     "gold": "Crime and Punishment",
+     "distractors": [
+      "The Brothers Karamazov",
+      "Fathers and Sons",
+      "Dead Souls",
+      "Doctor Zhivago"
+     ]
+    }
+   },
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       3
+      ]
+     }
+    },
+    "target": 6,
+    "target_alts": [
+     4,
+     4,
+     6,
+     9
+    ]
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "source": "authored (claude-opus-5-5) for qwen3.5-2b: 2hop, the bridge something a well-read adult knows at once, and the easiest final relation: the city, country, founder or author of the bridge.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t2",
+    "knobs": {
+     "brief": "2hop, the bridge something a well-read adult knows at once, and the easiest final relation: the city, country, founder or author of the bridge."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 103,
+    "steer": "- Last wave: 8/60 passed.\n- Rejected by lint before gating: 4x units: bridge1 pads a one-word name with generic words (uncreditab; 1x natural:bridge1 'Ring Cycle' is not creditable; 1x latent: bridge overlaps the answer ('Nobel Prize', 'Alfred Nobel'); 1x natural:bridge1 'Bounty' is not creditable. Avoid these.\n- Failed (gold -> what the model wrote): Ernest Hemingway -> model said 'Gabriel Garcia Marquez' (0/10); Margaret Mitchell -> model said 'Harper Lee' (1/10); Agatha Christie -> model said 'Agatha Christie' (1/10); A. A. Milne -> model said 'Winnie-the-Pooh' (0/10); Jim Henson -> model said 'Jim Henson' (3/10); Martin Scorsese -> model said 'Martin Scorsese' (1/10); Vince Gilligan -> model said 'David M. Malarkey' (0/10); Gene Roddenberry -> model said 'James T. Kirk' (2/10); Bob Dylan -> model said 'Bob Dylan' (2/10); Hieronymus Bosch -> model said 'Goya' (0/10); Eugène Delacroix -> model said 'Jean-Léon Gérôme' (2/10); Ferdinand de Lesseps -> model said 'Gabriel de Lattre de Tassigny' (0/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): Charles Dickens; Kurt Cobain; J. D. Salinger; John Steinbeck; Napoleon Bonaparte; Justinian I; Suzanne Collins; Franklin D. Roosevelt",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "multihop-au-t2-w103c2-multihop-mt-2hop-art-of-war-sun-tzu",
+   "subfamily": "2hop",
+   "prompt": "Fact: The ancient Chinese military treatise in thirteen chapters, which teaches that all warfare is based on deception, was written by",
+   "target": "Sun Tzu",
+   "target_alts": [
+    "Sunzi",
+    "Sun Wu",
+    "Sun Zi"
+   ],
+   "intermediates": [
+    "The Art of War"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "The Art of War",
+       "Art of War"
+      ]
+     },
+     "match": [
+      "The Art of War",
+      "Art of War"
+     ]
+    }
+   ],
+   "bridges": [
+    {
+     "question": "Which ancient Chinese military treatise in thirteen chapters says all warfare is based on deception?",
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "The Art of War",
+      "Art of War"
+     ]
+    }
+   ],
+   "mc": {
+    "bridge1": {
+     "gold": "The Art of War",
+     "distractors": [
+      "Tao Te Ching",
+      "The Analects",
+      "The Book of Five Rings",
+      "Thirty-Six Stratagems"
+     ]
+    }
+   },
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       4,
+       3
+      ]
+     }
+    },
+    "target": 3,
+    "target_alts": [
+     2,
+     2,
+     2
+    ]
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "source": "authored (claude-opus-5-5) for qwen3.5-2b: 2hop, the bridge something a well-read adult knows at once, and the easiest final relation: the city, country, founder or author of the bridge.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t2",
+    "knobs": {
+     "brief": "2hop, the bridge something a well-read adult knows at once, and the easiest final relation: the city, country, founder or author of the bridge."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 103,
+    "steer": "- Last wave: 8/60 passed.\n- Rejected by lint before gating: 4x units: bridge1 pads a one-word name with generic words (uncreditab; 1x natural:bridge1 'Ring Cycle' is not creditable; 1x latent: bridge overlaps the answer ('Nobel Prize', 'Alfred Nobel'); 1x natural:bridge1 'Bounty' is not creditable. Avoid these.\n- Failed (gold -> what the model wrote): Ernest Hemingway -> model said 'Gabriel Garcia Marquez' (0/10); Margaret Mitchell -> model said 'Harper Lee' (1/10); Agatha Christie -> model said 'Agatha Christie' (1/10); A. A. Milne -> model said 'Winnie-the-Pooh' (0/10); Jim Henson -> model said 'Jim Henson' (3/10); Martin Scorsese -> model said 'Martin Scorsese' (1/10); Vince Gilligan -> model said 'David M. Malarkey' (0/10); Gene Roddenberry -> model said 'James T. Kirk' (2/10); Bob Dylan -> model said 'Bob Dylan' (2/10); Hieronymus Bosch -> model said 'Goya' (0/10); Eugène Delacroix -> model said 'Jean-Léon Gérôme' (2/10); Ferdinand de Lesseps -> model said 'Gabriel de Lattre de Tassigny' (0/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): Charles Dickens; Kurt Cobain; J. D. Salinger; John Steinbeck; Napoleon Bonaparte; Justinian I; Suzanne Collins; Franklin D. Roosevelt",
+    "gate": {
+     "rate": 0.8,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "multihop-au-t2-w103c2-multihop-mt-2hop-masjid-al-haram-saudi",
+   "subfamily": "2hop",
+   "prompt": "Fact: The vast Islamic sanctuary that surrounds the Kaaba and receives millions of Hajj pilgrims every year stands in the kingdom of",
+   "target": "Saudi Arabia",
+   "target_alts": [
+    "Kingdom of Saudi Arabia",
+    "KSA"
+   ],
+   "intermediates": [
+    "Masjid al-Haram"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Masjid al-Haram",
+       "Great Mosque of Mecca",
+       "Grand Mosque"
+      ]
+     },
+     "match": [
+      "Masjid al-Haram",
+      "Great Mosque of Mecca",
+      "Grand Mosque"
+     ]
+    }
+   ],
+   "bridges": [
+    {
+     "question": "Which Islamic sanctuary surrounds the Kaaba?",
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "Masjid al-Haram",
+      "Great Mosque of Mecca",
+      "Grand Mosque"
+     ]
+    }
+   ],
+   "mc": {
+    "bridge1": {
+     "gold": "Masjid al-Haram",
+     "distractors": [
+      "Al-Masjid an-Nabawi",
+      "Dome of the Rock",
+      "Al-Aqsa Mosque",
+      "Blue Mosque"
+     ]
+    }
+   },
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       4,
+       5,
+       2
+      ]
+     }
+    },
+    "target": 2,
+    "target_alts": [
+     4,
+     2
+    ]
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "source": "authored (claude-opus-5-5) for qwen3.5-2b: 2hop, the bridge something a well-read adult knows at once, and the easiest final relation: the city, country, founder or author of the bridge.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t2",
+    "knobs": {
+     "brief": "2hop, the bridge something a well-read adult knows at once, and the easiest final relation: the city, country, founder or author of the bridge."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 103,
+    "steer": "- Last wave: 8/60 passed.\n- Rejected by lint before gating: 4x units: bridge1 pads a one-word name with generic words (uncreditab; 1x natural:bridge1 'Ring Cycle' is not creditable; 1x latent: bridge overlaps the answer ('Nobel Prize', 'Alfred Nobel'); 1x natural:bridge1 'Bounty' is not creditable. Avoid these.\n- Failed (gold -> what the model wrote): Ernest Hemingway -> model said 'Gabriel Garcia Marquez' (0/10); Margaret Mitchell -> model said 'Harper Lee' (1/10); Agatha Christie -> model said 'Agatha Christie' (1/10); A. A. Milne -> model said 'Winnie-the-Pooh' (0/10); Jim Henson -> model said 'Jim Henson' (3/10); Martin Scorsese -> model said 'Martin Scorsese' (1/10); Vince Gilligan -> model said 'David M. Malarkey' (0/10); Gene Roddenberry -> model said 'James T. Kirk' (2/10); Bob Dylan -> model said 'Bob Dylan' (2/10); Hieronymus Bosch -> model said 'Goya' (0/10); Eugène Delacroix -> model said 'Jean-Léon Gérôme' (2/10); Ferdinand de Lesseps -> model said 'Gabriel de Lattre de Tassigny' (0/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): Charles Dickens; Kurt Cobain; J. D. Salinger; John Steinbeck; Napoleon Bonaparte; Justinian I; Suzanne Collins; Franklin D. Roosevelt",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "multihop-au-t2-w103c2-multihop-mt-2hop-caesars-palace-las-vegas",
+   "subfamily": "2hop",
+   "prompt": "Fact: The Roman-themed casino resort that opened in 1966, famous for its Colosseum theater and toga-clad staff, stands in the Nevada city of",
+   "target": "Las Vegas",
+   "target_alts": [
+    "Vegas",
+    "Paradise, Nevada"
+   ],
+   "intermediates": [
+    "Caesars Palace"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Caesars Palace"
+      ]
+     },
+     "match": [
+      "Caesars Palace"
+     ]
+    }
+   ],
+   "bridges": [
+    {
+     "question": "Which Roman-themed Nevada casino resort opened in 1966 and has a Colosseum theater?",
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "Caesars Palace"
+     ]
+    }
+   ],
+   "mc": {
+    "bridge1": {
+     "gold": "Caesars Palace",
+     "distractors": [
+      "Bellagio",
+      "The Venetian",
+      "MGM Grand",
+      "The Mirage"
+     ]
+    }
+   },
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       4
+      ]
+     }
+    },
+    "target": 2,
+    "target_alts": [
+     1,
+     3
+    ]
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "source": "authored (claude-opus-5-5) for qwen3.5-2b: 2hop, the bridge something a well-read adult knows at once, and the easiest final relation: the city, country, founder or author of the bridge.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t2",
+    "knobs": {
+     "brief": "2hop, the bridge something a well-read adult knows at once, and the easiest final relation: the city, country, founder or author of the bridge."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 103,
+    "steer": "- Last wave: 8/60 passed.\n- Rejected by lint before gating: 4x units: bridge1 pads a one-word name with generic words (uncreditab; 1x natural:bridge1 'Ring Cycle' is not creditable; 1x latent: bridge overlaps the answer ('Nobel Prize', 'Alfred Nobel'); 1x natural:bridge1 'Bounty' is not creditable. Avoid these.\n- Failed (gold -> what the model wrote): Ernest Hemingway -> model said 'Gabriel Garcia Marquez' (0/10); Margaret Mitchell -> model said 'Harper Lee' (1/10); Agatha Christie -> model said 'Agatha Christie' (1/10); A. A. Milne -> model said 'Winnie-the-Pooh' (0/10); Jim Henson -> model said 'Jim Henson' (3/10); Martin Scorsese -> model said 'Martin Scorsese' (1/10); Vince Gilligan -> model said 'David M. Malarkey' (0/10); Gene Roddenberry -> model said 'James T. Kirk' (2/10); Bob Dylan -> model said 'Bob Dylan' (2/10); Hieronymus Bosch -> model said 'Goya' (0/10); Eugène Delacroix -> model said 'Jean-Léon Gérôme' (2/10); Ferdinand de Lesseps -> model said 'Gabriel de Lattre de Tassigny' (0/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): Charles Dickens; Kurt Cobain; J. D. Salinger; John Steinbeck; Napoleon Bonaparte; Justinian I; Suzanne Collins; Franklin D. Roosevelt",
+    "gate": {
+     "rate": 0.9,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "multihop-au-t2-w104c0-mhmt-2hop-st-peters-basilica-vatican-city",
+   "subfamily": "2hop",
+   "prompt": "Fact: The largest church in the world, built over the tomb of the first pope and crowned by Michelangelo's great dome, stands in the independent microstate known as",
+   "target": "Vatican City",
+   "target_alts": [
+    "Vatican",
+    "the Vatican"
+   ],
+   "intermediates": [
+    "St. Peter's Basilica"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "St. Peter's Basilica",
+       "Saint Peter's Basilica"
+      ]
+     },
+     "match": [
+      "St. Peter's Basilica",
+      "Saint Peter's Basilica"
+     ]
+    }
+   ],
+   "bridges": [
+    {
+     "question": "Which church, the largest in the world, is built over the tomb of the first pope and topped by Michelangelo's dome?",
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "St. Peter's Basilica",
+      "Saint Peter's Basilica",
+      "St. Peter's"
+     ]
+    }
+   ],
+   "mc": {
+    "bridge1": {
+     "gold": "St. Peter's Basilica",
+     "distractors": [
+      "St. John Lateran",
+      "Notre-Dame de Paris",
+      "Florence Cathedral",
+      "Westminster Abbey"
+     ]
+    }
+   },
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       6,
+       5
+      ]
+     }
+    },
+    "target": 2,
+    "target_alts": [
+     1,
+     2
+    ]
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "source": "authored (claude-opus-5-5) for qwen3.5-2b: 2hop, the bridge something a well-read adult knows at once, and the easiest final relation: the city, country, founder or author of the bridge.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t2",
+    "knobs": {
+     "brief": "2hop, the bridge something a well-read adult knows at once, and the easiest final relation: the city, country, founder or author of the bridge."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 104,
+    "steer": "- Last wave: 5/60 passed.\n- Rejected by lint before gating: 3x units: bridge1 canonical name is one token (uncreditable); 3x units: bridge1 pads a one-word name with generic words (uncreditab; 2x leak: ['empire'] in prompt; 1x leak: ['chihiro'] in prompt. Avoid these.\n- Failed (gold -> what the model wrote): Louisa May Alcott -> model said 'L. M. Montgomery' (2/10); Alexandre Dumas -> model said 'Alexandre Dumas' (9/10); Aldous Huxley -> model said 'F. Scott Fitzgerald' (0/10); Mary Shelley -> model said 'Agatha Christie' (3/10); Pablo Picasso -> model said 'Francisco Goya' (1/10); Diego Velázquez -> model said 'Jorge de la Cruz' (0/10); Edward Hopper -> model said 'Edward Hopper' (0/10); Johann Strauss II -> model said 'Franz Schubert' (0/10); Claude Debussy -> model said 'Debussy' (7/10); Edvard Grieg -> model said 'Johan Strauss' (0/10); Akira Kurosawa -> model said 'Kurosawa' (1/10); Guillermo del Toro -> model said 'Javier Bardem' (0/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): Adam Smith; Fyodor Dostoevsky; Sun Tzu; Saudi Arabia; Las Vegas",
+    "gate": {
+     "rate": 0.9,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "multihop-au-t2-w104c0-mhmt-2hop-manhattan-project-oppenheimer",
+   "subfamily": "2hop",
+   "prompt": "Fact: The secret wartime US program that built the first atomic bombs had its Los Alamos laboratory directed by",
+   "target": "J. Robert Oppenheimer",
+   "target_alts": [
+    "Oppenheimer",
+    "Robert Oppenheimer"
+   ],
+   "intermediates": [
+    "Manhattan Project"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Manhattan Project"
+      ]
+     },
+     "match": [
+      "Manhattan Project"
+     ]
+    }
+   ],
+   "bridges": [
+    {
+     "question": "What was the secret wartime US program that built the first atomic bombs?",
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "Manhattan Project",
+      "the Manhattan Project"
+     ]
+    }
+   ],
+   "mc": {
+    "bridge1": {
+     "gold": "Manhattan Project",
+     "distractors": [
+      "Apollo program",
+      "Operation Paperclip",
+      "Tube Alloys",
+      "Project Mercury"
+     ]
+    }
+   },
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       2
+      ]
+     }
+    },
+    "target": 6,
+    "target_alts": [
+     2,
+     4
+    ]
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "source": "authored (claude-opus-5-5) for qwen3.5-2b: 2hop, the bridge something a well-read adult knows at once, and the easiest final relation: the city, country, founder or author of the bridge.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t2",
+    "knobs": {
+     "brief": "2hop, the bridge something a well-read adult knows at once, and the easiest final relation: the city, country, founder or author of the bridge."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 104,
+    "steer": "- Last wave: 5/60 passed.\n- Rejected by lint before gating: 3x units: bridge1 canonical name is one token (uncreditable); 3x units: bridge1 pads a one-word name with generic words (uncreditab; 2x leak: ['empire'] in prompt; 1x leak: ['chihiro'] in prompt. Avoid these.\n- Failed (gold -> what the model wrote): Louisa May Alcott -> model said 'L. M. Montgomery' (2/10); Alexandre Dumas -> model said 'Alexandre Dumas' (9/10); Aldous Huxley -> model said 'F. Scott Fitzgerald' (0/10); Mary Shelley -> model said 'Agatha Christie' (3/10); Pablo Picasso -> model said 'Francisco Goya' (1/10); Diego Velázquez -> model said 'Jorge de la Cruz' (0/10); Edward Hopper -> model said 'Edward Hopper' (0/10); Johann Strauss II -> model said 'Franz Schubert' (0/10); Claude Debussy -> model said 'Debussy' (7/10); Edvard Grieg -> model said 'Johan Strauss' (0/10); Akira Kurosawa -> model said 'Kurosawa' (1/10); Guillermo del Toro -> model said 'Javier Bardem' (0/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): Adam Smith; Fyodor Dostoevsky; Sun Tzu; Saudi Arabia; Las Vegas",
+    "gate": {
+     "rate": 0.8,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "multihop-au-t2-w104c0-mhmt-2hop-general-relativity-einstein",
+   "subfamily": "2hop",
+   "prompt": "Fact: The 1915 account of gravity as the curvature of spacetime was published by",
+   "target": "Albert Einstein",
+   "target_alts": [
+    "Einstein"
+   ],
+   "intermediates": [
+    "general relativity"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "general relativity",
+       "general theory of relativity"
+      ]
+     },
+     "match": [
+      "general relativity",
+      "general theory of relativity"
+     ]
+    }
+   ],
+   "bridges": [
+    {
+     "question": "Which 1915 physical theory describes gravity as the curvature of spacetime?",
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "general relativity",
+      "general theory of relativity",
+      "relativity"
+     ]
+    }
+   ],
+   "mc": {
+    "bridge1": {
+     "gold": "general relativity",
+     "distractors": [
+      "quantum electrodynamics",
+      "Maxwell's equations",
+      "Newtonian mechanics",
+      "string theory"
+     ]
+    }
+   },
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       3,
+       5
+      ]
+     }
+    },
+    "target": 2,
+    "target_alts": [
+     1
+    ]
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "source": "authored (claude-opus-5-5) for qwen3.5-2b: 2hop, the bridge something a well-read adult knows at once, and the easiest final relation: the city, country, founder or author of the bridge.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t2",
+    "knobs": {
+     "brief": "2hop, the bridge something a well-read adult knows at once, and the easiest final relation: the city, country, founder or author of the bridge."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 104,
+    "steer": "- Last wave: 5/60 passed.\n- Rejected by lint before gating: 3x units: bridge1 canonical name is one token (uncreditable); 3x units: bridge1 pads a one-word name with generic words (uncreditab; 2x leak: ['empire'] in prompt; 1x leak: ['chihiro'] in prompt. Avoid these.\n- Failed (gold -> what the model wrote): Louisa May Alcott -> model said 'L. M. Montgomery' (2/10); Alexandre Dumas -> model said 'Alexandre Dumas' (9/10); Aldous Huxley -> model said 'F. Scott Fitzgerald' (0/10); Mary Shelley -> model said 'Agatha Christie' (3/10); Pablo Picasso -> model said 'Francisco Goya' (1/10); Diego Velázquez -> model said 'Jorge de la Cruz' (0/10); Edward Hopper -> model said 'Edward Hopper' (0/10); Johann Strauss II -> model said 'Franz Schubert' (0/10); Claude Debussy -> model said 'Debussy' (7/10); Edvard Grieg -> model said 'Johan Strauss' (0/10); Akira Kurosawa -> model said 'Kurosawa' (1/10); Guillermo del Toro -> model said 'Javier Bardem' (0/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): Adam Smith; Fyodor Dostoevsky; Sun Tzu; Saudi Arabia; Las Vegas",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "multihop-au-t2-w104c1-mhmt-2hop-origin-of-species-darwin",
+   "subfamily": "2hop",
+   "prompt": "Fact: The 1859 book that introduced the theory of evolution by natural selection was written by",
+   "target": "Charles Darwin",
+   "target_alts": [
+    "Darwin"
+   ],
+   "intermediates": [
+    "On the Origin of Species"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "On the Origin of Species",
+       "The Origin of Species"
+      ]
+     },
+     "match": [
+      "On the Origin of Species",
+      "The Origin of Species"
+     ]
+    }
+   ],
+   "bridges": [
+    {
+     "question": "Which 1859 book introduced the theory of evolution by natural selection?",
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "On the Origin of Species",
+      "The Origin of Species",
+      "Origin of Species"
+     ]
+    }
+   ],
+   "mc": {
+    "bridge1": {
+     "gold": "On the Origin of Species",
+     "distractors": [
+      "The Descent of Man",
+      "Principles of Geology",
+      "The Voyage of the Beagle",
+      "Systema Naturae"
+     ]
+    }
+   },
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       5,
+       4
+      ]
+     }
+    },
+    "target": 2,
+    "target_alts": [
+     1
+    ]
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "source": "authored (claude-opus-5-5) for qwen3.5-2b: 2hop, the bridge something a well-read adult knows at once, and the easiest final relation: the city, country, founder or author of the bridge.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t2",
+    "knobs": {
+     "brief": "2hop, the bridge something a well-read adult knows at once, and the easiest final relation: the city, country, founder or author of the bridge."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 104,
+    "steer": "- Last wave: 5/60 passed.\n- Rejected by lint before gating: 3x units: bridge1 canonical name is one token (uncreditable); 3x units: bridge1 pads a one-word name with generic words (uncreditab; 2x leak: ['empire'] in prompt; 1x leak: ['chihiro'] in prompt. Avoid these.\n- Failed (gold -> what the model wrote): Louisa May Alcott -> model said 'L. M. Montgomery' (2/10); Alexandre Dumas -> model said 'Alexandre Dumas' (9/10); Aldous Huxley -> model said 'F. Scott Fitzgerald' (0/10); Mary Shelley -> model said 'Agatha Christie' (3/10); Pablo Picasso -> model said 'Francisco Goya' (1/10); Diego Velázquez -> model said 'Jorge de la Cruz' (0/10); Edward Hopper -> model said 'Edward Hopper' (0/10); Johann Strauss II -> model said 'Franz Schubert' (0/10); Claude Debussy -> model said 'Debussy' (7/10); Edvard Grieg -> model said 'Johan Strauss' (0/10); Akira Kurosawa -> model said 'Kurosawa' (1/10); Guillermo del Toro -> model said 'Javier Bardem' (0/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): Adam Smith; Fyodor Dostoevsky; Sun Tzu; Saudi Arabia; Las Vegas",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "multihop-au-t2-w104c1-mhmt-2hop-jungle-book-kipling",
+   "subfamily": "2hop",
+   "prompt": "Fact: The 1894 story collection about Mowgli, a boy raised by wolves alongside Baloo the bear and Bagheera the panther, was written by",
+   "target": "Rudyard Kipling",
+   "target_alts": [
+    "Kipling"
+   ],
+   "intermediates": [
+    "The Jungle Book"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "The Jungle Book"
+      ]
+     },
+     "match": [
+      "The Jungle Book"
+     ]
+    }
+   ],
+   "bridges": [
+    {
+     "question": "Which 1894 story collection features Mowgli, Baloo and Bagheera?",
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "The Jungle Book",
+      "Jungle Book"
+     ]
+    }
+   ],
+   "mc": {
+    "bridge1": {
+     "gold": "The Jungle Book",
+     "distractors": [
+      "Just So Stories",
+      "The Wind in the Willows",
+      "Tarzan of the Apes",
+      "Black Beauty"
+     ]
+    }
+   },
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       3
+      ]
+     }
+    },
+    "target": 5,
+    "target_alts": [
+     2
+    ]
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "source": "authored (claude-opus-5-5) for qwen3.5-2b: 2hop, the bridge something a well-read adult knows at once, and the easiest final relation: the city, country, founder or author of the bridge.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t2",
+    "knobs": {
+     "brief": "2hop, the bridge something a well-read adult knows at once, and the easiest final relation: the city, country, founder or author of the bridge."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 104,
+    "steer": "- Last wave: 5/60 passed.\n- Rejected by lint before gating: 3x units: bridge1 canonical name is one token (uncreditable); 3x units: bridge1 pads a one-word name with generic words (uncreditab; 2x leak: ['empire'] in prompt; 1x leak: ['chihiro'] in prompt. Avoid these.\n- Failed (gold -> what the model wrote): Louisa May Alcott -> model said 'L. M. Montgomery' (2/10); Alexandre Dumas -> model said 'Alexandre Dumas' (9/10); Aldous Huxley -> model said 'F. Scott Fitzgerald' (0/10); Mary Shelley -> model said 'Agatha Christie' (3/10); Pablo Picasso -> model said 'Francisco Goya' (1/10); Diego Velázquez -> model said 'Jorge de la Cruz' (0/10); Edward Hopper -> model said 'Edward Hopper' (0/10); Johann Strauss II -> model said 'Franz Schubert' (0/10); Claude Debussy -> model said 'Debussy' (7/10); Edvard Grieg -> model said 'Johan Strauss' (0/10); Akira Kurosawa -> model said 'Kurosawa' (1/10); Guillermo del Toro -> model said 'Javier Bardem' (0/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): Adam Smith; Fyodor Dostoevsky; Sun Tzu; Saudi Arabia; Las Vegas",
+    "gate": {
+     "rate": 0.9,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "multihop-au-t2-w104c1-mhmt-2hop-church-of-england-henry-viii",
+   "subfamily": "2hop",
+   "prompt": "Fact: The established Protestant denomination headed by the British monarch, created when the Pope refused to annul a royal marriage in the 1530s, was founded by",
+   "target": "Henry VIII",
+   "target_alts": [
+    "King Henry VIII",
+    "Henry the Eighth"
+   ],
+   "intermediates": [
+    "Church of England"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Church of England",
+       "Anglican Church"
+      ]
+     },
+     "match": [
+      "Church of England",
+      "Anglican Church"
+     ]
+    }
+   ],
+   "bridges": [
+    {
+     "question": "Which established Protestant denomination is headed by the British monarch and arose from a 1530s break with the Pope?",
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "Church of England",
+      "Anglican Church"
+     ]
+    }
+   ],
+   "mc": {
+    "bridge1": {
+     "gold": "Church of England",
+     "distractors": [
+      "Church of Scotland",
+      "Lutheran Church",
+      "Methodist Church",
+      "Presbyterian Church"
+     ]
+    }
+   },
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       3,
+       3
+      ]
+     }
+    },
+    "target": 2,
+    "target_alts": [
+     3,
+     3
+    ]
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "source": "authored (claude-opus-5-5) for qwen3.5-2b: 2hop, the bridge something a well-read adult knows at once, and the easiest final relation: the city, country, founder or author of the bridge.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t2",
+    "knobs": {
+     "brief": "2hop, the bridge something a well-read adult knows at once, and the easiest final relation: the city, country, founder or author of the bridge."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 104,
+    "steer": "- Last wave: 5/60 passed.\n- Rejected by lint before gating: 3x units: bridge1 canonical name is one token (uncreditable); 3x units: bridge1 pads a one-word name with generic words (uncreditab; 2x leak: ['empire'] in prompt; 1x leak: ['chihiro'] in prompt. Avoid these.\n- Failed (gold -> what the model wrote): Louisa May Alcott -> model said 'L. M. Montgomery' (2/10); Alexandre Dumas -> model said 'Alexandre Dumas' (9/10); Aldous Huxley -> model said 'F. Scott Fitzgerald' (0/10); Mary Shelley -> model said 'Agatha Christie' (3/10); Pablo Picasso -> model said 'Francisco Goya' (1/10); Diego Velázquez -> model said 'Jorge de la Cruz' (0/10); Edward Hopper -> model said 'Edward Hopper' (0/10); Johann Strauss II -> model said 'Franz Schubert' (0/10); Claude Debussy -> model said 'Debussy' (7/10); Edvard Grieg -> model said 'Johan Strauss' (0/10); Akira Kurosawa -> model said 'Kurosawa' (1/10); Guillermo del Toro -> model said 'Javier Bardem' (0/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): Adam Smith; Fyodor Dostoevsky; Sun Tzu; Saudi Arabia; Las Vegas",
+    "gate": {
+     "rate": 0.9,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "multihop-au-t2-w105c0-mhmt-2hop-golden-temple-amritsar",
+   "subfamily": "2hop",
+   "prompt": "Fact: The holiest shrine of the Sikh faith, a gilded sanctuary rising from a sacred pool, stands in the Indian city of",
+   "target": "Amritsar",
+   "target_alts": [],
+   "intermediates": [
+    "Golden Temple"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Golden Temple",
+       "Harmandir Sahib"
+      ]
+     },
+     "match": [
+      "Golden Temple",
+      "Harmandir Sahib"
+     ]
+    }
+   ],
+   "bridges": [
+    {
+     "question": "What is the holiest shrine of the Sikh faith, a gilded sanctuary rising from a sacred pool?",
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "Golden Temple",
+      "Harmandir Sahib",
+      "Darbar Sahib"
+     ]
+    }
+   ],
+   "mc": {
+    "bridge1": {
+     "gold": "Golden Temple",
+     "distractors": [
+      "Akshardham",
+      "Lotus Temple",
+      "Meenakshi Temple",
+      "Jama Masjid"
+     ]
+    }
+   },
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       2,
+       4
+      ]
+     }
+    },
+    "target": 3,
+    "target_alts": []
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "source": "authored (claude-opus-5-5) for qwen3.5-2b: 2hop, the bridge something a well-read adult knows at once, and the easiest final relation: the city, country, founder or author of the bridge.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t2",
+    "knobs": {
+     "brief": "2hop, the bridge something a well-read adult knows at once, and the easiest final relation: the city, country, founder or author of the bridge."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 105,
+    "steer": "- Last wave: 7/51 passed.\n- Rejected by lint before gating: 2x units: bridge1 canonical name is one token (uncreditable); 1x natural:bridge1 'Dracula' is not creditable; 1x units: bridge1 pads a one-word name with generic words (uncreditab; 1x natural:bridge1 'Scientology' is not creditable. Avoid these.\n- Failed (gold -> what the model wrote): United Kingdom -> model said 'United Kingdom' (6/10); North Korea -> model said 'China' (0/10); Czech Republic -> model said 'Czechoslovak Republic' (3/10); Hong Kong -> model said 'Hong Kong' (7/10); Dante Alighieri -> model said 'Dante Alighieri' (9/10); Harriet Beecher Stowe -> model said 'Harriet Beecher Stowe' (9/10); H. G. Wells -> model said 'H.G. Wells' (8/10); Sofia Coppola -> model said 'David O. Russell' (0/10); Jordan Peele -> model said 'Jordan Peele' (0/10); Leonard Bernstein -> model said 'Leonard Bernstein' (1/10); Pink Floyd -> model said 'Pink Floyd' (3/10); Martin Luther King Jr. -> model said 'Martin Luther King Jr.' (3/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): Vatican City; New Orleans; J. Robert Oppenheimer; Albert Einstein; Charles Darwin; Rudyard Kipling; Henry VIII",
+    "gate": {
+     "rate": 0.9,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "multihop-au-t2-w105c1-mhmt-2hop-all-quiet-remarque",
+   "subfamily": "2hop",
+   "prompt": "Fact: The 1929 novel about the young German soldier Paul Bäumer and his schoolmates in the trenches of the Great War was written by",
+   "target": "Erich Maria Remarque",
+   "target_alts": [
+    "Remarque"
+   ],
+   "intermediates": [
+    "All Quiet on the Western Front"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "All Quiet on the Western Front"
+      ]
+     },
+     "match": [
+      "All Quiet on the Western Front"
+     ]
+    }
+   ],
+   "bridges": [
+    {
+     "question": "Which 1929 novel follows the German soldier Paul Bäumer in the trenches?",
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "All Quiet on the Western Front",
+      "All Quiet"
+     ]
+    }
+   ],
+   "mc": {
+    "bridge1": {
+     "gold": "All Quiet on the Western Front",
+     "distractors": [
+      "A Farewell to Arms",
+      "Storm of Steel",
+      "Johnny Got His Gun",
+      "The Good Soldier Švejk"
+     ]
+    }
+   },
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       6
+      ]
+     }
+    },
+    "target": 5,
+    "target_alts": [
+     2
+    ]
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "source": "authored (claude-opus-5-5) for qwen3.5-2b: 2hop, the bridge something a well-read adult knows at once, and the easiest final relation: the city, country, founder or author of the bridge.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t2",
+    "knobs": {
+     "brief": "2hop, the bridge something a well-read adult knows at once, and the easiest final relation: the city, country, founder or author of the bridge."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 105,
+    "steer": "- Last wave: 7/51 passed.\n- Rejected by lint before gating: 2x units: bridge1 canonical name is one token (uncreditable); 1x natural:bridge1 'Dracula' is not creditable; 1x units: bridge1 pads a one-word name with generic words (uncreditab; 1x natural:bridge1 'Scientology' is not creditable. Avoid these.\n- Failed (gold -> what the model wrote): United Kingdom -> model said 'United Kingdom' (6/10); North Korea -> model said 'China' (0/10); Czech Republic -> model said 'Czechoslovak Republic' (3/10); Hong Kong -> model said 'Hong Kong' (7/10); Dante Alighieri -> model said 'Dante Alighieri' (9/10); Harriet Beecher Stowe -> model said 'Harriet Beecher Stowe' (9/10); H. G. Wells -> model said 'H.G. Wells' (8/10); Sofia Coppola -> model said 'David O. Russell' (0/10); Jordan Peele -> model said 'Jordan Peele' (0/10); Leonard Bernstein -> model said 'Leonard Bernstein' (1/10); Pink Floyd -> model said 'Pink Floyd' (3/10); Martin Luther King Jr. -> model said 'Martin Luther King Jr.' (3/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): Vatican City; New Orleans; J. Robert Oppenheimer; Albert Einstein; Charles Darwin; Rudyard Kipling; Henry VIII",
+    "gate": {
+     "rate": 0.8,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "multihop-au-t2-w105c2-mhmt-2hop-terracotta-army-xian",
+   "subfamily": "2hop",
+   "prompt": "Fact: The thousands of life-size clay soldiers buried to guard the tomb of China's first emperor were unearthed in 1974 near the city of",
+   "target": "Xi'an",
+   "target_alts": [
+    "Xian",
+    "Xi’an",
+    "Sian"
+   ],
+   "intermediates": [
+    "Terracotta Army"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Terracotta Army",
+       "Terracotta Warriors"
+      ]
+     },
+     "match": [
+      "Terracotta Army",
+      "Terracotta Warriors"
+     ]
+    }
+   ],
+   "bridges": [
+    {
+     "question": "What is the name of the thousands of life-size clay soldiers buried to guard the tomb of China's first emperor?",
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "Terracotta Army",
+      "Terracotta Warriors",
+      "Terracotta Warriors and Horses"
+     ]
+    }
+   ],
+   "mc": {
+    "bridge1": {
+     "gold": "Terracotta Army",
+     "distractors": [
+      "Leshan Giant Buddha",
+      "Mogao Caves",
+      "Longmen Grottoes",
+      "Forbidden City"
+     ]
+    }
+   },
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       4,
+       4
+      ]
+     }
+    },
+    "target": 2,
+    "target_alts": [
+     2,
+     2,
+     2
+    ]
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "source": "authored (claude-opus-5-5) for qwen3.5-2b: 2hop, the bridge something a well-read adult knows at once, and the easiest final relation: the city, country, founder or author of the bridge.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t2",
+    "knobs": {
+     "brief": "2hop, the bridge something a well-read adult knows at once, and the easiest final relation: the city, country, founder or author of the bridge."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 105,
+    "steer": "- Last wave: 7/51 passed.\n- Rejected by lint before gating: 2x units: bridge1 canonical name is one token (uncreditable); 1x natural:bridge1 'Dracula' is not creditable; 1x units: bridge1 pads a one-word name with generic words (uncreditab; 1x natural:bridge1 'Scientology' is not creditable. Avoid these.\n- Failed (gold -> what the model wrote): United Kingdom -> model said 'United Kingdom' (6/10); North Korea -> model said 'China' (0/10); Czech Republic -> model said 'Czechoslovak Republic' (3/10); Hong Kong -> model said 'Hong Kong' (7/10); Dante Alighieri -> model said 'Dante Alighieri' (9/10); Harriet Beecher Stowe -> model said 'Harriet Beecher Stowe' (9/10); H. G. Wells -> model said 'H.G. Wells' (8/10); Sofia Coppola -> model said 'David O. Russell' (0/10); Jordan Peele -> model said 'Jordan Peele' (0/10); Leonard Bernstein -> model said 'Leonard Bernstein' (1/10); Pink Floyd -> model said 'Pink Floyd' (3/10); Martin Luther King Jr. -> model said 'Martin Luther King Jr.' (3/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): Vatican City; New Orleans; J. Robert Oppenheimer; Albert Einstein; Charles Darwin; Rudyard Kipling; Henry VIII",
+    "gate": {
+     "rate": 0.9,
+     "pass": true
+    }
+   }
+  }
+ ]
+}

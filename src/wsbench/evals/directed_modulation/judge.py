@@ -12,13 +12,12 @@ from wsbench.llm import Spend
 from wsbench.mc import classify, seed_int
 from wsbench.mcjudge import Call, Preflighter, item_scope, run_calls, with_readout_count
 from wsbench.readouts import Cell, load_readouts
-from wsbench.registry import REPO_ROOT, JudgeArgs
+from wsbench.registry import JudgeArgs, bank_path
 from wsbench.results import FamilyResult
 
 from . import score
 from .prompts import N_DISTRACTORS, PROMPT_VERSION, SCHEMA, SEED, SYSTEM, render_user
 
-BANK = REPO_ROOT / "evals" / "directed_modulation" / "items.json"
 _BPE_JUNK = re.compile(r"[ĠĊ▁]")
 
 
@@ -131,7 +130,7 @@ def decode(
 
 
 def run(args: JudgeArgs) -> FamilyResult:
-    _header, bank = load_bank(BANK)
+    _header, bank = load_bank(bank_path("directed_modulation"))
     scope = item_scope(bank, args)
     by_id = {it["id"]: it for it in scope}
     cells, rep = load_readouts(args.readouts, ids=list(by_id), layers=args.layers)

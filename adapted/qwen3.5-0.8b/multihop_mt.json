@@ -1,0 +1,17 @@
+{
+ "family": "multihop-hard",
+ "parent_family": "multihop-mt",
+ "contract": {
+  "multi_token": true,
+  "include_target": true,
+  "conjunctive_units": true
+ },
+ "gate": "Qwen3.6-27B behavioral, chat-templated capability question (enable_thinking=False, answer stem): greedy-verified AND >=8/10 @ temp 0.7; every bridge gate (English bridge question vs the gate-only `answers`) greedy + >=8/10. EVAL RENDER: plain prompt, readout at the final prompt token; scoring = conjunctive regex over units (all required units in one layer).",
+ "frozen": "2026-09-10",
+ "adapt": {
+  "model": "qwen3.5-0.8b",
+  "hf_id": "Qwen/Qwen3.5-0.8B",
+  "frozen": "2026-10-24"
+ },
+ "items": []
+}

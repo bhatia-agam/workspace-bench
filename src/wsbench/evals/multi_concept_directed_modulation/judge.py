@@ -21,7 +21,7 @@ from wsbench.llm import Spend
 from wsbench.mc import letter_index
 from wsbench.mcjudge import Call, Preflighter, item_scope, run_calls, with_readout_count
 from wsbench.readouts import load_readouts
-from wsbench.registry import REPO_ROOT, JudgeArgs
+from wsbench.registry import JudgeArgs, bank_path
 from wsbench.results import FamilyResult
 from wsbench.summarizer import SUMMARIZER_PROMPT_VERSION, aux_judge, render_bag, summarize
 
@@ -30,7 +30,6 @@ from .prompts import PROMPT_VERSION, SCHEMA, SYSTEM, render_user
 from .regions import Region, label_cells
 
 NAME = "multi_concept_directed_modulation"
-BANK = REPO_ROOT / "evals" / NAME / "items.json"
 CHANCE_LABEL = (
     "no analytic floor (multi-select over a frozen candidate list); the measured floors are "
     "the lucky-guessing and prompt-only baselines, and the controls' pick rate"
@@ -76,7 +75,7 @@ def verdict(
 
 
 def run(args: JudgeArgs) -> FamilyResult:
-    _header, items = load_bank(BANK)
+    _header, items = load_bank(bank_path(NAME))
     scope = item_scope(items, args)
     ids = [it["id"] for it in scope]
     by_id = {it["id"]: it for it in scope}

@@ -3,6 +3,7 @@ which token positions to read, and at which layers. `wsbench plan` writes it as 
 turns a positions rule into token indices once a producer has tokenized the render."""
 
 import json
+import os
 import re
 from collections.abc import Iterable
 from dataclasses import asdict, dataclass, field
@@ -10,7 +11,7 @@ from pathlib import Path
 from typing import Any
 
 from wsbench.banks import load_bank as load_bank_file
-from wsbench.registry import REPO_ROOT
+from wsbench.registry import BANK_ROOT_ENV, REPO_ROOT, bank_path
 
 GRID = list(range(20, 61, 4))  # the benchmark's layer grid for Qwen3.6-27B (64 layers)
 SIX = [20, 28, 36, 44, 52, 60]  # the association families' coarser grid
@@ -73,6 +74,7 @@ class ReadSpec:
 #                               convention of the banks that count from the end)
 #   positions {list}            explicit indices into the render
 #   line_one_newline            the newline token that ends line one (the last newline)
+#   last_newline                the last newline token anywhere (chat_prefill: inside the prefill)
 #   from_token {token}          from the first token whose text is `token` through the end
 #   from_last_sentence_start    from the first token of the final sentence of the last user
 #                               turn through the end of the render
@@ -80,8 +82,36 @@ class ReadSpec:
 #   suffix_text_then_tail       `suffix_text` plus every token after it (the chat tail)
 
 
+def _hal_capture_rows() -> Path:
+    """``$WSB_BANK_ROOT/hallucination.capture_rows.json`` for an adapted bank (an error if it is
+    missing), else the frozen ``evals/hallucination/capture_rows.json``."""
+    root = os.environ.get(BANK_ROOT_ENV)
+    if not root:
+        return REPO_ROOT / "evals/hallucination/capture_rows.json"
+    base = Path(root) if Path(root).is_absolute() else REPO_ROOT / root
+    path = base / "hallucination.capture_rows.json"
+    if not path.exists():
+        raise SystemExit(f"{BANK_ROOT_ENV}={root} has no hallucination capture rows ({path})")
+    return path
+
+
 def _clean(tok: str) -> str:
     return tok.replace("Ġ", " ").replace("▁", " ").replace("Ċ", "\n")
+
+
+# Poetry renders for subjects that commit to a rhyme only with a format scaffold (adapt gate legs
+# surface:fewshot / surface:prefill; gate_variant plain_fewshot / chat_prefill, porting.md).
+POETRY_FEWSHOT = (
+    "A rhyming couplet:\nThe cat lay sleeping on the mat,\nAnd dreamed it chased a little rat.\n\n"
+    "A rhyming couplet:\nThe sun went down behind the hill,\n"
+    "The evening air was calm and still.\n\n"
+)
+POETRY_PREFILL_USER = "Write a rhyming couplet."
+
+
+def poetry_prefill(prompt: str) -> str:
+    """Line one + the line-two stem (the couplet without its header), trailing space dropped."""
+    return "\n".join(prompt.split("\n")[1:]).rstrip()
 
 
 def resolve(rule: dict[str, Any], tokens: list[str]) -> list[int]:
@@ -103,6 +133,12 @@ def resolve(rule: dict[str, Any], tokens: list[str]) -> list[int]:
     if kind == "positions":
         return [int(p) for p in rule["positions"] if 0 <= int(p) < n]
     if kind == "line_one_newline":
+        # the last newline of the user content: in a chat render, before the closing turn marker
+        ends = [i for i, t in enumerate(tokens) if t in TURN_END]
+        stop = ends[-1] if ends else n
+        nls = [i for i, t in enumerate(tokens[:stop]) if "\n" in _clean(t)]
+        return [nls[-1]] if nls else []
+    if kind == "last_newline":
         nls = [i for i, t in enumerate(tokens) if "\n" in _clean(t)]
         return [nls[-1]] if nls else []
     if kind == "from_token":
@@ -122,19 +158,36 @@ def resolve(rule: dict[str, Any], tokens: list[str]) -> list[int]:
     raise ValueError(f"unknown positions rule {kind!r}")
 
 
-def _from_last_sentence_start(tokens: list[str]) -> list[int]:
+# turn markers of the chat templates the banks are adapted to (ChatML / Qwen, Gemma-4, Gemma-2/3,
+# Llama-3); the rules below find the user turn by these, never by one template's literals
+TURN_START = {"<|im_start|>", "<|turn>", "<start_of_turn>", "<|start_header_id|>"}
+TURN_END = {"<|im_end|>", "<turn|>", "<end_of_turn>", "<|eot_id|>", "<|end|>"}
+
+
+def _user_turn(tokens: list[str]) -> tuple[int, int] | None:
+    """(first content token, closing turn marker) of the LAST user turn, or None."""
     n = len(tokens)
-    ends = [i for i, t in enumerate(tokens) if t == "<|im_end|>"]
     starts = [
         i
         for i, t in enumerate(tokens)
-        if t == "<|im_start|>" and i + 1 < n and tokens[i + 1] == "user"
+        if t in TURN_START and i + 1 < n and _clean(tokens[i + 1]).strip() == "user"
     ]
-    if not starts or not ends:
-        return list(range(n))
-    u0 = starts[-1]
-    u1 = next((e for e in ends if e > u0), n)
-    body = list(range(u0 + 3, u1))  # skip <|im_start|>, user, newline
+    if not starts:
+        return None
+    u0 = starts[-1] + 2  # past the marker and the role name
+    while u0 < n and not _clean(tokens[u0]).strip():  # and the header's newline(s)
+        u0 += 1
+    u1 = next((i for i in range(u0, n) if tokens[i] in TURN_END), None)
+    return None if u1 is None else (u0, u1)
+
+
+def _from_last_sentence_start(tokens: list[str]) -> list[int]:
+    n = len(tokens)
+    turn = _user_turn(tokens)
+    if turn is None:  # a chat render without recognisable turn markers: fail, never read it all
+        raise ValueError("from_last_sentence_start: no user turn markers in the render")
+    u0, u1 = turn
+    body = list(range(u0, u1))
     if not body:
         return list(range(u1, n))
     i = body[-1] - 1
@@ -170,7 +223,7 @@ def _text_end(tokens: list[str], start: int, text: str) -> int:
 
 
 def _bank(family: str) -> tuple[dict[str, Any], list[dict[str, Any]]]:
-    path = REPO_ROOT / "evals" / family / "items.json"
+    path = bank_path(family)
     raw = json.loads(path.read_text(encoding="utf-8"))
     if isinstance(raw, list):  # the plain-list banks already carry ids
         return {}, raw
@@ -207,7 +260,49 @@ def _final_token_families(family: str, render: str) -> list[ReadSpec]:
     return out
 
 
+BANK_LAYERS = {"buggy_code", "multi_concept_directed_modulation"}  # layers stored in the bank
+
+
+def _subject_layers() -> int | None:
+    """The adapted subject's block count (``$WSB_BANK_ROOT/report.json`` ``n_layers``), or None
+    for the frozen banks (whose grids are Qwen3.6-27B layers out of 64)."""
+    root = os.environ.get(BANK_ROOT_ENV)
+    if not root:
+        return None
+    base = Path(root) if Path(root).is_absolute() else REPO_ROOT / root
+    n = json.loads((base / "report.json").read_text()).get("n_layers")
+    if not n:
+        raise SystemExit(f"{base / 'report.json'} has no n_layers; re-run adapt freeze")
+    return int(n)
+
+
+def _subject_band() -> list[int]:
+    """The subject's lens layers (``report.json`` ``read_band``), empty if it reads every layer."""
+    root = os.environ.get(BANK_ROOT_ENV)
+    if not root:
+        return []
+    base = Path(root) if Path(root).is_absolute() else REPO_ROOT / root
+    return list(json.loads((base / "report.json").read_text()).get("read_band") or [])
+
+
 def plan(family: str) -> list[ReadSpec]:
+    """``_plan`` in the subject's own layers: under ``$WSB_BANK_ROOT`` every grid taken from the
+    27B constants is remapped by depth (``round(L * n / 64)``, then snapped to ``read_band`` if the
+    subject has one; duplicates dropped); layers an
+    adapted bank stores itself (``BANK_LAYERS``) are already the subject's."""
+    from dataclasses import replace
+
+    specs = _plan(family)
+    n = _subject_layers()
+    if n is None or family in BANK_LAYERS:
+        return specs
+    from wsbench.adapt.subjects import remap_layers
+
+    band = _subject_band()
+    return [replace(s, layers=remap_layers([int(x) for x in s.layers], n, band)) for s in specs]
+
+
+def _plan(family: str) -> list[ReadSpec]:
     """The read plan for one family, one ReadSpec per bank item."""
     if family in (
         "association",
@@ -224,19 +319,43 @@ def plan(family: str) -> list[ReadSpec]:
     ):
         return _final_token_families(family, "plain")
     if family == "poetry":
+        from wsbench.capable.questions import CONTINUE
+
         _h, items = _bank(family)
-        return [
-            ReadSpec(
-                family,
-                it["id"],
-                "plain",
-                {"kind": "line_one_newline"},
-                GRID,
-                text=it["prompt"],
-                note="the newline that ends line one of the couplet",
-            )
-            for it in items
-        ]
+        # an adapted item whose rhyme was committed in the chat render is read in that render
+        # (the gate's own question); the frozen bank and plain commitments read the raw couplet
+        out = []
+        for it in items:
+            # only an ADAPTED item's gate_variant picks its read render; a frozen item's
+            # gate_variant records the 27B's gate and never the eval read (bank header)
+            gv = it.get("gate_variant") if it.get("adapt") else None
+            if gv == "chat_prefill":  # the couplet is the assistant's own (prefilled) text
+                spec = ReadSpec(
+                    family,
+                    it["id"],
+                    "chat_prefill",
+                    {"kind": "last_newline"},
+                    GRID,
+                    text=POETRY_PREFILL_USER,
+                    prefill=poetry_prefill(it["prompt"]),
+                    note="the newline that ends line one, inside the prefill",
+                )
+            else:
+                texts = {
+                    "chat": f"{CONTINUE}\n\n{it['prompt']}",
+                    "plain_fewshot": POETRY_FEWSHOT + it["prompt"],
+                }
+                spec = ReadSpec(
+                    family,
+                    it["id"],
+                    "chat" if gv == "chat" else "plain",
+                    {"kind": "line_one_newline"},
+                    GRID,
+                    text=texts.get(gv, it["prompt"]),
+                    note="the newline that ends line one of the couplet",
+                )
+            out.append(spec)
+        return out
     if family == "directed_modulation":
         _h, items = _bank(family)
         return [
@@ -276,6 +395,7 @@ def plan(family: str) -> list[ReadSpec]:
                 {"kind": "last_n", "n": 5},
                 GRID,
                 text=it["stimulus"],
+                system=it.get("system"),  # the subject's one-word system turn (moral.variant)
                 note="the last five positions of the render",
             )
             for it in items
@@ -380,7 +500,7 @@ def plan(family: str) -> list[ReadSpec]:
                 family,
                 it["id"],
                 "chat_prefill",
-                {"kind": "last_n", "n": 12},
+                {"kind": "last_n", "n": int(header.get("last_n", 12))},  # the sentence's own count
                 [int(x) for x in header["layers"]],
                 text=it["prompt"],
                 prefill=header["target_sentence"],
@@ -389,7 +509,8 @@ def plan(family: str) -> list[ReadSpec]:
             for it in items
         ]
     if family == "hallucination":
-        rows = json.loads((REPO_ROOT / "evals/hallucination/capture_rows.json").read_text())
+        # an adapted bank's rows are the subject's own ids (off-policy ids must never be read)
+        rows = json.loads(_hal_capture_rows().read_text())
         return [
             ReadSpec(
                 family,
@@ -439,7 +560,13 @@ def plan(family: str) -> list[ReadSpec]:
             for it in items
         ]
     if family == "jlens_concept_pr":
-        m = json.loads((REPO_ROOT / "evals/jlens_concept_pr/manifest.json").read_text())
+        from wsbench.evals.jlens_concept_pr.judge import bank_dir
+
+        d = bank_dir()  # the adapted bank's own manifest under WSB_BANK_ROOT, never the 27B's
+        m = json.loads((d / "manifest.json").read_text())
+        rows = {}
+        if (d / "items.json").exists():  # an adapted bank ships the subject's exact rollout ids
+            rows = {r["label"]: r for r in json.loads((d / "items.json").read_text())}
         return [
             ReadSpec(
                 family,
@@ -447,8 +574,18 @@ def plan(family: str) -> list[ReadSpec]:
                 "captured",
                 {"kind": "positions", "positions": p["eval_positions"]},
                 GRID,
-                extra={"n_pos": p["n_pos"], "source_family": p["family"]},
-                note="the text is not shipped; recapture from the source repo's items",
+                extra={"n_pos": p["n_pos"], "source_family": p["family"]}
+                | (
+                    {
+                        "input_ids": rows[p["label"]]["input_ids"],
+                        "prompt_len": rows[p["label"]]["prompt_len"],
+                    }
+                    if p["label"] in rows
+                    else {}
+                ),
+                note="the subject's own rollout ids (items.json)"
+                if rows
+                else "the text is not shipped; recapture from the source repo's items",
             )
             for p in m["prompts"]
         ]
@@ -456,11 +593,20 @@ def plan(family: str) -> list[ReadSpec]:
 
 
 def families() -> list[str]:
-    return sorted(
+    """Every family with a bank; under ``$WSB_BANK_ROOT`` only those the adapted root actually
+    has (an ooc family with no bank is skipped, not an error, when planning everything)."""
+    names = sorted(
         p.name
         for p in (REPO_ROOT / "evals").iterdir()
         if (p / "items.json").exists() or (p / "manifest.json").exists()
     )
+    root = os.environ.get(BANK_ROOT_ENV)
+    if not root:
+        return names
+    base = Path(root) if Path(root).is_absolute() else REPO_ROOT / root
+    return [
+        f for f in names if (base / f"{f}.json").exists() or (base / f / "manifest.json").exists()
+    ]
 
 
 def write(specs: Iterable[ReadSpec], path: Path) -> int:

@@ -1,6 +1,7 @@
 """Family registry: each ``wsbench.evals.<family>`` package registers one ``EvalSpec`` on import."""
 
 import importlib
+import os
 import pkgutil
 from collections.abc import Callable, Mapping
 from dataclasses import dataclass, field
@@ -12,6 +13,21 @@ from wsbench.results import FamilyResult
 # src layout (uv-managed checkout); a wheel install would resolve to site-packages.
 REPO_ROOT = Path(__file__).resolve().parents[2]
 FAMILIES: dict[str, "EvalSpec"] = {}  # filled by register(); EvalSpec is defined below
+BANK_ROOT_ENV = "WSB_BANK_ROOT"  # a per-model bank directory, e.g. adapted/qwen3.5-4b
+
+
+def bank_path(family: str) -> Path:
+    """The bank a family judges: ``$WSB_BANK_ROOT/<family>.json`` when that variable is set (an
+    adapted bank; a family missing there is an error, never a silent fall-back to the frozen bank
+    of another model), else the frozen ``evals/<family>/items.json``."""
+    root = os.environ.get(BANK_ROOT_ENV)
+    if not root:
+        return REPO_ROOT / "evals" / family / "items.json"
+    base = Path(root) if Path(root).is_absolute() else REPO_ROOT / root
+    path = base / f"{family}.json"
+    if not path.exists():
+        raise SystemExit(f"{BANK_ROOT_ENV}={root} has no bank for {family!r} ({path})")
+    return path
 
 
 @dataclass

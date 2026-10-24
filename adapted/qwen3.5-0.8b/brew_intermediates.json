@@ -1,0 +1,43 @@
+{
+ "family": "brew_intermediates",
+ "rule": "seed-last greedy correct + 10/10 sampled correct + no leak + no shortcut",
+ "gate_config": {
+  "k": 10,
+  "max_new": 16,
+  "temperature": 0.8,
+  "top_p": 0.95,
+  "answer_stem": "Answer:",
+  "suppress_tokens": "<|im_end|>,<|endoftext|>",
+  "rule": "greedy + >=n_required/10, ok_8 and ok_10 both recorded",
+  "model_dir": "Qwen/Qwen3.6-27B",
+  "n_required": 10,
+  "seed": 0,
+  "items": "/root/app/staging/candidates.json",
+  "cell": "r10d2",
+  "orders": [
+   "last"
+  ],
+  "num_shards": 8,
+  "launcher": "modal_brew_gate.py (one grid cell per container)"
+ },
+ "n_candidates": 400,
+ "n_passers": 139,
+ "rejected": {
+  "not_ok10": 261,
+  "leaked": 0,
+  "shortcut": 0
+ },
+ "selection": {
+  "n": 100,
+  "seed": 0,
+  "from": "seeded shuffle of passers"
+ },
+ "source": "evals/workspace-bench/hillclimbing_evals/multi_token/brew_intermediates/items_final.json + prompts_full.json (source repo; items unchanged, each carries its read cells and their regions)",
+ "read": "24 pinned prompt positions per item (regions stir / start / question / emit_asst / emit_think / emit_colon), chat render with the prefill 'Answer:', layers 20..60 step 4",
+ "adapt": {
+  "model": "qwen3.5-0.8b",
+  "hf_id": "Qwen/Qwen3.5-0.8B",
+  "frozen": "2026-10-24"
+ },
+ "items": []
+}

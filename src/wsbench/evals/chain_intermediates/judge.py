@@ -22,13 +22,12 @@ from wsbench.family import (
 from wsbench.llm import Spend
 from wsbench.mcjudge import Call, Preflighter, item_scope, run_calls, with_readout_count
 from wsbench.readouts import load_readouts
-from wsbench.registry import REPO_ROOT, JudgeArgs
+from wsbench.registry import JudgeArgs, bank_path
 from wsbench.results import FamilyResult
 
 from .prompts import MAX_VALUES, NEAR, PROMPT_VERSION, SCHEMA, SYSTEM, render_user
 
 NAME = "chain_intermediates"
-BANK = REPO_ROOT / "evals" / NAME / "items.json"
 CHANCE_LABEL = (
     "no analytic floor (free recall); the measured floors are the magnitude-matched decoy null "
     "(extras.null_top1_near) and the prompt-only baseline"
@@ -101,7 +100,7 @@ def verdict(
 
 
 def run(args: JudgeArgs) -> FamilyResult:
-    _header, items = load_bank(BANK)
+    _header, items = load_bank(bank_path(NAME))
     scope = item_scope(items, args)
     ids = [it["id"] for it in scope]
     by_id = {it["id"]: it for it in scope}

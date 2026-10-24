@@ -26,7 +26,7 @@ class Cache:
         if self.path.exists() and self.path.stat().st_size:
             data = self.path.read_bytes()
             torn = not data.endswith(b"\n")
-            for line in data.decode("utf-8", "replace").splitlines():
+            for line in data.decode("utf-8", "replace").split("\n"):
                 if not line.strip():
                     continue
                 try:

@@ -13,13 +13,12 @@ from wsbench.family import cell_text, fail, mean, pass_rate_result, require_cell
 from wsbench.llm import Spend
 from wsbench.mcjudge import Call, Preflighter, item_scope, run_calls, with_readout_count
 from wsbench.readouts import load_readouts
-from wsbench.registry import REPO_ROOT, JudgeArgs
+from wsbench.registry import JudgeArgs, bank_path
 from wsbench.results import FamilyResult
 
 from .prompts import PROMPT_VERSION, SCHEMA, SEED, SYSTEM, mentions_any_colour, render_user
 
 NAME = "brew_intermediates"
-BANK = REPO_ROOT / "evals" / NAME / "items.json"
 EMIT = ("emit_asst", "emit_think", "emit_colon")
 STIR = ("stir",)
 REGION_SETS = {
@@ -82,7 +81,7 @@ def rule(cells: list[dict[str, Any]]) -> dict[str, Any] | None:
 
 
 def run(args: JudgeArgs) -> FamilyResult:
-    _header, items = load_bank(BANK)
+    _header, items = load_bank(bank_path(NAME))
     scope = item_scope(items, args)
     ids = [it["id"] for it in scope]
     by_id = {it["id"]: it for it in scope}

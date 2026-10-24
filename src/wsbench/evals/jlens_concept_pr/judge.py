@@ -21,6 +21,7 @@ partially scored. Keys are ``f"{cell.key}:A"``, ``:B{ti:02d}`` / ``:F{ti:02d}``,
 """
 
 import json
+import os
 import random
 from collections.abc import Callable, Mapping, Sequence
 from pathlib import Path
@@ -69,6 +70,25 @@ MAX_TOKENS = 16000  # every stage: a 60-concept response echoes every concept ba
 STAGE_P_TEMPERATURE = 0.0
 BANK_DIR = registry.REPO_ROOT / "evals" / FAMILY
 REF_DIR = BANK_DIR / "gen-jlens-pr-jlens"
+
+
+def bank_dir() -> Path:
+    """``$WSB_BANK_ROOT/jlens_concept_pr/`` for an adapted bank (the subject's own manifest and
+    J-lens reference; an error if missing, never the 27B's), else the frozen bank directory."""
+    root = os.environ.get(registry.BANK_ROOT_ENV)
+    if not root:
+        return BANK_DIR
+    base = Path(root) if Path(root).is_absolute() else registry.REPO_ROOT / root
+    d = base / FAMILY
+    if not (d / "manifest.json").exists():
+        raise SystemExit(f"{registry.BANK_ROOT_ENV}={root} has no {FAMILY} bank ({d})")
+    return d
+
+
+def ref_dir() -> Path:
+    return REF_DIR if bank_dir() == BANK_DIR else bank_dir() / "gen-jlens-pr-jlens"
+
+
 STAGES = ("a", "b", "foil", "p", "pfoil")
 STAGE_TAG = {"a": "A", "b": "B", "foil": "F", "p": "P", "pfoil": "Q"}
 
@@ -128,7 +148,7 @@ def foil_pairing(labels_by_group: Mapping[str, Sequence[str]], *, seed: int) -> 
 
 
 def load_manifest() -> dict[str, Any]:
-    return json.loads((BANK_DIR / "manifest.json").read_text(encoding="utf-8"))
+    return json.loads((bank_dir() / "manifest.json").read_text(encoding="utf-8"))
 
 
 def manifest_items(man: dict[str, Any]) -> list[dict[str, Any]]:
@@ -140,7 +160,7 @@ def manifest_items(man: dict[str, Any]) -> list[dict[str, Any]]:
 
 
 def reference_path(label: str, layer: int) -> Path:
-    return REF_DIR / label / f"L{layer:03d}.jsonl"
+    return ref_dir() / label / f"L{layer:03d}.jsonl"
 
 
 def reference_tokens(label: str, layer: int, pos: int) -> list[str]:
@@ -217,7 +237,7 @@ def run(args: JudgeArgs) -> FamilyResult:
     layers = sorted(args.layers) if args.layers else rep.layers
     bad = sorted({L for L in layers for it in scope if not reference_path(it["id"], L).exists()})
     if bad:
-        print(f"[{FAMILY}] no reference J-lens file for layers {bad} under {REF_DIR}")
+        print(f"[{FAMILY}] no reference J-lens file for layers {bad} under {ref_dir()}")
         raise SystemExit(2)
     expected = expected_cells(positions, layers)
     missing = missing_cells(cells, expected)

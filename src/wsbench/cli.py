@@ -191,6 +191,13 @@ class RunFamilies(JudgeOptions):
 
     def execute(self) -> int:
         names = sorted(registry.FAMILIES) if self.all else list(self.families or [])
+        if self.all and os.environ.get(registry.BANK_ROOT_ENV):
+            from wsbench import readplan
+
+            have = set(readplan.families())  # an adapted set has no bank for ooc families
+            if missing := [n for n in names if n not in have]:
+                print(f"adapted set: skipping families with no bank: {', '.join(missing)}")
+            names = [n for n in names if n in have]
         for n in names:
             if n not in registry.FAMILIES:
                 return _unknown(n)

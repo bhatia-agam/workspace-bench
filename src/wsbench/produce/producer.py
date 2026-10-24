@@ -137,7 +137,7 @@ class Producer:
         specs = specs[: limit or None]
         done = set()
         if out.exists():
-            for line in out.read_text(encoding="utf-8").splitlines():
+            for line in out.read_text(encoding="utf-8").split("\n"):
                 if line.strip():
                     done.add(json.loads(line)["id"])
         out.parent.mkdir(parents=True, exist_ok=True)
