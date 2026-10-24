@@ -282,13 +282,14 @@ until re-measured.
 only on the items that Claude Opus 5.5, shown the prompt text and asked what the model is
 thinking (no activation), fails on all three of three draws under the family's own scorer
 (families the API refused under the plain prompt were re-asked with a neutral note that the model
-is an open-weights, non-Claude model; see the baselines README). It
+is an open-weights, non-Claude model, four of them with Sonnet 5.5; see the baselines README). It
 keeps a lens from being credited for reading the prompt. The subset is frozen in
 `evals/baselines/anti_text_inversion.json` (`wsbench text-inversion stage=...` rebuilds it).
 Families not gated or with no surviving item are skipped under the flag (never run on the full
 bank); a family gated under another judge instrument fails until re-gated. Families with fewer
 than 20 surviving items are shown but left out of the macro, which today is the mean of
-wrong_bridge, poetry, arithmetic_intermediates, directed_modulation and moral_rationale. `multihop_mt` keeps its frozen subset but is superseded
+wrong_bridge, poetry, arithmetic_intermediates, directed_modulation, moral_rationale,
+user_modeling and conjunctive_association. `multihop_mt` keeps its frozen subset but is superseded
 (out of the macro, not re-gated: a full gate carries its entry over). Details and the per-family
 counts are in
 [`evals/baselines/README.md`](evals/baselines/README.md#anti-text-inversion-subset-anti_text_inversionjson).

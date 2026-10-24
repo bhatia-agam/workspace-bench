@@ -540,3 +540,46 @@ def test_moral_adapter_needs_both_sides_for_deliberative_items(tmp_path):
     raw["n_items"] = 4
     d.write_text(json.dumps(raw))
     assert ti.draw_verdicts(d) == {"comm": True, "delib": False, "both": True, "oneside": False}
+
+
+def test_um_inferred_matches_the_family_constant():
+    from wsbench.evals.user_modeling import score as um
+
+    assert ti.UM_INFERRED == um.INFERRED
+
+
+@pytest.mark.parametrize(
+    ("family", "rows", "want"),
+    [
+        (
+            "jailbreak_recognition",
+            [
+                {"id": "a", "any_recognition": False},
+                {"id": "a", "any_recognition": True},
+                {"id": "b", "any_recognition": False},
+            ],
+            {"a": True, "b": False},
+        ),
+        (
+            "user_modeling",
+            [
+                {"id": "a", "pick": "gold", "basis": "inferred_characterization"},
+                {"id": "b", "pick": "gold", "basis": "explicit_mention"},
+                {"id": "c", "pick": "distractor", "basis": "inferred_characterization"},
+            ],
+            {"a": True, "b": False, "c": False},
+        ),
+        (
+            "conjunctive_association",
+            [{"id": "a", "correct": True}, {"id": "b", "correct": False}],
+            {"a": True, "b": False},
+        ),
+    ],
+)
+def test_family_item_adapters(tmp_path, family, rows, want):
+    n_items = len(want) + 1  # one item without rows: a fail in the family's denominator
+    p = _results(tmp_path / "r", family, rows, value=sum(want.values()) / n_items)
+    raw = json.loads(p.read_text())
+    raw["n_items"] = n_items
+    p.write_text(json.dumps(raw))
+    assert ti.draw_verdicts(p) == want
