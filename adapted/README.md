@@ -117,3 +117,10 @@ rather than re-deriving renders from the bank files:
 
 The adapt-bank workstream updates this table when a set is built, audited or changed. Rebuild a
 set: `scripts/adapt_box.sh freeze model=<m>` after gating (see the skill).
+
+## Work products not in git
+
+Gate logs (`gate/`), candidates (`cand/`), J-lens fits (`jlens_work/`, `jlens_concept_pr/gen-*/`),
+floor readouts and judge dirs (`floors/{readouts,results}/`) and the grade cache stay on the RunPod
+box under `/workspace/agam/workspace-bench/adapted/` (git-ignored; ~27 GB). The frozen banks,
+`report.json`, audits and `floors/floors.json` are committed.
