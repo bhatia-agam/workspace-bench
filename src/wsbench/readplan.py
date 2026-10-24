@@ -496,6 +496,8 @@ def plan(family: str) -> list[ReadSpec]:
             )
             for it in items
         ]
+    if family == "introspection_inject":
+        return _introspection_inject()
     if family == "jlens_concept_pr":
         m = json.loads((REPO_ROOT / "evals/jlens_concept_pr/manifest.json").read_text())
         return [
@@ -511,6 +513,58 @@ def plan(family: str) -> list[ReadSpec]:
             for p in m["prompts"]
         ]
     raise KeyError(f"no read plan for {family!r}")
+
+
+def _introspection_inject() -> list[ReadSpec]:
+    """One row per activation a producer must generate WITH the steer applied: inject and
+    gaussian items and the 12 beta0 rows. Cross items reuse their partner's readout
+    (`readout_of`) and get no row; only the 125 headline items are ATI-scored."""
+    bank = json.loads((REPO_ROOT / "evals/introspection_inject/items.json").read_text())
+    renders, rec = bank["renders"], bank["spec"]
+    reused: dict[str, list[str]] = {}
+    for it in bank["items"]:
+        if it["kind"] == "cross":
+            reused.setdefault(it["readout_of"], []).append(it["id"])
+    out = []
+    for it in [*bank["items"], *bank["beta0_rows"]]:
+        if it["kind"] == "cross":
+            continue
+        r = renders[f"{it['prompt_kind']}:{it['prompt_key']}"]
+        span = [r["inject_span"][0], r["inject_span"][-1]]
+        vec = it["vector"]
+        steer: dict[str, Any] = {"type": vec["type"], "beta": float(it["beta"])}
+        if vec["type"] != "none":
+            steer |= {"inject_layer": int(rec["inject_layer"]), "token_span": span}
+            steer["formula"] = bank["vector_recipe"]["inject"]
+        if vec["type"] == "concept":
+            steer |= {"concept": vec["word"], "vector_recipe": "items.json vector_recipe"}
+        elif vec["type"] == "gaussian":
+            steer |= {"seed": int(vec["seed"]), "rng": bank["vector_recipe"]["gaussian"]}
+        headline = (
+            it["kind"] == "inject" and it["prompt_kind"] == "protocol" and float(it["beta"]) == 4.0
+        )
+        extra: dict[str, Any] = {
+            "input_ids": r["input_ids"],
+            "n_tokens": r["n_tokens"],
+            "steering": steer,
+            "diagnostic_positions": {"null": r["null"], "echo": r["echo"]},
+            "ati_scored": headline,
+        }
+        if it["id"] in reused:
+            extra["readout_reused_by"] = reused[it["id"]]
+        out.append(
+            ReadSpec(
+                "introspection_inject",
+                it["id"],
+                "captured",
+                {"kind": "positions", "positions": r["grid"]},
+                GRID,
+                extra=extra,
+                note="every unsteered position after the steered span through the last prompt "
+                "token; the producer must apply extra.steering itself (wsbench produce cannot)",
+            )
+        )
+    return out
 
 
 def families() -> list[str]:

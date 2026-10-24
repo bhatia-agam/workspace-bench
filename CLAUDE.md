@@ -17,9 +17,9 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
 
 ## Judge layer (`llm.py`, `judge_config.py`)
 - Default judge `google/gemini-3.8-flash` via OpenRouter, reasoning `{"effort": "minimal"}`.
-  Pins: agentic_misalignment + jailbreak_recognition -> `claude-sonnet-5`, ttt_move ->
-  `claude-opus-5-5` (reasons: README §Judges and the family READMEs). jlens runs all three
-  stages on the default judge.
+  Pins: agentic_misalignment + jailbreak_recognition -> `claude-sonnet-5`, ttt_move and
+  introspection_inject -> `claude-opus-5-5` (reasons: README §Judges and the family READMEs).
+  jlens runs all three stages on the default judge.
 - Override precedence and what `pinned_instrument` means: README §Judges (the bullets under
   the table); not restated here.
 - Routes by model id: `claude-*` -> Anthropic SDK (`ANTHROPIC_API_KEY`, or with no key and
