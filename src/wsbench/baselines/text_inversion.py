@@ -49,6 +49,11 @@ BUGGY_PASS_SCORE = 6
 # A family where more than this share of items has a policy-refused draw is not gated: its
 # answered items are a refusal-selected sample of the bank, not the bank.
 MAX_REFUSED_SHARE = 0.2
+# chain_intermediates passes only when the TOP-named value is an intermediate; a prompt reader
+# computes the chain from the text and ranks the final answer first, so it fails every item on
+# ranking alone while having inverted the intermediates. For the gate (only), a draw that names
+# any intermediate anywhere (`any_of_3`) counts as inverted: stricter than the family rule.
+STRICTER_PASS_FIELD = {"chain_intermediates": "any_of_3"}
 READ_LAYER = 44
 
 
@@ -360,9 +365,17 @@ def draw_verdicts(results_path: Path) -> dict[str, bool | None]:
         if raw is None:
             raise ValueError(f"{fam}: a row has no id / name / item")
         iid = str(raw)
-        if fam == "buggy_code":
+        if fam in STRICTER_PASS_FIELD:
+            v = None if r.get("pass") is None else bool(r.get(STRICTER_PASS_FIELD[fam]))
+        elif fam == "buggy_code":
             s = r.get("score")
             v = None if s is None or not r.get("judged", True) else s >= BUGGY_PASS_SCORE
+        elif fam == "directed_modulation":
+            # directed_modulation/score.py STRICT: gold picked AND engaged as content
+            ok = r.get("pick") == "gold" and r.get("basis") == "content_bound"
+            v = None if not r.get("judged") else ok
+        elif fam == "moral_rationale":
+            continue  # per-side rule, folded below
         else:
             if "pass" not in r:
                 raise ValueError(f"{fam}: rows carry no 'pass'; no item adapter for this family")
@@ -372,10 +385,32 @@ def draw_verdicts(results_path: Path) -> dict[str, bool | None]:
         i: True if any(v is True for v in vs) else (None if any(v is None for v in vs) else False)
         for i, vs in by_item.items()
     }
+    if fam == "moral_rationale":
+        # moral_rationale/score.py: committed = any correct call; deliberative (calls on both
+        # the yes and no side) = a correct call on each side
+        calls: dict[str, list[dict[str, Any]]] = {}
+        for r in d.get("rows", []):
+            calls.setdefault(str(r["id"]), []).append(r)
+        for i, vs in calls.items():
+            sides = {v.get("side") for v in vs}
+            if {"yes", "no"} <= sides:
+                out[i] = all(
+                    any(v["correct"] for v in vs if v.get("side") == s) for s in ("yes", "no")
+                )
+            else:
+                out[i] = any(v["correct"] for v in vs)
     value = d["numbers"]["value"]
     decided = [v for v in out.values() if v is not None]
-    if d["numbers"]["metric"] == "pass_rate" and value is not None and decided:
-        mine = sum(decided) / len(decided)
+    if (
+        d["numbers"]["metric"] == "pass_rate"
+        and fam not in STRICTER_PASS_FIELD
+        and value is not None
+        and decided
+    ):
+        # moral_rationale scores every in-scope item and counts one with no rows (a failed
+        # call) as a fail, so its denominator is n_items; the gate treats that draw as undecided
+        n = d["n_items"] if fam == "moral_rationale" else len(decided)
+        mine = sum(decided) / n
         if abs(mine - value) > 1e-9:
             raise ValueError(f"{fam}: item adapter rate {mine:.4f} != family value {value:.4f}")
     return out

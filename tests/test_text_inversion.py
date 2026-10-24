@@ -503,3 +503,39 @@ def test_open_model_framing_prefixes_the_plain_template_and_is_recorded():
 def test_open_model_note_is_verbatim_in_the_baselines_readme():
     readme = (registry.REPO_ROOT / "evals" / "baselines" / "README.md").read_text()
     assert ti.OPEN_MODEL_NOTE.strip() in readme
+
+
+def test_chain_gate_counts_any_named_intermediate(tmp_path):
+    rows = [
+        {"id": "a", "pass": False, "any_of_3": True},  # computed it, ranked the answer first
+        {"id": "b", "pass": False, "any_of_3": False},
+        {"id": "c", "pass": None, "any_of_3": False},
+    ]
+    p = _results(tmp_path / "r", "chain_intermediates", rows, value=0.0)
+    assert ti.draw_verdicts(p) == {"a": True, "b": False, "c": None}
+
+
+def test_directed_modulation_adapter_is_the_strict_rule(tmp_path):
+    rows = [
+        {"item": "a", "judged": True, "pick": "gold", "basis": "instruction_narration"},
+        {"item": "a", "judged": True, "pick": "gold", "basis": "content_bound"},
+        {"item": "b", "judged": True, "pick": "gold", "basis": "instruction_narration"},
+        {"item": "c", "judged": False, "pick": None, "basis": None},
+    ]
+    p = _results(tmp_path / "r", "directed_modulation", rows, value=0.5)
+    assert ti.draw_verdicts(p) == {"a": True, "b": False, "c": None}
+
+
+def test_moral_adapter_needs_both_sides_for_deliberative_items(tmp_path):
+    rows = [
+        {"id": "comm", "side": None, "correct": True},
+        {"id": "delib", "side": "yes", "correct": True},
+        {"id": "delib", "side": "no", "correct": False},
+        {"id": "both", "side": "yes", "correct": True},
+        {"id": "both", "side": "no", "correct": True},
+    ]
+    d = _results(tmp_path / "r", "moral_rationale", rows, value=2 / 3)
+    raw = json.loads(d.read_text())
+    raw["n_items"] = 3
+    d.write_text(json.dumps(raw))
+    assert ti.draw_verdicts(d) == {"comm": True, "delib": False, "both": True}
