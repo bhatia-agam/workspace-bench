@@ -202,6 +202,12 @@ def own_word(text: str, stub: str = "") -> str:
     return ws[0] if ws else ""
 
 
+def _states_role(text: str, role: str) -> bool:
+    """The role's head noun (its last word, singular or plural) is written in the answer."""
+    head = (words(role) or [role])[-1]
+    return any(_has_form(text, f) for f in (head, head + "s", head + "es"))
+
+
 def _names_to_roles(text: str, name_roles: dict[str, str]) -> str:
     for name, role in name_roles.items():
         text = re.sub(rf"\b{re.escape(name)}\b(?:'s)?", role, text)
@@ -246,6 +252,9 @@ def grade_leg(
                 for i, v in zip(todo, llm(ask, [texts[i] for i in todo]), strict=True):
                     if v is not None:
                         verdicts[i] = v
+    if roles := ask.meta.get("require_roles"):  # role_bound strict: the roles must be stated
+        verdicts = [v if v is not True or all(_states_role(t, r) for r in roles) else False
+                    for t, v in zip(texts, verdicts, strict=True)]  # fmt: skip
     if forbid := ask.meta.get("forbid"):
         verdicts = [
             False if writes_forbidden(t, forbid) else v

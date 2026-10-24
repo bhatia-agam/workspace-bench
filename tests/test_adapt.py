@@ -537,3 +537,30 @@ def test_own_word_skips_echoed_poetry_stub():
     assert own_word("Her voice rang out as clear as a bell.", stub) == "bell"
     assert own_word("clear as a bell") == "clear"  # no stub: unchanged
     assert own_word("a", stub) == "a"  # never strips the whole answer
+
+
+def test_role_bound_strict_requires_stated_roles(monkeypatch):
+    from wsbench.adapt import families as fams
+    from wsbench.adapt.gate import _states_role, grade_leg
+
+    item = {
+        "id": "x",
+        "stimulus": "Tony shaved Hank.",
+        "asked_question": "Who did what?",
+        "gold_label": "the barber shaved the fisherman",
+        "role_a": "barber",
+        "role_b": "fisherman",
+        "names": {"a": "Tony", "b": "Hank"},
+    }
+    assert _states_role("The barbers shaved him", "barber")
+    assert not _states_role("Tony shaved Hank.", "pizza delivery driver")
+    monkeypatch.setenv("ADAPT_ROLE_BOUND_STRICT", "1")
+    ask = next(a for a in fams.get("role_bound_association").asks(item) if a.leg == "surface")
+    assert ask.meta["require_roles"] == ["barber", "fisherman"] and "name_roles" not in ask.meta
+
+    def always_yes(_ask, texts):
+        return [True for _ in texts]
+
+    names_only = grade_leg(ask, "Tony shaved Hank.", [], 0.0, always_yes)
+    roles = grade_leg(ask, "The barber shaved the fisherman.", [], 0.0, always_yes)
+    assert names_only.greedy["ok"] is False and roles.greedy["ok"] is True

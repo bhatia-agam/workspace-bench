@@ -37,3 +37,9 @@ Re-read every absent/excluded family's gate log, then ran new waves (generation 
   its 61 consistent sides are no/false). brew left to the brew-tokenizer work.
 - These new items were not independently audited; an audit pass on poetry / role_bound /
   user_modeling is the next step before they enter a published macro.
+
+## Addendum 2026-10-24: response to AUDIT_2026-10-23.md
+
+- **poetry:** the audit's 11 idiom drops were applied (100 → 89). Then one authored wave (wave 300, chat_prefill, same gate) was steered with "line 2 must not be a fixed idiom; the rhyme must be guessable from line 1 alone; everyday words": 40 candidates, 11/40 passed the gate. All 11 were spot-checked with the audit's own criterion (Opus lists the top-5 rhymes from line 1 only). 9 pass; 2 were dropped (play→stay, bright→tight). Final: **98 items**. The re-freeze pulled in no unaudited items. Check: `outputs/fix_1024/poetry_w300_check.json`.
+- **role_bound_association:** under the new strict grader (`ADAPT_ROLE_BOUND_STRICT=1`; both roles must be stated) **0/100** kept answers survive: all name only the people. The bank text is unchanged. role_bound is `exclude_from_macro` until a strict-gated set reaches ≥ 50 atomic-pair items (`outputs/fix_1024/role_strict.json`).
+- **user_modeling:** the floor was re-measured with `ADAPT_FLOORS_FAMILIES=user_modeling`. It is .56 overall (n=100): selfdescribe .845 (n=58), synthsys .167 (n=42). The selfdescribe floor is saturated, so the family stays excluded (report.json note).

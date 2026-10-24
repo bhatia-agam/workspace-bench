@@ -243,10 +243,10 @@
    "complete": false
   },
   "user_modeling": {
-   "rate": 0.52,
+   "rate": 0.56,
    "ci95": [
-    0.42,
-    0.62
+    0.46,
+    0.65
    ],
    "metric": "pass_rate",
    "layer": 8,
@@ -255,7 +255,7 @@
    "counts": {
     "n_expected_cells": 2140,
     "n_missing_cells": 0,
-    "n_unjudged_cells": 3,
+    "n_unjudged_cells": 0,
     "n_empty_cells": 0,
     "skipped_rows": 0,
     "spend_usd": 0.0

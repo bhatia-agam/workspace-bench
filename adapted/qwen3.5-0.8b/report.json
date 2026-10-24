@@ -91,9 +91,9 @@
    "n_original": 100,
    "n_original_gated": 100,
    "n_original_pass": 36,
-   "n_items": 89,
-   "n_new": 53,
-   "n_candidates_gated": 270,
+   "n_items": 98,
+   "n_new": 62,
+   "n_candidates_gated": 308,
    "change": "new items from t1",
    "exclude_from_macro": false,
    "note": "100 items (36 originals + 64 authored common rhymes) committed in the chat_prefill render (96/100; read that render, porting.md). Was 1: in chat the 0.8B restates the couplet, in plain it emits digits; on 30 originals prefill 10/30, fewshot 1/30, plain 1/30, chat 0/30 (2026-10-24)."
@@ -242,7 +242,8 @@
    "n_candidates_gated": 212,
    "change": "new items from t1",
    "status": "full",
-   "note": "100 authored items (t1 brief: settings that make both roles explicit, e.g. lifeguard/swimmer); originals 0/100 because the 0.8B names the people, not the roles; each role used at most twice (2026-10-24)."
+   "note": "Audit 2026-10-23: under the strict role grader (answer must state both roles, ADAPT_ROLE_BOUND_STRICT=1) 0/100 kept items survive: every greedy answer names only the people and passed via the lenient name->role rewrite, so the gate does not show role binding. Excluded from the macro until a strict-gated set reaches >= 50 atomic-pair items.",
+   "exclude_from_macro": true
   },
   "typo_mt": {
    "target": 100,
@@ -268,7 +269,7 @@
    "change": "new items from t1",
    "status": "full",
    "exclude_from_macro": true,
-   "note": "58 selfdescribe (48 new, strong cues; expect a high prompt-only floor) + 42 synthsys originals; read selfdescribe separately; the macro decision is the audit's (still excluded) (2026-10-24)."
+   "note": "Floor re-measured 2026-10-24 (stock 0.8B prompt-only, Opus judge, family scorer): all .56 (n=100), selfdescribe .845 (n=58), synthsys .167 (n=42). The selfdescribe floor is saturated (>= .8: the prompt alone gives the attribute), so user_modeling stays out of the macro; if reported, report the selfdescribe/synthsys split beside these floors."
   },
   "hallucination": {
    "status": "full",
@@ -287,8 +288,8 @@
   }
  },
  "code": {
-  "git": "92d763e+dirty",
-  "adapt_sha256": "c3eb6fa7fd623310"
+  "git": "581f690+dirty",
+  "adapt_sha256": "35681e85cc6322ac"
  },
  "model": "qwen3.5-0.8b",
  "label": "Qwen3.5-0.8B",
@@ -339,7 +340,9 @@
    "poetry-au-t1-w101c2-couplet-skies-flies": "audit 2026-10-23: gold not plannable at the read site (line-one newline): line 2 is an idiom unrelated to line 1 and the gold is not in Opus's top-5 r",
    "poetry-au-t1-w101c2-couplet-years-ears": "audit 2026-10-23: gold not plannable at the read site (line-one newline): line 2 is an idiom unrelated to line 1 and the gold is not in Opus's top-5 r",
    "poetry-au-t1-w101c2-couplet-be-key": "audit 2026-10-23: gold not plannable at the read site (line-one newline): line 2 is an idiom unrelated to line 1 and the gold is not in Opus's top-5 r",
-   "poetry-au-t1-w100c1-couplet-place-chase": "audit 2026-10-23: gold not plannable at the read site (line-one newline): line 2 is an idiom unrelated to line 1 and the gold is not in Opus's top-5 r"
+   "poetry-au-t1-w100c1-couplet-place-chase": "audit 2026-10-23: gold not plannable at the read site (line-one newline): line 2 is an idiom unrelated to line 1 and the gold is not in Opus's top-5 r",
+   "poetry-au-t1-w300c0-couplet-play-stay": "fix 2026-10-24: gold not in Opus's top-5 rhymes from line 1 alone (audit criterion)",
+   "poetry-au-t1-w300c1-couplet-bright-tight": "fix 2026-10-24: gold not in Opus's top-5 rhymes from line 1 alone (audit criterion)"
   }
  }
 }

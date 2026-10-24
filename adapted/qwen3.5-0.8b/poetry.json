@@ -2207,6 +2207,249 @@
     }
    },
    "gate_variant": "plain"
+  },
+  {
+   "name": "poetry-au-t1-w300c0-couplet-boy-toy",
+   "prompt": "A rhyming couplet:\nThere was a happy little boy,\nWho loved to play with his new ",
+   "intermediates": [
+    "toy"
+   ],
+   "eval_render": "plain",
+   "readout": {
+    "kind": "line_one_newline"
+   },
+   "source": "authored (claude-opus-5-5) for qwen3.5-0.8b: Make line 2 a familiar, almost forced completion with one obvious rhyme (a cliche or idiom), with short lines and a one-syllable end word.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "Make line 2 a familiar, almost forced completion with one obvious rhyme (a cliche or idiom), with short lines and a one-syllable end word."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 300,
+    "steer": "Line 2 must NOT be a fixed idiom or set phrase (no 'cat out of the bag', 'black and white', 'by the horns'). The rhyme word must be guessable from line 1 alone: it should be one of the most common rhymes of line 1's last word, and line 2 should simply continue the scene of line 1. Use everyday one-syllable words a child knows.",
+    "gate": {
+     "rate": 0.8,
+     "pass": true
+    }
+   },
+   "gate_variant": "chat_prefill"
+  },
+  {
+   "name": "poetry-au-t1-w300c0-couplet-sky-high",
+   "prompt": "A rhyming couplet:\nThe bird flew up into the sky,\nIt soared so very far and ",
+   "intermediates": [
+    "high"
+   ],
+   "eval_render": "plain",
+   "readout": {
+    "kind": "line_one_newline"
+   },
+   "source": "authored (claude-opus-5-5) for qwen3.5-0.8b: Make line 2 a familiar, almost forced completion with one obvious rhyme (a cliche or idiom), with short lines and a one-syllable end word.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "Make line 2 a familiar, almost forced completion with one obvious rhyme (a cliche or idiom), with short lines and a one-syllable end word."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 300,
+    "steer": "Line 2 must NOT be a fixed idiom or set phrase (no 'cat out of the bag', 'black and white', 'by the horns'). The rhyme word must be guessable from line 1 alone: it should be one of the most common rhymes of line 1's last word, and line 2 should simply continue the scene of line 1. Use everyday one-syllable words a child knows.",
+    "gate": {
+     "rate": 0.9,
+     "pass": true
+    }
+   },
+   "gate_variant": "chat_prefill"
+  },
+  {
+   "name": "poetry-au-t1-w300c0-couplet-trees-breeze",
+   "prompt": "A rhyming couplet:\nThe leaves were swaying in the trees,\nThey rustled in the gentle ",
+   "intermediates": [
+    "breeze"
+   ],
+   "eval_render": "plain",
+   "readout": {
+    "kind": "line_one_newline"
+   },
+   "source": "authored (claude-opus-5-5) for qwen3.5-0.8b: Make line 2 a familiar, almost forced completion with one obvious rhyme (a cliche or idiom), with short lines and a one-syllable end word.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "Make line 2 a familiar, almost forced completion with one obvious rhyme (a cliche or idiom), with short lines and a one-syllable end word."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 300,
+    "steer": "Line 2 must NOT be a fixed idiom or set phrase (no 'cat out of the bag', 'black and white', 'by the horns'). The rhyme word must be guessable from line 1 alone: it should be one of the most common rhymes of line 1's last word, and line 2 should simply continue the scene of line 1. Use everyday one-syllable words a child knows.",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   },
+   "gate_variant": "chat_prefill"
+  },
+  {
+   "name": "poetry-au-t1-w300c0-couplet-nest-west",
+   "prompt": "A rhyming couplet:\nThe little bird flew to its nest,\nAs the sun went down in the ",
+   "intermediates": [
+    "west"
+   ],
+   "eval_render": "plain",
+   "readout": {
+    "kind": "line_one_newline"
+   },
+   "source": "authored (claude-opus-5-5) for qwen3.5-0.8b: Make line 2 a familiar, almost forced completion with one obvious rhyme (a cliche or idiom), with short lines and a one-syllable end word.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "Make line 2 a familiar, almost forced completion with one obvious rhyme (a cliche or idiom), with short lines and a one-syllable end word."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 300,
+    "steer": "Line 2 must NOT be a fixed idiom or set phrase (no 'cat out of the bag', 'black and white', 'by the horns'). The rhyme word must be guessable from line 1 alone: it should be one of the most common rhymes of line 1's last word, and line 2 should simply continue the scene of line 1. Use everyday one-syllable words a child knows.",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   },
+   "gate_variant": "chat_prefill"
+  },
+  {
+   "name": "poetry-au-t1-w300c1-couplet-sand-land",
+   "prompt": "A rhyming couplet:\nWe built a castle in the sand,\nThe biggest one in all the ",
+   "intermediates": [
+    "land"
+   ],
+   "eval_render": "plain",
+   "readout": {
+    "kind": "line_one_newline"
+   },
+   "source": "authored (claude-opus-5-5) for qwen3.5-0.8b: Make line 2 a familiar, almost forced completion with one obvious rhyme (a cliche or idiom), with short lines and a one-syllable end word.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "Make line 2 a familiar, almost forced completion with one obvious rhyme (a cliche or idiom), with short lines and a one-syllable end word."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 300,
+    "steer": "Line 2 must NOT be a fixed idiom or set phrase (no 'cat out of the bag', 'black and white', 'by the horns'). The rhyme word must be guessable from line 1 alone: it should be one of the most common rhymes of line 1's last word, and line 2 should simply continue the scene of line 1. Use everyday one-syllable words a child knows.",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   },
+   "gate_variant": "chat_prefill"
+  },
+  {
+   "name": "poetry-au-t1-w300c1-couplet-lap-nap",
+   "prompt": "A rhyming couplet:\nThe baby yawned upon my lap,\nAnd soon she took a little ",
+   "intermediates": [
+    "nap"
+   ],
+   "eval_render": "plain",
+   "readout": {
+    "kind": "line_one_newline"
+   },
+   "source": "authored (claude-opus-5-5) for qwen3.5-0.8b: Make line 2 a familiar, almost forced completion with one obvious rhyme (a cliche or idiom), with short lines and a one-syllable end word.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "Make line 2 a familiar, almost forced completion with one obvious rhyme (a cliche or idiom), with short lines and a one-syllable end word."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 300,
+    "steer": "Line 2 must NOT be a fixed idiom or set phrase (no 'cat out of the bag', 'black and white', 'by the horns'). The rhyme word must be guessable from line 1 alone: it should be one of the most common rhymes of line 1's last word, and line 2 should simply continue the scene of line 1. Use everyday one-syllable words a child knows.",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   },
+   "gate_variant": "chat_prefill"
+  },
+  {
+   "name": "poetry-au-t1-w300c1-couplet-bark-park",
+   "prompt": "A rhyming couplet:\nMy puppy loves to run and bark,\nSo every day we walk to the ",
+   "intermediates": [
+    "park"
+   ],
+   "eval_render": "plain",
+   "readout": {
+    "kind": "line_one_newline"
+   },
+   "source": "authored (claude-opus-5-5) for qwen3.5-0.8b: Make line 2 a familiar, almost forced completion with one obvious rhyme (a cliche or idiom), with short lines and a one-syllable end word.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "Make line 2 a familiar, almost forced completion with one obvious rhyme (a cliche or idiom), with short lines and a one-syllable end word."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 300,
+    "steer": "Line 2 must NOT be a fixed idiom or set phrase (no 'cat out of the bag', 'black and white', 'by the horns'). The rhyme word must be guessable from line 1 alone: it should be one of the most common rhymes of line 1's last word, and line 2 should simply continue the scene of line 1. Use everyday one-syllable words a child knows.",
+    "gate": {
+     "rate": 0.9,
+     "pass": true
+    }
+   },
+   "gate_variant": "chat_prefill"
+  },
+  {
+   "name": "poetry-au-t1-w300c1-couplet-plate-ate",
+   "prompt": "A rhyming couplet:\nMy dinner sat upon my plate,\nAnd every bit of it I ",
+   "intermediates": [
+    "ate"
+   ],
+   "eval_render": "plain",
+   "readout": {
+    "kind": "line_one_newline"
+   },
+   "source": "authored (claude-opus-5-5) for qwen3.5-0.8b: Make line 2 a familiar, almost forced completion with one obvious rhyme (a cliche or idiom), with short lines and a one-syllable end word.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "Make line 2 a familiar, almost forced completion with one obvious rhyme (a cliche or idiom), with short lines and a one-syllable end word."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 300,
+    "steer": "Line 2 must NOT be a fixed idiom or set phrase (no 'cat out of the bag', 'black and white', 'by the horns'). The rhyme word must be guessable from line 1 alone: it should be one of the most common rhymes of line 1's last word, and line 2 should simply continue the scene of line 1. Use everyday one-syllable words a child knows.",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   },
+   "gate_variant": "chat_prefill"
+  },
+  {
+   "name": "poetry-au-t1-w300c1-couplet-cloud-loud",
+   "prompt": "A rhyming couplet:\nThe thunder rumbled from the cloud,\nIt made a noise so very ",
+   "intermediates": [
+    "loud"
+   ],
+   "eval_render": "plain",
+   "readout": {
+    "kind": "line_one_newline"
+   },
+   "source": "authored (claude-opus-5-5) for qwen3.5-0.8b: Make line 2 a familiar, almost forced completion with one obvious rhyme (a cliche or idiom), with short lines and a one-syllable end word.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "Make line 2 a familiar, almost forced completion with one obvious rhyme (a cliche or idiom), with short lines and a one-syllable end word."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 300,
+    "steer": "Line 2 must NOT be a fixed idiom or set phrase (no 'cat out of the bag', 'black and white', 'by the horns'). The rhyme word must be guessable from line 1 alone: it should be one of the most common rhymes of line 1's last word, and line 2 should simply continue the scene of line 1. Use everyday one-syllable words a child knows.",
+    "gate": {
+     "rate": 0.8,
+     "pass": true
+    }
+   },
+   "gate_variant": "chat"
   }
  ]
 }

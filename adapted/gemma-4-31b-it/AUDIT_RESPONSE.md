@@ -50,3 +50,15 @@ decoded text, so I expect little effect. Re-measure the plain families before qu
   - reasons: Gemma's elicitation draws also opened in prose (43/100 topics had no yes/no in any of 9 draws, so the alignment check was vacuous). Re-elicited with "Begin your reply with one word, yes or no. Then give one short sentence." (`stage=variant_elicit`): yes/no-led draws on 91/100 topics; re-distilled and re-applied.
 - Result: **161 items, 90 topics (≤ 2 per topic), 79 yes / 82 no, 131 committed / 30 deliberative**; the 2 audit drops still apply. Status full, back in the macro.
 - Producer: read the chat render with the system turn (`wsbench plan` emits `system`); readouts captured without it are not comparable.
+
+## Addendum 2026-10-24: response to AUDIT_2026-10-23.md
+
+- **moral_rationale label nit:** all 161 items now carry `gate_variant: system_one_word`, set via `adapt patch` (report.json patches). The read plan is byte-identical before and after (render, text, system turn, positions on 161/161): moral's read is driven by `item.system`, not by `gate_variant`.
+- Judge foil 3/10 is a property of the moral judge's cross-topic distractors, not of this bank (audit). No change.
+
+## Addendum 2026-10-24: relational_multihop unblocked (98 items)
+Gemma's tokenizer splits the blank "'s" into "'" + "s". The read stays the stimulus's final token
+(now "s", the blank's last piece): `freeze` verifies by character offsets that the last token lies
+inside the trailing "'s" (0 mismatches on 98/98) and the relational judge accepts a token that is a
+suffix of the blank (`select_cells`; test `test_split_blank_last_piece_accepted`). 99/100 originals
+pass Gemma's gate; scene pairs atomic -> 98. Status full, in the macro. Needs OLens readouts.

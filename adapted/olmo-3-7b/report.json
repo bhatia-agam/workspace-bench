@@ -220,8 +220,8 @@
    "n_new": 76,
    "n_candidates_gated": 120,
    "change": "new items from t1",
-   "exclude_from_macro": false,
-   "note": "0 -> 100/100: OLMo answered with names, not roles (the asked question already requests roles); fixed in the grader (names rewritten to 'the <role> (<name>)' before grading: 80/160 stored answers pass), an ask_roles gate variant (+11 of the 80 still failing), and one refill wave (+34 authored at 57%); gate only, the read plan (stimulus + summarize suffix) is unchanged"
+   "exclude_from_macro": true,
+   "note": "Audit 2026-10-23: under the strict role grader (answer must state both roles, ADAPT_ROLE_BOUND_STRICT=1) 0/100 kept items survive: every greedy answer names only the people and passed via the lenient name->role rewrite, so the gate does not show role binding. Excluded from the macro until a strict-gated set reaches >= 50 atomic-pair items."
   },
   "buggy_code": {
    "status": "ooc",
@@ -307,8 +307,8 @@
   }
  },
  "code": {
-  "git": "77fb350+dirty",
-  "adapt_sha256": "2a49e3ca66fd7ff0"
+  "git": "581f690+dirty",
+  "adapt_sha256": "35681e85cc6322ac"
  },
  "model": "olmo-3-7b",
  "label": "OLMo-3-7B-Instruct",

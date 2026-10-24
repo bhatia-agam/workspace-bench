@@ -65,12 +65,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: true or false. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "false",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -143,12 +143,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: yes or no. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "no",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -209,12 +209,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: true or false. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "false",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -275,12 +275,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: yes or no. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "no",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -339,12 +339,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: true or false. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "true",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -403,12 +403,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: yes or no. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "yes",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -481,12 +481,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: true or false. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "false",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -559,12 +559,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: yes or no. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "no",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -661,12 +661,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: true or false. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "false",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -763,12 +763,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: yes or no. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "no",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -889,12 +889,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: true or false. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "false",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -1015,12 +1015,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: yes or no. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "no",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -1079,12 +1079,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: true or false. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "true",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -1143,12 +1143,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: yes or no. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "yes",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -1245,12 +1245,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: true or false. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "true",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -1347,12 +1347,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: yes or no. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "yes",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -1427,12 +1427,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: true or false. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "true",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 0.8,
     "pass": true
@@ -1507,12 +1507,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: yes or no. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "yes",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -1571,12 +1571,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: true or false. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "false",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -1635,12 +1635,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: yes or no. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "no",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -1701,12 +1701,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: true or false. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "true",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -1767,12 +1767,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: yes or no. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "yes",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -1859,12 +1859,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: true or false. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "true",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -1951,12 +1951,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: yes or no. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "yes",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -2033,12 +2033,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: true or false. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "true",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -2115,12 +2115,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: yes or no. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "yes",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -2205,12 +2205,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: true or false. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "false",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -2295,12 +2295,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: yes or no. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "no",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -2359,12 +2359,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: true or false. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "true",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 0.8,
     "pass": true
@@ -2449,12 +2449,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: true or false. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "false",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -2539,12 +2539,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: yes or no. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "no",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -2619,12 +2619,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: true or false. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "true",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -2699,12 +2699,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: yes or no. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "yes",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 0.8,
     "pass": true
@@ -2765,12 +2765,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: true or false. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "true",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -2831,12 +2831,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: yes or no. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "yes",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -2925,12 +2925,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: true or false. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "true",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -3019,12 +3019,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: yes or no. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "yes",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -3113,12 +3113,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: true or false. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "true",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -3207,12 +3207,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: yes or no. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "yes",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -3334,12 +3334,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: true or false. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "false",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -3447,12 +3447,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: true or false. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "false",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -3560,12 +3560,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: yes or no. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "no",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -3654,12 +3654,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: true or false. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "true",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -3748,12 +3748,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: yes or no. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "yes",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -3842,12 +3842,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: true or false. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "true",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -3936,12 +3936,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: yes or no. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "yes",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -4058,12 +4058,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: true or false. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "false",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -4180,12 +4180,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: yes or no. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "no",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -4262,12 +4262,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: true or false. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "true",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -4344,12 +4344,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: yes or no. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "yes",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -4416,12 +4416,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: true or false. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "true",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -4488,12 +4488,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: yes or no. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "yes",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -4607,12 +4607,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: true or false. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "false",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -4726,12 +4726,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: yes or no. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "no",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -4821,12 +4821,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: true or false. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "false",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -4916,12 +4916,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: yes or no. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "no",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -5015,12 +5015,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: true or false. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "false",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -5114,12 +5114,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: yes or no. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "no",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -5194,12 +5194,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: true or false. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "true",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -5274,12 +5274,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: yes or no. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "yes",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -5340,12 +5340,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: true or false. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "false",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -5406,12 +5406,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: yes or no. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "no",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -5529,12 +5529,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: true or false. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "false",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 0.8,
     "pass": true
@@ -5652,12 +5652,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: yes or no. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "no",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -5751,12 +5751,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: true or false. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "true",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 0.9,
     "pass": true
@@ -5841,12 +5841,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: yes or no. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "yes",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -5917,12 +5917,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: true or false. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "false",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -5993,12 +5993,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: yes or no. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "no",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -6076,12 +6076,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: true or false. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "true",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -6159,12 +6159,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: yes or no. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "yes",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -6223,12 +6223,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: true or false. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "false",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 0.8,
     "pass": true
@@ -6287,12 +6287,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: yes or no. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "no",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -6367,12 +6367,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: true or false. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "true",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -6447,12 +6447,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: yes or no. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "yes",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -6535,12 +6535,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: true or false. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "false",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -6623,12 +6623,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: yes or no. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "no",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -6713,12 +6713,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: true or false. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "false",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -6803,12 +6803,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: yes or no. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "no",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -6891,12 +6891,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: true or false. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "true",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -6979,12 +6979,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: yes or no. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "yes",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -7110,12 +7110,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: yes or no. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "no",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -7176,12 +7176,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: yes or no. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "no",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -7295,12 +7295,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: true or false. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "false",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -7414,12 +7414,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: yes or no. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "no",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -7480,12 +7480,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: true or false. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "false",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -7546,12 +7546,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: yes or no. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "no",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -7629,12 +7629,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: true or false. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "false",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 0.9,
     "pass": true
@@ -7712,12 +7712,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: yes or no. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "no",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -7790,12 +7790,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: true or false. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "true",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -7868,12 +7868,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: yes or no. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "yes",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -7964,12 +7964,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: true or false. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "true",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -8060,12 +8060,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: yes or no. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "yes",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -8138,12 +8138,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: true or false. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "true",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -8216,12 +8216,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: yes or no. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "yes",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -8296,12 +8296,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: yes or no. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "yes",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 0.8,
     "pass": true
@@ -8402,12 +8402,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: true or false. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "true",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -8508,12 +8508,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: yes or no. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "yes",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -8590,12 +8590,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: true or false. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "false",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -8672,12 +8672,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: yes or no. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "no",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -8756,12 +8756,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: yes or no. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "yes",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -8836,12 +8836,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: true or false. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "false",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -8916,12 +8916,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: yes or no. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "no",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -9027,12 +9027,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: true or false. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "false",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 0.8,
     "pass": true
@@ -9138,12 +9138,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: yes or no. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "yes",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -9202,12 +9202,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: yes or no. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "yes",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -9280,12 +9280,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: yes or no. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "no",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -9395,12 +9395,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: yes or no. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "no",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -9495,12 +9495,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: yes or no. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "no",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 0.8,
     "pass": true
@@ -9561,12 +9561,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: true or false. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "false",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -9627,12 +9627,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: yes or no. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "no",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -9719,12 +9719,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: true or false. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "false",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -9811,12 +9811,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: yes or no. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "no",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -9907,12 +9907,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: true or false. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "true",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -10003,12 +10003,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: yes or no. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "yes",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -10108,12 +10108,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: yes or no. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "no",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -10198,12 +10198,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: true or false. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "false",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -10288,12 +10288,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: yes or no. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "no",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -10354,12 +10354,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: true or false. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "false",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -10420,12 +10420,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: yes or no. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "no",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -10517,12 +10517,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: yes or no. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "yes",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 0.8,
     "pass": true
@@ -10583,12 +10583,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: true or false. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "false",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -10649,12 +10649,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: yes or no. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "no",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -10741,12 +10741,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: true or false. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "false",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -10833,12 +10833,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: yes or no. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "no",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -10921,12 +10921,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: true or false. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "true",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -11009,12 +11009,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: yes or no. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "yes",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -11099,12 +11099,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: true or false. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "true",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -11189,12 +11189,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: yes or no. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "yes",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -11268,12 +11268,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: true or false. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "true",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -11347,12 +11347,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: yes or no. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "yes",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -11427,12 +11427,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: true or false. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "true",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -11507,12 +11507,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: yes or no. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "yes",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -11573,12 +11573,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: true or false. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "true",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -11639,12 +11639,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: yes or no. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "yes",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -11703,12 +11703,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: true or false. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "true",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -11767,12 +11767,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: yes or no. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "yes",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -11849,12 +11849,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: true or false. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "false",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -11931,12 +11931,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: yes or no. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "no",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -12015,12 +12015,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: true or false. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "true",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -12099,12 +12099,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: yes or no. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "yes",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -12179,12 +12179,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: true or false. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "true",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -12259,12 +12259,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: yes or no. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "yes",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -12337,12 +12337,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: true or false. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "false",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -12415,12 +12415,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: yes or no. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "no",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -12511,12 +12511,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: true or false. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "false",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -12607,12 +12607,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: yes or no. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "no",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -12673,12 +12673,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: true or false. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "true",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 0.9,
     "pass": true
@@ -12739,12 +12739,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: yes or no. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "yes",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -12817,12 +12817,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: true or false. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "false",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -12895,12 +12895,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: yes or no. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "no",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -13042,12 +13042,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: true or false. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "true",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -13189,12 +13189,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: yes or no. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "yes",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -13302,12 +13302,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: true or false. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "false",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 0.9,
     "pass": true
@@ -13415,12 +13415,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: yes or no. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "no",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -13497,12 +13497,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: true or false. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "true",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -13579,12 +13579,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: yes or no. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "yes",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -13641,12 +13641,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: true or false. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "true",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 0.8,
     "pass": true
@@ -13758,12 +13758,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: yes or no. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "no",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -13836,12 +13836,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: yes or no. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "no",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 0.9,
     "pass": true
@@ -13944,12 +13944,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: yes or no. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "no",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true
@@ -14075,12 +14075,12 @@
   "gate_aligned": true,
   "gate_pass": true,
   "system": "Reply with exactly one word: true or false. No other text.",
-  "gate_variant": "chat",
+  "gate_variant": "system_one_word",
   "subject_answer": "false",
   "needs_reasons": false,
   "gate_reason_side_ok": true,
   "adapt": {
-   "origin": "original",
+   "patch": "audit 2026-10-23 nit: label the system-turn gate variant (render unchanged: the read is driven by item.system)",
    "gate": {
     "rate": 1.0,
     "pass": true

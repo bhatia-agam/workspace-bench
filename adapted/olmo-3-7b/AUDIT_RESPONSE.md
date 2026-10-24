@@ -36,3 +36,8 @@ jlens_concept_pr: our fitted instruct lens (n=600), 299/299 consistent. Floors:
 - Grader: the existing name-to-role rewrite (`families._role_bound` name_roles: each name -> "the <role> (<name>)", direction intact) had been added after this set was gated and was never applied here. Re-grading the stored greedy answers (the family's rule is greedy-only asked-open) passes 80/160 (35 originals, 45 authored). Spot checks: "Jack robbed Omar." = the pirate robbed the merchant.
 - Ask: an `ask_roles` gate variant ("Answer with their roles or occupations, not their names.") recovers 11 of the 80 still failing; most failures describe a different event ("Dev delivered crates to Marisol" for "the shop owner cheated the supplier"), i.e. real misses.
 - Refill: one authored wave, +34 at 57% yield. **Bank 100/100, pairs atomic, max role use 4.** Status full, back in the macro. Gate-only change: the read plan (stimulus + summarize suffix) never uses the asked question.
+
+## Addendum 2026-10-24: response to AUDIT_2026-10-23.md
+
+- **brew_intermediates:** the audit's 5 teal drops were applied. Re-freezing refilled toward teal, so 2 more teal items were dropped. Result: 98 items, teal 19/98 (≤ 20%).
+- **role_bound_association:** a strict grader mode was added (`ADAPT_ROLE_BOUND_STRICT=1`; an answer must state both roles, with no name→role rewrite). Re-grading the 100 kept greedy answers offline under it leaves **0/100**: every answer names only the people. The bank text is unchanged. role_bound is now `exclude_from_macro` (report.json note) until a strict-gated set reaches ≥ 50 atomic-pair items. Per-item results: `outputs/fix_1024/role_strict.json`.

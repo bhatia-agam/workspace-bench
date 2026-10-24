@@ -197,12 +197,20 @@ def _role_bound(item: dict) -> list[Ask]:
     if item.get("gate_variant") == "ask_roles":  # subjects that answer with names (OLMo-7B)
         text += " Answer with their roles or occupations, not their names."
     names = item.get("names") or {}
-    # answers that name the people instead of their roles (OLMo-7B: 150/160) still state the
-    # binding: rewrite each name to "the <role> (<name>)" before grading, direction intact
-    name_roles = {str(names[k]): f"the {item[f'role_{k}']} ({names[k]})" for k in ("a", "b")
-                  if names.get(k) and item.get(f"role_{k}")}  # fmt: skip
-    asked = _chat(_iid(item), "surface", text, [item["gold_label"]], "llm", max_tokens=64,
-                  meta={"threshold": 0.0, "name_roles": name_roles})  # fmt: skip
+    roles = [str(item[f"role_{k}"]) for k in ("a", "b") if item.get(f"role_{k}")]
+    if os.environ.get("ADAPT_ROLE_BOUND_STRICT") == "1":
+        # strict (audit 2026-10-23): only an answer that STATES both roles counts; names alone
+        # ("Tony shaved Hank.") are not evidence the subject bound the roles from the cues
+        meta = {"threshold": 0.0, "require_roles": roles}
+    else:
+        # lenient: answers that name the people instead of their roles (OLMo-7B: 150/160) are
+        # rewritten to "the <role> (<name>)" before grading, direction intact
+        name_roles = {str(names[k]): f"the {item[f'role_{k}']} ({names[k]})" for k in ("a", "b")
+                      if names.get(k) and item.get(f"role_{k}")}  # fmt: skip
+        meta = {"threshold": 0.0, "name_roles": name_roles}
+    asked = _chat(
+        _iid(item), "surface", text, [item["gold_label"]], "llm", max_tokens=64, meta=meta
+    )
     return [asked, _continuation_leak(item, "stimulus", [item["gold_label"]], 1.0)]
 
 
