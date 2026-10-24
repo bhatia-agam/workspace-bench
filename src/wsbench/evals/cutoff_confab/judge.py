@@ -92,7 +92,7 @@ def run(args: JudgeArgs) -> FamilyResult:
                 "layer": chosen,
                 "pass": tri_state(c is not None and strict_win(c, gold[i]), c is None),
                 # the ATI gate's looser rule: gold named by any sample at the chosen cell
-                "ati_pass": c is not None and c.get(gold[i], 0) > 0,
+                "ati_pass": None if c is None else c.get(gold[i], 0) > 0,
                 "counts": c,
                 "stratum": by_id[i].get("stratum"),
                 "label_type": by_id[i].get("label_type"),
