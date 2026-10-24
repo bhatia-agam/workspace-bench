@@ -323,10 +323,12 @@ right in at least 8 of 10 draws (10 of 10 for chain and brew):
 wsbench capable model=google/gemini-3.8-flash families=poetry,moral_rationale draws=10
 ```
 
-Three families are model-specific by construction and must be re-gated rather than re-scored:
+Five families are model-specific by construction and must be re-gated rather than re-scored:
 **poetry**, whose scored latent is the rhyme word this model would commit to,
-**moral_rationale**, whose per-item reasons are written for the side this model takes, and
-**ttt_move**, whose label is the square this model plays.
+**moral_rationale**, whose per-item reasons are written for the side this model takes,
+**ttt_move**, whose label is the square this model plays, **dm_category_default**, whose gold is
+this model's own favourite in the category, and **cutoff_confab**, whose gold is this model's
+stable wrong answer to a post-cutoff question.
 [AGENTS.md](AGENTS.md) has the per-family table, the sanity checks to run before trusting a
 number, and what has made an item harder so far.
 

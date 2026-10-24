@@ -18,7 +18,8 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
 ## Judge layer (`llm.py`, `judge_config.py`)
 - Default judge `google/gemini-3.8-flash` via OpenRouter, reasoning `{"effort": "minimal"}`.
   Pins: agentic_misalignment + jailbreak_recognition -> `claude-sonnet-5`, ttt_move ->
-  `claude-opus-5-5` (reasons: README §Judges and the family READMEs). jlens runs all three stages on the default judge.
+  `claude-opus-5-5` (reasons: README §Judges and the family READMEs). jlens runs all three
+  stages on the default judge.
 - Override precedence and what `pinned_instrument` means: README §Judges (the bullets under
   the table); not restated here.
 - Routes by model id: `claude-*` -> Anthropic SDK (`ANTHROPIC_API_KEY`, or with no key and
@@ -69,7 +70,8 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   answerer (`answerer=`) gates families into the same file with `stage=gate families=...`
   (merge); each entry records its `answerer` (none = Opus 5.5) and `framing` (none = plain;
   `open_model` adds a neutral non-Claude note). chain_intermediates is gated on `any_of_3`
-  and ttt_move on `ati_pass` (`STRICTER_PASS_FIELD`); directed_modulation / moral_rationale / jailbreak / user_modeling /
+  and ttt_move / cutoff_confab on `ati_pass` (`STRICTER_PASS_FIELD`); directed_modulation /
+  moral_rationale / jailbreak / user_modeling /
   conjunctive have their own item adapters (rowless items count as fails in `ROWLESS_IS_FAIL`
   families' denominators).
 - Per-family read regimes, pass rules and floors are documented in each `evals/<family>/README.md`

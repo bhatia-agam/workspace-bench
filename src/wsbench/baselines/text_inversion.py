@@ -60,7 +60,11 @@ MAX_REFUSED_SHARE = 0.2
 # ttt_move (plan 0016): one hedged answer fails the quote rule while naming the move, so for the
 # gate a draw counts as inverted when the judge's letter is the gold ignoring the quote check, or
 # the draw states the gold under quote.stated_moves (`ati_pass`).
-STRICTER_PASS_FIELD = {"chain_intermediates": "any_of_3", "ttt_move": "ati_pass"}
+STRICTER_PASS_FIELD = {
+    "chain_intermediates": "any_of_3",
+    "ttt_move": "ati_pass",
+    "cutoff_confab": "ati_pass",
+}
 ROWLESS_IS_FAIL = frozenset(
     {
         "moral_rationale",
