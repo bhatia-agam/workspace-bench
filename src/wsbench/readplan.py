@@ -67,6 +67,7 @@ class ReadSpec:
 #   final_token                 the last token of the render
 #   offset_from_end {k}         the token k from the end (k=1 is the last), reported as the
 #                               negative index -k, the convention of the banks that use it
+#   offsets_from_end {ks}       several such tokens, each reported as -k (list order kept)
 #   last_n {n}                  the last n tokens
 #   all                         every token
 #   all_from_end                every token, reported as negative offsets -n..-1 (the
@@ -94,6 +95,8 @@ def resolve(rule: dict[str, Any], tokens: list[str]) -> list[int]:
     if kind == "offset_from_end":
         k = int(rule["k"])
         return [-k] if 0 < k <= n else []
+    if kind == "offsets_from_end":
+        return [-int(k) for k in rule["ks"] if 0 < int(k) <= n]
     if kind == "last_n":
         return list(range(max(0, n - int(rule["n"])), n))
     if kind == "all":

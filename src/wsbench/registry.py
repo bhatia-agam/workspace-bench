@@ -53,6 +53,9 @@ class EvalSpec:
     # runnable by explicit name, but every "all" default skips it and the macro excludes it
     # (reason "superseded") — so its numbers never double-count beside its successor's.
     superseded_by: str = ""
+    # why this family is kept out of the macro (e.g. "hillclimbing: not yet reviewed"); empty =
+    # in the macro. It stays in `all` runs and reports, only the macro row skips it.
+    not_in_macro: str = ""
 
 
 def register(spec: EvalSpec) -> EvalSpec:
@@ -82,6 +85,12 @@ def superseded() -> dict[str, str]:
     """``{family: successor}`` for every superseded family (loads the registry)."""
     load_all()
     return {s.name: s.superseded_by for s in FAMILIES.values() if s.superseded_by}
+
+
+def not_in_macro() -> dict[str, str]:
+    """``{family: reason}`` for every family kept out of the macro (loads the registry)."""
+    load_all()
+    return {s.name: s.not_in_macro for s in FAMILIES.values() if s.not_in_macro}
 
 
 def drop_superseded(names: Iterable[str]) -> list[str]:

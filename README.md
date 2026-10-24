@@ -390,7 +390,8 @@ complete pass-rate families into a **macro** row and lists every exclusion with 
 `hallucination` (rate, lower is better), `jlens_concept_pr` (precision) and `agentic_misalignment`
 (`design_score`) are never in the macro, nor is a **superseded** family (`multihop_mt`, replaced
 by `multihop_mt_v2`; plan 0015), which is listed with reason `superseded` even when it was run by
-name. `run` also writes `run.json` (per-family status, result
+name, nor a family registered with `not_in_macro` (a hillclimbing family not yet reviewed), listed
+with reason `not in macro` and its stated reason. `run` also writes `run.json` (per-family status, result
 path, spend, the judge overrides in force).
 
 **Report-only extras (plan 0012, never the headline).**

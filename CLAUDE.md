@@ -83,6 +83,11 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   today only `multihop_mt` -> `multihop_mt_v2`): `results.macro` excludes it (reason
   `superseded`) and every `all` default skips it via `registry.drop_superseded`; it stays
   runnable by explicit name (`run` also takes `include_superseded=True`).
+- `EvalSpec.not_in_macro="<reason>"` keeps a family out of the macro only (reason `not in macro`,
+  `registry.not_in_macro()`); it still runs in `all` and appears in every table (plan 0016: the
+  four model-specific families until reviewed). `readplan` rule `offsets_from_end {ks}` reads
+  several end offsets; a plan row with `extra["ati_scored"] = False` is never ATI-gated
+  (`text_inversion.ati_scored`), so controls can ride in a family's plan.
 
 ## Driver (`runner.py`, `cli.py`)
 - `run all=True|families=a,b readouts_root=DIR out=DIR [family_workers=3] [json=True]` reads

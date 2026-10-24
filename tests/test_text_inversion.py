@@ -592,3 +592,17 @@ def test_conjunctive_api_fail_is_undecided(tmp_path):
     raw["n_items"] = 2
     p.write_text(json.dumps(raw))
     assert ti.draw_verdicts(p) == {"a": None, "b": False}
+
+
+def test_ati_scored_defaults_true_and_honours_the_flag():
+    assert ti.ati_scored(SimpleNamespace(extra={}))
+    assert not ti.ati_scored(SimpleNamespace(extra={"ati_scored": False}))
+
+
+def test_draw_verdicts_skips_excluded_from_rate_rows(tmp_path):
+    rows = [
+        {"id": "head", "pass": False},
+        {"id": "cross", "pass": True, "excluded_from_rate": True},  # rides on head's readout
+    ]
+    p = _results(tmp_path / "r", "fam", rows, value=0.0)
+    assert ti.draw_verdicts(p) == {"head": False}

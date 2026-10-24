@@ -166,3 +166,11 @@ def test_macro_defaults_to_the_registry_supersession(real_families):
     assert m["excluded"] == [
         {"family": "multihop_mt", "reason": "superseded", "by": "multihop_mt_v2"}
     ]
+
+
+def test_macro_excludes_not_in_macro_families():
+    rs = [_res("hill", value=0.9), _res("core", value=0.3)]
+    m = macro(rs, superseded={}, held_out={"hill": "hillclimbing"})
+    assert m["families"] == ["core"]
+    assert m["excluded"] == [{"family": "hill", "reason": "not in macro", "why": "hillclimbing"}]
+    assert "- hill: not in macro (hillclimbing)" in markdown_table(rs, m)

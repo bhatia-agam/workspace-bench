@@ -70,6 +70,12 @@ ROWLESS_IS_FAIL = frozenset(
 READ_LAYER = 44
 
 
+def ati_scored(spec: Any) -> bool:
+    """Whether a plan row is a gated item: a family whose plan also carries controls or other
+    unscored rows marks them ``extra["ati_scored"] = False`` (default: every row is gated)."""
+    return bool((getattr(spec, "extra", None) or {}).get("ati_scored", True))
+
+
 def gated_families() -> list[str]:
     from wsbench import registry
 
@@ -103,7 +109,7 @@ def build(out: Path = OUT, families: Iterable[str] | None = None, limit: int = 0
     n_bad = 0
     with path.open("w", encoding="utf-8") as fh:
         for fam in families or gated_families():
-            for spec in readplan.plan(fam)[: limit or None]:
+            for spec in [s for s in readplan.plan(fam) if ati_scored(s)][: limit or None]:
                 r = render(spec, tok)
                 pos = _positions(spec.positions, r.tokens)
                 if not pos:
@@ -374,6 +380,8 @@ def draw_verdicts(results_path: Path) -> dict[str, bool | None]:
     fam = d["family"]
     by_item: dict[str, list[bool | None]] = {}
     for r in d.get("rows", []):
+        if r.get("excluded_from_rate"):
+            continue  # a control / non-headline row (e.g. introspection cross items): not gated
         raw = r.get("id", r.get("name", r.get("item")))
         if raw is None:
             raise ValueError(f"{fam}: a row has no id / name / item")
@@ -474,7 +482,7 @@ def gate(
     not_gated: dict[str, str] = {}
     answers = [latest_answers(out / "answers" / f"draw{d}.jsonl") for d in range(draws)]
     for fam in fams or gated_families():
-        ids = [s.id for s in readplan.plan(fam)]
+        ids = [s.id for s in readplan.plan(fam) if ati_scored(s)]
         share = refusal_share(out, fam, ids, draws)
         if share > MAX_REFUSED_SHARE:
             not_gated[fam] = (
