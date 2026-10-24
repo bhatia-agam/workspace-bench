@@ -230,6 +230,7 @@ def plan(family: str) -> list[ReadSpec]:
         "typo",
         "basic_readout_mt",
         "multihop_mt",
+        "multihop_mt_v2",
         "wrong_bridge",
         "wrong_bridge_true",
         "multilingual_mt",
