@@ -290,8 +290,9 @@ answerer and framing at a time; see the baselines README for the passes of recor
 Families not gated or with no surviving item are skipped under the flag (never run on the full
 bank); a family gated under another judge instrument fails until re-gated. Families with fewer
 than 20 surviving items are shown but left out of the macro, which today is the mean of
-wrong_bridge, poetry, arithmetic_intermediates, directed_modulation, moral_rationale,
-user_modeling and conjunctive_association. `multihop_mt` keeps its frozen subset but is superseded
+wrong_bridge, poetry, arithmetic_intermediates, moral_rationale, user_modeling and
+conjunctive_association. No directed-modulation family is in the subset (both state the concept
+in the prompt). `multihop_mt` keeps its frozen subset but is superseded
 (out of the macro, not re-gated: a full gate carries its entry over). Details and the per-family
 counts are in
 [`evals/baselines/README.md`](evals/baselines/README.md#anti-text-inversion-subset-anti_text_inversionjson).

@@ -270,7 +270,8 @@ user_modeling (60%), conjunctive (94%) and role_bound (98%) stay ungated. Two fa
   ranks the final answer first, failing every item on ranking while having inverted the
   intermediates. For the gate only, a draw that names any intermediate anywhere (`any_of_3`)
   counts as inverted (`STRICTER_PASS_FIELD`), so every chain item is invertible.
-- **directed_modulation keeps most items because its scorer already discounts the prompt.**
+- **directed_modulation is excluded by design (2026-10-24).** Its gate kept 64/100 items, but
+  only because its scorer discounts the prompt, not because the answer is hidden:
   The concept is stated in the instruction ("Think about the body part clavicle..."); the judge
   credits only `content_bound` readouts and classes ones that narrate the instruction as
   `instruction_narration` (83% of Opus's answers), so prompt reading earns no credit there.
@@ -283,12 +284,13 @@ out=outputs/baselines/text_inversion_sonnet_open`, then `stage=gate families=<th
 answerer=claude-sonnet-5-5 framing=open_model`): user_modeling 57/100, conjunctive 25/100,
 jailbreak 5/86, role_bound 1/100. Sonnet is a weaker reader than Opus, so read those four
 entries as "Sonnet 5.5 cannot answer from the prompt". With them every gateable family is
-gated; only the four design exclusions remain in `_not_gated`. The file is the merge of four
+gated; only the design exclusions remain in `_not_gated` (directed_modulation joined them on
+2026-10-24: Camila, "don't include any directed modulation in the subset"). The file is the merge of four
 passes (plain/Opus over every family, then `families=` merges of open_model/Opus and
 open_model/Sonnet); a gate run without `families=` rebuilds only the first pass and would drop
 the merged entries.
 
-Gated (2026-10-24, 445 items in total):
+Gated (2026-10-24, 381 items in total):
 
 | family | answerer | framing | bank | ATI | invertible | unverified | answerer pass@1 (mean of 3) |
 |---|---|---|---|---|---|---|---|
@@ -312,7 +314,6 @@ Gated (2026-10-24, 445 items in total):
 | arithmetic_intermediates | Opus 5.5 | open_model | 596 | 111 | 485 | 0 | 0.80 |
 | brew_intermediates | Opus 5.5 | open_model | 100 | 0 | 100 | 0 | 0.97 |
 | chain_intermediates | Opus 5.5 | open_model | 120 | 0 | 120 | 0 | 1.00 |
-| directed_modulation | Opus 5.5 | open_model | 100 | 64 | 36 | 0 | 0.18 |
 | moral_rationale | Opus 5.5 | open_model | 200 | 36 | 164 | 0 | 0.65 |
 | jailbreak_recognition | Sonnet 5.5 | open_model | 86 | 5 | 79 | 2 | 0.83 |
 | user_modeling | Sonnet 5.5 | open_model | 100 | 57 | 38 | 5 | 0.34 |
@@ -327,6 +328,7 @@ Not gated (`_not_gated`; skipped under the flag, as are the families with no sur
 | jlens_concept_pr | precision against the J-lens top-10, not a bar a lens clears |
 | agentic_misalignment | a design score netted against foils, no item pass bit |
 | multi_concept_directed_modulation | the prompt dictates the concepts; prompt-only is 1.0 |
+| directed_modulation | the instruction states the concept; items survived only because the scorer discounts instruction narration, not because the answer is hidden (Camila 2026-10-24) |
 
 **Reading it.** Opus 5.5 recovers the answer from the text alone on most items of most families:
 its per-draw prompt-only rate is far above the stock-Qwen prompt-only floor (association 0.95
@@ -354,7 +356,6 @@ a run incomplete. A family whose current judge `prompt_version` differs from the
 `instrument` fails (exit 2) until re-gated. `report` leaves out the floor columns under this
 scope (they were measured on the full banks) and the macro skips families with fewer than 20
 items: with the current subset the macro is the mean of wrong_bridge, poetry,
-arithmetic_intermediates, directed_modulation, moral_rationale, user_modeling and
-conjunctive_association alone, so read the per-family rows. The Opus judge runs at T=1, so a fresh judge pass over the same answers can flip
+arithmetic_intermediates, moral_rationale, user_modeling and conjunctive_association alone, so read the per-family rows. The Opus judge runs at T=1, so a fresh judge pass over the same answers can flip
 an occasional verdict: a smoke re-judge of draw 0 before the final gate passed 1 of 76 wrong_bridge
 and 1 of 22 poetry items; on the final subset a fresh re-judge passed none.
