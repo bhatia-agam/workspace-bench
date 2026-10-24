@@ -1,0 +1,1750 @@
+{
+ "family": "wrong_bridge",
+ "gate": "DeepSeek-V4-Flash (BOS + raw text) raw-text greedy answers the 2-hop prompt with A' = hop2(B') where B' != B is the model's own (greedy) answer to the hop-1 probe; it answers hop2 correctly for the TRUE bridge; >= 4/10 T=0.7 samples give A' and B'; logP(A')>logP(A), logP(B')>logP(B); injecting B' into the prompt yields A' and injecting B yields A; hop2 on B' alone yields A'; B' not credited on S in Wikidata; Claude adjudication clean.",
+ "eval_render_note": "EVAL RENDER: feed `prompt` verbatim as plain text, NO chat template (same as multihop). Read = the last word of the prompt (` year` / ` of`): every prompt ends in the word, no trailing space, so `readout.offsets` is -1 (the final token) for all items.",
+ "read": "the last word of the prompt (final token, offset -1)",
+ "targets": "intermediates = the model's WRONG bridge B' (scored)",
+ "source": "Wikidata (QLever mirror, 2026-10-09) + DeepSeek-V4-Flash behavioral gate (2026-10-24); global-workspace scripts/v4_flash/newfam/wrong_bridge/",
+ "subject_model": "deepseek-ai/DeepSeek-V4-Flash",
+ "v4_note": "Subject = DeepSeek-V4-Flash: every behavioural gate re-run on V4 (vLLM 0.31, TP1, BOS + raw prompt text, no chat template). MIN_SAMPLE_AGREE = 4 (the value the Qwen bank was frozen at; scripts/wrong_bridge/gate.py:19 says 6). Wikidata scrape and candidates reused from the Qwen build. Built by global-workspace scripts/v4_flash/newfam/wrong_bridge/.",
+ "items": [
+  {
+   "name": "person_father-Q192846-death_year",
+   "prompt": "Fact: The father of Carloman II of France died in the year",
+   "target": "877",
+   "correct_answer": "879",
+   "intermediates": [
+    "Charles the Bald"
+   ],
+   "intermediates_aliases": [
+    "Charles the Bald",
+    "Carlus Calvus",
+    "Carolus Calvus",
+    "Charles II",
+    "Charles II, the Bald",
+    "Charles II The Bald"
+   ],
+   "true_intermediates": [
+    "Louis the Stammerer"
+   ],
+   "true_intermediates_aliases": [
+    "Louis the Stammerer"
+   ],
+   "template": "person_father",
+   "hop2": "death_year",
+   "wikidata": {
+    "S": "Q192846",
+    "B": "Q182840",
+    "B_prime": "Q71231"
+   },
+   "evidence": {
+    "p2_samples_Ap": 10,
+    "p1_samples_Bp": 9,
+    "p1_samples_B": 0,
+    "lp_Ap_minus_A": 2.6021205112338066,
+    "lp_Bp_minus_B": 0.7944100101012737,
+    "inject_Bp_gives_Ap": true,
+    "inject_B_gives_A": true,
+    "hop2_on_Bp_gives_Ap": true,
+    "inject_Bp": "877. Carloman II was born in 866. So he was 11 years old when his father died.",
+    "inject_B": "879. Carloman II and his brother Louis III were both crowned as kings of France. They ruled jointly until Louis",
+    "hop2_on_Bp": "877. Fact: Charles the Fat died in the year 888. Fact: Charles the Simple died in the year",
+    "p2_samples": [
+     "877. The son died in 884. This means the father died before the son.",
+     "877. He was succeeded by his two sons Louis III and Carloman II. They divided the kingdom between them,",
+     "877. Carloman II of France was born after 866. So that makes him at most 11 years old",
+     "877.",
+     "877.",
+     "877. Carloman II of France died in the year 884. What is the maximum number of years that could",
+     "877",
+     "877. Carloman II was then 11 years old. In 879, his brother Louis III of France died",
+     "877. That was Louis the Stammerer. Carloman II was born in 866. He was King of",
+     "877, and he became king in 879."
+    ],
+    "p1_samples": [
+     "Charles the Bald. Fact: The father of Charles the Bald was Louis the Pious. Fact: The father of Louis",
+     "Charles the Bald. Carloman II was the son of Charles the Bald, the King of West Francia, and his wife",
+     "Charles the Bald. Carloman II's father was Charles the Bald. Charles the Bald's son was Carloman II.",
+     "Charles the Bald.",
+     "Charles the Bald, King of West Francia, Holy Roman Emperor, and King of Italy.",
+     "King Charles the Bald",
+     "Charles the Bald, not Carloman I of France. Therefore, the statement \"Carloman II of France was born to",
+     "Charles the Bald; the mother was Ermentrude of Orléans.",
+     "Charles the Bald. Fact: The father of Charles the Bald was Louis the Pious. Fact: The father of Louis",
+     "Charles the Bald, not Louis the Stammerer. Wait, that doesn’t sound right. Let’s check"
+    ],
+    "Bp_credited_on_S": [],
+    "answer_hub_share": 0.00022789425706472196
+   },
+   "adjudication": {
+    "id": "person_father.Q192846.Q182840.death_year",
+    "clean": true,
+    "reason": "Carloman II of France (king 879–884) was the son of Louis the Stammerer, who died in 879; Charles the Bald (died 877) was his grandfather, and 'Carloman II of France' unambiguously names the king rather than Charles the Bald's own son Carloman, so the model made a genuine wrong-bridge error.",
+    "category": "clean",
+    "judge": "claude-opus-5-5"
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "last_word_token",
+    "offsets": [
+     -1
+    ]
+   }
+  },
+  {
+   "name": "doctoral_advisor-Q350183-death_year",
+   "prompt": "Fact: The doctoral advisor of Georg Henrik von Wright died in the year",
+   "target": "1951",
+   "correct_answer": "1958",
+   "intermediates": [
+    "Ludwig Wittgenstein"
+   ],
+   "intermediates_aliases": [
+    "Ludwig Wittgenstein",
+    "Ludwig Josef Johann Wittgenstein",
+    "Ludwig Joseph Johann Wittgenstein",
+    "Wittgenstein"
+   ],
+   "true_intermediates": [
+    "Eino Kaila"
+   ],
+   "true_intermediates_aliases": [
+    "Eino Kaila",
+    "Eino Sakari Johansson",
+    "Eino Johansson",
+    "Eino Sakari Kaila"
+   ],
+   "template": "doctoral_advisor",
+   "hop2": "death_year",
+   "wikidata": {
+    "S": "Q350183",
+    "B": "Q670103",
+    "B_prime": "Q9391"
+   },
+   "evidence": {
+    "p2_samples_Ap": 8,
+    "p1_samples_Bp": 9,
+    "p1_samples_B": 0,
+    "lp_Ap_minus_A": 6.986987244337797,
+    "lp_Bp_minus_B": 6.053210229794786,
+    "inject_Bp_gives_Ap": true,
+    "inject_B_gives_A": true,
+    "hop2_on_Bp_gives_Ap": true,
+    "inject_Bp": "1951. The doctoral advisor of Ludwig Wittgenstein, Bertrand Russell, died in the year 1970. The doctoral",
+    "inject_B": "1958. The doctoral advisor of Eino Kaila was Wilhelm Wundt, who died in the year",
+    "hop2_on_Bp": "1951. Fact: The number 1951 is a prime number. Fact: The number 1951 is",
+    "p2_samples": [
+     "1951.",
+     "1951.",
+     "in which von Wright himself died.",
+     "1951. The first two digits of this year are missing. They are (the last two digits of the year",
+     "1951.",
+     "1951. Who was the doctoral advisor of Georg Henrik von Wright?",
+     "1916.",
+     "1951.",
+     "1951. What is the name of that person?",
+     "1951. The doctoral advisor of the person who died in 1951 died in the year 1970."
+    ],
+    "p1_samples": [
+     "Ludwig Wittgenstein (he succeeded him as professor at Cambridge). His doctoral students included Jaakko Hintikka. So Hintikka",
+     "Ludwig Wittgenstein. However, von Wright was also a student of G. E. Moore and C. D. Broad.",
+     "Ludwig Wittgenstein.",
+     "Ludwig Wittgenstein. He was the chair of philosophy at the University of Helsinki from 1946 to 1961. He",
+     "Ludwig Wittgenstein. #Philosophy #HistoryOfPhilosophy",
+     "Ludwig Wittgenstein, one of the most influential philosophers of the 20th century. Under Wittgenstein's guidance, von Wright developed",
+     "Ludwig Wittgenstein.",
+     "Charles Sanders Peirce. (Wait, that’s not right. Let me try again.) Fact: The doctoral",
+     "Ludwig Wittgenstein. Von Wright was also the Professor of Philosophy at the University of Helsinki. He wrote a biography of Wittgenstein and",
+     "Ludwig Wittgenstein."
+    ],
+    "Bp_credited_on_S": [],
+    "answer_hub_share": 0.0003295978905735003
+   },
+   "adjudication": {
+    "id": "doctoral_advisor.Q350183.Q670103.death_year",
+    "clean": true,
+    "reason": "Von Wright earned his doctorate at Helsinki in 1941 under Eino Kaila, who died in 1958. Wittgenstein was his Cambridge mentor and predecessor in the chair, but never his doctoral supervisor, so the model's 1951 comes from a genuinely wrong bridge.",
+    "category": "clean",
+    "judge": "claude-opus-5-5"
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "last_word_token",
+    "offsets": [
+     -1
+    ]
+   }
+  },
+  {
+   "name": "novel_author-Q1306783-birth_year",
+   "prompt": "Fact: The author of A Little Woman was born in the year",
+   "target": "1832",
+   "correct_answer": "1883",
+   "intermediates": [
+    "Louisa May Alcott"
+   ],
+   "intermediates_aliases": [
+    "Louisa May Alcott",
+    "A. M. Barnard",
+    "Flora Fairchild",
+    "Flora Fairfield",
+    "L.M.A.",
+    "Louisa Alcott",
+    "Louisa M. Alcott",
+    "Louisa Mary Alcott",
+    "Tribulation Periwinkle"
+   ],
+   "true_intermediates": [
+    "Franz Kafka"
+   ],
+   "true_intermediates_aliases": [
+    "Franz Kafka",
+    "František Kafka",
+    "Kafka"
+   ],
+   "template": "novel_author",
+   "hop2": "birth_year",
+   "wikidata": {
+    "S": "Q1306783",
+    "B": "Q905",
+    "B_prime": "Q185696"
+   },
+   "evidence": {
+    "p2_samples_Ap": 8,
+    "p1_samples_Bp": 9,
+    "p1_samples_B": 0,
+    "lp_Ap_minus_A": 6.405864840373397,
+    "lp_Bp_minus_B": 9.014452853240073,
+    "inject_Bp_gives_Ap": true,
+    "inject_B_gives_A": true,
+    "hop2_on_Bp_gives_Ap": true,
+    "inject_Bp": "1832. She was born in Germantown, Pennsylvania. She was the second of four daughters. Her father",
+    "inject_B": "1883. He died in 1924. He was a German-language writer of novels and short stories. He",
+    "hop2_on_Bp": "1832. She was the second of four daughters. Her father was a transcendentalist and educator. He ran a",
+    "p2_samples": [
+     "1832. The author died in 1888. The author wrote Little Women in two volumes in 1868",
+     "1832. She was Louisa May Alcott, born in Germantown, Pennsylvania, on November 29,",
+     "1868. L.M. Montgomery lived from 1874-1942. This means that she could not have",
+     "1832.",
+     "1832 in Germantown, Pennsylvania. She was the second of four daughters. She began writing at an early",
+     "1832. She died in the year 1888. She was born in Germantown, which is now",
+     "1868",
+     "1832. Which of the following can be concluded from the given statement? (A) The author of A Little",
+     "1832. That was a year of great change and upheaval in the United States. The Nullification Crisis was",
+     "1832, the same year as the father of the nation, Louis Riel. But unlike Riel, Louisa"
+    ],
+    "p1_samples": [
+     "Louisa May Alcott. (I added the “Little” to make it sound more like the title, but you can",
+     "Louisa May Alcott.",
+     "Louisa May Alcott. It is a story of four sisters: Meg, Jo, Beth and Amy. The story is",
+     "Louisa May Alcott. (Fact: A Little Woman was written by Louisa May Alcott.) This sentence is a fact",
+     "Louisa May Alcott.",
+     "Louisa May Alcott. She wrote the book in two parts. The first part was published in 1868 and was",
+     "Louisa May Alcott and published in 1868. It is one of the most beloved novels in American literature, focusing",
+     "the author of Little Women, Louisa May Alcott, about her own mother, Abigail May Alcott. The book is",
+     "Louisa May Alcott. It was published in two volumes in 1868 and 1869. The novel follows the",
+     "Louisa May Alcott."
+    ],
+    "Bp_credited_on_S": [],
+    "answer_hub_share": 0.0023306210900764608
+   },
+   "adjudication": {
+    "id": "novel_author.Q1306783.Q905.birth_year",
+    "clean": true,
+    "reason": "\"A Little Woman\" (Eine kleine Frau, 1924) is unambiguously Kafka's short story, Kafka was born in 1883, and the model confused it with Alcott's differently titled \"Little Women,\" which makes this a genuine wrong-bridge error.",
+    "category": "clean",
+    "judge": "claude-opus-5-5"
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "last_word_token",
+    "offsets": [
+     -1
+    ]
+   }
+  },
+  {
+   "name": "person_mother-Q154412-death_year",
+   "prompt": "Fact: The mother of Mary I of Hungary died in the year",
+   "target": "1506",
+   "correct_answer": "1387",
+   "intermediates": [
+    "Anne of Foix-Candale"
+   ],
+   "intermediates_aliases": [
+    "Anne of Foix-Candale",
+    "Anna of Foix-Candale",
+    "Anne of Kendal"
+   ],
+   "true_intermediates": [
+    "Elizabeth of Bosnia"
+   ],
+   "true_intermediates_aliases": [
+    "Elizabeth of Bosnia",
+    "Elizabeth Kotromanić"
+   ],
+   "template": "person_mother",
+   "hop2": "death_year",
+   "wikidata": {
+    "S": "Q154412",
+    "B": "Q231166",
+    "B_prime": "Q231126"
+   },
+   "evidence": {
+    "p2_samples_Ap": 9,
+    "p1_samples_Bp": 6,
+    "p1_samples_B": 0,
+    "lp_Ap_minus_A": 5.877980515360832,
+    "lp_Bp_minus_B": 8.983090204303153,
+    "inject_Bp_gives_Ap": true,
+    "inject_B_gives_A": true,
+    "hop2_on_Bp_gives_Ap": true,
+    "inject_Bp": "1506, when Mary was only one year old. Mary was raised by her paternal grandfather, Maximilian I,",
+    "inject_B": "1387. Mary I of Hungary died in the year 1395. Mary I of Hungary was born in",
+    "hop2_on_Bp": "1506. Fact: Anne of Foix-Candale was born in 1484. Fact: Anne of",
+    "p2_samples": [
+     "1506, she was the daughter of Joanna of Castile and Philip the Handsome. Her mother died from p",
+     "1506. She was also known as Mary of Burgundy. Mary I of Hungary was born in 1505",
+     "1506, when Mary was one year old. She was raised by her paternal grandfather, Maximilian I, Holy",
+     "1506.",
+     "1506 after giving birth to her, and the mother of Mary I of Scotland died in 1542 after giving",
+     "1395. Mary died in the same year. Mary was born in 1371. Mary's mother died in",
+     "1506",
+     "1506, due to complications from childbirth. Mary was born just a few days after the death of her mother,",
+     "1506. That was 500 years ago. So far, so good.",
+     "1506, the same year that Mary was born."
+    ],
+    "p1_samples": [
+     "Anne of Foix-Candale.",
+     "a French princess and her father a prince of France, so she was a Valois. Her husband was a Habsburg",
+     "Anne of Foix-Candale. She died when Mary was just one month old. Mary was the daughter of King",
+     "Anne of Foix-Candale. Anne was a daughter of Gaston de Foix, Count of Candale,",
+     "Anna of Foix-Candale. Anna’s mother was Infanta Catherine of Navarre. Catherine was a daughter",
+     "known as Anna of Foix-Candale. Mary I of Hungary was known as Mary of Habsburg (she was",
+     "Anne of Foix-Candale.",
+     "Mary of Burgundy; the mother of Mary I of England was Catherine of Aragon; the mother of Mary, Queen",
+     "a sister of Catherine of Aragon. So Mary and Catherine were aunt and niece. So, when Mary I of Hungary",
+     "Anne of Foix-Candale. She was the daughter of Gaston de Foix, Count of Candale,"
+    ],
+    "Bp_credited_on_S": [],
+    "answer_hub_share": 0.00021222410865874363
+   },
+   "adjudication": {
+    "id": "person_mother.Q154412.Q231166.death_year",
+    "clean": true,
+    "reason": "Mary I of Hungary, the 14th-century regnant queen, was the daughter of Elizabeth of Bosnia, who was killed in 1387, while Anne of Foix-Candale (d. 1506) was the mother of Louis II and Anna Jagiellon and not the mother of any Mary of Hungary (Mary of Austria's mother was Joanna of Castile), so the model resolved the wrong bridge.",
+    "category": "clean",
+    "judge": "claude-opus-5-5"
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "last_word_token",
+    "offsets": [
+     -1
+    ]
+   }
+  },
+  {
+   "name": "tv_network-Q3318890-founded_year",
+   "prompt": "Fact: The network that originally aired Juana, la virgen was founded in the year",
+   "target": "1954",
+   "correct_answer": "1953",
+   "intermediates": [
+    "Telemundo"
+   ],
+   "intermediates_aliases": [
+    "Telemundo"
+   ],
+   "true_intermediates": [
+    "RCTV"
+   ],
+   "true_intermediates_aliases": [
+    "RCTV",
+    "Radio Caracas Televisión RCTV"
+   ],
+   "template": "tv_network",
+   "hop2": "founded_year",
+   "wikidata": {
+    "S": "Q3318890",
+    "B": "Q742964",
+    "B_prime": "Q136538"
+   },
+   "evidence": {
+    "p2_samples_Ap": 5,
+    "p1_samples_Bp": 10,
+    "p1_samples_B": 0,
+    "lp_Ap_minus_A": 4.550640106201172,
+    "lp_Bp_minus_B": 10.195621850783937,
+    "inject_Bp_gives_Ap": true,
+    "inject_B_gives_A": true,
+    "hop2_on_Bp_gives_Ap": true,
+    "inject_Bp": "1954. The network was originally known as NetSpan, and it was founded by a group of investors that included",
+    "inject_B": "1953. It was the first television station in Venezuela. The network was shut down in 2007 by the",
+    "hop2_on_Bp": "1954. It is a Spanish-language television network that is based in the United States. It is the second largest",
+    "p2_samples": [
+     "1984. Answer: Telemundo. Telemundo is a Spanish-language television network that was founded in",
+     "2000, so it’s not exactly surprising that it’s still a fairly new player in the world of",
+     "1954. The network is known for its telenovelas and other Spanish-language programming. The show was produced",
+     "1954. The network is known for its telenovelas and other Spanish-language programming. This network has a",
+     "that the first commercial radio station in the United States started broadcasting.",
+     "1954. The network's headquarters are located in Caracas, Venezuela. The network's official website is located at",
+     "1954. The first episode of Juana, la virgen premiered on a Thursday. Juana, la",
+     "2002. In 2014, that network aired a show that gave us the phrase \"Bienvenido",
+     "1954. Answer: Televisa. Fact: The original Juana, la virgen is a telen",
+     "1987. This network is now known for its popular telenovelas and has a large viewership in Latin"
+    ],
+    "p1_samples": [
+     "Telemundo from February 28, 2002 to June 20, 2002. The show was a",
+     "Telemundo. The show was created by Perla Farías, and it is a telenovela that originally",
+     "Telemundo from 2002 to 2003. It was a telenovela that aired in the US",
+     "Telemundo.",
+     "Telemundo in 2002. It was an instant hit and has been exported to dozens of countries. The show",
+     "Telemundo and was a telenovela that aired from 2002 to 2003. The show was",
+     "Telemundo from February 28, 2002, to June 7, 2002. The show,",
+     "Telemundo from February 28, 2002 to March 5, 2003. The show was created",
+     "Telemundo from February 28, 2002 to May 30, 2002. It was created by",
+     "Telemundo from 2002 to 2003."
+    ],
+    "Bp_credited_on_S": [],
+    "answer_hub_share": 0.0025962786672436176
+   },
+   "adjudication": {
+    "id": "tv_network.Q3318890.Q742964.founded_year",
+    "clean": true,
+    "reason": "Juana, la virgen was an RCTV production that premiered on RCTV in Venezuela in 2002, so Telemundo was at most a later foreign broadcaster rather than the original network, and the model's 1954 answer comes directly from Telemundo's Wikidata founding year.",
+    "category": "clean",
+    "judge": "claude-opus-5-5"
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "last_word_token",
+    "offsets": [
+     -1
+    ]
+   }
+  },
+  {
+   "name": "song_composer-Q82525-birth_city",
+   "prompt": "Fact: The composer of the song \"Im Wartesaal zum großen Glück\" was born in the city of",
+   "target": "Vienna",
+   "correct_answer": "Aschersleben",
+   "intermediates": [
+    "Walter Jurmann"
+   ],
+   "intermediates_aliases": [
+    "Walter Jurmann"
+   ],
+   "true_intermediates": [
+    "Walter Andreas Schwarz"
+   ],
+   "true_intermediates_aliases": [
+    "Walter Andreas Schwarz"
+   ],
+   "template": "song_composer",
+   "hop2": "birth_city",
+   "wikidata": {
+    "S": "Q82525",
+    "B": "Q77042",
+    "B_prime": "Q215611"
+   },
+   "evidence": {
+    "p2_samples_Ap": 5,
+    "p1_samples_Bp": 9,
+    "p1_samples_B": 0,
+    "lp_Ap_minus_A": 9.202879128337372,
+    "lp_Bp_minus_B": 11.31190300383605,
+    "inject_Bp_gives_Ap": true,
+    "inject_B_gives_A": true,
+    "hop2_on_Bp_gives_Ap": true,
+    "inject_Bp": "Vienna, Austria, in 1903. He was a prolific composer of popular songs and film scores, and his work",
+    "inject_B": "Aschersleben in 1913. He was a German author, singer, chansonnier, and cabaret",
+    "hop2_on_Bp": "Vienna, Austria, on October 12, 1903. He was a composer of popular songs and film scores.",
+    "p2_samples": [
+     "Cologne, Germany. His father was a well-known composer and music teacher. The young child learned to play the piano at",
+     "Wuppertal.",
+     "Vienna in 1898. This person is the father of the Austrian musician who composed the song \"Der Herr Kanz",
+     "Vienna, Austria, in 1904. He was originally named Friedrich Bixler, but he changed his name to",
+     "Vienna, Austria in 1901. He died in 1981. The lyrics were written by Charles Amberg.",
+     "Vienna. Walter Jurmann was born on October 12, 1903 in Vienna, Austria. He was a composer",
+     "Budapest, Hungary, and was a prolific composer of operetta, operas, and film music. He is best known",
+     "Osnabrück, Germany, in 1917. He was a bandleader and composer. This song was written",
+     "Cologne, Germany. This is a German song.",
+     "Vienna, Austria on November 15, 1930. He started playing the violin at the age of six. He"
+    ],
+    "p1_samples": [
+     "Walter Jurmann in 1930, with lyrics by Fritz Rotter. It was performed by the Comedian Harmon",
+     "Walter Jurmann, with lyrics by Fritz Rotter. It was performed by the Comedian Harmonists in 193",
+     "Walter Jurmann, with lyrics by Fritz Rotter. The song was written in 1929. The song was performed",
+     "Walter Jurmann in 1930. The text was written by Fritz Rotter. The song was recorded by the Com",
+     "Walter Heyer (1900–1953) with text by Walter Heyer (?) and Harald Kolasch",
+     "Walter Jurmann and lyrics by Fritz Rotter. It was recorded by the Comedian Harmonists in 1931",
+     "Walter Jurmann and was first performed by the Comedian Harmonists in 1934. The song became popular in",
+     "Walter Jurmann, a Jewish composer who had to flee Germany after the Nazis came to power.",
+     "Walter Jurmann and published in 1933 by Wiener Boheme Verlag. It was used in the 1931",
+     "Walter Jurmann in 1929. It was recorded by the Comedian Harmonists in 1930. The"
+    ],
+    "Bp_credited_on_S": [],
+    "answer_hub_share": 0.000591715976331361
+   },
+   "adjudication": {
+    "id": "song_composer.Q82525.Q77042.birth_city",
+    "clean": true,
+    "reason": "Walter Andreas Schwarz wrote and performed this 1956 German Eurovision entry and was born in Aschersleben, while Walter Jurmann, a Vienna-born composer of Comedian Harmonists-era songs, has no connection to it and no other notable song of this title exists.",
+    "category": "clean",
+    "judge": "claude-opus-5-5"
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "last_word_token",
+    "offsets": [
+     -1
+    ]
+   }
+  },
+  {
+   "name": "film_director-Q3791058-birth_city",
+   "prompt": "Fact: The director of the 1960 film The Delinquents was born in the city of",
+   "target": "Kansas City",
+   "correct_answer": "Huesca",
+   "intermediates": [
+    "Robert Altman"
+   ],
+   "intermediates_aliases": [
+    "Robert Altman",
+    "Robert Bernard Altman"
+   ],
+   "true_intermediates": [
+    "Carlos Saura"
+   ],
+   "true_intermediates_aliases": [
+    "Carlos Saura",
+    "Carlos Saura Atares",
+    "Carlos Saura Atarés"
+   ],
+   "template": "film_director",
+   "hop2": "birth_city",
+   "wikidata": {
+    "S": "Q3791058",
+    "B": "Q295855",
+    "B_prime": "Q55163"
+   },
+   "evidence": {
+    "p2_samples_Ap": 5,
+    "p1_samples_Bp": 9,
+    "p1_samples_B": 0,
+    "lp_Ap_minus_A": 8.914020562544465,
+    "lp_Bp_minus_B": 16.987669070884294,
+    "inject_Bp_gives_Ap": true,
+    "inject_B_gives_A": true,
+    "hop2_on_Bp_gives_Ap": true,
+    "inject_Bp": "Kansas City, Missouri. He was born on February 20, 1925. He died on November 20,",
+    "inject_B": "Huesca, Spain, in 1932. He is known for his contributions to Spanish cinema, particularly during the",
+    "hop2_on_Bp": "Kansas City, Missouri. He was the son of Bernard Clement Altman, an insurance salesman, and his wife, Helen",
+    "p2_samples": [
+     "Kansas City, Missouri. His name is Robert Altman. He is one of cinema's great satirists, his",
+     "Kansas City, Missouri.",
+     "Shawnee, Oklahoma. What was his name? This is a question that has been asked by many film enthusiasts and trivia",
+     "Kansas City, Missouri. Robert Altman was born in Kansas City, Missouri on February 20, 1925.",
+     "Shawnee, Oklahoma.",
+     "Eureka, California. Name this director.",
+     "Shawnee, Oklahoma, and shares his name with a famous brand of whiskey.",
+     "Kansas City, Missouri.",
+     "Kansas City. This is the same city where the 1958 film The Space Children was set. The director of The",
+     "New York, New York, USA on November 20, 1925. Fact: The director of the 196"
+    ],
+    "p1_samples": [
+     "Robert Altman.",
+     "Robert Altman and was his first feature film.",
+     "Robert Altman, and it stars Tom Laughlin, who would go on to play the iconic character Billy Jack in a",
+     "Robert Altman. The first film to ever get an X rating, how did this movie fare at the box office?",
+     "Robert Altman. He made it for a mere $63,000.",
+     "Robert Altman. Yes, the same Robert Altman who directed M*A*S*H, Nashville, The Player",
+     "Robert Altman.",
+     "Robert Altman and produced by Elmer Rhoden Jr., who was a local Kansas City businessman and had no previous film",
+     "a young Robert Altman. Fact: The 1959 film The Delinquents featured a young Tom Laughlin in",
+     "Robert Altman. Altman is celebrated for his later innovative style and use of overlapping dialogue. This early work showcases his"
+    ],
+    "Bp_credited_on_S": [],
+    "answer_hub_share": 4.8879040667361837e-05
+   },
+   "adjudication": {
+    "id": "film_director.Q3791058.Q295855.birth_city",
+    "clean": true,
+    "reason": "The 1960 film titled The Delinquents in English is Carlos Saura's Los golfos, and Saura was born in Huesca; Robert Altman's same-titled film dates from 1957, so the year rules it out and the model's Altman/Kansas City answer is a genuine wrong-bridge error from ignoring the date.",
+    "category": "clean",
+    "judge": "claude-opus-5-5"
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "last_word_token",
+    "offsets": [
+     -1
+    ]
+   }
+  },
+  {
+   "name": "album_label-Q21450454-hq_city",
+   "prompt": "Fact: The record label that released the 2016 album Electronica 2: The Heart of Noise is headquartered in the city of",
+   "target": "Paris",
+   "correct_answer": "New York City",
+   "intermediates": [
+    "Because Music"
+   ],
+   "intermediates_aliases": [
+    "Because Music"
+   ],
+   "true_intermediates": [
+    "Columbia Records"
+   ],
+   "true_intermediates_aliases": [
+    "Columbia Records",
+    "Columbia"
+   ],
+   "template": "album_label",
+   "hop2": "hq_city",
+   "wikidata": {
+    "S": "Q21450454",
+    "B": "Q183387",
+    "B_prime": "Q2740367"
+   },
+   "evidence": {
+    "p2_samples_Ap": 8,
+    "p1_samples_Bp": 6,
+    "p1_samples_B": 0,
+    "lp_Ap_minus_A": 6.550048395991325,
+    "lp_Bp_minus_B": 9.296081017237157,
+    "inject_Bp_gives_Ap": true,
+    "inject_B_gives_A": true,
+    "hop2_on_Bp_gives_Ap": true,
+    "inject_Bp": "Paris, France.",
+    "inject_B": "New York.",
+    "hop2_on_Bp": "Paris, France. The label was founded in 2003 by Emmanuel de Buretel, the former CEO of Virgin",
+    "p2_samples": [
+     "Paris, France. The same year, a major terrorist attack took place in Paris, resulting in the deaths of 130",
+     "Paris.",
+     "...",
+     "Paris. The label’s name is Because Music.",
+     "London.",
+     "Paris.",
+     "Paris.",
+     "Paris, France.",
+     "Paris, France. The album's genre is electronic music.",
+     "Paris."
+    ],
+    "p1_samples": [
+     "Kobalt. The album features collaborations with various artists, including Gary Numan, Peaches, and The Heavy.",
+     "because the artist, Jean-Michel Jarre, was unhappy with the way his previous label had handled the release of his",
+     "Because Music.",
+     "Because Music. It was published in 2016 and was the second of a two-part album series. It includes contributions",
+     "Kobalt.",
+     "of the same name. The song \"The Heart of Noise\" features an intro by the spoken word artist known as Kill",
+     "Because Music, which is owned by Christine and the Queens. The album peaked at number 8 on the French Albums Chart",
+     "Because Music.",
+     "Because Music.",
+     "Because Music."
+    ],
+    "Bp_credited_on_S": [],
+    "answer_hub_share": 0.0036907012332343145
+   },
+   "adjudication": {
+    "id": "album_label.Q21450454.Q183387.hq_city",
+    "clean": true,
+    "reason": "Electronica 2 was released by Jean-Michel Jarre through Columbia/Sony Music, and Because Music had no legitimate releasing or parent-label role on the album, so the model's Paris answer comes from a wrongly resolved bridge.",
+    "category": "clean",
+    "judge": "claude-opus-5-5"
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "last_word_token",
+    "offsets": [
+     -1
+    ]
+   }
+  },
+  {
+   "name": "doctoral_advisor-Q775969-birth_city",
+   "prompt": "Fact: The doctoral advisor of Dirk Coster was born in the city of",
+   "target": "Groningen",
+   "correct_answer": "Vienna",
+   "intermediates": [
+    "Heike Kamerlingh Onnes"
+   ],
+   "intermediates_aliases": [
+    "Heike Kamerlingh Onnes",
+    "H. Kamerlingh Onnes",
+    "H. K. Onnes"
+   ],
+   "true_intermediates": [
+    "Paul Ehrenfest"
+   ],
+   "true_intermediates_aliases": [
+    "Paul Ehrenfest",
+    "P. Ehrenfest"
+   ],
+   "template": "doctoral_advisor",
+   "hop2": "birth_city",
+   "wikidata": {
+    "S": "Q775969",
+    "B": "Q84227",
+    "B_prime": "Q62891"
+   },
+   "evidence": {
+    "p2_samples_Ap": 7,
+    "p1_samples_Bp": 7,
+    "p1_samples_B": 0,
+    "lp_Ap_minus_A": 6.213772467104718,
+    "lp_Bp_minus_B": 4.149637574679389,
+    "inject_Bp_gives_Ap": true,
+    "inject_B_gives_A": true,
+    "hop2_on_Bp_gives_Ap": true,
+    "inject_Bp": "Groningen, Netherlands. The doctoral advisor of Kamerlingh Onnes, Rudolf Adriaan Mees, was",
+    "inject_B": "Vienna, Austria. The doctoral advisor of Paul Ehrenfest was Ludwig Boltzmann, who was born in the city of Vienna,",
+    "hop2_on_Bp": "Groningen, Netherlands, on September 21, 1853. He was the son of Harm Kamerlingh",
+    "p2_samples": [
+     "the famous Dutch artist Hieronymus Bosch. This advisor's only child was the Dutch physicist and mathematician who was the first",
+     "Groningen.",
+     "Groningen. The doctoral advisor of Wander Johannes de Haas was born in the city of Deventer. The doctoral advisor",
+     "Groningen. The first two letters of this city name are the first two letters of the first name of the person who",
+     "Groningen. In what year was this advisor born?",
+     "the doctoral advisor of Heike Kamerlingh Onnes. Dirk Coster (1889-1950) was",
+     "Groningen.",
+     "Rotterdam. Dirk Coster was a Dutch physicist. He was a professor of physics at the University of Groningen. He",
+     "Groningen. What is the name of this advisor?",
+     "Groningen. In which year was the first woman to earn a Ph.D. from the University of Groningen born?"
+    ],
+    "p1_samples": [
+     "Heike Kamerlingh Onnes, the discoverer of superconductivity! In 1923, Coster and",
+     "Heike Kamerlingh Onnes, who discovered superconductivity in 1911. He got the Nobel Prize in",
+     "Heike Kamerlingh Onnes, who received the 1913 Nobel Prize in Physics for his work in low",
+     "Wander de Haas. He was the chair of experimental physics at the University of Groningen. De Haas is known for the",
+     "Heike Kamerlingh Onnes, the discoverer of superconductivity. Coster also worked with the Nobel laure",
+     "known as the \"Grandfather of Nuclear Physics\". He has made many contributions to science, including the liquid drop model,",
+     "Heike Kamerlingh Onnes.",
+     "Heike Kamerlingh Onnes, who was awarded the Nobel Prize in Physics in 1913 for his work",
+     "a scientist named Heike Kamerlingh Onnes. Onnes is famous for being the first person to liquefy",
+     "Wander de Haas, who was the first to measure the Zeeman effect in the laboratory. The supervisor of de Haas was"
+    ],
+    "Bp_credited_on_S": [],
+    "answer_hub_share": 0.003790375741595254
+   },
+   "adjudication": {
+    "id": "doctoral_advisor.Q775969.Q84227.birth_city",
+    "clean": true,
+    "reason": "Coster's 1922 Leiden doctorate was supervised by Paul Ehrenfest (born Vienna), and the model consistently names Kamerlingh Onnes, a Leiden colleague who was not his advisor and who was born in Groningen, so A' follows from the wrong bridge (though Coster's own later Groningen professorship is a minor confound).",
+    "category": "clean",
+    "judge": "claude-opus-5-5"
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "last_word_token",
+    "offsets": [
+     -1
+    ]
+   }
+  },
+  {
+   "name": "doctoral_advisor-Q92846557-death_city",
+   "prompt": "Fact: The doctoral advisor of Stanislawa Nikodym died in the city of",
+   "target": "Lviv",
+   "correct_answer": "Grodzisk Mazowiecki",
+   "intermediates": [
+    "Stefan Banach"
+   ],
+   "intermediates_aliases": [
+    "Stefan Banach"
+   ],
+   "true_intermediates": [
+    "Stefan Mazurkiewicz"
+   ],
+   "true_intermediates_aliases": [
+    "Stefan Mazurkiewicz"
+   ],
+   "template": "doctoral_advisor",
+   "hop2": "death_city",
+   "wikidata": {
+    "S": "Q92846557",
+    "B": "Q656642",
+    "B_prime": "Q180217"
+   },
+   "evidence": {
+    "p2_samples_Ap": 5,
+    "p1_samples_Bp": 9,
+    "p1_samples_B": 0,
+    "lp_Ap_minus_A": 5.243254674132913,
+    "lp_Bp_minus_B": 5.253634786553448,
+    "inject_Bp_gives_Ap": true,
+    "inject_B_gives_A": true,
+    "hop2_on_Bp_gives_Ap": true,
+    "inject_Bp": "Lwow, Poland, in 1945. The city is now known as Lviv, Ukraine. Banach",
+    "inject_B": "Grodzisk Mazowiecki, Poland. The doctoral advisor of Stefan Mazurkiewicz, Wacław Sier",
+    "hop2_on_Bp": "Lviv, which was part of Poland at the time of his death. He was a Polish mathematician who made significant contributions",
+    "p2_samples": [
+     "Lviv, which is currently in Ukraine, but at that time was part of the Austrian Partition. Which of the following",
+     "Bydgoszcz, where he was born. However, the professor was not born in Bydgoszcz, but",
+     "Lviv in 1941. The reason was a bullet in the back of the head. The executors were Germans",
+     "Łódź.",
+     "Lviv, which was part of Austria at the time.",
+     "Caen.",
+     "Lviv in 1941. It was a violent death. The name of the advisor was Stefan Banach. And",
+     "Lviv in 1941. He was killed by a bullet through the neck in his own apartment. The murderer was",
+     "Lwow in the year 1941. The first name of that advisor was Hugo.",
+     "the University of Warsaw in 1919. The University of Warsaw is in Poland. So the doctoral advisor of Stanisl"
+    ],
+    "p1_samples": [
+     "... himself. He did not have a PhD advisor, but he was a self-taught mathematician. He didn't receive",
+     "Stefan Banach. She was also the wife of Otton Nikodym.",
+     "Stefan Banach.",
+     "Stefan Banach.",
+     "Stefan Banach.",
+     "Stefan Banach. (Stanislawa Nikodym was a Polish mathematician who worked in functional analysis and measure theory.)",
+     "Stefan Banach",
+     "Stefan Banach. (She earned her degree in 1924, I think.) But the advisor of Stefan Banach",
+     "Stefan Banach. That is, a female math PhD had Banach as her advisor. And she worked on measure theory",
+     "Stefan Banach. Banach is considered the father of functional analysis. In Poland, the Banach space is named after"
+    ],
+    "Bp_credited_on_S": [],
+    "answer_hub_share": 0.011371127224785761
+   },
+   "adjudication": {
+    "id": "doctoral_advisor.Q92846557.Q656642.death_city",
+    "clean": true,
+    "reason": "Stanisława Nikodym earned her Warsaw doctorate under Stefan Mazurkiewicz, who died in Grodzisk Mazowiecki. Stefan Banach, who died in Lviv, held no advisory role for her; he is linked to her husband Otton Nikodym, which makes him a plausible but wrong bridge.",
+    "category": "clean",
+    "judge": "claude-opus-5-5"
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "last_word_token",
+    "offsets": [
+     -1
+    ]
+   }
+  },
+  {
+   "name": "composition_composer-Q1064299-birth_city",
+   "prompt": "Fact: The composer of Set the Controls for the Heart of the Sun was born in the city of",
+   "target": "Cambridge",
+   "correct_answer": "Great Bookham",
+   "intermediates": [
+    "David Gilmour"
+   ],
+   "intermediates_aliases": [
+    "David Gilmour",
+    "Dave Gilmour",
+    "David Jon Gilmour"
+   ],
+   "true_intermediates": [
+    "Roger Waters"
+   ],
+   "true_intermediates_aliases": [
+    "Roger Waters",
+    "George Roger Waters"
+   ],
+   "template": "composition_composer",
+   "hop2": "birth_city",
+   "wikidata": {
+    "S": "Q1064299",
+    "B": "Q180861",
+    "B_prime": "Q178517"
+   },
+   "evidence": {
+    "p2_samples_Ap": 7,
+    "p1_samples_Bp": 6,
+    "p1_samples_B": 2,
+    "lp_Ap_minus_A": 15.110703554935753,
+    "lp_Bp_minus_B": 0.2641104441136122,
+    "inject_Bp_gives_Ap": true,
+    "inject_B_gives_A": true,
+    "hop2_on_Bp_gives_Ap": true,
+    "inject_Bp": "Cambridge, England. The song was released in 1968 as part of Pink Floyd's second album, A Saucer",
+    "inject_B": "Great Bookham, Surrey, England, on September 6, 1943. He is best known for his work",
+    "hop2_on_Bp": "Cambridge, England, on March 6, 1946. He is a singer, songwriter, and multi-instrument",
+    "p2_samples": [
+     "1.4.1 In a typical power plant, the heat source to operate the Rankine cycle is from the",
+     "Cambridge, England, in the year 1943. This composer was a founding member of the band Pink Floyd. In",
+     "Cambridge, England. The composer was a founding member of the band Pink Floyd. The band was formed in 1965",
+     "Cambridge, England. (Roger Waters)",
+     "Cambridge, England, in the year 1943.",
+     "Epsom, in England. The song was released in 1968 on the album A Saucerful of Secrets",
+     "Cambridge, England.",
+     "Cambridge, England.",
+     "Cambridge. Answer: Roger Waters. The first Pink Floyd album to reach #1 in the UK was The Dark Side of",
+     "New York."
+    ],
+    "p1_samples": [
+     "David Gilmour and Roger Waters, with Waters writing the lyrics. The track was recorded in May and June 1972",
+     "David Gilmour and Roger Waters, although it was originally credited solely to Waters. It was the only song on A Sa",
+     "David Gilmour, with lyrics by Roger Waters. The song was recorded in May 1973 at Abbey Road studios.",
+     "David Gilmour, Roger Waters, and Rick Wright. It was published in 1968 and was the second track on",
+     "Syd Barrett in 1967. Initially, the song was a slow, spacey piece with a haunting atmosphere. The",
+     "David Gilmour, Roger Waters and Rick Wright. It is a dark song about a man who ends up in an insane",
+     "Roger Waters",
+     "David Gilmour and Roger Waters. The song uses the concept of time travel. The lyrics are based on the Chinese I",
+     "Waters (lyrics) and Gilmour (music).Īs the band began to record their second album, the",
+     "Roger Waters but was never performed live by Pink Floyd until the band's 1974 tour. It was the only song"
+    ],
+    "Bp_credited_on_S": [],
+    "answer_hub_share": 0.003337612323491656
+   },
+   "adjudication": {
+    "id": "composition_composer.Q1064299.Q180861.birth_city",
+    "clean": true,
+    "reason": "The song is credited solely to Roger Waters (born in Great Bookham), and David Gilmour, born in Cambridge, is not a credited composer; the model's own first-hop completions put Gilmour first, so Cambridge follows from that wrong bridge, though Pink Floyd's general Cambridge ties (Barrett, Waters' upbringing) are a minor confound.",
+    "category": "clean",
+    "judge": "claude-opus-5-5"
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "last_word_token",
+    "offsets": [
+     -1
+    ]
+   }
+  },
+  {
+   "name": "person_mother-Q347013-death_year",
+   "prompt": "Fact: The mother of Vratislaus II of Bohemia died in the year",
+   "target": "1052",
+   "correct_answer": "1058",
+   "intermediates": [
+    "Božena"
+   ],
+   "intermediates_aliases": [
+    "Božena"
+   ],
+   "true_intermediates": [
+    "Judith of Schweinfurt"
+   ],
+   "true_intermediates_aliases": [
+    "Judith of Schweinfurt"
+   ],
+   "template": "person_mother",
+   "hop2": "death_year",
+   "wikidata": {
+    "S": "Q347013",
+    "B": "Q61978",
+    "B_prime": "Q3563195"
+   },
+   "evidence": {
+    "p2_samples_Ap": 7,
+    "p1_samples_Bp": 6,
+    "p1_samples_B": 0,
+    "lp_Ap_minus_A": 2.0447564646601677,
+    "lp_Bp_minus_B": 5.201188061867697,
+    "inject_Bp_gives_Ap": true,
+    "inject_B_gives_A": true,
+    "hop2_on_Bp_gives_Ap": true,
+    "inject_Bp": "1052. Vratislaus II was the first King of Bohemia, ruling from 1085 until his",
+    "inject_B": "1058. Vratislaus II was born after 1035. So, Judith of Schweinfurt was",
+    "hop2_on_Bp": "1052. She was the mother of Vratislav II of Bohemia, the first King of Bohemia.",
+    "p2_samples": [
+     "1052.",
+     "1052. This means that her son was born before that date.",
+     "of his birth.",
+     "1062. So the statement is false.",
+     "1052. She was named Božena (also known as Božena of Bohemia). She was the",
+     "1052. However, she was not a native of Bohemia (she was a Hungarian princess, actually).",
+     "1062. Her name was Judith von Schweinfurt. The father of Vratislaus was Bretislaus",
+     "1052. The mother of Vratislaus II of Bohemia died in 1052. So the death",
+     "1052.",
+     "1052. He was born about 1035. She could not have died before he was born, so she"
+    ],
+    "p1_samples": [
+     "Božena (also known as Božena of Bohemia). She was the second wife of Duke Oldřich",
+     "Božena (also known as Božena of Bohemia), who was a concubine of his father,",
+     "Princess Božena (also known as Božena of Bohemia). She was the wife of Duke Oldřich",
+     "not named \"Božena\" but \"Božena\" is a common Slavic female given name. The name \"",
+     "Božena (Božena (Czech: Božena; died 1052) was a mistress and later",
+     "Božena (d. 1052). She was a daughter of a certain Křesina, who was",
+     "not named “Božena” but “Božetěcha”. The name “Božena” is a",
+     "Božena († 1052). She was the second wife of Duke Oldřich of Bohemia, whom",
+     "a daughter of the Emperor Henry III. The wife of Vratislaus II, Swatawa, was a daughter",
+     "Božena. She was a commoner. The marriage of her husband to her, his second wife, was mor"
+    ],
+    "Bp_credited_on_S": [],
+    "answer_hub_share": 0.00021222410865874363
+   },
+   "adjudication": {
+    "id": "person_mother.Q347013.Q61978.death_year",
+    "clean": true,
+    "reason": "Vratislaus II's mother was Judith of Schweinfurt (died 1058), while Božena was the wife of Oldřich and mother of Bretislaus I, which makes her Vratislaus's grandmother, so the model resolved the wrong bridge and gave her death year of 1052.",
+    "category": "clean",
+    "judge": "claude-opus-5-5"
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "last_word_token",
+    "offsets": [
+     -1
+    ]
+   }
+  },
+  {
+   "name": "album_performer-Q754161-birth_city",
+   "prompt": "Fact: The artist who released the 2005 album Rebirth was born in the city of",
+   "target": "New Orleans",
+   "correct_answer": "The Bronx",
+   "intermediates": [
+    "Lil Wayne"
+   ],
+   "intermediates_aliases": [
+    "Lil Wayne",
+    "Dwayne Carter",
+    "Dwayne Michael Carter Jr.",
+    "Weezy",
+    "Weezy F. Baby",
+    "Baby D",
+    "Birdman Jr.",
+    "President Carter",
+    "Shrimp Daddy",
+    "Tunechi"
+   ],
+   "true_intermediates": [
+    "Jennifer Lopez"
+   ],
+   "true_intermediates_aliases": [
+    "Jennifer Lopez",
+    "J-lo",
+    "J.lo",
+    "Jlo",
+    "J Lo",
+    "J-LO",
+    "J.LO",
+    "JLO",
+    "Jennifer López",
+    "Jennifer Lynn Affleck",
+    "Jennifer Lynn Lopez",
+    "Jennifer Lynn López",
+    "J-Lo",
+    "J. Lo",
+    "J.Lo",
+    "JLo"
+   ],
+   "template": "album_performer",
+   "hop2": "birth_city",
+   "wikidata": {
+    "S": "Q754161",
+    "B": "Q40715",
+    "B_prime": "Q15615"
+   },
+   "evidence": {
+    "p2_samples_Ap": 5,
+    "p1_samples_Bp": 7,
+    "p1_samples_B": 0,
+    "lp_Ap_minus_A": 7.0895403157919645,
+    "lp_Bp_minus_B": 1.7334740565856919,
+    "inject_Bp_gives_Ap": true,
+    "inject_B_gives_A": true,
+    "hop2_on_Bp_gives_Ap": true,
+    "inject_Bp": "New Orleans, Louisiana. The album was a departure from his usual hip-hop style, incorporating elements of rock and alternative music",
+    "inject_B": "New York, New York, USA.",
+    "hop2_on_Bp": "New Orleans, Louisiana. He is a rapper, singer, songwriter, record executive, entrepreneur, and actor. He",
+    "p2_samples": [
+     "New Orleans, Louisiana, which is located in the United States. The album Rebirth was released by the artist Lil Wayne",
+     "New Orleans, Louisiana, in the United States.",
+     "Myrtle Beach, South Carolina. Which artist? This is a question that can be answered with the help of the internet",
+     "New Orleans. The album's title is a reference to the city being rebuilt after Hurricane Katrina. This album also featured the",
+     "Detroit. (Lil Wayne, however, was born in New Orleans.)",
+     "Accra, Ghana. The album title Rebirth refers to his spiritual rebirth. He was given the name Carl Hammond,",
+     "Philadelphia, Pennsylvania.",
+     "New Orleans, Louisiana.",
+     "New Orleans. Answer: Lil Wayne. The album Rebirth came out in 2010, not 2005.",
+     "Chicago, Illinois."
+    ],
+    "p1_samples": [
+     "Lil Wayne under the name Young Money.",
+     "Lil Wayne’s Cash Money Records/Universal Motown, but the project is rarely mentioned in the same breath as his",
+     "Lil Wayne in 2010.",
+     "Lil Wayne, but the album was delayed multiple times before its release. The album was originally scheduled for release in 200",
+     "Lil Wayne, and it is considered one of his most divisive albums. But what makes this album a “fact”",
+     "American rapper and singer Lil Wayne. It has sold over 800,000 copies worldwide. It was Lil Wayne's",
+     "Lil Wayne, and it is considered by many to be one of the worst albums of all time. It was a departure",
+     "Lil Wayne, but the album's sound was a significant departure from his previous work, incorporating elements of rock and pop music",
+     "Lil Wayne. Fact: The album was a commercial success, debuting at number two on the Billboard 200 and selling",
+     "Lil Wayne, and it was a departure from his usual hip-hop sound, incorporating rock and alternative elements. This album was"
+    ],
+    "Bp_credited_on_S": [],
+    "answer_hub_share": 0.006588483331137172
+   },
+   "adjudication": {
+    "id": "album_performer.Q754161.Q40715.birth_city",
+    "clean": true,
+    "reason": "The 2005 date points unambiguously to Jennifer Lopez's Rebirth (she was born in the Bronx), while Lil Wayne's same-titled album came out in 2010, so B' is not correct for the 2005 album and the model simply resolved the wrong bridge.",
+    "category": "clean",
+    "judge": "claude-opus-5-5"
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "last_word_token",
+    "offsets": [
+     -1
+    ]
+   }
+  },
+  {
+   "name": "doctoral_advisor-Q214004-death_city",
+   "prompt": "Fact: The doctoral advisor of Christian Garve died in the city of",
+   "target": "Leipzig",
+   "correct_answer": "Halle (Saale)",
+   "intermediates": [
+    "Johann August Ernesti"
+   ],
+   "intermediates_aliases": [
+    "Johann August Ernesti"
+   ],
+   "true_intermediates": [
+    "Johann Andreas Segner"
+   ],
+   "true_intermediates_aliases": [
+    "Johann Andreas Segner",
+    "Johann Andreas von Segner",
+    "Johann Segner"
+   ],
+   "template": "doctoral_advisor",
+   "hop2": "death_city",
+   "wikidata": {
+    "S": "Q214004",
+    "B": "Q65853",
+    "B_prime": "Q72076"
+   },
+   "evidence": {
+    "p2_samples_Ap": 4,
+    "p1_samples_Bp": 7,
+    "p1_samples_B": 0,
+    "lp_Ap_minus_A": 2.84164481703192,
+    "lp_Bp_minus_B": 8.007966790737555,
+    "inject_Bp_gives_Ap": true,
+    "inject_B_gives_A": true,
+    "hop2_on_Bp_gives_Ap": true,
+    "inject_Bp": "Leipzig, Electorate of Saxony, Holy Roman Empire (now Germany) on September 11, 1781.",
+    "inject_B": "Halle, in the Kingdom of Prussia, in 1777.",
+    "hop2_on_Bp": "Leipzig, Germany.",
+    "p2_samples": [
+     "Halle (Saale) in 1749.",
+     "Leipzig in 1790. This advisor had a famous student from the University of Leipzig who was born in 1744",
+     "Leipzig in 1768.",
+     "Leiden in the year 1781. Who was this advisor? This question relates to the following work: Christian Garve",
+     "Leipzig.",
+     "Frankfurt an der Oder. Christian Garve was a German philosopher who studied under Johann August Ernesti at the University of",
+     "Breslau",
+     "Jena. Which city is that?",
+     "Züllichau in 1748. This is the same year in which Garve was born. The advisor in",
+     "Leipzig. Fact: The doctoral advisor of Christian Garve was Johann August Ernesti. Fact: Johann August Ernesti died"
+    ],
+    "p1_samples": [
+     "Johann August Ernesti. Fact: The doctoral advisor of Johann August Ernesti was Johann Christoph Gottsched. Fact:",
+     "Johann August Ernesti. Christian Garve was a German philosopher. He was born on January 7, 1742",
+     "Johann August Ernesti. Christian Garve's doctoral advisor was Johann August Ernesti. Johann August Ernesti's doctoral advisor",
+     "Johann August Nösselt.",
+     "Johann August Ernesti, and the doctoral advisor of Johann August Ernesti was Johann Christoph Gottsched, and the doctoral",
+     "Johann August Ernesti.",
+     "Johann August Ernesti, and the doctoral advisor of Ernesti was Johann August Ernesti (self), and the doctoral advisor",
+     "none other than Immanuel Kant. Garve wrote his dissertation on Cicero.",
+     "Johann August Nösselt.",
+     "Johann August Ernesti, who was also the doctoral advisor of Johann Gottfried Herder."
+    ],
+    "Bp_credited_on_S": [],
+    "answer_hub_share": 0.0024719841793012527
+   },
+   "adjudication": {
+    "id": "doctoral_advisor.Q214004.Q65853.death_city",
+    "clean": true,
+    "reason": "Wikidata and the Mathematics Genealogy Project list Segner as Garve's advisor for his 1766 Halle degree, and Segner died in Halle, whereas Ernesti was a Leipzig philologist with no recognized advisor role, so the model's answer of Leipzig comes from substituting the wrong person.",
+    "category": "clean",
+    "judge": "claude-opus-5-5"
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "last_word_token",
+    "offsets": [
+     -1
+    ]
+   }
+  },
+  {
+   "name": "person_father-Q449540-death_year",
+   "prompt": "Fact: The father of Ichijō died in the year",
+   "target": "1011",
+   "correct_answer": "991",
+   "intermediates": [
+    "Emperor Reizei"
+   ],
+   "intermediates_aliases": [
+    "Emperor Reizei",
+    "Reizei-tennō"
+   ],
+   "true_intermediates": [
+    "En'yū"
+   ],
+   "true_intermediates_aliases": [
+    "En'yū",
+    "En'yu",
+    "En'yuu"
+   ],
+   "template": "person_father",
+   "hop2": "death_year",
+   "wikidata": {
+    "S": "Q449540",
+    "B": "Q374104",
+    "B_prime": "Q374125"
+   },
+   "evidence": {
+    "p2_samples_Ap": 6,
+    "p1_samples_Bp": 4,
+    "p1_samples_B": 0,
+    "lp_Ap_minus_A": 6.462344478815794,
+    "lp_Bp_minus_B": 5.131426801846828,
+    "inject_Bp_gives_Ap": true,
+    "inject_B_gives_A": true,
+    "hop2_on_Bp_gives_Ap": true,
+    "inject_Bp": "1011. The father of Sanjō, Emperor Kazan, died in the year 1008. The",
+    "inject_B": "991, and his mother, Fujiwara no Senshi, died in 1002. The mother of the",
+    "hop2_on_Bp": "1011. He was the 63rd emperor of Japan. He was the son of Emperor Murakami and Fuj",
+    "p2_samples": [
+     "of the Ox (2009).",
+     "1011. The father of Gosanjō died in the year 1073. The father of Horikawa died",
+     "1470. The father of Myōshin-ji died in the year 1490. The father of",
+     "1011.",
+     "1011.",
+     "he was born",
+     "1011. The father of Sanjō died in the year 1017. The father of Go-Ich",
+     "980; the mother of Ichijō died in the year 981. This means that the mother and father of",
+     "1011 CE. That was 1011 years ago. In the year 1011, the world was",
+     "1011. I'm in the year 1000, so he's still alive. But his name is not"
+    ],
+    "p1_samples": [
+     "Emperor Reizei (reigned 967–969), but he was raised as the son of Emperor En'yū",
+     "the Emperor Reizei. The mother was Fujiwara no Kaishi (or Yoshiko), a daughter of Fuj",
+     "the Emperor Reizei. His mother was Fujiwara no … Full name: Emperor Ichijō (一条天皇",
+     "the Emperor Reizei, who was the son of Emperor Murakami. But his mother was a daughter of Fujiw",
+     "Emperor Reizei, and his mother was Fujiwara no Kaishi.",
+     "Emperor Reizei, and the mother was Fujiwara no Kaishi, a daughter of Fujiwara no Kore",
+     "the son of a former emperor, so there was a small amount of imperial blood in Ichijō's veins. But",
+     "the emperor Reizei; his mother was Fujiwara no Kaishi.",
+     "Fujiwara no Koretada, who was a Fujiwara regent. His mother was a daughter of the",
+     "the Emperor Reizei, and the mother was Fujiwara no Kaishi, a daughter of Fujiwara no"
+    ],
+    "Bp_credited_on_S": [],
+    "answer_hub_share": 0.00022789425706472196
+   },
+   "adjudication": {
+    "id": "person_father.Q449540.Q374104.death_year",
+    "clean": true,
+    "reason": "Emperor Ichijō's father was Emperor En'yū (d. 991), while Emperor Reizei (d. 1011) was his uncle and the father of Kazan and Sanjō, so the model confused the imperial branches and no plausible 'Ichijō' was Reizei's son.",
+    "category": "clean",
+    "judge": "claude-opus-5-5"
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "last_word_token",
+    "offsets": [
+     -1
+    ]
+   }
+  },
+  {
+   "name": "album_label-Q1929444-hq_city",
+   "prompt": "Fact: The record label that released the 1995 album Singles is headquartered in the city of",
+   "target": "Seattle",
+   "correct_answer": "Santa Monica",
+   "intermediates": [
+    "Sub Pop"
+   ],
+   "intermediates_aliases": [
+    "Sub Pop",
+    "Sub Pop Records"
+   ],
+   "true_intermediates": [
+    "Geffen Records"
+   ],
+   "true_intermediates_aliases": [
+    "Geffen Records",
+    "LC 07266",
+    "LC 7266"
+   ],
+   "template": "album_label",
+   "hop2": "hq_city",
+   "wikidata": {
+    "S": "Q1929444",
+    "B": "Q212699",
+    "B_prime": "Q778673"
+   },
+   "evidence": {
+    "p2_samples_Ap": 5,
+    "p1_samples_Bp": 4,
+    "p1_samples_B": 0,
+    "lp_Ap_minus_A": 4.884324669837952,
+    "lp_Bp_minus_B": 6.7822468327358365,
+    "inject_Bp_gives_Ap": true,
+    "inject_B_gives_A": true,
+    "hop2_on_Bp_gives_Ap": true,
+    "inject_Bp": "Seattle, Washington. The album was a compilation of songs from the 1992 film of the same name, which was",
+    "inject_B": "Santa Monica, California. The album was a soundtrack to the 1992 film of the same name, which was set",
+    "hop2_on_Bp": "Seattle, Washington. Fact: Sub Pop is a record label. Fact: Sub Pop is the label that first signed the",
+    "p2_samples": [
+     "the band's origin. Propaganda: The album was released on Sub Pop, a record label founded in Seattle, Washington",
+     "______.",
+     "Seattle.",
+     "Seattle. So it's not exactly a surprise how many of the featured artists came from the same region. And as the",
+     "Seattle. (True)",
+     "Seattle. However, this is not a list of 1995 albums that came out of the Seattle music scene; it",
+     "Simi Valley.",
+     "New York. In 1994, that record label released the album Illmatic. And in 1995, that",
+     "Seattle, Washington. This is the same city where the 1992 film Singles was set and filmed. The album was",
+     "Portland, Oregon."
+    ],
+    "p1_samples": [
+     "Sub Pop.",
+     "Sub Pop. Sub Pop was founded by Jonathan Poneman and Bruce Pavitt. The album includes songs by Mudhoney",
+     "Sub Pop.",
+     "A&M.",
+     "Sub Pop in 1992. (wait, what?) The album was originally intended for a 1992 release,",
+     "Epic",
+     "Epic Records",
+     "of the same name, owned by Madonna. The album featured songs from her previous albums, including \"Like a Virgin,\"",
+     "of the same name.",
+     "Epic. Fact: The album includes songs from artists such as Alice in Chains, Pearl Jam, Soundgarden, and"
+    ],
+    "Bp_credited_on_S": [],
+    "answer_hub_share": 0.007561436672967864
+   },
+   "adjudication": {
+    "id": "album_label.Q1929444.Q212699.hq_city",
+    "clean": true,
+    "reason": "The 1995 'Singles' is Nirvana's box set, released by Geffen/DGC. The model wrongly linked it to Sub Pop, which comes either from Nirvana's earlier label or from confusion with the Seattle-set 'Singles' film soundtrack (actually an Epic release). No reading of the subject makes Sub Pop the correct label.",
+    "category": "clean",
+    "judge": "claude-opus-5-5"
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "last_word_token",
+    "offsets": [
+     -1
+    ]
+   }
+  },
+  {
+   "name": "novel_author-Q786440-death_year",
+   "prompt": "Fact: The author of Auto-Emancipation died in the year",
+   "target": "1940",
+   "correct_answer": "1891",
+   "intermediates": [
+    "Ze'ev Jabotinsky"
+   ],
+   "intermediates_aliases": [
+    "Ze'ev Jabotinsky",
+    "Vladimir Evgenyevich Jabotinsky",
+    "Vladimir Evgenyevich Zhabotinsky",
+    "Vladimir Jabotinsky",
+    "Vladimir Yevgenyevich Jabotinsky",
+    "Vladimir Yevgenyevich Zhabotinsky",
+    "Vladimir Ze'ev Jabotinsky",
+    "Vladimir Zeev Jabotinsky",
+    "Vladimir Zeyev Zhabotinsky",
+    "Vladimir Zhabotinsky",
+    "Zeev Jabotinsky",
+    "Ze'ev Vladimir Jabotinsky",
+    "Zeev Vladimir Jabotinsky",
+    "Ze'ev Zhabotinsky",
+    "Zeev Zhabotinsky"
+   ],
+   "true_intermediates": [
+    "Leon Pinsker"
+   ],
+   "true_intermediates_aliases": [
+    "Leon Pinsker",
+    "Judah Leib Pinsker",
+    "Yehudah Leib Pinsker"
+   ],
+   "template": "novel_author",
+   "hop2": "death_year",
+   "wikidata": {
+    "S": "Q786440",
+    "B": "Q962710",
+    "B_prime": "Q319896"
+   },
+   "evidence": {
+    "p2_samples_Ap": 4,
+    "p1_samples_Bp": 5,
+    "p1_samples_B": 0,
+    "lp_Ap_minus_A": 4.605695188045502,
+    "lp_Bp_minus_B": 1.915348818700295,
+    "inject_Bp_gives_Ap": true,
+    "inject_B_gives_A": true,
+    "hop2_on_Bp_gives_Ap": true,
+    "inject_Bp": "1940.",
+    "inject_B": "1891.",
+    "hop2_on_Bp": "1940. He was a Jewish leader, writer, and orator who founded the Revisionist Zionist movement. He",
+    "p2_samples": [
+     "1940.",
+     "1940.",
+     "in which Israel was established as a state.",
+     "of the publication of The Jewish State.",
+     "1940.",
+     "1940. But his ideas have made a comeback. Who was he? What was his idea? And why has",
+     "1919.",
+     "that the Balfour Declaration was issued.",
+     "1904. This means that the author was not alive to see any of the following events: the Balfour",
+     "1904. In that year, the world was introduced to the first successful transatlantic radio transmission. The world also"
+    ],
+    "p1_samples": [
+     "Leo Motzkin. He was present at the first Zionist Congress in 1897. He wrote the pamphlet in",
+     "a Jewish Zionist and published in 1882. This was a seminal text in the early days of Zionism. The",
+     "Ze'ev Jabotinsky in 1935.",
+     "Ze'ev (Vladimir) Jabotinsky in 1897, and published in 1903. It",
+     "Ze’ev Jabotinsky in 1897. In this essay, Jabotinsky argued that the Jews should establish",
+     "Leo Motzkin (1867-1933). However, this pamphlet is often mistakenly attributed to Leon Pinsker",
+     "Ze'ev Jabotinsky",
+     "Ze'ev Jabotinsky in 1903. The answer: False. Ze'ev Jabotinsky wrote The",
+     "a Ukrainian Jew, Vladimir (Ze’ev) Jabotinsky, and published in Leipzig, Germany, in 189",
+     "Ze’ev Jabotinsky, the founder of Revisionist Zionism, in which he argued for the creation of a"
+    ],
+    "Bp_credited_on_S": [],
+    "answer_hub_share": 0.00261683771517357
+   },
+   "adjudication": {
+    "id": "novel_author.Q786440.Q962710.death_year",
+    "clean": true,
+    "reason": "Auto-Emancipation (1882) was written solely by Leon Pinsker, who died in 1891; Jabotinsky had no role in it and the title is unambiguous, so the model's answer of 1940, Jabotinsky's death year, is a clear wrong-bridge error.",
+    "category": "clean",
+    "judge": "claude-opus-5-5"
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "last_word_token",
+    "offsets": [
+     -1
+    ]
+   }
+  },
+  {
+   "name": "person_mother-Q153023-death_year",
+   "prompt": "Fact: The mother of Henry III died in the year",
+   "target": "1252",
+   "correct_answer": "1043",
+   "intermediates": [
+    "Blanche of Castile"
+   ],
+   "intermediates_aliases": [
+    "Blanche of Castile"
+   ],
+   "true_intermediates": [
+    "Gisela of Swabia"
+   ],
+   "true_intermediates_aliases": [
+    "Gisela of Swabia"
+   ],
+   "template": "person_mother",
+   "hop2": "death_year",
+   "wikidata": {
+    "S": "Q153023",
+    "B": "Q62033",
+    "B_prime": "Q353"
+   },
+   "evidence": {
+    "p2_samples_Ap": 4,
+    "p1_samples_Bp": 5,
+    "p1_samples_B": 0,
+    "lp_Ap_minus_A": 2.593423545360565,
+    "lp_Bp_minus_B": 10.206165201874683,
+    "inject_Bp_gives_Ap": true,
+    "inject_B_gives_A": true,
+    "hop2_on_Bp_gives_Ap": true,
+    "inject_Bp": "1252. She was the daughter of Alfonso VIII of Castile and Eleanor of England. She was also the niece",
+    "inject_B": "1043. She was buried in the Speyer Cathedral. Her tomb is located in the crypt of the cathedral,",
+    "hop2_on_Bp": "1252. She was the mother of King Louis IX of France. She was also the grandmother of King Philip III",
+    "p2_samples": [
+     "1253. She was the sister of King Louis IX of France, who had just died in 1252.",
+     "of his birth. King John and Isabella of Angoulême had Henry, their first son, in 1207.",
+     "1252. She was the Queen of France, wife to King Louis VIII and mother to King Louis IX (Saint",
+     "1348, but the cause of her death is unknown. It is thought that she died of the Black Death.",
+     "1253, and in 1254 Henry married Eleanor of Provence. But before his marriage Henry had many love",
+     "1252. She was born in 1188. She was the daughter of the Count of Angouleme.",
+     "929. Henry III’s father was Henry the Fowler. It is unknown what happened to the mother of Henry III",
+     "1252; she was Blanche of Castile. In 1254 Henry III traveled to France to discuss peace with",
+     "1252. Fact: The mother of Henry III was named Blanche. Fact: Blanche was a queen of France.",
+     "929. She was the first of the Saxon line to be buried in the Cathedral of Quedlinburg."
+    ],
+    "p1_samples": [
+     "Blanche of Castile. She was the grandmother of two saints, King Louis IX of France and Queen Isabella of Portugal.",
+     "Blanche of Castile.",
+     "the niece of Richard I and John. So how is it that Henry III became king? Explain.",
+     "Blanche of Castile. She was a granddaughter of Henry II of England and Eleanor of Aquitaine through her mother,",
+     "Constance of Arles, the third wife of Robert II of France. She was the daughter of William I, Count",
+     "Yolande of Aragon (1384–1442). However, she was not a queen in her own right",
+     "Marie of Brabant, not Eleanor of Provence. Henry III was born in 1207 and was king of",
+     "the sister of Richard I and John. True or false?",
+     "Blanche of Castile. She was known for her strong political influence and served as regent for her son.",
+     "Blanche of Castile."
+    ],
+    "Bp_credited_on_S": [],
+    "answer_hub_share": 0.0010611205432937182
+   },
+   "adjudication": {
+    "id": "person_mother.Q153023.Q62033.death_year",
+    "clean": true,
+    "reason": "Although 'Henry III' is underspecified (England, France, HRE, Castile), Blanche of Castile was the mother of Louis IX and of no Henry III, so B' is wrong under every reading; the answer 1252 is her death year and follows from that wrong bridge.",
+    "category": "clean",
+    "judge": "claude-opus-5-5"
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "last_word_token",
+    "offsets": [
+     -1
+    ]
+   }
+  },
+  {
+   "name": "character_creator-Q860264-birth_city",
+   "prompt": "Fact: The creator of the fictional character Charles Westmoreland was born in the city of",
+   "target": "Portland",
+   "correct_answer": "Aurora",
+   "intermediates": [
+    "Stephen King"
+   ],
+   "intermediates_aliases": [
+    "Stephen King",
+    "John Swithen",
+    "Richard Richard",
+    "Richard Bachman",
+    "Stephen Edwin King"
+   ],
+   "true_intermediates": [
+    "Paul Scheuring"
+   ],
+   "true_intermediates_aliases": [
+    "Paul Scheuring"
+   ],
+   "template": "character_creator",
+   "hop2": "birth_city",
+   "wikidata": {
+    "S": "Q860264",
+    "B": "Q314506",
+    "B_prime": "Q39829"
+   },
+   "evidence": {
+    "p2_samples_Ap": 4,
+    "p1_samples_Bp": 4,
+    "p1_samples_B": 0,
+    "lp_Ap_minus_A": 4.016926527023315,
+    "lp_Bp_minus_B": 10.432689481880516,
+    "inject_Bp_gives_Ap": true,
+    "inject_B_gives_A": true,
+    "hop2_on_Bp_gives_Ap": true,
+    "inject_Bp": "Portland, Maine. The character of Charles Westmoreland is from Maine, and his daughter is from Portland, Maine.",
+    "inject_B": "Aurora, Illinois, which is also the birthplace of the real-life Charles Westmoreland.",
+    "hop2_on_Bp": "Portland, Maine. He is a famous author of horror, supernatural fiction, suspense, and fantasy novels. He has published",
+    "p2_samples": [
+     "Omaha, Nebraska. His name is Stephen King. King wrote the novella Rita Hayworth and Shawshank Redemption",
+     "the same name as the fictional character, but the fictional character is not named after the city.",
+     "Chicago, Illinois. Which character is this? Answer: The character Charles Westmoreland was created by the author Stephen King",
+     "Portland. Fact: The actor who plays the fictional character Charles Westmoreland was born in the city of Portland. Fact",
+     "Portland, Oregon, on April 1, 1920.",
+     "Portland, Oregon. Charles Westmoreland is a fictional character from the television series Prison Break, portrayed by actor Muse Watson",
+     "Boston.",
+     "Victoria in the province of British Columbia in Canada. This character, whose real name was James, was featured in the hit",
+     "Portland, Maine. Answer: Stephen King. Stephen King wrote the novella “Rita Hayworth and the Shawsh",
+     "Paris, France in 1947. His father, originally a farmer from Ohio, had served as an Army Air Corps"
+    ],
+    "p1_samples": [
+     "Frank Darabont for the TV series Prison Break. Westmoreland is a prisoner at Fox River State Penitenti",
+     "Stephen King and is a main protagonist in his 1982 novel, “Rita Hayworth and Shawshank Red",
+     "Stephen King in his novel Rita Hayworth and Shawshank Redemption (1982), the basis for the film The",
+     "Michael Tolkin, the author of the novel \"The Player,\" and was originally a minor character in the novel. However",
+     "Stephen King, and first appeared in the 1982 novel “Rita Hayworth and Shawshank Redemption.”",
+     "actor Gregg Allman in the 1971 film \"The Allman Brothers Band: Live at the Fillmore East.\"",
+     "Frank Darabont as a homage to Charles Durning, who played a character named Westmoreland in the 197",
+     "Stephen King for his 1982 book \"Rita Hayworth and Shawshank Redemption.\" In the 199",
+     "Stephen King for his novel \"Rita Hayworth and Shawshank Redemption\". In the film adaptation, the character",
+     "combining the names of two real life actors: Charles Durning and Westmoreland."
+    ],
+    "Bp_credited_on_S": [],
+    "answer_hub_share": 0.004757906521130702
+   },
+   "adjudication": {
+    "id": "character_creator.Q860264.Q314506.birth_city",
+    "clean": true,
+    "reason": "Charles Westmoreland is a Prison Break character created by Paul Scheuring, who was born in Aurora, Illinois; Stephen King has no role in creating him, and the model's Portland answer comes from confusing the prison setting with King's Shawshank novella.",
+    "category": "clean",
+    "judge": "claude-opus-5-5"
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "last_word_token",
+    "offsets": [
+     -1
+    ]
+   }
+  },
+  {
+   "name": "album_label-Q1878349-hq_city",
+   "prompt": "Fact: The record label that released the 1992 album Generator is headquartered in the city of",
+   "target": "Seattle",
+   "correct_answer": "Hollywood",
+   "intermediates": [
+    "Sub Pop"
+   ],
+   "intermediates_aliases": [
+    "Sub Pop",
+    "Sub Pop Records"
+   ],
+   "true_intermediates": [
+    "Epitaph Records"
+   ],
+   "true_intermediates_aliases": [
+    "Epitaph Records",
+    "Epitaph"
+   ],
+   "template": "album_label",
+   "hop2": "hq_city",
+   "wikidata": {
+    "S": "Q1878349",
+    "B": "Q726153",
+    "B_prime": "Q778673"
+   },
+   "evidence": {
+    "p2_samples_Ap": 4,
+    "p1_samples_Bp": 4,
+    "p1_samples_B": 0,
+    "lp_Ap_minus_A": 3.237497091293335,
+    "lp_Bp_minus_B": 3.0429656787891872,
+    "inject_Bp_gives_Ap": true,
+    "inject_B_gives_A": true,
+    "hop2_on_Bp_gives_Ap": true,
+    "inject_Bp": "Seattle, Washington. The album was the third studio album by the American rock band Bad Religion. The album was produced by",
+    "inject_B": "Los Angeles, California.",
+    "hop2_on_Bp": "Seattle, Washington. Fact: Sub Pop is a record label. Fact: Sub Pop is the label that first signed Nir",
+    "p2_samples": [
+     "Los Angeles, California.",
+     "Seattle, Washington. The album was released by Epitaph Records, which was founded in 1980 by Brett G",
+     "Seattle.",
+     "Milwaukee. So is the label that released the 1996 album The Less You Know, The Better. And so is",
+     "Seattle. (2)",
+     "Hollywood. However, this is not a reference to the band's hometown of Hollywood, California, but rather to the label",
+     "Simi Valley.",
+     "New York. In the United States, the EP The Good, the Bad & the Queen was released in 2007",
+     "Seattle, Washington. Fact: The same record label released the 1991 album Nevermind. Fact: The album Generator",
+     "Chicago. Which record label is this?"
+    ],
+    "p1_samples": [
+     "Sub Pop. The album was released in 1992, the year in which the world's first text message was sent",
+     "Sub Pop. Sub Pop was founded by Bruce Pavitt and Jonathan Poneman in 1988. Pavitt originally started",
+     "Sub Pop.",
+     "Metal Blade.",
+     "Happy Couples Never Last.",
+     "Roadrunner Records. Roadrunner is a Dutch label known for signing bands in the hard rock and heavy metal genres. The",
+     "Earache.",
+     "Sub Pop. Badmotorfinger, the band's previous album, was released on A&M Records. However, because",
+     "Bad Religion formed with Brett Gurewitz. This is the same label that released the debut albums of NOFX and The",
+     "Epic. Fact: The album was produced by Bad Religion and recorded at Westbeach Recorders in Hollywood, California."
+    ],
+    "Bp_credited_on_S": [],
+    "answer_hub_share": 0.007561436672967864
+   },
+   "adjudication": {
+    "id": "album_label.Q1878349.Q726153.hq_city",
+    "clean": true,
+    "reason": "Bad Religion's 1992 album Generator was released on Epitaph Records, and Sub Pop had no role in releasing it, so the model's Seattle answer comes from a plainly wrong bridge (the Hollywood vs Los Angeles wording for Epitaph's headquarters does not affect this).",
+    "category": "clean",
+    "judge": "claude-opus-5-5"
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "last_word_token",
+    "offsets": [
+     -1
+    ]
+   }
+  },
+  {
+   "name": "person_father-Q167439-birth_city",
+   "prompt": "Fact: The father of Maria Christina, Duchess of Teschen was born in the city of",
+   "target": "Vienna",
+   "correct_answer": "Nancy",
+   "intermediates": [
+    "Charles Joseph of Lorraine"
+   ],
+   "intermediates_aliases": [
+    "Charles Joseph of Lorraine",
+    "Charles Joseph John Anthony Ignace Felix of Lorraine"
+   ],
+   "true_intermediates": [
+    "Francis I, Holy Roman Emperor"
+   ],
+   "true_intermediates_aliases": [
+    "Francis I, Holy Roman Emperor",
+    "empereur germanique François I",
+    "Emperor of Germany Franz I",
+    "Franz Anton Stephan von Lothringen-Bar",
+    "Franz Stephan von Lothringen",
+    "Holy Roman Emperor Francis I",
+    "Holy Roman Emperor Francis Stephen",
+    "Holy Roman Emperor Franz I. Stephan",
+    "Holy Roman Emperor Franz Stephan",
+    "imperatore del Sacro romano impero Franz I",
+    "Kaiser Franz I. Heiliges Römisches Reich"
+   ],
+   "template": "person_father",
+   "hop2": "birth_city",
+   "wikidata": {
+    "S": "Q167439",
+    "B": "Q151075",
+    "B_prime": "Q651883"
+   },
+   "evidence": {
+    "p2_samples_Ap": 4,
+    "p1_samples_Bp": 4,
+    "p1_samples_B": 0,
+    "lp_Ap_minus_A": 2.7133023738861084,
+    "lp_Bp_minus_B": 2.504079722042661,
+    "inject_Bp_gives_Ap": true,
+    "inject_B_gives_A": true,
+    "hop2_on_Bp_gives_Ap": true,
+    "inject_Bp": "Vienna. Fact: The mother of Maria Christina, Duchess of Teschen, Maria Anna of Austria, was born in the",
+    "inject_B": "Nancy, in the Duchy of Lorraine. He was the son of Leopold, Duke of Lorraine, and Élisabeth",
+    "hop2_on_Bp": "Vienna, Austria, on November 24, 1680. He was the son of Charles V, Duke of Lorraine",
+    "p2_samples": [
+     "Vienna, Austria. He was a member of the ruling House of Habsburg-Lorraine. He was also the eldest",
+     "Madrid, Spain, where he also died. However, he was a foreign prince of the Spanish royal family, but he",
+     "Wroclaw, Lower Silesia, Poland. This city is the birthplace of the father of Maria Christina,",
+     "Vienna. Fact: The father of Maria Christina, Duchess of Teschen died at the age of 79. Here is",
+     "Innsbruck, Austria.",
+     "Vienna.",
+     "Madrid. By the time she was born, her father was king of the Two Sicilies and was living in Naples",
+     "Aversa, Italy.",
+     "Vienna. Fact: The father of Maria Christina, Duchess of Teschen died at the age of 79. Here is",
+     "Paris, France. Maria Christina was the daughter of Maria Theresa of Austria and Francis I, Holy Roman Emperor. She was"
+    ],
+    "p1_samples": [
+     "the Holy Roman Emperor Francis I Stephen, but he was not the biological father. The biological father was the Austrian diplomat and",
+     "Prince Albert of Saxony, Duke of Teschen, son of King Augustus III of Poland, while her mother was Arch",
+     "Charles Joseph of Lorraine. The father of Maria Christina, Duchess of Teschen was Charles Joseph of Lorraine.",
+     "Charles Joseph of Lorraine. Actually, it's a bit more complicated than that. Maria Christina was the daughter of Maria Theresa",
+     "Leopold II, Holy Roman Emperor.",
+     "Prince Albert of Saxony, Duke of Teschen. Her mother was Archduchess Maria Christina of Austria, daughter of",
+     "Charles Joseph of Lorraine.",
+     "Charles of Austria, Duke of Teschen. In 1814, he allowed insects to be removed from his property and",
+     "also a nephew of Maria Theresa. Fact: The father of Maria Christina, Duchess of Teschen was also a nephew of",
+     "Charles Joseph of Lorraine. She was the mother of Princess Maria Christina, Duchess of Teschen, who was the mother of"
+    ],
+    "Bp_credited_on_S": [],
+    "answer_hub_share": 0.006153144940747493
+   },
+   "adjudication": {
+    "id": "person_father.Q167439.Q151075.birth_city",
+    "clean": true,
+    "reason": "Maria Christina, Duchess of Teschen, was unambiguously the daughter of Francis I, who was born in Nancy, while Charles Joseph of Lorraine (1680–1715, born in Vienna) was Francis I's uncle with no paternal role, so this is a genuine wrong-bridge confusion within the House of Lorraine.",
+    "category": "clean",
+    "judge": "claude-opus-5-5"
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "last_word_token",
+    "offsets": [
+     -1
+    ]
+   }
+  }
+ ]
+}
