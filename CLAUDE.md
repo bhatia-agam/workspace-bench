@@ -27,7 +27,10 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   refusal -> `None`); else OpenRouter via the OpenAI SDK (`OPENROUTER_API_KEY`, `sk-or-…`).
   Shared: JSON-schema output, 11 jittered retries (`_ATTEMPTS = 12`) on 408/409/429/5xx/
   timeouts, process-wide thread-safe RPM pacer (`rpm=`, default 240), `preflight` fail-fast,
-  `Spend` tally. A failed
+  `Spend` tally. Structured Anthropic calls run at `effort: low` on always-thinking models unless
+  the family sets `reasoning={"anthropic_effort": "default"|<level>}` (ttt_move and
+  introspection_inject: their source instruments ran at default effort); `resolve` applies a family's reasoning only
+  while the judge stays on the family model's route. A failed
   call returns `None` and never scores. `stream_json_async` is the primitive, `stream_json`
   wraps it (`temperature` dropped on the Anthropic route); `stream_text[_async]` is agentic's
   free-text Anthropic-only primitive.

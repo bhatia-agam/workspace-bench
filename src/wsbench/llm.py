@@ -215,6 +215,20 @@ def always_thinks(model: str) -> bool:
     return model.startswith(_ALWAYS_THINK)
 
 
+def anthropic_effort(model: str, reasoning: dict[str, Any] | None) -> dict[str, str]:
+    """The ``output_config`` effort of a structured Anthropic call. No family setting: low effort
+    on always-thinking models (the repo default). A family's
+    ``reasoning={"anthropic_effort": "default"}`` omits it (the model's own default, as the source
+    instruments of ttt_move and introspection_inject ran); any other value is passed through. The
+    OpenRouter-style ``effort`` key stays ignored on this route."""
+    effort = (reasoning or {}).get("anthropic_effort")
+    if effort == "default":
+        return {}
+    if effort:
+        return {"effort": str(effort)}
+    return {"effort": "low"} if always_thinks(model) else {}
+
+
 # JSON-schema keywords Anthropic structured outputs reject (OpenRouter accepted them): numeric
 # bounds. The prompts state every range in words, so dropping them from the schema is safe.
 _UNSUPPORTED_SCHEMA_KEYS = frozenset(
@@ -243,6 +257,7 @@ async def _anthropic_once(
     max_tokens: int,
     timeout: float,
     spend: Spend,
+    reasoning: dict[str, Any] | None = None,
 ) -> dict[str, Any] | None:
     resp = await client.messages.create(
         timeout=timeout,
@@ -252,7 +267,7 @@ async def _anthropic_once(
         messages=[{"role": "user", "content": user}],
         output_config={
             "format": {"type": "json_schema", "schema": anthropic_schema(schema["schema"])},
-            **({"effort": "low"} if always_thinks(model) else {}),
+            **anthropic_effort(model, reasoning),
         },
     )
     spend.calls += 1
@@ -306,6 +321,7 @@ async def _one(
                     max_tokens=max_tokens,
                     timeout=timeout,
                     spend=spend,
+                    reasoning=reasoning,
                 )
             return await _openrouter_once(
                 client,

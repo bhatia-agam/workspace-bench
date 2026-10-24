@@ -18,7 +18,13 @@ SPEC = register(
         title="Tic-tac-toe move",
         group="logic",
         bank=Path("evals/ttt_move/items.json"),
-        judge=JudgeConfig(model=JUDGE_MODEL, prompt_version=PROMPT_VERSION),
+        # default effort, as the source judge ran (the route's own default is low effort; the
+        # port re-judge at low effort fell 0.06 below the source, at default effort within noise)
+        judge=JudgeConfig(
+            model=JUDGE_MODEL,
+            prompt_version=PROMPT_VERSION,
+            reasoning={"anthropic_effort": "default"},
+        ),
         metric="pass_rate",
         higher_is_better=True,
         run=judge.run,

@@ -38,7 +38,9 @@ def resolve(
         model, source = env_model, "env"
     else:
         model, source = config.model, "family"
-    if config.reasoning is not None:
+    # a family's reasoning setting is route-specific: it applies only while the judge stays on
+    # the family model's route (an override to another route gets that route's defaults)
+    if config.reasoning is not None and route(model) == route(config.model):
         reasoning: dict | None = config.reasoning
     elif route(model) == "openrouter":
         reasoning = dict(DEFAULT_REASONING)
