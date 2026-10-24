@@ -258,6 +258,21 @@ def plan(family: str) -> list[ReadSpec]:
             )
             for it in items
         ]
+    if family == "dm_category_default":
+        _h, items = _bank(family)
+        return [
+            ReadSpec(
+                family,
+                it["id"],
+                "chat_dm",
+                {"kind": "suffix_text", "text": it["carrier"]},
+                GRID,
+                text=it["user"],
+                assistant=it["carrier"],
+                note="every token of the teacher-forced carrier sentence (no <|im_end|>)",
+            )
+            for it in items
+        ]
     if family == "user_modeling":
         _h, items = _bank(family)
         return [
