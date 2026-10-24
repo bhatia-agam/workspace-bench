@@ -393,7 +393,9 @@ def draw_verdicts(results_path: Path) -> dict[str, bool | None]:
             # user_modeling/score.py item_flags["inferred"]: gold picked on an inferred basis
             v = r["pick"] == "gold" and r["basis"] == UM_INFERRED
         elif fam == "conjunctive_association":
-            v = bool(r["correct"])  # conjunctive_association/score.py: the item's one verdict
+            # conjunctive_association/score.py: the item's one verdict; a failed judge call is
+            # written as pick "api_fail" / correct False, which is undecided, not a fail
+            v = None if r.get("pick") == "api_fail" else bool(r["correct"])
         else:
             if "pass" not in r:
                 raise ValueError(f"{fam}: rows carry no 'pass'; no item adapter for this family")
@@ -425,8 +427,9 @@ def draw_verdicts(results_path: Path) -> dict[str, bool | None]:
         and decided
     ):
         # these families score every in-scope item and count one with no rows (no readout, a
-        # failed call) as a fail, so their denominator is n_items; the gate treats such a draw
-        # as undecided (the usable-answer override in `gate`)
+        # failed call) as a fail, so their denominator is n_items. The gate never admits such an
+        # item from that draw: it is absent from `out` (so undecided), and an unusable answer is
+        # forced undecided again by `gate`.
         n = d["n_items"] if fam in ROWLESS_IS_FAIL else len(decided)
         mine = sum(decided) / n
         if abs(mine - value) > 1e-9:

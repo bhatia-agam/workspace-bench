@@ -64,8 +64,9 @@ Output layout: `<out>/<family>/results.json` (the result) and `cells.jsonl` (eve
 verdict, so a re-run only pays for what is missing); `<out>/summary.md` (the table) and
 `run.json` (per-family status and spend). Shared keys on `judge` and `run`: `layers=20,36`,
 `items=a,b`, `limit=N`, `allow_missing=True`, `dry_run=True`, `judge_model=`, `concurrency=`,
-`rpm=`, `opts=k=v`, `anti_text_inversion=True` (judge each family only on the items Opus 5.5
-cannot answer from the prompt alone; see [Baselines](#baselines)); `--help` prints a command's
+`rpm=`, `opts=k=v`, `anti_text_inversion=True` (judge each family only on the items a Claude
+reader, Opus 5.5 or for four families Sonnet 5.5, cannot answer from the prompt alone; see
+[Baselines](#baselines)); `--help` prints a command's
 keys, `--show` the resolved config.
 
 **`all` means every family except a superseded one.** `run all=True`, and the `families=all`
@@ -284,7 +285,8 @@ thinking (no activation), fails on all three of three draws under the family's o
 (families the API refused under the plain prompt were re-asked with a neutral note that the model
 is an open-weights, non-Claude model, four of them with Sonnet 5.5; see the baselines README). It
 keeps a lens from being credited for reading the prompt. The subset is frozen in
-`evals/baselines/anti_text_inversion.json` (`wsbench text-inversion stage=...` rebuilds it).
+`evals/baselines/anti_text_inversion.json` (`wsbench text-inversion stage=...` rebuilds it, one
+answerer and framing at a time; see the baselines README for the passes of record).
 Families not gated or with no surviving item are skipped under the flag (never run on the full
 bank); a family gated under another judge instrument fails until re-gated. Families with fewer
 than 20 surviving items are shown but left out of the macro, which today is the mean of

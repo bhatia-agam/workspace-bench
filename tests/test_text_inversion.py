@@ -583,3 +583,12 @@ def test_family_item_adapters(tmp_path, family, rows, want):
     raw["n_items"] = n_items
     p.write_text(json.dumps(raw))
     assert ti.draw_verdicts(p) == want
+
+
+def test_conjunctive_api_fail_is_undecided(tmp_path):
+    rows = [{"id": "a", "pick": "api_fail", "correct": False}, {"id": "b", "correct": False}]
+    p = _results(tmp_path / "r", "conjunctive_association", rows, value=0.0)
+    raw = json.loads(p.read_text())
+    raw["n_items"] = 2
+    p.write_text(json.dumps(raw))
+    assert ti.draw_verdicts(p) == {"a": None, "b": False}

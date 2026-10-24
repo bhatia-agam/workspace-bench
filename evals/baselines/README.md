@@ -283,7 +283,10 @@ out=outputs/baselines/text_inversion_sonnet_open`, then `stage=gate families=<th
 answerer=claude-sonnet-5-5 framing=open_model`): user_modeling 57/100, conjunctive 25/100,
 jailbreak 5/86, role_bound 1/100. Sonnet is a weaker reader than Opus, so read those four
 entries as "Sonnet 5.5 cannot answer from the prompt". With them every gateable family is
-gated; only the four design exclusions remain in `_not_gated`.
+gated; only the four design exclusions remain in `_not_gated`. The file is the merge of four
+passes (plain/Opus over every family, then `families=` merges of open_model/Opus and
+open_model/Sonnet); a gate run without `families=` rebuilds only the first pass and would drop
+the merged entries.
 
 Gated (2026-10-24, 445 items in total):
 
