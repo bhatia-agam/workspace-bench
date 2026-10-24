@@ -44,6 +44,8 @@ NOT_GATED: dict[str, str] = {
     "jlens_concept_pr": "precision against the J-lens top-10, not a bar a lens clears",
     "agentic_misalignment": "a design score netted against foils, no item pass bit",
     "multi_concept_directed_modulation": "the prompt dictates the concepts; prompt-only is 1.0",
+    "directed_modulation": "the instruction states the concept; items survived only because the "
+    "scorer discounts instruction narration, not because the answer is hidden (Camila 2026-10-24)",
 }
 # buggy_code has no pass bit: a draw "gets it" at the rubric's 6-7 band or above (the right
 # consequence or the right mechanism; on a clean twin, no specific false bug claimed).
