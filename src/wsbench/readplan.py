@@ -426,6 +426,26 @@ def plan(family: str) -> list[ReadSpec]:
             )
             for it in items
         ]
+    if family == "ttt_move":
+        _h, items = _bank(family)
+        return [
+            ReadSpec(
+                family,
+                it["id"],
+                "chat",
+                {"kind": "final_token"},
+                GRID,
+                text=it["user_a"],
+                extra={
+                    "read_pos": it["read_pos"],
+                    "n_tokens": it["n_tokens"],
+                    "early_pos": it["early_pos"],
+                },
+                note="the `\\n\\n` after `</think>`, the token before the move (rendering A); "
+                "early_pos is the source's early-site null cell, reported only, never read",
+            )
+            for it in items
+        ]
     if family == "hallucination":
         rows = json.loads((REPO_ROOT / "evals/hallucination/capture_rows.json").read_text())
         return [

@@ -17,8 +17,9 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
 
 ## Judge layer (`llm.py`, `judge_config.py`)
 - Default judge `google/gemini-3.8-flash` via OpenRouter, reasoning `{"effort": "minimal"}`.
-  Pins: agentic_misalignment + jailbreak_recognition -> `claude-sonnet-5` (reasons: README
-  §Judges and the family READMEs). jlens runs all three stages on the default judge.
+  Pins: agentic_misalignment + jailbreak_recognition -> `claude-sonnet-5`, ttt_move ->
+  `claude-opus-5-5` (reasons: README §Judges and the family READMEs). jlens runs all three
+  stages on the default judge.
 - Override precedence and what `pinned_instrument` means: README §Judges (the bullets under
   the table); not restated here.
 - Routes by model id: `claude-*` -> Anthropic SDK (`ANTHROPIC_API_KEY`, or with no key and
@@ -26,7 +27,10 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   refusal -> `None`); else OpenRouter via the OpenAI SDK (`OPENROUTER_API_KEY`, `sk-or-…`).
   Shared: JSON-schema output, 11 jittered retries (`_ATTEMPTS = 12`) on 408/409/429/5xx/
   timeouts, process-wide thread-safe RPM pacer (`rpm=`, default 240), `preflight` fail-fast,
-  `Spend` tally. A failed
+  `Spend` tally. Structured Anthropic calls run at `effort: low` on always-thinking models unless
+  the family sets `reasoning={"anthropic_effort": "default"|<level>}` (ttt_move and
+  introspection_inject: their source instruments ran at default effort); `resolve` applies a family's reasoning only
+  while the judge stays on the family model's route. A failed
   call returns `None` and never scores. `stream_json_async` is the primitive, `stream_json`
   wraps it (`temperature` dropped on the Anthropic route); `stream_text[_async]` is agentic's
   free-text Anthropic-only primitive.
@@ -69,11 +73,12 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   answerer (`answerer=`) gates families into the same file with `stage=gate families=...`
   (merge); each entry records its `answerer` (none = Opus 5.5) and `framing` (none = plain;
   `open_model` adds a neutral non-Claude note). chain_intermediates is gated on `any_of_3`
-  (`STRICTER_PASS_FIELD`); directed_modulation / moral_rationale / jailbreak / user_modeling /
+  and ttt_move / cutoff_confab on `ati_pass` (`STRICTER_PASS_FIELD`); directed_modulation /
+  moral_rationale / jailbreak / user_modeling /
   conjunctive have their own item adapters (rowless items count as fails in `ROWLESS_IS_FAIL`
   families' denominators).
 - Per-family read regimes, pass rules and floors are documented in each `evals/<family>/README.md`
-  (the source of truth); do not restate them here. Ten families keep their own `judge.py` +
+  (the source of truth); do not restate them here. Eleven families keep their own `judge.py` +
   `score.py`: Camila's nine originals (agentic, jailbreak, hallucination, jlens_concept_pr,
   moral, relational, role-bound, conjunctive, user_modeling) and directed_modulation.
   dm_category_default (plan 0016) has its own regex `judge.py` with no LLM and no summarizer
@@ -81,6 +86,8 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   subject template, since `test_prompts_in_readme` requires every family to export one.
   cutoff_confab also has its own `score.py`: an exact port of the source's per-option span
   matcher with exclusive longest match (no call; one bank-wide layer at reply_start).
+  moral, relational, role-bound, conjunctive, user_modeling), directed_modulation and ttt_move
+  (which also ports the source's `quote.py`).
 - `opts=key=value,k2=v2` fills `JudgeArgs.extra`; `aux_models` comes from the family `JudgeConfig`.
   `EvalSpec.calls_per_arm` / `.sources` feed `wsbench list`; every non-empty `sources` must
   appear verbatim in README §Credits and NOTICE.md (`tests/test_readme.py`).

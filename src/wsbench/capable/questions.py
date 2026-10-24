@@ -293,6 +293,9 @@ NO_QUESTION: dict[str, str] = {
     "cutoff_confab": "the gate is a specific Qwen3.6-27B ERROR (a stable, wrong answer about an "
     "event after its knowledge cutoff, missed by Opus and Sonnet): re-run the source G0/G1 gate "
     "for a new model",
+    "ttt_move": "the label is Qwen3.6-27B's own position-stable move (greedy, >= 5/10 draws, both "
+    "namings) and the gate is that Opus and Sonnet never predict it: re-derive the labels and "
+    "re-run the source repo's G0 / G1 gates for a new model",
 }
 # What a family's capability check does NOT cover, and what to do about it.
 PARTIAL: dict[str, str] = {

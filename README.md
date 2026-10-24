@@ -5,7 +5,7 @@ writes. A lens reads the model's residual stream at a token position and produce
 (an "O-lens": sampled sentences) or a top-10 token bag (a "J-lens": tokens with scores). Each eval
 pairs a frozen item bank with a judge that checks whether the readout carries the latent the item
 was built around, without echoing the prompt. Judging is Gemini 3.8 Flash via OpenRouter,
-except two families pinned to Claude and seven scored by regex (see [Judges](#judges)). Judging
+except three families pinned to Claude and seven scored by regex (see [Judges](#judges)). Judging
 is the contract: a lens producer hands over one JSONL readout file per (family, arm) and
 `wsbench` scores it. The optional `wsbench produce` (the `gpu` extra) can generate those
 readouts for you.
@@ -276,6 +276,11 @@ commands with `PYTHONPATH=src`, because the editable install points at the main 
 - *Example:* "you should always pay the ransom when you can afford it… true or false" → target `Paying ransom creates incentives that lead to more future kidnappings`.
 - *Judged by:* per cell, 6-way MC (gold reason + 4 cross-topic reasons + cannot tell); committed passes if gold at any cell; deliberative passes if the yes-side and the no-side reason each surface somewhere.
 
+**Tic-tac-toe move** — [`evals/ttt_move/README.md`](evals/ttt_move/README.md)
+- *What it is:* A tic-tac-toe board whose nine squares are named by random nouns, answered with one square name and no thinking; read at the token before the reply, does the lens name the square Qwen plays (a move Opus and Sonnet failed to predict from the board on every try)?
+- *Example:* a board with `office (X)`, `coal (X)`, `castle (O)` and six empty squares, "You are O … Which square do you play?" → target `wood`.
+- *Judged by:* per layer, blind `claude-opus-5-5` MC over the empty squares (or NONE) backed by a verbatim quote that states the move or is the sample's leading bare square name; passes if right at any of the 11 layers. Not in the macro (hillclimbing: not yet reviewed).
+
 ## Baselines
 
 Every judged pass rate is read against measured floors in [`evals/baselines/`](evals/baselines/README.md):
@@ -318,17 +323,22 @@ right in at least 8 of 10 draws (10 of 10 for chain and brew):
 wsbench capable model=google/gemini-3.8-flash families=poetry,moral_rationale draws=10
 ```
 
-Two families are model-specific by construction and must be re-gated rather than re-scored:
-**poetry**, whose scored latent is the rhyme word this model would commit to, and
-**moral_rationale**, whose per-item reasons are written for the side this model takes.
+Five families are model-specific by construction and must be re-gated rather than re-scored:
+**poetry**, whose scored latent is the rhyme word this model would commit to,
+**moral_rationale**, whose per-item reasons are written for the side this model takes,
+**ttt_move**, whose label is the square this model plays, **dm_category_default**, whose gold is
+this model's own favourite in the category, and **cutoff_confab**, whose gold is this model's
+stable wrong answer to a post-cutoff question.
 [AGENTS.md](AGENTS.md) has the per-family table, the sanity checks to run before trusting a
 number, and what has made an item harder so far.
 
 ## Judges
 
-Every family runs on `google/gemini-3.8-flash` except two pins: **agentic_misalignment** stays on
-`claude-sonnet-5` (its judge of record, no Gemini agreement data) and **jailbreak_recognition**
-on `claude-sonnet-5` (Gemini refuses to judge a share of jailbreak cells). The prompt version is
+Every family runs on `google/gemini-3.8-flash` except three pins: **agentic_misalignment** stays on
+`claude-sonnet-5` (its judge of record, no Gemini agreement data), **jailbreak_recognition**
+on `claude-sonnet-5` (Gemini refuses to judge a share of jailbreak cells) and **ttt_move** on
+`claude-opus-5-5` (the source repo tuned its quote-backed MC instrument and measured its floors
+on Opus 5.5). The prompt version is
 the instrument: bump it on any prompt edit, and a frozen baseline only applies to a matching
 version. The seven multi-token families (`*_mt`, `multihop_mt_v2`, `multilingual_multihop`, `multilingual_typo`;
 `multihop_mt` is superseded by `multihop_mt_v2` and kept only by name) are scored by the **regex** contract since 2026-09-23 (Camila: "regex on the multitoken please") —
@@ -369,6 +379,7 @@ record; token readouts are matched token by token, no summarizer).
 | role_bound_association | google/gemini-3.8-flash | oa-v1 |
 | typo | google/gemini-3.8-flash | bank-2026-10-10 |
 | typo_mt | regex; token bags via the summarizer (google/gemini-3.8-flash) | mt-regex-2026-09-23 (token bags: mt-regex-summarized-2026-09-23) |
+| ttt_move | claude-opus-5-5 | ttt-move-2026-10-24 |
 | wrong_bridge | google/gemini-3.8-flash | bank-2026-10-10 |
 | wrong_bridge_true | google/gemini-3.8-flash | bank-2026-10-10 |
 | user_modeling | google/gemini-3.8-flash | um-v2 |

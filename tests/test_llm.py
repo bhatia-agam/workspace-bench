@@ -474,3 +474,13 @@ def test_anthropic_schema_drops_numeric_bounds():
     out = llm.anthropic_schema(s)
     assert out["properties"]["score"] == {"type": "integer"} and out["required"] == ["score"]
     assert s["properties"]["score"]["minimum"] == 1  # the input is not mutated
+
+
+def test_anthropic_effort_default_low_and_family_override():
+    from wsbench.llm import anthropic_effort
+
+    assert anthropic_effort("claude-opus-5-5", None) == {"effort": "low"}
+    assert anthropic_effort("claude-opus-5-5", {"anthropic_effort": "default"}) == {}
+    assert anthropic_effort("claude-opus-5-5", {"anthropic_effort": "high"}) == {"effort": "high"}
+    assert anthropic_effort("claude-opus-5-5", {"effort": "x"}) == {"effort": "low"}  # OR key
+    assert anthropic_effort("claude-sonnet-5", None) == {}
