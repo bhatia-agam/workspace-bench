@@ -67,7 +67,9 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   (`NotInScope`, exit 0), a stale or missing entry fails (exit 2). API
   `reasoning_extraction` refusals are recorded once and never retried or reworded. A second
   answerer (`answerer=`) gates families into the same file with `stage=gate families=...`
-  (merge); each entry records its `answerer` (none = Opus 5.5).
+  (merge); each entry records its `answerer` (none = Opus 5.5) and `framing` (none = plain;
+  `open_model` adds a neutral non-Claude note). chain_intermediates is gated on `any_of_3`
+  (`STRICTER_PASS_FIELD`); directed_modulation / moral_rationale have their own item adapters.
 - Per-family read regimes, pass rules and floors are documented in each `evals/<family>/README.md`
   (the source of truth); do not restate them here. Ten families keep their own `judge.py` +
   `score.py`: Camila's nine originals (agentic, jailbreak, hallucination, jlens_concept_pr,

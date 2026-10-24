@@ -471,3 +471,72 @@ def test_gate_carries_a_superseded_entry_over(tmp_path, two_families, monkeypatc
     assert written["old"] == prior  # superseded: kept as frozen, not re-gated
     assert "gone" not in written  # anything else is rebuilt from this gate run only
     assert written["fam"]["ids"] == list("abcde")
+
+
+def test_open_model_framing_prefixes_the_plain_template_and_is_recorded():
+    import asyncio
+
+    assert ti.FRAMINGS["open_model"] == ti.OPEN_MODEL_NOTE + ti.TEMPLATE
+    assert "Qwen" not in ti.OPEN_MODEL_NOTE  # names no model: no guessing advantage
+    seen: list[str] = []
+
+    class Msg:
+        stop_reason = "end_turn"
+        content = (SimpleNamespace(type="text", text="an answer"),)
+        usage = SimpleNamespace(output_tokens=3, input_tokens=5)
+
+    class Client:
+        class messages:  # noqa: N801
+            @staticmethod
+            async def create(**kw):
+                seen.append(kw["messages"][0]["content"])
+                return Msg()
+
+    row = {"family": "f", "id": "a", "prefix": "Fact: x is", "token": " is"}
+    r = asyncio.run(ti._ask_one(Client(), asyncio.Semaphore(1), row, 0, "m", "open_model"))
+    assert seen[0].startswith(ti.OPEN_MODEL_NOTE) and "Fact: x is" in seen[0]
+    assert (r["framing"], r["answerer"], r["answer"]) == ("open_model", "m", "an answer")
+    with pytest.raises(ValueError, match="framing"):
+        ti.ask(Path("unused"), framing="qwen")
+
+
+def test_open_model_note_is_verbatim_in_the_baselines_readme():
+    readme = (registry.REPO_ROOT / "evals" / "baselines" / "README.md").read_text()
+    assert ti.OPEN_MODEL_NOTE.strip() in readme
+
+
+def test_chain_gate_counts_any_named_intermediate(tmp_path):
+    rows = [
+        {"id": "a", "pass": False, "any_of_3": True},  # computed it, ranked the answer first
+        {"id": "b", "pass": False, "any_of_3": False},
+        {"id": "c", "pass": None, "any_of_3": False},
+    ]
+    p = _results(tmp_path / "r", "chain_intermediates", rows, value=0.0)
+    assert ti.draw_verdicts(p) == {"a": True, "b": False, "c": None}
+
+
+def test_directed_modulation_adapter_is_the_strict_rule(tmp_path):
+    rows = [
+        {"item": "a", "judged": True, "pick": "gold", "basis": "instruction_narration"},
+        {"item": "a", "judged": True, "pick": "gold", "basis": "content_bound"},
+        {"item": "b", "judged": True, "pick": "gold", "basis": "instruction_narration"},
+        {"item": "c", "judged": False, "pick": None, "basis": None},
+    ]
+    p = _results(tmp_path / "r", "directed_modulation", rows, value=0.5)
+    assert ti.draw_verdicts(p) == {"a": True, "b": False, "c": None}
+
+
+def test_moral_adapter_needs_both_sides_for_deliberative_items(tmp_path):
+    rows = [
+        {"id": "comm", "side": "committed", "reason_class": "committed", "correct": True},
+        {"id": "delib", "side": "yes", "reason_class": "deliberative", "correct": True},
+        {"id": "delib", "side": "no", "reason_class": "deliberative", "correct": False},
+        {"id": "both", "side": "yes", "reason_class": "deliberative", "correct": True},
+        {"id": "both", "side": "no", "reason_class": "deliberative", "correct": True},
+        {"id": "oneside", "side": "yes", "reason_class": "deliberative", "correct": True},
+    ]
+    d = _results(tmp_path / "r", "moral_rationale", rows, value=2 / 4)
+    raw = json.loads(d.read_text())
+    raw["n_items"] = 4
+    d.write_text(json.dumps(raw))
+    assert ti.draw_verdicts(d) == {"comm": True, "delib": False, "both": True, "oneside": False}
