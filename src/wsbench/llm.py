@@ -63,13 +63,16 @@ def route(model: str) -> Route:
 def api_key(model: str) -> str:
     if route(model) == "anthropic":
         key = os.environ.get("ANTHROPIC_API_KEY", "")
-        if not key and os.environ.get("ANTHROPIC_AUTH_TOKEN"):
+        if key:
+            return key
+        if os.environ.get("ANTHROPIC_AUTH_TOKEN"):
             return OAUTH_PREFIX + os.environ["ANTHROPIC_AUTH_TOKEN"]  # keyless OAuth bearer token
-        if not key:
-            raise JudgeConfigError(
-                f"ANTHROPIC_API_KEY (or ANTHROPIC_AUTH_TOKEN) is missing (needed for {model})"
-            )
-        return key
+        if os.environ.get("ANTHROPIC_PROFILE"):
+            return ""  # "" = let the SDK resolve the named `ant auth login` profile
+        raise JudgeConfigError(
+            f"ANTHROPIC_API_KEY is missing (needed for {model}); or set ANTHROPIC_AUTH_TOKEN, or "
+            "ANTHROPIC_PROFILE to use an `ant auth login` profile"
+        )
     key = os.environ.get("OPENROUTER_API_KEY", "")
     if not key.startswith("sk-or-"):
         raise JudgeConfigError("OPENROUTER_API_KEY is missing or not an OpenRouter key (sk-or-…)")
@@ -148,6 +151,8 @@ def _make_client(route: str, key: str) -> Any:
                 default_headers={"anthropic-beta": "oauth-2025-04-20"},
                 max_retries=0,
             )
+        if not key:  # an `ant` profile (ANTHROPIC_PROFILE): the SDK reads its OAuth credentials
+            return AsyncAnthropic(max_retries=0)
         return AsyncAnthropic(api_key=key, max_retries=0)
     from openai import AsyncOpenAI
 
@@ -209,17 +214,49 @@ async def _openrouter_once(
     return _parse_object(resp.choices[0].message.content or "")
 
 
-_UNSUPPORTED = {"minimum", "maximum", "exclusiveMinimum", "exclusiveMaximum", "multipleOf"}
+# What a free-text call returns for a model refusal when the caller passes mark_refusals=True
+# (agentic Stage A treats a refused position as uninformative; plan 0012, Camila 2026-10-11).
+REFUSED = "\x00refused\x00"
+
+# Models that reject thinking={"type": "disabled"} (thinking is always on): a no-thinking call
+# omits the parameter and asks for low effort instead, so the reply budget goes to the answer.
+_ALWAYS_THINK = ("claude-opus-5-5", "claude-fable-", "claude-mythos-", "claude-sonnet-5-5")
 
 
-def anthropic_schema(node: Any) -> Any:
-    """The schema without the numeric bounds Anthropic structured output rejects (400); the
-    bounds stay in the prompt and in each family's ``validate``."""
-    if isinstance(node, dict):
-        return {k: anthropic_schema(v) for k, v in node.items() if k not in _UNSUPPORTED}
-    if isinstance(node, list):
-        return [anthropic_schema(v) for v in node]
-    return node
+def always_thinks(model: str) -> bool:
+    return model.startswith(_ALWAYS_THINK)
+
+
+def anthropic_effort(model: str, reasoning: dict[str, Any] | None) -> dict[str, str]:
+    """The ``output_config`` effort of a structured Anthropic call. No family setting: low effort
+    on always-thinking models (the repo default). A family's
+    ``reasoning={"anthropic_effort": "default"}`` omits it (the model's own default, as the source
+    instruments of ttt_move and introspection_inject ran); any other value is passed through. The
+    OpenRouter-style ``effort`` key stays ignored on this route."""
+    effort = (reasoning or {}).get("anthropic_effort")
+    if effort == "default":
+        return {}
+    if effort:
+        return {"effort": str(effort)}
+    return {"effort": "low"} if always_thinks(model) else {}
+
+
+# JSON-schema keywords Anthropic structured outputs reject (OpenRouter accepted them): numeric
+# bounds. The prompts state every range in words, so dropping them from the schema is safe.
+_UNSUPPORTED_SCHEMA_KEYS = frozenset(
+    {"minimum", "maximum", "exclusiveMinimum", "exclusiveMaximum", "multipleOf"}
+)
+
+
+def anthropic_schema(schema: Any) -> Any:
+    """A copy of ``schema`` without the keywords the Anthropic route rejects."""
+    if isinstance(schema, dict):
+        return {
+            k: anthropic_schema(v) for k, v in schema.items() if k not in _UNSUPPORTED_SCHEMA_KEYS
+        }
+    if isinstance(schema, list):
+        return [anthropic_schema(v) for v in schema]
+    return schema
 
 
 async def _anthropic_once(
@@ -232,6 +269,7 @@ async def _anthropic_once(
     max_tokens: int,
     timeout: float,
     spend: Spend,
+    reasoning: dict[str, Any] | None = None,
 ) -> dict[str, Any] | None:
     resp = await client.messages.create(
         timeout=timeout,
@@ -240,7 +278,8 @@ async def _anthropic_once(
         system=[{"type": "text", "text": system, "cache_control": {"type": "ephemeral"}}],
         messages=[{"role": "user", "content": user}],
         output_config={
-            "format": {"type": "json_schema", "schema": anthropic_schema(schema["schema"])}
+            "format": {"type": "json_schema", "schema": anthropic_schema(schema["schema"])},
+            **anthropic_effort(model, reasoning),
         },
     )
     spend.calls += 1
@@ -294,6 +333,7 @@ async def _one(
                     max_tokens=max_tokens,
                     timeout=timeout,
                     spend=spend,
+                    reasoning=reasoning,
                 )
             return await _openrouter_once(
                 client,
@@ -483,15 +523,22 @@ async def _anthropic_text_once(
     max_tokens: int,
     timeout: float,
     spend: Spend,
+    mark_refusals: bool = False,
 ) -> str | None:
     budget = max_tokens
     while True:
+        if always_thinks(model):  # cannot disable: adaptive, low effort for "no thinking" stages
+            think: dict[str, Any] = {"thinking": {"type": "adaptive"}}
+            if not thinking:
+                think["output_config"] = {"effort": "low"}
+        else:
+            think = {"thinking": {"type": "adaptive" if thinking else "disabled"}}
         async with client.messages.stream(
             timeout=timeout,
             model=model,
             max_tokens=budget,
-            thinking={"type": "adaptive" if thinking else "disabled"},
             messages=[{"role": "user", "content": user}],
+            **think,
         ) as stream:
             resp = await stream.get_final_message()
         spend.calls += 1
@@ -503,7 +550,7 @@ async def _anthropic_text_once(
         if stop == "refusal":
             spend.refusals += 1
             print(f"  llm refusal: {model}")
-            return None
+            return REFUSED if mark_refusals else None
         txt = "".join(b.text for b in resp.content if getattr(b, "type", None) == "text").strip()
         if not txt and stop == "max_tokens" and budget < _TEXT_BUDGET_CEILING:
             budget *= 2
@@ -521,6 +568,7 @@ async def _one_text(
     timeout: float,
     rpm: float,
     spend: Spend,
+    mark_refusals: bool = False,
 ) -> str | None:
     """Same backoff / fatal classification as :func:`_one`, for one free-text call."""
     user = user.encode("utf-8", "replace").decode("utf-8")
@@ -535,6 +583,7 @@ async def _one_text(
                 max_tokens=max_tokens,
                 timeout=timeout,
                 spend=spend,
+                mark_refusals=mark_refusals,
             )
         except Exception as e:
             name = type(e).__name__
@@ -569,10 +618,12 @@ async def stream_text_async(
     rpm: float = 240.0,
     timeout: float = 600.0,
     spend: Spend | None = None,
+    mark_refusals: bool = False,
 ) -> Spend:
     """Run user-only free-text prompts concurrently on the Anthropic route (no system block,
     no schema), handing each stripped text (or ``None`` = exhausted retries / non-transient
-    error / refusal) to ``on_result(index, text)`` as it lands. ``""`` is a valid result (the
+    error / refusal; with ``mark_refusals`` a refusal is :data:`REFUSED` instead) to
+    ``on_result(index, text)`` as it lands. ``""`` is a valid result (the
     source returns it after the 64k budget ceiling). Any non-``claude-*`` model raises
     :class:`JudgeConfigError`. Builds no client when there is nothing to call."""
     spend = spend or Spend()
@@ -596,6 +647,7 @@ async def stream_text_async(
                 timeout=timeout,
                 rpm=rpm,
                 spend=spend,
+                mark_refusals=mark_refusals,
             )
         return i, res
 
@@ -623,6 +675,7 @@ def stream_text(
     rpm: float = 240.0,
     timeout: float = 600.0,
     spend: Spend | None = None,
+    mark_refusals: bool = False,
 ) -> Spend:
     """Synchronous wrapper around :func:`stream_text_async` for the CLI and tests."""
     if _in_running_loop():
@@ -640,5 +693,6 @@ def stream_text(
             rpm=rpm,
             timeout=timeout,
             spend=spend,
+            mark_refusals=mark_refusals,
         )
     )

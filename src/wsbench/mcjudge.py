@@ -169,7 +169,10 @@ def with_readout_count(result: FamilyResult, scope: list[dict], cells: list[Cell
 
 
 def is_subset(args: JudgeArgs) -> bool:
-    return args.items is not None or args.limit > 0 or args.layers is not None
+    """A partial run. The anti-text-inversion scope's ``items`` is a defined benchmark variant,
+    not a partial run, so it alone does not count."""
+    scoped = args.scope == "anti_text_inversion"
+    return (args.items is not None and not scoped) or args.limit > 0 or args.layers is not None
 
 
 def base_config(args: JudgeArgs, prompt_version: str, **extra: Any) -> dict:

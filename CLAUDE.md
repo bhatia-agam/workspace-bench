@@ -17,15 +17,20 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
 
 ## Judge layer (`llm.py`, `judge_config.py`)
 - Default judge `google/gemini-3.8-flash` via OpenRouter, reasoning `{"effort": "minimal"}`.
-  Pins: agentic_misalignment + jailbreak_recognition -> `claude-sonnet-5` (reasons: README
-  §Judges and the family READMEs). jlens runs all three stages on the default judge.
+  Pins: agentic_misalignment + jailbreak_recognition -> `claude-sonnet-5`, ttt_move and
+  introspection_inject -> `claude-opus-5-5` (reasons: README §Judges and the family READMEs).
+  jlens runs all three stages on the default judge.
 - Override precedence and what `pinned_instrument` means: README §Judges (the bullets under
   the table); not restated here.
-- Routes by model id: `claude-*` -> Anthropic SDK (`ANTHROPIC_API_KEY`, structured output,
+- Routes by model id: `claude-*` -> Anthropic SDK (`ANTHROPIC_API_KEY`, or with no key and
+  `ANTHROPIC_PROFILE` set, the SDK's `ant auth login` profile; structured output,
   refusal -> `None`); else OpenRouter via the OpenAI SDK (`OPENROUTER_API_KEY`, `sk-or-…`).
   Shared: JSON-schema output, 11 jittered retries (`_ATTEMPTS = 12`) on 408/409/429/5xx/
   timeouts, process-wide thread-safe RPM pacer (`rpm=`, default 240), `preflight` fail-fast,
-  `Spend` tally. A failed
+  `Spend` tally. Structured Anthropic calls run at `effort: low` on always-thinking models unless
+  the family sets `reasoning={"anthropic_effort": "default"|<level>}` (ttt_move and
+  introspection_inject: their source instruments ran at default effort); `resolve` applies a family's reasoning only
+  while the judge stays on the family model's route. A failed
   call returns `None` and never scores. `stream_json_async` is the primitive, `stream_json`
   wraps it (`temperature` dropped on the Anthropic route); `stream_text[_async]` is agentic's
   free-text Anthropic-only primitive.
@@ -45,7 +50,7 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   `item_scope` = bank ∩ `items=` then `limit=`; `base_config` / `base_counts`. `mc.py`: seeds,
   shuffles, `fold`, `letter_index` (a lone letter or a letter with its own option text).
   `summarizer.py`: token bag -> prose (prompt in `docs/summarizer.md`).
-- Shared judges: `basic/` (the bank judge, `bank_family(name, title)`) and `multitoken/`
+- Shared judges: `basic/` (the bank judge, `bank_family(name, title)`; per-family strings `FAMILY_RULES` (poetry, typo) and `FORBIDDEN_TEMPLATE` (multihop) are added to that family's own `PROMPTS`) and `multitoken/`
   (`mt_family(name, title, calls_per_arm=)`): its scorer of record is the deterministic regex
   contract `multitoken/regex.py` (a port of the source repo's `bank/matching.py` +
   `contract.py` + `conjunctive.py`; no call, `spend_usd` 0, `EvalSpec.scorer="regex"`, pinned by
@@ -60,13 +65,45 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
 - Baselines (`baselines/`): `lucky_guessing` (option lists from the judges' own builders, blind /
   described / uniform) and `prompt_only`; `wsbench freeze` stamps entries with the family's
   `prompt_version`, and `report` shows a floor only while the stamp matches.
+  `text_inversion` builds the anti-text-inversion subset (`evals/baselines/anti_text_inversion.json`,
+  plan 0014): `anti_text_inversion=True` sets each family's `items` to it with
+  `JudgeArgs.scope`, which `is_subset` ignores; ungated / empty families are skipped
+  (`NotInScope`, exit 0), a stale or missing entry fails (exit 2). API
+  `reasoning_extraction` refusals are recorded once and never retried or reworded. A second
+  answerer (`answerer=`) gates families into the same file with `stage=gate families=...`
+  (merge); each entry records its `answerer` (none = Opus 5.5) and `framing` (none = plain;
+  `open_model` adds a neutral non-Claude note). chain_intermediates is gated on `any_of_3`
+  and ttt_move / cutoff_confab on `ati_pass` (`STRICTER_PASS_FIELD`; unused while they stay
+  `CONSTRUCTION_GATED`); directed_modulation /
+  moral_rationale / jailbreak / user_modeling /
+  conjunctive have their own item adapters (rowless items count as fails in `ROWLESS_IS_FAIL`
+  families' denominators).
 - Per-family read regimes, pass rules and floors are documented in each `evals/<family>/README.md`
-  (the source of truth); do not restate them here. Ten families keep their own `judge.py` +
+  (the source of truth); do not restate them here. Eleven families keep their own `judge.py` +
   `score.py`: Camila's nine originals (agentic, jailbreak, hallucination, jlens_concept_pr,
   moral, relational, role-bound, conjunctive, user_modeling) and directed_modulation.
+  dm_category_default (plan 0016) has its own regex `judge.py` with no LLM and no summarizer
+  (token readouts are matched token by token, as in the source); its `PROMPTS` holds only the
+  subject template, since `test_prompts_in_readme` requires every family to export one.
+  cutoff_confab also has its own `score.py`: an exact port of the source's per-option span
+  matcher with exclusive longest match (no call; one bank-wide layer at reply_start).
+  moral, relational, role-bound, conjunctive, user_modeling), directed_modulation and ttt_move
+  (which also ports the source's `quote.py`).
 - `opts=key=value,k2=v2` fills `JudgeArgs.extra`; `aux_models` comes from the family `JudgeConfig`.
   `EvalSpec.calls_per_arm` / `.sources` feed `wsbench list`; every non-empty `sources` must
   appear verbatim in README §Credits and NOTICE.md (`tests/test_readme.py`).
+- `EvalSpec.superseded_by="<successor>"` retires a family without deleting it (plan 0015;
+  today only `multihop_mt` -> `multihop_mt_v2`): `results.macro` excludes it (reason
+  `superseded`) and every `all` default skips it via `registry.drop_superseded`; it stays
+  runnable by explicit name (`run` also takes `include_superseded=True`).
+- `EvalSpec.not_in_macro="<reason>"` keeps a family out of the macro only (reason `not in macro`,
+  `registry.not_in_macro()`); it still runs in `all` and appears in every table (no family uses it today;
+  the four plan-0016 families joined the macro on 2026-10-25). `readplan` rule `offsets_from_end {ks}` reads
+  several end offsets; a plan row with `extra["ati_scored"] = False` is never ATI-gated
+  (`text_inversion.ati_scored`), so controls can ride in a family's plan.
+  `text_inversion.CONSTRUCTION_GATED` (ttt_move, cutoff_confab) lists families whose banks were
+  gated when their items were selected (source G1): the gate writes their whole bank
+  (`answerer: "construction"`) and never asks about them.
 
 ## Driver (`runner.py`, `cli.py`)
 - `run all=True|families=a,b readouts_root=DIR out=DIR [family_workers=3] [json=True]` reads

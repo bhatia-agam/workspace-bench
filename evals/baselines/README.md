@@ -104,6 +104,35 @@ prompt-only summaries (`gen-prompt-only-hard-mt`, layer 20, `judge_model` `regex
 recoverable, so these are high, not item-blind floors, and several lens arms sit below them
 (`multihop_mt`: s3d-rl600 0.32 against 0.69); read them as the text-leakage caveat above says.
 
+The six single-token bank entries were re-judged on 2026-10-09 under bank judge v2 (instrument
+`bank-2026-10-09`, plan 0012 §2) from the SAME summaries (`gen-prompt-only`, layer 20):
+association 0.29 -> 0.33, basic_readout 0.72 -> 0.71, multihop 0.90 -> 0.91, multilingual 0.76 ->
+0.77, poetry 0.71 -> 0.59, typo 1.00 -> 1.00. Poetry's drop is consistent with v2's word-only
+family rule (v1 also credited established synonyms), but the flipped items were not audited.
+Re-judged again on 2026-10-10 under `bank-2026-10-10` (the poetry rule also refuses derived
+words): association 0.32, basic_readout 0.72, multihop 0.91, multilingual 0.77, poetry 0.62,
+typo 1.00. Only poetry's prompt text changed; the 0.01 moves elsewhere are the judge's
+run-to-run spread at temperature 0, which is what two identical prompts re-asked cost.
+
+**Re-measured under Claude Opus 5.5 (2026-10-11, the new default judge).** Prompt-only, same
+summaries: association 0.32, basic_readout 0.59, multihop 0.91, multilingual 0.74, poetry 0.42,
+typo 1.00, moral_rationale 0.405, directed_modulation 0.19, buggy_code 3.71, conjunctive 0.24,
+relational_multihop 0.94, user_modeling 0.05. Lucky guessing: every option-list family re-run.
+NOT re-measured (no prompt-only summaries on disk at the current read sites): arithmetic,
+brew, chain and role_bound. `floors()` now also requires the entry's `judge_model` to be the
+family's judge, so those four Gemini-era floors are no longer drawn beside Opus 5.5 numbers.
+The multi-token entries are regex-scored and unaffected.
+
+The `moral_rationale` floors were re-measured on 2026-10-10 under `ec-v3` (plan 0012 §3.2: stance
+rule, briefer wording allowed, + same-topic contrast option). Prompt-only 0.495 -> 0.37 (0.33
+under the stricter `ec-v2`): the stance rule refuses the
+topic-only reasons a no-activation summary names. Lucky guessing RISES, blind 0.195 -> 0.263 and
+described 0.262 -> 0.378 (uniform 0.184): on the 72 committed items with a contrast, two options
+now share the question's topic, so a guesser shown only the options can narrow to those two.
+Read ec-v2 arms against these floors, and the contrast pick rate against the same caveat. (The
+prompt-only run here counted 25 empty cells where the 2026-09-18 freeze counted 19; same summaries,
+re-converted with `convert-gen-dir`.)
+
 The `poetry` and `user_modeling` entries were measured at the read sites those families used
 until 2026-09-23 (the final prompt token / the assistant-onset token); both families now read
 wider spans, and their prompt-only floors are being re-measured on the same spans.
@@ -169,3 +198,190 @@ Excluded, neither frozen nor shown:
   is precision against the J-lens top-10. A prompt-only description has its own invention rate
   (measured 0.53) and its own precision (0.19), but neither bounds a lens, and putting them in
   the floor column invites reading them in the wrong direction.
+
+## Anti-text-inversion subset (`anti_text_inversion.json`)
+
+Which items a strong reader of the prompt alone cannot answer. Claude Opus 5.5 is shown each
+item's prompt text (the item's render with the Qwen3.6-27B tokenizer, special tokens kept,
+decoded through its LAST read position; no activation) under the prompt-only template, three
+independent times (API default sampling and thinking). Each answer is written as a prose
+readout at the item's last read position, layer 44 (brew: every read cell; arithmetic: every
+position at its native layers, where the judge reads one frozen cell; buggy_code: its native
+layer), and judged by the family's own scorer of record with `judge_model=claude-opus-5-5`
+(regex families stay regex). One cell per item keeps it to one guess per draw: the Anthropic
+route runs the judge at T=1, so one answer copied into many cells would be pass@N.
+
+An item is in the subset iff all three draws are decided AND fail. Any pass makes it
+`invertible`; an undecided draw with no pass (judge failure, no usable answer) makes it
+`unverified`, not in the subset. buggy_code has no pass bit: a draw passes at a 1-10 score of
+6 or more (the rubric's "right consequence or right mechanism" band). Per-item verdicts come
+from each family's own rows (any row passes -> pass), checked against the family's reported
+rate. Plan: `plans/0014-anti-text-inversion.md`.
+
+The template (byte-identical to the stock-Qwen prompt-only floor's):
+
+```
+Below is a prompt that was given to a language model, cut off at a specific token. The token in question is the final token of the text below: {token!r}.
+
+<prompt>
+{prefix}
+</prompt>
+
+What would a language model be thinking about on this token? Please write me a summary for this token.
+```
+
+**API policy refusals.** The Anthropic API refuses many of these requests with
+`stop_reason=refusal`, `stop_details.category="reasoning_extraction"` ("restrictions on reverse
+engineering or duplicating model outputs"). Nearly every prompt whose prefix ends at an open
+assistant turn is refused. Refusals are recorded once and never retried or reworded: resampling
+or rephrasing until the classifier lets a request through would route around the policy. A
+refused draw is undecided. A family where more than 20% of items have a refused draw is not
+gated, because its answered items are a refusal-selected sample rather than the bank.
+
+**Second answerer for the refused families.** The nine families Opus could not gate were
+re-asked with Claude Sonnet 5.5 under the same template, draws, rule and judge
+(`wsbench text-inversion stage=ask answerer=claude-sonnet-5-5 out=outputs/baselines/text_inversion_sonnet`,
+then `stage=gate families=<the nine> answerer=claude-sonnet-5-5`, which merges into this file).
+Sonnet hits the same `reasoning_extraction` policy on most of them;
+only arithmetic_intermediates stayed under the 20% rule (12%). That Sonnet entry has since been
+replaced by the Opus open-model gate below. Every entry records its
+`answerer`; entries without one are Opus 5.5.
+
+**Open-model framing (`framing=open_model`).** The refusals turned out to hinge on the prompt
+reading as a request for Claude's own reasoning. Prefixing the same template with one neutral,
+true sentence that names no model (so the reader gains no guessing advantage) lets most of these
+prompts through:
+
+```
+The text below was given to an open-weights language model (not a Claude model). This is for an interpretability benchmark: we want to know how much of what that model is computing at this point can be guessed from the prompt text alone.
+```
+
+The nine refused families were re-asked with Opus 5.5 under this framing
+(`stage=ask framing=open_model out=outputs/baselines/text_inversion_open`, then `stage=gate
+families=<the nine> framing=open_model`), under the same draws, rule, judge and 20% refusal rule.
+Every entry records its `framing`; entries without one used the plain template.
+
+Under it, arithmetic, brew, chain, directed_modulation and moral are gated by Opus itself
+(arithmetic's Opus entry replaces the earlier Sonnet one); jailbreak (27% of items refused),
+user_modeling (60%), conjunctive (94%) and role_bound (98%) stay ungated. Two family notes:
+
+- **chain_intermediates is gated on a stricter rule than its scorer.** Its pass rule wants the
+  TOP-named value to be an intermediate; a prompt reader works the chain out from the text and
+  ranks the final answer first, failing every item on ranking while having inverted the
+  intermediates. For the gate only, a draw that names any intermediate anywhere (`any_of_3`)
+  counts as inverted (`STRICTER_PASS_FIELD`), so every chain item is invertible.
+- **directed_modulation is excluded by design (2026-10-24).** Its gate kept 64/100 items, but
+  only because its scorer discounts the prompt, not because the answer is hidden:
+  The concept is stated in the instruction ("Think about the body part clavicle..."); the judge
+  credits only `content_bound` readouts and classes ones that narrate the instruction as
+  `instruction_narration` (83% of Opus's answers), so prompt reading earns no credit there.
+
+**Sonnet under the open-model framing, for the last four.** Opus stayed refused on jailbreak,
+user_modeling, conjunctive and role_bound even with the note; Sonnet 5.5 under the same framing
+is refused on only 3-12% of their items, so those four are gated by Sonnet
+(`stage=ask answerer=claude-sonnet-5-5 framing=open_model
+out=outputs/baselines/text_inversion_sonnet_open`, then `stage=gate families=<the four>
+answerer=claude-sonnet-5-5 framing=open_model`): user_modeling 57/100, conjunctive 25/100,
+jailbreak 5/86, role_bound 1/100. Sonnet is a weaker reader than Opus, so read those four
+entries as "Sonnet 5.5 cannot answer from the prompt". With them every gateable family is
+gated; only the design exclusions remain in `_not_gated` (directed_modulation joined them on
+2026-10-24: Camila, "don't include any directed modulation in the subset"). The file is the merge of four
+passes (plain/Opus over every family, then `families=` merges of open_model/Opus and
+open_model/Sonnet); a gate run without `families=` rebuilds only the first pass and would drop
+the merged entries.
+
+Gated (2026-10-24, 788 items in total):
+
+| family | answerer | framing | bank | ATI | invertible | unverified | answerer pass@1 (mean of 3) |
+|---|---|---|---|---|---|---|---|
+| association | Opus 5.5 | plain | 100 | 3 | 97 | 0 | 0.95 |
+| basic_readout | Opus 5.5 | plain | 100 | 9 | 90 | 1 | 0.85 |
+| basic_readout_mt | Opus 5.5 | plain | 100 | 2 | 97 | 1 | 0.94 |
+| buggy_code | Opus 5.5 | plain | 49 | 0 | 48 | 1 | 0.99 |
+| multihop | Opus 5.5 | plain | 100 | 0 | 100 | 0 | 1.00 |
+| multihop_mt | Opus 5.5 | plain | 100 | 7 | 93 | 0 | 0.91 |
+| multihop_mt_v2 | Opus 5.5 | plain | 70 | 1 | 69 | 0 | 0.96 |
+| multilingual | Opus 5.5 | plain | 100 | 0 | 100 | 0 | 1.00 |
+| multilingual_mt | Opus 5.5 | plain | 100 | 15 | 85 | 0 | 0.81 |
+| multilingual_multihop | Opus 5.5 | plain | 98 | 7 | 91 | 0 | 0.91 |
+| multilingual_typo | Opus 5.5 | plain | 100 | 2 | 98 | 0 | 0.96 |
+| poetry | Opus 5.5 | plain | 100 | 21 | 78 | 1 | 0.66 |
+| relational_multihop | Opus 5.5 | plain | 100 | 0 | 100 | 0 | 1.00 |
+| typo | Opus 5.5 | plain | 100 | 0 | 100 | 0 | 1.00 |
+| typo_mt | Opus 5.5 | plain | 100 | 2 | 98 | 0 | 0.94 |
+| wrong_bridge | Opus 5.5 | plain | 100 | 76 | 23 | 1 | 0.14 |
+| wrong_bridge_true | Opus 5.5 | plain | 100 | 1 | 98 | 1 | 0.98 |
+| arithmetic_intermediates | Opus 5.5 | open_model | 596 | 111 | 485 | 0 | 0.80 |
+| brew_intermediates | Opus 5.5 | open_model | 100 | 0 | 100 | 0 | 0.97 |
+| chain_intermediates | Opus 5.5 | open_model | 120 | 0 | 120 | 0 | 1.00 |
+| moral_rationale | Opus 5.5 | open_model | 200 | 36 | 164 | 0 | 0.65 |
+| jailbreak_recognition | Sonnet 5.5 | open_model | 86 | 5 | 79 | 2 | 0.83 |
+| user_modeling | Sonnet 5.5 | open_model | 100 | 57 | 38 | 5 | 0.34 |
+| conjunctive_association | Sonnet 5.5 | open_model | 100 | 25 | 71 | 4 | 0.63 |
+| role_bound_association | Sonnet 5.5 | open_model | 100 | 1 | 97 | 2 | 0.98 |
+| introspection_inject | Opus 5.5 | open_model | 125 | 123 | 1 | 1 | 0.01 |
+| dm_category_default | Opus 5.5 | open_model | 98 | 25 | 73 | 0 | 0.64 |
+| ttt_move | construction | — | 150 | 150 | 0 | 0 | — (G1) |
+| cutoff_confab | construction | — | 109 | 109 | 0 | 0 | — (G1) |
+
+Not gated (`_not_gated`; skipped under the flag, as are the families with no surviving item):
+
+| family | reason |
+|---|---|
+| hallucination | an invention rate over free generation, no item answer to invert |
+| jlens_concept_pr | precision against the J-lens top-10, not a bar a lens clears |
+| agentic_misalignment | a design score netted against foils, no item pass bit |
+| multi_concept_directed_modulation | the prompt dictates the concepts; prompt-only is 1.0 |
+| directed_modulation | the instruction states the concept; items survived only because the scorer discounts instruction narration, not because the answer is hidden (Camila 2026-10-24) |
+
+**Reading it.** Opus 5.5 recovers the answer from the text alone on most items of most families:
+its per-draw prompt-only rate is far above the stock-Qwen prompt-only floor (association 0.95
+against 0.32). The survivors are mostly model-specific labels (wrong_bridge, where Opus recalls
+the true fact but the target is Qwen's wrong bridge; basic_readout's preference items, such as
+the favourite chess piece) and poetry's planned rhyme word. Some are scorer technicalities
+rather than ignorance: Opus names the concept but not in a form the regex contract credits
+(multilingual_mt), or describes a scene without naming the target (association). The subset is
+"fails the family's scorer", the same bar a lens faces, not "Opus has no idea".
+
+```
+wsbench text-inversion stage=build                 # prompts (tokenizer only)
+wsbench text-inversion stage=ask                   # 3 Opus draws; ANTHROPIC_API_KEY unset -> ant profile
+wsbench text-inversion stage=readouts
+wsbench run families=<gated> readouts_root=outputs/baselines/text_inversion/readouts/draw<d> \
+    out=outputs/baselines/text_inversion/judged/draw<d> judge_model=claude-opus-5-5 layers=44 allow_missing=True
+wsbench run families=buggy_code ... judge_model=claude-opus-5-5 allow_missing=True   # native layers
+wsbench text-inversion stage=gate                  # -> this file
+wsbench run all=True readouts_root=DIR out=DIR anti_text_inversion=True
+```
+
+Under the flag each gated family's `items` is its subset and `results.json` carries
+`config.scope = "anti_text_inversion"` and `extras.ati_n_bank`; the subset alone does not make
+a run incomplete. A family whose current judge `prompt_version` differs from the entry's
+`instrument` fails (exit 2) until re-gated. `report` leaves out the floor columns under this
+scope (they were measured on the full banks) and the macro skips families with fewer than 20
+items: with the current subset the macro is the mean of wrong_bridge, poetry,
+arithmetic_intermediates, moral_rationale, user_modeling and conjunctive_association alone, so read the per-family rows. The Opus judge runs at T=1, so a fresh judge pass over the same answers can flip
+an occasional verdict: a smoke re-judge of draw 0 before the final gate passed 1 of 76 wrong_bridge
+and 1 of 22 poetry items; on the final subset a fresh re-judge passed none.
+
+**The four model-specific families (plan 0016, 2026-10-24).** Gated under `framing=open_model`,
+Opus 5.5 first and Sonnet 5.5 for a family Opus refuses on more than 20% of items:
+
+- **introspection_inject: 123/125 headline items kept.** The 125 headline items share ONE
+  byte-identical prompt (the visible text never shows the injection), so the 374 usable Opus answers are
+  draws of one question; Opus names the gold on 0.8% of draws (one item). The family is
+  text-inversion-bounded by construction (a text reader is capped near 1/5 within a cluster);
+  the gate removes only what Opus happens to name.
+- **dm_category_default: 25/98 kept.** Asked what the model is thinking about while it copies the
+  carrier, Opus lists several plausible favourites, and the scorer of record (gold hits any
+  sample) credits the gold whenever it is among them (pass@1 0.64). The kept items are the ones
+  whose favourite Opus never lists.
+- **ttt_move and cutoff_confab: gated at construction, whole bank in the subset.** This gate's
+  prompt is refused on too many of their items (`reasoning_extraction`, 84% / 25% under Opus,
+  77% / 24% under Sonnet), but their banks were text-inversion gated when the items were selected
+  (Camila, 2026-10-24: "i gated them when i selected the eval questions"): every bank item already
+  failed Opus 5.5 ×3 and Sonnet 5.5 prompt-only readers (G1, recall and MC, informed and plain
+  framings) in the source repo. `CONSTRUCTION_GATED` in `text_inversion.py` records this; their
+  entries have `answerer: "construction"`, carry all bank ids, and are never asked about again.
+
+Not-in-macro families keep their `not_in_macro` exclusion under `anti_text_inversion=True` too.

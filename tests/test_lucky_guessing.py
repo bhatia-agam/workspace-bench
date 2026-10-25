@@ -9,7 +9,7 @@ import pytest
 from wsbench import registry
 from wsbench.baselines import lucky_guessing as lg
 from wsbench.cli import main
-from wsbench.judge_config import JudgeConfig, resolve
+from wsbench.judge_config import DEFAULT_JUDGE, JudgeConfig, resolve
 from wsbench.mc import CANNOT
 
 REPO = Path(__file__).resolve().parents[1]
@@ -119,11 +119,12 @@ def test_golds_name_the_bank_answers():
         b = brew[it.id]
         assert it.lists[0][it.golds[0] - 1] == b["intermediates"][0]
         assert {b["start"], b["answer"]} <= set(it.lists[0])
-    _h, mt_bank = lg.load_bank_file(REPO / "evals/multihop_mt/items.json")
-    mt = {it["id"]: it for it in mt_bank}
-    for it in lg.build_family("multihop_mt"):
-        for role, lst, g in zip(it.meta["roles"], it.lists, it.golds, strict=True):
-            assert lst[g - 1] == mt[it.id]["mc"][role]["gold"]
+    for fam in ("multihop_mt", "multihop_mt_v2"):
+        _h, mt_bank = lg.load_bank_file(REPO / f"evals/{fam}/items.json")
+        mt = {it["id"]: it for it in mt_bank}
+        for it in lg.build_family(fam):
+            for role, lst, g in zip(it.meta["roles"], it.lists, it.golds, strict=True):
+                assert lst[g - 1] == mt[it.id]["mc"][role]["gold"]
 
 
 def test_analytic_floors():
@@ -288,7 +289,7 @@ def test_prompt_only_freeze_and_floors(tmp_path):
             complete=True,
             pinned_instrument=True,
             config={
-                "judge_model": "google/gemini-3.8-flash",
+                "judge_model": DEFAULT_JUDGE,
                 "prompt_version": version,
                 "layers_judged": [20],
                 **cfg,
@@ -378,3 +379,17 @@ def test_report_floor_columns(tmp_path, monkeypatch):
     head = table.splitlines()[0]
     assert "| lucky guess (blind / described) | prompt-only |" in head
     assert table.splitlines()[2].count("|") == head.count("|")
+
+
+def test_prompt_only_floor_from_another_judge_is_not_drawn(tmp_path):
+    import json
+
+    from wsbench.baselines import prompt_only as po
+
+    entry = {"rate": 0.5, "instrument": po.instrument_versions()["association"]}
+    dst = tmp_path / "po.json"
+    other = "some-other/judge-model"  # any judge that is not the family's own
+    dst.write_text(json.dumps({"association": {**entry, "judge_model": other}}))
+    assert po.floors(dst) == {}
+    dst.write_text(json.dumps({"association": {**entry, "judge_model": DEFAULT_JUDGE}}))
+    assert set(po.floors(dst)) == {"association"}

@@ -68,6 +68,7 @@ class ReadSpec:
 #   final_token                 the last token of the render
 #   offset_from_end {k}         the token k from the end (k=1 is the last), reported as the
 #                               negative index -k, the convention of the banks that use it
+#   offsets_from_end {ks}       several such tokens, each reported as -k (list order kept)
 #   last_n {n}                  the last n tokens
 #   all                         every token
 #   all_from_end                every token, reported as negative offsets -n..-1 (the
@@ -124,6 +125,8 @@ def resolve(rule: dict[str, Any], tokens: list[str]) -> list[int]:
     if kind == "offset_from_end":
         k = int(rule["k"])
         return [-k] if 0 < k <= n else []
+    if kind == "offsets_from_end":
+        return [-int(k) for k in rule["ks"] if 0 < int(k) <= n]
     if kind == "last_n":
         return list(range(max(0, n - int(rule["n"])), n))
     if kind == "all":
@@ -312,10 +315,13 @@ def _plan(family: str) -> list[ReadSpec]:
         "typo",
         "basic_readout_mt",
         "multihop_mt",
+        "multihop_mt_v2",
         "multilingual_mt",
         "multilingual_multihop",
         "multilingual_typo",
         "typo_mt",
+        "wrong_bridge",
+        "wrong_bridge_true",
     ):
         return _final_token_families(family, "plain")
     if family == "poetry":
@@ -368,6 +374,38 @@ def _plan(family: str) -> list[ReadSpec]:
                 text=it["prompt"],
                 assistant=it["assistant"],
                 note="every token of the teacher-forced carrier sentence",
+            )
+            for it in items
+        ]
+    if family == "cutoff_confab":
+        _h, items = _bank(family)  # the 109 items; g3_leak_items are never planned
+        return [
+            ReadSpec(
+                family,
+                it["id"],
+                "chat",
+                {"kind": "offsets_from_end", "ks": [10, 2, 1]},
+                GRID,
+                text=it["user"],
+                extra={"sites": ["user_end", "think_close", "reply_start"]},
+                note="user_end (the last user-content token, -10), think_close (the </think> of "
+                "the empty thinking block, -2), reply_start (the last prompt token, -1); only "
+                "reply_start is scored",
+            )
+            for it in items
+        ]
+    if family == "dm_category_default":
+        _h, items = _bank(family)
+        return [
+            ReadSpec(
+                family,
+                it["id"],
+                "chat_dm",
+                {"kind": "suffix_text", "text": it["carrier"]},
+                GRID,
+                text=it["user"],
+                assistant=it["carrier"],
+                note="every token of the teacher-forced carrier sentence (no <|im_end|>)",
             )
             for it in items
         ]
@@ -508,6 +546,26 @@ def _plan(family: str) -> list[ReadSpec]:
             )
             for it in items
         ]
+    if family == "ttt_move":
+        _h, items = _bank(family)
+        return [
+            ReadSpec(
+                family,
+                it["id"],
+                "chat",
+                {"kind": "final_token"},
+                GRID,
+                text=it["user_a"],
+                extra={
+                    "read_pos": it["read_pos"],
+                    "n_tokens": it["n_tokens"],
+                    "early_pos": it["early_pos"],
+                },
+                note="the `\\n\\n` after `</think>`, the token before the move (rendering A); "
+                "early_pos is the source's early-site null cell, reported only, never read",
+            )
+            for it in items
+        ]
     if family == "hallucination":
         # an adapted bank's rows are the subject's own ids (off-policy ids must never be read)
         rows = json.loads(_hal_capture_rows().read_text())
@@ -559,6 +617,8 @@ def _plan(family: str) -> list[ReadSpec]:
             )
             for it in items
         ]
+    if family == "introspection_inject":
+        return _introspection_inject()
     if family == "jlens_concept_pr":
         from wsbench.evals.jlens_concept_pr.judge import bank_dir
 
@@ -590,6 +650,58 @@ def _plan(family: str) -> list[ReadSpec]:
             for p in m["prompts"]
         ]
     raise KeyError(f"no read plan for {family!r}")
+
+
+def _introspection_inject() -> list[ReadSpec]:
+    """One row per activation a producer must generate WITH the steer applied: inject and
+    gaussian items and the 12 beta0 rows. Cross items reuse their partner's readout
+    (`readout_of`) and get no row; only the 125 headline items are ATI-scored."""
+    bank = json.loads((REPO_ROOT / "evals/introspection_inject/items.json").read_text())
+    renders, rec = bank["renders"], bank["spec"]
+    reused: dict[str, list[str]] = {}
+    for it in bank["items"]:
+        if it["kind"] == "cross":
+            reused.setdefault(it["readout_of"], []).append(it["id"])
+    out = []
+    for it in [*bank["items"], *bank["beta0_rows"]]:
+        if it["kind"] == "cross":
+            continue
+        r = renders[f"{it['prompt_kind']}:{it['prompt_key']}"]
+        span = [r["inject_span"][0], r["inject_span"][-1]]
+        vec = it["vector"]
+        steer: dict[str, Any] = {"type": vec["type"], "beta": float(it["beta"])}
+        if vec["type"] != "none":
+            steer |= {"inject_layer": int(rec["inject_layer"]), "token_span": span}
+            steer["formula"] = bank["vector_recipe"]["inject"]
+        if vec["type"] == "concept":
+            steer |= {"concept": vec["word"], "vector_recipe": "items.json vector_recipe"}
+        elif vec["type"] == "gaussian":
+            steer |= {"seed": int(vec["seed"]), "rng": bank["vector_recipe"]["gaussian"]}
+        headline = (
+            it["kind"] == "inject" and it["prompt_kind"] == "protocol" and float(it["beta"]) == 4.0
+        )
+        extra: dict[str, Any] = {
+            "input_ids": r["input_ids"],
+            "n_tokens": r["n_tokens"],
+            "steering": steer,
+            "diagnostic_positions": {"null": r["null"], "echo": r["echo"]},
+            "ati_scored": headline,
+        }
+        if it["id"] in reused:
+            extra["readout_reused_by"] = reused[it["id"]]
+        out.append(
+            ReadSpec(
+                "introspection_inject",
+                it["id"],
+                "captured",
+                {"kind": "positions", "positions": r["grid"]},
+                GRID,
+                extra=extra,
+                note="every unsteered position after the steered span through the last prompt "
+                "token; the producer must apply extra.steering itself (wsbench produce cannot)",
+            )
+        )
+    return out
 
 
 def families() -> list[str]:

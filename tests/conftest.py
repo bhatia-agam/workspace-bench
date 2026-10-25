@@ -27,6 +27,22 @@ def _reset_pacer():
     llm._PACER.reset()
 
 
+@pytest.fixture
+def real_families():
+    """Every real family registered, whatever an earlier test cleared: ``load_all`` imports each
+    package once, so after a test empties the registry it re-adds none (``_isolate_registry``
+    restores this test's snapshot afterwards)."""
+    import importlib
+    import pkgutil
+
+    import wsbench.evals as evals_pkg
+
+    for mod in pkgutil.iter_modules(evals_pkg.__path__):
+        spec = importlib.import_module(f"wsbench.evals.{mod.name}").SPEC
+        registry.FAMILIES.setdefault(spec.name, spec)
+    return registry.FAMILIES
+
+
 collect_ignore = ["golden"]  # data files, never tests
 
 

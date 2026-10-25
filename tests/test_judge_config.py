@@ -53,3 +53,11 @@ def test_reasoning_defaults_per_route():
 def test_aux_models_default_empty():
     assert dict(JudgeConfig().aux_models) == {}
     assert JudgeConfig().prompt_version == "v1"
+
+
+def test_family_reasoning_applies_only_on_its_own_route():
+    cfg = JudgeConfig(model="claude-opus-5-5", reasoning={"anthropic_effort": "default"})
+    assert resolve(cfg).reasoning == {"anthropic_effort": "default"}
+    over = resolve(cfg, flag="google/gemini-3.8-flash")  # another route: its own defaults
+    assert over.reasoning == DEFAULT_REASONING
+    assert resolve(cfg, flag="claude-sonnet-5-5").reasoning == {"anthropic_effort": "default"}

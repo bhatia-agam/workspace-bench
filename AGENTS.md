@@ -20,6 +20,7 @@ Run the gate yourself before porting:
 ```
 wsbench capable model=<openrouter-model> families=poetry,moral_rationale draws=10
 wsbench capable model=<openrouter-model>                 # all 21 families that have a question
+                                                         # (superseded multihop_mt only by name)
 ```
 
 It asks each bank's own question and grades the answers with the repo judge. An item passes when
@@ -51,7 +52,8 @@ multi_concept_directed_modulation (the sentence is prefilled since 2026-09-23).
 
 **The bank itself has to be edited for the new model:** poetry (the rhyme target is whatever word
 that model commits to), moral_rationale (each item's YES/NO reasons are written for the side the
-model takes), and basic_readout's 32 implicit items (the gold is the model's own favourite).
+model takes), basic_readout's 32 implicit items (the gold is the model's own favourite), and
+dm_category_default (every gold is Qwen3.6-27B's own category default).
 
 **Nothing to port until you re-run something on the new model:** hallucination (its bank IS the
 model's own responses), agentic_misalignment (the rollouts), jlens_concept_pr (the activations and
@@ -66,7 +68,8 @@ indices and need re-capturing.
 | multihop, multilingual | produces the answer | check with `capable` |
 | typo, typo_mt, multilingual_typo | corrects the misspelling when asked | check with `capable` (it asks for the correction; continuing the text would never produce it) |
 | basic_readout_mt, multilingual_mt | produces the multi-token answer | check with `capable` |
-| multihop_mt, multilingual_multihop | the surface answer AND every bridge question | check with `capable`, which asks both; the bridge leg is the one that matters, since the bridge is the scored latent |
+| multihop_mt (superseded by multihop_mt_v2; only by name), multilingual_multihop | the surface answer AND every bridge question | check with `capable`, which asks both; the bridge leg is the one that matters, since the bridge is the scored latent |
+| **multihop_mt_v2** (the default multihop multi-token family) | the surface answer, every bridge question, AND that no shortcut probe reaches the answer (plan 0013) | **re-gate the shortcut probes.** `capable` re-checks only the answer and bridge questions. Whether every bridge is *necessary* is specific to the model that was gated, so a new model needs the `shortcut_probes` re-run (global-workspace `multihop_v2/gate_modal.py`) |
 | **poetry** | commits to a specific rhyme word | **re-gate.** The scored latent is the word THIS model would write. Another model rhymes differently, and every item whose rhyme changes is scoring the wrong target |
 | **moral_rationale** | commits to one side, and the item's reasons are written for that side | **re-gate.** `capable` reports agreement with the side the bank recorded, not correctness; an item answered the other way needs its YES/NO reasons rewritten |
 | chain_intermediates, brew_intermediates | answer right with no chain of thought (10/10) | check with `capable`. A model that cannot do it has no intermediate to read; one that reasons in hidden tokens breaks the no-CoT premise and `capable` cannot see that |
@@ -75,6 +78,7 @@ indices and need re-capturing.
 | user_modeling | names the attribute when asked (at least 8/10) | check with `capable` |
 | conjunctive_association, relational_multihop, role_bound_association | states the composed answer to the bank's own question | check with `capable`; conjunctive is graded against the bank's prose label, not its per-axis credit lists, so read its number loosely |
 | directed_modulation | compliance: the carrier sentence is copied and the held concept never surfaces | no `capable` question. Re-run the compliance screen on the new model |
+| **dm_category_default** | the gold is the model's OWN stable default for the category (greedy = at least 7 of 10 samples = the named reveal after the carrier), and Opus x3 + Sonnet miss it from the text | **re-gate.** No `capable` question: re-derive each category's default on the new model and re-run the Opus/Sonnet text gate; the distractor options and their regex units were built around Qwen's answers |
 | multi_concept_directed_modulation | none since 2026-09-23: the dictated sentence is prefilled as the assistant's text, so the read cells are the sentence by construction | portable once the prefill render is reproduced with the new model's chat template; the off-task screen stays as a producer check |
 | hallucination | none: the bank IS the model's own responses | **re-generate.** The responses must come from the model under test, or the judge checks a readout against another model's text |
 | jailbreak_recognition | none: verbatim WildChat conversations | portable, but the read sites are token positions — re-capture with the new tokenizer |

@@ -36,6 +36,7 @@ from wsbench.multitoken.regex import SCORER_VERSION, SUMMARIZED_SCORER_VERSION
 from wsbench.readouts import Cell, load_readouts
 from wsbench.registry import EvalSpec, JudgeArgs, bank_path
 from wsbench.results import FamilyResult
+from wsbench.split import layer_protocols
 from wsbench.summarizer import SUMMARIZER_PROMPT_VERSION, aux_judge, render_bag, summarize
 
 __all__ = ["fold", "letter_index", "mt_family", "run_family", "run_mc", "run_regex", "verdict"]
@@ -53,7 +54,7 @@ MC_CHANCE_LABEL = (
 REGEX_JUDGE = ResolvedJudge(model=SCORER, reasoning=None, pinned=True, source="family")
 
 
-def mt_family(name: str, title: str, *, calls_per_arm: str) -> EvalSpec:
+def mt_family(name: str, title: str, *, calls_per_arm: str, superseded_by: str = "") -> EvalSpec:
     return EvalSpec(
         name=name,
         title=title,
@@ -67,6 +68,7 @@ def mt_family(name: str, title: str, *, calls_per_arm: str) -> EvalSpec:
         calls_per_arm=f"0 (regex); {calls_per_arm} with opts=judge=mc",
         sources="",
         scorer=SCORER,
+        superseded_by=superseded_by,
     )
 
 
@@ -207,6 +209,7 @@ def run_regex(args: JudgeArgs, *, name: str) -> FamilyResult:
             }
 
     rows: list[dict[str, Any]] = []
+    incomplete_of: dict[str, bool] = {}
     for item_id in ids:
         units = units_of[item_id]
         res = regex.item_result(hits_by.get(item_id, {}), units)
@@ -246,6 +249,7 @@ def run_regex(args: JudgeArgs, *, name: str) -> FamilyResult:
         if tokens:
             row["unsummarized_layers"] = item_unsummarized
         rows.append(row)
+        incomplete_of[item_id] = incomplete
     decided = [r for r in rows if r["pass"] is not None]
     roles = sorted({r for row in rows for r in (*row["roles"], *row["optional_roles"])})
     first_lang: dict[str, Counter[str]] = defaultdict(Counter)
@@ -311,6 +315,25 @@ def run_regex(args: JudgeArgs, *, name: str) -> FamilyResult:
                 else {}
             ),
             **({"mc": previous_mc} if previous_mc else {}),
+            # plan 0012 §5: report-only layer protocols (unsummarized layers are undecided)
+            **(
+                {
+                    "layer_protocols": layer_protocols(
+                        {
+                            r["id"]: {
+                                int(L): int(L) in set(r["passing_layers"])
+                                for L in r["layers"]
+                                if int(L) not in set(r.get("unsummarized_layers", []))
+                            }
+                            for r in rows
+                        },
+                        family=name,
+                        layers=layers,
+                    )
+                }
+                if not args.dry_run
+                else {}
+            ),
         },
     )
     return with_readout_count(result, scope, cells)

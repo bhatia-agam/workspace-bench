@@ -3,7 +3,7 @@
 import importlib
 import os
 import pkgutil
-from collections.abc import Callable, Mapping
+from collections.abc import Callable, Iterable, Mapping
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -46,6 +46,7 @@ class JudgeArgs:
     dry_run: bool
     aux_models: Mapping[str, str] = field(default_factory=dict)  # e.g. {"summarizer": model}
     extra: dict[str, str] = field(default_factory=dict)  # family options from opts=key=value
+    scope: str = ""  # "anti_text_inversion": `items` is that frozen subset, not a partial run
 
 
 @dataclass(frozen=True)
@@ -64,6 +65,13 @@ class EvalSpec:
     # a deterministic scorer of record ("regex"): `wsbench list` shows it as the judge and `run`
     # skips its preflight unless opts=judge=mc asks for the family's optional LLM judge
     scorer: str = ""
+    # the family that replaces this one. A superseded family stays registered, frozen and
+    # runnable by explicit name, but every "all" default skips it and the macro excludes it
+    # (reason "superseded") — so its numbers never double-count beside its successor's.
+    superseded_by: str = ""
+    # why this family is kept out of the macro (e.g. "hillclimbing: not yet reviewed"); empty =
+    # in the macro. It stays in `all` runs and reports, only the macro row skips it.
+    not_in_macro: str = ""
 
 
 def register(spec: EvalSpec) -> EvalSpec:
@@ -87,3 +95,21 @@ def load_all() -> None:
 
     for mod in pkgutil.iter_modules(evals_pkg.__path__):
         importlib.import_module(f"wsbench.evals.{mod.name}")
+
+
+def superseded() -> dict[str, str]:
+    """``{family: successor}`` for every superseded family (loads the registry)."""
+    load_all()
+    return {s.name: s.superseded_by for s in FAMILIES.values() if s.superseded_by}
+
+
+def not_in_macro() -> dict[str, str]:
+    """``{family: reason}`` for every family kept out of the macro (loads the registry)."""
+    load_all()
+    return {s.name: s.not_in_macro for s in FAMILIES.values() if s.not_in_macro}
+
+
+def drop_superseded(names: Iterable[str]) -> list[str]:
+    """``names`` minus the superseded families, order kept: what ``all`` means everywhere."""
+    sup = superseded()
+    return [n for n in names if n not in sup]

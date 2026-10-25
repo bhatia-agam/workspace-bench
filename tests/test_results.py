@@ -146,3 +146,31 @@ def test_markdown_table():
     assert "google/gemini-3.8-flash" in lines[2]
     assert "macro" in lines[-1]
     assert len([ln for ln in markdown_table(rs, None).splitlines() if ln.startswith("|")]) == 4
+
+
+def test_macro_excludes_superseded_families():
+    rs = [_res("old", value=0.9), _res("new", value=0.3)]
+    m = macro(rs, superseded={"old": "new"})
+    assert m["families"] == ["new"] and m["value"] == pytest.approx(0.3)
+    assert m["excluded"] == [{"family": "old", "reason": "superseded", "by": "new"}]
+    # always out, even when its successor is not in the run
+    assert macro([_res("old")], superseded={"old": "new"})["families"] == []
+    md = markdown_table(rs, m)
+    assert "excluded: old (superseded)" in md and "- old: superseded by new" in md
+
+
+def test_macro_defaults_to_the_registry_supersession(real_families):
+    # plan 0015: multihop_mt_v2 replaces multihop_mt; v1 never counts toward the macro
+    m = macro([_res("multihop_mt", value=0.9), _res("multihop_mt_v2", value=0.2)])
+    assert m["families"] == ["multihop_mt_v2"]
+    assert m["excluded"] == [
+        {"family": "multihop_mt", "reason": "superseded", "by": "multihop_mt_v2"}
+    ]
+
+
+def test_macro_excludes_not_in_macro_families():
+    rs = [_res("hill", value=0.9), _res("core", value=0.3)]
+    m = macro(rs, superseded={}, held_out={"hill": "hillclimbing"})
+    assert m["families"] == ["core"]
+    assert m["excluded"] == [{"family": "hill", "reason": "not in macro", "why": "hillclimbing"}]
+    assert "- hill: not in macro (hillclimbing)" in markdown_table(rs, m)

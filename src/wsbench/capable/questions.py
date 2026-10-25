@@ -259,6 +259,7 @@ BUILDERS: dict[str, Callable[[], list[Question]]] = {
     "typo": _asked("typo", CORRECT_SPELLING),
     "basic_readout_mt": _asked("basic_readout_mt", CONTINUE),
     "multihop_mt": _with_bridges("multihop_mt"),
+    "multihop_mt_v2": _with_bridges("multihop_mt_v2"),
     "multilingual_mt": _asked("multilingual_mt", CONTINUE),
     "multilingual_multihop": _with_bridges("multilingual_multihop"),
     "multilingual_typo": _asked("multilingual_typo", CORRECT_SPELLING),
@@ -283,6 +284,21 @@ NO_QUESTION: dict[str, str] = {
     "jailbreak_recognition": "no gate: the bank is verbatim WildChat conversations",
     "agentic_misalignment": "the gate is the rollout itself (the model did or did not misbehave)",
     "jlens_concept_pr": "no bank questions: the items are captured activations",
+    "wrong_bridge": "the gate is a specific Qwen3.6-27B ERROR (it resolves the wrong bridge B' and "
+    "answers hop2(B')): re-run the wrong-bridge screen/gate for a new model",
+    "wrong_bridge_true": "contrast arm of wrong_bridge (same items): re-gate with wrong_bridge",
+    "dm_category_default": "the gold is Qwen3.6-27B's OWN stable default for the category (G0: "
+    "greedy = 7 of 10 samples = the named reveal): re-derive the defaults and re-run the "
+    "Opus/Sonnet text gate (G1) for a new model",
+    "cutoff_confab": "the gate is a specific Qwen3.6-27B ERROR (a stable, wrong answer about an "
+    "event after its knowledge cutoff, missed by Opus and Sonnet): re-run the source G0/G1 gate "
+    "for a new model",
+    "ttt_move": "the label is Qwen3.6-27B's own position-stable move (greedy, >= 5/10 draws, both "
+    "namings) and the gate is that Opus and Sonnet never predict it: re-derive the labels and "
+    "re-run the source repo's G0 / G1 gates for a new model",
+    "introspection_inject": "no bank questions: the label is created by the injection (the text "
+    "is identical across concepts); for a new model rebuild the concept vectors and re-check the "
+    "model's own report at the open quote (the source's Agam reproduction)",
 }
 # What a family's capability check does NOT cover, and what to do about it.
 PARTIAL: dict[str, str] = {
