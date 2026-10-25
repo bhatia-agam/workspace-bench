@@ -66,7 +66,7 @@ starting the next.
 
   Run long jobs in tmux and log to `/workspace/agam/logs/`. The first vLLM start compiles, which
   takes minutes; later starts reuse the cache. Larger subjects run on Modal: deploy
-  `scripts/adapt_modal.py` once (app `adapt-subject-llm`, vLLM on an H200, CUDA devel image) and
+  `scripts/adapt_modal.py` once (app `adapt-subject-llm`, vLLM, CUDA devel image; prefer B200 / B300 over H100 / H200 on new deploys, B200 when the image's Triton lacks sm_103a) and
   set `backend="modal"` on the Subject; every step (gate, hal, moral, agentic, floors) then
   generates there through `RemoteRunner` while rendering and grading stay local. Give Modal runs
   their own lock (`ADAPT_GPU_LOCK=/workspace/agam/logs/gpu-modal-<m>.lock`) so they don't queue
@@ -178,7 +178,7 @@ variants before the ladder, and keep the ladder's easiest tier honest: it must s
 **Big subjects (≥ ~30B, MoE, 1T):**
 - **Backends:**
   - ≤ 9B: the 4090.
-  - Dense 30B-class: `scripts/adapt_modal.py` (H200).
+  - Dense 30B-class: `scripts/adapt_modal.py` (prefer B200 / B300 on new deploys; the app defaults to H200).
   - MoE / 100B-class: the same Modal runner with tensor parallel 4.
   - 1T (Kimi-K2): its B300:8 model-parallel gate app. Batch every candidate into ONE generation run.
 - **They pass most originals.** The work is the model-specific families and gating, plus a few refills.
