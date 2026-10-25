@@ -172,7 +172,7 @@ def test_off_site_positions_are_ignored(tmp_path):
 def test_spec_and_plan():
     spec = cutoff_confab.SPEC
     assert spec.scorer == "regex" and spec.group == "precision"
-    assert spec.not_in_macro == "hillclimbing: not yet reviewed"
+    assert spec.not_in_macro == ""  # in the macro (Camila, 2026-10-25)
     plan = readplan.plan("cutoff_confab")
     assert [s.id for s in plan] == [it["id"] for it in ITEMS]
     s = plan[0]

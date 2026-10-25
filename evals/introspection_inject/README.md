@@ -2,8 +2,8 @@
 
 A concept vector is injected into Qwen3.6-27B's user turn at layer 12; the visible text never
 names it. Can a lens reading the UNSTEERED positions downstream name the injected concept?
-Hillclimbing family, kept out of the macro until reviewed
-(`not_in_macro="hillclimbing: not yet reviewed"`). Ported from the source repo (global-workspace
+**In the macro** (Camila, 2026-10-25). Its macro value is the 125-item protocol
+β=4 headline rate; controls never enter it. Ported from the source repo (global-workspace
 `origin/main` 120174e4, `evals/workspace-bench/hillclimbing_evals/multi_token/introspection_inject/`,
 plan rev 17 §7.2; port plan `plans/0016-four-model-specific-families.md`).
 

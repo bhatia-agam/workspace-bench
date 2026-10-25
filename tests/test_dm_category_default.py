@@ -48,7 +48,7 @@ def _args(tmp_path, readouts=EXAMPLE, **kw):
 
 def test_spec():
     assert SPEC.group == "association" and SPEC.scorer == "regex"
-    assert SPEC.not_in_macro == "hillclimbing: not yet reviewed" and not SPEC.sources
+    assert SPEC.not_in_macro == "" and not SPEC.sources  # in the macro (Camila, 2026-10-25)
     assert SPEC.judge.prompt_version == PROMPT_VERSION
 
 

@@ -196,7 +196,7 @@ def test_registered_readme_and_dry_run(tmp_path, capsys, monkeypatch):
     from wsbench.evals.introspection_inject import SPEC
 
     assert SPEC.group == "safety" and SPEC.judge.model == "claude-opus-5-5"
-    assert SPEC.not_in_macro == "hillclimbing: not yet reviewed"
+    assert SPEC.not_in_macro == ""  # in the macro (Camila, 2026-10-25)
     readme = (REPO / "evals/introspection_inject/README.md").read_text(encoding="utf-8")
     assert SYSTEM in readme and PROMPT_VERSION in readme
     monkeypatch.delenv("WSBENCH_JUDGE_MODEL", raising=False)

@@ -97,8 +97,8 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   `superseded`) and every `all` default skips it via `registry.drop_superseded`; it stays
   runnable by explicit name (`run` also takes `include_superseded=True`).
 - `EvalSpec.not_in_macro="<reason>"` keeps a family out of the macro only (reason `not in macro`,
-  `registry.not_in_macro()`); it still runs in `all` and appears in every table (plan 0016: the
-  four model-specific families until reviewed). `readplan` rule `offsets_from_end {ks}` reads
+  `registry.not_in_macro()`); it still runs in `all` and appears in every table (no family uses it today;
+  the four plan-0016 families joined the macro on 2026-10-25). `readplan` rule `offsets_from_end {ks}` reads
   several end offsets; a plan row with `extra["ati_scored"] = False` is never ATI-gated
   (`text_inversion.ati_scored`), so controls can ride in a family's plan.
   `text_inversion.CONSTRUCTION_GATED` (ttt_move, cutoff_confab) lists families whose banks were
