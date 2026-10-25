@@ -169,9 +169,11 @@
    "n_original_pass": 0,
    "n_items": 0,
    "n_new": 0,
-   "n_candidates_gated": 0,
+   "n_candidates_gated": 1200,
    "change": "original items only",
-   "status": "untried"
+   "status": "ooc",
+   "note": "ooc (2026-10-25): re-gated in the read render (chat, no system turn, prefill Answer:, T=0.8 top_p .95, greedy + 10/10): 0/100 originals and 0/1200 generated (t0-t2); it answers the start colour.",
+   "exclude_from_macro": true
   },
   "buggy_code": {
    "target": 49,
@@ -288,8 +290,8 @@
   }
  },
  "code": {
-  "git": "581f690+dirty",
-  "adapt_sha256": "35681e85cc6322ac"
+  "git": "1d2f8da",
+  "adapt_sha256": "ebba0fa06590e1d5"
  },
  "model": "qwen3.5-0.8b",
  "label": "Qwen3.5-0.8B",

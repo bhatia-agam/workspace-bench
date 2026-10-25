@@ -37,189 +37,32 @@
  "adapt": {
   "model": "qwen3.5-9b",
   "hf_id": "Qwen/Qwen3.5-9B",
-  "frozen": "2026-10-18"
+  "frozen": "2026-10-25"
  },
  "items": [
   {
-   "name": "brew-s2-r10d2-0066",
+   "name": "brew-ad-r6d2-761103258",
    "mode": "single",
    "depth": 2,
-   "n_rows": 10,
+   "n_rows": 6,
    "table": {
-    "green": {
-     "stir": "purple"
-    },
-    "purple": {
-     "stir": "orange"
-    },
-    "orange": {
-     "stir": "black"
-    },
-    "black": {
-     "stir": "orange"
-    },
-    "white": {
-     "stir": "blue"
-    },
-    "red": {
-     "stir": "white"
-    },
-    "brown": {
-     "stir": "blue"
-    },
     "gray": {
-     "stir": "purple"
+     "stir": "blue"
     },
     "blue": {
-     "stir": "purple"
-    },
-    "gold": {
-     "stir": "red"
-    }
-   },
-   "start": "green",
-   "stirs": [
-    "stir",
-    "stir"
-   ],
-   "intermediates": [
-    "purple"
-   ],
-   "untaken": [],
-   "answer": "orange",
-   "off_trajectory": [
-    "black",
-    "white",
-    "red",
-    "brown",
-    "gray",
-    "blue",
-    "gold"
-   ],
-   "options_adjacent": [
-    [
-     "green",
-     "purple",
-     "black",
-     "orange",
-     "white"
-    ]
-   ],
-   "options_random": [
-    [
-     "white",
-     "blue",
-     "purple",
-     "gold",
-     "black"
-    ]
-   ],
-   "prompt_first": "Here is a colour-mixing problem. Answer with a single colour word and nothing else.\nProblem: A potion changes colour each time it is stirred, according to these rules:\nA green potion turns purple when stirred.\nA purple potion turns orange when stirred.\nAn orange potion turns black when stirred.\nA black potion turns orange when stirred.\nA white potion turns blue when stirred.\nA red potion turns white when stirred.\nA brown potion turns blue when stirred.\nA gray potion turns purple when stirred.\nA blue potion turns purple when stirred.\nA gold potion turns red when stirred.\nThe potion starts out green.\nYou stir the potion twice.\nWhat colour is the potion at the end?",
-   "prompt": "Here is a colour-mixing problem. Answer with a single colour word and nothing else.\nProblem: A potion changes colour each time it is stirred, according to these rules:\nA green potion turns purple when stirred.\nA purple potion turns orange when stirred.\nAn orange potion turns black when stirred.\nA black potion turns orange when stirred.\nA white potion turns blue when stirred.\nA red potion turns white when stirred.\nA brown potion turns blue when stirred.\nA gray potion turns purple when stirred.\nA blue potion turns purple when stirred.\nA gold potion turns red when stirred.\nYou stir the potion twice.\nThe potion starts out green.\nWhat colour is the potion at the end?",
-   "gate": {
-    "ok_8": true,
-    "ok_10": true,
-    "greedy_ok": true,
-    "correct": 10,
-    "n": 10,
-    "leaked": false
-   },
-   "regions": {
-    "131": "stir",
-    "132": "stir",
-    "133": "stir",
-    "134": "stir",
-    "135": "stir",
-    "136": "stir",
-    "138": "start",
-    "139": "start",
-    "140": "start",
-    "141": "start",
-    "142": "start",
-    "143": "start",
-    "145": "question",
-    "146": "question",
-    "147": "question",
-    "148": "question",
-    "149": "question",
-    "150": "question",
-    "151": "question",
-    "152": "question",
-    "153": "question",
-    "158": "emit_asst",
-    "162": "emit_think",
-    "164": "emit_colon"
-   },
-   "eval_positions": [
-    131,
-    132,
-    133,
-    134,
-    135,
-    136,
-    138,
-    139,
-    140,
-    141,
-    142,
-    143,
-    145,
-    146,
-    147,
-    148,
-    149,
-    150,
-    151,
-    152,
-    153,
-    158,
-    162,
-    164
-   ],
-   "id": "brew-s2-r10d2-0066",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "brew-s2-r10d2-0230",
-   "mode": "single",
-   "depth": 2,
-   "n_rows": 10,
-   "table": {
-    "white": {
-     "stir": "green"
-    },
-    "green": {
-     "stir": "blue"
-    },
-    "brown": {
-     "stir": "gold"
-    },
-    "red": {
      "stir": "pink"
     },
-    "blue": {
-     "stir": "black"
-    },
-    "gray": {
-     "stir": "gold"
-    },
-    "black": {
-     "stir": "blue"
-    },
     "pink": {
-     "stir": "red"
-    },
-    "purple": {
      "stir": "white"
     },
-    "gold": {
-     "stir": "red"
+    "brown": {
+     "stir": "blue"
+    },
+    "green": {
+     "stir": "blue"
+    },
+    "white": {
+     "stir": "blue"
     }
    },
    "start": "white",
@@ -228,102 +71,96 @@
     "stir"
    ],
    "intermediates": [
-    "green"
+    "blue"
    ],
    "untaken": [],
-   "answer": "blue",
+   "answer": "pink",
    "off_trajectory": [
-    "brown",
-    "red",
     "gray",
-    "black",
-    "pink",
-    "purple",
-    "gold"
+    "brown",
+    "green"
    ],
    "options_adjacent": [
     [
-     "red",
-     "brown",
-     "green",
      "blue",
+     "green",
+     "brown",
+     "pink",
      "white"
     ]
    ],
    "options_random": [
     [
-     "red",
+     "teal",
      "green",
      "brown",
-     "pink",
-     "black"
+     "blue",
+     "gray"
     ]
    ],
-   "prompt_first": "Here is a colour-mixing problem. Answer with a single colour word and nothing else.\nProblem: A potion changes colour each time it is stirred, according to these rules:\nA white potion turns green when stirred.\nA green potion turns blue when stirred.\nA brown potion turns gold when stirred.\nA red potion turns pink when stirred.\nA blue potion turns black when stirred.\nA gray potion turns gold when stirred.\nA black potion turns blue when stirred.\nA pink potion turns red when stirred.\nA purple potion turns white when stirred.\nA gold potion turns red when stirred.\nThe potion starts out white.\nYou stir the potion twice.\nWhat colour is the potion at the end?",
-   "prompt": "Here is a colour-mixing problem. Answer with a single colour word and nothing else.\nProblem: A potion changes colour each time it is stirred, according to these rules:\nA white potion turns green when stirred.\nA green potion turns blue when stirred.\nA brown potion turns gold when stirred.\nA red potion turns pink when stirred.\nA blue potion turns black when stirred.\nA gray potion turns gold when stirred.\nA black potion turns blue when stirred.\nA pink potion turns red when stirred.\nA purple potion turns white when stirred.\nA gold potion turns red when stirred.\nYou stir the potion twice.\nThe potion starts out white.\nWhat colour is the potion at the end?",
-   "gate": {
-    "ok_8": true,
-    "ok_10": true,
-    "greedy_ok": true,
-    "correct": 10,
-    "n": 10,
-    "leaked": false
-   },
+   "prompt_first": "Here is a colour-mixing problem. Answer with a single colour word and nothing else.\nProblem: A potion changes colour each time it is stirred, according to these rules:\nA gray potion turns blue when stirred.\nA blue potion turns pink when stirred.\nA pink potion turns white when stirred.\nA brown potion turns blue when stirred.\nA green potion turns blue when stirred.\nA white potion turns blue when stirred.\nThe potion starts out white.\nYou stir the potion twice.\nWhat colour is the potion at the end?",
+   "prompt": "Here is a colour-mixing problem. Answer with a single colour word and nothing else.\nProblem: A potion changes colour each time it is stirred, according to these rules:\nA gray potion turns blue when stirred.\nA blue potion turns pink when stirred.\nA pink potion turns white when stirred.\nA brown potion turns blue when stirred.\nA green potion turns blue when stirred.\nA white potion turns blue when stirred.\nYou stir the potion twice.\nThe potion starts out white.\nWhat colour is the potion at the end?",
    "regions": {
-    "131": "stir",
-    "132": "stir",
-    "133": "stir",
-    "134": "stir",
-    "135": "stir",
-    "136": "stir",
-    "138": "start",
-    "139": "start",
-    "140": "start",
-    "141": "start",
-    "142": "start",
-    "143": "start",
-    "145": "question",
-    "146": "question",
-    "147": "question",
-    "148": "question",
-    "149": "question",
-    "150": "question",
-    "151": "question",
-    "152": "question",
-    "153": "question",
-    "158": "emit_asst",
-    "162": "emit_think",
-    "164": "emit_colon"
+    "95": "stir",
+    "96": "stir",
+    "97": "stir",
+    "98": "stir",
+    "99": "stir",
+    "100": "stir",
+    "102": "start",
+    "103": "start",
+    "104": "start",
+    "105": "start",
+    "106": "start",
+    "107": "start",
+    "109": "question",
+    "110": "question",
+    "111": "question",
+    "112": "question",
+    "113": "question",
+    "114": "question",
+    "115": "question",
+    "116": "question",
+    "117": "question",
+    "122": "emit_asst",
+    "126": "emit_think",
+    "128": "emit_colon"
    },
    "eval_positions": [
-    131,
-    132,
-    133,
-    134,
-    135,
-    136,
-    138,
-    139,
-    140,
-    141,
-    142,
-    143,
-    145,
-    146,
-    147,
-    148,
-    149,
-    150,
-    151,
-    152,
-    153,
-    158,
-    162,
-    164
+    95,
+    96,
+    97,
+    98,
+    99,
+    100,
+    102,
+    103,
+    104,
+    105,
+    106,
+    107,
+    109,
+    110,
+    111,
+    112,
+    113,
+    114,
+    115,
+    116,
+    117,
+    122,
+    126,
+    128
    ],
-   "id": "brew-s2-r10d2-0230",
+   "id": "brew-t1-s1000-0054",
    "adapt": {
-    "origin": "original",
+    "origin": "generated",
+    "tier": "t1",
+    "knobs": {
+     "depth": 2,
+     "n_rows": 6
+    },
+    "change": "6-row colour table",
     "gate": {
      "rate": 1.0,
      "pass": true
@@ -331,43 +168,282 @@
    }
   },
   {
-   "name": "brew-s2-r10d2-0299",
+   "name": "brew-ad-r6d2-514463408",
    "mode": "single",
    "depth": 2,
-   "n_rows": 10,
+   "n_rows": 6,
    "table": {
+    "white": {
+     "stir": "brown"
+    },
+    "brown": {
+     "stir": "gray"
+    },
+    "blue": {
+     "stir": "gray"
+    },
+    "gold": {
+     "stir": "blue"
+    },
+    "red": {
+     "stir": "brown"
+    },
+    "gray": {
+     "stir": "brown"
+    }
+   },
+   "start": "gold",
+   "stirs": [
+    "stir",
+    "stir"
+   ],
+   "intermediates": [
+    "blue"
+   ],
+   "untaken": [],
+   "answer": "gray",
+   "off_trajectory": [
+    "white",
+    "brown",
+    "red"
+   ],
+   "options_adjacent": [
+    [
+     "red",
+     "gold",
+     "white",
+     "gray",
+     "blue"
+    ]
+   ],
+   "options_random": [
+    [
+     "white",
+     "black",
+     "red",
+     "brown",
+     "blue"
+    ]
+   ],
+   "prompt_first": "Here is a colour-mixing problem. Answer with a single colour word and nothing else.\nProblem: A potion changes colour each time it is stirred, according to these rules:\nA white potion turns brown when stirred.\nA brown potion turns gray when stirred.\nA blue potion turns gray when stirred.\nA gold potion turns blue when stirred.\nA red potion turns brown when stirred.\nA gray potion turns brown when stirred.\nThe potion starts out gold.\nYou stir the potion twice.\nWhat colour is the potion at the end?",
+   "prompt": "Here is a colour-mixing problem. Answer with a single colour word and nothing else.\nProblem: A potion changes colour each time it is stirred, according to these rules:\nA white potion turns brown when stirred.\nA brown potion turns gray when stirred.\nA blue potion turns gray when stirred.\nA gold potion turns blue when stirred.\nA red potion turns brown when stirred.\nA gray potion turns brown when stirred.\nYou stir the potion twice.\nThe potion starts out gold.\nWhat colour is the potion at the end?",
+   "regions": {
+    "95": "stir",
+    "96": "stir",
+    "97": "stir",
+    "98": "stir",
+    "99": "stir",
+    "100": "stir",
+    "102": "start",
+    "103": "start",
+    "104": "start",
+    "105": "start",
+    "106": "start",
+    "107": "start",
+    "109": "question",
+    "110": "question",
+    "111": "question",
+    "112": "question",
+    "113": "question",
+    "114": "question",
+    "115": "question",
+    "116": "question",
+    "117": "question",
+    "122": "emit_asst",
+    "126": "emit_think",
+    "128": "emit_colon"
+   },
+   "eval_positions": [
+    95,
+    96,
+    97,
+    98,
+    99,
+    100,
+    102,
+    103,
+    104,
+    105,
+    106,
+    107,
+    109,
+    110,
+    111,
+    112,
+    113,
+    114,
+    115,
+    116,
+    117,
+    122,
+    126,
+    128
+   ],
+   "id": "brew-t1-s1000-0328",
+   "adapt": {
+    "origin": "generated",
+    "tier": "t1",
+    "knobs": {
+     "depth": 2,
+     "n_rows": 6
+    },
+    "change": "6-row colour table",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "brew-ad-r6d2-222189562",
+   "mode": "single",
+   "depth": 2,
+   "n_rows": 6,
+   "table": {
+    "blue": {
+     "stir": "gold"
+    },
+    "gold": {
+     "stir": "teal"
+    },
     "brown": {
      "stir": "purple"
     },
-    "green": {
-     "stir": "blue"
+    "orange": {
+     "stir": "purple"
     },
     "teal": {
-     "stir": "brown"
+     "stir": "blue"
     },
-    "white": {
-     "stir": "black"
+    "purple": {
+     "stir": "teal"
+    }
+   },
+   "start": "orange",
+   "stirs": [
+    "stir",
+    "stir"
+   ],
+   "intermediates": [
+    "purple"
+   ],
+   "untaken": [],
+   "answer": "teal",
+   "off_trajectory": [
+    "blue",
+    "gold",
+    "brown"
+   ],
+   "options_adjacent": [
+    [
+     "teal",
+     "orange",
+     "purple",
+     "brown",
+     "gold"
+    ]
+   ],
+   "options_random": [
+    [
+     "gold",
+     "blue",
+     "green",
+     "purple",
+     "brown"
+    ]
+   ],
+   "prompt_first": "Here is a colour-mixing problem. Answer with a single colour word and nothing else.\nProblem: A potion changes colour each time it is stirred, according to these rules:\nA blue potion turns gold when stirred.\nA gold potion turns teal when stirred.\nA brown potion turns purple when stirred.\nAn orange potion turns purple when stirred.\nA teal potion turns blue when stirred.\nA purple potion turns teal when stirred.\nThe potion starts out orange.\nYou stir the potion twice.\nWhat colour is the potion at the end?",
+   "prompt": "Here is a colour-mixing problem. Answer with a single colour word and nothing else.\nProblem: A potion changes colour each time it is stirred, according to these rules:\nA blue potion turns gold when stirred.\nA gold potion turns teal when stirred.\nA brown potion turns purple when stirred.\nAn orange potion turns purple when stirred.\nA teal potion turns blue when stirred.\nA purple potion turns teal when stirred.\nYou stir the potion twice.\nThe potion starts out orange.\nWhat colour is the potion at the end?",
+   "regions": {
+    "95": "stir",
+    "96": "stir",
+    "97": "stir",
+    "98": "stir",
+    "99": "stir",
+    "100": "stir",
+    "102": "start",
+    "103": "start",
+    "104": "start",
+    "105": "start",
+    "106": "start",
+    "107": "start",
+    "109": "question",
+    "110": "question",
+    "111": "question",
+    "112": "question",
+    "113": "question",
+    "114": "question",
+    "115": "question",
+    "116": "question",
+    "117": "question",
+    "122": "emit_asst",
+    "126": "emit_think",
+    "128": "emit_colon"
+   },
+   "eval_positions": [
+    95,
+    96,
+    97,
+    98,
+    99,
+    100,
+    102,
+    103,
+    104,
+    105,
+    106,
+    107,
+    109,
+    110,
+    111,
+    112,
+    113,
+    114,
+    115,
+    116,
+    117,
+    122,
+    126,
+    128
+   ],
+   "id": "brew-t1-s1000-0398",
+   "adapt": {
+    "origin": "generated",
+    "tier": "t1",
+    "knobs": {
+     "depth": 2,
+     "n_rows": 6
     },
-    "black": {
-     "stir": "gray"
-    },
+    "change": "6-row colour table",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "brew-ad-r5d2-796886364",
+   "mode": "single",
+   "depth": 2,
+   "n_rows": 5,
+   "table": {
     "pink": {
+     "stir": "purple"
+    },
+    "brown": {
+     "stir": "purple"
+    },
+    "gray": {
      "stir": "purple"
     },
     "purple": {
      "stir": "gray"
     },
-    "gray": {
-     "stir": "gold"
-    },
     "blue": {
-     "stir": "black"
-    },
-    "gold": {
-     "stir": "white"
+     "stir": "purple"
     }
    },
-   "start": "pink",
+   "start": "brown",
    "stirs": [
     "stir",
     "stir"
@@ -378,97 +454,90 @@
    "untaken": [],
    "answer": "gray",
    "off_trajectory": [
-    "brown",
-    "green",
-    "teal",
-    "white",
-    "black",
-    "blue",
-    "gold"
+    "pink",
+    "blue"
    ],
    "options_adjacent": [
     [
      "purple",
-     "pink",
+     "brown",
+     "blue",
      "gray",
-     "white",
-     "blue"
+     "pink"
     ]
    ],
    "options_random": [
     [
-     "white",
-     "blue",
-     "black",
+     "pink",
+     "red",
      "purple",
-     "gold"
+     "green",
+     "blue"
     ]
    ],
-   "prompt_first": "Here is a colour-mixing problem. Answer with a single colour word and nothing else.\nProblem: A potion changes colour each time it is stirred, according to these rules:\nA brown potion turns purple when stirred.\nA green potion turns blue when stirred.\nA teal potion turns brown when stirred.\nA white potion turns black when stirred.\nA black potion turns gray when stirred.\nA pink potion turns purple when stirred.\nA purple potion turns gray when stirred.\nA gray potion turns gold when stirred.\nA blue potion turns black when stirred.\nA gold potion turns white when stirred.\nThe potion starts out pink.\nYou stir the potion twice.\nWhat colour is the potion at the end?",
-   "prompt": "Here is a colour-mixing problem. Answer with a single colour word and nothing else.\nProblem: A potion changes colour each time it is stirred, according to these rules:\nA brown potion turns purple when stirred.\nA green potion turns blue when stirred.\nA teal potion turns brown when stirred.\nA white potion turns black when stirred.\nA black potion turns gray when stirred.\nA pink potion turns purple when stirred.\nA purple potion turns gray when stirred.\nA gray potion turns gold when stirred.\nA blue potion turns black when stirred.\nA gold potion turns white when stirred.\nYou stir the potion twice.\nThe potion starts out pink.\nWhat colour is the potion at the end?",
-   "gate": {
-    "ok_8": true,
-    "ok_10": true,
-    "greedy_ok": true,
-    "correct": 10,
-    "n": 10,
-    "leaked": false
-   },
+   "prompt_first": "Here is a colour-mixing problem. Answer with a single colour word and nothing else.\nProblem: A potion changes colour each time it is stirred, according to these rules:\nA pink potion turns purple when stirred.\nA brown potion turns purple when stirred.\nA gray potion turns purple when stirred.\nA purple potion turns gray when stirred.\nA blue potion turns purple when stirred.\nThe potion starts out brown.\nYou stir the potion twice.\nWhat colour is the potion at the end?",
+   "prompt": "Here is a colour-mixing problem. Answer with a single colour word and nothing else.\nProblem: A potion changes colour each time it is stirred, according to these rules:\nA pink potion turns purple when stirred.\nA brown potion turns purple when stirred.\nA gray potion turns purple when stirred.\nA purple potion turns gray when stirred.\nA blue potion turns purple when stirred.\nYou stir the potion twice.\nThe potion starts out brown.\nWhat colour is the potion at the end?",
    "regions": {
-    "131": "stir",
-    "132": "stir",
-    "133": "stir",
-    "134": "stir",
-    "135": "stir",
-    "136": "stir",
-    "138": "start",
-    "139": "start",
-    "140": "start",
-    "141": "start",
-    "142": "start",
-    "143": "start",
-    "145": "question",
-    "146": "question",
-    "147": "question",
-    "148": "question",
-    "149": "question",
-    "150": "question",
-    "151": "question",
-    "152": "question",
-    "153": "question",
-    "158": "emit_asst",
-    "162": "emit_think",
-    "164": "emit_colon"
+    "86": "stir",
+    "87": "stir",
+    "88": "stir",
+    "89": "stir",
+    "90": "stir",
+    "91": "stir",
+    "93": "start",
+    "94": "start",
+    "95": "start",
+    "96": "start",
+    "97": "start",
+    "98": "start",
+    "100": "question",
+    "101": "question",
+    "102": "question",
+    "103": "question",
+    "104": "question",
+    "105": "question",
+    "106": "question",
+    "107": "question",
+    "108": "question",
+    "113": "emit_asst",
+    "117": "emit_think",
+    "119": "emit_colon"
    },
    "eval_positions": [
-    131,
-    132,
-    133,
-    134,
-    135,
-    136,
-    138,
-    139,
-    140,
-    141,
-    142,
-    143,
-    145,
-    146,
-    147,
-    148,
-    149,
-    150,
-    151,
-    152,
-    153,
-    158,
-    162,
-    164
+    86,
+    87,
+    88,
+    89,
+    90,
+    91,
+    93,
+    94,
+    95,
+    96,
+    97,
+    98,
+    100,
+    101,
+    102,
+    103,
+    104,
+    105,
+    106,
+    107,
+    108,
+    113,
+    117,
+    119
    ],
-   "id": "brew-s2-r10d2-0299",
+   "id": "brew-t2-s2000-0331",
    "adapt": {
-    "origin": "original",
+    "origin": "generated",
+    "tier": "t2",
+    "knobs": {
+     "depth": 2,
+     "n_rows": 5
+    },
+    "change": "5-row colour table",
     "gate": {
      "rate": 1.0,
      "pass": true

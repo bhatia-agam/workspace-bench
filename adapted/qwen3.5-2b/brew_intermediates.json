@@ -37,7 +37,135 @@
  "adapt": {
   "model": "qwen3.5-2b",
   "hf_id": "Qwen/Qwen3.5-2B",
-  "frozen": "2026-10-20"
+  "frozen": "2026-10-25"
  },
- "items": []
+ "items": [
+  {
+   "name": "brew-ad-r6d2-776019512",
+   "mode": "single",
+   "depth": 2,
+   "n_rows": 6,
+   "table": {
+    "black": {
+     "stir": "gold"
+    },
+    "green": {
+     "stir": "teal"
+    },
+    "white": {
+     "stir": "black"
+    },
+    "teal": {
+     "stir": "black"
+    },
+    "purple": {
+     "stir": "gold"
+    },
+    "gold": {
+     "stir": "black"
+    }
+   },
+   "start": "purple",
+   "stirs": [
+    "stir",
+    "stir"
+   ],
+   "intermediates": [
+    "gold"
+   ],
+   "untaken": [],
+   "answer": "black",
+   "off_trajectory": [
+    "green",
+    "white",
+    "teal"
+   ],
+   "options_adjacent": [
+    [
+     "purple",
+     "black",
+     "green",
+     "gold",
+     "teal"
+    ]
+   ],
+   "options_random": [
+    [
+     "green",
+     "gold",
+     "white",
+     "teal",
+     "gray"
+    ]
+   ],
+   "prompt_first": "Here is a colour-mixing problem. Answer with a single colour word and nothing else.\nProblem: A potion changes colour each time it is stirred, according to these rules:\nA black potion turns gold when stirred.\nA green potion turns teal when stirred.\nA white potion turns black when stirred.\nA teal potion turns black when stirred.\nA purple potion turns gold when stirred.\nA gold potion turns black when stirred.\nThe potion starts out purple.\nYou stir the potion twice.\nWhat colour is the potion at the end?",
+   "prompt": "Here is a colour-mixing problem. Answer with a single colour word and nothing else.\nProblem: A potion changes colour each time it is stirred, according to these rules:\nA black potion turns gold when stirred.\nA green potion turns teal when stirred.\nA white potion turns black when stirred.\nA teal potion turns black when stirred.\nA purple potion turns gold when stirred.\nA gold potion turns black when stirred.\nYou stir the potion twice.\nThe potion starts out purple.\nWhat colour is the potion at the end?",
+   "regions": {
+    "95": "stir",
+    "96": "stir",
+    "97": "stir",
+    "98": "stir",
+    "99": "stir",
+    "100": "stir",
+    "102": "start",
+    "103": "start",
+    "104": "start",
+    "105": "start",
+    "106": "start",
+    "107": "start",
+    "109": "question",
+    "110": "question",
+    "111": "question",
+    "112": "question",
+    "113": "question",
+    "114": "question",
+    "115": "question",
+    "116": "question",
+    "117": "question",
+    "122": "emit_asst",
+    "126": "emit_think",
+    "128": "emit_colon"
+   },
+   "eval_positions": [
+    95,
+    96,
+    97,
+    98,
+    99,
+    100,
+    102,
+    103,
+    104,
+    105,
+    106,
+    107,
+    109,
+    110,
+    111,
+    112,
+    113,
+    114,
+    115,
+    116,
+    117,
+    122,
+    126,
+    128
+   ],
+   "id": "brew-t1-s1000-0072",
+   "adapt": {
+    "origin": "generated",
+    "tier": "t1",
+    "knobs": {
+     "depth": 2,
+     "n_rows": 6
+    },
+    "change": "6-row colour table",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  }
+ ]
 }

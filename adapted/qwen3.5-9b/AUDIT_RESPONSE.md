@@ -30,3 +30,8 @@ user_modeling (0.50 vs 0.07), conjunctive (0.31 vs 0.07), arithmetic (0.32 vs 0.
 multilingual_multihop (0.69 vs 0.45). It is lower on poetry (0.31 vs 0.71) and multilingual_mt
 (0.29 vs 0.42). Read 9B lens scores against these floors. role_bound is saturated (1.00), as on
 the 27B. Full table: `adapted/README.md`.
+
+## Addendum 2026-10-25: brew_intermediates re-gated in the read render
+- The 35B-A3B audit defect (brew gated with a system turn the lens never sees) was present in this set's old records for the 4B and 9B; the 0.8B and 2B records were already system-free.
+- All 100 originals re-gated in the read render (chat, no system turn, prefill `Answer:`, T=0.8 / top_p .95, greedy + 10/10), then the ladder walked (t0 10 rows, t1 6, t2 5; depth 2; ~400 generated per tier).
+- Result: still `ooc`, out of the macro (see report.json note). The 10/10-at-T=0.8 bar is binding: no tier reaches the 3% yield. Bank = the few passing items only.

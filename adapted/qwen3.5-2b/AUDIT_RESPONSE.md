@@ -16,3 +16,8 @@ directly. No refill: this is a small subject, and short families stay short and 
 - Patches the audit suggested (2B association `bf-newyear` gold, typo_mt "roller coaster" form)
   are not applied yet.
 - **Floors:** `floors/floors.json` once tmux `small-floors` finishes.
+
+## Addendum 2026-10-25: brew_intermediates re-gated in the read render
+- The 35B-A3B audit defect (brew gated with a system turn the lens never sees) was present in this set's old records for the 4B and 9B; the 0.8B and 2B records were already system-free.
+- All 100 originals re-gated in the read render (chat, no system turn, prefill `Answer:`, T=0.8 / top_p .95, greedy + 10/10), then the ladder walked (t0 10 rows, t1 6, t2 5; depth 2; ~400 generated per tier).
+- Result: still `ooc`, out of the macro (see report.json note). The 10/10-at-T=0.8 bar is binding: no tier reaches the 3% yield. Bank = the few passing items only.

@@ -182,10 +182,10 @@
    "n_original": 596,
    "n_original_gated": 586,
    "n_original_pass": 242,
-   "n_items": 517,
+   "n_items": 511,
    "n_new": 303,
    "n_candidates_gated": 3622,
-   "change": "new items from t0, t1, t2; structural role: 55% -> 22%; first step >= 100: 24% -> 10%",
+   "change": "new items from t0, t1, t2; structural role: 55% -> 23%; first step >= 100: 24% -> 10%",
    "freeze_notes": [
     "6 items have a null pool under 8"
    ],
@@ -195,14 +195,14 @@
    "target": 100,
    "n_original": 100,
    "n_original_gated": 100,
-   "n_original_pass": 3,
-   "n_items": 3,
-   "n_new": 0,
-   "n_candidates_gated": 0,
-   "change": "original items only",
-   "status": "untried",
+   "n_original_pass": 0,
+   "n_items": 4,
+   "n_new": 4,
+   "n_candidates_gated": 1200,
+   "change": "new items from t1, t2",
+   "status": "ooc",
    "exclude_from_macro": true,
-   "note": "3 items, ladder not run (4B scored 0/460 at T0); kept out of the macro; report as untried"
+   "note": "ooc (2026-10-25): re-gated in the read render (chat, no system turn, prefill Answer:, T=0.8 top_p .95, greedy + 10/10): 0/100 originals and 4/1200 generated (t0 10 rows 0/400, t1 6 rows 3/400, t2 5 rows 1/400); greedy is right on 49% of originals but samples never reach the 10/10 bar (max ~6/10). The earlier records were asked with a system turn (4B/9B)."
   },
   "buggy_code": {
    "target": 49,
@@ -413,8 +413,8 @@
   }
  },
  "code": {
-  "git": "92d763e+dirty",
-  "adapt_sha256": "3abef62979683c13"
+  "git": "1d2f8da",
+  "adapt_sha256": "ebba0fa06590e1d5"
  },
  "read_band": []
 }

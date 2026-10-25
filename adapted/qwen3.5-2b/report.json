@@ -78,12 +78,13 @@
    "n_original": 100,
    "n_original_gated": 100,
    "n_original_pass": 0,
-   "n_items": 0,
-   "n_new": 0,
-   "n_candidates_gated": 0,
-   "change": "original items only",
-   "status": "untried",
-   "exclude_from_macro": true
+   "n_items": 1,
+   "n_new": 1,
+   "n_candidates_gated": 1200,
+   "change": "new items from t1",
+   "status": "ooc",
+   "exclude_from_macro": true,
+   "note": "ooc (2026-10-25): re-gated in the read render (chat, no system turn, prefill Answer:, T=0.8 top_p .95, greedy + 10/10): 0/100 originals and 1/1200 generated (t0-t2); . The earlier records were asked with a system turn (4B/9B)."
   },
   "buggy_code": {
    "target": 49,
@@ -284,8 +285,8 @@
   "rule": "greedy right AND >= 8/10 (10/10 chain, brew)"
  },
  "code": {
-  "git": "92d763e+dirty",
-  "adapt_sha256": "46fdac93c08fe225"
+  "git": "1d2f8da",
+  "adapt_sha256": "ebba0fa06590e1d5"
  },
  "read_band": [],
  "drops": {

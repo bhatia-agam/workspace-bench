@@ -37,7 +37,131 @@
  "adapt": {
   "model": "qwen3.5-4b",
   "hf_id": "Qwen/Qwen3.5-4B",
-  "frozen": "2026-10-18"
+  "frozen": "2026-10-25"
  },
- "items": []
+ "items": [
+  {
+   "name": "brew-ad-r5d2-466465107",
+   "mode": "single",
+   "depth": 2,
+   "n_rows": 5,
+   "table": {
+    "white": {
+     "stir": "teal"
+    },
+    "teal": {
+     "stir": "pink"
+    },
+    "pink": {
+     "stir": "white"
+    },
+    "green": {
+     "stir": "pink"
+    },
+    "gray": {
+     "stir": "green"
+    }
+   },
+   "start": "white",
+   "stirs": [
+    "stir",
+    "stir"
+   ],
+   "intermediates": [
+    "teal"
+   ],
+   "untaken": [],
+   "answer": "pink",
+   "off_trajectory": [
+    "green",
+    "gray"
+   ],
+   "options_adjacent": [
+    [
+     "green",
+     "pink",
+     "gray",
+     "white",
+     "teal"
+    ]
+   ],
+   "options_random": [
+    [
+     "teal",
+     "green",
+     "gold",
+     "gray",
+     "black"
+    ]
+   ],
+   "prompt_first": "Here is a colour-mixing problem. Answer with a single colour word and nothing else.\nProblem: A potion changes colour each time it is stirred, according to these rules:\nA white potion turns teal when stirred.\nA teal potion turns pink when stirred.\nA pink potion turns white when stirred.\nA green potion turns pink when stirred.\nA gray potion turns green when stirred.\nThe potion starts out white.\nYou stir the potion twice.\nWhat colour is the potion at the end?",
+   "prompt": "Here is a colour-mixing problem. Answer with a single colour word and nothing else.\nProblem: A potion changes colour each time it is stirred, according to these rules:\nA white potion turns teal when stirred.\nA teal potion turns pink when stirred.\nA pink potion turns white when stirred.\nA green potion turns pink when stirred.\nA gray potion turns green when stirred.\nYou stir the potion twice.\nThe potion starts out white.\nWhat colour is the potion at the end?",
+   "regions": {
+    "86": "stir",
+    "87": "stir",
+    "88": "stir",
+    "89": "stir",
+    "90": "stir",
+    "91": "stir",
+    "93": "start",
+    "94": "start",
+    "95": "start",
+    "96": "start",
+    "97": "start",
+    "98": "start",
+    "100": "question",
+    "101": "question",
+    "102": "question",
+    "103": "question",
+    "104": "question",
+    "105": "question",
+    "106": "question",
+    "107": "question",
+    "108": "question",
+    "113": "emit_asst",
+    "117": "emit_think",
+    "119": "emit_colon"
+   },
+   "eval_positions": [
+    86,
+    87,
+    88,
+    89,
+    90,
+    91,
+    93,
+    94,
+    95,
+    96,
+    97,
+    98,
+    100,
+    101,
+    102,
+    103,
+    104,
+    105,
+    106,
+    107,
+    108,
+    113,
+    117,
+    119
+   ],
+   "id": "brew-t2-s2000-0285",
+   "adapt": {
+    "origin": "generated",
+    "tier": "t2",
+    "knobs": {
+     "depth": 2,
+     "n_rows": 5
+    },
+    "change": "5-row colour table",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  }
+ ]
 }
