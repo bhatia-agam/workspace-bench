@@ -29,6 +29,5 @@ SPEC = register(
         # + 300 beta0 units (200 x 264, 100 x 99); the 125 headline items alone are 33k
         calls_per_arm="≈ 409k (headline 33k)",
         sources="",  # in-house bank; the protocol and vector recipe follow Agam's reproduction
-        not_in_macro="hillclimbing: not yet reviewed",
     )
 )

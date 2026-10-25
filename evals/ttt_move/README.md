@@ -8,9 +8,7 @@ framings both to recall and to pick from the empty squares, were wrong every tim
 not readable off the prompt by a frontier reader.
 
 **Status:** ported 2026-10-24 (plan 0016) from the source repo (global-workspace `origin/main`,
-ttt_move #551, frozen 2026-10-23). Registered with
-`not_in_macro="hillclimbing: not yet reviewed"`: it runs in `all`, appears in every table and
-stays out of the macro row until reviewed. Judge pinned to `claude-opus-5-5`.
+ttt_move #551, frozen 2026-10-23). **In the macro** (Camila, 2026-10-25). Judge pinned to `claude-opus-5-5`.
 
 ## Bank (`items.json`, frozen, copied verbatim from the source)
 

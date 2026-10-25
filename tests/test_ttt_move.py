@@ -260,7 +260,7 @@ def test_registered_pinned_and_dry_run(tmp_path, capsys, monkeypatch):
     from wsbench.evals.ttt_move import SPEC
 
     assert SPEC.group == "logic" and SPEC.judge.model == "claude-opus-5-5"
-    assert SPEC.not_in_macro == "hillclimbing: not yet reviewed"
+    assert SPEC.not_in_macro == ""  # in the macro (Camila, 2026-10-25)
     monkeypatch.delenv("WSBENCH_JUDGE_MODEL", raising=False)
     out = tmp_path / "out"
     argv = ["judge", f"family={SPEC.name}", f"readouts={EXAMPLE}", f"out={out}", "dry_run=True"]

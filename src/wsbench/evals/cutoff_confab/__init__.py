@@ -23,6 +23,5 @@ SPEC = register(
         calls_per_arm="0 (regex)",
         sources="",
         scorer="regex",
-        not_in_macro="hillclimbing: not yet reviewed",
     )
 )

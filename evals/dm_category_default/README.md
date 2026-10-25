@@ -5,8 +5,7 @@ unrelated sentence; the lens reads every position where the model writes that se
 name the model's **own** answer for the category (its stable default, e.g. `baharat` for
 "Middle Eastern spice blend")? 98 items, regex-scored, in-house (source repo global-workspace,
 `evals/workspace-bench/hillclimbing_evals/multi_token/dm_category_default/`, frozen 2026-10-23,
-PRs #552 + #560). **Not in the macro** (`not_in_macro="hillclimbing: not yet reviewed"`, plan
-0016) until reviewed; it runs in `all` and appears in every table.
+PRs #552 + #560). **In the macro** (Camila, 2026-10-25).
 
 
 Note: the bank header's `contract.aggregation` ("plurality over writing positions x layers") is the
@@ -94,8 +93,8 @@ ties. The text floors are about 0 by construction (G1 removed every item Opus or
 answer). A reader told how the options were built, or a stock-Qwen text reader, finds the gold
 about half the time (source R6 0.537, R1 0.471). The source's steering test (§5) found that almost
 none of the steering effect on the answer passes through the carrier cells, so a carrier-cell hit
-cannot be attributed to the subject rather than the decoder's prior. These are the reasons the
-family stays out of the macro until reviewed.
+cannot be attributed to the subject rather than the decoder's prior. These caveats ride with the
+number; the family is in the macro (Camila, 2026-10-25).
 
 ## Port parity
 

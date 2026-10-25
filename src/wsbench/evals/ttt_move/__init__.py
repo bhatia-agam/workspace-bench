@@ -30,6 +30,5 @@ SPEC = register(
         run=judge.run,
         calls_per_arm="≈ 1.7k",
         sources="",  # in-house bank (source repo global-workspace, ttt_move #551)
-        not_in_macro="hillclimbing: not yet reviewed",
     )
 )

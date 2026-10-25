@@ -7,8 +7,7 @@ specific, and **incorrect**. claude-opus-5-5 (x3) and claude-sonnet-5-5 both had
 under two framings. Does the lens name that answer at the token right before Qwen replies?
 
 **Status:** ported from the source repo's frozen bank (2026-10-23, 109 items, global-workspace
-PR #553, `hillclimbing_evals/multi_token/cutoff_confab`). The family is **not in the macro**
-(`not_in_macro = "hillclimbing: not yet reviewed"`) until Camila reviews it.
+PR #553, `hillclimbing_evals/multi_token/cutoff_confab`). **In the macro** (Camila, 2026-10-25).
 
 > **Caveat (read this before using the number).** The label is Qwen's *knowledge state*,
 > usually a stale pre-cutoff fact or a guess at the front-runner. That knowledge is in the
