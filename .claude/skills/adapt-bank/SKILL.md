@@ -199,6 +199,23 @@ variants before the ladder, and keep the ladder's easiest tier honest: it must s
 - **A frozen item's `gate_variant` never picks its eval render**; only adapted items' variants do
   (`readplan` poetry).
 
+**Lessons from the 2026-10-23 round (each has an audit or pilot behind it):**
+- **Selection caps:**
+  - brew: no hidden colour above 20% of the bank (`run.CAPS`). Selection had followed each subject's
+    colour aversion (OLMo-7B teal 25/100).
+  - role_bound: at most 12 uses of any role; relational: at most 20 per relation.
+- **role_bound strict grading:** `ADAPT_ROLE_BOUND_STRICT=1` credits only answers that name the roles.
+  Small subjects that answer with names pass the lenient grader but score 0 under the strict one, so
+  they stay out of the macro.
+- **Possessive and split blanks** (relational on Gemma / Kimi): read the final piece of the blank and
+  verify by character span. Drop a scene if the tokenizer merges the blank into the name.
+- **Arithmetic and chain:** the pre-registered 27B read cell (`cells=frozen`) scores about 0 on other
+  subjects. Reading every position mostly matches other items' values (9B pilot: chance .70, real
+  lift +.04 to +.10), so report the lift over a permutation null next to any every-position number.
+- **Scoring models whose lens was read on the 27B bank:** `atlas/normal_gated.py`. Their own-set
+  scoring uses the subject's `-adapt` apps in gw-olens: `subject_*_modal.py` / `adapt_mp_subject_modal.py`,
+  and for Kimi, `kimi_wsbench_modal.py` in adaptive mode.
+
 **Ops:**
 - **tmux:** wait on sessions with `tmux has-session -t "=name"` (exact match).
 
