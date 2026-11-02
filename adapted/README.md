@@ -1,5 +1,14 @@
 # Adaptive WorkspaceBench: per-model sets
 
+> **⚠ Stale since the bank v2+ round (checked 2026-11-02).** Every set below was built from the v1
+> banks. Today's default judges for association, basic_readout, multihop, chain_intermediates and
+> poetry exit on them (no `mc`). moral, multilingual, multilingual_multihop and conjunctive run on
+> retired instruments, buggy / agentic / jailbreak report no headline, and the floors predate
+> summary mode. Do not quote a number from a family the skill's §State marks broken, retired or
+> headline-None; refreshing the sets is blocked until plan 0060 lands
+> (`.claude/skills/adapt-bank/SKILL.md` §State and §Refresh). "audited; usable" in the table below
+> means usable against the v1 banks a set was built from.
+
 Every frozen bank under `evals/` was gated on Qwen3.6-27B. For any other subject, use that
 subject's adapted set: the same families and item format, but every item is one THIS model
 computes (re-gated on it; failures replaced by easier items of the same kind; model-specific
@@ -122,13 +131,14 @@ rather than re-deriving renders from the bank files:
     subject's own J-lens top-10 reference at the subject's layers).
   - `agentic_misalignment`: prompt positions only; `prefill` is the subject's own misaligned
     rollout (reference for the judge, never shown to the lens).
-- Layers stored inside a bank (`buggy_code` header `read_cells`, `arithmetic` `cell.layer`,
-  `multi_concept_directed_modulation` header `layers`) are already the subject's.
+- Layers stored inside a bank are already the subject's. Since plan 0032 only `arithmetic`
+  `cell.layer` is read; `buggy_code` `read_cells` and MCDM `header.layers` are ignored (both read
+  GRID remapped by depth).
 
 ## Keeping this current
 
-The adapt-bank workstream updates this table when a set is built, audited or changed. Rebuild a
-set: `scripts/adapt_box.sh freeze model=<m>` after gating (see the skill).
+The adapt-bank workstream updates this table when a set is built, audited or changed. Refreshing a
+set to a newer bench is blocked until plan 0060 lands (the skill's §Refresh); never run a bare `freeze`.
 
 ## Work products not in git
 

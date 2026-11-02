@@ -18,11 +18,10 @@
     (global-workspace c3ff939c `scripts/ola/port/wsbench_gemma.py` LAYER_REMAP).
 - If the lens has a trained band, snap each remapped layer to the nearest band layer. That's what
   the prior Qwen-sizes port did.
-- Three judges carry layers inside the bank. Rewrite these in the adapted bank, because the judge
-  reads them:
-  - buggy_code `header.read_cells`
-  - arithmetic `item.cell.layer`
-  - multi_concept_directed_modulation `header.layers`
+- Since plan 0032 only arithmetic's `item.cell.layer` is a layer the judge reads from the bank:
+  rewrite it in the adapted bank (freeze does). buggy_code `header.read_cells` and
+  multi_concept_directed_modulation `header.layers` are still rewritten by freeze / carry but no
+  longer read (`readplan.BANK_LAYERS` is empty): both read GRID remapped by depth.
 
 ## Tokenizer and positions
 - **The Qwen3.5 sizes share Qwen3.6-27B's tokenizer, chat template and special tokens.** Every
@@ -51,7 +50,17 @@
 - If a family is missing from the root, that's an error, not a fallback to another model's bank.
   So list only the families present in `adapted/<model>/report.json`.
 - The frozen floors (`evals/baselines/`) were measured on the original banks. Re-measure them on an
-  adapted bank before drawing them beside it.
+  adapted bank before drawing them beside it (SKILL.md §4 Floors). `wsbench report` under
+  `WSB_BANK_ROOT` still draws the frozen 27B floors (`cli.py`), so read the adapted ones from
+  `adapted/<model>/floors/floors.json` and say which protocol they are.
+- `wsbench baseline kind=prompt_only_opus stage=build` hard-codes the `Qwen/Qwen3.6-27B` tokenizer
+  (`baselines/prompt_only_opus.py`): for a non-Qwen subject the render is decoded wrong until it
+  takes the subject's tokenizer.
+- ATI does not apply to adapted banks: `text_inversion` is scoped to the frozen 27B banks and its
+  `bank_sha` guard refuses any other bank.
+- Judge a refreshed set with every family `dry_run=True` first. A non-zero exit means a field the
+  registered bank's judge requires (`mc`, `mc.candidates`, `mc_roles`, a consistent `bank_version`)
+  was not built.
 
 ## Families whose gold is the subject's own answer (stamped by `profile` / `gate`)
 **Render caveat.** `gate_variant` records which render the subject committed in: `chat` (asked to
@@ -60,7 +69,9 @@ poetry passes were chat-only. A lens read in the plain render is then reading a 
 subject may not have committed to that word. The producer must read the render in `gate_variant`,
 or keep only `plain` items and report the count.
 
-- **poetry:** greedy plain continuation of the stub. Its first word must rhyme with line 1's end
+- **poetry** (this paragraph is the v1 stub gate that built the 11 sets; bank v5 adds the free
+  line-two leg, `line_one_end` and `mc.candidates`: families.md §poetry "Bank now"): greedy plain
+  continuation of the stub. Its first word must rhyme with line 1's end
   word (CMU), and ≥ 8/10 samples must give the same word. It becomes `intermediates[0]`; the
   authored word is kept as `authored_rhyme`. An echoed tail of line 2 is skipped before the first
   word is taken ("clear as a bell" after "...as clear as a" -> "bell").
@@ -78,7 +89,8 @@ or keep only `plain` items and report the count.
   becomes `target`, `intermediates` and `units[].match` when ≥ 8/10 samples agree. Refill from the
   55 implicit topics in GW `scripts/oracle_lens_evals/gen_basic_readout.py`. Never author the
   gold.
-- **moral_rationale:**
+- **moral_rationale** (the steps below are the v1 flow that built the 11 sets; the registered bank
+  is now `items_v3`, see the box after them):
   1. The gate records the subject's side (`subject_answer`, consistent ≥ 8/10).
   2. For every item: ask the topic's `question` with the elicitation instruction, greedy + 8 samples
      at T=0.8, 96 tokens, thinking off.
@@ -100,6 +112,18 @@ or keep only `plain` items and report the count.
      "Begin your reply with one word, yes or no. Then give one short sentence."; Gemma 57 → 91/100
      topics with a yes/no-led draw); move `moral/distilled.json` aside first (distil skips done topics).
 
+  **Bank v3 (registered since #190):** 195 items, `bank_version: 3`, instrument ec-v5d, frozen
+  `options` per item (`scripts/moral_distractors.py`), `rekey` / `reason_side_ok`; side and reasons
+  are sampled in the READ conversation (plan 0046). Two traps:
+  - `adapt moral stage=rekey_readrender` (which AGENTS.md names for a new model) ignores `model=`:
+    it samples Qwen3.6-27B (`moral.py` `run`, `scripts/qwen_sample_modal.py` `MODEL`). There is no
+    subject version yet (plan 0060). Running it for another subject re-keys to Qwen's sides.
+  - `profile` on v3 rewrites the side / reasons but keeps Qwen's `options`, so options and reasons
+    disagree. `moral_distractors.py` builds options for the bank of record only (it writes
+    `evals/moral_rationale/items_v3.json` from Qwen's `rekey.json`): a subject-keyed option build
+    is open (plan 0060). Never run it for an adapted set.
+  The judge checks `bank_version` per item and refuses a mix; v3 is a bare list (no header).
+
 - **role_bound_association (gate only):** subjects that answer with names instead of roles
   (OLMo-3-7B, "Tony shaved Hank.") are graded through the name→role rewrite (`name_roles`:
   "the <role> (<name>)"); re-run `regrade` on sets gated before it existed. `gate_variant:
@@ -116,15 +140,29 @@ or keep only `plain` items and report the count.
   - Keep only items with misaligned rollouts; set `misalignment_rate`, `rollout_pick` and `prefill`.
   - Fewer than ~5 → status `blocked` ("not exhibited"). Never pad from another model.
 - **jlens_concept_pr:**
-  - Needs the subject's own J-lens (HF `neuronpedia/jacobian-lens`: qwen3.5-0.8b/2b/4b,
-    gemma-4-31b; 9B has jpp only → `blocked`).
+  - Needs the subject's own J-lens: HF `neuronpedia/jacobian-lens` (qwen3.5-0.8b/2b/4b,
+    gemma-4-31b, deepseek-v4-flash n=25) or one fitted with `scripts/fit_jlens_modal.py` (the
+    official estimator, neuronpedia's recipe; validated on the 4B at per-layer cosine ≥ 0.927).
+    `blocked` only if neither exists.
+  - `scripts/adapt_jlens.py` / `adapt_jlens_modal.py` read the seed items from GW
+    (`/workspace/agam/global-workspace/evals/workspace-bench/jlens_pr/items.json`), not from this
+    repo's `evals/jlens_concept_pr`: `GW` is a hard-coded `Path` constant (`adapt_jlens.py:26`), not an env var: edit it to a
+    local global-workspace checkout off Agam's box.
   - Roll out the seeds, pick the read position with `pick_read_position`, capture at the remapped
     layers, and write the top-10.
-- **jailbreak_recognition:** items carry over; re-stamp positions (above). There's no gate in the
-  bank. Optionally ask the subject outright whether the last turn tries to override its rules
-  (≥ 8/10), and report the rate.
+- **jailbreak_recognition:** items carry over; re-stamp positions (above). There's no gate on the
+  positives. Bank v2 (plan 0037) adds 86 controls (`kind`, `twin_of`, `control_type twin|roleplay`)
+  that were gated on Qwen (`capable/questions.py`); `carry` copies them from the registered bank
+  WITHOUT re-screening them on the subject. Re-screen the controls on the subject before counting
+  the net headline (recall − control FPR); without controls the headline is None. Optionally ask
+  the subject outright whether the last turn tries to override its rules (≥ 8/10), and report the
+  rate.
 - **multi_concept_directed_modulation:** no gate. Reproduce the prefill render with the subject's
-  template and remap the header layers.
+  template (`carry`, from bank v2, 116 items); header layers are no longer read.
+- **agentic_misalignment v2 twins:** bank `items_v2` pairs each scenario with a clean twin (plans
+  0031 / 0052); an adapted bank keeps only scenarios the subject misbehaves on and has no twins, so
+  its headline is None (out of the macro). Port the twin of every kept scenario (and gate that the
+  subject does NOT misbehave on it) to get a headline.
 
 ## OLMo-3-7B-Instruct (scoped 2026-10-17; `allenai/Olmo-3-7B-Instruct` @ 6e5971d9)
 - 32 blocks, untied embeddings (real `lm_head`), Dolma2 tokenizer (100k vocab vs Qwen's 248k).

@@ -1,6 +1,6 @@
 ---
 name: adapt-bank
-description: Adapt WorkspaceBench to a new subject model so every question is one that model actually computes. Gate the original banks on the subject, rebuild what is model-specific, refill each family with new items of the same kind at a difficulty the subject passes, and freeze a per-model bank under adapted/<model>/. Use when someone wants WorkspaceBench for a model other than Qwen3.6-27B (from Qwen3.5-0.8B up to 1T MoE subjects like Kimi-K2: Qwen3.5, Qwen3, OLMo, Gemma, GLM, any HF chat model), asks for "adaptive", "per-model", "re-gated" or "ported" banks, or asks why a lens scores low on a small model.
+description: Adapt WorkspaceBench to a new subject model so every question is one that model actually computes, and say what an existing adapted set can and cannot be judged on after the bench changed (refresh is blocked until plan 0060). Gate the registered banks on the subject, rebuild what is model-specific, refill each family with new items of the same kind at a difficulty the subject passes, and freeze a per-model bank under adapted/<model>/. Use when someone wants WorkspaceBench for a model other than Qwen3.6-27B (from Qwen3.5-0.8B up to 1T MoE subjects like Kimi-K2: Qwen3.5, Qwen3, OLMo, Gemma, GLM, DeepSeek, any HF chat model), asks for "adaptive", "per-model", "re-gated", "ported" or "updated/refreshed" per-model banks, asks why an adapted set fails to judge, or asks why a lens scores low on a small model.
 ---
 
 # Adapt WorkspaceBench to a subject model
@@ -14,40 +14,109 @@ is not.
 
 What earlier attempts got wrong (the `.pm` / `.pmeq` banks in global-workspace `1f36ca88`): they
 drew new candidates at the 27B's difficulty and filtered them, so yields on Qwen3.5-4B were 0–4% on
-multihop_mt (removed 2026-10-30; multihop_mt_v2 is not portable yet (its shortcut gate is model-specific)), multilingual_mt, chain and brew. **Change the difficulty of what is asked, never
-the construction rules, the gate, or the scorer.**
+multihop_mt (since removed), multilingual_mt, chain and brew (since retired). **Change the
+difficulty of what is asked, never the construction rules, the gate, or the scorer.**
+
+## State of the adapted sets (2026-11-02): every set predates the bank v2+ round
+
+All 11 `adapted/<m>/` sets were frozen 2026-10-18..24 (touch-ups through 10-30: MCDM re-carry,
+typo_mt arithmetic drop, multihop_mt / hallucination / brew removal) from the **v1** banks. Since
+then most families moved to new registered banks (`EvalSpec.bank`: `items_v2`..`items_v5`) with
+blind-MC judges, new gate legs and every-position reads (plans 0023-0058). What happens today if you
+judge an adapted set as it is (verified on qwen3.5-9b, gemma-4-31b-it, kimi-k2, glm-5.3-flash):
+
+| effect on an adapted v1 bank | families |
+|---|---|
+| **judge exits** (no `mc` / `mc.candidates`: exit 2; poetry: uncaught ValueError) | association, basic_readout, multihop, chain_intermediates (default `judge=mc`), poetry |
+| runs, on a **retired instrument** or without the v2+ fields | moral_rationale (ec-v3.1, no option lists), multilingual (`v1_scorer="bank"`), multilingual_multihop (v1 regex), conjunctive_association (no `twin_of` / `inverted_label`: no inverted-twin diagnostic) |
+| runs, **headline None** (no twins / controls, so out of the macro) | buggy_code (no `twin`), agentic_misalignment (no clean twins), jailbreak_recognition (no v2 controls) |
+| runs, but on the old questions | basic_readout_mt (v4 shares 0/99 prompts with v1), multilingual_mt, multilingual_typo, typo_mt, multi_concept_directed_modulation (glm / kimi: still the 27-item set) |
+| bank unchanged; re-judge / re-read only (relgate-v4 and role_bound's action gate are JUDGE-side quote gates, not subject gate legs: no regate) | relational_multihop, role_bound_association, user_modeling, arithmetic_intermediates, directed_modulation |
+| absent from every set | wrong_bridge, multihop_mt_v2, knowledge_cutoff, model_specific_directed_modulation, introspection (§Families the adapt machinery does not cover) |
+
+Also stale on every set: `report.json` `code.adapt_sha256` (`5c9d…` / `ebba…` / `0ffc…`) no longer
+matches the adapt package, and `floors/floors.json` predates summary mode, the Opus prompt-only
+protocol and every judge change since 10-21. Readouts produced against the pre-plan-0032 read plans
+do not match today's plans. **A correct refresh needs plan 0060 Phase A first: §Refresh lists why, and the target procedure.**
+The per-family detail behind this table is in `references/families.md` (the "Bank now" line of
+each entry).
 
 ## Layout (everything this skill writes)
 
 ```
 adapted/<model>/report.json            per-family: target, n_original, n_original_pass, n_items,
                                        n_new, status, change (what the difficulty knobs did), note
-adapted/<model>/<family>.json          frozen adapted bank: same header + item shape as
-                                       evals/<family>/items.json; each item carries `adapt`
-                                       {origin, tier, knobs, gate, parent?, note?}
+adapted/<model>/<family>.json          frozen adapted bank: the header + item shape of the
+                                       REGISTERED bank (`registry.frozen_bank_path`, e.g.
+                                       evals/association/items_v3.json, not items.json); each
+                                       item carries `adapt` {origin, tier, knobs, gate, parent?, note?}
 adapted/<model>/gate/<family>.jsonl    every gated candidate, failures included (append-only;
                                        last record per id wins): {id, origin, item, gate, selected}
 adapted/<model>/cand/<family>.jsonl    candidates not yet gated (generator or author output)
 ```
 
 Frozen originals under `evals/` are never edited. Adapted banks are separate files. Judge them
-with `bank_root=adapted/<model>` (see `references/porting.md` §Judging an adapted bank).
+with `WSB_BANK_ROOT=adapted/<model>` (see `references/porting.md` §Judging an adapted bank).
+**A header and items from different bank versions break the judges** (multitoken families route
+on the header's version; conjunctive and moral check `bank_version` PER ITEM and refuse a mix, and
+moral v3 and conjunctive v4 are bare lists with no header): never hand-copy a new header over old items or the
+reverse, and every kept item, new dilemmas included, carries the registered `bank_version`.
+
+`gate/`, `cand/`, `floors/{readouts,results}/` and the grade cache are git-ignored. For the 11
+existing sets they live only on Agam's RunPod box (`/workspace/agam/workspace-bench/adapted/`,
+~27 GB); once plan 0060 lands, a refresh on any other box starts by reseeding from the frozen set
+(§Refresh, target step 0).
+
+## What can be built correctly today (until plan 0060 lands)
+
+**New subjects only** (no `adapted/<m>/gate/` yet). On an existing set, `profile` skips ids already
+in its gate log and `freeze` puts the registered header over the stored v1 payloads: that is
+§Refresh, which is blocked.
+
+Every runbook step below is limited by this table. "originals only" = profile the registered bank
+and freeze its passing items, with NO refill (new items would lack judge-side options or pools
+keyed to the registered items, or the family has no Brief / generator). Freeze marks a short family
+with no refill attempt `untried` (`run.py`; it resets `partial`), so record the reason with `note`
+AFTER every freeze, re-freezes included.
+
+| status today | families | how |
+|---|---|---|
+| full build | typo_mt, association (Brief writes `mc`, but the options are NOT leakage-screened and new items lack v3's `mc.distractor_aliases` / `topic`: say so in the note) | profile + `fill` |
+| full build (generated) | relational_multihop, arithmetic_intermediates | profile + `auto` |
+| originals only | directed_modulation (profile is its compliance gate; no Brief), multihop, chain_intermediates, basic_readout (implicit originals are restamped to the subject's answer by profile, with `mc.aliases` emptied; note it), conjunctive_association, role_bound_association (oa-v3 `distractors_v3.json` is keyed by registered pair ids), user_modeling (option pools), buggy_code (`select` does not pair twins: a pair with a failed member is orphaned, so the pair rate covers only both-pass pairs; say so in the note), multilingual / multilingual_mt / multilingual_typo / multilingual_multihop **only for a subject whose native languages are exactly `en` and `zh`**: freeze copies Qwen's `contract.native_langs` | profile + freeze |
+| carry | jailbreak_recognition (v2 controls are Qwen-screened: report recall only and say in the `note` TEXT that the net headline is not valid; not `note status=blocked`, which would block recall too), multi_concept_directed_modulation | `carry families=jailbreak_recognition,multi_concept_directed_modulation` (never another family: carry treats any non-jailbreak name as MCDM) |
+| regenerated | agentic_misalignment (plan 0031 left twins out: headline None by design), jlens_concept_pr (needs the subject's J-lens) | `$A agentic`; `scripts/adapt_jlens*.py` |
+| do not build (`note status=blocked`, reason "plan 0060") | basic_readout_mt (v4 gates the QUESTION in chat with no system turn, graded by `name_forms`; the adapt gate (`families.py` `_asked(CONTINUE, plain=True)`) adds a system turn, a continue instruction and a plain leg and never reads `name_forms`), poetry (v5 free leg missing; profile would put the subject's gold over Qwen's `mc.candidates`), moral_rationale (`$A moral` / `profile` keep Qwen's `options`; rekey is Qwen-only), the multilingual families for any subject whose native languages are not exactly `en` and `zh` | — |
+| not in the adapt machinery | §Families the adapt machinery does not cover | — |
 
 ## Runbook (one subject, in order)
 
-Every step is resumable; run each in its own tmux session (`/workspace/agam/logs/<step>-<m>.log`).
-`A=scripts/adapt_box.sh`, `M=model=<key>` (the key from `subjects.py`).
+Every step is resumable; run each in its own tmux session with a log under `logs/` (on Agam's box:
+`/workspace/agam/logs/<step>-<m>.log`). `A=scripts/adapt_box.sh` on Agam's box, else
+`A="python -m wsbench.adapt"` with the environment of §On another box; `M=model=<key>` (the key
+from `subjects.py`).
 
 | step | command | notes |
 |---|---|---|
-| 0 set up | add a `Subject` (pinned revision, `n_layers`, tokenizer family, `gpu_memory_utilization` / `enforce_eager` for a tight fit), download weights, `$A profile $M families=typo limit=5` | 9B on the 4090: 0.93 + eager (vision profiling is skipped: text only) |
-| 1 profile | `$A profile $M llm=claude-opus-5-5` | gates every original item; parallel Opus grading |
-| 2 generated | `$A auto $M family=chain_intermediates` (and arithmetic_intermediates, relational_multihop) | deterministic ladders |
-| 3 authored | `$A fill $M families=association,multihop,...` | waves sized by yield, auto-steered by the last wave's misses, tier step-down, ooc stop |
-| 4 model-specific | `$A moral $M` · `$A hal $M` · `$A agentic $M` · `$A carry $M` · jlens: `scripts/adapt_jlens.py` (needs the subject's neuronpedia J-lens; else `note status=blocked`) | directed_modulation is already compliance-gated by step 1 |
-| 5 freeze | `$A freeze $M` (+ `note` per family) | writes `n_layers` into report.json: `wsbench plan` then emits subject layers |
-| 6 audit | an INDEPENDENT agent writes `adapted/<m>/AUDIT.md` (correctness, leakage, difficulty, judge agreement); apply its drops, re-freeze | never self-certify |
-| 7 publish | update `adapted/README.md` (path, status, audit) and tell olens-train | consumers read via `WSB_BANK_ROOT=adapted/<m> wsbench plan` |
+| 0 set up | add a `Subject` (pinned revision, `n_layers`, tokenizer family, `chat_template`, `gpu_memory_utilization` / `enforce_eager` for a tight fit), download weights, `$A profile $M families=typo_mt limit=5 llm=claude-opus-5-5` (step 1 skips these rows, so grade them the same way) | 9B on the 4090: 0.93 + eager (vision profiling is skipped: text only) |
+| 1 profile | `$A profile $M llm=claude-opus-5-5 families=<the full-build, generated and originals-only families of §What can be built>` | gates every item of the REGISTERED bank; parallel Opus grading |
+| 2 generated | `$A auto $M family=arithmetic_intermediates`, then `family=relational_multihop` (chain only once plan 0060 lands) | deterministic ladders |
+| 3 authored | `$A fill $M families=typo_mt,association` (only these two: other families with a Brief would build items missing their judge-side keyed fields; `fill` raises KeyError on a family with no Brief) | waves sized by yield, auto-steered by the last wave's misses, tier step-down, ooc stop |
+| 4 model-specific | `$A agentic $M` · `$A carry $M families=jailbreak_recognition,multi_concept_directed_modulation` · jlens: `scripts/adapt_jlens.py` / `adapt_jlens_modal.py` (the subject's neuronpedia J-lens, or one fitted with `scripts/fit_jlens_modal.py`; else `note status=blocked`). NOT `$A moral` until plan 0060 | directed_modulation is compliance-gated by step 1 |
+| 5 freeze | `$A freeze $M families=<the families built>`, then `note` per family (after EVERY freeze) | writes `n_layers` into report.json: `wsbench plan` then emits subject layers |
+| 6 verify | `WSB_BANK_ROOT=adapted/<m> wsbench plan out=…` and each family's judge with `dry_run=True` | any non-zero exit (exit 2, or a traceback) means a required field was not built |
+| 7 floors | §4 Floors | both protocols, stamped |
+| 8 audit | an INDEPENDENT agent writes `adapted/<m>/AUDIT.md` (correctness, leakage, difficulty, judge agreement); apply its drops, re-freeze | never self-certify |
+| 9 publish | update `adapted/README.md` (path, status, audit, bank versions) and tell olens-train | consumers read via `WSB_BANK_ROOT=adapted/<m> wsbench plan` |
+
+`python -m wsbench.adapt` subcommands (`src/wsbench/adapt/__main__.py`; unknown keys are errors):
+`profile` (families limit regate llm draws temperature), `generate` (family tier n seed), `author`
+(family tier n steer wave), `gate` (families llm draws temperature regate), `regrade` (families llm
+workers), `auto` (family), `fill` (families llm waves), `freeze` (families), `note` (family status
+text exclude_from_macro), `drop` (family ids reason), `patch` (family id set note), `status`,
+`moral` (stage step out limit), `agentic` (stage), `carry` (families), `floors` (stage judge).
+There is no `hal` subcommand: the hallucination family was removed (plan 0040; HallucinationBench
+is reported as an index, `evals/hallucinationbench/`).
 
 ## Procedure
 
@@ -57,29 +126,32 @@ starting the next.
 ### 0. Set up the subject
 - Add it to `src/wsbench/adapt/subjects.py`: HF id, pinned revision, layer count, and the tokenizer
   family. Qwen3.5 shares the Qwen3.6 tokenizer and template, so token indices carry over; Gemma's
-  don't.
+  don't. A subject whose upstream template always opens a reasoning block (GLM-5.3-Flash) or ships
+  no Jinja at all (DeepSeek-V4: only `encoding_dsv4.py`) needs a pinned no-think `chat_template`
+  file checked against the vendor's own encoder on a few renders.
 - Run the gate where the weights fit. Up to ~9B: the RunPod 4090 with vLLM.
   `scripts/adapt_box.sh <cmd> …` wraps `python -m wsbench.adapt` with:
-  - the venv `/workspace/agam/envs/adapt` (vLLM needs its `ninja` on PATH);
-  - the persistent HF cache;
-  - offline weights.
+  - the venv `$ADAPT_ENV` (default `/workspace/agam/envs/adapt`; vLLM needs its `ninja` on PATH);
+  - the persistent HF cache (`HF_HOME`, default `/workspace/.persist/huggingface`);
+  - offline weights (`HF_HUB_OFFLINE`, default 1).
 
-  Run long jobs in tmux and log to `/workspace/agam/logs/`. The first vLLM start compiles, which
-  takes minutes; later starts reuse the cache. Larger subjects run on Modal: deploy
-  `scripts/adapt_modal.py` once (app `adapt-subject-llm`, vLLM, CUDA devel image; prefer B200 / B300 over H100 / H200 on new deploys, B200 when the image's Triton lacks sm_103a) and
-  set `backend="modal"` on the Subject; every step (gate, hal, moral, agentic, floors) then
-  generates there through `RemoteRunner` while rendering and grading stay local. Give Modal runs
-  their own lock (`ADAPT_GPU_LOCK=/workspace/agam/logs/gpu-modal-<m>.lock`) so they don't queue
-  behind the 4090.
+  The first vLLM start compiles, which takes minutes; later starts reuse the cache. Larger subjects
+  run on Modal: deploy `scripts/adapt_modal.py` once (app `adapt-subject-llm`, vLLM, CUDA devel
+  image) and set `backend="modal"` on the Subject (or `ADAPT_BACKEND=modal`); every step (gate,
+  moral, agentic, floors) then generates there through `RemoteRunner` while rendering and grading
+  stay local. The GPU is the decorator's `gpu="H200"` (`adapt_modal.py:24`): edit it to change it
+  (B200 / B300 for new deploys; B200 when the image's Triton lacks sm_103a). Give Modal runs their
+  own lock (`ADAPT_GPU_LOCK=…/gpu-modal-<m>.lock`) so they don't queue behind the 4090.
 - Thinking is always off. Use the subject's own chat template. Every runner start runs
   `template.check` (markers derivable, no reasoning block left open, system turn accepted) and
   refuses to gate otherwise.
-- Smoke test first: `scripts/adapt_box.sh profile model=<m> families=typo limit=5`. Read the
-  rendered question and the answers in the viewer before running anything bigger.
+- Smoke test first: `$A profile model=<m> families=typo_mt limit=5 llm=claude-opus-5-5`. Read the rendered question and
+  the answers in the viewer before running anything bigger.
 
-### 1. Profile: gate the original banks on the subject
-`scripts/adapt_box.sh profile model=<m>` asks each item's own gate question(s) and writes
-`gate/<family>.jsonl` with origin `original`.
+### 1. Profile: gate the registered banks on the subject
+`$A profile model=<m> families=<the full-build, generated and originals-only families of §What can be built>` asks each item's own gate question(s) and writes `gate/<family>.jsonl` with
+origin `original`. It reads `registry.frozen_bank_path` (the registered default bank), so it gates
+today's items; ids already in the gate log are SKIPPED unless `regate=true`.
 - Use greedy plus 10 samples at T=0.7 (chain: T=0.8, top_p 0.95, 10/10; every other knob:
   references/families.md, top).
 - multihop and the bridge families also gate every bridge question: the bridge is the scored latent.
@@ -92,38 +164,65 @@ starting the next.
 
 ### 2. Rebuild what is model-specific (no difficulty change)
 Follow `references/porting.md`:
-- poetry: the subject's own rhyme.
+- poetry: the subject's own rhyme. Bank v5 needs a free line-two leg the adapt gate does not have
+  yet (plan 0060): until then poetry cannot be ported to v5 (report it, don't freeze v1 items
+  under the v5 header).
 - basic_readout implicit: the subject's own favourite.
-- moral_rationale: the subject's side, with reasons distilled from its own draws.
+- moral_rationale: NOT today (§What can be built): do not run `$A moral` — on a profiled set it
+  rewrites the reasons and keeps Qwen's `options`. Target (plan 0060): the subject's side, reasons
+  sampled from its own draws, option lists rebuilt for those reasons.
 - directed_modulation: the compliance screen.
-- agentic_misalignment: rollouts.
-- jailbreak_recognition and multi_concept_directed_modulation: positions and template.
+- agentic_misalignment: rollouts (and, for a headline, clean twins).
+- jailbreak_recognition: positions and template (`carry`); the v2 controls are Qwen-screened and no
+  re-screen exists yet, so report recall only and the net headline `blocked`.
+- multi_concept_directed_modulation: the prefill render (bank v2, 116 items).
 - jlens_concept_pr: re-capture.
-- Layer remap: by depth fraction, for every family.
+- Layer remap: by depth fraction, for every family (`wsbench plan` does it from `n_layers`).
 
 ### 3. Refill each family down its difficulty ladder
-For each family below its target count (the original bank's size):
-1. Read the family's entry in `references/families.md`: its latent, invariants, and ordered tiers
-   (tier 0 = the original difficulty, each later tier easier on the knob that mattered most).
+Until plan 0060 lands, only the families §What can be built marks full build (typo_mt, association,
+and via `auto` relational_multihop / arithmetic_intermediates) are refilled; the rest of this
+section is the general procedure.
+
+For each family below its target count (the registered bank's size):
+1. Read the family's entry in `references/families.md`: its latent, invariants, ordered tiers
+   (tier 0 = the original difficulty, each later tier easier on the knob that mattered most), and
+   the fields the registered bank requires.
 2. Pick the tier from the profile. Start at the tier whose description matches the subject's
    failure pattern; don't step down blindly.
 3. Generate candidates:
    - Deterministic families (`wsbench/adapt/generate.py`: chain, relational, arithmetic):
-     `scripts/adapt_box.sh generate model=<m> family=<f> tier=<t> n=<n>`. Arithmetic keeps the
-     original per-variant counts as quotas, and its t0 ranges are read off the bank itself.
-   - Authored families (`wsbench/adapt/author.py` briefs exist for every authored family:
-     association, multihop, multilingual, typo, poetry, the six mt families, user_modeling,
-     basic_readout implicit, role_bound (pair objects), buggy_code (executed twins)):
-     `scripts/adapt_box.sh author model=<m> family=<f> tier=<t> n=30 steer="<what it got wrong>"`.
-     Opus writes against the brief, with items this subject passed as few-shots and an
-     ALREADY-USED list. The procedure is in `references/authoring.md`.
-4. `scripts/adapt_box.sh gate model=<m> families=<f> llm=claude-opus-5-5` lints every candidate (leak, format, the
+     `$A generate model=<m> family=<f> tier=<t> n=<n>`. Arithmetic keeps the original per-variant
+     counts as quotas, and its t0 ranges are read off the bank itself.
+   - Authored families (`wsbench/adapt/author.py` `BRIEFS`: association, multihop, multilingual,
+     typo, poetry, the five mt families typo_mt / multilingual_mt / multilingual_typo /
+     multilingual_multihop / basic_readout_mt, user_modeling, basic_readout implicit, role_bound
+     (pair objects), buggy_code (executed twins)). **No brief exists for conjunctive_association or
+     moral_rationale dilemmas**: those refill only from the registered bank. `$A author model=<m>
+     family=<f> tier=<t> n=30 steer="<what it got wrong>"`. Opus writes against the brief, with
+     items this subject passed as few-shots and an ALREADY-USED list. The procedure is in
+     `references/authoring.md`.
+4. `$A gate model=<m> families=<f> llm=claude-opus-5-5` lints every candidate (leak, format, the
    family's invariants) and then gates it. Failed lint is dropped before any GPU time.
 5. Read the misses in the viewer, then adjust:
    - Steer the next wave by the failure pattern.
    - Cap any single template, topic or relation at 20% of the family.
    - Pilot ~30 candidates at a new tier before generating hundreds.
-6. Stop rules (report, never pad):
+6. The blind-MC `mc` blocks the briefs and generators don't write (association: lint requires it, so
+   an association candidate without `mc` is rejected before the GPU; multihop; chain per-slot;
+   poetry `mc.candidates`) must exist in the candidate payload. **No MC builder takes adapted items
+   yet.** `scripts/build_multihop_mc.py`, `association_distractors.py`, `moral_distractors.py`,
+   `mc_leakage_r4.py` and `role_bound_distractors_v3.py` read and WRITE the frozen `evals/` files
+   (hard-coded paths): never run them for an adapted set, it rewrites the bank of record.
+   `r4_mc_distractors.py` writes only to `--out` but reads frozen banks only. Only
+   `scripts/poetry/build_mc.py` takes `--draft` / `--out` over an arbitrary bank. A field built by hand into
+   `adapted/<m>/<family>.json` is lost at the next `freeze` (it rebuilds from gate-log payloads +
+   `patches`). For an id ALREADY in the gate log the only route is `adapt patch` (applied at freeze;
+   never linted or gated): a rewritten `cand/` row is ignored (`store.pending` / `add_candidates`
+   skip gated ids) and `gate regate=true` re-gates the gate-log payload, not the cand row. A new
+   item can carry the field in its `cand/` row before its first `gate`. An adapted-item `adapt mc`
+   step is open (plan 0060).
+7. Stop rules (report, never pad):
    - **full**: target reached.
    - **partial**: the easiest tier is exhausted with yield ≥ 3%, or the budget is hit.
    - **ooc** (out of capability): yield < 3% on ≥ 60 candidates at the easiest tier that still
@@ -131,25 +230,148 @@ For each family below its target count (the original bank's size):
      `partial` with `refill` noting why it stopped (a 48/49 bank is usable, not ooc).
    - **blocked**: needs something absent (no J-lens for the subject, no misaligned rollouts).
 
-`scripts/adapt_box.sh auto model=<m> family=<f>` runs steps 3–4 down the ladder for the
-deterministic families; `scripts/adapt_box.sh fill model=<m> families=<f,...>` does the same for
-authored families (waves steered by `run.miss_steer`: lint reasons, what the subject wrote instead,
-and what passed).
+`$A auto model=<m> family=<f>` runs steps 3–4 down the ladder for the deterministic families;
+`$A fill model=<m> families=<f,...>` does the same for authored families (waves steered by
+`run.miss_steer`: lint reasons, what the subject wrote instead, and what passed).
 
-### 4. Freeze and audit
-`scripts/adapt_box.sh freeze model=<m>` writes `<family>.json` and `report.json`. Then:
+### 4. Freeze, verify, floors, audit
+`$A freeze model=<m> families=<the families built>` (never bare) writes `<family>.json` and
+`report.json`. It takes the header of the
+registered bank and the item payloads stored in the gate log. Then:
 - Eyeball 10 random new items per family in the viewer: is the latent the same kind as the
   originals, is the answer unambiguous, and did nothing leak?
-- `pytest tests/test_adapt*.py`, then run every adapted bank through its family's judge with
-  `dry_run=True` and the subject's remapped layers.
-- Re-measure the prompt-only floors: `scripts/adapt_box.sh floors model=<m>` (the stock subject
-  reads each prompt; each family's own judge on `claude-opus-5-5`). Easier items can raise a floor. A family whose prompt-only floor now saturates has to be flagged in `report.json`.
+- `pytest tests/test_adapt.py`, then `WSB_BANK_ROOT=adapted/<m> wsbench plan out=<dir>` and every
+  adapted bank through its family's judge with `dry_run=True`. A non-zero exit = a required field is
+  missing.
+- **Floors (two protocols; record which, and keep both records — `adapt floors stage=judge`
+  rewrites `floors/floors.json` with only its own record, so merge after it runs).** Every floor
+  command below that FREEZES writes the bank of record by default: `wsbench freeze` writes
+  `evals/baselines/<kind>.json` unless `dst=` is given; always pass `dst=adapted/<m>/floors/…`.
+  - *Bench protocol* (the one the 27B floors and `wsbench report` use): the Opus 5.5 prompt-only
+    reader in summary mode, `po-opus-v1+sonnet55-fallback`:
+    `WSB_BANK_ROOT=adapted/<m> wsbench baseline kind=prompt_only_opus stage=build|ask|readouts
+    out=<dir>`, then `stage=fallback_ask|fallback_readouts src=<dir> out=<fb>`, judged with
+    `wsbench run all=True readouts_root=<dir>/readouts out=<results dir> allow_missing=True`. **`stage=build`
+    hard-codes the Qwen3.6-27B tokenizer** (`baselines/prompt_only_opus.py:72`): for a non-Qwen
+    subject it must take the subject's tokenizer first (open item, plan 0060).
+  - *Stock-subject protocol* (secondary): `$A floors model=<m>` (the stock subject reads each
+    prompt; native aggregate, one layer; each family's own judge on `claude-opus-5-5`). Not
+    comparable with the bench protocol; label it.
+  - *Options-only*: `wsbench baseline kind=lucky_guessing` honours `WSB_BANK_ROOT` only for
+    association, conjunctive, role_bound, relational, moral and user_modeling (`bank_path`). The other
+    builders (directed_modulation, poetry, every multitoken family, basic_readout, multihop, MCDM,
+    chain) load `frozen_bank_path` and so measure the 27B bank's options, so don't report those as
+    an adapted floor (open item, plan 0060). The topic guesser reads `evals/baselines/topics/<family>.json`, keyed
+    by Qwen item ids, so adapted items have no topics, and `scripts/baselines/make_topics.py` writes
+    `evals/`: the adapted topic floor is an open item (plan 0060).
+  - `wsbench report` under `WSB_BANK_ROOT` still draws the frozen 27B floors (`cli.py`); read the
+    adapted floors from `floors/floors.json`. Easier items can raise a floor; flag a family whose
+    floor saturates in `report.json`.
 - Write `report.json.note` per family: what changed and why, in one sentence each.
-- **A family gained or changed a gate leg** (e.g. chain `first`, multihop originals' bridge):
-  `profile families=<f> regate=true` (originals) AND `gate families=<f> regate=true` (passing new
-  items), then refill and re-freeze. Old records otherwise keep passing without the leg.
-- `report.json` → `code` stamps the git HEAD and an adapt-package hash on every write; a bank
-  frozen under an older stamp than the gate logic you changed needs a regate.
+- **A family gained or changed a gate leg** (e.g. chain `first`, multihop originals' bridge; poetry's
+  free line-two leg once plan 0060 lands): `profile families=<f> regate=true` (originals) AND `gate
+  families=<f> regate=true` (passing new items), then refill and re-freeze. Old records otherwise
+  keep passing without the leg.
+- `report.json` → `code` stamps the git HEAD and an adapt-package hash on every write. Check it:
+  `python -c "from wsbench.adapt import store; print(store.code_stamp())"` vs
+  `report.json` `code.adapt_sha256`. A bank frozen under an older stamp than the gate logic you
+  changed needs a regate.
+
+## Refresh an existing set to a newer bench
+
+**Status (2026-11-02): blocked on plan 0060 Phase A. Do not refresh a set with today's code.**
+Until that lands, report an adapted set's families as they are (SKILL §State) and never quote a
+judged number from a family §State marks broken, retired or headline-None. Every ad-hoc route was
+checked and each one ends in a new header over old items, Qwen's options under the subject's gold,
+or a rewritten bank of record.
+
+### Why there is no safe ad-hoc refresh (verified traps in today's code)
+- `profile` skips ids already in the gate log (they keep their v1 payloads) unless `regate=true`;
+  `select` never filters to the ids in the current bank, so ids a bank version retired come back
+  (typo_mt's 15 arithmetic items, association's 7).
+- For an already-gated id, a rewritten `cand/` row is ignored (`store.pending` / `add_candidates`
+  skip gated ids) and `gate regate=true` re-lints and re-gates the GATE-LOG payload. `adapt patch`
+  is applied only at freeze and never reaches that payload.
+- `gate` lints first and association lint requires `mc`: regating or importing a v1 association
+  item without `mc` appends a rejected record, and last-record-wins makes it permanent.
+- `freeze` deep-copies the registered header every time, so header fields cannot be set per
+  subject: multilingual / mt headers keep Qwen's `contract.native_langs` (`['en','zh']`), which the
+  judges read (`multitoken/family.py`, `mcrx.py`), and the dry run passes.
+- A bare `freeze` re-freezes every family with gate rows, writing new headers over v1 rows of every
+  family not refreshed.
+- `profile` on poetry v5 or moral v3 restamps the subject's gold but keeps Qwen's `mc.candidates` /
+  `options`: the judge runs, against the wrong options.
+- Adapted-only items (origin `authored` / `generated`; 158 (kimi) to 1,129 (qwen3.5-4b) per set) are v1-shaped and
+  post-processed (`_post_freeze` remapped arithmetic `cell.layer` non-invertibly; non-Qwen sets
+  token-restamped). Re-gating them and re-freezing remaps layers twice; leaving them in puts v1 items
+  under a v2+ header that still runs where no field is hard-required.
+- The repo's MC builders (`build_multihop_mc.py`, `association_distractors.py`,
+  `moral_distractors.py`, `mc_leakage_r4.py`, `role_bound_distractors_v3.py`) and `wsbench freeze` (floors; `evals/baselines/` unless
+  `dst=`) write the bank of record. Never run them for an adapted set.
+- `drop` / `patch` records are unversioned: v1 audit decisions (gemma's 161 moral patches,
+  olmo-3-7b's moral drops) would be applied to v3 items.
+- Registered families a set lacks are SKIPPED (printed) under `WSB_BANK_ROOT` with `all=True`
+  (`cli.py` `RunFamilies`, `readplan.families()`), and exit 2 only when named explicitly: 5 for 9
+  sets (introspection, knowledge_cutoff, msdm, multihop_mt_v2, wrong_bridge), 7 for glm / kimi
+  (+ jlens, agentic). They appear in no report row, so a macro silently spans fewer families.
+
+### Target procedure (once plan 0060 Phase A lands; commands named there)
+0. Gate log: on Agam's box use it; elsewhere `adapt seed` rebuilds gate payloads from the frozen
+   set (post-freeze fields stripped; deterministic families regenerated instead).
+1. Diff: `adapt status` (bank version per family, stamp match, stale audit records). Delete only
+   `REMOVED_FAMILIES` files; keep retired / superseded ones, unrefilled.
+2. Per family, the mode plan 0060 §1 assigns: **upgrade** (judge-side fields only, e.g. `mc`,
+   pools, twins: `adapt upgrade` writes a new gate record, prior gate result copied, nothing
+   re-asked) or **rebuild** (the bank's questions or gate changed: basic_readout v5, basic_readout_mt
+   v4, poetry v5, moral re-key). multilingual v3 is an upgrade (prompts unchanged), after the
+   subject's `native_langs` is measured: originals re-profiled from the registered bank, new
+   items authored against v2-shaped briefs, v1 adapted-only items retired.
+3. Re-gate only where the SUBJECT gate changed; judge-side changes (relgate-v4, role_bound's action
+   gate, um-v3.4) need no regate.
+4. Refill, `freeze families=<refreshed>` (provenance-stamped rows only), verify every present family
+   `dry_run=True`, floors under both protocols into `adapted/<m>/floors/`, independent re-audit.
+5. Record `bank_version` per family in `report.json`, update `adapted/README.md`, re-produce readouts.
+
+## Families the adapt machinery does not cover
+
+`families.get` raises "unknown family" for every row but typo (in the adapt `FAMILIES`, just not
+refilled), so `profile` / `gate` cannot gate them yet. Do not
+copy the 27B bank into `adapted/<m>/` for them: a missing family is reported, never back-filled.
+
+| family | why not | what porting needs |
+|---|---|---|
+| multihop_mt_v2 | its shortcut gate (no shortcut probe reaches the answer) is specific to the gated model | the answer + bridge legs fit `families.py` (`capable/questions.py` already asks them); add a must-NOT-reach leg type for `shortcut_probes` (global-workspace `multihop_v2/gate_modal.py`) |
+| wrong_bridge | the item is a specific Qwen error (it answers via the wrong bridge) | re-elicit the subject's own wrong-bridge errors; no adapt code |
+| knowledge_cutoff | a model-specific error gate (G0 / G1) | re-run that gate on the subject; its judge also exits under an adapted root that lacks its bank |
+| model_specific_directed_modulation | model-specific by design (G0 defaults + G1 text gate) | re-derive on the subject; no adapt code |
+| introspection | injected concept vectors are the subject's own activations | rebuild vectors (`scripts/introspection_build_v2.py`, `introspection_export_vectors.py`) |
+| unverbalized_hint | retired (plan 0058); Qwen token positions | none |
+| typo | superseded by typo_mt (out of `all`) | stop refilling it; keep the frozen file only for old results |
+
+Removed and never to be adapted: medical_diagnosis{,_alt} (plan 0058), hallucination (plan 0040),
+multihop_mt (plan 0041), brew_intermediates (plans 0029 / 0033).
+
+## On another box (not Agam's RunPod box)
+
+Everything under `/workspace/agam/`, the 4090, `/dev/shm/compute.env`, the `runpod` ControlMaster,
+gw-olens' `adapt_mp_subject_modal.py` / `kimi_wsbench_modal.py` / `subject_*_modal.py`, the
+`/workspace/agam/hf_tok/<m>` tokenizer dirs (glm-5.3-flash, kimi-k2), and `atlas/normal_gated.py`
+(hard-codes those paths) exist only there. Elsewhere:
+- `ADAPT_ENV`, `HF_HOME`, `ADAPT_GPU_LOCK` and `MODAL_ENVIRONMENT` (default `agam`) to your own
+  values; `HF_HUB_OFFLINE=0` or pre-download the pinned revision; deploy `scripts/adapt_modal.py`
+  into your own Modal environment and set `ADAPT_BACKEND=modal`.
+- Re-stage a subject's `tokenizer_dir` / `chat_template` locally from the pinned HF revision and
+  point `subjects.py` at it.
+- **Claude auth.** The default reads the keyless OAuth token from Modal Dict `anthropic-oauth` in
+  `MODAL_ENVIRONMENT` (only Agam's env has it). Set `WSB_ANTHROPIC_AUTH=sdk` to use the
+  Anthropic SDK's own credentials (`ANTHROPIC_PROFILE` / federation). `adapt_box.sh` runs `unset
+  ANTHROPIC_API_KEY`, so an inline key does not survive it: call `python -m wsbench.adapt`
+  directly. `adapt floors stage=judge` always reads the Dict (`floors.py` `judge`) and fails off
+  that box until it honours `WSB_ANTHROPIC_AUTH` (open item, plan 0060).
+- Big MoE subjects (GLM-5.3-Flash 320B, DeepSeek-V4-Flash 284B, Kimi-K2 1T) do not fit
+  `adapt_modal.py`'s single-GPU vLLM: they need a tensor-parallel vLLM deploy (TP 4-8 on
+  H200 / B300) or an HF model-parallel runner exposing the same `RemoteRunner` interface. Check
+  stock, and batch every candidate into ONE generation run per stage.
 
 ## Tailoring to smaller and bigger subjects
 
@@ -177,23 +399,27 @@ variants before the ladder, and keep the ladder's easiest tier honest: it must s
 **Big subjects (≥ ~30B, MoE, 1T):**
 - **Backends:**
   - ≤ 9B: the 4090.
-  - Dense 30B-class: `scripts/adapt_modal.py` (prefer B200 / B300 on new deploys; the app defaults to H200).
-  - MoE / 100B-class: the same Modal runner with tensor parallel 4.
+  - Dense 30B-class: `scripts/adapt_modal.py` (edit its `gpu=` for B200 / B300).
+  - MoE / 100B-class+: tensor-parallel vLLM or HF model-parallel (§On another box).
   - 1T (Kimi-K2): its B300:8 model-parallel gate app. Batch every candidate into ONE generation run.
 - **They pass most originals.** The work is the model-specific families and gating, plus a few refills.
 - **If their lenses were already read on the 27B bank**, re-score instead of re-reading
-  (`atlas/normal_gated.py`):
+  (`atlas/normal_gated.py`, Agam's box only):
   - gate every item from the profile, every leg, with audit drops applied;
   - re-gold poetry, basic_readout and moral on the subject, and re-judge them on the existing readouts,
     seeding each judge dir with the original `cells.jsonl` so unchanged golds are cache hits;
   - drop families with fewer than 10 passing items;
-  - report as-is vs gated vs the 23-family headcount.
+  - report as-is vs gated vs the registered-family headcount (28 = registered families minus
+    typo (superseded) and unverbalized_hint (retired); count it from the registry, it changes).
 - Then score them on their own adaptive set like any subject.
 
 **Any tokenizer:**
 - **Re-derive banks that store token positions** (MCDM, jailbreak) by character
   span in the subject's own render. Require 0 mismatches.
-- **Gate in the exact read render**: no system turn unless the read has one.
+- **Gate in the exact read render**: no system turn unless the read has one. association,
+  conjunctive and role_bound are now READ in the `chat_summarize` render, but the adapt gate's
+  legs for them still use the plain render (`_continuation_leak` on `item[key]`), so a regate
+  re-runs the same render: the mismatch is a code gap (plan 0060), not something a regate fixes.
 - **A frozen item's `gate_variant` never picks its eval render**; only adapted items' variants do
   (`readplan` poetry).
 
@@ -210,33 +436,38 @@ variants before the ladder, and keep the ladder's easiest tier honest: it must s
   lift +.04 to +.10), so report the lift over a permutation null next to any every-position number.
 - **Scoring models whose lens was read on the 27B bank:** `atlas/normal_gated.py`. Their own-set
   scoring uses the subject's `-adapt` apps in gw-olens: `subject_*_modal.py` / `adapt_mp_subject_modal.py`,
-  and for Kimi, `kimi_wsbench_modal.py` in adaptive mode.
+  and for Kimi, `kimi_wsbench_modal.py` in adaptive mode (all Agam's box / env only).
 
 **Ops:**
 - **tmux:** wait on sessions with `tmux has-session -t "=name"` (exact match).
 
 ## report.json (schema) and audit decisions
 Per family: `status` (full / partial / untried / ooc / blocked), `note`, `change`, counts
-(`target`, `n_items`, `n_new`, `n_original_pass`, ...) and `exclude_from_macro` (consumers and
-`wsbench report` leave it out of the macro). Top level: `model`, `hf_id`, `n_layers` (the read
-plan's subject depth), and the audit decisions, which `freeze`, `fill` and `auto` honour:
+(`target`, `n_items`, `n_new`, `n_original_pass`, ...), `exclude_from_macro` (consumers and
+`wsbench report` leave it out of the macro) and, from the 2026-11 refresh on, `bank_version` (the
+registered bank the family was ported from). Top level: `model`, `hf_id`, `n_layers` (the read
+plan's subject depth), `read_band`, `code`, and the audit decisions, which `freeze`, `fill` and
+`auto` honour:
 - `drops[family][id] = reason`: written by `adapt drop family= ids=a,b reason=` (never by hand);
 - `patches[family][id] = {set, note}`: one item's fields fixed in the adapted copy only, written by
   `adapt patch family= id= set='{json}' note=`.
-Every step writes its own entry (hal, agentic, carry included); writes are atomic and locked.
+Every step writes its own entry (agentic, carry included); writes are atomic and locked.
+`adapt status model=<m>` prints the per-family state.
 
 ## Process hygiene
-- GPU commands (`profile gate auto fill hal agentic moral floors`, except their Claude-only
-  stages) take the box lock `/workspace/agam/logs/gpu.lock` inside `adapt_box.sh`; a chain script
-  that holds it (`exec 9>LOCK; flock 9`) passes the fd down. Never take it in a tmux command line
-  ending in `exec bash` (the shell keeps it).
+- GPU commands (`profile gate auto fill agentic moral floors`, except their Claude-only stages)
+  take the box lock `$ADAPT_GPU_LOCK` (default `/workspace/agam/logs/gpu.lock`) inside
+  `adapt_box.sh` only; `python -m wsbench.adapt` called directly takes no lock. A chain script that
+  holds it (`exec 9>LOCK; flock 9`) passes the fd down. Never take it in a tmux command line ending
+  in `exec bash` (the shell keeps it).
 - Unknown CLI keys are errors. `regrade` never undoes `adapt moral`'s side checks.
 - The model-grade cache persists (`adapted/.grade_cache/<grader>.jsonl`); `author` writes after
   every call; the gate, regrade and fill are resumable (gated ids are skipped).
 
 ## Rules
 - The gate is the subject itself, with its own template and thinking off. Never use OpenRouter
-  stand-ins, and never use another model's answers.
+  stand-ins (a provider that cannot turn reasoning off is a different render), and never use
+  another model's answers.
 - Same gate rule as the banks: greedy right AND ≥ 8/10 (10/10 for chain). Don't lower it
   to fill a family.
 - Never pad:
@@ -245,19 +476,20 @@ Every step writes its own entry (hal, agentic, carry included); writes are atomi
     whose ladder was never tried is `untried` (never `partial`).
 - Keep pairs atomic: twins, ab/ba, think/dont_think pairs pass or drop together.
 - Record every knob in `adapt.knobs` and every family's change in `report.json`. Anyone reading a
-  number must be able to tell what difficulty it was measured at.
+  number must be able to tell what difficulty, and which bank version, it was measured at.
 - Opus authors; it never grades its own items as correct. The subject grades by answering. A
   deterministic grader or the repo grader checks the answer.
-- Claude calls (`llm=` grading, `author`) use the judges' keyless OAuth token
-  (`wsbench/adapt/auth.py`; Modal Dict `anthropic-oauth`, read only). Never export
-  `ANTHROPIC_API_KEY` or ask for one. On a 401, stop and ask Agam to run `push-judge-token`.
-- API budget: check rate-limit headroom with the `runpod-control` skill before any authoring batch
-  over ~2k items. Pace to the org, which the judges share. Before any big run, check that no other
-  session is already running it (one agent per shared run).
+- Claude calls (`llm=` grading, `author`) on Agam's box use the judges' keyless OAuth token
+  (`wsbench/adapt/auth.py`; Modal Dict `anthropic-oauth`, read only); on a 401 there, stop and ask
+  Agam to run `push-judge-token`. Elsewhere use `WSB_ANTHROPIC_AUTH=sdk` (§On another box). Never
+  export `ANTHROPIC_API_KEY` into a shell or commit one.
+- API budget: before any authoring batch over ~2k items, check the org's rate-limit headroom (the
+  judges share it) and pace to it. Before any big run, check that no other session is already
+  running it (one agent per shared run).
 
 ## References
-- `references/families.md`: per family, the latent, gate, required keys, invariants, and difficulty
-  ladder.
+- `references/families.md`: per family, the latent, gate, required keys and registered-bank
+  fields, invariants, and difficulty ladder.
 - `references/authoring.md`: the Opus authoring prompt, the per-family briefs, and failure-steered
   waves.
 - `references/porting.md`: layers, tokenizer, read positions, the model-specific regeneration

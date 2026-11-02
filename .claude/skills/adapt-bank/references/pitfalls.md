@@ -57,7 +57,7 @@
 
   New items must lint clean. Original items are kept or dropped by the gate, not by the lint.
 
-## Ops
+## Ops (Agam's RunPod box; elsewhere see SKILL.md §On another box)
 - Box SSH goes through one ControlMaster (`ssh -O check runpod`). Poll slowly and sequentially;
   bursts of fresh connections make the 1Password agent refuse to sign.
 - The fellows Opus org limits (10M ITPM / 2M OTPM) are shared with judges. Pace authoring and grading.
