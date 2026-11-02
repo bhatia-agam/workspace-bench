@@ -364,6 +364,12 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   undecided (never a fail), a row whose only shortfall is such refusals stays complete
   (`runner.refusals_only`), and `results` marks a row with > 20% undecided not measurable.
   Tests that drive the chunk machinery with multi-layer cells pin `summ_layers=joint`.
+  v1.1.0 `summ_layers=layered` (`docs/summarizer.md` § Layered): the per-layer digests, then
+  ONE stage-2 call per item over them (`digest._layered_pass`, schema `DIGEST_SCHEMA`, grounded by
+  `digest.layered_ground`). `runner.judge_family` makes it the default of a multi-layer CLI run
+  (`digest.resolve_layer_mode`); a hand-built JudgeArgs and every single-layer run stay `union`,
+  so test call counts are unchanged. `summary_fakes.FakeLLM` answers stage-2 calls (user starts
+  `LAYER DIGESTS:`) with `layered_digest` and records them as `"layered"`, not `"digest"`.
   `summ_store=<dir>` shares every one-layer digest (key `digest:<id>|<L>`, same fingerprint)
   across out dirs, so `layers=[L]` and the union run ask each (item, layer) once
   (`tests/test_digest_store.py`; docs/summarizer.md "Shared per-layer store").

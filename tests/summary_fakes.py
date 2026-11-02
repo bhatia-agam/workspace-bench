@@ -27,31 +27,58 @@ def first_lines_digest(user: str, k: int = 3) -> dict:
     }
 
 
+def layered_digest(user: str, k: int = 50) -> dict:
+    """A passive fake stage-2 (layered) digest: every distinct sample shown, quoted whole, its
+    header as ``where``, a large count (the code caps it at the members' summed counts)."""
+    got = re.findall(r"^  sample (\[L\d+ pos -?\d+\]): (.*)$", user, flags=re.M)
+    seen: dict[str, str] = {}
+    for where, text in got:
+        seen.setdefault(text, where)
+    return {
+        "items": [
+            {"statement": f"LAYERED-{i}", "key": "", "where": w, "evidence": t, "count": 10**6}
+            for i, (t, w) in enumerate(list(seen.items())[:k])
+        ],
+        "rare": [],
+    }
+
+
 class FakeLLM:
     """Install with ``FakeLLM.install(monkeypatch, judge=...)``. ``digest`` maps a user prompt to
     a digest result (default: :func:`first_lines_digest`); ``judge(system, user, schema)``
     answers every other call. ``calls`` records ``(schema_name, system, user)``."""
 
-    def __init__(self, judge: Responder, digest: Callable[[str], dict | None] | None = None):
+    def __init__(
+        self,
+        judge: Responder,
+        digest: Callable[[str], dict | None] | None = None,
+        layered: Callable[[str], dict | None] | None = None,
+    ):
         self.judge = judge
         self.digest = digest or first_lines_digest
+        self.layered = layered or layered_digest
         self.calls: list[tuple[str, str, str]] = []
 
     def stream_json(self, prompts, *, schema, on_result, **_kw) -> Spend:
         name = schema.get("name", "")
         for i, (system, user) in enumerate(prompts):
             self.calls.append((name, system, user))
-            on_result(
-                i, self.digest(user) if name == "digest" else self.judge(system, user, schema)
-            )
+            if name == "digest" and user.startswith("LAYER DIGESTS:"):
+                self.calls[-1] = ("layered", system, user)
+                r = self.layered(user)
+            elif name == "digest":
+                r = self.digest(user)
+            else:
+                r = self.judge(system, user, schema)
+            on_result(i, r)
         return Spend()
 
     def n(self, name: str) -> int:
         return sum(1 for c in self.calls if c[0] == name)
 
     @classmethod
-    def install(cls, monkeypatch, judge: Responder, digest=None) -> "FakeLLM":
-        fake = cls(judge, digest)
+    def install(cls, monkeypatch, judge: Responder, digest=None, layered=None) -> "FakeLLM":
+        fake = cls(judge, digest, layered)
         monkeypatch.setattr(llm, "stream_json", fake.stream_json)
         monkeypatch.setattr(llm, "preflight", lambda model, reasoning: None)
         return fake

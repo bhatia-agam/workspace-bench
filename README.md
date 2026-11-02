@@ -446,7 +446,14 @@ families credit an item when ANY read cell passes: any layer, any position, any 
 cell a family reads for an item goes to ONE passive digest call (`claude-opus-5-5` by default),
 and the family judges or scores that single digest ONCE, so there is no pass@layer / pass@position /
 pass@sample rule. A method is a readouts file plus an optional `layers=`: `layers=44` is the
-single-layer method, no `layers=` is every layer the file has. By default the judge reads only
+single-layer method, no `layers=` is every layer the file has. A multi-layer method (v1.1.0,
+`summ_layers=layered`, the CLI default) is summarized in two stages: one digest per read layer
+(the same call a `layers=[L]` run makes), then ONE note-taker call per item that summarizes those
+layer digests into the all-layer digest the judge reads (same schema, every entry grounded on a
+layer digest's verbatim sample, `[N samples, M layers]` support, budget `summ_layered_x` = 2x
+the single-layer one); `summ_layers=union` (the v1.0 mechanical merge) and `joint` stay opts, and
+the numbers-digest families keep their v1.0 all-layer path (`docs/summarizer.md` § Layered).
+By default the judge reads only
 the verbatim readout samples the digest picked (each with a mechanically counted prominence
 marker), and every quote, numeral or regex gate checks those samples, never the note-taker's own
 words. Summary rows are marked `†` in the table and form their own macro; they draw the
@@ -464,7 +471,8 @@ into separate `out=` dirs (`wsbench run` warns when it overwrites a result of th
 `aggregate=native`: summary mode reads every cell (chain's `cells=last` is retired: use `reads=lite`). Options: `summ_model`, `summ_variant=task|blind`,
 `summ_render=extractive|abstractive`, `summ_effort`, `summ_max`, `summ_token_cap` (ablation),
 `summ_overflow=hierarchical|stride`, `summ_concurrency`, `summ_timeout`,
-`summ_fallback=none|default|default+<claude model>`, `summ_rare`, `summ_numbers`
+`summ_fallback=none|default|default+<claude model>`, `summ_rare`, `summ_numbers`,
+`summ_layers=layered|union|joint`, `summ_layered_x`
 (per-family defaults in `digest.FAMILY_DEFAULTS`; the five refusal-prone families use
 `default+claude-sonnet-5-5`, Sonnet 5 before 2026-11-01, and a cached digest Sonnet 5 served is
 re-asked on Sonnet 5.5). Details: `docs/summarizer.md` § Item digest and each family README's "Summary

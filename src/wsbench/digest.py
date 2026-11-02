@@ -63,8 +63,19 @@ OVERFLOWS = ("stride", "hierarchical")
 # every layer keeps its own rare tier), merged by key with per-claim counts summed; "joint": the
 # old single call over every layer (an ablation). A numbers digest (summ_numbers > 0) always runs
 # joint: its five-number budget is deliberately fixed (plan 0022 Part B).
-LAYER_MODES = ("union", "joint")
+# v1.1.0 (Camila 2026-11-02, "a single summary of the layer summaries"): "layered" = the same
+# per-layer digests as "union", then ONE stage-2 note-taker call per item that reads every
+# layer's digest (labelled by layer) and writes one all-layer digest in the single-layer schema,
+# grounded on the layer digests' own samples (:func:`_layered_pass`). It is the CLI default for a
+# multi-layer config of every non-numbers family (``runner.judge_family`` via
+# :func:`resolve_layer_mode`); a hand-built JudgeArgs, and every single-layer run, keeps
+# "union" (byte-identical to v1.0). "union" (the v1.0 mechanical merge) and "joint" stay opts.
+LAYER_MODES = ("union", "joint", "layered")
 DEFAULT_LAYER_MODE = "union"
+LAYERED_MODE = "layered"
+LAYERED_VERSION = "layered-v1"
+# summ_layered_x: the stage-2 budget as a multiple of the single-layer one (summ_max, summ_rare)
+DEFAULT_LAYERED_SCALE = 2
 # ``summ_store=<dir>``: the per-layer digest store shared by every layer config of one readouts
 # file (a ``layers=[L]`` run and any multi-layer union run of the same family). Each (item, layer)
 # digest is asked ONCE across those configs (``SharedDigests``); it changes no request, so it is
@@ -346,13 +357,19 @@ class Settings:
     # "default": server-side refusal fallback for digest calls; "default+<model>": a call still
     # declined after it re-runs once on <model> (client-side; plan 0037 J10)
     fallback: str = "none"
-    layer_mode: str = DEFAULT_LAYER_MODE  # summ_layers (audit F1): union | joint
+    layer_mode: str = DEFAULT_LAYER_MODE  # summ_layers (audit F1): union | joint | layered
     show_key: bool = False  # summ_showkey=1: the support marker names the key it counted
+    layered_scale: int = DEFAULT_LAYERED_SCALE  # summ_layered_x (layered only)
 
     @property
     def per_layer(self) -> bool:
         """A multi-layer item is digested layer by layer (never for a numbers digest)."""
-        return self.layer_mode == "union" and self.numbers == 0
+        return self.layer_mode in ("union", LAYERED_MODE) and self.numbers == 0
+
+    @property
+    def layered(self) -> bool:
+        """The stage-2 layer-summary merge (v1.1.0) replaces the mechanical union merge."""
+        return self.layer_mode == LAYERED_MODE and self.numbers == 0
 
     def to_json(self) -> dict[str, Any]:
         return {
@@ -373,6 +390,11 @@ class Settings:
             "fallback": self.fallback,
             "layer_mode": self.layer_mode,
             **({"show_key": True} if self.show_key else {}),
+            **(
+                {"layered": {"version": LAYERED_VERSION, "scale": self.layered_scale}}
+                if self.layered
+                else {}
+            ),
         }
 
     @property
@@ -485,12 +507,40 @@ def settings(args: JudgeArgs, family: str | None = None) -> Settings:
         if "summ_concurrency" in args.extra
         else None,
         timeout=float(_int_opt(args, "summ_timeout", 1)) if "summ_timeout" in args.extra else None,
-        layer_mode=_choice(args, "summ_layers", LAYER_MODES, DEFAULT_LAYER_MODE),
+        layer_mode=_layer_mode(args),
+        layered_scale=_int_opt(args, "summ_layered_x", DEFAULT_LAYERED_SCALE),
         show_key=_choice(
             args, "summ_showkey", ("0", "1"), "1" if family in SHOW_KEY_FAMILIES else "0"
         )
         == "1",
     )
+
+
+def _layer_mode(args: JudgeArgs) -> str:
+    mode = _choice(args, "summ_layers", LAYER_MODES, DEFAULT_LAYER_MODE)
+    if mode == LAYERED_MODE and _nonneg_opt(args, "summ_numbers", 0) > 0:
+        fail("summ_layers=layered does not apply to a numbers digest (summ_numbers > 0)")
+    return mode
+
+
+def resolve_layer_mode(family: str, extra: Mapping[str, str], n_layers: int) -> dict[str, str]:
+    """v1.1.0: the CLI default ``summ_layers`` of one family run. A summary-mode run of a
+    non-numbers, hierarchical family that reads more than one layer and does not set
+    ``summ_layers`` gets ``layered``; anything else is returned unchanged (a single-layer run,
+    a numbers digest, the stride ablation, a native-only family, an explicit ``summ_layers``)."""
+    out = dict(extra)
+    if (
+        n_layers <= 1
+        or "summ_layers" in out
+        or family in NATIVE_ONLY
+        or out.get("aggregate", DEFAULT_AGGREGATE) != "summary"
+    ):
+        return out
+    s = settings(_probe(out), family)
+    if s.numbers > 0 or s.overflow != "hierarchical":
+        return out
+    out["summ_layers"] = LAYERED_MODE
+    return out
 
 
 def _probe(extra: Mapping[str, str]) -> JudgeArgs:
@@ -527,6 +577,7 @@ KNOWN_KEYS = frozenset(
         "summ_ties",
         "summ_layers",
         "summ_showkey",
+        "summ_layered_x",
         STORE_OPT,
     }
 )
@@ -583,6 +634,10 @@ def prompt_version(pv: str, args: JudgeArgs, family: str | None = None) -> str:
     s = settings(args, family)
     tail = "-stride" if s.overflow == "stride" else ""
     tail += "-joint" if s.layer_mode == "joint" and s.numbers == 0 else ""
+    if s.layered:  # v1.1.0: the stage-2 layer-summary merge (its own digest + instrument tag)
+        tail += f"-{LAYERED_VERSION}" + (
+            f"x{s.layered_scale}" if s.layered_scale != DEFAULT_LAYERED_SCALE else ""
+        )
     # "-rankties": round 4 r2, support-ranked tie_cut (the first-five-in-order "-ties" rule is void)
     tail += f"-rankties{s.ties}" if s.numbers > 0 and s.ties > 0 else ""
     return f"{pv}+{DIGEST_PROMPT_VERSION}-{s.variant}-{s.render}{tail}+{SUMMARY_JUDGE_VERSION}"
@@ -1511,6 +1566,8 @@ class Collapse:
     # final r1 (third review of #201): per item, the texts of the lines :func:`pin_lines` added;
     # MC-judge input only, never digest regex evidence (``gate_texts(pins=False)``)
     pinned: dict[str, set[str]] = field(default_factory=dict)
+    # v1.1.0 layered: per item, the estimated tokens of its stage-2 input (layered items only)
+    layered_in_tokens: dict[str, int] = field(default_factory=dict)
 
     def extras(self) -> dict[str, Any]:
         served: dict[str, int] = {}
@@ -1558,6 +1615,11 @@ class Collapse:
             "summary_layers": {
                 str(k): v for k, v in sorted(self.layer_hist.get(item_id, {}).items())
             },
+            **(
+                {"summary_layered_input_tokens": self.layered_in_tokens[item_id]}
+                if item_id in self.layered_in_tokens
+                else {}
+            ),
             "summary_state": (
                 "unsummarized"
                 if item_id in self.unsummarized
@@ -2272,7 +2334,23 @@ def _collapse_layers(
         _reask_collapsed(name, part, parts, salt=salt, kw=kw)
     if isinstance(cache, SharedDigests):
         part.diag["n_store_rows_adopted"] = cache.adopted
-    return _merge_parts(part, parts, owner, layer_of, cells_by_item, s, pos)
+    col = _merge_parts(part, parts, owner, layer_of, cells_by_item, s, pos)
+    if s.layered and not args.dry_run:
+        _layered_pass(
+            name,
+            col,
+            part,
+            owner,
+            layer_of,
+            args=args,
+            s=s,
+            cache=cache,
+            spend=spend,
+            preflight=preflight,
+            notes=notes,
+            layers_tag=layers_tag,
+        )
+    return col
 
 
 def _reask_collapsed(
@@ -2393,6 +2471,385 @@ def _merge_parts(
     col.diag["n_parts_zero_nonempty"] = part.diag.get("n_digest_zero_nonempty", 0)
     col.diag["n_digest_zero_nonempty"] = sum(1 for r in col.reasons.values() if r == "zero")
     return col
+
+
+# ---------------------------------------------------------------- layered (v1.1.0)
+
+_RESTATE_RULE = (
+    "- Readouts often restate"
+    + DIGEST_SYSTEM.split("\n- Readouts often restate", 1)[1].split("\n\nReturn two lists.", 1)[0]
+)
+LAYERED_SYSTEM = (
+    """You are a note-taker for an interpretability benchmark. You are given DIGESTS of raw \
+readouts of a language model's internal activations, taken while it read a passage you cannot \
+see: one digest per read layer (or per range of layers), each written by an earlier note-taker \
+from that layer's readouts alone. A digest entry gives a statement, its key, how many readout \
+samples of that layer state it, and the verbatim readout sample it rests on, under the sample's \
+[L<layer> pos <index>] header (free-text samples separate their bullets with ⁞; a ranked \
+list of top tokens is joined by " | ").
+
+Write ONE digest across all the layers. You are a passive recorder, not an analyst:
+- Report only content that is present in the samples shown. Do not infer what the passage says, \
+answer any question, translate, or add knowledge of your own.
+- The same content seen at several layers is ONE entry; its count is the sum of the samples \
+stating it at those layers. Entries that differ in any specific term, target, stance or claim are \
+different content: never merge them.
+- Rank by prominence: content stated by many samples, or at many layers, comes first.
+"""
+    + _DIGEST_RULES
+    + "\n"
+    + _RESTATE_RULE
+    + """
+
+Return two lists. "items": up to {max_items} entries, most prominent first. "rare": up to \
+{max_rare} entries for content that no "items" entry covers and that appears in only one or a few \
+samples, or at only one layer. Rare content matters as much as prominent content: a specific \
+name, number, term, non-English word or claim that one layer's digest records once is kept, not \
+dropped. Fill "rare" with the most specific such content first.
+
+Every entry, in either list, has: "statement" (one short line in the readouts' own terms), "key" \
+(the one to four words, copied exactly from the evidence, that name this entry's content), \
+"where" (the [L<layer> pos <index>] header of the sample the evidence comes from), "evidence" \
+(one span copied character for character from ONE of the samples shown, that shows the statement \
+and contains the key; from a token list, copy whole tokens), and "count" (how many readout \
+samples state this entry's content, summed over the layers whose digests record it; at least 1)."""
+)
+assert "{max_items}" in LAYERED_SYSTEM and "Readouts often restate" in LAYERED_SYSTEM
+LAYERED_USER = "LAYER DIGESTS:\n{digests}"
+PROMPTS["LAYERED_SYSTEM"] = LAYERED_SYSTEM
+PROMPTS["LAYERED_USER"] = LAYERED_USER
+LAYERED_ATTEMPTS = 2  # a stage-2 answer with no grounded entry is re-asked once
+MAX_LAYERED_DEPTH = 4  # hierarchical stage-2 levels before one final call over everything
+
+
+def layered_caps(s: Settings) -> tuple[int, int]:
+    """The stage-2 budget: ``summ_layered_x`` x the single-layer ``summ_max`` / ``summ_rare``."""
+    return s.max_items * s.layered_scale, s.max_rare * s.layered_scale
+
+
+def render_layered_system(s: Settings, task_note: str) -> str:
+    mi, mr = layered_caps(s)
+    system = LAYERED_SYSTEM.replace("{max_items}", str(mi)).replace("{max_rare}", str(mr))
+    if s.variant == "task" and task_note.strip():
+        system += "\n\n" + DIGEST_TASK_LINE.replace("{task_note}", task_note)
+    return system
+
+
+def _label(layers: Sequence[int]) -> str:
+    return f"L{layers[0]}" if len(layers) == 1 else f"L{layers[0]}-L{layers[-1]}"
+
+
+def render_layered(groups: Sequence[tuple[Sequence[int], Sequence[Grounded]]]) -> str:
+    """The stage-2 input: each layer's (or layer range's) digest under its label, every entry
+    with its tier, count, statement, key and verbatim sample (header + text)."""
+    out: list[str] = []
+    for layers, gs in groups:
+        out.append(f"=== {_label(layers)} digest ===")
+        for g in gs:
+            tier = "rare" if g.tier == "rare" else "item"
+            out.append(f"- ({tier}; {support_text(g.count, len(g.layers))}) {g.statement}")
+            out.append(f"  key: {_one_line(g.key)}")
+            out.append(f"  sample {g.line.where}: {g.line.text}")
+    return LAYERED_USER.replace("{digests}", "\n".join(out))
+
+
+def layered_member(g: Grounded, e: Grounded) -> bool:
+    """A layer-digest entry ``e`` states the same content as the stage-2 entry ``g``: it quotes
+    the same sample, has the same claim key (:func:`claim_key`), or each one's key occurs in the
+    other's sample (a bare one-way key hit is NOT enough: "Paris" inside "France and Paris
+    region" is other content)."""
+    if e.line is g.line or e.line.text == g.line.text or claim_key(e) == claim_key(g):
+        return True
+    return bool(e.key) and _key_hits(g.key, e.line) and _key_hits(e.key, g.line)
+
+
+def layered_ground(
+    result: object, entries: Sequence[Grounded], s: Settings, dup: list[int] | None = None
+) -> tuple[list[Grounded], int]:
+    """A stage-2 answer grounded on the layer digests' own samples (``ground`` over their
+    lines: the evidence must be a verbatim span of one of them, the key inside it), then each
+    entry's cross-layer support recomputed from its members (:func:`layered_member`), taking at
+    most ONE member per layer (or layer range: its best-supported one, so overlapping entries of
+    one layer are never summed): the count is the answer's own count capped at the members'
+    summed counts and floored at the number of their layers, the layers their union."""
+    seen: dict[int, Line] = {}
+    for g in entries:
+        seen.setdefault(id(g.line), g.line)
+    lines = list(seen.values())
+    mi, mr = layered_caps(s)
+    raw: dict[tuple[str, str], object] = {}
+    by_ev: dict[str, object] = {}
+    if isinstance(result, dict):
+        for it in [*(result.get("items") or []), *(result.get("rare") or [])]:
+            if isinstance(it, dict) and isinstance(it.get("evidence"), str):
+                k = it.get("key") if isinstance(it.get("key"), str) else ""
+                ev = _one_line(it["evidence"])
+                raw.setdefault((ev, _one_line(k).strip()), it.get("count"))
+                by_ev.setdefault(ev, it.get("count"))
+    kept, dropped = ground(result, lines, mi, dup, max_rare=mr)
+    out: list[Grounded] = []
+    for g in kept:
+        best: dict[tuple[int, ...], int] = {}
+        for e in entries:
+            if layered_member(g, e):
+                best[e.layers] = max(best.get(e.layers, 0), e.count)
+        layers = tuple(sorted({x for lys in best for x in lys} | set(g.layers)))
+        cap = max(1, sum(best.values()), len(layers))
+        r = raw.get((g.evidence, g.key.strip()), by_ev.get(g.evidence))
+        n = cap if isinstance(r, bool) or not isinstance(r, int) else min(max(1, r), cap)
+        n = max(n, len(layers))
+        out.append(
+            dataclasses.replace(g, count=n, layers=layers, support=support_text(n, len(layers)))
+        )
+    return out, dropped
+
+
+def _layered_pass(
+    name: str,
+    col: Collapse,
+    part: Collapse,
+    owner: Mapping[str, str],
+    layer_of: Mapping[str, int | None],
+    *,
+    args: JudgeArgs,
+    s: Settings,
+    cache: Cache | SharedDigests,
+    spend: Spend,
+    preflight: Callable[[], None] | None,
+    notes: Mapping[str, str],
+    layers_tag: str,
+) -> None:
+    """v1.1.0 stage 2: every summarized item read at more than one layer gets ONE call that reads
+    its per-layer digests (labelled by layer) and writes one all-layer digest in the single-layer
+    schema, grounded and counted by :func:`layered_ground`; it replaces the mechanical union
+    (:func:`merge_grounded`). Input over the global cap is cut into contiguous layer ranges,
+    each condensed by the same call, then merged by one more (hierarchically). A declined call
+    re-runs server-side and then on the refusal model, as a digest does; an item whose stage 2
+    is declined, fails, or grounds no entry (after one re-ask) is unsummarized (reasons
+    ``refused`` / ``layered_failed``), never judged on the mechanical union."""
+    by_item: dict[str, list[tuple[int, list[Grounded]]]] = {}
+    for pid, item_id in owner.items():
+        layer = layer_of.get(pid)
+        if layer is None or pid not in part.summaries:
+            continue
+        by_item.setdefault(item_id, []).append((layer, list(part.grounded.get(pid, ()))))
+    read_layers: dict[str, set[int]] = {}
+    for pid, item_id in owner.items():
+        if layer_of.get(pid) is not None:
+            read_layers.setdefault(item_id, set()).add(int(layer_of[pid]))  # type: ignore[arg-type]
+
+    def undecided(i: str) -> bool:  # undecide_partial would drop it: no stage 2 is paid for it
+        ls = read_layers.get(i, set())
+        miss = set(col.refused_layers.get(i, ())) & ls
+        return bool(ls) and len(miss) / len(ls) > PARTIAL_UNDECIDED_SHARE
+
+    todo = {
+        i: sorted(v)
+        for i, v in by_item.items()
+        if len(v) > 1 and i in col.summaries and i not in col.unsummarized and not undecided(i)
+    }
+    for k in (
+        "n_layered_items",
+        "n_layered_calls",
+        "n_layered_chunked",
+        "n_layered_failed",
+        "n_layered_depth_capped",
+    ):
+        col.diag.setdefault(k, 0)
+    col.diag.setdefault("n_layered_dropped_entries", 0)
+    if not todo:
+        return
+    conc = s.concurrency or args.concurrency
+    # the stage-2 input is cut by ESTIMATE; dividing by the worst measured real/estimate ratio
+    # keeps every call's real size under the global cap without a count_tokens round trip
+    budget = int(s.token_cap / _UNCOUNTED_RATIO)
+    served: dict[str, str] = {}
+
+    def call(batch: list[tuple[str, str, str, str]]) -> dict[str, object]:
+        """(item, key, fp, user) -> result; cache first; declined -> refusal model."""
+        out: dict[str, object] = {}
+        miss: list[tuple[str, str, str, str]] = []
+        for t in batch:
+            row = _cached(cache, t[1], t[2], s.refusal_model)  # type: ignore[arg-type]
+            if row is not None:
+                out[t[1]] = row["result"]
+                res0 = row["result"]
+                if isinstance(res0, dict) and res0.get(llm.SERVED_BY):
+                    served[t[0]] = str(res0[llm.SERVED_BY])
+            else:
+                miss.append(t)
+
+        def run(ts: list[tuple[str, str, str, str]], model: str, client: bool) -> None:
+            def on_result(j: int, r: dict | None) -> None:
+                i, key, fp, _u = ts[j]
+                if client and isinstance(r, dict) and _marker(r) is None:
+                    r = {**r, llm.SERVED_BY: model, SERVED_VIA: "client"}
+                r = _mark_served(r)
+                if r is not None and _marker(r) is None:
+                    cache.put(key, fp, {"result": r})
+                    if isinstance(r, dict) and r.get(llm.SERVED_BY):
+                        served[i] = str(r[llm.SERVED_BY])
+                out[key] = r
+
+            col.diag["n_layered_calls"] += len(ts)
+            llm.stream_json(
+                [(render_layered_system(s, notes[i]), u) for i, _k, _f, u in ts],
+                schema=DIGEST_SCHEMA,
+                model=model,
+                reasoning=s.reasoning,
+                on_result=on_result,
+                concurrency=conc,
+                rpm=args.rpm,
+                max_tokens=MAX_TOKENS,
+                timeout=_timeout_for(s, [u for *_x, u in ts]),
+                spend=spend,
+                mark_refusals=True,
+                attempts=DIGEST_ATTEMPTS,
+                fallbacks=None if client else s.server_fallback,
+            )
+
+        if miss:
+            if preflight is not None:
+                preflight()
+            run(miss, s.model, False)
+            again = [t for t in miss if _marker(out.get(t[1])) == "refused"]
+            if again and s.refusal_model:
+                col.diag["n_refusal_model_calls"] = col.diag.get("n_refusal_model_calls", 0) + len(
+                    again
+                )
+                run(again, s.refusal_model, True)
+        return out
+
+    def fp_of(i: str, user: str, salt: str) -> str:
+        mi, mr = layered_caps(s)
+        return fingerprint(
+            LAYERED_VERSION, s.model, s.reasoning, s.variant, mi, mr,
+            notes[i] if s.variant == "task" else "", render_layered_system(s, notes[i]), user,
+            salt,
+        )  # fmt: skip
+
+    def stage(
+        jobs: dict[str, tuple[str, list[tuple[Sequence[int], Sequence[Grounded]]]]],
+    ) -> dict[str, tuple[list[Grounded] | None, str]]:
+        """jobs: job key -> (item, groups); one grounded answer per job (re-asked once when it
+        grounds nothing), or (None, reason)."""
+        res: dict[str, tuple[list[Grounded] | None, str]] = {}
+        pending = dict(jobs)
+        for attempt in range(LAYERED_ATTEMPTS):
+            if not pending:
+                break
+            salt = "" if attempt == 0 else f"reask{attempt}"
+            batch = []
+            for jk, (i, groups) in pending.items():
+                user = render_layered(groups)
+                batch.append((i, jk + (f"|{salt}" if salt else ""), fp_of(i, user, salt), user))
+            got = call(batch)
+            nxt = {}
+            for (_i, key, _fp, _u), jk in zip(batch, list(pending), strict=True):
+                r = got.get(key)
+                if _marker(r) is not None:
+                    res[jk] = (None, "refused" if _marker(r) == "refused" else "too_long")
+                    continue
+                entries = [g for _l, gs in pending[jk][1] for g in gs]
+                kept, dropped = layered_ground(r, entries, s) if r is not None else ([], 0)
+                col.diag["n_layered_dropped_entries"] += dropped
+                if kept:
+                    res[jk] = (kept, "")
+                else:
+                    res[jk] = (None, "layered_failed")
+                    nxt[jk] = pending[jk]
+            pending = nxt
+        return res
+
+    def chunks(groups: list[tuple[Sequence[int], Sequence[Grounded]]]) -> list[list]:
+        """Contiguous layer ranges whose stage-2 input fits the cap (by estimate)."""
+        out: list[list] = [[]]
+        for g in groups:
+            trial = [*out[-1], g]
+            if out[-1] and est_tokens(render_layered(trial)) > budget:
+                out.append([g])
+            else:
+                out[-1] = trial
+        return out
+
+    # level by level: an item whose input exceeds the cap is cut into layer ranges; each range is
+    # condensed, and the ranges' digests become the next level's groups
+    level: dict[str, list[tuple[Sequence[int], Sequence[Grounded]]]] = {
+        i: [((layer,), gs) for layer, gs in v] for i, v in todo.items()
+    }
+    in_tokens = {i: est_tokens(render_layered(g)) for i, g in level.items()}
+    final: dict[str, list[Grounded]] = {}
+    failed: dict[str, str] = {}
+    depth = 0
+    while level:
+        depth += 1
+        jobs: dict[str, tuple[str, list]] = {}
+        # per split item: its next-level groups, in layer order; a str is a pending job key, a
+        # tuple a group carried over unchanged (a range that fits only by itself)
+        split: dict[str, list[Any]] = {}
+        for i, groups in level.items():
+            parts_ = chunks(groups)
+            if len(parts_) == 1 or depth > MAX_LAYERED_DEPTH or all(len(p) == 1 for p in parts_):
+                # one call over everything (an input still over the cap comes back too_long)
+                col.diag["n_layered_depth_capped"] += len(parts_) > 1
+                jobs[f"layered:{i}|{layers_tag}|d{depth}"] = (i, list(groups))
+                continue
+            col.diag["n_layered_chunked"] += depth == 1
+            for k, p in enumerate(parts_):
+                if len(p) == 1:
+                    split.setdefault(i, []).append(p[0])
+                    continue
+                jk = f"layered:{i}|{layers_tag}|d{depth}|c{k + 1}of{len(parts_)}"
+                jobs[jk] = (i, p)
+                split.setdefault(i, []).append(jk)
+        res = stage(jobs)
+        nxt: dict[str, list[tuple[Sequence[int], Sequence[Grounded]]]] = {}
+        for jk, (i, _groups) in jobs.items():
+            if i in split:
+                continue
+            kept, why = res[jk]
+            if kept is None:
+                failed[i] = why
+            else:
+                final[i] = kept
+        for i, seq in split.items():
+            bad = [res[x][1] for x in seq if isinstance(x, str) and res[x][0] is None]
+            if bad:
+                failed[i] = bad[0]
+                continue
+            nxt[i] = [
+                (tuple(sorted({y for ly, _gs in jobs[x][1] for y in ly})), res[x][0] or [])
+                if isinstance(x, str)
+                else x
+                for x in seq
+            ]
+        level = nxt
+    for i in todo:
+        if i in failed:
+            col.unsummarized.add(i)
+            for attr in ("summaries", "evidence", "statements", "grounded", "layer_hist"):
+                getattr(col, attr).pop(i, None)
+            col.cells[i] = dataclasses.replace(col.cells[i], samples=("",))
+            for d in (col.partial, col.refused_layers, col.chunks, col.served_by):
+                d.pop(i, None)  # as _merge_parts leaves an unsummarized item
+            col.reasons[i] = failed[i]
+            col.diag["n_layered_failed"] += 1
+            continue
+        _set_summary(col, i, final[i], s)
+        col.layered_in_tokens[i] = in_tokens[i]
+        col.diag["n_layered_items"] += 1
+        if i in served:
+            prev = col.served_by.get(i)
+            col.served_by[i] = ",".join(sorted({*(prev.split(",") if prev else []), served[i]}))
+    # the item-level reason counts of _merge_parts, recounted with the stage-2 failures
+    col.diag["n_items_all_dropped"] = sum(1 for r in col.reasons.values() if r == "all_dropped")
+    col.diag["n_digest_refused"] = sum(1 for r in col.reasons.values() if r == "refused")
+    col.diag["n_digest_too_long"] = sum(1 for r in col.reasons.values() if r == "too_long")
+    col.diag["n_hierarchical_items"] = len(col.chunks)
+    col.diag["n_fallback_served_items"] = len(col.served_by)
+    toks = sorted(in_tokens.values())
+    col.diag["layered_input_tokens_max"] = toks[-1]
+    col.diag["layered_input_tokens_median"] = toks[len(toks) // 2]
 
 
 # ---------------------------------------------------------------- numbers digest (audit F11)
