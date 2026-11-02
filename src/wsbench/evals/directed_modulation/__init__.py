@@ -22,7 +22,7 @@ SPEC = register(
         run=judge.run,
         task_note=_prompts.DIGEST_TASK_NOTE,
         # plan 0035 G1: the full read is every carrier token (the shortest carrier has 6 words),
-        # one contiguous run ending at the carrier's last token; lite = that last token
+        # one contiguous run ending at the carrier's last token; lite = the same (plan 0061)
         min_full_positions=6,
         full_contiguous=True,
         # plan 0035 G5: options are concepts (no competitor run), one gold per item

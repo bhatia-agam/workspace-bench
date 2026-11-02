@@ -689,13 +689,13 @@ def test_dm_gate_uses_quote_ok():
         assert v["evidence_verified"], q
 
 
-def test_dm_lite_judges_final_carrier_token(tmp_path, monkeypatch, family):
-    """G1: under reads=lite only the carrier's final token is judged; the stamp ends +reads-lite;
-    the plan row carries the pre-registered final_token rule and the full carrier span."""
+def test_dm_lite_judges_full_carrier(tmp_path, monkeypatch, family):
+    """Plan 0061: reads=lite judges the same carrier cells as reads=full (lite rule `same`); the
+    stamp ends +reads-lite; the plan row carries the full carrier span."""
     from wsbench import readplan
 
     spec = next(s for s in readplan.plan("directed_modulation") if s.id == "dm-pair-00-pos")
-    assert spec.lite_positions == {"kind": "final_token"} and spec.lite_layers is None
+    assert spec.lite_positions == {"kind": "same"} and spec.lite_layers is None
     assert spec.positions["kind"] == "suffix_text"
     assert family.min_full_positions == 6 and family.full_contiguous
     rows = [
@@ -711,6 +711,18 @@ def test_dm_lite_judges_final_carrier_token(tmp_path, monkeypatch, family):
         extra={"aggregate": "native", "reads": "lite"},
     )
     r = family.run(args)
-    assert {v["pos"] for v in r.rows} == {40} and len(fake.calls) == 1
+    assert {v["pos"] for v in r.rows} == {38, 39, 40} and len(fake.calls) == 3
     assert r.config["prompt_version"].endswith("+reads-lite")
     assert reads.mode(args) == "lite"
+    full = family.run(
+        summary_args(
+            path,
+            tmp_path / "f",
+            prompts.PROMPT_VERSION,
+            items=["dm-pair-00-pos"],
+            extra={"aggregate": "native"},
+        )
+    )
+    assert {v["pos"] for v in full.rows} == {v["pos"] for v in r.rows}
+    assert full.value == r.value
+    assert not full.config["prompt_version"].endswith("+reads-lite")

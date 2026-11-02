@@ -664,11 +664,12 @@ def test_mcdm_spec_is_multi_select(tmp_path, monkeypatch):
 
 def test_readplan_mcdm_lite_row():
     row = readplan.plan(NAME)[0]
-    assert row.lite_positions == {"kind": "offset_from_end", "k": 6} and row.lite_layers is None
+    assert row.lite_positions == {"kind": "same"} and row.lite_layers is None  # plan 0061
     assert row.layers == readplan.GRID and len(readplan.plan(NAME)) == 116
 
 
-def test_mcdm_lite_skips_compliance_and_reads_to(tmp_path, monkeypatch):
+def test_mcdm_lite_matches_full(tmp_path, monkeypatch, capsys):
+    """Plan 0061: reads=lite judges the 12 sentence cells, with write compliance, as full does."""
     path = write_jsonl(
         tmp_path / "r.jsonl",
         _rows(
@@ -676,11 +677,15 @@ def test_mcdm_lite_skips_compliance_and_reads_to(tmp_path, monkeypatch):
         ),
     )
     seen = _fake(monkeypatch, lambda c: {"picks": []})
-    r = judge.run(_args(path, tmp_path, items=["d-lion"], extra={"reads": "lite"}))
-    assert [c.meta["pos"] for c in seen] == [-6]
-    assert r.rows[0]["reason"] is None and r.rows[0]["complied"] is None
+    r = judge.run(_args(path, tmp_path / "lite", items=["d-lion"], extra={"reads": "lite"}))
+    lite_pos = sorted(c.meta["pos"] for c in seen)
+    seen.clear()
+    full = judge.run(_args(path, tmp_path / "full", items=["d-lion"]))
+    assert lite_pos == sorted(c.meta["pos"] for c in seen) == list(range(-12, 0))
+    assert r.rows == full.rows and r.value == full.value
     assert r.config["prompt_version"].endswith("+reads-lite")
-    # a declared-lite file whose cell is not ' to' exits 2
+    assert not full.config["prompt_version"].endswith("+reads-lite")
+    # a declared-lite file with one cell per layer (the superseded ' to' site) exits 2
     bad = write_jsonl(
         tmp_path / "b.jsonl",
         [
@@ -692,6 +697,7 @@ def test_mcdm_lite_skips_compliance_and_reads_to(tmp_path, monkeypatch):
     with pytest.raises(SystemExit) as e:
         judge.run(_args(bad, tmp_path / "b", items=["d-lion"], extra={"reads": "lite"}))
     assert e.value.code == 2
+    assert "lite rule is `same`" in capsys.readouterr().err
 
 
 def test_mcdm_prompt_only_skips_compliance(tmp_path, monkeypatch):

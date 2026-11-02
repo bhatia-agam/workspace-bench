@@ -411,12 +411,13 @@ def _grid_rows(item: str, layers, positions) -> list[dict]:
     ]
 
 
-def test_lite_keeps_only_final_position(tmp_path, fake_llm, mk_args):
+def test_lite_keeps_all_positions(tmp_path, fake_llm, mk_args):
+    """Plan 0061: reads=lite judges every cell reads=full does (lite rule `same`)."""
     path = write_jsonl(tmp_path / "r.jsonl", _grid_rows(A, (20, 44), range(40)))
     fake = fake_llm(lambda s, u: {"a": 1} if u.startswith("Return") else _verdict(_esc(A)))
     lite = judge.run(mk_args(path, items=[A], extra={"reads": "lite"}, out=tmp_path / "lite"))
     calls = [u for _s, u in fake.calls if not u.startswith("Return")]
-    assert len(calls) == 2 and all("p39" in u for u in calls)
+    assert len(calls) == 80
     assert lite.config["prompt_version"].endswith("+reads-lite")
     fake = fake_llm(lambda s, u: {"a": 1} if u.startswith("Return") else _verdict(_esc(A)))
     full = judge.run(mk_args(path, items=[A], out=tmp_path / "full"))
@@ -462,7 +463,7 @@ def test_old_span_file_is_not_full(tmp_path, fake_llm, mk_args):
 def test_plan_reads_every_position():
     rows = readplan.plan("user_modeling")
     assert len(rows) == 100 and all(r.positions == {"kind": "all"} for r in rows)
-    assert all(r.lite_positions == {"kind": "final_token"} and r.lite_layers is None for r in rows)
+    assert all(r.lite_positions == {"kind": "same"} and r.lite_layers is None for r in rows)
     assert all(list(r.layers) == list(readplan.GRID) for r in rows)
 
 

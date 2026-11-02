@@ -209,6 +209,19 @@ def lite_rule_of(specs: Mapping[str, ReadSpec], ids: Collection[str] | None = No
     return json.dumps([json.loads(r) for r in sorted(rules)], sort_keys=True)
 
 
+def lite_is_full(specs: Mapping[str, ReadSpec], ids: Collection[str]) -> bool:
+    """Every item of ``ids`` has a plan row whose lite rule is ``same`` at the full layers
+    (``lite_layers is None``): ``reads=lite`` then judges exactly the ``reads=full`` cells
+    (association, conjunctive_association, plan 0061's families), so it gets full's completeness
+    checks. An item without a plan row is lite-read at ``final_token`` (``select``), never full."""
+    return bool(ids) and all(
+        iid in specs
+        and specs[iid].lite_positions.get("kind") == "same"
+        and specs[iid].lite_layers is None
+        for iid in ids
+    )
+
+
 def plan_layers_missing(
     cells: Sequence[Cell], specs: Mapping[str, ReadSpec], mode: str
 ) -> dict[str, list[int]]:
@@ -317,6 +330,22 @@ def load(
     for c in cells:  # before the selection: lite keeps every position's token for context
         if c.token is not None:
             rep.site_tokens.setdefault(c.id, {}).setdefault(c.pos, c.token)
+    lite_full = m == "lite" and lite_is_full(sp, {c.id for c in cells})
+    if (
+        lite_full
+        and meta is not None
+        and min_pos > 1
+        and cells
+        and all(len({c.pos for c in cs}) == 1 for cs in _by_item_layer(cells).values())
+    ):
+        # plan 0061: a file produced under a superseded single-site lite rule (final token,
+        # MCDM's ' to') would otherwise be judged as the `same` instrument (any sidecar file:
+        # check_full's own 1-position message would say "use reads=lite" to a lite run)
+        fail(
+            f"{path}: reads=lite with 1 position per cell, but this family's lite rule is `same` "
+            "(lite = the full positions); a lite-site file (a superseded lite rule) or a "
+            "truncated read — re-produce it, or judge the full file with reads=lite"
+        )
     before = cells
     cells = select(cells, sp, m, reader=reader, declared=declared)
     if m == "lite" and before and not cells:
@@ -327,7 +356,7 @@ def load(
             "positions); a file produced at the lite site must declare reads=lite in its sidecar"
         )
     partial: set[str] = set()
-    if m == "full":
+    if m == "full" or lite_full:
         partial |= (
             check_full(
                 cells,

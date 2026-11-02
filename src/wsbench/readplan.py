@@ -98,6 +98,19 @@ FINAL = {"kind": "final_token"}
 
 
 LITE_SITE_FAMILIES = ("association", "conjunctive_association", "role_bound_association")
+SAME = {"kind": "same"}
+# plan 0061 (Camila 2026-11-02: "for ALL directed modulation eval families lite should be the same
+# positions as normal. user modeling should also be the same, and basic readout"): reads=lite
+# reads every full position at every full layer, so a lite run differs from full only in its
+# +reads-lite stamp. A code constant, not evals/<family>/lite_rule.json: these families never had
+# a procedure-chosen lite site (LITE_SITE_FAMILIES). The banks' `readout.lite` keys are not read.
+LITE_SAME_FAMILIES = (
+    "basic_readout",
+    "directed_modulation",
+    "model_specific_directed_modulation",
+    "multi_concept_directed_modulation",
+    "user_modeling",
+)
 
 
 def frozen_lite_rule(family: str) -> dict[str, Any]:
@@ -443,6 +456,9 @@ def _final_token_families_items(
     family: str, items: list[dict[str, Any]], render: str
 ) -> list[ReadSpec]:
     lite = frozen_lite_rule(family) if family in LITE_SITE_FAMILIES else dict(FINAL)
+    same = family in LITE_SAME_FAMILIES
+    if same:
+        lite = dict(SAME)
     out = []
     for it in items:
         rule = {"kind": "final_token"}
@@ -450,7 +466,8 @@ def _final_token_families_items(
         spec = it.get("readout") or {}
         if spec.get("kind") == "question_through_end":
             # plan 0053 (basic_readout v2): every token from the first token of the user question
-            # through the prefilled answer stem; lite = the bank's lite rule (the stem's ":")
+            # through the prefilled answer stem; lite = the bank's lite rule (the stem's ":"),
+            # except for LITE_SAME_FAMILIES (basic_readout, plan 0061: the same positions)
             out.append(
                 ReadSpec(
                     family,
@@ -462,7 +479,7 @@ def _final_token_families_items(
                     prefill=ANSWER_STEM,
                     note="the user question, the turn end, the assistant header and the "
                     "prefilled answer stem",
-                    lite_positions=dict(spec.get("lite") or FINAL),
+                    lite_positions=dict(SAME) if same else dict(spec.get("lite") or FINAL),
                 )
             )
             continue
@@ -473,7 +490,7 @@ def _final_token_families_items(
             # every token of the render (wrong_bridge v2, plan 0050); the bank's `lite` key is
             # the reads=lite site, copied into the plan row (the judge never reads the bank for it)
             rule = {"kind": "all"}
-            item_lite = dict(spec.get("lite") or FINAL)
+            item_lite = dict(SAME) if same else dict(spec.get("lite") or FINAL)
         r = it.get("eval_render") or render
         if r == "chat":  # basic_readout's implicit items: the model's own favourite after the stem
             out.append(
@@ -789,8 +806,9 @@ def _plan(family: str) -> list[ReadSpec]:
                 GRID,
                 text=it["prompt"],
                 assistant=it["assistant"],
-                note="every token of the teacher-forced carrier sentence",
-                lite_positions=FINAL,
+                note="every token of the teacher-forced carrier sentence; lite = the same "
+                "positions (plan 0061)",
+                lite_positions=dict(SAME),
             )
             for it in items
         ]
@@ -822,8 +840,9 @@ def _plan(family: str) -> list[ReadSpec]:
                 GRID,
                 text=it["user"],
                 assistant=it["carrier"],
-                note="every token of the teacher-forced carrier sentence (no <|im_end|>)",
-                lite_positions=FINAL,
+                note="every token of the teacher-forced carrier sentence (no <|im_end|>); lite = "
+                "the same positions (plan 0061)",
+                lite_positions=dict(SAME),
             )
             for it in items
         ]
@@ -835,7 +854,7 @@ def _plan(family: str) -> list[ReadSpec]:
                 it["id"],
                 "chat_context",
                 # user_modeling plan (Camila 2026-10-30: "We should read at all positions"):
-                # every token of the chat_context render; lite = the assistant-onset final token
+                # every token of the chat_context render; lite = the same positions (plan 0061)
                 {"kind": "all"},
                 GRID,
                 messages=it["messages"],
@@ -843,7 +862,7 @@ def _plan(family: str) -> list[ReadSpec]:
                     "every token of the render (system turn, user turn, assistant header, empty "
                     "think block)"
                 ),
-                lite_positions=dict(FINAL),
+                lite_positions=dict(SAME),
                 lite_layers=None,
             )
             for it in items
@@ -986,8 +1005,9 @@ def _plan(family: str) -> list[ReadSpec]:
                 text=it["prompt"],
                 prefill=header["target_sentence"],
                 note="every token of the prefilled target sentence, at every GRID layer "
-                "(plan 0032 §2.1.2); lite: the 6th token from the end (' to', mcdm.md G1)",
-                lite_positions={"kind": "offset_from_end", "k": 6},
+                "(plan 0032 §2.1.2); lite = the same positions (plan 0061; was the 6th token "
+                "from the end, ' to')",
+                lite_positions=dict(SAME),
             )
             for it in items
         ]

@@ -805,12 +805,13 @@ def test_basic_readout_full_thresholds(tmp_path):
     assert e.value.code == 2
 
 
-def test_basic_readout_lite_is_final_token(tmp_path):
+def test_basic_readout_lite_is_same(tmp_path):
+    """Plan 0061: reads=lite keeps every position reads=full does, at every layer."""
     path = _file(tmp_path, "10 - 1 = 9", layers=(20, 24), n=9)
     _spec, args = _args(path, tmp_path / "o", summary=False, layers=(20, 24), reads="lite")
     cells, rep = reads.load(args, "basic_readout", ids=[ITEM])
-    assert sorted((c.layer, c.pos) for c in cells) == [(20, 8), (24, 8)]
-    assert json.loads(rep.lite_rule) == [{"layers": None, "positions": {"kind": "final_token"}}]
+    assert sorted((c.layer, c.pos) for c in cells) == [(L, p) for L in (20, 24) for p in range(9)]
+    assert json.loads(rep.lite_rule) == [{"layers": None, "positions": {"kind": "same"}}]
 
 
 def test_user_template_shape():

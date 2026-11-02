@@ -35,9 +35,10 @@ selfdescribe item, 11–33 per synthsys item, 23,232 cells) is a strict subset w
   position (`EvalSpec.min_full_positions = 37`, `full_contiguous = True`, shared
   `reads.check_full`); an old-span file exits 2 (or is `partial` under `allow_missing`). A
   sidecar-less file is report-only (`extras.partial_ids_unenforced`).
-- **Lite (`reads=lite`):** the final token only (`lite_positions = {"kind": "final_token"}`,
-  every full layer): the assistant onset, the infra default (not chosen from data). Lite ⊆ full,
-  so one full read serves both; lite rows are stamped `+reads-lite` and never mixed with full.
+- **Lite (`reads=lite`):** the same positions and layers as full (`lite_positions = {"kind":
+  "same"}`, plan 0061, Camila 2026-11-02), with full's completeness checks; lite rows are stamped
+  `+reads-lite` and never mixed with full. It was the final token (the assistant onset) before;
+  lite results judged before plan 0061 are stale.
 - **Layers:** `layers=all|each|<csv>` (shared).
 
 The bank's own `read` paragraph and per-item `readout.kind` still describe the old span: the bank

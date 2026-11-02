@@ -339,11 +339,11 @@ def test_collapse_rejects_dropped_cells(tmp_path):
 
 def test_produce_lite_then_judge_lite_keeps_the_lite_site(tmp_path):
     """A file the producer wrote reads=lite (only the lite site) judges reads=lite unchanged:
-    the lite rule is not idempotent (MCDM's offset_from_end k=6 over its own single output keeps
-    nothing), so it is never re-applied to a declared-lite file (review of PR #140)."""
-    fam = "multi_concept_directed_modulation"
+    the lite rule is not idempotent (multihop's offset_from_end k=2 over its own single output
+    keeps nothing), so it is never re-applied to a declared-lite file (review of PR #140)."""
+    fam = "multihop"
     sp = reads.specs(fam)
-    iid = next(iter(sp))
+    iid = next(i for i, s in sp.items() if s.lite_positions.get("k", 1) >= 2)
     spec = sp[iid]
     layers = spec.lite_layers or spec.layers
     (site,) = lite_select(list(range(30, 42)), spec.lite_positions)
@@ -354,6 +354,52 @@ def test_produce_lite_then_judge_lite_keeps_the_lite_site(tmp_path):
     cells, rep = reads.load(_args(path, tmp_path, extra={"reads": "lite"}), fam, ids=[iid])
     assert rep.reads == "lite"
     assert {(c.layer, c.pos) for c in cells} == {(L, site) for L in layers}
+
+
+UM = "user_modeling"  # lite rule `same` (plan 0061), min_full_positions 37, contiguous
+
+
+def test_lite_is_full_gets_the_full_span_check(tmp_path):
+    """Plan 0061: a reads=lite run whose lite rule is `same` gets reads=full's completeness
+    checks (a gapped sidecar file exits 2; under allow_missing its item is partial)."""
+    a, b = [s.id for s in readplan.plan(UM)[:2]]
+    assert reads.lite_is_full(reads.specs(UM), {a, b})
+    rows = _rows(a, [20], [p for p in range(40) if p != 20]) + _rows(b, [20], range(40))
+    path = write_jsonl(tmp_path / "r.jsonl", rows)
+    write_sidecar(path, reader="t", arm="t")
+    lite = {"reads": "lite"}
+    with pytest.raises(SystemExit) as e:
+        reads.load(_args(path, tmp_path, layers=[20], extra=lite), UM, ids=[a, b])
+    assert e.value.code == 2
+    args = _args(path, tmp_path, layers=[20], allow_missing=True, extra=lite)
+    cells, rep = reads.load(args, UM, ids=[a, b])
+    assert rep.partial_ids == [a] and reads.incomplete(args) and len(cells) == 79
+
+
+def test_lite_is_full_refuses_a_superseded_lite_file(tmp_path, capsys):
+    """Plan 0061: a declared-lite file with one position per cell (the superseded final-token
+    site) for a `same` family exits 2 instead of being judged as the `same` instrument."""
+    a = readplan.plan(UM)[0].id
+    path = write_jsonl(tmp_path / "r.jsonl", _rows(a, [20], [39]))
+    write_sidecar(path, reads="lite", reader="t", arm="t")
+    with pytest.raises(SystemExit) as e:
+        reads.load(_args(path, tmp_path, layers=[20], extra={"reads": "lite"}), UM, ids=[a])
+    assert e.value.code == 2
+    assert "lite rule is `same`" in capsys.readouterr().err
+
+
+def test_lite_without_same_rule_has_no_span_check(tmp_path):
+    """A family whose lite rule is a single site (multihop's offset_from_end) keeps today's lite
+    behaviour: a gapped file is judged at its lite site, nothing partial."""
+    sp = reads.specs("multihop")
+    iid = next(i for i, s in sp.items() if s.lite_positions.get("k") == 1)
+    assert not reads.lite_is_full(sp, {iid})
+    path = write_jsonl(tmp_path / "r.jsonl", _rows(iid, [20], [1, 2, 4, 5]))
+    write_sidecar(path, reader="t", arm="t")
+    cells, rep = reads.load(
+        _args(path, tmp_path, layers=[20], extra={"reads": "lite"}), "multihop", ids=[iid]
+    )
+    assert [(c.layer, c.pos) for c in cells] == [(20, 5)] and not rep.partial_ids
 
 
 def test_select_is_identity_on_a_declared_lite_file():

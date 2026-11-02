@@ -127,9 +127,10 @@ floor, for the same reason the topic guesser is not one: it reads the instructio
 - `reads=full` (default): every token of the teacher-forced carrier sentence (`suffix_text`), at
   every layer of the grid; `min_full_positions=6` (the shortest carrier has 6 words), one
   contiguous run ending at the carrier's last token.
-- `reads=lite`: the carrier's final token (`final_token`, the closing "."), every layer;
-  pre-registered (the shared default), not chosen by pass rate. Lite is a subset of full, so one
-  read serves both.
+- `reads=lite`: the same positions and layers as `reads=full` (`lite_positions = {"kind":
+  "same"}`; plan 0061, Camila 2026-11-02: "for ALL directed modulation eval families lite should be the same
+  positions as normal"); a lite run differs from full only in its `+reads-lite` stamp. It was the
+  carrier's final token (`final_token`) before; lite results judged before plan 0061 are stale.
 
 ## Readouts
 

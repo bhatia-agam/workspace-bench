@@ -212,9 +212,9 @@ def test_dmo_scorer_unchanged():
 # ---------------------------------------------------------------- G8
 
 
-def test_dmo_lite_final_token_and_full_span():
+def test_dmo_lite_same_as_full_span():
     row = readplan.plan(NAME)[0]
-    assert row.lite_positions == {"kind": "final_token"} and row.lite_layers is None
+    assert row.lite_positions == {"kind": "same"} and row.lite_layers is None  # plan 0061
     assert pkg.SPEC.min_full_positions == judge.MIN_CARRIER_TOKENS == 7
     assert pkg.SPEC.full_contiguous is True
     assert pkg.SPEC.task_note == prompts.DIGEST_TASK_NOTE

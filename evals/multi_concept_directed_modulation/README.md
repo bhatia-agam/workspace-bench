@@ -44,11 +44,13 @@ block, and the dictated sentence is **prefilled as the assistant's text**. The f
 `EvalSpec.min_full_positions = 12`, one contiguous run (`reads.check_full`). Any other layer
 set is `layers=all|each|<csv>`; the summarizer sees exactly the layers loaded.
 
-**Lite (`reads=lite`)**: the ` to` token only (`offset_from_end k=6`; the sentence is fixed, so
-offset 6 is always ` to`), at every full layer. Cached s3d native verdicts (4 layers, plan-0025
-judge): all concepts credited at ` to` alone on 27 of 98 items vs 41 over all 12 positions (`The`
-19, final `.` 18). Under lite (and for a `prompt_only:` reader) the write-compliance gate is
-skipped: a one-token window cannot hold three target words. A lite cell that is not ` to` exits 2.
+**Lite (`reads=lite`)**: the same 12 sentence positions at every full layer as full (`same`,
+plan 0061, Camila 2026-11-02), write-compliance gate included; a lite run differs from full only in its
+`+reads-lite` stamp. A declared-lite file with one position per cell (produced under the old
+lite rule) exits 2. Before plan 0061 lite was the ` to` token only (`offset_from_end k=6`; cached
+s3d native verdicts: all concepts credited at ` to` alone on 27 of 98 items vs 41 over all 12
+positions); lite results judged before plan 0061 are stale. For a `prompt_only:` reader the
+write-compliance gate is still skipped (a one-cell window cannot hold three target words).
 
 ```
 <|im_start|>user
@@ -176,7 +178,7 @@ for single-bullet `*-x4` arms: four samples; `tokens10` for token lenses).
 
 ```
 wsbench plan family=multi_concept_directed_modulation out=plan/                  # full read
-wsbench plan family=multi_concept_directed_modulation reads=lite out=plan-lite/  # ' to' only
+wsbench plan family=multi_concept_directed_modulation reads=lite out=plan-lite/  # = full (plan 0061)
 wsbench judge family=multi_concept_directed_modulation readouts=examples/readouts/multi_concept_directed_modulation.jsonl out=outputs/toy/mcdm dry_run=True
 wsbench judge family=multi_concept_directed_modulation readouts=<arm>.jsonl out=outputs/<arm>/mcdm opts=aggregate=native
 ```

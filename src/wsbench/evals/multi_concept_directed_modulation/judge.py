@@ -55,7 +55,6 @@ def pick_cap(n_gold: int) -> int:
 
 
 MIN_PUBLISHED_N = 10  # a per-kind / prior-direction group below this gets no published rate
-LITE_TOKEN = " to"  # the lite read site: offset 6 from the end of the dictated sentence
 
 NAME = "multi_concept_directed_modulation"
 CHANCE_LABEL = (
@@ -354,19 +353,11 @@ def _spec() -> Any:
 def _windows(
     args: JudgeArgs, cells: Sequence[Cell], rep: LoadReport, ids: Sequence[str]
 ) -> tuple[dict[str, dict[int, Region]], dict[str, Any]]:
-    """Region labels and write compliance per item. Under ``reads=lite`` (one ' to' cell per
-    item and layer) and for a ``prompt_only:`` reader (one cell per item) the window is not the
-    sentence, so the compliance gate (a run of 3 target words) is skipped and every loaded cell
-    is in-sentence (mcdm.md G1); a lite cell that is not ' to' exits 2."""
-    lite = reads.mode(args) == "lite"
-    if lite or reads.is_prompt_only(rep.reader):
-        if lite:
-            bad = sorted({c.id for c in cells if c.token is not None and c.token != LITE_TOKEN})
-            if bad:
-                fail(
-                    f"{NAME}: reads=lite judges the {LITE_TOKEN!r} cell; item {bad[0]} has "
-                    f"{next(c.token for c in cells if c.id == bad[0])!r} (wrong file or plan)"
-                )
+    """Region labels and write compliance per item. For a ``prompt_only:`` reader (one cell per
+    item) the window is not the sentence, so the compliance gate (a run of 3 target words) is
+    skipped and every loaded cell is in-sentence (mcdm.md G1). ``reads=lite`` reads the same
+    sentence cells as ``reads=full`` (plan 0061) and takes the full path."""
+    if reads.is_prompt_only(rep.reader):
         regions: dict[str, dict[int, Region]] = defaultdict(dict)
         for c in cells:
             regions[c.id][c.pos] = Region.IN_SENTENCE

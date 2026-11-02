@@ -308,15 +308,15 @@ def test_relational_reads_from_full_stop():
 
 def test_user_modeling_reads_every_position():
     """Camila 2026-10-30 ("We should read at all positions", plan 0056): the UM full read is
-    every token of the chat render (system turn, user turn, template tail); lite = the final
-    token, a subset of it."""
+    every token of the chat render (system turn, user turn, template tail); lite = the same
+    positions (plan 0061)."""
     rows = readplan.plan("user_modeling")
     assert len(rows) == 100 and all(list(s.layers) == list(readplan.GRID) for s in rows)
     rule, lite = rows[0].positions, rows[0].lite_positions
-    assert rule == {"kind": "all"} and lite == {"kind": "final_token"}
+    assert rule == {"kind": "all"} and lite == {"kind": "same"}
     full = readplan.resolve(rule, UM_TOKENS)
     assert full == list(range(len(UM_TOKENS)))
-    assert readplan.lite_select(full, lite) == [len(UM_TOKENS) - 1]
+    assert readplan.lite_select(full, lite) == full
 
 
 def test_association_reads_summarize_suffix():
@@ -362,14 +362,14 @@ def test_association_lite_rule(monkeypatch):
 
 def test_basic_readout_v2_all_chat_prefill():
     """Plan 0039 C2b/C4: every v2 item is a chat question with the answer stem prefilled, read
-    from the first question token through the end; lite = the final token (the stem's ":")."""
+    from the first question token through the end; lite = the same positions (plan 0061)."""
     rows = readplan.plan("basic_readout")
     assert len(rows) == 100
     for s in rows:
         assert s.render == "chat_prefill" and s.prefill == readplan.ANSWER_STEM, s.id
         assert s.positions == {"kind": "suffix_text_then_tail", "text": s.text}, s.id
         assert s.text.endswith("? Answer in one word.") and s.layers == readplan.GRID
-        assert s.lite_positions == {"kind": "final_token"} and s.lite_layers is None
+        assert s.lite_positions == {"kind": "same"} and s.lite_layers is None
 
 
 def test_basic_readout_v2_positions():
@@ -421,3 +421,44 @@ def test_multilingual_families_read_all_positions(family):
         assert lite_select(full, spec.lite_positions) == [4]
     lite = plan(family, reads="lite")[0]
     assert resolve(lite.positions, toks) == [4]
+
+
+# plan 0061: pre-change plan_sha (origin/main c2fd6929). They pin the no-reread claim (the lite
+# site is never hashed); a later bank or full-read change may refresh them.
+PLAN0061_SHA = {
+    "basic_readout": "195a60c7c52e32f0fab96a4a9bebae95630090db878853c09d512c017f6e7ea1",
+    "directed_modulation": "1da94e9cd24b0a10b951957ca383d62658700ae241c0f2f7d3aa4231f842b820",
+    "model_specific_directed_modulation": (
+        "ef00b1f9ec23cda8340e146cb34219fc56795f1585cd6856afd8682b8411e782"
+    ),
+    "multi_concept_directed_modulation": (
+        "41ce9adb0a84f6a8dcd9f4f3393ab3ee18adbd75d89817e49c1d3c6b6eb901cf"
+    ),
+    "user_modeling": "072e3108baa0053d2925aa1062d0331b38db57681ba6b249a2c6ce1697e5d674",
+}
+
+
+@pytest.mark.parametrize("family", readplan.LITE_SAME_FAMILIES)
+def test_lite_same_families_read_full_positions(family):
+    """Plan 0061 (Camila 2026-11-02): every DM family, user_modeling and basic_readout read the
+    full positions at the full layers under reads=lite; plan_sha is unchanged."""
+    from wsbench import reads
+
+    assert set(PLAN0061_SHA) == set(readplan.LITE_SAME_FAMILIES)
+    full = readplan.plan(family, layers=None)
+    lite = readplan.plan(family, layers=None, reads="lite")
+    assert all(s.lite_positions == {"kind": "same"} and s.lite_layers is None for s in full)
+    assert [(s.id, s.layers) for s in lite] == [(s.id, s.layers) for s in full]
+    for s in full[:5]:  # the rule keeps every full position (absolute and from-end coordinates)
+        for ps in (list(range(3, 40)), list(range(-37, 0))):
+            assert readplan.lite_select(ps, s.lite_positions) == ps
+    assert reads.plan_sha(family) == PLAN0061_SHA[family]
+
+
+def test_lite_same_leaves_other_final_token_families():
+    """Plan 0061 touches only its five families: typo and wrong_bridge keep their lite site."""
+    assert {json.dumps(s.lite_positions) for s in readplan.plan("typo")} == {
+        json.dumps({"kind": "final_token"})
+    }
+    assert all(s.lite_positions != {"kind": "same"} for s in readplan.plan("wrong_bridge"))
+    assert all(s.lite_positions != {"kind": "same"} for s in readplan.plan("basic_readout_mt"))
