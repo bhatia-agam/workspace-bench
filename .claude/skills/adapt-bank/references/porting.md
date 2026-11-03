@@ -61,6 +61,17 @@
 - Judge a refreshed set with every family `dry_run=True` first. A non-zero exit means a field the
   registered bank's judge requires (`mc`, `mc.candidates`, `mc_roles`, a consistent `bank_version`)
   was not built.
+- A dry run catches only the exits. Many judge inputs fall back SILENTLY for an adapted-only id:
+  - id-keyed resources, e.g. multihop `split_subjects.json`, role_bound `distractors_v3.json`,
+    user_modeling's value pools, basic_readout_mt `exonyms.json`;
+  - id-pattern rules (multihop `nhop-*-element`);
+  - Qwen defaults (`native_langs`).
+
+  Every family's judge inputs and their classes are in
+  [`docs/adapt_judge_inputs.md`](../../../../docs/adapt_judge_inputs.md) (plan 0060 A2.0). Its
+  machine-readable source is `src/wsbench/adapt/judge_inputs.py`, which provides
+  `REQUIRED_ITEM_FIELDS`, `SUBJECT_FIELDS`, `ADAPTED_ONLY_FIELDS` and
+  `check_item(family, item, header)`. Run `check_bank` over a refreshed set before judging it.
 
 ## Families whose gold is the subject's own answer (stamped by `profile` / `gate`)
 **Render caveat.** `gate_variant` records which render the subject committed in: `chat` (asked to
