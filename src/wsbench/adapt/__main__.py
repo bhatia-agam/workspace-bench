@@ -3,7 +3,8 @@
 profile   gate the original banks on the subject   [limit= regate=true draws= temperature= llm=]
 generate  deterministic candidates at a tier              family= tier= n= [seed=]
 author    Opus-authored candidates at a tier              family= tier= n= [steer= wave=]
-gate      lint + gate pending (regate=true: passing new items)   [draws= temperature= llm= regate=]
+gate      lint + gate pending (regate=true: passing new items; regate=all: failed too)
+          [draws= temperature= llm= regate=]
 regrade   re-grade stored answers (no resampling)         llm=<claude id> [workers=16]
 auto      generate+gate down the ladder until full / ooc  family=
 freeze    write adapted/<model>/<family>.json + report.json
@@ -11,15 +12,15 @@ note      status + reason (+ macro exclusion)   family= [status=] [text=] [exclu
 drop      audited drop: ids leave the bank (reason recorded)  family= ids=a,b reason=
 patch     audited field fix on one item of the adapted copy   family= id= set='{json}' note=
 status    one line per family
-native_langs  the subject's native languages, which freeze needs   [stage=measure]
-          | langs=en,.. evidence= [thinking=off]
+native_langs  the subject's native languages, which freeze needs   [stage=measure card=en,..]
+          | langs=en,.. evidence= [thinking=off] | stage=upgrade [families=] (A1.10 / A2 rebuild)
 moral     moral_rationale: elicit, distil, re-gate          [stage=]
           v3 on a subject: stage=rekey_readrender step=<s> [variant=system_one_word] [out=],
           then stage=options [bank=], then stage=adopt [bank=]
 poetry    poetry v5: stage=gate|tier_a|mc|opus_gate|all     [regate=true]
-agentic   agentic_misalignment: rollouts, commitment judge, keep  [stage=]
+agentic   agentic_misalignment: rollouts, commitment judge, keep  [stage=] [twins=true]
 fill      author+gate an authored family until full / ooc       families= [waves=8]
-carry     verify + copy jailbreak / multi_concept_dm to the subject [families=]
+carry     verify + copy jailbreak / multi_concept_dm to the subject [families=] [screen=true]
 floors    prompt-only floors: stock subject summaries, Claude judge   [stage=] [judge=]
 mc        MC options for adapted-only candidates (the repo's builders, --bank)   families=
           [stage=build|subject]  (subject: basic_readout's post-gate subject fields)
@@ -67,11 +68,11 @@ KEYS: dict[str, set[str]] = {
     "drop": {"family", "ids", "reason"},
     "patch": {"family", "id", "set", "note"},
     "status": set(),
-    "native_langs": {"stage", "langs", "evidence", "thinking"},
+    "native_langs": {"stage", "langs", "evidence", "thinking", "families", "card"},
     "moral": {"stage", "step", "out", "limit", "variant", "bank"},
     "poetry": {"stage", "regate"},
-    "agentic": {"stage"},
-    "carry": {"families"},
+    "agentic": {"stage", "twins"},
+    "carry": {"families", "screen"},
     "floors": {"stage", "judge"},
     "introspection": {"stage", "result", "coherence", "llm"},
     # plan 0060 Phase E: self-answer families re-derived on the subject
@@ -102,8 +103,8 @@ def main(argv: list[str] | None = None) -> None:
             common[k] = int(a[k])
     if "temperature" in a:
         common["temperature"] = float(a["temperature"])
-    if cmd == "profile":
-        regate = a.get("regate", "").lower() in ("1", "true", "yes")
+    if cmd == "profile":  # profile regate re-asks every original, so "all" is the same as true
+        regate = a.get("regate", "").lower() in ("1", "true", "yes", "all")
         run.profile(model, names, limit=int(a.get("limit", 0)), regate=regate, **common)
     elif cmd == "generate":
         run.generate(model, a["family"], a["tier"], int(a["n"]), int(a.get("seed", 0)))
@@ -113,7 +114,8 @@ def main(argv: list[str] | None = None) -> None:
         steer = a.get("steer", "")
         author(model, a["family"], a["tier"], int(a["n"]), steer, int(a.get("wave", 0)))
     elif cmd == "gate":
-        regate = a.get("regate", "").lower() in ("1", "true", "yes")
+        rg = a.get("regate", "").lower()
+        regate: bool | str = "all" if rg == "all" else rg in ("1", "true", "yes")
         run.gate(model, names, regate=regate, **common)
     elif cmd == "regrade":
         llm = a.get("llm") or sys.exit("regrade needs llm=<claude id>")
@@ -125,7 +127,8 @@ def main(argv: list[str] | None = None) -> None:
     elif cmd == "carry":
         from . import carry
 
-        carry.carry(model, [f for f in families.split(",") if f] or None)
+        screen = a.get("screen", "true").lower() in ("1", "true", "yes")  # plan 0060 A2
+        carry.carry(model, [f for f in families.split(",") if f] or None, screen=screen)
     elif cmd == "fill":
         runner = run._runner(model)  # one vLLM load for every family
         for fam in names:
@@ -134,7 +137,8 @@ def main(argv: list[str] | None = None) -> None:
     elif cmd == "agentic":
         from . import agentic
 
-        agentic.run(model, a.get("stage", "all"))
+        twins = a.get("twins", "true").lower() in ("1", "true", "yes")  # plan 0060 D5
+        agentic.run(model, a.get("stage", "all"), twins=twins)
     elif cmd == "moral":
         from . import moral
 
@@ -186,19 +190,24 @@ def main(argv: list[str] | None = None) -> None:
         run.drop(model, a["family"], [i for i in a["ids"].split(",") if i], a["reason"])
     elif cmd == "patch":
         run.patch(model, a["family"], a["id"], json.loads(a["set"]), a["note"])
-    elif cmd == "freeze":
-        run.freeze(model, names if families else None)
-        run.status(model)
     elif cmd == "native_langs":
         from . import native_langs as nl
 
         if a.get("stage") == "measure":
-            nl.measure(model, a.get("thinking", "off"))
+            card = [x for x in a.get("card", "").split(",") if x] or None
+            print(nl.measure(model, a.get("thinking", "off"), card_langs=card))
+        elif a.get("stage") == "upgrade":  # plan 0060 A2: the multilingual rows, rebuilt
+            from . import ml_native
+
+            ml_native.upgrade(model, [f for f in families.split(",") if f] or None)
         elif "langs" in a:
             langs = [x for x in a["langs"].split(",") if x]
             print(nl.record(model, langs, a.get("evidence", ""), a.get("thinking", "off")))
         else:
             print(nl.load(model) or f"{model}: not measured ({nl.path(model)})")
+    elif cmd == "freeze":
+        run.freeze(model, names if families else None)
+        run.status(model)
     else:
         run.status(model)
 

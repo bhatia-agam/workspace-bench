@@ -16,7 +16,7 @@ from wsbench.readplan import SUMMARIZE_SUFFIX
 
 from . import moral as _moral_mod
 from . import poetry as _po
-from .gate import Ask
+from .gate import ANNOTATION, Ask
 
 OWN_STEM = "My one-word answer is:"
 
@@ -147,12 +147,14 @@ def _poetry(item: dict) -> list[Ask]:
 
 def _numeric(item: dict) -> list[Ask]:
     """Arithmetic and chain: the final number, and no rollout may write an intermediate (the
-    latent has to stay unwritten). Chain items also carry ``prompt_first`` (start number first):
-    the bank recorded both as ``gate.last`` / ``gate.first``, so both are legs."""
+    latent has to stay unwritten). Chain items also carry ``prompt_first`` (start number first).
+    Chain v2's rule (plan 0038, ``gate_v2``) is strict 10/10 + greedy + no leak on the seed-LAST
+    render (``prompt``) only: v2 kept items that failed the seed-first render (item 0: 8/10), so
+    ``prompt_first`` is asked as an annotation leg (``note:first``, recorded, never gating)."""
     forbid = [str(x) for x in item.get("intermediates") or []]
     legs = [("surface", item["prompt"])]
     if item.get("prompt_first"):
-        legs.append(("first", item["prompt_first"]))
+        legs.append((f"{ANNOTATION}:first", item["prompt_first"]))
     return [_chat(_iid(item), leg, text, [item["answer"]], "number", max_tokens=16,
                   meta={"forbid": forbid}) for leg, text in legs]  # fmt: skip
 

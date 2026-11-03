@@ -342,13 +342,21 @@ def _leg_dict(leg: Leg) -> dict[str, Any]:
     return d
 
 
+# A leg named ``note:<what>`` is an annotation: sampled, graded and kept in ``legs``, but never
+# part of the pass rule or the rate (plan 0060 A2 chain: v2 kept items that failed `first`).
+ANNOTATION = "note"
+
+
 def gate_record(legs: dict[str, Leg]) -> dict[str, Any]:
     """One item's gate. Legs are grouped by the name before ``:``: renders of the same question
     (``surface`` = chat, ``surface:plain`` = raw continuation) are alternatives, so one passing is
     enough; separate questions (``surface``, ``bridge1``) must each pass. The shown answers are
-    the best-scoring render of the surface group."""
+    the best-scoring render of the surface group. ``note:*`` legs (:data:`ANNOTATION`) are
+    recorded only."""
     groups: dict[str, list[tuple[str, Leg]]] = {}
     for name, leg in legs.items():
+        if name.split(":")[0] == ANNOTATION:  # recorded, never gating (chain v2's `first`)
+            continue
         groups.setdefault(name.split(":")[0], []).append((name, leg))
     best = {g: max(ls, key=lambda x: (x[1].passed, x[1].rate or 0.0)) for g, ls in groups.items()}
     head_name, head = best.get("surface") or next(iter(best.values()))

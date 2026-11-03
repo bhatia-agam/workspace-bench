@@ -903,8 +903,6 @@ def test_native_langs_file_and_freeze_refusal(tmp_path, monkeypatch):
         nl.record("qwen3.5-4b", ["ja", "en"], "measured")
     with pytest.raises(SystemExit, match="evidence"):
         nl.record("qwen3.5-4b", ["en"], " ")
-    with pytest.raises(NotImplementedError):
-        nl.measure("qwen3.5-4b")
     nl.record("qwen3.5-4b", ["en", "zh"], "plan 0054 R6 on the subject, thinking off")
     run.freeze("qwen3.5-4b", ["typo_mt"])
     bank = _json.loads((d / "typo_mt.json").read_text())

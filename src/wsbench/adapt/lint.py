@@ -146,6 +146,11 @@ def _computational(family: str, it: dict) -> list[str]:
                 out.append(f"leak: {leak} written in {key}")
         if int(it.get("depth") or len(inter) + 1) < 2:
             out.append("latent: depth 1 has no intermediate")
+        from .generate import CHAIN_INTER
+
+        lo, hi = CHAIN_INTER  # bank v2's rule: a v1 chain with a one-digit step is retired here
+        if bad := [v for v in inter if not (lo <= int(v) <= hi)]:
+            out.append(f"latent: intermediate(s) {bad} outside {lo}..{hi} (chain v2 rule)")
     if family == "arithmetic_intermediates":
         if leak := _num_leak(it.get("prompt", ""), inter):
             out.append(f"leak: step value {leak} written in prompt")

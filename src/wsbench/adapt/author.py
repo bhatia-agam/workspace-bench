@@ -394,6 +394,8 @@ def _buggy(x: dict) -> list[dict]:
         "verified": verify_python(clean_code) if clean_code else None,
         "why_correct": x.get("why_correct"), "looks_like": x.get("looks_like"), **common,
     }  # fmt: skip
+    # plan 0030 / 0060 A2: the symmetric `twin` the judge pairs on (select keeps pairs atomic)
+    buggy["twin"], clean["twin"] = clean_name, slug
     return [buggy, clean]
 
 

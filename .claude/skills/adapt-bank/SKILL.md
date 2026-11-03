@@ -29,7 +29,7 @@ judge an adapted set as it is (verified on qwen3.5-9b, gemma-4-31b-it, kimi-k2, 
 |---|---|
 | **judge exits** (no `mc` / `mc.candidates`: exit 2; poetry: uncaught ValueError) | association, basic_readout, multihop, chain_intermediates (default `judge=mc`), poetry |
 | runs, on a **retired instrument** or without the v2+ fields | moral_rationale (ec-v3.1, no option lists), multilingual (`v1_scorer="bank"`), multilingual_multihop (v1 regex), conjunctive_association (no `twin_of` / `inverted_label`: no inverted-twin diagnostic) |
-| runs, **headline None** (no twins / controls, so out of the macro) | buggy_code (no `twin`), agentic_misalignment (no clean twins), jailbreak_recognition (no v2 controls) |
+| runs, **headline None** (no twins / controls, so out of the macro) | buggy_code (no `twin`), agentic_misalignment (no clean twins), jailbreak_recognition (no v2 controls); a set rebuilt with plan 0060 A2 has all three |
 | runs, but on the old questions | basic_readout_mt (v4 shares 0/99 prompts with v1), multilingual_mt, multilingual_typo, typo_mt, multi_concept_directed_modulation (glm / kimi: still the 27-item set) |
 | bank unchanged; re-judge / re-read only (relgate-v4 and role_bound's action gate are JUDGE-side quote gates, not subject gate legs: no regate) | relational_multihop, role_bound_association, user_modeling, arithmetic_intermediates, directed_modulation |
 | absent from every set | wrong_bridge, multihop_mt_v2, knowledge_cutoff, model_specific_directed_modulation, introspection (§Families the adapt machinery does not cover) |
@@ -84,9 +84,9 @@ AFTER every freeze, re-freezes included.
 | full build | typo_mt, association (Brief writes `mc`, but the options are NOT leakage-screened and new items lack v3's `mc.distractor_aliases` / `topic`: say so in the note) | profile + `fill` |
 | full build (plan 0060 A2 rebuilds) | basic_readout v5 (Brief tiers `t1` implicit / `entity` / `processing`; profile → `fill` → `$A mc $M families=basic_readout` (entity / processing candidates: `mc_leakage_r4.py --bank`) → gate → `$A mc $M families=basic_readout stage=subject` after EVERY gate (implicit golds = the subject's answer, a distractor never names it; marks `subject_fields_for`) → freeze (balances `mc.gold_position` per subfamily over the shipped set)), basic_readout_mt v4 (gate = the v4 question in chat, no system turn / stem, graded by `name_forms`, T 0.7 / top_p 0.8 / top_k 20 (a Modal subject needs its app redeployed for `top_k`); Brief `t1` / `t2`; `$A mc $M families=basic_readout_mt` before gate (r4 → r4b → `build_r4b_mc_banks.py --bank`); freeze writes the set's `basic_readout_mt/{exonyms,hidden_rivals}.json` overlays, which need the judge overlays of PR #243) | as described |
 | full build (generated) | relational_multihop, arithmetic_intermediates | profile + `auto` |
-| originals only | directed_modulation (profile is its compliance gate; no Brief), multihop, chain_intermediates, conjunctive_association, role_bound_association (oa-v3 `distractors_v3.json` is keyed by registered pair ids), user_modeling (option pools), buggy_code (`select` does not pair twins: a pair with a failed member is orphaned, so the pair rate covers only both-pass pairs; say so in the note), multilingual / multilingual_mt / multilingual_typo / multilingual_multihop **only for a subject whose native languages are exactly `en` and `zh`**: freeze copies Qwen's `contract.native_langs` | profile + freeze |
-| carry | jailbreak_recognition (v2 controls are Qwen-screened: report recall only and say in the `note` TEXT that the net headline is not valid; not `note status=blocked`, which would block recall too), multi_concept_directed_modulation | `carry families=jailbreak_recognition,multi_concept_directed_modulation` (never another family: carry treats any non-jailbreak name as MCDM) |
-| regenerated | agentic_misalignment (plan 0031 left twins out: headline None by design), jlens_concept_pr (needs the subject's J-lens) | `$A agentic`; `scripts/adapt_jlens*.py` |
+| originals only | directed_modulation (profile is its compliance gate; no Brief), multihop, chain_intermediates (gate = v2's rule: strict 10/10 + greedy + no leak on the seed-last render; `first` is a `note:first` annotation leg; new generated items get per-slot `mc` from `options.build_mc` over the shipped set at freeze; originals keep the registered options), conjunctive_association, role_bound_association (oa-v3 `distractors_v3.json` is keyed by registered pair ids), user_modeling (option pools), buggy_code (plan 0060 A2: `select` keeps each buggy / clean pair `{id, twin}` atomic, registered `twin` or the authored `-au-` / `-au-clean-` ids; a failed clean twin drops its buggy partner; authored pairs get `twin` at authoring and at freeze), multilingual / multilingual_mt / multilingual_typo / multilingual_multihop **only for a subject whose native languages are exactly `en` and `zh`**: freeze copies Qwen's `contract.native_langs` | profile + freeze |
+| carry | jailbreak_recognition (`carry` re-screens every v2 control on the subject with the bank's J5 grader, `scripts/build_jailbreak_v2.py` `grade_gate`: 20 no-think draws + greedy, since the subject never thinks; a failing control is dropped with its pairing in `adapt.dropped_controls` and the report; `screen=false` skips it, and then the net headline is not valid), multi_concept_directed_modulation | `carry families=jailbreak_recognition,multi_concept_directed_modulation` (never another family: carry treats any non-jailbreak name as MCDM) |
+| regenerated | agentic_misalignment (plan 0060 D5: every clean twin is rolled out with the same protocol and kept only if the subject never misbehaves on it, beside its kept partner; pairs are atomic; at >= `MACRO_MIN_PAIRS` pairs the macro exclusion is lifted; `twins=false` gives plan 0031's twin-less scope), jlens_concept_pr (needs the subject's J-lens) | `$A agentic`; `scripts/adapt_jlens*.py` |
 | do not build (`note status=blocked`, reason "plan 0060") | poetry (v5 free leg missing; profile would put the subject's gold over Qwen's `mc.candidates`), moral_rationale (`$A moral` / `profile` keep Qwen's `options`; rekey is Qwen-only), the multilingual families for any subject whose native languages are not exactly `en` and `zh` | — |
 | not in the adapt machinery | §Families the adapt machinery does not cover | — |
 
@@ -101,7 +101,7 @@ from `subjects.py`).
 |---|---|---|
 | 0 set up | add a `Subject` (pinned revision, `n_layers`, tokenizer family, `chat_template`, `gpu_memory_utilization` / `enforce_eager` for a tight fit), download weights, `$A profile $M families=typo_mt limit=5 llm=claude-opus-5-5` (step 1 skips these rows, so grade them the same way) | 9B on the 4090: 0.93 + eager (vision profiling is skipped: text only) |
 | 1 profile | `$A profile $M llm=claude-opus-5-5 families=<the full-build, generated and originals-only families of §What can be built>` | gates every item of the REGISTERED bank; parallel Opus grading |
-| 2 generated | `$A auto $M family=arithmetic_intermediates`, then `family=relational_multihop` (chain only once plan 0060 lands) | deterministic ladders |
+| 2 generated | `$A auto $M family=arithmetic_intermediates`, then `family=relational_multihop`, then `family=chain_intermediates` (tiers keep every intermediate in 10..99) | deterministic ladders |
 | 3 authored | `$A fill $M families=typo_mt,association` (only these two: other families with a Brief would build items missing their judge-side keyed fields; `fill` raises KeyError on a family with no Brief) | waves sized by yield, auto-steered by the last wave's misses, tier step-down, ooc stop |
 | 4 model-specific | `$A agentic $M` · `$A carry $M families=jailbreak_recognition,multi_concept_directed_modulation` · jlens: `scripts/adapt_jlens.py` / `adapt_jlens_modal.py` (the subject's neuronpedia J-lens, or one fitted with `scripts/fit_jlens_modal.py`; else `note status=blocked`). NOT `$A moral` until plan 0060 | directed_modulation is compliance-gated by step 1 |
 | 5 freeze | `$A freeze $M families=<the families built>`, then `note` per family (after EVERY freeze) | writes `n_layers` into report.json: `wsbench plan` then emits subject layers. wrong_bridge and multihop_mt_v2 (plan 0060 Phase E: `$A wrong_bridge`, `$A multihop_mt_v2`) are not in the default family list: they ship ONLY when named, `families=wrong_bridge,multihop_mt_v2` |
@@ -175,9 +175,9 @@ Follow `references/porting.md`:
   rewrites the reasons and keeps Qwen's `options`. Target (plan 0060): the subject's side, reasons
   sampled from its own draws, option lists rebuilt for those reasons.
 - directed_modulation: the compliance screen.
-- agentic_misalignment: rollouts (and, for a headline, clean twins).
-- jailbreak_recognition: positions and template (`carry`); the v2 controls are Qwen-screened and no
-  re-screen exists yet, so report recall only and the net headline `blocked`.
+- agentic_misalignment: rollouts, the clean twins included (plan 0060 D5; `$A agentic`).
+- jailbreak_recognition: positions and template (`carry`); the v2 controls are re-screened on the
+  subject by `carry` (plan 0060 A2).
 - multi_concept_directed_modulation: the prefill render (bank v2, 116 items).
 - jlens_concept_pr: re-capture.
 - Layer remap: by depth fraction, for every family (`wsbench plan` does it from `n_layers`).
@@ -280,10 +280,12 @@ Then:
     adapted floors from `floors/floors.json`. Easier items can raise a floor; flag a family whose
     floor saturates in `report.json`.
 - Write `report.json.note` per family: what changed and why, in one sentence each.
-- **A family gained or changed a gate leg** (e.g. chain `first`, multihop originals' bridge; poetry's
-  free line-two leg once plan 0060 lands): `profile families=<f> regate=true` (originals) AND `gate
+- **A family gained or changed a gate leg** (e.g. multihop originals' bridge; poetry's free
+  line-two leg once plan 0060 lands): `profile families=<f> regate=true` (originals) AND `gate
   families=<f> regate=true` (passing new items), then refill and re-freeze. Old records otherwise
-  keep passing without the leg.
+  keep passing without the leg. When a leg was REMOVED or made an annotation (chain v2's `first`),
+  use `gate regate=all`: it re-asks the failed new items too (every row is re-linted first, so a v1
+  chain with an intermediate below 10 is lint-retired).
 - `report.json` → `code` stamps the git HEAD and an adapt-package hash on every write. Check it:
   `python -c "from wsbench.adapt import store; print(store.code_stamp())"` vs
   `report.json` `code.adapt_sha256`. A bank frozen under an older stamp than the gate logic you

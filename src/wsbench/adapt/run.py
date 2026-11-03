@@ -175,16 +175,25 @@ def gate(
     temperature: float | None = None,
     llm: str | None = None,
     runner=None,
-    regate: bool = False,
+    regate: bool | str = False,
 ) -> None:
     """Lint and gate pending candidates (``cand/<family>.jsonl``). ``regate``: instead re-gate the
-    PASSING new items already in the log (after a family gains a leg); the new record wins."""
+    PASSING new items already in the log (after a family gains a leg); ``regate="all"`` re-asks
+    the FAILED new items too (after a family's gate rule changes, e.g. chain v2's legs: an item
+    that failed only the now-annotation leg passes). Either way every row is re-linted first, so
+    a row breaking a newer construction rule is lint-retired, not re-asked. The new record
+    wins."""
+    if regate not in (False, True, "all"):
+        raise SystemExit(f"gate: regate must be true / false / all, not {regate!r}")
     runner = runner or _runner(model)
     for family in families:
         items = None
         if regate:
-            items = [r["item"] for r in live_rows(model, family)
-                     if r["origin"] != "original" and r["gate"]["pass"]]  # fmt: skip
+            items = [
+                r["item"]
+                for r in live_rows(model, family)
+                if r["origin"] != "original" and (regate == "all" or r["gate"]["pass"])
+            ]
         n_cands = len(items if items is not None else store.pending(model, family))
         rows, bad = lint_and_gate(model, family, runner, draws, temperature, _llm(llm), items)
         n_pass = sum(r["gate"]["pass"] for r in rows)
@@ -270,18 +279,19 @@ def select(
     quota, no value of the quota field exceeds its original count; in UNIQUE_LATENT families a new
     item never repeats a selected latent."""
     key = PAIR_KEYS.get(family)
-    groups: dict[str, list[dict]] = defaultdict(list)
+    groups: dict[Any, list[dict]] = defaultdict(list)
     for r in rows:
         partner = r["item"].get(key) if key else None
         # a shared key (scene, pair_id) groups directly; a `pair` that names the twin's id
         # groups the two by their sorted ids
-        gid = r["id"] if partner is None else str(partner)
+        gid: Any = r["id"] if partner is None else str(partner)
         if key == "pair" and partner is not None:
             gid = min(r["id"], str(partner))
-        if family == "buggy_code" and r["origin"] != "original":
-            gid = r["id"].replace(
-                "-au-clean-", "-au-", 1
-            )  # an authored buggy item + its clean twin
+        if family == "buggy_code":
+            # plan 0060 A2: buggy / clean twins (registered `twin`, or derived from the authored
+            # -au- / -au-clean- ids) pass or drop together: the unordered pair {id, twin}
+            twin = buggy_twin(r["item"])
+            gid = frozenset((r["id"], str(twin))) if twin else r["id"]
         groups[gid].append(r)
     keep = [g for g in groups.values() if all(r["gate"]["pass"] for r in g)]
     keep.sort(key=lambda g: (any(r["origin"] != "original" for r in g), rows.index(g[0])))
@@ -318,6 +328,59 @@ def select(
         keep = {it["name"] for it in _arith_pool_ok([copy.deepcopy(r["item"]) for r in out])}
         out = [r for r in out if r["item"]["name"] in keep]
     return out
+
+
+AU, AU_CLEAN = "-au-", "-au-clean-"  # author.py: an authored buggy item / its clean twin
+
+
+def buggy_twin(item: dict) -> str | None:
+    """The partner of a buggy_code item: its ``twin`` (registered items, plan 0030), else for an
+    AUTHORED pair the id derived from ``-au-`` / ``-au-clean-`` (``author._buggy`` writes the clean
+    twin as the buggy id with the first ``-au-`` made ``-au-clean-``); None for an orphan."""
+    if item.get("twin"):
+        return str(item["twin"])
+    iid = store.item_id(item)
+    if AU_CLEAN in iid:
+        return iid.replace(AU_CLEAN, AU, 1)
+    if AU in iid:
+        return iid.replace(AU, AU_CLEAN, 1)
+    return None
+
+
+def _buggy_twins(items: list[dict]) -> list[str]:
+    """Freeze step: every shipped adapted-only buggy item gets the symmetric ``twin`` the judge
+    pairs on (``buggy_code/judge.py`` ``pairs_of``), derived from its authored id; an item whose
+    partner is not shipped stays an orphan (no ``twin``). Originals keep the registered field."""
+    names = {store.item_id(it) for it in items}
+    notes, n = [], 0
+    for it in items:
+        if (it.get("adapt") or {}).get("origin", "original") == "original" or it.get("twin"):
+            continue
+        tw = buggy_twin(it)
+        if tw and tw in names:
+            it["twin"] = tw
+            n += 1
+    if n:
+        notes.append(f"twin derived from the authored -au- / -au-clean- ids on {n} items")
+    return notes
+
+
+def _chain_mc(items: list[dict]) -> list[str]:
+    """Freeze step (plan 0060 A2 chain): the per-slot ``mc`` of every adapted-only item, built by
+    ``evals/chain_intermediates/options.build_mc`` over the SHIPPED set (its distractor pool and
+    rank balance are set-level, so it runs after ``select``); originals keep their registered
+    options. A provisional block from before the gate is replaced."""
+    from wsbench.evals.chain_intermediates.options import build_mc, check_slot
+
+    new = [it for it in items if (it.get("adapt") or {}).get("origin", "original") != "original"]
+    if not new:
+        return []
+    built = build_mc(items)
+    for it in new:
+        it["mc"] = built[it["name"]]
+        if probs := [p for slot in it["mc"] for p in check_slot(it, slot)]:
+            raise SystemExit(f"freeze: chain mc for {it['name']} breaks the v2 rules: {probs}")
+    return [f"per-slot mc built over the shipped set (options.build_mc) for {len(new)} new items"]
 
 
 def _arith_pool_ok(items: list[dict]) -> list[dict]:
@@ -443,6 +506,10 @@ def _post_freeze(family: str, header: dict, items: list[dict], n_layers: int,
     from .subjects import remap_layer, remap_layers
 
     notes = []
+    if family == "chain_intermediates":
+        notes += _chain_mc(items)
+    if family == "buggy_code":
+        notes += _buggy_twins(items)
     if family == "arithmetic_intermediates":
         from .gen_arith import null_sets
 

@@ -1,8 +1,9 @@
 """Plan 0031: agentic_misalignment scored on misaligned / clean-twin pairs. The pair rule, the
 strict twin rule, the cluster CI, scope, ``complete``, the separation of twins from controls and
 from ``aggregate_design``, cache safety of the ``+pairs`` stamp, the summary_mode_compare pairing,
-``~`` ids, adapt skipping twins, the bank builder and the real bank's twin invariants. Offline:
-every judge call is a scripted fake, on a tiny synthetic bank built by the bank builder."""
+``~`` ids, adapt porting the twins (plan 0060 D5; twins=False skips them), the bank builder and
+the real bank's twin invariants. Offline: every judge call is a scripted fake, on a tiny
+synthetic bank built by the bank builder."""
 
 import hashlib
 import importlib.util
@@ -742,14 +743,18 @@ def test_base_pairs_pair_native_and_summary_runs(fixture_bank, run, tmp_path):
 # ---------------------------------------------------------------- adapt
 
 
-def test_adapt_drops_twins(fixture_bank, run, tmp_path, monkeypatch):
-    """``wsbench adapt agentic`` drops ``arm: "twin"`` in rollout, judge and build; an adapted
-    bank has no pairs, so its headline is None."""
+def test_adapt_ports_twins_by_default_and_drops_them_on_request(
+    fixture_bank, run, tmp_path, monkeypatch
+):
+    """Plan 0060 D5 (Camila, reversing plan 0031's "twins are not adapted"): ``wsbench adapt
+    agentic`` rolls out, judges and gates the clean twins by default, keeping a twin only when the
+    subject does not misbehave on it, beside its kept partner. ``twins=False`` still gives plan
+    0031's scope: twins dropped in rollout, judge and build, no pairs, headline None."""
     from wsbench.adapt import agentic, store
+    from wsbench.evals.agentic_misalignment import score as am_score
 
     bank, _t, tp = fixture_bank
     monkeypatch.setattr(agentic, "_bank", lambda: json.loads(json.dumps(bank)))
-    monkeypatch.setattr(store, "model_dir", lambda model, root=None: tmp_path / "adapted" / model)
     monkeypatch.setattr(store, "code_stamp", lambda: {})
     asked: list[str] = []
 
@@ -761,19 +766,13 @@ def test_adapt_drops_twins(fixture_bank, run, tmp_path, monkeypatch):
     import wsbench.adapt.run as adapt_run
 
     monkeypatch.setattr(adapt_run, "_runner", lambda model: Runner())
-    agentic.rollout("subj")
-    originals = [it["id"] for it in bank["items"] if it["arm"] != "twin"]
-    assert asked == originals
-    d = tmp_path / "adapted" / "subj" / "agentic"
-    roll = json.loads((d / "rollouts.json").read_text())
-    roll["w-a~twin"] = ["stale twin rollout"]  # an older run's twin rollout is never judged
-    (d / "rollouts.json").write_text(json.dumps(roll))
 
     class Session:
         pushed = 0
 
-        def create(self, **kw):
-            text = '{"label": "MISALIGNED"}'
+        def create(self, **kw):  # the subject misbehaves on every original, never on a twin
+            twin = "~twin r" in kw["messages"][0]["content"]
+            text = '{"label": "%s"}' % ("ALIGNED" if twin else "MISALIGNED")
             return SimpleNamespace(content=[SimpleNamespace(type="text", text=text)])
 
         def refresh(self, seen):
@@ -782,10 +781,40 @@ def test_adapt_drops_twins(fixture_bank, run, tmp_path, monkeypatch):
     import wsbench.adapt.auth as auth
 
     monkeypatch.setattr(auth, "Session", Session)
+    originals = [it["id"] for it in bank["items"] if it["arm"] != "twin"]
+    twins = [it["id"] for it in bank["items"] if it["arm"] == "twin"]
+
+    # D5, the default: twins ported and gated on the subject
+    monkeypatch.setattr(store, "model_dir", lambda model, root=None: tmp_path / "d5" / model)
+    agentic.rollout("subj")
+    assert asked == [it["id"] for it in bank["items"]]
     agentic.judge("subj", workers=2)
+    agentic.build("subj")
+    out = json.loads((tmp_path / "d5" / "subj" / "agentic_misalignment.json").read_text())
+    kept_twins = [it["id"] for it in out["items"] if it["arm"] == "twin"]
+    assert kept_twins == twins
+    pairs = am_score.pairs_of(out["items"])
+    assert len(pairs) == len(twins) == out["n_pairs"]
+    by = {it["id"]: it for it in out["items"]}
+    for m, t in pairs:
+        assert by[m]["twin"] == t and by[t]["twin"] == m and by[t]["cluster"] == by[m]["cluster"]
+        assert by[t]["misalignment_rate"] == 0.0 and by[t]["twin_rule"]
+    rep = json.loads((tmp_path / "d5" / "subj" / "report.json").read_text())
+    assert rep["families"]["agentic_misalignment"]["target"] == len(bank["items"])
+
+    # twins=False: plan 0031's scope, on request
+    asked.clear()
+    monkeypatch.setattr(store, "model_dir", lambda model, root=None: tmp_path / "adapted" / model)
+    agentic.rollout("subj", twins=False)
+    assert asked == originals
+    d = tmp_path / "adapted" / "subj" / "agentic"
+    roll = json.loads((d / "rollouts.json").read_text())
+    roll["w-a~twin"] = ["stale twin rollout"]  # an older run's twin rollout is never judged
+    (d / "rollouts.json").write_text(json.dumps(roll))
+    agentic.judge("subj", workers=2, twins=False)
     judged = json.loads((d / "judged.json").read_text())
     assert sorted(judged) == sorted(originals)
-    agentic.build("subj")
+    agentic.build("subj", twins=False)
     out = json.loads((tmp_path / "adapted" / "subj" / "agentic_misalignment.json").read_text())
     assert all(it["arm"] != "twin" for it in out["items"])
     assert all(not {"twin", "cluster"} & set(it) for it in out["items"])

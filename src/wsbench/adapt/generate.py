@@ -78,6 +78,12 @@ def _chain_distractors(v: int, start: int, answer: int, forbid: set[int], lits: 
     return pool[:4]
 
 
+# chain bank v2's construction rule (plan 0038; plan 0060 A2): every intermediate is in 10..99, so
+# the per-slot MC options (options.py, 1..99) never sit on a one-digit gold. A tier changes the
+# start and step ranges, never this rule.
+CHAIN_INTER = (10, 99)
+
+
 def chain(rng: random.Random, knobs: dict[str, Any]) -> dict[str, Any] | None:
     depth = rng.choice(knobs.get("depths", [2, 3]))
     ops = knobs.get("ops", ["add", "sub", "double", "triple", "halve_up", "halve_down"])
@@ -93,6 +99,8 @@ def chain(rng: random.Random, knobs: dict[str, Any]) -> dict[str, Any] | None:
         vals.append(x)
     inter, answer = vals[:-1], vals[-1]
     if len({start, *vals}) != depth + 1:
+        return None
+    if not all(CHAIN_INTER[0] <= v <= CHAIN_INTER[1] for v in inter):
         return None
     text = "\n".join(s["text"] for s in steps)
     prompt = CHAIN_LAST.format(steps=text, start=start)
@@ -212,16 +220,20 @@ GENERATORS: dict[str, Generator] = {
         "chain_intermediates",
         chain,
         [
-            Tier("t0", {"depths": [2, 3]}, "original rules (depth 2-3, six step kinds)"),
+            Tier(
+                "t0",
+                {"depths": [2, 3]},
+                "original rules (depth 2-3, six step kinds; every intermediate in 10..99)",
+            ),
             Tier(
                 "t1",
-                {"depths": [2], "ops": ["add", "sub", "double"]},
-                "depth 2 only; add/subtract 2-9 and double",
+                {"depths": [2], "ops": ["add", "sub", "double"], "start": [5, 40]},
+                "depth 2 only; add/subtract 2-9 and double; start 5-40",
             ),
             Tier(
                 "t2",
-                {"depths": [2], "ops": ["add", "sub"], "n_max": 5, "start": [2, 15], "vmax": 40},
-                "depth 2; add/subtract 2-5 only; start 2-15",
+                {"depths": [2], "ops": ["add", "sub"], "n_max": 5, "start": [10, 30], "vmax": 40},
+                "depth 2; add/subtract 2-5 only; start 10-30",
             ),
         ],
     ),
