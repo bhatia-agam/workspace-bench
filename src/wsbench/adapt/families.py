@@ -372,6 +372,8 @@ REGENERATE = {
     # plan 0060 Phase E (model-specific families; their own stages, not `profile` / `gate`)
     "wrong_bridge": "the subject's own wrong-bridge errors: `adapt wrong_bridge` (wrong_bridge.py)",
     "multihop_mt_v2": "staged gate with a must-not-reach shortcut leg: `adapt multihop_mt_v2`",
+    "nyt_connections": "the subject's own groupings, labels and stability, options rebuilt "
+    "around them: `adapt nyt_connections` (nyt_connections.py)",
 }
 
 

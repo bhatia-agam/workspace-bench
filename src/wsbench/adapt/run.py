@@ -762,6 +762,10 @@ def freeze(model: str, families: list[str] | None = None) -> dict[str, Any]:
             ad["gate"] = {k: r["gate"][k] for k in ("rate", "pass")}
             items.append(it)
         notes = _post_freeze(family, header, items, subject.n_layers, subject.read_band)
+        if family == "nyt_connections" and header:  # plan 0060 Phase E: the subject's counts
+            from .nyt_connections import post_freeze
+
+            notes += post_freeze(header, items, subject)
         if subject.tokenizer != "qwen3.6":  # the banks' token-tied fields were Qwen's
             try:
                 items, more = restamp_tokens(model, family, items)

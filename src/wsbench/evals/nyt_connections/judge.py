@@ -202,8 +202,21 @@ def load_bank() -> tuple[dict[str, Any], list[dict[str, Any]]]:
     return nyt.bank_items()
 
 
+def bank_provenance(header: Mapping[str, Any]) -> dict[str, Any]:
+    """Which bank a run judged: its subject and whether it is an adapted (per-subject) bank
+    (``adapt`` block written by ``wsbench.adapt`` freeze). ``scripts/nyt_connections_bar.py``
+    refuses to pair an adapted headline with the registered (Qwen) prompt-only floor."""
+    return {"subject_model": header.get("subject_model"), "adapted": "adapt" in header}
+
+
 def run(args: JudgeArgs) -> FamilyResult:
-    _header, items = load_bank()
+    header, items = load_bank()
+    result = _run(args, items)
+    result.extras["bank"] = bank_provenance(header)
+    return result
+
+
+def _run(args: JudgeArgs, items: list[dict[str, Any]]) -> FamilyResult:
     scope = item_scope(items, args)
     ids = [it["id"] for it in scope]
     cells, rep = reads.load(args, NAME, ids=ids)

@@ -561,13 +561,15 @@ carried over from the 27B; there is no Opus / Sonnet unguessability gate.
   before the caps count it. `stage=bank` needs `pool=`.
   The judge also reads `template` (role cues) and `prompt`; both are built.
 
-**Freezing both Phase E families:** they are not in `families.FAMILIES`, so a bare `freeze` (and
+**Freezing the Phase E families:** they are not in `families.FAMILIES`, so a bare `freeze` (and
 `status`) skips them. They ship only when named: `$A freeze $M families=wrong_bridge,multihop_mt_v2`
+(nyt_connections likewise: `families=nyt_connections`, after `$A nyt_connections $M`)
 (or alongside other families in the same `families=` list).
 
 ## Not in the adapt machinery (SKILL.md §Families the adapt machinery does not cover)
 None left in this list: introspection, multihop_mt_v2, wrong_bridge (above),
-knowledge_cutoff and model_specific_directed_modulation (below) each have their own stage
+knowledge_cutoff and model_specific_directed_modulation (below) and nyt_connections
+(`$A nyt_connections`, SKILL.md) each have their own stage
 (`families.get` names it). unverbalized_hint is retired (plan 0058).
 
 ## Self-answer families re-derived on the subject (plan 0060 Phase E)

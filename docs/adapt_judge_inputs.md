@@ -670,7 +670,7 @@ Header: `contract.multi_token`, `contract.include_target`, `contract.native_lang
 ### nyt_connections
 
 Judge: `evals/nyt_connections/judge.py`. Refresh: model-specific (Phase E). Bank: dict, id from `id`.
-Note: plan 0062: every slot, label and stability is Qwen3.6-27B's own; a new subject re-samples its answers and naming turn and rebuilds the options
+Note: plan 0062: every slot, label and stability is Qwen3.6-27B's own; a new subject re-samples its answers and naming turn and rebuilds the options (`adapt nyt_connections`, plan 0060 Phase E). The judge looks nothing up by registered id: an adapted item is read from $WSB_BANK_ROOT and resolved against the mirror by nyt_id
 REQUIRED_ITEM_FIELDS: `id`, `nyt_id`, `mc`.
 SUBJECT_FIELDS: `mc`.
 

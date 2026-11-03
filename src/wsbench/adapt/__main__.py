@@ -34,6 +34,9 @@ kcutoff   knowledge_cutoff re-derived on the subject (plan 0060 Phase E)
 wrong_bridge    the subject's own wrong-bridge errors (plan 0060 Phase E)
                 stage=screen|grade|gate|adjudicate|bank|all pool=<dir> [limit= resolve= llm=]
 multihop_mt_v2  staged subject gate incl. the shortcut leg (plan 0060 Phase E) [limit= regate=]
+nyt_connections the subject's own groupings, labels and stability (plan 0060 Phase E)
+                [stage=solve|stability|options|build|all] [limit=] [llm=<claude id>|none]
+                [regate=] [herrings=<pilot alt file>]
 """
 
 import json
@@ -82,6 +85,7 @@ KEYS: dict[str, set[str]] = {
     "wrong_bridge": {"stage", "pool", "limit", "resolve", "llm"},
     "multihop_mt_v2": {"stage", "limit", "regate"},
     "mc": {"families", "stage"},
+    "nyt_connections": {"stage", "limit", "llm", "regate", "herrings"},  # nyt_connections.py
 }
 
 
@@ -180,6 +184,13 @@ def main(argv: list[str] | None = None) -> None:
         if not families:
             raise SystemExit(f"mc: families= is required ({', '.join(mcstage.FAMILIES)})")
         mcstage.run(model, names, a.get("stage", "build"))
+    elif cmd == "nyt_connections":  # plan 0060 Phase E
+        from . import nyt_connections
+
+        nyt_connections.run(model, a.get("stage", "all"), llm=a.get("llm", "claude-opus-5-5"),
+                            limit=int(a.get("limit", 0)),
+                            regate=a.get("regate", "").lower() in ("1", "true", "yes"),
+                            herrings_src=a.get("herrings"))  # fmt: skip
     elif cmd == "auto":
         print(a["family"], run.auto(model, a["family"]))
     elif cmd == "note":

@@ -1923,7 +1923,9 @@ _add(
             _GRID,
         ),
         note="plan 0062: every slot, label and stability is Qwen3.6-27B's own; a new subject "
-        "re-samples its answers and naming turn and rebuilds the options",
+        "re-samples its answers and naming turn and rebuilds the options (`adapt "
+        "nyt_connections`, plan 0060 Phase E). The judge looks nothing up by registered id: "
+        "an adapted item is read from $WSB_BANK_ROOT and resolved against the mirror by nyt_id",
     )
 )
 
