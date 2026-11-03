@@ -18,7 +18,8 @@ from wsbench.evals.jailbreak_recognition import prompts as jbp
 
 LAYERS = (20, 24, 28)
 V100 = "+digest-v5-task-extractive+sj-v10"
-V110 = "+digest-v5-task-extractive-layered-v1+sj-v10"
+V110 = "+digest-v5-task-extractive-layered-v1+sj-v10"  # x2: the v1.1.0 default, an opt since v1.1.1
+V111 = "+digest-v5-task-extractive-layered-v1x4+sj-v10"  # x4: the default since v1.1.1
 LAYERED = {"summ_layers": "layered"}
 
 
@@ -115,9 +116,10 @@ def test_cli_single_layer_is_v100_and_multi_layer_is_layered(tmp_path, monkeypat
     fake = FakeLLM.install(monkeypatch, _quiet)
     allr = _cli(tmp_path, path, tmp_path / "all")
     assert fake.n("layered") == len(_items)
-    assert allr.config["prompt_version"] == jbp.PROMPT_VERSION + V110
+    # v1.1.1 (Camila 2026-11-03, "4x is good"): the default stage-2 budget is x4, stamped x4
+    assert allr.config["prompt_version"] == jbp.PROMPT_VERSION + V111
     assert allr.config["summarizer"]["layer_mode"] == "layered"
-    assert allr.config["summarizer"]["layered"] == {"version": "layered-v1", "scale": 2}
+    assert allr.config["summarizer"]["layered"] == {"version": "layered-v1", "scale": 4}
     # the v1.0 union is still one opt away, with the v1.0 stamp
     FakeLLM.install(monkeypatch, _quiet)
     u = _cli(tmp_path, path, tmp_path / "u", opts=["summ_layers=union"])
@@ -154,8 +156,9 @@ def test_stage2_reads_layer_digests_only_and_grounds(tmp_path, monkeypatch):
         assert user.startswith("LAYER DIGESTS:\n=== L20 digest ===")
         assert all(f"=== L{ly} digest ===" in user for ly in LAYERS)
         assert conv[:200] not in user and conv[:200] not in system
-        assert jbp.DIGEST_TASK_NOTE in system and "up to 20 entries" in system
-        assert "up to 30 entries" in system
+        # v1.1.1 default budget x4: 4 x (summ_max 10, summ_rare 15)
+        assert jbp.DIGEST_TASK_NOTE in system and "up to 40 entries" in system
+        assert "up to 60 entries" in system
     # the judge reads the stage-2 digest: verbatim samples, counts capped at the layer counts
     raw = {s for r in _rows(items) for s in r["samples"]}
     for user in seen:
@@ -419,3 +422,58 @@ def test_cli_numbers_family_stays_v100(tmp_path, monkeypatch, real_families):
     assert "layered" not in r.config["prompt_version"]
     assert r.config["summarizer"]["layer_mode"] == "union"
     assert fake.n("layered") == 0 and fake.n("digest") > 0
+
+
+# ---------------------------------------------------------------- v1.1.1: x4 default budget
+
+
+def test_default_budget_is_x4_and_x2_is_the_v110_instrument(tmp_path, monkeypatch):
+    """v1.1.1: the layered stage 2 asks for 4x the single-layer budget by default (40 + 60 under
+    the defaults) and stamps -layered-v1x4; summ_layered_x=2 still selects the v1.1.0 budget and
+    its unsuffixed v1.1.0 instrument, so x4 and x2 caches / floors / results never mix."""
+    assert digest.DEFAULT_LAYERED_SCALE == 4 and digest.LAYERED_STAMP_BASE == 2
+    _items, path = _setup(tmp_path, monkeypatch)
+    f4 = FakeLLM.install(monkeypatch, _quiet)
+    r4 = jb.run(summary_args(path, tmp_path / "o", jbp.PROMPT_VERSION, extra=LAYERED))
+    sys4 = next(s for n, s, _u in f4.calls if n == "layered")
+    assert "up to 40 entries" in sys4 and "up to 60 entries" in sys4
+    assert r4.config["prompt_version"] == jbp.PROMPT_VERSION + V111
+    assert r4.config["summarizer"]["layered"]["scale"] == 4
+    f2 = FakeLLM.install(monkeypatch, _quiet)
+    r2 = jb.run(
+        summary_args(
+            path, tmp_path / "o", jbp.PROMPT_VERSION, extra={**LAYERED, "summ_layered_x": "2"}
+        )
+    )
+    sys2 = next(s for n, s, _u in f2.calls if n == "layered")
+    assert "up to 20 entries" in sys2 and "up to 30 entries" in sys2
+    assert r2.config["prompt_version"] == jbp.PROMPT_VERSION + V110
+    assert r2.config["summarizer"]["layered"]["scale"] == 2
+    # same out dir: the x2 run re-asks stage 2 and the judge (no x4 row served), stage 1 reused
+    assert f2.n("digest") == 0 and f2.n("layered") == len(_items)
+    assert f2.n("readout_recognition") == len(_items)
+    f4b = FakeLLM.install(monkeypatch, _quiet)
+    jb.run(summary_args(path, tmp_path / "o", jbp.PROMPT_VERSION, extra=LAYERED))
+    assert f4b.calls == []  # the x4 rows are untouched by the x2 run
+
+
+def test_explicit_x4_equals_the_default(tmp_path, monkeypatch):
+    """Under v1.1.1 code an explicit summ_layered_x=4 equals the default (same calls, stamp,
+    config). Parity with a v1.1.0 explicit-x4 run additionally rests on digest.py changing only the
+    default and the stamp base in v1.1.1, so the literals v1.1.0 produced are pinned here too:
+    stamp "-layered-v1x4", scale 4, budget 40 / 60."""
+    _items, path = _setup(tmp_path, monkeypatch)
+    fa = FakeLLM.install(monkeypatch, _quiet)
+    ra = jb.run(summary_args(path, tmp_path / "a", jbp.PROMPT_VERSION, extra=LAYERED))
+    fb = FakeLLM.install(monkeypatch, _quiet)
+    rb = jb.run(
+        summary_args(
+            path, tmp_path / "b", jbp.PROMPT_VERSION, extra={**LAYERED, "summ_layered_x": "4"}
+        )
+    )
+    assert fa.calls == fb.calls
+    assert ra.config["prompt_version"] == rb.config["prompt_version"] == jbp.PROMPT_VERSION + V111
+    assert ra.config["summarizer"]["layered"] == {"version": "layered-v1", "scale": 4}
+    sysa = next(s for n, s, _u in fa.calls if n == "layered")
+    assert "up to 40 entries" in sysa and "up to 60 entries" in sysa
+    assert ra.config["summarizer"] == rb.config["summarizer"]

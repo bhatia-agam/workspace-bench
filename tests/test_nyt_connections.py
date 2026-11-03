@@ -352,7 +352,7 @@ def test_quote_gate_uses_the_layered_stage2_evidence(tmp_path, monkeypatch):
     fake = FakeLLM.install(monkeypatch, _gold_judge())
     res = judge.run(_args(path, tmp_path, extra={"summ_layers": "layered", "keep_nyt_text": "1"}))
     assert fake.n("layered") == len(ids) and res.value == 1.0
-    assert "-layered-v1" in res.config["prompt_version"]
+    assert "-layered-v1x4+" in res.config["prompt_version"]  # v1.1.1 default budget x4
     for r in res.rows:  # each verified quote lies in the stage-2 digest's evidence lines
         ev = [digest.Line(text=t) for t in r["summary_evidence"]]
         assert r["summary_layered_input_tokens"] > 0 and digest.quote_ok(r["quote"], ev)
@@ -482,9 +482,13 @@ def _bar_inputs():
     pv = "nyt-mc-2026-11-02+digest-v5-task-extractive+sj-v10"
     config = {
         "aggregate": "summary",
-        "prompt_version": pv.replace("extractive+", "extractive-layered-v1+") + "+reads-lite",
+        "prompt_version": pv.replace("extractive+", "extractive-layered-v1x4+") + "+reads-lite",
         "judge_model": "claude-opus-5-5",
-        "summarizer": {**summ, "layer_mode": "layered", "layered": {"version": "layered-v1"}},
+        "summarizer": {
+            **summ,
+            "layer_mode": "layered",
+            "layered": {"version": "layered-v1", "scale": 4},
+        },
     }
     rows = [{"id": f"c0334|s{k}", "pass": k % 2 == 0} for k in range(6)] + [
         {"id": "c0434|s0", "pass": None}

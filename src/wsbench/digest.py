@@ -74,8 +74,13 @@ LAYER_MODES = ("union", "joint", "layered")
 DEFAULT_LAYER_MODE = "union"
 LAYERED_MODE = "layered"
 LAYERED_VERSION = "layered-v1"
-# summ_layered_x: the stage-2 budget as a multiple of the single-layer one (summ_max, summ_rare)
-DEFAULT_LAYERED_SCALE = 2
+# summ_layered_x: the stage-2 budget as a multiple of the single-layer one (summ_max, summ_rare).
+# v1.1.1 (Camila 2026-11-03, "4x is good"; the s3d budget sweep in final64/UNION_COMPARE.md): 4,
+# was 2. The stamp keys the multiple against the v1.1.0 base LAYERED_STAMP_BASE (2, unsuffixed),
+# so x2 keeps its v1.1.0 instrument and every other multiple, the x4 default included, is
+# stamped "-layered-v1x<k>": x4 caches, floors and results never mix with x2 ones.
+DEFAULT_LAYERED_SCALE = 4
+LAYERED_STAMP_BASE = 2
 # ``summ_store=<dir>``: the per-layer digest store shared by every layer config of one readouts
 # file (a ``layers=[L]`` run and any multi-layer union run of the same family). Each (item, layer)
 # digest is asked ONCE across those configs (``SharedDigests``); it changes no request, so it is
@@ -636,7 +641,7 @@ def prompt_version(pv: str, args: JudgeArgs, family: str | None = None) -> str:
     tail += "-joint" if s.layer_mode == "joint" and s.numbers == 0 else ""
     if s.layered:  # v1.1.0: the stage-2 layer-summary merge (its own digest + instrument tag)
         tail += f"-{LAYERED_VERSION}" + (
-            f"x{s.layered_scale}" if s.layered_scale != DEFAULT_LAYERED_SCALE else ""
+            f"x{s.layered_scale}" if s.layered_scale != LAYERED_STAMP_BASE else ""
         )
     # "-rankties": round 4 r2, support-ranked tie_cut (the first-five-in-order "-ties" rule is void)
     tail += f"-rankties{s.ties}" if s.numbers > 0 and s.ties > 0 else ""

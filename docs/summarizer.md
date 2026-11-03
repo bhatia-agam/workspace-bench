@@ -21,8 +21,8 @@ per-layer digests are merged into the one judged digest (see "Audit fixes" below
 - `DIGEST_PROMPT_VERSION = "digest-v5"`, `SUMMARY_JUDGE_VERSION = "sj-v10"`. A summary-mode
   result stamps `digest.prompt_version(<family PV>, args, family)`: under the defaults
   `<family PV>+digest-v5-task-extractive+sj-v10` (plus `-stride`
-  under the stride ablation, `-joint` under the `summ_layers=joint` ablation, `-layered-v1` under
-  `summ_layers=layered` (v1.1.0, the multi-layer default; see below), and `+reads-lite`
+  under the stride ablation, `-joint` under the `summ_layers=joint` ablation, `-layered-v1x4` under
+  `summ_layers=layered` (v1.1.0, the multi-layer default, budget x4 since v1.1.1; see below), and `+reads-lite`
   from `reads.stamp`). Family docs cite the
   function's output, never a literal.
 - **All readouts, always** (Camila: "the summarizer should always be fed ALL of the readouts").
@@ -179,7 +179,7 @@ per-layer digests are merged into the one judged digest (see "Audit fixes" below
   (`digest.RETIRED_REFUSAL_MODELS`, i.e. Sonnet 5) is re-asked, served by Sonnet 5.5 and
   re-judged, never silently reused. Server-side-served and unserved rows stay cached.
 
-## Layered all-layer digest (`summ_layers=layered`, v1.1.0, `layered-v1`)
+## Layered all-layer digest (`summ_layers=layered`, v1.1.0, `layered-v1`; budget x4 since v1.1.1)
 
 Camila 2026-11-02: "a single summary of the layer summaries for all evals, so one summarizer
 sees all readouts from a layer, and then another summarizer summarizes all the layer summaries
@@ -204,9 +204,17 @@ and this goes to the judge." The default for a multi-layer config since bench v1
   best-supported) counts. The count is the answer's own count capped at the members' summed
   counts and floored at their number of layers; the layers are their union. A stage 2 for an
   item `undecide_partial` would drop (refused layers > 20%) is never asked.
-- **Budget:** `summ_layered_x` (default 2) times the single-layer `summ_max` / `summ_rare`, i.e.
-  20 prominent + 30 rare entries under the defaults (50 + 50 for agentic_misalignment /
-  knowledge_cutoff). A non-default multiple is stamped (`-layered-v1x3`).
+- **Budget:** `summ_layered_x` (default **4** since v1.1.1, Camila 2026-11-03 "4x is good"; 2 in
+  v1.1.0) times the single-layer `summ_max` / `summ_rare`, i.e. 40 prominent + 60 rare entries
+  under the defaults (100 + 100 for agentic_misalignment / knowledge_cutoff). Why 4: on s3d-rl600
+  the x2 layered union scored below the v1.0 mechanical union on 13 of 25 families, with the big
+  drops in agentic_misalignment and the regex / multi-token families (multilingual_typo,
+  multilingual_multihop, conjunctive_association); x4 recovers them (13 -> 11 down, unjudged
+  unchanged), while x8 overflows the stage-2 call's 32k output cap (`MAX_TOKENS`) and leaves items
+  unsummarized (sweep: `final64/UNION_COMPARE.md`, "Stage-2 budget sweep"). The stamp keys the
+  multiple against the v1.1.0 base (`LAYERED_STAMP_BASE` = 2): x2 stays unsuffixed
+  (`-layered-v1`, the v1.1.0 instrument, still selectable with `summ_layered_x=2`), any other
+  multiple, the x4 default included, is `-layered-v1x<k>` (`-layered-v1x4`).
 - **Overflow:** a stage-2 input over the global cap (`DEFAULT_TOKEN_CAP` divided by the worst
   real/estimate token ratio `_UNCOUNTED_RATIO`, by estimate) is cut into
   contiguous layer ranges, each condensed by the same call (labelled `L<a>-L<b>`), and the range
@@ -222,10 +230,11 @@ and this goes to the judge." The default for a multi-layer config since bench v1
   from v1.0 (same instrument, same requests). The numbers digests (`chain_intermediates`,
   `arithmetic_intermediates`) keep their v1.0 all-layer path: their five-number budget is fixed
   by design (plan 0022 Part B) and their operand / consensus / tie passes act on the merged keys,
-  so a 2x stage-2 budget does not apply (`summ_layers=layered` with `summ_numbers > 0` exits 2).
+  so a multiplied stage-2 budget does not apply (`summ_layers=layered` with `summ_numbers > 0` exits 2).
   `jlens_concept_pr` is native-only.
-- **Stamps:** the instrument gains `-layered-v1` after the render tag
-  (`<PV>+digest-v5-task-extractive-layered-v1+sj-v10`) and `config.summarizer` carries
+- **Stamps:** the instrument gains `-layered-v1x4` after the render tag
+  (`<PV>+digest-v5-task-extractive-layered-v1x4+sj-v10` under the v1.1.1 default; `-layered-v1`
+  for `summ_layered_x=2`, the v1.1.0 default) and `config.summarizer` carries
   `layer_mode: "layered"` and `layered: {version, scale}`, so floors, freeze checks and judge
   caches never mix with a v1.0 union. Stage-2 calls are cached in the out dir under
   `layered:<id>|<layers>|d<depth>[|c<i>of<n>]` (never in `summ_store`); a row's

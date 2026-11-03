@@ -391,7 +391,8 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   undecided (never a fail), a row whose only shortfall is such refusals stays complete
   (`runner.refusals_only`), and `results` marks a row with > 20% undecided not measurable.
   Tests that drive the chunk machinery with multi-layer cells pin `summ_layers=joint`.
-  v1.1.0 `summ_layers=layered` (`docs/summarizer.md` § Layered): the per-layer digests, then
+  v1.1.0 `summ_layers=layered` (`docs/summarizer.md` § Layered; stage-2 budget `summ_layered_x`
+  default 4 since v1.1.1, stamped `-layered-v1x4`; `summ_layered_x=2` = the v1.1.0 `-layered-v1`): the per-layer digests, then
   ONE stage-2 call per item over them (`digest._layered_pass`, schema `DIGEST_SCHEMA`, grounded by
   `digest.layered_ground`). `runner.judge_family` makes it the default of a multi-layer CLI run
   (`digest.resolve_layer_mode`); a hand-built JudgeArgs and every single-layer run stay `union`,
