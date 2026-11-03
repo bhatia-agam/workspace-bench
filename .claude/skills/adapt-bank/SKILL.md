@@ -342,8 +342,8 @@ copy the 27B bank into `adapted/<m>/` for them: a missing family is reported, ne
 |---|---|---|
 | multihop_mt_v2 | its shortcut gate (no shortcut probe reaches the answer) is specific to the gated model | the answer + bridge legs fit `families.py` (`capable/questions.py` already asks them); add a must-NOT-reach leg type for `shortcut_probes` (global-workspace `multihop_v2/gate_modal.py`) |
 | wrong_bridge | the item is a specific Qwen error (it answers via the wrong bridge) | re-elicit the subject's own wrong-bridge errors; no adapt code |
-| knowledge_cutoff | a model-specific error gate (G0 / G1) | re-run that gate on the subject; its judge also exits under an adapted root that lacks its bank |
-| model_specific_directed_modulation | model-specific by design (G0 defaults + G1 text gate) | re-derive on the subject; no adapt code |
+| knowledge_cutoff | a model-specific error gate (G0 / G1) | `$A kcutoff $M [cutoff=YYYY-MM]` (plan 0060 Phase E): G0 re-run on the subject, G1 dropped, options / units rebuilt; then `freeze families=knowledge_cutoff`. nocot items not built (`references/families.md`) |
+| model_specific_directed_modulation | model-specific by design (G0 defaults + G1 text gate) | `$A msdm $M` (plan 0060 Phase E): the subject's own defaults (G0 + compliance), G1 dropped, options / units rebuilt; then `freeze families=model_specific_directed_modulation` |
 | introspection | injected concept vectors are the subject's own activations | rebuild vectors (`scripts/introspection_build_v2.py`, `introspection_export_vectors.py`) |
 | unverbalized_hint | retired (plan 0058); Qwen token positions | none |
 | typo | superseded by typo_mt (out of `all`) | stop refilling it; keep the frozen file only for old results |

@@ -18,6 +18,11 @@ carry     verify + copy jailbreak / multi_concept_dm to the subject [families=]
 floors    prompt-only floors: stock subject summaries, Claude judge   [stage=] [judge=]
 introspection  the subject's own vectors, dose, detection baseline  [stage=] [result=]
                [coherence=off] [llm=]
+msdm      model_specific_directed_modulation re-derived on the subject (plan 0060 Phase E)
+          [stage=elicit|canon|units|build|all] [llm=<claude id>|none] [limit=] [regate=] [pool=]
+kcutoff   knowledge_cutoff re-derived on the subject (plan 0060 Phase E)
+          [stage=elicit|canon|verify|units|build|all] [llm=] [cutoff=YYYY-MM] [limit=] [regate=]
+          [pool=]
 """
 
 import json
@@ -57,6 +62,9 @@ KEYS: dict[str, set[str]] = {
     "carry": {"families"},
     "floors": {"stage", "judge"},
     "introspection": {"stage", "result", "coherence", "llm"},
+    # plan 0060 Phase E: self-answer families re-derived on the subject
+    "msdm": {"stage", "llm", "limit", "regate", "pool"},
+    "kcutoff": {"stage", "llm", "cutoff", "limit", "regate", "pool"},
 }
 
 
@@ -121,6 +129,15 @@ def main(argv: list[str] | None = None) -> None:
 
         introspection.run(model, a.get("stage", "all"), a.get("result"),
                           a.get("coherence", "on"), a.get("llm", "claude-opus-5-5"))  # fmt: skip
+    elif cmd in ("msdm", "kcutoff"):  # plan 0060 Phase E
+        from . import kcutoff, msdm
+
+        mod = msdm if cmd == "msdm" else kcutoff
+        extra = {"cutoff": a["cutoff"]} if "cutoff" in a else {}
+        mod.run(model, a.get("stage", "all"), llm=a.get("llm", "claude-opus-5-5"),
+                limit=int(a.get("limit", 0)),
+                regate=a.get("regate", "").lower() in ("1", "true", "yes"),
+                pool=a.get("pool", "true").lower() in ("1", "true", "yes"), **extra)  # fmt: skip
     elif cmd == "auto":
         print(a["family"], run.auto(model, a["family"]))
     elif cmd == "note":

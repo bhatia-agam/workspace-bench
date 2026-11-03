@@ -310,6 +310,9 @@ REGENERATE = {
     "multi_concept_directed_modulation": "prefill render with the subject's template",
     "introspection": "the subject's own vectors, dose and detection baseline "
     "(`adapt introspection`)",
+    # plan 0060 Phase E: the gold is the subject's own answer (`adapt msdm` / `adapt kcutoff`)
+    "model_specific_directed_modulation": "the subject's own category defaults (`adapt msdm`)",
+    "knowledge_cutoff": "the subject's own consistent wrong answers (`adapt kcutoff`)",
 }
 
 
