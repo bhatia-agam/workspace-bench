@@ -99,8 +99,10 @@ MC_SEED = "wb-mc-adapt-2026-11-02"
 N_DISTRACTORS = 4
 READOUT = {"kind": "all_positions", "lite": {"kind": "final_token"}}
 
-# Item fields the subject's gate writes on an ``original`` row (plan 0060 A1.1 ``SUBJECT_FIELDS``):
-# freeze overlays them on the registered item. A ``generated`` row is all subject-built.
+# Item fields the subject's gate writes on an ``original`` row (plan 0060 A1.1 ``SUBJECT_FIELDS``);
+# this stage writes them into the row item, and freeze ships that row item verbatim (a family
+# outside ``families.FAMILIES``: no rebuild from the registered item). A ``generated`` row is all
+# subject-built.
 SUBJECT_FIELDS = ("evidence",)
 
 

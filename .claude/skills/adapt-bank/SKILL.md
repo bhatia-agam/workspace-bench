@@ -113,7 +113,9 @@ from `subjects.py`).
 `profile` (families limit regate llm draws temperature), `generate` (family tier n seed), `author`
 (family tier n steer wave), `gate` (families llm draws temperature regate), `regrade` (families llm
 workers), `auto` (family), `fill` (families llm waves), `freeze` (families), `note` (family status
-text exclude_from_macro), `drop` (family ids reason), `patch` (family id set note), `status`,
+text exclude_from_macro), `drop` (family ids reason), `patch` (family id set note), `status`, `native_langs` (stage langs evidence thinking: write or
+show `adapted/<m>/native_langs.json`, which `freeze` needs for the six multilingual / mt families;
+`stage=measure` is not implemented yet, plan 0060 A1.10),
 `moral` (stage step out limit), `agentic` (stage), `carry` (families), `floors` (stage judge).
 There is no `hal` subcommand: the hallucination family was removed (plan 0040; HallucinationBench
 is reported as an index, `evals/hallucinationbench/`).
@@ -236,8 +238,15 @@ For each family below its target count (the registered bank's size):
 
 ### 4. Freeze, verify, floors, audit
 `$A freeze model=<m> families=<the families built>` (never bare) writes `<family>.json` and
-`report.json`. It takes the header of the
-registered bank and the item payloads stored in the gate log. Then:
+`report.json`. It takes the header of the registered bank; every ORIGINAL is the registered item
+itself plus the subject-side overlays (own-answer gold, `gate_variant`, `families.SUBJECT_FIELDS`,
+token restamps), and original ids the registered bank lacks are never selected; new items are
+the gate-log payloads. It refuses (writing nothing) a family whose items lack
+`families.REQUIRED_ITEM_FIELDS`, whose originals lack their `SUBJECT_FIELDS`, or, for the six
+multilingual / mt families, a subject without `native_langs.json` (plan 0060 A1.1 / A1.10). It
+records `bank` / `bank_version` per family and writes `status: absent`, `exclude_from_macro`
+and a `note` (an existing note is kept) for every registered family the set lacks (A1.6).
+Then:
 - Eyeball 10 random new items per family in the viewer: is the latent the same kind as the
   originals, is the answer unambiguous, and did nothing leak?
 - `pytest tests/test_adapt.py`, then `WSB_BANK_ROOT=adapted/<m> wsbench plan out=<dir>` and every
@@ -252,16 +261,18 @@ registered bank and the item payloads stored in the gate log. Then:
     `WSB_BANK_ROOT=adapted/<m> wsbench baseline kind=prompt_only_opus stage=build|ask|readouts
     out=<dir>`, then `stage=fallback_ask|fallback_readouts src=<dir> out=<fb>`, judged with
     `wsbench run all=True readouts_root=<dir>/readouts out=<results dir> allow_missing=True`. **`stage=build`
-    hard-codes the Qwen3.6-27B tokenizer** (`baselines/prompt_only_opus.py:72`): for a non-Qwen
-    subject it must take the subject's tokenizer first (open item, plan 0060).
+    uses the subject's tokenizer** under `WSB_BANK_ROOT` (`report.json` `model`, via
+    `adapt.author.tokenizer`; plan 0060 A1.9).
   - *Stock-subject protocol* (secondary): `$A floors model=<m>` (the stock subject reads each
     prompt; native aggregate, one layer; each family's own judge on `claude-opus-5-5`). Not
     comparable with the bench protocol; label it.
-  - *Options-only*: `wsbench baseline kind=lucky_guessing` honours `WSB_BANK_ROOT` only for
-    association, conjunctive, role_bound, relational, moral and user_modeling (`bank_path`). The other
-    builders (directed_modulation, poetry, every multitoken family, basic_readout, multihop, MCDM,
-    chain) load `frozen_bank_path` and so measure the 27B bank's options, so don't report those as
-    an adapted floor (open item, plan 0060). The topic guesser reads `evals/baselines/topics/<family>.json`, keyed
+  - *Options-only*: `wsbench baseline kind=lucky_guessing` reads every family's options through
+    `bank_path`, so it honours `WSB_BANK_ROOT` (plan 0060 A1.9; knowledge_cutoff and wrong_bridge,
+    absent from the adapted sets, still read the registered bank).
+  - Under `WSB_BANK_ROOT`, `wsbench freeze` defaults `dst=` to `<root>/floors/<file>`, refuses a
+    `dst` under `evals/baselines/`, and merges the result into `floors/floors.json`, which keeps
+    one record per protocol (`protocol`, `prompt_version`, `judge`, `families`); `adapt floors
+    stage=judge` writes its own `stock-subject-v1` record the same way (plan 0060 A1.9). The topic guesser reads `evals/baselines/topics/<family>.json`, keyed
     by Qwen item ids, so adapted items have no topics, and `scripts/baselines/make_topics.py` writes
     `evals/`: the adapted topic floor is an open item (plan 0060).
   - `wsbench report` under `WSB_BANK_ROOT` still draws the frozen 27B floors (`cli.py`); read the
@@ -366,8 +377,7 @@ gw-olens' `adapt_mp_subject_modal.py` / `kimi_wsbench_modal.py` / `subject_*_mod
   `MODAL_ENVIRONMENT` (only Agam's env has it). Set `WSB_ANTHROPIC_AUTH=sdk` to use the
   Anthropic SDK's own credentials (`ANTHROPIC_PROFILE` / federation). `adapt_box.sh` runs `unset
   ANTHROPIC_API_KEY`, so an inline key does not survive it: call `python -m wsbench.adapt`
-  directly. `adapt floors stage=judge` always reads the Dict (`floors.py` `judge`) and fails off
-  that box until it honours `WSB_ANTHROPIC_AUTH` (open item, plan 0060).
+  directly. `adapt floors stage=judge` honours it too (plan 0060 A1.9).
 - **Per-subject Modal apps** (`scripts/adapt_modal.py`, plan 0060 A3). Each `backend="modal"`
   Subject names its app (`modal_app`) and how it is served: `modal_gpu` (fallbacks in order),
   `modal_tp`, `modal_engines` (TP engines per container, one per GPU set: DeepSeek-V4 = one

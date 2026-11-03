@@ -11,6 +11,8 @@ note      status + reason (+ macro exclusion)   family= [status=] [text=] [exclu
 drop      audited drop: ids leave the bank (reason recorded)  family= ids=a,b reason=
 patch     audited field fix on one item of the adapted copy   family= id= set='{json}' note=
 status    one line per family
+native_langs  the subject's native languages, which freeze needs   [stage=measure]
+          | langs=en,.. evidence= [thinking=off]
 moral     moral_rationale: elicit, distil, re-gate          [stage=]
 agentic   agentic_misalignment: rollouts, commitment judge, keep  [stage=]
 fill      author+gate an authored family until full / ooc       families= [waves=8]
@@ -60,6 +62,7 @@ KEYS: dict[str, set[str]] = {
     "drop": {"family", "ids", "reason"},
     "patch": {"family", "id", "set", "note"},
     "status": set(),
+    "native_langs": {"stage", "langs", "evidence", "thinking"},
     "moral": {"stage", "step", "out", "limit"},
     "agentic": {"stage"},
     "carry": {"families"},
@@ -168,6 +171,16 @@ def main(argv: list[str] | None = None) -> None:
     elif cmd == "freeze":
         run.freeze(model, names if families else None)
         run.status(model)
+    elif cmd == "native_langs":
+        from . import native_langs as nl
+
+        if a.get("stage") == "measure":
+            nl.measure(model, a.get("thinking", "off"))
+        elif "langs" in a:
+            langs = [x for x in a["langs"].split(",") if x]
+            print(nl.record(model, langs, a.get("evidence", ""), a.get("thinking", "off")))
+        else:
+            print(nl.load(model) or f"{model}: not measured ({nl.path(model)})")
     else:
         run.status(model)
 

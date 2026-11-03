@@ -123,12 +123,41 @@ def code_stamp() -> dict[str, str]:
     return {"git": git + ("+dirty" if dirty else ""), "adapt_sha256": h.hexdigest()[:16]}
 
 
+# freeze's automatic note for a registered family the set lacks (plan 0060 A1.6)
+ABSENT_NOTE = "absent: this set has no bank for the family (plan 0060 A1.6)"
+
+
+def clear_built_absent(model: str, report: dict[str, Any]) -> list[str]:
+    """Families whose bank is now on disk but whose entry still carries freeze's AUTOMATIC
+    absence (``absent_auto``, set only when freeze added the exclusion; or the automatic note
+    itself): the absence goes (``absent_auto``, ``exclude_from_macro``, the automatic note, an
+    ``absent`` status). A family built by any writer (freeze, carry, agentic, introspection)
+    rejoins the macro, also when a writer replaced the note in between; a hand-written note
+    is kept, and an exclusion freeze did not add is never touched. Returns them."""
+    root, out = model_dir(model), []
+    for fam, e in (report.get("families") or {}).items():
+        if not (e.get("absent_auto") or e.get("note") == ABSENT_NOTE):
+            continue
+        if not ((root / f"{fam}.json").exists() or (root / fam / "manifest.json").exists()):
+            continue
+        e.pop("absent_auto", None)
+        e.pop("exclude_from_macro", None)
+        if e.get("note") == ABSENT_NOTE:
+            e.pop("note")
+        if e.get("status") == "absent":
+            e.pop("status")
+        out.append(fam)
+    return out
+
+
 def update_report(model: str, mutate: Callable[[dict[str, Any]], Any]) -> dict[str, Any]:
-    """Locked read -> ``mutate(report)`` in place -> atomic write (stamped with ``code_stamp``).
-    Returns the new report."""
+    """Locked read -> ``mutate(report)`` in place -> stale automatic absences cleared
+    (``clear_built_absent``) -> atomic write (stamped with ``code_stamp``). Returns the new
+    report."""
     with report_lock(model):
         report = read_report(model)
         mutate(report)
+        clear_built_absent(model, report)
         report["code"] = code_stamp()
         write_json(model_dir(model) / "report.json", report)
         return report

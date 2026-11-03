@@ -482,8 +482,136 @@ def live_rows(model: str, family: str, report: dict | None = None) -> list[dict]
     return rows
 
 
+ABSENT_NOTE = store.ABSENT_NOTE
+_OPTIONAL_OVERLAY = ("gate_variant", "needs_reasons")  # subject-side, overlaid when present
+
+
+def get_path(item: Any, path: str) -> Any:
+    """``item["a"]["b"]`` for ``"a.b"``; a missing key is ``None``."""
+    cur = item
+    for part in path.split("."):
+        if not isinstance(cur, dict) or part not in cur:
+            return None
+        cur = cur[part]
+    return cur
+
+
+def has_path(item: Any, path: str) -> bool:
+    cur = item
+    for part in path.split("."):
+        if not isinstance(cur, dict) or part not in cur:
+            return False
+        cur = cur[part]
+    return True
+
+
+def bank_rel(family: str) -> str:
+    """The registered bank of record, repo-relative (``evals/association/items_v3.json``)."""
+    from wsbench.registry import REPO_ROOT, frozen_bank_path
+
+    return frozen_bank_path(family).relative_to(REPO_ROOT).as_posix()
+
+
+def bank_version(family: str) -> int:
+    """The registered bank's version: ``items_v<N>.json`` -> N, ``items.json`` -> 1."""
+    import re
+
+    m = re.search(r"items_v(\d+)\.json$", bank_rel(family))
+    return int(m.group(1)) if m else 1
+
+
+def registered_rows(rows: list[dict], reg_ids: set[str]) -> list[dict]:
+    """``rows`` minus the ``original`` rows whose id the registered bank no longer has (a retired
+    id never comes back through an old gate record)."""
+    return [r for r in rows if r["origin"] != "original" or r["id"] in reg_ids]
+
+
+def _bank_rows(model: str, family: str, originals: list[dict]) -> list[dict]:
+    return registered_rows(live_rows(model, family), {store.item_id(it) for it in originals})
+
+
+def build_original(family: str, reg_item: dict, row: dict, native: list[str] | None = None) -> dict:
+    """An ``original`` as shipped (plan 0060 A1.1): the REGISTERED item, never the gate-log
+    payload, with only the subject-side fields the gate produced laid over it: the own-answer
+    gold (``restamp``), ``gate_variant``, the family's ``SUBJECT_FIELDS`` and, when ``native``
+    (the subject's native languages, differing from the registered header's) is given, the
+    rebuilt native units (A1.10). Token restamps follow at freeze (``restamp_tokens``)."""
+    from . import native_langs as nl
+
+    it = copy.deepcopy(reg_item)
+    src = row["item"]
+    fam = fams.FAMILIES.get(family)
+    own = (fam is not None and fam.own) or (
+        family == "basic_readout" and it.get("subfamily") == "implicit"
+    )
+    if own and row["gate"].get("legs"):
+        it = restamp(family, it, row["gate"])
+    for key in _OPTIONAL_OVERLAY:
+        if key in src:
+            it[key] = copy.deepcopy(src[key])
+    for p in fams.SUBJECT_FIELDS.get(family, ()):
+        head, *rest = p.split(".")
+        if not rest:
+            it[head] = copy.deepcopy(src[head])
+            continue
+        cur = it.setdefault(head, {})
+        for part in rest[:-1]:
+            cur = cur.setdefault(part, {})
+        cur[rest[-1]] = copy.deepcopy(get_path(src, p))
+    if native is not None:
+        it = nl.overlay_native_units(family, it, src)
+    return it
+
+
+def _subject_fields_missing(row: dict, need: tuple[str, ...], model: str) -> bool:
+    """A passing original whose SUBJECT_FIELDS were not built on ``model`` (unmarked or
+    incomplete)."""
+    if not need or row["origin"] != "original" or not row["gate"]["pass"]:
+        return False
+    it = row["item"]
+    return it.get(fams.SUBJECT_MARKER) != model or not all(has_path(it, p) for p in need)
+
+
+def missing_required(family: str, items: list[dict]) -> list[str]:
+    """The ``REQUIRED_ITEM_FIELDS`` keys some item lacks (sorted)."""
+    need = fams.required_item_fields(family)
+    return sorted({p for it in items for p in need if not has_path(it, p)})
+
+
+def _present(root: Any, family: str) -> bool:
+    return (root / f"{family}.json").exists() or (root / family / "manifest.json").exists()
+
+
+def registered_families() -> list[str]:
+    """What ``all`` means: every registered family minus the superseded and retired ones."""
+    import importlib
+    import pkgutil
+
+    import wsbench.evals as evals_pkg
+    from wsbench import registry
+
+    specs = {}  # from each package's SPEC: the registry may have been emptied after import
+    for mod in pkgutil.iter_modules(evals_pkg.__path__):
+        spec = getattr(importlib.import_module(f"wsbench.evals.{mod.name}"), "SPEC", None)
+        if spec is not None:
+            specs[spec.name] = spec
+    return sorted(f for f, sp in specs.items()
+                  if not sp.superseded_by and f not in registry.RETIRED_FAMILIES)  # fmt: skip
+
+
 def freeze(model: str, families: list[str] | None = None) -> dict[str, Any]:
-    """Write ``adapted/<model>/<family>.json`` + ``report.json`` from the gate logs."""
+    """Write ``adapted/<model>/<family>.json`` + ``report.json`` from the gate logs.
+
+    Plan 0060 A1: every original is built from the REGISTERED item (``build_original``), and
+    only originals whose id the registered bank has are selected; a family whose originals lack
+    their ``SUBJECT_FIELDS``, whose items lack ``REQUIRED_ITEM_FIELDS``, or a multilingual family
+    without the subject's ``native_langs.json`` is refused (then nothing is written); each family
+    entry records ``bank`` / ``bank_version``; every registered family the set lacks is written
+    as ``absent`` (an existing note is kept)."""
+    from wsbench.banks import native_langs as header_native_langs
+
+    from . import native_langs as nl
+
     subject = get_subject(model)
     report = store.read_report(model)
     report.update({"model": model, "label": subject.label, "hf_id": subject.hf_id,
@@ -491,18 +619,59 @@ def freeze(model: str, families: list[str] | None = None) -> dict[str, Any]:
     report.setdefault("gate", {"rule": "greedy right AND >= 8/10 (10/10 chain)"})
     fam_reports = report.setdefault("families", {})
     root = store.model_dir(model)
+    refused: dict[str, str] = {}
+    banks: dict[str, Any] = {}
+    removed: dict[str, set[str]] = defaultdict(set)  # keys freeze took out of an entry
     for family in families or sorted(fams.FAMILIES):
         rows = live_rows(model, family, report)
         if not rows:
             continue
         header, originals = store.original_bank(family)
         header = copy.deepcopy(header)
+        reg = {store.item_id(it): it for it in originals}
+        rows = registered_rows(rows, set(reg))
         target = len(originals)
+        need = fams.SUBJECT_FIELDS.get(family, ())
+        # a profiled row is a copy of the registered item, so presence alone proves nothing: the
+        # step that builds the fields from the subject marks the item (fams.SUBJECT_MARKER)
+        unbuilt = [r["id"] for r in rows if _subject_fields_missing(r, need, model)]
+        if need and unbuilt:
+            refused[family] = (
+                f"{len(unbuilt)} passing originals lack the subject fields {list(need)} built "
+                f"on {model} (item `{fams.SUBJECT_MARKER}`); never shipped from the registered "
+                "item, which holds Qwen's (plan 0060 A2)"
+            )
+            continue
+        native = None
+        if family in nl.FAMILIES:  # A1.10: the subject's languages, never Qwen's
+            try:
+                langs = nl.langs_for_freeze(model)
+            except SystemExit as e:
+                refused[family] = str(e)
+                continue
+            if tuple(langs) != header_native_langs(header):
+                native = langs
+                if unbuilt := [r["id"] for r in rows if r["origin"] == "original"
+                               and r["gate"]["pass"]
+                               and nl.unbuilt(family, r["item"], reg[r["id"]], langs)]:  # fmt: skip
+                    refused[family] = (
+                        f"{len(unbuilt)} originals' native units not rebuilt for {langs} "
+                        f"(item `{nl.MARKER}`; plan 0060 A1.10, the A2 multilingual upgrader)"
+                    )
+                    continue
+            header.setdefault("contract", {})["native_langs"] = list(langs)
         chosen = select(family, rows, target, quotas(family, originals))
         items = []
         patches = (report.get("patches") or {}).get(family, {})
         for r in chosen:
-            it = copy.deepcopy(r["item"])
+            # copy-verbatim (the registered item + subject overlays) only for the families gated
+            # item by item here; a family with its own subject stage (knowledge_cutoff, msdm,
+            # wrong_bridge, multihop_mt_v2, ...: fams.REGENERATE) writes `original` rows whose
+            # item is ALREADY rebuilt on the subject (its gold, options, relabels), shipped as is
+            if r["origin"] == "original" and family in fams.FAMILIES:
+                it = build_original(family, reg[r["id"]], r, native)
+            else:
+                it = copy.deepcopy(r["item"])
             if (patch := patches.get(r["id"])) is not None:  # audited fixes, recorded with a note
                 it.update(copy.deepcopy(patch.get("set", {})))
                 it.setdefault("adapt", {})["patch"] = patch.get("note", "")
@@ -520,6 +689,9 @@ def freeze(model: str, families: list[str] | None = None) -> dict[str, Any]:
                 print(f"{family}: blocked ({e})")
                 continue
             notes += more
+        if missing := missing_required(family, items):
+            refused[family] = f"items lack {missing} (REQUIRED_ITEM_FIELDS; plan 0060 §1 / A2)"
+            continue
         bank: Any = items
         if header:
             bank = {
@@ -527,9 +699,12 @@ def freeze(model: str, families: list[str] | None = None) -> dict[str, Any]:
                 "adapt": {"model": model, "hf_id": subject.hf_id, "frozen": str(dt.date.today())},
                 "items": items,
             }
-        store.write_json(root / f"{family}.json", bank)
+        banks[family] = bank
         n_orig_pass = sum(r["gate"]["pass"] for r in rows if r["origin"] == "original")
         entry = fam_reports.setdefault(family, {})
+        if entry.get("status") == "absent":  # built now (the rest: store.clear_built_absent)
+            entry.pop("status")
+            removed[family].add("status")
         entry.update(
             {
                 "target": target,
@@ -539,6 +714,8 @@ def freeze(model: str, families: list[str] | None = None) -> dict[str, Any]:
                 "n_items": len(items),
                 "n_new": sum(r["origin"] != "original" for r in chosen),
                 "n_candidates_gated": sum(r["origin"] != "original" for r in rows),
+                "bank": bank_rel(family),
+                "bank_version": bank_version(family),
             }
         )
         entry["change"] = describe(family, originals, items)  # measured, not the tier menu
@@ -551,12 +728,28 @@ def freeze(model: str, families: list[str] | None = None) -> dict[str, Any]:
             # ooc / blocked set by `auto`, `fill` or `note` are kept; short with no refill ever
             # attempted is `untried`, not `partial` (skill audit)
             entry["status"] = "partial" if tried else "untried"
+    if refused:  # nothing is written: a refused family never ships a half-built bank
+        lines = "\n".join(f"  {f}: {w}" for f, w in sorted(refused.items()))
+        raise SystemExit(f"freeze refused:\n{lines}")
+    for family, bank in banks.items():
+        store.write_json(root / f"{family}.json", bank)
+    absent = [f for f in registered_families() if not _present(root, f)]
 
     def _merge(fresh: dict) -> None:  # computed entries into a fresh read: drops / patches /
         for k in ("model", "label", "hf_id", "n_layers", "read_band", "gate"):  # notes kept
             fresh[k] = report[k]
+        fams_out = fresh.setdefault("families", {})
         for fam, e in fam_reports.items():
-            fresh.setdefault("families", {}).setdefault(fam, {}).update(e)
+            fams_out.setdefault(fam, {}).update(e)
+            for k in removed.get(fam, ()):
+                if k not in e:
+                    fams_out[fam].pop(k, None)
+        for fam in absent:  # A1.6: explicit and out of the macro, unless a hand note says why
+            e = fams_out.setdefault(fam, {})
+            if e.get("status") in (None, "absent"):
+                e["status"] = "absent"
+            if "note" not in e:  # automatic: marked so it is cleared once the family is built
+                e.update(note=ABSENT_NOTE, exclude_from_macro=True, absent_auto=True)
 
     return store.update_report(model, _merge)
 
@@ -611,7 +804,7 @@ def auto(model: str, family: str, runner=None, max_waves: int = 6, **kw: Any) ->
     for t_i, tier in enumerate(gen.tiers):
         tried = passed = 0
         for wave in range(max_waves):
-            rows = live_rows(model, family)
+            rows = _bank_rows(model, family, originals)
             chosen = select(family, rows, target, quota)
             have = len(chosen)
             short = sorted(deficits(family, chosen, quota)) if quota else None
@@ -633,7 +826,7 @@ def auto(model: str, family: str, runner=None, max_waves: int = 6, **kw: Any) ->
                 break
             # yield in BANK units: an item whose twin or scene partner failed adds nothing, so a
             # pair family's wave size and its out-of-capability call use what actually lands
-            rows = live_rows(model, family)
+            rows = _bank_rows(model, family, originals)
             gained = len(select(family, rows, target, quota)) - have
             tried += len(new)
             passed += gained
@@ -704,7 +897,7 @@ def regrade(model: str, families: list[str], llm: str, workers: int = 16) -> Non
         print(f"{family:28s} pass {before} -> {after} of {len(rows)} (cache {len(grade.cache)})")
 
 
-STATUSES = ("full", "partial", "untried", "ooc", "blocked")
+STATUSES = ("full", "partial", "untried", "ooc", "blocked", "absent")
 
 
 def note(model: str, family: str, status: str | None = None, text: str | None = None,
@@ -723,6 +916,7 @@ def note(model: str, family: str, status: str | None = None, text: str | None = 
             entry["note"] = text
         if exclude_from_macro is not None:
             entry["exclude_from_macro"] = exclude_from_macro
+            entry.pop("absent_auto", None)  # a deliberate exclusion: never cleared automatically
 
     store.update_report(model, _set)
 
@@ -801,7 +995,7 @@ def fill(model: str, family: str, llm: str | None = "claude-opus-5-5", max_waves
     t_i, low, steer, status, tried, landed, wave = 0, 0, "", "partial", 0, 0, 0
     yield_est = 0.4
     while wave < max_waves:
-        have = len(select(family, live_rows(model, family), target, quota))
+        have = len(select(family, _bank_rows(model, family, originals), target, quota))
         if have >= target:
             status = "full"
             break
@@ -812,7 +1006,7 @@ def fill(model: str, family: str, llm: str | None = "claude-opus-5-5", max_waves
         write(model, family, tiers[t_i], n, steer=steer, wave=100 + wave)
         lint_and_gate(model, family, runner, DEFAULT_DRAWS, None, _llm(llm))
         new = set(store.gated(model, family)) - before
-        gained = len(select(family, live_rows(model, family), target, quota))
+        gained = len(select(family, _bank_rows(model, family, originals), target, quota))
         gained -= have
         tried, landed = tried + len(new), landed + max(0, gained)  # at the CURRENT tier only
         yield_est = max(gained, 0) / max(1, len(new))

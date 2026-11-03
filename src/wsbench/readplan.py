@@ -546,6 +546,10 @@ def _multihop() -> list[ReadSpec]:
 # families whose plan layers an adapted bank stores itself (none since plan 0032: buggy_code and
 # multi_concept_directed_modulation read GRID like every other family, remapped by depth)
 BANK_LAYERS: set[str] = set()
+# families whose LITE layers come from the bank header (buggy_code: ``read_cells[...].layer``, the
+# judge's layer of record). adapt freeze already remaps those cells to the subject's depth, so
+# plan() must not remap them again (plan 0060 A1.8); their full rows are remapped as usual.
+LITE_BANK_LAYERS: frozenset[str] = frozenset({"buggy_code"})
 
 
 def _subject_layers() -> int | None:
@@ -622,8 +626,14 @@ def plan(family: str, *, layers: LayersArg = None, reads: str = "full") -> list[
         def remap(xs: list[int] | None) -> list[int] | None:
             return None if xs is None else remap_layers([int(x) for x in xs], n, band)
 
+        lite_done = family in LITE_BANK_LAYERS  # already in the subject's layers (A1.8)
         specs = [
-            replace(s, layers=remap(s.layers), lite_layers=remap(s.lite_layers)) for s in specs
+            replace(
+                s,
+                layers=remap(s.layers),
+                lite_layers=s.lite_layers if lite_done else remap(s.lite_layers),
+            )
+            for s in specs
         ]
     if layers is not None:  # an explicit layer set: lite keeps its layers that are read
         specs = [

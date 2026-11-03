@@ -56,8 +56,10 @@ MAX_NEW, CTX_MAX_NEW = 24, 32
 # superseded recall probes (gate_modal.py): one-to-many out of context; G4ctx_b2 replaces them
 SUPERSEDED = ("G4_prefix_b2", "G2_b2_from_b1")
 
-# Item fields the subject gate writes (plan 0060 A1.1 ``SUBJECT_FIELDS``): freeze must overlay
-# these on the registered item. A relabel rewrites every role-keyed field.
+# Item fields the subject gate writes (plan 0060 A1.1 ``SUBJECT_FIELDS``); this stage writes them
+# into the row item, and freeze ships that row item verbatim (a family outside
+# ``families.FAMILIES``: no rebuild from the registered item). A relabel rewrites every role-keyed
+# field.
 SUBJECT_FIELDS = (
     "subfamily",
     "relabeled_from",

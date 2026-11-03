@@ -60,6 +60,26 @@ def last_site(positions: list[int], n_tokens: int) -> int:
     return max(positions, key=lambda p: p % n_tokens)
 
 
+def subject_tokenizer() -> Any:
+    """Under ``$WSB_BANK_ROOT`` (an adapted set): the subject's own tokenizer and chat template
+    (``adapt.author.tokenizer`` of ``report.json`` ``model``; plan 0060 A1.9); else None (the
+    registered banks: Qwen3.6-27B's)."""
+    import os
+
+    from wsbench.registry import BANK_ROOT_ENV, REPO_ROOT
+
+    root = os.environ.get(BANK_ROOT_ENV)
+    if not root:
+        return None
+    base = Path(root) if Path(root).is_absolute() else REPO_ROOT / root
+    model = json.loads((base / "report.json").read_text(encoding="utf-8")).get("model")
+    if not model:
+        raise SystemExit(f"{base / 'report.json'} names no model; re-run adapt freeze")
+    from wsbench.adapt.author import tokenizer
+
+    return tokenizer(model)
+
+
 def build(out: Path, fams: Iterable[str] | None = None, limit: int = 0) -> Path:
     """``out/prompts.jsonl``: one row per plan row id of every family (all ids, not only the
     ATI-scored ones), the render decoded through its last ``reads=full`` site. Tokenizer only."""
@@ -69,7 +89,9 @@ def build(out: Path, fams: Iterable[str] | None = None, limit: int = 0) -> Path:
     from wsbench.produce.producer import _positions
     from wsbench.produce.render import render
 
-    tok = AutoTokenizer.from_pretrained("Qwen/Qwen3.6-27B")
+    tok = subject_tokenizer()
+    if tok is None:  # the registered banks: the 27B's tokenizer, as before
+        tok = AutoTokenizer.from_pretrained("Qwen/Qwen3.6-27B")
     out.mkdir(parents=True, exist_ok=True)
     path = out / "prompts.jsonl"
     n_bad = 0

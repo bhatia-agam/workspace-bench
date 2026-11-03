@@ -25,6 +25,8 @@ TEMPLATE = (
 EXCLUDED = {"multi_concept_directed_modulation", "directed_modulation", "jlens_concept_pr",
             "jailbreak_recognition"}  # fmt: skip
 MAX_POS, MAX_NEW = 32, 256
+PROTOCOL = "stock-subject-v1"  # this module's floor: the stock subject reads the prompt
+LEGACY_PROTOCOL = "stock-subject (legacy, pre-summary-mode)"  # an unlabelled floors.json record
 
 
 def _dir(model: str) -> Path:
@@ -84,13 +86,16 @@ def generate(model: str) -> None:
 
 def judge(model: str, judge_model: str = "claude-opus-5-5") -> dict:
     """Each family's own judge at the one layer the summaries were written to (any layer is the
-    same: the rows are replicated). Needs ANTHROPIC_AUTH_TOKEN (the keyless OAuth token)."""
-    from .auth import read_token
+    same: the rows are replicated). Auth: the keyless OAuth token from the Modal Dict, or, with
+    ``WSB_ANTHROPIC_AUTH=sdk`` (off Agam's box, plan 0060 A1.9), the environment's own
+    credentials passed through untouched."""
+    env = {**os.environ, "WSB_BANK_ROOT": str(store.model_dir(model))}
+    if os.environ.get("WSB_ANTHROPIC_AUTH") != "sdk":
+        from .auth import read_token
 
-    token, _pushed = read_token()
-    env = {**os.environ, "WSB_BANK_ROOT": str(store.model_dir(model)),
-           "ANTHROPIC_AUTH_TOKEN": token or ""}  # fmt: skip
-    env.pop("ANTHROPIC_API_KEY", None)
+        token, _pushed = read_token()
+        env["ANTHROPIC_AUTH_TOKEN"] = token or ""
+        env.pop("ANTHROPIC_API_KEY", None)
     out, rd = {}, _dir(model) / "readouts"
     only = _only()
     for f in sorted(p.stem for p in rd.glob("*.jsonl") if not only or p.stem in only):
@@ -114,16 +119,48 @@ def judge(model: str, judge_model: str = "claude-opus-5-5") -> dict:
                   "layer": layer, "judge_model": cfg.get("judge_model") or judge_model,
                   "n_items": res.get("n_items"), "counts": res.get("counts"),
                   "complete": res.get("complete"),
+                  "prompt_version": cfg.get("prompt_version"),
                   "aggregate": cfg.get("aggregate") or "native"}  # fmt: skip
-    if only and (_dir(model) / "floors.json").exists():  # partial re-measure: keep the others
-        prev = json.loads((_dir(model) / "floors.json").read_text())
+    if only:  # partial re-measure: keep this protocol's other families
+        prev = read_floors(_dir(model)).get("protocols", {}).get(PROTOCOL, {})
         out = {**prev.get("families", {}), **out}
-    rec = {"reader": f"stock {model} (the subject itself), prompt-only template, T=1.0, "
+    rec = {"protocol": PROTOCOL,
+           "reader": f"stock {model} (the subject itself), prompt-only template, T=1.0, "
                      f"{MAX_NEW} new tokens, <= {MAX_POS} positions per item",
-           "judge": judge_model, "families": out}  # fmt: skip
-    store.write_json(_dir(model) / "floors.json", rec)
+           "judge": judge_model,
+           "prompt_version": {f: v.get("prompt_version") for f, v in out.items()},
+           "families": out}  # fmt: skip
+    merge_record(_dir(model), rec)
     print(json.dumps({f: v.get("rate") for f, v in out.items()}, indent=1))
     return rec
+
+
+def read_floors(floors_dir: Path) -> dict:
+    """``floors.json`` as ``{"protocols": {protocol: record}}``; the pre-0060 single-record file
+    (``reader`` / ``judge`` / ``families``) is read as one legacy record."""
+    path = floors_dir / "floors.json"
+    if not path.exists():
+        return {"protocols": {}}
+    cur = json.loads(path.read_text(encoding="utf-8"))
+    if "protocols" in cur:
+        return cur
+    if "families" in cur:
+        proto = cur.get("protocol") or LEGACY_PROTOCOL
+        return {"protocols": {proto: {**cur, "protocol": proto}}}
+    return {"protocols": {}}
+
+
+def merge_record(floors_dir: Path, record: dict) -> dict:
+    """Write ``record`` into ``floors.json`` as ITS protocol's one record, keeping every other
+    protocol's (plan 0060 A1.9: the bench and stock-subject floors live side by side). Each
+    record names its ``protocol``, ``prompt_version`` and ``judge``."""
+    for k in ("protocol", "prompt_version", "judge"):
+        if k not in record:
+            raise ValueError(f"floors record without {k!r}")
+    cur = read_floors(floors_dir)
+    cur["protocols"][record["protocol"]] = record
+    store.write_json(floors_dir / "floors.json", cur)
+    return cur
 
 
 def run(model: str, stage: str = "all", judge_model: str = "claude-opus-5-5") -> None:

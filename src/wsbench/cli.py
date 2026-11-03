@@ -1106,15 +1106,21 @@ class Freeze(Command):
         self.source = _path(self.source) if self.source else None
 
     def execute(self) -> int:
+        # plan 0060 A1.9: under $WSB_BANK_ROOT (an adapted set) the floors default to
+        # <root>/floors/<the same file name>, never evals/baselines/, and are merged into
+        # <root>/floors/floors.json as their protocol's record
+        root = _adapted_root()
         try:
             if self.kind == "lucky_guessing":
-                dst = self.dst or lucky_guessing.FROZEN
+                dst = self.dst or _floor_dst(root, lucky_guessing.FROZEN)
+                _refuse_bank_of_record(root, dst)
                 src = self.src or Path("outputs/baselines/lucky_guessing")
                 frozen = lucky_guessing.freeze(src, dst)
             elif self.kind == "prompt_only":
                 src = self.src or Path("outputs/prompt-only")
                 # a summary-mode run freezes into prompt_only_summary.json (plan 0024)
-                dst = self.dst or prompt_only.default_dst(src)
+                dst = self.dst or _floor_dst(root, prompt_only.default_dst(src))
+                _refuse_bank_of_record(root, dst)
                 frozen = prompt_only.freeze(src, dst, source=self.source)
             else:
                 print(
@@ -1126,7 +1132,57 @@ class Freeze(Command):
             print(str(e), file=sys.stderr)
             return EXIT_USAGE
         print(f"froze {sorted(k for k in frozen if not k.startswith('_'))} -> {dst}")
+        if root is not None:
+            from wsbench.adapt.floors import merge_record
+
+            merge_record(root / "floors", _floor_record(self.kind, frozen, Path(dst)))
+            print(f"merged into {root / 'floors' / 'floors.json'}")
         return 0
+
+
+def _adapted_root() -> Path | None:
+    """``$WSB_BANK_ROOT`` as a path, or None for the registered banks."""
+    from wsbench.registry import BANK_ROOT_ENV, REPO_ROOT
+
+    raw = os.environ.get(BANK_ROOT_ENV)
+    if not raw:
+        return None
+    return Path(raw) if Path(raw).is_absolute() else REPO_ROOT / raw
+
+
+def _floor_dst(root: Path | None, default: Path) -> Path:
+    return default if root is None else root / "floors" / default.name
+
+
+def _refuse_bank_of_record(root: Path | None, dst: Path) -> None:
+    """An adapted run never writes ``evals/baselines/`` (plan 0060 A1.9)."""
+    from wsbench.registry import REPO_ROOT
+
+    base = (REPO_ROOT / "evals" / "baselines").resolve()
+    if root is not None and Path(dst).resolve().is_relative_to(base):
+        raise ValueError(f"freeze: dst={dst} is the bank of record; an adapted run "
+                         f"(WSB_BANK_ROOT={root}) writes {root / 'floors'}")  # fmt: skip
+
+
+def _floor_record(kind: str, frozen: dict[str, Any], dst: Path) -> dict[str, Any]:
+    """One ``floors.json`` record (protocol, prompt_version, judge, families) from a freeze."""
+    fams = {k: v for k, v in frozen.items() if not k.startswith("_") and isinstance(v, dict)}
+    if kind == "prompt_only":
+        src = frozen.get("_source") if isinstance(frozen.get("_source"), dict) else {}
+        # no protocol stamped (a stock-subject run): the frozen file names it, so two such runs
+        # (native / summary) keep separate records
+        protocol = str(src.get("protocol") or f"prompt_only:{dst.stem}")
+        pv = {f: e.get("instrument") for f, e in fams.items()}
+        judges = {e.get("judge_model") for e in fams.values()}
+    else:  # lucky_guessing: {family: {variant: entry}}
+        protocol = "lucky_guessing"
+        pv = {f: {v: e.get("instrument") for v, e in vs.items() if isinstance(e, dict)}
+              for f, vs in fams.items()}  # fmt: skip
+        judges = {e.get("judge_model") or e.get("guesser") for vs in fams.values()
+                  for e in vs.values() if isinstance(e, dict)}  # fmt: skip
+    judge = sorted(str(j) for j in judges if j)
+    return {"protocol": protocol, "prompt_version": pv,
+            "judge": judge[0] if len(judge) == 1 else judge, "families": fams}  # fmt: skip
 
 
 class TextInversion(Command):
