@@ -116,7 +116,11 @@ from `subjects.py`).
 workers), `auto` (family), `fill` (families llm waves), `freeze` (families), `note` (family status
 text exclude_from_macro), `drop` (family ids reason), `patch` (family id set note), `status`, `native_langs` (stage langs evidence thinking: write or
 show `adapted/<m>/native_langs.json`, which `freeze` needs for the six multilingual / mt families;
-`stage=measure` is not implemented yet, plan 0060 A1.10),
+`stage=measure [thinking=on|off] [readouts=<J-lens readouts dir>]` runs plan 0054 R6: the
+thinking trace (default on for a subject with `thinking_mode`) plus the J-lens (token lens)
+readout criterion, Camila 2026-11-03; `stage=readouts readouts=<dir>` adds the latter to a
+measured record; a Chinese-lab subject is not measured: `langs=en,zh evidence="Chinese-lab
+model: en+zh assumed (Camila 2026-11-03)"`, gating.md §0),
 `moral` (stage step out limit), `agentic` (stage), `carry` (families), `floors` (stage judge).
 There is no `hal` subcommand: the hallucination family was removed (plan 0040; HallucinationBench
 is reported as an index, `evals/hallucinationbench/`).

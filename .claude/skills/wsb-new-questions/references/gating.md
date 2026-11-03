@@ -15,18 +15,33 @@ intermediate "in English or the model's native language").
 
 - **Sample** the subject with **thinking ON**, T=1.0, K=4, on 30 prompts of the family plus 20
   neutral English prompts (50 prompts, 200 thoughts).
-- **Readouts:** if a prose reader exists for the subject, also take 10 read sites of its
-  readouts (all samples at those sites).
+- **Readouts (Camila's decision, 2026-11-03): J-lens (token lens) readouts.** If the subject
+  has a J-lens, take 10 read sites of its J-lens readouts (every layer's top-10 tokens at each
+  site). The reader is the J-lens, NOT a prose reader (O-lens / NLA / s3d): on Qwen3.6-27B the
+  thinking traces hold ~0% Chinese letters and its O-lens rl-onchat-x4 readouts ~0% Chinese,
+  while its J-lens top-10 hold 11-36% Chinese per family; that is where "qwen thinks in
+  chinese" comes from. A subject with no J-lens uses the trace criterion alone, recorded as such.
 - **Measure:** the share of thought LETTERS per language (script detection by
-  `unicodedata` script name; CJK split zh / ja by `langid` on the run) and the share of readout
-  samples per language.
+  `unicodedata` script name; Han split zh / ja per run of CJK text: a run with kana is ``ja``;
+  a family trace's letters in its prompt's own non-Latin L2 script, i.e. the quoted passage,
+  are left out)
+  and the share of J-lens top-10 tokens per language (each token decoded with the subject's
+  tokenizer and assigned the script holding most of its letters; tokens without letters and
+  tokens in the item's own non-Latin L2 script are left out).
 - **Rule:** a language is native when it holds at least **10%** of thought letters or at least
-  **10%** of readout samples. English always counts. Record the model card's stated languages
-  beside the measurement, but the measurement decides.
+  **10%** of the J-lens tokens. English always counts. Record the model card's stated languages
+  beside the measurement, but the measurement decides. `wsbench.adapt native_langs`
+  (`stage=measure [readouts=<J-lens dir>]`, or `stage=readouts` to add the J-lens later)
+  implements this and records both criteria and which one made each language native
+  (`native_by`). A subject without a thinking mode is measured thinking off (response letters).
 - **Record** the list in the bank header as `contract.native_langs` (ISO 639-1 codes, English
   first). Readers use `wsbench.banks.native_langs(header)`, which defaults to `("en", "zh")` for
   the frozen Qwen3.6-27B banks. Nothing hard-codes "zh" or "Chinese".
 - Re-run per subject model; never copy another model's list. Qwen3.6-27B: `["en", "zh"]`.
+- **Exception, Chinese-lab models (Camila, 2026-11-03): no measurement.** A model from a Chinese
+  lab (Qwen, GLM / Zhipu, DeepSeek, Kimi / Moonshot, ...) is taken as `["en", "zh"]`: record it
+  with `python -m wsbench.adapt native_langs <m> langs=en,zh evidence="Chinese-lab model: en+zh
+  assumed (Camila 2026-11-03), not measured"`. Measure every other subject as above.
 - `scripts/validate_bank.py` errors on a new multi-token bank whose `contract` lacks
   `native_langs`.
 

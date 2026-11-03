@@ -1201,6 +1201,11 @@ Tests (`tests/test_readouts.py`):
   `langid`) or at least 10% of readout samples are in it. English always counts. Record the
   model card's stated languages beside the measurement, but the measurement decides. Re-run per
   subject model; never copy another model's list. Qwen3.6-27B: `["en", "zh"]`.
+  **2026-11-03 (Camila): the "readouts" are the subject's J-lens (token lens) readouts, not a
+  prose reader:** 10 read sites, share of J-lens top-10 tokens per language, >= 10%. On
+  Qwen3.6-27B the thinking traces and the O-lens readouts hold ~0% Chinese; the J-lens holds
+  25% at the 10 sites, which gives `["en", "zh"]`. A subject with no J-lens uses the trace alone
+  (`wsbench.adapt.native_langs`, plan 0060).
 - **Field:** bank header `contract.native_langs` (ISO codes, English first). multilingual.md's
   top-level `native_languages` is replaced by this field.
 - **Reader:** `banks.native_langs(header) -> tuple[str, ...]`, default `("en", "zh")` for the

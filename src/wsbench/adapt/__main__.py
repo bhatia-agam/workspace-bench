@@ -12,7 +12,10 @@ note      status + reason (+ macro exclusion)   family= [status=] [text=] [exclu
 drop      audited drop: ids leave the bank (reason recorded)  family= ids=a,b reason=
 patch     audited field fix on one item of the adapted copy   family= id= set='{json}' note=
 status    one line per family
-native_langs  the subject's native languages, which freeze needs   [stage=measure card=en,..]
+native_langs  the subject's native languages, which freeze needs   [stage=measure card=en,..
+          thinking=on|off (default: on with a thinking mode, plan 0054 R6's trace measure)
+          readouts=<J-lens readouts dir> (the readout criterion; none = trace only)]
+          | stage=readouts readouts=<dir> (add the J-lens criterion to a measured record)
           | langs=en,.. evidence= [thinking=off] | stage=upgrade [families=] (A1.10 / A2 rebuild)
 moral     moral_rationale: elicit, distil, re-gate          [stage=]
           v3 on a subject: stage=rekey_readrender step=<s> [variant=system_one_word] [out=],
@@ -73,7 +76,7 @@ KEYS: dict[str, set[str]] = {
     "drop": {"family", "ids", "reason"},
     "patch": {"family", "id", "set", "note"},
     "status": set(),
-    "native_langs": {"stage", "langs", "evidence", "thinking", "families", "card"},
+    "native_langs": {"stage", "langs", "evidence", "thinking", "families", "card", "readouts"},
     "moral": {"stage", "step", "out", "limit", "variant", "bank"},
     "poetry": {"stage", "regate"},
     "agentic": {"stage", "twins"},
@@ -213,14 +216,17 @@ def main(argv: list[str] | None = None) -> None:
 
         if a.get("stage") == "measure":
             card = [x for x in a.get("card", "").split(",") if x] or None
-            print(nl.measure(model, a.get("thinking", "off"), card_langs=card))
+            print(nl.measure(model, a.get("thinking"), card_langs=card,  # None: default_thinking
+                             readouts=a.get("readouts")))  # fmt: skip
+        elif a.get("stage") == "readouts":  # the J-lens criterion added to a measured record
+            print(nl.add_readouts(model, a["readouts"]))
         elif a.get("stage") == "upgrade":  # plan 0060 A2: the multilingual rows, rebuilt
             from . import ml_native
 
             ml_native.upgrade(model, [f for f in families.split(",") if f] or None)
         elif "langs" in a:
             langs = [x for x in a["langs"].split(",") if x]
-            print(nl.record(model, langs, a.get("evidence", ""), a.get("thinking", "off")))
+            print(nl.record(model, langs, a.get("evidence", ""), a.get("thinking")))
         else:
             print(nl.load(model) or f"{model}: not measured ({nl.path(model)})")
     elif cmd == "freeze":

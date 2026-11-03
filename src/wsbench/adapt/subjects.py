@@ -64,6 +64,15 @@ class Subject:
     # plan 0060 D8: arithmetic has no pre-registered cell on this subject (its render has no
     # counterpart of the Qwen cell's token); freeze drops cell.pos and the judge reads every cell
     arith_all_positions: bool = False
+    # the subject has a native thinking mode (a reasoning trace before the answer), verified on
+    # its own template (``template.think_markers`` delimits a trace; tests/
+    # test_native_langs_thinking.py). Only ``native_langs.measure`` ever renders it (plan 0054 R6
+    # measures the TRACE; its default is thinking on for such a subject). Every gating render
+    # stays thinking off (``template.check``).
+    thinking_mode: bool = False
+    # the chat template file for that thinking-on measurement render; None = the tokenizer's own
+    # (hub) template, NOT ``chat_template`` (a pinned thinking-OFF render: GLM-5.3, Muse)
+    thinking_template: str | None = None
 
 
 SUBJECTS: dict[str, Subject] = {
@@ -76,6 +85,7 @@ SUBJECTS: dict[str, Subject] = {
             24,
             "qwen3.6",
             "2fc06364715b967f1860aea9cf38778875588b17",
+            thinking_mode=True,  # hub template: enable_thinking opens <think>
         ),
         Subject(
             "qwen3.5-2b",
@@ -84,6 +94,7 @@ SUBJECTS: dict[str, Subject] = {
             24,
             "qwen3.6",
             "15852e8c16360a2fea060d615a32b45270f8a8fc",
+            thinking_mode=True,  # hub template: enable_thinking opens <think>
         ),
         Subject(
             "qwen3.5-4b",
@@ -92,6 +103,7 @@ SUBJECTS: dict[str, Subject] = {
             32,
             "qwen3.6",
             "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+            thinking_mode=True,  # hub template: enable_thinking opens <think>
         ),
         Subject(
             "qwen3.5-9b",
@@ -102,6 +114,7 @@ SUBJECTS: dict[str, Subject] = {
             "c202236235762e1c871ad0ccb60c8ee5ba337b9a",
             gpu_memory_utilization=0.93,
             enforce_eager=True,
+            thinking_mode=True,  # hub template: enable_thinking opens <think>
         ),
         Subject(
             "olmo-3-7b",
@@ -119,6 +132,7 @@ SUBJECTS: dict[str, Subject] = {
             "gemma4",
             "842da3794eaa0b77d5f08bae87a17459d91ff475",
             backend="modal",
+            thinking_mode=True,  # enable_thinking: the model opens <|channel>thought
         ),
         # OLens subjects added 2026-10-18 (hub main that day); Modal so sets build in parallel
         # with the box queue. Tokenizer keys: "qwen3" = Qwen3's 151k vocab (not the 3.6 one).
@@ -131,6 +145,7 @@ SUBJECTS: dict[str, Subject] = {
             "b968826d9c46dd6066d109eabc6255188de91218",
             backend="modal",
             read_band=tuple(range(12, 35, 2)),
+            thinking_mode=True,  # enable_thinking: the model opens <think> itself
         ),  # its OLens reads even layers 12..34
         Subject(
             "olmo-3.1-32b",
@@ -149,6 +164,7 @@ SUBJECTS: dict[str, Subject] = {
             "qwen3.6",
             "995ad96eacd98c81ed38be0c5b274b04031597b0",
             backend="modal",
+            thinking_mode=True,  # hub template: enable_thinking opens <think>
         ),
         # normal-bank OLens subjects (>= 32B, 2026-10-23): gated + re-golded on the 27B bank only.
         # model-parallel HF generation on Modal: gw-olens scripts/ola/port/adapt_mp_subject_modal.py
@@ -186,6 +202,7 @@ SUBJECTS: dict[str, Subject] = {
             tokenizer_dir="/workspace/agam/hf_tok/glm-5.3-flash",
             # gw-olens' template: the upstream one always opens <think>
             chat_template="/workspace/agam/hf_tok/glm-5.3-flash/glm5_chat_nothink.jinja",
+            thinking_mode=True,  # the upstream template always opens <think> (see above)
         ),
         # GLM-5.3 non-Flash (plan 0060 D1): the glm53 lens work's checkpoint, 754B MoE, d 6144.
         # Thinking off = its template at reasoning_effort=low with the <think></think> closed
@@ -216,6 +233,7 @@ SUBJECTS: dict[str, Subject] = {
                 ("model_loader_extra_config", {"enable_multithread_load": True, "num_threads": 64}),
                 ("kernel_config", {"moe_backend": "marlin"}),
             ),
+            thinking_mode=True,  # the hub template always opens <think> (effort Max)
         ),
         # plan 0060 A3 (2026-11-03). No Jinja template ships: the pinned one reproduces
         # encode_messages(thinking_mode="chat") = <bos><|User|>...<|Assistant|></think> (fullwidth
@@ -243,6 +261,9 @@ SUBJECTS: dict[str, Subject] = {
             modal_weights="hf/hub/models--deepseek-ai--DeepSeek-V4-Flash/snapshots/"
             "60d8d70770c6776ff598c94bb586a859a38244f1",
             modal_engine=(("moe_backend", "marlin"), ("generation_config", "vllm")),
+            # encoding_dsv4 thinking_mode="thinking"; no Jinja template renders it yet, so
+            # native_langs thinking=on refuses until a thinking_template is pinned
+            thinking_mode=True,
         ),
         # plan 0060 new subjects (2026-11-03; every pin = hub main that day). No J-lens for any
         # of the three yet: read_band=() (depth remap, no snap) until one is fitted.
@@ -269,6 +290,7 @@ SUBJECTS: dict[str, Subject] = {
             modal_weights="hf/hub/models--deepseek-ai--DeepSeek-V4-Pro-0813/snapshots/"
             "72e1d3230f6c080a530b0a1d46f8eb4602340597",
             modal_engine=(("moe_backend", "marlin"), ("generation_config", "vllm")),
+            thinking_mode=True,  # as Flash: no thinking render pinned yet
         ),
         # Kimi-K3: the remote-code tokenizer overrides apply_chat_template with an XTML render
         # (encoding_k3.py), switched by ``thinking`` (enable_thinking is ignored). thinking=False
@@ -302,6 +324,7 @@ SUBJECTS: dict[str, Subject] = {
                 ("language_model_only", True),
                 ("gpu_memory_utilization", 0.95),
             ),
+            thinking_mode=True,  # thinking=True opens <|open|>think<|sep|>
         ),
         # Muse-Spark-Open (816B-A42B, NVFP4; gated, the local HF token has access). No native
         # thinking-off mode: the pinned data/templates/muse_spark_nothink.jinja is the upstream
@@ -324,6 +347,9 @@ SUBJECTS: dict[str, Subject] = {
             modal_image="muse",
             modal_volume="muse-spark",
             modal_weights="hf/meta-models__Muse-Spark-Open-816B-A42B-NVFP4",
+            # no thinking-off mode at all (the pinned template forces the answer channel): its
+            # hub template reasons in the to=self channel, which think_markers delimits
+            thinking_mode=True,
         ),
     ]
 }

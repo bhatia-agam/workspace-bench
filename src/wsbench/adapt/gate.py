@@ -378,7 +378,11 @@ def gate_record(legs: dict[str, Leg]) -> dict[str, Any]:
 
 class Runner:
     """vLLM over the subject's HF weights. Thinking is always off: the banks' latents are the ones
-    computed without a written chain of thought."""
+    computed without a written chain of thought. The one exception is ``thinking`` = True, set
+    only by ``run._runner(measure_thinking=True)`` for the native-language measurement (plan
+    0054 R6 reads the reasoning TRACE); no gate ever runs on such a runner."""
+
+    thinking: bool = False  # chat renders with enable_thinking=True (native_langs.measure only)
 
     def __init__(
         self,
@@ -424,7 +428,7 @@ class Runner:
                 list(ask.messages),
                 tokenize=False,
                 add_generation_prompt=True,
-                enable_thinking=False,
+                enable_thinking=self.thinking,
             )
             return text + ask.prefill
         from .template import bos_prefix
@@ -448,14 +452,23 @@ class Runner:
         return b[: len(a)] == a
 
     def sample(
-        self, asks: list[Ask], draws: int, temperature: float, top_p: float = 1.0, top_k: int = -1
+        self,
+        asks: list[Ask],
+        draws: int,
+        temperature: float,
+        top_p: float = 1.0,
+        top_k: int = -1,
+        stop_token_ids: list[int] | None = None,
     ) -> list[tuple[str, list[str]]]:
         """``top_k`` -1 = off (vLLM's default); a bank whose gate fixed one (basic_readout_mt v4:
-        20) passes it."""
+        20) passes it. ``stop_token_ids``: extra ids ending every draw (native_langs: the trace's
+        closing token)."""
         from vllm import SamplingParams
 
+        stop = stop_token_ids or None
         prompts = [self.render(a) for a in asks]
-        greedy_p = [SamplingParams(temperature=0.0, max_tokens=a.max_tokens) for a in asks]
+        greedy_p = [SamplingParams(temperature=0.0, max_tokens=a.max_tokens, stop_token_ids=stop)
+                    for a in asks]  # fmt: skip
         sample_p = [
             SamplingParams(
                 n=draws,
@@ -464,6 +477,7 @@ class Runner:
                 top_k=top_k,
                 max_tokens=a.max_tokens,
                 seed=self.seed + i,
+                stop_token_ids=stop,
             )
             for i, a in enumerate(asks)
         ]
@@ -612,7 +626,7 @@ class RemoteRunner(Runner):
 
     def _template_ids(self, messages: list) -> list[int]:
         out = self.tok.apply_chat_template(messages, tokenize=True, add_generation_prompt=True,
-                                           enable_thinking=False)  # fmt: skip
+                                           enable_thinking=self.thinking)  # fmt: skip
         return list(out["input_ids"] if hasattr(out, "keys") else out)
 
     def prompt_ids(self, ask: Ask) -> list[int]:
@@ -663,15 +677,22 @@ class RemoteRunner(Runner):
         return [method.remote(*a) for a in args]
 
     def sample(
-        self, asks: list[Ask], draws: int, temperature: float, top_p: float = 1.0, top_k: int = -1
+        self,
+        asks: list[Ask],
+        draws: int,
+        temperature: float,
+        top_p: float = 1.0,
+        top_k: int = -1,
+        stop_token_ids: list[int] | None = None,
     ) -> list[tuple[str, list[str]]]:
         prompts = [self.prompt_ids(a) for a in asks]
         n = self.CHUNK
-        # top_k (and the reply_stop ids) travel only when set, so an app deployed before they
-        # existed still serves the rest. reply_stop: the engine stops on the marker TOKEN (K3's
-        # <|close|> 163588), so a reply that writes "<|close|>" as text is never cut
-        extra = ((top_k, self.reply_stop) if self.reply_stop else
-                 (top_k,) if top_k != -1 else ())  # fmt: skip
+        # top_k (and the stop ids) travel only when set, so an app deployed before they existed
+        # still serves the rest. reply_stop: the engine stops on the marker TOKEN (K3's
+        # <|close|> 163588), so a reply that writes "<|close|>" as text is never cut;
+        # stop_token_ids (native_langs: the trace's closing token) join it
+        stops = sorted({*self.reply_stop, *(stop_token_ids or [])})
+        extra = ((top_k, stops) if stops else (top_k,) if top_k != -1 else ())  # fmt: skip
         args = [(prompts[i : i + n], [a.max_tokens for a in asks[i : i + n]], draws, temperature,
                  top_p, self.seed + i, *extra) for i in range(0, len(prompts), n)]  # fmt: skip
         return [r for part in self._calls(self.remote.sample, args) for r in part]

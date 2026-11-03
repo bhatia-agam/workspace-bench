@@ -109,6 +109,77 @@ def check(tok: Any) -> list[str]:
     return problems
 
 
+THINK_SENTINEL = "ZQXTHOUGHTXQZ"
+
+
+def think_markers(tok: Any) -> dict[str, Any]:
+    """The subject's reasoning-trace delimiters, read off its own THINKING-ON render (no literals
+    in code). Used ONLY by the native-language measurement (plan 0054 R6, ``native_langs``);
+    no gating render ever thinks (``check``).
+
+    A one-turn conversation rendered with the generation prompt (``enable_thinking=True``) is
+    compared with the same conversation plus an assistant turn holding ``reasoning_content`` =
+    a sentinel trace and ``content`` = a sentinel reply. Returns:
+
+    - ``open``: what the MODEL writes to open its trace ("" when the generation prompt already
+      opens it: Qwen3.5/3.6 ``<think>\\n``, GLM ``<think>``, Kimi-K3 ``<|open|>think<|sep|>``;
+      Qwen3-8B ``<think>\\n``, Gemma-4 ``<|channel>thought\\n`` otherwise);
+    - ``close``: the template's text between the trace and the reply, whitespace-stripped
+      (``</think>``, ``<channel|>``, ``<|close|>think<|sep|><|open|>response<|sep|>``);
+    - ``stop_id``: the close's first token when it is one added token (the engine stops there,
+      so the sample is the trace alone even when decoding drops special tokens), else None;
+    - ``cut``: that token's text (else ``close``), where a decoded sample's trace ends;
+    - ``open_visible``: ``open`` as decoding with ``skip_special_tokens`` leaves it (Gemma-4:
+      ``thought\\n``), so a sample whose special tokens were dropped still parses.
+
+    Raises ValueError when the template renders no trace (no thinking mode: OLMo, Kimi-K2) or its
+    generation prompt is not a prefix of the reasoning render."""
+    user = [{"role": "user", "content": SENTINEL}]
+    gen = tok.apply_chat_template(user, tokenize=False, add_generation_prompt=True,
+                                  enable_thinking=True)  # fmt: skip
+    conv = [*user, {"role": "assistant", "content": REPLY_SENTINEL,
+                    "reasoning_content": THINK_SENTINEL}]  # fmt: skip
+    full = tok.apply_chat_template(conv, tokenize=False, add_generation_prompt=False,
+                                   enable_thinking=True)  # fmt: skip
+    if THINK_SENTINEL not in full or REPLY_SENTINEL not in full:
+        raise ValueError("template: no reasoning trace in the thinking-on render (no thinking "
+                         "mode)")  # fmt: skip
+    head = gen[gen.index(SENTINEL) :]
+    t0 = full.index(THINK_SENTINEL)
+    pre = full[full.index(SENTINEL) : t0]
+    close = full[t0 + len(THINK_SENTINEL) : full.index(REPLY_SENTINEL)].strip()
+    if not pre.startswith(head.rstrip()):
+        raise ValueError(f"template: generation prompt {head!r} is not a prefix of the reasoning "
+                         f"render {pre!r}")  # fmt: skip
+    if not close:
+        raise ValueError("template: nothing closes the reasoning trace")
+    opener = pre[len(head) :] if pre.startswith(head) else pre[len(head.rstrip()) :]
+    ids = list(tok(close, add_special_tokens=False)["input_ids"])
+    added = {int(i) for i in getattr(tok, "added_tokens_decoder", {}) or {}}
+    added |= set(getattr(tok, "all_special_ids", []) or [])
+    stop_id = ids[0] if ids and ids[0] in added else None
+    cut = tok.decode([stop_id], skip_special_tokens=False) if stop_id is not None else close
+    vis = (tok.decode(list(tok(opener, add_special_tokens=False)["input_ids"]),
+                      skip_special_tokens=True) if opener.strip() else "")  # fmt: skip
+    return {"open": opener, "close": close, "stop_id": stop_id, "cut": cut, "open_visible": vis}
+
+
+def check_thinking(tok: Any) -> list[str]:
+    """The native-language measurement's OWN render check (plan 0054 R6): turn markers derivable
+    and a reasoning trace delimitable (``think_markers``). It replaces ``check`` for that one
+    render path only (``run._runner(measure_thinking=True)``): a thinking render is exactly what
+    ``check`` refuses, and every gating render keeps ``check``."""
+    try:
+        markers(tok)
+    except (ValueError, StopIteration, IndexError) as e:
+        return [f"turn markers not derivable from the render: {e!r}"]
+    try:
+        think_markers(tok)
+    except Exception as e:  # a template without a thinking render: any failure
+        return [f"no delimitable reasoning trace in the thinking-on render: {e!r}"]
+    return []
+
+
 def system_rule(tok: Any) -> str:
     """How the subject renders a system turn ahead of the first user turn: ``"marker"`` = inside
     its own role-marked turn (ChatML ``<|im_start|>system``, Gemma, GLM, Kimi); ``"bare"`` = the

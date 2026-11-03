@@ -56,9 +56,13 @@ not cover (see the modal_script.py docstring).
 0. read      evals/<family>/README.md and references/families.md#<family>
 0b. native   determine the subject model's NATIVE LANGUAGES in addition to English
              (references/gating.md §0: thinking on, T=1.0, K=4, 30 family prompts + 20
-             neutral English prompts, plus 10 read sites of a prose reader when one exists; a
-             language is native at >= 10% of thought letters or >= 10% of readout samples;
-             English always counts; the measurement decides, not the model card). Record it in
+             neutral English prompts, plus 10 read sites of the subject's J-LENS (token lens)
+             readouts when it has a J-lens (Camila 2026-11-03: the J-lens, not a prose reader);
+             a language is native at >= 10% of thought letters or >= 10% of the J-lens top-10
+             tokens; English always counts; the measurement decides, not the model card;
+             `python -m wsbench.adapt native_langs <m> stage=measure readouts=<J-lens dir>`
+             runs both and records which criterion made each language native; a Chinese-lab
+             model is not measured: it is ["en", "zh"], Camila 2026-11-03). Record it in
              the bank header as `contract.native_langs` (ISO codes, English first; Qwen3.6-27B:
              ["en", "zh"]). Re-measure per subject; never copy another model's list. Every
              "English or the model's native language" rule reads it (`banks.native_langs`).

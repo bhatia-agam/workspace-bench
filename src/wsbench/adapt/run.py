@@ -114,21 +114,41 @@ def _gate_rows(model: str, family: str, items: list[dict], runner, draws, temper
     return rows
 
 
-def _runner(model: str):
+def _runner(model: str, *, measure_thinking: bool = False, max_model_len: int | None = None):
+    """The subject's runner, gated by ``template.check`` (never a thinking render).
+
+    ``measure_thinking=True`` is the ONE exemption, for ``native_langs.measure`` (plan 0054 R6
+    reads the reasoning trace): the runner renders with thinking on, through
+    ``Subject.thinking_template`` (None = the tokenizer's own template, not the pinned
+    thinking-off ``chat_template``), and passes ``template.check_thinking`` instead of ``check``.
+    ``max_model_len`` overrides the subject's (a trace needs more room than a gate answer)."""
     from .gate import RemoteRunner, Runner
-    from .template import check
+    from .template import check, check_thinking
 
     s = get_subject(model)
+    if measure_thinking and not s.thinking_mode:
+        raise SystemExit(f"{model}: no thinking mode (Subject.thinking_mode=False)")
+    mml = max_model_len or s.max_model_len
+    template = s.thinking_template if measure_thinking else s.chat_template
     # ADAPT_BACKEND=modal sends a box-sized subject to Modal too (box GPU busy); pair it with its
     # own ADAPT_GPU_LOCK so it does not queue behind the 4090
     if os.environ.get("ADAPT_BACKEND", s.backend) == "modal":  # generation on Modal, rest local
-        r = RemoteRunner(s.hf_id, revision=s.revision, max_model_len=s.max_model_len,
+        r = RemoteRunner(s.hf_id, revision=s.revision, max_model_len=mml,
                          modal_app=s.modal_app, tokenizer_dir=s.tokenizer_dir,
-                         chat_template=s.chat_template)  # fmt: skip
+                         chat_template=template)  # fmt: skip
     else:
-        r = Runner(s.hf_id, revision=s.revision, max_model_len=s.max_model_len,
+        r = Runner(s.hf_id, revision=s.revision, max_model_len=mml,
                    gpu_memory_utilization=s.gpu_memory_utilization,
                    enforce_eager=s.enforce_eager)  # fmt: skip
+        if measure_thinking and template:  # the box runner keeps vLLM's template otherwise
+            from pathlib import Path
+
+            r.tok.chat_template = Path(template).read_text()
+    if measure_thinking:  # the measurement's own render path; gating renders never get here
+        if problems := check_thinking(r.tok):
+            raise SystemExit(f"{model}: thinking render check failed: " + "; ".join(problems))
+        r.thinking = True
+        return r
     if problems := check(r.tok):  # step 0: never gate through a template that thinks or breaks
         raise SystemExit(f"{model}: template check failed: " + "; ".join(problems))
     return r
