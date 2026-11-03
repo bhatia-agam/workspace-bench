@@ -26,6 +26,21 @@ class Subject:
     tokenizer_dir: str | None = None  # local tokenizer files when the hub id needs remote code
     chat_template: str | None = None  # a template file replacing the tokenizer's own
     trust_remote_code: bool = False  # the hub tokenizer is remote code (Kimi's tiktoken)
+    # the chat-template kwarg that turns thinking on/off. Every adapt render passes
+    # ``enable_thinking``; ``load_tokenizer`` renames it to this for a template that spells it
+    # differently (Kimi-K3's remote-code apply_chat_template takes ``thinking`` and silently
+    # ignores enable_thinking, so the render would open a think block at thinking_effort=max)
+    thinking_kwarg: str = "enable_thinking"
+    # the one-token marker that ends a reply when the engine does not stop on it by itself:
+    # RemoteRunner makes the engine stop on that TOKEN id (a reply that writes the same string as
+    # BPE text is untouched). Kimi-K3: "<|close|>" (163588) closes the response channel; vLLM
+    # stops only at <|end_of_msg|>, after "<|close|>response<|sep|><|close|>message<|sep|>"
+    reply_end: str | None = None
+    # RemoteRunner takes prompt ids from apply_chat_template(tokenize=True) instead of
+    # re-encoding the rendered text (``gate.RemoteRunner.prompt_ids``). Kimi-K3: its template
+    # encodes message content with specials disallowed, so re-encoding the text would turn a
+    # literal "<|close|>" in a message into a control token
+    template_ids: bool = False
     # backend="modal": how scripts/adapt_modal.py builds the subject's app (``modal_spec``). The
     # defaults are the shared app's: one H200, the hub cache volume, the stock vLLM image.
     modal_gpu: tuple[str, ...] = ("H200",)  # Modal GPU spec(s); more than one = fallback order
@@ -34,7 +49,7 @@ class Subject:
     # vLLM engines per container, one per GPU at TP=modal_tp: DeepSeek-V4-Flash is one B300:8
     # running 8 TP=1 engines (gen_vllm_modal.py; Camila's rule "always 8xB300"), not 8 containers
     modal_engines: int = 1
-    modal_image: str = "default"  # the image recipe in scripts/adapt_modal.py: default|glm53|dsv4
+    modal_image: str = "default"  # recipe in scripts/adapt_modal.py: default|glm53|dsv4|muse
     modal_volume: str = "adapt-hf-cache"  # mounted at the recipe's mount point
     modal_weights: str | None = None  # a checkpoint dir inside the volume; None = the hub id
     # False = its modal_app is not built by scripts/adapt_modal.py (an Agam-only text app that
@@ -224,6 +239,87 @@ SUBJECTS: dict[str, Subject] = {
             "60d8d70770c6776ff598c94bb586a859a38244f1",
             modal_engine=(("moe_backend", "marlin"), ("generation_config", "vllm")),
         ),
+        # plan 0060 new subjects (2026-11-03; every pin = hub main that day). No J-lens for any
+        # of the three yet: read_band=() (depth remap, no snap) until one is fitted.
+        # DeepSeek-V4-Pro-0813: Flash's tokenizer files byte for byte; its encoding_dsv4.py
+        # differs from Flash's only in thinking-mode reasoning-effort prompts, so the chat-mode
+        # render (Flash's pinned template) is identical (tests/test_adapt_new_subjects.py).
+        # arithmetic per D8, as Flash: the render ends <|Assistant|></think>. Served as ONE
+        # TP8 engine on B300:8 (not Flash's 8 TP=1 engines), the dsv4 image, volume v4-pro.
+        Subject(
+            "deepseek-v4-pro",
+            "deepseek-ai/DeepSeek-V4-Pro-0813",
+            "DeepSeek-V4-Pro-0813",
+            61,
+            "dsv4",
+            "72e1d3230f6c080a530b0a1d46f8eb4602340597",
+            backend="modal",
+            modal_app="adapt-v4-pro",
+            chat_template=str(TEMPLATES / "deepseek_v4_chat.jinja"),
+            arith_all_positions=True,
+            modal_gpu=("B300:8",),
+            modal_tp=8,
+            modal_image="dsv4",
+            modal_volume="v4-pro",
+            modal_weights="hf/hub/models--deepseek-ai--DeepSeek-V4-Pro-0813/snapshots/"
+            "72e1d3230f6c080a530b0a1d46f8eb4602340597",
+            modal_engine=(("moe_backend", "marlin"), ("generation_config", "vllm")),
+        ),
+        # Kimi-K3: the remote-code tokenizer overrides apply_chat_template with an XTML render
+        # (encoding_k3.py), switched by ``thinking`` (enable_thinking is ignored). thinking=False
+        # drops the think channel: the generation prompt opens the response channel directly,
+        # <|open|>message role="assistant"<|sep|><|open|>response<|sep|> (no think block to
+        # close, no thinking-effort system message). Replies end "<|close|>response<|sep|>
+        # <|close|>message<|sep|><|end_of_msg|>"; the XTML markers are not special tokens, so
+        # reply_end stops the engine on the <|close|> token; template_ids keeps literal markers
+        # in content plain text. Default image (vLLM 0.31.0, tiktoken), TP8 on
+        # B300:8; weights on volume kimi-k3 (mounted at /hf: the snapshot is /hf/hf/hub/...).
+        Subject(
+            "kimi-k3",
+            "moonshotai/Kimi-K3",
+            "Kimi-K3",
+            93,
+            "kimi3",
+            "f831ab66814297da540d832a5235f8e904f29d06",
+            backend="modal",
+            modal_app="adapt-kimi-k3",
+            trust_remote_code=True,
+            thinking_kwarg="thinking",
+            reply_end="<|close|>",
+            template_ids=True,
+            modal_gpu=("B300:8",),
+            modal_tp=8,
+            modal_volume="kimi-k3",
+            modal_weights="hf/hub/models--moonshotai--Kimi-K3/snapshots/"
+            "f831ab66814297da540d832a5235f8e904f29d06",
+            modal_engine=(
+                ("trust_remote_code", True),
+                ("language_model_only", True),
+                ("gpu_memory_utilization", 0.95),
+            ),
+        ),
+        # Muse-Spark-Open (816B-A42B, NVFP4; gated, the local HF token has access). No native
+        # thinking-off mode: the pinned data/templates/muse_spark_nothink.jinja is the upstream
+        # template at reasoning_effort=low, current_date 2026-11-03 (deterministic) and the
+        # generation prompt <|start|>assistant to=user<|message|> (the answer channel, not
+        # to=self reasoning). Stops: generation_config.json eos [200001, 200008] (<|eot|>).
+        # The "muse" image (vLLM 0.33.0); weights on volume muse-spark as a plain snapshot dir.
+        Subject(
+            "muse-spark-open",
+            "meta-models/Muse-Spark-Open-816B-A42B-NVFP4",
+            "Muse-Spark-Open-816B-A42B (NVFP4)",
+            62,
+            "muse",
+            "4239e4db19376904f2e82c167e78f70abb5455fe",
+            backend="modal",
+            modal_app="adapt-muse-spark-open",
+            chat_template=str(TEMPLATES / "muse_spark_nothink.jinja"),
+            modal_gpu=("B300:8", "B200:8"),
+            modal_tp=8,
+            modal_image="muse",
+            modal_volume="muse-spark",
+            modal_weights="hf/meta-models__Muse-Spark-Open-816B-A42B-NVFP4",
+        ),
     ]
 }
 
@@ -266,9 +362,12 @@ def load_tokenizer(
     tokenizer_dir: str | None = None,
     chat_template: str | None = None,
     trust_remote_code: bool = False,
+    thinking_kwarg: str | None = None,
 ) -> Any:
     """The subject's tokenizer: local ``tokenizer_dir`` files, else the hub id at ``revision``;
-    ``chat_template`` (a file) replaces the tokenizer's own template either way."""
+    ``chat_template`` (a file) replaces the tokenizer's own template either way.
+    ``thinking_kwarg`` (None = the registered Subject's, else ``enable_thinking``): the kwarg
+    ``apply_chat_template`` receives in place of ``enable_thinking`` (``rename_thinking``)."""
     from transformers import AutoTokenizer
 
     if tokenizer_dir:
@@ -284,6 +383,27 @@ def load_tokenizer(
         )
     if chat_template:
         tok.chat_template = Path(chat_template).read_text()
+    if thinking_kwarg is None:
+        s = subject_for(hf_id, revision)
+        thinking_kwarg = s.thinking_kwarg if s else "enable_thinking"
+    return rename_thinking(tok, thinking_kwarg)
+
+
+def rename_thinking(tok: Any, kwarg: str) -> Any:
+    """``tok`` whose ``apply_chat_template`` passes ``enable_thinking`` on as ``kwarg``: every
+    adapt render (gate, template checks, read plan, carry, introspection) keeps saying
+    ``enable_thinking=False`` and reaches a template that spells the switch differently.
+    Unchanged (the same object, unwrapped) for ``enable_thinking``."""
+    if kwarg == "enable_thinking":
+        return tok
+    apply = tok.apply_chat_template
+
+    def apply_chat_template(conversation: Any, *args: Any, **kw: Any) -> Any:
+        if "enable_thinking" in kw:
+            kw[kwarg] = kw.pop("enable_thinking")
+        return apply(conversation, *args, **kw)
+
+    tok.apply_chat_template = apply_chat_template
     return tok
 
 

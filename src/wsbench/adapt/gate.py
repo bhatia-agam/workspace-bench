@@ -433,12 +433,18 @@ class Runner:
             self._bos = self.tok.decode(bos_prefix(self.tok), skip_special_tokens=False)
         return self._bos + (ask.prompt or "")
 
-    def token_prefix(self, head: str, full: str) -> bool:
-        """``full``'s token ids start with ``head``'s (both tokenized as ``RemoteRunner.encode``
-        does, without added specials): BPE can merge across the join (Qwen: the generation
-        prompt's ``\n\n`` and a reply's leading ``\n``)."""
-        a = list(self.tok(head, add_special_tokens=False)["input_ids"])
-        b = list(self.tok(full, add_special_tokens=False)["input_ids"])
+    def prompt(self, ask: Ask) -> str | list[int]:
+        """What ``generate`` is given for ``ask``: the rendered text here (vLLM tokenizes it);
+        ``RemoteRunner`` gives the token ids (``prompt_ids``)."""
+        return self.render(ask)
+
+    def token_prefix(self, head: str | list[int], full: str | list[int]) -> bool:
+        """``full``'s token ids start with ``head``'s (text tokenized as ``RemoteRunner.encode``
+        does, without added specials; token ids, from ``prompt``, as they are): BPE can merge
+        across the join (Qwen: the generation prompt's ``\n\n`` and a reply's leading ``\n``)."""
+        a, b = (x if isinstance(x, list) else self.tok(x, add_special_tokens=False)["input_ids"]
+                for x in (head, full))  # fmt: skip
+        a, b = list(a), list(b)
         return b[: len(a)] == a
 
     def sample(
@@ -531,6 +537,9 @@ class RemoteRunner(Runner):
     ``[gMASK]<sop>``) is never doubled by the engine's own tokenization."""
 
     CHUNK = 512  # prompts per remote call (bounded payloads; the seed offset is the chunk start)
+    # per-subject settings (``__init__`` sets them; defaults for a runner built without it)
+    template_ids: bool = False
+    reply_stop: tuple[int, ...] | list[int] = ()
 
     def __init__(
         self,
@@ -563,9 +572,11 @@ class RemoteRunner(Runner):
         if trust_remote_code is None:
             trust_remote_code = s.trust_remote_code
         self.replicas = replicas or s.modal_replicas
+        self.template_ids = s.template_ids  # Kimi-K3: ids from the template (``prompt_ids``)
         self.hf_id, self.revision, self.seed = hf_id, revision, seed
         self.tok = subjects.load_tokenizer(hf_id, revision, tokenizer_dir, chat_template,
                                            trust_remote_code)  # fmt: skip
+        self.reply_stop = self._stop_id(s.reply_end)  # Kimi-K3: [<|close|>] (163588)
         cls = modal.Cls.from_name(modal_app, "SubjectLLM")
         self.remote = cls(model_id=hf_id, revision=revision or "", max_model_len=max_model_len)
 
@@ -584,6 +595,67 @@ class RemoteRunner(Runner):
         lead = self._lead
         return ids if not lead or ids[: len(lead)] == lead else lead + ids
 
+    def _stop_id(self, end: str | None) -> list[int]:
+        """``[id]`` of the subject's ``reply_end`` marker token ([] for none)."""
+        if not end:
+            return []
+        ids = list(self.tok(end, add_special_tokens=False)["input_ids"])
+        if len(ids) != 1:
+            raise ValueError(f"reply_end {end!r} is not one token: {ids}")
+        return ids
+
+    def plain(self, text: str) -> list[int]:
+        """``text`` as ordinary text: any ``<|...|>`` in it encoded as BPE, never as a control
+        token (Kimi-K3's own ``encode(..., allow_special_tokens=False)``, which its template
+        uses for message content)."""
+        return list(self.tok.encode(text, allow_special_tokens=False)) if text else []
+
+    def _template_ids(self, messages: list) -> list[int]:
+        out = self.tok.apply_chat_template(messages, tokenize=True, add_generation_prompt=True,
+                                           enable_thinking=False)  # fmt: skip
+        return list(out["input_ids"] if hasattr(out, "keys") else out)
+
+    def prompt_ids(self, ask: Ask) -> list[int]:
+        """The token ids sent for ``ask``. By default the render re-encoded (``encode``). A
+        ``Subject.template_ids`` subject (Kimi-K3) encodes message content with specials
+        disallowed, so re-encoding its rendered text would turn a literal ``<|close|>`` in a
+        message (floors quote the subject's own render) into a control token: its ids come from
+        ``apply_chat_template(tokenize=True)`` itself; a prefill, a reply and a raw prompt are
+        plain text (``plain``). The follow-up tail is cut from the full conversation's template
+        ids after the reply sentinel (K3 encodes every segment on its own, so the pieces join
+        exactly)."""
+        if not self.template_ids:
+            return self.encode(self.render(ask))
+        if ask.followup:
+            from .template import REPLY_SENTINEL
+
+            if ask.reply is None:
+                raise ValueError(f"{ask.item_id}/{ask.leg}: a follow-up ask needs its reply")
+            conv = [*(ask.messages or ()), {"role": "assistant", "content": REPLY_SENTINEL},
+                    *ask.followup]  # fmt: skip
+            full, sent = self._template_ids(conv), self.plain(REPLY_SENTINEL)
+            at = next(i for i in range(len(full)) if full[i : i + len(sent)] == sent)
+            tail = full[at + len(sent) :]
+            return self.prompt_ids(ask.first_turn()) + self.plain(ask.reply) + tail
+        if ask.messages:
+            return self._template_ids(list(ask.messages)) + self.plain(ask.prefill)
+        from .template import bos_prefix
+
+        return list(bos_prefix(self.tok)) + self.plain(ask.prompt or "")
+
+    def prompt(self, ask: Ask) -> list[int]:
+        return self.prompt_ids(ask)
+
+    def _cut_ids(self, r: dict) -> dict:
+        """A ``generate`` result up to (excluding) the first ``reply_stop`` token: the engine
+        stops there, so this only trims the stop token vLLM reports in ``ids``."""
+        ids = list(r.get("ids") or [])
+        k = next((i for i, t in enumerate(ids) if t in self.reply_stop), None)
+        if k is None:
+            return r
+        return {**r, "ids": ids[:k],
+                "text": self.tok.decode(ids[:k], skip_special_tokens=True)}  # fmt: skip
+
     def _calls(self, method: Any, args: list[tuple]) -> list:
         """One remote call per chunk: in order, or fanned over the subject's replicas."""
         if self.replicas > 1 and len(args) > 1:
@@ -593,10 +665,13 @@ class RemoteRunner(Runner):
     def sample(
         self, asks: list[Ask], draws: int, temperature: float, top_p: float = 1.0, top_k: int = -1
     ) -> list[tuple[str, list[str]]]:
-        prompts = [self.encode(self.render(a)) for a in asks]
+        prompts = [self.prompt_ids(a) for a in asks]
         n = self.CHUNK
-        # top_k travels only when set, so an app deployed before it existed still serves the rest
-        extra = (top_k,) if top_k != -1 else ()
+        # top_k (and the reply_stop ids) travel only when set, so an app deployed before they
+        # existed still serves the rest. reply_stop: the engine stops on the marker TOKEN (K3's
+        # <|close|> 163588), so a reply that writes "<|close|>" as text is never cut
+        extra = ((top_k, self.reply_stop) if self.reply_stop else
+                 (top_k,) if top_k != -1 else ())  # fmt: skip
         args = [(prompts[i : i + n], [a.max_tokens for a in asks[i : i + n]], draws, temperature,
                  top_p, self.seed + i, *extra) for i in range(0, len(prompts), n)]  # fmt: skip
         return [r for part in self._calls(self.remote.sample, args) for r in part]
@@ -610,15 +685,19 @@ class RemoteRunner(Runner):
         top_p: float = 1.0,
         stop_token_ids: list[int] | None = None,
     ) -> list[dict]:
+        # a template_ids subject (Kimi-K3): pass ``prompt(ask)`` ids, not rendered text
         ids = [self.encode(p) for p in prompts]
         n = self.CHUNK
-        args = [(ids[i : i + n], temperature, max_tokens, seed + i, top_p, stop_token_ids)
+        stops = sorted({*(stop_token_ids or []), *self.reply_stop}) or None
+        args = [(ids[i : i + n], temperature, max_tokens, seed + i, top_p, stops)
                 for i in range(0, len(ids), n)]  # fmt: skip
-        return [r for part in self._calls(self.remote.generate, args) for r in part]
+        out = [r for part in self._calls(self.remote.generate, args) for r in part]
+        return [self._cut_ids(r) for r in out] if self.reply_stop else out
 
     # ---- plan 0060 Phase E (wrong_intermediate logP legs): scored on Modal from local token ids --
     def cont_logprobs(self, prompts: list[str], conts: list[str]) -> list[float]:
-        jobs = cont_jobs(self.tok, prompts, conts)  # token ids, like sample / generate
+        # token ids, like sample / generate; plain text for a template_ids subject (Kimi-K3)
+        jobs = cont_jobs(self.tok, prompts, conts, self.plain if self.template_ids else None)
         n = self.CHUNK
         args = [([j[0] for j in jobs[i : i + n]], [j[1] for j in jobs[i : i + n]])
                 for i in range(0, len(jobs), n)]  # fmt: skip
@@ -628,13 +707,21 @@ class RemoteRunner(Runner):
 
 
 # ---- plan 0060 Phase E: helpers for Runner.cont_logprobs (shared with scripts/adapt_modal.py) ----
-def cont_jobs(tok: Any, prompts: list[str], conts: list[str]) -> list[tuple[list[int], int]]:
+def cont_jobs(
+    tok: Any, prompts: list[str], conts: list[str], encode: Callable[[str], list[int]] | None = None
+) -> list[tuple[list[int], int]]:
     """``(ids of BOS + prompt + cont, k)``: ``k`` = the first index where those ids diverge from
     the prompt's own ids (tokenization may merge at the seam), i.e. where scoring starts. The
     lead is the raw render's (``bos_prefix``: Gemma ``<bos>``, GLM ``[gMASK]<sop>``) or else the
     specials the tokenizer itself prepends (a Llama-style BOS, as ``RemoteRunner.encode`` adds):
-    the ids go to the engine as-is, which adds nothing."""
+    the ids go to the engine as-is, which adds nothing. ``encode`` = how text becomes ids
+    (default: the tokenizer, no added specials; Kimi-K3: ``RemoteRunner.plain``)."""
     from .template import bos_prefix
+
+    if encode is None:
+
+        def encode(text: str) -> list[int]:
+            return list(tok(text, add_special_tokens=False)["input_ids"])
 
     bos = list(bos_prefix(tok))
     if not bos:
@@ -644,8 +731,8 @@ def cont_jobs(tok: Any, prompts: list[str], conts: list[str]) -> list[tuple[list
         bos = on[:at]
     out = []
     for p, c in zip(prompts, conts, strict=True):
-        p_ids = bos + tok(p, add_special_tokens=False)["input_ids"]
-        full = bos + tok(p + c, add_special_tokens=False)["input_ids"]
+        p_ids = bos + encode(p)
+        full = bos + encode(p + c)
         k = 0
         while k < len(p_ids) and k < len(full) and full[k] == p_ids[k]:
             k += 1
@@ -706,6 +793,12 @@ def _broken(ask: Ask) -> bool:
     return (ask.meta.get("followup") or {}).get("prefix") == "broken"
 
 
+def prompt_of(runner: Any, ask: Ask) -> str | list[int]:
+    """``runner.prompt(ask)`` (exact token ids on Modal), or the render for a runner without it."""
+    fn = getattr(runner, "prompt", None)
+    return fn(ask) if fn is not None else runner.render(ask)
+
+
 def with_replies(runner: "Runner", asks: list[Ask]) -> list[Ask]:
     """Fill each follow-up ask's ``reply`` with the subject's greedy answer to its first turn, and
     check the token prefix: the read render's ids must start the follow-up's. When they do not,
@@ -718,18 +811,18 @@ def with_replies(runner: "Runner", asks: list[Ask]) -> list[Ask]:
     for i, a in enumerate(asks):
         todo.setdefault(int(a.meta.get("reply_tokens", 128)), []).append(i)
     for max_tokens, idx in todo.items():
-        prompts = [runner.render(asks[i].first_turn()) for i in idx]
+        prompts = [prompt_of(runner, asks[i].first_turn()) for i in idx]
         got = runner.generate(prompts, temperature=0.0, max_tokens=max_tokens,
                               seed=getattr(runner, "seed", 0))  # fmt: skip
         replies.update({i: g["text"] for i, g in zip(idx, got, strict=True)})
     out = []
     for i, a in enumerate(asks):
-        head, reply = runner.render(a.first_turn()), replies[i]
+        head, reply = prompt_of(runner, a.first_turn()), replies[i]
         check: dict[str, Any] = {"prefix": "exact"}
-        if not runner.token_prefix(head, runner.render(replace(a, reply=reply))):
+        if not runner.token_prefix(head, prompt_of(runner, replace(a, reply=reply))):
             check = {"prefix": "stripped", "reply_raw": reply}
             reply = reply.lstrip()
-            if not runner.token_prefix(head, runner.render(replace(a, reply=reply))):
+            if not runner.token_prefix(head, prompt_of(runner, replace(a, reply=reply))):
                 check["prefix"] = "broken"
         check["reply_states_gold"] = any(_has_form(reply, g) for g in a.golds)
         out.append(replace(a, reply=reply, meta={**a.meta, "followup": check}))

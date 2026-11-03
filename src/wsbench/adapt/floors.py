@@ -50,7 +50,7 @@ def generate(model: str) -> None:
     from wsbench import readplan
     from wsbench.produce.render import render
 
-    from .gate import Ask
+    from .gate import Ask, prompt_of
     from .run import _runner
 
     os.environ["WSB_BANK_ROOT"] = str(store.model_dir(model))
@@ -67,7 +67,8 @@ def generate(model: str) -> None:
                 prefix = tok.decode(r.ids[: p + 1], skip_special_tokens=False)
                 msg = TEMPLATE.format(token=r.decoded[p], prefix=prefix)
                 jobs.append((fam, spec.id, p, spec.layers[0]))
-                prompts.append(runner.render(Ask(spec.id, "floor", messages=(
+                # exact ids on Modal (Kimi-K3: the quoted render's markers stay plain text)
+                prompts.append(prompt_of(runner, Ask(spec.id, "floor", messages=(
                     {"role": "user", "content": msg},), max_tokens=MAX_NEW)))  # fmt: skip
     outs = runner.generate(prompts, 1.0, MAX_NEW, seed=7)  # local vLLM or Modal alike
     by_fam: dict[str, list[dict]] = {}

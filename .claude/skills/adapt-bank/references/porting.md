@@ -212,6 +212,60 @@ or keep only `plain` items and report the count.
 - `read_band` = J-lens `std-n1000` rows 0..40 (row r = block r; row 41 is the identity anchor,
   there is no L42 row).
 
+## DeepSeek-V4-Pro (plan 0060; `deepseek-ai/DeepSeek-V4-Pro-0813` @ 72e1d323)
+- 61 blocks, tokenizer family `dsv4`. Its `tokenizer.json` / `tokenizer_config.json` are V4-Flash's
+  byte for byte, and its `encoding_dsv4.py` differs only in the thinking-mode reasoning-effort
+  prompts, so the chat-mode render is Flash's: the Subject reuses `deepseek_v4_chat.jinja`
+  (`tests/test_adapt_new_subjects.py` runs Pro's own encoder against it). Markers, `bos_prefix`,
+  `system_rule = "bare"` and carry: as V4-Flash.
+- arithmetic (D8): as V4-Flash, `arith_all_positions=True`.
+- No J-lens: `read_band=()`. Served as ONE TP8 engine on B300:8 (`modal_engines=1`, unlike
+  Flash's 8 TP=1 engines), the `dsv4` image, volume `v4-pro`.
+
+## Kimi-K3 (plan 0060; `moonshotai/Kimi-K3` @ f831ab66)
+- 93 blocks, tokenizer family `kimi3` (tiktoken remote code, `trust_remote_code`). No Jinja: the
+  tokenizer's `apply_chat_template` renders XTML (`encoding_k3.py`), and its switch is
+  `thinking` (default True); `enable_thinking` falls into `**kwargs` and is ignored, so without
+  `Subject.thinking_kwarg="thinking"` every render opens the think channel after a
+  `thinking_effort=max` system message (`template.check` refuses that).
+- `thinking=False` drops the think channel: `<|open|>message role="user"<|sep|>{q}<|close|>message
+  <|sep|><|end_of_msg|><|open|>message role="assistant"<|sep|><|open|>response<|sep|>`. Nothing
+  is left open, so there is no prefill-close. The README's "always has thinking" describes the
+  API; the encoder supports a non-thinking render and that is what is used (the smoke test should
+  confirm replies are answers, not reasoning).
+- `markers`: turn_start `<|open|>` (the one whose `role` attribute is `user`), turn_end
+  `<|close|>`, header_len 7, gen_tail `message <|sep|> <|end_of_msg|> <|open|> message role="
+  assistant" <|sep|> <|open|> response <|sep|>`; `bos_prefix = []`; `system_rule = "marker"`.
+  carry's jailbreak re-stamp skips the whole header by `header_len` (every template now).
+- Stops: `generation_config.json` eos `<|end_of_msg|>`; a reply ends `<|close|>response<|sep|>
+  <|close|>message<|sep|>` first, and those markers are not special tokens (the detokenizer keeps
+  them), so `Subject.reply_end="<|close|>"` makes `RemoteRunner` stop the engine on the
+  `<|close|>` TOKEN (163588; sample and generate). A reply that writes the string as BPE text is
+  untouched.
+- Prompt ids: the template encodes content with specials disallowed, so re-encoding the
+  rendered text would make a literal `<|close|>` / `<|sep|>` in a message (floors quote the
+  subject's own render) a live control token. `Subject.template_ids=True`:
+  `RemoteRunner.prompt_ids` takes the template's own ids, with prefill, reply and raw text
+  encoded plain (`encode(..., allow_special_tokens=False)`); floors, follow-ups and wrong_bridge
+  send `prompt_of(runner, ask)` ids.
+- No J-lens: `read_band=()`. Default image (vLLM 0.31.0), TP8 on B300:8, engine kwargs
+  `trust_remote_code`, `language_model_only=True`, `gpu_memory_utilization=0.95`; volume `kimi-k3`
+  mounted at the default recipe's `/hf` (snapshot `/hf/hf/hub/models--moonshotai--Kimi-K3/...`).
+
+## Muse-Spark-Open (plan 0060; `meta-models/Muse-Spark-Open-816B-A42B-NVFP4` @ 4239e4db)
+- 62 blocks, tokenizer family `muse`; gated (the HF token needs access). No thinking-off mode:
+  the pinned `data/templates/muse_spark_nothink.jinja` is the upstream template with three edits:
+  `reasoning_effort` pinned `low` ("Reasoning strength: 8."), `current_date` pinned `2026-11-03`
+  (upstream uses today's date), and the generation prompt `<|start|>assistant to=user<|message|>`
+  (the answer channel; upstream leaves the recipient to the model, `to=self` = reasoning).
+- `markers`: turn_start `<|start|>`, turn_end `<|eot|>`, header_len 3, gen_tail `<|start|>
+  assistant to =user <|message|>`; `bos_prefix = [<|begin_of_text|>]` (the tokenizer does not add
+  it); `system_rule = "marker"` (a system message joins the template's own system turn).
+- Stops: `generation_config.json` eos `[200001, 200008]` (`<|end_of_text|>`, `<|eot|>`), which
+  vLLM applies from the checkpoint dir.
+- No J-lens: `read_band=()`. `muse` image (vLLM 0.33.0), TP8 on B300:8 (B200:8 fallback), volume
+  `muse-spark` with the plain snapshot dir `hf/meta-models__Muse-Spark-Open-816B-A42B-NVFP4`.
+
 ## Lens read band (`Subject.read_band`)
 If the subject's lens reads only some layers (Qwen3-8B's OLens: even layers 12..34), set
 `read_band` on the Subject. `remap_layer(s)` then depth-remaps and snaps to the nearest band layer

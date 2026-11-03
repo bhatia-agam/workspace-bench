@@ -30,10 +30,19 @@ Image recipes (``Subject.modal_image``):
   (``("moe_backend", "marlin")``) in the Subject's engine kwargs. Layout per Camila's rule
   "always 8xB300": ``modal_gpu=("B300:8",)``, ``modal_tp=1``, ``modal_engines=8`` = one container
   running 8 TP=1 engines (the first warms the JIT caches, then the other 7 start), as
-  ``gen_vllm_modal.py`` does.
+  ``gen_vllm_modal.py`` does. deepseek-v4-pro uses the same image as ONE TP8 engine on B300:8
+  (volume ``v4-pro``).
+- ``muse``: the dsv4 base (CUDA 13 devel) with vLLM 0.33.0 (what Muse-Spark-Open needs);
+  weights = the plain snapshot dir ``hf/meta-models__Muse-Spark-Open-816B-A42B-NVFP4`` on the
+  ``muse-spark`` volume (no HF secret: nothing is fetched from the hub).
+
+kimi-k3 uses ``default`` (trust_remote_code, ``language_model_only``, gpu_memory_utilization 0.95
+in its engine kwargs) with its weights on the ``kimi-k3`` volume, mounted at the default
+recipe's ``/hf``: ``modal_weights`` is the hub-cache snapshot dir under it (``hf/hub/...``).
 
 Prerequisites: the subject's weights volume exists in the env (``glm53-weights`` with
-``hf/nvidia__GLM-5.3-NVFP4``; ``v4-flash``); the glm53 fork tarball comes from a public HF repo
+``hf/nvidia__GLM-5.3-NVFP4``; ``v4-flash``; ``v4-pro``, ``kimi-k3`` with the pinned snapshot
+under ``hf/hub``; ``muse-spark``); the glm53 fork tarball comes from a public HF repo
 (no secret). kimi-k2 has no weights volume: its first load downloads ~1 TB into
 ``adapt-hf-cache``. A Subject with ``modal_built=False`` (glm-5.3-flash: Agam's text-only app)
 is refused here and by RemoteRunner.
@@ -44,6 +53,9 @@ Deploy (Camila's env; ``MODAL=/root/.cache/cfinf-modal-venv/bin/modal``, from th
     $MODAL deploy scripts/adapt_modal.py                            # adapt-subject-llm (shared)
     ADAPT_SUBJECT=glm-5.3 $MODAL deploy scripts/adapt_modal.py      # adapt-glm-5.3 (B300:8 TP8)
     ADAPT_SUBJECT=kimi-k2 $MODAL deploy scripts/adapt_modal.py      # adapt-kimi-k2 (B300:8 TP8)
+    ADAPT_SUBJECT=deepseek-v4-pro $MODAL deploy scripts/adapt_modal.py  # adapt-v4-pro (B300:8 TP8)
+    ADAPT_SUBJECT=kimi-k3 $MODAL deploy scripts/adapt_modal.py      # adapt-kimi-k3 (B300:8 TP8)
+    ADAPT_SUBJECT=muse-spark-open $MODAL deploy scripts/adapt_modal.py  # B300:8|B200:8, TP8
     # then every adapt command for that subject (backend="modal") uses its app transparently;
     # ADAPT_BACKEND=modal sends a box-sized subject to the shared app instead of the 4090
 
@@ -101,7 +113,13 @@ RECIPES: dict[str, dict] = {
         "env": {"HF_HOME": "/vol/hf", "CUDA_HOME": "/usr/local/cuda", "MAX_JOBS": "4"},
         "resources": {"memory": 256 * 1024, "cpu": 16},
     },
+    "muse": {  # Muse-Spark-Open: a plain snapshot dir on the muse-spark volume
+        "mount": "/vol",
+        "env": {"HF_HOME": "/vol/hf", "CUDA_HOME": "/usr/local/cuda"},
+        "resources": {"memory": 256 * 1024, "cpu": 16},
+    },
 }  # fmt: skip
+MUSE_VLLM = "vllm==0.33.0"  # Muse-Spark (MuseSparkForConditionalGeneration) needs 0.33.0
 RECIPE = RECIPES[SPEC["image"]]
 
 
@@ -131,6 +149,12 @@ def _image(recipe: str) -> modal.Image:
                 "local_dir='/opt'))\"",
                 f"pip install --no-deps /opt/{GLM_FORK}",  # a public repo: no HF secret
             )
+            .env(env)
+        )
+    if recipe == "muse":  # the dsv4 recipe's CUDA 13 devel base, on vLLM 0.33.0
+        return (
+            modal.Image.from_registry("nvidia/cuda:13.0.1-devel-ubuntu24.04", add_python="3.12")
+            .uv_pip_install(MUSE_VLLM)
             .env(env)
         )
     if recipe == "dsv4":  # DeepGEMM JIT-compiles at runtime and asserts a CUDA home (nvcc)
@@ -235,14 +259,20 @@ def split(n: int, k: int) -> list[tuple[int, int]]:
     return [(lo, min(n, lo + step)) for lo in range(0, n, step)]
 
 
-def run_sample(llm, prompts, max_tokens, draws, temperature, top_p, seed, top_k=-1) -> list:
+def run_sample(
+    llm, prompts, max_tokens, draws, temperature, top_p, seed, top_k=-1, stop_token_ids=None
+) -> list:
     """Greedy + ``draws`` samples per prompt (token ids, or text); prompt i samples with seed+i.
-    ``top_k`` -1 = off (basic_readout_mt v4's gate fixes 20, plan 0060 A2)."""
+    ``top_k`` -1 = off (basic_readout_mt v4's gate fixes 20, plan 0060 A2). ``stop_token_ids``:
+    the subject's reply_end token (Kimi-K3's <|close|>), on both draws."""
     from vllm import SamplingParams
 
+    stop = stop_token_ids or None
     ins = _inputs(prompts)
     g = llm.generate(
-        ins, [SamplingParams(temperature=0.0, max_tokens=m) for m in max_tokens], use_tqdm=False
+        ins,
+        [SamplingParams(temperature=0.0, max_tokens=m, stop_token_ids=stop) for m in max_tokens],
+        use_tqdm=False,
     )
     s = llm.generate(
         ins,
@@ -254,6 +284,7 @@ def run_sample(llm, prompts, max_tokens, draws, temperature, top_p, seed, top_k=
                 top_k=top_k,
                 max_tokens=m,
                 seed=seed + i,
+                stop_token_ids=stop,
             )
             for i, m in enumerate(max_tokens)
         ],
@@ -312,7 +343,8 @@ def fan_out(engines: list, name: str, args: tuple) -> list:
     prompts = args[0]
     calls = []
     for eng, (lo, hi) in zip(engines, split(len(prompts), len(engines)), strict=False):
-        if name == "sample":  # (prompts, max_tokens, draws, temperature, top_p, seed[, top_k])
+        # sample: (prompts, max_tokens, draws, temperature, top_p, seed[, top_k, stop])
+        if name == "sample":
             a = (prompts[lo:hi], args[1][lo:hi], *args[2:5], args[5] + lo, *args[6:])
         elif name == "cont_logprobs":  # (ids, starts): both per prompt (plan 0060 Phase E)
             a = (prompts[lo:hi], args[1][lo:hi])
@@ -460,7 +492,8 @@ if SPEC["replicas"] > 1:  # the containers RemoteRunner fans out over
 @app.cls(
     image=_image(SPEC["image"]),
     gpu=SPEC["gpu"][0] if len(SPEC["gpu"]) == 1 else SPEC["gpu"],
-    # the weights volumes (glm53-weights, v4-flash) are read-only here; the hub cache is written
+    # the weights volumes (glm53-weights, v4-flash, v4-pro, muse-spark) are read-only here; the
+    # default recipe's volume (the hub cache; kimi-k3's) is mounted writable
     volumes={RECIPE["mount"]: volume if SPEC["image"] == "default" else volume.read_only()},
     timeout=6 * 3600,
     scaledown_window=600,
@@ -517,9 +550,11 @@ class SubjectLLM:
         top_p: float,
         seed: int,
         top_k: int = -1,
+        stop_token_ids: list[int] | None = None,
     ) -> list[tuple[str, list[str]]]:
         """Greedy + ``draws`` samples per prompt (token ids, or text): Runner.sample's contract."""
-        extra = (top_k,) if top_k != -1 else ()
+        extra = ((top_k, stop_token_ids) if stop_token_ids else
+                 (top_k,) if top_k != -1 else ())  # fmt: skip
         return self._run("sample", (prompts, max_tokens, draws, temperature, top_p, seed, *extra))
 
     @modal.method()

@@ -54,7 +54,7 @@ from pathlib import Path
 from typing import Any
 
 from . import store
-from .gate import Ask, Leg, gate_record
+from .gate import Ask, Leg, gate_record, prompt_of
 
 FAMILY = "wrong_intermediate"
 VERSION = "wb-subject-gate-v1"
@@ -389,7 +389,7 @@ def local_resolver(ents: dict) -> Callable[[list[str]], dict[str, list[str]]]:
 # ------------------------------------------------------------------ subject generation
 def _greedy(runner: Any, prompts: list[str]) -> list[str]:
     """Greedy raw-text continuations: the subject's raw render (BOS + text), no chat template."""
-    texts = [runner.render(Ask("", "raw", prompt=p)) for p in prompts]
+    texts = [prompt_of(runner, Ask("", "raw", prompt=p)) for p in prompts]  # ids on Modal
     return [o["text"] for o in runner.generate(texts, 0.0, MAX_NEW, 0)]
 
 

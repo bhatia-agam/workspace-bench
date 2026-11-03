@@ -502,7 +502,8 @@ carried over from the 27B; there is no Opus / Sonnet unguessability gate.
   / cross); P(Yes) on the un-prefilled protocol turn; greedy neutral replies. Small / medium
   subjects: `HFEngine` on Modal (`modal deploy scripts/adapt_introspection_modal.py`, used when
   `Subject.backend == "modal"`) or on the box GPU. Big MoE subjects (`introspection.EXTERNAL`:
-  glm-5.3 NVFP4, deepseek-v4-flash, kimi-k2, glm-5.3-flash) are refused: implement `Engine` (5
+  glm-5.3 NVFP4, deepseek-v4-flash, kimi-k2, glm-5.3-flash, deepseek-v4-pro, kimi-k3,
+  muse-spark-open) are refused: implement `Engine` (5
   methods) on their own loader, run `measure`, `save_result` to an `.npz`, then
   `stage=measure result=<npz>`. V4 needs a stream mode decided (4 mHC streams) and was NO-GO
   under this rule before.

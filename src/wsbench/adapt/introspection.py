@@ -88,6 +88,13 @@ EXTERNAL: dict[str, str] = {
     "v4_flash_ar/newfam/introspection.md)",
     "kimi-k2": "moonshotai/Kimi-K2-Instruct-0905 (1T MoE, 61 blocks): the B300:8 model-parallel "
     "app (gw-olens adapt_mp_subject_modal.py, Subject.modal_app); tokenizer_dir is Agam-only",
+    "deepseek-v4-pro": "deepseek-ai/DeepSeek-V4-Pro-0813 (MoE, 61 blocks, V4 architecture): no "
+    "HF loader in the repo; the render is V4-Flash's pinned chat-mode template, and the engine "
+    "must choose and record the stream mode as V4-Flash's must",
+    "kimi-k3": "moonshotai/Kimi-K3 (MoE, 93 blocks, remote-code KimiK3ForConditionalGeneration): "
+    "no HF loader in the repo; the render is the XTML tokenizer's own at thinking=False",
+    "muse-spark-open": "meta-models/Muse-Spark-Open-816B-A42B-NVFP4 (816B MoE, 62 blocks, NVFP4): "
+    "no HF loader in the repo; the render is data/templates/muse_spark_nothink.jinja",
 }
 
 COHERENCE_PROMPT = (  # the V4 port's rater prompt, verbatim

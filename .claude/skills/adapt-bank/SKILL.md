@@ -130,8 +130,17 @@ starting the next.
 - Add it to `src/wsbench/adapt/subjects.py`: HF id, pinned revision, layer count, and the tokenizer
   family. Qwen3.5 shares the Qwen3.6 tokenizer and template, so token indices carry over; Gemma's
   don't. A subject whose upstream template always opens a reasoning block (GLM-5.3-Flash) or ships
-  no Jinja at all (DeepSeek-V4: only `encoding_dsv4.py`) needs a pinned no-think `chat_template`
-  file checked against the vendor's own encoder on a few renders.
+  no Jinja at all (DeepSeek-V4: only `encoding_dsv4.py`) or has no thinking-off mode at all
+  (Muse-Spark-Open: the generation prompt names the answer channel) needs a pinned no-think
+  `chat_template` file checked against the vendor's own encoder on a few renders. A tokenizer
+  whose thinking switch is not `enable_thinking` (Kimi-K3's remote-code XTML render takes
+  `thinking`) sets `Subject.thinking_kwarg`: `load_tokenizer` renames the kwarg, so every render
+  still says `enable_thinking=False`. A reply marker the engine does not stop on and the
+  detokenizer keeps (K3's non-special `<|close|>`) goes in `Subject.reply_end`: `RemoteRunner`
+  has the engine stop on that token id. A template that encodes message content with specials
+  disallowed (K3) sets `Subject.template_ids`: prompt ids come from
+  `apply_chat_template(tokenize=True)`, never from re-encoding the rendered text (callers send
+  `runner.prompt(ask)`, `gate.prompt_of`). Per-subject notes: `references/porting.md`.
 - Run the gate where the weights fit. Up to ~9B: the RunPod 4090 with vLLM.
   `scripts/adapt_box.sh <cmd> …` wraps `python -m wsbench.adapt` with:
   - the venv `$ADAPT_ENV` (default `/workspace/agam/envs/adapt`; vLLM needs its `ninja` on PATH);
@@ -386,13 +395,15 @@ gw-olens' `adapt_mp_subject_modal.py` / `kimi_wsbench_modal.py` / `subject_*_mod
   Subject names its app (`modal_app`) and how it is served: `modal_gpu` (fallbacks in order),
   `modal_tp`, `modal_engines` (TP engines per container, one per GPU set: DeepSeek-V4 = one
   B300:8 with 8 TP=1 engines, "always 8xB300"), `modal_replicas` (containers the chunks fan out
-  over), `modal_image` (recipe `default` | `glm53` | `dsv4`), `modal_volume` + `modal_weights`,
+  over), `modal_image` (recipe `default` | `glm53` | `dsv4` | `muse` (vLLM 0.33.0)),
+  `modal_volume` + `modal_weights`,
   `modal_engine` (extra `vllm.LLM` kwargs). Subjects with the default fields share
   `adapt-subject-llm` (one H200). `modal_built=False` (glm-5.3-flash: Agam's text-only app, not
   rebuilt per D1) is refused by both the deploy script and `RemoteRunner`.
   Prerequisites: the weights volume exists in the env (`glm53-weights` holding
-  `hf/nvidia__GLM-5.3-NVFP4`; `v4-flash`); kimi-k2 has none, so its first load writes ~1 TB into
-  `adapt-hf-cache`. The glm53 image pulls the vLLM fork from a public HF repo (no secret).
+  `hf/nvidia__GLM-5.3-NVFP4`; `v4-flash`; `v4-pro` and `kimi-k3` holding the pinned snapshot under
+  `hf/hub`; `muse-spark` holding `hf/meta-models__Muse-Spark-Open-816B-A42B-NVFP4`); kimi-k2 has
+  none, so its first load writes ~1 TB into `adapt-hf-cache`. The glm53 image pulls the vLLM fork from a public HF repo (no secret).
   Deploy once per app, from the repo root, with the Modal client venv:
 
   ```bash
@@ -401,6 +412,9 @@ gw-olens' `adapt_mp_subject_modal.py` / `kimi_wsbench_modal.py` / `subject_*_mod
   $MODAL deploy scripts/adapt_modal.py                         # adapt-subject-llm (shared)
   ADAPT_SUBJECT=glm-5.3 $MODAL deploy scripts/adapt_modal.py   # adapt-glm-5.3: B300:8|B200:8, TP8
   ADAPT_SUBJECT=kimi-k2 $MODAL deploy scripts/adapt_modal.py   # adapt-kimi-k2: B300:8, TP8
+  ADAPT_SUBJECT=deepseek-v4-pro $MODAL deploy scripts/adapt_modal.py  # adapt-v4-pro: B300:8, TP8
+  ADAPT_SUBJECT=kimi-k3 $MODAL deploy scripts/adapt_modal.py   # adapt-kimi-k3: B300:8, TP8
+  ADAPT_SUBJECT=muse-spark-open $MODAL deploy scripts/adapt_modal.py  # B300:8|B200:8, TP8
   ```
 
   Then run `python -m wsbench.adapt … model=<key>` with the same `MODAL_ENVIRONMENT`;

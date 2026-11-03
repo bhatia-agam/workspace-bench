@@ -11,6 +11,10 @@ REPLY_SENTINEL = "ZQXREPLYXQZ"
 # DeepSeek-V4's <|User|> spelled with fullwidth bars (U+FF5C). ChatML / Gemma / Kimi spell the
 # role as its own token after the opener ("<|im_start|>", "user").
 ROLE_MARKERS = ("<|user|>", "<\uff5cUser\uff5c>")
+# Kimi-K3's XTML render: a turn is <|open|>message role="user"<|sep|>{content}<|close|>message
+# <|sep|><|end_of_msg|>; the role is an attribute value several tokens after the opener, so the
+# turn starts at the <|open|> before it. Its think channel opens <|open|>think<|sep|>.
+XTML_OPEN = "<|open|>"
 
 
 def markers(tok: Any) -> dict[str, Any]:
@@ -30,7 +34,12 @@ def markers(tok: Any) -> dict[str, Any]:
     if s0 is None or s1 is None:
         raise ValueError("template: sentinel not found in the render")
     role = next(i for i in range(s0 - 1, -1, -1) if toks[i].strip() in ("user", *ROLE_MARKERS))
-    start = role if toks[role].strip() in ROLE_MARKERS else role - 1  # GLM / V4: role-named
+    if toks[role].strip() in ROLE_MARKERS:  # GLM / V4: role-named
+        start = role
+    elif XTML_OPEN in toks[:role]:  # Kimi-K3 XTML: the <|open|> whose role attribute is user
+        start = max(i for i in range(role) if toks[i] == XTML_OPEN)
+    else:
+        start = role - 1
     return {
         "turn_start_id": ids[start], "turn_start": toks[start],
         "turn_end_id": ids[s1 + 1], "turn_end": toks[s1 + 1],
@@ -70,7 +79,8 @@ def stop_ids(tok: Any, gen_eos: Any = None) -> list[int]:
     return sorted(i for i in ids if i is not None)
 
 
-OPEN_THINK = ("<think>", "<|channel>thought", "<|think|>")  # an unclosed reasoning block
+OPEN_THINK = ("<think>", "<|channel>thought", "<|think|>", "<|open|>think")  # a reasoning block
+CLOSE_THINK = ("</think>", "<channel|>", "<|close|>think")  # ... and what closes it
 
 
 def check(tok: Any) -> list[str]:
@@ -84,7 +94,7 @@ def check(tok: Any) -> list[str]:
         return [f"turn markers not derivable from the render: {e!r}"]
     tail = "".join(m["gen_tail"])
     for o in OPEN_THINK:
-        if o in tail and tail.rfind(o) > max(tail.rfind("</think>"), tail.rfind("<channel|>")):
+        if o in tail and tail.rfind(o) > max(tail.rfind(c) for c in CLOSE_THINK):
             problems.append(f"generation prompt leaves a reasoning block open: {tail!r}")
     try:
         sys_user = [{"role": "system", "content": SYS_SENTINEL}, {"role": "user", "content": "U"}]

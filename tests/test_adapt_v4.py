@@ -153,7 +153,10 @@ def test_v4_subject_pins():
     assert remap_layer(63, 43, V4.read_band) == 40 and remap_layer(60, 43, V4.read_band) == 40
     assert remap_layer(56, 43, V4.read_band) == 38 and remap_layer(0, 43, V4.read_band) == 0
     assert V4.arith_all_positions
-    assert not any(s.arith_all_positions for k, s in SUBJECTS.items() if k != V4.key)
+    # D8: only the V4 render (Flash and Pro share it, ending in </think>) reads all positions
+    v4_render = {V4.key, "deepseek-v4-pro"}
+    assert SUBJECTS["deepseek-v4-pro"].arith_all_positions
+    assert not any(s.arith_all_positions for k, s in SUBJECTS.items() if k not in v4_render)
 
 
 # ---------------------------------------------------------------- the template (string level)
