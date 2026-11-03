@@ -43,6 +43,10 @@ def restamp(family: str, item: dict, record: dict) -> dict:
         "surface:fewshot": "plain_fewshot",
         "surface:prefill": "chat_prefill",
     }.get(record.get("render") or "surface", record.get("render"))
+    if family == "poetry":  # v5: the subject's commitments and free leg (poetry.finalize)
+        from .poetry import restamp_fields
+
+        restamp_fields(item, record)
     if not own:
         return item
     if family == "poetry":
@@ -82,6 +86,8 @@ def _gate_rows(model: str, family: str, items: list[dict], runner, draws, temper
         print(f"{family}: llm-graded legs and no llm= -> {DEFAULT_LLM}")  # grader (audit #14)
         llm = _llm(DEFAULT_LLM)
     records = run_gate(runner, asks, draws, temp, fam.threshold, llm, top_p=top_p)
+    if fam.finalize is not None:
+        records = {iid: fam.finalize(rec) for iid, rec in records.items()}
     rows = []
     for it in items:
         iid = store.item_id(it)
@@ -628,6 +634,10 @@ def freeze(model: str, families: list[str] | None = None) -> dict[str, Any]:
             continue
         header, originals = store.original_bank(family)
         header = copy.deepcopy(header)
+        if family == "poetry":  # the subject's opus_gate / qwen_regate records (plan 0060 A2)
+            from .poetry import header_overlay
+
+            header_overlay(model, header)
         reg = {store.item_id(it): it for it in originals}
         rows = registered_rows(rows, set(reg))
         target = len(originals)
@@ -858,6 +868,8 @@ def _regrade_row(family: str, row: dict, grade) -> dict:
     from .gate import Leg, gate_record, grade_leg
 
     fam = fams.get(family)
+    if row.get("built_by"):  # a row a later stage built (moral adopt, poetry opus_gate): its
+        return row  # evidence is not the gate legs alone, so a re-grade keeps it as it is
     asks = {a.leg: a for a in fam.asks(row["item"])}
     legs: dict[str, Leg] = {}
     for name, old in row["gate"]["legs"].items():
@@ -867,6 +879,8 @@ def _regrade_row(family: str, row: dict, grade) -> dict:
         thr = row.get("sampling", {}).get("threshold", fam.threshold)
         legs[name] = grade_leg(ask, old["greedy"]["text"], texts, thr, grade)
     rec = gate_record(legs)
+    if fam.finalize is not None:
+        rec = fam.finalize(rec)
     if (moral := row["gate"].get("moral")) is not None:
         # moral_rationale after `adapt moral`: the regrade may only update the consistency check;
         # the side / alignment / reason checks and the distilled reasons stay (skill audit)

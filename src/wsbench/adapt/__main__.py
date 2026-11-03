@@ -14,6 +14,9 @@ status    one line per family
 native_langs  the subject's native languages, which freeze needs   [stage=measure]
           | langs=en,.. evidence= [thinking=off]
 moral     moral_rationale: elicit, distil, re-gate          [stage=]
+          v3 on a subject: stage=rekey_readrender step=<s> [variant=system_one_word] [out=],
+          then stage=options [bank=], then stage=adopt [bank=]
+poetry    poetry v5: stage=gate|tier_a|mc|opus_gate|all     [regate=true]
 agentic   agentic_misalignment: rollouts, commitment judge, keep  [stage=]
 fill      author+gate an authored family until full / ooc       families= [waves=8]
 carry     verify + copy jailbreak / multi_concept_dm to the subject [families=]
@@ -63,7 +66,8 @@ KEYS: dict[str, set[str]] = {
     "patch": {"family", "id", "set", "note"},
     "status": set(),
     "native_langs": {"stage", "langs", "evidence", "thinking"},
-    "moral": {"stage", "step", "out", "limit"},
+    "moral": {"stage", "step", "out", "limit", "variant", "bank"},
+    "poetry": {"stage", "regate"},
     "agentic": {"stage"},
     "carry": {"families"},
     "floors": {"stage", "judge"},
@@ -131,8 +135,13 @@ def main(argv: list[str] | None = None) -> None:
     elif cmd == "moral":
         from . import moral
 
-        extra = {k: a[k] for k in ("step", "out", "limit") if k in a}
+        extra = {k: a[k] for k in ("step", "out", "limit", "variant", "bank") if k in a}
         moral.run(model, a.get("stage", "all"), **extra)
+    elif cmd == "poetry":
+        from . import poetry
+
+        regate = a.get("regate", "").lower() in ("1", "true", "yes")
+        poetry.run(model, a.get("stage", "all"), regate=regate)
     elif cmd == "introspection":
         from . import introspection
 

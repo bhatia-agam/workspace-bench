@@ -2,8 +2,16 @@
 dilemma's reasons from the subject, distil them with Opus, then re-gate every item on the side the
 subject committed to. Prior: global-workspace 1f36ca88 ``pmeq_gen/skill_patch/moral_gate.py``.
 ``python -m wsbench.adapt moral model=<m> [stage=elicit|distil|apply|all|variant]``; ``variant``
-re-gates the originals with a one-word system turn for subjects that answer in prose (Gemma)."""
+re-gates the originals with a one-word system turn for subjects that answer in prose (Gemma).
 
+Bank v3 on a subject (plan 0060 A2): ``stage=rekey_readrender step=<s>`` with ``model=<subject>``
+samples Leg S / Leg R through the subject's runner (``out=`` defaults to
+``adapted/<m>/moral/rekey``; ``variant=system_one_word`` for prose answerers), then
+``stage=options`` (scripts/moral_distractors.py, every step, ``--bank`` = the subject's bank) and
+``stage=adopt`` (gate rows over v3's ids, ``bank_version: 3``). ``model=Qwen/Qwen3.6-27B`` keeps
+the bank of record's re-key exactly as before (request rows for scripts/qwen_sample_modal.py)."""
+
+import copy
 import json
 import os
 import re
@@ -299,8 +307,22 @@ def _verify_sides(rows: list[dict]) -> set[str]:
 
 
 def run(model: str, stage: str = "all", **kw: Any) -> None:
-    if stage == "rekey_readrender":  # plan 0046: Qwen3.6-27B on the read render (bank v2)
-        rekey_readrender(kw["out"], kw.get("step", "requests_s"), int(kw.get("limit", 0)))
+    if stage == "rekey_readrender":  # plan 0046: the read render (bank v2/v3)
+        if is_registered(model):  # Qwen3.6-27B: request rows for scripts/qwen_sample_modal.py
+            if kw.get("variant"):
+                raise SystemExit("moral rekey: variant= is for an adapted subject only")
+            rekey_readrender(kw["out"], kw.get("step", "requests_s"), int(kw.get("limit", 0)))
+            return
+        # plan 0060 A2: any other model is a registered subject, sampled through its runner
+        rekey_readrender(kw.get("out") or str(rekey_dir(model)), kw.get("step", "requests_s"),
+                         int(kw.get("limit", 0)), model=model,
+                         variant=kw.get("variant", ""))  # fmt: skip
+        return
+    if stage == "options":  # plan 0060 A2: scripts/moral_distractors.py on the subject's rekey
+        options(model, kw.get("out") or str(rekey_dir(model)), kw.get("bank"))
+        return
+    if stage == "adopt":  # plan 0060 A2: rekey + subject options -> v3 gate rows
+        adopt(model, kw.get("out") or str(rekey_dir(model)), kw.get("bank"))
         return
     if stage == "variant":
         variant(model)
@@ -640,7 +662,15 @@ def _write_jsonl(path: Any, rows: list[dict]) -> None:
     Path(path).write_text("".join(json.dumps(r, ensure_ascii=False) + "\n" for r in rows), "utf-8")
 
 
-def rekey_readrender(out: str, step: str, limit: int = 0) -> None:
+def rekey_readrender(
+    out: str,
+    step: str,
+    limit: int = 0,
+    *,
+    model: str | None = None,
+    variant: str = "",
+    runner: Any = None,
+) -> None:
     """``stage=rekey_readrender step=<step> out=<dir>`` (plan 0046 §2.1). Steps, in order:
 
     requests_s -> <out>/side.jsonl (run scripts/qwen_sample_modal.py -> side.samples.jsonl);
@@ -650,7 +680,14 @@ def rekey_readrender(out: str, step: str, limit: int = 0) -> None:
     verify     -> <out>/side_checks.json + <out>/same_checks.json (Opus side + equivalence);
     assemble   -> <out>/rekey.json (every v1 item: v2 fields, gate, rekey provenance).
     The v1 bank is the input (``items.json``, untouched); scripts/moral_distractors.py builds
-    the option lists and freezes the bank (``items_v3.json`` today; ``items_v2.json`` is frozen)."""
+    the option lists and freezes the bank (``items_v3.json`` today; ``items_v2.json`` is frozen).
+
+    ``model`` (plan 0060 A2): an adapted SUBJECT (never the 27B, whose path above is unchanged).
+    ``requests_s`` / ``requests_r`` then also sample the rows through the subject's runner
+    (``run._runner``: local vLLM or its Modal app) and write ``side.samples.jsonl`` /
+    ``reason.samples.jsonl`` in qwen_sample_modal's row shape; every ``rekey`` record carries
+    ``model``. ``variant=system_one_word``: both legs are asked with the one-word system turn
+    (``SYSTEM_ONE_WORD``; prose answerers such as Gemma), and the item records it."""
     from pathlib import Path
 
     from wsbench.evals.moral_rationale import BANK_V1
@@ -662,9 +699,18 @@ def rekey_readrender(out: str, step: str, limit: int = 0) -> None:
     d.mkdir(parents=True, exist_ok=True)
     v1 = json.loads((REPO_ROOT / BANK_V1).read_text(encoding="utf-8"))
     items = v1[:limit] if limit else v1
+    if model is not None:  # the variant is fixed at requests_s and holds for every later step
+        variant = _pin_variant(d, variant, step)
+    elif variant:
+        raise SystemExit("moral rekey: variant= needs an adapted subject (model=)")
+    if variant:
+        items = with_variant(items, variant)
     if step == "requests_s":
-        _write_jsonl(d / "side.jsonl", side_requests(items))
+        rows = side_requests(items)
+        _write_jsonl(d / "side.jsonl", rows)
         print(f"moral rekey: {len(items)} Leg S rows -> {d / 'side.jsonl'}")
+        if model is not None:
+            _write_jsonl(d / "side.samples.jsonl", sample_rows(model, rows, runner))
         return
     if step == "grade_s":
         g = group_samples(_jsonl(d / "side.samples.jsonl"))
@@ -682,6 +728,8 @@ def rekey_readrender(out: str, step: str, limit: int = 0) -> None:
         rows = reason_requests(items, verdicts)
         _write_jsonl(d / "reason.jsonl", rows)
         print(f"moral rekey: {len(rows)} Leg R rows -> {d / 'reason.jsonl'}")
+        if model is not None:
+            _write_jsonl(d / "reason.samples.jsonl", sample_rows(model, rows, runner))
         return
     reason = group_samples(_jsonl(d / "reason.samples.jsonl"))
     req = {r["key"]: r for r in _jsonl(d / "reason.jsonl")}
@@ -767,6 +815,7 @@ def rekey_readrender(out: str, step: str, limit: int = 0) -> None:
                     "v1_gate_pass": it.get("gate_pass"),
                     "changed": bool(changed),
                     "same_checks": same,
+                    **({"model": model} if model is not None else {}),
                 },
             }
         )
@@ -775,3 +824,234 @@ def rekey_readrender(out: str, step: str, limit: int = 0) -> None:
         ("pass" if x["v2"]["gate_pass"] else "fail", x["v2"]["reason_class"]) for x in out_items
     )
     print(f"moral rekey: {len(out_items)} items -> {d / 'rekey.json'}: {dict(t)}")
+
+
+# ------------------------------------------------- plan 0060 A2: the v3 re-key on a subject
+
+REGISTERED_MODEL = "Qwen/Qwen3.6-27B"  # the bank of record's subject (scripts/qwen_sample_modal)
+REGISTERED_NAMES = {REGISTERED_MODEL, "qwen3.6-27b", "Qwen3.6-27B"}
+V3_VERSION = 3
+VARIANTS = ("system_one_word",)
+
+
+def is_registered(model: str) -> bool:
+    """The 27B (the bank of record's own re-key, unchanged); anything else must be a registered
+    adapted subject (``subjects.get`` refuses an unknown key: no silent Qwen fallback)."""
+    if model in REGISTERED_NAMES:
+        return True
+    from .subjects import get
+
+    get(model)
+    return False
+
+
+def rekey_dir(model: str):
+    return _dir(model) / "rekey"
+
+
+def _pin_variant(d: Any, variant: str, step: str) -> str:
+    """``<out>/variant.txt`` records the variant at ``requests_s``; later steps read it, and a
+    different ``variant=`` there is refused (the legs must share one render)."""
+    if variant and variant not in VARIANTS:
+        raise SystemExit(f"moral rekey: variant={variant!r}: one of {VARIANTS}")
+    path = d / "variant.txt"
+    if step == "requests_s":
+        path.write_text(variant, encoding="utf-8")
+        return variant
+    pinned = path.read_text(encoding="utf-8").strip() if path.exists() else ""
+    if variant and variant != pinned:
+        raise SystemExit(f"moral rekey: variant={variant!r}, but requests_s ran with {pinned!r}")
+    return pinned
+
+
+def with_variant(items: list[dict], variant: str) -> list[dict]:
+    """``system_one_word``: the item's read conversation gets the one-word system turn for its
+    answer format (``variant``'s turn; it names both sides, so it never suggests one)."""
+    out = []
+    for it in items:
+        fmt = "true_false" if it.get("answer_format") == "true_false" else "yes_no"
+        out.append({**it, "system": SYSTEM_ONE_WORD[fmt], "gate_variant": variant})
+    return out
+
+
+def sample_rows(model: str, rows: list[dict], runner: Any = None) -> list[dict]:
+    """Sample request rows (gate_sampling shape) on the SUBJECT through its runner, in the
+    output-row shape scripts/qwen_sample_modal.py writes, so ``group_samples`` and every later
+    step are shared with the 27B path. The runner renders ``messages`` with the subject's own
+    chat template, thinking off (gate.Runner); a row's greedy draw is kept only if it asks for
+    one. Rows are sampled in groups of equal sampling settings."""
+    from wsbench import gate_sampling as gs
+
+    from .gate import Ask
+
+    if not rows:
+        return []
+    if runner is None:
+        from .run import _runner
+
+        runner = _runner(model)
+    out: list[dict] = []
+    groups: dict[tuple, list[dict]] = {}
+    for r in rows:
+        if "messages" not in r:
+            raise SystemExit(f"moral rekey: row {r['key']} has no messages")
+        groups.setdefault((int(r["n"]), float(r["temperature"]), float(r.get("top_p", 1.0)),
+                           int(r["max_tokens"])), []).append(r)  # fmt: skip
+    for (n, temp, top_p, _mt), part in groups.items():
+        asks = [
+            Ask(r["key"], "rekey", messages=tuple(r["messages"]), max_tokens=int(r["max_tokens"]))
+            for r in part
+        ]
+        for r, (greedy, samples) in zip(part, runner.sample(asks, n, temp, top_p), strict=True):
+            outs = ([[(greedy, None)]] if r.get("greedy") else []) + [[(t, None) for t in samples]]
+            out += gs.output_rows(r, outs)
+    print(f"moral rekey: sampled {len(rows)} rows on {model} ({len(out)} draws)")
+    return out
+
+
+OPTION_STEPS = ("build", "gate", "restyle", "harden", "lenmatch", "coregister", "freeze")
+
+
+def _moral_distractors(args: list[str]) -> None:
+    import subprocess
+    import sys
+
+    from wsbench.registry import REPO_ROOT
+
+    script = REPO_ROOT / "scripts" / "moral_distractors.py"
+    env = {**os.environ, "PYTHONPATH": os.pathsep.join(
+        [str(REPO_ROOT / "src"), os.environ.get("PYTHONPATH", "")]).rstrip(os.pathsep)}  # fmt: skip
+    subprocess.run([sys.executable, str(script), *args], check=True, env=env, cwd=REPO_ROOT)
+
+
+def subject_bank_path(out: Any, bank: str | None = None):
+    from pathlib import Path
+
+    return Path(bank) if bank else Path(out) / "items_v3.json"
+
+
+def options(
+    model: str, out: str, bank: str | None = None, script: Any = _moral_distractors
+) -> None:
+    """The subject-keyed option lists: scripts/moral_distractors.py's steps, in order, over the
+    subject's ``<out>/rekey.json`` (its own reasons and draws), frozen with ``--bank`` to the
+    subject's bank (default ``<out>/items_v3.json``), never ``evals/``."""
+    from pathlib import Path
+
+    if is_registered(model):
+        raise SystemExit("moral options: the 27B's options are evals/moral_rationale/items_v3.json")
+    d = Path(out)
+    if not (d / "rekey.json").exists():
+        raise SystemExit(f"moral options: no {d / 'rekey.json'}; run stage=rekey_readrender")
+    work = d / "options"
+    work.mkdir(parents=True, exist_ok=True)
+    for step in OPTION_STEPS:
+        args = [step, "--rekey", str(d), "--out", str(work)]
+        if step == "freeze":
+            args += ["--bank", str(subject_bank_path(d, bank))]
+        script(args)
+
+
+# fields the subject's re-key / option build writes over the registered v3 item (everything the
+# 27B's re-key wrote there: the judge reads reason_class, options, reasons, look_for_reasons)
+_V2_FIELDS = (
+    "reason_class", "reasons", "gold_reasons", "gold_terms", "look_for_reasons",
+    "must_surface_both", "answer_split", "commit_answer", "commit_direction", "commit_precise",
+    "gate_committed_token", "gate_aligned", "gate_reason_side_ok", "gate_pass",
+)  # fmt: skip
+_BANK_FIELDS = ("options", "reasons", "look_for_reasons", "reason_side_ok", "rekey")
+# the rest adopt writes on every item (families.SUBJECT_FIELDS covers all three tuples, so an
+# A1 freeze that overlays only SUBJECT_FIELDS ships exactly the adopted item)
+ADOPT_FIELDS = ("system", "gate_variant", "bank_version", "needs_reasons", "subject_answer")
+
+
+def adopt(model: str, out: str, bank: str | None = None) -> Counter:
+    """Gate rows from the subject's re-key, restricted to the REGISTERED v3 bank's ids
+    (``bank_version: 3``): each row's item is the registered v3 item with the subject's side,
+    class, reasons and gate (``rekey.json``) and its subject-keyed options (the
+    ``moral_distractors.py --bank`` output) laid over it, marked
+    ``families.SUBJECT_MARKER = model``. Pass = the v3 gate (token AND precise AND aligned AND
+    reason supports the side AND has a reason, Leg S kept, class kept) AND options built. A v3
+    id the re-key did not keep, or without options, fails and never keeps the registered
+    (Qwen's) options."""
+    import datetime as dt
+    from pathlib import Path
+
+    from . import families as fams
+
+    if is_registered(model):
+        raise SystemExit("moral adopt: the 27B's bank of record is evals/moral_rationale/")
+    d = Path(out)
+    entries = json.loads((d / "rekey.json").read_text(encoding="utf-8"))
+    if wrong := sorted({str(e["rekey"].get("model")) for e in entries} - {model}):
+        raise SystemExit(f"moral adopt: {d / 'rekey.json'} was re-keyed on {wrong}, not {model}")
+    bpath = subject_bank_path(d, bank)
+    from wsbench.registry import REPO_ROOT
+
+    if (REPO_ROOT / "evals") in bpath.resolve().parents:
+        raise SystemExit(f"moral adopt: bank={bpath} is under evals/ (the bank of record)")
+    sb = {}
+    if bpath.exists():
+        sb = {it["id"]: it for it in json.loads(bpath.read_text(encoding="utf-8"))}
+    else:
+        print(f"moral adopt: no subject options at {bpath} (stage=options): every item fails")
+    _h, v3 = store.original_bank(FAMILY)
+    by_id = {e["v1"]["id"]: e for e in entries}
+    now = dt.datetime.now(dt.UTC).isoformat(timespec="seconds")
+    rows, tally = [], Counter()
+    for reg in v3:
+        iid = reg["id"]
+        e, sub = by_id.get(iid), sb.get(iid)
+        it = copy.deepcopy(reg)
+        it.pop("options", None)  # the registered (Qwen's) lists never ride along
+        if e is None:
+            checks = {"rekeyed": False}
+            v2, rk = {}, {}
+        else:
+            v2, rk = e["v2"], e["rekey"]
+            it.update({k: copy.deepcopy(v2[k]) for k in _V2_FIELDS if k in v2})
+            it["rekey"] = copy.deepcopy(rk)
+            checks = {"rekeyed": True, **v2.get("gate_checks", {})}
+        # the subject's option bank must be THIS subject's and keyed on THIS re-key's side/class
+        sub_ok = bool(
+            sub
+            and sub.get("options")
+            and (sub.get("rekey") or {}).get("model") == model
+            and sub.get("commit_direction") == v2.get("commit_direction")
+            and sub.get("reason_class") == v2.get("reason_class")
+        )
+        if sub_ok:
+            it.update({k: copy.deepcopy(sub[k]) for k in _BANK_FIELDS if k in sub})
+        src = (sub if sub_ok else None) or (e or {}).get("v1") or {}
+        # system_one_word: the read conversation's system turn; always written (None = none) so
+        # the shipped item never keeps a registered value (SUBJECT_FIELDS overlay)
+        it["system"] = src.get("system") or None
+        it["gate_variant"] = src.get("gate_variant") or ("system_one_word" if it.get("system")
+                                                        else "chat")  # fmt: skip
+        checks["options"] = sub_ok
+        ok = all(checks.values())
+        it.update({"bank_version": V3_VERSION, "needs_reasons": False, "gate_pass": ok,
+                   "subject_answer": v2.get("commit_answer", "")})  # fmt: skip
+        if ok:
+            it[fams.SUBJECT_MARKER] = model
+        side = {"greedy": {"text": rk.get("side_greedy", ""), "ok": ok}, "samples": [],
+                "rate": None, "decided": 0, "passed": bool(checks.get("leg_s")),
+                "question": "\n\n".join(m["content"] for m in read_messages(it)),
+                "own": v2.get("commit_answer", "")}  # fmt: skip
+        draws = rk.get("side_draws") or {}
+        if v2.get("commit_direction") in ("yes", "no") and draws:
+            side["rate"] = draws.get(v2["commit_direction"], 0) / max(1, sum(draws.values()))
+            side["decided"] = sum(draws.values())
+        gate = {"pass": ok, "rate": side["rate"], "render": "surface",
+                "greedy": side["greedy"], "samples": [], "question": side["question"],
+                "legs": {"surface": side}, "moral": checks}  # fmt: skip
+        rows.append({"id": iid, "origin": "original", "item": it, "gate": gate, "selected": ok,
+                     "sampling": {"draws": SIDE_N, "temperature": SIDE_T, "top_p": SIDE_TOP_P,
+                                  "threshold": COMMIT_MIN / SIDE_N},
+                     "bank_version": V3_VERSION, "built_by": "moral adopt", "at": now})  # fmt: skip
+        tally["pass" if ok else "fail"] += 1
+        for k, v in checks.items():
+            tally[f"fail:{k}"] += not v
+    store.record_gates(model, FAMILY, rows)
+    print(f"moral adopt: {len(rows)} v3 items -> gate rows: {dict(+tally)}")
+    return tally

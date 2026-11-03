@@ -45,7 +45,12 @@ exported ``ANTHROPIC_API_KEY``)::
     python scripts/moral_distractors.py harden --rekey <dir> --out <dir>
     python scripts/moral_distractors.py lenmatch --rekey <dir> --out <dir>
     python scripts/moral_distractors.py coregister --rekey <dir> --out <dir>
-    python scripts/moral_distractors.py freeze --rekey <dir> --out <dir>
+    python scripts/moral_distractors.py freeze --rekey <dir> --out <dir> [--bank <file>]
+
+``--bank`` (plan 0060 A2): an adapted subject's re-key (``adapt moral model=<m>
+stage=rekey_readrender``, records carrying ``model``) freezes to that file instead of
+``evals/`` (``adapt moral stage=options`` runs every step with it); without it the bank of record
+is written exactly as before.
 """
 
 import argparse
@@ -1458,10 +1463,30 @@ def gate(rekey: Path, out: Path, limit: int) -> None:
     print(f"gate: regenerated same-* on {sum(st.state[lst['key']]['regen_kept'] for lst in lists)}")
 
 
-def freeze(rekey: Path, out: Path) -> None:
+def bank_paths(entries: list[dict], bank: Path | None) -> tuple[Path, Path]:
+    """Where ``freeze`` writes: the bank of record (``V3`` + ``REPORT``) by default; with
+    ``--bank`` (plan 0060 A2, an adapted subject's re-key) that file and its report beside it.
+    A subject-keyed ``rekey.json`` (its records carry ``model``) is refused without ``--bank``
+    and refused into ``evals/``: no adapted run ever writes the bank of record."""
+    subjects = sorted({str(e["rekey"]["model"]) for e in entries if e["rekey"].get("model")})
+    if bank is None:
+        if subjects:
+            raise SystemExit(
+                f"freeze: rekey.json is keyed on {subjects}; pass --bank (never evals/)"
+            )
+        return V3, REPORT
+    bank = bank.resolve()
+    if subjects and (REPO / "evals") in bank.parents:
+        raise SystemExit(f"freeze: --bank {bank} is under evals/; an adapted bank never is")
+    return bank, bank.with_name(bank.stem + "_report.json")
+
+
+def freeze(rekey: Path, out: Path, bank: Path | None = None) -> None:
     """Write ``items_v3.json`` (bare list, ``bank_version: 3`` per item) and the re-key report
-    (bank v2, ``items_v2.json``, was frozen before the length-match pass and is never rewritten)."""
+    (bank v2, ``items_v2.json``, was frozen before the length-match pass and is never rewritten).
+    ``bank``: write there instead (an adapted subject's options; ``bank_paths``)."""
     entries = _load(rekey / "rekey.json")
+    bank_path, report_path = bank_paths(entries, bank)
     st = Lists(out / "lists.json")
     v2_items, report = [], {"items": {}, "counts": Counter()}
     for e in entries:
@@ -1523,6 +1548,8 @@ def freeze(rekey: Path, out: Path) -> None:
                     "v1_look_for": rk["v1_look_for"],
                     "v1_gate_pass": rk["v1_gate_pass"],
                     "changed": rk["changed"],
+                    # an adapted subject's re-key names its model (plan 0060 A2: adopt checks it)
+                    **({"model": rk["model"]} if rk.get("model") else {}),
                 },
             }
         )
@@ -1556,9 +1583,10 @@ def freeze(rekey: Path, out: Path) -> None:
     if gate_path.exists():
         g = _load(gate_path)
         report["gate"] = {"draws": g["draws"], "n_easy_lists": len(g["easy"])}
-    _save(V3, v2_items)
-    _save(REPORT, report)
-    print(f"froze {len(v2_items)} items -> {V3}; counts {report['counts']}")
+    bank_path.parent.mkdir(parents=True, exist_ok=True)
+    _save(bank_path, v2_items)
+    _save(report_path, report)
+    print(f"froze {len(v2_items)} items -> {bank_path}; counts {report['counts']}")
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -1570,6 +1598,13 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--rekey", type=Path, required=True)
     ap.add_argument("--out", type=Path, required=True)
     ap.add_argument("--limit", type=int, default=0)
+    ap.add_argument(
+        "--bank",
+        type=Path,
+        default=None,
+        help="freeze: the bank file to write (an adapted subject's; default: the bank of record "
+        "evals/moral_rationale/items_v3.json, refused for a subject-keyed rekey.json)",
+    )
     a = ap.parse_args(argv)
     if a.step == "build":
         build(a.rekey, a.out, a.limit)
@@ -1584,7 +1619,7 @@ def main(argv: list[str] | None = None) -> int:
     elif a.step == "coregister":
         coregister(a.rekey, a.out, a.limit)
     else:
-        freeze(a.rekey, a.out)
+        freeze(a.rekey, a.out, a.bank)
     return 0
 
 
