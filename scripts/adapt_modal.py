@@ -34,7 +34,8 @@ Image recipes (``Subject.modal_image``):
   (volume ``v4-pro``).
 - ``muse``: the dsv4 base (CUDA 13 devel) with vLLM 0.33.0 (what Muse-Spark-Open needs);
   weights = the plain snapshot dir ``hf/meta-models__Muse-Spark-Open-816B-A42B-NVFP4`` on the
-  ``muse-spark`` volume (no HF secret: nothing is fetched from the hub).
+  ``muse-spark`` volume (no HF secret: nothing is fetched from the hub). Carries flashinfer's
+  prebuilt JIT cache (sm103a + sm100a): JIT-building the trtllm MoE on B300 segfaults gcc.
 
 kimi-k3 uses ``default`` (trust_remote_code, ``language_model_only``, gpu_memory_utilization 0.95
 in its engine kwargs) with its weights on the ``kimi-k3`` volume, mounted at the default
@@ -115,11 +116,17 @@ RECIPES: dict[str, dict] = {
     },
     "muse": {  # Muse-Spark-Open: a plain snapshot dir on the muse-spark volume
         "mount": "/vol",
-        "env": {"HF_HOME": "/vol/hf", "CUDA_HOME": "/usr/local/cuda"},
+        "env": {"HF_HOME": "/vol/hf", "CUDA_HOME": "/usr/local/cuda", "MAX_JOBS": "4"},
         "resources": {"memory": 256 * 1024, "cpu": 16},
     },
 }  # fmt: skip
 MUSE_VLLM = "vllm==0.33.0"  # Muse-Spark (MuseSparkForConditionalGeneration) needs 0.33.0
+# vllm 0.33.0's flashinfer (0.7.2.post1) JIT-compiles fused_moe_trtllm_sm100 at the first forward,
+# and cc1plus segfaults building it on the B300 (gcc ICE in trtllm_batched_gemm_runner.cu, every
+# TP rank, container crash-loop). Install flashinfer's prebuilt JIT cache instead: the meta package
+# (provider discovery) --no-deps plus the B300 (sm103a) and B200 (sm100a) providers only.
+FLASHINFER_JIT = "0.7.2.post1+cu130"
+FLASHINFER_INDEX = "https://flashinfer.ai/whl/cu130"
 RECIPE = RECIPES[SPEC["image"]]
 
 
@@ -155,6 +162,19 @@ def _image(recipe: str) -> modal.Image:
         return (
             modal.Image.from_registry("nvidia/cuda:13.0.1-devel-ubuntu24.04", add_python="3.12")
             .uv_pip_install(MUSE_VLLM)
+            .run_commands(
+                f"pip install --no-deps --extra-index-url {FLASHINFER_INDEX} "
+                f"flashinfer-jit-cache=={FLASHINFER_JIT} "
+                f"flashinfer-jit-cache-sm103a=={FLASHINFER_JIT} "
+                f"flashinfer-jit-cache-sm100a=={FLASHINFER_JIT}",
+                # fail the build, not the engine, if the cache lacks the MoE module
+                'python -c "import flashinfer_jit_cache as j; ps = j.get_jit_cache_providers(); '
+                "print([(p.provider_id, sorted(p.cuda_architectures), len(p.modules)) "
+                "for p in ps]); "
+                "assert all(any(a in p.cuda_architectures "
+                "and 'fused_moe_trtllm_sm100' in p.modules "
+                "for p in ps) for a in ('sm103a', 'sm100a'))\"",
+            )
             .env(env)
         )
     if recipe == "dsv4":  # DeepGEMM JIT-compiles at runtime and asserts a CUDA home (nvcc)

@@ -265,6 +265,10 @@ or keep only `plain` items and report the count.
   vLLM applies from the checkpoint dir.
 - No J-lens: `read_band=()`. `muse` image (vLLM 0.33.0), TP8 on B300:8 (B200:8 fallback), volume
   `muse-spark` with the plain snapshot dir `hf/meta-models__Muse-Spark-Open-816B-A42B-NVFP4`.
+- The image carries flashinfer's prebuilt JIT cache (`flashinfer-jit-cache` 0.7.2.post1+cu130,
+  sm103a + sm100a providers): building `fused_moe_trtllm_sm100` at engine start segfaults
+  cc1plus on B300 (gcc ICE, every TP rank, the container crash-loops). A first boot is ~25 min
+  (weights ~6-12 min off the volume, then the trtllm fp4 MoE autotuner).
 
 ## Lens read band (`Subject.read_band`)
 If the subject's lens reads only some layers (Qwen3-8B's OLens: even layers 12..34), set
