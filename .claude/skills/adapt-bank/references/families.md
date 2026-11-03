@@ -34,9 +34,11 @@ re-stamped (`references/porting.md`).
 ### association — the referent a vignette evokes but never names
 - **Keys:** `name, prompt, intermediates[1], source, consistency, gate_variant:"referent",
   eval_render:"plain", readout{final_prompt_token,[-1]}`. Add `aliases` (for gating only).
-- **Gate:** "This text describes something it never names. Reply with the single word or short
-  phrase that names it." Graded `contains` against target + aliases; misses go to the LLM grader
-  (synonyms are common).
+- **Gate (plan 0060 D10, in the read render):** after the subject's greedy summary of the scene
+  (`chat_summarize`), the follow-up "The story you just summarized describes something it never
+  names. Reply with the single word or short phrase that names it, and nothing else." Graded
+  `contains` against target + aliases; misses go to the LLM grader (synonyms are common).
+  Greedy right AND >= 8/10. See [Gate in the read render](#gate-in-the-read-render-plan-0060-d10).
 - **Invariants:**
   - no target or alias (stem-loose) in the prompt;
   - ends in `.!?`;
@@ -55,7 +57,8 @@ re-stamped (`references/porting.md`).
   (`scripts/association_distractors.py`, `scripts/mc_leakage_r4.py`, topic guesser; these write
   `evals/`, never run them for an adapted set); quote gate + pins. Read render `chat_summarize`
   (19-position suffix span × GRID; lite = all positions), so `eval_render` / `readout` are no longer
-  needed. The adapt gate still asks in the plain render; a regate does not fix that (plan 0060), and
+  needed. The adapt gate's referent question is asked in that render too (plan 0060 D10; records
+  gated before it carry no `sampling.gate_render` and `adapt regrade` skips them: regate), and
   regating a v1 association item without `mc` is destructive (lint rejects it, last record wins). 7 v1 ids left the bank: drop them.
 
 ### basic_readout — the obvious next concept (entity / processing / implicit)
@@ -393,8 +396,10 @@ deleted.
   echo). Re-read only.
 
 ### conjunctive_association — state × content × relation (gold_label among the cluster's 10)
-- **Gate:** NTP gate (continuations never verbalize a state axis). Asked-open is an annotation only;
-  it was ~38% on the 27B, so don't gate on it.
+- **Gate:** NTP gate (the plain continuation never verbalizes the composed state; greedy clean and
+  0/10 samples). Unchanged by plan 0060 D10 (a leak screen, not a knowledge leg: see
+  [Gate in the read render](#gate-in-the-read-render-plan-0060-d10)). Asked-open is an annotation
+  only; it was ~38% on the 27B, so don't gate on it.
 - **Ladder:**
   - T0: L3/L4 blends.
   - T1: L3 only with concrete cues.
@@ -406,7 +411,8 @@ deleted.
 
 ### role_bound_association — who did what to whom
 - **Gate:** asked-open greedy (Opus-judged gold vs contrast), and the continuation must not state
-  the gold.
+  the gold (greedy clean). Plan 0060 D10: `asked_question` is asked in the read render, as a
+  follow-up turn after the subject's greedy summary; the leak screen stays the plain continuation.
 - **Ladder:**
   - T0: as is.
   - T1: tier A (role words blocked) and shorter scenes (≤ 70 words) with clearer role cues.
@@ -417,6 +423,56 @@ deleted.
   `final_token` (`readplan._adapted_offset`).
 
 ---
+
+## Gate in the read render (plan 0060 D10)
+
+association, conjunctive_association and role_bound_association are read in `chat_summarize`:
+the subject's chat template, thinking off, NO system turn, one user turn = the scene +
+`"\n\nSummarize the preceding story in one sentence."`, read on the suffix and the
+generation-prompt tail (`readplan`, `produce/render.py`). D10 fixes the gate/read mismatch for the
+KNOWLEDGE check, the leg that asks whether the subject holds the latent:
+
+- **Knowledge legs, in the read conversation** (association referent: greedy right AND >= 8/10;
+  role_bound asked-open: greedy only, lenient / strict grading as before). `adapt/families.py`
+  `_followup`, `Ask.followup`: `run_gate` first generates the subject's greedy summary of the read
+  render (`SUMMARY_TOKENS` = 128), then asks the question as a follow-up user turn after it. The
+  prompt is the read render's own text + the summary + the template's text for closing that reply
+  and opening the next user turn (`template.followup_tail`, read off the subject's template with a
+  sentinel reply). A plain re-render of the 3-turn conversation is NOT a prefix on Qwen3 (a past
+  assistant turn loses its empty think block), so it would gate a context the lens never reads.
+  Greedy + 10 samples are all conditioned on the one greedy summary.
+- **Token-prefix check** (`gate.with_replies`, `Runner.token_prefix`): the read render's ids must
+  start the follow-up's ids. BPE can merge across the join (Qwen: `</think>\n\n` + a reply led by
+  `\n` tokenizes as `\n\n\n`); then the reply's leading whitespace is stripped and the check
+  repeated. Still not a prefix = `broken`: the leg is not sampled and is undecided (a fail).
+  The record says which: `followup.prefix` = `exact` / `stripped` (with `reply_raw`) / `broken`.
+- **`followup.reply_states_gold`** (top level of the gate record and on the leg): the greedy
+  summary already wrote a gold form (deterministic whole-word match over the whole reply). Such
+  a pass may be a copy of the subject's own summary rather than recall from the read state; it
+  still passes (the latent was computed before the reply), and analysis can separate it.
+- **Why a follow-up and not the alternatives.** (a) Appending the question to the summarize user
+  turn changes the chat-tail tokens the lens reads. (b) An assistant prefill ("The thing the story
+  never names is") keeps the prefix but invents a new question in the subject's own voice, and
+  role_bound's question is a user question. (c) The old separate chat with `ANSWER_SYSTEM` adds a
+  system turn the read does not have and drops the summarize framing. The follow-up asks the
+  bank's own question (association: `NAME_REFERENT` with "This text" pointed at "The story you
+  just summarized"; role_bound: `asked_question` verbatim, plus the `ask_roles` sentence for that
+  variant) about the same scene, downstream of the very states the lens reads.
+- **No `ANSWER_SYSTEM`.** The read has no system turn, so the knowledge leg has none; the question
+  states its own format, `contains` reads the first line and misses go to the LLM grader.
+- **Leak screens stay the registered plain continuation** (`_continuation_leak`: role_bound
+  greedy clean, conjunctive 0/10; conjunctive's gate is therefore unchanged). The screen asks
+  whether the subject naturally writes the latent; the read positions come BEFORE any reply, so
+  nothing the subject writes next is in what the lens reads, and the screen need not live in the
+  read conversation. Moving it onto the summary would select for the wrong thing: role_bound's
+  one-sentence summary is close to its own asked question ("who did what to whom"), so a good
+  summary would fail the screen, and conjunctive's 0/10 on summaries (which name the emotional
+  state) would wipe the family.
+- **Records:** association and role_bound rows carry `sampling.gate_render: "chat_summarize"`; a
+  follow-up leg stores its `reply` and `followup` checks, and `adapt regrade` restores them. A row
+  gated before D10 (the old `ANSWER_SYSTEM` question) has a different stored question: regrade
+  skips it and says to regate.
+- **Registered 27B banks are untouched:** this is the adapt gate only (`capable` is separate).
 
 ## Regenerate on the subject (no ladder; porting.md)
 - agentic_misalignment, jlens_concept_pr, jailbreak_recognition: regenerate on the subject.

@@ -12,6 +12,7 @@ from pathlib import Path
 
 from wsbench.capable.questions import CONTINUE, CORRECT_SPELLING, NAME_REFERENT, readable_outcome
 from wsbench.capable.run import ANSWER_SYSTEM
+from wsbench.readplan import SUMMARIZE_SUFFIX
 
 from . import moral as _moral_mod
 from . import poetry as _po
@@ -171,16 +172,56 @@ def _continuation_leak(item: dict, key: str, gold: list[str], max_rate: float) -
     )  # fmt: skip
 
 
+# ---- plan 0060 D10: knowledge legs in the read render (``readplan`` ``chat_summarize``) ------
+#
+# association, conjunctive_association and role_bound_association are READ in ``chat_summarize``:
+# the subject's chat template, thinking off, no system turn, one user turn = the scene +
+# SUMMARIZE_SUFFIX, read on the suffix and the generation-prompt tail. Their KNOWLEDGE legs (does
+# the subject hold the referent / the role binding) are asked in that conversation, as a FOLLOW-UP
+# user turn after the subject's own greedy summary (``Ask.followup``), rendered so the read render
+# is a token-exact prefix of it. The LEAK screens stay the registered plain continuation
+# (``_continuation_leak``): the read positions precede any reply, and a summary is an explicit
+# request to state the gist. Reasoning: the skill's references/families.md "Gate in the read
+# render".
+
+SUMMARY_TOKENS = 128  # the greedy one-sentence summary a follow-up is conditioned on
+# the pinned NAME_REFERENT, its "This text" pointed at the story the subject just summarized
+REFERENT_FOLLOWUP = NAME_REFERENT.replace("This text", "The story you just summarized", 1)
+
+
+def read_turn(item: dict, key: str) -> tuple[dict, ...]:
+    """The ``chat_summarize`` conversation exactly as ``produce.render`` builds it."""
+    return ({"role": "user", "content": f"{item[key]}{SUMMARIZE_SUFFIX}"},)
+
+
+def _followup(item: dict, key: str, text: str, golds, grade: str, **kw) -> Ask:
+    """A question asked after the subject's greedy summary of the read render (``run_gate``
+    generates it): the conversation the lens read, continued."""
+    meta = {"reply_tokens": SUMMARY_TOKENS, **kw.pop("meta", {})}
+    return Ask(_iid(item), "surface", tuple(str(g) for g in golds if str(g)), read_turn(item, key),
+               grade=grade, meta=meta, followup=({"role": "user", "content": text},),
+               **kw)  # fmt: skip
+
+
+def _association(item: dict) -> list[Ask]:
+    """Source gate: the subject names the referent (greedy + >= 8/10), asked after its own
+    summary; no leak screen (the bank never had one). The record notes whether that summary
+    already named the gold (``Leg.followup["reply_states_gold"]``)."""
+    return [_followup(item, "prompt", REFERENT_FOLLOWUP, _golds(item), "contains")]
+
+
 def _conjunctive(item: dict) -> list[Ask]:
     """Source gate (oracle_lens/latent_eval.md): continuations never verbalize the composed
-    state. Asked-open was an annotation only (~38% even on the 27B), so it is not gated."""
+    state. Asked-open was an annotation only (~38% even on the 27B), so it is not gated. Plan 0060
+    D10 leaves it as is: a leak screen, kept on the plain continuation."""
     return [_continuation_leak(item, "stimulus", [item["gold_label"]], 0.0)]
 
 
 def _role_bound(item: dict) -> list[Ask]:
     """Source gate: the asked-open GREEDY answer gives the gold role binding, and the
-    continuation does not state it."""
-    text = f"{item['stimulus']}\n\n{item['asked_question']}"
+    continuation does not state it. Plan 0060 D10: the asked question is a follow-up after the
+    subject's greedy summary in the read render; the leak screen stays the plain continuation."""
+    text = str(item["asked_question"])
     if item.get("gate_variant") == "ask_roles":  # subjects that answer with names (OLMo-7B)
         text += " Answer with their roles or occupations, not their names."
     names = item.get("names") or {}
@@ -195,9 +236,8 @@ def _role_bound(item: dict) -> list[Ask]:
         name_roles = {str(names[k]): f"the {item[f'role_{k}']} ({names[k]})" for k in ("a", "b")
                       if names.get(k) and item.get(f"role_{k}")}  # fmt: skip
         meta = {"threshold": 0.0, "name_roles": name_roles}
-    asked = _chat(
-        _iid(item), "surface", text, [item["gold_label"]], "llm", max_tokens=64, meta=meta
-    )
+    asked = _followup(item, "stimulus", text, [item["gold_label"]], "llm", max_tokens=64,
+                      meta=meta)  # fmt: skip
     return [asked, _continuation_leak(item, "stimulus", [item["gold_label"]], 1.0)]
 
 
@@ -267,12 +307,15 @@ class Family:
     # a family rule over one item's legs that ``gate.gate_record``'s per-group alternatives
     # cannot express (poetry v5: the free word must be the stub word in the same render)
     finalize: Callable[[dict], dict] | None = None
+    # the readplan render the legs are asked in when it is not the per-leg default (plan 0060 D10);
+    # recorded in each gate row's ``sampling`` so a pre-D10 record is told apart
+    gate_render: str = ""
 
 
 FAMILIES: dict[str, Family] = {
     f.name: f
     for f in [
-        Family("association", _asked(NAME_REFERENT)),
+        Family("association", _association, gate_render="chat_summarize"),
         Family("basic_readout", _basic_readout, note="implicit items: own favourite"),
         Family(
             "multihop",
@@ -301,7 +344,12 @@ FAMILIES: dict[str, Family] = {
         Family("chain_intermediates", _numeric, threshold=1.0, temperature=0.8, top_p=0.95),
         Family("relational_multihop", _relational),
         Family("conjunctive_association", _conjunctive, note="leak screen only (source gate)"),
-        Family("role_bound_association", _role_bound, note="greedy asked-open + leak screen"),
+        Family(
+            "role_bound_association",
+            _role_bound,
+            note="greedy asked-open + leak screen",
+            gate_render="chat_summarize",
+        ),
         Family("user_modeling", _user_modeling),
         Family("buggy_code", _buggy_code, note="consequence half only"),
         Family("moral_rationale", _moral, own=True, note="side re-gate; reasons re-distilled"),

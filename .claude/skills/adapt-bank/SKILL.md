@@ -460,9 +460,11 @@ variants before the ladder, and keep the ladder's easiest tier honest: it must s
 - **Re-derive banks that store token positions** (MCDM, jailbreak) by character
   span in the subject's own render. Require 0 mismatches.
 - **Gate in the exact read render**: no system turn unless the read has one. association,
-  conjunctive and role_bound are now READ in the `chat_summarize` render, but the adapt gate's
-  legs for them still use the plain render (`_continuation_leak` on `item[key]`), so a regate
-  re-runs the same render: the mismatch is a code gap (plan 0060), not something a regate fixes.
+  conjunctive and role_bound are READ in the `chat_summarize` render, and (plan 0060 D10) their
+  knowledge legs (association's referent, role_bound's asked question) are asked in it, as a
+  follow-up after the subject's greedy summary with the read render as a checked token prefix.
+  Leak screens stay the plain continuation (`references/families.md` "Gate in the read render").
+  Records gated before D10 need a regate, not a regrade.
 - **A frozen item's `gate_variant` never picks its eval render**; only adapted items' variants do
   (`readplan` poetry).
 

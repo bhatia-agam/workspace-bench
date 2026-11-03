@@ -85,6 +85,8 @@ def _gate_rows(model: str, family: str, items: list[dict], runner, draws, temper
     sampling = {"draws": draws, "temperature": temp, "top_p": top_p, "threshold": fam.threshold}
     if top_k is not None:  # recorded only when the family's gate fixes one (basic_readout_mt)
         sampling["top_k"] = top_k
+    if fam.gate_render:  # plan 0060 D10: legs asked in the read render
+        sampling["gate_render"] = fam.gate_render
     if llm is None and any(a.grade == "llm" for a in asks):  # never fail llm legs for want of a
         print(f"{family}: llm-graded legs and no llm= -> {DEFAULT_LLM}")  # grader (audit #14)
         llm = _llm(DEFAULT_LLM)
@@ -880,13 +882,39 @@ def auto(model: str, family: str, runner=None, max_waves: int = 6, **kw: Any) ->
     return status
 
 
+def _regrade_asks(family: str, row: dict) -> dict | None:
+    """The row's asks by leg, follow-up legs given back the reply they were sampled after; None
+    when a leg's stored question is not the current one (a record gated before plan 0060 D10 moved
+    the family into its read render: its answers are to another prompt, so only a regate fixes
+    it)."""
+    from dataclasses import replace
+
+    fam = fams.get(family)
+    asks = {a.leg: a for a in fam.asks(row["item"])}
+    if not fam.gate_render:
+        return asks
+    for name, old in row["gate"]["legs"].items():
+        if (ask := asks.get(name)) is None:
+            continue
+        if ask.followup:
+            if old.get("reply") is None:
+                return None
+            meta = {**ask.meta, "followup": old.get("followup") or {}}
+            ask = asks[name] = replace(ask, reply=old["reply"], meta=meta)
+        if old.get("question") != ask.question():
+            return None
+    return asks
+
+
 def _regrade_row(family: str, row: dict, grade) -> dict:
     from .gate import Leg, gate_record, grade_leg
 
     fam = fams.get(family)
     if row.get("built_by"):  # a row a later stage built (moral adopt, poetry opus_gate): its
         return row  # evidence is not the gate legs alone, so a re-grade keeps it as it is
-    asks = {a.leg: a for a in fam.asks(row["item"])}
+    asks = _regrade_asks(family, row)
+    if asks is None:
+        raise ValueError(f"{family}/{row['id']}: gated in another render; regate, not regrade")
     legs: dict[str, Leg] = {}
     for name, old in row["gate"]["legs"].items():
         if (ask := asks.get(name)) is None:
@@ -917,6 +945,11 @@ def regrade(model: str, families: list[str], llm: str, workers: int = 16) -> Non
     for family in families:
         # lint rejects were never sampled: nothing to re-grade
         rows = [r for r in store.gated(model, family).values() if not r["gate"].get("lint")]
+        stale = [r["id"] for r in rows if _regrade_asks(family, r) is None]
+        if stale:  # plan 0060 D10: answers to the old plain / system-turn prompts
+            print(f"{family}: {len(stale)} rows gated before the read-render gate are left as "
+                  f"they are (regate them): {stale[:5]}")  # fmt: skip
+            rows = [r for r in rows if r["id"] not in set(stale)]
         with ThreadPoolExecutor(workers) as pool:
             new = list(pool.map(partial(_regrade_row, family, grade=grade), rows))
         for r in new:
