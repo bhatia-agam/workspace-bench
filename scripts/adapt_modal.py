@@ -278,7 +278,23 @@ def _inputs(prompts: list) -> list:
     return [TokensPrompt(prompt_token_ids=p) if isinstance(p, list) else p for p in prompts]
 
 
-RUN = {"sample": run_sample, "generate": run_generate}
+# ---- plan 0060 Phase E (wrong_bridge logP legs) ----
+def run_cont_logprobs(llm, ids: list, starts: list) -> list:
+    """Per token-id sequence: the sum of its teacher-forced log-probs from ``max(k, 1)`` on
+    (vLLM ``prompt_logprobs``; ``gate.sum_cont_logprob`` is the same sum on the local Runner)."""
+    from vllm import SamplingParams
+
+    sp = SamplingParams(temperature=0.0, max_tokens=1, prompt_logprobs=0)
+    outs = llm.generate(_inputs(ids), sp, use_tqdm=False)
+    return [
+        float(sum(o.prompt_logprobs[i][x[i]].logprob for i in range(max(k, 1), len(x))))
+        for o, x, k in zip(outs, ids, starts, strict=True)
+    ]
+
+
+# ---- end plan 0060 Phase E ----
+
+RUN = {"sample": run_sample, "generate": run_generate, "cont_logprobs": run_cont_logprobs}
 
 
 def fan_out(engines: list, name: str, args: tuple) -> list:
@@ -292,6 +308,8 @@ def fan_out(engines: list, name: str, args: tuple) -> list:
     for eng, (lo, hi) in zip(engines, split(len(prompts), len(engines)), strict=False):
         if name == "sample":  # (prompts, max_tokens, draws, temperature, top_p, seed)
             a = (prompts[lo:hi], args[1][lo:hi], *args[2:5], args[5] + lo)
+        elif name == "cont_logprobs":  # (ids, starts): both per prompt (plan 0060 Phase E)
+            a = (prompts[lo:hi], args[1][lo:hi])
         else:  # generate: one seed for every prompt, as on one engine
             a = (prompts[lo:hi], *args[1:])
         calls.append(eng(name, a))
@@ -510,3 +528,12 @@ class SubjectLLM:
         return self._run(
             "generate", (prompts, temperature, max_tokens, seed, top_p, stop_token_ids)
         )
+
+    # ---- plan 0060 Phase E (wrong_bridge logP legs): RemoteRunner.cont_logprobs ----
+    @modal.method()
+    def cont_logprobs(self, ids: list[list[int]], starts: list[int]) -> list[float]:
+        """Teacher-forced sum of log P over ``ids[i][max(k, 1):]`` per sequence (token ids and
+        start positions built locally by ``gate.cont_jobs``), in input order."""
+        return self._run("cont_logprobs", (ids, starts))
+
+    # ---- end plan 0060 Phase E ----

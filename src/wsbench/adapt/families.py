@@ -313,6 +313,9 @@ REGENERATE = {
     # plan 0060 Phase E: the gold is the subject's own answer (`adapt msdm` / `adapt kcutoff`)
     "model_specific_directed_modulation": "the subject's own category defaults (`adapt msdm`)",
     "knowledge_cutoff": "the subject's own consistent wrong answers (`adapt kcutoff`)",
+    # plan 0060 Phase E (model-specific families; their own stages, not `profile` / `gate`)
+    "wrong_bridge": "the subject's own wrong-bridge errors: `adapt wrong_bridge` (wrong_bridge.py)",
+    "multihop_mt_v2": "staged gate with a must-not-reach shortcut leg: `adapt multihop_mt_v2`",
 }
 
 

@@ -223,12 +223,34 @@ These rules apply to every new item in this group:
 multihop_mt was removed from WorkspaceBench (plan 0041); every adapted `multihop_mt.json` was
 deleted.
 
-### multihop_mt_v2 — not in the adapt machinery yet (bank `items_v4`)
-- **Latent:** the bridge of a multi-token multihop question.
-- **Gate:** the surface answer, every bridge question, AND no shortcut probe reaches the answer
-  (plan 0013). The first two fit `families.py` (`capable/questions.py` already asks them, the
-  `_asked(CONTINUE, bridges=True)` shape); the shortcut leg is a must-NOT-reach leg that does not
-  exist yet. Until it does, the family is absent from adapted sets.
+### multihop_mt_v2 — the bridges THIS subject needs (bank `items_v4`; plan 0060 Phase E)
+- **Latent:** the bridge(s) of a multi-token two- or three-hop question; every bridge proved
+  necessary on the subject.
+- **Code:** `src/wsbench/adapt/mhmt2.py`, `$A multihop_mt_v2 $M [limit=] [regate=true]` (one
+  stage, `gate`; GPU). Not a `profile` family (`families.get` raises): its legs need their own
+  draw counts and a verdict with a relabel.
+- **Target re-derived on the subject:** the bridges and answer are world facts, so no new gold.
+  What is subject-specific is WHICH items need their bridges: the registered staged gate
+  (GW `oracle_lens_evals/multihop_v2/gate_modal.py`: same probe texts, stored on each item as
+  `probes` / `shortcut_probes`, same render = chat, no system turn, thinking off, stem
+  `My answer is:`, `FILL_IN_MT_QUESTION` for `fill` probes, T=0.7, 24 tokens, `contains_target`)
+  is re-run on the subject.
+- **Gates kept:** G1 greedy ∧ ≥16/20; recall G2 / G3 greedy ∧ ≥8/10, three-hop G4ctx_b2 ≥5/10;
+  **the shortcut leg (must NOT reach):** every stored S1 + S2 ablation fails the item on a greedy
+  hit or >4/20 (gate.py's leak semantics: `meta.leak`, `max_rate` 0.2); nothing excused. Staged
+  (G1 → recall → shortcuts). A three-hop whose every hit hides only bridge 1 is relabeled
+  `relabel_b2` (finalize.py's remap of every role-keyed field: `units`, `bridges`, `mc`,
+  `name_forms`, `probe_token_lens`, `bridge_consistency`, `hides`). A registered relabeled item
+  ignores probes hiding only `dropped_bridge` and its G2_b1.
+- **Gate dropped:** the frontier "unguessable" / ATI panel (the family is out of ATI anyway); the
+  independent adversary is not re-run (its probes are prompt ablations, model-independent).
+- **Judge-side fields:** copied verbatim from the registered item (`mc`, `name_forms`, units,
+  forms); the subject's evidence overwrites `consistency*`, `bridge_consistency`,
+  `hop_consistency`, `shortcut_probes[].n_pass`, `shortcut_max`. Non-Qwen tokenizer:
+  `probe_token_lens` / `n_render_tokens` restamped (`mt.stamp`), an item with no multi-token form
+  left fails. `mhmt2.SUBJECT_FIELDS` lists what A1's copy-verbatim freeze must overlay.
+- **Open:** no refill (new candidates need MC lists and name forms, A2 builders);
+  `min_full_positions=15` and `contract.native_langs` are Qwen's.
 
 ### multilingual_mt — the concept (en/zh) + language from an L2 description
 - **Ladder:**
@@ -450,9 +472,47 @@ carried over from the 27B; there is no Opus / Sonnet unguessability gate.
   lowers the family's `reads=full` minimum to it under either bank override (`WSB_BANK_FILE_<F>`
   wins, via `registry.bank_path`); registered banks are never consulted.
 
+## wrong_bridge — the subject's OWN wrong bridge (plan 0060 Phase E; bank `items_v4`)
+- **Latent:** B', the wrong intermediate the subject resolves on a Wikidata two-hop prompt, so it
+  answers hop2(B') instead of hop2(B). Plain render (BOS + prompt), read at every token.
+- **Code:** `src/wsbench/adapt/wrong_bridge.py`, `$A wrong_bridge $M stage=screen|grade|gate|
+  adjudicate|bank|all pool=<dir>` (`pool` = the GW scrape: `candidates.jsonl` + `entities.json`;
+  on this box `/workspace/gw-wrong-bridge/outputs/wrong_bridge/`). Work files:
+  `adapted/<m>/gate/wrong_bridge.work/` (git-ignored). Not a `profile` family.
+- **Target re-derived on the subject:** GW `scripts/wrong_bridge/` re-run on the subject (logic
+  ported, not imported): `screen` greedy p2 / p1 / p2b (GPU) → `grade` E1 (p2 wrong, p2b right,
+  p1 names B' != B, B' resolves to a Wikidata entity of B's kind, p2 = hop2(B'); drops leak,
+  year-close, ambiguous B'; `resolve=wikidata` looks up names the cache lacks) → `gate` →
+  `adjudicate` (Claude) → `bank`. gold = the subject's B', contrast = B, target = hop2(B').
+- **Gates kept (the consistency rule, on the subject):** greedy A' and B'; ≥4/10 T=0.7 samples
+  give A' and ≥4/10 give B' (the bank was BUILT at 4: its own evidence goes down to (4, 4), ~49/100
+  items under 6; the "6" in its header and GW gate.py is stale); logP(A') > logP(A) and
+  logP(B') > logP(B) teacher-forced (`Runner.cont_logprobs`, local and Modal; a runner without it
+  FAILS every item); inject B' → A',
+  inject B → A, hop2(B') → A'; A' not a default answer (<3% of the template's other-bridge
+  prompts, over the SUBJECT's answers); B' not credited on S; the Opus clean-error audit (a
+  validity check, same prompt); caps one per S, ≤20 / template, ≤4 / B'.
+- **Gates dropped:** the ATI panel (Opus / Astra / Argon "unguessable"), and the v3/v4 Opus
+  distractors' options-only leakage gate.
+- **Judge-side fields:** an item equal to a registered one (same S, hop2 and B' QID) is
+  `original` and keeps its `mc` verbatim (`SUBJECT_FIELDS = ("evidence",)`). Every other item is
+  `generated` and `bank` builds `mc` {category, gold, contrast, 4 distractors, order, forms,
+  seed, topic}: the v2 pool rule over the registered v4 options + the subject's bridges of the
+  category; forms by the v4 rule (`scripts/wrong_bridge_mc_options.py`, imported read-only) over
+  `wikidata_v3.json` + every-language labels fetched for new QIDs (`fetch_v3`, cached in
+  `wikidata_extra.json`; the pool's English labels only if Wikidata returns nothing). An option
+  with no entity, a template with no MC category, or a pool under 4 drops the item; `mc` is built
+  before the caps count it. `stage=bank` needs `pool=`.
+  The judge also reads `template` (role cues) and `prompt`; both are built.
+
+**Freezing both Phase E families:** they are not in `families.FAMILIES`, so a bare `freeze` (and
+`status`) skips them. They ship only when named: `$A freeze $M families=wrong_bridge,multihop_mt_v2`
+(or alongside other families in the same `families=` list).
+
 ## Not in the adapt machinery (SKILL.md §Families the adapt machinery does not cover)
-multihop_mt_v2 (above), wrong_bridge, knowledge_cutoff, model_specific_directed_modulation:
-`families.get` raises for each (introspection too, pointing at `adapt introspection`). unverbalized_hint is retired (plan 0058).
+None left in this list: introspection, multihop_mt_v2, wrong_bridge (above),
+knowledge_cutoff and model_specific_directed_modulation (below) each have their own stage
+(`families.get` names it). unverbalized_hint is retired (plan 0058).
 
 ## Self-answer families re-derived on the subject (plan 0060 Phase E)
 

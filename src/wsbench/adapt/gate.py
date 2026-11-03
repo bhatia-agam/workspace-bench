@@ -399,6 +399,25 @@ class Runner:
         outs = self.llm.generate(ins, sp, use_tqdm=False)
         return [{"text": o.outputs[0].text, "ids": list(o.outputs[0].token_ids)} for o in outs]
 
+    # ---- plan 0060 Phase E (wrong_bridge logP legs): teacher-forced continuation scores ----
+    def cont_logprobs(self, prompts: list[str], conts: list[str]) -> list[float]:
+        """log P(cont | prompt) per pair, raw render (the subject's BOS + text, no template), as
+        global-workspace ``wrong_bridge/qwen_modal.py`` scores it: ``prompt + cont`` teacher-
+        forced, summed from the first token where it diverges from the prompt's own ids."""
+        from vllm import SamplingParams
+        from vllm.inputs import TokensPrompt
+
+        jobs = cont_jobs(self.tok, prompts, conts)
+        sp = SamplingParams(temperature=0.0, max_tokens=1, prompt_logprobs=0)
+        outs = self.llm.generate([TokensPrompt(prompt_token_ids=ids) for ids, _k in jobs], sp,
+                                 use_tqdm=False)  # fmt: skip
+        return [
+            sum_cont_logprob(o.prompt_logprobs, ids, k)
+            for (ids, k), o in zip(jobs, outs, strict=True)
+        ]
+
+    # ---- end plan 0060 Phase E ----
+
     def gen_eos(self) -> list[int]:
         """The model config's and the generation config's eos ids (Qwen3.5's generation config
         adds <|im_end|>; Gemma's adds <turn|>)."""
@@ -506,6 +525,51 @@ class RemoteRunner(Runner):
         args = [(ids[i : i + n], temperature, max_tokens, seed + i, top_p, stop_token_ids)
                 for i in range(0, len(ids), n)]  # fmt: skip
         return [r for part in self._calls(self.remote.generate, args) for r in part]
+
+    # ---- plan 0060 Phase E (wrong_bridge logP legs): scored on Modal from local token ids ----
+    def cont_logprobs(self, prompts: list[str], conts: list[str]) -> list[float]:
+        jobs = cont_jobs(self.tok, prompts, conts)  # token ids, like sample / generate
+        n = self.CHUNK
+        args = [([j[0] for j in jobs[i : i + n]], [j[1] for j in jobs[i : i + n]])
+                for i in range(0, len(jobs), n)]  # fmt: skip
+        return [r for part in self._calls(self.remote.cont_logprobs, args) for r in part]
+
+    # ---- end plan 0060 Phase E ----
+
+
+# ---- plan 0060 Phase E: helpers for Runner.cont_logprobs (shared with scripts/adapt_modal.py) ----
+def cont_jobs(tok: Any, prompts: list[str], conts: list[str]) -> list[tuple[list[int], int]]:
+    """``(ids of BOS + prompt + cont, k)``: ``k`` = the first index where those ids diverge from
+    the prompt's own ids (tokenization may merge at the seam), i.e. where scoring starts. The
+    lead is the raw render's (``bos_prefix``: Gemma ``<bos>``, GLM ``[gMASK]<sop>``) or else the
+    specials the tokenizer itself prepends (a Llama-style BOS, as ``RemoteRunner.encode`` adds):
+    the ids go to the engine as-is, which adds nothing."""
+    from .template import bos_prefix
+
+    bos = list(bos_prefix(tok))
+    if not bos:
+        on = list(tok("x", add_special_tokens=True)["input_ids"])
+        off = list(tok("x", add_special_tokens=False)["input_ids"])
+        at = next((i for i in range(len(on) - len(off) + 1) if on[i : i + len(off)] == off), 0)
+        bos = on[:at]
+    out = []
+    for p, c in zip(prompts, conts, strict=True):
+        p_ids = bos + tok(p, add_special_tokens=False)["input_ids"]
+        full = bos + tok(p + c, add_special_tokens=False)["input_ids"]
+        k = 0
+        while k < len(p_ids) and k < len(full) and full[k] == p_ids[k]:
+            k += 1
+        out.append((full, k))
+    return out
+
+
+def sum_cont_logprob(prompt_logprobs: list, ids: list[int], k: int) -> float:
+    """Sum of the teacher-forced log-probs of ``ids[max(k, 1):]`` (vLLM ``prompt_logprobs``: one
+    ``{token_id: Logprob}`` per position, None at 0)."""
+    return float(sum(prompt_logprobs[i][ids[i]].logprob for i in range(max(k, 1), len(ids))))
+
+
+# ---- end plan 0060 Phase E ----
 
 
 GRADE_WORKERS = int(os.environ.get("ADAPT_CLAUDE_WORKERS", "16"))  # org OTPM is shared

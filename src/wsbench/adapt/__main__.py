@@ -23,6 +23,9 @@ msdm      model_specific_directed_modulation re-derived on the subject (plan 006
 kcutoff   knowledge_cutoff re-derived on the subject (plan 0060 Phase E)
           [stage=elicit|canon|verify|units|build|all] [llm=] [cutoff=YYYY-MM] [limit=] [regate=]
           [pool=]
+wrong_bridge    the subject's own wrong-bridge errors (plan 0060 Phase E)
+                stage=screen|grade|gate|adjudicate|bank|all pool=<dir> [limit= resolve= llm=]
+multihop_mt_v2  staged subject gate incl. the shortcut leg (plan 0060 Phase E) [limit= regate=]
 """
 
 import json
@@ -65,6 +68,9 @@ KEYS: dict[str, set[str]] = {
     # plan 0060 Phase E: self-answer families re-derived on the subject
     "msdm": {"stage", "llm", "limit", "regate", "pool"},
     "kcutoff": {"stage", "llm", "cutoff", "limit", "regate", "pool"},
+    # plan 0060 Phase E (wrong_bridge.py, mhmt2.py)
+    "wrong_bridge": {"stage", "pool", "limit", "resolve", "llm"},
+    "multihop_mt_v2": {"stage", "limit", "regate"},
 }
 
 
@@ -138,6 +144,17 @@ def main(argv: list[str] | None = None) -> None:
                 limit=int(a.get("limit", 0)),
                 regate=a.get("regate", "").lower() in ("1", "true", "yes"),
                 pool=a.get("pool", "true").lower() in ("1", "true", "yes"), **extra)  # fmt: skip
+    elif cmd == "wrong_bridge":  # plan 0060 Phase E
+        from . import wrong_bridge
+
+        wrong_bridge.run(model, a.get("stage", "all"), pool=a.get("pool"),
+                         limit=int(a.get("limit", 0)), llm=a.get("llm", "claude-opus-5-5"),
+                         resolve=a.get("resolve", "local"))  # fmt: skip
+    elif cmd == "multihop_mt_v2":  # plan 0060 Phase E
+        from . import mhmt2
+
+        regate = a.get("regate", "").lower() in ("1", "true", "yes")
+        mhmt2.run(model, a.get("stage", "gate"), limit=int(a.get("limit", 0)), regate=regate)
     elif cmd == "auto":
         print(a["family"], run.auto(model, a["family"]))
     elif cmd == "note":
