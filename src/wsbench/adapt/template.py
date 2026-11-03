@@ -5,6 +5,11 @@ the token that opens a user turn, the one that closes it, and the generation-pro
 from typing import Any
 
 SENTINEL = "ZQXSENTINELXQZ"
+SYS_SENTINEL = "ZQXSYSTEMXQZ"
+# turn openers that name the role themselves (no separate role token): GLM's <|user|>,
+# DeepSeek-V4's <|User|> spelled with fullwidth bars (U+FF5C). ChatML / Gemma / Kimi spell the
+# role as its own token after the opener ("<|im_start|>", "user").
+ROLE_MARKERS = ("<|user|>", "<\uff5cUser\uff5c>")
 
 
 def markers(tok: Any) -> dict[str, Any]:
@@ -23,8 +28,8 @@ def markers(tok: Any) -> dict[str, Any]:
             break
     if s0 is None or s1 is None:
         raise ValueError("template: sentinel not found in the render")
-    role = next(i for i in range(s0 - 1, -1, -1) if toks[i].strip() in ("user", "<|user|>"))
-    start = role if toks[role].strip() == "<|user|>" else role - 1  # GLM: role-named marker
+    role = next(i for i in range(s0 - 1, -1, -1) if toks[i].strip() in ("user", *ROLE_MARKERS))
+    start = role if toks[role].strip() in ROLE_MARKERS else role - 1  # GLM / V4: role-named
     return {
         "turn_start_id": ids[start], "turn_start": toks[start],
         "turn_end_id": ids[s1 + 1], "turn_end": toks[s1 + 1],
@@ -81,10 +86,28 @@ def check(tok: Any) -> list[str]:
         if o in tail and tail.rfind(o) > max(tail.rfind("</think>"), tail.rfind("<channel|>")):
             problems.append(f"generation prompt leaves a reasoning block open: {tail!r}")
     try:
-        tok.apply_chat_template([{"role": "system", "content": "S"}, {"role": "user",
-                                "content": "U"}], tokenize=False, add_generation_prompt=True,
-                                enable_thinking=False)  # fmt: skip
+        sys_user = [{"role": "system", "content": SYS_SENTINEL}, {"role": "user", "content": "U"}]
+        text = tok.apply_chat_template(sys_user, tokenize=False, add_generation_prompt=True,
+                                       enable_thinking=False)  # fmt: skip
     except Exception as e:
         problems.append(f"template rejects a system turn ({type(e).__name__}); moral/agentic "
                         "asks with a system prompt need it folded into the user turn")  # fmt: skip
+    else:
+        if isinstance(text, str) and SYS_SENTINEL not in text:
+            problems.append("template drops the system turn's content")
     return problems
+
+
+def system_rule(tok: Any) -> str:
+    """How the subject renders a system turn ahead of the first user turn: ``"marker"`` = inside
+    its own role-marked turn (ChatML ``<|im_start|>system``, Gemma, GLM, Kimi); ``"bare"`` = the
+    content alone between the BOS and the first user marker, no role marker and no closing token
+    (DeepSeek-V4: ``encode_messages`` renders system as ``"{content}"``). Under ``"bare"`` no
+    token separates the system text from the user turn, so a read anchored on a system-turn
+    marker has none to anchor on; user-turn anchors (``markers``) are unaffected."""
+    text = tok.apply_chat_template([{"role": "system", "content": SYS_SENTINEL}, {"role": "user",
+                                   "content": SENTINEL}], tokenize=False,
+                                   add_generation_prompt=True, enable_thinking=False)  # fmt: skip
+    at = text.index(SYS_SENTINEL) + len(SYS_SENTINEL)
+    bare = text.startswith(markers(tok)["turn_start"].strip(), at) and "system" not in text[:at]
+    return "bare" if bare else "marker"

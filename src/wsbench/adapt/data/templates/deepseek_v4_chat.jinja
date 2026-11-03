@@ -1,0 +1,31 @@
+{#- DeepSeek-V4 (deepseek-ai/DeepSeek-V4-Flash @60d8d707) chat template, thinking OFF.
+    The release ships no Jinja template; this reproduces encoding/encoding_dsv4.py
+    encode_messages(messages, thinking_mode="chat") for system / user / developer / assistant
+    messages without tools or tasks, token for token (tests/test_adapt_v4.py):
+      <bos>{system}<｜User｜>{user}<｜Assistant｜></think>{assistant}<eos><｜User｜>...
+    - A system message is its bare content, no role marker (system_msg_template = "{content}").
+    - <｜Assistant｜></think> follows a user / developer turn that is followed by an assistant
+      turn, or that ends the conversation when add_generation_prompt is true (encode_messages
+      always adds it; HF's add_generation_prompt=false leaves the turn open).
+    - Thinking stays off whatever enable_thinking says (the adapt-bank subject rule); earlier
+      assistant turns' reasoning_content is dropped, as chat mode does.
+    - Tools, tool calls, tasks and latest_reminder are not supported (raise). -#}
+{{- '<｜begin▁of▁sentence｜>' -}}
+{%- for m in messages -%}
+{%- if m.tools is defined and m.tools or m.tool_calls is defined and m.tool_calls or m.task is defined and m.task is not none -%}
+{{- raise_exception('deepseek_v4_chat.jinja: tools / tool_calls / task are not supported') -}}
+{%- endif -%}
+{%- set content = m.content if m.content is defined and m.content is not none else '' -%}
+{%- if m.role == 'system' -%}
+{{- content -}}
+{%- elif m.role == 'user' or m.role == 'developer' -%}
+{{- '<｜User｜>' + content -}}
+{%- if (not loop.last and messages[loop.index0 + 1].role == 'assistant') or (loop.last and add_generation_prompt) -%}
+{{- '<｜Assistant｜></think>' -}}
+{%- endif -%}
+{%- elif m.role == 'assistant' -%}
+{{- content + '<｜end▁of▁sentence｜>' -}}
+{%- else -%}
+{{- raise_exception('deepseek_v4_chat.jinja: unsupported role ' + m.role) -}}
+{%- endif -%}
+{%- endfor -%}

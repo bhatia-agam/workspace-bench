@@ -41,6 +41,9 @@ class Subject:
     # predates token-id prompts): RemoteRunner refuses it instead of failing inside vLLM
     modal_built: bool = True
     modal_engine: tuple[tuple[str, Any], ...] = ()  # extra kwargs for the vLLM engine (overrides)
+    # plan 0060 D8: arithmetic has no pre-registered cell on this subject (its render has no
+    # counterpart of the Qwen cell's token); freeze drops cell.pos and the judge reads every cell
+    arith_all_positions: bool = False
 
 
 SUBJECTS: dict[str, Subject] = {
@@ -193,6 +196,33 @@ SUBJECTS: dict[str, Subject] = {
                 ("model_loader_extra_config", {"enable_multithread_load": True, "num_threads": 64}),
                 ("kernel_config", {"moe_backend": "marlin"}),
             ),
+        ),
+        # plan 0060 A3 (2026-11-03). No Jinja template ships: the pinned one reproduces
+        # encode_messages(thinking_mode="chat") = <bos><|User|>...<|Assistant|></think> (fullwidth
+        # bars) token for token (tests/test_adapt_v4.py). J-lens v4-flash:/runs/jlens/std-n1000:
+        # row r = block r for r in 0..40 (sources 0..40, target block 41); row 41 is the identity
+        # anchor and there is no L42 row, so the band is rows <= 40.
+        Subject(
+            "deepseek-v4-flash",
+            "deepseek-ai/DeepSeek-V4-Flash",
+            "DeepSeek-V4-Flash",
+            43,
+            "dsv4",
+            "60d8d70770c6776ff598c94bb586a859a38244f1",
+            backend="modal",
+            read_band=tuple(range(41)),
+            modal_app="adapt-v4-flash",
+            chat_template=str(TEMPLATES / "deepseek_v4_chat.jinja"),
+            arith_all_positions=True,
+            # Camila's rule: always 8xB300 = one container, 8 TP=1 engines (gen_vllm_modal.py)
+            modal_gpu=("B300:8",),
+            modal_tp=1,
+            modal_engines=8,
+            modal_image="dsv4",
+            modal_volume="v4-flash",
+            modal_weights="hf/hub/models--deepseek-ai--DeepSeek-V4-Flash/snapshots/"
+            "60d8d70770c6776ff598c94bb586a859a38244f1",
+            modal_engine=(("moe_backend", "marlin"), ("generation_config", "vllm")),
         ),
     ]
 }

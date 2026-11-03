@@ -369,7 +369,8 @@ def restamp_tokens(model: str, family: str, items: list[dict]) -> tuple[list[dic
     if family == "relational_multihop":
         return _check_blank(tok, items)
     if family == "arithmetic_intermediates":
-        return _restamp_arith_cells(tok, items)
+        every = get_subject(model).arith_all_positions  # plan 0060 D8 (DeepSeek-V4)
+        return _restamp_arith_cells(tok, items, all_positions=every)
     if family not in MT and family != "multihop":
         return items, []
     kept, dropped = [], 0
@@ -392,14 +393,26 @@ def restamp_tokens(model: str, family: str, items: list[dict]) -> tuple[list[dic
 QWEN_GEN_TAIL = 8  # tokens after the user turn's <|im_end|> in the Qwen chat render (think-off)
 
 
-def _restamp_arith_cells(tok: Any, items: list[dict]) -> tuple[list[dict], list[str]]:
+def _restamp_arith_cells(
+    tok: Any, items: list[dict], all_positions: bool = False
+) -> tuple[list[dict], list[str]]:
     """arithmetic ``cell.pos`` is a negative offset into the Qwen chat render: -8 / -7 = 1 / 2
     tokens after the user turn's closing marker (the newline; the assistant turn opener). Re-anchor
-    it on the subject's own closing marker so it names the same structural token."""
+    it on the subject's own closing marker so it names the same structural token.
+    ``all_positions`` (plan 0060 D8, DeepSeek-V4): the subject's render has no counterpart, so no
+    cell is pre-registered: ``cell.pos`` becomes None (``pos_qwen`` kept) and the bank is judged
+    with ``cells=all`` (every position at every layer; the permutation-null lift beside it)."""
     from wsbench.produce.render import _chat
 
     from .template import markers
 
+    if all_positions:
+        for it in items:
+            it["cell"] = {**it["cell"], "pos": None, "pos_qwen": it["cell"]["pos"]}
+        return items, [
+            f"no pre-registered cell (plan 0060 D8): cell.pos dropped on all {len(items)} items; "
+            "judge with opts=cells=all (every position at every read layer)"
+        ]
     end_id, moved = markers(tok)["turn_end_id"], 0
     for it in items:
         k = int(it["cell"]["pos"]) + QWEN_GEN_TAIL + 1  # tokens past the closing marker

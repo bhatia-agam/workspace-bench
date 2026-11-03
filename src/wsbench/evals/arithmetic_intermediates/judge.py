@@ -396,7 +396,12 @@ def run(args: JudgeArgs) -> FamilyResult:
         i: (args.layers[0] if mode == "frozen" and args.layers else int(by_id[i]["cell"]["layer"]))
         for i in ids
     }
-    frozen_pos = {i: int(by_id[i]["cell"]["pos"]) for i in ids}
+    # an adapted bank with no pre-registered cell (plan 0060 D8, DeepSeek-V4) stores pos None
+    pos_of = {i: by_id[i]["cell"].get("pos") for i in ids}
+    frozen_pos = {i: None if p is None else int(p) for i, p in pos_of.items()}
+    if mode == "frozen" and (no_cell := [i for i in ids if frozen_pos[i] is None]):
+        fail(f"{NAME}: {len(no_cell)} items have no pre-registered cell (cell.pos None, an "
+             "adapted bank read at every position); pass opts=cells=all")  # fmt: skip
     cells, rep = reads.load(args, NAME, ids=ids)
     cells_of: dict[str, list[Cell]] = defaultdict(list)
     n_off_cell = 0

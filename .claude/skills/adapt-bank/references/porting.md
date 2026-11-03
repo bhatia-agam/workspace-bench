@@ -189,6 +189,25 @@ or keep only `plain` items and report the count.
 - J-lens: neuronpedia has only the base model (`allenai/Olmo-3-1025-7B`), so jlens is `blocked`
   for the Instruct subject unless a base-model lens is accepted.
 
+## DeepSeek-V4-Flash (plan 0060 A3; `deepseek-ai/DeepSeek-V4-Flash` @ 60d8d707)
+- 43 blocks, d 4096, tokenizer family `dsv4`. No Jinja template ships: the Subject pins
+  `src/wsbench/adapt/data/templates/deepseek_v4_chat.jinja`, which reproduces
+  `encoding_dsv4.encode_messages(thinking_mode="chat")` = `<bos><｜User｜>…<｜Assistant｜></think>`
+  token for token (`tests/test_adapt_v4.py`; thinking stays off whatever `enable_thinking` says).
+  `author.tokenizer` and `RemoteRunner` apply it with no `tokenizer_dir`.
+- Role-named user marker (like GLM's `<|user|>`): `markers` gives turn_start `<｜User｜>`,
+  turn_end `<｜Assistant｜>`, header_len 1, gen_tail `["</think>"]`; `bos_prefix` = `[<bos>]`.
+  A system turn is its bare content right after `<bos>` with no marker (`template.system_rule`
+  = `"bare"`).
+- carry: the jailbreak re-stamp (span = the last user turn's content, turn_end `<｜Assistant｜>`)
+  and the MCDM prefill check both hold on every item by character span.
+- arithmetic (D8): the render ends `<｜Assistant｜></think>`, so Qwen's -7 cell has no
+  counterpart. `Subject.arith_all_positions` makes freeze store `cell.pos = None` (`pos_qwen`
+  kept); judge with `opts=cells=all` (summary mode does already) and report the lift over the
+  permutation null beside it. The native `cells=frozen` judge refuses such a bank.
+- `read_band` = J-lens `std-n1000` rows 0..40 (row r = block r; row 41 is the identity anchor,
+  there is no L42 row).
+
 ## Lens read band (`Subject.read_band`)
 If the subject's lens reads only some layers (Qwen3-8B's OLens: even layers 12..34), set
 `read_band` on the Subject. `remap_layer(s)` then depth-remaps and snaps to the nearest band layer
