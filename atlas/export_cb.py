@@ -25,6 +25,8 @@ os.environ.setdefault("HF_HOME", "/workspace/.persist/huggingface")
 os.environ.setdefault("HF_HUB_OFFLINE", "1")
 # the export reads only frozen banks; knowledge_cutoff's nocot rows would fetch nocot's zip (plan 0018)
 os.environ.setdefault("WSB_NO_NOCOT", "1")
+# and nyt_connections' rows would fetch the pinned NYT mirror (plan 0062)
+os.environ.setdefault("WSB_NO_NYT", "1")
 os.environ.setdefault("TOKENIZERS_PARALLELISM", "false")
 for _v in ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS"):
     os.environ.setdefault(_v, "1")

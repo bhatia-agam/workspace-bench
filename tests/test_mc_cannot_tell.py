@@ -23,6 +23,11 @@ def _last_option(family: str) -> str:
 
         _h, items = j.load_bank(registry.bank_path(family))
         return j.shown_options(j.mc_options(items[0])[0])[-1]
+    if family == "nyt_connections":  # plan 0062
+        from wsbench.evals.nyt_connections import judge as j
+
+        _h, items = j.load_bank()
+        return j.shown(j.slot_options(items[0], items[0]["mc"][0]))[-1]
     if family == "association":
         from wsbench.evals.association import judge as j
 

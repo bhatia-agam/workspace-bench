@@ -1,4 +1,5 @@
-"""Refuse a results tree or website bundle that republishes nocot readout text (plan 0044 §C9).
+"""Refuse a results tree or website bundle that republishes nocot readout text (plan 0044 §C9)
+or NYT Connections readout text (plan 0062).
 
 nocot-bench asks that its unpacked items not be republished, and readouts at user-turn positions
 paraphrase its questions, so every knowledge_cutoff result row of a nocot item must carry
@@ -6,7 +7,10 @@ paraphrase its questions, so every knowledge_cutoff result row of a nocot item m
 ``opts=keep_nocot_text=1``). This walks every ``*.json`` / ``*.jsonl`` under the given paths,
 finds every object with an ``id`` that is a nocot item id (or ``source == "nocot"``), and exits 1
 naming the files whose such objects hold a non-redacted ``quote`` / ``summary`` /
-``summary_evidence`` / ``summary_statements``. Run it in every website / bundle build:
+``summary_evidence`` / ``summary_statements``. nyt_connections (plan 0062) the same: its rows
+(id ``cNNNN|sK``, field ``puzzle``) must carry ``[redacted: nyt]`` unless
+``opts=keep_nyt_text=1``, and its judge / digest caches are never publishable. Run it in every
+website / bundle build:
 
     python scripts/check_nocot_redaction.py outputs/<run> site/data
 """
@@ -22,6 +26,7 @@ sys.path.insert(0, str(ROOT / "src"))
 
 from wsbench import nocot  # noqa: E402
 from wsbench.evals.knowledge_cutoff.judge import unredacted_nocot  # noqa: E402
+from wsbench.evals.nyt_connections import judge as nyt_judge  # noqa: E402
 
 
 def _objects(x: Any) -> Iterator[dict]:
@@ -51,9 +56,14 @@ def _load(path: Path) -> list[Any]:
         return []
 
 
+def _nyt_puzzle(o: dict) -> str:
+    return str(o.get("puzzle") or str(o.get("id", "")).split("|", 1)[0])
+
+
 def check(paths: list[Path]) -> dict[str, list[str]]:
-    """``{file: [offending nocot ids]}`` over every json / jsonl file under ``paths``."""
+    """``{file: [offending nocot / nyt ids]}`` over every json / jsonl file under ``paths``."""
     ids = {str(it["id"]) for it in nocot.load_obscure()[1]}
+    nyt_ids = {str(it["id"]) for it in nyt_judge.load_bank()[1]}
     bad: dict[str, list[str]] = {}
     for root in paths:
         files = [root] if root.is_file() else sorted(root.rglob("*.json*"))
@@ -63,12 +73,18 @@ def check(paths: list[Path]) -> dict[str, list[str]]:
             docs = _load(f)
             rows = [o for doc in docs for o in _objects(doc) if "id" in o]
             hit = unredacted_nocot(rows, ids)
+            hit += nyt_judge.unredacted([o for o in rows if _nyt_puzzle(o) in nyt_ids])
             # a judge / digest cache (cells.jsonl) holds raw readouts and quotes keyed
             # "<id>|L<layer>" or "digest:<id>|...": never publishable for a nocot id
             for o in docs:
                 key = str(o.get("key", "")) if isinstance(o, dict) else ""
-                kid = key.removeprefix("digest:").split("|", 1)[0]
-                if kid in ids:
+                kid = (
+                    key.removeprefix("digest:")
+                    .removeprefix("layered:")
+                    .removeprefix("ntok:")
+                    .split("|", 1)[0]
+                )
+                if kid in ids or kid in nyt_ids:
                     hit.append(kid)
             if hit:
                 bad[str(f)] = sorted(set(hit))
@@ -81,7 +97,10 @@ def main(argv: list[str]) -> int:
         return 2
     bad = check([Path(a) for a in argv])
     for f, ids in bad.items():
-        print(f"{f}: unredacted nocot text for {len(ids)} id(s), e.g. {ids[:3]}", file=sys.stderr)
+        print(
+            f"{f}: unredacted nocot / nyt text for {len(ids)} id(s), e.g. {ids[:3]}",
+            file=sys.stderr,
+        )
     return 1 if bad else 0
 
 

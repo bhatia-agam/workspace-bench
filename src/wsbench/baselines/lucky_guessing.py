@@ -155,6 +155,14 @@ SYSTEM_QUESTION = (
     "considerations. Without any other information, guess which consideration the model "
     "actually weighed. Commit to one option per list. Do not explain."
 )
+# plan 0062 (nyt_connections): the direct guess sees the puzzle's 16 words and one slot's labels
+SYSTEM_QUESTION_NYT = (
+    "You will be shown the 16 words of an NYT Connections puzzle that a language model (an "
+    "open-weights model answering with no chain of thought) sorted into 4 groups of 4, and, for "
+    "one of its groups, a list of candidate connections. Without any other information, guess "
+    "which connection the model had in mind for that group. Commit to one option per list. Do "
+    "not explain."
+)
 
 # One honest sentence per family for the described variant: what the lists are ABOUT, never the
 # judge's question (that would hand the blind guesser the question it is denied).
@@ -218,6 +226,10 @@ DESCRIPTIONS: dict[str, str] = {
         "computation, or its own favourite of some category"
     ),
     "wrong_bridge": "which person, group or company an unseen factual question is about",
+    "nyt_connections": (
+        "which connection a language model had in mind for one of the groups it formed when "
+        "sorting the 16 words of an NYT Connections puzzle into 4 groups of 4"
+    ),
     "introspection": (
         "which concept, if any, was injected into a model's activations while it read an "
         "unrelated prompt (each list is one cluster of related concepts plus 'no injected "
@@ -357,7 +369,19 @@ def _moral() -> list[Item]:
 # the question variant's hook: the question text the family's judge shows beside the options
 GUESS_QUESTION: dict[str, Callable[[Item], str]] = {
     "moral_rationale": lambda it: str(it.meta["question"]),
+    # plan 0062: the 16 words as Qwen saw them, rendered at run time (never committed)
+    "nyt_connections": lambda it: "Words: " + ", ".join(_nyt_words(int(it.meta["nyt_id"]))),
 }
+# the question variant's system prompt per family; every other hooked family: SYSTEM_QUESTION
+SYSTEM_QUESTION_BY_FAMILY: dict[str, str] = {"nyt_connections": SYSTEM_QUESTION_NYT}
+
+
+def _nyt_words(nyt_id: int) -> list[str]:
+    from wsbench import nyt
+
+    return nyt.words(nyt_id)
+
+
 # a deliberative moral item's lists are asked per side, as the judge asks them
 _SIDE_LABEL = {"yes": "reasons to answer yes / true", "no": "reasons to answer no / false"}
 
@@ -504,6 +528,30 @@ def _chain() -> list[Item]:
     return out
 
 
+def _nyt_connections() -> list[Item]:
+    """nyt_connections (plan 0062): one Item per STABLE slot (id ``cNNNN|sK``, the family's
+    headline unit), its labels in the judge's order (cannot-tell dropped), gold = Qwen's label;
+    the NYT labels resolve from the pinned mirror at run time."""
+    from wsbench.evals.nyt_connections import judge as nj
+
+    _h, items = nj.load_bank()
+    out = []
+    for it in items:
+        for s in it["mc"]:
+            if not s["stable"]:
+                continue
+            opts = nj.slot_options(it, s)
+            out.append(
+                Item(
+                    nj.slot_id(it["id"], s["slot"]),
+                    [[lab for _r, lab in opts]],
+                    [nj.gold_pos(opts)],
+                    meta={"nyt_id": int(it["nyt_id"]), "roles": [r for r, _l in opts]},
+                )
+            )
+    return out
+
+
 def _knowledge_cutoff() -> list[Item]:
     """The judge's own menu (plan 0044): the item's K = 5 options in the bank's seeded order,
     the ``mc.KC_NONE`` line dropped; the bank via ``registry.frozen_bank_path`` (v2), then the
@@ -573,6 +621,7 @@ BUILDERS: dict[str, Callable[[], list[Item]]] = {
     "multilingual_typo": _multitoken("multilingual_typo"),
     "multi_concept_directed_modulation": _multi_concept,
     "knowledge_cutoff": _knowledge_cutoff,
+    "nyt_connections": _nyt_connections,
     "basic_readout": _basic_readout,
     "multihop": _multihop,
     "wrong_bridge": _wrong_bridge,
@@ -1397,7 +1446,7 @@ def run_family(
                             if variant == "question_marks"
                             else SYSTEM_MARKS
                             if variant in ("described_marks", "blind_marks")
-                            else SYSTEM_QUESTION
+                            else SYSTEM_QUESTION_BY_FAMILY.get(name, SYSTEM_QUESTION)
                             if variant == "question"
                             else SYSTEM_TOPIC
                             if meta_topics

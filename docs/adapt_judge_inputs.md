@@ -667,6 +667,22 @@ Header: `contract.multi_token`, `contract.include_target`, `contract.native_lang
 | qwen | `min_full_positions=13` |  | - | subject | multilingual_typo/__init__.py | Qwen render length; reads.check_full exits below it on a sidecar file (reads.py:308) |
 | qwen | `GRID layers (Qwen 64 blocks)` |  | - | subject | readplan.py:588-627 | remapped by depth from report.json n_layers under WSB_BANK_ROOT (exit without it) |
 
+### nyt_connections
+
+Judge: `evals/nyt_connections/judge.py`. Refresh: model-specific (Phase E). Bank: dict, id from `id`.
+Note: plan 0062: every slot, label and stability is Qwen3.6-27B's own; a new subject re-samples its answers and naming turn and rebuilds the options
+REQUIRED_ITEM_FIELDS: `id`, `nyt_id`, `mc`.
+SUBJECT_FIELDS: `mc`.
+
+| kind | input | req | if absent | class | where | note |
+|---|---|---|---|---|---|---|
+| item | `id` | yes | exit | build | mcjudge.py:149-151 | raw id (bare-list bank) |
+| item | `nyt_id` | yes | exit | copy-verbatim | nyt.py (bank_items, words, render); readplan.py (_nyt_rows) | the NYT puzzle number; words and NYT labels are fetched from the pinned mirror |
+| item | `mc` | yes | exit | subject | evals/nyt_connections/judge.py (slot_options, _run_summary, rows) | one slot per Qwen group: members (indices into the shuffled 16), Qwen's follow-up label, stability over 16 samples, stable / correct / gold_same / model_specific, and the frozen option list (same-connection filter applied) |
+| resource | `Eyefyre/NYT-Connections-Answers connections.json @0c42b26 (sha256-pinned)` |  | exit | copy-verbatim | nyt.py (fetch, puzzles) | ids-only bank: text only at plan time; WSB_NO_NYT -> no rows |
+| qwen | `min_full_positions=12` |  | - | subject | nyt_connections/__init__.py | Qwen render length; reads.check_full exits below it on a sidecar file (reads.py:308) |
+| qwen | `GRID layers (Qwen 64 blocks)` |  | - | subject | readplan.py:588-627 | remapped by depth from report.json n_layers under WSB_BANK_ROOT (exit without it) |
+
 ### poetry
 
 Judge: `evals/poetry/{judge,options}.py`. Refresh: rebuild (v5). Bank: dict, id from `name`.

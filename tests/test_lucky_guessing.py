@@ -442,7 +442,7 @@ def test_moral_question_variant_shows_question_and_drops_escape():
 
 
 def test_question_variant_only_for_hooked_families(tmp_path):
-    assert set(lg.GUESS_QUESTION) == {"moral_rationale"}
+    assert set(lg.GUESS_QUESTION) == {"moral_rationale", "nyt_connections"}
     judge = resolve(JudgeConfig(prompt_version=lg.PROMPT_VERSION), env={})
     with pytest.raises(ValueError, match="GUESS_QUESTION"):
         lg.run_family("user_modeling", "question", judge=judge, out=tmp_path, dry_run=True)

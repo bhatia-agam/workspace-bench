@@ -36,3 +36,9 @@ relational_multihop, 0044 knowledge_cutoff, 0045 introspection, 0046 moral_ratio
 agentic_misalignment, 0053 basic_readout, 0054 the four multilingual families (v2 banks,
 `mc+regex`), 0055 role_bound_association, 0056 user_modeling (um-v3.2), 0058 medical_diagnosis{,_alt}
 removed and unverbalized_hint retired for now.
+
+Plans after the campaign:
+
+| plan | family / scope |
+|---|---|
+| 0062 | `0062-nyt-connections.md`: the `nyt_connections` family (model-specific; ids-only NYT Connections bank v1, per-slot MC on the layered digest; bar = beat the prompt-only floor) |

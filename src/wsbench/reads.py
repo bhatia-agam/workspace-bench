@@ -23,6 +23,7 @@ from pathlib import Path
 from typing import Any
 
 from wsbench import readplan
+from wsbench.nyt import NO_NYT_ENV
 from wsbench.readouts import Cell, LoadReport, load_readouts, normalize, read_sidecar
 from wsbench.readplan import FINAL, ReadSpec, lite_select
 from wsbench.registry import BANK_FILE_ENV_PREFIX, BANK_ROOT_ENV, JudgeArgs
@@ -64,7 +65,7 @@ def strip_reads(pv: str) -> str:
 
 
 def _env_key() -> tuple[tuple[str, str], ...]:
-    keys = [BANK_ROOT_ENV, readplan.NO_NOCOT_ENV]
+    keys = [BANK_ROOT_ENV, readplan.NO_NOCOT_ENV, NO_NYT_ENV]
     keys += [k for k in os.environ if k.startswith(BANK_FILE_ENV_PREFIX)]
     return tuple(sorted((k, os.environ.get(k, "")) for k in keys))
 

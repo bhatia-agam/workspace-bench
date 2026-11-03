@@ -1891,6 +1891,44 @@ _add(
 
 _add(
     FamilyInputs(
+        "nyt_connections",
+        "evals/nyt_connections/judge.py",
+        "model-specific (Phase E)",
+        "dict",
+        "id",
+        (
+            _ID,
+            _req(
+                "nyt_id",
+                COPY,
+                "nyt.py (bank_items, words, render); readplan.py (_nyt_rows)",
+                "the NYT puzzle number; words and NYT labels are fetched from the pinned mirror",
+            ),
+            _req(
+                "mc",
+                SUBJECT,
+                "evals/nyt_connections/judge.py (slot_options, _run_summary, rows)",
+                "one slot per Qwen group: members (indices into the shuffled 16), Qwen's "
+                "follow-up label, stability over 16 samples, stable / correct / gold_same / "
+                "model_specific, and the frozen option list (same-connection filter applied)",
+            ),
+            _r(
+                "Eyefyre/NYT-Connections-Answers connections.json @0c42b26 (sha256-pinned)",
+                EXIT,
+                COPY,
+                "nyt.py (fetch, puzzles)",
+                "ids-only bank: text only at plan time; WSB_NO_NYT -> no rows",
+            ),
+            _qwen_min_full(12, "nyt_connections/__init__.py"),
+            _GRID,
+        ),
+        note="plan 0062: every slot, label and stability is Qwen3.6-27B's own; a new subject "
+        "re-samples its answers and naming turn and rebuilds the options",
+    )
+)
+
+_add(
+    FamilyInputs(
         "wrong_bridge",
         "evals/wrong_bridge/judge.py",
         "model-specific (Phase E)",

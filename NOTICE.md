@@ -141,3 +141,18 @@ identified by label prefix.
   are included; it is provided "as is", without warranty of any kind). MMLU-Redux
   2.0 is CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/): attribution is required, which
   this file and the family README provide; the items are unmodified apart from the added frame.
+
+## NYT Connections — The New York Times / `Eyefyre/NYT-Connections-Answers`
+
+- Source: the NYT Connections puzzles (The New York Times), read from the community mirror
+  https://github.com/Eyefyre/NYT-Connections-Answers (`connections.json`), pinned to commit
+  `0c42b26054d4d9e2b1d8fc7b1599925a97fb1ec7`, sha256
+  `1bd17c9161c665dbdf2ea8011123a574b7e831cc6442fc7a73fd144d0371f534`.
+- Included: **ids only.** `evals/nyt_connections/items.json` holds puzzle numbers and dates,
+  member indices into the shuffled word list, and Qwen3.6-27B's own labels for its groups; no
+  puzzle word and no NYT group name is committed (an option equal to an NYT group name is stored
+  as a reference to it). The puzzle text is fetched from the pinned mirror at run time
+  (`wsbench.nyt`) into the user's local cache and is never redistributed; results, digests and
+  readouts of this family are not published.
+- Licence: the mirror carries no licence. The puzzles, their words and their group names are
+  owned by The New York Times; nothing here grants any right to them.

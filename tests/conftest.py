@@ -41,6 +41,47 @@ def _offline_nocot(monkeypatch):
     )
 
 
+def synthetic_nyt(ids) -> dict:
+    """Synthetic NYT puzzles (plan 0062): 16 made-up words and 4 made-up group names per id,
+    names unique per (id, group) and never equal to a committed bank label."""
+    return {
+        int(n): {
+            "id": int(n),
+            "date": "2000-01-01",
+            "groups": [
+                {
+                    "name": f"SYNTHETIC GROUP {int(n)}-{k}",
+                    "members": [f"WORD{int(n)}X{4 * k + j}" for j in range(4)],
+                    "level": k,
+                }
+                for k in range(4)
+            ],
+        }
+        for n in ids
+    }
+
+
+_NYT_STUB: dict = {}
+
+
+@pytest.fixture(autouse=True)
+def _offline_nyt(monkeypatch):
+    """nyt_connections renders its puzzles from the pinned NYT mirror (a network fetch, plan
+    0062): every test gets synthetic words and group names for every nyt_id the committed bank
+    references (items, cross-puzzle option references, hence the null-partner pool) instead.
+    The fetch and its checks are tested on a fixture file in tests/test_nyt_connections.py."""
+    import json
+    from pathlib import Path
+
+    from wsbench import nyt
+
+    if not _NYT_STUB:
+        bank = Path(__file__).resolve().parents[1] / "evals/nyt_connections/items.json"
+        items = json.loads(bank.read_text(encoding="utf-8"))["items"]
+        _NYT_STUB.update(synthetic_nyt(nyt.referenced_ids(items)))
+    monkeypatch.setattr(nyt, "puzzles", lambda: _NYT_STUB)
+
+
 @pytest.fixture
 def real_families():
     """Every real family registered, whatever an earlier test cleared: ``load_all`` imports each

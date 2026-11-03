@@ -36,10 +36,10 @@ POEM = [
 
 def test_every_family_plans_and_rows_serialize():
     fams = readplan.families()
-    assert len(fams) == 30  # + 4 (plan 0016), - ttt (0017), + unverbalized_hint, + 2 (0027),
+    assert len(fams) == 31  # + 4 (plan 0016), - ttt (0017), + unverbalized_hint, + 2 (0027),
     # - brew_intermediates (0029), - wrong_bridge_true (2026-10-30), - hallucination (0040),
     # - multihop_mt (removed 2026-10-30), - medical_diagnosis{,_alt} (0058; unverbalized_hint is
-    # retired, not removed: its bank stays, so it still plans by name)
+    # retired, not removed: its bank stays, so it still plans by name), + nyt_connections (0062)
     for fam in fams:
         specs = readplan.plan(fam)
         assert specs, fam

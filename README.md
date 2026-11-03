@@ -283,6 +283,11 @@ macro instead (see [HallucinationBench](#hallucinationbench)).
 - *Example:* "Think about your favorite Middle Eastern spice blend while you write. Now write exactly this sentence: \"The invoice total appears on the second page.\"" → target `baharat` (distractors `zaatar`, `ras el hanout`), read at each carrier token.
 - *Judged by:* regex, no call: the gold's forms (`unicode_word_matcher`, one sample at a time) hit any carrier position × layer; every distractor option is scored by the same rule and the mean distractor rate, a derangement null and the Opus prompt-only floor are reported beside the headline.
 
+**NYT Connections** — [`evals/nyt_connections/README.md`](evals/nyt_connections/README.md)
+- *What it is:* Qwen sees a NYT Connections puzzle (16 words, 4 groups of 4) and answers with member words only, never naming a connection; a follow-up turn names the connection it had in mind for each group. Reading the last 12 prompt tokens, before Qwen writes anything, does the lens point to Qwen's own label for each group, among the labels of competing groupings of the same words (the NYT label, red herrings) and an unrelated label? 335 puzzles, ids only (the words and NYT labels are fetched from a pinned mirror at plan time, never committed); headline on the 89 slots stable under 16 samples. Bar: beat the prompt-only floor; the continuation floor and the slot-0 (next-text) share are reported, not gating.
+- *Example:* (synthetic) words `BLIM, CRANDLE, DOSKET, …, TWIDDEN`; Qwen's first group `KLOOP, MORBY, GORPLE, BLIM`, which it later names `MOONS OF ZORB` → options `MOONS OF ZORB` (Qwen) / `ZORBIAN PASTRIES` (the puzzle's group) / `GLIMMISH DANCES` (herring) / `KINDS OF WUMBLE` (another puzzle) / cannot tell.
+- *Judged by:* one v1.1.0 layered digest per puzzle (per-layer digests, then one stage-2 summary), then one blind MC call per slot over its labels (the headline scores the stable slots; the rest feed the all-slot extras) plus "cannot tell", with a verbatim quote from the digest (a Qwen pick whose quote fails counts as cannot tell); extras: a partner-puzzle null, a continuation floor (the slot's member words only), a word-masked digest and slot 0 vs slots 1–3; floors: prompt-only (`po-opus-v1`, paired by `scripts/nyt_connections_bar.py`) and a direct guess from the words.
+
 
 ## Baselines
 
@@ -342,14 +347,15 @@ right in at least 8 of 10 draws (10 of 10 for chain):
 wsbench capable model=google/gemini-3.8-flash families=poetry,moral_rationale draws=10
 ```
 
-Four families are model-specific by construction and must be re-gated rather than re-scored:
+Five families are model-specific by construction and must be re-gated rather than re-scored:
 **poetry**, whose scored latent is the rhyme word this model would commit to,
 **moral_rationale**, whose per-item side and reasons are sampled from this model in the read
 conversation (bank v2; v1's reasons came from an explanation prompt and disagreed with the
 committed side on 23 items),
 **model_specific_directed_modulation**, whose gold is
-this model's own favourite in the category, and **knowledge_cutoff**, whose gold is this
-model's stable wrong answer to a post-cutoff or obscure-fact question (the retired
+this model's own favourite in the category, **knowledge_cutoff**, whose gold is this
+model's stable wrong answer to a post-cutoff or obscure-fact question, and
+**nyt_connections**, whose labels are this model's own stable groupings and its names for them (the retired
 unverbalized_hint is model-specific too: its pairs are defined by which questions this model
 silently follows a hint on, and its read positions are this model's tokenizer indices).
 [AGENTS.md](AGENTS.md) has the per-family table, the sanity checks to run before trusting a
@@ -407,6 +413,7 @@ digest's token lines are also matched space-joined, stamped `+joined-2026-10-30`
 | multilingual_mt | regex (no call natively; the digest model under summary mode) | mt-regex-2026-10-30+v2+ln-2026-10-31f+rawrx-v2+same-sample-v1+bank-v4 |
 | multilingual_multihop | claude-opus-5-5 (blind MC, then the regex units: `mc+regex`) | mcrx-2026-11-01a+mc-ml-2026-11-01b |
 | multilingual_typo | regex (no call natively; the digest model under summary mode) | mt-regex-2026-10-30+v2+ln-2026-10-31f+rawrx-v2+anchor-support-v1+bank-v3 |
+| nyt_connections | claude-opus-5-5 | nyt-mc-2026-11-02 (blind per-slot MC on the layered digest, plan 0062; summary stamp `nyt-mc-2026-11-02+digest-v5-task-extractive-layered-v1+sj-v10`; native = diagnostic) |
 | poetry | claude-opus-5-5 | poetry-free-2026-11-01 (headline: own blind free-response judge, no options, exact-gold check + deterministic line-ending gates + distractor/rival dominance veto; round 5) + diagnostic poetry-mc-2026-11-01-v5 (blind MC judge, plan 0038; bank v5 options) |
 | relational_multihop | claude-opus-5-5 | rel-v3+relgate-v4 (rel-v3 = the 18-option list with a third decoy relation, #209 round 6, judge calls keyed rel-v3; relgate-v3 = the order gate's blank rule; relgate-v4 = lawyer forms, a second ask on an order-gate failure, and the decisive-clean-count rule for non-passing answers) |
 | role_bound_association | claude-opus-5-5 | oa-v3.1 (oa-v2.4 prompts on the oa-v3.1 lists) |
@@ -565,6 +572,10 @@ tokens per item. Every family caches per-cell verdicts and digests in
   CC BY 4.0): the unverbalized_hint questions are verbatim MMLU / MMLU-Redux items (prompt
   framing and hints added). The paired hinted-prompt design follows Turpin et al. 2023,
   *Language Models Don't Always Say What They Think* (NeurIPS 2023, arXiv:2305.04388).
+- **NYT Connections** — the puzzles are The New York Times' (NYT Connections), read from the
+  community mirror `Eyefyre/NYT-Connections-Answers` (pinned commit; the mirror carries no
+  licence). The nyt_connections bank holds puzzle ids, member indices and Qwen's own labels only;
+  the puzzle text is fetched at run time and never redistributed.
 
 ## License
 

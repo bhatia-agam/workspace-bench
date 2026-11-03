@@ -206,6 +206,23 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   rendered from nocot-bench's pinned zip by `wsbench.nocot` at plan time only (judge / run / ATI
   stay offline via `EvalSpec.item_ids`; `WSB_NO_NOCOT=1` drops the nocot rows from the plan, set
   by `atlas/export_cb.py`); `tests/conftest.py` stubs `nocot.questions` so tests never fetch. Never commit nocot question text or obscure items' real readouts / `cells.jsonl`.
+- nyt_connections (plan 0062, `nyt-mc-2026-11-02`, group model_specific): **ids-only bank**
+  (`evals/nyt_connections/items.json`: puzzle ids, member indices into the shuffled 16, Qwen's
+  own labels; every label that folds equal to an NYT group name is a `{role, nyt_group[, nyt_id]}`
+  reference). `wsbench.nyt` fetches the pinned Eyefyre mirror (`connections.json`, commit + sha256
+  in the header) into `$WSB_CACHE/nyt/` at plan / judge time; `WSB_NO_NYT=1` drops the family's
+  plan rows (in `reads._env_key`; set by `atlas/export_cb.py`); `tests/conftest.py` stubs
+  `nyt.puzzles` with synthetic words (offline stub), so tests never fetch. Read: last 12 prompt
+  tokens x GRID, lite = full (`SAME`). Scoring: the v1.1.0 layered digest (the CLI default; the
+  family pins no layer mode), then one blind MC per **stable slot** (`cannot tell` last, quote
+  gate on `col.evidence`, verbatim-only); **per-slot rows** `id = "cNNNN|sK"`, headline on
+  stable slots only (non-stable slots write no rows, only extras), refusal counts in stable
+  slots; extras: partner null, continuation floor, word-masked digest, slot 0 vs 1–3. Bar =
+  beat the frozen `po-opus-v1` floor (`scripts/nyt_connections_bar.py`, which refuses a
+  mismatched instrument); the continuation floor is reported, not gating (Camila's §0
+  override). Rows carry roles, never label text; digests / quotes redacted unless
+  `opts=keep_nyt_text`. Never commit NYT text, real readouts, `cells.jsonl` or results of this
+  family.
 - moral_rationale (plan 0046): **bank v3 is the registered default (`ec-v5d`); bank v5
   `evals/moral_rationale/items_v5.json` is opt-in** (round 4, `ec-v7` = ec-v5d's prompts and
   scoring; not registered while it leaks the side, review of #215): the 24 bank-v3 items whose rebuilt

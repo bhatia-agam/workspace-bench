@@ -2037,5 +2037,76 @@
    "instrument": "poetry-mc-2026-11-01-v5",
    "written": "2026-11-01T16:09:14+00:00"
   }
+ },
+ "nyt_connections": {
+  "blind": {
+   "mean": 0.3258426966292135,
+   "std": 0.017765604832406624,
+   "majority": 0.3258426966292135,
+   "exact": null,
+   "any_hit": null,
+   "mean_picks": null,
+   "analytic_floor": 0.29812734082397,
+   "n_items": 89,
+   "n_draws": 5,
+   "n_api_fail": 0,
+   "invalid_rate": 0.0,
+   "n_options_per_list": [
+    3,
+    4,
+    5
+   ],
+   "model": "claude-opus-5-5",
+   "prompt_version": "lucky-2026-09-16",
+   "rule": "single pick",
+   "instrument": "nyt-mc-2026-11-02",
+   "written": "2026-11-03T03:41:08+00:00"
+  },
+  "described": {
+   "mean": 0.4022471910112359,
+   "std": 0.02009948743820036,
+   "majority": 0.39325842696629215,
+   "exact": null,
+   "any_hit": null,
+   "mean_picks": null,
+   "analytic_floor": 0.29812734082397,
+   "n_items": 89,
+   "n_draws": 5,
+   "n_api_fail": 0,
+   "invalid_rate": 0.0,
+   "n_options_per_list": [
+    3,
+    4,
+    5
+   ],
+   "model": "claude-opus-5-5",
+   "prompt_version": "lucky-2026-09-16",
+   "rule": "single pick",
+   "instrument": "nyt-mc-2026-11-02",
+   "written": "2026-11-03T03:43:05+00:00"
+  },
+  "question": {
+   "mean": 0.5460674157303371,
+   "std": 0.012810959832574615,
+   "majority": 0.550561797752809,
+   "exact": null,
+   "any_hit": null,
+   "mean_picks": null,
+   "analytic_floor": 0.29812734082397,
+   "n_items": 89,
+   "n_draws": 5,
+   "n_api_fail": 0,
+   "invalid_rate": 0.008988764044943821,
+   "n_options_per_list": [
+    3,
+    4,
+    5
+   ],
+   "model": "claude-opus-5-5",
+   "prompt_version": "lucky-2026-09-16",
+   "rule": "single pick",
+   "instrument": "nyt-mc-2026-11-02",
+   "written": "2026-11-03T03:45:00+00:00"
+  }
  }
 }

@@ -957,6 +957,8 @@ def _plan(family: str) -> list[ReadSpec]:
             )
             for it in items
         ]
+    if family == "nyt_connections":
+        return _nyt_rows()
     if family == "arithmetic_intermediates":
         _h, items = _bank(family)
         return [
@@ -1132,6 +1134,35 @@ def _nocot_rows() -> list[ReadSpec]:
             lite_positions=FINAL,
         )
         for it in nocot.load_obscure()[1]
+    ]
+
+
+def _nyt_rows() -> list[ReadSpec]:
+    """nyt_connections (plan 0062): ids-only puzzles whose user turn is rendered from the pinned
+    NYT mirror (``wsbench.nyt``, fetched here, sha256-checked); none with ``$WSB_NO_NYT`` set (an
+    offline consumer). Unlike knowledge_cutoff's nocot rows, an adapted bank root still plans: the
+    planned text is the model-independent puzzle prompt (the labels, which are model-specific, are
+    not in the plan), so a clone under ``$WSB_BANK_ROOT`` plans exactly like its original. Lite =
+    ``SAME`` (plan 0061's retained rule: a lite run differs from full only by its stamp)."""
+    from wsbench import nyt
+
+    if os.environ.get(nyt.NO_NYT_ENV):
+        return []
+    _h, items = nyt.bank_items()
+    return [
+        ReadSpec(
+            "nyt_connections",
+            it["id"],
+            "chat",
+            {"kind": "last_n", "n": 12},
+            GRID,
+            text=nyt.render(int(it["nyt_id"])),
+            note="an NYT Connections puzzle, members-only answer format (text rendered from the "
+            "pinned mirror at plan time; never republish it); the last 12 prompt tokens, before "
+            "the model writes anything",
+            lite_positions=dict(SAME),
+        )
+        for it in items
     ]
 
 
