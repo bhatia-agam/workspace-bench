@@ -90,6 +90,32 @@ SOURCE_BANK = {
     "multilingual_typo": "items_v2.json",
 }
 VERSION = "r4b-refine-2026-11-01"
+# ``--bank`` / ``--out`` (plan 0060 A2, an adapted bank of ONE family; main sets both): the source
+# bank, the refine result and its topic cache; the v3 lists come from ``--pools``. Unset = the
+# registered ``evals/<family>/`` files.
+BANK: Path | None = None
+OUT: Path | None = None
+
+
+def source_bank(family: str) -> Path:
+    return BANK if BANK is not None else REPO_ROOT / "evals" / family / SOURCE_BANK[family]
+
+
+def refine_path(family: str) -> Path:
+    return OUT if OUT is not None else REPO_ROOT / "evals" / family / "r4b_distractors.json"
+
+
+def topics_path(family: str) -> Path:
+    if OUT is not None:
+        return OUT.with_name(f"{OUT.stem}.topics.json")
+    return REPO_ROOT / "evals" / family / "r4b_topics.json"
+
+
+def under_evals(path: Path) -> bool:
+    p, ev = Path(path).resolve(), (REPO_ROOT / "evals").resolve()
+    return p == ev or ev in p.parents
+
+
 DRAWS = 5
 MAX_ITEM_HITS = 1
 ROUNDS = 8
@@ -286,7 +312,7 @@ def _concept_specs(family: str, items: list[dict[str, Any]]) -> list[dict[str, A
 def concept_topics(family: str, specs: list[dict[str, Any]]) -> dict[tuple[str, str], dict]:
     """The topic call of ``r4_mc_distractors`` (prompt only, never the answer), cached in
     ``evals/<family>/r4b_topics.json`` so a re-run reuses the labels."""
-    path = REPO_ROOT / "evals" / family / "r4b_topics.json"
+    path = topics_path(family)
     have = json.loads(path.read_text("utf-8"))["items"] if path.exists() else {}
     out = {
         (s["id"], s["role"]): have[s["id"]][s["role"]]
@@ -339,11 +365,12 @@ def balanced_languages(family: str) -> dict[str, list[str]]:
     (``options.r4b_balanced_language_distractors`` over the source bank's golds)."""
     from wsbench.multitoken.options import r4b_balanced_language_distractors
 
-    if family not in _BALANCED:
-        _h, items = load_bank(REPO_ROOT / "evals" / family / SOURCE_BANK[family])
+    key = f"{family}|{source_bank(family)}"
+    if key not in _BALANCED:
+        _h, items = load_bank(source_bank(family))
         golds = {str(it["name"]): str(it["mc"]["language"]["gold"]) for it in items}
-        _BALANCED[family] = r4b_balanced_language_distractors(family, golds)
-    return _BALANCED[family]
+        _BALANCED[key] = r4b_balanced_language_distractors(family, golds)
+    return _BALANCED[key]
 
 
 def language_list(family: str, it: dict[str, Any]) -> dict[str, Any]:
@@ -368,7 +395,7 @@ def language_list(family: str, it: dict[str, Any]) -> dict[str, Any]:
 def load_lists(family: str, pools: dict[str, Any]) -> dict[tuple[str, str], dict[str, Any]]:
     """(item id, role) -> the current list (topic, kind, gold, distractors) + its screening
     spec, pool spares and, for the multilingual families, the item's language list."""
-    _h, items = load_bank(REPO_ROOT / "evals" / family / SOURCE_BANK[family])
+    _h, items = load_bank(source_bank(family))
     bank = {str(it["id"]): it for it in items}
     out: dict[tuple[str, str], dict[str, Any]] = {}
     if family in CONCEPT_FAMILIES:
@@ -388,8 +415,11 @@ def load_lists(family: str, pools: dict[str, Any]) -> dict[tuple[str, str], dict
                 "cues": [],
             }
         return out
-    v3 = json.loads((REPO_ROOT / "evals" / family / "r4_distractors.json").read_text("utf-8"))
-    specs_ = {(s["id"], s["role"]): s for s in gen.specs(family)}
+    if BANK is not None:  # an adapted bank: its v3 lists are the --pools lists themselves
+        v3 = {"items": {k: v for k, v in (pools.get(family) or {}).items() if k != "_meta"}}
+    else:
+        v3 = json.loads((REPO_ROOT / "evals" / family / "r4_distractors.json").read_text("utf-8"))
+    specs_ = {(s["id"], s["role"]): s for s in gen.specs(family, BANK)}
     for iid, roles in v3["items"].items():
         for role, b in roles.items():
             pool = (pools.get(family) or {}).get(iid, {}).get(role) or {}
@@ -614,7 +644,7 @@ def run(
     prev: dict[str, Any] = {}
     prev_pass = 1
     if pass2 or resume:
-        path = REPO_ROOT / "evals" / family / "r4b_distractors.json"
+        path = refine_path(family)
         doc = json.loads(path.read_text("utf-8"))
         prev, prev_pass = doc["items"], int(doc.get("pass", 1))
     if pass2:
@@ -633,7 +663,7 @@ def run(
             for k in fk:
                 lists[k]["fix_topic"] = True
             retopic(lists, fk)
-    _h, items = load_bank(REPO_ROOT / "evals" / family / SOURCE_BANK[family])
+    _h, items = load_bank(source_bank(family))
     bank = {str(it["id"]): it for it in items}
     by_item: dict[str, list[tuple[str, str]]] = {}
     for k in lists:
@@ -769,7 +799,19 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--force", type=Path, help="JSON {family: [item ids]} never kept as is")
     ap.add_argument("--fix-topics", type=Path, help="JSON {family: [ids]}: gold-aware retopic")
     ap.add_argument("--max-list-hits", type=int, default=MAX_LIST_HITS)
+    ap.add_argument("--bank", type=Path, help="an adapted bank read instead (one family)")
+    ap.add_argument("--out", type=Path, help="with --bank: the refine result (never evals/)")
     a = ap.parse_args(argv)
+    if a.bank is not None:
+        if len(a.families) != 1:
+            ap.error("--bank takes exactly one family")
+        if a.out is None:
+            ap.error("--bank needs --out")
+        if under_evals(a.out):
+            ap.error(f"--out {a.out} is under evals/: an adapted build never writes evals/")
+    elif a.out is not None:
+        ap.error("--out needs --bank")
+    globals()["BANK"], globals()["OUT"] = a.bank, a.out
     pools = json.loads(a.pools.read_text(encoding="utf-8"))
     if a.gate_described:
         GATE_VARIANTS.append("described")
@@ -785,9 +827,10 @@ def main(argv: list[str] | None = None) -> int:
         if a.fix_topics:
             fix = set(json.loads(a.fix_topics.read_text(encoding="utf-8")).get(fam, []))
         doc = run(fam, pools, a.rounds, a.pass2, a.resume, only, force, fix)
-        path = REPO_ROOT / "evals" / fam / "r4b_distractors.json"
+        path = refine_path(fam)
+        path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(json.dumps(doc, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
-        print(f"wrote {path.relative_to(REPO_ROOT)}")
+        print(f"wrote {path.relative_to(REPO_ROOT) if OUT is None else path}")
     return 0
 
 

@@ -122,12 +122,26 @@ def _forms_of(it: dict[str, Any], role: str) -> list[str]:
     return [str(f) for f in out if str(f).strip()]
 
 
-def specs(family: str) -> list[dict[str, Any]]:
+BANKS = {
+    "wrong_bridge": "evals/wrong_bridge/items_v2.json",
+    "basic_readout_mt": "evals/basic_readout_mt/items_v2.json",
+    "multihop_mt_v2": "evals/multihop_mt_v2/items_v2.json",
+    "multilingual_multihop": "evals/multilingual_multihop/items_v2.json",
+}
+
+
+def bank_path(family: str, bank: Path | None = None) -> Path:
+    """The bank a family's lists are read from: the registered source, or ``bank`` (``--bank``,
+    an adapted bank)."""
+    return Path(bank) if bank is not None else REPO_ROOT / BANKS[family]
+
+
+def specs(family: str, bank: Path | None = None) -> list[dict[str, Any]]:
     """One spec per judged list: item id, role, prompt, hop question, gold (+ its forms), the
-    fixed options and the names to avoid."""
+    fixed options and the names to avoid. ``bank``: read instead of the registered source."""
     out: list[dict[str, Any]] = []
     if family == "wrong_bridge":
-        _h, items = load_bank(REPO_ROOT / "evals/wrong_bridge/items_v2.json")
+        _h, items = load_bank(bank_path(family, bank))
         from wsbench.evals.wrong_bridge.judge import subject_of
 
         for it in items:
@@ -156,12 +170,9 @@ def specs(family: str) -> list[dict[str, Any]]:
                 }
             )
         return out
-    bank = {
-        "basic_readout_mt": "evals/basic_readout_mt/items_v2.json",
-        "multihop_mt_v2": "evals/multihop_mt_v2/items_v2.json",
-        "multilingual_multihop": "evals/multilingual_multihop/items_v2.json",
-    }[family]
-    _h, items = load_bank(REPO_ROOT / bank)
+    if family not in BANKS:
+        raise KeyError(family)
+    _h, items = load_bank(bank_path(family, bank))
     for it in items:
         for role, blk in (it.get("mc") or {}).items():
             if role == "language" or not isinstance(blk, dict):
@@ -321,8 +332,10 @@ def _case(name: str, gold: str) -> str:
     return name
 
 
-def run(family: str, only: set[str] | None = None, retry_note: str = "") -> dict[str, Any]:
-    ss = [s for s in specs(family) if only is None or f"{s['id']}|{s['role']}" in only]
+def run(
+    family: str, only: set[str] | None = None, retry_note: str = "", bank: Path | None = None
+) -> dict[str, Any]:
+    ss = [s for s in specs(family, bank) if only is None or f"{s['id']}|{s['role']}" in only]
     out: dict[str, Any] = {}
     topics: dict[int, dict[str, Any]] = {}
 
@@ -444,14 +457,21 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--out", type=Path, required=True)
     ap.add_argument("--only", type=Path, help="JSON {family: ['id|role', ...]} to regenerate")
     ap.add_argument("--note", default="", help="extra instruction for a regeneration round")
+    ap.add_argument("--bank", type=Path, help="an adapted bank read instead (one family)")
     a = ap.parse_args(argv)
+    if a.bank is not None:
+        if len(a.families) != 1:
+            ap.error("--bank takes exactly one family")
+        evals = (REPO_ROOT / "evals").resolve()
+        if evals == a.out.resolve() or evals in a.out.resolve().parents:
+            ap.error(f"--out {a.out} is under evals/: an adapted build never writes evals/")
     prev = json.loads(a.out.read_text(encoding="utf-8")) if a.out.exists() else {}
     only = json.loads(a.only.read_text(encoding="utf-8")) if a.only else None
     for fam in a.families:
         sel = set(only.get(fam, [])) if only is not None else None
         if sel is not None and not sel:
             continue
-        res = run(fam, sel, a.note)
+        res = run(fam, sel, a.note, a.bank)
         merged = prev.setdefault(fam, {})
         for iid, roles in res.items():
             merged.setdefault(iid, {}).update(roles)

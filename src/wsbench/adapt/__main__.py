@@ -21,6 +21,8 @@ agentic   agentic_misalignment: rollouts, commitment judge, keep  [stage=]
 fill      author+gate an authored family until full / ooc       families= [waves=8]
 carry     verify + copy jailbreak / multi_concept_dm to the subject [families=]
 floors    prompt-only floors: stock subject summaries, Claude judge   [stage=] [judge=]
+mc        MC options for adapted-only candidates (the repo's builders, --bank)   families=
+          [stage=build|subject]  (subject: basic_readout's post-gate subject fields)
 introspection  the subject's own vectors, dose, detection baseline  [stage=] [result=]
                [coherence=off] [llm=]
 msdm      model_specific_directed_modulation re-derived on the subject (plan 0060 Phase E)
@@ -78,6 +80,7 @@ KEYS: dict[str, set[str]] = {
     # plan 0060 Phase E (wrong_bridge.py, mhmt2.py)
     "wrong_bridge": {"stage", "pool", "limit", "resolve", "llm"},
     "multihop_mt_v2": {"stage", "limit", "regate"},
+    "mc": {"families", "stage"},
 }
 
 
@@ -167,6 +170,12 @@ def main(argv: list[str] | None = None) -> None:
 
         regate = a.get("regate", "").lower() in ("1", "true", "yes")
         mhmt2.run(model, a.get("stage", "gate"), limit=int(a.get("limit", 0)), regate=regate)
+    elif cmd == "mc":
+        from . import mcstage
+
+        if not families:
+            raise SystemExit(f"mc: families= is required ({', '.join(mcstage.FAMILIES)})")
+        mcstage.run(model, names, a.get("stage", "build"))
     elif cmd == "auto":
         print(a["family"], run.auto(model, a["family"]))
     elif cmd == "note":

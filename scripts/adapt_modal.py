@@ -235,8 +235,9 @@ def split(n: int, k: int) -> list[tuple[int, int]]:
     return [(lo, min(n, lo + step)) for lo in range(0, n, step)]
 
 
-def run_sample(llm, prompts, max_tokens, draws, temperature, top_p, seed) -> list:
-    """Greedy + ``draws`` samples per prompt (token ids, or text); prompt i samples with seed+i."""
+def run_sample(llm, prompts, max_tokens, draws, temperature, top_p, seed, top_k=-1) -> list:
+    """Greedy + ``draws`` samples per prompt (token ids, or text); prompt i samples with seed+i.
+    ``top_k`` -1 = off (basic_readout_mt v4's gate fixes 20, plan 0060 A2)."""
     from vllm import SamplingParams
 
     ins = _inputs(prompts)
@@ -247,7 +248,12 @@ def run_sample(llm, prompts, max_tokens, draws, temperature, top_p, seed) -> lis
         ins,
         [
             SamplingParams(
-                n=draws, temperature=temperature, top_p=top_p, max_tokens=m, seed=seed + i
+                n=draws,
+                temperature=temperature,
+                top_p=top_p,
+                top_k=top_k,
+                max_tokens=m,
+                seed=seed + i,
             )
             for i, m in enumerate(max_tokens)
         ],
@@ -306,8 +312,8 @@ def fan_out(engines: list, name: str, args: tuple) -> list:
     prompts = args[0]
     calls = []
     for eng, (lo, hi) in zip(engines, split(len(prompts), len(engines)), strict=False):
-        if name == "sample":  # (prompts, max_tokens, draws, temperature, top_p, seed)
-            a = (prompts[lo:hi], args[1][lo:hi], *args[2:5], args[5] + lo)
+        if name == "sample":  # (prompts, max_tokens, draws, temperature, top_p, seed[, top_k])
+            a = (prompts[lo:hi], args[1][lo:hi], *args[2:5], args[5] + lo, *args[6:])
         elif name == "cont_logprobs":  # (ids, starts): both per prompt (plan 0060 Phase E)
             a = (prompts[lo:hi], args[1][lo:hi])
         else:  # generate: one seed for every prompt, as on one engine
@@ -510,9 +516,11 @@ class SubjectLLM:
         temperature: float,
         top_p: float,
         seed: int,
+        top_k: int = -1,
     ) -> list[tuple[str, list[str]]]:
         """Greedy + ``draws`` samples per prompt (token ids, or text): Runner.sample's contract."""
-        return self._run("sample", (prompts, max_tokens, draws, temperature, top_p, seed))
+        extra = (top_k,) if top_k != -1 else ()
+        return self._run("sample", (prompts, max_tokens, draws, temperature, top_p, seed, *extra))
 
     @modal.method()
     def generate(

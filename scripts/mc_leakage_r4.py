@@ -155,11 +155,41 @@ FAMS = {
 }
 
 
+# ``--bank`` / ``--bank-out`` (plan 0060 A2, an adapted bank): every bank read is ``BANK`` and
+# every bank write ``BANK_OUT`` instead of the family's ``evals/`` files (main sets both).
+BANK: Path | None = None
+BANK_OUT: Path | None = None
+
+
+def bank_in(rel: str) -> Path:
+    """The bank file a stage reads: ``REPO / rel`` (registered), or ``BANK``."""
+    return BANK if BANK is not None else REPO / rel
+
+
+def bank_out(path: Path) -> Path:
+    """The bank file a stage writes: ``path`` (registered), or ``BANK_OUT`` (never evals/)."""
+    if BANK is None:
+        return path
+    if BANK_OUT is None:
+        raise SystemExit("--bank: this stage writes a bank and needs --bank-out")
+    if under_evals(BANK_OUT):
+        raise SystemExit(f"--bank-out {BANK_OUT} is under evals/: an adapted build never writes it")
+    return BANK_OUT
+
+
+def under_evals(path: Path) -> bool:
+    p = Path(path).resolve()
+    return p == REPO / "evals" or (REPO / "evals") in p.parents
+
+
 def load(fam: Fam, path: str | None = None) -> tuple[dict[str, Any], list[dict[str, Any]]]:
-    raw = json.loads((REPO / (path or fam.v2)).read_text(encoding="utf-8"))
+    raw = json.loads(bank_in(path or fam.v2).read_text(encoding="utf-8"))
+    if isinstance(raw, list):
+        raw = {"items": raw}
     items = raw["items"]
     for it in items:
-        it.setdefault("id", label_of(it["name"]))
+        if "id" not in it:
+            it["id"] = label_of(it["name"])
     return {k: v for k, v in raw.items() if k != "items"}, items
 
 
@@ -887,8 +917,9 @@ def build_bank(fam: Fam, header: dict, items: list[dict[str, Any]], st: dict, rn
     if short:
         raise SystemExit(f"{fam.name}: items with too few valid distractors: {short}")
     h = dict(header)
-    h["version"] = 3
-    h["supersedes"] = Path(fam.v2).name
+    if BANK is None:  # an adapted bank keeps its own header version
+        h["version"] = 3
+        h["supersedes"] = Path(fam.v2).name
     h["mc_leakage"] = {
         "procedure": VERSION,
         "round": rnd,
@@ -1137,8 +1168,9 @@ def relabel(out: Path) -> None:
     shown). The pre-relabel list is kept as ``distractors_pre_relabel``. Re-measure the floors
     with ``wsbench baseline`` afterwards."""
     fam = FAMS["multihop"]
-    path = REPO / fam.v3
+    path = bank_in(fam.v3)
     bank = json.loads(path.read_text(encoding="utf-8"))
+    path = bank_out(path)
     items = [it for it in bank["items"] if it["name"] in RELABEL]
     assert len(items) == len(RELABEL), "a RELABEL item is missing from bank v3"
     by_id.clear()
@@ -1311,8 +1343,9 @@ def kinship(fam: Fam, out: Path, state: Path) -> list[str]:
     with ``wsbench baseline`` afterwards."""
     if fam.name not in KIN_FAMILIES:
         raise SystemExit(f"kinship: {fam.name} is not in {KIN_FAMILIES}")
-    path = REPO / fam.v3
+    path = bank_in(fam.v3)
     bank = json.loads(path.read_text(encoding="utf-8"))
+    path = bank_out(path)
     st = json.loads(state.read_text(encoding="utf-8"))
     items = bank["items"]
     by_id.clear()
@@ -1757,7 +1790,7 @@ def observe(
     dest = fam.v4 if version == 4 else fam.v5
     _h2, v2 = load(fam)
     v2_of = {it["id"]: it for it in v2}
-    bank = json.loads((REPO / fam.v3).read_text(encoding="utf-8"))
+    bank = json.loads(bank_in(fam.v3).read_text(encoding="utf-8"))
     st = json.loads(state.read_text(encoding="utf-8"))
     seen: dict[str, dict[str, list[str]]] = json.loads(observed.read_text(encoding="utf-8"))
     riv3: dict[str, dict[str, list[str]]] = (
@@ -1875,8 +1908,8 @@ def observe(
         "items": sorted(changed),
     }
     bank["mc_leakage"].pop("floors", None)  # bank v3's floors; v4's are re-measured
-    write_bank(fam, bank, REPO / dest)
-    print(f"observe: {len(changed)} items changed -> {REPO / dest}")
+    write_bank(fam, bank, bank_out(REPO / dest))
+    print(f"observe: {len(changed)} items changed -> {bank_out(REPO / dest)}")
     return changed
 
 
@@ -1926,8 +1959,9 @@ def balance(fam: Fam) -> dict[str, int]:
     slots."""
     if fam.name != "basic_readout" or not fam.v5:
         raise SystemExit("balance: basic_readout bank v5 only (poetry's order is seeded by id)")
-    path = REPO / fam.v5
+    path = bank_in(fam.v5)
     bank = json.loads(path.read_text(encoding="utf-8"))
+    path = bank_out(path)
     for it in bank["items"]:
         it["id"] = label_of(it["name"])
     slots = gold_slots(bank["items"])
@@ -2221,8 +2255,8 @@ def freeze(fam: Fam, out: Path, rnd: int) -> None:
         if p.exists():
             a = json.loads(p.read_text(encoding="utf-8"))["aggregate"]
             bank["mc_leakage"]["floors"][v] = round(float(a["mean"]), 3)
-    write_bank(fam, bank, REPO / fam.v3)
-    print(f"froze {REPO / fam.v3}")
+    write_bank(fam, bank, bank_out(REPO / fam.v3))
+    print(f"froze {bank_out(REPO / fam.v3)}")
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -2267,8 +2301,29 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--rejudged", type=Path, help="replay: the re-judge under the new bank")
     ap.add_argument("--base", type=Path, help="evidence (poetry): bank v4's evidence file")
     ap.add_argument("--readouts", type=Path, help="veto (poetry): the cached readout file")
+    ap.add_argument(
+        "--bank", type=Path, help="an adapted bank: read instead of every evals/<family> bank"
+    )
+    ap.add_argument(
+        "--bank-out", type=Path, help="with --bank: where a bank-writing stage writes (not evals/)"
+    )
     a = ap.parse_args(argv)
     fam = FAMS[a.family]
+    global BANK, BANK_OUT
+    BANK, BANK_OUT = a.bank, a.bank_out
+    if a.bank is None and a.bank_out is not None:
+        ap.error("--bank-out needs --bank")
+    if a.bank is not None:
+        if a.cmd in ("relabel", "veto"):
+            ap.error(f"{a.cmd} edits / replays the registered bank only; not with --bank")
+        if a.cmd in ("freeze", "kin", "observe", "balance") and a.bank_out is None:
+            ap.error(f"{a.cmd} with --bank needs --bank-out")
+        outs = [("--bank-out", a.bank_out), ("--out", a.out)]
+        if a.cmd in ("evidence", "replay"):
+            outs.append(("--observed", a.observed))
+        for flag, p in outs:
+            if p is not None and under_evals(p):
+                ap.error(f"{flag} {p} is under evals/: an adapted build never writes evals/")
     if a.out is None and a.cmd in ("round", "measure", "next", "freeze", "keep", "relabel", "kin"):
         ap.error(f"{a.cmd} needs --out")
     if a.cmd == "veto" and (fam.name != "poetry" or a.readouts is None or a.observed is None):

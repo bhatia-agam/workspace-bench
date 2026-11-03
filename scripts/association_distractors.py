@@ -168,9 +168,19 @@ def append_jsonl(p: Path, rows: list[dict[str, Any]]) -> None:
             f.write(json.dumps(r, ensure_ascii=False) + "\n")
 
 
+BANK: Path | None = None  # ``--bank``: an adapted bank read instead of V1 (main sets it)
+
+
 def v1_items() -> tuple[dict[str, Any], list[dict[str, Any]]]:
-    raw = json.loads(V1.read_text(encoding="utf-8"))
+    raw = json.loads((BANK or V1).read_text(encoding="utf-8"))
+    if isinstance(raw, list):
+        raw = {"items": raw}
     return {k: v for k, v in raw.items() if k != "items"}, raw["items"]
+
+
+def under_evals(path: Path) -> bool:
+    p = Path(path).resolve()
+    return p == REPO / "evals" or (REPO / "evals") in p.parents
 
 
 def kept_items() -> list[dict[str, Any]]:
@@ -485,7 +495,11 @@ def screen(out: Path, draws: int, rounds: int, limit: int = 0) -> None:
     print(f"screen: {n} of {len(items)}")
 
 
-def freeze(out: Path, review: str, *, write: bool = True) -> dict[str, Any]:
+def freeze(
+    out: Path, review: str, *, write: bool = True, dest: Path | None = None
+) -> dict[str, Any]:
+    """``dest`` (``--bank-out``): an adapted bank's items with their options, written there with
+    the bank's own header kept (plus ``dropped_by_screen``); never V2."""
     header, items = v1_items()
     state = json.loads((out / "state.json").read_text(encoding="utf-8"))
     overrides = read_overrides(out)
@@ -512,6 +526,15 @@ def freeze(out: Path, review: str, *, write: bool = True) -> dict[str, Any]:
         new["eval_render"] = "chat_summarize"
         new.pop("readout", None)
         kept.append(new)
+    if dest is not None:
+        if under_evals(dest):
+            raise SystemExit(f"--bank-out {dest} is under evals/: an adapted build never writes it")
+        raw = {**header, "dropped_by_screen": dropped, "items": kept}
+        if write:
+            dest.parent.mkdir(parents=True, exist_ok=True)
+            dest.write_text(json.dumps(raw, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
+            print(f"froze {len(kept)} items -> {dest} (dropped {sorted(dropped)})")
+        return raw
     hdr = {k: v for k, v in header.items() if k not in ("items", "eval_render_note")}
     hdr.update(
         {
@@ -545,7 +568,20 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--rounds", type=int, default=4)
     ap.add_argument("--limit", type=int, default=0)
     ap.add_argument("--review", default="")
+    ap.add_argument("--bank", type=Path, help="an adapted bank read instead of evals' v1 bank")
+    ap.add_argument("--bank-out", type=Path, help="freeze with --bank: where the bank goes")
     a = ap.parse_args(argv)
+    global BANK
+    BANK = a.bank
+    if a.bank is None and a.bank_out is not None:
+        ap.error("--bank-out needs --bank")
+    if a.bank is not None:
+        if a.stage == "freeze" and a.bank_out is None:
+            ap.error("freeze with --bank needs --bank-out (never evals/association/items_v2.json)")
+        if a.bank_out is not None and under_evals(a.bank_out):
+            ap.error(f"--bank-out {a.bank_out} is under evals/")
+        if under_evals(Path(a.out)):
+            ap.error(f"--out {a.out} is under evals/")
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
     if a.stage == "propose":
@@ -557,7 +593,7 @@ def main(argv: list[str] | None = None) -> int:
         if not a.review:
             print("freeze needs --review '<who reviewed the option lists, and what changed>'")
             return 2
-        freeze(out, a.review)
+        freeze(out, a.review, dest=a.bank_out)
     return 0
 
 

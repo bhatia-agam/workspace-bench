@@ -249,6 +249,89 @@ def _flat_implicit(it: dict) -> dict:
     return {**it, "topic": p.removeprefix("What is your favorite ").split("?")[0]}
 
 
+# --- basic_readout v5 (plan 0060 A2): the bank's question form, slice, task_context and mc ---
+BR_SUFFIX = "? Answer in one word."
+BR_FIXED = {
+    "eval_render": "chat",
+    "gate_variant": "chat_prefill",
+    "readout": {"kind": "question_through_end", "lite": {"kind": "final_token"}},
+}
+
+
+def _opts(entries: Any) -> list[tuple[str, list[str]]]:
+    """``[{option, aliases}]`` (or bare strings) -> ``[(option, aliases)]``."""
+    out = []
+    for e in entries or []:
+        if isinstance(e, dict) and str(e.get("option") or "").strip():
+            out.append((str(e["option"]).strip(), [str(a) for a in e.get("aliases") or [] if a]))
+        elif isinstance(e, str) and e.strip():
+            out.append((e.strip(), []))
+    return out
+
+
+def _br_v5(x: dict) -> dict:
+    """A v5-shaped item (``evals/basic_readout/items_v5.json``). entity / processing: Opus's
+    question, gold and options. implicit: the question only is the item; the gold is the
+    subject's own answer, so ``candidates`` (the category's members, most typical first) seed a
+    provisional list (gold = the first) and the spares that ``rebuild.subject_mc`` tops up from
+    once the subject has answered. ``mc.gold_position`` is provisional (balanced at freeze)."""
+    sub = str(x.get("subfamily") or "").strip()
+    if sub == "implicit" or x.get("topic"):
+        topic = str(x.pop("topic", "") or x.get("subject") or "").strip()
+        cands = _opts(x.pop("candidates", None))
+        x.update(
+            {
+                "subfamily": "implicit",
+                "slice": "implicit",
+                "subject": topic,
+                "prompt": FAV.format(topic),
+                "target": "",
+                "intermediates": [],
+                "units": [{"role": "readout", "lang": "en", "headline": True, "match": []}],
+                "task_context": str(x.get("task_context") or "")
+                or f"the model was asked to name its own favourite {topic}, with a single word",
+            }
+        )
+        gold, galias = cands[0] if cands else ("", [])
+        dis = cands[1:5]
+        x["mc"] = {
+            "gold": gold,
+            "aliases": galias,
+            "distractors": [d for d, _a in dis],
+            "distractor_aliases": {d: a for d, a in dis if a},
+            "spares": [{"option": d, "aliases": a} for d, a in cands[5:]],
+            "gold_position": 0,
+        }
+    else:
+        target = str(x.get("target") or "").strip()
+        aliases = [str(a) for a in x.pop("aliases", None) or [] if str(a).strip()]
+        dis = _opts(x.pop("distractors", None))
+        forms = list(dict.fromkeys([target, *aliases]))
+        x["intermediates"] = forms
+        x["units"] = [{"role": "readout", "lang": "en", "headline": True, "match": forms}]
+        x["mc"] = {
+            "gold": target,
+            "aliases": [a for a in aliases if a != target],
+            "distractors": [d for d, _a in dis],
+            "distractor_aliases": {d: a for d, a in dis if a},
+            "gold_position": 0,
+        }
+    x.pop("candidates", None)
+    return x
+
+
+def _flat_br_v5(it: dict) -> dict:
+    """A v5 bank item in the flat shape Opus writes (few-shots)."""
+    m = it.get("mc") or {}
+    dal = m.get("distractor_aliases") or {}
+    opts = [{"option": d, "aliases": dal.get(d, [])} for d in m.get("distractors") or []]
+    if it.get("subfamily") == "implicit":
+        gold = {"option": m.get("gold"), "aliases": m.get("aliases") or []}
+        return {**it, "prompt": "", "target": "", "topic": it.get("subject"),
+                "candidates": [gold, *opts]}  # fmt: skip
+    return {**it, "aliases": m.get("aliases") or [], "distractors": opts}
+
+
 RB_ASK = (
     "In one sentence, state who did what to whom in this scene — identify each person by their "
     "role or relationship (not their name), and be explicit about the direction."
@@ -387,6 +470,46 @@ def _mt_readout(x: dict) -> dict:
 
 
 MT_FIXED = {"eval_render": "plain", "readout": {"kind": "final_prompt_token", "offsets": [-1]}}
+# basic_readout_mt v4 (plan 0060 A2): the chat question, every position read (v4 header)
+BRMT_FIXED = {
+    "eval_render": "chat",
+    "gate_variant": "chat",
+    "readout": {"kind": "all_from_end", "lite": "final_token"},
+}
+
+
+def _brmt_v4(x: dict) -> dict:
+    """A v4-shaped entity item: ``units`` (English forms; ``mt.stamp`` adds ``match`` and
+    ``probe_token_lens``), ``name_forms`` (English + Chinese; the gate grades by them),
+    ``mc.readout`` (provisional: ``adapt mc`` rebuilds the list) and ``exonyms`` (to the set's
+    overlay file at freeze, never shipped in the item)."""
+    target = str(x.get("target") or "").strip()
+    alts = [str(a).strip() for a in x.get("target_alts") or [] if str(a).strip()]
+    en = list(dict.fromkeys(f for f in [target, *alts] if f))
+    zh = list(dict.fromkeys(str(f) for f in x.pop("name_forms_zh", None) or [] if str(f)))
+    x["subfamily"] = "entity"
+    x["target_alts"] = [a for a in alts if a != target]
+    x["intermediates"] = en[:1]
+    x["units"] = [{"role": "readout", "required": True, "multi_token": True, "forms": {"en": en}}]
+    x["name_forms"] = {"readout": {"en": en, **({"zh": zh} if zh else {})}}
+    x["mc"] = {"readout": {"gold": target, "distractors": list(x.pop("distractors", None) or [])}}
+    exo = x.pop("exonyms", None) or {}
+    x["exonyms"] = {"readout": {str(k): [str(f) for f in v if str(f)]
+                                for k, v in exo.items() if isinstance(v, list) and v}}  # fmt: skip
+    return x
+
+
+def _flat_brmt_v4(it: dict) -> dict:
+    """A v4 bank item in the flat shape Opus writes (few-shots)."""
+    nf = (it.get("name_forms") or {}).get("readout") or {}
+    return {
+        **it,
+        "name_forms_zh": nf.get("zh", []),
+        "distractors": ((it.get("mc") or {}).get("readout") or {}).get("distractors", []),
+        "exonyms": {},
+    }
+
+
 MT_INVARIANTS = [
     "No word of four or more letters from the target, its alternatives or the bridge forms appears "
     "in the prompt, in any spelling.",
@@ -585,36 +708,63 @@ BRIEFS: dict[str, Brief] = {
         shots_where={"subfamily": "selfdescribe"},
     ),
     "basic_readout": Brief(
-        latent="the implicit subfamily: a 'What is your favorite X?' question; the scored latent "
-        "is the answer the model itself commits to (its own favourite becomes the gold, it is "
-        "never authored)",
+        latent="a short question with a one-word answer, in the bank v5 form (plan 0053): the "
+        "user asks the question, ending '? Answer in one word.', and the model answers after the "
+        "stem 'My one-word answer is:'. Subfamilies: entity (a fact about a famous athlete, "
+        "musician, capital or landmark), processing (small arithmetic, the day or month before / "
+        "after one) and implicit ('What is your favorite X?': the scored latent is the answer "
+        "the model itself commits to; its own favourite becomes the gold, it is never authored)",
         keys={
-            "name": "unique slug br-imp-<topic>",
-            "topic": "the category, as it reads after 'What is your favorite' (constellation, "
-            "chess piece, programming language)",
+            "name": "unique slug br-<ent|proc|imp>-<slice>-<topic>",
+            "subfamily": "entity, processing or implicit",
+            "slice": "entity: ath / mus / cap / lmk; processing: arith / dayafter / daybefore / "
+            "monthafter / monthbefore; implicit: implicit",
+            "subject": "what the question is about (Muhammad Ali, 10 - 1, Monday); implicit: the "
+            "category",
+            "prompt": "entity / processing: the question, ending exactly '? Answer in one word.' "
+            "(implicit: leave empty, it is built from topic)",
+            "target": "entity / processing: the one-word answer (implicit: empty)",
+            "aliases": "entity / processing: other accepted forms of the answer (case and "
+            "number-word variants, the Simplified Chinese form)",
+            "distractors": "entity / processing: 4 objects {option, aliases}: wrong answers of the "
+            "same kind (other sports, other countries, other numbers 0-12), aliases in the same "
+            "languages as the answer's",
+            "topic": "implicit only: the category, as it reads after 'What is your favorite' "
+            "(constellation, chess piece, programming language)",
+            "candidates": "implicit only: 9 objects {option, aliases}: one-word members of the "
+            "category, the most typical first, aliases = English variants + the Simplified "
+            "Chinese form",
+            "task_context": "one line: 'the model was asked ..., to answer with a single word'",
         },
         invariants=[
-            "A concrete category whose members are single words; the answer is one word.",
-            "Never a category a model might decline to have a favourite in (pet, holiday, "
-            "religion, politician), and never a person.",
+            "The answer and every alias are never written in the question; no option is a word "
+            "of the question.",
+            "Every answer is one word; entity / processing have exactly one correct answer.",
+            "No distractor or candidate is a form, part, kind, broader term or near-synonym of "
+            "another option (Linux / Ubuntu, blue / indigo), and no two share a form.",
+            "Every option carries a Chinese form when any option of the item does.",
+            "processing arithmetic stays in 0..12 and never offers an operand; day / month "
+            "lists never offer the question's own day or month.",
+            "implicit: a concrete category whose members are single words; never a category a "
+            "model might decline to have a favourite in (pet, holiday, religion, politician), "
+            "and never a person.",
         ],
         tiers={
-            "t1": "Categories with one strong default answer that most people and models give "
-            "(color -> blue, chess piece -> queen, constellation -> Orion, programming language "
-            "-> Python, country to visit -> Japan): a narrow category whose most famous member "
-            "dominates. Avoid broad categories with many equal options (fruit, dessert, season, "
-            "music, soup).",
+            "t1": "Write implicit items only: categories with one strong default answer that most "
+            "people and models give (color -> blue, chess piece -> queen, constellation -> Orion, "
+            "programming language -> Python, country to visit -> Japan): a narrow category whose "
+            "most famous member dominates. Avoid broad categories with many equal options "
+            "(fruit, dessert, season, music, soup).",
+            "entity": "Write entity items only, about world-famous people and places (G20 "
+            "capitals, the most famous athletes and musicians, landmarks every adult knows).",
+            "processing": "Write processing items only: single-step arithmetic with small whole "
+            "numbers (answer 0..12), and the day or month directly before or after a named one.",
         },
-        fixed={
-            "eval_render": "chat",
-            "readout": {"kind": "final_prompt_token", "offsets": [-1]},
-            "gate_variant": "chat",
-        },
+        fixed=BR_FIXED,
         used=("prompt",),
-        build=_implicit,
+        build=_br_v5,
         stamp=False,
-        flat=_flat_implicit,
-        shots_where={"subfamily": "implicit"},
+        flat=_flat_br_v5,
     ),
     "role_bound_association": Brief(
         latent="a short scene where one person does an action to another, written so the roles "
@@ -726,26 +876,44 @@ BRIEFS: dict[str, Brief] = {
         fixed={"eval_render": "plain", "readout": {"kind": "line_one_tail"}},
     ),
     "basic_readout_mt": Brief(
-        latent="a sentence that describes a named entity and stops right before its multi-token "
-        "name; the scored latent is that name",
+        latent="a factual QUESTION (bank v4, plan 0051) whose answer is one specific, usually "
+        "multi-word name (a dynasty, a place, a person, a compound, a syndrome); the model is "
+        "asked it in chat with no system prompt and no answer stem, and the scored latent is "
+        "that name",
         keys={
-            "name": "unique slug",
+            "name": "unique slug brh-ent-<topic>",
             "subfamily": "always entity",
-            "prompt": "the description, ending right before the name (e.g. '... is called the')",
-            "target": "the entity's canonical name, two or more words",
-            "target_alts": "other names for the same entity",
-            "distractors": "four other entities of the same kind and specificity",
+            "prompt": "the question in English, every clue needed for one answer, ending in a "
+            "question mark",
+            "target": "the answer's natural display name, two or more words",
+            "target_alts": "other English names of the same answer (short forms without the "
+            "category word, historical names)",
+            "name_forms_zh": "the answer's Simplified Chinese names",
+            "distractors": "four other names of the same kind, region and era, written in exactly "
+            "the target's naming style",
+            "exonyms": "the answer's standard names in ru / es / fr / de / fa: {lang: [forms]}, "
+            "only the languages that have one",
         },
-        invariants=MT_INVARIANTS,
+        invariants=[
+            *MT_INVARIANTS[:1],
+            "No name form of the answer and no distractor is written in the question (any "
+            "spelling).",
+            "The question has exactly one answer; someone who knows the fact names it at once.",
+            "No distractor is an alias, superset or subset of the answer, or shares a name form "
+            "with it.",
+            *MT_INVARIANTS[2:],
+        ],
         tiers={
             "t1": "Famous entities a well-read adult knows (well-known dynasties, buildings, "
             "battles, treaties, scientists' laws), never long-tail facts.",
             "t2": "Textbook entities (the Great Wall of China, the Roman Empire, the Eiffel "
             "Tower, the Theory of Relativity).",
         },
-        fixed=MT_FIXED,
+        fixed=BRMT_FIXED,
         used=("intermediates", "target"),
-        build=_mt_readout,
+        build=_brmt_v4,
+        flat=_flat_brmt_v4,
+        shots_where={"subfamily": "entity"},
     ),
     "association": Brief(
         latent="a short text that evokes ONE concept (a thing, activity, place or event) "
@@ -794,6 +962,10 @@ BRIEFS: dict[str, Brief] = {
             "bridge_question": "a direct question whose answer is the bridge, without naming "
             "the target or the bridge",
             "bridge_aliases": "other names of the bridge",
+            "bridge_type": "the bridge's kind, one of: US state, animal, antonym word, city, "
+            "continent, country, direction, drink, element, fictional character, instrument, "
+            "month, mountain, number, organ, person, planet, river, shape, sport (the MC "
+            "builder draws distractors of this type; plan 0060 §1)",
         },
         invariants=[
             "Neither the bridge nor the target (or their aliases) appears in the prompt.",

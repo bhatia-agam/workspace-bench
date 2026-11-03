@@ -83,9 +83,12 @@ Write <n> items spread across <subfamilies/topics>; no topic or template more th
 - **MC blocks in general** (bank v2+ judges): association `mc` {gold, aliases, distractors[7]}
   (lint requires it), basic_readout `mc` with a balanced `gold_position` (a distractor never equals
   the subject's own answer), multihop `mc`, chain per-slot `mc`, poetry `mc.candidates`. The repo's
-  builders (`build_multihop_mc.py`, `association_distractors.py`, `mc_leakage_r4.py`,
-  `role_bound_distractors_v3.py`) write the
-  frozen `evals/` banks and must not be run for an adapted set; only `scripts/poetry/build_mc.py`
+  builders write the frozen `evals/` banks by default; `build_multihop_mc.py`,
+  `association_distractors.py`, `mc_leakage_r4.py`, `r4_mc_distractors.py`, `r4b_mc_refine.py`
+  and `build_r4*_mc_banks.py` take `--bank` (+ `--out` / `--bank-out`, refused under `evals/`)
+  and `python -m wsbench.adapt mc model=<m> families=<f>` runs the right chain on the pending
+  ADAPTED-ONLY candidates (association, multihop, basic_readout, basic_readout_mt; plan 0060 A2);
+  `role_bound_distractors_v3.py` / `moral_distractors.py` do not yet; `scripts/poetry/build_mc.py`
   takes `--draft` / `--out`. Put the block in a NEW candidate's payload before its first `gate`;
   for an already-gated id the only route is `adapt patch` (SKILL.md §3 step 6). Distractors are the same kind and specificity as the gold; never pick them by what the
   subject answered wrongly.

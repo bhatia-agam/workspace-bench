@@ -623,10 +623,31 @@ def distractor_aliases_of(bridge_type: str, d: str) -> list[str]:
     return [a for a in dict.fromkeys(out) if a != d]
 
 
+def row_of(item: dict[str, Any]) -> dict[str, Any]:
+    """An item's gold-table row: :data:`GOLD` for a registered name, else (an adapted bank's own
+    item, ``--bank``) read off the item: ``bridge_type`` (or ``mc.bridge_type``), the gold
+    (``mc.gold``, else the first intermediate), its aliases (``mc.aliases``, else
+    ``bridge_aliases``, else the other intermediates) and optional hand exclusions
+    ``mc_exclude``."""
+    name = item.get("name") or item.get("id")
+    if name in GOLD:
+        return GOLD[name]
+    mc0 = item.get("mc") or {}
+    t = item.get("bridge_type") or mc0.get("bridge_type")
+    if t not in POOLS:
+        raise ValueError(f"{name}: bridge_type {t!r} has no pool ({sorted(POOLS)})")
+    inter = [str(x) for x in item.get("intermediates") or []]
+    g = str(mc0.get("gold") or (inter[0] if inter else ""))
+    if not g:
+        raise ValueError(f"{name}: no gold (mc.gold or intermediates)")
+    a = mc0.get("aliases") or item.get("bridge_aliases") or [x for x in inter if x != g]
+    return G(t=t, g=g, a=[str(x) for x in a if str(x) != g], x=list(item.get("mc_exclude") or []))
+
+
 def build_mc(item: dict[str, Any]) -> dict[str, Any]:
     import hashlib
 
-    row = GOLD[item["name"]]
+    row = row_of(item)
     forms = aliases_of(row, item["prompt"])
     bad = [f for f in forms if _fold(f) in DEMONYMS]
     if bad:
@@ -634,10 +655,11 @@ def build_mc(item: dict[str, Any]) -> dict[str, Any]:
     pool = [c for c in POOLS[row["t"]] if not _excluded(item, row, c, forms)]
     pinned = [p for p in row.get("pin", []) if p in pool]
     rest = sorted(set(pool) - set(pinned))
-    seed = int.from_bytes(hashlib.sha256(f"{SEED}|{item['name']}".encode()).digest()[:8], "big")
+    name = item.get("name") or item.get("id")
+    seed = int.from_bytes(hashlib.sha256(f"{SEED}|{name}".encode()).digest()[:8], "big")
     need = N_DISTRACTORS - len(pinned)
     if len(rest) < need:
-        raise ValueError(f"{item['name']}: only {len(rest)} candidates for {need} distractors")
+        raise ValueError(f"{name}: only {len(rest)} candidates for {need} distractors")
     drawn = random.Random(seed).sample(rest, need)
     return {
         "bridge_type": row["t"],
@@ -701,10 +723,51 @@ def build() -> dict[str, Any]:
     return out
 
 
-def main() -> int:
+def build_bank(path: Path) -> Any:
+    """``--bank``: an adapted bank (a dict with ``items`` or a bare list) with ``mc`` built for
+    every item by the same rule; the header is kept as is (no version bump)."""
+    raw = json.loads(Path(path).read_text(encoding="utf-8"))
+    src_items = raw["items"] if isinstance(raw, dict) else raw
+    items = []
+    for it in src_items:
+        mc = build_mc(it)
+        new = dict(it)
+        new["intermediates"] = [
+            m for m in it.get("intermediates") or [] if _fold(m) not in DEMONYMS
+        ]
+        new["mc"] = mc
+        items.append(new)
+    if isinstance(raw, dict):
+        return {**{k: v for k, v in raw.items() if k != "items"}, "items": items}
+    return items
+
+
+def under_evals(path: Path) -> bool:
+    p = Path(path).resolve()
+    return p == ROOT / "evals" or (ROOT / "evals") in p.parents
+
+
+def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n", 1)[0])
     ap.add_argument("--check", action="store_true", help="exit 1 if the file is stale")
-    a = ap.parse_args()
+    ap.add_argument("--bank", type=Path, help="an adapted bank to build mc for (not evals/)")
+    ap.add_argument("--out", type=Path, help="with --bank: where the bank is written")
+    a = ap.parse_args(argv)
+    if a.bank is not None:
+        if a.out is None:
+            ap.error("--bank needs --out")
+        if under_evals(a.out):
+            ap.error(f"--out {a.out} is under evals/: an adapted build never writes evals/")
+        if a.check:
+            ap.error("--check is for the registered bank only")
+        bank = build_bank(a.bank)
+        a.out.parent.mkdir(parents=True, exist_ok=True)
+        a.out.write_text(json.dumps(bank, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
+        n = len(bank["items"] if isinstance(bank, dict) else bank)
+        print(f"wrote {a.out} ({n} items)")
+        return 0
+    if a.out is not None:
+        ap.error("--out needs --bank")
     text = json.dumps(build(), indent=1, ensure_ascii=False) + "\n"
     if a.check:
         same = DST.exists() and DST.read_text(encoding="utf-8") == text

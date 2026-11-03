@@ -10,7 +10,7 @@ from collections import defaultdict
 from typing import Any
 
 from . import families as fams
-from . import store
+from . import rebuild, store
 from .gate import DEFAULT_DRAWS, DEFAULT_TEMPERATURE, run_gate
 from .generate import describe
 from .subjects import get as get_subject
@@ -79,13 +79,16 @@ def _gate_rows(model: str, family: str, items: list[dict], runner, draws, temper
     if temperature is None:
         temp = fam.temperature if fam.temperature is not None else DEFAULT_TEMPERATURE
         top_p = fam.top_p if fam.top_p is not None else 1.0
+        top_k = fam.top_k
     else:
-        temp, top_p = temperature, 1.0
+        temp, top_p, top_k = temperature, 1.0, None
     sampling = {"draws": draws, "temperature": temp, "top_p": top_p, "threshold": fam.threshold}
+    if top_k is not None:  # recorded only when the family's gate fixes one (basic_readout_mt)
+        sampling["top_k"] = top_k
     if llm is None and any(a.grade == "llm" for a in asks):  # never fail llm legs for want of a
         print(f"{family}: llm-graded legs and no llm= -> {DEFAULT_LLM}")  # grader (audit #14)
         llm = _llm(DEFAULT_LLM)
-    records = run_gate(runner, asks, draws, temp, fam.threshold, llm, top_p=top_p)
+    records = run_gate(runner, asks, draws, temp, fam.threshold, llm, top_p=top_p, top_k=top_k)
     if fam.finalize is not None:
         records = {iid: fam.finalize(rec) for iid, rec in records.items()}
     rows = []
@@ -627,6 +630,7 @@ def freeze(model: str, families: list[str] | None = None) -> dict[str, Any]:
     root = store.model_dir(model)
     refused: dict[str, str] = {}
     banks: dict[str, Any] = {}
+    extra: dict[str, dict[str, Any]] = {}  # family -> {rel path: obj} (freeze_step)
     removed: dict[str, set[str]] = defaultdict(set)  # keys freeze took out of an entry
     for family in families or sorted(fams.FAMILIES):
         rows = live_rows(model, family, report)
@@ -699,6 +703,15 @@ def freeze(model: str, families: list[str] | None = None) -> dict[str, Any]:
                 print(f"{family}: blocked ({e})")
                 continue
             notes += more
+        try:  # plan 0060 A2 set-level steps over the shipped items (gold slots, overlays)
+            more, extra_files = rebuild.freeze_step(model, family, header, items)
+        except SystemExit as e:
+            fam_reports.setdefault(family, {}).update(
+                status="blocked", n_items=0, target=target, note=str(e)
+            )
+            print(f"{family}: blocked ({e})")
+            continue
+        notes += more
         if missing := missing_required(family, items):
             refused[family] = f"items lack {missing} (REQUIRED_ITEM_FIELDS; plan 0060 §1 / A2)"
             continue
@@ -710,6 +723,7 @@ def freeze(model: str, families: list[str] | None = None) -> dict[str, Any]:
                 "items": items,
             }
         banks[family] = bank
+        extra[family] = extra_files  # the set's judge overlays (A2), written with the banks
         n_orig_pass = sum(r["gate"]["pass"] for r in rows if r["origin"] == "original")
         entry = fam_reports.setdefault(family, {})
         if entry.get("status") == "absent":  # built now (the rest: store.clear_built_absent)
@@ -743,6 +757,8 @@ def freeze(model: str, families: list[str] | None = None) -> dict[str, Any]:
         raise SystemExit(f"freeze refused:\n{lines}")
     for family, bank in banks.items():
         store.write_json(root / f"{family}.json", bank)
+        for rel, obj in extra.get(family, {}).items():  # the set's judge overlays (A2)
+            store.write_json(root / rel, obj)
     absent = [f for f in registered_families() if not _present(root, f)]
 
     def _merge(fresh: dict) -> None:  # computed entries into a fresh read: drops / patches /

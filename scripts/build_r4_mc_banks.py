@@ -88,8 +88,13 @@ def multilingual_concepts(items: list[dict[str, Any]]) -> dict[str, list[str]]:
     return out
 
 
-def build(family: str, gen: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
-    src = REPO / "evals" / family / "items_v2.json"
+def build(
+    family: str, gen: dict[str, Any], src: Path | None = None
+) -> tuple[dict[str, Any], dict[str, Any]]:
+    """``src`` (``--bank``): an adapted bank built instead of ``evals/<family>/items_v2.json``;
+    its header version is kept (only the ``r4_mc`` record is added)."""
+    adapted = src is not None
+    src = src if src is not None else REPO / "evals" / family / "items_v2.json"
     bank = json.loads(src.read_text(encoding="utf-8"))
     items = bank["items"]
     topics: dict[str, list[str]] = {}
@@ -142,13 +147,14 @@ def build(family: str, gen: dict[str, Any]) -> tuple[dict[str, Any], dict[str, A
                 g = (gen.get(family) or {}).get(_label(it["name"]), {}).get(role) or {}
                 labels.append(str(g["topic"]))
         topics[_label(it["name"])] = labels
-    version = bank.get("version")
-    new_version: Any = "v3" if isinstance(version, str) and version.startswith("v") else 3
-    if isinstance(version, str) and version.isdigit():
-        new_version = "3"
-    bank["version"] = new_version
-    bank["supersedes"] = "items_v2.json"
-    bank["frozen"] = "2026-11-01"
+    if not adapted:
+        version = bank.get("version")
+        new_version: Any = "v3" if isinstance(version, str) and version.startswith("v") else 3
+        if isinstance(version, str) and version.isdigit():
+            new_version = "3"
+        bank["version"] = new_version
+        bank["supersedes"] = "items_v2.json"
+        bank["frozen"] = "2026-11-01"
     bank["r4_mc"] = {
         "script": "scripts/build_r4_mc_banks.py",
         "rule": (
@@ -196,10 +202,60 @@ def _label(name: str) -> str:
     return label_of(name)
 
 
+def under_evals(path: Path) -> bool:
+    p, ev = Path(path).resolve(), (REPO / "evals").resolve()
+    return p == ev or ev in p.parents
+
+
+def distractor_items(doc: dict[str, Any], family: str) -> dict[str, Any]:
+    """The per-item lists of a distractor file: ``r4_distractors.json`` (``items``) or a raw
+    ``r4_mc_distractors.py`` output (``{family: {...}}``)."""
+    if "items" in doc:
+        return doc["items"]
+    return {k: v for k, v in (doc.get(family) or {}).items() if k != "_meta"}
+
+
+def adapted_main(a: argparse.Namespace, ap: argparse.ArgumentParser) -> int:
+    """``--bank``: one family's adapted bank + its distractor file -> ``--out`` (topics to
+    ``--topics-out`` when given); nothing under evals/ is written."""
+    fam = a.family
+    if fam not in (*CONTENT_FAMILIES, "multilingual"):
+        ap.error(f"--family must be one of {[*CONTENT_FAMILIES, 'multilingual']}")
+    if a.out is None:
+        ap.error("--bank needs --out")
+    if fam in CONTENT_FAMILIES and a.distractors is None:
+        ap.error(f"{fam}: --bank needs --distractors")
+    for flag, p in (("--out", a.out), ("--topics-out", a.topics_out)):
+        if p is not None and under_evals(p):
+            ap.error(f"{flag} {p} is under evals/: an adapted build never writes evals/")
+    gen: dict[str, Any] = {}
+    if a.distractors is not None:
+        doc = json.loads(a.distractors.read_text(encoding="utf-8"))
+        gen[fam] = distractor_items(doc, fam)
+    bank, topics = build(fam, gen, a.bank)
+    outs = {a.out: bank, **({a.topics_out: topics} if a.topics_out is not None else {})}
+    for p, doc in outs.items():
+        p.parent.mkdir(parents=True, exist_ok=True)
+        p.write_text(json.dumps(doc, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
+        print(f"wrote {p}")
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n", 1)[0])
     ap.add_argument("--check", action="store_true")
+    ap.add_argument("--family", help="with --bank: the family of the adapted bank")
+    ap.add_argument("--bank", type=Path, help="an adapted bank built instead of evals/")
+    ap.add_argument("--distractors", type=Path, help="with --bank: its r4 distractor file")
+    ap.add_argument("--out", type=Path, help="with --bank: the built bank (never evals/)")
+    ap.add_argument("--topics-out", type=Path, help="with --bank: the topic labels")
     a = ap.parse_args(argv)
+    if a.bank is not None:
+        if a.check:
+            ap.error("--check is for the registered banks only")
+        return adapted_main(a, ap)
+    if any(x is not None for x in (a.family, a.distractors, a.out, a.topics_out)):
+        ap.error("--family / --distractors / --out / --topics-out need --bank")
     texts: dict[Path, str] = {}
     gen: dict[str, Any] = {}
     for fam in CONTENT_FAMILIES:

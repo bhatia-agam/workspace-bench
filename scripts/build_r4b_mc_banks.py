@@ -59,15 +59,22 @@ def _bump(version: Any, new: int) -> Any:
     return new
 
 
-def build(family: str) -> tuple[str, dict[str, Any], dict[str, Any]]:
+def build(
+    family: str, bank_path: Path | None = None, refine_path: Path | None = None
+) -> tuple[str, dict[str, Any], dict[str, Any]]:
+    """``bank_path`` / ``refine_path`` (``--bank`` / ``--distractors``): an adapted bank and its
+    ``r4b_mc_refine.py --bank`` result instead of the registered ``evals/<family>/`` files; the
+    adapted bank's header version is kept (only the ``r4b_mc`` record is added)."""
     from wsbench.banks import label_of
     from wsbench.multitoken.options import gold_english, judged_roles, r4_language_distractors
 
     src, dst, _v = BANKS[family]
-    bank = json.loads((REPO / "evals" / family / src).read_text(encoding="utf-8"))
-    refine = json.loads(
-        (REPO / "evals" / family / "r4b_distractors.json").read_text(encoding="utf-8")
-    )
+    adapted = bank_path is not None
+    bank_path = bank_path if bank_path is not None else REPO / "evals" / family / src
+    if refine_path is None:
+        refine_path = REPO / "evals" / family / "r4b_distractors.json"
+    bank = json.loads(bank_path.read_text(encoding="utf-8"))
+    refine = json.loads(refine_path.read_text(encoding="utf-8"))
     if int(refine.get("pass", 1)) < 2:
         raise SystemExit(f"{family}: r4b_distractors.json is not a pass-2+ file (topics rewritten)")
     lists = refine["items"]
@@ -122,10 +129,11 @@ def build(family: str) -> tuple[str, dict[str, Any], dict[str, Any]]:
         if family == "multilingual_typo" and "mc_roles" in it:
             # the content block now precedes the language block, as in the other banks
             it["mc"] = {r: mcb[r] for r in it["mc_roles"] if r in mcb}
-    new_n = int(dst.removeprefix("items_v").removesuffix(".json"))
-    bank["version"] = _bump(bank.get("version"), new_n)
-    bank["supersedes"] = src
-    bank["frozen"] = "2026-11-01"
+    if not adapted:
+        new_n = int(dst.removeprefix("items_v").removesuffix(".json"))
+        bank["version"] = _bump(bank.get("version"), new_n)
+        bank["supersedes"] = src
+        bank["frozen"] = "2026-11-01"
     bank["r4b_mc"] = {
         "script": "scripts/build_r4b_mc_banks.py",
         "rule": (
@@ -166,11 +174,43 @@ def build(family: str) -> tuple[str, dict[str, Any], dict[str, Any]]:
     return dst, bank, topic_doc
 
 
+def under_evals(path: Path) -> bool:
+    p, ev = Path(path).resolve(), (REPO / "evals").resolve()
+    return p == ev or ev in p.parents
+
+
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n", 1)[0])
     ap.add_argument("--check", action="store_true")
     ap.add_argument("families", nargs="*", default=list(BANKS))
+    ap.add_argument("--family", help="with --bank: the family (or one positional family)")
+    ap.add_argument("--bank", type=Path, help="an adapted bank built instead of evals/")
+    ap.add_argument("--distractors", type=Path, help="with --bank: its r4b_mc_refine.py result")
+    ap.add_argument("--out", type=Path, help="with --bank: the built bank (never evals/)")
+    ap.add_argument("--topics-out", type=Path, help="with --bank: the topic labels")
     a = ap.parse_args(argv)
+    if a.bank is not None:
+        fams = [a.family] if a.family else list(a.families)
+        if a.family and a.families not in (list(BANKS), [a.family]):
+            ap.error("--bank: name one family")
+        if len(fams) != 1 or fams[0] not in BANKS:
+            ap.error(f"--bank takes exactly one family of {list(BANKS)}")
+        if a.check:
+            ap.error("--check is for the registered banks only")
+        if a.out is None or a.distractors is None:
+            ap.error("--bank needs --distractors and --out")
+        for flag, p in (("--out", a.out), ("--topics-out", a.topics_out)):
+            if p is not None and under_evals(p):
+                ap.error(f"{flag} {p} is under evals/: an adapted build never writes evals/")
+        _dst, bank, topics = build(fams[0], a.bank, a.distractors)
+        outs = {a.out: bank, **({a.topics_out: topics} if a.topics_out is not None else {})}
+        for p, doc in outs.items():
+            p.parent.mkdir(parents=True, exist_ok=True)
+            p.write_text(json.dumps(doc, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
+            print(f"wrote {p}")
+        return 0
+    if any(x is not None for x in (a.family, a.distractors, a.out, a.topics_out)):
+        ap.error("--family / --distractors / --out / --topics-out need --bank")
     texts: dict[Path, str] = {}
     for fam in a.families:
         dst, bank, topics = build(fam)

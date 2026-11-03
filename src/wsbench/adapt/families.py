@@ -110,6 +110,30 @@ def _basic_readout(item: dict) -> list[Ask]:
                 prefill=OWN_STEM, max_tokens=8)]  # fmt: skip
 
 
+# basic_readout_mt v4's own gate (the bank header's ``gate``; ``scripts/build_brmt_v2.py``
+# ``QWEN_GATE``): answers were cut at 300 tokens there, and graded over the whole answer
+BRMT_MAX_TOKENS = 300
+
+
+def _name_forms(item: dict, role: str = "readout") -> list[str]:
+    """Every listed name of ``role``'s answer, any language: the v4 bank's ``name_forms`` (else
+    the unit's own ``forms``, as ``multitoken.family.item_name_forms`` reads a v1 item)."""
+    got = (item.get("name_forms") or {}).get(role)
+    if not got:
+        unit = next((u for u in item.get("units") or [] if u.get("role") == role), None)
+        got = (unit or {}).get("forms") or {}
+    return list(dict.fromkeys(str(f) for fs in got.values() for f in fs if str(f)))
+
+
+def _basic_readout_mt(item: dict) -> list[Ask]:
+    """basic_readout_mt v4 (plan 0060 A2): the bank's gate exactly: the QUESTION in chat, no
+    system turn, no answer stem and no plain leg, graded by ``name_forms`` (any language,
+    ``mc.form_in``) over the whole answer; sampled at the family's T / top_p / top_k."""
+    msgs = ({"role": "user", "content": item["prompt"]},)
+    return [Ask(_iid(item), "surface", tuple(_name_forms(item)), msgs, grade="name_forms",
+                max_tokens=BRMT_MAX_TOKENS)]  # fmt: skip
+
+
 def _poetry(item: dict) -> list[Ask]:
     """Bank v5's rule on the subject (plan 0060 A2; ``poetry.py``): the latent is the rhyme THIS
     model plans at line one's newline -- the modal last word of 11 free line twos written from
@@ -237,6 +261,7 @@ class Family:
     # None = the AGENTS.md default (T=0.7, top_p 1.0)
     temperature: float | None = None
     top_p: float | None = None
+    top_k: int | None = None  # None = the runner's default (off)
     own: bool = False  # the gold is the subject's own answer, stamped after gating
     note: str = ""
     # a family rule over one item's legs that ``gate.gate_record``'s per-group alternatives
@@ -258,7 +283,16 @@ FAMILIES: dict[str, Family] = {
         Family("poetry", _poetry, own=True, finalize=_po.finalize, note="v5: free + stub legs"),
         Family("typo", _asked(CORRECT_SPELLING, grade="first_word", strict=True)),
         Family("directed_modulation", _directed_modulation),
-        Family("basic_readout_mt", _asked(CONTINUE, plain=True)),
+        # v4's gate (header `gate`): T=0.7, top_p 0.8, top_k 20; the other mt families keep
+        # _asked(CONTINUE, plain=True)
+        Family(
+            "basic_readout_mt",
+            _basic_readout_mt,
+            temperature=0.7,
+            top_p=0.8,
+            top_k=20,
+            note="v4 question in chat, no system turn / stem, graded by name_forms",
+        ),
         Family("multilingual_mt", _asked(CONTINUE, plain=True, strict=True)),
         Family("multilingual_multihop", _asked(CONTINUE, bridges=True, plain=True, strict=True)),
         Family("typo_mt", _asked(CORRECT_SPELLING, strict=True)),
@@ -337,6 +371,10 @@ SUBJECT_FIELDS: dict[str, tuple[str, ...]] = {
         "prompt_only_opus",
         "gate_variant",
     ),
+    # basic_readout v5 (A2): an implicit item's options are re-keyed on the subject's own answer
+    # (``rebuild.subject_mc``; a distractor never equals it); entity / processing originals are
+    # marked with the registered block unchanged. ``gold_position`` is rebuilt at freeze.
+    "basic_readout": ("mc",),
 }
 
 # Item keys every shipped item must carry, or ``freeze`` refuses the family (plan 0060 A1.1; item
