@@ -488,6 +488,9 @@ def grade(
         f, fp = ans_freq[c["template"]], ans_p1[c["template"]]
         hub = (f[a] - fp[f"{a}|{wd_norm(g['p1_name'])}"]) / max(1, sum(f.values()))
         ap_names = names_of(ents[v_bp]) if c["vkind"] == "item" and v_bp in ents else [str(v_bp)]
+        if not ap_names:  # an A' entity with no label and no alias: nothing to grade or score
+            stats["Ap_unnamed"] += 1
+            continue
         e1.append(
             {
                 **c,
@@ -609,17 +612,22 @@ def _gate_legs(c: dict, outs: dict[str, Any], ents: dict) -> tuple[dict[str, Leg
     return legs, ev, checks
 
 
+def gateable(e: dict) -> bool:
+    """An E1 candidate the gate takes: no prompt naming B', no year-close answer, no ambiguous
+    B', and an A' with at least one name (an e1.jsonl from before the grade-stage check can hold
+    an unnamed A', which would crash the logP legs)."""
+    if e["Bp_leak"] or e["year_close"] or e["Bp_ambiguous_with"]:
+        return False
+    return e["vkind"] == "year" or bool(e.get("Bp_answer_names"))
+
+
 def gate(model: str, pool: str, runner: Any = None, limit: int = 0) -> list[dict]:
     """Stage 3: the consistency rule on the subject for every E1 candidate (minus a prompt that
     names B', a year-close answer and an ambiguous B'). Writes ``gated.jsonl``."""
     from . import run
 
     _c, ents = _ents(model, pool)
-    e1 = [
-        e
-        for e in _read_jsonl(work_dir(model) / "e1.jsonl")
-        if not (e["Bp_leak"] or e["year_close"] or e["Bp_ambiguous_with"])
-    ]
+    e1 = [e for e in _read_jsonl(work_dir(model) / "e1.jsonl") if gateable(e)]
     path = work_dir(model) / "gated.jsonl"
     done = {r["id"] for r in _read_jsonl(path)}
     e1 = [e for e in e1 if e["id"] not in done][: limit or None]  # limit = new ids this run
