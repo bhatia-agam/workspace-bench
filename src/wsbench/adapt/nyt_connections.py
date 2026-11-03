@@ -78,6 +78,13 @@ NAME_FOLLOWUP = (
     "For each of your 4 groups, in the same order, name the connection you had in mind. Answer "
     "with exactly 4 lines in the format\nCONNECTION: WORD, WORD, WORD, WORD\nand nothing else."
 )
+# plan 0060 Phase E fallback (A): small subjects copy NAME_FOLLOWUP's placeholder literally
+# ("CONNECTION: W, W, W, W", no label). A puzzle whose original naming turn labels 0 of its 4
+# (valid) groups is re-asked ONCE, greedy, with this unambiguous format; recorded per item as
+# ``adapt.name_variant = "explicit"``. The original prompt is kept wherever it gave any label.
+NAME_FOLLOWUP_EXPLICIT = NAME_FOLLOWUP.replace(
+    "\nCONNECTION: WORD,", "\n<name of the connection>: WORD,", 1
+)
 # the pilot's herring prompt (summ_mc.ALT / AVOID), its output line switched to JSON (the adapt
 # Claude helper parses JSON replies); validity and distinctness are checked as make_alts.py did
 ALT = """Here is an NYT Connections puzzle and its correct solution.
@@ -108,30 +115,77 @@ Reply with JSON only: {{"same": [true/false for each label, in order]}}"""  # no
 
 LINE = re.compile(r"^\s*(?:\d+[.)]\s*|[-*]\s*)?\**([^:\n]+?)\**\s*:\s*(.+?)\s*$")
 PLACEHOLDER = re.compile(r"(?i)(group|connection|category)\s*\d*")
+# plan 0060 Phase E (B): "CONNECTION: LABEL: W, W, W, W" (OLMo) -- a leading placeholder that
+# another "label:" follows is dropped before LINE, so the label is the name (adapt copy only)
+PLACEHOLDER_PREFIX = re.compile(
+    r"(?i)^\s*(?:\d+[.)]\s*|[-*]\s*)?\**(?:group|connection|category)\s*\d*\**\s*:\s*(?=[^:\n]*:)"
+)
+
+
+# a copied template rather than a label (the explicit re-ask's "<name of the connection>",
+# "<category>", a bare group number "4"): never the subject's label (plan 0060 Phase E)
+TEMPLATE_JUNK = re.compile(r"(?i)^\s*(?:<[^>]*>|\d+|name of the connection)\s*$")
+
+
+def template_junk(name: str) -> bool:
+    return bool(TEMPLATE_JUNK.match(name.strip().strip("*").strip()))
+
+
+def _clean_lead(lead: str) -> str:
+    """C's label without list markup ("1. Audacity", "[Audacity]", "**Audacity**")."""
+    lead = re.sub(r"^\s*(?:\d+[.)]|[-*])\s+", "", lead.strip())
+    lead = lead.strip().strip("*").strip()
+    if m := re.fullmatch(r"\[([^\[\]]*)\]", lead):  # only a wrapping pair: "[LETTER] (IS) ..."
+        lead = m.group(1).strip()
+    return lead
 
 
 def fset(ws: Sequence[str]) -> frozenset[str]:
     return frozenset(w.upper() for w in ws)
 
 
-def parse_answer(text: str, words: Sequence[str]) -> list[dict]:
-    """``CONNECTION: W, W, W, W`` lines -> ``[{name, members, line, extra}]`` in output order."""
+def parse_answer(text: str, words: Sequence[str], reverse: bool = False) -> list[dict]:
+    """``CONNECTION: W, W, W, W`` lines -> ``[{name, members, line, extra, lead}]`` in output
+    order. ``lead`` (plan 0060 Phase E, C): the comma items before the first puzzle word, joined
+    -- the label of "CONNECTION: <label>, W, W, W, W" (Qwen3.5). With ``reverse`` (only the
+    explicit-format re-ask's text), a line whose forward parse finds no puzzle word is tried
+    REVERSED (D): "W, W, W, W: label", every left item a puzzle word."""
     vocab = {w.upper(): w for w in words}
     out = []
     for i, raw in enumerate(text.splitlines()):
-        m = LINE.match(raw)
+        m = LINE.match(PLACEHOLDER_PREFIX.sub("", raw, count=1))
         if not m:
             continue
-        mem, extra = [], 0
+        mem, extra, lead = [], 0, []
         for part in m.group(2).split(","):
             w = part.strip().strip("*.").strip().upper()
             if w in vocab:
                 mem.append(vocab[w])
             elif w:
                 extra += 1
+                if not mem:
+                    lead.append(part.strip())
         if mem:
-            out.append({"name": m.group(1).strip(), "members": mem, "line": i, "extra": extra})
+            out.append({"name": m.group(1).strip(), "members": mem, "line": i, "extra": extra,
+                        "lead": _clean_lead(", ".join(lead))})  # fmt: skip
+        elif reverse and (rev := _reversed_line(raw, vocab)):  # (D): forward found none
+            out.append({"name": rev[0], "members": rev[1], "line": i, "extra": 0, "lead": ""})
     return out
+
+
+def _reversed_line(raw: str, vocab: Mapping[str, str]) -> tuple[str, list[str]] | None:
+    """Plan 0060 Phase E (D): "W, W, W, W: label" (Qwen3.5-2B's explicit-format naming) ->
+    ``(label, members)`` when EVERY comma item left of the last colon is a puzzle word and the
+    label is non-empty; else None."""
+    left, sep, right = raw.rpartition(":")
+    if not sep:
+        return None
+    left = re.sub(r"^\s*(?:\d+[.)]\s*|[-*]\s*)?", "", left)
+    items = [p.strip().strip("*.").strip().upper() for p in left.split(",")]
+    label = right.strip().strip("*").strip()
+    if not label or not items or not all(x in vocab for x in items):
+        return None
+    return label, [vocab[x] for x in items]
 
 
 def valid(groups: Sequence[Mapping[str, Any]], words: Sequence[str]) -> bool:
@@ -158,15 +212,21 @@ def parse_members(text: str, words: Sequence[str]) -> list[dict]:
     return out
 
 
-def subject_groups(greedy: str, named: str, words: Sequence[str]) -> list[dict]:
+def subject_groups(
+    greedy: str, named: str, words: Sequence[str], reverse: bool = False
+) -> list[dict]:
     """The subject's greedy groups with the names its follow-up turn gave them, matched by member
-    set (first match wins, placeholders skipped); an unmatched group keeps ``name`` empty."""
+    set (first match wins, placeholders skipped); an unmatched group keeps ``name`` empty. A
+    placeholder name with a ``lead`` label (plan 0060 Phase E, C) takes the lead instead."""
     groups = parse_members(greedy, words)
     names: dict[frozenset[str], str] = {}
-    for g in parse_answer(named, words):
-        if PLACEHOLDER.fullmatch(g["name"].strip()):
-            continue
-        names.setdefault(frozenset(g["members"]), g["name"])
+    for g in parse_answer(named, words, reverse):
+        name = g["name"]
+        if PLACEHOLDER.fullmatch(name.strip()) or template_junk(name):
+            if not g.get("lead") or template_junk(g["lead"]):
+                continue
+            name = g["lead"]
+        names.setdefault(frozenset(g["members"]), name)
     for g in groups:
         g["name"] = names.get(frozenset(g["members"]), "")
     return groups
@@ -214,13 +274,13 @@ def solve_ask(item: Mapping[str, Any]):
     return Ask(item["id"], "solve", messages=msgs, grade="own", max_tokens=MAX_TOKENS)
 
 
-def name_ask(item: Mapping[str, Any], greedy: str):
+def name_ask(item: Mapping[str, Any], greedy: str, followup: str = NAME_FOLLOWUP):
     from .gate import Ask
 
     msgs = (
         {"role": "user", "content": nyt.render(int(item["nyt_id"]))},
         {"role": "assistant", "content": greedy},
-        {"role": "user", "content": NAME_FOLLOWUP},
+        {"role": "user", "content": followup},
     )
     return Ask(item["id"], "name", messages=msgs, grade="own", max_tokens=MAX_TOKENS)
 
@@ -240,22 +300,52 @@ def solve(model: str, runner=None, limit: int = 0, regate: bool = False) -> dict
     path = _dir(model) / "solve.json"
     done = {} if regate else _load(path)
     todo = [it for it in items if it["id"] not in done][: limit or None]
+    out = dict(done)
     if not todo:
         print("nyt_connections solve: nothing to ask")
-        return done
+    else:
+        if runner is None:
+            from .run import _runner
+
+            runner = _runner(model)
+        got = runner.sample([solve_ask(it) for it in todo], N_SAMPLES, TEMPERATURE, top_p=TOP_P)
+        named = runner.sample(
+            [name_ask(it, g) for it, (g, _s) in zip(todo, got, strict=True)], 1, TEMPERATURE,
+            TOP_P,
+        )  # fmt: skip
+        for it, (g, s), (nm, _x) in zip(todo, got, named, strict=True):
+            out[it["id"]] = {"greedy": g, "samples": list(s), "named": nm}
+        store.write_json(path, out)
+        print(f"nyt_connections solve: {len(todo)} puzzles -> {path}")
+    return rename_explicit(model, items, out, path, runner)
+
+
+def _zero_labels(rec: Mapping[str, Any], nid: int) -> bool:
+    """The original naming turn labels none of a VALID greedy partition's groups."""
+    words = nyt.words(nid)
+    groups = subject_groups(rec["greedy"], rec.get("named", ""), words)
+    return valid(groups, words) and not any(g["name"] for g in groups)
+
+
+def rename_explicit(model: str, items: Sequence[Mapping[str, Any]], out: dict[str, Any],
+                    path: Path, runner=None) -> dict[str, Any]:  # fmt: skip
+    """Fallback (A): re-ask ONLY the naming turn, once, greedy, with NAME_FOLLOWUP_EXPLICIT for
+    each solved puzzle whose original naming labels 0 groups; stored as ``named_explicit``
+    (resumable: puzzles that have one are skipped)."""
+    todo = [it for it in items if it["id"] in out and "named_explicit" not in out[it["id"]]
+            and _zero_labels(out[it["id"]], int(it["nyt_id"]))]  # fmt: skip
+    if not todo:
+        return out
     if runner is None:
         from .run import _runner
 
         runner = _runner(model)
-    got = runner.sample([solve_ask(it) for it in todo], N_SAMPLES, TEMPERATURE, top_p=TOP_P)
-    named = runner.sample(
-        [name_ask(it, g) for it, (g, _s) in zip(todo, got, strict=True)], 1, TEMPERATURE, TOP_P
-    )
-    out = dict(done)
-    for it, (g, s), (nm, _x) in zip(todo, got, named, strict=True):
-        out[it["id"]] = {"greedy": g, "samples": list(s), "named": nm}
+    asks = [name_ask(it, out[it["id"]]["greedy"], NAME_FOLLOWUP_EXPLICIT) for it in todo]
+    named = runner.sample(asks, 1, TEMPERATURE, TOP_P)
+    for it, (nm, _x) in zip(todo, named, strict=True):
+        out[it["id"]] = {**out[it["id"]], "named_explicit": nm}
     store.write_json(path, out)
-    print(f"nyt_connections solve: {len(todo)} puzzles -> {path}")
+    print(f"nyt_connections solve: {len(todo)} 0-label puzzles re-named (explicit format)")
     return out
 
 
@@ -269,6 +359,10 @@ def puzzle_stability(item: Mapping[str, Any], rec: Mapping[str, Any]) -> dict[st
     words = nyt.words(nid)
     groups = subject_groups(rec["greedy"], rec.get("named", ""), words)
     out: dict[str, Any] = {"nyt_id": nid, "reason": "", "groups": []}
+    if rec.get("named_explicit") and valid(groups, words) and not any(g["name"] for g in groups):
+        # fallback (A): the original naming gave no label at all; the explicit re-ask names them
+        groups = subject_groups(rec["greedy"], rec["named_explicit"], words, reverse=True)
+        out["name_variant"] = "explicit"
     if not valid(groups, words):
         out["reason"] = f"solve: the greedy answer is no partition into 4x4 ({len(groups)} groups)"
         return out
@@ -640,6 +734,8 @@ def build_item(
             "rule": f"stable iff the subject's group is in >= {MIN_STABLE}/{N_SAMPLES} samples",
             "qwen": {"n_slots": len(reg), "n_stable": sum(st for _s, st in reg)},
             "notes": notes,
+            # fallback (A): labels from the explicit-format naming re-ask
+            **({"name_variant": "explicit"} if stab.get("name_variant") == "explicit" else {}),
         },
     }
     return new, [], notes
