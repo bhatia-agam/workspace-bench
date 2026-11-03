@@ -17,7 +17,12 @@ class Subject:
     n_layers: int  # 0 = read num_hidden_layers from the HF config at run time
     tokenizer: str
     revision: str | None = None
-    max_model_len: int = 4096
+    # prompt + reply budget of the subject's vLLM engine. Every bank's longest prompt plus its
+    # max_tokens must fit: carry's jailbreak_recognition v2 re-screen sends a 4,261-token prompt
+    # (Qwen render, ``read.n_tokens`` of rp-wildchat-fe022288) + 512 tokens, over the old 4096
+    # (tests/test_adapt_phase2_fixes.py holds the margin for every subject). 8192 keeps the KV
+    # reservation small for the 24 GB box subjects (qwen3.5-9b at 0.93 + eager)
+    max_model_len: int = 8192
     backend: str = "box"  # "box" = the RunPod 4090; "modal" = too big for 24 GB
     gpu_memory_utilization: float = 0.85  # vLLM share of the 24 GB card
     enforce_eager: bool = False  # no torch.compile / CUDA graphs (saves memory on a tight fit)

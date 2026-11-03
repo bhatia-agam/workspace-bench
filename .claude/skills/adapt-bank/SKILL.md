@@ -81,8 +81,8 @@ AFTER every freeze, re-freezes included.
 
 | status today | families | how |
 |---|---|---|
-| full build | typo_mt, association (Brief writes `mc`, but the options are NOT leakage-screened and new items lack v3's `mc.distractor_aliases` / `topic`: say so in the note) | profile + `fill` |
-| full build (plan 0060 A2 rebuilds) | basic_readout v5 (Brief tiers `t1` implicit / `entity` / `processing`; profile → `fill` → `$A mc $M families=basic_readout` (entity / processing candidates: `mc_leakage_r4.py --bank`) → gate → `$A mc $M families=basic_readout stage=subject` after EVERY gate (implicit golds = the subject's answer, a distractor never names it; marks `subject_fields_for`) → freeze (balances `mc.gold_position` per subfamily over the shipped set)), basic_readout_mt v4 (gate = the v4 question in chat, no system turn / stem, graded by `name_forms`, T 0.7 / top_p 0.8 / top_k 20 (a Modal subject needs its app redeployed for `top_k`); Brief `t1` / `t2`; `$A mc $M families=basic_readout_mt` before gate (r4 → r4b → `build_r4b_mc_banks.py --bank`); freeze writes the set's `basic_readout_mt/{exonyms,hidden_rivals}.json` overlays, which need the judge overlays of PR #243) | as described |
+| full build | typo_mt, association (Brief writes a provisional `mc`; `fill` replaces it on every wave with `adapt mc`'s screened options before the gate. Check new items for v3's `mc.distractor_aliases` / `topic` and say in the note what is missing) | profile + `fill` |
+| full build (plan 0060 A2 rebuilds) | basic_readout v5 (Brief tiers `t1` implicit / `entity` / `processing`; profile → `fill`, which on every wave runs author → `$A mc $M families=basic_readout` (entity / processing candidates: `mc_leakage_r4.py --bank`) → gate → `$A mc $M families=basic_readout stage=subject` (run those two by hand for candidates authored outside `fill`; `stage=subject` after EVERY gate) (implicit golds = the subject's answer, a distractor never names it; marks `subject_fields_for`) → freeze (balances `mc.gold_position` per subfamily over the shipped set)), basic_readout_mt v4 (gate = the v4 question in chat, no system turn / stem, graded by `name_forms`, T 0.7 / top_p 0.8 / top_k 20 (a Modal subject needs its app redeployed for `top_k`); Brief `t1` / `t2`; `$A mc $M families=basic_readout_mt` before gate (r4 → r4b → `build_r4b_mc_banks.py --bank`; `fill` runs it on every wave); freeze writes the set's `basic_readout_mt/{exonyms,hidden_rivals}.json` overlays, which need the judge overlays of PR #243) | as described |
 | full build (generated) | relational_multihop, arithmetic_intermediates | profile + `auto` |
 | originals only | directed_modulation (profile is its compliance gate; no Brief), multihop, chain_intermediates (gate = v2's rule: strict 10/10 + greedy + no leak on the seed-last render; `first` is a `note:first` annotation leg; new generated items get per-slot `mc` from `options.build_mc` over the shipped set at freeze; originals keep the registered options), conjunctive_association, role_bound_association (oa-v3 `distractors_v3.json` is keyed by registered pair ids), user_modeling (option pools), buggy_code (plan 0060 A2: `select` keeps each buggy / clean pair `{id, twin}` atomic, registered `twin` or the authored `-au-` / `-au-clean-` ids; a failed clean twin drops its buggy partner; authored pairs get `twin` at authoring and at freeze), multilingual / multilingual_mt / multilingual_typo / multilingual_multihop **only for a subject whose native languages are exactly `en` and `zh`**: freeze copies Qwen's `contract.native_langs` | profile + freeze |
 | carry | jailbreak_recognition (`carry` re-screens every v2 control on the subject with the bank's J5 grader, `scripts/build_jailbreak_v2.py` `grade_gate`: 20 no-think draws + greedy, since the subject never thinks; a failing control is dropped with its pairing in `adapt.dropped_controls` and the report; `screen=false` skips it, and then the net headline is not valid), multi_concept_directed_modulation | `carry families=jailbreak_recognition,multi_concept_directed_modulation` (never another family: carry treats any non-jailbreak name as MCDM) |
@@ -102,7 +102,7 @@ from `subjects.py`).
 | 0 set up | add a `Subject` (pinned revision, `n_layers`, tokenizer family, `chat_template`, `gpu_memory_utilization` / `enforce_eager` for a tight fit), download weights, `$A profile $M families=typo_mt limit=5 llm=claude-opus-5-5` (step 1 skips these rows, so grade them the same way) | 9B on the 4090: 0.93 + eager (vision profiling is skipped: text only) |
 | 1 profile | `$A profile $M llm=claude-opus-5-5 families=<the full-build, generated and originals-only families of §What can be built>` | gates every item of the REGISTERED bank; parallel Opus grading |
 | 2 generated | `$A auto $M family=arithmetic_intermediates`, then `family=relational_multihop`, then `family=chain_intermediates` (tiers keep every intermediate in 10..99) | deterministic ladders |
-| 3 authored | `$A fill $M families=typo_mt,association` (only these two: other families with a Brief would build items missing their judge-side keyed fields; `fill` raises KeyError on a family with no Brief) | waves sized by yield, auto-steered by the last wave's misses, tier step-down, ooc stop |
+| 3 authored | `$A fill $M families=typo_mt,association` (only these two: other families with a Brief would build items missing their judge-side keyed fields; `fill` raises KeyError on a family with no Brief; for association / basic_readout / basic_readout_mt / multihop (`mcstage.FAMILIES`) every wave goes author → `adapt mc` → gate) | waves sized by yield, auto-steered by the last wave's misses, tier step-down, ooc stop |
 | 4 model-specific | `$A agentic $M` · `$A carry $M families=jailbreak_recognition,multi_concept_directed_modulation` · jlens: `scripts/adapt_jlens.py` / `adapt_jlens_modal.py` (the subject's neuronpedia J-lens, or one fitted with `scripts/fit_jlens_modal.py`; else `note status=blocked`). NOT `$A moral` until plan 0060 | directed_modulation is compliance-gated by step 1 |
 | 5 freeze | `$A freeze $M families=<the families built>`, then `note` per family (after EVERY freeze) | writes `n_layers` into report.json: `wsbench plan` then emits subject layers. wrong_intermediate, multihop_mt_v2 and nyt_connections (plan 0060 Phase E: `$A wrong_intermediate`, `$A multihop_mt_v2`, `$A nyt_connections`) are not in the default family list: they ship ONLY when named, `families=wrong_intermediate,multihop_mt_v2,nyt_connections` |
 | 6 verify | `WSB_BANK_ROOT=adapted/<m> wsbench plan out=…` and each family's judge with `dry_run=True` | any non-zero exit (exit 2, or a traceback) means a required field was not built |
@@ -232,8 +232,11 @@ For each family below its target count (the registered bank's size):
    `patches`). For an id ALREADY in the gate log the only route is `adapt patch` (applied at freeze;
    never linted or gated): a rewritten `cand/` row is ignored (`store.pending` / `add_candidates`
    skip gated ids) and `gate regate=true` re-gates the gate-log payload, not the cand row. A new
-   item can carry the field in its `cand/` row before its first `gate`. An adapted-item `adapt mc`
-   step is open (plan 0060).
+   item can carry the field in its `cand/` row before its first `gate`. `adapt mc` (and `fill`,
+   on every wave) builds it for the pending adapted-only candidates of association, multihop,
+   basic_readout and basic_readout_mt; each build gets its own work dir
+   `adapted/<m>/mc/<family>/build-<hash>/` keyed by the pending set (a rerun of the same set
+   resumes there; earlier builds' dirs are the archive, never merged into a new build).
 7. Stop rules (report, never pad):
    - **full**: target reached.
    - **partial**: the easiest tier is exhausted with yield ≥ 3%, or the budget is hit.
@@ -244,7 +247,10 @@ For each family below its target count (the registered bank's size):
 
 `$A auto model=<m> family=<f>` runs steps 3–4 down the ladder for the deterministic families;
 `$A fill model=<m> families=<f,...>` does the same for authored families (waves steered by
-`run.miss_steer`: lint reasons, what the subject wrote instead, and what passed).
+`run.miss_steer`: lint reasons, what the subject wrote instead, and what passed). For the MC
+families (`mcstage.FAMILIES`) each wave's options are built by `adapt mc` between author and
+gate, so no item is gated on its provisional list; basic_readout also gets `stage=subject` after
+each gate.
 
 ### 4. Freeze, verify, floors, audit
 `$A freeze model=<m> families=<the families built>` (never bare) writes `<family>.json` and

@@ -4,7 +4,8 @@ an adapted bank").
 ``stage=build`` (default): the family's own MC builders run on the ADAPTED-ONLY pending
 candidates (``cand/<family>.jsonl`` rows not yet gated; originals keep the registered options and
 are never touched), each with ``--bank`` (a work bank of those candidates) and an output under
-``adapted/<m>/mc/<family>/`` (never ``evals/``: the builders refuse it). The built ``mc`` is
+``adapted/<m>/mc/<family>/build-<hash>/``, one dir per pending set (:func:`work_dir`; never
+``evals/``: the builders refuse it). The built ``mc`` is
 written into the candidate payloads in place (cand-row mode: ``store.add_candidates`` dedups by
 id, so an append would be ignored), before ``gate``. A candidate the builder drops (association:
 the gold lost the screen) loses its provisional ``mc``, so lint rejects it rather than gating an
@@ -28,6 +29,7 @@ cannot-tell stays last (the judge adds it), and options are frozen in the item.
 
 import copy
 import datetime as dt
+import hashlib
 import importlib.util
 import json
 import os
@@ -121,6 +123,9 @@ def _todo(model: str, family: str) -> list[dict]:
             continue
         if family == "basic_readout" and c.get("subfamily") == "implicit":
             continue
+        built = (c.get("adapt") or {}).get("mc_build")
+        if built and not built.get("dropped"):  # already built (a rerun after the gate crashed):
+            continue  # rebuilding would re-spend Opus and overwrite brmt's hidden_rivals
         out.append(c)
     return out
 
@@ -157,6 +162,18 @@ def _rewrite_cands(model: str, family: str, new: dict[str, dict]) -> None:
     os.replace(tmp, path)
 
 
+def work_dir(model: str, family: str, todo: list[dict]) -> Path:
+    """The build's own work dir, ``adapted/<m>/mc/<family>/build-<hash>/``, keyed by the
+    candidates it builds. The builders resume from (and r4_mc_distractors merges into) what
+    their ``--out`` already holds, so a shared dir mixed a previous build's pools into the next
+    one (r4b ``load_lists`` then raised KeyError on the ids the new bank lacks). The same
+    pending set (a crashed build rerun) resumes in its own dir; a new set starts fresh, and
+    earlier builds' dirs stay as the archive."""
+    blob = json.dumps(sorted(todo, key=store.item_id), sort_keys=True, ensure_ascii=False)
+    key = hashlib.sha256(blob.encode("utf-8")).hexdigest()[:12]
+    return store.model_dir(model) / "mc" / family / f"build-{key}"
+
+
 def build(model: str, family: str) -> dict[str, int]:
     """Run the family's builders on its pending adapted-only candidates; write the options into
     the candidate payloads. Returns ``{"built", "dropped"}``."""
@@ -164,7 +181,7 @@ def build(model: str, family: str) -> dict[str, int]:
     if not todo:
         print(f"{family}: no pending adapted-only candidates for the MC builder")
         return {"built": 0, "dropped": 0}
-    work = _not_evals(store.model_dir(model) / "mc" / family)
+    work = _not_evals(work_dir(model, family, todo))
     work.mkdir(parents=True, exist_ok=True)
     header, _items = store.original_bank(family)
     bank = work / "bank_in.json"
@@ -177,7 +194,7 @@ def build(model: str, family: str) -> dict[str, int]:
         run_builder(script, argv)
     built = {store.item_id(it): it for it in _items_of(out)}
     at = dt.datetime.now(dt.UTC).isoformat(timespec="seconds")
-    record = {"builders": [s for s, _a in calls], "at": at}
+    record = {"builders": [s for s, _a in calls], "at": at, "work": work.name}
     new, dropped = {}, 0
     for c in todo:
         iid = store.item_id(c)

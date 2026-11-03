@@ -973,7 +973,8 @@ def adopt(model: str, out: str, bank: str | None = None) -> Counter:
     ``families.SUBJECT_MARKER = model``. Pass = the v3 gate (token AND precise AND aligned AND
     reason supports the side AND has a reason, Leg S kept, class kept) AND options built. A v3
     id the re-key did not keep, or without options, fails and never keeps the registered
-    (Qwen's) options."""
+    (Qwen's) options; one whose option list never completed (the freeze report's
+    ``drop: options_incomplete``) is marked ``gate.drop`` and tallied fail:options_incomplete."""
     import datetime as dt
     from pathlib import Path
 
@@ -995,6 +996,14 @@ def adopt(model: str, out: str, bank: str | None = None) -> Counter:
         sb = {it["id"]: it for it in json.loads(bpath.read_text(encoding="utf-8"))}
     else:
         print(f"moral adopt: no subject options at {bpath} (stage=options): every item fails")
+    # items moral_distractors.py freeze dropped because select never completed one of their
+    # lists (its report beside the bank, ``bank_paths``): recorded as fail:options_incomplete
+    rpath = bpath.with_name(bpath.stem + "_report.json")
+    short: dict[str, list[str]] = {}
+    if rpath.exists():
+        rep_items = json.loads(rpath.read_text(encoding="utf-8")).get("items") or {}
+        short = {str(k): list(r.get("incomplete") or []) for k, r in rep_items.items()
+                 if r.get("drop") == "options_incomplete"}  # fmt: skip
     _h, v3 = store.original_bank(FAMILY)
     by_id = {e["v1"]["id"]: e for e in entries}
     now = dt.datetime.now(dt.UTC).isoformat(timespec="seconds")
@@ -1045,6 +1054,10 @@ def adopt(model: str, out: str, bank: str | None = None) -> Counter:
         gate = {"pass": ok, "rate": side["rate"], "render": "surface",
                 "greedy": side["greedy"], "samples": [], "question": side["question"],
                 "legs": {"surface": side}, "moral": checks}  # fmt: skip
+        if not sub_ok and iid in short:
+            gate["drop"] = "options_incomplete"
+            gate["incomplete"] = short[iid]
+            tally["fail:options_incomplete"] += 1
         rows.append({"id": iid, "origin": "original", "item": it, "gate": gate, "selected": ok,
                      "sampling": {"draws": SIDE_N, "temperature": SIDE_T, "top_p": SIDE_TOP_P,
                                   "threshold": COMMIT_MIN / SIDE_N},

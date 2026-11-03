@@ -54,6 +54,7 @@ Writes ``evals/<family>/r4b_distractors.json``. Run:
 import argparse
 import hashlib
 import json
+import os
 import random
 import sys
 from pathlib import Path
@@ -67,7 +68,7 @@ from wsbench.banks import load_bank
 from wsbench.baselines import lucky_guessing as lg
 from wsbench.llm import schema_block, stream_json
 from wsbench.multitoken.options import seeded_shuffle as mt_shuffle
-from wsbench.registry import REPO_ROOT
+from wsbench.registry import BANK_FILE_ENV_PREFIX, REPO_ROOT, canonical
 
 FAMILIES = (
     "basic_readout_mt",
@@ -596,11 +597,31 @@ def evaluate(
     }
 
 
+def option_items(family: str) -> list[lg.Item]:
+    """The family's option lists (``lg.build_family``) over the SOURCE bank: with ``--bank``
+    the adapted bank (via ``WSB_BANK_FILE_<FAMILY>`` for the call), never the registered one,
+    whose ids an adapted-only bank does not share."""
+    if BANK is None:
+        return lg.build_family(family)
+    key = BANK_FILE_ENV_PREFIX + canonical(family).upper()
+    old = os.environ.get(key)
+    os.environ[key] = str(Path(BANK).resolve())
+    try:
+        return lg.build_family(family)
+    finally:
+        if old is None:
+            os.environ.pop(key, None)
+        else:
+            os.environ[key] = old
+
+
 def assemble(
     family: str, lists: dict[tuple[str, str], dict[str, Any]], choice: dict, bank: dict
 ) -> list[lg.Item]:
-    items = lg.build_family(family)
-    topics = lg.load_list_topics(family) if family not in CONCEPT_FAMILIES else {}
+    items = option_items(family)
+    # the frozen topic labels are keyed by the registered ids: an adapted bank has none (its
+    # content lists take their topics from ``lists`` below)
+    topics = lg.load_list_topics(family) if family not in CONCEPT_FAMILIES and BANK is None else {}
     out = []
     for it in items:
         roles = list(it.meta.get("roles") or [])

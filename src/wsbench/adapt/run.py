@@ -10,7 +10,7 @@ from collections import defaultdict
 from typing import Any
 
 from . import families as fams
-from . import rebuild, store
+from . import mcstage, rebuild, store
 from .gate import DEFAULT_DRAWS, DEFAULT_TEMPERATURE, run_gate
 from .generate import describe
 from .subjects import get as get_subject
@@ -1117,7 +1117,9 @@ def fill(model: str, family: str, llm: str | None = "claude-opus-5-5", max_waves
     """Author-and-gate an authored family down its brief's tiers until the bank is full or the
     stop rules fire (SKILL.md §3): waves sized from the last yield (bank units), each steered by
     the previous wave's misses; step down a tier after 3 waves under 30%; ``ooc`` below 3% on at
-    least 60 candidates at the last tier. Writes the status to report.json."""
+    least 60 candidates at the last tier. Writes the status to report.json. A family with MC
+    builders (``mcstage.FAMILIES``) has each wave's options built (``adapt mc``) between author
+    and gate; basic_readout also gets ``stage=subject`` after every gate."""
     from .author import BRIEFS
     from .author import author as write
 
@@ -1138,7 +1140,13 @@ def fill(model: str, family: str, llm: str | None = "claude-opus-5-5", max_waves
             n = max(5, n // 2)  # a pair object becomes two items
         before = set(store.gated(model, family))
         write(model, family, tiers[t_i], n, steer=steer, wave=100 + wave)
+        if family in mcstage.FAMILIES:
+            # the wave's options through the family's MC builders BEFORE the gate (``adapt mc``
+            # reads pending rows only: gated rows would keep the provisional, unscreened lists)
+            mcstage.build(model, family)
         lint_and_gate(model, family, runner, DEFAULT_DRAWS, None, _llm(llm))
+        if family == "basic_readout":
+            rebuild.subject_fields(model)  # stage=subject after every gate (implicit golds)
         new = set(store.gated(model, family)) - before
         gained = len(select(family, _bank_rows(model, family, originals), target, quota))
         gained -= have

@@ -423,6 +423,20 @@ def select(items: dict[str, dict], lists: list[dict], st: Lists, out: Path) -> N
     st.save()
 
 
+def incomplete(s: dict | None) -> bool:
+    """A list ``select`` never completed (``chosen`` is None: fewer than ``need`` verified
+    distinct candidates after every round). Every later pass skips it, and ``freeze`` drops its
+    item with ``drop: options_incomplete`` (``adapt moral stage=adopt``: fail:options_incomplete).
+    No state at all counts too (the passes skip it; freeze keeps its older ``distractors`` drop);
+    a state without a ``chosen`` key is a hand-built pass state, never incomplete."""
+    return s is None or ("chosen" in s and s["chosen"] is None)
+
+
+def complete_lists(lists: list[dict], st: Lists) -> list[dict]:
+    """The lists ``select`` completed (the input of restyle / harden / lenmatch / coregister)."""
+    return [lst for lst in lists if not incomplete(st.state.get(lst["key"]))]
+
+
 RESTYLE_SYSTEM = """You edit multiple-choice options for a benchmark so that no option stands out \
 by its FORM. You get one CORRECT option, which is the style reference, and several other options. \
 Rewrite each other option so that it reads exactly like the correct option in register and shape: \
@@ -454,6 +468,7 @@ def restyle(rekey: Path, out: Path, limit: int) -> None:
     items = _items(entries)
     lists = [lst for e in entries for lst in lists_of(e)]
     st = Lists(out / "lists.json")
+    lists = complete_lists(lists, st)
     tasks = {}
     for lst in lists:
         s = st.state[lst["key"]]
@@ -557,7 +572,10 @@ def restyle(rekey: Path, out: Path, limit: int) -> None:
 
 def _final(s: dict) -> list[dict] | None:
     """The frozen distractors of a list: the co-register pass's when it ran, else the
-    length-match pass's, else the hardening pass's, else the register pass's, else the chosen."""
+    length-match pass's, else the hardening pass's, else the register pass's, else the chosen.
+    None for a list ``select`` never completed (a pass output left from an earlier run included)."""
+    if incomplete(s):
+        return None
     coreg = (s.get("coreg") or {}).get("distractors")
     return coreg or s.get("lenmatched") or s.get("hardened") or s.get("restyled") or s.get("chosen")
 
@@ -622,7 +640,7 @@ def harden(rekey: Path, out: Path, limit: int) -> None:
     hs = Lists(out / "harden.json")
     lists, need = [], {}
     for e in entries:
-        for lst in lists_of(e):
+        for lst in complete_lists(lists_of(e), st):
             lists.append({**lst, "need": {"opp": 0, "same": 0}})  # verify() sets statuses only
             need[lst["key"]] = harden_need(e)
     by_key = {lst["key"]: lst for lst in lists}
@@ -921,9 +939,9 @@ def lenmatch(rekey: Path, out: Path, limit: int) -> None:
     frozen distractors land in ``lists.json`` as ``lenmatched`` (``_final`` prefers them)."""
     entries = _entries(rekey, limit)
     items = _items(entries)
-    lists = [lst for e in entries for lst in lists_of(e)]
-    by_key = {lst["key"]: lst for lst in lists}
     st = Lists(out / "lists.json")
+    lists = complete_lists([lst for e in entries for lst in lists_of(e)], st)
+    by_key = {lst["key"]: lst for lst in lists}
     ls = Lists(out / "lenmatch.json")
     ranks = gold_ranks([lst["key"] for lst in lists])
     for lst in lists:
@@ -1184,8 +1202,8 @@ def coregister(rekey: Path, out: Path, limit: int) -> None:
     ``coreg = {gold, distractors}`` (``_final`` and ``freeze`` prefer it)."""
     entries = _entries(rekey, limit)
     items = _items(entries)
-    lists = [lst for e in entries for lst in lists_of(e)]
     st, ls = Lists(out / "lists.json"), Lists(out / "lenmatch.json")
+    lists = complete_lists([lst for e in entries for lst in lists_of(e)], st)
     n_stale = 0
     for lst in lists:  # a co-registered list goes stale when lenmatch rewrote its input or a
         s = st.state[lst["key"]]  # form rule added since rejects it; it is co-registered again
@@ -1507,6 +1525,15 @@ def freeze(rekey: Path, out: Path, bank: Path | None = None) -> None:
             report["counts"]["drop_gate"] += 1
             continue
         lists = lists_of(e)
+        short = [lst["side"] for lst in lists
+                 if lst["key"] in st.state and incomplete(st.state[lst["key"]])]  # fmt: skip
+        if short:  # select never completed a list: the item drops, the others are unaffected
+            rec["kept"] = False
+            rec["drop"] = "options_incomplete"
+            rec["incomplete"] = short
+            report["items"][it["id"]] = rec
+            report["counts"]["drop_options_incomplete"] += 1
+            continue
         opts = {}
         for lst in lists:
             s = st.state.get(lst["key"]) or {}

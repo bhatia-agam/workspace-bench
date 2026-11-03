@@ -87,7 +87,9 @@ Write <n> items spread across <subfamilies/topics>; no topic or template more th
   `association_distractors.py`, `mc_leakage_r4.py`, `r4_mc_distractors.py`, `r4b_mc_refine.py`
   and `build_r4*_mc_banks.py` take `--bank` (+ `--out` / `--bank-out`, refused under `evals/`)
   and `python -m wsbench.adapt mc model=<m> families=<f>` runs the right chain on the pending
-  ADAPTED-ONLY candidates (association, multihop, basic_readout, basic_readout_mt; plan 0060 A2);
+  ADAPTED-ONLY candidates (association, multihop, basic_readout, basic_readout_mt; plan 0060 A2;
+  `fill` runs it on every wave before the gate; one work dir per pending set,
+  `adapted/<m>/mc/<family>/build-<hash>/`);
   `role_bound_distractors_v3.py` / `moral_distractors.py` do not yet; `scripts/poetry/build_mc.py`
   takes `--draft` / `--out`. Put the block in a NEW candidate's payload before its first `gate`;
   for an already-gated id the only route is `adapt patch` (SKILL.md §3 step 6). Distractors are the same kind and specificity as the gold; never pick them by what the
