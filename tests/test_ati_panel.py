@@ -52,7 +52,7 @@ def test_panel_verdict_is_the_min_rule(qwen, frontier, want):
 
 @pytest.fixture
 def fams(monkeypatch):
-    ids = {"fam": list("abcde"), "wrong_bridge": list("abcde")}
+    ids = {"fam": list("abcde"), "wrong_intermediate": list("abcde")}
     monkeypatch.setattr(ti, "gated_families", lambda: ["fam"])
     monkeypatch.setattr(readplan, "plan", lambda f: [SimpleNamespace(id=i) for i in ids[f]])
     monkeypatch.setattr(
@@ -177,12 +177,12 @@ def test_unverified_share_drops_a_regular_family_and_stops_a_crafted_one(tmp_pat
     ti.gate(out, dst=dst)
     assert "unverified: 5/5" in json.loads(dst.read_text())["_not_gated"]["fam"]
     out2 = tmp_path / "o2"
-    _write(out2, "qwen", "wrong_bridge", und)
-    _write(out2, "opus", "wrong_bridge", {i: [F, N, F] for i in "abcde"})
+    _write(out2, "qwen", "wrong_intermediate", und)
+    _write(out2, "opus", "wrong_intermediate", {i: [F, N, F] for i in "abcde"})
     for a in ti.FRONTIER_OTHERS:
-        _write(out2, a, "wrong_bridge", {i: [F, F, F] for i in "abcde"})
+        _write(out2, a, "wrong_intermediate", {i: [F, F, F] for i in "abcde"})
     with pytest.raises(SystemExit, match="stop and report"):
-        ti.gate(out2, dst=None, families=["wrong_bridge"])
+        ti.gate(out2, dst=None, families=["wrong_intermediate"])
 
 
 def test_slot_refusals_and_sonnet_slot(tmp_path, fams):
@@ -216,16 +216,16 @@ def test_slot_refusals_and_sonnet_slot(tmp_path, fams):
 
 def test_crafted_slot_refusal_stops(tmp_path, fams):
     out = tmp_path / "o"
-    _standard(out, "wrong_bridge")
+    _standard(out, "wrong_intermediate")
     _write(
         out,
         "opus",
-        "wrong_bridge",
+        "wrong_intermediate",
         {i: [N, F, F] for i in "abcde"},
         status={(i, 0): "refusal" for i in "abc"},
     )
     with pytest.raises(SystemExit, match="crafted ATI family"):
-        ti.gate(out, dst=None, families=["wrong_bridge"])
+        ti.gate(out, dst=None, families=["wrong_intermediate"])
 
 
 def test_panel_pilot_guard_fires_before_completeness(tmp_path, fams):
@@ -254,13 +254,15 @@ def test_roots_union_supersede_and_double_decision(tmp_path, fams):
 
 def test_candidates_mode_keeps_per_item_verdicts(tmp_path, fams):
     out = tmp_path / "o"
-    _write(out, "qwen", "wrong_bridge", {i: [T, T, T] for i in "abcde"})
-    _write(out, "opus", "wrong_bridge", {"a": [F, F, F], **{i: [F, N, F] for i in "bcde"}})
+    _write(out, "qwen", "wrong_intermediate", {i: [T, T, T] for i in "abcde"})
+    _write(out, "opus", "wrong_intermediate", {"a": [F, F, F], **{i: [F, N, F] for i in "bcde"}})
     for a in ti.FRONTIER_OTHERS:
-        _write(out, a, "wrong_bridge", {i: [F, F, F] for i in "abcde"})
+        _write(out, a, "wrong_intermediate", {i: [F, F, F] for i in "abcde"})
     dst = tmp_path / "cands.json"
     # 4/5 unverified would stop a crafted bank gate; a candidate pool just reports them
-    e = ti.gate(out, dst=dst, families=["wrong_bridge"], candidates=True)["wrong_bridge"]
+    e = ti.gate(out, dst=dst, families=["wrong_intermediate"], candidates=True)[
+        "wrong_intermediate"
+    ]
     assert e["ids"] == ["a"] and e["n_unverified"] == 4
     assert json.loads(dst.read_text())["_candidates"] is True
 
@@ -750,15 +752,15 @@ def test_subset_entry_accepts_a_provisional_entry(tmp_path, fams):
 
 
 def test_full_gate_carries_a_provisional_entry_over(tmp_path, fams, monkeypatch):
-    monkeypatch.setattr(ti, "gated_families", lambda: ["fam", "wrong_bridge"])
+    monkeypatch.setattr(ti, "gated_families", lambda: ["fam", "wrong_intermediate"])
     out = tmp_path / "o"
     _standard(out)
-    _two_readers(out, "wrong_bridge")  # no astra / argon draws for this family
+    _two_readers(out, "wrong_intermediate")  # no astra / argon draws for this family
     dst = tmp_path / "ati.json"
-    ti.gate(out, dst=dst, families=["wrong_bridge"], frontier=[], panel_label=LABEL)
-    ti.gate(out, dst=dst)  # full gate: wrong_bridge is skipped (readers missing), not dropped
+    ti.gate(out, dst=dst, families=["wrong_intermediate"], frontier=[], panel_label=LABEL)
+    ti.gate(out, dst=dst)  # full gate: wrong_intermediate is skipped (readers missing), not dropped
     written = json.loads(dst.read_text())
-    assert written["wrong_bridge"]["provisional"] is True and written["fam"]["ids"] == [
+    assert written["wrong_intermediate"]["provisional"] is True and written["fam"]["ids"] == [
         "a",
         "c",
         "e",
@@ -839,16 +841,16 @@ def test_frozen_argon_decisive_counts_match_the_statuses():
 
 
 def test_full_gate_carries_a_cleared_reduced_entry_over(tmp_path, fams, monkeypatch):
-    monkeypatch.setattr(ti, "gated_families", lambda: ["fam", "wrong_bridge"])
+    monkeypatch.setattr(ti, "gated_families", lambda: ["fam", "wrong_intermediate"])
     out = tmp_path / "o"
     _standard(out)
-    _two_readers(out, "wrong_bridge")
+    _two_readers(out, "wrong_intermediate")
     dst = tmp_path / "ati.json"
-    ti.gate(out, dst=dst, families=["wrong_bridge"], frontier=[], panel_label=LABEL)
+    ti.gate(out, dst=dst, families=["wrong_intermediate"], frontier=[], panel_label=LABEL)
     d = json.loads(dst.read_text())
-    del d["wrong_bridge"]["provisional"]  # cleared: no item the missing readers could move
+    del d["wrong_intermediate"]["provisional"]  # cleared: no item the missing readers could move
     dst.write_text(json.dumps(d))
-    ti.gate(out, dst=dst)  # full gate: wrong_bridge is skipped, its cleared entry kept
+    ti.gate(out, dst=dst)  # full gate: wrong_intermediate is skipped, its cleared entry kept
     written = json.loads(dst.read_text())
-    wb = written["wrong_bridge"]
+    wb = written["wrong_intermediate"]
     assert wb["panel"] == LABEL and "provisional" not in wb

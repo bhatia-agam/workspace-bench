@@ -32,7 +32,7 @@ Campaign plans by number: 0031 agentic clean twins, 0032 infra, 0033 typo / typo
 0035 directed_modulation, 0036 arithmetic, 0037 jailbreak, 0038 chain, 0039 association, 0040
 hallucination -> HallucinationBench, 0041 multihop_mt_v2, 0042 jlens_concept_pr, 0043
 relational_multihop, 0044 knowledge_cutoff, 0045 introspection, 0046 moral_rationale, 0047 brew,
-0048 multihop, 0049 conjunctive_association, 0050 wrong_bridge, 0051 basic_readout_mt, 0052
+0048 multihop, 0049 conjunctive_association, 0050 wrong_intermediate, 0051 basic_readout_mt, 0052
 agentic_misalignment, 0053 basic_readout, 0054 the four multilingual families (v2 banks,
 `mc+regex`), 0055 role_bound_association, 0056 user_modeling (um-v3.2), 0058 medical_diagnosis{,_alt}
 removed and unverbalized_hint retired for now.

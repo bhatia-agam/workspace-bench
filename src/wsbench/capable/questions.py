@@ -283,8 +283,9 @@ NO_QUESTION: dict[str, str] = {
     "Qwen3.6-27B neither refuses nor reads a jailbreak in 21 draws (plan 0037 J5)",
     "agentic_misalignment": "the gate is the rollout itself (the model did or did not misbehave)",
     "jlens_concept_pr": "no bank questions: the items are captured activations",
-    "wrong_bridge": "the gate is a specific Qwen3.6-27B ERROR (it resolves the wrong bridge B' and "
-    "answers hop2(B')): re-run the wrong-bridge screen/gate for a new model",
+    "wrong_intermediate": "the gate is a specific Qwen3.6-27B ERROR (it resolves the wrong "
+    "intermediate B' and answers hop2(B')): re-run the wrong-intermediate screen/gate for a "
+    "new model",
     "model_specific_directed_modulation": "the gold is Qwen3.6-27B's OWN stable default for the "
     "category (G0: greedy = 7 of 10 samples = the named reveal): re-derive the defaults and "
     "re-run the Opus/Sonnet text gate (G1) for a new model",

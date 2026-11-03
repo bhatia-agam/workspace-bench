@@ -222,7 +222,7 @@ class JudgeFamily(JudgeOptions):
         if self.family not in registry.FAMILIES:
             return _unknown(self.family)
         spec = registry.get(self.family)
-        out = self.out or Path("outputs") / self.readouts.stem / spec.name
+        out = self.out or registry.family_dir(Path("outputs") / self.readouts.stem, spec.name)
         try:
             opts = parse_opts(self.opt)
             judge = resolve(spec.judge, flag=self.judge_model, env=os.environ)
@@ -341,7 +341,7 @@ class RunFamilies(JudgeOptions):
                     sub,
                     readouts_root=self.readouts_root,
                     out=self.out,
-                    out_of=lambda name, tag=tag: self.out / name / tag,
+                    out_of=lambda name, tag=tag: registry.family_dir(self.out, name) / tag,
                 )
                 code = max(code, c)
                 for o in outcomes:

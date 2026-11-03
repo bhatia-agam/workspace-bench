@@ -1,7 +1,8 @@
-"""wrong_bridge (plan 0050): a blind 6-way MC judge over the model's wrong bridge B' (gold), the
+"""wrong_intermediate (plan 0050): a blind 6-way MC judge over the model's wrong intermediate B'
+(gold), the
 true bridge B (contrast, scored as a fail and reported as ``true_bridge_rate``) and four
 same-category distractors, plus "cannot tell" last. Options and name forms are frozen in bank v2
-(``scripts/wrong_bridge_mc_options.py``); nothing is built at judge time.
+(``scripts/wrong_intermediate_mc_options.py``); nothing is built at judge time.
 
 Summary mode (the default): every loaded cell of an item (every position x layer under
 ``reads=full``; the final token under ``reads=lite``) -> one digest -> ONE MC call. Native mode
@@ -45,7 +46,7 @@ from wsbench.results import FamilyResult
 
 from . import prompts as wp
 
-NAME = "wrong_bridge"
+NAME = "wrong_intermediate"
 N_SHOWN = 7  # 6 candidates + cannot tell
 CHANCE = 1 / 6
 CHANCE_LABEL = (

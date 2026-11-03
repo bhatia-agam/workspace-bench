@@ -252,7 +252,7 @@ scorer reads.
   KIND but any topic (William Henry Harrison beside Richard I, Oreste Baratieri, Lise Meitner),
   so a guesser told the topic always found the gold (topic 1.000; blind 0.203, described 0.209).
   v3 draws four same-topic distractors per bridge (`scripts/r4_mc_distractors.py` +
-  `scripts/r4_mc_select.py`, the brmt / wrong_bridge method; never the item's other bridges or
+  `scripts/r4_mc_select.py`, the brmt / wrong_intermediate method; never the item's other bridges or
   its target): blind 0.246, described 0.286, topic 0.457, uniform 0.186 (fresh draws). Still
   FAILED the standard (<= 0.236).
 - **Round 4b (bank v4, `items_v4.json`, the bank of record)**: every list re-drawn by
@@ -275,7 +275,7 @@ scorer reads.
   teacher Weierstrass for Cantor), which a correct read discusses, and a trial table contested 2
   such correct cells.
 - 2026-11-01 (`rv-2026-11-01h`, review of PR #208 round 4c, rule only): a line holding the
-  rival quote and naming the gold counts for neither side, not for the gold (wrong_bridge
+  rival quote and naming the gold counts for neither side, not for the gold (wrong_intermediate
   README, round 4d). No cell moves (all 62, all-lite 54 of 70, re-scored): bolivar-caracas-t2
   passes on its gold-only line (95, split 392), rand-novel 120 (split 166), all-lite
   henry-james-pragmatism bridge2 11 (split 27).

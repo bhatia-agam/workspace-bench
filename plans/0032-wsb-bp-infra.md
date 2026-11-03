@@ -103,7 +103,7 @@ on top of "singled out", never relax it), §2.7.4 (bullet mark folded by `fold_q
   has no `layers=` and no `reads=` key.
 - Positions: 14 families read ONE token (`_final_token_families`, `readplan.py:239-263`, with the
   family list at `:309-324`): association, basic_readout, multihop, multilingual, typo, the six
-  `*_mt` families, wrong_bridge(_true). The others read spans: `suffix_text` (DM, DMO),
+  `*_mt` families, wrong_intermediate(_true). The others read spans: `suffix_text` (DM, DMO),
   `all_from_end` (knowledge_cutoff, medical, arithmetic), `from_last_sentence_start`
   (user_modeling), `last_n 5` (moral), `suffix_text_then_tail` (conj / role-bound), `from_token
   " What"` (chain), explicit `positions` (jailbreak, introspection, unverbalized_hint,
@@ -222,7 +222,7 @@ Not MC today, so there is no option list:
   `directed_modulation_obscure/judge.py:75-93`).
 
 Several family specs turn basic families into MC judges (basic_readout, association, multihop,
-poetry, wrong_bridge, multihop_mt_v2, basic_readout_mt). D4 applies to each of them.
+poetry, wrong_intermediate, multihop_mt_v2, basic_readout_mt). D4 applies to each of them.
 
 ### 1.6 Tool names in judge / summarizer prompts (D5)
 I grepped every family's `PROMPTS`, plus `digest.PROMPTS`, `summarizer.PROMPTS`,
@@ -231,7 +231,7 @@ I grepped every family's `PROMPTS`, plus `digest.PROMPTS`, `summarizer.PROMPTS`,
 
 1. `basic/prompts.py:27-28`, `SYSTEM`: "for the J-lens the samples are top-10 vocabulary tokens,
    for the oracle lens they are free-text generations". It is the native SYSTEM of association,
-   basic_readout, multihop, multilingual, poetry, typo, wrong_bridge(_true) and medical(_alt).
+   basic_readout, multihop, multilingual, poetry, typo, wrong_intermediate(_true) and medical(_alt).
    `SYSTEM_SUMMARY` replaces this sentence (`:62-69`), so summary mode is clean. Native is not.
 2. `basic/prompts.py:63-65`, `SUMMARY_INPUT_OLD`: the same sentence, kept as the replacement
    anchor.
@@ -512,7 +512,7 @@ Tests:
    - Every MC builder calls it: conjunctive, role_bound, relational, moral, user_modeling (its
      local `CANNOT_TELL` is deleted; it uses `mc.CANNOT`), DM, multitoken (its longer escape text
      via `cannot=`), basic_readout (its longer text via `cannot=`), and every new MC judge in the
-     family specs (association, multihop, poetry, wrong_bridge, brmt, mhv2, chain MC).
+     family specs (association, multihop, poetry, wrong_intermediate, brmt, mhv2, chain MC).
 2. **introspection.** `CANNOT` is the 7th option, AFTER "no injected concept", and is not
    reshuffled (introspection.md's "reshuffled into the 7 options" is overridden). Rule line:
    'Choose "cannot tell from the readout" when the samples neither name a concept option nor
@@ -628,7 +628,7 @@ itself; `reads.load` does it.
      `allow_missing=True`; then those items are `partial`, judged on the cells they have, listed
      in `extras.partial_ids`, and the run is `complete=False`. **This replaces every
      family-local completeness check** (basic_readout's 8, chain's 20, moral's 6, the
-     contiguous-run copies in brmt, multihop, mhv2, multilingual, relational, wrong_bridge, KC's
+     contiguous-run copies in brmt, multihop, mhv2, multilingual, relational, wrong_intermediate, KC's
      `full_span`).
    - **Round 2: three more full-read guards, and when they apply** (arithmetic UNRESOLVED
      lines 158-159, typo_mt risk 7):
@@ -839,7 +839,7 @@ Tests (`tests/test_reads.py`):
    its own family (native and summary alike), never a bare constant when either field is set.
    - **Targets variant (second review of PR #140).** The clauses above speak of OPTIONS; the
      basic bank families (association, basic_readout, multihop, multilingual, poetry, typo,
-     wrong_bridge(_true), medical_diagnosis(_alt)) judge against TARGETS and have no options, so
+     wrong_intermediate(_true), medical_diagnosis(_alt)) judge against TARGETS and have no options, so
      the lone-option clause would read the target as the lone "option" and credit exactly
      Camila's multihop case (target six in "equal twelve six eight seven eleven nine sixteen
      twenty five"), contradicting Q4 and the SYSTEM rule "a sample that lists many
@@ -969,7 +969,7 @@ Tests (`tests/test_reads.py`):
    `mc.form_in(text: str, forms: Sequence[str]) -> bool`: folded match of any listed form;
    Latin-script forms need Unicode word boundaries, CJK forms are matched as exact substrings of
    the listed form. A quote with no Latin letters is NOT accepted by default: it passes only if
-   it contains a listed form in that script. wrong_bridge's `name_in_quote` "True for any quote
+   it contains a listed form in that script. wrong_intermediate's `name_in_quote` "True for any quote
    without Latin letters", and UM/KC substring CJK aliases, move to `form_in` with explicit CJK
    forms (as brmt `name_forms` already does).
 7. **Native token prompts** that forbid combining tokens are rewritten to the same rule
@@ -1068,7 +1068,7 @@ Tests:
      under the interim options-form note never share a stamp with the final one.
      That covers every family still registered through `bank_family` (medical, medical_alt;
      typo and wrong_bridge_true leave `all`). A family that moves to its own MC PV
-     (basic_readout, multihop, wrong_bridge, association, poetry per their specs) is unaffected
+     (basic_readout, multihop, wrong_intermediate, association, poetry per their specs) is unaffected
      by this line; multihop.md's "other basic families keep `bank-2026-10-10`" is superseded. Frozen
      native floors stamped `bank-2026-10-10` in `prompt_only.json` are not drawn beside the new
      stamp (`summary_floor_applies` / `floor_applies` compare instruments); they are re-measured

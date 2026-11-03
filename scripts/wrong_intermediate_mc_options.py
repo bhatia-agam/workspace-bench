@@ -1,20 +1,21 @@
 # ruff: noqa: RUF002, RUF003
-"""Build wrong_bridge bank v2 (plan 0050): frozen multiple-choice options and name forms.
+"""Build wrong_intermediate bank v2 (plan 0050): frozen multiple-choice options and name forms.
 
-Reads ``evals/wrong_bridge/items.json`` (v1, never modified) and writes
+Reads ``evals/wrong_intermediate/items.json`` (v1, never modified) and writes
 
-- ``evals/wrong_bridge/items_v2.json``: every v1 field kept; each scored item gains
+- ``evals/wrong_intermediate/items_v2.json``: every v1 field kept; each scored item gains
   ``readout = {"kind": "all_positions", "lite": {"kind": "final_token"}}`` (read every token;
   ``reads=lite`` reads the final one) and an ``mc`` block (category, gold = the model's wrong
   bridge B', contrast = the true bridge B, 4 same-category distractors, the seeded order, the
   name forms of each option); the header gains ``version``, ``supersedes``,
   ``contract.native_langs`` and ``mc_build`` (every rule below, the fallbacks, the forms
   withheld);
-- ``tests/golden/wrong_bridge_options.json``: ``{item id: shown order}``.
+- ``tests/golden/wrong_intermediate_options.json``: ``{item id: shown order}``.
 
 Deterministic. The only network step is the one-time Wikidata ``zh*`` label + alias fetch for
-the bridge QIDs (``--fetch``), cached and frozen in ``evals/wrong_bridge/zh_labels_v2.json``; no
-LLM API. Run: ``python scripts/wrong_bridge_mc_options.py [--fetch]``.
+the bridge QIDs (``--fetch``), cached and frozen in ``evals/wrong_intermediate/zh_labels_v2.json``;
+no
+LLM API. Run: ``python scripts/wrong_intermediate_mc_options.py [--fetch]``.
 """
 
 import argparse
@@ -29,10 +30,10 @@ from pathlib import Path
 from typing import Any
 
 REPO = Path(__file__).resolve().parents[1]
-V1 = REPO / "evals" / "wrong_bridge" / "items.json"
-V2 = REPO / "evals" / "wrong_bridge" / "items_v2.json"
-ZH = REPO / "evals" / "wrong_bridge" / "zh_labels_v2.json"
-GOLDEN = REPO / "tests" / "golden" / "wrong_bridge_options.json"
+V1 = REPO / "evals" / "wrong_intermediate" / "items.json"
+V2 = REPO / "evals" / "wrong_intermediate" / "items_v2.json"
+ZH = REPO / "evals" / "wrong_intermediate" / "zh_labels_v2.json"
+GOLDEN = REPO / "tests" / "golden" / "wrong_intermediate_options.json"
 
 WB_MC_SEED = "wb-mc-2026-10-30"
 N_DISTRACTORS = 4
@@ -195,7 +196,7 @@ def fetch_zh(qids: list[str]) -> dict[str, dict[str, Any]]:
         )
         req = urllib.request.Request(
             f"https://www.wikidata.org/w/api.php?{q}",
-            headers={"User-Agent": "workspace-bench bank build (wrong_bridge v2)"},
+            headers={"User-Agent": "workspace-bench bank build (wrong_intermediate v2)"},
         )
         with urllib.request.urlopen(req, timeout=60) as r:
             ents = json.loads(r.read().decode())["entities"]
@@ -499,7 +500,7 @@ def main(argv: list[str] | None = None) -> int:
 
 # ================================================================ bank v3 (round 4, 2026-11-01)
 # Camila r2: (1) the four distractors are Opus-authored, same field and era and fame as the gold
-# (``evals/wrong_bridge/r4_distractors.json``, scripts/r4_mc_distractors.py): the v2 pool drew
+# (``evals/wrong_intermediate/r4_distractors.json``, scripts/r4_mc_distractors.py): the v2 pool drew
 # from other items' bridges of the same broad category, so the gold and the contrast were the
 # only close pair (Beethoven / Mozart among Lennon / Harrison / Schoenberg / Rubinstein) and the
 # options-only + described guessers beat chance (0.208 / 0.262 / topic 0.276 vs 1/6);
@@ -511,11 +512,11 @@ def main(argv: list[str] | None = None) -> int:
 # were the name, the bank aliases (gold / contrast only), Chinese labels and the short form, so
 # "King Roger II" (org_founder-Q1303856 L28) and the Russian "Карл Маркс" (namesake-Q989622
 # L32) were dropped by the form gate.
-V2 = REPO / "evals" / "wrong_bridge" / "items_v2.json"
-V3 = REPO / "evals" / "wrong_bridge" / "items_v3.json"
-WD3 = REPO / "evals" / "wrong_bridge" / "wikidata_v3.json"
-R4 = REPO / "evals" / "wrong_bridge" / "r4_distractors.json"
-GOLDEN3 = REPO / "tests" / "golden" / "wrong_bridge_options_v3.json"
+V2 = REPO / "evals" / "wrong_intermediate" / "items_v2.json"
+V3 = REPO / "evals" / "wrong_intermediate" / "items_v3.json"
+WD3 = REPO / "evals" / "wrong_intermediate" / "wikidata_v3.json"
+R4 = REPO / "evals" / "wrong_intermediate" / "r4_distractors.json"
+GOLDEN3 = REPO / "tests" / "golden" / "wrong_intermediate_options_v3.json"
 WB_MC_SEED_V3 = "wb-mc-2026-11-01"
 # Wikimedia's user-agent policy: a tool name and a contact (a generic agent is rate-limited)
 UA_V3 = "WorkspaceBenchBankBuild/1.0 (https://github.com/camila-blank/workspace-bench) urllib"
@@ -900,7 +901,7 @@ def build_v3(
 
 
 def main_v3(argv: list[str]) -> int:
-    ap = argparse.ArgumentParser(description="wrong_bridge bank v3")
+    ap = argparse.ArgumentParser(description="wrong_intermediate bank v3")
     ap.add_argument("--v3", action="store_true")
     ap.add_argument("--fetch", action="store_true")
     ap.add_argument("--check", action="store_true")
@@ -972,7 +973,7 @@ def main_v3(argv: list[str]) -> int:
 #    an epithet ("Casimir the Great").
 #    Dropped: "Abdul Hamid", "Sultan Hamid", "Рожер III", "Abdülmecid".
 # The collision and prompt checks are unchanged (item_forms_v3).
-V4 = REPO / "evals" / "wrong_bridge" / "items_v4.json"
+V4 = REPO / "evals" / "wrong_intermediate" / "items_v4.json"
 _ROMAN_VALUE = {
     r: n
     for n, r in enumerate(
@@ -1175,7 +1176,7 @@ def build_v4(wd: dict[str, Any], r4all: dict[str, Any]) -> dict[str, Any]:
 
 
 def main_v4(argv: list[str]) -> int:
-    ap = argparse.ArgumentParser(description="wrong_bridge bank v4")
+    ap = argparse.ArgumentParser(description="wrong_intermediate bank v4")
     ap.add_argument("--v4", action="store_true")
     ap.add_argument("--check", action="store_true")
     a = ap.parse_args(argv)

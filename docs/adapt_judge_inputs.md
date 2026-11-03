@@ -104,7 +104,7 @@ These all read `REPO_ROOT/evals/…`, never the bank root.
 - **jailbreak_recognition**: without `kind`, every item is a positive and the headline is None.
 - **buggy_code**: without `twin`, the item is an orphan. No adapted set has a twin, so every
   set's `pair_rate` is None.
-- **wrong_bridge**:
+- **wrong_intermediate**:
   - A missing `readout` gives a final_token read.
   - An unknown `template` means no role cues.
   - `mc.order` must have exactly 6 options.
@@ -820,23 +820,23 @@ REQUIRED_ITEM_FIELDS: `name`, `attr_class`, `attr`, `messages`, `attr_label`, `s
 | qwen | `min_full_positions=37` |  | - | subject | user_modeling/__init__.py:22-24 | Qwen render length; reads.check_full exits below it on a sidecar file (reads.py:308) |
 | qwen | `GRID layers (Qwen 64 blocks)` |  | - | subject | readplan.py:588-627 | remapped by depth from report.json n_layers under WSB_BANK_ROOT (exit without it) |
 
-### wrong_bridge
+### wrong_intermediate
 
-Judge: `evals/wrong_bridge/judge.py`. Refresh: model-specific (Phase E). Bank: dict, id from `name`.
+Judge: `evals/wrong_intermediate/judge.py`. Refresh: model-specific (Phase E). Bank: dict, id from `name`.
 REQUIRED_ITEM_FIELDS: `name`, `prompt`, `readout`, `template`, `mc`.
 SUBJECT_FIELDS: `mc`.
 
 | kind | input | req | if absent | class | where | note |
 |---|---|---|---|---|---|---|
 | item | `name` | yes | exit | build | banks.py:18-35 | id = label_of(name); new id for adapted-only |
-| item | `prompt` | yes | exit | copy-verbatim | wrong_bridge/judge.py:388-405 |  (checked) |
+| item | `prompt` | yes | exit | copy-verbatim | wrong_intermediate/judge.py:388-405 |  (checked) |
 | item | `readout` | yes | fallback | copy-verbatim | readplan.py:487-494 | absent: final_token full read |
-| item | `template` | yes | silent | copy-verbatim | wrong_bridge/judge.py:342-360,437 |  |
-| item | `mc.order` | yes | exit | build | wrong_bridge/judge.py:48,278,310 | exactly 6 |
-| item | `mc.gold` | yes | exit | subject | wrong_bridge/judge.py:284,309 | the subject's wrong bridge |
-| item | `mc.contrast` | yes | exit | copy-verbatim | wrong_bridge/judge.py:284,444 |  |
-| item | `mc.forms` | yes | exit | build | wrong_bridge/judge.py:308,431-451 |  |
-| qwen | `min_full_positions=9` |  | - | subject | wrong_bridge/__init__.py:24-25 | Qwen render length; reads.check_full exits below it on a sidecar file (reads.py:308) |
+| item | `template` | yes | silent | copy-verbatim | wrong_intermediate/judge.py:342-360,437 |  |
+| item | `mc.order` | yes | exit | build | wrong_intermediate/judge.py:48,278,310 | exactly 6 |
+| item | `mc.gold` | yes | exit | subject | wrong_intermediate/judge.py:284,309 | the subject's wrong intermediate |
+| item | `mc.contrast` | yes | exit | copy-verbatim | wrong_intermediate/judge.py:284,444 |  |
+| item | `mc.forms` | yes | exit | build | wrong_intermediate/judge.py:308,431-451 |  |
+| qwen | `min_full_positions=9` |  | - | subject | wrong_intermediate/__init__.py:24-25 | Qwen render length; reads.check_full exits below it on a sidecar file (reads.py:308) |
 | qwen | `GRID layers (Qwen 64 blocks)` |  | - | subject | readplan.py:588-627 | remapped by depth from report.json n_layers under WSB_BANK_ROOT (exit without it) |
 
 <!-- end judge_inputs table -->

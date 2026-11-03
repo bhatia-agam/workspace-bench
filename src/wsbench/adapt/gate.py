@@ -487,7 +487,7 @@ class Runner:
         outs = self.llm.generate(ins, sp, use_tqdm=False)
         return [{"text": o.outputs[0].text, "ids": list(o.outputs[0].token_ids)} for o in outs]
 
-    # ---- plan 0060 Phase E (wrong_bridge logP legs): teacher-forced continuation scores ----
+    # ---- plan 0060 Phase E (wrong_intermediate logP legs): teacher-forced continuation scores ----
     def cont_logprobs(self, prompts: list[str], conts: list[str]) -> list[float]:
         """log P(cont | prompt) per pair, raw render (the subject's BOS + text, no template), as
         global-workspace ``wrong_bridge/qwen_modal.py`` scores it: ``prompt + cont`` teacher-
@@ -616,7 +616,7 @@ class RemoteRunner(Runner):
                 for i in range(0, len(ids), n)]  # fmt: skip
         return [r for part in self._calls(self.remote.generate, args) for r in part]
 
-    # ---- plan 0060 Phase E (wrong_bridge logP legs): scored on Modal from local token ids ----
+    # ---- plan 0060 Phase E (wrong_intermediate logP legs): scored on Modal from local token ids --
     def cont_logprobs(self, prompts: list[str], conts: list[str]) -> list[float]:
         jobs = cont_jobs(self.tok, prompts, conts)  # token ids, like sample / generate
         n = self.CHUNK

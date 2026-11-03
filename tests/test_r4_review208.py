@@ -1,4 +1,4 @@
-"""Round 4 review of PR #208 (wrong_bridge): (1) the true bridge's own digest line counts only
+"""Round 4 review of PR #208 (wrong_intermediate): (1) the true bridge's own digest line counts only
 through a full name in the hidden entity's role, (2) a code-selected rival audit weighs every
 prominent competing line, whether or not the MC call names it. Every rule is pinned both ways:
 the too-lenient shape of a cited case still fails, the too-strict shape now passes."""
@@ -6,8 +6,8 @@ the too-lenient shape of a cited case still fails, the too-strict shape now pass
 from summary_fakes import FakeLLM, summary_args
 
 from wsbench import digest, readplan, reads, registry
-from wsbench.evals.wrong_bridge import judge as wb
-from wsbench.evals.wrong_bridge import prompts as wp
+from wsbench.evals.wrong_intermediate import judge as wb
+from wsbench.evals.wrong_intermediate import prompts as wp
 
 
 def _g(text: str, count: int) -> digest.Grounded:
@@ -19,7 +19,9 @@ def _item(qid: str) -> dict:
     # the cited cases were judged on bank v2's lists (round 4 froze new lists in bank v3)
     from wsbench.banks import load_bank
 
-    return next(it for it in load_bank("evals/wrong_bridge/items_v2.json")[1] if qid in it["id"])
+    return next(
+        it for it in load_bank("evals/wrong_intermediate/items_v2.json")[1] if qid in it["id"]
+    )
 
 
 def _v(it: dict, gs: list, quote: str, rq: str = "", audit: dict | None = None) -> dict:
@@ -228,15 +230,17 @@ def _run(tmp_path, monkeypatch, audit_answer):
             rows.append({"id": BEETHOVEN, "layer": lay, "pos": p, "samples": [s]})
     from conftest import write_jsonl, write_sidecar
 
-    path = write_jsonl(tmp_path / "wrong_bridge.jsonl", rows)
-    write_sidecar(path, reads="full", plan_sha=reads.plan_sha("wrong_bridge"), layers=list(layers))
+    path = write_jsonl(tmp_path / "wrong_intermediate.jsonl", rows)
+    write_sidecar(
+        path, reads="full", plan_sha=reads.plan_sha("wrong_intermediate"), layers=list(layers)
+    )
     args = summary_args(path, tmp_path / "out", wp.PROMPT_VERSION, items=[BEETHOVEN],
                         allow_missing=True, extra={})  # fmt: skip
-    return fake, registry.FAMILIES["wrong_bridge"].run(args)
+    return fake, registry.FAMILIES["wrong_intermediate"].run(args)
 
 
 def test_summary_run_audits_a_credited_pick(tmp_path, monkeypatch):
-    assert readplan.plan("wrong_bridge")
+    assert readplan.plan("wrong_intermediate")
     audit = {"verdicts": [{"line": 1, "rival": True, "name": "Antonio Salieri"}]}
     fake, r = _run(tmp_path, monkeypatch, audit)
     assert fake.n("wb_rivals") == 1 and r.extras["n_audit_calls"] == 1

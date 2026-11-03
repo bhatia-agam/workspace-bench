@@ -1,7 +1,13 @@
-# wrong_bridge
+# wrong_intermediate
+
+Renamed from `wrong_bridge` on 2026-11-03 (v1.2.0; Camila). Label only: the bank files here are
+byte-identical (their headers still say `"family": "wrong_bridge"`), the judge prompts and
+instrument are unchanged, and the family hashes under `wrong_bridge`, so `plan_sha` / ATI
+`bank_sha` and every score are unchanged. `family=wrong_bridge` and `wrong_bridge.jsonl` readout
+files still work.
 
 Does the lens identify the model's WRONG intermediate? A Wikidata two-hop prompt where
-Qwen3.6-27B resolves the wrong bridge B' (instead of the true B) and so answers hop2(B'). The
+Qwen3.6-27B resolves the wrong intermediate B' (instead of the true B) and so answers hop2(B'). The
 scored latent is B'; the judge must pick it out of a list that also holds the true bridge B.
 
 Example: "Fact: The composer of Canon and Gigue in D died in the year" -> model answer `1750`
@@ -23,18 +29,18 @@ byte-identical): the same 100 items, prompts and render as v1, plus per item
   tokens; the plan rule `{"kind": "all"}`); `reads=lite` reads only the final token (the last
   word ` year` / ` of`, the v1 read site). Layers: the standard grid L20..60 step 4, or any
   `layers=` list (`all`, a csv, one layer).
-- `mc`: the frozen multiple-choice block (below), built by `scripts/wrong_bridge_mc_options.py`
+- `mc`: the frozen multiple-choice block (below), built by `scripts/wrong_intermediate_mc_options.py`
   (deterministic; its only network step, the Wikidata `zh*` label + alias fetch, is cached in
   `zh_labels_v2.json`). The header's `mc_build` records every rule, the 4 band fallbacks, the
   forms withheld and the names without a Chinese label. `contract.native_langs = ["en", "zh"]`.
 
 **Bank v3** (`items_v3.json`, `version: 3`, `supersedes: items_v2.json`, frozen 2026-11-01;
 the bank of record in round 4, superseded by v4 below; v2 and v1 stay byte-identical). Only the `mc` block changes
-(`scripts/wrong_bridge_mc_options.py --v3`, header `mc_build_v3`):
+(`scripts/wrong_intermediate_mc_options.py --v3`, header `mc_build_v3`):
 
 - **Options** (Camila r2 MC leakage standard): the gold and the contrast as before, plus four
   Opus-candidate distractors of the hidden entity's ROLE ("a composer", "a film director",
-  "a record label"; `evals/wrong_bridge/r4_distractors.json`, `scripts/r4_mc_distractors.py` +
+  "a record label"; `evals/wrong_intermediate/r4_distractors.json`, `scripts/r4_mc_distractors.py` +
   `scripts/r4_mc_select.py`): real entities with an English Wikipedia article, two at least as
   famous as the gold and two less famous (Wikipedia sitelinks), never named in the prompt, never
   the gold's or the contrast's Wikidata entity, redrawn while an options-only or topic guesser
@@ -56,7 +62,7 @@ the bank of record in round 4, superseded by v4 below; v2 and v1 stay byte-ident
 bank of record since round 4c; v3, v2 and v1 stay byte-identical). The v3 options, order,
 distractors and topics unchanged (so the v3 leakage floors hold; they are re-stamped for the new
 instrument in `evals/baselines/lucky_guessing.json`); only the name forms are filtered
-(`scripts/wrong_bridge_mc_options.py --v4`, header `mc_build_v4`; review of PR #208 round 4b:
+(`scripts/wrong_intermediate_mc_options.py --v4`, header `mc_build_v4`; review of PR #208 round 4b:
 v3 took every Wikidata label and alias with no sanity filter, so "Down" (a Greek alias of
 Pantera; Down is another band) made "Let's break it down" name Pantera, the Uzbek label
 "Gilbert" named David Hilbert, the variant-alias surnames "Carter" / "Ritchie" named Beyoncé /
@@ -78,7 +84,7 @@ word of 4+ letters) applies only to a form spelled with a letter outside ASCII (
 an accented Latin letter: "Карла Маркса", "Ivana Gundulića"); a plain-ASCII form is
 English-spelled and matches whole words (plus the possessive), since English does not inflect
 names: "a random philosopher" no longer names Ayn Rand, "a wilder story" Oscar Wilde, "Hannah
-Arendt" William Hanna. Every v4 rule is tested both ways in `tests/test_r4c_wrong_bridge_forms.py`
+Arendt" William Hanna. Every v4 rule is tested both ways in `tests/test_r4c_wrong_intermediate_forms.py`
 (the cited too-lenient shapes name nobody; "King Roger II", "Карла Маркса", "Hilbert's program",
 "группа Пантера" still name the option).
 
@@ -123,7 +129,7 @@ candidates, screened on Qwen3.6-27B (raw text, greedy). An item is kept only if 
 6. a Claude Opus 5.5 audit finds no ambiguity (same-title works, co-holders, publisher-vs-developer,
    stale Wikidata).
 
-At most 20 items per template and 4 per wrong bridge. The capability gate does not port: the
+At most 20 items per template and 4 per wrong intermediate. The capability gate does not port: the
 bank is a specific Qwen3.6-27B error (`capable` lists it under NO_QUESTION).
 
 ## Scoring
@@ -138,7 +144,7 @@ compared in NFC; "Marxism" (3 more letters) and a short word with an ending neve
 **Multiple choice, blind.** Per item the judge sees six candidates for the hidden entity, in a
 seeded order frozen in `mc.order`, then the cannot-tell line LAST (`mc.options_with_cannot`):
 
-- gold = `intermediates[0]` (B', the model's wrong bridge);
+- gold = `intermediates[0]` (B', the model's wrong intermediate);
 - contrast = `true_intermediates[0]` (B, "the correct bridge"): shown, scored as a **fail**, and
   counted in `extras.true_bridge_rate` (contrast picks / decided items). This is the signal the
   removed `wrong_bridge_true` family carried, now inside one judgment: a readout must pick B'
@@ -335,18 +341,18 @@ native path (one call per layer, the ATI gate) has no sample counts and is uncha
 
 `{"id": "<item label>", "layer": L, "pos": P, "samples": [...]}` (or `"tokens"`) rows; label =
 item `name` (`wsbench.banks.label_of`); every position of the prompt per layer. Example:
-`examples/readouts/wrong_bridge.jsonl` (+ `.meta.json` sidecar, `sampling: prose1`).
+`examples/readouts/wrong_intermediate.jsonl` (+ `.meta.json` sidecar, `sampling: prose1`).
 
 ```
-wsbench plan families=wrong_bridge out=plan/               # reads=full: positions {"kind": "all"}
-wsbench judge family=wrong_bridge readouts=<arm>/wrong_bridge.jsonl out=outputs/<arm>/wrong_bridge limit=3
-wsbench judge family=wrong_bridge readouts=<arm>/wrong_bridge.jsonl out=outputs/<arm>/wrong_bridge-lite reads=lite
+wsbench plan families=wrong_intermediate out=plan/               # reads=full: positions {"kind": "all"}
+wsbench judge family=wrong_intermediate readouts=<arm>/wrong_intermediate.jsonl out=outputs/<arm>/wrong_intermediate limit=3
+wsbench judge family=wrong_intermediate readouts=<arm>/wrong_intermediate.jsonl out=outputs/<arm>/wrong_intermediate-lite reads=lite
 ```
 
 ## Judge prompts
 
 `prompt_version`: `wb-mc-2026-10-31r+rv-2026-11-01h+wbaudit-v2+wbforms-v4+bank-v4` (the family's own stamp; summary mode stamps
-`digest.prompt_version("wb-mc-2026-10-31r+rv-2026-11-01h+wbaudit-v2+wbforms-v4+bank-v4", args, "wrong_bridge")`, plus `+reads-lite` under
+`digest.prompt_version("wb-mc-2026-10-31r+rv-2026-11-01h+wbaudit-v2+wbforms-v4+bank-v4", args, "wrong_intermediate")`, plus `+reads-lite` under
 `reads=lite`). The MC calls are keyed without `+wbaudit-v2` and with the rival rule's call
 version (`rv-2026-10-31e`): the MC prompt did not change, so cached MC answers are re-scored. Judge: the repo default (`claude-opus-5-5`), unpinned. Output schema
 `{"choice": int, "quote": str, "rival_quote": str}` (`wb_pick`). The judge never sees the prompt, A, A', the
@@ -471,7 +477,7 @@ the model reads a one-sentence factual question whose answer needs a silent firs
 
 ## ATI
 
-`wrong_bridge` is a crafted ATI family and stays gated. Bank v2 changes its `bank_sha` and its
+`wrong_intermediate` is a crafted ATI family and stays gated. Bank v2 changes its `bank_sha` and its
 instrument (`wb-mc-2026-10-30`), so the frozen entry (instrument `bank-2026-10-10`, 100/100)
 went stale. It was re-gated on 2026-10-31 (R1-ATI): the stored panel answers (Qwen / Opus /
 Astra / Argon × 3 draws) were re-judged NATIVE with this MC instrument, with no new answers (the
@@ -483,9 +489,9 @@ entry, 58/100, is deleted).
 
 The four-reader panel gate (Qwen3.6-27B x {Opus 5.5, GPT-6 Astra, Gemini 4 Argon}, one best
 guess x 3 draws each; see `evals/baselines/README.md`) admitted 93 of the 100 items (the frontier
-readers almost never name Qwen's wrong bridge: pass@3 0.00-0.06). The other 7 moved to
+readers almost never name Qwen's wrong intermediate: pass@3 0.00-0.06). The other 7 moved to
 `retired_panel_gate` (unscored, with their panel status) and were replaced by 7 items that pass
-every gate above plus one item per subject S, <= 20 per template and <= 4 per wrong bridge over
+every gate above plus one item per subject S, <= 20 per template and <= 4 per wrong intermediate over
 the refilled bank, and the panel: 5 from the adjudicated finalists left out of the original bank
 (templates already in the bank) and 2 from a new hop-1 template (`song_lyricist`) screened through the same stages (the 258k
 candidate pool was exhausted). The bank was ATI 100/100 under instrument `bank-2026-10-10`

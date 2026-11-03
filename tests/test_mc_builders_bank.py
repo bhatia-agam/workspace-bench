@@ -27,7 +27,7 @@ def _snapshot() -> dict[str, str]:
     out = {}
     subs = ("multihop", "association", "basic_readout", "basic_readout_mt", "poetry",
             "multihop_mt_v2", "multilingual_multihop", "multilingual_mt", "multilingual_typo",
-            "multilingual", "wrong_bridge", "baselines/topics")  # fmt: skip
+            "multilingual", "wrong_intermediate", "baselines/topics")  # fmt: skip
     for sub in subs:
         for p in sorted((EVALS / sub).glob("*.json")):
             out[str(p)] = hashlib.sha256(p.read_bytes()).hexdigest()
@@ -236,7 +236,7 @@ def _brmt_items(n: int, src: str = "items_v2.json") -> list[dict]:
 def test_r4_default_and_bank(tmp_path, monkeypatch, evals_untouched):
     g = _mod("r4_mc_distractors")
     assert g.bank_path("basic_readout_mt") == EVALS / "basic_readout_mt/items_v2.json"
-    assert g.bank_path("wrong_bridge") == EVALS / "wrong_bridge/items_v2.json"
+    assert g.bank_path("wrong_intermediate") == EVALS / "wrong_intermediate/items_v2.json"
     its = _brmt_items(2)
     bank = _write(tmp_path / "bank.json", {"family": "basic_readout_mt", "items": its})
     assert len(g.specs("basic_readout_mt", bank)) < len(g.specs("basic_readout_mt"))

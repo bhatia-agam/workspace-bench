@@ -1,9 +1,9 @@
 # ruff: noqa: RUF001
-"""Review of PR #208 (round 4b), BLOCKING 1: wrong_bridge bank v3 took Wikidata labels and
+"""Review of PR #208 (round 4b), BLOCKING 1: wrong_intermediate bank v3 took Wikidata labels and
 aliases in every language with no sanity filter, and the matcher let every Latin word of 4+
 letters take a 2-letter tail, so ordinary English words and other people's names counted as the
 gold in the form gate and in every rival check. Bank v4 (``items_v4.json``, the v3 options with
-filtered forms, ``scripts/wrong_bridge_mc_options.py --v4``) and wbforms-v2 (the tail only for
+filtered forms, ``scripts/wrong_intermediate_mc_options.py --v4``) and wbforms-v2 (the tail only for
 forms spelled outside ASCII). Both directions: the too-lenient shapes no longer name the option,
 the forms Camila asked for (regnal short form, Russian / Croatian inflection, Wikidata names in
 other scripts) still do. The digest lines are verbatim from the cached final-olens-rl600-x4 L36
@@ -15,12 +15,12 @@ import pytest
 
 from wsbench import digest
 from wsbench.banks import load_bank
-from wsbench.evals.wrong_bridge import judge as wj
-from wsbench.evals.wrong_bridge import prompts as wp
+from wsbench.evals.wrong_intermediate import judge as wj
+from wsbench.evals.wrong_intermediate import prompts as wp
 
 REPO = Path(__file__).resolve().parents[1]
-V3 = REPO / "evals/wrong_bridge/items_v3.json"
-V4 = REPO / "evals/wrong_bridge/items_v4.json"
+V3 = REPO / "evals/wrong_intermediate/items_v3.json"
+V4 = REPO / "evals/wrong_intermediate/items_v4.json"
 PANTERA = "album_performer-Q591875-formed_year"
 BEYONCE = "album_performer-Q2564709-birth_city"
 RAND = "doctoral_advisor-Q1235503-death_year"
@@ -54,7 +54,7 @@ def _g(text: str, count: int) -> digest.Grounded:
 def test_v4_is_the_bank_of_record_and_stamped():
     from wsbench import registry
 
-    assert registry.bank_path("wrong_bridge") == V4
+    assert registry.bank_path("wrong_intermediate") == V4
     assert wp.FORMS_VERSION == "wbforms-v4" and wp.BANK_TAG == "bank-v4"
     assert wp.PROMPT_VERSION.endswith("+wbforms-v4+bank-v4")
     # a forms-only change: the MC call key is unchanged (cached MC answers are re-scored)
@@ -151,7 +151,7 @@ def test_builder_rules():
     import importlib.util
 
     spec = importlib.util.spec_from_file_location(
-        "wbmc", REPO / "scripts/wrong_bridge_mc_options.py"
+        "wbmc", REPO / "scripts/wrong_intermediate_mc_options.py"
     )
     assert spec and spec.loader
     w = importlib.util.module_from_spec(spec)

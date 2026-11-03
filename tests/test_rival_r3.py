@@ -1,11 +1,12 @@
-"""Round 3 rival check (wsbench.rival) on wrong_bridge and basic_readout_mt: a credited pick must
+"""Round 3 rival check (wsbench.rival) on wrong_intermediate and basic_readout_mt: a credited pick
+must
 clearly outweigh the strongest line naming a DIFFERENT answer (an option or not), on the digest's
 own sample counts. Both directions are pinned: the lenient shapes of the cited cases fail, and a
 clear lead, a rare hit with no rival and a non-rival quote still pass."""
 
 from wsbench import digest, rival
 from wsbench.banks import load_bank
-from wsbench.evals.wrong_bridge import judge as wb
+from wsbench.evals.wrong_intermediate import judge as wb
 from wsbench.multitoken import family as fam
 from wsbench.multitoken.options import option_sets
 
@@ -73,12 +74,12 @@ def test_near_verbatim_rival_quote_is_located():
     assert rv["rival_verified"] and rv["rival_support"] == 44 and rv["contested"]
 
 
-# ------------------------------------------------------------------ wrong_bridge
+# ------------------------------------------------------------------ wrong_intermediate
 
 
 def _wb_item(qid: str) -> dict:
     # the cited cases were judged on bank v2's lists (round 4 froze new lists in bank v3)
-    _h, items = load_bank("evals/wrong_bridge/items_v2.json")
+    _h, items = load_bank("evals/wrong_intermediate/items_v2.json")
     return next(it for it in items if qid in it["id"])
 
 
@@ -86,7 +87,7 @@ def _wb_choice(it: dict) -> int:
     return wb.positions(it)[0]
 
 
-def test_wrong_bridge_q6466264_plurality_is_contested():
+def test_wrong_intermediate_q6466264_plurality_is_contested():
     # cached all-layer digest: Torre Nilsson's 13-sample line vs a 44-sample Buñuel-director line
     it = _wb_item("Q6466264")
     gold = (
@@ -105,7 +106,7 @@ def test_wrong_bridge_q6466264_plurality_is_contested():
     assert v["gold_support"] == 13 and v["rival_support"] == 44
 
 
-def test_wrong_bridge_clear_lead_still_passes():
+def test_wrong_intermediate_clear_lead_still_passes():
     # the too-strict shape: the same item with a clear lead keeps its credit
     it = _wb_item("Q6466264")
     gold = "The director is **Leopoldo Torre Nilsson**, who died in Buenos Aires."
@@ -119,7 +120,7 @@ def test_wrong_bridge_clear_lead_still_passes():
     assert v["pick"] == "gold" and v["credited"] and not v["contested"]
 
 
-def test_wrong_bridge_native_path_has_no_rival_check():
+def test_wrong_intermediate_native_path_has_no_rival_check():
     it = _wb_item("Q6466264")
     gold = "The director is **Leopoldo Torre Nilsson**."
     lines = [digest.Line(gold), digest.Line("Directed by Luis Buñuel.")]
@@ -208,7 +209,7 @@ def test_at_least_needs_the_gold_line_to_match_the_rival():
     assert not m.contested(5, 4) and not m.contested(5, 5) and not m.contested(1, 0)
 
 
-def test_wrong_bridge_contrast_line_is_weighed_even_unnamed():
+def test_wrong_intermediate_contrast_line_is_weighed_even_unnamed():
     # L52 Q3221113-shaped: the judge's rival is weak, but the true bridge has its own line
     it = _wb_item("Q3221113")
     gold, contrast = it["mc"]["gold"], it["mc"]["contrast"]
@@ -218,7 +219,7 @@ def test_wrong_bridge_contrast_line_is_weighed_even_unnamed():
     assert v["pick"] == "contested" and v["contrast_support"] == 3
 
 
-def test_wrong_bridge_contrast_far_behind_does_not_contest():
+def test_wrong_intermediate_contrast_far_behind_does_not_contest():
     it = _wb_item("Q3221113")
     gold, contrast = it["mc"]["gold"], it["mc"]["contrast"]
     gs = [_g(f"The novel is by {gold}, the famous author.", 12), _g(f"Written by {contrast}.", 3)]

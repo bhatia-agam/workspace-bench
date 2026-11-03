@@ -6,7 +6,7 @@ Camila: "if there are a ton of different equally prominent answers then it shoul
 The judges were told so in words ("far more often", "clearly more prominent"), but they weighed
 only the listed options, so a 1-sample gold line passed beside 5-13-sample lines giving another
 answer that is not an option (basic_readout_mt all-lite: drakensberg, naples-yellow-2, ...), and
-pluralities passed where a rival is named about as often (wrong_bridge all-layer: Q848987,
+pluralities passed where a rival is named about as often (wrong_intermediate all-layer: Q848987,
 Q591875, Q4892867, Q6466264, Q3794057).
 
 The judge now also returns ``rival_quote``: a short verbatim quote from the digest line with the
@@ -18,7 +18,8 @@ the ``[N samples]`` marker the judge reads):
   (``single_gold``: the family's own "names the gold and no other option" test), so a gold pick
   is never weighed by a weaker quote than the digest holds. The line holding the judge's quote
   counts only through that same test (review of PR #208: a quote-holding line that also names
-  another candidate singles out none, and wrong_bridge v4m/L52 composer-Q1746043 passed 30 vs 7
+  another candidate singles out none, and wrong_intermediate v4m/L52 composer-Q1746043 passed 30 vs
+  7
   on a Beethoven + Mendelssohn line while the best Beethoven-only line held 8; the rival and
   contrast lines were already held to it);
 - ``rival_support`` = the largest count of a digest entry whose line holds ``rival_quote``
@@ -33,12 +34,12 @@ the ``[N samples]`` marker the judge reads):
   Martín", the same line on both sides; the code option-rival check already skipped such
   lines); such a split line (it holds the rival quote AND names the gold) counts for NEITHER
   side (-11-01h, review of PR #208 round 4c: -11-01g still credited it to the gold, so a line
-  giving both answers for the same role weighed the rival claim nowhere: wrong_bridge L52
+  giving both answers for the same role weighed the rival claim nowhere: wrong_intermediate L52
   composition_composer-Q182537 passed 7 vs 0 on "John Lennon. The composer of the song tax was
   Paul McCartney. The musician ... who wrote Tax was John Lennon."); a gold whose only singling
   line is split is contested;
 - the pick is ``contested`` (a fail, never a credit) when ``rival_support > 0`` and the gold
-  does not lead by the family's :class:`Margin`: wrong_bridge (its rule: "stated far more
+  does not lead by the family's :class:`Margin`: wrong_intermediate (its rule: "stated far more
   often") needs ``gold >= 1.5 x rival`` AND ``gold - rival >= 2`` (2 samples vs 1 is no clear
   favour); basic_readout_mt and multihop_mt_v2 need ``gold > rival`` (round 4b, ``MORE_THAN``:
   a tie is equally prominent and contested; round 3's ``gold >= rival`` let 4 vs 4 pass).
@@ -56,7 +57,7 @@ from wsbench.nearquote import close_lines
 RIVAL_VERSION = "rv-2026-11-01h"  # -31f: gold support only from lines singling out the gold;
 # -11-01g: a rival line that names the gold is no rival line; -11-01h: ... and no gold line
 # either (a split line counts for neither side). ``contest(split=...)`` (round 4e) lets a caller
-# mark more split lines; without it the rule is unchanged, so the stamp is too (wrong_bridge's
+# mark more split lines; without it the rule is unchanged, so the stamp is too (wrong_intermediate's
 # use of it is stamped by its own AUDIT_VERSION, wbaudit-v2)
 # the judge calls' fingerprint: the prompt (RIVAL_RULE) did not change in -31f / -11-01g, so
 # cached answers are re-scored (call_version)
@@ -81,7 +82,7 @@ class Margin:
         return rival > 0 and (gold < self.ratio * rival or gold - rival < self.lead)
 
 
-FAR_MORE = Margin(1.5, 2)  # wrong_bridge: "stated far more often"
+FAR_MORE = Margin(1.5, 2)  # wrong_intermediate: "stated far more often"
 AT_LEAST = Margin(1.0)  # the round-3 basic_readout_mt margin (a tie passed); kept for reference
 # round 4b (basic_readout_mt and multihop_mt_v2, optrv-v2): the gold must lead, a tie is
 # contested (Camila: "if there are a ton of different equally prominent answers then it should
@@ -132,7 +133,8 @@ def contest(
     takes a digest line (``Grounded.line``), ``names_gold`` a quote's text; ``single_option(rq,
     line)``: the verified rival quote names another listed option and ``line`` singles out that
     same option (its best line then counts, as the gold's does). ``split(entry)``: the caller
-    found the entry to name the gold AND a competing answer in the same role (wrong_bridge: the
+    found the entry to name the gold AND a competing answer in the same role (wrong_intermediate:
+    the
     rival audit's name, wbaudit-v2); it counts for neither side here, as a quote-split line does,
     and the caller weighs it as that rival's."""
     rq = str((result or {}).get("rival_quote", "") or "").strip()

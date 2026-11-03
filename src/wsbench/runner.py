@@ -362,7 +362,7 @@ def run_families(
     futures: dict[Future[FamilyOutcome], str] = {}
     try:
         for s, readouts in runnable:
-            dest = out_of(s.name) if out_of is not None else out / s.name
+            dest = out_of(s.name) if out_of is not None else registry.family_dir(out, s.name)
             fut = executor.submit(_one, s, args, readouts, dest, judges[s.name], opts)
             futures[fut] = s.name
         for fut in as_completed(futures):

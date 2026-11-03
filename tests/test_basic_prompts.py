@@ -9,7 +9,8 @@ from wsbench.basic import prompts as bp
 PINNED = {
     "bank-2026-10-30": "7ede5154d52bb6457379caa0d4ee4a05c67ff085647a2b6ce832f72e02360be7",
     # the token note in its TARGETS form (review of PR #140)
-    # re-pinned by plan 0050 (wrong_bridge / wrong_bridge_true task-note lines deleted before any
+    # re-pinned by plan 0050 (wrong_intermediate / wrong_bridge_true task-note lines deleted before
+    # any
     # result was stamped bank-2026-10-30b; the sha constant only)
     # re-pinned by the audit-fix digest PR (F1/F2: digest.SUMMARY_NOTE* rewritten for per-claim
     # counts and the per-layer merge; those strings are versioned by digest.SUMMARY_JUDGE_VERSION

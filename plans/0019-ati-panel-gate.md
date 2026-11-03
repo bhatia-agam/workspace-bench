@@ -38,9 +38,9 @@ signal, counting ATI items that would flip.
 
 - **Full gate** (2026-10-28, `guess`): 1131 ATI items across 27 panel-gated families (+ multihop_mt's
   carried plan-0014 entry, 7). After the refill: 1236 (+7 = 1243 under the flag). Crafted
-  families: introspection 125/125 (no refill), wrong_bridge 93/100, directed_modulation_obscure
+  families: introspection 125/125 (no refill), wrong_intermediate 93/100, directed_modulation_obscure
   66/98, knowledge_cutoff 42/109.
-- **wrong_bridge: one item per subject S also binds.** `gate.py bank` builds the bank with one item per S, and the restatement above omitted that rule. The first merge broke it (three replacements shared S with a kept item) and was reverted (980fea5).
+- **wrong_intermediate: one item per subject S also binds.** `gate.py bank` builds the bank with one item per S, and the restatement above omitted that rule. The first merge broke it (three replacements shared S with a kept item) and was reverted (980fea5).
   - Replacements must have an S that is new to the post-retirement bank, plus the B′ ≤ 4 and template ≤ 20 caps.
   - The adjudicated pool yields 6 admissible items (5 used: `film_director-Q1608079` was swapped out after review because its wrong bridge "Santiago Mitre" contains the true answer "Santiago"), so the remainder comes from new hop-1 templates screened through the same stages (≥ 4/10 per the bank's actual minimum; `CREDIT_PROPS` only extended).
 - **directed_modulation_obscure:**
@@ -122,13 +122,13 @@ signal, counting ATI items that would flip.
      - dmo `units`/`option_units` match their gold under `unicode_word_matcher`;
      - the `chat_dm` token parity;
      - the knowledge_cutoff G3 leak exclusion;
-     - wrong_bridge ids == wrong_bridge_true ids;
+     - wrong_intermediate ids == wrong_bridge_true ids;
      - the frozen entry's `bank_sha` == `bank_fingerprint(fam)`;
      - plan ids == bank ids.
    - This supersedes Rev 3 E's "pinned item dict plus header" fixture and Rev 2 item 11's "`test_legacy_family_names.py` is unchanged".
 8. **wrong_bridge_true twins in refill.**
-   - Each wrong_bridge refill round also writes a wrong_bridge_true candidate bank: the twins, built from each candidate's B by the same script, with the same ids and read sites, supplied with `WSB_BANK_FILE_WRONG_BRIDGE_TRUE`.
-   - Answers are copied from the wrong_bridge candidate's answers when the rendered prefix is byte-identical (asserted), and asked fresh otherwise.
+   - Each wrong_intermediate refill round also writes a wrong_bridge_true candidate bank: the twins, built from each candidate's B by the same script, with the same ids and read sites, supplied with `WSB_BANK_FILE_WRONG_BRIDGE_TRUE`.
+   - Answers are copied from the wrong_intermediate candidate's answers when the rendered prefix is byte-identical (asserted), and asked fresh otherwise.
    - The twins are **judged** by wrong_bridge_true's own scorer in the same round root, and their roots enter the wrong_bridge_true `roots=` union.
    - wrong_bridge_true is re-gated from the union. It is never refilled on its own count: its n_ati is reported, but it must not land in `_not_gated` for lack of judgings.
 9. **Files section** below is superseded by this list:
@@ -142,7 +142,7 @@ signal, counting ATI items that would flip.
    - `tests/test_text_inversion.py` (new tests + the one sanctioned assertion mapping);
    - `tests/test_bank_override.py` (new);
    - `evals/baselines/{anti_text_inversion.json,README.md}`, `README.md`, `CLAUDE.md`;
-   - phase 2: `evals/{wrong_bridge,wrong_bridge_true,introspection,knowledge_cutoff,directed_modulation_obscure}/{items.json,README.md}`, `examples/readouts/<those>.jsonl`, `tests/fixtures/*_pre_refill_*`, `tests/test_refilled_banks.py` (new), and the setup-only edits of item 7.
+   - phase 2: `evals/{wrong_intermediate,wrong_bridge_true,introspection,knowledge_cutoff,directed_modulation_obscure}/{items.json,README.md}`, `examples/readouts/<those>.jsonl`, `tests/fixtures/*_pre_refill_*`, `tests/test_refilled_banks.py` (new), and the setup-only edits of item 7.
    - There is no `paths.py` and no `cands=`.
 
 ## Rev 3 changes (binding; override Rev 2 and the body where they differ)
@@ -201,7 +201,7 @@ H. **`write_readouts` return shape retained**: still a flat `{family: sorted lay
 ## Rev 2 changes (binding; they override the sections below where they differ)
 
 1. **Bank fingerprint, not a prompt_version bump.**
-   - `wrong_bridge`'s `PROMPT_VERSION` is the shared `wsbench.basic.prompts` constant (also used by association, basic_readout, multihop, multilingual, poetry, typo and wrong_bridge_true). `directed_modulation_obscure`'s is also its scorer_version. So refill bumps **no** prompt_version.
+   - `wrong_intermediate`'s `PROMPT_VERSION` is the shared `wsbench.basic.prompts` constant (also used by association, basic_readout, multihop, multilingual, poetry, typo and wrong_bridge_true). `directed_modulation_obscure`'s is also its scorer_version. So refill bumps **no** prompt_version.
    - Every frozen entry gains `bank_sha` = sha256 of the sorted ati-scored id list (`[s.id for s in readplan.plan(fam) if ati_scored(s)]`). `subset_entry` keeps its `instrument` check **and** fails (exit 2, "bank changed since gating; re-gate") when the current bank's `bank_sha` differs.
    - An entry with no `bank_sha` (old file) is treated as stale. New test.
 2. **Gate version.** `_source.gate = "panel-v1"` and each entry's `gate = "panel-v1"`. The runner stamps `extras.ati_gate` beside the retained `config.scope`, `extras.ati_n_bank` and `extras.ati_judge_model`.
@@ -242,13 +242,13 @@ H. **`write_readouts` return shape retained**: still a flat `{family: sorted lay
   - A candidate enters the bank iff it is ATI under the panel rule.
 - **Verdicts are binding and cached.** A bank item's or candidate's verdict comes from its own cached answers and judgings (keyed by answerer, family, id, draw). The confirmation re-gate of a refilled bank **reuses** those caches: no new draws and no new judge calls for items already decided. The refilled bank's frozen entry is assembled from them, and `n_ati == N0` holds by construction.
   - The one place where options change is introspection clusters, where a member is replaced. There, the affected items' judgings are redone against the new options with the cached answers (no new draws). Any item that flips to non-ATI is retired, and the round counts against the cap.
-- **wrong_bridge_true is mirrored.** Its bank is "the same 100 items, ids and read sites" as wrong_bridge, with B as the target. Every wrong_bridge retirement or addition is applied to `evals/wrong_bridge_true/items.json` by the same script (a twin row built from the candidate's B). wrong_bridge_true is then re-gated with the panel, and its README is updated. Its own n_ati is reported and does not drive the refill.
+- **wrong_bridge_true is mirrored.** Its bank is "the same 100 items, ids and read sites" as wrong_intermediate, with B as the target. Every wrong_intermediate retirement or addition is applied to `evals/wrong_bridge_true/items.json` by the same script (a twin row built from the candidate's B). wrong_bridge_true is then re-gated with the panel, and its README is updated. Its own n_ati is reported and does not drive the refill.
 - **Fixtures (phase 2).** Retirement is decided by the gate only, never biased to protect fixtures. Where a retired id is pinned by a must-pass test or an `examples/readouts/<family>.jsonl` toy, phase 2 re-points that fixture to a surviving id with the same properties (the same kind / cross / gaussian role; the same pass status in the toy), and changes nothing else in the test. Exactly these fixtures are sanctioned:
   - `test_introspection.py` HEAD / CROSS / GAUSS;
   - `test_knowledge_cutoff.py` `ITEMS[0]` / `ITEMS[1]`;
-  - `examples/readouts/{introspection,knowledge_cutoff,directed_modulation_obscure,wrong_bridge,wrong_bridge_true}.jsonl`.
+  - `examples/readouts/{introspection,knowledge_cutoff,directed_modulation_obscure,wrong_intermediate,wrong_bridge_true}.jsonl`.
 - **Candidate pools: where they live** (dev box, not in git):
-  - wrong_bridge: `/workspace/gw-wrong-bridge/outputs/wrong_bridge/adjudicated.jsonl` (199);
+  - wrong_intermediate: `/workspace/gw-wrong-bridge/outputs/wrong_bridge/adjudicated.jsonl` (199);
   - knowledge_cutoff: `/workspace/gw-cutoff-confab/outputs/cutoff_confab/frozen_items.json` (+ `gate_b1.json`, `questions_b1.json`);
   - directed_modulation_obscure: `/workspace/gw-dm-default/outputs/dm_category_default/` (`candidates.json`) plus the bank file's `extension_items` and `set_c_items` (global-workspace `evals/workspace-bench/hillclimbing_evals/multi_token/directed_modulation_obscure/items.json`);
   - introspection: `/workspace/gw-introspection-inject/outputs/introspection_inject/`.
@@ -256,7 +256,7 @@ H. **`write_readouts` return shape retained**: still a flat `{family: sorted lay
 
 ### Construction gates retained in refill, complete restatement (rev 2, supersedes the table's third column)
 
-- **wrong_bridge (every one of these, then the panel):**
+- **wrong_intermediate (every one of these, then the panel):**
   - the greedy 2-hop answer is wrong AND the model answers hop 2 right for the TRUE bridge B;
   - asked hop 1 alone, the model names B′ ≠ B, and its 2-hop answer equals B′'s Wikidata value;
   - ≥ 4/10 T=0.7 samples give A′ and ≥ 4/10 give B′;
@@ -302,7 +302,7 @@ OpenRouter). Take the min of Qwen and the frontier group: if **either** Qwen **o
 frontier models fail to name the target from the prompt alone, the item goes in the
 anti-text-inversion (ATI) subset. If Qwen **and** at least one frontier model solve it, it does not.
 The readers are asked what the model is *thinking about in this prompt*, not what an activation
-contains. Run this over every regular family and over the four crafted ATI families (wrong_bridge,
+contains. Run this over every regular family and over the four crafted ATI families (wrong_intermediate,
 introspection, knowledge_cutoff, directed_modulation_obscure). If the new gate depletes a crafted
 family, regenerate items until the family passes it again.
 
@@ -323,7 +323,7 @@ An item only leaks to a lens when both hold.
 - **The new gate replaces the old one.** `anti_text_inversion=True` now means the panel gate.
   `evals/baselines/anti_text_inversion.json` is rewritten in place. The rev-2 Opus-only file stays
   in git history, and the report prints old vs new counts per family.
-- **Refill target = the original bank size**: wrong_bridge 100, introspection 125 (headline
+- **Refill target = the original bank size**: wrong_intermediate 100, introspection 125 (headline
   items), knowledge_cutoff 109, directed_modulation_obscure 98.
 
 ## Prompt (all four answerers, byte-identical)
@@ -427,7 +427,7 @@ reads the same `ids` key, so the runner, cli and mcjudge need no change beyond t
 
 ## Refill of the crafted families (phase 2, after the gate lands)
 
-For each of wrong_bridge, introspection, knowledge_cutoff and directed_modulation_obscure:
+For each of wrong_intermediate, introspection, knowledge_cutoff and directed_modulation_obscure:
 - if `n_ati < N0` (100 / 125 / 109 / 98), the family is refilled;
 - bank items that fail the panel gate (invertible or unverified) are **retired** from the
   scored bank: they move to a new `retired_panel_gate` list in `items.json`, kept with their verdicts and never scored;
@@ -443,7 +443,7 @@ there). **Every existing construction gate is retained**, and the panel gate is 
 
 | family | candidate source (first) | then generate more with | construction gates retained (restated) |
 |---|---|---|---|
-| wrong_bridge | the 99 adjudicated finalists not in the bank (`outputs/wrong_bridge/adjudicated.jsonl`, 199 rows) | `scripts/wrong_bridge/` stages A–D on unscreened candidates (258k pool) | greedy 2-hop wrong + true-bridge hop 2 right; hop-1 names B′ ≠ B and the 2-hop answer = B′'s value; ≥ 4/10 T=0.7 samples give A′ and B′; logP(A′)>logP(A), logP(B′)>logP(B); B′/B injection causal checks; non-default A′ (< 3% template share); Claude adjudication; `wrong_bridge_true` pairing unchanged |
+| wrong_intermediate | the 99 adjudicated finalists not in the bank (`outputs/wrong_bridge/adjudicated.jsonl`, 199 rows) | `scripts/wrong_bridge/` stages A–D on unscreened candidates (258k pool) | greedy 2-hop wrong + true-bridge hop 2 right; hop-1 names B′ ≠ B and the 2-hop answer = B′'s value; ≥ 4/10 T=0.7 samples give A′ and B′; logP(A′)>logP(A), logP(B′)>logP(B); B′/B injection causal checks; non-default A′ (< 3% template share); Claude adjudication; `wrong_bridge_true` pairing unchanged |
 | directed_modulation_obscure | the unscored `extension_items` (24) and `set_c_items` (135) pools | `build_candidates.py` on new categories | gold = greedy, = ≥ 7/10 T=1 samples, = the named reveal after the teacher-forced carrier; symmetric `option_units` built by the same `build_units.py` procedure (gold not identified); G1 never re-rolled; R0/R0s binding floor below the G1-conditional floor (re-checked by `write_bank.py`) |
 | knowledge_cutoff | G1 survivors in `frozen_items.json` not in the bank | `author.py` new batch → `panel_modal.py` → `gate.py` → `freeze.py` | G0: Qwen answer stable (≥ 7/10 T=1 agree with greedy), specific, non-null, Opus-verified incorrect; G1 Opus ×3 + Sonnet miss under both framings; the 6 G3 leak items stay excluded; seeded option order |
 | introspection | new concepts in the same register | `build_bank.py --words-only` → `ii_modal.py --mode vectors` (Agam's recipe) → `build_bank.py` | clusters of exactly 5 semantic neighbours, options = cluster + "no injected concept" (K = 6); protocol Trial 1 β = 4 headline; steering spec unchanged (L12, `h += β‖h‖v̂`, tokens 97–116); controls (gaussian, cross, β0) regenerated for any new concept by the same recipe |
@@ -511,7 +511,7 @@ scripts/ati_panel_judge.sh                   loops the 12 draw-judgings per fami
 evals/baselines/anti_text_inversion.json     rewritten by stage=gate
 evals/baselines/README.md, README.md, CLAUDE.md
 tests/test_text_inversion.py
-(phase 2) evals/{wrong_bridge,wrong_bridge_true,introspection,knowledge_cutoff,directed_modulation_obscure}/{items.json,README.md}
+(phase 2) evals/{wrong_intermediate,wrong_bridge_true,introspection,knowledge_cutoff,directed_modulation_obscure}/{items.json,README.md}
 (phase 2) examples/readouts/<those families>.jsonl, tests/test_{introspection,knowledge_cutoff}.py fixture ids only
 src/wsbench/paths.py                        WSBENCH_BANK_OVERRIDE_<FAMILY> (candidate staging)
 src/wsbench/runner.py                       extras.ati_gate stamp

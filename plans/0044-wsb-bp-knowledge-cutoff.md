@@ -38,7 +38,7 @@ labels are cited in code comments as `plan 0044 §Cn`.
    needed and was not added.
 9. **ATI**: the frozen entry is stale (bank sha and instrument moved) until gpu R8 re-judges the
    cached panel answers (the spec's schedule); `anti_text_inversion=True` exits 2 for this family
-   until then. Tests follow the `REGATE_PENDING` pattern of the wrong_bridge PR.
+   until then. Tests follow the `REGATE_PENDING` pattern of the wrong_intermediate PR.
 10. `test_summary_bundles_every_loaded_line`: 2 items x 3 layers x 30 positions x 4 samples is 360
     lines per item (720 in total); the spec's "720 per item" was an arithmetic slip.
 

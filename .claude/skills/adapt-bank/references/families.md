@@ -528,13 +528,13 @@ carried over from the 27B; there is no Opus / Sonnet unguessability gate.
   lowers the family's `reads=full` minimum to it under either bank override (`WSB_BANK_FILE_<F>`
   wins, via `registry.bank_path`); registered banks are never consulted.
 
-## wrong_bridge — the subject's OWN wrong bridge (plan 0060 Phase E; bank `items_v4`)
+## wrong_intermediate — the subject's OWN wrong intermediate (plan 0060 Phase E; bank `items_v4`)
 - **Latent:** B', the wrong intermediate the subject resolves on a Wikidata two-hop prompt, so it
   answers hop2(B') instead of hop2(B). Plain render (BOS + prompt), read at every token.
-- **Code:** `src/wsbench/adapt/wrong_bridge.py`, `$A wrong_bridge $M stage=screen|grade|gate|
+- **Code:** `src/wsbench/adapt/wrong_intermediate.py`, `$A wrong_intermediate $M stage=screen|grade|gate|
   adjudicate|bank|all pool=<dir>` (`pool` = the GW scrape: `candidates.jsonl` + `entities.json`;
   on this box `/workspace/gw-wrong-bridge/outputs/wrong_bridge/`). Work files:
-  `adapted/<m>/gate/wrong_bridge.work/` (git-ignored). Not a `profile` family.
+  `adapted/<m>/gate/wrong_intermediate.work/` (git-ignored). Not a `profile` family.
 - **Target re-derived on the subject:** GW `scripts/wrong_bridge/` re-run on the subject (logic
   ported, not imported): `screen` greedy p2 / p1 / p2b (GPU) → `grade` E1 (p2 wrong, p2b right,
   p1 names B' != B, B' resolves to a Wikidata entity of B's kind, p2 = hop2(B'); drops leak,
@@ -554,7 +554,7 @@ carried over from the 27B; there is no Opus / Sonnet unguessability gate.
   `original` and keeps its `mc` verbatim (`SUBJECT_FIELDS = ("evidence",)`). Every other item is
   `generated` and `bank` builds `mc` {category, gold, contrast, 4 distractors, order, forms,
   seed, topic}: the v2 pool rule over the registered v4 options + the subject's bridges of the
-  category; forms by the v4 rule (`scripts/wrong_bridge_mc_options.py`, imported read-only) over
+  category; forms by the v4 rule (`scripts/wrong_intermediate_mc_options.py`, imported read-only) over
   `wikidata_v3.json` + every-language labels fetched for new QIDs (`fetch_v3`, cached in
   `wikidata_extra.json`; the pool's English labels only if Wikidata returns nothing). An option
   with no entity, a template with no MC category, or a pool under 4 drops the item; `mc` is built
@@ -562,12 +562,12 @@ carried over from the 27B; there is no Opus / Sonnet unguessability gate.
   The judge also reads `template` (role cues) and `prompt`; both are built.
 
 **Freezing the Phase E families:** they are not in `families.FAMILIES`, so a bare `freeze` (and
-`status`) skips them. They ship only when named: `$A freeze $M families=wrong_bridge,multihop_mt_v2`
+`status`) skips them. They ship only when named: `$A freeze $M families=wrong_intermediate,multihop_mt_v2`
 (nyt_connections likewise: `families=nyt_connections`, after `$A nyt_connections $M`)
 (or alongside other families in the same `families=` list).
 
 ## Not in the adapt machinery (SKILL.md §Families the adapt machinery does not cover)
-None left in this list: introspection, multihop_mt_v2, wrong_bridge (above),
+None left in this list: introspection, multihop_mt_v2, wrong_intermediate (above),
 knowledge_cutoff and model_specific_directed_modulation (below) and nyt_connections
 (`$A nyt_connections`, SKILL.md) each have their own stage
 (`families.get` names it). unverbalized_hint is retired (plan 0058).
@@ -642,6 +642,6 @@ Qwen's forms). A gold that agrees with Qwen's is fine: it is the subject's answe
   an adapted root. Until then an adapted knowledge_cutoff has the frozen-pool items only.
 
 ## Not in the adapt machinery (SKILL.md §Families the adapt machinery does not cover)
-multihop_mt_v2 (above), wrong_bridge, introspection: `families.get` raises for each.
+multihop_mt_v2 (above), wrong_intermediate, introspection: `families.get` raises for each.
 knowledge_cutoff and model_specific_directed_modulation have their own stages (above).
 unverbalized_hint is retired (plan 0058).

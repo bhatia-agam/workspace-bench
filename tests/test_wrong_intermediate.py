@@ -1,4 +1,4 @@
-"""wrong_bridge (plan 0050): bank v2 (every token read, MC options frozen), the blind 6-way MC
+"""wrong_intermediate (plan 0050): bank v2 (every token read, MC options frozen), the blind 6-way MC
 judge with name-form and echo gates, the removal of wrong_bridge_true."""
 
 import dataclasses
@@ -15,18 +15,18 @@ from summary_fakes import FakeLLM, summary_args
 
 from wsbench import digest, mc, readplan, reads, registry
 from wsbench.baselines import lucky_guessing
-from wsbench.evals.wrong_bridge import judge as wj
-from wsbench.evals.wrong_bridge import prompts as wp
+from wsbench.evals.wrong_intermediate import judge as wj
+from wsbench.evals.wrong_intermediate import prompts as wp
 from wsbench.readouts import Cell
 from wsbench.results import FamilyResult, macro
 
 REPO = Path(__file__).resolve().parents[1]
-GOLDEN = REPO / "tests/golden/wrong_bridge_options.json"  # bank v2
-GOLDEN_V3 = REPO / "tests/golden/wrong_bridge_options_v3.json"  # bank v3 (round 4)
-V2_BANK = REPO / "evals/wrong_bridge/items_v2.json"
-V3_BANK = REPO / "evals/wrong_bridge/items_v3.json"
-V4_BANK = REPO / "evals/wrong_bridge/items_v4.json"  # round 4c: v3 options, filtered forms
-AUDIT = REPO / "tests/fixtures/wrong_bridge_audit_cases.jsonl"
+GOLDEN = REPO / "tests/golden/wrong_intermediate_options.json"  # bank v2
+GOLDEN_V3 = REPO / "tests/golden/wrong_intermediate_options_v3.json"  # bank v3 (round 4)
+V2_BANK = REPO / "evals/wrong_intermediate/items_v2.json"
+V3_BANK = REPO / "evals/wrong_intermediate/items_v3.json"
+V4_BANK = REPO / "evals/wrong_intermediate/items_v4.json"  # round 4c: v3 options, filtered forms
+AUDIT = REPO / "tests/fixtures/wrong_intermediate_audit_cases.jsonl"
 BEETHOVEN = "composition_composer-Q1977772-birth_city"  # gold Beethoven, contrast Mozart
 MADONNA = "album_performer-Q167554-birth_year"
 MATILDA = "person_mother-Q102005-death_year"
@@ -59,9 +59,9 @@ def toy_file(tmp_path, *, ids=(BEETHOVEN,), layers=(20, 44, 60), n_pos=14, text=
             for p in range(n_pos):
                 s = text(iid, lay, p) if text else f"- sample {iid[:5]} L{lay} p{p}"
                 rows.append({"id": iid, "layer": lay, "pos": p, "samples": [s]})
-    path = write_jsonl(tmp_path / "wrong_bridge.jsonl", rows)
+    path = write_jsonl(tmp_path / "wrong_intermediate.jsonl", rows)
     if sidecar:
-        meta.setdefault("plan_sha", reads.plan_sha("wrong_bridge"))
+        meta.setdefault("plan_sha", reads.plan_sha("wrong_intermediate"))
         meta.setdefault("layers", list(layers))
         write_sidecar(path, reads=meta.pop("reads", "full"), **meta)
     return path
@@ -70,7 +70,7 @@ def toy_file(tmp_path, *, ids=(BEETHOVEN,), layers=(20, 44, 60), n_pos=14, text=
 def run_items(tmp_path, path, ids, *, extra=None, **kw):
     args = summary_args(path, tmp_path / "out", wp.PROMPT_VERSION, items=list(ids),
                         allow_missing=True, extra=extra or {}, **kw)  # fmt: skip
-    return registry.FAMILIES["wrong_bridge"].run(args)
+    return registry.FAMILIES["wrong_intermediate"].run(args)
 
 
 def answer(choice: int, quote: str):
@@ -81,7 +81,7 @@ def answer(choice: int, quote: str):
 
 
 def test_plan_reads_every_token_and_lite_reads_final():
-    rows = readplan.plan("wrong_bridge")
+    rows = readplan.plan("wrong_intermediate")
     assert len(rows) == 100
     for s in rows:
         assert s.positions == {"kind": "all"}
@@ -104,14 +104,14 @@ def test_full_plan_rows_have_min_positions():
     if not found:
         pytest.skip("Qwen3.6-27B tokenizer not cached")
     tok = tokenizers.Tokenizer.from_file(found[0])
-    need = registry.FAMILIES["wrong_bridge"].min_full_positions
-    for s in readplan.plan("wrong_bridge"):
+    need = registry.FAMILIES["wrong_intermediate"].min_full_positions
+    for s in readplan.plan("wrong_intermediate"):
         n = len(tok.encode(s.text, add_special_tokens=False).ids)
         assert len(readplan.resolve(s.positions, ["x"] * n)) >= need, s.id
 
 
 def test_min_full_positions_is_the_shortest_prompt_in_words():
-    spec = registry.FAMILIES["wrong_bridge"]
+    spec = registry.FAMILIES["wrong_intermediate"]
     assert spec.min_full_positions == 9 and spec.full_contiguous
     assert min(len(it["prompt"].split()) for it in items().values()) == 9
 
@@ -125,11 +125,11 @@ def test_judge_uses_reads_load_only(tmp_path, monkeypatch):
         return real(args, family, path, **kw)
 
     monkeypatch.setattr(reads, "load", spy)
-    src = (REPO / "src/wsbench/evals/wrong_bridge/judge.py").read_text()
+    src = (REPO / "src/wsbench/evals/wrong_intermediate/judge.py").read_text()
     assert "load_readouts" not in src
     FakeLLM.install(monkeypatch, judge=answer(7, ""))
     run_items(tmp_path, toy_file(tmp_path), [BEETHOVEN])
-    assert seen == ["wrong_bridge"]
+    assert seen == ["wrong_intermediate"]
 
 
 def test_full_summary_gets_every_position_and_layer(tmp_path, monkeypatch):
@@ -150,7 +150,7 @@ def test_full_summary_gets_every_position_and_layer(tmp_path, monkeypatch):
     assert sorted((c.layer, c.pos) for c in got["expect_all"]) == sorted(keys)
     assert r.config["reads"] == "full" and not r.config["prompt_version"].endswith("+reads-lite")
     assert r.config["prompt_version"] == digest.prompt_version(
-        wp.PROMPT_VERSION, summary_args(tmp_path, tmp_path, "x"), "wrong_bridge"
+        wp.PROMPT_VERSION, summary_args(tmp_path, tmp_path, "x"), "wrong_intermediate"
     )
 
 
@@ -177,7 +177,7 @@ def test_one_position_full_file_with_sidecar_exits(tmp_path, monkeypatch):
     path = toy_file(tmp_path, n_pos=1)
     with pytest.raises(SystemExit):
         run_items(tmp_path, path, [BEETHOVEN])
-    (tmp_path / "wrong_bridge.jsonl.meta.json").unlink()
+    (tmp_path / "wrong_intermediate.jsonl.meta.json").unlink()
     r = run_items(tmp_path, path, [BEETHOVEN])
     assert r.config["reads_checked"] == "no_sidecar"
     assert BEETHOVEN in r.extras["partial_ids_unenforced"]
@@ -230,7 +230,7 @@ def test_options_frozen_and_golden(bank, golden_path):
 @pytest.mark.parametrize("flags", [["--check"], ["--v3", "--check"], ["--v4", "--check"]])
 def test_builder_is_reproducible(flags):
     out = subprocess.run(
-        [sys.executable, str(REPO / "scripts/wrong_bridge_mc_options.py"), *flags],
+        [sys.executable, str(REPO / "scripts/wrong_intermediate_mc_options.py"), *flags],
         capture_output=True,
         text=True,
     )
@@ -252,7 +252,7 @@ def test_forms_surname_only_when_unique(bank):
             assert "Karl" not in fs
             # v2 never lists the stem; v3 did (the Dutch alias "Abdul Hamid" of Abdul Hamid II:
             # it names his grandfather Abdul Hamid I too, review of PR #208 round 4b); v4 keeps
-            # regnal numerals again (scripts/wrong_bridge_mc_options.py raw_forms_v4 rule 2)
+            # regnal numerals again (scripts/wrong_intermediate_mc_options.py raw_forms_v4 rule 2)
             assert bank == V3_BANK or "Abdul Hamid" not in fs
             others = [f for o2, fl in forms.items() if o2 != o for f in fl]
             for f in fs:
@@ -421,11 +421,11 @@ def test_native_extras_have_layer_pick_columns(tmp_path, monkeypatch):
 
 
 def test_flat_types_declared():
-    spec = registry.FAMILIES["wrong_bridge"]
+    spec = registry.FAMILIES["wrong_intermediate"]
     assert spec.flat_types == wp.FLAT_TYPES and spec.multi_select is False
     assert not spec.targets_judge
     note = mc.token_note(wp.FLAT_TYPES, multi_select=False)
-    assert digest.token_note_of("wrong_bridge") == note == wp.KIND_NOTE_TOKENS
+    assert digest.token_note_of("wrong_intermediate") == note == wp.KIND_NOTE_TOKENS
     assert note != mc.TOKEN_NOTE and "names of people, bands or companies" in note
 
 
@@ -439,8 +439,8 @@ def test_token_list_rank1_not_credited(tmp_path, monkeypatch):
     fake = FakeLLM.install(monkeypatch, judge=answer(7, ""))
     rows = [{"id": iid, "layer": L, "pos": p, "tokens": line.split(" | ")}
             for L in (20, 44) for p in range(12)]  # fmt: skip
-    path = write_jsonl(tmp_path / "wrong_bridge.jsonl", rows)
-    write_sidecar(path, sampling="tokens10", plan_sha=reads.plan_sha("wrong_bridge"))
+    path = write_jsonl(tmp_path / "wrong_intermediate.jsonl", rows)
+    write_sidecar(path, sampling="tokens10", plan_sha=reads.plan_sha("wrong_intermediate"))
     run_items(tmp_path, path, [iid])
     user = next(u for n, _s, u in fake.calls if n == "wb_pick")
     assert note in user
@@ -504,7 +504,7 @@ def test_collapse_receives_task_note(tmp_path, monkeypatch):
     monkeypatch.setattr(digest, "collapse", spy)
     fake = FakeLLM.install(monkeypatch, judge=answer(7, ""))
     run_items(tmp_path, toy_file(tmp_path), [BEETHOVEN])
-    assert got["note"] == wp.TASK_NOTE == registry.FAMILIES["wrong_bridge"].task_note
+    assert got["note"] == wp.TASK_NOTE == registry.FAMILIES["wrong_intermediate"].task_note
     dig = next(s for n, s, _u in fake.calls if n == "digest")
     assert wp.TASK_NOTE in dig
     for it in items().values():
@@ -512,9 +512,9 @@ def test_collapse_receives_task_note(tmp_path, monkeypatch):
             assert o not in wp.TASK_NOTE
 
 
-def test_lucky_builder_wrong_bridge():
-    built = lucky_guessing.build_family("wrong_bridge")
-    assert len(built) == 100 and "wrong_bridge" in lucky_guessing.DESCRIPTIONS
+def test_lucky_builder_wrong_intermediate():
+    built = lucky_guessing.build_family("wrong_intermediate")
+    assert len(built) == 100 and "wrong_intermediate" in lucky_guessing.DESCRIPTIONS
     by = items()
     for x in built:
         it = by[x.id]
@@ -526,7 +526,7 @@ def test_lucky_builder_wrong_bridge():
 def test_bank_path_is_v4_and_v3_v2_are_kept():
     # round 4: the bank of record was v3; round 4c: v4 (v3's options, filtered forms); v3, v2
     # and v1 stay frozen beside it
-    assert registry.bank_path("wrong_bridge") == V4_BANK
+    assert registry.bank_path("wrong_intermediate") == V4_BANK
     v4 = json.loads(V4_BANK.read_text(encoding="utf-8"))
     v3_ = json.loads(V3_BANK.read_text(encoding="utf-8"))
     assert v4["version"] == 4 and v4["supersedes"] == "items_v3.json"
@@ -538,7 +538,7 @@ def test_bank_path_is_v4_and_v3_v2_are_kept():
             k: v for k, v in a["mc"].items() if k != "forms"
         }
     v2 = json.loads(V2_BANK.read_text(encoding="utf-8"))
-    v1 = json.loads((REPO / "evals/wrong_bridge/items.json").read_text(encoding="utf-8"))
+    v1 = json.loads((REPO / "evals/wrong_intermediate/items.json").read_text(encoding="utf-8"))
     assert v2["version"] == 2 and v2["supersedes"] == "items.json"
     assert v2["contract"]["native_langs"] == ["en", "zh"]
     for a, b in zip(v1["items"], v2["items"], strict=True):
@@ -561,20 +561,20 @@ def _toy_result(family: str) -> FamilyResult:
                         "aggregate": "summary", "reads": "full"}, counts={})  # fmt: skip
 
 
-def test_wrong_bridge_in_macro(real_families):
-    spec = registry.FAMILIES["wrong_bridge"]
+def test_wrong_intermediate_in_macro(real_families):
+    spec = registry.FAMILIES["wrong_intermediate"]
     assert spec.not_in_macro == "" and spec.metric == "pass_rate"
-    m = macro([_toy_result("wrong_bridge"), _toy_result("wrong_bridge_true")])
-    assert m["families"] == ["wrong_bridge"]
+    m = macro([_toy_result("wrong_intermediate"), _toy_result("wrong_bridge_true")])
+    assert m["families"] == ["wrong_intermediate"]
     assert {"family": "wrong_bridge_true", "reason": "removed",
             "why": registry.REMOVED_FAMILIES["wrong_bridge_true"]} in m["excluded"]  # fmt: skip
 
 
 def test_example_readouts_judge(tmp_path, monkeypatch):
     FakeLLM.install(monkeypatch, judge=answer(7, ""))
-    ex = REPO / "examples/readouts/wrong_bridge.jsonl"
+    ex = REPO / "examples/readouts/wrong_intermediate.jsonl"
     ids = sorted({json.loads(ln)["id"] for ln in ex.read_text().splitlines()})
     args = summary_args(ex, tmp_path / "o", wp.PROMPT_VERSION, items=ids, layers=[20, 44])
-    r = registry.FAMILIES["wrong_bridge"].run(args)
+    r = registry.FAMILIES["wrong_intermediate"].run(args)
     assert r.n_items == 3 and r.config["reads_checked"] == "sidecar"
     assert dataclasses.asdict(r)["rows"][0]["options"][-1] == wp.CANNOT

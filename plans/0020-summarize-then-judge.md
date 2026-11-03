@@ -308,7 +308,7 @@ Every family in the table gets the hook. Conventions for the table:
 
 | family (group) | hook point | judged unit in summary mode | prompt variant | notes |
 |---|---|---|---|---|
-| association, basic_readout, multihop, multilingual, poetry, typo, wrong_bridge, wrong_bridge_true (`basic/family.py`) | after `require_cells` (`basic/family.py:63`) | One bank-judge call per item on the summary. `_item_row` uses `layers=[SUMMARY_LAYER]` and takes `incomplete` from the item's real missing cells | `SYSTEM` line 2 ("…readout samples at one layer (several token positions)…") gets summary wording. `BLOCK` becomes the summary with no position header. `KIND_NOTE_*` becomes `SUMMARY_NOTE` | Family rules and forbidden lines unchanged. The stance and candidate-list rules still apply, because the judge sees whole samples. Quote gate via `gate_texts` |
+| association, basic_readout, multihop, multilingual, poetry, typo, wrong_intermediate, wrong_bridge_true (`basic/family.py`) | after `require_cells` (`basic/family.py:63`) | One bank-judge call per item on the summary. `_item_row` uses `layers=[SUMMARY_LAYER]` and takes `incomplete` from the item's real missing cells | `SYSTEM` line 2 ("…readout samples at one layer (several token positions)…") gets summary wording. `BLOCK` becomes the summary with no position header. `KIND_NOTE_*` becomes `SUMMARY_NOTE` | Family rules and forbidden lines unchanged. The stance and candidate-list rules still apply, because the judge sees whole samples. Quote gate via `gate_texts` |
 | basic_readout_mt, multihop_mt (superseded), multihop_mt_v2, multilingual_mt, multilingual_multihop, multilingual_typo, typo_mt (`multitoken/family.py`) | after `require_cells` (`:143`) | The regex contract runs on `gate_texts` as the samples of one layer. `opts=judge=mc`: one MC call per (item, unit) on the summary, gated by `gate_texts` | MC path: the `USER` sample header becomes `SUMMARY_NOTE` | **Same-layer conjunction is relaxed by design.** "Every required unit at one layer" becomes "every required unit among the item's evidence samples". Camila asked for exactly this pooling, and the README states it. The digest does not translate, so an L2-only echo cannot gain an English form |
 | arithmetic_intermediates | after selection (`judge.py:205`) | **Summary mode forces `cells=all`.** An explicit `cells=frozen` with `aggregate=summary` exits 2, because the frozen cell is a sweep-picked best cell and the user asked for every position and layer. One call per item using the single-cell `SYSTEM`/`USER` | The `USER` sample header becomes `SUMMARY_NOTE` | `verified()` on `gate_texts`. A pooled summary offers more numbers to the ≤3-value cap (`MAX_VALUES` unchanged), but the paired `cross` null is computed on the same summaries under the same rule, so the floor moves with it (README says so). A method with no arithmetic layers (e.g. `layers=44` on the current readouts) is "not defined" |
 | chain_intermediates | after `require_cells` (`:121`) | One call per item, **forced `cells=all`** (Goal) | `SUMMARY_NOTE` header | **Summary-mode item rule: any of the judge's ≤3 verified values is gold**, not top-1. This is the existing `any_of_3` diagnostic with every value verified. Pooled over 11 layers, the loudly stated final answer would otherwise win the top slot by construction. The near-decoy null uses the same any-of-3 rule. `names_number` / `quote_in` on `gate_texts` |
@@ -418,7 +418,7 @@ CI: `uv run ruff check . && uv run ruff format --check . && uv run pytest -q`.
 **Dev slice.** Items 0-19 (bank order) of every hooked family.
 - Source: s3d-rl600 readouts (`/workspace/root/wsbench-pub/outputs/readouts/s3d-rl600`).
 - Families absent there (jailbreak, introspection, knowledge_cutoff,
-  directed_modulation_obscure, wrong_bridge, wrong_bridge_true, multihop_mt_v2) come from
+  directed_modulation_obscure, wrong_intermediate, wrong_bridge_true, multihop_mt_v2) come from
   `/workspace/root/wsb-ati-runs/readouts/s3d`, using whatever items exist, up to 20.
 - All layers, judge `claude-opus-5-5`.
 - Dev items are **excluded from every D3 headline table** (D3a, D3b and D3c), and a dev-inclusive
@@ -495,7 +495,7 @@ the slice is re-run.
 **D3c: full banks, newer families.**
 - Readouts: `/workspace/root/wsb-ati-runs/readouts/s3d`, for the hooked families absent from
   s3d-rl600 that have full readouts there: directed_modulation_obscure, knowledge_cutoff,
-  introspection, wrong_bridge and wrong_bridge_true. knowledge_cutoff's readouts are legacy
+  introspection, wrong_intermediate and wrong_bridge_true. knowledge_cutoff's readouts are legacy
   3-offset, so it is `partial` in both modes, as the report states.
 - Methods: all layers and `layers=44`. Modes: native and summary-extractive.
 - **Cannot be validated, because no full readouts exist:** jailbreak_recognition (5 items) and

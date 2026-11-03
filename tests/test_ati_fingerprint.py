@@ -25,7 +25,7 @@ CHANGED_BY_FAMILY_PRS: set[str] = {
     "moral_rationale",  # plan 0046: bank v2 + every-position plan
     "association",  # plan 0039: bank v2 + summarize-suffix plan
     "basic_readout",  # plan 0053: v2 bank (question form)
-    "wrong_bridge",  # plan 0050: bank v2 (mc block, all positions)
+    "wrong_intermediate",  # plan 0050: bank v2 (mc block, all positions)
     "basic_readout_mt",  # plan 0050: bank v2 (question form)
     # plan 0040: v2 banks (units, natural forms, names-only language units) and the
     # all-positions read plan; prompts and the last read position are unchanged, so the

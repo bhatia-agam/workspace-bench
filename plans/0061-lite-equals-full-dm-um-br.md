@@ -35,8 +35,8 @@ differs from full only in its `+reads-lite` stamp.
    - `_final_token_families_items`: for `family in LITE_SAME_FAMILIES` every row's
      `lite_positions` is `dict(SAME)` on **all three** paths (`question_through_end`,
      `chat` prefill, plain), overriding the bank row's `readout.lite`. The other families on this
-     path (`typo`, `wrong_bridge`) keep their current lite (`FINAL`, or the bank's `lite` for
-     `wrong_bridge`'s `all_positions` rows) — **retained invariant**.
+     path (`typo`, `wrong_intermediate`) keep their current lite (`FINAL`, or the bank's `lite` for
+     `wrong_intermediate`'s `all_positions` rows) — **retained invariant**.
    - The bank files are NOT edited (their `readout.lite` keys stay as the historical record;
      the plan row is what the judge reads, never the bank).
    - **Retained invariant:** `plan_sha` is unchanged for every family (`reads.py` never hashes the
@@ -94,7 +94,7 @@ differs from full only in its `+reads-lite` stamp.
    - `tests/test_readplan.py`: `test_user_modeling_reads_every_position` (docstring, the
      `final_token` assertion, and `lite_select(...) == [len-1]` → all positions) and
      `test_basic_readout_v2_all_chat_prefill` (its lite assertion) updated to `same`;
-     `test_basic_readout_v2_positions` (explicit rule, not the plan's lite) is untouched; any assertion about `typo` / `wrong_bridge` /
+     `test_basic_readout_v2_positions` (explicit rule, not the plan's lite) is untouched; any assertion about `typo` / `wrong_intermediate` /
      other families is untouched.
    - `tests/test_reads.py::test_produce_lite_then_judge_lite_keeps_the_lite_site` hard-codes
      MCDM as its non-idempotent-rule example: re-target it (and its docstring) to `multihop`
@@ -110,7 +110,7 @@ differs from full only in its `+reads-lite` stamp.
    - New test in `tests/test_readplan.py`: for each of the five families, every plan row has
      `lite_positions == {"kind": "same"}` and `lite_layers is None`, and
      `readplan.plan(f, reads="lite")` selects the same (id, pos, layer) cells as
-     `reads="full"`; `typo` / `wrong_bridge` lite rows are unchanged; `plan_sha(f)` equals the
+     `reads="full"`; `typo` / `wrong_intermediate` lite rows are unchanged; `plan_sha(f)` equals the
      value computed on `origin/main` c2fd6929 before this change (hard-coded per family, with a
      comment that the values pin plan 0061's no-reread claim and may be refreshed by a later bank
      change).

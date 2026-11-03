@@ -61,7 +61,7 @@ used `judge_model=claude-opus-5-5` as an override; this makes that the instrumen
      their Gemini entries stay in the file, undrawn, and the README says so (brew and role_bound
      are `saturated` anyway; chain's 0.03 is the one real loss until summaries are generated on
      GPU, a follow-up).
-   - Families that never had floors (wrong_bridge, wrong_bridge_true, multihop_mt_v2,
+   - Families that never had floors (wrong_intermediate, wrong_bridge_true, multihop_mt_v2,
      directed_modulation_obscure, introspection, knowledge_cutoff, hallucination,
      jlens_concept_pr, agentic, jailbreak) are out of scope.
 5. **ATI subset** needs no change: staleness is `instrument` + `bank_sha`

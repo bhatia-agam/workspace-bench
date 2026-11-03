@@ -72,6 +72,12 @@ next-token prediction: in the source repo's ttt README (global-workspace
 `evals/workspace-bench/hillclimbing_evals/multi_token/ttt/README.md`, per-layer table) the plain
 logit-lens argmax at the read site scored 0.733 at L60, above the O-lens's 0.587 at that layer.
 Its `results.json` in an old run dir is excluded from the macro (reason `removed`).
+v1.2.0 (2026-11-03): `wrong_intermediate` was renamed from `wrong_bridge` (Camila). A pure
+label change: the bank, judge prompts, instrument string, item ids and scores are unchanged, and
+the family still hashes under `wrong_bridge` (`registry.HASH_FAMILY_NAMES`), so `plan_sha`, the
+ATI `bank_sha` and the seeded floors do not move and readouts produced before the rename pass
+the plan check. `family=wrong_bridge` still works (a one-line note on stderr), as do
+`wrong_bridge.jsonl` readout files and `wrong_bridge/` out dirs and digest stores.
 
 Output layout: `<out>/<family>/results.json` (the result) and `cells.jsonl` (every judge
 verdict, so a re-run only pays for what is missing); `<out>/summary.md` (the table) and
@@ -135,10 +141,10 @@ commands with `PYTHONPATH=src`, because the editable install points at the main 
 - *Example:* "Fact: The chemical symbol for the element with atomic number 26 is" → surface answer `Fe`; target (bridge) `iron`.
 - *Judged by:* a blind multiple-choice judge (plan 0036): the bridge plus 4 same-type distractors and "cannot tell from the readout" last; pass = the gold letter with a verbatim quote that names the bridge (no demonyms, no number floods); not in the anti-text-inversion subset.
 
-**Wrong-bridge multihop** — [`evals/wrong_bridge/README.md`](evals/wrong_bridge/README.md)
-- *What it is:* A Wikidata two-hop prompt where Qwen3.6-27B resolves the WRONG intermediate and so answers wrong ("Fact: The composer of Canon and Gigue in D died in the year" -> `1750` via *Bach*, not Pachelbel's 1706); does the lens identify the model's wrong bridge, read at every token of the prompt (`reads=lite`: the final token).
-- *Example:* "Fact: The painter of Small Cowper Madonna died in the year" → model answer `1519`; target (the model's wrong bridge) `Leonardo da Vinci` (true bridge Raphael).
-- *Judged by:* 6-way MC over the model's wrong bridge, the true bridge and four same-category distractors, plus cannot tell; one digest per item over every position and layer. A pick of the true bridge fails and is reported as `true_bridge_rate` (the former `wrong_bridge_true` family, removed 2026-10-30).
+**Wrong-intermediate multihop** — [`evals/wrong_intermediate/README.md`](evals/wrong_intermediate/README.md)
+- *What it is:* A Wikidata two-hop prompt where Qwen3.6-27B resolves the WRONG intermediate and so answers wrong ("Fact: The composer of Canon and Gigue in D died in the year" -> `1750` via *Bach*, not Pachelbel's 1706); does the lens identify the model's wrong intermediate, read at every token of the prompt (`reads=lite`: the final token).
+- *Example:* "Fact: The painter of Small Cowper Madonna died in the year" → model answer `1519`; target (the model's wrong intermediate) `Leonardo da Vinci` (true bridge Raphael).
+- *Judged by:* 6-way MC over the model's wrong intermediate, the true bridge and four same-category distractors, plus cannot tell; one digest per item over every position and layer. A pick of the true bridge fails and is reported as `true_bridge_rate` (the former `wrong_bridge_true` family, removed 2026-10-30).
 
 **Multilingual** — [`evals/multilingual/README.md`](evals/multilingual/README.md)
 - *What it is:* A non-English prompt with a one-word answer ("Sechs geteilt durch zwei ist" -> `drei`); the lens must NAME the passage's language AND write the answer's meaning in English or the model's native language (Chinese for Qwen3.6-27B), read at every prompt position (`reads=lite`: the final token). 99 items (v2 bank, plan 0054).
@@ -419,7 +425,7 @@ digest's token lines are also matched space-joined, stamped `+joined-2026-10-30`
 | role_bound_association | claude-opus-5-5 | oa-v3.1 (oa-v2.4 prompts on the oa-v3.1 lists) |
 | typo (superseded by typo_mt) | claude-opus-5-5 | bank-2026-10-30b |
 | typo_mt | regex (no call natively; the digest model under summary mode) | mt-regex-2026-10-30+typo-v2 |
-| wrong_bridge | claude-opus-5-5 | wb-mc-2026-10-31r+rv-2026-11-01h+wbaudit-v2+wbforms-v4+bank-v4 |
+| wrong_intermediate | claude-opus-5-5 | wb-mc-2026-10-31r+rv-2026-11-01h+wbaudit-v2+wbforms-v4+bank-v4 |
 | user_modeling | claude-opus-5-5 | um-v3.4 |
 
 - Override precedence: `judge_model=` flag > `WSBENCH_JUDGE_MODEL` env > the family pin.

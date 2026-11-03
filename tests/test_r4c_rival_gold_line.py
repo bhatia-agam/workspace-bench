@@ -8,7 +8,7 @@ gold-free line, still contests. Digest lines are verbatim from the cached final-
 all-layer digests.
 
 Round 4d (rv-2026-11-01h, review of PR #208 round 4c): such a split line counts for NEITHER side.
-Crediting it all to the gold weighed the competing claim nowhere: wrong_bridge L52
+Crediting it all to the gold weighed the competing claim nowhere: wrong_intermediate L52
 composition_composer-Q182537-birth_year went from contested (7 vs 7) to PASS 7 vs 0 on a line
 naming both John Lennon and Paul McCartney as the writer of Taxman. bolivar keeps its pass through
 its other, gold-only line (95 samples in the real digest)."""
@@ -76,7 +76,7 @@ def test_rival_quote_in_both_kinds_of_line_counts_the_gold_free_one():
     assert not rv["contested"] and "rival_names_gold" not in rv
 
 
-# wrong_bridge L52 composition_composer-Q182537-birth_year (gold John Lennon), digest lines
+# wrong_intermediate L52 composition_composer-Q182537-birth_year (gold John Lennon), digest lines
 # verbatim from the cached final-olens-rl600-x4 L52 digest (scratch/r4c/wb_final)
 TAX7 = (
     "John Lennon. The composer of the song tax was Paul McCartney. The musician in the band the "

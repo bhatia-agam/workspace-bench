@@ -15,7 +15,7 @@ from test_rival_r3 import _g, _wb_choice, _wb_item
 from wsbench import digest, rival
 from wsbench.banks import load_bank
 from wsbench.digest import Line
-from wsbench.evals.wrong_bridge import judge as wb
+from wsbench.evals.wrong_intermediate import judge as wb
 from wsbench.multitoken import family as fam
 from wsbench.multitoken import mcrx, regex
 from wsbench.multitoken.options import LANGUAGE_ROLE

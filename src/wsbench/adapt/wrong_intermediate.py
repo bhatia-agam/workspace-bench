@@ -1,8 +1,10 @@
-"""wrong_bridge on a subject (plan 0060 §6b Phase E): ``python -m wsbench.adapt wrong_bridge
+"""wrong_intermediate on a subject (plan 0060 §6b Phase E): ``python -m wsbench.adapt
+wrong_intermediate
 model=<m> stage=<s> pool=<dir> [limit=] [resolve=wikidata] [llm=]``.
 
 The registered items are Qwen3.6-27B's OWN errors: a Wikidata two-hop prompt where the model
-resolves the wrong bridge B' (not the true B) and answers hop2(B'). Another subject makes other
+resolves the wrong intermediate B' (not the true B) and answers hop2(B'). Another subject makes
+other
 errors, so its bank is rebuilt from its own behaviour by re-running the family's construction
 pipeline (global-workspace ``scripts/wrong_bridge/``: ``grade.py`` + ``gate.py``; the stage logic
 below is ported from there) on the subject, over the same Wikidata candidate pool (``pool=``: the
@@ -23,15 +25,15 @@ scrape's ``candidates.jsonl`` + ``entities.json``):
 4. ``adjudicate``: the registered Claude audit (same system prompt) for ambiguity, co-holders,
    stale Wikidata. This is a validity check of the item, not the dropped frontier "unguessable"
    (ATI panel) gate.
-5. ``bank``: one item per subject S, <= 20 per template and <= 4 per wrong bridge, strongest
+5. ``bank``: one item per subject S, <= 20 per template and <= 4 per wrong intermediate, strongest
    first; the item rebuilt around the SUBJECT's bridge (gold = its B', contrast = B) with a
-   6-option ``mc`` block and name forms; every record appended to ``gate/wrong_bridge.jsonl``.
+   6-option ``mc`` block and name forms; every record appended to ``gate/wrong_intermediate.jsonl``.
    An item whose (S, hop2, B') equals a registered item's is that registered item (origin
    ``original``, its ``mc`` verbatim, the subject's ``evidence`` overlaid); every other is
    ``generated``.
 
 Options for a generated item (``build_mc``): the bank v2 pool rule (the registered builder,
-``scripts/wrong_bridge_mc_options.py``) over the registered v4 options of the item's category
+``scripts/wrong_intermediate_mc_options.py``) over the registered v4 options of the item's category
 plus the other subject items' bridges of that category: never the item's own B'/B (same QID,
 stem or a shared form), no name with a form in the prompt, four drawn by a seeded shuffle, no two
 sharing a stem or form. Forms: the bank v4 rule (``raw_forms_v4`` + ``item_forms_v3``) over the
@@ -54,10 +56,11 @@ from typing import Any
 from . import store
 from .gate import Ask, Leg, gate_record
 
-FAMILY = "wrong_bridge"
+FAMILY = "wrong_intermediate"
 VERSION = "wb-subject-gate-v1"
 DRAWS, TEMPERATURE, MAX_NEW = 10, 0.7, 24
-# The registered bank was BUILT at 4 (evals/wrong_bridge/README.md: ">= 4/10 T=0.7 samples give A'
+# The registered bank was BUILT at 4 (evals/wrong_intermediate/README.md: ">= 4/10 T=0.7 samples
+# give A'
 # and >= 4/10 give B'"): its own items' evidence goes as low as (4, 4) and ~49/100 are below 6.
 # The "6" in the bank header's gate string and global-workspace gate.py:19 is stale (the V4-Flash
 # port also ran at 4). Kept at 4, the rule the bank was actually frozen with.
@@ -107,8 +110,12 @@ SUBJECT_FIELDS = ("evidence",)
 
 
 def work_dir(model: str) -> Path:
-    """Stage files (git-ignored with the gate log): ``adapted/<m>/gate/wrong_bridge.work/``."""
-    return store.model_dir(model) / "gate" / "wrong_bridge.work"
+    """Stage files (git-ignored with the gate log): ``adapted/<m>/gate/wrong_intermediate.work/``
+    (``wrong_bridge.work/`` when only a pre-rename stage dir exists, v1.2.0)."""
+    gate = store.model_dir(model) / "gate"
+    path = gate / "wrong_intermediate.work"
+    legacy = gate / "wrong_bridge.work"
+    return legacy if legacy.exists() and not path.exists() else path
 
 
 def _read_jsonl(path: Path) -> list[dict]:
@@ -777,9 +784,10 @@ def adjudicate(
 # ------------------------------------------------------------------ options (mc) for new items
 @functools.cache
 def mc_builder() -> Any:
-    """The registered option builder, ``scripts/wrong_bridge_mc_options.py`` (read-only use: its
+    """The registered option builder, ``scripts/wrong_intermediate_mc_options.py`` (read-only use:
+    its
     category map, form rules and collision screen)."""
-    path = store.REPO_ROOT / "scripts" / "wrong_bridge_mc_options.py"
+    path = store.REPO_ROOT / "scripts" / "wrong_intermediate_mc_options.py"
     spec = importlib.util.spec_from_file_location("_wb_mc_options", path)
     assert spec is not None and spec.loader is not None
     mod = importlib.util.module_from_spec(spec)
@@ -988,7 +996,7 @@ def bank(
     """Stage 5: strongest first, build each candidate's item around the subject's bridge (its
     ``mc`` included) and only then count it against the caps (one per S, per template, per B'),
     so an item whose options cannot be built never takes a cap slot. Appends one record per
-    gated candidate to ``gate/wrong_bridge.jsonl`` (failures included, with ``drop``)."""
+    gated candidate to ``gate/wrong_intermediate.jsonl`` (failures included, with ``drop``)."""
     if not pool:
         raise SystemExit(f"{FAMILY} stage=bank needs pool=<dir> (the bridges' entity cache)")
     if registered is None:
@@ -996,11 +1004,11 @@ def bank(
     reg_by_name = {it["name"]: it for it in registered}
     if wd is None:
         wd = json.loads(
-            (store.REPO_ROOT / "evals/wrong_bridge/wikidata_v3.json").read_text("utf-8")
+            (store.REPO_ROOT / "evals/wrong_intermediate/wikidata_v3.json").read_text("utf-8")
         )
     if r4 is None:
         r4 = json.loads(
-            (store.REPO_ROOT / "evals/wrong_bridge/r4_distractors.json").read_text("utf-8")
+            (store.REPO_ROOT / "evals/wrong_intermediate/r4_distractors.json").read_text("utf-8")
         )["items"]
     make_mc = make_mc or build_mc
     wd = {"entities": dict(wd.get("entities", {})), "enwiki": dict(wd.get("enwiki", {}))}
@@ -1059,7 +1067,7 @@ def bank(
         elif per_t[e["template"]] >= PER_TEMPLATE:
             why = f"cap: {PER_TEMPLATE} per template"
         elif per_b[e["Bp"]] >= PER_BRIDGE:
-            why = f"cap: {PER_BRIDGE} per wrong bridge"
+            why = f"cap: {PER_BRIDGE} per wrong intermediate"
         elif not original:  # options first: a failed build never consumes a cap slot
             cat = mc_builder().category_of(item)
             if kinds.get(item["intermediates"][0]) == "band" and cat == "musician":

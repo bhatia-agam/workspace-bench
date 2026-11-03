@@ -187,9 +187,9 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   (the source of truth); do not restate them here. Eleven families keep their own `judge.py`
   (+ `score.py`): Camila's originals (agentic, jailbreak, jlens_concept_pr, moral, relational,
   role-bound, conjunctive, user_modeling; hallucination left for HallucinationBench, plan 0040),
-  directed_modulation, knowledge_cutoff and wrong_bridge (plan 0050: a blind 6-way MC over B',
+  directed_modulation, knowledge_cutoff and wrong_intermediate (plan 0050: a blind 6-way MC over B',
   the true bridge B and four same-category distractors frozen in bank v2 by
-  `scripts/wrong_bridge_mc_options.py`; a gold pick is credited only with a verified quote
+  `scripts/wrong_intermediate_mc_options.py`; a gold pick is credited only with a verified quote
   carrying a listed name form, `mc.forms`, that is not a prompt echo; `true_bridge_rate`
   replaces the removed wrong_bridge_true).
   user_modeling (plan 0056, `um-v3.2`) adds a value gate on top of the shared
@@ -326,6 +326,12 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   `canonical` is single-step) to `model_specific_directed_modulation` (2026-10-30, plan 0034:
   bank and native instrument unchanged; the ATI entry moved key with
   `scripts/ati_restamp_rename.py`, which re-derives the old-name `bank_sha` first).
+  v1.2.0 (2026-11-03): `wrong_bridge` -> `wrong_intermediate`, a label change that keeps every
+  hash: `registry.HASH_FAMILY_NAMES` / `hash_name` make `plan_sha` (`reads._clean_row`), the ATI
+  `bank_sha` (`text_inversion._row_dict`) and the lucky-guessing seeds (`_rng`) hash the old
+  key, so pre-rename sidecars, ATI entries and floors stay valid without a restamp;
+  `registry.family_dir` reuses a `wrong_bridge/` out dir or `summ_store` subdir. The bank
+  files moved byte-identical (headers keep `"family": "wrong_bridge"`); prompt bytes unchanged.
   `registry.canonical` resolves CLI `family=`/`families=`, `run` falls back to `<old>.jsonl`,
   `read_results` and `text_inversion.subset_entry` accept the old key
   (`tests/test_legacy_family_names.py`).
@@ -338,7 +344,7 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
 - Deleted families: `registry.REMOVED_FAMILIES` (today `ttt` / `ttt_move`, removed 2026-10-26 by
   plan 0017 as too close to next-token prediction, `brew_intermediates`, retired 2026-10-29
   by plan 0029 because the prompt alone solves it, `wrong_bridge_true`, removed 2026-10-30 by
-  plan 0050: not part of the benchmark, its signal is wrong_bridge's `true_bridge_rate`,
+  plan 0050: not part of the benchmark, its signal is wrong_intermediate's `true_bridge_rate`,
   `hallucination`, replaced 2026-10-30 by HallucinationBench, plan 0040, and `multihop_mt`,
   removed 2026-10-30 by plan 0041 as superseded by multihop_mt_v2, and `medical_diagnosis` /
   `medical_diagnosis_alt`, removed 2026-10-31 by Camila, plan 0058) are gone from the code, banks and ATI file;

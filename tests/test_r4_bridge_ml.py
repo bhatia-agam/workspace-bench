@@ -8,7 +8,8 @@ shapes of the cited cases (cached final-olens-rl600-x4 readouts):
    and bank v3 gives mlh-tr-bademcik "tonsil" / "tonsils";
 3. multilingual_typo: one anchored naming sample supports the language unit (ANSWERS_R2 §8);
 4. multilingual_multihop: a lone native-language naming is pinned (pins-v4);
-5. wrong_bridge: the v3 name forms (every option's Wikidata names in every language, the regnal
+5. wrong_intermediate: the v3 name forms (every option's Wikidata names in every language, the
+regnal
    short form) and the inflection-tolerant matcher ("King Roger II", "Карла Маркса");
 6. multihop_mt_v2 / basic_readout_mt: every other listed option is weighed in code (optrv-v1)."""
 
@@ -21,7 +22,7 @@ import pytest
 from wsbench import digest, mc
 from wsbench.banks import load_bank, native_langs
 from wsbench.digest import Line
-from wsbench.evals.wrong_bridge import judge as wj
+from wsbench.evals.wrong_intermediate import judge as wj
 from wsbench.multitoken import family as fam
 from wsbench.multitoken import mcrx, regex
 from wsbench.multitoken.options import option_aliases, option_sets
@@ -271,14 +272,14 @@ def test_topic_line_is_still_never_pinned(monkeypatch):
     assert not any(g(Line(topic)) for g in got)
 
 
-# ------------------------------------------------------------------ 5. wrong_bridge forms
+# ------------------------------------------------------------------ 5. wrong_intermediate forms
 
 ROGER = "org_founder-Q1303856-death_year"
 MARX = "namesake-Q989622-death_year"
 
 
 def _wb(iid: str, bank: str = "items_v3.json") -> dict:
-    _h, items = load_bank(REPO / "evals/wrong_bridge" / bank)
+    _h, items = load_bank(REPO / "evals/wrong_intermediate" / bank)
     return next(i for i in items if i["id"] == iid)
 
 
@@ -331,7 +332,7 @@ def test_a_partial_name_fitting_another_option_is_no_credit():
 
 
 def test_every_v3_option_has_wikidata_forms():
-    _h, items = load_bank(REPO / "evals/wrong_bridge/items_v3.json")
+    _h, items = load_bank(REPO / "evals/wrong_intermediate/items_v3.json")
     for it in items:
         for o, fs in it["mc"]["forms"].items():
             assert len(fs) >= 2, (it["id"], o)  # its name plus at least one Wikidata name
@@ -410,7 +411,7 @@ def test_v3_banks_change_only_the_distractor_lists(family):
 
 @pytest.mark.parametrize(
     "family",
-    sorted({*R4_BANKS, "wrong_bridge", "multilingual_mt", "multilingual_typo"}),
+    sorted({*R4_BANKS, "wrong_intermediate", "multilingual_mt", "multilingual_typo"}),
 )
 def test_no_v3_option_is_in_the_prompt_the_model_reads(family):
     """(round 4b: the registered banks, i.e. v4 / typo v3 where they superseded v3)"""
@@ -466,7 +467,7 @@ def test_topic_variant_shows_each_lists_topic_and_never_the_gold():
         lg.with_topics([lg.Item("no-such-item", bad.lists, bad.golds)], "basic_readout_mt")
 
 
-@pytest.mark.parametrize("family", [*R4_BANKS, "wrong_bridge"])
+@pytest.mark.parametrize("family", [*R4_BANKS, "wrong_intermediate"])
 def test_every_item_has_topic_labels(family):
     from wsbench.baselines import lucky_guessing as lg
 

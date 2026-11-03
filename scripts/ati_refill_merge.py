@@ -11,7 +11,7 @@ did not admit and append panel-ATI replacements from the family's refill pool.
 - The header is kept byte-for-byte except the ``refill_panel_gate`` provenance block (rounds
   accumulate). Family-specific header recomputations are NOT done here and were done by hand,
   documented inside that block: knowledge_cutoff's ``g1_conditional_floor`` (``recomputed``),
-  model_specific_directed_modulation's ``notes``, the wrong_bridge swap note.
+  model_specific_directed_modulation's ``notes``, the wrong_intermediate swap note.
 - Refuses to run unless the frozen entry was gated on the current bank (``bank_sha``), so a
   second run before a re-gate cannot retire the previous round's replacements, and every added
   item's pool verdict must be ATI under ``panel_verdict``.

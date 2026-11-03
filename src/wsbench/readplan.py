@@ -11,7 +11,7 @@ from pathlib import Path
 from typing import Any
 
 from wsbench.banks import load_bank as load_bank_file
-from wsbench.registry import BANK_ROOT_ENV, REPO_ROOT, bank_path, frozen_bank_path
+from wsbench.registry import BANK_ROOT_ENV, REPO_ROOT, bank_path, canonical, frozen_bank_path
 
 GRID = list(range(20, 61, 4))  # the benchmark's layer grid for Qwen3.6-27B (64 layers)
 # history (plan 0032 §2.1.2): no plan row reads these any more; every family's grid is GRID
@@ -487,7 +487,7 @@ def _final_token_families_items(
             k = -int(spec["offsets"][0])
             rule = {"kind": "final_token"} if k == 1 else {"kind": "offset_from_end", "k": k}
         elif spec.get("kind") == "all_positions":
-            # every token of the render (wrong_bridge v2, plan 0050); the bank's `lite` key is
+            # every token of the render (wrong_intermediate v2, plan 0050); the bank's `lite` key is
             # the reads=lite site, copied into the plan row (the judge never reads the bank for it)
             rule = {"kind": "all"}
             item_lite = dict(SAME) if same else dict(spec.get("lite") or FINAL)
@@ -604,6 +604,7 @@ def plan(family: str, *, layers: LayersArg = None, reads: str = "full") -> list[
 
     if reads not in ("full", "lite"):
         raise SystemExit(f"reads={reads!r}: expected full or lite")
+    family = canonical(family)  # a former key (registry.LEGACY_FAMILY_NAMES) plans the family
     if layers is None:
         layers = _layers_env()
     specs = _plan(family)
@@ -668,7 +669,7 @@ def _plan(family: str) -> list[ReadSpec]:
     if family in (
         "basic_readout",
         "typo",
-        "wrong_bridge",
+        "wrong_intermediate",
     ):
         return _final_token_families(family, "plain")
     if family == "typo_mt":

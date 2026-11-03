@@ -1,4 +1,5 @@
-"""plan 0060 Phase E on main's per-subject Modal design: the wrong_bridge logP legs as token ids
+"""plan 0060 Phase E on main's per-subject Modal design: the wrong_intermediate logP legs as token
+ids
 (``gate.cont_jobs``), ``RemoteRunner.cont_logprobs`` in chunks over the subject's app, and the
 app's ``cont_logprobs`` on one engine or fanned out over several (order kept). No GPU, no Modal
 calls, no network."""

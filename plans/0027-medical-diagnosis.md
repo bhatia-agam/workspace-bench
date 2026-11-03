@@ -17,7 +17,7 @@ of the chat render and never at response tokens.
 About 100 items, each with a gated, stable intermediate. Two tiers in one bank:
 - `correct`: Qwen's diagnosis is the gold diagnosis, and its answer is the gold answer.
 - `wrong`: Qwen settles on a stable WRONG diagnosis D′ and answers what follows from D′. This
-  is the clinical analogue of `wrong_bridge`, and the scored latent is D′.
+  is the clinical analogue of `wrong_intermediate`, and the scored latent is D′.
 
 ## Build (global-workspace `scripts/medical_dx/`, outputs in `outputs/medical_dx/`)
 
@@ -206,7 +206,7 @@ About 100 items, each with a gated, stable intermediate. Two tiers in one bank:
 
 ## Bench wiring (this repo)
 
-- `evals/medical_diagnosis/items.json`: `{header…, items}` like `wrong_bridge`.
+- `evals/medical_diagnosis/items.json`: `{header…, items}` like `wrong_intermediate`.
   - Item fields: `name`, `prompt` (the user turn), `target` (A_q, the surface answer),
     `intermediates` [D_q], `intermediates_aliases`, `tier`, `question_type`, `specialty`.
   - Also `correct_answer` / `true_intermediates` (gold; differ from target/intermediates only on

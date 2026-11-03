@@ -15,7 +15,7 @@ predecessor, and only the MC distractor lists change.
   call's topic for an Opus-authored list, :data:`LANGUAGE_TOPIC` for a language list, the item's
   ``mc_type`` label for a multilingual concept list.
 
-wrong_bridge v3 is built by ``scripts/wrong_bridge_mc_options.py --v3`` (it needs the
+wrong_intermediate v3 is built by ``scripts/wrong_intermediate_mc_options.py --v3`` (it needs the
 Wikidata name forms of every option). Deterministic given the frozen distractor file.
 Run: ``python scripts/build_r4_mc_banks.py [--check]``.
 """
@@ -269,11 +269,13 @@ def main(argv: list[str] | None = None) -> int:
         texts[REPO / "evals" / "baselines" / "topics" / f"{fam}.json"] = (
             json.dumps(topics, indent=1, ensure_ascii=False) + "\n"
         )
-    wb = json.loads((REPO / "evals/wrong_bridge/r4_distractors.json").read_text(encoding="utf-8"))
-    texts[REPO / "evals" / "baselines" / "topics" / "wrong_bridge.json"] = (
+    wb = json.loads(
+        (REPO / "evals/wrong_intermediate/r4_distractors.json").read_text(encoding="utf-8")
+    )
+    texts[REPO / "evals" / "baselines" / "topics" / "wrong_intermediate.json"] = (
         json.dumps(
             {
-                "family": "wrong_bridge",
+                "family": "wrong_intermediate",
                 "version": TOPIC_VERSION,
                 "script": "scripts/build_r4_mc_banks.py",
                 "items": {k: [v["bridge"]["topic"]] for k, v in sorted(wb["items"].items())},

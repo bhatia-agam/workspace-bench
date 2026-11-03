@@ -38,6 +38,7 @@ RENAMES = {
     "cutoff_confab": "knowledge_cutoff",
     "dm_category_default": "model_specific_directed_modulation",
     "directed_modulation_obscure": "model_specific_directed_modulation",  # plan 0034 O1
+    "wrong_bridge": "wrong_intermediate",  # v1.2.0 (2026-11-03)
 }
 
 
@@ -301,7 +302,7 @@ def test_brew_guard_regex():
 
 def test_wrong_bridge_true_is_removed(real_families):
     # plan 0050 (Camila 2026-10-30): "wrong bridge true - this should not be in the benchmark,
-    # remove it"; its signal survives as wrong_bridge's true_bridge_rate
+    # remove it"; its signal survives as wrong_intermediate's true_bridge_rate
     from wsbench import readplan
 
     assert "wrong_bridge_true" in registry.REMOVED_FAMILIES

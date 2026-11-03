@@ -100,8 +100,8 @@ def _last_option(family: str) -> str:
 
         _h, items = load_bank_file(registry.bank_path(family))
         return options_of(family, items[0])[0][-1]
-    if family == "wrong_bridge":
-        from wsbench.evals.wrong_bridge import judge as j
+    if family == "wrong_intermediate":
+        from wsbench.evals.wrong_intermediate import judge as j
 
         return j.shown_options(j.load_items()[0])[-1]
     if family == "introspection":  # round 4: floored for its diagnostic judge column

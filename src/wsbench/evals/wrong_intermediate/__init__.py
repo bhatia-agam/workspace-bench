@@ -1,4 +1,4 @@
-"""Wrong-bridge multihop (plan 0050): does the readout identify the model's WRONG bridge B'? A
+"""Wrong-intermediate multihop (plan 0050): does the readout identify the model's WRONG bridge B'? A
 6-way MC judge (B', the true bridge B, four same-category distractors, cannot tell) over every
 token of the prompt (``reads=lite``: the final token)."""
 
@@ -12,10 +12,10 @@ from .prompts import FLAT_TYPES, MULTI_SELECT, PROMPT_VERSION, TASK_NOTE
 
 SPEC = register(
     EvalSpec(
-        name="wrong_bridge",
-        title="Wrong-bridge multihop",
+        name="wrong_intermediate",
+        title="Wrong-intermediate multihop",
         group="basic",
-        bank=Path("evals/wrong_bridge/items_v4.json"),
+        bank=Path("evals/wrong_intermediate/items_v4.json"),
         judge=JudgeConfig(prompt_version=PROMPT_VERSION),
         metric="pass_rate",
         higher_is_better=True,

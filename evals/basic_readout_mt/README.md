@@ -221,12 +221,12 @@ WIF) at bank v4: still 0/99 (all four readers solve all 99).
   ouguiya's worth" as a rival (two drafts without the `why` field dismissed it; the field and the
   "even when both could be true" clause were added for that reason).
 - 2026-11-01 (`rv-2026-11-01h`, review of PR #208 round 4c, rule only): a line holding the
-  rival quote and naming the gold counts for neither side (wrong_bridge README, round 4d). No
+  rival quote and naming the gold counts for neither side (wrong_intermediate README, round 4d). No
   basic_readout_mt cell moves (all 91, all-lite 40, L20 80, L60 75 of 99, re-scored).
 - 2026-11-01 (`rv-2026-11-01g`, rule only): a rival line that also names the gold is no rival
   line (`rival.contest`; multihop_mt_v2 README). No basic_readout_mt cell moves (its remaining
   ties, e.g. tayebsalih all 62 vs 62, lemierre L20 8 vs 8, are distinct lines).
-- 2026-10-31 (review of PR #208, `rv-2026-10-31f`, prompts unchanged): the gold's support counts the line holding the judge's quote only if that line singles out the gold, as the rival's and the contrast's lines must (a line naming two candidates lent its count to the gold alone: wrong_bridge L52 composer-Q1746043 passed 30 vs 7 on a Beethoven + Mendelssohn line whose best Beethoven-only line holds 8). Cached answers are re-scored (`rival.RIVAL_CALL_VERSION` keys the calls).
+- 2026-10-31 (review of PR #208, `rv-2026-10-31f`, prompts unchanged): the gold's support counts the line holding the judge's quote only if that line singles out the gold, as the rival's and the contrast's lines must (a line naming two candidates lent its count to the gold alone: wrong_intermediate L52 composer-Q1746043 passed 30 vs 7 on a Beethoven + Mendelssohn line whose best Beethoven-only line holds 8). Cached answers are re-scored (`rival.RIVAL_CALL_VERSION` keys the calls).
 
 ## Readouts
 

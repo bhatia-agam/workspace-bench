@@ -2306,7 +2306,9 @@ def _collapse_layers(
         # the salt adds every setting a sub-key's own fingerprint may omit (the halving level
         # does not key the cap; no digest fingerprint keys the fallback)
         salt = fingerprint(s.fallback, s.token_cap, s.overflow)
-        cache = SharedDigests(cache, Path(store).resolve() / name, route, salt=salt)
+        from wsbench.registry import family_dir  # a store written under a former family key
+
+        cache = SharedDigests(cache, family_dir(Path(store).resolve(), name), route, salt=salt)
     pnotes = {pid: notes[owner[pid]] for pid in parts}
     salt = f"spare{spare}" if spare else ""
     kw: dict[str, Any] = {

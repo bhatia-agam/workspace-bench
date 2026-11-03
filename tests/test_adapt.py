@@ -805,7 +805,9 @@ def test_freeze_builds_originals_from_the_registered_item(tmp_path, monkeypatch)
              for it in items[:3]]  # fmt: skip
     retired = {"id": "assoc-retired-x", "prompt": "p", "intermediates": ["x"]}
     _gate_log(d, "association", [_row(it) for it in stale] + [_row(retired)])
-    store.write_json(d / "report.json", {"families": {"wrong_bridge": {"note": "Phase B: later"}}})
+    store.write_json(
+        d / "report.json", {"families": {"wrong_intermediate": {"note": "Phase B: later"}}}
+    )
     run.freeze("qwen3.5-4b", ["association"])
     bank = _json.loads((d / "association.json").read_text())
     got = {it["id"]: it for it in bank["items"]}
@@ -817,7 +819,7 @@ def test_freeze_builds_originals_from_the_registered_item(tmp_path, monkeypatch)
     rep = _json.loads((d / "report.json").read_text())
     e = rep["families"]["association"]
     assert e["bank_version"] == 3 and e["bank"] == "evals/association/items_v3.json"
-    wb = rep["families"]["wrong_bridge"]
+    wb = rep["families"]["wrong_intermediate"]
     assert wb["status"] == "absent" and wb["note"] == "Phase B: later"  # never overwritten
     assert "exclude_from_macro" not in wb and "absent_auto" not in wb  # a hand note: not forced
     kc = rep["families"]["knowledge_cutoff"]
@@ -1037,11 +1039,11 @@ def test_absence_clears_when_another_writer_builds_the_family(tmp_path, monkeypa
     d = _set(tmp_path, monkeypatch)
     _h, items = original_bank("association")
     _gate_log(d, "association", [_row(items[0])])
-    store.write_json(d / "report.json", {"families": {"wrong_bridge": {"note": "by hand"}}})
+    store.write_json(d / "report.json", {"families": {"wrong_intermediate": {"note": "by hand"}}})
     run.freeze("qwen3.5-4b", ["association"])
     rep = _json.loads((d / "report.json").read_text())
     assert rep["families"]["knowledge_cutoff"]["note"] == run.ABSENT_NOTE
-    for fam in ("knowledge_cutoff", "wrong_bridge"):  # e.g. a per-subject builder writes it
+    for fam in ("knowledge_cutoff", "wrong_intermediate"):  # e.g. a per-subject builder writes it
         (d / f"{fam}.json").write_text("[]")
     store.update_report("qwen3.5-4b", lambda r: r["families"]["knowledge_cutoff"].update(
         status="full", n_items=0))  # fmt: skip
@@ -1051,8 +1053,8 @@ def test_absence_clears_when_another_writer_builds_the_family(tmp_path, monkeypa
     fam = _json.loads((d / "report.json").read_text())["families"]
     assert fam["knowledge_cutoff"].get("status") != "absent"
     assert "exclude_from_macro" not in fam["knowledge_cutoff"]
-    assert fam["wrong_bridge"]["note"] == "by hand"  # never an automatic note: untouched
-    assert "exclude_from_macro" not in fam["wrong_bridge"]
+    assert fam["wrong_intermediate"]["note"] == "by hand"  # never an automatic note: untouched
+    assert "exclude_from_macro" not in fam["wrong_intermediate"]
 
 
 def test_freeze_writes_nothing_when_any_family_is_refused(tmp_path, monkeypatch):
@@ -1084,7 +1086,7 @@ def test_floor_record_protocol_falls_back_to_the_frozen_file(tmp_path):
 
 @pytest.mark.parametrize("family", ["knowledge_cutoff", "multihop_mt_v2"])
 def test_freeze_ships_subject_stage_originals_verbatim(family, tmp_path, monkeypatch):
-    """Families with their own subject stage (kcutoff, mhmt2, msdm, wrong_bridge) write
+    """Families with their own subject stage (kcutoff, mhmt2, msdm, wrong_intermediate) write
     `original` rows already rebuilt on the subject: freeze ships the row's item, never the
     registered (Qwen) gold, and never asks families.get for them."""
     import json as _json

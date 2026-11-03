@@ -15,7 +15,7 @@ REPO = registry.REPO_ROOT
 # scored bank sizes: knowledge_cutoff = its own 108 (items_v2.json, plan 0044: cs01301 retired
 # for a null label) + 39 nocot items (obscure_items.json; 2 of the 41 retired by the panel gate,
 # not replaced)
-N0 = {"wrong_bridge": 100, "introspection": 125, "knowledge_cutoff": 147,
+N0 = {"wrong_intermediate": 100, "introspection": 125, "knowledge_cutoff": 147,
       "model_specific_directed_modulation": 98}  # fmt: skip
 ITEMS_JSON = {**N0, "knowledge_cutoff": 108}
 
@@ -60,7 +60,7 @@ def test_crafted_family_is_whole_bank_ati_on_the_current_bank(family, frozen):
 
 
 @pytest.mark.parametrize(
-    "family", ["wrong_bridge", "knowledge_cutoff", "model_specific_directed_modulation"]
+    "family", ["wrong_intermediate", "knowledge_cutoff", "model_specific_directed_modulation"]
 )
 def test_refill_bookkeeping(family):
     b = _bank(family)
@@ -75,8 +75,8 @@ def test_refill_bookkeeping(family):
     )
 
 
-def test_wrong_bridge_composition():
-    bank = json.loads(registry.bank_path("wrong_bridge").read_text(encoding="utf-8"))
+def test_wrong_intermediate_composition():
+    bank = json.loads(registry.bank_path("wrong_intermediate").read_text(encoding="utf-8"))
     wb = bank["items"]
     subjects = collections.Counter(it["wikidata"]["S"] for it in wb)
     assert max(subjects.values()) == 1  # one item per subject (gate.py bank)
@@ -126,7 +126,7 @@ def test_introspection_bank_unchanged_by_the_refill():
 # (all re-gated 2026-10-31, decision R1-ATI: plans 0038/0039/0043-0046/0050/0053/0054/0056 and
 # the conjunctive comp-v3 entry; evals/baselines/README.md "Fix-round-1 re-gate")
 # Empty since 2026-11-01 (decision R1-ATI gemini): every entry above was re-gated on the full
-# four-reader panel at its current bank and instrument (conjunctive comp-v5, wrong_bridge /
+# four-reader panel at its current bank and instrument (conjunctive comp-v5, wrong_intermediate /
 # basic_readout_mt / multilingual* bank v3-v4, association / basic_readout / poetry round-4 MC
 # banks). A family PR that changes a bank adds its entry back here until the re-gate.
 PENDING_REGATE: dict[str, str] = {}

@@ -26,7 +26,7 @@ from wsbench import readplan
 from wsbench.nyt import NO_NYT_ENV
 from wsbench.readouts import Cell, LoadReport, load_readouts, normalize, read_sidecar
 from wsbench.readplan import FINAL, ReadSpec, lite_select
-from wsbench.registry import BANK_FILE_ENV_PREFIX, BANK_ROOT_ENV, JudgeArgs
+from wsbench.registry import BANK_FILE_ENV_PREFIX, BANK_ROOT_ENV, JudgeArgs, hash_name
 
 READS = ("full", "lite")
 LITE_STAMP = "+reads-lite"
@@ -88,6 +88,8 @@ def specs(family: str) -> dict[str, ReadSpec]:
 
 def _clean_row(row: Mapping[str, Any]) -> dict[str, Any]:
     d = {k: v for k, v in row.items() if k not in PLAN_SHA_EXCLUDE}
+    if isinstance(d.get("family"), str):  # v1.2.0: a renamed family hashes as its former key
+        d["family"] = hash_name(d["family"])
     if isinstance(d.get("extra"), dict):
         d["extra"] = {k: v for k, v in d["extra"].items() if k != "reads"}
         if not d["extra"]:

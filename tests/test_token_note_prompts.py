@@ -157,7 +157,7 @@ BASIC_TARGET_JUDGES = [
     # plan 0054: multilingual left the basic bank judge (an MC judge with options, mc+regex)
     # poetry: its own blind MC judge (plan 0038)
     "typo",
-]  # wrong_bridge: its own MC judge with FLAT_TYPES (plan 0050); wrong_bridge_true removed
+]  # wrong_intermediate: its own MC judge with FLAT_TYPES (plan 0050); wrong_bridge_true removed
 
 
 @pytest.mark.parametrize("family", BASIC_TARGET_JUDGES)

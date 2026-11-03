@@ -1,5 +1,7 @@
-"""plan 0060 Phase E: per-subject adaptation of wrong_bridge and multihop_mt_v2 (fake runners; no
-GPU, no API). ``wsbench.adapt.wrong_bridge`` rebuilds the bank from the subject's own wrong-bridge
+"""plan 0060 Phase E: per-subject adaptation of wrong_intermediate and multihop_mt_v2 (fake
+runners; no
+GPU, no API). ``wsbench.adapt.wrong_intermediate`` rebuilds the bank from the subject's own
+wrong-intermediate
 errors; ``wsbench.adapt.mhmt2`` re-runs the registered staged gate (answer + bridges + the
 must-not-reach shortcut leg) on the subject."""
 
@@ -9,7 +11,7 @@ import json
 import pytest
 
 from wsbench.adapt import mhmt2, run, store
-from wsbench.adapt import wrong_bridge as wb
+from wsbench.adapt import wrong_intermediate as wb
 
 MODEL = "qwen3.5-4b"  # a registered subject on the Qwen tokenizer (no token restamp)
 
@@ -179,7 +181,7 @@ def test_mh2_freeze_includes_the_subject_rows(tmp_store):
     assert rep["n_items"] == 3 and rep["target"] == len(items) and rep["status"] == "untried"
 
 
-# ====================================================================== wrong_bridge
+# ====================================================================== wrong_intermediate
 def _ent(label, *, p31="Q5", sl=50, occ="Q36834", aliases=(), **props):
     claims = {
         "P31": [
@@ -216,7 +218,7 @@ def _pool(tmp_path):
     and a film whose director the subject swaps for Steven Spielberg (a new item)."""
     reg = next(
         it
-        for it in _registered("wrong_bridge")[1]
+        for it in _registered("wrong_intermediate")[1]
         if it["name"] == "composition_composer-Q1977772-birth_city"
     )
     ents = {
@@ -310,7 +312,7 @@ class WBRunner:
         self.answers, self.samples, self.n_generated = answers, samples or {}, 0
 
     def render(self, ask):
-        assert ask.messages is None  # wrong_bridge is read and gated in the plain render
+        assert ask.messages is None  # wrong_intermediate is read and gated in the plain render
         return self.BOS + ask.prompt
 
     def generate(self, prompts, temperature, max_tokens, seed, top_p=1.0, stop_token_ids=None):
@@ -409,7 +411,7 @@ def test_wb_rebuilds_the_bank_from_the_subjects_own_errors(tmp_store, tmp_path):
     assert all(o in mc["forms"][o] for o in mc["order"])
     assert not {"Steven Spielberg", "Jan Kowalczyk"} & set(mc["distractors"])
     # the registered judge takes the item as it takes a registered one
-    from wsbench.evals.wrong_bridge import judge
+    from wsbench.evals.wrong_intermediate import judge
 
     assert judge.positions(it) == (
         mc["order"].index(mc["gold"]) + 1,
@@ -418,8 +420,8 @@ def test_wb_rebuilds_the_bank_from_the_subjects_own_errors(tmp_store, tmp_path):
     assert judge.name_in("Directed by Steven Spielberg.", mc["forms"][mc["gold"]])
     assert len(judge.shown_options(it)) == 7
     # and freeze ships both, the registered one first
-    run.freeze(MODEL, ["wrong_bridge"])
-    bank = json.loads((tmp_store / "wrong_bridge.json").read_text())
+    run.freeze(MODEL, ["wrong_intermediate"])
+    bank = json.loads((tmp_store / "wrong_intermediate.json").read_text())
     assert [i["name"] for i in bank["items"]] == [reg["name"], "film_director-Q90002-birth_year"]
     assert bank["version"] == 4
 
@@ -518,9 +520,9 @@ def test_local_runner_cont_logprobs_runs_vllm_prompt_logprobs(monkeypatch):
 
 
 def test_wb_new_band_draws_band_distractors():
-    _h, registered = _registered("wrong_bridge")
-    wd = json.loads((store.REPO_ROOT / "evals/wrong_bridge/wikidata_v3.json").read_text())
-    r4 = json.loads((store.REPO_ROOT / "evals/wrong_bridge/r4_distractors.json").read_text())
+    _h, registered = _registered("wrong_intermediate")
+    wd = json.loads((store.REPO_ROOT / "evals/wrong_intermediate/wikidata_v3.json").read_text())
+    r4 = json.loads((store.REPO_ROOT / "evals/wrong_intermediate/r4_distractors.json").read_text())
     it = {
         "name": "album_performer-Q90010-formed_year", "template": "album_performer",
         "prompt": "Fact: The performer of the 1991 album Loudnoise was formed in the year",
@@ -545,9 +547,9 @@ def test_wb_new_band_draws_band_distractors():
 
 
 def test_wb_build_mc_drops_an_option_without_an_entity():
-    _h, registered = _registered("wrong_bridge")
-    wd = json.loads((store.REPO_ROOT / "evals/wrong_bridge/wikidata_v3.json").read_text())
-    r4 = json.loads((store.REPO_ROOT / "evals/wrong_bridge/r4_distractors.json").read_text())
+    _h, registered = _registered("wrong_intermediate")
+    wd = json.loads((store.REPO_ROOT / "evals/wrong_intermediate/wikidata_v3.json").read_text())
+    r4 = json.loads((store.REPO_ROOT / "evals/wrong_intermediate/r4_distractors.json").read_text())
     it = {
         "name": "film_director-Q90002-birth_year", "template": "film_director",
         "prompt": "Fact: The director of the 1975 film Jawz was born in the year",
@@ -640,7 +642,7 @@ def test_wb_caps_count_only_items_whose_options_build(tmp_store, tmp_path, monke
     assert whys == [
         "no mc: no category, a pool under 4, an unresolved option or a lost name",
         None, "cap: one item per subject S", None, None, None, None,
-        "cap: 4 per wrong bridge", None, "cap: 6 per template", "cap: 6 per template",
+        "cap: 4 per wrong intermediate", None, "cap: 6 per template", "cap: 6 per template",
     ]  # fmt: skip
     with pytest.raises(SystemExit, match="needs pool="):
         wb.bank(MODEL, None)
@@ -649,15 +651,15 @@ def test_wb_caps_count_only_items_whose_options_build(tmp_store, tmp_path, monke
 def test_cli_registers_the_phase_e_commands():
     from wsbench.adapt.__main__ import KEYS, main
 
-    assert {"stage", "pool"} <= KEYS["wrong_bridge"] and "regate" in KEYS["multihop_mt_v2"]
+    assert {"stage", "pool"} <= KEYS["wrong_intermediate"] and "regate" in KEYS["multihop_mt_v2"]
     with pytest.raises(SystemExit, match="unknown argument"):
-        main(["wrong_bridge", f"model={MODEL}", "family=x"])
+        main(["wrong_intermediate", f"model={MODEL}", "family=x"])
     with pytest.raises(SystemExit, match="needs pool="):
-        main(["wrong_bridge", f"model={MODEL}", "stage=grade"])
+        main(["wrong_intermediate", f"model={MODEL}", "stage=grade"])
     with pytest.raises(SystemExit, match="unknown stage"):
         main(["multihop_mt_v2", f"model={MODEL}", "stage=nope"])
     from wsbench.adapt import families
 
-    for fam in ("wrong_bridge", "multihop_mt_v2"):  # never gated item by item through profile
+    for fam in ("wrong_intermediate", "multihop_mt_v2"):  # never gated item by item through profile
         with pytest.raises(SystemExit, match="adapt"):
             families.get(fam)

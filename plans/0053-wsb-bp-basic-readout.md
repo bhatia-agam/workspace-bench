@@ -244,7 +244,7 @@ New module `src/wsbench/basic/mcjudge_basic.py` (the name `SHARED_API.md` uses f
 `quote_close`): a blind forced-choice bank judge with per-family option data in each bank.
 (r2, critique r1-13) Exactly two families use it: `MC_FAMILIES = {"basic_readout", "multihop"}`
 in `basic/family.py` (multihop.md R1 adds `"multihop"`), and `run_family` dispatches on it
-before the free-text path at `basic/family.py:80`. association (C3), poetry and wrong_bridge
+before the free-text path at `basic/family.py:80`. association (C3), poetry and wrong_intermediate
 (W2) build their own judges and are NOT users of this module, so it is not designed around
 their options. The module takes the cannot-tell string per family (`cannot=`: basic_readout
 passes `BR_CANNOT`, multihop `mc.CANNOT`), and `quote_close` (C7) is applied for basic_readout
@@ -970,9 +970,9 @@ verdicts plus any G9 audit failure for this family under New errors found.
 
 **Shared files touched:**
 - `src/wsbench/basic/{family.py,judge.py,prompts.py}` plus a new `basic/mcjudge_basic.py`.
-  These are shared by association, multihop, multilingual, poetry, typo, wrong_bridge(_true) and
+  These are shared by association, multihop, multilingual, poetry, typo, wrong_intermediate(_true) and
   medical_diagnosis(_alt). `mcjudge_basic.py` serves `MC_FAMILIES = {"basic_readout",
-  "multihop"}` only (r2, critique r1-13); association, poetry and wrong_bridge build their own
+  "multihop"}` only (r2, critique r1-13); association, poetry and wrong_intermediate build their own
   judges per their specs. The tool-name fix to the shared `SYSTEM` and the shared basic PV bump
   (`bank-2026-10-30`, `bank-2026-10-30-md`) are infra §2.8.1's, not this spec's.
 - `src/wsbench/readplan.py`: only the `question_through_end` branch (emitting

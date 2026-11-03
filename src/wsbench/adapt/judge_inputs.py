@@ -541,7 +541,7 @@ _WB_SUBJECT = re.compile(r"^\s*fact:\s*(the .+?) (?:was|were|is|died)\b", re.IGN
 
 
 def _p_wb(it, _h, _reg):
-    from wsbench.evals.wrong_bridge.judge import ROLE_CUES
+    from wsbench.evals.wrong_intermediate.judge import ROLE_CUES
 
     probs = []
     if str(it.get("template", "")) not in ROLE_CUES:
@@ -1931,14 +1931,14 @@ _add(
 
 _add(
     FamilyInputs(
-        "wrong_bridge",
-        "evals/wrong_bridge/judge.py",
+        "wrong_intermediate",
+        "evals/wrong_intermediate/judge.py",
         "model-specific (Phase E)",
         "dict",
         "name",
         (
             _NAME,
-            _req("prompt", COPY, "wrong_bridge/judge.py:388-405", probe=_p_wb),
+            _req("prompt", COPY, "wrong_intermediate/judge.py:388-405", probe=_p_wb),
             _req(
                 "readout",
                 COPY,
@@ -1946,12 +1946,17 @@ _add(
                 "absent: final_token full read",
                 absent=FALLBACK,
             ),
-            _req("template", COPY, "wrong_bridge/judge.py:342-360,437", absent=SILENT),
-            _req("mc.order", BUILD, "wrong_bridge/judge.py:48,278,310", "exactly 6"),
-            _req("mc.gold", SUBJECT, "wrong_bridge/judge.py:284,309", "the subject's wrong bridge"),
-            _req("mc.contrast", COPY, "wrong_bridge/judge.py:284,444"),
-            _req("mc.forms", BUILD, "wrong_bridge/judge.py:308,431-451"),
-            _qwen_min_full(9, "wrong_bridge/__init__.py:24-25"),
+            _req("template", COPY, "wrong_intermediate/judge.py:342-360,437", absent=SILENT),
+            _req("mc.order", BUILD, "wrong_intermediate/judge.py:48,278,310", "exactly 6"),
+            _req(
+                "mc.gold",
+                SUBJECT,
+                "wrong_intermediate/judge.py:284,309",
+                "the subject's wrong intermediate",
+            ),
+            _req("mc.contrast", COPY, "wrong_intermediate/judge.py:284,444"),
+            _req("mc.forms", BUILD, "wrong_intermediate/judge.py:308,431-451"),
+            _qwen_min_full(9, "wrong_intermediate/__init__.py:24-25"),
             _GRID,
         ),
     )

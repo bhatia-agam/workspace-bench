@@ -749,7 +749,7 @@ def freeze(model: str, families: list[str] | None = None) -> dict[str, Any]:
         for r in chosen:
             # copy-verbatim (the registered item + subject overlays) only for the families gated
             # item by item here; a family with its own subject stage (knowledge_cutoff, msdm,
-            # wrong_bridge, multihop_mt_v2, ...: fams.REGENERATE) writes `original` rows whose
+            # wrong_intermediate, multihop_mt_v2, ...: fams.REGENERATE) writes `original` rows whose
             # item is ALREADY rebuilt on the subject (its gold, options, relabels), shipped as is
             if r["origin"] == "original" and family in fams.FAMILIES:
                 it = build_original(family, reg[r["id"]], r, native)

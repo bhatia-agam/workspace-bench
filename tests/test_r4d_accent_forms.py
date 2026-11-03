@@ -4,7 +4,7 @@ as if it were non-English ("Dalit", "Dalian" for Dalí). Such a form now keeps i
 text to take the tail or to count as one bare word; spelled without them it matches only as a
 whole multi-word English form. Both directions per case, on the bank-v4 forms."""
 
-from wsbench.evals.wrong_bridge import judge as wj
+from wsbench.evals.wrong_intermediate import judge as wj
 
 PART = ["Arvo Pärt", "Arvo Pert", "Pärt", "Пярт"]
 DALI = ["Salvador Dalí", "Dalí Salvador"]

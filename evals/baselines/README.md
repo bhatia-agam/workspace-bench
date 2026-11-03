@@ -34,7 +34,7 @@ the family's judge (the model-free uniform variant always):
 - **topic** (round 4, Camila r2 MC leakage standard: "a few options that would confuse the
   judge even if the judge can tell what the topic is"). A topic file
   `evals/baselines/topics/<family>.json` has one of two forms (`topic_form`). Per-list labels
-  (an `items` map, `scripts/build_r4_mc_banks.py`; the bridge / multilingual / wrong_bridge
+  (an `items` map, `scripts/build_r4_mc_banks.py`; the bridge / multilingual / wrong_intermediate
   families): the described guesser plus each list's TOPIC (what its hidden question is about,
   never the question, the answer or an option), the examples shown with their topics too.
   One line per item (a `topics` map; role_bound_association, conjunctive_association): the
@@ -334,7 +334,7 @@ Fresh draws (never the selection draws), Opus 5.5, 5 per item, the family's own 
 
 | family (bank) | chance | blind | described | topic | standard (<= chance + 5) |
 |---|---|---|---|---|---|
-| wrong_bridge (v3) | .167 | .120 | .156 | .092 | PASS (v2 lists: .214 / .260 / .358) |
+| wrong_intermediate (v3) | .167 | .120 | .156 | .092 | PASS (v2 lists: .214 / .260 / .358) |
 | multilingual (v3) | .040 | .055 | .085 | .077 | PASS (v2 lists: blind .014, described .135, topic .329 with the first labels) |
 | multilingual_multihop (v3) | .040 | .092 | .118 | .159 | FAIL (v2 lists: .247 / .480 / .582) |
 | basic_readout_mt (v3) | .200 | .299 | .356 | .523 | FAIL (v2 lists: .184 / .392 / .693) |
@@ -345,7 +345,7 @@ alone, never the answer; 25 real same-topic candidates per list from that topic;
 the prompt, the gold's Wikidata entity and the item's other bridges / target) and
 `scripts/r4_mc_select.py` (two candidates at least as famous as the gold and two less famous, by
 Wikipedia sitelinks; a list either guesser picked in 3+ of 5 draws redrawn from its pool, up to 5
-rounds). wrong_bridge's topic is the hidden entity's ROLE ("a composer"), never the question (which
+rounds). wrong_intermediate's topic is the hidden entity's ROLE ("a composer"), never the question (which
 describes the true bridge and would exclude the model's wrong one); multilingual's lists are
 other items' golds of the same type, weighted by gold frequency, and the bank's other gold
 languages closest to the gold. Drafts that failed and why (kept in the scripts' docstrings):
@@ -371,7 +371,7 @@ per item, the family's own rule (every list right); `uniform` is the seeded mode
 | multilingual_mt (v4) | .040 | .006 | .040 | .026 | .048 | 100/100 |
 | multilingual_typo (v3) | .040 | .000 | .070 | .048 | .048 | 100/100 |
 | multilingual (v3, unchanged; re-measured for `mc-ml-2026-11-01b`) | .040 | .057 | .069 | .087 | .032 | 99/99 |
-| wrong_bridge (v3, unchanged) | .167 | .120 | .092 | .156 | | 100/100 |
+| wrong_intermediate (v3, unchanged) | .167 | .120 | .092 | .156 | | 100/100 |
 
 Standard: blind and topic <= chance + 5 points (all pass; described passes too). The confuser
 column is `scripts/r4b_confuser_audit.py`: one Opus call per content list sees the topic and the
@@ -420,7 +420,7 @@ reason).
 
 Round 4c (review of PR #208 round 4b) changes no shown list. basic_readout_mt and multihop_mt_v2
 move to `optrv-v3` (hidden rivals weighed in code, never shown; the guesser path has no digest,
-so no draw is re-scored) and wrong_bridge to `wbforms-v2+bank-v4` (the v3 options with filtered
+so no draw is re-scored) and wrong_intermediate to `wbforms-v2+bank-v4` (the v3 options with filtered
 name forms); their frozen entries are re-stamped with the same draws. Restoring the
 readout-attested "dirhams" to basic_readout_mt's khoums list was measured and rejected: all 9
 candidate lists fail the item gate above (`evals/basic_readout_mt/r4c_dirhams_gate.json`).
@@ -584,7 +584,7 @@ final-olens-rl600-x4 campaign's prompt versions, frozen from the campaign's judg
 | role_bound_association | 0.540 (saturated) | 100 | Opus 5.5 + Sonnet 5 | 90/100 | 0 | not measurable |
 | typo_mt | 1.000 | 85 | Opus 5.5 | 0 | — | = floor |
 | user_modeling | 0.260 | 100 | Opus 5.5 + Sonnet 5 | 31/100 | 0 | not measurable |
-| wrong_bridge | 0.000 | 100 | Opus 5.5 | 0 | — | = floor |
+| wrong_intermediate | 0.000 | 100 | Opus 5.5 | 0 | — | = floor |
 
 `n` is the family's headline unit (pairs for agentic_misalignment and buggy_code;
 inject items for introspection). Plan 0058 removed medical_diagnosis{,_alt} and retired
@@ -830,6 +830,12 @@ Excluded, neither frozen nor shown:
 
 ## Anti-text-inversion subset (`anti_text_inversion.json`)
 
+**Key rename, 2026-11-03 (v1.2.0).** `wrong_bridge` was renamed `wrong_intermediate`; its
+entries in `anti_text_inversion.json`, `lucky_guessing.json` and `prompt_only_summary.json` (and
+`topics/` / `confusers/`) moved key with values unchanged. Unlike the plan 0034 move, no restamp:
+the family hashes under its former key (`registry.HASH_FAMILY_NAMES`), so the frozen `bank_sha`
+still matches. Old keys still resolve (`subset_entry`).
+
 **Key move, 2026-10-30 (plan 0034).** `directed_modulation_obscure` was renamed
 `model_specific_directed_modulation`. Its entry moved key with `scripts/ati_restamp_rename.py`:
 the fingerprint recomputed under the old name equals the frozen `bank_sha` (9f5370f0b33c: bank
@@ -908,7 +914,7 @@ only when the Qwen-based decoder AND a strong text reader can both get it. It is
 OpenRouter moderation flag) is recorded once and never retried or reworded. A family is not
 gated when more than 20% of its items had a refused draw from its Claude slot, or when more than
 20% of its items end unverified: its decided items would be a selected sample. On one of the four
-crafted ATI families (wrong_bridge, introspection, knowledge_cutoff, model_specific_directed_modulation)
+crafted ATI families (wrong_intermediate, introspection, knowledge_cutoff, model_specific_directed_modulation)
 either rule is a stop-and-report, never a silent drop.
 
 **Not gated** (`_not_gated`; skipped under the flag): jlens_concept_pr, agentic_misalignment,
@@ -1023,7 +1029,7 @@ of its 3 draws.
 | role_bound_association | 100 | 9 | 1 | 91 | 0.91 | 0.98 | 0.99 | 0.98 |
 | typo_mt (NOT_GATED since plan 0033; entry removed) | 100 | 25 | 2 | 75 | 0.75 | 0.94 | 0.92 | 0.92 |
 | user_modeling | 100 | 17 | 57 | 83 | 0.83 | 0.97 | 0.90 | 0.91 |
-| wrong_bridge (crafted) | 100 | 100 | 76 | 0 | 0.62 | 0.00 | 0.00 | 0.01 |
+| wrong_intermediate (crafted) | 100 | 100 | 76 | 0 | 0.62 | 0.00 | 0.00 | 0.01 |
 | wrong_bridge_true (removed 2026-10-30) | 100 | 58 | 1 | 42 | 0.42 | 0.99 | 1.00 | 1.00 |
 
 ### Fix-round-1 re-gate (2026-10-31, decision R1-ATI)
@@ -1107,7 +1113,7 @@ fix-round-1 table below describe the qwen+opus state at that point; they now rea
 | relational_multihop | `rel-v1` → `rel-v2+relgate-v2` | 100 | 13 → **20** | +9 / −2 |  | 80 | 0 | 0.80 | 1.00 | 0.99 | 0.98 |
 | role_bound_association | `oa-v1` → `oa-v2.3` | 100 | 9 → **25** | +19 / −3 |  | 75 | 0 | 0.76 | 0.89 | 0.91 | 0.87 |
 | user_modeling | `um-v2` → `um-v3.2` | 100 | 17 → **35** | +18 / −0 |  | 65 | 0 | 0.65 | 0.91 | 0.76 | 0.80 |
-| wrong_bridge | `bank-2026-10-10` → `wb-mc-2026-10-30` | 100 | 100 → **100** | +0 / −0 |  | 0 | 0 | 0.59 | 0.00 | 0.00 | 0.00 |
+| wrong_intermediate | `bank-2026-10-10` → `wb-mc-2026-10-30` | 100 | 100 → **100** | +0 / −0 |  | 0 | 0 | 0.59 | 0.00 | 0.00 | 0.00 |
 
 Round 4 (2026-11-01, workstream B) re-stamps: **jailbreak_recognition** re-gated on the cached
 panel draws at `jb-v4+pins-r1+pins-r3+guard-r5` (Opus 5.5 judging the 12 draws natively, the
@@ -1139,7 +1145,7 @@ signpair 3 each, absval / addmul / sign / subsub 1 each. The arithmetic ATI numb
 
 **Reading it.** The subset grew because the rule asks two things of a leak: Qwen AND a frontier
 reader must both get the item. Families whose target is Qwen's own behaviour keep (or, refilled,
-fill) their bank because the frontier readers miss it: on the refilled wrong_bridge Opus / Astra /
+fill) their bank because the frontier readers miss it: on the refilled wrong_intermediate Opus / Astra /
 Argon pass@3 is 0.00 / 0.00 / 0.01 against Qwen's 0.62 (before the refill 0.06 / 0.00 / 0.06 vs
 0.67). wrong_bridge_true (removed 2026-10-30) went from 1 to 58 for the opposite reason: its target is the TRUE
 bridge, which Qwen does not resolve (Qwen pass@3 0.42). Before its refill knowledge_cutoff kept
@@ -1187,7 +1193,7 @@ membership change below comes from the current instrument / bank, not from argon
 | multilingual_typo | `...+anchor-support-v1+bank-v3` | 0 → **0** | none | 0.99 | 0 / 300 |
 | role_bound_association | `oa-v3.1` | 25 → **39** | +14 / −0 (oa-v3's stricter per-item judge: Qwen pass@3 0.63) | 0.75 | 0 / 300 |
 | user_modeling | `um-v3.4` | 35 → **35** | +3 / −3 | 0.78 | 0 / 300 |
-| wrong_bridge | `...+wbforms-v4+bank-v4` | 100 → **100** | none | 0.00 | 0 / 300 |
+| wrong_intermediate | `...+wbforms-v4+bank-v4` | 100 → **100** | none | 0.00 | 0 / 300 |
 
 role_bound_association's headline is the pair rule since oa-v3 (round 4), but the gate still
 decides each item on its own rows, so its drift guard now compares the item verdicts with the
@@ -1195,7 +1201,7 @@ family's per-item rate (`extras.item_pass_rate`) instead of the pair rate.
 
 ### Refill of the crafted families
 
-wrong_bridge (100), introspection (125 headline), knowledge_cutoff (109) and
+wrong_intermediate (100), introspection (125 headline), knowledge_cutoff (109) and
 model_specific_directed_modulation (98) exist to be ATI. Bank items the panel could read were retired to
 `retired_panel_gate` in `items.json` (unscored, with their panel status) and replaced through
 each family's construction pipeline (every construction gate retained, plus the panel gate in
@@ -1205,11 +1211,11 @@ re-gated from cached verdicts only (`stage=gate roots=<main>,<refill rounds>`):
 | family | panel kept | retired -> replaced | final ATI |
 |---|---|---|---|
 | introspection | 125/125 | 0 | 125/125 |
-| wrong_bridge | 93/100 | 7 (one per subject, template / wrong-bridge caps; twin mirrored) | 100/100 |
+| wrong_intermediate | 93/100 | 7 (one per subject, template / wrong-intermediate caps; twin mirrored) | 100/100 |
 | model_specific_directed_modulation | 66/98 | 32 (strict-recognisable, own carriers) | 98/98 |
 | knowledge_cutoff | 42/109 (+ 39/41 nocot) | 67 (same stratum x label_type mix); 2 nocot items retired, not replaced | 148/148 |
 
-wrong_bridge_true mirrored wrong_bridge's ids and was gated on its own (58/100), not refilled; it
+wrong_bridge_true mirrored wrong_intermediate's ids and was gated on its own (58/100), not refilled; it
 was removed from the benchmark on 2026-10-30 (plan 0050; its ATI entry is deleted).
 Each family README has a refill section; the pre-refill banks are kept in `tests/fixtures/`, and
 `tests/test_refilled_banks.py` checks the live banks.
@@ -1328,7 +1334,7 @@ Gated (2026-10-24, 679 items in total; ttt's 150 were removed by plan 0017, know
 | relational_multihop | Opus 5.5 | plain | 100 | 0 | 100 | 0 | 1.00 |
 | typo | Opus 5.5 | plain | 100 | 0 | 100 | 0 | 1.00 |
 | typo_mt | Opus 5.5 | plain | 100 | 2 | 98 | 0 | 0.94 |
-| wrong_bridge | Opus 5.5 | plain | 100 | 76 | 23 | 1 | 0.14 |
+| wrong_intermediate | Opus 5.5 | plain | 100 | 76 | 23 | 1 | 0.14 |
 | wrong_bridge_true (removed 2026-10-30) | Opus 5.5 | plain | 100 | 1 | 98 | 1 | 0.98 |
 | arithmetic_intermediates | Opus 5.5 | open_model | 596 | 111 | 485 | 0 | 0.80 |
 | chain_intermediates | Opus 5.5 | open_model | 120 | 0 | 120 | 0 | 1.00 |
@@ -1355,8 +1361,8 @@ Not gated (`_not_gated`; skipped under the flag, as are the families with no sur
 
 **Reading it.** Opus 5.5 recovers the answer from the text alone on most items of most families:
 its per-draw prompt-only rate is far above the stock-Qwen prompt-only floor (association 0.95
-against 0.32). The survivors are mostly model-specific labels (wrong_bridge, where Opus recalls
-the true fact but the target is Qwen's wrong bridge; basic_readout's preference items, such as
+against 0.32). The survivors are mostly model-specific labels (wrong_intermediate, where Opus recalls
+the true fact but the target is Qwen's wrong intermediate; basic_readout's preference items, such as
 the favourite chess piece) and poetry's planned rhyme word. Some are scorer technicalities
 rather than ignorance: Opus names the concept but not in a form the regex contract credits
 (multilingual_mt), or describes a scene without naming the target (association). The subset is
@@ -1379,9 +1385,9 @@ Under the flag each gated family's `items` is its subset and `results.json` carr
 a run incomplete. A family whose current judge `prompt_version` differs from the entry's
 `instrument` fails (exit 2) until re-gated. `report` leaves out the floor columns under this
 scope (they were measured on the full banks) and the macro skips families with fewer than 20
-items: with the current subset the macro is the mean of wrong_bridge, poetry,
+items: with the current subset the macro is the mean of wrong_intermediate, poetry,
 arithmetic_intermediates, moral_rationale, user_modeling and conjunctive_association alone, so read the per-family rows. The Opus judge runs at T=1, so a fresh judge pass over the same answers can flip
-an occasional verdict: a smoke re-judge of draw 0 before the final gate passed 1 of 76 wrong_bridge
+an occasional verdict: a smoke re-judge of draw 0 before the final gate passed 1 of 76 wrong_intermediate
 and 1 of 22 poetry items; on the final subset a fresh re-judge passed none.
 
 **The four model-specific families (plan 0016, 2026-10-24).** Gated under `framing=open_model`,

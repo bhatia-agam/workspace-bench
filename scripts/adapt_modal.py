@@ -284,7 +284,7 @@ def _inputs(prompts: list) -> list:
     return [TokensPrompt(prompt_token_ids=p) if isinstance(p, list) else p for p in prompts]
 
 
-# ---- plan 0060 Phase E (wrong_bridge logP legs) ----
+# ---- plan 0060 Phase E (wrong_intermediate logP legs) ----
 def run_cont_logprobs(llm, ids: list, starts: list) -> list:
     """Per token-id sequence: the sum of its teacher-forced log-probs from ``max(k, 1)`` on
     (vLLM ``prompt_logprobs``; ``gate.sum_cont_logprob`` is the same sum on the local Runner)."""
@@ -537,7 +537,7 @@ class SubjectLLM:
             "generate", (prompts, temperature, max_tokens, seed, top_p, stop_token_ids)
         )
 
-    # ---- plan 0060 Phase E (wrong_bridge logP legs): RemoteRunner.cont_logprobs ----
+    # ---- plan 0060 Phase E (wrong_intermediate logP legs): RemoteRunner.cont_logprobs ----
     @modal.method()
     def cont_logprobs(self, ids: list[list[int]], starts: list[int]) -> list[float]:
         """Teacher-forced sum of log P over ``ids[i][max(k, 1):]`` per sequence (token ids and

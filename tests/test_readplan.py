@@ -456,9 +456,10 @@ def test_lite_same_families_read_full_positions(family):
 
 
 def test_lite_same_leaves_other_final_token_families():
-    """Plan 0061 touches only its five families: typo and wrong_bridge keep their lite site."""
+    """Plan 0061 touches only its five families: typo and wrong_intermediate keep their lite
+    site."""
     assert {json.dumps(s.lite_positions) for s in readplan.plan("typo")} == {
         json.dumps({"kind": "final_token"})
     }
-    assert all(s.lite_positions != {"kind": "same"} for s in readplan.plan("wrong_bridge"))
+    assert all(s.lite_positions != {"kind": "same"} for s in readplan.plan("wrong_intermediate"))
     assert all(s.lite_positions != {"kind": "same"} for s in readplan.plan("basic_readout_mt"))

@@ -1,7 +1,7 @@
 # ruff: noqa: RUF001
 """Review of PR #208 (round 4d), both directions for each fix.
 
-1. wrong_bridge (wbaudit-v2): the rival audit also checks lines that name the gold and hold
+1. wrong_intermediate (wbaudit-v2): the rival audit also checks lines that name the gold and hold
    another name; one it marks as giving a different person in the role (a name the line holds)
    is a split line, cut from the gold's support and weighed as that rival's. L52
    composition_composer-Q182537 (gold John Lennon) passed 4 vs 0 while ~16 samples of Lennon
@@ -11,7 +11,7 @@
    option audit dismisses is not weighed. bonaire-capital (all) was contested 69 vs 72 by a
    true line about Aruba; L20 palau-capital 5 vs 10 by a former-capital line. A line the audit
    keeps, or a failed audit, still contests.
-3. wrong_bridge ``name_in`` precompiles its patterns (was ~33 ms per call)."""
+3. wrong_intermediate ``name_in`` precompiles its patterns (was ~33 ms per call)."""
 
 import time
 
@@ -19,8 +19,8 @@ import pytest
 
 from wsbench import digest
 from wsbench.banks import load_bank
-from wsbench.evals.wrong_bridge import judge as wb
-from wsbench.evals.wrong_bridge import prompts as wp
+from wsbench.evals.wrong_intermediate import judge as wb
+from wsbench.evals.wrong_intermediate import prompts as wp
 from wsbench.multitoken import family as fam
 from wsbench.multitoken import prompts as mp
 from wsbench.multitoken.options import option_sets
@@ -31,7 +31,7 @@ def _g(text: str, count: int) -> digest.Grounded:
     return digest.Grounded("", digest.support_text(count), text, ln, text, "items", "", count)
 
 
-# ------------------------------------------------------------------ 1. wrong_bridge split lines
+# -------------------------------------------------------------- 1. wrong_intermediate split lines
 TAXMAN = "composition_composer-Q182537-birth_year"
 L52 = [
     (

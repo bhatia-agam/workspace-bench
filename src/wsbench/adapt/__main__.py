@@ -31,7 +31,7 @@ msdm      model_specific_directed_modulation re-derived on the subject (plan 006
 kcutoff   knowledge_cutoff re-derived on the subject (plan 0060 Phase E)
           [stage=elicit|canon|verify|units|build|all] [llm=] [cutoff=YYYY-MM] [limit=] [regate=]
           [pool=]
-wrong_bridge    the subject's own wrong-bridge errors (plan 0060 Phase E)
+wrong_intermediate    the subject's own wrong-intermediate errors (plan 0060 Phase E)
                 stage=screen|grade|gate|adjudicate|bank|all pool=<dir> [limit= resolve= llm=]
 multihop_mt_v2  staged subject gate incl. the shortcut leg (plan 0060 Phase E) [limit= regate=]
 nyt_connections the subject's own groupings, labels and stability (plan 0060 Phase E)
@@ -41,6 +41,8 @@ nyt_connections the subject's own groupings, labels and stability (plan 0060 Pha
 
 import json
 import sys
+
+from wsbench.registry import LEGACY_FAMILY_NAMES, canonical
 
 from . import families as fams
 from . import run
@@ -81,8 +83,8 @@ KEYS: dict[str, set[str]] = {
     # plan 0060 Phase E: self-answer families re-derived on the subject
     "msdm": {"stage", "llm", "limit", "regate", "pool"},
     "kcutoff": {"stage", "llm", "cutoff", "limit", "regate", "pool"},
-    # plan 0060 Phase E (wrong_bridge.py, mhmt2.py)
-    "wrong_bridge": {"stage", "pool", "limit", "resolve", "llm"},
+    # plan 0060 Phase E (wrong_intermediate.py, mhmt2.py)
+    "wrong_intermediate": {"stage", "pool", "limit", "resolve", "llm"},
     "multihop_mt_v2": {"stage", "limit", "regate"},
     "mc": {"families", "stage"},
     "nyt_connections": {"stage", "limit", "llm", "regate", "herrings"},  # nyt_connections.py
@@ -91,6 +93,9 @@ KEYS: dict[str, set[str]] = {
 
 def main(argv: list[str] | None = None) -> None:
     argv = sys.argv[1:] if argv is None else argv
+    if argv and argv[0] in LEGACY_FAMILY_NAMES:  # `adapt wrong_bridge` (renamed in v1.2.0)
+        print(f"note: family {argv[0]!r} was renamed to {canonical(argv[0])!r}", file=sys.stderr)
+        argv = [canonical(argv[0]), *argv[1:]]
     if not argv or argv[0] not in KEYS:
         raise SystemExit(USAGE)
     cmd, a = argv[0], _args(argv[1:])
@@ -99,8 +104,10 @@ def main(argv: list[str] | None = None) -> None:
     if bad := sorted(set(a) - KEYS[cmd] - {"model"}):
         raise SystemExit(f"{cmd}: unknown argument(s) {bad}; allowed: {sorted(KEYS[cmd])}\n{USAGE}")
     model = a.pop("model", None) or sys.exit("model= is required")
+    if "family" in a:
+        a["family"] = canonical(a["family"])
     families = a.pop("families", "")
-    names = [f for f in families.split(",") if f] or sorted(fams.FAMILIES)
+    names = [canonical(f) for f in families.split(",") if f] or sorted(fams.FAMILIES)
     common = {k: a[k] for k in ("llm",) if k in a}
     for k in ("draws",):
         if k in a:
@@ -167,10 +174,10 @@ def main(argv: list[str] | None = None) -> None:
                 limit=int(a.get("limit", 0)),
                 regate=a.get("regate", "").lower() in ("1", "true", "yes"),
                 pool=a.get("pool", "true").lower() in ("1", "true", "yes"), **extra)  # fmt: skip
-    elif cmd == "wrong_bridge":  # plan 0060 Phase E
-        from . import wrong_bridge
+    elif cmd == "wrong_intermediate":  # plan 0060 Phase E
+        from . import wrong_intermediate
 
-        wrong_bridge.run(model, a.get("stage", "all"), pool=a.get("pool"),
+        wrong_intermediate.run(model, a.get("stage", "all"), pool=a.get("pool"),
                          limit=int(a.get("limit", 0)), llm=a.get("llm", "claude-opus-5-5"),
                          resolve=a.get("resolve", "local"))  # fmt: skip
     elif cmd == "multihop_mt_v2":  # plan 0060 Phase E

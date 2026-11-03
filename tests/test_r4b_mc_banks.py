@@ -210,7 +210,7 @@ def test_call_key_maps_the_rule_only_bump():
         "multilingual_mt",
         "multilingual_multihop",
         "multilingual_typo",
-        "wrong_bridge",
+        "wrong_intermediate",
     ],
 )
 def test_confuser_audit_is_current_and_passes(family):

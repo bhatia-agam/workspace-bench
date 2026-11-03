@@ -28,7 +28,10 @@ def validate(row: Mapping[str, Any]) -> None:
 
 def seed(family: str, key: str, draw: int = 0) -> int:
     """``qwen_seed(family, key, draw)``: 4 bytes of sha256, distinct per (family, key, draw)."""
-    return int.from_bytes(hashlib.sha256(f"{family}|{key}|{draw}".encode()).digest()[:4], "big")
+    from wsbench.registry import hash_name  # a renamed family seeds as its former key (v1.2.0)
+
+    blob = f"{hash_name(family)}|{key}|{draw}"
+    return int.from_bytes(hashlib.sha256(blob.encode()).digest()[:4], "big")
 
 
 def request_ids(tok: Any, row: Mapping[str, Any]) -> list[int]:

@@ -9,7 +9,7 @@ from pathlib import Path
 from typing import Any
 
 from wsbench.banks import load_bank as load_wrapped
-from wsbench.registry import REPO_ROOT
+from wsbench.registry import REPO_ROOT, legacy_names
 
 
 def model_dir(model: str, root: Path = REPO_ROOT) -> Path:
@@ -50,12 +50,24 @@ def _append_jsonl(path: Path, rows: list[dict]) -> None:
             f.write(json.dumps(row, ensure_ascii=False) + "\n")
 
 
+def _legacy_ok(base: Path, family: str) -> Path:
+    """``base/<family>.jsonl``, or the file under a former family key when only that exists
+    (a pre-v1.2.0 ``wrong_bridge.jsonl``)."""
+    path = base / f"{family}.jsonl"
+    if path.exists():
+        return path
+    for old in legacy_names(family):
+        if (legacy := base / f"{old}.jsonl").exists():
+            return legacy
+    return path
+
+
 def gate_path(model: str, family: str) -> Path:
-    return model_dir(model) / "gate" / f"{family}.jsonl"
+    return _legacy_ok(model_dir(model) / "gate", family)
 
 
 def cand_path(model: str, family: str) -> Path:
-    return model_dir(model) / "cand" / f"{family}.jsonl"
+    return _legacy_ok(model_dir(model) / "cand", family)
 
 
 def gated(model: str, family: str) -> dict[str, dict]:

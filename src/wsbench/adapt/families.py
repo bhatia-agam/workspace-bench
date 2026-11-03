@@ -370,7 +370,8 @@ REGENERATE = {
     "model_specific_directed_modulation": "the subject's own category defaults (`adapt msdm`)",
     "knowledge_cutoff": "the subject's own consistent wrong answers (`adapt kcutoff`)",
     # plan 0060 Phase E (model-specific families; their own stages, not `profile` / `gate`)
-    "wrong_bridge": "the subject's own wrong-bridge errors: `adapt wrong_bridge` (wrong_bridge.py)",
+    "wrong_intermediate": "the subject's own wrong-intermediate errors: "
+    "`adapt wrong_intermediate` (wrong_intermediate.py)",
     "multihop_mt_v2": "staged gate with a must-not-reach shortcut leg: `adapt multihop_mt_v2`",
     "nyt_connections": "the subject's own groupings, labels and stability, options rebuilt "
     "around them: `adapt nyt_connections` (nyt_connections.py)",

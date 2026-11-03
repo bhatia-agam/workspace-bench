@@ -87,7 +87,7 @@ brew_intermediates, buggy_code, chain_intermediates, conjunctive_association,
 directed_modulation, jailbreak_recognition, moral_rationale, multi_concept_directed_modulation,
 multihop, multihop_mt, multihop_mt_v2, multilingual, multilingual_mt, multilingual_multihop,
 multilingual_typo, poetry, relational_multihop, role_bound_association, typo, typo_mt,
-user_modeling, wrong_bridge, wrong_bridge_true, arithmetic_intermediates.
+user_modeling, wrong_intermediate, wrong_bridge_true, arithmetic_intermediates.
 
 Not gated, with reason recorded in the frozen file:
 - `hallucination` — an invention rate, no item-level "answer" to invert.

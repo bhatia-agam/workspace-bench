@@ -375,11 +375,11 @@ def test_review_fixes():
     clone = _clone("multihop", mitems[0])
     clone["split_subject"] = []
     assert any("split_subject is empty" in p for p in ji.check_item("multihop", clone))
-    # wrong_bridge: the subject regex is the judge's (case-insensitive, leading space)
-    _wh, witems, _ = _bank("wrong_bridge")
+    # wrong_intermediate: the subject regex is the judge's (case-insensitive, leading space)
+    _wh, witems, _ = _bank("wrong_intermediate")
     w = copy.deepcopy(witems[0])
     w["prompt"] = "  " + w["prompt"].replace("Fact:", "fact:", 1)
-    assert ji.check_item("wrong_bridge", w) == []
+    assert ji.check_item("wrong_intermediate", w) == []
 
 
 def test_directed_modulation_bank_level_draw_check():

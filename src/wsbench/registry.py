@@ -29,7 +29,16 @@ LEGACY_FAMILY_NAMES: dict[str, str] = {
     # canonical() is single-step, so both former keys point straight at the current one
     "dm_category_default": "model_specific_directed_modulation",
     "directed_modulation_obscure": "model_specific_directed_modulation",  # plan 0034 O1
+    "wrong_bridge": "wrong_intermediate",  # v1.2.0 (Camila 2026-11-03)
 }
+
+# Renamed families whose former key stays INSIDE their hashed identities: the read plan's
+# ``plan_sha`` (``reads.plan_sha_rows``), the ATI ``bank_sha`` (``text_inversion.bank_fingerprint``)
+# and the lucky-guessing seeds all hash the family name, so a rename would void every readout
+# sidecar, ATI entry and seeded floor produced under the old key. These families hash as their
+# former key (``hash_name``); the rename is a label change only. (The 2026-10-26 renames
+# predate plan_sha and keep hashing their current key.)
+HASH_FAMILY_NAMES: dict[str, str] = {"wrong_intermediate": "wrong_bridge"}
 
 
 # Families deleted from the bench -> why (never registered again; plan 0017). Old run dirs may
@@ -40,7 +49,7 @@ REMOVED_FAMILIES: dict[str, str] = {
     "ttt_move": "removed 2026-10-26 (#97): too close to next-token prediction",
     "brew_intermediates": "removed 2026-10-29 (plan 0029): the prompt alone solves it",
     "wrong_bridge_true": (
-        "removed 2026-10-30 (Camila, plan 0050): not part of the benchmark; wrong_bridge "
+        "removed 2026-10-30 (Camila, plan 0050): not part of the benchmark; wrong_intermediate "
         "reports the true-bridge pick as true_bridge_rate"
     ),
     "hallucination": "removed 2026-10-30 (plan 0040): replaced by HallucinationBench "
@@ -72,13 +81,40 @@ def legacy_names(name: str) -> list[str]:
     return [old for old, new in LEGACY_FAMILY_NAMES.items() if new == name]
 
 
+def hash_name(name: str) -> str:
+    """The key ``name`` hashes under in plan_sha / bank_sha / seeds: its frozen former key for a
+    family in ``HASH_FAMILY_NAMES``, else ``name`` itself (never canonicalized: the plan 0034
+    restamp hashes rows under a former key on purpose, ``scripts/ati_restamp_rename.py``)."""
+    return HASH_FAMILY_NAMES.get(name, name)
+
+
+def family_dir(root: Path, name: str) -> Path:
+    """``root/<name>``, or ``root/<former key>`` when only a directory under a former key exists
+    (an out dir or digest store written before the rename keeps its cached verdicts)."""
+    path = Path(root) / name
+    if path.exists():
+        return path
+    for old in legacy_names(name):
+        if (legacy := Path(root) / old).exists():
+            return legacy
+    return path
+
+
 def bank_path(family: str) -> Path:
     """The bank a family judges (plan 0032 §2.12): ``$WSB_BANK_FILE_<FAMILY>`` (one family's
     whole bank file, read at call time) > ``$WSB_BANK_ROOT/<family>.json`` (an adapted bank; a
     family missing there is an error, never a silent fall-back to the frozen bank of another
     model) > ``REPO_ROOT / EvalSpec.bank`` (the registered file: ``items.json``, or a versioned
     ``items_v<N>.json`` once the family switches). There is no ``items.json`` literal fallback."""
-    one = os.environ.get(BANK_FILE_ENV_PREFIX + family.upper())
+    family = canonical(family)
+    one = os.environ.get(BANK_FILE_ENV_PREFIX + family.upper()) or next(
+        (
+            v
+            for old in legacy_names(family)
+            if (v := os.environ.get(BANK_FILE_ENV_PREFIX + old.upper()))
+        ),
+        None,
+    )
     if one:  # one family's whole bank file (ATI refill candidates, pinned test fixtures)
         path = Path(one) if Path(one).is_absolute() else REPO_ROOT / one
         if not path.is_file():
@@ -88,6 +124,10 @@ def bank_path(family: str) -> Path:
     if root:
         base = Path(root) if Path(root).is_absolute() else REPO_ROOT / root
         path = base / f"{family}.json"
+        if not path.exists():  # an adapted set written under a former key
+            path = next(
+                (p for old in legacy_names(family) if (p := base / f"{old}.json").exists()), path
+            )
         if not path.exists():
             raise SystemExit(f"{BANK_ROOT_ENV}={root} has no bank for {family!r} ({path})")
         return path
@@ -120,7 +160,13 @@ def overlay_path(family: str, name: str) -> Path | None:
     when ``WSB_BANK_ROOT`` is set and that file exists, else None (never under the registered
     bank)."""
     root = bank_root()
-    return None if root is None else _overlay_at(str(root), family, name)
+    if root is None:
+        return None
+    family = canonical(family)
+    hit = _overlay_at(str(root), family, name)
+    for old in legacy_names(family):
+        hit = hit or _overlay_at(str(root), old, name)
+    return hit
 
 
 @functools.cache
@@ -258,6 +304,7 @@ def adapted_only(family: str, item_id: str) -> bool:
 def _spec_for_bank(family: str) -> "EvalSpec":
     """The family's EvalSpec, also when the registry was emptied after import (the family
     package's ``SPEC``); an unknown family exits 2."""
+    family = canonical(family)
     if family not in FAMILIES:
         load_all()
     if family in FAMILIES:
