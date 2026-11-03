@@ -245,6 +245,25 @@ def plan_layers_missing(
 # ---------------------------------------------------------------- load
 
 
+def min_full_positions(family: str, default: int) -> int:
+    """The family's ``reads=full`` minimum span, lowered (never raised) by an ADAPTED bank's
+    ``adapt.min_grid_positions``: a subject whose template gives a render fewer read positions
+    than the 27B's (introspection's neutral grid, ``wsbench.adapt.introspection``). Consulted
+    only under a bank override (``$WSB_BANK_FILE_<FAMILY>`` or ``$WSB_BANK_ROOT``, resolved by
+    ``registry.bank_path`` with its precedence); the registered banks are never read here."""
+    from wsbench import registry
+
+    if not (os.environ.get(BANK_FILE_ENV_PREFIX + family.upper()) or os.environ.get(BANK_ROOT_ENV)):
+        return default
+    try:
+        raw = json.loads(registry.bank_path(family).read_text(encoding="utf-8"))
+    except (SystemExit, OSError, ValueError):
+        return default
+    adapt = raw.get("adapt") if isinstance(raw, dict) else None
+    n = adapt.get("min_grid_positions") if isinstance(adapt, dict) else None
+    return min(default, int(n)) if isinstance(n, int) and n >= 1 else default
+
+
 def _spec_of(family: str) -> Any:
     from wsbench import registry
 
@@ -306,6 +325,7 @@ def load(
             rep.layers_missing = miss
     spec = _spec_of(family)
     min_pos = int(getattr(spec, "min_full_positions", 2)) if spec is not None else 2
+    min_pos = min_full_positions(family, min_pos)
     contiguous = bool(getattr(spec, "full_contiguous", True)) if spec is not None else True
     if prompt_only:
         rep.reads_checked = "prompt_only"

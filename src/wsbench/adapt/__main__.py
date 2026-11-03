@@ -16,6 +16,8 @@ agentic   agentic_misalignment: rollouts, commitment judge, keep  [stage=]
 fill      author+gate an authored family until full / ooc       families= [waves=8]
 carry     verify + copy jailbreak / multi_concept_dm to the subject [families=]
 floors    prompt-only floors: stock subject summaries, Claude judge   [stage=] [judge=]
+introspection  the subject's own vectors, dose, detection baseline  [stage=] [result=]
+               [coherence=off] [llm=]
 """
 
 import json
@@ -54,6 +56,7 @@ KEYS: dict[str, set[str]] = {
     "agentic": {"stage"},
     "carry": {"families"},
     "floors": {"stage", "judge"},
+    "introspection": {"stage", "result", "coherence", "llm"},
 }
 
 
@@ -113,6 +116,11 @@ def main(argv: list[str] | None = None) -> None:
 
         extra = {k: a[k] for k in ("step", "out", "limit") if k in a}
         moral.run(model, a.get("stage", "all"), **extra)
+    elif cmd == "introspection":
+        from . import introspection
+
+        introspection.run(model, a.get("stage", "all"), a.get("result"),
+                          a.get("coherence", "on"), a.get("llm", "claude-opus-5-5"))  # fmt: skip
     elif cmd == "auto":
         print(a["family"], run.auto(model, a["family"]))
     elif cmd == "note":

@@ -308,6 +308,8 @@ REGENERATE = {
     "jlens_concept_pr": "subject activations and the subject's own J-lens",
     "jailbreak_recognition": "items carry over; re-stamp read positions for the tokenizer",
     "multi_concept_directed_modulation": "prefill render with the subject's template",
+    "introspection": "the subject's own vectors, dose and detection baseline "
+    "(`adapt introspection`)",
 }
 
 

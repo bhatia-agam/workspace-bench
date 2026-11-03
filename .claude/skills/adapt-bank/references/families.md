@@ -408,6 +408,48 @@ deleted.
 - directed_modulation: bank unchanged; judge narration counts (plan 0028), groups file (plan 0035,
   which checked every adapted set's concepts are covered), round 5. Re-judge only.
 
+### introspection — the subject's own vectors, dose and detection baseline (plan 0060 Phase E)
+`python -m wsbench.adapt introspection model=<m> stage=job|measure|coherence|calibrate|build|all`
+(`src/wsbench/adapt/introspection.py`; work products in `adapted/<m>/introspection/`). Nothing is
+carried over from the 27B; there is no Opus / Sonnet unguessability gate.
+- `job` (CPU, the subject's tokenizer): re-renders the 12 prompts with the subject's template;
+  inject span / grid / null / echo / lite are re-located by character offsets (the source's
+  rules). A subject whose protocol render IS the 27B's (same template, not merely the
+  `qwen3.6` tokenizer key) must reproduce every registered site, or it stops. Inject block = `remap_layer(12, n_layers)` (no band snap). Writes `job.json`: every id
+  the GPU needs (vector renders, the 100 baseline entries, the paper words' continuations, the
+  un-prefilled detection renders, the neutral prompts).
+- `measure` (GPU): `introspection.measure(engine, job)`. The bank's vector recipe at the remapped
+  block (last token of `Tell me about {word}`, minus the baseline mean); gaussian rows from the
+  bank's seeds at the subject's width; Agam's Phase-1 RR sweep (β 1,2,3,4,6,8 × inject / gaussian
+  / cross); P(Yes) on the un-prefilled protocol turn; greedy neutral replies. Small / medium
+  subjects: `HFEngine` on Modal (`modal deploy scripts/adapt_introspection_modal.py`, used when
+  `Subject.backend == "modal"`) or on the box GPU. Big MoE subjects (`introspection.EXTERNAL`:
+  glm-5.3 NVFP4, deepseek-v4-flash, kimi-k2, glm-5.3-flash) are refused: implement `Engine` (5
+  methods) on their own loader, run `measure`, `save_result` to an `.npz`, then
+  `stage=measure result=<npz>`. V4 needs a stream mode decided (4 mHC streams) and was NO-GO
+  under this rule before.
+- `coherence` (Claude, the V4 port's rater prompt; resume-safe `coherence.jsonl`, keyed on the
+  reply's hash, so a re-measured reply is re-rated). `calibrate` refuses unless every reply is
+  rated; `coherence=off` drops the clause (recorded as a deviation).
+- Every file is tied to the job: `job.json` carries `job_sha`, `measure` stamps it into the
+  sweep (an external result too) and `calibrate` into `calibration.json`; a result or a
+  calibration of another job is refused. A changed job deletes sweep, vectors, calibration and
+  bank; a new `measure` deletes calibration and bank; `calibrate` and a NO-GO `build` delete the
+  bank. An ingested `result=` must also match the job's betas and paper words.
+  `job.json` / `sweep.json` are git-ignored; the `.npy` vectors and `coherence.jsonl` are kept.
+- `calibrate`: headline β = smallest with median RR ≥ 0.60 and ≥ 80% injected neutral replies
+  rated ≥ 6; secondary = smallest with RR ≥ 0.35 (headline / 2 if that is the headline). GO iff,
+  at the headline, RR − β0 ≥ 0.30, RR − gaussian ≥ 0.30, cross ≤ β0 + 0.10. The detection
+  baseline (β0 median RR, β0 top-5 reports, P(Yes) false alarms over Trial 1–8) is recorded.
+- `build`: NO-GO → report `blocked`, no bank. GO → `adapted/<m>/introspection.json` (the v2 bank
+  with the subject's renders, `spec.inject_layer`, vectors block, concepts' norms / fingerprints,
+  `vector_space_check`, `calibration`; the 27B's provenance under `reference_27b`). Item `beta`
+  stays the TIER (4 / 2) the judge, ids and twins key on; `items[].dose` is the subject's β and is
+  what `readplan` injects. A render whose grid is < 9 positions (non-ChatML templates) is
+  recorded as `adapt.min_grid_positions`; `reads.min_full_positions`
+  lowers the family's `reads=full` minimum to it under either bank override (`WSB_BANK_FILE_<F>`
+  wins, via `registry.bank_path`); registered banks are never consulted.
+
 ## Not in the adapt machinery (SKILL.md §Families the adapt machinery does not cover)
-multihop_mt_v2 (above), wrong_bridge, knowledge_cutoff, model_specific_directed_modulation,
-introspection: `families.get` raises for each. unverbalized_hint is retired (plan 0058).
+multihop_mt_v2 (above), wrong_bridge, knowledge_cutoff, model_specific_directed_modulation:
+`families.get` raises for each (introspection too, pointing at `adapt introspection`). unverbalized_hint is retired (plan 0058).

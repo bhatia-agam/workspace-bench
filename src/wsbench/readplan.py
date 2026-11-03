@@ -1155,7 +1155,9 @@ def _introspection() -> list[ReadSpec]:
         r = renders[f"{it['prompt_kind']}:{it['prompt_key']}"]
         span = [r["inject_span"][0], r["inject_span"][-1]]
         vec = it["vector"]
-        steer: dict[str, Any] = {"type": vec["type"], "beta": float(it["beta"])}
+        # an adapted bank's `dose` is the subject's calibrated beta; `beta` stays the dose tier
+        # the judge keys on (wsbench.adapt.introspection); the registered bank has no `dose`
+        steer: dict[str, Any] = {"type": vec["type"], "beta": float(it.get("dose", it["beta"]))}
         if vec["type"] != "none":
             steer |= {"inject_layer": int(rec["inject_layer"]), "token_span": span}
             steer["formula"] = bank["vector_recipe"]["inject"]
