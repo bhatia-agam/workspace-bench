@@ -27,7 +27,7 @@ from wsbench.readouts import Cell, LoadReport
 from wsbench.registry import JudgeArgs, bank_path
 from wsbench.results import FamilyResult
 
-from .options import OptionSet, Roles, build, item_roles, parse_relation, partner_of
+from .options import OptionSet, Roles, build, item_partner, item_roles, parse_relation
 from .prompts import (
     BASES,
     CANNOT_LETTER,
@@ -435,8 +435,7 @@ def run(args: JudgeArgs) -> FamilyResult:
     by_name = {it["name"]: it for it in items}
     partner_concepts = {
         it["id"]: {
-            str(c)
-            for c in (by_name.get(partner_of(str(it["name"])) or "") or {}).get("concepts") or []
+            str(c) for c in (by_name.get(item_partner(it) or "") or {}).get("concepts") or []
         }
         - {str(c) for c in it.get("concepts") or []}
         for it in items
@@ -861,7 +860,7 @@ def _item_row(
     unjudged or missing."""
     item_id = item["id"]
     concepts = [str(c) for c in item.get("concepts") or []]
-    partner = partner_of(str(item["name"]))
+    partner = item_partner(item)
     mine = [v for v in verdicts if v["item"] == item_id]
     in_sentence = sorted(p for p, r in regions.items() if r is Region.IN_SENTENCE)
     region_counts = {r.value: sum(1 for x in regions.values() if x is r) for r in Region}

@@ -336,12 +336,27 @@ def _ordinal_only(clause: str, value: int) -> bool:
 ELEMENT_ITEM = re.compile(r"^nhop-.+-element$")
 
 
-def element_item(item: Mapping[str, Any]) -> bool:
+ELEMENT_FLAG = "element_bridge"  # plan 0060 A2: the explicit flag of an adapted-only item
+
+
+def element_item(item: Mapping[str, Any], family: str = "multihop") -> bool:
     """The item's number bridge IS its answer element's atomic number (``nhop-*-element``): the
     only items where the round-4 widenings (an ordinal-only naming, the quote's line clause) can
     read the answer back. Elsewhere "period", "rows", "group", "positions" name the counted thing
-    ("12 hours in each period", "5 rings in two rows"; gate bank-gate-r5)."""
-    return bool(ELEMENT_ITEM.match(str(item.get("id", ""))))
+    ("12 hours in each period", "5 rings in two rows"; gate bank-gate-r5).
+
+    A registered id keeps the id rule. Any other id takes its explicit ``element_bridge`` flag
+    when the row carries one (plan 0060 A2); under ``WSB_BANK_ROOT`` an adapted-only
+    number-bridge item without the flag is an error, never a silent id-rule miss."""
+    iid = str(item.get("id", ""))
+    if ELEMENT_FLAG in item and iid not in registry.registered_ids(family):
+        return bool(item[ELEMENT_FLAG])
+    if (item.get("mc") or {}).get("bridge_type") == "number" and registry.adapted_only(family, iid):
+        raise SystemExit(
+            f"{family}/{iid}: an adapted-only number-bridge item needs an explicit "
+            f"{ELEMENT_FLAG!r} flag (true/false); the nhop-*-element id rule is for registered ids"
+        )
+    return bool(ELEMENT_ITEM.match(iid))
 
 
 def _counted_half(line_clause: str, clause: str, value: int) -> bool:
@@ -416,15 +431,30 @@ _SUBJECTS: dict[str, dict[str, list[str]]] = {}
 def split_subject(item: dict[str, Any], family: str = "multihop") -> list[str]:
     """The item's first-hop cue terms: ``item["split_subject"]`` when the bank row carries one,
     else ``evals/<family>/split_subjects.json`` by item id; ``[]`` (rule off) for an item with
-    neither (``test_split_subjects_cover_the_bank`` holds the shipped bank to full coverage)."""
+    neither (``test_split_subjects_cover_the_bank`` holds the shipped bank to full coverage).
+
+    Plan 0060 A2: under ``WSB_BANK_ROOT`` the file is the registered one with the set's
+    ``<root>/<family>/split_subjects.json`` entries added (``registry.load_resource``; a
+    registered id always reads its registered entry), and an adapted-only id with no entry in
+    either is an error, never the rule silently off."""
     own = item.get("split_subject")
     if own:
         return [str(t) for t in own]
-    if family not in _SUBJECTS:
-        path = registry.REPO_ROOT / "evals" / family / SPLIT_SUBJECTS
-        data = json.loads(path.read_text(encoding="utf-8")) if path.is_file() else {}
-        _SUBJECTS[family] = data.get("subjects", {})
-    return list(_SUBJECTS[family].get(str(item.get("id", "")), []))
+    iid = str(item.get("id", ""))
+    if registry.bank_root() is None:
+        if family not in _SUBJECTS:
+            path = registry.REPO_ROOT / "evals" / family / SPLIT_SUBJECTS
+            data = json.loads(path.read_text(encoding="utf-8")) if path.is_file() else {}
+            _SUBJECTS[family] = data.get("subjects", {})
+        return list(_SUBJECTS[family].get(iid, []))
+    data, _added = registry.load_resource(family, SPLIT_SUBJECTS, ("subjects",))
+    got = (data.get("subjects") or {}).get(iid)
+    if not got and registry.adapted_only(family, iid):
+        raise SystemExit(
+            f"{family}/{iid}: an adapted-only item needs a non-empty split_subject (the row's "
+            f"own field, or {registry.BANK_ROOT_ENV}/{family}/{SPLIT_SUBJECTS})"
+        )
+    return list(got or [])
 
 
 def _cue_hit(term: str, sent: str) -> bool:
@@ -600,6 +630,9 @@ def _validate(call: Call, r: dict) -> bool:
 def run(args: JudgeArgs, *, name: str, bank: Path) -> FamilyResult:
     _header, items = load_bank(bank)
     scope = item_scope(items, args)
+    for it in scope:  # plan 0060 A2: a missing per-set entry fails here, before any call
+        split_subject(it, name)
+        element_item(it, name)
     ids = [it["id"] for it in scope]
     by_id = {it["id"]: it for it in scope}
     options = {i: options_of(name, by_id[i]) for i in ids}

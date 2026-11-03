@@ -68,6 +68,30 @@ def partner_of(name: str) -> str | None:
     return None
 
 
+PARTNER_FIELD = "partner"  # plan 0060 A2: an adapted-only item's explicit binding partner
+
+
+def item_partner(it: Mapping[str, Any]) -> str | None:
+    """The item's binding partner. A registered name keeps the id-suffix rule
+    (:func:`partner_of`); any other item takes its explicit ``partner`` field (a name, or null =
+    none) when it carries one. Under ``WSB_BANK_ROOT`` an adapted-only item without the field is
+    an error: a pair that breaks the suffix naming would silently lose its partner option and
+    its partner veto (plan 0060 A2)."""
+    from wsbench import registry
+    from wsbench.banks import label_of
+
+    name = str(it.get("name", ""))
+    if PARTNER_FIELD in it and label_of(name) not in registry.registered_ids(NAME):
+        got = it[PARTNER_FIELD]
+        return None if got is None else str(got)
+    if registry.adapted_only(NAME, label_of(name)):
+        raise SystemExit(
+            f"{NAME}/{name}: an adapted-only item needs an explicit {PARTNER_FIELD!r} field "
+            "(a name or null); the -a/-b, -ab/-ba suffix rule is for registered ids"
+        )
+    return partner_of(name)
+
+
 def _companion_dir() -> Path:
     """The directory of the companion files: beside the bank in use, else beside the frozen
     bank (an adapted bank directory holds only ``<family>.json``)."""
@@ -107,20 +131,61 @@ def parse_relation(concept: str) -> dict[str, str] | None:
 
 
 def item_roles(it: Mapping[str, Any]) -> dict[str, str] | None:
-    """A relation item's roles: the bank's ``roles`` (v2), else parsed from its concept (v1)."""
-    if not str(it.get("name", "")).startswith("b-") or not it.get("concepts"):
+    """A relation item's roles: the bank's ``roles`` (v2), else parsed from its concept (v1).
+    A relation item is named ``b-*``; an item outside the registered bank that carries
+    ``roles`` is one too, whatever its name (plan 0060 A2: the explicit field, not the id)."""
+    if not it.get("concepts"):
         return None
+    if not str(it.get("name", "")).startswith("b-"):
+        from wsbench import registry
+        from wsbench.banks import label_of
+
+        if not it.get("roles") or label_of(str(it.get("name", ""))) in registry.registered_ids(
+            NAME
+        ):
+            return None
     r = it.get("roles")
     return dict(r) if r else parse_relation(str(it["concepts"][0]))
 
 
 def name_aliases() -> dict[str, list[str]]:
     """``person -> Chinese forms`` (``name_aliases_v2.json``): the both-names check has no
-    script exemption, so a Chinese readout names a person only by one of these."""
-    return {
-        str(k): [str(x) for x in v]
-        for k, v in _read(_companion_dir() / NAMES_FILE)["aliases"].items()
-    }
+    script exemption, so a Chinese readout names a person only by one of these. Under
+    ``WSB_BANK_ROOT`` (plan 0060 A2) the set's ``<root>/multi_concept_directed_modulation/
+    name_aliases_v2.json`` people are added (``registry.load_resource``: a listed person keeps
+    the registered forms)."""
+    from wsbench import registry
+
+    base = _companion_dir() / NAMES_FILE
+    if registry.overlay_path(NAME, NAMES_FILE) is None:
+        data = _read(base)
+    else:
+        data, _added = registry.load_resource(NAME, NAMES_FILE, ("aliases",), registered=base)
+    return {str(k): [str(x) for x in v] for k, v in data["aliases"].items()}
+
+
+def check_adapted_people(items: Sequence[Mapping[str, Any]]) -> None:
+    """Under ``WSB_BANK_ROOT``: every person of an adapted-only relation item has alternative
+    forms (the item's own ``aliases`` or :func:`name_aliases`); else an error, never a Chinese
+    readout that silently cannot name them in the both-names check (plan 0060 A2)."""
+    from wsbench import registry
+    from wsbench.banks import label_of
+
+    if registry.bank_root() is None:
+        return
+    known = set(name_aliases())
+    for it in items:
+        name = str(it.get("name", ""))
+        r = item_roles(it)
+        if not r or not registry.adapted_only(NAME, label_of(name)):
+            continue
+        own = set(it.get("aliases") or {})
+        miss = [p for p in (r["agent"], r["patient"]) if p not in known | own]
+        if miss:
+            raise SystemExit(
+                f"{NAME}/{name}: no name forms for {miss} (the item's aliases or "
+                f"{registry.BANK_ROOT_ENV}/{NAME}/{NAMES_FILE})"
+            )
 
 
 def _aliases(items: Sequence[Mapping[str, Any]]) -> dict[str, list[str]]:
@@ -154,6 +219,7 @@ def close_relatives(concepts: Sequence[str]) -> set[str]:
 
 def build(items: Sequence[Mapping[str, Any]]) -> dict[str, OptionSet]:
     """``id -> OptionSet`` over the whole bank (never the scored subset): module docstring."""
+    check_adapted_people(items)
     by_name = {str(it["name"]): it for it in items}
     aliases = _aliases(items)
     rel_items = [it for it in items if item_roles(it)]
@@ -166,7 +232,7 @@ def build(items: Sequence[Mapping[str, Any]]) -> dict[str, OptionSet]:
     out: dict[str, OptionSet] = {}
     for it in items:
         name = str(it["name"])
-        mate = partner_of(name)
+        mate = item_partner(it)
         own = [str(c) for c in it.get("concepts") or []]
         partner = by_name.get(mate or "")
         extra = [str(c) for c in (partner or {}).get("concepts") or [] if c not in own]

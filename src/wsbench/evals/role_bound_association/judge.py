@@ -9,7 +9,7 @@ from collections import defaultdict
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 
-from wsbench import digest, mc, reads
+from wsbench import digest, mc, reads, registry
 from wsbench.cache import Cache
 from wsbench.family import render_bag
 from wsbench.llm import Spend
@@ -206,7 +206,8 @@ def role_terms_shown(role: str, lex: gate.Lexicon) -> list[str]:
     ``roles_v1.json`` terms, else its :func:`display_terms`, with no CJK form and no mere
     spelling variant (:func:`_stem`) of the role or of an earlier term; the same rule for every
     option, gold or distractor."""
-    terms = lex.terms(role) if lex.has(role) else display_terms().get(role, [])
+    shown = display_terms() if lex.display is None else lex.display  # plan 0060 A2: scoped
+    terms = lex.terms(role) if lex.has(role) else list(shown.get(role, []))
     seen = {_stem(role)}
     out: list[str] = []
     for t in terms:
@@ -246,14 +247,25 @@ def bare_label(shown: str) -> str:
     return _ALSO.sub("", shown)
 
 
-DISTRACTORS_V3 = REPO_ROOT / "evals/role_bound_association/distractors_v3.json"
+DISTRACTORS_FILE = "distractors_v3.json"
+DISTRACTORS_V3 = REPO_ROOT / "evals/role_bound_association" / DISTRACTORS_FILE
 
 
-@functools.lru_cache(maxsize=1)
 def distractors_v3() -> dict[str, dict[str, list[str]]]:
     """``{pair_id: {"roles": [3], "actions": [4]}}``: the frozen oa-v3 same-setting distractors
-    (``scripts/role_bound_distractors_v3.py``, Opus 5.5, round 4 MC leakage standard)."""
-    d = json.loads(DISTRACTORS_V3.read_text(encoding="utf-8"))
+    (``scripts/role_bound_distractors_v3.py``, Opus 5.5, round 4 MC leakage standard). Under
+    ``WSB_BANK_ROOT`` the set's ``role_bound_association/distractors_v3.json`` pairs are added
+    (plan 0060 A2, ``registry.load_resource``: a registered pair_id always reads its registered
+    entry; keyed by pair_id, so no registered pair's block can change)."""
+    over = registry.overlay_path(FAMILY, DISTRACTORS_FILE)
+    return _distractors_v3(str(over or ""))
+
+
+@functools.lru_cache(maxsize=4)
+def _distractors_v3(_over: str) -> dict[str, dict[str, list[str]]]:
+    d, _added = registry.load_resource(
+        FAMILY, DISTRACTORS_FILE, ("pairs",), registered=DISTRACTORS_V3
+    )
     return {
         str(k): {"roles": list(v["roles"]), "actions": list(v["actions"])}
         for k, v in d["pairs"].items()
@@ -266,9 +278,15 @@ def build_block_v3(it: dict, items: list[dict], lex: gate.Lexicon) -> Block:
     distinct 4-letter prefixes); actions = gold + the pair's 4 frozen same-setting actions. The
     oa-v2 lists failed the standard (options-only 0.230, topic 0.356 vs uniform 0.008): their
     actions came from unrelated pairs, so the one action fitting the two people was the gold.
-    A pair with no frozen entry (an adapted bank's) keeps the oa-v2 block."""
+    A pair with no frozen entry keeps the oa-v2 block, except an adapted-only pair under
+    ``WSB_BANK_ROOT`` (plan 0060 A2): the leaking oa-v2 block is never its silent fallback."""
     dist = distractors_v3().get(it.get("pair_id", ""))
     if dist is None:
+        if gate.adapted_pair(it):
+            raise SystemExit(
+                f"{FAMILY}/{it.get('id')}: adapted-only pair {it.get('pair_id')!r} has no oa-v3 "
+                f"distractors ({registry.BANK_ROOT_ENV}/{FAMILY}/{DISTRACTORS_FILE})"
+            )
         return build_block_v2(it, items, lex)
     rng = random.Random(seed_int(f"{DATASET_SEED}:d3:{it['id']}"))
     ra, rb = it["role_a"], it["role_b"]
@@ -322,8 +340,15 @@ def build_block_v3(it: dict, items: list[dict], lex: gate.Lexicon) -> Block:
     )
 
 
+def lexicons_of(scope: list[dict], lex: gate.Lexicon) -> dict[str, gate.Lexicon]:
+    """Per item: the lexicon it is judged with (``gate.lexicon_for``: ``lex`` for every
+    registered pair; the scoped per-set lexicon for an adapted-only pair, plan 0060 A2)."""
+    return {it["id"]: gate.lexicon_for(it, lex) for it in scope}
+
+
 def blocks_of(scope: list[dict], bank: list[dict], lex: gate.Lexicon) -> dict[str, Block]:
-    return {it["id"]: build_block_v3(it, bank, lex) for it in scope}
+    lexes = lexicons_of(scope, lex)
+    return {it["id"]: build_block_v3(it, bank, lexes[it["id"]]) for it in scope}
 
 
 # ---------------------------------------------------------------- story-echo guard (C1.6)
@@ -451,7 +476,7 @@ def pick_problems(
     for q, lab, other in (("Q1", picked[0], picked[2]), ("Q3", picked[2], picked[0])):
         if not option_named(quote, lab, lex, other):
             out.append(f'the quote does not name your {q} pick "{bare_label(lab)}"')
-    if not gate.action_ref(quote, picked[1], _objects(picked[2], lex)):
+    if not gate.action_ref(quote, picked[1], _objects(picked[2], lex), lex.actions):
         out.append(f'the quote does not state your Q2 pick "{picked[1]}"')
     pa, pp = _person_of(picked[0]), _person_of(picked[2])
     if pa and pp and gate.relation_conflict(quote, pa, pp, lex):  # round 3
@@ -522,7 +547,8 @@ def run(args: JudgeArgs) -> FamilyResult:
     bank = load_bank(FAMILY)
     lex = gate.load_lexicon()
     scope = item_scope(bank, args)
-    blocks = blocks_of(scope, bank, lex)
+    lexes = lexicons_of(scope, lex)  # plan 0060 A2: an adapted-only pair's scoped lexicon
+    blocks = {it["id"]: build_block_v3(it, bank, lexes[it["id"]]) for it in scope}
     cells, rep = reads.load(args, FAMILY, ids=[it["id"] for it in scope])
     cells, span = story_guard(cells, rep, args)
     extra = {
@@ -530,7 +556,7 @@ def run(args: JudgeArgs) -> FamilyResult:
         "n_roles_unlexiconed": len({r for b in blocks.values() for r in b.unlexiconed}),
     }
     if digest.summary_mode(args):
-        return _run_summary(args, scope, blocks, cells, rep, lex, extra)
+        return _run_summary(args, scope, blocks, cells, rep, lex, extra, lexes)
     selected = cells  # every loaded cell of the read span is a site
     nonempty = [c for c in selected if not c.empty]
     by_key = {c.key: c for c in nonempty}
@@ -573,7 +599,7 @@ def run(args: JudgeArgs) -> FamilyResult:
             n_api_failed += 1
             continue
         cell = by_key[call.key]
-        v = verdict(r, blocks[cell.id], digest.native_lines([cell]), [cell], lex)
+        v = verdict(r, blocks[cell.id], digest.native_lines([cell]), [cell], lexes[cell.id])
         rows.append({"key": call.key, "id": cell.id, "layer": cell.layer, "pos": cell.pos, **v})
     counts = base_counts(
         n_expected=len(selected),
@@ -610,6 +636,7 @@ def _run_summary(
     rep: LoadReport,
     lex: gate.Lexicon,
     extra: dict,
+    lexes: Mapping[str, gate.Lexicon] | None = None,
 ) -> FamilyResult:
     """Summary mode: every site of an item -> one digest -> the three MCs on it. Binding is per
     STATEMENT, not per digest: the gate requires the quote inside one bullet of one digest line
@@ -617,9 +644,8 @@ def _run_summary(
     unsummarized item is undecided (audit F3: never a fail); one whose call failed is a fail;
     both counted in ``n_unjudged_cells`` (items); an empty one is a fail counted in
     ``n_empty_cells`` (items)."""
-    from wsbench import registry
-
     task_note = registry.get(FAMILY).task_note
+    lex_of: Mapping[str, gate.Lexicon] = lexes if lexes is not None else defaultdict(lambda: lex)
     pv = digest.prompt_version(PROMPT_VERSION, args, FAMILY)
     by_item: dict[str, list[Cell]] = defaultdict(list)
     for c in cells:
@@ -639,7 +665,7 @@ def _run_summary(
             expect_all=cells,
         )
         if not args.dry_run:
-            _pin_two_person_lines(args, col, ids, by_item, blocks, lex)
+            _pin_two_person_lines(args, col, ids, by_item, blocks, {i: lex_of[i] for i in ids})
         source_kind = digest.as_prose(rep)
         note = digest.summary_note(args, source_kind, family=FAMILY)
         judged = [i for i in ids if i not in col.unsummarized and i not in col.empty]
@@ -678,7 +704,7 @@ def _run_summary(
             r0 = results.get(c.key)
             if r0 is None:
                 continue
-            probs = pick_problems(r0, blocks[i], col.evidence.get(i, ()), by_item[i], lex)
+            probs = pick_problems(r0, blocks[i], col.evidence.get(i, ()), by_item[i], lex_of[i])
             if probs:
                 retry_of[i] = {"first": r0, "problems": probs}
                 re_calls.append(
@@ -712,7 +738,7 @@ def _run_summary(
         if i in judged and r is None:
             n_api_failed += 1
         v = (
-            verdict(r, blocks[i], col.evidence.get(i, ()), by_item[i], lex)
+            verdict(r, blocks[i], col.evidence.get(i, ()), by_item[i], lex_of[i])
             if r is not None
             else dict(_UNJUDGED)
         )
@@ -782,7 +808,7 @@ def _pin_two_person_lines(
     ids: list[str],
     by_item: Mapping[str, list[Cell]],
     blocks: Mapping[str, Block],
-    lex: gate.Lexicon,
+    lex: gate.Lexicon | Mapping[str, gate.Lexicon],
 ) -> None:
     """final r1: pin into each digest the raw statements that name two of the SHOWN people (by
     name or role) and one of the SHOWN actions: the same rule for every option, never told the
@@ -792,15 +818,20 @@ def _pin_two_person_lines(
     for i in ids:
         b = blocks[i]
         people = list(b.people)
+        lx = lex[i] if isinstance(lex, Mapping) else lex
 
-        objects = [w for lab in people for w in _objects(lab, lex)]
+        objects = [w for lab in people for w in _objects(lab, lx)]
 
         def pred(
-            ln: digest.Line, people: list = people, acts: tuple = b.actions, objs: list = objects
+            ln: digest.Line,
+            people: list = people,
+            acts: tuple = b.actions,
+            objs: list = objects,
+            lx: gate.Lexicon = lx,
         ) -> bool:
             for part in ln.text.split(prompts.BULLET_MARK):
-                n = sum(option_named(part, lab, lex) for lab in people)
-                if n >= 2 and any(gate.action_ref(part, a, objs) for a in acts):
+                n = sum(option_named(part, lab, lx) for lab in people)
+                if n >= 2 and any(gate.action_ref(part, a, objs, lx.actions) for a in acts):
                     return True
             return False
 

@@ -68,10 +68,32 @@ def _groups(path: Path = GROUPS_FILE) -> dict[str, str]:
     return out
 
 
+@cache
+def _merged_groups(over: Path) -> dict[str, str]:
+    """:func:`_groups` with the set overlay's concepts added (plan 0060 A2; same format,
+    ``{"groups": {subfamily: {group: [concepts]}}}``). A new concept may join a registered group
+    or a new one; a registered concept keeps its registered group (listing it under another is
+    an error), so no registered item's distractor exclusions change."""
+    base = _groups()
+    add = _groups(over)
+    clash = sorted(c for c, g in add.items() if c in base and base[c] != g)
+    if clash:
+        raise SystemExit(f"{over}: registered concepts in another group: {clash[:5]}")
+    return {**add, **base}
+
+
+def concept_groups() -> dict[str, str]:
+    """The concept -> group map the judge reads: the frozen file, plus under ``WSB_BANK_ROOT``
+    the set's ``<root>/directed_modulation/distractor_groups.json`` (:func:`_merged_groups`)."""
+    over = registry.overlay_path(FAMILY, GROUPS_FILE.name)
+    return _groups() if over is None else _merged_groups(over)
+
+
 def group_of(concept: str) -> str:
     """The concept's relatedness group; a concept missing from the groups file is a hard error
-    (a new bank concept must be grouped before it can be judged)."""
-    g = _groups().get(concept)
+    (a new bank concept must be grouped before it can be judged; an adapted set's new concept
+    in its ``distractor_groups.json`` overlay, :func:`concept_groups`)."""
+    g = concept_groups().get(concept)
     if g is None:
         raise ValueError(f"{GROUPS_FILE.name}: concept {concept!r} has no relatedness group")
     return g
@@ -89,7 +111,12 @@ def option_sets(
     relatedness group (plan 0035 C2: no synonym, instance or close relative of the gold is ever
     a competing option), drawn and ordered with a per-item seeded rng, so an item's options are
     identical across rows, runs and arms. The escape line is appended at render time
-    (``mc.options_with_cannot``), never part of the list."""
+    (``mc.options_with_cannot``), never part of the list.
+
+    The draw is over the LOADED bank's same-subfamily concepts, so it is a bank-level property:
+    an adapted bank smaller than the registered one shows different options even for its
+    verbatim originals, and a subfamily with fewer than ``N_DISTRACTORS`` concepts unrelated to
+    a gold raises (plan 0060 audit)."""
     by_sub: dict[str, set[str]] = {}
     for it in items:
         by_sub.setdefault(str(it["subfamily"]), set()).add(str(it["concept"]))

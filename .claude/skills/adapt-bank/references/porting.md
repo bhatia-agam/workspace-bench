@@ -47,6 +47,10 @@
 ## Judging an adapted bank
 `WSB_BANK_ROOT=adapted/<model> wsbench run families=<the adapted ones> readouts_root=… out=…`
 - Every family's bank load goes through `registry.bank_path`.
+- Judge an adapted bank via `WSB_BANK_ROOT` only, never `WSB_BANK_FILE_<FAMILY>`. The per-set
+  judge resources (`adapted/<m>/<family>/<file>`, plan 0060 A2: `registry.load_resource`) and
+  the loud "adapted-only id has no per-set entry" errors key on the root; a bank-file override
+  reads the registered resources only and silently falls back for adapted-only ids.
 - If a family is missing from the root, that's an error, not a fallback to another model's bank.
   So list only the families present in `adapted/<model>/report.json`.
 - The frozen floors (`evals/baselines/`) were measured on the original banks. Re-measure them on an

@@ -1,11 +1,15 @@
 """Family registry: each ``wsbench.evals.<family>`` package registers one ``EvalSpec`` on import."""
 
+import copy
+import functools
 import importlib
+import json
 import os
 import pkgutil
 from collections.abc import Callable, Iterable, Mapping
 from dataclasses import dataclass, field
 from pathlib import Path
+from typing import Any
 
 from wsbench.judge_config import JudgeConfig, ResolvedJudge
 from wsbench.results import FamilyResult
@@ -95,6 +99,160 @@ def frozen_bank_path(family: str) -> Path:
     ``WSB_BANK_*`` overrides: what the adapt / viewer / lucky-guessing tools treat as the frozen
     27B bank (a versioned ``items_v<N>.json`` once the family switches, plan 0032 §2.12)."""
     return REPO_ROOT / _spec_for_bank(family).bank
+
+
+def bank_root() -> Path | None:
+    """``$WSB_BANK_ROOT`` as a path (relative = under REPO_ROOT), or None for the registered
+    bank."""
+    root = os.environ.get(BANK_ROOT_ENV)
+    if not root:
+        return None
+    return Path(root) if Path(root).is_absolute() else REPO_ROOT / root
+
+
+def resource_path(family: str, name: str) -> Path:
+    """A judge resource of the REGISTERED instrument: ``REPO_ROOT/evals/<family>/<name>``."""
+    return REPO_ROOT / "evals" / family / name
+
+
+def overlay_path(family: str, name: str) -> Path | None:
+    """The per-set overlay of a judge resource (plan 0060 A2): ``$WSB_BANK_ROOT/<family>/<name>``
+    when ``WSB_BANK_ROOT`` is set and that file exists, else None (never under the registered
+    bank)."""
+    root = bank_root()
+    return None if root is None else _overlay_at(str(root), family, name)
+
+
+@functools.cache
+def _overlay_at(root: str, family: str, name: str) -> Path | None:
+    """One existence check per (set dir, family, file): judges look resources up per item, and
+    a set dir is written before it is judged."""
+    path = Path(root) / family / name
+    return path if path.is_file() else None
+
+
+def merge_overlay(
+    base: Any, over: Any, keys: Iterable[str], *, where: str = "overlay"
+) -> tuple[Any, frozenset[str]]:
+    """``(merged, added)``: ``base`` (never mutated) with the overlay's entries ADDED under each
+    dotted path of ``keys`` (``"subjects"``, ``"groups.pair"``): a key absent from the
+    registered map is added; a key the registered map has must carry the identical value, else
+    SystemExit (an overlay never shadows a registered entry). A list at a path (``passive``)
+    merges as a set of members. ``added`` = every added entry as ``"<path>/<key>"``. Every other
+    overlay field (``version``, ``note``) is ignored."""
+    out = copy.deepcopy(base)
+    added: set[str] = set()
+    for path in keys:
+        parts = path.split(".")
+        src: Any = over
+        for p in parts:
+            src = src.get(p) if isinstance(src, Mapping) else None
+        if src is None:
+            continue
+        dst = out
+        for p in parts[:-1]:
+            dst = dst.setdefault(p, {})
+            if not isinstance(dst, dict):
+                raise SystemExit(f"{where}: {path} shape differs from the registered file")
+        reg = dst.get(parts[-1])
+        if not isinstance(src, (list, Mapping)):
+            raise SystemExit(f"{where}: {path!r} must be a map or a list")
+        if reg is not None and isinstance(reg, list) != isinstance(src, list):
+            raise SystemExit(f"{where}: {path} shape differs from the registered file")
+        if reg is not None and not isinstance(reg, (list, Mapping)):
+            raise SystemExit(f"{where}: {path} shape differs from the registered file")
+        if isinstance(src, list):
+            have_l = list(dst.get(parts[-1]) or [])
+            new = [x for x in src if x not in have_l]
+            dst[parts[-1]] = have_l + new
+            added |= {f"{path}/{x}" for x in new}
+            continue
+        have = dst.setdefault(parts[-1], {})
+        for k, v in src.items():
+            if k in have:
+                if have[k] != v:
+                    raise SystemExit(
+                        f"{where}: {path}/{k} differs from the registered entry (an overlay "
+                        "only adds entries; registered keys resolve to registered entries)"
+                    )
+                continue
+            have[k] = v
+            added.add(f"{path}/{k}")
+    return out, frozenset(added)
+
+
+_RESOURCE_CACHE: dict[tuple[str, str, tuple[str, ...]], tuple[Any, frozenset[str]]] = {}
+
+
+def load_resource(
+    family: str, name: str, keys: Iterable[str], *, registered: Path | None = None
+) -> tuple[Any, frozenset[str]]:
+    """``(data, added)``: the registered resource (``registered``, default
+    :func:`resource_path`; a missing file reads as ``{}``) with the per-set overlay
+    (:func:`overlay_path`) merged on it by :func:`merge_overlay`. With no ``WSB_BANK_ROOT`` or no
+    overlay file: exactly the registered file, ``added`` empty. Cached per (registered file,
+    overlay file); the caller must not mutate the result."""
+    reg = registered if registered is not None else resource_path(family, name)
+    over = overlay_path(family, name)
+    ks = tuple(keys)
+    key = (str(reg), str(over or ""), ks)
+    if key not in _RESOURCE_CACHE:
+        base = json.loads(reg.read_text(encoding="utf-8")) if reg.is_file() else {}
+        if over is None:
+            _RESOURCE_CACHE[key] = (base, frozenset())
+        else:
+            data = json.loads(over.read_text(encoding="utf-8"))
+            _RESOURCE_CACHE[key] = merge_overlay(base, data, ks, where=str(over))
+    return _RESOURCE_CACHE[key]
+
+
+def registered_ids(family: str) -> frozenset[str]:
+    """Ids of the family's REGISTERED bank (:func:`frozen_bank_path`, never the ``WSB_BANK_*``
+    overrides): ``label_of(name)`` for name-keyed items, else ``id``. What decides "registered"
+    vs "adapted-only" for every per-set overlay lookup."""
+    return _registered_ids(_frozen_bank_str(family))
+
+
+@functools.cache
+def _frozen_bank_str(family: str) -> str:
+    """:func:`frozen_bank_path` once per family (it may list the evals package on each call when
+    the registry was emptied, and the per-item overlay checks call it per item)."""
+    return str(frozen_bank_path(family))
+
+
+@functools.cache
+def _registered_ids(path: str) -> frozenset[str]:
+    from wsbench.banks import label_of
+
+    raw = json.loads(Path(path).read_text(encoding="utf-8"))
+    items = raw if isinstance(raw, list) else raw.get("items", [])
+    out = set()
+    for it in items:
+        if it.get("name"):
+            out.add(label_of(str(it["name"])))
+        elif it.get("id"):
+            out.add(str(it["id"]))
+    return frozenset(out)
+
+
+def registered_values(family: str, field_name: str) -> frozenset[str]:
+    """Every value of item field ``field_name`` in the family's REGISTERED bank (e.g.
+    role_bound's ``pair_id``)."""
+    return _registered_values(_frozen_bank_str(family), field_name)
+
+
+@functools.cache
+def _registered_values(path: str, field_name: str) -> frozenset[str]:
+    raw = json.loads(Path(path).read_text(encoding="utf-8"))
+    items = raw if isinstance(raw, list) else raw.get("items", [])
+    return frozenset(str(it[field_name]) for it in items if it.get(field_name) is not None)
+
+
+def adapted_only(family: str, item_id: str) -> bool:
+    """An adapted bank is in use (``WSB_BANK_ROOT``) AND ``item_id`` is not in the family's
+    registered bank: the case where a per-set entry is required and a missing one is a loud
+    error. Always False for the registered bank."""
+    return bank_root() is not None and str(item_id) not in registered_ids(family)
 
 
 def _spec_for_bank(family: str) -> "EvalSpec":

@@ -17,7 +17,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Literal
 
-from wsbench import digest, mc, reads, rival
+from wsbench import digest, mc, reads, registry, rival
 from wsbench.banks import load_bank, native_langs
 from wsbench.basic.mcjudge_bank import pieces_hold
 from wsbench.cache import Cache
@@ -1942,12 +1942,42 @@ def hidden_rivals(family: str, item_id: str, role: str) -> list[str]:
     distractors an earlier frozen bank listed for this unit and the current list dropped (the
     round-4 leakage redraws removed readout-named competitors such as "dirhams" for the khoums
     item; shown again they re-open the leak). Weighed by :func:`contested_verdict` in code, never
-    shown to the judge. Missing file or entry = none."""
+    shown to the judge. Missing file or entry = none.
+
+    Plan 0060 A2: under ``WSB_BANK_ROOT`` the set's ``<root>/<family>/hidden_rivals.json``
+    items are added (``registry.load_resource``; a registered id reads its registered entry),
+    and an adapted-only id with no entry (``{}`` = none, explicitly) in a family that has the
+    file is an error."""
+    if registry.bank_root() is not None:
+        got = _adapted_entry(family, HIDDEN_RIVALS_FILE, item_id).get(role)
+        return [str(x) for x in got or ()]
     if family not in _HIDDEN_CACHE:
         path = REPO_ROOT / "evals" / family / "hidden_rivals.json"
         data = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {}
         _HIDDEN_CACHE[family] = {str(k): v for k, v in (data.get("items") or {}).items()}
     return [str(x) for x in (_HIDDEN_CACHE[family].get(str(item_id)) or {}).get(role) or ()]
+
+
+HIDDEN_RIVALS_FILE = "hidden_rivals.json"
+
+
+def _adapted_entry(family: str, name: str, item_id: str) -> dict[str, Any]:
+    """An item's entry in ``evals/<family>/<name>`` (``{"items": {id: {role: ...}}}``) with the
+    set's overlay items added (``registry.load_resource``); ``{}`` for a family with neither
+    file. An adapted-only id (``registry.adapted_only``) missing from a resource the family has
+    is an error, never the silent "no entry"."""
+    data, _added = registry.load_resource(family, name, ("items",))
+    got = (data.get("items") or {}).get(str(item_id))
+    if (
+        got is None
+        and registry.adapted_only(family, item_id)
+        and (registry.resource_path(family, name).exists() or registry.overlay_path(family, name))
+    ):
+        raise SystemExit(
+            f"{family}/{item_id}: adapted-only item has no {name} entry "
+            f"({registry.BANK_ROOT_ENV}/{family}/{name}; {{}} = none)"
+        )
+    return dict(got or {})
 
 
 def call_pv(pv: str) -> str:
@@ -1979,6 +2009,7 @@ def _gate(
     )  # fmt: skip
 
 
+BRMT = "basic_readout_mt"
 EXONYMS_FILE = REPO_ROOT / "evals/basic_readout_mt/exonyms.json"
 
 
@@ -1997,11 +2028,17 @@ _EXONYM_CACHE: dict[str, dict[str, dict[str, dict[str, list[str]]]]] = {}
 
 def gate_name_forms(item: Mapping[str, Any], role: str) -> dict[str, list[str]]:
     """:func:`item_name_forms` plus the item's frozen exonyms (:func:`_exonyms`), each new
-    language after the bank's own (a form the bank already lists is not repeated)."""
-    if "x" not in _EXONYM_CACHE:
-        _EXONYM_CACHE["x"] = _exonyms()
+    language after the bank's own (a form the bank already lists is not repeated). Under
+    ``WSB_BANK_ROOT`` (plan 0060 A2) the set's ``<root>/basic_readout_mt/exonyms.json`` items
+    are added, and an adapted-only id with no entry (``{}`` = none) is an error."""
+    iid = str(item.get("id") or item.get("name"))
+    if registry.bank_root() is not None:
+        extra = _adapted_entry(BRMT, EXONYMS_FILE.name, iid).get(role)
+    else:
+        if "x" not in _EXONYM_CACHE:
+            _EXONYM_CACHE["x"] = _exonyms()
+        extra = (_EXONYM_CACHE["x"].get(iid) or {}).get(role)
     out = item_name_forms(item, role)
-    extra = (_EXONYM_CACHE["x"].get(str(item.get("id") or item.get("name"))) or {}).get(role)
     have = {mc.fold(f).strip() for fs in out.values() for f in fs}
     for lang, fs in (extra or {}).items():
         add = [str(f) for f in fs if mc.fold(str(f)).strip() not in have]
@@ -2120,6 +2157,11 @@ def run_mc(args: JudgeArgs, *, name: str, pinned: bool = False) -> FamilyResult:
     base_system = ML_SYSTEM if v2 else cfg.system
     diag_pv = ML_MC_PROMPT_VERSION if v2 else PROMPT_VERSION
     scope = item_scope(items, args)
+    if cfg.name_gate and registry.bank_root() is not None:
+        for it in scope:  # plan 0060 A2: a missing per-set entry fails before any call
+            _adapted_entry(BRMT, EXONYMS_FILE.name, it["id"])
+            if cfg.rival:
+                _adapted_entry(name, HIDDEN_RIVALS_FILE, it["id"])
     ids = [it["id"] for it in scope]
     by_id = {it["id"]: it for it in scope}
     profile = MC_PROFILES.get(name) if pinned else None

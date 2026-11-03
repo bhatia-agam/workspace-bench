@@ -324,6 +324,12 @@ def test_read_plan_of_an_adapted_only_clone_equals_the_original(family, tmp_path
     items = raw if isinstance(raw, list) else raw["items"]
     orig = items[0]
     items.append(_clone(family, orig))
+    if isinstance(raw, dict) and isinstance(raw.get("vectors"), dict):
+        # an adapted bank names its subject's OWN vectors (readplan.vector_file refuses the
+        # registered evals/ ones under WSB_BANK_ROOT, #243); the plan only resolves the path
+        for v in raw["vectors"].values():
+            if isinstance(v, dict) and str(v.get("path", "")).startswith("evals/"):
+                v["path"] = "adapted/fixture/" + str(v["path"])[len("evals/") :]
     (tmp_path / f"{family}.json").write_text(json.dumps(raw), encoding="utf-8")
     (tmp_path / "report.json").write_text(json.dumps({"n_layers": 64}), encoding="utf-8")
     monkeypatch.setenv(registry.BANK_ROOT_ENV, str(tmp_path))

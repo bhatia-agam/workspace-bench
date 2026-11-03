@@ -81,8 +81,15 @@ def targets_path() -> Path:
 
 
 def load_targets() -> dict[str, dict]:
-    """The Stage C sidecar (plan 0012 §3.1): item id -> {action, forms, not_credit}."""
-    return dict(json.loads(targets_path().read_text(encoding="utf-8"))["items"])
+    """The Stage C sidecar (plan 0012 §3.1): item id -> {action, forms, not_credit}. Under
+    ``WSB_BANK_ROOT`` (plan 0060 A2) the set's ``<root>/agentic_misalignment/<targets file>``
+    items are added to :func:`targets_path`'s (``registry.load_resource``: a registered id
+    always reads its registered target); :func:`item_targets` fails loudly on a missing one."""
+    path = targets_path()
+    if registry.overlay_path(FAMILY, path.name) is None:
+        return dict(json.loads(path.read_text(encoding="utf-8"))["items"])
+    data, _added = registry.load_resource(FAMILY, path.name, ("items",), registered=path)
+    return dict(data["items"])
 
 
 def target_of(it: dict, targets: dict[str, dict]) -> dict | None:

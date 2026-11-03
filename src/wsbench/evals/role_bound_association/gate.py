@@ -29,11 +29,12 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
-from wsbench import digest
+from wsbench import digest, registry
 from wsbench.mc import form_in
 from wsbench.readouts import Cell
 from wsbench.registry import REPO_ROOT
 
+FAMILY = "role_bound_association"
 LEXICON = REPO_ROOT / "evals/role_bound_association/roles_v1.json"
 _LATIN_WORD = re.compile(r"[^\W\d_]+", re.UNICODE)
 _HYPHEN = re.compile("(?<=\\w)[-\u2010\u2011\u2013](?=\\w)")
@@ -44,6 +45,10 @@ class Lexicon:
     version: str
     roles: Mapping[str, Mapping[str, Sequence[str]]]
     block: Mapping[str, Sequence[str]] = field(default_factory=dict)
+    # plan 0060 A2: an adapted pair's scoped lexicon also carries its merged action lexicon and
+    # display terms; None (every registered item) = the registered files
+    actions: "Actions | None" = None
+    display: Mapping[str, Sequence[str]] | None = None
 
     def has(self, role: str) -> bool:
         return role in self.roles
@@ -434,19 +439,7 @@ class Actions:
 @functools.lru_cache(maxsize=4)
 def load_actions(path: Path = ACTIONS) -> Actions:
     """The action lexicon ``actions_v1.json`` (final r1)."""
-    d = json.loads(Path(path).read_text(encoding="utf-8"))
-    return Actions(
-        str(d["version"]),
-        {k: tuple(v) for k, v in d["actions"].items()},
-        {k: tuple(v) for k, v in d.get("needs_object", {}).items()},
-        {k: tuple(v) for k, v in d.get("object_preps", {}).items()},
-        frozenset(d.get("passive", ())),
-        {k: tuple(v) for k, v in d.get("dative", {}).items()},
-        {
-            k: tuple((f.split("|", 1)[0], f.split("|", 1)[1]) for f in v)
-            for k, v in d.get("split_object", {}).items()
-        },
-    )
+    return _actions_of(json.loads(Path(path).read_text(encoding="utf-8")))
 
 
 _DETS = ("the", "a", "an", "his", "her", "their", "its", "my", "our", "your", "these", "those")
@@ -569,7 +562,9 @@ def _passive(text: str, form: str, objects: Sequence[str]) -> bool:
     return re.search(pat, text, flags=re.I) is not None
 
 
-def action_ref(quote: str, action: str, objects: Sequence[str] = ()) -> bool:
+def action_ref(
+    quote: str, action: str, objects: Sequence[str] = (), lx: Actions | None = None
+) -> bool:
     """final r1: the quote states the action by one of its listed forms (``mc.form_in``: Latin
     word-bounded, CJK as listed multi-character forms; a ``re:`` form is a regular expression), or
     by a ``needs_object`` form (generic-sense words and their inflections: "fine", "mad",
@@ -577,8 +572,9 @@ def action_ref(quote: str, action: str, objects: Sequence[str] = ()) -> bool:
     role terms) or a pronoun as its object (:func:`_with_object`: "fines the driver", "mad at
     him"), or in the passive for a ``passive`` form ("Otto was fed by Maya"). An action missing
     from the lexicon (an adapted bank's) is its own words. A related but different action never
-    counts ("empathy" for pitied, "reprimands" for yelled at)."""
-    lx = load_actions()
+    counts ("empathy" for pitied, "reprimands" for yelled at). ``lx``: an adapted pair's scoped
+    action lexicon (:func:`lexicon_for`), default the registered one."""
+    lx = lx if lx is not None else load_actions()
     forms = lx.forms.get(action)
     if forms is None:
         forms = (action,)
@@ -726,7 +722,7 @@ def check(
     a = person_ref(q, *agent, lex, counterpart=patient[1], others=others)
     p = person_ref(q, *patient, lex, counterpart=agent[1], others=others)
     objects = [patient[0], *lex.terms(patient[1])]
-    act = True if action is None else action_ref(q, action, objects)
+    act = True if action is None else action_ref(q, action, objects, lex.actions)
     rel = not relation_conflict(q, agent, patient, lex)
     return {
         "quote_ok": qok,
@@ -737,3 +733,84 @@ def check(
         "relation_ok": rel,
         "ok": qok and one and a and p and act and rel,
     }
+
+
+# ------------------------------------------------- plan 0060 A2: per-set lexicon overlays
+# Under WSB_BANK_ROOT, adapted/<m>/role_bound_association/{roles_v1,actions_v1,display_terms_v1}
+# .json ADD entries for the set's adapted-only pairs (registry.load_resource: a registered key
+# is never shadowed). The lexicon is read bank-wide (conflicting_role / _lexicon_words iterate
+# every role, so an added role would change a REGISTERED pair's verdict), hence the overlay is
+# SCOPED: only an item whose pair_id is not in the registered bank gets the merged lexicon
+# (lexicon_for); every registered pair keeps the registered files exactly.
+ROLES_FILE = "roles_v1.json"
+ACTIONS_FILE = "actions_v1.json"
+DISPLAY_FILE = "display_terms_v1.json"
+ROLES_KEYS = ("roles", "block")
+ACTIONS_KEYS = ("actions", "needs_object", "object_preps", "passive", "dative", "split_object")
+DISPLAY_KEYS = ("roles",)
+
+
+def adapted_lexicon() -> Lexicon | None:
+    """The merged (registered + per-set overlay) lexicon for adapted-only pairs, with its merged
+    actions and display terms; None with no ``WSB_BANK_ROOT``."""
+    if registry.bank_root() is None:
+        return None
+    files = (ROLES_FILE, ACTIONS_FILE, DISPLAY_FILE)
+    paths = tuple(str(registry.overlay_path(FAMILY, f) or "") for f in files)
+    return _adapted_lexicon(paths)
+
+
+@functools.lru_cache(maxsize=4)
+def _adapted_lexicon(_paths: tuple[str, ...]) -> Lexicon:
+    roles, _a = registry.load_resource(FAMILY, ROLES_FILE, ROLES_KEYS, registered=LEXICON)
+    acts, _b = registry.load_resource(FAMILY, ACTIONS_FILE, ACTIONS_KEYS, registered=ACTIONS)
+    disp, _c = registry.load_resource(FAMILY, DISPLAY_FILE, DISPLAY_KEYS)
+    return Lexicon(
+        str(roles["version"]),
+        roles["roles"],
+        roles.get("block", {}),
+        actions=_actions_of(acts),
+        display={str(k): [str(t) for t in v] for k, v in disp["roles"].items()},
+    )
+
+
+def _actions_of(d: Mapping[str, Any]) -> Actions:
+    return Actions(
+        str(d["version"]),
+        {k: tuple(v) for k, v in d["actions"].items()},
+        {k: tuple(v) for k, v in d.get("needs_object", {}).items()},
+        {k: tuple(v) for k, v in d.get("object_preps", {}).items()},
+        frozenset(d.get("passive", ())),
+        {k: tuple(v) for k, v in d.get("dative", {}).items()},
+        {
+            k: tuple((f.split("|", 1)[0], f.split("|", 1)[1]) for f in v)
+            for k, v in d.get("split_object", {}).items()
+        },
+    )
+
+
+def adapted_pair(it: Mapping[str, Any]) -> bool:
+    """Under ``WSB_BANK_ROOT``, the item's ``pair_id`` is not a registered pair."""
+    return registry.bank_root() is not None and str(
+        it.get("pair_id", "")
+    ) not in registry.registered_values(FAMILY, "pair_id")
+
+
+def lexicon_for(it: Mapping[str, Any], lex: Lexicon) -> Lexicon:
+    """The lexicon ``it`` is judged with: ``lex`` (the registered one) for every registered pair
+    and for the registered bank; the merged per-set lexicon (:func:`adapted_lexicon`) for an
+    adapted-only pair, whose two roles and gold action must then be lexiconed (a missing entry
+    is an error, never the silent literal-only match)."""
+    if not adapted_pair(it):
+        return lex
+    merged = adapted_lexicon()
+    assert merged is not None and merged.actions is not None
+    miss = [r for r in (it.get("role_a"), it.get("role_b")) if r and not merged.has(str(r))]
+    if it.get("action") and str(it["action"]) not in merged.actions.forms:
+        miss.append(f"action {it['action']!r}")
+    if miss:
+        raise SystemExit(
+            f"{FAMILY}/{it.get('id')}: adapted-only pair {it.get('pair_id')!r} has no lexicon "
+            f"entry for {miss} ({registry.BANK_ROOT_ENV}/{FAMILY}/{ROLES_FILE} / {ACTIONS_FILE})"
+        )
+    return merged
