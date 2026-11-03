@@ -868,25 +868,13 @@ BRIEFS: dict[str, Brief] = {
 
 
 def tokenizer(model: str) -> Any:
-    """The subject's own tokenizer: token counts are tokenizer-tied (``probe_token_lens``)."""
-    from transformers import AutoTokenizer
-
-    from .subjects import get
+    """The subject's own tokenizer: token counts are tokenizer-tied (``probe_token_lens``). Its
+    ``chat_template`` applies with or without a ``tokenizer_dir`` (GLM-5.3 loads from the hub)."""
+    from .subjects import get, load_tokenizer
 
     s = get(model)
-    if not s.tokenizer_dir:
-        return AutoTokenizer.from_pretrained(s.hf_id, revision=s.revision)
-    try:  # local files (Kimi's hub tokenizer is remote code; its converted tokenizer.json is not)
-        tok = AutoTokenizer.from_pretrained(s.tokenizer_dir)
-    except ValueError:
-        from transformers import PreTrainedTokenizerFast
-
-        tok = PreTrainedTokenizerFast.from_pretrained(s.tokenizer_dir)
-    if s.chat_template:
-        from pathlib import Path
-
-        tok.chat_template = Path(s.chat_template).read_text()
-    return tok
+    return load_tokenizer(s.hf_id, s.revision, s.tokenizer_dir, s.chat_template,
+                          s.trust_remote_code)  # fmt: skip
 
 
 def _few_shots(model: str, family: str, brief: Brief, k: int = 4) -> list[dict]:

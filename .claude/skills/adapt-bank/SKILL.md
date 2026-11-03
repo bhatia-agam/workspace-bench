@@ -360,18 +360,50 @@ gw-olens' `adapt_mp_subject_modal.py` / `kimi_wsbench_modal.py` / `subject_*_mod
 - `ADAPT_ENV`, `HF_HOME`, `ADAPT_GPU_LOCK` and `MODAL_ENVIRONMENT` (default `agam`) to your own
   values; `HF_HUB_OFFLINE=0` or pre-download the pinned revision; deploy `scripts/adapt_modal.py`
   into your own Modal environment and set `ADAPT_BACKEND=modal`.
-- Re-stage a subject's `tokenizer_dir` / `chat_template` locally from the pinned HF revision and
-  point `subjects.py` at it.
+- Re-stage a subject's `tokenizer_dir` / `chat_template` from the pinned HF revision into
+  `src/wsbench/adapt/data/templates/` and point `subjects.py` at it (done for glm-5.3, kimi-k2).
 - **Claude auth.** The default reads the keyless OAuth token from Modal Dict `anthropic-oauth` in
   `MODAL_ENVIRONMENT` (only Agam's env has it). Set `WSB_ANTHROPIC_AUTH=sdk` to use the
   Anthropic SDK's own credentials (`ANTHROPIC_PROFILE` / federation). `adapt_box.sh` runs `unset
   ANTHROPIC_API_KEY`, so an inline key does not survive it: call `python -m wsbench.adapt`
   directly. `adapt floors stage=judge` always reads the Dict (`floors.py` `judge`) and fails off
   that box until it honours `WSB_ANTHROPIC_AUTH` (open item, plan 0060).
-- Big MoE subjects (GLM-5.3-Flash 320B, DeepSeek-V4-Flash 284B, Kimi-K2 1T) do not fit
-  `adapt_modal.py`'s single-GPU vLLM: they need a tensor-parallel vLLM deploy (TP 4-8 on
-  H200 / B300) or an HF model-parallel runner exposing the same `RemoteRunner` interface. Check
-  stock, and batch every candidate into ONE generation run per stage.
+- **Per-subject Modal apps** (`scripts/adapt_modal.py`, plan 0060 A3). Each `backend="modal"`
+  Subject names its app (`modal_app`) and how it is served: `modal_gpu` (fallbacks in order),
+  `modal_tp`, `modal_engines` (TP engines per container, one per GPU set: DeepSeek-V4 = one
+  B300:8 with 8 TP=1 engines, "always 8xB300"), `modal_replicas` (containers the chunks fan out
+  over), `modal_image` (recipe `default` | `glm53` | `dsv4`), `modal_volume` + `modal_weights`,
+  `modal_engine` (extra `vllm.LLM` kwargs). Subjects with the default fields share
+  `adapt-subject-llm` (one H200). `modal_built=False` (glm-5.3-flash: Agam's text-only app, not
+  rebuilt per D1) is refused by both the deploy script and `RemoteRunner`.
+  Prerequisites: the weights volume exists in the env (`glm53-weights` holding
+  `hf/nvidia__GLM-5.3-NVFP4`; `v4-flash`); kimi-k2 has none, so its first load writes ~1 TB into
+  `adapt-hf-cache`. The glm53 image pulls the vLLM fork from a public HF repo (no secret).
+  Deploy once per app, from the repo root, with the Modal client venv:
+
+  ```bash
+  MODAL=/root/.cache/cfinf-modal-venv/bin/modal
+  export MODAL_PROFILE=safety-sahan-2 MODAL_ENVIRONMENT=camila-blank
+  $MODAL deploy scripts/adapt_modal.py                         # adapt-subject-llm (shared)
+  ADAPT_SUBJECT=glm-5.3 $MODAL deploy scripts/adapt_modal.py   # adapt-glm-5.3: B300:8|B200:8, TP8
+  ADAPT_SUBJECT=kimi-k2 $MODAL deploy scripts/adapt_modal.py   # adapt-kimi-k2: B300:8, TP8
+  ```
+
+  Then run `python -m wsbench.adapt … model=<key>` with the same `MODAL_ENVIRONMENT`;
+  `RemoteRunner` finds the app by name. It sends TOKEN IDS (the local render, tokenized without
+  added specials), so `<bos>` / `[gMASK]<sop>` is never doubled: an app deployed before A3 took
+  text and must be redeployed. The first call boots the engine (GLM-5.3: localize ~440 GB to
+  NVMe + load + JIT, ~15-20 min; `scaledown_window` keeps it warm 10 min between calls), so
+  batch every candidate into ONE generation run per stage. Check Blackwell stock first.
+- **Tokenizers off the box.** `glm-5.3` loads its tokenizer from the hub at the pinned revision
+  plus the in-repo `data/templates/glm53_nvfp4_nothink.jinja`; `kimi-k2` loads the hub's
+  remote-code tokenizer (`trust_remote_code`, needs `tiktoken`, in the `gpu` extra) with its
+  official template as-is: every Kimi render opens with the template's default system turn ("You
+  are Kimi, an AI assistant created by Moonshot AI.") unless the ask has its own system message
+  (sets are built fresh, so Agam's earlier renders need not match). `glm-5.3-flash` still points
+  at Agam's `/workspace/agam/hf_tok` (not refreshed, plan 0060 D1).
+- The box `Runner` hands vLLM rendered text; `RemoteRunner` sends token ids. For a tokenizer that
+  auto-adds a BOS the render already carries, the two backends can differ by that token.
 
 ## Tailoring to smaller and bigger subjects
 

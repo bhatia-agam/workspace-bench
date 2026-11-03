@@ -11,7 +11,8 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = ["pytest>=8", "ruff>=0.6"]
-gpu = ["torch>=2.4", "transformers>=5", "peft>=0.14", "huggingface_hub", "accelerate", "pyyaml"]
+gpu = ["torch>=2.4", "transformers>=5", "peft>=0.14", "huggingface_hub", "accelerate", "pyyaml",
+       "tiktoken"]  # tiktoken: Kimi-K2's hub tokenizer
 
 [project.scripts]
 wsbench = "wsbench.cli:main"
