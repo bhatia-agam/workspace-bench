@@ -176,7 +176,10 @@ def test_registered_template_gate_is_the_template_not_the_tokenizer_key(tok, ban
         ii.build_job(s.key, tok, bank)
 
 
-def test_unregistered_external_subject_gets_the_runner_guidance(tok, bank):
+def test_unregistered_external_subject_gets_the_runner_guidance(tok, bank, monkeypatch):
+    # deepseek-v4-flash is registered since #239; unregister it here so the case still exercises
+    # an EXTERNAL subject that has no Subject entry yet
+    monkeypatch.delitem(subjects.SUBJECTS, "deepseek-v4-flash", raising=False)
     assert "deepseek-v4-flash" not in subjects.SUBJECTS
     with pytest.raises(SystemExit, match=r"subjects\.py yet.*encode_messages"):
         ii.build_job("deepseek-v4-flash", tok, bank)
