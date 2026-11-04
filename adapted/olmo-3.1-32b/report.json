@@ -370,7 +370,7 @@
   "basic_readout_mt": {
    "basic-au-t1-w100c0-ent-battle-waterloo": "audit 2026-10-19: natural-name test: everyday name 'Waterloo' for readout not credited by the regex scorer (natural name is ONE dolma2 token, regex scorer can never credit it); forms {\"en\": [\"Battle of Waterloo\", \"Wate"
   },
-  "multihop_mt": {
+  "multihop_mt_regex": {
    "multihop-au-t1-w100c0-mh2-titanic-harlandwolff": "audit 2026-10-19: natural-name test: everyday name 'Titanic' for bridge1 not credited by the regex scorer (natural name is ONE dolma2 token, regex scorer can never credit it); forms {\"en\": [\"RMS Titanic\", \"the Titanic\"",
    "multihop-au-t1-w100c0-mh2-beagle-fitzroy": "audit 2026-10-19: natural-name test: everyday name 'Beagle' for bridge1 not credited by the regex scorer (natural name multi-token but missing from forms: patchable (adapt patch) instead of drop); forms {\"en\": [\"HMS Be",
    "multihop-au-t1-w100c0-mh2-ioc-coubertin": "audit 2026-10-19: natural-name test: everyday name 'IOC' for bridge1 not credited by the regex scorer (natural name is ONE dolma2 token, regex scorer can never credit it); forms {\"en\": [\"International Olympic Committee",

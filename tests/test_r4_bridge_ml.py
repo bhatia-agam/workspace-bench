@@ -12,7 +12,7 @@ shapes of the cited cases (cached final-olens-rl600-x4 readouts):
 5. wrong_intermediate: the v3 name forms (every option's Wikidata names in every language, the
 regnal
    short form) and the inflection-tolerant matcher ("King Roger II", "Карла Маркса");
-6. multihop_mt_v2 / basic_readout_mt: every other listed option is weighed in code (optrv-v1)."""
+6. multihop_mt / basic_readout_mt: every other listed option is weighed in code (optrv-v1)."""
 
 import json
 from pathlib import Path
@@ -339,7 +339,7 @@ def _g(text: str, count: int) -> digest.Grounded:
 
 
 def _mh2(iid: str):
-    _h, items = load_bank(REPO / "evals/multihop_mt_v2/items_v3.json")
+    _h, items = load_bank(REPO / "evals/multihop_mt/items_v3.json")
     it = next(i for i in items if i["id"] == iid)
     return it, option_sets(items, cannot="cannot tell")[iid], fam.bank_entities(items)
 
@@ -352,7 +352,7 @@ def test_a_heading_question_masks_only_itself():
 
 # ------------------------------------------------------------------ 7. the MC leakage standard
 
-R4_BANKS = ("basic_readout_mt", "multihop_mt_v2", "multilingual", "multilingual_multihop")
+R4_BANKS = ("basic_readout_mt", "multihop_mt", "multilingual", "multilingual_multihop")
 
 
 @pytest.mark.parametrize("family", R4_BANKS)

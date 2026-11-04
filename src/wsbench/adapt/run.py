@@ -569,7 +569,7 @@ def _post_freeze(family: str, header: dict, items: list[dict], n_layers: int,
 def live_rows(model: str, family: str, report: dict | None = None) -> list[dict]:
     """Gate rows minus the audited drops (``report.json`` ``drops[family] = {id: reason}``)."""
     report = report if report is not None else store.read_report(model)
-    dropped = (report.get("drops") or {}).get(family, {})
+    dropped = store.report_entry(report.get("drops"), family)
     rows = [r for r in store.gated(model, family).values() if r["id"] not in dropped]
     from .lint import MT
 
@@ -679,7 +679,12 @@ def missing_required(family: str, items: list[dict]) -> list[str]:
 
 
 def _present(root: Any, family: str) -> bool:
-    return (root / f"{family}.json").exists() or (root / family / "manifest.json").exists()
+    from wsbench.registry import lookup_names  # a set written under a former family key
+
+    return any(
+        (root / f"{k}.json").exists() or (root / k / "manifest.json").exists()
+        for k in lookup_names(family)
+    )
 
 
 def registered_families() -> list[str]:
@@ -775,7 +780,7 @@ def freeze(model: str, families: list[str] | None = None) -> dict[str, Any]:
         for r in chosen:
             # copy-verbatim (the registered item + subject overlays) only for the families gated
             # item by item here; a family with its own subject stage (knowledge_cutoff, msdm,
-            # wrong_intermediate, multihop_mt_v2, ...: fams.REGENERATE) writes `original` rows whose
+            # wrong_intermediate, multihop_mt, ...: fams.REGENERATE) writes `original` rows whose
             # item is ALREADY rebuilt on the subject (its gold, options, relabels), shipped as is
             if r["origin"] == "original" and family in fams.FAMILIES:
                 it = build_original(family, reg[r["id"]], r, native)
@@ -889,7 +894,7 @@ def status(model: str) -> None:
     report = store.read_report(model)
     for family in sorted(fams.FAMILIES):
         rows = store.gated(model, family)
-        e = (report.get("families") or {}).get(family, {})
+        e = store.report_entry(report.get("families"), family)
         n_o = sum(r["origin"] == "original" for r in rows.values())
         p_o = sum(r["gate"]["pass"] for r in rows.values() if r["origin"] == "original")
         n_n = sum(r["origin"] != "original" for r in rows.values())

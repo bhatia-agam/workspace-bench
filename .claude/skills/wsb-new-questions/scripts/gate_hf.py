@@ -43,7 +43,7 @@ PLAIN_VARIANT = {
     "poetry",
     "multihop",
     "multilingual",
-    "multihop_mt_v2",
+    "multihop_mt",
     "multilingual_mt",
     "multilingual_multihop",
     "basic_readout_mt",
@@ -480,7 +480,7 @@ def stamp_mt(it: dict[str, Any], tok: Any, family: str) -> bool:
                 if lang != "zh" and not any(c > 1 for c in counts):
                     ok = False
     ptl: dict[str, Any] = {"units": units, "target": ntok(tok, str(it.get("target", "")))}
-    if family == "multihop_mt_v2":
+    if family == "multihop_mt":
         ptl["target_alts"] = [ntok(tok, str(a)) for a in it.get("target_alts", [])]
     it["probe_token_lens"] = ptl
     return ok
@@ -770,7 +770,7 @@ def main() -> int:
                 if plain
                 else GATE_VARIANT.get(fam, "chat")
             )
-        if fam in ("multihop_mt_v2", "multilingual_multihop"):
+        if fam in ("multihop_mt", "multilingual_multihop"):
             it["bridge_consistency"] = {
                 q["qid"].split(":")[1]: q["hits"] / a.k for q in legs if ":bridge" in q["qid"]
             }

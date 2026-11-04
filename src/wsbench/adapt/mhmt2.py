@@ -1,4 +1,4 @@
-"""multihop_mt_v2 on a subject (plan 0060 §6b Phase E): ``python -m wsbench.adapt multihop_mt_v2
+"""multihop_mt on a subject (plan 0060 §6b Phase E): ``python -m wsbench.adapt multihop_mt
 model=<m> [limit=] [regate=true]``.
 
 The family's targets (the bridges and the answer) are world facts, so the registered items keep
@@ -33,7 +33,7 @@ from typing import Any
 from . import store
 from .gate import GRADERS, Ask, Leg, gate_record, grade_leg
 
-FAMILY = "multihop_mt_v2"
+FAMILY = "multihop_mt"
 VERSION = "mh2-subject-gate-v1"
 
 # verbatim from global-workspace scripts/oracle_lens_evals/mt_check.py and gate_modal.py
@@ -362,7 +362,7 @@ def gate(
     items: list[dict] | None = None,
 ) -> list[dict]:
     """Gate the registered bank's items on the subject and append the records to
-    ``gate/multihop_mt_v2.jsonl`` (origin ``original``; pass = verdict pass or relabel_b2).
+    ``gate/multihop_mt.jsonl`` (origin ``original``; pass = verdict pass or relabel_b2).
     Ids already gated are skipped unless ``regate``."""
     from . import run
 

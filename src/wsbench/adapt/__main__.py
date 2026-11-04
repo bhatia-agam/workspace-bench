@@ -36,7 +36,7 @@ kcutoff   knowledge_cutoff re-derived on the subject (plan 0060 Phase E)
           [pool=]
 wrong_intermediate    the subject's own wrong-intermediate errors (plan 0060 Phase E)
                 stage=screen|grade|gate|adjudicate|bank|all pool=<dir> [limit= resolve= llm=]
-multihop_mt_v2  staged subject gate incl. the shortcut leg (plan 0060 Phase E) [limit= regate=]
+multihop_mt  staged subject gate incl. the shortcut leg (plan 0060 Phase E) [limit= regate=]
 nyt_connections the subject's own groupings, labels and stability (plan 0060 Phase E)
                 [stage=solve|stability|options|build|all] [limit=] [llm=<claude id>|none]
                 [regate=] [herrings=<pilot alt file>]
@@ -88,7 +88,7 @@ KEYS: dict[str, set[str]] = {
     "kcutoff": {"stage", "llm", "cutoff", "limit", "regate", "pool"},
     # plan 0060 Phase E (wrong_intermediate.py, mhmt2.py)
     "wrong_intermediate": {"stage", "pool", "limit", "resolve", "llm"},
-    "multihop_mt_v2": {"stage", "limit", "regate"},
+    "multihop_mt": {"stage", "limit", "regate"},
     "mc": {"families", "stage"},
     "nyt_connections": {"stage", "limit", "llm", "regate", "herrings"},  # nyt_connections.py
 }
@@ -183,7 +183,7 @@ def main(argv: list[str] | None = None) -> None:
         wrong_intermediate.run(model, a.get("stage", "all"), pool=a.get("pool"),
                          limit=int(a.get("limit", 0)), llm=a.get("llm", "claude-opus-5-5"),
                          resolve=a.get("resolve", "local"))  # fmt: skip
-    elif cmd == "multihop_mt_v2":  # plan 0060 Phase E
+    elif cmd == "multihop_mt":  # plan 0060 Phase E
         from . import mhmt2
 
         regate = a.get("regate", "").lower() in ("1", "true", "yes")

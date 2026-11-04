@@ -8,7 +8,7 @@ import pytest
 from summary_fakes import FakeLLM, digest_lines, summary_args
 
 from wsbench import digest, registry
-from wsbench.evals.multihop_mt_v2 import SPEC as MH2
+from wsbench.evals.multihop_mt import SPEC as MH2
 from wsbench.evals.multilingual_mt import SPEC as ML
 from wsbench.multitoken.prompts import PROMPT_VERSION, V2_MT_TAG
 from wsbench.multitoken.regex import SCORER_VERSION
@@ -95,7 +95,7 @@ def test_token_file_digest_only_and_multiword_reachable_via_joined_line(tmp_path
     )
     fake = FakeLLM.install(monkeypatch, _no_judge)
     args = summary_args(path, tmp_path / "o", SCORER_VERSION, items=[MH])
-    args.extra["judge"] = "regex"  # multihop_mt_v2 is MC-scored since plan 0041; regex = opt-in
+    args.extra["judge"] = "regex"  # multihop_mt is MC-scored since plan 0041; regex = opt-in
     r = MH2.run(args)
     assert fake.n("interp") == 0 and fake.n("digest") == 1 * 2  # no per-cell interp-v1 call
     assert r.config["source_kind"] == "tokens"

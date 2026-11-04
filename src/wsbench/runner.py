@@ -217,14 +217,11 @@ def refusals_only(args: JudgeArgs, result: FamilyResult) -> int:
 
 
 def readouts_path(root: Path, name: str) -> Path | None:
-    """``root/<family>.jsonl`` (or a former family key's file), None when there is none."""
-    path = root / f"{name}.jsonl"
-    if path.exists():
-        return path
-    for old in registry.legacy_names(name):
-        if (legacy := root / f"{old}.jsonl").exists():
-            return legacy
-    return None
+    """``root/<family>.jsonl`` (or a former family key's file, ``registry.lookup_names``), None
+    when there is none."""
+    return next(
+        (p for key in registry.lookup_names(name) if (p := root / f"{key}.jsonl").exists()), None
+    )
 
 
 def run_layer_count(path: Path, layers: Sequence[int] | None) -> int:
@@ -317,13 +314,12 @@ def run_families(
     runnable: list[tuple[EvalSpec, Path]] = []
     for s in specs:
         readouts = readouts_root / f"{s.name}.jsonl"
-        if not readouts.exists():
-            # a readout file written under a former family key (registry.LEGACY_FAMILY_NAMES)
-            for old in registry.legacy_names(s.name):
-                if (legacy := readouts_root / f"{old}.jsonl").exists():
-                    print(f"{s.name}: no {readouts.name}, reading legacy {legacy.name}")
-                    readouts = legacy
-                    break
+        # a readout file written under a former family key (registry.LEGACY_FAMILY_NAMES; for a
+        # reused key the former key's file wins, registry.lookup_names)
+        found = readouts_path(readouts_root, s.name)
+        if found is not None and found != readouts:
+            print(f"{s.name}: reading legacy {found.name}")
+            readouts = found
         if not readouts.exists():
             msg = f"no readouts at {readouts}"
             print(f"{s.name}: skipped ({msg})")

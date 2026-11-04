@@ -270,7 +270,7 @@
   "basic_readout_mt": {
    "basic-au-t1-w100c0-brh-ent-battle-waterloo": "audit 2026-10-19: uncreditable natural name: 'Waterloo' is a single-token form, scorer only matches multi-token forms"
   },
-  "multihop_mt": {
+  "multihop_mt_regex": {
    "multihop-au-t1-w100c0-mhm-beagle-darwin": "audit 2026-10-19: uncreditable natural name 'Beagle'; also 'Robert' (target alt 'Charles Robert Darwin') in prompt",
    "multihop-au-t1-w100c0-mhm-hermitage-petersburg": "audit 2026-10-19: uncreditable natural name 'Hermitage'"
   },

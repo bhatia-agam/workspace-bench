@@ -2,7 +2,7 @@
 
 The code in this repository and every in-house item bank are released under the MIT licence in
 `LICENSE`. In-house means every bank not listed below as third-party: `association`,
-`basic_readout`, `basic_readout_mt`, `multihop`, `multihop_mt_v2`, `multilingual`,
+`basic_readout`, `basic_readout_mt`, `multihop`, `multihop_mt`, `multilingual`,
 `multilingual_mt`, `multilingual_multihop`, `multilingual_typo`, `poetry`, `typo`, `typo_mt`,
 `directed_modulation`, `multi_concept_directed_modulation`, `chain_intermediates`,
 `arithmetic_intermediates`, `buggy_code`, `conjunctive_association`, `role_bound_association`,

@@ -227,14 +227,16 @@ These rules apply to every new item in this group:
     figures).
 - l2_factual items: only the subject's strong L2s.
 
-### multihop_mt — removed 2026-10-30
-multihop_mt was removed from WorkspaceBench (plan 0041); every adapted `multihop_mt.json` was
-deleted.
+### multihop_mt_regex — removed 2026-10-30
+The regex-scored family then keyed `multihop_mt` (now `multihop_mt_regex`) was removed from
+WorkspaceBench (plan 0041); every adapted `multihop_mt.json` of it was deleted. Since 2026-11-04
+the key `multihop_mt` belongs to the shortcut-gated family once keyed `multihop_mt_v2`; sets built
+before then keep their `multihop_mt_v2.*` files, which load under the new key.
 
-### multihop_mt_v2 — the bridges THIS subject needs (bank `items_v6`; plan 0060 Phase E)
+### multihop_mt — the bridges THIS subject needs (bank `items_v6`; plan 0060 Phase E)
 - **Latent:** the bridge(s) of a multi-token two- or three-hop question; every bridge proved
   necessary on the subject.
-- **Code:** `src/wsbench/adapt/mhmt2.py`, `$A multihop_mt_v2 $M [limit=] [regate=true]` (one
+- **Code:** `src/wsbench/adapt/mhmt2.py`, `$A multihop_mt $M [limit=] [regate=true]` (one
   stage, `gate`; GPU). Not a `profile` family (`families.get` raises): its legs need their own
   draw counts and a verdict with a relabel.
 - **Target re-derived on the subject:** the bridges and answer are world facts, so no new gold.
@@ -577,12 +579,12 @@ carried over from the 27B; there is no Opus / Sonnet unguessability gate.
   The judge also reads `prompt` (the prompt-echo check); it is built.
 
 **Freezing the Phase E families:** they are not in `families.FAMILIES`, so a bare `freeze` (and
-`status`) skips them. They ship only when named: `$A freeze $M families=wrong_intermediate,multihop_mt_v2`
+`status`) skips them. They ship only when named: `$A freeze $M families=wrong_intermediate,multihop_mt`
 (nyt_connections likewise: `families=nyt_connections`, after `$A nyt_connections $M`)
 (or alongside other families in the same `families=` list).
 
 ## Not in the adapt machinery (SKILL.md §Families the adapt machinery does not cover)
-None left in this list: introspection, multihop_mt_v2, wrong_intermediate (above),
+None left in this list: introspection, multihop_mt, wrong_intermediate (above),
 knowledge_cutoff and model_specific_directed_modulation (below) and nyt_connections
 (`$A nyt_connections`, SKILL.md) each have their own stage
 (`families.get` names it). unverbalized_hint is retired (plan 0058).
@@ -657,6 +659,6 @@ Qwen's forms). A gold that agrees with Qwen's is fine: it is the subject's answe
   an adapted root. Until then an adapted knowledge_cutoff has the frozen-pool items only.
 
 ## Not in the adapt machinery (SKILL.md §Families the adapt machinery does not cover)
-multihop_mt_v2 (above), wrong_intermediate, introspection: `families.get` raises for each.
+multihop_mt (above), wrong_intermediate, introspection: `families.get` raises for each.
 knowledge_cutoff and model_specific_directed_modulation have their own stages (above).
 unverbalized_hint is retired (plan 0058).

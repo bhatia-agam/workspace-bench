@@ -26,7 +26,7 @@ def _snapshot() -> dict[str, str]:
     """sha256 of every file the builders could write under evals/."""
     out = {}
     subs = ("multihop", "association", "basic_readout", "basic_readout_mt", "poetry",
-            "multihop_mt_v2", "multilingual_multihop", "multilingual_mt", "multilingual_typo",
+            "multihop_mt", "multilingual_multihop", "multilingual_mt", "multilingual_typo",
             "multilingual", "wrong_intermediate", "baselines/topics")  # fmt: skip
     for sub in subs:
         for p in sorted((EVALS / sub).glob("*.json")):
@@ -251,7 +251,7 @@ def test_r4_default_and_bank(tmp_path, monkeypatch, evals_untouched):
     assert g.main(["basic_readout_mt", "--out", str(out), "--bank", str(bank)]) == 0
     assert seen["bank"] == bank and "basic_readout_mt" in json.loads(out.read_text("utf-8"))
     with pytest.raises(SystemExit):
-        g.main(["basic_readout_mt", "multihop_mt_v2", "--out", str(out), "--bank", str(bank)])
+        g.main(["basic_readout_mt", "multihop_mt", "--out", str(out), "--bank", str(bank)])
     with pytest.raises(SystemExit):
         g.main(["basic_readout_mt", "--out", str(EVALS / "x.json"), "--bank", str(bank)])
 
@@ -293,7 +293,7 @@ def test_r4b_refine_bank(tmp_path, monkeypatch, evals_untouched):
     with pytest.raises(SystemExit):
         r.main([f, "--pools", str(pp), "--bank", str(bank), "--out", str(EVALS / f / "x.json")])
     with pytest.raises(SystemExit):
-        r.main([f, "multihop_mt_v2", "--pools", str(pp), "--bank", str(bank), "--out", str(out)])
+        r.main([f, "multihop_mt", "--pools", str(pp), "--bank", str(bank), "--out", str(out)])
     r.BANK, r.OUT = None, None
 
 

@@ -162,15 +162,15 @@ def test_macro_excludes_superseded_families():
 
 
 def test_macro_defaults_to_the_registry_supersession(real_families):
-    # plan 0015 superseded multihop_mt by multihop_mt_v2; since 2026-10-30 v1 is removed, so a
+    # plan 0015 superseded multihop_mt_regex by multihop_mt; since 2026-10-30 v1 is removed, so a
     # stale v1 results.json in an old run dir is excluded as removed
-    m = macro([_res("multihop_mt", value=0.9), _res("multihop_mt_v2", value=0.2)])
-    assert m["families"] == ["multihop_mt_v2"]
+    m = macro([_res("multihop_mt_regex", value=0.9), _res("multihop_mt", value=0.2)])
+    assert m["families"] == ["multihop_mt"]
     assert m["excluded"] == [
         {
-            "family": "multihop_mt",
+            "family": "multihop_mt_regex",
             "reason": "removed",
-            "why": registry.REMOVED_FAMILIES["multihop_mt"],
+            "why": registry.REMOVED_FAMILIES["multihop_mt_regex"],
         }
     ]
 

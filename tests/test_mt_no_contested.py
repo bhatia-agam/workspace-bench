@@ -1,4 +1,4 @@
-"""``norival-v1``: basic_readout_mt and multihop_mt_v2 no longer overrule a judge pick
+"""``norival-v1``: basic_readout_mt and multihop_mt no longer overrule a judge pick
 with code support counting: ``contested_verdict`` (the judge's unaudited rival_quote, every other
 listed option's best digest line, the hidden rivals) and the option-audit call are gone. The
 judge's rival_quote is reported, never scored; the MC calls keep their cached key."""
@@ -6,7 +6,7 @@ judge's rival_quote is reported, never scored; the MC calls keep their cached ke
 from test_basic_readout_mt import NAME, _gold, _item, _run
 
 from wsbench import registry, rival
-from wsbench.evals.multihop_mt_v2 import prompts as mh2p
+from wsbench.evals.multihop_mt import prompts as mh2p
 from wsbench.multitoken import family as fam
 from wsbench.multitoken import prompts as mp
 
@@ -29,7 +29,7 @@ def test_stamps_move_and_call_keys_do_not(real_families):
         "mc-brmt-2026-10-31r+rv-2026-10-31e+optrv-v1+bank-v4+digest-v5"
     )
     assert mh2p.MH2_PROMPT_VERSION == "mh2-mc-2026-11-01+norival-v1+qline-v2+bank-v6"
-    assert fam.call_pv("multihop_mt_v2", mh2p.MH2_PROMPT_VERSION) == (
+    assert fam.call_pv("multihop_mt", mh2p.MH2_PROMPT_VERSION) == (
         "mh2-mc-2026-11-01+rv-2026-10-31e+optrv-v1+bank-v4"
     )
     assert fam.call_pv("multilingual", "x+y") == "x+y"  # other families: unchanged

@@ -90,7 +90,7 @@ below).
   - Header `contract.native_langs` defaults to Qwen's `('en','zh')`.
   - Without `mc_roles`, the language unit is not swapped to its naming forms.
   - A missing `mc[role]` draws options from other items.
-  - In multihop_mt_v2, one item whose `readout.kind` is not `all` flips the whole plan to v1.
+  - In multihop_mt, one item whose `readout.kind` is not `all` flips the whole plan to v1.
     Its prompt also hard-codes "English or Chinese".
 - **chain_intermediates**: without `kinds`, the head_tie veto never fires. `opts=judge=free`
   swaps the instrument.
@@ -567,7 +567,7 @@ SUBJECT_FIELDS: `readout`.
 | qwen | `min_full_positions=8` |  | - | subject | multihop/__init__.py | Qwen render length; reads.check_full exits below it on a sidecar file (reads.py:308) |
 | qwen | `GRID layers (Qwen 64 blocks)` |  | - | subject | readplan.py:588-627 | remapped by depth from report.json n_layers under WSB_BANK_ROOT (exit without it) |
 
-### multihop_mt_v2
+### multihop_mt
 
 Judge: `multitoken/family.py (MC_PROFILES, rival)`. Refresh: model-specific (Phase E). Bank: dict, id from `name`.
 REQUIRED_ITEM_FIELDS: `name`, `prompt`, `units`, `probe_token_lens`, `target`, `readout`, `mc`, `name_forms`.
@@ -588,9 +588,9 @@ Header: `contract.multi_token`, `contract.include_target`, `contract.native_lang
 | item | `readout` | yes | fallback | copy-verbatim | readplan.py:732-741 |  (checked) |
 | item | `mc` | yes | fallback | build | multitoken/options.py:207-212 |  |
 | item | `name_forms` | yes | silent | build | multitoken/family.py:2617-2632 |  |
-| qwen | `SYSTEM 'English or Chinese' (MH2_NATIVE_LANGS = DEFAULT_NATIVE_LANGS)` |  | - | hazard | evals/multihop_mt_v2/prompts.py:41,58 | ignores the header's native_langs |
+| qwen | `SYSTEM 'English or Chinese' (MH2_NATIVE_LANGS = DEFAULT_NATIVE_LANGS)` |  | - | hazard | evals/multihop_mt/prompts.py:41,58 | ignores the header's native_langs |
 | qwen | `not in adapt lint.MT: probe_token_lens never restamped` |  | - | hazard | adapt/run.py:373 |  |
-| qwen | `min_full_positions=15` |  | - | subject | multihop_mt_v2/__init__.py:19-21 | Qwen render length; reads.check_full exits below it on a sidecar file (reads.py:308) |
+| qwen | `min_full_positions=15` |  | - | subject | multihop_mt/__init__.py:19-21 | Qwen render length; reads.check_full exits below it on a sidecar file (reads.py:308) |
 | qwen | `GRID layers (Qwen 64 blocks)` |  | - | subject | readplan.py:588-627 | remapped by depth from report.json n_layers under WSB_BANK_ROOT (exit without it) |
 
 ### multilingual

@@ -39,7 +39,7 @@ accepts the exact word, an inflection, an established synonym/alias or a faithfu
 with a verbatim quote from ONE sample. So list the canonical concept, not every paraphrase;
 add `units.match` only for genuinely ambiguous surface forms (`Boxing`/`boxing`).
 
-## Multi-token families (basic_readout_mt, multihop_mt_v2, multilingual_mt, typo_mt, multilingual_multihop, multilingual_typo)
+## Multi-token families (basic_readout_mt, multihop_mt, multilingual_mt, typo_mt, multilingual_multihop, multilingual_typo)
 
 Header (all required): `family` (the source name: `basic-readout-hard`, `multihop-hard`,
 `multilingual-hard`, `typo-hard`, `multilingual-multihop`, `multilingual-typo`; keep it, the
@@ -48,18 +48,18 @@ legacy fallback keys on it), `parent_family`, `contract`, `gate`, `frozen` (ISO 
 ```json
 "contract": {"multi_token": true, "include_target": false, "conjunctive_units": true}
 ```
-`include_target` is `true` only for multihop_mt_v2. Copy the frozen bank's block unchanged.
+`include_target` is `true` only for multihop_mt. Copy the frozen bank's block unchanged.
 
 | field | meaning | read by |
 |---|---|---|
-| `name`, `subfamily` | id; `entity`/`l2_factual` (basic_readout_mt), `2hop`/`3hop` (multihop_mt_v2, multilingual_multihop), `fwd` (multilingual_mt), `novel`/`realword`/`arith` (typo_mt), `typo` (multilingual_typo) | all; quotas |
+| `name`, `subfamily` | id; `entity`/`l2_factual` (basic_readout_mt), `2hop`/`3hop` (multihop_mt, multilingual_multihop), `fwd` (multilingual_mt), `novel`/`realword`/`arith` (typo_mt), `typo` (multilingual_typo) | all; quotas |
 | `prompt` | plain-text fragment ending IMMEDIATELY before the answer (no trailing space or punctuation; typo families end WITH the misspelling) | plan, capable |
-| `target`, `target_alts` | the next-token answer and its inflections; gate golds; a scored optional unit only under `include_target` | capable, judge (multihop_mt_v2) |
+| `target`, `target_alts` | the next-token answer and its inflections; gate golds; a scored optional unit only under `include_target` | capable, judge (multihop_mt) |
 | `lang` | L2 code, one of `pl tr fi hu id vi sw ru el he ar ko` (the MC language confusables exist only for these) | judge (MC), plan |
 | `typo_word` | the misspelled last word | gate, lint |
 | `intermediates` | the headline latent, for display | - |
 | `units` | the scored units, see below | judge |
-| `bridges` (multihop_mt_v2, multilingual_multihop) | `[{"question": <English question whose answer is the bridge>, "units": [<roles>], "answers": [<every short way to name it>]}]`; GATE-ONLY | capable (bridge legs) |
+| `bridges` (multihop_mt, multilingual_multihop) | `[{"question": <English question whose answer is the bridge>, "units": [<roles>], "answers": [<every short way to name it>]}]`; GATE-ONLY | capable (bridge legs) |
 | `probe_token_lens` | `{"units": {role: {lang: [count per form]}}, "target": n, "target_alts": [n...]}` (target_alts only under include_target); aligned position by position with `forms[lang]` | judge |
 | `mc` | `{role: {"gold": <first en form>, "distractors": [4 names]}}` per required non-language unit (absent in the typo families) | judge (`opts=judge=mc`), lucky-guessing floor |
 | `readout` | `{"kind":"final_prompt_token","offsets":[-1]}` | plan |
@@ -75,7 +75,7 @@ A unit:
 - `forms` is an authored OR-list per language (`en`, `zh`, and the L2 code where the family
   allows it); `match` = the flattened forms (lint requires equality with the sorted flatten).
 - Roles per family: basic_readout_mt `readout` (+ `language` on l2_factual; the L2 answer is the
-  next token, so `readout` lists only `en`/`zh` there); multihop_mt_v2 `bridge1` (+ `bridge2` on
+  next token, so `readout` lists only `en`/`zh` there); multihop_mt `bridge1` (+ `bridge2` on
   3hop), `en` only (the bank-of-record `items_v2.json` adds `name_forms` per native language,
   zh included, in `scripts/build_mh2_bank_v2.py`); multilingual_mt `concept` {en, zh} + `language`; typo_mt `correction` {en};
   multilingual_multihop `bridge_l2` (required false) + `bridge_native` {en, zh} (required) +

@@ -828,17 +828,17 @@ def test_arith_frozen_panel_readouts_load_under_guards(tmp_path, monkeypatch, re
 
 
 def test_mh2_not_gated(offline, tmp_path, real_families, capsys):
-    """Plan 0033 B3 (Camila 2026-10-30: "Don't include this in ati"): multihop_mt_v2 is excluded
+    """Plan 0033 B3 (Camila 2026-10-30: "Don't include this in ati"): multihop_mt is excluded
     by design through NOT_GATED (its frozen entry, 0/70 survivors, is dropped)."""
-    assert "multihop_mt_v2" in ti.NOT_GATED
-    assert "multihop_mt_v2" not in ti.gated_families()
-    assert "multihop_mt_v2" not in ti.STRICTER_PASS_FIELD
+    assert "multihop_mt" in ti.NOT_GATED
+    assert "multihop_mt" not in ti.gated_families()
+    assert "multihop_mt" not in ti.STRICTER_PASS_FIELD
     with pytest.raises(ti.NotInScope):
-        ti.subset_entry("multihop_mt_v2")
+        ti.subset_entry("multihop_mt")
     frozen = json.loads(ti.FROZEN.read_text(encoding="utf-8"))
-    assert "multihop_mt_v2" not in frozen and "multihop_mt" not in frozen
-    example = registry.REPO_ROOT / "examples/readouts/multihop_mt_v2.jsonl"
-    argv = ["judge", "family=multihop_mt_v2", f"readouts={example}", f"out={tmp_path / 'o'}"]
+    assert "multihop_mt" not in frozen and "multihop_mt_regex" not in frozen
+    example = registry.REPO_ROOT / "examples/readouts/multihop_mt.jsonl"
+    argv = ["judge", "family=multihop_mt", f"readouts={example}", f"out={tmp_path / 'o'}"]
     assert main([*argv, "anti_text_inversion=True"]) == 0  # skipped, never judged
     assert "not gated" in capsys.readouterr().err
 

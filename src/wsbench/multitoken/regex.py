@@ -15,7 +15,7 @@ The rules, in the order a cell is scored:
    only forms the bank stamped as multi-token stay (``probe_token_lens.units[role][lang][i] >
    1`` — the source's strict count: min over case variants x bare/leading-space, so a form any
    single Qwen3.6-27B token could equal is never creditable). ``include_target`` banks
-   (multihop_mt_v2) add an OPTIONAL ``target`` unit from ``target`` + ``target_alts``, likewise
+   (multihop_mt) add an OPTIONAL ``target`` unit from ``target`` + ``target_alts``, likewise
    filtered (``probe_token_lens.target`` / ``.target_alts``), minus forms a unit already covers.
    A REQUIRED unit left without a creditable form is a bank error.
 3. **A form hits a sample** (``unicode_word_matcher``): both sides folded (NFKD, combining marks
@@ -285,7 +285,7 @@ class BankContract:
     multi_token: bool  # only multi-token forms may award credit
     include_target: bool  # the item's ``target`` is itself a scored (optional) unit
     conjunctive_units: bool  # a layer passes only when EVERY required unit hits there
-    # opt-in keys of a bank's contract block (multihop_mt_v2 bank v2, 2026-10-30; default off, so
+    # opt-in keys of a bank's contract block (multihop_mt bank v2, 2026-10-30; default off, so
     # every other bank scores byte-identically): ``markdown_fold`` matches each sample after
     # ``digest.fold_quote`` (``**Venerable Bede**`` == ``Venerable Bede``); ``fuzzy_names`` also
     # credits a misspelt Latin-script name (``fuzzy_form_in``: Khatchaturian for Khachaturian)

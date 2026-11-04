@@ -747,7 +747,7 @@ def _plan(family: str) -> list[ReadSpec]:
             else:  # the v1 completion bank (WSB_BANK_FILE_BASIC_READOUT_MT=items.json)
                 out += _final_token_families_items(family, [it], "plain")
         return out
-    if family == "multihop_mt_v2":
+    if family == "multihop_mt":
         # bank v2 (plan 0041; Camila 2026-10-30: "read at every token not just final position
         # (except lite/fast should be last token)"): the item's `readout` block is the source,
         # every prompt token at every GRID layer, lite = its `lite` rule (the final token)

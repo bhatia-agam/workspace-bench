@@ -274,10 +274,10 @@ def test_v1_shaped_items_are_reported():
     _h, items, _ = _bank("association")
     v1 = {k: v for k, v in items[0].items() if k != "mc"}
     assert any(p.startswith("missing: mc") for p in ji.check_item("association", v1))
-    mh, mitems, _ = _bank("multihop_mt_v2")
+    mh, mitems, _ = _bank("multihop_mt")
     bad = copy.deepcopy(mitems[0])
     bad["readout"] = {"kind": "final_prompt_token", "offsets": [-1]}
-    assert any("v1 final-token" in p for p in ji.check_item("multihop_mt_v2", bad, mh))
+    assert any("v1 final-token" in p for p in ji.check_item("multihop_mt", bad, mh))
     _mh, moral, _ = _bank("moral_rationale")
     m1 = {k: v for k, v in moral[0].items() if k != "bank_version"}
     got = ji.check_item("moral_rationale", m1)

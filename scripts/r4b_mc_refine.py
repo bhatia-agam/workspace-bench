@@ -1,6 +1,6 @@
 """Refine the round-4 MC lists that still leak (Camila r2 MC leakage standard, round 4b).
 
-The v3 lists of basic_readout_mt, multihop_mt_v2 and multilingual_multihop
+The v3 lists of basic_readout_mt, multihop_mt and multilingual_multihop
 (``scripts/r4_mc_distractors.py`` + ``scripts/r4_mc_select.py``) still let the options-only and
 topic guessers beat uniform chance + 5 points. Reading the lists the guessers solve showed three
 cues the fame-balanced draw did not remove:
@@ -72,7 +72,7 @@ from wsbench.registry import BANK_FILE_ENV_PREFIX, REPO_ROOT, canonical
 
 FAMILIES = (
     "basic_readout_mt",
-    "multihop_mt_v2",
+    "multihop_mt",
     "multilingual_multihop",
     "multilingual_mt",
     "multilingual_typo",
@@ -85,7 +85,7 @@ LANG_FAMILIES = ("multilingual_multihop", "multilingual_mt", "multilingual_typo"
 LANGUAGE_TOPIC = "the language a short non-English prompt is written in"
 SOURCE_BANK = {
     "basic_readout_mt": "items_v3.json",
-    "multihop_mt_v2": "items_v3.json",
+    "multihop_mt": "items_v3.json",
     "multilingual_multihop": "items_v3.json",
     "multilingual_mt": "items_v3.json",
     "multilingual_typo": "items_v2.json",

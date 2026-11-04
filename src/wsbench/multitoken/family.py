@@ -114,7 +114,7 @@ _V1_SCORERS: dict[str, V1Scorer] = {}
 
 def bank_version(name: str) -> int:
     """The ``version`` of the family's bank header as loaded now (``bank_path``); 1 if absent
-    or unreadable. An int (the multilingual v2 banks) or a ``"v<N>"`` string (multihop_mt_v2)."""
+    or unreadable. An int (the multilingual v2 banks) or a ``"v<N>"`` string (multihop_mt)."""
     header, _items = load_bank(bank_path(name))
     raw = str(header.get("version", 1)).strip().lower().removeprefix("v")
     return int(raw) if raw.isdigit() else 1
@@ -128,7 +128,7 @@ REGEX_LEG_VERSION = f"{SCORER_VERSION}+leg-regex"
 
 @dataclass(frozen=True)
 class MCProfile:
-    """A ``scorer="mc"`` family's own forced-choice judge (plan 0041; first user multihop_mt_v2):
+    """A ``scorer="mc"`` family's own forced-choice judge (plan 0041; first user multihop_mt):
     its SYSTEM prompt, its unit question (no role label), its cannot-tell line, and the name gate
     over the bank's ``name_forms``. ``regex_version`` stamps the regex contract when it runs as the
     diagnostic (``extras.regex``) or, unpinned, as ``opts=judge=regex``."""
@@ -137,7 +137,7 @@ class MCProfile:
     question: str
     cannot: str
     regex_version: str = SCORER_VERSION
-    # round 4 (multihop_mt_v2): the judge also returns rival_quote (BRMT_SCHEMA), reported per
+    # round 4 (multihop_mt): the judge also returns rival_quote (BRMT_SCHEMA), reported per
     # unit and never scored
     rival: bool = False
 
@@ -1283,7 +1283,7 @@ def bank_entities(items: Sequence[Mapping[str, Any]]) -> dict[str, list[list[str
     """kind -> the bank's names of that kind, one entry (its forms) per name: every name unit's
     full names (``units[].full_forms``, else its forms; never the ``language`` unit) and every
     ``mc`` gold and distractor, over the WHOLE bank (never the judged subset), entries sharing a
-    form merged (:func:`merge_forms`). ``kind`` is the unit's ``kind`` (multihop_mt_v2: person /
+    form merged (:func:`merge_forms`). ``kind`` is the unit's ``kind`` (multihop_mt: person /
     work / event), ``""`` for a bank without kinds (one pool)."""
     raw: dict[str, list[list[str]]] = defaultdict(list)
     for it in items:
@@ -1746,7 +1746,7 @@ def quoted_verdict(
 # prompt is unchanged, so cached answers stay valid): reported per unit, never scored. The MC
 # calls keep the key they were cached under (:data:`CALL_VERSIONS`).
 # family -> (its result stamp, the call version its cached MC answers are keyed by); a family
-# package registers its own entry beside its SPEC (multihop_mt_v2)
+# package registers its own entry beside its SPEC (multihop_mt)
 CALL_VERSIONS: dict[str, tuple[str, str]] = {
     "basic_readout_mt": (BRMT_PROMPT_VERSION, BRMT_CALL_VERSION),
 }
@@ -1828,7 +1828,7 @@ def gate_name_forms(
     are added, and an adapted-only id with no entry (``{}`` = none) is an error.
 
     ``family`` is the running family: the per-set overlay and its adapted-only check are
-    basic_readout_mt's alone, so another family (multihop_mt_v2's profile rival check) reads
+    basic_readout_mt's alone, so another family (multihop_mt's profile rival check) reads
     the frozen table exactly as without ``WSB_BANK_ROOT`` (its ids are never brmt ids: checked
     against brmt's bank, every one looked adapted-only and stopped the judge)."""
     iid = str(item.get("id") or item.get("name"))
@@ -2409,7 +2409,7 @@ def _item_row(
 
 
 # ---------------------------------------------------------------------------------------------
-# a family's own pinned forced-choice judge (MC_PROFILES; plan 0041, multihop_mt_v2)
+# a family's own pinned forced-choice judge (MC_PROFILES; plan 0041, multihop_mt)
 # ---------------------------------------------------------------------------------------------
 @dataclass(frozen=True)
 class _UnitBank:

@@ -119,7 +119,7 @@ NOT_GATED: dict[str, str] = {
     "multihop": 'excluded from the ATI subset by design (Camila 2026-10-30: "do not include the '
     'single question in ati"): one surviving item (spaceneedle-border, a gold-keying artefact '
     "re-keyed to Washington by decision Q9), not a subset",
-    "multihop_mt_v2": "excluded from the ATI subset by design (Camila 2026-10-30); the panel "
+    "multihop_mt": "excluded from the ATI subset by design (Camila 2026-10-30); the panel "
     "names every bridge from the prompt (0/70 survived panel-v1)",
     # unverbalized_hint: retired for now (plan 0058, registry.RETIRED_FAMILIES); on restore
     # re-add "pair-level control family: the neutral twin is the counterfactual control and

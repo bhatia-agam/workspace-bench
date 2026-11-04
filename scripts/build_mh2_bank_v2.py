@@ -1,4 +1,4 @@
-"""Build ``evals/multihop_mt_v2/items_v2.json`` (bank v2) from the frozen ``items.json`` (plan
+"""Build ``evals/multihop_mt/items_v2.json`` (bank v2) from the frozen ``items.json`` (plan
 0041; Camila 2026-10-30, the "Multihop mt v2" section of her WorkspaceBench feedback).
 
 Same 70 items, same prompts, same gate evidence. Added, deterministically (CPU, tokenizer only):
@@ -48,8 +48,8 @@ from wsbench import mc
 from wsbench.adapt import mt
 
 REPO = Path(__file__).resolve().parents[1]
-SRC = REPO / "evals/multihop_mt_v2/items.json"
-DST = REPO / "evals/multihop_mt_v2/items_v2.json"
+SRC = REPO / "evals/multihop_mt/items.json"
+DST = REPO / "evals/multihop_mt/items_v2.json"
 FROZEN_SHA256 = "7c0160a7f818165a09d357a7b0e159301894501124e301bec7f19f75679600d3"
 SEED = 20261030
 N_DISTRACTORS = 4
@@ -139,7 +139,7 @@ TARGET_KIND: dict[str, str] = {
     "Edinburgh": "place",
 }
 
-# -- name forms (hand review, recorded in evals/multihop_mt_v2/README.md) ----------------------
+# -- name forms (hand review, recorded in evals/multihop_mt/README.md) ----------------------
 # surname / distinctive-name forms the gate aliases lack ("add surname forms consistently")
 HAND_ADD: dict[tuple[str, str], list[str]] = {
     ("mh2-coeur-de-lion-brother-charter-q2", "bridge1"): ["Lionheart"],
@@ -803,13 +803,13 @@ def co_mention(d: dict[str, Any], readouts: Path, *, old: dict[str, Any]) -> dic
     return out
 
 
-GOLDEN = REPO / "tests/golden/multihop_mt_v2_options_v2.json"
+GOLDEN = REPO / "tests/golden/multihop_mt_options_v2.json"
 
 
 def write_golden() -> None:
-    """``tests/golden/multihop_mt_v2_options_v2.json``: the judge's option lists over bank v2."""
+    """``tests/golden/multihop_mt_options_v2.json``: the judge's option lists over bank v2."""
     from wsbench.banks import load_bank
-    from wsbench.evals.multihop_mt_v2.prompts import MH2_CANNOT, MH2_PROMPT_VERSION
+    from wsbench.evals.multihop_mt.prompts import MH2_CANNOT, MH2_PROMPT_VERSION
     from wsbench.multitoken.options import option_sets
 
     _h, items = load_bank(DST)
@@ -840,7 +840,7 @@ def main() -> int:
     a = ap.parse_args()
     raw = SRC.read_bytes()
     if hashlib.sha256(raw).hexdigest() != FROZEN_SHA256:
-        raise SystemExit("evals/multihop_mt_v2/items.json changed; the frozen bank is read-only")
+        raise SystemExit("evals/multihop_mt/items.json changed; the frozen bank is read-only")
     src = json.loads(raw)
     d = build(src, load_tokenizer())
     problems = validate(d)

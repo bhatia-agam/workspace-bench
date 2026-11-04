@@ -30,6 +30,10 @@ LEGACY_FAMILY_NAMES: dict[str, str] = {
     "dm_category_default": "model_specific_directed_modulation",
     "directed_modulation_obscure": "model_specific_directed_modulation",  # plan 0034 O1
     "wrong_bridge": "wrong_intermediate",  # v1.2.0 (Camila 2026-11-03)
+    # 2026-11-04: the multi-token multihop family takes the plain key; multihop_mt was the key of
+    # the regex-scored family removed on 2026-10-30, listed as multihop_mt_regex since then
+    # (REUSED_FAMILY_KEYS)
+    "multihop_mt_v2": "multihop_mt",
 }
 
 # Renamed families whose former key stays INSIDE their hashed identities: the read plan's
@@ -38,7 +42,22 @@ LEGACY_FAMILY_NAMES: dict[str, str] = {
 # sidecar, ATI entry and seeded floor produced under the old key. These families hash as their
 # former key (``hash_name``); the rename is a label change only. (The 2026-10-26 renames
 # predate plan_sha and keep hashing their current key.)
-HASH_FAMILY_NAMES: dict[str, str] = {"wrong_intermediate": "wrong_bridge"}
+HASH_FAMILY_NAMES: dict[str, str] = {
+    "wrong_intermediate": "wrong_bridge",
+    "multihop_mt": "multihop_mt_v2",
+}
+
+# Current keys that a removed family used before the live family took them over -> (the removed
+# family's key now, the stamp prefixes of the live family's results). A store, out dir, readout
+# root or adapted set written before the rename may hold the removed family's files under the
+# reused key, so a file or directory under the live family's former key wins there
+# (``lookup_names``); a stored result under the reused key whose ``prompt_version`` starts with
+# none of the prefixes is the removed family's (``results.read_results`` reads it under that key).
+REUSED_FAMILY_KEYS: dict[str, tuple[str, tuple[str, ...]]] = {
+    # the live family's MC stamps (summary and native) and its opts=judge=regex diagnostic; the
+    # removed family stamped mc-2026-09-16 / mt-regex-2026-09-23 and later regex versions
+    "multihop_mt": ("multihop_mt_regex", ("mh2-mc-", "mt-regex-2026-10-30+md+fz")),
+}
 
 
 # Families deleted from the bench -> why (never registered again; plan 0017). Old run dirs may
@@ -55,7 +74,10 @@ REMOVED_FAMILIES: dict[str, str] = {
     "hallucination": "removed 2026-10-30 (plan 0040): replaced by HallucinationBench "
     "(github.com/camila-blank/hallucination-bench); its index is reported in WSB "
     "(README §HallucinationBench)",
-    "multihop_mt": "removed 2026-10-30: superseded by multihop_mt_v2 (Camila)",
+    "multihop_mt_regex": (
+        "removed 2026-10-30: superseded by multihop_mt_v2 (Camila), which has been keyed "
+        "multihop_mt since 2026-11-04; this family was keyed multihop_mt until then"
+    ),
     "medical_diagnosis": "removed 2026-10-31 (Camila, plan 0058): taken out of the benchmark",
     "medical_diagnosis_alt": "removed 2026-10-31 (Camila, plan 0058): taken out of the "
     "benchmark with medical_diagnosis",
@@ -81,6 +103,24 @@ def legacy_names(name: str) -> list[str]:
     return [old for old, new in LEGACY_FAMILY_NAMES.items() if new == name]
 
 
+def lookup_names(name: str) -> list[str]:
+    """The keys a file or directory of the current family ``name`` may sit under, in lookup
+    order: ``name``, then its former keys; for a reused key (``REUSED_FAMILY_KEYS``) the former
+    keys first, so a pre-rename root's file of the removed family is never read as this one's."""
+    old = legacy_names(name)
+    return [*old, name] if name in REUSED_FAMILY_KEYS else [name, *old]
+
+
+def stored_family(family: str, prompt_version: str | None) -> str:
+    """The key a stored result of ``family`` stamped ``prompt_version`` belongs to: the removed
+    family's key for a reused key (``REUSED_FAMILY_KEYS``) when the stamp is not the live
+    family's, else ``family``."""
+    reused = REUSED_FAMILY_KEYS.get(family)
+    if reused and not str(prompt_version or "").startswith(reused[1]):
+        return reused[0]
+    return family
+
+
 def hash_name(name: str) -> str:
     """The key ``name`` hashes under in plan_sha / bank_sha / seeds: its frozen former key for a
     family in ``HASH_FAMILY_NAMES``, else ``name`` itself (never canonicalized: the plan 0034
@@ -90,14 +130,12 @@ def hash_name(name: str) -> str:
 
 def family_dir(root: Path, name: str) -> Path:
     """``root/<name>``, or ``root/<former key>`` when only a directory under a former key exists
-    (an out dir or digest store written before the rename keeps its cached verdicts)."""
-    path = Path(root) / name
-    if path.exists():
-        return path
-    for old in legacy_names(name):
-        if (legacy := Path(root) / old).exists():
-            return legacy
-    return path
+    (an out dir or digest store written before the rename keeps its cached verdicts); for a
+    reused key a former key's directory wins (``lookup_names``)."""
+    for key in lookup_names(name):
+        if (path := Path(root) / key).exists():
+            return path
+    return Path(root) / name
 
 
 def bank_path(family: str) -> Path:
@@ -123,11 +161,12 @@ def bank_path(family: str) -> Path:
     root = os.environ.get(BANK_ROOT_ENV)
     if root:
         base = Path(root) if Path(root).is_absolute() else REPO_ROOT / root
-        path = base / f"{family}.json"
-        if not path.exists():  # an adapted set written under a former key
-            path = next(
-                (p for old in legacy_names(family) if (p := base / f"{old}.json").exists()), path
-            )
+        # an adapted set written under a former key (``lookup_names``: the current key first,
+        # except for a reused key)
+        path = next(
+            (p for key in lookup_names(family) if (p := base / f"{key}.json").exists()),
+            base / f"{family}.json",
+        )
         if not path.exists():
             raise SystemExit(f"{BANK_ROOT_ENV}={root} has no bank for {family!r} ({path})")
         return path
@@ -163,10 +202,9 @@ def overlay_path(family: str, name: str) -> Path | None:
     if root is None:
         return None
     family = canonical(family)
-    hit = _overlay_at(str(root), family, name)
-    for old in legacy_names(family):
-        hit = hit or _overlay_at(str(root), old, name)
-    return hit
+    return next(
+        (hit for key in lookup_names(family) if (hit := _overlay_at(str(root), key, name))), None
+    )
 
 
 @functools.cache

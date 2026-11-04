@@ -27,7 +27,7 @@ from typing import Any
 
 MT_FAMILIES = {
     "basic_readout_mt",
-    "multihop_mt_v2",
+    "multihop_mt",
     "multilingual_mt",
     "typo_mt",
     "multilingual_multihop",
@@ -67,7 +67,7 @@ REQUIRED: dict[str, list[str]] = {
         "eval_render",
         "intermediates",
     ],
-    "multihop_mt_v2": [
+    "multihop_mt": [
         "name",
         "subfamily",
         "prompt",
@@ -498,7 +498,7 @@ def gold_forms(family: str, it: dict[str, Any]) -> list[tuple[str, str]]:
             for lang, fs in forms.items():
                 for f in fs:
                     out.append((f"unit {u.get('role')}[{lang}]", str(f)))
-        if family == "multihop_mt_v2":
+        if family == "multihop_mt":
             out += [("target", str(t)) for t in [it.get("target"), *it.get("target_alts", [])] if t]
         return out
     if family in ("association", "basic_readout", "multihop", "multilingual", "poetry", "typo"):
@@ -598,7 +598,7 @@ def check_guards(
                 if ans and occurs(str(ans), str(br.get("question", ""))):
                     err(f"{k}: bridge answer {ans!r} appears in its own question")
         targets = [str(t) for t in [it.get("target"), *(it.get("target_alts") or [])] if t]
-        if family in ("multihop_mt_v2", "multilingual_multihop"):
+        if family in ("multihop_mt", "multilingual_multihop"):
             for u in it.get("units", []):
                 if not str(u.get("role", "")).startswith("bridge"):
                     continue
@@ -675,7 +675,7 @@ def check_guards(
     if family in (
         "multihop",
         "multilingual",
-        "multihop_mt_v2",
+        "multihop_mt",
         "basic_readout",
         "basic_readout_mt",
         "typo",

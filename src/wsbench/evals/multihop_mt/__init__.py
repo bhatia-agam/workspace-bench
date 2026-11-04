@@ -1,10 +1,10 @@
-"""Multihop v2 (multi-token): the shortcut-gated two- and three-hop bank (plan 0013), read at
+"""Multihop (multi-token): the shortcut-gated two- and three-hop bank (plan 0013), read at
 every prompt token (lite: the final token) and judged by its own pinned forced-choice judge over
 other questions' bridges (plan 0041, Camila 2026-10-30). Bank v2: ``items_v2.json``."""
 
 from pathlib import Path
 
-from wsbench.evals.multihop_mt_v2.prompts import (
+from wsbench.evals.multihop_mt.prompts import (
     FLAT_TYPES,
     MH2_CALL_VERSION,
     MH2_CANNOT,
@@ -23,14 +23,14 @@ MIN_FULL_POSITIONS = 15
 
 SPEC = register(
     mt_family(
-        "multihop_mt_v2",
-        "Multihop v2 (multi-token)",
+        "multihop_mt",
+        "Multihop (multi-token)",
         calls_per_arm="≈ 0.13k (64 digests + 69 MC)",
         scorer="mc",
         # bank v6 = v4 without Kant among kant-hume's options, with the leaking bridge lists
         # rebuilt and 6 items dropped (its header's read_plan_bank keeps v4's read plan, so v4
         # readouts serve it)
-        bank=Path("evals/multihop_mt_v2/items_v6.json"),
+        bank=Path("evals/multihop_mt/items_v6.json"),
         prompt_version=MH2_PROMPT_VERSION,
         min_full_positions=MIN_FULL_POSITIONS,
         full_contiguous=True,

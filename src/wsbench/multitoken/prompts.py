@@ -50,7 +50,7 @@ QUESTION_LANGUAGE = question_language()
 
 # ---------------------------------------------------------------------------------------------
 # the MC judge of record of a name-answer family (plan 0051, basic_readout_mt; reused by the
-# multihop_mt_v2 and mc+regex family PRs): one factory, each family passes its task sentences
+# multihop_mt and mc+regex family PRs): one factory, each family passes its task sentences
 MC_PICK_RULES = (
     "Pick an option only if (1) the readouts write that option's own name — in any language, "
     'script, spelling or transliteration; a category word such as "river", "moon" or "dynasty" '
@@ -339,7 +339,7 @@ _ML_TAIL = (
 )
 DIGEST_TASK_NOTES: dict[str, str] = {
     "basic_readout_mt": BRMT_TASK_NOTE,
-    "multihop_mt_v2": "the model reads a factual prompt whose answer needs one or two silent "
+    "multihop_mt": "the model reads a factual prompt whose answer needs one or two silent "
     "intermediate steps, each a multi-word name",
     # plan 0040 B8: no answer, rare mentions kept, the language left unnamed (the native
     # languages are subject-dependent; the judge prompt renders them from banks.native_langs)

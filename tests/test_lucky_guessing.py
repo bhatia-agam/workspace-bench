@@ -116,7 +116,7 @@ def test_golds_name_the_bank_answers():
     mc = {it["id"]: it for it in mc_bank}
     for it in lg.build_family("multi_concept_directed_modulation"):
         assert sorted(it.lists[0][g - 1] for g in it.golds) == sorted(mc[it.id]["concepts"])
-    for fam in ("multihop_mt_v2",):
+    for fam in ("multihop_mt",):
         _h, mt_bank = lg.load_bank_file(REPO / f"evals/{fam}/items.json")
         mt = {it["id"]: it for it in mt_bank}
         for it in lg.build_family(fam):

@@ -171,7 +171,7 @@ Columns:
 | poetry (v2.1) | 0.51 | L52: 0.35 | 0.43 |
 | typo | 1.00 | L20: 0.96 | 1.00 |
 | basic_readout_mt | 0.71 | L52: 0.51 | 0.63 |
-| multihop_mt | 0.32 | L52: 0.19 | 0.24 |
+| multihop_mt_regex | 0.32 | L52: 0.19 | 0.24 |
 | multilingual_mt | 0.62 | L52: 0.39 | 0.48 |
 | multilingual_multihop | 0.40 | L32: 0.09 | 0.34 |
 | multilingual_typo | 0.78 | L52: 0.55 | 0.75 |

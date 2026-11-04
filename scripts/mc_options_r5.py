@@ -90,10 +90,10 @@ class Cfg:
 
 
 CFGS = {
-    "multihop_mt_v2": Cfg(
-        "multihop_mt_v2",
-        "evals/multihop_mt_v2/items_v4.json",
-        "evals/multihop_mt_v2/items_v6.json",
+    "multihop_mt": Cfg(
+        "multihop_mt",
+        "evals/multihop_mt/items_v4.json",
+        "evals/multihop_mt/items_v6.json",
         6,
         "an unstated intermediate entity of a factual statement, written as its full name (the "
         "model must think of it to complete the statement, but the statement never names it)",

@@ -288,7 +288,7 @@
  },
  "read_band": [],
  "drops": {
-  "multihop_mt": {
+  "multihop_mt_regex": {
    "multihop-au-t1-w100c0-mhm-beagle-darwin": "audit 2026-10-19: natural name 'Beagle' not credited by the regex scorer (one Gemma token, can't be a form)",
    "multihop-au-t1-w100c1-mhh-olympics-founder": "audit 2026-10-19: natural name 'Olympics' not credited by the regex scorer (one Gemma token, can't be a form)",
    "multihop-au-t1-w100c1-mhh-kfc-founder": "audit 2026-10-19: natural name 'KFC' not credited by the regex scorer (one Gemma token, can't be a form)",

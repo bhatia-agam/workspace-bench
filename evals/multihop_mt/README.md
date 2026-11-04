@@ -1,14 +1,16 @@
-# multihop_mt_v2
+# multihop_mt
 
 A two- or three-hop factual prompt whose bridges are multi-token names, and **every bridge is
 proved necessary**: the model cannot reach the answer without it. The lens must NAME every
 bridge. Example: "Fact: the crusader monarch nicknamed 'Cœur de Lion', who first licensed jousting tournaments on English soil was succeeded on the throne by his younger brother, a monarch whose reign is best remembered for the" → bridges *Richard I of England* and
 *John of England*, answer Magna Carta.
 
-70 items (frozen 2026-10-15, plan 0013). It replaced `multihop_mt`, which an audit found
-93/100 reachable while skipping a claimed bridge (`V1_AUDIT_2026-10-15.md`, moved here from the
-removed family; `multihop_mt` was removed from the bench on 2026-10-30, plan 0041). Plain
-render.
+70 items (frozen 2026-10-15, plan 0013). The family was keyed `multihop_mt_v2` until
+2026-11-04; that key keeps working as a former key, and the family's plan, ATI fingerprint and
+lucky-guessing seeds still hash it (`registry.HASH_FAMILY_NAMES`). It replaced the regex-scored
+family then keyed `multihop_mt` (now listed as `multihop_mt_regex`), which an audit found 93/100
+reachable while skipping a claimed bridge (`V1_AUDIT_2026-10-15.md`, moved here from the removed
+family; that family was removed from the bench on 2026-10-30, plan 0041). Plain render.
 
 **Bank v6 (`items_v6.json`, frozen 2026-11-04)** is the bank of record (`EvalSpec.bank`): 64 of
 v2's 70 items with only the MC distractor lists changed (v3 = round 4's lists, v4 = round 4b's,
@@ -305,7 +307,7 @@ in the 2026-11-04 refreeze (Floors).
   0.186: 1/5 per list over the substantive options). Before the
   three-hop pairing the blind guesser picked the related gold pair on the six three-hop items
   (0.60 blind, 0.97 described on those items; two-hop items 0.20, at chance); after it, 0.13
-  blind / 0.37 described on them. The v1 authored-confusable lists of `multihop_mt` scored 0.658
+  blind / 0.37 described on them. The v1 authored-confusable lists of `multihop_mt_regex` scored 0.658
   blind.
 - **Prompt-only:** `po-opus-v1` (Opus 5.5 reads the prompt, its readout judged by this same
   pipeline), frozen in `evals/baselines/prompt_only_summary.json`: 1.000 on bank v6 and before the rebuild, as
@@ -338,7 +340,7 @@ in the 2026-11-04 refreeze (Floors).
   `qline-v2`: the lucky-guessing entries restamped, the prompt-only floor re-scored from its
   cached answers (0 new judge calls; 1.000, n = 64, unchanged). Bank v6 now supersedes and reads
   the plan of `items_v4.json` and keeps the Kant edit's record (`v5`), and `items_v5.json` is
-  removed, so bank v6 is the one new multihop_mt_v2 bank file.
+  removed, so bank v6 is the one new multihop_mt bank file.
 - 2026-11-04 (`+bank-v5`): Immanuel Kant, whom kant-hume's prompt describes, is no longer one of
   its bridge-1 options.
 - 2026-11-04 (`+qline-v2`): a quote one word off verifies near-verbatim, and a quote cut mid-name
@@ -391,11 +393,11 @@ in the 2026-11-04 refreeze (Floors).
   Khachaturyan [1] beside Shostakovich [15+]). Bank v3 (Floors).
 
 - 2026-10-15: frozen with the regex contract of record (`mt-regex-2026-09-23`).
-- 2026-10-23: the default multihop multi-token family (plan 0015), replacing `multihop_mt`.
+- 2026-10-23: the default multihop multi-token family (plan 0015), replacing `multihop_mt_regex`.
 - 2026-10-30 (plan 0032 §2.3): the token-bag summarizer step is deleted.
 - 2026-10-30 (plan 0041): bank v2, every-token reads (lite = the final token), the pinned MC
   judge `mh2-mc-2026-10-30` over other questions' bridges with cannot tell and the name gate;
-  the regex contract (`mt-regex-2026-10-30+md+fz`) becomes a diagnostic; out of ATI. `multihop_mt` is
+  the regex contract (`mt-regex-2026-10-30+md+fz`) becomes a diagnostic; out of ATI. `multihop_mt_regex` is
   removed. No result before this date is comparable to the v2 instrument.
 - 2026-10-30 (`mh2-mc-2026-10-30b`, PR #167 review): Chinese name forms in `name_forms`
   (`contract.native_langs`); the SYSTEM's "in any language or script" becomes "written in
@@ -408,18 +410,23 @@ in the 2026-11-04 refreeze (Floors).
   digest-v5's `[N samples, M layers]` line markers ("[12 samples, 3 layers]", "[1 sample]")
   instead of the retired `[many]`/`[several]`/`[few]`/`[one]` tags. Option lists unchanged
   (lucky entries restamped, not redrawn).
+- 2026-11-04: the family's key becomes `multihop_mt` (it was `multihop_mt_v2`, which keeps
+  working as a former key: command line, readout files, out dirs, digest stores, stored results,
+  adapted sets). A label change only: the plan, the ATI fingerprint and the lucky-guessing seeds
+  hash the former key (`registry.HASH_FAMILY_NAMES`), the banks moved byte-identical, and the
+  prompts, stamps and call keys are unchanged.
 
 ## Readouts
 
 `{"id": "<item name>", "layer": L, "pos": P, "samples": [...]}` rows (every prompt position); `tokens`
-rows for a token lens. `examples/readouts/multihop_mt_v2.jsonl` is a toy final-token file for
+rows for a token lens. `examples/readouts/multihop_mt.jsonl` is a toy final-token file for
 `dry_run=True`.
 
 ```
-wsbench plan families=multihop_mt_v2 out=plan/            # full: every token x 11 layers
-wsbench plan families=multihop_mt_v2 reads=lite out=plan/  # lite: the final token
-wsbench judge family=multihop_mt_v2 readouts=examples/readouts/multihop_mt_v2.jsonl out=outputs/toy/multihop_mt_v2 dry_run=True
-wsbench judge family=multihop_mt_v2 readouts=<arm>.jsonl out=outputs/<arm>/multihop_mt_v2 limit=3
+wsbench plan families=multihop_mt out=plan/            # full: every token x 11 layers
+wsbench plan families=multihop_mt reads=lite out=plan/  # lite: the final token
+wsbench judge family=multihop_mt readouts=examples/readouts/multihop_mt.jsonl out=outputs/toy/multihop_mt dry_run=True
+wsbench judge family=multihop_mt readouts=<arm>.jsonl out=outputs/<arm>/multihop_mt limit=3
 ```
 
 ## Judge prompts

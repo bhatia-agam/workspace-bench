@@ -138,7 +138,7 @@ def _forms_of(it: dict[str, Any], role: str) -> list[str]:
 BANKS = {
     "wrong_intermediate": "evals/wrong_intermediate/items_v2.json",
     "basic_readout_mt": "evals/basic_readout_mt/items_v2.json",
-    "multihop_mt_v2": "evals/multihop_mt_v2/items_v2.json",
+    "multihop_mt": "evals/multihop_mt/items_v2.json",
     "multilingual_multihop": "evals/multilingual_multihop/items_v2.json",
 }
 

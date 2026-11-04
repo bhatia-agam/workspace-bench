@@ -19,9 +19,12 @@ subject's adapted set: the same families and item format, but every item is one 
 computes (re-gated on it; failures replaced by easier items of the same kind; model-specific
 families regenerated on it). How the sets are built: `.claude/skills/adapt-bank/SKILL.md`.
 
-**No multi-token multihop family (2026-10-30, plan 0041).** `multihop_mt` was removed from the
-bench (superseded by `multihop_mt_v2`), and every adapted `multihop_mt.json`, report and floor
-entry with it. Multihop_mt_v2 is not portable yet (its shortcut gate is model-specific): the adapted sets have no
+**No multi-token multihop family (2026-10-30, plan 0041).** The regex-scored family then keyed
+`multihop_mt` was removed from the bench (superseded by `multihop_mt_v2`, which has been keyed
+`multihop_mt` since 2026-11-04; the removed family is listed as `multihop_mt_regex`, and the
+three reports that still held its drops keep them under that key), and every adapted
+`multihop_mt.json`, report and floor entry with it. Sets keep their `multihop_mt_v2.*` files;
+they load under the current key through the former-key lookup. Multihop_mt_v2 is not portable yet (its shortcut gate is model-specific): the adapted sets have no
 multi-token multihop family until it is ported with its gate re-run per subject.
 
 

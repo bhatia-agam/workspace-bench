@@ -220,7 +220,7 @@ def test_mt_build_roundtrip_and_stamp():
         def encode(self, s, add_special_tokens=False):
             return list(range(max(1, len(s) // 4)))
 
-    # multihop_mt was removed 2026-10-30; multilingual_multihop is the other bridge family the
+    # multihop_mt_regex was removed 2026-10-30; multilingual_multihop is the other bridge family the
     # same lint rule (bridge vs answer) covers
     fam = "multilingual_multihop"
     _h, items = original_bank(fam)
@@ -1116,7 +1116,7 @@ def test_floor_record_protocol_falls_back_to_the_frozen_file(tmp_path):
     assert cli._floor_record("prompt_only", src, tmp_path / "x.json")["protocol"] == "po-opus-v1"
 
 
-@pytest.mark.parametrize("family", ["knowledge_cutoff", "multihop_mt_v2"])
+@pytest.mark.parametrize("family", ["knowledge_cutoff", "multihop_mt"])
 def test_freeze_ships_subject_stage_originals_verbatim(family, tmp_path, monkeypatch):
     """Families with their own subject stage (kcutoff, mhmt2, msdm, wrong_intermediate) write
     `original` rows already rebuilt on the subject: freeze ships the row's item, never the

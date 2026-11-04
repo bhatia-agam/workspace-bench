@@ -30,7 +30,7 @@ def test_search_lists_are_the_recorded_ones():
     r5 = _driver()
     assert {n: c.search_lists for n, c in r5.CFGS.items()} == {
         "basic_readout_mt": 5,
-        "multihop_mt_v2": 5,
+        "multihop_mt": 5,
         "multilingual": r5.SEARCH_LISTS,
         "multilingual_mt": r5.SEARCH_LISTS,
         "multilingual_multihop": 4,
@@ -70,7 +70,7 @@ def test_start_bank_reapplies_a_folded_edit(tmp_path, monkeypatch):
                 want = by[it["name"]]["mc"][role]["distractors"]
                 want = [d for d in want if d not in cut.get(it["name"], {}).get(role, [])]
                 assert blk["distractors"] == want, (name, it["name"], role)
-    assert r5.CFGS["basic_readout_mt"].edit == r5.CFGS["multihop_mt_v2"].edit == "v5"
+    assert r5.CFGS["basic_readout_mt"].edit == r5.CFGS["multihop_mt"].edit == "v5"
 
 
 def _lucky(d: Path, variant: str, hits: dict[str, int], chance: float = 0.2) -> None:

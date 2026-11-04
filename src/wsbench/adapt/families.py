@@ -372,7 +372,7 @@ REGENERATE = {
     # plan 0060 Phase E (model-specific families; their own stages, not `profile` / `gate`)
     "wrong_intermediate": "the subject's own wrong-intermediate errors: "
     "`adapt wrong_intermediate` (wrong_intermediate.py)",
-    "multihop_mt_v2": "staged gate with a must-not-reach shortcut leg: `adapt multihop_mt_v2`",
+    "multihop_mt": "staged gate with a must-not-reach shortcut leg: `adapt multihop_mt`",
     "nyt_connections": "the subject's own groupings, labels and stability, options rebuilt "
     "around them: `adapt nyt_connections` (nyt_connections.py)",
 }

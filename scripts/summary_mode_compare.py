@@ -104,7 +104,7 @@ BASE_PAIRS: dict[str, dict[str, str]] = {
 }
 MT_FAMILIES = {
     "basic_readout_mt",
-    "multihop_mt_v2",
+    "multihop_mt",
     "multilingual_mt",
     "multilingual_multihop",
     "multilingual_typo",

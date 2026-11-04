@@ -91,7 +91,7 @@ keys, `--show` the resolved config.
 **`all` means every family except a superseded or retired one.** `run all=True`, and the
 `families=all` default of `plan`, `capable`, `baseline` and `text-inversion`, skip `typo`
 (superseded by `typo_mt`, plan 0033: Camila 2026-10-30, "just keep the hard version";
-`multihop_mt`, the former example, was removed on 2026-10-30, plan 0041) and
+`multihop_mt_regex`, the former example, was removed on 2026-10-30, plan 0041) and
 `unverbalized_hint` (retired (Camila 2026-10-31, for now), plan 0058: code, bank and its
 [README](evals/unverbalized_hint/README.md) are kept so it can be restored, but it has no entry
 below and is out of the macro and the ATI file); name one (`families=typo`) or pass
@@ -168,7 +168,7 @@ commands with `PYTHONPATH=src`, because the editable install points at the main 
 
 ### Basic (multi-token)
 
-**Multihop v2 (multi-token)** — [`evals/multihop_mt_v2/README.md`](evals/multihop_mt_v2/README.md) — the multi-token multihop family (its predecessor `multihop_mt` was removed on 2026-10-30, plan 0041: 93 of its 100 items were reachable while skipping a bridge).
+**Multihop (multi-token)** — [`evals/multihop_mt/README.md`](evals/multihop_mt/README.md) — the multi-token multihop family, keyed `multihop_mt_v2` until 2026-11-04 (its predecessor, the regex-scored family then keyed `multihop_mt` and now listed as `multihop_mt_regex`, was removed on 2026-10-30, plan 0041: 93 of its 100 items were reachable while skipping a bridge).
 - *What it is:* A shortcut-gated two- or three-hop factual prompt whose multi-token bridges are each proved necessary on Qwen3.6-27B (bridge-ablated, final-clause-only and adversary probes all fail to reach the answer); the lens must name every bridge. Read at every prompt token at every grid layer (`reads=lite`: the final prompt token). Bank v6 (`items_v6.json`, 64 items).
 - *Example:* "Fact: the crusader monarch nicknamed 'Cœur de Lion', who first licensed jousting tournaments on English soil was succeeded on the throne by his younger brother, a monarch whose reign is best remembered for the" → bridges `Richard I of England` and `John of England`, in one sample.
 - *Judged by:* its own forced-choice judge (Opus 5.5, pinned; plan 0041): per required bridge, the bridge among 4 other questions' bridges or targets of the same kind, plus cannot tell; a gold pick counts only with a verified (or near-verbatim) quote that names the bridge, in the quote or in the line it came from (a full name, a gate alias, a unique surname such as `Khachaturian`, or a misspelling such as `Khatchaturian`), and nothing in code overrules the pick; the item passes when every bridge is credited. Summary mode (the default): one digest per item over every read position and layer. The regex contract (markdown folded, surname forms added) stays as `extras.regex`, and `opts=judge=regex` scores it unpinned. Not in the anti-text-inversion subset (Camila 2026-10-30).
@@ -336,7 +336,7 @@ entry's `bank_sha`), fails until re-gated. Families with fewer than 20 surviving
 but left out of the macro. No directed-modulation family other than
 model_specific_directed_modulation is in the subset (both others state the concept in the prompt).
 `multihop` (single-token) is not gated by design (Camila 2026-10-30: one surviving item is not a
-subset). `multihop_mt_v2` is excluded by design (Camila 2026-10-30; the panel names every bridge
+subset). `multihop_mt` is excluded by design (Camila 2026-10-30; the panel names every bridge
 from the prompt, 0 of 70 survived).
 Details and the per-family counts are in
 [`evals/baselines/README.md`](evals/baselines/README.md#anti-text-inversion-subset-anti_text_inversionjson).
@@ -397,7 +397,7 @@ structured calls run at low effort unless a family sets `anthropic_effort`, and 
 sent. A refusal is a failed call: never scored, counted unjudged. Numbers judged on Gemini are a
 different instrument. The prompt version is
 the instrument: bump it on any prompt edit, and a frozen baseline only applies to a matching
-version and the family's own judge. The multi-token regex families (`*_mt`, `multilingual_typo`) other than `basic_readout_mt` (the MC judge with a name gate since 2026-10-30, plan 0051) and `multihop_mt_v2` (its own pinned MC judge since plan 0041; Camila 2026-10-30: "should have an mc judge with common distractors from other questions") are scored by the **regex** contract since 2026-09-23 (Camila: "regex on the multitoken please"; numeric answer markers match in any case since `mt-regex-2026-10-30`, plan 0033) —
+version and the family's own judge. The multi-token regex families (`*_mt`, `multilingual_typo`) other than `basic_readout_mt` (the MC judge with a name gate since 2026-10-30, plan 0051) and `multihop_mt` (its own pinned MC judge since plan 0041; Camila 2026-10-30: "should have an mc judge with common distractors from other questions") are scored by the **regex** contract since 2026-09-23 (Camila: "regex on the multitoken please"; numeric answer markers match in any case since `mt-regex-2026-10-30`, plan 0033) —
 no call; token readouts are matched as raw tokens (the J-lens interpretation step,
 `mt-regex-summarized-decoded-2026-10-27`, is deleted in plan 0032: under the summary default every
 method goes through the one digest). Their forced-choice judge of 2026-09-16 is `opts=judge=mc` and
@@ -431,7 +431,7 @@ digest's token lines are also matched space-joined, stamped `+joined-2026-10-30`
 | moral_rationale | claude-opus-5-5 | ec-v9 (bank v3: one pick per item and side, the reason the readouts mainly give; code verifies the quote, a near-verbatim quote verifying like an exact one (summary stamp `+nq1`); summary results take the majority of 3 draws' pass / fail verdicts, stamped `+maj3v`; opt-in banks v4 / v5 / v7: `ec-v9-b4` / `ec-v9-b5` / `ec-v9-b7`; `opts=prompts=ec-v4.1` = the earlier single pick; bank v2 = ec-v4) |
 | multi_concept_directed_modulation | claude-opus-5-5 | mcdm-2026-11-01e+bank-v2+notokinterp-2026-10-30+pins-r3+nocap-a1 (judge prompts mcdm-2026-11-01e, round 5: worked examples name no bank concept; pins-r3 = option-symmetric concept pins + the one-sample elided-quote rescue; nocap-a1 = no code-side cap on the number of picks) |
 | multihop | claude-opus-5-5 | bank-mc-2026-11-01-v3+bank-gate-r10+bank-v5 (bank v5: bank v3's 68 kept items + 30 new gated two-hop items, 98; bank v3's options on the kept items; gate r10: derived-forms table `mhforms-v2`, the quote read in its line (through the line only when cut mid-name), no split rule; MC calls keyed bank-mc-2026-11-01-v3) |
-| multihop_mt_v2 | claude-opus-5-5 | mh2-mc-2026-11-01+norival-v1+qline-v2+bank-v6 (MC judge + name gate; bank v6 = bank v4 with Kant out of kant-hume's options, with 15 bridge lists rebuilt and 6 items dropped, 64 items; the judge's verified pick stands, the gold read in the quote's line (through the line only when cut mid-name); MC calls keyed mh2-mc-2026-11-01+rv-2026-10-31e+optrv-v1+bank-v4; regex diagnostic mt-regex-2026-10-30+md+fz) |
+| multihop_mt | claude-opus-5-5 | mh2-mc-2026-11-01+norival-v1+qline-v2+bank-v6 (MC judge + name gate; bank v6 = bank v4 with Kant out of kant-hume's options, with 15 bridge lists rebuilt and 6 items dropped, 64 items; the judge's verified pick stands, the gold read in the quote's line (through the line only when cut mid-name); MC calls keyed mh2-mc-2026-11-01+rv-2026-10-31e+optrv-v1+bank-v4; regex diagnostic mt-regex-2026-10-30+md+fz) |
 | multilingual | claude-opus-5-5 (blind MC on the content, then the regex units: `mc+regex`; the language leg on the raw samples) | mcrx-2026-11-03e+mc-ml-2026-11-01b+bank-v4 (bank v4 = bank v3 with 19 concept lists rebuilt; MC calls keyed without the bank stamp) |
 | multilingual_mt | regex (no call natively; the digest model under summary mode) | mt-regex-2026-10-30+v2+ln-2026-11-03a+rawrx-v2+plural-v2+langleg-v1+bank-v5 (bank v5 = bank v4 with 27 concept lists of the MC diagnostic rebuilt) |
 | multilingual_multihop | claude-opus-5-5 (blind MC on the content, then the regex units: `mc+regex`; the language leg on the raw samples) | mcrx-2026-11-03e+mc-ml-2026-11-01b+bank-v5 (bank v5 = bank v4 with 32 bridge lists rebuilt and 9 items dropped, 89 items; MC calls keyed without the bank stamp) |
@@ -539,7 +539,7 @@ count) into a **macro** row and lists every exclusion with its reason; `jlens_co
 `typo_mt`, plan 0033), which is listed with reason `superseded` even when it was run by
 name, nor a **retired** family (`unverbalized_hint`, plan 0058; reason `retired`, also when run
 by name), nor a **removed** family's stale `results.json` in an old run dir (reason `removed`:
-`ttt`, `ttt_move`, the family plan 0029 retired, `multihop_mt`, `hallucination` (plan
+`ttt`, `ttt_move`, the family plan 0029 retired, `multihop_mt_regex`, `hallucination` (plan
 0040), `medical_diagnosis`, `medical_diagnosis_alt` (plan 0058)), nor a
 family registered with `not_in_macro` (a hillclimbing family not yet reviewed), listed
 with reason `not in macro` and its stated reason. `run` also writes `run.json` (per-family status, result

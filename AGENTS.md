@@ -79,8 +79,8 @@ indices and need re-capturing.
 | multihop, multilingual | produces the answer | check with `capable` |
 | typo, typo_mt, multilingual_typo | corrects the misspelling when asked | check with `capable` (it asks for the correction; continuing the text would never produce it) |
 | basic_readout_mt, multilingual_mt | produces the multi-token answer | check with `capable` |
-| multilingual_multihop (multihop_mt was removed, plan 0041) | the surface answer AND every bridge question | check with `capable`, which asks both; the bridge leg is the one that matters, since the bridge is the scored latent |
-| **multihop_mt_v2** (the default multihop multi-token family) | the surface answer, every bridge question, AND that no shortcut probe reaches the answer (plan 0013) | **re-gate the shortcut probes.** `capable` re-checks only the answer and bridge questions. Whether every bridge is *necessary* is specific to the model that was gated, so a new model needs the `shortcut_probes` re-run (global-workspace `multihop_v2/gate_modal.py`) |
+| multilingual_multihop (multihop_mt_regex was removed, plan 0041) | the surface answer AND every bridge question | check with `capable`, which asks both; the bridge leg is the one that matters, since the bridge is the scored latent |
+| **multihop_mt** (the default multihop multi-token family) | the surface answer, every bridge question, AND that no shortcut probe reaches the answer (plan 0013) | **re-gate the shortcut probes.** `capable` re-checks only the answer and bridge questions. Whether every bridge is *necessary* is specific to the model that was gated, so a new model needs the `shortcut_probes` re-run (global-workspace `multihop_v2/gate_modal.py`) |
 | **poetry** | commits to a specific rhyme word | **re-gate.** The scored latent is the word THIS model would write. Another model rhymes differently, and every item whose rhyme changes is scoring the wrong target |
 | **moral_rationale** | commits to one side, and the item's reasons are sampled for that side | **re-key.** `capable` reports agreement with the side the bank recorded, not correctness; **no runnable recipe exists for a new model yet.** The bank-v3 recipe (plan 0046: `python -m wsbench.adapt moral model=<key> stage=rekey_readrender out=<dir> step=<step>` for `requests_s`, `grade_s`, `requests_r`, `distil`, `verify`, `assemble`, then `scripts/moral_distractors.py`) samples Qwen3.6-27B only (`model=` is required but ignored) and its last step rewrites `evals/moral_rationale/items_v3.json`; a subject version is plan 0060 |
 | chain_intermediates | answer right with no chain of thought (10/10) | check with `capable`. A model that cannot do it has no intermediate to read; one that reasons in hidden tokens breaks the no-CoT premise and `capable` cannot see that |
@@ -159,9 +159,9 @@ so far, and what a new item has to satisfy:
 - **A real gate.** Greedy-correct, then at least 8 of 10 samples at temperature 0.7.
 - **Distractors drawn from the same pool.** Same kind, same specificity, seeded per item so every
   arm and every subset sees the same list. Then measure the lucky-guessing floor: blind guessing
-  above chance means the options leak (2026-09: multihop_mt's MC judge guessed 0.658 blind
+  above chance means the options leak (2026-09: multihop_mt_regex's MC judge guessed 0.658 blind
   against a measured uniform 0.126 and an analytic 0.149 with its authored confusables; the
-  family was removed 2026-10-30, and multihop_mt_v2 draws its options from other questions'
+  family was removed 2026-10-30, and multihop_mt draws its options from other questions'
   bridges instead, plan 0041).
 - **A null you can compute.** A permutation over other items' answers, a decoy set matched in
   magnitude, a derangement foil. Only arithmetic_intermediates, chain_intermediates and

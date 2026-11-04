@@ -4,7 +4,7 @@
 - **Filtering is not adapting.** `.pmeq` refilled each family with leftover 27B candidates and then
   authored more with the same "long-tail / obscure" prompts. Its "famous" knob was applied only
   after the reuse step.
-  - Yields on Qwen3.5-4B: multihop_mt 3% (family removed 2026-10-30), multilingual_mt 4%, multilingual_multihop 2%, chain
+  - Yields on Qwen3.5-4B: multihop_mt_regex 3% (family removed 2026-10-30), multilingual_mt 4%, multilingual_multihop 2%, chain
     3.5%, brew 0%, relational 0%.
   - Change the difficulty the brief asks for first.
 - **Ungated families slipped through.**
@@ -46,7 +46,7 @@
   - 23 items have `gate_pass=False`;
   - 21 committed items have `look_for_reasons[0]` supporting the side opposite
     `commit_direction`.
-- multihop_mt (removed 2026-10-30): 9 items broke the leak rule and 3 broke bridge/target overlap.
+- multihop_mt_regex (removed 2026-10-30): 9 items broke the leak rule and 3 broke bridge/target overlap.
 - multilingual_multihop: 1 known defect.
 - agentic_misalignment: 3 "misaligned" items have a misalignment rate of 0.125–0.25.
 - `adapt.lint` over the frozen banks flags:
@@ -99,7 +99,7 @@
 - **New gate legs don't apply retroactively:** gate records are append-only and last-wins, so
   originals AND passing new items must be re-gated (`regate=true` on profile and gate).
 - **Non-Qwen tokenizers re-stamp before select** (`live_rows`): OLMo loses 15/100 typo_mt, 5
-  basic_readout_mt, 4 multihop_mt (removed 2026-10-30) to one-token forms; fill refills them before freeze.
+  basic_readout_mt, 4 multihop_mt_regex (removed 2026-10-30) to one-token forms; fill refills them before freeze.
 - **J-lens for a subject neuronpedia lacks:** `scripts/fit_jlens_modal.py` (official estimator,
   neuronpedia's recipe, H200 chunks, exact merge). Validated on the 4B: per-layer cosine to
   neuronpedia's lens min 0.927, mean 0.986 at n=400. Fitted: 9B (n=400), OLMo-3-7B-Instruct

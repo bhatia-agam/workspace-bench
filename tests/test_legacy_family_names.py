@@ -39,6 +39,7 @@ RENAMES = {
     "dm_category_default": "model_specific_directed_modulation",
     "directed_modulation_obscure": "model_specific_directed_modulation",  # plan 0034 O1
     "wrong_bridge": "wrong_intermediate",  # v1.2.0 (2026-11-03)
+    "multihop_mt_v2": "multihop_mt",  # 2026-11-04 (tests/test_rename_multihop_mt.py)
 }
 
 
@@ -199,6 +200,9 @@ def test_subset_entry_reads_old_key(tmp_path):
 def test_frozen_ati_file_uses_new_keys(real_families):
     frozen = json.loads(ti.FROZEN.read_text(encoding="utf-8"))
     for old, new in RENAMES.items():
+        if new in frozen["_not_gated"]:  # excluded by design: listed under its current key there
+            assert old not in frozen and old not in frozen["_not_gated"]
+            continue
         assert old not in frozen and new in frozen
         if frozen[new]["instrument"] != ti.gate_instrument(new):
             # plan 0032: introspection's instrument gained +cannot; re-gated in the run phase

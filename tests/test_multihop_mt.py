@@ -1,4 +1,4 @@
-"""multihop_mt_v2: the shortcut-gated bank (plan 0013) and bank v2 (plan 0041, Camila 2026-10-30):
+"""multihop_mt: the shortcut-gated bank (plan 0013) and bank v2 (plan 0041, Camila 2026-10-30):
 read at every prompt token (lite: the final token), judged by its own pinned MC judge over other
 questions' bridges / targets with cannot tell, a name gate over ``name_forms`` (unique surnames
 and misspellings credit), markdown folded, out of the ATI subset."""
@@ -15,16 +15,16 @@ from summary_fakes import FakeLLM, summary_args
 from wsbench import digest, mc, readplan, reads, registry
 from wsbench.banks import load_bank
 from wsbench.digest import Line
-from wsbench.evals.multihop_mt_v2 import MIN_FULL_POSITIONS, SPEC
-from wsbench.evals.multihop_mt_v2 import prompts as P  # noqa: N812
+from wsbench.evals.multihop_mt import MIN_FULL_POSITIONS, SPEC
+from wsbench.evals.multihop_mt import prompts as P  # noqa: N812
 from wsbench.judge_config import resolve
 from wsbench.multitoken import family as fam
 from wsbench.multitoken.options import judged_roles, option_sets
 from wsbench.multitoken.prompts import CANNOT
 
 REPO = Path(__file__).resolve().parents[1]
-V2 = REPO / "evals/multihop_mt_v2/items_v2.json"
-FROZEN = REPO / "evals/multihop_mt_v2/items.json"
+V2 = REPO / "evals/multihop_mt/items_v2.json"
+FROZEN = REPO / "evals/multihop_mt/items.json"
 FROZEN_SHA256 = "7c0160a7f818165a09d357a7b0e159301894501124e301bec7f19f75679600d3"
 COEUR = "mh2-coeur-de-lion-brother-charter-q2"
 SABRE = "mh2-sabre-dance-ethnicity-t0"
@@ -56,7 +56,7 @@ def test_options_match_the_golden_and_the_bank():
     assert header["family"] == "multihop-hard" and header["version"] == "v2"
     opts = option_sets(items)
     golden = json.loads(
-        (REPO / "tests/golden/multihop_mt_v2_options.json").read_text(encoding="utf-8")
+        (REPO / "tests/golden/multihop_mt_options.json").read_text(encoding="utf-8")
     )
     want = {
         i: {r: (v["options"], v["gold_index"]) for r, v in per.items()}
@@ -110,7 +110,7 @@ def test_registered():
     assert SPEC.group == "basic_mt" and SPEC.scorer == ""
     assert SPEC.judge.prompt_version == P.MH2_PROMPT_VERSION
     assert P.MH2_PROMPT_VERSION == "mh2-mc-2026-11-01+norival-v1+qline-v2+bank-v6"
-    assert SPEC.bank == Path("evals/multihop_mt_v2/items_v6.json")
+    assert SPEC.bank == Path("evals/multihop_mt/items_v6.json")
     assert registry.bank_path(NAME) == V2.with_name("items_v6.json")  # the r5-rebuilt bank v6
     assert fam.MC_PROFILES[NAME].cannot == P.MH2_CANNOT and mc.is_cannot(P.MH2_CANNOT)
     assert SPEC.task_note == P.MH2_TASK_NOTE and not SPEC.superseded_by
@@ -264,7 +264,7 @@ def test_bankv2_options_match_golden():
     _h, items = _v2()
     opts = option_sets(items, cannot=P.MH2_CANNOT)
     golden = json.loads(
-        (REPO / "tests/golden/multihop_mt_v2_options_v2.json").read_text(encoding="utf-8")
+        (REPO / "tests/golden/multihop_mt_options_v2.json").read_text(encoding="utf-8")
     )
     want = {
         i: {r: (v["options"], v["gold_index"]) for r, v in per.items()}
@@ -546,7 +546,7 @@ def test_native_mc_any_layer_with_pick_columns(tmp_path, monkeypatch):
 
 
 def test_regex_opt_in_is_unpinned(tmp_path):
-    example = REPO / "examples/readouts/multihop_mt_v2.jsonl"
+    example = REPO / "examples/readouts/multihop_mt.jsonl"
     args = native_args(
         readouts=example, out=tmp_path / "o", judge=resolve(SPEC.judge), layers=None,
         items=None, limit=0, allow_missing=True, concurrency=1, rpm=1.0, dry_run=False,
@@ -633,7 +633,7 @@ def test_zh_forms_follow_the_en_lone_given_name_rule():
     bmh2 = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(bmh2)
     assert {"凯末尔", "叶海亚"} <= bmh2.ZH_LONE_GIVEN
-    _h, items = load_bank(REPO / "evals/multihop_mt_v2/items_v2.json")
+    _h, items = load_bank(REPO / "evals/multihop_mt/items_v2.json")
     for it in items:
         for role, langs in it["name_forms"].items():
             hit = set(langs["zh"]) & bmh2.ZH_LONE_GIVEN

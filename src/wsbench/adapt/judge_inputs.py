@@ -1399,7 +1399,7 @@ _add(
 
 _add(
     FamilyInputs(
-        "multihop_mt_v2",
+        "multihop_mt",
         "multitoken/family.py (MC_PROFILES, rival)",
         "model-specific (Phase E)",
         "dict",
@@ -1414,7 +1414,7 @@ _add(
             _q(
                 "SYSTEM 'English or Chinese' (MH2_NATIVE_LANGS = DEFAULT_NATIVE_LANGS)",
                 HAZARD,
-                "evals/multihop_mt_v2/prompts.py:41,58",
+                "evals/multihop_mt/prompts.py:41,58",
                 "ignores the header's native_langs",
             ),
             _q(
@@ -1422,7 +1422,7 @@ _add(
                 HAZARD,
                 "adapt/run.py:373",
             ),
-            _qwen_min_full(15, "multihop_mt_v2/__init__.py:19-21"),
+            _qwen_min_full(15, "multihop_mt/__init__.py:19-21"),
             _GRID,
         ),
     )

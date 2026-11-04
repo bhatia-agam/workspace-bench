@@ -16,7 +16,7 @@ REPO = Path(__file__).resolve().parents[1]
 # family -> (the bank it supersedes, the new bank, its version)
 BANKS = {
     "basic_readout_mt": ("items_v4.json", "items_v6.json", 6),
-    "multihop_mt_v2": ("items_v4.json", "items_v6.json", 6),
+    "multihop_mt": ("items_v4.json", "items_v6.json", 6),
     "multilingual": ("items_v3.json", "items_v4.json", 4),
     "multilingual_mt": ("items_v4.json", "items_v5.json", 5),
     "multilingual_multihop": ("items_v4.json", "items_v5.json", 5),
@@ -26,7 +26,7 @@ BANKS = {
 # dropped item's plan row stays (``read_plan_bank``), so every earlier readout file serves
 PLAN_SHA = {
     "basic_readout_mt": "4c8f2cc057e6",
-    "multihop_mt_v2": "1d5f2e2fa84b",
+    "multihop_mt": "1d5f2e2fa84b",
     "multilingual": "e9a67ff80bee",
     "multilingual_mt": "2510a7af7c96",
     "multilingual_multihop": "f57d844abf4e",
@@ -37,7 +37,7 @@ PLAN_SHA = {
 # the rebuild started from a small edit of the bank it supersedes that the series folded into the
 # new bank instead of keeping a file of its own: the header key of the new bank recording the edit
 # (scripts/mc_options_r5.py's ``start_bank`` re-applies it the same way)
-FOLDED = {"basic_readout_mt": "v5", "multihop_mt_v2": "v5"}
+FOLDED = {"basic_readout_mt": "v5", "multihop_mt": "v5"}
 
 
 def _raw(family: str, name: str) -> dict:
@@ -60,7 +60,7 @@ def test_driver_families(real_families):
     r5 = _driver()
     assert sorted(r5.CFGS) == [
         "basic_readout_mt",
-        "multihop_mt_v2",
+        "multihop_mt",
         "multilingual",
         "multilingual_mt",
         "multilingual_multihop",
@@ -173,7 +173,7 @@ def test_registered_and_read_plan_unchanged(family, real_families):
 
 # the rebuild's own record (the header's r5_mc.floors, every measurement up to the freeze):
 # multilingual_multihop's topic guesser stayed above the standard on the kept items whatever was
-# dropped; multihop_mt_v2 met it on the kept items' repair-round draws, but its topic guesser
+# dropped; multihop_mt met it on the kept items' repair-round draws, but its topic guesser
 # fails it on fresh draws over the frozen bank (evals/baselines/README.md, "Option rebuild r5")
 NOT_MET = {"multilingual_multihop"}
 
@@ -200,7 +200,7 @@ def test_recorded_floors_and_standard(family):
 # the standard verdicts on record
 FROZEN_FAILS: dict[str, set[str]] = {
     "basic_readout_mt": set(),
-    "multihop_mt_v2": {"topic"},
+    "multihop_mt": {"topic"},
     "multilingual": set(),
     "multilingual_mt": set(),
     "multilingual_multihop": {"described", "topic"},
@@ -224,13 +224,13 @@ def test_frozen_floors_are_on_the_new_bank(family, real_families):
 def test_call_keys_survive_the_bank_stamps(real_families):
     """A bank stamp moves the result stamp only: the MC calls stay keyed as before (the options
     are in the fingerprinted prompt, so a rebuilt list is re-asked and every other one is not)."""
-    from wsbench.evals.multihop_mt_v2.prompts import MH2_CALL_VERSION, MH2_PROMPT_VERSION
+    from wsbench.evals.multihop_mt.prompts import MH2_CALL_VERSION, MH2_PROMPT_VERSION
     from wsbench.multitoken import mcrx
     from wsbench.multitoken.family import call_pv
     from wsbench.multitoken.prompts import BRMT_CALL_VERSION, BRMT_PROMPT_VERSION
 
     assert call_pv("basic_readout_mt", BRMT_PROMPT_VERSION) == BRMT_CALL_VERSION
-    assert call_pv("multihop_mt_v2", MH2_PROMPT_VERSION) == MH2_CALL_VERSION
+    assert call_pv("multihop_mt", MH2_PROMPT_VERSION) == MH2_CALL_VERSION
     for family in ("multilingual", "multilingual_multihop"):
         pv = real_families[family].judge.prompt_version
         assert "+bank-v" in pv and "+bank-v" not in mcrx.call_version(pv)

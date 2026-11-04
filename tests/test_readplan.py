@@ -38,8 +38,9 @@ def test_every_family_plans_and_rows_serialize():
     fams = readplan.families()
     assert len(fams) == 33  # + 4 (plan 0016), - ttt (0017), + unverbalized_hint, + 2 (0027),
     # - brew_intermediates (0029), - wrong_bridge_true (2026-10-30), - hallucination (0040),
-    # - multihop_mt (removed 2026-10-30), - medical_diagnosis{,_alt} (0058; unverbalized_hint is
-    # retired, not removed: its bank stays, so it still plans by name), + nyt_connections (0062),
+    # - multihop_mt_regex (removed 2026-10-30), - medical_diagnosis{,_alt} (0058;
+    # unverbalized_hint is retired, not removed: its bank stays, so it still plans by name),
+    # + nyt_connections (0062),
     # + hinted_cutoff (0063), + math_shortcuts (0065)
     for fam in fams:
         specs = readplan.plan(fam)
@@ -177,7 +178,7 @@ def test_plan_all_skips_superseded_but_names_still_plan(tmp_path, real_families)
 
     assert main(["plan", f"out={tmp_path / 'all'}", "limit=1"]) == 0
     written = {p.stem for p in (tmp_path / "all").glob("*.jsonl")}
-    assert "multihop_mt_v2" in written
+    assert "multihop_mt" in written
     superseded = set(registry.superseded()) | set(registry.RETIRED_FAMILIES)  # + plan 0058
     assert not written & superseded
     assert len(written) == len(readplan.families()) - len(superseded)

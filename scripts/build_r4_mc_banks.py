@@ -3,7 +3,7 @@
 Every bank is a NEW file (frozen banks are never edited): each item keeps every field of its
 predecessor, and only the MC distractor lists change.
 
-- basic_readout_mt items_v3.json, multihop_mt_v2 items_v3.json, multilingual_multihop
+- basic_readout_mt items_v3.json, multihop_mt items_v3.json, multilingual_multihop
   items_v3.json: each content list's four distractors are the Opus-authored same-topic ones of
   ``scripts/r4_mc_distractors.py`` (frozen in ``evals/<family>/r4_distractors.json``).
 - multilingual items_v3.json and multilingual_multihop items_v3.json: each language list's four
@@ -41,7 +41,7 @@ MULTILINGUAL_TOPICS = {
     "season": "a season of the year",
     "phase": "a form or state of water",
 }
-CONTENT_FAMILIES = ("basic_readout_mt", "multihop_mt_v2", "multilingual_multihop")
+CONTENT_FAMILIES = ("basic_readout_mt", "multihop_mt", "multilingual_multihop")
 LANG_FAMILIES = ("multilingual", "multilingual_multihop")
 
 
@@ -261,7 +261,7 @@ def main(argv: list[str] | None = None) -> int:
     for fam in CONTENT_FAMILIES:
         p = REPO / "evals" / fam / "r4_distractors.json"
         gen[fam] = json.loads(p.read_text(encoding="utf-8"))["items"]
-    for fam in ("basic_readout_mt", "multihop_mt_v2", "multilingual", "multilingual_multihop"):
+    for fam in ("basic_readout_mt", "multihop_mt", "multilingual", "multilingual_multihop"):
         bank, topics = build(fam, gen)
         texts[REPO / "evals" / fam / "items_v3.json"] = (
             json.dumps(bank, indent=1, ensure_ascii=False) + "\n"

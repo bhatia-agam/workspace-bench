@@ -48,8 +48,8 @@ def test_the_task_asked_is_the_task_the_bank_gates():
     # an association item's prompt is a finished sentence that never names the concept
     assert capq.build("association")[0].ask.startswith(capq.NAME_REFERENT)
     # the mt bridge families ask the bank's own bridge question beside the surface answer
-    bank = {it["id"]: it for it in capq.bank_items("multihop_mt_v2")}
-    bridges = [q for q in capq.build("multihop_mt_v2") if q.meta.get("leg") == "bridge"]
+    bank = {it["id"]: it for it in capq.bank_items("multihop_mt")}
+    bridges = [q for q in capq.build("multihop_mt") if q.meta.get("leg") == "bridge"]
     assert bridges
     for q in bridges:
         item = bank[q.id.split(":")[0]]
@@ -253,7 +253,7 @@ def test_cli_all_skips_superseded(capsys, monkeypatch, real_families):
         lambda name, **kw: seen.append(name) or {"n_items": 0, "n_calls": 0},
     )
     assert main(["capable", "model=m", "dry_run=True"]) == 0
-    assert "multihop_mt_v2" in seen and "multihop_mt" not in seen
+    assert "multihop_mt" in seen and "multihop_mt_regex" not in seen
     assert "typo_mt" in seen and "typo" not in seen  # plan 0033 T1
     superseded = set(registry.superseded())
     assert not set(seen) & superseded

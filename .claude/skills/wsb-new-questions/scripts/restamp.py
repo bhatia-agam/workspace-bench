@@ -3,7 +3,7 @@ multi-token families) and multihop `readout.offsets`.
 
     uv run --with transformers --with jinja2 python \\
         .claude/skills/wsb-new-questions/scripts/restamp.py \\
-        --family multihop_mt_v2 --bank cand/multihop_mt_v2.json --tokenizer Qwen/Qwen3.6-27B
+        --family multihop_mt --bank cand/multihop_mt.json --tokenizer Qwen/Qwen3.6-27B
 
 Rewrites the bank in place (or to --out). Use the tokenizer of the model whose activations
 will be read: Qwen/Qwen3.6-27B for the public bank, the subject for a per-model bank.

@@ -18,7 +18,7 @@ from wsbench.multitoken.options import r4_language_distractors
 REPO = Path(__file__).resolve().parents[1]
 NEW = {
     "basic_readout_mt": ("items_v3.json", "items_v4.json"),
-    "multihop_mt_v2": ("items_v3.json", "items_v4.json"),
+    "multihop_mt": ("items_v3.json", "items_v4.json"),
     "multilingual_multihop": ("items_v3.json", "items_v4.json"),
     "multilingual_mt": ("items_v3.json", "items_v4.json"),
     "multilingual_typo": ("items_v2.json", "items_v3.json"),
@@ -28,7 +28,7 @@ NEW = {
 # (tests/test_r5_mc_options.py) re-took the audit on its own lists, so the audit covers every item
 LATER = {
     "basic_readout_mt": ("items_v6.json", set()),
-    "multihop_mt_v2": ("items_v6.json", set()),
+    "multihop_mt": ("items_v6.json", set()),
     "multilingual_mt": ("items_v5.json", set()),
     "multilingual_multihop": ("items_v5.json", set()),
     "multilingual_typo": ("items_v4.json", set()),
@@ -120,7 +120,7 @@ def test_topic_labels_cover_every_list(family):
 # An r5-rebuilt bank (tests/test_r5_mc_options.py) carries the verdicts measured on it.
 STANDARD_FAILS: dict[str, set[str]] = {
     "basic_readout_mt": set(),
-    "multihop_mt_v2": {"topic"},
+    "multihop_mt": {"topic"},
     "multilingual_multihop": {"described", "topic"},
     "multilingual_mt": set(),
     "multilingual_typo": set(),
@@ -177,7 +177,7 @@ def test_call_key_maps_the_rule_only_bump():
     "family",
     [
         "basic_readout_mt",
-        "multihop_mt_v2",
+        "multihop_mt",
         "multilingual",
         "multilingual_mt",
         "multilingual_multihop",

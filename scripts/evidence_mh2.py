@@ -1,10 +1,10 @@
-"""Offline evidence for plan 0041 (multihop_mt removal + multihop_mt_v2 fixes): CPU only, no API
+"""Offline evidence for plan 0041 (multihop_mt_regex removal + multihop_mt fixes): CPU only, no API
 call, cached readouts and the v2 bank only. Writes the evidence files the plan's coverage table
-names under ``OUT/evidence/{multihop_mt,multihop_mt_v2}/``.
+names under ``OUT/evidence/{multihop_mt_regex,multihop_mt}/``.
 
     uv run --no-sync python scripts/evidence_mh2.py --out OUT [--readouts ROOT]
 
-``ROOT`` holds ``<arm>/multihop_mt_v2.jsonl`` cached final-token readouts (the ``*-x4`` arms,
+``ROOT`` holds ``<arm>/multihop_mt.jsonl`` cached final-token readouts (the ``*-x4`` arms,
 no sidecar); default the global-workspace ``wsb_latest`` cache.
 """
 
@@ -29,10 +29,10 @@ from wsbench.readouts import write_sidecar
 from wsbench.registry import JudgeArgs
 
 REPO = Path(__file__).resolve().parents[1]
-NAME = "multihop_mt_v2"
+NAME = "multihop_mt"
 ARMS = ["rl-onchat-x4", "span8_32-x4", "rl-relverb_p4-x4", "rl-reltree_p4-x4", "rl-relpara_p4-x4"]
 DEFAULT_ROOT = Path("/workspace/gw-relational-ar/outputs/wsb_latest/outputs/readouts")
-FROZEN = "evals/multihop_mt_v2/items.json"
+FROZEN = "evals/multihop_mt/items.json"
 COEUR = "mh2-coeur-de-lion-brother-charter-q2"
 SABRE = "mh2-sabre-dance-ethnicity-t0"
 AUDITED = [
@@ -71,7 +71,7 @@ def regex_rescore(root: Path, tmp: Path) -> tuple[str, dict[str, Any]]:
     through ``reads.load`` (default sampling ``prose1`` and the ``bullet4`` override), plus
     ``regex_any_length`` (bank v2 ``name_forms``, no token-length filter)."""
     spec = registry.FAMILIES[NAME]
-    h2, items2 = load_bank(REPO / "evals/multihop_mt_v2/items_v2.json")
+    h2, items2 = load_bank(REPO / "evals/multihop_mt/items_v2.json")
     c2 = regex.contract_for(h2, h2["family"])
     loose = dataclasses.replace(c2, multi_token=False)
     table: dict[str, Any] = {}
@@ -166,8 +166,8 @@ def _hit_quote(path: Path, iid: str, items: list, contract: regex.BankContract) 
 
 def options_md(root: Path) -> tuple[str, dict[str, Any]]:
     _h1, items1 = load_bank(REPO / FROZEN)
-    _h2, items2 = load_bank(REPO / "evals/multihop_mt_v2/items_v2.json")
-    from wsbench.evals.multihop_mt_v2.prompts import MH2_CANNOT
+    _h2, items2 = load_bank(REPO / "evals/multihop_mt/items_v2.json")
+    from wsbench.evals.multihop_mt.prompts import MH2_CANNOT
 
     o1, o2 = option_sets(items1), option_sets(items2, cannot=MH2_CANNOT)
     out = ["# B2: options, frozen (authored confusables) vs bank v2 (other questions)", ""]
@@ -236,7 +236,7 @@ def positions_md(root: Path, tmp: Path) -> tuple[str, dict[str, Any]]:
 
 
 def fuzzy_md() -> str:
-    _h, items = load_bank(REPO / "evals/multihop_mt_v2/items_v2.json")
+    _h, items = load_bank(REPO / "evals/multihop_mt/items_v2.json")
     it = next(x for x in items if x["id"] == SABRE)
     nf = it["name_forms"]["bridge1"]["en"]
     full = it["units"][0]["full_forms"]
@@ -259,7 +259,7 @@ def main() -> int:
     ap.add_argument("--readouts", type=Path, default=DEFAULT_ROOT)
     a = ap.parse_args()
     registry.load_all()
-    ev1, ev2 = a.out / "evidence/multihop_mt", a.out / "evidence/multihop_mt_v2"
+    ev1, ev2 = a.out / "evidence/multihop_mt_regex", a.out / "evidence/multihop_mt"
     ev1.mkdir(parents=True, exist_ok=True)
     ev2.mkdir(parents=True, exist_ok=True)
     tmp = a.out / "evidence/_tmp"
@@ -271,12 +271,12 @@ def main() -> int:
     rows = [ln for ln in lst.splitlines() if "multihop" in ln]
     from wsbench.results import macro
 
-    removed = registry.REMOVED_FAMILIES["multihop_mt"]
-    m = macro([_res("multihop_mt", 0.9), _res(NAME, 0.2)])
+    removed = registry.REMOVED_FAMILIES["multihop_mt_regex"]
+    m = macro([_res("multihop_mt_regex", 0.9), _res(NAME, 0.2)])
     (ev1 / "removal.txt").write_text(
         "wsbench list rows naming multihop:\n" + "\n".join(rows) + "\n\n"
-        f"REMOVED_FAMILIES['multihop_mt'] = {removed!r}\n"
-        f"macro over an old run dir holding multihop_mt + multihop_mt_v2 results: families "
+        f"REMOVED_FAMILIES['multihop_mt_regex'] = {removed!r}\n"
+        f"macro over an old run dir holding multihop_mt_regex + multihop_mt results: families "
         f"{m['families']}, excluded {m['excluded']}\n",
         encoding="utf-8",
     )
@@ -296,7 +296,7 @@ def main() -> int:
     text, summary["regex"] = regex_rescore(a.readouts, tmp)
     (ev2 / "regex_rescore.md").write_text(text, encoding="utf-8")
     (ev2 / "fuzzy.md").write_text(fuzzy_md(), encoding="utf-8")
-    (a.out / "evidence/multihop_mt_v2/summary.json").write_text(
+    (a.out / "evidence/multihop_mt/summary.json").write_text(
         json.dumps(summary, indent=1, ensure_ascii=False, default=str) + "\n", encoding="utf-8"
     )
     print(json.dumps(summary["regex"]["table"], indent=1))

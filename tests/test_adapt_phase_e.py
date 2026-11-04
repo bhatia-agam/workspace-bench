@@ -1,4 +1,4 @@
-"""plan 0060 Phase E: per-subject adaptation of wrong_intermediate and multihop_mt_v2 (fake
+"""plan 0060 Phase E: per-subject adaptation of wrong_intermediate and multihop_mt (fake
 runners; no
 GPU, no API). ``wsbench.adapt.wrong_intermediate`` rebuilds the bank from the subject's own
 wrong-intermediate
@@ -26,9 +26,9 @@ def _registered(family):
     return store.original_bank(family)
 
 
-# ====================================================================== multihop_mt_v2
+# ====================================================================== multihop_mt
 def _mh2(pred):
-    _h, items = _registered("multihop_mt_v2")
+    _h, items = _registered("multihop_mt")
     return copy.deepcopy(next(it for it in items if pred(it)))
 
 
@@ -100,13 +100,13 @@ def test_mh2_two_hop_pass_and_shortcut_fail(tmp_store):
         assert it[k] == two[k]
     assert it["consistency"] == 1.0 and it["shortcut_max"] == 0.0
     assert all(sp["n_pass"] == 0 and sp["n"] == 20 for sp in it["shortcut_probes"])
-    assert store.gated(MODEL, "multihop_mt_v2")[two["name"]]["gate"]["pass"]
+    assert store.gated(MODEL, "multihop_mt")[two["name"]]["gate"]["pass"]
     # the must-NOT-reach leg: one shortcut probe reaching the answer fails the item
     sid = two["shortcut_probes"][-1]["id"]
     (bad,) = mhmt2.gate(MODEL, runner=MH2Runner(hit={sid}), tok=None, items=[two], regate=True)
     assert bad["gate"]["verdict"] == "fail" and not bad["gate"]["pass"]
     assert any(r.startswith(f"{sid}=20/20g") for r in bad["gate"]["reasons"])
-    assert store.gated(MODEL, "multihop_mt_v2")[two["name"]]["gate"]["pass"] is False  # last wins
+    assert store.gated(MODEL, "multihop_mt")[two["name"]]["gate"]["pass"] is False  # last wins
 
 
 def test_mh2_failed_recall_skips_the_shortcut_stage(tmp_store):
@@ -170,15 +170,15 @@ def test_mh2_restamps_token_counts_for_another_tokenizer():
 
 
 def test_mh2_freeze_includes_the_subject_rows(tmp_store):
-    header, items = _registered("multihop_mt_v2")
+    header, items = _registered("multihop_mt")
     some = copy.deepcopy(items[:3])
     mhmt2.gate(MODEL, runner=MH2Runner(), tok=None, items=some)
-    run.freeze(MODEL, ["multihop_mt_v2"])
-    bank = json.loads((tmp_store / "multihop_mt_v2.json").read_text())
+    run.freeze(MODEL, ["multihop_mt"])
+    bank = json.loads((tmp_store / "multihop_mt.json").read_text())
     # the shipped header is the registered bank's (its version included)
     assert bank["version"] == header["version"] and len(bank["items"]) == 3
     assert all(it["adapt"]["gate"]["pass"] for it in bank["items"])
-    rep = json.loads((tmp_store / "report.json").read_text())["families"]["multihop_mt_v2"]
+    rep = json.loads((tmp_store / "report.json").read_text())["families"]["multihop_mt"]
     assert rep["n_items"] == 3 and rep["target"] == len(items) and rep["status"] == "untried"
 
 
@@ -652,16 +652,16 @@ def test_wb_caps_count_only_items_whose_options_build(tmp_store, tmp_path, monke
 def test_cli_registers_the_phase_e_commands():
     from wsbench.adapt.__main__ import KEYS, main
 
-    assert {"stage", "pool"} <= KEYS["wrong_intermediate"] and "regate" in KEYS["multihop_mt_v2"]
+    assert {"stage", "pool"} <= KEYS["wrong_intermediate"] and "regate" in KEYS["multihop_mt"]
     with pytest.raises(SystemExit, match="unknown argument"):
         main(["wrong_intermediate", f"model={MODEL}", "family=x"])
     with pytest.raises(SystemExit, match="needs pool="):
         main(["wrong_intermediate", f"model={MODEL}", "stage=grade"])
     with pytest.raises(SystemExit, match="unknown stage"):
-        main(["multihop_mt_v2", f"model={MODEL}", "stage=nope"])
+        main(["multihop_mt", f"model={MODEL}", "stage=nope"])
     from wsbench.adapt import families
 
-    for fam in ("wrong_intermediate", "multihop_mt_v2"):  # never gated item by item through profile
+    for fam in ("wrong_intermediate", "multihop_mt"):  # never gated item by item through profile
         with pytest.raises(SystemExit, match="adapt"):
             families.get(fam)
 
