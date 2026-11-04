@@ -136,7 +136,7 @@ re-stamped (`references/porting.md`).
   - T2: those languages with relations limited to numbers, days, colours and basic opposites, plus
     an explicit cue word.
 - **Main knob:** language resource level.
-- **Bank now:** `items_v3` (plan 0054): language units hold NAMES only, every unit required, items
+- **Bank now:** `items_v4` (plan 0054; v3 with the r5-rebuilt concept lists): language units hold NAMES only, every unit required, items
   carry `mc` + `mc_roles` + `lang`; header `contract.native_langs` (measured per subject, plan 0054
   R6); scorer `mc+regex`. The author already emits the v2 shape (`author.py`); the gate legs still
   check the surface form only (no language-name leg). A v1 adapted bank silently runs the v1

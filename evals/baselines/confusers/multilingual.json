@@ -172,11 +172,11 @@
    "list": 0,
    "topic": "the opposite (antonym) of a common word",
    "options": [
-    "young",
-    "down",
+    "cold",
+    "slow",
     "small",
-    "far",
-    "cold"
+    "dark",
+    "bad"
    ],
    "gold": 3,
    "fits": [
@@ -334,10 +334,10 @@
    "topic": "a month name",
    "options": [
     "July",
-    "October",
-    "June",
-    "April",
-    "February"
+    "September",
+    "March",
+    "May",
+    "April"
    ],
    "gold": 1,
    "fits": [
@@ -746,11 +746,11 @@
    "list": 0,
    "topic": "a time of day",
    "options": [
-    "midnight",
-    "dusk",
-    "noon",
+    "afternoon",
+    "morning",
+    "evening",
     "night",
-    "morning"
+    "noon"
    ],
    "gold": 4,
    "fits": [
@@ -999,7 +999,7 @@
    "list": 0,
    "topic": "a colour word",
    "options": [
-    "brown",
+    "white",
     "blue",
     "red",
     "black",
@@ -1138,7 +1138,7 @@
    "topic": "a colour word",
    "options": [
     "green",
-    "brown",
+    "white",
     "black",
     "red",
     "blue"
@@ -1229,10 +1229,10 @@
    "list": 0,
    "topic": "a capital city",
    "options": [
-    "Lisbon",
+    "Madrid",
+    "Berlin",
+    "Rome",
     "London",
-    "Vienna",
-    "Tokyo",
     "Paris"
    ],
    "gold": 5,
@@ -1275,9 +1275,9 @@
    "list": 0,
    "topic": "a day of the week",
    "options": [
-    "Wednesday",
+    "Thursday",
     "Tuesday",
-    "Saturday",
+    "Wednesday",
     "Friday",
     "Sunday"
    ],
@@ -1414,9 +1414,9 @@
    "topic": "the opposite (antonym) of a common word",
    "options": [
     "small",
-    "far",
     "old",
-    "young",
+    "slow",
+    "weak",
     "cold"
    ],
    "gold": 1,
@@ -1437,9 +1437,9 @@
    "topic": "the opposite (antonym) of a common word",
    "options": [
     "cold",
-    "right",
-    "down",
-    "last",
+    "short",
+    "old",
+    "low",
     "small"
    ],
    "gold": 1,
@@ -1597,11 +1597,11 @@
    "list": 0,
    "topic": "a month name",
    "options": [
+    "June",
     "May",
-    "July",
     "February",
-    "March",
-    "November"
+    "April",
+    "March"
    ],
    "gold": 3,
    "fits": [
@@ -1666,9 +1666,9 @@
    "topic": "a month name",
    "options": [
     "November",
-    "June",
-    "July",
-    "February",
+    "March",
+    "April",
+    "January",
     "May"
    ],
    "gold": 1,
@@ -1757,7 +1757,7 @@
    "list": 0,
    "topic": "a colour word",
    "options": [
-    "orange",
+    "white",
     "red",
     "blue",
     "black",
@@ -1803,11 +1803,11 @@
    "list": 0,
    "topic": "the opposite (antonym) of a common word",
    "options": [
-    "last",
-    "cold",
+    "dark",
     "small",
+    "cold",
     "closed",
-    "down"
+    "old"
    ],
    "gold": 4,
    "fits": [
@@ -1872,11 +1872,11 @@
    "list": 0,
    "topic": "the opposite (antonym) of a common word",
    "options": [
-    "right",
+    "slow",
     "cold",
-    "far",
+    "low",
     "small",
-    "down"
+    "bad"
    ],
    "gold": 4,
    "fits": [
@@ -1941,11 +1941,11 @@
    "list": 0,
    "topic": "the opposite (antonym) of a common word",
    "options": [
-    "last",
-    "right",
+    "cold",
+    "small",
     "old",
-    "far",
-    "cold"
+    "bad",
+    "short"
    ],
    "gold": 3,
    "fits": [
@@ -1965,19 +1965,20 @@
    "topic": "a form or state of water",
    "options": [
     "ice",
+    "snow",
+    "fog",
     "steam",
-    "mud",
-    "dew",
     "rain"
    ],
    "gold": 1,
    "fits": [
     1,
     2,
+    3,
     4,
     5
    ],
-   "n_confusers": 3,
+   "n_confusers": 4,
    "ok": true,
    "answered": true
   },
@@ -2010,9 +2011,9 @@
    "topic": "the opposite (antonym) of a common word",
    "options": [
     "cold",
-    "far",
-    "right",
-    "old",
+    "small",
+    "dark",
+    "short",
     "slow"
    ],
    "gold": 1,
@@ -2055,10 +2056,10 @@
    "list": 0,
    "topic": "a time of day",
    "options": [
-    "noon",
     "morning",
+    "evening",
     "dawn",
-    "dusk",
+    "afternoon",
     "night"
    ],
    "gold": 5,
@@ -2125,10 +2126,10 @@
    "topic": "the opposite (antonym) of a common word",
    "options": [
     "cold",
-    "closed",
-    "last",
-    "far",
-    "down"
+    "dark",
+    "small",
+    "slow",
+    "bad"
    ],
    "gold": 1,
    "fits": [

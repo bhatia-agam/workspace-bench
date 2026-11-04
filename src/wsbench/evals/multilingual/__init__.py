@@ -5,7 +5,12 @@ scorer mc+regex)."""
 from pathlib import Path
 
 from wsbench.multitoken.family import mt_family
-from wsbench.multitoken.prompts import DIGEST_TASK_NOTES, MCRX_VERSION, ML_MC_PROMPT_VERSION
+from wsbench.multitoken.prompts import (
+    DIGEST_TASK_NOTES,
+    MCRX_VERSION,
+    ML_BANK_TAGS,
+    ML_MC_PROMPT_VERSION,
+)
 from wsbench.registry import register
 
 SPEC = register(
@@ -14,9 +19,10 @@ SPEC = register(
         "Multilingual",
         calls_per_arm="≈ 0.4k",
         scorer="mc+regex",
-        bank=Path("evals/multilingual/items_v3.json"),
+        # bank v4 = v3 with the leaking concept lists rebuilt (scripts/mc_options_r5.py)
+        bank=Path("evals/multilingual/items_v4.json"),
         prompt_version=MCRX_VERSION,
-        instrument_tag=ML_MC_PROMPT_VERSION,
+        instrument_tag=f"{ML_MC_PROMPT_VERSION}+{ML_BANK_TAGS['multilingual']}",
         min_full_positions=4,
         full_contiguous=True,
         task_note=DIGEST_TASK_NOTES["multilingual"],

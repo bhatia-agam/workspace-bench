@@ -17,12 +17,14 @@ REPO = Path(__file__).resolve().parents[1]
 BANKS = {
     "basic_readout_mt": ("items_v5.json", "items_v6.json", 6),
     "multihop_mt_v2": ("items_v5.json", "items_v6.json", 6),
+    "multilingual": ("items_v3.json", "items_v4.json", 4),
 }
 # the plan_sha of each family's read plan before the rebuild: options are never rendered, and a
 # dropped item's plan row stays (``read_plan_bank``), so every earlier readout file serves
 PLAN_SHA = {
     "basic_readout_mt": "4c8f2cc057e6",
     "multihop_mt_v2": "1d5f2e2fa84b",
+    "multilingual": "e9a67ff80bee",
 }
 
 
@@ -156,6 +158,7 @@ def test_recorded_floors_and_standard(family):
 FROZEN_FAILS: dict[str, set[str]] = {
     "basic_readout_mt": set(),
     "multihop_mt_v2": {"topic"},
+    "multilingual": set(),
 }
 
 
@@ -176,8 +179,21 @@ def test_call_keys_survive_the_bank_stamps(real_families):
     """A bank stamp moves the result stamp only: the MC calls stay keyed as before (the options
     are in the fingerprinted prompt, so a rebuilt list is re-asked and every other one is not)."""
     from wsbench.evals.multihop_mt_v2.prompts import MH2_CALL_VERSION, MH2_PROMPT_VERSION
+    from wsbench.multitoken import mcrx
     from wsbench.multitoken.family import call_pv
     from wsbench.multitoken.prompts import BRMT_CALL_VERSION, BRMT_PROMPT_VERSION
 
     assert call_pv("basic_readout_mt", BRMT_PROMPT_VERSION) == BRMT_CALL_VERSION
     assert call_pv("multihop_mt_v2", MH2_PROMPT_VERSION) == MH2_CALL_VERSION
+    for family in ("multilingual",):
+        pv = real_families[family].judge.prompt_version
+        assert "+bank-v" in pv and "+bank-v" not in mcrx.call_version(pv)
+        assert mcrx.call_version(pv) == mcrx.call_version(pv.split("+bank-v")[0])
+
+
+def test_multilingual_alias_note_is_the_new_bank_table():
+    from wsbench.multitoken.options import alias_note, option_aliases
+    from wsbench.multitoken.prompts import ML_ALIAS_NOTE
+
+    _h, items = load_bank(REPO / "evals/multilingual/items_v4.json")
+    assert alias_note(option_aliases(items)) == ML_ALIAS_NOTE

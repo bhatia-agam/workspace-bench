@@ -110,7 +110,8 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   families are three-line packages under `evals/`. Option
   lists are pinned by goldens in `tests/golden/`. A spec with `scorer` set is not preflighted by
   `run` unless `opts=judge=mc`, and `wsbench list` shows the scorer in the judge column.
-- The four multilingual families (plan 0054) judge `items_v2.json` banks built offline by
+- The four multilingual families (plan 0054) judge v2-shaped banks (registered: multilingual v4,
+  multilingual_mt v4, multilingual_multihop v4, multilingual_typo v3), whose v2 base is built by
   `scripts/build_multilingual_v2.py` (curation in `scripts/multilingual_v2_curation.py`; run it
   with `--check` after any edit, a test enforces it): language units hold NAMES only
   (`multitoken/languages.py`, "Polish" case-sensitive), every unit required, items carry

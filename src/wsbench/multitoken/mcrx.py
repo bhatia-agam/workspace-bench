@@ -81,6 +81,8 @@ from wsbench.readouts import Cell
 from wsbench.registry import JudgeArgs, bank_path
 from wsbench.results import FamilyResult
 
+# a result stamp's bank stamp (prompts.ML_BANK_TAGS), never part of a call key (call_version)
+_BANK_STAMP = re.compile(r"\+bank-v\d+")
 _LEG_LABEL = (
     "AND the language leg (at least one raw sample of the read window names the language in a "
     "naming context)"
@@ -317,8 +319,10 @@ def role_verdict(
 def call_version(pv: str) -> str:
     """The MC calls' fingerprint version: ``pv`` with the scorer rule version replaced by
     :data:`~wsbench.multitoken.prompts.MCRX_CALL_VERSION` (rule-only bumps re-score cached
-    answers; a changed prompt or input re-asks, since system and user are fingerprinted too)."""
-    return pv.replace(MCRX_VERSION, MCRX_CALL_VERSION, 1)
+    answers; a changed prompt or input re-asks, since system and user are fingerprinted too). A
+    bank stamp (``+bank-vN``, ``prompts.ML_BANK_TAGS``) is dropped: the options are in the
+    fingerprinted user prompt already."""
+    return _BANK_STAMP.sub("", pv.replace(MCRX_VERSION, MCRX_CALL_VERSION, 1))
 
 
 def _label(v: dict[str, Any]) -> str:
