@@ -237,7 +237,7 @@ commands with `PYTHONPATH=src`, because the editable install points at the main 
 **User modelling** — [`evals/user_modeling/README.md`](evals/user_modeling/README.md)
 - *What it is:* A chat implies a user attribute (country, gender, occupation…); does the lens encode the attribute the model inferred, named for the USER, at any token of the chat render (system turn, user turn, assistant header, empty think block; lite: the same positions, plan 0061). Bank v2: the 47 SelfDescribe items, where the attribute is only implied.
 - *Example:* "…sit with family over a table full of banchan… write a Wikipedia infobox for me" → target `south korea` (a readout saying "the user is Korean" counts; "Korean cuisine", "kimchi" or Chinese-language text do not).
-- *Judged by:* identification MC (gold + up to 9 mutually exclusive same-class distractors, the gold's hard neighbours always included, + cannot tell), gold never disclosed; the picked value must be NAMED for the user in one readout list or one bullet, and a deterministic gate checks the quote is real, lies in one bullet, and names the picked value; headline pass = verified gold with basis `inferred` (summary mode: the majority answer of three draws).
+- *Judged by:* identification MC (gold + up to 9 mutually exclusive same-class distractors, the gold's hard neighbours always included, + cannot tell), gold never disclosed; the picked value must be NAMED for the user in one readout list or one bullet, and a deterministic gate checks the quote is real, lies in one bullet, and names the picked value; headline pass = verified gold with basis `inferred` (summary mode: the majority verdict of three draws).
 
 **Conjunctive association** — [`evals/conjunctive_association/README.md`](evals/conjunctive_association/README.md)
 - *What it is:* A vignette implies a compound state (state × content × relation) without naming it; does the lens state the whole composition, with the roles the right way round.
@@ -441,7 +441,7 @@ digest's token lines are also matched space-joined, stamped `+joined-2026-10-30`
 | typo (superseded by typo_mt) | claude-opus-5-5 | bank-2026-10-30b |
 | typo_mt | regex (no call natively; the digest model under summary mode) | mt-regex-2026-10-30+typo-v2 |
 | wrong_intermediate | claude-opus-5-5 | wb-mc-2026-10-31r+judge-only-v1+qline-v2+wbforms-v4+bank-v4 (the judge's verified pick stands, no code check after it; MC calls keyed wb-mc-2026-10-31r+rv-2026-10-31e) |
-| user_modeling | claude-opus-5-5 | um-v3.4+bank-v2 (bank v2: the 47 SelfDescribe items; judge calls keyed um-v3.4; summary results `+maj3`: the majority of three draws' gated picks) |
+| user_modeling | claude-opus-5-5 | um-v3.4+bank-v2 (bank v2: the 47 SelfDescribe items; judge calls keyed um-v3.4; summary results `+maj3v`: the majority of three draws' pass / fail verdicts) |
 
 - Override precedence: `judge_model=` flag > `WSBENCH_JUDGE_MODEL` env > the family pin.
 - Routes: model ids starting with `claude-` use Anthropic directly; all other ids use OpenRouter.
