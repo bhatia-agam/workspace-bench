@@ -252,8 +252,14 @@ deleted.
   `hop_consistency`, `shortcut_probes[].n_pass`, `shortcut_max`. Non-Qwen tokenizer:
   `probe_token_lens` / `n_render_tokens` restamped (`mt.stamp`), an item with no multi-token form
   left fails. `mhmt2.SUBJECT_FIELDS` lists what A1's copy-verbatim freeze must overlay.
-- **Open:** no refill (new candidates need MC lists and name forms, A2 builders);
-  `min_full_positions=15` and `contract.native_langs` are Qwen's.
+- **Refill (plan 0066):** the GW adversary-probed pool (box-only, sha-pinned `mh2_pool.json`;
+  1,384 clean candidates after the adversary `problem` / `factual_issue` rule, entity-deduped vs
+  the bank), same staged gate and shortcut leg, + targeted-shortcut review legs stored in
+  `shortcut_probes` (`origin: "review"`); `build_fields` after the gate: validated `units[].kind`
+  (a judge input), forms, `name_forms`, `mc` via the r4 → r4b chain (`--bank`), zh after r4b,
+  bank `readout`, `n_render_tokens`, subject-tokenizer stamp; one item per entity (finalize's
+  greedy `taken` rule). POLICY: 300 candidates / 3%.
+- **Open:** `min_full_positions=15` and `contract.native_langs` are Qwen's.
 
 ### multilingual_mt — the concept (en/zh) + language from an L2 description
 - **Ladder:**
@@ -355,6 +361,11 @@ deleted.
   - T1: ~8-line Python, a single-step value bug, deterministic output.
   - T2: an obvious crash with a common exception.
 - Avoid off-by-one (auto-fixed), aliasing and subtle exceptions.
+- **Refill (plan 0066):** `refill families=buggy_code` = `fill` on the Brief; target 24 PAIRS
+  (`refill.buggy_selection`: pairs atomic, `src` quota 25 / 38, authored crash ≤ 20%); every
+  clean item also passes the greedy `bugclaim` leg (no bug claim in the bare continuation, plan
+  0030 (b)); lint adds twin-differ / IO / literal-copy guards. POLICY: 60 pair objects at `t2` /
+  3%.
 - Authored, then verified by execution (1f36ca88 `skill_patch/buggy_gate.py`).
 - **Bank now:** same file, new content: a symmetric `twin` field and 15 new twins; the headline is
   the pair rate (plan 0030). An adapted bank without twins has every item an orphan and
@@ -562,6 +573,14 @@ carried over from the 27B; there is no Opus / Sonnet unguessability gate.
   before the caps count it. `stage=bank` needs `pool=`.
   The judge also reads `template` (role cues) and `prompt`; both are built.
 
+- **Refill (plan 0066):** source 0 = already-screened items of templates that have `ROLE_CUES`
+  but no MC category (person_mother, namesake: per-item category from B''s entity), then a
+  lower-`min_sl` re-scrape (`pool=dir1,dir2`, round 1 takes precedence). Retained: E1,
+  `MIN_SAMPLE_AGREE` 4, logP, inject, `HUB_FRAC` (over the union), adjudication, caps. New: the
+  entity-based category check (`CATEGORY_P31` over `entities.json` ∪ `entities_extra.json`, frozen
+  class table). Templates without cues need the stacked role-cue change first (judge instrument).
+  POLICY: 200k screened / 5e-5.
+
 **Freezing the Phase E families:** they are not in `families.FAMILIES`, so a bare `freeze` (and
 `status`) skips them. They ship only when named: `$A freeze $M families=wrong_intermediate,multihop_mt_v2`
 (nyt_connections likewise: `families=nyt_connections`, after `$A nyt_connections $M`)
@@ -606,9 +625,10 @@ Qwen's forms). A gold that agrees with Qwen's is fine: it is the subject's answe
 - **Dropped:** G1 (Opus x3 + Sonnet, both framings), pass-2 / label-QA / strict recognisability
   (all frontier-reader screens), the ATI panel. Qwen's gate records are stripped from the item;
   `qwen_gold` and the subject's `g0` are recorded.
-- **Open:** the 32 refill categories' source questions are not recoverable here, so their direct
-  question is `What is your {topic}?` (two reworded step-2 questions are pinned in
-  `msdm.QUESTION_OVERRIDES`). The judge's `MIN_CARRIER_TOKENS = 7` is a Qwen token count; freeze
+- **Refill (plan 0066):** `pool=ext` = the GW category pool (box-only, sha-pinned
+  `msdm_pool.jsonl`, rows in bank shape from `step*/gate.json`); same G0 / compliance / option
+  rules; + membership and label-QA validity legs (all built items); ≤ 2 per domain. The direct
+  question prefers `item["question"]` (source wording). POLICY: 200 categories / 3%. The judge's `MIN_CARRIER_TOKENS = 7` is a Qwen token count; freeze
   copies the 27B header (`preregistered_action`, pools) unchanged.
 
 ### knowledge_cutoff — the subject's own consistent wrong answer (`adapt kcutoff`)
@@ -634,6 +654,10 @@ Qwen's forms). A gold that agrees with Qwen's is fine: it is the subject's answe
   gold/cutoff`); the truth-only rule (gold != truth) applies only to `llm=none` runs. Judged quotes and spans need no
   item field beyond these (the judge builds its menu and G1-G3 from `options` / `option_units`).
 - **Dropped:** G1 (Opus x3 + Sonnet, informed + plain framings), the ATI panel.
+- **Refill (plan 0066):** `pool=ext` = the GW question pool b1 + b2 (box-only, sha-pinned
+  `kcutoff_pool.jsonl`, content-deduped against bank / retired / g3 / hygiene); peer labels become
+  `options` / `option_sources`; same G0 / G3 / truth / option rules; the label / stratum mix is
+  reported, not capped; `cutoff=` unset. POLICY: 1,000 questions / 1%.
 - **nocot items (plan 0018): not built.** `obscure_items.json` is ids-only and Qwen-labelled, and
   the judge never loads it under `WSB_BANK_ROOT`. Porting needs: the question text rendered from
   nocot's pinned zip at gate time only (`wsbench.nocot.questions`, never written to `adapted/`),

@@ -830,6 +830,7 @@ def main(argv: list[str] | None = None) -> int:
             ap.error("--bank needs --out")
         if under_evals(a.out):
             ap.error(f"--out {a.out} is under evals/: an adapted build never writes evals/")
+        a.bank = gen.payload_bank(a.bank, a.families[0], a.out)
     elif a.out is not None:
         ap.error("--out needs --bank")
     globals()["BANK"], globals()["OUT"] = a.bank, a.out
