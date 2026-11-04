@@ -231,16 +231,55 @@
    "target": 63,
    "n_original": 63,
    "n_original_gated": 60,
-   "n_original_pass": 6,
-   "n_items": 0,
-   "n_new": 0,
-   "n_candidates_gated": 0,
-   "change": "original items only",
-   "status": "untried",
-   "note": "Originals only (no refill run this round): 6/63 registered items pass on Qwen3.5-4B; buggy/clean pairs kept atomic (a failed clean twin drops its buggy partner), giving 0 items; no items pass, nothing to read",
+   "n_original_pass": 3,
+   "n_items": 12,
+   "n_new": 12,
+   "n_candidates_gated": 300,
+   "change": "refill via run.fill: 6/24 pairs; 8 landed of 60 tried, yield 13.33%; stop: crash cap binding",
+   "status": "partial",
+   "note": "Refilled (plan 0066, 2026-11-04): partial, 6/24 pairs shipped (12 items); stop: crash cap binding; tally 8/60 = 0.133 (n_min 60, y_min 0.03). Source: authored executed pairs on the buggy_code Brief (fill, t2 pilot then t1 down). Authored pairs: {'non_crash': 5, 'crash': 8, 'crash_cap': 1}. Delta audit: 0 drop(s).",
    "bank": "evals/buggy_code/items.json",
    "bank_version": 1,
-   "exclude_from_macro": true
+   "exclude_from_macro": true,
+   "refill": {
+    "route": "run.fill",
+    "unit": "pairs",
+    "target": 24,
+    "have": 6,
+    "tried": 60,
+    "landed": 8,
+    "yield": 0.13333333333333333,
+    "waves": 4,
+    "n_min": 60,
+    "y_min": 0.03,
+    "tally": {
+     "t2": {
+      "tried": 60,
+      "landed": 8
+     },
+     "t1": {
+      "tried": 90,
+      "landed": 5
+     }
+    },
+    "pool_size": null,
+    "pool_used": null,
+    "stop": "crash cap binding",
+    "budget": {
+     "gpu_minutes": null,
+     "claude_budget": null,
+     "claude_calls": 2621
+    },
+    "pilot": false,
+    "tier": "t2",
+    "authored_pairs": {
+     "non_crash": 5,
+     "crash": 8,
+     "crash_cap": 1
+    }
+   },
+   "target_pairs": 24,
+   "n_pairs": 6
   },
   "multilingual_multihop": {
    "target": 98,
@@ -477,45 +516,148 @@
   "model_specific_directed_modulation": {
    "rederive": {
     "version": "msdm-self-2026-11-03",
-    "elicited": 130,
-    "g0": 4,
-    "compliant": 128,
-    "pass": 3
+    "elicited": 1530,
+    "g0": 126,
+    "compliant": 1514,
+    "pass": 107,
+    "valid": 107
    },
    "target": 98,
    "n_original": 98,
    "n_original_gated": 98,
    "n_original_pass": 0,
-   "n_items": 2,
-   "n_new": 2,
-   "n_candidates_gated": 31,
+   "n_items": 98,
+   "n_new": 98,
+   "n_candidates_gated": 1426,
    "bank": "evals/model_specific_directed_modulation/items.json",
    "bank_version": 1,
-   "change": "original items only",
-   "status": "partial",
-   "note": "Re-derived on Qwen3.5-4B (adapt msdm, plan 0060 Phase E): 130 categories elicited, 4 G0-stable (>= 7/10 + named reveal), 128 compliant, 3 ship; G1 dropped; no refill route; n=2 is too small to read alone"
+   "change": "refill via msdm.refill_wave: 98/98 categories; 107 landed of 1530 tried, yield 6.99%; pool 1400/7782 used; stop: 98 >= target 98",
+   "status": "full",
+   "note": "Refilled (plan 0066, 2026-11-04): full, 98/98 categories shipped (98 items); stop: 98 >= target 98; tally 107/1530 = 0.0699 (n_min 200, y_min 0.03). Source: the GW category pool msdm_pool.jsonl (130 bank + retired categories counted as prior); unchanged G0 / compliance / option rules + membership and label-QA validity legs on every item (decision 8). Delta audit: 5 drop(s) (s2_cooking_stage_of_rendang_gulai_kalio_or_, s2_free_electron_laser_facility, s3b2_australian_cattle_dog_coat_color, s2_georgian_bread, s3b2_piecewise_linear_activation_function).",
+   "refill_note": {
+    "type_mix": {
+     "food_drink": 19,
+     "taxonomy": 9,
+     "technical_variants": 51,
+     "untyped": 28
+    },
+    "registered_type_mix": {
+     "food_drink": 36,
+     "taxonomy": 21,
+     "technical_variants": 31,
+     "untyped": 10
+    },
+    "domain_cap": 2,
+    "question_changed": [
+     "s2_genus_of_typical_owl_strigidae"
+    ]
+   },
+   "refill": {
+    "route": "msdm.refill_wave",
+    "unit": "categories",
+    "target": 98,
+    "have": 98,
+    "tried": 1530,
+    "landed": 107,
+    "yield": 0.06993464052287582,
+    "waves": 7,
+    "n_min": 200,
+    "y_min": 0.03,
+    "tally": {
+     "ext pool": {
+      "tried": 1530,
+      "landed": 107,
+      "prior": {
+       "tried": 1530,
+       "landed": 107
+      }
+     }
+    },
+    "pool_size": 7782,
+    "pool_used": 1400,
+    "stop": "98 >= target 98",
+    "budget": {
+     "claude_budget": null,
+     "gpu_minutes": null,
+     "claude_calls": 0
+    },
+    "pilot": false,
+    "untried_levels": []
+   }
   },
   "knowledge_cutoff": {
    "rederive": {
     "version": "kc-self-2026-11-03",
     "cutoff": null,
-    "elicited": 181,
-    "stable": 12,
-    "incorrect": 7,
-    "pass": 7
+    "elicited": 5454,
+    "stable": 147,
+    "incorrect": 73,
+    "pass": 68
    },
    "target": 108,
    "n_original": 108,
    "n_original_gated": 107,
    "n_original_pass": 2,
-   "n_items": 5,
-   "n_new": 3,
-   "n_candidates_gated": 72,
+   "n_items": 63,
+   "n_new": 61,
+   "n_candidates_gated": 5342,
    "bank": "evals/knowledge_cutoff/items_v2.json",
    "bank_version": 2,
-   "change": "original items only",
+   "change": "refill via kcutoff.refill_wave: 63/108 items; 68 landed of 5454 tried, yield 1.25%; pool 5273/5273 used; stop: pool exhausted",
    "status": "partial",
-   "note": "Re-derived on Qwen3.5-4B (adapt kcutoff, plan 0060 Phase E, no cutoff= given): 181 items elicited, 12 stable (>= 7/10), 7 wrong, 7 pass (originals + retired-panel pool; G1 / ATI panel dropped for adapted subjects); nocot items not built; n=5 is too small to read alone"
+   "note": "Refilled (plan 0066, 2026-11-04): partial, 63/108 items shipped (63 items); stop: pool exhausted; tally 68/5454 = 0.0125 (n_min 1000, y_min 0.01). Source: the GW b1+b2 question pool kcutoff_pool.jsonl (181 bank + pool questions counted as prior; cutoff= unset, decision 4); gold = the subject's stable wrong answer. Delta audit: 3 drop(s) (cs02008, b2_01872, b2_02629). | refill mix: label_type stale 24 / confab 39 (registered stale 55 / confab 53); stratum A 58 / B 5 (registered A 96 / B 12); reported, not capped (plan 0066 decision 5)",
+   "refill_mix": {
+    "label_type": {
+     "stale": 24,
+     "confab": 39
+    },
+    "stratum": {
+     "A": 58,
+     "B": 5
+    },
+    "registered": {
+     "label_type": {
+      "stale": 55,
+      "confab": 53
+     },
+     "stratum": {
+      "A": 96,
+      "B": 12
+     }
+    }
+   },
+   "refill": {
+    "route": "kcutoff.refill_wave",
+    "unit": "items",
+    "target": 108,
+    "have": 63,
+    "tried": 5454,
+    "landed": 68,
+    "yield": 0.012467913458012467,
+    "waves": 8,
+    "n_min": 1000,
+    "y_min": 0.01,
+    "tally": {
+     "ext pool": {
+      "tried": 5454,
+      "landed": 68,
+      "prior": {
+       "tried": 5454,
+       "landed": 68
+      }
+     }
+    },
+    "pool_size": 5273,
+    "pool_used": 5273,
+    "stop": "pool exhausted",
+    "budget": {
+     "claude_budget": null,
+     "gpu_minutes": null,
+     "claude_calls": 0
+    },
+    "pilot": false,
+    "untried_levels": []
+   }
   },
   "nyt_connections": {
    "rederive": {
@@ -547,14 +689,46 @@
    "n_original": 100,
    "n_original_gated": 2,
    "n_original_pass": 0,
-   "n_items": 33,
-   "n_new": 33,
-   "n_candidates_gated": 943,
+   "n_items": 48,
+   "n_new": 48,
+   "n_candidates_gated": 1793,
    "bank": "evals/wrong_intermediate/items_v4.json",
    "bank_version": 4,
-   "change": "original items only",
+   "change": "refill via wrong_intermediate.refill_wave: 48/100 items; 49 landed of 407992 tried, yield 0.01%; pool 407992/407992 used; stop: pool exhausted",
    "status": "partial",
-   "note": "Re-derived on Qwen3.5-4B (adapt wrong_intermediate over the GW scrape): 1254 E1 errors, 51/945 pass the consistency gate, 33 survive adjudication + caps with a buildable mc (0 equal a registered item). Shipped at its real count (no minimum in the adapt code; never padded)"
+   "note": "Refilled (plan 0066, 2026-11-04): partial, 48/100 items shipped (48 items); stop: pool exhausted; tally 49/407992 = 0.00012 (n_min 200000, y_min 5e-05). Source: round 1 + the r2 re-scrape (r2a + r2b, GLM-5.3's pool string; #273 role cues); round-1 screened candidates counted as prior; entity-kind check + hub share over the union. Delta audit: 1 drop(s) (painting_creator-Q28538485-death_year).",
+   "refill": {
+    "route": "wrong_intermediate.refill_wave",
+    "unit": "items",
+    "target": 100,
+    "have": 48,
+    "tried": 407992,
+    "landed": 49,
+    "yield": 0.000120100394125375,
+    "waves": 3,
+    "n_min": 200000,
+    "y_min": 5e-05,
+    "tally": {
+     "expanded scrape": {
+      "tried": 407992,
+      "landed": 49,
+      "prior": {
+       "tried": 407992,
+       "landed": 49
+      }
+     }
+    },
+    "pool_size": 407992,
+    "pool_used": 407992,
+    "stop": "pool exhausted",
+    "budget": {
+     "claude_budget": null,
+     "gpu_minutes": null,
+     "claude_calls": 0
+    },
+    "pilot": false,
+    "untried_levels": []
+   }
   },
   "multihop_mt_v2": {
    "target": 70,
@@ -563,17 +737,62 @@
    "n_original_pass": 1,
    "n_items": 1,
    "n_new": 0,
-   "n_candidates_gated": 0,
+   "n_candidates_gated": 2700,
    "bank": "evals/multihop_mt_v2/items_v4.json",
    "bank_version": 4,
-   "change": "original items only",
-   "status": "untried",
-   "note": "Registered items re-gated on Qwen3.5-4B (adapt multihop_mt_v2, staged gate incl. the must-not-reach shortcut leg): 1/70 pass; no refill route (new items need MC lists and name forms); n=1 is too small to read alone; judgeable under WSB_BANK_ROOT since the PR #258 fix to multitoken/family.py gate_name_forms (it crashed on every adapted set before; its floors were re-run after the fix)"
+   "change": "refill via mhmt2.refill_wave: 1/70 items; 1 landed of 487 tried, yield 0.21%; pool 2700/3384 used; stop: yield 1/487 < 0.03 on >= 300 candidates at the easiest level, 1 < 70/2",
+   "status": "ooc",
+   "note": "Refilled (plan 0066, 2026-11-04): ooc, 1/70 items shipped (1 items); stop: yield 1/487 < 0.03 on >= 300 candidates at the easiest level, 1 < 70/2; tally 1/487 = 0.00205 (n_min 300, y_min 0.03). Source: mh2_pool.json + the decision-7 adversary pool mh2_pool.v2.json; every 3-hop candidate gated before any ooc (§11.14); unchanged staged gate, shortcut leg, relabel_b2 + review legs. Delta audit: 0 drop(s). Out of capacity under the objective §1.2 rule: too small to read alone.",
+   "refill": {
+    "route": "mhmt2.refill_wave",
+    "unit": "items",
+    "target": 70,
+    "have": 1,
+    "tried": 487,
+    "landed": 1,
+    "yield": 0.002053388090349076,
+    "waves": 9,
+    "n_min": 300,
+    "y_min": 0.03,
+    "tally": {
+     "2-hop pool": {
+      "tried": 487,
+      "landed": 1,
+      "prior": {
+       "tried": 487,
+       "landed": 1
+      }
+     }
+    },
+    "pool_size": 3384,
+    "pool_used": 2700,
+    "stop": "yield 1/487 < 0.03 on >= 300 candidates at the easiest level, 1 < 70/2",
+    "budget": {
+     "claude_budget": null,
+     "gpu_minutes": null,
+     "claude_calls": 0
+    },
+    "pilot": false,
+    "untried_levels": []
+   },
+   "exclude_from_macro": true
   },
   "introspection": {
    "status": "absent",
    "note": "PENDING: needs the subject's own injected concept vectors, dose and detection baseline (adapt introspection, plan 0060 Phase E); not run for this subject",
    "exclude_from_macro": true
+  },
+  "hinted_cutoff": {
+   "status": "absent",
+   "note": "absent: this set has no bank for the family (plan 0060 A1.6)",
+   "exclude_from_macro": true,
+   "absent_auto": true
+  },
+  "math_shortcuts": {
+   "status": "absent",
+   "note": "absent: this set has no bank for the family (plan 0060 A1.6)",
+   "exclude_from_macro": true,
+   "absent_auto": true
   }
  },
  "model": "qwen3.5-4b",
@@ -584,8 +803,8 @@
  },
  "n_layers": 32,
  "code": {
-  "git": "5a4c538f+dirty",
-  "adapt_sha256": "d68e1849f052b6f9"
+  "git": "",
+  "adapt_sha256": "3eb78041a8499c12"
  },
  "read_band": [],
  "drops_v1_archived": {
@@ -787,10 +1006,21 @@
   },
   "knowledge_cutoff": {
    "cs01552": "audit 2026-11-03 (independent, plan 0060 build): gold \"leqembi\" is a prefix of every other option including the truth \"leqembi iqlik\" and is the brand of the prompt's named drug, so options cannot separate stale from true",
-   "cs01684": "audit 2026-11-03 (independent, plan 0060 build): option \"a320neo family\" overlaps the gold \"a320neo\", giving two gold-compatible options"
+   "cs01684": "audit 2026-11-03 (independent, plan 0060 build): option \"a320neo family\" overlaps the gold \"a320neo\", giving two gold-compatible options",
+   "cs02008": "delta audit 2026-11-04: audit 2026-11-04 (independent, plan 0066 delta): the distractor 'there is no pope leo xiv, and the current pope is francis...' is the same answer as the gold 'this is a trick question! pope leo xiv does not exist ... the current pope is francis'. The two share no built form, so same_answer / option_collision miss the pair, but a readout of the subject's belief cannot separate the two options.",
+   "b2_01872": "delta audit 2026-11-04: audit 2026-11-04 (independent, plan 0066 delta): the gold 'this event has not occurred' answers about an unsolicited takeover approach for BP in H2 2026. The truth is unknown (truth null, verify model_correct 'unknown'), and 'no approach occurred' may simply be true, so the gold is not shown to be wrong.",
+   "b2_02629": "delta audit 2026-11-04: audit 2026-11-04 (independent, plan 0066 delta): the gold 'python' answers about the top language in GitHub Octoverse 2026. The truth is unknown (truth null, verify model_correct 'unknown'), and Python is a plausible No. 1, so the gold is not shown to be wrong."
   },
   "model_specific_directed_modulation": {
-   "s3b2_locomotive_wheel_arrangement_notation_sy": "audit 2026-11-03 (independent, plan 0060 build): G0 reaches 7/10 only by canonicalising the sample \"AAR\" (a distinct notation system) to \"uic classification\", and the judge's gold forms lack AAR; the true count is 6/10, below the rule"
+   "s3b2_locomotive_wheel_arrangement_notation_sy": "audit 2026-11-03 (independent, plan 0060 build): G0 reaches 7/10 only by canonicalising the sample \"AAR\" (a distinct notation system) to \"uic classification\", and the judge's gold forms lack AAR; the true count is 6/10, below the rule",
+   "s2_cooking_stage_of_rendang_gulai_kalio_or_": "delta audit 2026-11-04: audit 2026-11-04 (independent, plan 0066 delta): the prompt names every option, the gold included ('...rendang (gulai, kalio, or dry rendang)'). The leak screen stripped 'Dry rendang' / 'rendang', leaving only 'rendang kering', 'randang kering' and 'true rendang', so the subject's own reveal 'Dry rendang' cannot be credited (Opus gold arm: fail). This is the same defect as olmo's drop of this id.",
+   "s2_free_electron_laser_facility": "delta audit 2026-11-04: audit 2026-11-04 (independent, plan 0066 delta): the distractor 'LCLS-II' is the upgrade of the gold LCLS, and its label hits the gold form 'LCLS', so a readout naming the distractor credits the gold (Opus foil arm: pass).",
+   "s3b2_australian_cattle_dog_coat_color": "delta audit 2026-11-04: audit 2026-11-04 (independent, plan 0066 delta): the label of the distractor 'Blue Merle' hits the gold forms 'Blue' / 'blue', so a readout naming the distractor credits the gold (Opus foil arm: pass).",
+   "s2_georgian_bread": "delta audit 2026-11-04: audit 2026-11-04 (independent, plan 0066 delta): the distractor 'Khachapuri Adjaruli' is a kind of the gold 'Khachapuri', and its label hits the gold form, so a readout naming the distractor credits the gold (Opus foil arm: pass).",
+   "s3b2_piecewise_linear_activation_function": "delta audit 2026-11-04: audit 2026-11-04 (independent, plan 0066 delta): the distractor 'Leaky ReLU' is a ReLU variant, and its label hits the gold forms 'ReLU' / 'relu', so a readout naming the distractor credits the gold (Opus foil arm: pass)."
+  },
+  "wrong_intermediate": {
+   "painting_creator-Q28538485-death_year": "delta audit 2026-11-04: audit 2026-11-04 (independent, plan 0066 delta): the Turner title in the prompt contains 'Raffaelle', a variant spelling of B' (Raphael), so B' is named in the input, not a hidden intermediate. This is the same title and defect as qwen3-8b's drop of painting_creator-Q28538485-birth_year."
   }
  }
 }

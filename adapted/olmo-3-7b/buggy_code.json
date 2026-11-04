@@ -40,22 +40,6 @@
  "items": [
   {
    "src": "clean",
-   "name": "py-clean-clamped-discount",
-   "code": "def final_price(price, discounts):\n    for d in discounts:\n        price = max(price - d, 0.0)\n    return price\n\ncart = {\"keyboard\": 45.0}\npromo_codes = [10.0, 15.0, 25.0]\nprint(f\"charge: {final_price(cart['keyboard'], promo_codes):.2f}\")",
-   "language": "python",
-   "verified": "exec: exit 0; stdout = 'charge: 0.00'",
-   "lang_group": "python",
-   "id": "py-clean-clamped-discount",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "src": "clean",
    "name": "py-clean-join-checked",
    "code": "import os.path\n\ndef user_file(base, name):\n    path = os.path.normpath(os.path.join(base, name))\n    if not path.startswith(base + os.sep):\n        raise ValueError(\"path escapes base\")\n    return path\n\nprint(user_file(\"/srv/uploads\", \"report.txt\"))",
    "language": "python",
@@ -66,22 +50,6 @@
     "origin": "original",
     "gate": {
      "rate": 0.9,
-     "pass": true
-    }
-   }
-  },
-  {
-   "src": "clean",
-   "name": "py-clean-removesuffix",
-   "code": "def strip_ext(filename):\n    return filename.removesuffix(\".csv\")\n\nprint(strip_ext(\"trades.csv\"))\nprint(strip_ext(\"stocks.csv\"))",
-   "language": "python",
-   "verified": "exec: exit 0; stdout = 'trades | stocks'",
-   "lang_group": "python",
-   "id": "py-clean-removesuffix",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 1.0,
      "pass": true
     }
    }

@@ -37,5 +37,372 @@
   "hf_id": "Qwen/Qwen3.5-4B",
   "frozen": "2026-11-04"
  },
- "items": []
+ "items": [
+  {
+   "src": "buggy",
+   "name": "buggy-au-t1-w101c0-py-exam-verdict-flipped",
+   "id": "buggy-au-t1-w101c0-py-exam-verdict-flipped",
+   "code": "def verdict(score):\n    if score < 50:\n        return \"pass\"\n    return \"fail\"\n\nprint(verdict(72))\nprint(verdict(35))",
+   "verified": "exec: exit 0; stdout = 'fail | pass'",
+   "cause": "The comparison is inverted, so 72 is labelled fail and 35 is labelled pass.",
+   "category": "inverted comparison",
+   "bug_line": 2,
+   "level2_tokens": [
+    "inverted",
+    "flipped"
+   ],
+   "consequence_class": "categorical",
+   "raises": false,
+   "n_lines": 7,
+   "language": "python",
+   "lang_group": "python",
+   "twin": "buggy-au-clean-t1-w101c0-py-exam-verdict-flipped",
+   "source": "authored (claude-opus-5-5) for qwen3.5-4b: About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 101,
+    "gate": {
+     "rate": 0.9,
+     "pass": true
+    }
+   }
+  },
+  {
+   "src": "clean",
+   "name": "buggy-au-clean-t1-w101c0-py-exam-verdict-flipped",
+   "id": "buggy-au-clean-t1-w101c0-py-exam-verdict-flipped",
+   "code": "def outcome(mark):\n    if mark >= 50:\n        return \"pass\"\n    return \"fail\"\n\nprint(outcome(72))\nprint(outcome(35))",
+   "verified": "exec: exit 0; stdout = 'pass | fail'",
+   "why_correct": "Marks of 50 or more return pass, so 72 passes and 35 fails.",
+   "looks_like": "a boundary mistake at exactly 50",
+   "language": "python",
+   "lang_group": "python",
+   "twin": "buggy-au-t1-w101c0-py-exam-verdict-flipped",
+   "source": "authored (claude-opus-5-5) for qwen3.5-4b: About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 101,
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "src": "buggy",
+   "name": "buggy-au-t1-w101c0-py-trip-reversed-subtraction",
+   "id": "buggy-au-t1-w101c0-py-trip-reversed-subtraction",
+   "code": "odometer_start = 12400\nodometer_end = 12650\ntrip = odometer_start - odometer_end\nprint(f\"trip: {trip} km\")",
+   "verified": "exec: exit 0; stdout = 'trip: -250 km'",
+   "cause": "The start reading is subtracted from the end in the wrong order, so the trip prints -250 km instead of 250 km.",
+   "category": "reversed operands",
+   "bug_line": 3,
+   "level2_tokens": [
+    "reversed",
+    "operands"
+   ],
+   "consequence_class": "value",
+   "raises": false,
+   "n_lines": 4,
+   "language": "python",
+   "lang_group": "python",
+   "twin": "buggy-au-clean-t1-w101c0-py-trip-reversed-subtraction",
+   "source": "authored (claude-opus-5-5) for qwen3.5-4b: About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 101,
+    "gate": {
+     "rate": 0.8,
+     "pass": true
+    }
+   }
+  },
+  {
+   "src": "clean",
+   "name": "buggy-au-clean-t1-w101c0-py-trip-reversed-subtraction",
+   "id": "buggy-au-clean-t1-w101c0-py-trip-reversed-subtraction",
+   "code": "reading_before = 12400\nreading_after = 12650\nleg = reading_after - reading_before\nprint(f\"trip: {leg} km\")",
+   "verified": "exec: exit 0; stdout = 'trip: 250 km'",
+   "why_correct": "The later reading minus the earlier one gives the positive distance, 250 km.",
+   "looks_like": "subtraction in the wrong order",
+   "language": "python",
+   "lang_group": "python",
+   "twin": "buggy-au-t1-w101c0-py-trip-reversed-subtraction",
+   "source": "authored (claude-opus-5-5) for qwen3.5-4b: About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 101,
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "src": "buggy",
+   "name": "buggy-au-t1-w102c1-py-lives-incremented",
+   "id": "buggy-au-t1-w102c1-py-lives-incremented",
+   "code": "lives = 3\nhits = 2\nfor _ in range(hits):\n    lives += 1\nprint(\"lives left:\", lives)",
+   "verified": "exec: exit 0; stdout = 'lives left: 5'",
+   "cause": "Each hit adds a life instead of removing one, so it prints lives left: 5 instead of 1.",
+   "category": "wrong operator",
+   "bug_line": 4,
+   "level2_tokens": [
+    "increment",
+    "added"
+   ],
+   "consequence_class": "value",
+   "raises": false,
+   "n_lines": 5,
+   "language": "python",
+   "lang_group": "python",
+   "twin": "buggy-au-clean-t1-w102c1-py-lives-incremented",
+   "source": "authored (claude-opus-5-5) for qwen3.5-4b: About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 102,
+    "steer": "- Last wave: 10/60 passed.\n- Rejected by lint before gating: 1x literal: the output 'ROM 140' is a copy of the program's literals. Avoid these.\n- Failed (gold -> what the model wrote): None -> model said '100' (1/10); None -> model said '12' (0/10); None -> model said 'The program outputs 16.' (9/10); None -> model said '30' (6/10); None -> model said '4.33' (0/10); None -> model said '4.33' (4/10); None -> model said 'The program outputs 13500.' (1/10); None -> model said '13500' (5/10); None -> model said '200' (10/10); None -> model said 'The program outputs 32.0 and 212.0 on se' (0/10); None -> model said 'The program outputs: 32.0 212.0' (1/10); None -> model said '100% complete' (0/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): None; None; None; None; None; None; None; None; None; None",
+    "gate": {
+     "rate": 0.8,
+     "pass": true
+    }
+   }
+  },
+  {
+   "src": "clean",
+   "name": "buggy-au-clean-t1-w102c1-py-lives-incremented",
+   "id": "buggy-au-clean-t1-w102c1-py-lives-incremented",
+   "code": "coins = 10\nbuys = 3\nfor _ in range(buys):\n    coins -= 2\nprint(\"coins left:\", coins)",
+   "verified": "exec: exit 0; stdout = 'coins left: 4'",
+   "why_correct": "Each purchase subtracts its cost of 2 coins, so 10 minus 6 prints coins left: 4.",
+   "looks_like": "wrong direction",
+   "language": "python",
+   "lang_group": "python",
+   "twin": "buggy-au-t1-w102c1-py-lives-incremented",
+   "source": "authored (claude-opus-5-5) for qwen3.5-4b: About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 102,
+    "steer": "- Last wave: 10/60 passed.\n- Rejected by lint before gating: 1x literal: the output 'ROM 140' is a copy of the program's literals. Avoid these.\n- Failed (gold -> what the model wrote): None -> model said '100' (1/10); None -> model said '12' (0/10); None -> model said 'The program outputs 16.' (9/10); None -> model said '30' (6/10); None -> model said '4.33' (0/10); None -> model said '4.33' (4/10); None -> model said 'The program outputs 13500.' (1/10); None -> model said '13500' (5/10); None -> model said '200' (10/10); None -> model said 'The program outputs 32.0 and 212.0 on se' (0/10); None -> model said 'The program outputs: 32.0 212.0' (1/10); None -> model said '100% complete' (0/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): None; None; None; None; None; None; None; None; None; None",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "src": "buggy",
+   "name": "buggy-au-t1-w103c0-py-stock-added",
+   "id": "buggy-au-t1-w103c0-py-stock-added",
+   "code": "stock = 20\norders = [3, 5, 2]\nfor o in orders:\n    stock += o\nprint(\"left:\", stock)",
+   "verified": "exec: exit 0; stdout = 'left: 30'",
+   "cause": "Each order is put back onto the stock instead of being removed from it, so it prints left: 30 instead of left: 10.",
+   "category": "wrong operator",
+   "bug_line": 4,
+   "level2_tokens": [
+    "added",
+    "plus"
+   ],
+   "consequence_class": "value",
+   "raises": false,
+   "n_lines": 5,
+   "language": "python",
+   "lang_group": "python",
+   "twin": "buggy-au-clean-t1-w103c0-py-stock-added",
+   "source": "authored (claude-opus-5-5) for qwen3.5-4b: About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 103,
+    "steer": "- Last wave: 7/60 passed.\n- Rejected by lint before gating: 1x leak: bug words ['height'] in the code; 1x leak: bug words ['minutes'] in the code. Avoid these.\n- Failed (gold -> what the model wrote): None -> model said '11' (0/10); None -> model said '18' (0/10); None -> model said '10' (1/10); None -> model said '10' (0/10); None -> model said 'The program outputs 0.' (1/10); None -> model said '1' (0/10); None -> model said 'The output is 100.0.' (0/10); None -> model said 'The output is 16.0.' (2/10); None -> model said 'The program outputs 5.' (0/10); None -> model said '9' (5/10); None -> model said '25' (3/10); None -> model said 'TypeError: unsupported operand type(s) f' (1/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): None; None; None; None; None; None; None",
+    "gate": {
+     "rate": 0.7,
+     "pass": true
+    }
+   }
+  },
+  {
+   "src": "clean",
+   "name": "buggy-au-clean-t1-w103c0-py-stock-added",
+   "id": "buggy-au-clean-t1-w103c0-py-stock-added",
+   "code": "charge = 90\nuses = [10, 25, 5]\nfor u in uses:\n    charge -= u\nprint(\"left:\", charge)",
+   "verified": "exec: exit 0; stdout = 'left: 50'",
+   "why_correct": "Each use is subtracted from charge, so the remaining charge prints left: 50.",
+   "looks_like": "a sign error in a running balance",
+   "language": "python",
+   "lang_group": "python",
+   "twin": "buggy-au-t1-w103c0-py-stock-added",
+   "source": "authored (claude-opus-5-5) for qwen3.5-4b: About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 103,
+    "steer": "- Last wave: 7/60 passed.\n- Rejected by lint before gating: 1x leak: bug words ['height'] in the code; 1x leak: bug words ['minutes'] in the code. Avoid these.\n- Failed (gold -> what the model wrote): None -> model said '11' (0/10); None -> model said '18' (0/10); None -> model said '10' (1/10); None -> model said '10' (0/10); None -> model said 'The program outputs 0.' (1/10); None -> model said '1' (0/10); None -> model said 'The output is 100.0.' (0/10); None -> model said 'The output is 16.0.' (2/10); None -> model said 'The program outputs 5.' (0/10); None -> model said '9' (5/10); None -> model said '25' (3/10); None -> model said 'TypeError: unsupported operand type(s) f' (1/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): None; None; None; None; None; None; None",
+    "gate": {
+     "rate": 0.7,
+     "pass": true
+    }
+   }
+  },
+  {
+   "src": "buggy",
+   "name": "buggy-au-t1-w103c0-py-heater-inverted",
+   "id": "buggy-au-t1-w103c0-py-heater-inverted",
+   "code": "def heater(temp):\n    if temp > 18:\n        return \"on\"\n    return \"off\"\n\nprint(heater(10))",
+   "verified": "exec: exit 0; stdout = 'off'",
+   "cause": "The heater switches on when it is warm instead of when it is cold, so 10 degrees prints off instead of on.",
+   "category": "inverted comparison",
+   "bug_line": 2,
+   "level2_tokens": [
+    "inverted",
+    "reversed"
+   ],
+   "consequence_class": "categorical",
+   "raises": false,
+   "n_lines": 6,
+   "language": "python",
+   "lang_group": "python",
+   "twin": "buggy-au-clean-t1-w103c0-py-heater-inverted",
+   "source": "authored (claude-opus-5-5) for qwen3.5-4b: About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 103,
+    "steer": "- Last wave: 7/60 passed.\n- Rejected by lint before gating: 1x leak: bug words ['height'] in the code; 1x leak: bug words ['minutes'] in the code. Avoid these.\n- Failed (gold -> what the model wrote): None -> model said '11' (0/10); None -> model said '18' (0/10); None -> model said '10' (1/10); None -> model said '10' (0/10); None -> model said 'The program outputs 0.' (1/10); None -> model said '1' (0/10); None -> model said 'The output is 100.0.' (0/10); None -> model said 'The output is 16.0.' (2/10); None -> model said 'The program outputs 5.' (0/10); None -> model said '9' (5/10); None -> model said '25' (3/10); None -> model said 'TypeError: unsupported operand type(s) f' (1/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): None; None; None; None; None; None; None",
+    "gate": {
+     "rate": 0.9,
+     "pass": true
+    }
+   }
+  },
+  {
+   "src": "clean",
+   "name": "buggy-au-clean-t1-w103c0-py-heater-inverted",
+   "id": "buggy-au-clean-t1-w103c0-py-heater-inverted",
+   "code": "def fan(temp):\n    if temp > 25:\n        return \"on\"\n    return \"off\"\n\nprint(fan(30))",
+   "verified": "exec: exit 0; stdout = 'on'",
+   "why_correct": "A fan should run when it is hot, and 30 > 25, so it prints on.",
+   "looks_like": "an inverted threshold test",
+   "language": "python",
+   "lang_group": "python",
+   "twin": "buggy-au-t1-w103c0-py-heater-inverted",
+   "source": "authored (claude-opus-5-5) for qwen3.5-4b: About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 103,
+    "steer": "- Last wave: 7/60 passed.\n- Rejected by lint before gating: 1x leak: bug words ['height'] in the code; 1x leak: bug words ['minutes'] in the code. Avoid these.\n- Failed (gold -> what the model wrote): None -> model said '11' (0/10); None -> model said '18' (0/10); None -> model said '10' (1/10); None -> model said '10' (0/10); None -> model said 'The program outputs 0.' (1/10); None -> model said '1' (0/10); None -> model said 'The output is 100.0.' (0/10); None -> model said 'The output is 16.0.' (2/10); None -> model said 'The program outputs 5.' (0/10); None -> model said '9' (5/10); None -> model said '25' (3/10); None -> model said 'TypeError: unsupported operand type(s) f' (1/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): None; None; None; None; None; None; None",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "src": "buggy",
+   "name": "buggy-au-t2-w100c0-py-undo-after-clear",
+   "id": "buggy-au-t2-w100c0-py-undo-after-clear",
+   "code": "history = [\"type a\", \"type b\"]\nhistory.clear()\nlast_action = history[-1]\nprint(\"undo:\", last_action)",
+   "verified": "exec: exit 1; stdout = ''; last = 'IndexError: list index out of range'",
+   "cause": "clear() removes every entry, so history[-1] on the now-empty list raises IndexError.",
+   "category": "indexing a list after clearing it",
+   "bug_line": 3,
+   "level2_tokens": [
+    "emptied stack",
+    "nothing left"
+   ],
+   "consequence_class": "crash",
+   "raises": true,
+   "n_lines": 4,
+   "language": "python",
+   "lang_group": "python",
+   "twin": "buggy-au-clean-t2-w100c0-py-undo-after-clear",
+   "source": "authored (claude-opus-5-5) for qwen3.5-4b: About 6 lines of Python with an obvious crash raising a common exception (ZeroDivisionError, KeyError, IndexError, TypeError, AttributeError) on a line where a careful reader sees it coming.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t2",
+    "knobs": {
+     "brief": "About 6 lines of Python with an obvious crash raising a common exception (ZeroDivisionError, KeyError, IndexError, TypeError, AttributeError) on a line where a careful reader sees it coming."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 100,
+    "gate": {
+     "rate": 0.75,
+     "pass": true
+    }
+   }
+  },
+  {
+   "src": "clean",
+   "name": "buggy-au-clean-t2-w100c0-py-undo-after-clear",
+   "id": "buggy-au-clean-t2-w100c0-py-undo-after-clear",
+   "code": "history_log = [\"type a\", \"type b\"]\nhistory_log.append(\"type c\")\nrecent = history_log[-1]\nprint(\"undo:\", recent)",
+   "verified": "exec: exit 0; stdout = 'undo: type c'",
+   "why_correct": "The list keeps its entries and gains one more, so history_log[-1] is 'type c' and the program prints 'undo: type c'.",
+   "looks_like": "reading the last element of a list just after modifying it",
+   "language": "python",
+   "lang_group": "python",
+   "twin": "buggy-au-t2-w100c0-py-undo-after-clear",
+   "source": "authored (claude-opus-5-5) for qwen3.5-4b: About 6 lines of Python with an obvious crash raising a common exception (ZeroDivisionError, KeyError, IndexError, TypeError, AttributeError) on a line where a careful reader sees it coming.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t2",
+    "knobs": {
+     "brief": "About 6 lines of Python with an obvious crash raising a common exception (ZeroDivisionError, KeyError, IndexError, TypeError, AttributeError) on a line where a careful reader sees it coming."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 100,
+    "gate": {
+     "rate": 0.9,
+     "pass": true
+    }
+   }
+  }
+ ]
 }

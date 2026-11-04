@@ -72,7 +72,8 @@
    "change": "new items from t1",
    "bank": "evals/association/items_v3.json",
    "bank_version": 3,
-   "note": "Profile (D10: referent leg asked in the chat_summarize read render) + fill: 15 originals + 78 authored = 93/93; authored items' mc built by the repo's builders (association_distractors + mc_leakage_r4 --bank, via adapt mc) before gating"
+   "note": "Profile (D10: referent leg asked in the chat_summarize read render) + fill: 15 originals + 78 authored = 93/93; authored items' mc built by the repo's builders (association_distractors + mc_leakage_r4 --bank, via adapt mc) before gating",
+   "min_grid_positions": 15
   },
   "multihop": {
    "status": "untried",
@@ -158,7 +159,7 @@
    "n_candidates_gated": 116,
    "change": "new items from t1",
    "freeze_notes": [
-    "re-stamped with the subject's tokenizer; 0 items lost every multi-token form",
+    "re-stamped with the subject's tokenizer; 1 items lost every multi-token form: brh-ent-currency-bhutan",
     "84 adapted-only items: exonyms / hidden_rivals in the set's overlay files"
    ],
    "note": "v4 rebuild (gate = the v4 question in chat), profile + fill, native_langs [en] by Camila's decision (2026-11-03: OLMo is an American-lab model, native en; no measurement), native units rebuilt by the nl_upgrade: 99/99 (15 originals + 84 authored); tokens re-stamped for OLMo-3-7B-Instruct's tokenizer",
@@ -250,7 +251,8 @@
    "change": "original items only",
    "bank": "evals/user_modeling/items.json",
    "bank_version": 1,
-   "note": "Originals only (option pools keyed to registered ids): 84/100 pass on OLMo-3-7B-Instruct; no refill"
+   "note": "Originals only (option pools keyed to registered ids): 84/100 pass on OLMo-3-7B-Instruct; no refill",
+   "min_grid_positions": 33
   },
   "role_bound_association": {
    "status": "untried",
@@ -264,22 +266,58 @@
    "change": "original items only",
    "note": "Originals only (distractors_v3 keyed to registered pair ids), action leg asked in the chat_summarize read render (D10): 37/100 pass on OLMo-3-7B-Instruct, ab/ba pairs atomic, giving 14; no refill",
    "bank": "evals/role_bound_association/items.json",
-   "bank_version": 1
+   "bank_version": 1,
+   "min_grid_positions": 15
   },
   "buggy_code": {
-   "status": "untried",
+   "status": "ooc",
    "target": 63,
    "n_original": 63,
    "n_original_gated": 63,
-   "n_original_pass": 11,
-   "n_items": 5,
+   "n_original_pass": 6,
+   "n_items": 3,
    "n_new": 0,
-   "n_candidates_gated": 0,
-   "change": "original items only",
+   "n_candidates_gated": 120,
+   "change": "refill via run.fill: 0/24 pairs; 0 landed of 60 tried, yield 0.00%; stop: yield 0/60 < 0.03 on >= 60 candidates at the easiest level, 0 < 24/2",
    "bank": "evals/buggy_code/items.json",
    "bank_version": 1,
-   "note": "Originals only (no refill run this round): 11/63 registered items pass on OLMo-3-7B-Instruct; buggy/clean pairs kept atomic (a failed clean twin drops its buggy partner), giving 5 items; n=5 is too small to read alone; audit 2026-11-04: no complete buggy/clean pair ships (orphan clean controls), so the pair headline is None",
-   "exclude_from_macro": true
+   "note": "Refilled (plan 0066, 2026-11-04): ooc, 0/24 pairs shipped (3 items); stop: yield 0/60 < 0.03 on >= 60 candidates at the easiest level, 0 < 24/2; tally 0/60 = 0 (n_min 60, y_min 0.03). Source: authored executed pairs on the buggy_code Brief (fill, t2 pilot then t1 down). Authored pairs: {'non_crash': 0, 'crash': 0, 'crash_cap': 0}. Delta audit: 0 drop(s). Out of capacity under the objective §1.2 rule: too small to read alone.",
+   "exclude_from_macro": true,
+   "refill": {
+    "route": "run.fill",
+    "unit": "pairs",
+    "target": 24,
+    "have": 0,
+    "tried": 60,
+    "landed": 0,
+    "yield": 0.0,
+    "waves": 2,
+    "n_min": 60,
+    "y_min": 0.03,
+    "tally": {
+     "t2": {
+      "tried": 60,
+      "landed": 0
+     }
+    },
+    "pool_size": null,
+    "pool_used": null,
+    "stop": "yield 0/60 < 0.03 on >= 60 candidates at the easiest level, 0 < 24/2",
+    "budget": {
+     "gpu_minutes": null,
+     "claude_budget": null,
+     "claude_calls": 980
+    },
+    "pilot": true,
+    "tier": "t2",
+    "authored_pairs": {
+     "non_crash": 0,
+     "crash": 0,
+     "crash_cap": 0
+    }
+   },
+   "target_pairs": 24,
+   "n_pairs": 0
   },
   "agentic_misalignment": {
    "status": "partial",
@@ -302,7 +340,8 @@
    "status": "untried",
    "bank": "evals/conjunctive_association/items_v4.json",
    "bank_version": 4,
-   "note": "Originals only (no Brief for this family), gated in the chat_summarize read render (D10): 92/100 pass on OLMo-3-7B-Instruct; no refill"
+   "note": "Originals only (no Brief for this family), gated in the chat_summarize read render (D10): 92/100 pass on OLMo-3-7B-Instruct; no refill",
+   "min_grid_positions": 15
   },
   "directed_modulation": {
    "target": 100,
@@ -403,45 +442,148 @@
   "model_specific_directed_modulation": {
    "rederive": {
     "version": "msdm-self-2026-11-03",
-    "elicited": 130,
-    "g0": 16,
-    "compliant": 50,
-    "pass": 5
+    "elicited": 2330,
+    "g0": 210,
+    "compliant": 1059,
+    "pass": 68,
+    "valid": 68
    },
    "target": 98,
    "n_original": 98,
    "n_original_gated": 97,
    "n_original_pass": 3,
-   "n_items": 4,
-   "n_new": 1,
-   "n_candidates_gated": 32,
+   "n_items": 62,
+   "n_new": 59,
+   "n_candidates_gated": 2229,
    "bank": "evals/model_specific_directed_modulation/items.json",
    "bank_version": 1,
-   "change": "original items only",
+   "change": "refill via msdm.refill_wave: 62/98 categories; 68 landed of 2330 tried, yield 2.92%; pool 2200/7782 used; stop: low yield above half: yield 68/2330 < 0.03 on >= 200 candidates at the easiest level, 62 >= 98/2",
    "status": "partial",
-   "note": "Re-derived on OLMo-3-7B-Instruct (adapt msdm, plan 0060 Phase E): 130 categories elicited, 16 G0-stable (>= 7/10 + named reveal), 50 compliant, 5 ship; G1 dropped; no refill route; n=4 is too small to read alone"
+   "note": "Refilled (plan 0066, 2026-11-04): partial, 62/98 categories shipped (62 items); stop: low yield above half: yield 68/2330 < 0.03 on >= 200 candidates at the easiest level, 62 >= 98/2; tally 68/2330 = 0.0292 (n_min 200, y_min 0.03). Source: the GW category pool msdm_pool.jsonl (130 bank + retired categories counted as prior); unchanged G0 / compliance / option rules + membership and label-QA validity legs on every item (decision 8). Delta audit: 3 drop(s) (s2_cooking_stage_of_rendang_gulai_kalio_or_, s2_type_of_plasmon, s3b2_drawer_joinery_method).",
+   "refill_note": {
+    "type_mix": {
+     "food_drink": 13,
+     "taxonomy": 4,
+     "technical_variants": 29,
+     "untyped": 18
+    },
+    "registered_type_mix": {
+     "food_drink": 36,
+     "taxonomy": 21,
+     "technical_variants": 31,
+     "untyped": 10
+    },
+    "domain_cap": 2,
+    "question_changed": [
+     "s2_genus_of_typical_owl_strigidae"
+    ]
+   },
+   "refill": {
+    "route": "msdm.refill_wave",
+    "unit": "categories",
+    "target": 98,
+    "have": 62,
+    "tried": 2330,
+    "landed": 68,
+    "yield": 0.029184549356223177,
+    "waves": 11,
+    "n_min": 200,
+    "y_min": 0.03,
+    "tally": {
+     "ext pool": {
+      "tried": 2330,
+      "landed": 68,
+      "prior": {
+       "tried": 2330,
+       "landed": 68
+      }
+     }
+    },
+    "pool_size": 7782,
+    "pool_used": 2200,
+    "stop": "low yield above half: yield 68/2330 < 0.03 on >= 200 candidates at the easiest level, 62 >= 98/2",
+    "budget": {
+     "claude_budget": null,
+     "gpu_minutes": null,
+     "claude_calls": 0
+    },
+    "pilot": false,
+    "untried_levels": []
+   }
   },
   "knowledge_cutoff": {
    "rederive": {
     "version": "kc-self-2026-11-03",
     "cutoff": null,
-    "elicited": 181,
-    "stable": 38,
-    "incorrect": 30,
-    "pass": 27
+    "elicited": 2181,
+    "stable": 236,
+    "incorrect": 139,
+    "pass": 119
    },
    "target": 108,
    "n_original": 108,
    "n_original_gated": 108,
    "n_original_pass": 12,
-   "n_items": 27,
-   "n_new": 15,
-   "n_candidates_gated": 73,
+   "n_items": 108,
+   "n_new": 96,
+   "n_candidates_gated": 2069,
    "bank": "evals/knowledge_cutoff/items_v2.json",
    "bank_version": 2,
-   "change": "original items only",
-   "status": "partial",
-   "note": "Re-derived on OLMo-3-7B-Instruct (adapt kcutoff, plan 0060 Phase E, no cutoff= given): 181 items elicited, 38 stable (>= 7/10), 30 wrong, 27 pass (originals + retired-panel pool; G1 / ATI panel dropped for adapted subjects); nocot items not built"
+   "change": "refill via kcutoff.refill_wave: 108/108 items; 119 landed of 2181 tried, yield 5.46%; pool 2000/5273 used; stop: 108 >= target 108",
+   "status": "full",
+   "note": "Refilled (plan 0066, 2026-11-04): full, 108/108 items shipped (108 items); stop: 108 >= target 108; tally 119/2181 = 0.0546 (n_min 1000, y_min 0.01). Source: the GW b1+b2 question pool kcutoff_pool.jsonl (181 bank + pool questions counted as prior; cutoff= unset, decision 4); gold = the subject's stable wrong answer. Delta audit: 3 drop(s) (cs02554, b2_00903, b2_01570). | refill mix: label_type stale 31 / confab 77 (registered stale 55 / confab 53); stratum A 93 / B 15 (registered A 96 / B 12); reported, not capped (plan 0066 decision 5)",
+   "refill_mix": {
+    "label_type": {
+     "stale": 31,
+     "confab": 77
+    },
+    "stratum": {
+     "A": 93,
+     "B": 15
+    },
+    "registered": {
+     "label_type": {
+      "stale": 55,
+      "confab": 53
+     },
+     "stratum": {
+      "A": 96,
+      "B": 12
+     }
+    }
+   },
+   "refill": {
+    "route": "kcutoff.refill_wave",
+    "unit": "items",
+    "target": 108,
+    "have": 108,
+    "tried": 2181,
+    "landed": 119,
+    "yield": 0.05456212746446584,
+    "waves": 2,
+    "n_min": 1000,
+    "y_min": 0.01,
+    "tally": {
+     "ext pool": {
+      "tried": 2181,
+      "landed": 119,
+      "prior": {
+       "tried": 2181,
+       "landed": 119
+      }
+     }
+    },
+    "pool_size": 5273,
+    "pool_used": 2000,
+    "stop": "108 >= target 108",
+    "budget": {
+     "claude_budget": null,
+     "gpu_minutes": null,
+     "claude_calls": 0
+    },
+    "pilot": false,
+    "untried_levels": []
+   }
   },
   "nyt_connections": {
    "rederive": {
@@ -478,33 +620,119 @@
    "n_candidates_gated": 170,
    "bank": "evals/wrong_intermediate/items_v4.json",
    "bank_version": 4,
-   "change": "original items only",
-   "status": "partial",
-   "note": "Re-derived on OLMo-3-7B-Instruct (adapt wrong_intermediate over the GW scrape): 215 E1 errors, 4/170 pass the consistency gate, 3 survive adjudication + caps with a buildable mc (0 equal a registered item). Shipped at its real count (no minimum in the adapt code; never padded); n=3 is too small to read alone"
+   "change": "refill via wrong_intermediate.refill_wave: 3/100 items; 3 landed of 207044 tried, yield 0.00%; stop: yield 3/207044 < 5e-05 on >= 200000 candidates at the easiest level, 3 < 100/2",
+   "status": "ooc",
+   "note": "Refilled (plan 0066, 2026-11-04): ooc, 3/100 items shipped (3 items); stop: yield 3/207044 < 5e-05 on >= 200000 candidates at the easiest level, 3 < 100/2; tally 3/207044 = 1.45e-05 (n_min 200000, y_min 5e-05). Source: round 1 + the r2 re-scrape (r2a + r2b, GLM-5.3's pool string; #273 role cues); round-1 screened candidates counted as prior; entity-kind check + hub share over the union. Delta audit: 0 drop(s). Out of capacity under the objective §1.2 rule: too small to read alone.",
+   "refill": {
+    "route": "wrong_intermediate.refill_wave",
+    "unit": "items",
+    "target": 100,
+    "have": 3,
+    "tried": 207044,
+    "landed": 3,
+    "yield": 1.4489673692548443e-05,
+    "waves": 0,
+    "n_min": 200000,
+    "y_min": 5e-05,
+    "tally": {
+     "expanded scrape": {
+      "tried": 207044,
+      "landed": 3,
+      "prior": {
+       "tried": 207044,
+       "landed": 3
+      }
+     }
+    },
+    "pool_size": null,
+    "pool_used": null,
+    "stop": "yield 3/207044 < 5e-05 on >= 200000 candidates at the easiest level, 3 < 100/2",
+    "budget": {
+     "claude_budget": null,
+     "gpu_minutes": null,
+     "claude_calls": 0
+    },
+    "pilot": false,
+    "untried_levels": []
+   },
+   "exclude_from_macro": true
   },
   "multihop_mt_v2": {
    "target": 70,
    "n_original": 70,
    "n_original_gated": 70,
    "n_original_pass": 3,
-   "n_items": 3,
-   "n_new": 0,
-   "n_candidates_gated": 0,
+   "n_items": 4,
+   "n_new": 1,
+   "n_candidates_gated": 2700,
    "bank": "evals/multihop_mt_v2/items_v4.json",
    "bank_version": 4,
-   "change": "original items only",
-   "status": "untried",
-   "note": "Registered items re-gated on OLMo-3-7B-Instruct (adapt multihop_mt_v2, staged gate incl. the must-not-reach shortcut leg): 3/70 pass; no refill route (new items need MC lists and name forms); n=3 is too small to read alone; judgeable under WSB_BANK_ROOT since the PR #258 fix to multitoken/family.py gate_name_forms (it crashed on every adapted set before; its floors were re-run after the fix)"
+   "change": "refill via mhmt2.refill_wave: 4/70 items; 4 landed of 487 tried, yield 0.82%; pool 2700/3384 used; stop: yield 4/487 < 0.03 on >= 300 candidates at the easiest level, 4 < 70/2",
+   "status": "ooc",
+   "note": "Refilled (plan 0066, 2026-11-04): ooc, 4/70 items shipped (4 items); stop: yield 4/487 < 0.03 on >= 300 candidates at the easiest level, 4 < 70/2; tally 4/487 = 0.00821 (n_min 300, y_min 0.03). Source: mh2_pool.json + the decision-7 adversary pool mh2_pool.v2.json; every 3-hop candidate gated before any ooc (§11.14); unchanged staged gate, shortcut leg, relabel_b2 + review legs. Delta audit: 0 drop(s). Out of capacity under the objective §1.2 rule: too small to read alone. | mc over gate: 1/1 shipped items (lists ship as in the registered bank)",
+   "mc_over_gate_runs": {
+    "refill-1413735b97e4": {
+     "over_gate_ids": [
+      "mh2-augustine-mother-monica"
+     ]
+    }
+   },
+   "mc_over_gate": 1,
+   "refill": {
+    "route": "mhmt2.refill_wave",
+    "unit": "items",
+    "target": 70,
+    "have": 4,
+    "tried": 487,
+    "landed": 4,
+    "yield": 0.008213552361396304,
+    "waves": 9,
+    "n_min": 300,
+    "y_min": 0.03,
+    "tally": {
+     "2-hop pool": {
+      "tried": 487,
+      "landed": 4,
+      "prior": {
+       "tried": 487,
+       "landed": 4
+      }
+     }
+    },
+    "pool_size": 3384,
+    "pool_used": 2700,
+    "stop": "yield 4/487 < 0.03 on >= 300 candidates at the easiest level, 4 < 70/2",
+    "budget": {
+     "claude_budget": null,
+     "gpu_minutes": null,
+     "claude_calls": 0
+    },
+    "pilot": false,
+    "untried_levels": []
+   },
+   "exclude_from_macro": true
   },
   "introspection": {
    "status": "absent",
    "note": "PENDING: needs the subject's own injected concept vectors, dose and detection baseline (adapt introspection, plan 0060 Phase E); not run for this subject",
    "exclude_from_macro": true
+  },
+  "hinted_cutoff": {
+   "status": "absent",
+   "note": "absent: this set has no bank for the family (plan 0060 A1.6)",
+   "exclude_from_macro": true,
+   "absent_auto": true
+  },
+  "math_shortcuts": {
+   "status": "absent",
+   "note": "absent: this set has no bank for the family (plan 0060 A1.6)",
+   "exclude_from_macro": true,
+   "absent_auto": true
   }
  },
  "code": {
-  "git": "5a4c538f+dirty",
-  "adapt_sha256": "d68e1849f052b6f9"
+  "git": "",
+  "adapt_sha256": "3eb78041a8499c12"
  },
  "model": "olmo-3-7b",
  "label": "OLMo-3-7B-Instruct",
@@ -604,7 +832,10 @@
    "c0480": "audit 2026-11-03 (independent, plan 0060 build): Both stable slots carry inapplicable subject labels (\"Agricultural/Nutrition cycle\" for JUICE/POT/SODA/WATER; \"Clothing and accessories\" for BLOUSE/BOOKEND/PANT/STICK)."
   },
   "model_specific_directed_modulation": {
-   "s2_type_of_touff_e": "audit 2026-11-03 (independent, plan 0060 build): The gold \"shrimp\" has no bare \"shrimp\" regex form, so the judge cannot credit a readout naming shrimp; the options also hold the supersets \"shrimp and crab\" and \"seafood\"."
+   "s2_type_of_touff_e": "audit 2026-11-03 (independent, plan 0060 build): The gold \"shrimp\" has no bare \"shrimp\" regex form, so the judge cannot credit a readout naming shrimp; the options also hold the supersets \"shrimp and crab\" and \"seafood\".",
+   "s2_cooking_stage_of_rendang_gulai_kalio_or_": "delta audit 2026-11-04: the prompt names every option, the gold included ('...cooking stage of rendang (gulai, kalio, or dry rendang)'); build then stripped 'Dry rendang'/'dry rendang' as 'in visible text', leaving only 'rendang kering', so the subject's own reveal 'dry rendang' is uncreditable (same defect as the 11-03 drop s2_type_of_touff_e)",
+   "s2_type_of_plasmon": "delta audit 2026-11-04: duplicate-gold options: distractors 'Surface plasmon polariton' and 'localized surface plasmon' are kinds of surface plasmon, their English forms were stripped (GOLD_COLLIDES) and their labels hit the gold form 'surface plasmon', so a readout naming a distractor passes (Opus foil arm: pass)",
+   "s3b2_drawer_joinery_method": "delta audit 2026-11-04: duplicate-gold options: distractors 'Sliding dovetail' and 'Half-blind dovetail' are dovetails, keep only Japanese forms, and their labels hit the gold form 'dovetail', so a distractor readout credits the gold (same mechanism as s2_type_of_plasmon, shown by the judge's own matcher)"
   },
   "basic_readout_mt": {
    "brh-ent-mohr-double-compound": "audit 2026-11-03 (independent, plan 0060 build): OLMo never names Mohr's salt: greedy and all 10 samples answer \"ammonium iron(II) sulfate hexahydrate\"/\"ferrous ammonium sulfate\", yet all 11 are graded ok, so the subject does not compute the gold.",
@@ -614,6 +845,12 @@
    "brh-id-puncak-jaya": "audit 2026-11-03 (independent, plan 0060 build): Three credited samples answer \"Gunungapi\" (wrong peak); clean answers are about 6/11, below the 8/10 bar, so the 0.8 pass is a grader artefact.",
    "basic-au-t1-w100c2-brh-ent-nahco3": "audit 2026-11-03 (independent, plan 0060 build): OLMo's answer is \"baking soda\" (the gold appears only as a parenthetical), the question's \"common chemical name\" admits both, and the judge rejects a \"baking soda\" readout (verified), so the subject's own answer is uncreditable.",
    "brh-ent-illimani-range": "audit 2026-11-03 (independent, plan 0060 build): Greedy and most samples commit to \"the Andes\" (excluded by the question's \"Andean mountain range\"); Cordillera Real appears only as a hedged aside, 2/11 never name it, and the rate sits at 0.8."
+  },
+  "knowledge_cutoff": {
+   "cs02554": "delta audit 2026-11-04: K2: distractor 'playstation 5 pro' contains the gold 'playstation 5' whole-word (forms ps5 / ps5 pro) and names the same Circana hardware platform (Circana reports PS5 incl. Pro), so two options name one answer; the stratum-B gold is also unverified (VERIFY model_correct=unknown, incumbent repeat)",
+   "b2_00903": "delta audit 2026-11-04: distractor 'spectrum 1' is the same answer as the gold 'spectrum-1'; the scorer splits on [\\s-]+ so both compile to one span, which is contested and credits neither: a gold readout scores 0 (confirmed: Opus and Sonnet gold arm both fail this item)",
+   "b2_01570": "delta audit 2026-11-04: distractor 'tensor processing unit 7' is the same answer as the gold 'tpu v7', and 'TPU v7' is Google's own version designation for Ironwood (TPU7x), so the gold is not genuinely wrong (restates the question; cf. GLM cs00775)",
+   "b2_02632": "delta audit follow-up 2026-11-04: near-duplicate of the shipped b2_01788 (same fact Sept vs Oct 2026, same gold gpt-4o)"
   }
  }
 }

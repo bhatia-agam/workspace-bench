@@ -109,13 +109,48 @@
    "n_original_pass": 0,
    "n_items": 0,
    "n_new": 0,
-   "n_candidates_gated": 0,
-   "change": "original items only",
-   "status": "untried",
+   "n_candidates_gated": 120,
+   "change": "refill via run.fill: 0/24 pairs; 0 landed of 60 tried, yield 0.00%; stop: yield 0/60 < 0.03 on >= 60 candidates at the easiest level, 0 < 24/2",
+   "status": "ooc",
    "exclude_from_macro": true,
    "bank": "evals/buggy_code/items.json",
    "bank_version": 1,
-   "note": "Originals only (no refill run this round): 0/63 registered items pass on Qwen3.5-2B; buggy/clean pairs kept atomic (a failed clean twin drops its buggy partner), giving 0 items; no items pass, nothing to read"
+   "note": "Refilled (plan 0066, 2026-11-04): ooc, 0/24 pairs shipped (0 items); stop: yield 0/60 < 0.03 on >= 60 candidates at the easiest level, 0 < 24/2; tally 0/60 = 0 (n_min 60, y_min 0.03). Source: authored executed pairs on the buggy_code Brief (fill, t2 pilot then t1 down). Authored pairs: {'non_crash': 0, 'crash': 0, 'crash_cap': 0}. Delta audit: 0 drop(s). Out of capacity under the objective §1.2 rule: too small to read alone.",
+   "refill": {
+    "route": "run.fill",
+    "unit": "pairs",
+    "target": 24,
+    "have": 0,
+    "tried": 60,
+    "landed": 0,
+    "yield": 0.0,
+    "waves": 2,
+    "n_min": 60,
+    "y_min": 0.03,
+    "tally": {
+     "t2": {
+      "tried": 60,
+      "landed": 0
+     }
+    },
+    "pool_size": null,
+    "pool_used": null,
+    "stop": "yield 0/60 < 0.03 on >= 60 candidates at the easiest level, 0 < 24/2",
+    "budget": {
+     "gpu_minutes": null,
+     "claude_budget": null,
+     "claude_calls": 1677
+    },
+    "pilot": true,
+    "tier": "t2",
+    "authored_pairs": {
+     "non_crash": 0,
+     "crash": 0,
+     "crash_cap": 0
+    }
+   },
+   "target_pairs": 24,
+   "n_pairs": 0
   },
   "conjunctive_association": {
    "target": 100,
@@ -562,10 +597,11 @@
   "model_specific_directed_modulation": {
    "rederive": {
     "version": "msdm-self-2026-11-03",
-    "elicited": 130,
-    "g0": 1,
-    "compliant": 76,
-    "pass": 1
+    "elicited": 330,
+    "g0": 2,
+    "compliant": 189,
+    "pass": 1,
+    "valid": 1
    },
    "target": 98,
    "n_original": 98,
@@ -573,34 +609,135 @@
    "n_original_pass": 0,
    "n_items": 1,
    "n_new": 1,
-   "n_candidates_gated": 32,
+   "n_candidates_gated": 232,
    "bank": "evals/model_specific_directed_modulation/items.json",
    "bank_version": 1,
-   "change": "original items only",
-   "status": "partial",
-   "note": "Re-derived on Qwen3.5-2B (adapt msdm, plan 0060 Phase E): 130 categories elicited, 1 G0-stable (>= 7/10 + named reveal), 76 compliant, 1 ship; G1 dropped; no refill route; n=1 is too small to read alone"
+   "change": "refill via msdm.refill_wave: 1/98 categories; 1 landed of 330 tried, yield 0.30%; pool 200/7782 used; stop: yield 1/330 < 0.03 on >= 200 candidates at the easiest level, 1 < 98/2",
+   "status": "ooc",
+   "note": "Refilled (plan 0066, 2026-11-04): ooc, 1/98 categories shipped (1 items); stop: yield 1/330 < 0.03 on >= 200 candidates at the easiest level, 1 < 98/2; tally 1/330 = 0.00303 (n_min 200, y_min 0.03). Source: the GW category pool msdm_pool.jsonl (130 bank + retired categories counted as prior); unchanged G0 / compliance / option rules + membership and label-QA validity legs on every item (decision 8). Delta audit: 0 drop(s). Out of capacity under the objective §1.2 rule: too small to read alone.",
+   "refill_note": {
+    "type_mix": {
+     "food_drink": 1
+    },
+    "registered_type_mix": {
+     "food_drink": 36,
+     "taxonomy": 21,
+     "technical_variants": 31,
+     "untyped": 10
+    },
+    "domain_cap": 2,
+    "question_changed": [
+     "s2_genus_of_typical_owl_strigidae"
+    ]
+   },
+   "refill": {
+    "route": "msdm.refill_wave",
+    "unit": "categories",
+    "target": 98,
+    "have": 1,
+    "tried": 330,
+    "landed": 1,
+    "yield": 0.0030303030303030303,
+    "waves": 1,
+    "n_min": 200,
+    "y_min": 0.03,
+    "tally": {
+     "ext pool": {
+      "tried": 330,
+      "landed": 1,
+      "prior": {
+       "tried": 330,
+       "landed": 1
+      }
+     }
+    },
+    "pool_size": 7782,
+    "pool_used": 200,
+    "stop": "yield 1/330 < 0.03 on >= 200 candidates at the easiest level, 1 < 98/2",
+    "budget": {
+     "claude_budget": null,
+     "gpu_minutes": null,
+     "claude_calls": 0
+    },
+    "pilot": false,
+    "untried_levels": []
+   },
+   "exclude_from_macro": true
   },
   "knowledge_cutoff": {
    "rederive": {
     "version": "kc-self-2026-11-03",
     "cutoff": null,
-    "elicited": 181,
-    "stable": 2,
-    "incorrect": 2,
-    "pass": 2
+    "elicited": 1181,
+    "stable": 18,
+    "incorrect": 11,
+    "pass": 8
    },
    "target": 108,
    "n_original": 108,
    "n_original_gated": 108,
    "n_original_pass": 1,
-   "n_items": 2,
-   "n_new": 1,
-   "n_candidates_gated": 73,
+   "n_items": 4,
+   "n_new": 3,
+   "n_candidates_gated": 1072,
    "bank": "evals/knowledge_cutoff/items_v2.json",
    "bank_version": 2,
-   "change": "original items only",
-   "status": "partial",
-   "note": "Re-derived on Qwen3.5-2B (adapt kcutoff, plan 0060 Phase E, no cutoff= given): 181 items elicited, 2 stable (>= 7/10), 2 wrong, 2 pass (originals + retired-panel pool; G1 / ATI panel dropped for adapted subjects); nocot items not built; n=2 is too small to read alone"
+   "change": "refill via kcutoff.refill_wave: 4/108 items; 8 landed of 1181 tried, yield 0.68%; pool 1000/5273 used; stop: yield 8/1181 < 0.01 on >= 1000 candidates at the easiest level, 4 < 108/2",
+   "status": "ooc",
+   "note": "Refilled (plan 0066, 2026-11-04): ooc, 4/108 items shipped (4 items); stop: yield 8/1181 < 0.01 on >= 1000 candidates at the easiest level, 4 < 108/2; tally 8/1181 = 0.00677 (n_min 1000, y_min 0.01). Source: the GW b1+b2 question pool kcutoff_pool.jsonl (181 bank + pool questions counted as prior; cutoff= unset, decision 4); gold = the subject's stable wrong answer. Delta audit: 1 drop(s) (cs02554). Out of capacity under the objective §1.2 rule: too small to read alone. | refill mix: label_type stale 2 / confab 3 (registered stale 55 / confab 53); stratum A 3 / B 2 (registered A 96 / B 12); reported, not capped (plan 0066 decision 5)",
+   "refill_mix": {
+    "label_type": {
+     "stale": 2,
+     "confab": 3
+    },
+    "stratum": {
+     "A": 3,
+     "B": 2
+    },
+    "registered": {
+     "label_type": {
+      "stale": 55,
+      "confab": 53
+     },
+     "stratum": {
+      "A": 96,
+      "B": 12
+     }
+    }
+   },
+   "refill": {
+    "route": "kcutoff.refill_wave",
+    "unit": "items",
+    "target": 108,
+    "have": 4,
+    "tried": 1181,
+    "landed": 8,
+    "yield": 0.006773920406435224,
+    "waves": 1,
+    "n_min": 1000,
+    "y_min": 0.01,
+    "tally": {
+     "ext pool": {
+      "tried": 1181,
+      "landed": 8,
+      "prior": {
+       "tried": 1181,
+       "landed": 8
+      }
+     }
+    },
+    "pool_size": 5273,
+    "pool_used": 1000,
+    "stop": "yield 8/1181 < 0.01 on >= 1000 candidates at the easiest level, 4 < 108/2",
+    "budget": {
+     "claude_budget": null,
+     "gpu_minutes": null,
+     "claude_calls": 0
+    },
+    "pilot": false,
+    "untried_levels": []
+   },
+   "exclude_from_macro": true
   },
   "nyt_connections": {
    "rederive": {
@@ -633,14 +770,47 @@
    "n_original": 100,
    "n_original_gated": 0,
    "n_original_pass": 0,
-   "n_items": 1,
-   "n_new": 1,
+   "n_items": 2,
+   "n_new": 2,
    "n_candidates_gated": 553,
    "bank": "evals/wrong_intermediate/items_v4.json",
    "bank_version": 4,
-   "change": "original items only",
-   "status": "partial",
-   "note": "Re-derived on Qwen3.5-2B (adapt wrong_intermediate over the GW scrape): 593 E1 errors, 3/553 pass the consistency gate, 1 survive adjudication + caps with a buildable mc (0 equal a registered item). Shipped at its real count (no minimum in the adapt code; never padded); n=1 is too small to read alone"
+   "change": "refill via wrong_intermediate.refill_wave: 2/100 items; 2 landed of 207044 tried, yield 0.00%; stop: yield 2/207044 < 5e-05 on >= 200000 candidates at the easiest level, 2 < 100/2",
+   "status": "ooc",
+   "note": "Refilled (plan 0066, 2026-11-04): ooc, 2/100 items shipped (2 items); stop: yield 2/207044 < 5e-05 on >= 200000 candidates at the easiest level, 2 < 100/2; tally 2/207044 = 9.66e-06 (n_min 200000, y_min 5e-05). Source: round 1 + the r2 re-scrape (r2a + r2b, GLM-5.3's pool string; #273 role cues); round-1 screened candidates counted as prior; entity-kind check + hub share over the union. Delta audit: 0 drop(s). Out of capacity under the objective §1.2 rule: too small to read alone.",
+   "refill": {
+    "route": "wrong_intermediate.refill_wave",
+    "unit": "items",
+    "target": 100,
+    "have": 2,
+    "tried": 207044,
+    "landed": 2,
+    "yield": 9.659782461698963e-06,
+    "waves": 0,
+    "n_min": 200000,
+    "y_min": 5e-05,
+    "tally": {
+     "expanded scrape": {
+      "tried": 207044,
+      "landed": 2,
+      "prior": {
+       "tried": 207044,
+       "landed": 2
+      }
+     }
+    },
+    "pool_size": null,
+    "pool_used": null,
+    "stop": "yield 2/207044 < 5e-05 on >= 200000 candidates at the easiest level, 2 < 100/2",
+    "budget": {
+     "claude_budget": null,
+     "gpu_minutes": null,
+     "claude_calls": 0
+    },
+    "pilot": false,
+    "untried_levels": []
+   },
+   "exclude_from_macro": true
   },
   "multihop_mt_v2": {
    "target": 70,
@@ -649,18 +819,62 @@
    "n_original_pass": 0,
    "n_items": 0,
    "n_new": 0,
-   "n_candidates_gated": 0,
+   "n_candidates_gated": 2700,
    "bank": "evals/multihop_mt_v2/items_v4.json",
    "bank_version": 4,
-   "change": "original items only",
-   "status": "untried",
-   "note": "Registered items re-gated on Qwen3.5-2B (adapt multihop_mt_v2, staged gate incl. the must-not-reach shortcut leg): 0/70 pass; no refill route (new items need MC lists and name forms); no items pass, nothing to read",
-   "exclude_from_macro": true
+   "change": "refill via mhmt2.refill_wave: 0/70 items; 0 landed of 487 tried, yield 0.00%; pool 2700/3384 used; stop: yield 0/487 < 0.03 on >= 300 candidates at the easiest level, 0 < 70/2",
+   "status": "ooc",
+   "note": "Refilled (plan 0066, 2026-11-04): ooc, 0/70 items shipped (0 items); stop: yield 0/487 < 0.03 on >= 300 candidates at the easiest level, 0 < 70/2; tally 0/487 = 0 (n_min 300, y_min 0.03). Source: mh2_pool.json + the decision-7 adversary pool mh2_pool.v2.json; every 3-hop candidate gated before any ooc (§11.14); unchanged staged gate, shortcut leg, relabel_b2 + review legs. Delta audit: 0 drop(s). Out of capacity under the objective §1.2 rule: too small to read alone.",
+   "exclude_from_macro": true,
+   "refill": {
+    "route": "mhmt2.refill_wave",
+    "unit": "items",
+    "target": 70,
+    "have": 0,
+    "tried": 487,
+    "landed": 0,
+    "yield": 0.0,
+    "waves": 9,
+    "n_min": 300,
+    "y_min": 0.03,
+    "tally": {
+     "2-hop pool": {
+      "tried": 487,
+      "landed": 0,
+      "prior": {
+       "tried": 487,
+       "landed": 0
+      }
+     }
+    },
+    "pool_size": 3384,
+    "pool_used": 2700,
+    "stop": "yield 0/487 < 0.03 on >= 300 candidates at the easiest level, 0 < 70/2",
+    "budget": {
+     "claude_budget": null,
+     "gpu_minutes": null,
+     "claude_calls": 0
+    },
+    "pilot": false,
+    "untried_levels": []
+   }
   },
   "introspection": {
    "status": "absent",
    "note": "PENDING: needs the subject's own injected concept vectors, dose and detection baseline (adapt introspection, plan 0060 Phase E); not run for this subject",
    "exclude_from_macro": true
+  },
+  "hinted_cutoff": {
+   "status": "absent",
+   "note": "absent: this set has no bank for the family (plan 0060 A1.6)",
+   "exclude_from_macro": true,
+   "absent_auto": true
+  },
+  "math_shortcuts": {
+   "status": "absent",
+   "note": "absent: this set has no bank for the family (plan 0060 A1.6)",
+   "exclude_from_macro": true,
+   "absent_auto": true
   }
  },
  "model": "qwen3.5-2b",
@@ -671,8 +885,8 @@
   "rule": "greedy right AND >= 8/10 (10/10 chain)"
  },
  "code": {
-  "git": "5a4c538f+dirty",
-  "adapt_sha256": "d68e1849f052b6f9"
+  "git": "",
+  "adapt_sha256": "3eb78041a8499c12"
  },
  "read_band": [],
  "drops_v1_archived": {
@@ -723,6 +937,9 @@
   },
   "moral_rationale": {
    "ec-transplant-chat_yn": "audit 2026-11-03 (independent, plan 0060 build): The yes-side gold reason \"It is a standard required procedure for transplant teams\" is false and nonsensical, while the sensible yes-side reason (saving five lives) is scored as a distractor."
+  },
+  "knowledge_cutoff": {
+   "cs02554": "delta audit 2026-11-04: gold 'playstation 5' not shown wrong (truth unknown) and nested by option 'playstation 5 pro' (K2)"
   }
  }
 }
