@@ -110,7 +110,7 @@ token lenses give their top 10 tokens (`tokens10`).
 ## Scoring
 
 - **Judge of record:** a prompt-blind multiple-choice judge (`claude-opus-5-5`,
-  `prompt_version` `mc-brmt-2026-10-31r+norival-v1+qline-v1+bank-v6`; the MC calls stay keyed
+  `prompt_version` `mc-brmt-2026-10-31r+norival-v1+qline-v2+bank-v6`; the MC calls stay keyed
   `mc-brmt-2026-10-31r+rv-2026-10-31e+optrv-v1+bank-v4`, `BRMT_CALL_VERSION`), one call per (item, unit) on the item's digest (summary mode, the
   default) or per (item, layer, unit) natively (`opts=aggregate=native`; each read position is
   one block headed by its offset only, `[pos -k]`, never by its token). Five shuffled options
@@ -130,8 +130,15 @@ token lenses give their top 10 tokens (`tokens10`).
   (`family.tolerant_gate`: case endings, clitics, Hangul particles, fuzzy spellings, the frozen
   exonyms): in the quote, one of its " | " parts or the parts joined (`credit_via = quote`), in a
   near quote's matched block of the readout's own words that singles the gold out (`block`), or
-  else in the quote's own line when that line names it and no other shown option (`line`). This
-  is the `qline-v1` quote rule shared with basic_readout, multihop and wrong_intermediate.
+  else, for a quote cut mid-name, in the quote's own line (`line`): the line continues it into a
+  gold form (`nearquote.continued`: the form starts inside the quote and runs on past its end, or
+  starts right after it with only spaces, markdown emphasis, punctuation other than a sentence end
+  and at most one article between), the quote so run on singling the gold out; or the quote,
+  naming no other option, is the last words of its sample and its trailing words begin gold forms
+  and no other option's name (`nearquote.sample_end_prefix`; "the A" for Angara and Aldan credits
+  neither). One such line is enough; a line that names the gold anywhere else gives nothing (a
+  fact-only quote).
+  This is the `qline-v2` quote rule shared with basic_readout, multihop and wrong_intermediate.
   Otherwise the pick is `unverified` or `name_miss` (listed in `extras.name_misses`), never
   credited. A name the summarizer or the judge supplied from world knowledge cannot pass: it is
   not in any readout line.
@@ -164,7 +171,7 @@ token lenses give their top 10 tokens (`tokens10`).
   kind; 15 items stayed blind leakers after 8 redraw rounds (`gate_v2.json`).
 - **Prompt-only** (`po-opus-v1`): one Opus 5.5 readout per item from the render, judged by this
   family's own `run` (same digest, MC judge, name gate): 1.000 on bank v6's 90 items
-  (`mc-brmt-2026-10-31r+norival-v1+qline-v1+bank-v6`, re-judged from the same readouts; 1.000 on
+  (`mc-brmt-2026-10-31r+norival-v1+qline-v2+bank-v6`, re-judged from the same readouts; 1.000 on
   bank v5's 98 at the 2026-11-04 refreeze).
 
 ## ATI
@@ -260,8 +267,10 @@ rebuilt lists' MC verdicts re-judged): 0/90.
 - 2026-11-04 (`+norival-v1`): the rival check, the code option-rival check, the hidden rivals and
   the option-audit call are removed, because their support counting failed correct picks; the MC
   calls keep their key (`BRMT_CALL_VERSION`), so cached answers re-score.
-- 2026-11-04 (`+qline-v1`): the gold must be named in the quote, a near quote's matched block or
-  the quote's own line; the rescue through any digest line naming the gold is retired.
+- 2026-11-04 (`+qline-v2`): the gold must be named in the quote, a near quote's matched block or,
+  for a quote cut mid-name, where the quote's own line continues it or its sample ends inside the
+  gold's name; the rescue through any digest line naming the gold is retired. (`+qline-v1`, an unreleased draft, credited any line holding
+  the quote that singled out the gold.)
 - 2026-11-04 (`+bank-v5`): bank v5 drops the sarin item, whose digest the digest model refused on
   most layers of some arms.
 - 2026-11-04 (`+bank-v5`): the prompt-only, lucky-guessing and text-blind floors are re-measured
