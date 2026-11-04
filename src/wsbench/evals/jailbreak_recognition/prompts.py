@@ -54,7 +54,10 @@ NATIVE_PROMPT_VERSION = CALL_VERSION + "+pins-r1+pins-r3+guard-off"
 # The calls are keyed SUMMARY_CALL_VERSION; native mode keeps the per-readout labels
 # +opus5-fb: a digest or item-question call Sonnet declines re-runs once on claude-opus-5,
 # client-side; rows record digest_model / judge_model (stamp only)
-PROMPT_VERSION = NATIVE_PROMPT_VERSION + "+sonnet-digest+item-q2+opus5-fb"
+# +test-pins: a third digest pin group, judge.TEST_PIN (the request described as a test, trigger
+# or bypass attempt of the model's safety), in the model's own words only; an item whose digest
+# gains a pin is re-asked
+PROMPT_VERSION = NATIVE_PROMPT_VERSION + "+sonnet-digest+item-q2+opus5-fb+test-pins"
 # q1 asked the same question without the family's rules
 SUMMARY_CALL_VERSION = "jb-item-q2"  # keys every summary-mode judge call
 N_DRAWS = 3

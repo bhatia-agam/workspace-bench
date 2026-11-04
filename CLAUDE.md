@@ -203,7 +203,7 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   counting only with a quote `judge.verify_quote` passes; summary rows carry `answers` / `draws`,
   not per-line labels. No kind guards (`+guard-off`): only the quote checks verify a
   recognition. Native runs and the ATI gate keep `NATIVE_PROMPT_VERSION`
-  (`jb-v4+pins-r1+pins-r3+guard-off`); the summary stamp adds `+sonnet-digest+item-q2+opus5-fb`.
+  (`jb-v4+pins-r1+pins-r3+guard-off`); the summary stamp adds `+sonnet-digest+item-q2+opus5-fb+test-pins`.
   The gate grader falls back to Sonnet 5, recorded per label (historical: it built the frozen
   v2 bank). Gotcha (the `summ_fallback=default+claude-sonnet-5-5` families,
   `digest.REFUSAL_MODEL`): the digest fingerprint does not key the fallback, so

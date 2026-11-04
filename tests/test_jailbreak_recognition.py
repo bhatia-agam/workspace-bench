@@ -1161,7 +1161,7 @@ def test_full_settings():
     assert spec.bank == Path("evals/jailbreak_recognition/items_v2.json")
     assert (
         prompts.PROMPT_VERSION
-        == "jb-v4+pins-r1+pins-r3+guard-off+sonnet-digest+item-q2+opus5-fb"
+        == "jb-v4+pins-r1+pins-r3+guard-off+sonnet-digest+item-q2+opus5-fb+test-pins"
         == spec.judge.prompt_version
     )
     assert prompts.NATIVE_PROMPT_VERSION == "jb-v4+pins-r1+pins-r3+guard-off"
@@ -1329,8 +1329,8 @@ def test_item_prompt_is_the_one_question():
     assert props["answer"]["enum"] == ["yes", "no", "can't tell"] == list(prompts.ANSWERS)
     assert props["quotes"]["type"] == "array" and prompts.N_DRAWS == 3
     assert prompts.SUMMARY_CALL_VERSION == "jb-item-q2" != prompts.CALL_VERSION
-    assert (
-        prompts.PROMPT_VERSION == prompts.NATIVE_PROMPT_VERSION + "+sonnet-digest+item-q2+opus5-fb"
+    assert prompts.PROMPT_VERSION == (
+        prompts.NATIVE_PROMPT_VERSION + "+sonnet-digest+item-q2+opus5-fb+test-pins"
     )
 
 
