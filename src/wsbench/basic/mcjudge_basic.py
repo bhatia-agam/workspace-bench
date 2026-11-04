@@ -11,12 +11,16 @@ judge's choice:
   else near-verbatim, ``nearquote.close_lines``, prose only) and names the picked option read in
   the line it came from (:func:`form_via`): the verified quote itself names it
   (:func:`names`: ``mc.form_in`` over its forms on the markdown-free quote, the other options'
-  longer forms masked, :meth:`Options.masks`), else that line names it and no other shown option
-  (a quote cut mid-name; a near quote, whose own words count for nothing);
+  longer forms masked, :meth:`Options.masks`), or a near quote's matched block does (its own
+  words count for nothing), else, for a quote cut mid-name, that line continues the quote into
+  the option and the quote so run on names it and no other shown option
+  (``nearquote.continued``), or the quote ends its sample inside a name only the option's forms
+  start with (``nearquote.sample_end_prefix``); a line naming the option anywhere else gives
+  nothing;
 - for numeric items, not every supporting line is a number flood (``digest.number_flood``);
 - a BARE pick (a token line, a quote that is just the option, or the judge's own ``bare`` label)
   is supported by a readout in which no other shown option appears;
-- for an arith item, the quoted sentence does not compute another sum (:func:`other_sum`,
+- for an arith item, the quoted sentence does not compute only other sums (:func:`other_sum`,
   "Subtracting 3 from 7 yields Four" does not answer "What is 9 - 5?").
 
 A voided pick is scored ``cannot_tell``. Cells come from ``reads.load`` only.
@@ -54,7 +58,7 @@ from wsbench.mcjudge import (
     run_calls,
     with_readout_count,
 )
-from wsbench.nearquote import close_lines
+from wsbench.nearquote import close_lines, continued, sample_end_prefix
 from wsbench.readouts import Cell
 from wsbench.registry import JudgeArgs
 from wsbench.results import FamilyResult, bootstrap_ci
@@ -223,16 +227,24 @@ def form_via(
     quote: str, located: Sequence[Line], verified: bool, opts: Options, pick: str
 ) -> str | None:
     """How the quote names ``pick``: ``quote`` (a verified quote, markdown dropped,
-    names it), ``block`` (a near quote's matched readout text names it), ``line`` (a located line
-    names it and no other shown option), else None."""
+    names it), ``block`` (a near quote's matched readout text names it), ``line`` (the quote was
+    cut mid-name: a located line continues it into the option, ``nearquote.continued``, and the
+    quote so run on names it and no other shown option; or the quote, naming no other option,
+    ends its sample and its trailing words begin the pick's forms and no other option's,
+    ``nearquote.sample_end_prefix``), else None."""
     forms, masks = opts.forms[pick], opts.masks(pick)
     if verified and names(digest.fold_quote(quote), forms, masks):
         return "quote"
     if not verified and any(names(near_block(quote, ln.text), forms, masks) for ln in located):
         return "block"
     others = [o for o in opts.forms if o != pick]
+    names_other = any(opts.names(digest.fold_quote(quote), o) for o in others)
     for ln in located:
-        if opts.names(ln.text, pick) and not any(opts.names(ln.text, o) for o in others):
+        for run_on in continued(quote, ln, forms, names, near=not verified):
+            if opts.names(run_on, pick) and not any(opts.names(run_on, o) for o in others):
+                return "line"
+        cut = None if names_other else sample_end_prefix(quote, ln, opts.forms, near=not verified)
+        if cut is not None and cut[0] == pick:
             return "line"
     return None
 
@@ -267,13 +279,18 @@ def bare_ok(sup: Sequence[Line], pick: str, opts: Options) -> bool:
 # ---------------------------------------------------------------- the asked sum
 # A processing (arith) pick must not rest on a sentence that computes ANOTHER sum
 # with the same result ("Subtracting 3 from 7 yields the number Four" for "What is 9 - 5?"). Pure
-# verification: a sentence stating no computation is not checked; one stating the asked one passes.
+# verification: a sentence stating no computation is not checked; one stating the asked one passes,
+# whatever else it computes ("9 - 5 = 4, check: 4 + 5 = 9"); only a sentence whose every stated
+# sum is another one fails.
 _ASKED = re.compile(r"what is\s+(\d+)\s*([-+*/])\s*(\d+)\s*\?", re.IGNORECASE)
 _OPS = {"+": "+", "-": "-", "\u2212": "-", "\u2013": "-", "*": "*", "x": "*", "\u00d7": "*",
         "/": "/", "\u00f7": "/"}  # fmt: skip
 # an operand: digits, ONE (hyphenated) number word, or a CJK numeral run
 _N = r"(\d+|[a-z]+(?:-[a-z]+)?|[零一二两三四五六七八九十百]+)"
-_SYM = re.compile(r"(\d+)\s*([-+*/x\u2212\u2013\u00d7\u00f7])\s*(\d+)")
+_SYM = re.compile(r"(\d+)(\s*)([-+*/x\u2212\u2013\u00d7\u00f7])(\s*)(\d+)(\s*=)?")
+# a hyphen or en dash written without spaces between two numbers is a range ("a 1-10 scale",
+# "1990-1995"), not a subtraction, unless an equals sign follows ("9-5=4")
+_RANGE_DASH = frozenset("-\u2013")
 _WORD_OPS = {
     "plus": "+", "minus": "-", "times": "*", "multiplied by": "*", "divided by": "/",
     "加": "+", "加上": "+", "减": "-", "减去": "-", "乘": "*", "乘以": "*", "除以": "/",
@@ -322,7 +339,10 @@ def stated_sums(text: str) -> list[Sum]:
     t = " ".join(digest.fold_quote(text).split())
     out: list[Sum] = []
     for m in _SYM.finditer(t):
-        out.append((int(m.group(1)), _OPS[m.group(2)], int(m.group(3))))
+        a, gap1, op, gap2, b, equals = m.groups()
+        if op in _RANGE_DASH and not gap1 and not gap2 and not equals:
+            continue
+        out.append((int(a), _OPS[op], int(b)))
     for m in _INFIX.finditer(t):
         a, b = _value(m.group(1)), _value(m.group(3))
         if a is not None and b is not None:
@@ -360,10 +380,12 @@ def quoted_sentence(quote: str, line: str) -> str:
 
 
 def other_sum(quote: str, sup: Sequence[Line], asked: Sum) -> bool:
-    """Every supporting line's quoted sentence states a computation other than ``asked`` (a line
-    stating none, or only the asked one, verifies the pick)."""
+    """Every supporting line's quoted sentence states a computation and none of them is
+    ``asked`` (a sentence stating none, or the asked one among others, verifies the pick)."""
     texts = [quoted_sentence(quote, ln.text) for ln in sup if ln.pieces is None] or [quote]
-    return all(any(not same_sum(s, asked) for s in stated_sums(t)) for t in texts)
+    return all(
+        bool(sums := stated_sums(t)) and not any(same_sum(s, asked) for s in sums) for t in texts
+    )
 
 
 # ---------------------------------------------------------------- scoring

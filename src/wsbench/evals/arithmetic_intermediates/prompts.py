@@ -84,8 +84,10 @@ Rules:
 
 # summary mode, numbers digest (plan 0022 Part B): the digest's number keys bound what can pass;
 # the judge sees whole evidence samples and may name up to ten values, kept only when a key
-# writes them. A plain, generic ask (no consensus rule, no operand/result rule: restated
-# operands never take a digest key, digest.collapse ``operands=``).
+# writes them. A plain, generic ask: no consensus rule, no operand/result rule (a restated
+# operand takes a digest key only when no other number is left, digest.collapse ``operands=``),
+# no bag rule (the flat-list void is code's, digest.number_flood) and no list of numbers to leave
+# out beyond one generic "label, count or date" line.
 MAX_VALUES_SUMMARY = 10  # the judge cannot see the keys; the digest's number keys bound it
 SYSTEM_SUMMARY = f"""{_INTRO} {_TASK.format(s="")}
 

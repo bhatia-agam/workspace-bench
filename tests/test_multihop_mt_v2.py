@@ -109,7 +109,7 @@ def test_registered():
     # plan 0041 B2: the pinned MC judge is the scorer of record (it was the regex contract)
     assert SPEC.group == "basic_mt" and SPEC.scorer == ""
     assert SPEC.judge.prompt_version == P.MH2_PROMPT_VERSION
-    assert P.MH2_PROMPT_VERSION == "mh2-mc-2026-11-01+norival-v1+qline-v1+bank-v5"
+    assert P.MH2_PROMPT_VERSION == "mh2-mc-2026-11-01+norival-v1+qline-v2+bank-v5"
     assert SPEC.bank == Path("evals/multihop_mt_v2/items_v5.json")
     assert registry.bank_path(NAME) == V2.with_name("items_v5.json")  # bank v5
     assert fam.MC_PROFILES[NAME].cannot == P.MH2_CANNOT and mc.is_cannot(P.MH2_CANNOT)
@@ -468,13 +468,25 @@ def test_one_list_parts_join_to_name():
     toks = ("Henry", "James", "novel")
     line = Line(" | ".join(toks), toks, "[L44 pos 3]", 44, 3)
     assert _verdict(HJAMES, "bridge1", "Henry | James", [line])["correct"]
-    # a quote that does not name the gold itself is read in its own line, here a
-    # list that spells Henry James; a line that does not spell the name still fails
-    v = _verdict(HJAMES, "bridge1", "James", [line])
+    # a token quote is a whole token: a list continues no quote, so "James" alone is a name miss
+    # even from a list that spells Henry James
+    assert _verdict(HJAMES, "bridge1", "James", [line])["kind"] == "name_miss"
+
+
+def test_quote_cut_mid_name_is_read_where_its_line_continues_it():
+    line = _prose(
+        "The philosopher behind pragmatism's novelist brother was Henry James, of course."
+    )
+    v = _verdict(HJAMES, "bridge1", "pragmatism's novelist brother was Henry", line)
     assert v["correct"] and v["credit_via"] == "line"
-    toks2 = ("James", "novel")
-    line2 = Line(" | ".join(toks2), toks2, "[L44 pos 3]", 44, 3)
-    assert _verdict(HJAMES, "bridge1", "James", [line2])["kind"] == "name_miss"
+    # the cached jarry-ubu-t3 shape: the quote ends its sample inside the name, and only the
+    # gold's forms start "Henry J"
+    line = _prose("was Henry James. Who was he? The novelist brother was **Henry J")
+    v = _verdict(HJAMES, "bridge1", "The novelist brother was **Henry J", line)
+    assert v["correct"] and v["credit_via"] == "line" and v["credit"] == "exact"
+    # a fact-only quote is not credited by a line that names the gold before it
+    line = _prose("Henry James wrote The Turn of the Screw in 1898.")
+    assert _verdict(HJAMES, "bridge1", "The Turn of the Screw in 1898", line)["kind"] == "name_miss"
 
 
 def test_mc_is_pinned_scorer_of_record(tmp_path, monkeypatch):

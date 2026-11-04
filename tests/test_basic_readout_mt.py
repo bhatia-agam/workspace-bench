@@ -173,14 +173,14 @@ def _run(tmp_path, monkeypatch, plan, *, items, text_of=None, quotes=None, **kw)
 def test_spec_judge_is_mc_pinned(real_families, tmp_path, monkeypatch):
     spec = real_families[NAME]
     assert spec.scorer == ""
-    assert spec.judge.prompt_version == "mc-brmt-2026-10-31r+norival-v1+qline-v1+bank-v5"
+    assert spec.judge.prompt_version == "mc-brmt-2026-10-31r+norival-v1+qline-v2+bank-v5"
     assert spec.bank == Path("evals/basic_readout_mt/items_v5.json")  # v4 without the sarin item
     assert spec.not_in_macro == "" and spec.metric == "pass_rate" and not spec.multi_select
     assert spec.min_full_positions == 8 and spec.full_contiguous
     it = _item("brh-ent-")
     r, _f = _run(tmp_path, monkeypatch, {it["id"]: {"readout": "gold"}}, items=[it["id"]])
     assert r.pinned_instrument is True and r.complete
-    assert r.config["prompt_version"] == "mc-brmt-2026-10-31r+norival-v1+qline-v1+bank-v5"
+    assert r.config["prompt_version"] == "mc-brmt-2026-10-31r+norival-v1+qline-v2+bank-v5"
 
 
 def test_regex_diagnostic_is_unpinned(real_families, tmp_path):

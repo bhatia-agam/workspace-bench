@@ -42,7 +42,8 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   `fallbacks` parameter); a served JSON result carries `llm.SERVED_BY`, a served text fires
   `on_served`, and only refusals move (a `max_tokens` stop or an error stays the primary's
   outcome). `mcjudge.run_calls(refusal_model=)` passes it through and caches the serving model
-  with the row. The digest's equivalent is `summ_fallback=none+<model>`, and
+  with the row, under the judge's fingerprint: a later run with another refusal model (or none)
+  reuses that row (no stale-fallback check, unlike the digest). The digest's equivalent is `summ_fallback=none+<model>`, and
   `digest.OUTPUT_CAPS` gives a digest model its own per-call output cap (`Settings.max_tokens`).
 
 ## Family conventions
@@ -76,14 +77,15 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   `MC_FAMILIES` dispatch to a blind forced-choice judge instead, over options frozen in the bank
   (`item["mc"]`), cannot-tell last. Two modules, written in parallel by the two family PRs and
   kept side by side (unifying them is a follow-up): basic_readout (plan 0053) on
-  `basic/mcjudge_basic.py` (quote gate: `quote_ok` or `nearquote.close_lines`, the option read
-  in the quote's line, `form_via`; number-flood void, bare-mention ruling, the asked-sum void
+  `basic/mcjudge_basic.py` (quote gate: `quote_ok` or `nearquote.close_lines`, the option named
+  by the quote or, cut mid-name, where its line continues it or its sample ends inside the
+  name, `form_via`; number-flood void, bare-mention ruling, the asked-sum void
   `other_sum`; options seeded and calls keyed by `OPTIONS_VERSIONS`, not the result stamp;
   its prompts are `SYSTEM_MC` / `USER_MC` / `BR_CANNOT` in `basic/prompts.py`, kept OUT of the
   shared `PROMPTS` so they never stale the other basic families' stamp), and multihop (plan 0048,
   `MC_BANK_FAMILIES`) on `basic/mcjudge_bank.py` (gates: the quote verifies, verbatim or
-  near-verbatim, and names the gold in itself or in its line by name, alias or a derived form
-  from the frozen `evals/multihop/derived_forms.json` (`gold_forms`), names no other option, and
+  near-verbatim, and names the gold in itself (or, cut mid-name, where its line continues it or its
+  sample ends inside the name) by name, alias or a derived form from the frozen `evals/multihop/derived_forms.json` (`gold_forms`), names no other option, and
   is no number flood; no split rule; the gate version `GATE_VERSION` joins the result stamp while
   the calls keep `CALL_VERSIONS`; strings in the family's `prompts.MC`); per-family strings `FAMILY_RULES` (typo) are added to that family's own `PROMPTS` (`FORBIDDEN_TEMPLATE` / `FORBIDDEN_FAMILIES` is empty since plan 0058 removed medical_diagnosis{,_alt}; the mechanism stays); `FAMILY_PROMPT_VERSIONS` / `prompt_version_of` give a newer family its own stamp so adding a rule never stales the older families' `bank-2026-10-10` ATI entries and floors; `DIGEST_TASK_NOTES_TEXT` is in every basic family's PROMPTS, so a new note line must be added to every basic README) and `multitoken/`
   (`mt_family(name, title, calls_per_arm=, scorer=)`): basic_readout_mt (plan 0051) is
@@ -91,8 +93,9 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   `mc.options_with_cannot`) plus the deterministic name gate (code verifies the pick and never
   overrules it; `rival_quote` is reported only), since audit fix F4
   `multitoken.family.tolerant_gate` (quote verified by `digest.quote_ok` or near-verbatim via
-  `nearquote.close_lines`; the gold named by the quote, a near quote's matched block, or the
-  quote's own line when it singles it out (no rescue through any other line), with
+  `nearquote.close_lines`; the gold named by the quote, a near quote's matched block, or, for a
+  quote cut mid-name, where its own line continues it or its sample ends inside the name (no
+  rescue through any other line), with
   case endings / Arabic clitics / Hangul particles / fuzzy spellings and the frozen
   `evals/basic_readout_mt/exonyms.json`; `name_gate` itself is the old strict rule), headline = the `readout`
   unit only (`BRMT_HEADLINE_UNITS`; `McFamily` in `MC_FAMILIES` holds a family's MC config, the
@@ -218,10 +221,11 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   directed_modulation, hinted_cutoff, knowledge_cutoff, math_shortcuts and wrong_intermediate (plan 0050: a blind 6-way MC over B',
   the true bridge B and four same-category distractors frozen in bank v2 by
   `scripts/wrong_intermediate_mc_options.py`; a gold pick is credited only with a verified or
-  near-verbatim quote that names it by a listed form, `mc.forms`, in the quote or in the line it
-  came from, and that is not a prompt echo; no code check overrules the judge's pick
-  (`judge-only-v1`), and the raw wrong-vs-true counts are reported only; `true_bridge_rate`
-  replaces the removed wrong_bridge_true).
+  near-verbatim quote that names it by a listed form, `mc.forms`, in the quote or (a quote cut
+  mid-name) where its line continues it or its sample ends inside the gold's name, and that is not
+  a prompt echo; no code check overrules the judge's pick (`judge-only-v1`), and the raw
+  wrong-vs-true counts are reported only; `true_bridge_rate` replaces the removed
+  wrong_bridge_true).
   user_modeling (plan 0056; judge calls `CALL_VERSION = "um-v3.4"`; bank `items_v2.json` = the
   47 selfdescribe items, result stamp `um-v3.4+bank-v2`, read plan = items.json's via
   `read_plan_bank`) adds a value gate on top of the shared
@@ -229,9 +233,10 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   there bumps its `CALL_VERSION`; `tests/fixtures/user_modeling_gate_cases.json` replays the
   cached gold picks, so rebuild the fixture's `blocked_expected` when the lexicon changes).
   role-bound's summary mode asks each item three times and votes over the draws' pass / fail
-  verdicts (`judge.draw_verdict`, stamp `+maj3v`); user_modeling's takes the majority of the
-  draws' gated picks (`judge.draw_label`, stamp `+maj3`, no majority = undecided). Both reuse
-  conjunctive's `draw_key` / `majority` / `n_draws`; draw 0 keeps the single-call key.
+  verdicts (`judge.draw_verdict`, stamp `+maj3v`), and so does user_modeling's (a draw passes
+  on a gated gold pick with an inferred basis; its full label, `judge.draw_label`, is a
+  diagnostic). Both reuse conjunctive's `draw_key` / `majority` / `n_draws`; draw 0 keeps the
+  single-call key.
   model_specific_directed_modulation (plan 0016; formerly directed_modulation_obscure) has its own
   regex `judge.py` with no LLM and no summarizer (token readouts are matched token by token, as in
   the source); its `PROMPTS` holds only the subject template, since `test_prompts_in_readme`
@@ -274,7 +279,7 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   counts; code only verifies the quote, pass = the verified pick is the gold; summary mode asks
   each (item, side) 3 times, reusing conjunctive's `draw_key` / `majority` / `n_draws`, and takes
   the majority of the draws' pass / fail verdicts, result stamp `+maj3v`; a near-verbatim quote
-  (`nearquote.close_lines`) verifies like an exact one, summary stamp `+nq1`; the earlier
+  (`nearquote.close_lines`) verifies like an exact one under `ec-v9` only, summary stamp `+nq1`; the earlier
   multi-label rule survives only as `lucky_guessing.marks_pass`, which scores the multi-mark
   guessers of the floors frozen under it); bank v5 `evals/moral_rationale/items_v5.json` is
   opt-in** (round 4, `ec-v9-b5`; not registered while it leaks the side, review of #215): the 24 bank-v3 items whose rebuilt
@@ -318,14 +323,15 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   items; v1 `items.json` byte-identical, read only by `tests/test_basic_association.py`'s
   test-only `bank_family` registration), its own `judge.py` (8-way MC + cannot tell; gate:
   `digest.quote_ok` -> one retry of a quote miss -> token-line flat-list void -> listed form
-  (`quote_names_gold`: a proper-noun form only with its capital, never hyphen-glued) -> the
-  quote's own line or another evidence sentence (3b / 3c) -> a proper-noun gold held only as a
-  common word fails (`gold_common_word`) -> quote-only re-judge; no raw-sample count overrules
-  the pick; row `credit`; stamp `assoc-mc-2026-11-01-v3+gate-a1+bank-v5`, calls keyed
-  `CALL_VERSION`), read at the 19 summarize-suffix sites like conjunctive / role-bound. The
-  registered bank is v5 (`items_v5.json` = bank v3 minus `winter` and `pentagon`, 91 items, v3's
-  read plan via `read_plan_bank`; an adaptation plans its own items, so
-  `adapt.store.original_bank` drops that key from the header it copies). Its options come from
+  (`mc.aliases`, any case; a `HOMOGRAPH_GOLDS` gold such as pentagon only with its capital, never
+  hyphen-glued) -> the quote's own line or another evidence sentence (3b / 3c) -> a homograph
+  gold held only as the common word fails (`gold_common_word`) -> quote-only re-judge; no
+  raw-sample count overrules the pick; row `credit`; stamp
+  `assoc-mc-2026-11-01-v3+gate-a2+bank-v5`, calls keyed `CALL_VERSION`), read at the 19
+  summarize-suffix sites like conjunctive / role-bound. The registered bank is v5
+  (`items_v5.json` = bank v3 minus `winter` and `pentagon`, 91 items, v3's read plan via
+  `read_plan_bank`; an adaptation plans its own items, so `adapt.store.original_bank` drops that
+  key from the header it copies). Its options come from
   `scripts/association_distractors.py` (Opus proposer from the gold alone, lint + entailment
   check, 5-draw scene screen). Its ATI entry was
   re-gated on 2026-10-31 (R1-ATI) on the reduced panel, qwen+opus then qwen+opus+astra (R1-ATI
