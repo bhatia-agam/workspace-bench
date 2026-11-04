@@ -550,17 +550,17 @@
      "aggregate": "native"
     },
     "buggy_code": {
-     "rate": 0.0,
+     "rate": 0.05263157894736842,
      "ci95": [
       0.0,
-      0.0
+      0.15789473684210525
      ],
      "metric": "pass_rate",
      "layer": 12,
      "judge_model": "claude-opus-5-5",
-     "n_items": 4,
+     "n_items": 19,
      "counts": {
-      "n_expected_cells": 15,
+      "n_expected_cells": 45,
       "n_missing_cells": 0,
       "n_unjudged_cells": 0,
       "n_empty_cells": 0,
@@ -616,10 +616,10 @@
      "aggregate": "native"
     },
     "knowledge_cutoff": {
-     "rate": 0.14814814814814814,
+     "rate": 0.12962962962962962,
      "ci95": [
-      0.08333333333333333,
-      0.2222222222222222
+      0.07407407407407407,
+      0.19444444444444445
      ],
      "metric": "pass_rate",
      "layer": 12,
@@ -638,10 +638,10 @@
      "aggregate": "native"
     },
     "model_specific_directed_modulation": {
-     "rate": 0.32653061224489793,
+     "rate": 0.30612244897959184,
      "ci95": [
-      0.23469387755102042,
-      0.41836734693877553
+      0.21428571428571427,
+      0.40816326530612246
      ],
      "metric": "pass_rate",
      "layer": 12,
@@ -704,10 +704,10 @@
      "aggregate": "native"
     },
     "multihop_mt_v2": {
-     "rate": 0.8484848484848485,
+     "rate": 0.9393939393939394,
      "ci95": [
-      0.7272727272727273,
-      0.9696969696969697
+      0.8484848484848485,
+      1.0
      ],
      "metric": "pass_rate",
      "layer": 12,
@@ -968,10 +968,10 @@
      "aggregate": "native"
     },
     "wrong_intermediate": {
-     "rate": 0.4117647058823529,
+     "rate": 0.36470588235294116,
      "ci95": [
-      0.3176470588235294,
-      0.5176470588235295
+      0.27058823529411763,
+      0.4588235294117647
      ],
      "metric": "pass_rate",
      "layer": 12,
@@ -2074,18 +2074,18 @@
      "not_measurable": false
     },
     "buggy_code": {
-     "rate": 0.75,
+     "rate": 0.9473684210526315,
      "saturated": false,
      "ci95": [
-      0.25,
+      0.8421052631578947,
       1.0
      ],
      "metric": "pass_rate",
      "higher_is_better": true,
-     "n_items": 4,
+     "n_items": 19,
      "n_items_decided": null,
      "counts": {
-      "n_expected_cells": 15,
+      "n_expected_cells": 45,
       "n_missing_cells": 0,
       "n_unjudged_cells": 0,
       "n_empty_cells": 0
@@ -2117,11 +2117,11 @@
      },
      "decided": {},
      "digest_unserved": [],
-     "written": "2026-11-04T15:56:42+00:00",
-     "value": 0.75,
-     "n": 4,
+     "written": "2026-11-04T17:48:15+00:00",
+     "value": 0.9473684210526315,
+     "n": 19,
      "ci": [
-      0.25,
+      0.8421052631578947,
       1.0
      ],
      "n_refused": 0,
@@ -2731,7 +2731,7 @@
       "cs00229": false
      },
      "digest_unserved": [],
-     "written": "2026-11-04T15:56:42+00:00",
+     "written": "2026-11-04T17:48:15+00:00",
      "value": 0.0,
      "n": 108,
      "ci": [
@@ -2747,11 +2747,11 @@
      "not_measurable": false
     },
     "model_specific_directed_modulation": {
-     "rate": 0.7959183673469388,
+     "rate": 0.826530612244898,
      "saturated": false,
      "ci95": [
-      0.7142857142857143,
-      0.8775510204081632
+      0.7551020408163265,
+      0.8979591836734694
      ],
      "metric": "pass_rate",
      "higher_is_better": true,
@@ -2789,14 +2789,14 @@
      },
      "decided": {
       "middle_eastern_spice_blend": true,
-      "s1_persian_khoresh_stew": true,
+      "s1_persian_khoresh_stew": false,
       "s1_lebanese_salad": true,
       "s1_kepler_poinsot_polyhedron": true,
       "s1_species_of_ladybird_beetle": true,
-      "s2_epipedobates_species": true,
+      "s2_epipedobates_species": false,
       "s2_bromeliad_genus_for_a_dart_frog_vivarium": true,
       "s2_knot_theory_software_tool": true,
-      "s3b1_seadragon_species": false,
+      "s3b1_seadragon_species": true,
       "s3b1_british_malting_barley_variety": true,
       "s3b1_dimensionless_number_involving_surface_t": false,
       "s3b2_armenian_wine_region": true,
@@ -2811,13 +2811,13 @@
       "trickster_figure": true,
       "s1_amine_protecting_group": true,
       "s1_classical_construction_problem_of_antiqu": true,
-      "s1_giant_silk_moth": true,
+      "s1_giant_silk_moth": false,
       "s1_bordeaux_blending_grape_variety": true,
       "s2_peruvian_dessert": true,
       "s2_french_basque_iparralde_dish": true,
       "s2_permitted_champagne_grape_variety": true,
       "s3b1_western_atlantic_seahorse_species": true,
-      "s3b1_feijoada_accompaniment": false,
+      "s3b1_feijoada_accompaniment": true,
       "s3b1_prostate_cancer_cell_line": true,
       "s2_bromeliaceae_subfamily": true,
       "s1_lucky_number_under_100": false,
@@ -2827,20 +2827,20 @@
       "s1_african_folklore_trickster": true,
       "s1_python_web_framework": true,
       "s3b2_chi_squared_family_test_for_categorical_": true,
-      "s1_horsetail_species": false,
+      "s1_horsetail_species": true,
       "s1_pteris_species": true,
       "s1_named_rearrangement_reaction": false,
       "s1_blackletter_style": true,
       "s3b2_bitter_for_a_venetian_spritz": true,
-      "s2_free_electron_laser_facility": true,
+      "s2_free_electron_laser_facility": false,
       "s1_non_orientable_surface": true,
       "s3b2_dipturus_species": true,
       "s3b2_anatidae_genus": true,
       "s3b2_dust_carrying_regional_wind": true,
-      "s2_oolong_producing_region": false,
+      "s2_oolong_producing_region": true,
       "s1_species_of_hornbill": true,
       "s2_cosmogenic_radionuclide": true,
-      "s3b2_test_for_randomness_of_a_sequence": false,
+      "s3b2_test_for_randomness_of_a_sequence": true,
       "s1_snow_yokai": true,
       "s2_relative_of_the_gamma_function": true,
       "s1_note_value": true,
@@ -2854,14 +2854,14 @@
       "s3b1_angophora_species": true,
       "s1_oceanographic_research_vessel": true,
       "s3b1_bread_base_for_sm_rrebr_d": true,
-      "s1_famous_named_historical_chess_game": false,
+      "s1_famous_named_historical_chess_game": true,
       "s1_washed_rind_cheese": true,
       "s2_deilephila_species": true,
       "s3b2_protein_for_swahili_pilau": true,
       "s2_rousettinae_genus": true,
       "s3b1_andalusian_cold_soup": true,
       "s2_fundulopanchax_species": true,
-      "s3b2_california_downslope_wind": true,
+      "s3b2_california_downslope_wind": false,
       "s3b2_salamandra_species": true,
       "s3b1_agedashi_tofu_topping": false,
       "s3b2_teochew_lou_mei_braised_item": true,
@@ -2873,11 +2873,11 @@
       "s1_feldspar_mineral": true,
       "s3b2_two_mirror_reflecting_telescope_configur": true,
       "s2_basic_amino_acid": true,
-      "s1_isomorphism_theorem": false,
+      "s1_isomorphism_theorem": true,
       "s3b1_oden_ingredient": false,
       "s2_classic_tequila_cocktail": true,
       "s3b2_domestic_duck_breed": true,
-      "s2_beaune_premier_cru": false,
+      "s2_beaune_premier_cru": true,
       "s1_rust_standard_library_trait": true,
       "s1_compact_simple_lie_group_of_rank_2": true,
       "s2_hybrid_sorting_algorithm": true,
@@ -2888,12 +2888,12 @@
       "s1_taxicab_number": true
      },
      "digest_unserved": [],
-     "written": "2026-11-04T15:56:42+00:00",
-     "value": 0.7959183673469388,
+     "written": "2026-11-04T17:48:15+00:00",
+     "value": 0.826530612244898,
      "n": 98,
      "ci": [
-      0.7142857142857143,
-      0.8775510204081632
+      0.7551020408163265,
+      0.8979591836734694
      ],
      "n_refused": 0,
      "n_refused_ask": 0,
@@ -4251,7 +4251,7 @@
       "product_manufacturer-Q1052838-hq_city": false
      },
      "digest_unserved": [],
-     "written": "2026-11-04T15:56:42+00:00",
+     "written": "2026-11-04T17:48:15+00:00",
      "value": 0.0,
      "n": 85,
      "ci": [
@@ -4343,7 +4343,7 @@
       "mh2-marshal-regent-t2": true
      },
      "digest_unserved": [],
-     "written": "2026-11-04T15:56:42+00:00",
+     "written": "2026-11-04T17:48:15+00:00",
      "value": 1.0,
      "n": 33,
      "ci": [

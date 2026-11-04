@@ -594,10 +594,10 @@
      "aggregate": "native"
     },
     "knowledge_cutoff": {
-     "rate": 0.5454545454545454,
+     "rate": 0.5892857142857143,
      "ci95": [
-      0.41818181818181815,
-      0.6727272727272727
+      0.44642857142857145,
+      0.7142857142857143
      ],
      "metric": "pass_rate",
      "layer": 10,
@@ -606,7 +606,7 @@
      "counts": {
       "n_expected_cells": 63,
       "n_missing_cells": 0,
-      "n_unjudged_cells": 8,
+      "n_unjudged_cells": 7,
       "n_empty_cells": 0,
       "skipped_rows": 0,
       "spend_usd": 0.0
@@ -616,10 +616,10 @@
      "aggregate": "native"
     },
     "model_specific_directed_modulation": {
-     "rate": 0.37755102040816324,
+     "rate": 0.3673469387755102,
      "ci95": [
-      0.2857142857142857,
-      0.46938775510204084
+      0.2755102040816326,
+      0.45918367346938777
      ],
      "metric": "pass_rate",
      "layer": 10,
@@ -968,17 +968,17 @@
      "aggregate": "native"
     },
     "buggy_code": {
-     "rate": 0.0,
+     "rate": 0.3076923076923077,
      "ci95": [
-      0.0,
-      0.0
+      0.07692307692307693,
+      0.5384615384615384
      ],
      "metric": "pass_rate",
      "layer": 10,
      "judge_model": "claude-opus-5-5",
-     "n_items": 6,
+     "n_items": 13,
      "counts": {
-      "n_expected_cells": 12,
+      "n_expected_cells": 26,
       "n_missing_cells": 0,
       "n_unjudged_cells": 0,
       "n_empty_cells": 0,
@@ -2636,7 +2636,7 @@
       "b2_00874": false
      },
      "digest_unserved": [],
-     "written": "2026-11-04T16:21:06+00:00",
+     "written": "2026-11-04T17:45:13+00:00",
      "value": 0.0,
      "n": 63,
      "ci": [
@@ -2652,11 +2652,11 @@
      "not_measurable": false
     },
     "model_specific_directed_modulation": {
-     "rate": 0.8979591836734694,
+     "rate": 0.8877551020408163,
      "saturated": false,
      "ci95": [
-      0.8367346938775511,
-      0.9489795918367347
+      0.826530612244898,
+      0.9387755102040817
      ],
      "metric": "pass_rate",
      "higher_is_better": true,
@@ -2707,7 +2707,7 @@
       "s2_italian_dried_pasta_brand": true,
       "s1_refractory_metal": true,
       "s2_cosmogenic_radionuclide": true,
-      "s1_note_value": false,
+      "s1_note_value": true,
       "s3b2_bordeaux_vintage_of_the_2000s": false,
       "s3b1_ripemd_variant": true,
       "s3b2_skateboard_flip_trick": true,
@@ -2716,7 +2716,7 @@
       "s3b2_puli_coat_color": true,
       "s1_spanish_red_grape_variety": true,
       "s3b1_sampling_distribution_used_in_hypothesis": true,
-      "s3b2_california_downslope_wind": false,
+      "s3b2_california_downslope_wind": true,
       "s3b1_frequency_determining_resonator_technolo": true,
       "s2_named_lemniscate": true,
       "s3b1_heraldic_fur": true,
@@ -2736,7 +2736,7 @@
       "s2_theorem_about_mutually_tangent_circles": true,
       "s1_public_key_cryptosystem": true,
       "s2_georgian_spice_blend_or_seasoning": true,
-      "s1_atmospheric_circulation_cell": true,
+      "s1_atmospheric_circulation_cell": false,
       "s1_dicksonia_species": true,
       "s1_ancient_greek_sophist": true,
       "s3b1_commercial_polyimide_family_polymer": true,
@@ -2759,7 +2759,7 @@
       "s3b2_part_of_cicada_sound_producing_anatomy": true,
       "s2_italian_dop_or_igp_prosciutto_crudo": true,
       "s2_radioisotope_of_iodine": true,
-      "s3b1_range_query_data_structure": true,
+      "s3b1_range_query_data_structure": false,
       "s2_leffe_beer": false,
       "s3b1_sicilian_wine_grape_variety": true,
       "s3b2_ionotropic_glutamate_receptor_type": true,
@@ -2767,17 +2767,17 @@
       "s3b1_glioblastoma_cell_line": true,
       "s2_fullerene_molecule": true,
       "s1_type_of_mycorrhiza": false,
-      "s3b1_ramen_egg_preparation": false,
+      "s3b1_ramen_egg_preparation": true,
       "s3b1_afro_brazilian_rhythm": true,
       "s2_regional_style_of_ph": true,
       "s2_named_pythagorean_interval": true,
       "s3b1_lifetime_distribution_in_reliability_eng": true,
       "s3b2_border_collie_coat_color": true,
-      "s2_champagne_glass_shape": true,
+      "s2_champagne_glass_shape": false,
       "s2_elementary_step_of_the_cross_coupling_ca": true,
       "s1_russian_bogatyr": true,
       "s3b1_ni_oise_specialty": true,
-      "s2_refrigeration_cycle": true,
+      "s2_refrigeration_cycle": false,
       "s2_rousettus_species": true,
       "s3b1_embedded_runge_kutta_pair": true,
       "s3b2_chua_s_circuit_attractor_regime": true,
@@ -2793,12 +2793,12 @@
       "s2_pyrimidine_nucleobase": true
      },
      "digest_unserved": [],
-     "written": "2026-11-04T16:21:06+00:00",
-     "value": 0.8979591836734694,
+     "written": "2026-11-04T17:45:13+00:00",
+     "value": 0.8877551020408163,
      "n": 98,
      "ci": [
-      0.8367346938775511,
-      0.9489795918367347
+      0.826530612244898,
+      0.9387755102040817
      ],
      "n_refused": 0,
      "n_refused_ask": 0,
@@ -4049,7 +4049,7 @@
       "product_manufacturer-Q1128789-founded_year": false
      },
      "digest_unserved": [],
-     "written": "2026-11-04T16:21:06+00:00",
+     "written": "2026-11-04T17:45:13+00:00",
      "value": 0.0,
      "n": 48,
      "ci": [
@@ -4109,7 +4109,7 @@
       "mh2-mwalimu-ujamaa-t2": true
      },
      "digest_unserved": [],
-     "written": "2026-11-04T16:21:06+00:00",
+     "written": "2026-11-04T17:45:13+00:00",
      "value": 1.0,
      "n": 1,
      "ci": [
@@ -4224,10 +4224,10 @@
      ],
      "metric": "pass_rate",
      "higher_is_better": true,
-     "n_items": 6,
+     "n_items": 13,
      "n_items_decided": null,
      "counts": {
-      "n_expected_cells": 12,
+      "n_expected_cells": 26,
       "n_missing_cells": 0,
       "n_unjudged_cells": 0,
       "n_empty_cells": 0
@@ -4259,9 +4259,9 @@
      },
      "decided": {},
      "digest_unserved": [],
-     "written": "2026-11-04T16:21:06+00:00",
+     "written": "2026-11-04T17:45:13+00:00",
      "value": 1.0,
-     "n": 6,
+     "n": 13,
      "ci": [
       1.0,
       1.0

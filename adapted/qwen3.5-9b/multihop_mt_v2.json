@@ -1667,6 +1667,341 @@
      "pass": true
     }
    }
+  },
+  {
+   "name": "mh2-francis-marguerite-heptameron",
+   "subfamily": "2hop",
+   "domain": "European and Asian history",
+   "prompt": "Fact: The French king who was captured at the Battle of Pavia and became Leonardo da Vinci's final patron had a beloved elder sister, a queen and writer whose best-known work is the story collection called the",
+   "spans": {
+    "D1": "The French king who was captured at the Battle of Pavia and became Leonardo da Vinci's final patron",
+    "R1": " had a beloved elder sister,",
+    "N2": " a queen and writer",
+    "R2": " whose best-known work is the story collection called the",
+    "G1": "A sixteenth-century French king"
+   },
+   "target": "Heptameron",
+   "target_alts": [
+    "The Heptameron",
+    "L'Heptaméron"
+   ],
+   "source": "multihop_v2",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "all",
+    "lite": {
+     "kind": "final_token"
+    }
+   },
+   "intermediates": [
+    "Marguerite de Navarre"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Marguerite de Navarre",
+       "Margaret of Navarre",
+       "Marguerite d'Angoulême",
+       "Marguerite of Navarre",
+       "Marguerite"
+      ]
+     },
+     "match": [
+      "Marguerite de Navarre",
+      "Margaret of Navarre",
+      "Marguerite d'Angoulême",
+      "Marguerite of Navarre",
+      "Marguerite"
+     ],
+     "kind": "person",
+     "full_forms": [
+      "Marguerite de Navarre",
+      "Margaret of Navarre",
+      "Marguerite d'Angoulême"
+     ],
+     "forms_excluded": []
+    }
+   ],
+   "bridges": [
+    {
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "Marguerite de Navarre",
+      "Margaret of Navarre",
+      "Marguerite d'Angoulême",
+      "Marguerite of Navarre",
+      "Marguerite"
+     ],
+     "question": "Fact: Francis I of France had a beloved elder sister,"
+    }
+   ],
+   "probes": {
+    "G2_b2_from_b1": {
+     "kind": "fill",
+     "text": "Fact: Francis I of France had a beloved elder sister,",
+     "accept": [
+      "Marguerite de Navarre",
+      "Margaret of Navarre",
+      "Marguerite d'Angoulême",
+      "Marguerite of Navarre",
+      "Marguerite"
+     ]
+    },
+    "G3_hop_b2_t": {
+     "kind": "qa",
+     "text": "What story collection is Marguerite de Navarre best known for writing?",
+     "accept": [
+      "Heptameron",
+      "The Heptameron",
+      "L'Heptaméron",
+      "Heptaméron"
+     ]
+    },
+    "G4_prefix_b2": {
+     "kind": "fill",
+     "text": "Fact: The French king who was captured at the Battle of Pavia and became Leonardo da Vinci's final patron had a beloved elder sister,",
+     "accept": [
+      "Marguerite de Navarre",
+      "Margaret of Navarre",
+      "Marguerite d'Angoulême",
+      "Marguerite of Navarre",
+      "Marguerite"
+     ]
+    },
+    "S1_drop_b1": {
+     "kind": "fill",
+     "text": "Fact: A sixteenth-century French king had a beloved elder sister, a queen and writer whose best-known work is the story collection called the",
+     "accept": [
+      "Heptameron",
+      "The Heptameron",
+      "L'Heptaméron",
+      "Heptaméron"
+     ]
+    },
+    "S1_direct_b1_to_t": {
+     "kind": "fill",
+     "text": "Fact: Francis I of France was a writer whose best-known work is the story collection called the",
+     "accept": [
+      "Heptameron",
+      "The Heptameron",
+      "L'Heptaméron",
+      "Heptaméron"
+     ]
+    },
+    "G2_b1": {
+     "kind": "qa",
+     "text": "Name the French king who was captured at the Battle of Pavia and became Leonardo da Vinci's final patron.",
+     "accept": [
+      "Francis I of France",
+      "François I",
+      "Francis I",
+      "François Ier",
+      "Francois I"
+     ]
+    },
+    "S1_local_cue": {
+     "kind": "fill",
+     "text": "Fact: the writer's best-known work is the story collection called the",
+     "accept": [
+      "Heptameron",
+      "The Heptameron",
+      "L'Heptaméron",
+      "Heptaméron"
+     ]
+    }
+   },
+   "shortcut_accept": [
+    "Heptameron",
+    "The Heptameron",
+    "L'Heptaméron",
+    "Heptaméron"
+   ],
+   "why_nonobvious": "A generic story collection defaults to the Decameron or Canterbury Tales, and Francis I wrote no such work, so the Heptameron requires walking to his sister Marguerite de Navarre.",
+   "id": "mh2-francis-marguerite-heptameron",
+   "shortcut_probes": [
+    {
+     "id": "S1_drop_b1",
+     "kind": "fill",
+     "text": "Fact: A sixteenth-century French king had a beloved elder sister, a queen and writer whose best-known work is the story collection called the",
+     "hides": [
+      "dropped_bridge"
+     ],
+     "n_pass": 17,
+     "n": 20,
+     "greedy_pass": 1
+    },
+    {
+     "id": "S1_direct_b1_to_t",
+     "kind": "fill",
+     "text": "Fact: Francis I of France was a writer whose best-known work is the story collection called the",
+     "hides": [
+      "bridge1"
+     ],
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "S1_local_cue",
+     "kind": "fill",
+     "text": "Fact: the writer's best-known work is the story collection called the",
+     "hides": [
+      "dropped_bridge",
+      "bridge1"
+     ],
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "S2adv3_0",
+     "kind": "fill",
+     "text": "Fact: A queen and writer whose best-known work is the story collection called the",
+     "hides": [
+      "dropped_bridge",
+      "bridge1"
+     ],
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "S2adv3_1",
+     "kind": "fill",
+     "text": "Fact: A French king had a beloved elder sister, a queen and writer whose best-known work is the story collection called the",
+     "hides": [
+      "dropped_bridge",
+      "bridge1"
+     ],
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "S2adv3_2",
+     "kind": "fill",
+     "text": "Fact: Francis I of France is linked to a famous story collection called the",
+     "hides": [
+      "bridge1"
+     ],
+     "n_pass": 1,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "S2adv3_3",
+     "kind": "qa",
+     "text": "What is the best-known story collection written by a French queen?",
+     "hides": [
+      "dropped_bridge",
+      "bridge1"
+     ],
+     "n_pass": 1,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "Rrv1_0",
+     "kind": "fill",
+     "text": "Fact: The French king who was captured at the Battle of Pavia and became Leonardo da Vinci's final patron is linked to a famous story collection called the",
+     "hides": [
+      "bridge1"
+     ],
+     "origin": "review",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "Rrv1_1",
+     "kind": "fill",
+     "text": "Fact: A king's elder sister was a writer whose best-known work is the story collection called the",
+     "hides": [
+      "bridge1"
+     ],
+     "origin": "review",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    }
+   ],
+   "pool_source": "s1+s2",
+   "consistency": 0.85,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge1": 0.8
+   },
+   "hop_consistency": 1.0,
+   "context_b2_consistency": 0.8,
+   "shortcut_max": 0.85,
+   "gate_variant": "chat",
+   "relabeled_from": "3hop",
+   "relabel_reason": [
+    "subject gate (mh2-subject-gate-v1): S1_drop_b1=17/20g"
+   ],
+   "dropped_bridge": "Francis I of France",
+   "mc": {
+    "bridge1": {
+     "gold": "Marguerite de Navarre",
+     "distractors": [
+      "Marie de Guise",
+      "Jeanne d'Albret",
+      "Anne de Beaujeu",
+      "Catherine de Médicis"
+     ]
+    }
+   },
+   "name_forms": {
+    "bridge1": {
+     "en": [
+      "Marguerite de Navarre",
+      "Margaret of Navarre",
+      "Marguerite d'Angoulême",
+      "Marguerite of Navarre",
+      "Marguerite"
+     ],
+     "zh": [
+      "玛格丽特·德·纳瓦拉",
+      "玛格丽特・德・纳瓦拉",
+      "玛格丽特•德•纳瓦拉",
+      "玛格丽特德纳瓦拉",
+      "纳瓦拉的玛格丽特",
+      "昂古莱姆的玛格丽特"
+     ]
+    }
+   },
+   "n_render_tokens": 42,
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       6,
+       4,
+       8,
+       6,
+       3
+      ]
+     }
+    },
+    "target": 3,
+    "target_alts": [
+     4,
+     6
+    ]
+   },
+   "adapt": {
+    "origin": "refill",
+    "gate": {
+     "rate": 0.15,
+     "pass": true
+    }
+   }
   }
  ]
 }

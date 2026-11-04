@@ -342,54 +342,58 @@
    "bank_version": 1
   },
   "buggy_code": {
-   "status": "ooc",
+   "status": "partial",
    "refill": {
     "route": "run.fill",
     "unit": "pairs",
     "target": 24,
-    "have": 4,
+    "have": 19,
     "tried": 60,
     "landed": 1,
     "yield": 0.016666666666666666,
-    "waves": 2,
+    "waves": 3,
     "n_min": 60,
     "y_min": 0.03,
     "tally": {
      "t2": {
       "tried": 60,
       "landed": 1
+     },
+     "t1": {
+      "tried": 90,
+      "landed": 14
      }
     },
     "pool_size": null,
     "pool_used": null,
-    "stop": "yield 1/60 < 0.03 on >= 60 candidates at the easiest level, 4 < 24/2",
+    "stop": "low yield above half: yield 1/60 < 0.03 on >= 60 candidates at the easiest level, 19 >= 24/2",
     "budget": {
      "gpu_minutes": null,
      "claude_budget": null,
-     "claude_calls": 1101
+     "claude_calls": 1342
     },
-    "pilot": true,
+    "pilot": false,
     "tier": "t2",
     "authored_pairs": {
-     "non_crash": 0,
+     "non_crash": 14,
      "crash": 1,
-     "crash_cap": 0
+     "crash_cap": 3
     }
    },
    "target": 63,
    "n_original": 63,
    "n_original_gated": 63,
    "n_original_pass": 24,
-   "n_items": 15,
-   "n_new": 0,
-   "n_candidates_gated": 120,
-   "change": "refill via run.fill: 4/24 pairs; 1 landed of 60 tried, yield 1.67%; stop: yield 1/60 < 0.03 on >= 60 candidates at the easiest level, 4 < 24/2",
-   "note": "Refilled (plan 0066, 2026-11-04): ooc, 4/24 pairs shipped (15 items); stop: yield 1/60 < 0.03 on >= 60 candidates at the easiest level, 4 < 24/2; tally 1/60 = 0.0167 (n_min 60, y_min 0.03). Source: authored executed pairs on the buggy_code Brief (fill, t2 pilot then t1 down). Authored pairs: {'non_crash': 0, 'crash': 1, 'crash_cap': 0}. Delta audit: 0 drop(s). Out of capacity under the objective §1.2 rule: too small to read alone.",
+   "n_items": 45,
+   "n_new": 30,
+   "n_candidates_gated": 300,
+   "change": "refill via run.fill: 19/24 pairs; 1 landed of 60 tried, yield 1.67%; stop: low yield above half: yield 1/60 < 0.03 on >= 60 candidates at the easiest level, 19 >= 24/2",
+   "note": "Refilled (plan 0066, 2026-11-04): partial, 19/24 pairs shipped (45 items); stop: low yield above half: yield 1/60 < 0.03 on >= 60 candidates at the easiest level, 19 >= 24/2; tally 1/60 = 0.0167 (n_min 60, y_min 0.03). Source: authored executed pairs on the buggy_code Brief (fill, t2 pilot then t1 down). Authored pairs: {'non_crash': 14, 'crash': 1, 'crash_cap': 3}. Delta audit: 0 drop(s).",
    "bank": "evals/buggy_code/items.json",
    "bank_version": 1,
    "target_pairs": 24,
-   "n_pairs": 4,
-   "exclude_from_macro": true
+   "n_pairs": 19,
+   "exclude_from_macro": false
   },
   "agentic_misalignment": {
    "status": "partial",
@@ -512,7 +516,8 @@
     },
     "pilot": false,
     "untried_levels": []
-   }
+   },
+   "exclude_from_macro": false
   },
   "knowledge_cutoff": {
    "rederive": {
@@ -586,7 +591,8 @@
     },
     "pilot": false,
     "untried_levels": []
-   }
+   },
+   "exclude_from_macro": false
   },
   "nyt_connections": {
    "rederive": {
@@ -634,7 +640,7 @@
     "tried": 407992,
     "landed": 88,
     "yield": 0.00021569050373536737,
-    "waves": 3,
+    "waves": 4,
     "n_min": 200000,
     "y_min": 5e-05,
     "tally": {
@@ -657,7 +663,8 @@
     },
     "pilot": false,
     "untried_levels": []
-   }
+   },
+   "exclude_from_macro": false
   },
   "multihop_mt_v2": {
    "target": 70,
@@ -760,7 +767,7 @@
  },
  "code": {
   "git": "",
-  "adapt_sha256": "3eb78041a8499c12"
+  "adapt_sha256": "2149b9c85a663c0a"
  },
  "model": "qwen3-8b",
  "label": "Qwen3-8B",

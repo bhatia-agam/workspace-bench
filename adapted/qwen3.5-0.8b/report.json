@@ -202,7 +202,7 @@
    "n_original_pass": 0,
    "n_items": 0,
    "n_new": 0,
-   "n_candidates_gated": 120,
+   "n_candidates_gated": 360,
    "change": "refill via run.fill: 0/24 pairs; 0 landed of 60 tried, yield 0.00%; stop: yield 0/60 < 0.03 on >= 60 candidates at the easiest level, 0 < 24/2",
    "status": "ooc",
    "note": "Refilled (plan 0066, 2026-11-04): ooc, 0/24 pairs shipped (0 items); stop: yield 0/60 < 0.03 on >= 60 candidates at the easiest level, 0 < 24/2; tally 0/60 = 0 (n_min 60, y_min 0.03). Source: authored executed pairs on the buggy_code Brief (fill, t2 pilot then t1 down). Authored pairs: {'non_crash': 0, 'crash': 0, 'crash_cap': 0}. Delta audit: 0 drop(s). Out of capacity under the objective §1.2 rule: too small to read alone.",
@@ -217,12 +217,16 @@
     "tried": 60,
     "landed": 0,
     "yield": 0.0,
-    "waves": 2,
+    "waves": 3,
     "n_min": 60,
     "y_min": 0.03,
     "tally": {
      "t2": {
       "tried": 60,
+      "landed": 0
+     },
+     "t1": {
+      "tried": 120,
       "landed": 0
      }
     },
@@ -232,9 +236,9 @@
     "budget": {
      "gpu_minutes": null,
      "claude_budget": null,
-     "claude_calls": 1809
+     "claude_calls": 2485
     },
-    "pilot": true,
+    "pilot": false,
     "tier": "t2",
     "authored_pairs": {
      "non_crash": 0,
@@ -934,7 +938,7 @@
  },
  "code": {
   "git": "",
-  "adapt_sha256": "3eb78041a8499c12"
+  "adapt_sha256": "2149b9c85a663c0a"
  },
  "model": "qwen3.5-0.8b",
  "label": "Qwen3.5-0.8B",

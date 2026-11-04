@@ -421,3 +421,7 @@ None (`delta_drops.json`: all lists empty).
 - Floors re-measured under both protocols (po-opus-v1 summary + stock-subject-v1) for the five families; wrong_intermediate / multihop_mt_v2 have 0 items, so no floor (the #273 / #284 instrument bumps have nothing to restamp here).
 - Span check over `wsbench plan` with the subject's tokenizer: no family below its registered minimum. One pre-existing basic_readout item (`basic-au-entity-w103c0-br-ent-cap-brasilia`) resolves no read position on this tokenizer (not a template-length issue; reported, unchanged).
 - Not fixed here; reported: K2 (`src/wsbench/adapt/kcutoff.py:443-462`, the option dedupe misses whole-word containment, e.g. "8" inside "8,192" in `b2_00235`, kept: the Opus judge does not credit it); the wrong_intermediate prior tally is 207,044 here, not the plan's "258k on every subject" (still over n_min).
+
+
+### Actions after the B2 follow-up (set builder, 2026-11-04)
+- buggy_code: B2 fix (#288) + non-pilot re-run: t1 0/120 pair objects, still `ooc` with 0 items (bank unchanged). Re-frozen; notes rewritten.

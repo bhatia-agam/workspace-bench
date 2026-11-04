@@ -98,6 +98,66 @@
      "pass": true
     }
    }
+  },
+  {
+   "src": "buggy",
+   "name": "buggy-au-t1-w102c0-py-max-cheapest-vendor",
+   "id": "buggy-au-t1-w102c0-py-max-cheapest-vendor",
+   "code": "quotes = {\"acme\": 340, \"bolt\": 295, \"crane\": 410}\nbudget = 350\nbest_vendor = max(quotes, key=quotes.get)\ncost = quotes[best_vendor]\nprint(\"cheapest:\", best_vendor, cost)\nprint(\"within budget:\", cost <= budget)",
+   "verified": "exec: exit 0; stdout = 'cheapest: crane 410 | within budget: False'",
+   "cause": "max picks the highest quote, so it reports crane 410 and False instead of bolt 295 and True",
+   "category": "wrong builtin",
+   "bug_line": 3,
+   "level2_tokens": [
+    "largest",
+    "opposite"
+   ],
+   "consequence_class": "value",
+   "raises": false,
+   "n_lines": 6,
+   "language": "python",
+   "lang_group": "python",
+   "twin": "buggy-au-clean-t1-w102c0-py-max-cheapest-vendor",
+   "source": "authored (claude-opus-5-5) for olmo-3-7b: About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 102,
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "src": "clean",
+   "name": "buggy-au-clean-t1-w102c0-py-max-cheapest-vendor",
+   "id": "buggy-au-clean-t1-w102c0-py-max-cheapest-vendor",
+   "code": "bids = {\"ana\": 120, \"raj\": 175, \"lin\": 140}\nreserve = 150\ntop_bidder = max(bids, key=bids.get)\namount = bids[top_bidder]\nprint(\"winner:\", top_bidder, amount)\nprint(\"meets reserve:\", amount >= reserve)",
+   "verified": "exec: exit 0; stdout = 'winner: raj 175 | meets reserve: True'",
+   "why_correct": "the auction winner is the highest bid, so max correctly gives raj 175 and True",
+   "looks_like": "max used where min was intended",
+   "language": "python",
+   "lang_group": "python",
+   "twin": "buggy-au-t1-w102c0-py-max-cheapest-vendor",
+   "source": "authored (claude-opus-5-5) for olmo-3-7b: About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 102,
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
   }
  ]
 }
