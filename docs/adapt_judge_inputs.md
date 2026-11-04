@@ -209,7 +209,7 @@ REQUIRED_ITEM_FIELDS: `name`, `prompt`, `mc`.
 | item | `mc.distractors` | yes | exit | build | association/judge.py:87 | 7 (CHANCE = 1/8) |
 | item | `mc.aliases` | yes | silent | build | association/judge.py:80,117 |  |
 | item | `mc.distractor_aliases` | yes | silent | build | association/judge.py:120 | absent: weaker other-option checks in steps 3b / 3c (lenient) |
-| resource | `distractor count` |  | silent | build | association/prompts.py:21 |  (checked) |
+| resource | `distractor count` |  | silent | build | association/prompts.py:24 |  (checked) |
 | resource | `evals/association/lite_rule.json` |  | - | copy-verbatim | readplan.py:116-127 | family-keyed ({kind: same}) |
 | qwen | `chat_summarize render + SUMMARIZE_SUFFIX` |  | - | subject | readplan.py:23, 925-941 | positions from the subject's own render (suffix_text_then_tail) |
 | qwen | `min_full_positions=19` |  | - | subject | association/__init__.py:27 | Qwen render length; reads.check_full exits below it on a sidecar file (reads.py:308) |

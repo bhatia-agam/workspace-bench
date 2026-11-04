@@ -241,9 +241,10 @@ def test_topic_stays_a_floor_for_every_other_family():
     assert lg.bar(e, DM) == (pytest.approx(0.15), "described")
     assert not lg.is_floor(DM, "topic") and lg.is_floor(DM, "described")
     assert lg.is_floor(None, "topic")
-    # the standard on a live family with a measured topic guesser keeps its topic row
+    # the standard on a live family with a measured topic guesser keeps its topic row (poetry:
+    # association's floors wait for a re-measure on its bank v5)
     fl = lg.floors()
-    assert "topic" in {r["variant"] for r in lg.standard("association", fl["association"])}
+    assert "topic" in {r["variant"] for r in lg.standard("poetry", fl["poetry"])}
 
 
 def test_mcdm_floors_live_after_the_restamp():

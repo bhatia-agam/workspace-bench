@@ -130,6 +130,7 @@ def test_introspection_bank_unchanged_by_the_refill():
 # basic_readout_mt / multilingual* bank v3-v4, association / basic_readout / poetry round-4 MC
 # banks). A family PR that changes a bank adds its entry back here until the re-gate.
 PENDING_REGATE: dict[str, str] = {
+    "association": "bank v5 = bank v3 without winter and pentagon",
     "basic_readout": "bank v7 (2026-11-03): Big Ben's gold option reads 'England / UK'",
     "basic_readout_mt": "bank v5 (2026-11-03): the sarin item is dropped",
 }

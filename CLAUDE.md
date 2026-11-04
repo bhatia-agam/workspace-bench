@@ -294,8 +294,11 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   (`quote_names_gold`: a proper-noun form only with its capital, never hyphen-glued) -> the
   quote's own line or another evidence sentence (3b / 3c) -> a proper-noun gold held only as a
   common word fails (`gold_common_word`) -> quote-only re-judge; no raw-sample count overrules
-  the pick; row `credit`; stamp `assoc-mc-2026-11-01-v3+gate-a1`, calls keyed `CALL_VERSION`),
-  read at the 19 summarize-suffix sites like conjunctive / role-bound. Its options come from
+  the pick; row `credit`; stamp `assoc-mc-2026-11-01-v3+gate-a1+bank-v5`, calls keyed
+  `CALL_VERSION`), read at the 19 summarize-suffix sites like conjunctive / role-bound. The
+  registered bank is v5 (`items_v5.json` = bank v3 minus `winter` and `pentagon`, 91 items, v3's
+  read plan via `read_plan_bank`; an adaptation plans its own items, so
+  `adapt.store.original_bank` drops that key from the header it copies). Its options come from
   `scripts/association_distractors.py` (Opus proposer from the gold alone, lint + entailment
   check, 5-draw scene screen). Its ATI entry was
   re-gated on 2026-10-31 (R1-ATI) on the reduced panel, qwen+opus then qwen+opus+astra (R1-ATI

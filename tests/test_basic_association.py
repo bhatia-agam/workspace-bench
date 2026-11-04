@@ -118,10 +118,10 @@ def test_registered_spec(real_families):
 
     assert SPEC.group == "basic" and SPEC.metric == "pass_rate"
     assert SPEC.judge.model == DEFAULT_JUDGE
-    # the deterministic gate is stamped (gate-a1); the calls stay keyed as before
-    assert SPEC.judge.prompt_version == ASSOC_PV == "assoc-mc-2026-11-01-v3+gate-a1"
+    # the stamp adds the gate (gate-a1) and the bank (bank-v5); the calls stay keyed as before
+    assert SPEC.judge.prompt_version == ASSOC_PV == "assoc-mc-2026-11-01-v3+gate-a1+bank-v5"
     assert CALL_VERSION == "assoc-mc-2026-11-01-v3"
-    assert SPEC.calls_per_arm == "≈ 200" and str(SPEC.bank).endswith("items_v3.json")
+    assert SPEC.calls_per_arm == "≈ 200" and str(SPEC.bank).endswith("items_v5.json")
 
 
 def test_readme_carries_the_verbatim_prompt():

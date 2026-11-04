@@ -16,7 +16,10 @@ CALL_VERSION = "assoc-mc-2026-11-01-v3"  # every judge call's fingerprint (promp
 # the result stamp adds the deterministic gate: gate-a1 = the proper-noun form rule of steps 3 /
 # 4b, and no raw-sample "outnamed" guard in steps 3c / 5; cached calls stay valid
 GATE_VERSION = "gate-a1"
-PROMPT_VERSION = f"{CALL_VERSION}+{GATE_VERSION}"
+# bank v5 = bank v3 minus two items (winter, pentagon); the other items, their
+# option lists and so their calls are v3's, so cached answers stay valid
+BANK_TAG = "bank-v5"
+PROMPT_VERSION = f"{CALL_VERSION}+{GATE_VERSION}+{BANK_TAG}"
 ASSOC_SEED = "assoc-v2-20261030"  # fixes every item's option order (reproducible)
 CHANCE = 1 / 8  # a forced guess among the 8 substantive options
 

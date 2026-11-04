@@ -21,7 +21,10 @@ def item_id(item: dict) -> str:
 
 
 def original_bank(family: str) -> tuple[dict[str, Any], list[dict]]:
-    """The frozen bank, header and items, whether wrapped or a plain list."""
+    """The frozen bank, header and items, whether wrapped or a plain list. The header never
+    carries ``read_plan_bank``: that names a sibling file of the registered bank whose read plan
+    the registered bank reuses, while an adapted bank is read at its own items' plan."""
+    from wsbench.readplan import READ_PLAN_BANK
     from wsbench.registry import frozen_bank_path
 
     path = frozen_bank_path(family)
@@ -29,8 +32,10 @@ def original_bank(family: str) -> tuple[dict[str, Any], list[dict]]:
     if isinstance(raw, list):
         return {}, raw
     if raw.get("items") and "name" not in raw["items"][0]:
-        return {k: v for k, v in raw.items() if k != "items"}, raw["items"]
-    return load_wrapped(path)
+        header = {k: v for k, v in raw.items() if k not in ("items", READ_PLAN_BANK)}
+        return header, raw["items"]
+    header, items = load_wrapped(path)
+    return {k: v for k, v in header.items() if k != READ_PLAN_BANK}, items
 
 
 def _read_jsonl(path: Path) -> list[dict]:

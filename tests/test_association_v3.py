@@ -1,28 +1,30 @@
 """Round 4 (Camila r2's MC leakage standard): association bank v3 = bank v2 with re-chosen
-distractors (and their forms), the registered bank. Bank v2's own tests stay in
-``test_association_v2.py`` (pinned to v2 by ``$WSB_BANK_FILE_ASSOCIATION``)."""
+distractors (and their forms); the registered bank v5 = bank v3 without two items.
+Bank v2's own tests stay in ``test_association_v2.py`` (pinned to v2 by
+``$WSB_BANK_FILE_ASSOCIATION``)."""
 
 import json
 import re
 from pathlib import Path
 
-from wsbench import digest, mc, registry
+from wsbench import digest, mc, readplan, registry
+from wsbench.adapt import store
 from wsbench.baselines import lucky_guessing as lg
 from wsbench.evals.association import judge as aj
 
 REPO = Path(__file__).resolve().parents[1]
 V2 = REPO / "evals/association/items_v2.json"
 V3 = REPO / "evals/association/items_v3.json"
+V5 = REPO / "evals/association/items_v5.json"
 
 
 def _bank(path: Path) -> list[dict]:
     return json.loads(path.read_text(encoding="utf-8"))["items"]
 
 
-def test_v3_is_registered_and_changes_only_the_options():
+def test_v3_changes_only_the_options():
     raw = json.loads(V3.read_text(encoding="utf-8"))
     assert raw["version"] == 3 and raw["supersedes"] == "items_v2.json" and "mc_leakage" in raw
-    assert registry.bank_path("association") == V3
     v2, v3 = _bank(V2), _bank(V3)
     assert [it["name"] for it in v2] == [it["name"] for it in v3]
     for a, b in zip(v2, v3, strict=True):
@@ -32,6 +34,27 @@ def test_v3_is_registered_and_changes_only_the_options():
         for k in ("gold", "aliases", "category"):
             assert a["mc"][k] == b["mc"][k], (a["name"], k)
         assert b["mc"]["distractors_v2"] == a["mc"]["distractors"]
+
+
+def test_v5_is_registered_and_drops_only_winter_and_pentagon(monkeypatch):
+    """winter's scene ("light failing by four, radiators clanking")
+    depicts dusk, a shown option; pentagon's five-sided building makes a shape word read as the
+    gold. Bank v5 drops both and keeps every other v3 item byte for byte, with v3's read plan
+    (``read_plan_bank``): one plan_sha, no new readouts, and the judge loads only v5's ids."""
+    raw = json.loads(V5.read_text(encoding="utf-8"))
+    assert raw["version"] == 5 and raw["supersedes"] == raw["read_plan_bank"] == V3.name
+    assert set(raw["audit_drop"]["dropped"]) == {"winter", "pentagon"}
+    assert registry.bank_path("association") == V5
+    v3 = _bank(V3)
+    assert _bank(V5) == [it for it in v3 if it["name"] not in {"winter", "pentagon"}]
+    assert len(_bank(V5)) == len(v3) - 2 == 91
+    assert sorted(it["id"] for it in aj.load_items()) == sorted(it["name"] for it in _bank(V5))
+    after = [s.row() for s in readplan.plan("association")]
+    monkeypatch.setenv(registry.BANK_FILE_ENV_PREFIX + "ASSOCIATION", str(V3))
+    assert after == [s.row() for s in readplan.plan("association")]
+    # an adaptation starts from v5's 91 items and plans them itself (no dangling read_plan_bank)
+    header, adapt_items = store.original_bank("association")
+    assert readplan.READ_PLAN_BANK not in header and len(adapt_items) == 91
 
 
 def test_v3_options_clean():

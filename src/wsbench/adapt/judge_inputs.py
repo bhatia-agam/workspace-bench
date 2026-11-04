@@ -456,7 +456,7 @@ def _p_assoc_seven(it, _h, _reg):
     if it.get("mc") and n != 7:
         return (
             f"hazard: mc.distractors has {n} entries, not 7: the reported chance line "
-            "CHANCE = 1/8 (association/prompts.py:21) is wrong for this item"
+            "CHANCE = 1/8 (association/prompts.py:24) is wrong for this item"
         )
     return None
 
@@ -696,7 +696,7 @@ _add(
                 "distractor count",
                 SILENT,
                 BUILD,
-                "association/prompts.py:21",
+                "association/prompts.py:24",
                 probe=_p_assoc_seven,
             ),
             _r(

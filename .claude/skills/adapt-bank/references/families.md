@@ -52,7 +52,8 @@ re-stamped (`references/porting.md`).
   - Floor: T2. Below that the cue list *is* the definition, so it is still a latent but an easy one.
     Flag it in the note.
 - **Main knob:** cue strength.
-- **Bank now:** `items_v3` (93 items; plan 0039 + round 4): `mc` {gold, aliases, distractors[7]}
+- **Bank now:** `items_v5` (91 items: v3 minus winter / pentagon, v3's read plan; stamp
+  `+gate-a1+bank-v5`; plan 0039 + round 4): `mc` {gold, aliases, distractors[7]}
   (lint requires it, `adapt/lint.py`), leakage-screened on the bank of record
   (`scripts/association_distractors.py`, `scripts/mc_leakage_r4.py`, topic guesser; these write
   `evals/`, never run them for an adapted set); quote gate + pins. Read render `chat_summarize`

@@ -830,7 +830,8 @@ def test_freeze_builds_originals_from_the_registered_item(tmp_path, monkeypatch)
         assert got[it["id"]]["adapt"]["origin"] == "original"
     rep = _json.loads((d / "report.json").read_text())
     e = rep["families"]["association"]
-    assert e["bank_version"] == 3 and e["bank"] == "evals/association/items_v3.json"
+    assert e["bank_version"] == 5 and e["bank"] == "evals/association/items_v5.json"
+    assert "read_plan_bank" not in bank  # the set plans its own items
     wb = rep["families"]["wrong_intermediate"]
     assert wb["status"] == "absent" and wb["note"] == "Phase B: later"  # never overwritten
     assert "exclude_from_macro" not in wb and "absent_auto" not in wb  # a hand note: not forced
@@ -851,8 +852,10 @@ def test_freeze_drops_the_read_plan_bank_pointer(tmp_path, monkeypatch):
     from wsbench.readplan import READ_PLAN_BANK
 
     d = _set(tmp_path, monkeypatch)
+    raw = _json.loads(registry.frozen_bank_path("multihop").read_text(encoding="utf-8"))
+    assert raw.get(READ_PLAN_BANK)  # the registered bank v4 reads bank v3's plan
     header, items = original_bank("multihop")
-    assert header.get(READ_PLAN_BANK)  # the registered bank v4 reads bank v3's plan
+    assert READ_PLAN_BANK not in header  # the loader drops it too
     _gate_log(d, "multihop", [_row(it) for it in items[:3]])
     run.freeze("qwen3.5-4b", ["multihop"])
     bank = _json.loads((d / "multihop.json").read_text())
