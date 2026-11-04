@@ -1,11 +1,10 @@
 """Offline evidence for plan 0045 (introspection), no model and no API call.
 
 ``paired`` (default): the source repo's committed per-cell verdicts (s3d.rl600 O-lens and J-lens,
-every unit, all 11 layers x the full grid; ``grid_verdicts.json``) and its raw grid readouts
-(``grid/shard*.json``) run through THIS repo's v2 scoring code: ``judge.units`` on bank v2,
-``judge._row`` (accept sets A(c)), ``judge.pair`` (the gaussian twin's judge leg + the regex leg
-``judge.twin_regex`` over the twin's own cells) and ``judge.summarize``. The source verdicts have
-no quotes, so the "same as" group check (``quote_options`` inside A(c)) cannot be applied
+every unit, all 11 layers x the full grid; ``grid_verdicts.json``) run through THIS repo's v2
+scoring code: ``judge.units`` on bank v2, ``judge._row`` (accept sets A(c)), ``judge.pair`` (the
+gaussian twin's judge verdict) and ``judge.summarize``. The source verdicts have no
+quotes, so the "same as" group check (``quote_options`` inside A(c)) cannot be applied
 offline (every quote is taken as naming only the pick); the v2 menu ("also" / "same as") and
 rubric only act in the LLM phase. ``--v1`` scores with A(c) = {c} (today's rule).
 
@@ -21,11 +20,9 @@ lite rule becomes ``final_token``.
 """
 
 import argparse
-import glob
 import json
 import re
 import sys
-from collections import defaultdict
 from collections.abc import Mapping, Sequence
 from pathlib import Path
 from typing import Any
@@ -35,14 +32,12 @@ sys.path.insert(0, str(REPO / "src"))
 
 from wsbench import mc  # noqa: E402
 from wsbench.evals.introspection import judge  # noqa: E402
-from wsbench.readouts import Cell  # noqa: E402
 
 SRC = Path("/workspace/gw-introspection-inject")
 VERDICTS = (
     SRC / "evals/workspace-bench/hillclimbing_evals/multi_token/introspection_inject/readouts"
     "/grid_verdicts.json"
 )
-SHARDS = SRC / "outputs/introspection_inject/grid"
 MARGIN = 0.10
 _WHERE = re.compile(r"\[L(-?\d+) pos (-?\d+)")
 
@@ -58,26 +53,6 @@ def _bank(v1: bool) -> dict[str, Any]:
             {**c, "surface_forms": [c["word"]], "extra_forms": []} for c in bank["concepts"]
         ]
     return bank
-
-
-def _readout_cells(reader: str, ids: set[str], grids: Mapping[str, Sequence[int]]) -> dict:
-    out: dict[str, list[Cell]] = defaultdict(list)
-    for f in sorted(glob.glob(str(SHARDS / "shard*.json"))):
-        for r in json.loads(Path(f).read_text(encoding="utf-8"))["records"]:
-            if r["id"] not in ids:
-                continue
-            grid = set(grids[r["id"]])
-            for layer, cols in r[reader].items():
-                for p, v in zip(r["positions"], cols, strict=True):
-                    if p not in grid:
-                        continue
-                    if reader == "olens":
-                        smp = tuple(v if isinstance(v, list) else [v])
-                        out[r["id"]].append(Cell(r["id"], int(layer), int(p), smp, None, None))
-                    else:
-                        toks = tuple(t if isinstance(t, str) else str(t[0]) for t in v)
-                        out[r["id"]].append(Cell(r["id"], int(layer), int(p), None, toks, None))
-    return out
 
 
 def paired(reader: str, *, v1: bool = False, beta: float = 4.0, kind: str = "protocol") -> dict:
@@ -105,9 +80,7 @@ def paired(reader: str, *, v1: bool = False, beta: float = 4.0, kind: str = "pro
                 v = g["picks"][pi][li]
                 cells[(layer, pos)] = None if v < 0 else (e["options"][v], "")
         rows.append(judge._row(u, cells))
-    grids = {u["readout_of"]: bank["renders"][u["render"]]["grid"] for u in us}
-    rc = _readout_cells(reader, {u["readout_of"] for u in us}, grids)
-    judge.pair(rows, bank, rc)
+    judge.pair(rows)
     s = judge.summarize(rows, list(range(20, 61, 4)))
     key = f"{kind}|b{beta:g}"
     sub = s["subheadlines"][key]
@@ -118,8 +91,6 @@ def paired(reader: str, *, v1: bool = False, beta: float = 4.0, kind: str = "pro
         "subheadline": key,
         "n": len(inj),
         "unpaired": sub["unpaired"],
-        "paired_judge_only": sub["paired_judge_only"],
-        "paired_regex_only": sub["paired_regex_only"],
         "paired": sub["rate"],
         "paired_all_twins": sub["paired_all_twins"],
         "beta0_prior_rate": sub["beta0_prior_rate"],
@@ -130,7 +101,6 @@ def paired(reader: str, *, v1: bool = False, beta: float = 4.0, kind: str = "pro
             {
                 "id": r["id"],
                 "gaussian_judge": r["twin_hits"]["gaussian"]["judge"],
-                "gaussian_regex_quote": r["twin_hits"]["gaussian"]["regex_quote"],
             }
             for r in inj
             if r["pass_unpaired"] and r["pass"] is False
@@ -146,7 +116,6 @@ def cmd_paired(a: argparse.Namespace) -> dict:
     for t in out["tables"]:
         print(
             f"{t['reader']:6s} {t['rule']:16s} n={t['n']} unpaired={t['unpaired']:.3f} "
-            f"judge-only={t['paired_judge_only']:.3f} regex-only={t['paired_regex_only']:.3f} "
             f"PAIRED={t['paired']:.3f} all-twins={t['paired_all_twins']:.3f} "
             f"beta0-prior={t['beta0_prior_rate']:.3f} floors={t['floors']} "
             f"voided={len(t['voided'])}"

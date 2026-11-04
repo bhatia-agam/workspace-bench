@@ -347,7 +347,7 @@ def test_f12_clean_chains_still_state():
 )
 def test_f12_names_and_acronyms_do_not_void(concept, sample):
     assert (
-        ij.PROMPT_VERSION == "ii-grid-2026-11-v2+twinrx-v4+rxhead-v1"
+        ij.PROMPT_VERSION == "ii-grid-2026-11-v4+twinrx-v4+jhead-v2"
         and ij.CALL_VERSION in ij.PROMPT_VERSION
     )
     bank = ij.load()

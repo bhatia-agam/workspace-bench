@@ -1,10 +1,7 @@
-"""Introspection. HEADLINE (round 4, ``rxhead-v1``): a deterministic regex over the raw
-readouts names the injected concept (the target or a Q12 equivalent, word boundary, inflection
-tolerant, names / acronyms skipped), paired: an inject hit is voided when its own gaussian
-(random-vector) twin's readout also names it. The LLM judge (a blind forced-choice judge per grid
-cell natively, or per unit on its readout's digest in summary mode, with the none rule and
-per-unit quote verification) is a diagnostic column (``judge_*``). Same-grid control floors
-(beta0, cross, gaussian) by the same regex. Rules are explained in the family README."""
+"""Introspection (``jhead-v2``): a blind forced-choice judge per grid cell
+(native) or per unit on its readout's digest (summary), the quote check, the Q12 accept sets,
+the PAIRED headline (a hit is voided when the judge also names the target on the gaussian twin)
+and the same-grid floors. The round-4 regex is a diagnostic column (``rx_*`` / ``regex_*``)."""
 
 import json
 import re
@@ -47,10 +44,9 @@ TWIN_KINDS = ("gaussian", "cross", "beta0")
 VOIDING_TWIN = "gaussian"  # decision Q12: only the matched random-vector control voids a hit
 MAX_TOKENS = 8000  # the source judge's budget
 CHANCE_LABEL = (
-    "no analytic floor: the headline is the regex (the target or a Q12 equivalent named in any "
-    "loaded raw readout), paired (voided when the item's gaussian twin readout also names it); "
-    "the floor of record is extras.floor_of_record (max of the beta0, cross and gaussian regex "
-    "floors)"
+    "no analytic floor: 1/6 per cell saturates over 264 cells; the floor of record is "
+    "extras.floor_of_record (max of the beta0, cross and gaussian any-of-grid floors); the "
+    "headline is paired (an inject hit whose gaussian twin also names the target is voided)"
 )
 
 
@@ -102,19 +98,18 @@ def concept_forms(bank: Mapping[str, Any], word: str) -> list[str]:
 
 
 def regex_forms(bank: Mapping[str, Any], concept: str) -> list[str]:
-    """The regex twin leg's forms: every word of A(c), with its forms (decision Q12: "regex over
-    the target + equivalents")."""
+    """The regex diagnostic's forms of concept ``c``: every word of A(c), with its forms
+    (decision Q12: "regex over the target + equivalents")."""
     return list(dict.fromkeys(f for w in accept_of(bank, concept) for f in concept_forms(bank, w)))
 
 
-# F12 (audit 2026-10-31): the prose regex leg applies the judge rubric's name rule ("a label
-# inside a proper name, title, brand, product, acronym, code, ID or citation does not name the
-# concept"), so a twin is held to the same naming standard as the inject hit it voids. A form
-# occurrence is skipped when it is an acronym of a lower-case form ("GLUE test" for glue) or a
-# capitalised word beside another capitalised word of a multi-word name or title ("Judea
-# Pearl", "String of Pearls", "Doggy Bag"). Any other occurrence still voids: an incidental
-# mention ("a trumpet, faintly") is the target in the control's readout. The judge leg is
-# unchanged. Stamped on the result as REGEX_LEG_VERSION (no judge call re-asked).
+# The prose regex diagnostic applies a name rule ("a label inside a proper name, title, brand,
+# product, acronym, code, ID or citation does not name the concept"). A form occurrence is
+# skipped when it is an acronym of a lower-case form ("GLUE test" for glue) or a capitalised
+# word beside another capitalised word of a multi-word name or title ("Judea Pearl", "String of
+# Pearls", "Doggy Bag"). Any other occurrence counts: an incidental mention ("a trumpet,
+# faintly") is a regex hit. Stamped on the result as REGEX_LEG_VERSION (no judge call
+# re-asked). The matcher feeds the regex diagnostic column only; no twin is voided by it.
 _NAME_LINKS = frozenset({"of", "the", "de", "la", "le", "von", "van", "and", "&"})
 _WORD = re.compile(r"[^\W\d_][\w'-]*")  # on _fold_keep_case text: curly quotes are plain
 _BREAK_END = re.compile(r"[.!?:;]\W*$")
@@ -282,9 +277,8 @@ def regex_hits(
 
 
 def twin_regex(forms: Sequence[str], cells: Iterable[Cell]) -> str | None:
-    """The regex leg (deterministic, no LLM): the first loaded sample or token of ``cells`` that
-    names one of ``forms`` (:func:`regex_hits`), else None. The headline's own leg and the
-    gaussian twin's void use this one matcher."""
+    """The regex diagnostic's twin check (deterministic, no LLM): the first loaded sample or
+    token of ``cells`` that names one of ``forms`` (:func:`regex_hits`), else None."""
     hits = regex_hits(forms, cells, first=True)
     return hits[0][2] if hits else None
 
@@ -583,25 +577,6 @@ def run(args: JudgeArgs) -> FamilyResult:
     for c in cells:
         if not c.empty:
             readout_cells[c.id].append(c)
-    judge_opt = args.extra.get("judge", "on")
-    if judge_opt not in ("on", "off"):
-        fail(f"{NAME}: opts=judge must be on or off, not {judge_opt!r}")
-    if judge_opt == "off":
-        return _run_regex_only(
-            args,
-            bank=bank,
-            scope_name=scope_name,
-            scope=scope,
-            us=us,
-            cells=cells,
-            rep=rep,
-            layers=layers,
-            n_expected=n_expected,
-            n_missing=len(missing),
-            n_empty=len(empty),
-            present=present,
-            readout_cells=readout_cells,
-        )
     if digest.summary_mode(args):
         return _run_summary(
             args,
@@ -663,8 +638,8 @@ def run(args: JudgeArgs) -> FamilyResult:
         resolved.setdefault(k[0], {})[(k[1], k[2])] = (NONE_OPTION, "")  # names nothing
 
     rows = [_row(u, resolved.get(u["id"], {})) for u in us if u["readout_of"] in present]
-    pair(rows, bank, readout_cells)
-    regex_score(rows, bank, readout_cells)
+    pair(rows)
+    regex_diagnostic(rows, bank, readout_cells)
     head = [r for r in rows if not r.get("excluded_from_rate")]
     rest = [r for r in rows if r.get("excluded_from_rate")]
     extras = summarize(rows, layers)
@@ -680,7 +655,7 @@ def run(args: JudgeArgs) -> FamilyResult:
         rep=rep,
         n_expected=n_expected,
         n_missing=len(missing),
-        n_unjudged=_undecided(head),
+        n_unjudged=audit["unavailable"],
         n_empty=len(empty),
         spend=spend,
         chance_label=CHANCE_LABEL,
@@ -691,7 +666,6 @@ def run(args: JudgeArgs) -> FamilyResult:
             "n_rows_excluded_from_rate": len(rest),
             "informed_text_bound": INFORMED_TEXT_BOUND,
             "audit": audit,
-            "judge_n_unjudged": audit["unavailable"],
             **extras,
         },
     )
@@ -699,73 +673,6 @@ def run(args: JudgeArgs) -> FamilyResult:
     if scope_name != "all":
         result.complete = False
         result.extras["incomplete_reason"] = f"scope={scope_name}"  # runner.refusals_only
-    result.extras["n_items_without_readouts"] = sum(
-        1 for it in scope if it.get("readout_of", it["id"]) not in present
-    )
-    return result
-
-
-def _undecided(rows: Sequence[dict[str, Any]]) -> int:
-    """Headline rows the regex scorer leaves undecided (no gaussian twin row): the headline's
-    unjudged count. The judge's own unavailable calls are reported in ``extras.audit`` only."""
-    return sum(1 for r in rows if r.get("role") == "headline" and r.get("pass") is None)
-
-
-def _run_regex_only(
-    args: JudgeArgs,
-    *,
-    bank: dict[str, Any],
-    scope_name: str,
-    scope: list[dict[str, Any]],
-    us: list[dict[str, Any]],
-    cells: list[Cell],
-    rep: Any,
-    layers: list[int],
-    n_expected: int,
-    n_missing: int,
-    n_empty: int,
-    present: set[str],
-    readout_cells: Mapping[str, list[Cell]],
-) -> FamilyResult:
-    """``opts=judge=off``: the headline regex scorer alone (no digest, no judge call); every
-    judge column is None."""
-    rows = [_row(u, {}) for u in us if u["readout_of"] in present]
-    pair(rows, bank, readout_cells)
-    regex_score(rows, bank, readout_cells)
-    head = [r for r in rows if not r.get("excluded_from_rate")]
-    rest = [r for r in rows if r.get("excluded_from_rate")]
-    result = pass_rate_result(
-        name=NAME,
-        args=args,
-        prompt_version=PROMPT_VERSION,
-        rows=head,
-        cells=cells,
-        rep=rep,
-        n_expected=n_expected,
-        n_missing=n_missing,
-        n_unjudged=_undecided(head),
-        n_empty=n_empty,
-        spend=Spend(),
-        chance_label=CHANCE_LABEL,
-        # the regex headline reads the raw cells under either aggregate: the run's mode stands
-        config_extra={
-            "aggregate": "summary" if digest.summary_mode(args) else "native",
-            "layers_judged": layers,
-            "scope": scope_name,
-            "judge": "off",
-        },
-        extras={
-            "n_calls": 0,
-            "n_units": len(us),
-            "n_rows_excluded_from_rate": len(rest),
-            "informed_text_bound": INFORMED_TEXT_BOUND,
-            **summarize(rows, layers),
-        },
-    )
-    result.rows = head + rest
-    if scope_name != "all":
-        result.complete = False
-        result.extras["incomplete_reason"] = f"scope={scope_name}"
     result.extras["n_items_without_readouts"] = sum(
         1 for it in scope if it.get("readout_of", it["id"]) not in present
     )
@@ -825,7 +732,7 @@ def _run_summary(
     on their partner's); ONE ``digest.collapse`` call with a per-readout task note; one judge
     call per unit, controls and twins included, so the floors and the pairs stay matched. A
     unit whose digest failed is undecided; an empty digest names nothing (a judged none). The
-    regex twin leg reads the loaded raw cells, never the digest."""
+    regex diagnostic reads the loaded raw cells, never the digest."""
     by_readout: dict[str, list[Cell]] = defaultdict(list)
     for c in cells:  # loaded on the grid (or the lite site) already
         by_readout[c.id].append(c)
@@ -900,12 +807,13 @@ def _run_summary(
         row.pop("earliest_layer", None)
         row.update(col.row(u["readout_of"]))
         rows.append(row)
-    pair(rows, bank, readout_cells)
-    regex_score(rows, bank, readout_cells)
+    pair(rows)
+    regex_diagnostic(rows, bank, readout_cells)
     head = [r for r in rows if not r.get("excluded_from_rate")]
     rest = [r for r in rows if r.get("excluded_from_rate")]
     n_unsummarized = sum(1 for u in us if u["readout_of"] in col.unsummarized)
     extras = summarize(rows, layers)
+    extras.pop("headline_per_layer_any_position")  # the judge's hits sit on L-1: omitted
     result = pass_rate_result(
         name=NAME,
         args=args,
@@ -915,7 +823,7 @@ def _run_summary(
         rep=rep,
         n_expected=n_expected,
         n_missing=n_missing,
-        n_unjudged=_undecided(head),
+        n_unjudged=audit["unavailable"] + n_unsummarized,
         n_empty=len(empty_units),
         spend=spend,
         chance_label=CHANCE_LABEL,
@@ -930,7 +838,6 @@ def _run_summary(
             "n_rows_excluded_from_rate": len(rest),
             "informed_text_bound": INFORMED_TEXT_BOUND,
             "audit": audit,
-            "judge_n_unjudged": audit["unavailable"] + n_unsummarized,
             "summary": {**col.extras(), "n_units_unsummarized": n_unsummarized},
             "digest_served_by": col.extras().get("digest_served_by", {}),
             **digest.completeness_flags(col),
@@ -1022,20 +929,18 @@ def _same(u: Mapping[str, Any], lab: str) -> list[str]:
     return list(u["menu"].get(lab, ((), ()))[1])
 
 
-def pair(
-    rows: list[dict[str, Any]], bank: Mapping[str, Any], readout_cells: Mapping[str, Sequence[Cell]]
-) -> None:
-    """The paired rule (decision Q12) on every inject row, in place. A twin HIT fires if its
-    judge leg (the twin unit's own judged pick credits A(c)) or its regex leg (``twin_regex``
-    over the twin readout's loaded cells, forms of A(c)) fires. ``pass = pass_unpaired and not
-    gaussian hit``; a missing gaussian twin makes ``pass`` None (undecided, never scored
-    unpaired). cross and beta0 hits feed ``paired_all_twins`` and ``beta0_prior`` only."""
+def pair(rows: list[dict[str, Any]]) -> None:
+    """The paired rule (decision Q12; the twin is judged by the judge only), on every
+    inject row, in place. A twin HIT = the twin unit's own judged pick credits A(c) (the same
+    judge and rubric on the same read window as the hit; beta0: its ``chance_hits`` for c).
+    ``pass = pass_unpaired and not gaussian hit``; a missing or undecided gaussian twin makes
+    ``pass`` None (undecided, never scored unpaired). cross and beta0 hits feed
+    ``paired_all_twins`` and ``beta0_prior`` only."""
     by_id = {r["id"]: r for r in rows}
     for r in rows:
         if r["kind"] != "inject":
             continue
         c = r["concept"]
-        forms = regex_forms(bank, c)
         hits: dict[str, dict[str, Any] | None] = {}
         for kind in TWIN_KINDS:
             tid = (r.get("twins") or {}).get(kind)
@@ -1043,89 +948,58 @@ def pair(
             if t is None:
                 hits[kind] = None
                 continue
-            judge_hit = (
-                (t.get("chance_hits") or {}).get(c) if kind == "beta0" else t.get("pass_unpaired")
-            )
-            quote = twin_regex(forms, readout_cells.get(t["readout_of"], ()))
-            hits[kind] = {
-                "judge": bool(judge_hit),
-                "judge_decided": judge_hit is not None,
-                "regex": quote is not None,
-                "regex_quote": quote,
-            }
+            if kind == "beta0":
+                hit, quote = (t.get("chance_hits") or {}).get(c), None
+            else:
+                hit, quote = t.get("pass_unpaired"), _first_hit_quote(t)
+            hits[kind] = {"judge": bool(hit), "judge_decided": hit is not None, "quote": quote}
         r["twin_hits"] = hits
         base = r["pass_unpaired"]
         g = hits[VOIDING_TWIN]
-        if base is None or g is None or (not g["judge_decided"] and not g["regex"]):
-            r["pass"] = None
-        else:
-            r["pass"] = bool(base) and not (g["judge"] or g["regex"])
-        r["twin_missing"] = g is None or (not g["judge_decided"] and not g["regex"])
-        r["paired_judge_only"] = (
-            None if r["twin_missing"] or base is None else bool(base) and not g["judge"]
-        )
-        r["paired_regex_only"] = (
-            None if g is None or base is None else bool(base) and not g["regex"]
-        )
-        all_known = all(h is not None and (h["judge_decided"] or h["regex"]) for h in hits.values())
+        r["twin_missing"] = g is None or not g["judge_decided"]
+        r["pass"] = None if base is None or r["twin_missing"] else bool(base) and not g["judge"]
+        all_known = all(h is not None and h["judge_decided"] for h in hits.values())
         r["paired_all_twins"] = (
             None
             if base is None or not all_known
-            else bool(base) and not any(h["judge"] or h["regex"] for h in hits.values() if h)
+            else bool(base) and not any(h["judge"] for h in hits.values() if h)
         )
         b0 = hits["beta0"]
-        r["beta0_prior"] = None if b0 is None else bool(b0["judge"] or b0["regex"])
+        r["beta0_prior"] = None if b0 is None or not b0["judge_decided"] else b0["judge"]
 
 
-def regex_score(
+def _first_hit_quote(row: Mapping[str, Any]) -> str | None:
+    """The verified quote of a twin row's first credited cell (its void's evidence), else None."""
+    hc = row.get("hit_cells") or []
+    return row["quotes"].get(f"L{hc[0][0]}|p{hc[0][1]}") if hc else None
+
+
+def regex_diagnostic(
     rows: list[dict[str, Any]], bank: Mapping[str, Any], readout_cells: Mapping[str, Sequence[Cell]]
 ) -> None:
-    """The HEADLINE scorer (round 4, ``rxhead-v1``; Camila r2: "just the concept being mentioned
-    in any way"), in place, after :func:`pair`. The judge's verdicts move to ``judge_pass`` /
-    ``judge_pass_unpaired`` (diagnostic, paired as before); then:
-
-    - inject / gaussian / cross rows: ``pass_unpaired`` = some loaded raw cell of the row's
-      readout names a form of A(target) (:func:`regex_forms`: the target + its Q12 equivalents,
-      surface, "also" and Chinese forms; :func:`regex_hits`: word boundary, inflection tolerant,
-      names / acronyms skipped); ``rx_cells`` / ``rx_quote`` record where;
-    - an inject row's ``pass`` = ``pass_unpaired`` and NOT its gaussian twin's regex hit (the
-      paired random-vector control); no gaussian twin row -> None (undecided);
-    - a control row's ``pass`` = its ``pass_unpaired`` (the floor's chance hit);
-    - beta0 units: ``chance_hits`` per cluster concept, by the same regex."""
+    """The regex DIAGNOSTIC column (the round-4 ``rxhead-v1`` headline), in place;
+    it never sets ``pass``. On inject / gaussian / cross rows: ``rx_pass_unpaired`` = some loaded
+    raw cell of the row's readout names a form of A(target) (:func:`regex_forms`,
+    :func:`regex_hits`), with ``rx_cells`` / ``rx_quote`` recording where; on inject rows also
+    ``rx_twin_quote`` (the gaussian twin readout's first regex hit) and ``rx_pass`` =
+    ``rx_pass_unpaired`` and no twin hit (None without a gaussian twin row)."""
+    by_id = {r["id"]: r for r in rows}
     for r in rows:
-        r["judge_pass"] = r.get("pass")
-        r["judge_pass_unpaired"] = r.get("pass_unpaired")
-        cells = readout_cells.get(r["readout_of"], ())
         if r["kind"] == "beta0":
-            r["judge_chance_hits"] = r.get("chance_hits")
-            r["chance_hits"] = {
-                lab: bool(regex_hits(regex_forms(bank, lab), cells, first=True))
-                for lab in r["options"]
-                if lab not in NON_PICKS
-            }
             continue
-        hits = regex_hits(regex_forms(bank, r["target"]), cells)
+        forms = regex_forms(bank, r["target"])
+        hits = regex_hits(forms, readout_cells.get(r["readout_of"], ()))
         r["rx_cells"] = [[layer, pos] for layer, pos, _q in hits]
         r["rx_quote"] = hits[0][2] if hits else None
-        r["pass_unpaired"] = bool(hits)
+        r["rx_pass_unpaired"] = bool(hits)
         if r["kind"] != "inject":
-            r["pass"] = r["pass_unpaired"]
             continue
-        th = r.get("twin_hits") or {}
-        g = th.get(VOIDING_TWIN)
-        r["pass"] = None if g is None else bool(hits) and not g["regex"]
-        r["twin_missing"] = g is None
-        r["earliest_layer"] = min((h[0] for h in hits), default=None)
-        # the judge's per-leg diagnostics keep their judge meaning under a judge_ prefix
-        r["judge_paired_judge_only"] = r.pop("paired_judge_only", None)
-        r.pop("paired_regex_only", None)
-        r["paired_all_twins"] = (
-            None
-            if any(th.get(k) is None for k in TWIN_KINDS)
-            else bool(hits) and not any(th[k]["regex"] for k in TWIN_KINDS)
-        )
-        b0 = th.get("beta0")
-        r["beta0_prior"] = None if b0 is None else bool(b0["regex"])
+        t = by_id.get((r.get("twins") or {}).get(VOIDING_TWIN, ""))
+        if t is None:
+            r["rx_twin_quote"] = r["rx_pass"] = None
+            continue
+        r["rx_twin_quote"] = twin_regex(forms, readout_cells.get(t["readout_of"], ()))
+        r["rx_pass"] = bool(hits) and r["rx_twin_quote"] is None
 
 
 def _rate(xs: Iterable[bool | None]) -> float | None:
@@ -1160,9 +1034,9 @@ def summarize(rows: list[dict[str, Any]], layers: list[int]) -> dict[str, Any]:
                 "rate": rate(decided),
                 "n": len(decided),
                 "unpaired": _rate(r["pass_unpaired"] for r in inj),
-                # the LLM judge, a diagnostic column (round 4): its paired and unpaired rates
-                "judge_paired": _rate(r.get("judge_pass") for r in inj),
-                "judge_unpaired": _rate(r.get("judge_pass_unpaired") for r in inj),
+                # the round-4 regex headline, a diagnostic column
+                "regex_paired": _rate(r.get("rx_pass") for r in inj),
+                "regex_unpaired": _rate(r.get("rx_pass_unpaired") for r in inj),
                 "paired_all_twins": _rate(r.get("paired_all_twins") for r in inj),
                 "beta0_prior_rate": _rate(r.get("beta0_prior") for r in inj),
                 "n_twin_missing": sum(1 for r in inj if r.get("twin_missing")),
@@ -1184,6 +1058,7 @@ def summarize(rows: list[dict[str, Any]], layers: list[int]) -> dict[str, Any]:
             for kind in ("cross", "gaussian"):
                 fa[f"{key}|{kind}"] = _rate(r["false_alarm"] for r in sel(kind))
     head = [r for r in rows if r["role"] == "headline" and r["pass"] is not None]
+    rx_head = [r for r in rows if r["role"] == "headline" and r.get("rx_pass") is not None]
     hk = f"{HEADLINE[0]}|b{HEADLINE[1]:g}"
     hs = sub[hk]
     return {
@@ -1192,27 +1067,26 @@ def summarize(rows: list[dict[str, Any]], layers: list[int]) -> dict[str, Any]:
         "floor_of_record": floors[hk]["floor_of_record"],
         "margin_over_floor": floors[hk]["margin"],
         "headline_unpaired": hs["unpaired"],
-        "judge_paired": hs["judge_paired"],
-        "judge_unpaired": hs["judge_unpaired"],
+        "regex_paired": hs["regex_paired"],
+        "regex_unpaired": hs["regex_unpaired"],
         "paired_all_twins": hs["paired_all_twins"],
         "beta0_prior_rate": hs["beta0_prior_rate"],
         "n_twin_missing": hs["n_twin_missing"],
         "voided": [
             {
                 "id": r["id"],
-                "rx_quote": r.get("rx_quote"),
-                "by": {
-                    k: {"regex_quote": h["regex_quote"]}
-                    for k, h in (r.get("twin_hits") or {}).items()
-                    if k == VOIDING_TWIN and h and h["regex"]
-                },
+                "twin": r["twins"][VOIDING_TWIN],
+                "twin_quote": r["twin_hits"][VOIDING_TWIN]["quote"],
             }
             for r in rows
             if r["role"] == "headline" and r["pass_unpaired"] and r["pass"] is False
         ],
         "false_alarm_any_of_grid": fa,
         "headline_per_layer_any_position": {
-            str(L): rate(any(c[0] == L for c in r.get("rx_cells", ())) for r in head)
+            str(L): rate(any(c[0] == L for c in r["hit_cells"]) for r in head) for L in layers
+        },
+        "regex_per_layer_any_position": {
+            str(L): rate(any(c[0] == L for c in r.get("rx_cells", ())) for r in rx_head)
             for L in layers
         },
     }

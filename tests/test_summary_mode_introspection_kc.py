@@ -80,8 +80,8 @@ def _ii_judge(quote_from_statement: bool = False):
             for form in (lab, ij._singular(lab)):  # quote the form actually written
                 if any(re.search(rf"(?<![a-z]){form}(?![a-z])", ln.lower()) for ln in lines):
                     quote = "STATEMENT-0" if quote_from_statement else form
-                    return {"choice": k + 1, "quote": quote, "anomaly_noted": False}
-        return {"choice": none, "quote": "", "anomaly_noted": False, "anomaly_quote": ""}
+                    return {"choice": k + 1, "quote": quote}
+        return {"choice": none, "quote": ""}
 
     return answer
 
@@ -102,18 +102,19 @@ def test_introspection_one_call_per_unit_on_a_shared_digest(tmp_path, monkeypatc
     assert fake.n("introspection_verdict") == 3 + n_clusters  # HEAD, CROSS, GAUSS + beta0 units
     assert all(s == II_SYSTEM_SUMMARY for n, s, _u in fake.calls if n == "introspection_verdict")
     rows = {x["id"]: x for x in r.rows}
-    # round 4 (rxhead-v1, sanctioned): the judge's verdicts are the judge_* diagnostic columns;
-    # earliest_layer and the per-layer column are the regex headline's (raw cells, real layers)
-    assert rows[HEAD]["judge_pass"] is True and rows[HEAD]["hit_cells"] == [[-1, 140]]
+    # the judge is the headline; the regex is the rx_* diagnostic
+    assert rows[HEAD]["pass"] is True and rows[HEAD]["hit_cells"] == [[-1, 140]]
+    assert "earliest_layer" not in rows[HEAD]
     assert rows[HEAD]["summary"] == rows[CROSS]["summary"]  # one summary, two units
-    assert rows[CROSS]["judge_pass"] is False and rows[GAUSS]["judge_pass"] is False
+    assert rows[CROSS]["pass"] is False and rows[GAUSS]["pass"] is False
     b0 = rows[f"{B0}|music"]  # a control unit is judged on its digest exactly like the others
-    assert b0["judge_chance_hits"]["drums"] is True and b0["summary_state"] == "summarized"
+    assert b0["chance_hits"]["drums"] is True and b0["summary_state"] == "summarized"
     assert r.extras["floors"]["protocol|b4"]["beta0"] is not None
+    assert "headline_per_layer_any_position" not in r.extras
+    assert "regex_per_layer_any_position" in r.extras  # raw cells, real layers
     assert r.config["aggregate"] == "summary" and r.config["source_kind"] == "prose"
-    # II_PV carries the regex-leg version (twinrx-v4) and the regex headline's (rxhead-v1); the
-    # calls keep CALL_VERSION
-    assert II_PV.endswith("+" + II_RX + "+rxhead-v1")
+    # II_PV carries the regex matcher's version (twinrx-v4) and the headline's (jhead-v2)
+    assert II_PV.endswith("+" + II_RX + "+jhead-v2")
     want = digest.prompt_version(II_PV, _ii_args(tmp_path))
     assert r.config["prompt_version"] == want
     assert r.config["prompt_version"].startswith(f"{II_PV}+digest-v5-task-extractive")
@@ -132,7 +133,7 @@ def test_introspection_quote_only_in_a_statement_fails(tmp_path, monkeypatch):
     FakeLLM.install(monkeypatch, _ii_judge(quote_from_statement=True), digest=_all_lines)
     r = ij.run(_ii_args(tmp_path))
     rows = {x["id"]: x for x in r.rows}
-    assert rows[HEAD]["judge_pass"] is False and rows[HEAD]["summary_statements"]
+    assert rows[HEAD]["pass"] is False and rows[HEAD]["summary_statements"]
     assert r.extras["audit"]["forced_none"] > 0 and r.extras["audit"]["concept_picks"] == 0
 
 
@@ -141,10 +142,8 @@ def test_introspection_failed_digest_is_undecided(tmp_path, monkeypatch):
     r = ij.run(_ii_args(tmp_path))
     assert fake.n("introspection_verdict") == 0
     rows = {x["id"]: x for x in r.rows}
-    assert rows[HEAD]["judge_pass"] is None and rows[HEAD]["summary_state"] == "unsummarized"
-    assert r.extras["judge_n_unjudged"] == len(r.rows) and r.extras["judge_paired"] is None
-    # the regex headline reads the raw cells: a failed digest leaves it decided
-    assert rows[HEAD]["pass"] is not None and r.counts["n_unjudged_cells"] == 0
+    assert rows[HEAD]["pass"] is None and rows[HEAD]["summary_state"] == "unsummarized"
+    assert r.counts["n_unjudged_cells"] == len(r.rows) and r.value is None
 
 
 def test_introspection_token_source_quotes_one_token(tmp_path, monkeypatch):
@@ -160,21 +159,22 @@ def test_introspection_token_source_quotes_one_token(tmp_path, monkeypatch):
         opts = _options(user)
         quote = "trumpets brass" if "trumpets | brass" in user else "trumpets"
         if "trumpets" in opts:
-            return {"choice": opts.index("trumpets") + 1, "quote": quote, "anomaly_noted": False}
-        return {"choice": opts.index(ij.NONE_OPTION) + 1, "quote": "", "anomaly_noted": False}
+            return {"choice": opts.index("trumpets") + 1, "quote": quote}
+        return {"choice": opts.index(ij.NONE_OPTION) + 1, "quote": ""}
 
     fake = FakeLLM.install(monkeypatch, answer, digest=_all_lines)
     r = ij.run(summary_args(path, tmp_path / "o", II_PV, items=[HEAD, GAUSS], allow_missing=True))
     assert not any(n == "summarize" for n, _s, _u in fake.calls)  # no per-cell token summarizer
     by = {x["id"]: x for x in r.rows}
-    assert by[HEAD]["judge_pass_unpaired"] is False  # "trumpets brass" spans two tokens
-    assert by[GAUSS]["judge_pass"] is True
+    assert by[HEAD]["pass"] is False  # "trumpets brass" spans two tokens of one line
+    assert by[GAUSS]["pass"] is True
     assert r.config["source_kind"] == "tokens"
 
 
 def test_introspection_paired_rule_in_summary_mode(tmp_path, monkeypatch):
-    """Plan 0045: the gaussian twin's regex leg reads the loaded raw cells, not the digest: a
-    twin whose digest never shows the target still voids the item when a raw sample names it."""
+    """Only the twin's own judge verdict (on its digest) voids: a twin whose digest
+    never shows the target leaves the hit standing even when a raw sample names it; the regex
+    diagnostic reads the raw cells and keeps its own pairing."""
     rows = [
         {"id": HEAD, "layer": 56, "pos": 140, "samples": ["a fanfare of trumpets"]},
         {"id": GAUSS, "layer": 56, "pos": 140, "samples": ["nothing at all"]},
@@ -191,11 +191,15 @@ def test_introspection_paired_rule_in_summary_mode(tmp_path, monkeypatch):
     )
     r = ij.run(summary_args(path, tmp_path / "o", II_PV, items=[HEAD], allow_missing=True))
     by = {x["id"]: x for x in r.rows}
-    assert by[GAUSS]["judge_pass"] is False  # the twin's judge leg does not fire on its digest
-    g = by[HEAD]["twin_hits"]["gaussian"]
-    assert g["judge"] is False and g["regex"] is True and g["regex_quote"] == "a trumpet, faintly"
-    assert by[HEAD]["pass_unpaired"] is True and by[HEAD]["pass"] is False
-    assert r.value == 0.0 and r.extras["headline_unpaired"] == 1.0
+    assert by[GAUSS]["pass"] is False  # the twin's judge does not fire on its digest
+    assert by[HEAD]["twin_hits"]["gaussian"] == {
+        "judge": False,
+        "judge_decided": True,
+        "quote": None,
+    }
+    assert by[HEAD]["pass_unpaired"] is True and by[HEAD]["pass"] is True
+    assert r.value == 1.0 and r.extras["headline_unpaired"] == 1.0
+    assert by[HEAD]["rx_twin_quote"] == "a trumpet, faintly" and by[HEAD]["rx_pass"] is False
 
 
 def test_introspection_native_prompt_is_unchanged():

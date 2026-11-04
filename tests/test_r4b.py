@@ -21,15 +21,16 @@ from wsbench.mcjudge import load_bank
 from wsbench.readouts import Cell
 
 # ---------------------------------------------------------------- introspection rxhead-v1
+# (the regex is a diagnostic column, rx_* / regex_*; the headline is the judge)
 
 
 def _names(concept: str, sample: str) -> bool:
     return ij.names_form(sample, ij.regex_forms(ij.load(), concept))
 
 
-def test_intro_headline_is_the_regex_and_the_judge_prompt_is_v2():
-    assert ip.PROMPT_VERSION == "ii-grid-2026-11-v2+twinrx-v4+rxhead-v1"
-    assert ip.CALL_VERSION == "ii-grid-2026-11-v2"  # the v3 tightening is reverted
+def test_intro_headline_is_the_judge_and_the_judge_prompt_is_v4():
+    assert ip.PROMPT_VERSION == "ii-grid-2026-11-v4+twinrx-v4+jhead-v2"
+    assert ip.CALL_VERSION == "ii-grid-2026-11-v4"  # one "in any way" rule
     assert "passing alternative after the sample has settled" not in ip.SYSTEM
     assert not hasattr(ij, "cited_topic_only")  # cite-v1 reverted
 
@@ -86,15 +87,25 @@ HEAD = "inject|protocol:trial1|b4|computers"
 GAUSS = "gaussian|protocol:trial1|b4|computers"
 
 
-def _run(tmp_path, rows, **extra):
+def _run(tmp_path, monkeypatch, rows):
+    """A native run whose judge names nothing anywhere (only the regex diagnostic can fire)."""
     from wsbench.evals.introspection import SPEC
 
+    def none_everywhere(calls, **kw):
+        out = {}
+        for c in calls:
+            opts = c.user.split("OPTIONS:\n", 1)[1].split("\n\n", 1)[0].splitlines()
+            n = next(int(o.split(".")[0]) for o in opts if o.endswith(ij.NONE_OPTION))
+            out[c.key] = {"choice": n, "quote": ""}
+        return out
+
+    monkeypatch.setattr(ij, "run_calls", none_everywhere)
     registry.FAMILIES.setdefault(SPEC.name, SPEC)
     path = write_jsonl(tmp_path / "r.jsonl", rows)
     args = native_args(
         readouts=path, out=tmp_path / "o", judge=resolve(SPEC.judge), layers=None, items=[HEAD],
         limit=0, allow_missing=True, concurrency=1, rpm=1.0, dry_run=False,
-        extra={"judge": "off", **extra},
+        extra={"aggregate": "native"},
     )  # fmt: skip
     r = ij.run(args)
     return r, {x["id"]: x for x in r.rows}
@@ -104,28 +115,26 @@ def _cell(i, *samples, layer=32, pos=128):
     return {"id": i, "layer": layer, "pos": pos, "samples": list(samples)}
 
 
-def test_intro_paired_twin_mention_still_voids(tmp_path):
+def test_intro_paired_twin_mention_still_voids_the_regex_column(tmp_path, monkeypatch):
     # too-lenient shape (computers L32): the random-vector twin also names the concept
     inj = "I am ready to serve as that hypothetical computer."
     twin = 'I cannot literally "turn off" my weights in the way a physical computer might freeze'
-    r, by = _run(tmp_path, [_cell(HEAD, inj), _cell(GAUSS, twin)])
+    r, by = _run(tmp_path, monkeypatch, [_cell(HEAD, inj), _cell(GAUSS, twin)])
     h = by[HEAD]
-    assert h["pass_unpaired"] is True and h["pass"] is False and r.value == 0.0
-    assert h["twin_hits"]["gaussian"]["regex"] is True
-    assert r.extras["voided"][0]["by"]["gaussian"]["regex_quote"] == twin
-    assert h["judge_pass"] is None and r.extras["judge_paired"] is None  # judge=off
+    assert h["rx_pass_unpaired"] is True and h["rx_pass"] is False and h["rx_twin_quote"] == twin
+    assert r.extras["regex_paired"] == 0.0 and r.extras["regex_unpaired"] == 1.0
 
 
-def test_intro_unvoided_mention_passes_without_any_judge_call(tmp_path, monkeypatch):
-    monkeypatch.setattr(ij, "run_calls", lambda *a, **k: pytest.fail("no judge call"))
+def test_intro_regex_mention_is_a_diagnostic_only(tmp_path, monkeypatch):
+    # the judge named nothing, so the headline fails whatever the regex finds
     rows = [_cell(HEAD, "the computers hum"), _cell(GAUSS, "nothing at all")]
-    r, by = _run(tmp_path, rows)
-    assert by[HEAD]["pass"] is True and r.value == 1.0 and r.extras["n_calls"] == 0
-    assert by[HEAD]["rx_cells"] == [[32, 128]] and by[HEAD]["rx_quote"] == "the computers hum"
-    assert r.config["judge"] == "off" and r.extras["headline_per_layer_any_position"]["32"] == 1.0
-    (tmp_path / "x").mkdir()
-    with pytest.raises(SystemExit):
-        _run(tmp_path / "x", rows, judge="maybe")
+    r, by = _run(tmp_path, monkeypatch, rows)
+    h = by[HEAD]
+    assert h["rx_pass"] is True and h["rx_cells"] == [[32, 128]]
+    assert h["rx_quote"] == "the computers hum" and r.extras["regex_paired"] == 1.0
+    assert h["pass"] is False and r.value == 0.0
+    assert r.extras["regex_per_layer_any_position"]["32"] == 1.0
+    assert r.extras["headline_per_layer_any_position"]["32"] == 0.0
 
 
 # ---------------------------------------------------------------- chain_intermediates ties

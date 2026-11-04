@@ -187,16 +187,16 @@ def test_scripted_run_on_the_toy_file(tmp_path, monkeypatch):
         for c in calls:
             unit, layer, pos = c.meta["unit"], c.meta["layer"], c.meta["pos"]
             if unit == HEAD and (layer, pos) == (56, 140):
-                out[c.key] = {"choice": 4, "quote": "trumpets", "anomaly_noted": False}
+                out[c.key] = {"choice": 4, "quote": "trumpets"}
             elif unit == HEAD:
                 out[c.key] = None  # unavailable: no pick (source rule), not undecided
             elif unit == CROSS and (layer, pos) == (56, 140):
                 # names a concept that is not in the samples: forced to none
-                out[c.key] = {"choice": 5, "quote": "memories", "anomaly_noted": False}
+                out[c.key] = {"choice": 5, "quote": "memories"}
             elif unit.startswith(B0) and unit.endswith("|music") and pos == 140:
-                out[c.key] = {"choice": 1, "quote": "drum", "anomaly_noted": False}
+                out[c.key] = {"choice": 1, "quote": "drum"}
             else:
-                out[c.key] = {"choice": _none(c.user), "quote": "", "anomaly_noted": False}
+                out[c.key] = {"choice": _none(c.user), "quote": ""}
         return out
 
     monkeypatch.setattr(judge, "run_calls", fake_run_calls)
@@ -205,18 +205,21 @@ def test_scripted_run_on_the_toy_file(tmp_path, monkeypatch):
     # only units with readouts get rows; the cross unit rides on HEAD's readout
     assert set(rows) >= {HEAD, CROSS, GAUSS, f"{B0}|music"}
     assert all(not row["id"].startswith("inject|neutral") for row in r.rows)
-    # round 4 (rxhead-v1, sanctioned): the judge's verdicts are the judge_* diagnostic columns
-    assert rows[HEAD]["judge_pass"] is True and rows[HEAD]["hit_cells"] == [[56, 140]]
+    # the judge is the headline (round 4 had the regex)
+    assert rows[HEAD]["pass"] is True and rows[HEAD]["hit_cells"] == [[56, 140]]
     assert rows[HEAD]["role"] == "headline" and "excluded_from_rate" not in rows[HEAD]
     assert rows[HEAD]["n_cells_unavailable"] == 1
-    assert rows[CROSS]["judge_pass"] is False and rows[CROSS]["excluded_from_rate"] is True
+    assert rows[CROSS]["pass"] is False and rows[CROSS]["excluded_from_rate"] is True
     assert rows[GAUSS]["excluded_from_rate"] is True and rows[GAUSS]["target"] == "trumpets"
     b0 = rows[f"{B0}|music"]
-    assert b0["pass"] is None and b0["judge_chance_hits"]["drums"] is True
+    assert b0["pass"] is None and b0["chance_hits"]["drums"] is True
     assert b0["excluded_from_rate"] is True and b0["role"] == "control"
-    assert r.n_items == 1 and r.extras["judge_paired"] == 1.0
-    assert r.extras["judge_n_unjudged"] == 1 and r.counts["n_missing_cells"] > 0
+    assert r.value == 1.0 and r.n_items == 1
+    assert r.counts["n_unjudged_cells"] == 1 and r.counts["n_missing_cells"] > 0
     assert r.complete is False
+    fl = r.extras["floors"]["protocol|b4"]
+    assert fl["beta0"] == pytest.approx(1 / 125) and fl["cross"] == 0.0
+    assert r.extras["floor_of_record"]["arm"] == "beta0"
     assert r.extras["audit"]["forced_none"] == 1 and r.extras["audit"]["concept_picks"] == 2
 
 
@@ -230,7 +233,7 @@ def test_scope_headline_and_bad_scope(tmp_path, monkeypatch):
     # plan 0045 §2.1 Scope: scope=headline also judges the headline's twins (gaussian, cross,
     # beta0 trial1), so the paired headline is decided; only HEAD enters the rate
     head = [row["id"] for row in r.rows if not row.get("excluded_from_rate")]
-    assert head == [HEAD] and r.extras["judge_paired"] == 0.0
+    assert head == [HEAD] and r.value == 0.0
     assert {GAUSS, f"{B0}|music"} <= {row["id"] for row in r.rows}
     assert r.config["scope"] == "headline" and r.complete is False
     with pytest.raises(SystemExit) as e:
@@ -263,8 +266,7 @@ def test_registered_readme_and_dry_run(tmp_path, capsys, monkeypatch):
     ]
     assert main(argv) == 0
     r = read_results(out)
-    # round 4: a dry run makes no judge call, but the regex headline needs none
-    assert r.extras["judge_paired"] is None and r.counts["n_missing_cells"] > 0
+    assert r.value is None and r.counts["n_missing_cells"] > 0
     assert "OPTIONS:" in capsys.readouterr().out
     json.dumps(r.extras)
 
@@ -274,8 +276,8 @@ def test_a_unit_with_no_judged_cell_is_undecided(tmp_path, monkeypatch):
     monkeypatch.setattr(judge, "run_calls", lambda calls, **kw: {c.key: None for c in calls})
     r = judge.run(_args(tmp_path))
     rows = {row["id"]: row for row in r.rows}
-    assert rows[HEAD]["judge_pass"] is None
-    assert r.extras["judge_paired"] is None
+    assert rows[HEAD]["pass"] is None
+    assert r.value is None
 
 
 # ---------------------------------------------------------------- plan 0045 (bank v2)
@@ -315,10 +317,10 @@ def _scripted(monkeypatch, policy):
         for c in calls:
             got = policy(c.meta["unit"], c.meta["layer"], c.meta["pos"], c.user)
             if got is None:
-                out[c.key] = {"choice": _none(c.user), "quote": "", "anomaly_noted": False}
+                out[c.key] = {"choice": _none(c.user), "quote": ""}
             else:
                 lab, quote = got
-                out[c.key] = {"choice": _opt(c.user, lab), "quote": quote, "anomaly_noted": False}
+                out[c.key] = {"choice": _opt(c.user, lab), "quote": quote}
         return out
 
     monkeypatch.setattr(judge, "run_calls", fake)
@@ -351,39 +353,42 @@ def test_paired_gaussian_judge_hit_voids_inject_hit(tmp_path, monkeypatch):
     rows = [_cell_rows(HEAD, 56, 140, "a fanfare of trumpets"), _cell_rows(GAUSS, 56, 140, "x")]
     pol = _quote_policy({"trumpets": "trumpets"})
 
-    def judge_both(unit, layer, pos, user):  # the twin is judged as naming trumpets, no regex hit
+    def judge_both(unit, layer, pos, user):  # the twin is judged as naming trumpets
         return ("trumpets", "x") if unit == GAUSS else pol(unit, layer, pos, user)
 
     rows_ = [*rows, _cell_rows(GAUSS, 56, 139, "x")]
     r, by = _run_rows(tmp_path, monkeypatch, rows_, judge_both, [HEAD])
     # the twin's quote "x" is a verified span, so its judged pick stands
     h = by[HEAD]
-    assert h["judge_pass_unpaired"] is True and h["judge_pass"] is False
-    assert h["twin_hits"]["gaussian"] == {
-        "judge": True,
-        "judge_decided": True,
-        "regex": False,
-        "regex_quote": None,
-    }
-    assert r.extras["judge_paired"] == 0.0 and r.extras["judge_unpaired"] == 1.0
-    assert h["judge_paired_judge_only"] is False
-    # round 4 (rxhead-v1): the headline is the regex, voided by the twin's REGEX leg only; this
-    # twin's text names nothing, so the inject mention stands
-    assert h["pass_unpaired"] is True and h["pass"] is True and r.value == 1.0
-    assert r.extras["voided"] == []
+    assert h["pass_unpaired"] is True and h["pass"] is False
+    assert h["twin_hits"]["gaussian"] == {"judge": True, "judge_decided": True, "quote": "x"}
+    assert r.value == 0.0 and r.extras["headline_unpaired"] == 1.0
+    assert r.extras["voided"] == [{"id": HEAD, "twin": GAUSS, "twin_quote": "x"}]
+    # the regex diagnostic: the twin's text names nothing, so its column passes
+    assert h["rx_pass"] is True and h["rx_twin_quote"] is None and r.extras["regex_paired"] == 1.0
 
 
 @pytest.mark.parametrize(
-    ("twin_text", "voids"), [("a brass trumpet", True), ("a trumpeter", False)]
+    ("twin_text", "rx_hit"),
+    [
+        ("a brass trumpet", True),
+        # the computers L32 shape: an incidental twin mention
+        ("the way a physical trumpet might freeze", True),
+        ("a trumpeter", False),
+    ],
 )
-def test_paired_gaussian_regex_hit_voids_inject_hit(tmp_path, monkeypatch, twin_text, voids):
+def test_twin_regex_mention_does_not_void_the_judge_hit(tmp_path, monkeypatch, twin_text, rx_hit):
+    """Only the twin's own judge verdict voids. A twin readout the
+    judge does not credit to the target leaves the hit standing, whatever the regex matches."""
     rows = [_cell_rows(HEAD, 56, 140, "trumpets"), _cell_rows(GAUSS, 56, 140, twin_text)]
     pol = _quote_policy({"trumpets": "trumpets"})  # the twin text never names "trumpets"
-    _r, by = _run_rows(tmp_path, monkeypatch, rows, pol, [HEAD])
-    g = by[HEAD]["twin_hits"]["gaussian"]
-    assert g["judge"] is False and g["regex"] is voids
-    assert by[HEAD]["pass"] is (not voids) and by[HEAD]["pass_unpaired"] is True
-    assert g["regex_quote"] == (twin_text if voids else None)
+    r, by = _run_rows(tmp_path, monkeypatch, rows, pol, [HEAD])
+    h = by[HEAD]
+    assert h["twin_hits"]["gaussian"] == {"judge": False, "judge_decided": True, "quote": None}
+    assert h["pass"] is True and h["pass_unpaired"] is True and r.value == 1.0
+    # the regex diagnostic keeps its own pairing
+    assert h["rx_twin_quote"] == (twin_text if rx_hit else None)
+    assert h["rx_pass"] is (not rx_hit)
 
 
 def test_regex_leg_includes_equivalents_and_extra_forms():
@@ -410,7 +415,7 @@ def test_beta0_and_cross_twins_do_not_void_headline(tmp_path, monkeypatch):
     pol = _quote_policy({"trumpets": "trumpets"})
     r, by = _run_rows(tmp_path, monkeypatch, rows, pol, [HEAD])
     h = by[HEAD]
-    assert h["twin_hits"]["beta0"]["judge"] is True and h["twin_hits"]["beta0"]["regex"] is True
+    assert h["twin_hits"]["beta0"] == {"judge": True, "judge_decided": True, "quote": None}
     assert h["pass"] is True  # only the gaussian twin voids
     assert h["beta0_prior"] is True and r.extras["beta0_prior_rate"] == 1.0
     # the cross twin reads inject|...|sadness, absent here: paired_all_twins is undecided
@@ -441,7 +446,9 @@ def test_regex_forms_irregular_and_zh():
                     assert not (mc._CJK.search(fb) and fa in fb), (a, fa, b, fb)
 
 
-def test_regex_leg_reads_selected_cells_only(tmp_path, monkeypatch):
+def test_twin_is_judged_on_the_same_cells_as_the_hit(tmp_path, monkeypatch):
+    """The twin's judge reads the cells the run reads for the hit (same layers=, same
+    reads= site); its regex diagnostic reads the same cells."""
     rows = [
         _cell_rows(HEAD, 44, 140, "trumpets"),
         _cell_rows(GAUSS, 44, 140, "nothing"),
@@ -452,21 +459,26 @@ def test_regex_leg_reads_selected_cells_only(tmp_path, monkeypatch):
     _r, by = _run_rows(
         tmp_path, monkeypatch, rows, pol, [HEAD], layers=[44], extra={"reads": "lite"}
     )
-    assert by[HEAD]["twin_hits"]["gaussian"]["regex"] is False and by[HEAD]["pass"] is True
+    assert by[GAUSS]["n_cells_judged"] == 1 and by[GAUSS]["pass_unpaired"] is False
+    assert by[HEAD]["twin_hits"]["gaussian"]["judge"] is False and by[HEAD]["pass"] is True
+    assert by[HEAD]["rx_twin_quote"] is None
     full_rows = [*rows, _cell_rows(HEAD, 48, 140, "x")]
     (tmp_path / "f").mkdir()
     _r2, by2 = _run_rows(tmp_path / "f", monkeypatch, full_rows, pol, [HEAD], layers=[44, 48])
-    assert by2[HEAD]["twin_hits"]["gaussian"]["regex"] is True and by2[HEAD]["pass"] is False
+    assert by2[GAUSS]["hit_cells"] == [[44, 139], [48, 140]]
+    assert by2[HEAD]["twin_hits"]["gaussian"]["judge"] is True and by2[HEAD]["pass"] is False
+    assert by2[HEAD]["rx_twin_quote"] == "trumpets" and by2[HEAD]["rx_pass"] is False
 
 
-def test_regex_leg_uses_loaded_samples_only(tmp_path, monkeypatch):
+def test_regex_diagnostic_uses_loaded_samples_only(tmp_path, monkeypatch):
     rows = [
         _cell_rows(HEAD, 56, 140, "trumpets"),
         _cell_rows(GAUSS, 56, 140, "- first generation", "- a second generation: trumpets"),
     ]
     pol = _quote_policy({"trumpets": "trumpets"})
     _r, by = _run_rows(tmp_path, monkeypatch, rows, pol, [HEAD], extra={"sampling": "prose1"})
-    assert by[HEAD]["twin_hits"]["gaussian"]["regex"] is False and by[HEAD]["pass"] is True
+    assert by[HEAD]["rx_twin_quote"] is None and by[HEAD]["rx_pass"] is True
+    assert by[HEAD]["pass"] is True
 
 
 def test_missing_twin_is_undecided(tmp_path, monkeypatch):
@@ -534,10 +546,10 @@ def test_accept_set_applies_to_floors_and_twins(tmp_path, monkeypatch):
     hits = judge._row(b0, {(44, 140): ("youths", "youths")})["chance_hits"]
     assert hits["teenagers"] and hits["children"] and hits["youths"] and not hits["elders"]
     rows = [_cell_rows(TEEN, 56, 140, "teenagers"), _cell_rows(_gauss(TEEN), 56, 140, "a youth")]
-    _r, by = _run_rows(
-        tmp_path, monkeypatch, rows, _quote_policy({"teenagers": "teenagers"}), [TEEN]
-    )
-    assert by[TEEN]["twin_hits"]["gaussian"]["regex"] is True and by[TEEN]["pass"] is False
+    pol = _quote_policy({"teenagers": "teenagers", "youth": "youths"})
+    _r, by = _run_rows(tmp_path, monkeypatch, rows, pol, [TEEN])
+    # the twin's judge picks youths (a Q12 equivalent of teenagers): it voids the hit
+    assert by[TEEN]["twin_hits"]["gaussian"]["judge"] is True and by[TEEN]["pass"] is False
 
 
 def test_bank_v2_equivalents_are_cluster_mates():
@@ -605,10 +617,10 @@ def test_equivalence_group_on_one_line_is_singled_out(tmp_path, monkeypatch):
         return None
 
     _r, by = _run_rows(tmp_path, monkeypatch, rows, policy, [TREES, LEAVES])
-    assert by[TREES]["judge_pass_unpaired"] is True
-    assert by[LEAVES]["judge_pass_unpaired"] is False
-    # the regex headline: each is mentioned on the line (no gaussian twin here: undecided)
-    assert by[TREES]["pass_unpaired"] is True and by[LEAVES]["pass_unpaired"] is True
+    assert by[TREES]["pass_unpaired"] is True
+    assert by[LEAVES]["pass_unpaired"] is False
+    # the regex diagnostic: each is mentioned on the line
+    assert by[TREES]["rx_pass_unpaired"] is True and by[LEAVES]["rx_pass_unpaired"] is True
     # the scorer would not credit a leaves pick on that line either: roots ∉ A(leaves)
     u = judge.units(judge.load(), [_item(judge.load(), LEAVES)])[0]
     assert not judge.credited("leaves", "leaves | roots", u["accept"], u["option_forms"])
@@ -626,8 +638,8 @@ def test_lone_option_in_same_category_list_is_singled_out(tmp_path, monkeypatch)
         return None
 
     _r, by = _run_rows(tmp_path, monkeypatch, rows, policy, [HEAD])
-    assert by[HEAD]["judge_pass"] is False
-    assert by[HEAD]["pass"] is True  # the regex headline: "trumpet" is mentioned
+    assert by[HEAD]["pass"] is False
+    assert by[HEAD]["rx_pass"] is True  # the regex diagnostic: "trumpet" is mentioned
     bank = judge.load()
     u = judge.units(bank, [_item(bank, HEAD)])[0]
     # with only trumpets among the options on the line, the lone option is credited
@@ -635,24 +647,44 @@ def test_lone_option_in_same_category_list_is_singled_out(tmp_path, monkeypatch)
     assert judge.quote_options("cello | trumpet | flute", u["option_forms"]) == {"trumpets"}
 
 
-def test_rubric_excludes_names_codes_and_related_words():
-    for clause in (
-        "A label inside a proper name, title, brand, product, acronym, code, ID or citation does "
-        "not\nname the concept unless the sample is about the thing itself.",
-        '"Zepplin v. OpenAI" (a case\nname), "Icy Veins" (a title), "SKIN-KL-24" (a code), '
-        '"PRISM" (an acronym) and the *Dune*\nnovels do not name dirigibles / veins / skin / '
-        'prisms / dunes; "Mount Vesuvius erupting" names\nvolcanoes.',
-        '"deception" is not lies, "anxiety" is not fear, "blood vessels" is not blood, and\n'
-        '"Monolithic" (a style) is not monoliths. A word buried inside another word '
-        '("Kotcontraption")\ndoes not count.',
-        'hypernyms of an option that\n  are neither options nor its listed "also" words',
-        'An option\'s listed "also"\n  words name that option.',
+def test_rubric_is_one_any_way_naming_rule():
+    """One naming criterion, "the concept or a close equivalent, in
+    any way"; the v2 exclusions (names / codes / related words / buried words, the exact-word
+    tie-break) and the unscored anomaly fields are gone."""
+    flat = " ".join(SYSTEM.split())
+    assert (
+        "An option is named if a sample names that concept or a close equivalent, in any way."
+        in flat
+    )
+    for gone in (
+        "proper name",
+        "Kotcontraption",
+        "hypernyms",
+        "related meaning",
+        "outranks",
+        "anomaly",
+        "presented as",
     ):
-        assert " ".join(clause.split()) in " ".join(SYSTEM.split()), clause
+        assert gone not in SYSTEM, gone
     assert "lens" not in SYSTEM.lower()
     assert SYSTEM.startswith(
         f"You are judging {mc.READOUT_PHRASE} in an interpretability benchmark."
     )
+    assert set(judge.SCHEMA["schema"]["properties"]) == {"choice", "quote"}
+
+
+def test_any_way_pick_is_credited_and_is_the_headline(tmp_path, monkeypatch):
+    """The bags all shape (raw L48 pos 130): a Title-Case answer the v2 rubric
+    excluded as a name. The judge's pick stands once its quote verifies; it is the headline."""
+    said = 'The concept appears to be **"Shopping Bag."**'
+    rows = [_cell_rows(BAGS, 48, 130, said), _cell_rows(_gauss(BAGS), 48, 130, "nothing")]
+
+    def policy(unit, layer, pos, user):
+        return ("bags", "Shopping Bag") if unit == BAGS else None
+
+    r, by = _run_rows(tmp_path, monkeypatch, rows, policy, [BAGS])
+    assert by[BAGS]["pass"] is True and by[BAGS]["hit_cells"] == [[48, 130]]
+    assert r.value == 1.0 and r.extras["headline_unpaired"] == 1.0
 
 
 def test_summary_system_replace_still_fires():
@@ -665,11 +697,10 @@ def test_summary_system_replace_still_fires():
 def test_tie_rule_counts_only_singling_samples():
     flat = " ".join(SYSTEM.split())
     assert (
-        "Count only samples that single out an option (for token lists, by the token-line rule "
-        "in the user turn); if several options are singled out by different samples, choose "
-        "the one singled out most often / most prominently." in flat
+        "If different samples name different options, choose the one named most often / most "
+        "prominently. In a token list, an option counts only where the token-line rule in the "
+        "user turn singles it out." in flat
     )
-    assert "If several options are named, choose the one named most often" not in SYSTEM
 
 
 def test_cannot_tell_is_no_hit_and_not_a_false_alarm(tmp_path, monkeypatch):
