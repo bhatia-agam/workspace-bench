@@ -3,45 +3,150 @@
   "model_specific_directed_modulation": {
    "rederive": {
     "version": "msdm-self-2026-11-03",
-    "elicited": 130,
-    "g0": 72,
-    "compliant": 113,
-    "pass": 61
+    "elicited": 330,
+    "g0": 177,
+    "compliant": 293,
+    "pass": 145,
+    "valid": 145
    },
    "target": 98,
    "n_original": 98,
    "n_original_gated": 98,
-   "n_original_pass": 49,
-   "n_items": 61,
-   "n_new": 12,
-   "n_candidates_gated": 32,
+   "n_original_pass": 48,
+   "n_items": 98,
+   "n_new": 50,
+   "n_candidates_gated": 232,
    "bank": "evals/model_specific_directed_modulation/items.json",
    "bank_version": 1,
-   "change": "original items only",
-   "status": "partial",
-   "note": "Re-derived on DeepSeek-V4-Pro (adapt msdm, plan 0060 Phase E): 130 categories elicited, 72 G0-stable, 113 compliant, 61 with >= 2 options ship; no refill route."
+   "change": "refill via msdm.refill_wave: 98/98 categories; 145 landed of 330 tried, yield 43.94%; pool 200/7782 used; stop: 98 >= target 98",
+   "status": "full",
+   "note": "Refilled (plan 0066, 2026-11-04): full, 98/98 categories shipped (98 items); stop: 98 >= target 98; tally 145/330 = 0.439 (n_min 200, y_min 0.03). Source: the GW category pool msdm_pool.jsonl (130 bank + retired categories counted as prior); unchanged G0 / compliance / option rules + membership and label-QA validity legs on every item (decision 8). Delta audit: 0 drop(s).",
+   "refill_note": {
+    "type_mix": {
+     "food_drink": 39,
+     "taxonomy": 23,
+     "technical_variants": 22,
+     "untyped": 13
+    },
+    "registered_type_mix": {
+     "food_drink": 36,
+     "taxonomy": 21,
+     "technical_variants": 31,
+     "untyped": 10
+    },
+    "domain_cap": 2,
+    "question_changed": [
+     "s2_genus_of_typical_owl_strigidae"
+    ]
+   },
+   "refill": {
+    "route": "msdm.refill_wave",
+    "unit": "categories",
+    "target": 98,
+    "have": 98,
+    "tried": 330,
+    "landed": 145,
+    "yield": 0.4393939393939394,
+    "waves": 1,
+    "n_min": 200,
+    "y_min": 0.03,
+    "tally": {
+     "ext pool": {
+      "tried": 330,
+      "landed": 145,
+      "prior": {
+       "tried": 330,
+       "landed": 145
+      }
+     }
+    },
+    "pool_size": 7782,
+    "pool_used": 200,
+    "stop": "98 >= target 98",
+    "budget": {
+     "claude_budget": null,
+     "gpu_minutes": null,
+     "claude_calls": 0
+    },
+    "pilot": false,
+    "untried_levels": []
+   },
+   "exclude_from_macro": false
   },
   "knowledge_cutoff": {
    "rederive": {
     "version": "kc-self-2026-11-03",
     "cutoff": null,
-    "elicited": 181,
-    "stable": 123,
-    "incorrect": 53,
-    "pass": 52
+    "elicited": 1181,
+    "stable": 615,
+    "incorrect": 252,
+    "pass": 245
    },
    "target": 108,
    "n_original": 108,
    "n_original_gated": 108,
    "n_original_pass": 29,
-   "n_items": 52,
-   "n_new": 23,
-   "n_candidates_gated": 73,
+   "n_items": 108,
+   "n_new": 79,
+   "n_candidates_gated": 1062,
    "bank": "evals/knowledge_cutoff/items_v2.json",
    "bank_version": 2,
-   "change": "original items only",
-   "status": "partial",
-   "note": "Re-derived on DeepSeek-V4-Pro (adapt kcutoff, no cutoff= given): 181 items elicited, 123 stable (>= 7/10), 53 of them wrong, 52 ship; nocot items not built; small n, read with a CI."
+   "change": "refill via kcutoff.refill_wave: 108/108 items; 245 landed of 1181 tried, yield 20.75%; pool 1000/5273 used; stop: 108 >= target 108",
+   "status": "full",
+   "note": "Refilled (plan 0066, 2026-11-04): full, 108/108 items shipped (108 items); stop: 108 >= target 108; tally 245/1181 = 0.207 (n_min 1000, y_min 0.01). Source: the GW b1+b2 question pool kcutoff_pool.jsonl (181 bank + pool questions counted as prior; cutoff= unset, decision 4); gold = the subject's stable wrong answer. Delta audit: 11 drop(s) (cs00775, b2_00009, b2_02650, cs00173, b2_01564, cs02560, b2_01809, b2_02484, b2_01769, b2_01735, cs00071). | refill mix: label_type stale 74 / confab 34 (registered stale 55 / confab 53); stratum A 90 / B 18 (registered A 96 / B 12); reported, not capped (plan 0066 decision 5)",
+   "refill_mix": {
+    "label_type": {
+     "stale": 74,
+     "confab": 34
+    },
+    "stratum": {
+     "A": 90,
+     "B": 18
+    },
+    "registered": {
+     "label_type": {
+      "stale": 55,
+      "confab": 53
+     },
+     "stratum": {
+      "A": 96,
+      "B": 12
+     }
+    }
+   },
+   "refill": {
+    "route": "kcutoff.refill_wave",
+    "unit": "items",
+    "target": 108,
+    "have": 108,
+    "tried": 1181,
+    "landed": 245,
+    "yield": 0.20745131244707873,
+    "waves": 1,
+    "n_min": 1000,
+    "y_min": 0.01,
+    "tally": {
+     "ext pool": {
+      "tried": 1181,
+      "landed": 245,
+      "prior": {
+       "tried": 1181,
+       "landed": 245
+      }
+     }
+    },
+    "pool_size": 5273,
+    "pool_used": 1000,
+    "stop": "108 >= target 108",
+    "budget": {
+     "claude_budget": null,
+     "gpu_minutes": null,
+     "claude_calls": 0
+    },
+    "pilot": false,
+    "untried_levels": []
+   },
+   "exclude_from_macro": false
   },
   "agentic_misalignment": {
    "status": "blocked",
@@ -146,7 +251,8 @@
    "freeze_notes": [
     "no pre-registered cell (plan 0060 D8): cell.pos dropped on all 565 items; judge with opts=cells=all (every position at every read layer)"
    ],
-   "note": "565/596: all 596 originals pass the gate (393/405 generated too) but freeze selection (per-variant quotas, null-pool rule) keeps 565 originals and no generated items; no pre-registered cell (D8), judge with opts=cells=all."
+   "note": "565/596: all 596 originals pass the gate (393/405 generated too) but freeze selection (per-variant quotas, null-pool rule) keeps 565 originals and no generated items; no pre-registered cell (D8), judge with opts=cells=all.",
+   "min_grid_positions": 24
   },
   "relational_multihop": {
    "status": "partial",
@@ -191,7 +297,7 @@
    "bank_version": 2,
    "change": "new items from t1",
    "freeze_notes": [
-    "re-stamped with the subject's tokenizer; 0 items lost every multi-token form"
+    "re-stamped with the subject's tokenizer; 11 items lost every multi-token form: tyh-novel-archipelago, tyh-novel-cardiomyopathy, tyh-novel-chloroplast, tyh-novel-coleoptera, tyh-novel-confluence, tyh-real-adsorption, tyh-real-deference, tyh-real-immortality, tyh-real-phosphorus, tyh-real-allusion, tyh-real-conformation"
    ],
    "note": "Profile + fill, native_langs [en, zh] by Camila's decision (2026-11-03, Chinese lab; not measured), native units rebuilt by the nl_upgrade: 71 originals + 14 authored = 85/85; 11 passing originals were excluded before selection because they lose every multi-token form on the DeepSeek tokenizer (the freeze note's '0 lost' counts only shipped items)."
   },
@@ -206,7 +312,8 @@
    "n_candidates_gated": 60,
    "bank": "evals/association/items_v3.json",
    "bank_version": 3,
-   "change": "new items from t1"
+   "change": "new items from t1",
+   "min_grid_positions": 11
   },
   "basic_readout": {
    "status": "full",
@@ -237,7 +344,7 @@
    "bank_version": 4,
    "change": "new items from t1",
    "freeze_notes": [
-    "re-stamped with the subject's tokenizer; 0 items lost every multi-token form",
+    "re-stamped with the subject's tokenizer; 6 items lost every multi-token form: brh-ent-currency-bhutan, brh-ent-kachin-mandalay-waterway, brh-fi-alankomaat, brh-fi-alankomaat-munster-1648, brh-id-denhaag-arbitrase, brh-pl-konstantynopol-sobor-381",
     "6 adapted-only items: exonyms / hidden_rivals in the set's overlay files"
    ],
    "note": "v4 rebuild, native_langs [en, zh] by Camila's decision (2026-11-03, Chinese lab; not measured), native units rebuilt by the nl_upgrade: 93 originals + 6 authored items (overlays exonyms / hidden_rivals) = 99/99; 6 passing originals were excluded before selection because they lose every multi-token form on the DeepSeek tokenizer."
@@ -271,16 +378,52 @@
    "target": 63,
    "n_original": 63,
    "n_original_gated": 63,
-   "n_original_pass": 26,
-   "n_items": 14,
+   "n_original_pass": 2,
+   "n_items": 2,
    "n_new": 0,
-   "n_candidates_gated": 0,
+   "n_candidates_gated": 120,
    "bank": "evals/buggy_code/items.json",
    "bank_version": 1,
-   "change": "original items only",
+   "change": "refill via run.fill: 0/24 pairs; 0 landed of 60 tried, yield 0.00%; stop: yield 0/60 < 0.03 on >= 60 candidates at the easiest level, 0 < 24/2",
    "status": "blocked",
-   "note": "Originals only (plan 0060 A2, no refill): 26/63 registered items pass on DeepSeek-V4-Pro; after pair-atomic selection the 14 shipped items are ALL clean programs (0 buggy items, 0 buggy/clean pairs), so the pair headline has n=0; only the clean false-alarm rate is measurable; out of the macro.",
-   "exclude_from_macro": true
+   "note": "BLOCKED (plan 0066 rollout, 2026-11-04): not ooc. A subject behaviour (render verified, not a bug; see the diagnostic below) holds every pair: DeepSeek-V4-Pro answers the surface leg (e.g. 'ZeroDivisionError: division by zero', 10/10), but its plain continuation of bare code is EMPTY on the legs that read it: the buggy `leak` leg on 43/60 authored t2 items (all 25 registered buggy fail it) and the clean greedy-only `bugclaim` leg on 52/60 authored and 24/26 registered cleans. §11.8 counts an empty continuation as undecided = fail, so no pair can land (about 13 authored buggy items also fail the leak leg on real, decided leaks; the t2 pilot tally 0/60 is not a capacity measure). Shipped: the 2 registered cleans whose greedy bugclaim continuation is non-empty and passes (no pairs; pair headline n=0; the other 12 cleans fail the undecided bugclaim leg). Diagnostic (2026-11-04, refill/diag/v4_eos_diag.json): on 3 bare-code buggy items the plain render already starts with BOS (<｜begin▁of▁sentence｜>, id 0), so (b) BOS-prepended is identical to (a); (a), (b) and (c) a trailing newline all give EOS as the FIRST greedy token on 3/3 items (samples at T=1: EOS first on 13 of 15 per variant). Not a render bug: V4-Pro itself ends a raw code continuation immediately. The empty-continuation rule (§11.8) is unchanged, so the family stays blocked; refill_hold set. Delta audit: the 12 removals are exactly the cleans with an empty bugclaim leg.",
+   "exclude_from_macro": true,
+   "refill": {
+    "route": "run.fill",
+    "unit": "pairs",
+    "target": 24,
+    "have": 0,
+    "tried": 60,
+    "landed": 0,
+    "yield": 0.0,
+    "waves": 2,
+    "n_min": 60,
+    "y_min": 0.03,
+    "tally": {
+     "t2": {
+      "tried": 60,
+      "landed": 0
+     }
+    },
+    "pool_size": null,
+    "pool_used": null,
+    "stop": "yield 0/60 < 0.03 on >= 60 candidates at the easiest level, 0 < 24/2",
+    "budget": {
+     "gpu_minutes": null,
+     "claude_budget": null,
+     "claude_calls": 270
+    },
+    "pilot": true,
+    "tier": "t2",
+    "authored_pairs": {
+     "non_crash": 0,
+     "crash": 0,
+     "crash_cap": 0
+    }
+   },
+   "refill_hold": "V4-Pro emits EOS first on raw code continuations (leak / bugclaim legs undecided; render verified, not a bug)",
+   "target_pairs": 24,
+   "n_pairs": 0
   },
   "conjunctive_association": {
    "target": 100,
@@ -294,7 +437,8 @@
    "bank_version": 4,
    "change": "original items only",
    "status": "untried",
-   "note": "Originals only (no Brief for this family): 52/100 registered items pass on DeepSeek-V4-Pro; no refill attempted."
+   "note": "Originals only (no Brief for this family): 52/100 registered items pass on DeepSeek-V4-Pro; no refill attempted.",
+   "min_grid_positions": 11
   },
   "directed_modulation": {
    "target": 100,
@@ -343,14 +487,116 @@
    "n_original": 70,
    "n_original_gated": 70,
    "n_original_pass": 12,
-   "n_items": 12,
-   "n_new": 0,
-   "n_candidates_gated": 0,
+   "n_items": 70,
+   "n_new": 58,
+   "n_candidates_gated": 3000,
    "bank": "evals/multihop_mt_v2/items_v4.json",
    "bank_version": 4,
-   "change": "original items only",
-   "status": "untried",
-   "note": "Registered items re-gated on DeepSeek-V4-Pro (adapt multihop_mt_v2, staged gate incl. the must-not-reach shortcut leg): 12/70 pass; no refill route (new items need MC lists and name forms); n=12 is too small to read alone."
+   "change": "refill via mhmt2.refill_wave: 70/70 items; 46 landed of 784 tried, yield 5.87%; pool 3000/3384 used; stop: 70 >= target 70",
+   "status": "full",
+   "note": "Refilled (plan 0066, 2026-11-04): full, 70/70 items shipped (70 items); stop: 70 >= target 70; tally 46/784 = 0.0587 (n_min 300, y_min 0.03). Source: mh2_pool.json + the decision-7 adversary pool mh2_pool.v2.json; every 3-hop candidate gated before any ooc (§11.14); unchanged staged gate, shortcut leg, relabel_b2 + review legs. Delta audit: 0 drop(s). | mc over gate: 24/58 shipped items (lists ship as in the registered bank)",
+   "mc_over_gate_runs": {
+    "refill-0bf9206207fc": {
+     "over_gate_ids": [
+      "mh2-marshal-regent-t2",
+      "mh2-nooyi-birth-city-s1",
+      "mh2-queensberry-feud-t2"
+     ]
+    },
+    "refill-9f52aa93893b": {
+     "over_gate_ids": [
+      "mh2-coppola-sofia-translation",
+      "mh2-fermat-diophantus-algebra",
+      "mh2-oprah-angelou-caged-bird-r1",
+      "mh2-thomas-klaus-mephisto"
+     ]
+    },
+    "refill-5b85e48ce17b": {
+     "over_gate_ids": [
+      "mh2-fuseli-wollstonecraft-vindication",
+      "mh2-henry-fonda-peter-easy-rider",
+      "mh2-spiegel-kerr-bloom"
+     ]
+    },
+    "refill-3bd8d27d0f68": {
+     "over_gate_ids": [
+      "mh2-farhan-javed-sholay",
+      "mh2-lovelace-byron-donjuan",
+      "mh2-richardson-neeson-oscar-nom"
+     ]
+    },
+    "refill-6bfd8ae3aa61": {
+     "over_gate_ids": []
+    },
+    "refill-4c7371701c18": {
+     "over_gate_ids": []
+    },
+    "refill-b6d7b5039f27": {
+     "over_gate_ids": [
+      "mh2-bohr-brother",
+      "mh2-harbaugh-brother-nfl-team-r2",
+      "mh2-henryv-director-wife-oscar",
+      "mh2-jovovich-besson-reno",
+      "mh2-mussorgsky-repin-barge-haulers",
+      "mh2-yeltsin-putin-leningrad"
+     ]
+    },
+    "refill-91bb768fdf2c": {
+     "over_gate_ids": [
+      "mh2-redgrave-richardson-tomjones"
+     ]
+    },
+    "refill-361f0063df03": {
+     "over_gate_ids": [
+      "mh2-amundsen-ship",
+      "mh2-haneke-amour-s2",
+      "mh2-poitier-oscar-film-t2"
+     ]
+    },
+    "refill-2d168f3a00d6": {
+     "over_gate_ids": [
+      "mh2-ando-birth-island",
+      "mh2-banach-steinhaus-s2",
+      "mh2-kahlo-family-home",
+      "mh2-missile-man-birthplace",
+      "mh2-sade-quills-actor"
+     ]
+    }
+   },
+   "mc_over_gate": 24,
+   "refill": {
+    "route": "mhmt2.refill_wave",
+    "unit": "items",
+    "target": 70,
+    "have": 70,
+    "tried": 784,
+    "landed": 46,
+    "yield": 0.058673469387755105,
+    "waves": 5,
+    "n_min": 300,
+    "y_min": 0.03,
+    "tally": {
+     "2-hop pool": {
+      "tried": 784,
+      "landed": 46,
+      "prior": {
+       "tried": 784,
+       "landed": 46
+      }
+     }
+    },
+    "pool_size": 3384,
+    "pool_used": 3000,
+    "stop": "70 >= target 70",
+    "budget": {
+     "claude_budget": null,
+     "gpu_minutes": null,
+     "claude_calls": 0
+    },
+    "pilot": false,
+    "untried_levels": []
+   },
+   "exclude_from_macro": false
   },
   "multilingual": {
    "target": 99,
@@ -443,7 +689,8 @@
    "bank_version": 1,
    "change": "original items only",
    "status": "untried",
-   "note": "Originals only (distractors_v3 keyed to registered pair ids): 66/100 pass on DeepSeek-V4-Pro, pairs kept atomic, giving 44; no refill attempted."
+   "note": "Originals only (distractors_v3 keyed to registered pair ids): 66/100 pass on DeepSeek-V4-Pro, pairs kept atomic, giving 44; no refill attempted.",
+   "min_grid_positions": 11
   },
   "user_modeling": {
    "target": 100,
@@ -457,7 +704,8 @@
    "bank_version": 1,
    "change": "original items only",
    "status": "untried",
-   "note": "Originals only (option pools keyed to registered ids): 96/100 pass on DeepSeek-V4-Pro; no refill attempted."
+   "note": "Originals only (option pools keyed to registered ids): 96/100 pass on DeepSeek-V4-Pro; no refill attempted.",
+   "min_grid_positions": 24
   },
   "wrong_intermediate": {
    "target": 100,
@@ -469,9 +717,42 @@
    "n_candidates_gated": 501,
    "bank": "evals/wrong_intermediate/items_v4.json",
    "bank_version": 4,
-   "change": "original items only",
-   "status": "partial",
-   "note": "Re-derived on DeepSeek-V4-Pro (adapt wrong_intermediate over the GW scrape, 339k prompts): 625 E1 errors, 157/502 pass the consistency gate, 9 adjudicated clean, 8 with a buildable mc; 1 audit drop (B' not established on the surface leg) leaves 7; none equal a registered item; n=7 is too small to read alone, and on half the items gold and contrast are the only plausible options (quote beside an options-only floor)."
+   "change": "refill via wrong_intermediate.refill_wave: 7/100 items; 8 landed of 207044 tried, yield 0.00%; stop: yield 8/207044 < 5e-05 on >= 200000 candidates at the easiest level, 7 < 100/2",
+   "status": "ooc",
+   "note": "Refilled (plan 0066, 2026-11-04): ooc, 7/100 items shipped (7 items); stop: yield 8/207044 < 5e-05 on >= 200000 candidates at the easiest level, 7 < 100/2; tally 8/207044 = 3.86e-05 (n_min 200000, y_min 5e-05). Source: round 1 + the r2 re-scrape (r2a + r2b, GLM-5.3's pool string; #273 role cues); round-1 screened candidates counted as prior; entity-kind check + hub share over the union. Delta audit: 0 drop(s). Out of capacity under the objective §1.2 rule: too small to read alone.",
+   "refill": {
+    "route": "wrong_intermediate.refill_wave",
+    "unit": "items",
+    "target": 100,
+    "have": 7,
+    "tried": 207044,
+    "landed": 8,
+    "yield": 3.863912984679585e-05,
+    "waves": 0,
+    "n_min": 200000,
+    "y_min": 5e-05,
+    "tally": {
+     "expanded scrape": {
+      "tried": 207044,
+      "landed": 8,
+      "prior": {
+       "tried": 207044,
+       "landed": 8
+      }
+     }
+    },
+    "pool_size": null,
+    "pool_used": null,
+    "stop": "yield 8/207044 < 5e-05 on >= 200000 candidates at the easiest level, 7 < 100/2",
+    "budget": {
+     "claude_budget": null,
+     "gpu_minutes": null,
+     "claude_calls": 0
+    },
+    "pilot": false,
+    "untried_levels": []
+   },
+   "exclude_from_macro": true
   },
   "introspection": {
    "status": "absent",
@@ -484,11 +765,23 @@
    "note": "Absent: no J-lens for DeepSeek-V4-Pro (none on neuronpedia, none fitted), so the subject's own top-10 reference cannot be built.",
    "exclude_from_macro": true,
    "absent_auto": true
+  },
+  "hinted_cutoff": {
+   "status": "absent",
+   "note": "absent: this set has no bank for the family (plan 0060 A1.6)",
+   "exclude_from_macro": true,
+   "absent_auto": true
+  },
+  "math_shortcuts": {
+   "status": "absent",
+   "note": "absent: this set has no bank for the family (plan 0060 A1.6)",
+   "exclude_from_macro": true,
+   "absent_auto": true
   }
  },
  "code": {
-  "git": "5a4c538f+dirty",
-  "adapt_sha256": "dbdd81b047097fed"
+  "git": "",
+  "adapt_sha256": "2149b9c85a663c0a"
  },
  "model": "deepseek-v4-pro",
  "label": "DeepSeek-V4-Pro-0813",
@@ -518,6 +811,19 @@
   },
   "wrong_intermediate": {
    "album_label-Q1754196-founded_year": "audit 2026-11-04: the subject's own greedy surface continuation attributes the answer to a different label ('1993 by a man named Euronymous. The label is called Deathlike Silence'), surface rate 5/10: the read-site B' (Candlelight Records) is not established"
+  },
+  "knowledge_cutoff": {
+   "cs00775": "delta audit 2026-11-04: delta audit 2026-11-04 (K-gold): gold 'pwcc' is the pre-2024 name of the true platform Fanatics Collect (VERIFY's own answer), so the gold is the right entity under an old name, not a wrong answer; same item was dropped in the GLM-5.3 delta audit",
+   "b2_00009": "delta audit 2026-11-04: delta audit 2026-11-04 (K2 whole-word containment): distractor 'qualcomm snapdragon 8 gen 3' contains the gold 'snapdragon 8 gen 3' (same chip), so the options hold the gold twice; also 'snapdragon 8 gen 4' is the pre-launch name of the truth 'snapdragon 8 elite'",
+   "b2_02650": "delta audit 2026-11-04: delta audit 2026-11-04 (K2 number variant + K4): options hold both '1,000' (gold) and '1000'; a gold readout is not credited by either judge (verified=False); VERIFY model_correct=unknown for the Sept 2026 figure",
+   "cs00173": "delta audit 2026-11-04: delta audit 2026-11-04 (K2 same-answer option): options hold the truth twice as '2' and '2.00' (author truth + VERIFY restatement not merged), so a truth readout credits two options and the MC floor is distorted",
+   "b2_01564": "delta audit 2026-11-04: delta audit 2026-11-04 (K2 same-answer option): distractor 'total compute subsystem' is the expansion of the gold 'arm total compute css' (CSS = compute subsystem; the gold's own forms include 'arm total compute compute subsystem'), so the options hold the gold twice",
+   "cs02560": "delta audit 2026-11-04: delta audit 2026-11-04 (K4): Netflix #1 for July 6-12 2026 has an unknown truth (VERIFY model_correct=unknown) and 'stranger things' is not shown wrong; one option is a refusal sentence ('given the date is in the future ... i cannot know ...')",
+   "b2_01809": "delta audit 2026-11-04: delta audit 2026-11-04 (K4): iOS 27 on-device model size has an unknown truth (VERIFY model_correct=unknown); VERIFY itself says it 'could still plausibly be 3B', so the gold '3' is not shown wrong",
+   "b2_02484": "delta audit 2026-11-04: delta audit 2026-11-04 (K4): Sweden's climate minister after the Sept 2026 election has an unknown truth (VERIFY model_correct=unknown); the incumbent 'romina pourmokhtari' could be reappointed in the new government, so the gold is not shown wrong",
+   "b2_01769": "delta audit 2026-11-04: delta audit 2026-11-04 (K4): the Pixel Buds Pro 3 chip has an unknown truth (VERIFY model_correct=unknown); a reused 'tensor a1' is possible, so the gold is not shown wrong",
+   "b2_01735": "delta audit follow-up 2026-11-04 (K4): truth unknown (Mac Studio H2 2026 max memory), gold 192 not shown wrong",
+   "cs00071": "delta audit follow-up 2 2026-11-04: truth listed twice in options (xiaomi 17 / xiaomi 17 series; K2)"
   }
  }
 }
