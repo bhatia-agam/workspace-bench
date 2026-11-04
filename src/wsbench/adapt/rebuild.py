@@ -10,11 +10,13 @@
   ``mc.gold_position`` is then balanced per subfamily at freeze over the SHIPPED set
   (:func:`balance_gold_positions`, the bank's own ``mc_leakage.gold_order`` rule): a
   provisional slot written before the gate is replaced there.
-- **basic_readout_mt v4.** The judge's per-item gate tables (``exonyms.json``,
-  ``hidden_rivals.json``) are keyed by registered id, so an adapted-only item's entries go to the
-  set's overlay files ``adapted/<m>/basic_readout_mt/{exonyms,hidden_rivals}.json`` (the judge
-  overlay design: ``registry.load_resource``), written by freeze from the candidate's own
-  ``exonyms`` / ``hidden_rivals`` keys, which never ship in the bank (:func:`brmt_overlays`).
+- **basic_readout_mt v4.** The judge's per-item gate table ``exonyms.json`` is keyed by
+  registered id, so an adapted-only item's entries go to the set's overlay file
+  ``adapted/<m>/basic_readout_mt/exonyms.json`` (the judge overlay design:
+  ``registry.load_resource``), written by freeze from the candidate's own ``exonyms`` key, which
+  never ships in the bank (:func:`brmt_overlays`). Its ``hidden_rivals`` go to
+  ``hidden_rivals.json`` beside it, kept for reference: the judge reads no hidden rivals since
+  norival-v1.
 """
 
 import copy
@@ -335,7 +337,8 @@ def brmt_overlays(items: list[dict], model: str) -> tuple[list[str], dict[str, A
         "authored with the item); added to evals/basic_readout_mt/exonyms.json by the judge "
         "(registry.load_resource)",
         "hidden_rivals": "adapted-only items' same-topic distractors the MC builder dropped "
-        "(adapt mc); added to evals/basic_readout_mt/hidden_rivals.json by the judge",
+        "(adapt mc); kept for reference, unused since norival-v1 (the judge reads no hidden "
+        "rivals)",
     }
     files = {
         f"{BRMT}/{k}.json": {

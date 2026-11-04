@@ -25,7 +25,7 @@ answer (the prompt's target), not the gloss a reader writes.
 
 ## Scoring: the regex contract
 
-Instrument `mt-regex-2026-10-30+v2+ln-2026-11-03a+rawrx-v2+plural-v1+langleg-v1+bank-v4` (the shared `regex.SCORER_VERSION` plus the bank tag; the
+Instrument `mt-regex-2026-10-30+v2+ln-2026-11-03a+rawrx-v2+plural-v2+langleg-v1+bank-v4` (the shared `regex.SCORER_VERSION` plus the bank tag; the
 tag is stamped only while the v2 bank is the one judged); `judge_model` `regex` natively, the
 digest model under summary mode (pinned follows the digest). The contract: a form hits a sample
 after folding both sides (NFKD, combining marks dropped, casefold; a `case_sensitive` form keeps
@@ -156,8 +156,11 @@ Russian sentence"); they are measured in the run phase.
   ("في العربية", "בעברית", "σε ελληνικά") are added and the autonym label "(suomi)" is dropped,
   because readouts named languages in forms the list missed and "(Suomi)", the country, passed
   multilingual_mt's mlt-fi-kansanedustaja.
-- 2026-11-04 (tag `+plural-v1`): English content forms also credit their regular plural
-  (`regex.english_plurals`), because "dripstone caves" missed the form "dripstone cave".
+- 2026-11-04 (tag `+plural-v2`): English content forms also credit their regular plural
+  (`regex.english_plurals`), because "dripstone caves" missed the form "dripstone cave". A form
+  whose first letter is upper case takes no plural (matching is case-blind, so "Booth" ->
+  "Booths" would credit "voting booths"), and "-is" becomes "-es" ("dialysis" -> "dialyses").
+  (`+plural-v1`, which pluralised every form, was an unreleased draft.)
 
 ## Readouts
 

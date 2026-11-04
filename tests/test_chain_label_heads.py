@@ -1,5 +1,6 @@
 """chain_intermediates heads-v4: a number a lowercase word continues ("20 steps in order.") is a
-count, a label or an operand, never a stated result (judge.result_head / judge.label_head)."""
+count, a label or an operand, never a stated result (judge.result_head / judge.label_head);
+heads-v5: unless the continuation calls it the result or the answer ("12 is the result")."""
 
 from wsbench import digest
 from wsbench.evals.chain_intermediates import judge as chain
@@ -31,6 +32,42 @@ def test_answer_head_shapes():
         ("17 ### Explanation Adding 5 to the initial number 12 results in 17.", 17),
     ):
         assert chain.answer_head(s) == v, s
+
+
+def test_result_statement_keeps_the_head_and_is_no_label():
+    """heads-v5: "N is / was / equals (the) (final) result / answer" states N as the result."""
+    for s in (
+        "12 is the result: 24 / 2 = 12",
+        "12 is the result",
+        "12 is the answer.",
+        "12 is the result of halving 24.",
+        "12 was the answer",
+        "12 equals the final result",
+        "- **12** is the final answer.",
+    ):
+        assert chain.answer_head(s) == 12, s
+        assert not chain.label_head(s, 12), s
+    # other lowercase continuations are still counts, labels or operands
+    for s in ("12 is the starting number", "12 is resultant", "12 results from halving"):
+        assert chain.answer_head(s) is None, s
+    assert chain.label_head("12 is the starting number", 12)
+
+
+def test_result_statement_quote_is_a_hit():
+    opts = [9, 12, 14, 7, 16, 11, 20, 5]
+    for quote, sample in (
+        ("12 is the result", "12 is the result: 24 / 2 = 12"),
+        ("12 is the answer.", "12 is the answer."),
+        ("12 was the answer", "Halving 24: 12 was the answer"),
+    ):
+        v = _slot(quote, 12, opts, (sample,))
+        assert v["kind"] == "hit", (quote, v)
+
+
+def test_result_statement_counts_in_the_tie_gate():
+    ops = chain.op_pattern(["halve_up"])
+    cells = [Cell("x", 44, 60, ("12 is the result of halving 24.",) * 2, None, None)]
+    assert chain.answer_head_counts(cells, ops) == {12: 2}
 
 
 # chain-w2-d2p-0171 (lens B RL600): start 15, +5 -> 20, +2 -> 22. The judge picked 20 on a key
@@ -87,5 +124,5 @@ def test_tie_gate_counts_result_heads_only():
 
 
 def test_stamp():
-    assert prompts.HEADS_VERSION == "heads-v4" and prompts.MC_CALL_VERSION == "chain-mc-2026-10-30"
-    assert prompts.PROMPT_VERSION == "chain-mc-2026-10-30+heads-v4+start-op+key-ex2"
+    assert prompts.HEADS_VERSION == "heads-v5" and prompts.MC_CALL_VERSION == "chain-mc-2026-10-30"
+    assert prompts.PROMPT_VERSION == "chain-mc-2026-10-30+heads-v5+start-op+key-ex2"
