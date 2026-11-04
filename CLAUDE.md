@@ -42,7 +42,8 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   `fallbacks` parameter); a served JSON result carries `llm.SERVED_BY`, a served text fires
   `on_served`, and only refusals move (a `max_tokens` stop or an error stays the primary's
   outcome). `mcjudge.run_calls(refusal_model=)` passes it through and caches the serving model
-  with the row. The digest's equivalent is `summ_fallback=none+<model>`, and
+  with the row, under the judge's fingerprint: a later run with another refusal model (or none)
+  reuses that row (no stale-fallback check, unlike the digest). The digest's equivalent is `summ_fallback=none+<model>`, and
   `digest.OUTPUT_CAPS` gives a digest model its own per-call output cap (`Settings.max_tokens`).
 
 ## Family conventions
