@@ -768,10 +768,9 @@ def guess_item(fam: Fam, x: dict[str, Any], s: dict) -> Any:
 
     t = topic(fam, x, s)
     if fam.name == "basic_readout":
-        from wsbench.basic.mcjudge_basic import CANNOT_OF, options_for
-        from wsbench.basic.prompts import prompt_version_of
+        from wsbench.basic.mcjudge_basic import CANNOT_OF, options_for, options_version
 
-        o = options_for(x, pv=prompt_version_of(fam.name), cannot=CANNOT_OF[fam.name])
+        o = options_for(x, pv=options_version(fam.name), cannot=CANNOT_OF[fam.name])
         return lg.Item(x["id"], [o.shown[:-1]], [o.gold_pos + 1], meta={"topic": t})
     if fam.name == "multihop":
         from wsbench.basic.mcjudge_bank import options_of

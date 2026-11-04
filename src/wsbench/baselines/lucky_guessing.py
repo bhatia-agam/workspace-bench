@@ -467,11 +467,10 @@ def _multitoken(name: str) -> Callable[[], list[Item]]:
 
 def _basic_readout() -> list[Item]:
     """plan 0039: the blind MC judge's frozen option lists (cannot-tell dropped)."""
-    from wsbench.basic.mcjudge_basic import CANNOT_OF, options_for
-    from wsbench.basic.prompts import prompt_version_of
+    from wsbench.basic.mcjudge_basic import CANNOT_OF, options_for, options_version
 
     _h, items = load_bank_file(bank_path("basic_readout"))
-    pv = prompt_version_of("basic_readout")
+    pv = options_version("basic_readout")  # the judge's own option seed
     out = []
     for it in items:
         o = options_for(it, pv=pv, cannot=CANNOT_OF["basic_readout"])

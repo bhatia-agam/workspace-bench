@@ -7,18 +7,21 @@ seed of the prompt version and the item id, with the family's cannot-tell line L
 the lettered options — never the item's prompt. A gold pick passes only when, on top of the
 judge's choice:
 
-- the quote names the picked option (:func:`names`: ``mc.form_in`` over its forms, with the other
-  options' longer forms masked, :meth:`Options.masks`) and verifies against the real
-  readout lines (``digest.quote_ok``; for prose lines only, :func:`quote_close` tolerates a
-  near-verbatim quote whose matched block contains the option);
+- the quote verifies against the real readout lines (``digest.quote_ok``, markdown-insensitive;
+  else near-verbatim, ``nearquote.close_lines``, prose only) and names the picked option read in
+  the line it came from (:func:`form_via`): the verified quote itself names it
+  (:func:`names`: ``mc.form_in`` over its forms on the markdown-free quote, the other options'
+  longer forms masked, :meth:`Options.masks`), else that line names it and no other shown option
+  (a quote cut mid-name; a near quote, whose own words count for nothing);
 - for numeric items, not every supporting line is a number flood (``digest.number_flood``);
 - a BARE pick (a token line, a quote that is just the option, or the judge's own ``bare`` label)
-  is supported by a readout in which no other shown option appears.
+  is supported by a readout in which no other shown option appears;
+- for an arith item, the quoted sentence does not compute another sum (:func:`other_sum`,
+  "Subtracting 3 from 7 yields Four" does not answer "What is 9 - 5?").
 
 A voided pick is scored ``cannot_tell``. Cells come from ``reads.load`` only.
 """
 
-import math
 import re
 import string
 from collections import Counter, defaultdict
@@ -51,9 +54,10 @@ from wsbench.mcjudge import (
     run_calls,
     with_readout_count,
 )
+from wsbench.nearquote import close_lines
 from wsbench.readouts import Cell
 from wsbench.registry import JudgeArgs
-from wsbench.results import FamilyResult
+from wsbench.results import FamilyResult, bootstrap_ci
 from wsbench.split import layer_protocols
 
 # banks v2-v5 show 5 substantive options + cannot tell (A-F); round 5's opt-in basic_readout bank
@@ -62,9 +66,25 @@ from wsbench.split import layer_protocols
 LETTERS = "ABCDEFGHIJKL"
 # the cannot-tell line of each MC family (multihop passes mc.CANNOT when it joins)
 CANNOT_OF: dict[str, str] = {"basic_readout": BR_CANNOT}
-# families whose gate adds quote_close (multihop declines it)
-QUOTE_CLOSE_FAMILIES = frozenset({"basic_readout"})
 NUMERIC_SLICES = frozenset({"arith"})
+# the options' seed and the MC calls' cache key per family: the stamp of the family's last option
+# or prompt change. A scoring-only stamp change (such as the sum check) keeps them, so every item
+# keeps its option order and cached answers are re-scored, never re-asked
+OPTIONS_VERSIONS: dict[str, str] = {"basic_readout": "br-mc-2026-11-01-v5b"}
+
+
+def options_version(family: str) -> str:
+    """The seed of a family's option order and the key of its MC calls (:data:`OPTIONS_VERSIONS`,
+    else the family's stamp)."""
+    return OPTIONS_VERSIONS.get(family, prompt_version_of(family))
+
+
+def call_pv(family: str, pv: str) -> str:
+    """``pv`` (the result stamp, maybe with digest / reads suffixes) with the family's stamp
+    replaced by :func:`options_version`: the MC calls' fingerprint version."""
+    return pv.replace(prompt_version_of(family), options_version(family), 1)
+
+
 CHANCE_LABEL = (
     "uniform pick over each item's substantive options, averaged (1 in 5 on banks v2-v5); "
     "cannot-tell excluded"
@@ -176,42 +196,45 @@ def chance_of(items: Sequence[Mapping[str, Any]]) -> float:
 # ---------------------------------------------------------------- quote gate (C7)
 
 
-def quote_close(quote: str, line: str, forms: Sequence[str], masks: Sequence[str] = ()) -> bool:
-    """A near-verbatim prose quote: on ``digest.fold_quote`` forms, the longest common block of
-    the quote and ONE prose line is >= max(4, ceil(0.9 * len(quote))) characters AND that block
-    itself names one of ``forms`` (:func:`names`, so a block that stops before the answer word
-    fails)."""
-    fq, fl = digest.fold_quote(quote), digest.fold_quote(line)
-    if not fq or not fl:
-        return False
-    m = SequenceMatcher(None, fq, fl, autojunk=False).find_longest_match(0, len(fq), 0, len(fl))
-    need = max(4, math.ceil(0.9 * len(fq)))
-    return m.size >= need and names(fq[m.a : m.a + m.size], forms, masks)
-
-
-def supporting_lines(
-    quote: str,
-    lines: Sequence[Line],
-    forms: Sequence[str],
-    *,
-    close: bool,
-    masks: Sequence[str] = (),
-) -> list[Line]:
-    """The readout lines a quote is verified against (empty = the gate fails): the quote must
-    name the picked option, then verify by ``digest.quote_ok`` (one line, or a word split
-    across adjacent positions of one layer), else — prose lines only, ``close`` families —
-    by :func:`quote_close`. ``masks``: :meth:`Options.masks` of the pick."""
-    if not quote.strip() or not names(quote, forms, masks):
-        return []
+def locate(quote: str, lines: Sequence[Line]) -> tuple[list[Line], bool]:
+    """(the lines a quote came from, verified exactly): the lines ``digest.quote_ok`` verifies it
+    in (one line, or a word split across adjacent positions of one layer), else the prose lines a
+    near-verbatim quote came from (``nearquote.close_lines``) with ``False``; ``[]``: unverified."""
+    if not digest.fold_quote(quote):
+        return [], False
     sup = [ln for ln in lines if digest.quote_ok(quote, [ln])]
     if sup:
-        return sup
+        return sup, True
     split = digest.split_word(quote, lines)
     if split:
-        return split
-    if not close:
-        return []
-    return [ln for ln in lines if ln.pieces is None and quote_close(quote, ln.text, forms, masks)]
+        return split, True
+    return close_lines(quote, list(lines)), False
+
+
+def near_block(quote: str, text: str) -> str:
+    """The longest block a near-verbatim quote shares with a line (``digest.fold_quote`` forms):
+    the readout's own words at the quote's place, never the judge's."""
+    fq, fl = digest.fold_quote(quote), digest.fold_quote(text)
+    m = SequenceMatcher(None, fq, fl, autojunk=False).find_longest_match(0, len(fq), 0, len(fl))
+    return fl[m.b : m.b + m.size]
+
+
+def form_via(
+    quote: str, located: Sequence[Line], verified: bool, opts: Options, pick: str
+) -> str | None:
+    """How the quote names ``pick``: ``quote`` (a verified quote, markdown dropped,
+    names it), ``block`` (a near quote's matched readout text names it), ``line`` (a located line
+    names it and no other shown option), else None."""
+    forms, masks = opts.forms[pick], opts.masks(pick)
+    if verified and names(digest.fold_quote(quote), forms, masks):
+        return "quote"
+    if not verified and any(names(near_block(quote, ln.text), forms, masks) for ln in located):
+        return "block"
+    others = [o for o in opts.forms if o != pick]
+    for ln in located:
+        if opts.names(ln.text, pick) and not any(opts.names(ln.text, o) for o in others):
+            return "line"
+    return None
 
 
 # ASCII punctuation plus the CJK / curly forms (written as escapes: ruff RUF001)
@@ -241,6 +264,108 @@ def bare_ok(sup: Sequence[Line], pick: str, opts: Options) -> bool:
     return any(not any(opts.names(ln.text, o) for o in others) for ln in sup)
 
 
+# ---------------------------------------------------------------- the asked sum
+# A processing (arith) pick must not rest on a sentence that computes ANOTHER sum
+# with the same result ("Subtracting 3 from 7 yields the number Four" for "What is 9 - 5?"). Pure
+# verification: a sentence stating no computation is not checked; one stating the asked one passes.
+_ASKED = re.compile(r"what is\s+(\d+)\s*([-+*/])\s*(\d+)\s*\?", re.IGNORECASE)
+_OPS = {"+": "+", "-": "-", "\u2212": "-", "\u2013": "-", "*": "*", "x": "*", "\u00d7": "*",
+        "/": "/", "\u00f7": "/"}  # fmt: skip
+# an operand: digits, ONE (hyphenated) number word, or a CJK numeral run
+_N = r"(\d+|[a-z]+(?:-[a-z]+)?|[零一二两三四五六七八九十百]+)"
+_SYM = re.compile(r"(\d+)\s*([-+*/x\u2212\u2013\u00d7\u00f7])\s*(\d+)")
+_WORD_OPS = {
+    "plus": "+", "minus": "-", "times": "*", "multiplied by": "*", "divided by": "/",
+    "加": "+", "加上": "+", "减": "-", "减去": "-", "乘": "*", "乘以": "*", "除以": "/",
+}  # fmt: skip
+_INFIX = re.compile(
+    rf"{_N}\s*(plus|minus|times|multiplied by|divided by|加上|加|减去|减|乘以|乘|除以)\s*{_N}"
+)
+_THE = r"(?:the number\s+)?"
+# verb / noun forms: (pattern, op, operand order: True = as written, False = reversed)
+_PHRASES = (
+    (re.compile(rf"subtract\w*\s+{_THE}{_N}\s+from\s+{_THE}{_N}"), "-", False),
+    (re.compile(rf"(?:take|taking|takes) {_N} (?:away )?from {_N}"), "-", False),
+    (re.compile(rf"add\w*\s+{_THE}{_N}\s+(?:to|and)\s+{_THE}{_N}"), "+", True),
+    (re.compile(rf"multipl\w*\s+{_N}\s+(?:by|and)\s+{_N}"), "*", True),
+    (re.compile(rf"divid\w*\s+{_N}\s+by\s+{_N}"), "/", True),
+    (re.compile(rf"(?:sum|total) of\s+{_N}\s+and\s+{_N}"), "+", True),
+    (re.compile(rf"difference (?:between|of)\s+{_N}\s+and\s+{_N}"), "-", True),
+    (re.compile(rf"product of\s+{_N}\s+and\s+{_N}"), "*", True),
+    (re.compile(rf"quotient of\s+{_N}\s+and\s+{_N}"), "/", True),
+)
+# sentence ends: . ! ? newline, the bullet mark, the CJK full stop / exclamation / question, and
+# a label that starts a NEW problem ("Input: 40 + 50", "Question 2:"; a digest line has lost its
+# newlines, so a lens that moves on to another example would otherwise run into its sum)
+_SENT_END = re.compile(
+    r"[.!?\n\u205e\u3002\uff01\uff1f]|\b(?:input|question|problem|example|q)\s*\d*\s*:"
+)
+Sum = tuple[int, str, int]
+
+
+def asked_sum(prompt: str) -> Sum | None:
+    """``(a, op, b)`` of an arith prompt ("What is 9 - 5? ..."), else None."""
+    m = _ASKED.search(prompt)
+    return (int(m.group(1)), m.group(2), int(m.group(3))) if m else None
+
+
+def _value(tok: str) -> int | None:
+    from wsbench import numerals
+
+    return numerals.word_value(tok)
+
+
+def stated_sums(text: str) -> list[Sum]:
+    """Every computation ``text`` states: ``a op b`` in symbols, ``a plus b`` in words (English or
+    Chinese), or a verb / noun form ("subtracting 3 from 7", "the sum of 2 and 2"); operands are
+    numerals in any form (``numerals.word_value``)."""
+    t = " ".join(digest.fold_quote(text).split())
+    out: list[Sum] = []
+    for m in _SYM.finditer(t):
+        out.append((int(m.group(1)), _OPS[m.group(2)], int(m.group(3))))
+    for m in _INFIX.finditer(t):
+        a, b = _value(m.group(1)), _value(m.group(3))
+        if a is not None and b is not None:
+            out.append((a, _WORD_OPS[m.group(2)], b))
+    for pat, op, as_written in _PHRASES:
+        for m in pat.finditer(t):
+            a, b = _value(m.group(1)), _value(m.group(2))
+            if a is not None and b is not None:
+                out.append((a, op, b) if as_written else (b, op, a))
+    return out
+
+
+def same_sum(x: Sum, y: Sum) -> bool:
+    """The same computation (``+`` and ``*`` commute)."""
+    if x[1] != y[1]:
+        return False
+    return (x[0], x[2]) == (y[0], y[2]) or (x[1] in "+*" and (x[2], x[0]) == (y[0], y[2]))
+
+
+def quoted_sentence(quote: str, line: str) -> str:
+    """The sentence(s) of ``line`` the quote sits in (folded; the quote widened to the sentence
+    ends around it), else the quote itself. A bullet mark (``digest.BULLET_MARK``) ends a
+    sentence: ``fold_quote`` turns it into a space, so it is made a full stop first (otherwise a
+    multi-bullet sample's next bullet joins the quoted sentence)."""
+    stop = ". "
+    mark = digest.BULLET_MARK.strip()
+    fq = digest.fold_quote(quote.replace(mark, stop))
+    fl = digest.fold_quote(line.replace(mark, stop))
+    k = fl.find(fq) if fq else -1
+    if k < 0:
+        return fq
+    starts = [m.end() for m in _SENT_END.finditer(fl, 0, k)]
+    m = _SENT_END.search(fl, k + len(fq))
+    return fl[(starts[-1] if starts else 0) : (m.start() if m else len(fl))]
+
+
+def other_sum(quote: str, sup: Sequence[Line], asked: Sum) -> bool:
+    """Every supporting line's quoted sentence states a computation other than ``asked`` (a line
+    stating none, or only the asked one, verifies the pick)."""
+    texts = [quoted_sentence(quote, ln.text) for ln in sup if ln.pieces is None] or [quote]
+    return all(any(not same_sum(s, asked) for s in stated_sums(t)) for t in texts)
+
+
 # ---------------------------------------------------------------- scoring
 
 
@@ -252,7 +377,9 @@ class Verdict:
     quote: str
     quote_ok: bool
     bare: bool
-    void: str  # "" | "quote" | "flood" | "bare"
+    void: str  # "" | "quote" | "flood" | "bare" | "sum"
+    form_via: str = ""  # "quote" | "block" | "line"; "" when the gate did not run
+    quote_near: bool = False  # verified near-verbatim only (nearquote.close_lines)
 
     @property
     def passed(self) -> bool:
@@ -267,6 +394,8 @@ class Verdict:
             "quote_ok": self.quote_ok,
             "bare": self.bare,
             "void": self.void,
+            "form_via": self.form_via,
+            "quote_near": self.quote_near,
         }
 
 
@@ -279,10 +408,10 @@ def score(
     lines: Sequence[Line],
     *,
     numeric: bool,
-    close: bool = True,
+    asked: Sum | None = None,
 ) -> Verdict:
     """One judge answer -> a Verdict (module docstring). Only a gold pick is gated; a distractor
-    or cannot-tell pick is a FAIL as it stands."""
+    or cannot-tell pick is a FAIL as it stands. ``asked``: an arith item's asked sum."""
     idx = mc.letter_index(result.get("choice"), opts.shown, LETTERS)
     quote = str(result.get("quote") or "").strip()
     stated = str(result.get("stated") or "")
@@ -293,15 +422,19 @@ def score(
     if kind != "gold":
         return Verdict(kind, kind, choice, quote, False, False, "")
     forms = opts.forms[choice]
-    sup = supporting_lines(quote, lines, forms, close=close, masks=opts.masks(choice))
-    if not sup:
-        return Verdict(kind, "cannot_tell", choice, quote, False, False, "quote")
+    sup, verified = locate(quote, lines)
+    via = form_via(quote, sup, verified, opts, choice) if sup else None
+    near = bool(sup) and not verified
+    if via is None:
+        return Verdict(kind, "cannot_tell", choice, quote, False, False, "quote", "", near)
     bare = is_bare(quote, sup, forms, stated)
     if numeric and all(ln.bullet is None and digest.number_flood(ln) for ln in sup):
-        return Verdict(kind, "cannot_tell", choice, quote, True, bare, "flood")
+        return Verdict(kind, "cannot_tell", choice, quote, True, bare, "flood", via, near)
     if bare and not bare_ok(sup, choice, opts):
-        return Verdict(kind, "cannot_tell", choice, quote, True, bare, "bare")
-    return Verdict(kind, "gold", choice, quote, True, bare, "")
+        return Verdict(kind, "cannot_tell", choice, quote, True, bare, "bare", via, near)
+    if asked is not None and other_sum(quote, sup, asked):
+        return Verdict(kind, "cannot_tell", choice, quote, True, bare, "sum", via, near)
+    return Verdict(kind, "gold", choice, quote, True, bare, "", via, near)
 
 
 # ---------------------------------------------------------------- rendering
@@ -384,9 +517,13 @@ def run(args: JudgeArgs, *, name: str, bank: Path) -> FamilyResult:
     ids = [it["id"] for it in scope]
     pv = prompt_version_of(name)
     cannot = CANNOT_OF.get(name, mc.CANNOT)
-    opts = {it["id"]: options_for(it, pv=pv, cannot=cannot) for it in scope}
+    opts = {it["id"]: options_for(it, pv=options_version(name), cannot=cannot) for it in scope}
     contexts = {it["id"]: str(it.get("task_context") or "") for it in scope}
     numeric = {it["id"]: it.get("slice") in NUMERIC_SLICES for it in scope}
+    asked = {
+        it["id"]: asked_sum(str(it.get("prompt") or "")) if numeric[it["id"]] else None
+        for it in scope
+    }
     cells, rep = reads.load(args, name, ids=ids)
     layers = args.layers if args.layers is not None else rep.layers
     groups: dict[tuple[str, int], list[Cell]] = defaultdict(list)
@@ -395,13 +532,12 @@ def run(args: JudgeArgs, *, name: str, bank: Path) -> FamilyResult:
     expected = [(i, layer) for i in ids for layer in layers]
     missing = [k for k in expected if k not in groups]
     require_cells(name, missing, len(expected), args)
-    close = name in QUOTE_CLOSE_FAMILIES
     chance = chance_of(scope)
     if digest.summary_mode(args):
         return _summary(
             args, name=name, scope=scope, ids=ids, opts=opts, contexts=contexts,
             numeric=numeric, cells=cells, rep=rep, groups=groups, expected=expected,
-            missing=missing, close=close, chance=chance,
+            missing=missing, chance=chance, asked=asked,
         )  # fmt: skip
 
     kind = rep.kind or "prose"
@@ -426,7 +562,7 @@ def run(args: JudgeArgs, *, name: str, bank: Path) -> FamilyResult:
     spend = Spend()
     pre = Preflighter(args.dry_run)
     with Cache(args.out / "cells.jsonl") as cache:
-        res = _judge(calls, opts_of, args, pv=pv, cache=cache, spend=spend, pre=pre)
+        res = _judge(calls, opts_of, args, pv=call_pv(name, pv), cache=cache, spend=spend, pre=pre)
     n_unjudged = 0
     for c in calls:
         r = res.get(c.key)
@@ -435,7 +571,7 @@ def run(args: JudgeArgs, *, name: str, bank: Path) -> FamilyResult:
             continue
         i, layer = c.key.rsplit("|L", 1)
         verdicts[(i, int(layer))] = score(
-            r, opts_of[c.key], lines_of[c.key], numeric=numeric[i], close=close
+            r, opts_of[c.key], lines_of[c.key], numeric=numeric[i], asked=asked[i]
         )
     rows = [_native_row(i, layers, groups, verdicts, opts[i]) for i in ids]
     extras: dict[str, Any] = {
@@ -520,8 +656,9 @@ def _native_row(
 def _pick_extras(
     rows: Sequence[Mapping[str, Any]], scope: Sequence[Mapping[str, Any]] = ()
 ) -> dict[str, Any]:
-    """Pick distribution, bare-mention passes, voids, and the decided pass rate per subfamily
-    (the implicit third's options are far easier to guess blind: report it apart)."""
+    """Pick distribution, bare-mention passes, voids, and each subfamily (entity / processing /
+    implicit) as its own number: decided items, passes, pass rate and its bootstrap 95% CI (the
+    implicit third's options are far easier to guess blind: report it apart)."""
     sub = {str(it["id"]): str(it.get("subfamily") or "") for it in scope}
     by: dict[str, list[bool]] = defaultdict(list)
     for r in rows:
@@ -539,7 +676,13 @@ def _pick_extras(
         "n_bare_mention_pass": sum(1 for r in rows if r.get("pass") and r.get("bare")),
         "n_voided": dict(sorted(voids.items())),
         "pass_by_subfamily": {
-            k: {"n": len(v), "pass_rate": sum(v) / len(v)} for k, v in sorted(by.items())
+            k: {
+                "n": len(v),
+                "n_pass": sum(v),
+                "pass_rate": sum(v) / len(v),
+                "ci95": list(bootstrap_ci([float(x) for x in v])),
+            }
+            for k, v in sorted(by.items())
         },
     }
 
@@ -558,8 +701,8 @@ def _summary(
     groups: Mapping[tuple[str, int], list[Cell]],
     expected: list[tuple[str, int]],
     missing: list[tuple[str, int]],
-    close: bool,
     chance: float,
+    asked: Mapping[str, Sum | None] | None = None,
 ) -> FamilyResult:
     """Every item's cells at every layer and position -> one digest (per-item task context, no
     cell dropped) -> one blind MC call on the digest, quotes verified against the digest's real
@@ -607,7 +750,7 @@ def _summary(
                     meta={"gold": opts[i].gold},
                 )
             )
-        res = _judge(calls, opts_of, args, pv=pv, cache=cache, spend=spend, pre=pre)
+        res = _judge(calls, opts_of, args, pv=call_pv(name, pv), cache=cache, spend=spend, pre=pre)
     rows = []
     n_unjudged = len(col.unsummarized)
     for i in ids:
@@ -630,7 +773,7 @@ def _summary(
             row.update({"pass": None, "choice_kind": None, "bare": False, "n_unjudged": 1})
         else:
             lines = list(col.evidence.get(i, ()))
-            v = score(r, opts[i], lines, numeric=numeric[i], close=close)
+            v = score(r, opts[i], lines, numeric=numeric[i], asked=(asked or {}).get(i))
             row.update(
                 {
                     "pass": v.passed,

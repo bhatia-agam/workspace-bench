@@ -33,7 +33,9 @@ GOLDEN = REPO / "tests/golden/basic_readout_options.json"
 PV = "br-mc-2026-10-30b"  # bank v2's judge stamp (its option order and golden file)
 PV3 = "br-mc-2026-11-01-v3"  # round 4: bank v3's stamp
 PV4 = "br-mc-2026-11-01-v4"  # PR #214 review r5: bank v4's stamp
-PV5 = "br-mc-2026-11-01-v5b"  # PR #214 review r7: the registered stamp (bank v5, balanced slots)
+PV5 = "br-mc-2026-11-01-v5b"  # PR #214 review r7: bank v5's option seed / call key (balanced slots)
+# the registered result stamp (scoring-only suffixes; options and calls keep PV5)
+STAMP = PV5 + "+brsum-v1+qline-v1"
 FLAT = ("numbers", "days of the week", "months", "candidate answers of the task's type")
 
 
@@ -99,9 +101,9 @@ def test_registered_spec_and_readme():
     from wsbench.evals.basic_readout import SPEC
 
     registry.FAMILIES.setdefault(SPEC.name, SPEC)
-    assert SPEC.group == "basic" and SPEC.judge.prompt_version == PV5
+    assert SPEC.group == "basic" and SPEC.judge.prompt_version == STAMP
     readme = (REPO / "evals/basic_readout/README.md").read_text(encoding="utf-8")
-    assert SYSTEM_MC in readme and PV5 in readme
+    assert SYSTEM_MC in readme and STAMP in readme
 
 
 def test_registered_spec_uses_v5(monkeypatch):
@@ -114,9 +116,9 @@ def test_registered_spec_uses_v5(monkeypatch):
             monkeypatch.delenv(k)
     assert SPEC.bank == Path("evals/basic_readout/items_v5.json")
     assert registry.bank_path("basic_readout").name == "items_v5.json"
-    assert SPEC.judge.prompt_version == PV5
-    args = summary_args(EXAMPLE, Path("/tmp/x"), PV5)
-    assert digest.prompt_version(PV5, args, "basic_readout").startswith(PV5 + "+digest-")
+    assert SPEC.judge.prompt_version == STAMP
+    args = summary_args(EXAMPLE, Path("/tmp/x"), STAMP)
+    assert digest.prompt_version(STAMP, args, "basic_readout").startswith(STAMP + "+digest-")
 
 
 def test_dry_run_on_the_toy_file(tmp_path, capsys, monkeypatch):
@@ -590,38 +592,42 @@ DAVIS_L24 = (
 DAVIS_QUOTE = "the instrument most commonly associated with him is the trumpet"
 
 
-def test_quote_close_tolerates_added_article():
+def test_near_quote_tolerates_added_article():
+    # the near-verbatim fallback is nearquote.close_lines (it replaced quote_close)
     lines = _prose(DAVIS_L24)
     assert not digest.quote_ok(DAVIS_QUOTE, lines)
+    located, verified = mj.locate(DAVIS_QUOTE, lines)
+    assert located and not verified
     o = _opts("br-ent-mus-davis")
-    assert mj.supporting_lines(DAVIS_QUOTE, lines, o.forms["trumpet"], close=True)
     v = mj.score(_pick(o, "trumpet", DAVIS_QUOTE), o, lines, numeric=False)
-    assert v.quote_ok and v.void != "quote"
+    # the matched block ("...associated with him is the trumpet") names the pick; the sample's
+    # later "using the flute" (an option of this v2 list) does not void it
+    assert v.passed and v.quote_near and v.form_via == "block" and v.void == ""
 
 
-def test_quote_close_requires_option_in_block():
+def test_near_quote_needs_the_option_in_its_line():
     line = "after a very long weekend away we all agreed that the day before Monday is Saturday"
     quote = "after a very long weekend away we all agreed that the day before Monday is Sunday"
     fq, fl = digest.fold_quote(quote), digest.fold_quote(line)
     m = SequenceMatcher(None, fq, fl, autojunk=False).find_longest_match(0, len(fq), 0, len(fl))
-    assert m.size >= 0.9 * len(fq)
-    assert not mj.quote_close(quote, line, ["Sunday", "星期日"])
+    assert m.size >= 0.9 * len(fq)  # a near quote of a line that names another day
+    o = _opts("br-proc-daybefore-monday")
+    v = mj.score(_pick(o, "Sunday", quote), o, _prose(line), numeric=False)
+    assert not v.passed and v.void == "quote"
 
 
 def test_quote_gate_rejects_fabrication():
     line = "the trumpet player walked on stage with a cornet and a mute"
-    assert not mj.quote_close("Miles Davis played the trumpet all his life", line, ["trumpet"])
     o = _opts("br-ent-mus-davis")
     pick = _pick(o, "trumpet", "he mostly played the trumpet in clubs")
     v = mj.score(pick, o, _prose(line), numeric=False)
     assert v.void == "quote" and not v.passed
 
 
-def test_quote_close_never_applies_to_token_lines():
+def test_near_quote_never_applies_to_token_lines():
     lines = _tokens(["the", "trumpet", "player"])
-    forms = ["trumpet"]
-    assert mj.supporting_lines("the trumpet player", lines, forms, close=True) == []
-    assert mj.supporting_lines("trumpet", lines, forms, close=True)
+    assert mj.locate("the trumpet player is here", lines) == ([], False)
+    assert mj.locate("trumpet", lines)[1]
 
 
 def test_number_flood_pick_is_cannot_tell():
@@ -719,7 +725,9 @@ def test_worked_arith_pick_passes_in_both_modes(tmp_path, monkeypatch, summary):
     r = spec.run(args)
     assert r.rows[0]["pass"] is True and r.extras["n_bare_mention_pass"] == 0
     assert r.chance == pytest.approx(0.2) and r.config["judge"] == "mc"
-    assert r.extras["pass_by_subfamily"] == {"processing": {"n": 1, "pass_rate": 1.0}}
+    assert r.extras["pass_by_subfamily"] == {
+        "processing": {"n": 1, "n_pass": 1, "pass_rate": 1.0, "ci95": [1.0, 1.0]}
+    }
 
 
 def test_native_extras_have_layer_pick_columns(tmp_path, monkeypatch):
@@ -736,7 +744,7 @@ def test_native_extras_have_layer_pick_columns(tmp_path, monkeypatch):
     ):
         assert k in r.extras, k
     assert r.extras["n_items_gold_any_layer"] == 1 and r.extras["n_calls"] == 2
-    assert r.config["prompt_version"] == PV5
+    assert r.config["prompt_version"] == STAMP
 
 
 def test_bare_pass_is_counted(tmp_path, monkeypatch):
@@ -1086,3 +1094,17 @@ def test_gold_position_only_moves_the_gold():
             mj.options_for(
                 {**it, "mc": {**it["mc"], "gold_position": bad}}, pv=PV5, cannot=BR_CANNOT
             )
+
+
+def test_sum_check_stops_at_the_bullet_mark():
+    """s3d br-proc-arith-3_4: the quoted bullet states no other sum; the NEXT bullet
+    of the same multi-bullet sample ("Since 2 + 5 = 7") must not void the pick."""
+    from wsbench import digest
+    from wsbench.basic import mcjudge_basic as m
+
+    line = f"7. The sum is seven {digest.BULLET_MARK} 7** (Since 2 + 5 = 7, the answer is seven"
+    assert m.stated_sums(m.quoted_sentence("7. The sum is seven", line)) == []
+    assert not m.other_sum("7. The sum is seven", [digest.Line(line)], (3, "+", 4))
+    # a different sum inside the quoted bullet still voids
+    bad = f"Four. Subtracting 3 from 7 yields Four. {digest.BULLET_MARK} 4"
+    assert m.other_sum("Subtracting 3 from 7 yields Four", [digest.Line(bad)], (9, "-", 5))

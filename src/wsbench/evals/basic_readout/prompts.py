@@ -15,7 +15,7 @@ from wsbench.basic.prompts import (
 )
 from wsbench.evals.basic_readout import FLAT_TYPES, TASK_NOTE
 
-PROMPT_VERSION = prompt_version_of("basic_readout")  # "br-mc-2026-11-01-v5b"
+PROMPT_VERSION = prompt_version_of("basic_readout")  # "br-mc-2026-11-01-v5b+brsum-v1+qline-v1"
 SCHEMA = MC_SCHEMA
 SYSTEM = SYSTEM_MC
 TOKEN_NOTE = mc.token_note(FLAT_TYPES)
