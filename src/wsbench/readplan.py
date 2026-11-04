@@ -1083,6 +1083,30 @@ def _plan(family: str) -> list[ReadSpec]:
             )
             for it in items
         ]
+    if family == "hinted_cutoff":
+        _h, items = _bank(family)
+        return [
+            ReadSpec(
+                family,
+                it["id"],
+                "captured",
+                {"kind": "positions", "positions": it["positions"]},
+                GRID,
+                text=it["text"],
+                assistant=it["reply"],
+                extra={
+                    "input_ids": it["input_ids"],
+                    "prompt_len": it["n_prompt"],
+                    "pair_id": it["pair_id"],
+                    "role": it["role"],
+                },
+                note="the pair's length-equalized reply positions before the 'Answer:' line "
+                "(Qwen tokenizer indices into the shipped prompt + silent-reply ids; both twins "
+                "read the same count)",
+                lite_positions={"kind": "last_n", "n": 32},
+            )
+            for it in items
+        ]
     if family == "introspection":
         return _introspection()
     if family == "jlens_concept_pr":

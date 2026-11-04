@@ -63,7 +63,7 @@ that model commits to; since plan 0038 its MC judge also needs `line_one_end`, `
 commitments of the new subject and `mc.candidates`, built by `scripts/poetry/build_mc.py` after the
 gate -- the adapted banks under `adapted/` predate it and must be rebuilt before judging), moral_rationale (each item's YES/NO reasons are written for the side the
 model takes), nyt_connections (the slots, their labels and stability are Qwen3.6-27B's own
-groupings and follow-up names; plan 0062), basic_readout's 32 implicit items (the gold is the model's own favourite), and
+groupings and follow-up names; plan 0062), hinted_cutoff (the I / N twins, their silent replies and the read positions are Qwen3.6-27B's own behaviour and tokens; plan 0063), basic_readout's 32 implicit items (the gold is the model's own favourite), and
 model_specific_directed_modulation (every gold is Qwen3.6-27B's own category default).
 
 **Nothing to port until you re-run something on the new model:** agentic_misalignment (the
@@ -94,6 +94,7 @@ indices and need re-capturing.
 | jailbreak_recognition | none: verbatim WildChat conversations | portable, but the read sites are token positions — re-capture with the new tokenizer |
 | agentic_misalignment | the rollout itself (the model did misbehave) | **re-run the scenarios.** A model that does not take the misaligned action has nothing to read. The plan-0031 clean twins are not adapted (an adapted bank has no pairs) |
 | **nyt_connections** | the model's own member-only answer, its follow-up connection names, and slot stability over 16 samples (stable = at least 12/16; plan 0062) | **re-gate.** No `capable` question: re-sample the new model's answers (greedy + 16 at T 0.7) and its naming turn, rebuild the options and re-run the same-connection filter (`scripts/build_nyt_connections_bank.py` documents the pipeline); the NYT text is fetched at plan time from the pinned mirror, never ported |
+| **hinted_cutoff** | without the hint the model is right on at most 1 of 10 samples on I and knows N; with the correct hint it is right 19/20 on both, and the read reply is silent (no hint, no not-knowing; calibrated Opus judge) | **re-gate.** No `capable` question: re-run the source pipeline (global-workspace `ccut_stages.py`: bank, base, screen, confirm, silence judge, pairing, freeze) on the new model, then rebuild with `scripts/build_hinted_cutoff_bank.py` |
 | jlens_concept_pr | none: the items are captured activations | re-capture; the J-lens reference must come from the same model |
 
 Two things are model-specific no matter what the gate says. Read positions are token indices, so

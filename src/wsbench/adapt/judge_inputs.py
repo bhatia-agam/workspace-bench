@@ -1850,6 +1850,28 @@ _add(
 
 _add(
     FamilyInputs(
+        "hinted_cutoff",
+        "evals/hinted_cutoff/judge.py",
+        "model-specific (plan 0063)",
+        "dict",
+        "name",
+        (
+            _NAME,
+            _req("pair_id", COPY, "hinted_cutoff/judge.py:pairs_of"),
+            _req("role", SUBJECT, "hinted_cutoff/judge.py:pairs_of", "I/N from Qwen behaviour"),
+            _req("cluster", COPY, "hinted_cutoff/judge.py:pairs_of", "I-twin event cluster"),
+            _req("positions", SUBJECT, "hinted_cutoff/judge.py:run", "Qwen reply token indices"),
+            _req("text", COPY, "readplan.py hinted_cutoff branch"),
+            _req("reply", SUBJECT, "readplan.py hinted_cutoff branch", "Qwen's silent reply"),
+            _req("input_ids", SUBJECT, "readplan.py hinted_cutoff branch", "captured render"),
+            _req("n_prompt", SUBJECT, "readplan.py hinted_cutoff branch"),
+            _GRID,
+        ),
+    )
+)
+
+_add(
+    FamilyInputs(
         "knowledge_cutoff",
         "evals/knowledge_cutoff/judge.py",
         "model-specific (Phase E)",
@@ -2199,6 +2221,7 @@ def _bank_uvh(items: list[Mapping[str, Any]]) -> dict[str, list[str]]:
 BANK_CHECKS: dict[str, Callable[[list[Mapping[str, Any]]], dict[str, list[str]]]] = {
     "directed_modulation": _bank_dm,
     "unverbalized_hint": _bank_uvh,
+    "hinted_cutoff": _bank_uvh,  # the same one-I-one-N-per-pair rule (hinted_cutoff.pairs_of)
 }
 """Checks over a whole bank (a draw over the loaded items), run by :func:`check_bank`."""
 

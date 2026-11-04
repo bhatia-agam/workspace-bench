@@ -274,9 +274,16 @@ def layer_union_check(
     }
 
 
+# Families whose headline is not the mean of ``row["pass"]`` (plan 0063: hinted_cutoff's is a class
+# difference); the shared-id bracket would print a different metric beside the floor, so skip it.
+NO_SHARED_BRACKET = frozenset({"hinted_cutoff"})
+
+
 def shared_floor_text(r: FamilyResult, entry: Mapping[str, Any] | None, text: str) -> str:
     """A prompt-only floor cell with the floor re-taken on the ids decided by BOTH the row and
     the floor (the frozen entry's ``decided``), and the row's own rate on them."""
+    if r.family in NO_SHARED_BRACKET:
+        return text
     if not entry or not isinstance(entry.get("decided"), dict):
         return text
     floor_ids, row_ids = entry["decided"], decided_outcomes(r.rows, r.n_items)
