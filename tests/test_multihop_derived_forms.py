@@ -116,8 +116,8 @@ def test_cjk_demonyms_still_fail(iid, quote):
 
 
 def test_stamp_and_call_key():
-    # r8: the quote's line rule; r9: bank v5's table entries (mhforms-v2)
-    assert mj.GATE_VERSION in ("bank-gate-r7", "bank-gate-r8", "bank-gate-r9")
+    # r9: the quote's line rule (cut mid-name); r10: bank v5's table entries (mhforms-v2)
+    assert mj.GATE_VERSION in ("bank-gate-r9", "bank-gate-r10")
     pv = prompt_version_of("multihop")
     assert pv.startswith("bank-mc-2026-11-01-v3+" + mj.GATE_VERSION)
     assert mj.call_pv("multihop", pv + "+digest-v5-task-extractive+sj-v10") == (

@@ -232,6 +232,26 @@ def test_freeze_accepts_agentic_summary_stamp_base_only(tmp_path, monkeypatch, r
 
 
 SONNET_DIGEST = ("agentic_misalignment", "jailbreak_recognition")
+# families whose result stamp moved after the refreeze on a scoring-only rule change: the floor of
+# record stays on the stamp it was measured under (so `report` does not draw it) until it is
+# re-scored from its cached judge answers; an entry leaves once its floor is refreshed.
+# 2026-11-04 (pre-merge review): the cut-mid-name line rule, the English plural rule and the
+# pass / fail vote, on banks this series replaces later.
+PENDING_RESCORE: dict[str, str] = {
+    "basic_readout_mt": "mc-brmt-2026-10-31r+norival-v1+qline-v1+bank-v5",
+    "multihop": "bank-mc-2026-11-01-v3+bank-gate-r8+bank-v4",
+    "multihop_mt_v2": "mh2-mc-2026-11-01+norival-v1+qline-v1+bank-v5",
+    "multilingual": "mcrx-2026-11-03d+mc-ml-2026-11-01b",
+    "multilingual_mt": (
+        "mt-regex-2026-10-30+v2+ln-2026-11-03a+rawrx-v2+plural-v1+langleg-v1+bank-v4"
+    ),
+    "multilingual_multihop": "mcrx-2026-11-03d+mc-ml-2026-11-01b",
+    "multilingual_typo": (
+        "mt-regex-2026-10-30+v2+ln-2026-11-03a+rawrx-v2+plural-v1+anchor-support-v1+langleg-v1"
+        "+bank-v3"
+    ),
+    "user_modeling": "um-v3.4+bank-v2+maj3",
+}
 
 
 def test_committed_floor_file_is_the_refreeze(real_families):
@@ -250,6 +270,8 @@ def test_committed_floor_file_is_the_refreeze(real_families):
         digest_model = "claude-sonnet-5" if fam in SONNET_DIGEST else "claude-opus-5-5"
         assert e["aggregate"] == "summary" and e["summarizer"]["model"] == digest_model, fam
         bases = po.summary_bases(fam, versions[fam])
+        if fam in PENDING_RESCORE:  # still exactly on the stamp before the rule change
+            bases = (PENDING_RESCORE[fam],)
         assert any(e["instrument"].startswith(f"{b}+") for b in bases), (fam, e["instrument"])
         assert "+digest-" in e["instrument"], fam
     fb = {f for f, e in fams.items() if e["protocol"] == po.PO_FALLBACK}

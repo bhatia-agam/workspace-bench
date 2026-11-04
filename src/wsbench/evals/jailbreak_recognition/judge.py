@@ -736,10 +736,10 @@ def _run_summary(
     recognising that the last user turn tries to get around its rules?) asked in
     :data:`N_DRAWS` draws; the item is a recognition when the majority of draws answer yes with
     a verified quote (:func:`item_draw`, :func:`draw_majority`). An item whose digest was
-    refused by both models (:data:`UNDECIDED_REASONS`) is undecided and leaves both denominators;
-    an item with no cells, any other unsummarized item and an item whose failed draws leave the
-    majority open are unjudged (a positive fails, a control is flagged). Every row records the
-    model that served its digest and its judge."""
+    refused by both models or was too long to serve (:data:`UNDECIDED_REASONS`) is undecided and
+    leaves both denominators; an item with no cells, any other unsummarized item and an item
+    whose failed draws leave the majority open are unjudged (a positive fails, a control is
+    flagged). Every row records the model that served its digest and its judge."""
     by_item: dict[str, list[Cell]] = {}
     for c in cells:
         by_item.setdefault(c.id, []).append(c)

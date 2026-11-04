@@ -189,7 +189,9 @@ _WORDY = re.compile(r"[^\W_]+(?:[\s\-'][^\W_]+)*")
 # A case-sensitive form also hits in lower case where the sample sets the word off as a cited
 # word: wrapped in markdown emphasis or quotation marks on both
 # sides ("**may**", '"may"', "«may»"). "En inglés el mes que sigue a abril es **may**." names May;
-# "you may go" still does not (b3-ml-es-month-april).
+# "you may go" still does not (b3-ml-es-month-april). The rule reads the marks, not the grammar:
+# an emphasised or quoted verb hits too ("You **may** want", "it *may* rain", "we **march**
+# forward"); accepted, because the MC judge must still pick the gold on a verified quote.
 CITED_CASE_VERSION = "cited-case-v1"
 _CITE_OPEN = "(?:\\*{1,2}|_{1,2}|[\"'`\u00ab\u201c\u201e\u2018\u2039])"
 _CITE_CLOSE = "(?:\\*{1,2}|_{1,2}|[\"'`\u00bb\u201d\u201c\u2019\u203a])"
@@ -389,12 +391,16 @@ OPTIONAL_V2_ROLES = frozenset({"bridge_l2"})
 # A v2 multilingual item's English content forms also credit their regular English plural,
 # formed on the form's LAST word ("dripstone cave" -> "dripstone caves": the only native line of
 # mlt-hu-cseppkobarlang's digest was "víz-barlangok** (*dripstone caves*)"): +s, +es after ss /
-# us / is / x / z / ch / sh (none after another final s, already a plural), consonant + y -> ies.
-# Only the units that name a thing (PLURAL_ROLES: multilingual_mt's concept,
-# multilingual_multihop's bridge, multilingual_typo's correction), never multilingual's one-word
-# answers (adjectives, numbers, months, directions: "lows", "colds" would be other words); never
-# a case-sensitive form, a number, a CJK form or a ``re:`` pattern; the bank file is unchanged.
-PLURAL_VERSION = "plural-v1"
+# us / x / z / ch / sh, -is -> -es ("dialysis" -> "dialyses"; none after another final s, already
+# a plural), consonant + y -> ies. Only the units that name a thing (PLURAL_ROLES:
+# multilingual_mt's concept, multilingual_multihop's bridge, multilingual_typo's correction), never
+# multilingual's one-word answers (adjectives, numbers, months, directions: "lows", "colds" would
+# be other words); never a form whose first letter is upper case (a name: matching is case-blind,
+# so "Booth" -> "Booths" would credit "voting booths"; capitalised common nouns such as "X-ray"
+# lose their plural too), a case-sensitive form, a number, a CJK form or a ``re:`` pattern; the
+# bank file is unchanged. plural-v2: no capitalised form, -is -> -es (plural-v1 was an unreleased
+# draft that pluralised every form and gave "analysises").
+PLURAL_VERSION = "plural-v2"
 PLURAL_ROLES = frozenset({"concept", "bridge_native", "correction_native"})
 
 
@@ -404,6 +410,9 @@ def english_plurals(form: str) -> list[str]:
         return []
     if not _WORDY.fullmatch(fold(form)):
         return []
+    first = re.search(r"[^\W\d_]", form)
+    if first is None or first.group(0).isupper():
+        return []  # a name ("Turkmenistan", "Booth"): never pluralised
     m = re.search(r"[^\W\d_]+$", form)
     if m is None:
         return []
@@ -411,6 +420,8 @@ def english_plurals(form: str) -> list[str]:
     low = word.casefold()
     if low.endswith("s") and not low.endswith(("ss", "us", "is")):
         return []  # already a plural ("brain waves")
+    if low.endswith("is"):
+        return [f"{head}{word[:-2]}es"]  # "analysis" -> "analyses"
     if low.endswith(("s", "x", "z", "ch", "sh")):
         return [f"{head}{word}es"]
     if len(low) > 1 and low.endswith("y") and low[-2] not in "aeiou":
