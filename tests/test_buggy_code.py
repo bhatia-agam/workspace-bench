@@ -29,10 +29,13 @@ EXAMPLE = REPO / "examples/readouts/buggy_code.jsonl"
 
 
 @pytest.fixture(autouse=True)
-def _registered():
+def _registered(monkeypatch):
+    """These tests pin the frozen 63-item bank (items.json): the scoring code is
+    bank-independent. The registered bank v2 is tested in test_buggy_code_bank_v2.py."""
     from wsbench.evals.buggy_code import SPEC
 
     registry.FAMILIES.setdefault(SPEC.name, SPEC)
+    monkeypatch.setenv("WSB_BANK_FILE_BUGGY_CODE", "evals/buggy_code/items.json")
 
 
 def _args(tmp_path, ids, **over):

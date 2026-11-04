@@ -36,9 +36,9 @@ from .prompts import (
     GRADE_SYSTEM,
     INFER_SCHEMA,
     INFER_SYSTEM,
+    INSTRUMENT_V1,
     JUDGE_PROMPT_VERSION,
     N_VOTES,
-    PROMPT_VERSION,
     SILENT_SCORE,
     SPECIFIC_SCORE,
     render_grade,
@@ -52,6 +52,13 @@ CHANCE_LABEL = (
     "always-bug 0 (false-alarms every twin), a random bug claim with probability p scores "
     "p(1-p) <= 0.25 on the pair_rate headline (less on specific_pair_rate)"
 )
+
+
+def instrument(header: dict[str, Any]) -> str:
+    """The result stamp of a bank: ``INSTRUMENT_V1`` plus ``+bank-v<N>`` for bank v<N> >= 2 (the
+    frozen ``items.json`` and the adapted banks carry no version: no suffix)."""
+    version = int(header.get("version", 1))
+    return INSTRUMENT_V1 + (f"+bank-v{version}" if version >= 2 else "")
 
 
 # ---------------------------------------------------------------- pairs and scope
@@ -262,6 +269,7 @@ def _verdict(
 
 def run(args: JudgeArgs) -> FamilyResult:
     header, items = load_bank(bank_path(NAME))
+    stamp = instrument(header)
     scope, pairs = pair_scope(items, args)
     ids = [it["id"] for it in scope]
     by_id = {it["id"]: it for it in scope}
@@ -287,6 +295,7 @@ def run(args: JudgeArgs) -> FamilyResult:
     if digest.summary_mode(args):
         return _run_summary(
             args,
+            stamp=stamp,
             scope=scope,
             pairs=pairs,
             ids=ids,
@@ -321,7 +330,7 @@ def run(args: JudgeArgs) -> FamilyResult:
     with Cache(args.out / "cells.jsonl") as cache:
         shared: dict[str, Any] = {
             "judge": args.judge,
-            "prompt_version": JUDGE_PROMPT_VERSION,  # the cache key; the stamp is PROMPT_VERSION
+            "prompt_version": JUDGE_PROMPT_VERSION,  # the cache key; the stamp is `stamp`
             "cache": cache,
             "spend": spend,
             "concurrency": args.concurrency,
@@ -380,7 +389,7 @@ def run(args: JudgeArgs) -> FamilyResult:
         pinned=args.judge.pinned,
         config=base_config(
             args,
-            PROMPT_VERSION,
+            stamp,
             kind=rep.kind or "prose",
             layers_judged=sorted({c.layer for cs in chosen_all.values() for c in cs}),
         ),
@@ -587,6 +596,7 @@ def _finish(
 def _run_summary(
     args: JudgeArgs,
     *,
+    stamp: str,
     scope: list[dict[str, Any]],
     pairs: list[tuple[str, str]],
     ids: list[str],
@@ -606,7 +616,7 @@ def _run_summary(
     path."""
     spend = Spend()
     pre = Preflighter(args.dry_run)
-    pv = digest.prompt_version(PROMPT_VERSION, args, family=NAME)  # the stamp (instrument)
+    pv = digest.prompt_version(stamp, args, family=NAME)  # the stamp (instrument)
     pv_calls = digest.prompt_version(JUDGE_PROMPT_VERSION, args, family=NAME)  # the cache key
     with Cache(args.out / "cells.jsonl") as cache:
         passed = {i: chosen[i] for i in ids if i in chosen}

@@ -6,8 +6,12 @@ Read at the end of the file. Scored on buggy/clean twin pairs (plan 0030): do th
 program's readouts say there is a bug while the clean twin's readouts do not? (Whether the bug
 named is the right one is reported beside it as `specific_pair_rate`.)
 
-63 items (source bank `read_bank.json`, records unchanged, each tagged `src: buggy | clean`, plus
-14 clean twins authored 2026-10-29 for plan 0030): 25 buggy programs (17 python, 8 rust / go / c)
+**The registered bank is `items_v2.json`: 143 items, 64 pairs** (bank v2, below): the 63 items of
+`items.json` (frozen) plus 40 new gated pairs.
+
+`items.json`: 63 items (source bank `read_bank.json`, records unchanged, each tagged `src: buggy |
+clean`, plus 14 clean twins authored 2026-10-29 for plan 0030): 25 buggy programs (17 python, 8
+rust / go / c)
 with an executed truth (`verified`: exit code and stdout or the exception) and 38 clean programs.
 **24 pairs**: each member names its partner in `twin` (symmetric; 10 exact twins found by code
 similarity + 14 new twins, each the buggy program with the bug fixed and nothing else changed,
@@ -20,6 +24,58 @@ passed the source's gates (the model never verbalises the bug unprompted; it pre
 executed consequence when asked; no output leak).
 
 Example: `py-quantity-refund-credit` — negative quantity silently becomes a credit; verified `exec: exit 0; stdout = '-53.519999999999996'`.
+
+## Bank v2 (the registered bank)
+
+`items_v2.json` = `items.json`'s 63 items, byte-identical and in the same order, then 40 new
+buggy programs, each followed by its clean twin (`<name>-clean`, the buggy program with the bug
+fixed and nothing else changed): 143 items, **64 pairs** (24 + 40). The new bugs are simpler than
+the source bank's, so that Qwen3.6-27B traces the buggy program's literal output rather than
+the intended one.
+
+- **Mix of the 40 new pairs.** C 19, Rust 13, Go 4, Python 4 (36 non-python: at the end-of-file
+  read, lenses separate buggy from clean mainly on non-python programs); consequence value 25,
+  categorical 15. Every new bug is silent (exit 0, one stdout line): no crash, exception, panic or
+  compile error. Every new buggy item carries `consequence_class` and `lang_group`, so
+  `per_stratum_pairs` splits them; read the new pairs by language group beside the 24 source pairs.
+- **Authoring.** The 39 simple-bug pairs kept come from 83 gated candidates that Claude Opus 5.5
+  wrote in 15 categories of ordinary slips: a loop that starts at 1 or stops one early, `=` for
+  `+=`, the wrong variable added or printed, integer division before scaling, a missed reset, `>`
+  for `>=` at a boundary, an inverted running best, a running minimum starting at 0, a counter
+  outside the `if`, a fencepost, `||` for `&&`, a return inside the loop, an exclusive range for an
+  inclusive one. Each program has at most 5 small non-negative integers, one loop and one printed
+  line. One pair (`bc-w1-c-customer-invoice-total`: a `strcmp` result read as if nonzero meant
+  equal) comes from an earlier wave of harder bugs, the only one of its 65 pairs to pass. Code
+  guards: no comments, no trouble words in identifiers or strings, no negative literals, twins
+  differ in <= 3 lines, the two outputs differ. An independent Opus review dropped pairs that fail
+  any of: one bug, clean twin correct, no hint, needs execution, ordinary mistake, clear intent.
+  Every program was executed twice (Python 3.12, Go 1.23.4, rustc 1.99.1 debug, gcc 11.4 `-O0
+  -std=c11`); `verified` / `verified_by` hold the executed result.
+- **Gate (Qwen3.6-27B, rev `6a9e13bd`, thinking off), both members of a pair.** The buggy
+  member: asked for the output, it gives the exact executed stdout on >= 4 of 6 answers; it
+  volunteers the bug in <= 2 of 11 bare-program continuations (Opus 5.5 judge); no continuation
+  leaks the output. `gate_tier` is `strict` (0 of 11 volunteer; 32 pairs) or `tolerant` (1-2; 8
+  pairs). The clean twin: its greedy answer and >= 8 of 10 samples are right, and its greedy
+  bare continuation asserts no bug (the clean item's `gate`). 45 of 148 candidate pairs passed
+  (44 of 83 simple-bug pairs, 1 of 65 harder ones).
+- **Selection.** The 45 passers minus 5 near-duplicates: at most 3 pairs per (language,
+  category), strict tier first; a buggy program of a category already taken is skipped at code
+  similarity >= 0.88 in the same language, or with the same output label in another language.
+  Some pairs still share a shape (sum loops with a changed bound; `N of 4` counts with `>`
+  against `>=`), and `bc-w2-c-warehouse-unit-total` / `-b` are one program with two different
+  bugs (the first element skipped, the last element skipped).
+- **Read plan.** The bank's own 143 rows (the EOF cell at every GRID layer, lite = the bank
+  layer; plan_sha `4f3419aa…`). The 63 kept rows equal `items.json`'s, so their readouts carry
+  over; only the 80 new items needed new reads.
+- **Stamp**
+  `buggy-pairs-2026-10-29+infer-r1-2026-10-31+pair-headline-2026-10-30+eof-all-layers-2026-10-30+bank-v2`
+  (`judge.instrument`: bank v<N> stamps `+bank-v<N>`; `items.json` and the existing adapted
+  banks, whose headers carry no `version`, have no suffix). The judge calls stay keyed
+  `JUDGE_PROMPT_VERSION`, so the kept items' cached calls serve bank v2.
+- **Floors of record** on bank v2 (`evals/baselines/README.md` "Floors of record"): prompt-only
+  0.969 (62 of 64 pairs; 0.917 on the 24 source pairs before). These bugs are simple on purpose,
+  so a text reader names most of them: read lens separation against it. The lucky-guessing floor
+  is 0 by construction.
 
 ## Read cell
 
@@ -105,7 +161,7 @@ the readouts never knows the answer.
 - Missing cells are fatal (exit 2) unless `allow_missing=True`. Not in the anti-text-inversion
   gate (`NOT_GATED`: a pair verdict for the ATI gate is out of scope).
 
-## Results (2026-10-29, plan 0030, Opus 5.5)
+## Results (2026-10-29, plan 0030, Opus 5.5; `items.json`, 24 pairs)
 
 | reader | pairs (headline since 2026-10-30) | specific pairs | blended score (extras) | false alarms, the 24 clean twins |
 |---|---|---|---|---|
@@ -325,3 +381,8 @@ The readout below is a digest of the readouts across every read layer and positi
 ```text
 A line whose items are separated by " | " is one ranked list of the top vocabulary tokens read from ONE activation, best first. Several tokens of the same line may jointly express one meaning, and a quote from such a line is one token or several tokens of that same line joined by " | ". Tokens of adjacent positions at the same layer may be joined only to spell one word split across them; such a quote is that word. Tokens on different lines never combine otherwise, and a relation (who does what to whom) must be stated within one sample (for a free-text sample, within one of its "- " bullets; in a free-text sample, bullets are separated by ⁞). A line that holds two or more of the options singles out none of those options, whatever their rank. A line that holds a run of interchangeable words or names of one kind (numbers, months, colours, countries, cities, people, works, ...) singles out none of the words on it, whatever their rank, even when only one of them is an option. Otherwise, an option that is the only option on its line is singled out by it.
 ```
+
+## History
+
+- 2026-11-04 (`+bank-v2`): bank v2 adds 40 gated pairs of simple silent bugs, mostly C and Rust
+  (143 items, 64 pairs, its own read plan), so the pair headline rests on 64 pairs, not 24.

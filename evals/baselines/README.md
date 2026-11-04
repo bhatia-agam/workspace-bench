@@ -60,7 +60,7 @@ model_specific_directed_modulation, nyt_connections and typo_mt.
 | association | 0.892 | 0.912 [0.85, 0.97] | 91 | assoc-mc-2026-11-01-v3+gate-a1+bank-v5 | Opus 5.5 |
 | basic_readout | 0.840 | 0.810 [0.74, 0.88] | 100 | br-mc-2026-11-01-v5b+brsum-v1+qline-v1+bank-v7 | Opus 5.5 |
 | basic_readout_mt | 1.000 | 1.000 | 98 | mc-brmt-2026-10-31r+norival-v1+qline-v1+bank-v5 | Opus 5.5 |
-| buggy_code | 0.917 | 0.917 [0.79, 1.00] | 24 pairs | buggy-pairs-2026-10-29+infer-r1-2026-10-31+pair-headline-2026-10-30+eof-all-layers-2026-10-30 | Opus 5.5 |
+| buggy_code (bank v2) | 0.917 (24 pairs) | 0.969 [0.92, 1.00] | 64 pairs | buggy-pairs-2026-10-29+infer-r1-2026-10-31+pair-headline-2026-10-30+eof-all-layers-2026-10-30+bank-v2 | Opus 5.5 |
 | chain_intermediates | 0.967 | 0.967 [0.93, 0.99] | 120 | chain-mc-2026-10-30+heads-v4+start-op+key-ex2 | Opus 5.5 |
 | conjunctive_association | 0.220 | 0.340 [0.25, 0.43] | 100 | comp-v5+maj | Opus 5.5 |
 | introspection | 0.000 | 0.000 | 125 | ii-grid-2026-11-v4+twinrx-v4+jhead-v2 | Opus 5.5 |
@@ -81,8 +81,8 @@ model_specific_directed_modulation, nyt_connections and typo_mt.
 | wrong_intermediate | 0.000 | 0.000 | 100 | wb-mc-2026-10-31r+judge-only-v1+qline-v1+wbforms-v4+bank-v4 | Opus 5.5 |
 
 "Before" is the 2026-10-31 campaign value under the family's earlier instrument and bank, except in
-the rows marked with a bank (multihop and user_modeling), whose "before" is the refreeze floor on
-the earlier bank (below). The large
+the rows marked with a bank (multihop, user_modeling and buggy_code), whose "before" is the refreeze
+floor on the earlier bank (below). The large
 moves are real text leakage, read item by item: multilingual_multihop's reader names the bridge
 and the passage language ("the description fits Lake Sarez", "Battle Creek"), which the current
 instrument credits (no L2 bridge form is required, and the language is scored on the raw
@@ -93,14 +93,16 @@ floor scored on Sonnet 5 answers (Opus then refused 65 of 100 asks; it now answe
 
 **Banks frozen after the refreeze.** Rows marked with a bank were measured on a bank registered
 after the refreeze, under the same protocol and the bank's own stamp: multihop bank v5 (98 items:
-bank v4's 68 and 30 new) and user_modeling bank v3 (126 items: bank v2's 47 and 79 new).
-Prompt-only: the kept items' prompts are byte-identical, so their refreeze answers were reused and
-only the new ids were asked (multihop 30, user_modeling 79; 0 refused), then each family was judged
-whole. Lucky guessing: fresh draws on the whole bank (multihop v5's build measured its options too,
-blind 0.143, described 0.204, topic 0.229, bank header `mc_leakage_v5`, and the fresh draws agree).
-The user_modeling rise is text leakage the new items carry: 72 of the 79 are decoded from their
-implied cue ("joint tax return" -> married, rubber-handled pliers and a voltage tester ->
-electrician).
+bank v4's 68 and 30 new), user_modeling bank v3 (126 items: bank v2's 47 and 79 new) and buggy_code
+bank v2 (64 pairs: the 24 source pairs and 40 new). Prompt-only: the kept items' prompts are
+byte-identical, so their refreeze answers were reused and only the new ids were asked (multihop 30,
+user_modeling 79, buggy_code 80; 0 refused), then each family was judged whole. Lucky guessing:
+fresh draws on the whole bank (multihop v5's build measured its options too, blind 0.143, described
+0.204, topic 0.229, bank header `mc_leakage_v5`, and the fresh draws agree; buggy_code has no lucky
+floor, 0 by construction). The rises are text leakage the new items carry: 72 of user_modeling's 79
+new items are decoded from their implied cue ("joint tax return" -> married, rubber-handled pliers
+and a voltage tester -> electrician), and buggy_code's 40 new pairs are simple bugs on purpose: the
+reader names the bug in all 40 (62 of 64 pairs pass).
 
 **Lucky guessing (`lucky_guessing.json`).** Re-measured (Opus 5.5, 5 fresh draws per item) where
 a family's lists or item set changed: association (bank v5), basic_readout (bank v7's Big Ben

@@ -344,12 +344,16 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   gemini, 2026-11-01, argon via Gemini WIF) at bank v3: 26/93.
 - buggy_code (plan 0030) is pair-scored on the bank's symmetric `twin` field: headline
   `pair_rate` since 2026-10-30 (metric `pass_rate`, in the macro, `chance` 0.0;
-  `specific_pair_rate`, the grade-≥8 bar, in extras; instrument
-  `buggy-pairs-2026-10-29+pair-headline-2026-10-30`, judge calls keyed `JUDGE_PROMPT_VERSION`), `items=` expands to
+  `specific_pair_rate`, the grade-≥8 bar, in extras; instrument `INSTRUMENT_V1`
+  (`buggy-pairs-2026-10-29+infer-r1-2026-10-31+pair-headline-2026-10-30+eof-all-layers-2026-10-30`)
+  plus the bank stamp (below), judge calls keyed `JUDGE_PROMPT_VERSION`), `items=` expands to
   pairs, `limit=` counts pairs, `n_items` = pairs in scope; orphans (no twin; every adapted-bank
   item) stay in the per-item extras only. Stage A is 3 votes (keys `...|infer|v1..v3`), Stage B 3
   votes (`...|grade|v1..v3`) only on buggy pair members claiming `bug`; any undecided pair makes
-  the run incomplete. ATI NOT_GATED.
+  the run incomplete. ATI NOT_GATED. The registered bank v2 `items_v2.json` = `items.json`'s 63
+  items + 40 new gated pairs (143 items, 64 pairs, its own read plan); the stamp is
+  `judge.instrument(header)` (`INSTRUMENT_V1` + `+bank-v<N>`; a header without `version`, as in
+  `items.json` and the existing adapted banks, has no suffix), the call key unchanged.
 - agentic_misalignment (plans 0031 / 0052) is pair-scored on misaligned / clean-twin pairs, bank
   `items_v2.json` (am-bank-v2, 22 pairs; v1 `items.json` / `targets.json` frozen, sha-pinned by
   `test_old_bank_untouched`; the Stage C companion follows `registry.bank_path` by name,

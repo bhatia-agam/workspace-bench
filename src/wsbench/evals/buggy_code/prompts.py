@@ -11,7 +11,13 @@ JUDGE_PROMPT_VERSION = "buggy-pairs-2026-10-29+infer-r1-2026-10-31"
 # the instrument (EvalSpec, results stamp, floors): the headline is the plain pair rate (Camila
 # 2026-10-30, "lets stick with the plain pass rate for now"); specific_pair_rate is an extra
 # plan 0032 §2.1.4 / §2.8.1: the EOF anchor at every layer read; tool-free wording
-PROMPT_VERSION = JUDGE_PROMPT_VERSION + "+pair-headline-2026-10-30+eof-all-layers-2026-10-30"
+# INSTRUMENT_V1: the stamp of the frozen 63-item items.json (and of every adapted bank)
+INSTRUMENT_V1 = JUDGE_PROMPT_VERSION + "+pair-headline-2026-10-30+eof-all-layers-2026-10-30"
+# bank v2 (2026-11-04, items_v2.json) = items.json + 40 new gated pairs: a result is stamped
+# +bank-v2 (judge.instrument), so floors measured on the 63 items are never served for it. Stamp
+# only: the judge calls stay keyed JUDGE_PROMPT_VERSION, so the kept items' cached calls serve
+BANK_STAMP = "+bank-v2"
+PROMPT_VERSION = INSTRUMENT_V1 + BANK_STAMP  # the registered instrument (bank v2)
 CLAIMS = ("bug", "correct", "none")
 SILENT_SCORE = {"buggy": 1, "clean": 5}  # a readout that claims nothing: see the README
 N_VOTES = 3  # plan 0030: Stage A majority, Stage B median (voted members only)

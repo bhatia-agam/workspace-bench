@@ -202,9 +202,10 @@ def test_native_prompts_and_version_unchanged():
     # plan 0030 judge prompts; final r1 (2026-10-31) Stage A frame rule: +infer-r1
     assert bp.JUDGE_PROMPT_VERSION == "buggy-pairs-2026-10-29+infer-r1-2026-10-31"
     # plan 0032 §2.15: EOF x every layer and tool-free wording add +eof-all-layers
-    assert bp.PROMPT_VERSION == (
+    assert bp.INSTRUMENT_V1 == (
         "buggy-pairs-2026-10-29+infer-r1-2026-10-31+pair-headline-2026-10-30+eof-all-layers-2026-10-30"
     )
+    assert bp.PROMPT_VERSION == bp.INSTRUMENT_V1 + "+bank-v2"  # bank v2 (2026-11-04)
     assert bp.INFER_USER == "readout samples (k={k}):\n{samples}"
     assert bp.render_infer(["a"]) == "readout samples (k=1):\n[0] a"
     assert bp.render_infer_summary("NOTE", "[one] x") == "NOTE\n\nreadout digest:\n[one] x"
