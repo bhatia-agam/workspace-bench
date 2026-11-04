@@ -451,9 +451,92 @@
    "exclude_from_macro": true
   },
   "jlens_concept_pr": {
-   "status": "absent",
-   "note": "Held: needs GLM-5.3's own J-lens; the fit (tmux glm53-jlens-fit2000) is still running, then scripts/adapt_jlens*.py.",
-   "exclude_from_macro": true
+   "status": "full",
+   "note": "Regenerated on GLM-5.3: the bank's 299 seeds re-rendered (thinking-off chat template; pt = [gMASK]<sop> + 128 tokens), rolled out on the subject (vLLM, T=1, 512 new, seed 7, 0 empty), one read position each, read through GLM's own J-lens (glm53-jlens:glm-5.3-nvfp4/lens.pt, 1950 WikiText prompts, cosine readout, lm_head) on the HF stack; 296 items after 3 audit drops; references ship at grid layers 34..73 only, where the lens split-half is <= 0.17 (L24 0.26, L29 0.22 not shipped: judged runs list them under layers_without_reference); headline: quote L54 (depth match of the 27B L44) beside the default L44.",
+   "exclude_from_macro": false,
+   "n_items": 296,
+   "target": 299,
+   "layers": [
+    34,
+    39,
+    44,
+    49,
+    54,
+    58,
+    63,
+    68,
+    73
+   ],
+   "lens": {
+    "path": "modal volume glm53-jlens:glm-5.3-nvfp4/lens.pt",
+    "n_prompts": 1950,
+    "chunks": "195/200",
+    "fitted_by": "global-workspace scripts/glm53_aff/jlens_fit_modal.py (branch camila/glm53-jlens)",
+    "readout": "cosine",
+    "split_half_rel": {
+     "24": 0.2636,
+     "29": 0.2224,
+     "34": 0.1685,
+     "39": 0.1406,
+     "44": 0.1169,
+     "49": 0.1039,
+     "54": 0.0855,
+     "58": 0.0744,
+     "63": 0.0604,
+     "68": 0.048,
+     "73": 0.0293
+    },
+    "reliable_from": 31
+   },
+   "sanity_top10": {
+    "24": {
+     "current_in_top10": 0.0502,
+     "next_in_top10": 0.0268
+    },
+    "29": {
+     "current_in_top10": 0.1438,
+     "next_in_top10": 0.0468
+    },
+    "34": {
+     "current_in_top10": 0.1171,
+     "next_in_top10": 0.0435
+    },
+    "39": {
+     "current_in_top10": 0.1204,
+     "next_in_top10": 0.087
+    },
+    "44": {
+     "current_in_top10": 0.0702,
+     "next_in_top10": 0.1472
+    },
+    "49": {
+     "current_in_top10": 0.0569,
+     "next_in_top10": 0.1438
+    },
+    "54": {
+     "current_in_top10": 0.01,
+     "next_in_top10": 0.1706
+    },
+    "58": {
+     "current_in_top10": 0.0134,
+     "next_in_top10": 0.1973
+    },
+    "63": {
+     "current_in_top10": 0.01,
+     "next_in_top10": 0.2609
+    },
+    "68": {
+     "current_in_top10": 0.01,
+     "next_in_top10": 0.3579
+    },
+    "73": {
+     "current_in_top10": 0.01,
+     "next_in_top10": 0.6321
+    }
+   },
+   "code": "workspace-bench PR #262 scripts/adapt_jlens_glm53_modal.py",
+   "n_dropped_audit": 3,
+   "headline": "the judge's default headline is the literal L44 (in GLM's grid, at 27B-L36 depth); the depth match of the 27B headline is GLM L54: quote opts=headline_layer=54 beside it. Floors measured at both."
   },
   "multilingual": {
    "status": "untried",
@@ -527,13 +610,91 @@
  },
  "code": {
   "git": "5a4c538f+dirty",
-  "adapt_sha256": "d68e1849f052b6f9"
+  "adapt_sha256": "dbdd81b047097fed"
  },
  "model": "glm-5.3",
  "label": "GLM-5.3 (NVFP4)",
  "hf_id": "nvidia/GLM-5.3-NVFP4",
  "n_layers": 78,
- "read_band": [],
+ "read_band": [
+  0,
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7,
+  8,
+  9,
+  10,
+  11,
+  12,
+  13,
+  14,
+  15,
+  16,
+  17,
+  18,
+  19,
+  20,
+  21,
+  22,
+  23,
+  24,
+  25,
+  26,
+  27,
+  28,
+  29,
+  30,
+  31,
+  32,
+  33,
+  34,
+  35,
+  36,
+  37,
+  38,
+  39,
+  40,
+  41,
+  42,
+  43,
+  44,
+  45,
+  46,
+  47,
+  48,
+  49,
+  50,
+  51,
+  52,
+  53,
+  54,
+  55,
+  56,
+  57,
+  58,
+  59,
+  60,
+  61,
+  62,
+  63,
+  64,
+  65,
+  66,
+  67,
+  68,
+  69,
+  70,
+  71,
+  72,
+  73,
+  74,
+  75,
+  76
+ ],
  "gate": {
   "rule": "greedy right AND >= 8/10 (10/10 chain)"
  },
@@ -558,6 +719,11 @@
   "multilingual_typo": {
    "mlt-el-aftokinitodromos": "audit 2026-11-03 (AUDIT.md): The required correction_l2 unit holds only one inflected form (αυτοκινητόδρομο, bağışıklıktır), so a readout naming the corrected word in its dictionary form is never credited (confirmed: both judges fail the gold arm).",
    "mlt-tr-bagisiklik-immunity": "audit 2026-11-03 (AUDIT.md): The required correction_l2 unit holds only one inflected form (αυτοκινητόδρομο, bağışıklıktır), so a readout naming the corrected word in its dictionary form is never credited (confirmed: both judges fail the gold arm)."
+  },
+  "jlens_concept_pr": {
+   "pt-pile-0064": "audit 2026-11-04 (AUDIT.md, jlens_concept_pr): the T=1.0 rollout degenerated into garbled multilingual text before the read position; references are word fragments, not a meaningful cell.",
+   "chat-lmsys-0013": "audit 2026-11-04 (AUDIT.md, jlens_concept_pr): 1-token reply read at its final token; top-10s are newline/period and glitch/end-of-turn tokens (<|user|>, PostalCodesNL) that pass is_content_token, so any arm scores ~0.",
+   "chat-lmsys-0046": "audit 2026-11-04 (AUDIT.md, jlens_concept_pr): 3-token reply ('Answer : D') read at its final token; glitch/end-of-turn top-10s at L44-L73."
   }
  }
 }

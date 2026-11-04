@@ -1,0 +1,79 @@
+{
+ "note": "jlens_concept_pr is EXCLUDED from both floor protocols by design (prompt_only_opus.EXCLUDED / adapt floors.EXCLUDED: 'precision against the J-lens top-10, not a bar a lens clears'); measured here as a reference only, kept out of floors/floors.json. Bank: 296 items (after the 3 audit drops). Each protocol's one prose readout per item is judged against the GLM J-lens references at L44 (the judge's literal default headline) and L54 (the depth match of the 27B L44). The family's in-judge floor is the shuffled-partner foil.",
+ "protocols": {
+  "po-opus-v1": {
+   "reader": "Opus 5.5 prompt-only reader (summary-mode prompt, open_model framing), 0 refusals so no Sonnet fallback served",
+   "by_headline_layer": {
+    "L44": {
+     "precision": 0.19378873501057975,
+     "ci95": [
+      0.18070886385585513,
+      0.20660620388477546
+     ],
+     "recall_at_10": 0.42248422047045336,
+     "foil": {
+      "recall_at_10": 0.08081986137574022,
+      "precision": 0.028431855933466636
+     },
+     "n_items": 292,
+     "complete": true,
+     "prompt_version": "jlens-pr-v3+fw-v2+sense-v1",
+     "judge_model": "claude-opus-5-5"
+    },
+    "L54": {
+     "precision": 0.21621809583662732,
+     "ci95": [
+      0.20279811148408688,
+      0.22945733054931391
+     ],
+     "recall_at_10": 0.5425741225261466,
+     "foil": {
+      "recall_at_10": 0.07257331381831296,
+      "precision": 0.02309256769331528
+     },
+     "n_items": 291,
+     "complete": true,
+     "prompt_version": "jlens-pr-v3+fw-v2+sense-v1",
+     "judge_model": "claude-opus-5-5"
+    }
+   }
+  },
+  "stock-subject-v1": {
+   "reader": "stock glm-5.3 reading the prompt (adapt floors TEMPLATE, T=1.0, 256 new tokens), via floors_stock_gen.py (adapt/floors.py generate restricted to this family)",
+   "by_headline_layer": {
+    "L44": {
+     "precision": 0.1904409448803932,
+     "ci95": [
+      0.17695781991258736,
+      0.2031628053268432
+     ],
+     "recall_at_10": 0.41921508707283817,
+     "foil": {
+      "recall_at_10": 0.07614161013408653,
+      "precision": 0.029108524885797626
+     },
+     "n_items": 294,
+     "complete": true,
+     "prompt_version": "jlens-pr-v3+fw-v2+sense-v1",
+     "judge_model": "claude-opus-5-5"
+    },
+    "L54": {
+     "precision": 0.21777743336397806,
+     "ci95": [
+      0.20322350894442104,
+      0.2313312399131352
+     ],
+     "recall_at_10": 0.5328212370807015,
+     "foil": {
+      "recall_at_10": 0.07382827095985724,
+      "precision": 0.021499980322275448
+     },
+     "n_items": 290,
+     "complete": true,
+     "prompt_version": "jlens-pr-v3+fw-v2+sense-v1",
+     "judge_model": "claude-opus-5-5"
+    }
+   }
+  }
+ }
+}
