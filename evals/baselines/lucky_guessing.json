@@ -18,8 +18,9 @@
    "model": "claude-opus-5-5",
    "prompt_version": "lucky-2026-09-16",
    "rule": "single pick",
-   "instrument": "mc-brmt-2026-10-31r+norival-v1+qline-v1+bank-v6",
-   "written": "2026-11-04T10:29:13+00:00"
+   "instrument": "mc-brmt-2026-10-31r+norival-v1+qline-v2+bank-v6",
+   "written": "2026-11-04T10:29:13+00:00",
+   "restamped": "2026-11-04 (qline-v2): measured at mc-brmt-2026-10-31r+norival-v1+qline-v1+bank-v6; only the deterministic quote rule changed, the option lists did not, and a guesser sees only the lists, so the values stand"
   },
   "described": {
    "mean": 0.16,
@@ -39,8 +40,9 @@
    "model": "claude-opus-5-5",
    "prompt_version": "lucky-2026-09-16",
    "rule": "single pick",
-   "instrument": "mc-brmt-2026-10-31r+norival-v1+qline-v1+bank-v6",
-   "written": "2026-11-04T10:29:14+00:00"
+   "instrument": "mc-brmt-2026-10-31r+norival-v1+qline-v2+bank-v6",
+   "written": "2026-11-04T10:29:14+00:00",
+   "restamped": "2026-11-04 (qline-v2): measured at mc-brmt-2026-10-31r+norival-v1+qline-v1+bank-v6; only the deterministic quote rule changed, the option lists did not, and a guesser sees only the lists, so the values stand"
   },
   "uniform": {
    "mean": 0.21555555555555556,
@@ -60,8 +62,9 @@
    "model": "seeded-uniform",
    "prompt_version": "lucky-2026-09-16",
    "rule": "single pick",
-   "instrument": "mc-brmt-2026-10-31r+norival-v1+qline-v1+bank-v6",
-   "written": "2026-11-04T10:29:15+00:00"
+   "instrument": "mc-brmt-2026-10-31r+norival-v1+qline-v2+bank-v6",
+   "written": "2026-11-04T10:29:15+00:00",
+   "restamped": "2026-11-04 (qline-v2): measured at mc-brmt-2026-10-31r+norival-v1+qline-v1+bank-v6; only the deterministic quote rule changed, the option lists did not, and a guesser sees only the lists, so the values stand"
   },
   "topic": {
    "mean": 0.2088888888888889,
@@ -82,8 +85,9 @@
    "model": "claude-opus-5-5",
    "prompt_version": "lucky-2026-09-16",
    "rule": "single pick",
-   "instrument": "mc-brmt-2026-10-31r+norival-v1+qline-v1+bank-v6",
-   "written": "2026-11-04T10:29:15+00:00"
+   "instrument": "mc-brmt-2026-10-31r+norival-v1+qline-v2+bank-v6",
+   "written": "2026-11-04T10:29:15+00:00",
+   "restamped": "2026-11-04 (qline-v2): measured at mc-brmt-2026-10-31r+norival-v1+qline-v1+bank-v6; only the deterministic quote rule changed, the option lists did not, and a guesser sees only the lists, so the values stand"
   }
  },
  "conjunctive_association": {
@@ -580,8 +584,9 @@
    "model": "claude-opus-5-5",
    "prompt_version": "lucky-2026-09-16",
    "rule": "single pick",
-   "instrument": "mt-regex-2026-10-30+v2+ln-2026-11-03a+rawrx-v2+plural-v1+langleg-v1+bank-v4",
-   "written": "2026-11-04T07:52:21+00:00"
+   "instrument": "mt-regex-2026-10-30+v2+ln-2026-11-03a+rawrx-v2+plural-v2+langleg-v1+bank-v4",
+   "written": "2026-11-04T07:52:21+00:00",
+   "restamped": "2026-11-04 (plural-v2): measured at mt-regex-2026-10-30+v2+ln-2026-11-03a+rawrx-v2+plural-v1+langleg-v1+bank-v4; only the English plural rule changed, the option lists did not, and a guesser sees only the lists, so the values stand"
   },
   "described": {
    "mean": 0.256,
@@ -601,8 +606,9 @@
    "model": "claude-opus-5-5",
    "prompt_version": "lucky-2026-09-16",
    "rule": "single pick",
-   "instrument": "mt-regex-2026-10-30+v2+ln-2026-11-03a+rawrx-v2+plural-v1+langleg-v1+bank-v4",
-   "written": "2026-11-04T07:54:53+00:00"
+   "instrument": "mt-regex-2026-10-30+v2+ln-2026-11-03a+rawrx-v2+plural-v2+langleg-v1+bank-v4",
+   "written": "2026-11-04T07:54:53+00:00",
+   "restamped": "2026-11-04 (plural-v2): measured at mt-regex-2026-10-30+v2+ln-2026-11-03a+rawrx-v2+plural-v1+langleg-v1+bank-v4; only the English plural rule changed, the option lists did not, and a guesser sees only the lists, so the values stand"
   },
   "uniform": {
    "mean": 0.19,
@@ -622,8 +628,9 @@
    "model": "seeded-uniform",
    "prompt_version": "lucky-2026-09-16",
    "rule": "single pick",
-   "instrument": "mt-regex-2026-10-30+v2+ln-2026-11-03a+rawrx-v2+plural-v1+langleg-v1+bank-v4",
-   "written": "2026-11-04T07:57:25+00:00"
+   "instrument": "mt-regex-2026-10-30+v2+ln-2026-11-03a+rawrx-v2+plural-v2+langleg-v1+bank-v4",
+   "written": "2026-11-04T07:57:25+00:00",
+   "restamped": "2026-11-04 (plural-v2): measured at mt-regex-2026-10-30+v2+ln-2026-11-03a+rawrx-v2+plural-v1+langleg-v1+bank-v4; only the English plural rule changed, the option lists did not, and a guesser sees only the lists, so the values stand"
   },
   "topic": {
    "mean": 0.284,
@@ -644,8 +651,9 @@
    "model": "claude-opus-5-5",
    "prompt_version": "lucky-2026-09-16",
    "rule": "single pick",
-   "instrument": "mt-regex-2026-10-30+v2+ln-2026-11-03a+rawrx-v2+plural-v1+langleg-v1+bank-v4",
-   "written": "2026-11-04T07:57:25+00:00"
+   "instrument": "mt-regex-2026-10-30+v2+ln-2026-11-03a+rawrx-v2+plural-v2+langleg-v1+bank-v4",
+   "written": "2026-11-04T07:57:25+00:00",
+   "restamped": "2026-11-04 (plural-v2): measured at mt-regex-2026-10-30+v2+ln-2026-11-03a+rawrx-v2+plural-v1+langleg-v1+bank-v4; only the English plural rule changed, the option lists did not, and a guesser sees only the lists, so the values stand"
   }
  },
  "multilingual_multihop": {
@@ -667,8 +675,9 @@
    "model": "claude-opus-5-5",
    "prompt_version": "lucky-2026-09-16",
    "rule": "single pick",
-   "instrument": "mcrx-2026-11-03d+mc-ml-2026-11-01b",
-   "written": "2026-11-04T07:44:26+00:00"
+   "instrument": "mcrx-2026-11-03e+mc-ml-2026-11-01b",
+   "written": "2026-11-04T07:44:26+00:00",
+   "restamped": "2026-11-04 (mcrx-2026-11-03e): measured at mcrx-2026-11-03d+mc-ml-2026-11-01b; only the English plural rule changed, the option lists did not, and a guesser sees only the lists, so the values stand"
   },
   "described": {
    "mean": 0.4061224489795919,
@@ -688,8 +697,9 @@
    "model": "claude-opus-5-5",
    "prompt_version": "lucky-2026-09-16",
    "rule": "single pick",
-   "instrument": "mcrx-2026-11-03d+mc-ml-2026-11-01b",
-   "written": "2026-11-04T07:46:55+00:00"
+   "instrument": "mcrx-2026-11-03e+mc-ml-2026-11-01b",
+   "written": "2026-11-04T07:46:55+00:00",
+   "restamped": "2026-11-04 (mcrx-2026-11-03e): measured at mcrx-2026-11-03d+mc-ml-2026-11-01b; only the English plural rule changed, the option lists did not, and a guesser sees only the lists, so the values stand"
   },
   "uniform": {
    "mean": 0.24693877551020407,
@@ -709,8 +719,9 @@
    "model": "seeded-uniform",
    "prompt_version": "lucky-2026-09-16",
    "rule": "single pick",
-   "instrument": "mcrx-2026-11-03d+mc-ml-2026-11-01b",
-   "written": "2026-11-04T07:49:25+00:00"
+   "instrument": "mcrx-2026-11-03e+mc-ml-2026-11-01b",
+   "written": "2026-11-04T07:49:25+00:00",
+   "restamped": "2026-11-04 (mcrx-2026-11-03e): measured at mcrx-2026-11-03d+mc-ml-2026-11-01b; only the English plural rule changed, the option lists did not, and a guesser sees only the lists, so the values stand"
   },
   "topic": {
    "mean": 0.4244897959183674,
@@ -731,8 +742,9 @@
    "model": "claude-opus-5-5",
    "prompt_version": "lucky-2026-09-16",
    "rule": "single pick",
-   "instrument": "mcrx-2026-11-03d+mc-ml-2026-11-01b",
-   "written": "2026-11-04T07:49:25+00:00"
+   "instrument": "mcrx-2026-11-03e+mc-ml-2026-11-01b",
+   "written": "2026-11-04T07:49:25+00:00",
+   "restamped": "2026-11-04 (mcrx-2026-11-03e): measured at mcrx-2026-11-03d+mc-ml-2026-11-01b; only the English plural rule changed, the option lists did not, and a guesser sees only the lists, so the values stand"
   }
  },
  "multilingual_typo": {
@@ -754,8 +766,9 @@
    "model": "claude-opus-5-5",
    "prompt_version": "lucky-2026-09-16",
    "rule": "single pick",
-   "instrument": "mt-regex-2026-10-30+v2+ln-2026-11-03a+rawrx-v2+plural-v1+anchor-support-v1+langleg-v1+bank-v3",
-   "written": "2026-11-04T08:00:57+00:00"
+   "instrument": "mt-regex-2026-10-30+v2+ln-2026-11-03a+rawrx-v2+plural-v2+anchor-support-v1+langleg-v1+bank-v3",
+   "written": "2026-11-04T08:00:57+00:00",
+   "restamped": "2026-11-04 (plural-v2): measured at mt-regex-2026-10-30+v2+ln-2026-11-03a+rawrx-v2+plural-v1+anchor-support-v1+langleg-v1+bank-v3; only the English plural rule changed, the option lists did not, and a guesser sees only the lists, so the values stand"
   },
   "described": {
    "mean": 0.298,
@@ -775,8 +788,9 @@
    "model": "claude-opus-5-5",
    "prompt_version": "lucky-2026-09-16",
    "rule": "single pick",
-   "instrument": "mt-regex-2026-10-30+v2+ln-2026-11-03a+rawrx-v2+plural-v1+anchor-support-v1+langleg-v1+bank-v3",
-   "written": "2026-11-04T08:03:28+00:00"
+   "instrument": "mt-regex-2026-10-30+v2+ln-2026-11-03a+rawrx-v2+plural-v2+anchor-support-v1+langleg-v1+bank-v3",
+   "written": "2026-11-04T08:03:28+00:00",
+   "restamped": "2026-11-04 (plural-v2): measured at mt-regex-2026-10-30+v2+ln-2026-11-03a+rawrx-v2+plural-v1+anchor-support-v1+langleg-v1+bank-v3; only the English plural rule changed, the option lists did not, and a guesser sees only the lists, so the values stand"
   },
   "uniform": {
    "mean": 0.196,
@@ -796,8 +810,9 @@
    "model": "seeded-uniform",
    "prompt_version": "lucky-2026-09-16",
    "rule": "single pick",
-   "instrument": "mt-regex-2026-10-30+v2+ln-2026-11-03a+rawrx-v2+plural-v1+anchor-support-v1+langleg-v1+bank-v3",
-   "written": "2026-11-04T08:06:02+00:00"
+   "instrument": "mt-regex-2026-10-30+v2+ln-2026-11-03a+rawrx-v2+plural-v2+anchor-support-v1+langleg-v1+bank-v3",
+   "written": "2026-11-04T08:06:02+00:00",
+   "restamped": "2026-11-04 (plural-v2): measured at mt-regex-2026-10-30+v2+ln-2026-11-03a+rawrx-v2+plural-v1+anchor-support-v1+langleg-v1+bank-v3; only the English plural rule changed, the option lists did not, and a guesser sees only the lists, so the values stand"
   },
   "topic": {
    "mean": 0.332,
@@ -818,8 +833,9 @@
    "model": "claude-opus-5-5",
    "prompt_version": "lucky-2026-09-16",
    "rule": "single pick",
-   "instrument": "mt-regex-2026-10-30+v2+ln-2026-11-03a+rawrx-v2+plural-v1+anchor-support-v1+langleg-v1+bank-v3",
-   "written": "2026-11-04T08:06:01+00:00"
+   "instrument": "mt-regex-2026-10-30+v2+ln-2026-11-03a+rawrx-v2+plural-v2+anchor-support-v1+langleg-v1+bank-v3",
+   "written": "2026-11-04T08:06:01+00:00",
+   "restamped": "2026-11-04 (plural-v2): measured at mt-regex-2026-10-30+v2+ln-2026-11-03a+rawrx-v2+plural-v1+anchor-support-v1+langleg-v1+bank-v3; only the English plural rule changed, the option lists did not, and a guesser sees only the lists, so the values stand"
   }
  },
  "relational_multihop": {
@@ -1143,8 +1159,9 @@
    "model": "claude-opus-5-5",
    "prompt_version": "lucky-2026-09-16",
    "rule": "single pick",
-   "instrument": "chain-mc-2026-10-30+heads-v4+start-op+key-ex2",
-   "written": "2026-11-01T02:24:33+00:00"
+   "instrument": "chain-mc-2026-10-30+heads-v5+start-op+key-ex2",
+   "written": "2026-11-01T02:24:33+00:00",
+   "restamped": "2026-11-04 (heads-v5): measured at chain-mc-2026-10-30+heads-v4+start-op+key-ex2; only the answer-head rule changed, the option lists did not, and a guesser sees only the lists, so the values stand"
   },
   "uniform": {
    "mean": 0.10166666666666666,
@@ -1164,8 +1181,9 @@
    "model": "seeded-uniform",
    "prompt_version": "lucky-2026-09-16",
    "rule": "single pick",
-   "instrument": "chain-mc-2026-10-30+heads-v4+start-op+key-ex2",
-   "written": "2026-11-04T07:45:08+00:00"
+   "instrument": "chain-mc-2026-10-30+heads-v5+start-op+key-ex2",
+   "written": "2026-11-04T07:45:08+00:00",
+   "restamped": "2026-11-04 (heads-v5): measured at chain-mc-2026-10-30+heads-v4+start-op+key-ex2; only the answer-head rule changed, the option lists did not, and a guesser sees only the lists, so the values stand"
   },
   "described": {
    "mean": 0.13333333333333333,
@@ -1185,8 +1203,9 @@
    "model": "claude-opus-5-5",
    "prompt_version": "lucky-2026-09-16",
    "rule": "single pick",
-   "instrument": "chain-mc-2026-10-30+heads-v4+start-op+key-ex2",
-   "written": "2026-11-01T02:27:07+00:00"
+   "instrument": "chain-mc-2026-10-30+heads-v5+start-op+key-ex2",
+   "written": "2026-11-01T02:27:07+00:00",
+   "restamped": "2026-11-04 (heads-v5): measured at chain-mc-2026-10-30+heads-v4+start-op+key-ex2; only the answer-head rule changed, the option lists did not, and a guesser sees only the lists, so the values stand"
   }
  },
  "basic_readout": {
@@ -1208,8 +1227,9 @@
    "model": "claude-opus-5-5",
    "prompt_version": "lucky-2026-09-16",
    "rule": "single pick",
-   "instrument": "br-mc-2026-11-01-v5b+brsum-v1+qline-v1+bank-v7",
-   "written": "2026-11-04T07:50:14+00:00"
+   "instrument": "br-mc-2026-11-01-v5b+brsum-v2+qline-v2+bank-v7",
+   "written": "2026-11-04T07:50:14+00:00",
+   "restamped": "2026-11-04 (brsum-v2+qline-v2): measured at br-mc-2026-11-01-v5b+brsum-v1+qline-v1+bank-v7; only the deterministic asked-sum check and quote rule changed, the option lists did not, and a guesser sees only the lists, so the values stand"
   },
   "described": {
    "mean": 0.35,
@@ -1229,8 +1249,9 @@
    "model": "claude-opus-5-5",
    "prompt_version": "lucky-2026-09-16",
    "rule": "single pick",
-   "instrument": "br-mc-2026-11-01-v5b+brsum-v1+qline-v1+bank-v7",
-   "written": "2026-11-04T07:52:46+00:00"
+   "instrument": "br-mc-2026-11-01-v5b+brsum-v2+qline-v2+bank-v7",
+   "written": "2026-11-04T07:52:46+00:00",
+   "restamped": "2026-11-04 (brsum-v2+qline-v2): measured at br-mc-2026-11-01-v5b+brsum-v1+qline-v1+bank-v7; only the deterministic asked-sum check and quote rule changed, the option lists did not, and a guesser sees only the lists, so the values stand"
   },
   "uniform": {
    "mean": 0.202,
@@ -1250,8 +1271,9 @@
    "model": "seeded-uniform",
    "prompt_version": "lucky-2026-09-16",
    "rule": "single pick",
-   "instrument": "br-mc-2026-11-01-v5b+brsum-v1+qline-v1+bank-v7",
-   "written": "2026-11-04T07:55:18+00:00"
+   "instrument": "br-mc-2026-11-01-v5b+brsum-v2+qline-v2+bank-v7",
+   "written": "2026-11-04T07:55:18+00:00",
+   "restamped": "2026-11-04 (brsum-v2+qline-v2): measured at br-mc-2026-11-01-v5b+brsum-v1+qline-v1+bank-v7; only the deterministic asked-sum check and quote rule changed, the option lists did not, and a guesser sees only the lists, so the values stand"
   },
   "topic": {
    "mean": 0.33799999999999997,
@@ -1271,8 +1293,9 @@
    "model": "claude-opus-5-5",
    "prompt_version": "lucky-2026-09-16",
    "rule": "single pick",
-   "instrument": "br-mc-2026-11-01-v5b+brsum-v1+qline-v1+bank-v7",
-   "written": "2026-11-04T07:55:18+00:00"
+   "instrument": "br-mc-2026-11-01-v5b+brsum-v2+qline-v2+bank-v7",
+   "written": "2026-11-04T07:55:18+00:00",
+   "restamped": "2026-11-04 (brsum-v2+qline-v2): measured at br-mc-2026-11-01-v5b+brsum-v1+qline-v1+bank-v7; only the deterministic asked-sum check and quote rule changed, the option lists did not, and a guesser sees only the lists, so the values stand"
   }
  },
  "wrong_intermediate": {
@@ -1294,8 +1317,9 @@
    "model": "claude-opus-5-5",
    "prompt_version": "lucky-2026-09-16",
    "rule": "single pick",
-   "instrument": "wb-mc-2026-10-31r+judge-only-v1+qline-v1+wbforms-v4+bank-v4",
-   "written": "2026-11-01T06:43:41+00:00"
+   "instrument": "wb-mc-2026-10-31r+judge-only-v1+qline-v2+wbforms-v4+bank-v4",
+   "written": "2026-11-01T06:43:41+00:00",
+   "restamped": "2026-11-04 (qline-v2): measured at wb-mc-2026-10-31r+judge-only-v1+qline-v1+wbforms-v4+bank-v4; only the deterministic quote rule changed, the option lists did not, and a guesser sees only the lists, so the values stand"
   },
   "described": {
    "mean": 0.156,
@@ -1315,8 +1339,9 @@
    "model": "claude-opus-5-5",
    "prompt_version": "lucky-2026-09-16",
    "rule": "single pick",
-   "instrument": "wb-mc-2026-10-31r+judge-only-v1+qline-v1+wbforms-v4+bank-v4",
-   "written": "2026-11-01T06:43:42+00:00"
+   "instrument": "wb-mc-2026-10-31r+judge-only-v1+qline-v2+wbforms-v4+bank-v4",
+   "written": "2026-11-01T06:43:42+00:00",
+   "restamped": "2026-11-04 (qline-v2): measured at wb-mc-2026-10-31r+judge-only-v1+qline-v1+wbforms-v4+bank-v4; only the deterministic quote rule changed, the option lists did not, and a guesser sees only the lists, so the values stand"
   },
   "uniform": {
    "mean": 0.188,
@@ -1336,8 +1361,9 @@
    "model": "seeded-uniform",
    "prompt_version": "lucky-2026-09-16",
    "rule": "single pick",
-   "instrument": "wb-mc-2026-10-31r+judge-only-v1+qline-v1+wbforms-v4+bank-v4",
-   "written": "2026-11-01T06:43:42+00:00"
+   "instrument": "wb-mc-2026-10-31r+judge-only-v1+qline-v2+wbforms-v4+bank-v4",
+   "written": "2026-11-01T06:43:42+00:00",
+   "restamped": "2026-11-04 (qline-v2): measured at wb-mc-2026-10-31r+judge-only-v1+qline-v1+wbforms-v4+bank-v4; only the deterministic quote rule changed, the option lists did not, and a guesser sees only the lists, so the values stand"
   },
   "topic": {
    "mean": 0.092,
@@ -1357,8 +1383,9 @@
    "model": "claude-opus-5-5",
    "prompt_version": "lucky-2026-09-16",
    "rule": "single pick",
-   "instrument": "wb-mc-2026-10-31r+judge-only-v1+qline-v1+wbforms-v4+bank-v4",
-   "written": "2026-11-01T06:43:41+00:00"
+   "instrument": "wb-mc-2026-10-31r+judge-only-v1+qline-v2+wbforms-v4+bank-v4",
+   "written": "2026-11-01T06:43:41+00:00",
+   "restamped": "2026-11-04 (qline-v2): measured at wb-mc-2026-10-31r+judge-only-v1+qline-v1+wbforms-v4+bank-v4; only the deterministic quote rule changed, the option lists did not, and a guesser sees only the lists, so the values stand"
   }
  },
  "multihop_mt_v2": {
@@ -1380,8 +1407,9 @@
    "model": "claude-opus-5-5",
    "prompt_version": "lucky-2026-09-16",
    "rule": "single pick",
-   "instrument": "mh2-mc-2026-11-01+norival-v1+qline-v1+bank-v6",
-   "written": "2026-11-04T10:29:20+00:00"
+   "instrument": "mh2-mc-2026-11-01+norival-v1+qline-v2+bank-v6",
+   "written": "2026-11-04T10:29:20+00:00",
+   "restamped": "2026-11-04 (qline-v2): measured at mh2-mc-2026-11-01+norival-v1+qline-v1+bank-v6; only the deterministic quote rule changed, the option lists did not, and a guesser sees only the lists, so the values stand"
   },
   "described": {
    "mean": 0.215625,
@@ -1401,8 +1429,9 @@
    "model": "claude-opus-5-5",
    "prompt_version": "lucky-2026-09-16",
    "rule": "single pick",
-   "instrument": "mh2-mc-2026-11-01+norival-v1+qline-v1+bank-v6",
-   "written": "2026-11-04T10:29:20+00:00"
+   "instrument": "mh2-mc-2026-11-01+norival-v1+qline-v2+bank-v6",
+   "written": "2026-11-04T10:29:20+00:00",
+   "restamped": "2026-11-04 (qline-v2): measured at mh2-mc-2026-11-01+norival-v1+qline-v1+bank-v6; only the deterministic quote rule changed, the option lists did not, and a guesser sees only the lists, so the values stand"
   },
   "uniform": {
    "mean": 0.1875,
@@ -1422,8 +1451,9 @@
    "model": "seeded-uniform",
    "prompt_version": "lucky-2026-09-16",
    "rule": "single pick",
-   "instrument": "mh2-mc-2026-11-01+norival-v1+qline-v1+bank-v6",
-   "written": "2026-11-04T10:29:21+00:00"
+   "instrument": "mh2-mc-2026-11-01+norival-v1+qline-v2+bank-v6",
+   "written": "2026-11-04T10:29:21+00:00",
+   "restamped": "2026-11-04 (qline-v2): measured at mh2-mc-2026-11-01+norival-v1+qline-v1+bank-v6; only the deterministic quote rule changed, the option lists did not, and a guesser sees only the lists, so the values stand"
   },
   "topic": {
    "mean": 0.3375,
@@ -1444,8 +1474,9 @@
    "model": "claude-opus-5-5",
    "prompt_version": "lucky-2026-09-16",
    "rule": "single pick",
-   "instrument": "mh2-mc-2026-11-01+norival-v1+qline-v1+bank-v6",
-   "written": "2026-11-04T10:29:21+00:00"
+   "instrument": "mh2-mc-2026-11-01+norival-v1+qline-v2+bank-v6",
+   "written": "2026-11-04T10:29:21+00:00",
+   "restamped": "2026-11-04 (qline-v2): measured at mh2-mc-2026-11-01+norival-v1+qline-v1+bank-v6; only the deterministic quote rule changed, the option lists did not, and a guesser sees only the lists, so the values stand"
   }
  },
  "multilingual": {
@@ -1467,8 +1498,9 @@
    "model": "claude-opus-5-5",
    "prompt_version": "lucky-2026-09-16",
    "rule": "single pick",
-   "instrument": "mcrx-2026-11-03d+mc-ml-2026-11-01b+bank-v4",
-   "written": "2026-11-04T09:49:35+00:00"
+   "instrument": "mcrx-2026-11-03e+mc-ml-2026-11-01b+bank-v4",
+   "written": "2026-11-04T09:49:35+00:00",
+   "restamped": "2026-11-04 (mcrx-2026-11-03e): measured at mcrx-2026-11-03d+mc-ml-2026-11-01b+bank-v4; only the English plural rule changed, the option lists did not, and a guesser sees only the lists, so the values stand"
   },
   "described": {
    "mean": 0.21414141414141413,
@@ -1488,8 +1520,9 @@
    "model": "claude-opus-5-5",
    "prompt_version": "lucky-2026-09-16",
    "rule": "single pick",
-   "instrument": "mcrx-2026-11-03d+mc-ml-2026-11-01b+bank-v4",
-   "written": "2026-11-04T09:49:35+00:00"
+   "instrument": "mcrx-2026-11-03e+mc-ml-2026-11-01b+bank-v4",
+   "written": "2026-11-04T09:49:35+00:00",
+   "restamped": "2026-11-04 (mcrx-2026-11-03e): measured at mcrx-2026-11-03d+mc-ml-2026-11-01b+bank-v4; only the English plural rule changed, the option lists did not, and a guesser sees only the lists, so the values stand"
   },
   "topic": {
    "mean": 0.20202020202020204,
@@ -1510,8 +1543,9 @@
    "model": "claude-opus-5-5",
    "prompt_version": "lucky-2026-09-16",
    "rule": "single pick",
-   "instrument": "mcrx-2026-11-03d+mc-ml-2026-11-01b+bank-v4",
-   "written": "2026-11-04T09:49:36+00:00"
+   "instrument": "mcrx-2026-11-03e+mc-ml-2026-11-01b+bank-v4",
+   "written": "2026-11-04T09:49:36+00:00",
+   "restamped": "2026-11-04 (mcrx-2026-11-03e): measured at mcrx-2026-11-03d+mc-ml-2026-11-01b+bank-v4; only the English plural rule changed, the option lists did not, and a guesser sees only the lists, so the values stand"
   },
   "uniform": {
    "mean": 0.18383838383838386,
@@ -1531,8 +1565,9 @@
    "model": "seeded-uniform",
    "prompt_version": "lucky-2026-09-16",
    "rule": "single pick",
-   "instrument": "mcrx-2026-11-03d+mc-ml-2026-11-01b+bank-v4",
-   "written": "2026-11-04T09:49:36+00:00"
+   "instrument": "mcrx-2026-11-03e+mc-ml-2026-11-01b+bank-v4",
+   "written": "2026-11-04T09:49:36+00:00",
+   "restamped": "2026-11-04 (mcrx-2026-11-03e): measured at mcrx-2026-11-03d+mc-ml-2026-11-01b+bank-v4; only the English plural rule changed, the option lists did not, and a guesser sees only the lists, so the values stand"
   }
  },
  "knowledge_cutoff": {
@@ -1684,8 +1719,9 @@
    "model": "claude-opus-5-5",
    "prompt_version": "lucky-2026-09-16",
    "rule": "single pick",
-   "instrument": "assoc-mc-2026-11-01-v3+gate-a1+bank-v5",
-   "written": "2026-11-04T07:49:52+00:00"
+   "instrument": "assoc-mc-2026-11-01-v3+gate-a2+bank-v5",
+   "written": "2026-11-04T07:49:52+00:00",
+   "restamped": "2026-11-04 (gate-a2): measured at assoc-mc-2026-11-01-v3+gate-a1+bank-v5; only the deterministic quote gate changed, the option lists did not, and a guesser sees only the lists, so the values stand"
   },
   "described": {
    "mean": 0.4329670329670329,
@@ -1705,8 +1741,9 @@
    "model": "claude-opus-5-5",
    "prompt_version": "lucky-2026-09-16",
    "rule": "single pick",
-   "instrument": "assoc-mc-2026-11-01-v3+gate-a1+bank-v5",
-   "written": "2026-11-04T07:52:10+00:00"
+   "instrument": "assoc-mc-2026-11-01-v3+gate-a2+bank-v5",
+   "written": "2026-11-04T07:52:10+00:00",
+   "restamped": "2026-11-04 (gate-a2): measured at assoc-mc-2026-11-01-v3+gate-a1+bank-v5; only the deterministic quote gate changed, the option lists did not, and a guesser sees only the lists, so the values stand"
   },
   "topic": {
    "mean": 0.6175824175824176,
@@ -1726,8 +1763,9 @@
    "model": "claude-opus-5-5",
    "prompt_version": "lucky-2026-09-16",
    "rule": "single pick",
-   "instrument": "assoc-mc-2026-11-01-v3+gate-a1+bank-v5",
-   "written": "2026-11-04T07:54:29+00:00"
+   "instrument": "assoc-mc-2026-11-01-v3+gate-a2+bank-v5",
+   "written": "2026-11-04T07:54:29+00:00",
+   "restamped": "2026-11-04 (gate-a2): measured at assoc-mc-2026-11-01-v3+gate-a1+bank-v5; only the deterministic quote gate changed, the option lists did not, and a guesser sees only the lists, so the values stand"
   },
   "uniform": {
    "mean": 0.10769230769230768,
@@ -1747,8 +1785,9 @@
    "model": "seeded-uniform",
    "prompt_version": "lucky-2026-09-16",
    "rule": "single pick",
-   "instrument": "assoc-mc-2026-11-01-v3+gate-a1+bank-v5",
-   "written": "2026-11-04T07:54:29+00:00"
+   "instrument": "assoc-mc-2026-11-01-v3+gate-a2+bank-v5",
+   "written": "2026-11-04T07:54:29+00:00",
+   "restamped": "2026-11-04 (gate-a2): measured at assoc-mc-2026-11-01-v3+gate-a1+bank-v5; only the deterministic quote gate changed, the option lists did not, and a guesser sees only the lists, so the values stand"
   }
  },
  "multihop": {
@@ -1770,8 +1809,9 @@
    "model": "claude-opus-5-5",
    "prompt_version": "lucky-2026-09-16",
    "rule": "single pick",
-   "instrument": "bank-mc-2026-11-01-v3+bank-gate-r9+bank-v5",
-   "written": "2026-11-04T10:07:34+00:00"
+   "instrument": "bank-mc-2026-11-01-v3+bank-gate-r10+bank-v5",
+   "written": "2026-11-04T10:07:34+00:00",
+   "restamped": "2026-11-04 (bank-gate-r10): measured at bank-mc-2026-11-01-v3+bank-gate-r9+bank-v5; only the deterministic quote rule changed, the option lists did not, and a guesser sees only the lists, so the values stand"
   },
   "described": {
    "mean": 0.21836734693877552,
@@ -1791,8 +1831,9 @@
    "model": "claude-opus-5-5",
    "prompt_version": "lucky-2026-09-16",
    "rule": "single pick",
-   "instrument": "bank-mc-2026-11-01-v3+bank-gate-r9+bank-v5",
-   "written": "2026-11-04T10:10:03+00:00"
+   "instrument": "bank-mc-2026-11-01-v3+bank-gate-r10+bank-v5",
+   "written": "2026-11-04T10:10:03+00:00",
+   "restamped": "2026-11-04 (bank-gate-r10): measured at bank-mc-2026-11-01-v3+bank-gate-r9+bank-v5; only the deterministic quote rule changed, the option lists did not, and a guesser sees only the lists, so the values stand"
   },
   "topic": {
    "mean": 0.22448979591836732,
@@ -1812,8 +1853,9 @@
    "model": "claude-opus-5-5",
    "prompt_version": "lucky-2026-09-16",
    "rule": "single pick",
-   "instrument": "bank-mc-2026-11-01-v3+bank-gate-r9+bank-v5",
-   "written": "2026-11-04T10:12:32+00:00"
+   "instrument": "bank-mc-2026-11-01-v3+bank-gate-r10+bank-v5",
+   "written": "2026-11-04T10:12:32+00:00",
+   "restamped": "2026-11-04 (bank-gate-r10): measured at bank-mc-2026-11-01-v3+bank-gate-r9+bank-v5; only the deterministic quote rule changed, the option lists did not, and a guesser sees only the lists, so the values stand"
   },
   "uniform": {
    "mean": 0.17346938775510204,
@@ -1833,8 +1875,9 @@
    "model": "seeded-uniform",
    "prompt_version": "lucky-2026-09-16",
    "rule": "single pick",
-   "instrument": "bank-mc-2026-11-01-v3+bank-gate-r9+bank-v5",
-   "written": "2026-11-04T10:12:32+00:00"
+   "instrument": "bank-mc-2026-11-01-v3+bank-gate-r10+bank-v5",
+   "written": "2026-11-04T10:12:32+00:00",
+   "restamped": "2026-11-04 (bank-gate-r10): measured at bank-mc-2026-11-01-v3+bank-gate-r9+bank-v5; only the deterministic quote rule changed, the option lists did not, and a guesser sees only the lists, so the values stand"
   }
  },
  "poetry": {

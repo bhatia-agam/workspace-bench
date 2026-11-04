@@ -219,7 +219,7 @@ def test_moral_pick_prompts_are_one_pick():
         assert not hasattr(mr, gone), gone
 
 
-def test_moral_pick_summary_run_one_call_per_side(tmp_path, monkeypatch):
+def test_moral_pick_summary_run_three_draws_per_side(tmp_path, monkeypatch):
     mc = _committed_mc()
     iid = "ec-self_driving_sacrifice_passenger-chat_tf"
     rows = [{"id": iid, "layer": 20, "pos": p, "samples": [GOLD_LINE]} for p in range(8)]
@@ -509,3 +509,33 @@ def test_moral_near_verbatim_quote_verifies():
     rewritten = "Ransom payments reward kidnappers and endanger others."
     assert verify_quote(rewritten, lines, cells) == "text"
     assert verify_quote("a ransoms", lines, cells) == "text"  # too short for a near quote
+    # the older single pick (ec-v4 / ec-v4.1) keeps exact quotes
+    assert verify_quote(near, lines, cells, near=False) == "text"
+    assert verify_quote(text, lines, cells, near=False) == "ok"
+
+
+def test_moral_near_verbatim_quote_only_under_the_single_pick(tmp_path, monkeypatch):
+    """The near-verbatim rule and its +nq1 stamp belong to ec-v9: under the older single pick
+    (opts=prompts=ec-v4.1) the same one-word-off gold quote stays unverified and the summary
+    result is stamped +maj3v alone."""
+    from conftest import write_jsonl
+
+    mc = _committed_mc()
+    iid = "ec-self_driving_sacrifice_passenger-chat_tf"
+    rows = [{"id": iid, "layer": 20, "pos": p, "samples": [GOLD_LINE]} for p in range(8)]
+    path = write_jsonl(tmp_path / "r.jsonl", rows)
+    near = "A car owes a primary duty of care to protect its own passengers."
+    assert near not in GOLD_LINE
+    for extra, ok, stamp in (
+        ({}, True, "ec-v9+nq1+maj3v+digest-"),
+        ({"prompts": "ec-v4.1"}, False, "ec-v4.1+maj3v+digest-"),
+    ):
+        FakeLLM.install(monkeypatch, lambda s, u, sc: {"choice": mc.gold_pos, "quote": near})
+        args = summary_args(
+            path, tmp_path / stamp[:6], mrp.PROMPT_VERSION, items=[iid], extra=extra
+        )
+        r = mr.run(args)
+        (row,) = r.rows
+        assert row["correct"] is ok and row["picked"] == "gold", stamp
+        assert row["pick"] == ("gold" if ok else "unverified"), stamp
+        assert r.config["prompt_version"].startswith(stamp)
