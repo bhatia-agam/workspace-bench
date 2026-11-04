@@ -35,7 +35,7 @@ PV3 = "br-mc-2026-11-01-v3"  # round 4: bank v3's stamp
 PV4 = "br-mc-2026-11-01-v4"  # PR #214 review r5: bank v4's stamp
 PV5 = "br-mc-2026-11-01-v5b"  # PR #214 review r7: bank v5's option seed / call key (balanced slots)
 # the registered result stamp (scoring-only suffixes; options and calls keep PV5)
-STAMP = PV5 + "+brsum-v1+qline-v1+bank-v7"
+STAMP = PV5 + "+brsum-v2+qline-v2+bank-v7"
 V7 = REPO / "evals/basic_readout/items_v7.json"  # the registered bank
 FLAT = ("numbers", "days of the week", "months", "candidate answers of the task's type")
 

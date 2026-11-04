@@ -42,7 +42,8 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   `fallbacks` parameter); a served JSON result carries `llm.SERVED_BY`, a served text fires
   `on_served`, and only refusals move (a `max_tokens` stop or an error stays the primary's
   outcome). `mcjudge.run_calls(refusal_model=)` passes it through and caches the serving model
-  with the row. The digest's equivalent is `summ_fallback=none+<model>`, and
+  with the row, under the judge's fingerprint: a later run with another refusal model (or none)
+  reuses that row (no stale-fallback check, unlike the digest). The digest's equivalent is `summ_fallback=none+<model>`, and
   `digest.OUTPUT_CAPS` gives a digest model its own per-call output cap (`Settings.max_tokens`).
 
 ## Family conventions
@@ -76,14 +77,15 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   `MC_FAMILIES` dispatch to a blind forced-choice judge instead, over options frozen in the bank
   (`item["mc"]`), cannot-tell last. Two modules, written in parallel by the two family PRs and
   kept side by side (unifying them is a follow-up): basic_readout (plan 0053) on
-  `basic/mcjudge_basic.py` (quote gate: `quote_ok` or `nearquote.close_lines`, the option read
-  in the quote's line, `form_via`; number-flood void, bare-mention ruling, the asked-sum void
+  `basic/mcjudge_basic.py` (quote gate: `quote_ok` or `nearquote.close_lines`, the option named
+  by the quote or, cut mid-name, where its line continues it or its sample ends inside the
+  name, `form_via`; number-flood void, bare-mention ruling, the asked-sum void
   `other_sum`; options seeded and calls keyed by `OPTIONS_VERSIONS`, not the result stamp;
   its prompts are `SYSTEM_MC` / `USER_MC` / `BR_CANNOT` in `basic/prompts.py`, kept OUT of the
   shared `PROMPTS` so they never stale the other basic families' stamp), and multihop (plan 0048,
   `MC_BANK_FAMILIES`) on `basic/mcjudge_bank.py` (gates: the quote verifies, verbatim or
-  near-verbatim, and names the gold in itself or in its line by name, alias or a derived form
-  from the frozen `evals/multihop/derived_forms.json` (`gold_forms`), names no other option, and
+  near-verbatim, and names the gold in itself (or, cut mid-name, where its line continues it or its
+  sample ends inside the name) by name, alias or a derived form from the frozen `evals/multihop/derived_forms.json` (`gold_forms`), names no other option, and
   is no number flood; no split rule; the gate version `GATE_VERSION` joins the result stamp while
   the calls keep `CALL_VERSIONS`; strings in the family's `prompts.MC`); per-family strings `FAMILY_RULES` (typo) are added to that family's own `PROMPTS` (`FORBIDDEN_TEMPLATE` / `FORBIDDEN_FAMILIES` is empty since plan 0058 removed medical_diagnosis{,_alt}; the mechanism stays); `FAMILY_PROMPT_VERSIONS` / `prompt_version_of` give a newer family its own stamp so adding a rule never stales the older families' `bank-2026-10-10` ATI entries and floors; `DIGEST_TASK_NOTES_TEXT` is in every basic family's PROMPTS, so a new note line must be added to every basic README) and `multitoken/`
   (`mt_family(name, title, calls_per_arm=, scorer=)`): basic_readout_mt (plan 0051) is
@@ -201,10 +203,11 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   directed_modulation, hinted_cutoff, knowledge_cutoff, math_shortcuts and wrong_intermediate (plan 0050: a blind 6-way MC over B',
   the true bridge B and four same-category distractors frozen in bank v2 by
   `scripts/wrong_intermediate_mc_options.py`; a gold pick is credited only with a verified or
-  near-verbatim quote that names it by a listed form, `mc.forms`, in the quote or in the line it
-  came from, and that is not a prompt echo; no code check overrules the judge's pick
-  (`judge-only-v1`), and the raw wrong-vs-true counts are reported only; `true_bridge_rate`
-  replaces the removed wrong_bridge_true).
+  near-verbatim quote that names it by a listed form, `mc.forms`, in the quote or (a quote cut
+  mid-name) where its line continues it or its sample ends inside the gold's name, and that is not
+  a prompt echo; no code check overrules the judge's pick (`judge-only-v1`), and the raw
+  wrong-vs-true counts are reported only; `true_bridge_rate` replaces the removed
+  wrong_bridge_true).
   user_modeling (plan 0056, `um-v3.2`) adds a value gate on top of the shared
   `quote_ok` + `statement_lines`: `mc.form_in` over its frozen lexicon `aliases.py` (an edit
   there bumps its `PROMPT_VERSION`; `tests/fixtures/user_modeling_gate_cases.json` replays the
