@@ -315,21 +315,6 @@ def test_jb_guard_applies_in_postprocess():
 # ---------------------------------------------------------------- arithmetic +cons-r3
 
 
-def test_arith_consensus_block_lists_marked_keys_only():
-    from wsbench.evals.arithmetic_intermediates import judge as aj
-    from wsbench.evals.arithmetic_intermediates import prompts as ap
-
-    ln = Line("87 + 88 = 175")
-    note = "first number of 4 of 4 samples at [L44 pos -3]"
-    marked = digest.Grounded("s", "4 samples", "87", ln, "87", "numbers", consensus=note)
-    plain = digest.Grounded("s", "9 samples", "175", ln, "175", "numbers")
-    assert aj.consensus_keys([plain, marked]) == ["87"]
-    u = ap.render_user_summary("NOTE", "- [9 samples] 175", aj.consensus_keys([plain, marked]))
-    assert "CONSENSUS VALUES" in u and u.index("CONSENSUS VALUES") < u.index("[9 samples] 175")
-    assert "CONSENSUS VALUES" not in ap.render_user_summary("NOTE", "- 175", [])
-    assert "include each of them among the values you name" in ap.SYSTEM_SUMMARY
-
-
 def test_arith_consensus_ranks_before_unmarked_but_cap_holds():
     ln = Line("108 then 216", layer=56, pos=-7)
     cons = [digest.Consensus(108.0, "108", 56, -7, 4, 4, ln)]

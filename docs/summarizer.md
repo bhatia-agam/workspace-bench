@@ -160,14 +160,11 @@ per-layer digests are merged into the one judged digest (see "Audit fixes" below
     every headline, re-takes a prompt-only floor on the ids both decided
     (`[floor vs row on n shared]`) and reports a twin-bank pair (`results.PAIRED_FAMILIES`,
     empty since plan 0058) on the ids decided in both; `prompt_only.freeze` counts digest refusals toward the floor's refusal share.
-  - *F11, arithmetic (numbers digest).* The family passes its operands and `consensus=True`:
-    the digest asks for `NUMBERS_SPARE` = 4 spare numbers, keys that restate an operand take a
-    judged slot only when nothing else is left, a number that at least 3 of the 4 samples of ONE
-    activation begin with (`digest.consensus_claims`, `lead_number`) is marked `first number of
-    K of N samples at [L.. pos ..]` and fills a slot the summarizer left free (still five slots;
-    an operand is never marked). The summary judge reads the mark (`CONSENSUS_RULE`); the headline
-    stays the judge, and `extras.consensus_band` reports the raw-readout rate of the same rule
-    beside it with the same rule on the cross null.
+  - *Arithmetic (numbers digest).* The family passes its operands: the digest asks for
+    `NUMBERS_SPARE` = 4 spare numbers, and a key that restates an operand takes a judged slot
+    only when nothing else is left. The first-number consensus marks (`consensus=True`,
+    `digest.consensus_claims`), the judge's `CONSENSUS_RULE` and `extras.consensus_band` were
+    retired on 2026-11-04 (`+generic-r7`); `collapse(consensus=)` remains, but no family sets it.
 - **Refusal fallbacks** (`summ_fallback`): `default` passes the server-side refusal fallback
   (`fallbacks="default"`); `default+<claude model>` additionally re-runs a call still declined
   after it once on that model, at the same level, before any halving (plan 0037 J10;
@@ -237,7 +234,7 @@ and this goes to the judge." The default for a multi-layer config since bench v1
   A single-layer run, a hand-built `JudgeArgs` and `summ_layers=union` / `joint` are unchanged
   from v1.0 (same instrument, same requests). The numbers digests (`chain_intermediates`,
   `arithmetic_intermediates`) keep their v1.0 all-layer path: their five-number budget is fixed
-  by design (plan 0022 Part B) and their operand / consensus / tie passes act on the merged keys,
+  by design (plan 0022 Part B) and their operand and tie passes act on the merged keys,
   so a multiplied stage-2 budget does not apply (`summ_layers=layered` with `summ_numbers > 0` exits 2).
   `jlens_concept_pr` is native-only.
 - **Stamps:** the instrument gains `-layered-v1x4` after the render tag

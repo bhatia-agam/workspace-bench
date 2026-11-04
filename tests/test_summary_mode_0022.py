@@ -12,7 +12,6 @@ from wsbench import digest, llm, registry
 from wsbench.cache import Cache
 from wsbench.evals.arithmetic_intermediates import SPEC as ARITH
 from wsbench.evals.arithmetic_intermediates import judge as arith_judge
-from wsbench.evals.arithmetic_intermediates.prompts import SYSTEM as ARITH_NATIVE
 from wsbench.evals.arithmetic_intermediates.prompts import SYSTEM_SUMMARY as ARITH_SUMMARY
 from wsbench.evals.chain_intermediates import SPEC as CHAIN
 from wsbench.evals.chain_intermediates import judge as chain_judge
@@ -307,12 +306,11 @@ def test_arith_verdict_keys_and_native_default():
 
 
 def test_summary_prompts_only_change_the_cap():
-    from wsbench.evals.arithmetic_intermediates.prompts import CONSENSUS_RULE
-
-    for native, summary in ((CHAIN_NATIVE, CHAIN_SUMMARY), (ARITH_NATIVE, ARITH_SUMMARY)):
-        if summary is ARITH_SUMMARY:  # audit F11 (Fable's ruling): plus the consensus-mark rule
-            summary = summary.replace("\n" + CONSENSUS_RULE, "", 1)
-        assert summary == native.replace("at most three.", "at most ten.") and summary != native
+    # chain: the summary prompt is the native one with the larger cap
+    assert CHAIN_NATIVE.replace("at most three.", "at most ten.") == CHAIN_SUMMARY
+    assert CHAIN_SUMMARY != CHAIN_NATIVE
+    # arithmetic: its own generic summary prompt, capped at ten
+    assert "at most ten." in ARITH_SUMMARY and "CONSENSUS" not in ARITH_SUMMARY
 
 
 @pytest.fixture

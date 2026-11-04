@@ -48,8 +48,8 @@ BASE_PAIRS: dict[str, dict[str, str]] = {
         "arith-free-batched-2026-10-30": "arith-free-2026-10-30",  # plan 0036 (no token labels)
         # final r1: both stamps carry the rule version (+exact-int+keys-union)
         "arith-free-batched-2026-10-30+exact-int+keys-union": (
-            # round 3 / round 4: summary-only rules (consensus block / consensus counted)
-            "arith-free-2026-10-30+exact-int+keys-union+cons-r3+cons-r4"
+            # the summary-only generic judge (no consensus machinery)
+            "arith-free-2026-10-30+exact-int+keys-union+generic-r7"
         ),
     },
     # final r1: summary mode pins model-voice reactions (+pins-r1); native is unchanged

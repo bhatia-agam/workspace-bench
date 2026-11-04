@@ -324,7 +324,8 @@ deleted.
   - step not within separation of the answer;
   - exact eval re-check.
 - The judge-side `cell.layer` must be remapped.
-- **Bank now:** unchanged; judge plan 0036 (exact small integers, per-layer keys, cons-r4; lite =
+- **Bank now:** unchanged; judge plan 0036 (exact small integers, per-layer keys, generic-r7: one generic summary judge, the
+  consensus rules retired; lite =
   the remapped L56 / L60). No bank edit; re-read.
 
 ### chain_intermediates — values along a chain of operations

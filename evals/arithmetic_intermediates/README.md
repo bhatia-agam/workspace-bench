@@ -66,8 +66,9 @@ Example: `(271 - 322) * 14` → intermediate -51, answer -714.
   Native `opts=aggregate=native` has two cell grids: `cells=frozen` (the native default: the
   variant's one pre-registered cell, one call per item; the ATI gate's instrument) and
   `cells=all` (every row, one batched call per (item, layer)).
-- **Judge: free recall, prompt-blind.** For each cell (or digest) the judge names the numbers the
-  readout presents as computed values, ranked, at most three (ten on a digest), or none (the
+- **Judge: free recall, prompt-blind.** For each cell the judge names the numbers the readout
+  presents as computed values (at most three); on a digest, every number it uses in a
+  calculation, inputs as well as results (at most ten); or none (the
   chained-intermediates judge with its task sentence changed to a bare arithmetic expression).
   **No read-site token text reaches the judge in any mode** (native batched since
   `arith-free-batched-2026-10-30`; summary mode never): batched entries are headed
@@ -174,7 +175,7 @@ wsbench judge family=arithmetic_intermediates readouts=<arm>.jsonl out=outputs/<
 
 ## Judge prompts
 
-`prompt_version`: `arith-free-2026-10-30+exact-int+keys-union` for the per-cell call (summary mode: `arith-free-2026-10-30+exact-int+keys-union+cons-r3+cons-r4`, see above) (`cells=frozen`, and the base of the
+`prompt_version`: `arith-free-2026-10-30+exact-int+keys-union` for the per-cell call (summary mode: `arith-free-2026-10-30+exact-int+keys-union+generic-r7`, see above) (`cells=frozen`, and the base of the
 summary stamp) and `arith-free-batched-2026-10-30+exact-int+keys-union` for the batched `cells=all` call (the calls
 themselves stay keyed `arith-free-2026-10-30` / `arith-free-batched-2026-10-30`: final r1 re-asks no call) — the two share
 their instructions and differ only in packaging, so they carry their own tags; `reads=lite`
@@ -315,56 +316,16 @@ on that digest.
   numbers than one cell does, so the paired `cross` null is taken from the same kept values on
   the same digest under the same rule: the floor moves with the pass rate, and `net` stays the
   comparison.
-- **Operands and the first-number consensus (audit F11, 2026-10-31).** The numbers digest is
-  told the item's operands: it asks for 4 spare numbers, and a key that restates an operand
-  takes one of the five judged slots only when no other number is left. A number that at least 3
-  of the 4 samples of ONE activation begin with (`digest.consensus_claims`) is a counted claim:
-  its line is marked `first number of K of N samples at [L<layer> pos <index>]`, and it fills a
-  slot the summarizer left free (never an operand; never more than five slots; round 3: marked
-  numbers rank first, see below). The summary judge reads that mark (`CONSENSUS_RULE` in `SYSTEM_SUMMARY`). Decision (Fable, 2026-10-31): the
-  mechanical consensus is NOT the headline; the headline stays this judge.
-- **Round 3 (`+cons-r3`, summary mode only; calls keyed `arith-free-2026-10-30+cons-r3`, so every
-  summary call is re-asked).** The all-layer judge ignored `CONSENSUS_RULE` in long digests (30-44
-  union keys): in 64/596 items the gold was a marked key, yet the judge named only right-hand
-  results ('87 + 88 = 175' gave 175, not the marked 87), so all-layer (0.413) scored below lite
-  and L56 (0.455) although its keys are the union of theirs. Two changes, the headline still
-  being the judge (Fable F11): (1) the judge's user turn opens with a `CONSENSUS VALUES` block
-  listing the digest's consensus-marked number keys (`judge.consensus_keys`), and
-  `CONSENSUS_RULE` tells the judge to name each of them; (2) in the numbers cap
-  (`digest.rank_numbers`) consensus-marked numbers rank BEFORE the unmarked summarizer numbers, so
-  the 5-per-layer cap never cuts a consensus value while it keeps an unconsented one (fracadd-013
-  L56: 108 leads 4 of 4 samples, but its line was keyed 216 and the filled 108 fell past the cap);
-  the slot count is unchanged. Re-judged on the final O-lens readouts: all-layer 0.413 -> 0.562
-  (cross null 0.064 -> 0.074, net 0.349 -> 0.488), L56 0.455 -> 0.495, L60 0.404 -> 0.515, so
-  all-layer is again above every single layer. All 17 audit ids pass at all-layer (addmul-003,
-  mulmid-056, addmul-007, addmul-032, fraccomp-009, fracadd-033, addmul-012, addmul-049,
-  subsub-009/049/043, fraccomp-066/107/053, fracadd-013, fracadd-076, fracint-051). The re-ask
-  also moves some cells the other way (all-layer 12 pass -> fail against 101 fail -> pass).
-  Native runs and the ATI gate are unchanged (`NATIVE_PROMPT_VERSION` =
-  `arith-free-2026-10-30+exact-int+keys-union`).
-- **Round 4 (`+cons-r4`, summary mode only, deterministic; Camila r2 / ANSWERS_R2 §9: "the
-  judge must use the consensus marks").** At `+cons-r3` the all-layer judge still left out a
-  marked value in 8 items whose gold led 3-4 of 4 samples of one activation (absval-093,
-  absval-338, fracadd-058, fraccomp-069, fraccomp-134, fracint-029, mulmid-079, subsubx-012).
-  Two fixes: (1) the consensus mark now survives the per-layer merge of a union digest
-  (`digest.merge_grounded` keeps any member's mark; the best-supported member often had none, so
-  the merged line lost it and the value was missing from the `CONSENSUS VALUES` block: those
-  items' judge calls are re-asked); (2) every digest key that is a first-number consensus
-  (marked, or whose value is a consensus of one activation of the item's own raw cells,
-  `judge.consensus_of`) is counted among the values the judge names (`judge.verdict`
-  `consensus=`: appended after the judge's own values, then the same key / support / flood
-  checks; `n_consensus_added` per row). Gold-blind: it adds every consensus value, so the cross
-  null sees them too. Re-scored on the cached final O-lens readouts: all-layer 0.562 -> 0.576
-  (cross 0.074 -> 0.076; all 8 items pass; 11 fail -> pass, 3 pass -> fail from re-ask noise on
-  items with no gold consensus), L56 0.495 and L60 0.515 unchanged (single layers merge
-  nothing, and their judge named every marked value). After the change no item whose gold is a
-  raw first-number consensus fails at all-layer (0 of 303).
-- **Consensus band (diagnostic).** `extras.consensus_band` (both modes) is the raw-readout rate
-  of "at one activation, at least 3 of the 4 samples begin with a value within tolerance of the
-  intermediate", the item's own operands excluded, with `cross` = the same rule applied to the
-  null set's intermediates and `net` = rate - cross; rows carry `consensus_values`,
-  `consensus_hit`, `consensus_exact`, `consensus_cross`. Reported beside the headline, never in
-  it. On the final-olens-rl600-x4 readouts: 0.668 against a null of 0.125.
+- **Operands.** The numbers digest is told the item's operands: it asks for 4 spare numbers, and
+  a key that restates an operand takes one of the judged slots only when no other number is left.
+- **One generic judge (`+generic-r7`).** `SYSTEM_SUMMARY` is one plain ask, the same for every
+  lens: name every number the readout uses in a calculation, the numbers it operates on as well
+  as the results it gets ("87 + 83 = 170" gives 87, the intermediate of (43 + 44) * 6, as well as
+  170). Code only verifies the judge's values (written in one evidence sample, equal to a digest
+  key, not a number-flood line); it never adds or drops one. Restated operands never take a
+  digest key (above), so the judge needs no operand rule. The paired cross-item null
+  (`extras.cross`: the same kept values against the null set's intermediates) is the luck check:
+  a judge that names more numbers raises it too.
 - **Item states.** An item with no cells keeps the native missing path (undecided, `kind:
   "missing"`). An unsummarized item (failed / unparsable digest, or every digest item failing the
   evidence check) or a failed judge call is undecided and counted in `n_unjudged_cells`. An empty
@@ -385,8 +346,7 @@ on that digest.
   those number keys: a judged value must EQUAL one key's value (CJK keys such as 十四 and number
   words such as `nine` are parsed; the judge's quote only verifies a value, it never makes it a
   key). The judge, which sees whole evidence samples but not the keys, may name up to
-  `MAX_VALUES_SUMMARY` = 10 values (`SYSTEM_SUMMARY` is `SYSTEM` with "at most three." → "at most
-  ten."); the five keys are the bound, so a gold value that is merely one of many numbers in the
+  `MAX_VALUES_SUMMARY` = 10 values (`SYSTEM_SUMMARY` asks for at most ten); the five keys are the bound, so a gold value that is merely one of many numbers in the
   evidence fails. The paired null uses the same kept set. Rows add `digest_numbers` and
   `answer_in_digest` (whether the item's final answer, never gold, took one of the five slots).
 
@@ -397,29 +357,19 @@ You are reading readouts of a language model's internal activations, written as 
 on given numbers, answered with no chain of thought. You do NOT get to see the expression — only
 the readout.
 
-The readout may be free text, bullet points, or a bag of loose tokens, possibly in several
-languages (Chinese numerals like 十四 mean fourteen). It is often vague, generic, or about
-something else entirely, and it frequently contains numbers that are not results of anything.
+The readout may be free text, bullet points, or lists of tokens, possibly in several languages
+(Chinese numerals like 十四 mean fourteen). It is often vague or about something else, and it may
+contain numbers that are not results of anything.
 
-Your job: name the number(s) that this readout presents as a COMPUTED VALUE — a result, an
-intermediate, a total, a "the answer is X". Rank them, most clearly a computed result first,
-at most ten. Decimals and negative numbers are values too; report them exactly as written.
+Your job: name every number this readout uses in a calculation: the numbers it operates on
+as well as the results it gets (a result, an intermediate, a total, an answer). Rank them, most
+prominent first, at most ten. Report each number exactly as written; decimals and negative
+numbers are values too.
 
-Rules:
-- Do NOT list numbers that appear as operands, quantities, labels, list indices, years, counts
-  of items, or parts of unrelated prose. Only numbers the readout presents as something that was
-  worked out.
-- If the readout states arithmetic with both operands and a result ("16 - 2 = 14"), list the
-  RESULT (14), not the operands.
-- A bag of loose numerals with no arithmetic around them counts only when it is dominated
-  by ONE value (several of its tokens write the same number, e.g. 九 | nine | 9): list that
-  value. A bag or list of several different numbers singles out none of them, whatever their
-  order or rank.
-- A digest line whose marker says "first number of K of N samples at [L<layer> pos <index>]" carries a number that K of the N samples of ONE activation begin with: that activation leads with the number as its value. Treat that number as presented as a computed value, even when the sample goes on to use it in further arithmetic. The mark covers only the number it names, and only when K is at least 3; any other number on that line follows the rules above. Every number listed under CONSENSUS VALUES at the top of the readout is such a marked number: include each of them among the values you name.
-- If the readout presents no number as a computed value, set states_value false and return an
-  empty list. That is a normal and common answer — do not invent one.
-- Never do any arithmetic of your own. You do not know the task, so you cannot know what the
-  right answer is; only report what the text itself puts forward.
+- Leave out numbers that only label, count or date things, or that belong to unrelated prose.
+- If no number takes part in a calculation, set states_value false and return an empty list.
+- Never do arithmetic of your own: you do not know the expression, so report only what the text
+  itself puts forward.
 
 Token lists. A line whose items are separated by " | " is one ranked list of the top vocabulary tokens read from ONE activation, best first. Several tokens of the same line may jointly express one meaning, and a quote from such a line is one token or several tokens of that same line joined by " | ". Tokens of adjacent positions at the same layer may be joined only to spell one word split across them; such a quote is that word. Tokens on different lines never combine otherwise, and a relation (who does what to whom) must be stated within one sample (for a free-text sample, within one of its "- " bullets; in a free-text sample, bullets are separated by ⁞). A line that holds two or more of the options singles out none of those options, whatever their rank. A line that holds a run of numbers, or of any other words or names of one kind, singles out none of the words on it, whatever their rank, even when only one of them is an option. Otherwise, an option that is the only option on its line is singled out by it. A number is never assembled from separate tokens: digits on one list or at adjacent positions (2, 7, 1) are not the number 271.
 ```
@@ -434,14 +384,9 @@ Readout:
 {readout}
 >>>
 
-Which number(s) does this readout present as a computed value?
+Which numbers does this readout use in a calculation, as inputs or as results?
 ```
 
-`CONSENSUS_BLOCK` (round 3, `+cons-r3`): prepended to the readout in `USER_SUMMARY` when the digest has consensus-marked number keys (`judge.consensus_keys`), `{values}` = those keys in digest order:
-
-```text
-CONSENSUS VALUES (each is the first number of at least 3 of the 4 samples of one activation; its digest line carries the mark): {values}
-```
 
 This family runs `summ_rare=0` (the numbers digest), so its notes drop the rare-content clause:
 
@@ -489,9 +434,17 @@ the model was silently evaluating a short arithmetic expression (a few operation
 - **The numbers digest keys are the union of the per-layer keys** (`digest.NUMBERS_UNION_FAMILIES`).
   A multi-layer config digests each read layer separately (the same digest a single-layer run makes,
   cache key `digest:<id>|<layer>`), ranks each layer's numbers to its own five slots (operands
-  demoted, that layer's first-number consensus seated), and merges them; nothing is re-ranked across
+  demoted), and merges them; nothing is re-ranked across
   layers, so the judged keys are exactly the union of the keys single-layer runs would judge (at most
   5 per layer). The judge may then name as many values as there are keys (`prompts.system_summary`,
   never fewer than ten), so the value cap never drops a gold key. The joint five-key all-layer digest
   crowded out the gold: in 95 of the 102 items passing at L56 but failing all-layer, the gold was not
   a key. The cross null is computed from the same kept values, so it rises with the larger key set.
+
+## History
+
+- 2026-11-04 (`+generic-r7`): summary mode uses one generic judge prompt that names every
+  number a readout uses in a calculation; it retires the first-number consensus rules
+  (`+cons-r3` / `+cons-r4`, which fired only on lenses with at least three samples per
+  activation) and the result-not-operands rule (which dropped an intermediate that fed a further
+  step).

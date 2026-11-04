@@ -18,19 +18,16 @@ CALL_VERSION = "arith-free-2026-10-30"  # keys every call (unchanged by final r1
 # (rel5pct credited off-by-one / off-by-few / rounded numbers); the numbers digest keys are
 # the union of the per-layer digests' keys (digest.NUMBERS_UNION_FAMILIES)
 RULE_VERSION = "+exact-int+keys-union"
-# round 3 +cons-r3 (summary mode only): consensus-marked numbers rank before unmarked keys in
-# the numbers cap (digest.rank_numbers) and are listed in a CONSENSUS VALUES block at the top of
-# the judge's user turn (CONSENSUS_BLOCK; the headline stays the judge, Fable F11). The summary
-# calls are keyed CALL_VERSION_SUMMARY; native runs keep CALL_VERSION + RULE_VERSION
-# (judge.NATIVE_PROMPT_VERSION)
-SUMMARY_RULE_VERSION = "+cons-r3"
+# summary mode (+generic-r7): ONE generic judge prompt that treats every lens alike
+# (SYSTEM_SUMMARY below). It names every number the readout uses in a calculation, the numbers it
+# operates on as well as the results ("87 + 83 = 170" for an intermediate 87); code only verifies
+# the judge's values (written in the readouts, equal to a digest key). Summary calls are keyed
+# CALL_VERSION_SUMMARY; native runs keep CALL_VERSION + RULE_VERSION (judge.NATIVE_PROMPT_VERSION).
+# The earlier first-number consensus rule (+cons-r3 / +cons-r4) is retired: it could fire only on
+# lenses with >= 3 samples per activation.
+SUMMARY_RULE_VERSION = "+generic-r7"
 CALL_VERSION_SUMMARY = CALL_VERSION + SUMMARY_RULE_VERSION
-# round 4 +cons-r4 (summary mode, deterministic; Camila r2 / ANSWERS_R2 §9: "the judge must use
-# the consensus marks"): every consensus-marked digest key is counted among the values the judge
-# names (judge.verdict ``consensus``), so a judge that leaves a marked value out (8 all-layer
-# items at cons-r3: absval-093, fracadd-058, ...) cannot drop it. Stamp only: no call re-asked
-CONSENSUS_USE_VERSION = "+cons-r4"
-PROMPT_VERSION = CALL_VERSION + RULE_VERSION + SUMMARY_RULE_VERSION + CONSENSUS_USE_VERSION
+PROMPT_VERSION = CALL_VERSION + RULE_VERSION + SUMMARY_RULE_VERSION
 # cells=all: one call per (item, layer) over every position of that layer (Camila, 2026-09-23 06:14:
 # "for user modeling and arithmetic let's just batch it - feed it everything at once!"). Same
 # instructions as PROMPT_VERSION, different packaging, so its own version tag. 2026-10-30: the
@@ -85,24 +82,28 @@ Rules:
 
 {_NOTE}"""
 
-# summary mode, five-number digest (plan 0022 Part B): the digest's (at most five) number keys
-# bound what can pass; the judge, which sees whole evidence samples, may name up to ten values,
-# kept only when a key writes them. Only the cap sentence changes.
-MAX_VALUES_SUMMARY = 10  # the judge cannot see the keys; the digest's 5 number keys bound it
-# audit F11 (2026-10-31; Fable: the first-number consensus is carried INTO the digest as a
-# counted claim so the summary judge can use it; the headline stays this judge): the digest marks
-# a number that at least 3 of the 4 samples of ONE activation begin with
-CONSENSUS_RULE = """- A digest line whose marker says "first number of K of N samples at [L<layer> \
-pos <index>]" carries a number that K of the N samples of ONE activation begin with: that \
-activation leads with the number as its value. Treat that number as presented as a computed \
-value, even when the sample goes on to use it in further arithmetic. The mark covers only the \
-number it names, and only when K is at least 3; any other number on that line follows the rules \
-above. Every number listed under CONSENSUS VALUES at the top of the readout is such a marked \
-number: include each of them among the values you name."""
-SYSTEM_SUMMARY = SYSTEM.replace("at most three.", "at most ten.").replace(
-    "\n{_BAG}".replace("{_BAG}", _BAG), "\n" + _BAG + "\n" + CONSENSUS_RULE
-)
-assert SYSTEM_SUMMARY != SYSTEM and CONSENSUS_RULE in SYSTEM_SUMMARY
+# summary mode, numbers digest (plan 0022 Part B): the digest's number keys bound what can pass;
+# the judge sees whole evidence samples and may name up to ten values, kept only when a key
+# writes them. A plain, generic ask (no consensus rule, no operand/result rule: restated
+# operands never take a digest key, digest.collapse ``operands=``).
+MAX_VALUES_SUMMARY = 10  # the judge cannot see the keys; the digest's number keys bound it
+SYSTEM_SUMMARY = f"""{_INTRO} {_TASK.format(s="")}
+
+The readout may be free text, bullet points, or lists of tokens, possibly in several languages
+(Chinese numerals like 十四 mean fourteen). It is often vague or about something else, and it may
+contain numbers that are not results of anything.
+
+Your job: name every number this readout uses in a calculation: the numbers it operates on
+as well as the results it gets (a result, an intermediate, a total, an answer). Rank them, most
+prominent first, at most ten. Report each number exactly as written; decimals and negative
+numbers are values too.
+
+- Leave out numbers that only label, count or date things, or that belong to unrelated prose.
+- If no number takes part in a calculation, set states_value false and return an empty list.
+- Never do arithmetic of your own: you do not know the expression, so report only what the text
+  itself puts forward.
+
+{_NOTE}"""
 
 
 def system_summary(n_keys: int) -> str:
@@ -161,7 +162,7 @@ USER_BATCH = (
 # "Readout:" header becomes the digest note (digest.summary_note)
 USER_SUMMARY = (
     "{summary_note}\n\nReadout:\n<<<\n{readout}\n>>>\n\n"
-    "Which number(s) does this readout present as a computed value?"
+    "Which numbers does this readout use in a calculation, as inputs or as results?"
 )
 # the task TYPE the digest's `task` variant is told (EvalSpec.task_note; never the expression,
 # its values or its answer: no numeral and no number word, test_arith_task_note_has_no_numerals)
@@ -209,7 +210,7 @@ SCHEMA_SUMMARY = schema_block(
         "values": {
             "type": "array",
             "items": {"type": "number"},
-            "description": "ranked, most clearly a computed result first, at most ten",
+            "description": "ranked, most clearly presented first, at most ten",
         },
     },
     ["states_value", "values", "basis", "quote"],
@@ -255,18 +256,9 @@ def render_user(readout: str) -> str:
     return USER.replace("{readout}", readout.strip())
 
 
-CONSENSUS_BLOCK = (
-    "CONSENSUS VALUES (each is the first number of at least 3 of the 4 samples of one "
-    "activation; its digest line carries the mark): {values}"
-)
-PROMPTS["CONSENSUS_BLOCK"] = CONSENSUS_BLOCK
-
-
-def render_user_summary(note: str, summary: str, consensus: list[str] | None = None) -> str:
-    """Summary mode: the digest note, then the item's digest as the lens output, headed (round 3,
-    ``+cons-r3``) by the :data:`CONSENSUS_BLOCK` of its consensus-marked number keys, if any."""
-    head = CONSENSUS_BLOCK.replace("{values}", ", ".join(consensus)) + "\n\n" if consensus else ""
-    return USER_SUMMARY.replace("{summary_note}", note).replace("{readout}", head + summary.strip())
+def render_user_summary(note: str, summary: str) -> str:
+    """Summary mode: the digest note, then the item's digest as the lens output."""
+    return USER_SUMMARY.replace("{summary_note}", note).replace("{readout}", summary.strip())
 
 
 def render_entry(k: int, pos: int, text: str, *, bag: bool) -> str:

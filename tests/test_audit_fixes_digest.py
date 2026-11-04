@@ -512,38 +512,6 @@ def test_keyed_number_with_consensus_is_annotated():
     )
 
 
-def test_arithmetic_summary_judge_reads_the_consensus_mark():
-    from wsbench.evals.arithmetic_intermediates import prompts as ap
-
-    assert ap.CONSENSUS_RULE in ap.SYSTEM_SUMMARY and ap.CONSENSUS_RULE not in ap.SYSTEM
-    assert "only when K is at least 3" in ap.CONSENSUS_RULE
-
-
-def test_consensus_band_applies_the_same_rule_to_the_null():
-    from wsbench.evals.arithmetic_intermediates.judge import consensus_band
-
-    item = {"operands": ["87", "88", "2"]}
-    cells = {
-        "i": [
-            _prose("i", 52, -8, "175 ok", "175", "175!", "x"),  # gold consensus
-            _prose("i", 52, -7, "87 + 88", "87", "87 is", "87"),  # an operand: never counts
-            _prose("i", 56, -8, "40 hmm", "40", "40", "1"),  # a null-set value
-        ]
-    }
-    band, rows = consensus_band(
-        ["i"], cells, {"i": item}, {"i": 175.0}, {"i": "exact"}, {"i": [40.0, 999.0]}
-    )
-    assert rows["i"]["consensus_values"] == [40.0, 175.0]
-    assert rows["i"]["consensus_hit"] and rows["i"]["consensus_cross"] == 0.5
-    assert band["rate"] == 1.0 and band["cross"] == 0.5 and band["net"] == 0.5 and band["n"] == 1
-    # a single-sample reader has no activation with >= 3 samples: no band
-    one = {"i": [_prose("i", 52, -8, "175")]}
-    band, rows = consensus_band(
-        ["i"], one, {"i": item}, {"i": 175.0}, {"i": "exact"}, {"i": [40.0]}
-    )
-    assert band["n"] == 0 and band["rate"] is None and rows == {}
-
-
 def test_arithmetic_digest_gets_operands_and_consensus(tmp_path, monkeypatch):
     """End to end on the numbers digest: an operand keyed by the summarizer is demoted out of
     the five slots and a 4-of-4 lead consensus the summarizer missed fills its place."""
