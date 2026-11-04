@@ -32,32 +32,32 @@ def _v7mod():
     return mod
 
 
-def test_v3_stays_registered_and_v7_is_opt_in_under_ec_v8(monkeypatch):
-    """Bank v7 does not meet the moral standard (its gold guessers sit far above chance), so v3 /
-    ec-v5d stays the default; v7 is selected by its env and judged under ec-v8, and neither
-    bank takes the other's stamp."""
+def test_v3_stays_registered_and_v7_is_opt_in_under_its_own_stamp(monkeypatch):
+    """Bank v7 does not meet the moral standard (its gold guessers sit far above chance), so v3
+    stays the default; v7 is selected by its env and judged under its own stamp of the one-pick
+    instrument (built under ec-v8, now ec-v9-b7), and neither bank takes the other's stamp."""
     monkeypatch.delenv("WSB_BANK_FILE_MORAL_RATIONALE", raising=False)
     registry.load_all()
     spec = registry.FAMILIES[FAMILY]
     assert spec.bank == Path("evals/moral_rationale/items_v3.json")
-    assert spec.judge.prompt_version == "ec-v5d" != mrp.PROMPT_VERSION_V7 == "ec-v8"
+    assert spec.judge.prompt_version == "ec-v9" != mrp.PROMPT_VERSION_V7 == "ec-v9-b7"
     from wsbench.mcjudge import load_bank
 
     monkeypatch.setenv("WSB_BANK_FILE_MORAL_RATIONALE", V7_ENV)
     bank = load_bank(FAMILY)
     assert mr.bank_version(bank) == mr.BANK_V7 == 7
-    assert mr.instrument_version(bank, summary_args(Path("x"), Path("y"), "x")) == "ec-v8"
-    inst, v5d = mrp.Instrument("ec-v8"), mrp.Instrument("ec-v5d")
-    assert inst.multi and inst.located and inst.system == v5d.system
+    assert mr.instrument_version(bank, summary_args(Path("x"), Path("y"), "x")) == "ec-v9-b7"
+    inst, v3i = mrp.Instrument("ec-v9-b7"), mrp.Instrument("ec-v9")
+    assert inst.pick and inst.system == v3i.system == mrp.SYSTEM_PICK
     with pytest.raises(SystemExit):
         mr.instrument_version(
-            bank, summary_args(Path("x"), Path("y"), "x", extra={"prompts": "ec-v5d"})
+            bank, summary_args(Path("x"), Path("y"), "x", extra={"prompts": "ec-v9"})
         )
     monkeypatch.setenv("WSB_BANK_FILE_MORAL_RATIONALE", "evals/moral_rationale/items_v3.json")
     v3 = load_bank(FAMILY)
     with pytest.raises(SystemExit):
         mr.instrument_version(
-            v3, summary_args(Path("x"), Path("y"), "x", extra={"prompts": "ec-v8"})
+            v3, summary_args(Path("x"), Path("y"), "x", extra={"prompts": "ec-v9-b7"})
         )
 
 
@@ -125,7 +125,7 @@ def _one_list(kinds: dict[int, str], direction: str = "no") -> dict:
 
 def test_prior_side_reader_cannot_pass_a_one_sided_list_but_passes_a_two_sided_one():
     """On a v7 list every option argues the gold's side: marking 'that side' marks all five
-    (fails ec_pass) and marking the other side marks none, so always-no / always-yes pass 0.
+    (fails marks_pass) and marking the other side marks none, so always-no / always-yes pass 0.
     A v3-shaped list (two opposite-side options) is passed by the reader of the right side."""
     same = dict.fromkeys(range(1, 6), "same")
     one = lg.prior_side({"a": _one_list(same, "no"), "b": _one_list(same, "yes")})
@@ -138,11 +138,11 @@ def test_prior_side_reader_cannot_pass_a_one_sided_list_but_passes_a_two_sided_o
     assert sr is not None and "side_follow" not in sr
 
 
-def test_ec_pass_on_a_one_sided_list_both_ways():
+def test_marks_pass_on_a_one_sided_list_both_ways():
     kinds = dict.fromkeys(range(1, 6), "same")
-    assert mr.ec_pass({3: 2, 1: 1}, 3, kinds, 5)  # gold + a same-side option marked
-    assert not mr.ec_pass(dict.fromkeys(range(1, 6), 1), 3, kinds, 5)  # every option
-    assert not mr.ec_pass({1: 3}, 3, kinds, 5)  # gold not marked
+    assert lg.marks_pass({3: 2, 1: 1}, 3, kinds, 5)  # gold + a same-side option marked
+    assert not lg.marks_pass(dict.fromkeys(range(1, 6), 1), 3, kinds, 5)  # every option
+    assert not lg.marks_pass({1: 3}, 3, kinds, 5)  # gold not marked
 
 
 def test_author_feasible_both_ways():

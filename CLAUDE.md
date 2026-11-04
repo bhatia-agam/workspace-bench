@@ -259,9 +259,12 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   override). Rows carry roles, never label text; digests / quotes redacted unless
   `opts=keep_nyt_text`. Never commit NYT text, real readouts, `cells.jsonl` or results of this
   family.
-- moral_rationale (plan 0046): **bank v3 is the registered default (`ec-v5d`); bank v5
-  `evals/moral_rationale/items_v5.json` is opt-in** (round 4, `ec-v7` = ec-v5d's prompts and
-  scoring; not registered while it leaks the side, review of #215): the 24 bank-v3 items whose rebuilt
+- moral_rationale (plan 0046): **bank v3 is the registered default (`ec-v9`: one pick per (item,
+  side), "which one reason do these readouts mainly give", the judge seeing the digest's sample
+  counts; code only verifies the quote, pass = the verified pick is the gold; the earlier
+  multi-label rule survives only as `lucky_guessing.marks_pass`, which scores the multi-mark
+  guessers of the floors frozen under it); bank v5 `evals/moral_rationale/items_v5.json` is
+  opt-in** (round 4, `ec-v9-b5`; not registered while it leaks the side, review of #215): the 24 bank-v3 items whose rebuilt
   distractor lists a question+options, an options-only and a described (solved-examples) guesser
   pick the gold from at uniform chance (`scripts/moral_v5.py`: adversarial authoring with the
   guessers in the loop, a confirmation gate on fresh draws; floors in
@@ -278,12 +281,12 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   table at the top of `evals/moral_rationale/README.md`). The
   read plan stays bank v3's 195 rows for banks v4/v5
   (options are never in the render), so v3 readouts judge v5 with no GPU. Bank v7
-  `items_v7.json` (opt-in, `ec-v8`, `scripts/moral_v7.py`): v3's 195 items and golds, all four
+  `items_v7.json` (opt-in, `ec-v9-b7`, `scripts/moral_v7.py`): v3's 195 items and golds, all four
   distractors other LLMs' same-side reasons (Opus/Sonnet 5.5, astra, argon harvest), so the side
   readers are at 0; NOT registered: its gold guessers stay far above chance (the gold is Qwen's
   modal reason; floors `evals/baselines/lucky_guessing_moral_v7.json`). Bank v3
-  `evals/moral_rationale/items_v3.json` (judged under `ec-v5d`; earlier `ec-v4.1` = ec-v4's
-  text): bank v2 with length-matched, co-registered option lists (review
+  `evals/moral_rationale/items_v3.json` (judged under `ec-v9`; earlier `ec-v5d` = the multi-label
+  rule, and `ec-v4.1` = ec-v4's text): bank v2 with length-matched, co-registered option lists (review
   round 4 of PR #186: gold rank by length balanced, comma / slash (and its spacing) / "outweigh" / "and" marks
   matched; `scripts/moral_distractors.py lenmatch` + `coregister`). Bank v2 `items_v2.json` (195 items,
   `bank_version: 2` per item; frozen, `ec-v4`; v1 `items.json` byte-identical) re-keyed under the READ render
@@ -297,7 +300,7 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   (`WSB_BANK_FILE_MORAL_RATIONALE=evals/moral_rationale/items.json`) = legacy `ec-v3.1` (ec-v3
   with a tool-free system opening). Reads:
   full = every render position (`min_full_positions=6`), lite = the last five. Its ATI entry was
-  re-gated under ec-v5c on 2026-10-31 (R1-ATI, full panel: 152/195), re-stamped ec-v5d in round 3 (native scoring unchanged). Round 3: ec-v5d (summary support from a locator call, `judge.located_support`); opt-in bank v4 (`items_v4.json`, 53 gate-passing items, `ec-v6`, `scripts/moral_adversarial.py`).
+  re-gated under ec-v5c on 2026-10-31 (R1-ATI, full panel: 152/195), re-stamped ec-v5d in round 3; it is stale under ec-v9 until re-gated. Opt-in bank v4 (`items_v4.json`, 53 gate-passing items, `ec-v9-b4`, `scripts/moral_adversarial.py`).
 - association (plan 0039) left the bank judge: bank v2 `evals/association/items_v2.json` (93
   items; v1 `items.json` byte-identical, read only by `tests/test_basic_association.py`'s
   test-only `bank_family` registration), its own `judge.py` (8-way MC + cannot tell; gate:

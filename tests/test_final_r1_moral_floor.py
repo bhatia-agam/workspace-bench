@@ -1,15 +1,12 @@
-"""Final r1 (2026-10-31): moral_rationale multi-mark guesser floor under the judge's ec-v5c rule."""
+"""Final r1 (2026-10-31): moral_rationale multi-mark guesser floor under the ec-v5c rule. ec-v9
+replaced that judge with a single pick; the rule lives on as ``lucky_guessing.marks_pass``
+only to score the multi-mark guessers of the floors frozen under ec-v5c / ec-v5d."""
 
 from wsbench.baselines import lucky_guessing as lg
-from wsbench.evals.moral_rationale import judge as mr
 
 
 def _item(kinds, golds=(2,)):
     return lg.Item("x", [["a", "b", "c", "d"]] * len(golds), list(golds), meta={"kinds": kinds})
-
-
-def test_ratio_held_equal_to_judge():
-    assert lg.OPP_WIN_RATIO == mr.OPP_WIN_RATIO
 
 
 def test_marks_verdict_mirrors_ec_v5c():
@@ -56,41 +53,16 @@ def test_floor_symmetric_with_lens_on_moral_item_0():
 
 
 OPP_SAME = {"2": "opp", "3": "same", "4": "opp", "5": "same"}
-TEXTS = ["duty of care first", "fewest total deaths", "keep the promise", "obey the law", "x y z"]
 
 
-def _lens(marked):
-    """``ml_verdict`` on a readout that states each marked option on its own line."""
-    from wsbench.digest import Line
-
-    mc = mr.MC(
-        side="committed",
-        question="q",
-        shown=[*TEXTS, "cannot tell"],
-        gold_pos=1,
-        short_pool=False,
-        kind_by_pos={int(k): v for k, v in OPP_SAME.items()},
-    )
-    lines = [Line(f"The model weighs: {TEXTS[p - 1]}.") for p in marked]
-    draw = {"marks": [{"choice": p, "quote": TEXTS[p - 1]} for p in marked]}
-    return mr.ml_verdict([draw] * 3, mc, (lines, []), mr.sample_support(lines))
-
-
-def test_lens_marking_every_option_on_separate_lines_fails():
-    v = _lens([1, 2, 3, 4, 5])
-    assert v["gold_marked"] and v["marks_every_option"] and not v["correct"]
-    v = _lens([1, 2, 3, 4])  # every option but one: the gold still stands
-    assert v["correct"] and not v["marks_every_option"]
-    assert _lens([1])["correct"] and _lens([1, 3])["correct"]
-
-
-def test_ec_pass_one_rule_for_both_sides():
+def test_marks_pass_one_rule_for_every_guesser():
     kinds = {2: "opp", 3: "same"}
-    assert mr.ec_pass({1: 3}, 1, kinds, 4)
-    assert not mr.ec_pass({1: 3, 2: 3, 3: 3, 4: 3}, 1, kinds, 4)  # every option marked
-    assert not mr.ec_pass({2: 3}, 1, kinds, 4)  # gold unmarked
-    assert not mr.ec_pass({1: 2, 2: 3}, 1, kinds, 4)  # opposite >= 1.5x gold
-    assert mr.ec_pass({1: 2, 2: 2, 3: 9}, 1, kinds, 4)  # same-side support never beats
+    assert lg.OPP_WIN_RATIO == 1.5
+    assert lg.marks_pass({1: 3}, 1, kinds, 4)
+    assert not lg.marks_pass({1: 3, 2: 3, 3: 3, 4: 3}, 1, kinds, 4)  # every option marked
+    assert not lg.marks_pass({2: 3}, 1, kinds, 4)  # gold unmarked
+    assert not lg.marks_pass({1: 2, 2: 3}, 1, kinds, 4)  # opposite >= 1.5x gold
+    assert lg.marks_pass({1: 2, 2: 2, 3: 9}, 1, kinds, 4)  # same-side support never beats
 
 
 def test_deliberative_needs_both_sides():

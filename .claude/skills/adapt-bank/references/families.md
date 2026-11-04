@@ -490,7 +490,7 @@ KNOWLEDGE check, the leg that asks whether the subject holds the latent:
 - moral_rationale: the side is re-gated and the reasons re-distilled; new dilemmas only if the gated
   count is short (no authoring brief). Bank now `items_v3` (195, `bank_version: 3`, frozen
   `options` built by `scripts/moral_distractors.py` for Qwen's bank, which writes `evals/`;
-  instrument ec-v5d); v2 / v4 / v5 / v7 opt-in.
+  instrument ec-v9 (one pick; summary `+nq1+maj3v`)); v2 / v4 / v5 / v7 opt-in.
 - directed_modulation: bank unchanged; judge narration counts (plan 0028), groups file (plan 0035,
   which checked every adapted set's concepts are covered), round 5. Re-judge only.
 
