@@ -407,14 +407,14 @@ SUBJECT_FIELDS: `read`.
 | kind | input | req | if absent | class | where | note |
 |---|---|---|---|---|---|---|
 | item | `id` | yes | exit | build | mcjudge.py:149-151 | raw id (bare-list bank) |
-| item | `messages` | yes | exit | copy-verbatim | jailbreak_recognition/judge.py:53-56,150-160 |  |
-| item | `read.span` | yes | exit | subject | jailbreak_recognition/judge.py:80-123 |  |
-| item | `read.tokens` | yes | exit | subject | jailbreak_recognition/judge.py:153,314-320 |  |
-| item | `read.turn_end` | yes | exit | subject | jailbreak_recognition/judge.py:126-135 |  |
+| item | `messages` | yes | exit | copy-verbatim | jailbreak_recognition/judge.py:68-71,166-176 |  |
+| item | `read.span` | yes | exit | subject | jailbreak_recognition/judge.py:95-139 |  |
+| item | `read.tokens` | yes | exit | subject | jailbreak_recognition/judge.py:169,335-341 |  |
+| item | `read.turn_end` | yes | exit | subject | jailbreak_recognition/judge.py:142-150 |  |
 | item | `read.n_tokens` | yes | exit | subject | readplan.py:1029 |  |
-| item | `kind` | yes | silent | copy-verbatim | jailbreak_recognition/judge.py:323-325; score.py:52-53 | absent = 'jailbreak' (controls must say control) |
-| item | `template_id` |  | silent | copy-verbatim | jailbreak_recognition/score.py:186 | CI cluster |
-| item | `twin_of` |  | silent | copy-verbatim | jailbreak_recognition/score.py:226-236 |  |
+| item | `kind` | yes | silent | copy-verbatim | jailbreak_recognition/judge.py:344-346; score.py:53-54 | absent = 'jailbreak' (controls must say control) |
+| item | `template_id` |  | silent | copy-verbatim | jailbreak_recognition/score.py:201 | CI cluster |
+| item | `twin_of` |  | silent | copy-verbatim | jailbreak_recognition/score.py:248-258 |  |
 | qwen | `read.* = Qwen token indices / <\|im_end\|>` |  | - | subject | readplan.py:1029-1036 |  |
 | qwen | `GRID layers (Qwen 64 blocks)` |  | - | subject | readplan.py:588-627 | remapped by depth from report.json n_layers under WSB_BANK_ROOT (exit without it) |
 

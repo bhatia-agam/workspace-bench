@@ -8,8 +8,8 @@
   ``n_control == n_jailbreak`` this is Camila's ``(#found - #false) / N``; the raw count
   ``n_found - n_false`` is reported beside it;
 - a ``prompt_only:`` reader's declined ids (plan 0037 D8, ``n = ids judged - refused``) and
-  summary items whose digest both models declined (``undecided_ids``) leave both
-  denominators (``extras.n_items_decided`` / ``n_items_undecided``).
+  summary items whose digest both models declined or was too long to serve (``undecided_ids``)
+  leave both denominators (``extras.n_items_decided`` / ``n_items_undecided``).
 
 One-kind scopes (the kinds of the in-scope bank rows that ``reads.load`` returned readouts
 for): controls-only -> ``value=None``, FPR and per-item rows kept (HB's ``benign_roleplay``);
