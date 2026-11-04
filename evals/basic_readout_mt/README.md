@@ -274,10 +274,13 @@ rebuilt lists' MC verdicts re-judged): 0/90.
 - 2026-11-04 (`+bank-v5`): bank v5 drops the sarin item, whose digest the digest model refused on
   most layers of some arms.
 - 2026-11-04 (`+bank-v5`): the prompt-only, lucky-guessing and text-blind floors are re-measured
-  on bank v5's 98 items, so they are drawn beside this instrument again.
+  on bank v5's 98 items. They were measured under the `qline-v1` draft: the lucky-guessing entries
+  carry `qline-v2` (a guesser sees only the lists); the prompt-only and text-blind entries stay on
+  `qline-v1` until re-scored under the new stamp.
 - 2026-11-04 (`+bank-v6`): bank v6 rebuilds the answer lists the lucky-guessing guessers still
   solved and drops the 8 items they solved whatever the list, so the floors meet the MC leakage
-  standard.
+  standard. Its floors, measured under the `qline-v1` draft, are re-scored from their cached
+  answers under `qline-v2` (0 new judge calls; prompt-only 1.000 and text-blind 0 / 90 unchanged).
 
 ## Readouts
 
