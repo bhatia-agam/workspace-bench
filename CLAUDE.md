@@ -197,10 +197,11 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   directed_modulation, hinted_cutoff, knowledge_cutoff, math_shortcuts and wrong_intermediate (plan 0050: a blind 6-way MC over B',
   the true bridge B and four same-category distractors frozen in bank v2 by
   `scripts/wrong_intermediate_mc_options.py`; a gold pick is credited only with a verified or
-  near-verbatim quote that names it by a listed form, `mc.forms`, in the quote or in the line it
-  came from, and that is not a prompt echo; no code check overrules the judge's pick
-  (`judge-only-v1`), and the raw wrong-vs-true counts are reported only; `true_bridge_rate`
-  replaces the removed wrong_bridge_true).
+  near-verbatim quote that names it by a listed form, `mc.forms`, in the quote or (a quote cut
+  mid-name) where its line continues it or its sample ends inside the gold's name, and that is not
+  a prompt echo; no code check overrules the judge's pick (`judge-only-v1`), and the raw
+  wrong-vs-true counts are reported only; `true_bridge_rate` replaces the removed
+  wrong_bridge_true).
   user_modeling (plan 0056, `um-v3.2`) adds a value gate on top of the shared
   `quote_ok` + `statement_lines`: `mc.form_in` over its frozen lexicon `aliases.py` (an edit
   there bumps its `PROMPT_VERSION`; `tests/fixtures/user_modeling_gate_cases.json` replays the
