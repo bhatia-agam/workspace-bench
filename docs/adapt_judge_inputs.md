@@ -354,8 +354,8 @@ REQUIRED_ITEM_FIELDS: `name`, `prompt`, `assistant`, `concept`, `subfamily`, `po
 ### hinted_cutoff
 
 Judge: `evals/hinted_cutoff/judge.py`. Refresh: model-specific (plan 0063). Bank: dict, id from `name`.
-REQUIRED_ITEM_FIELDS: `name`, `pair_id`, `role`, `cluster`, `positions`, `text`, `reply`, `input_ids`, `n_prompt`.
-SUBJECT_FIELDS: `role`, `positions`, `reply`, `input_ids`, `n_prompt`.
+REQUIRED_ITEM_FIELDS: `name`, `pair_id`, `role`, `cluster`, `positions`, `text`, `input_ids`, `n_prompt`.
+SUBJECT_FIELDS: `role`, `positions`, `input_ids`, `n_prompt`.
 
 | kind | input | req | if absent | class | where | note |
 |---|---|---|---|---|---|---|
@@ -363,10 +363,9 @@ SUBJECT_FIELDS: `role`, `positions`, `reply`, `input_ids`, `n_prompt`.
 | item | `pair_id` | yes | exit | copy-verbatim | hinted_cutoff/judge.py:pairs_of |  |
 | item | `role` | yes | exit | subject | hinted_cutoff/judge.py:pairs_of | I/N from Qwen behaviour |
 | item | `cluster` | yes | exit | copy-verbatim | hinted_cutoff/judge.py:pairs_of | I-twin event cluster |
-| item | `positions` | yes | exit | subject | hinted_cutoff/judge.py:run | Qwen reply token indices |
+| item | `positions` | yes | exit | subject | hinted_cutoff/judge.py:run | Qwen prompt token indices |
 | item | `text` | yes | exit | copy-verbatim | readplan.py hinted_cutoff branch |  |
-| item | `reply` | yes | exit | subject | readplan.py hinted_cutoff branch | Qwen's silent reply |
-| item | `input_ids` | yes | exit | subject | readplan.py hinted_cutoff branch | captured render |
+| item | `input_ids` | yes | exit | subject | readplan.py hinted_cutoff branch | prompt-only ids |
 | item | `n_prompt` | yes | exit | subject | readplan.py hinted_cutoff branch |  |
 | qwen | `GRID layers (Qwen 64 blocks)` |  | - | subject | readplan.py:588-627 | remapped by depth from report.json n_layers under WSB_BANK_ROOT (exit without it) |
 

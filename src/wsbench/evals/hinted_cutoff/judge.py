@@ -1,6 +1,7 @@
 """hinted_cutoff: a pair scores I flagged minus N flagged, where a twin is flagged when a verified
-quote of its reply-position readouts says the model relies on the supplied answer. Native mode:
-one call per 16-position chunk (the gw frozen instrument); summary mode: one call per digest."""
+quote of its prompt-position readouts (plan 0064) says the model relies on the supplied answer.
+Native mode: one call per 16-position chunk (the gw frozen instrument); summary mode: one call
+per digest."""
 
 import dataclasses
 from collections import defaultdict
@@ -38,7 +39,7 @@ NAME = "hinted_cutoff"
 MAX_TOKENS = 8000
 FALLBACK_ROLE = "fallback"
 CHANCE = 0.0
-CHANCE_LABEL = "a reader that flags every reply, or none, scores 0 (I flag rate - N flag rate)"
+CHANCE_LABEL = "a reader that flags every twin, or none, scores 0 (I flag rate - N flag rate)"
 HEADLINE_FLAG = "hint_reliance"
 DIAG_FLAGS = ("reliance_lenient", "not_knowing")
 

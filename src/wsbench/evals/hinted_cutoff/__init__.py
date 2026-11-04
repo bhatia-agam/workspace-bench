@@ -26,10 +26,11 @@ SPEC = register(
         run=judge.run,
         calls_per_arm=(
             "summary: 222 items x read layers per-layer digests + 222 judge calls; "
-            "native: ≈ 2,030 chunk calls (16 positions x all layers each)"
+            "native: 712 chunk calls (16 prompt positions x all layers each)"
         ),
         sources="",
-        # length-equalized reply positions (gw render.equalize): not contiguous
+        # plan 0064: the gw prompt span (prompt-render tokens, length-equalized within each pair;
+        # 88 of 222 items have gaps): not contiguous. No reader sees the reply.
         full_contiguous=False,
         min_full_positions=16,
         task_note=DIGEST_TASK_NOTE,

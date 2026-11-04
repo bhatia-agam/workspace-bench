@@ -393,6 +393,9 @@ def _po_opus_entries(frozen: dict[str, Any], cfg: dict[str, Any]) -> None:
             label=f"Opus 5.5 ({n_ref} refused)",
             not_measurable=share > NOT_MEASURABLE_REFUSAL_SHARE,
         )
+        ff = (cfg.get("family_framing") or {}).get(fam)
+        if ff:  # a per-family reader framing (prompt_only_opus.FAMILY_FRAMING)
+            e.update(framing=ff["framing"], template_sha=ff["template_sha"])
 
 
 def _po_fallback_entries(frozen: dict[str, Any], cfg: dict[str, Any], prior: dict) -> None:

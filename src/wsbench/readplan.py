@@ -1093,16 +1093,17 @@ def _plan(family: str) -> list[ReadSpec]:
                 {"kind": "positions", "positions": it["positions"]},
                 GRID,
                 text=it["text"],
-                assistant=it["reply"],
+                # plan 0064: the prompt only; no reply is shown to any reader or floor
+                assistant=None,
                 extra={
                     "input_ids": it["input_ids"],
                     "prompt_len": it["n_prompt"],
                     "pair_id": it["pair_id"],
                     "role": it["role"],
                 },
-                note="the pair's length-equalized reply positions before the 'Answer:' line "
-                "(Qwen tokenizer indices into the shipped prompt + silent-reply ids; both twins "
-                "read the same count)",
+                note="the pair's length-equalized prompt-render positions (Qwen tokenizer indices "
+                "into the shipped prompt-only ids, which end at the generation prompt; both "
+                "twins read the same count)",
                 lite_positions={"kind": "last_n", "n": 32},
             )
             for it in items

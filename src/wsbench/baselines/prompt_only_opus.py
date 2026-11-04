@@ -36,6 +36,9 @@ MODEL = "claude-opus-5-5"
 READER = f"prompt_only:{MODEL}"
 PROMPT_ONLY_LAYER = 44
 FRAMING = "open_model"  # OPEN_MODEL_NOTE + TEMPLATE (text_inversion.FRAMINGS)
+# per-family override (plan 0064; Camila 2026-11-04: "we should not specify an open weights
+# model", hinted_cutoff only): NEUTRAL_NOTE + TEMPLATE, which makes no claim about the model
+FAMILY_FRAMING: dict[str, str] = {"hinted_cutoff": "neutral"}
 FALLBACK_MODEL = "claude-sonnet-5-5"  # Camila 2026-11-01 (was claude-sonnet-5)
 FALLBACK_PROTOCOL = f"{PROTOCOL}+sonnet55-fallback"
 FALLBACK_READER = f"{READER}+{FALLBACK_MODEL}-fallback"
@@ -45,6 +48,19 @@ NOT_MEASURABLE_REFUSAL_SHARE = 0.20  # = prompt_only.NOT_MEASURABLE_REFUSAL_SHAR
 EXCLUDED: dict[str, str] = {
     "jlens_concept_pr": "precision against the J-lens top-10, not a bar a lens clears",
 }
+
+
+def framing_of(family: str) -> str:
+    return FAMILY_FRAMING.get(family, FRAMING)
+
+
+def _family_framing(fams: Iterable[str]) -> dict[str, dict[str, str]]:
+    """The run_config record of every family asked under a non-default framing."""
+    return {
+        f: {"framing": framing_of(f), "template_sha": ti.prompt_sha(ti.FRAMINGS[framing_of(f)])}
+        for f in fams
+        if framing_of(f) != FRAMING
+    }
 
 
 def families() -> list[str]:
@@ -143,12 +159,20 @@ async def _ask(out: Path, concurrency: int, fams: set[str] | None) -> int:
     ans.mkdir(parents=True, exist_ok=True)
     path = ans / "draw0.jsonl"
     rows = ti.load_jsonl(path) if path.exists() else []
-    done = {(r["family"], r["id"]) for r in rows if not r.get("error") or ti.is_refusal(r)}
+    # an answer asked under another framing (e.g. before FAMILY_FRAMING) is not a cache hit
+    done = {
+        (r["family"], r["id"])
+        for r in rows
+        if (not r.get("error") or ti.is_refusal(r))
+        and r.get("framing", FRAMING) == framing_of(r["family"])
+    }
     todo = [r for r in prompts if (r["family"], r["id"]) not in done]
     print(f"{len(todo)} to ask ({len(done)} cached)", flush=True)
     c = client()
     sem = asyncio.Semaphore(concurrency)
-    tasks = [asyncio.create_task(ti._ask_one(c, sem, r, 0, MODEL, FRAMING)) for r in todo]
+    tasks = [
+        asyncio.create_task(ti._ask_one(c, sem, r, 0, MODEL, framing_of(r["family"]))) for r in todo
+    ]
     n_fail = 0
     with path.open("a", encoding="utf-8") as fh:
         for fut in asyncio.as_completed(tasks):
@@ -219,6 +243,7 @@ def write_readouts(out: Path) -> dict[str, dict[str, Any]]:
         "model": MODEL,
         "framing": FRAMING,
         "template_sha": ti.prompt_sha(ti.FRAMINGS[FRAMING]),
+        "family_framing": _family_framing(stats),
         "draws": 1,
         "layer": PROMPT_ONLY_LAYER,
         "families": stats,
@@ -276,7 +301,10 @@ async def _ask_fallback(out: Path, srcs: list[Path], concurrency: int) -> int:
     print(f"{len(todo)} refused ids to re-ask on {FALLBACK_MODEL} ({len(done)} cached)", flush=True)
     c = client()
     sem = asyncio.Semaphore(concurrency)
-    tasks = [asyncio.create_task(ti._ask_one(c, sem, p, 0, FALLBACK_MODEL, FRAMING)) for p in todo]
+    tasks = [
+        asyncio.create_task(ti._ask_one(c, sem, p, 0, FALLBACK_MODEL, framing_of(p["family"])))
+        for p in todo
+    ]
     n_fail = 0
     with path.open("a", encoding="utf-8") as fh:
         for fut in asyncio.as_completed(tasks):
@@ -372,6 +400,7 @@ def write_fallback_readouts(out: Path, srcs: Iterable[Path]) -> dict[str, dict[s
         "fallback": FALLBACK_MODEL,
         "framing": FRAMING,
         "template_sha": ti.prompt_sha(ti.FRAMINGS[FRAMING]),
+        "family_framing": _family_framing(stats),
         "draws": 1,
         "layer": PROMPT_ONLY_LAYER,
         "families": stats,

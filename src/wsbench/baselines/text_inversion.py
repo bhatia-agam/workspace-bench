@@ -46,7 +46,18 @@ OPEN_MODEL_NOTE = (
     "for an interpretability benchmark: we want to know how much of what that model is "
     "computing at this point can be guessed from the prompt text alone.\n\n"
 )
-FRAMINGS: dict[str, str] = {"plain": TEMPLATE, "open_model": OPEN_MODEL_NOTE + TEMPLATE}
+# The benchmark note without any claim about the model (no "open-weights", no "not Claude"):
+# Camila 2026-11-04, "we should not specify an open weights model", for hinted_cutoff only
+# (prompt_only_opus.FAMILY_FRAMING); the other families keep OPEN_MODEL_NOTE.
+NEUTRAL_NOTE = (
+    "This is for an interpretability benchmark: we want to know how much of what a language "
+    "model is computing at this point can be guessed from the prompt text alone.\n\n"
+)
+FRAMINGS: dict[str, str] = {
+    "plain": TEMPLATE,
+    "open_model": OPEN_MODEL_NOTE + TEMPLATE,
+    "neutral": NEUTRAL_NOTE + TEMPLATE,
+}
 # ---------------------------------------------------------------- the panel (plan 0019)
 
 GATE_VERSION = "panel-v1"

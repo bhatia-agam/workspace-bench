@@ -3,8 +3,10 @@
     python scripts/build_hinted_cutoff_bank.py --frozen <gw>/evals/chint_cutoff/frozen_v1.json \
         [--gw-commit <sha>]
 
-A pure transform (no tokenizer, no GPU): items keep the exact frozen ids, spans and texts; the
-read positions are the frozen reply span (length-equalized, before the 'Answer:' line)."""
+A pure transform (no tokenizer, no GPU). Plan 0064: every reader sees the PROMPT only, so items
+ship the prompt ids (``input_ids[:n_prompt]``), no reply text and no reply span; the read
+positions are the frozen gw prompt span (the user-turn tokens, length-equalized within each
+pair)."""
 
 import argparse
 import hashlib
@@ -18,10 +20,7 @@ KEEP = (
     "event_date",
     "question",
     "hint_answer",
-    "reply",
-    "input_ids",
     "n_prompt",
-    "spans",
     "question_token_coverage",
 )
 
@@ -34,10 +33,10 @@ def build(frozen: dict, sha: str, gw_commit: str) -> dict:
     pair_of |= {p["N"]: p["pair_id"] for p in frozen["pairs"]}
     for key in sorted(frozen["items"]):
         it = frozen["items"][key]
-        reply = [int(x) for x in it["spans"]["reply"]]
-        assert reply and min(reply) >= it["n_prompt"], key  # reply positions only
-        assert max(reply) < len(it["input_ids"]), key
-        assert reply == sorted(set(reply)), key
+        n = it["n_prompt"]
+        pos = [int(x) for x in it["spans"]["prompt"]]
+        assert pos and max(pos) < n <= len(it["input_ids"]), key  # prompt positions only
+        assert pos == sorted(set(pos)), key
         row = {
             "name": it["read_label"],
             "item_key": key,
@@ -46,7 +45,9 @@ def build(frozen: dict, sha: str, gw_commit: str) -> dict:
             "cluster": cluster[key],
             "text": it["user_prompt"],
             **{k: it[k] for k in KEEP},
-            "positions": reply,
+            "input_ids": it["input_ids"][:n],
+            "spans": {s: it["spans"][s] for s in ("prompt", "question")},
+            "positions": pos,
         }
         items.append(row)
     ids = [r["name"] for r in items]
@@ -55,6 +56,9 @@ def build(frozen: dict, sha: str, gw_commit: str) -> dict:
         a = next(r for r in items if r["item_key"] == p["I"])
         b = next(r for r in items if r["item_key"] == p["N"])
         assert (a["role"], b["role"]) == ("I", "N") and len(a["positions"]) == len(b["positions"])
+    for r in items:
+        assert "reply" not in r and "reply" not in r["spans"], r["name"]
+        assert len(r["input_ids"]) == r["n_prompt"] and max(r["positions"]) < r["n_prompt"]
     m = frozen["metric"]
     return {
         **{
@@ -68,6 +72,10 @@ def build(frozen: dict, sha: str, gw_commit: str) -> dict:
             "n_items": len(items),
             "metric": m["definition"],
             "flag": m["flag"],
+            "read_span": "prompt",
+            "reference_result_prompt_span": frozen["reference_results"]["olens"][
+                "prompt|hint_reliance"
+            ],
             "gw_judge_prompts_sha256": m["judge_prompts_sha256"],
             "reference_results": frozen["reference_results"],
             "prompt_only_baseline": frozen["prompt_only_baseline"],

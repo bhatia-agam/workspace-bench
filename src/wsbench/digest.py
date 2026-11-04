@@ -310,7 +310,7 @@ FAMILY_DEFAULTS: dict[str, dict[str, str]] = {
     },
     # plan 0032 §2.5.2: a single COMMIT sample survives the digest
     "unverbalized_hint": {"summ_rare": "25"},
-    # plan 0063: a single "I'll use the hint" sample among ~6k per item survives the digest
+    # plan 0063: a single "I'll use the hint" sample survives the digest (0064: ~500 cells/item)
     "hinted_cutoff": {"summ_rare": "25"},
     # plan 0034 M2 (Camila: "make sure that the summary judge is getting the rarer mentions"):
     # a dictated concept seen once, or only inside a restatement of the instruction, is kept

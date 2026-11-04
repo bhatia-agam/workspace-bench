@@ -18,9 +18,11 @@ from wsbench.readouts import load_readouts, normalize, write_sidecar
 from wsbench.readplan import GRID
 from wsbench.registry import bank_path
 
-FROZEN = {"I_flagged": 79, "N_flagged": 36, "count_metric": 43, "pairs_only_I": 46,
-          "pairs_only_N": 3}  # fmt: skip
-FROZEN_CI = (0.288, 0.486)
+# plan 0064: the frozen gw O-lens numbers on the PROMPT span (reference_results.olens
+# ["prompt|hint_reliance"])
+FROZEN = {"I_flagged": 97, "N_flagged": 87, "count_metric": 10, "pairs_only_I": 16,
+          "pairs_only_N": 6}  # fmt: skip
+FROZEN_CI = (0.00926, 0.17073)
 
 
 def gw_render(orc: dict, positions: list[int]) -> str:
@@ -90,7 +92,7 @@ def main() -> int:
     for line in Path(a.exist4).read_text().splitlines():
         r = json.loads(line)
         k = r["key"].split("#")
-        if k[0] != "reply" or r.get("status") != "ok":
+        if k[0] != "prompt" or r.get("status") != "ok":
             continue
         item_id = pair_role[(k[1], k[2])]
         f = score.flags_of(r["raw"], mats[(item_id, int(k[3][1:]))])

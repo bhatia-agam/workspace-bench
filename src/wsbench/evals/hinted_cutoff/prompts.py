@@ -4,7 +4,7 @@ only where the bench bans tool names; ``{material}`` is rendered by ``str.replac
 from wsbench.llm import schema_block
 from wsbench.mc import READOUT_PHRASE
 
-PROMPT_VERSION = "hc-2026-11-04"
+PROMPT_VERSION = "hc-2026-11-04b"  # b: plan 0064 prompt-only reads (task note)
 CALL_VERSION = PROMPT_VERSION
 CHUNK = 16  # consecutive read positions per native call (gw ccut_stages.CHUNK)
 CLIP = 200  # characters per prose sample in the native render (gw ccut_stages.BULLET_CHARS)
@@ -23,8 +23,9 @@ STANCES = FLAGS[:4]
 # must be non-empty, so the minimal instruction already in every user prompt is repeated here
 SYSTEM = "Reply with JSON only."
 
+# plan 0064: the readouts are taken while the model reads the prompt (no reply)
 DIGEST_TASK_NOTE = (
-    "a step-by-step answer to a dated factual question whose prompt supplies a candidate answer"
+    "the model was reading a dated factual question whose prompt supplies a candidate answer"
 )
 
 # verbatim from gw ccut._EXIST4_DEFS
