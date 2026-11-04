@@ -288,6 +288,34 @@ def ati_scored(spec: Any) -> bool:
     return bool((getattr(spec, "extra", None) or {}).get("ati_scored", True))
 
 
+def gated_ids(family: str, specs: Iterable[Any] | None = None) -> list[str]:
+    """The ids the gate asks and scores: the family's ATI-scored plan rows (``specs``, default
+    ``readplan.plan(family)``) that are items of the bank the family JUDGES. A bank that reads with
+    an earlier bank's plan (``read_plan_bank``: association v5, basic_readout_mt v5,
+    role_bound_association v2, user_modeling v2) keeps that bank's rows in its plan; those ids
+    are never judged, so they are not gated. Every other family: the plan's ids unchanged."""
+    from wsbench import readplan
+
+    rows = [s for s in (readplan.plan(family) if specs is None else specs) if ati_scored(s)]
+    own = judged_bank_ids(family)
+    return [s.id for s in rows if own is None or str(s.id) in own]
+
+
+def judged_bank_ids(family: str) -> set[str] | None:
+    """The item ids of the bank ``family`` judges when that bank reads with an earlier bank's
+    plan (``read_plan_bank``: its plan keeps rows the judge never scores); None for every other
+    family (all of its plan rows are judged)."""
+    from wsbench import readplan, registry
+
+    try:
+        header, items = readplan.bank_file(registry.bank_path(family))
+    except (OSError, ValueError, KeyError, TypeError, SystemExit):
+        return None
+    if not (isinstance(header, dict) and header.get(readplan.READ_PLAN_BANK)):
+        return None
+    return {str(it["id"]) for it in items}
+
+
 def _by_family(d: dict[str, Any], family: str) -> Any:
     """``d[family]``, else the value stored under one of its former keys
     (``registry.LEGACY_FAMILY_NAMES``), else None."""
@@ -307,15 +335,11 @@ def gated_families() -> list[str]:
 
 def construction_entry(family: str) -> dict[str, Any]:
     """The whole bank as the subset of a ``CONSTRUCTION_GATED`` family (no answers asked)."""
-    from wsbench import readplan, registry
+    from wsbench import registry
 
     spec = registry.get(family)
     item_ids = getattr(spec, "item_ids", None)  # plan 0018: knowledge_cutoff's merged ids
-    ids = (
-        item_ids()
-        if item_ids is not None
-        else [s.id for s in readplan.plan(family) if ati_scored(s)]
-    )
+    ids = item_ids() if item_ids is not None else gated_ids(family)
     return {
         "answerer": "construction",
         "gate": CONSTRUCTION_GATED[family],
@@ -356,7 +380,9 @@ def build(
     n_bad = 0
     with path.open("w", encoding="utf-8") as fh:
         for fam in families or gated_families():
-            for spec in [s for s in readplan.plan(fam) if ati_scored(s)][: limit or None]:
+            specs = readplan.plan(fam)
+            keep = set(gated_ids(fam, specs))
+            for spec in [s for s in specs if ati_scored(s) and s.id in keep][: limit or None]:
                 r = render(spec, tok)
                 pos = _positions(spec.positions, r.tokens)
                 if not pos:
@@ -1327,7 +1353,6 @@ def _gate_panel(
     family is a stop-and-report. ``frontier`` = the non-Claude frontier readers used (default
     both); a reduced panel (``panel_label`` required, see ``gate``) writes a provisional entry
     whose ``panel`` is that label and whose ``status`` follows its own ``status_order``."""
-    from wsbench import readplan
 
     override = None
     if slot_override:
@@ -1343,7 +1368,7 @@ def _gate_panel(
     for fam in fams or gated_families():
         if fam in CONSTRUCTION_GATED:
             continue
-        ids = [s.id for s in readplan.plan(fam) if ati_scored(s)]
+        ids = gated_ids(fam)  # the judged bank's ids, not a read_plan_bank's extra rows
         slot = slot_of(main, fam, override)
         slot_model = CLAUDE_SLOTS[slot]
         panel = ["qwen", slot, *frontier]

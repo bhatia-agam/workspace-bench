@@ -841,3 +841,22 @@ def test_mh2_not_gated(offline, tmp_path, real_families, capsys):
     argv = ["judge", "family=multihop_mt_v2", f"readouts={example}", f"out={tmp_path / 'o'}"]
     assert main([*argv, "anti_text_inversion=True"]) == 0  # skipped, never judged
     assert "not gated" in capsys.readouterr().err
+
+
+def test_gated_ids_are_the_judged_bank(real_families, monkeypatch):
+    """A bank that reads with an earlier bank's plan (``read_plan_bank``) is gated on its OWN
+    items, not the plan's extra rows (user_modeling v2: plan 100, judged 47); a bank with its own
+    plan keeps every plan id."""
+    monkeypatch.delenv("WSB_BANK_FILE_USER_MODELING", raising=False)
+    plan = [s.id for s in readplan.plan("user_modeling") if ti.ati_scored(s)]
+    ids = ti.gated_ids("user_modeling")
+    assert len(plan) == 100 and len(ids) == 47
+    assert ids == [i for i in plan if i.startswith("um-sd-")]
+    # role_bound bank v2 (a wrapped bank keyed on id) reads items.json's plan: 100 rows, 92 judged
+    rb = [s.id for s in readplan.plan("role_bound_association") if ti.ati_scored(s)]
+    rb_ids = ti.gated_ids("role_bound_association")
+    assert len(rb) == 100 and len(rb_ids) == 92 and set(rb_ids) < set(rb)
+    poetry = [s.id for s in readplan.plan("poetry") if ti.ati_scored(s)]
+    assert ti.gated_ids("poetry") == poetry  # its own plan: every plan id
+    monkeypatch.setenv("WSB_BANK_FILE_USER_MODELING", "evals/user_modeling/items.json")
+    assert ti.gated_ids("user_modeling") == plan  # v1 has its own plan: all 100

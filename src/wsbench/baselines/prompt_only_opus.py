@@ -107,7 +107,9 @@ def subject_tokenizer() -> Any:
 
 def build(out: Path, fams: Iterable[str] | None = None, limit: int = 0) -> Path:
     """``out/prompts.jsonl``: one row per plan row id of every family (all ids, not only the
-    ATI-scored ones), the render decoded through its last ``reads=full`` site. Tokenizer only."""
+    ATI-scored ones), the render decoded through its last ``reads=full`` site. Tokenizer only.
+    A bank that reads with an earlier bank's plan (``read_plan_bank``) is asked on its own ids
+    only: the plan's other rows are never judged (``text_inversion.judged_bank_ids``)."""
     from transformers import AutoTokenizer
 
     from wsbench import readplan
@@ -123,7 +125,9 @@ def build(out: Path, fams: Iterable[str] | None = None, limit: int = 0) -> Path:
     kw = {"skip_special_tokens": False, "clean_up_tokenization_spaces": False}
     with path.open("w", encoding="utf-8") as fh:
         for fam in fams or families():
-            for spec in readplan.plan(fam)[: limit or None]:
+            own = ti.judged_bank_ids(fam)
+            specs = [s for s in readplan.plan(fam) if own is None or str(s.id) in own]
+            for spec in specs[: limit or None]:
                 r = render(spec, tok)
                 pos = _positions(spec.positions, r.tokens)
                 if not pos:
