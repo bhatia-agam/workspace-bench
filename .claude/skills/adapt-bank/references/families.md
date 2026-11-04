@@ -560,7 +560,7 @@ carried over from the 27B; there is no Opus / Sonnet unguessability gate.
   `wikidata_extra.json`; the pool's English labels only if Wikidata returns nothing). An option
   with no entity, a template with no MC category, or a pool under 4 drops the item; `mc` is built
   before the caps count it. `stage=bank` needs `pool=`.
-  The judge also reads `template` (role cues) and `prompt`; both are built.
+  The judge also reads `prompt` (the prompt-echo check); it is built.
 
 **Freezing the Phase E families:** they are not in `families.FAMILIES`, so a bare `freeze` (and
 `status`) skips them. They ship only when named: `$A freeze $M families=wrong_intermediate,multihop_mt_v2`

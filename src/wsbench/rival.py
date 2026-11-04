@@ -39,10 +39,12 @@ the ``[N samples]`` marker the judge reads):
   Paul McCartney. The musician ... who wrote Tax was John Lennon."); a gold whose only singling
   line is split is contested;
 - the pick is ``contested`` (a fail, never a credit) when ``rival_support > 0`` and the gold
-  does not lead by the family's :class:`Margin`: wrong_intermediate (its rule: "stated far more
-  often") needs ``gold >= 1.5 x rival`` AND ``gold - rival >= 2`` (2 samples vs 1 is no clear
-  favour); basic_readout_mt and multihop_mt_v2 need ``gold > rival`` (round 4b, ``MORE_THAN``:
-  a tie is equally prominent and contested; round 3's ``gold >= rival`` let 4 vs 4 pass).
+  does not lead by the family's :class:`Margin`: basic_readout_mt and multihop_mt_v2 need
+  ``gold > rival`` (round 4b, ``MORE_THAN``: a tie is equally prominent and contested; round 3's
+  ``gold >= rival`` let 4 vs 4 pass).
+
+wrong_intermediate keeps the rival sentence in its prompt (so its cached answers stay valid) but
+only reports ``rival_quote``: its judge's verified pick stands.
 
 Only summary mode has support counts; the native path (one call per layer, the ATI gate) keeps
 its verdicts unchanged."""
@@ -57,8 +59,7 @@ from wsbench.nearquote import close_lines
 RIVAL_VERSION = "rv-2026-11-01h"  # -31f: gold support only from lines singling out the gold;
 # -11-01g: a rival line that names the gold is no rival line; -11-01h: ... and no gold line
 # either (a split line counts for neither side). ``contest(split=...)`` (round 4e) lets a caller
-# mark more split lines; without it the rule is unchanged, so the stamp is too (wrong_intermediate's
-# use of it is stamped by its own AUDIT_VERSION, wbaudit-v2)
+# mark more split lines; without it the rule is unchanged, so the stamp is too
 # the judge calls' fingerprint: the prompt (RIVAL_RULE) did not change in -31f / -11-01g, so
 # cached answers are re-scored (call_version)
 RIVAL_CALL_VERSION = "rv-2026-10-31e"
@@ -82,7 +83,7 @@ class Margin:
         return rival > 0 and (gold < self.ratio * rival or gold - rival < self.lead)
 
 
-FAR_MORE = Margin(1.5, 2)  # wrong_intermediate: "stated far more often"
+FAR_MORE = Margin(1.5, 2)  # "stated far more often" (the default margin of :func:`contest`)
 AT_LEAST = Margin(1.0)  # the round-3 basic_readout_mt margin (a tie passed); kept for reference
 # round 4b (basic_readout_mt and multihop_mt_v2, optrv-v2): the gold must lead, a tie is
 # contested (Camila: "if there are a ton of different equally prominent answers then it should
@@ -133,10 +134,8 @@ def contest(
     takes a digest line (``Grounded.line``), ``names_gold`` a quote's text; ``single_option(rq,
     line)``: the verified rival quote names another listed option and ``line`` singles out that
     same option (its best line then counts, as the gold's does). ``split(entry)``: the caller
-    found the entry to name the gold AND a competing answer in the same role (wrong_intermediate:
-    the
-    rival audit's name, wbaudit-v2); it counts for neither side here, as a quote-split line does,
-    and the caller weighs it as that rival's."""
+    found the entry to name the gold AND a competing answer in the same role; it counts for
+    neither side here, as a quote-split line does, and the caller weighs it as that rival's."""
     rq = str((result or {}).get("rival_quote", "") or "").strip()
     located = holders(rq, grounded) if rq and not names_gold(rq) else []
     # -11-01h: a line holding the verified rival quote AND naming the gold is a split line: it

@@ -18,6 +18,7 @@ from wsbench import readplan, reads, registry, runner
 from wsbench.baselines import lucky_guessing
 from wsbench.baselines import text_inversion as ti
 from wsbench.cli import _family
+from wsbench.evals.wrong_intermediate import judge as wj
 from wsbench.evals.wrong_intermediate import prompts as wp
 
 REPO = Path(__file__).resolve().parents[1]
@@ -25,7 +26,6 @@ REPO = Path(__file__).resolve().parents[1]
 # is the one every campaign sidecar of the family carries
 PRE_PLAN_SHA = "0c247af522d39b73be377775cae115f9ab5f8619bf2a328be90e48b146b83f3f"
 PRE_BANK_SHA_PREFIX = "23a8ac85bac7"
-PRE_PROMPT_VERSION = "wb-mc-2026-10-31r+rv-2026-11-01h+wbaudit-v2+wbforms-v4+bank-v4"
 
 
 def test_new_name_is_the_family():
@@ -73,27 +73,31 @@ def test_plan_sha_unchanged_by_the_rename():
     assert registry.hash_name("association") == "association"
 
 
-# sha256 over every upper-case string constant of the judge's prompts module (system / user /
-# audit / summary prompts, task note, instrument stamps), computed on the pre-rename module
-PRE_PROMPTS_SHA = "a7292ad975d25e80747110b467276e40815e8ce0b60519d3618ec029ab801e5e"
+# sha256 over the MC judge's prompt constants (system / user / summary prompts, task note, seed,
+# forms and bank stamps), computed on the pre-rename module; the rename changed none of them
+PRE_PROMPTS_SHA = "6796fdb08af187906c2c6d6f490f118e284e98e417106d05bfbe750551ad193e"
 PROMPT_CONSTANTS = (
-    "RIVAL_VERSION", "AUDIT_VERSION", "MC_CALL_VERSION", "FORMS_VERSION", "BANK_TAG",
-    "PROMPT_VERSION", "WB_MC_SEED", "RIVAL_RULE", "SYSTEM", "AUDIT_SYSTEM", "AUDIT_USER", "CANNOT",
-    "USER", "BLOCK", "KIND_NOTE_PROSE", "KIND_NOTE_TOKENS", "USER_SUMMARY", "TASK_NOTE",
+    "BANK_TAG", "BLOCK", "CANNOT", "FORMS_VERSION", "KIND_NOTE_PROSE", "KIND_NOTE_TOKENS",
+    "RIVAL_RULE", "SYSTEM", "TASK_NOTE", "USER", "USER_SUMMARY", "WB_MC_SEED",
 )  # fmt: skip
+# the MC calls' fingerprint version before the rename (the cache key of every MC answer)
+PRE_MC_CALL_VERSION = "wb-mc-2026-10-31r+rv-2026-10-31e"
 
 
 def test_instrument_and_prompt_bytes_unchanged_by_the_rename():
-    assert wp.PROMPT_VERSION == PRE_PROMPT_VERSION
+    assert wj._mc_version(wp.PROMPT_VERSION) == PRE_MC_CALL_VERSION
     blob = "\x00".join(f"{k}={getattr(wp, k)}" for k in sorted(PROMPT_CONSTANTS))
     assert hashlib.sha256(blob.encode()).hexdigest() == PRE_PROMPTS_SHA
 
 
 def test_ati_bank_sha_unchanged_by_the_rename():
-    entry = ti.subset_entry("wrong_intermediate")  # a bank_sha mismatch would exit (re-gate)
+    # the frozen entry itself (``subset_entry`` also checks the instrument, which a later rule
+    # change moves; the rename is about the bank fingerprint and the key lookup)
+    frozen = json.loads(ti.FROZEN.read_text(encoding="utf-8"))
+    entry = ti._by_family(frozen, "wrong_intermediate")
     assert entry["bank_sha"].startswith(PRE_BANK_SHA_PREFIX)
     assert ti.bank_fingerprint("wrong_intermediate") == entry["bank_sha"]
-    assert ti.subset_entry("wrong_bridge") == entry
+    assert ti._by_family(frozen, registry.canonical("wrong_bridge")) == entry
 
 
 def test_lucky_guessing_seeds_unchanged_by_the_rename():

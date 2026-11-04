@@ -106,7 +106,6 @@ These all read `REPO_ROOT/evals/…`, never the bank root.
   set's `pair_rate` is None.
 - **wrong_intermediate**:
   - A missing `readout` gives a final_token read.
-  - An unknown `template` means no role cues.
   - `mc.order` must have exactly 6 options.
 - **unverbalized_hint** (retired): each `pair_id` needs exactly one I and one N item, or
   `pairs_of` exits. `check_bank` checks this.
@@ -859,19 +858,18 @@ REQUIRED_ITEM_FIELDS: `name`, `attr_class`, `attr`, `messages`, `attr_label`, `s
 ### wrong_intermediate
 
 Judge: `evals/wrong_intermediate/judge.py`. Refresh: model-specific (Phase E). Bank: dict, id from `name`.
-REQUIRED_ITEM_FIELDS: `name`, `prompt`, `readout`, `template`, `mc`.
+REQUIRED_ITEM_FIELDS: `name`, `prompt`, `readout`, `mc`.
 SUBJECT_FIELDS: `mc`.
 
 | kind | input | req | if absent | class | where | note |
 |---|---|---|---|---|---|---|
 | item | `name` | yes | exit | build | banks.py:18-35 | id = label_of(name); new id for adapted-only |
-| item | `prompt` | yes | exit | copy-verbatim | wrong_intermediate/judge.py:388-405 |  (checked) |
+| item | `prompt` | yes | exit | copy-verbatim | wrong_intermediate/judge.py:290-303,405 |  (checked) |
 | item | `readout` | yes | fallback | copy-verbatim | readplan.py:487-494 | absent: final_token full read |
-| item | `template` | yes | silent | copy-verbatim | wrong_intermediate/judge.py:342-360,437 |  |
-| item | `mc.order` | yes | exit | build | wrong_intermediate/judge.py:48,278,310 | exactly 6 |
-| item | `mc.gold` | yes | exit | subject | wrong_intermediate/judge.py:284,309 | the subject's wrong intermediate |
-| item | `mc.contrast` | yes | exit | copy-verbatim | wrong_intermediate/judge.py:284,444 |  |
-| item | `mc.forms` | yes | exit | build | wrong_intermediate/judge.py:308,431-451 |  |
+| item | `mc.order` | yes | exit | build | wrong_intermediate/judge.py:49,277,282 | exactly 6 |
+| item | `mc.gold` | yes | exit | subject | wrong_intermediate/judge.py:283,332 | the subject's wrong intermediate |
+| item | `mc.contrast` | yes | exit | copy-verbatim | wrong_intermediate/judge.py:283,361 |  |
+| item | `mc.forms` | yes | exit | build | wrong_intermediate/judge.py:331,359 |  |
 | qwen | `min_full_positions=9` |  | - | subject | wrong_intermediate/__init__.py:24-25 | Qwen render length; reads.check_full exits below it on a sidecar file (reads.py:308) |
 | qwen | `GRID layers (Qwen 64 blocks)` |  | - | subject | readplan.py:588-627 | remapped by depth from report.json n_layers under WSB_BANK_ROOT (exit without it) |
 

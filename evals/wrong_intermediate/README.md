@@ -135,7 +135,7 @@ bank is a specific Qwen3.6-27B error (`capable` lists it under NO_QUESTION).
 ## Scoring
 
 **Name matcher** (round 4, `+wbforms-v1`, `judge.name_in`, used for every option by every check:
-the form gate, single-out, the rival and contrast lines, the audit): each word of 4+ letters of a
+the form gate and the raw counts): each word of 4+ letters of a
 non-CJK form may run on into up to 2 letters of its own script (Russian "Назван в честь Карла
 Маркса" for "Карл Маркс", Croatian "Ivana Gundulića"), word boundaries count only letters of the
 form's own scripts (a Latin name glued to CJK text, "Blue Note以...", is a whole word), Hangul is
@@ -173,69 +173,28 @@ or one occurs inside the other: "Matilda", "Karl", "Abdul Hamid", "Caesar" besid
 
 **Pass rule.** A pick is `gold` / `contrast` / `distractor` / `cannot_tell` / `invalid`
 (`mc.classify`; an invalid number is re-asked once, then unjudged). A gold pick passes only if
-its quote (a) verifies against the readout (`digest.quote_ok`: inside one sample, or tokens of
-one ranked list, or one word split across adjacent positions), (b) carries a listed name form of
-the gold (`mc.form_in`; a fact-only quote such as "born in Bonn in 1770" never passes, a quote
-without Latin letters passes only with a listed Chinese form) and (c) is not an echo of the
-prompt (the quote, folded and with spaces and punctuation removed, is not part of the prompt:
-"Bluenote" from "Bluenote Café" is not credit). A gold pick failing a gate counts as
-`gold_uncredited` (a fail).
+its quote (a) verifies against the readout (`digest.quote_ok`, markdown marks ignored: inside
+one sample, or tokens of one ranked list, or one word split across adjacent positions), or
+near-verbatim (`nearquote.close_lines`: a prose quote of at least 12 characters whose longest
+common block with one sample covers 90% of it; `quote_near`), (b) names the gold reasonably and
+unambiguously, read in the line it came from (`qline-v1`, `judge.form_via`): a
+verified quote that carries a listed name form of the gold (`form_via = quote`; a fact-only quote
+such as "born in Bonn in 1770" never passes, a quote without Latin letters passes only with a
+listed Chinese form), or a near quote's matched block (the readout's own words at the quote's
+place, never the judge's) that names the gold and no other candidate (`form_via = block`), else a
+line holding the quote that names the gold and no other candidate (`form_via = line`: the quote
+"Ludwig van" cut at a sample boundary, from a line naming Ludwig van Beethoven); a quote
+naming another candidate never passes, and (c) is not an echo of the prompt (the quote, folded
+and with spaces and punctuation removed, is not part of the prompt: "Bluenote" from "Bluenote
+Café" is not credit). A gold pick failing a gate counts as `gold_uncredited` (a fail).
 
-**Rival check** (summary mode, round 3, `wsbench.rival`; Camila: "if there are a ton of different
-equally prominent answers then it should not pass"). The judge also returns `rival_quote`: a
-short quote from the digest line with the MOST samples that names a DIFFERENT person, group or
-company (listed or not) in the same role for the same work or thing (or a garbled variant of its
-title), or "" when there is none. When that rival is a listed candidate, its best digest line
-counts, as the gold's does; the true bridge B (the contrast) is always weighed this way, named by
-the judge or not (`contrast_support`: its best digest line that names it in full and in the role,
-and no other candidate; see round 4 below). Code then compares
-the digest's own `[N samples]` counts: the gold's support is the largest count of a digest line
-that names the gold and no other candidate (the line holding the judge's quote counts only if it
-does too: a line naming two candidates singles out none); the rival's is the count
-of the line holding `rival_quote` (verbatim, else near-verbatim). A credited pick whose support
-is below 1.5x the rival's, or leads it by fewer than 2 samples, is `contested` (a fail;
-`rival.FAR_MORE`). This is what the judge's own "stated far more
-often" rule was meant to do, but before round 3 it passed pluralities such as Torre Nilsson's
-13-sample line beside a 44-sample line naming Buñuel as the director (Q6466264), or Cézanne 121
-vs van Gogh 104 painting lines (Q4892867). A rival quote that names the gold is no rival
-(`rival_names_gold`); an unlocatable one is ignored and counted (`n_rival_unverified`). The
-native path (one call per layer, the ATI gate) has no sample counts and is unchanged.
-
-**Round 4 (review of PR #208).**
-- *The contrast's own line* (`contrast_line`) must name B through a full form (the Q10 bare
-  surname is dropped: `full_forms` removes a one-word form that is the last word or `·`-segment
-  of another form, the label itself is kept), not glued by a hyphen into another name, with a
-  role cue near it: a cue word of the item's template (`ROLE_CUES`: `direct`, `paint`, `wrot`,
-  `releas`, ... as word starts, CJK cues as substrings), a word of the prompt's subject phrase
-  (`subject_words`: "the namesake of the Saint Petersburg Conservatory" -> `petersburg`,
-  `conservatory`) or "by" just before the name, within ~60 characters before / ~40 after; the
-  word right before the name is no cue (an apposition, "The painter Raphael Sanzio died in
-  Rome", describes the name). Before this the surname `Hung` (Sammo Hung) matched "Jet Li as
-  Wong Fei-Hung" and contested Q691478 at all-layer 19 vs 24, and "Keyshia Cole" counted for
-  J. Cole.
-- *The rival audit* (`AUDIT_SYSTEM`, schema `wb_rivals`): the MC call's single `rival_quote`
-  was often a weak line (Q3794057: a 2-sample Fellini line beside "Il futuro è tuo – directed by
-  Luciano Tovoli" [12] and Sergio Martino [9]; Q591875: none at all). For every credited gold
-  pick, code selects the digest lines with at least a third of the gold's best support that do
-  not name the gold (`audit_lines`, largest first, at most 30) and asks one more call to mark
-  each as a rival or not. Unlike the MC judge, the audit is told the prompt's subject phrase
-  (`subject_of`: "The director of the 1984 film Il futuro è donna"; never the relation or an
-  answer), since a garbled title can only be matched against the real one; it can only take a
-  credit away. A failed audit call leaves the item unjudged. wbaudit-v2 (round 4e) appends,
-  after those lines (so their numbers do not move), every prominent line that names the gold and
-  holds another name (`split_candidates`, `other_name`: a capitalized word that is no function
-  word and no prompt word, or a CJK character); the audit is told such a line is a rival when it
-  ALSO gives a different person in the role. A gold-naming line it marks with a name the line
-  holds (`line_names`) is a *split line* (`audit_split`): it counts for neither side in
-  `rival.contest` and is weighed as that rival's entity. A line naming only the gold never starts
-  an audit call.
-- *The weighing* (`rival_entities`, `combined_support`): every competing entity (the contrast's
-  lines, each audited rival line keyed by its name, the MC `rival_quote`) keeps its best line.
-  The pick is `contested` unless the gold leads the strongest of them by `rival.FAR_MORE` AND
-  outweighs the sum of all entities with at least a third of its support (`OUTWEIGH`: more
-  samples than the sum). A lone rival gives exactly the round-3 rule; a plurality among several
-  near answers fails (Q591875: Pantera 27 vs Aerosmith 14 + AC/DC 13 + Steeler 10). Row fields:
-  `rival_entities`, `top_rival_support`, `combined_support`; extras: `n_audit_calls`.
+**No code check after the judge** (`judge-only-v1`). The six candidates plus "cannot tell"
+already require the readout to single out one entity, so a gold pick that passes the gates above
+is credited and nothing in code overrules it. The judge still returns `rival_quote` (its prompt
+is unchanged, so cached MC answers stay valid); it is reported on the row and never scored.
+Every row (both modes) also reports, beside the score and never in it, `raw_wrong` / `raw_true`
+(how many raw readout samples of the item's loaded cells name B' / B through their listed forms,
+`judge.raw_counts`) and `raw_majority` (`wrong` / `true` / `tie` / `none`).
 
 - Summary mode (default): one digest per item over every loaded cell, ONE MC call per item;
   that verdict is the item verdict. A missing layer leaves a non-pass undecided; an
@@ -246,8 +205,8 @@ native path (one call per layer, the ATI gate) has no sample counts and is uncha
   `n_items_gold_any_layer`, `n_items_distractor_any_layer`, `n_items_distractor_majority`
   (the contrast counts as a distractor there).
 - Extras (both modes): `pick_counts {gold, contrast, distractor, cannot_tell, invalid,
-  gold_uncredited, contested}`, `n_contested`, `n_rival_unverified`, `rival_margin`,
-  `n_items_picked_true_bridge`, `true_bridge_rate`.
+  gold_uncredited}`, `n_items_picked_true_bridge`, `true_bridge_rate`, `raw_majority` (counts)
+  and `raw_wrong_majority_rate`.
 - Chance: MC, 6 candidates + cannot tell: uniform-guess floor 1/6; the lucky-guessing floors are
   in `evals/baselines/lucky_guessing.json`. The measured prompt-only floor is Opus 5.5
   (`po-opus-v1`: one Opus readout per item judged through this same digest + MC judge,
@@ -255,87 +214,6 @@ native path (one call per layer, the ATI gate) has no sample counts and is uncha
 - `reads=full` checks every (item, layer) holds one contiguous run of >= 9 positions (the
   shortest prompt has 9 words); a file with a sidecar and one position per cell exits 2 ("looks
   like a lite file"); `reads=lite` stamps `+reads-lite` on the prompt version.
-
-### Round 4 (2026-11-01, `+wbforms-v1+bank-v3`)
-
-- The cited too-strict cells, re-scored from the cached MC answers on the v2 lists with the v3
-  forms: org_founder-Q1303856 L28 ("the founder of Monreale Cathedral was **King Roger II**") is
-  now a credited gold pick; namesake-Q989622 L20, L24 and L28 (Russian "Карла Маркса") are
-  credited; at L32 the form gate now passes ("Почему именно Карл Маркс?") but the pick is
-  contested by a 4-sample rival line against the gold's 1 (the rival check, unchanged).
-- Bank v3 (above) changes the options, so every config needs new MC calls (`rejudge`).
-
-### Round 4c (2026-11-01, `+rv-2026-11-01g ... +wbforms-v2+bank-v4`)
-
-- Bank v4 and the ASCII-only inflection tail (above). Cached MC answers are re-scored (forms are
-  not in the MC call key); the rival audit is re-asked (its key is the full stamp).
-- `rv-2026-11-01g` (`wsbench.rival.contest`): a rival line that also names the gold is no rival
-  line (the judge is told so; code checked only the quote), so a rival quoted from the gold's
-  own line no longer ties or outweighs the gold with itself (L52 composition_composer-Q182537).
-  **Correction (round 4d):** Q182537 was not "the gold's own line": its 7-sample line names
-  both John Lennon and Paul McCartney as the writer of Taxman, a separate claim for the same
-  role, and the 4/3/1-sample lines split the same way. Its gain below was too lenient; see
-  round 4d.
-- Re-scored from the same cached MC answers, bank v3 + wbforms-v1 + rv-31f (8748e85e) -> this
-  instrument: all-lite 17 -> 17, L28 17 -> 16, L36 28 -> 28, L40 25 -> 25, L44 21 -> 20,
-  L52 22 -> 23, L56 16 -> 17, prompt-only 0 -> 0; all-layer 0.46 on this instrument (the bank-v3 all-layer baseline on the same cached answers did not finish within the 2 h job limit, so no before/after is given for it). Lost: lines the v3 forms
-  had counted as naming the gold (so the audit never saw them) now reach the rival audit and
-  outweigh the gold (L28 novel_author-Q4449949: "Hardy Boys" 5 vs 5; L40 Q3221113: Lilian
-  Jackson Braun 3 vs Heinlein 4, under FAR_MORE; L44 painting_creator-Q1170194: Tiepolo 8 vs
-  7). Gained: L40 album_performer-Q2564709 (Alicia Keys no longer weighed), L52 Q182537 (the
-  same-line rival), L56 film_director-Q384243 (the Spielberg entity gone). The audit is
-  re-asked, so some of these moves are audit-call variation as well as the forms.
-
-### Round 4d (2026-11-01, `+rv-2026-11-01h ... +wbforms-v3+bank-v4`)
-
-- `rv-2026-11-01h` (`wsbench.rival.contest`, review of PR #208 round 4c): a digest line that
-  holds the verified rival quote AND names the gold is a split line and counts for NEITHER
-  side (`split_support` records it); -11-01g credited it all to the gold, so the competing
-  claim was weighed nowhere (the rival audit skips gold-naming lines). A gold whose only
-  singling line is split is contested.
-- `wbforms-v3`: accent-only forms (above).
-- Re-scored from the round-4c cached MC answers (the rival audit is re-asked, its key is the
-  full stamp): all-lite 17 -> 17, L28 16 -> 15, L36 28 -> 27, L40 25 -> 26, L44 20 -> 21,
-  L52 23 -> 23, L56 17 -> 18, prompt-only 0 -> 0. Every flip is re-asked rival-audit
-  variation (a different `rival_entities` set; no `split_support` and no form change on any
-  flipped cell); the forms change moved no cell.
-- **Open in 4d, fixed in round 4e below:** L52 composition_composer-Q182537 still passes, now 4 vs 0
-  (was 7 vs 0): the split 7-sample line is dropped, but the 4-sample gold line ('"Taxman" was
-  written by John Lennon') also says "The songwriter of Taxman is Paul McCartney" without
-  holding the judge's rival quote, and the gold support is role-blind (the 4-sample "John
-  Lennon was born in Liverpool" line would carry it too). Contesting it needs either the
-  rival's NAME (not its quote) to mark split lines plus role-tied gold support
-  (`option_line`), a larger change left for a decision.
-
-### Round 4e (2026-11-01, `+wbaudit-v2`)
-
-- Fixes the round-4d open case (review of PR #208 round 4d): the rival audit also checks
-  gold-naming lines that hold another name, and a line it marks as giving a different person in
-  the role (by a name the line holds) is a split line, cut from the gold and weighed as that
-  rival's (above). L52 composition_composer-Q182537 is now contested 4 vs 7: the McCartney
-  lines (7, 4, 3, 1 samples) all name Lennon too and are cut, leaving the Liverpool line (4),
-  while "~paul mccartney" weighs 7. Gold support itself stays role-blind (a "Lennon was born in
-  Liverpool" line is evidence of the bridge in this eval); `option_line` was not adopted.
-- `rival_entities` now reads the same numbered list the audit call showed (`audit_shown` at
-  `pre_gold_support`); in -11-01h it recomputed the list with a gold bar that still counted
-  split lines, so a verdict could land on a different line.
-- `name_in` / `name_spans` compile each form's pattern once (`_compiled`, `_any_compiled`:
-  ~33-50 ms -> ~0.4 ms per call on the largest option); the all-layer re-score now finishes in
-  minutes.
-- `wbforms-v4` (ASCII twins, above) and the audit key without the forms stamp
-  (`_audit_version`: the user message already holds the lines, so a forms-only change stops
-  re-asking every audit; rounds 4c / 4d re-asked them all).
-- Re-scored from the round-4d cached MC answers (the audit is re-asked once more: its prompt,
-  lines and key changed): all-lite 17 -> 15, L28 15 -> 13, L36 27 -> 27, L40 26 -> 21,
-  L44 21 -> 23, L52 23 -> 16, L56 18 -> 16, all-layer 43 -> 39 (0.39; the first all-layer number
-  on the round-4d+ instruments), prompt-only 0 -> 0. To separate the rule from audit-call
-  variation, every config was also re-scored on the same final audit answers with the split rule
-  switched off (`scratch/r4f/nosplit.sh`, patching `audit_split` / `line_names`): the rule alone
-  flips 21 cells, every one pass -> contested (e.g. all El Greco 50 vs Velázquez 34 on "the
-  painter of Las Meninas ... Diego Velázquez ... El Greco", M-Net 26 vs SABC 47, L36 Gundulić
-  "Alternatively, he could be Lujo Petrović", Q182537 all 33 vs McCartney 38); the other 19
-  moves (both ways) are re-asked audit variation, as in rounds 4c / 4d. Some split verdicts are
-  audit noise (L56 Nintendo vs a Capcom-in-Osaka aside); a split can only take a credit away.
 
 ## Readouts
 
@@ -351,11 +229,12 @@ wsbench judge family=wrong_intermediate readouts=<arm>/wrong_intermediate.jsonl 
 
 ## Judge prompts
 
-`prompt_version`: `wb-mc-2026-10-31r+rv-2026-11-01h+wbaudit-v2+wbforms-v4+bank-v4` (the family's own stamp; summary mode stamps
-`digest.prompt_version("wb-mc-2026-10-31r+rv-2026-11-01h+wbaudit-v2+wbforms-v4+bank-v4", args, "wrong_intermediate")`, plus `+reads-lite` under
-`reads=lite`). The MC calls are keyed without `+wbaudit-v2` and with the rival rule's call
-version (`rv-2026-10-31e`): the MC prompt did not change, so cached MC answers are re-scored. Judge: the repo default (`claude-opus-5-5`), unpinned. Output schema
-`{"choice": int, "quote": str, "rival_quote": str}` (`wb_pick`). The judge never sees the prompt, A, A', the
+`prompt_version`: `wb-mc-2026-10-31r+judge-only-v1+qline-v1+wbforms-v4+bank-v4` (the family's own stamp; summary mode stamps
+`digest.prompt_version("wb-mc-2026-10-31r+judge-only-v1+qline-v1+wbforms-v4+bank-v4", args, "wrong_intermediate")`, plus `+reads-lite` under
+`reads=lite`). The MC calls are keyed by the frozen round-3 call version
+`wb-mc-2026-10-31r+rv-2026-10-31e` (`prompts.MC_CALL_VERSION`) in place of the stamp: the MC
+prompt has not changed since, so cached MC answers are re-scored. Judge: the repo default (`claude-opus-5-5`), unpinned. Output schema
+`{"choice": int, "quote": str, "rival_quote": str}` (`wb_pick`; `rival_quote` is reported, never scored). The judge never sees the prompt, A, A', the
 template or the hop-2 relation.
 
 System prompt (both modes):
@@ -420,8 +299,8 @@ The default since plan 0024 (`opts=aggregate=native` opts out to the any-layer r
 Every cell of an item (every read layer × position × sample under `reads=full`; the final
 position at every layer under `reads=lite`) goes to ONE digest call (`docs/summarizer.md` §
 Item digest) with this family's task note, and the MC judge is called ONCE per item on that
-digest. A YES needs a quote from inside one evidence sample (`col.evidence`), never from the
-note-taker's words. User message (`{summary_note}` = the shared `digest.SUMMARY_NOTE`, plus the
+digest. A gold pick needs a quote from inside one evidence sample (`col.evidence`; verbatim or
+near-verbatim), never from the note-taker's words. User message (`{summary_note}` = the shared `digest.SUMMARY_NOTE`, plus the
 token note above when the readouts are token lists):
 
 ```text
@@ -432,41 +311,6 @@ CANDIDATES:
 
 READOUT:
 {summary}
-```
-
-Rival audit (summary mode only, one call per credited gold pick; see the rival check above).
-System prompt:
-
-```text
-You check one answer of a judge of readouts of a language model's internal activations, taken while the model read a one-sentence factual question. The question asks for a fact (a year or a city) about a person, group or company that it never names; you are told which work or thing it is about. The judge chose the candidate below as the one the readout identifies as that hidden entity, and cited a quote. Each readout line is one claim with its support marker ([N samples]).
-
-For EACH numbered line under LINES TO CHECK, say whether it names a DIFFERENT person, group or company (in the candidate list or not) as the entity in question ("rival": true, with that "name"), that is:
-- as the maker, performer, founder, parent, advisor or namesake of the work or thing in question, under its title or any variant of it (readouts garble titles: 'The Silent Road', 'Silent Roads' and 'The Road of Silence' may all be attempts at one film);
-- or as the entity whose year or city the line gives or seeks as the answer to the question itself.
-A line that also names the chosen candidate is checked the same way: it is a rival when it ALSO gives a different person, group or company in that role ("X wrote it. ... Y wrote it."; give that different "name"), not when it gives only the chosen candidate in the role and mentions the other in some other way.
-Not a rival ("rival": false, "name": ""): a line about a clearly different work, thing or relation; a fact the line states about someone it merely mentions; a name that appears only as a comparison ("born in the same year as X"), a style reference, one entry of a list of several names, or a reference point for something else; a line that names nobody of the candidates' kind. Judge only from what each line says, not from your own knowledge of who made the work.
-Return JSON: {"verdicts": [{"line": <number>, "rival": <true or false>, "name": "<name or empty>"}, ...]}, one verdict per numbered line.
-```
-
-User message (`{subject}` = the prompt's subject phrase, `{choice}` = the MC pick as `N. name`,
-`{quote}` = its quote, `{lines}` = the audited lines as `N. [k samples] <line>`):
-
-```text
-THE QUESTION IS ABOUT: {subject}
-
-CANDIDATES:
-{options}
-
-THE JUDGE CHOSE: {choice}
-ITS QUOTE: {quote}
-
-{summary_note}
-
-READOUT:
-{summary}
-
-LINES TO CHECK:
-{lines}
 ```
 
 Task note (`EvalSpec.task_note`, sent to the summarizer; no gold, no option, no tool name):
@@ -496,3 +340,19 @@ the refilled bank, and the panel: 5 from the adjudicated finalists left out of t
 (templates already in the bank) and 2 from a new hop-1 template (`song_lyricist`) screened through the same stages (the 258k
 candidate pool was exhausted). The bank was ATI 100/100 under instrument `bank-2026-10-10`
 (`wrong_bridge_true`, the true-bridge twin, was 58/100; it is removed, see Scoring).
+
+## History
+
+- 2026-10-31 (`wb-mc-2026-10-31r`, round 3): the judge also returns `rival_quote`, and code
+  failed a gold pick unless its best digest line held 1.5 times the rival line's samples.
+- 2026-11-01 (`+wbforms-v1+bank-v3`, round 4): option name forms are every Wikidata name of the
+  option, matched with inflection tolerance; bank v3 swaps in same-role distractors that meet the
+  MC leakage standard; a rival audit call checked every prominent line that did not name the gold.
+- 2026-11-01 (`+wbforms-v2` to `+wbforms-v4`, `bank-v4`, rounds 4c-4e): bank v4 filters the name
+  forms, inflection tolerance applies only to forms spelled outside ASCII, and accent-only forms
+  and their plain-ASCII twins keep their accents.
+- 2026-11-04 (`qline-v1`): a quote one word off verifies near-verbatim, and the gold may be named
+  by the line the quote came from, so a quote cut mid-name ("...was Ludwig van") is credited.
+- 2026-11-04 (`judge-only-v1`): the rival check, rival audit call and true-bridge raw-count check
+  are removed because their support counts failed correct picks (Blue Note, in 124 raw samples,
+  was contested by a line about another label); raw wrong-vs-true counts are reported only.

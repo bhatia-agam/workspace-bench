@@ -167,10 +167,19 @@ def test_builder_rules():
     assert w.keeps_regnal("Casimir the Great", 3, "Casimir III the Great")
 
 
+def _single(it: dict, text: str) -> bool:
+    """The line names the gold and no other option (the forms test the removed rival weighing
+    used; kept here as a pure forms regression)."""
+    t = wj.norm(text)
+    forms = it["mc"]["forms"]
+    gold = it["mc"]["gold"]
+    others = [o for o in it["mc"]["order"] if o != gold]
+    return wj.name_in(t, forms[gold]) and not any(wj.name_in(t, forms[o]) for o in others)
+
+
 def test_l36_pantera_gold_support_is_the_real_line(v3, v4):
-    """L36 Q591875: under v3 the 4-sample "Let's break it down" line was the gold's best
-    single-out line (gold_support 4, so FAR_MORE no longer contested it) and the Black Sabbath
-    "Down Gettem" line counted as naming Pantera (dropped from the rival audit)."""
+    """L36 Q591875: under v3 the 4-sample "Let's break it down" line singled out the gold and the
+    Black Sabbath "Down Gettem" line counted as naming Pantera; the v4 forms name neither."""
     gs = [
         _g(
             'the album *"The Next Episode"* in 2001 and the artist who released the album '
@@ -190,11 +199,10 @@ def test_l36_pantera_gold_support_is_the_real_line(v3, v4):
         ),
     ]
     for bank, best, sabbath_names_gold in ((v3, 4, True), (v4, 1, False)):
-        names_gold, single_gold, _ = wj._option_tests(bank[PANTERA])
-        assert max(g.count for g in gs if single_gold(g.line)) == best
-        assert names_gold(gs[2].line.text) is sabbath_names_gold
-    shown = wj.audit_lines(v4[PANTERA], 1, gs)
-    assert gs[2] in shown and gs[0] in shown  # both are now rival-audit candidates
+        it = bank[PANTERA]
+        assert max(g.count for g in gs if _single(it, g.line.text)) == best
+        gold_forms = it["mc"]["forms"][it["mc"]["gold"]]
+        assert wj.name_in(wj.norm(gs[2].line.text), gold_forms) is sabbath_names_gold
 
 
 def test_l36_beyonce_jay_z_line_is_not_gold_support(v3, v4):
@@ -211,5 +219,4 @@ def test_l36_beyonce_jay_z_line_is_not_gold_support(v3, v4):
         ),
     ]
     for bank, best in ((v3, 4), (v4, 2)):
-        _names_gold, single_gold, _ = wj._option_tests(bank[BEYONCE])
-        assert max(g.count for g in gs if single_gold(g.line)) == best
+        assert max(g.count for g in gs if _single(bank[BEYONCE], g.line.text)) == best

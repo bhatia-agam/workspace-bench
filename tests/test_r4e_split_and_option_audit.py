@@ -1,17 +1,11 @@
 # ruff: noqa: RUF001
 """Review of PR #208 (round 4d), both directions for each fix.
 
-1. wrong_intermediate (wbaudit-v2): the rival audit also checks lines that name the gold and hold
-   another name; one it marks as giving a different person in the role (a name the line holds)
-   is a split line, cut from the gold's support and weighed as that rival's. L52
-   composition_composer-Q182537 (gold John Lennon) passed 4 vs 0 while ~16 samples of Lennon
-   lines said "The composer of the song tax was Paul McCartney". Digest lines verbatim from
-   the cached final-olens-rl600-x4 L52 digest.
-2. basic_readout_mt / multihop_mt_v2 (optrv-v4, optaudit-v1): a code option-rival line the
+1. basic_readout_mt / multihop_mt_v2 (optrv-v4, optaudit-v1): a code option-rival line the
    option audit dismisses is not weighed. bonaire-capital (all) was contested 69 vs 72 by a
    true line about Aruba; L20 palau-capital 5 vs 10 by a former-capital line. A line the audit
    keeps, or a failed audit, still contests.
-3. wrong_intermediate ``name_in`` precompiles its patterns (was ~33 ms per call)."""
+2. wrong_intermediate ``name_in`` precompiles its patterns (was ~33 ms per call)."""
 
 import time
 
@@ -31,146 +25,7 @@ def _g(text: str, count: int) -> digest.Grounded:
     return digest.Grounded("", digest.support_text(count), text, ln, text, "items", "", count)
 
 
-# -------------------------------------------------------------- 1. wrong_intermediate split lines
-TAXMAN = "composition_composer-Q182537-birth_year"
-L52 = [
-    (
-        '" is John Lennon of The Beatles. The songwriter of "Taxman" is Paul McCartney of The '
-        'Beatles. "Taxman" was written by John Lennon',
-        4,
-    ),
-    (
-        "John Lennon. The composer of the song tax was Paul McCartney. The musician in the band "
-        'the Beatles who wrote Tax was John Lennon. We know that "Tax" is a song by the Beatles.',
-        7,
-    ),
-    (
-        "Liverpool, England. The alternative birthplace of John Lennon is Wallet Street, "
-        "Liverpool. The Beatles formed in Liverpool, England. John Lennon was born in Liverpool, "
-        "England. John Lennon was born in Liverpool",
-        4,
-    ),
-    (
-        "John Lennon. The person who composed Taxman was Paul McCartney. The band The Beatles was "
-        "formed in Liverpool. Who was John Lennon? John Lennon was a guitarist. The person who "
-        "wrote Tax",
-        3,
-    ),
-    (
-        'ation IV* or *Taxation XV* (opera/comedy scores) by Béla Bartók. "Taxation" is his '
-        "famous symphonic work. - **Taxation IV’s Novelty Orchestra** also features a theme "
-        "called *Taxation*.",
-        2,
-    ),
-    (
-        "1944. Elvis Presley was born in the year 1935. James Dean was born in the year 1931. "
-        "What is the missing year",
-        6,
-    ),
-    (
-        "* is John Lennon of The Beatles. The writer of *Taxman* is Paul McCartney of The "
-        "Beatles. Both songs are from the Beatles' 1966 album *Revolver*.",
-        1,
-    ),
-]
-QUOTE = "The musician in the band the Beatles who wrote Tax was John Lennon."
-RIVAL_Q = "The composer of the song tax was Paul McCartney."
-
-
-@pytest.fixture(scope="module")
-def taxman():
-    return next(it for it in wb.load_items() if it["id"] == TAXMAN)
-
-
-def _wb(it, gs, audit=None, rq=RIVAL_Q, quote=QUOTE):
-    res = {"choice": wb.positions(it)[0], "quote": quote, "rival_quote": rq}
-    return res, wb.decide(res, it, [g.line for g in gs], gs, audit)
-
-
-def _mark(shown, names):
-    """An audit answer marking each shown line whose text holds a key of ``names``."""
-    out = []
-    for n, g in enumerate(shown, 1):
-        hit = next((v for k, v in names.items() if k in g.line.text), None)
-        out.append({"line": n, "rival": hit is not None, "name": hit or ""})
-    return {"verdicts": out}
-
-
-def test_taxman_without_the_split_audit_passes(taxman):
-    """The reviewed state: every McCartney line also names Lennon, so it was weighed nowhere."""
-    gs = [_g(t, c) for t, c in L52]
-    _res, v = _wb(taxman, gs, {"verdicts": []})
-    assert v["pick"] == "gold" and v["gold_support"] == 4 and v["rival_entities"] == {}
-
-
-def test_taxman_audit_sees_the_lennon_mccartney_lines(taxman):
-    gs = [_g(t, c) for t, c in L52]
-    res = {"choice": wb.positions(taxman)[0], "quote": QUOTE, "rival_quote": RIVAL_Q}
-    shown = wb.audit_shown(taxman, wb.pre_gold_support(taxman, res, gs), gs)
-    texts = [g.line.text for g in shown]
-    # the non-gold lines keep their wbaudit-v1 numbers; the split candidates follow
-    assert texts[: len(wb.audit_lines(taxman, 4, gs))] == [
-        g.line.text for g in wb.audit_lines(taxman, 4, gs)
-    ]
-    for t, _c in L52[:4]:
-        assert t in texts  # every prominent Lennon line holding another name
-
-
-def test_taxman_split_lines_contest_the_pick(taxman):
-    gs = [_g(t, c) for t, c in L52]
-    res = {"choice": wb.positions(taxman)[0], "quote": QUOTE, "rival_quote": RIVAL_Q}
-    shown = wb.audit_shown(taxman, wb.pre_gold_support(taxman, res, gs), gs)
-    audit = _mark(shown, {"Paul McCartney": "Paul McCartney"})
-    _res, v = _wb(taxman, gs, audit)
-    assert v["pick"] == "contested" and not v["credited"]
-    assert v["gold_support"] == 4  # the Liverpool line, the only Lennon line without McCartney
-    assert v["rival_entities"]["~paul mccartney"] == 7
-    assert v["split_support"] == 7
-
-
-def test_a_mentioned_bandmate_is_no_split(taxman):
-    """The other direction: the audit keeps a line that gives only Lennon in the role and
-    mentions McCartney otherwise; and a rival name the line does not hold never cuts it."""
-    line = "John Lennon wrote Taxman; Paul McCartney played bass on the recording."
-    gs = [_g(line, 6), _g(L52[5][0], 1)]
-    res = {"choice": wb.positions(taxman)[0], "quote": "John Lennon wrote Taxman"}
-    shown = wb.audit_shown(taxman, wb.pre_gold_support(taxman, res, gs), gs)
-    assert [g.line.text for g in shown] == [line]
-    no = {"verdicts": [{"line": 1, "rival": False, "name": ""}]}
-    _r, v = _wb(taxman, gs, no, rq="", quote="John Lennon wrote Taxman")
-    assert v["pick"] == "gold" and v["gold_support"] == 6
-    wrong = {"verdicts": [{"line": 1, "rival": True, "name": "George Martin"}]}
-    _r, v = _wb(taxman, gs, wrong, rq="", quote="John Lennon wrote Taxman")
-    assert v["pick"] == "gold" and v["gold_support"] == 6 and v["rival_entities"] == {}
-
-
-def test_a_gold_only_line_starts_no_audit(taxman):
-    gs = [_g("John Lennon wrote Taxman.", 5)]
-    assert wb.audit_shown(taxman, 5, gs) == []
-    # a CJK gold line joins an audit but never starts one (no segmentation)
-    assert wb.audit_shown(taxman, 5, [_g("约翰·列侬写了《Taxman》", 5)]) == []
-
-
-def test_audit_numbering_is_the_runs():
-    """rival_entities reads the same numbered list the run showed (the -11-01h list used a
-    gold bar that still counted split lines, so verdicts could land on other lines)."""
-    it = next(i for i in wb.load_items() if i["id"] == TAXMAN)
-    gs = [_g(t, c) for t, c in L52]
-    res = {"choice": wb.positions(it)[0], "quote": QUOTE, "rival_quote": RIVAL_Q}
-    shown = wb.audit_shown(it, wb.pre_gold_support(it, res, gs), gs)
-    audit = _mark(shown, {"Bartók": "Béla Bartók"})
-    a = wb.rival_entities(it, res, gs, audit)
-    b = wb.rival_entities(it, res, gs, audit, shown)
-    assert a == b and a["~bela bartok"].count == 2
-
-
-def test_audit_prompt_and_stamp():
-    assert "also names the chosen candidate" in wp.AUDIT_SYSTEM
-    assert wp.AUDIT_VERSION == "wbaudit-v2" and "+wbaudit-v2+" in wp.PROMPT_VERSION
-    assert "wbaudit" not in wb._mc_version(wp.PROMPT_VERSION)  # MC calls stay cached
-
-
-# ------------------------------------------------------------------ 2. option audit (brmt)
+# ------------------------------------------------------------------ 1. option audit (brmt)
 BONAIRE = "brh-ent-bonaire-capital"
 PALAU = "brh-ent-palau-capital"
 ARUBA = (
@@ -283,7 +138,7 @@ def test_option_audit_stamps():
     assert mp.OPTION_AUDIT_VERSION == "optaudit-v1"
 
 
-# ------------------------------------------------------------------ 3. name_in speed
+# ------------------------------------------------------------------ 2. name_in speed
 def test_name_in_is_precompiled():
     it = max(wb.load_items(), key=lambda i: max(len(v) for v in i["mc"]["forms"].values()))
     forms = [it["mc"]["forms"][o] for o in it["mc"]["order"]]
@@ -298,7 +153,7 @@ def test_name_in_is_precompiled():
     assert per_call < 0.005  # was ~0.033-0.05 s with the re cache overflowing
 
 
-# ------------------------------------------------------------------ 4. ASCII twins (wbforms-v4)
+# ------------------------------------------------------------------ 3. ASCII twins (wbforms-v4)
 DALI_ITEM = "painting_creator-Q2272625-death_year"
 
 
@@ -336,8 +191,3 @@ def test_option_audit_asks_for_a_reason_first():
     props = mp.OPTION_AUDIT_SCHEMA["schema"]["properties"]["verdicts"]["items"]
     assert list(props["properties"]) == ["line", "why", "rival"]
     assert "even when both claims could" in mp.OPTION_AUDIT_SYSTEM
-
-
-def test_audit_key_omits_the_forms_stamp():
-    key = wb._audit_version(wp.PROMPT_VERSION)
-    assert wp.FORMS_VERSION not in key and wp.AUDIT_VERSION in key and wp.BANK_TAG in key
