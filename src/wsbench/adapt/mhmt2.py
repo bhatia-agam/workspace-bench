@@ -1083,6 +1083,20 @@ def easiest_tally(model: str) -> tuple[int, int]:
     return tried, landed
 
 
+def untried_levels(model: str) -> list[str]:
+    """refill hook: the harder levels (3-hop) that still have pool candidates never gated, so
+    ``refill`` declares no ooc on the 2-hop tally alone (a subject failing 2-hop on shortcuts is
+    too capable for that level, not incapable). No pool file -> no levels (the wave itself then
+    refuses loudly)."""
+    try:
+        items = load_pool()["items"]
+    except SystemExit:
+        return []
+    done = store.gated(model, FAMILY)
+    left = {it.get("subfamily") for it in items if store.item_id(it) not in done}
+    return sorted(left - {"2hop", None})
+
+
 def prior_tally(model: str) -> tuple[int, int]:
     """refill hook: what already counts toward the easiest-level tally (§1.2)."""
     return easiest_tally(model)

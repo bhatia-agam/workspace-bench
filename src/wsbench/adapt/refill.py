@@ -398,14 +398,21 @@ def _refill_family(
     start, calls, done = time.monotonic(), 0, 0
     exhausted, pool_size, pool_used = False, prev.get("pool_size"), prev.get("pool_used")
     status, why = None, ""
+    levels_hook = _hook(family, "untried_levels")
+    untried: list[str] = []
     while True:
         have = have_of(model, family)
+        # a harder level of the family's construction with candidates never gated: no ooc yet
+        # (GLM-5.3 multihop_mt_v2, 2026-11-04: the 2-hop pilot failed on shortcuts, i.e. the
+        # subject was too capable for the easiest level, and the 3-hop pool was never tried)
+        untried = list(levels_hook(model)) if levels_hook is not None else []
+        n_min = float("inf") if untried else pol.n_min
         budget: bool | str = False
         if claude_budget is not None and calls >= claude_budget:
             budget = f"claude_budget {claude_budget}"
         elif gpu_minutes is not None and (time.monotonic() - start) / 60 >= gpu_minutes:
             budget = f"gpu_minutes {gpu_minutes:g} (wall clock)"
-        status, why = stop_status(have, target, tried, landed, pol.n_min, pol.y_min, exhausted,
+        status, why = stop_status(have, target, tried, landed, n_min, pol.y_min, exhausted,
                                   budget, hold=hold)  # fmt: skip
         if status is not None:
             break
@@ -434,6 +441,7 @@ def _refill_family(
         "budget": {"claude_budget": claude_budget, "gpu_minutes": gpu_minutes,
                    "claude_calls": calls},
         "pilot": pilot,
+        "untried_levels": untried,
     }  # fmt: skip
     write_block(model, family, block, status)
     return status

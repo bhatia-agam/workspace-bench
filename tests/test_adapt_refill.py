@@ -378,6 +378,29 @@ def test_refill_driver_writes_the_block_and_stops_ooc(mdir, monkeypatch):
     assert (b["pool_size"], b["pool_used"], rep["status"]) == (5000, 1000, "ooc")
 
 
+def test_refill_driver_no_ooc_while_a_harder_level_is_untried(mdir, monkeypatch):
+    """multihop_mt_v2: a 2-hop tally under y_min is not ooc while 3-hop pool candidates remain
+    ungated (``mhmt2.untried_levels``); once none remain, the plan's ooc rule applies."""
+    from wsbench.adapt import mhmt2
+
+    left = {"n": 2}  # 3-hop candidates remain for the first two checks
+
+    def wave(model, *, wave, runner=None, llm=None, **kw):
+        left["n"] -= 1
+        return {"tried": 300, "landed": 2, "exhausted": False, "claude_calls": 1}
+
+    monkeypatch.setattr(mhmt2, "refill_wave", wave, raising=False)
+    monkeypatch.setattr(mhmt2, "untried_levels", lambda m: ["3hop"] if left["n"] > 0 else [])
+    assert rf.refill(MODEL, ["multihop_mt_v2"])["multihop_mt_v2"] == "ooc"
+    b = json.loads((mdir / "report.json").read_text())["families"]["multihop_mt_v2"]["refill"]
+    assert b["waves"] == 2 and b["tried"] == 600 and b["untried_levels"] == []
+    # the pilot still stops at n_min, never ooc, while the harder level is untried
+    left["n"] = 5
+    assert rf.refill(MODEL, ["multihop_mt_v2"], pilot=True)["multihop_mt_v2"] == "partial"
+    b = json.loads((mdir / "report.json").read_text())["families"]["multihop_mt_v2"]["refill"]
+    assert b["stop"].startswith("pilot") and b["untried_levels"] == ["3hop"]
+
+
 def test_refill_driver_hold_pilot_budget_and_missing_route(mdir, monkeypatch):
     from wsbench.adapt import kcutoff, mhmt2
 

@@ -1160,6 +1160,22 @@ Keep the apps warm with `scripts_local/keepalive.py` during Claude-only stages, 
 
     `mh2_pool.v2.json` (decision 7) is not built; it stays unpinned until a subject needs it.
 
+14. **multihop_mt_v2 on GLM-5.3: no ooc while a harder level is untried (Camila-delegated,
+    2026-11-04).** The 2-hop pilot passed 2 of 300 pool candidates (prior 9 of 70), about 2.97 %,
+    just under `y_min`. But 266 of the 296 gate failures passed G1 and recall and then reached
+    the target through an S1 / S2 shortcut ablation: the subject was too capable for the
+    2-hop level, not incapable. `refill` now asks the family's `untried_levels(model)` hook
+    (`mhmt2`: the pool's 3-hop candidates not yet gated) and declares no ooc while any level
+    remains untried. The pilot still stops at `n_min`. Once every level has been gated, the §1.2
+    rule applies unchanged on the easiest-level tally. The refill block records
+    `untried_levels`. GLM's own run gated the 3-hop candidates through the direct
+    `mhmt2.refill_wave` loop before this landed (recorded as a deviation in its report and audit).
+    **Known limitation of `contains_target` (not changed):** it matches the target anywhere in
+    the 24-token continuation, so a verbose subject's explanation ("**Socrates** (e.g., Plato
+    was … pupil of Socrates)") can count as a shortcut hit. On GLM's pilot, matching only the
+    answer head would have changed 12 of 276 shortcut failures (1 of 54 on the registered
+    bank). The registered rule stays as it is.
+
 ## Files
 
 ```
