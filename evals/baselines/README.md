@@ -44,8 +44,8 @@ per judged id (no answer was reused), then the family's own digest, judge and ru
 (agentic_misalignment and jailbreak_recognition: the Sonnet 5 digest and judge pins with the
 Opus 5 refusal re-run). Opus 5.5 declined only 4 asks (agentic_misalignment), all served by the
 Sonnet 5.5 fallback (none refused by both), so every floor is measurable. A bank that reads with
-an earlier bank's plan (`read_plan_bank`; at the refreeze: association v5, basic_readout_mt v5,
-role_bound_association v2, and the 68-item multihop and 47-item user_modeling banks that the
+an earlier bank's plan (`read_plan_bank`; at the refreeze: association v5, role_bound_association
+v2, and the 98-item basic_readout_mt, 68-item multihop and 47-item user_modeling banks that the
 next bank of each replaced) is asked on its own ids only
 (`prompt_only_opus.build`); introspection is asked on its headline rows only (the 125 protocol,
 beta-4 inject rows and their 125 gaussian twins, judged with `opts=scope=headline`, which yields

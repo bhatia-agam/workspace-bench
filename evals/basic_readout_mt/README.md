@@ -38,8 +38,9 @@ The model is asked a factual question whose answer is one specific, usually mult
 
 ## Bank v6 (`items_v6.json`, frozen 2026-11-04; the registered bank)
 
-Bank v5 with its leaking answer lists rebuilt and 8 items dropped (90 items; only
-`mc.readout.distractors` and its `pool` note change). On v5 the topic guesser picked the best-known
+Bank v4 without the sarin item (98 items; "The sarin item" below), with its leaking answer lists
+rebuilt and 8 items dropped (90 items; only `mc.readout.distractors` and its `pool` note change).
+On the 98 items the topic guesser picked the best-known
 member of the topic (0.327 vs chance 0.200, n = 98: Mount Tambora among Indonesian volcanoes,
 Ngerulmud among Pacific capitals). `scripts/mc_options_r5.py` re-chose the 23 lists whose gold the
 topic guesser picked on at least 3 of 5 draws (procedure: `evals/baselines/README.md`, "Option
@@ -55,18 +56,18 @@ build's measurements, and the confuser audit holds 90/90. The header's `read_pla
 `items_v4.json`, so the read plan, its `plan_sha` and every v4 readout file serve v6. Stamp
 `+bank-v6`; the MC calls keep their `+bank-v4` key, so only the 16 rebuilt lists' calls are new.
 
-## Bank v5 (`items_v5.json`, frozen 2026-11-03)
+## The sarin item (dropped 2026-11-03)
 
-Bank v4 without `brh-ent-chem-sarin-systematic` (98 items; every other byte is v4's): the bank's
-only weapon-related item, whose digest the summarizer refused on 9 of 11 layers for one O-lens
-arm (leaving it undecided) and on 1-2 layers for two others. The header's `read_plan_bank` names
-`items_v4.json`, so the read plan, its `plan_sha` and every v4 readout file serve v5. Stamp
-`+bank-v5`; the MC calls keep their `+bank-v4` key (`BRMT_CALL_VERSION`), so v4 runs re-score from
-cache. The floors were re-measured on v5's 98 items in the 2026-11-04 refreeze (Floors, ATI).
+Bank v6 starts from bank v4 without `brh-ent-chem-sarin-systematic` (98 items; every other byte is
+v4's; bank v6's header keeps the record, `v5`): the bank's only weapon-related item, whose digest
+the summarizer refused on 9 of 11 layers of one lens's readouts (leaving it undecided) and on 1-2
+layers of two others. The drop shipped first as its own 98-item bank (`items_v5.json`, stamp
+`+bank-v5`, read with v4's plan; the MC calls kept their `+bank-v4` key); bank v6 replaces that
+file. The floors were re-measured on the 98 items in the 2026-11-04 refreeze (Floors, ATI).
 
 ## Bank v4 (`items_v4.json`, frozen 2026-11-01, round 4b)
 
-The bank of record until bank v5 (above); only `mc.readout.distractors` changes (v2 and v3 are kept). v3 (below) still
+The bank of record until the sarin drop (above); only `mc.readout.distractors` changes (v2 and v3 are kept). v3 (below) still
 failed Camila r2's standard. v4 re-draws every list with `scripts/r4b_mc_refine.py`: an Opus call
 writes distractors in the gold's exact naming style ("dalasi" among "cedi" / "leone", not among
 "Liberian dollar"; one dash style; one grammatical number) that fit the topic as stated, the topic
@@ -162,7 +163,7 @@ token lenses give their top 10 tokens (`tokens10`).
 
 - **Lucky guessing, bank v6 (the frozen floors; Opus 5.5, 5 draws per item):** blind 0.129,
   described 0.160, topic 0.209, uniform 0.216 vs chance 0.200 (n = 90, Bank v6 above): the MC
-  leakage standard is met. Bank v5 (2026-11-04 refreeze): blind 0.129, described 0.220, topic
+  leakage standard is met. The 98 items without the sarin item (2026-11-04 refreeze): blind 0.129, described 0.220, topic
   0.327, uniform 0.204; topic failed the standard (`evals/baselines/README.md` "Floors of
   record"). Bank v4: blind 0.069, topic 0.214, described 0.145, uniform 0.202 (Bank v4 above).
   Earlier lists, for the record: v3 blind 0.299 / described 0.356 / topic 0.523; v2 (below) blind 0.171, described 0.359, uniform 0.202 (the v1 lists, Gemini 3.8 Flash, both lists: blind
@@ -172,7 +173,7 @@ token lenses give their top 10 tokens (`tokens10`).
 - **Prompt-only** (`po-opus-v1`): one Opus 5.5 readout per item from the render, judged by this
   family's own `run` (same digest, MC judge, name gate): 1.000 on bank v6's 90 items
   (`mc-brmt-2026-10-31r+norival-v1+qline-v2+bank-v6`, re-judged from the same readouts; 1.000 on
-  bank v5's 98 at the 2026-11-04 refreeze).
+  the 98 items without the sarin item at the 2026-11-04 refreeze).
 
 ## ATI
 
@@ -181,7 +182,7 @@ Qwen + Opus + Astra (argon unreachable), PROVISIONAL; every item is invertible (
 solve all 99), so the family has no ATI subset (`evals/baselines/README.md`, fix-round-1
 re-gate). Re-gated on 2026-11-01 (R1-ATI gemini) on the full four-reader panel (argon via Gemini
 WIF) at bank v4: still 0/99 (all four readers solve all 99). Re-gated on a fresh full panel at
-bank v5 (2026-11-04 refreeze): 0/98. Re-gated on bank v6 from the same panel answers (only the
+the 98 items without the sarin item (2026-11-04 refreeze): 0/98. Re-gated on bank v6 from the same panel answers (only the
 rebuilt lists' MC verdicts re-judged): 0/90.
 
 ## Instrument history
@@ -281,6 +282,8 @@ rebuilt lists' MC verdicts re-judged): 0/90.
   solved and drops the 8 items they solved whatever the list, so the floors meet the MC leakage
   standard. Its floors, measured under the `qline-v1` draft, are re-scored from their cached
   answers under `qline-v2` (0 new judge calls; prompt-only 1.000 and text-blind 0 / 90 unchanged).
+  Bank v6 now supersedes `items_v4.json` and keeps the sarin drop's record (`v5`), and the 98-item
+  `items_v5.json` is removed, so bank v6 is the one new basic_readout_mt bank file.
 
 ## Readouts
 

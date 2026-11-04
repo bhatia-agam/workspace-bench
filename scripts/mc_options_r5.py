@@ -76,13 +76,17 @@ SEARCH_LISTS = 4
 @dataclasses.dataclass(frozen=True)
 class Cfg:
     name: str
-    bank: str  # the registered bank the rebuild starts from
+    bank: str  # the registered bank the rebuild starts from (``edit`` re-applied, if any)
     new: str  # the bank version it freezes
     version: int
     kind: str  # what a content gold is (the proposer's and ranker's item type)
     screen: str  # how the validity screen asks: question | complete | describe | typo
     multihop: bool = False  # the same-answer check (a bridge whose swap keeps the answer)
     search_lists: int = SEARCH_LISTS  # round >= 1: candidate lists the search plays per list
+    # the header key of ``new`` that records a small edit the rebuild's starting bank made to
+    # ``bank`` (that bank was folded into ``new`` instead of keeping a file of its own):
+    # ``start_bank`` re-applies it, so a re-run starts from the same items and header
+    edit: str = ""
 
 
 CFGS = {
@@ -99,12 +103,13 @@ CFGS = {
     ),
     "basic_readout_mt": Cfg(
         "basic_readout_mt",
-        "evals/basic_readout_mt/items_v5.json",
+        "evals/basic_readout_mt/items_v4.json",
         "evals/basic_readout_mt/items_v6.json",
         6,
         "the specific multi-word name a factual question asks for",
         "question",
         search_lists=5,
+        edit="v5",  # bank v4 without the sarin item
     ),
     "multilingual": Cfg(
         "multilingual",
@@ -247,6 +252,37 @@ def dump(p: Path, obj: Any) -> None:
 
 def fdir(cfg: Cfg) -> Path:
     return WORK / cfg.name
+
+
+def start_bank(cfg: Cfg) -> Path:
+    """The bank the rebuild starts from: ``cfg.bank``, or, for a family with ``cfg.edit``, that
+    bank with the edit recorded under that key of ``cfg.new``'s header re-applied (``removed``:
+    items dropped; ``removed_options``: distractors taken out of a role's list) and the record
+    (and, after a drop, the read plan it keeps) added to its header, written to the work dir."""
+    if not cfg.edit:
+        return REPO / cfg.bank
+    new = REPO / cfg.new
+    if not new.is_file():
+        raise SystemExit(f"{cfg.name}: {cfg.new} records the start bank's edit and is missing")
+    rec = load(new)[cfg.edit]
+    raw = load(REPO / cfg.bank)
+    gone = set(rec.get("removed") or [])
+    cut = rec.get("removed_options") or {}
+    items = []
+    for it in raw["items"]:
+        if it["name"] in gone:
+            continue
+        for role, opts in cut.get(it["name"], {}).items():
+            blk = it["mc"][role]
+            blk["distractors"] = [d for d in blk["distractors"] if d not in opts]
+        items.append(it)
+    head = {k: v for k, v in raw.items() if k != "items"}
+    if gone:  # options are never rendered: the dropped rows stay in the read plan
+        head["read_plan_bank"] = head.get("read_plan_bank") or Path(cfg.bank).name
+    head[cfg.edit] = rec
+    path = fdir(cfg) / "start_bank.json"
+    dump(path, {**head, "items": items})
+    return path
 
 
 # ---------------------------------------------------------------- the guessers' items
@@ -480,7 +516,7 @@ def install(cfg: Cfg, lists: list[dict[str, Any]], st: dict) -> r4.Fam:
     distractors and share the state with r4's form table; return the r4 family record."""
     r4.lint = lint
     r4.topic = lambda fam, it, state: it["topic"]
-    fam = r4.Fam(cfg.name, cfg.bank, cfg.new, 4, cfg.kind, screens=True)
+    fam = r4.Fam(cfg.name, str(start_bank(cfg)), cfg.new, 4, cfg.kind, screens=True)
     r4.seed_pool(fam, lists, st)
     r4.ST.clear()
     r4.ST.update(st)  # the same per-list dicts: pool forms added later are seen by the lint
@@ -713,7 +749,7 @@ def search(cfg: Cfg, fam: r4.Fam, todo: list[dict], items: list[dict], st: dict,
 
 
 def run_round(cfg: Cfg, rnd: int) -> None:
-    _h, items = load_bank(REPO / cfg.bank)
+    _h, items = load_bank(start_bank(cfg))
     prev = fdir(cfg) / f"bank_r{rnd - 1}.json" if rnd else None
     if prev is not None:
         _h, items = load_bank(prev)
@@ -754,7 +790,7 @@ def run_round(cfg: Cfg, rnd: int) -> None:
         if x["id"] in todo_ids:
             s["rounds"][str(rnd)] = list(s["chosen"])
     dump(state_path(cfg), st)
-    bank = load(REPO / cfg.bank) if prev is None else load(prev)
+    bank = load(start_bank(cfg)) if prev is None else load(prev)
     chosen = {x["id"]: st[x["id"]]["chosen"] for x in todo}
     for it in bank["items"]:
         for role, blk in (it.get("mc") or {}).items():
@@ -846,7 +882,7 @@ def measure(
 
 def changed_lists(cfg: Cfg, bank: Path) -> dict[str, dict[str, list[str]]]:
     """item id -> role -> (frozen list, new list) for every content list ``bank`` changed."""
-    _h, old = load_bank(REPO / cfg.bank)
+    _h, old = load_bank(start_bank(cfg))
     _h, new = load_bank(bank)
     by = {it["id"]: it for it in old}
     out: dict[str, dict[str, list[str]]] = {}
@@ -865,7 +901,7 @@ def cmd_leakers(cfg: Cfg, a: argparse.Namespace) -> int:
     hits, rec = per_item_hits(d)
     fail = failing(d)
     keys = leakers(hits, fail)
-    _h, items = load_bank(REPO / cfg.bank)
+    _h, items = load_bank(start_bank(cfg))
     todo = leaky_lists(cfg, items, keys, rec, fail)
     rep = {
         "family": cfg.name,
@@ -894,7 +930,7 @@ def cmd_round(cfg: Cfg, a: argparse.Namespace) -> int:
 
 
 def cmd_measure(cfg: Cfg, a: argparse.Namespace) -> int:
-    bank = REPO / cfg.bank if a.round < 0 else fdir(cfg) / f"bank_r{a.round}.json"
+    bank = start_bank(cfg) if a.round < 0 else fdir(cfg) / f"bank_r{a.round}.json"
     tag = "base" if a.round < 0 else f"r{a.round}"
     if a.round <= 0:
         seed = Path(a.baseline_dir) / cfg.name / "cells.jsonl"
@@ -1125,7 +1161,7 @@ def cmd_freeze(cfg: Cfg, a: argparse.Namespace) -> int:
     (round ``r``'s candidate) minus the dropped items, and the ``r5_mc`` record."""
     from wsbench.banks import label_of
 
-    old = load(REPO / cfg.bank)
+    old = load(start_bank(cfg))
     _raw, items, drops = final_items(cfg, a.round)
     head = {k: v for k, v in old.items() if k != "items"}
     head["version"] = cfg.version

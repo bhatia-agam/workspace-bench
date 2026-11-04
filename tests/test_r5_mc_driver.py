@@ -44,6 +44,35 @@ def test_search_lists_are_the_recorded_ones():
             assert m is None or int(m.group(1)) == cfg.search_lists, name
 
 
+def test_start_bank_reapplies_a_folded_edit(tmp_path, monkeypatch):
+    """A rebuild that started from a small edit of an earlier bank, which the series folded into
+    the new bank instead of keeping its own file, starts from that edit re-applied: the record
+    under ``cfg.edit`` in the new bank's header. Every other family starts from ``cfg.bank``."""
+    r5 = _driver()
+    monkeypatch.setattr(r5, "WORK", tmp_path)
+    for name, cfg in r5.CFGS.items():
+        path = r5.start_bank(cfg)
+        if not cfg.edit:
+            assert path == REPO / cfg.bank, name
+            continue
+        start = json.loads(path.read_text(encoding="utf-8"))
+        old = json.loads((REPO / cfg.bank).read_text(encoding="utf-8"))
+        rec = json.loads((REPO / cfg.new).read_text(encoding="utf-8"))[cfg.edit]
+        assert start[cfg.edit] == rec and path.parent == tmp_path / name
+        gone = set(rec.get("removed") or [])
+        assert [it["name"] for it in start["items"]] == [
+            it["name"] for it in old["items"] if it["name"] not in gone
+        ]
+        cut = rec.get("removed_options") or {}
+        by = {it["name"]: it for it in old["items"]}
+        for it in start["items"]:
+            for role, blk in it["mc"].items():
+                want = by[it["name"]]["mc"][role]["distractors"]
+                want = [d for d in want if d not in cut.get(it["name"], {}).get(role, [])]
+                assert blk["distractors"] == want, (name, it["name"], role)
+    assert r5.CFGS["basic_readout_mt"].edit == "v5"
+
+
 def _lucky(d: Path, variant: str, hits: dict[str, int], chance: float = 0.2) -> None:
     """A lucky-guessing result in ``d``: one five-option list per item, ``hits[id]`` of 5 draws
     on the gold."""
