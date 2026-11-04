@@ -264,7 +264,9 @@ def test_v2_number_concept_credits_digits(tmp_path, monkeypatch):
 
 # ------------------------------------------------- v1-shaped banks (adapted ports, review r2)
 
-ADAPTED = "adapted/qwen3.5-4b"
+# the v1-shaped adapted banks of the pre-plan-0060 qwen3.5-4b set, frozen as a fixture (the set
+# itself was rebuilt on the v2 banks by plan 0060)
+ADAPTED = "tests/fixtures/adapted_v1"
 
 
 def _adapted_dry_run(name, tmp_path, monkeypatch, bank_root=ADAPTED):

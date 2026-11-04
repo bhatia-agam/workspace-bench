@@ -1,0 +1,306 @@
+{
+ "version": "adapt-qwen3-8b",
+ "note": "adapted-only items' same-topic distractors the MC builder dropped (adapt mc); added to evals/basic_readout_mt/hidden_rivals.json by the judge",
+ "items": {
+  "basic-au-t1-w100c0-brh-ent-africa-highest-peak": {
+   "readout": [
+    "Mount Stanley"
+   ]
+  },
+  "basic-au-t1-w100c0-brh-ent-agra-shah-jahan": {
+   "readout": [
+    "Humayun's Tomb",
+    "Red Fort",
+    "Qutb Minar",
+    "Jama Masjid"
+   ]
+  },
+  "basic-au-t1-w100c0-brh-ent-bartholdi-harbor-figure": {
+   "readout": [
+    "Lincoln Memorial",
+    "Gateway Arch"
+   ]
+  },
+  "basic-au-t1-w100c0-brh-ent-beagle-naturalist": {
+   "readout": [
+    "Thomas Henry Huxley",
+    "Joseph Dalton Hooker",
+    "Alfred Russel Wallace",
+    "Herbert Spencer"
+   ]
+  },
+  "basic-au-t1-w100c0-brh-ent-champollion-slab": {
+   "readout": [
+    "Mesha Stele",
+    "Behistun Inscription",
+    "Narmer Palette",
+    "Cyrus Cylinder"
+   ]
+  },
+  "basic-au-t1-w100c0-brh-ent-chromosome-21-extra": {
+   "readout": [
+    "Turner syndrome",
+    "Klinefelter syndrome",
+    "Edwards syndrome",
+    "Patau syndrome"
+   ]
+  },
+  "basic-au-t1-w100c0-brh-ent-current-voltage-proportional": {
+   "readout": [
+    "Coulomb's law",
+    "Faraday's law",
+    "Ampère's law",
+    "Kirchhoff's law"
+   ]
+  },
+  "basic-au-t1-w100c0-brh-ent-hall-of-mirrors-1919": {
+   "readout": [
+    "Treaty of Trianon",
+    "Treaty of Saint-Germain",
+    "Treaty of Brest-Litovsk",
+    "Treaty of Sèvres"
+   ]
+  },
+  "basic-au-t1-w100c0-brh-ent-justinian-istanbul-dome": {
+   "readout": [
+    "Süleymaniye Mosque",
+    "Chora Church",
+    "Topkapi Palace",
+    "Blue Mosque"
+   ]
+  },
+  "basic-au-t1-w100c0-brh-ent-mona-lisa-painter": {
+   "readout": [
+    "Michelangelo Buonarroti",
+    "Raphael Sanzio",
+    "Sandro Botticelli",
+    "Tiziano Vecellio"
+   ]
+  },
+  "basic-au-t1-w100c0-brh-ent-norman-conquest-1066": {
+   "readout": [
+    "Battle of Stamford Bridge",
+    "Battle of Agincourt",
+    "Battle of Crécy"
+   ]
+  },
+  "basic-au-t1-w100c0-brh-ent-pressure-volume-gas": {
+   "readout": [
+    "Charles's law",
+    "Gay-Lussac's law",
+    "Avogadro's law",
+    "Dalton's law"
+   ]
+  },
+  "basic-au-t1-w100c0-brh-ent-queensland-polyp-structure": {
+   "readout": [
+    "Ningaloo Reef",
+    "Belize Barrier Reef",
+    "Tubbataha Reef",
+    "Florida Reef"
+   ]
+  },
+  "basic-au-t1-w100c0-brh-ent-richthofen-trade-network": {
+   "readout": [
+    "Incense Route",
+    "Tea Horse Road"
+   ]
+  },
+  "basic-au-t1-w100c0-brh-ent-runnymede-1215": {
+   "readout": [
+    "Provisions of Oxford",
+    "Charter of the Forest",
+    "Petition of Right",
+    "Bill of Rights"
+   ]
+  },
+  "basic-au-t1-w100c0-brh-ent-sultans-1453-1922": {
+   "readout": [
+    "Mughal Empire",
+    "Mamluk Sultanate",
+    "Seljuk Empire"
+   ]
+  },
+  "basic-au-t1-w100c0-brh-ent-table-salt-compound": {
+   "readout": [
+    "potassium chloride",
+    "sodium bicarbonate",
+    "calcium carbonate",
+    "sodium hydroxide"
+   ]
+  },
+  "basic-au-t1-w100c0-brh-ent-two-science-nobels": {
+   "readout": [
+    "Lise Meitner",
+    "Dorothy Hodgkin",
+    "Rosalind Franklin",
+    "Emmy Noether"
+   ]
+  },
+  "basic-au-t1-w100c0-brh-ent-zhu-yuanzhang-house": {
+   "readout": [
+    "Yuan dynasty",
+    "Song dynasty",
+    "Tang dynasty"
+   ]
+  },
+  "basic-au-t1-w100c1-brh-ent-76-year-visitor": {
+   "readout": [
+    "Encke's Comet",
+    "Biela's Comet",
+    "Comet Hale-Bopp",
+    "Comet Shoemaker-Levy 9"
+   ]
+  },
+  "basic-au-t1-w100c1-brh-ent-arizona-gorge": {
+   "readout": [
+    "Copper Canyon",
+    "Fish River Canyon"
+   ]
+  },
+  "basic-au-t1-w100c1-brh-ent-buoyancy-rule": {
+   "readout": [
+    "Pascal's principle",
+    "Bernoulli's principle"
+   ]
+  },
+  "basic-au-t1-w100c1-brh-ent-champ-de-mars-1889": {
+   "readout": [
+    "Blackpool Tower",
+    "Tokyo Tower",
+    "CN Tower",
+    "Shukhov Tower"
+   ]
+  },
+  "basic-au-t1-w100c1-brh-ent-changan-618-house": {
+   "readout": [
+    "Song dynasty",
+    "Sui dynasty",
+    "Yuan dynasty"
+   ]
+  },
+  "basic-au-t1-w100c1-brh-ent-genoese-navigator-1492": {
+   "readout": [
+    "Amerigo Vespucci",
+    "Vasco da Gama",
+    "John Cabot"
+   ]
+  },
+  "basic-au-t1-w100c1-brh-ent-gettysburg-1863": {
+   "readout": [
+    "Battle of Shiloh",
+    "Battle of Fredericksburg"
+   ]
+  },
+  "basic-au-t1-w100c1-brh-ent-hostage-sympathy": {
+   "readout": [
+    "Lima syndrome",
+    "Paris syndrome",
+    "Jerusalem syndrome",
+    "Stendhal syndrome"
+   ]
+  },
+  "basic-au-t1-w100c1-brh-ent-nahco3-powder": {
+   "readout": [
+    "sodium carbonate",
+    "potassium bicarbonate",
+    "calcium carbonate",
+    "ammonium bicarbonate"
+   ]
+  },
+  "basic-au-t1-w100c1-brh-ent-photosynthesis-gas": {
+   "readout": [
+    "nitrous oxide",
+    "sulfur dioxide",
+    "nitrogen dioxide"
+   ]
+  },
+  "basic-au-t1-w100c1-brh-ent-principia-1687": {
+   "readout": [
+    "Robert Hooke",
+    "Edmond Halley"
+   ]
+  },
+  "basic-au-t1-w100c1-brh-ent-russia-1613-1917": {
+   "readout": [
+    "Rurik dynasty",
+    "Hohenzollern dynasty",
+    "Vasa dynasty"
+   ]
+  },
+  "basic-au-t1-w100c1-brh-ent-shanhaiguan-jiayuguan": {
+   "readout": [
+    "Hadrian's Wall",
+    "Berlin Wall",
+    "Antonine Wall",
+    "Theodosian Walls"
+   ]
+  },
+  "basic-au-t1-w100c1-brh-ent-soviet-exit-1918": {
+   "readout": [
+    "Treaty of Trianon",
+    "Treaty of Bucharest",
+    "Treaty of Rapallo",
+    "Treaty of Riga"
+   ]
+  },
+  "basic-au-t1-w100c1-brh-ent-spring-elasticity": {
+   "readout": [
+    "Charles's law",
+    "Coulomb's law",
+    "Snell's law",
+    "Faraday's law"
+   ]
+  },
+  "basic-au-t1-w100c1-brh-ent-tics-1885": {
+   "readout": [
+    "Asperger syndrome",
+    "Rett syndrome",
+    "Angelman syndrome",
+    "Williams syndrome"
+   ]
+  },
+  "basic-au-t1-w100c1-brh-ent-tuscan-campanile-tilt": {
+   "readout": [
+    "Leaning Tower of Nevyansk",
+    "Leaning Tower of Suurhusen",
+    "Asinelli Tower",
+    "Giotto's Campanile"
+   ]
+  },
+  "basic-au-t1-w100c1-brh-ent-zambezi-livingstone": {
+   "readout": [
+    "Niagara Falls",
+    "Iguazu Falls",
+    "Angel Falls",
+    "Kalambo Falls"
+   ]
+  },
+  "basic-au-t1-w100c2-brh-ent-1494-meridian": {
+   "readout": [
+    "Treaty of Zaragoza",
+    "Treaty of Madrid",
+    "Treaty of Lisbon"
+   ]
+  },
+  "basic-au-t1-w100c2-brh-ent-leonidas-pass": {
+   "readout": [
+    "Battle of Artemisium"
+   ]
+  },
+  "basic-au-t1-w100c2-brh-ent-opium-war-1842": {
+   "readout": [
+    "Treaty of Tientsin",
+    "Treaty of Aigun"
+   ]
+  },
+  "basic-au-t1-w100c2-brh-ent-volga-sixth-army": {
+   "readout": [
+    "Battle of Kursk",
+    "Battle of Moscow",
+    "Battle of Berlin",
+    "Battle of El Alamein"
+   ]
+  }
+ }
+}

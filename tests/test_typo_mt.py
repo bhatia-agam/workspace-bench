@@ -25,7 +25,9 @@ V1 = REPO / "evals/typo_mt/items.json"
 V2 = REPO / "evals/typo_mt/items_v2.json"
 V1_SHA = "c02874dfc958d5ce85a5c64a05f7f13630ec7d129bca2a0704e534448fc95507"
 HAND = "tyh-novel-interpretability-hand"  # " mechan" "istic" " interpret" "ibility" (Qwen3.6)
-ADAPTED_ARITH = {"gemma-4-31b-it": 13, "glm-5.3-flash": 10, "qwen3-8b": 7, "qwen3.5-9b": 1}
+# the old adapted banks that were rewritten in place (arith items dropped); qwen3-8b and
+# qwen3.5-9b left this list when plan 0060 rebuilt them fresh on the registered v2 bank
+ADAPTED_ARITH = {"gemma-4-31b-it": 13, "glm-5.3-flash": 10}
 
 
 def _is_numeric_form(f: str) -> bool:

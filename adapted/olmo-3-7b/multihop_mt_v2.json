@@ -1,0 +1,724 @@
+{
+ "family": "multihop-hard",
+ "parent_family": "multihop-mt",
+ "version": 4,
+ "contract": {
+  "multi_token": true,
+  "include_target": true,
+  "conjunctive_units": true,
+  "markdown_fold": true,
+  "fuzzy_names": true,
+  "native_langs": [
+   "en",
+   "zh"
+  ]
+ },
+ "gate": "Qwen3.6-27B behavioral, chat-templated fill-in question (enable_thinking=False, answer stem), staged (workspace-bench plan 0013). G1: the prompt, greedy AND >=16/20 @0.7. Recall: G2 bridge1 from the prompt's own clue and G3 the last hop with its source named, each greedy AND >=8/10; G4 (3-hop) bridge2 identified inside the full statement, greedy AND >=5/10. Shortcuts: S1 generator ablations (drop_b1, local_cue, 3-hop direct_b1_to_t) and S2 independent-adversary ablations must not reach the target (greedy or >4/20); none is ever excused. A 3-hop item whose only shortcut is drop_b1 is frozen as a 2-hop through bridge2 (relabel_b2). No factual issue; fresh-eye review overrides applied. EVAL RENDER: plain prompt; readouts at every prompt token (lite: the final token). Scoring (bank v2, 2026-10-30): a forced-choice judge per required unit over other questions' bridges and targets of the same kind plus cannot tell, credited only with a verified quote that holds a name form of the gold (name_forms; misspellings within edit distance); the conjunctive regex over units stays as a diagnostic.",
+ "frozen": "2026-11-01",
+ "built_from": {
+  "file": "items.json",
+  "sha256": "7c0160a7f818165a09d357a7b0e159301894501124e301bec7f19f75679600d3",
+  "frozen": "2026-10-15"
+ },
+ "builder": "scripts/build_mh2_bank_v2.py",
+ "readout": {
+  "kind": "all",
+  "lite": {
+   "kind": "final_token"
+  }
+ },
+ "supersedes": "items_v3.json",
+ "r4_mc": {
+  "script": "scripts/build_r4_mc_banks.py",
+  "rule": "round 4 (Camila r2 MC leakage standard): only the MC distractor lists change. Content lists: the four Opus-authored same-topic distractors of r4_distractors.json (scripts/r4_mc_distractors.py). ",
+  "lang_rule": null,
+  "lists_changed": 76
+ },
+ "r4b_mc": {
+  "script": "scripts/build_r4b_mc_banks.py",
+  "rule": "round 4b (Camila r2 MC leakage standard, second pass): only the MC distractor lists change. Content lists: the four distractors scripts/r4b_mc_refine.py kept (r4b_distractors.json: Opus-revised in the gold's naming style, fitting the topic as stated, kept when neither the options-only nor the topic guesser solves the item in more than 1 of 5 draws). ",
+  "lists_changed": 76,
+  "n_over_gate": 19
+ },
+ "adapt": {
+  "model": "olmo-3-7b",
+  "hf_id": "allenai/Olmo-3-7B-Instruct",
+  "frozen": "2026-11-04"
+ },
+ "items": [
+  {
+   "name": "mh2-telegram-founder-network",
+   "subfamily": "2hop",
+   "domain": "business, companies and their founders",
+   "prompt": "Fact: The founder of the encrypted messaging app Telegram had earlier founded the social network",
+   "spans": {
+    "D1": "The founder of the encrypted messaging app Telegram",
+    "R1": " had earlier founded the social network",
+    "G1": "A tech entrepreneur"
+   },
+   "target": "VKontakte",
+   "target_alts": [
+    "VK"
+   ],
+   "source": "multihop_v2",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "all",
+    "lite": {
+     "kind": "final_token"
+    }
+   },
+   "intermediates": [
+    "Pavel Durov"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Pavel Durov",
+       "Pavel Valeryevich Durov",
+       "Durov"
+      ]
+     },
+     "match": [
+      "Pavel Durov",
+      "Pavel Valeryevich Durov",
+      "Durov"
+     ],
+     "kind": "person",
+     "full_forms": [
+      "Pavel Durov",
+      "Pavel Valeryevich Durov"
+     ],
+     "forms_excluded": []
+    }
+   ],
+   "bridges": [
+    {
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "Pavel Durov",
+      "Pavel Valeryevich Durov",
+      "Durov"
+     ],
+     "question": "Name the founder of the encrypted messaging app Telegram."
+    }
+   ],
+   "probes": {
+    "G3_hop_b1_t": {
+     "kind": "fill",
+     "text": "Fact: Pavel Durov had earlier founded the social network",
+     "accept": [
+      "VKontakte",
+      "VK",
+      "V Kontakte"
+     ]
+    },
+    "S1_drop_b1": {
+     "kind": "fill",
+     "text": "Fact: A tech entrepreneur had earlier founded the social network",
+     "accept": [
+      "VKontakte",
+      "VK",
+      "V Kontakte"
+     ]
+    },
+    "G2_b1": {
+     "kind": "qa",
+     "text": "Name the founder of the encrypted messaging app Telegram.",
+     "accept": [
+      "Pavel Durov",
+      "Pavel Valeryevich Durov",
+      "Durov"
+     ]
+    },
+    "S1_local_cue": {
+     "kind": "fill",
+     "text": "Fact: the entrepreneur had earlier founded the social network",
+     "accept": [
+      "VKontakte",
+      "VK",
+      "V Kontakte"
+     ]
+    }
+   },
+   "shortcut_accept": [
+    "VKontakte",
+    "VK",
+    "V Kontakte"
+   ],
+   "why_nonobvious": "A generic entrepreneur founding a social network defaults to Facebook, so reaching VKontakte requires identifying Telegram's founder as Pavel Durov.",
+   "consistency": 0.95,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge1": 1.0
+   },
+   "hop_consistency": 1.0,
+   "context_b2_consistency": null,
+   "shortcut_probes": [
+    {
+     "id": "S1_drop_b1",
+     "kind": "fill",
+     "text": "Fact: A tech entrepreneur had earlier founded the social network",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S1_local_cue",
+     "kind": "fill",
+     "text": "Fact: the entrepreneur had earlier founded the social network",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_0",
+     "kind": "fill",
+     "text": "Fact: The founder of the encrypted messaging app had earlier founded the social network",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_1",
+     "kind": "fill",
+     "text": "Fact: The founder of the messaging app had earlier founded the social network",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_2",
+     "kind": "qa",
+     "text": "Which social network was founded by a person who later founded an encrypted messaging app?",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    }
+   ],
+   "shortcut_max": 0.0,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       4,
+       8,
+       2
+      ]
+     }
+    },
+    "target": 2,
+    "target_alts": [
+     1
+    ]
+   },
+   "mc": {
+    "bridge1": {
+     "gold": "Pavel Durov",
+     "distractors": [
+      "Mark Zuckerberg",
+      "Jeff Bezos",
+      "Larry Page",
+      "Jimmy Wales"
+     ],
+     "pool": "Opus-revised same-topic distractors (r4b_distractors.json)"
+    }
+   },
+   "name_forms": {
+    "bridge1": {
+     "en": [
+      "Pavel Durov",
+      "Pavel Valeryevich Durov",
+      "Durov"
+     ],
+     "zh": [
+      "帕维尔·杜罗夫",
+      "帕维尔・杜罗夫",
+      "帕维尔•杜罗夫",
+      "帕维尔杜罗夫",
+      "杜罗夫"
+     ]
+    }
+   },
+   "n_render_tokens": 16,
+   "id": "mh2-telegram-founder-network",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 0.95,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "mh2-rowling-galbraith-s0",
+   "subfamily": "2hop",
+   "domain": "literature and its authors",
+   "prompt": "Fact: The British author of the Harry Potter novels has published crime fiction under the pseudonym",
+   "spans": {
+    "D1": "The British author of the Harry Potter novels",
+    "R1": " has published crime fiction under the pseudonym",
+    "G1": "A British author"
+   },
+   "target": "Robert Galbraith",
+   "target_alts": [],
+   "source": "multihop_v2",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "all",
+    "lite": {
+     "kind": "final_token"
+    }
+   },
+   "intermediates": [
+    "J. K. Rowling"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "J. K. Rowling",
+       "Joanne Rowling",
+       "JK Rowling",
+       "Rowling"
+      ]
+     },
+     "match": [
+      "J. K. Rowling",
+      "Joanne Rowling",
+      "JK Rowling",
+      "Rowling"
+     ],
+     "kind": "person",
+     "full_forms": [
+      "J. K. Rowling",
+      "Joanne Rowling"
+     ],
+     "forms_excluded": []
+    }
+   ],
+   "bridges": [
+    {
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "J. K. Rowling",
+      "Joanne Rowling",
+      "JK Rowling",
+      "Rowling"
+     ],
+     "question": "Name the British author of the Harry Potter novels."
+    }
+   ],
+   "probes": {
+    "G3_hop_b1_t": {
+     "kind": "fill",
+     "text": "Fact: J. K. Rowling has published crime fiction under the pseudonym",
+     "accept": [
+      "Robert Galbraith",
+      "Galbraith"
+     ]
+    },
+    "S1_drop_b1": {
+     "kind": "fill",
+     "text": "Fact: A British author has published crime fiction under the pseudonym",
+     "accept": [
+      "Robert Galbraith",
+      "Galbraith"
+     ]
+    },
+    "G2_b1": {
+     "kind": "qa",
+     "text": "Name the British author of the Harry Potter novels.",
+     "accept": [
+      "J. K. Rowling",
+      "Joanne Rowling",
+      "JK Rowling",
+      "Rowling"
+     ]
+    },
+    "S1_local_cue": {
+     "kind": "fill",
+     "text": "Fact: the novelist has published crime fiction under the pseudonym",
+     "accept": [
+      "Robert Galbraith",
+      "Galbraith"
+     ]
+    }
+   },
+   "shortcut_accept": [
+    "Robert Galbraith",
+    "Galbraith"
+   ],
+   "why_nonobvious": "Many authors write under pseudonyms, so the final relation alone gives no specific name; only identifying Rowling yields Robert Galbraith.",
+   "consistency": 1.0,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge1": 1.0
+   },
+   "hop_consistency": 1.0,
+   "context_b2_consistency": null,
+   "shortcut_probes": [
+    {
+     "id": "S1_drop_b1",
+     "kind": "fill",
+     "text": "Fact: A British author has published crime fiction under the pseudonym",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S1_local_cue",
+     "kind": "fill",
+     "text": "Fact: the novelist has published crime fiction under the pseudonym",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_0",
+     "kind": "fill",
+     "text": "Fact: The British author has published crime fiction under the pseudonym",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_1",
+     "kind": "qa",
+     "text": "Under what pseudonym has a British author published crime fiction?",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_2",
+     "kind": "fill",
+     "text": "Fact: The author of the novels has published crime fiction under the pseudonym",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    }
+   ],
+   "shortcut_max": 0.0,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       5,
+       3,
+       2,
+       1
+      ]
+     }
+    },
+    "target": 4,
+    "target_alts": []
+   },
+   "mc": {
+    "bridge1": {
+     "gold": "J. K. Rowling",
+     "distractors": [
+      "J. R. R. Tolkien",
+      "C. S. Lewis",
+      "P. D. James",
+      "A. S. Byatt"
+     ],
+     "pool": "Opus-revised same-topic distractors (r4b_distractors.json)"
+    }
+   },
+   "name_forms": {
+    "bridge1": {
+     "en": [
+      "J. K. Rowling",
+      "Joanne Rowling",
+      "JK Rowling",
+      "Rowling"
+     ],
+     "zh": [
+      "J·K·罗琳",
+      "J・K・罗琳",
+      "J•K•罗琳",
+      "JK罗琳",
+      "J.K.罗琳",
+      "乔安妮·罗琳",
+      "乔安妮・罗琳",
+      "乔安妮•罗琳",
+      "乔安妮罗琳"
+     ]
+    }
+   },
+   "n_render_tokens": 18,
+   "id": "mh2-rowling-galbraith-s0",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "mh2-vermeer-delft-s0",
+   "subfamily": "2hop",
+   "domain": "painting and sculpture",
+   "prompt": "Fact: The painter of Girl with a Pearl Earring and The Milkmaid spent his entire life in the city of",
+   "spans": {
+    "D1": "The painter of Girl with a Pearl Earring and The Milkmaid",
+    "R1": " spent his entire life in the city of",
+    "G1": "A seventeenth-century painter"
+   },
+   "target": "Delft",
+   "target_alts": [],
+   "source": "multihop_v2",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "all",
+    "lite": {
+     "kind": "final_token"
+    }
+   },
+   "intermediates": [
+    "Johannes Vermeer"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Johannes Vermeer",
+       "Jan Vermeer",
+       "Vermeer"
+      ]
+     },
+     "match": [
+      "Johannes Vermeer",
+      "Jan Vermeer",
+      "Vermeer"
+     ],
+     "kind": "person",
+     "full_forms": [
+      "Johannes Vermeer",
+      "Jan Vermeer"
+     ],
+     "forms_excluded": []
+    }
+   ],
+   "bridges": [
+    {
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "Johannes Vermeer",
+      "Jan Vermeer",
+      "Vermeer"
+     ],
+     "question": "Name the painter of Girl with a Pearl Earring and The Milkmaid."
+    }
+   ],
+   "probes": {
+    "G3_hop_b1_t": {
+     "kind": "fill",
+     "text": "Fact: Johannes Vermeer spent his entire life in the city of",
+     "accept": [
+      "Delft"
+     ]
+    },
+    "S1_drop_b1": {
+     "kind": "fill",
+     "text": "Fact: A seventeenth-century painter spent his entire life in the city of",
+     "accept": [
+      "Delft"
+     ]
+    },
+    "G2_b1": {
+     "kind": "qa",
+     "text": "Name the painter of Girl with a Pearl Earring and The Milkmaid.",
+     "accept": [
+      "Johannes Vermeer",
+      "Jan Vermeer",
+      "Vermeer"
+     ]
+    },
+    "S1_local_cue": {
+     "kind": "fill",
+     "text": "Fact: the painter spent his entire life in the city of",
+     "accept": [
+      "Delft"
+     ]
+    }
+   },
+   "shortcut_accept": [
+    "Delft"
+   ],
+   "why_nonobvious": "Neither painting title names a place, and a generic seventeenth-century painter's lifelong city could be Amsterdam, Haarlem, Antwerp, Leiden and others, so Delft requires first identifying Vermeer.",
+   "consistency": 1.0,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge1": 1.0
+   },
+   "hop_consistency": 1.0,
+   "context_b2_consistency": null,
+   "shortcut_probes": [
+    {
+     "id": "S1_drop_b1",
+     "kind": "fill",
+     "text": "Fact: A seventeenth-century painter spent his entire life in the city of",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S1_local_cue",
+     "kind": "fill",
+     "text": "Fact: the painter spent his entire life in the city of",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_0",
+     "kind": "fill",
+     "text": "Fact: The painter spent his entire life in the city of",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_1",
+     "kind": "fill",
+     "text": "Fact: The painter of a girl spent his entire life in the city of",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_2",
+     "kind": "qa",
+     "text": "Which city did the painter who spent his entire life in one city live in?",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    }
+   ],
+   "shortcut_max": 0.0,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       3,
+       3,
+       2
+      ]
+     }
+    },
+    "target": 3,
+    "target_alts": []
+   },
+   "mc": {
+    "bridge1": {
+     "gold": "Johannes Vermeer",
+     "distractors": [
+      "Rembrandt van Rijn",
+      "Frans Hals",
+      "Pieter de Hooch",
+      "Jan Steen"
+     ],
+     "pool": "Opus-revised same-topic distractors (r4b_distractors.json)"
+    }
+   },
+   "name_forms": {
+    "bridge1": {
+     "en": [
+      "Johannes Vermeer",
+      "Jan Vermeer",
+      "Vermeer"
+     ],
+     "zh": [
+      "约翰内斯·维米尔",
+      "约翰内斯・维米尔",
+      "约翰内斯•维米尔",
+      "约翰内斯维米尔",
+      "维米尔",
+      "扬·弗美尔",
+      "扬・弗美尔",
+      "扬•弗美尔",
+      "扬弗美尔",
+      "弗美尔",
+      "维梅尔"
+     ]
+    }
+   },
+   "n_render_tokens": 23,
+   "id": "mh2-vermeer-delft-s0",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  }
+ ]
+}

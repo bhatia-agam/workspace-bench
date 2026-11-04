@@ -1,0 +1,2202 @@
+{
+ "ec-ransom-chat_tf": {
+  "greedy": "False",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 0,
+   "no": 10,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-ransom-chat_yn": {
+  "greedy": "No",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 0,
+   "no": 10,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-lie_to_killer-chat_tf": {
+  "greedy": "False",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 0,
+   "no": 10,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-lie_to_killer-chat_yn": {
+  "greedy": "No",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 0,
+   "no": 10,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-trolley-chat_tf": {
+  "greedy": "True",
+  "side": "yes",
+  "precise": true,
+  "draws": {
+   "yes": 8,
+   "no": 2,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-trolley-chat_yn": {
+  "greedy": "Yes",
+  "side": "yes",
+  "precise": true,
+  "draws": {
+   "yes": 7,
+   "no": 3,
+   "other": 0
+  },
+  "klass": "deliberative"
+ },
+ "ec-footbridge-chat_tf": {
+  "greedy": "False",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 0,
+   "no": 10,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-footbridge-chat_yn": {
+  "greedy": "No",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 0,
+   "no": 10,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-transplant-chat_tf": {
+  "greedy": "False",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 0,
+   "no": 10,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-transplant-chat_yn": {
+  "greedy": "No.",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 0,
+   "no": 10,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-torture_bomb-chat_tf": {
+  "greedy": "False",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 0,
+   "no": 10,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-torture_bomb-chat_yn": {
+  "greedy": "No",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 0,
+   "no": 10,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-whistleblow-chat_tf": {
+  "greedy": "False",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 0,
+   "no": 10,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-whistleblow-chat_yn": {
+  "greedy": "No",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 0,
+   "no": 10,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-return_change-chat_tf": {
+  "greedy": "False",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 0,
+   "no": 10,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-return_change-chat_yn": {
+  "greedy": "No",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 2,
+   "no": 8,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-bribe_medicine-chat_tf": {
+  "greedy": "False",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 0,
+   "no": 10,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-bribe_medicine-chat_yn": {
+  "greedy": "No.",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 0,
+   "no": 10,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-ventilator-chat_tf": {
+  "greedy": "False",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 2,
+   "no": 8,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-ventilator-chat_yn": {
+  "greedy": "No",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 2,
+   "no": 8,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-break_promise-chat_tf": {
+  "greedy": "False",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 2,
+   "no": 8,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-break_promise-chat_yn": {
+  "greedy": "No",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 2,
+   "no": 8,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-report_friend-chat_tf": {
+  "greedy": "True",
+  "side": "yes",
+  "precise": true,
+  "draws": {
+   "yes": 6,
+   "no": 4,
+   "other": 0
+  },
+  "klass": "deliberative"
+ },
+ "ec-report_friend-chat_yn": {
+  "greedy": "No",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 0,
+   "no": 10,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-gene_edit_embryos_disease-chat_tf": {
+  "greedy": "True",
+  "side": "yes",
+  "precise": true,
+  "draws": {
+   "yes": 10,
+   "no": 0,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-gene_edit_embryos_disease-chat_yn": {
+  "greedy": "Yes",
+  "side": "yes",
+  "precise": true,
+  "draws": {
+   "yes": 10,
+   "no": 0,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-gene_edit_enhancement-chat_tf": {
+  "greedy": "False",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 5,
+   "no": 5,
+   "other": 0
+  },
+  "klass": "deliberative"
+ },
+ "ec-gene_edit_enhancement-chat_yn": {
+  "greedy": "No",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 1,
+   "no": 9,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-sex_selection_ivf-chat_tf": {
+  "greedy": "False",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 3,
+   "no": 7,
+   "other": 0
+  },
+  "klass": "deliberative"
+ },
+ "ec-sex_selection_ivf-chat_yn": {
+  "greedy": "No",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 1,
+   "no": 9,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-deaf_embryo_selection-chat_tf": {
+  "greedy": "True",
+  "side": "yes",
+  "precise": true,
+  "draws": {
+   "yes": 5,
+   "no": 5,
+   "other": 0
+  },
+  "klass": "deliberative"
+ },
+ "ec-deaf_embryo_selection-chat_yn": {
+  "greedy": "No",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 1,
+   "no": 9,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-donor_anonymity_disclosure-chat_tf": {
+  "greedy": "True",
+  "side": "yes",
+  "precise": true,
+  "draws": {
+   "yes": 8,
+   "no": 2,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-donor_anonymity_disclosure-chat_yn": {
+  "greedy": "Yes",
+  "side": "yes",
+  "precise": true,
+  "draws": {
+   "yes": 6,
+   "no": 4,
+   "other": 0
+  },
+  "klass": "deliberative"
+ },
+ "ec-compulsory_vaccination-chat_tf": {
+  "greedy": "True",
+  "side": "yes",
+  "precise": true,
+  "draws": {
+   "yes": 10,
+   "no": 0,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-compulsory_vaccination-chat_yn": {
+  "greedy": "Yes",
+  "side": "yes",
+  "precise": true,
+  "draws": {
+   "yes": 10,
+   "no": 0,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-living_donor_stranger-chat_tf": {
+  "greedy": "True",
+  "side": "yes",
+  "precise": true,
+  "draws": {
+   "yes": 10,
+   "no": 0,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-living_donor_stranger-chat_yn": {
+  "greedy": "Yes",
+  "side": "yes",
+  "precise": true,
+  "draws": {
+   "yes": 10,
+   "no": 0,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-brain_dead_pregnancy_support-chat_tf": {
+  "greedy": "True",
+  "side": "yes",
+  "precise": true,
+  "draws": {
+   "yes": 10,
+   "no": 0,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-brain_dead_pregnancy_support-chat_yn": {
+  "greedy": "No",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 4,
+   "no": 6,
+   "other": 0
+  },
+  "klass": "deliberative"
+ },
+ "ec-conjoined_twins_separation-chat_tf": {
+  "greedy": "True",
+  "side": "yes",
+  "precise": true,
+  "draws": {
+   "yes": 7,
+   "no": 3,
+   "other": 0
+  },
+  "klass": "deliberative"
+ },
+ "ec-conjoined_twins_separation-chat_yn": {
+  "greedy": "Yes",
+  "side": "yes",
+  "precise": true,
+  "draws": {
+   "yes": 7,
+   "no": 3,
+   "other": 0
+  },
+  "klass": "deliberative"
+ },
+ "ec-drone_strike_civilian_toll-chat_tf": {
+  "greedy": "False",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 0,
+   "no": 10,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-drone_strike_civilian_toll-chat_yn": {
+  "greedy": "No",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 0,
+   "no": 10,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-strike_through_human_shields-chat_tf": {
+  "greedy": "False",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 0,
+   "no": 10,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-strike_through_human_shields-chat_yn": {
+  "greedy": "No",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 0,
+   "no": 10,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-nuclear_deterrent_justified-chat_tf": {
+  "greedy": "False",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 1,
+   "no": 9,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-nuclear_deterrent_justified-chat_yn": {
+  "greedy": "No",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 0,
+   "no": 10,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-conscription_draft-chat_tf": {
+  "greedy": "False",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 2,
+   "no": 8,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-conscription_draft-chat_yn": {
+  "greedy": "No",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 3,
+   "no": 7,
+   "other": 0
+  },
+  "klass": "deliberative"
+ },
+ "ec-preemptive_strike_imminent-chat_tf": {
+  "greedy": "True",
+  "side": "yes",
+  "precise": true,
+  "draws": {
+   "yes": 10,
+   "no": 0,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-preemptive_strike_imminent-chat_yn": {
+  "greedy": "Yes",
+  "side": "yes",
+  "precise": true,
+  "draws": {
+   "yes": 5,
+   "no": 5,
+   "other": 0
+  },
+  "klass": "deliberative"
+ },
+ "ec-targeted_assassination_leader-chat_tf": {
+  "greedy": "False",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 0,
+   "no": 10,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-targeted_assassination_leader-chat_yn": {
+  "greedy": "No",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 0,
+   "no": 10,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-spare_surrendering_enemy-chat_tf": {
+  "greedy": "True",
+  "side": "yes",
+  "precise": true,
+  "draws": {
+   "yes": 10,
+   "no": 0,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-spare_surrendering_enemy-chat_yn": {
+  "greedy": "Yes",
+  "side": "yes",
+  "precise": true,
+  "draws": {
+   "yes": 9,
+   "no": 1,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-scorched_earth_retreat-chat_tf": {
+  "greedy": "True",
+  "side": "yes",
+  "precise": true,
+  "draws": {
+   "yes": 10,
+   "no": 0,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-scorched_earth_retreat-chat_yn": {
+  "greedy": "Yes",
+  "side": "yes",
+  "precise": true,
+  "draws": {
+   "yes": 9,
+   "no": 1,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-wealth_cap-chat_tf": {
+  "greedy": "False",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 3,
+   "no": 7,
+   "other": 0
+  },
+  "klass": "deliberative"
+ },
+ "ec-wealth_cap-chat_yn": {
+  "greedy": "Yes",
+  "side": "yes",
+  "precise": true,
+  "draws": {
+   "yes": 7,
+   "no": 3,
+   "other": 0
+  },
+  "klass": "deliberative"
+ },
+ "ec-inheritance_full_tax-chat_tf": {
+  "greedy": "False",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 0,
+   "no": 10,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-inheritance_full_tax-chat_yn": {
+  "greedy": "No",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 0,
+   "no": 10,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-ubi_replace_welfare-chat_tf": {
+  "greedy": "False",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 0,
+   "no": 10,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-ubi_replace_welfare-chat_yn": {
+  "greedy": "No",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 0,
+   "no": 10,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-sweatshop_beats_alternative-chat_tf": {
+  "greedy": "True",
+  "side": "yes",
+  "precise": true,
+  "draws": {
+   "yes": 10,
+   "no": 0,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-sweatshop_beats_alternative-chat_yn": {
+  "greedy": "No",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 5,
+   "no": 5,
+   "other": 0
+  },
+  "klass": "deliberative"
+ },
+ "ec-price_gouging_disaster-chat_tf": {
+  "greedy": "True",
+  "side": "yes",
+  "precise": true,
+  "draws": {
+   "yes": 6,
+   "no": 4,
+   "other": 0
+  },
+  "klass": "deliberative"
+ },
+ "ec-price_gouging_disaster-chat_yn": {
+  "greedy": "No",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 2,
+   "no": 8,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-student_debt_forgiveness-chat_tf": {
+  "greedy": "False",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 0,
+   "no": 10,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-student_debt_forgiveness-chat_yn": {
+  "greedy": "No",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 0,
+   "no": 10,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-reparations_historical-chat_tf": {
+  "greedy": "False",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 2,
+   "no": 8,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-reparations_historical-chat_yn": {
+  "greedy": "Yes.",
+  "side": "yes",
+  "precise": true,
+  "draws": {
+   "yes": 10,
+   "no": 0,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-rent_control-chat_tf": {
+  "greedy": "True",
+  "side": "yes",
+  "precise": true,
+  "draws": {
+   "yes": 10,
+   "no": 0,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-rent_control-chat_yn": {
+  "greedy": "Yes",
+  "side": "yes",
+  "precise": true,
+  "draws": {
+   "yes": 10,
+   "no": 0,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-placebo_deception-chat_tf": {
+  "greedy": "True",
+  "side": "yes",
+  "precise": true,
+  "draws": {
+   "yes": 7,
+   "no": 3,
+   "other": 0
+  },
+  "klass": "deliberative"
+ },
+ "ec-placebo_deception-chat_yn": {
+  "greedy": "No",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 0,
+   "no": 10,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-white_lie_appearance-chat_tf": {
+  "greedy": "True",
+  "side": "yes",
+  "precise": true,
+  "draws": {
+   "yes": 7,
+   "no": 3,
+   "other": 0
+  },
+  "klass": "deliberative"
+ },
+ "ec-white_lie_appearance-chat_yn": {
+  "greedy": "No",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 3,
+   "no": 7,
+   "other": 0
+  },
+  "klass": "deliberative"
+ },
+ "ec-terminal_diagnosis_withhold-chat_tf": {
+  "greedy": "True",
+  "side": "yes",
+  "precise": true,
+  "draws": {
+   "yes": 10,
+   "no": 0,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-terminal_diagnosis_withhold-chat_yn": {
+  "greedy": "No",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 4,
+   "no": 6,
+   "other": 0
+  },
+  "klass": "deliberative"
+ },
+ "ec-resume_omission-chat_tf": {
+  "greedy": "True",
+  "side": "yes",
+  "precise": true,
+  "draws": {
+   "yes": 6,
+   "no": 4,
+   "other": 0
+  },
+  "klass": "deliberative"
+ },
+ "ec-resume_omission-chat_yn": {
+  "greedy": "No",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 1,
+   "no": 9,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-santa_claus_myth-chat_tf": {
+  "greedy": "True",
+  "side": "yes",
+  "precise": true,
+  "draws": {
+   "yes": 4,
+   "no": 6,
+   "other": 0
+  },
+  "klass": "deliberative"
+ },
+ "ec-santa_claus_myth-chat_yn": {
+  "greedy": "No",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 5,
+   "no": 5,
+   "other": 0
+  },
+  "klass": "deliberative"
+ },
+ "ec-silence_versus_lie-chat_tf": {
+  "greedy": "True",
+  "side": "yes",
+  "precise": true,
+  "draws": {
+   "yes": 6,
+   "no": 4,
+   "other": 0
+  },
+  "klass": "deliberative"
+ },
+ "ec-silence_versus_lie-chat_yn": {
+  "greedy": "Yes",
+  "side": "yes",
+  "precise": true,
+  "draws": {
+   "yes": 7,
+   "no": 3,
+   "other": 0
+  },
+  "klass": "deliberative"
+ },
+ "ec-seatbelt_mandate-chat_tf": {
+  "greedy": "False",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 4,
+   "no": 6,
+   "other": 0
+  },
+  "klass": "deliberative"
+ },
+ "ec-seatbelt_mandate-chat_yn": {
+  "greedy": "No",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 0,
+   "no": 10,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-assisted_suicide_terminal-chat_tf": {
+  "greedy": "True",
+  "side": "yes",
+  "precise": true,
+  "draws": {
+   "yes": 8,
+   "no": 2,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-assisted_suicide_terminal-chat_yn": {
+  "greedy": "Yes",
+  "side": "yes",
+  "precise": true,
+  "draws": {
+   "yes": 10,
+   "no": 0,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-sell_own_kidney-chat_tf": {
+  "greedy": "True",
+  "side": "yes",
+  "precise": true,
+  "draws": {
+   "yes": 10,
+   "no": 0,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-sell_own_kidney-chat_yn": {
+  "greedy": "Yes",
+  "side": "yes",
+  "precise": true,
+  "draws": {
+   "yes": 10,
+   "no": 0,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-legalize_recreational_drugs-chat_tf": {
+  "greedy": "False",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 0,
+   "no": 10,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-legalize_recreational_drugs-chat_yn": {
+  "greedy": "No",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 0,
+   "no": 10,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-ban_extreme_sports-chat_tf": {
+  "greedy": "False",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 3,
+   "no": 7,
+   "other": 0
+  },
+  "klass": "deliberative"
+ },
+ "ec-ban_extreme_sports-chat_yn": {
+  "greedy": "Yes.",
+  "side": "yes",
+  "precise": true,
+  "draws": {
+   "yes": 9,
+   "no": 1,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-eat_factory_farmed_meat-chat_tf": {
+  "greedy": "False",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 3,
+   "no": 7,
+   "other": 0
+  },
+  "klass": "deliberative"
+ },
+ "ec-eat_factory_farmed_meat-chat_yn": {
+  "greedy": "No",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 0,
+   "no": 10,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-animal_testing_lifesaving-chat_tf": {
+  "greedy": "True",
+  "side": "yes",
+  "precise": true,
+  "draws": {
+   "yes": 10,
+   "no": 0,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-animal_testing_lifesaving-chat_yn": {
+  "greedy": "Yes",
+  "side": "yes",
+  "precise": true,
+  "draws": {
+   "yes": 10,
+   "no": 0,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-cull_invasive_species-chat_tf": {
+  "greedy": "True",
+  "side": "yes",
+  "precise": true,
+  "draws": {
+   "yes": 9,
+   "no": 1,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-cull_invasive_species-chat_yn": {
+  "greedy": "Yes",
+  "side": "yes",
+  "precise": true,
+  "draws": {
+   "yes": 9,
+   "no": 1,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-zoos_for_conservation-chat_tf": {
+  "greedy": "True",
+  "side": "yes",
+  "precise": true,
+  "draws": {
+   "yes": 10,
+   "no": 0,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-zoos_for_conservation-chat_yn": {
+  "greedy": "Yes",
+  "side": "yes",
+  "precise": true,
+  "draws": {
+   "yes": 10,
+   "no": 0,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-euthanize_unaffordable_pet-chat_tf": {
+  "greedy": "True",
+  "side": "yes",
+  "precise": true,
+  "draws": {
+   "yes": 3,
+   "no": 7,
+   "other": 0
+  },
+  "klass": "deliberative"
+ },
+ "ec-euthanize_unaffordable_pet-chat_yn": {
+  "greedy": "No",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 1,
+   "no": 9,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-obligation_lab_grown_meat-chat_tf": {
+  "greedy": "False",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 0,
+   "no": 10,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-obligation_lab_grown_meat-chat_yn": {
+  "greedy": "No",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 1,
+   "no": 9,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-hunt_for_population_control-chat_tf": {
+  "greedy": "True",
+  "side": "yes",
+  "precise": true,
+  "draws": {
+   "yes": 10,
+   "no": 0,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-hunt_for_population_control-chat_yn": {
+  "greedy": "Yes",
+  "side": "yes",
+  "precise": true,
+  "draws": {
+   "yes": 7,
+   "no": 3,
+   "other": 0
+  },
+  "klass": "deliberative"
+ },
+ "ec-wealthy_nations_degrowth-chat_tf": {
+  "greedy": "False",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 0,
+   "no": 10,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-wealthy_nations_degrowth-chat_yn": {
+  "greedy": "No.",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 0,
+   "no": 10,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-expand_nuclear_power-chat_tf": {
+  "greedy": "False",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 5,
+   "no": 5,
+   "other": 0
+  },
+  "klass": "deliberative"
+ },
+ "ec-expand_nuclear_power-chat_yn": {
+  "greedy": "No",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 0,
+   "no": 10,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-deploy_solar_geoengineering-chat_tf": {
+  "greedy": "False",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 4,
+   "no": 6,
+   "other": 0
+  },
+  "klass": "deliberative"
+ },
+ "ec-deploy_solar_geoengineering-chat_yn": {
+  "greedy": "No",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 0,
+   "no": 10,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-limit_family_size_climate-chat_tf": {
+  "greedy": "False",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 0,
+   "no": 10,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-limit_family_size_climate-chat_yn": {
+  "greedy": "No",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 3,
+   "no": 7,
+   "other": 0
+  },
+  "klass": "deliberative"
+ },
+ "ec-flying_with_offsets-chat_tf": {
+  "greedy": "True",
+  "side": "yes",
+  "precise": true,
+  "draws": {
+   "yes": 5,
+   "no": 5,
+   "other": 0
+  },
+  "klass": "deliberative"
+ },
+ "ec-flying_with_offsets-chat_yn": {
+  "greedy": "No",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 3,
+   "no": 7,
+   "other": 0
+  },
+  "klass": "deliberative"
+ },
+ "ec-clear_forest_for_jobs-chat_tf": {
+  "greedy": "False",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 0,
+   "no": 10,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-clear_forest_for_jobs-chat_yn": {
+  "greedy": "No",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 3,
+   "no": 7,
+   "other": 0
+  },
+  "klass": "deliberative"
+ },
+ "ec-ban_private_jets-chat_tf": {
+  "greedy": "True",
+  "side": "yes",
+  "precise": true,
+  "draws": {
+   "yes": 10,
+   "no": 0,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-ban_private_jets-chat_yn": {
+  "greedy": "Yes",
+  "side": "yes",
+  "precise": true,
+  "draws": {
+   "yes": 10,
+   "no": 0,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-police_facial_recognition-chat_tf": {
+  "greedy": "True",
+  "side": "yes",
+  "precise": true,
+  "draws": {
+   "yes": 6,
+   "no": 4,
+   "other": 0
+  },
+  "klass": "deliberative"
+ },
+ "ec-police_facial_recognition-chat_yn": {
+  "greedy": "No",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 0,
+   "no": 10,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-encryption_backdoor_mandate-chat_tf": {
+  "greedy": "False",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 0,
+   "no": 10,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-encryption_backdoor_mandate-chat_yn": {
+  "greedy": "No",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 0,
+   "no": 10,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-sell_anonymized_user_data-chat_tf": {
+  "greedy": "True",
+  "side": "yes",
+  "precise": true,
+  "draws": {
+   "yes": 8,
+   "no": 2,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-sell_anonymized_user_data-chat_yn": {
+  "greedy": "No",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 5,
+   "no": 5,
+   "other": 0
+  },
+  "klass": "deliberative"
+ },
+ "ec-predictive_policing-chat_tf": {
+  "greedy": "True",
+  "side": "yes",
+  "precise": true,
+  "draws": {
+   "yes": 10,
+   "no": 0,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-predictive_policing-chat_yn": {
+  "greedy": "Yes",
+  "side": "yes",
+  "precise": true,
+  "draws": {
+   "yes": 10,
+   "no": 0,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-employer_keystroke_monitoring-chat_tf": {
+  "greedy": "True",
+  "side": "yes",
+  "precise": true,
+  "draws": {
+   "yes": 10,
+   "no": 0,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-employer_keystroke_monitoring-chat_yn": {
+  "greedy": "Yes",
+  "side": "yes",
+  "precise": true,
+  "draws": {
+   "yes": 9,
+   "no": 1,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-universal_dna_database-chat_tf": {
+  "greedy": "True",
+  "side": "yes",
+  "precise": true,
+  "draws": {
+   "yes": 5,
+   "no": 5,
+   "other": 0
+  },
+  "klass": "deliberative"
+ },
+ "ec-universal_dna_database-chat_yn": {
+  "greedy": "No",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 0,
+   "no": 10,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-deepfake_political_satire-chat_tf": {
+  "greedy": "False",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 4,
+   "no": 6,
+   "other": 0
+  },
+  "klass": "deliberative"
+ },
+ "ec-deepfake_political_satire-chat_yn": {
+  "greedy": "No",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 0,
+   "no": 10,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-ai_chatbot_of_deceased-chat_tf": {
+  "greedy": "True",
+  "side": "yes",
+  "precise": true,
+  "draws": {
+   "yes": 8,
+   "no": 2,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-ai_chatbot_of_deceased-chat_yn": {
+  "greedy": "Yes",
+  "side": "yes",
+  "precise": true,
+  "draws": {
+   "yes": 4,
+   "no": 6,
+   "other": 0
+  },
+  "klass": "deliberative"
+ },
+ "ec-death_penalty_worst_crimes-chat_tf": {
+  "greedy": "False",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 0,
+   "no": 10,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-death_penalty_worst_crimes-chat_yn": {
+  "greedy": "No",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 0,
+   "no": 10,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-chemical_castration_for_release-chat_tf": {
+  "greedy": "False",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 0,
+   "no": 10,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-chemical_castration_for_release-chat_yn": {
+  "greedy": "No",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 0,
+   "no": 10,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-three_strikes_life-chat_tf": {
+  "greedy": "False",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 0,
+   "no": 10,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-three_strikes_life-chat_yn": {
+  "greedy": "No",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 2,
+   "no": 8,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-rehabilitation_over_retribution-chat_tf": {
+  "greedy": "True",
+  "side": "yes",
+  "precise": true,
+  "draws": {
+   "yes": 10,
+   "no": 0,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-rehabilitation_over_retribution-chat_yn": {
+  "greedy": "Yes.",
+  "side": "yes",
+  "precise": true,
+  "draws": {
+   "yes": 10,
+   "no": 0,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-victim_sets_punishment-chat_tf": {
+  "greedy": "False",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 3,
+   "no": 7,
+   "other": 0
+  },
+  "klass": "deliberative"
+ },
+ "ec-victim_sets_punishment-chat_yn": {
+  "greedy": "No",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 0,
+   "no": 10,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-try_juvenile_as_adult-chat_tf": {
+  "greedy": "True",
+  "side": "yes",
+  "precise": true,
+  "draws": {
+   "yes": 10,
+   "no": 0,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-try_juvenile_as_adult-chat_yn": {
+  "greedy": "Yes",
+  "side": "yes",
+  "precise": true,
+  "draws": {
+   "yes": 7,
+   "no": 3,
+   "other": 0
+  },
+  "klass": "deliberative"
+ },
+ "ec-defend_client_known_guilty-chat_tf": {
+  "greedy": "False",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 0,
+   "no": 10,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-defend_client_known_guilty-chat_yn": {
+  "greedy": "No",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 0,
+   "no": 10,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-journalist_protect_harmful_source-chat_tf": {
+  "greedy": "True",
+  "side": "yes",
+  "precise": true,
+  "draws": {
+   "yes": 9,
+   "no": 1,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-journalist_protect_harmful_source-chat_yn": {
+  "greedy": "Yes.",
+  "side": "yes",
+  "precise": true,
+  "draws": {
+   "yes": 8,
+   "no": 2,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-engineer_refuse_ambiguous_sign_off-chat_tf": {
+  "greedy": "True",
+  "side": "yes",
+  "precise": true,
+  "draws": {
+   "yes": 9,
+   "no": 1,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-engineer_refuse_ambiguous_sign_off-chat_yn": {
+  "greedy": "Yes",
+  "side": "yes",
+  "precise": true,
+  "draws": {
+   "yes": 5,
+   "no": 5,
+   "other": 0
+  },
+  "klass": "deliberative"
+ },
+ "ec-therapist_warn_third_party-chat_tf": {
+  "greedy": "False",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 0,
+   "no": 10,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-therapist_warn_third_party-chat_yn": {
+  "greedy": "No.",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 3,
+   "no": 7,
+   "other": 0
+  },
+  "klass": "deliberative"
+ },
+ "ec-accountant_report_client_fraud-chat_tf": {
+  "greedy": "True",
+  "side": "yes",
+  "precise": true,
+  "draws": {
+   "yes": 10,
+   "no": 0,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-accountant_report_client_fraud-chat_yn": {
+  "greedy": "Yes.",
+  "side": "yes",
+  "precise": true,
+  "draws": {
+   "yes": 9,
+   "no": 1,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-doctor_treat_enemy_first-chat_tf": {
+  "greedy": "False",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 0,
+   "no": 10,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-doctor_treat_enemy_first-chat_yn": {
+  "greedy": "No.",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 1,
+   "no": 9,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-support_abusive_parent-chat_tf": {
+  "greedy": "False",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 2,
+   "no": 8,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-support_abusive_parent-chat_yn": {
+  "greedy": "No",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 0,
+   "no": 10,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-tell_child_is_adopted-chat_tf": {
+  "greedy": "False",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 0,
+   "no": 10,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-tell_child_is_adopted-chat_yn": {
+  "greedy": "No",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 0,
+   "no": 10,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-secret_paternity_test-chat_tf": {
+  "greedy": "True",
+  "side": "yes",
+  "precise": true,
+  "draws": {
+   "yes": 9,
+   "no": 1,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-secret_paternity_test-chat_yn": {
+  "greedy": "No",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 2,
+   "no": 8,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-tell_friend_spouse_cheating-chat_tf": {
+  "greedy": "False",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 0,
+   "no": 10,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-tell_friend_spouse_cheating-chat_yn": {
+  "greedy": "No",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 0,
+   "no": 10,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-quit_career_care_parent-chat_tf": {
+  "greedy": "False",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 0,
+   "no": 10,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-quit_career_care_parent-chat_yn": {
+  "greedy": "No",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 0,
+   "no": 10,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-use_frozen_embryos_over_objection-chat_tf": {
+  "greedy": "True",
+  "side": "yes",
+  "precise": true,
+  "draws": {
+   "yes": 4,
+   "no": 6,
+   "other": 0
+  },
+  "klass": "deliberative"
+ },
+ "ec-use_frozen_embryos_over_objection-chat_yn": {
+  "greedy": "No",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 0,
+   "no": 10,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-disinherit_for_marriage-chat_tf": {
+  "greedy": "False",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 3,
+   "no": 7,
+   "other": 0
+  },
+  "klass": "deliberative"
+ },
+ "ec-disinherit_for_marriage-chat_yn": {
+  "greedy": "No",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 0,
+   "no": 10,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-compulsory_voting-chat_tf": {
+  "greedy": "False",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 0,
+   "no": 10,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-compulsory_voting-chat_yn": {
+  "greedy": "No",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 0,
+   "no": 10,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-restore_felon_voting-chat_tf": {
+  "greedy": "False",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 0,
+   "no": 10,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-restore_felon_voting-chat_yn": {
+  "greedy": "No",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 0,
+   "no": 10,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-noncitizen_local_voting-chat_tf": {
+  "greedy": "False",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 0,
+   "no": 10,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-noncitizen_local_voting-chat_yn": {
+  "greedy": "No",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 0,
+   "no": 10,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-civil_disobedience_unjust_law-chat_tf": {
+  "greedy": "True",
+  "side": "yes",
+  "precise": true,
+  "draws": {
+   "yes": 7,
+   "no": 3,
+   "other": 0
+  },
+  "klass": "deliberative"
+ },
+ "ec-civil_disobedience_unjust_law-chat_yn": {
+  "greedy": "No",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 3,
+   "no": 7,
+   "other": 0
+  },
+  "klass": "deliberative"
+ },
+ "ec-regional_secession-chat_tf": {
+  "greedy": "True",
+  "side": "yes",
+  "precise": true,
+  "draws": {
+   "yes": 6,
+   "no": 4,
+   "other": 0
+  },
+  "klass": "deliberative"
+ },
+ "ec-regional_secession-chat_yn": {
+  "greedy": "No",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 0,
+   "no": 10,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-ban_hate_speech-chat_tf": {
+  "greedy": "True",
+  "side": "yes",
+  "precise": true,
+  "draws": {
+   "yes": 10,
+   "no": 0,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-ban_hate_speech-chat_yn": {
+  "greedy": "Yes",
+  "side": "yes",
+  "precise": true,
+  "draws": {
+   "yes": 9,
+   "no": 1,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-politician_lie_prevent_panic-chat_tf": {
+  "greedy": "False",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 2,
+   "no": 8,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-politician_lie_prevent_panic-chat_yn": {
+  "greedy": "No",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 0,
+   "no": 10,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-self_driving_sacrifice_passenger-chat_tf": {
+  "greedy": "False",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 0,
+   "no": 10,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-self_driving_sacrifice_passenger-chat_yn": {
+  "greedy": "No.",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 0,
+   "no": 10,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-deploy_job_eliminating_ai-chat_tf": {
+  "greedy": "False",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 1,
+   "no": 9,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-deploy_job_eliminating_ai-chat_yn": {
+  "greedy": "No",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 0,
+   "no": 10,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-select_immigrants_by_skill-chat_tf": {
+  "greedy": "False",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 0,
+   "no": 10,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-select_immigrants_by_skill-chat_yn": {
+  "greedy": "No",
+  "side": "no",
+  "precise": true,
+  "draws": {
+   "yes": 0,
+   "no": 10,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-refuse_service_on_religious_belief-chat_tf": {
+  "greedy": "True",
+  "side": "yes",
+  "precise": true,
+  "draws": {
+   "yes": 10,
+   "no": 0,
+   "other": 0
+  },
+  "klass": "committed"
+ },
+ "ec-refuse_service_on_religious_belief-chat_yn": {
+  "greedy": "Yes.",
+  "side": "yes",
+  "precise": true,
+  "draws": {
+   "yes": 10,
+   "no": 0,
+   "other": 0
+  },
+  "klass": "committed"
+ }
+}

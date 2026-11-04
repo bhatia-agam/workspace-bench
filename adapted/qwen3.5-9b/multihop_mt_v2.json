@@ -1,0 +1,1672 @@
+{
+ "family": "multihop-hard",
+ "parent_family": "multihop-mt",
+ "version": 4,
+ "contract": {
+  "multi_token": true,
+  "include_target": true,
+  "conjunctive_units": true,
+  "markdown_fold": true,
+  "fuzzy_names": true,
+  "native_langs": [
+   "en",
+   "zh"
+  ]
+ },
+ "gate": "Qwen3.6-27B behavioral, chat-templated fill-in question (enable_thinking=False, answer stem), staged (workspace-bench plan 0013). G1: the prompt, greedy AND >=16/20 @0.7. Recall: G2 bridge1 from the prompt's own clue and G3 the last hop with its source named, each greedy AND >=8/10; G4 (3-hop) bridge2 identified inside the full statement, greedy AND >=5/10. Shortcuts: S1 generator ablations (drop_b1, local_cue, 3-hop direct_b1_to_t) and S2 independent-adversary ablations must not reach the target (greedy or >4/20); none is ever excused. A 3-hop item whose only shortcut is drop_b1 is frozen as a 2-hop through bridge2 (relabel_b2). No factual issue; fresh-eye review overrides applied. EVAL RENDER: plain prompt; readouts at every prompt token (lite: the final token). Scoring (bank v2, 2026-10-30): a forced-choice judge per required unit over other questions' bridges and targets of the same kind plus cannot tell, credited only with a verified quote that holds a name form of the gold (name_forms; misspellings within edit distance); the conjunctive regex over units stays as a diagnostic.",
+ "frozen": "2026-11-01",
+ "built_from": {
+  "file": "items.json",
+  "sha256": "7c0160a7f818165a09d357a7b0e159301894501124e301bec7f19f75679600d3",
+  "frozen": "2026-10-15"
+ },
+ "builder": "scripts/build_mh2_bank_v2.py",
+ "readout": {
+  "kind": "all",
+  "lite": {
+   "kind": "final_token"
+  }
+ },
+ "supersedes": "items_v3.json",
+ "r4_mc": {
+  "script": "scripts/build_r4_mc_banks.py",
+  "rule": "round 4 (Camila r2 MC leakage standard): only the MC distractor lists change. Content lists: the four Opus-authored same-topic distractors of r4_distractors.json (scripts/r4_mc_distractors.py). ",
+  "lang_rule": null,
+  "lists_changed": 76
+ },
+ "r4b_mc": {
+  "script": "scripts/build_r4b_mc_banks.py",
+  "rule": "round 4b (Camila r2 MC leakage standard, second pass): only the MC distractor lists change. Content lists: the four distractors scripts/r4b_mc_refine.py kept (r4b_distractors.json: Opus-revised in the gold's naming style, fitting the topic as stated, kept when neither the options-only nor the topic guesser solves the item in more than 1 of 5 draws). ",
+  "lists_changed": 76,
+  "n_over_gate": 19
+ },
+ "adapt": {
+  "model": "qwen3.5-9b",
+  "hf_id": "Qwen/Qwen3.5-9B",
+  "frozen": "2026-11-04"
+ },
+ "items": [
+  {
+   "name": "mh2-gaixia-victor-dynasty",
+   "subfamily": "2hop",
+   "domain": "European and Asian history",
+   "prompt": "Fact: The rebel commander who defeated his rival Xiang Yu at Gaixia went on to found the",
+   "spans": {
+    "D1": "The rebel commander who defeated his rival Xiang Yu at Gaixia",
+    "R1": " went on to found the",
+    "G1": "A Chinese rebel commander"
+   },
+   "target": "Han dynasty",
+   "target_alts": [
+    "Western Han dynasty"
+   ],
+   "source": "multihop_v2",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "all",
+    "lite": {
+     "kind": "final_token"
+    }
+   },
+   "intermediates": [
+    "Liu Bang"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Liu Bang",
+       "Emperor Gaozu of Han",
+       "Gaozu",
+       "Emperor Gaozu",
+       "Gaozu of Han"
+      ]
+     },
+     "match": [
+      "Liu Bang",
+      "Emperor Gaozu of Han",
+      "Gaozu",
+      "Emperor Gaozu",
+      "Gaozu of Han"
+     ],
+     "kind": "person",
+     "full_forms": [
+      "Liu Bang",
+      "Emperor Gaozu of Han"
+     ],
+     "forms_excluded": [
+      {
+       "form": "Liu",
+       "reason": "shorter than 4 characters"
+      }
+     ]
+    }
+   ],
+   "bridges": [
+    {
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "Liu Bang",
+      "Emperor Gaozu of Han",
+      "Gaozu",
+      "Emperor Gaozu",
+      "Liu"
+     ],
+     "question": "Name the rebel commander who defeated his rival Xiang Yu at Gaixia."
+    }
+   ],
+   "probes": {
+    "G3_hop_b1_t": {
+     "kind": "fill",
+     "text": "Fact: Liu Bang went on to found the",
+     "accept": [
+      "Han dynasty",
+      "Western Han dynasty",
+      "Han",
+      "Western Han"
+     ]
+    },
+    "S1_drop_b1": {
+     "kind": "fill",
+     "text": "Fact: A Chinese rebel commander went on to found the",
+     "accept": [
+      "Han dynasty",
+      "Western Han dynasty",
+      "Han",
+      "Western Han"
+     ]
+    },
+    "G2_b1": {
+     "kind": "qa",
+     "text": "Name the rebel commander who defeated his rival Xiang Yu at Gaixia.",
+     "accept": [
+      "Liu Bang",
+      "Emperor Gaozu of Han",
+      "Gaozu",
+      "Emperor Gaozu",
+      "Liu"
+     ]
+    },
+    "S1_local_cue": {
+     "kind": "fill",
+     "text": "Fact: the rebel commander went on to found the",
+     "accept": [
+      "Han dynasty",
+      "Western Han dynasty",
+      "Han",
+      "Western Han"
+     ]
+    }
+   },
+   "shortcut_accept": [
+    "Han dynasty",
+    "Western Han dynasty",
+    "Han",
+    "Western Han"
+   ],
+   "why_nonobvious": "A generic Chinese rebel who founded a dynasty could equally be Zhu Yuanzhang (Ming), so the answer requires recognising Xiang Yu's conqueror as Liu Bang.",
+   "consistency": 0.9,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge1": 1.0
+   },
+   "hop_consistency": 1.0,
+   "context_b2_consistency": null,
+   "shortcut_probes": [
+    {
+     "id": "S1_drop_b1",
+     "kind": "fill",
+     "text": "Fact: A Chinese rebel commander went on to found the",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S1_local_cue",
+     "kind": "fill",
+     "text": "Fact: the rebel commander went on to found the",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_0",
+     "kind": "fill",
+     "text": "Fact: The rebel commander who defeated his rival went on to found the",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_1",
+     "kind": "fill",
+     "text": "Fact: The rebel commander went on to found the",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_2",
+     "kind": "qa",
+     "text": "Which dynasty was founded by a rebel commander who defeated his rival?",
+     "n_pass": 2,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    }
+   ],
+   "shortcut_max": 0.1,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       2,
+       6,
+       3,
+       4,
+       5
+      ]
+     }
+    },
+    "target": 2,
+    "target_alts": [
+     3
+    ]
+   },
+   "mc": {
+    "bridge1": {
+     "gold": "Liu Bang",
+     "distractors": [
+      "Wang Mang",
+      "Sun Quan",
+      "Zhao Kuangyin",
+      "Cao Cao"
+     ],
+     "pool": "Opus-revised same-topic distractors (r4b_distractors.json)"
+    }
+   },
+   "name_forms": {
+    "bridge1": {
+     "en": [
+      "Liu Bang",
+      "Emperor Gaozu of Han",
+      "Gaozu",
+      "Emperor Gaozu",
+      "Gaozu of Han"
+     ],
+     "zh": [
+      "刘邦",
+      "汉高祖",
+      "汉高帝"
+     ]
+    }
+   },
+   "n_render_tokens": 21,
+   "id": "mh2-gaixia-victor-dynasty",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 0.9,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "mh2-pizarro-lima-t0",
+   "subfamily": "2hop",
+   "domain": "European and Asian history",
+   "prompt": "Fact: The conquistador who captured Atahualpa at Cajamarca founded as his capital the city of",
+   "spans": {
+    "D1": "The conquistador who captured Atahualpa at Cajamarca",
+    "R1": " founded as his capital the city of",
+    "G1": "A sixteenth-century Spanish conquistador"
+   },
+   "target": "Lima",
+   "target_alts": [
+    "Ciudad de los Reyes"
+   ],
+   "source": "multihop_v2",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "all",
+    "lite": {
+     "kind": "final_token"
+    }
+   },
+   "intermediates": [
+    "Francisco Pizarro"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Francisco Pizarro",
+       "Pizarro"
+      ]
+     },
+     "match": [
+      "Francisco Pizarro",
+      "Pizarro"
+     ],
+     "kind": "person",
+     "full_forms": [
+      "Francisco Pizarro"
+     ],
+     "forms_excluded": []
+    }
+   ],
+   "bridges": [
+    {
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "Francisco Pizarro",
+      "Pizarro"
+     ],
+     "question": "Name the conquistador who captured Atahualpa at Cajamarca."
+    }
+   ],
+   "probes": {
+    "G3_hop_b1_t": {
+     "kind": "fill",
+     "text": "Fact: Francisco Pizarro founded as his capital the city of",
+     "accept": [
+      "Lima",
+      "Ciudad de los Reyes"
+     ]
+    },
+    "S1_drop_b1": {
+     "kind": "fill",
+     "text": "Fact: A sixteenth-century Spanish conquistador founded as his capital the city of",
+     "accept": [
+      "Lima",
+      "Ciudad de los Reyes"
+     ]
+    },
+    "G2_b1": {
+     "kind": "qa",
+     "text": "Name the conquistador who captured Atahualpa at Cajamarca.",
+     "accept": [
+      "Francisco Pizarro",
+      "Pizarro"
+     ]
+    },
+    "S1_local_cue": {
+     "kind": "fill",
+     "text": "Fact: the soldier founded as his capital the city of",
+     "accept": [
+      "Lima",
+      "Ciudad de los Reyes"
+     ]
+    }
+   },
+   "shortcut_accept": [
+    "Lima",
+    "Ciudad de los Reyes"
+   ],
+   "why_nonobvious": "A generic soldier founding a capital points to countless cities; Lima follows only once the captor of Atahualpa is identified as Pizarro.",
+   "consistency": 0.8,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge1": 1.0
+   },
+   "hop_consistency": 1.0,
+   "context_b2_consistency": null,
+   "shortcut_probes": [
+    {
+     "id": "S1_drop_b1",
+     "kind": "fill",
+     "text": "Fact: A sixteenth-century Spanish conquistador founded as his capital the city of",
+     "n_pass": 2,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S1_local_cue",
+     "kind": "fill",
+     "text": "Fact: the soldier founded as his capital the city of",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_0",
+     "kind": "fill",
+     "text": "Fact: The conquistador founded as his capital the city of",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_1",
+     "kind": "fill",
+     "text": "Fact: The conquistador who captured the ruler founded as his capital the city of",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_2",
+     "kind": "qa",
+     "text": "Which city did a conquistador found as his capital?",
+     "n_pass": 1,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    }
+   ],
+   "shortcut_max": 0.1,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       4,
+       3
+      ]
+     }
+    },
+    "target": 1,
+    "target_alts": [
+     4
+    ]
+   },
+   "mc": {
+    "bridge1": {
+     "gold": "Francisco Pizarro",
+     "distractors": [
+      "Amerigo Vespucci",
+      "Christopher Columbus",
+      "Pánfilo de Narváez",
+      "Jacques Cartier"
+     ],
+     "pool": "Opus-revised same-topic distractors (r4b_distractors.json)"
+    }
+   },
+   "name_forms": {
+    "bridge1": {
+     "en": [
+      "Francisco Pizarro",
+      "Pizarro"
+     ],
+     "zh": [
+      "弗朗西斯科·皮萨罗",
+      "弗朗西斯科・皮萨罗",
+      "弗朗西斯科•皮萨罗",
+      "弗朗西斯科皮萨罗",
+      "皮萨罗"
+     ]
+    }
+   },
+   "n_render_tokens": 21,
+   "id": "mh2-pizarro-lima-t0",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 0.8,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "mh2-rousseau-geneva-t1",
+   "subfamily": "2hop",
+   "domain": "philosophy and scholarship",
+   "prompt": "Fact: The philosopher who wrote 'The Social Contract' and 'Émile' was born in the city of",
+   "spans": {
+    "D1": "The philosopher who wrote 'The Social Contract' and 'Émile'",
+    "R1": " was born in the city of",
+    "G1": "An eighteenth-century philosopher"
+   },
+   "target": "Geneva",
+   "target_alts": [
+    "Genève"
+   ],
+   "source": "multihop_v2",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "all",
+    "lite": {
+     "kind": "final_token"
+    }
+   },
+   "intermediates": [
+    "Jean-Jacques Rousseau"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Jean-Jacques Rousseau",
+       "Rousseau",
+       "J.-J. Rousseau"
+      ]
+     },
+     "match": [
+      "Jean-Jacques Rousseau",
+      "Rousseau",
+      "J.-J. Rousseau"
+     ],
+     "kind": "person",
+     "full_forms": [
+      "Jean-Jacques Rousseau",
+      "Rousseau"
+     ],
+     "forms_excluded": []
+    }
+   ],
+   "bridges": [
+    {
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "Jean-Jacques Rousseau",
+      "Rousseau",
+      "J.-J. Rousseau"
+     ],
+     "question": "Name the philosopher who wrote 'The Social Contract' and 'Émile'."
+    }
+   ],
+   "probes": {
+    "G3_hop_b1_t": {
+     "kind": "fill",
+     "text": "Fact: Jean-Jacques Rousseau was born in the city of",
+     "accept": [
+      "Geneva",
+      "Genève",
+      "Geneve"
+     ]
+    },
+    "S1_drop_b1": {
+     "kind": "fill",
+     "text": "Fact: An eighteenth-century philosopher was born in the city of",
+     "accept": [
+      "Geneva",
+      "Genève",
+      "Geneve"
+     ]
+    },
+    "G2_b1": {
+     "kind": "qa",
+     "text": "Name the philosopher who wrote 'The Social Contract' and 'Émile'.",
+     "accept": [
+      "Jean-Jacques Rousseau",
+      "Rousseau",
+      "J.-J. Rousseau"
+     ]
+    },
+    "S1_local_cue": {
+     "kind": "fill",
+     "text": "Fact: the philosopher was born in the city of",
+     "accept": [
+      "Geneva",
+      "Genève",
+      "Geneve"
+     ]
+    }
+   },
+   "shortcut_accept": [
+    "Geneva",
+    "Genève",
+    "Geneve"
+   ],
+   "why_nonobvious": "Only the book titles identify Rousseau, and a generic philosopher's birthplace points to many cities, not Geneva in particular.",
+   "consistency": 1.0,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge1": 0.8
+   },
+   "hop_consistency": 1.0,
+   "context_b2_consistency": null,
+   "shortcut_probes": [
+    {
+     "id": "S1_drop_b1",
+     "kind": "fill",
+     "text": "Fact: An eighteenth-century philosopher was born in the city of",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S1_local_cue",
+     "kind": "fill",
+     "text": "Fact: the philosopher was born in the city of",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_0",
+     "kind": "fill",
+     "text": "Fact: The philosopher was born in the city of",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_1",
+     "kind": "fill",
+     "text": "Fact: The philosopher who wrote a treatise and a novel was born in the city of",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_2",
+     "kind": "qa",
+     "text": "In which city was the philosopher who wrote the books born?",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    }
+   ],
+   "shortcut_max": 0.0,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       6,
+       2,
+       6
+      ]
+     }
+    },
+    "target": 1,
+    "target_alts": [
+     1
+    ]
+   },
+   "mc": {
+    "bridge1": {
+     "gold": "Jean-Jacques Rousseau",
+     "distractors": [
+      "Denis Diderot",
+      "Voltaire",
+      "Julien Offray de La Mettrie",
+      "Moses Mendelssohn"
+     ],
+     "pool": "Opus-revised same-topic distractors (r4b_distractors.json)"
+    }
+   },
+   "name_forms": {
+    "bridge1": {
+     "en": [
+      "Jean-Jacques Rousseau",
+      "Rousseau",
+      "J.-J. Rousseau"
+     ],
+     "zh": [
+      "让-雅克·卢梭",
+      "让-雅克・卢梭",
+      "让-雅克•卢梭",
+      "让-雅克卢梭",
+      "让·雅克·卢梭",
+      "让・雅克・卢梭",
+      "让•雅克•卢梭",
+      "让雅克卢梭",
+      "卢梭"
+     ]
+    }
+   },
+   "n_render_tokens": 22,
+   "id": "mh2-rousseau-geneva-t1",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 0.8,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "mh2-maimonides-birthplace",
+   "subfamily": "2hop",
+   "domain": "philosophy and scholarship",
+   "prompt": "Fact: The author of The Guide for the Perplexed was born in the city of",
+   "spans": {
+    "D1": "The author of The Guide for the Perplexed",
+    "R1": " was born in the city of",
+    "G1": "A medieval philosopher"
+   },
+   "target": "Córdoba",
+   "target_alts": [
+    "Cordova"
+   ],
+   "source": "multihop_v2",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "all",
+    "lite": {
+     "kind": "final_token"
+    }
+   },
+   "intermediates": [
+    "Moses Maimonides"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Moses Maimonides",
+       "Maimonides",
+       "Rambam",
+       "Moses ben Maimon"
+      ]
+     },
+     "match": [
+      "Moses Maimonides",
+      "Maimonides",
+      "Rambam",
+      "Moses ben Maimon"
+     ],
+     "kind": "person",
+     "full_forms": [
+      "Moses Maimonides",
+      "Maimonides",
+      "Rambam"
+     ],
+     "forms_excluded": []
+    }
+   ],
+   "bridges": [
+    {
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "Moses Maimonides",
+      "Maimonides",
+      "Rambam",
+      "Moses ben Maimon"
+     ],
+     "question": "Name the author of The Guide for the Perplexed."
+    }
+   ],
+   "probes": {
+    "G3_hop_b1_t": {
+     "kind": "fill",
+     "text": "Fact: Moses Maimonides was born in the city of",
+     "accept": [
+      "Córdoba",
+      "Cordova",
+      "Cordoba"
+     ]
+    },
+    "S1_drop_b1": {
+     "kind": "fill",
+     "text": "Fact: A medieval philosopher was born in the city of",
+     "accept": [
+      "Córdoba",
+      "Cordova",
+      "Cordoba"
+     ]
+    },
+    "G2_b1": {
+     "kind": "qa",
+     "text": "Name the author of The Guide for the Perplexed.",
+     "accept": [
+      "Moses Maimonides",
+      "Maimonides",
+      "Rambam",
+      "Moses ben Maimon"
+     ]
+    },
+    "S1_local_cue": {
+     "kind": "fill",
+     "text": "Fact: the philosopher was born in the city of",
+     "accept": [
+      "Córdoba",
+      "Cordova",
+      "Cordoba"
+     ]
+    }
+   },
+   "shortcut_accept": [
+    "Córdoba",
+    "Cordova",
+    "Cordoba"
+   ],
+   "why_nonobvious": "The work title names no place, and a generic philosopher's birthplace is open; only identifying Maimonides gives Córdoba.",
+   "consistency": 0.85,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge1": 1.0
+   },
+   "hop_consistency": 1.0,
+   "context_b2_consistency": null,
+   "shortcut_probes": [
+    {
+     "id": "S1_drop_b1",
+     "kind": "fill",
+     "text": "Fact: A medieval philosopher was born in the city of",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S1_local_cue",
+     "kind": "fill",
+     "text": "Fact: the philosopher was born in the city of",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_0",
+     "kind": "fill",
+     "text": "Fact: The author of the treatise was born in the city of",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_1",
+     "kind": "fill",
+     "text": "Fact: The author was born in the city of",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_2",
+     "kind": "fill",
+     "text": "Fact: The author of The Guide was born in the city of",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_3",
+     "kind": "qa",
+     "text": "In which city was the author of the philosophical guide born?",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    }
+   ],
+   "shortcut_max": 0.0,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       5,
+       3,
+       2,
+       5
+      ]
+     }
+    },
+    "target": 1,
+    "target_alts": [
+     1
+    ]
+   },
+   "mc": {
+    "bridge1": {
+     "gold": "Moses Maimonides",
+     "distractors": [
+      "Thomas Aquinas",
+      "Peter Abelard",
+      "Albertus Magnus",
+      "Duns Scotus"
+     ],
+     "pool": "Opus-revised same-topic distractors (r4b_distractors.json)"
+    }
+   },
+   "name_forms": {
+    "bridge1": {
+     "en": [
+      "Moses Maimonides",
+      "Maimonides",
+      "Rambam",
+      "Moses ben Maimon"
+     ],
+     "zh": [
+      "摩西·迈蒙尼德",
+      "摩西・迈蒙尼德",
+      "摩西•迈蒙尼德",
+      "摩西迈蒙尼德",
+      "迈蒙尼德"
+     ]
+    }
+   },
+   "n_render_tokens": 18,
+   "id": "mh2-maimonides-birthplace",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 0.85,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "mh2-mwalimu-ujamaa-t2",
+   "subfamily": "2hop",
+   "domain": "politics and statesmen",
+   "prompt": "Fact: The former schoolteacher known by the honorific 'Mwalimu' who led Tanganyika to independence championed the political philosophy known as",
+   "spans": {
+    "D1": "The former schoolteacher known by the honorific 'Mwalimu' who led Tanganyika to independence",
+    "R1": " championed the political philosophy known as",
+    "G1": "An African independence leader"
+   },
+   "target": "Ujamaa",
+   "target_alts": [],
+   "source": "multihop_v2",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "all",
+    "lite": {
+     "kind": "final_token"
+    }
+   },
+   "intermediates": [
+    "Julius Nyerere"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Julius Nyerere",
+       "Nyerere",
+       "Julius Kambarage Nyerere"
+      ]
+     },
+     "match": [
+      "Julius Nyerere",
+      "Nyerere",
+      "Julius Kambarage Nyerere"
+     ],
+     "kind": "person",
+     "full_forms": [
+      "Julius Nyerere",
+      "Nyerere"
+     ],
+     "forms_excluded": []
+    }
+   ],
+   "bridges": [
+    {
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "Julius Nyerere",
+      "Nyerere",
+      "Julius Kambarage Nyerere"
+     ],
+     "question": "Name the former schoolteacher known by the honorific 'Mwalimu' who led Tanganyika to independence."
+    }
+   ],
+   "probes": {
+    "G3_hop_b1_t": {
+     "kind": "fill",
+     "text": "Fact: Julius Nyerere championed the political philosophy known as",
+     "accept": [
+      "Ujamaa",
+      "ujamaa",
+      "African socialism"
+     ]
+    },
+    "S1_drop_b1": {
+     "kind": "fill",
+     "text": "Fact: An African independence leader championed the political philosophy known as",
+     "accept": [
+      "Ujamaa",
+      "ujamaa",
+      "African socialism"
+     ]
+    },
+    "G2_b1": {
+     "kind": "qa",
+     "text": "Name the former schoolteacher known by the honorific 'Mwalimu' who led Tanganyika to independence.",
+     "accept": [
+      "Julius Nyerere",
+      "Nyerere",
+      "Julius Kambarage Nyerere"
+     ]
+    },
+    "S1_local_cue": {
+     "kind": "fill",
+     "text": "Fact: the leader championed the political philosophy known as",
+     "accept": [
+      "Ujamaa",
+      "ujamaa",
+      "African socialism"
+     ]
+    }
+   },
+   "shortcut_accept": [
+    "Ujamaa",
+    "ujamaa",
+    "African socialism"
+   ],
+   "why_nonobvious": "The generic relation 'championed the political philosophy known as' admits countless doctrines; only resolving the Mwalimu clue to Nyerere selects ujamaa.",
+   "consistency": 0.95,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge1": 1.0
+   },
+   "hop_consistency": 1.0,
+   "context_b2_consistency": null,
+   "shortcut_probes": [
+    {
+     "id": "S1_drop_b1",
+     "kind": "fill",
+     "text": "Fact: An African independence leader championed the political philosophy known as",
+     "n_pass": 1,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S1_local_cue",
+     "kind": "fill",
+     "text": "Fact: the leader championed the political philosophy known as",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_0",
+     "kind": "fill",
+     "text": "Fact: The former schoolteacher who led his country to independence championed the political philosophy known as",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_1",
+     "kind": "fill",
+     "text": "Fact: The leader who led the country to independence championed the political philosophy known as",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_2",
+     "kind": "qa",
+     "text": "Which political philosophy was championed by a former schoolteacher known by an honorific meaning 'teacher' who led his country to independence?",
+     "n_pass": 1,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    }
+   ],
+   "shortcut_max": 0.05,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       4,
+       2,
+       7
+      ]
+     }
+    },
+    "target": 3,
+    "target_alts": []
+   },
+   "mc": {
+    "bridge1": {
+     "gold": "Julius Nyerere",
+     "distractors": [
+      "Kwame Nkrumah",
+      "Patrice Lumumba",
+      "Barthélemy Boganda",
+      "Milton Obote"
+     ],
+     "pool": "Opus-revised same-topic distractors (r4b_distractors.json)"
+    }
+   },
+   "name_forms": {
+    "bridge1": {
+     "en": [
+      "Julius Nyerere",
+      "Nyerere",
+      "Julius Kambarage Nyerere"
+     ],
+     "zh": [
+      "朱利叶斯·尼雷尔",
+      "朱利叶斯・尼雷尔",
+      "朱利叶斯•尼雷尔",
+      "朱利叶斯尼雷尔",
+      "尼雷尔"
+     ]
+    }
+   },
+   "n_render_tokens": 30,
+   "id": "mh2-mwalimu-ujamaa-t2",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 0.95,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "mh2-rowling-galbraith-s0",
+   "subfamily": "2hop",
+   "domain": "literature and its authors",
+   "prompt": "Fact: The British author of the Harry Potter novels has published crime fiction under the pseudonym",
+   "spans": {
+    "D1": "The British author of the Harry Potter novels",
+    "R1": " has published crime fiction under the pseudonym",
+    "G1": "A British author"
+   },
+   "target": "Robert Galbraith",
+   "target_alts": [],
+   "source": "multihop_v2",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "all",
+    "lite": {
+     "kind": "final_token"
+    }
+   },
+   "intermediates": [
+    "J. K. Rowling"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "J. K. Rowling",
+       "Joanne Rowling",
+       "JK Rowling",
+       "Rowling"
+      ]
+     },
+     "match": [
+      "J. K. Rowling",
+      "Joanne Rowling",
+      "JK Rowling",
+      "Rowling"
+     ],
+     "kind": "person",
+     "full_forms": [
+      "J. K. Rowling",
+      "Joanne Rowling"
+     ],
+     "forms_excluded": []
+    }
+   ],
+   "bridges": [
+    {
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "J. K. Rowling",
+      "Joanne Rowling",
+      "JK Rowling",
+      "Rowling"
+     ],
+     "question": "Name the British author of the Harry Potter novels."
+    }
+   ],
+   "probes": {
+    "G3_hop_b1_t": {
+     "kind": "fill",
+     "text": "Fact: J. K. Rowling has published crime fiction under the pseudonym",
+     "accept": [
+      "Robert Galbraith",
+      "Galbraith"
+     ]
+    },
+    "S1_drop_b1": {
+     "kind": "fill",
+     "text": "Fact: A British author has published crime fiction under the pseudonym",
+     "accept": [
+      "Robert Galbraith",
+      "Galbraith"
+     ]
+    },
+    "G2_b1": {
+     "kind": "qa",
+     "text": "Name the British author of the Harry Potter novels.",
+     "accept": [
+      "J. K. Rowling",
+      "Joanne Rowling",
+      "JK Rowling",
+      "Rowling"
+     ]
+    },
+    "S1_local_cue": {
+     "kind": "fill",
+     "text": "Fact: the novelist has published crime fiction under the pseudonym",
+     "accept": [
+      "Robert Galbraith",
+      "Galbraith"
+     ]
+    }
+   },
+   "shortcut_accept": [
+    "Robert Galbraith",
+    "Galbraith"
+   ],
+   "why_nonobvious": "Many authors write under pseudonyms, so the final relation alone gives no specific name; only identifying Rowling yields Robert Galbraith.",
+   "consistency": 1.0,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge1": 1.0
+   },
+   "hop_consistency": 1.0,
+   "context_b2_consistency": null,
+   "shortcut_probes": [
+    {
+     "id": "S1_drop_b1",
+     "kind": "fill",
+     "text": "Fact: A British author has published crime fiction under the pseudonym",
+     "n_pass": 1,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S1_local_cue",
+     "kind": "fill",
+     "text": "Fact: the novelist has published crime fiction under the pseudonym",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_0",
+     "kind": "fill",
+     "text": "Fact: The British author has published crime fiction under the pseudonym",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_1",
+     "kind": "qa",
+     "text": "Under what pseudonym has a British author published crime fiction?",
+     "n_pass": 2,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_2",
+     "kind": "fill",
+     "text": "Fact: The author of the novels has published crime fiction under the pseudonym",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    }
+   ],
+   "shortcut_max": 0.1,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       5,
+       3,
+       2,
+       1
+      ]
+     }
+    },
+    "target": 4,
+    "target_alts": []
+   },
+   "mc": {
+    "bridge1": {
+     "gold": "J. K. Rowling",
+     "distractors": [
+      "J. R. R. Tolkien",
+      "C. S. Lewis",
+      "P. D. James",
+      "A. S. Byatt"
+     ],
+     "pool": "Opus-revised same-topic distractors (r4b_distractors.json)"
+    }
+   },
+   "name_forms": {
+    "bridge1": {
+     "en": [
+      "J. K. Rowling",
+      "Joanne Rowling",
+      "JK Rowling",
+      "Rowling"
+     ],
+     "zh": [
+      "J·K·罗琳",
+      "J・K・罗琳",
+      "J•K•罗琳",
+      "JK罗琳",
+      "J.K.罗琳",
+      "乔安妮·罗琳",
+      "乔安妮・罗琳",
+      "乔安妮•罗琳",
+      "乔安妮罗琳"
+     ]
+    }
+   },
+   "n_render_tokens": 18,
+   "id": "mh2-rowling-galbraith-s0",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 0.9,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "mh2-zahrawi-encyclopedia-tasrif-s2",
+   "subfamily": "2hop",
+   "domain": "medicine and its pioneers",
+   "prompt": "Fact: The tenth-century Andalusian court physician hailed as the father of surgery compiled the thirty-volume medical encyclopedia known as",
+   "spans": {
+    "D1": "The tenth-century Andalusian court physician hailed as the father of surgery",
+    "R1": " compiled the thirty-volume medical encyclopedia known as",
+    "G1": "A medieval physician"
+   },
+   "target": "Kitab al-Tasrif",
+   "target_alts": [
+    "Al-Tasrif",
+    "The Method of Medicine"
+   ],
+   "source": "multihop_v2",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "all",
+    "lite": {
+     "kind": "final_token"
+    }
+   },
+   "intermediates": [
+    "Abu al-Qasim al-Zahrawi"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Abu al-Qasim al-Zahrawi",
+       "Albucasis",
+       "al-Zahrawi",
+       "Zahrawi",
+       "Abulcasis"
+      ]
+     },
+     "match": [
+      "Abu al-Qasim al-Zahrawi",
+      "Albucasis",
+      "al-Zahrawi",
+      "Zahrawi",
+      "Abulcasis"
+     ],
+     "kind": "person",
+     "full_forms": [
+      "Abu al-Qasim al-Zahrawi",
+      "Albucasis"
+     ],
+     "forms_excluded": []
+    }
+   ],
+   "bridges": [
+    {
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "Abu al-Qasim al-Zahrawi",
+      "Albucasis",
+      "al-Zahrawi",
+      "Zahrawi",
+      "Abulcasis"
+     ],
+     "question": "Name the tenth-century Andalusian court physician hailed as the father of surgery."
+    }
+   ],
+   "probes": {
+    "G3_hop_b1_t": {
+     "kind": "fill",
+     "text": "Fact: Abu al-Qasim al-Zahrawi compiled the thirty-volume medical encyclopedia known as",
+     "accept": [
+      "Kitab al-Tasrif",
+      "Al-Tasrif",
+      "The Method of Medicine",
+      "al-Tasrif",
+      "Tasrif"
+     ]
+    },
+    "S1_drop_b1": {
+     "kind": "fill",
+     "text": "Fact: A medieval physician compiled the thirty-volume medical encyclopedia known as",
+     "accept": [
+      "Kitab al-Tasrif",
+      "Al-Tasrif",
+      "The Method of Medicine",
+      "al-Tasrif",
+      "Tasrif"
+     ]
+    },
+    "G2_b1": {
+     "kind": "qa",
+     "text": "Name the tenth-century Andalusian court physician hailed as the father of surgery.",
+     "accept": [
+      "Abu al-Qasim al-Zahrawi",
+      "Albucasis",
+      "al-Zahrawi",
+      "Zahrawi",
+      "Abulcasis"
+     ]
+    },
+    "S1_local_cue": {
+     "kind": "fill",
+     "text": "Fact: the physician compiled the thirty-volume medical encyclopedia known as",
+     "accept": [
+      "Kitab al-Tasrif",
+      "Al-Tasrif",
+      "The Method of Medicine",
+      "al-Tasrif",
+      "Tasrif"
+     ]
+    }
+   },
+   "shortcut_accept": [
+    "Kitab al-Tasrif",
+    "Al-Tasrif",
+    "The Method of Medicine",
+    "al-Tasrif",
+    "Tasrif"
+   ],
+   "why_nonobvious": "A generic physician compiling a medical encyclopedia defaults to Ibn Sina's Canon or al-Razi's al-Hawi; only identifying al-Zahrawi yields al-Tasrif.",
+   "consistency": 0.9,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge1": 1.0
+   },
+   "hop_consistency": 0.8,
+   "context_b2_consistency": null,
+   "shortcut_probes": [
+    {
+     "id": "S1_drop_b1",
+     "kind": "fill",
+     "text": "Fact: A medieval physician compiled the thirty-volume medical encyclopedia known as",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S1_local_cue",
+     "kind": "fill",
+     "text": "Fact: the physician compiled the thirty-volume medical encyclopedia known as",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_0",
+     "kind": "fill",
+     "text": "Fact: The thirty-volume medical encyclopedia is known as",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_1",
+     "kind": "qa",
+     "text": "What thirty-volume medical encyclopedia was compiled by a court physician?",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    }
+   ],
+   "shortcut_max": 0.0,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       10,
+       3,
+       5,
+       3,
+       4
+      ]
+     }
+    },
+    "target": 5,
+    "target_alts": [
+     4,
+     4
+    ]
+   },
+   "mc": {
+    "bridge1": {
+     "gold": "Abu al-Qasim al-Zahrawi",
+     "distractors": [
+      "Abu Rayhan al-Biruni",
+      "Abu Ali ibn Sina",
+      "Abu Yusuf al-Kindi",
+      "Abu Ali al-Hasan ibn al-Haytham"
+     ],
+     "pool": "Opus-revised same-topic distractors (r4b_distractors.json)"
+    }
+   },
+   "name_forms": {
+    "bridge1": {
+     "en": [
+      "Abu al-Qasim al-Zahrawi",
+      "Albucasis",
+      "al-Zahrawi",
+      "Zahrawi",
+      "Abulcasis"
+     ],
+     "zh": [
+      "阿布·卡西姆·宰赫拉威",
+      "阿布・卡西姆・宰赫拉威",
+      "阿布•卡西姆•宰赫拉威",
+      "阿布卡西姆宰赫拉威",
+      "宰赫拉威",
+      "阿尔布卡西斯"
+     ]
+    }
+   },
+   "n_render_tokens": 24,
+   "id": "mh2-zahrawi-encyclopedia-tasrif-s2",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 0.8,
+     "pass": true
+    }
+   }
+  }
+ ]
+}

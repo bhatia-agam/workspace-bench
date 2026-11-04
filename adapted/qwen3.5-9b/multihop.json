@@ -2,11 +2,62 @@
  "family": "multihop",
  "gate": "Qwen3.6-27B behavioral: >=8/10 correct at temp 0.7 (greedy-verified first); association scored against association_aliases.json (phrase-aware, echo-guarded); poetry scored by committed rhyme",
  "eval_render_note": "EVAL RENDER: feed `prompt` verbatim as plain text, NO chat template (directed-modulation is the only chat-templated family). `gate_variant` records how the item was behaviorally verified and does NOT affect the eval read.",
- "read": "the last word of the prompt (its last non-whitespace token; one position per item, every judged layer); changed 2026-09-23 from the final prompt token, which for 33 items is the bare space after the last word (Camila: \"multihop should be read on the second to last token, ie the last word, not the space token\"). Per item, `readout.offsets` is the read position counted from the end of the Qwen3.6-27B tokenization of `prompt`: -2 for the 33 prompts that end in a bare space token, -1 for the 67 whose final token is the word itself (59) or the opening quote of `is \"` (8: the quote is the last non-whitespace token and is the read).",
+ "read": "full (the default, plan 0036): every token of the plain render of `prompt`, reported as negative offsets -n..-1 (`all_from_end`), at every judged layer. lite (`reads=lite`): the last word of the prompt only, `offset_from_end k` with k = -readout.offsets[0] (1 or 2), which retains the 2026-09-23 decision (Camila: \"multihop should be read on the second to last token, ie the last word, not the space token\"). Per item, `readout.offsets` is the last-word position counted from the end of the Qwen3.6-27B tokenization of `prompt`: -2 for the 33 prompts that end in a bare space token, -1 for the other 67.",
+ "version": 3,
+ "supersedes": "items_v2.json",
+ "mc_seed": "multihop-mc-2026-10-30",
+ "mc_note": "plan 0036: `mc` is the frozen multiple-choice block of the blind bank MC judge (`wsbench.basic.mcjudge_basic`): `gold` (the bridge), `aliases` (the forms the judge's quote may use; never a demonym), 4 same-type `distractors` and `distractor_aliases` (their listed forms, Chinese included: a token list that also holds one voids a gold pick; number distractors are compared by value instead), built by scripts/build_multihop_mc.py (seed in `mc_seed`). The judge shows gold + distractors shuffled with mc.seeded_shuffle(f'multihop|{id}'), then 'cannot tell from the readout' last. spaceneedle-border is re-keyed Seattle -> Washington (decision Q9).",
+ "mc_leakage": {
+  "procedure": "mcleak-r4-2026-11-01",
+  "round": 3,
+  "rule": "Camila r2 (2026-11-01): options-only and described/topic guessers (Opus 5.5, 5 draws, the family's own single-pick rule) <= uniform chance + 5 points; >= 2 same-topic confusers per list. Distractors re-chosen by scripts/mc_leakage_r4.py: Opus-proposed same-topic wrong answers (never the scene / a readout), ranked by an Opus guesser's preference, validity-screened (the gold wins 5/5 with the question shown); the gold, prompts and read plan are bank v2's",
+  "keep_v2": {
+   "rule": "PR #214 review (finding 1): the split / multi-option rules only see the shown options, so a new list that drops a confuser the readouts name (birthstone May vs April) silently loosens the gate, and one that adds an option readouts name in passing tightens it. An item keeps bank v2's list unless v2's list leaks (a binding guesser picked its gold on >= 3 of 5 draws in the fresh v2 measurement); a re-chosen list keeps every v2 distractor a cached judge call picked (an observed confuser), replacing the re-chosen distractor the guessers prefer least",
+   "n_kept_v2": 49,
+   "observed_confusers": {
+    "nhop-rainbow-element": [
+     "14"
+    ],
+    "firstletter-halloween-month": [
+     "August"
+    ]
+   }
+  },
+  "repaired_after_measure": [
+   "bf-southpole-bird"
+  ],
+  "frozen": "2026-11-01T07:02:07+00:00",
+  "floors": {
+   "blind": 0.112,
+   "described": 0.19,
+   "topic": 0.194
+  },
+  "relabel": {
+   "procedure": "mcleak-r4-relabel-2026-11-01",
+   "rule": "PR #214 review r3 (finding 1): these items' bridge_type named the second hop's relation ('antonym word'), not the unstated bridge, so the topic guesser and the >= 2 same-topic confusers check tested the wrong kind. Relabelled to the bridge's true kind (old type: mc.bridge_type_v2); options re-chosen from hand-written pools of that kind that are not right answers to the first hop (lint, topic-member check, validity screen as every list; old list: mc.distractors_pre_relabel). Bank v3 was unjudged, so it is rewritten in place under its stamp",
+   "items": [
+    "dbl-altitude-antonym",
+    "dbl-armistice-antonym",
+    "dual-photosynthesis-opposite",
+    "dual-stars-visible-opposite"
+   ],
+   "floors_pre_relabel": {
+    "blind": 0.11,
+    "described": 0.192,
+    "topic": 0.214
+   },
+   "floors": {
+    "blind": 0.112,
+    "described": 0.212,
+    "topic": 0.218
+   },
+   "note": "floors: a fresh `wsbench baseline` of this bank (evals/baselines/lucky_guessing.json); mc_leakage.floors is the round-3 candidate bank's measurement, before the post-measure repair and the relabel. Per item (topic guesser, gold picks of 5, pre -> post): stars 0 -> 5, armistice 3 -> 5, photosynthesis 1 -> 2, altitude 0 -> 0: told the true kind, a guesser picks the kind's most answer-like member (night among times of the daily cycle, war among states of conflict), the leakage the old label hid"
+  }
+ },
  "adapt": {
   "model": "qwen3.5-9b",
   "hf_id": "Qwen/Qwen3.5-9B",
-  "frozen": "2026-10-18"
+  "frozen": "2026-11-04"
  },
  "items": [
   {
@@ -25,6 +76,41 @@
     "offsets": [
      -2
     ]
+   },
+   "mc": {
+    "bridge_type": "element",
+    "gold": "iron",
+    "aliases": [
+     "铁"
+    ],
+    "distractors": [
+     "oxygen",
+     "hydrogen",
+     "gold",
+     "carbon"
+    ],
+    "distractor_aliases": {
+     "oxygen": [
+      "氧"
+     ],
+     "hydrogen": [
+      "氢"
+     ],
+     "gold": [
+      "金"
+     ],
+     "carbon": [
+      "碳"
+     ]
+    },
+    "topic_confusers": 4,
+    "distractors_v2": [
+     "nitrogen",
+     "platinum",
+     "zinc",
+     "sodium"
+    ],
+    "list_source": "v3"
    },
    "id": "atomic-26-symbol",
    "adapt": {
@@ -52,6 +138,43 @@
      -2
     ]
    },
+   "mc": {
+    "bridge_type": "element",
+    "gold": "gold",
+    "aliases": [
+     "金",
+     "黄金"
+    ],
+    "distractors": [
+     "platinum",
+     "iron",
+     "nitrogen",
+     "magnesium"
+    ],
+    "distractor_aliases": {
+     "platinum": [
+      "铂",
+      "白金"
+     ],
+     "iron": [
+      "铁"
+     ],
+     "nitrogen": [
+      "氮"
+     ],
+     "magnesium": [
+      "镁"
+     ]
+    },
+    "topic_confusers": 4,
+    "distractors_v2": [
+     "platinum",
+     "iron",
+     "nitrogen",
+     "magnesium"
+    ],
+    "list_source": "v2"
+   },
    "id": "atomic-79-symbol",
    "adapt": {
     "origin": "original",
@@ -77,6 +200,42 @@
     "offsets": [
      -2
     ]
+   },
+   "mc": {
+    "bridge_type": "month",
+    "gold": "May",
+    "aliases": [
+     "五月"
+    ],
+    "distractors": [
+     "April",
+     "July",
+     "June",
+     "March"
+    ],
+    "distractor_aliases": {
+     "April": [
+      "四月"
+     ],
+     "July": [
+      "Jul",
+      "七月"
+     ],
+     "June": [
+      "六月"
+     ],
+     "March": [
+      "三月"
+     ]
+    },
+    "topic_confusers": 4,
+    "distractors_v2": [
+     "April",
+     "July",
+     "June",
+     "March"
+    ],
+    "list_source": "v2"
    },
    "id": "birthstone-emerald-month",
    "adapt": {
@@ -104,6 +263,41 @@
      -2
     ]
    },
+   "mc": {
+    "bridge_type": "element",
+    "gold": "calcium",
+    "aliases": [
+     "钙"
+    ],
+    "distractors": [
+     "iron",
+     "hydrogen",
+     "copper",
+     "sulfur"
+    ],
+    "distractor_aliases": {
+     "iron": [
+      "铁"
+     ],
+     "hydrogen": [
+      "氢"
+     ],
+     "copper": [
+      "铜"
+     ],
+     "sulfur": [
+      "硫"
+     ]
+    },
+    "topic_confusers": 4,
+    "distractors_v2": [
+     "iron",
+     "hydrogen",
+     "copper",
+     "sulfur"
+    ],
+    "list_source": "v2"
+   },
    "id": "chem-bones-Z",
    "adapt": {
     "origin": "original",
@@ -130,6 +324,42 @@
      -2
     ]
    },
+   "mc": {
+    "bridge_type": "element",
+    "gold": "carbon",
+    "aliases": [
+     "碳"
+    ],
+    "distractors": [
+     "iron",
+     "neon",
+     "gold",
+     "sodium"
+    ],
+    "distractor_aliases": {
+     "iron": [
+      "铁"
+     ],
+     "neon": [
+      "氖"
+     ],
+     "gold": [
+      "金",
+      "黄金"
+     ],
+     "sodium": [
+      "钠"
+     ]
+    },
+    "topic_confusers": 4,
+    "distractors_v2": [
+     "iron",
+     "neon",
+     "gold",
+     "sodium"
+    ],
+    "list_source": "v2"
+   },
    "id": "chem-organic-Z",
    "adapt": {
     "origin": "original",
@@ -155,6 +385,42 @@
     "offsets": [
      -2
     ]
+   },
+   "mc": {
+    "bridge_type": "element",
+    "gold": "oxygen",
+    "aliases": [
+     "氧",
+     "氧气"
+    ],
+    "distractors": [
+     "iron",
+     "nitrogen",
+     "helium",
+     "silver"
+    ],
+    "distractor_aliases": {
+     "iron": [
+      "铁"
+     ],
+     "nitrogen": [
+      "氮"
+     ],
+     "helium": [
+      "氦"
+     ],
+     "silver": [
+      "银"
+     ]
+    },
+    "topic_confusers": 4,
+    "distractors_v2": [
+     "nitrogen",
+     "helium",
+     "magnesium",
+     "iron"
+    ],
+    "list_source": "v3"
    },
    "id": "chem-photosynthesis-Z",
    "adapt": {
@@ -183,11 +449,37 @@
      -2
     ]
    },
+   "mc": {
+    "bridge_type": "number",
+    "gold": "6",
+    "aliases": [
+     "six",
+     "六",
+     "sixth",
+     "6th",
+     "第六"
+    ],
+    "distractors": [
+     "9",
+     "8",
+     "17",
+     "5"
+    ],
+    "distractor_aliases": {},
+    "topic_confusers": 4,
+    "distractors_v2": [
+     "9",
+     "8",
+     "17",
+     "5"
+    ],
+    "list_source": "v2"
+   },
    "id": "double-dice-faces",
    "adapt": {
     "origin": "original",
     "gate": {
-     "rate": 0.8,
+     "rate": 0.9,
      "pass": true
     }
    }
@@ -208,6 +500,41 @@
     "offsets": [
      -2
     ]
+   },
+   "mc": {
+    "bridge_type": "month",
+    "gold": "July",
+    "aliases": [
+     "七月"
+    ],
+    "distractors": [
+     "September",
+     "May",
+     "March",
+     "April"
+    ],
+    "distractor_aliases": {
+     "September": [
+      "九月"
+     ],
+     "May": [
+      "五月"
+     ],
+     "March": [
+      "三月"
+     ],
+     "April": [
+      "四月"
+     ]
+    },
+    "topic_confusers": 4,
+    "distractors_v2": [
+     "September",
+     "May",
+     "March",
+     "April"
+    ],
+    "list_source": "v2"
    },
    "id": "etym-caesar-monthnum",
    "adapt": {
@@ -235,6 +562,46 @@
      -1
     ]
    },
+   "mc": {
+    "bridge_type": "month",
+    "gold": "February",
+    "aliases": [
+     "Feb",
+     "二月"
+    ],
+    "distractors": [
+     "October",
+     "April",
+     "December",
+     "November"
+    ],
+    "distractor_aliases": {
+     "October": [
+      "Oct",
+      "十月"
+     ],
+     "April": [
+      "Apr",
+      "四月"
+     ],
+     "December": [
+      "Dec",
+      "十二月"
+     ],
+     "November": [
+      "Nov",
+      "十一月"
+     ]
+    },
+    "topic_confusers": 4,
+    "distractors_v2": [
+     "October",
+     "May",
+     "September",
+     "June"
+    ],
+    "list_source": "v3"
+   },
    "id": "firstletter-valentines-month",
    "adapt": {
     "origin": "original",
@@ -260,6 +627,44 @@
     "offsets": [
      -2
     ]
+   },
+   "mc": {
+    "bridge_type": "organ",
+    "gold": "kidney",
+    "aliases": [
+     "kidneys",
+     "肾",
+     "肾脏"
+    ],
+    "distractors": [
+     "stomach",
+     "pancreas",
+     "skin",
+     "brain"
+    ],
+    "distractor_aliases": {
+     "stomach": [
+      "胃"
+     ],
+     "pancreas": [
+      "胰腺"
+     ],
+     "skin": [
+      "皮肤"
+     ],
+     "brain": [
+      "大脑",
+      "脑"
+     ]
+    },
+    "topic_confusers": 4,
+    "distractors_v2": [
+     "stomach",
+     "pancreas",
+     "skin",
+     "brain"
+    ],
+    "list_source": "v2"
    },
    "id": "func-filters-count",
    "adapt": {
@@ -287,6 +692,46 @@
      -2
     ]
    },
+   "mc": {
+    "bridge_type": "organ",
+    "gold": "heart",
+    "aliases": [
+     "hearts",
+     "心脏"
+    ],
+    "distractors": [
+     "stomach",
+     "pancreas",
+     "kidney",
+     "liver"
+    ],
+    "distractor_aliases": {
+     "stomach": [
+      "胃"
+     ],
+     "pancreas": [
+      "胰腺"
+     ],
+     "kidney": [
+      "kidneys",
+      "肾",
+      "肾脏"
+     ],
+     "liver": [
+      "livers",
+      "肝脏",
+      "肝"
+     ]
+    },
+    "topic_confusers": 4,
+    "distractors_v2": [
+     "skin",
+     "kidney",
+     "stomach",
+     "pancreas"
+    ],
+    "list_source": "v3"
+   },
    "id": "func-pumps-chambers",
    "adapt": {
     "origin": "original",
@@ -312,6 +757,46 @@
     "offsets": [
      -2
     ]
+   },
+   "mc": {
+    "bridge_type": "month",
+    "gold": "December",
+    "aliases": [
+     "Dec",
+     "十二月"
+    ],
+    "distractors": [
+     "April",
+     "July",
+     "March",
+     "October"
+    ],
+    "distractor_aliases": {
+     "April": [
+      "Apr",
+      "四月"
+     ],
+     "July": [
+      "Jul",
+      "七月"
+     ],
+     "March": [
+      "Mar",
+      "三月"
+     ],
+     "October": [
+      "Oct",
+      "十月"
+     ]
+    },
+    "topic_confusers": 4,
+    "distractors_v2": [
+     "June",
+     "September",
+     "November",
+     "October"
+    ],
+    "list_source": "v3"
    },
    "id": "holiday-christmas-monthnum",
    "adapt": {
@@ -339,6 +824,44 @@
      -2
     ]
    },
+   "mc": {
+    "bridge_type": "month",
+    "gold": "October",
+    "aliases": [
+     "Oct",
+     "十月"
+    ],
+    "distractors": [
+     "December",
+     "January",
+     "November",
+     "September"
+    ],
+    "distractor_aliases": {
+     "December": [
+      "Dec",
+      "十二月"
+     ],
+     "January": [
+      "一月"
+     ],
+     "November": [
+      "Nov",
+      "十一月"
+     ],
+     "September": [
+      "九月"
+     ]
+    },
+    "topic_confusers": 4,
+    "distractors_v2": [
+     "January",
+     "August",
+     "April",
+     "September"
+    ],
+    "list_source": "v3"
+   },
    "id": "holiday-halloween-monthnum",
    "adapt": {
     "origin": "original",
@@ -364,6 +887,44 @@
     "offsets": [
      -2
     ]
+   },
+   "mc": {
+    "bridge_type": "month",
+    "gold": "July",
+    "aliases": [
+     "Jul",
+     "七月"
+    ],
+    "distractors": [
+     "February",
+     "June",
+     "November",
+     "October"
+    ],
+    "distractor_aliases": {
+     "February": [
+      "Feb",
+      "二月"
+     ],
+     "June": [
+      "六月"
+     ],
+     "November": [
+      "十一月"
+     ],
+     "October": [
+      "Oct",
+      "十月"
+     ]
+    },
+    "topic_confusers": 4,
+    "distractors_v2": [
+     "February",
+     "June",
+     "November",
+     "October"
+    ],
+    "list_source": "v2"
    },
    "id": "holiday-independence-monthnum",
    "adapt": {
@@ -391,6 +952,44 @@
      -2
     ]
    },
+   "mc": {
+    "bridge_type": "month",
+    "gold": "February",
+    "aliases": [
+     "Feb",
+     "二月"
+    ],
+    "distractors": [
+     "October",
+     "November",
+     "December",
+     "April"
+    ],
+    "distractor_aliases": {
+     "October": [
+      "Oct",
+      "十月"
+     ],
+     "November": [
+      "十一月"
+     ],
+     "December": [
+      "Dec",
+      "十二月"
+     ],
+     "April": [
+      "四月"
+     ]
+    },
+    "topic_confusers": 4,
+    "distractors_v2": [
+     "October",
+     "November",
+     "December",
+     "April"
+    ],
+    "list_source": "v2"
+   },
    "id": "holiday-valentines-monthnum",
    "adapt": {
     "origin": "original",
@@ -417,11 +1016,112 @@
      -2
     ]
    },
+   "mc": {
+    "bridge_type": "direction",
+    "gold": "south",
+    "aliases": [
+     "南"
+    ],
+    "distractors": [
+     "left",
+     "forward",
+     "east",
+     "backward"
+    ],
+    "distractor_aliases": {
+     "left": [
+      "左"
+     ],
+     "forward": [
+      "前",
+      "向前"
+     ],
+     "east": [
+      "东"
+     ],
+     "backward": [
+      "后",
+      "向后"
+     ]
+    },
+    "topic_confusers": 4,
+    "distractors_v2": [
+     "left",
+     "forward",
+     "east",
+     "backward"
+    ],
+    "list_source": "v2"
+   },
    "id": "inv-antarctica-opposite",
    "adapt": {
     "origin": "original",
     "gate": {
      "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "inv-roots-opposite",
+   "prompt": "Fact: The direction opposite to the one tree roots grow is \"",
+   "target": "up",
+   "intermediates": [
+    "down"
+   ],
+   "source": "jlens_source",
+   "consistency": 1.0,
+   "gate_variant": "plain",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "last_word_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "mc": {
+    "bridge_type": "direction",
+    "gold": "down",
+    "aliases": [
+     "downward",
+     "downwards",
+     "下"
+    ],
+    "distractors": [
+     "backward",
+     "west",
+     "north",
+     "right"
+    ],
+    "distractor_aliases": {
+     "backward": [
+      "后",
+      "向后"
+     ],
+     "west": [
+      "西"
+     ],
+     "north": [
+      "北"
+     ],
+     "right": [
+      "右"
+     ]
+    },
+    "topic_confusers": 4,
+    "distractors_v2": [
+     "backward",
+     "west",
+     "north",
+     "right"
+    ],
+    "list_source": "v2"
+   },
+   "id": "inv-roots-opposite",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 0.9,
      "pass": true
     }
    }
@@ -443,33 +1143,44 @@
      -2
     ]
    },
-   "id": "inv-sunrise-opposite",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "month-7-namedafter",
-   "prompt": "Fact: The seventh month of the year is named after the Roman leader Julius ",
-   "target": "Caesar",
-   "intermediates": [
-    "July"
-   ],
-   "source": "jlens_source",
-   "consistency": 1.0,
-   "gate_variant": "plain",
-   "eval_render": "plain",
-   "readout": {
-    "kind": "last_word_token",
-    "offsets": [
-     -2
-    ]
+   "mc": {
+    "bridge_type": "direction",
+    "gold": "east",
+    "aliases": [
+     "东"
+    ],
+    "distractors": [
+     "down",
+     "north",
+     "right",
+     "left"
+    ],
+    "distractor_aliases": {
+     "down": [
+      "downward",
+      "downwards",
+      "下"
+     ],
+     "north": [
+      "北"
+     ],
+     "right": [
+      "右"
+     ],
+     "left": [
+      "左"
+     ]
+    },
+    "topic_confusers": 4,
+    "distractors_v2": [
+     "down",
+     "north",
+     "right",
+     "left"
+    ],
+    "list_source": "v2"
    },
-   "id": "month-7-namedafter",
+   "id": "inv-sunrise-opposite",
    "adapt": {
     "origin": "original",
     "gate": {
@@ -494,6 +1205,45 @@
     "offsets": [
      -1
     ]
+   },
+   "mc": {
+    "bridge_type": "month",
+    "gold": "February",
+    "aliases": [
+     "Feb",
+     "二月"
+    ],
+    "distractors": [
+     "July",
+     "October",
+     "December",
+     "May"
+    ],
+    "distractor_aliases": {
+     "July": [
+      "Jul",
+      "七月"
+     ],
+     "October": [
+      "Oct",
+      "十月"
+     ],
+     "December": [
+      "Dec",
+      "十二月"
+     ],
+     "May": [
+      "五月"
+     ]
+    },
+    "topic_confusers": 4,
+    "distractors_v2": [
+     "November",
+     "December",
+     "July",
+     "August"
+    ],
+    "list_source": "v3"
    },
    "id": "pred-valentines-prevmonth",
    "adapt": {
@@ -521,6 +1271,47 @@
      -2
     ]
    },
+   "mc": {
+    "bridge_type": "animal",
+    "gold": "spider",
+    "aliases": [
+     "spiders",
+     "蜘蛛"
+    ],
+    "distractors": [
+     "lion",
+     "elephant",
+     "tiger",
+     "horse"
+    ],
+    "distractor_aliases": {
+     "lion": [
+      "lions",
+      "狮子"
+     ],
+     "elephant": [
+      "elephants",
+      "大象",
+      "象"
+     ],
+     "tiger": [
+      "tigers",
+      "老虎",
+      "虎"
+     ],
+     "horse": [
+      "马"
+     ]
+    },
+    "topic_confusers": 4,
+    "distractors_v2": [
+     "horse",
+     "polar bear",
+     "camel",
+     "frog"
+    ],
+    "list_source": "v3"
+   },
    "id": "spider-legs",
    "adapt": {
     "origin": "original",
@@ -546,6 +1337,42 @@
     "offsets": [
      -2
     ]
+   },
+   "mc": {
+    "bridge_type": "instrument",
+    "gold": "violin",
+    "aliases": [
+     "violins",
+     "小提琴"
+    ],
+    "distractors": [
+     "drums",
+     "harp",
+     "piano",
+     "trumpet"
+    ],
+    "distractor_aliases": {
+     "drums": [
+      "鼓"
+     ],
+     "harp": [
+      "竖琴"
+     ],
+     "piano": [
+      "钢琴"
+     ],
+     "trumpet": [
+      "小号"
+     ]
+    },
+    "topic_confusers": 4,
+    "distractors_v2": [
+     "drums",
+     "harp",
+     "piano",
+     "trumpet"
+    ],
+    "list_source": "v2"
    },
    "id": "violin-strings",
    "adapt": {
@@ -573,6 +1400,43 @@
      -1
     ]
    },
+   "mc": {
+    "bridge_type": "country",
+    "gold": "Italy",
+    "aliases": [
+     "意大利"
+    ],
+    "distractors": [
+     "Netherlands",
+     "Spain",
+     "Argentina",
+     "Australia"
+    ],
+    "distractor_aliases": {
+     "Netherlands": [
+      "Holland",
+      "荷兰"
+     ],
+     "Spain": [
+      "西班牙"
+     ],
+     "Argentina": [
+      "阿根廷"
+     ],
+     "Australia": [
+      "澳洲",
+      "澳大利亚"
+     ]
+    },
+    "topic_confusers": 4,
+    "distractors_v2": [
+     "Netherlands",
+     "Spain",
+     "Argentina",
+     "Australia"
+    ],
+    "list_source": "v2"
+   },
    "id": "bf-boot-capital",
    "adapt": {
     "origin": "original",
@@ -598,6 +1462,43 @@
     "offsets": [
      -1
     ]
+   },
+   "mc": {
+    "bridge_type": "drink",
+    "gold": "wine",
+    "aliases": [
+     "wines",
+     "葡萄酒",
+     "红酒"
+    ],
+    "distractors": [
+     "milk",
+     "beer",
+     "coffee",
+     "tea"
+    ],
+    "distractor_aliases": {
+     "milk": [
+      "牛奶"
+     ],
+     "beer": [
+      "啤酒"
+     ],
+     "coffee": [
+      "咖啡"
+     ],
+     "tea": [
+      "茶"
+     ]
+    },
+    "topic_confusers": 4,
+    "distractors_v2": [
+     "milk",
+     "beer",
+     "coffee",
+     "tea"
+    ],
+    "list_source": "v2"
    },
    "id": "bf-bordeaux-fruit",
    "adapt": {
@@ -625,6 +1526,44 @@
      -1
     ]
    },
+   "mc": {
+    "bridge_type": "month",
+    "gold": "December",
+    "aliases": [
+     "Dec",
+     "十二月"
+    ],
+    "distractors": [
+     "May",
+     "July",
+     "August",
+     "October"
+    ],
+    "distractor_aliases": {
+     "May": [
+      "五月"
+     ],
+     "July": [
+      "Jul",
+      "七月"
+     ],
+     "August": [
+      "八月"
+     ],
+     "October": [
+      "Oct",
+      "十月"
+     ]
+    },
+    "topic_confusers": 4,
+    "distractors_v2": [
+     "May",
+     "July",
+     "August",
+     "October"
+    ],
+    "list_source": "v2"
+   },
    "id": "bf-christmas-season",
    "adapt": {
     "origin": "original",
@@ -650,6 +1589,45 @@
     "offsets": [
      -1
     ]
+   },
+   "mc": {
+    "bridge_type": "country",
+    "gold": "France",
+    "aliases": [
+     "法国"
+    ],
+    "distractors": [
+     "United States",
+     "United Kingdom",
+     "Japan",
+     "China"
+    ],
+    "distractor_aliases": {
+     "United States": [
+      "USA",
+      "America",
+      "美国"
+     ],
+     "United Kingdom": [
+      "Britain",
+      "Great Britain",
+      "英国"
+     ],
+     "Japan": [
+      "日本"
+     ],
+     "China": [
+      "中国"
+     ]
+    },
+    "topic_confusers": 4,
+    "distractors_v2": [
+     "Norway",
+     "Denmark",
+     "Sweden",
+     "Brazil"
+    ],
+    "list_source": "v3"
    },
    "id": "bf-eiffel-currency",
    "adapt": {
@@ -677,6 +1655,41 @@
      -1
     ]
    },
+   "mc": {
+    "bridge_type": "country",
+    "gold": "Japan",
+    "aliases": [
+     "日本"
+    ],
+    "distractors": [
+     "Scotland",
+     "France",
+     "Italy",
+     "Brazil"
+    ],
+    "distractor_aliases": {
+     "Scotland": [
+      "苏格兰"
+     ],
+     "France": [
+      "法国"
+     ],
+     "Italy": [
+      "意大利"
+     ],
+     "Brazil": [
+      "巴西"
+     ]
+    },
+    "topic_confusers": 3,
+    "distractors_v2": [
+     "Scotland",
+     "France",
+     "Italy",
+     "Brazil"
+    ],
+    "list_source": "v2"
+   },
    "id": "bf-fuji-ocean",
    "adapt": {
     "origin": "original",
@@ -702,6 +1715,43 @@
     "offsets": [
      -1
     ]
+   },
+   "mc": {
+    "bridge_type": "country",
+    "gold": "Egypt",
+    "aliases": [
+     "埃及"
+    ],
+    "distractors": [
+     "Italy",
+     "United States",
+     "China",
+     "India"
+    ],
+    "distractor_aliases": {
+     "Italy": [
+      "意大利"
+     ],
+     "United States": [
+      "USA",
+      "America",
+      "美国"
+     ],
+     "China": [
+      "中国"
+     ],
+     "India": [
+      "印度"
+     ]
+    },
+    "topic_confusers": 4,
+    "distractors_v2": [
+     "Australia",
+     "Italy",
+     "Nepal",
+     "Finland"
+    ],
+    "list_source": "v3"
    },
    "id": "bf-giza-continent",
    "adapt": {
@@ -729,6 +1779,42 @@
      -1
     ]
    },
+   "mc": {
+    "bridge_type": "country",
+    "gold": "Nepal",
+    "aliases": [
+     "尼泊尔"
+    ],
+    "distractors": [
+     "Peru",
+     "Chile",
+     "India",
+     "Switzerland"
+    ],
+    "distractor_aliases": {
+     "Peru": [
+      "秘鲁"
+     ],
+     "Chile": [
+      "智利"
+     ],
+     "India": [
+      "Republic of India",
+      "印度"
+     ],
+     "Switzerland": [
+      "瑞士"
+     ]
+    },
+    "topic_confusers": 4,
+    "distractors_v2": [
+     "Japan",
+     "Portugal",
+     "Ireland",
+     "Norway"
+    ],
+    "list_source": "v3"
+   },
    "id": "bf-kathmandu-mountain",
    "adapt": {
     "origin": "original",
@@ -754,6 +1840,42 @@
     "offsets": [
      -1
     ]
+   },
+   "mc": {
+    "bridge_type": "country",
+    "gold": "Spain",
+    "aliases": [
+     "西班牙"
+    ],
+    "distractors": [
+     "Netherlands",
+     "Canada",
+     "Sweden",
+     "New Zealand"
+    ],
+    "distractor_aliases": {
+     "Netherlands": [
+      "Holland",
+      "荷兰"
+     ],
+     "Canada": [
+      "加拿大"
+     ],
+     "Sweden": [
+      "瑞典"
+     ],
+     "New Zealand": [
+      "新西兰"
+     ]
+    },
+    "topic_confusers": 4,
+    "distractors_v2": [
+     "Netherlands",
+     "Canada",
+     "Sweden",
+     "New Zealand"
+    ],
+    "list_source": "v2"
    },
    "id": "bf-madrid-language",
    "adapt": {
@@ -781,6 +1903,43 @@
      -1
     ]
    },
+   "mc": {
+    "bridge_type": "person",
+    "gold": "Armstrong",
+    "aliases": [
+     "Neil Armstrong",
+     "阿姆斯特朗"
+    ],
+    "distractors": [
+     "Mozart",
+     "Gandhi",
+     "Napoleon",
+     "Newton"
+    ],
+    "distractor_aliases": {
+     "Mozart": [
+      "莫扎特"
+     ],
+     "Gandhi": [
+      "甘地"
+     ],
+     "Napoleon": [
+      "拿破仑"
+     ],
+     "Newton": [
+      "Isaac Newton",
+      "牛顿"
+     ]
+    },
+    "topic_confusers": 4,
+    "distractors_v2": [
+     "Mozart",
+     "Gandhi",
+     "Napoleon",
+     "Newton"
+    ],
+    "list_source": "v2"
+   },
    "id": "bf-moonwalk-firstname",
    "adapt": {
     "origin": "original",
@@ -806,6 +1965,43 @@
     "offsets": [
      -1
     ]
+   },
+   "mc": {
+    "bridge_type": "continent",
+    "gold": "Antarctica",
+    "aliases": [
+     "南极洲"
+    ],
+    "distractors": [
+     "North America",
+     "Asia",
+     "Europe",
+     "Greenland"
+    ],
+    "distractor_aliases": {
+     "North America": [
+      "北美",
+      "北美洲"
+     ],
+     "Asia": [
+      "亚洲"
+     ],
+     "Europe": [
+      "欧洲"
+     ],
+     "Greenland": [
+      "格陵兰",
+      "格陵兰岛"
+     ]
+    },
+    "topic_confusers": 3,
+    "distractors_v2": [
+     "North America",
+     "Oceania",
+     "Asia",
+     "Europe"
+    ],
+    "list_source": "v2+repaired"
    },
    "id": "bf-southpole-bird",
    "adapt": {
@@ -833,6 +2029,47 @@
      -1
     ]
    },
+   "mc": {
+    "bridge_type": "country",
+    "gold": "Egypt",
+    "aliases": [
+     "埃及"
+    ],
+    "distractors": [
+     "Germany",
+     "Russia",
+     "China",
+     "United Kingdom"
+    ],
+    "distractor_aliases": {
+     "Germany": [
+      "Federal Republic of Germany",
+      "德国"
+     ],
+     "Russia": [
+      "Russian Federation",
+      "俄罗斯"
+     ],
+     "China": [
+      "People's Republic of China",
+      "PRC",
+      "中国"
+     ],
+     "United Kingdom": [
+      "Britain",
+      "Great Britain",
+      "英国"
+     ]
+    },
+    "topic_confusers": 4,
+    "distractors_v2": [
+     "Finland",
+     "Japan",
+     "Norway",
+     "Argentina"
+    ],
+    "list_source": "v3"
+   },
    "id": "bf-sphinx-river",
    "adapt": {
     "origin": "original",
@@ -858,6 +2095,46 @@
     "offsets": [
      -1
     ]
+   },
+   "mc": {
+    "bridge_type": "shape",
+    "gold": "octagon",
+    "aliases": [
+     "octagons",
+     "八边形",
+     "八角形"
+    ],
+    "distractors": [
+     "hexagon",
+     "pentagon",
+     "triangle",
+     "square"
+    ],
+    "distractor_aliases": {
+     "hexagon": [
+      "hexagons",
+      "六边形",
+      "六角形"
+     ],
+     "pentagon": [
+      "五边形"
+     ],
+     "triangle": [
+      "triangles",
+      "三角形"
+     ],
+     "square": [
+      "正方形"
+     ]
+    },
+    "topic_confusers": 4,
+    "distractors_v2": [
+     "rectangle",
+     "pentagon",
+     "oval",
+     "square"
+    ],
+    "list_source": "v3"
    },
    "id": "bf-stopsign-sides",
    "adapt": {
@@ -885,6 +2162,41 @@
      -1
     ]
    },
+   "mc": {
+    "bridge_type": "country",
+    "gold": "Japan",
+    "aliases": [
+     "日本"
+    ],
+    "distractors": [
+     "Canada",
+     "France",
+     "Spain",
+     "Italy"
+    ],
+    "distractor_aliases": {
+     "Canada": [
+      "加拿大"
+     ],
+     "France": [
+      "法国"
+     ],
+     "Spain": [
+      "西班牙"
+     ],
+     "Italy": [
+      "意大利"
+     ]
+    },
+    "topic_confusers": 4,
+    "distractors_v2": [
+     "Mexico",
+     "Netherlands",
+     "Norway",
+     "New Zealand"
+    ],
+    "list_source": "v3"
+   },
    "id": "bf-sushi-capital",
    "adapt": {
     "origin": "original",
@@ -910,6 +2222,47 @@
     "offsets": [
      -1
     ]
+   },
+   "mc": {
+    "bridge_type": "animal",
+    "gold": "polar bear",
+    "aliases": [
+     "polar bears",
+     "北极熊"
+    ],
+    "distractors": [
+     "elephant",
+     "cat",
+     "lion",
+     "kangaroo"
+    ],
+    "distractor_aliases": {
+     "elephant": [
+      "大象",
+      "象"
+     ],
+     "cat": [
+      "cats",
+      "猫"
+     ],
+     "lion": [
+      "lions",
+      "狮子",
+      "狮"
+     ],
+     "kangaroo": [
+      "kangaroos",
+      "袋鼠"
+     ]
+    },
+    "topic_confusers": 4,
+    "distractors_v2": [
+     "camel",
+     "snake",
+     "elephant",
+     "dog"
+    ],
+    "list_source": "v3"
    },
    "id": "bf-whitebear-ocean",
    "adapt": {
@@ -937,6 +2290,42 @@
      -1
     ]
    },
+   "mc": {
+    "bridge_type": "country",
+    "gold": "Greece",
+    "aliases": [
+     "希腊"
+    ],
+    "distractors": [
+     "Nepal",
+     "India",
+     "Netherlands",
+     "New Zealand"
+    ],
+    "distractor_aliases": {
+     "Nepal": [
+      "尼泊尔"
+     ],
+     "India": [
+      "印度"
+     ],
+     "Netherlands": [
+      "Holland",
+      "荷兰"
+     ],
+     "New Zealand": [
+      "新西兰"
+     ]
+    },
+    "topic_confusers": 4,
+    "distractors_v2": [
+     "Nepal",
+     "India",
+     "Netherlands",
+     "New Zealand"
+    ],
+    "list_source": "v2"
+   },
    "id": "b3-mh-acropolis-capital",
    "adapt": {
     "origin": "original",
@@ -962,6 +2351,47 @@
     "offsets": [
      -1
     ]
+   },
+   "mc": {
+    "bridge_type": "fictional character",
+    "gold": "Sherlock Holmes",
+    "aliases": [
+     "Sherlock",
+     "Holmes",
+     "福尔摩斯",
+     "夏洛克"
+    ],
+    "distractors": [
+     "Dracula",
+     "Hamlet",
+     "Harry Potter",
+     "Batman"
+    ],
+    "distractor_aliases": {
+     "Dracula": [
+      "德古拉"
+     ],
+     "Hamlet": [
+      "哈姆雷特"
+     ],
+     "Harry Potter": [
+      "Harry",
+      "哈利·波特",
+      "哈利波特"
+     ],
+     "Batman": [
+      "Bruce Wayne",
+      "蝙蝠侠"
+     ]
+    },
+    "topic_confusers": 4,
+    "distractors_v2": [
+     "Don Quixote",
+     "Dracula",
+     "Huckleberry Finn",
+     "Tarzan"
+    ],
+    "list_source": "v3"
    },
    "id": "b3-mh-bakerstreet-city",
    "adapt": {
@@ -989,6 +2419,47 @@
      -1
     ]
    },
+   "mc": {
+    "bridge_type": "person",
+    "gold": "Homer",
+    "aliases": [
+     "荷马"
+    ],
+    "distractors": [
+     "Shakespeare",
+     "Einstein",
+     "Leonardo da Vinci",
+     "Napoleon"
+    ],
+    "distractor_aliases": {
+     "Shakespeare": [
+      "William Shakespeare",
+      "莎士比亚"
+     ],
+     "Einstein": [
+      "Albert Einstein",
+      "爱因斯坦"
+     ],
+     "Leonardo da Vinci": [
+      "Leonardo",
+      "Da Vinci",
+      "达·芬奇",
+      "列奥纳多·达·芬奇"
+     ],
+     "Napoleon": [
+      "Napoleon Bonaparte",
+      "拿破仑"
+     ]
+    },
+    "topic_confusers": 4,
+    "distractors_v2": [
+     "Beethoven",
+     "Lincoln",
+     "Picasso",
+     "Columbus"
+    ],
+    "list_source": "v3"
+   },
    "id": "b3-mh-blindpoet-epic",
    "adapt": {
     "origin": "original",
@@ -1014,6 +2485,42 @@
     "offsets": [
      -1
     ]
+   },
+   "mc": {
+    "bridge_type": "country",
+    "gold": "Argentina",
+    "aliases": [
+     "阿根廷"
+    ],
+    "distractors": [
+     "Netherlands",
+     "Ireland",
+     "New Zealand",
+     "Nepal"
+    ],
+    "distractor_aliases": {
+     "Netherlands": [
+      "Holland",
+      "荷兰"
+     ],
+     "Ireland": [
+      "爱尔兰"
+     ],
+     "New Zealand": [
+      "新西兰"
+     ],
+     "Nepal": [
+      "尼泊尔"
+     ]
+    },
+    "topic_confusers": 4,
+    "distractors_v2": [
+     "Netherlands",
+     "Ireland",
+     "New Zealand",
+     "Nepal"
+    ],
+    "list_source": "v2"
    },
    "id": "b3-mh-buenosaires-language",
    "adapt": {
@@ -1041,6 +2548,45 @@
      -1
     ]
    },
+   "mc": {
+    "bridge_type": "country",
+    "gold": "Italy",
+    "aliases": [
+     "意大利"
+    ],
+    "distractors": [
+     "France",
+     "United States",
+     "Germany",
+     "United Kingdom"
+    ],
+    "distractor_aliases": {
+     "France": [
+      "法国"
+     ],
+     "United States": [
+      "USA",
+      "America",
+      "美国"
+     ],
+     "Germany": [
+      "德国"
+     ],
+     "United Kingdom": [
+      "Britain",
+      "Great Britain",
+      "英国"
+     ]
+    },
+    "topic_confusers": 4,
+    "distractors_v2": [
+     "India",
+     "Scotland",
+     "Greece",
+     "Portugal"
+    ],
+    "list_source": "v3"
+   },
    "id": "b3-mh-colosseum-capital",
    "adapt": {
     "origin": "original",
@@ -1066,6 +2612,45 @@
     "offsets": [
      -1
     ]
+   },
+   "mc": {
+    "bridge_type": "country",
+    "gold": "France",
+    "aliases": [
+     "法国"
+    ],
+    "distractors": [
+     "United States",
+     "United Kingdom",
+     "China",
+     "Italy"
+    ],
+    "distractor_aliases": {
+     "United States": [
+      "USA",
+      "America",
+      "美国"
+     ],
+     "United Kingdom": [
+      "Britain",
+      "Great Britain",
+      "英国"
+     ],
+     "China": [
+      "中国"
+     ],
+     "Italy": [
+      "意大利"
+     ]
+    },
+    "topic_confusers": 4,
+    "distractors_v2": [
+     "Egypt",
+     "Sweden",
+     "Canada",
+     "Greece"
+    ],
+    "list_source": "v3"
    },
    "id": "b3-mh-eiffel-capital",
    "adapt": {
@@ -1093,6 +2678,42 @@
      -1
     ]
    },
+   "mc": {
+    "bridge_type": "country",
+    "gold": "Norway",
+    "aliases": [
+     "挪威"
+    ],
+    "distractors": [
+     "Netherlands",
+     "Greece",
+     "Portugal",
+     "Canada"
+    ],
+    "distractor_aliases": {
+     "Netherlands": [
+      "Holland",
+      "荷兰"
+     ],
+     "Greece": [
+      "希腊"
+     ],
+     "Portugal": [
+      "葡萄牙"
+     ],
+     "Canada": [
+      "加拿大"
+     ]
+    },
+    "topic_confusers": 4,
+    "distractors_v2": [
+     "Netherlands",
+     "Greece",
+     "Portugal",
+     "Canada"
+    ],
+    "list_source": "v2"
+   },
    "id": "b3-mh-fjords-capital",
    "adapt": {
     "origin": "original",
@@ -1118,6 +2739,47 @@
     "offsets": [
      -1
     ]
+   },
+   "mc": {
+    "bridge_type": "country",
+    "gold": "Japan",
+    "aliases": [
+     "日本"
+    ],
+    "distractors": [
+     "France",
+     "United States",
+     "China",
+     "Germany"
+    ],
+    "distractor_aliases": {
+     "France": [
+      "法国"
+     ],
+     "United States": [
+      "USA",
+      "United States of America",
+      "America",
+      "美国"
+     ],
+     "China": [
+      "People's Republic of China",
+      "PRC",
+      "中国",
+      "中华人民共和国"
+     ],
+     "Germany": [
+      "德国"
+     ]
+    },
+    "topic_confusers": 4,
+    "distractors_v2": [
+     "Canada",
+     "Australia",
+     "France",
+     "Portugal"
+    ],
+    "list_source": "v3"
    },
    "id": "b3-mh-fuji-currency",
    "adapt": {
@@ -1145,6 +2807,45 @@
      -1
     ]
    },
+   "mc": {
+    "bridge_type": "city",
+    "gold": "San Francisco",
+    "aliases": [
+     "旧金山",
+     "三藩市"
+    ],
+    "distractors": [
+     "Chicago",
+     "Berlin",
+     "London",
+     "Washington, D.C."
+    ],
+    "distractor_aliases": {
+     "Chicago": [
+      "芝加哥"
+     ],
+     "Berlin": [
+      "柏林"
+     ],
+     "London": [
+      "伦敦"
+     ],
+     "Washington, D.C.": [
+      "Washington DC",
+      "Washington",
+      "华盛顿",
+      "华盛顿特区"
+     ]
+    },
+    "topic_confusers": 4,
+    "distractors_v2": [
+     "Berlin",
+     "Miami",
+     "Houston",
+     "New York"
+    ],
+    "list_source": "v3"
+   },
    "id": "b3-mh-goldengate-ocean",
    "adapt": {
     "origin": "original",
@@ -1170,6 +2871,44 @@
     "offsets": [
      -1
     ]
+   },
+   "mc": {
+    "bridge_type": "person",
+    "gold": "Newton",
+    "aliases": [
+     "Isaac Newton",
+     "牛顿"
+    ],
+    "distractors": [
+     "Einstein",
+     "Shakespeare",
+     "Darwin",
+     "Lincoln"
+    ],
+    "distractor_aliases": {
+     "Einstein": [
+      "Albert Einstein",
+      "爱因斯坦"
+     ],
+     "Shakespeare": [
+      "William Shakespeare",
+      "莎士比亚"
+     ],
+     "Darwin": [
+      "达尔文"
+     ],
+     "Lincoln": [
+      "林肯"
+     ]
+    },
+    "topic_confusers": 4,
+    "distractors_v2": [
+     "Armstrong",
+     "Lincoln",
+     "Homer",
+     "Darwin"
+    ],
+    "list_source": "v3"
    },
    "id": "b3-mh-gravity-fruit",
    "adapt": {
@@ -1197,6 +2936,41 @@
      -1
     ]
    },
+   "mc": {
+    "bridge_type": "country",
+    "gold": "Ireland",
+    "aliases": [
+     "爱尔兰"
+    ],
+    "distractors": [
+     "Greece",
+     "Sweden",
+     "India",
+     "Portugal"
+    ],
+    "distractor_aliases": {
+     "Greece": [
+      "希腊"
+     ],
+     "Sweden": [
+      "瑞典"
+     ],
+     "India": [
+      "印度"
+     ],
+     "Portugal": [
+      "葡萄牙"
+     ]
+    },
+    "topic_confusers": 4,
+    "distractors_v2": [
+     "Greece",
+     "Sweden",
+     "India",
+     "Portugal"
+    ],
+    "list_source": "v2"
+   },
    "id": "b3-mh-guinness-capital",
    "adapt": {
     "origin": "original",
@@ -1222,6 +2996,44 @@
     "offsets": [
      -1
     ]
+   },
+   "mc": {
+    "bridge_type": "city",
+    "gold": "Los Angeles",
+    "aliases": [
+     "L.A.",
+     "洛杉矶"
+    ],
+    "distractors": [
+     "London",
+     "Berlin",
+     "Moscow",
+     "New York"
+    ],
+    "distractor_aliases": {
+     "London": [
+      "伦敦"
+     ],
+     "Berlin": [
+      "柏林"
+     ],
+     "Moscow": [
+      "莫斯科"
+     ],
+     "New York": [
+      "New York City",
+      "NYC",
+      "纽约"
+     ]
+    },
+    "topic_confusers": 4,
+    "distractors_v2": [
+     "London",
+     "Berlin",
+     "Moscow",
+     "New York"
+    ],
+    "list_source": "v2"
    },
    "id": "b3-mh-griffithobservatory-state",
    "adapt": {
@@ -1249,6 +3061,42 @@
      -1
     ]
    },
+   "mc": {
+    "bridge_type": "country",
+    "gold": "Australia",
+    "aliases": [
+     "澳洲",
+     "澳大利亚"
+    ],
+    "distractors": [
+     "Canada",
+     "Spain",
+     "Sweden",
+     "Switzerland"
+    ],
+    "distractor_aliases": {
+     "Canada": [
+      "加拿大"
+     ],
+     "Spain": [
+      "西班牙"
+     ],
+     "Sweden": [
+      "瑞典"
+     ],
+     "Switzerland": [
+      "瑞士"
+     ]
+    },
+    "topic_confusers": 4,
+    "distractors_v2": [
+     "Canada",
+     "Spain",
+     "Sweden",
+     "Switzerland"
+    ],
+    "list_source": "v2"
+   },
    "id": "b3-mh-kangaroo-ocean",
    "adapt": {
     "origin": "original",
@@ -1274,6 +3122,41 @@
     "offsets": [
      -1
     ]
+   },
+   "mc": {
+    "bridge_type": "country",
+    "gold": "Scotland",
+    "aliases": [
+     "苏格兰"
+    ],
+    "distractors": [
+     "France",
+     "Spain",
+     "Greece",
+     "Brazil"
+    ],
+    "distractor_aliases": {
+     "France": [
+      "法国"
+     ],
+     "Spain": [
+      "西班牙"
+     ],
+     "Greece": [
+      "希腊"
+     ],
+     "Brazil": [
+      "巴西"
+     ]
+    },
+    "topic_confusers": 4,
+    "distractors_v2": [
+     "France",
+     "Spain",
+     "Greece",
+     "Brazil"
+    ],
+    "list_source": "v2"
    },
    "id": "b3-mh-kilts-capital",
    "adapt": {
@@ -1301,6 +3184,42 @@
      -1
     ]
    },
+   "mc": {
+    "bridge_type": "country",
+    "gold": "New Zealand",
+    "aliases": [
+     "NZ",
+     "新西兰"
+    ],
+    "distractors": [
+     "Russia",
+     "India",
+     "Canada",
+     "Italy"
+    ],
+    "distractor_aliases": {
+     "Russia": [
+      "俄罗斯"
+     ],
+     "India": [
+      "印度"
+     ],
+     "Canada": [
+      "加拿大"
+     ],
+     "Italy": [
+      "意大利"
+     ]
+    },
+    "topic_confusers": 4,
+    "distractors_v2": [
+     "Russia",
+     "India",
+     "Canada",
+     "Italy"
+    ],
+    "list_source": "v2"
+   },
    "id": "b3-mh-kiwi-capital",
    "adapt": {
     "origin": "original",
@@ -1326,6 +3245,42 @@
     "offsets": [
      -1
     ]
+   },
+   "mc": {
+    "bridge_type": "country",
+    "gold": "Russia",
+    "aliases": [
+     "俄罗斯"
+    ],
+    "distractors": [
+     "France",
+     "Italy",
+     "China",
+     "Japan"
+    ],
+    "distractor_aliases": {
+     "France": [
+      "法国"
+     ],
+     "Italy": [
+      "意大利"
+     ],
+     "China": [
+      "PRC",
+      "中国"
+     ],
+     "Japan": [
+      "日本"
+     ]
+    },
+    "topic_confusers": 4,
+    "distractors_v2": [
+     "India",
+     "Japan",
+     "Portugal",
+     "Australia"
+    ],
+    "list_source": "v3"
    },
    "id": "b3-mh-kremlin-language",
    "adapt": {
@@ -1353,6 +3308,43 @@
      -1
     ]
    },
+   "mc": {
+    "bridge_type": "city",
+    "gold": "New York",
+    "aliases": [
+     "New York City",
+     "NYC",
+     "纽约"
+    ],
+    "distractors": [
+     "Berlin",
+     "London",
+     "Paris",
+     "Chicago"
+    ],
+    "distractor_aliases": {
+     "Berlin": [
+      "柏林"
+     ],
+     "London": [
+      "伦敦"
+     ],
+     "Paris": [
+      "巴黎"
+     ],
+     "Chicago": [
+      "芝加哥"
+     ]
+    },
+    "topic_confusers": 4,
+    "distractors_v2": [
+     "Berlin",
+     "Chicago",
+     "Los Angeles",
+     "Miami"
+    ],
+    "list_source": "v3"
+   },
    "id": "b3-mh-liberty-river",
    "adapt": {
     "origin": "original",
@@ -1378,6 +3370,42 @@
     "offsets": [
      -1
     ]
+   },
+   "mc": {
+    "bridge_type": "country",
+    "gold": "Portugal",
+    "aliases": [
+     "葡萄牙"
+    ],
+    "distractors": [
+     "Netherlands",
+     "Canada",
+     "Ireland",
+     "Scotland"
+    ],
+    "distractor_aliases": {
+     "Netherlands": [
+      "Holland",
+      "荷兰"
+     ],
+     "Canada": [
+      "加拿大"
+     ],
+     "Ireland": [
+      "爱尔兰"
+     ],
+     "Scotland": [
+      "苏格兰"
+     ]
+    },
+    "topic_confusers": 3,
+    "distractors_v2": [
+     "Netherlands",
+     "Canada",
+     "Ireland",
+     "Scotland"
+    ],
+    "list_source": "v2"
    },
    "id": "b3-mh-lisbon-language",
    "adapt": {
@@ -1405,6 +3433,42 @@
      -1
     ]
    },
+   "mc": {
+    "bridge_type": "country",
+    "gold": "Finland",
+    "aliases": [
+     "芬兰"
+    ],
+    "distractors": [
+     "Portugal",
+     "New Zealand",
+     "Netherlands",
+     "Switzerland"
+    ],
+    "distractor_aliases": {
+     "Portugal": [
+      "葡萄牙"
+     ],
+     "New Zealand": [
+      "新西兰"
+     ],
+     "Netherlands": [
+      "Holland",
+      "荷兰"
+     ],
+     "Switzerland": [
+      "瑞士"
+     ]
+    },
+    "topic_confusers": 4,
+    "distractors_v2": [
+     "Portugal",
+     "New Zealand",
+     "Netherlands",
+     "Switzerland"
+    ],
+    "list_source": "v2"
+   },
    "id": "b3-mh-nokia-capital",
    "adapt": {
     "origin": "original",
@@ -1430,6 +3494,44 @@
     "offsets": [
      -1
     ]
+   },
+   "mc": {
+    "bridge_type": "country",
+    "gold": "Brazil",
+    "aliases": [
+     "巴西"
+    ],
+    "distractors": [
+     "India",
+     "France",
+     "Japan",
+     "United States"
+    ],
+    "distractor_aliases": {
+     "India": [
+      "印度"
+     ],
+     "France": [
+      "法国"
+     ],
+     "Japan": [
+      "日本"
+     ],
+     "United States": [
+      "USA",
+      "America",
+      "United States of America",
+      "美国"
+     ]
+    },
+    "topic_confusers": 4,
+    "distractors_v2": [
+     "Greece",
+     "Italy",
+     "Ireland",
+     "India"
+    ],
+    "list_source": "v3"
    },
    "id": "b3-mh-samba-river",
    "adapt": {
@@ -1457,6 +3559,42 @@
      -1
     ]
    },
+   "mc": {
+    "bridge_type": "country",
+    "gold": "Egypt",
+    "aliases": [
+     "埃及"
+    ],
+    "distractors": [
+     "Brazil",
+     "Japan",
+     "Netherlands",
+     "France"
+    ],
+    "distractor_aliases": {
+     "Brazil": [
+      "巴西"
+     ],
+     "Japan": [
+      "日本"
+     ],
+     "Netherlands": [
+      "Holland",
+      "荷兰"
+     ],
+     "France": [
+      "法国"
+     ]
+    },
+    "topic_confusers": 4,
+    "distractors_v2": [
+     "Brazil",
+     "Japan",
+     "Netherlands",
+     "France"
+    ],
+    "list_source": "v2"
+   },
    "id": "b3-mh-sphinx-capital",
    "adapt": {
     "origin": "original",
@@ -1482,6 +3620,42 @@
     "offsets": [
      -1
     ]
+   },
+   "mc": {
+    "bridge_type": "country",
+    "gold": "India",
+    "aliases": [
+     "印度"
+    ],
+    "distractors": [
+     "Japan",
+     "China",
+     "France",
+     "Italy"
+    ],
+    "distractor_aliases": {
+     "Japan": [
+      "日本"
+     ],
+     "China": [
+      "中国",
+      "People's Republic of China"
+     ],
+     "France": [
+      "法国"
+     ],
+     "Italy": [
+      "意大利"
+     ]
+    },
+    "topic_confusers": 4,
+    "distractors_v2": [
+     "Scotland",
+     "Australia",
+     "Mexico",
+     "New Zealand"
+    ],
+    "list_source": "v3"
    },
    "id": "b3-mh-tajmahal-river",
    "adapt": {
@@ -1510,6 +3684,45 @@
      -1
     ]
    },
+   "mc": {
+    "bridge_type": "country",
+    "gold": "Netherlands",
+    "aliases": [
+     "Holland",
+     "荷兰"
+    ],
+    "distractors": [
+     "France",
+     "Spain",
+     "United States",
+     "China"
+    ],
+    "distractor_aliases": {
+     "France": [
+      "法国"
+     ],
+     "Spain": [
+      "España",
+      "西班牙"
+     ],
+     "United States": [
+      "USA",
+      "America",
+      "美国"
+     ],
+     "China": [
+      "中国"
+     ]
+    },
+    "topic_confusers": 4,
+    "distractors_v2": [
+     "Nepal",
+     "France",
+     "Canada",
+     "Norway"
+    ],
+    "list_source": "v3"
+   },
    "id": "b3-mh-tulips-capital",
    "adapt": {
     "origin": "original",
@@ -1535,6 +3748,42 @@
     "offsets": [
      -1
     ]
+   },
+   "mc": {
+    "bridge_type": "mountain",
+    "gold": "Olympus",
+    "aliases": [
+     "Mount Olympus",
+     "奥林匹斯山"
+    ],
+    "distractors": [
+     "Matterhorn",
+     "Elbrus",
+     "Fuji",
+     "Kilimanjaro"
+    ],
+    "distractor_aliases": {
+     "Matterhorn": [
+      "马特洪"
+     ],
+     "Elbrus": [
+      "厄尔布鲁士"
+     ],
+     "Fuji": [
+      "富士"
+     ],
+     "Kilimanjaro": [
+      "乞力马扎罗"
+     ]
+    },
+    "topic_confusers": 4,
+    "distractors_v2": [
+     "Matterhorn",
+     "Elbrus",
+     "Fuji",
+     "Kilimanjaro"
+    ],
+    "list_source": "v2"
    },
    "id": "b3-mh-zeus-country",
    "adapt": {
@@ -1562,11 +3811,123 @@
      -2
     ]
    },
+   "mc": {
+    "bridge_type": "country",
+    "gold": "Brazil",
+    "aliases": [
+     "巴西"
+    ],
+    "distractors": [
+     "Italy",
+     "Japan",
+     "Nepal",
+     "Russia"
+    ],
+    "distractor_aliases": {
+     "Italy": [
+      "意大利"
+     ],
+     "Japan": [
+      "日本"
+     ],
+     "Nepal": [
+      "尼泊尔"
+     ],
+     "Russia": [
+      "俄罗斯"
+     ]
+    },
+    "topic_confusers": 4,
+    "distractors_v2": [
+     "Italy",
+     "Japan",
+     "Nepal",
+     "Russia"
+    ],
+    "list_source": "v2"
+   },
    "id": "carnival-ocean",
    "adapt": {
     "origin": "original",
     "gate": {
      "rate": 0.8,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "dual-stars-visible-opposite",
+   "prompt": "Fact: The opposite of the time of day when stars are visible is \"",
+   "target": "day",
+   "intermediates": [
+    "night"
+   ],
+   "source": "jlens_source",
+   "consistency": 0.9,
+   "gate_variant": "chat",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "last_word_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "mc": {
+    "bridge_type": "time of the 24-hour cycle",
+    "gold": "night",
+    "aliases": [
+     "nighttime",
+     "night-time",
+     "夜晚",
+     "晚上"
+    ],
+    "distractors": [
+     "noon",
+     "morning",
+     "afternoon",
+     "sunrise"
+    ],
+    "distractor_aliases": {
+     "noon": [
+      "midday",
+      "中午",
+      "正午"
+     ],
+     "morning": [
+      "mornings",
+      "早上",
+      "上午",
+      "早晨"
+     ],
+     "afternoon": [
+      "afternoons",
+      "下午"
+     ],
+     "sunrise": [
+      "日出"
+     ]
+    },
+    "topic_confusers": 4,
+    "distractors_v2": [
+     "hate",
+     "war",
+     "slow",
+     "early"
+    ],
+    "list_source": "v3+relabel",
+    "bridge_type_v2": "antonym word",
+    "distractors_pre_relabel": [
+     "hot",
+     "big",
+     "good",
+     "love"
+    ]
+   },
+   "id": "dual-stars-visible-opposite",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
      "pass": true
     }
    }
@@ -1587,6 +3948,41 @@
     "offsets": [
      -2
     ]
+   },
+   "mc": {
+    "bridge_type": "country",
+    "gold": "China",
+    "aliases": [
+     "中国"
+    ],
+    "distractors": [
+     "Japan",
+     "France",
+     "Italy",
+     "Germany"
+    ],
+    "distractor_aliases": {
+     "Japan": [
+      "日本"
+     ],
+     "France": [
+      "法国"
+     ],
+     "Italy": [
+      "意大利"
+     ],
+     "Germany": [
+      "德国"
+     ]
+    },
+    "topic_confusers": 4,
+    "distractors_v2": [
+     "Mexico",
+     "Scotland",
+     "Sweden",
+     "Netherlands"
+    ],
+    "list_source": "v3"
    },
    "id": "firstletter-greatwall-country",
    "adapt": {
@@ -1614,6 +4010,45 @@
      -1
     ]
    },
+   "mc": {
+    "bridge_type": "month",
+    "gold": "October",
+    "aliases": [
+     "Oct",
+     "十月"
+    ],
+    "distractors": [
+     "August",
+     "December",
+     "July",
+     "April"
+    ],
+    "distractor_aliases": {
+     "August": [
+      "八月"
+     ],
+     "December": [
+      "Dec",
+      "十二月"
+     ],
+     "July": [
+      "Jul",
+      "七月"
+     ],
+     "April": [
+      "Apr",
+      "四月"
+     ]
+    },
+    "topic_confusers": 4,
+    "distractors_v2": [
+     "March",
+     "September",
+     "February",
+     "August"
+    ],
+    "list_source": "v3+observed"
+   },
    "id": "firstletter-halloween-month",
    "adapt": {
     "origin": "original",
@@ -1639,6 +4074,44 @@
     "offsets": [
      -1
     ]
+   },
+   "mc": {
+    "bridge_type": "country",
+    "gold": "France",
+    "aliases": [
+     "法国"
+    ],
+    "distractors": [
+     "United States",
+     "Japan",
+     "China",
+     "India"
+    ],
+    "distractor_aliases": {
+     "United States": [
+      "USA",
+      "United States of America",
+      "America",
+      "美国"
+     ],
+     "Japan": [
+      "日本"
+     ],
+     "China": [
+      "中国"
+     ],
+     "India": [
+      "印度"
+     ]
+    },
+    "topic_confusers": 4,
+    "distractors_v2": [
+     "Canada",
+     "Japan",
+     "Argentina",
+     "Australia"
+    ],
+    "list_source": "v3"
    },
    "id": "bf-eiffel-continent",
    "adapt": {
@@ -1666,6 +4139,42 @@
      -1
     ]
    },
+   "mc": {
+    "bridge_type": "country",
+    "gold": "Australia",
+    "aliases": [
+     "澳洲",
+     "澳大利亚"
+    ],
+    "distractors": [
+     "France",
+     "Japan",
+     "China",
+     "Italy"
+    ],
+    "distractor_aliases": {
+     "France": [
+      "法国"
+     ],
+     "Japan": [
+      "日本"
+     ],
+     "China": [
+      "中国"
+     ],
+     "Italy": [
+      "意大利"
+     ]
+    },
+    "topic_confusers": 4,
+    "distractors_v2": [
+     "Japan",
+     "Scotland",
+     "Denmark",
+     "Norway"
+    ],
+    "list_source": "v3"
+   },
    "id": "bf-kangaroo-capital",
    "adapt": {
     "origin": "original",
@@ -1691,6 +4200,44 @@
     "offsets": [
      -1
     ]
+   },
+   "mc": {
+    "bridge_type": "country",
+    "gold": "Canada",
+    "aliases": [
+     "加拿大"
+    ],
+    "distractors": [
+     "United States",
+     "Japan",
+     "Germany",
+     "France"
+    ],
+    "distractor_aliases": {
+     "United States": [
+      "USA",
+      "United States of America",
+      "America",
+      "美国"
+     ],
+     "Japan": [
+      "日本"
+     ],
+     "Germany": [
+      "德国"
+     ],
+     "France": [
+      "法国"
+     ]
+    },
+    "topic_confusers": 4,
+    "distractors_v2": [
+     "Russia",
+     "Ireland",
+     "Sweden",
+     "Switzerland"
+    ],
+    "list_source": "v3"
    },
    "id": "bf-mapleleaf-capital",
    "adapt": {
@@ -1718,6 +4265,41 @@
      -1
     ]
    },
+   "mc": {
+    "bridge_type": "country",
+    "gold": "Greece",
+    "aliases": [
+     "希腊"
+    ],
+    "distractors": [
+     "Ireland",
+     "Norway",
+     "Japan",
+     "Sweden"
+    ],
+    "distractor_aliases": {
+     "Ireland": [
+      "爱尔兰"
+     ],
+     "Norway": [
+      "挪威"
+     ],
+     "Japan": [
+      "日本"
+     ],
+     "Sweden": [
+      "瑞典"
+     ]
+    },
+    "topic_confusers": 4,
+    "distractors_v2": [
+     "Ireland",
+     "Norway",
+     "Japan",
+     "Sweden"
+    ],
+    "list_source": "v2"
+   },
    "id": "bf-olympia-language",
    "adapt": {
     "origin": "original",
@@ -1744,11 +4326,46 @@
      -1
     ]
    },
+   "mc": {
+    "bridge_type": "country",
+    "gold": "Sweden",
+    "aliases": [
+     "瑞典"
+    ],
+    "distractors": [
+     "New Zealand",
+     "Italy",
+     "Nepal",
+     "France"
+    ],
+    "distractor_aliases": {
+     "New Zealand": [
+      "新西兰"
+     ],
+     "Italy": [
+      "意大利"
+     ],
+     "Nepal": [
+      "尼泊尔"
+     ],
+     "France": [
+      "法国"
+     ]
+    },
+    "topic_confusers": 4,
+    "distractors_v2": [
+     "New Zealand",
+     "Italy",
+     "Nepal",
+     "France"
+    ],
+    "list_source": "v2"
+   },
    "id": "b3-mh-ikea-capital",
    "adapt": {
     "origin": "original",
     "gate": {
-     "rate": 0.9,
+     "rate": 1.0,
      "pass": true
     }
    }
@@ -1769,6 +4386,42 @@
     "offsets": [
      -1
     ]
+   },
+   "mc": {
+    "bridge_type": "country",
+    "gold": "Denmark",
+    "aliases": [
+     "丹麦"
+    ],
+    "distractors": [
+     "Mexico",
+     "Australia",
+     "Brazil",
+     "Russia"
+    ],
+    "distractor_aliases": {
+     "Mexico": [
+      "墨西哥"
+     ],
+     "Australia": [
+      "澳洲",
+      "澳大利亚"
+     ],
+     "Brazil": [
+      "巴西"
+     ],
+     "Russia": [
+      "俄罗斯"
+     ]
+    },
+    "topic_confusers": 4,
+    "distractors_v2": [
+     "Mexico",
+     "Australia",
+     "Brazil",
+     "Russia"
+    ],
+    "list_source": "v2"
    },
    "id": "b3-mh-lego-capital",
    "adapt": {
@@ -1796,6 +4449,43 @@
      -1
     ]
    },
+   "mc": {
+    "bridge_type": "country",
+    "gold": "Italy",
+    "aliases": [
+     "意大利"
+    ],
+    "distractors": [
+     "Japan",
+     "China",
+     "India",
+     "Australia"
+    ],
+    "distractor_aliases": {
+     "Japan": [
+      "日本"
+     ],
+     "China": [
+      "中国",
+      "PRC"
+     ],
+     "India": [
+      "印度"
+     ],
+     "Australia": [
+      "澳洲",
+      "澳大利亚"
+     ]
+    },
+    "topic_confusers": 4,
+    "distractors_v2": [
+     "Australia",
+     "New Zealand",
+     "Mexico",
+     "Canada"
+    ],
+    "list_source": "v3"
+   },
    "id": "b3-mh-pizza-continent",
    "adapt": {
     "origin": "original",
@@ -1821,6 +4511,41 @@
     "offsets": [
      -1
     ]
+   },
+   "mc": {
+    "bridge_type": "planet",
+    "gold": "Mars",
+    "aliases": [
+     "火星"
+    ],
+    "distractors": [
+     "Uranus",
+     "Neptune",
+     "Jupiter",
+     "Venus"
+    ],
+    "distractor_aliases": {
+     "Uranus": [
+      "天王星"
+     ],
+     "Neptune": [
+      "海王星"
+     ],
+     "Jupiter": [
+      "木星"
+     ],
+     "Venus": [
+      "金星"
+     ]
+    },
+    "topic_confusers": 4,
+    "distractors_v2": [
+     "Uranus",
+     "Neptune",
+     "Jupiter",
+     "Venus"
+    ],
+    "list_source": "v2"
    },
    "id": "b3-mh-redplanet-moons",
    "adapt": {
@@ -1848,11 +4573,50 @@
      -1
     ]
    },
+   "mc": {
+    "bridge_type": "mountain",
+    "gold": "Everest",
+    "aliases": [
+     "Mount Everest",
+     "珠穆朗玛峰",
+     "珠峰"
+    ],
+    "distractors": [
+     "Kilimanjaro",
+     "Denali",
+     "Mont Blanc",
+     "Matterhorn"
+    ],
+    "distractor_aliases": {
+     "Kilimanjaro": [
+      "乞力马扎罗"
+     ],
+     "Denali": [
+      "德纳里"
+     ],
+     "Mont Blanc": [
+      "勃朗峰"
+     ],
+     "Matterhorn": [
+      "Mont Cervin",
+      "Monte Cervino",
+      "马特洪峰"
+     ]
+    },
+    "topic_confusers": 4,
+    "distractors_v2": [
+     "Mont Blanc",
+     "Denali",
+     "Kilimanjaro",
+     "Aconcagua"
+    ],
+    "list_source": "v3"
+   },
    "id": "b3-mh-tallest-continent",
    "adapt": {
     "origin": "original",
     "gate": {
-     "rate": 0.8,
+     "rate": 0.9,
      "pass": true
     }
    }
@@ -1873,6 +4637,45 @@
     "offsets": [
      -2
     ]
+   },
+   "mc": {
+    "bridge_type": "country",
+    "gold": "Italy",
+    "aliases": [
+     "意大利"
+    ],
+    "distractors": [
+     "United States",
+     "United Kingdom",
+     "China",
+     "Japan"
+    ],
+    "distractor_aliases": {
+     "United States": [
+      "USA",
+      "America",
+      "美国"
+     ],
+     "United Kingdom": [
+      "Britain",
+      "Great Britain",
+      "英国"
+     ],
+     "China": [
+      "中国"
+     ],
+     "Japan": [
+      "日本"
+     ]
+    },
+    "topic_confusers": 4,
+    "distractors_v2": [
+     "Brazil",
+     "Denmark",
+     "Sweden",
+     "Argentina"
+    ],
+    "list_source": "v3"
    },
    "id": "colosseum-currency",
    "adapt": {
@@ -1900,33 +4703,52 @@
      -1
     ]
    },
-   "id": "dual-photosynthesis-opposite",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "firstletter-populous-country",
-   "prompt": "Fact: The first letter of the name of the world's most populous country is ",
-   "target": "C",
-   "intermediates": [
-    "China"
-   ],
-   "source": "jlens_source",
-   "consistency": 0.8,
-   "gate_variant": "chat",
-   "eval_render": "plain",
-   "readout": {
-    "kind": "last_word_token",
-    "offsets": [
-     -2
+   "mc": {
+    "bridge_type": "time of the 24-hour cycle",
+    "gold": "day",
+    "aliases": [
+     "daytime",
+     "白天"
+    ],
+    "distractors": [
+     "midnight",
+     "evening",
+     "dusk",
+     "twilight"
+    ],
+    "distractor_aliases": {
+     "midnight": [
+      "午夜",
+      "半夜"
+     ],
+     "evening": [
+      "evenings",
+      "傍晚"
+     ],
+     "dusk": [
+      "黄昏"
+     ],
+     "twilight": [
+      "暮色"
+     ]
+    },
+    "topic_confusers": 4,
+    "distractors_v2": [
+     "wet",
+     "war",
+     "soft",
+     "slow"
+    ],
+    "list_source": "v3+relabel",
+    "bridge_type_v2": "antonym word",
+    "distractors_pre_relabel": [
+     "wet",
+     "war",
+     "soft",
+     "slow"
     ]
    },
-   "id": "firstletter-populous-country",
+   "id": "dual-photosynthesis-opposite",
    "adapt": {
     "origin": "original",
     "gate": {
@@ -1952,6 +4774,41 @@
      -1
     ]
    },
+   "mc": {
+    "bridge_type": "country",
+    "gold": "Italy",
+    "aliases": [
+     "意大利"
+    ],
+    "distractors": [
+     "France",
+     "Germany",
+     "Japan",
+     "China"
+    ],
+    "distractor_aliases": {
+     "France": [
+      "法国"
+     ],
+     "Germany": [
+      "德国"
+     ],
+     "Japan": [
+      "日本"
+     ],
+     "China": [
+      "中国"
+     ]
+    },
+    "topic_confusers": 4,
+    "distractors_v2": [
+     "Spain",
+     "Egypt",
+     "Canada",
+     "Norway"
+    ],
+    "list_source": "v3"
+   },
    "id": "bf-colosseum-language",
    "adapt": {
     "origin": "original",
@@ -1966,8 +4823,7 @@
    "prompt": "Fact: The most spoken language of the country that built the Great Wall is",
    "target": "Mandarin",
    "intermediates": [
-    "China",
-    "Chinese"
+    "China"
    ],
    "source": "staging",
    "consistency": 0.8,
@@ -1978,6 +4834,42 @@
     "offsets": [
      -1
     ]
+   },
+   "mc": {
+    "bridge_type": "country",
+    "gold": "China",
+    "aliases": [
+     "中国"
+    ],
+    "distractors": [
+     "Scotland",
+     "Australia",
+     "Switzerland",
+     "Ireland"
+    ],
+    "distractor_aliases": {
+     "Scotland": [
+      "苏格兰"
+     ],
+     "Australia": [
+      "澳洲",
+      "澳大利亚"
+     ],
+     "Switzerland": [
+      "瑞士"
+     ],
+     "Ireland": [
+      "爱尔兰"
+     ]
+    },
+    "topic_confusers": 3,
+    "distractors_v2": [
+     "Scotland",
+     "Australia",
+     "Switzerland",
+     "Ireland"
+    ],
+    "list_source": "v2"
    },
    "id": "bf-greatwall-language",
    "adapt": {
@@ -2005,6 +4897,43 @@
      -1
     ]
    },
+   "mc": {
+    "bridge_type": "continent",
+    "gold": "Africa",
+    "aliases": [
+     "非洲"
+    ],
+    "distractors": [
+     "South America",
+     "Asia",
+     "Europe",
+     "North America"
+    ],
+    "distractor_aliases": {
+     "South America": [
+      "南美",
+      "南美洲"
+     ],
+     "Asia": [
+      "亚洲"
+     ],
+     "Europe": [
+      "欧洲"
+     ],
+     "North America": [
+      "北美",
+      "北美洲"
+     ]
+    },
+    "topic_confusers": 4,
+    "distractors_v2": [
+     "Europe",
+     "North America",
+     "Oceania",
+     "South America"
+    ],
+    "list_source": "v3"
+   },
    "id": "bf-nile-desert",
    "adapt": {
     "origin": "original",
@@ -2030,6 +4959,44 @@
     "offsets": [
      -1
     ]
+   },
+   "mc": {
+    "bridge_type": "person",
+    "gold": "Einstein",
+    "aliases": [
+     "Albert Einstein",
+     "爱因斯坦"
+    ],
+    "distractors": [
+     "Shakespeare",
+     "Aristotle",
+     "Newton",
+     "Plato"
+    ],
+    "distractor_aliases": {
+     "Shakespeare": [
+      "William Shakespeare",
+      "莎士比亚"
+     ],
+     "Aristotle": [
+      "亚里士多德"
+     ],
+     "Newton": [
+      "Isaac Newton",
+      "牛顿"
+     ],
+     "Plato": [
+      "柏拉图"
+     ]
+    },
+    "topic_confusers": 4,
+    "distractors_v2": [
+     "Beethoven",
+     "Darwin",
+     "Mozart",
+     "Homer"
+    ],
+    "list_source": "v3"
    },
    "id": "bf-relativity-firstname",
    "adapt": {
@@ -2057,6 +5024,44 @@
      -1
     ]
    },
+   "mc": {
+    "bridge_type": "country",
+    "gold": "India",
+    "aliases": [
+     "印度"
+    ],
+    "distractors": [
+     "Brazil",
+     "Germany",
+     "France",
+     "United States"
+    ],
+    "distractor_aliases": {
+     "Brazil": [
+      "巴西"
+     ],
+     "Germany": [
+      "德国"
+     ],
+     "France": [
+      "法国"
+     ],
+     "United States": [
+      "USA",
+      "America",
+      "United States of America",
+      "美国"
+     ]
+    },
+    "topic_confusers": 4,
+    "distractors_v2": [
+     "Portugal",
+     "Spain",
+     "Greece",
+     "Netherlands"
+    ],
+    "list_source": "v3"
+   },
    "id": "bf-tajmahal-continent",
    "adapt": {
     "origin": "original",
@@ -2082,6 +5087,41 @@
     "offsets": [
      -1
     ]
+   },
+   "mc": {
+    "bridge_type": "country",
+    "gold": "Mexico",
+    "aliases": [
+     "墨西哥"
+    ],
+    "distractors": [
+     "Sweden",
+     "Canada",
+     "Brazil",
+     "Russia"
+    ],
+    "distractor_aliases": {
+     "Sweden": [
+      "瑞典"
+     ],
+     "Canada": [
+      "加拿大"
+     ],
+     "Brazil": [
+      "巴西"
+     ],
+     "Russia": [
+      "俄罗斯"
+     ]
+    },
+    "topic_confusers": 4,
+    "distractors_v2": [
+     "Sweden",
+     "Canada",
+     "Brazil",
+     "Russia"
+    ],
+    "list_source": "v2"
    },
    "id": "b3-mh-aztec-language",
    "adapt": {
@@ -2109,644 +5149,45 @@
      -1
     ]
    },
+   "mc": {
+    "bridge_type": "city",
+    "gold": "Chicago",
+    "aliases": [
+     "芝加哥"
+    ],
+    "distractors": [
+     "London",
+     "Paris",
+     "Los Angeles",
+     "Tokyo"
+    ],
+    "distractor_aliases": {
+     "London": [
+      "伦敦"
+     ],
+     "Paris": [
+      "巴黎"
+     ],
+     "Los Angeles": [
+      "L.A.",
+      "洛杉矶"
+     ],
+     "Tokyo": [
+      "东京"
+     ]
+    },
+    "topic_confusers": 4,
+    "distractors_v2": [
+     "Sydney",
+     "Houston",
+     "Mumbai",
+     "Moscow"
+    ],
+    "list_source": "v3"
+   },
    "id": "b3-mh-windycity-state",
    "adapt": {
     "origin": "original",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multihop-au-t1-w100c0-mh-istanbul-capital",
-   "prompt": "Fact: The capital of the country whose largest city is Istanbul is",
-   "target": "Ankara",
-   "intermediates": [
-    "Turkey"
-   ],
-   "bridge_question": "Which country's largest city is Istanbul?",
-   "bridge_aliases": [
-    "Türkiye",
-    "Republic of Turkey"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "last_word_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for qwen3.5-9b: Use famous bridges and common relations: country -> capital / language / currency, author -> famous book, element -> symbol.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use famous bridges and common relations: country -> capital / language / currency, author -> famous book, element -> symbol."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 100,
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multihop-au-t1-w100c0-mh-machupicchu-capital",
-   "prompt": "Fact: The capital of the country home to Machu Picchu is",
-   "target": "Lima",
-   "intermediates": [
-    "Peru"
-   ],
-   "bridge_question": "In which country is Machu Picchu located?",
-   "bridge_aliases": [
-    "Republic of Peru"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "last_word_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for qwen3.5-9b: Use famous bridges and common relations: country -> capital / language / currency, author -> famous book, element -> symbol.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use famous bridges and common relations: country -> capital / language / currency, author -> famous book, element -> symbol."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 100,
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multihop-au-t1-w100c0-mh-mozart-capital",
-   "prompt": "Fact: The capital of the country where Mozart was born is",
-   "target": "Vienna",
-   "intermediates": [
-    "Austria"
-   ],
-   "bridge_question": "In which modern country was Mozart born?",
-   "bridge_aliases": [
-    "Republic of Austria",
-    "Österreich"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "last_word_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for qwen3.5-9b: Use famous bridges and common relations: country -> capital / language / currency, author -> famous book, element -> symbol.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use famous bridges and common relations: country -> capital / language / currency, author -> famous book, element -> symbol."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 100,
-    "gate": {
-     "rate": 0.8,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multihop-au-t1-w100c0-mh-lonestar-capital",
-   "prompt": "Fact: The capital city of the U.S. state nicknamed the Lone Star State is",
-   "target": "Austin",
-   "intermediates": [
-    "Texas"
-   ],
-   "bridge_question": "Which U.S. state is nicknamed the Lone Star State?",
-   "bridge_aliases": [
-    "TX"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "last_word_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for qwen3.5-9b: Use famous bridges and common relations: country -> capital / language / currency, author -> famous book, element -> symbol.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use famous bridges and common relations: country -> capital / language / currency, author -> famous book, element -> symbol."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 100,
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multihop-au-t1-w100c0-mh-bigben-currency",
-   "prompt": "Fact: The currency of the country where Big Ben stands is the",
-   "target": "pound",
-   "intermediates": [
-    "United Kingdom"
-   ],
-   "bridge_question": "In which country does Big Ben stand?",
-   "bridge_aliases": [
-    "UK",
-    "Britain",
-    "Great Britain",
-    "England"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "last_word_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for qwen3.5-9b: Use famous bridges and common relations: country -> capital / language / currency, author -> famous book, element -> symbol.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use famous bridges and common relations: country -> capital / language / currency, author -> famous book, element -> symbol."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 100,
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multihop-au-t1-w100c0-mh-liberty-currency",
-   "prompt": "Fact: The currency of the country home to the Statue of Liberty is the",
-   "target": "dollar",
-   "intermediates": [
-    "United States"
-   ],
-   "bridge_question": "In which country is the Statue of Liberty located?",
-   "bridge_aliases": [
-    "USA",
-    "US",
-    "America",
-    "United States of America"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "last_word_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for qwen3.5-9b: Use famous bridges and common relations: country -> capital / language / currency, author -> famous book, element -> symbol.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use famous bridges and common relations: country -> capital / language / currency, author -> famous book, element -> symbol."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 100,
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multihop-au-t1-w100c0-mh-bangkok-currency",
-   "prompt": "Fact: The currency of the country whose capital is Bangkok is the",
-   "target": "baht",
-   "intermediates": [
-    "Thailand"
-   ],
-   "bridge_question": "Which country has Bangkok as its capital?",
-   "bridge_aliases": [
-    "Siam",
-    "Kingdom of Thailand"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "last_word_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for qwen3.5-9b: Use famous bridges and common relations: country -> capital / language / currency, author -> famous book, element -> symbol.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use famous bridges and common relations: country -> capital / language / currency, author -> famous book, element -> symbol."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 100,
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multihop-au-t1-w100c0-mh-berlin-language",
-   "prompt": "Fact: The official language of the country whose capital is Berlin is",
-   "target": "German",
-   "intermediates": [
-    "Germany"
-   ],
-   "bridge_question": "Which country has Berlin as its capital?",
-   "bridge_aliases": [
-    "Deutschland",
-    "Federal Republic of Germany"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "last_word_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for qwen3.5-9b: Use famous bridges and common relations: country -> capital / language / currency, author -> famous book, element -> symbol.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use famous bridges and common relations: country -> capital / language / currency, author -> famous book, element -> symbol."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 100,
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multihop-au-t1-w100c0-mh-hanoi-language",
-   "prompt": "Fact: The official language of the country whose capital is Hanoi is",
-   "target": "Vietnamese",
-   "intermediates": [
-    "Vietnam"
-   ],
-   "bridge_question": "Which country has Hanoi as its capital?",
-   "bridge_aliases": [
-    "Viet Nam"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "last_word_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for qwen3.5-9b: Use famous bridges and common relations: country -> capital / language / currency, author -> famous book, element -> symbol.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use famous bridges and common relations: country -> capital / language / currency, author -> famous book, element -> symbol."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 100,
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multihop-au-t1-w100c0-mh-lightest-symbol",
-   "prompt": "Fact: The chemical symbol of the lightest element is",
-   "target": "H",
-   "intermediates": [
-    "hydrogen"
-   ],
-   "bridge_question": "What is the lightest chemical element?",
-   "bridge_aliases": [
-    "element 1"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "last_word_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for qwen3.5-9b: Use famous bridges and common relations: country -> capital / language / currency, author -> famous book, element -> symbol.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use famous bridges and common relations: country -> capital / language / currency, author -> famous book, element -> symbol."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 100,
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multihop-au-t1-w100c0-mh-liquidmetal-symbol",
-   "prompt": "Fact: The chemical symbol of the only metal that is liquid at room temperature is",
-   "target": "Hg",
-   "intermediates": [
-    "mercury"
-   ],
-   "bridge_question": "Which metal is liquid at room temperature?",
-   "bridge_aliases": [
-    "quicksilver"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "last_word_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for qwen3.5-9b: Use famous bridges and common relations: country -> capital / language / currency, author -> famous book, element -> symbol.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use famous bridges and common relations: country -> capital / language / currency, author -> famous book, element -> symbol."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 100,
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multihop-au-t1-w100c0-mh-secondplace-symbol",
-   "prompt": "Fact: The chemical symbol of the metal of Olympic second-place medals is",
-   "target": "Ag",
-   "intermediates": [
-    "silver"
-   ],
-   "bridge_question": "What metal are Olympic second-place medals named after?",
-   "bridge_aliases": [
-    "argentum"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "last_word_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for qwen3.5-9b: Use famous bridges and common relations: country -> capital / language / currency, author -> famous book, element -> symbol.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use famous bridges and common relations: country -> capital / language / currency, author -> famous book, element -> symbol."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 100,
-    "gate": {
-     "rate": 0.9,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multihop-au-t1-w100c0-mh-animalfarm-novel",
-   "prompt": "Fact: The dystopian novel titled with a year, by the author of Animal Farm, is",
-   "target": "1984",
-   "intermediates": [
-    "George Orwell"
-   ],
-   "bridge_question": "Who wrote Animal Farm?",
-   "bridge_aliases": [
-    "Orwell",
-    "Eric Blair"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "last_word_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for qwen3.5-9b: Use famous bridges and common relations: country -> capital / language / currency, author -> famous book, element -> symbol.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use famous bridges and common relations: country -> capital / language / currency, author -> famous book, element -> symbol."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 100,
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multihop-au-t1-w100c0-mh-hamlet-scottishplay",
-   "prompt": "Fact: The famous Scottish tragedy by the author of Hamlet is",
-   "target": "Macbeth",
-   "intermediates": [
-    "William Shakespeare"
-   ],
-   "bridge_question": "Who wrote Hamlet?",
-   "bridge_aliases": [
-    "Shakespeare",
-    "the Bard"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "last_word_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for qwen3.5-9b: Use famous bridges and common relations: country -> capital / language / currency, author -> famous book, element -> symbol.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use famous bridges and common relations: country -> capital / language / currency, author -> famous book, element -> symbol."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 100,
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multihop-au-t1-w100c0-mh-seagod-planet",
-   "prompt": "Fact: The planet named after the Roman counterpart of the Greek god of the sea is",
-   "target": "Neptune",
-   "intermediates": [
-    "Poseidon"
-   ],
-   "bridge_question": "Who is the Greek god of the sea?",
-   "bridge_aliases": [],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "last_word_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for qwen3.5-9b: Use famous bridges and common relations: country -> capital / language / currency, author -> famous book, element -> symbol.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use famous bridges and common relations: country -> capital / language / currency, author -> famous book, element -> symbol."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 100,
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multihop-au-t1-w100c0-mh-hungary-river",
-   "prompt": "Fact: The river that flows through the capital of Hungary is the",
-   "target": "Danube",
-   "intermediates": [
-    "Budapest"
-   ],
-   "bridge_question": "What is the capital of Hungary?",
-   "bridge_aliases": [],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "last_word_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for qwen3.5-9b: Use famous bridges and common relations: country -> capital / language / currency, author -> famous book, element -> symbol.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use famous bridges and common relations: country -> capital / language / currency, author -> famous book, element -> symbol."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 100,
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multihop-au-t1-w100c0-mh-moonlight-birthplace",
-   "prompt": "Fact: The city where the composer of the Moonlight Sonata was born is",
-   "target": "Bonn",
-   "intermediates": [
-    "Ludwig van Beethoven"
-   ],
-   "bridge_question": "Who composed the Moonlight Sonata?",
-   "bridge_aliases": [
-    "Beethoven"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "last_word_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for qwen3.5-9b: Use famous bridges and common relations: country -> capital / language / currency, author -> famous book, element -> symbol.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use famous bridges and common relations: country -> capital / language / currency, author -> famous book, element -> symbol."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 100,
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multihop-au-t1-w100c0-mh-muhammad-holybook",
-   "prompt": "Fact: The holy book of the religion whose prophet is Muhammad is the",
-   "target": "Quran",
-   "intermediates": [
-    "Islam"
-   ],
-   "bridge_question": "Which religion has Muhammad as its prophet?",
-   "bridge_aliases": [
-    "Islamic faith"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "last_word_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for qwen3.5-9b: Use famous bridges and common relations: country -> capital / language / currency, author -> famous book, element -> symbol.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use famous bridges and common relations: country -> capital / language / currency, author -> famous book, element -> symbol."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 100,
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multihop-au-t1-w100c1-mh-tintin-capital",
-   "prompt": "Fact: The capital of the country famous for Tintin, waffles and chocolate is",
-   "target": "Brussels",
-   "intermediates": [
-    "Belgium"
-   ],
-   "bridge_question": "Which country is famous for Tintin, waffles and chocolate?",
-   "bridge_aliases": [
-    "Kingdom of Belgium"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "last_word_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for qwen3.5-9b: Use famous bridges and common relations: country -> capital / language / currency, author -> famous book, element -> symbol.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use famous bridges and common relations: country -> capital / language / currency, author -> famous book, element -> symbol."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 100,
     "gate": {
      "rate": 1.0,
      "pass": true

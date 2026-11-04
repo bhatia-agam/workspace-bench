@@ -2,10 +2,34 @@
  "family": "multilingual",
  "gate": "Qwen3.6-27B behavioral: >=8/10 correct at temp 0.7 (greedy-verified first); association scored against association_aliases.json (phrase-aware, echo-guarded); poetry scored by committed rhyme",
  "eval_render_note": "EVAL RENDER: feed `prompt` verbatim as plain text, NO chat template (directed-modulation is the only chat-templated family). `gate_variant` records how the item was behaviorally verified and does NOT affect the eval read.",
+ "version": 3,
+ "contract": {
+  "multi_token": false,
+  "include_target": false,
+  "conjunctive_units": true,
+  "native_langs": [
+   "en"
+  ]
+ },
+ "v2": "v2 (plan 0040, Camila 2026-10-30): the readout must NAME the passage's language and write the intermediate in English or the model's native language (contract.native_langs); every unit is required; the language unit holds language names only.",
+ "built_by": "scripts/build_multilingual_v2.py (curation: scripts/multilingual_v2_curation.py)",
+ "v1_bank": "evals/multilingual/items.json",
+ "n_items": 99,
+ "dropped": {
+  "b3-ml-es-capital-france": "the gloss Paris and the target París coincide after folding, so an English mention cannot be told from the L2 answer"
+ },
+ "supersedes": "items_v2.json",
+ "frozen": "2026-11-01",
+ "r4_mc": {
+  "script": "scripts/build_r4_mc_banks.py",
+  "rule": "round 4 (Camila r2 MC leakage standard): only the MC distractor lists change. Concept lists: four of the other items' golds of the same mc_type, sampled without replacement weighted by gold frequency (never the gold or a prompt concept; filled from the v2 list). Language lists: the four other gold languages of this bank closest to the gold (shared family 4, script 2, region 1; ties seeded by family and gold). ",
+  "lang_rule": "wsbench.multitoken.options.r4_language_distractors (R4_LANG_INFO / R4_LANG_POOLS)",
+  "lists_changed": 198
+ },
  "adapt": {
   "model": "olmo-3-7b",
   "hf_id": "allenai/Olmo-3-7B-Instruct",
-  "frozen": "2026-10-24"
+  "frozen": "2026-11-04"
  },
  "items": [
   {
@@ -30,11 +54,112 @@
      -1
     ]
    },
+   "lang": "de",
+   "mc_type": "opposite",
+   "prompt_concepts": [
+    "above",
+    "high",
+    "place",
+    "top",
+    "up"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "down",
+       "below",
+       "low",
+       "bottom"
+      ]
+     },
+     "match": [
+      "down",
+      "below",
+      "low",
+      "bottom"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "German"
+      ],
+      "de": [
+       "Deutsch",
+       "auf Deutsch",
+       "deutsche Sprache",
+       "deutschen Sprache"
+      ]
+     },
+     "match": [
+      "German",
+      "Deutsch",
+      "auf Deutsch",
+      "deutsche Sprache",
+      "deutschen Sprache"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "down",
+     "distractors": [
+      "small",
+      "slow",
+      "short",
+      "right"
+     ]
+    },
+    "language": {
+     "gold": "German",
+     "distractors": [
+      "Danish",
+      "Dutch",
+      "Irish",
+      "Czech"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1,
+       1,
+       1,
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "de": [
+       1,
+       2,
+       3,
+       3
+      ]
+     }
+    },
+    "target": 1
+   },
    "id": "de-place-up-down",
    "adapt": {
     "origin": "original",
     "gate": {
-     "rate": 0.9,
+     "rate": 1.0,
      "pass": true
     }
    }
@@ -60,6 +185,101 @@
     "offsets": [
      -1
     ]
+   },
+   "lang": "de",
+   "mc_type": "opposite",
+   "prompt_concepts": [
+    "big",
+    "large",
+    "short",
+    "size",
+    "tall"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "small",
+       "little"
+      ]
+     },
+     "match": [
+      "small",
+      "little"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "German"
+      ],
+      "de": [
+       "Deutsch",
+       "auf Deutsch",
+       "deutsche Sprache",
+       "deutschen Sprache"
+      ]
+     },
+     "match": [
+      "German",
+      "Deutsch",
+      "auf Deutsch",
+      "deutsche Sprache",
+      "deutschen Sprache"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "small",
+     "distractors": [
+      "cold",
+      "down",
+      "old",
+      "last"
+     ]
+    },
+    "language": {
+     "gold": "German",
+     "distractors": [
+      "Danish",
+      "Dutch",
+      "Irish",
+      "Czech"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1,
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "de": [
+       1,
+       2,
+       3,
+       3
+      ]
+     }
+    },
+    "target": 1
    },
    "id": "de-size-big-small",
    "adapt": {
@@ -92,6 +312,102 @@
      -1
     ]
    },
+   "lang": "es",
+   "mc_type": "number",
+   "prompt_concepts": [
+    "four",
+    "half"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "two",
+       "2"
+      ]
+     },
+     "match": [
+      "two",
+      "2"
+     ],
+     "numeric_match": "standalone"
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Spanish"
+      ],
+      "es": [
+       "español",
+       "castellano",
+       "en español",
+       "lengua española",
+       "idioma español"
+      ]
+     },
+     "match": [
+      "Spanish",
+      "español",
+      "castellano",
+      "en español",
+      "lengua española",
+      "idioma español"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "two",
+     "distractors": [
+      "ten",
+      "six",
+      "three",
+      "five"
+     ]
+    },
+    "language": {
+     "gold": "Spanish",
+     "distractors": [
+      "French",
+      "Portuguese",
+      "Italian",
+      "Irish"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1,
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "es": [
+       1,
+       3,
+       2,
+       4,
+       3
+      ]
+     }
+    },
+    "target": 1
+   },
    "id": "es-half-four",
    "adapt": {
     "origin": "original",
@@ -122,6 +438,98 @@
     "offsets": [
      -1
     ]
+   },
+   "lang": "es",
+   "mc_type": "month",
+   "prompt_concepts": [
+    "September",
+    "month"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "October"
+      ]
+     },
+     "match": [
+      "October"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Spanish"
+      ],
+      "es": [
+       "español",
+       "castellano",
+       "en español",
+       "lengua española",
+       "idioma español"
+      ]
+     },
+     "match": [
+      "Spanish",
+      "español",
+      "castellano",
+      "en español",
+      "lengua española",
+      "idioma español"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "October",
+     "distractors": [
+      "February",
+      "July",
+      "May",
+      "November"
+     ]
+    },
+    "language": {
+     "gold": "Spanish",
+     "distractors": [
+      "French",
+      "Portuguese",
+      "Italian",
+      "Irish"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "es": [
+       1,
+       3,
+       2,
+       4,
+       3
+      ]
+     }
+    },
+    "target": 1
    },
    "id": "es-month-after-sep",
    "adapt": {
@@ -154,6 +562,104 @@
      -1
     ]
    },
+   "lang": "es",
+   "mc_type": "opposite",
+   "prompt_concepts": [
+    "big",
+    "large",
+    "short",
+    "size",
+    "tall"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "small",
+       "little"
+      ]
+     },
+     "match": [
+      "small",
+      "little"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Spanish"
+      ],
+      "es": [
+       "español",
+       "castellano",
+       "en español",
+       "lengua española",
+       "idioma español"
+      ]
+     },
+     "match": [
+      "Spanish",
+      "español",
+      "castellano",
+      "en español",
+      "lengua española",
+      "idioma español"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "small",
+     "distractors": [
+      "young",
+      "cold",
+      "far",
+      "down"
+     ]
+    },
+    "language": {
+     "gold": "Spanish",
+     "distractors": [
+      "French",
+      "Portuguese",
+      "Italian",
+      "Irish"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1,
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "es": [
+       1,
+       3,
+       2,
+       4,
+       3
+      ]
+     }
+    },
+    "target": 1
+   },
    "id": "es-size-big-small",
    "adapt": {
     "origin": "original",
@@ -184,6 +690,92 @@
     "offsets": [
      -1
     ]
+   },
+   "lang": "fr",
+   "mc_type": "month",
+   "prompt_concepts": [
+    "May",
+    "month"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "June"
+      ]
+     },
+     "match": [
+      "June"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "French"
+      ],
+      "fr": [
+       "français",
+       "en français",
+       "langue française"
+      ]
+     },
+     "match": [
+      "French",
+      "français",
+      "en français",
+      "langue française"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "June",
+     "distractors": [
+      "July",
+      "November",
+      "March",
+      "April"
+     ]
+    },
+    "language": {
+     "gold": "French",
+     "distractors": [
+      "Spanish",
+      "Portuguese",
+      "Italian",
+      "Polish"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "fr": [
+       1,
+       2,
+       2
+      ]
+     }
+    },
+    "target": 1
    },
    "id": "fr-month-after-may",
    "adapt": {
@@ -216,6 +808,92 @@
      -1
     ]
    },
+   "lang": "fr",
+   "mc_type": "opposite",
+   "prompt_concepts": [
+    "first",
+    "order"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "last"
+      ]
+     },
+     "match": [
+      "last"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "French"
+      ],
+      "fr": [
+       "français",
+       "en français",
+       "langue française"
+      ]
+     },
+     "match": [
+      "French",
+      "français",
+      "en français",
+      "langue française"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "last",
+     "distractors": [
+      "down",
+      "small",
+      "slow",
+      "far"
+     ]
+    },
+    "language": {
+     "gold": "French",
+     "distractors": [
+      "Spanish",
+      "Portuguese",
+      "Italian",
+      "Polish"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "fr": [
+       1,
+       2,
+       2
+      ]
+     }
+    },
+    "target": 1
+   },
    "id": "fr-order-first-last",
    "adapt": {
     "origin": "original",
@@ -246,6 +924,96 @@
     "offsets": [
      -1
     ]
+   },
+   "lang": "fr",
+   "mc_type": "opposite",
+   "prompt_concepts": [
+    "close",
+    "near",
+    "place"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "far",
+       "far away"
+      ]
+     },
+     "match": [
+      "far",
+      "far away"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "French"
+      ],
+      "fr": [
+       "français",
+       "en français",
+       "langue française"
+      ]
+     },
+     "match": [
+      "French",
+      "français",
+      "en français",
+      "langue française"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "far",
+     "distractors": [
+      "closed",
+      "down",
+      "slow",
+      "cold"
+     ]
+    },
+    "language": {
+     "gold": "French",
+     "distractors": [
+      "Spanish",
+      "Portuguese",
+      "Italian",
+      "Polish"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1,
+       2
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "fr": [
+       1,
+       2,
+       2
+      ]
+     }
+    },
+    "target": 1
    },
    "id": "fr-place-near-far",
    "adapt": {
@@ -278,6 +1046,104 @@
      -1
     ]
    },
+   "lang": "fr",
+   "mc_type": "opposite",
+   "prompt_concepts": [
+    "above",
+    "high",
+    "place",
+    "top",
+    "up"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "down",
+       "below",
+       "low",
+       "bottom"
+      ]
+     },
+     "match": [
+      "down",
+      "below",
+      "low",
+      "bottom"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "French"
+      ],
+      "fr": [
+       "français",
+       "en français",
+       "langue française"
+      ]
+     },
+     "match": [
+      "French",
+      "français",
+      "en français",
+      "langue française"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "down",
+     "distractors": [
+      "small",
+      "young",
+      "new",
+      "slow"
+     ]
+    },
+    "language": {
+     "gold": "French",
+     "distractors": [
+      "Spanish",
+      "Portuguese",
+      "Italian",
+      "Polish"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1,
+       1,
+       1,
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "fr": [
+       1,
+       2,
+       2
+      ]
+     }
+    },
+    "target": 1
+   },
    "id": "fr-place-up-down",
    "adapt": {
     "origin": "original",
@@ -308,6 +1174,98 @@
     "offsets": [
      -1
     ]
+   },
+   "lang": "fr",
+   "mc_type": "opposite",
+   "prompt_concepts": [
+    "big",
+    "large",
+    "short",
+    "size",
+    "tall"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "small",
+       "little"
+      ]
+     },
+     "match": [
+      "small",
+      "little"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "French"
+      ],
+      "fr": [
+       "français",
+       "en français",
+       "langue française"
+      ]
+     },
+     "match": [
+      "French",
+      "français",
+      "en français",
+      "langue française"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "small",
+     "distractors": [
+      "closed",
+      "right",
+      "down",
+      "last"
+     ]
+    },
+    "language": {
+     "gold": "French",
+     "distractors": [
+      "Spanish",
+      "Portuguese",
+      "Italian",
+      "Polish"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1,
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "fr": [
+       1,
+       2,
+       2
+      ]
+     }
+    },
+    "target": 1
    },
    "id": "fr-size-big-small",
    "adapt": {
@@ -340,6 +1298,92 @@
      -1
     ]
    },
+   "lang": "pt",
+   "mc_type": "month",
+   "prompt_concepts": [
+    "August",
+    "month"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "July"
+      ]
+     },
+     "match": [
+      "July"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Portuguese"
+      ],
+      "pt": [
+       "português",
+       "em português",
+       "língua portuguesa"
+      ]
+     },
+     "match": [
+      "Portuguese",
+      "português",
+      "em português",
+      "língua portuguesa"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "July",
+     "distractors": [
+      "June",
+      "February",
+      "April",
+      "October"
+     ]
+    },
+    "language": {
+     "gold": "Portuguese",
+     "distractors": [
+      "Spanish",
+      "Italian",
+      "French",
+      "Polish"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "pt": [
+       3,
+       4,
+       7
+      ]
+     }
+    },
+    "target": 1
+   },
    "id": "pt-month-before-aug",
    "adapt": {
     "origin": "original",
@@ -370,6 +1414,92 @@
     "offsets": [
      -1
     ]
+   },
+   "lang": "pt",
+   "mc_type": "opposite",
+   "prompt_concepts": [
+    "first",
+    "order"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "last"
+      ]
+     },
+     "match": [
+      "last"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Portuguese"
+      ],
+      "pt": [
+       "português",
+       "em português",
+       "língua portuguesa"
+      ]
+     },
+     "match": [
+      "Portuguese",
+      "português",
+      "em português",
+      "língua portuguesa"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "last",
+     "distractors": [
+      "down",
+      "slow",
+      "small",
+      "new"
+     ]
+    },
+    "language": {
+     "gold": "Portuguese",
+     "distractors": [
+      "Spanish",
+      "Italian",
+      "French",
+      "Polish"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "pt": [
+       3,
+       4,
+       7
+      ]
+     }
+    },
+    "target": 1
    },
    "id": "pt-order-first-last",
    "adapt": {
@@ -402,6 +1532,96 @@
      -1
     ]
    },
+   "lang": "pt",
+   "mc_type": "opposite",
+   "prompt_concepts": [
+    "close",
+    "near",
+    "place"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "far",
+       "far away"
+      ]
+     },
+     "match": [
+      "far",
+      "far away"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Portuguese"
+      ],
+      "pt": [
+       "português",
+       "em português",
+       "língua portuguesa"
+      ]
+     },
+     "match": [
+      "Portuguese",
+      "português",
+      "em português",
+      "língua portuguesa"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "far",
+     "distractors": [
+      "cold",
+      "last",
+      "closed",
+      "down"
+     ]
+    },
+    "language": {
+     "gold": "Portuguese",
+     "distractors": [
+      "Spanish",
+      "Italian",
+      "French",
+      "Polish"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1,
+       2
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "pt": [
+       3,
+       4,
+       7
+      ]
+     }
+    },
+    "target": 1
+   },
    "id": "pt-place-near-far",
    "adapt": {
     "origin": "original",
@@ -432,6 +1652,92 @@
     "offsets": [
      -1
     ]
+   },
+   "lang": "nl",
+   "mc_type": "opposite",
+   "prompt_concepts": [
+    "left",
+    "opposite"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "right"
+      ]
+     },
+     "match": [
+      "right"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Dutch"
+      ],
+      "nl": [
+       "Nederlands",
+       "in het Nederlands",
+       "Nederlandse taal"
+      ]
+     },
+     "match": [
+      "Dutch",
+      "Nederlands",
+      "in het Nederlands",
+      "Nederlandse taal"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "right",
+     "distractors": [
+      "cold",
+      "small",
+      "young",
+      "down"
+     ]
+    },
+    "language": {
+     "gold": "Dutch",
+     "distractors": [
+      "German",
+      "Danish",
+      "Irish",
+      "Polish"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "nl": [
+       3,
+       5,
+       4
+      ]
+     }
+    },
+    "target": 1
    },
    "id": "dutch-direction-left",
    "adapt": {
@@ -464,6 +1770,107 @@
      -1
     ]
    },
+   "lang": "fil",
+   "mc_type": "opposite",
+   "prompt_concepts": [
+    "above",
+    "high",
+    "opposite",
+    "top",
+    "up"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "down",
+       "below",
+       "low",
+       "bottom"
+      ]
+     },
+     "match": [
+      "down",
+      "below",
+      "low",
+      "bottom"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Filipino",
+       "Tagalog"
+      ],
+      "fil": [
+       "wikang Filipino",
+       "wikang Tagalog",
+       "sa wikang Filipino"
+      ]
+     },
+     "match": [
+      "Filipino",
+      "Tagalog",
+      "wikang Filipino",
+      "wikang Tagalog",
+      "sa wikang Filipino"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "down",
+     "distractors": [
+      "far",
+      "last",
+      "cold",
+      "small"
+     ]
+    },
+    "language": {
+     "gold": "Filipino",
+     "distractors": [
+      "Indonesian",
+      "Polish",
+      "French",
+      "Irish"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1,
+       1,
+       1,
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1,
+       2
+      ],
+      "fil": [
+       3,
+       4,
+       4
+      ]
+     }
+    },
+    "target": 1
+   },
    "id": "filipino-opposite-up",
    "adapt": {
     "origin": "original",
@@ -494,6 +1901,96 @@
     "offsets": [
      -1
     ]
+   },
+   "lang": "fr",
+   "mc_type": "number",
+   "prompt_concepts": [
+    "number",
+    "seven"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "eight",
+       "8"
+      ]
+     },
+     "match": [
+      "eight",
+      "8"
+     ],
+     "numeric_match": "standalone"
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "French"
+      ],
+      "fr": [
+       "français",
+       "en français",
+       "langue française"
+      ]
+     },
+     "match": [
+      "French",
+      "français",
+      "en français",
+      "langue française"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "eight",
+     "distractors": [
+      "four",
+      "three",
+      "five",
+      "six"
+     ]
+    },
+    "language": {
+     "gold": "French",
+     "distractors": [
+      "Spanish",
+      "Portuguese",
+      "Italian",
+      "Polish"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1,
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "fr": [
+       1,
+       2,
+       2
+      ]
+     }
+    },
+    "target": 1
    },
    "id": "french-number-seven",
    "adapt": {
@@ -526,6 +2023,92 @@
      -1
     ]
    },
+   "lang": "fr",
+   "mc_type": "month",
+   "prompt_concepts": [
+    "June",
+    "month"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "July"
+      ]
+     },
+     "match": [
+      "July"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "French"
+      ],
+      "fr": [
+       "français",
+       "en français",
+       "langue française"
+      ]
+     },
+     "match": [
+      "French",
+      "français",
+      "en français",
+      "langue française"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "July",
+     "distractors": [
+      "October",
+      "February",
+      "April",
+      "November"
+     ]
+    },
+    "language": {
+     "gold": "French",
+     "distractors": [
+      "Spanish",
+      "Portuguese",
+      "Italian",
+      "Polish"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "fr": [
+       1,
+       2,
+       2
+      ]
+     }
+    },
+    "target": 1
+   },
    "id": "frn-month-after-jun",
    "adapt": {
     "origin": "original",
@@ -556,6 +2139,96 @@
     "offsets": [
      -1
     ]
+   },
+   "lang": "it",
+   "mc_type": "number",
+   "prompt_concepts": [
+    "number",
+    "two"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "three",
+       "3"
+      ]
+     },
+     "match": [
+      "three",
+      "3"
+     ],
+     "numeric_match": "standalone"
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Italian"
+      ],
+      "it": [
+       "italiano",
+       "in italiano",
+       "lingua italiana"
+      ]
+     },
+     "match": [
+      "Italian",
+      "italiano",
+      "in italiano",
+      "lingua italiana"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "three",
+     "distractors": [
+      "eight",
+      "ten",
+      "six",
+      "five"
+     ]
+    },
+    "language": {
+     "gold": "Italian",
+     "distractors": [
+      "Spanish",
+      "French",
+      "Portuguese",
+      "Dutch"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1,
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "it": [
+       1,
+       2,
+       3
+      ]
+     }
+    },
+    "target": 1
    },
    "id": "italian-number-two",
    "adapt": {
@@ -588,6 +2261,101 @@
      -1
     ]
    },
+   "lang": "pl",
+   "mc_type": "opposite",
+   "prompt_concepts": [
+    "left",
+    "opposite"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "right"
+      ]
+     },
+     "match": [
+      "right"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Polish"
+      ],
+      "pl": [
+       "język polski",
+       "po polsku",
+       "polszczyzna",
+       "polskiego",
+       "w języku polskim"
+      ]
+     },
+     "match": [
+      "Polish",
+      "język polski",
+      "po polsku",
+      "polszczyzna",
+      "polskiego",
+      "w języku polskim"
+     ],
+     "case_sensitive": [
+      "Polish"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "right",
+     "distractors": [
+      "small",
+      "down",
+      "last",
+      "cold"
+     ]
+    },
+    "language": {
+     "gold": "Polish",
+     "distractors": [
+      "Slovak",
+      "Czech",
+      "Ukrainian",
+      "Serbian"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "pl": [
+       5,
+       3,
+       5,
+       2,
+       7
+      ]
+     }
+    },
+    "target": 1
+   },
    "id": "polish-direction-left",
    "adapt": {
     "origin": "original",
@@ -618,6 +2386,104 @@
     "offsets": [
      -1
     ]
+   },
+   "lang": "pt",
+   "mc_type": "opposite",
+   "prompt_concepts": [
+    "above",
+    "high",
+    "opposite",
+    "top",
+    "up"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "down",
+       "below",
+       "low",
+       "bottom"
+      ]
+     },
+     "match": [
+      "down",
+      "below",
+      "low",
+      "bottom"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Portuguese"
+      ],
+      "pt": [
+       "português",
+       "em português",
+       "língua portuguesa"
+      ]
+     },
+     "match": [
+      "Portuguese",
+      "português",
+      "em português",
+      "língua portuguesa"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "down",
+     "distractors": [
+      "small",
+      "far",
+      "slow",
+      "last"
+     ]
+    },
+    "language": {
+     "gold": "Portuguese",
+     "distractors": [
+      "Spanish",
+      "Italian",
+      "French",
+      "Polish"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1,
+       1,
+       1,
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "pt": [
+       3,
+       4,
+       7
+      ]
+     }
+    },
+    "target": 1
    },
    "id": "portuguese-direction-up",
    "adapt": {
@@ -650,6 +2516,92 @@
      -1
     ]
    },
+   "lang": "pt",
+   "mc_type": "season",
+   "prompt_concepts": [
+    "season",
+    "spring"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "summer"
+      ]
+     },
+     "match": [
+      "summer"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Portuguese"
+      ],
+      "pt": [
+       "português",
+       "em português",
+       "língua portuguesa"
+      ]
+     },
+     "match": [
+      "Portuguese",
+      "português",
+      "em português",
+      "língua portuguesa"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "summer",
+     "distractors": [
+      "autumn",
+      "dry season",
+      "rainy season",
+      "winter"
+     ]
+    },
+    "language": {
+     "gold": "Portuguese",
+     "distractors": [
+      "Spanish",
+      "Italian",
+      "French",
+      "Polish"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "pt": [
+       3,
+       4,
+       7
+      ]
+     }
+    },
+    "target": 1
+   },
    "id": "portuguese-season-spring",
    "adapt": {
     "origin": "original",
@@ -681,42 +2633,107 @@
      -1
     ]
    },
+   "lang": "es",
+   "mc_type": "number",
+   "prompt_concepts": [
+    "number",
+    "three"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "four",
+       "4"
+      ]
+     },
+     "match": [
+      "four",
+      "4"
+     ],
+     "numeric_match": "standalone"
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Spanish"
+      ],
+      "es": [
+       "español",
+       "castellano",
+       "en español",
+       "lengua española",
+       "idioma español"
+      ]
+     },
+     "match": [
+      "Spanish",
+      "español",
+      "castellano",
+      "en español",
+      "lengua española",
+      "idioma español"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "four",
+     "distractors": [
+      "ten",
+      "eight",
+      "six",
+      "two"
+     ]
+    },
+    "language": {
+     "gold": "Spanish",
+     "distractors": [
+      "French",
+      "Portuguese",
+      "Italian",
+      "Irish"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1,
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "es": [
+       1,
+       3,
+       2,
+       4,
+       3
+      ]
+     }
+    },
+    "target": 1
+   },
    "id": "spanish-number-three",
    "adapt": {
     "origin": "original",
     "gate": {
      "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "b3-ml-de-opposite-fast",
-   "prompt": "Das Gegenteil von \"schnell\" ist",
-   "target": "langsam",
-   "intermediates": [
-    "slow"
-   ],
-   "reference_concepts": [
-    "German",
-    "opposite",
-    "fast"
-   ],
-   "source": "staging_b3",
-   "consistency": 1.0,
-   "gate_variant": "chat",
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "id": "b3-ml-de-opposite-fast",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 0.9,
      "pass": true
     }
    }
@@ -742,6 +2759,99 @@
     "offsets": [
      -1
     ]
+   },
+   "lang": "de",
+   "mc_type": "number",
+   "prompt_concepts": [
+    "sum",
+    "two"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "four",
+       "4"
+      ]
+     },
+     "match": [
+      "four",
+      "4"
+     ],
+     "numeric_match": "standalone"
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "German"
+      ],
+      "de": [
+       "Deutsch",
+       "auf Deutsch",
+       "deutsche Sprache",
+       "deutschen Sprache"
+      ]
+     },
+     "match": [
+      "German",
+      "Deutsch",
+      "auf Deutsch",
+      "deutsche Sprache",
+      "deutschen Sprache"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "four",
+     "distractors": [
+      "three",
+      "eight",
+      "six",
+      "five"
+     ]
+    },
+    "language": {
+     "gold": "German",
+     "distractors": [
+      "Danish",
+      "Dutch",
+      "Irish",
+      "Czech"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1,
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "de": [
+       1,
+       2,
+       3,
+       3
+      ]
+     }
+    },
+    "target": 1
    },
    "id": "b3-ml-de-sum-four",
    "adapt": {
@@ -772,6 +2882,97 @@
     "offsets": [
      -1
     ]
+   },
+   "lang": "es",
+   "mc_type": "colour",
+   "prompt_concepts": [
+    "sky"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "blue"
+      ]
+     },
+     "match": [
+      "blue"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Spanish"
+      ],
+      "es": [
+       "español",
+       "castellano",
+       "en español",
+       "lengua española",
+       "idioma español"
+      ]
+     },
+     "match": [
+      "Spanish",
+      "español",
+      "castellano",
+      "en español",
+      "lengua española",
+      "idioma español"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "blue",
+     "distractors": [
+      "red",
+      "green",
+      "black",
+      "brown"
+     ]
+    },
+    "language": {
+     "gold": "Spanish",
+     "distractors": [
+      "French",
+      "Portuguese",
+      "Italian",
+      "Irish"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "es": [
+       1,
+       3,
+       2,
+       4,
+       3
+      ]
+     }
+    },
+    "target": 1
    },
    "id": "b3-ml-es-color-sky",
    "adapt": {
@@ -804,6 +3005,98 @@
      -1
     ]
    },
+   "lang": "es",
+   "mc_type": "day",
+   "prompt_concepts": [
+    "Monday",
+    "day"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Tuesday"
+      ]
+     },
+     "match": [
+      "Tuesday"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Spanish"
+      ],
+      "es": [
+       "español",
+       "castellano",
+       "en español",
+       "lengua española",
+       "idioma español"
+      ]
+     },
+     "match": [
+      "Spanish",
+      "español",
+      "castellano",
+      "en español",
+      "lengua española",
+      "idioma español"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "Tuesday",
+     "distractors": [
+      "Sunday",
+      "Thursday",
+      "Friday",
+      "Saturday"
+     ]
+    },
+    "language": {
+     "gold": "Spanish",
+     "distractors": [
+      "French",
+      "Portuguese",
+      "Italian",
+      "Irish"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "es": [
+       1,
+       3,
+       2,
+       4,
+       3
+      ]
+     }
+    },
+    "target": 1
+   },
    "id": "b3-ml-es-day-monday",
    "adapt": {
     "origin": "original",
@@ -834,6 +3127,101 @@
     "offsets": [
      -1
     ]
+   },
+   "lang": "es",
+   "mc_type": "month",
+   "prompt_concepts": [
+    "April",
+    "month"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "May"
+      ]
+     },
+     "match": [
+      "May"
+     ],
+     "case_sensitive": [
+      "May"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Spanish"
+      ],
+      "es": [
+       "español",
+       "castellano",
+       "en español",
+       "lengua española",
+       "idioma español"
+      ]
+     },
+     "match": [
+      "Spanish",
+      "español",
+      "castellano",
+      "en español",
+      "lengua española",
+      "idioma español"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "May",
+     "distractors": [
+      "February",
+      "July",
+      "June",
+      "November"
+     ]
+    },
+    "language": {
+     "gold": "Spanish",
+     "distractors": [
+      "French",
+      "Portuguese",
+      "Italian",
+      "Irish"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "es": [
+       1,
+       3,
+       2,
+       4,
+       3
+      ]
+     }
+    },
+    "target": 1
    },
    "id": "b3-ml-es-month-april",
    "adapt": {
@@ -866,6 +3254,99 @@
      -1
     ]
    },
+   "lang": "es",
+   "mc_type": "opposite",
+   "prompt_concepts": [
+    "fast",
+    "opposite",
+    "quick"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "slow"
+      ]
+     },
+     "match": [
+      "slow"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Spanish"
+      ],
+      "es": [
+       "español",
+       "castellano",
+       "en español",
+       "lengua española",
+       "idioma español"
+      ]
+     },
+     "match": [
+      "Spanish",
+      "español",
+      "castellano",
+      "en español",
+      "lengua española",
+      "idioma español"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "slow",
+     "distractors": [
+      "last",
+      "small",
+      "right",
+      "cold"
+     ]
+    },
+    "language": {
+     "gold": "Spanish",
+     "distractors": [
+      "French",
+      "Portuguese",
+      "Italian",
+      "Irish"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "es": [
+       1,
+       3,
+       2,
+       4,
+       3
+      ]
+     }
+    },
+    "target": 1
+   },
    "id": "b3-ml-es-opposite-fast",
    "adapt": {
     "origin": "original",
@@ -896,6 +3377,99 @@
     "offsets": [
      -1
     ]
+   },
+   "lang": "es",
+   "mc_type": "opposite",
+   "prompt_concepts": [
+    "hot",
+    "opposite",
+    "warm"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "cold"
+      ]
+     },
+     "match": [
+      "cold"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Spanish"
+      ],
+      "es": [
+       "español",
+       "castellano",
+       "en español",
+       "lengua española",
+       "idioma español"
+      ]
+     },
+     "match": [
+      "Spanish",
+      "español",
+      "castellano",
+      "en español",
+      "lengua española",
+      "idioma español"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "cold",
+     "distractors": [
+      "right",
+      "small",
+      "down",
+      "slow"
+     ]
+    },
+    "language": {
+     "gold": "Spanish",
+     "distractors": [
+      "French",
+      "Portuguese",
+      "Italian",
+      "Irish"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "es": [
+       1,
+       3,
+       2,
+       4,
+       3
+      ]
+     }
+    },
+    "target": 1
    },
    "id": "b3-ml-es-opposite-hot",
    "adapt": {
@@ -928,6 +3502,92 @@
      -1
     ]
    },
+   "lang": "fr",
+   "mc_type": "capital",
+   "prompt_concepts": [
+    "England",
+    "capital"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "London"
+      ]
+     },
+     "match": [
+      "London"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "French"
+      ],
+      "fr": [
+       "français",
+       "en français",
+       "langue française"
+      ]
+     },
+     "match": [
+      "French",
+      "français",
+      "en français",
+      "langue française"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "London",
+     "distractors": [
+      "Paris",
+      "Tokyo",
+      "Vienna",
+      "Rome"
+     ]
+    },
+    "language": {
+     "gold": "French",
+     "distractors": [
+      "Spanish",
+      "Portuguese",
+      "Italian",
+      "Polish"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "fr": [
+       1,
+       2,
+       2
+      ]
+     }
+    },
+    "target": 1
+   },
    "id": "b3-ml-fr-capital-england",
    "adapt": {
     "origin": "original",
@@ -958,6 +3618,92 @@
     "offsets": [
      -1
     ]
+   },
+   "lang": "fr",
+   "mc_type": "colour",
+   "prompt_concepts": [
+    "blood",
+    "color"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "red"
+      ]
+     },
+     "match": [
+      "red"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "French"
+      ],
+      "fr": [
+       "français",
+       "en français",
+       "langue française"
+      ]
+     },
+     "match": [
+      "French",
+      "français",
+      "en français",
+      "langue française"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "red",
+     "distractors": [
+      "blue",
+      "green",
+      "black",
+      "brown"
+     ]
+    },
+    "language": {
+     "gold": "French",
+     "distractors": [
+      "Spanish",
+      "Portuguese",
+      "Italian",
+      "Polish"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "fr": [
+       1,
+       2,
+       2
+      ]
+     }
+    },
+    "target": 1
    },
    "id": "b3-ml-fr-color-blood",
    "adapt": {
@@ -990,6 +3736,92 @@
      -1
     ]
    },
+   "lang": "fr",
+   "mc_type": "month",
+   "prompt_concepts": [
+    "March",
+    "month"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "April"
+      ]
+     },
+     "match": [
+      "April"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "French"
+      ],
+      "fr": [
+       "français",
+       "en français",
+       "langue française"
+      ]
+     },
+     "match": [
+      "French",
+      "français",
+      "en français",
+      "langue française"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "April",
+     "distractors": [
+      "February",
+      "July",
+      "November",
+      "June"
+     ]
+    },
+    "language": {
+     "gold": "French",
+     "distractors": [
+      "Spanish",
+      "Portuguese",
+      "Italian",
+      "Polish"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "fr": [
+       1,
+       2,
+       2
+      ]
+     }
+    },
+    "target": 1
+   },
    "id": "b3-ml-fr-month-march",
    "adapt": {
     "origin": "original",
@@ -1020,6 +3852,98 @@
     "offsets": [
      -1
     ]
+   },
+   "lang": "fr",
+   "mc_type": "opposite",
+   "prompt_concepts": [
+    "big",
+    "large",
+    "opposite",
+    "short",
+    "tall"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "small",
+       "little"
+      ]
+     },
+     "match": [
+      "small",
+      "little"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "French"
+      ],
+      "fr": [
+       "français",
+       "en français",
+       "langue française"
+      ]
+     },
+     "match": [
+      "French",
+      "français",
+      "en français",
+      "langue française"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "small",
+     "distractors": [
+      "right",
+      "last",
+      "cold",
+      "young"
+     ]
+    },
+    "language": {
+     "gold": "French",
+     "distractors": [
+      "Spanish",
+      "Portuguese",
+      "Italian",
+      "Polish"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1,
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "fr": [
+       1,
+       2,
+       2
+      ]
+     }
+    },
+    "target": 1
    },
    "id": "b3-ml-fr-opposite-big",
    "adapt": {
@@ -1052,6 +3976,97 @@
      -1
     ]
    },
+   "lang": "fr",
+   "mc_type": "number",
+   "prompt_concepts": [
+    "sum",
+    "three",
+    "two"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "five",
+       "5"
+      ]
+     },
+     "match": [
+      "five",
+      "5"
+     ],
+     "numeric_match": "standalone"
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "French"
+      ],
+      "fr": [
+       "français",
+       "en français",
+       "langue française"
+      ]
+     },
+     "match": [
+      "French",
+      "français",
+      "en français",
+      "langue française"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "five",
+     "distractors": [
+      "six",
+      "eight",
+      "four",
+      "ten"
+     ]
+    },
+    "language": {
+     "gold": "French",
+     "distractors": [
+      "Spanish",
+      "Portuguese",
+      "Italian",
+      "Polish"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1,
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "fr": [
+       1,
+       2,
+       2
+      ]
+     }
+    },
+    "target": 1
+   },
    "id": "b3-ml-fr-sum-five",
    "adapt": {
     "origin": "original",
@@ -1082,6 +4097,98 @@
     "offsets": [
      -1
     ]
+   },
+   "lang": "it",
+   "mc_type": "opposite",
+   "prompt_concepts": [
+    "big",
+    "large",
+    "opposite",
+    "short",
+    "tall"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "small",
+       "little"
+      ]
+     },
+     "match": [
+      "small",
+      "little"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Italian"
+      ],
+      "it": [
+       "italiano",
+       "in italiano",
+       "lingua italiana"
+      ]
+     },
+     "match": [
+      "Italian",
+      "italiano",
+      "in italiano",
+      "lingua italiana"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "small",
+     "distractors": [
+      "cold",
+      "far",
+      "down",
+      "last"
+     ]
+    },
+    "language": {
+     "gold": "Italian",
+     "distractors": [
+      "Spanish",
+      "French",
+      "Portuguese",
+      "Dutch"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1,
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "it": [
+       1,
+       2,
+       3
+      ]
+     }
+    },
+    "target": 1
    },
    "id": "b3-ml-it-opposite-big",
    "adapt": {
@@ -1114,41 +4221,98 @@
      -1
     ]
    },
+   "lang": "it",
+   "mc_type": "opposite",
+   "prompt_concepts": [
+    "hot",
+    "opposite",
+    "warm"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "cold"
+      ]
+     },
+     "match": [
+      "cold"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Italian"
+      ],
+      "it": [
+       "italiano",
+       "in italiano",
+       "lingua italiana"
+      ]
+     },
+     "match": [
+      "Italian",
+      "italiano",
+      "in italiano",
+      "lingua italiana"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "cold",
+     "distractors": [
+      "far",
+      "right",
+      "closed",
+      "down"
+     ]
+    },
+    "language": {
+     "gold": "Italian",
+     "distractors": [
+      "Spanish",
+      "French",
+      "Portuguese",
+      "Dutch"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "it": [
+       1,
+       2,
+       3
+      ]
+     }
+    },
+    "target": 1
+   },
    "id": "b3-ml-it-opposite-hot",
    "adapt": {
     "origin": "original",
     "gate": {
      "rate": 0.9,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "b3-ml-pt-capital-japan",
-   "prompt": "A capital do Japão é",
-   "target": "Tóquio",
-   "intermediates": [
-    "Tokyo"
-   ],
-   "reference_concepts": [
-    "Portuguese",
-    "Japan"
-   ],
-   "source": "staging_b3",
-   "consistency": 1.0,
-   "gate_variant": "chat",
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "id": "b3-ml-pt-capital-japan",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 0.8,
      "pass": true
     }
    }
@@ -1174,6 +4338,92 @@
     "offsets": [
      -1
     ]
+   },
+   "lang": "pt",
+   "mc_type": "month",
+   "prompt_concepts": [
+    "March",
+    "month"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "April"
+      ]
+     },
+     "match": [
+      "April"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Portuguese"
+      ],
+      "pt": [
+       "português",
+       "em português",
+       "língua portuguesa"
+      ]
+     },
+     "match": [
+      "Portuguese",
+      "português",
+      "em português",
+      "língua portuguesa"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "April",
+     "distractors": [
+      "May",
+      "February",
+      "June",
+      "July"
+     ]
+    },
+    "language": {
+     "gold": "Portuguese",
+     "distractors": [
+      "Spanish",
+      "Italian",
+      "French",
+      "Polish"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "pt": [
+       3,
+       4,
+       7
+      ]
+     }
+    },
+    "target": 1
    },
    "id": "b3-ml-pt-month-march",
    "adapt": {
@@ -1206,6 +4456,98 @@
      -1
     ]
    },
+   "lang": "pt",
+   "mc_type": "opposite",
+   "prompt_concepts": [
+    "big",
+    "large",
+    "opposite",
+    "short",
+    "tall"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "small",
+       "little"
+      ]
+     },
+     "match": [
+      "small",
+      "little"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Portuguese"
+      ],
+      "pt": [
+       "português",
+       "em português",
+       "língua portuguesa"
+      ]
+     },
+     "match": [
+      "Portuguese",
+      "português",
+      "em português",
+      "língua portuguesa"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "small",
+     "distractors": [
+      "cold",
+      "far",
+      "old",
+      "young"
+     ]
+    },
+    "language": {
+     "gold": "Portuguese",
+     "distractors": [
+      "Spanish",
+      "Italian",
+      "French",
+      "Polish"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1,
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "pt": [
+       3,
+       4,
+       7
+      ]
+     }
+    },
+    "target": 1
+   },
    "id": "b3-ml-pt-opposite-big",
    "adapt": {
     "origin": "original",
@@ -1236,6 +4578,93 @@
     "offsets": [
      -1
     ]
+   },
+   "lang": "pt",
+   "mc_type": "opposite",
+   "prompt_concepts": [
+    "hot",
+    "opposite",
+    "warm"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "cold"
+      ]
+     },
+     "match": [
+      "cold"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Portuguese"
+      ],
+      "pt": [
+       "português",
+       "em português",
+       "língua portuguesa"
+      ]
+     },
+     "match": [
+      "Portuguese",
+      "português",
+      "em português",
+      "língua portuguesa"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "cold",
+     "distractors": [
+      "small",
+      "right",
+      "last",
+      "down"
+     ]
+    },
+    "language": {
+     "gold": "Portuguese",
+     "distractors": [
+      "Spanish",
+      "Italian",
+      "French",
+      "Polish"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "pt": [
+       3,
+       4,
+       7
+      ]
+     }
+    },
+    "target": 1
    },
    "id": "b3-ml-pt-opposite-hot",
    "adapt": {
@@ -1268,6 +4697,98 @@
      -1
     ]
    },
+   "lang": "de",
+   "mc_type": "month",
+   "prompt_concepts": [
+    "February",
+    "month"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "March"
+      ]
+     },
+     "match": [
+      "March"
+     ],
+     "case_sensitive": [
+      "March"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "German"
+      ],
+      "de": [
+       "Deutsch",
+       "auf Deutsch",
+       "deutsche Sprache",
+       "deutschen Sprache"
+      ]
+     },
+     "match": [
+      "German",
+      "Deutsch",
+      "auf Deutsch",
+      "deutsche Sprache",
+      "deutschen Sprache"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "March",
+     "distractors": [
+      "June",
+      "July",
+      "May",
+      "April"
+     ]
+    },
+    "language": {
+     "gold": "German",
+     "distractors": [
+      "Danish",
+      "Dutch",
+      "Irish",
+      "Czech"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "de": [
+       1,
+       2,
+       3,
+       3
+      ]
+     }
+    },
+    "target": 1
+   },
    "id": "b3-ml-de-month-february",
    "adapt": {
     "origin": "original",
@@ -1299,11 +4820,100 @@
      -1
     ]
    },
+   "lang": "de",
+   "mc_type": "opposite",
+   "prompt_concepts": [
+    "first",
+    "order"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "last"
+      ]
+     },
+     "match": [
+      "last"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "German"
+      ],
+      "de": [
+       "Deutsch",
+       "auf Deutsch",
+       "deutsche Sprache",
+       "deutschen Sprache"
+      ]
+     },
+     "match": [
+      "German",
+      "Deutsch",
+      "auf Deutsch",
+      "deutsche Sprache",
+      "deutschen Sprache"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "last",
+     "distractors": [
+      "down",
+      "small",
+      "far",
+      "cold"
+     ]
+    },
+    "language": {
+     "gold": "German",
+     "distractors": [
+      "Danish",
+      "Dutch",
+      "Irish",
+      "Czech"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "de": [
+       1,
+       2,
+       3,
+       3
+      ]
+     }
+    },
+    "target": 1
+   },
    "id": "de-order-first-last",
    "adapt": {
     "origin": "original",
     "gate": {
-     "rate": 0.9,
+     "rate": 0.8,
      "pass": true
     }
    }
@@ -1329,6 +4939,98 @@
     "offsets": [
      -1
     ]
+   },
+   "lang": "es",
+   "mc_type": "opposite",
+   "prompt_concepts": [
+    "first",
+    "order"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "last"
+      ]
+     },
+     "match": [
+      "last"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Spanish"
+      ],
+      "es": [
+       "español",
+       "castellano",
+       "en español",
+       "lengua española",
+       "idioma español"
+      ]
+     },
+     "match": [
+      "Spanish",
+      "español",
+      "castellano",
+      "en español",
+      "lengua española",
+      "idioma español"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "last",
+     "distractors": [
+      "right",
+      "cold",
+      "small",
+      "new"
+     ]
+    },
+    "language": {
+     "gold": "Spanish",
+     "distractors": [
+      "French",
+      "Portuguese",
+      "Italian",
+      "Irish"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "es": [
+       1,
+       3,
+       2,
+       4,
+       3
+      ]
+     }
+    },
+    "target": 1
    },
    "id": "es-order-first-last",
    "adapt": {
@@ -1361,11 +5063,115 @@
      -1
     ]
    },
+   "lang": "es",
+   "mc_type": "opposite",
+   "prompt_concepts": [
+    "above",
+    "high",
+    "place",
+    "top",
+    "up"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "down",
+       "below",
+       "low",
+       "bottom"
+      ]
+     },
+     "match": [
+      "down",
+      "below",
+      "low",
+      "bottom"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Spanish"
+      ],
+      "es": [
+       "español",
+       "castellano",
+       "en español",
+       "lengua española",
+       "idioma español"
+      ]
+     },
+     "match": [
+      "Spanish",
+      "español",
+      "castellano",
+      "en español",
+      "lengua española",
+      "idioma español"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "down",
+     "distractors": [
+      "cold",
+      "short",
+      "slow",
+      "far"
+     ]
+    },
+    "language": {
+     "gold": "Spanish",
+     "distractors": [
+      "French",
+      "Portuguese",
+      "Italian",
+      "Irish"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1,
+       1,
+       1,
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "es": [
+       1,
+       3,
+       2,
+       4,
+       3
+      ]
+     }
+    },
+    "target": 1
+   },
    "id": "es-place-up-down",
    "adapt": {
     "origin": "original",
     "gate": {
-     "rate": 0.8,
+     "rate": 0.9,
      "pass": true
     }
    }
@@ -1391,6 +5197,101 @@
     "offsets": [
      -1
     ]
+   },
+   "lang": "es",
+   "mc_type": "time",
+   "prompt_concepts": [
+    "day",
+    "time"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "night",
+       "nighttime"
+      ]
+     },
+     "match": [
+      "night",
+      "nighttime"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Spanish"
+      ],
+      "es": [
+       "español",
+       "castellano",
+       "en español",
+       "lengua española",
+       "idioma español"
+      ]
+     },
+     "match": [
+      "Spanish",
+      "español",
+      "castellano",
+      "en español",
+      "lengua española",
+      "idioma español"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "night",
+     "distractors": [
+      "dawn",
+      "midnight",
+      "dusk",
+      "morning"
+     ]
+    },
+    "language": {
+     "gold": "Spanish",
+     "distractors": [
+      "French",
+      "Portuguese",
+      "Italian",
+      "Irish"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1,
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "es": [
+       1,
+       3,
+       2,
+       4,
+       3
+      ]
+     }
+    },
+    "target": 1
    },
    "id": "es-time-after-day",
    "adapt": {
@@ -1423,6 +5324,92 @@
      -1
     ]
    },
+   "lang": "pt",
+   "mc_type": "month",
+   "prompt_concepts": [
+    "October",
+    "month"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "November"
+      ]
+     },
+     "match": [
+      "November"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Portuguese"
+      ],
+      "pt": [
+       "português",
+       "em português",
+       "língua portuguesa"
+      ]
+     },
+     "match": [
+      "Portuguese",
+      "português",
+      "em português",
+      "língua portuguesa"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "November",
+     "distractors": [
+      "February",
+      "July",
+      "June",
+      "May"
+     ]
+    },
+    "language": {
+     "gold": "Portuguese",
+     "distractors": [
+      "Spanish",
+      "Italian",
+      "French",
+      "Polish"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "pt": [
+       3,
+       4,
+       7
+      ]
+     }
+    },
+    "target": 1
+   },
    "id": "pt-month-after-oct",
    "adapt": {
     "origin": "original",
@@ -1453,6 +5440,104 @@
     "offsets": [
      -1
     ]
+   },
+   "lang": "pt",
+   "mc_type": "opposite",
+   "prompt_concepts": [
+    "above",
+    "high",
+    "place",
+    "top",
+    "up"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "down",
+       "below",
+       "low",
+       "bottom"
+      ]
+     },
+     "match": [
+      "down",
+      "below",
+      "low",
+      "bottom"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Portuguese"
+      ],
+      "pt": [
+       "português",
+       "em português",
+       "língua portuguesa"
+      ]
+     },
+     "match": [
+      "Portuguese",
+      "português",
+      "em português",
+      "língua portuguesa"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "down",
+     "distractors": [
+      "last",
+      "small",
+      "young",
+      "new"
+     ]
+    },
+    "language": {
+     "gold": "Portuguese",
+     "distractors": [
+      "Spanish",
+      "Italian",
+      "French",
+      "Polish"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1,
+       1,
+       1,
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "pt": [
+       3,
+       4,
+       7
+      ]
+     }
+    },
+    "target": 1
    },
    "id": "pt-place-up-down",
    "adapt": {
@@ -1485,6 +5570,98 @@
      -1
     ]
    },
+   "lang": "pt",
+   "mc_type": "opposite",
+   "prompt_concepts": [
+    "big",
+    "large",
+    "short",
+    "size",
+    "tall"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "small",
+       "little"
+      ]
+     },
+     "match": [
+      "small",
+      "little"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Portuguese"
+      ],
+      "pt": [
+       "português",
+       "em português",
+       "língua portuguesa"
+      ]
+     },
+     "match": [
+      "Portuguese",
+      "português",
+      "em português",
+      "língua portuguesa"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "small",
+     "distractors": [
+      "old",
+      "cold",
+      "slow",
+      "last"
+     ]
+    },
+    "language": {
+     "gold": "Portuguese",
+     "distractors": [
+      "Spanish",
+      "Italian",
+      "French",
+      "Polish"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1,
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "pt": [
+       3,
+       4,
+       7
+      ]
+     }
+    },
+    "target": 1
+   },
    "id": "pt-size-big-small",
    "adapt": {
     "origin": "original",
@@ -1515,6 +5692,98 @@
     "offsets": [
      -1
     ]
+   },
+   "lang": "nl",
+   "mc_type": "opposite",
+   "prompt_concepts": [
+    "big",
+    "large",
+    "opposite",
+    "short",
+    "tall"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "small",
+       "little"
+      ]
+     },
+     "match": [
+      "small",
+      "little"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Dutch"
+      ],
+      "nl": [
+       "Nederlands",
+       "in het Nederlands",
+       "Nederlandse taal"
+      ]
+     },
+     "match": [
+      "Dutch",
+      "Nederlands",
+      "in het Nederlands",
+      "Nederlandse taal"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "small",
+     "distractors": [
+      "right",
+      "closed",
+      "far",
+      "last"
+     ]
+    },
+    "language": {
+     "gold": "Dutch",
+     "distractors": [
+      "German",
+      "Danish",
+      "Irish",
+      "Polish"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1,
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "nl": [
+       3,
+       5,
+       4
+      ]
+     }
+    },
+    "target": 1
    },
    "id": "dutch-opposite-big",
    "adapt": {
@@ -1547,6 +5816,89 @@
      -1
     ]
    },
+   "lang": "id",
+   "mc_type": "colour",
+   "prompt_concepts": [
+    "color",
+    "grass"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "green"
+      ]
+     },
+     "match": [
+      "green"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Indonesian"
+      ],
+      "id": [
+       "bahasa Indonesia",
+       "dalam bahasa Indonesia"
+      ]
+     },
+     "match": [
+      "Indonesian",
+      "bahasa Indonesia",
+      "dalam bahasa Indonesia"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "green",
+     "distractors": [
+      "red",
+      "blue",
+      "black",
+      "white"
+     ]
+    },
+    "language": {
+     "gold": "Indonesian",
+     "distractors": [
+      "Filipino",
+      "Irish",
+      "Polish",
+      "Danish"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "id": [
+       3,
+       4
+      ]
+     }
+    },
+    "target": 1
+   },
    "id": "indonesian-color-grass",
    "adapt": {
     "origin": "original",
@@ -1578,11 +5930,91 @@
      -1
     ]
    },
+   "lang": "ja",
+   "mc_type": "day",
+   "prompt_concepts": [
+    "Monday",
+    "day"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Tuesday"
+      ]
+     },
+     "match": [
+      "Tuesday"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Japanese"
+      ],
+      "ja": [
+       "日本語"
+      ]
+     },
+     "match": [
+      "Japanese",
+      "日本語"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "Tuesday",
+     "distractors": [
+      "Thursday",
+      "Sunday",
+      "Wednesday",
+      "Saturday"
+     ]
+    },
+    "language": {
+     "gold": "Japanese",
+     "distractors": [
+      "Korean",
+      "German",
+      "Arabic",
+      "Spanish"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "ja": [
+       4
+      ]
+     }
+    },
+    "target": 2
+   },
    "id": "japanese-day-monday",
    "adapt": {
     "origin": "original",
     "gate": {
-     "rate": 0.9,
+     "rate": 1.0,
      "pass": true
     }
    }
@@ -1608,6 +6040,92 @@
     "offsets": [
      -1
     ]
+   },
+   "lang": "sk",
+   "mc_type": "opposite",
+   "prompt_concepts": [
+    "opposite",
+    "young"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "old"
+      ]
+     },
+     "match": [
+      "old"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Slovak"
+      ],
+      "sk": [
+       "slovenčina",
+       "po slovensky",
+       "slovenský jazyk"
+      ]
+     },
+     "match": [
+      "Slovak",
+      "slovenčina",
+      "po slovensky",
+      "slovenský jazyk"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "old",
+     "distractors": [
+      "right",
+      "far",
+      "last",
+      "cold"
+     ]
+    },
+    "language": {
+     "gold": "Slovak",
+     "distractors": [
+      "Czech",
+      "Polish",
+      "Ukrainian",
+      "Serbian"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "sk": [
+       3,
+       4,
+       7
+      ]
+     }
+    },
+    "target": 2
    },
    "id": "slovak-opposite-young",
    "adapt": {
@@ -1640,6 +6158,98 @@
      -1
     ]
    },
+   "lang": "es",
+   "mc_type": "phase",
+   "prompt_concepts": [
+    "freeze",
+    "water"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "ice"
+      ]
+     },
+     "match": [
+      "ice"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Spanish"
+      ],
+      "es": [
+       "español",
+       "castellano",
+       "en español",
+       "lengua española",
+       "idioma español"
+      ]
+     },
+     "match": [
+      "Spanish",
+      "español",
+      "castellano",
+      "en español",
+      "lengua española",
+      "idioma español"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "ice",
+     "distractors": [
+      "steam",
+      "rain",
+      "dew",
+      "mud"
+     ]
+    },
+    "language": {
+     "gold": "Spanish",
+     "distractors": [
+      "French",
+      "Portuguese",
+      "Italian",
+      "Irish"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "es": [
+       1,
+       3,
+       2,
+       4,
+       3
+      ]
+     }
+    },
+    "target": 1
+   },
    "id": "spanish-phase-water",
    "adapt": {
     "origin": "original",
@@ -1670,6 +6280,96 @@
     "offsets": [
      -1
     ]
+   },
+   "lang": "de",
+   "mc_type": "family",
+   "prompt_concepts": [
+    "brother",
+    "family",
+    "mother"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "uncle"
+      ]
+     },
+     "match": [
+      "uncle"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "German"
+      ],
+      "de": [
+       "Deutsch",
+       "auf Deutsch",
+       "deutsche Sprache",
+       "deutschen Sprache"
+      ]
+     },
+     "match": [
+      "German",
+      "Deutsch",
+      "auf Deutsch",
+      "deutsche Sprache",
+      "deutschen Sprache"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "uncle",
+     "distractors": [
+      "nephew",
+      "aunt",
+      "grandfather",
+      "grandmother"
+     ]
+    },
+    "language": {
+     "gold": "German",
+     "distractors": [
+      "Danish",
+      "Dutch",
+      "Irish",
+      "Czech"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "de": [
+       1,
+       2,
+       3,
+       3
+      ]
+     }
+    },
+    "target": 2
    },
    "id": "b3-ml-de-family-uncle",
    "adapt": {
@@ -1702,6 +6402,96 @@
      -1
     ]
    },
+   "lang": "de",
+   "mc_type": "opposite",
+   "prompt_concepts": [
+    "hot",
+    "opposite",
+    "warm"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "cold"
+      ]
+     },
+     "match": [
+      "cold"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "German"
+      ],
+      "de": [
+       "Deutsch",
+       "auf Deutsch",
+       "deutsche Sprache",
+       "deutschen Sprache"
+      ]
+     },
+     "match": [
+      "German",
+      "Deutsch",
+      "auf Deutsch",
+      "deutsche Sprache",
+      "deutschen Sprache"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "cold",
+     "distractors": [
+      "far",
+      "old",
+      "slow",
+      "right"
+     ]
+    },
+    "language": {
+     "gold": "German",
+     "distractors": [
+      "Danish",
+      "Dutch",
+      "Irish",
+      "Czech"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "de": [
+       1,
+       2,
+       3,
+       3
+      ]
+     }
+    },
+    "target": 1
+   },
    "id": "b3-ml-de-opposite-hot",
    "adapt": {
     "origin": "original",
@@ -1732,6 +6522,99 @@
     "offsets": [
      -1
     ]
+   },
+   "lang": "es",
+   "mc_type": "family",
+   "prompt_concepts": [
+    "family",
+    "mother",
+    "sister"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "aunt"
+      ]
+     },
+     "match": [
+      "aunt"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Spanish"
+      ],
+      "es": [
+       "español",
+       "castellano",
+       "en español",
+       "lengua española",
+       "idioma español"
+      ]
+     },
+     "match": [
+      "Spanish",
+      "español",
+      "castellano",
+      "en español",
+      "lengua española",
+      "idioma español"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "aunt",
+     "distractors": [
+      "uncle",
+      "nephew",
+      "daughter",
+      "son"
+     ]
+    },
+    "language": {
+     "gold": "Spanish",
+     "distractors": [
+      "French",
+      "Portuguese",
+      "Italian",
+      "Irish"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "es": [
+       1,
+       3,
+       2,
+       4,
+       3
+      ]
+     }
+    },
+    "target": 2
    },
    "id": "b3-ml-es-family-aunt",
    "adapt": {
@@ -1764,6 +6647,101 @@
      -1
     ]
    },
+   "lang": "es",
+   "mc_type": "time",
+   "prompt_concepts": [
+    "day",
+    "opposite"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "night",
+       "nighttime"
+      ]
+     },
+     "match": [
+      "night",
+      "nighttime"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Spanish"
+      ],
+      "es": [
+       "español",
+       "castellano",
+       "en español",
+       "lengua española",
+       "idioma español"
+      ]
+     },
+     "match": [
+      "Spanish",
+      "español",
+      "castellano",
+      "en español",
+      "lengua española",
+      "idioma español"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "night",
+     "distractors": [
+      "noon",
+      "morning",
+      "dusk",
+      "dawn"
+     ]
+    },
+    "language": {
+     "gold": "Spanish",
+     "distractors": [
+      "French",
+      "Portuguese",
+      "Italian",
+      "Irish"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1,
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "es": [
+       1,
+       3,
+       2,
+       4,
+       3
+      ]
+     }
+    },
+    "target": 1
+   },
    "id": "b3-ml-es-opposite-day",
    "adapt": {
     "origin": "original",
@@ -1794,6 +6772,93 @@
     "offsets": [
      -1
     ]
+   },
+   "lang": "fr",
+   "mc_type": "family",
+   "prompt_concepts": [
+    "brother",
+    "family",
+    "mother"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "uncle"
+      ]
+     },
+     "match": [
+      "uncle"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "French"
+      ],
+      "fr": [
+       "français",
+       "en français",
+       "langue française"
+      ]
+     },
+     "match": [
+      "French",
+      "français",
+      "en français",
+      "langue française"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "uncle",
+     "distractors": [
+      "aunt",
+      "nephew",
+      "cousin",
+      "niece"
+     ]
+    },
+    "language": {
+     "gold": "French",
+     "distractors": [
+      "Spanish",
+      "Portuguese",
+      "Italian",
+      "Polish"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "fr": [
+       1,
+       2,
+       2
+      ]
+     }
+    },
+    "target": 2
    },
    "id": "b3-ml-fr-family-uncle",
    "adapt": {
@@ -1826,6 +6891,93 @@
      -1
     ]
    },
+   "lang": "fr",
+   "mc_type": "opposite",
+   "prompt_concepts": [
+    "hot",
+    "opposite",
+    "warm"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "cold"
+      ]
+     },
+     "match": [
+      "cold"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "French"
+      ],
+      "fr": [
+       "français",
+       "en français",
+       "langue française"
+      ]
+     },
+     "match": [
+      "French",
+      "français",
+      "en français",
+      "langue française"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "cold",
+     "distractors": [
+      "last",
+      "closed",
+      "down",
+      "far"
+     ]
+    },
+    "language": {
+     "gold": "French",
+     "distractors": [
+      "Spanish",
+      "Portuguese",
+      "Italian",
+      "Polish"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "fr": [
+       1,
+       2,
+       2
+      ]
+     }
+    },
+    "target": 1
+   },
    "id": "b3-ml-fr-opposite-hot",
    "adapt": {
     "origin": "original",
@@ -1856,6 +7008,102 @@
     "offsets": [
      -1
     ]
+   },
+   "lang": "es",
+   "mc_type": "number",
+   "prompt_concepts": [
+    "number",
+    "two"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "three",
+       "3"
+      ]
+     },
+     "match": [
+      "three",
+      "3"
+     ],
+     "numeric_match": "standalone"
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Spanish"
+      ],
+      "es": [
+       "español",
+       "castellano",
+       "en español",
+       "lengua española",
+       "idioma español"
+      ]
+     },
+     "match": [
+      "Spanish",
+      "español",
+      "castellano",
+      "en español",
+      "lengua española",
+      "idioma español"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "three",
+     "distractors": [
+      "six",
+      "ten",
+      "four",
+      "five"
+     ]
+    },
+    "language": {
+     "gold": "Spanish",
+     "distractors": [
+      "French",
+      "Portuguese",
+      "Italian",
+      "Irish"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1,
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "es": [
+       1,
+       3,
+       2,
+       4,
+       3
+      ]
+     }
+    },
+    "target": 1
    },
    "id": "es-number-after-two",
    "adapt": {
@@ -1888,6 +7136,96 @@
      -1
     ]
    },
+   "lang": "fr",
+   "mc_type": "number",
+   "prompt_concepts": [
+    "four",
+    "number"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "five",
+       "5"
+      ]
+     },
+     "match": [
+      "five",
+      "5"
+     ],
+     "numeric_match": "standalone"
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "French"
+      ],
+      "fr": [
+       "français",
+       "en français",
+       "langue française"
+      ]
+     },
+     "match": [
+      "French",
+      "français",
+      "en français",
+      "langue française"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "five",
+     "distractors": [
+      "three",
+      "six",
+      "ten",
+      "eight"
+     ]
+    },
+    "language": {
+     "gold": "French",
+     "distractors": [
+      "Spanish",
+      "Portuguese",
+      "Italian",
+      "Polish"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1,
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "fr": [
+       1,
+       2,
+       2
+      ]
+     }
+    },
+    "target": 1
+   },
    "id": "fr-number-after-four",
    "adapt": {
     "origin": "original",
@@ -1918,6 +7256,95 @@
     "offsets": [
      -1
     ]
+   },
+   "lang": "pt",
+   "mc_type": "month",
+   "prompt_concepts": [
+    "April",
+    "month"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "May"
+      ]
+     },
+     "match": [
+      "May"
+     ],
+     "case_sensitive": [
+      "May"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Portuguese"
+      ],
+      "pt": [
+       "português",
+       "em português",
+       "língua portuguesa"
+      ]
+     },
+     "match": [
+      "Portuguese",
+      "português",
+      "em português",
+      "língua portuguesa"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "May",
+     "distractors": [
+      "July",
+      "February",
+      "June",
+      "March"
+     ]
+    },
+    "language": {
+     "gold": "Portuguese",
+     "distractors": [
+      "Spanish",
+      "Italian",
+      "French",
+      "Polish"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "pt": [
+       3,
+       4,
+       7
+      ]
+     }
+    },
+    "target": 1
    },
    "id": "pt-month-after-apr",
    "adapt": {
@@ -1950,1273 +7377,99 @@
      -1
     ]
    },
+   "lang": "pt",
+   "mc_type": "number",
+   "prompt_concepts": [
+    "five",
+    "number"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "six",
+       "6"
+      ]
+     },
+     "match": [
+      "six",
+      "6"
+     ],
+     "numeric_match": "standalone"
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Portuguese"
+      ],
+      "pt": [
+       "português",
+       "em português",
+       "língua portuguesa"
+      ]
+     },
+     "match": [
+      "Portuguese",
+      "português",
+      "em português",
+      "língua portuguesa"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "six",
+     "distractors": [
+      "two",
+      "three",
+      "four",
+      "ten"
+     ]
+    },
+    "language": {
+     "gold": "Portuguese",
+     "distractors": [
+      "Spanish",
+      "Italian",
+      "French",
+      "Polish"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1,
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "pt": [
+       3,
+       4,
+       7
+      ]
+     }
+    },
+    "target": 1
+   },
    "id": "pt-number-after-five",
    "adapt": {
     "origin": "original",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w100c0-fr-opposite-sad",
-   "prompt": "Le contraire de \"triste\" est \"",
-   "target": "heureux",
-   "intermediates": [
-    "happy"
-   ],
-   "reference_concepts": [
-    "French",
-    "opposite",
-    "sad"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for olmo-3-7b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 100,
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w100c0-de-day-after-tuesday",
-   "prompt": "Der Tag nach Dienstag ist \"",
-   "target": "Mittwoch",
-   "intermediates": [
-    "Wednesday"
-   ],
-   "reference_concepts": [
-    "German",
-    "weekday",
-    "Tuesday"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for olmo-3-7b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 100,
-    "gate": {
-     "rate": 0.9,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w100c0-es-day-after-thursday",
-   "prompt": "El día después del jueves es el \"",
-   "target": "viernes",
-   "intermediates": [
-    "Friday"
-   ],
-   "reference_concepts": [
-    "Spanish",
-    "weekday",
-    "Thursday"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for olmo-3-7b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 100,
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w100c0-es-six-plus-six",
-   "prompt": "Seis más seis son \"",
-   "target": "doce",
-   "intermediates": [
-    "twelve"
-   ],
-   "reference_concepts": [
-    "Spanish",
-    "addition",
-    "six"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for olmo-3-7b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 100,
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w100c0-fr-color-snow",
-   "prompt": "La neige est de couleur \"",
-   "target": "blanche",
-   "intermediates": [
-    "white"
-   ],
-   "reference_concepts": [
-    "French",
-    "color",
-    "snow"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for olmo-3-7b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 100,
-    "gate": {
-     "rate": 0.8,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w100c0-it-color-lemon",
-   "prompt": "Il colore del limone è \"",
-   "target": "giallo",
-   "intermediates": [
-    "yellow"
-   ],
-   "reference_concepts": [
-    "Italian",
-    "color",
-    "lemon"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for olmo-3-7b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 100,
-    "gate": {
-     "rate": 0.8,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w100c0-es-color-chocolate",
-   "prompt": "El color del chocolate es \"",
-   "target": "marrón",
-   "intermediates": [
-    "brown"
-   ],
-   "reference_concepts": [
-    "Spanish",
-    "color",
-    "chocolate"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for olmo-3-7b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 100,
-    "gate": {
-     "rate": 0.8,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w100c0-pt-animal-meow",
-   "prompt": "O animal que diz \"miau\" é o \"",
-   "target": "gato",
-   "intermediates": [
-    "cat"
-   ],
-   "reference_concepts": [
-    "Portuguese",
-    "animal sound",
-    "meow"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for olmo-3-7b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 100,
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w100c0-fr-shines-at-night",
-   "prompt": "L'astre qui brille dans le ciel la nuit est la \"",
-   "target": "lune",
-   "intermediates": [
-    "moon"
-   ],
-   "reference_concepts": [
-    "French",
-    "celestial body",
-    "night"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for olmo-3-7b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 100,
-    "gate": {
-     "rate": 0.9,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w100c1-fr-sum-ten-five",
-   "prompt": "Dix plus cinq font \"",
-   "target": "quinze",
-   "intermediates": [
-    "fifteen"
-   ],
-   "reference_concepts": [
-    "French",
-    "sum",
-    "ten"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for olmo-3-7b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 100,
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w100c1-es-day-after-sunday",
-   "prompt": "El día después del domingo es el \"",
-   "target": "lunes",
-   "intermediates": [
-    "Monday"
-   ],
-   "reference_concepts": [
-    "Spanish",
-    "day",
-    "Sunday"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for olmo-3-7b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 100,
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w100c1-pt-day-after-saturday",
-   "prompt": "O dia depois de sábado é \"",
-   "target": "domingo",
-   "intermediates": [
-    "Sunday"
-   ],
-   "reference_concepts": [
-    "Portuguese",
-    "day",
-    "Saturday"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for olmo-3-7b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 100,
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w100c1-it-season-after-winter",
-   "prompt": "La stagione dopo l'inverno è la \"",
-   "target": "primavera",
-   "intermediates": [
-    "spring"
-   ],
-   "reference_concepts": [
-    "Italian",
-    "season",
-    "winter"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for olmo-3-7b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 100,
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w100c1-it-family-fathers-father",
-   "prompt": "Il padre di mio padre è mio \"",
-   "target": "nonno",
-   "intermediates": [
-    "grandfather"
-   ],
-   "reference_concepts": [
-    "Italian",
-    "family",
-    "father"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for olmo-3-7b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 100,
-    "gate": {
-     "rate": 0.9,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w100c1-de-animal-barks",
-   "prompt": "Das Tier, das bellt, ist der \"",
-   "target": "Hund",
-   "intermediates": [
-    "dog"
-   ],
-   "reference_concepts": [
-    "German",
-    "animal sound",
-    "bark"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for olmo-3-7b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 100,
-    "gate": {
-     "rate": 0.9,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w100c1-it-body-see-with",
-   "prompt": "Noi vediamo con gli \"",
-   "target": "occhi",
-   "intermediates": [
-    "eyes"
-   ],
-   "reference_concepts": [
-    "Italian",
-    "body part",
-    "see"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for olmo-3-7b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 100,
-    "gate": {
-     "rate": 0.9,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w100c1-fr-fruit-newton",
-   "prompt": "Le fruit rouge qui est tombé sur la tête de Newton est une \"",
-   "target": "pomme",
-   "intermediates": [
-    "apple"
-   ],
-   "reference_concepts": [
-    "French",
-    "fruit",
-    "Newton"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for olmo-3-7b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 100,
-    "gate": {
-     "rate": 0.9,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w100c2-es-opposite-expensive",
-   "prompt": "Lo contrario de \"caro\" es \"",
-   "target": "barato",
-   "intermediates": [
-    "cheap"
-   ],
-   "reference_concepts": [
-    "Spanish",
-    "opposite",
-    "expensive"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for olmo-3-7b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 100,
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w100c2-es-tool-cut-bread",
-   "prompt": "Para cortar el pan uso un \"",
-   "target": "cuchillo",
-   "intermediates": [
-    "knife"
-   ],
-   "reference_concepts": [
-    "Spanish",
-    "tool",
-    "cut"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for olmo-3-7b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 100,
-    "gate": {
-     "rate": 0.8,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w100c2-fr-profession-bread",
-   "prompt": "La personne qui fait le pain est le \"",
-   "target": "boulanger",
-   "intermediates": [
-    "baker"
-   ],
-   "reference_concepts": [
-    "French",
-    "profession",
-    "bread"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for olmo-3-7b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 100,
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w100c2-es-object-door",
-   "prompt": "Para abrir la puerta necesito una \"",
-   "target": "llave",
-   "intermediates": [
-    "key"
-   ],
-   "reference_concepts": [
-    "Spanish",
-    "object",
-    "door"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for olmo-3-7b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 100,
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w100c2-it-habitat-fish",
-   "prompt": "Il pesce vive nell'\"",
-   "target": "acqua",
-   "intermediates": [
-    "water"
-   ],
-   "reference_concepts": [
-    "Italian",
-    "habitat",
-    "fish"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for olmo-3-7b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 100,
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w101c0-de-opposite-war",
-   "prompt": "Das Gegenteil von \"Krieg\" ist \"",
-   "target": "Frieden",
-   "intermediates": [
-    "peace"
-   ],
-   "reference_concepts": [
-    "German",
-    "opposite",
-    "war"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for olmo-3-7b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 101,
-    "steer": "- Last wave: 26/60 passed.\n- Rejected by lint before gating: 1x leak: ['krank'] shares the target's stem. Avoid these.\n- Failed (gold -> what the model wrote): arm -> model said 'machtlos\"' (1/10); brutto -> model said 'ugnato\"' (0/10); quinta -> model said 'segunda-feira\".' (3/10); vingt -> model said 'cent' (0/10); cem -> model said 'cento\"' (0/10); undici -> model said 'una' (0/10); abuela -> model said 'tía' (0/10); Enkelin -> model said 'Mutter' (0/10); irmã -> model said 'irmã' (5/10); Welpe -> model said 'Max' (0/10); dunkel -> model said 'schwarz' (0/10); blando -> model said 'frágil' (0/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): vacío; heureux; Mittwoch; viernes; doce; blanche; giallo; marrón; gato; lune; léger; quinze",
-    "gate": {
-     "rate": 0.8,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w101c0-es-opposite-dirty",
-   "prompt": "El contrario de \"sucio\" es \"",
-   "target": "limpio",
-   "intermediates": [
-    "clean"
-   ],
-   "reference_concepts": [
-    "Spanish",
-    "opposite",
-    "dirty"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for olmo-3-7b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 101,
-    "steer": "- Last wave: 26/60 passed.\n- Rejected by lint before gating: 1x leak: ['krank'] shares the target's stem. Avoid these.\n- Failed (gold -> what the model wrote): arm -> model said 'machtlos\"' (1/10); brutto -> model said 'ugnato\"' (0/10); quinta -> model said 'segunda-feira\".' (3/10); vingt -> model said 'cent' (0/10); cem -> model said 'cento\"' (0/10); undici -> model said 'una' (0/10); abuela -> model said 'tía' (0/10); Enkelin -> model said 'Mutter' (0/10); irmã -> model said 'irmã' (5/10); Welpe -> model said 'Max' (0/10); dunkel -> model said 'schwarz' (0/10); blando -> model said 'frágil' (0/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): vacío; heureux; Mittwoch; viernes; doce; blanche; giallo; marrón; gato; lune; léger; quinze",
-    "gate": {
-     "rate": 0.8,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w101c0-es-food-hen",
-   "prompt": "La gallina pone \"",
-   "target": "huevos",
-   "intermediates": [
-    "eggs"
-   ],
-   "reference_concepts": [
-    "Spanish",
-    "food",
-    "hen"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for olmo-3-7b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 101,
-    "steer": "- Last wave: 26/60 passed.\n- Rejected by lint before gating: 1x leak: ['krank'] shares the target's stem. Avoid these.\n- Failed (gold -> what the model wrote): arm -> model said 'machtlos\"' (1/10); brutto -> model said 'ugnato\"' (0/10); quinta -> model said 'segunda-feira\".' (3/10); vingt -> model said 'cent' (0/10); cem -> model said 'cento\"' (0/10); undici -> model said 'una' (0/10); abuela -> model said 'tía' (0/10); Enkelin -> model said 'Mutter' (0/10); irmã -> model said 'irmã' (5/10); Welpe -> model said 'Max' (0/10); dunkel -> model said 'schwarz' (0/10); blando -> model said 'frágil' (0/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): vacío; heureux; Mittwoch; viernes; doce; blanche; giallo; marrón; gato; lune; léger; quinze",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w101c0-es-nature-rain",
-   "prompt": "Cuando llueve, el agua cae de las \"",
-   "target": "nubes",
-   "intermediates": [
-    "clouds"
-   ],
-   "reference_concepts": [
-    "Spanish",
-    "weather",
-    "rain"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for olmo-3-7b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 101,
-    "steer": "- Last wave: 26/60 passed.\n- Rejected by lint before gating: 1x leak: ['krank'] shares the target's stem. Avoid these.\n- Failed (gold -> what the model wrote): arm -> model said 'machtlos\"' (1/10); brutto -> model said 'ugnato\"' (0/10); quinta -> model said 'segunda-feira\".' (3/10); vingt -> model said 'cent' (0/10); cem -> model said 'cento\"' (0/10); undici -> model said 'una' (0/10); abuela -> model said 'tía' (0/10); Enkelin -> model said 'Mutter' (0/10); irmã -> model said 'irmã' (5/10); Welpe -> model said 'Max' (0/10); dunkel -> model said 'schwarz' (0/10); blando -> model said 'frágil' (0/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): vacío; heureux; Mittwoch; viernes; doce; blanche; giallo; marrón; gato; lune; léger; quinze",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w101c0-pt-number-three-times-ten",
-   "prompt": "Três vezes dez são \"",
-   "target": "trinta",
-   "intermediates": [
-    "thirty"
-   ],
-   "reference_concepts": [
-    "Portuguese",
-    "number",
-    "ten"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for olmo-3-7b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 101,
-    "steer": "- Last wave: 26/60 passed.\n- Rejected by lint before gating: 1x leak: ['krank'] shares the target's stem. Avoid these.\n- Failed (gold -> what the model wrote): arm -> model said 'machtlos\"' (1/10); brutto -> model said 'ugnato\"' (0/10); quinta -> model said 'segunda-feira\".' (3/10); vingt -> model said 'cent' (0/10); cem -> model said 'cento\"' (0/10); undici -> model said 'una' (0/10); abuela -> model said 'tía' (0/10); Enkelin -> model said 'Mutter' (0/10); irmã -> model said 'irmã' (5/10); Welpe -> model said 'Max' (0/10); dunkel -> model said 'schwarz' (0/10); blando -> model said 'frágil' (0/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): vacío; heureux; Mittwoch; viernes; doce; blanche; giallo; marrón; gato; lune; léger; quinze",
-    "gate": {
-     "rate": 0.8,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w101c0-es-job-fire",
-   "prompt": "La persona que apaga los incendios es el \"",
-   "target": "bombero",
-   "intermediates": [
-    "firefighter"
-   ],
-   "reference_concepts": [
-    "Spanish",
-    "profession",
-    "fire"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for olmo-3-7b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 101,
-    "steer": "- Last wave: 26/60 passed.\n- Rejected by lint before gating: 1x leak: ['krank'] shares the target's stem. Avoid these.\n- Failed (gold -> what the model wrote): arm -> model said 'machtlos\"' (1/10); brutto -> model said 'ugnato\"' (0/10); quinta -> model said 'segunda-feira\".' (3/10); vingt -> model said 'cent' (0/10); cem -> model said 'cento\"' (0/10); undici -> model said 'una' (0/10); abuela -> model said 'tía' (0/10); Enkelin -> model said 'Mutter' (0/10); irmã -> model said 'irmã' (5/10); Welpe -> model said 'Max' (0/10); dunkel -> model said 'schwarz' (0/10); blando -> model said 'frágil' (0/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): vacío; heureux; Mittwoch; viernes; doce; blanche; giallo; marrón; gato; lune; léger; quinze",
-    "gate": {
-     "rate": 0.9,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w100c0-fr-opposite-gagner",
-   "prompt": "Le contraire de 'gagner' est \"",
-   "target": "perdre",
-   "intermediates": [
-    "lose"
-   ],
-   "reference_concepts": [
-    "French",
-    "opposite",
-    "gagner"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for olmo-3-7b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 100,
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w100c0-pt-capital-china",
-   "prompt": "A capital da China é \"",
-   "target": "Pequim",
-   "intermediates": [
-    "Beijing"
-   ],
-   "reference_concepts": [
-    "Portuguese",
-    "capital",
-    "China"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for olmo-3-7b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 100,
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w100c0-fr-glove-body-part",
-   "prompt": "On porte un gant sur la \"",
-   "target": "main",
-   "intermediates": [
-    "hand"
-   ],
-   "reference_concepts": [
-    "French",
-    "body part",
-    "gant"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for olmo-3-7b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 100,
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w100c0-fr-year-twelve-months",
-   "prompt": "Une année a douze \"",
-   "target": "mois",
-   "intermediates": [
-    "months"
-   ],
-   "reference_concepts": [
-    "French",
-    "time unit",
-    "année"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for olmo-3-7b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 100,
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w100c0-it-our-planet",
-   "prompt": "Il nostro pianeta si chiama \"",
-   "target": "Terra",
-   "intermediates": [
-    "Earth"
-   ],
-   "reference_concepts": [
-    "Italian",
-    "planet",
-    "pianeta"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for olmo-3-7b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 100,
-    "gate": {
-     "rate": 0.9,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w100c0-es-enter-house-open",
-   "prompt": "Para entrar en una casa se abre la \"",
-   "target": "puerta",
-   "intermediates": [
-    "door"
-   ],
-   "reference_concepts": [
-    "Spanish",
-    "house part",
-    "casa"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for olmo-3-7b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 100,
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w100c1-fr-opposite-acheter",
-   "prompt": "Le contraire d'« acheter » est « ",
-   "target": "vendre",
-   "intermediates": [
-    "sell"
-   ],
-   "reference_concepts": [
-    "French",
-    "opposite",
-    "acheter"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for olmo-3-7b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 100,
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w100c1-it-profession-cura-malati",
-   "prompt": "La persona che cura i malati in ospedale è il \"",
-   "target": "medico",
-   "intermediates": [
-    "doctor"
-   ],
-   "reference_concepts": [
-    "Italian",
-    "profession",
-    "malati"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for olmo-3-7b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 100,
-    "gate": {
-     "rate": 0.9,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w100c1-fr-proverb-meilleur-ami",
-   "prompt": "Le chien est le meilleur ami de l'",
-   "target": "homme",
-   "intermediates": [
-    "man"
-   ],
-   "reference_concepts": [
-    "French",
-    "saying",
-    "chien"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for olmo-3-7b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 100,
     "gate": {
      "rate": 1.0,
      "pass": true

@@ -4,14 +4,31 @@
  "contract": {
   "multi_token": true,
   "include_target": false,
-  "conjunctive_units": true
+  "conjunctive_units": true,
+  "native_langs": [
+   "en",
+   "zh"
+  ]
  },
  "gate": "Qwen3.6-27B behavioral, chat-templated capability question (enable_thinking=False, answer stem): greedy-verified AND >=8/10 @ temp 0.7 (answer in the text's language). EVAL RENDER: plain prompt, final prompt token; conjunctive regex over concept (en/zh gloss) + language; the L2 target is never creditable (next token).",
- "frozen": "2026-09-10",
+ "frozen": "2026-11-01",
+ "version": 4,
+ "v2": "v2 (plan 0040, Camila 2026-10-30): the readout must NAME the passage's language and write the intermediate in English or the model's native language (contract.native_langs); every unit is required; the language unit holds language names only.",
+ "built_by": "scripts/build_multilingual_v2.py (curation: scripts/multilingual_v2_curation.py)",
+ "v1_bank": "evals/multilingual_mt/items.json",
+ "n_items": 100,
+ "supersedes": "items_v3.json",
+ "v3": "v3 (round 4, Camila r2 / ANSWERS_R2 §6): items_v2.json with ONE change: mlh-tr-bademcik's concept unit gains the forms 'tonsil' and 'tonsils' (the readout 'point clearly to the tonsils, \"bademcik\" in Turkish' missed the closed forms 'palatine tonsil' / 'tonsil gland' for three rounds). Every other item, unit, form and option is byte-identical to v2.",
+ "r4b_mc": {
+  "script": "scripts/build_r4b_mc_banks.py",
+  "rule": "round 4b (Camila r2 MC leakage standard, second pass): only the MC distractor lists change. Content lists: the four distractors scripts/r4b_mc_refine.py kept (r4b_distractors.json: Opus-revised in the gold's naming style, fitting the topic as stated, kept when neither the options-only nor the topic guesser solves the item in more than 1 of 5 draws). Language lists: the four other gold languages of this bank closest to the gold (options.r4_language_distractors). ",
+  "lists_changed": 200,
+  "n_over_gate": 24
+ },
  "adapt": {
   "model": "qwen3.5-0.8b",
   "hf_id": "Qwen/Qwen3.5-0.8B",
-  "frozen": "2026-10-24"
+  "frozen": "2026-11-03"
  },
  "items": []
 }

@@ -1,0 +1,196 @@
+{
+ "version": "adapt-qwen3.5-9b",
+ "note": "adapted-only items' same-topic distractors the MC builder dropped (adapt mc); added to evals/basic_readout_mt/hidden_rivals.json by the judge",
+ "items": {
+  "basic-au-t1-w100c0-brh-ent-1492-caribbean-navigator": {
+   "readout": [
+    "Amerigo Vespucci",
+    "John Cabot"
+   ]
+  },
+  "basic-au-t1-w100c0-brh-ent-agra-mausoleum": {
+   "readout": [
+    "Humayun's Tomb",
+    "Qutub Minar"
+   ]
+  },
+  "basic-au-t1-w100c0-brh-ent-bosworth-to-1603-royals": {
+   "readout": [
+    "Plantagenet dynasty",
+    "Hanoverian dynasty",
+    "Norman dynasty"
+   ]
+  },
+  "basic-au-t1-w100c0-brh-ent-chromosome-21-extra": {
+   "readout": [
+    "Edwards syndrome",
+    "Patau syndrome"
+   ]
+  },
+  "basic-au-t1-w100c0-brh-ent-cyrus-darius-realm": {
+   "readout": [
+    "Seleucid Empire",
+    "Sasanian Empire",
+    "Median Empire"
+   ]
+  },
+  "basic-au-t1-w100c0-brh-ent-hostage-captor-bond": {
+   "readout": [
+    "Lima syndrome",
+    "Paris syndrome",
+    "Jerusalem syndrome",
+    "Stendhal syndrome"
+   ]
+  },
+  "basic-au-t1-w100c0-brh-ent-justinian-domed-basilica": {
+   "readout": [
+    "Sultan Ahmed Mosque",
+    "Süleymaniye Mosque",
+    "Chora Church",
+    "Basilica Cistern"
+   ]
+  },
+  "basic-au-t1-w100c0-brh-ent-ming-imperial-house": {
+   "readout": [
+    "Yuan dynasty"
+   ]
+  },
+  "basic-au-t1-w100c0-brh-ent-norman-conquest-clash": {
+   "readout": [
+    "Battle of Stamford Bridge",
+    "Battle of Fulford",
+    "Battle of Agincourt"
+   ]
+  },
+  "basic-au-t1-w100c0-brh-ent-pressure-volume-inverse": {
+   "readout": [
+    "Charles's law",
+    "Gay-Lussac's law",
+    "Avogadro's law",
+    "Dalton's law"
+   ]
+  },
+  "basic-au-t1-w100c0-brh-ent-principia-author": {
+   "readout": [
+    "Gottfried Wilhelm Leibniz",
+    "Robert Hooke",
+    "Edmond Halley"
+   ]
+  },
+  "basic-au-t1-w100c0-brh-ent-spain-morocco-passage": {
+   "readout": [
+    "Strait of Messina",
+    "Strait of Bonifacio",
+    "Strait of Otranto"
+   ]
+  },
+  "basic-au-t1-w100c0-brh-ent-thirty-years-war-end": {
+   "readout": [
+    "Peace of Nijmegen",
+    "Peace of Utrecht",
+    "Peace of the Pyrenees"
+   ]
+  },
+  "basic-au-t1-w100c0-brh-ent-tilted-campanile": {
+   "readout": [
+    "Giotto's Campanile",
+    "Torre del Mangia",
+    "St Mark's Campanile",
+    "Asinelli Tower"
+   ]
+  },
+  "basic-au-t1-w100c0-brh-ent-two-science-nobels": {
+   "readout": [
+    "Lise Meitner",
+    "Rosalind Franklin",
+    "Dorothy Hodgkin",
+    "Emmy Noether"
+   ]
+  },
+  "basic-au-t1-w100c0-brh-ent-versailles-1919": {
+   "readout": [
+    "Treaty of Trianon",
+    "Treaty of Saint-Germain-en-Laye",
+    "Treaty of Sèvres",
+    "Treaty of Neuilly-sur-Seine"
+   ]
+  },
+  "basic-au-t1-w100c0-brh-ent-voltage-current-resistance": {
+   "readout": [
+    "Coulomb's law",
+    "Joule's law",
+    "Ampère's law"
+   ]
+  },
+  "basic-au-t1-w100c0-brh-ent-white-nile-source": {
+   "readout": [
+    "Lake Chad",
+    "Lake Albert"
+   ]
+  },
+  "basic-au-t1-w100c1-brh-ent-armstrong": {
+   "readout": [
+    "Buzz Aldrin",
+    "Michael Collins",
+    "Yuri Gagarin",
+    "John Glenn"
+   ]
+  },
+  "basic-au-t1-w100c1-brh-ent-darwin": {
+   "readout": [
+    "Thomas Huxley",
+    "Gregor Mendel",
+    "Jean-Baptiste Lamarck",
+    "Alfred Wallace"
+   ]
+  },
+  "basic-au-t1-w100c1-brh-ent-everest": {
+   "readout": [
+    "Mount Kilimanjaro",
+    "Mount Elbrus",
+    "Mount Aconcagua",
+    "Mount Kangchenjunga"
+   ]
+  },
+  "basic-au-t1-w100c1-brh-ent-gettysburg": {
+   "readout": [
+    "Battle of Shiloh",
+    "Battle of Chancellorsville",
+    "Battle of Fredericksburg"
+   ]
+  },
+  "basic-au-t1-w100c1-brh-ent-great-wall": {
+   "readout": [
+    "Antonine Wall",
+    "Berlin Wall",
+    "Atlantic Wall"
+   ]
+  },
+  "basic-au-t1-w100c1-brh-ent-habsburg": {
+   "readout": [
+    "Hohenzollern dynasty",
+    "Bourbon dynasty"
+   ]
+  },
+  "basic-au-t1-w100c1-brh-ent-han-dynasty": {
+   "readout": [
+    "Jin dynasty"
+   ]
+  },
+  "basic-au-t1-w100c1-brh-ent-hookes-law": {
+   "readout": [
+    "Charles's law",
+    "Snell's law",
+    "Pascal's law"
+   ]
+  },
+  "basic-au-t1-w100c1-brh-ent-magna-carta": {
+   "readout": [
+    "Charter of the Forest",
+    "Provisions of Oxford",
+    "Statute of Westminster",
+    "Constitutions of Clarendon"
+   ]
+  }
+ }
+}

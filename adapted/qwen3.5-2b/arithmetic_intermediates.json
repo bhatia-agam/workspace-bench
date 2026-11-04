@@ -120,7 +120,7 @@
     "pos": -8
    },
    "role": "structural",
-   "n_items": 17
+   "n_items": 0
   },
   "subsub": {
    "shape": "(a - b) - c",
@@ -130,7 +130,7 @@
     "pos": -8
    },
    "role": "comparison",
-   "n_items": 60
+   "n_items": 44
   },
   "subsubx": {
    "shape": "a - (b - c)",
@@ -160,7 +160,7 @@
  "adapt": {
   "model": "qwen3.5-2b",
   "hf_id": "Qwen/Qwen3.5-2B",
-  "frozen": "2026-10-20"
+  "frozen": "2026-11-04"
  },
  "items": [
   {
@@ -214,6 +214,7 @@
     }
    },
    "null_set": [
+    "arithmetic-t0-s0-0141",
     "arithmetic-t0-s0-0215",
     "arithmetic-t1-s1000-0197",
     "arithmetic-t1-s1000-0227",
@@ -223,6 +224,7 @@
     "arithmetic-t2-s2000-0178",
     "arithmetic-t2-s2000-0221",
     "arithmetic-t2-s2000-0395",
+    "arithmetic-t2-s2000-0396",
     "arithmetic-t2-s2001-0048",
     "arithmetic-t2-s2001-0089",
     "arithmetic-t2-s2001-0123",
@@ -250,23 +252,102 @@
     "arithmetic-t2-s2003-0104",
     "arithmetic-t2-s2003-0307",
     "arithmetic-t2-s2003-0345",
-    "arithmetic-t2-s2003-0358",
-    "arithmetic-t2-s2004-0027",
-    "arithmetic-t2-s2004-0051",
-    "arithmetic-t2-s2004-0063",
-    "arithmetic-t2-s2004-0079",
-    "arithmetic-t2-s2004-0080",
-    "arithmetic-t2-s2004-0090",
-    "arithmetic-t2-s2004-0135",
-    "arithmetic-t2-s2004-0218",
-    "arithmetic-t2-s2004-0224",
-    "arithmetic-t2-s2004-0315",
-    "arithmetic-t2-s2005-0046",
-    "arithmetic-t2-s2005-0092",
-    "arithmetic-t2-s2005-0156",
-    "arithmetic-t2-s2005-0164",
-    "arithmetic-t2-s2005-0183",
-    "arithmetic-t2-s2005-0186"
+    "arithmetic-t2-s2003-0358"
+   ]
+  },
+  {
+   "variant": "subsub",
+   "expr": "(66 - 28) - 16",
+   "operands": [
+    "66",
+    "28",
+    "16"
+   ],
+   "first_op": "subtract",
+   "answer": "22",
+   "first_value": "38",
+   "intermediates": [
+    "38"
+   ],
+   "prompt": "Compute (66 - 28) - 16. Reply with only the final number, nothing else.",
+   "tolerance": "rel5pct",
+   "cell": {
+    "layer": 21,
+    "pos": -8
+   },
+   "role": "comparison",
+   "single_token_reachable": true,
+   "name": "arithmetic-t0-s0-0141",
+   "adapt": {
+    "origin": "generated",
+    "tier": "t0",
+    "knobs": {
+     "only": [
+      "absval",
+      "addmul",
+      "floordiv",
+      "frac",
+      "fracadd",
+      "fraccomp",
+      "fracint",
+      "fracsmall",
+      "muladd",
+      "mulmid",
+      "sign",
+      "signpair",
+      "subsub",
+      "subsubx"
+     ]
+    },
+    "change": "the bank's own operand ranges per variant",
+    "gate": {
+     "rate": 0.8,
+     "pass": true
+    }
+   },
+   "null_set": [
+    "arithmetic-t0-s0-0091",
+    "arithmetic-t0-s0-0249",
+    "arithmetic-t1-s1000-0197",
+    "arithmetic-t1-s1000-0227",
+    "arithmetic-t1-s1000-0284",
+    "arithmetic-t2-s2000-0108",
+    "arithmetic-t2-s2000-0162",
+    "arithmetic-t2-s2000-0178",
+    "arithmetic-t2-s2000-0221",
+    "arithmetic-t2-s2000-0395",
+    "arithmetic-t2-s2000-0396",
+    "arithmetic-t2-s2001-0048",
+    "arithmetic-t2-s2001-0089",
+    "arithmetic-t2-s2001-0123",
+    "arithmetic-t2-s2001-0173",
+    "arithmetic-t2-s2001-0239",
+    "arithmetic-t2-s2001-0256",
+    "arithmetic-t2-s2001-0282",
+    "arithmetic-t2-s2001-0316",
+    "arithmetic-t2-s2001-0346",
+    "arithmetic-t2-s2001-0360",
+    "arithmetic-t2-s2001-0379",
+    "arithmetic-t2-s2001-0398",
+    "arithmetic-t2-s2002-0069",
+    "arithmetic-t2-s2002-0085",
+    "arithmetic-t2-s2002-0114",
+    "arithmetic-t2-s2002-0130",
+    "arithmetic-t2-s2002-0141",
+    "arithmetic-t2-s2002-0151",
+    "arithmetic-t2-s2002-0197",
+    "arithmetic-t2-s2002-0234",
+    "arithmetic-t2-s2002-0310",
+    "arithmetic-t2-s2002-0336",
+    "arithmetic-t2-s2002-0372",
+    "arithmetic-t2-s2003-0001",
+    "arithmetic-t2-s2003-0049",
+    "arithmetic-t2-s2003-0100",
+    "arithmetic-t2-s2003-0104",
+    "arithmetic-t2-s2003-0194",
+    "arithmetic-t2-s2003-0307",
+    "arithmetic-t2-s2003-0345",
+    "arithmetic-t2-s2003-0358"
    ]
   },
   {
@@ -330,6 +411,7 @@
     "arithmetic-t2-s2000-0178",
     "arithmetic-t2-s2000-0221",
     "arithmetic-t2-s2000-0395",
+    "arithmetic-t2-s2000-0396",
     "arithmetic-t2-s2001-0048",
     "arithmetic-t2-s2001-0089",
     "arithmetic-t2-s2001-0123",
@@ -360,25 +442,7 @@
     "arithmetic-t2-s2003-0194",
     "arithmetic-t2-s2003-0307",
     "arithmetic-t2-s2003-0345",
-    "arithmetic-t2-s2003-0358",
-    "arithmetic-t2-s2004-0027",
-    "arithmetic-t2-s2004-0051",
-    "arithmetic-t2-s2004-0063",
-    "arithmetic-t2-s2004-0079",
-    "arithmetic-t2-s2004-0080",
-    "arithmetic-t2-s2004-0090",
-    "arithmetic-t2-s2004-0124",
-    "arithmetic-t2-s2004-0135",
-    "arithmetic-t2-s2004-0218",
-    "arithmetic-t2-s2004-0224",
-    "arithmetic-t2-s2004-0315",
-    "arithmetic-t2-s2005-0024",
-    "arithmetic-t2-s2005-0046",
-    "arithmetic-t2-s2005-0092",
-    "arithmetic-t2-s2005-0156",
-    "arithmetic-t2-s2005-0164",
-    "arithmetic-t2-s2005-0183",
-    "arithmetic-t2-s2005-0186"
+    "arithmetic-t2-s2003-0358"
    ]
   },
   {
@@ -432,6 +496,7 @@
     }
    },
    "null_set": [
+    "arithmetic-t0-s0-0141",
     "arithmetic-t0-s0-0215",
     "arithmetic-t1-s1000-0197",
     "arithmetic-t1-s1000-0227",
@@ -441,6 +506,7 @@
     "arithmetic-t2-s2000-0178",
     "arithmetic-t2-s2000-0221",
     "arithmetic-t2-s2000-0395",
+    "arithmetic-t2-s2000-0396",
     "arithmetic-t2-s2001-0048",
     "arithmetic-t2-s2001-0089",
     "arithmetic-t2-s2001-0123",
@@ -468,22 +534,7 @@
     "arithmetic-t2-s2003-0104",
     "arithmetic-t2-s2003-0307",
     "arithmetic-t2-s2003-0345",
-    "arithmetic-t2-s2003-0358",
-    "arithmetic-t2-s2004-0027",
-    "arithmetic-t2-s2004-0051",
-    "arithmetic-t2-s2004-0079",
-    "arithmetic-t2-s2004-0080",
-    "arithmetic-t2-s2004-0090",
-    "arithmetic-t2-s2004-0135",
-    "arithmetic-t2-s2004-0218",
-    "arithmetic-t2-s2004-0224",
-    "arithmetic-t2-s2004-0315",
-    "arithmetic-t2-s2005-0046",
-    "arithmetic-t2-s2005-0092",
-    "arithmetic-t2-s2005-0156",
-    "arithmetic-t2-s2005-0164",
-    "arithmetic-t2-s2005-0183",
-    "arithmetic-t2-s2005-0186"
+    "arithmetic-t2-s2003-0358"
    ]
   },
   {
@@ -536,11 +587,13 @@
    },
    "null_set": [
     "arithmetic-t0-s0-0091",
+    "arithmetic-t0-s0-0141",
     "arithmetic-t0-s0-0215",
     "arithmetic-t0-s0-0249",
     "arithmetic-t1-s1000-0227",
     "arithmetic-t2-s2000-0108",
     "arithmetic-t2-s2000-0162",
+    "arithmetic-t2-s2000-0396",
     "arithmetic-t2-s2001-0048",
     "arithmetic-t2-s2001-0089",
     "arithmetic-t2-s2001-0239",
@@ -562,22 +615,7 @@
     "arithmetic-t2-s2003-0049",
     "arithmetic-t2-s2003-0104",
     "arithmetic-t2-s2003-0194",
-    "arithmetic-t2-s2003-0358",
-    "arithmetic-t2-s2004-0051",
-    "arithmetic-t2-s2004-0079",
-    "arithmetic-t2-s2004-0080",
-    "arithmetic-t2-s2004-0124",
-    "arithmetic-t2-s2004-0135",
-    "arithmetic-t2-s2004-0218",
-    "arithmetic-t2-s2004-0224",
-    "arithmetic-t2-s2004-0315",
-    "arithmetic-t2-s2005-0024",
-    "arithmetic-t2-s2005-0046",
-    "arithmetic-t2-s2005-0092",
-    "arithmetic-t2-s2005-0156",
-    "arithmetic-t2-s2005-0164",
-    "arithmetic-t2-s2005-0183",
-    "arithmetic-t2-s2005-0186"
+    "arithmetic-t2-s2003-0358"
    ]
   },
   {
@@ -630,6 +668,7 @@
    },
    "null_set": [
     "arithmetic-t0-s0-0091",
+    "arithmetic-t0-s0-0141",
     "arithmetic-t0-s0-0215",
     "arithmetic-t0-s0-0249",
     "arithmetic-t1-s1000-0197",
@@ -638,6 +677,7 @@
     "arithmetic-t2-s2000-0178",
     "arithmetic-t2-s2000-0221",
     "arithmetic-t2-s2000-0395",
+    "arithmetic-t2-s2000-0396",
     "arithmetic-t2-s2001-0089",
     "arithmetic-t2-s2001-0123",
     "arithmetic-t2-s2001-0173",
@@ -664,24 +704,7 @@
     "arithmetic-t2-s2003-0194",
     "arithmetic-t2-s2003-0307",
     "arithmetic-t2-s2003-0345",
-    "arithmetic-t2-s2003-0358",
-    "arithmetic-t2-s2004-0027",
-    "arithmetic-t2-s2004-0051",
-    "arithmetic-t2-s2004-0063",
-    "arithmetic-t2-s2004-0079",
-    "arithmetic-t2-s2004-0080",
-    "arithmetic-t2-s2004-0090",
-    "arithmetic-t2-s2004-0124",
-    "arithmetic-t2-s2004-0135",
-    "arithmetic-t2-s2004-0218",
-    "arithmetic-t2-s2004-0224",
-    "arithmetic-t2-s2004-0315",
-    "arithmetic-t2-s2005-0024",
-    "arithmetic-t2-s2005-0046",
-    "arithmetic-t2-s2005-0092",
-    "arithmetic-t2-s2005-0156",
-    "arithmetic-t2-s2005-0183",
-    "arithmetic-t2-s2005-0186"
+    "arithmetic-t2-s2003-0358"
    ]
   },
   {
@@ -734,11 +757,13 @@
    },
    "null_set": [
     "arithmetic-t0-s0-0091",
+    "arithmetic-t0-s0-0141",
     "arithmetic-t0-s0-0215",
     "arithmetic-t0-s0-0249",
     "arithmetic-t1-s1000-0227",
     "arithmetic-t2-s2000-0108",
     "arithmetic-t2-s2000-0162",
+    "arithmetic-t2-s2000-0396",
     "arithmetic-t2-s2001-0048",
     "arithmetic-t2-s2001-0089",
     "arithmetic-t2-s2001-0239",
@@ -756,21 +781,7 @@
     "arithmetic-t2-s2003-0049",
     "arithmetic-t2-s2003-0104",
     "arithmetic-t2-s2003-0194",
-    "arithmetic-t2-s2003-0358",
-    "arithmetic-t2-s2004-0051",
-    "arithmetic-t2-s2004-0063",
-    "arithmetic-t2-s2004-0079",
-    "arithmetic-t2-s2004-0080",
-    "arithmetic-t2-s2004-0124",
-    "arithmetic-t2-s2004-0135",
-    "arithmetic-t2-s2004-0218",
-    "arithmetic-t2-s2004-0224",
-    "arithmetic-t2-s2004-0315",
-    "arithmetic-t2-s2005-0024",
-    "arithmetic-t2-s2005-0092",
-    "arithmetic-t2-s2005-0156",
-    "arithmetic-t2-s2005-0164",
-    "arithmetic-t2-s2005-0186"
+    "arithmetic-t2-s2003-0358"
    ]
   },
   {
@@ -823,6 +834,7 @@
    },
    "null_set": [
     "arithmetic-t0-s0-0091",
+    "arithmetic-t0-s0-0141",
     "arithmetic-t0-s0-0215",
     "arithmetic-t0-s0-0249",
     "arithmetic-t1-s1000-0197",
@@ -850,16 +862,7 @@
     "arithmetic-t2-s2003-0100",
     "arithmetic-t2-s2003-0194",
     "arithmetic-t2-s2003-0307",
-    "arithmetic-t2-s2003-0345",
-    "arithmetic-t2-s2004-0027",
-    "arithmetic-t2-s2004-0063",
-    "arithmetic-t2-s2004-0090",
-    "arithmetic-t2-s2004-0124",
-    "arithmetic-t2-s2005-0024",
-    "arithmetic-t2-s2005-0046",
-    "arithmetic-t2-s2005-0092",
-    "arithmetic-t2-s2005-0164",
-    "arithmetic-t2-s2005-0183"
+    "arithmetic-t2-s2003-0345"
    ]
   },
   {
@@ -912,6 +915,7 @@
    },
    "null_set": [
     "arithmetic-t0-s0-0091",
+    "arithmetic-t0-s0-0141",
     "arithmetic-t0-s0-0215",
     "arithmetic-t0-s0-0249",
     "arithmetic-t1-s1000-0197",
@@ -920,6 +924,7 @@
     "arithmetic-t2-s2000-0178",
     "arithmetic-t2-s2000-0221",
     "arithmetic-t2-s2000-0395",
+    "arithmetic-t2-s2000-0396",
     "arithmetic-t2-s2001-0089",
     "arithmetic-t2-s2001-0123",
     "arithmetic-t2-s2001-0173",
@@ -946,24 +951,7 @@
     "arithmetic-t2-s2003-0194",
     "arithmetic-t2-s2003-0307",
     "arithmetic-t2-s2003-0345",
-    "arithmetic-t2-s2003-0358",
-    "arithmetic-t2-s2004-0027",
-    "arithmetic-t2-s2004-0051",
-    "arithmetic-t2-s2004-0063",
-    "arithmetic-t2-s2004-0079",
-    "arithmetic-t2-s2004-0080",
-    "arithmetic-t2-s2004-0090",
-    "arithmetic-t2-s2004-0124",
-    "arithmetic-t2-s2004-0135",
-    "arithmetic-t2-s2004-0218",
-    "arithmetic-t2-s2004-0224",
-    "arithmetic-t2-s2004-0315",
-    "arithmetic-t2-s2005-0024",
-    "arithmetic-t2-s2005-0046",
-    "arithmetic-t2-s2005-0092",
-    "arithmetic-t2-s2005-0156",
-    "arithmetic-t2-s2005-0183",
-    "arithmetic-t2-s2005-0186"
+    "arithmetic-t2-s2003-0358"
    ]
   },
   {
@@ -1016,12 +1004,14 @@
    },
    "null_set": [
     "arithmetic-t0-s0-0091",
+    "arithmetic-t0-s0-0141",
     "arithmetic-t0-s0-0215",
     "arithmetic-t0-s0-0249",
     "arithmetic-t1-s1000-0227",
     "arithmetic-t2-s2000-0108",
     "arithmetic-t2-s2000-0162",
     "arithmetic-t2-s2000-0395",
+    "arithmetic-t2-s2000-0396",
     "arithmetic-t2-s2001-0048",
     "arithmetic-t2-s2001-0089",
     "arithmetic-t2-s2001-0173",
@@ -1041,20 +1031,7 @@
     "arithmetic-t2-s2003-0001",
     "arithmetic-t2-s2003-0049",
     "arithmetic-t2-s2003-0104",
-    "arithmetic-t2-s2003-0358",
-    "arithmetic-t2-s2004-0051",
-    "arithmetic-t2-s2004-0079",
-    "arithmetic-t2-s2004-0080",
-    "arithmetic-t2-s2004-0135",
-    "arithmetic-t2-s2004-0218",
-    "arithmetic-t2-s2004-0224",
-    "arithmetic-t2-s2004-0315",
-    "arithmetic-t2-s2005-0046",
-    "arithmetic-t2-s2005-0092",
-    "arithmetic-t2-s2005-0156",
-    "arithmetic-t2-s2005-0164",
-    "arithmetic-t2-s2005-0183",
-    "arithmetic-t2-s2005-0186"
+    "arithmetic-t2-s2003-0358"
    ]
   },
   {
@@ -1101,18 +1078,20 @@
     },
     "change": "single-digit factors, sums and differences under 50",
     "gate": {
-     "rate": 0.8,
+     "rate": 0.9,
      "pass": true
     }
    },
    "null_set": [
     "arithmetic-t0-s0-0091",
+    "arithmetic-t0-s0-0141",
     "arithmetic-t0-s0-0215",
     "arithmetic-t0-s0-0249",
     "arithmetic-t1-s1000-0227",
     "arithmetic-t2-s2000-0108",
     "arithmetic-t2-s2000-0162",
     "arithmetic-t2-s2000-0395",
+    "arithmetic-t2-s2000-0396",
     "arithmetic-t2-s2001-0048",
     "arithmetic-t2-s2001-0089",
     "arithmetic-t2-s2001-0173",
@@ -1132,149 +1111,7 @@
     "arithmetic-t2-s2003-0001",
     "arithmetic-t2-s2003-0049",
     "arithmetic-t2-s2003-0104",
-    "arithmetic-t2-s2003-0358",
-    "arithmetic-t2-s2004-0051",
-    "arithmetic-t2-s2004-0079",
-    "arithmetic-t2-s2004-0080",
-    "arithmetic-t2-s2004-0135",
-    "arithmetic-t2-s2004-0218",
-    "arithmetic-t2-s2004-0224",
-    "arithmetic-t2-s2004-0315",
-    "arithmetic-t2-s2005-0046",
-    "arithmetic-t2-s2005-0092",
-    "arithmetic-t2-s2005-0156",
-    "arithmetic-t2-s2005-0164",
-    "arithmetic-t2-s2005-0183",
-    "arithmetic-t2-s2005-0186"
-   ]
-  },
-  {
-   "variant": "signpair",
-   "expr": "(10 - 14) * 2",
-   "operands": [
-    "10",
-    "14",
-    "2"
-   ],
-   "first_op": "subtract",
-   "answer": "-8",
-   "first_value": "-4",
-   "intermediates": [
-    "-4"
-   ],
-   "prompt": "Compute (10 - 14) * 2. Reply with only the final number, nothing else.",
-   "tolerance": "rel5pct",
-   "cell": {
-    "layer": 21,
-    "pos": -8
-   },
-   "role": "comparison",
-   "single_token_reachable": true,
-   "name": "arithmetic-t2-s2000-0347",
-   "adapt": {
-    "origin": "generated",
-    "tier": "t2",
-    "knobs": {
-     "ranges": {
-      "a": [
-       2,
-       20
-      ],
-      "b": [
-       10,
-       40
-      ],
-      "c": [
-       2,
-       4
-      ]
-     }
-    },
-    "change": "single-digit factors, sums and differences under 50",
-    "gate": {
-     "rate": 0.9,
-     "pass": true
-    }
-   },
-   "null_set": [
-    "arithmetic-t2-s2000-0354",
-    "arithmetic-t2-s2001-0051",
-    "arithmetic-t2-s2001-0224",
-    "arithmetic-t2-s2002-0031",
-    "arithmetic-t2-s2002-0265",
-    "arithmetic-t2-s2003-0119",
-    "arithmetic-t2-s2003-0196",
-    "arithmetic-t2-s2004-0198",
-    "arithmetic-t2-s2004-0203",
-    "arithmetic-t2-s2005-0033",
-    "arithmetic-t2-s2005-0191",
-    "arithmetic-t2-s2005-0218"
-   ]
-  },
-  {
-   "variant": "signpair",
-   "expr": "(12 - 14) * 4",
-   "operands": [
-    "12",
-    "14",
-    "4"
-   ],
-   "first_op": "subtract",
-   "answer": "-8",
-   "first_value": "-2",
-   "intermediates": [
-    "-2"
-   ],
-   "prompt": "Compute (12 - 14) * 4. Reply with only the final number, nothing else.",
-   "tolerance": "rel5pct",
-   "cell": {
-    "layer": 21,
-    "pos": -8
-   },
-   "role": "comparison",
-   "single_token_reachable": true,
-   "name": "arithmetic-t2-s2000-0354",
-   "adapt": {
-    "origin": "generated",
-    "tier": "t2",
-    "knobs": {
-     "ranges": {
-      "a": [
-       2,
-       20
-      ],
-      "b": [
-       10,
-       40
-      ],
-      "c": [
-       2,
-       4
-      ]
-     }
-    },
-    "change": "single-digit factors, sums and differences under 50",
-    "gate": {
-     "rate": 0.8,
-     "pass": true
-    }
-   },
-   "null_set": [
-    "arithmetic-t2-s2000-0347",
-    "arithmetic-t2-s2001-0051",
-    "arithmetic-t2-s2001-0099",
-    "arithmetic-t2-s2001-0224",
-    "arithmetic-t2-s2001-0259",
-    "arithmetic-t2-s2002-0031",
-    "arithmetic-t2-s2002-0265",
-    "arithmetic-t2-s2003-0055",
-    "arithmetic-t2-s2003-0113",
-    "arithmetic-t2-s2003-0119",
-    "arithmetic-t2-s2003-0196",
-    "arithmetic-t2-s2004-0198",
-    "arithmetic-t2-s2004-0203",
-    "arithmetic-t2-s2005-0191",
-    "arithmetic-t2-s2005-0218"
+    "arithmetic-t2-s2003-0358"
    ]
   },
   {
@@ -1327,6 +1164,7 @@
    },
    "null_set": [
     "arithmetic-t0-s0-0091",
+    "arithmetic-t0-s0-0141",
     "arithmetic-t0-s0-0215",
     "arithmetic-t0-s0-0249",
     "arithmetic-t1-s1000-0227",
@@ -1334,6 +1172,7 @@
     "arithmetic-t2-s2000-0162",
     "arithmetic-t2-s2000-0178",
     "arithmetic-t2-s2000-0221",
+    "arithmetic-t2-s2000-0396",
     "arithmetic-t2-s2001-0048",
     "arithmetic-t2-s2001-0089",
     "arithmetic-t2-s2001-0239",
@@ -1352,20 +1191,88 @@
     "arithmetic-t2-s2003-0194",
     "arithmetic-t2-s2003-0307",
     "arithmetic-t2-s2003-0345",
-    "arithmetic-t2-s2003-0358",
-    "arithmetic-t2-s2004-0051",
-    "arithmetic-t2-s2004-0063",
-    "arithmetic-t2-s2004-0079",
-    "arithmetic-t2-s2004-0080",
-    "arithmetic-t2-s2004-0124",
-    "arithmetic-t2-s2004-0135",
-    "arithmetic-t2-s2004-0218",
-    "arithmetic-t2-s2004-0315",
-    "arithmetic-t2-s2005-0024",
-    "arithmetic-t2-s2005-0092",
-    "arithmetic-t2-s2005-0156",
-    "arithmetic-t2-s2005-0164",
-    "arithmetic-t2-s2005-0186"
+    "arithmetic-t2-s2003-0358"
+   ]
+  },
+  {
+   "variant": "subsub",
+   "expr": "(28 - 18) - 5",
+   "operands": [
+    "28",
+    "18",
+    "5"
+   ],
+   "first_op": "subtract",
+   "answer": "5",
+   "first_value": "10",
+   "intermediates": [
+    "10"
+   ],
+   "prompt": "Compute (28 - 18) - 5. Reply with only the final number, nothing else.",
+   "tolerance": "rel5pct",
+   "cell": {
+    "layer": 21,
+    "pos": -8
+   },
+   "role": "comparison",
+   "single_token_reachable": true,
+   "name": "arithmetic-t2-s2000-0396",
+   "adapt": {
+    "origin": "generated",
+    "tier": "t2",
+    "knobs": {
+     "ranges": {
+      "a": [
+       20,
+       49
+      ],
+      "b": [
+       8,
+       19
+      ],
+      "c": [
+       2,
+       6
+      ]
+     }
+    },
+    "change": "single-digit factors, sums and differences under 50",
+    "gate": {
+     "rate": 0.8,
+     "pass": true
+    }
+   },
+   "null_set": [
+    "arithmetic-t0-s0-0091",
+    "arithmetic-t0-s0-0141",
+    "arithmetic-t0-s0-0215",
+    "arithmetic-t0-s0-0249",
+    "arithmetic-t1-s1000-0197",
+    "arithmetic-t1-s1000-0227",
+    "arithmetic-t1-s1000-0284",
+    "arithmetic-t2-s2000-0162",
+    "arithmetic-t2-s2000-0178",
+    "arithmetic-t2-s2000-0221",
+    "arithmetic-t2-s2000-0395",
+    "arithmetic-t2-s2001-0048",
+    "arithmetic-t2-s2001-0123",
+    "arithmetic-t2-s2001-0173",
+    "arithmetic-t2-s2001-0256",
+    "arithmetic-t2-s2001-0282",
+    "arithmetic-t2-s2001-0316",
+    "arithmetic-t2-s2001-0360",
+    "arithmetic-t2-s2001-0379",
+    "arithmetic-t2-s2001-0398",
+    "arithmetic-t2-s2002-0069",
+    "arithmetic-t2-s2002-0085",
+    "arithmetic-t2-s2002-0151",
+    "arithmetic-t2-s2002-0197",
+    "arithmetic-t2-s2002-0234",
+    "arithmetic-t2-s2002-0336",
+    "arithmetic-t2-s2003-0100",
+    "arithmetic-t2-s2003-0194",
+    "arithmetic-t2-s2003-0307",
+    "arithmetic-t2-s2003-0345"
    ]
   },
   {
@@ -1418,6 +1325,7 @@
    },
    "null_set": [
     "arithmetic-t0-s0-0091",
+    "arithmetic-t0-s0-0141",
     "arithmetic-t0-s0-0215",
     "arithmetic-t0-s0-0249",
     "arithmetic-t1-s1000-0197",
@@ -1426,6 +1334,7 @@
     "arithmetic-t2-s2000-0178",
     "arithmetic-t2-s2000-0221",
     "arithmetic-t2-s2000-0395",
+    "arithmetic-t2-s2000-0396",
     "arithmetic-t2-s2001-0089",
     "arithmetic-t2-s2001-0123",
     "arithmetic-t2-s2001-0173",
@@ -1452,85 +1361,7 @@
     "arithmetic-t2-s2003-0194",
     "arithmetic-t2-s2003-0307",
     "arithmetic-t2-s2003-0345",
-    "arithmetic-t2-s2003-0358",
-    "arithmetic-t2-s2004-0027",
-    "arithmetic-t2-s2004-0051",
-    "arithmetic-t2-s2004-0063",
-    "arithmetic-t2-s2004-0079",
-    "arithmetic-t2-s2004-0080",
-    "arithmetic-t2-s2004-0090",
-    "arithmetic-t2-s2004-0124",
-    "arithmetic-t2-s2004-0135",
-    "arithmetic-t2-s2004-0218",
-    "arithmetic-t2-s2004-0224",
-    "arithmetic-t2-s2004-0315",
-    "arithmetic-t2-s2005-0024",
-    "arithmetic-t2-s2005-0046",
-    "arithmetic-t2-s2005-0092",
-    "arithmetic-t2-s2005-0156",
-    "arithmetic-t2-s2005-0183",
-    "arithmetic-t2-s2005-0186"
-   ]
-  },
-  {
-   "variant": "signpair",
-   "expr": "(11 - 12) * 3",
-   "operands": [
-    "11",
-    "12",
-    "3"
-   ],
-   "first_op": "subtract",
-   "answer": "-3",
-   "first_value": "-1",
-   "intermediates": [
-    "-1"
-   ],
-   "prompt": "Compute (11 - 12) * 3. Reply with only the final number, nothing else.",
-   "tolerance": "rel5pct",
-   "cell": {
-    "layer": 21,
-    "pos": -8
-   },
-   "role": "comparison",
-   "single_token_reachable": true,
-   "name": "arithmetic-t2-s2001-0051",
-   "adapt": {
-    "origin": "generated",
-    "tier": "t2",
-    "knobs": {
-     "ranges": {
-      "a": [
-       2,
-       20
-      ],
-      "b": [
-       10,
-       40
-      ],
-      "c": [
-       2,
-       4
-      ]
-     }
-    },
-    "change": "single-digit factors, sums and differences under 50",
-    "gate": {
-     "rate": 0.9,
-     "pass": true
-    }
-   },
-   "null_set": [
-    "arithmetic-t2-s2000-0347",
-    "arithmetic-t2-s2000-0354",
-    "arithmetic-t2-s2001-0099",
-    "arithmetic-t2-s2001-0259",
-    "arithmetic-t2-s2003-0055",
-    "arithmetic-t2-s2003-0113",
-    "arithmetic-t2-s2003-0119",
-    "arithmetic-t2-s2003-0196",
-    "arithmetic-t2-s2005-0033",
-    "arithmetic-t2-s2005-0218"
+    "arithmetic-t2-s2003-0358"
    ]
   },
   {
@@ -1583,6 +1414,7 @@
    },
    "null_set": [
     "arithmetic-t0-s0-0091",
+    "arithmetic-t0-s0-0141",
     "arithmetic-t0-s0-0215",
     "arithmetic-t0-s0-0249",
     "arithmetic-t1-s1000-0197",
@@ -1610,79 +1442,7 @@
     "arithmetic-t2-s2003-0100",
     "arithmetic-t2-s2003-0194",
     "arithmetic-t2-s2003-0307",
-    "arithmetic-t2-s2003-0345",
-    "arithmetic-t2-s2004-0027",
-    "arithmetic-t2-s2004-0063",
-    "arithmetic-t2-s2004-0090",
-    "arithmetic-t2-s2004-0124",
-    "arithmetic-t2-s2005-0024",
-    "arithmetic-t2-s2005-0046",
-    "arithmetic-t2-s2005-0092",
-    "arithmetic-t2-s2005-0164",
-    "arithmetic-t2-s2005-0183"
-   ]
-  },
-  {
-   "variant": "signpair",
-   "expr": "(18 - 23) * 3",
-   "operands": [
-    "18",
-    "23",
-    "3"
-   ],
-   "first_op": "subtract",
-   "answer": "-15",
-   "first_value": "-5",
-   "intermediates": [
-    "-5"
-   ],
-   "prompt": "Compute (18 - 23) * 3. Reply with only the final number, nothing else.",
-   "tolerance": "rel5pct",
-   "cell": {
-    "layer": 21,
-    "pos": -8
-   },
-   "role": "comparison",
-   "single_token_reachable": true,
-   "name": "arithmetic-t2-s2001-0099",
-   "adapt": {
-    "origin": "generated",
-    "tier": "t2",
-    "knobs": {
-     "ranges": {
-      "a": [
-       2,
-       20
-      ],
-      "b": [
-       10,
-       40
-      ],
-      "c": [
-       2,
-       4
-      ]
-     }
-    },
-    "change": "single-digit factors, sums and differences under 50",
-    "gate": {
-     "rate": 0.8,
-     "pass": true
-    }
-   },
-   "null_set": [
-    "arithmetic-t2-s2000-0354",
-    "arithmetic-t2-s2001-0051",
-    "arithmetic-t2-s2001-0224",
-    "arithmetic-t2-s2002-0031",
-    "arithmetic-t2-s2002-0265",
-    "arithmetic-t2-s2003-0119",
-    "arithmetic-t2-s2003-0196",
-    "arithmetic-t2-s2004-0198",
-    "arithmetic-t2-s2004-0203",
-    "arithmetic-t2-s2005-0033",
-    "arithmetic-t2-s2005-0191",
-    "arithmetic-t2-s2005-0218"
+    "arithmetic-t2-s2003-0345"
    ]
   },
   {
@@ -1735,11 +1495,13 @@
    },
    "null_set": [
     "arithmetic-t0-s0-0091",
+    "arithmetic-t0-s0-0141",
     "arithmetic-t0-s0-0215",
     "arithmetic-t0-s0-0249",
     "arithmetic-t1-s1000-0227",
     "arithmetic-t2-s2000-0108",
     "arithmetic-t2-s2000-0162",
+    "arithmetic-t2-s2000-0396",
     "arithmetic-t2-s2001-0048",
     "arithmetic-t2-s2001-0089",
     "arithmetic-t2-s2001-0239",
@@ -1759,22 +1521,7 @@
     "arithmetic-t2-s2003-0049",
     "arithmetic-t2-s2003-0104",
     "arithmetic-t2-s2003-0194",
-    "arithmetic-t2-s2003-0358",
-    "arithmetic-t2-s2004-0051",
-    "arithmetic-t2-s2004-0079",
-    "arithmetic-t2-s2004-0080",
-    "arithmetic-t2-s2004-0124",
-    "arithmetic-t2-s2004-0135",
-    "arithmetic-t2-s2004-0218",
-    "arithmetic-t2-s2004-0224",
-    "arithmetic-t2-s2004-0315",
-    "arithmetic-t2-s2005-0024",
-    "arithmetic-t2-s2005-0046",
-    "arithmetic-t2-s2005-0092",
-    "arithmetic-t2-s2005-0156",
-    "arithmetic-t2-s2005-0164",
-    "arithmetic-t2-s2005-0183",
-    "arithmetic-t2-s2005-0186"
+    "arithmetic-t2-s2003-0358"
    ]
   },
   {
@@ -1827,6 +1574,7 @@
    },
    "null_set": [
     "arithmetic-t0-s0-0091",
+    "arithmetic-t0-s0-0141",
     "arithmetic-t0-s0-0215",
     "arithmetic-t0-s0-0249",
     "arithmetic-t1-s1000-0227",
@@ -1834,6 +1582,7 @@
     "arithmetic-t2-s2000-0162",
     "arithmetic-t2-s2000-0178",
     "arithmetic-t2-s2000-0221",
+    "arithmetic-t2-s2000-0396",
     "arithmetic-t2-s2001-0048",
     "arithmetic-t2-s2001-0089",
     "arithmetic-t2-s2001-0239",
@@ -1852,81 +1601,7 @@
     "arithmetic-t2-s2003-0194",
     "arithmetic-t2-s2003-0307",
     "arithmetic-t2-s2003-0345",
-    "arithmetic-t2-s2003-0358",
-    "arithmetic-t2-s2004-0051",
-    "arithmetic-t2-s2004-0063",
-    "arithmetic-t2-s2004-0079",
-    "arithmetic-t2-s2004-0080",
-    "arithmetic-t2-s2004-0124",
-    "arithmetic-t2-s2004-0135",
-    "arithmetic-t2-s2004-0218",
-    "arithmetic-t2-s2004-0315",
-    "arithmetic-t2-s2005-0024",
-    "arithmetic-t2-s2005-0092",
-    "arithmetic-t2-s2005-0156",
-    "arithmetic-t2-s2005-0164",
-    "arithmetic-t2-s2005-0186"
-   ]
-  },
-  {
-   "variant": "signpair",
-   "expr": "(18 - 19) * 3",
-   "operands": [
-    "18",
-    "19",
-    "3"
-   ],
-   "first_op": "subtract",
-   "answer": "-3",
-   "first_value": "-1",
-   "intermediates": [
-    "-1"
-   ],
-   "prompt": "Compute (18 - 19) * 3. Reply with only the final number, nothing else.",
-   "tolerance": "rel5pct",
-   "cell": {
-    "layer": 21,
-    "pos": -8
-   },
-   "role": "comparison",
-   "single_token_reachable": true,
-   "name": "arithmetic-t2-s2001-0224",
-   "adapt": {
-    "origin": "generated",
-    "tier": "t2",
-    "knobs": {
-     "ranges": {
-      "a": [
-       2,
-       20
-      ],
-      "b": [
-       10,
-       40
-      ],
-      "c": [
-       2,
-       4
-      ]
-     }
-    },
-    "change": "single-digit factors, sums and differences under 50",
-    "gate": {
-     "rate": 0.8,
-     "pass": true
-    }
-   },
-   "null_set": [
-    "arithmetic-t2-s2000-0347",
-    "arithmetic-t2-s2000-0354",
-    "arithmetic-t2-s2001-0099",
-    "arithmetic-t2-s2001-0259",
-    "arithmetic-t2-s2003-0055",
-    "arithmetic-t2-s2003-0113",
-    "arithmetic-t2-s2003-0119",
-    "arithmetic-t2-s2003-0196",
-    "arithmetic-t2-s2005-0033",
-    "arithmetic-t2-s2005-0218"
+    "arithmetic-t2-s2003-0358"
    ]
   },
   {
@@ -1979,6 +1654,7 @@
    },
    "null_set": [
     "arithmetic-t0-s0-0091",
+    "arithmetic-t0-s0-0141",
     "arithmetic-t0-s0-0215",
     "arithmetic-t0-s0-0249",
     "arithmetic-t1-s1000-0197",
@@ -2005,14 +1681,7 @@
     "arithmetic-t2-s2003-0100",
     "arithmetic-t2-s2003-0194",
     "arithmetic-t2-s2003-0307",
-    "arithmetic-t2-s2003-0345",
-    "arithmetic-t2-s2004-0027",
-    "arithmetic-t2-s2004-0063",
-    "arithmetic-t2-s2004-0090",
-    "arithmetic-t2-s2004-0124",
-    "arithmetic-t2-s2005-0024",
-    "arithmetic-t2-s2005-0092",
-    "arithmetic-t2-s2005-0164"
+    "arithmetic-t2-s2003-0345"
    ]
   },
   {
@@ -2065,11 +1734,13 @@
    },
    "null_set": [
     "arithmetic-t0-s0-0091",
+    "arithmetic-t0-s0-0141",
     "arithmetic-t0-s0-0215",
     "arithmetic-t0-s0-0249",
     "arithmetic-t1-s1000-0227",
     "arithmetic-t2-s2000-0108",
     "arithmetic-t2-s2000-0162",
+    "arithmetic-t2-s2000-0396",
     "arithmetic-t2-s2001-0048",
     "arithmetic-t2-s2001-0089",
     "arithmetic-t2-s2001-0239",
@@ -2091,85 +1762,7 @@
     "arithmetic-t2-s2003-0049",
     "arithmetic-t2-s2003-0104",
     "arithmetic-t2-s2003-0194",
-    "arithmetic-t2-s2003-0358",
-    "arithmetic-t2-s2004-0051",
-    "arithmetic-t2-s2004-0079",
-    "arithmetic-t2-s2004-0080",
-    "arithmetic-t2-s2004-0124",
-    "arithmetic-t2-s2004-0135",
-    "arithmetic-t2-s2004-0218",
-    "arithmetic-t2-s2004-0224",
-    "arithmetic-t2-s2004-0315",
-    "arithmetic-t2-s2005-0024",
-    "arithmetic-t2-s2005-0046",
-    "arithmetic-t2-s2005-0092",
-    "arithmetic-t2-s2005-0156",
-    "arithmetic-t2-s2005-0164",
-    "arithmetic-t2-s2005-0183",
-    "arithmetic-t2-s2005-0186"
-   ]
-  },
-  {
-   "variant": "signpair",
-   "expr": "(11 - 16) * 4",
-   "operands": [
-    "11",
-    "16",
-    "4"
-   ],
-   "first_op": "subtract",
-   "answer": "-20",
-   "first_value": "-5",
-   "intermediates": [
-    "-5"
-   ],
-   "prompt": "Compute (11 - 16) * 4. Reply with only the final number, nothing else.",
-   "tolerance": "rel5pct",
-   "cell": {
-    "layer": 21,
-    "pos": -8
-   },
-   "role": "comparison",
-   "single_token_reachable": true,
-   "name": "arithmetic-t2-s2001-0259",
-   "adapt": {
-    "origin": "generated",
-    "tier": "t2",
-    "knobs": {
-     "ranges": {
-      "a": [
-       2,
-       20
-      ],
-      "b": [
-       10,
-       40
-      ],
-      "c": [
-       2,
-       4
-      ]
-     }
-    },
-    "change": "single-digit factors, sums and differences under 50",
-    "gate": {
-     "rate": 0.9,
-     "pass": true
-    }
-   },
-   "null_set": [
-    "arithmetic-t2-s2000-0354",
-    "arithmetic-t2-s2001-0051",
-    "arithmetic-t2-s2001-0224",
-    "arithmetic-t2-s2002-0031",
-    "arithmetic-t2-s2002-0265",
-    "arithmetic-t2-s2003-0119",
-    "arithmetic-t2-s2003-0196",
-    "arithmetic-t2-s2004-0198",
-    "arithmetic-t2-s2004-0203",
-    "arithmetic-t2-s2005-0033",
-    "arithmetic-t2-s2005-0191",
-    "arithmetic-t2-s2005-0218"
+    "arithmetic-t2-s2003-0358"
    ]
   },
   {
@@ -2222,11 +1815,13 @@
    },
    "null_set": [
     "arithmetic-t0-s0-0091",
+    "arithmetic-t0-s0-0141",
     "arithmetic-t0-s0-0215",
     "arithmetic-t0-s0-0249",
     "arithmetic-t1-s1000-0227",
     "arithmetic-t2-s2000-0108",
     "arithmetic-t2-s2000-0162",
+    "arithmetic-t2-s2000-0396",
     "arithmetic-t2-s2001-0048",
     "arithmetic-t2-s2001-0089",
     "arithmetic-t2-s2001-0239",
@@ -2248,22 +1843,7 @@
     "arithmetic-t2-s2003-0049",
     "arithmetic-t2-s2003-0104",
     "arithmetic-t2-s2003-0194",
-    "arithmetic-t2-s2003-0358",
-    "arithmetic-t2-s2004-0051",
-    "arithmetic-t2-s2004-0079",
-    "arithmetic-t2-s2004-0080",
-    "arithmetic-t2-s2004-0124",
-    "arithmetic-t2-s2004-0135",
-    "arithmetic-t2-s2004-0218",
-    "arithmetic-t2-s2004-0224",
-    "arithmetic-t2-s2004-0315",
-    "arithmetic-t2-s2005-0024",
-    "arithmetic-t2-s2005-0046",
-    "arithmetic-t2-s2005-0092",
-    "arithmetic-t2-s2005-0156",
-    "arithmetic-t2-s2005-0164",
-    "arithmetic-t2-s2005-0183",
-    "arithmetic-t2-s2005-0186"
+    "arithmetic-t2-s2003-0358"
    ]
   },
   {
@@ -2316,6 +1896,7 @@
    },
    "null_set": [
     "arithmetic-t0-s0-0091",
+    "arithmetic-t0-s0-0141",
     "arithmetic-t0-s0-0215",
     "arithmetic-t0-s0-0249",
     "arithmetic-t1-s1000-0197",
@@ -2324,6 +1905,7 @@
     "arithmetic-t2-s2000-0178",
     "arithmetic-t2-s2000-0221",
     "arithmetic-t2-s2000-0395",
+    "arithmetic-t2-s2000-0396",
     "arithmetic-t2-s2001-0089",
     "arithmetic-t2-s2001-0123",
     "arithmetic-t2-s2001-0173",
@@ -2350,24 +1932,7 @@
     "arithmetic-t2-s2003-0194",
     "arithmetic-t2-s2003-0307",
     "arithmetic-t2-s2003-0345",
-    "arithmetic-t2-s2003-0358",
-    "arithmetic-t2-s2004-0027",
-    "arithmetic-t2-s2004-0051",
-    "arithmetic-t2-s2004-0063",
-    "arithmetic-t2-s2004-0079",
-    "arithmetic-t2-s2004-0080",
-    "arithmetic-t2-s2004-0090",
-    "arithmetic-t2-s2004-0124",
-    "arithmetic-t2-s2004-0135",
-    "arithmetic-t2-s2004-0218",
-    "arithmetic-t2-s2004-0224",
-    "arithmetic-t2-s2004-0315",
-    "arithmetic-t2-s2005-0024",
-    "arithmetic-t2-s2005-0046",
-    "arithmetic-t2-s2005-0092",
-    "arithmetic-t2-s2005-0156",
-    "arithmetic-t2-s2005-0183",
-    "arithmetic-t2-s2005-0186"
+    "arithmetic-t2-s2003-0358"
    ]
   },
   {
@@ -2420,6 +1985,7 @@
    },
    "null_set": [
     "arithmetic-t0-s0-0091",
+    "arithmetic-t0-s0-0141",
     "arithmetic-t0-s0-0215",
     "arithmetic-t0-s0-0249",
     "arithmetic-t1-s1000-0197",
@@ -2447,16 +2013,7 @@
     "arithmetic-t2-s2003-0194",
     "arithmetic-t2-s2003-0307",
     "arithmetic-t2-s2003-0345",
-    "arithmetic-t2-s2003-0358",
-    "arithmetic-t2-s2004-0027",
-    "arithmetic-t2-s2004-0063",
-    "arithmetic-t2-s2004-0080",
-    "arithmetic-t2-s2004-0090",
-    "arithmetic-t2-s2004-0124",
-    "arithmetic-t2-s2004-0135",
-    "arithmetic-t2-s2005-0024",
-    "arithmetic-t2-s2005-0092",
-    "arithmetic-t2-s2005-0164"
+    "arithmetic-t2-s2003-0358"
    ]
   },
   {
@@ -2509,11 +2066,13 @@
    },
    "null_set": [
     "arithmetic-t0-s0-0091",
+    "arithmetic-t0-s0-0141",
     "arithmetic-t0-s0-0215",
     "arithmetic-t0-s0-0249",
     "arithmetic-t1-s1000-0227",
     "arithmetic-t2-s2000-0108",
     "arithmetic-t2-s2000-0162",
+    "arithmetic-t2-s2000-0396",
     "arithmetic-t2-s2001-0048",
     "arithmetic-t2-s2001-0089",
     "arithmetic-t2-s2001-0239",
@@ -2535,22 +2094,7 @@
     "arithmetic-t2-s2003-0049",
     "arithmetic-t2-s2003-0104",
     "arithmetic-t2-s2003-0194",
-    "arithmetic-t2-s2003-0358",
-    "arithmetic-t2-s2004-0051",
-    "arithmetic-t2-s2004-0079",
-    "arithmetic-t2-s2004-0080",
-    "arithmetic-t2-s2004-0124",
-    "arithmetic-t2-s2004-0135",
-    "arithmetic-t2-s2004-0218",
-    "arithmetic-t2-s2004-0224",
-    "arithmetic-t2-s2004-0315",
-    "arithmetic-t2-s2005-0024",
-    "arithmetic-t2-s2005-0046",
-    "arithmetic-t2-s2005-0092",
-    "arithmetic-t2-s2005-0156",
-    "arithmetic-t2-s2005-0164",
-    "arithmetic-t2-s2005-0183",
-    "arithmetic-t2-s2005-0186"
+    "arithmetic-t2-s2003-0358"
    ]
   },
   {
@@ -2602,6 +2146,7 @@
     }
    },
    "null_set": [
+    "arithmetic-t0-s0-0141",
     "arithmetic-t0-s0-0215",
     "arithmetic-t1-s1000-0197",
     "arithmetic-t1-s1000-0227",
@@ -2609,6 +2154,7 @@
     "arithmetic-t2-s2000-0108",
     "arithmetic-t2-s2000-0162",
     "arithmetic-t2-s2000-0395",
+    "arithmetic-t2-s2000-0396",
     "arithmetic-t2-s2001-0048",
     "arithmetic-t2-s2001-0089",
     "arithmetic-t2-s2001-0123",
@@ -2635,22 +2181,7 @@
     "arithmetic-t2-s2003-0104",
     "arithmetic-t2-s2003-0307",
     "arithmetic-t2-s2003-0345",
-    "arithmetic-t2-s2003-0358",
-    "arithmetic-t2-s2004-0027",
-    "arithmetic-t2-s2004-0051",
-    "arithmetic-t2-s2004-0079",
-    "arithmetic-t2-s2004-0080",
-    "arithmetic-t2-s2004-0090",
-    "arithmetic-t2-s2004-0135",
-    "arithmetic-t2-s2004-0218",
-    "arithmetic-t2-s2004-0224",
-    "arithmetic-t2-s2004-0315",
-    "arithmetic-t2-s2005-0046",
-    "arithmetic-t2-s2005-0092",
-    "arithmetic-t2-s2005-0156",
-    "arithmetic-t2-s2005-0164",
-    "arithmetic-t2-s2005-0183",
-    "arithmetic-t2-s2005-0186"
+    "arithmetic-t2-s2003-0358"
    ]
   },
   {
@@ -2697,12 +2228,13 @@
     },
     "change": "single-digit factors, sums and differences under 50",
     "gate": {
-     "rate": 0.8,
+     "rate": 0.9,
      "pass": true
     }
    },
    "null_set": [
     "arithmetic-t0-s0-0091",
+    "arithmetic-t0-s0-0141",
     "arithmetic-t0-s0-0215",
     "arithmetic-t0-s0-0249",
     "arithmetic-t1-s1000-0197",
@@ -2711,6 +2243,7 @@
     "arithmetic-t2-s2000-0162",
     "arithmetic-t2-s2000-0178",
     "arithmetic-t2-s2000-0221",
+    "arithmetic-t2-s2000-0396",
     "arithmetic-t2-s2001-0048",
     "arithmetic-t2-s2001-0089",
     "arithmetic-t2-s2001-0239",
@@ -2732,81 +2265,7 @@
     "arithmetic-t2-s2003-0194",
     "arithmetic-t2-s2003-0307",
     "arithmetic-t2-s2003-0345",
-    "arithmetic-t2-s2003-0358",
-    "arithmetic-t2-s2004-0051",
-    "arithmetic-t2-s2004-0063",
-    "arithmetic-t2-s2004-0079",
-    "arithmetic-t2-s2004-0080",
-    "arithmetic-t2-s2004-0124",
-    "arithmetic-t2-s2004-0135",
-    "arithmetic-t2-s2004-0218",
-    "arithmetic-t2-s2004-0315",
-    "arithmetic-t2-s2005-0024",
-    "arithmetic-t2-s2005-0092",
-    "arithmetic-t2-s2005-0156",
-    "arithmetic-t2-s2005-0164",
-    "arithmetic-t2-s2005-0186"
-   ]
-  },
-  {
-   "variant": "signpair",
-   "expr": "(20 - 21) * 3",
-   "operands": [
-    "20",
-    "21",
-    "3"
-   ],
-   "first_op": "subtract",
-   "answer": "-3",
-   "first_value": "-1",
-   "intermediates": [
-    "-1"
-   ],
-   "prompt": "Compute (20 - 21) * 3. Reply with only the final number, nothing else.",
-   "tolerance": "rel5pct",
-   "cell": {
-    "layer": 21,
-    "pos": -8
-   },
-   "role": "comparison",
-   "single_token_reachable": true,
-   "name": "arithmetic-t2-s2002-0031",
-   "adapt": {
-    "origin": "generated",
-    "tier": "t2",
-    "knobs": {
-     "ranges": {
-      "a": [
-       2,
-       20
-      ],
-      "b": [
-       10,
-       40
-      ],
-      "c": [
-       2,
-       4
-      ]
-     }
-    },
-    "change": "single-digit factors, sums and differences under 50",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   },
-   "null_set": [
-    "arithmetic-t2-s2000-0347",
-    "arithmetic-t2-s2000-0354",
-    "arithmetic-t2-s2001-0099",
-    "arithmetic-t2-s2001-0259",
-    "arithmetic-t2-s2003-0055",
-    "arithmetic-t2-s2003-0113",
-    "arithmetic-t2-s2003-0119",
-    "arithmetic-t2-s2003-0196",
-    "arithmetic-t2-s2005-0033",
-    "arithmetic-t2-s2005-0218"
+    "arithmetic-t2-s2003-0358"
    ]
   },
   {
@@ -2859,6 +2318,7 @@
    },
    "null_set": [
     "arithmetic-t0-s0-0091",
+    "arithmetic-t0-s0-0141",
     "arithmetic-t0-s0-0215",
     "arithmetic-t0-s0-0249",
     "arithmetic-t1-s1000-0197",
@@ -2867,6 +2327,7 @@
     "arithmetic-t2-s2000-0162",
     "arithmetic-t2-s2000-0178",
     "arithmetic-t2-s2000-0221",
+    "arithmetic-t2-s2000-0396",
     "arithmetic-t2-s2001-0048",
     "arithmetic-t2-s2001-0089",
     "arithmetic-t2-s2001-0123",
@@ -2886,17 +2347,7 @@
     "arithmetic-t2-s2003-0194",
     "arithmetic-t2-s2003-0307",
     "arithmetic-t2-s2003-0345",
-    "arithmetic-t2-s2003-0358",
-    "arithmetic-t2-s2004-0027",
-    "arithmetic-t2-s2004-0051",
-    "arithmetic-t2-s2004-0063",
-    "arithmetic-t2-s2004-0080",
-    "arithmetic-t2-s2004-0090",
-    "arithmetic-t2-s2004-0124",
-    "arithmetic-t2-s2004-0135",
-    "arithmetic-t2-s2005-0024",
-    "arithmetic-t2-s2005-0092",
-    "arithmetic-t2-s2005-0164"
+    "arithmetic-t2-s2003-0358"
    ]
   },
   {
@@ -2949,6 +2400,7 @@
    },
    "null_set": [
     "arithmetic-t0-s0-0091",
+    "arithmetic-t0-s0-0141",
     "arithmetic-t0-s0-0215",
     "arithmetic-t0-s0-0249",
     "arithmetic-t1-s1000-0197",
@@ -2957,6 +2409,7 @@
     "arithmetic-t2-s2000-0162",
     "arithmetic-t2-s2000-0178",
     "arithmetic-t2-s2000-0221",
+    "arithmetic-t2-s2000-0396",
     "arithmetic-t2-s2001-0048",
     "arithmetic-t2-s2001-0089",
     "arithmetic-t2-s2001-0123",
@@ -2976,17 +2429,7 @@
     "arithmetic-t2-s2003-0194",
     "arithmetic-t2-s2003-0307",
     "arithmetic-t2-s2003-0345",
-    "arithmetic-t2-s2003-0358",
-    "arithmetic-t2-s2004-0027",
-    "arithmetic-t2-s2004-0051",
-    "arithmetic-t2-s2004-0063",
-    "arithmetic-t2-s2004-0080",
-    "arithmetic-t2-s2004-0090",
-    "arithmetic-t2-s2004-0124",
-    "arithmetic-t2-s2004-0135",
-    "arithmetic-t2-s2005-0024",
-    "arithmetic-t2-s2005-0092",
-    "arithmetic-t2-s2005-0164"
+    "arithmetic-t2-s2003-0358"
    ]
   },
   {
@@ -3039,6 +2482,7 @@
    },
    "null_set": [
     "arithmetic-t0-s0-0091",
+    "arithmetic-t0-s0-0141",
     "arithmetic-t0-s0-0215",
     "arithmetic-t0-s0-0249",
     "arithmetic-t1-s1000-0197",
@@ -3066,16 +2510,7 @@
     "arithmetic-t2-s2003-0194",
     "arithmetic-t2-s2003-0307",
     "arithmetic-t2-s2003-0345",
-    "arithmetic-t2-s2003-0358",
-    "arithmetic-t2-s2004-0027",
-    "arithmetic-t2-s2004-0063",
-    "arithmetic-t2-s2004-0080",
-    "arithmetic-t2-s2004-0090",
-    "arithmetic-t2-s2004-0124",
-    "arithmetic-t2-s2004-0135",
-    "arithmetic-t2-s2005-0024",
-    "arithmetic-t2-s2005-0092",
-    "arithmetic-t2-s2005-0164"
+    "arithmetic-t2-s2003-0358"
    ]
   },
   {
@@ -3128,6 +2563,7 @@
    },
    "null_set": [
     "arithmetic-t0-s0-0091",
+    "arithmetic-t0-s0-0141",
     "arithmetic-t0-s0-0215",
     "arithmetic-t0-s0-0249",
     "arithmetic-t1-s1000-0197",
@@ -3157,17 +2593,7 @@
     "arithmetic-t2-s2003-0100",
     "arithmetic-t2-s2003-0194",
     "arithmetic-t2-s2003-0307",
-    "arithmetic-t2-s2003-0345",
-    "arithmetic-t2-s2004-0027",
-    "arithmetic-t2-s2004-0063",
-    "arithmetic-t2-s2004-0090",
-    "arithmetic-t2-s2004-0124",
-    "arithmetic-t2-s2004-0224",
-    "arithmetic-t2-s2005-0024",
-    "arithmetic-t2-s2005-0046",
-    "arithmetic-t2-s2005-0092",
-    "arithmetic-t2-s2005-0164",
-    "arithmetic-t2-s2005-0183"
+    "arithmetic-t2-s2003-0345"
    ]
   },
   {
@@ -3220,6 +2646,7 @@
    },
    "null_set": [
     "arithmetic-t0-s0-0091",
+    "arithmetic-t0-s0-0141",
     "arithmetic-t0-s0-0215",
     "arithmetic-t0-s0-0249",
     "arithmetic-t1-s1000-0197",
@@ -3247,21 +2674,7 @@
     "arithmetic-t2-s2003-0100",
     "arithmetic-t2-s2003-0194",
     "arithmetic-t2-s2003-0307",
-    "arithmetic-t2-s2003-0345",
-    "arithmetic-t2-s2004-0027",
-    "arithmetic-t2-s2004-0063",
-    "arithmetic-t2-s2004-0079",
-    "arithmetic-t2-s2004-0090",
-    "arithmetic-t2-s2004-0124",
-    "arithmetic-t2-s2004-0218",
-    "arithmetic-t2-s2004-0224",
-    "arithmetic-t2-s2004-0315",
-    "arithmetic-t2-s2005-0024",
-    "arithmetic-t2-s2005-0046",
-    "arithmetic-t2-s2005-0092",
-    "arithmetic-t2-s2005-0156",
-    "arithmetic-t2-s2005-0183",
-    "arithmetic-t2-s2005-0186"
+    "arithmetic-t2-s2003-0345"
    ]
   },
   {
@@ -3313,6 +2726,7 @@
     }
    },
    "null_set": [
+    "arithmetic-t0-s0-0141",
     "arithmetic-t0-s0-0215",
     "arithmetic-t1-s1000-0197",
     "arithmetic-t1-s1000-0227",
@@ -3320,6 +2734,7 @@
     "arithmetic-t2-s2000-0108",
     "arithmetic-t2-s2000-0162",
     "arithmetic-t2-s2000-0395",
+    "arithmetic-t2-s2000-0396",
     "arithmetic-t2-s2001-0048",
     "arithmetic-t2-s2001-0089",
     "arithmetic-t2-s2001-0123",
@@ -3344,22 +2759,7 @@
     "arithmetic-t2-s2003-0001",
     "arithmetic-t2-s2003-0049",
     "arithmetic-t2-s2003-0104",
-    "arithmetic-t2-s2003-0358",
-    "arithmetic-t2-s2004-0027",
-    "arithmetic-t2-s2004-0051",
-    "arithmetic-t2-s2004-0079",
-    "arithmetic-t2-s2004-0080",
-    "arithmetic-t2-s2004-0090",
-    "arithmetic-t2-s2004-0135",
-    "arithmetic-t2-s2004-0218",
-    "arithmetic-t2-s2004-0224",
-    "arithmetic-t2-s2004-0315",
-    "arithmetic-t2-s2005-0046",
-    "arithmetic-t2-s2005-0092",
-    "arithmetic-t2-s2005-0156",
-    "arithmetic-t2-s2005-0164",
-    "arithmetic-t2-s2005-0183",
-    "arithmetic-t2-s2005-0186"
+    "arithmetic-t2-s2003-0358"
    ]
   },
   {
@@ -3412,6 +2812,7 @@
    },
    "null_set": [
     "arithmetic-t0-s0-0091",
+    "arithmetic-t0-s0-0141",
     "arithmetic-t0-s0-0215",
     "arithmetic-t0-s0-0249",
     "arithmetic-t1-s1000-0197",
@@ -3420,6 +2821,7 @@
     "arithmetic-t2-s2000-0162",
     "arithmetic-t2-s2000-0178",
     "arithmetic-t2-s2000-0221",
+    "arithmetic-t2-s2000-0396",
     "arithmetic-t2-s2001-0048",
     "arithmetic-t2-s2001-0089",
     "arithmetic-t2-s2001-0239",
@@ -3441,20 +2843,7 @@
     "arithmetic-t2-s2003-0194",
     "arithmetic-t2-s2003-0307",
     "arithmetic-t2-s2003-0345",
-    "arithmetic-t2-s2003-0358",
-    "arithmetic-t2-s2004-0051",
-    "arithmetic-t2-s2004-0063",
-    "arithmetic-t2-s2004-0079",
-    "arithmetic-t2-s2004-0080",
-    "arithmetic-t2-s2004-0124",
-    "arithmetic-t2-s2004-0135",
-    "arithmetic-t2-s2004-0218",
-    "arithmetic-t2-s2004-0315",
-    "arithmetic-t2-s2005-0024",
-    "arithmetic-t2-s2005-0092",
-    "arithmetic-t2-s2005-0156",
-    "arithmetic-t2-s2005-0164",
-    "arithmetic-t2-s2005-0186"
+    "arithmetic-t2-s2003-0358"
    ]
   },
   {
@@ -3507,11 +2896,13 @@
    },
    "null_set": [
     "arithmetic-t0-s0-0091",
+    "arithmetic-t0-s0-0141",
     "arithmetic-t0-s0-0215",
     "arithmetic-t0-s0-0249",
     "arithmetic-t1-s1000-0227",
     "arithmetic-t2-s2000-0108",
     "arithmetic-t2-s2000-0162",
+    "arithmetic-t2-s2000-0396",
     "arithmetic-t2-s2001-0048",
     "arithmetic-t2-s2001-0089",
     "arithmetic-t2-s2001-0239",
@@ -3529,82 +2920,7 @@
     "arithmetic-t2-s2003-0049",
     "arithmetic-t2-s2003-0104",
     "arithmetic-t2-s2003-0194",
-    "arithmetic-t2-s2003-0358",
-    "arithmetic-t2-s2004-0051",
-    "arithmetic-t2-s2004-0063",
-    "arithmetic-t2-s2004-0079",
-    "arithmetic-t2-s2004-0080",
-    "arithmetic-t2-s2004-0124",
-    "arithmetic-t2-s2004-0135",
-    "arithmetic-t2-s2004-0218",
-    "arithmetic-t2-s2004-0224",
-    "arithmetic-t2-s2004-0315",
-    "arithmetic-t2-s2005-0024",
-    "arithmetic-t2-s2005-0092",
-    "arithmetic-t2-s2005-0156",
-    "arithmetic-t2-s2005-0164",
-    "arithmetic-t2-s2005-0186"
-   ]
-  },
-  {
-   "variant": "signpair",
-   "expr": "(14 - 15) * 4",
-   "operands": [
-    "14",
-    "15",
-    "4"
-   ],
-   "first_op": "subtract",
-   "answer": "-4",
-   "first_value": "-1",
-   "intermediates": [
-    "-1"
-   ],
-   "prompt": "Compute (14 - 15) * 4. Reply with only the final number, nothing else.",
-   "tolerance": "rel5pct",
-   "cell": {
-    "layer": 21,
-    "pos": -8
-   },
-   "role": "comparison",
-   "single_token_reachable": true,
-   "name": "arithmetic-t2-s2002-0265",
-   "adapt": {
-    "origin": "generated",
-    "tier": "t2",
-    "knobs": {
-     "ranges": {
-      "a": [
-       2,
-       20
-      ],
-      "b": [
-       10,
-       40
-      ],
-      "c": [
-       2,
-       4
-      ]
-     }
-    },
-    "change": "single-digit factors, sums and differences under 50",
-    "gate": {
-     "rate": 0.8,
-     "pass": true
-    }
-   },
-   "null_set": [
-    "arithmetic-t2-s2000-0347",
-    "arithmetic-t2-s2000-0354",
-    "arithmetic-t2-s2001-0099",
-    "arithmetic-t2-s2001-0259",
-    "arithmetic-t2-s2003-0055",
-    "arithmetic-t2-s2003-0113",
-    "arithmetic-t2-s2003-0119",
-    "arithmetic-t2-s2003-0196",
-    "arithmetic-t2-s2005-0033",
-    "arithmetic-t2-s2005-0218"
+    "arithmetic-t2-s2003-0358"
    ]
   },
   {
@@ -3657,6 +2973,7 @@
    },
    "null_set": [
     "arithmetic-t0-s0-0091",
+    "arithmetic-t0-s0-0141",
     "arithmetic-t0-s0-0215",
     "arithmetic-t0-s0-0249",
     "arithmetic-t1-s1000-0197",
@@ -3686,17 +3003,7 @@
     "arithmetic-t2-s2003-0100",
     "arithmetic-t2-s2003-0194",
     "arithmetic-t2-s2003-0307",
-    "arithmetic-t2-s2003-0345",
-    "arithmetic-t2-s2004-0027",
-    "arithmetic-t2-s2004-0063",
-    "arithmetic-t2-s2004-0090",
-    "arithmetic-t2-s2004-0124",
-    "arithmetic-t2-s2004-0224",
-    "arithmetic-t2-s2005-0024",
-    "arithmetic-t2-s2005-0046",
-    "arithmetic-t2-s2005-0092",
-    "arithmetic-t2-s2005-0164",
-    "arithmetic-t2-s2005-0183"
+    "arithmetic-t2-s2003-0345"
    ]
   },
   {
@@ -3749,6 +3056,7 @@
    },
    "null_set": [
     "arithmetic-t0-s0-0091",
+    "arithmetic-t0-s0-0141",
     "arithmetic-t0-s0-0215",
     "arithmetic-t0-s0-0249",
     "arithmetic-t1-s1000-0197",
@@ -3757,6 +3065,7 @@
     "arithmetic-t2-s2000-0178",
     "arithmetic-t2-s2000-0221",
     "arithmetic-t2-s2000-0395",
+    "arithmetic-t2-s2000-0396",
     "arithmetic-t2-s2001-0089",
     "arithmetic-t2-s2001-0123",
     "arithmetic-t2-s2001-0173",
@@ -3783,24 +3092,7 @@
     "arithmetic-t2-s2003-0194",
     "arithmetic-t2-s2003-0307",
     "arithmetic-t2-s2003-0345",
-    "arithmetic-t2-s2003-0358",
-    "arithmetic-t2-s2004-0027",
-    "arithmetic-t2-s2004-0051",
-    "arithmetic-t2-s2004-0063",
-    "arithmetic-t2-s2004-0079",
-    "arithmetic-t2-s2004-0080",
-    "arithmetic-t2-s2004-0090",
-    "arithmetic-t2-s2004-0124",
-    "arithmetic-t2-s2004-0135",
-    "arithmetic-t2-s2004-0218",
-    "arithmetic-t2-s2004-0224",
-    "arithmetic-t2-s2004-0315",
-    "arithmetic-t2-s2005-0024",
-    "arithmetic-t2-s2005-0046",
-    "arithmetic-t2-s2005-0092",
-    "arithmetic-t2-s2005-0156",
-    "arithmetic-t2-s2005-0183",
-    "arithmetic-t2-s2005-0186"
+    "arithmetic-t2-s2003-0358"
    ]
   },
   {
@@ -3853,6 +3145,7 @@
    },
    "null_set": [
     "arithmetic-t0-s0-0091",
+    "arithmetic-t0-s0-0141",
     "arithmetic-t0-s0-0215",
     "arithmetic-t0-s0-0249",
     "arithmetic-t1-s1000-0197",
@@ -3879,14 +3172,7 @@
     "arithmetic-t2-s2003-0100",
     "arithmetic-t2-s2003-0194",
     "arithmetic-t2-s2003-0307",
-    "arithmetic-t2-s2003-0345",
-    "arithmetic-t2-s2004-0027",
-    "arithmetic-t2-s2004-0063",
-    "arithmetic-t2-s2004-0090",
-    "arithmetic-t2-s2004-0124",
-    "arithmetic-t2-s2005-0024",
-    "arithmetic-t2-s2005-0092",
-    "arithmetic-t2-s2005-0164"
+    "arithmetic-t2-s2003-0345"
    ]
   },
   {
@@ -3939,6 +3225,7 @@
    },
    "null_set": [
     "arithmetic-t0-s0-0091",
+    "arithmetic-t0-s0-0141",
     "arithmetic-t0-s0-0215",
     "arithmetic-t0-s0-0249",
     "arithmetic-t1-s1000-0197",
@@ -3968,17 +3255,7 @@
     "arithmetic-t2-s2003-0100",
     "arithmetic-t2-s2003-0194",
     "arithmetic-t2-s2003-0307",
-    "arithmetic-t2-s2003-0345",
-    "arithmetic-t2-s2004-0027",
-    "arithmetic-t2-s2004-0063",
-    "arithmetic-t2-s2004-0090",
-    "arithmetic-t2-s2004-0124",
-    "arithmetic-t2-s2004-0224",
-    "arithmetic-t2-s2005-0024",
-    "arithmetic-t2-s2005-0046",
-    "arithmetic-t2-s2005-0092",
-    "arithmetic-t2-s2005-0164",
-    "arithmetic-t2-s2005-0183"
+    "arithmetic-t2-s2003-0345"
    ]
   },
   {
@@ -4031,6 +3308,7 @@
    },
    "null_set": [
     "arithmetic-t0-s0-0091",
+    "arithmetic-t0-s0-0141",
     "arithmetic-t0-s0-0215",
     "arithmetic-t0-s0-0249",
     "arithmetic-t1-s1000-0197",
@@ -4057,77 +3335,7 @@
     "arithmetic-t2-s2003-0100",
     "arithmetic-t2-s2003-0194",
     "arithmetic-t2-s2003-0307",
-    "arithmetic-t2-s2003-0345",
-    "arithmetic-t2-s2004-0027",
-    "arithmetic-t2-s2004-0063",
-    "arithmetic-t2-s2004-0090",
-    "arithmetic-t2-s2004-0124",
-    "arithmetic-t2-s2005-0024",
-    "arithmetic-t2-s2005-0092",
-    "arithmetic-t2-s2005-0164"
-   ]
-  },
-  {
-   "variant": "signpair",
-   "expr": "(12 - 17) * 4",
-   "operands": [
-    "12",
-    "17",
-    "4"
-   ],
-   "first_op": "subtract",
-   "answer": "-20",
-   "first_value": "-5",
-   "intermediates": [
-    "-5"
-   ],
-   "prompt": "Compute (12 - 17) * 4. Reply with only the final number, nothing else.",
-   "tolerance": "rel5pct",
-   "cell": {
-    "layer": 21,
-    "pos": -8
-   },
-   "role": "comparison",
-   "single_token_reachable": true,
-   "name": "arithmetic-t2-s2003-0055",
-   "adapt": {
-    "origin": "generated",
-    "tier": "t2",
-    "knobs": {
-     "ranges": {
-      "a": [
-       2,
-       20
-      ],
-      "b": [
-       10,
-       40
-      ],
-      "c": [
-       2,
-       4
-      ]
-     }
-    },
-    "change": "single-digit factors, sums and differences under 50",
-    "gate": {
-     "rate": 0.8,
-     "pass": true
-    }
-   },
-   "null_set": [
-    "arithmetic-t2-s2000-0354",
-    "arithmetic-t2-s2001-0051",
-    "arithmetic-t2-s2001-0224",
-    "arithmetic-t2-s2002-0031",
-    "arithmetic-t2-s2002-0265",
-    "arithmetic-t2-s2003-0119",
-    "arithmetic-t2-s2003-0196",
-    "arithmetic-t2-s2004-0198",
-    "arithmetic-t2-s2004-0203",
-    "arithmetic-t2-s2005-0033",
-    "arithmetic-t2-s2005-0191",
-    "arithmetic-t2-s2005-0218"
+    "arithmetic-t2-s2003-0345"
    ]
   },
   {
@@ -4180,12 +3388,14 @@
    },
    "null_set": [
     "arithmetic-t0-s0-0091",
+    "arithmetic-t0-s0-0141",
     "arithmetic-t0-s0-0215",
     "arithmetic-t0-s0-0249",
     "arithmetic-t1-s1000-0227",
     "arithmetic-t2-s2000-0108",
     "arithmetic-t2-s2000-0162",
     "arithmetic-t2-s2000-0395",
+    "arithmetic-t2-s2000-0396",
     "arithmetic-t2-s2001-0048",
     "arithmetic-t2-s2001-0089",
     "arithmetic-t2-s2001-0173",
@@ -4205,20 +3415,7 @@
     "arithmetic-t2-s2003-0001",
     "arithmetic-t2-s2003-0049",
     "arithmetic-t2-s2003-0104",
-    "arithmetic-t2-s2003-0358",
-    "arithmetic-t2-s2004-0051",
-    "arithmetic-t2-s2004-0079",
-    "arithmetic-t2-s2004-0080",
-    "arithmetic-t2-s2004-0135",
-    "arithmetic-t2-s2004-0218",
-    "arithmetic-t2-s2004-0224",
-    "arithmetic-t2-s2004-0315",
-    "arithmetic-t2-s2005-0046",
-    "arithmetic-t2-s2005-0092",
-    "arithmetic-t2-s2005-0156",
-    "arithmetic-t2-s2005-0164",
-    "arithmetic-t2-s2005-0183",
-    "arithmetic-t2-s2005-0186"
+    "arithmetic-t2-s2003-0358"
    ]
   },
   {
@@ -4271,6 +3468,7 @@
    },
    "null_set": [
     "arithmetic-t0-s0-0091",
+    "arithmetic-t0-s0-0141",
     "arithmetic-t0-s0-0215",
     "arithmetic-t0-s0-0249",
     "arithmetic-t1-s1000-0197",
@@ -4300,146 +3498,7 @@
     "arithmetic-t2-s2003-0100",
     "arithmetic-t2-s2003-0194",
     "arithmetic-t2-s2003-0307",
-    "arithmetic-t2-s2003-0345",
-    "arithmetic-t2-s2004-0027",
-    "arithmetic-t2-s2004-0063",
-    "arithmetic-t2-s2004-0090",
-    "arithmetic-t2-s2004-0124",
-    "arithmetic-t2-s2004-0224",
-    "arithmetic-t2-s2005-0024",
-    "arithmetic-t2-s2005-0046",
-    "arithmetic-t2-s2005-0092",
-    "arithmetic-t2-s2005-0164",
-    "arithmetic-t2-s2005-0183"
-   ]
-  },
-  {
-   "variant": "signpair",
-   "expr": "(13 - 18) * 3",
-   "operands": [
-    "13",
-    "18",
-    "3"
-   ],
-   "first_op": "subtract",
-   "answer": "-15",
-   "first_value": "-5",
-   "intermediates": [
-    "-5"
-   ],
-   "prompt": "Compute (13 - 18) * 3. Reply with only the final number, nothing else.",
-   "tolerance": "rel5pct",
-   "cell": {
-    "layer": 21,
-    "pos": -8
-   },
-   "role": "comparison",
-   "single_token_reachable": true,
-   "name": "arithmetic-t2-s2003-0113",
-   "adapt": {
-    "origin": "generated",
-    "tier": "t2",
-    "knobs": {
-     "ranges": {
-      "a": [
-       2,
-       20
-      ],
-      "b": [
-       10,
-       40
-      ],
-      "c": [
-       2,
-       4
-      ]
-     }
-    },
-    "change": "single-digit factors, sums and differences under 50",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   },
-   "null_set": [
-    "arithmetic-t2-s2000-0354",
-    "arithmetic-t2-s2001-0051",
-    "arithmetic-t2-s2001-0224",
-    "arithmetic-t2-s2002-0031",
-    "arithmetic-t2-s2002-0265",
-    "arithmetic-t2-s2003-0119",
-    "arithmetic-t2-s2003-0196",
-    "arithmetic-t2-s2004-0198",
-    "arithmetic-t2-s2004-0203",
-    "arithmetic-t2-s2005-0033",
-    "arithmetic-t2-s2005-0191",
-    "arithmetic-t2-s2005-0218"
-   ]
-  },
-  {
-   "variant": "signpair",
-   "expr": "(10 - 13) * 4",
-   "operands": [
-    "10",
-    "13",
-    "4"
-   ],
-   "first_op": "subtract",
-   "answer": "-12",
-   "first_value": "-3",
-   "intermediates": [
-    "-3"
-   ],
-   "prompt": "Compute (10 - 13) * 4. Reply with only the final number, nothing else.",
-   "tolerance": "rel5pct",
-   "cell": {
-    "layer": 21,
-    "pos": -8
-   },
-   "role": "comparison",
-   "single_token_reachable": true,
-   "name": "arithmetic-t2-s2003-0119",
-   "adapt": {
-    "origin": "generated",
-    "tier": "t2",
-    "knobs": {
-     "ranges": {
-      "a": [
-       2,
-       20
-      ],
-      "b": [
-       10,
-       40
-      ],
-      "c": [
-       2,
-       4
-      ]
-     }
-    },
-    "change": "single-digit factors, sums and differences under 50",
-    "gate": {
-     "rate": 0.8,
-     "pass": true
-    }
-   },
-   "null_set": [
-    "arithmetic-t2-s2000-0347",
-    "arithmetic-t2-s2000-0354",
-    "arithmetic-t2-s2001-0051",
-    "arithmetic-t2-s2001-0099",
-    "arithmetic-t2-s2001-0224",
-    "arithmetic-t2-s2001-0259",
-    "arithmetic-t2-s2002-0031",
-    "arithmetic-t2-s2002-0265",
-    "arithmetic-t2-s2003-0055",
-    "arithmetic-t2-s2003-0113",
-    "arithmetic-t2-s2004-0198",
-    "arithmetic-t2-s2004-0203",
-    "arithmetic-t2-s2005-0033",
-    "arithmetic-t2-s2005-0191",
-    "arithmetic-t2-s2005-0218"
+    "arithmetic-t2-s2003-0345"
    ]
   },
   {
@@ -4491,6 +3550,7 @@
     }
    },
    "null_set": [
+    "arithmetic-t0-s0-0141",
     "arithmetic-t0-s0-0215",
     "arithmetic-t1-s1000-0197",
     "arithmetic-t1-s1000-0227",
@@ -4498,6 +3558,7 @@
     "arithmetic-t2-s2000-0108",
     "arithmetic-t2-s2000-0162",
     "arithmetic-t2-s2000-0395",
+    "arithmetic-t2-s2000-0396",
     "arithmetic-t2-s2001-0048",
     "arithmetic-t2-s2001-0089",
     "arithmetic-t2-s2001-0123",
@@ -4522,88 +3583,7 @@
     "arithmetic-t2-s2003-0001",
     "arithmetic-t2-s2003-0049",
     "arithmetic-t2-s2003-0104",
-    "arithmetic-t2-s2003-0358",
-    "arithmetic-t2-s2004-0027",
-    "arithmetic-t2-s2004-0051",
-    "arithmetic-t2-s2004-0079",
-    "arithmetic-t2-s2004-0080",
-    "arithmetic-t2-s2004-0090",
-    "arithmetic-t2-s2004-0135",
-    "arithmetic-t2-s2004-0218",
-    "arithmetic-t2-s2004-0224",
-    "arithmetic-t2-s2004-0315",
-    "arithmetic-t2-s2005-0046",
-    "arithmetic-t2-s2005-0092",
-    "arithmetic-t2-s2005-0156",
-    "arithmetic-t2-s2005-0164",
-    "arithmetic-t2-s2005-0183",
-    "arithmetic-t2-s2005-0186"
-   ]
-  },
-  {
-   "variant": "signpair",
-   "expr": "(13 - 16) * 4",
-   "operands": [
-    "13",
-    "16",
-    "4"
-   ],
-   "first_op": "subtract",
-   "answer": "-12",
-   "first_value": "-3",
-   "intermediates": [
-    "-3"
-   ],
-   "prompt": "Compute (13 - 16) * 4. Reply with only the final number, nothing else.",
-   "tolerance": "rel5pct",
-   "cell": {
-    "layer": 21,
-    "pos": -8
-   },
-   "role": "comparison",
-   "single_token_reachable": true,
-   "name": "arithmetic-t2-s2003-0196",
-   "adapt": {
-    "origin": "generated",
-    "tier": "t2",
-    "knobs": {
-     "ranges": {
-      "a": [
-       2,
-       20
-      ],
-      "b": [
-       10,
-       40
-      ],
-      "c": [
-       2,
-       4
-      ]
-     }
-    },
-    "change": "single-digit factors, sums and differences under 50",
-    "gate": {
-     "rate": 0.8,
-     "pass": true
-    }
-   },
-   "null_set": [
-    "arithmetic-t2-s2000-0347",
-    "arithmetic-t2-s2000-0354",
-    "arithmetic-t2-s2001-0051",
-    "arithmetic-t2-s2001-0099",
-    "arithmetic-t2-s2001-0224",
-    "arithmetic-t2-s2001-0259",
-    "arithmetic-t2-s2002-0031",
-    "arithmetic-t2-s2002-0265",
-    "arithmetic-t2-s2003-0055",
-    "arithmetic-t2-s2003-0113",
-    "arithmetic-t2-s2004-0198",
-    "arithmetic-t2-s2004-0203",
-    "arithmetic-t2-s2005-0033",
-    "arithmetic-t2-s2005-0191",
-    "arithmetic-t2-s2005-0218"
+    "arithmetic-t2-s2003-0358"
    ]
   },
   {
@@ -4656,12 +3636,14 @@
    },
    "null_set": [
     "arithmetic-t0-s0-0091",
+    "arithmetic-t0-s0-0141",
     "arithmetic-t0-s0-0215",
     "arithmetic-t0-s0-0249",
     "arithmetic-t1-s1000-0227",
     "arithmetic-t2-s2000-0108",
     "arithmetic-t2-s2000-0162",
     "arithmetic-t2-s2000-0395",
+    "arithmetic-t2-s2000-0396",
     "arithmetic-t2-s2001-0048",
     "arithmetic-t2-s2001-0089",
     "arithmetic-t2-s2001-0173",
@@ -4682,20 +3664,7 @@
     "arithmetic-t2-s2003-0001",
     "arithmetic-t2-s2003-0049",
     "arithmetic-t2-s2003-0104",
-    "arithmetic-t2-s2003-0358",
-    "arithmetic-t2-s2004-0051",
-    "arithmetic-t2-s2004-0079",
-    "arithmetic-t2-s2004-0080",
-    "arithmetic-t2-s2004-0135",
-    "arithmetic-t2-s2004-0218",
-    "arithmetic-t2-s2004-0224",
-    "arithmetic-t2-s2004-0315",
-    "arithmetic-t2-s2005-0046",
-    "arithmetic-t2-s2005-0092",
-    "arithmetic-t2-s2005-0156",
-    "arithmetic-t2-s2005-0164",
-    "arithmetic-t2-s2005-0183",
-    "arithmetic-t2-s2005-0186"
+    "arithmetic-t2-s2003-0358"
    ]
   },
   {
@@ -4748,12 +3717,14 @@
    },
    "null_set": [
     "arithmetic-t0-s0-0091",
+    "arithmetic-t0-s0-0141",
     "arithmetic-t0-s0-0215",
     "arithmetic-t0-s0-0249",
     "arithmetic-t1-s1000-0227",
     "arithmetic-t2-s2000-0108",
     "arithmetic-t2-s2000-0162",
     "arithmetic-t2-s2000-0395",
+    "arithmetic-t2-s2000-0396",
     "arithmetic-t2-s2001-0048",
     "arithmetic-t2-s2001-0089",
     "arithmetic-t2-s2001-0173",
@@ -4774,20 +3745,7 @@
     "arithmetic-t2-s2003-0001",
     "arithmetic-t2-s2003-0049",
     "arithmetic-t2-s2003-0104",
-    "arithmetic-t2-s2003-0358",
-    "arithmetic-t2-s2004-0051",
-    "arithmetic-t2-s2004-0079",
-    "arithmetic-t2-s2004-0080",
-    "arithmetic-t2-s2004-0135",
-    "arithmetic-t2-s2004-0218",
-    "arithmetic-t2-s2004-0224",
-    "arithmetic-t2-s2004-0315",
-    "arithmetic-t2-s2005-0046",
-    "arithmetic-t2-s2005-0092",
-    "arithmetic-t2-s2005-0156",
-    "arithmetic-t2-s2005-0164",
-    "arithmetic-t2-s2005-0183",
-    "arithmetic-t2-s2005-0186"
+    "arithmetic-t2-s2003-0358"
    ]
   },
   {
@@ -4840,6 +3798,7 @@
    },
    "null_set": [
     "arithmetic-t0-s0-0091",
+    "arithmetic-t0-s0-0141",
     "arithmetic-t0-s0-0215",
     "arithmetic-t0-s0-0249",
     "arithmetic-t1-s1000-0197",
@@ -4869,1991 +3828,7 @@
     "arithmetic-t2-s2003-0100",
     "arithmetic-t2-s2003-0194",
     "arithmetic-t2-s2003-0307",
-    "arithmetic-t2-s2003-0345",
-    "arithmetic-t2-s2004-0027",
-    "arithmetic-t2-s2004-0063",
-    "arithmetic-t2-s2004-0090",
-    "arithmetic-t2-s2004-0124",
-    "arithmetic-t2-s2004-0224",
-    "arithmetic-t2-s2005-0024",
-    "arithmetic-t2-s2005-0046",
-    "arithmetic-t2-s2005-0092",
-    "arithmetic-t2-s2005-0164",
-    "arithmetic-t2-s2005-0183"
-   ]
-  },
-  {
-   "variant": "subsub",
-   "expr": "(28 - 11) - 4",
-   "operands": [
-    "28",
-    "11",
-    "4"
-   ],
-   "first_op": "subtract",
-   "answer": "13",
-   "first_value": "17",
-   "intermediates": [
-    "17"
-   ],
-   "prompt": "Compute (28 - 11) - 4. Reply with only the final number, nothing else.",
-   "tolerance": "rel5pct",
-   "cell": {
-    "layer": 21,
-    "pos": -8
-   },
-   "role": "comparison",
-   "single_token_reachable": true,
-   "name": "arithmetic-t2-s2004-0027",
-   "adapt": {
-    "origin": "generated",
-    "tier": "t2",
-    "knobs": {
-     "ranges": {
-      "a": [
-       20,
-       49
-      ],
-      "b": [
-       8,
-       19
-      ],
-      "c": [
-       2,
-       6
-      ]
-     }
-    },
-    "change": "single-digit factors, sums and differences under 50",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   },
-   "null_set": [
-    "arithmetic-t0-s0-0091",
-    "arithmetic-t0-s0-0215",
-    "arithmetic-t0-s0-0249",
-    "arithmetic-t1-s1000-0227",
-    "arithmetic-t2-s2000-0108",
-    "arithmetic-t2-s2000-0162",
-    "arithmetic-t2-s2001-0048",
-    "arithmetic-t2-s2001-0089",
-    "arithmetic-t2-s2001-0239",
-    "arithmetic-t2-s2001-0316",
-    "arithmetic-t2-s2001-0346",
-    "arithmetic-t2-s2001-0379",
-    "arithmetic-t2-s2002-0069",
-    "arithmetic-t2-s2002-0085",
-    "arithmetic-t2-s2002-0114",
-    "arithmetic-t2-s2002-0130",
-    "arithmetic-t2-s2002-0141",
-    "arithmetic-t2-s2002-0151",
-    "arithmetic-t2-s2002-0310",
-    "arithmetic-t2-s2002-0336",
-    "arithmetic-t2-s2002-0372",
-    "arithmetic-t2-s2003-0001",
-    "arithmetic-t2-s2003-0049",
-    "arithmetic-t2-s2003-0104",
-    "arithmetic-t2-s2003-0194",
-    "arithmetic-t2-s2003-0358",
-    "arithmetic-t2-s2004-0051",
-    "arithmetic-t2-s2004-0079",
-    "arithmetic-t2-s2004-0080",
-    "arithmetic-t2-s2004-0124",
-    "arithmetic-t2-s2004-0135",
-    "arithmetic-t2-s2004-0218",
-    "arithmetic-t2-s2004-0224",
-    "arithmetic-t2-s2004-0315",
-    "arithmetic-t2-s2005-0024",
-    "arithmetic-t2-s2005-0046",
-    "arithmetic-t2-s2005-0092",
-    "arithmetic-t2-s2005-0156",
-    "arithmetic-t2-s2005-0164",
-    "arithmetic-t2-s2005-0183",
-    "arithmetic-t2-s2005-0186"
-   ]
-  },
-  {
-   "variant": "subsub",
-   "expr": "(27 - 17) - 6",
-   "operands": [
-    "27",
-    "17",
-    "6"
-   ],
-   "first_op": "subtract",
-   "answer": "4",
-   "first_value": "10",
-   "intermediates": [
-    "10"
-   ],
-   "prompt": "Compute (27 - 17) - 6. Reply with only the final number, nothing else.",
-   "tolerance": "rel5pct",
-   "cell": {
-    "layer": 21,
-    "pos": -8
-   },
-   "role": "comparison",
-   "single_token_reachable": true,
-   "name": "arithmetic-t2-s2004-0051",
-   "adapt": {
-    "origin": "generated",
-    "tier": "t2",
-    "knobs": {
-     "ranges": {
-      "a": [
-       20,
-       49
-      ],
-      "b": [
-       8,
-       19
-      ],
-      "c": [
-       2,
-       6
-      ]
-     }
-    },
-    "change": "single-digit factors, sums and differences under 50",
-    "gate": {
-     "rate": 0.8,
-     "pass": true
-    }
-   },
-   "null_set": [
-    "arithmetic-t0-s0-0091",
-    "arithmetic-t0-s0-0215",
-    "arithmetic-t0-s0-0249",
-    "arithmetic-t1-s1000-0197",
-    "arithmetic-t1-s1000-0227",
-    "arithmetic-t1-s1000-0284",
-    "arithmetic-t2-s2000-0162",
-    "arithmetic-t2-s2000-0178",
-    "arithmetic-t2-s2000-0221",
-    "arithmetic-t2-s2000-0395",
-    "arithmetic-t2-s2001-0048",
-    "arithmetic-t2-s2001-0123",
-    "arithmetic-t2-s2001-0173",
-    "arithmetic-t2-s2001-0256",
-    "arithmetic-t2-s2001-0282",
-    "arithmetic-t2-s2001-0316",
-    "arithmetic-t2-s2001-0360",
-    "arithmetic-t2-s2001-0379",
-    "arithmetic-t2-s2001-0398",
-    "arithmetic-t2-s2002-0069",
-    "arithmetic-t2-s2002-0085",
-    "arithmetic-t2-s2002-0151",
-    "arithmetic-t2-s2002-0197",
-    "arithmetic-t2-s2002-0234",
-    "arithmetic-t2-s2002-0336",
-    "arithmetic-t2-s2003-0100",
-    "arithmetic-t2-s2003-0194",
-    "arithmetic-t2-s2003-0307",
-    "arithmetic-t2-s2003-0345",
-    "arithmetic-t2-s2004-0027",
-    "arithmetic-t2-s2004-0063",
-    "arithmetic-t2-s2004-0090",
-    "arithmetic-t2-s2004-0124",
-    "arithmetic-t2-s2005-0024",
-    "arithmetic-t2-s2005-0046",
-    "arithmetic-t2-s2005-0092",
-    "arithmetic-t2-s2005-0164",
-    "arithmetic-t2-s2005-0183"
-   ]
-  },
-  {
-   "variant": "subsub",
-   "expr": "(36 - 15) - 6",
-   "operands": [
-    "36",
-    "15",
-    "6"
-   ],
-   "first_op": "subtract",
-   "answer": "15",
-   "first_value": "21",
-   "intermediates": [
-    "21"
-   ],
-   "prompt": "Compute (36 - 15) - 6. Reply with only the final number, nothing else.",
-   "tolerance": "rel5pct",
-   "cell": {
-    "layer": 21,
-    "pos": -8
-   },
-   "role": "comparison",
-   "single_token_reachable": true,
-   "name": "arithmetic-t2-s2004-0063",
-   "adapt": {
-    "origin": "generated",
-    "tier": "t2",
-    "knobs": {
-     "ranges": {
-      "a": [
-       20,
-       49
-      ],
-      "b": [
-       8,
-       19
-      ],
-      "c": [
-       2,
-       6
-      ]
-     }
-    },
-    "change": "single-digit factors, sums and differences under 50",
-    "gate": {
-     "rate": 0.9,
-     "pass": true
-    }
-   },
-   "null_set": [
-    "arithmetic-t0-s0-0091",
-    "arithmetic-t0-s0-0215",
-    "arithmetic-t1-s1000-0227",
-    "arithmetic-t1-s1000-0284",
-    "arithmetic-t2-s2000-0108",
-    "arithmetic-t2-s2000-0162",
-    "arithmetic-t2-s2000-0395",
-    "arithmetic-t2-s2001-0048",
-    "arithmetic-t2-s2001-0089",
-    "arithmetic-t2-s2001-0173",
-    "arithmetic-t2-s2001-0239",
-    "arithmetic-t2-s2001-0316",
-    "arithmetic-t2-s2001-0346",
-    "arithmetic-t2-s2001-0398",
-    "arithmetic-t2-s2002-0069",
-    "arithmetic-t2-s2002-0085",
-    "arithmetic-t2-s2002-0114",
-    "arithmetic-t2-s2002-0130",
-    "arithmetic-t2-s2002-0141",
-    "arithmetic-t2-s2002-0197",
-    "arithmetic-t2-s2002-0234",
-    "arithmetic-t2-s2002-0310",
-    "arithmetic-t2-s2002-0336",
-    "arithmetic-t2-s2002-0372",
-    "arithmetic-t2-s2003-0001",
-    "arithmetic-t2-s2003-0049",
-    "arithmetic-t2-s2003-0104",
-    "arithmetic-t2-s2003-0358",
-    "arithmetic-t2-s2004-0051",
-    "arithmetic-t2-s2004-0079",
-    "arithmetic-t2-s2004-0080",
-    "arithmetic-t2-s2004-0135",
-    "arithmetic-t2-s2004-0218",
-    "arithmetic-t2-s2004-0224",
-    "arithmetic-t2-s2004-0315",
-    "arithmetic-t2-s2005-0046",
-    "arithmetic-t2-s2005-0092",
-    "arithmetic-t2-s2005-0156",
-    "arithmetic-t2-s2005-0164",
-    "arithmetic-t2-s2005-0183",
-    "arithmetic-t2-s2005-0186"
-   ]
-  },
-  {
-   "variant": "subsub",
-   "expr": "(24 - 13) - 5",
-   "operands": [
-    "24",
-    "13",
-    "5"
-   ],
-   "first_op": "subtract",
-   "answer": "6",
-   "first_value": "11",
-   "intermediates": [
-    "11"
-   ],
-   "prompt": "Compute (24 - 13) - 5. Reply with only the final number, nothing else.",
-   "tolerance": "rel5pct",
-   "cell": {
-    "layer": 21,
-    "pos": -8
-   },
-   "role": "comparison",
-   "single_token_reachable": true,
-   "name": "arithmetic-t2-s2004-0079",
-   "adapt": {
-    "origin": "generated",
-    "tier": "t2",
-    "knobs": {
-     "ranges": {
-      "a": [
-       20,
-       49
-      ],
-      "b": [
-       8,
-       19
-      ],
-      "c": [
-       2,
-       6
-      ]
-     }
-    },
-    "change": "single-digit factors, sums and differences under 50",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   },
-   "null_set": [
-    "arithmetic-t0-s0-0091",
-    "arithmetic-t0-s0-0215",
-    "arithmetic-t0-s0-0249",
-    "arithmetic-t1-s1000-0197",
-    "arithmetic-t1-s1000-0227",
-    "arithmetic-t1-s1000-0284",
-    "arithmetic-t2-s2000-0162",
-    "arithmetic-t2-s2000-0178",
-    "arithmetic-t2-s2000-0221",
-    "arithmetic-t2-s2000-0395",
-    "arithmetic-t2-s2001-0048",
-    "arithmetic-t2-s2001-0123",
-    "arithmetic-t2-s2001-0173",
-    "arithmetic-t2-s2001-0256",
-    "arithmetic-t2-s2001-0282",
-    "arithmetic-t2-s2001-0316",
-    "arithmetic-t2-s2001-0360",
-    "arithmetic-t2-s2001-0379",
-    "arithmetic-t2-s2001-0398",
-    "arithmetic-t2-s2002-0141",
-    "arithmetic-t2-s2002-0151",
-    "arithmetic-t2-s2002-0197",
-    "arithmetic-t2-s2002-0234",
-    "arithmetic-t2-s2002-0336",
-    "arithmetic-t2-s2003-0100",
-    "arithmetic-t2-s2003-0194",
-    "arithmetic-t2-s2003-0307",
-    "arithmetic-t2-s2003-0345",
-    "arithmetic-t2-s2004-0027",
-    "arithmetic-t2-s2004-0063",
-    "arithmetic-t2-s2004-0090",
-    "arithmetic-t2-s2004-0124",
-    "arithmetic-t2-s2005-0024",
-    "arithmetic-t2-s2005-0092",
-    "arithmetic-t2-s2005-0164"
-   ]
-  },
-  {
-   "variant": "subsub",
-   "expr": "(24 - 15) - 3",
-   "operands": [
-    "24",
-    "15",
-    "3"
-   ],
-   "first_op": "subtract",
-   "answer": "6",
-   "first_value": "9",
-   "intermediates": [
-    "9"
-   ],
-   "prompt": "Compute (24 - 15) - 3. Reply with only the final number, nothing else.",
-   "tolerance": "rel5pct",
-   "cell": {
-    "layer": 21,
-    "pos": -8
-   },
-   "role": "comparison",
-   "single_token_reachable": true,
-   "name": "arithmetic-t2-s2004-0080",
-   "adapt": {
-    "origin": "generated",
-    "tier": "t2",
-    "knobs": {
-     "ranges": {
-      "a": [
-       20,
-       49
-      ],
-      "b": [
-       8,
-       19
-      ],
-      "c": [
-       2,
-       6
-      ]
-     }
-    },
-    "change": "single-digit factors, sums and differences under 50",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   },
-   "null_set": [
-    "arithmetic-t0-s0-0091",
-    "arithmetic-t0-s0-0215",
-    "arithmetic-t0-s0-0249",
-    "arithmetic-t1-s1000-0197",
-    "arithmetic-t1-s1000-0227",
-    "arithmetic-t1-s1000-0284",
-    "arithmetic-t2-s2000-0162",
-    "arithmetic-t2-s2000-0178",
-    "arithmetic-t2-s2000-0221",
-    "arithmetic-t2-s2000-0395",
-    "arithmetic-t2-s2001-0048",
-    "arithmetic-t2-s2001-0123",
-    "arithmetic-t2-s2001-0173",
-    "arithmetic-t2-s2001-0256",
-    "arithmetic-t2-s2001-0282",
-    "arithmetic-t2-s2001-0316",
-    "arithmetic-t2-s2001-0346",
-    "arithmetic-t2-s2001-0360",
-    "arithmetic-t2-s2001-0379",
-    "arithmetic-t2-s2001-0398",
-    "arithmetic-t2-s2002-0069",
-    "arithmetic-t2-s2002-0085",
-    "arithmetic-t2-s2002-0114",
-    "arithmetic-t2-s2002-0151",
-    "arithmetic-t2-s2002-0197",
-    "arithmetic-t2-s2002-0234",
-    "arithmetic-t2-s2002-0336",
-    "arithmetic-t2-s2003-0100",
-    "arithmetic-t2-s2003-0194",
-    "arithmetic-t2-s2003-0307",
-    "arithmetic-t2-s2003-0345",
-    "arithmetic-t2-s2004-0027",
-    "arithmetic-t2-s2004-0063",
-    "arithmetic-t2-s2004-0090",
-    "arithmetic-t2-s2004-0124",
-    "arithmetic-t2-s2004-0224",
-    "arithmetic-t2-s2005-0024",
-    "arithmetic-t2-s2005-0046",
-    "arithmetic-t2-s2005-0092",
-    "arithmetic-t2-s2005-0164",
-    "arithmetic-t2-s2005-0183"
-   ]
-  },
-  {
-   "variant": "subsub",
-   "expr": "(27 - 10) - 6",
-   "operands": [
-    "27",
-    "10",
-    "6"
-   ],
-   "first_op": "subtract",
-   "answer": "11",
-   "first_value": "17",
-   "intermediates": [
-    "17"
-   ],
-   "prompt": "Compute (27 - 10) - 6. Reply with only the final number, nothing else.",
-   "tolerance": "rel5pct",
-   "cell": {
-    "layer": 21,
-    "pos": -8
-   },
-   "role": "comparison",
-   "single_token_reachable": true,
-   "name": "arithmetic-t2-s2004-0090",
-   "adapt": {
-    "origin": "generated",
-    "tier": "t2",
-    "knobs": {
-     "ranges": {
-      "a": [
-       20,
-       49
-      ],
-      "b": [
-       8,
-       19
-      ],
-      "c": [
-       2,
-       6
-      ]
-     }
-    },
-    "change": "single-digit factors, sums and differences under 50",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   },
-   "null_set": [
-    "arithmetic-t0-s0-0091",
-    "arithmetic-t0-s0-0215",
-    "arithmetic-t0-s0-0249",
-    "arithmetic-t1-s1000-0227",
-    "arithmetic-t2-s2000-0108",
-    "arithmetic-t2-s2000-0162",
-    "arithmetic-t2-s2001-0048",
-    "arithmetic-t2-s2001-0089",
-    "arithmetic-t2-s2001-0239",
-    "arithmetic-t2-s2001-0316",
-    "arithmetic-t2-s2001-0346",
-    "arithmetic-t2-s2001-0379",
-    "arithmetic-t2-s2002-0069",
-    "arithmetic-t2-s2002-0085",
-    "arithmetic-t2-s2002-0114",
-    "arithmetic-t2-s2002-0130",
-    "arithmetic-t2-s2002-0141",
-    "arithmetic-t2-s2002-0151",
-    "arithmetic-t2-s2002-0310",
-    "arithmetic-t2-s2002-0336",
-    "arithmetic-t2-s2002-0372",
-    "arithmetic-t2-s2003-0001",
-    "arithmetic-t2-s2003-0049",
-    "arithmetic-t2-s2003-0104",
-    "arithmetic-t2-s2003-0194",
-    "arithmetic-t2-s2003-0358",
-    "arithmetic-t2-s2004-0051",
-    "arithmetic-t2-s2004-0079",
-    "arithmetic-t2-s2004-0080",
-    "arithmetic-t2-s2004-0124",
-    "arithmetic-t2-s2004-0135",
-    "arithmetic-t2-s2004-0218",
-    "arithmetic-t2-s2004-0224",
-    "arithmetic-t2-s2004-0315",
-    "arithmetic-t2-s2005-0024",
-    "arithmetic-t2-s2005-0046",
-    "arithmetic-t2-s2005-0092",
-    "arithmetic-t2-s2005-0156",
-    "arithmetic-t2-s2005-0164",
-    "arithmetic-t2-s2005-0183",
-    "arithmetic-t2-s2005-0186"
-   ]
-  },
-  {
-   "variant": "subsub",
-   "expr": "(39 - 16) - 5",
-   "operands": [
-    "39",
-    "16",
-    "5"
-   ],
-   "first_op": "subtract",
-   "answer": "18",
-   "first_value": "23",
-   "intermediates": [
-    "23"
-   ],
-   "prompt": "Compute (39 - 16) - 5. Reply with only the final number, nothing else.",
-   "tolerance": "rel5pct",
-   "cell": {
-    "layer": 21,
-    "pos": -8
-   },
-   "role": "comparison",
-   "single_token_reachable": true,
-   "name": "arithmetic-t2-s2004-0124",
-   "adapt": {
-    "origin": "generated",
-    "tier": "t2",
-    "knobs": {
-     "ranges": {
-      "a": [
-       20,
-       49
-      ],
-      "b": [
-       8,
-       19
-      ],
-      "c": [
-       2,
-       6
-      ]
-     }
-    },
-    "change": "single-digit factors, sums and differences under 50",
-    "gate": {
-     "rate": 0.8,
-     "pass": true
-    }
-   },
-   "null_set": [
-    "arithmetic-t0-s0-0215",
-    "arithmetic-t1-s1000-0197",
-    "arithmetic-t1-s1000-0227",
-    "arithmetic-t1-s1000-0284",
-    "arithmetic-t2-s2000-0108",
-    "arithmetic-t2-s2000-0162",
-    "arithmetic-t2-s2000-0395",
-    "arithmetic-t2-s2001-0048",
-    "arithmetic-t2-s2001-0089",
-    "arithmetic-t2-s2001-0123",
-    "arithmetic-t2-s2001-0173",
-    "arithmetic-t2-s2001-0239",
-    "arithmetic-t2-s2001-0256",
-    "arithmetic-t2-s2001-0282",
-    "arithmetic-t2-s2001-0316",
-    "arithmetic-t2-s2001-0346",
-    "arithmetic-t2-s2001-0360",
-    "arithmetic-t2-s2001-0398",
-    "arithmetic-t2-s2002-0069",
-    "arithmetic-t2-s2002-0085",
-    "arithmetic-t2-s2002-0114",
-    "arithmetic-t2-s2002-0130",
-    "arithmetic-t2-s2002-0141",
-    "arithmetic-t2-s2002-0197",
-    "arithmetic-t2-s2002-0234",
-    "arithmetic-t2-s2002-0310",
-    "arithmetic-t2-s2002-0336",
-    "arithmetic-t2-s2002-0372",
-    "arithmetic-t2-s2003-0001",
-    "arithmetic-t2-s2003-0049",
-    "arithmetic-t2-s2003-0104",
-    "arithmetic-t2-s2003-0358",
-    "arithmetic-t2-s2004-0027",
-    "arithmetic-t2-s2004-0051",
-    "arithmetic-t2-s2004-0079",
-    "arithmetic-t2-s2004-0080",
-    "arithmetic-t2-s2004-0090",
-    "arithmetic-t2-s2004-0135",
-    "arithmetic-t2-s2004-0218",
-    "arithmetic-t2-s2004-0224",
-    "arithmetic-t2-s2004-0315",
-    "arithmetic-t2-s2005-0046",
-    "arithmetic-t2-s2005-0092",
-    "arithmetic-t2-s2005-0156",
-    "arithmetic-t2-s2005-0164",
-    "arithmetic-t2-s2005-0183",
-    "arithmetic-t2-s2005-0186"
-   ]
-  },
-  {
-   "variant": "subsub",
-   "expr": "(24 - 15) - 6",
-   "operands": [
-    "24",
-    "15",
-    "6"
-   ],
-   "first_op": "subtract",
-   "answer": "3",
-   "first_value": "9",
-   "intermediates": [
-    "9"
-   ],
-   "prompt": "Compute (24 - 15) - 6. Reply with only the final number, nothing else.",
-   "tolerance": "rel5pct",
-   "cell": {
-    "layer": 21,
-    "pos": -8
-   },
-   "role": "comparison",
-   "single_token_reachable": true,
-   "name": "arithmetic-t2-s2004-0135",
-   "adapt": {
-    "origin": "generated",
-    "tier": "t2",
-    "knobs": {
-     "ranges": {
-      "a": [
-       20,
-       49
-      ],
-      "b": [
-       8,
-       19
-      ],
-      "c": [
-       2,
-       6
-      ]
-     }
-    },
-    "change": "single-digit factors, sums and differences under 50",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   },
-   "null_set": [
-    "arithmetic-t0-s0-0091",
-    "arithmetic-t0-s0-0215",
-    "arithmetic-t0-s0-0249",
-    "arithmetic-t1-s1000-0197",
-    "arithmetic-t1-s1000-0227",
-    "arithmetic-t1-s1000-0284",
-    "arithmetic-t2-s2000-0162",
-    "arithmetic-t2-s2000-0178",
-    "arithmetic-t2-s2000-0221",
-    "arithmetic-t2-s2000-0395",
-    "arithmetic-t2-s2001-0048",
-    "arithmetic-t2-s2001-0123",
-    "arithmetic-t2-s2001-0173",
-    "arithmetic-t2-s2001-0256",
-    "arithmetic-t2-s2001-0282",
-    "arithmetic-t2-s2001-0316",
-    "arithmetic-t2-s2001-0346",
-    "arithmetic-t2-s2001-0360",
-    "arithmetic-t2-s2001-0379",
-    "arithmetic-t2-s2001-0398",
-    "arithmetic-t2-s2002-0069",
-    "arithmetic-t2-s2002-0085",
-    "arithmetic-t2-s2002-0114",
-    "arithmetic-t2-s2002-0151",
-    "arithmetic-t2-s2002-0197",
-    "arithmetic-t2-s2002-0234",
-    "arithmetic-t2-s2002-0336",
-    "arithmetic-t2-s2003-0100",
-    "arithmetic-t2-s2003-0194",
-    "arithmetic-t2-s2003-0307",
-    "arithmetic-t2-s2003-0345",
-    "arithmetic-t2-s2004-0027",
-    "arithmetic-t2-s2004-0063",
-    "arithmetic-t2-s2004-0090",
-    "arithmetic-t2-s2004-0124",
-    "arithmetic-t2-s2004-0224",
-    "arithmetic-t2-s2005-0024",
-    "arithmetic-t2-s2005-0046",
-    "arithmetic-t2-s2005-0092",
-    "arithmetic-t2-s2005-0164",
-    "arithmetic-t2-s2005-0183"
-   ]
-  },
-  {
-   "variant": "signpair",
-   "expr": "(15 - 16) * 3",
-   "operands": [
-    "15",
-    "16",
-    "3"
-   ],
-   "first_op": "subtract",
-   "answer": "-3",
-   "first_value": "-1",
-   "intermediates": [
-    "-1"
-   ],
-   "prompt": "Compute (15 - 16) * 3. Reply with only the final number, nothing else.",
-   "tolerance": "rel5pct",
-   "cell": {
-    "layer": 21,
-    "pos": -8
-   },
-   "role": "comparison",
-   "single_token_reachable": true,
-   "name": "arithmetic-t2-s2004-0198",
-   "adapt": {
-    "origin": "generated",
-    "tier": "t2",
-    "knobs": {
-     "ranges": {
-      "a": [
-       2,
-       20
-      ],
-      "b": [
-       10,
-       40
-      ],
-      "c": [
-       2,
-       4
-      ]
-     }
-    },
-    "change": "single-digit factors, sums and differences under 50",
-    "gate": {
-     "rate": 0.8,
-     "pass": true
-    }
-   },
-   "null_set": [
-    "arithmetic-t2-s2000-0347",
-    "arithmetic-t2-s2000-0354",
-    "arithmetic-t2-s2001-0099",
-    "arithmetic-t2-s2001-0259",
-    "arithmetic-t2-s2003-0055",
-    "arithmetic-t2-s2003-0113",
-    "arithmetic-t2-s2003-0119",
-    "arithmetic-t2-s2003-0196",
-    "arithmetic-t2-s2005-0033",
-    "arithmetic-t2-s2005-0218"
-   ]
-  },
-  {
-   "variant": "signpair",
-   "expr": "(16 - 17) * 2",
-   "operands": [
-    "16",
-    "17",
-    "2"
-   ],
-   "first_op": "subtract",
-   "answer": "-2",
-   "first_value": "-1",
-   "intermediates": [
-    "-1"
-   ],
-   "prompt": "Compute (16 - 17) * 2. Reply with only the final number, nothing else.",
-   "tolerance": "rel5pct",
-   "cell": {
-    "layer": 21,
-    "pos": -8
-   },
-   "role": "comparison",
-   "single_token_reachable": true,
-   "name": "arithmetic-t2-s2004-0203",
-   "adapt": {
-    "origin": "generated",
-    "tier": "t2",
-    "knobs": {
-     "ranges": {
-      "a": [
-       2,
-       20
-      ],
-      "b": [
-       10,
-       40
-      ],
-      "c": [
-       2,
-       4
-      ]
-     }
-    },
-    "change": "single-digit factors, sums and differences under 50",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   },
-   "null_set": [
-    "arithmetic-t2-s2000-0347",
-    "arithmetic-t2-s2000-0354",
-    "arithmetic-t2-s2001-0099",
-    "arithmetic-t2-s2001-0259",
-    "arithmetic-t2-s2003-0055",
-    "arithmetic-t2-s2003-0113",
-    "arithmetic-t2-s2003-0119",
-    "arithmetic-t2-s2003-0196",
-    "arithmetic-t2-s2005-0033",
-    "arithmetic-t2-s2005-0218"
-   ]
-  },
-  {
-   "variant": "subsub",
-   "expr": "(21 - 10) - 6",
-   "operands": [
-    "21",
-    "10",
-    "6"
-   ],
-   "first_op": "subtract",
-   "answer": "5",
-   "first_value": "11",
-   "intermediates": [
-    "11"
-   ],
-   "prompt": "Compute (21 - 10) - 6. Reply with only the final number, nothing else.",
-   "tolerance": "rel5pct",
-   "cell": {
-    "layer": 21,
-    "pos": -8
-   },
-   "role": "comparison",
-   "single_token_reachable": true,
-   "name": "arithmetic-t2-s2004-0218",
-   "adapt": {
-    "origin": "generated",
-    "tier": "t2",
-    "knobs": {
-     "ranges": {
-      "a": [
-       20,
-       49
-      ],
-      "b": [
-       8,
-       19
-      ],
-      "c": [
-       2,
-       6
-      ]
-     }
-    },
-    "change": "single-digit factors, sums and differences under 50",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   },
-   "null_set": [
-    "arithmetic-t0-s0-0091",
-    "arithmetic-t0-s0-0215",
-    "arithmetic-t0-s0-0249",
-    "arithmetic-t1-s1000-0197",
-    "arithmetic-t1-s1000-0227",
-    "arithmetic-t1-s1000-0284",
-    "arithmetic-t2-s2000-0162",
-    "arithmetic-t2-s2000-0178",
-    "arithmetic-t2-s2000-0221",
-    "arithmetic-t2-s2000-0395",
-    "arithmetic-t2-s2001-0048",
-    "arithmetic-t2-s2001-0123",
-    "arithmetic-t2-s2001-0173",
-    "arithmetic-t2-s2001-0256",
-    "arithmetic-t2-s2001-0282",
-    "arithmetic-t2-s2001-0316",
-    "arithmetic-t2-s2001-0360",
-    "arithmetic-t2-s2001-0379",
-    "arithmetic-t2-s2001-0398",
-    "arithmetic-t2-s2002-0141",
-    "arithmetic-t2-s2002-0151",
-    "arithmetic-t2-s2002-0197",
-    "arithmetic-t2-s2002-0234",
-    "arithmetic-t2-s2002-0336",
-    "arithmetic-t2-s2003-0100",
-    "arithmetic-t2-s2003-0194",
-    "arithmetic-t2-s2003-0307",
-    "arithmetic-t2-s2003-0345",
-    "arithmetic-t2-s2004-0027",
-    "arithmetic-t2-s2004-0063",
-    "arithmetic-t2-s2004-0090",
-    "arithmetic-t2-s2004-0124",
-    "arithmetic-t2-s2005-0024",
-    "arithmetic-t2-s2005-0092",
-    "arithmetic-t2-s2005-0164"
-   ]
-  },
-  {
-   "variant": "subsub",
-   "expr": "(25 - 13) - 5",
-   "operands": [
-    "25",
-    "13",
-    "5"
-   ],
-   "first_op": "subtract",
-   "answer": "7",
-   "first_value": "12",
-   "intermediates": [
-    "12"
-   ],
-   "prompt": "Compute (25 - 13) - 5. Reply with only the final number, nothing else.",
-   "tolerance": "rel5pct",
-   "cell": {
-    "layer": 21,
-    "pos": -8
-   },
-   "role": "comparison",
-   "single_token_reachable": true,
-   "name": "arithmetic-t2-s2004-0224",
-   "adapt": {
-    "origin": "generated",
-    "tier": "t2",
-    "knobs": {
-     "ranges": {
-      "a": [
-       20,
-       49
-      ],
-      "b": [
-       8,
-       19
-      ],
-      "c": [
-       2,
-       6
-      ]
-     }
-    },
-    "change": "single-digit factors, sums and differences under 50",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   },
-   "null_set": [
-    "arithmetic-t0-s0-0091",
-    "arithmetic-t0-s0-0215",
-    "arithmetic-t0-s0-0249",
-    "arithmetic-t1-s1000-0197",
-    "arithmetic-t1-s1000-0227",
-    "arithmetic-t1-s1000-0284",
-    "arithmetic-t2-s2000-0162",
-    "arithmetic-t2-s2000-0178",
-    "arithmetic-t2-s2000-0221",
-    "arithmetic-t2-s2001-0048",
-    "arithmetic-t2-s2001-0123",
-    "arithmetic-t2-s2001-0256",
-    "arithmetic-t2-s2001-0282",
-    "arithmetic-t2-s2001-0316",
-    "arithmetic-t2-s2001-0360",
-    "arithmetic-t2-s2001-0379",
-    "arithmetic-t2-s2002-0130",
-    "arithmetic-t2-s2002-0141",
-    "arithmetic-t2-s2002-0151",
-    "arithmetic-t2-s2002-0234",
-    "arithmetic-t2-s2002-0310",
-    "arithmetic-t2-s2002-0336",
-    "arithmetic-t2-s2003-0001",
-    "arithmetic-t2-s2003-0100",
-    "arithmetic-t2-s2003-0104",
-    "arithmetic-t2-s2003-0194",
-    "arithmetic-t2-s2003-0307",
-    "arithmetic-t2-s2003-0345",
-    "arithmetic-t2-s2003-0358",
-    "arithmetic-t2-s2004-0027",
-    "arithmetic-t2-s2004-0063",
-    "arithmetic-t2-s2004-0080",
-    "arithmetic-t2-s2004-0090",
-    "arithmetic-t2-s2004-0124",
-    "arithmetic-t2-s2004-0135",
-    "arithmetic-t2-s2005-0024",
-    "arithmetic-t2-s2005-0092",
-    "arithmetic-t2-s2005-0164"
-   ]
-  },
-  {
-   "variant": "subsub",
-   "expr": "(24 - 13) - 6",
-   "operands": [
-    "24",
-    "13",
-    "6"
-   ],
-   "first_op": "subtract",
-   "answer": "5",
-   "first_value": "11",
-   "intermediates": [
-    "11"
-   ],
-   "prompt": "Compute (24 - 13) - 6. Reply with only the final number, nothing else.",
-   "tolerance": "rel5pct",
-   "cell": {
-    "layer": 21,
-    "pos": -8
-   },
-   "role": "comparison",
-   "single_token_reachable": true,
-   "name": "arithmetic-t2-s2004-0315",
-   "adapt": {
-    "origin": "generated",
-    "tier": "t2",
-    "knobs": {
-     "ranges": {
-      "a": [
-       20,
-       49
-      ],
-      "b": [
-       8,
-       19
-      ],
-      "c": [
-       2,
-       6
-      ]
-     }
-    },
-    "change": "single-digit factors, sums and differences under 50",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   },
-   "null_set": [
-    "arithmetic-t0-s0-0091",
-    "arithmetic-t0-s0-0215",
-    "arithmetic-t0-s0-0249",
-    "arithmetic-t1-s1000-0197",
-    "arithmetic-t1-s1000-0227",
-    "arithmetic-t1-s1000-0284",
-    "arithmetic-t2-s2000-0162",
-    "arithmetic-t2-s2000-0178",
-    "arithmetic-t2-s2000-0221",
-    "arithmetic-t2-s2000-0395",
-    "arithmetic-t2-s2001-0048",
-    "arithmetic-t2-s2001-0123",
-    "arithmetic-t2-s2001-0173",
-    "arithmetic-t2-s2001-0256",
-    "arithmetic-t2-s2001-0282",
-    "arithmetic-t2-s2001-0316",
-    "arithmetic-t2-s2001-0360",
-    "arithmetic-t2-s2001-0379",
-    "arithmetic-t2-s2001-0398",
-    "arithmetic-t2-s2002-0141",
-    "arithmetic-t2-s2002-0151",
-    "arithmetic-t2-s2002-0197",
-    "arithmetic-t2-s2002-0234",
-    "arithmetic-t2-s2002-0336",
-    "arithmetic-t2-s2003-0100",
-    "arithmetic-t2-s2003-0194",
-    "arithmetic-t2-s2003-0307",
-    "arithmetic-t2-s2003-0345",
-    "arithmetic-t2-s2004-0027",
-    "arithmetic-t2-s2004-0063",
-    "arithmetic-t2-s2004-0090",
-    "arithmetic-t2-s2004-0124",
-    "arithmetic-t2-s2005-0024",
-    "arithmetic-t2-s2005-0092",
-    "arithmetic-t2-s2005-0164"
-   ]
-  },
-  {
-   "variant": "subsub",
-   "expr": "(32 - 9) - 5",
-   "operands": [
-    "32",
-    "9",
-    "5"
-   ],
-   "first_op": "subtract",
-   "answer": "18",
-   "first_value": "23",
-   "intermediates": [
-    "23"
-   ],
-   "prompt": "Compute (32 - 9) - 5. Reply with only the final number, nothing else.",
-   "tolerance": "rel5pct",
-   "cell": {
-    "layer": 21,
-    "pos": -8
-   },
-   "role": "comparison",
-   "single_token_reachable": true,
-   "name": "arithmetic-t2-s2005-0024",
-   "adapt": {
-    "origin": "generated",
-    "tier": "t2",
-    "knobs": {
-     "ranges": {
-      "a": [
-       20,
-       49
-      ],
-      "b": [
-       8,
-       19
-      ],
-      "c": [
-       2,
-       6
-      ]
-     }
-    },
-    "change": "single-digit factors, sums and differences under 50",
-    "gate": {
-     "rate": 0.8,
-     "pass": true
-    }
-   },
-   "null_set": [
-    "arithmetic-t0-s0-0215",
-    "arithmetic-t1-s1000-0197",
-    "arithmetic-t1-s1000-0227",
-    "arithmetic-t1-s1000-0284",
-    "arithmetic-t2-s2000-0108",
-    "arithmetic-t2-s2000-0162",
-    "arithmetic-t2-s2000-0395",
-    "arithmetic-t2-s2001-0048",
-    "arithmetic-t2-s2001-0089",
-    "arithmetic-t2-s2001-0123",
-    "arithmetic-t2-s2001-0173",
-    "arithmetic-t2-s2001-0239",
-    "arithmetic-t2-s2001-0256",
-    "arithmetic-t2-s2001-0282",
-    "arithmetic-t2-s2001-0316",
-    "arithmetic-t2-s2001-0346",
-    "arithmetic-t2-s2001-0360",
-    "arithmetic-t2-s2001-0398",
-    "arithmetic-t2-s2002-0069",
-    "arithmetic-t2-s2002-0085",
-    "arithmetic-t2-s2002-0114",
-    "arithmetic-t2-s2002-0130",
-    "arithmetic-t2-s2002-0141",
-    "arithmetic-t2-s2002-0197",
-    "arithmetic-t2-s2002-0234",
-    "arithmetic-t2-s2002-0310",
-    "arithmetic-t2-s2002-0336",
-    "arithmetic-t2-s2002-0372",
-    "arithmetic-t2-s2003-0001",
-    "arithmetic-t2-s2003-0049",
-    "arithmetic-t2-s2003-0104",
-    "arithmetic-t2-s2003-0358",
-    "arithmetic-t2-s2004-0027",
-    "arithmetic-t2-s2004-0051",
-    "arithmetic-t2-s2004-0079",
-    "arithmetic-t2-s2004-0080",
-    "arithmetic-t2-s2004-0090",
-    "arithmetic-t2-s2004-0135",
-    "arithmetic-t2-s2004-0218",
-    "arithmetic-t2-s2004-0224",
-    "arithmetic-t2-s2004-0315",
-    "arithmetic-t2-s2005-0046",
-    "arithmetic-t2-s2005-0092",
-    "arithmetic-t2-s2005-0156",
-    "arithmetic-t2-s2005-0164",
-    "arithmetic-t2-s2005-0183",
-    "arithmetic-t2-s2005-0186"
-   ]
-  },
-  {
-   "variant": "signpair",
-   "expr": "(10 - 12) * 4",
-   "operands": [
-    "10",
-    "12",
-    "4"
-   ],
-   "first_op": "subtract",
-   "answer": "-8",
-   "first_value": "-2",
-   "intermediates": [
-    "-2"
-   ],
-   "prompt": "Compute (10 - 12) * 4. Reply with only the final number, nothing else.",
-   "tolerance": "rel5pct",
-   "cell": {
-    "layer": 21,
-    "pos": -8
-   },
-   "role": "comparison",
-   "single_token_reachable": true,
-   "name": "arithmetic-t2-s2005-0033",
-   "adapt": {
-    "origin": "generated",
-    "tier": "t2",
-    "knobs": {
-     "ranges": {
-      "a": [
-       2,
-       20
-      ],
-      "b": [
-       10,
-       40
-      ],
-      "c": [
-       2,
-       4
-      ]
-     }
-    },
-    "change": "single-digit factors, sums and differences under 50",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   },
-   "null_set": [
-    "arithmetic-t2-s2000-0347",
-    "arithmetic-t2-s2001-0051",
-    "arithmetic-t2-s2001-0099",
-    "arithmetic-t2-s2001-0224",
-    "arithmetic-t2-s2001-0259",
-    "arithmetic-t2-s2002-0031",
-    "arithmetic-t2-s2002-0265",
-    "arithmetic-t2-s2003-0055",
-    "arithmetic-t2-s2003-0113",
-    "arithmetic-t2-s2003-0119",
-    "arithmetic-t2-s2003-0196",
-    "arithmetic-t2-s2004-0198",
-    "arithmetic-t2-s2004-0203",
-    "arithmetic-t2-s2005-0191",
-    "arithmetic-t2-s2005-0218"
-   ]
-  },
-  {
-   "variant": "subsub",
-   "expr": "(25 - 12) - 5",
-   "operands": [
-    "25",
-    "12",
-    "5"
-   ],
-   "first_op": "subtract",
-   "answer": "8",
-   "first_value": "13",
-   "intermediates": [
-    "13"
-   ],
-   "prompt": "Compute (25 - 12) - 5. Reply with only the final number, nothing else.",
-   "tolerance": "rel5pct",
-   "cell": {
-    "layer": 21,
-    "pos": -8
-   },
-   "role": "comparison",
-   "single_token_reachable": true,
-   "name": "arithmetic-t2-s2005-0046",
-   "adapt": {
-    "origin": "generated",
-    "tier": "t2",
-    "knobs": {
-     "ranges": {
-      "a": [
-       20,
-       49
-      ],
-      "b": [
-       8,
-       19
-      ],
-      "c": [
-       2,
-       6
-      ]
-     }
-    },
-    "change": "single-digit factors, sums and differences under 50",
-    "gate": {
-     "rate": 0.8,
-     "pass": true
-    }
-   },
-   "null_set": [
-    "arithmetic-t0-s0-0091",
-    "arithmetic-t0-s0-0215",
-    "arithmetic-t0-s0-0249",
-    "arithmetic-t1-s1000-0197",
-    "arithmetic-t1-s1000-0227",
-    "arithmetic-t2-s2000-0108",
-    "arithmetic-t2-s2000-0162",
-    "arithmetic-t2-s2000-0178",
-    "arithmetic-t2-s2000-0221",
-    "arithmetic-t2-s2001-0048",
-    "arithmetic-t2-s2001-0089",
-    "arithmetic-t2-s2001-0123",
-    "arithmetic-t2-s2001-0256",
-    "arithmetic-t2-s2001-0282",
-    "arithmetic-t2-s2001-0316",
-    "arithmetic-t2-s2001-0360",
-    "arithmetic-t2-s2001-0379",
-    "arithmetic-t2-s2002-0130",
-    "arithmetic-t2-s2002-0141",
-    "arithmetic-t2-s2002-0151",
-    "arithmetic-t2-s2002-0310",
-    "arithmetic-t2-s2002-0336",
-    "arithmetic-t2-s2003-0001",
-    "arithmetic-t2-s2003-0100",
-    "arithmetic-t2-s2003-0104",
-    "arithmetic-t2-s2003-0194",
-    "arithmetic-t2-s2003-0307",
-    "arithmetic-t2-s2003-0345",
-    "arithmetic-t2-s2003-0358",
-    "arithmetic-t2-s2004-0027",
-    "arithmetic-t2-s2004-0051",
-    "arithmetic-t2-s2004-0063",
-    "arithmetic-t2-s2004-0080",
-    "arithmetic-t2-s2004-0090",
-    "arithmetic-t2-s2004-0124",
-    "arithmetic-t2-s2004-0135",
-    "arithmetic-t2-s2005-0024",
-    "arithmetic-t2-s2005-0092",
-    "arithmetic-t2-s2005-0164"
-   ]
-  },
-  {
-   "variant": "subsub",
-   "expr": "(20 - 15) - 3",
-   "operands": [
-    "20",
-    "15",
-    "3"
-   ],
-   "first_op": "subtract",
-   "answer": "2",
-   "first_value": "5",
-   "intermediates": [
-    "5"
-   ],
-   "prompt": "Compute (20 - 15) - 3. Reply with only the final number, nothing else.",
-   "tolerance": "rel5pct",
-   "cell": {
-    "layer": 21,
-    "pos": -8
-   },
-   "role": "comparison",
-   "single_token_reachable": true,
-   "name": "arithmetic-t2-s2005-0092",
-   "adapt": {
-    "origin": "generated",
-    "tier": "t2",
-    "knobs": {
-     "ranges": {
-      "a": [
-       20,
-       49
-      ],
-      "b": [
-       8,
-       19
-      ],
-      "c": [
-       2,
-       6
-      ]
-     }
-    },
-    "change": "single-digit factors, sums and differences under 50",
-    "gate": {
-     "rate": 0.8,
-     "pass": true
-    }
-   },
-   "null_set": [
-    "arithmetic-t0-s0-0091",
-    "arithmetic-t0-s0-0215",
-    "arithmetic-t0-s0-0249",
-    "arithmetic-t1-s1000-0197",
-    "arithmetic-t1-s1000-0227",
-    "arithmetic-t1-s1000-0284",
-    "arithmetic-t2-s2000-0108",
-    "arithmetic-t2-s2000-0162",
-    "arithmetic-t2-s2000-0178",
-    "arithmetic-t2-s2000-0221",
-    "arithmetic-t2-s2000-0395",
-    "arithmetic-t2-s2001-0048",
-    "arithmetic-t2-s2001-0089",
-    "arithmetic-t2-s2001-0123",
-    "arithmetic-t2-s2001-0173",
-    "arithmetic-t2-s2001-0239",
-    "arithmetic-t2-s2001-0256",
-    "arithmetic-t2-s2001-0282",
-    "arithmetic-t2-s2001-0316",
-    "arithmetic-t2-s2001-0346",
-    "arithmetic-t2-s2001-0360",
-    "arithmetic-t2-s2001-0379",
-    "arithmetic-t2-s2001-0398",
-    "arithmetic-t2-s2002-0069",
-    "arithmetic-t2-s2002-0085",
-    "arithmetic-t2-s2002-0114",
-    "arithmetic-t2-s2002-0130",
-    "arithmetic-t2-s2002-0141",
-    "arithmetic-t2-s2002-0151",
-    "arithmetic-t2-s2002-0197",
-    "arithmetic-t2-s2002-0234",
-    "arithmetic-t2-s2002-0310",
-    "arithmetic-t2-s2002-0336",
-    "arithmetic-t2-s2002-0372",
-    "arithmetic-t2-s2003-0001",
-    "arithmetic-t2-s2003-0049",
-    "arithmetic-t2-s2003-0100",
-    "arithmetic-t2-s2003-0104",
-    "arithmetic-t2-s2003-0194",
-    "arithmetic-t2-s2003-0307",
-    "arithmetic-t2-s2003-0345",
-    "arithmetic-t2-s2003-0358",
-    "arithmetic-t2-s2004-0027",
-    "arithmetic-t2-s2004-0051",
-    "arithmetic-t2-s2004-0063",
-    "arithmetic-t2-s2004-0079",
-    "arithmetic-t2-s2004-0080",
-    "arithmetic-t2-s2004-0090",
-    "arithmetic-t2-s2004-0124",
-    "arithmetic-t2-s2004-0135",
-    "arithmetic-t2-s2004-0218",
-    "arithmetic-t2-s2004-0224",
-    "arithmetic-t2-s2004-0315",
-    "arithmetic-t2-s2005-0024",
-    "arithmetic-t2-s2005-0046",
-    "arithmetic-t2-s2005-0156",
-    "arithmetic-t2-s2005-0164",
-    "arithmetic-t2-s2005-0183",
-    "arithmetic-t2-s2005-0186"
-   ]
-  },
-  {
-   "variant": "subsub",
-   "expr": "(28 - 17) - 6",
-   "operands": [
-    "28",
-    "17",
-    "6"
-   ],
-   "first_op": "subtract",
-   "answer": "5",
-   "first_value": "11",
-   "intermediates": [
-    "11"
-   ],
-   "prompt": "Compute (28 - 17) - 6. Reply with only the final number, nothing else.",
-   "tolerance": "rel5pct",
-   "cell": {
-    "layer": 21,
-    "pos": -8
-   },
-   "role": "comparison",
-   "single_token_reachable": true,
-   "name": "arithmetic-t2-s2005-0156",
-   "adapt": {
-    "origin": "generated",
-    "tier": "t2",
-    "knobs": {
-     "ranges": {
-      "a": [
-       20,
-       49
-      ],
-      "b": [
-       8,
-       19
-      ],
-      "c": [
-       2,
-       6
-      ]
-     }
-    },
-    "change": "single-digit factors, sums and differences under 50",
-    "gate": {
-     "rate": 0.9,
-     "pass": true
-    }
-   },
-   "null_set": [
-    "arithmetic-t0-s0-0091",
-    "arithmetic-t0-s0-0215",
-    "arithmetic-t0-s0-0249",
-    "arithmetic-t1-s1000-0197",
-    "arithmetic-t1-s1000-0227",
-    "arithmetic-t1-s1000-0284",
-    "arithmetic-t2-s2000-0162",
-    "arithmetic-t2-s2000-0178",
-    "arithmetic-t2-s2000-0221",
-    "arithmetic-t2-s2000-0395",
-    "arithmetic-t2-s2001-0048",
-    "arithmetic-t2-s2001-0123",
-    "arithmetic-t2-s2001-0173",
-    "arithmetic-t2-s2001-0256",
-    "arithmetic-t2-s2001-0282",
-    "arithmetic-t2-s2001-0316",
-    "arithmetic-t2-s2001-0360",
-    "arithmetic-t2-s2001-0379",
-    "arithmetic-t2-s2001-0398",
-    "arithmetic-t2-s2002-0141",
-    "arithmetic-t2-s2002-0151",
-    "arithmetic-t2-s2002-0197",
-    "arithmetic-t2-s2002-0234",
-    "arithmetic-t2-s2002-0336",
-    "arithmetic-t2-s2003-0100",
-    "arithmetic-t2-s2003-0194",
-    "arithmetic-t2-s2003-0307",
-    "arithmetic-t2-s2003-0345",
-    "arithmetic-t2-s2004-0027",
-    "arithmetic-t2-s2004-0063",
-    "arithmetic-t2-s2004-0090",
-    "arithmetic-t2-s2004-0124",
-    "arithmetic-t2-s2005-0024",
-    "arithmetic-t2-s2005-0092",
-    "arithmetic-t2-s2005-0164"
-   ]
-  },
-  {
-   "variant": "subsub",
-   "expr": "(21 - 14) - 4",
-   "operands": [
-    "21",
-    "14",
-    "4"
-   ],
-   "first_op": "subtract",
-   "answer": "3",
-   "first_value": "7",
-   "intermediates": [
-    "7"
-   ],
-   "prompt": "Compute (21 - 14) - 4. Reply with only the final number, nothing else.",
-   "tolerance": "rel5pct",
-   "cell": {
-    "layer": 21,
-    "pos": -8
-   },
-   "role": "comparison",
-   "single_token_reachable": true,
-   "name": "arithmetic-t2-s2005-0164",
-   "adapt": {
-    "origin": "generated",
-    "tier": "t2",
-    "knobs": {
-     "ranges": {
-      "a": [
-       20,
-       49
-      ],
-      "b": [
-       8,
-       19
-      ],
-      "c": [
-       2,
-       6
-      ]
-     }
-    },
-    "change": "single-digit factors, sums and differences under 50",
-    "gate": {
-     "rate": 0.9,
-     "pass": true
-    }
-   },
-   "null_set": [
-    "arithmetic-t0-s0-0091",
-    "arithmetic-t0-s0-0215",
-    "arithmetic-t0-s0-0249",
-    "arithmetic-t1-s1000-0197",
-    "arithmetic-t1-s1000-0284",
-    "arithmetic-t2-s2000-0108",
-    "arithmetic-t2-s2000-0178",
-    "arithmetic-t2-s2000-0221",
-    "arithmetic-t2-s2000-0395",
-    "arithmetic-t2-s2001-0089",
-    "arithmetic-t2-s2001-0123",
-    "arithmetic-t2-s2001-0173",
-    "arithmetic-t2-s2001-0239",
-    "arithmetic-t2-s2001-0256",
-    "arithmetic-t2-s2001-0282",
-    "arithmetic-t2-s2001-0346",
-    "arithmetic-t2-s2001-0360",
-    "arithmetic-t2-s2001-0379",
-    "arithmetic-t2-s2001-0398",
-    "arithmetic-t2-s2002-0069",
-    "arithmetic-t2-s2002-0085",
-    "arithmetic-t2-s2002-0114",
-    "arithmetic-t2-s2002-0130",
-    "arithmetic-t2-s2002-0151",
-    "arithmetic-t2-s2002-0197",
-    "arithmetic-t2-s2002-0234",
-    "arithmetic-t2-s2002-0310",
-    "arithmetic-t2-s2002-0372",
-    "arithmetic-t2-s2003-0001",
-    "arithmetic-t2-s2003-0049",
-    "arithmetic-t2-s2003-0100",
-    "arithmetic-t2-s2003-0104",
-    "arithmetic-t2-s2003-0194",
-    "arithmetic-t2-s2003-0307",
-    "arithmetic-t2-s2003-0345",
-    "arithmetic-t2-s2003-0358",
-    "arithmetic-t2-s2004-0027",
-    "arithmetic-t2-s2004-0051",
-    "arithmetic-t2-s2004-0063",
-    "arithmetic-t2-s2004-0079",
-    "arithmetic-t2-s2004-0080",
-    "arithmetic-t2-s2004-0090",
-    "arithmetic-t2-s2004-0124",
-    "arithmetic-t2-s2004-0135",
-    "arithmetic-t2-s2004-0218",
-    "arithmetic-t2-s2004-0224",
-    "arithmetic-t2-s2004-0315",
-    "arithmetic-t2-s2005-0024",
-    "arithmetic-t2-s2005-0046",
-    "arithmetic-t2-s2005-0092",
-    "arithmetic-t2-s2005-0156",
-    "arithmetic-t2-s2005-0183",
-    "arithmetic-t2-s2005-0186"
-   ]
-  },
-  {
-   "variant": "subsub",
-   "expr": "(23 - 10) - 6",
-   "operands": [
-    "23",
-    "10",
-    "6"
-   ],
-   "first_op": "subtract",
-   "answer": "7",
-   "first_value": "13",
-   "intermediates": [
-    "13"
-   ],
-   "prompt": "Compute (23 - 10) - 6. Reply with only the final number, nothing else.",
-   "tolerance": "rel5pct",
-   "cell": {
-    "layer": 21,
-    "pos": -8
-   },
-   "role": "comparison",
-   "single_token_reachable": true,
-   "name": "arithmetic-t2-s2005-0183",
-   "adapt": {
-    "origin": "generated",
-    "tier": "t2",
-    "knobs": {
-     "ranges": {
-      "a": [
-       20,
-       49
-      ],
-      "b": [
-       8,
-       19
-      ],
-      "c": [
-       2,
-       6
-      ]
-     }
-    },
-    "change": "single-digit factors, sums and differences under 50",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   },
-   "null_set": [
-    "arithmetic-t0-s0-0091",
-    "arithmetic-t0-s0-0215",
-    "arithmetic-t0-s0-0249",
-    "arithmetic-t1-s1000-0197",
-    "arithmetic-t1-s1000-0227",
-    "arithmetic-t2-s2000-0108",
-    "arithmetic-t2-s2000-0162",
-    "arithmetic-t2-s2000-0178",
-    "arithmetic-t2-s2000-0221",
-    "arithmetic-t2-s2001-0048",
-    "arithmetic-t2-s2001-0089",
-    "arithmetic-t2-s2001-0123",
-    "arithmetic-t2-s2001-0256",
-    "arithmetic-t2-s2001-0282",
-    "arithmetic-t2-s2001-0316",
-    "arithmetic-t2-s2001-0360",
-    "arithmetic-t2-s2001-0379",
-    "arithmetic-t2-s2002-0130",
-    "arithmetic-t2-s2002-0141",
-    "arithmetic-t2-s2002-0151",
-    "arithmetic-t2-s2002-0310",
-    "arithmetic-t2-s2002-0336",
-    "arithmetic-t2-s2003-0001",
-    "arithmetic-t2-s2003-0100",
-    "arithmetic-t2-s2003-0104",
-    "arithmetic-t2-s2003-0194",
-    "arithmetic-t2-s2003-0307",
-    "arithmetic-t2-s2003-0345",
-    "arithmetic-t2-s2003-0358",
-    "arithmetic-t2-s2004-0027",
-    "arithmetic-t2-s2004-0051",
-    "arithmetic-t2-s2004-0063",
-    "arithmetic-t2-s2004-0080",
-    "arithmetic-t2-s2004-0090",
-    "arithmetic-t2-s2004-0124",
-    "arithmetic-t2-s2004-0135",
-    "arithmetic-t2-s2005-0024",
-    "arithmetic-t2-s2005-0092",
-    "arithmetic-t2-s2005-0164"
-   ]
-  },
-  {
-   "variant": "subsub",
-   "expr": "(26 - 15) - 6",
-   "operands": [
-    "26",
-    "15",
-    "6"
-   ],
-   "first_op": "subtract",
-   "answer": "5",
-   "first_value": "11",
-   "intermediates": [
-    "11"
-   ],
-   "prompt": "Compute (26 - 15) - 6. Reply with only the final number, nothing else.",
-   "tolerance": "rel5pct",
-   "cell": {
-    "layer": 21,
-    "pos": -8
-   },
-   "role": "comparison",
-   "single_token_reachable": true,
-   "name": "arithmetic-t2-s2005-0186",
-   "adapt": {
-    "origin": "generated",
-    "tier": "t2",
-    "knobs": {
-     "ranges": {
-      "a": [
-       20,
-       49
-      ],
-      "b": [
-       8,
-       19
-      ],
-      "c": [
-       2,
-       6
-      ]
-     }
-    },
-    "change": "single-digit factors, sums and differences under 50",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   },
-   "null_set": [
-    "arithmetic-t0-s0-0091",
-    "arithmetic-t0-s0-0215",
-    "arithmetic-t0-s0-0249",
-    "arithmetic-t1-s1000-0197",
-    "arithmetic-t1-s1000-0227",
-    "arithmetic-t1-s1000-0284",
-    "arithmetic-t2-s2000-0162",
-    "arithmetic-t2-s2000-0178",
-    "arithmetic-t2-s2000-0221",
-    "arithmetic-t2-s2000-0395",
-    "arithmetic-t2-s2001-0048",
-    "arithmetic-t2-s2001-0123",
-    "arithmetic-t2-s2001-0173",
-    "arithmetic-t2-s2001-0256",
-    "arithmetic-t2-s2001-0282",
-    "arithmetic-t2-s2001-0316",
-    "arithmetic-t2-s2001-0360",
-    "arithmetic-t2-s2001-0379",
-    "arithmetic-t2-s2001-0398",
-    "arithmetic-t2-s2002-0141",
-    "arithmetic-t2-s2002-0151",
-    "arithmetic-t2-s2002-0197",
-    "arithmetic-t2-s2002-0234",
-    "arithmetic-t2-s2002-0336",
-    "arithmetic-t2-s2003-0100",
-    "arithmetic-t2-s2003-0194",
-    "arithmetic-t2-s2003-0307",
-    "arithmetic-t2-s2003-0345",
-    "arithmetic-t2-s2004-0027",
-    "arithmetic-t2-s2004-0063",
-    "arithmetic-t2-s2004-0090",
-    "arithmetic-t2-s2004-0124",
-    "arithmetic-t2-s2005-0024",
-    "arithmetic-t2-s2005-0092",
-    "arithmetic-t2-s2005-0164"
-   ]
-  },
-  {
-   "variant": "signpair",
-   "expr": "(20 - 21) * 2",
-   "operands": [
-    "20",
-    "21",
-    "2"
-   ],
-   "first_op": "subtract",
-   "answer": "-2",
-   "first_value": "-1",
-   "intermediates": [
-    "-1"
-   ],
-   "prompt": "Compute (20 - 21) * 2. Reply with only the final number, nothing else.",
-   "tolerance": "rel5pct",
-   "cell": {
-    "layer": 21,
-    "pos": -8
-   },
-   "role": "comparison",
-   "single_token_reachable": true,
-   "name": "arithmetic-t2-s2005-0191",
-   "adapt": {
-    "origin": "generated",
-    "tier": "t2",
-    "knobs": {
-     "ranges": {
-      "a": [
-       2,
-       20
-      ],
-      "b": [
-       10,
-       40
-      ],
-      "c": [
-       2,
-       4
-      ]
-     }
-    },
-    "change": "single-digit factors, sums and differences under 50",
-    "gate": {
-     "rate": 0.8,
-     "pass": true
-    }
-   },
-   "null_set": [
-    "arithmetic-t2-s2000-0347",
-    "arithmetic-t2-s2000-0354",
-    "arithmetic-t2-s2001-0099",
-    "arithmetic-t2-s2001-0259",
-    "arithmetic-t2-s2003-0055",
-    "arithmetic-t2-s2003-0113",
-    "arithmetic-t2-s2003-0119",
-    "arithmetic-t2-s2003-0196",
-    "arithmetic-t2-s2005-0033",
-    "arithmetic-t2-s2005-0218"
-   ]
-  },
-  {
-   "variant": "signpair",
-   "expr": "(10 - 30) * 2",
-   "operands": [
-    "10",
-    "30",
-    "2"
-   ],
-   "first_op": "subtract",
-   "answer": "-40",
-   "first_value": "-20",
-   "intermediates": [
-    "-20"
-   ],
-   "prompt": "Compute (10 - 30) * 2. Reply with only the final number, nothing else.",
-   "tolerance": "rel5pct",
-   "cell": {
-    "layer": 21,
-    "pos": -8
-   },
-   "role": "comparison",
-   "single_token_reachable": true,
-   "name": "arithmetic-t2-s2005-0218",
-   "adapt": {
-    "origin": "generated",
-    "tier": "t2",
-    "knobs": {
-     "ranges": {
-      "a": [
-       2,
-       20
-      ],
-      "b": [
-       10,
-       40
-      ],
-      "c": [
-       2,
-       4
-      ]
-     }
-    },
-    "change": "single-digit factors, sums and differences under 50",
-    "gate": {
-     "rate": 0.8,
-     "pass": true
-    }
-   },
-   "null_set": [
-    "arithmetic-t2-s2000-0347",
-    "arithmetic-t2-s2000-0354",
-    "arithmetic-t2-s2001-0051",
-    "arithmetic-t2-s2001-0099",
-    "arithmetic-t2-s2001-0224",
-    "arithmetic-t2-s2001-0259",
-    "arithmetic-t2-s2002-0031",
-    "arithmetic-t2-s2002-0265",
-    "arithmetic-t2-s2003-0055",
-    "arithmetic-t2-s2003-0113",
-    "arithmetic-t2-s2003-0119",
-    "arithmetic-t2-s2003-0196",
-    "arithmetic-t2-s2004-0198",
-    "arithmetic-t2-s2004-0203",
-    "arithmetic-t2-s2005-0033",
-    "arithmetic-t2-s2005-0191"
+    "arithmetic-t2-s2003-0345"
    ]
   }
  ]

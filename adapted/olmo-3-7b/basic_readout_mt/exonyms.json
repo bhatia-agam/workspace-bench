@@ -1,0 +1,1177 @@
+{
+ "version": "adapt-olmo-3-7b",
+ "note": "adapted-only items' extra gold name forms (ru / es / fr / de / fa exonyms, authored with the item); added to evals/basic_readout_mt/exonyms.json by the judge (registry.load_resource)",
+ "items": {
+  "basic-au-t1-w100c0-brh-ent-africa-summit": {
+   "readout": {
+    "ru": [
+     "Килиманджаро"
+    ],
+    "fr": [
+     "Kilimandjaro"
+    ],
+    "de": [
+     "Kilimandscharo"
+    ],
+    "fa": [
+     "کلیمانجارو"
+    ]
+   }
+  },
+  "basic-au-t1-w100c0-brh-ent-chromosome-21": {
+   "readout": {
+    "ru": [
+     "синдром Дауна"
+    ],
+    "es": [
+     "síndrome de Down"
+    ],
+    "fr": [
+     "syndrome de Down",
+     "trisomie 21"
+    ],
+    "de": [
+     "Down-Syndrom"
+    ],
+    "fa": [
+     "سندرم داون"
+    ]
+   }
+  },
+  "basic-au-t1-w100c0-brh-ent-current-voltage-resistance": {
+   "readout": {
+    "ru": [
+     "закон Ома"
+    ],
+    "es": [
+     "ley de Ohm"
+    ],
+    "fr": [
+     "loi d'Ohm"
+    ],
+    "de": [
+     "Ohmsches Gesetz"
+    ],
+    "fa": [
+     "قانون اهم"
+    ]
+   }
+  },
+  "basic-au-t1-w100c0-brh-ent-gas-pressure-volume": {
+   "readout": {
+    "ru": [
+     "закон Бойля — Мариотта"
+    ],
+    "es": [
+     "ley de Boyle-Mariotte"
+    ],
+    "fr": [
+     "loi de Boyle-Mariotte"
+    ],
+    "de": [
+     "Boyle-Mariotte-Gesetz"
+    ],
+    "fa": [
+     "قانون بویل"
+    ]
+   }
+  },
+  "basic-au-t1-w100c0-brh-ent-hastings-1066": {
+   "readout": {
+    "ru": [
+     "Битва при Гастингсе"
+    ],
+    "es": [
+     "Batalla de Hastings"
+    ],
+    "fr": [
+     "Bataille d'Hastings"
+    ],
+    "de": [
+     "Schlacht bei Hastings"
+    ],
+    "fa": [
+     "نبرد هستینگز"
+    ]
+   }
+  },
+  "basic-au-t1-w100c0-brh-ent-hypotenuse-result": {
+   "readout": {
+    "ru": [
+     "теорема Пифагора"
+    ],
+    "es": [
+     "teorema de Pitágoras"
+    ],
+    "fr": [
+     "théorème de Pythagore"
+    ],
+    "de": [
+     "Satz des Pythagoras"
+    ],
+    "fa": [
+     "قضیه فیثاغورس"
+    ]
+   }
+  },
+  "basic-au-t1-w100c0-brh-ent-justinian-537-church": {
+   "readout": {
+    "ru": [
+     "Собор Святой Софии",
+     "Айя-София"
+    ],
+    "es": [
+     "Santa Sofía"
+    ],
+    "fr": [
+     "Sainte-Sophie"
+    ],
+    "fa": [
+     "ایاصوفیه"
+    ]
+   }
+  },
+  "basic-au-t1-w100c0-brh-ent-ming-china": {
+   "readout": {
+    "ru": [
+     "Империя Мин",
+     "династия Мин"
+    ],
+    "es": [
+     "dinastía Ming"
+    ],
+    "fr": [
+     "dynastie Ming"
+    ],
+    "de": [
+     "Ming-Dynastie"
+    ],
+    "fa": [
+     "دودمان مینگ"
+    ]
+   }
+  },
+  "basic-au-t1-w100c0-brh-ent-nacl-compound": {
+   "readout": {
+    "ru": [
+     "хлорид натрия"
+    ],
+    "es": [
+     "cloruro de sodio"
+    ],
+    "fr": [
+     "chlorure de sodium"
+    ],
+    "de": [
+     "Natriumchlorid"
+    ],
+    "fa": [
+     "سدیم کلرید"
+    ]
+   }
+  },
+  "basic-au-t1-w100c0-brh-ent-paris-1889-landmark": {
+   "readout": {
+    "ru": [
+     "Эйфелева башня"
+    ],
+    "es": [
+     "Torre Eiffel"
+    ],
+    "de": [
+     "Eiffelturm"
+    ],
+    "fa": [
+     "برج ایفل"
+    ]
+   }
+  },
+  "basic-au-t1-w100c0-brh-ent-polonium-radium-discoverer": {
+   "readout": {
+    "ru": [
+     "Мария Склодовская-Кюри"
+    ],
+    "fa": [
+     "ماری کوری"
+    ]
+   }
+  },
+  "basic-au-t1-w100c0-brh-ent-principia-author": {
+   "readout": {
+    "ru": [
+     "Исаак Ньютон"
+    ],
+    "fa": [
+     "آیزاک نیوتن"
+    ]
+   }
+  },
+  "basic-au-t1-w100c0-brh-ent-queensland-polyp-system": {
+   "readout": {
+    "ru": [
+     "Большой Барьерный риф"
+    ],
+    "es": [
+     "Gran Barrera de Coral"
+    ],
+    "fr": [
+     "Grande Barrière de corail"
+    ],
+    "fa": [
+     "دیواره بزرگ مرجانی"
+    ]
+   }
+  },
+  "basic-au-t1-w100c0-brh-ent-runnymede-1215": {
+   "readout": {
+    "ru": [
+     "Великая хартия вольностей"
+    ],
+    "es": [
+     "Carta Magna"
+    ],
+    "fr": [
+     "Grande Charte"
+    ],
+    "fa": [
+     "منشور کبیر"
+    ]
+   }
+  },
+  "basic-au-t1-w100c0-brh-ent-spain-morocco-waterway": {
+   "readout": {
+    "ru": [
+     "Гибралтарский пролив"
+    ],
+    "es": [
+     "Estrecho de Gibraltar"
+    ],
+    "fr": [
+     "détroit de Gibraltar"
+    ],
+    "de": [
+     "Straße von Gibraltar"
+    ],
+    "fa": [
+     "تنگه جبل‌الطارق"
+    ]
+   }
+  },
+  "basic-au-t1-w100c0-brh-ent-thirty-years-war-end": {
+   "readout": {
+    "ru": [
+     "Вестфальский мир"
+    ],
+    "es": [
+     "Paz de Westfalia"
+    ],
+    "fr": [
+     "traités de Westphalie"
+    ],
+    "de": [
+     "Westfälischer Friede"
+    ],
+    "fa": [
+     "پیمان وستفالی"
+    ]
+   }
+  },
+  "basic-au-t1-w100c0-brh-ent-versailles-1919": {
+   "readout": {
+    "ru": [
+     "Версальский мирный договор",
+     "Версальский договор"
+    ],
+    "es": [
+     "Tratado de Versalles"
+    ],
+    "fr": [
+     "Traité de Versailles"
+    ],
+    "de": [
+     "Versailler Vertrag",
+     "Friedensvertrag von Versailles"
+    ],
+    "fa": [
+     "پیمان ورسای"
+    ]
+   }
+  },
+  "basic-au-t1-w100c1-brh-ent-archimedes-buoyancy": {
+   "readout": {
+    "ru": [
+     "закон Архимеда"
+    ],
+    "es": [
+     "principio de Arquímedes"
+    ],
+    "fr": [
+     "poussée d'Archimède"
+    ],
+    "de": [
+     "Archimedisches Prinzip"
+    ]
+   }
+  },
+  "basic-au-t1-w100c1-brh-ent-arizona-gorge": {
+   "readout": {
+    "ru": [
+     "Гранд-Каньон"
+    ],
+    "es": [
+     "Gran Cañón"
+    ]
+   }
+  },
+  "basic-au-t1-w100c1-brh-ent-darwin-beagle": {
+   "readout": {
+    "ru": [
+     "Чарлз Дарвин",
+     "Чарльз Дарвин"
+    ],
+    "fa": [
+     "چارلز داروین"
+    ]
+   }
+  },
+  "basic-au-t1-w100c1-brh-ent-gettysburg-1863": {
+   "readout": {
+    "ru": [
+     "Битва при Геттисберге"
+    ],
+    "es": [
+     "Batalla de Gettysburg"
+    ],
+    "fr": [
+     "Bataille de Gettysburg"
+    ],
+    "de": [
+     "Schlacht von Gettysburg"
+    ]
+   }
+  },
+  "basic-au-t1-w100c1-brh-ent-han-china": {
+   "readout": {
+    "ru": [
+     "Династия Хань"
+    ],
+    "es": [
+     "dinastía Han"
+    ],
+    "fr": [
+     "dynastie Han"
+    ],
+    "de": [
+     "Han-Dynastie"
+    ]
+   }
+  },
+  "basic-au-t1-w100c1-brh-ent-hooke-spring": {
+   "readout": {
+    "ru": [
+     "закон Гука"
+    ],
+    "es": [
+     "ley de Hooke"
+    ],
+    "fr": [
+     "loi de Hooke"
+    ],
+    "de": [
+     "Hookesches Gesetz"
+    ]
+   }
+  },
+  "basic-au-t1-w100c1-brh-ent-hostage-bond": {
+   "readout": {
+    "ru": [
+     "стокгольмский синдром"
+    ],
+    "es": [
+     "síndrome de Estocolmo"
+    ],
+    "fr": [
+     "syndrome de Stockholm"
+    ],
+    "de": [
+     "Stockholm-Syndrom"
+    ]
+   }
+  },
+  "basic-au-t1-w100c1-brh-ent-jordan-rift-lake": {
+   "readout": {
+    "ru": [
+     "Мёртвое море"
+    ],
+    "es": [
+     "mar Muerto"
+    ],
+    "fr": [
+     "mer Morte"
+    ],
+    "de": [
+     "Totes Meer"
+    ],
+    "fa": [
+     "دریای مرده"
+    ]
+   }
+  },
+  "basic-au-t1-w100c1-brh-ent-nanking-1842": {
+   "readout": {
+    "ru": [
+     "Нанкинский договор"
+    ],
+    "es": [
+     "Tratado de Nankín"
+    ],
+    "fr": [
+     "Traité de Nankin"
+    ],
+    "de": [
+     "Vertrag von Nanking"
+    ]
+   }
+  },
+  "basic-au-t1-w100c1-brh-ent-northern-fortifications": {
+   "readout": {
+    "ru": [
+     "Великая Китайская стена"
+    ],
+    "es": [
+     "Gran Muralla China"
+    ],
+    "fr": [
+     "Grande Muraille de Chine"
+    ],
+    "de": [
+     "Chinesische Mauer"
+    ]
+   }
+  },
+  "basic-au-t1-w100c1-brh-ent-thermopylae-480bc": {
+   "readout": {
+    "ru": [
+     "Битва при Фермопилах"
+    ],
+    "es": [
+     "Batalla de las Termópilas"
+    ],
+    "fr": [
+     "Bataille des Thermopyles"
+    ],
+    "de": [
+     "Schlacht bei den Thermopylen"
+    ]
+   }
+  },
+  "basic-au-t1-w100c1-brh-ent-tordesillas-1494": {
+   "readout": {
+    "ru": [
+     "Тордесильясский договор"
+    ],
+    "es": [
+     "Tratado de Tordesillas"
+    ],
+    "fr": [
+     "Traité de Tordesillas"
+    ],
+    "de": [
+     "Vertrag von Tordesillas"
+    ]
+   }
+  },
+  "basic-au-t1-w100c2-brh-ent-babur-realm": {
+   "readout": {
+    "ru": [
+     "Империя Великих Моголов"
+    ],
+    "es": [
+     "Imperio mogol"
+    ],
+    "fr": [
+     "Empire moghol"
+    ],
+    "de": [
+     "Mogulreich"
+    ],
+    "fa": [
+     "امپراتوری گورکانی"
+    ]
+   }
+  },
+  "basic-au-t1-w100c2-brh-ent-flux-voltage-law": {
+   "readout": {
+    "ru": [
+     "закон Фарадея"
+    ],
+    "es": [
+     "ley de Faraday"
+    ],
+    "fr": [
+     "loi de Faraday"
+    ],
+    "de": [
+     "Faradaysches Induktionsgesetz"
+    ]
+   }
+  },
+  "basic-au-t1-w100c2-brh-ent-heliocentric-astronomer": {
+   "readout": {
+    "ru": [
+     "Николай Коперник"
+    ],
+    "es": [
+     "Nicolás Copérnico"
+    ],
+    "fr": [
+     "Nicolas Copernic"
+    ],
+    "de": [
+     "Nikolaus Kopernikus"
+    ],
+    "fa": [
+     "نیکلاس کوپرنیک"
+    ]
+   }
+  },
+  "basic-au-t1-w100c2-brh-ent-isthmus-waterway": {
+   "readout": {
+    "ru": [
+     "Панамский канал"
+    ],
+    "es": [
+     "Canal de Panamá"
+    ],
+    "fr": [
+     "canal de Panama"
+    ],
+    "de": [
+     "Panamakanal"
+    ]
+   }
+  },
+  "basic-au-t1-w100c2-brh-ent-japan-peak": {
+   "readout": {
+    "ru": [
+     "Фудзияма",
+     "Фудзи"
+    ],
+    "es": [
+     "monte Fuji"
+    ],
+    "fr": [
+     "mont Fuji"
+    ]
+   }
+  },
+  "basic-au-t1-w100c2-brh-ent-mona-lisa-painter": {
+   "readout": {
+    "ru": [
+     "Леонардо да Винчи"
+    ],
+    "fa": [
+     "لئوناردو دا وینچی"
+    ]
+   }
+  },
+  "basic-au-t1-w100c2-brh-ent-n2o": {
+   "readout": {
+    "ru": [
+     "закись азота"
+    ],
+    "es": [
+     "óxido nitroso"
+    ],
+    "fr": [
+     "protoxyde d'azote"
+    ],
+    "de": [
+     "Distickstoffmonoxid",
+     "Lachgas"
+    ]
+   }
+  },
+  "basic-au-t1-w100c2-brh-ent-nyc-harbor-monument": {
+   "readout": {
+    "ru": [
+     "Статуя Свободы"
+    ],
+    "es": [
+     "Estatua de la Libertad"
+    ],
+    "fr": [
+     "Statue de la Liberté"
+    ],
+    "de": [
+     "Freiheitsstatue"
+    ]
+   }
+  },
+  "basic-au-t1-w100c2-brh-ent-petrograd-1917": {
+   "readout": {
+    "ru": [
+     "Октябрьская революция"
+    ],
+    "es": [
+     "Revolución de Octubre"
+    ],
+    "fr": [
+     "révolution d'Octobre"
+    ],
+    "de": [
+     "Oktoberrevolution"
+    ]
+   }
+  },
+  "basic-au-t1-w100c2-brh-ent-snell-optics": {
+   "readout": {
+    "ru": [
+     "закон Снеллиуса"
+    ],
+    "es": [
+     "ley de Snell"
+    ],
+    "fr": [
+     "loi de Snell-Descartes"
+    ],
+    "de": [
+     "Snelliussches Brechungsgesetz"
+    ]
+   }
+  },
+  "basic-au-t1-w100c2-brh-ent-tang-china": {
+   "readout": {
+    "ru": [
+     "Династия Тан",
+     "Тан"
+    ],
+    "es": [
+     "dinastía Tang"
+    ],
+    "fr": [
+     "dynastie Tang"
+    ],
+    "de": [
+     "Tang-Dynastie"
+    ]
+   }
+  },
+  "basic-au-t1-w100c2-brh-ent-trafalgar-1805": {
+   "readout": {
+    "ru": [
+     "Трафальгарское сражение"
+    ],
+    "es": [
+     "Batalla de Trafalgar"
+    ],
+    "fr": [
+     "Bataille de Trafalgar"
+    ],
+    "de": [
+     "Schlacht von Trafalgar"
+    ]
+   }
+  },
+  "basic-au-t1-w100c2-brh-ent-vienna-royal-house": {
+   "readout": {
+    "ru": [
+     "Габсбурги"
+    ],
+    "es": [
+     "Casa de Habsburgo"
+    ],
+    "fr": [
+     "maison de Habsbourg"
+    ],
+    "de": [
+     "Habsburger"
+    ]
+   }
+  },
+  "basic-au-t1-w100c2-brh-ent-volga-1942": {
+   "readout": {
+    "ru": [
+     "Сталинградская битва"
+    ],
+    "es": [
+     "Batalla de Stalingrado"
+    ],
+    "fr": [
+     "bataille de Stalingrad"
+    ],
+    "de": [
+     "Schlacht von Stalingrad"
+    ]
+   }
+  },
+  "basic-au-t1-w100c2-brh-ent-war-of-1812-peace": {
+   "readout": {
+    "ru": [
+     "Гентский мирный договор"
+    ],
+    "es": [
+     "Tratado de Gante"
+    ],
+    "fr": [
+     "traité de Gand"
+    ],
+    "de": [
+     "Frieden von Gent"
+    ]
+   }
+  },
+  "basic-au-t1-w100c2-brh-ent-wiles-proof": {
+   "readout": {
+    "ru": [
+     "Великая теорема Ферма"
+    ],
+    "es": [
+     "último teorema de Fermat"
+    ],
+    "fr": [
+     "grand théorème de Fermat"
+    ],
+    "de": [
+     "Großer Fermatscher Satz"
+    ]
+   }
+  },
+  "basic-au-t1-w101c0-brh-ent-athenian-runner-legend": {
+   "readout": {
+    "ru": [
+     "Марафонская битва"
+    ],
+    "es": [
+     "Batalla de Maratón"
+    ],
+    "fr": [
+     "Bataille de Marathon"
+    ],
+    "de": [
+     "Schlacht bei Marathon"
+    ],
+    "fa": [
+     "نبرد ماراتون"
+    ]
+   }
+  },
+  "basic-au-t1-w101c0-brh-ent-bolshevik-war-exit": {
+   "readout": {
+    "ru": [
+     "Брестский мир"
+    ],
+    "es": [
+     "Tratado de Brest-Litovsk"
+    ],
+    "fr": [
+     "Traité de Brest-Litovsk"
+    ],
+    "de": [
+     "Friede von Brest-Litowsk"
+    ]
+   }
+  },
+  "basic-au-t1-w101c0-brh-ent-fourteenth-century-pandemic": {
+   "readout": {
+    "ru": [
+     "Чёрная смерть"
+    ],
+    "es": [
+     "peste negra"
+    ],
+    "fr": [
+     "peste noire"
+    ],
+    "de": [
+     "Schwarzer Tod"
+    ]
+   }
+  },
+  "basic-au-t1-w101c0-brh-ent-galaxy-recession-distance": {
+   "readout": {
+    "ru": [
+     "закон Хаббла"
+    ]
+   }
+  },
+  "basic-au-t1-w101c0-brh-ent-gas-volume-temperature": {
+   "readout": {
+    "ru": [
+     "закон Шарля"
+    ],
+    "es": [
+     "ley de Charles"
+    ],
+    "fr": [
+     "loi de Charles"
+    ]
+   }
+  },
+  "basic-au-t1-w101c0-brh-ent-jovian-moons-inquisition": {},
+  "basic-au-t1-w101c0-brh-ent-limestone-chalk-compound": {
+   "readout": {
+    "ru": [
+     "карбонат кальция"
+    ],
+    "es": [
+     "carbonato de calcio"
+    ],
+    "fr": [
+     "carbonate de calcium"
+    ],
+    "de": [
+     "Calciumcarbonat"
+    ]
+   }
+  },
+  "basic-au-t1-w101c0-brh-ent-louvre-enigmatic-smile": {
+   "readout": {
+    "ru": [
+     "Мона Лиза"
+    ]
+   }
+  },
+  "basic-au-t1-w101c0-brh-ent-manchu-last-imperial-house": {
+   "readout": {
+    "ru": [
+     "Цин"
+    ],
+    "es": [
+     "dinastía Qing"
+    ],
+    "fr": [
+     "dynastie Qing"
+    ],
+    "de": [
+     "Qing-Dynastie"
+    ]
+   }
+  },
+  "basic-au-t1-w101c0-brh-ent-osman-founded-realm": {
+   "readout": {
+    "ru": [
+     "Османская империя"
+    ],
+    "es": [
+     "Imperio otomano"
+    ],
+    "fr": [
+     "Empire ottoman"
+    ],
+    "de": [
+     "Osmanisches Reich"
+    ],
+    "fa": [
+     "امپراتوری عثمانی"
+    ]
+   }
+  },
+  "basic-au-t1-w101c0-brh-ent-pacific-carrier-turning-point": {
+   "readout": {
+    "ru": [
+     "Битва за Мидуэй"
+    ],
+    "es": [
+     "Batalla de Midway"
+    ],
+    "fr": [
+     "Bataille de Midway"
+    ],
+    "de": [
+     "Schlacht um Midway"
+    ],
+    "fa": [
+     "نبرد میدوی"
+    ]
+   }
+  },
+  "basic-au-t1-w101c0-brh-ent-particles-per-mole": {
+   "readout": {
+    "ru": [
+     "число Авогадро"
+    ],
+    "es": [
+     "número de Avogadro"
+    ],
+    "fr": [
+     "nombre d'Avogadro"
+    ],
+    "de": [
+     "Avogadro-Zahl"
+    ]
+   }
+  },
+  "basic-au-t1-w101c0-brh-ent-pea-plant-heredity": {},
+  "basic-au-t1-w101c0-brh-ent-xxy-male-condition": {
+   "readout": {
+    "ru": [
+     "синдром Клайнфельтера"
+    ],
+    "es": [
+     "síndrome de Klinefelter"
+    ],
+    "fr": [
+     "syndrome de Klinefelter"
+    ],
+    "de": [
+     "Klinefelter-Syndrom"
+    ]
+   }
+  },
+  "basic-au-t1-w101c1-brh-ent-british-monarch-residence": {
+   "readout": {
+    "ru": [
+     "Букингемский дворец"
+    ],
+    "es": [
+     "Palacio de Buckingham"
+    ],
+    "fr": [
+     "Palais de Buckingham"
+    ]
+   }
+  },
+  "basic-au-t1-w101c1-brh-ent-crispin-day-longbows": {
+   "readout": {
+    "ru": [
+     "Битва при Азенкуре"
+    ],
+    "es": [
+     "Batalla de Agincourt"
+    ],
+    "fr": [
+     "Bataille d'Azincourt"
+    ],
+    "de": [
+     "Schlacht von Azincourt"
+    ]
+   }
+  },
+  "basic-au-t1-w101c1-brh-ent-divided-german-capital-barrier": {
+   "readout": {
+    "ru": [
+     "Берлинская стена"
+    ],
+    "es": [
+     "Muro de Berlín"
+    ],
+    "fr": [
+     "Mur de Berlin"
+    ]
+   }
+  },
+  "basic-au-t1-w101c1-brh-ent-eec-founding-pact": {
+   "readout": {
+    "ru": [
+     "Римский договор"
+    ],
+    "es": [
+     "Tratado de Roma"
+    ],
+    "fr": [
+     "Traité de Rome"
+    ],
+    "de": [
+     "Römische Verträge"
+    ]
+   }
+  },
+  "basic-au-t1-w101c1-brh-ent-fibrillin-tall-stature": {},
+  "basic-au-t1-w101c1-brh-ent-first-moonwalker": {},
+  "basic-au-t1-w101c1-brh-ent-fluid-speed-pressure": {},
+  "basic-au-t1-w101c1-brh-ent-highest-peak-earth": {
+   "readout": {
+    "ru": [
+     "Эверест",
+     "Джомолунгма"
+    ],
+    "es": [
+     "Monte Everest"
+    ],
+    "fr": [
+     "Mont Everest"
+    ]
+   }
+  },
+  "basic-au-t1-w101c1-brh-ent-ile-de-la-cite-gothic": {
+   "readout": {
+    "ru": [
+     "Собор Парижской Богоматери"
+    ],
+    "es": [
+     "Catedral de Notre Dame"
+    ]
+   }
+  },
+  "basic-au-t1-w101c1-brh-ent-kublai-khan-house": {},
+  "basic-au-t1-w101c1-brh-ent-metternich-1815-conference": {
+   "readout": {
+    "ru": [
+     "Венский конгресс"
+    ],
+    "es": [
+     "Congreso de Viena"
+    ],
+    "fr": [
+     "Congrès de Vienne"
+    ],
+    "de": [
+     "Wiener Kongress"
+    ]
+   }
+  },
+  "basic-au-t1-w101c1-brh-ent-nasa-flawed-mirror-observatory": {},
+  "basic-au-t1-w101c1-brh-ent-penicillin-discoverer": {},
+  "basic-au-t1-w101c1-brh-ent-point-charge-force": {},
+  "basic-au-t1-w101c1-brh-ent-terracotta-army-house": {},
+  "basic-au-t1-w101c1-brh-ent-three-emperors-1805": {
+   "readout": {
+    "ru": [
+     "Битва под Аустерлицем"
+    ],
+    "es": [
+     "Batalla de Austerlitz"
+    ],
+    "fr": [
+     "Bataille d'Austerlitz"
+    ],
+    "de": [
+     "Schlacht bei Austerlitz"
+    ]
+   }
+  },
+  "basic-au-t1-w101c1-brh-ent-utzon-sail-venue": {
+   "readout": {
+    "ru": [
+     "Сиднейский оперный театр"
+    ],
+    "es": [
+     "Ópera de Sídney"
+    ],
+    "fr": [
+     "Opéra de Sydney"
+    ]
+   }
+  },
+  "basic-au-t1-w101c2-brh-ent-ardennes-1944": {
+   "readout": {
+    "ru": [
+     "Арденнская операция"
+    ],
+    "es": [
+     "batalla de las Ardenas"
+    ],
+    "fr": [
+     "bataille des Ardennes"
+    ],
+    "de": [
+     "Ardennenoffensive"
+    ]
+   }
+  },
+  "basic-au-t1-w101c2-brh-ent-cleopatra-ruling-house": {
+   "readout": {
+    "ru": [
+     "Птолемеи"
+    ],
+    "es": [
+     "dinastía ptolemaica"
+    ],
+    "fr": [
+     "dynastie lagide"
+    ],
+    "de": [
+     "Ptolemäer"
+    ]
+   }
+  },
+  "basic-au-t1-w101c2-brh-ent-first-circumnavigation-leader": {
+   "readout": {
+    "ru": [
+     "Фернан Магеллан"
+    ],
+    "es": [
+     "Fernando de Magallanes"
+    ],
+    "fr": [
+     "Fernand de Magellan"
+    ]
+   }
+  },
+  "basic-au-t1-w101c2-brh-ent-mexican-cession-1848": {
+   "readout": {
+    "es": [
+     "Tratado de Guadalupe Hidalgo"
+    ],
+    "fr": [
+     "traité de Guadalupe Hidalgo"
+    ],
+    "de": [
+     "Vertrag von Guadalupe Hidalgo"
+    ],
+    "ru": [
+     "Договор Гуадалупе-Идальго"
+    ]
+   }
+  },
+  "basic-au-t1-w101c2-brh-ent-movable-type-chinese-house": {
+   "readout": {
+    "ru": [
+     "династия Сун"
+    ],
+    "es": [
+     "dinastía Song"
+    ],
+    "fr": [
+     "dynastie Song"
+    ],
+    "de": [
+     "Song-Dynastie"
+    ]
+   }
+  },
+  "basic-au-t1-w101c2-brh-ent-pompeii-volcano": {
+   "readout": {
+    "ru": [
+     "Везувий"
+    ],
+    "es": [
+     "Vesubio"
+    ],
+    "fr": [
+     "Vésuve"
+    ],
+    "de": [
+     "Vesuv"
+    ]
+   }
+  },
+  "basic-au-t1-w101c2-brh-ent-rabies-vaccine-chemist": {
+   "readout": {
+    "ru": [
+     "Луи Пастер"
+    ],
+    "fa": [
+     "لویی پاستور"
+    ]
+   }
+  },
+  "basic-au-t1-w101c2-brh-ent-siren-pitch-change": {
+   "readout": {
+    "ru": [
+     "эффект Доплера"
+    ],
+    "es": [
+     "efecto Doppler"
+    ],
+    "fr": [
+     "effet Doppler"
+    ],
+    "de": [
+     "Doppler-Effekt"
+    ]
+   }
+  }
+ }
+}

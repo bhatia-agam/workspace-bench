@@ -1,0 +1,53 @@
+{
+ "family": "nyt_connections",
+ "version": 1,
+ "frozen": "2026-11-02",
+ "source": {
+  "repo": "github.com/Eyefyre/NYT-Connections-Answers",
+  "url": "https://raw.githubusercontent.com/Eyefyre/NYT-Connections-Answers/0c42b26054d4d9e2b1d8fc7b1599925a97fb1ec7/connections.json",
+  "commit": "0c42b26054d4d9e2b1d8fc7b1599925a97fb1ec7",
+  "sha256": "1bd17c9161c665dbdf2ea8011123a574b7e831cc6442fc7a73fd144d0371f534",
+  "note": "ids only: words, members and NYT group names are re-derived from this file at plan / judge time (wsbench.nyt); none is committed"
+ },
+ "subject_model": "Qwen/Qwen3.5-0.8B, chat template, enable_thinking=False, no system prompt (re-derived on the subject, nyt-self-2026-11-03)",
+ "answer_format": "members-only (wsbench.nyt.PROMPT_MEMBERS); Qwen3.5-0.8B's labels from the follow-up naming turn (the pilot's conn_common.NAME_FOLLOWUP), greedy; re-derived on the subject (wsbench.adapt.nyt_connections)",
+ "stability": {
+  "n_samples": 16,
+  "temperature": 0.7,
+  "top_p": 0.95,
+  "rule": "a slot is stable iff the subject's group is in >= 12/16 samples"
+ },
+ "options": "per slot: Qwen3.5-0.8B's label (role qwen: the subject's own label) + the label of the NYT group sharing the most words (gold) + <= 2 red-herring labels sharing >= 2 words (alt; Opus-written herrings, NYT groups excluded) + 1 other-puzzle Qwen3.5-0.8B label (foil); distractors naming the same connection as Qwen3.5-0.8B's (near-synonyms included) dropped by an Opus check (the pilot's summ_cat2.EQUIV). Bank v1 label rule: a label that folds equal to ANY NYT group name in the mirror is a reference; an alt equal to the gold is dropped. The judge shuffles by mc.seeded_shuffle('<id>-<slot>') and adds mc.CANNOT last",
+ "read_positions": "the last 12 tokens of the rendered prompt (readplan rule last_n n=12), before Qwen writes anything",
+ "excluded": [
+  "puzzles whose Qwen3.5-0.8B answer is not a valid partition of the 16 words with all four groups labelled by the follow-up turn",
+  "puzzles with fewer than 2 valid red-herring solutions",
+  "the registered bank's exclusions (its candidate set is the registered bank's puzzles)",
+  "slots that keep fewer than 2 distinct distractors"
+ ],
+ "pilot": {
+  "repo": "global-workspace",
+  "branch": "camila/connections-feas",
+  "commit": "413a1faa324ba1e2b1e87723ee2f3f85ce6b0bde",
+  "bank_sha256": "7621e197b3c96bd2093723d0e5f28e9b4728ebf199784d65728fcf8836d1b6d8",
+  "doc": "docs/project/experiments/connections/README.md (follow-ups 5-6), AUDIT.md"
+ },
+ "contract": {
+  "native_langs": [
+   "en"
+  ]
+ },
+ "counts": {
+  "puzzles": 0,
+  "slots": 0,
+  "stable": 0,
+  "model_specific": 0,
+  "puzzles_with_stable": 0
+ },
+ "adapt": {
+  "model": "qwen3.5-0.8b",
+  "hf_id": "Qwen/Qwen3.5-0.8B",
+  "frozen": "2026-11-03"
+ },
+ "items": []
+}

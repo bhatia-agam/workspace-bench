@@ -1,286 +1,2116 @@
 {
- "reader": "stock qwen3.5-0.8b (the subject itself), prompt-only template, T=1.0, 256 new tokens, <= 32 positions per item",
- "judge": "claude-opus-5-5",
- "families": {
-  "association": {
-   "rate": 0.32432432432432434,
-   "ci95": [
-    0.16216216216216217,
-    0.4864864864864865
-   ],
-   "metric": "pass_rate",
-   "layer": 8,
-   "judge_model": "claude-opus-5-5",
-   "n_items": 37,
-   "counts": {
-    "n_expected_cells": 37,
-    "n_missing_cells": 0,
-    "n_unjudged_cells": 0,
-    "n_empty_cells": 0,
-    "skipped_rows": 0,
-    "spend_usd": 0.0
+ "protocols": {
+  "stock-subject (legacy, pre-summary-mode)": {
+   "reader": "stock qwen3.5-0.8b (the subject itself), prompt-only template, T=1.0, 256 new tokens, <= 32 positions per item",
+   "judge": "claude-opus-5-5",
+   "families": {
+    "association": {
+     "rate": 0.32432432432432434,
+     "ci95": [
+      0.16216216216216217,
+      0.4864864864864865
+     ],
+     "metric": "pass_rate",
+     "layer": 8,
+     "judge_model": "claude-opus-5-5",
+     "n_items": 37,
+     "counts": {
+      "n_expected_cells": 37,
+      "n_missing_cells": 0,
+      "n_unjudged_cells": 0,
+      "n_empty_cells": 0,
+      "skipped_rows": 0,
+      "spend_usd": 0.0
+     },
+     "complete": false
+    },
+    "basic_readout": {
+     "rate": 0.21951219512195122,
+     "ci95": [
+      0.13414634146341464,
+      0.3048780487804878
+     ],
+     "metric": "pass_rate",
+     "layer": 8,
+     "judge_model": "claude-opus-5-5",
+     "n_items": 82,
+     "counts": {
+      "n_expected_cells": 82,
+      "n_missing_cells": 0,
+      "n_unjudged_cells": 0,
+      "n_empty_cells": 0,
+      "skipped_rows": 0,
+      "spend_usd": 0.0
+     },
+     "complete": false
+    },
+    "basic_readout_mt": {
+     "rate": 0.20689655172413793,
+     "ci95": [
+      0.10344827586206896,
+      0.3103448275862069
+     ],
+     "metric": "pass_rate",
+     "layer": 8,
+     "judge_model": "regex",
+     "n_items": 58,
+     "counts": {
+      "n_expected_cells": 58,
+      "n_missing_cells": 0,
+      "n_unjudged_cells": 0,
+      "n_empty_cells": 0,
+      "skipped_rows": 0,
+      "spend_usd": 0.0
+     },
+     "complete": false
+    },
+    "conjunctive_association": {
+     "rate": 0.020618556701030927,
+     "ci95": [
+      0.0,
+      0.05154639175257732
+     ],
+     "metric": "pass_rate",
+     "layer": 8,
+     "judge_model": "claude-opus-5-5",
+     "n_items": 97,
+     "counts": {
+      "n_expected_cells": 97,
+      "n_missing_cells": 0,
+      "n_unjudged_cells": 0,
+      "n_empty_cells": 0,
+      "skipped_rows": 0,
+      "spend_usd": 0.0
+     },
+     "complete": false
+    },
+    "directed_modulation": {
+     "rate": 0.24096385542168675,
+     "ci95": [
+      0.1566265060240964,
+      0.3373493975903614
+     ],
+     "metric": "pass_rate",
+     "layer": 8,
+     "judge_model": "claude-opus-5-5",
+     "n_items": 83,
+     "counts": {
+      "n_expected_cells": 685,
+      "n_missing_cells": 0,
+      "n_unjudged_cells": 0,
+      "n_empty_cells": 0,
+      "skipped_rows": 0,
+      "spend_usd": 0.0
+     },
+     "complete": false
+    },
+    "moral_rationale": {
+     "rate": 0.4528301886792453,
+     "ci95": [
+      0.32075471698113206,
+      0.5849056603773585
+     ],
+     "metric": "pass_rate",
+     "layer": 8,
+     "judge_model": "claude-opus-5-5",
+     "n_items": 53,
+     "counts": {
+      "n_expected_cells": 265,
+      "n_missing_cells": 0,
+      "n_unjudged_cells": 0,
+      "n_empty_cells": 0,
+      "skipped_rows": 0,
+      "spend_usd": 0.0
+     },
+     "complete": false
+    },
+    "multihop": {
+     "rate": 0.17073170731707318,
+     "ci95": [
+      0.04878048780487805,
+      0.2926829268292683
+     ],
+     "metric": "pass_rate",
+     "layer": 8,
+     "judge_model": "claude-opus-5-5",
+     "n_items": 41,
+     "counts": {
+      "n_expected_cells": 41,
+      "n_missing_cells": 0,
+      "n_unjudged_cells": 0,
+      "n_empty_cells": 0,
+      "skipped_rows": 0,
+      "spend_usd": 0.0
+     },
+     "complete": false
+    },
+    "multilingual": {
+     "rate": 0.12,
+     "ci95": [
+      0.0,
+      0.24
+     ],
+     "metric": "pass_rate",
+     "layer": 8,
+     "judge_model": "claude-opus-5-5",
+     "n_items": 25,
+     "counts": {
+      "n_expected_cells": 25,
+      "n_missing_cells": 0,
+      "n_unjudged_cells": 0,
+      "n_empty_cells": 0,
+      "skipped_rows": 0,
+      "spend_usd": 0.0
+     },
+     "complete": false
+    },
+    "multilingual_typo": {
+     "rate": 0.0,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "metric": "pass_rate",
+     "layer": 8,
+     "judge_model": "regex",
+     "n_items": 4,
+     "counts": {
+      "n_expected_cells": 4,
+      "n_missing_cells": 0,
+      "n_unjudged_cells": 0,
+      "n_empty_cells": 0,
+      "skipped_rows": 0,
+      "spend_usd": 0.0
+     },
+     "complete": false
+    },
+    "poetry": {
+     "rate": 0.01020408163265306,
+     "ci95": [
+      0.0,
+      0.030612244897959183
+     ],
+     "metric": "pass_rate",
+     "layer": 8,
+     "judge_model": "claude-opus-5-5",
+     "n_items": 98,
+     "counts": {
+      "n_expected_cells": 98,
+      "n_missing_cells": 0,
+      "n_unjudged_cells": 0,
+      "n_empty_cells": 0,
+      "skipped_rows": 0,
+      "spend_usd": 0.0
+     },
+     "complete": false
+    },
+    "typo": {
+     "rate": 0.6938775510204082,
+     "ci95": [
+      0.6020408163265306,
+      0.7857142857142857
+     ],
+     "metric": "pass_rate",
+     "layer": 8,
+     "judge_model": "claude-opus-5-5",
+     "n_items": 98,
+     "counts": {
+      "n_expected_cells": 98,
+      "n_missing_cells": 0,
+      "n_unjudged_cells": 0,
+      "n_empty_cells": 0,
+      "skipped_rows": 0,
+      "spend_usd": 0.0
+     },
+     "complete": false
+    },
+    "typo_mt": {
+     "rate": 0.5172413793103449,
+     "ci95": [
+      0.3103448275862069,
+      0.6896551724137931
+     ],
+     "metric": "pass_rate",
+     "layer": 8,
+     "judge_model": "regex",
+     "n_items": 29,
+     "counts": {
+      "n_expected_cells": 29,
+      "n_missing_cells": 0,
+      "n_unjudged_cells": 0,
+      "n_empty_cells": 0,
+      "skipped_rows": 0,
+      "spend_usd": 0.0
+     },
+     "complete": false
+    },
+    "user_modeling": {
+     "rate": 0.56,
+     "ci95": [
+      0.46,
+      0.65
+     ],
+     "metric": "pass_rate",
+     "layer": 8,
+     "judge_model": "claude-opus-5-5",
+     "n_items": 100,
+     "counts": {
+      "n_expected_cells": 2140,
+      "n_missing_cells": 0,
+      "n_unjudged_cells": 0,
+      "n_empty_cells": 0,
+      "skipped_rows": 0,
+      "spend_usd": 0.0
+     },
+     "complete": false
+    },
+    "role_bound_association": {
+     "rate": 0.99,
+     "ci95": [
+      0.97,
+      1.0
+     ],
+     "metric": "pass_rate",
+     "layer": 8,
+     "judge_model": "claude-opus-5-5",
+     "n_items": 100,
+     "counts": {
+      "n_expected_cells": 1900,
+      "n_missing_cells": 0,
+      "n_unjudged_cells": 10,
+      "n_empty_cells": 0,
+      "skipped_rows": 0,
+      "spend_usd": 0.0
+     },
+     "complete": false
+    }
    },
-   "complete": false
+   "protocol": "stock-subject (legacy, pre-summary-mode)"
   },
-  "basic_readout": {
-   "rate": 0.21951219512195122,
-   "ci95": [
-    0.13414634146341464,
-    0.3048780487804878
-   ],
-   "metric": "pass_rate",
-   "layer": 8,
-   "judge_model": "claude-opus-5-5",
-   "n_items": 82,
-   "counts": {
-    "n_expected_cells": 82,
-    "n_missing_cells": 0,
-    "n_unjudged_cells": 0,
-    "n_empty_cells": 0,
-    "skipped_rows": 0,
-    "spend_usd": 0.0
+  "stock-subject-v1": {
+   "protocol": "stock-subject-v1",
+   "reader": "stock qwen3.5-0.8b (the subject itself), prompt-only template, T=1.0, 256 new tokens, <= 32 positions per item",
+   "judge": "claude-opus-5-5",
+   "prompt_version": {
+    "agentic_misalignment": "am-narrative-v2+am-design-v3+twin-c2+pairs-v2",
+    "association": "assoc-mc-2026-11-01-v3",
+    "basic_readout": "br-mc-2026-11-01-v5b",
+    "basic_readout_mt": "mc-brmt-2026-10-31r+rv-2026-11-01h+optrv-v4+bank-v4",
+    "conjunctive_association": "comp-v5+maj-noinv",
+    "model_specific_directed_modulation": "dmcd-regex-2026-10-23",
+    "moral_rationale": null,
+    "multihop": "bank-mc-2026-11-01-v3",
+    "multilingual": "mcrx-2026-11-01a+mc-ml-2026-11-01b",
+    "multilingual_typo": "mt-regex-2026-10-30+v2+ln-2026-10-31f+rawrx-v2+anchor-support-v1+bank-v3",
+    "poetry": "poetry-free-2026-11-01",
+    "role_bound_association": "oa-v3.1",
+    "typo": "bank-2026-10-30b",
+    "typo_mt": "mt-regex-2026-10-30+typo-v2",
+    "user_modeling": "um-v3.4"
    },
-   "complete": false
+   "families": {
+    "agentic_misalignment": {
+     "rate": 1.0,
+     "ci95": null,
+     "metric": "pair_rate",
+     "layer": 8,
+     "judge_model": "claude-opus-5-5",
+     "n_items": 1,
+     "counts": {
+      "n_expected_cells": 256,
+      "n_missing_cells": 0,
+      "n_unjudged_cells": 1,
+      "n_empty_cells": 0,
+      "skipped_rows": 0,
+      "spend_usd": 0.0
+     },
+     "complete": false,
+     "prompt_version": "am-narrative-v2+am-design-v3+twin-c2+pairs-v2",
+     "aggregate": "native"
+    },
+    "association": {
+     "rate": 0.7727272727272727,
+     "ci95": [
+      0.6363636363636364,
+      0.8863636363636364
+     ],
+     "metric": "pass_rate",
+     "layer": 8,
+     "judge_model": "claude-opus-5-5",
+     "n_items": 45,
+     "counts": {
+      "n_expected_cells": 45,
+      "n_missing_cells": 0,
+      "n_unjudged_cells": 1,
+      "n_empty_cells": 0,
+      "skipped_rows": 0,
+      "spend_usd": 0.0
+     },
+     "complete": false,
+     "prompt_version": "assoc-mc-2026-11-01-v3",
+     "aggregate": "native"
+    },
+    "basic_readout": {
+     "rate": 0.6767676767676768,
+     "ci95": [
+      0.5858585858585859,
+      0.7676767676767676
+     ],
+     "metric": "pass_rate",
+     "layer": 8,
+     "judge_model": "claude-opus-5-5",
+     "n_items": 100,
+     "counts": {
+      "n_expected_cells": 100,
+      "n_missing_cells": 1,
+      "n_unjudged_cells": 0,
+      "n_empty_cells": 0,
+      "skipped_rows": 0,
+      "spend_usd": 0.0
+     },
+     "complete": false,
+     "prompt_version": "br-mc-2026-11-01-v5b",
+     "aggregate": "native"
+    },
+    "basic_readout_mt": {
+     "rate": 0.7731958762886598,
+     "ci95": [
+      0.6804123711340206,
+      0.8556701030927835
+     ],
+     "metric": "pass_rate",
+     "layer": 8,
+     "judge_model": "claude-opus-5-5",
+     "n_items": 97,
+     "counts": {
+      "n_expected_cells": 97,
+      "n_missing_cells": 0,
+      "n_unjudged_cells": 0,
+      "n_empty_cells": 0,
+      "skipped_rows": 0,
+      "spend_usd": 0.0
+     },
+     "complete": true,
+     "prompt_version": "mc-brmt-2026-10-31r+rv-2026-11-01h+optrv-v4+bank-v4",
+     "aggregate": "native"
+    },
+    "conjunctive_association": {
+     "rate": 0.0,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "metric": "pass_rate",
+     "layer": 8,
+     "judge_model": "claude-opus-5-5",
+     "n_items": 98,
+     "counts": {
+      "n_expected_cells": 98,
+      "n_missing_cells": 0,
+      "n_unjudged_cells": 0,
+      "n_empty_cells": 0,
+      "skipped_rows": 0,
+      "spend_usd": 0.0
+     },
+     "complete": true,
+     "prompt_version": "comp-v5+maj-noinv",
+     "aggregate": "native"
+    },
+    "model_specific_directed_modulation": {
+     "rate": 0.0,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "metric": "pass_rate",
+     "layer": 8,
+     "judge_model": "regex",
+     "n_items": 1,
+     "counts": {
+      "n_expected_cells": 1,
+      "n_missing_cells": 0,
+      "n_unjudged_cells": 0,
+      "n_empty_cells": 0,
+      "skipped_rows": 0,
+      "spend_usd": 0.0
+     },
+     "complete": true,
+     "prompt_version": "dmcd-regex-2026-10-23",
+     "aggregate": "native"
+    },
+    "moral_rationale": {
+     "error": "no results (exit 3; see /workspace/wsb-runs/adapted/qwen3.5-0.8b/floors/results/moral_rationale/judge.log)"
+    },
+    "multihop": {
+     "rate": 0.4166666666666667,
+     "ci95": [
+      0.16666666666666666,
+      0.6666666666666666
+     ],
+     "metric": "pass_rate",
+     "layer": 8,
+     "judge_model": "claude-opus-5-5",
+     "n_items": 12,
+     "counts": {
+      "n_expected_cells": 12,
+      "n_missing_cells": 0,
+      "n_unjudged_cells": 0,
+      "n_empty_cells": 0,
+      "skipped_rows": 0,
+      "spend_usd": 0.0
+     },
+     "complete": true,
+     "prompt_version": "bank-mc-2026-11-01-v3",
+     "aggregate": "native"
+    },
+    "multilingual": {
+     "rate": 0.3,
+     "ci95": [
+      0.0,
+      0.6
+     ],
+     "metric": "pass_rate",
+     "layer": 8,
+     "judge_model": "claude-opus-5-5",
+     "n_items": 10,
+     "counts": {
+      "n_expected_cells": 10,
+      "n_missing_cells": 0,
+      "n_unjudged_cells": 0,
+      "n_empty_cells": 0,
+      "skipped_rows": 0,
+      "spend_usd": 0.0
+     },
+     "complete": true,
+     "prompt_version": "mcrx-2026-11-01a+mc-ml-2026-11-01b",
+     "aggregate": "native"
+    },
+    "multilingual_typo": {
+     "rate": 0.0,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "metric": "pass_rate",
+     "layer": 8,
+     "judge_model": "regex",
+     "n_items": 1,
+     "counts": {
+      "n_expected_cells": 1,
+      "n_missing_cells": 0,
+      "n_unjudged_cells": 0,
+      "n_empty_cells": 0,
+      "skipped_rows": 0,
+      "spend_usd": 0.0
+     },
+     "complete": true,
+     "prompt_version": "mt-regex-2026-10-30+v2+ln-2026-10-31f+rawrx-v2+anchor-support-v1+bank-v3",
+     "aggregate": "native"
+    },
+    "poetry": {
+     "rate": 0.0,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "metric": "pass_rate",
+     "layer": 8,
+     "judge_model": "claude-opus-5-5",
+     "n_items": 2,
+     "counts": {
+      "n_expected_cells": 2,
+      "n_missing_cells": 0,
+      "n_unjudged_cells": 0,
+      "n_empty_cells": 0,
+      "skipped_rows": 0,
+      "spend_usd": 0.0
+     },
+     "complete": true,
+     "prompt_version": "poetry-free-2026-11-01",
+     "aggregate": "native"
+    },
+    "role_bound_association": {
+     "rate": 0.5,
+     "ci95": [
+      0.0,
+      1.0
+     ],
+     "metric": "pass_rate",
+     "layer": 8,
+     "judge_model": "claude-opus-5-5",
+     "n_items": 8,
+     "counts": {
+      "n_expected_cells": 152,
+      "n_missing_cells": 0,
+      "n_unjudged_cells": 0,
+      "n_empty_cells": 0,
+      "skipped_rows": 0,
+      "spend_usd": 0.0
+     },
+     "complete": true,
+     "prompt_version": "oa-v3.1",
+     "aggregate": "native"
+    },
+    "typo": {
+     "rate": 0.6428571428571429,
+     "ci95": [
+      0.5510204081632653,
+      0.7346938775510204
+     ],
+     "metric": "pass_rate",
+     "layer": 8,
+     "judge_model": "claude-opus-5-5",
+     "n_items": 98,
+     "counts": {
+      "n_expected_cells": 98,
+      "n_missing_cells": 0,
+      "n_unjudged_cells": 0,
+      "n_empty_cells": 0,
+      "skipped_rows": 0,
+      "spend_usd": 0.0
+     },
+     "complete": true,
+     "prompt_version": "bank-2026-10-30b",
+     "aggregate": "native"
+    },
+    "typo_mt": {
+     "rate": 0.425531914893617,
+     "ci95": [
+      0.2765957446808511,
+      0.574468085106383
+     ],
+     "metric": "pass_rate",
+     "layer": 8,
+     "judge_model": "regex",
+     "n_items": 47,
+     "counts": {
+      "n_expected_cells": 47,
+      "n_missing_cells": 0,
+      "n_unjudged_cells": 0,
+      "n_empty_cells": 0,
+      "skipped_rows": 0,
+      "spend_usd": 0.0
+     },
+     "complete": true,
+     "prompt_version": "mt-regex-2026-10-30+typo-v2",
+     "aggregate": "native"
+    },
+    "user_modeling": {
+     "rate": 0.09433962264150944,
+     "ci95": [
+      0.018867924528301886,
+      0.16981132075471697
+     ],
+     "metric": "pass_rate",
+     "layer": 8,
+     "judge_model": "claude-opus-5-5",
+     "n_items": 53,
+     "counts": {
+      "n_expected_cells": 1696,
+      "n_missing_cells": 0,
+      "n_unjudged_cells": 0,
+      "n_empty_cells": 0,
+      "skipped_rows": 0,
+      "spend_usd": 0.0
+     },
+     "complete": true,
+     "prompt_version": "um-v3.4",
+     "aggregate": "native"
+    }
+   }
   },
-  "basic_readout_mt": {
-   "rate": 0.20689655172413793,
-   "ci95": [
-    0.10344827586206896,
-    0.3103448275862069
-   ],
-   "metric": "pass_rate",
-   "layer": 8,
-   "judge_model": "regex",
-   "n_items": 58,
-   "counts": {
-    "n_expected_cells": 58,
-    "n_missing_cells": 0,
-    "n_unjudged_cells": 0,
-    "n_empty_cells": 0,
-    "skipped_rows": 0,
-    "spend_usd": 0.0
+  "po-opus-v1": {
+   "protocol": "po-opus-v1",
+   "prompt_version": {
+    "agentic_misalignment": "am-design-v3+summ-c4+twin-c2+pairs-v2+digest-v5-task-extractive+sj-v10",
+    "association": "assoc-mc-2026-11-01-v3+digest-v5-task-extractive+sj-v10",
+    "basic_readout": "br-mc-2026-11-01-v5b+digest-v5-task-extractive+sj-v10",
+    "basic_readout_mt": "mc-brmt-2026-10-31r+rv-2026-11-01h+optrv-v4+bank-v4+digest-v5-task-extractive+sj-v10",
+    "conjunctive_association": "comp-v5+maj-noinv+digest-v5-task-extractive+sj-v10",
+    "directed_modulation": "dm-2026-10-31+expressed+digest-v5-task-extractive+sj-v10",
+    "jailbreak_recognition": "jb-v4+pins-r1+pins-r3+guard-r6+digest-v5-task-extractive+sj-v10",
+    "moral_rationale": "ec-v5d+digest-v5-task-extractive+sj-v10",
+    "multi_concept_directed_modulation": "mcdm-2026-11-01e+bank-v2+notokinterp-2026-10-30+pins-r3+digest-v5-task-extractive+sj-v10",
+    "multihop": "bank-mc-2026-11-01-v3+digest-v5-task-extractive+sj-v10",
+    "multilingual": "mcrx-2026-11-01a+mc-ml-2026-11-01b+digest-v5-task-extractive+sj-v10",
+    "multilingual_typo": "mt-regex-2026-10-30+v2+ln-2026-10-31f+rawrx-v2+anchor-support-v1+bank-v3+digest-v5-task-extractive+sj-v10",
+    "poetry": "poetry-free-2026-11-01+digest-v5-task-extractive+sj-v10",
+    "role_bound_association": "oa-v3.1+digest-v5-task-extractive+sj-v10",
+    "typo_mt": "mt-regex-2026-10-30+typo-v2+digest-v5-task-extractive+sj-v10",
+    "user_modeling": "um-v3.4+digest-v5-task-extractive+sj-v10"
    },
-   "complete": false
-  },
-  "conjunctive_association": {
-   "rate": 0.020618556701030927,
-   "ci95": [
-    0.0,
-    0.05154639175257732
+   "judge": [
+    "claude-opus-5-5",
+    "claude-sonnet-5"
    ],
-   "metric": "pass_rate",
-   "layer": 8,
-   "judge_model": "claude-opus-5-5",
-   "n_items": 97,
-   "counts": {
-    "n_expected_cells": 97,
-    "n_missing_cells": 0,
-    "n_unjudged_cells": 0,
-    "n_empty_cells": 0,
-    "skipped_rows": 0,
-    "spend_usd": 0.0
-   },
-   "complete": false
-  },
-  "directed_modulation": {
-   "rate": 0.24096385542168675,
-   "ci95": [
-    0.1566265060240964,
-    0.3373493975903614
-   ],
-   "metric": "pass_rate",
-   "layer": 8,
-   "judge_model": "claude-opus-5-5",
-   "n_items": 83,
-   "counts": {
-    "n_expected_cells": 685,
-    "n_missing_cells": 0,
-    "n_unjudged_cells": 0,
-    "n_empty_cells": 0,
-    "skipped_rows": 0,
-    "spend_usd": 0.0
-   },
-   "complete": false
-  },
-  "moral_rationale": {
-   "rate": 0.4528301886792453,
-   "ci95": [
-    0.32075471698113206,
-    0.5849056603773585
-   ],
-   "metric": "pass_rate",
-   "layer": 8,
-   "judge_model": "claude-opus-5-5",
-   "n_items": 53,
-   "counts": {
-    "n_expected_cells": 265,
-    "n_missing_cells": 0,
-    "n_unjudged_cells": 0,
-    "n_empty_cells": 0,
-    "skipped_rows": 0,
-    "spend_usd": 0.0
-   },
-   "complete": false
-  },
-  "multihop": {
-   "rate": 0.17073170731707318,
-   "ci95": [
-    0.04878048780487805,
-    0.2926829268292683
-   ],
-   "metric": "pass_rate",
-   "layer": 8,
-   "judge_model": "claude-opus-5-5",
-   "n_items": 41,
-   "counts": {
-    "n_expected_cells": 41,
-    "n_missing_cells": 0,
-    "n_unjudged_cells": 0,
-    "n_empty_cells": 0,
-    "skipped_rows": 0,
-    "spend_usd": 0.0
-   },
-   "complete": false
-  },
-  "multilingual": {
-   "rate": 0.12,
-   "ci95": [
-    0.0,
-    0.24
-   ],
-   "metric": "pass_rate",
-   "layer": 8,
-   "judge_model": "claude-opus-5-5",
-   "n_items": 25,
-   "counts": {
-    "n_expected_cells": 25,
-    "n_missing_cells": 0,
-    "n_unjudged_cells": 0,
-    "n_empty_cells": 0,
-    "skipped_rows": 0,
-    "spend_usd": 0.0
-   },
-   "complete": false
-  },
-  "multilingual_typo": {
-   "rate": 0.0,
-   "ci95": [
-    0.0,
-    0.0
-   ],
-   "metric": "pass_rate",
-   "layer": 8,
-   "judge_model": "regex",
-   "n_items": 4,
-   "counts": {
-    "n_expected_cells": 4,
-    "n_missing_cells": 0,
-    "n_unjudged_cells": 0,
-    "n_empty_cells": 0,
-    "skipped_rows": 0,
-    "spend_usd": 0.0
-   },
-   "complete": false
-  },
-  "poetry": {
-   "rate": 0.01020408163265306,
-   "ci95": [
-    0.0,
-    0.030612244897959183
-   ],
-   "metric": "pass_rate",
-   "layer": 8,
-   "judge_model": "claude-opus-5-5",
-   "n_items": 98,
-   "counts": {
-    "n_expected_cells": 98,
-    "n_missing_cells": 0,
-    "n_unjudged_cells": 0,
-    "n_empty_cells": 0,
-    "skipped_rows": 0,
-    "spend_usd": 0.0
-   },
-   "complete": false
-  },
-  "typo": {
-   "rate": 0.6938775510204082,
-   "ci95": [
-    0.6020408163265306,
-    0.7857142857142857
-   ],
-   "metric": "pass_rate",
-   "layer": 8,
-   "judge_model": "claude-opus-5-5",
-   "n_items": 98,
-   "counts": {
-    "n_expected_cells": 98,
-    "n_missing_cells": 0,
-    "n_unjudged_cells": 0,
-    "n_empty_cells": 0,
-    "skipped_rows": 0,
-    "spend_usd": 0.0
-   },
-   "complete": false
-  },
-  "typo_mt": {
-   "rate": 0.5172413793103449,
-   "ci95": [
-    0.3103448275862069,
-    0.6896551724137931
-   ],
-   "metric": "pass_rate",
-   "layer": 8,
-   "judge_model": "regex",
-   "n_items": 29,
-   "counts": {
-    "n_expected_cells": 29,
-    "n_missing_cells": 0,
-    "n_unjudged_cells": 0,
-    "n_empty_cells": 0,
-    "skipped_rows": 0,
-    "spend_usd": 0.0
-   },
-   "complete": false
-  },
-  "user_modeling": {
-   "rate": 0.56,
-   "ci95": [
-    0.46,
-    0.65
-   ],
-   "metric": "pass_rate",
-   "layer": 8,
-   "judge_model": "claude-opus-5-5",
-   "n_items": 100,
-   "counts": {
-    "n_expected_cells": 2140,
-    "n_missing_cells": 0,
-    "n_unjudged_cells": 0,
-    "n_empty_cells": 0,
-    "skipped_rows": 0,
-    "spend_usd": 0.0
-   },
-   "complete": false
-  },
-  "role_bound_association": {
-   "rate": 0.99,
-   "ci95": [
-    0.97,
-    1.0
-   ],
-   "metric": "pass_rate",
-   "layer": 8,
-   "judge_model": "claude-opus-5-5",
-   "n_items": 100,
-   "counts": {
-    "n_expected_cells": 1900,
-    "n_missing_cells": 0,
-    "n_unjudged_cells": 10,
-    "n_empty_cells": 0,
-    "skipped_rows": 0,
-    "spend_usd": 0.0
-   },
-   "complete": false
+   "families": {
+    "agentic_misalignment": {
+     "rate": 0.0,
+     "saturated": false,
+     "ci95": null,
+     "metric": "pair_rate",
+     "higher_is_better": true,
+     "n_items": 1,
+     "n_items_decided": null,
+     "counts": {
+      "n_expected_cells": 8,
+      "n_missing_cells": 0,
+      "n_unjudged_cells": 0,
+      "n_empty_cells": 0
+     },
+     "judge_model": "claude-sonnet-5",
+     "instrument": "am-design-v3+summ-c4+twin-c2+pairs-v2+digest-v5-task-extractive+sj-v10",
+     "layers_judged": [
+      44
+     ],
+     "complete": true,
+     "aggregate": "summary",
+     "summarizer": {
+      "model": "claude-opus-5-5",
+      "reasoning": {
+       "anthropic_effort": "default"
+      },
+      "prompt_version": "digest-v5",
+      "variant": "task",
+      "render": "extractive",
+      "max_items": 25,
+      "max_rare": 25,
+      "numbers": 0,
+      "token_cap": 920000,
+      "decode": true,
+      "overflow": "hierarchical",
+      "fallback": "default",
+      "layer_mode": "union"
+     },
+     "decided": {},
+     "digest_unserved": [],
+     "written": "2026-11-04T01:45:01+00:00",
+     "value": 0.0,
+     "n": 1,
+     "ci": null,
+     "n_refused": 0,
+     "n_refused_ask": 0,
+     "n_refused_digest": 0,
+     "refusal_share": 0.0,
+     "protocol": "po-opus-v1",
+     "label": "Opus 5.5 (0 refused)",
+     "not_measurable": false
+    },
+    "association": {
+     "rate": 0.9777777777777777,
+     "saturated": false,
+     "ci95": [
+      0.9333333333333333,
+      1.0
+     ],
+     "metric": "pass_rate",
+     "higher_is_better": true,
+     "n_items": 45,
+     "n_items_decided": 45,
+     "counts": {
+      "n_expected_cells": 45,
+      "n_missing_cells": 0,
+      "n_unjudged_cells": 0,
+      "n_empty_cells": 0
+     },
+     "judge_model": "claude-opus-5-5",
+     "instrument": "assoc-mc-2026-11-01-v3+digest-v5-task-extractive+sj-v10",
+     "layers_judged": null,
+     "complete": true,
+     "aggregate": "summary",
+     "summarizer": {
+      "model": "claude-opus-5-5",
+      "reasoning": {
+       "anthropic_effort": "default"
+      },
+      "prompt_version": "digest-v5",
+      "variant": "task",
+      "render": "extractive",
+      "max_items": 10,
+      "max_rare": 15,
+      "numbers": 0,
+      "token_cap": 920000,
+      "decode": true,
+      "overflow": "hierarchical",
+      "fallback": "none",
+      "layer_mode": "union"
+     },
+     "decided": {
+      "bf-fire": true,
+      "association-au-t1-w100c1-bf-gardening": true,
+      "association-au-t1-w100c1-bf-helicopter": true,
+      "association-au-t1-w101c2-assoc-easy-kangaroo": true,
+      "association-au-t1-w101c2-assoc-easy-camera": true,
+      "association-au-t1-w102c0-assoc-easy-strawberry": true,
+      "association-au-t1-w102c1-assoc-easy-camel": true,
+      "association-au-t1-w102c1-assoc-easy-calendar": true,
+      "association-au-t1-w102c1-assoc-easy-parade": true,
+      "association-au-t1-w102c1-assoc-easy-tornado": true,
+      "association-au-t1-w102c2-assoc-easy-harp-angels-strings": true,
+      "association-au-t2-w103c0-assoc-easy-frog": true,
+      "association-au-t2-w103c0-assoc-easy-pyramid": true,
+      "association-au-t2-w103c0-assoc-easy-moon": true,
+      "association-au-t2-w103c1-assoc-easy-lion": true,
+      "association-au-t2-w103c1-assoc-easy-bee": true,
+      "association-au-t2-w103c1-assoc-easy-cake": true,
+      "association-au-t2-w103c1-assoc-easy-bridge": true,
+      "association-au-t2-w103c1-assoc-easy-ocean": true,
+      "association-au-t2-w103c1-assoc-easy-breakfast": true,
+      "association-au-t2-w104c0-assoc-easy-cow": true,
+      "association-au-t2-w104c0-assoc-easy-monkey": true,
+      "association-au-t2-w104c0-assoc-easy-river": true,
+      "association-au-t2-w104c0-assoc-easy-dancing": true,
+      "association-au-t2-w104c1-assoc-easy-salt": true,
+      "association-au-t2-w104c1-assoc-easy-eye": true,
+      "association-au-t2-w104c1-assoc-easy-glove": true,
+      "association-au-t2-w104c1-assoc-easy-forest": true,
+      "association-au-t2-w104c2-assoc-easy-balloon": true,
+      "association-au-t2-w104c2-assoc-easy-soap": true,
+      "association-au-t2-w104c2-assoc-easy-towel": true,
+      "association-au-t2-w104c2-assoc-easy-thunder": false,
+      "association-au-t2-w104c2-assoc-easy-heart": true,
+      "association-au-t2-w104c2-assoc-easy-shopping": true,
+      "association-au-t2-w105c1-easy-zipper-jacket-teeth": true,
+      "association-au-t2-w105c1-easy-glue-sticky-paper": true,
+      "association-au-t2-w106c0-assoc-easy-mushroom": true,
+      "association-au-t2-w106c0-assoc-easy-wolf": true,
+      "association-au-t2-w106c0-assoc-easy-harry-potter": true,
+      "association-au-t2-w106c1-assoc-easy-shadow": true,
+      "association-au-t2-w107c0-assoc-easy2-egypt": true,
+      "association-au-t2-w107c1-assoc-easy-batman": true,
+      "association-au-t2-w107c1-assoc-easy-brain": true,
+      "association-au-t2-w107c1-assoc-easy-calculator": true,
+      "association-au-t2-w107c2-assoc-easy-ostrich": true
+     },
+     "digest_unserved": [],
+     "written": "2026-11-04T01:40:26+00:00",
+     "value": 0.9777777777777777,
+     "n": 45,
+     "ci": [
+      0.9333333333333333,
+      1.0
+     ],
+     "n_refused": 0,
+     "n_refused_ask": 0,
+     "n_refused_digest": 0,
+     "refusal_share": 0.0,
+     "protocol": "po-opus-v1",
+     "label": "Opus 5.5 (0 refused)",
+     "not_measurable": false
+    },
+    "basic_readout": {
+     "rate": 0.8484848484848485,
+     "saturated": false,
+     "ci95": [
+      0.7777777777777778,
+      0.9191919191919192
+     ],
+     "metric": "pass_rate",
+     "higher_is_better": true,
+     "n_items": 100,
+     "n_items_decided": 99,
+     "counts": {
+      "n_expected_cells": 100,
+      "n_missing_cells": 1,
+      "n_unjudged_cells": 0,
+      "n_empty_cells": 0
+     },
+     "judge_model": "claude-opus-5-5",
+     "instrument": "br-mc-2026-11-01-v5b+digest-v5-task-extractive+sj-v10",
+     "layers_judged": [
+      44
+     ],
+     "complete": false,
+     "aggregate": "summary",
+     "summarizer": {
+      "model": "claude-opus-5-5",
+      "reasoning": {
+       "anthropic_effort": "default"
+      },
+      "prompt_version": "digest-v5",
+      "variant": "task",
+      "render": "extractive",
+      "max_items": 10,
+      "max_rare": 15,
+      "numbers": 0,
+      "token_cap": 920000,
+      "decode": true,
+      "overflow": "hierarchical",
+      "fallback": "none",
+      "layer_mode": "union"
+     },
+     "decided": {
+      "br-ent-ath-brady": true,
+      "br-ent-ath-gretzky": true,
+      "br-ent-ath-james": true,
+      "br-ent-ath-jordan": true,
+      "br-ent-ath-messi": true,
+      "br-ent-ath-ronaldo": true,
+      "br-ent-ath-ruth": true,
+      "br-ent-ath-woods": true,
+      "br-ent-cap-athens": true,
+      "br-ent-cap-berlin": true,
+      "br-ent-cap-cairo": true,
+      "br-ent-cap-madrid": true,
+      "br-ent-cap-moscow": true,
+      "br-ent-cap-nairobi": true,
+      "br-ent-cap-ottawa": true,
+      "br-ent-cap-paris": true,
+      "br-ent-cap-rome": true,
+      "br-ent-cap-tokyo": true,
+      "br-ent-lmk-big": false,
+      "br-ent-lmk-christ": true,
+      "br-ent-lmk-eiffel": true,
+      "br-ent-lmk-great": true,
+      "br-ent-lmk-sydney": true,
+      "br-ent-lmk-taj": true,
+      "br-ent-mus-hendrix": true,
+      "br-proc-arith-3_4": true,
+      "br-proc-arith-6-2": true,
+      "br-proc-arith-7_2": true,
+      "br-proc-arith-8_2": true,
+      "br-proc-arith-9-5": true,
+      "br-proc-dayafter-monday": true,
+      "br-proc-dayafter-saturday": true,
+      "br-proc-dayafter-sunday": true,
+      "br-proc-dayafter-thursday": true,
+      "br-proc-dayafter-tuesday": true,
+      "br-proc-dayafter-wednesday": true,
+      "br-proc-monthafter-april": true,
+      "br-proc-monthafter-august": true,
+      "br-proc-monthafter-december": true,
+      "br-proc-monthafter-february": true,
+      "br-proc-monthafter-january": true,
+      "br-proc-monthafter-july": true,
+      "br-proc-monthafter-june": true,
+      "br-proc-monthafter-march": true,
+      "br-proc-monthafter-may": true,
+      "br-imp-programmingl": true,
+      "br-imp-shakespeare": true,
+      "br-imp-os": false,
+      "basic-au-entity-w0c0-br-ent-lmk-greatwall": true,
+      "basic-au-t1-w100c0-br-imp-browser": false,
+      "basic-au-t1-w100c0-br-imp-shell": true,
+      "basic-au-t1-w100c0-br-imp-vcs": true,
+      "basic-au-t1-w100c0-br-imp-data-format": true,
+      "basic-au-t1-w100c1-br-imp-implicit-search-engine": false,
+      "basic-au-t1-w100c1-br-imp-implicit-dinosaur": false,
+      "basic-au-t1-w100c2-br-imp-implicit-linux-distribution": true,
+      "basic-au-t1-w100c2-br-imp-implicit-web-framework": false,
+      "basic-au-t1-w100c2-br-imp-implicit-code-hosting-platform": true,
+      "basic-au-t1-w101c0-br-imp-implicit-spreadsheet-program": true,
+      "basic-au-t1-w101c0-br-imp-implicit-cloud-provider": false,
+      "basic-au-t1-w101c0-br-imp-implicit-3d-modeling-software": true,
+      "basic-au-t1-w101c0-br-imp-implicit-video-conferencing-app": true,
+      "basic-au-t1-w101c0-br-imp-implicit-e-reader": true,
+      "basic-au-t1-w101c1-br-imp-implicit-http-method": true,
+      "basic-au-t1-w101c1-br-imp-implicit-python-testing-framework": true,
+      "basic-au-t1-w101c1-br-imp-implicit-presentation-software": false,
+      "basic-au-t1-w101c2-br-imp-implicit-document-file-format": true,
+      "basic-au-t1-w101c2-br-imp-implicit-video-file-format": true,
+      "basic-au-t1-w101c2-br-imp-implicit-audio-file-format": false,
+      "basic-au-t1-w101c2-br-imp-implicit-email-service": true,
+      "basic-au-t1-w101c2-br-imp-implicit-cms": true,
+      "basic-au-t1-w102c0-br-imp-implicit-scripting-language": true,
+      "basic-au-t1-w102c0-br-imp-implicit-precious-metal": true,
+      "basic-au-t1-w102c0-br-imp-implicit-french-city": true,
+      "basic-au-t1-w102c0-br-imp-implicit-spreadsheet-function": false,
+      "basic-au-t1-w102c0-br-imp-implicit-australian-city": false,
+      "basic-au-t1-w102c0-br-imp-implicit-spanish-city": false,
+      "basic-au-t1-w102c1-br-imp-implicit-canadian-city": false,
+      "basic-au-t1-w102c1-br-imp-implicit-scottish-city": true,
+      "basic-au-t1-w102c1-br-imp-implicit-text-encoding": true,
+      "basic-au-t1-w102c1-br-imp-implicit-game-engine": false,
+      "basic-au-t1-w102c1-br-imp-implicit-ride-sharing-app": false,
+      "basic-au-t1-w102c2-br-imp-implicit-python-package-manager": true,
+      "basic-au-t1-w102c2-br-imp-implicit-online-shopping-site": true,
+      "basic-au-entity-w103c0-br-ent-cap-beijing": true,
+      "basic-au-entity-w103c0-br-ent-cap-canberra": true,
+      "basic-au-entity-w103c0-br-ent-cap-ankara": true,
+      "basic-au-entity-w103c0-br-ent-cap-france": true,
+      "basic-au-entity-w103c0-br-ent-cap-germany": true,
+      "basic-au-entity-w103c0-br-ent-cap-italy": true,
+      "basic-au-entity-w103c0-br-ent-cap-canada": true,
+      "basic-au-entity-w103c0-br-ent-lmk-pisa-tower": true,
+      "basic-au-entity-w103c0-br-ent-lmk-acropolis": true,
+      "basic-au-entity-w103c0-br-ent-lmk-machu-picchu": true,
+      "basic-au-entity-w103c0-br-ent-lmk-eiffel-city": true,
+      "basic-au-entity-w103c0-br-ent-lmk-bigben-city": true,
+      "basic-au-entity-w103c0-br-ent-lmk-colosseum-city": true,
+      "basic-au-entity-w103c0-br-ent-ath-neymar": true,
+      "basic-au-entity-w103c0-br-ent-ath-curry": true
+     },
+     "digest_unserved": [],
+     "written": "2026-11-04T01:40:26+00:00",
+     "value": 0.8484848484848485,
+     "n": 99,
+     "ci": [
+      0.7777777777777778,
+      0.9191919191919192
+     ],
+     "n_refused": 0,
+     "n_refused_ask": 0,
+     "n_refused_digest": 0,
+     "refusal_share": 0.0,
+     "protocol": "po-opus-v1",
+     "label": "Opus 5.5 (0 refused)",
+     "not_measurable": false
+    },
+    "basic_readout_mt": {
+     "rate": 1.0,
+     "saturated": false,
+     "ci95": [
+      1.0,
+      1.0
+     ],
+     "metric": "pass_rate",
+     "higher_is_better": true,
+     "n_items": 97,
+     "n_items_decided": 97,
+     "counts": {
+      "n_expected_cells": 97,
+      "n_missing_cells": 0,
+      "n_unjudged_cells": 0,
+      "n_empty_cells": 0
+     },
+     "judge_model": "claude-opus-5-5",
+     "instrument": "mc-brmt-2026-10-31r+rv-2026-11-01h+optrv-v4+bank-v4+digest-v5-task-extractive+sj-v10",
+     "layers_judged": [
+      44
+     ],
+     "complete": true,
+     "aggregate": "summary",
+     "summarizer": {
+      "model": "claude-opus-5-5",
+      "reasoning": {
+       "anthropic_effort": "default"
+      },
+      "prompt_version": "digest-v5",
+      "variant": "task",
+      "render": "extractive",
+      "max_items": 10,
+      "max_rare": 15,
+      "numbers": 0,
+      "token_cap": 920000,
+      "decode": true,
+      "overflow": "hierarchical",
+      "fallback": "none",
+      "layer_mode": "union"
+     },
+     "decided": {
+      "basic-au-t1-w0c0-brh-ent-hastings-1066": true,
+      "basic-au-t1-w0c0-brh-ent-boyle-gas": true,
+      "basic-au-t2-w0c0-brh-ent-relativity": true,
+      "basic-au-t1-w0c0-brh-ent-versailles-1919": true,
+      "basic-au-t1-w100c0-brh-ent-westphalia-1648": true,
+      "basic-au-t1-w100c0-brh-ent-ohm-law": true,
+      "basic-au-t1-w100c0-brh-ent-hooke-law": true,
+      "basic-au-t1-w100c0-brh-ent-archimedes-buoyancy": true,
+      "basic-au-t1-w100c0-brh-ent-down-trisomy": true,
+      "basic-au-t1-w100c0-brh-ent-armstrong-moon": true,
+      "basic-au-t1-w100c0-brh-ent-sodium-chloride": true,
+      "basic-au-t1-w100c0-brh-ent-black-death": true,
+      "basic-au-t1-w100c0-brh-ent-magna-carta": true,
+      "basic-au-t1-w100c1-brh-ent-trafalgar-1805": true,
+      "basic-au-t1-w100c1-brh-ent-thermopylae-480bc": true,
+      "basic-au-t1-w100c1-brh-ent-waitangi-1840": true,
+      "basic-au-t1-w100c1-brh-ent-habsburg-austria": true,
+      "basic-au-t1-w100c1-brh-ent-berlin-wall": true,
+      "basic-au-t1-w100c1-brh-ent-hubble-expansion": true,
+      "basic-au-t1-w100c1-brh-ent-snell-optics": true,
+      "basic-au-t1-w100c1-brh-ent-newton-principia": true,
+      "basic-au-t1-w100c1-brh-ent-leonardo-mona-lisa": true,
+      "basic-au-t1-w100c1-brh-ent-kilimanjaro": true,
+      "basic-au-t1-w100c1-brh-ent-co2-gas": true,
+      "basic-au-t1-w100c1-brh-ent-h2so4-battery": true,
+      "basic-au-t1-w100c2-brh-ent-brest-litovsk": true,
+      "basic-au-t1-w100c2-brh-ent-han-dynasty": true,
+      "basic-au-t1-w100c2-brh-ent-ottoman-empire": true,
+      "basic-au-t1-w100c2-brh-ent-coulomb-law": true,
+      "basic-au-t1-w100c2-brh-ent-doppler-effect": true,
+      "basic-au-t1-w100c2-brh-ent-darwin-beagle": true,
+      "basic-au-t1-w100c2-brh-ent-fuji-peak": true,
+      "basic-au-t1-w100c2-brh-ent-hydrogen-peroxide": true,
+      "basic-au-t1-w101c0-brh-ent-pythagorean-theorem": true,
+      "basic-au-t1-w101c0-brh-ent-charles-gas-law": true,
+      "basic-au-t1-w101c0-brh-ent-pauli-exclusion": true,
+      "basic-au-t1-w101c0-brh-ent-congress-vienna": true,
+      "basic-au-t1-w101c0-brh-ent-turner-syndrome": true,
+      "basic-au-t1-w101c0-brh-ent-gagarin-vostok": true,
+      "basic-au-t1-w101c0-brh-ent-nahco3-leavening": true,
+      "basic-au-t1-w101c0-brh-ent-n2o-dental": true,
+      "basic-au-t1-w101c0-brh-ent-london-blaze-1666": true,
+      "basic-au-t1-w101c0-brh-ent-industrial-era": true,
+      "basic-au-t1-w101c0-brh-ent-byzantium-1453": true,
+      "basic-au-t1-w101c0-brh-ent-us-declaration-1776": true,
+      "basic-au-t1-w101c0-brh-ent-darwin-mechanism": true,
+      "basic-au-t1-w101c0-brh-ent-amyloid-dementia": true,
+      "basic-au-t1-w101c1-brh-ent-nanking-1842": true,
+      "basic-au-t1-w101c1-brh-ent-avogadro-mole": true,
+      "basic-au-t1-w101c1-brh-ent-bernoulli-lift": true,
+      "basic-au-t1-w101c1-brh-ent-heisenberg-1927": true,
+      "basic-au-t1-w101c1-brh-ent-co-poisoning": true,
+      "basic-au-t1-w101c1-brh-ent-hcl-stomach": true,
+      "basic-au-t1-w101c1-brh-ent-bulge-1944": true,
+      "basic-au-t1-w101c1-brh-ent-mughal-babur": true,
+      "basic-au-t1-w101c1-brh-ent-phi-1618": true,
+      "basic-au-t1-w101c2-brh-ent-normandy-1944": true,
+      "basic-au-t1-w101c2-brh-ent-pearl-harbor-1941": true,
+      "basic-au-t1-w101c2-brh-ent-mendeleev-chart": true,
+      "basic-au-t1-w101c2-brh-ent-union-confederacy": true,
+      "basic-au-t1-w101c2-brh-ent-pompeii-volcano": true,
+      "basic-au-t1-w101c2-brh-ent-rest-unless-forced": true,
+      "basic-au-t1-w102c0-brh-ent-raf-1940-air-campaign": true,
+      "basic-au-t1-w102c0-brh-ent-menlo-park-inventor": true,
+      "basic-au-t1-w102c0-brh-ent-xxy-condition": true,
+      "basic-au-t1-w102c0-brh-ent-naoh-base": true,
+      "basic-au-t1-w102c0-brh-ent-caco3-compound": true,
+      "basic-au-t1-w102c0-brh-ent-queensland-coral-system": true,
+      "basic-au-t1-w102c0-brh-ent-sitting-bull-1876-clash": true,
+      "basic-au-t1-w102c0-brh-ent-leonardo-milan-mural": true,
+      "basic-au-t1-w102c1-brh-ent-genghis-khan": true,
+      "basic-au-t1-w102c1-brh-ent-angkor-wat": true,
+      "basic-au-t1-w102c1-brh-ent-vinegar-compound": true,
+      "basic-au-t1-w102c1-brh-ent-thirty-years-war": true,
+      "basic-au-t1-w102c1-brh-ent-lake-victoria": true,
+      "basic-au-t1-w102c1-brh-ent-apollo-eleven": true,
+      "basic-au-t1-w102c1-brh-ent-louis-pasteur": true,
+      "basic-au-t1-w102c1-brh-ent-mississippi": true,
+      "basic-au-t1-w102c2-brh-ent-burj-khalifa": true,
+      "basic-au-t1-w102c2-brh-ent-somme-1916": true,
+      "basic-au-t1-w102c2-brh-ent-maastricht-1992": true,
+      "basic-au-t1-w102c2-brh-ent-ptolemaic-egypt": true,
+      "basic-au-t1-w102c2-brh-ent-luther-theses": true,
+      "basic-au-t1-w102c2-brh-ent-hubble-observatory": true,
+      "basic-au-t1-w103c0-brh-ent-giza-wonder": true,
+      "basic-au-t1-w103c0-brh-ent-graves-thyroid": true,
+      "basic-au-t1-w103c0-brh-ent-udhr-1948": true,
+      "basic-au-t1-w103c0-brh-ent-photoelectric-1905": true,
+      "basic-au-t1-w103c1-brh-ent-joseon-korea": true,
+      "basic-au-t1-w103c1-brh-ent-alamein-1942": true,
+      "basic-au-t1-w103c1-brh-ent-ideal-gas-pvnrt": true,
+      "basic-au-t1-w103c1-brh-ent-fleming-penicillin": true,
+      "basic-au-t1-w103c1-brh-ent-celiac-gluten": true,
+      "basic-au-t1-w103c1-brh-ent-hypochlorite-bleach": true,
+      "basic-au-t1-w103c1-brh-ent-ammonium-nitrate-beirut": true,
+      "basic-au-t1-w103c1-brh-ent-olympus-zeus": true,
+      "basic-au-t1-w103c1-brh-ent-meiji-1868": true
+     },
+     "digest_unserved": [],
+     "written": "2026-11-04T01:40:26+00:00",
+     "value": 1.0,
+     "n": 97,
+     "ci": [
+      1.0,
+      1.0
+     ],
+     "n_refused": 0,
+     "n_refused_ask": 0,
+     "n_refused_digest": 0,
+     "refusal_share": 0.0,
+     "protocol": "po-opus-v1",
+     "label": "Opus 5.5 (0 refused)",
+     "not_measurable": false
+    },
+    "conjunctive_association": {
+     "rate": 0.32653061224489793,
+     "saturated": false,
+     "ci95": [
+      0.24489795918367346,
+      0.41836734693877553
+     ],
+     "metric": "pass_rate",
+     "higher_is_better": true,
+     "n_items": 98,
+     "n_items_decided": 98,
+     "counts": {
+      "n_expected_cells": 98,
+      "n_missing_cells": 0,
+      "n_unjudged_cells": 0,
+      "n_empty_cells": 0
+     },
+     "judge_model": "claude-opus-5-5",
+     "instrument": "comp-v5+maj-noinv+digest-v5-task-extractive+sj-v10",
+     "layers_judged": [
+      44
+     ],
+     "complete": true,
+     "aggregate": "summary",
+     "summarizer": {
+      "model": "claude-opus-5-5",
+      "reasoning": {
+       "anthropic_effort": "default"
+      },
+      "prompt_version": "digest-v5",
+      "variant": "task",
+      "render": "extractive",
+      "max_items": 10,
+      "max_rare": 15,
+      "numbers": 0,
+      "token_cap": 920000,
+      "decode": true,
+      "overflow": "hierarchical",
+      "fallback": "none",
+      "layer_mode": "union"
+     },
+     "decided": {
+      "q01_a": false,
+      "q01_b": false,
+      "q01_c": false,
+      "q01_d": true,
+      "q01_e": false,
+      "q01_f": false,
+      "q01_g": false,
+      "q01_h": false,
+      "q01_i": false,
+      "q01_j": false,
+      "q02_a": true,
+      "q02_b": false,
+      "q02_c": false,
+      "q02_d": true,
+      "q02_e": false,
+      "q02_f": false,
+      "q02_g": true,
+      "q02_h": false,
+      "q02_i": false,
+      "q02_j": true,
+      "q03_a": true,
+      "q03_b": false,
+      "q03_c": false,
+      "q03_d": true,
+      "q03_e": false,
+      "q03_f": true,
+      "q03_g": false,
+      "q03_h": true,
+      "q03_i": false,
+      "q03_j": false,
+      "q04_a": false,
+      "q04_b": true,
+      "q04_d": true,
+      "q04_e": true,
+      "q04_f": true,
+      "q04_g": true,
+      "q04_h": false,
+      "q04_i": false,
+      "q04_j": false,
+      "q05_a": false,
+      "q05_b": false,
+      "q05_c": true,
+      "q05_d": false,
+      "q05_e": true,
+      "q05_f": false,
+      "q05_g": true,
+      "q05_h": true,
+      "q05_i": true,
+      "q05_j": true,
+      "q06_a": false,
+      "q06_b": true,
+      "q06_c": false,
+      "q06_d": true,
+      "q06_e": true,
+      "q06_f": false,
+      "q06_g": false,
+      "q06_h": false,
+      "q06_j": false,
+      "q07_a": false,
+      "q07_b": false,
+      "q07_c": true,
+      "q07_d": true,
+      "q07_e": true,
+      "q07_f": false,
+      "q07_g": false,
+      "q07_h": false,
+      "q07_i": true,
+      "q07_j": false,
+      "q08_a": false,
+      "q08_b": false,
+      "q08_c": true,
+      "q08_d": false,
+      "q08_e": false,
+      "q08_f": false,
+      "q08_g": false,
+      "q08_h": false,
+      "q08_i": false,
+      "q08_j": false,
+      "q09_a": false,
+      "q09_b": false,
+      "q09_c": false,
+      "q09_d": false,
+      "q09_e": false,
+      "q09_f": false,
+      "q09_g": true,
+      "q09_h": false,
+      "q09_i": false,
+      "q09_j": false,
+      "q10_a": false,
+      "q10_b": true,
+      "q10_c": true,
+      "q10_d": false,
+      "q10_e": false,
+      "q10_f": false,
+      "q10_g": false,
+      "q10_h": true,
+      "q10_i": false,
+      "q10_j": false
+     },
+     "digest_unserved": [],
+     "written": "2026-11-04T01:40:26+00:00",
+     "value": 0.32653061224489793,
+     "n": 98,
+     "ci": [
+      0.24489795918367346,
+      0.41836734693877553
+     ],
+     "n_refused": 0,
+     "n_refused_ask": 0,
+     "n_refused_digest": 0,
+     "refusal_share": 0.0,
+     "protocol": "po-opus-v1",
+     "label": "Opus 5.5 (0 refused)",
+     "not_measurable": false
+    },
+    "directed_modulation": {
+     "rate": 1.0,
+     "saturated": true,
+     "ci95": [
+      1.0,
+      1.0
+     ],
+     "metric": "pass_rate",
+     "higher_is_better": true,
+     "n_items": 82,
+     "n_items_decided": 82,
+     "counts": {
+      "n_expected_cells": 82,
+      "n_missing_cells": 0,
+      "n_unjudged_cells": 0,
+      "n_empty_cells": 0
+     },
+     "judge_model": "claude-opus-5-5",
+     "instrument": "dm-2026-10-31+expressed+digest-v5-task-extractive+sj-v10",
+     "layers_judged": [
+      44
+     ],
+     "complete": true,
+     "aggregate": "summary",
+     "summarizer": {
+      "model": "claude-opus-5-5",
+      "reasoning": {
+       "anthropic_effort": "default"
+      },
+      "prompt_version": "digest-v5",
+      "variant": "task",
+      "render": "extractive",
+      "max_items": 10,
+      "max_rare": 25,
+      "numbers": 0,
+      "token_cap": 920000,
+      "decode": true,
+      "overflow": "hierarchical",
+      "fallback": "none",
+      "layer_mode": "union"
+     },
+     "decided": {},
+     "digest_unserved": [],
+     "written": "2026-11-04T01:40:26+00:00",
+     "value": 1.0,
+     "n": 82,
+     "ci": [
+      1.0,
+      1.0
+     ],
+     "n_refused": 0,
+     "n_refused_ask": 0,
+     "n_refused_digest": 0,
+     "refusal_share": 0.0,
+     "protocol": "po-opus-v1",
+     "label": "Opus 5.5 (0 refused)",
+     "not_measurable": false
+    },
+    "jailbreak_recognition": {
+     "rate": 0.8372093023255814,
+     "saturated": false,
+     "ci95": [
+      0.7407407407407407,
+      0.9230769230769231
+     ],
+     "metric": "pass_rate",
+     "higher_is_better": true,
+     "n_items": 132,
+     "n_items_decided": 132,
+     "counts": {
+      "n_expected_cells": 132,
+      "n_missing_cells": 0,
+      "n_unjudged_cells": 9,
+      "n_empty_cells": 0
+     },
+     "judge_model": "claude-sonnet-5",
+     "instrument": "jb-v4+pins-r1+pins-r3+guard-r6+digest-v5-task-extractive+sj-v10",
+     "layers_judged": [
+      44
+     ],
+     "complete": false,
+     "aggregate": "summary",
+     "summarizer": {
+      "model": "claude-opus-5-5",
+      "reasoning": {
+       "anthropic_effort": "default"
+      },
+      "prompt_version": "digest-v5",
+      "variant": "task",
+      "render": "extractive",
+      "max_items": 10,
+      "max_rare": 15,
+      "numbers": 0,
+      "token_cap": 920000,
+      "decode": true,
+      "overflow": "hierarchical",
+      "fallback": "default+claude-sonnet-5-5",
+      "layer_mode": "union"
+     },
+     "decided": {},
+     "digest_unserved": [],
+     "written": "2026-11-04T01:40:26+00:00",
+     "value": 0.8372093023255814,
+     "n": 132,
+     "ci": [
+      0.7407407407407407,
+      0.9230769230769231
+     ],
+     "n_refused": 0,
+     "n_refused_ask": 0,
+     "n_refused_digest": 0,
+     "refusal_share": 0.0,
+     "protocol": "po-opus-v1",
+     "label": "Opus 5.5 (0 refused)",
+     "not_measurable": false
+    },
+    "moral_rationale": {
+     "rate": 0.10588235294117647,
+     "saturated": false,
+     "ci95": [
+      0.058823529411764705,
+      0.1588235294117647
+     ],
+     "metric": "pass_rate",
+     "higher_is_better": true,
+     "n_items": 178,
+     "n_items_decided": 170,
+     "counts": {
+      "n_expected_cells": 178,
+      "n_missing_cells": 0,
+      "n_unjudged_cells": 8,
+      "n_empty_cells": 0
+     },
+     "judge_model": "claude-opus-5-5",
+     "instrument": "ec-v5d+digest-v5-task-extractive+sj-v10",
+     "layers_judged": [
+      44
+     ],
+     "complete": false,
+     "aggregate": "summary",
+     "summarizer": {
+      "model": "claude-opus-5-5",
+      "reasoning": {
+       "anthropic_effort": "default"
+      },
+      "prompt_version": "digest-v5",
+      "variant": "task",
+      "render": "extractive",
+      "max_items": 10,
+      "max_rare": 15,
+      "numbers": 0,
+      "token_cap": 920000,
+      "decode": true,
+      "overflow": "hierarchical",
+      "fallback": "default+claude-sonnet-5-5",
+      "layer_mode": "union"
+     },
+     "decided": {},
+     "digest_unserved": [],
+     "written": "2026-11-04T01:40:26+00:00",
+     "value": 0.10588235294117647,
+     "n": 170,
+     "ci": [
+      0.058823529411764705,
+      0.1588235294117647
+     ],
+     "n_refused": 0,
+     "n_refused_ask": 0,
+     "n_refused_digest": 0,
+     "refusal_share": 0.0,
+     "protocol": "po-opus-v1",
+     "label": "Opus 5.5 (0 refused)",
+     "not_measurable": false
+    },
+    "multi_concept_directed_modulation": {
+     "rate": 0.9642857142857143,
+     "saturated": true,
+     "ci95": [
+      0.9285714285714286,
+      0.9910714285714286
+     ],
+     "metric": "pass_rate",
+     "higher_is_better": true,
+     "n_items": 116,
+     "n_items_decided": 112,
+     "counts": {
+      "n_expected_cells": 116,
+      "n_missing_cells": 0,
+      "n_unjudged_cells": 2,
+      "n_empty_cells": 0
+     },
+     "judge_model": "claude-opus-5-5",
+     "instrument": "mcdm-2026-11-01e+bank-v2+notokinterp-2026-10-30+pins-r3+digest-v5-task-extractive+sj-v10",
+     "layers_judged": [
+      44
+     ],
+     "complete": false,
+     "aggregate": "summary",
+     "summarizer": {
+      "model": "claude-opus-5-5",
+      "reasoning": {
+       "anthropic_effort": "default"
+      },
+      "prompt_version": "digest-v5",
+      "variant": "task",
+      "render": "extractive",
+      "max_items": 10,
+      "max_rare": 25,
+      "numbers": 0,
+      "token_cap": 920000,
+      "decode": true,
+      "overflow": "hierarchical",
+      "fallback": "none",
+      "layer_mode": "union"
+     },
+     "decided": {
+      "d-plumber": true,
+      "d-violin": true,
+      "d-cranes": true,
+      "d-umbrella": true,
+      "d-petrichor": true,
+      "d-chain-egg": true,
+      "d-chain-key": true,
+      "d-fox-a": true,
+      "d-fox-b": true,
+      "b-ange-mix-ab": true,
+      "b-ange-mix-ba": true,
+      "b-jeal-mix-ab": true,
+      "b-jeal-mix-ba": true,
+      "b-fear-mix-ab": true,
+      "b-fear-mix-ba": true,
+      "b-prid-mix-ab": true,
+      "b-prid-mix-ba": true,
+      "b-ange-same-ab": true,
+      "b-ange-same-ba": true,
+      "b-jeal-same-ab": true,
+      "b-jeal-same-ba": true,
+      "b-debt-same-ab": true,
+      "b-debt-same-ba": true,
+      "b-trus-same-ab": true,
+      "b-trus-same-ba": true,
+      "d-lighthouse-keeper": true,
+      "d-hot-air-balloon": true,
+      "d-snapping-turtle": true,
+      "d-stained-glass-window": true,
+      "d-jukebox": true,
+      "d-erupting-volcano": true,
+      "d-accordion": true,
+      "d-garden-gnome": true,
+      "d-octopus": true,
+      "d-windmill": true,
+      "d-forklift": true,
+      "d-cactus": true,
+      "d-carousel": true,
+      "d-telescope": true,
+      "d-flamingo": true,
+      "d-igloo": true,
+      "d-chandelier": true,
+      "d-pineapple": true,
+      "d-lava-lamp": true,
+      "d-lumberjack": true,
+      "d-kangaroo": true,
+      "d-trampoline": true,
+      "d-walrus": true,
+      "d-giraffe": true,
+      "d-penguin": true,
+      "d-dentist": true,
+      "d-dragon": true,
+      "d-wheelbarrow": true,
+      "d-koala": true,
+      "d-astronaut": true,
+      "d-pirate-ship": true,
+      "d-parrot": true,
+      "d-blacksmith": true,
+      "d-hedgehog": true,
+      "d-ballerina": true,
+      "d-camel": true,
+      "d-scarecrow": true,
+      "d-lion": true,
+      "d-chef": true,
+      "d-robot": true,
+      "d-elephant": false,
+      "d-monk": true,
+      "d-zebra": true,
+      "d-baker": true,
+      "d-owl": true,
+      "d-gorilla": true,
+      "d-nurse": true,
+      "d-samurai": true,
+      "d-tiger": true,
+      "d-clown": true,
+      "d-mermaid": true,
+      "d-pilot": true,
+      "d-squirrel": true,
+      "d-magician": true,
+      "d-sheep": true,
+      "d-detective": true,
+      "d-crocodile": true,
+      "b-admi-mix-ab": true,
+      "b-admi-mix-ba": true,
+      "b-rese-mix-ab": true,
+      "b-rese-mix-ba": true,
+      "b-prot-mix-ab": true,
+      "b-prot-mix-ba": true,
+      "b-teac-mix-ab": true,
+      "b-teac-mix-ba": true,
+      "b-forg-same-ab": true,
+      "b-forg-same-ba": true,
+      "b-betr-same-ab": true,
+      "b-betr-same-ba": true,
+      "b-worr-same-ab": true,
+      "b-worr-same-ba": true,
+      "b-blam-same-ab": true,
+      "b-blam-same-ba": true,
+      "b-moza-ent-ab": false,
+      "b-moza-ent-ba": true,
+      "b-batm-ent-ab": true,
+      "b-batm-ent-ba": true,
+      "b-thor-ent-ab": true,
+      "b-thor-ent-ba": true,
+      "b-stra-ent-ab": true,
+      "b-stra-ent-ba": true,
+      "b-holm-ent-ab": true,
+      "b-achi-ent-ba": false,
+      "b-edis-ent-ab": true,
+      "b-edis-ent-ba": true,
+      "b-caes-ent-ab": true,
+      "b-caes-ent-ba": false
+     },
+     "digest_unserved": [
+      "b-achi-ent-ab",
+      "b-holm-ent-ba"
+     ],
+     "written": "2026-11-04T01:40:26+00:00",
+     "value": 0.9642857142857143,
+     "n": 112,
+     "ci": [
+      0.9285714285714286,
+      0.9910714285714286
+     ],
+     "n_refused": 2,
+     "n_refused_ask": 0,
+     "n_refused_digest": 2,
+     "refusal_share": 0.017241379310344827,
+     "protocol": "po-opus-v1",
+     "label": "Opus 5.5 (2 refused)",
+     "not_measurable": false
+    },
+    "multihop": {
+     "rate": 1.0,
+     "saturated": false,
+     "ci95": [
+      1.0,
+      1.0
+     ],
+     "metric": "pass_rate",
+     "higher_is_better": true,
+     "n_items": 12,
+     "n_items_decided": 9,
+     "counts": {
+      "n_expected_cells": 12,
+      "n_missing_cells": 0,
+      "n_unjudged_cells": 3,
+      "n_empty_cells": 0
+     },
+     "judge_model": "claude-opus-5-5",
+     "instrument": "bank-mc-2026-11-01-v3+digest-v5-task-extractive+sj-v10",
+     "layers_judged": [
+      44
+     ],
+     "complete": false,
+     "aggregate": "summary",
+     "summarizer": {
+      "model": "claude-opus-5-5",
+      "reasoning": {
+       "anthropic_effort": "default"
+      },
+      "prompt_version": "digest-v5",
+      "variant": "task",
+      "render": "extractive",
+      "max_items": 10,
+      "max_rare": 15,
+      "numbers": 0,
+      "token_cap": 920000,
+      "decode": true,
+      "overflow": "hierarchical",
+      "fallback": "none",
+      "layer_mode": "union"
+     },
+     "decided": {
+      "bf-christmas-season": true,
+      "bf-fuji-ocean": true,
+      "b3-mh-acropolis-capital": true,
+      "b3-mh-buenosaires-language": true,
+      "b3-mh-fuji-currency": true,
+      "b3-mh-griffithobservatory-state": true,
+      "b3-mh-kremlin-language": true,
+      "b3-mh-lisbon-language": true,
+      "bf-eiffel-continent": true
+     },
+     "digest_unserved": [
+      "b3-mh-colosseum-capital",
+      "b3-mh-eiffel-capital",
+      "bf-sphinx-river"
+     ],
+     "written": "2026-11-04T01:40:26+00:00",
+     "value": 1.0,
+     "n": 9,
+     "ci": [
+      1.0,
+      1.0
+     ],
+     "n_refused": 3,
+     "n_refused_ask": 0,
+     "n_refused_digest": 3,
+     "refusal_share": 0.25,
+     "protocol": "po-opus-v1",
+     "label": "Opus 5.5 (3 refused)",
+     "not_measurable": true
+    },
+    "multilingual": {
+     "rate": 0.8,
+     "saturated": false,
+     "ci95": [
+      0.5,
+      1.0
+     ],
+     "metric": "pass_rate",
+     "higher_is_better": true,
+     "n_items": 10,
+     "n_items_decided": 10,
+     "counts": {
+      "n_expected_cells": 10,
+      "n_missing_cells": 0,
+      "n_unjudged_cells": 0,
+      "n_empty_cells": 0
+     },
+     "judge_model": "claude-opus-5-5",
+     "instrument": "mcrx-2026-11-01a+mc-ml-2026-11-01b+digest-v5-task-extractive+sj-v10",
+     "layers_judged": [
+      44
+     ],
+     "complete": true,
+     "aggregate": "summary",
+     "summarizer": {
+      "model": "claude-opus-5-5",
+      "reasoning": {
+       "anthropic_effort": "default"
+      },
+      "prompt_version": "digest-v5",
+      "variant": "task",
+      "render": "extractive",
+      "max_items": 10,
+      "max_rare": 15,
+      "numbers": 0,
+      "token_cap": 920000,
+      "decode": true,
+      "overflow": "hierarchical",
+      "fallback": "none",
+      "layer_mode": "union"
+     },
+     "decided": {
+      "de-size-big-small": true,
+      "fr-place-up-down": true,
+      "fr-size-big-small": true,
+      "dutch-direction-left": true,
+      "italian-number-two": true,
+      "portuguese-direction-up": false,
+      "b3-ml-de-capital-austria": true,
+      "es-place-up-down": false,
+      "pt-place-up-down": true,
+      "b3-ml-fr-opposite-hot": true
+     },
+     "digest_unserved": [],
+     "written": "2026-11-04T01:40:27+00:00",
+     "value": 0.8,
+     "n": 10,
+     "ci": [
+      0.5,
+      1.0
+     ],
+     "n_refused": 0,
+     "n_refused_ask": 0,
+     "n_refused_digest": 0,
+     "refusal_share": 0.0,
+     "protocol": "po-opus-v1",
+     "label": "Opus 5.5 (0 refused)",
+     "not_measurable": false
+    },
+    "multilingual_typo": {
+     "rate": 1.0,
+     "saturated": false,
+     "ci95": [
+      1.0,
+      1.0
+     ],
+     "metric": "pass_rate",
+     "higher_is_better": true,
+     "n_items": 1,
+     "n_items_decided": 1,
+     "counts": {
+      "n_expected_cells": 1,
+      "n_missing_cells": 0,
+      "n_unjudged_cells": 0,
+      "n_empty_cells": 0
+     },
+     "judge_model": "claude-opus-5-5",
+     "instrument": "mt-regex-2026-10-30+v2+ln-2026-10-31f+rawrx-v2+anchor-support-v1+bank-v3+digest-v5-task-extractive+sj-v10",
+     "layers_judged": [
+      44
+     ],
+     "complete": true,
+     "aggregate": "summary",
+     "summarizer": {
+      "model": "claude-opus-5-5",
+      "reasoning": {
+       "anthropic_effort": "default"
+      },
+      "prompt_version": "digest-v5",
+      "variant": "task",
+      "render": "extractive",
+      "max_items": 10,
+      "max_rare": 15,
+      "numbers": 0,
+      "token_cap": 920000,
+      "decode": true,
+      "overflow": "hierarchical",
+      "fallback": "none",
+      "layer_mode": "union"
+     },
+     "decided": {
+      "mlt-he-archaeology": true
+     },
+     "digest_unserved": [],
+     "written": "2026-11-04T01:40:27+00:00",
+     "value": 1.0,
+     "n": 1,
+     "ci": [
+      1.0,
+      1.0
+     ],
+     "n_refused": 0,
+     "n_refused_ask": 0,
+     "n_refused_digest": 0,
+     "refusal_share": 0.0,
+     "protocol": "po-opus-v1",
+     "label": "Opus 5.5 (0 refused)",
+     "not_measurable": false
+    },
+    "poetry": {
+     "rate": 0.0,
+     "saturated": false,
+     "ci95": [
+      0.0,
+      0.0
+     ],
+     "metric": "pass_rate",
+     "higher_is_better": true,
+     "n_items": 2,
+     "n_items_decided": 2,
+     "counts": {
+      "n_expected_cells": 2,
+      "n_missing_cells": 0,
+      "n_unjudged_cells": 0,
+      "n_empty_cells": 0
+     },
+     "judge_model": "claude-opus-5-5",
+     "instrument": "poetry-free-2026-11-01+digest-v5-task-extractive+sj-v10",
+     "layers_judged": [
+      44
+     ],
+     "complete": true,
+     "aggregate": "summary",
+     "summarizer": {
+      "model": "claude-opus-5-5",
+      "reasoning": {
+       "anthropic_effort": "default"
+      },
+      "prompt_version": "digest-v5",
+      "variant": "task",
+      "render": "extractive",
+      "max_items": 10,
+      "max_rare": 15,
+      "numbers": 0,
+      "token_cap": 920000,
+      "decode": true,
+      "overflow": "hierarchical",
+      "fallback": "none",
+      "layer_mode": "union"
+     },
+     "decided": {
+      "v3-po-bright-night": false,
+      "v3-po-heal-feel": false
+     },
+     "digest_unserved": [],
+     "written": "2026-11-04T01:40:27+00:00",
+     "value": 0.0,
+     "n": 2,
+     "ci": [
+      0.0,
+      0.0
+     ],
+     "n_refused": 0,
+     "n_refused_ask": 0,
+     "n_refused_digest": 0,
+     "refusal_share": 0.0,
+     "protocol": "po-opus-v1",
+     "label": "Opus 5.5 (0 refused)",
+     "not_measurable": false
+    },
+    "role_bound_association": {
+     "rate": 0.25,
+     "saturated": true,
+     "ci95": [
+      0.0,
+      0.75
+     ],
+     "metric": "pass_rate",
+     "higher_is_better": true,
+     "n_items": 8,
+     "n_items_decided": 8,
+     "counts": {
+      "n_expected_cells": 8,
+      "n_missing_cells": 0,
+      "n_unjudged_cells": 0,
+      "n_empty_cells": 0
+     },
+     "judge_model": "claude-opus-5-5",
+     "instrument": "oa-v3.1+digest-v5-task-extractive+sj-v10",
+     "layers_judged": [
+      44
+     ],
+     "complete": true,
+     "aggregate": "summary",
+     "summarizer": {
+      "model": "claude-opus-5-5",
+      "reasoning": {
+       "anthropic_effort": "default"
+      },
+      "prompt_version": "digest-v5",
+      "variant": "task",
+      "render": "extractive",
+      "max_items": 10,
+      "max_rare": 15,
+      "numbers": 0,
+      "token_cap": 920000,
+      "decode": true,
+      "overflow": "hierarchical",
+      "fallback": "none",
+      "layer_mode": "union"
+     },
+     "decided": {
+      "oa-teacher-student-scold-ab": false,
+      "oa-teacher-student-scold-ba": true,
+      "oa-lawyer-witness-interrogate-ab": false,
+      "oa-lawyer-witness-interrogate-ba": true,
+      "oa-waiter-customer-apologize-ab": true,
+      "oa-waiter-customer-apologize-ba": true,
+      "oa-doctor-nurse-instruct-ab": false,
+      "oa-doctor-nurse-instruct-ba": true
+     },
+     "digest_unserved": [],
+     "written": "2026-11-04T01:40:27+00:00",
+     "value": 0.25,
+     "n": 8,
+     "ci": [
+      0.0,
+      0.75
+     ],
+     "n_refused": 0,
+     "n_refused_ask": 0,
+     "n_refused_digest": 0,
+     "refusal_share": 0.0,
+     "protocol": "po-opus-v1",
+     "label": "Opus 5.5 (0 refused)",
+     "not_measurable": false
+    },
+    "typo_mt": {
+     "rate": 1.0,
+     "saturated": false,
+     "ci95": [
+      1.0,
+      1.0
+     ],
+     "metric": "pass_rate",
+     "higher_is_better": true,
+     "n_items": 47,
+     "n_items_decided": 47,
+     "counts": {
+      "n_expected_cells": 47,
+      "n_missing_cells": 0,
+      "n_unjudged_cells": 0,
+      "n_empty_cells": 0
+     },
+     "judge_model": "claude-opus-5-5",
+     "instrument": "mt-regex-2026-10-30+typo-v2+digest-v5-task-extractive+sj-v10",
+     "layers_judged": [
+      44
+     ],
+     "complete": true,
+     "aggregate": "summary",
+     "summarizer": {
+      "model": "claude-opus-5-5",
+      "reasoning": {
+       "anthropic_effort": "default"
+      },
+      "prompt_version": "digest-v5",
+      "variant": "task",
+      "render": "extractive",
+      "max_items": 10,
+      "max_rare": 15,
+      "numbers": 0,
+      "token_cap": 920000,
+      "decode": true,
+      "overflow": "hierarchical",
+      "fallback": "none",
+      "layer_mode": "union"
+     },
+     "decided": {
+      "tyh-novel-bronchiectasis": true,
+      "tyh-novel-cartography": true,
+      "tyh-novel-cassoulet": true,
+      "tyh-novel-chitinous": true,
+      "tyh-novel-coloratura": true,
+      "tyh-novel-contrapposto": true,
+      "typo-au-t1-w100c0-tyh-novel-counterproductive": true,
+      "typo-au-t1-w100c0-tyh-novel-untrustworthy": true,
+      "typo-au-t1-w100c1-tyh-novel-reconsideration": true,
+      "typo-au-t1-w100c1-tyh-novel-powerlessness": true,
+      "typo-au-t1-w100c1-tyh-novel-overpopulation": true,
+      "typo-au-t1-w100c2-tyh-novel-prehistoric": true,
+      "typo-au-t1-w100c2-tyh-novel-undernourished": true,
+      "typo-au-t1-w100c2-tyh-novel-disinfectant": true,
+      "typo-au-t1-w101c0-tyh-novel-dishonesty": true,
+      "typo-au-t1-w101c1-tyh-novel-overachiever": true,
+      "typo-au-t1-w101c1-tyh-novel-disobedience": true,
+      "typo-au-t1-w101c1-tyh-novel-interstellar": true,
+      "typo-au-t1-w101c2-tyh-novel-overcooked": true,
+      "typo-au-t1-w101c2-tyh-novel-sunbathing": true,
+      "typo-au-t1-w102c0-tyh-novel-overprotective": true,
+      "typo-au-t1-w102c0-tyh-novel-sunflowers": true,
+      "typo-au-t1-w102c1-tyh-novel-overpriced": true,
+      "typo-au-t1-w102c2-tyh-novel-overcharged": true,
+      "typo-au-t1-w102c2-tyh-novel-stargazing": true,
+      "typo-au-t1-w103c0-tyh-novel-overworked": true,
+      "typo-au-t1-w103c1-tyh-novel-underpaid": true,
+      "typo-au-t1-w104c0-tyh-novel-overgrown": true,
+      "typo-au-t1-w104c0-tyh-novel-overpaid": true,
+      "typo-au-t1-w104c0-tyh-novel-bookkeeper": true,
+      "typo-au-t1-w104c1-tyh-novel-outlived": true,
+      "typo-au-t1-w104c1-tyh-novel-lifeguard": true,
+      "typo-au-t1-w104c2-tyh-novel-overripe": true,
+      "typo-au-t1-w104c2-tyh-novel-overheard": true,
+      "typo-au-t1-w104c2-tyh-novel-underlined": true,
+      "typo-au-t1-w105c0-tyh-novel-moonlight": true,
+      "typo-au-t1-w105c1-tyh-novel-fireproof": true,
+      "typo-au-t1-w105c2-tyh-novel-caterpillar": true,
+      "typo-au-t1-w105c2-tyh-novel-mouthwash": true,
+      "typo-au-t1-w105c2-tyh-novel-overcast": true,
+      "typo-au-t1-w106c0-typo-novel-weatherproof": true,
+      "typo-au-t1-w106c1-typo-novel-reorganized": true,
+      "typo-au-t1-w106c1-typo-novel-unsuitable": true,
+      "typo-au-t1-w106c1-typo-novel-refillable": true,
+      "typo-au-t1-w106c2-typo-novel-uncountable": true,
+      "typo-au-t1-w107c0-typo-novel-homesick": true,
+      "typo-au-t1-w107c0-typo-novel-unprepared": true
+     },
+     "digest_unserved": [],
+     "written": "2026-11-04T01:40:27+00:00",
+     "value": 1.0,
+     "n": 47,
+     "ci": [
+      1.0,
+      1.0
+     ],
+     "n_refused": 0,
+     "n_refused_ask": 0,
+     "n_refused_digest": 0,
+     "refusal_share": 0.0,
+     "protocol": "po-opus-v1",
+     "label": "Opus 5.5 (0 refused)",
+     "not_measurable": false
+    },
+    "user_modeling": {
+     "rate": 0.11320754716981132,
+     "saturated": false,
+     "ci95": [
+      0.03773584905660377,
+      0.20754716981132076
+     ],
+     "metric": "pass_rate",
+     "higher_is_better": true,
+     "n_items": 53,
+     "n_items_decided": 53,
+     "counts": {
+      "n_expected_cells": 53,
+      "n_missing_cells": 0,
+      "n_unjudged_cells": 0,
+      "n_empty_cells": 0
+     },
+     "judge_model": "claude-opus-5-5",
+     "instrument": "um-v3.4+digest-v5-task-extractive+sj-v10",
+     "layers_judged": [
+      44
+     ],
+     "complete": true,
+     "aggregate": "summary",
+     "summarizer": {
+      "model": "claude-opus-5-5",
+      "reasoning": {
+       "anthropic_effort": "default"
+      },
+      "prompt_version": "digest-v5",
+      "variant": "task",
+      "render": "extractive",
+      "max_items": 10,
+      "max_rare": 15,
+      "numbers": 0,
+      "token_cap": 920000,
+      "decode": true,
+      "overflow": "hierarchical",
+      "fallback": "default+claude-sonnet-5-5",
+      "layer_mode": "union"
+     },
+     "decided": {},
+     "digest_unserved": [],
+     "written": "2026-11-04T01:40:27+00:00",
+     "value": 0.11320754716981132,
+     "n": 53,
+     "ci": [
+      0.03773584905660377,
+      0.20754716981132076
+     ],
+     "n_refused": 0,
+     "n_refused_ask": 0,
+     "n_refused_digest": 0,
+     "refusal_share": 0.0,
+     "protocol": "po-opus-v1",
+     "label": "Opus 5.5 (0 refused)",
+     "not_measurable": false
+    }
+   }
   }
  }
 }

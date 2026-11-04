@@ -7,12 +7,113 @@
  "render": "chat (Qwen chat template, enable_thinking=False, no system prompt): the item prompt is the user turn; the assistant turn opens with the empty <think>\n\n</think>\n\n block and the target sentence is PREFILLED as the assistant's text (bare sentence, no closing quote)",
  "read_cells": "every token of the prefilled target sentence (12 tokens: The committee will meet on Thursday to review the annual budget .), offsets -12 .. -1 from the end of the render",
  "read_cells_changed": "2026-09-23 (Camila: \"we aren't prefilling the sentence, we are just including it as part of the user message, so fix that and rerun all the methods on the written sentence tokens\"). Before: bare render of the prompt text followed by a greedy rollout, read cells = the last 20 tokens of the rollout (offsets -1 .. -20), which mixed the written sentence, the model's <think> block and its re-write of the prompt.",
- "layers": [
-  22,
-  26,
-  28,
-  30
+ "concept_edits": "2026-10-29 (plan 0025): bare-word concepts removed from `concepts` (prompts unchanged) because the all-concepts rule would fail those items on an incidental unit: d-violin: 'floating', d-cranes: 'seven', d-fox-a: 'chasing', d-fox-b: 'chasing'",
+ "new_items": [
+  "d-lighthouse-keeper",
+  "d-hot-air-balloon",
+  "d-snapping-turtle",
+  "d-stained-glass-window",
+  "d-jukebox",
+  "d-erupting-volcano",
+  "d-accordion",
+  "d-garden-gnome",
+  "d-octopus",
+  "d-windmill",
+  "d-forklift",
+  "d-cactus",
+  "d-carousel",
+  "d-telescope",
+  "d-flamingo",
+  "d-igloo",
+  "d-chandelier",
+  "d-pineapple",
+  "d-lava-lamp",
+  "d-lumberjack",
+  "d-kangaroo",
+  "d-trampoline",
+  "d-walrus",
+  "d-giraffe",
+  "d-penguin",
+  "d-dentist",
+  "d-dragon",
+  "d-wheelbarrow",
+  "d-koala",
+  "d-astronaut",
+  "d-pirate-ship",
+  "d-parrot",
+  "d-blacksmith",
+  "d-hedgehog",
+  "d-ballerina",
+  "d-camel",
+  "d-scarecrow",
+  "d-lion",
+  "d-chef",
+  "d-robot",
+  "d-elephant",
+  "d-monk",
+  "d-zebra",
+  "d-baker",
+  "d-owl",
+  "d-gorilla",
+  "d-nurse",
+  "d-samurai",
+  "d-tiger",
+  "d-clown",
+  "d-mermaid",
+  "d-pilot",
+  "d-squirrel",
+  "d-magician",
+  "d-sheep",
+  "d-detective",
+  "d-crocodile",
+  "b-admi-mix-ab",
+  "b-admi-mix-ba",
+  "b-rese-mix-ab",
+  "b-rese-mix-ba",
+  "b-prot-mix-ab",
+  "b-prot-mix-ba",
+  "b-teac-mix-ab",
+  "b-teac-mix-ba",
+  "b-forg-same-ab",
+  "b-forg-same-ba",
+  "b-betr-same-ab",
+  "b-betr-same-ba",
+  "b-worr-same-ab",
+  "b-worr-same-ba",
+  "b-blam-same-ab",
+  "b-blam-same-ba"
  ],
+ "expanded": "2026-10-29 (plan 0025): 27 -> 100 items (73 authored; the original 27 byte-identical)",
+ "version": 2,
+ "new_items_v2": [
+  "b-moza-ent-ab",
+  "b-moza-ent-ba",
+  "b-batm-ent-ab",
+  "b-batm-ent-ba",
+  "b-thor-ent-ab",
+  "b-thor-ent-ba",
+  "b-stra-ent-ab",
+  "b-stra-ent-ba",
+  "b-holm-ent-ab",
+  "b-holm-ent-ba",
+  "b-achi-ent-ab",
+  "b-achi-ent-ba",
+  "b-edis-ent-ab",
+  "b-edis-ent-ba",
+  "b-caes-ent-ab",
+  "b-caes-ent-ba"
+ ],
+ "camilas_entity_pairs": [
+  "b-moza-ent",
+  "b-batm-ent",
+  "b-thor-ent",
+  "b-stra-ent"
+ ],
+ "companions": {
+  "relation_clusters": "relation_clusters_v2.json",
+  "distractor_groups": "distractor_groups_v2.json"
+ },
+ "expanded_v2": "2026-10-30 (plan 0034): 100 -> 116 items; the 100 v1 items byte-identical (relation items gain `roles`), 16 `entity` items in 8 ab/ba pairs (Camila's Mozart/Salieri, Batman/Joker, Thor/Loki, Stravinsky/Schoenberg plus four added pairs); `layers` removed (every family reads readplan.GRID)",
  "items": [
   {
    "name": "d-none",
@@ -131,7 +232,13 @@
    ],
    "stratum": "mix",
    "emotion": "anger",
-   "order": "ab"
+   "order": "ab",
+   "roles": {
+    "agent": "Adam",
+    "patient": "Betty",
+    "relation": "being angry at",
+    "cluster": "anger"
+   }
   },
   {
    "name": "b-ange-mix-ba",
@@ -141,7 +248,13 @@
    ],
    "stratum": "mix",
    "emotion": "anger",
-   "order": "ba"
+   "order": "ba",
+   "roles": {
+    "agent": "Betty",
+    "patient": "Adam",
+    "relation": "being angry at",
+    "cluster": "anger"
+   }
   },
   {
    "name": "b-jeal-mix-ab",
@@ -151,7 +264,13 @@
    ],
    "stratum": "mix",
    "emotion": "jealousy",
-   "order": "ab"
+   "order": "ab",
+   "roles": {
+    "agent": "Maria",
+    "patient": "Tom",
+    "relation": "being jealous of",
+    "cluster": "envy"
+   }
   },
   {
    "name": "b-jeal-mix-ba",
@@ -161,7 +280,13 @@
    ],
    "stratum": "mix",
    "emotion": "jealousy",
-   "order": "ba"
+   "order": "ba",
+   "roles": {
+    "agent": "Tom",
+    "patient": "Maria",
+    "relation": "being jealous of",
+    "cluster": "envy"
+   }
   },
   {
    "name": "b-fear-mix-ab",
@@ -171,7 +296,13 @@
    ],
    "stratum": "mix",
    "emotion": "fear",
-   "order": "ab"
+   "order": "ab",
+   "roles": {
+    "agent": "Susan",
+    "patient": "David",
+    "relation": "being afraid of",
+    "cluster": "fear"
+   }
   },
   {
    "name": "b-fear-mix-ba",
@@ -181,7 +312,13 @@
    ],
    "stratum": "mix",
    "emotion": "fear",
-   "order": "ba"
+   "order": "ba",
+   "roles": {
+    "agent": "David",
+    "patient": "Susan",
+    "relation": "being afraid of",
+    "cluster": "fear"
+   }
   },
   {
    "name": "b-prid-mix-ab",
@@ -191,7 +328,13 @@
    ],
    "stratum": "mix",
    "emotion": "pride",
-   "order": "ab"
+   "order": "ab",
+   "roles": {
+    "agent": "Emma",
+    "patient": "James",
+    "relation": "being proud of",
+    "cluster": "esteem"
+   }
   },
   {
    "name": "b-prid-mix-ba",
@@ -201,7 +344,13 @@
    ],
    "stratum": "mix",
    "emotion": "pride",
-   "order": "ba"
+   "order": "ba",
+   "roles": {
+    "agent": "James",
+    "patient": "Emma",
+    "relation": "being proud of",
+    "cluster": "esteem"
+   }
   },
   {
    "name": "b-ange-same-ab",
@@ -211,7 +360,13 @@
    ],
    "stratum": "same",
    "emotion": "anger",
-   "order": "ab"
+   "order": "ab",
+   "roles": {
+    "agent": "Adam",
+    "patient": "Brian",
+    "relation": "being angry at",
+    "cluster": "anger"
+   }
   },
   {
    "name": "b-ange-same-ba",
@@ -221,7 +376,13 @@
    ],
    "stratum": "same",
    "emotion": "anger",
-   "order": "ba"
+   "order": "ba",
+   "roles": {
+    "agent": "Brian",
+    "patient": "Adam",
+    "relation": "being angry at",
+    "cluster": "anger"
+   }
   },
   {
    "name": "b-jeal-same-ab",
@@ -231,7 +392,13 @@
    ],
    "stratum": "same",
    "emotion": "jealousy",
-   "order": "ab"
+   "order": "ab",
+   "roles": {
+    "agent": "Alice",
+    "patient": "Karen",
+    "relation": "being jealous of",
+    "cluster": "envy"
+   }
   },
   {
    "name": "b-jeal-same-ba",
@@ -241,7 +408,13 @@
    ],
    "stratum": "same",
    "emotion": "jealousy",
-   "order": "ba"
+   "order": "ba",
+   "roles": {
+    "agent": "Karen",
+    "patient": "Alice",
+    "relation": "being jealous of",
+    "cluster": "envy"
+   }
   },
   {
    "name": "b-debt-same-ab",
@@ -251,7 +424,13 @@
    ],
    "stratum": "same",
    "emotion": "debt",
-   "order": "ab"
+   "order": "ab",
+   "roles": {
+    "agent": "Carlos",
+    "patient": "Miguel",
+    "relation": "owing money to",
+    "cluster": "debt"
+   }
   },
   {
    "name": "b-debt-same-ba",
@@ -261,7 +440,13 @@
    ],
    "stratum": "same",
    "emotion": "debt",
-   "order": "ba"
+   "order": "ba",
+   "roles": {
+    "agent": "Miguel",
+    "patient": "Carlos",
+    "relation": "owing money to",
+    "cluster": "debt"
+   }
   },
   {
    "name": "b-trus-same-ab",
@@ -271,7 +456,13 @@
    ],
    "stratum": "same",
    "emotion": "trust",
-   "order": "ab"
+   "order": "ab",
+   "roles": {
+    "agent": "Nina",
+    "patient": "Petra",
+    "relation": "trusting",
+    "cluster": "trust"
+   }
   },
   {
    "name": "b-trus-same-ba",
@@ -281,7 +472,13 @@
    ],
    "stratum": "same",
    "emotion": "trust",
-   "order": "ba"
+   "order": "ba",
+   "roles": {
+    "agent": "Petra",
+    "patient": "Nina",
+    "relation": "trusting",
+    "cluster": "trust"
+   }
   },
   {
    "name": "d-lighthouse-keeper",
@@ -798,7 +995,13 @@
    ],
    "stratum": "mix",
    "emotion": "admiration",
-   "order": "ab"
+   "order": "ab",
+   "roles": {
+    "agent": "Oliver",
+    "patient": "Ingrid",
+    "relation": "admiring",
+    "cluster": "esteem"
+   }
   },
   {
    "name": "b-admi-mix-ba",
@@ -808,7 +1011,13 @@
    ],
    "stratum": "mix",
    "emotion": "admiration",
-   "order": "ba"
+   "order": "ba",
+   "roles": {
+    "agent": "Ingrid",
+    "patient": "Oliver",
+    "relation": "admiring",
+    "cluster": "esteem"
+   }
   },
   {
    "name": "b-rese-mix-ab",
@@ -818,7 +1027,13 @@
    ],
    "stratum": "mix",
    "emotion": "resentment",
-   "order": "ab"
+   "order": "ab",
+   "roles": {
+    "agent": "Lucas",
+    "patient": "Hannah",
+    "relation": "resenting",
+    "cluster": "anger"
+   }
   },
   {
    "name": "b-rese-mix-ba",
@@ -828,7 +1043,13 @@
    ],
    "stratum": "mix",
    "emotion": "resentment",
-   "order": "ba"
+   "order": "ba",
+   "roles": {
+    "agent": "Hannah",
+    "patient": "Lucas",
+    "relation": "resenting",
+    "cluster": "anger"
+   }
   },
   {
    "name": "b-prot-mix-ab",
@@ -838,7 +1059,13 @@
    ],
    "stratum": "mix",
    "emotion": "protection",
-   "order": "ab"
+   "order": "ab",
+   "roles": {
+    "agent": "Sofia",
+    "patient": "Daniel",
+    "relation": "protecting",
+    "cluster": "protection"
+   }
   },
   {
    "name": "b-prot-mix-ba",
@@ -848,7 +1075,13 @@
    ],
    "stratum": "mix",
    "emotion": "protection",
-   "order": "ba"
+   "order": "ba",
+   "roles": {
+    "agent": "Daniel",
+    "patient": "Sofia",
+    "relation": "protecting",
+    "cluster": "protection"
+   }
   },
   {
    "name": "b-teac-mix-ab",
@@ -858,7 +1091,13 @@
    ],
    "stratum": "mix",
    "emotion": "teaching",
-   "order": "ab"
+   "order": "ab",
+   "roles": {
+    "agent": "Ethan",
+    "patient": "Chloe",
+    "relation": "teaching",
+    "cluster": "teaching"
+   }
   },
   {
    "name": "b-teac-mix-ba",
@@ -868,7 +1107,13 @@
    ],
    "stratum": "mix",
    "emotion": "teaching",
-   "order": "ba"
+   "order": "ba",
+   "roles": {
+    "agent": "Chloe",
+    "patient": "Ethan",
+    "relation": "teaching",
+    "cluster": "teaching"
+   }
   },
   {
    "name": "b-forg-same-ab",
@@ -878,7 +1123,13 @@
    ],
    "stratum": "same",
    "emotion": "forgiveness",
-   "order": "ab"
+   "order": "ab",
+   "roles": {
+    "agent": "Rachel",
+    "patient": "Laura",
+    "relation": "forgiving",
+    "cluster": "forgiveness"
+   }
   },
   {
    "name": "b-forg-same-ba",
@@ -888,7 +1139,13 @@
    ],
    "stratum": "same",
    "emotion": "forgiveness",
-   "order": "ba"
+   "order": "ba",
+   "roles": {
+    "agent": "Laura",
+    "patient": "Rachel",
+    "relation": "forgiving",
+    "cluster": "forgiveness"
+   }
   },
   {
    "name": "b-betr-same-ab",
@@ -898,7 +1155,13 @@
    ],
    "stratum": "same",
    "emotion": "betrayal",
-   "order": "ab"
+   "order": "ab",
+   "roles": {
+    "agent": "Kevin",
+    "patient": "Derek",
+    "relation": "betraying",
+    "cluster": "betrayal"
+   }
   },
   {
    "name": "b-betr-same-ba",
@@ -908,7 +1171,13 @@
    ],
    "stratum": "same",
    "emotion": "betrayal",
-   "order": "ba"
+   "order": "ba",
+   "roles": {
+    "agent": "Derek",
+    "patient": "Kevin",
+    "relation": "betraying",
+    "cluster": "betrayal"
+   }
   },
   {
    "name": "b-worr-same-ab",
@@ -918,7 +1187,13 @@
    ],
    "stratum": "same",
    "emotion": "worry",
-   "order": "ab"
+   "order": "ab",
+   "roles": {
+    "agent": "Julia",
+    "patient": "Fiona",
+    "relation": "worrying about",
+    "cluster": "fear"
+   }
   },
   {
    "name": "b-worr-same-ba",
@@ -928,7 +1203,13 @@
    ],
    "stratum": "same",
    "emotion": "worry",
-   "order": "ba"
+   "order": "ba",
+   "roles": {
+    "agent": "Fiona",
+    "patient": "Julia",
+    "relation": "worrying about",
+    "cluster": "fear"
+   }
   },
   {
    "name": "b-blam-same-ab",
@@ -938,7 +1219,13 @@
    ],
    "stratum": "same",
    "emotion": "blame",
-   "order": "ab"
+   "order": "ab",
+   "roles": {
+    "agent": "Peter",
+    "patient": "Simon",
+    "relation": "blaming",
+    "cluster": "anger"
+   }
   },
   {
    "name": "b-blam-same-ba",
@@ -948,91 +1235,317 @@
    ],
    "stratum": "same",
    "emotion": "blame",
-   "order": "ba"
+   "order": "ba",
+   "roles": {
+    "agent": "Simon",
+    "patient": "Peter",
+    "relation": "blaming",
+    "cluster": "anger"
+   }
+  },
+  {
+   "name": "b-moza-ent-ab",
+   "prompt": "Think about Mozart being jealous of Salieri. Now write this sentence: \"The committee will meet on Thursday to review the annual budget.\"\n",
+   "concepts": [
+    "Mozart being jealous of Salieri"
+   ],
+   "stratum": "entity",
+   "order": "ab",
+   "roles": {
+    "agent": "Mozart",
+    "patient": "Salieri",
+    "relation": "being jealous of",
+    "cluster": "envy"
+   },
+   "prior_direction": "ba"
+  },
+  {
+   "name": "b-moza-ent-ba",
+   "prompt": "Think about Salieri being jealous of Mozart. Now write this sentence: \"The committee will meet on Thursday to review the annual budget.\"\n",
+   "concepts": [
+    "Salieri being jealous of Mozart"
+   ],
+   "stratum": "entity",
+   "order": "ba",
+   "roles": {
+    "agent": "Salieri",
+    "patient": "Mozart",
+    "relation": "being jealous of",
+    "cluster": "envy"
+   },
+   "prior_direction": "ba"
+  },
+  {
+   "name": "b-batm-ent-ab",
+   "prompt": "Think about Batman chasing the Joker. Now write this sentence: \"The committee will meet on Thursday to review the annual budget.\"\n",
+   "concepts": [
+    "Batman chasing the Joker"
+   ],
+   "stratum": "entity",
+   "order": "ab",
+   "roles": {
+    "agent": "Batman",
+    "patient": "the Joker",
+    "relation": "chasing",
+    "cluster": "pursuit"
+   },
+   "prior_direction": "ab",
+   "aliases": {
+    "the Joker": [
+     "Joker"
+    ]
+   }
+  },
+  {
+   "name": "b-batm-ent-ba",
+   "prompt": "Think about the Joker chasing Batman. Now write this sentence: \"The committee will meet on Thursday to review the annual budget.\"\n",
+   "concepts": [
+    "the Joker chasing Batman"
+   ],
+   "stratum": "entity",
+   "order": "ba",
+   "roles": {
+    "agent": "the Joker",
+    "patient": "Batman",
+    "relation": "chasing",
+    "cluster": "pursuit"
+   },
+   "prior_direction": "ab",
+   "aliases": {
+    "the Joker": [
+     "Joker"
+    ]
+   }
+  },
+  {
+   "name": "b-thor-ent-ab",
+   "prompt": "Think about Thor being angry at Loki. Now write this sentence: \"The committee will meet on Thursday to review the annual budget.\"\n",
+   "concepts": [
+    "Thor being angry at Loki"
+   ],
+   "stratum": "entity",
+   "order": "ab",
+   "roles": {
+    "agent": "Thor",
+    "patient": "Loki",
+    "relation": "being angry at",
+    "cluster": "anger"
+   },
+   "prior_direction": null
+  },
+  {
+   "name": "b-thor-ent-ba",
+   "prompt": "Think about Loki being angry at Thor. Now write this sentence: \"The committee will meet on Thursday to review the annual budget.\"\n",
+   "concepts": [
+    "Loki being angry at Thor"
+   ],
+   "stratum": "entity",
+   "order": "ba",
+   "roles": {
+    "agent": "Loki",
+    "patient": "Thor",
+    "relation": "being angry at",
+    "cluster": "anger"
+   },
+   "prior_direction": null
+  },
+  {
+   "name": "b-stra-ent-ab",
+   "prompt": "Think about Stravinsky being distrustful of Schoenberg. Now write this sentence: \"The committee will meet on Thursday to review the annual budget.\"\n",
+   "concepts": [
+    "Stravinsky being distrustful of Schoenberg"
+   ],
+   "stratum": "entity",
+   "order": "ab",
+   "roles": {
+    "agent": "Stravinsky",
+    "patient": "Schoenberg",
+    "relation": "being distrustful of",
+    "cluster": "fear"
+   },
+   "prior_direction": null,
+   "aliases": {
+    "Schoenberg": [
+     "Schönberg",
+     "Schonberg"
+    ]
+   }
+  },
+  {
+   "name": "b-stra-ent-ba",
+   "prompt": "Think about Schoenberg being distrustful of Stravinsky. Now write this sentence: \"The committee will meet on Thursday to review the annual budget.\"\n",
+   "concepts": [
+    "Schoenberg being distrustful of Stravinsky"
+   ],
+   "stratum": "entity",
+   "order": "ba",
+   "roles": {
+    "agent": "Schoenberg",
+    "patient": "Stravinsky",
+    "relation": "being distrustful of",
+    "cluster": "fear"
+   },
+   "prior_direction": null,
+   "aliases": {
+    "Schoenberg": [
+     "Schönberg",
+     "Schonberg"
+    ]
+   }
+  },
+  {
+   "name": "b-holm-ent-ab",
+   "prompt": "Think about Holmes outwitting Moriarty. Now write this sentence: \"The committee will meet on Thursday to review the annual budget.\"\n",
+   "concepts": [
+    "Holmes outwitting Moriarty"
+   ],
+   "stratum": "entity",
+   "order": "ab",
+   "roles": {
+    "agent": "Holmes",
+    "patient": "Moriarty",
+    "relation": "outwitting",
+    "cluster": "outwitting"
+   },
+   "prior_direction": "ab",
+   "aliases": {
+    "Holmes": [
+     "Sherlock"
+    ]
+   }
+  },
+  {
+   "name": "b-holm-ent-ba",
+   "prompt": "Think about Moriarty outwitting Holmes. Now write this sentence: \"The committee will meet on Thursday to review the annual budget.\"\n",
+   "concepts": [
+    "Moriarty outwitting Holmes"
+   ],
+   "stratum": "entity",
+   "order": "ba",
+   "roles": {
+    "agent": "Moriarty",
+    "patient": "Holmes",
+    "relation": "outwitting",
+    "cluster": "outwitting"
+   },
+   "prior_direction": "ab",
+   "aliases": {
+    "Holmes": [
+     "Sherlock"
+    ]
+   }
+  },
+  {
+   "name": "b-achi-ent-ab",
+   "prompt": "Think about Achilles mourning Patroclus. Now write this sentence: \"The committee will meet on Thursday to review the annual budget.\"\n",
+   "concepts": [
+    "Achilles mourning Patroclus"
+   ],
+   "stratum": "entity",
+   "order": "ab",
+   "roles": {
+    "agent": "Achilles",
+    "patient": "Patroclus",
+    "relation": "mourning",
+    "cluster": "mourning"
+   },
+   "prior_direction": "ab",
+   "aliases": {
+    "Patroclus": [
+     "Patroklos"
+    ]
+   }
+  },
+  {
+   "name": "b-achi-ent-ba",
+   "prompt": "Think about Patroclus mourning Achilles. Now write this sentence: \"The committee will meet on Thursday to review the annual budget.\"\n",
+   "concepts": [
+    "Patroclus mourning Achilles"
+   ],
+   "stratum": "entity",
+   "order": "ba",
+   "roles": {
+    "agent": "Patroclus",
+    "patient": "Achilles",
+    "relation": "mourning",
+    "cluster": "mourning"
+   },
+   "prior_direction": "ab",
+   "aliases": {
+    "Patroclus": [
+     "Patroklos"
+    ]
+   }
+  },
+  {
+   "name": "b-edis-ent-ab",
+   "prompt": "Think about Edison resenting Tesla. Now write this sentence: \"The committee will meet on Thursday to review the annual budget.\"\n",
+   "concepts": [
+    "Edison resenting Tesla"
+   ],
+   "stratum": "entity",
+   "order": "ab",
+   "roles": {
+    "agent": "Edison",
+    "patient": "Tesla",
+    "relation": "resenting",
+    "cluster": "anger"
+   },
+   "prior_direction": null
+  },
+  {
+   "name": "b-edis-ent-ba",
+   "prompt": "Think about Tesla resenting Edison. Now write this sentence: \"The committee will meet on Thursday to review the annual budget.\"\n",
+   "concepts": [
+    "Tesla resenting Edison"
+   ],
+   "stratum": "entity",
+   "order": "ba",
+   "roles": {
+    "agent": "Tesla",
+    "patient": "Edison",
+    "relation": "resenting",
+    "cluster": "anger"
+   },
+   "prior_direction": null
+  },
+  {
+   "name": "b-caes-ent-ab",
+   "prompt": "Think about Caesar trusting Brutus completely. Now write this sentence: \"The committee will meet on Thursday to review the annual budget.\"\n",
+   "concepts": [
+    "Caesar trusting Brutus completely"
+   ],
+   "stratum": "entity",
+   "order": "ab",
+   "roles": {
+    "agent": "Caesar",
+    "patient": "Brutus",
+    "relation": "trusting",
+    "cluster": "trust"
+   },
+   "prior_direction": "ab"
+  },
+  {
+   "name": "b-caes-ent-ba",
+   "prompt": "Think about Brutus trusting Caesar completely. Now write this sentence: \"The committee will meet on Thursday to review the annual budget.\"\n",
+   "concepts": [
+    "Brutus trusting Caesar completely"
+   ],
+   "stratum": "entity",
+   "order": "ba",
+   "roles": {
+    "agent": "Brutus",
+    "patient": "Caesar",
+    "relation": "trusting",
+    "cluster": "trust"
+   },
+   "prior_direction": "ab"
   }
  ],
- "concept_edits": "2026-10-29 (plan 0025): bare-word concepts removed from `concepts` (prompts unchanged) because the all-concepts rule would fail those items on an incidental unit: d-violin: 'floating', d-cranes: 'seven', d-fox-a: 'chasing', d-fox-b: 'chasing'",
- "new_items": [
-  "d-lighthouse-keeper",
-  "d-hot-air-balloon",
-  "d-snapping-turtle",
-  "d-stained-glass-window",
-  "d-jukebox",
-  "d-erupting-volcano",
-  "d-accordion",
-  "d-garden-gnome",
-  "d-octopus",
-  "d-windmill",
-  "d-forklift",
-  "d-cactus",
-  "d-carousel",
-  "d-telescope",
-  "d-flamingo",
-  "d-igloo",
-  "d-chandelier",
-  "d-pineapple",
-  "d-lava-lamp",
-  "d-lumberjack",
-  "d-kangaroo",
-  "d-trampoline",
-  "d-walrus",
-  "d-giraffe",
-  "d-penguin",
-  "d-dentist",
-  "d-dragon",
-  "d-wheelbarrow",
-  "d-koala",
-  "d-astronaut",
-  "d-pirate-ship",
-  "d-parrot",
-  "d-blacksmith",
-  "d-hedgehog",
-  "d-ballerina",
-  "d-camel",
-  "d-scarecrow",
-  "d-lion",
-  "d-chef",
-  "d-robot",
-  "d-elephant",
-  "d-monk",
-  "d-zebra",
-  "d-baker",
-  "d-owl",
-  "d-gorilla",
-  "d-nurse",
-  "d-samurai",
-  "d-tiger",
-  "d-clown",
-  "d-mermaid",
-  "d-pilot",
-  "d-squirrel",
-  "d-magician",
-  "d-sheep",
-  "d-detective",
-  "d-crocodile",
-  "b-admi-mix-ab",
-  "b-admi-mix-ba",
-  "b-rese-mix-ab",
-  "b-rese-mix-ba",
-  "b-prot-mix-ab",
-  "b-prot-mix-ba",
-  "b-teac-mix-ab",
-  "b-teac-mix-ba",
-  "b-forg-same-ab",
-  "b-forg-same-ba",
-  "b-betr-same-ab",
-  "b-betr-same-ba",
-  "b-worr-same-ab",
-  "b-worr-same-ba",
-  "b-blam-same-ab",
-  "b-blam-same-ba"
- ],
- "expanded": "2026-10-29 (plan 0025): 27 -> 100 items (73 authored; the original 27 byte-identical)",
  "last_n": 12,
  "adapt": {
   "model": "qwen3.5-9b",
-  "frozen": "2026-10-29",
-  "render": "re-rendered with the subject's tokenizer + template: the prefilled sentence is 12 tokens, read offsets -12..-1",
-  "layers": "[44, 52, 56, 60] -> [22, 26, 28, 30] (32 blocks)"
+  "frozen": "2026-11-03",
+  "render": "re-rendered with the subject's tokenizer + template: the prefilled sentence is 12 tokens, read offsets -12..-1"
  }
 }

@@ -1,0 +1,489 @@
+{
+ "version": "adapt-qwen3.5-9b",
+ "note": "adapted-only items' extra gold name forms (ru / es / fr / de / fa exonyms, authored with the item); added to evals/basic_readout_mt/exonyms.json by the judge (registry.load_resource)",
+ "items": {
+  "basic-au-t1-w100c0-brh-ent-1492-caribbean-navigator": {
+   "readout": {
+    "ru": [
+     "Христофор Колумб"
+    ],
+    "fr": [
+     "Christophe Colomb"
+    ],
+    "de": [
+     "Christoph Kolumbus"
+    ],
+    "fa": [
+     "کریستف کلمب"
+    ]
+   }
+  },
+  "basic-au-t1-w100c0-brh-ent-agra-mausoleum": {
+   "readout": {
+    "ru": [
+     "Тадж-Махал"
+    ],
+    "de": [
+     "Tadsch Mahal"
+    ],
+    "fa": [
+     "تاج محل"
+    ]
+   }
+  },
+  "basic-au-t1-w100c0-brh-ent-bosworth-to-1603-royals": {
+   "readout": {
+    "ru": [
+     "Тюдоры",
+     "династия Тюдоров"
+    ],
+    "es": [
+     "Casa de Tudor",
+     "dinastía Tudor"
+    ],
+    "fr": [
+     "maison Tudor",
+     "dynastie Tudor"
+    ],
+    "de": [
+     "Haus Tudor",
+     "Tudor-Dynastie"
+    ],
+    "fa": [
+     "خاندان تودور"
+    ]
+   }
+  },
+  "basic-au-t1-w100c0-brh-ent-chromosome-21-extra": {
+   "readout": {
+    "ru": [
+     "синдром Дауна"
+    ],
+    "es": [
+     "síndrome de Down"
+    ],
+    "fr": [
+     "syndrome de Down",
+     "trisomie 21"
+    ],
+    "de": [
+     "Down-Syndrom"
+    ],
+    "fa": [
+     "نشانگان داون",
+     "سندرم داون"
+    ]
+   }
+  },
+  "basic-au-t1-w100c0-brh-ent-cyrus-darius-realm": {
+   "readout": {
+    "ru": [
+     "Держава Ахеменидов",
+     "Ахеменидская империя"
+    ],
+    "es": [
+     "Imperio aqueménida"
+    ],
+    "fr": [
+     "Empire achéménide"
+    ],
+    "de": [
+     "Achämenidenreich"
+    ],
+    "fa": [
+     "هخامنشیان",
+     "شاهنشاهی هخامنشی"
+    ]
+   }
+  },
+  "basic-au-t1-w100c0-brh-ent-hostage-captor-bond": {
+   "readout": {
+    "ru": [
+     "стокгольмский синдром"
+    ],
+    "es": [
+     "síndrome de Estocolmo"
+    ],
+    "fr": [
+     "syndrome de Stockholm"
+    ],
+    "de": [
+     "Stockholm-Syndrom"
+    ],
+    "fa": [
+     "سندرم استکهلم"
+    ]
+   }
+  },
+  "basic-au-t1-w100c0-brh-ent-justinian-domed-basilica": {
+   "readout": {
+    "ru": [
+     "Айя-София",
+     "Собор Святой Софии"
+    ],
+    "es": [
+     "Santa Sofía"
+    ],
+    "fr": [
+     "Sainte-Sophie"
+    ],
+    "fa": [
+     "ایاصوفیه"
+    ]
+   }
+  },
+  "basic-au-t1-w100c0-brh-ent-ming-imperial-house": {
+   "readout": {
+    "ru": [
+     "Империя Мин",
+     "династия Мин"
+    ],
+    "es": [
+     "dinastía Ming"
+    ],
+    "fr": [
+     "dynastie Ming"
+    ],
+    "de": [
+     "Ming-Dynastie"
+    ],
+    "fa": [
+     "دودمان مینگ",
+     "سلسله مینگ"
+    ]
+   }
+  },
+  "basic-au-t1-w100c0-brh-ent-norman-conquest-clash": {
+   "readout": {
+    "ru": [
+     "Битва при Гастингсе"
+    ],
+    "es": [
+     "Batalla de Hastings"
+    ],
+    "fr": [
+     "Bataille d'Hastings"
+    ],
+    "de": [
+     "Schlacht bei Hastings"
+    ],
+    "fa": [
+     "نبرد هستینگز"
+    ]
+   }
+  },
+  "basic-au-t1-w100c0-brh-ent-pressure-volume-inverse": {
+   "readout": {
+    "ru": [
+     "закон Бойля — Мариотта"
+    ],
+    "es": [
+     "ley de Boyle",
+     "ley de Boyle-Mariotte"
+    ],
+    "fr": [
+     "loi de Boyle-Mariotte"
+    ],
+    "de": [
+     "Boyle-Mariotte-Gesetz",
+     "Gesetz von Boyle-Mariotte"
+    ],
+    "fa": [
+     "قانون بویل"
+    ]
+   }
+  },
+  "basic-au-t1-w100c0-brh-ent-principia-author": {
+   "readout": {
+    "ru": [
+     "Исаак Ньютон"
+    ],
+    "fa": [
+     "آیزاک نیوتن"
+    ]
+   }
+  },
+  "basic-au-t1-w100c0-brh-ent-spain-morocco-passage": {
+   "readout": {
+    "ru": [
+     "Гибралтарский пролив"
+    ],
+    "es": [
+     "estrecho de Gibraltar"
+    ],
+    "fr": [
+     "détroit de Gibraltar"
+    ],
+    "de": [
+     "Straße von Gibraltar"
+    ],
+    "fa": [
+     "تنگه جبل‌الطارق"
+    ]
+   }
+  },
+  "basic-au-t1-w100c0-brh-ent-thirty-years-war-end": {
+   "readout": {
+    "ru": [
+     "Вестфальский мир"
+    ],
+    "es": [
+     "Paz de Westfalia"
+    ],
+    "fr": [
+     "traités de Westphalie",
+     "paix de Westphalie"
+    ],
+    "de": [
+     "Westfälischer Friede"
+    ],
+    "fa": [
+     "پیمان وستفالی",
+     "صلح وستفالی"
+    ]
+   }
+  },
+  "basic-au-t1-w100c0-brh-ent-tilted-campanile": {
+   "readout": {
+    "ru": [
+     "Пизанская башня",
+     "Падающая башня в Пизе"
+    ],
+    "es": [
+     "torre de Pisa",
+     "torre inclinada de Pisa"
+    ],
+    "fr": [
+     "tour de Pise"
+    ],
+    "de": [
+     "Schiefer Turm von Pisa"
+    ],
+    "fa": [
+     "برج کج پیزا"
+    ]
+   }
+  },
+  "basic-au-t1-w100c0-brh-ent-two-science-nobels": {
+   "readout": {
+    "ru": [
+     "Мария Склодовская-Кюри",
+     "Мари Кюри"
+    ],
+    "fa": [
+     "ماری کوری"
+    ]
+   }
+  },
+  "basic-au-t1-w100c0-brh-ent-versailles-1919": {
+   "readout": {
+    "ru": [
+     "Версальский мирный договор",
+     "Версальский договор"
+    ],
+    "es": [
+     "Tratado de Versalles"
+    ],
+    "fr": [
+     "Traité de Versailles"
+    ],
+    "de": [
+     "Versailler Vertrag",
+     "Friedensvertrag von Versailles"
+    ],
+    "fa": [
+     "پیمان ورسای",
+     "معاهده ورسای"
+    ]
+   }
+  },
+  "basic-au-t1-w100c0-brh-ent-voltage-current-resistance": {
+   "readout": {
+    "ru": [
+     "закон Ома"
+    ],
+    "es": [
+     "ley de Ohm"
+    ],
+    "fr": [
+     "loi d'Ohm"
+    ],
+    "de": [
+     "ohmsches Gesetz"
+    ],
+    "fa": [
+     "قانون اهم"
+    ]
+   }
+  },
+  "basic-au-t1-w100c0-brh-ent-white-nile-source": {
+   "readout": {
+    "ru": [
+     "озеро Виктория",
+     "Виктория"
+    ],
+    "es": [
+     "lago Victoria"
+    ],
+    "fr": [
+     "lac Victoria"
+    ],
+    "de": [
+     "Victoriasee"
+    ],
+    "fa": [
+     "دریاچه ویکتوریا"
+    ]
+   }
+  },
+  "basic-au-t1-w100c1-brh-ent-armstrong": {
+   "readout": {
+    "ru": [
+     "Нил Армстронг"
+    ],
+    "fa": [
+     "نیل آرمسترانگ"
+    ]
+   }
+  },
+  "basic-au-t1-w100c1-brh-ent-darwin": {
+   "readout": {
+    "ru": [
+     "Чарлз Дарвин",
+     "Чарльз Дарвин"
+    ],
+    "fa": [
+     "چارلز داروین"
+    ]
+   }
+  },
+  "basic-au-t1-w100c1-brh-ent-everest": {
+   "readout": {
+    "ru": [
+     "Эверест",
+     "Джомолунгма"
+    ],
+    "es": [
+     "monte Everest"
+    ],
+    "fr": [
+     "mont Everest"
+    ],
+    "fa": [
+     "قله اورست"
+    ]
+   }
+  },
+  "basic-au-t1-w100c1-brh-ent-gettysburg": {
+   "readout": {
+    "ru": [
+     "Битва при Геттисберге"
+    ],
+    "es": [
+     "Batalla de Gettysburg"
+    ],
+    "fr": [
+     "Bataille de Gettysburg"
+    ],
+    "de": [
+     "Schlacht von Gettysburg"
+    ],
+    "fa": [
+     "نبرد گتیسبرگ"
+    ]
+   }
+  },
+  "basic-au-t1-w100c1-brh-ent-great-wall": {
+   "readout": {
+    "ru": [
+     "Великая Китайская стена"
+    ],
+    "es": [
+     "Gran Muralla China"
+    ],
+    "fr": [
+     "Grande Muraille de Chine"
+    ],
+    "de": [
+     "Chinesische Mauer"
+    ],
+    "fa": [
+     "دیوار بزرگ چین"
+    ]
+   }
+  },
+  "basic-au-t1-w100c1-brh-ent-habsburg": {
+   "readout": {
+    "ru": [
+     "Габсбурги"
+    ],
+    "es": [
+     "Casa de Habsburgo"
+    ],
+    "fr": [
+     "maison de Habsbourg"
+    ],
+    "de": [
+     "Habsburger"
+    ],
+    "fa": [
+     "خاندان هابسبورگ"
+    ]
+   }
+  },
+  "basic-au-t1-w100c1-brh-ent-han-dynasty": {
+   "readout": {
+    "ru": [
+     "Хань"
+    ],
+    "es": [
+     "dinastía Han"
+    ],
+    "fr": [
+     "dynastie Han"
+    ],
+    "de": [
+     "Han-Dynastie"
+    ],
+    "fa": [
+     "دودمان هان"
+    ]
+   }
+  },
+  "basic-au-t1-w100c1-brh-ent-hookes-law": {
+   "readout": {
+    "ru": [
+     "закон Гука"
+    ],
+    "es": [
+     "ley de Hooke"
+    ],
+    "fr": [
+     "loi de Hooke"
+    ],
+    "de": [
+     "Hookesches Gesetz"
+    ],
+    "fa": [
+     "قانون هوک"
+    ]
+   }
+  },
+  "basic-au-t1-w100c1-brh-ent-magna-carta": {
+   "readout": {
+    "ru": [
+     "Великая хартия вольностей"
+    ],
+    "es": [
+     "Carta Magna"
+    ],
+    "fr": [
+     "Grande Charte"
+    ],
+    "fa": [
+     "منشور کبیر"
+    ]
+   }
+  }
+ }
+}

@@ -1,5 +1,241 @@
 [
  {
+  "scene_key": "Remy-Skyler-Sam-neighbor-child",
+  "stimulus": "Remy's neighbor is Skyler. Skyler's child is Sam. In other words, Sam is Remy's",
+  "names": [
+   "Remy",
+   "Skyler",
+   "Sam"
+  ],
+  "hop1": "neighbor",
+  "hop2": "child",
+  "gold": "neighbor's child",
+  "gold_alt": "child of Remy's neighbor",
+  "flipped": "child's neighbor",
+  "id": "relational-t0-s0-0087-a",
+  "scene": "relational-t0-s0-0087",
+  "adapt": {
+   "origin": "generated",
+   "tier": "t0",
+   "knobs": {},
+   "change": "original rules (13 professional x 5 kinship relations)",
+   "gate": {
+    "rate": 0.8,
+    "pass": true
+   }
+  }
+ },
+ {
+  "scene_key": "Remy-Skyler-Sam-neighbor-child",
+  "stimulus": "Remy's child is Skyler. Skyler's neighbor is Sam. In other words, Sam is Remy's",
+  "names": [
+   "Remy",
+   "Skyler",
+   "Sam"
+  ],
+  "hop1": "child",
+  "hop2": "neighbor",
+  "gold": "child's neighbor",
+  "gold_alt": "neighbor of Remy's child",
+  "flipped": "neighbor's child",
+  "id": "relational-t0-s0-0087-b",
+  "scene": "relational-t0-s0-0087",
+  "adapt": {
+   "origin": "generated",
+   "tier": "t0",
+   "knobs": {},
+   "change": "original rules (13 professional x 5 kinship relations)",
+   "gate": {
+    "rate": 0.9,
+    "pass": true
+   }
+  }
+ },
+ {
+  "scene_key": "Remy-Blake-Skyler-tutor-sibling",
+  "stimulus": "Remy's tutor is Blake. Blake's sibling is Skyler. In other words, Skyler is Remy's",
+  "names": [
+   "Remy",
+   "Blake",
+   "Skyler"
+  ],
+  "hop1": "tutor",
+  "hop2": "sibling",
+  "gold": "tutor's sibling",
+  "gold_alt": "sibling of Remy's tutor",
+  "flipped": "sibling's tutor",
+  "id": "relational-t0-s0-0139-a",
+  "scene": "relational-t0-s0-0139",
+  "adapt": {
+   "origin": "generated",
+   "tier": "t0",
+   "knobs": {},
+   "change": "original rules (13 professional x 5 kinship relations)",
+   "gate": {
+    "rate": 0.8,
+    "pass": true
+   }
+  }
+ },
+ {
+  "scene_key": "Remy-Blake-Skyler-tutor-sibling",
+  "stimulus": "Remy's sibling is Blake. Blake's tutor is Skyler. In other words, Skyler is Remy's",
+  "names": [
+   "Remy",
+   "Blake",
+   "Skyler"
+  ],
+  "hop1": "sibling",
+  "hop2": "tutor",
+  "gold": "sibling's tutor",
+  "gold_alt": "tutor of Remy's sibling",
+  "flipped": "tutor's sibling",
+  "id": "relational-t0-s0-0139-b",
+  "scene": "relational-t0-s0-0139",
+  "adapt": {
+   "origin": "generated",
+   "tier": "t0",
+   "knobs": {},
+   "change": "original rules (13 professional x 5 kinship relations)",
+   "gate": {
+    "rate": 0.9,
+    "pass": true
+   }
+  }
+ },
+ {
+  "scene_key": "Sasha-Lee-Skyler-tutor-sibling",
+  "stimulus": "Sasha's tutor is Lee. Lee's sibling is Skyler. In other words, Skyler is Sasha's",
+  "names": [
+   "Sasha",
+   "Lee",
+   "Skyler"
+  ],
+  "hop1": "tutor",
+  "hop2": "sibling",
+  "gold": "tutor's sibling",
+  "gold_alt": "sibling of Sasha's tutor",
+  "flipped": "sibling's tutor",
+  "id": "relational-t0-s0-0184-a",
+  "scene": "relational-t0-s0-0184",
+  "adapt": {
+   "origin": "generated",
+   "tier": "t0",
+   "knobs": {},
+   "change": "original rules (13 professional x 5 kinship relations)",
+   "gate": {
+    "rate": 0.8,
+    "pass": true
+   }
+  }
+ },
+ {
+  "scene_key": "Sasha-Lee-Skyler-tutor-sibling",
+  "stimulus": "Sasha's sibling is Lee. Lee's tutor is Skyler. In other words, Skyler is Sasha's",
+  "names": [
+   "Sasha",
+   "Lee",
+   "Skyler"
+  ],
+  "hop1": "sibling",
+  "hop2": "tutor",
+  "gold": "sibling's tutor",
+  "gold_alt": "tutor of Sasha's sibling",
+  "flipped": "tutor's sibling",
+  "id": "relational-t0-s0-0184-b",
+  "scene": "relational-t0-s0-0184",
+  "adapt": {
+   "origin": "generated",
+   "tier": "t0",
+   "knobs": {},
+   "change": "original rules (13 professional x 5 kinship relations)",
+   "gate": {
+    "rate": 0.9,
+    "pass": true
+   }
+  }
+ },
+ {
+  "scene_key": "Frankie-Casey-Lee-neighbor-sibling",
+  "stimulus": "Frankie's neighbor is Casey. Casey's sibling is Lee. In other words, Lee is Frankie's",
+  "names": [
+   "Frankie",
+   "Casey",
+   "Lee"
+  ],
+  "hop1": "neighbor",
+  "hop2": "sibling",
+  "gold": "neighbor's sibling",
+  "gold_alt": "sibling of Frankie's neighbor",
+  "flipped": "sibling's neighbor",
+  "id": "relational-t1-s1000-0097-a",
+  "scene": "relational-t1-s1000-0097",
+  "adapt": {
+   "origin": "generated",
+   "tier": "t1",
+   "knobs": {
+    "professional": [
+     "boss",
+     "doctor",
+     "neighbor",
+     "landlord",
+     "coach",
+     "dentist"
+    ],
+    "kinship": [
+     "sibling",
+     "parent",
+     "child"
+    ]
+   },
+   "change": "the commonest relation words only (6 professional x sibling/parent/child)",
+   "gate": {
+    "rate": 0.8,
+    "pass": true
+   }
+  }
+ },
+ {
+  "scene_key": "Frankie-Casey-Lee-neighbor-sibling",
+  "stimulus": "Frankie's sibling is Casey. Casey's neighbor is Lee. In other words, Lee is Frankie's",
+  "names": [
+   "Frankie",
+   "Casey",
+   "Lee"
+  ],
+  "hop1": "sibling",
+  "hop2": "neighbor",
+  "gold": "sibling's neighbor",
+  "gold_alt": "neighbor of Frankie's sibling",
+  "flipped": "neighbor's sibling",
+  "id": "relational-t1-s1000-0097-b",
+  "scene": "relational-t1-s1000-0097",
+  "adapt": {
+   "origin": "generated",
+   "tier": "t1",
+   "knobs": {
+    "professional": [
+     "boss",
+     "doctor",
+     "neighbor",
+     "landlord",
+     "coach",
+     "dentist"
+    ],
+    "kinship": [
+     "sibling",
+     "parent",
+     "child"
+    ]
+   },
+   "change": "the commonest relation words only (6 professional x sibling/parent/child)",
+   "gate": {
+    "rate": 0.8,
+    "pass": true
+   }
+  }
+ },
+ {
   "scene_key": "Aubrey-Taylor-Indigo-landlord-sibling",
   "stimulus": "Aubrey's landlord is Taylor. Taylor's sibling is Indigo. In other words, Indigo is Aubrey's",
   "names": [

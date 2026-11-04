@@ -4,14 +4,30 @@
  "contract": {
   "multi_token": true,
   "include_target": false,
-  "conjunctive_units": true
+  "conjunctive_units": true,
+  "native_langs": [
+   "en",
+   "zh"
+  ]
  },
  "gate": "Qwen3.6-27B behavioral, chat-templated capability question (enable_thinking=False, answer stem): greedy-verified AND >=8/10 @ temp 0.7 (correct spelling). EVAL RENDER: plain prompt, final prompt token; conjunctive regex over correction (L2/en/zh) + language.",
- "frozen": "2026-09-10",
+ "frozen": "2026-11-01",
+ "version": 3,
+ "v2": "v2 (plan 0040, Camila 2026-10-30): the readout must NAME the passage's language and write the intermediate in English or the model's native language (contract.native_langs); every unit is required; the language unit holds language names only.",
+ "built_by": "scripts/build_multilingual_v2.py (curation: scripts/multilingual_v2_curation.py)",
+ "v1_bank": "evals/multilingual_typo/items.json",
+ "n_items": 100,
+ "supersedes": "items_v2.json",
+ "r4b_mc": {
+  "script": "scripts/build_r4b_mc_banks.py",
+  "rule": "round 4b (Camila r2 MC leakage standard, second pass): only the MC distractor lists change. Content lists: the four distractors scripts/r4b_mc_refine.py kept (r4b_distractors.json: Opus-revised in the gold's naming style, fitting the topic as stated, kept when neither the options-only nor the topic guesser solves the item in more than 1 of 5 draws). Language lists: the four other gold languages of this bank closest to the gold (options.r4_language_distractors). correction_native: a frozen mc block (gold = the unit's first English form). ",
+  "lists_changed": 200,
+  "n_over_gate": 5
+ },
  "adapt": {
   "model": "qwen3.5-0.8b",
   "hf_id": "Qwen/Qwen3.5-0.8B",
-  "frozen": "2026-10-24"
+  "frozen": "2026-11-03"
  },
  "items": [
   {
@@ -35,16 +51,28 @@
    ],
    "units": [
     {
-     "role": "correction",
+     "role": "correction_l2",
      "required": true,
      "multi_token": true,
      "forms": {
       "he": [
        "ארכיאולוגיה"
-      ],
+      ]
+     },
+     "match": [
+      "ארכיאולוגיה"
+     ]
+    },
+    {
+     "role": "correction_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
       "en": [
        "archaeological science",
-       "archaeology as a discipline"
+       "archaeology as a discipline",
+       "archaeology",
+       "archeology"
       ],
       "zh": [
        "考古学研究",
@@ -52,9 +80,10 @@
       ]
      },
      "match": [
-      "ארכיאולוגיה",
       "archaeological science",
       "archaeology as a discipline",
+      "archaeology",
+      "archeology",
       "考古学研究",
       "考古学科"
      ]
@@ -68,18 +97,26 @@
        "Hebrew"
       ],
       "zh": [
-       "希伯来语"
+       "希伯来语",
+       "希伯来文"
       ],
       "he": [
-       "ארכיאולוגיה",
-       "הארכיאולוגיה"
+       "עברית",
+       "בעברית",
+       "בשפה העברית",
+       "השפה העברית",
+       "עברית מודרנית"
       ]
      },
      "match": [
       "Hebrew",
       "希伯来语",
-      "ארכיאולוגיה",
-      "הארכיאולוגיה"
+      "希伯来文",
+      "עברית",
+      "בעברית",
+      "בשפה העברית",
+      "השפה העברית",
+      "עברית מודרנית"
      ]
     }
    ],
@@ -89,13 +126,17 @@
    "gate_variant": "chat",
    "probe_token_lens": {
     "units": {
-     "correction": {
+     "correction_l2": {
       "he": [
        6
-      ],
+      ]
+     },
+     "correction_native": {
       "en": [
        2,
-       5
+       5,
+       2,
+       2
       ],
       "zh": [
        2,
@@ -107,367 +148,49 @@
        1
       ],
       "zh": [
+       4,
        4
       ],
       "he": [
-       6,
-       6
+       3,
+       3,
+       5,
+       5,
+       7
       ]
      }
     },
     "target": 6
    },
+   "mc": {
+    "correction_native": {
+     "gold": "archaeological science",
+     "distractors": [
+      "forensic science",
+      "environmental science",
+      "computational linguistics",
+      "materials science"
+     ]
+    },
+    "language": {
+     "gold": "Hebrew",
+     "distractors": [
+      "Arabic",
+      "Turkish",
+      "Vietnamese",
+      "Polish"
+     ]
+    }
+   },
+   "mc_roles": [
+    "correction_native",
+    "language"
+   ],
    "id": "mlt-he-archaeology",
    "adapt": {
     "origin": "original",
     "gate": {
      "rate": 0.8888888888888888,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w100c1-mlt-ru-translator",
-   "lang": "ru",
-   "prompt": "На переговорах с японскими партнёрами каждую фразу нам пересказывал опытный переводчк",
-   "typo_word": "переводчк",
-   "target": "переводчик",
-   "target_alts": [],
-   "intermediates": [
-    "переводчик"
-   ],
-   "units": [
-    {
-     "role": "correction",
-     "required": true,
-     "multi_token": true,
-     "forms": {
-      "ru": [
-       "переводчик"
-      ],
-      "en": [
-       "professional translator",
-       "language interpreter"
-      ],
-      "zh": [
-       "翻译",
-       "口译员"
-      ]
-     },
-     "match": [
-      "переводчик",
-      "professional translator",
-      "language interpreter",
-      "翻译",
-      "口译员"
-     ]
-    },
-    {
-     "role": "language",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "Russian"
-      ],
-      "zh": [
-       "俄语"
-      ],
-      "ru": [
-       "переводчик",
-       "переводчика",
-       "переводчица"
-      ]
-     },
-     "match": [
-      "Russian",
-      "俄语",
-      "переводчик",
-      "переводчика",
-      "переводчица"
-     ]
-    }
-   ],
-   "subfamily": "typo",
-   "probe_token_lens": {
-    "units": {
-     "correction": {
-      "ru": [
-       2
-      ],
-      "en": [
-       2,
-       2
-      ],
-      "zh": [
-       1,
-       3
-      ]
-     },
-     "language": {
-      "en": [
-       1
-      ],
-      "zh": [
-       1
-      ],
-      "ru": [
-       2,
-       2,
-       3
-      ]
-     }
-    }
-   },
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for qwen3.5-0.8b: Use only Indonesian (id), Greek (el), Russian (ru) or Vietnamese (vi), the languages this model corrects best, and common everyday words that still take several tokens (compounds, derived words, multi-syllable Vietnamese terms). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word. Spread evenly over the four languages.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only Indonesian (id), Greek (el), Russian (ru) or Vietnamese (vi), the languages this model corrects best, and common everyday words that still take several tokens (compounds, derived words, multi-syllable Vietnamese terms). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word. Spread evenly over the four languages."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 100,
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w100c2-mlt-el-restaurant",
-   "lang": "el",
-   "prompt": "Για το δείπνο της επετείου τους έκλεισαν τραπέζι σε ένα ακριβό εστιατόρυο",
-   "typo_word": "εστιατόρυο",
-   "target": "εστιατόριο",
-   "target_alts": [],
-   "intermediates": [
-    "εστιατόριο"
-   ],
-   "units": [
-    {
-     "role": "correction",
-     "required": true,
-     "multi_token": true,
-     "forms": {
-      "el": [
-       "εστιατόριο"
-      ],
-      "en": [
-       "dining restaurant",
-       "eating establishment"
-      ],
-      "zh": [
-       "餐厅",
-       "饭馆"
-      ]
-     },
-     "match": [
-      "εστιατόριο",
-      "dining restaurant",
-      "eating establishment",
-      "餐厅",
-      "饭馆"
-     ]
-    },
-    {
-     "role": "language",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "Greek"
-      ],
-      "zh": [
-       "希腊语"
-      ],
-      "el": [
-       "εστιατόριο",
-       "εστιατόρια",
-       "εστιατορίου"
-      ]
-     },
-     "match": [
-      "Greek",
-      "希腊语",
-      "εστιατόριο",
-      "εστιατόρια",
-      "εστιατορίου"
-     ]
-    }
-   ],
-   "subfamily": "typo",
-   "probe_token_lens": {
-    "units": {
-     "correction": {
-      "el": [
-       5
-      ],
-      "en": [
-       2,
-       2
-      ],
-      "zh": [
-       1,
-       2
-      ]
-     },
-     "language": {
-      "en": [
-       1
-      ],
-      "zh": [
-       2
-      ],
-      "el": [
-       5,
-       5,
-       5
-      ]
-     }
-    }
-   },
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for qwen3.5-0.8b: Use only Indonesian (id), Greek (el), Russian (ru) or Vietnamese (vi), the languages this model corrects best, and common everyday words that still take several tokens (compounds, derived words, multi-syllable Vietnamese terms). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word. Spread evenly over the four languages.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only Indonesian (id), Greek (el), Russian (ru) or Vietnamese (vi), the languages this model corrects best, and common everyday words that still take several tokens (compounds, derived words, multi-syllable Vietnamese terms). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word. Spread evenly over the four languages."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 100,
-    "gate": {
-     "rate": 0.8,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w101c1-mlt-ru-teacher",
-   "lang": "ru",
-   "prompt": "Первого сентября первоклассников в школе встретила добрая и строгая учительнца",
-   "typo_word": "учительнца",
-   "target": "учительница",
-   "target_alts": [],
-   "intermediates": [
-    "учительница"
-   ],
-   "units": [
-    {
-     "role": "correction",
-     "required": true,
-     "multi_token": true,
-     "forms": {
-      "ru": [
-       "учительница"
-      ],
-      "en": [
-       "female teacher",
-       "school teacher"
-      ],
-      "zh": [
-       "女教师",
-       "老师"
-      ]
-     },
-     "match": [
-      "учительница",
-      "female teacher",
-      "school teacher",
-      "女教师",
-      "老师"
-     ]
-    },
-    {
-     "role": "language",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "Russian"
-      ],
-      "zh": [
-       "俄语"
-      ],
-      "ru": [
-       "учительница",
-       "учительницы",
-       "учитель"
-      ]
-     },
-     "match": [
-      "Russian",
-      "俄语",
-      "учительница",
-      "учительницы",
-      "учитель"
-     ]
-    }
-   ],
-   "subfamily": "typo",
-   "probe_token_lens": {
-    "units": {
-     "correction": {
-      "ru": [
-       2
-      ],
-      "en": [
-       2,
-       2
-      ],
-      "zh": [
-       2,
-       1
-      ]
-     },
-     "language": {
-      "en": [
-       1
-      ],
-      "zh": [
-       1
-      ],
-      "ru": [
-       2,
-       2,
-       1
-      ]
-     }
-    }
-   },
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for qwen3.5-0.8b: Use only Indonesian (id), Greek (el), Russian (ru) or Vietnamese (vi), the languages this model corrects best, and common everyday words that still take several tokens (compounds, derived words, multi-syllable Vietnamese terms). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word. Spread evenly over the four languages.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only Indonesian (id), Greek (el), Russian (ru) or Vietnamese (vi), the languages this model corrects best, and common everyday words that still take several tokens (compounds, derived words, multi-syllable Vietnamese terms). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word. Spread evenly over the four languages."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 101,
-    "steer": "- Last wave: 2/60 passed.\n- Rejected by lint before gating: 12x units: native correction is one token (uncreditable); 1x natural:correction 'kemerdekaan' is not creditable; 1x natural:correction 'pertandingan' is not creditable; 1x natural:correction 'kesehatan' is not creditable. Avoid these.\n- Failed (gold -> what the model wrote): perpustakaan -> model said 'perpustaka' (0/10); penerbangan -> model said 'penerbagan' (0/10); πανεπιστήμιο -> model said 'Πανεπιστήμιο' (1/10); φαρμακείο -> model said 'αυξήθηκε' (0/10); λεωφορείο -> model said 'λεωφωρείο' (0/10); θερμοκρασία -> model said 'αυγορά' (0/10); γενέθλια -> model said 'να' (0/10); велосипед -> model said 'сепеде' (0/10); фотоаппарат -> model said 'фотоапарат' (0/10); bệnh viện -> model said 'viẹn' (1/10); điện thoại -> model said 'thoạu' (1/10); máy giặt -> model said 'giặy' (2/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): переводчик; εστιατόριο",
-    "gate": {
-     "rate": 0.8,
      "pass": true
     }
    }

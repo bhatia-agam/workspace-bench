@@ -1,1 +1,1020 @@
-[]
+[
+ {
+  "id": "oa-police-thief-chase-ab",
+  "pair_id": "oa-police-thief-chase",
+  "tier": "A",
+  "direction": "ab",
+  "stereotypicality": "congruent",
+  "role_a": "police officer",
+  "role_b": "thief",
+  "action": "chased",
+  "names": {
+   "a": "Marcus",
+   "b": "Dylan"
+  },
+  "stimulus": "Dylan shoved the register's cash drawer contents into his hoodie and bolted out of the corner shop, the alarm shrieking behind him. Marcus, whose badge and shoulder radio marked him as the one on duty that block, dropped his coffee and chased him for three streets, calling in the direction of flight as he ran. He caught up near the loading bay and had the cuffs on before backup arrived.",
+  "read_position": "end_of_stimulus",
+  "gold_label": "the police officer chased the thief",
+  "contrast_label": "the thief chased the police officer",
+  "asked_question": "In one sentence, state who did what to whom in this scene — identify each person by their role or relationship (not their name), and be explicit about the direction.",
+  "mc_options": [
+   "the police officer chased the thief",
+   "the thief chased the police officer"
+  ],
+  "blocklist": {
+   "roles": [
+    "police",
+    "officer",
+    "cop",
+    "policeman",
+    "policewoman",
+    "detective",
+    "patrol",
+    "thief",
+    "thieves",
+    "robber",
+    "burglar",
+    "criminal",
+    "crook",
+    "shoplifter"
+   ],
+   "action": []
+  },
+  "generator": "claude-opus-5",
+  "qa": {
+   "asked_open": "pass",
+   "continuation": "pass",
+   "continuation_sent1": "clean"
+  },
+  "adapt": {
+   "origin": "original",
+   "gate": {
+    "rate": 1.0,
+    "pass": true
+   }
+  }
+ },
+ {
+  "id": "oa-police-thief-chase-ba",
+  "pair_id": "oa-police-thief-chase",
+  "tier": "A",
+  "direction": "ba",
+  "stereotypicality": "incongruent",
+  "role_a": "police officer",
+  "role_b": "thief",
+  "action": "chased",
+  "names": {
+   "a": "Marcus",
+   "b": "Dmitri"
+  },
+  "stimulus": "Marcus, in a pressed navy uniform with a metal shield pinned to his chest, had just radioed in the smashed jewelry case when the man who had emptied it turned on him with a crowbar. Wristwatches spilled from Dmitri's coat pockets as he swung; Marcus lost his footing, dropped the radio, and bolted toward the alley. Dmitri sprinted after him, closing the gap block after block, shouting for him to stop. Marcus did not slow down until he reached the steps of the precinct house, Dmitri's footsteps still pounding somewhere behind him.",
+  "read_position": "end_of_stimulus",
+  "gold_label": "the thief chased the police officer",
+  "contrast_label": "the police officer chased the thief",
+  "asked_question": "In one sentence, state who did what to whom in this scene — identify each person by their role or relationship (not their name), and be explicit about the direction.",
+  "mc_options": [
+   "the thief chased the police officer",
+   "the police officer chased the thief"
+  ],
+  "blocklist": {
+   "roles": [
+    "police",
+    "officer",
+    "cop",
+    "policeman",
+    "policewoman",
+    "detective",
+    "patrol",
+    "thief",
+    "thieves",
+    "robber",
+    "burglar",
+    "criminal",
+    "crook",
+    "shoplifter"
+   ],
+   "action": []
+  },
+  "generator": "claude-opus-5",
+  "qa": {
+   "asked_open": "pass",
+   "continuation": "pass",
+   "continuation_sent1": "clean"
+  },
+  "adapt": {
+   "origin": "original",
+   "gate": {
+    "rate": 1.0,
+    "pass": true
+   }
+  }
+ },
+ {
+  "id": "oa-teacher-student-scold-ab",
+  "pair_id": "oa-teacher-student-scold",
+  "tier": "A",
+  "direction": "ab",
+  "stereotypicality": "congruent",
+  "role_a": "teacher",
+  "role_b": "student",
+  "action": "scolded",
+  "names": {
+   "a": "Margaret",
+   "b": "Dylan"
+  },
+  "stimulus": "Margaret set down the red pen she had been using to mark the stack of quizzes and walked to the back row, where Dylan was hunched over a desk with his backpack still on. She scolded him for the third time that week — first for the missing homework, then for the phone hidden under his notebook, her voice sharp enough that the rest of the room went silent. He stared at his shoes and said nothing while she reminded him whose lesson plan he was interrupting and that she expected better by Friday. Only after she returned to the whiteboard did the low murmur of the room start up again.",
+  "read_position": "end_of_stimulus",
+  "gold_label": "the teacher scolded the student",
+  "contrast_label": "the student scolded the teacher",
+  "asked_question": "In one sentence, state who did what to whom in this scene — identify each person by their role or relationship (not their name), and be explicit about the direction.",
+  "mc_options": [
+   "the teacher scolded the student",
+   "the student scolded the teacher"
+  ],
+  "blocklist": {
+   "roles": [
+    "teacher",
+    "professor",
+    "instructor",
+    "tutor",
+    "student",
+    "pupil",
+    "schoolboy",
+    "schoolgirl"
+   ],
+   "action": []
+  },
+  "generator": "claude-opus-5",
+  "qa": {
+   "asked_open": "pass",
+   "continuation": "pass",
+   "continuation_sent1": "clean"
+  },
+  "adapt": {
+   "origin": "original",
+   "gate": {
+    "rate": 1.0,
+    "pass": true
+   }
+  }
+ },
+ {
+  "id": "oa-teacher-student-scold-ba",
+  "pair_id": "oa-teacher-student-scold",
+  "tier": "A",
+  "direction": "ba",
+  "stereotypicality": "incongruent",
+  "role_a": "teacher",
+  "role_b": "student",
+  "action": "scolded",
+  "names": {
+   "a": "Daniel",
+   "b": "Maya"
+  },
+  "stimulus": "Maya waited until the last of her classmates had filed out, then walked up from the third row still holding her returned essay. She scolded Daniel for the red comments he had written across it, saying that mocking a fifteen-year-old's handwriting in front of everyone was beneath someone who set the grades. He listened from behind the desk, one hand on the attendance roster, and did not interrupt her. He apologized, then quietly erased the homework assignment he had chalked up that morning.",
+  "read_position": "end_of_stimulus",
+  "gold_label": "the student scolded the teacher",
+  "contrast_label": "the teacher scolded the student",
+  "asked_question": "In one sentence, state who did what to whom in this scene — identify each person by their role or relationship (not their name), and be explicit about the direction.",
+  "mc_options": [
+   "the student scolded the teacher",
+   "the teacher scolded the student"
+  ],
+  "blocklist": {
+   "roles": [
+    "teacher",
+    "professor",
+    "instructor",
+    "tutor",
+    "student",
+    "pupil",
+    "schoolboy",
+    "schoolgirl"
+   ],
+   "action": []
+  },
+  "generator": "claude-opus-5",
+  "qa": {
+   "asked_open": "pass",
+   "continuation": "pass",
+   "continuation_sent1": "clean"
+  },
+  "adapt": {
+   "origin": "original",
+   "gate": {
+    "rate": 0.7142857142857143,
+    "pass": true
+   }
+  }
+ },
+ {
+  "id": "oa-lawyer-witness-interrogate-ab",
+  "pair_id": "oa-lawyer-witness-interrogate",
+  "tier": "A",
+  "direction": "ab",
+  "stereotypicality": "congruent",
+  "role_a": "lawyer",
+  "role_b": "witness",
+  "action": "interrogated",
+  "names": {
+   "a": "Marcus",
+   "b": "Elena"
+  },
+  "stimulus": "Marcus straightened the cuffs of his charcoal suit, checked the notes on his legal pad, and turned toward the raised wooden box where Elena sat, her hand still warm from the oath she had just sworn. For twenty minutes he pressed her about what she had seen from her kitchen window that night, cutting off each hesitant answer with a sharper question about the angle of the streetlight and the color of the coat. Elena could only grip the rail and reply, while the judge twice reminded him to let her finish. He had been retained by the defendant a year earlier and had drilled these questions for weeks; she had simply been sent a summons.",
+  "read_position": "end_of_stimulus",
+  "gold_label": "the lawyer interrogated the witness",
+  "contrast_label": "the witness interrogated the lawyer",
+  "asked_question": "In one sentence, state who did what to whom in this scene — identify each person by their role or relationship (not their name), and be explicit about the direction.",
+  "mc_options": [
+   "the lawyer interrogated the witness",
+   "the witness interrogated the lawyer"
+  ],
+  "blocklist": {
+   "roles": [
+    "lawyer",
+    "attorney",
+    "counsel",
+    "prosecutor",
+    "witness"
+   ],
+   "action": []
+  },
+  "generator": "claude-opus-5",
+  "qa": {
+   "asked_open": "pass",
+   "continuation": "pass",
+   "continuation_sent1": "clean"
+  },
+  "adapt": {
+   "origin": "original",
+   "gate": {
+    "rate": 0.5714285714285714,
+    "pass": true
+   }
+  }
+ },
+ {
+  "id": "oa-lawyer-witness-interrogate-ba",
+  "pair_id": "oa-lawyer-witness-interrogate",
+  "tier": "A",
+  "direction": "ba",
+  "stereotypicality": "incongruent",
+  "role_a": "lawyer",
+  "role_b": "witness",
+  "action": "interrogated",
+  "names": {
+   "a": "Miriam",
+   "b": "Dale"
+  },
+  "stimulus": "During the recess, Dale — who had been sworn in that morning to describe the collision he had watched from his balcony — cornered Miriam in the corridor outside Courtroom 4, where she had been hired to defend the driver and would deliver the closing argument. For ten minutes he interrogated her: what her hourly fee was, whether she actually believed the driver, why she had twisted his account of the traffic light. Miriam gave short, guarded answers, glanced repeatedly at the clock, and did not put a single question to him in return.",
+  "read_position": "end_of_stimulus",
+  "gold_label": "the witness interrogated the lawyer",
+  "contrast_label": "the lawyer interrogated the witness",
+  "asked_question": "In one sentence, state who did what to whom in this scene — identify each person by their role or relationship (not their name), and be explicit about the direction.",
+  "mc_options": [
+   "the witness interrogated the lawyer",
+   "the lawyer interrogated the witness"
+  ],
+  "blocklist": {
+   "roles": [
+    "lawyer",
+    "attorney",
+    "counsel",
+    "prosecutor",
+    "witness"
+   ],
+   "action": []
+  },
+  "generator": "claude-opus-5",
+  "qa": {
+   "asked_open": "pass",
+   "continuation": "pass",
+   "continuation_sent1": "clean"
+  },
+  "adapt": {
+   "origin": "original",
+   "gate": {
+    "rate": 0.8,
+    "pass": true
+   }
+  }
+ },
+ {
+  "id": "oa-guard-visitor-search-ab",
+  "pair_id": "oa-guard-visitor-search",
+  "tier": "A",
+  "direction": "ab",
+  "stereotypicality": "congruent",
+  "role_a": "security guard",
+  "role_b": "visitor",
+  "action": "searched",
+  "names": {
+   "a": "Darnell",
+   "b": "Priya"
+  },
+  "stimulus": "Priya signed the clipboard at the lobby desk and clipped on a paper badge printed with the number of the office she was headed to on the fourth floor. Darnell, in the navy uniform issued to him by the building, set her tote on the counter and went through it pocket by pocket, then ran the handheld wand down her sleeves and around her ankles. Nothing turned up but a phone charger and a paperback. He zipped the bag shut, handed it back, and returned to his stool by the turnstiles.",
+  "read_position": "end_of_stimulus",
+  "gold_label": "the security guard searched the visitor",
+  "contrast_label": "the visitor searched the security guard",
+  "asked_question": "In one sentence, state who did what to whom in this scene — identify each person by their role or relationship (not their name), and be explicit about the direction.",
+  "mc_options": [
+   "the security guard searched the visitor",
+   "the visitor searched the security guard"
+  ],
+  "blocklist": {
+   "roles": [
+    "guard",
+    "security",
+    "visitor",
+    "guest"
+   ],
+   "action": []
+  },
+  "generator": "claude-opus-5",
+  "qa": {
+   "asked_open": "pass",
+   "continuation": "pass",
+   "continuation_sent1": "clean"
+  },
+  "adapt": {
+   "origin": "original",
+   "gate": {
+    "rate": 1.0,
+    "pass": true
+   }
+  }
+ },
+ {
+  "id": "oa-guard-visitor-search-ba",
+  "pair_id": "oa-guard-visitor-search",
+  "tier": "A",
+  "direction": "ba",
+  "stereotypicality": "incongruent",
+  "role_a": "security guard",
+  "role_b": "visitor",
+  "action": "searched",
+  "names": {
+   "a": "Marcus",
+   "b": "Priya"
+  },
+  "stimulus": "Marcus had spent the whole morning behind the lobby desk in his navy uniform, issuing clip-on passes and buzzing people through the turnstile. When the master key ring went missing, he stood up, raised both arms, and held still while Priya \\u\\u2014 who had signed the sheet at 1:45 for a fourth-floor meeting and was still wearing the paper pass he'd handed her \\u2014 patted down each of his uniform pockets, turned out the cuffs of his jacket, and finally worked the ring loose from behind his belt pouch. She set it on the counter and wiped her palms on a tissue from her bag. Marcus clipped the ring back onto his belt and sat down again as the elevator chimed.",
+  "read_position": "end_of_stimulus",
+  "gold_label": "the visitor searched the security guard",
+  "contrast_label": "the security guard searched the visitor",
+  "asked_question": "In one sentence, state who did what to whom in this scene — identify each person by their role or relationship (not their name), and be explicit about the direction.",
+  "mc_options": [
+   "the visitor searched the security guard",
+   "the security guard searched the visitor"
+  ],
+  "blocklist": {
+   "roles": [
+    "guard",
+    "security",
+    "visitor",
+    "guest"
+   ],
+   "action": []
+  },
+  "generator": "claude-opus-5",
+  "qa": {
+   "asked_open": "pass",
+   "continuation": "pass",
+   "continuation_sent1": "clean"
+  },
+  "adapt": {
+   "origin": "original",
+   "gate": {
+    "rate": 0.8,
+    "pass": true
+   }
+  }
+ },
+ {
+  "id": "oa-journalist-politician-interview-ab",
+  "pair_id": "oa-journalist-politician-interview",
+  "tier": "A",
+  "direction": "ab",
+  "stereotypicality": "congruent",
+  "role_a": "journalist",
+  "role_b": "politician",
+  "action": "interviewed",
+  "names": {
+   "a": "Maya",
+   "b": "Daniel"
+  },
+  "stimulus": "Maya set her recorder on the desk, flipped to a page of prepared questions, and worked through them one by one while Daniel, who had held the district's assembly seat for six years, answered each in turn. She pressed him twice on the water bill vote, noted his exact wording, and thanked him when her list ran out. The recorder went back into her bag, and the office door clicked shut behind her. Two weeks later she was three states away, standing in a hangar in the rain, waiting on a delayed cargo flight for an unrelated story.",
+  "read_position": "end_of_stimulus",
+  "gold_label": "the journalist interviewed the politician",
+  "contrast_label": "the politician interviewed the journalist",
+  "asked_question": "In one sentence, state who did what to whom in this scene — identify each person by their role or relationship (not their name), and be explicit about the direction.",
+  "mc_options": [
+   "the journalist interviewed the politician",
+   "the politician interviewed the journalist"
+  ],
+  "blocklist": {
+   "roles": [
+    "journalist",
+    "reporter",
+    "correspondent",
+    "politician",
+    "senator",
+    "mayor",
+    "candidate",
+    "councilman"
+   ],
+   "action": []
+  },
+  "generator": "claude-opus-5",
+  "qa": {
+   "asked_open": "pass",
+   "continuation": "pass",
+   "continuation_sent1": "leak"
+  },
+  "adapt": {
+   "origin": "original",
+   "gate": {
+    "rate": 1.0,
+    "pass": true
+   }
+  }
+ },
+ {
+  "id": "oa-journalist-politician-interview-ba",
+  "pair_id": "oa-journalist-politician-interview",
+  "tier": "A",
+  "direction": "ba",
+  "stereotypicality": "incongruent",
+  "role_a": "journalist",
+  "role_b": "politician",
+  "action": "interviewed",
+  "names": {
+   "a": "Marcus",
+   "b": "Elena"
+  },
+  "stimulus": "Elena, who had won a third term representing the harbor district and still chaired the transit committee, set up a ring light in her district office for a new episode of her constituent podcast. Marcus, whose byline had run above the paper's Sunday city column for eleven years and whose press badge was still clipped to his jacket, sat down across the desk and let her set the pace. She worked down her list of interview questions about how the column got written, pressing him on his sourcing and on the paper's endorsement process, and he answered each one while she scribbled follow-ups in the margin. Afterward an intern uploaded the audio file, and Elena rinsed the two coffee mugs in the office sink.",
+  "read_position": "end_of_stimulus",
+  "gold_label": "the politician interviewed the journalist",
+  "contrast_label": "the journalist interviewed the politician",
+  "asked_question": "In one sentence, state who did what to whom in this scene — identify each person by their role or relationship (not their name), and be explicit about the direction.",
+  "mc_options": [
+   "the politician interviewed the journalist",
+   "the journalist interviewed the politician"
+  ],
+  "blocklist": {
+   "roles": [
+    "journalist",
+    "reporter",
+    "correspondent",
+    "politician",
+    "senator",
+    "mayor",
+    "candidate",
+    "councilman"
+   ],
+   "action": []
+  },
+  "generator": "claude-opus-5",
+  "qa": {
+   "asked_open": "pass",
+   "continuation": "pass",
+   "continuation_sent1": "clean"
+  },
+  "adapt": {
+   "origin": "original",
+   "gate": {
+    "rate": 0.875,
+    "pass": true
+   }
+  }
+ },
+ {
+  "id": "oa-babysitter-toddler-feed-ab",
+  "pair_id": "oa-babysitter-toddler-feed",
+  "tier": "A",
+  "direction": "ab",
+  "stereotypicality": "congruent",
+  "role_a": "babysitter",
+  "role_b": "toddler",
+  "action": "fed",
+  "names": {
+   "a": "Maya",
+   "b": "Otto"
+  },
+  "stimulus": "Maya arrived at seven with her homework in her backpack, and the parents left the phone list on the fridge before driving off. She warmed the mashed sweet potato, strapped Otto into the high chair, and guided each spoonful past his two new teeth until the bowl was empty. Afterward she wiped his chin, carried him to the crib, and sat down at the kitchen table to start her chemistry reading.",
+  "read_position": "end_of_stimulus",
+  "gold_label": "the babysitter fed the toddler",
+  "contrast_label": "the toddler fed the babysitter",
+  "asked_question": "In one sentence, state who did what to whom in this scene — identify each person by their role or relationship (not their name), and be explicit about the direction.",
+  "mc_options": [
+   "the babysitter fed the toddler",
+   "the toddler fed the babysitter"
+  ],
+  "blocklist": {
+   "roles": [
+    "babysitter",
+    "sitter",
+    "nanny",
+    "caregiver",
+    "toddler",
+    "baby",
+    "infant",
+    "child"
+   ],
+   "action": []
+  },
+  "generator": "claude-opus-5",
+  "qa": {
+   "asked_open": "pass",
+   "continuation": "pass",
+   "continuation_sent1": "clean"
+  },
+  "adapt": {
+   "origin": "original",
+   "gate": {
+    "rate": 1.0,
+    "pass": true
+   }
+  }
+ },
+ {
+  "id": "oa-babysitter-toddler-feed-ba",
+  "pair_id": "oa-babysitter-toddler-feed",
+  "tier": "A",
+  "direction": "ba",
+  "stereotypicality": "incongruent",
+  "role_a": "babysitter",
+  "role_b": "toddler",
+  "action": "fed",
+  "names": {
+   "a": "Mara",
+   "b": "Eli"
+  },
+  "stimulus": "Mara, the ninth-grader hired for the evening while the parents were at their dinner reservation, knelt beside the high chair with her mouth open on request. Eli, barely two, gripped a soggy banana slice in his fist and pushed it past her lips, then patted her cheek and reached for another. She chewed and swallowed every piece he delivered, one after another, while he narrated the whole business with a single happy syllable. By the time the tray was bare she had eaten most of his snack, and the kitchen clock ticked over to seven.",
+  "read_position": "end_of_stimulus",
+  "gold_label": "the toddler fed the babysitter",
+  "contrast_label": "the babysitter fed the toddler",
+  "asked_question": "In one sentence, state who did what to whom in this scene — identify each person by their role or relationship (not their name), and be explicit about the direction.",
+  "mc_options": [
+   "the toddler fed the babysitter",
+   "the babysitter fed the toddler"
+  ],
+  "blocklist": {
+   "roles": [
+    "babysitter",
+    "sitter",
+    "nanny",
+    "caregiver",
+    "toddler",
+    "baby",
+    "infant",
+    "child"
+   ],
+   "action": []
+  },
+  "generator": "claude-opus-5",
+  "qa": {
+   "asked_open": "pass",
+   "continuation": "pass",
+   "continuation_sent1": "clean"
+  },
+  "adapt": {
+   "origin": "original",
+   "gate": {
+    "rate": 0.9,
+    "pass": true
+   }
+  }
+ },
+ {
+  "id": "oa-bouncer-patron-eject-ab",
+  "pair_id": "oa-bouncer-patron-eject",
+  "tier": "A",
+  "direction": "ab",
+  "stereotypicality": "congruent",
+  "role_a": "bouncer",
+  "role_b": "patron",
+  "action": "ejected",
+  "names": {
+   "a": "Marcus",
+   "b": "Devin"
+  },
+  "stimulus": "Marcus stood at the velvet rope with a clicker in one hand and an earpiece looped behind his ear, having worked that door for six years. When Devin, who had paid the ten-dollar cover an hour earlier, knocked over a tray of drinks and started shouting at the bartender, Marcus took him by the elbow, walked him out through the entrance, and set him down on the sidewalk with the flat instruction that his night there was over. Marcus then stepped back inside, unhooked the rope to let two waiting people through, and reset his count on the clicker. Devin zipped his jacket and started up the block toward the bus stop.",
+  "read_position": "end_of_stimulus",
+  "gold_label": "the bouncer ejected the patron",
+  "contrast_label": "the patron ejected the bouncer",
+  "asked_question": "In one sentence, state who did what to whom in this scene — identify each person by their role or relationship (not their name), and be explicit about the direction.",
+  "mc_options": [
+   "the bouncer ejected the patron",
+   "the patron ejected the bouncer"
+  ],
+  "blocklist": {
+   "roles": [
+    "bouncer",
+    "doorman",
+    "security",
+    "patron",
+    "customer",
+    "clubgoer",
+    "guest"
+   ],
+   "action": []
+  },
+  "generator": "claude-opus-5",
+  "qa": {
+   "asked_open": "pass",
+   "continuation": "pass",
+   "continuation_sent1": "clean"
+  },
+  "adapt": {
+   "origin": "original",
+   "gate": {
+    "rate": 1.0,
+    "pass": true
+   }
+  }
+ },
+ {
+  "id": "oa-bouncer-patron-eject-ba",
+  "pair_id": "oa-bouncer-patron-eject",
+  "tier": "A",
+  "direction": "ba",
+  "stereotypicality": "incongruent",
+  "role_a": "bouncer",
+  "role_b": "patron",
+  "action": "ejected",
+  "names": {
+   "a": "Russell",
+   "b": "Devon"
+  },
+  "stimulus": "Devon had paid the ten-dollar cover at eleven and had been nursing the same warm beer at the end of the bar ever since. When Russell, the broad-shouldered man in the black windbreaker who had been working the entrance with an earpiece and an ID scanner all night, started shoving people away from the stage, Devon set down his glass, got both hands under Russell's arms, and walked him backward through the front doors onto the wet sidewalk. He pulled the door shut, dropped the latch, and went back to his stool. The bartender slid him a clean napkin, and the jukebox switched over to something slower.",
+  "read_position": "end_of_stimulus",
+  "gold_label": "the patron ejected the bouncer",
+  "contrast_label": "the bouncer ejected the patron",
+  "asked_question": "In one sentence, state who did what to whom in this scene — identify each person by their role or relationship (not their name), and be explicit about the direction.",
+  "mc_options": [
+   "the patron ejected the bouncer",
+   "the bouncer ejected the patron"
+  ],
+  "blocklist": {
+   "roles": [
+    "bouncer",
+    "doorman",
+    "security",
+    "patron",
+    "customer",
+    "clubgoer",
+    "guest"
+   ],
+   "action": []
+  },
+  "generator": "claude-opus-5",
+  "qa": {
+   "asked_open": "pass",
+   "continuation": "pass",
+   "continuation_sent1": "clean"
+  },
+  "adapt": {
+   "origin": "original",
+   "gate": {
+    "rate": 0.125,
+    "pass": true
+   }
+  }
+ },
+ {
+  "id": "oa-child-grandparent-hug-ab",
+  "pair_id": "oa-child-grandparent-hug",
+  "tier": "A",
+  "direction": "ab",
+  "stereotypicality": "neutral",
+  "role_a": "child",
+  "role_b": "grandparent",
+  "action": "hugged",
+  "names": {
+   "a": "Mia",
+   "b": "Ruth"
+  },
+  "stimulus": "Mia, who had turned seven in March, dropped her backpack in the hall and ran the length of the porch to Ruth, her father's mother, who was sitting in the wicker chair with the crossword. Ruth's hands stayed where they were, one on her cane and one around a full mug of tea, so Mia just pressed her face into the old cardigan and squeezed with both arms until the buttons left marks on her cheek. Then she let go and went to find the cat. Ruth set the mug down on the rail and noted that the tea had gone cold anyway.",
+  "read_position": "end_of_stimulus",
+  "gold_label": "the child hugged the grandparent",
+  "contrast_label": "the grandparent hugged the child",
+  "asked_question": "In one sentence, state who did what to whom in this scene — identify each person by their role or relationship (not their name), and be explicit about the direction.",
+  "mc_options": [
+   "the child hugged the grandparent",
+   "the grandparent hugged the child"
+  ],
+  "blocklist": {
+   "roles": [
+    "child",
+    "kid",
+    "boy",
+    "girl",
+    "grandson",
+    "granddaughter",
+    "grandparent",
+    "grandmother",
+    "grandfather",
+    "grandma",
+    "grandpa"
+   ],
+   "action": []
+  },
+  "generator": "claude-opus-5",
+  "qa": {
+   "asked_open": "pass",
+   "continuation": "pass",
+   "continuation_sent1": "clean"
+  },
+  "adapt": {
+   "origin": "original",
+   "gate": {
+    "rate": 0.42857142857142855,
+    "pass": true
+   }
+  }
+ },
+ {
+  "id": "oa-child-grandparent-hug-ba",
+  "pair_id": "oa-child-grandparent-hug",
+  "tier": "A",
+  "direction": "ba",
+  "stereotypicality": "neutral",
+  "role_a": "child",
+  "role_b": "grandparent",
+  "action": "hugged",
+  "names": {
+   "a": "Eli",
+   "b": "Marta"
+  },
+  "stimulus": "Marta set down her knitting when her son's seven-year-old came in from the yard, and she reached out and folded both arms around him, one hand patting his back the way she used to do with his father. Eli stood still through it, arms hanging at his sides because he was holding a dripping ice pop in one fist and didn't want it on her sweater. She let go, smoothed his hair, and went back to her chair. The porch fan clicked around twice before either of them said anything about dinner.",
+  "read_position": "end_of_stimulus",
+  "gold_label": "the grandparent hugged the child",
+  "contrast_label": "the child hugged the grandparent",
+  "asked_question": "In one sentence, state who did what to whom in this scene — identify each person by their role or relationship (not their name), and be explicit about the direction.",
+  "mc_options": [
+   "the grandparent hugged the child",
+   "the child hugged the grandparent"
+  ],
+  "blocklist": {
+   "roles": [
+    "child",
+    "kid",
+    "boy",
+    "girl",
+    "grandson",
+    "granddaughter",
+    "grandparent",
+    "grandmother",
+    "grandfather",
+    "grandma",
+    "grandpa"
+   ],
+   "action": []
+  },
+  "generator": "claude-opus-5",
+  "qa": {
+   "asked_open": "pass",
+   "continuation": "pass",
+   "continuation_sent1": "clean"
+  },
+  "adapt": {
+   "origin": "original",
+   "gate": {
+    "rate": 0.875,
+    "pass": true
+   }
+  }
+ },
+ {
+  "id": "oa-sister-brother-tease-ab",
+  "pair_id": "oa-sister-brother-tease",
+  "tier": "B",
+  "direction": "ab",
+  "stereotypicality": "neutral",
+  "role_a": "sister",
+  "role_b": "brother",
+  "action": "teased",
+  "names": {
+   "a": "Nora",
+   "b": "Owen"
+  },
+  "stimulus": "Nora and Owen had shared the same parents, the same last name, and the same cramped bedroom for eleven years. When Owen came home with a lopsided haircut, Nora invented a singsong rhyme about it and chirped it in a high voice every time he passed the doorway, snickering at his reddening ears. He stopped answering her after the fourth time, and she let the rhyme drop only when their father called them down to dinner. She set out the forks with the tune still stuck in her head.",
+  "read_position": "end_of_stimulus",
+  "gold_label": "the sister teased the brother",
+  "contrast_label": "the brother teased the sister",
+  "asked_question": "In one sentence, state who did what to whom in this scene — identify each person by their role or relationship (not their name), and be explicit about the direction.",
+  "mc_options": [
+   "the sister teased the brother",
+   "the brother teased the sister"
+  ],
+  "blocklist": {
+   "roles": [
+    "sister",
+    "sis",
+    "brother",
+    "bro"
+   ],
+   "action": [
+    "tease",
+    "teased",
+    "teases",
+    "teasing",
+    "taunt",
+    "mock",
+    "mocked",
+    "ridicule",
+    "make fun"
+   ]
+  },
+  "generator": "claude-opus-5",
+  "qa": {
+   "asked_open": "pass",
+   "continuation": "pass",
+   "continuation_sent1": "clean"
+  },
+  "adapt": {
+   "origin": "original",
+   "gate": {
+    "rate": 0.75,
+    "pass": true
+   }
+  }
+ },
+ {
+  "id": "oa-sister-brother-tease-ba",
+  "pair_id": "oa-sister-brother-tease",
+  "tier": "B",
+  "direction": "ba",
+  "stereotypicality": "neutral",
+  "role_a": "sister",
+  "role_b": "brother",
+  "action": "teased",
+  "names": {
+   "a": "Nora",
+   "b": "Miles"
+  },
+  "stimulus": "At dinner Nora said \"expresso\" while asking for the milk, and Miles caught it at once. For the rest of the meal, every time she reached for anything, he repeated the word back to her in a high singsong, stretching the extra syllable out, ignoring their father's third request to leave his younger sibling alone. Nora ate the rest of her potatoes without looking up. Afterward Miles carried the plates to the sink, humming the same three notes, and the kitchen light went off a little after nine.",
+  "read_position": "end_of_stimulus",
+  "gold_label": "the brother teased the sister",
+  "contrast_label": "the sister teased the brother",
+  "asked_question": "In one sentence, state who did what to whom in this scene — identify each person by their role or relationship (not their name), and be explicit about the direction.",
+  "mc_options": [
+   "the brother teased the sister",
+   "the sister teased the brother"
+  ],
+  "blocklist": {
+   "roles": [
+    "sister",
+    "sis",
+    "brother",
+    "bro"
+   ],
+   "action": [
+    "tease",
+    "teased",
+    "teases",
+    "teasing",
+    "taunt",
+    "mock",
+    "mocked",
+    "ridicule",
+    "make fun"
+   ]
+  },
+  "generator": "claude-opus-5",
+  "qa": {
+   "asked_open": "pass",
+   "continuation": "pass",
+   "continuation_sent1": "clean"
+  },
+  "adapt": {
+   "origin": "original",
+   "gate": {
+    "rate": 0.0,
+    "pass": true
+   }
+  }
+ },
+ {
+  "id": "oa-critic-musician-mock-ab",
+  "pair_id": "oa-critic-musician-mock",
+  "tier": "B",
+  "direction": "ab",
+  "stereotypicality": "congruent",
+  "role_a": "critic",
+  "role_b": "musician",
+  "action": "mocked",
+  "names": {
+   "a": "Harold",
+   "b": "Nadia"
+  },
+  "stimulus": "Harold filed his concert column just before midnight, spending three paragraphs on the way Nadia had swayed over her cello, calling her tremolo the sound of a rusted gate practicing for retirement. At the newspaper's coffee station the next morning he hunched over an imaginary instrument, wobbled his chin for whoever walked past, and repeated his own line about the gate until the copy desk laughed. Nadia read the column in her hotel room, laid the page face-down on the nightstand, and went down to breakfast. The dining room was serving the eggs cold again.",
+  "read_position": "end_of_stimulus",
+  "gold_label": "the critic mocked the musician",
+  "contrast_label": "the musician mocked the critic",
+  "asked_question": "In one sentence, state who did what to whom in this scene — identify each person by their role or relationship (not their name), and be explicit about the direction.",
+  "mc_options": [
+   "the critic mocked the musician",
+   "the musician mocked the critic"
+  ],
+  "blocklist": {
+   "roles": [
+    "critic",
+    "reviewer",
+    "musician",
+    "pianist",
+    "violinist",
+    "singer",
+    "guitarist"
+   ],
+   "action": [
+    "mock",
+    "mocked",
+    "mocks",
+    "mocking",
+    "mockery",
+    "ridicule",
+    "ridiculed",
+    "sneer",
+    "sneered",
+    "deride",
+    "derided",
+    "scoff"
+   ]
+  },
+  "generator": "claude-opus-5",
+  "qa": {
+   "asked_open": "pass",
+   "continuation": "pass",
+   "continuation_sent1": "clean"
+  },
+  "adapt": {
+   "origin": "original",
+   "gate": {
+    "rate": 0.8888888888888888,
+    "pass": true
+   }
+  }
+ },
+ {
+  "id": "oa-critic-musician-mock-ba",
+  "pair_id": "oa-critic-musician-mock",
+  "tier": "B",
+  "direction": "ba",
+  "stereotypicality": "incongruent",
+  "role_a": "critic",
+  "role_b": "musician",
+  "action": "mocked",
+  "names": {
+   "a": "Delia",
+   "b": "Marcus"
+  },
+  "stimulus": "Delia had spent Thursday's arts page calling the second movement \"a wounded animal loose in a stairwell.\" At the reception afterward, Marcus set his cello case against the wall, pushed a pair of imaginary spectacles up his nose, and recited the line aloud in a fluttering, adenoidal drawl, pausing to scribble on a cocktail napkin exactly the way she hunched over her notebook in the dark of row F. The circle of guests laughed; Delia stirred her drink and said nothing. A caterer refilled the ice bucket and began clearing the far table.",
+  "read_position": "end_of_stimulus",
+  "gold_label": "the musician mocked the critic",
+  "contrast_label": "the critic mocked the musician",
+  "asked_question": "In one sentence, state who did what to whom in this scene — identify each person by their role or relationship (not their name), and be explicit about the direction.",
+  "mc_options": [
+   "the musician mocked the critic",
+   "the critic mocked the musician"
+  ],
+  "blocklist": {
+   "roles": [
+    "critic",
+    "reviewer",
+    "musician",
+    "pianist",
+    "violinist",
+    "singer",
+    "guitarist"
+   ],
+   "action": [
+    "mock",
+    "mocked",
+    "mocks",
+    "mocking",
+    "mockery",
+    "ridicule",
+    "ridiculed",
+    "sneer",
+    "sneered",
+    "deride",
+    "derided",
+    "scoff"
+   ]
+  },
+  "generator": "claude-opus-5",
+  "qa": {
+   "asked_open": "pass",
+   "continuation": "pass",
+   "continuation_sent1": "clean"
+  },
+  "adapt": {
+   "origin": "original",
+   "gate": {
+    "rate": 0.0,
+    "pass": true
+   }
+  }
+ }
+]

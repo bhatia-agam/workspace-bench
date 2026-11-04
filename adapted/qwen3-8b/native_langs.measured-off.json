@@ -1,0 +1,42 @@
+{
+ "model": "qwen3-8b",
+ "native_langs": [
+  "en"
+ ],
+ "thinking": "off",
+ "method": "plan 0054 R6",
+ "measured": "2026-11-03",
+ "evidence": "plan 0054 R6 with thinking OFF (plan 0060 D7): 30 family + 20 neutral prompts x K=4 at T=1.0, 256 tokens, through the subject runner; family-prompt response-letter shares {'en': 0.9774, 'zh': 0.0132, 'ru': 0.0094}; native >= 10%; model card: not recorded; calibration unverified",
+ "shares_family": {
+  "en": 0.9774,
+  "zh": 0.0132,
+  "ru": 0.0094
+ },
+ "shares_neutral": {
+  "en": 1.0
+ },
+ "shares_all": {
+  "en": 0.9998,
+  "zh": 0.0001,
+  "ru": 0.0001
+ },
+ "model_card_langs": null,
+ "calibration": {
+  "status": "unverified",
+  "reference": "Qwen/Qwen3.6-27B",
+  "expected": [
+   "en",
+   "zh"
+  ],
+  "check": "the first GPU run measures the reference with this procedure; trust this subject's result only once that gives the expected list"
+ },
+ "protocol": {
+  "n_family": 30,
+  "n_neutral": 20,
+  "k": 4,
+  "temperature": 1.0,
+  "max_tokens": 256,
+  "share": 0.1,
+  "unit": "response letters of the family prompts (no trace with thinking off)"
+ }
+}

@@ -12,14 +12,72 @@
  "n": 120,
  "selection": {
   "rule": "strict 10/10 + greedy + no leak on seed-last; all depth-3 plain items + 84 depth-2 plain items round-robin over step-kind pairs; the single conditional item dropped",
-  "seed": 0
+  "seed": 0,
+  "v2": "v1's 83 items with every intermediate >= 10 kept byte-identical (plus the mc block); the 37 with an intermediate < 10 replaced depth for depth (24 depth-2 + 13 depth-3) by new seed-last plain chains whose intermediates are all in 10..99, strict-gated, round-robin over step-kind tuples",
+  "dropped_v1": [
+   "chain-d3p-0611",
+   "chain-d3p-0711",
+   "chain-d3p-0768",
+   "chain-d3p-0791",
+   "chain-w2-d3p-0374",
+   "chain-w2-d3p-0408",
+   "chain-w2-d3p-0419",
+   "chain-w2-d3p-0422",
+   "chain-w2-d3p-0599",
+   "chain-w2-d3p-0600",
+   "chain-w2-d3p-0676",
+   "chain-w2-d3p-0704",
+   "chain-w2-d3p-0881",
+   "chain-d2p-0200",
+   "chain-d2p-0230",
+   "chain-d2p-0231",
+   "chain-d2p-0234",
+   "chain-d2p-0238",
+   "chain-d2p-0240",
+   "chain-d2p-0244",
+   "chain-d2p-0256",
+   "chain-d2p-0263",
+   "chain-d2p-0295",
+   "chain-d2p-0388",
+   "chain-w2-d2p-0013",
+   "chain-w2-d2p-0040",
+   "chain-w2-d2p-0082",
+   "chain-w2-d2p-0086",
+   "chain-w2-d2p-0087",
+   "chain-w2-d2p-0098",
+   "chain-w2-d2p-0122",
+   "chain-w2-d2p-0148",
+   "chain-w2-d2p-0181",
+   "chain-w2-d2p-0201",
+   "chain-w2-d2p-0222",
+   "chain-w2-d2p-0250",
+   "chain-w2-d2p-0284"
+  ]
  },
  "source": "evals/workspace-bench/hillclimbing_evals/multi_token/chain_intermediates/items_final.json (source repo; items unchanged)",
- "read": "the last prompt token (the end of the user turn), chat render, thinking off; layers 20..60 step 4",
+ "read": "from the last token of the start number through the end of the chat render (full); the render's final token, the assistant onset (lite); layers: GRID or any requested set",
+ "version": 2,
+ "supersedes": "items.json",
+ "gate_v2": {
+  "k": 10,
+  "max_new": 16,
+  "temperature": 0.8,
+  "top_p": 0.95,
+  "min_correct": 10,
+  "max_leak": 0,
+  "greedy": true,
+  "render": "seed-last, chat template, enable_thinking=False",
+  "model": "Qwen/Qwen3.6-27B (vLLM on Modal, qwen_sample_modal.py)"
+ },
+ "mc": {
+  "n_options": 8,
+  "seed": "chain-v2",
+  "rules": "wsbench.evals.chain_intermediates.options (never start / answer / literal / other gold; <= 2 error-path values; 2-3 other items' intermediates in band gold//2..2*gold+5; seeded fill; sorted-rank balance <= 20%); cannot-tell is appended LAST at judge time"
+ },
  "adapt": {
   "model": "qwen3.5-0.8b",
   "hf_id": "Qwen/Qwen3.5-0.8B",
-  "frozen": "2026-10-24"
+  "frozen": "2026-11-03"
  },
  "items": []
 }

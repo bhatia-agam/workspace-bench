@@ -1,0 +1,3636 @@
+{
+ "family": "multihop-hard",
+ "parent_family": "multihop-mt",
+ "version": 4,
+ "contract": {
+  "multi_token": true,
+  "include_target": true,
+  "conjunctive_units": true,
+  "markdown_fold": true,
+  "fuzzy_names": true,
+  "native_langs": [
+   "en",
+   "zh"
+  ]
+ },
+ "gate": "Qwen3.6-27B behavioral, chat-templated fill-in question (enable_thinking=False, answer stem), staged (workspace-bench plan 0013). G1: the prompt, greedy AND >=16/20 @0.7. Recall: G2 bridge1 from the prompt's own clue and G3 the last hop with its source named, each greedy AND >=8/10; G4 (3-hop) bridge2 identified inside the full statement, greedy AND >=5/10. Shortcuts: S1 generator ablations (drop_b1, local_cue, 3-hop direct_b1_to_t) and S2 independent-adversary ablations must not reach the target (greedy or >4/20); none is ever excused. A 3-hop item whose only shortcut is drop_b1 is frozen as a 2-hop through bridge2 (relabel_b2). No factual issue; fresh-eye review overrides applied. EVAL RENDER: plain prompt; readouts at every prompt token (lite: the final token). Scoring (bank v2, 2026-10-30): a forced-choice judge per required unit over other questions' bridges and targets of the same kind plus cannot tell, credited only with a verified quote that holds a name form of the gold (name_forms; misspellings within edit distance); the conjunctive regex over units stays as a diagnostic.",
+ "frozen": "2026-11-01",
+ "built_from": {
+  "file": "items.json",
+  "sha256": "7c0160a7f818165a09d357a7b0e159301894501124e301bec7f19f75679600d3",
+  "frozen": "2026-10-15"
+ },
+ "builder": "scripts/build_mh2_bank_v2.py",
+ "readout": {
+  "kind": "all",
+  "lite": {
+   "kind": "final_token"
+  }
+ },
+ "supersedes": "items_v3.json",
+ "r4_mc": {
+  "script": "scripts/build_r4_mc_banks.py",
+  "rule": "round 4 (Camila r2 MC leakage standard): only the MC distractor lists change. Content lists: the four Opus-authored same-topic distractors of r4_distractors.json (scripts/r4_mc_distractors.py). ",
+  "lang_rule": null,
+  "lists_changed": 76
+ },
+ "r4b_mc": {
+  "script": "scripts/build_r4b_mc_banks.py",
+  "rule": "round 4b (Camila r2 MC leakage standard, second pass): only the MC distractor lists change. Content lists: the four distractors scripts/r4b_mc_refine.py kept (r4b_distractors.json: Opus-revised in the gold's naming style, fitting the topic as stated, kept when neither the options-only nor the topic guesser solves the item in more than 1 of 5 draws). ",
+  "lists_changed": 76,
+  "n_over_gate": 19
+ },
+ "adapt": {
+  "model": "qwen3-8b",
+  "hf_id": "Qwen/Qwen3-8B",
+  "frozen": "2026-11-04"
+ },
+ "items": [
+  {
+   "name": "mh2-henry-james-pragmatism",
+   "subfamily": "3hop",
+   "domain": "literature and its authors",
+   "prompt": "Fact: The novelist who wrote The Portrait of a Lady and The Turn of the Screw was the younger brother of a philosopher who helped found the school of thought known as",
+   "spans": {
+    "D1": "The novelist who wrote The Portrait of a Lady and The Turn of the Screw",
+    "R1": " was the younger brother of",
+    "N2": " a philosopher",
+    "R2": " who helped found the school of thought known as",
+    "G1": "A nineteenth-century novelist"
+   },
+   "target": "pragmatism",
+   "target_alts": [
+    "American pragmatism"
+   ],
+   "source": "multihop_v2",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "all",
+    "lite": {
+     "kind": "final_token"
+    }
+   },
+   "intermediates": [
+    "Henry James",
+    "William James"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Henry James"
+      ]
+     },
+     "match": [
+      "Henry James"
+     ],
+     "kind": "person",
+     "full_forms": [
+      "Henry James"
+     ],
+     "forms_excluded": [
+      {
+       "form": "James",
+       "reason": "a lone given name"
+      }
+     ]
+    },
+    {
+     "role": "bridge2",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "William James"
+      ]
+     },
+     "match": [
+      "William James"
+     ],
+     "kind": "person",
+     "full_forms": [
+      "William James"
+     ],
+     "forms_excluded": [
+      {
+       "form": "James",
+       "reason": "a lone given name"
+      }
+     ]
+    }
+   ],
+   "bridges": [
+    {
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "Henry James",
+      "James"
+     ],
+     "question": "Name the novelist who wrote The Portrait of a Lady and The Turn of the Screw."
+    },
+    {
+     "units": [
+      "bridge2"
+     ],
+     "answers": [
+      "William James",
+      "James"
+     ],
+     "question": "Here is an incomplete statement:\n\n\"Fact: The novelist who wrote The Portrait of a Lady and The Turn of the Screw was the younger brother of a philosopher who helped found the school of thought known as___\"\n\nIn this statement, who or what is \"a philosopher\"? Answer with the specific name."
+    }
+   ],
+   "probes": {
+    "G2_b2_from_b1": {
+     "kind": "fill",
+     "text": "Fact: Henry James was the younger brother of",
+     "accept": [
+      "William James",
+      "James"
+     ]
+    },
+    "G3_hop_b2_t": {
+     "kind": "qa",
+     "text": "Which school of philosophy did William James help found?",
+     "accept": [
+      "pragmatism",
+      "American pragmatism",
+      "Pragmatism"
+     ]
+    },
+    "G4_prefix_b2": {
+     "kind": "fill",
+     "text": "Fact: The novelist who wrote The Portrait of a Lady and The Turn of the Screw was the younger brother of",
+     "accept": [
+      "William James",
+      "James"
+     ]
+    },
+    "S1_drop_b1": {
+     "kind": "fill",
+     "text": "Fact: A nineteenth-century novelist was the younger brother of a philosopher who helped found the school of thought known as",
+     "accept": [
+      "pragmatism",
+      "American pragmatism",
+      "Pragmatism"
+     ]
+    },
+    "S1_direct_b1_to_t": {
+     "kind": "fill",
+     "text": "Fact: Henry James helped found the school of thought known as",
+     "accept": [
+      "pragmatism",
+      "American pragmatism",
+      "Pragmatism"
+     ]
+    },
+    "G2_b1": {
+     "kind": "qa",
+     "text": "Name the novelist who wrote The Portrait of a Lady and The Turn of the Screw.",
+     "accept": [
+      "Henry James",
+      "James"
+     ]
+    },
+    "S1_local_cue": {
+     "kind": "fill",
+     "text": "Fact: the philosopher helped found the school of thought known as",
+     "accept": [
+      "pragmatism",
+      "American pragmatism",
+      "Pragmatism"
+     ]
+    }
+   },
+   "shortcut_accept": [
+    "pragmatism",
+    "American pragmatism",
+    "Pragmatism"
+   ],
+   "why_nonobvious": "Henry James himself has no tie to any philosophical school, and the generic relation could be any school; pragmatism is reached only via his brother William James.",
+   "consistency": 1.0,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge1": 1.0,
+    "bridge2": 1.0
+   },
+   "hop_consistency": 1.0,
+   "context_b2_consistency": 1.0,
+   "shortcut_probes": [
+    {
+     "id": "S1_drop_b1",
+     "kind": "fill",
+     "text": "Fact: A nineteenth-century novelist was the younger brother of a philosopher who helped found the school of thought known as",
+     "n_pass": 1,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S1_direct_b1_to_t",
+     "kind": "fill",
+     "text": "Fact: Henry James helped found the school of thought known as",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge2"
+     ]
+    },
+    {
+     "id": "S1_local_cue",
+     "kind": "fill",
+     "text": "Fact: the philosopher helped found the school of thought known as",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1",
+      "bridge2"
+     ]
+    },
+    {
+     "id": "S2adv3_0",
+     "kind": "fill",
+     "text": "Fact: Henry James helped found the school of thought known as",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge2"
+     ]
+    },
+    {
+     "id": "S2adv3_1",
+     "kind": "fill",
+     "text": "Fact: A philosopher who helped found the school of thought known as",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1",
+      "bridge2"
+     ]
+    },
+    {
+     "id": "S2adv3_2",
+     "kind": "fill",
+     "text": "Fact: The novelist was the younger brother of a philosopher who helped found the school of thought known as",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1",
+      "bridge2"
+     ]
+    },
+    {
+     "id": "S2adv3_3",
+     "kind": "qa",
+     "text": "Which school of thought did the brother of a novelist help found?",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1",
+      "bridge2"
+     ]
+    }
+   ],
+   "shortcut_max": 0.05,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       2
+      ]
+     },
+     "bridge2": {
+      "en": [
+       2
+      ]
+     }
+    },
+    "target": 3,
+    "target_alts": [
+     4
+    ]
+   },
+   "mc": {
+    "bridge1": {
+     "gold": "Henry James",
+     "distractors": [
+      "Anne Brontë",
+      "Nathaniel Hawthorne",
+      "Louisa May Alcott",
+      "William Makepeace Thackeray"
+     ],
+     "pool": "Opus-revised same-topic distractors (r4b_distractors.json)"
+    },
+    "bridge2": {
+     "gold": "William James",
+     "distractors": [
+      "Ralph Waldo Emerson",
+      "Hannah Arendt",
+      "Henry David Thoreau",
+      "Ayn Rand"
+     ],
+     "pool": "Opus-revised same-topic distractors (r4b_distractors.json)"
+    }
+   },
+   "name_forms": {
+    "bridge1": {
+     "en": [
+      "Henry James"
+     ],
+     "zh": [
+      "亨利·詹姆斯",
+      "亨利・詹姆斯",
+      "亨利•詹姆斯",
+      "亨利詹姆斯"
+     ]
+    },
+    "bridge2": {
+     "en": [
+      "William James"
+     ],
+     "zh": [
+      "威廉·詹姆斯",
+      "威廉・詹姆斯",
+      "威廉•詹姆斯",
+      "威廉詹姆斯",
+      "威廉·詹姆士",
+      "威廉・詹姆士",
+      "威廉•詹姆士",
+      "威廉詹姆士"
+     ]
+    }
+   },
+   "n_render_tokens": 33,
+   "id": "mh2-henry-james-pragmatism",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 0.95,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "mh2-wharton-age-of-innocence-s0",
+   "subfamily": "2hop",
+   "domain": "literature and its authors",
+   "prompt": "Fact: The American novelist who wrote 'The House of Mirth' and 'Ethan Frome' was awarded the Pulitzer for her novel",
+   "spans": {
+    "D1": "The American novelist who wrote 'The House of Mirth' and 'Ethan Frome'",
+    "R1": " was awarded the Pulitzer for her novel",
+    "G1": "An American novelist"
+   },
+   "target": "The Age of Innocence",
+   "target_alts": [],
+   "source": "multihop_v2",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "all",
+    "lite": {
+     "kind": "final_token"
+    }
+   },
+   "intermediates": [
+    "Edith Wharton"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Edith Wharton",
+       "Edith Newbold Jones Wharton",
+       "Wharton",
+       "Edith Newbold Jones"
+      ]
+     },
+     "match": [
+      "Edith Wharton",
+      "Edith Newbold Jones Wharton",
+      "Wharton",
+      "Edith Newbold Jones"
+     ],
+     "kind": "person",
+     "full_forms": [
+      "Edith Wharton",
+      "Edith Newbold Jones Wharton"
+     ],
+     "forms_excluded": []
+    }
+   ],
+   "bridges": [
+    {
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "Edith Wharton",
+      "Edith Newbold Jones Wharton",
+      "Wharton",
+      "Edith Newbold Jones"
+     ],
+     "question": "Name the American novelist who wrote 'The House of Mirth' and 'Ethan Frome'."
+    }
+   ],
+   "probes": {
+    "G3_hop_b1_t": {
+     "kind": "fill",
+     "text": "Fact: Edith Wharton was awarded the Pulitzer for her novel",
+     "accept": [
+      "The Age of Innocence",
+      "Age of Innocence"
+     ]
+    },
+    "S1_drop_b1": {
+     "kind": "fill",
+     "text": "Fact: An American novelist was awarded the Pulitzer for her novel",
+     "accept": [
+      "The Age of Innocence",
+      "Age of Innocence"
+     ]
+    },
+    "G2_b1": {
+     "kind": "qa",
+     "text": "Name the American novelist who wrote 'The House of Mirth' and 'Ethan Frome'.",
+     "accept": [
+      "Edith Wharton",
+      "Edith Newbold Jones Wharton",
+      "Wharton",
+      "Edith Newbold Jones"
+     ]
+    },
+    "S1_local_cue": {
+     "kind": "fill",
+     "text": "Fact: the novelist was awarded the Pulitzer for her novel",
+     "accept": [
+      "The Age of Innocence",
+      "Age of Innocence"
+     ]
+    }
+   },
+   "shortcut_accept": [
+    "The Age of Innocence",
+    "Age of Innocence"
+   ],
+   "why_nonobvious": "Many women novelists won the Pulitzer, and the named works are different books, so only resolving Edith Wharton gives The Age of Innocence.",
+   "consistency": 0.9,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge1": 1.0
+   },
+   "hop_consistency": 0.9,
+   "context_b2_consistency": null,
+   "shortcut_probes": [
+    {
+     "id": "S1_drop_b1",
+     "kind": "fill",
+     "text": "Fact: An American novelist was awarded the Pulitzer for her novel",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S1_local_cue",
+     "kind": "fill",
+     "text": "Fact: the novelist was awarded the Pulitzer for her novel",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_0",
+     "kind": "fill",
+     "text": "Fact: The American novelist was awarded the Pulitzer for her novel",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_1",
+     "kind": "fill",
+     "text": "Fact: The novelist was awarded the Pulitzer for her novel",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_2",
+     "kind": "qa",
+     "text": "For which novel was the American novelist awarded the Pulitzer?",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    }
+   ],
+   "shortcut_max": 0.0,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       3,
+       7,
+       2,
+       5
+      ]
+     }
+    },
+    "target": 4,
+    "target_alts": []
+   },
+   "mc": {
+    "bridge1": {
+     "gold": "Edith Wharton",
+     "distractors": [
+      "William Dean Howells",
+      "Upton Sinclair",
+      "Theodore Dreiser",
+      "Sinclair Lewis"
+     ],
+     "pool": "Opus-revised same-topic distractors (r4b_distractors.json)"
+    }
+   },
+   "name_forms": {
+    "bridge1": {
+     "en": [
+      "Edith Wharton",
+      "Edith Newbold Jones Wharton",
+      "Wharton",
+      "Edith Newbold Jones"
+     ],
+     "zh": [
+      "伊迪丝·华顿",
+      "伊迪丝・华顿",
+      "伊迪丝•华顿",
+      "伊迪丝华顿",
+      "伊迪丝·沃顿",
+      "伊迪丝・沃顿",
+      "伊迪丝•沃顿",
+      "伊迪丝沃顿",
+      "伊迪斯·华顿",
+      "伊迪斯・华顿",
+      "伊迪斯•华顿",
+      "伊迪斯华顿"
+     ]
+    }
+   },
+   "n_render_tokens": 28,
+   "id": "mh2-wharton-age-of-innocence-s0",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 0.9,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "mh2-gaixia-victor-dynasty",
+   "subfamily": "2hop",
+   "domain": "European and Asian history",
+   "prompt": "Fact: The rebel commander who defeated his rival Xiang Yu at Gaixia went on to found the",
+   "spans": {
+    "D1": "The rebel commander who defeated his rival Xiang Yu at Gaixia",
+    "R1": " went on to found the",
+    "G1": "A Chinese rebel commander"
+   },
+   "target": "Han dynasty",
+   "target_alts": [
+    "Western Han dynasty"
+   ],
+   "source": "multihop_v2",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "all",
+    "lite": {
+     "kind": "final_token"
+    }
+   },
+   "intermediates": [
+    "Liu Bang"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Liu Bang",
+       "Emperor Gaozu of Han",
+       "Gaozu",
+       "Emperor Gaozu",
+       "Gaozu of Han"
+      ]
+     },
+     "match": [
+      "Liu Bang",
+      "Emperor Gaozu of Han",
+      "Gaozu",
+      "Emperor Gaozu",
+      "Gaozu of Han"
+     ],
+     "kind": "person",
+     "full_forms": [
+      "Liu Bang",
+      "Emperor Gaozu of Han"
+     ],
+     "forms_excluded": [
+      {
+       "form": "Liu",
+       "reason": "shorter than 4 characters"
+      }
+     ]
+    }
+   ],
+   "bridges": [
+    {
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "Liu Bang",
+      "Emperor Gaozu of Han",
+      "Gaozu",
+      "Emperor Gaozu",
+      "Liu"
+     ],
+     "question": "Name the rebel commander who defeated his rival Xiang Yu at Gaixia."
+    }
+   ],
+   "probes": {
+    "G3_hop_b1_t": {
+     "kind": "fill",
+     "text": "Fact: Liu Bang went on to found the",
+     "accept": [
+      "Han dynasty",
+      "Western Han dynasty",
+      "Han",
+      "Western Han"
+     ]
+    },
+    "S1_drop_b1": {
+     "kind": "fill",
+     "text": "Fact: A Chinese rebel commander went on to found the",
+     "accept": [
+      "Han dynasty",
+      "Western Han dynasty",
+      "Han",
+      "Western Han"
+     ]
+    },
+    "G2_b1": {
+     "kind": "qa",
+     "text": "Name the rebel commander who defeated his rival Xiang Yu at Gaixia.",
+     "accept": [
+      "Liu Bang",
+      "Emperor Gaozu of Han",
+      "Gaozu",
+      "Emperor Gaozu",
+      "Liu"
+     ]
+    },
+    "S1_local_cue": {
+     "kind": "fill",
+     "text": "Fact: the rebel commander went on to found the",
+     "accept": [
+      "Han dynasty",
+      "Western Han dynasty",
+      "Han",
+      "Western Han"
+     ]
+    }
+   },
+   "shortcut_accept": [
+    "Han dynasty",
+    "Western Han dynasty",
+    "Han",
+    "Western Han"
+   ],
+   "why_nonobvious": "A generic Chinese rebel who founded a dynasty could equally be Zhu Yuanzhang (Ming), so the answer requires recognising Xiang Yu's conqueror as Liu Bang.",
+   "consistency": 1.0,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge1": 1.0
+   },
+   "hop_consistency": 1.0,
+   "context_b2_consistency": null,
+   "shortcut_probes": [
+    {
+     "id": "S1_drop_b1",
+     "kind": "fill",
+     "text": "Fact: A Chinese rebel commander went on to found the",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S1_local_cue",
+     "kind": "fill",
+     "text": "Fact: the rebel commander went on to found the",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_0",
+     "kind": "fill",
+     "text": "Fact: The rebel commander who defeated his rival went on to found the",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_1",
+     "kind": "fill",
+     "text": "Fact: The rebel commander went on to found the",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_2",
+     "kind": "qa",
+     "text": "Which dynasty was founded by a rebel commander who defeated his rival?",
+     "n_pass": 2,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    }
+   ],
+   "shortcut_max": 0.1,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       2,
+       6,
+       3,
+       4,
+       5
+      ]
+     }
+    },
+    "target": 2,
+    "target_alts": [
+     3
+    ]
+   },
+   "mc": {
+    "bridge1": {
+     "gold": "Liu Bang",
+     "distractors": [
+      "Wang Mang",
+      "Sun Quan",
+      "Zhao Kuangyin",
+      "Cao Cao"
+     ],
+     "pool": "Opus-revised same-topic distractors (r4b_distractors.json)"
+    }
+   },
+   "name_forms": {
+    "bridge1": {
+     "en": [
+      "Liu Bang",
+      "Emperor Gaozu of Han",
+      "Gaozu",
+      "Emperor Gaozu",
+      "Gaozu of Han"
+     ],
+     "zh": [
+      "刘邦",
+      "汉高祖",
+      "汉高帝"
+     ]
+    }
+   },
+   "n_render_tokens": 21,
+   "id": "mh2-gaixia-victor-dynasty",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 0.9,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "mh2-alexander-birthplace-s1",
+   "subfamily": "2hop",
+   "domain": "exploration, geography and architecture",
+   "prompt": "Fact: The king who defeated Darius III at Gaugamela and founded a famous city in the Nile delta was born in the city of",
+   "spans": {
+    "D1": "The king who defeated Darius III at Gaugamela and founded a famous city in the Nile delta",
+    "R1": " was born in the city of",
+    "G1": "An ancient king"
+   },
+   "target": "Pella",
+   "target_alts": [],
+   "source": "multihop_v2",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "all",
+    "lite": {
+     "kind": "final_token"
+    }
+   },
+   "intermediates": [
+    "Alexander the Great"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Alexander the Great",
+       "Alexander III of Macedon",
+       "Alexander III"
+      ]
+     },
+     "match": [
+      "Alexander the Great",
+      "Alexander III of Macedon",
+      "Alexander III"
+     ],
+     "kind": "person",
+     "full_forms": [
+      "Alexander the Great",
+      "Alexander III of Macedon"
+     ],
+     "forms_excluded": [
+      {
+       "form": "Alexander",
+       "reason": "a lone given name"
+      }
+     ]
+    }
+   ],
+   "bridges": [
+    {
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "Alexander the Great",
+      "Alexander III of Macedon",
+      "Alexander",
+      "Alexander III"
+     ],
+     "question": "Name the king who defeated Darius III at Gaugamela and founded a famous city in the Nile delta."
+    }
+   ],
+   "probes": {
+    "G3_hop_b1_t": {
+     "kind": "fill",
+     "text": "Fact: Alexander the Great was born in the city of",
+     "accept": [
+      "Pella"
+     ]
+    },
+    "S1_drop_b1": {
+     "kind": "fill",
+     "text": "Fact: An ancient king was born in the city of",
+     "accept": [
+      "Pella"
+     ]
+    },
+    "G2_b1": {
+     "kind": "qa",
+     "text": "Name the king who defeated Darius III at Gaugamela and founded a famous city in the Nile delta.",
+     "accept": [
+      "Alexander the Great",
+      "Alexander III of Macedon",
+      "Alexander",
+      "Alexander III"
+     ]
+    },
+    "S1_local_cue": {
+     "kind": "fill",
+     "text": "Fact: the king was born in the city of",
+     "accept": [
+      "Pella"
+     ]
+    }
+   },
+   "shortcut_accept": [
+    "Pella"
+   ],
+   "why_nonobvious": "Neither Gaugamela nor the Nile delta points to Pella; the birthplace follows only after resolving Alexander the Great.",
+   "consistency": 0.9,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge1": 1.0
+   },
+   "hop_consistency": 1.0,
+   "context_b2_consistency": null,
+   "shortcut_probes": [
+    {
+     "id": "S1_drop_b1",
+     "kind": "fill",
+     "text": "Fact: An ancient king was born in the city of",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S1_local_cue",
+     "kind": "fill",
+     "text": "Fact: the king was born in the city of",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_0",
+     "kind": "fill",
+     "text": "Fact: The king who defeated a rival and founded a famous city was born in the city of",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_1",
+     "kind": "fill",
+     "text": "Fact: The king was born in the city of",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_2",
+     "kind": "qa",
+     "text": "In which city was the ancient king who founded a famous city born?",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    }
+   ],
+   "shortcut_max": 0.0,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       3,
+       5,
+       2
+      ]
+     }
+    },
+    "target": 2,
+    "target_alts": []
+   },
+   "mc": {
+    "bridge1": {
+     "gold": "Alexander the Great",
+     "distractors": [
+      "Mithridates the Great",
+      "Hammurabi",
+      "Nebuchadnezzar II",
+      "Ramesses the Great"
+     ],
+     "pool": "Opus-revised same-topic distractors (r4b_distractors.json)"
+    }
+   },
+   "name_forms": {
+    "bridge1": {
+     "en": [
+      "Alexander the Great",
+      "Alexander III of Macedon",
+      "Alexander III"
+     ],
+     "zh": [
+      "亚历山大大帝",
+      "亚历山大三世"
+     ]
+    }
+   },
+   "n_render_tokens": 29,
+   "id": "mh2-alexander-birthplace-s1",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 0.9,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "mh2-rousseau-geneva-t1",
+   "subfamily": "2hop",
+   "domain": "philosophy and scholarship",
+   "prompt": "Fact: The philosopher who wrote 'The Social Contract' and 'Émile' was born in the city of",
+   "spans": {
+    "D1": "The philosopher who wrote 'The Social Contract' and 'Émile'",
+    "R1": " was born in the city of",
+    "G1": "An eighteenth-century philosopher"
+   },
+   "target": "Geneva",
+   "target_alts": [
+    "Genève"
+   ],
+   "source": "multihop_v2",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "all",
+    "lite": {
+     "kind": "final_token"
+    }
+   },
+   "intermediates": [
+    "Jean-Jacques Rousseau"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Jean-Jacques Rousseau",
+       "Rousseau",
+       "J.-J. Rousseau"
+      ]
+     },
+     "match": [
+      "Jean-Jacques Rousseau",
+      "Rousseau",
+      "J.-J. Rousseau"
+     ],
+     "kind": "person",
+     "full_forms": [
+      "Jean-Jacques Rousseau",
+      "Rousseau"
+     ],
+     "forms_excluded": []
+    }
+   ],
+   "bridges": [
+    {
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "Jean-Jacques Rousseau",
+      "Rousseau",
+      "J.-J. Rousseau"
+     ],
+     "question": "Name the philosopher who wrote 'The Social Contract' and 'Émile'."
+    }
+   ],
+   "probes": {
+    "G3_hop_b1_t": {
+     "kind": "fill",
+     "text": "Fact: Jean-Jacques Rousseau was born in the city of",
+     "accept": [
+      "Geneva",
+      "Genève",
+      "Geneve"
+     ]
+    },
+    "S1_drop_b1": {
+     "kind": "fill",
+     "text": "Fact: An eighteenth-century philosopher was born in the city of",
+     "accept": [
+      "Geneva",
+      "Genève",
+      "Geneve"
+     ]
+    },
+    "G2_b1": {
+     "kind": "qa",
+     "text": "Name the philosopher who wrote 'The Social Contract' and 'Émile'.",
+     "accept": [
+      "Jean-Jacques Rousseau",
+      "Rousseau",
+      "J.-J. Rousseau"
+     ]
+    },
+    "S1_local_cue": {
+     "kind": "fill",
+     "text": "Fact: the philosopher was born in the city of",
+     "accept": [
+      "Geneva",
+      "Genève",
+      "Geneve"
+     ]
+    }
+   },
+   "shortcut_accept": [
+    "Geneva",
+    "Genève",
+    "Geneve"
+   ],
+   "why_nonobvious": "Only the book titles identify Rousseau, and a generic philosopher's birthplace points to many cities, not Geneva in particular.",
+   "consistency": 1.0,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge1": 1.0
+   },
+   "hop_consistency": 1.0,
+   "context_b2_consistency": null,
+   "shortcut_probes": [
+    {
+     "id": "S1_drop_b1",
+     "kind": "fill",
+     "text": "Fact: An eighteenth-century philosopher was born in the city of",
+     "n_pass": 1,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S1_local_cue",
+     "kind": "fill",
+     "text": "Fact: the philosopher was born in the city of",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_0",
+     "kind": "fill",
+     "text": "Fact: The philosopher was born in the city of",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_1",
+     "kind": "fill",
+     "text": "Fact: The philosopher who wrote a treatise and a novel was born in the city of",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_2",
+     "kind": "qa",
+     "text": "In which city was the philosopher who wrote the books born?",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    }
+   ],
+   "shortcut_max": 0.05,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       6,
+       2,
+       6
+      ]
+     }
+    },
+    "target": 1,
+    "target_alts": [
+     2
+    ]
+   },
+   "mc": {
+    "bridge1": {
+     "gold": "Jean-Jacques Rousseau",
+     "distractors": [
+      "Denis Diderot",
+      "Voltaire",
+      "Julien Offray de La Mettrie",
+      "Moses Mendelssohn"
+     ],
+     "pool": "Opus-revised same-topic distractors (r4b_distractors.json)"
+    }
+   },
+   "name_forms": {
+    "bridge1": {
+     "en": [
+      "Jean-Jacques Rousseau",
+      "Rousseau",
+      "J.-J. Rousseau"
+     ],
+     "zh": [
+      "让-雅克·卢梭",
+      "让-雅克・卢梭",
+      "让-雅克•卢梭",
+      "让-雅克卢梭",
+      "让·雅克·卢梭",
+      "让・雅克・卢梭",
+      "让•雅克•卢梭",
+      "让雅克卢梭",
+      "卢梭"
+     ]
+    }
+   },
+   "n_render_tokens": 22,
+   "id": "mh2-rousseau-geneva-t1",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 0.95,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "mh2-mwalimu-ujamaa-t2",
+   "subfamily": "2hop",
+   "domain": "politics and statesmen",
+   "prompt": "Fact: The former schoolteacher known by the honorific 'Mwalimu' who led Tanganyika to independence championed the political philosophy known as",
+   "spans": {
+    "D1": "The former schoolteacher known by the honorific 'Mwalimu' who led Tanganyika to independence",
+    "R1": " championed the political philosophy known as",
+    "G1": "An African independence leader"
+   },
+   "target": "Ujamaa",
+   "target_alts": [],
+   "source": "multihop_v2",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "all",
+    "lite": {
+     "kind": "final_token"
+    }
+   },
+   "intermediates": [
+    "Julius Nyerere"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Julius Nyerere",
+       "Nyerere",
+       "Julius Kambarage Nyerere"
+      ]
+     },
+     "match": [
+      "Julius Nyerere",
+      "Nyerere",
+      "Julius Kambarage Nyerere"
+     ],
+     "kind": "person",
+     "full_forms": [
+      "Julius Nyerere",
+      "Nyerere"
+     ],
+     "forms_excluded": []
+    }
+   ],
+   "bridges": [
+    {
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "Julius Nyerere",
+      "Nyerere",
+      "Julius Kambarage Nyerere"
+     ],
+     "question": "Name the former schoolteacher known by the honorific 'Mwalimu' who led Tanganyika to independence."
+    }
+   ],
+   "probes": {
+    "G3_hop_b1_t": {
+     "kind": "fill",
+     "text": "Fact: Julius Nyerere championed the political philosophy known as",
+     "accept": [
+      "Ujamaa",
+      "ujamaa",
+      "African socialism"
+     ]
+    },
+    "S1_drop_b1": {
+     "kind": "fill",
+     "text": "Fact: An African independence leader championed the political philosophy known as",
+     "accept": [
+      "Ujamaa",
+      "ujamaa",
+      "African socialism"
+     ]
+    },
+    "G2_b1": {
+     "kind": "qa",
+     "text": "Name the former schoolteacher known by the honorific 'Mwalimu' who led Tanganyika to independence.",
+     "accept": [
+      "Julius Nyerere",
+      "Nyerere",
+      "Julius Kambarage Nyerere"
+     ]
+    },
+    "S1_local_cue": {
+     "kind": "fill",
+     "text": "Fact: the leader championed the political philosophy known as",
+     "accept": [
+      "Ujamaa",
+      "ujamaa",
+      "African socialism"
+     ]
+    }
+   },
+   "shortcut_accept": [
+    "Ujamaa",
+    "ujamaa",
+    "African socialism"
+   ],
+   "why_nonobvious": "The generic relation 'championed the political philosophy known as' admits countless doctrines; only resolving the Mwalimu clue to Nyerere selects ujamaa.",
+   "consistency": 0.95,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge1": 1.0
+   },
+   "hop_consistency": 1.0,
+   "context_b2_consistency": null,
+   "shortcut_probes": [
+    {
+     "id": "S1_drop_b1",
+     "kind": "fill",
+     "text": "Fact: An African independence leader championed the political philosophy known as",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S1_local_cue",
+     "kind": "fill",
+     "text": "Fact: the leader championed the political philosophy known as",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_0",
+     "kind": "fill",
+     "text": "Fact: The former schoolteacher who led his country to independence championed the political philosophy known as",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_1",
+     "kind": "fill",
+     "text": "Fact: The leader who led the country to independence championed the political philosophy known as",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_2",
+     "kind": "qa",
+     "text": "Which political philosophy was championed by a former schoolteacher known by an honorific meaning 'teacher' who led his country to independence?",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    }
+   ],
+   "shortcut_max": 0.0,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       4,
+       3,
+       7
+      ]
+     }
+    },
+    "target": 3,
+    "target_alts": []
+   },
+   "mc": {
+    "bridge1": {
+     "gold": "Julius Nyerere",
+     "distractors": [
+      "Kwame Nkrumah",
+      "Patrice Lumumba",
+      "Barthélemy Boganda",
+      "Milton Obote"
+     ],
+     "pool": "Opus-revised same-topic distractors (r4b_distractors.json)"
+    }
+   },
+   "name_forms": {
+    "bridge1": {
+     "en": [
+      "Julius Nyerere",
+      "Nyerere",
+      "Julius Kambarage Nyerere"
+     ],
+     "zh": [
+      "朱利叶斯·尼雷尔",
+      "朱利叶斯・尼雷尔",
+      "朱利叶斯•尼雷尔",
+      "朱利叶斯尼雷尔",
+      "尼雷尔"
+     ]
+    }
+   },
+   "n_render_tokens": 30,
+   "id": "mh2-mwalimu-ujamaa-t2",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 0.95,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "mh2-sun-yat-sen-burial-t2",
+   "subfamily": "2hop",
+   "domain": "medicine and its pioneers",
+   "prompt": "Fact: The physician revered as the 'Father of the Nation' who led the overthrow of the Qing dynasty was laid to rest in a grand mausoleum in the city of",
+   "spans": {
+    "D1": "The physician revered as the 'Father of the Nation' who led the overthrow of the Qing dynasty",
+    "R1": " was laid to rest in a grand mausoleum in the city of",
+    "G1": "A twentieth-century physician"
+   },
+   "target": "Nanjing",
+   "target_alts": [
+    "Nanking"
+   ],
+   "source": "multihop_v2",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "all",
+    "lite": {
+     "kind": "final_token"
+    }
+   },
+   "intermediates": [
+    "Sun Yat-sen"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Sun Yat-sen",
+       "Sun Zhongshan",
+       "Sun Wen"
+      ]
+     },
+     "match": [
+      "Sun Yat-sen",
+      "Sun Zhongshan",
+      "Sun Wen"
+     ],
+     "kind": "person",
+     "full_forms": [
+      "Sun Yat-sen",
+      "Sun Zhongshan"
+     ],
+     "forms_excluded": [
+      {
+       "form": "Sun",
+       "reason": "shorter than 4 characters"
+      }
+     ]
+    }
+   ],
+   "bridges": [
+    {
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "Sun Yat-sen",
+      "Sun Zhongshan",
+      "Sun Wen",
+      "Sun"
+     ],
+     "question": "Name the physician revered as the 'Father of the Nation' who led the overthrow of the Qing dynasty."
+    }
+   ],
+   "probes": {
+    "G3_hop_b1_t": {
+     "kind": "fill",
+     "text": "Fact: Sun Yat-sen was laid to rest in a grand mausoleum in the city of",
+     "accept": [
+      "Nanjing",
+      "Nanking"
+     ]
+    },
+    "S1_drop_b1": {
+     "kind": "fill",
+     "text": "Fact: A twentieth-century physician was laid to rest in a grand mausoleum in the city of",
+     "accept": [
+      "Nanjing",
+      "Nanking"
+     ]
+    },
+    "G2_b1": {
+     "kind": "qa",
+     "text": "Name the physician revered as the 'Father of the Nation' who led the overthrow of the Qing dynasty.",
+     "accept": [
+      "Sun Yat-sen",
+      "Sun Zhongshan",
+      "Sun Wen",
+      "Sun"
+     ]
+    },
+    "S1_local_cue": {
+     "kind": "fill",
+     "text": "Fact: the physician was laid to rest in a grand mausoleum in the city of",
+     "accept": [
+      "Nanjing",
+      "Nanking"
+     ]
+    }
+   },
+   "shortcut_accept": [
+    "Nanjing",
+    "Nanking"
+   ],
+   "why_nonobvious": "Nothing in the prompt mentions Nanjing or its landmarks, the Qing clue points to Beijing rather than Nanjing, and a generic physician's mausoleum city is unconstrained, so only knowing Sun Yat-sen's burial gives the answer.",
+   "consistency": 1.0,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge1": 1.0
+   },
+   "hop_consistency": 1.0,
+   "context_b2_consistency": null,
+   "shortcut_probes": [
+    {
+     "id": "S1_drop_b1",
+     "kind": "fill",
+     "text": "Fact: A twentieth-century physician was laid to rest in a grand mausoleum in the city of",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S1_local_cue",
+     "kind": "fill",
+     "text": "Fact: the physician was laid to rest in a grand mausoleum in the city of",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_0",
+     "kind": "fill",
+     "text": "Fact: The physician was laid to rest in a grand mausoleum in the city of",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_1",
+     "kind": "fill",
+     "text": "Fact: The leader revered as the 'Father of the Nation' was laid to rest in a grand mausoleum in the city of",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_2",
+     "kind": "fill",
+     "text": "Fact: The man who led the overthrow of a dynasty was laid to rest in a grand mausoleum in the city of",
+     "n_pass": 3,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_3",
+     "kind": "qa",
+     "text": "In which city is there a grand mausoleum where a revered leader was laid to rest?",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    }
+   ],
+   "shortcut_max": 0.15,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       4,
+       4,
+       2
+      ]
+     }
+    },
+    "target": 2,
+    "target_alts": [
+     2
+    ]
+   },
+   "mc": {
+    "bridge1": {
+     "gold": "Sun Yat-sen",
+     "distractors": [
+      "Mao Zedong",
+      "Kim Il-sung",
+      "Zhou Enlai",
+      "Park Chung-hee"
+     ],
+     "pool": "Opus-revised same-topic distractors (r4b_distractors.json)"
+    }
+   },
+   "name_forms": {
+    "bridge1": {
+     "en": [
+      "Sun Yat-sen",
+      "Sun Zhongshan",
+      "Sun Wen"
+     ],
+     "zh": [
+      "孙中山",
+      "孙逸仙",
+      "孙文"
+     ]
+    }
+   },
+   "n_render_tokens": 36,
+   "id": "mh2-sun-yat-sen-burial-t2",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 0.85,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "mh2-rowling-galbraith-s0",
+   "subfamily": "2hop",
+   "domain": "literature and its authors",
+   "prompt": "Fact: The British author of the Harry Potter novels has published crime fiction under the pseudonym",
+   "spans": {
+    "D1": "The British author of the Harry Potter novels",
+    "R1": " has published crime fiction under the pseudonym",
+    "G1": "A British author"
+   },
+   "target": "Robert Galbraith",
+   "target_alts": [],
+   "source": "multihop_v2",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "all",
+    "lite": {
+     "kind": "final_token"
+    }
+   },
+   "intermediates": [
+    "J. K. Rowling"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "J. K. Rowling",
+       "Joanne Rowling",
+       "JK Rowling",
+       "Rowling"
+      ]
+     },
+     "match": [
+      "J. K. Rowling",
+      "Joanne Rowling",
+      "JK Rowling",
+      "Rowling"
+     ],
+     "kind": "person",
+     "full_forms": [
+      "J. K. Rowling",
+      "Joanne Rowling"
+     ],
+     "forms_excluded": []
+    }
+   ],
+   "bridges": [
+    {
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "J. K. Rowling",
+      "Joanne Rowling",
+      "JK Rowling",
+      "Rowling"
+     ],
+     "question": "Name the British author of the Harry Potter novels."
+    }
+   ],
+   "probes": {
+    "G3_hop_b1_t": {
+     "kind": "fill",
+     "text": "Fact: J. K. Rowling has published crime fiction under the pseudonym",
+     "accept": [
+      "Robert Galbraith",
+      "Galbraith"
+     ]
+    },
+    "S1_drop_b1": {
+     "kind": "fill",
+     "text": "Fact: A British author has published crime fiction under the pseudonym",
+     "accept": [
+      "Robert Galbraith",
+      "Galbraith"
+     ]
+    },
+    "G2_b1": {
+     "kind": "qa",
+     "text": "Name the British author of the Harry Potter novels.",
+     "accept": [
+      "J. K. Rowling",
+      "Joanne Rowling",
+      "JK Rowling",
+      "Rowling"
+     ]
+    },
+    "S1_local_cue": {
+     "kind": "fill",
+     "text": "Fact: the novelist has published crime fiction under the pseudonym",
+     "accept": [
+      "Robert Galbraith",
+      "Galbraith"
+     ]
+    }
+   },
+   "shortcut_accept": [
+    "Robert Galbraith",
+    "Galbraith"
+   ],
+   "why_nonobvious": "Many authors write under pseudonyms, so the final relation alone gives no specific name; only identifying Rowling yields Robert Galbraith.",
+   "consistency": 0.9,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge1": 1.0
+   },
+   "hop_consistency": 1.0,
+   "context_b2_consistency": null,
+   "shortcut_probes": [
+    {
+     "id": "S1_drop_b1",
+     "kind": "fill",
+     "text": "Fact: A British author has published crime fiction under the pseudonym",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S1_local_cue",
+     "kind": "fill",
+     "text": "Fact: the novelist has published crime fiction under the pseudonym",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_0",
+     "kind": "fill",
+     "text": "Fact: The British author has published crime fiction under the pseudonym",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_1",
+     "kind": "qa",
+     "text": "Under what pseudonym has a British author published crime fiction?",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_2",
+     "kind": "fill",
+     "text": "Fact: The author of the novels has published crime fiction under the pseudonym",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    }
+   ],
+   "shortcut_max": 0.0,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       5,
+       3,
+       2,
+       1
+      ]
+     }
+    },
+    "target": 4,
+    "target_alts": []
+   },
+   "mc": {
+    "bridge1": {
+     "gold": "J. K. Rowling",
+     "distractors": [
+      "J. R. R. Tolkien",
+      "C. S. Lewis",
+      "P. D. James",
+      "A. S. Byatt"
+     ],
+     "pool": "Opus-revised same-topic distractors (r4b_distractors.json)"
+    }
+   },
+   "name_forms": {
+    "bridge1": {
+     "en": [
+      "J. K. Rowling",
+      "Joanne Rowling",
+      "JK Rowling",
+      "Rowling"
+     ],
+     "zh": [
+      "J·K·罗琳",
+      "J・K・罗琳",
+      "J•K•罗琳",
+      "JK罗琳",
+      "J.K.罗琳",
+      "乔安妮·罗琳",
+      "乔安妮・罗琳",
+      "乔安妮•罗琳",
+      "乔安妮罗琳"
+     ]
+    }
+   },
+   "n_render_tokens": 18,
+   "id": "mh2-rowling-galbraith-s0",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 0.9,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "mh2-vermeer-delft-s0",
+   "subfamily": "2hop",
+   "domain": "painting and sculpture",
+   "prompt": "Fact: The painter of Girl with a Pearl Earring and The Milkmaid spent his entire life in the city of",
+   "spans": {
+    "D1": "The painter of Girl with a Pearl Earring and The Milkmaid",
+    "R1": " spent his entire life in the city of",
+    "G1": "A seventeenth-century painter"
+   },
+   "target": "Delft",
+   "target_alts": [],
+   "source": "multihop_v2",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "all",
+    "lite": {
+     "kind": "final_token"
+    }
+   },
+   "intermediates": [
+    "Johannes Vermeer"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Johannes Vermeer",
+       "Jan Vermeer",
+       "Vermeer"
+      ]
+     },
+     "match": [
+      "Johannes Vermeer",
+      "Jan Vermeer",
+      "Vermeer"
+     ],
+     "kind": "person",
+     "full_forms": [
+      "Johannes Vermeer",
+      "Jan Vermeer"
+     ],
+     "forms_excluded": []
+    }
+   ],
+   "bridges": [
+    {
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "Johannes Vermeer",
+      "Jan Vermeer",
+      "Vermeer"
+     ],
+     "question": "Name the painter of Girl with a Pearl Earring and The Milkmaid."
+    }
+   ],
+   "probes": {
+    "G3_hop_b1_t": {
+     "kind": "fill",
+     "text": "Fact: Johannes Vermeer spent his entire life in the city of",
+     "accept": [
+      "Delft"
+     ]
+    },
+    "S1_drop_b1": {
+     "kind": "fill",
+     "text": "Fact: A seventeenth-century painter spent his entire life in the city of",
+     "accept": [
+      "Delft"
+     ]
+    },
+    "G2_b1": {
+     "kind": "qa",
+     "text": "Name the painter of Girl with a Pearl Earring and The Milkmaid.",
+     "accept": [
+      "Johannes Vermeer",
+      "Jan Vermeer",
+      "Vermeer"
+     ]
+    },
+    "S1_local_cue": {
+     "kind": "fill",
+     "text": "Fact: the painter spent his entire life in the city of",
+     "accept": [
+      "Delft"
+     ]
+    }
+   },
+   "shortcut_accept": [
+    "Delft"
+   ],
+   "why_nonobvious": "Neither painting title names a place, and a generic seventeenth-century painter's lifelong city could be Amsterdam, Haarlem, Antwerp, Leiden and others, so Delft requires first identifying Vermeer.",
+   "consistency": 1.0,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge1": 1.0
+   },
+   "hop_consistency": 1.0,
+   "context_b2_consistency": null,
+   "shortcut_probes": [
+    {
+     "id": "S1_drop_b1",
+     "kind": "fill",
+     "text": "Fact: A seventeenth-century painter spent his entire life in the city of",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S1_local_cue",
+     "kind": "fill",
+     "text": "Fact: the painter spent his entire life in the city of",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_0",
+     "kind": "fill",
+     "text": "Fact: The painter spent his entire life in the city of",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_1",
+     "kind": "fill",
+     "text": "Fact: The painter of a girl spent his entire life in the city of",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_2",
+     "kind": "qa",
+     "text": "Which city did the painter who spent his entire life in one city live in?",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    }
+   ],
+   "shortcut_max": 0.0,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       3,
+       3,
+       2
+      ]
+     }
+    },
+    "target": 3,
+    "target_alts": []
+   },
+   "mc": {
+    "bridge1": {
+     "gold": "Johannes Vermeer",
+     "distractors": [
+      "Rembrandt van Rijn",
+      "Frans Hals",
+      "Pieter de Hooch",
+      "Jan Steen"
+     ],
+     "pool": "Opus-revised same-topic distractors (r4b_distractors.json)"
+    }
+   },
+   "name_forms": {
+    "bridge1": {
+     "en": [
+      "Johannes Vermeer",
+      "Jan Vermeer",
+      "Vermeer"
+     ],
+     "zh": [
+      "约翰内斯·维米尔",
+      "约翰内斯・维米尔",
+      "约翰内斯•维米尔",
+      "约翰内斯维米尔",
+      "维米尔",
+      "扬·弗美尔",
+      "扬・弗美尔",
+      "扬•弗美尔",
+      "扬弗美尔",
+      "弗美尔",
+      "维梅尔"
+     ]
+    }
+   },
+   "n_render_tokens": 23,
+   "id": "mh2-vermeer-delft-s0",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "mh2-zahrawi-encyclopedia-tasrif-s2",
+   "subfamily": "2hop",
+   "domain": "medicine and its pioneers",
+   "prompt": "Fact: The tenth-century Andalusian court physician hailed as the father of surgery compiled the thirty-volume medical encyclopedia known as",
+   "spans": {
+    "D1": "The tenth-century Andalusian court physician hailed as the father of surgery",
+    "R1": " compiled the thirty-volume medical encyclopedia known as",
+    "G1": "A medieval physician"
+   },
+   "target": "Kitab al-Tasrif",
+   "target_alts": [
+    "Al-Tasrif",
+    "The Method of Medicine"
+   ],
+   "source": "multihop_v2",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "all",
+    "lite": {
+     "kind": "final_token"
+    }
+   },
+   "intermediates": [
+    "Abu al-Qasim al-Zahrawi"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Abu al-Qasim al-Zahrawi",
+       "Albucasis",
+       "al-Zahrawi",
+       "Zahrawi",
+       "Abulcasis"
+      ]
+     },
+     "match": [
+      "Abu al-Qasim al-Zahrawi",
+      "Albucasis",
+      "al-Zahrawi",
+      "Zahrawi",
+      "Abulcasis"
+     ],
+     "kind": "person",
+     "full_forms": [
+      "Abu al-Qasim al-Zahrawi",
+      "Albucasis"
+     ],
+     "forms_excluded": []
+    }
+   ],
+   "bridges": [
+    {
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "Abu al-Qasim al-Zahrawi",
+      "Albucasis",
+      "al-Zahrawi",
+      "Zahrawi",
+      "Abulcasis"
+     ],
+     "question": "Name the tenth-century Andalusian court physician hailed as the father of surgery."
+    }
+   ],
+   "probes": {
+    "G3_hop_b1_t": {
+     "kind": "fill",
+     "text": "Fact: Abu al-Qasim al-Zahrawi compiled the thirty-volume medical encyclopedia known as",
+     "accept": [
+      "Kitab al-Tasrif",
+      "Al-Tasrif",
+      "The Method of Medicine",
+      "al-Tasrif",
+      "Tasrif"
+     ]
+    },
+    "S1_drop_b1": {
+     "kind": "fill",
+     "text": "Fact: A medieval physician compiled the thirty-volume medical encyclopedia known as",
+     "accept": [
+      "Kitab al-Tasrif",
+      "Al-Tasrif",
+      "The Method of Medicine",
+      "al-Tasrif",
+      "Tasrif"
+     ]
+    },
+    "G2_b1": {
+     "kind": "qa",
+     "text": "Name the tenth-century Andalusian court physician hailed as the father of surgery.",
+     "accept": [
+      "Abu al-Qasim al-Zahrawi",
+      "Albucasis",
+      "al-Zahrawi",
+      "Zahrawi",
+      "Abulcasis"
+     ]
+    },
+    "S1_local_cue": {
+     "kind": "fill",
+     "text": "Fact: the physician compiled the thirty-volume medical encyclopedia known as",
+     "accept": [
+      "Kitab al-Tasrif",
+      "Al-Tasrif",
+      "The Method of Medicine",
+      "al-Tasrif",
+      "Tasrif"
+     ]
+    }
+   },
+   "shortcut_accept": [
+    "Kitab al-Tasrif",
+    "Al-Tasrif",
+    "The Method of Medicine",
+    "al-Tasrif",
+    "Tasrif"
+   ],
+   "why_nonobvious": "A generic physician compiling a medical encyclopedia defaults to Ibn Sina's Canon or al-Razi's al-Hawi; only identifying al-Zahrawi yields al-Tasrif.",
+   "consistency": 0.9,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge1": 0.8
+   },
+   "hop_consistency": 1.0,
+   "context_b2_consistency": null,
+   "shortcut_probes": [
+    {
+     "id": "S1_drop_b1",
+     "kind": "fill",
+     "text": "Fact: A medieval physician compiled the thirty-volume medical encyclopedia known as",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S1_local_cue",
+     "kind": "fill",
+     "text": "Fact: the physician compiled the thirty-volume medical encyclopedia known as",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_0",
+     "kind": "fill",
+     "text": "Fact: The thirty-volume medical encyclopedia is known as",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_1",
+     "kind": "qa",
+     "text": "What thirty-volume medical encyclopedia was compiled by a court physician?",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    }
+   ],
+   "shortcut_max": 0.0,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       10,
+       3,
+       5,
+       3,
+       4
+      ]
+     }
+    },
+    "target": 6,
+    "target_alts": [
+     4,
+     4
+    ]
+   },
+   "mc": {
+    "bridge1": {
+     "gold": "Abu al-Qasim al-Zahrawi",
+     "distractors": [
+      "Abu Rayhan al-Biruni",
+      "Abu Ali ibn Sina",
+      "Abu Yusuf al-Kindi",
+      "Abu Ali al-Hasan ibn al-Haytham"
+     ],
+     "pool": "Opus-revised same-topic distractors (r4b_distractors.json)"
+    }
+   },
+   "name_forms": {
+    "bridge1": {
+     "en": [
+      "Abu al-Qasim al-Zahrawi",
+      "Albucasis",
+      "al-Zahrawi",
+      "Zahrawi",
+      "Abulcasis"
+     ],
+     "zh": [
+      "阿布·卡西姆·宰赫拉威",
+      "阿布・卡西姆・宰赫拉威",
+      "阿布•卡西姆•宰赫拉威",
+      "阿布卡西姆宰赫拉威",
+      "宰赫拉威",
+      "阿尔布卡西斯"
+     ]
+    }
+   },
+   "n_render_tokens": 24,
+   "id": "mh2-zahrawi-encyclopedia-tasrif-s2",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 0.8,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "mh2-rand-novel",
+   "subfamily": "2hop",
+   "domain": "philosophy and scholarship",
+   "prompt": "Fact: the Russian-born novelist-philosopher who founded Objectivism published in 1957 the novel",
+   "spans": {
+    "D1": "the Russian-born novelist-philosopher who founded Objectivism",
+    "R1": " published in 1957 the novel",
+    "G1": "A twentieth-century American novelist"
+   },
+   "target": "Atlas Shrugged",
+   "target_alts": [],
+   "source": "multihop_v2",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "all",
+    "lite": {
+     "kind": "final_token"
+    }
+   },
+   "intermediates": [
+    "Ayn Rand"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Ayn Rand",
+       "Alisa Rosenbaum",
+       "Rand"
+      ]
+     },
+     "match": [
+      "Ayn Rand",
+      "Alisa Rosenbaum",
+      "Rand"
+     ],
+     "kind": "person",
+     "full_forms": [
+      "Ayn Rand",
+      "Alisa Rosenbaum"
+     ],
+     "forms_excluded": []
+    }
+   ],
+   "bridges": [
+    {
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "Ayn Rand",
+      "Alisa Rosenbaum",
+      "Rand"
+     ],
+     "question": "Name the Russian-born novelist-philosopher who founded Objectivism."
+    }
+   ],
+   "probes": {
+    "G3_hop_b1_t": {
+     "kind": "fill",
+     "text": "Fact: Ayn Rand published in 1957 the novel",
+     "accept": [
+      "Atlas Shrugged"
+     ]
+    },
+    "S1_drop_b1": {
+     "kind": "fill",
+     "text": "Fact: A twentieth-century American novelist published in 1957 the novel",
+     "accept": [
+      "Atlas Shrugged",
+      "Shrugged"
+     ]
+    },
+    "G2_b1": {
+     "kind": "qa",
+     "text": "Name the Russian-born novelist-philosopher who founded Objectivism.",
+     "accept": [
+      "Ayn Rand",
+      "Alisa Rosenbaum",
+      "Rand"
+     ]
+    },
+    "S1_local_cue": {
+     "kind": "fill",
+     "text": "Fact: the novelist published in 1957 the novel",
+     "accept": [
+      "Atlas Shrugged",
+      "Shrugged"
+     ]
+    }
+   },
+   "shortcut_accept": [
+    "Atlas Shrugged",
+    "Shrugged"
+   ],
+   "why_nonobvious": "Many novels appeared in 1957, so the title requires first identifying Ayn Rand from the Objectivism clue.",
+   "consistency": 1.0,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge1": 1.0
+   },
+   "hop_consistency": 1.0,
+   "context_b2_consistency": null,
+   "shortcut_probes": [
+    {
+     "id": "S1_drop_b1",
+     "kind": "fill",
+     "text": "Fact: A twentieth-century American novelist published in 1957 the novel",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S1_local_cue",
+     "kind": "fill",
+     "text": "Fact: the novelist published in 1957 the novel",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_0",
+     "kind": "fill",
+     "text": "Fact: the novelist published in 1957 the novel",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_1",
+     "kind": "fill",
+     "text": "Fact: the Russian-born novelist published in 1957 the novel",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_2",
+     "kind": "fill",
+     "text": "Fact: the novelist-philosopher published in 1957 the novel",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_3",
+     "kind": "qa",
+     "text": "Which novel by a novelist-philosopher was published in 1957?",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    }
+   ],
+   "shortcut_max": 0.0,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       3,
+       4,
+       1
+      ]
+     }
+    },
+    "target": 2,
+    "target_alts": []
+   },
+   "mc": {
+    "bridge1": {
+     "gold": "Ayn Rand",
+     "distractors": [
+      "Rebecca Goldstein",
+      "Miguel de Unamuno",
+      "Iris Murdoch",
+      "Jean-Paul Sartre"
+     ],
+     "pool": "Opus-revised same-topic distractors (r4b_distractors.json)"
+    }
+   },
+   "name_forms": {
+    "bridge1": {
+     "en": [
+      "Ayn Rand",
+      "Alisa Rosenbaum",
+      "Rand"
+     ],
+     "zh": [
+      "安·兰德",
+      "安・兰德",
+      "安•兰德",
+      "安兰德",
+      "艾茵·兰德",
+      "艾茵・兰德",
+      "艾茵•兰德",
+      "艾茵兰德"
+     ]
+    }
+   },
+   "n_render_tokens": 22,
+   "id": "mh2-rand-novel",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "mh2-baptizer-father-zechariah-s3",
+   "subfamily": "2hop",
+   "domain": "religious leaders and saints",
+   "prompt": "Fact: The preacher who immersed Jesus in the Jordan River and was later beheaded at the request of Salome was the son of the priest",
+   "spans": {
+    "D1": "The preacher who immersed Jesus in the Jordan River and was later beheaded at the request of Salome",
+    "R1": " was the son of the priest",
+    "G1": "A Jewish preacher"
+   },
+   "target": "Zechariah",
+   "target_alts": [
+    "Zacharias"
+   ],
+   "source": "multihop_v2",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "all",
+    "lite": {
+     "kind": "final_token"
+    }
+   },
+   "intermediates": [
+    "John the Baptist"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "John the Baptist",
+       "Yahya ibn Zakariya",
+       "John the Baptiser"
+      ]
+     },
+     "match": [
+      "John the Baptist",
+      "Yahya ibn Zakariya",
+      "John the Baptiser"
+     ],
+     "kind": "person",
+     "full_forms": [
+      "John the Baptist",
+      "Yahya ibn Zakariya"
+     ],
+     "forms_excluded": [
+      {
+       "form": "John",
+       "reason": "a lone given name"
+      },
+      {
+       "form": "Yahya",
+       "reason": "a lone given name"
+      },
+      {
+       "form": "the Baptist",
+       "reason": "a descriptor without the name (also a denomination word)"
+      }
+     ]
+    }
+   ],
+   "bridges": [
+    {
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "John the Baptist",
+      "Yahya ibn Zakariya",
+      "John",
+      "Yahya",
+      "the Baptist"
+     ],
+     "question": "Name the preacher who immersed Jesus in the Jordan River and was later beheaded at the request of Salome."
+    }
+   ],
+   "probes": {
+    "G3_hop_b1_t": {
+     "kind": "fill",
+     "text": "Fact: John the Baptist was the son of the priest",
+     "accept": [
+      "Zechariah",
+      "Zacharias",
+      "Zachary",
+      "Zakariya"
+     ]
+    },
+    "S1_drop_b1": {
+     "kind": "fill",
+     "text": "Fact: A Jewish preacher was the son of the priest",
+     "accept": [
+      "Zechariah",
+      "Zacharias",
+      "Zachary",
+      "Zakariya"
+     ]
+    },
+    "G2_b1": {
+     "kind": "qa",
+     "text": "Name the preacher who immersed Jesus in the Jordan River and was later beheaded at the request of Salome.",
+     "accept": [
+      "John the Baptist",
+      "Yahya ibn Zakariya",
+      "John",
+      "Yahya",
+      "the Baptist"
+     ]
+    },
+    "S1_local_cue": {
+     "kind": "fill",
+     "text": "Fact: the prophet was the son of the priest",
+     "accept": [
+      "Zechariah",
+      "Zacharias",
+      "Zachary",
+      "Zakariya"
+     ]
+    }
+   },
+   "shortcut_accept": [
+    "Zechariah",
+    "Zacharias",
+    "Zachary",
+    "Zakariya"
+   ],
+   "why_nonobvious": "A generic prophet or preacher who was a priest's son could be Jeremiah (Hilkiah) or Ezekiel (Buzi); only identifying the baptizer of Jesus gives Zechariah.",
+   "consistency": 1.0,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge1": 1.0
+   },
+   "hop_consistency": 0.9,
+   "context_b2_consistency": null,
+   "shortcut_probes": [
+    {
+     "id": "S1_drop_b1",
+     "kind": "fill",
+     "text": "Fact: A Jewish preacher was the son of the priest",
+     "n_pass": 2,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S1_local_cue",
+     "kind": "fill",
+     "text": "Fact: the prophet was the son of the priest",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_0",
+     "kind": "fill",
+     "text": "Fact: The preacher was the son of the priest",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_1",
+     "kind": "fill",
+     "text": "Fact: The man was the son of the priest",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_2",
+     "kind": "qa",
+     "text": "The preacher was the son of which priest?",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_3",
+     "kind": "fill",
+     "text": "Fact: The person who was later killed was the son of the priest",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    }
+   ],
+   "shortcut_max": 0.1,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       3,
+       6,
+       4
+      ]
+     }
+    },
+    "target": 3,
+    "target_alts": [
+     2
+    ]
+   },
+   "mc": {
+    "bridge1": {
+     "gold": "John the Baptist",
+     "distractors": [
+      "Saint Peter",
+      "Mary, mother of Jesus",
+      "Martha",
+      "Judas Iscariot"
+     ],
+     "pool": "Opus-revised same-topic distractors (r4b_distractors.json)"
+    }
+   },
+   "name_forms": {
+    "bridge1": {
+     "en": [
+      "John the Baptist",
+      "Yahya ibn Zakariya",
+      "John the Baptiser"
+     ],
+     "zh": [
+      "施洗约翰",
+      "施洗者约翰"
+     ]
+    }
+   },
+   "n_render_tokens": 28,
+   "id": "mh2-baptizer-father-zechariah-s3",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 0.9,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "mh2-hobbes-tutor-charles-t2",
+   "subfamily": "2hop",
+   "domain": "politics and statesmen",
+   "prompt": "Fact: The English philosopher who wrote 'Leviathan' served in exile as mathematics tutor to the young prince who later became King",
+   "spans": {
+    "D1": "The English philosopher who wrote 'Leviathan'",
+    "R1": " served in exile as mathematics tutor to the young prince who later became King",
+    "G1": "A seventeenth-century philosopher"
+   },
+   "target": "Charles II of England",
+   "target_alts": [
+    "Charles II"
+   ],
+   "source": "multihop_v2",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "all",
+    "lite": {
+     "kind": "final_token"
+    }
+   },
+   "intermediates": [
+    "Thomas Hobbes"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Thomas Hobbes",
+       "Hobbes"
+      ]
+     },
+     "match": [
+      "Thomas Hobbes",
+      "Hobbes"
+     ],
+     "kind": "person",
+     "full_forms": [
+      "Thomas Hobbes",
+      "Hobbes"
+     ],
+     "forms_excluded": []
+    }
+   ],
+   "bridges": [
+    {
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "Thomas Hobbes",
+      "Hobbes"
+     ],
+     "question": "Name the English philosopher who wrote 'Leviathan'."
+    }
+   ],
+   "probes": {
+    "G3_hop_b1_t": {
+     "kind": "fill",
+     "text": "Fact: Thomas Hobbes served in exile as mathematics tutor to the young prince who later became King",
+     "accept": [
+      "Charles II of England",
+      "Charles II",
+      "Charles the Second",
+      "King Charles II"
+     ]
+    },
+    "S1_drop_b1": {
+     "kind": "fill",
+     "text": "Fact: A seventeenth-century philosopher served in exile as mathematics tutor to the young prince who later became King",
+     "accept": [
+      "Charles II of England",
+      "Charles II",
+      "Charles the Second",
+      "King Charles II"
+     ]
+    },
+    "G2_b1": {
+     "kind": "qa",
+     "text": "Name the English philosopher who wrote 'Leviathan'.",
+     "accept": [
+      "Thomas Hobbes",
+      "Hobbes"
+     ]
+    },
+    "S1_local_cue": {
+     "kind": "fill",
+     "text": "Fact: the philosopher served as a tutor to the young prince who later became King",
+     "accept": [
+      "Charles II of England",
+      "Charles II",
+      "Charles the Second",
+      "King Charles II"
+     ]
+    }
+   },
+   "shortcut_accept": [
+    "Charles II of England",
+    "Charles II",
+    "Charles the Second",
+    "King Charles II"
+   ],
+   "why_nonobvious": "Many philosophers tutored future kings, so only identifying Hobbes through Leviathan leads to his famous exile tutorship of the future Charles II.",
+   "consistency": 1.0,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge1": 1.0
+   },
+   "hop_consistency": 1.0,
+   "context_b2_consistency": null,
+   "shortcut_probes": [
+    {
+     "id": "S1_drop_b1",
+     "kind": "fill",
+     "text": "Fact: A seventeenth-century philosopher served in exile as mathematics tutor to the young prince who later became King",
+     "n_pass": 1,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S1_local_cue",
+     "kind": "fill",
+     "text": "Fact: the philosopher served as a tutor to the young prince who later became King",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_0",
+     "kind": "fill",
+     "text": "Fact: The English tutor in exile taught the young prince who later became King",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_1",
+     "kind": "qa",
+     "text": "Which young English prince in exile later became King?",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_2",
+     "kind": "fill",
+     "text": "Fact: The philosopher served as mathematics tutor to the young prince who later became King",
+     "n_pass": 1,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    }
+   ],
+   "shortcut_max": 0.05,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       3,
+       2
+      ]
+     }
+    },
+    "target": 4,
+    "target_alts": [
+     2
+    ]
+   },
+   "mc": {
+    "bridge1": {
+     "gold": "Thomas Hobbes",
+     "distractors": [
+      "René Descartes",
+      "Baruch Spinoza",
+      "Francis Bacon",
+      "Gottfried Leibniz"
+     ],
+     "pool": "Opus-revised same-topic distractors (r4b_distractors.json)"
+    }
+   },
+   "name_forms": {
+    "bridge1": {
+     "en": [
+      "Thomas Hobbes",
+      "Hobbes"
+     ],
+     "zh": [
+      "托马斯·霍布斯",
+      "托马斯・霍布斯",
+      "托马斯•霍布斯",
+      "托马斯霍布斯",
+      "霍布斯"
+     ]
+    }
+   },
+   "n_render_tokens": 26,
+   "id": "mh2-hobbes-tutor-charles-t2",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 0.95,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "mh2-rizal-first-novel-t2",
+   "subfamily": "2hop",
+   "domain": "medicine and its pioneers",
+   "prompt": "Fact: The ophthalmologist executed by Spanish colonial authorities in 1896 who became the national hero of the Philippines published as his first novel the book titled",
+   "spans": {
+    "D1": "The ophthalmologist executed by Spanish colonial authorities in 1896 who became the national hero of the Philippines",
+    "R1": " published as his first novel the book titled",
+    "G1": "A nineteenth-century ophthalmologist"
+   },
+   "target": "Noli Me Tángere",
+   "target_alts": [
+    "Noli Me Tangere"
+   ],
+   "source": "multihop_v2",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "all",
+    "lite": {
+     "kind": "final_token"
+    }
+   },
+   "intermediates": [
+    "José Rizal"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "José Rizal",
+       "Jose Rizal",
+       "Rizal"
+      ]
+     },
+     "match": [
+      "José Rizal",
+      "Jose Rizal",
+      "Rizal"
+     ],
+     "kind": "person",
+     "full_forms": [
+      "José Rizal",
+      "Jose Rizal"
+     ],
+     "forms_excluded": []
+    }
+   ],
+   "bridges": [
+    {
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "José Rizal",
+      "Jose Rizal",
+      "Rizal"
+     ],
+     "question": "Name the ophthalmologist executed by Spanish colonial authorities in 1896 who became the national hero of the Philippines."
+    }
+   ],
+   "probes": {
+    "G3_hop_b1_t": {
+     "kind": "fill",
+     "text": "Fact: José Rizal published as his first novel the book titled",
+     "accept": [
+      "Noli Me Tángere",
+      "Noli Me Tangere",
+      "Noli"
+     ]
+    },
+    "S1_drop_b1": {
+     "kind": "fill",
+     "text": "Fact: A nineteenth-century ophthalmologist published as his first novel the book titled",
+     "accept": [
+      "Noli Me Tángere",
+      "Noli Me Tangere",
+      "Noli",
+      "Tángere"
+     ]
+    },
+    "G2_b1": {
+     "kind": "qa",
+     "text": "Name the ophthalmologist executed by Spanish colonial authorities in 1896 who became the national hero of the Philippines.",
+     "accept": [
+      "José Rizal",
+      "Jose Rizal",
+      "Rizal"
+     ]
+    },
+    "S1_local_cue": {
+     "kind": "fill",
+     "text": "Fact: the ophthalmologist published as his first novel the book titled",
+     "accept": [
+      "Noli Me Tángere",
+      "Noli Me Tangere",
+      "Noli",
+      "Tángere"
+     ]
+    }
+   },
+   "shortcut_accept": [
+    "Noli Me Tángere",
+    "Noli Me Tangere",
+    "Noli",
+    "Tángere"
+   ],
+   "why_nonobvious": "The execution date and national-hero description point to José Rizal but say nothing about any book, and a generic ophthalmologist's first novel has no default answer, so the title requires resolving Rizal.",
+   "consistency": 1.0,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge1": 0.9
+   },
+   "hop_consistency": 1.0,
+   "context_b2_consistency": null,
+   "shortcut_probes": [
+    {
+     "id": "S1_drop_b1",
+     "kind": "fill",
+     "text": "Fact: A nineteenth-century ophthalmologist published as his first novel the book titled",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S1_local_cue",
+     "kind": "fill",
+     "text": "Fact: the ophthalmologist published as his first novel the book titled",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_0",
+     "kind": "fill",
+     "text": "Fact: The ophthalmologist published as his first novel the book titled",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_1",
+     "kind": "fill",
+     "text": "Fact: The writer from the Philippines published as his first novel the book titled",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_2",
+     "kind": "fill",
+     "text": "Fact: The author executed by colonial authorities published as his first novel the book titled",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_3",
+     "kind": "qa",
+     "text": "What book did the ophthalmologist from the Philippines publish as his first novel?",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    }
+   ],
+   "shortcut_max": 0.0,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       4,
+       4,
+       2
+      ]
+     }
+    },
+    "target": 6,
+    "target_alts": [
+     5
+    ]
+   },
+   "mc": {
+    "bridge1": {
+     "gold": "José Rizal",
+     "distractors": [
+      "Gregorio del Pilar",
+      "Hồ Chí Minh",
+      "Apolinario Mabini",
+      "Emilio Aguinaldo"
+     ],
+     "pool": "Opus-revised same-topic distractors (r4b_distractors.json)"
+    }
+   },
+   "name_forms": {
+    "bridge1": {
+     "en": [
+      "José Rizal",
+      "Rizal"
+     ],
+     "zh": [
+      "何塞·黎刹",
+      "何塞・黎刹",
+      "何塞•黎刹",
+      "何塞黎刹",
+      "黎刹"
+     ]
+    }
+   },
+   "n_render_tokens": 33,
+   "id": "mh2-rizal-first-novel-t2",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 0.9,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "mh2-hamlet-author-wife-t0",
+   "subfamily": "2hop",
+   "domain": "literature and its authors",
+   "prompt": "Fact: The playwright who wrote Hamlet and King Lear married a woman named",
+   "spans": {
+    "D1": "The playwright who wrote Hamlet and King Lear",
+    "R1": " married a woman named",
+    "G1": "An English playwright"
+   },
+   "target": "Anne Hathaway",
+   "target_alts": [
+    "Agnes Hathaway"
+   ],
+   "source": "multihop_v2",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "all",
+    "lite": {
+     "kind": "final_token"
+    }
+   },
+   "intermediates": [
+    "William Shakespeare"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "William Shakespeare",
+       "Shakespeare"
+      ]
+     },
+     "match": [
+      "William Shakespeare",
+      "Shakespeare"
+     ],
+     "kind": "person",
+     "full_forms": [
+      "William Shakespeare"
+     ],
+     "forms_excluded": []
+    }
+   ],
+   "bridges": [
+    {
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "William Shakespeare",
+      "Shakespeare"
+     ],
+     "question": "Name the playwright who wrote Hamlet and King Lear."
+    }
+   ],
+   "probes": {
+    "G3_hop_b1_t": {
+     "kind": "fill",
+     "text": "Fact: William Shakespeare married a woman named",
+     "accept": [
+      "Anne Hathaway",
+      "Agnes Hathaway",
+      "Hathaway"
+     ]
+    },
+    "S1_drop_b1": {
+     "kind": "fill",
+     "text": "Fact: An English playwright married a woman named",
+     "accept": [
+      "Anne Hathaway",
+      "Agnes Hathaway",
+      "Hathaway"
+     ]
+    },
+    "G2_b1": {
+     "kind": "qa",
+     "text": "Name the playwright who wrote Hamlet and King Lear.",
+     "accept": [
+      "William Shakespeare",
+      "Shakespeare"
+     ]
+    },
+    "S1_local_cue": {
+     "kind": "fill",
+     "text": "Fact: the playwright married a woman named",
+     "accept": [
+      "Anne Hathaway",
+      "Agnes Hathaway",
+      "Hathaway"
+     ]
+    }
+   },
+   "shortcut_accept": [
+    "Anne Hathaway",
+    "Agnes Hathaway",
+    "Hathaway"
+   ],
+   "why_nonobvious": "The prompt names only two plays; the wife's name follows only after identifying Shakespeare, and a generic playwright's wife has no default answer.",
+   "consistency": 0.9,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge1": 1.0
+   },
+   "hop_consistency": 1.0,
+   "context_b2_consistency": null,
+   "shortcut_probes": [
+    {
+     "id": "S1_drop_b1",
+     "kind": "fill",
+     "text": "Fact: An English playwright married a woman named",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S1_local_cue",
+     "kind": "fill",
+     "text": "Fact: the playwright married a woman named",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_0",
+     "kind": "fill",
+     "text": "Fact: The playwright married a woman named",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_1",
+     "kind": "fill",
+     "text": "Fact: The playwright who wrote plays married a woman named",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_2",
+     "kind": "qa",
+     "text": "What was the name of the woman the playwright married?",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_3",
+     "kind": "fill",
+     "text": "Fact: A man married a woman named",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    }
+   ],
+   "shortcut_max": 0.0,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       2,
+       1
+      ]
+     }
+    },
+    "target": 3,
+    "target_alts": [
+     4
+    ]
+   },
+   "mc": {
+    "bridge1": {
+     "gold": "William Shakespeare",
+     "distractors": [
+      "Thomas Kyd",
+      "John Fletcher",
+      "Thomas Dekker",
+      "Thomas Middleton"
+     ],
+     "pool": "Opus-revised same-topic distractors (r4b_distractors.json)"
+    }
+   },
+   "name_forms": {
+    "bridge1": {
+     "en": [
+      "William Shakespeare",
+      "Shakespeare"
+     ],
+     "zh": [
+      "威廉·莎士比亚",
+      "威廉・莎士比亚",
+      "威廉•莎士比亚",
+      "威廉莎士比亚",
+      "莎士比亚"
+     ]
+    }
+   },
+   "n_render_tokens": 15,
+   "id": "mh2-hamlet-author-wife-t0",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 0.9,
+     "pass": true
+    }
+   }
+  }
+ ]
+}

@@ -2,10 +2,35 @@
  "family": "multilingual",
  "gate": "Qwen3.6-27B behavioral: >=8/10 correct at temp 0.7 (greedy-verified first); association scored against association_aliases.json (phrase-aware, echo-guarded); poetry scored by committed rhyme",
  "eval_render_note": "EVAL RENDER: feed `prompt` verbatim as plain text, NO chat template (directed-modulation is the only chat-templated family). `gate_variant` records how the item was behaviorally verified and does NOT affect the eval read.",
+ "version": 3,
+ "contract": {
+  "multi_token": false,
+  "include_target": false,
+  "conjunctive_units": true,
+  "native_langs": [
+   "en",
+   "zh"
+  ]
+ },
+ "v2": "v2 (plan 0040, Camila 2026-10-30): the readout must NAME the passage's language and write the intermediate in English or the model's native language (contract.native_langs); every unit is required; the language unit holds language names only.",
+ "built_by": "scripts/build_multilingual_v2.py (curation: scripts/multilingual_v2_curation.py)",
+ "v1_bank": "evals/multilingual/items.json",
+ "n_items": 99,
+ "dropped": {
+  "b3-ml-es-capital-france": "the gloss Paris and the target París coincide after folding, so an English mention cannot be told from the L2 answer"
+ },
+ "supersedes": "items_v2.json",
+ "frozen": "2026-11-01",
+ "r4_mc": {
+  "script": "scripts/build_r4_mc_banks.py",
+  "rule": "round 4 (Camila r2 MC leakage standard): only the MC distractor lists change. Concept lists: four of the other items' golds of the same mc_type, sampled without replacement weighted by gold frequency (never the gold or a prompt concept; filled from the v2 list). Language lists: the four other gold languages of this bank closest to the gold (shared family 4, script 2, region 1; ties seeded by family and gold). ",
+  "lang_rule": "wsbench.multitoken.options.r4_language_distractors (R4_LANG_INFO / R4_LANG_POOLS)",
+  "lists_changed": 198
+ },
  "adapt": {
   "model": "qwen3.5-2b",
   "hf_id": "Qwen/Qwen3.5-2B",
-  "frozen": "2026-10-20"
+  "frozen": "2026-11-04"
  },
  "items": [
   {
@@ -29,6 +54,130 @@
     "offsets": [
      -1
     ]
+   },
+   "lang": "de",
+   "mc_type": "opposite",
+   "prompt_concepts": [
+    "above",
+    "high",
+    "place",
+    "top",
+    "up"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "down",
+       "below",
+       "low",
+       "bottom"
+      ],
+      "zh": [
+       "下",
+       "下面",
+       "下方"
+      ]
+     },
+     "match": [
+      "down",
+      "below",
+      "low",
+      "bottom",
+      "下",
+      "下面",
+      "下方"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "German"
+      ],
+      "zh": [
+       "德语",
+       "德文"
+      ],
+      "de": [
+       "Deutsch",
+       "auf Deutsch",
+       "deutsche Sprache",
+       "deutschen Sprache"
+      ]
+     },
+     "match": [
+      "German",
+      "德语",
+      "德文",
+      "Deutsch",
+      "auf Deutsch",
+      "deutsche Sprache",
+      "deutschen Sprache"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "down",
+     "distractors": [
+      "small",
+      "slow",
+      "short",
+      "right"
+     ]
+    },
+    "language": {
+     "gold": "German",
+     "distractors": [
+      "Danish",
+      "Dutch",
+      "Irish",
+      "Czech"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1,
+       1,
+       1,
+       1
+      ],
+      "zh": [
+       1,
+       1,
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "zh": [
+       1,
+       2
+      ],
+      "de": [
+       1,
+       2,
+       2,
+       2
+      ]
+     }
+    },
+    "target": 1
    },
    "id": "de-place-up-down",
    "adapt": {
@@ -61,6 +210,118 @@
      -1
     ]
    },
+   "lang": "de",
+   "mc_type": "opposite",
+   "prompt_concepts": [
+    "big",
+    "large",
+    "short",
+    "size",
+    "tall"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "small",
+       "little"
+      ],
+      "zh": [
+       "小"
+      ]
+     },
+     "match": [
+      "small",
+      "little",
+      "小"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "German"
+      ],
+      "zh": [
+       "德语",
+       "德文"
+      ],
+      "de": [
+       "Deutsch",
+       "auf Deutsch",
+       "deutsche Sprache",
+       "deutschen Sprache"
+      ]
+     },
+     "match": [
+      "German",
+      "德语",
+      "德文",
+      "Deutsch",
+      "auf Deutsch",
+      "deutsche Sprache",
+      "deutschen Sprache"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "small",
+     "distractors": [
+      "cold",
+      "down",
+      "old",
+      "last"
+     ]
+    },
+    "language": {
+     "gold": "German",
+     "distractors": [
+      "Danish",
+      "Dutch",
+      "Irish",
+      "Czech"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1,
+       1
+      ],
+      "zh": [
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "zh": [
+       1,
+       2
+      ],
+      "de": [
+       1,
+       2,
+       2,
+       2
+      ]
+     }
+    },
+    "target": 1
+   },
    "id": "de-size-big-small",
    "adapt": {
     "origin": "original",
@@ -91,6 +352,122 @@
     "offsets": [
      -1
     ]
+   },
+   "lang": "es",
+   "mc_type": "number",
+   "prompt_concepts": [
+    "four",
+    "half"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "two",
+       "2"
+      ],
+      "zh": [
+       "二",
+       "两"
+      ]
+     },
+     "match": [
+      "two",
+      "2",
+      "二",
+      "两"
+     ],
+     "numeric_match": "standalone"
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Spanish"
+      ],
+      "zh": [
+       "西班牙语",
+       "西班牙文"
+      ],
+      "es": [
+       "español",
+       "castellano",
+       "en español",
+       "lengua española",
+       "idioma español"
+      ]
+     },
+     "match": [
+      "Spanish",
+      "西班牙语",
+      "西班牙文",
+      "español",
+      "castellano",
+      "en español",
+      "lengua española",
+      "idioma español"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "two",
+     "distractors": [
+      "ten",
+      "six",
+      "three",
+      "five"
+     ]
+    },
+    "language": {
+     "gold": "Spanish",
+     "distractors": [
+      "French",
+      "Portuguese",
+      "Italian",
+      "Irish"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1,
+       1
+      ],
+      "zh": [
+       1,
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "zh": [
+       1,
+       2
+      ],
+      "es": [
+       1,
+       2,
+       2,
+       2,
+       2
+      ]
+     }
+    },
+    "target": 1
    },
    "id": "es-half-four",
    "adapt": {
@@ -123,11 +500,127 @@
      -1
     ]
    },
+   "lang": "es",
+   "mc_type": "opposite",
+   "prompt_concepts": [
+    "close",
+    "near",
+    "place"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "far",
+       "far away"
+      ],
+      "zh": [
+       "远",
+       "遥远"
+      ]
+     },
+     "match": [
+      "far",
+      "far away",
+      "远",
+      "遥远"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Spanish"
+      ],
+      "zh": [
+       "西班牙语",
+       "西班牙文"
+      ],
+      "es": [
+       "español",
+       "castellano",
+       "en español",
+       "lengua española",
+       "idioma español"
+      ]
+     },
+     "match": [
+      "Spanish",
+      "西班牙语",
+      "西班牙文",
+      "español",
+      "castellano",
+      "en español",
+      "lengua española",
+      "idioma español"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "far",
+     "distractors": [
+      "down",
+      "small",
+      "cold",
+      "last"
+     ]
+    },
+    "language": {
+     "gold": "Spanish",
+     "distractors": [
+      "French",
+      "Portuguese",
+      "Italian",
+      "Irish"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1,
+       2
+      ],
+      "zh": [
+       1,
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "zh": [
+       1,
+       2
+      ],
+      "es": [
+       1,
+       2,
+       2,
+       2,
+       2
+      ]
+     }
+    },
+    "target": 1
+   },
    "id": "es-place-near-far",
    "adapt": {
     "origin": "original",
     "gate": {
-     "rate": 0.8,
+     "rate": 0.9,
      "pass": true
     }
    }
@@ -153,6 +646,121 @@
     "offsets": [
      -1
     ]
+   },
+   "lang": "es",
+   "mc_type": "opposite",
+   "prompt_concepts": [
+    "big",
+    "large",
+    "short",
+    "size",
+    "tall"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "small",
+       "little"
+      ],
+      "zh": [
+       "小"
+      ]
+     },
+     "match": [
+      "small",
+      "little",
+      "小"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Spanish"
+      ],
+      "zh": [
+       "西班牙语",
+       "西班牙文"
+      ],
+      "es": [
+       "español",
+       "castellano",
+       "en español",
+       "lengua española",
+       "idioma español"
+      ]
+     },
+     "match": [
+      "Spanish",
+      "西班牙语",
+      "西班牙文",
+      "español",
+      "castellano",
+      "en español",
+      "lengua española",
+      "idioma español"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "small",
+     "distractors": [
+      "young",
+      "cold",
+      "far",
+      "down"
+     ]
+    },
+    "language": {
+     "gold": "Spanish",
+     "distractors": [
+      "French",
+      "Portuguese",
+      "Italian",
+      "Irish"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1,
+       1
+      ],
+      "zh": [
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "zh": [
+       1,
+       2
+      ],
+      "es": [
+       1,
+       2,
+       2,
+       2,
+       2
+      ]
+     }
+    },
+    "target": 1
    },
    "id": "es-size-big-small",
    "adapt": {
@@ -185,6 +793,116 @@
      -1
     ]
    },
+   "lang": "fr",
+   "mc_type": "opposite",
+   "prompt_concepts": [
+    "close",
+    "near",
+    "place"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "far",
+       "far away"
+      ],
+      "zh": [
+       "远",
+       "遥远"
+      ]
+     },
+     "match": [
+      "far",
+      "far away",
+      "远",
+      "遥远"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "French"
+      ],
+      "zh": [
+       "法语",
+       "法文"
+      ],
+      "fr": [
+       "français",
+       "en français",
+       "langue française"
+      ]
+     },
+     "match": [
+      "French",
+      "法语",
+      "法文",
+      "français",
+      "en français",
+      "langue française"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "far",
+     "distractors": [
+      "closed",
+      "down",
+      "slow",
+      "cold"
+     ]
+    },
+    "language": {
+     "gold": "French",
+     "distractors": [
+      "Spanish",
+      "Portuguese",
+      "Italian",
+      "Polish"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1,
+       2
+      ],
+      "zh": [
+       1,
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "zh": [
+       1,
+       2
+      ],
+      "fr": [
+       1,
+       2,
+       2
+      ]
+     }
+    },
+    "target": 1
+   },
    "id": "fr-place-near-far",
    "adapt": {
     "origin": "original",
@@ -215,6 +933,127 @@
     "offsets": [
      -1
     ]
+   },
+   "lang": "fr",
+   "mc_type": "opposite",
+   "prompt_concepts": [
+    "above",
+    "high",
+    "place",
+    "top",
+    "up"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "down",
+       "below",
+       "low",
+       "bottom"
+      ],
+      "zh": [
+       "下",
+       "下面",
+       "下方"
+      ]
+     },
+     "match": [
+      "down",
+      "below",
+      "low",
+      "bottom",
+      "下",
+      "下面",
+      "下方"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "French"
+      ],
+      "zh": [
+       "法语",
+       "法文"
+      ],
+      "fr": [
+       "français",
+       "en français",
+       "langue française"
+      ]
+     },
+     "match": [
+      "French",
+      "法语",
+      "法文",
+      "français",
+      "en français",
+      "langue française"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "down",
+     "distractors": [
+      "small",
+      "young",
+      "new",
+      "slow"
+     ]
+    },
+    "language": {
+     "gold": "French",
+     "distractors": [
+      "Spanish",
+      "Portuguese",
+      "Italian",
+      "Polish"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1,
+       1,
+       1,
+       1
+      ],
+      "zh": [
+       1,
+       1,
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "zh": [
+       1,
+       2
+      ],
+      "fr": [
+       1,
+       2,
+       2
+      ]
+     }
+    },
+    "target": 1
    },
    "id": "fr-place-up-down",
    "adapt": {
@@ -247,6 +1086,115 @@
      -1
     ]
    },
+   "lang": "fr",
+   "mc_type": "opposite",
+   "prompt_concepts": [
+    "big",
+    "large",
+    "short",
+    "size",
+    "tall"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "small",
+       "little"
+      ],
+      "zh": [
+       "小"
+      ]
+     },
+     "match": [
+      "small",
+      "little",
+      "小"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "French"
+      ],
+      "zh": [
+       "法语",
+       "法文"
+      ],
+      "fr": [
+       "français",
+       "en français",
+       "langue française"
+      ]
+     },
+     "match": [
+      "French",
+      "法语",
+      "法文",
+      "français",
+      "en français",
+      "langue française"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "small",
+     "distractors": [
+      "closed",
+      "right",
+      "down",
+      "last"
+     ]
+    },
+    "language": {
+     "gold": "French",
+     "distractors": [
+      "Spanish",
+      "Portuguese",
+      "Italian",
+      "Polish"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1,
+       1
+      ],
+      "zh": [
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "zh": [
+       1,
+       2
+      ],
+      "fr": [
+       1,
+       2,
+       2
+      ]
+     }
+    },
+    "target": 1
+   },
    "id": "fr-size-big-small",
    "adapt": {
     "origin": "original",
@@ -277,6 +1225,112 @@
     "offsets": [
      -1
     ]
+   },
+   "lang": "nl",
+   "mc_type": "opposite",
+   "prompt_concepts": [
+    "left",
+    "opposite"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "right"
+      ],
+      "zh": [
+       "右",
+       "右边"
+      ]
+     },
+     "match": [
+      "right",
+      "右",
+      "右边"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Dutch"
+      ],
+      "zh": [
+       "荷兰语",
+       "荷兰文"
+      ],
+      "nl": [
+       "Nederlands",
+       "in het Nederlands",
+       "Nederlandse taal"
+      ]
+     },
+     "match": [
+      "Dutch",
+      "荷兰语",
+      "荷兰文",
+      "Nederlands",
+      "in het Nederlands",
+      "Nederlandse taal"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "right",
+     "distractors": [
+      "cold",
+      "small",
+      "young",
+      "down"
+     ]
+    },
+    "language": {
+     "gold": "Dutch",
+     "distractors": [
+      "German",
+      "Danish",
+      "Irish",
+      "Polish"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1
+      ],
+      "zh": [
+       1,
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "zh": [
+       2,
+       2
+      ],
+      "nl": [
+       1,
+       3,
+       2
+      ]
+     }
+    },
+    "target": 1
    },
    "id": "dutch-direction-left",
    "adapt": {
@@ -309,6 +1363,113 @@
      -1
     ]
    },
+   "lang": "it",
+   "mc_type": "number",
+   "prompt_concepts": [
+    "number",
+    "two"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "three",
+       "3"
+      ],
+      "zh": [
+       "三"
+      ]
+     },
+     "match": [
+      "three",
+      "3",
+      "三"
+     ],
+     "numeric_match": "standalone"
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Italian"
+      ],
+      "zh": [
+       "意大利语",
+       "意大利文"
+      ],
+      "it": [
+       "italiano",
+       "in italiano",
+       "lingua italiana"
+      ]
+     },
+     "match": [
+      "Italian",
+      "意大利语",
+      "意大利文",
+      "italiano",
+      "in italiano",
+      "lingua italiana"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "three",
+     "distractors": [
+      "eight",
+      "ten",
+      "six",
+      "five"
+     ]
+    },
+    "language": {
+     "gold": "Italian",
+     "distractors": [
+      "Spanish",
+      "French",
+      "Portuguese",
+      "Dutch"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1,
+       1
+      ],
+      "zh": [
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "zh": [
+       2,
+       2
+      ],
+      "it": [
+       1,
+       2,
+       2
+      ]
+     }
+    },
+    "target": 1
+   },
    "id": "italian-number-two",
    "adapt": {
     "origin": "original",
@@ -339,6 +1500,112 @@
     "offsets": [
      -1
     ]
+   },
+   "lang": "fa",
+   "mc_type": "colour",
+   "prompt_concepts": [
+    "blood",
+    "color"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "red"
+      ],
+      "zh": [
+       "红",
+       "红色"
+      ]
+     },
+     "match": [
+      "red",
+      "红",
+      "红色"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Persian",
+       "Farsi"
+      ],
+      "zh": [
+       "波斯语"
+      ],
+      "fa": [
+       "فارسی",
+       "زبان فارسی",
+       "به فارسی"
+      ]
+     },
+     "match": [
+      "Persian",
+      "Farsi",
+      "波斯语",
+      "فارسی",
+      "زبان فارسی",
+      "به فارسی"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "red",
+     "distractors": [
+      "blue",
+      "green",
+      "black",
+      "orange"
+     ]
+    },
+    "language": {
+     "gold": "Persian",
+     "distractors": [
+      "Arabic",
+      "Turkish",
+      "Japanese",
+      "Estonian"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1
+      ],
+      "zh": [
+       1,
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1,
+       1
+      ],
+      "zh": [
+       2
+      ],
+      "fa": [
+       2,
+       3,
+       3
+      ]
+     }
+    },
+    "target": 2
    },
    "id": "persian-color-blood",
    "adapt": {
@@ -371,6 +1638,118 @@
      -1
     ]
    },
+   "lang": "pl",
+   "mc_type": "opposite",
+   "prompt_concepts": [
+    "left",
+    "opposite"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "right"
+      ],
+      "zh": [
+       "右",
+       "右边"
+      ]
+     },
+     "match": [
+      "right",
+      "右",
+      "右边"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Polish"
+      ],
+      "zh": [
+       "波兰语"
+      ],
+      "pl": [
+       "język polski",
+       "po polsku",
+       "polszczyzna",
+       "polskiego",
+       "w języku polskim"
+      ]
+     },
+     "match": [
+      "Polish",
+      "波兰语",
+      "język polski",
+      "po polsku",
+      "polszczyzna",
+      "polskiego",
+      "w języku polskim"
+     ],
+     "case_sensitive": [
+      "Polish"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "right",
+     "distractors": [
+      "small",
+      "down",
+      "last",
+      "cold"
+     ]
+    },
+    "language": {
+     "gold": "Polish",
+     "distractors": [
+      "Slovak",
+      "Czech",
+      "Ukrainian",
+      "Serbian"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1
+      ],
+      "zh": [
+       1,
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "zh": [
+       2
+      ],
+      "pl": [
+       4,
+       3,
+       4,
+       2,
+       5
+      ]
+     }
+    },
+    "target": 1
+   },
    "id": "polish-direction-left",
    "adapt": {
     "origin": "original",
@@ -401,6 +1780,127 @@
     "offsets": [
      -1
     ]
+   },
+   "lang": "pt",
+   "mc_type": "opposite",
+   "prompt_concepts": [
+    "above",
+    "high",
+    "opposite",
+    "top",
+    "up"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "down",
+       "below",
+       "low",
+       "bottom"
+      ],
+      "zh": [
+       "下",
+       "下面",
+       "下方"
+      ]
+     },
+     "match": [
+      "down",
+      "below",
+      "low",
+      "bottom",
+      "下",
+      "下面",
+      "下方"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Portuguese"
+      ],
+      "zh": [
+       "葡萄牙语",
+       "葡萄牙文"
+      ],
+      "pt": [
+       "português",
+       "em português",
+       "língua portuguesa"
+      ]
+     },
+     "match": [
+      "Portuguese",
+      "葡萄牙语",
+      "葡萄牙文",
+      "português",
+      "em português",
+      "língua portuguesa"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "down",
+     "distractors": [
+      "small",
+      "far",
+      "slow",
+      "last"
+     ]
+    },
+    "language": {
+     "gold": "Portuguese",
+     "distractors": [
+      "Spanish",
+      "Italian",
+      "French",
+      "Polish"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1,
+       1,
+       1,
+       1
+      ],
+      "zh": [
+       1,
+       1,
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "zh": [
+       2,
+       2
+      ],
+      "pt": [
+       1,
+       2,
+       2
+      ]
+     }
+    },
+    "target": 1
    },
    "id": "portuguese-direction-up",
    "adapt": {
@@ -433,6 +1933,116 @@
      -1
     ]
    },
+   "lang": "tr",
+   "mc_type": "opposite",
+   "prompt_concepts": [
+    "fast",
+    "opposite",
+    "quick"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "slow"
+      ],
+      "zh": [
+       "慢",
+       "缓慢"
+      ]
+     },
+     "match": [
+      "slow",
+      "慢",
+      "缓慢"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Turkish"
+      ],
+      "zh": [
+       "土耳其语"
+      ],
+      "tr": [
+       "Türkçe",
+       "Türkçedir",
+       "Türk dili",
+       "Türkçe olarak",
+       "Türkçe dilinde"
+      ]
+     },
+     "match": [
+      "Turkish",
+      "土耳其语",
+      "Türkçe",
+      "Türkçedir",
+      "Türk dili",
+      "Türkçe olarak",
+      "Türkçe dilinde"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "slow",
+     "distractors": [
+      "cold",
+      "far",
+      "right",
+      "small"
+     ]
+    },
+    "language": {
+     "gold": "Turkish",
+     "distractors": [
+      "Dutch",
+      "Portuguese",
+      "Polish",
+      "German"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1
+      ],
+      "zh": [
+       1,
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "zh": [
+       2
+      ],
+      "tr": [
+       2,
+       3,
+       2,
+       3,
+       4
+      ]
+     }
+    },
+    "target": 2
+   },
    "id": "turkish-opposite-fast",
    "adapt": {
     "origin": "original",
@@ -463,6 +2073,112 @@
     "offsets": [
      -1
     ]
+   },
+   "lang": "de",
+   "mc_type": "capital",
+   "prompt_concepts": [
+    "Austria",
+    "capital"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Vienna"
+      ],
+      "zh": [
+       "维也纳"
+      ]
+     },
+     "match": [
+      "Vienna",
+      "维也纳"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "German"
+      ],
+      "zh": [
+       "德语",
+       "德文"
+      ],
+      "de": [
+       "Deutsch",
+       "auf Deutsch",
+       "deutsche Sprache",
+       "deutschen Sprache"
+      ]
+     },
+     "match": [
+      "German",
+      "德语",
+      "德文",
+      "Deutsch",
+      "auf Deutsch",
+      "deutsche Sprache",
+      "deutschen Sprache"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "Vienna",
+     "distractors": [
+      "Tokyo",
+      "London",
+      "Paris",
+      "Madrid"
+     ]
+    },
+    "language": {
+     "gold": "German",
+     "distractors": [
+      "Danish",
+      "Dutch",
+      "Irish",
+      "Czech"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1
+      ],
+      "zh": [
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "zh": [
+       1,
+       2
+      ],
+      "de": [
+       1,
+       2,
+       2,
+       2
+      ]
+     }
+    },
+    "target": 1
    },
    "id": "b3-ml-de-capital-austria",
    "adapt": {
@@ -495,6 +2211,115 @@
      -1
     ]
    },
+   "lang": "de",
+   "mc_type": "colour",
+   "prompt_concepts": [
+    "color",
+    "grass"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "green"
+      ],
+      "zh": [
+       "绿",
+       "绿色"
+      ]
+     },
+     "match": [
+      "green",
+      "绿",
+      "绿色"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "German"
+      ],
+      "zh": [
+       "德语",
+       "德文"
+      ],
+      "de": [
+       "Deutsch",
+       "auf Deutsch",
+       "deutsche Sprache",
+       "deutschen Sprache"
+      ]
+     },
+     "match": [
+      "German",
+      "德语",
+      "德文",
+      "Deutsch",
+      "auf Deutsch",
+      "deutsche Sprache",
+      "deutschen Sprache"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "green",
+     "distractors": [
+      "black",
+      "blue",
+      "red",
+      "orange"
+     ]
+    },
+    "language": {
+     "gold": "German",
+     "distractors": [
+      "Danish",
+      "Dutch",
+      "Irish",
+      "Czech"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1
+      ],
+      "zh": [
+       1,
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "zh": [
+       1,
+       2
+      ],
+      "de": [
+       1,
+       2,
+       2,
+       2
+      ]
+     }
+    },
+    "target": 1
+   },
    "id": "b3-ml-de-color-grass",
    "adapt": {
     "origin": "original",
@@ -526,11 +2351,120 @@
      -1
     ]
    },
+   "lang": "de",
+   "mc_type": "colour",
+   "prompt_concepts": [
+    "color",
+    "sky"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "blue"
+      ],
+      "zh": [
+       "蓝",
+       "蓝色"
+      ]
+     },
+     "match": [
+      "blue",
+      "蓝",
+      "蓝色"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "German"
+      ],
+      "zh": [
+       "德语",
+       "德文"
+      ],
+      "de": [
+       "Deutsch",
+       "auf Deutsch",
+       "deutsche Sprache",
+       "deutschen Sprache"
+      ]
+     },
+     "match": [
+      "German",
+      "德语",
+      "德文",
+      "Deutsch",
+      "auf Deutsch",
+      "deutsche Sprache",
+      "deutschen Sprache"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "blue",
+     "distractors": [
+      "green",
+      "red",
+      "black",
+      "purple"
+     ]
+    },
+    "language": {
+     "gold": "German",
+     "distractors": [
+      "Danish",
+      "Dutch",
+      "Irish",
+      "Czech"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1
+      ],
+      "zh": [
+       1,
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "zh": [
+       1,
+       2
+      ],
+      "de": [
+       1,
+       2,
+       2,
+       2
+      ]
+     }
+    },
+    "target": 1
+   },
    "id": "b3-ml-de-color-sky",
    "adapt": {
     "origin": "original",
     "gate": {
-     "rate": 1.0,
+     "rate": 0.9,
      "pass": true
     }
    }
@@ -556,6 +2490,116 @@
     "offsets": [
      -1
     ]
+   },
+   "lang": "de",
+   "mc_type": "opposite",
+   "prompt_concepts": [
+    "fast",
+    "opposite",
+    "quick"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "slow"
+      ],
+      "zh": [
+       "慢",
+       "缓慢"
+      ]
+     },
+     "match": [
+      "slow",
+      "慢",
+      "缓慢"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "German"
+      ],
+      "zh": [
+       "德语",
+       "德文"
+      ],
+      "de": [
+       "Deutsch",
+       "auf Deutsch",
+       "deutsche Sprache",
+       "deutschen Sprache"
+      ]
+     },
+     "match": [
+      "German",
+      "德语",
+      "德文",
+      "Deutsch",
+      "auf Deutsch",
+      "deutsche Sprache",
+      "deutschen Sprache"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "slow",
+     "distractors": [
+      "down",
+      "last",
+      "cold",
+      "new"
+     ]
+    },
+    "language": {
+     "gold": "German",
+     "distractors": [
+      "Danish",
+      "Dutch",
+      "Irish",
+      "Czech"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1
+      ],
+      "zh": [
+       1,
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "zh": [
+       1,
+       2
+      ],
+      "de": [
+       1,
+       2,
+       2,
+       2
+      ]
+     }
+    },
+    "target": 1
    },
    "id": "b3-ml-de-opposite-fast",
    "adapt": {
@@ -588,6 +2632,116 @@
      -1
     ]
    },
+   "lang": "de",
+   "mc_type": "number",
+   "prompt_concepts": [
+    "sum",
+    "two"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "four",
+       "4"
+      ],
+      "zh": [
+       "四"
+      ]
+     },
+     "match": [
+      "four",
+      "4",
+      "四"
+     ],
+     "numeric_match": "standalone"
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "German"
+      ],
+      "zh": [
+       "德语",
+       "德文"
+      ],
+      "de": [
+       "Deutsch",
+       "auf Deutsch",
+       "deutsche Sprache",
+       "deutschen Sprache"
+      ]
+     },
+     "match": [
+      "German",
+      "德语",
+      "德文",
+      "Deutsch",
+      "auf Deutsch",
+      "deutsche Sprache",
+      "deutschen Sprache"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "four",
+     "distractors": [
+      "three",
+      "eight",
+      "six",
+      "five"
+     ]
+    },
+    "language": {
+     "gold": "German",
+     "distractors": [
+      "Danish",
+      "Dutch",
+      "Irish",
+      "Czech"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1,
+       1
+      ],
+      "zh": [
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "zh": [
+       1,
+       2
+      ],
+      "de": [
+       1,
+       2,
+       2,
+       2
+      ]
+     }
+    },
+    "target": 1
+   },
    "id": "b3-ml-de-sum-four",
    "adapt": {
     "origin": "original",
@@ -618,11 +2772,122 @@
      -1
     ]
    },
+   "lang": "es",
+   "mc_type": "colour",
+   "prompt_concepts": [
+    "sky"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "blue"
+      ],
+      "zh": [
+       "蓝",
+       "蓝色"
+      ]
+     },
+     "match": [
+      "blue",
+      "蓝",
+      "蓝色"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Spanish"
+      ],
+      "zh": [
+       "西班牙语",
+       "西班牙文"
+      ],
+      "es": [
+       "español",
+       "castellano",
+       "en español",
+       "lengua española",
+       "idioma español"
+      ]
+     },
+     "match": [
+      "Spanish",
+      "西班牙语",
+      "西班牙文",
+      "español",
+      "castellano",
+      "en español",
+      "lengua española",
+      "idioma español"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "blue",
+     "distractors": [
+      "red",
+      "green",
+      "black",
+      "brown"
+     ]
+    },
+    "language": {
+     "gold": "Spanish",
+     "distractors": [
+      "French",
+      "Portuguese",
+      "Italian",
+      "Irish"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1
+      ],
+      "zh": [
+       1,
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "zh": [
+       1,
+       2
+      ],
+      "es": [
+       1,
+       2,
+       2,
+       2,
+       2
+      ]
+     }
+    },
+    "target": 1
+   },
    "id": "b3-ml-es-color-sky",
    "adapt": {
     "origin": "original",
     "gate": {
-     "rate": 1.0,
+     "rate": 0.9,
      "pass": true
     }
    }
@@ -649,11 +2914,124 @@
      -1
     ]
    },
+   "lang": "es",
+   "mc_type": "opposite",
+   "prompt_concepts": [
+    "fast",
+    "opposite",
+    "quick"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "slow"
+      ],
+      "zh": [
+       "慢",
+       "缓慢"
+      ]
+     },
+     "match": [
+      "slow",
+      "慢",
+      "缓慢"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Spanish"
+      ],
+      "zh": [
+       "西班牙语",
+       "西班牙文"
+      ],
+      "es": [
+       "español",
+       "castellano",
+       "en español",
+       "lengua española",
+       "idioma español"
+      ]
+     },
+     "match": [
+      "Spanish",
+      "西班牙语",
+      "西班牙文",
+      "español",
+      "castellano",
+      "en español",
+      "lengua española",
+      "idioma español"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "slow",
+     "distractors": [
+      "last",
+      "small",
+      "right",
+      "cold"
+     ]
+    },
+    "language": {
+     "gold": "Spanish",
+     "distractors": [
+      "French",
+      "Portuguese",
+      "Italian",
+      "Irish"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1
+      ],
+      "zh": [
+       1,
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "zh": [
+       1,
+       2
+      ],
+      "es": [
+       1,
+       2,
+       2,
+       2,
+       2
+      ]
+     }
+    },
+    "target": 1
+   },
    "id": "b3-ml-es-opposite-fast",
    "adapt": {
     "origin": "original",
     "gate": {
-     "rate": 1.0,
+     "rate": 0.9,
      "pass": true
     }
    }
@@ -680,30 +3058,143 @@
      -1
     ]
    },
+   "lang": "es",
+   "mc_type": "opposite",
+   "prompt_concepts": [
+    "hot",
+    "opposite",
+    "warm"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "cold"
+      ],
+      "zh": [
+       "冷",
+       "寒冷"
+      ]
+     },
+     "match": [
+      "cold",
+      "冷",
+      "寒冷"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Spanish"
+      ],
+      "zh": [
+       "西班牙语",
+       "西班牙文"
+      ],
+      "es": [
+       "español",
+       "castellano",
+       "en español",
+       "lengua española",
+       "idioma español"
+      ]
+     },
+     "match": [
+      "Spanish",
+      "西班牙语",
+      "西班牙文",
+      "español",
+      "castellano",
+      "en español",
+      "lengua española",
+      "idioma español"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "cold",
+     "distractors": [
+      "right",
+      "small",
+      "down",
+      "slow"
+     ]
+    },
+    "language": {
+     "gold": "Spanish",
+     "distractors": [
+      "French",
+      "Portuguese",
+      "Italian",
+      "Irish"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1
+      ],
+      "zh": [
+       1,
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "zh": [
+       1,
+       2
+      ],
+      "es": [
+       1,
+       2,
+       2,
+       2,
+       2
+      ]
+     }
+    },
+    "target": 1
+   },
    "id": "b3-ml-es-opposite-hot",
    "adapt": {
     "origin": "original",
     "gate": {
-     "rate": 0.9,
+     "rate": 1.0,
      "pass": true
     }
    }
   },
   {
-   "name": "b3-ml-fr-opposite-big",
-   "prompt": "Le contraire de \"grand\" est \"",
-   "target": "petit",
+   "name": "b3-ml-fr-capital-england",
+   "prompt": "La capitale de l'Angleterre est",
+   "target": "Londres",
    "intermediates": [
-    "small"
+    "London"
    ],
    "reference_concepts": [
     "French",
-    "opposite",
-    "big"
+    "capital",
+    "England"
    ],
    "source": "staging_b3",
    "consistency": 1.0,
-   "gate_variant": "plain",
+   "gate_variant": "chat",
    "eval_render": "plain",
    "readout": {
     "kind": "final_prompt_token",
@@ -711,11 +3202,114 @@
      -1
     ]
    },
-   "id": "b3-ml-fr-opposite-big",
+   "lang": "fr",
+   "mc_type": "capital",
+   "prompt_concepts": [
+    "England",
+    "capital"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "London"
+      ],
+      "zh": [
+       "伦敦"
+      ]
+     },
+     "match": [
+      "London",
+      "伦敦"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "French"
+      ],
+      "zh": [
+       "法语",
+       "法文"
+      ],
+      "fr": [
+       "français",
+       "en français",
+       "langue française"
+      ]
+     },
+     "match": [
+      "French",
+      "法语",
+      "法文",
+      "français",
+      "en français",
+      "langue française"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "London",
+     "distractors": [
+      "Paris",
+      "Tokyo",
+      "Vienna",
+      "Rome"
+     ]
+    },
+    "language": {
+     "gold": "French",
+     "distractors": [
+      "Spanish",
+      "Portuguese",
+      "Italian",
+      "Polish"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1
+      ],
+      "zh": [
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "zh": [
+       1,
+       2
+      ],
+      "fr": [
+       1,
+       2,
+       2
+      ]
+     }
+    },
+    "target": 1
+   },
+   "id": "b3-ml-fr-capital-england",
    "adapt": {
     "origin": "original",
     "gate": {
-     "rate": 1.0,
+     "rate": 0.8,
      "pass": true
     }
    }
@@ -741,6 +3335,115 @@
     "offsets": [
      -1
     ]
+   },
+   "lang": "it",
+   "mc_type": "opposite",
+   "prompt_concepts": [
+    "big",
+    "large",
+    "opposite",
+    "short",
+    "tall"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "small",
+       "little"
+      ],
+      "zh": [
+       "小"
+      ]
+     },
+     "match": [
+      "small",
+      "little",
+      "小"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Italian"
+      ],
+      "zh": [
+       "意大利语",
+       "意大利文"
+      ],
+      "it": [
+       "italiano",
+       "in italiano",
+       "lingua italiana"
+      ]
+     },
+     "match": [
+      "Italian",
+      "意大利语",
+      "意大利文",
+      "italiano",
+      "in italiano",
+      "lingua italiana"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "small",
+     "distractors": [
+      "cold",
+      "far",
+      "down",
+      "last"
+     ]
+    },
+    "language": {
+     "gold": "Italian",
+     "distractors": [
+      "Spanish",
+      "French",
+      "Portuguese",
+      "Dutch"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1,
+       1
+      ],
+      "zh": [
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "zh": [
+       2,
+       2
+      ],
+      "it": [
+       1,
+       2,
+       2
+      ]
+     }
+    },
+    "target": 1
    },
    "id": "b3-ml-it-opposite-big",
    "adapt": {
@@ -773,38 +3476,114 @@
      -1
     ]
    },
-   "id": "b3-ml-it-opposite-hot",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "b3-ml-pt-opposite-big",
-   "prompt": "O contrário de \"grande\" é \"",
-   "target": "pequeno",
-   "intermediates": [
-    "small"
-   ],
-   "reference_concepts": [
-    "Portuguese",
+   "lang": "it",
+   "mc_type": "opposite",
+   "prompt_concepts": [
+    "hot",
     "opposite",
-    "big"
+    "warm"
    ],
-   "source": "staging_b3",
-   "consistency": 1.0,
-   "gate_variant": "plain",
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "cold"
+      ],
+      "zh": [
+       "冷",
+       "寒冷"
+      ]
+     },
+     "match": [
+      "cold",
+      "冷",
+      "寒冷"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Italian"
+      ],
+      "zh": [
+       "意大利语",
+       "意大利文"
+      ],
+      "it": [
+       "italiano",
+       "in italiano",
+       "lingua italiana"
+      ]
+     },
+     "match": [
+      "Italian",
+      "意大利语",
+      "意大利文",
+      "italiano",
+      "in italiano",
+      "lingua italiana"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "cold",
+     "distractors": [
+      "far",
+      "right",
+      "closed",
+      "down"
+     ]
+    },
+    "language": {
+     "gold": "Italian",
+     "distractors": [
+      "Spanish",
+      "French",
+      "Portuguese",
+      "Dutch"
+     ]
+    }
    },
-   "id": "b3-ml-pt-opposite-big",
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1
+      ],
+      "zh": [
+       1,
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "zh": [
+       2,
+       2
+      ],
+      "it": [
+       1,
+       2,
+       2
+      ]
+     }
+    },
+    "target": 1
+   },
+   "id": "b3-ml-it-opposite-hot",
    "adapt": {
     "origin": "original",
     "gate": {
@@ -835,11 +3614,118 @@
      -1
     ]
    },
+   "lang": "pt",
+   "mc_type": "opposite",
+   "prompt_concepts": [
+    "hot",
+    "opposite",
+    "warm"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "cold"
+      ],
+      "zh": [
+       "冷",
+       "寒冷"
+      ]
+     },
+     "match": [
+      "cold",
+      "冷",
+      "寒冷"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Portuguese"
+      ],
+      "zh": [
+       "葡萄牙语",
+       "葡萄牙文"
+      ],
+      "pt": [
+       "português",
+       "em português",
+       "língua portuguesa"
+      ]
+     },
+     "match": [
+      "Portuguese",
+      "葡萄牙语",
+      "葡萄牙文",
+      "português",
+      "em português",
+      "língua portuguesa"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "cold",
+     "distractors": [
+      "small",
+      "right",
+      "last",
+      "down"
+     ]
+    },
+    "language": {
+     "gold": "Portuguese",
+     "distractors": [
+      "Spanish",
+      "Italian",
+      "French",
+      "Polish"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1
+      ],
+      "zh": [
+       1,
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "zh": [
+       2,
+       2
+      ],
+      "pt": [
+       1,
+       2,
+       2
+      ]
+     }
+    },
+    "target": 1
+   },
    "id": "b3-ml-pt-opposite-hot",
    "adapt": {
     "origin": "original",
     "gate": {
-     "rate": 0.9,
+     "rate": 1.0,
      "pass": true
     }
    }
@@ -866,42 +3752,138 @@
      -1
     ]
    },
+   "lang": "es",
+   "mc_type": "opposite",
+   "prompt_concepts": [
+    "above",
+    "high",
+    "place",
+    "top",
+    "up"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "down",
+       "below",
+       "low",
+       "bottom"
+      ],
+      "zh": [
+       "下",
+       "下面",
+       "下方"
+      ]
+     },
+     "match": [
+      "down",
+      "below",
+      "low",
+      "bottom",
+      "下",
+      "下面",
+      "下方"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Spanish"
+      ],
+      "zh": [
+       "西班牙语",
+       "西班牙文"
+      ],
+      "es": [
+       "español",
+       "castellano",
+       "en español",
+       "lengua española",
+       "idioma español"
+      ]
+     },
+     "match": [
+      "Spanish",
+      "西班牙语",
+      "西班牙文",
+      "español",
+      "castellano",
+      "en español",
+      "lengua española",
+      "idioma español"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "down",
+     "distractors": [
+      "cold",
+      "short",
+      "slow",
+      "far"
+     ]
+    },
+    "language": {
+     "gold": "Spanish",
+     "distractors": [
+      "French",
+      "Portuguese",
+      "Italian",
+      "Irish"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1,
+       1,
+       1,
+       1
+      ],
+      "zh": [
+       1,
+       1,
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "zh": [
+       1,
+       2
+      ],
+      "es": [
+       1,
+       2,
+       2,
+       2,
+       2
+      ]
+     }
+    },
+    "target": 1
+   },
    "id": "es-place-up-down",
    "adapt": {
     "origin": "original",
     "gate": {
      "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "es-time-after-day",
-   "prompt": "Después del día viene la \"",
-   "target": "noche",
-   "intermediates": [
-    "night"
-   ],
-   "reference_concepts": [
-    "español",
-    "time",
-    "day"
-   ],
-   "source": "jlens_source",
-   "consistency": 0.9,
-   "gate_variant": "plain",
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "id": "es-time-after-day",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 0.9,
      "pass": true
     }
    }
@@ -927,6 +3909,109 @@
     "offsets": [
      -1
     ]
+   },
+   "lang": "fr",
+   "mc_type": "month",
+   "prompt_concepts": [
+    "January",
+    "month"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "February"
+      ],
+      "zh": [
+       "二月"
+      ]
+     },
+     "match": [
+      "February",
+      "二月"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "French"
+      ],
+      "zh": [
+       "法语",
+       "法文"
+      ],
+      "fr": [
+       "français",
+       "en français",
+       "langue française"
+      ]
+     },
+     "match": [
+      "French",
+      "法语",
+      "法文",
+      "français",
+      "en français",
+      "langue française"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "February",
+     "distractors": [
+      "November",
+      "July",
+      "March",
+      "May"
+     ]
+    },
+    "language": {
+     "gold": "French",
+     "distractors": [
+      "Spanish",
+      "Portuguese",
+      "Italian",
+      "Polish"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1
+      ],
+      "zh": [
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "zh": [
+       1,
+       2
+      ],
+      "fr": [
+       1,
+       2,
+       2
+      ]
+     }
+    },
+    "target": 1
    },
    "id": "fr-month-after-jan",
    "adapt": {
@@ -959,6 +4044,127 @@
      -1
     ]
    },
+   "lang": "pt",
+   "mc_type": "opposite",
+   "prompt_concepts": [
+    "above",
+    "high",
+    "place",
+    "top",
+    "up"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "down",
+       "below",
+       "low",
+       "bottom"
+      ],
+      "zh": [
+       "下",
+       "下面",
+       "下方"
+      ]
+     },
+     "match": [
+      "down",
+      "below",
+      "low",
+      "bottom",
+      "下",
+      "下面",
+      "下方"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Portuguese"
+      ],
+      "zh": [
+       "葡萄牙语",
+       "葡萄牙文"
+      ],
+      "pt": [
+       "português",
+       "em português",
+       "língua portuguesa"
+      ]
+     },
+     "match": [
+      "Portuguese",
+      "葡萄牙语",
+      "葡萄牙文",
+      "português",
+      "em português",
+      "língua portuguesa"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "down",
+     "distractors": [
+      "last",
+      "small",
+      "young",
+      "new"
+     ]
+    },
+    "language": {
+     "gold": "Portuguese",
+     "distractors": [
+      "Spanish",
+      "Italian",
+      "French",
+      "Polish"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1,
+       1,
+       1,
+       1
+      ],
+      "zh": [
+       1,
+       1,
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "zh": [
+       2,
+       2
+      ],
+      "pt": [
+       1,
+       2,
+       2
+      ]
+     }
+    },
+    "target": 1
+   },
    "id": "pt-place-up-down",
    "adapt": {
     "origin": "original",
@@ -990,7 +4196,256 @@
      -1
     ]
    },
+   "lang": "pt",
+   "mc_type": "opposite",
+   "prompt_concepts": [
+    "big",
+    "large",
+    "short",
+    "size",
+    "tall"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "small",
+       "little"
+      ],
+      "zh": [
+       "小"
+      ]
+     },
+     "match": [
+      "small",
+      "little",
+      "小"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Portuguese"
+      ],
+      "zh": [
+       "葡萄牙语",
+       "葡萄牙文"
+      ],
+      "pt": [
+       "português",
+       "em português",
+       "língua portuguesa"
+      ]
+     },
+     "match": [
+      "Portuguese",
+      "葡萄牙语",
+      "葡萄牙文",
+      "português",
+      "em português",
+      "língua portuguesa"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "small",
+     "distractors": [
+      "old",
+      "cold",
+      "slow",
+      "last"
+     ]
+    },
+    "language": {
+     "gold": "Portuguese",
+     "distractors": [
+      "Spanish",
+      "Italian",
+      "French",
+      "Polish"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1,
+       1
+      ],
+      "zh": [
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "zh": [
+       2,
+       2
+      ],
+      "pt": [
+       1,
+       2,
+       2
+      ]
+     }
+    },
+    "target": 1
+   },
    "id": "pt-size-big-small",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "dutch-opposite-big",
+   "prompt": "Het tegenovergestelde van groot is ",
+   "target": "klein",
+   "intermediates": [
+    "small"
+   ],
+   "reference_concepts": [
+    "Dutch",
+    "opposite",
+    "big"
+   ],
+   "source": "jlens_source",
+   "consistency": 0.9,
+   "gate_variant": "plain_stripped",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "lang": "nl",
+   "mc_type": "opposite",
+   "prompt_concepts": [
+    "big",
+    "large",
+    "opposite",
+    "short",
+    "tall"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "small",
+       "little"
+      ],
+      "zh": [
+       "小"
+      ]
+     },
+     "match": [
+      "small",
+      "little",
+      "小"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Dutch"
+      ],
+      "zh": [
+       "荷兰语",
+       "荷兰文"
+      ],
+      "nl": [
+       "Nederlands",
+       "in het Nederlands",
+       "Nederlandse taal"
+      ]
+     },
+     "match": [
+      "Dutch",
+      "荷兰语",
+      "荷兰文",
+      "Nederlands",
+      "in het Nederlands",
+      "Nederlandse taal"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "small",
+     "distractors": [
+      "right",
+      "closed",
+      "far",
+      "last"
+     ]
+    },
+    "language": {
+     "gold": "Dutch",
+     "distractors": [
+      "German",
+      "Danish",
+      "Irish",
+      "Polish"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1,
+       1
+      ],
+      "zh": [
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "zh": [
+       2,
+       2
+      ],
+      "nl": [
+       1,
+       3,
+       2
+      ]
+     }
+    },
+    "target": 1
+   },
+   "id": "dutch-opposite-big",
    "adapt": {
     "origin": "original",
     "gate": {
@@ -1021,11 +4476,120 @@
      -1
     ]
    },
+   "lang": "es",
+   "mc_type": "phase",
+   "prompt_concepts": [
+    "freeze",
+    "water"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "ice"
+      ],
+      "zh": [
+       "冰"
+      ]
+     },
+     "match": [
+      "ice",
+      "冰"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Spanish"
+      ],
+      "zh": [
+       "西班牙语",
+       "西班牙文"
+      ],
+      "es": [
+       "español",
+       "castellano",
+       "en español",
+       "lengua española",
+       "idioma español"
+      ]
+     },
+     "match": [
+      "Spanish",
+      "西班牙语",
+      "西班牙文",
+      "español",
+      "castellano",
+      "en español",
+      "lengua española",
+      "idioma español"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "ice",
+     "distractors": [
+      "steam",
+      "rain",
+      "dew",
+      "mud"
+     ]
+    },
+    "language": {
+     "gold": "Spanish",
+     "distractors": [
+      "French",
+      "Portuguese",
+      "Italian",
+      "Irish"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1
+      ],
+      "zh": [
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "zh": [
+       1,
+       2
+      ],
+      "es": [
+       1,
+       2,
+       2,
+       2,
+       2
+      ]
+     }
+    },
+    "target": 1
+   },
    "id": "spanish-phase-water",
    "adapt": {
     "origin": "original",
     "gate": {
-     "rate": 0.9,
+     "rate": 1.0,
      "pass": true
     }
    }
@@ -1051,6 +4615,116 @@
     "offsets": [
      -1
     ]
+   },
+   "lang": "de",
+   "mc_type": "opposite",
+   "prompt_concepts": [
+    "hot",
+    "opposite",
+    "warm"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "cold"
+      ],
+      "zh": [
+       "冷",
+       "寒冷"
+      ]
+     },
+     "match": [
+      "cold",
+      "冷",
+      "寒冷"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "German"
+      ],
+      "zh": [
+       "德语",
+       "德文"
+      ],
+      "de": [
+       "Deutsch",
+       "auf Deutsch",
+       "deutsche Sprache",
+       "deutschen Sprache"
+      ]
+     },
+     "match": [
+      "German",
+      "德语",
+      "德文",
+      "Deutsch",
+      "auf Deutsch",
+      "deutsche Sprache",
+      "deutschen Sprache"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "cold",
+     "distractors": [
+      "far",
+      "old",
+      "slow",
+      "right"
+     ]
+    },
+    "language": {
+     "gold": "German",
+     "distractors": [
+      "Danish",
+      "Dutch",
+      "Irish",
+      "Czech"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1
+      ],
+      "zh": [
+       1,
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "zh": [
+       1,
+       2
+      ],
+      "de": [
+       1,
+       2,
+       2,
+       2
+      ]
+     }
+    },
+    "target": 1
    },
    "id": "b3-ml-de-opposite-hot",
    "adapt": {
@@ -1083,42 +4757,129 @@
      -1
     ]
    },
+   "lang": "es",
+   "mc_type": "time",
+   "prompt_concepts": [
+    "day",
+    "opposite"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "night",
+       "nighttime"
+      ],
+      "zh": [
+       "夜",
+       "夜晚",
+       "黑夜"
+      ]
+     },
+     "match": [
+      "night",
+      "nighttime",
+      "夜",
+      "夜晚",
+      "黑夜"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Spanish"
+      ],
+      "zh": [
+       "西班牙语",
+       "西班牙文"
+      ],
+      "es": [
+       "español",
+       "castellano",
+       "en español",
+       "lengua española",
+       "idioma español"
+      ]
+     },
+     "match": [
+      "Spanish",
+      "西班牙语",
+      "西班牙文",
+      "español",
+      "castellano",
+      "en español",
+      "lengua española",
+      "idioma español"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "night",
+     "distractors": [
+      "noon",
+      "morning",
+      "dusk",
+      "dawn"
+     ]
+    },
+    "language": {
+     "gold": "Spanish",
+     "distractors": [
+      "French",
+      "Portuguese",
+      "Italian",
+      "Irish"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1,
+       1
+      ],
+      "zh": [
+       1,
+       1,
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "zh": [
+       1,
+       2
+      ],
+      "es": [
+       1,
+       2,
+       2,
+       2,
+       2
+      ]
+     }
+    },
+    "target": 1
+   },
    "id": "b3-ml-es-opposite-day",
    "adapt": {
     "origin": "original",
     "gate": {
      "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "b3-ml-es-sum-four",
-   "prompt": "Dos más dos son",
-   "target": "cuatro",
-   "intermediates": [
-    "four"
-   ],
-   "reference_concepts": [
-    "Spanish",
-    "sum",
-    "two"
-   ],
-   "source": "staging_b3",
-   "consistency": 0.9,
-   "gate_variant": "chat",
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "id": "b3-ml-es-sum-four",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 0.8,
      "pass": true
     }
    }
@@ -1145,2204 +4906,118 @@
      -1
     ]
    },
+   "lang": "fr",
+   "mc_type": "opposite",
+   "prompt_concepts": [
+    "hot",
+    "opposite",
+    "warm"
+   ],
+   "units": [
+    {
+     "role": "concept_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "cold"
+      ],
+      "zh": [
+       "冷",
+       "寒冷"
+      ]
+     },
+     "match": [
+      "cold",
+      "冷",
+      "寒冷"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "French"
+      ],
+      "zh": [
+       "法语",
+       "法文"
+      ],
+      "fr": [
+       "français",
+       "en français",
+       "langue française"
+      ]
+     },
+     "match": [
+      "French",
+      "法语",
+      "法文",
+      "français",
+      "en français",
+      "langue française"
+     ]
+    }
+   ],
+   "mc": {
+    "concept_native": {
+     "gold": "cold",
+     "distractors": [
+      "last",
+      "closed",
+      "down",
+      "far"
+     ]
+    },
+    "language": {
+     "gold": "French",
+     "distractors": [
+      "Spanish",
+      "Portuguese",
+      "Italian",
+      "Polish"
+     ]
+    }
+   },
+   "mc_roles": [
+    "concept_native",
+    "language"
+   ],
+   "probe_token_lens": {
+    "units": {
+     "concept_native": {
+      "en": [
+       1
+      ],
+      "zh": [
+       1,
+       1
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "zh": [
+       1,
+       2
+      ],
+      "fr": [
+       1,
+       2,
+       2
+      ]
+     }
+    },
+    "target": 1
+   },
    "id": "b3-ml-fr-opposite-hot",
    "adapt": {
     "origin": "original",
     "gate": {
      "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w100c0-fr-opposite-heavy",
-   "prompt": "Le contraire de \"lourd\" est \"",
-   "target": "léger",
-   "intermediates": [
-    "light"
-   ],
-   "reference_concepts": [
-    "French",
-    "opposite",
-    "heavy"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for qwen3.5-2b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 100,
-    "gate": {
-     "rate": 0.9,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w100c0-de-opposite-bright",
-   "prompt": "Das Gegenteil von \"hell\" ist \"",
-   "target": "dunkel",
-   "intermediates": [
-    "dark"
-   ],
-   "reference_concepts": [
-    "German",
-    "opposite",
-    "bright"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for qwen3.5-2b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 100,
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w100c0-es-opposite-full",
-   "prompt": "Lo contrario de \"lleno\" es \"",
-   "target": "vacío",
-   "intermediates": [
-    "empty"
-   ],
-   "reference_concepts": [
-    "Spanish",
-    "opposite",
-    "full"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for qwen3.5-2b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 100,
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w100c0-fr-color-snow",
-   "prompt": "La couleur de la neige est le \"",
-   "target": "blanc",
-   "intermediates": [
-    "white"
-   ],
-   "reference_concepts": [
-    "French",
-    "color",
-    "snow"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for qwen3.5-2b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 100,
-    "gate": {
-     "rate": 0.9,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w100c0-pt-color-banana",
-   "prompt": "A cor de uma banana madura é \"",
-   "target": "amarelo",
-   "intermediates": [
-    "yellow"
-   ],
-   "reference_concepts": [
-    "Portuguese",
-    "color",
-    "banana"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for qwen3.5-2b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 100,
-    "gate": {
-     "rate": 0.9,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w100c0-fr-number-after-nineteen",
-   "prompt": "Le nombre qui vient après dix-neuf est \"",
-   "target": "vingt",
-   "intermediates": [
-    "twenty"
-   ],
-   "reference_concepts": [
-    "French",
-    "number",
-    "nineteen"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for qwen3.5-2b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 100,
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w100c0-pt-fish-live-in",
-   "prompt": "Os peixes vivem na \"",
-   "target": "água",
-   "intermediates": [
-    "water"
-   ],
-   "reference_concepts": [
-    "Portuguese",
-    "habitat",
-    "fish"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for qwen3.5-2b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 100,
-    "gate": {
-     "rate": 0.8,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w100c1-de-opposite-loud",
-   "prompt": "Das Gegenteil von \"laut\" ist \"",
-   "target": "leise",
-   "intermediates": [
-    "quiet"
-   ],
-   "reference_concepts": [
-    "German",
-    "opposite",
-    "loud"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for qwen3.5-2b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 100,
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w100c1-fr-opposite-strong",
-   "prompt": "Le contraire de \"fort\" est \"",
-   "target": "faible",
-   "intermediates": [
-    "weak"
-   ],
-   "reference_concepts": [
-    "French",
-    "opposite",
-    "strong"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for qwen3.5-2b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 100,
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w100c1-it-opposite-always",
-   "prompt": "Il contrario di \"sempre\" è \"",
-   "target": "mai",
-   "intermediates": [
-    "never"
-   ],
-   "reference_concepts": [
-    "Italian",
-    "opposite",
-    "always"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for qwen3.5-2b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 100,
-    "gate": {
-     "rate": 0.9,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w100c2-de-opposite-expensive",
-   "prompt": "Das Gegenteil von \"teuer\" ist \"",
-   "target": "billig",
-   "intermediates": [
-    "cheap"
-   ],
-   "reference_concepts": [
-    "German",
-    "opposite",
-    "expensive"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for qwen3.5-2b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 100,
-    "gate": {
-     "rate": 0.8,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w100c2-it-opposite-win",
-   "prompt": "Il contrario di \"vincere\" è \"",
-   "target": "perdere",
-   "intermediates": [
-    "lose"
-   ],
-   "reference_concepts": [
-    "Italian",
-    "opposite",
-    "win"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for qwen3.5-2b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 100,
-    "gate": {
-     "rate": 0.9,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w101c0-de-opposite-high",
-   "prompt": "Das Gegenteil von \"hoch\" ist \"",
-   "target": "niedrig",
-   "intermediates": [
-    "low"
-   ],
-   "reference_concepts": [
-    "German",
-    "opposite",
-    "high"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for qwen3.5-2b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 101,
-    "steer": "- Last wave: 12/60 passed.\n- Failed (gold -> what the model wrote): brutto -> model said 'cattivo' (0/10); tredici -> model said 'tre' (0/10); jeudi -> model said 'le jour après mercredi est jeudi' (2/10); nonno -> model said 'Il mio nonno è mio' (4/10); avó -> model said 'mãe' (2/10); primavera -> model said 'verano' (6/10); chien -> model said \"l'animal qui aboie est le chien\" (4/10); mucca -> model said 'mamma' (0/10); galo -> model said '\"pato\"' (0/10); sehen -> model said 'den Blick in die Tiefe werfen' (3/10); miele -> model said 'glutine' (1/10); cuchillo -> model said 'un cuchillo' (2/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): léger; dunkel; vacío; blanc; amarelo; vingt; água; leise; faible; mai; billig; perdere",
-    "gate": {
-     "rate": 0.9,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w101c0-fr-opposite-before",
-   "prompt": "Le contraire de \"avant\" est \"",
-   "target": "après",
-   "intermediates": [
-    "after"
-   ],
-   "reference_concepts": [
-    "French",
-    "opposite",
-    "before"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for qwen3.5-2b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 101,
-    "steer": "- Last wave: 12/60 passed.\n- Failed (gold -> what the model wrote): brutto -> model said 'cattivo' (0/10); tredici -> model said 'tre' (0/10); jeudi -> model said 'le jour après mercredi est jeudi' (2/10); nonno -> model said 'Il mio nonno è mio' (4/10); avó -> model said 'mãe' (2/10); primavera -> model said 'verano' (6/10); chien -> model said \"l'animal qui aboie est le chien\" (4/10); mucca -> model said 'mamma' (0/10); galo -> model said '\"pato\"' (0/10); sehen -> model said 'den Blick in die Tiefe werfen' (3/10); miele -> model said 'glutine' (1/10); cuchillo -> model said 'un cuchillo' (2/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): léger; dunkel; vacío; blanc; amarelo; vingt; água; leise; faible; mai; billig; perdere",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w101c0-es-opposite-fat",
-   "prompt": "Lo contrario de \"gordo\" es \"",
-   "target": "delgado",
-   "intermediates": [
-    "thin"
-   ],
-   "reference_concepts": [
-    "Spanish",
-    "opposite",
-    "fat"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for qwen3.5-2b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 101,
-    "steer": "- Last wave: 12/60 passed.\n- Failed (gold -> what the model wrote): brutto -> model said 'cattivo' (0/10); tredici -> model said 'tre' (0/10); jeudi -> model said 'le jour après mercredi est jeudi' (2/10); nonno -> model said 'Il mio nonno è mio' (4/10); avó -> model said 'mãe' (2/10); primavera -> model said 'verano' (6/10); chien -> model said \"l'animal qui aboie est le chien\" (4/10); mucca -> model said 'mamma' (0/10); galo -> model said '\"pato\"' (0/10); sehen -> model said 'den Blick in die Tiefe werfen' (3/10); miele -> model said 'glutine' (1/10); cuchillo -> model said 'un cuchillo' (2/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): léger; dunkel; vacío; blanc; amarelo; vingt; água; leise; faible; mai; billig; perdere",
-    "gate": {
-     "rate": 0.9,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w101c0-it-opposite-clean",
-   "prompt": "Il contrario di \"pulito\" è \"",
-   "target": "sporco",
-   "intermediates": [
-    "dirty"
-   ],
-   "reference_concepts": [
-    "Italian",
-    "opposite",
-    "clean"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for qwen3.5-2b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 101,
-    "steer": "- Last wave: 12/60 passed.\n- Failed (gold -> what the model wrote): brutto -> model said 'cattivo' (0/10); tredici -> model said 'tre' (0/10); jeudi -> model said 'le jour après mercredi est jeudi' (2/10); nonno -> model said 'Il mio nonno è mio' (4/10); avó -> model said 'mãe' (2/10); primavera -> model said 'verano' (6/10); chien -> model said \"l'animal qui aboie est le chien\" (4/10); mucca -> model said 'mamma' (0/10); galo -> model said '\"pato\"' (0/10); sehen -> model said 'den Blick in die Tiefe werfen' (3/10); miele -> model said 'glutine' (1/10); cuchillo -> model said 'un cuchillo' (2/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): léger; dunkel; vacío; blanc; amarelo; vingt; água; leise; faible; mai; billig; perdere",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w101c0-pt-object-library-books",
-   "prompt": "Na biblioteca há muitos \"",
-   "target": "livros",
-   "intermediates": [
-    "books"
-   ],
-   "reference_concepts": [
-    "Portuguese",
-    "contents",
-    "library"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for qwen3.5-2b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 101,
-    "steer": "- Last wave: 12/60 passed.\n- Failed (gold -> what the model wrote): brutto -> model said 'cattivo' (0/10); tredici -> model said 'tre' (0/10); jeudi -> model said 'le jour après mercredi est jeudi' (2/10); nonno -> model said 'Il mio nonno è mio' (4/10); avó -> model said 'mãe' (2/10); primavera -> model said 'verano' (6/10); chien -> model said \"l'animal qui aboie est le chien\" (4/10); mucca -> model said 'mamma' (0/10); galo -> model said '\"pato\"' (0/10); sehen -> model said 'den Blick in die Tiefe werfen' (3/10); miele -> model said 'glutine' (1/10); cuchillo -> model said 'un cuchillo' (2/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): léger; dunkel; vacío; blanc; amarelo; vingt; água; leise; faible; mai; billig; perdere",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w101c1-de-opposite-rich",
-   "prompt": "Das Gegenteil von \"reich\" ist \"",
-   "target": "arm",
-   "intermediates": [
-    "poor"
-   ],
-   "reference_concepts": [
-    "German",
-    "opposite",
-    "rich"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for qwen3.5-2b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 101,
-    "steer": "- Last wave: 12/60 passed.\n- Failed (gold -> what the model wrote): brutto -> model said 'cattivo' (0/10); tredici -> model said 'tre' (0/10); jeudi -> model said 'le jour après mercredi est jeudi' (2/10); nonno -> model said 'Il mio nonno è mio' (4/10); avó -> model said 'mãe' (2/10); primavera -> model said 'verano' (6/10); chien -> model said \"l'animal qui aboie est le chien\" (4/10); mucca -> model said 'mamma' (0/10); galo -> model said '\"pato\"' (0/10); sehen -> model said 'den Blick in die Tiefe werfen' (3/10); miele -> model said 'glutine' (1/10); cuchillo -> model said 'un cuchillo' (2/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): léger; dunkel; vacío; blanc; amarelo; vingt; água; leise; faible; mai; billig; perdere",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w101c1-pt-opposite-inside",
-   "prompt": "O contrário de \"dentro\" é \"",
-   "target": "fora",
-   "intermediates": [
-    "outside"
-   ],
-   "reference_concepts": [
-    "Portuguese",
-    "opposite",
-    "inside"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for qwen3.5-2b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 101,
-    "steer": "- Last wave: 12/60 passed.\n- Failed (gold -> what the model wrote): brutto -> model said 'cattivo' (0/10); tredici -> model said 'tre' (0/10); jeudi -> model said 'le jour après mercredi est jeudi' (2/10); nonno -> model said 'Il mio nonno è mio' (4/10); avó -> model said 'mãe' (2/10); primavera -> model said 'verano' (6/10); chien -> model said \"l'animal qui aboie est le chien\" (4/10); mucca -> model said 'mamma' (0/10); galo -> model said '\"pato\"' (0/10); sehen -> model said 'den Blick in die Tiefe werfen' (3/10); miele -> model said 'glutine' (1/10); cuchillo -> model said 'un cuchillo' (2/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): léger; dunkel; vacío; blanc; amarelo; vingt; água; leise; faible; mai; billig; perdere",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w101c1-es-opposite-entrance",
-   "prompt": "Lo contrario de \"entrada\" es \"",
-   "target": "salida",
-   "intermediates": [
-    "exit"
-   ],
-   "reference_concepts": [
-    "Spanish",
-    "opposite",
-    "entrance"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for qwen3.5-2b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 101,
-    "steer": "- Last wave: 12/60 passed.\n- Failed (gold -> what the model wrote): brutto -> model said 'cattivo' (0/10); tredici -> model said 'tre' (0/10); jeudi -> model said 'le jour après mercredi est jeudi' (2/10); nonno -> model said 'Il mio nonno è mio' (4/10); avó -> model said 'mãe' (2/10); primavera -> model said 'verano' (6/10); chien -> model said \"l'animal qui aboie est le chien\" (4/10); mucca -> model said 'mamma' (0/10); galo -> model said '\"pato\"' (0/10); sehen -> model said 'den Blick in die Tiefe werfen' (3/10); miele -> model said 'glutine' (1/10); cuchillo -> model said 'un cuchillo' (2/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): léger; dunkel; vacío; blanc; amarelo; vingt; água; leise; faible; mai; billig; perdere",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w101c1-es-food-hens",
-   "prompt": "Las gallinas ponen \"",
-   "target": "huevos",
-   "intermediates": [
-    "eggs"
-   ],
-   "reference_concepts": [
-    "Spanish",
-    "product",
-    "hens"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for qwen3.5-2b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 101,
-    "steer": "- Last wave: 12/60 passed.\n- Failed (gold -> what the model wrote): brutto -> model said 'cattivo' (0/10); tredici -> model said 'tre' (0/10); jeudi -> model said 'le jour après mercredi est jeudi' (2/10); nonno -> model said 'Il mio nonno è mio' (4/10); avó -> model said 'mãe' (2/10); primavera -> model said 'verano' (6/10); chien -> model said \"l'animal qui aboie est le chien\" (4/10); mucca -> model said 'mamma' (0/10); galo -> model said '\"pato\"' (0/10); sehen -> model said 'den Blick in die Tiefe werfen' (3/10); miele -> model said 'glutine' (1/10); cuchillo -> model said 'un cuchillo' (2/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): léger; dunkel; vacío; blanc; amarelo; vingt; água; leise; faible; mai; billig; perdere",
-    "gate": {
-     "rate": 0.8,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w101c1-fr-nature-sky-day",
-   "prompt": "Le jour, dans le ciel, brille le \"",
-   "target": "soleil",
-   "intermediates": [
-    "sun"
-   ],
-   "reference_concepts": [
-    "French",
-    "sky object",
-    "daytime"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for qwen3.5-2b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 101,
-    "steer": "- Last wave: 12/60 passed.\n- Failed (gold -> what the model wrote): brutto -> model said 'cattivo' (0/10); tredici -> model said 'tre' (0/10); jeudi -> model said 'le jour après mercredi est jeudi' (2/10); nonno -> model said 'Il mio nonno è mio' (4/10); avó -> model said 'mãe' (2/10); primavera -> model said 'verano' (6/10); chien -> model said \"l'animal qui aboie est le chien\" (4/10); mucca -> model said 'mamma' (0/10); galo -> model said '\"pato\"' (0/10); sehen -> model said 'den Blick in die Tiefe werfen' (3/10); miele -> model said 'glutine' (1/10); cuchillo -> model said 'un cuchillo' (2/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): léger; dunkel; vacío; blanc; amarelo; vingt; água; leise; faible; mai; billig; perdere",
-    "gate": {
-     "rate": 0.9,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w101c1-es-taste-sugar",
-   "prompt": "El azúcar tiene un sabor \"",
-   "target": "dulce",
-   "intermediates": [
-    "sweet"
-   ],
-   "reference_concepts": [
-    "Spanish",
-    "taste",
-    "sugar"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for qwen3.5-2b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 101,
-    "steer": "- Last wave: 12/60 passed.\n- Failed (gold -> what the model wrote): brutto -> model said 'cattivo' (0/10); tredici -> model said 'tre' (0/10); jeudi -> model said 'le jour après mercredi est jeudi' (2/10); nonno -> model said 'Il mio nonno è mio' (4/10); avó -> model said 'mãe' (2/10); primavera -> model said 'verano' (6/10); chien -> model said \"l'animal qui aboie est le chien\" (4/10); mucca -> model said 'mamma' (0/10); galo -> model said '\"pato\"' (0/10); sehen -> model said 'den Blick in die Tiefe werfen' (3/10); miele -> model said 'glutine' (1/10); cuchillo -> model said 'un cuchillo' (2/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): léger; dunkel; vacío; blanc; amarelo; vingt; água; leise; faible; mai; billig; perdere",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w101c2-de-opposite-early",
-   "prompt": "Das Gegenteil von \"früh\" ist \"",
-   "target": "spät",
-   "intermediates": [
-    "late"
-   ],
-   "reference_concepts": [
-    "German",
-    "opposite",
-    "early"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for qwen3.5-2b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 101,
-    "steer": "- Last wave: 12/60 passed.\n- Failed (gold -> what the model wrote): brutto -> model said 'cattivo' (0/10); tredici -> model said 'tre' (0/10); jeudi -> model said 'le jour après mercredi est jeudi' (2/10); nonno -> model said 'Il mio nonno è mio' (4/10); avó -> model said 'mãe' (2/10); primavera -> model said 'verano' (6/10); chien -> model said \"l'animal qui aboie est le chien\" (4/10); mucca -> model said 'mamma' (0/10); galo -> model said '\"pato\"' (0/10); sehen -> model said 'den Blick in die Tiefe werfen' (3/10); miele -> model said 'glutine' (1/10); cuchillo -> model said 'un cuchillo' (2/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): léger; dunkel; vacío; blanc; amarelo; vingt; água; leise; faible; mai; billig; perdere",
-    "gate": {
-     "rate": 0.8,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w101c2-fr-opposite-with",
-   "prompt": "Le contraire de \"avec\" est \"",
-   "target": "sans",
-   "intermediates": [
-    "without"
-   ],
-   "reference_concepts": [
-    "French",
-    "opposite",
-    "with"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for qwen3.5-2b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 101,
-    "steer": "- Last wave: 12/60 passed.\n- Failed (gold -> what the model wrote): brutto -> model said 'cattivo' (0/10); tredici -> model said 'tre' (0/10); jeudi -> model said 'le jour après mercredi est jeudi' (2/10); nonno -> model said 'Il mio nonno è mio' (4/10); avó -> model said 'mãe' (2/10); primavera -> model said 'verano' (6/10); chien -> model said \"l'animal qui aboie est le chien\" (4/10); mucca -> model said 'mamma' (0/10); galo -> model said '\"pato\"' (0/10); sehen -> model said 'den Blick in die Tiefe werfen' (3/10); miele -> model said 'glutine' (1/10); cuchillo -> model said 'un cuchillo' (2/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): léger; dunkel; vacío; blanc; amarelo; vingt; água; leise; faible; mai; billig; perdere",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w101c2-pt-opposite-yes",
-   "prompt": "O contrário de \"sim\" é \"",
-   "target": "não",
-   "intermediates": [
-    "no"
-   ],
-   "reference_concepts": [
-    "Portuguese",
-    "opposite",
-    "yes"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for qwen3.5-2b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 101,
-    "steer": "- Last wave: 12/60 passed.\n- Failed (gold -> what the model wrote): brutto -> model said 'cattivo' (0/10); tredici -> model said 'tre' (0/10); jeudi -> model said 'le jour après mercredi est jeudi' (2/10); nonno -> model said 'Il mio nonno è mio' (4/10); avó -> model said 'mãe' (2/10); primavera -> model said 'verano' (6/10); chien -> model said \"l'animal qui aboie est le chien\" (4/10); mucca -> model said 'mamma' (0/10); galo -> model said '\"pato\"' (0/10); sehen -> model said 'den Blick in die Tiefe werfen' (3/10); miele -> model said 'glutine' (1/10); cuchillo -> model said 'un cuchillo' (2/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): léger; dunkel; vacío; blanc; amarelo; vingt; água; leise; faible; mai; billig; perdere",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w101c2-es-insect-hive",
-   "prompt": "El insecto que vive en la colmena y hace miel es la \"",
-   "target": "abeja",
-   "intermediates": [
-    "bee"
-   ],
-   "reference_concepts": [
-    "Spanish",
-    "animal",
-    "hive"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for qwen3.5-2b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 101,
-    "steer": "- Last wave: 12/60 passed.\n- Failed (gold -> what the model wrote): brutto -> model said 'cattivo' (0/10); tredici -> model said 'tre' (0/10); jeudi -> model said 'le jour après mercredi est jeudi' (2/10); nonno -> model said 'Il mio nonno è mio' (4/10); avó -> model said 'mãe' (2/10); primavera -> model said 'verano' (6/10); chien -> model said \"l'animal qui aboie est le chien\" (4/10); mucca -> model said 'mamma' (0/10); galo -> model said '\"pato\"' (0/10); sehen -> model said 'den Blick in die Tiefe werfen' (3/10); miele -> model said 'glutine' (1/10); cuchillo -> model said 'un cuchillo' (2/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): léger; dunkel; vacío; blanc; amarelo; vingt; água; leise; faible; mai; billig; perdere",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w101c2-de-country-berlin",
-   "prompt": "Berlin ist die Hauptstadt von \"",
-   "target": "Deutschland",
-   "intermediates": [
-    "Germany"
-   ],
-   "reference_concepts": [
-    "German",
-    "capital of",
-    "Berlin"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for qwen3.5-2b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 101,
-    "steer": "- Last wave: 12/60 passed.\n- Failed (gold -> what the model wrote): brutto -> model said 'cattivo' (0/10); tredici -> model said 'tre' (0/10); jeudi -> model said 'le jour après mercredi est jeudi' (2/10); nonno -> model said 'Il mio nonno è mio' (4/10); avó -> model said 'mãe' (2/10); primavera -> model said 'verano' (6/10); chien -> model said \"l'animal qui aboie est le chien\" (4/10); mucca -> model said 'mamma' (0/10); galo -> model said '\"pato\"' (0/10); sehen -> model said 'den Blick in die Tiefe werfen' (3/10); miele -> model said 'glutine' (1/10); cuchillo -> model said 'un cuchillo' (2/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): léger; dunkel; vacío; blanc; amarelo; vingt; água; leise; faible; mai; billig; perdere",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w101c2-it-sky-shine",
-   "prompt": "Di notte, in cielo brillano tante piccole \"",
-   "target": "stelle",
-   "intermediates": [
-    "stars"
-   ],
-   "reference_concepts": [
-    "Italian",
-    "object",
-    "shine"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for qwen3.5-2b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 101,
-    "steer": "- Last wave: 12/60 passed.\n- Failed (gold -> what the model wrote): brutto -> model said 'cattivo' (0/10); tredici -> model said 'tre' (0/10); jeudi -> model said 'le jour après mercredi est jeudi' (2/10); nonno -> model said 'Il mio nonno è mio' (4/10); avó -> model said 'mãe' (2/10); primavera -> model said 'verano' (6/10); chien -> model said \"l'animal qui aboie est le chien\" (4/10); mucca -> model said 'mamma' (0/10); galo -> model said '\"pato\"' (0/10); sehen -> model said 'den Blick in die Tiefe werfen' (3/10); miele -> model said 'glutine' (1/10); cuchillo -> model said 'un cuchillo' (2/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): léger; dunkel; vacío; blanc; amarelo; vingt; água; leise; faible; mai; billig; perdere",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w101c2-es-place-borrow",
-   "prompt": "El lugar donde se pueden pedir prestados libros es la \"",
-   "target": "biblioteca",
-   "intermediates": [
-    "library"
-   ],
-   "reference_concepts": [
-    "Spanish",
-    "place",
-    "borrow"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for qwen3.5-2b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 101,
-    "steer": "- Last wave: 12/60 passed.\n- Failed (gold -> what the model wrote): brutto -> model said 'cattivo' (0/10); tredici -> model said 'tre' (0/10); jeudi -> model said 'le jour après mercredi est jeudi' (2/10); nonno -> model said 'Il mio nonno è mio' (4/10); avó -> model said 'mãe' (2/10); primavera -> model said 'verano' (6/10); chien -> model said \"l'animal qui aboie est le chien\" (4/10); mucca -> model said 'mamma' (0/10); galo -> model said '\"pato\"' (0/10); sehen -> model said 'den Blick in die Tiefe werfen' (3/10); miele -> model said 'glutine' (1/10); cuchillo -> model said 'un cuchillo' (2/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): léger; dunkel; vacío; blanc; amarelo; vingt; água; leise; faible; mai; billig; perdere",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w102c0-de-opposite-right-wrong",
-   "prompt": "Das Gegenteil von \"richtig\" ist \"",
-   "target": "falsch",
-   "intermediates": [
-    "wrong"
-   ],
-   "reference_concepts": [
-    "German",
-    "opposite",
-    "correct"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for qwen3.5-2b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 102,
-    "steer": "- Last wave: 18/60 passed.\n- Rejected by lint before gating: 1x latent: gloss is a cognate of the target; 1x leak: ['kranke'] shares the target's stem. Avoid these.\n- Failed (gold -> what the model wrote): marrone -> model said 'brow' (0/10); cien -> model said 'la leyenda de los diez' (0/10); dimanche -> model said 'le jour après samedi' (1/10); sábado -> model said 'o dia mais longo da semana' (0/10); main -> model said 'main' (5/10); nariz -> model said '\"Olemos con la\"' (0/10); bocca -> model said 'la \"pizza\"' (0/10); Vogel -> model said 'Flügel' (3/10); pez -> model said 'rayo' (2/10); souris -> model said 'la souris' (6/10); pane -> model said 'pasta' (1/10); boulanger -> model said 'painier' (0/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): niedrig; après; delgado; sporco; livros; arm; fora; salida; huevos; soleil; dulce; spät",
-    "gate": {
-     "rate": 0.8,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w102c0-fr-opposite-buy-sell",
-   "prompt": "Le contraire de \"acheter\" est \"",
-   "target": "vendre",
-   "intermediates": [
-    "sell"
-   ],
-   "reference_concepts": [
-    "French",
-    "opposite",
-    "buy"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for qwen3.5-2b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 102,
-    "steer": "- Last wave: 18/60 passed.\n- Rejected by lint before gating: 1x latent: gloss is a cognate of the target; 1x leak: ['kranke'] shares the target's stem. Avoid these.\n- Failed (gold -> what the model wrote): marrone -> model said 'brow' (0/10); cien -> model said 'la leyenda de los diez' (0/10); dimanche -> model said 'le jour après samedi' (1/10); sábado -> model said 'o dia mais longo da semana' (0/10); main -> model said 'main' (5/10); nariz -> model said '\"Olemos con la\"' (0/10); bocca -> model said 'la \"pizza\"' (0/10); Vogel -> model said 'Flügel' (3/10); pez -> model said 'rayo' (2/10); souris -> model said 'la souris' (6/10); pane -> model said 'pasta' (1/10); boulanger -> model said 'painier' (0/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): niedrig; après; delgado; sporco; livros; arm; fora; salida; huevos; soleil; dulce; spät",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w102c0-fr-family-son-daughter",
-   "prompt": "Un homme a deux enfants : un fils et une \"",
-   "target": "fille",
-   "intermediates": [
-    "daughter"
-   ],
-   "reference_concepts": [
-    "French",
-    "family",
-    "son"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for qwen3.5-2b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 102,
-    "steer": "- Last wave: 18/60 passed.\n- Rejected by lint before gating: 1x latent: gloss is a cognate of the target; 1x leak: ['kranke'] shares the target's stem. Avoid these.\n- Failed (gold -> what the model wrote): marrone -> model said 'brow' (0/10); cien -> model said 'la leyenda de los diez' (0/10); dimanche -> model said 'le jour après samedi' (1/10); sábado -> model said 'o dia mais longo da semana' (0/10); main -> model said 'main' (5/10); nariz -> model said '\"Olemos con la\"' (0/10); bocca -> model said 'la \"pizza\"' (0/10); Vogel -> model said 'Flügel' (3/10); pez -> model said 'rayo' (2/10); souris -> model said 'la souris' (6/10); pane -> model said 'pasta' (1/10); boulanger -> model said 'painier' (0/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): niedrig; après; delgado; sporco; livros; arm; fora; salida; huevos; soleil; dulce; spät",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w102c1-fr-opposite-small-big",
-   "prompt": "Le contraire de \"petit\" est \"",
-   "target": "grand",
-   "intermediates": [
-    "big"
-   ],
-   "reference_concepts": [
-    "French",
-    "opposite",
-    "small"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for qwen3.5-2b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 102,
-    "steer": "- Last wave: 18/60 passed.\n- Rejected by lint before gating: 1x latent: gloss is a cognate of the target; 1x leak: ['kranke'] shares the target's stem. Avoid these.\n- Failed (gold -> what the model wrote): marrone -> model said 'brow' (0/10); cien -> model said 'la leyenda de los diez' (0/10); dimanche -> model said 'le jour après samedi' (1/10); sábado -> model said 'o dia mais longo da semana' (0/10); main -> model said 'main' (5/10); nariz -> model said '\"Olemos con la\"' (0/10); bocca -> model said 'la \"pizza\"' (0/10); Vogel -> model said 'Flügel' (3/10); pez -> model said 'rayo' (2/10); souris -> model said 'la souris' (6/10); pane -> model said 'pasta' (1/10); boulanger -> model said 'painier' (0/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): niedrig; après; delgado; sporco; livros; arm; fora; salida; huevos; soleil; dulce; spät",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w102c1-es-opposite-down-up",
-   "prompt": "Lo contrario de \"abajo\" es \"",
-   "target": "arriba",
-   "intermediates": [
-    "up"
-   ],
-   "reference_concepts": [
-    "Spanish",
-    "opposite",
-    "down"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for qwen3.5-2b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 102,
-    "steer": "- Last wave: 18/60 passed.\n- Rejected by lint before gating: 1x latent: gloss is a cognate of the target; 1x leak: ['kranke'] shares the target's stem. Avoid these.\n- Failed (gold -> what the model wrote): marrone -> model said 'brow' (0/10); cien -> model said 'la leyenda de los diez' (0/10); dimanche -> model said 'le jour après samedi' (1/10); sábado -> model said 'o dia mais longo da semana' (0/10); main -> model said 'main' (5/10); nariz -> model said '\"Olemos con la\"' (0/10); bocca -> model said 'la \"pizza\"' (0/10); Vogel -> model said 'Flügel' (3/10); pez -> model said 'rayo' (2/10); souris -> model said 'la souris' (6/10); pane -> model said 'pasta' (1/10); boulanger -> model said 'painier' (0/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): niedrig; après; delgado; sporco; livros; arm; fora; salida; huevos; soleil; dulce; spät",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w102c1-pt-opposite-thin-fat",
-   "prompt": "O contrário de \"magro\" é \"",
-   "target": "gordo",
-   "intermediates": [
-    "fat"
-   ],
-   "reference_concepts": [
-    "Portuguese",
-    "opposite",
-    "thin"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for qwen3.5-2b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 102,
-    "steer": "- Last wave: 18/60 passed.\n- Rejected by lint before gating: 1x latent: gloss is a cognate of the target; 1x leak: ['kranke'] shares the target's stem. Avoid these.\n- Failed (gold -> what the model wrote): marrone -> model said 'brow' (0/10); cien -> model said 'la leyenda de los diez' (0/10); dimanche -> model said 'le jour après samedi' (1/10); sábado -> model said 'o dia mais longo da semana' (0/10); main -> model said 'main' (5/10); nariz -> model said '\"Olemos con la\"' (0/10); bocca -> model said 'la \"pizza\"' (0/10); Vogel -> model said 'Flügel' (3/10); pez -> model said 'rayo' (2/10); souris -> model said 'la souris' (6/10); pane -> model said 'pasta' (1/10); boulanger -> model said 'painier' (0/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): niedrig; après; delgado; sporco; livros; arm; fora; salida; huevos; soleil; dulce; spät",
-    "gate": {
-     "rate": 0.9,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w102c1-es-food-steak-meat",
-   "prompt": "El bistec es un trozo de \"",
-   "target": "carne",
-   "intermediates": [
-    "meat"
-   ],
-   "reference_concepts": [
-    "Spanish",
-    "food",
-    "steak"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for qwen3.5-2b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 102,
-    "steer": "- Last wave: 18/60 passed.\n- Rejected by lint before gating: 1x latent: gloss is a cognate of the target; 1x leak: ['kranke'] shares the target's stem. Avoid these.\n- Failed (gold -> what the model wrote): marrone -> model said 'brow' (0/10); cien -> model said 'la leyenda de los diez' (0/10); dimanche -> model said 'le jour après samedi' (1/10); sábado -> model said 'o dia mais longo da semana' (0/10); main -> model said 'main' (5/10); nariz -> model said '\"Olemos con la\"' (0/10); bocca -> model said 'la \"pizza\"' (0/10); Vogel -> model said 'Flügel' (3/10); pez -> model said 'rayo' (2/10); souris -> model said 'la souris' (6/10); pane -> model said 'pasta' (1/10); boulanger -> model said 'painier' (0/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): niedrig; après; delgado; sporco; livros; arm; fora; salida; huevos; soleil; dulce; spät",
-    "gate": {
-     "rate": 0.9,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w102c1-it-verb-paper-write",
-   "prompt": "Con la penna e un foglio di carta posso \"",
-   "target": "scrivere",
-   "intermediates": [
-    "write"
-   ],
-   "reference_concepts": [
-    "Italian",
-    "action",
-    "paper"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for qwen3.5-2b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 102,
-    "steer": "- Last wave: 18/60 passed.\n- Rejected by lint before gating: 1x latent: gloss is a cognate of the target; 1x leak: ['kranke'] shares the target's stem. Avoid these.\n- Failed (gold -> what the model wrote): marrone -> model said 'brow' (0/10); cien -> model said 'la leyenda de los diez' (0/10); dimanche -> model said 'le jour après samedi' (1/10); sábado -> model said 'o dia mais longo da semana' (0/10); main -> model said 'main' (5/10); nariz -> model said '\"Olemos con la\"' (0/10); bocca -> model said 'la \"pizza\"' (0/10); Vogel -> model said 'Flügel' (3/10); pez -> model said 'rayo' (2/10); souris -> model said 'la souris' (6/10); pane -> model said 'pasta' (1/10); boulanger -> model said 'painier' (0/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): niedrig; après; delgado; sporco; livros; arm; fora; salida; huevos; soleil; dulce; spät",
-    "gate": {
-     "rate": 0.9,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w102c2-de-opposite-right-left",
-   "prompt": "Das Gegenteil von \"rechts\" ist \"",
-   "target": "links",
-   "intermediates": [
-    "left"
-   ],
-   "reference_concepts": [
-    "German",
-    "opposite",
-    "right"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for qwen3.5-2b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 102,
-    "steer": "- Last wave: 18/60 passed.\n- Rejected by lint before gating: 1x latent: gloss is a cognate of the target; 1x leak: ['kranke'] shares the target's stem. Avoid these.\n- Failed (gold -> what the model wrote): marrone -> model said 'brow' (0/10); cien -> model said 'la leyenda de los diez' (0/10); dimanche -> model said 'le jour après samedi' (1/10); sábado -> model said 'o dia mais longo da semana' (0/10); main -> model said 'main' (5/10); nariz -> model said '\"Olemos con la\"' (0/10); bocca -> model said 'la \"pizza\"' (0/10); Vogel -> model said 'Flügel' (3/10); pez -> model said 'rayo' (2/10); souris -> model said 'la souris' (6/10); pane -> model said 'pasta' (1/10); boulanger -> model said 'painier' (0/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): niedrig; après; delgado; sporco; livros; arm; fora; salida; huevos; soleil; dulce; spät",
-    "gate": {
-     "rate": 0.9,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w102c2-fr-opposite-front-behind",
-   "prompt": "Le contraire de \"devant\" est \"",
-   "target": "derrière",
-   "intermediates": [
-    "behind"
-   ],
-   "reference_concepts": [
-    "French",
-    "opposite",
-    "front"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for qwen3.5-2b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 102,
-    "steer": "- Last wave: 18/60 passed.\n- Rejected by lint before gating: 1x latent: gloss is a cognate of the target; 1x leak: ['kranke'] shares the target's stem. Avoid these.\n- Failed (gold -> what the model wrote): marrone -> model said 'brow' (0/10); cien -> model said 'la leyenda de los diez' (0/10); dimanche -> model said 'le jour après samedi' (1/10); sábado -> model said 'o dia mais longo da semana' (0/10); main -> model said 'main' (5/10); nariz -> model said '\"Olemos con la\"' (0/10); bocca -> model said 'la \"pizza\"' (0/10); Vogel -> model said 'Flügel' (3/10); pez -> model said 'rayo' (2/10); souris -> model said 'la souris' (6/10); pane -> model said 'pasta' (1/10); boulanger -> model said 'painier' (0/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): niedrig; après; delgado; sporco; livros; arm; fora; salida; huevos; soleil; dulce; spät",
-    "gate": {
-     "rate": 0.8,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w102c2-es-opposite-better-worse",
-   "prompt": "Lo contrario de \"mejor\" es \"",
-   "target": "peor",
-   "intermediates": [
-    "worse"
-   ],
-   "reference_concepts": [
-    "Spanish",
-    "opposite",
-    "better"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for qwen3.5-2b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 102,
-    "steer": "- Last wave: 18/60 passed.\n- Rejected by lint before gating: 1x latent: gloss is a cognate of the target; 1x leak: ['kranke'] shares the target's stem. Avoid these.\n- Failed (gold -> what the model wrote): marrone -> model said 'brow' (0/10); cien -> model said 'la leyenda de los diez' (0/10); dimanche -> model said 'le jour après samedi' (1/10); sábado -> model said 'o dia mais longo da semana' (0/10); main -> model said 'main' (5/10); nariz -> model said '\"Olemos con la\"' (0/10); bocca -> model said 'la \"pizza\"' (0/10); Vogel -> model said 'Flügel' (3/10); pez -> model said 'rayo' (2/10); souris -> model said 'la souris' (6/10); pane -> model said 'pasta' (1/10); boulanger -> model said 'painier' (0/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): niedrig; après; delgado; sporco; livros; arm; fora; salida; huevos; soleil; dulce; spät",
-    "gate": {
-     "rate": 0.8,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w102c2-it-opposite-alive-dead",
-   "prompt": "Il contrario di \"vivo\" è \"",
-   "target": "morto",
-   "intermediates": [
-    "dead"
-   ],
-   "reference_concepts": [
-    "Italian",
-    "opposite",
-    "alive"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for qwen3.5-2b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 102,
-    "steer": "- Last wave: 18/60 passed.\n- Rejected by lint before gating: 1x latent: gloss is a cognate of the target; 1x leak: ['kranke'] shares the target's stem. Avoid these.\n- Failed (gold -> what the model wrote): marrone -> model said 'brow' (0/10); cien -> model said 'la leyenda de los diez' (0/10); dimanche -> model said 'le jour après samedi' (1/10); sábado -> model said 'o dia mais longo da semana' (0/10); main -> model said 'main' (5/10); nariz -> model said '\"Olemos con la\"' (0/10); bocca -> model said 'la \"pizza\"' (0/10); Vogel -> model said 'Flügel' (3/10); pez -> model said 'rayo' (2/10); souris -> model said 'la souris' (6/10); pane -> model said 'pasta' (1/10); boulanger -> model said 'painier' (0/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): niedrig; après; delgado; sporco; livros; arm; fora; salida; huevos; soleil; dulce; spät",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w102c2-es-greeting-hello-goodbye",
-   "prompt": "Al llegar decimos \"hola\" y al irnos decimos \"",
-   "target": "adiós",
-   "intermediates": [
-    "goodbye"
-   ],
-   "reference_concepts": [
-    "Spanish",
-    "greeting",
-    "hello"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for qwen3.5-2b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 102,
-    "steer": "- Last wave: 18/60 passed.\n- Rejected by lint before gating: 1x latent: gloss is a cognate of the target; 1x leak: ['kranke'] shares the target's stem. Avoid these.\n- Failed (gold -> what the model wrote): marrone -> model said 'brow' (0/10); cien -> model said 'la leyenda de los diez' (0/10); dimanche -> model said 'le jour après samedi' (1/10); sábado -> model said 'o dia mais longo da semana' (0/10); main -> model said 'main' (5/10); nariz -> model said '\"Olemos con la\"' (0/10); bocca -> model said 'la \"pizza\"' (0/10); Vogel -> model said 'Flügel' (3/10); pez -> model said 'rayo' (2/10); souris -> model said 'la souris' (6/10); pane -> model said 'pasta' (1/10); boulanger -> model said 'painier' (0/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): niedrig; après; delgado; sporco; livros; arm; fora; salida; huevos; soleil; dulce; spät",
-    "gate": {
-     "rate": 0.9,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w103c0-fr-opposite-close-open",
-   "prompt": "Le contraire de \"fermer\" est \"",
-   "target": "ouvrir",
-   "intermediates": [
-    "open"
-   ],
-   "reference_concepts": [
-    "French",
-    "opposite",
-    "close"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for qwen3.5-2b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 103,
-    "steer": "- Last wave: 13/60 passed.\n- Failed (gold -> what the model wrote): largo -> model said 'largo' (5/10); veloce -> model said 'rapido' (4/10); viola -> model said 'verde' (0/10); cinza -> model said '1,500 milímetros' (0/10); eins -> model said 'zwei' (0/10); irmã -> model said 'filha' (3/10); rana -> model said 'croac' (0/10); Löwe -> model said 'Der König der Tiere ist der \"Löwe\".' (2/10); cabeza -> model said 'la cabeza' (6/10); cuchara -> model said 'una cuchara' (3/10); garfo -> model said 'com arroz' (0/10); fromage -> model said 'la souris' (0/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): falsch; vendre; fille; grand; arriba; gordo; carne; scrivere; links; derrière; peor; morto",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w103c0-de-opposite-friend-enemy",
-   "prompt": "Das Gegenteil von \"Freund\" ist \"",
-   "target": "Feind",
-   "intermediates": [
-    "enemy"
-   ],
-   "reference_concepts": [
-    "German",
-    "opposite",
-    "friend"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for qwen3.5-2b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 103,
-    "steer": "- Last wave: 13/60 passed.\n- Failed (gold -> what the model wrote): largo -> model said 'largo' (5/10); veloce -> model said 'rapido' (4/10); viola -> model said 'verde' (0/10); cinza -> model said '1,500 milímetros' (0/10); eins -> model said 'zwei' (0/10); irmã -> model said 'filha' (3/10); rana -> model said 'croac' (0/10); Löwe -> model said 'Der König der Tiere ist der \"Löwe\".' (2/10); cabeza -> model said 'la cabeza' (6/10); cuchara -> model said 'una cuchara' (3/10); garfo -> model said 'com arroz' (0/10); fromage -> model said 'la souris' (0/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): falsch; vendre; fille; grand; arriba; gordo; carne; scrivere; links; derrière; peor; morto",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w103c1-pt-opposite-beginning-end",
-   "prompt": "O contrário de \"começo\" é \"",
-   "target": "fim",
-   "intermediates": [
-    "end"
-   ],
-   "reference_concepts": [
-    "Portuguese",
-    "opposite",
-    "começo"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for qwen3.5-2b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 103,
-    "steer": "- Last wave: 13/60 passed.\n- Failed (gold -> what the model wrote): largo -> model said 'largo' (5/10); veloce -> model said 'rapido' (4/10); viola -> model said 'verde' (0/10); cinza -> model said '1,500 milímetros' (0/10); eins -> model said 'zwei' (0/10); irmã -> model said 'filha' (3/10); rana -> model said 'croac' (0/10); Löwe -> model said 'Der König der Tiere ist der \"Löwe\".' (2/10); cabeza -> model said 'la cabeza' (6/10); cuchara -> model said 'una cuchara' (3/10); garfo -> model said 'com arroz' (0/10); fromage -> model said 'la souris' (0/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): falsch; vendre; fille; grand; arriba; gordo; carne; scrivere; links; derrière; peor; morto",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w103c2-es-opposite-last-first",
-   "prompt": "Lo contrario de \"último\" es \"",
-   "target": "primero",
-   "intermediates": [
-    "first"
-   ],
-   "reference_concepts": [
-    "Spanish",
-    "opposite",
-    "último"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for qwen3.5-2b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 103,
-    "steer": "- Last wave: 13/60 passed.\n- Failed (gold -> what the model wrote): largo -> model said 'largo' (5/10); veloce -> model said 'rapido' (4/10); viola -> model said 'verde' (0/10); cinza -> model said '1,500 milímetros' (0/10); eins -> model said 'zwei' (0/10); irmã -> model said 'filha' (3/10); rana -> model said 'croac' (0/10); Löwe -> model said 'Der König der Tiere ist der \"Löwe\".' (2/10); cabeza -> model said 'la cabeza' (6/10); cuchara -> model said 'una cuchara' (3/10); garfo -> model said 'com arroz' (0/10); fromage -> model said 'la souris' (0/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): falsch; vendre; fille; grand; arriba; gordo; carne; scrivere; links; derrière; peor; morto",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w103c2-fr-animal-wings",
-   "prompt": "Les oiseaux volent grâce à leurs \"",
-   "target": "ailes",
-   "intermediates": [
-    "wings"
-   ],
-   "reference_concepts": [
-    "French",
-    "animal body part",
-    "oiseaux"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for qwen3.5-2b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 103,
-    "steer": "- Last wave: 13/60 passed.\n- Failed (gold -> what the model wrote): largo -> model said 'largo' (5/10); veloce -> model said 'rapido' (4/10); viola -> model said 'verde' (0/10); cinza -> model said '1,500 milímetros' (0/10); eins -> model said 'zwei' (0/10); irmã -> model said 'filha' (3/10); rana -> model said 'croac' (0/10); Löwe -> model said 'Der König der Tiere ist der \"Löwe\".' (2/10); cabeza -> model said 'la cabeza' (6/10); cuchara -> model said 'una cuchara' (3/10); garfo -> model said 'com arroz' (0/10); fromage -> model said 'la souris' (0/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): falsch; vendre; fille; grand; arriba; gordo; carne; scrivere; links; derrière; peor; morto",
-    "gate": {
-     "rate": 0.9,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w104c0-de-opposite-smart",
-   "prompt": "Das Gegenteil von \"klug\" ist \"",
-   "target": "dumm",
-   "intermediates": [
-    "stupid"
-   ],
-   "reference_concepts": [
-    "German",
-    "opposite",
-    "smart"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for qwen3.5-2b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 104,
-    "steer": "- Last wave: 5/60 passed.\n- Rejected by lint before gating: 1x leak: ['cerisier'] shares the target's stem; 1x leak: ['pentear'] shares the target's stem; 1x leak: ['frankreich'] shares the target's stem; 1x leak: ['alemania'] shares the target's stem. Avoid these.\n- Failed (gold -> what the model wrote): amaro -> model said 'amaro' (4/10); mentira -> model said 'falsidade' (0/10); Zunge -> model said 'Geschmack' (0/10); polmoni -> model said 'respiriamo l\\'aria con i \"' (1/10); matin -> model said 'le monde' (0/10); almoço -> model said 'chamada \"arroz com feijão\"' (4/10); Zitrone -> model said 'Apfel' (0/10); piscina -> model said 'parque' (2/10); porto -> model said '\"mare\"' (0/10); escoba -> model said 'una brocha' (0/10); gesso -> model said '\"pallino\"' (0/10); Igel -> model said 'König der Wüste' (0/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): ouvrir; Feind; fim; primero; ailes",
-    "gate": {
-     "rate": 0.8,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w104c0-es-opposite-above",
-   "prompt": "Lo contrario de \"encima\" es \"",
-   "target": "debajo",
-   "intermediates": [
-    "under"
-   ],
-   "reference_concepts": [
-    "Spanish",
-    "opposite",
-    "above"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for qwen3.5-2b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 104,
-    "steer": "- Last wave: 5/60 passed.\n- Rejected by lint before gating: 1x leak: ['cerisier'] shares the target's stem; 1x leak: ['pentear'] shares the target's stem; 1x leak: ['frankreich'] shares the target's stem; 1x leak: ['alemania'] shares the target's stem. Avoid these.\n- Failed (gold -> what the model wrote): amaro -> model said 'amaro' (4/10); mentira -> model said 'falsidade' (0/10); Zunge -> model said 'Geschmack' (0/10); polmoni -> model said 'respiriamo l\\'aria con i \"' (1/10); matin -> model said 'le monde' (0/10); almoço -> model said 'chamada \"arroz com feijão\"' (4/10); Zitrone -> model said 'Apfel' (0/10); piscina -> model said 'parque' (2/10); porto -> model said '\"mare\"' (0/10); escoba -> model said 'una brocha' (0/10); gesso -> model said '\"pallino\"' (0/10); Igel -> model said 'König der Wüste' (0/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): ouvrir; Feind; fim; primero; ailes",
-    "gate": {
-     "rate": 0.8,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w104c0-es-food-egg-part",
-   "prompt": "La parte amarilla del huevo se llama la \"",
-   "target": "yema",
-   "intermediates": [
-    "yolk"
-   ],
-   "reference_concepts": [
-    "Spanish",
-    "part of",
-    "egg"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for qwen3.5-2b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 104,
-    "steer": "- Last wave: 5/60 passed.\n- Rejected by lint before gating: 1x leak: ['cerisier'] shares the target's stem; 1x leak: ['pentear'] shares the target's stem; 1x leak: ['frankreich'] shares the target's stem; 1x leak: ['alemania'] shares the target's stem. Avoid these.\n- Failed (gold -> what the model wrote): amaro -> model said 'amaro' (4/10); mentira -> model said 'falsidade' (0/10); Zunge -> model said 'Geschmack' (0/10); polmoni -> model said 'respiriamo l\\'aria con i \"' (1/10); matin -> model said 'le monde' (0/10); almoço -> model said 'chamada \"arroz com feijão\"' (4/10); Zitrone -> model said 'Apfel' (0/10); piscina -> model said 'parque' (2/10); porto -> model said '\"mare\"' (0/10); escoba -> model said 'una brocha' (0/10); gesso -> model said '\"pallino\"' (0/10); Igel -> model said 'König der Wüste' (0/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): ouvrir; Feind; fim; primero; ailes",
-    "gate": {
-     "rate": 0.8,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w104c1-de-opposite-wet",
-   "prompt": "Das Gegenteil von \"nass\" ist \"",
-   "target": "trocken",
-   "intermediates": [
-    "dry"
-   ],
-   "reference_concepts": [
-    "German",
-    "opposite",
-    "wet"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for qwen3.5-2b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 104,
-    "steer": "- Last wave: 5/60 passed.\n- Rejected by lint before gating: 1x leak: ['cerisier'] shares the target's stem; 1x leak: ['pentear'] shares the target's stem; 1x leak: ['frankreich'] shares the target's stem; 1x leak: ['alemania'] shares the target's stem. Avoid these.\n- Failed (gold -> what the model wrote): amaro -> model said 'amaro' (4/10); mentira -> model said 'falsidade' (0/10); Zunge -> model said 'Geschmack' (0/10); polmoni -> model said 'respiriamo l\\'aria con i \"' (1/10); matin -> model said 'le monde' (0/10); almoço -> model said 'chamada \"arroz com feijão\"' (4/10); Zitrone -> model said 'Apfel' (0/10); piscina -> model said 'parque' (2/10); porto -> model said '\"mare\"' (0/10); escoba -> model said 'una brocha' (0/10); gesso -> model said '\"pallino\"' (0/10); Igel -> model said 'König der Wüste' (0/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): ouvrir; Feind; fim; primero; ailes",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w104c1-fr-opposite-never",
-   "prompt": "Le contraire de \"jamais\" est \"",
-   "target": "toujours",
-   "intermediates": [
-    "always"
-   ],
-   "reference_concepts": [
-    "French",
-    "opposite",
-    "never"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for qwen3.5-2b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 104,
-    "steer": "- Last wave: 5/60 passed.\n- Rejected by lint before gating: 1x leak: ['cerisier'] shares the target's stem; 1x leak: ['pentear'] shares the target's stem; 1x leak: ['frankreich'] shares the target's stem; 1x leak: ['alemania'] shares the target's stem. Avoid these.\n- Failed (gold -> what the model wrote): amaro -> model said 'amaro' (4/10); mentira -> model said 'falsidade' (0/10); Zunge -> model said 'Geschmack' (0/10); polmoni -> model said 'respiriamo l\\'aria con i \"' (1/10); matin -> model said 'le monde' (0/10); almoço -> model said 'chamada \"arroz com feijão\"' (4/10); Zitrone -> model said 'Apfel' (0/10); piscina -> model said 'parque' (2/10); porto -> model said '\"mare\"' (0/10); escoba -> model said 'una brocha' (0/10); gesso -> model said '\"pallino\"' (0/10); Igel -> model said 'König der Wüste' (0/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): ouvrir; Feind; fim; primero; ailes",
-    "gate": {
-     "rate": 0.9,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w104c1-es-opposite-question",
-   "prompt": "Lo contrario de \"pregunta\" es \"",
-   "target": "respuesta",
-   "intermediates": [
-    "answer"
-   ],
-   "reference_concepts": [
-    "Spanish",
-    "opposite",
-    "question"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for qwen3.5-2b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 104,
-    "steer": "- Last wave: 5/60 passed.\n- Rejected by lint before gating: 1x leak: ['cerisier'] shares the target's stem; 1x leak: ['pentear'] shares the target's stem; 1x leak: ['frankreich'] shares the target's stem; 1x leak: ['alemania'] shares the target's stem. Avoid these.\n- Failed (gold -> what the model wrote): amaro -> model said 'amaro' (4/10); mentira -> model said 'falsidade' (0/10); Zunge -> model said 'Geschmack' (0/10); polmoni -> model said 'respiriamo l\\'aria con i \"' (1/10); matin -> model said 'le monde' (0/10); almoço -> model said 'chamada \"arroz com feijão\"' (4/10); Zitrone -> model said 'Apfel' (0/10); piscina -> model said 'parque' (2/10); porto -> model said '\"mare\"' (0/10); escoba -> model said 'una brocha' (0/10); gesso -> model said '\"pallino\"' (0/10); Igel -> model said 'König der Wüste' (0/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): ouvrir; Feind; fim; primero; ailes",
-    "gate": {
-     "rate": 0.9,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w104c1-it-opposite-forget",
-   "prompt": "Il contrario di \"dimenticare\" è \"",
-   "target": "ricordare",
-   "intermediates": [
-    "remember"
-   ],
-   "reference_concepts": [
-    "Italian",
-    "opposite",
-    "forget"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for qwen3.5-2b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 104,
-    "steer": "- Last wave: 5/60 passed.\n- Rejected by lint before gating: 1x leak: ['cerisier'] shares the target's stem; 1x leak: ['pentear'] shares the target's stem; 1x leak: ['frankreich'] shares the target's stem; 1x leak: ['alemania'] shares the target's stem. Avoid these.\n- Failed (gold -> what the model wrote): amaro -> model said 'amaro' (4/10); mentira -> model said 'falsidade' (0/10); Zunge -> model said 'Geschmack' (0/10); polmoni -> model said 'respiriamo l\\'aria con i \"' (1/10); matin -> model said 'le monde' (0/10); almoço -> model said 'chamada \"arroz com feijão\"' (4/10); Zitrone -> model said 'Apfel' (0/10); piscina -> model said 'parque' (2/10); porto -> model said '\"mare\"' (0/10); escoba -> model said 'una brocha' (0/10); gesso -> model said '\"pallino\"' (0/10); Igel -> model said 'König der Wüste' (0/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): ouvrir; Feind; fim; primero; ailes",
-    "gate": {
-     "rate": 0.8,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w104c1-es-body-heart",
-   "prompt": "El corazón bombea la \"",
-   "target": "sangre",
-   "intermediates": [
-    "blood"
-   ],
-   "reference_concepts": [
-    "Spanish",
-    "body",
-    "heart"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for qwen3.5-2b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 104,
-    "steer": "- Last wave: 5/60 passed.\n- Rejected by lint before gating: 1x leak: ['cerisier'] shares the target's stem; 1x leak: ['pentear'] shares the target's stem; 1x leak: ['frankreich'] shares the target's stem; 1x leak: ['alemania'] shares the target's stem. Avoid these.\n- Failed (gold -> what the model wrote): amaro -> model said 'amaro' (4/10); mentira -> model said 'falsidade' (0/10); Zunge -> model said 'Geschmack' (0/10); polmoni -> model said 'respiriamo l\\'aria con i \"' (1/10); matin -> model said 'le monde' (0/10); almoço -> model said 'chamada \"arroz com feijão\"' (4/10); Zitrone -> model said 'Apfel' (0/10); piscina -> model said 'parque' (2/10); porto -> model said '\"mare\"' (0/10); escoba -> model said 'una brocha' (0/10); gesso -> model said '\"pallino\"' (0/10); Igel -> model said 'König der Wüste' (0/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): ouvrir; Feind; fim; primero; ailes",
-    "gate": {
-     "rate": 0.9,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w104c2-de-opposite-more",
-   "prompt": "Das Gegenteil von \"mehr\" ist \"",
-   "target": "weniger",
-   "intermediates": [
-    "less"
-   ],
-   "reference_concepts": [
-    "German",
-    "opposite",
-    "more"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for qwen3.5-2b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 104,
-    "steer": "- Last wave: 5/60 passed.\n- Rejected by lint before gating: 1x leak: ['cerisier'] shares the target's stem; 1x leak: ['pentear'] shares the target's stem; 1x leak: ['frankreich'] shares the target's stem; 1x leak: ['alemania'] shares the target's stem. Avoid these.\n- Failed (gold -> what the model wrote): amaro -> model said 'amaro' (4/10); mentira -> model said 'falsidade' (0/10); Zunge -> model said 'Geschmack' (0/10); polmoni -> model said 'respiriamo l\\'aria con i \"' (1/10); matin -> model said 'le monde' (0/10); almoço -> model said 'chamada \"arroz com feijão\"' (4/10); Zitrone -> model said 'Apfel' (0/10); piscina -> model said 'parque' (2/10); porto -> model said '\"mare\"' (0/10); escoba -> model said 'una brocha' (0/10); gesso -> model said '\"pallino\"' (0/10); Igel -> model said 'König der Wüste' (0/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): ouvrir; Feind; fim; primero; ailes",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w104c2-fr-opposite-boy",
-   "prompt": "Le contraire de \"garçon\" est \"",
-   "target": "fille",
-   "intermediates": [
-    "girl"
-   ],
-   "reference_concepts": [
-    "French",
-    "opposite",
-    "boy"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for qwen3.5-2b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 104,
-    "steer": "- Last wave: 5/60 passed.\n- Rejected by lint before gating: 1x leak: ['cerisier'] shares the target's stem; 1x leak: ['pentear'] shares the target's stem; 1x leak: ['frankreich'] shares the target's stem; 1x leak: ['alemania'] shares the target's stem. Avoid these.\n- Failed (gold -> what the model wrote): amaro -> model said 'amaro' (4/10); mentira -> model said 'falsidade' (0/10); Zunge -> model said 'Geschmack' (0/10); polmoni -> model said 'respiriamo l\\'aria con i \"' (1/10); matin -> model said 'le monde' (0/10); almoço -> model said 'chamada \"arroz com feijão\"' (4/10); Zitrone -> model said 'Apfel' (0/10); piscina -> model said 'parque' (2/10); porto -> model said '\"mare\"' (0/10); escoba -> model said 'una brocha' (0/10); gesso -> model said '\"pallino\"' (0/10); Igel -> model said 'König der Wüste' (0/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): ouvrir; Feind; fim; primero; ailes",
-    "gate": {
-     "rate": 0.9,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w104c2-es-material-windows",
-   "prompt": "Las ventanas están hechas de \"",
-   "target": "vidrio",
-   "intermediates": [
-    "glass"
-   ],
-   "reference_concepts": [
-    "Spanish",
-    "material",
-    "windows"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for qwen3.5-2b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 104,
-    "steer": "- Last wave: 5/60 passed.\n- Rejected by lint before gating: 1x leak: ['cerisier'] shares the target's stem; 1x leak: ['pentear'] shares the target's stem; 1x leak: ['frankreich'] shares the target's stem; 1x leak: ['alemania'] shares the target's stem. Avoid these.\n- Failed (gold -> what the model wrote): amaro -> model said 'amaro' (4/10); mentira -> model said 'falsidade' (0/10); Zunge -> model said 'Geschmack' (0/10); polmoni -> model said 'respiriamo l\\'aria con i \"' (1/10); matin -> model said 'le monde' (0/10); almoço -> model said 'chamada \"arroz com feijão\"' (4/10); Zitrone -> model said 'Apfel' (0/10); piscina -> model said 'parque' (2/10); porto -> model said '\"mare\"' (0/10); escoba -> model said 'una brocha' (0/10); gesso -> model said '\"pallino\"' (0/10); Igel -> model said 'König der Wüste' (0/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): ouvrir; Feind; fim; primero; ailes",
-    "gate": {
-     "rate": 0.8,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t1-w104c2-fr-ingredient-bake",
-   "prompt": "Pour faire du pain, le boulanger mélange de l'eau et de la \"",
-   "target": "farine",
-   "intermediates": [
-    "flour"
-   ],
-   "reference_concepts": [
-    "French",
-    "ingredient",
-    "bake"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for qwen3.5-2b: Use only French, German, Spanish, Italian or Portuguese.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 104,
-    "steer": "- Last wave: 5/60 passed.\n- Rejected by lint before gating: 1x leak: ['cerisier'] shares the target's stem; 1x leak: ['pentear'] shares the target's stem; 1x leak: ['frankreich'] shares the target's stem; 1x leak: ['alemania'] shares the target's stem. Avoid these.\n- Failed (gold -> what the model wrote): amaro -> model said 'amaro' (4/10); mentira -> model said 'falsidade' (0/10); Zunge -> model said 'Geschmack' (0/10); polmoni -> model said 'respiriamo l\\'aria con i \"' (1/10); matin -> model said 'le monde' (0/10); almoço -> model said 'chamada \"arroz com feijão\"' (4/10); Zitrone -> model said 'Apfel' (0/10); piscina -> model said 'parque' (2/10); porto -> model said '\"mare\"' (0/10); escoba -> model said 'una brocha' (0/10); gesso -> model said '\"pallino\"' (0/10); Igel -> model said 'König der Wüste' (0/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): ouvrir; Feind; fim; primero; ailes",
-    "gate": {
-     "rate": 0.8,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t2-w105c0-fr-opposite-difficult-easy",
-   "prompt": "Le contraire de \"difficile\" est \"",
-   "target": "facile",
-   "intermediates": [
-    "easy"
-   ],
-   "reference_concepts": [
-    "French",
-    "opposite adjective",
-    "difficult"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for qwen3.5-2b: Use only French, German, Spanish, Italian or Portuguese, and only numbers, days, months, colours and basic opposites, with an explicit cue word.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t2",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese, and only numbers, days, months, colours and basic opposites, with an explicit cue word."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 105,
-    "steer": "- Last wave: 12/60 passed.\n- Rejected by lint before gating: 1x leak: ['flugzeuge'] shares the target's stem; 1x leak: ['fahrzeug'] shares the target's stem. Avoid these.\n- Failed (gold -> what the model wrote): étroit -> model said 'petit' (0/10); dimenticare -> model said 'obbligare' (3/10); boulangerie -> model said 'La boulangerie de la rue' (1/10); quarto -> model said 'o quarto' (4/10); filo -> model said \"l'occhio\" (0/10); aguja -> model said 'una aguja' (1/10); Welpe -> model said 'Max' (0/10); veau -> model said 'le \"petit de la vache\"' (0/10); tuono -> model said 'rumore di fulmini' (2/10); Tal -> model said 'Wald' (2/10); codo -> model said 'húmero' (0/10); joelho -> model said '\"articular\"' (0/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): dumm; debajo; yema; trocken; toujours; respuesta; ricordare; sangre; weniger; fille; vidrio; farine",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t2-w105c0-fr-opposite-false-true",
-   "prompt": "Le contraire de \"faux\" est \"",
-   "target": "vrai",
-   "intermediates": [
-    "true"
-   ],
-   "reference_concepts": [
-    "French",
-    "opposite adjective",
-    "false"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for qwen3.5-2b: Use only French, German, Spanish, Italian or Portuguese, and only numbers, days, months, colours and basic opposites, with an explicit cue word.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t2",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese, and only numbers, days, months, colours and basic opposites, with an explicit cue word."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 105,
-    "steer": "- Last wave: 12/60 passed.\n- Rejected by lint before gating: 1x leak: ['flugzeuge'] shares the target's stem; 1x leak: ['fahrzeug'] shares the target's stem. Avoid these.\n- Failed (gold -> what the model wrote): étroit -> model said 'petit' (0/10); dimenticare -> model said 'obbligare' (3/10); boulangerie -> model said 'La boulangerie de la rue' (1/10); quarto -> model said 'o quarto' (4/10); filo -> model said \"l'occhio\" (0/10); aguja -> model said 'una aguja' (1/10); Welpe -> model said 'Max' (0/10); veau -> model said 'le \"petit de la vache\"' (0/10); tuono -> model said 'rumore di fulmini' (2/10); Tal -> model said 'Wald' (2/10); codo -> model said 'húmero' (0/10); joelho -> model said '\"articular\"' (0/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): dumm; debajo; yema; trocken; toujours; respuesta; ricordare; sangre; weniger; fille; vidrio; farine",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "multilingual-au-t2-w105c0-it-opposite-arrive-leave",
-   "prompt": "Il contrario di \"arrivare\" è \"",
-   "target": "partire",
-   "intermediates": [
-    "leave"
-   ],
-   "reference_concepts": [
-    "Italian",
-    "opposite verb",
-    "arrive"
-   ],
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for qwen3.5-2b: Use only French, German, Spanish, Italian or Portuguese, and only numbers, days, months, colours and basic opposites, with an explicit cue word.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t2",
-    "knobs": {
-     "brief": "Use only French, German, Spanish, Italian or Portuguese, and only numbers, days, months, colours and basic opposites, with an explicit cue word."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 105,
-    "steer": "- Last wave: 12/60 passed.\n- Rejected by lint before gating: 1x leak: ['flugzeuge'] shares the target's stem; 1x leak: ['fahrzeug'] shares the target's stem. Avoid these.\n- Failed (gold -> what the model wrote): étroit -> model said 'petit' (0/10); dimenticare -> model said 'obbligare' (3/10); boulangerie -> model said 'La boulangerie de la rue' (1/10); quarto -> model said 'o quarto' (4/10); filo -> model said \"l'occhio\" (0/10); aguja -> model said 'una aguja' (1/10); Welpe -> model said 'Max' (0/10); veau -> model said 'le \"petit de la vache\"' (0/10); tuono -> model said 'rumore di fulmini' (2/10); Tal -> model said 'Wald' (2/10); codo -> model said 'húmero' (0/10); joelho -> model said '\"articular\"' (0/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): dumm; debajo; yema; trocken; toujours; respuesta; ricordare; sangre; weniger; fille; vidrio; farine",
-    "gate": {
-     "rate": 0.8,
      "pass": true
     }
    }

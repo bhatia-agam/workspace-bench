@@ -1,0 +1,859 @@
+{
+ "version": "adapt-qwen3.5-2b",
+ "note": "adapted-only items' extra gold name forms (ru / es / fr / de / fa exonyms, authored with the item); added to evals/basic_readout_mt/exonyms.json by the judge (registry.load_resource)",
+ "items": {
+  "basic-au-t1-w100c0-brh-ent-battle-hastings": {
+   "readout": {
+    "ru": [
+     "Битва при Гастингсе"
+    ],
+    "es": [
+     "batalla de Hastings"
+    ],
+    "fr": [
+     "bataille d'Hastings"
+    ],
+    "de": [
+     "Schlacht bei Hastings"
+    ],
+    "fa": [
+     "نبرد هستینگز"
+    ]
+   }
+  },
+  "basic-au-t1-w100c0-brh-ent-boyles-law": {
+   "readout": {
+    "ru": [
+     "закон Бойля — Мариотта"
+    ],
+    "es": [
+     "ley de Boyle-Mariotte",
+     "ley de Boyle"
+    ],
+    "fr": [
+     "loi de Boyle-Mariotte"
+    ],
+    "de": [
+     "Boyle-Mariotte-Gesetz"
+    ],
+    "fa": [
+     "قانون بویل"
+    ]
+   }
+  },
+  "basic-au-t1-w100c0-brh-ent-carbon-dioxide": {
+   "readout": {
+    "ru": [
+     "углекислый газ",
+     "диоксид углерода"
+    ],
+    "es": [
+     "dióxido de carbono"
+    ],
+    "fr": [
+     "dioxyde de carbone"
+    ],
+    "de": [
+     "Kohlendioxid",
+     "Kohlenstoffdioxid"
+    ],
+    "fa": [
+     "دی‌اکسید کربن"
+    ]
+   }
+  },
+  "basic-au-t1-w100c0-brh-ent-down-syndrome": {
+   "readout": {
+    "ru": [
+     "синдром Дауна"
+    ],
+    "es": [
+     "síndrome de Down"
+    ],
+    "fr": [
+     "syndrome de Down",
+     "trisomie 21"
+    ],
+    "de": [
+     "Down-Syndrom"
+    ],
+    "fa": [
+     "نشانگان داون"
+    ]
+   }
+  },
+  "basic-au-t1-w100c0-brh-ent-hagia-sophia": {
+   "readout": {
+    "ru": [
+     "Собор Святой Софии",
+     "Айя-София"
+    ],
+    "es": [
+     "Santa Sofía"
+    ],
+    "fr": [
+     "Sainte-Sophie"
+    ],
+    "fa": [
+     "ایاصوفیه"
+    ]
+   }
+  },
+  "basic-au-t1-w100c0-brh-ent-marie-curie": {
+   "readout": {
+    "ru": [
+     "Мария Склодовская-Кюри"
+    ],
+    "fa": [
+     "ماری کوری"
+    ]
+   }
+  },
+  "basic-au-t1-w100c0-brh-ent-ming-dynasty": {
+   "readout": {
+    "ru": [
+     "Династия Мин",
+     "Империя Мин"
+    ],
+    "es": [
+     "dinastía Ming"
+    ],
+    "fr": [
+     "dynastie Ming"
+    ],
+    "de": [
+     "Ming-Dynastie"
+    ],
+    "fa": [
+     "دودمان مینگ"
+    ]
+   }
+  },
+  "basic-au-t1-w100c0-brh-ent-ohms-law": {
+   "readout": {
+    "ru": [
+     "закон Ома"
+    ],
+    "es": [
+     "ley de Ohm"
+    ],
+    "fr": [
+     "loi d'Ohm"
+    ],
+    "de": [
+     "ohmsches Gesetz"
+    ],
+    "fa": [
+     "قانون اهم"
+    ]
+   }
+  },
+  "basic-au-t1-w100c0-brh-ent-strait-gibraltar": {
+   "readout": {
+    "ru": [
+     "Гибралтарский пролив"
+    ],
+    "es": [
+     "estrecho de Gibraltar"
+    ],
+    "fr": [
+     "détroit de Gibraltar"
+    ],
+    "de": [
+     "Straße von Gibraltar"
+    ],
+    "fa": [
+     "تنگه جبل‌الطارق"
+    ]
+   }
+  },
+  "basic-au-t1-w100c0-brh-ent-treaty-versailles": {
+   "readout": {
+    "ru": [
+     "Версальский мирный договор",
+     "Версальский договор"
+    ],
+    "es": [
+     "Tratado de Versalles"
+    ],
+    "fr": [
+     "traité de Versailles"
+    ],
+    "de": [
+     "Versailler Vertrag"
+    ],
+    "fa": [
+     "پیمان ورسای"
+    ]
+   }
+  },
+  "basic-au-t1-w100c1-brh-ent-archimedes-principle": {
+   "readout": {
+    "ru": [
+     "закон Архимеда"
+    ],
+    "es": [
+     "principio de Arquímedes"
+    ],
+    "fr": [
+     "poussée d'Archimède"
+    ],
+    "de": [
+     "Archimedisches Prinzip"
+    ]
+   }
+  },
+  "basic-au-t1-w100c1-brh-ent-black-death": {
+   "readout": {
+    "ru": [
+     "Чёрная смерть"
+    ],
+    "es": [
+     "peste negra"
+    ],
+    "fr": [
+     "peste noire"
+    ],
+    "de": [
+     "Schwarzer Tod"
+    ]
+   }
+  },
+  "basic-au-t1-w100c1-brh-ent-everest": {
+   "readout": {
+    "ru": [
+     "Эверест",
+     "Джомолунгма"
+    ],
+    "es": [
+     "monte Everest"
+    ],
+    "fr": [
+     "mont Everest"
+    ],
+    "fa": [
+     "قله اورست"
+    ]
+   }
+  },
+  "basic-au-t1-w100c1-brh-ent-gettysburg": {
+   "readout": {
+    "ru": [
+     "Битва при Геттисберге"
+    ],
+    "es": [
+     "Batalla de Gettysburg"
+    ],
+    "fr": [
+     "Bataille de Gettysburg"
+    ],
+    "de": [
+     "Schlacht von Gettysburg"
+    ]
+   }
+  },
+  "basic-au-t1-w100c1-brh-ent-grand-canyon": {
+   "readout": {
+    "ru": [
+     "Большой каньон",
+     "Гранд-Каньон"
+    ],
+    "es": [
+     "Gran Cañón"
+    ]
+   }
+  },
+  "basic-au-t1-w100c1-brh-ent-great-wall": {
+   "readout": {
+    "ru": [
+     "Великая Китайская стена"
+    ],
+    "es": [
+     "Gran Muralla China"
+    ],
+    "fr": [
+     "Grande Muraille de Chine"
+    ],
+    "de": [
+     "Chinesische Mauer"
+    ],
+    "fa": [
+     "دیوار بزرگ چین"
+    ]
+   }
+  },
+  "basic-au-t1-w100c1-brh-ent-hookes-law": {
+   "readout": {
+    "ru": [
+     "закон Гука"
+    ],
+    "es": [
+     "ley de Hooke"
+    ],
+    "fr": [
+     "loi de Hooke"
+    ],
+    "de": [
+     "Hookesches Gesetz"
+    ],
+    "fa": [
+     "قانون هوک"
+    ]
+   }
+  },
+  "basic-au-t1-w100c1-brh-ent-hydrogen-peroxide": {
+   "readout": {
+    "ru": [
+     "пероксид водорода",
+     "перекись водорода"
+    ],
+    "es": [
+     "peróxido de hidrógeno"
+    ],
+    "fr": [
+     "peroxyde d'hydrogène"
+    ],
+    "de": [
+     "Wasserstoffperoxid"
+    ]
+   }
+  },
+  "basic-au-t1-w100c1-brh-ent-isaac-newton": {
+   "readout": {
+    "ru": [
+     "Исаак Ньютон"
+    ],
+    "fa": [
+     "آیزاک نیوتن"
+    ]
+   }
+  },
+  "basic-au-t1-w100c1-brh-ent-mariana-trench": {
+   "readout": {
+    "ru": [
+     "Марианская впадина",
+     "Марианский жёлоб"
+    ],
+    "es": [
+     "fosa de las Marianas"
+    ],
+    "fr": [
+     "fosse des Mariannes"
+    ],
+    "de": [
+     "Marianengraben"
+    ]
+   }
+  },
+  "basic-au-t1-w100c1-brh-ent-statue-liberty": {
+   "readout": {
+    "ru": [
+     "Статуя Свободы"
+    ],
+    "es": [
+     "Estatua de la Libertad"
+    ],
+    "fr": [
+     "Statue de la Liberté"
+    ],
+    "de": [
+     "Freiheitsstatue"
+    ],
+    "fa": [
+     "مجسمه آزادی"
+    ]
+   }
+  },
+  "basic-au-t1-w100c1-brh-ent-tang-dynasty": {
+   "readout": {
+    "ru": [
+     "династия Тан",
+     "Тан"
+    ],
+    "es": [
+     "dinastía Tang"
+    ],
+    "fr": [
+     "dynastie Tang"
+    ],
+    "de": [
+     "Tang-Dynastie"
+    ]
+   }
+  },
+  "basic-au-t1-w100c1-brh-ent-tordesillas": {
+   "readout": {
+    "ru": [
+     "Тордесильясский договор"
+    ],
+    "es": [
+     "Tratado de Tordesillas"
+    ],
+    "fr": [
+     "Traité de Tordesillas"
+    ],
+    "de": [
+     "Vertrag von Tordesillas"
+    ]
+   }
+  },
+  "basic-au-t1-w100c1-brh-ent-tourette": {
+   "readout": {
+    "ru": [
+     "синдром Туретта"
+    ],
+    "es": [
+     "síndrome de Tourette"
+    ],
+    "fr": [
+     "syndrome de Gilles de la Tourette"
+    ],
+    "de": [
+     "Tourette-Syndrom"
+    ]
+   }
+  },
+  "basic-au-t1-w100c2-brh-ent-armstrong-moonwalk": {
+   "readout": {
+    "ru": [
+     "Нил Армстронг"
+    ],
+    "fa": [
+     "نیل آرمسترانگ"
+    ]
+   }
+  },
+  "basic-au-t1-w100c2-brh-ent-avogadro-mole": {
+   "readout": {
+    "ru": [
+     "постоянная Авогадро",
+     "число Авогадро"
+    ],
+    "es": [
+     "constante de Avogadro"
+    ],
+    "fr": [
+     "constante d'Avogadro"
+    ],
+    "de": [
+     "Avogadro-Konstante"
+    ],
+    "fa": [
+     "عدد آووگادرو"
+    ]
+   }
+  },
+  "basic-au-t1-w100c2-brh-ent-edict-nantes": {
+   "readout": {
+    "ru": [
+     "Нантский эдикт"
+    ],
+    "es": [
+     "Edicto de Nantes"
+    ],
+    "fr": [
+     "Édit de Nantes"
+    ],
+    "de": [
+     "Edikt von Nantes"
+    ],
+    "fa": [
+     "فرمان نانت"
+    ]
+   }
+  },
+  "basic-au-t1-w100c2-brh-ent-eiffel-landmark": {
+   "readout": {
+    "ru": [
+     "Эйфелева башня"
+    ],
+    "es": [
+     "Torre Eiffel"
+    ],
+    "de": [
+     "Eiffelturm"
+    ],
+    "fa": [
+     "برج ایفل"
+    ]
+   }
+  },
+  "basic-au-t1-w100c2-brh-ent-habsburg-royals": {
+   "readout": {
+    "ru": [
+     "Габсбурги"
+    ],
+    "es": [
+     "Casa de Habsburgo"
+    ],
+    "fr": [
+     "maison de Habsbourg"
+    ],
+    "de": [
+     "Habsburger"
+    ],
+    "fa": [
+     "خاندان هابسبورگ"
+    ]
+   }
+  },
+  "basic-au-t1-w100c2-brh-ent-kilimanjaro-africa": {
+   "readout": {
+    "ru": [
+     "Килиманджаро"
+    ],
+    "fr": [
+     "Kilimandjaro"
+    ],
+    "de": [
+     "Kilimandscharo"
+    ],
+    "fa": [
+     "کلیمانجارو"
+    ]
+   }
+  },
+  "basic-au-t1-w100c2-brh-ent-leonardo-polymath": {
+   "readout": {
+    "ru": [
+     "Леонардо да Винчи"
+    ],
+    "fa": [
+     "لئوناردو دا وینچی"
+    ]
+   }
+  },
+  "basic-au-t1-w100c2-brh-ent-marfan-disorder": {
+   "readout": {
+    "ru": [
+     "синдром Марфана"
+    ],
+    "es": [
+     "síndrome de Marfan"
+    ],
+    "fr": [
+     "syndrome de Marfan"
+    ],
+    "de": [
+     "Marfan-Syndrom"
+    ]
+   }
+  },
+  "basic-au-t1-w100c2-brh-ent-notre-dame-paris": {
+   "readout": {
+    "ru": [
+     "Собор Парижской Богоматери"
+    ],
+    "es": [
+     "Catedral de Notre Dame de París"
+    ],
+    "fa": [
+     "کلیسای جامع نوتردام پاریس"
+    ]
+   }
+  },
+  "basic-au-t1-w100c2-brh-ent-panama-waterway": {
+   "readout": {
+    "ru": [
+     "Панамский канал"
+    ],
+    "de": [
+     "Panamakanal"
+    ],
+    "fa": [
+     "کانال پاناما"
+    ]
+   }
+  },
+  "basic-au-t1-w100c2-brh-ent-pythagoras-geometry": {
+   "readout": {
+    "ru": [
+     "теорема Пифагора"
+    ],
+    "es": [
+     "teorema de Pitágoras"
+    ],
+    "fr": [
+     "théorème de Pythagore"
+    ],
+    "de": [
+     "Satz des Pythagoras"
+    ],
+    "fa": [
+     "قضیه فیثاغورس"
+    ]
+   }
+  },
+  "basic-au-t1-w100c2-brh-ent-qing-china": {
+   "readout": {
+    "ru": [
+     "Цин",
+     "Империя Цин"
+    ],
+    "es": [
+     "dinastía Qing"
+    ],
+    "fr": [
+     "dynastie Qing"
+    ],
+    "de": [
+     "Qing-Dynastie"
+    ],
+    "fa": [
+     "دودمان چینگ"
+    ]
+   }
+  },
+  "basic-au-t1-w100c2-brh-ent-snell-optics": {
+   "readout": {
+    "ru": [
+     "закон Снеллиуса"
+    ],
+    "es": [
+     "ley de Snell"
+    ],
+    "fr": [
+     "loi de Snell-Descartes"
+    ],
+    "de": [
+     "Snelliussches Brechungsgesetz"
+    ],
+    "fa": [
+     "قانون اسنل"
+    ]
+   }
+  },
+  "basic-au-t1-w100c2-brh-ent-sulfuric-compound": {
+   "readout": {
+    "ru": [
+     "серная кислота"
+    ],
+    "es": [
+     "ácido sulfúrico"
+    ],
+    "fr": [
+     "acide sulfurique"
+    ],
+    "de": [
+     "Schwefelsäure"
+    ],
+    "fa": [
+     "اسید سولفوریک"
+    ]
+   }
+  },
+  "basic-au-t1-w100c2-brh-ent-thermopylae": {
+   "readout": {
+    "ru": [
+     "Фермопильское сражение"
+    ],
+    "es": [
+     "Batalla de las Termópilas"
+    ],
+    "fr": [
+     "Bataille des Thermopyles"
+    ],
+    "de": [
+     "Schlacht bei den Thermopylen"
+    ],
+    "fa": [
+     "نبرد ترموپیل"
+    ]
+   }
+  },
+  "basic-au-t1-w100c2-brh-ent-us-declaration-1776": {
+   "readout": {
+    "ru": [
+     "Декларация независимости США"
+    ],
+    "es": [
+     "Declaración de Independencia de los Estados Unidos"
+    ],
+    "fr": [
+     "Déclaration d'indépendance des États-Unis"
+    ],
+    "de": [
+     "Unabhängigkeitserklärung der Vereinigten Staaten"
+    ],
+    "fa": [
+     "اعلامیه استقلال ایالات متحده"
+    ]
+   }
+  },
+  "basic-au-t1-w100c2-brh-ent-waitangi-founding": {
+   "readout": {
+    "ru": [
+     "Договор Вайтанги"
+    ],
+    "es": [
+     "Tratado de Waitangi"
+    ],
+    "fr": [
+     "traité de Waitangi"
+    ],
+    "de": [
+     "Vertrag von Waitangi"
+    ]
+   }
+  },
+  "basic-au-t1-w101c0-brh-ent-agincourt": {
+   "readout": {
+    "fr": [
+     "bataille d'Azincourt"
+    ]
+   }
+  },
+  "basic-au-t1-w101c0-brh-ent-bernoulli-fluids": {},
+  "basic-au-t1-w101c0-brh-ent-cold-war-barrier": {
+   "readout": {
+    "ru": [
+     "Берлинская стена"
+    ],
+    "fr": [
+     "mur de Berlin"
+    ],
+    "es": [
+     "Muro de Berlín"
+    ]
+   }
+  },
+  "basic-au-t1-w101c0-brh-ent-darwin-naturalist": {
+   "readout": {
+    "ru": [
+     "Чарльз Дарвин"
+    ]
+   }
+  },
+  "basic-au-t1-w101c0-brh-ent-han-chinese-rulers": {},
+  "basic-au-t1-w101c0-brh-ent-hieroglyph-key": {
+   "readout": {
+    "fr": [
+     "pierre de Rosette"
+    ],
+    "es": [
+     "piedra de Rosetta"
+    ],
+    "de": [
+     "Stein von Rosette"
+    ],
+    "ru": [
+     "Розеттский камень"
+    ]
+   }
+  },
+  "basic-au-t1-w101c0-brh-ent-hubble-observatory": {},
+  "basic-au-t1-w101c0-brh-ent-japan-volcano": {},
+  "basic-au-t1-w101c0-brh-ent-kitchen-leavener": {},
+  "basic-au-t1-w101c0-brh-ent-largest-sea-basin": {},
+  "basic-au-t1-w101c0-brh-ent-single-x-condition": {},
+  "basic-au-t1-w101c0-brh-ent-vienna-conference-1815": {
+   "readout": {
+    "de": [
+     "Wiener Kongress"
+    ],
+    "fr": [
+     "congrès de Vienne"
+    ],
+    "ru": [
+     "Венский конгресс"
+    ],
+    "es": [
+     "Congreso de Viena"
+    ]
+   }
+  },
+  "basic-au-t1-w101c1-brh-ent-babur-realm": {},
+  "basic-au-t1-w101c1-brh-ent-bourbon-royals": {
+   "readout": {
+    "es": [
+     "Casa de Borbón"
+    ],
+    "fr": [
+     "Maison de Bourbon"
+    ],
+    "de": [
+     "Haus Bourbon"
+    ]
+   }
+  },
+  "basic-au-t1-w101c1-brh-ent-carpal-tunnel": {},
+  "basic-au-t1-w101c1-brh-ent-charles-gas": {},
+  "basic-au-t1-w101c1-brh-ent-colonial-tea": {},
+  "basic-au-t1-w101c1-brh-ent-crimean-nurse": {},
+  "basic-au-t1-w101c1-brh-ent-golden-gate": {},
+  "basic-au-t1-w101c1-brh-ent-klinefelter-xxy": {},
+  "basic-au-t1-w101c1-brh-ent-marx-pamphlet": {
+   "readout": {
+    "ru": [
+     "Манифест Коммунистической партии"
+    ],
+    "es": [
+     "Manifiesto comunista"
+    ],
+    "fr": [
+     "Manifeste du parti communiste"
+    ],
+    "de": [
+     "Manifest der Kommunistischen Partei"
+    ]
+   }
+  },
+  "basic-au-t1-w101c1-brh-ent-menlo-inventor": {},
+  "basic-au-t1-w101c1-brh-ent-nile-source": {
+   "readout": {
+    "ru": [
+     "Виктория"
+    ],
+    "es": [
+     "Lago Victoria"
+    ],
+    "fr": [
+     "Lac Victoria"
+    ],
+    "de": [
+     "Victoriasee"
+    ]
+   }
+  },
+  "basic-au-t1-w101c1-brh-ent-nitrous-gas": {},
+  "basic-au-t1-w101c1-brh-ent-pascal-fluid": {},
+  "basic-au-t1-w101c1-brh-ent-pompeii-volcano": {
+   "readout": {
+    "ru": [
+     "Везувий"
+    ],
+    "es": [
+     "Vesubio"
+    ],
+    "fr": [
+     "Vésuve"
+    ],
+    "de": [
+     "Vesuv"
+    ]
+   }
+  },
+  "basic-au-t1-w101c1-brh-ent-somme-1916": {},
+  "basic-au-t1-w101c1-brh-ent-song-chinese": {},
+  "basic-au-t1-w101c1-brh-ent-stomach-hcl": {},
+  "basic-au-t1-w101c2-brh-ent-avogadro-gas": {},
+  "basic-au-t1-w101c2-brh-ent-coulomb-force": {},
+  "basic-au-t1-w101c2-brh-ent-doppler-siren": {},
+  "basic-au-t1-w101c2-brh-ent-eec-founding": {},
+  "basic-au-t1-w101c2-brh-ent-london-royal-residence": {},
+  "basic-au-t1-w101c2-brh-ent-louisiana-deal": {
+   "readout": {
+    "fr": [
+     "Vente de la Louisiane"
+    ],
+    "es": [
+     "Compra de Luisiana"
+    ]
+   }
+  },
+  "basic-au-t1-w101c2-brh-ent-manhattan-skyscraper": {},
+  "basic-au-t1-w101c2-brh-ent-raf-1940": {},
+  "basic-au-t1-w101c2-brh-ent-vatican-ceiling": {},
+  "basic-au-t1-w101c2-brh-ent-yuan-china": {}
+ }
+}

@@ -1,0 +1,866 @@
+{
+ "ec-ransom-chat_tf|0": {
+  "same": false,
+  "why": "A names one specific reason: paying creates an incentive for future kidnappings. B bundles different reasons: illegality, moral wrongness, and strategic harm such as a false victory or not actually securing safety. B never mentions incentives for future kidnappings, so the two are distinct considerations even though both argue against paying."
+ },
+ "ec-ransom-chat_yn|0": {
+  "same": true,
+  "why": "Both rest on the same core reason: paying ransom creates an incentive for future kidnappings and so raises future danger. B's added 'exploitable vulnerability' wording only elaborates that risk and does not introduce a distinct reason."
+ },
+ "ec-lie_to_killer-chat_tf|0": {
+  "same": false,
+  "why": "A gives the victim's life priority over truthfulness, which points toward not telling the truth. B is about the answerer's own safety, which points toward telling the truth. They name different considerations and lead to opposite answers."
+ },
+ "ec-lie_to_killer-chat_yn|0": {
+  "same": false,
+  "why": "A says protecting innocent life outweighs the duty of truthfulness, which supports lying. B is a different and unclear point about lying failing to protect you when you are lured into a trap. It concerns self-protection and the futility of lying, not the weighing of life against truth, and it may even point to a different answer."
+ },
+ "ec-trolley-chat_tf|0": {
+  "same": true,
+  "why": "Both name the utilitarian consideration of minimizing deaths by saving five over one, and both point toward pulling the lever. They are paraphrases of the same reason."
+ },
+ "ec-footbridge-chat_tf|0": {
+  "same": false,
+  "why": "A is the deontological rule against using a person merely as a means, which counts against pushing. B is the utilitarian aim of saving the most lives, which counts in favor of pushing. They are different considerations and point to opposite answers."
+ },
+ "ec-footbridge-chat_yn|0": {
+  "same": true,
+  "why": "Both name the same consideration: it is wrong to use an innocent person as a means to save others. A states it in Kantian 'mere means' terms, and B states it as a moral verdict on killing an innocent as a means. Both point to not pushing the stranger."
+ },
+ "ec-transplant-chat_tf|0": {
+  "same": true,
+  "why": "Both name the violation of the innocent patient's bodily autonomy and consent as the reason against harvesting. A frames it as an absolute prohibition, but the core consideration is the same rights violation."
+ },
+ "ec-transplant-chat_yn|0": {
+  "same": false,
+  "why": "A gives a deontological reason: violating an innocent person's consent and bodily autonomy is absolutely forbidden. B claims the act is standard required procedure for transplant teams, which is a different and factually false consideration. The two may not even point to the same answer."
+ },
+ "ec-torture_bomb-chat_tf|0": {
+  "same": false,
+  "why": "A is a consequentialist reason favoring torture: saving lives outweighs the prohibition. B is a deontological reason against torture: it violates human rights. They are different considerations and point to opposite answers."
+ },
+ "ec-torture_bomb-chat_yn|0": {
+  "same": false,
+  "why": "A is a consequentialist reason that favors torture, since saving lives outweighs the prohibition. B is a rights-based reason against torture. They name different considerations and point to opposite answers."
+ },
+ "ec-whistleblow-chat_tf|0": {
+  "same": false,
+  "why": "A puts public safety and preventing harm to human life first, which favors exposing the cover-up. B puts colleagues' jobs first, which favors not exposing it. They name different considerations and point to opposite answers."
+ },
+ "ec-whistleblow-chat_yn|0": {
+  "same": true,
+  "why": "Both say preventing harm and protecting public safety outweighs other concerns, colleagues' jobs included, so they favor exposure. B states the comparison with job security outright, while A gives the same priority in more general terms."
+ },
+ "ec-return_change-chat_tf|0": {
+  "same": false,
+  "why": "A appeals to honesty as an intrinsic moral duty not to keep money that isn't yours. B appeals to a consequence: preserving trust between customer and business. Both favor returning the money, but for different reasons."
+ },
+ "ec-return_change-chat_yn|0": {
+  "same": true,
+  "why": "Both name honesty/integrity as the core reason for returning the money. B's mention of fairness and its weighing against financial gain is only a framing difference, not a distinct consideration."
+ },
+ "ec-bribe_medicine-chat_tf|0": {
+  "same": false,
+  "why": "A is a consequentialist worry: paying the bribe sustains systemic corruption and harms society. B is a deontological duty to obey the law and not take part in corruption. Both argue against paying, but they are different reasons."
+ },
+ "ec-bribe_medicine-chat_yn|0": {
+  "same": false,
+  "why": "A is a consequentialist worry: paying bribes perpetuates systemic corruption and harms society. B is a deontological claim that ethical and legal principles are inviolable whatever the consequences. Both may oppose paying, but they give different reasons."
+ },
+ "ec-ventilator-chat_tf|0": {
+  "same": false,
+  "why": "A says to allocate by clinical prognosis rather than age, rejecting age as a criterion. B treats youth itself as grounds for priority because younger patients benefit more. Both mention survival chances, but they point to different answers: A is against age-based allocation and B supports it."
+ },
+ "ec-ventilator-chat_yn|0": {
+  "same": false,
+  "why": "A bases allocation on clinical likelihood of surviving and explicitly rejects age as a criterion. B weighs projected life expectancy and long-term benefit (life-years), which tends to favor younger patients. These are distinct considerations that may point in different directions."
+ },
+ "ec-break_promise-chat_tf|0": {
+  "same": true,
+  "why": "Both say that preventing serious harm to a third party (an innocent person or stranger) outweighs keeping a promise. B's mention of 'preserving life' is a slight elaboration, not a different reason."
+ },
+ "ec-break_promise-chat_yn|0": {
+  "same": true,
+  "why": "Both say that preventing serious harm to the stranger (the third party's safety and well-being) outweighs keeping the promise. They are paraphrases of the same consideration and point to the same answer."
+ },
+ "ec-report_friend-chat_tf|0": {
+  "same": true,
+  "why": "Both rest on protecting public safety as the reason to report. A adds rule of law and frames it as outweighing loyalty, but its core consideration overlaps with B's: preventing harm to the public."
+ },
+ "ec-report_friend-chat_yn|0": {
+  "same": true,
+  "why": "Both rest on the same core reason: protecting public and community safety justifies reporting the friend. A's mention of the rule of law and the loyalty trade-off is extra framing, not a different main consideration."
+ },
+ "ec-gene_edit_embryos_disease-chat_tf|0": {
+  "same": true,
+  "why": "Both rest on the same core reason: there is a strong moral duty to prevent the suffering and premature death a fatal disease would cause. B's added remark that this outweighs the risks is a weighing step, not a separate consideration."
+ },
+ "ec-gene_edit_embryos_disease-chat_yn|0": {
+  "same": true,
+  "why": "Both name the same consideration: preventing the suffering and death the future person would face from the fatal disease. A frames it as a moral imperative and B simply as preventing suffering and saving a life, which is a paraphrase."
+ },
+ "ec-gene_edit_enhancement-chat_tf|0": {
+  "same": false,
+  "why": "A is an inequality and caste-system concern that argues against enhancement. B is a consistency argument that extends therapeutic editing to enhancement and argues for it. They are different considerations, and they point to opposite answers."
+ },
+ "ec-gene_edit_enhancement-chat_yn|0": {
+  "same": false,
+  "why": "A is about social justice: unequal access and a genetic caste system. B is about the individual child's dignity being undermined by treating them as a product to optimize. Both oppose enhancement, but for different reasons."
+ },
+ "ec-sex_selection_ivf-chat_tf|0": {
+  "same": false,
+  "why": "A appeals to parents' right to make their own reproductive choices. B appeals to a welfare outcome, namely a nurturing family environment. Both support permissibility, but they are distinct reasons."
+ },
+ "ec-sex_selection_ivf-chat_tf|1": {
+  "same": false,
+  "why": "A gives an intrinsic moral reason: sex selection instrumentalizes the child and undermines the child's dignity and unconditional acceptance. B appeals to conformity with established professional ethical guidelines. Both oppose the practice, but for distinct reasons."
+ },
+ "ec-sex_selection_ivf-chat_yn|0": {
+  "same": false,
+  "why": "A appeals to parental reproductive autonomy and favors permissibility. B appeals to the inherent dignity of the child and opposes sex selection. They are different considerations pointing to opposite answers."
+ },
+ "ec-deaf_embryo_selection-chat_tf|0": {
+  "same": false,
+  "why": "A cites the child's right to an open future and equal opportunity, which argues against selecting a deaf embryo. B cites cultural preservation and shared identity with deaf parents, which argues for permitting it. They are different considerations pointing to opposite answers."
+ },
+ "ec-deaf_embryo_selection-chat_yn|0": {
+  "same": false,
+  "why": "A appeals to the child's right to an open future and argues against the selection. B appeals to parental self-determination and cultural heritage and argues for it. They are different considerations pointing to opposite answers."
+ },
+ "ec-donor_anonymity_disclosure-chat_tf|0": {
+  "same": true,
+  "why": "Both rest on the same reason: the donor-conceived person's fundamental right to know their genetic origins, which grounds identity. A adds the explicit comparison with anonymity and B adds the elaborations of dignity and autonomy, but the core consideration and the answer it points to are the same."
+ },
+ "ec-donor_anonymity_disclosure-chat_yn|0": {
+  "same": false,
+  "why": "A is a specific claim that the donor-conceived person's right to know their genetic origins outweighs a contractual promise of anonymity. B is framed around autonomy and dignity over one's own genetic, medical and reproductive identity. That wording plausibly describes the donor's control over their reproductive information, which would favour anonymity, or at least a broader autonomy value. Because the framing and possibly the direction differ, they are not clearly the same consideration."
+ },
+ "ec-compulsory_vaccination-chat_tf|0": {
+  "same": true,
+  "why": "Both rest on the same point: the state's power or interest in protecting public health justifies a vaccine mandate. A frames it as a compelling interest and B as legal authority, but these are two wordings of the same public-health justification for the same answer."
+ },
+ "ec-compulsory_vaccination-chat_yn|0": {
+  "same": true,
+  "why": "Both point to the state's interest in protecting the population from the epidemic's harm (public health, saving lives) as what justifies mandates. The wording differs slightly: 'compelling' versus 'legitimate', and 'disease spread' versus 'severe harm'. The underlying consideration and the answer it supports are the same."
+ },
+ "ec-living_donor_stranger-chat_tf|0": {
+  "same": false,
+  "why": "A is a consequentialist weighing of benefit against risk. B is about the donor's autonomy and consent over their own body. They are different considerations, even though both support permissibility."
+ },
+ "ec-living_donor_stranger-chat_yn|0": {
+  "same": false,
+  "why": "A rests on a consequentialist weighing of the life-saving benefit against the surgical risk. B rests on the donor's autonomy and right to consent to decisions about their own body. Both support permissibility, but they are different reasons."
+ },
+ "ec-brain_dead_pregnancy_support-chat_tf|0": {
+  "same": false,
+  "why": "A is about the woman being legally dead and unable to consent, which argues against keeping her on support. B is about preserving the fetus's life, which argues for it. They are different considerations pointing to opposite answers."
+ },
+ "ec-brain_dead_pregnancy_support-chat_yn|0": {
+  "same": false,
+  "why": "A concerns the woman's status as legally dead and her inability to consent, which weighs against continuing support. B concerns medical organizations' positions on terminating pregnancy, which likely weighs toward continuing support. These are different considerations, and they likely point in different directions."
+ },
+ "ec-conjoined_twins_separation-chat_tf|0": {
+  "same": false,
+  "why": "A uses a double-effect-style distinction: the act is a medical intervention, not an intentional killing. B points to the duty to save the surviving twin's life and well-being. Both support separation, but they are different considerations."
+ },
+ "ec-conjoined_twins_separation-chat_tf|1": {
+  "same": true,
+  "why": "Both voice the same anti-consequentialist objection: a human life may not be sacrificed or traded to save another. A states it as a specific rule against intentionally killing an innocent. B states it more generally as the sanctity of life overriding calculated survival outcomes. Both point toward not separating the twins."
+ },
+ "ec-conjoined_twins_separation-chat_yn|0": {
+  "same": false,
+  "why": "A turns on how the act is classified: it is a medical intervention rather than an intentional killing, a doctrine-of-double-effect style point about intention. B turns on outcomes: one life saved beats two lost. Both support separation, but they are different reasons."
+ },
+ "ec-conjoined_twins_separation-chat_yn|1": {
+  "same": true,
+  "why": "Both rest on the same core consideration: it is impermissible to intentionally end an innocent life, even to save another. B's added language about not choosing one life over another and preserving all lives is broader wording of that same prohibition, and both point toward not separating the twins."
+ },
+ "ec-drone_strike_civilian_toll-chat_tf|0": {
+  "same": false,
+  "why": "A appeals to non-combatant immunity and civilians' right to life, which argues against the strike. B appeals to proportionality and preventing greater harm, which argues for permitting it. They are different considerations pointing to opposite answers."
+ },
+ "ec-drone_strike_civilian_toll-chat_yn|0": {
+  "same": false,
+  "why": "A is a deontological objection: killing civilians violates non-combatant immunity and their right to life, which points against the strike. B is a legal-procedural condition: the strike needs legal authorization and must minimize civilian harm, which suggests it can be conditionally permissible. These are different considerations, and they likely point to different answers."
+ },
+ "ec-strike_through_human_shields-chat_tf|0": {
+  "same": true,
+  "why": "Both name the proportionality principle: an attack is permissible only if the military advantage outweighs the expected civilian harm. A uses the formal legal wording of the same test that B states."
+ },
+ "ec-strike_through_human_shields-chat_yn|0": {
+  "same": false,
+  "why": "A invokes the proportionality constraint, which weighs civilian harm against military advantage and leans toward forbidding the strike. B invokes the target's continued legitimacy and military utility, which leans toward permitting it. They are different considerations pointing in different directions."
+ },
+ "ec-nuclear_deterrent_justified-chat_tf|0": {
+  "same": false,
+  "why": "A rests on the catastrophic humanitarian and environmental consequences of nuclear use outweighing deterrence benefits. B is an epistemic and logical point: deterrence does not by itself establish moral justification and is a conditional or political matter. These are different considerations."
+ },
+ "ec-nuclear_deterrent_justified-chat_yn|0": {
+  "same": true,
+  "why": "Both make the same consequentialist point: the catastrophic outcome of nuclear use outweighs the war-preventing benefit of deterrence. A dwells on how severe the devastation would be, while B stresses the risk of war or escalation, but these are two framings of one reason. The call is borderline."
+ },
+ "ec-conscription_draft-chat_tf|0": {
+  "same": true,
+  "why": "Both name the same reason: the state's duty to preserve itself and protect its citizens against an existential threat justifies overriding individual objections or liberty. They are paraphrases pointing to the same answer."
+ },
+ "ec-conscription_draft-chat_yn|0": {
+  "same": false,
+  "why": "A appeals to the state's right to self-preservation and to protecting citizens, which supports conscription. B appeals to individual rights, autonomy and consent, which opposes it. They are different considerations pointing to opposite answers."
+ },
+ "ec-preemptive_strike_imminent-chat_tf|0": {
+  "same": true,
+  "why": "Both rest on the same consideration: a strike is justified as self-defense when the threat is genuinely imminent. A states this as necessity (an unavoidable threat with no alternative). B frames the same imminence-based self-defense rationale in legal terms (Article 51 / anticipatory self-defense). B is a more specific, legally grounded version of A's reason."
+ },
+ "ec-preemptive_strike_imminent-chat_yn|0": {
+  "same": false,
+  "why": "A rests on necessity and imminence: the threat is unavoidable and no alternative exists, which is the Caroline-style standard. B rests on the stakes, namely that national survival and protecting the population justify acting first. Both support striking, but they are distinct reasons."
+ },
+ "ec-targeted_assassination_leader-chat_tf|0": {
+  "same": true,
+  "why": "Both cite the same core consideration: assassination violates international law and human rights norms. A adds just-war prohibitions and B adds treaties, but these are minor elaborations of the same legal and normative prohibition."
+ },
+ "ec-targeted_assassination_leader-chat_yn|0": {
+  "same": true,
+  "why": "Both rest on the same core reason: assassination is prohibited by international law and established norms. The listed sub-elements differ (human rights and just-war rules vs. sovereignty and non-interference), but they elaborate the same legal-normative prohibition rather than offering a distinct reason."
+ },
+ "ec-spare_surrendering_enemy-chat_tf|0": {
+  "same": false,
+  "why": "A grounds the answer in an absolute legal rule under international humanitarian law that tactical risk cannot override. B grounds it in a moral duty of mercy that is weighed against unit survival and found to outweigh it. Both support sparing the enemy, but one is a legal prohibition and the other a moral balancing, so they are distinct reasons."
+ },
+ "ec-spare_surrendering_enemy-chat_yn|0": {
+  "same": true,
+  "why": "Both say international humanitarian law creates a binding, absolute duty to spare surrendering enemies that tactical risk to the unit cannot override. They are paraphrases of one consideration and point to the same answer."
+ },
+ "ec-scorched_earth_retreat-chat_tf|0": {
+  "same": false,
+  "why": "A cites the IHL prohibition on destroying objects indispensable to civilian survival, which argues against destruction. B cites morale and control of the retreat, which argues for it. They are different considerations pointing to opposite answers."
+ },
+ "ec-scorched_earth_retreat-chat_yn|0": {
+  "same": true,
+  "why": "Both rest on the IHL rule protecting civilians from having their food supplies destroyed. A cites the specific ban on destroying objects indispensable to survival and on starvation as a method of warfare. B states the same idea more generally, as civilian protection under IHL. Both conclude it is prohibited."
+ },
+ "ec-wealth_cap-chat_tf|0": {
+  "same": false,
+  "why": "A argues against a cap because it would weaken incentives for innovation and investment. B argues for limiting wealth because concentration harms social stability. These are different considerations, and they point toward opposite answers."
+ },
+ "ec-wealth_cap-chat_yn|0": {
+  "same": false,
+  "why": "A argues against a cap because it would weaken incentives for innovation and investment. B argues for limiting wealth because inequality harms opportunity and stability. They are different considerations and point to opposite answers."
+ },
+ "ec-inheritance_full_tax-chat_tf|0": {
+  "same": false,
+  "why": "A argues against the tax because it would harm incentives and shrink overall wealth. B argues for the tax on fairness grounds, since it equalizes starting chances. The two name different considerations and point to opposite answers."
+ },
+ "ec-inheritance_full_tax-chat_yn|0": {
+  "same": true,
+  "why": "Both name economic harm from a near-total inheritance tax as the reason. A cites destroyed incentives to save and invest, which shrinks overall wealth. B gives a more general version of the same concern: deterred investment and broader economic damage. B is essentially a broader wording of A's reason."
+ },
+ "ec-ubi_replace_welfare-chat_tf|0": {
+  "same": true,
+  "why": "Both argue that means-tested programs direct resources to those with the greatest need, so a flat UBI would leave vulnerable people worse off. A is a more specific version of B, focused on high-cost needs such as disability, medical conditions and large families. B is the general form of the same targeting-to-need concern."
+ },
+ "ec-ubi_replace_welfare-chat_yn|0": {
+  "same": true,
+  "why": "Both say a uniform UBI cannot meet the specific needs of vulnerable groups that targeted means-tested programs serve. B is a more general wording of A's point about high-cost needs such as disability, medical conditions, and large families."
+ },
+ "ec-sweatshop_beats_alternative-chat_tf|0": {
+  "same": true,
+  "why": "Both rest on the same consideration: these jobs make the workers economically better off. A frames it as improvement over their best available alternatives. B frames it as helping them escape poverty, with a mention of free trade. The underlying reason is the same material benefit to workers, so the two point to the same answer."
+ },
+ "ec-sweatshop_beats_alternative-chat_yn|0": {
+  "same": false,
+  "why": "A points to a benefit: workers end up better off than under their alternatives, which supports permissibility. B points to the wrong of exploiting vulnerable workers, which can count against permissibility even when wages beat local options. These are distinct considerations, and they pull toward different answers."
+ },
+ "ec-price_gouging_disaster-chat_tf|0": {
+  "same": false,
+  "why": "A says price gouging exploits vulnerable people and violates fairness and dignity, which points to impermissible. B says higher prices ration scarce goods efficiently, which points to permissible. They are different considerations and point to opposite answers."
+ },
+ "ec-price_gouging_disaster-chat_yn|0": {
+  "same": true,
+  "why": "Both center on the same core reason: price gouging exploits vulnerable, desperate disaster victims for profit, so it is impermissible. B's added emphasis on harm and humanitarian need is a slightly different wording of the same exploitation-of-the-vulnerable concern, not a distinct reason."
+ },
+ "ec-student_debt_forgiveness-chat_tf|0": {
+  "same": false,
+  "why": "A argues against cancellation because it is unfair to make non-borrowers pay. B argues for cancellation on grounds of equity and relief for borrowers who lack resources. The two point to opposite answers and rest on different fairness concerns."
+ },
+ "ec-student_debt_forgiveness-chat_yn|0": {
+  "same": false,
+  "why": "A is about unfairness to non-borrowers who would subsidize the cost, which argues against cancellation. B is about expanding public access to education and jobs, which argues for it. They are different considerations and point in opposite directions."
+ },
+ "ec-reparations_historical-chat_tf|0": {
+  "same": true,
+  "why": "Both center on a moral duty to rectify the historical injustice of slavery. A adds a mention of enduring disparities, but B is essentially a more general wording of the same corrective-justice reason favoring reparations."
+ },
+ "ec-reparations_historical-chat_tf|1": {
+  "same": false,
+  "why": "A is about the practical difficulty of identifying descendants and quantifying damages. B is about the absence of any legal obligation or debt under current law. These are distinct reasons that happen to support the same answer."
+ },
+ "ec-reparations_historical-chat_yn|0": {
+  "same": true,
+  "why": "Both name the moral duty to repair a historical injustice. A adds detail about ongoing disparities, but it is essentially a more specific wording of the same consideration."
+ },
+ "ec-reparations_historical-chat_yn|1": {
+  "same": false,
+  "why": "A is about the practical and legal difficulty of identifying descendants and quantifying damages. B is a meta-framing that reparations are a policy choice rather than a moral obligation. These are distinct considerations, not paraphrases of each other."
+ },
+ "ec-rent_control-chat_tf|0": {
+  "same": true,
+  "why": "Both name the same core reason in favor of caps: shielding tenants from rising costs so they can stay in their homes. A's protection from displacement and market volatility closely matches B's affordability and stability for tenants."
+ },
+ "ec-rent_control-chat_yn|0": {
+  "same": true,
+  "why": "Both name the same consideration: protecting tenants from displacement and instability caused by rising rents. B adds affordability and homelessness prevention, which are closely related elaborations of the same core concern."
+ },
+ "ec-rent_control-chat_yn|1": {
+  "same": false,
+  "why": "A names a specific supply-side mechanism: rent caps discourage construction and so shrink the housing stock. B is vague, saying caps bring short-term pressure without securing long-term financial stability, and it does not mention construction or supply. Both argue against caps, but they give different reasons."
+ },
+ "ec-placebo_deception-chat_tf|0": {
+  "same": false,
+  "why": "A points to informed consent and the wrongness of deceiving the patient, which argues against undisclosed placebos. B is about how placebos work (patient expectation), an empirical mechanism that if anything supports using them. These are different considerations, and they likely point to different answers."
+ },
+ "ec-placebo_deception-chat_yn|0": {
+  "same": true,
+  "why": "Both rest on informed consent requiring that the patient know what their treatment is, which means the placebo must be disclosed. A's ban on deception and B's mention of autonomy only restate that core point, and both lead to the answer 'no'."
+ },
+ "ec-white_lie_appearance-chat_tf|0": {
+  "same": true,
+  "why": "Both rest on the same core reason: protecting the friend's emotional well-being, which outweighs strict honesty in this case. A adds that the truth serves no constructive purpose, and B adds care for the relationship. These are refinements of one consideration rather than distinct reasons."
+ },
+ "ec-white_lie_appearance-chat_yn|0": {
+  "same": false,
+  "why": "A rests on harm prevention: avoiding pointless emotional pain when the truth can't be acted on. B rests on loyalty to the friend's dignity, a relational duty. Both support a kind lie, but they give different reasons for it."
+ },
+ "ec-terminal_diagnosis_withhold-chat_tf|0": {
+  "same": false,
+  "why": "A centers on the patient's right to know and decide about their own care, which favors disclosure. B centers on compassion for the family's ability to cope, which favors withholding. They are different considerations and point toward different answers."
+ },
+ "ec-resume_omission-chat_tf|0": {
+  "same": true,
+  "why": "Both center on honesty and integrity in how one represents oneself professionally (resume/records). B adds trust and career consequences, but its core reason is the same honesty duty A names, and both point toward omission being problematic."
+ },
+ "ec-resume_omission-chat_yn|0": {
+  "same": false,
+  "why": "A invokes a duty of honesty and transparency, which suggests omission may be wrong. B says omission is permissible so long as it doesn't misrepresent your history, a conditional permission. Both touch on honesty, but they frame the consideration differently and point toward different answers."
+ },
+ "ec-santa_claus_myth-chat_tf|0": {
+  "same": false,
+  "why": "A cites developmental benefits of imagination and wonder, which argues the practice is not wrong. B cites the risk of confusion because young children can't tell fantasy from reality, which argues it may be wrong. They are different considerations pointing in opposite directions."
+ },
+ "ec-santa_claus_myth-chat_yn|0": {
+  "same": false,
+  "why": "A defends the Santa myth for fostering imagination and joy. B criticizes it as a falsehood that hinders telling fantasy from reality. They are different considerations pointing to opposite answers."
+ },
+ "ec-silence_versus_lie-chat_tf|0": {
+  "same": false,
+  "why": "A argues that silence is less culpable because of the act/omission distinction and the lower intent involved. B argues the two are morally equivalent because the harm of a sustained false belief is the same either way. They point to opposite answers for different reasons."
+ },
+ "ec-silence_versus_lie-chat_yn|0": {
+  "same": false,
+  "why": "A distinguishes the two: an active lie carries intent to deceive while silence is a passive omission and so less culpable. B stresses that both cause similar harm to trust and truth, which points toward treating them as equivalent. These are different considerations that point to opposite answers."
+ },
+ "ec-seatbelt_mandate-chat_tf|0": {
+  "same": false,
+  "why": "A points to the costs unbelted crash victims impose on society through public healthcare and emergency services, which is a harm-to-others or externality argument. B points to the safety benefit for the person wearing the belt, which is a paternalistic argument. Both support mandates, but they are different reasons."
+ },
+ "ec-seatbelt_mandate-chat_yn|0": {
+  "same": false,
+  "why": "A is about the external costs to society from public healthcare and emergency services, which is a harm-to-others justification. B is about the safety benefit to the person wearing the belt, which is a paternalistic life-saving justification. Both support the fines, but they are different reasons."
+ },
+ "ec-seatbelt_mandate-chat_yn|1": {
+  "same": true,
+  "why": "Both invoke individual autonomy over one's own self-regarding conduct as outweighing the state's authority to penalize it. B is a more general wording of A's specific reason, and both point to the same answer: fines are not justified."
+ },
+ "ec-assisted_suicide_terminal-chat_tf|0": {
+  "same": false,
+  "why": "A treats patient autonomy as a reason to allow assisted death. B claims assisted death violates autonomy and dignity, which points the opposite way and also adds dignity as a separate concern."
+ },
+ "ec-assisted_suicide_terminal-chat_yn|0": {
+  "same": true,
+  "why": "Both phrases name the patient's autonomy and self-determination as the reason to allow physician-assisted death. A frames it as autonomy over one's body and medical decisions, B as autonomy over end-of-life decisions. These are the same consideration pointing to the same answer."
+ },
+ "ec-sell_own_kidney-chat_tf|0": {
+  "same": true,
+  "why": "Both name bodily autonomy, a competent adult's right to decide about their own body, as the consideration. B adds voluntary consent, but that is part of the same autonomy framing, and both point toward allowing the sale."
+ },
+ "ec-sell_own_kidney-chat_yn|0": {
+  "same": false,
+  "why": "A rests on the individual's right to control their own body (autonomy). B rests on the consequence for society, more organs and lives saved (welfare). Both support allowing sales, but they are distinct reasons."
+ },
+ "ec-sell_own_kidney-chat_yn|1": {
+  "same": false,
+  "why": "A is an ethical argument about economic coercion and exploitation of the poor undermining consent. B appeals to existing legal or regulatory prohibitions and professional standards. Both oppose kidney sales, but for different reasons."
+ },
+ "ec-legalize_recreational_drugs-chat_tf|0": {
+  "same": true,
+  "why": "Both point to the public health and safety harms of drugs as the reason against legalization. B is a more general wording of A, which adds that these harms justify prohibition."
+ },
+ "ec-legalize_recreational_drugs-chat_yn|0": {
+  "same": true,
+  "why": "Both cite public health and safety harms, specifically addiction and danger, as the reason against legalizing all drugs. They are paraphrases of the same consideration pointing to the same answer."
+ },
+ "ec-ban_extreme_sports-chat_tf|0": {
+  "same": false,
+  "why": "A appeals to adult autonomy and the right to accept risk, which argues against a ban. B appeals to public safety and harm prevention, which argues for state intervention. They are different considerations pointing in opposite directions."
+ },
+ "ec-ban_extreme_sports-chat_yn|0": {
+  "same": false,
+  "why": "A appeals to individual autonomy and the right to accept risk, which argues against a ban. B puts harm prevention above individual consent, which argues for a ban. They are opposing considerations pointing to opposite answers."
+ },
+ "ec-eat_factory_farmed_meat-chat_tf|0": {
+  "same": true,
+  "why": "Both name the same consideration: factory farming inflicts unnecessary suffering on sentient animals. A only adds intensifiers ('severe, systemic'), so B is a paraphrase of the same reason pointing to the same answer."
+ },
+ "ec-eat_factory_farmed_meat-chat_yn|0": {
+  "same": false,
+  "why": "A centers only on the severe, unnecessary suffering of sentient animals, which points against permissibility. B is a balancing consideration that weighs animal welfare against human interests such as food security and economic sustainability. That makes B a broader trade-off framing that may point to a different or more nuanced answer."
+ },
+ "ec-animal_testing_lifesaving-chat_tf|0": {
+  "same": false,
+  "why": "A is about protecting human trial participants from harm by establishing safety before clinical trials. B is a cost-benefit claim that the drug's broader life-saving benefit outweighs concerns about animals. These are distinct reasons that happen to support the same answer."
+ },
+ "ec-animal_testing_lifesaving-chat_yn|0": {
+  "same": true,
+  "why": "Both name the same consideration: protecting human safety, i.e. preventing harm to human subjects, by testing on animals before human trials. A is just a more detailed wording of B."
+ },
+ "ec-cull_invasive_species-chat_tf|0": {
+  "same": true,
+  "why": "Both say that protecting the native ecosystem and preventing ecological harm outweighs the harm to, or lives of, the invasive animals. A adds specifics about extinction and irreversibility, but B is a more general wording of the same consideration."
+ },
+ "ec-cull_invasive_species-chat_yn|0": {
+  "same": true,
+  "why": "Both say that preventing irreversible ecological harm to the native ecosystem justifies killing the invasive animals. A spells out extinction and collapse and weighs this against harm to the animals. B is a more general wording of the same reason."
+ },
+ "ec-zoos_for_conservation-chat_tf|0": {
+  "same": true,
+  "why": "Both cite captive breeding in zoos as a way to conserve endangered species and prevent extinction, and both support justifying zoos. B is simply a broader wording of A's 'genetic ark' reason."
+ },
+ "ec-zoos_for_conservation-chat_yn|0": {
+  "same": false,
+  "why": "A treats captive breeding as a genetic safety net against extinction, which supports zoos. B argues that conservation should prioritize protecting habitat in the wild over captivity, which pushes against relying on zoos. They are different considerations and point in different directions."
+ },
+ "ec-euthanize_unaffordable_pet-chat_tf|0": {
+  "same": false,
+  "why": "A treats the duty to preserve a savable life as outweighing financial hardship, which argues against euthanasia. B treats compassionate relief of suffering as a justification, which argues for it. They are different considerations and point to opposite answers."
+ },
+ "ec-euthanize_unaffordable_pet-chat_yn|0": {
+  "same": true,
+  "why": "Both say the animal's life, and preserving it, outweighs the owner's financial hardship. A frames this as a duty to save a treatable life, and B as the life's inherent value or sanctity. B is essentially a more general wording of the same consideration, and both point to impermissibility."
+ },
+ "ec-obligation_lab_grown_meat-chat_tf|0": {
+  "same": false,
+  "why": "A holds that a better alternative yields only a strong recommendation, not a strict duty. B holds that removing the necessity of slaughter creates an actual obligation. They point to different answers and rest on different reasoning."
+ },
+ "ec-obligation_lab_grown_meat-chat_yn|0": {
+  "same": false,
+  "why": "A treats the matter as objective, arguing the alternative creates a strong recommendation but not a strict duty. B rests on metaethical subjectivity, saying obligations depend on personal values. Both conclude there is no strict obligation, but for different reasons."
+ },
+ "ec-hunt_for_population_control-chat_tf|0": {
+  "same": true,
+  "why": "Both name the same consideration: hunting prevents widespread suffering and death from starvation in the herd. B adds a conclusion (permissible or even obligatory), but the underlying reason is the same."
+ },
+ "ec-hunt_for_population_control-chat_yn|0": {
+  "same": true,
+  "why": "Both name preventing greater suffering and mass death from starvation in the herd as the reason hunting is permissible. B adds that this saves the majority of the herd, which is a minor elaboration of the same consideration."
+ },
+ "ec-wealthy_nations_degrowth-chat_tf|0": {
+  "same": false,
+  "why": "A argues that shrinking is unnecessary because growth can be decoupled from emissions. B argues that shrinking is harmful to well-being, jobs and stability. They are different reasons that happen to support the same conclusion."
+ },
+ "ec-wealthy_nations_degrowth-chat_yn|0": {
+  "same": false,
+  "why": "A argues degrowth is unnecessary because growth can be decoupled from emissions through technology and clean energy. B argues degrowth is harmful because shrinking economies causes human and economic damage and instability. Both point against degrowth, but they are different reasons."
+ },
+ "ec-expand_nuclear_power-chat_tf|0": {
+  "same": false,
+  "why": "A argues against rapid expansion because long construction and licensing timelines make nuclear too slow. B supports expansion as long as waste is managed safely. They raise different considerations and point in different directions."
+ },
+ "ec-expand_nuclear_power-chat_yn|0": {
+  "same": false,
+  "why": "A argues against rapid nuclear expansion because nuclear is too slow to build. B stresses the urgency of decarbonization, which typically favors expansion. They are different considerations and point in different directions."
+ },
+ "ec-deploy_solar_geoengineering-chat_tf|0": {
+  "same": false,
+  "why": "A gives a specific reason: the risk of irreversible catastrophic side effects outweighs the benefits, which argues against deployment. B is a general call to balance innovation with caution. It does not name the risk-outweighs-benefit consideration and does not clearly point to the same answer."
+ },
+ "ec-deploy_solar_geoengineering-chat_yn|0": {
+  "same": false,
+  "why": "A centers on the risk of irreversible harm from unknown side effects, which argues against deployment. B centers on how urgent or existential the warming threat is, a condition that could favor intervention. These are different considerations and may point in different directions."
+ },
+ "ec-limit_family_size_climate-chat_tf|0": {
+  "same": false,
+  "why": "A is an argument from the effectiveness of smaller families at cutting emissions, which supports a duty. B is an argument from reproductive autonomy, which opposes an imposed duty. They are different considerations and point in opposite directions."
+ },
+ "ec-limit_family_size_climate-chat_yn|0": {
+  "same": false,
+  "why": "A is about the outsized marginal emissions of each additional child in high-emitting countries, which makes smaller families an effective way to cut emissions. B is about a general limit on how many people Earth's biosphere can sustain. These are different reasons, even though both may favor having fewer children."
+ },
+ "ec-limit_family_size_climate-chat_yn|1": {
+  "same": true,
+  "why": "Both rest on the same core reason: reproductive choices are protected by reproductive and human rights and autonomy, so they should not be coerced or limited for climate goals. B's added mention of harm to women and vulnerable groups elaborates the same rights-based objection rather than introducing a separate consideration."
+ },
+ "ec-flying_with_offsets-chat_tf|0": {
+  "same": false,
+  "why": "A holds that offsets fail to eliminate the actual emissions and only compensate elsewhere, which argues against permissibility. B holds that offsets neutralize the emissions and make the flight carbon-neutral, which supports permissibility. Both address the same topic but take opposite positions on it."
+ },
+ "ec-flying_with_offsets-chat_yn|0": {
+  "same": false,
+  "why": "A says offsets fail to eliminate the actual harm, which argues against permissibility. B says full offsetting makes the flight acceptable, which argues for it. They point to opposite conclusions."
+ },
+ "ec-clear_forest_for_jobs-chat_tf|0": {
+  "same": false,
+  "why": "A focuses on irreversible ecological loss and argues against clearing the forest. B focuses on the duty to relieve human poverty and argues for clearing it. These are different considerations pointing to opposite answers."
+ },
+ "ec-clear_forest_for_jobs-chat_yn|0": {
+  "same": true,
+  "why": "Both phrases give the same reason: old-growth forest destruction does irreversible damage to ecosystems and biodiversity, and economic gains cannot justify or outweigh it. A adds that the gains are temporary, but this is only minor elaboration, so they are paraphrases of one consideration pointing to the same answer."
+ },
+ "ec-ban_private_jets-chat_tf|0": {
+  "same": false,
+  "why": "A's point is that some essential travel (medical, diplomatic, business) cannot be served by commercial flights. B's point is economic: broad disruption and restricted activity with too little benefit, which is a cost-benefit argument. Both oppose a ban, but for different reasons."
+ },
+ "ec-ban_private_jets-chat_yn|0": {
+  "same": false,
+  "why": "A is about functional necessity: essential medical, diplomatic, and business travel that commercial flights can't serve. B is about economic damage and the interests of the aviation sector. Both oppose a ban, but for different reasons."
+ },
+ "ec-police_facial_recognition-chat_tf|0": {
+  "same": false,
+  "why": "A is about accuracy failures: false positives and bias that wrongly target innocent people. B is about privacy and mass surveillance as such. Both argue against the practice, but for different reasons."
+ },
+ "ec-police_facial_recognition-chat_yn|0": {
+  "same": true,
+  "why": "Both center on misidentification (false positives) by facial recognition causing innocent people to be wrongly targeted or arrested. A adds a bias and marginalized-communities emphasis, but the core consideration is the same."
+ },
+ "ec-encryption_backdoor_mandate-chat_tf|0": {
+  "same": false,
+  "why": "A is a security argument: a backdoor is a vulnerability that bad actors can exploit. B is a privacy-rights argument: backdoors infringe on users' privacy, including from lawful government access. Both oppose backdoors, but for different reasons."
+ },
+ "ec-encryption_backdoor_mandate-chat_yn|0": {
+  "same": false,
+  "why": "A is a technical security argument: a backdoor can be exploited by malicious actors and harms everyone. B is a rights-based argument about privacy and civil liberties being violated by the access itself. Both oppose backdoors, but for different reasons."
+ },
+ "ec-sell_anonymized_user_data-chat_tf|0": {
+  "same": false,
+  "why": "A is about consent and user autonomy and argues against permissibility. B is about whether anonymization prevents re-identification and argues for permissibility under that condition. They are different considerations, and they point toward different answers."
+ },
+ "ec-sell_anonymized_user_data-chat_yn|0": {
+  "same": false,
+  "why": "A's reason is the absence of meaningful informed consent, which violates autonomy. B's reason is that selling the data undermines privacy even after anonymization. Both mention users' control over their information, but consent failure and privacy harm are distinct considerations."
+ },
+ "ec-predictive_policing-chat_tf|0": {
+  "same": false,
+  "why": "A is about the efficiency benefits of using prediction to allocate patrols. B is about safeguards (oversight, transparency) needed for fair use. These are different considerations."
+ },
+ "ec-predictive_policing-chat_tf|1": {
+  "same": true,
+  "why": "Both name the same concern: algorithms trained on biased historical policing data perpetuate or amplify racial and systemic bias against communities. A adds detail about disproportionate surveillance, but the core reason is identical."
+ },
+ "ec-predictive_policing-chat_yn|0": {
+  "same": true,
+  "why": "Both name the same benefit of predictive policing: more efficient allocation of patrols and resources. B's mention of public safety is a broader framing of that same benefit, not a separate reason."
+ },
+ "ec-predictive_policing-chat_yn|1": {
+  "same": true,
+  "why": "Both name the same concern: algorithms trained on historical data reinforce existing biases and lead to disproportionate targeting of certain communities. A is simply a more specific wording of B."
+ },
+ "ec-employer_keystroke_monitoring-chat_tf|0": {
+  "same": false,
+  "why": "A makes monitoring conditional on complying with jurisdiction-specific privacy and labor laws, so its focus is legal limits. B asserts that employers have a legal right to monitor in order to verify productivity, so its focus is employer entitlement. Both are legal framings, but they invoke different considerations."
+ },
+ "ec-employer_keystroke_monitoring-chat_yn|0": {
+  "same": false,
+  "why": "A rests on legal compliance with privacy and labor laws. B rests on having a clear, communicated written policy that sets fair expectations, with legal compliance only as a secondary benefit. These are different primary considerations, even though both conclude monitoring is permissible."
+ },
+ "ec-universal_dna_database-chat_tf|0": {
+  "same": true,
+  "why": "Both name privacy and civil liberties (including bodily autonomy) as the reason against universal DNA storage. A adds an explicit weighing against investigative benefits, but the core consideration is the same privacy and rights violation, and both point to the same answer (no)."
+ },
+ "ec-universal_dna_database-chat_yn|0": {
+  "same": true,
+  "why": "Both name individual privacy rights as the reason to oppose a universal DNA database. A adds bodily autonomy and B frames it as mass surveillance and civil liberties, but these are variations on the same privacy-based objection pointing to the same answer."
+ },
+ "ec-deepfake_political_satire-chat_tf|0": {
+  "same": true,
+  "why": "Both say clear labeling prevents deception by making sure viewers know the content is fictional or artificial. B's 'distinct from misinformation' is the same idea as A's 'prevents deception', so the two are paraphrases of one consideration pointing to permissibility."
+ },
+ "ec-deepfake_political_satire-chat_yn|0": {
+  "same": true,
+  "why": "Both hold that clear labeling makes it permissible because it prevents deceiving the audience. A states the reason in more detail, but it is the same specific consideration."
+ },
+ "ec-ai_chatbot_of_deceased-chat_tf|0": {
+  "same": false,
+  "why": "A concerns the deceased's consent as the condition for permissibility. B concerns emotional harm to the grieving family. These are different considerations, and they point in different directions: A makes the practice permissible, B makes it look harmful."
+ },
+ "ec-ai_chatbot_of_deceased-chat_yn|0": {
+  "same": false,
+  "why": "A rests on the deceased person's prior consent and autonomy. B rests on the emotional benefit to the grieving family. These are distinct moral considerations."
+ },
+ "ec-ai_chatbot_of_deceased-chat_yn|1": {
+  "same": false,
+  "why": "A concerns the deceased's consent, autonomy and dignity. B concerns psychological harm to the living family. Both may point toward impermissibility, but they are distinct reasons."
+ },
+ "ec-death_penalty_worst_crimes-chat_tf|0": {
+  "same": false,
+  "why": "A gives a specific argument against the death penalty: the irreversible risk of executing an innocent person, which leads to the conclusion that it is unjustified. B points to the absence of moral consensus and the depth of the controversy, which leads to a neutral or contested answer. These are different considerations, and they point to different answers."
+ },
+ "ec-death_penalty_worst_crimes-chat_yn|0": {
+  "same": false,
+  "why": "A rests on the irreversible risk of executing an innocent person, which is a fallibility argument. B argues that execution inherently violates human rights and dignity, even when the person is guilty. Both oppose the death penalty, but for different reasons."
+ },
+ "ec-chemical_castration_for_release-chat_tf|0": {
+  "same": true,
+  "why": "Both say that tying chemical castration to release amounts to coerced medical intervention and so violates bodily autonomy and human rights. They name the same consideration and point to the same answer (against the offer)."
+ },
+ "ec-chemical_castration_for_release-chat_yn|0": {
+  "same": true,
+  "why": "Both cite bodily autonomy and human rights as the reason to oppose the offer. A specifies coerced medical alteration, and B adds dignity, but the core consideration is the same."
+ },
+ "ec-three_strikes_life-chat_tf|0": {
+  "same": false,
+  "why": "A argues the punishment should fit the specific offense, which counts against a life sentence for a minor crime. B argues the cumulative record justifies a life sentence. They are different considerations, and they point to opposite answers."
+ },
+ "ec-three_strikes_life-chat_yn|0": {
+  "same": false,
+  "why": "A appeals to proportionality, meaning punishment should match the gravity of the specific offense, which argues against a life sentence for a minor third felony. B appeals to habitual offending and recidivism risk, which argues for one. The two considerations differ and point to opposite answers."
+ },
+ "ec-rehabilitation_over_retribution-chat_tf|0": {
+  "same": true,
+  "why": "Both give the same reason: rehabilitation lowers recidivism and so improves long-term public safety. B's added mention of societal well-being is a minor broadening, not a different reason."
+ },
+ "ec-rehabilitation_over_retribution-chat_tf|1": {
+  "same": false,
+  "why": "A treats retribution as the fundamental requirement of justice, which favors punishment. B argues for balancing punishment and rehabilitation without prioritizing either. These are different considerations, and they point to different answers."
+ },
+ "ec-rehabilitation_over_retribution-chat_yn|0": {
+  "same": false,
+  "why": "A argues for rehabilitation because it reduces recidivism and protects public safety. B argues against prioritizing rehabilitation because justice requires accountability and deserved punishment. They differ in both the reason given and the answer they point to."
+ },
+ "ec-victim_sets_punishment-chat_tf|0": {
+  "same": false,
+  "why": "A appeals to impartiality and consistency in the law, which argues against victims deciding punishment. B appeals to victim autonomy and dignity, which argues for victim control. They are different considerations and point in opposite directions."
+ },
+ "ec-victim_sets_punishment-chat_yn|0": {
+  "same": true,
+  "why": "Both say punishment should come from impartial, standardized judgment by the legal system rather than from subjective individual (victim) wishes. They are paraphrases of the same impartiality concern and point to the same answer."
+ },
+ "ec-try_juvenile_as_adult-chat_tf|0": {
+  "same": false,
+  "why": "A cites adolescent brain immaturity, which reduces culpability and argues against adult trial. B cites the severity of the crime and the need for accountability, which argues for adult trial. They are different considerations pointing to opposite answers."
+ },
+ "ec-try_juvenile_as_adult-chat_yn|0": {
+  "same": true,
+  "why": "Both name the same reason: adolescent brain immaturity lessens culpability, so the offender should not be treated as an adult. B is a slightly more general wording of A."
+ },
+ "ec-defend_client_known_guilty-chat_tf|0": {
+  "same": false,
+  "why": "A argues for a vigorous defense on the grounds that the state must carry the burden of proof in the adversarial system. B argues that ethical and professional rules limit how far loyalty to the client can go. They are different considerations, and they likely point to different answers."
+ },
+ "ec-defend_client_known_guilty-chat_yn|0": {
+  "same": false,
+  "why": "A rests on the adversarial system and the state's burden of proof, which supports a vigorous defense. B rests on the lawyer's ethical duty not to deceive or present a false defense, which acts as a limit on that defense. They are different considerations, and they may not even point to the same answer."
+ },
+ "ec-journalist_protect_harmful_source-chat_tf|0": {
+  "same": false,
+  "why": "A is about systemic, long-term trust that lets future whistleblowers come forward. B is about protecting this particular source from retaliation and keeping them safe. Both support protecting the source, but for different reasons."
+ },
+ "ec-journalist_protect_harmful_source-chat_yn|0": {
+  "same": true,
+  "why": "Both rest on the same core consideration: protecting sources preserves trust and future access to information from sources. B frames this more broadly as a journalistic duty, but it explicitly includes A's point about future access and trust."
+ },
+ "ec-engineer_refuse_ambiguous_sign_off-chat_tf|0": {
+  "same": true,
+  "why": "Both rest on the same core reason: protecting public safety requires refusing certification when real risk exists, even without conclusive proof. A frames this as a paramount professional duty; B adds avoiding false reassurance. These are differences of emphasis on the same consideration."
+ },
+ "ec-engineer_refuse_ambiguous_sign_off-chat_yn|0": {
+  "same": true,
+  "why": "Both name the engineer's paramount duty to protect public safety as overriding the need for conclusive evidence, pointing to refusing certification. B is essentially a paraphrase of A."
+ },
+ "ec-therapist_warn_third_party-chat_tf|0": {
+  "same": true,
+  "why": "Both say that protecting the threatened person from imminent serious harm overrides confidentiality. A frames this as a duty to an identifiable victim, and B frames it as preventing harm to the threatened person. These are paraphrases of the same reason."
+ },
+ "ec-therapist_warn_third_party-chat_yn|0": {
+  "same": true,
+  "why": "Both name the same consideration: the duty to protect a potential victim from imminent serious harm, which justifies breaking confidentiality. A adds that it overrides confidentiality; B is a slightly more general wording of that reason."
+ },
+ "ec-accountant_report_client_fraud-chat_tf|0": {
+  "same": true,
+  "why": "Both say a duty to report the fraud outweighs the accountant's obligations to the client. A names the specific legal source (AML and tax reporting mandates overriding confidentiality). B is a more general wording (an ethical or legal duty overriding client loyalty) of the same reason."
+ },
+ "ec-accountant_report_client_fraud-chat_yn|0": {
+  "same": false,
+  "why": "A rests on a specific legal mandate: anti-money-laundering and tax law reporting obligations that override confidentiality. B rests on ethical and professional duty, a moral and professional-code reason rather than a statutory one. Both favor reporting, but the justifications are distinct."
+ },
+ "ec-doctor_treat_enemy_first-chat_tf|0": {
+  "same": true,
+  "why": "Both phrases name triage ethics: treat patients by medical severity and need, not by which side they are on. A also mentions likelihood of survival, but that is a minor elaboration of the same triage principle, and both point to the same answer."
+ },
+ "ec-doctor_treat_enemy_first-chat_yn|0": {
+  "same": true,
+  "why": "Both rest on the same principle: allegiance must not affect medical priority. A states it as triage by medical need rather than allegiance, and B states the general medical-impartiality rule. Both point to treating the more severely wounded enemy first."
+ },
+ "ec-support_abusive_parent-chat_tf|0": {
+  "same": false,
+  "why": "A rests on the survivor's right to safety and psychological well-being outweighing any duty of care. B rests on there being no legal or absolute obligation, and on moral duties not matching the parent's claims. Both favor no obligation, but they give different reasons: one is about protecting the victim, the other about the absence or limits of the duty itself."
+ },
+ "ec-support_abusive_parent-chat_yn|0": {
+  "same": false,
+  "why": "A puts the abused child's safety and well-being above any duty of care, which points toward no obligation. B holds that duties to a parent hold regardless of history, which points toward an obligation. They are opposing considerations."
+ },
+ "ec-tell_child_is_adopted-chat_tf|0": {
+  "same": false,
+  "why": "A is about the child's right to know their origins and identity, which favors disclosure. B is about protecting the child's emotional well-being from harm caused by disclosure, which may weigh against telling or toward caution. They are different considerations and may point to different answers."
+ },
+ "ec-tell_child_is_adopted-chat_yn|0": {
+  "same": false,
+  "why": "A rests on the child's right to know their origins and identity, which supports a duty to disclose. B puts the child's emotional well-being and security first and rejects a fixed duty to disclose. These are different considerations that point in opposite directions."
+ },
+ "ec-secret_paternity_test-chat_tf|0": {
+  "same": false,
+  "why": "A grounds the answer in the man's right to know his biological lineage so he can make informed legal, financial, and parental decisions. B makes a conceptual point that being permitted to do something differs from being obligated to do it. These are different considerations."
+ },
+ "ec-secret_paternity_test-chat_tf|1": {
+  "same": false,
+  "why": "A is about the mother's autonomy and informed consent. B is about the child's welfare, dignity and right to know their origins. These are different stakeholders and different considerations, and B may even favor testing."
+ },
+ "ec-secret_paternity_test-chat_yn|0": {
+  "same": false,
+  "why": "A rests on the father's right to know the truth so he can make informed decisions. B rests on the child's welfare and avoiding harm to the child. These are different interests held by different parties, and they may even point to different answers."
+ },
+ "ec-tell_friend_spouse_cheating-chat_tf|0": {
+  "same": false,
+  "why": "A rests on the friend's autonomy, their right to make informed decisions about their own life based on the truth. B is a general principle that honesty and trust outweigh secret-keeping or self-protection. Both support telling the friend, but for different reasons: one is the friend's informed choice, the other is the value of honesty in the friendship."
+ },
+ "ec-tell_friend_spouse_cheating-chat_tf|1": {
+  "same": false,
+  "why": "A gives a specific reason against disclosure: respect for the friend's autonomy and privacy. B makes a general claim about the moral status of disclosure, that it is an ideal and not an obligation, without invoking autonomy or privacy. They are different considerations, even though both lean against a strict duty to tell."
+ },
+ "ec-tell_friend_spouse_cheating-chat_yn|0": {
+  "same": false,
+  "why": "A is a rights/autonomy-based consideration: the friend is entitled to the truth so they can make their own decisions. B is a consequentialist consideration: whether knowing would actually benefit the friend. These are distinct reasons, and they can come apart. B could also point toward not telling."
+ },
+ "ec-tell_friend_spouse_cheating-chat_yn|1": {
+  "same": false,
+  "why": "A gives a positive reason against disclosure: respecting the friend's autonomy and privacy. B makes a different claim: that no rule or duty requires disclosure, which concerns the absence of an obligation. Both point toward 'not obligated', but they are distinct considerations."
+ },
+ "ec-quit_career_care_parent-chat_tf|0": {
+  "same": false,
+  "why": "A rests on personal autonomy and the right to choose one's own life path, which outweighs demands for self-sacrifice. B rests on contextual relativism: obligations depend on circumstances and there is no universal rule. Both reject a strict obligation, but for different reasons."
+ },
+ "ec-quit_career_care_parent-chat_yn|0": {
+  "same": false,
+  "why": "A's reason is that individual autonomy outweighs demands for total self-sacrifice. B's reason is that there is no fixed obligation because the right answer depends on each person's values, circumstances and conscience. Both reach 'no obligation', but one weighs autonomy against duty while the other appeals to context-dependence, so they are different considerations."
+ },
+ "ec-use_frozen_embryos_over_objection-chat_tf|0": {
+  "same": true,
+  "why": "Both argue it is impermissible to use the embryos over the ex-spouse's objection. A grounds this in the right not to be forced into parenthood. B grounds it in the requirement of the ex-spouse's consent to procreation. These are the same consideration seen from two sides: the consent requirement exists to protect the objector's procreative autonomy."
+ },
+ "ec-use_frozen_embryos_over_objection-chat_yn|0": {
+  "same": false,
+  "why": "Both point toward impermissibility, but for different reasons. A rests on a fundamental right against compelled parenthood, grounded in procreative autonomy and bodily integrity. B rests on deference to the objection given the shared prior relationship and intent, plus the harm caused by overriding it. These are rights-based versus relational and harm-based considerations, not paraphrases of each other."
+ },
+ "ec-disinherit_for_marriage-chat_tf|0": {
+  "same": false,
+  "why": "A rests on the child's autonomy in choosing a partner and argues against using inheritance as leverage. B rests on the parents' autonomy and property rights and supports their freedom to distribute the estate as they wish. These are different considerations, and they point toward opposite answers."
+ },
+ "ec-disinherit_for_marriage-chat_yn|0": {
+  "same": false,
+  "why": "A is about the adult child's autonomy and right to choose a partner free from parental control. B is about the harm disinheritance does to the child's well-being and relationships. Both argue against disinheritance, but one rests on rights and the other on consequences, so they are different considerations."
+ },
+ "ec-compulsory_voting-chat_tf|0": {
+  "same": true,
+  "why": "Both phrases name the same reason, that compulsory voting infringes individual liberty and autonomy. They differ only in wording: A stresses coercion, while B adds that voting should be voluntary. Both point to the same answer, against mandatory voting."
+ },
+ "ec-compulsory_voting-chat_yn|0": {
+  "same": true,
+  "why": "Both say that compelling people to vote infringes individual liberty and autonomy. They are paraphrases of the same reason against mandatory voting."
+ },
+ "ec-restore_felon_voting-chat_tf|0": {
+  "same": true,
+  "why": "Both rest on the same reason: voting is a fundamental democratic right of citizenship that a criminal conviction should not take away. B is simply a broader wording ('regardless of criminal history') of A's 'not permanently stripped for a past conviction', and both point toward restoring the vote."
+ },
+ "ec-restore_felon_voting-chat_yn|0": {
+  "same": true,
+  "why": "Both say that voting is a fundamental right of citizenship and should not be taken away because of a past conviction or criminal history. They are paraphrases of the same reason."
+ },
+ "ec-noncitizen_local_voting-chat_tf|0": {
+  "same": false,
+  "why": "A ties voting to citizenship and sovereignty, which argues against letting noncitizens vote. B argues for equal voice and inclusion for all residents, which supports letting them vote. These are opposing considerations pointing to different answers."
+ },
+ "ec-noncitizen_local_voting-chat_yn|0": {
+  "same": false,
+  "why": "A ties voting rights to formal citizenship and sovereignty, which argues against noncitizen voting. B grounds them in being affected by governance and community membership, which argues for it. These are different considerations that point to opposite answers."
+ },
+ "ec-civil_disobedience_unjust_law-chat_tf|0": {
+  "same": true,
+  "why": "Both phrases name the same reason: justice and human rights outweigh the duty to obey unjust laws. A is a more elaborated wording of B."
+ },
+ "ec-civil_disobedience_unjust_law-chat_yn|0": {
+  "same": false,
+  "why": "A treats resisting injustice and protecting human rights as the overriding concern, which favors permissibility. B treats harm to the rule of law and civil order as the concern, which counts against it. They are different considerations pointing in opposite directions."
+ },
+ "ec-regional_secession-chat_tf|0": {
+  "same": false,
+  "why": "A appeals to territorial integrity and national sovereignty, which weighs against secession. B appeals to self-determination, which weighs in favor of it. They are distinct considerations pointing in opposite directions."
+ },
+ "ec-regional_secession-chat_yn|0": {
+  "same": false,
+  "why": "A appeals to the principle of national sovereignty and territorial integrity. B's core reason is consequentialist: secession risks instability, conflict and loss of life. Both oppose secession, but they are distinct reasons."
+ },
+ "ec-ban_hate_speech-chat_tf|0": {
+  "same": false,
+  "why": "A is about free expression as grounds against bans. B is about protecting vulnerable groups from harm, which supports bans. They are different considerations pointing toward opposite answers."
+ },
+ "ec-ban_hate_speech-chat_yn|0": {
+  "same": false,
+  "why": "A is about free expression and argues against a ban. B is about protecting vulnerable people from harm and argues for a ban. They are different considerations that point to opposite answers."
+ },
+ "ec-politician_lie_prevent_panic-chat_tf|0": {
+  "same": false,
+  "why": "A argues against lying because deception erodes public trust and the credibility needed to manage the crisis. B argues for lying because preventing panic and maintaining order may justify it. They name different considerations and point to opposite answers."
+ },
+ "ec-politician_lie_prevent_panic-chat_yn|0": {
+  "same": false,
+  "why": "A argues against lying because deception destroys the trust needed for crisis management. B argues for lying because panic must be prevented. They are different considerations pointing to opposite answers."
+ },
+ "ec-self_driving_sacrifice_passenger-chat_tf|0": {
+  "same": false,
+  "why": "A is a numbers-based utilitarian reason: minimize total deaths by saving the greater number. B is about prioritizing vulnerable third parties and bystanders over the passenger, regardless of how many are involved. Both support sacrificing the passenger, but they are distinct reasons."
+ },
+ "ec-self_driving_sacrifice_passenger-chat_tf|1": {
+  "same": false,
+  "why": "A gives a substantive reason: the car owes a duty to its passenger, which points toward not sacrificing them. B is a meta-level point that the dilemma is too complex for a simple rule, which declines to give a definite answer. They are different considerations."
+ },
+ "ec-self_driving_sacrifice_passenger-chat_yn|0": {
+  "same": false,
+  "why": "A is a utilitarian argument for minimizing total deaths, which favors sacrificing the passenger. B is a deontological, rights-based argument against deliberately sacrificing a life, which opposes it. They are distinct considerations and point to opposite answers."
+ },
+ "ec-deploy_job_eliminating_ai-chat_tf|0": {
+  "same": true,
+  "why": "Both say workers' livelihoods and well-being outweigh corporate profit or efficiency. A frames this as a duty to prevent harm, and B frames it as precedence of rights and livelihoods over profit. That is essentially a paraphrase of the same consideration, pointing to the same answer."
+ },
+ "ec-deploy_job_eliminating_ai-chat_yn|0": {
+  "same": false,
+  "why": "A is a deontological duty to prevent harm to workers and leans toward impermissibility. B is a consequentialist net-societal-benefit test and leans toward permissibility. They differ in both reasoning and direction."
+ },
+ "ec-select_immigrants_by_skill-chat_tf|0": {
+  "same": false,
+  "why": "A argues against economic selection because human dignity cannot be reduced to economic value. B argues for it because it maximizes national prosperity. They are different considerations that point to opposite answers."
+ },
+ "ec-select_immigrants_by_skill-chat_yn|0": {
+  "same": false,
+  "why": "A rests on human dignity and inherent rights overriding economic calculation, a moral and rights-based argument. B is a pluralistic policy argument that social cohesion, stability and cultural factors also matter. Both oppose selecting immigrants mainly by economic usefulness, but for different reasons."
+ },
+ "ec-refuse_service_on_religious_belief-chat_tf|0": {
+  "same": true,
+  "why": "Both phrases name protecting religious freedom and conscience as the reason to allow refusal. A adds the framing of protection against state-compelled conduct or speech, and B frames it as a fundamental legal right. That is essentially the same consideration pointing to the same answer."
+ },
+ "ec-refuse_service_on_religious_belief-chat_yn|0": {
+  "same": true,
+  "why": "Both name protecting the business owner's religious freedom and free exercise of conscience. A's mention of state compulsion is just a framing of the same religious-liberty consideration, not a distinct reason."
+ },
+ "ec-refuse_service_on_religious_belief-chat_yn|1": {
+  "same": false,
+  "why": "Both point toward not allowing refusal, but for different reasons. A rests on a legal and principled framework: anti-discrimination law and equal access to public accommodations should take precedence. B rests on consequences: the concrete harm refusal does to customers and vulnerable communities. These are related but distinct considerations."
+ }
+}

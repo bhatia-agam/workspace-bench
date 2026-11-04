@@ -1,0 +1,317 @@
+{
+ "version": "adapt-qwen3.5-4b",
+ "note": "adapted-only items' same-topic distractors the MC builder dropped (adapt mc); added to evals/basic_readout_mt/hidden_rivals.json by the judge",
+ "items": {
+  "basic-au-t1-w100c0-brh-ent-1347-pandemic": {
+   "readout": [
+    "Plague of Justinian",
+    "Great Plague of London",
+    "Antonine Plague"
+   ]
+  },
+  "basic-au-t1-w100c0-brh-ent-agra-mausoleum": {
+   "readout": [
+    "Red Fort",
+    "Qutb Minar",
+    "Fatehpur Sikri"
+   ]
+  },
+  "basic-au-t1-w100c0-brh-ent-bosworth-founders": {
+   "readout": [
+    "House of York",
+    "House of Lancaster",
+    "House of Stuart",
+    "House of Plantagenet"
+   ]
+  },
+  "basic-au-t1-w100c0-brh-ent-boyle-gas-law": {
+   "readout": [
+    "Gay-Lussac's law",
+    "Avogadro's law",
+    "Dalton's law"
+   ]
+  },
+  "basic-au-t1-w100c0-brh-ent-chromosome-21": {
+   "readout": [
+    "Turner syndrome",
+    "Klinefelter syndrome",
+    "Edwards syndrome"
+   ]
+  },
+  "basic-au-t1-w100c0-brh-ent-gibraltar-strait": {
+   "readout": [
+    "Strait of Messina",
+    "Strait of Hormuz",
+    "Strait of Dover",
+    "Strait of Bonifacio"
+   ]
+  },
+  "basic-au-t1-w100c0-brh-ent-hastings-1066": {
+   "readout": [
+    "Battle of Fulford",
+    "Battle of Maldon",
+    "Battle of Edington"
+   ]
+  },
+  "basic-au-t1-w100c0-brh-ent-hypotenuse-result": {
+   "readout": [
+    "Law of cosines",
+    "Fermat's Last Theorem",
+    "Euclid's theorem"
+   ]
+  },
+  "basic-au-t1-w100c0-brh-ent-justinian-dome": {
+   "readout": [
+    "Sultan Ahmed Mosque",
+    "Süleymaniye Mosque",
+    "Chora Church",
+    "Basilica Cistern"
+   ]
+  },
+  "basic-au-t1-w100c0-brh-ent-louvre-smile": {
+   "readout": [
+    "Lady with an Ermine",
+    "Girl with a Pearl Earring"
+   ]
+  },
+  "basic-au-t1-w100c0-brh-ent-ming-china": {
+   "readout": [
+    "Yuan dynasty"
+   ]
+  },
+  "basic-au-t1-w100c0-brh-ent-nacl": {
+   "readout": [
+    "potassium chloride",
+    "sodium bicarbonate",
+    "calcium carbonate",
+    "sodium hydroxide"
+   ]
+  },
+  "basic-au-t1-w100c0-brh-ent-origin-of-species": {
+   "readout": [
+    "Jean-Baptiste Lamarck",
+    "Joseph Dalton Hooker"
+   ]
+  },
+  "basic-au-t1-w100c0-brh-ent-principia-author": {
+   "readout": [
+    "Gottfried Wilhelm Leibniz",
+    "Robert Hooke",
+    "Edmond Halley",
+    "Christiaan Huygens"
+   ]
+  },
+  "basic-au-t1-w100c0-brh-ent-queensland-coral": {
+   "readout": [
+    "Ningaloo Reef",
+    "Mesoamerican Barrier Reef",
+    "Tubbataha Reef",
+    "Apo Reef"
+   ]
+  },
+  "basic-au-t1-w100c0-brh-ent-runnymede-1215": {
+   "readout": [
+    "Provisions of Oxford",
+    "Charter of the Forest",
+    "Petition of Right"
+   ]
+  },
+  "basic-au-t1-w100c0-brh-ent-silk-trade-network": {
+   "readout": [
+    "Amber Road",
+    "Incense Route",
+    "Tea Horse Road",
+    "Grand Trunk Road"
+   ]
+  },
+  "basic-au-t1-w100c0-brh-ent-siren-frequency": {
+   "readout": [
+    "Sagnac effect"
+   ]
+  },
+  "basic-au-t1-w100c0-brh-ent-versailles-1919": {
+   "readout": [
+    "Treaty of Sèvres",
+    "Treaty of Neuilly"
+   ]
+  },
+  "basic-au-t1-w100c1-brh-ent-archimedes-principle": {
+   "readout": [
+    "Pascal's principle",
+    "Bernoulli's principle",
+    "Huygens' principle"
+   ]
+  },
+  "basic-au-t1-w100c1-brh-ent-dead-sea": {
+   "readout": [
+    "Sea of Galilee",
+    "Red Sea",
+    "Aral Sea"
+   ]
+  },
+  "basic-au-t1-w100c1-brh-ent-gettysburg": {
+   "readout": [
+    "Battle of Shiloh",
+    "Battle of Chancellorsville",
+    "Battle of Fredericksburg"
+   ]
+  },
+  "basic-au-t1-w100c1-brh-ent-great-wall": {
+   "readout": [
+    "Berlin Wall",
+    "Antonine Wall",
+    "Western Wall"
+   ]
+  },
+  "basic-au-t1-w100c1-brh-ent-hookes-law": {
+   "readout": [
+    "Ohm's law",
+    "Charles's law",
+    "Snell's law",
+    "Coulomb's law"
+   ]
+  },
+  "basic-au-t1-w100c1-brh-ent-kilimanjaro": {
+   "readout": [
+    "Mount Stanley",
+    "Mount Meru",
+    "Mount Elgon"
+   ]
+  },
+  "basic-au-t1-w100c1-brh-ent-leaning-tower-pisa": {
+   "readout": [
+    "Torre del Mangia",
+    "Asinelli Tower"
+   ]
+  },
+  "basic-au-t1-w100c1-brh-ent-marie-curie": {
+   "readout": [
+    "Lise Meitner",
+    "Rosalind Franklin",
+    "Dorothy Hodgkin",
+    "Emmy Noether"
+   ]
+  },
+  "basic-au-t1-w100c1-brh-ent-nitrous-oxide": {
+   "readout": [
+    "nitric oxide",
+    "nitrogen dioxide",
+    "carbon monoxide"
+   ]
+  },
+  "basic-au-t1-w100c1-brh-ent-panama-canal": {
+   "readout": [
+    "Kiel Canal",
+    "Corinth Canal"
+   ]
+  },
+  "basic-au-t1-w100c1-brh-ent-sulfuric-acid": {
+   "readout": [
+    "nitric acid",
+    "hydrochloric acid",
+    "phosphoric acid",
+    "acetic acid"
+   ]
+  },
+  "basic-au-t1-w100c1-brh-ent-sydney-opera-house": {
+   "readout": [
+    "Royal Albert Hall",
+    "Palais Garnier",
+    "Metropolitan Opera House",
+    "Teatro alla Scala"
+   ]
+  },
+  "basic-au-t1-w100c1-brh-ent-tang-dynasty": {
+   "readout": [
+    "Song dynasty",
+    "Sui dynasty"
+   ]
+  },
+  "basic-au-t1-w100c1-brh-ent-thermopylae": {
+   "readout": [
+    "Battle of Artemisium"
+   ]
+  },
+  "basic-au-t1-w100c1-brh-ent-tordesillas-1494": {
+   "readout": [
+    "Treaty of Zaragoza",
+    "Treaty of Madrid",
+    "Treaty of Lisbon"
+   ]
+  },
+  "basic-au-t1-w100c1-brh-ent-westphalia-1648": {
+   "readout": [
+    "Peace of Prague"
+   ]
+  },
+  "basic-au-t1-w100c2-brh-ent-carbon-dioxide": {
+   "readout": [
+    "sulfur dioxide",
+    "nitrogen dioxide",
+    "hydrogen sulfide"
+   ]
+  },
+  "basic-au-t1-w100c2-brh-ent-columbus": {
+   "readout": [
+    "Amerigo Vespucci",
+    "John Cabot",
+    "Bartolomeu Dias"
+   ]
+  },
+  "basic-au-t1-w100c2-brh-ent-eiffel-tower": {
+   "readout": [
+    "Tokyo Tower",
+    "Blackpool Tower",
+    "CN Tower",
+    "Space Needle"
+   ]
+  },
+  "basic-au-t1-w100c2-brh-ent-marfan-syndrome": {
+   "readout": [
+    "Ehlers–Danlos syndrome",
+    "Turner syndrome",
+    "Klinefelter syndrome",
+    "Noonan syndrome"
+   ]
+  },
+  "basic-au-t1-w100c2-brh-ent-ohms-law": {
+   "readout": [
+    "Coulomb's law",
+    "Joule's law",
+    "Faraday's law",
+    "Kirchhoff's current law"
+   ]
+  },
+  "basic-au-t1-w100c2-brh-ent-qing-dynasty": {
+   "readout": [
+    "Yuan dynasty"
+   ]
+  },
+  "basic-au-t1-w100c2-brh-ent-stalingrad-battle": {
+   "readout": [
+    "Battle of Moscow",
+    "Battle of Berlin",
+    "Battle of Kiev"
+   ]
+  },
+  "basic-au-t1-w100c2-brh-ent-trafalgar-1805": {
+   "readout": [
+    "Battle of Copenhagen"
+   ]
+  },
+  "basic-au-t1-w100c2-brh-ent-vienna-congress": {
+   "readout": [
+    "Congress of Berlin",
+    "Congress of Verona",
+    "Congress of Aix-la-Chapelle"
+   ]
+  },
+  "basic-au-t1-w100c2-brh-ent-waitangi-1840": {
+   "readout": [
+    "Treaty of Ghent",
+    "Treaty of Amiens",
+    "Treaty of Fort Laramie"
+   ]
+  }
+ }
+}

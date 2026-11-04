@@ -1,0 +1,2350 @@
+{
+ "family": "wrong_bridge",
+ "gate": "Qwen3.6-27B raw-text greedy answers the 2-hop prompt with A' = hop2(B') where B' != B is the model's own (greedy) answer to the hop-1 probe; it answers hop2 correctly for the TRUE bridge; >= 6/10 T=0.7 samples give A' and B'; logP(A')>logP(A), logP(B')>logP(B); injecting B' into the prompt yields A' and injecting B yields A; hop2 on B' alone yields A'; B' not credited on S in Wikidata; Claude adjudication clean.",
+ "eval_render_note": "EVAL RENDER: feed `prompt` verbatim as plain text, NO chat template. Read = every token of the prompt (`readout.kind` all_positions; reads=full); reads=lite reads only the final token (the last word ` year` / ` of`).",
+ "read": "every token of the plain render (reads=full); the final token (reads=lite)",
+ "targets": "mc: 6-way multiple choice over the model's WRONG bridge B' (gold, intermediates[0]), the true bridge B (contrast, true_intermediates[0], scored as a fail) and 4 same-category distractors, plus cannot tell",
+ "source": "Wikidata (QLever mirror, 2026-10-09) + Qwen3.6-27B behavioral gate; global-workspace scripts/wrong_bridge/",
+ "refill_panel_gate": {
+  "plan": "plans/0019-ati-panel-gate.md",
+  "date": "2026-10-28",
+  "n_retired": 7,
+  "n_added": 7,
+  "added_ids": [
+   "song_lyricist-Q1792838-birth_year",
+   "song_lyricist-Q908516-birth_year",
+   "org_founder-Q1303856-death_year",
+   "org_founder-Q618562-death_year",
+   "doctoral_advisor-Q313059-birth_year",
+   "album_performer-Q1757122-formed_year",
+   "painting_creator-Q3228387-death_city"
+  ],
+  "pool": "outputs/baselines/refill/wrong_bridge/pool_merged.json",
+  "rule": "retired = bank items not ATI under the panel gate; replacements passed every construction gate and the panel gate (candidate mode) before entering",
+  "notes": {
+   "swap": "film_director-Q1608079-birth_city replaced by painting_creator-Q3228387-death_city after review: its wrong bridge 'Santiago Mitre' contains the true hop-2 answer 'Santiago'"
+  }
+ },
+ "version": 4,
+ "supersedes": "items_v3.json",
+ "contract": {
+  "native_langs": [
+   "en",
+   "zh"
+  ]
+ },
+ "mc_build": {
+  "script": "scripts/wrong_bridge_mc_options.py",
+  "plan": "plans/0037-wrong-bridge-mc.md",
+  "seed": "wb-mc-2026-10-30",
+  "n_distractors": 4,
+  "min_pool": 8,
+  "template_category": {
+   "album_performer": "musician",
+   "song_performer": "musician",
+   "song_lyricist": "musician",
+   "composition_composer": "composer",
+   "novel_author": "writer",
+   "film_director": "filmmaker",
+   "character_creator": "filmmaker",
+   "painting_creator": "painter",
+   "doctoral_advisor": "scholar",
+   "person_father": "historical_leader",
+   "org_founder": "historical_leader",
+   "game_developer": "company",
+   "album_label": "company",
+   "product_manufacturer": "company",
+   "tv_network": "company"
+  },
+  "item_category": {
+   "person_mother-Q192402-birth_year": "musician",
+   "person_mother-Q102005-death_year": "historical_leader",
+   "namesake-Q178416-death_year": "composer",
+   "namesake-Q989622-death_year": "historical_leader"
+  },
+  "bands": [
+   "AC/DC",
+   "Metallica",
+   "Pantera",
+   "Sepultura",
+   "Sonic Youth",
+   "The Flaming Lips",
+   "The Rolling Stones",
+   "Wings"
+  ],
+  "unmapped_retired_templates": [
+   "building_architect"
+  ],
+  "pool_rule": "B' and B of every OTHER item (scored + retired_panel_gate) of the same category and kind (musician people vs bands), minus the item's own B'/B (same QID, same stem or a shared form) and any name with a form in the item's prompt; sorted, seeded shuffle, the first 4 that share no stem or form with an already drawn one",
+  "forms_rule": "full name + bank aliases (union over the items carrying the name) + Wikidata zh* labels and aliases (zh_labels_v2.json) + the Q10 short form (last word of the name; a one-word name also takes the last word of each alias that is a fuller variant of it, >= 3 words with the same first word; for a zh label or alias, its last '·' segment); a form is withheld when it collides with another option's forms (equal, or one occurs inside the other) or occurs in the prompt; Latin forms shorter than 3 characters are dropped",
+  "surname_exclude": [
+   "al",
+   "da",
+   "de",
+   "del",
+   "der",
+   "el",
+   "emperor",
+   "i",
+   "ii",
+   "iii",
+   "iv",
+   "king",
+   "la",
+   "le",
+   "lord",
+   "of",
+   "pope",
+   "queen",
+   "saint",
+   "sir",
+   "st",
+   "the",
+   "van",
+   "von"
+  ],
+  "surname_rules": "no short form for company/band names, names with an epithet or designation ('of', 'the' before the last word), single-word names, or East Asian names in given-name-last order",
+  "given_name_last": [
+   "Shen Kuo",
+   "Su Shi",
+   "Yuen Woo-ping"
+  ],
+  "fallbacks": [
+   {
+    "id": "album_performer-Q591875-formed_year",
+    "category": "band",
+    "pool": "musician + band",
+    "n": 27
+   },
+   {
+    "id": "song_performer-Q4581006-formed_year",
+    "category": "band",
+    "pool": "musician + band",
+    "n": 27
+   },
+   {
+    "id": "album_performer-Q792779-formed_year",
+    "category": "band",
+    "pool": "musician + band",
+    "n": 27
+   },
+   {
+    "id": "album_performer-Q1757122-formed_year",
+    "category": "band",
+    "pool": "musician + band",
+    "n": 27
+   }
+  ],
+  "forms_withheld": [
+   {
+    "id": "person_mother-Q102005-death_year",
+    "option": "Matilda of Scotland",
+    "form": "Matilda",
+    "why": "shared with another option"
+   },
+   {
+    "id": "person_mother-Q102005-death_year",
+    "option": "Matilda of Scotland",
+    "form": "玛蒂尔达",
+    "why": "shared with another option"
+   },
+   {
+    "id": "person_mother-Q102005-death_year",
+    "option": "Matilda of Scotland",
+    "form": "玛蒂尔达 (苏格兰)",
+    "why": "shared with another option"
+   },
+   {
+    "id": "person_mother-Q102005-death_year",
+    "option": "Matilda of Scotland",
+    "form": "蘇格蘭的玛蒂尔达",
+    "why": "shared with another option"
+   },
+   {
+    "id": "person_mother-Q102005-death_year",
+    "option": "Matilda of Flanders",
+    "form": "Matilda",
+    "why": "shared with another option"
+   },
+   {
+    "id": "person_mother-Q102005-death_year",
+    "option": "Matilda of Flanders",
+    "form": "弗兰德的玛蒂尔达",
+    "why": "shared with another option"
+   },
+   {
+    "id": "person_mother-Q102005-death_year",
+    "option": "Matilda of Flanders",
+    "form": "玛蒂尔达",
+    "why": "shared with another option"
+   },
+   {
+    "id": "album_performer-Q27981679-birth_city",
+    "option": "J. Cole",
+    "form": "Jermaine Lamar Cole",
+    "why": "shared with another option"
+   },
+   {
+    "id": "album_performer-Q27981679-birth_city",
+    "option": "Kendrick Lamar",
+    "form": "Lamar",
+    "why": "shared with another option"
+   },
+   {
+    "id": "album_performer-Q2564709-birth_city",
+    "option": "Beyoncé",
+    "form": "碧昂絲·吉賽兒·諾利斯-卡特",
+    "why": "shared with another option"
+   },
+   {
+    "id": "album_performer-Q2564709-birth_city",
+    "option": "Beyoncé",
+    "form": "Carter",
+    "why": "shared with another option"
+   },
+   {
+    "id": "album_performer-Q2564709-birth_city",
+    "option": "Beyoncé",
+    "form": "諾利斯-卡特",
+    "why": "shared with another option"
+   },
+   {
+    "id": "album_performer-Q2564709-birth_city",
+    "option": "Jay-Z",
+    "form": "Shawn Corey Carter",
+    "why": "shared with another option"
+   },
+   {
+    "id": "album_performer-Q2564709-birth_city",
+    "option": "Jay-Z",
+    "form": "The Carter Administration",
+    "why": "shared with another option"
+   },
+   {
+    "id": "album_performer-Q2564709-birth_city",
+    "option": "Jay-Z",
+    "form": "卡特",
+    "why": "shared with another option"
+   },
+   {
+    "id": "novel_author-Q1149756-birth_city",
+    "option": "Al-Ghazali",
+    "form": "Abu Hamid al-Ghazali",
+    "why": "shared with another option"
+   },
+   {
+    "id": "novel_author-Q1149756-birth_city",
+    "option": "Mohsin Hamid",
+    "form": "Hamid",
+    "why": "shared with another option"
+   },
+   {
+    "id": "person_father-Q311646-birth_city",
+    "option": "Saladin",
+    "form": "Yusuf ibn Ayyub",
+    "why": "shared with another option"
+   },
+   {
+    "id": "person_father-Q311646-birth_city",
+    "option": "Saladin",
+    "form": "Ṣalāḥ ad-Dīn Yūsuf ibn Ayyūb alarabi",
+    "why": "shared with another option"
+   },
+   {
+    "id": "person_father-Q311646-birth_city",
+    "option": "Julius Caesar",
+    "form": "Caesar",
+    "why": "shared with another option"
+   },
+   {
+    "id": "person_father-Q311646-birth_city",
+    "option": "Najm ad-Din Ayyub",
+    "form": "Ayyub",
+    "why": "shared with another option"
+   },
+   {
+    "id": "person_father-Q311646-birth_city",
+    "option": "Constantine the Great",
+    "form": "Imperator Caesar Flavius Valerius Aurelius Constantinus Augustus",
+    "why": "shared with another option"
+   },
+   {
+    "id": "song_performer-Q18208944-birth_city",
+    "option": "Beyoncé",
+    "form": "碧昂絲·吉賽兒·諾利斯-卡特",
+    "why": "shared with another option"
+   },
+   {
+    "id": "song_performer-Q18208944-birth_city",
+    "option": "Beyoncé",
+    "form": "Carter",
+    "why": "shared with another option"
+   },
+   {
+    "id": "song_performer-Q18208944-birth_city",
+    "option": "Beyoncé",
+    "form": "諾利斯-卡特",
+    "why": "shared with another option"
+   },
+   {
+    "id": "song_performer-Q18208944-birth_city",
+    "option": "Jay-Z",
+    "form": "Shawn Corey Carter",
+    "why": "shared with another option"
+   },
+   {
+    "id": "song_performer-Q18208944-birth_city",
+    "option": "Jay-Z",
+    "form": "The Carter Administration",
+    "why": "shared with another option"
+   },
+   {
+    "id": "song_performer-Q18208944-birth_city",
+    "option": "Jay-Z",
+    "form": "卡特",
+    "why": "shared with another option"
+   },
+   {
+    "id": "song_lyricist-Q1792838-birth_year",
+    "option": "Jay-Z",
+    "form": "Shawn Corey Carter",
+    "why": "shared with another option"
+   },
+   {
+    "id": "song_lyricist-Q1792838-birth_year",
+    "option": "Jay-Z",
+    "form": "The Carter Administration",
+    "why": "shared with another option"
+   },
+   {
+    "id": "song_lyricist-Q1792838-birth_year",
+    "option": "Jay-Z",
+    "form": "卡特",
+    "why": "shared with another option"
+   },
+   {
+    "id": "song_lyricist-Q1792838-birth_year",
+    "option": "Beyoncé",
+    "form": "碧昂絲·吉賽兒·諾利斯-卡特",
+    "why": "shared with another option"
+   },
+   {
+    "id": "song_lyricist-Q1792838-birth_year",
+    "option": "Beyoncé",
+    "form": "Carter",
+    "why": "shared with another option"
+   },
+   {
+    "id": "song_lyricist-Q1792838-birth_year",
+    "option": "Beyoncé",
+    "form": "諾利斯-卡特",
+    "why": "shared with another option"
+   }
+  ],
+  "zh_labels": "zh_labels_v2.json",
+  "no_zh_label": [
+   "Birt Acres",
+   "Kate McGarrigle",
+   "Mohsin Hamid",
+   "Sub Pop"
+  ]
+ },
+ "frozen": "2026-11-01",
+ "mc_build_v3": {
+  "script": "scripts/wrong_bridge_mc_options.py --v3",
+  "seed": "wb-mc-2026-11-01",
+  "distractors": "the four Opus-authored same-topic distractors of r4_distractors.json (scripts/r4_mc_distractors.py): same field, era and fame as the gold, never named in the prompt, never sharing a form with the gold or the contrast",
+  "forms_rule": "for EVERY option: its name + its Wikidata labels and aliases in every language (wikidata_v3.json; the gold / contrast QIDs from the item, a distractor's from its English Wikipedia title) + the regnal short form ('<name> <numeral>' without 'of <place>') + the unhyphenated variant + the Q10 short form (Latin; the last word of a spaced non-Latin label with the English name's word count when the English name has one; the last '·' segment of a CJK label); withheld when it collides with another option's forms or occurs in the prompt; Latin forms shorter than 3 characters dropped",
+  "forms_withheld": [
+   {
+    "id": "composition_composer-Q146535-birth_year",
+    "option": "Michael Jackson",
+    "form": "The King",
+    "why": "shared with another option"
+   },
+   {
+    "id": "composition_composer-Q146535-birth_year",
+    "option": "Elvis Presley",
+    "form": "The King of Rock 'n' Roll",
+    "why": "shared with another option"
+   },
+   {
+    "id": "composition_composer-Q146535-birth_year",
+    "option": "Elvis Presley",
+    "form": "The King of Rock'n'Roll",
+    "why": "shared with another option"
+   },
+   {
+    "id": "painting_creator-Q2607050-death_year",
+    "option": "Raphael",
+    "form": "サンティ",
+    "why": "shared with another option"
+   },
+   {
+    "id": "album_performer-Q4992532-birth_year",
+    "option": "Elton John",
+    "form": "ჯონი",
+    "why": "shared with another option"
+   },
+   {
+    "id": "org_founder-Q640379-death_year",
+    "option": "Mansa Musa",
+    "form": "穆萨",
+    "why": "shared with another option"
+   },
+   {
+    "id": "org_founder-Q640379-death_year",
+    "option": "Mansa Musa",
+    "form": "穆薩",
+    "why": "shared with another option"
+   },
+   {
+    "id": "org_founder-Q640379-death_year",
+    "option": "Augustus",
+    "form": "császár",
+    "why": "shared with another option"
+   },
+   {
+    "id": "person_mother-Q102005-death_year",
+    "option": "Æthelflæd",
+    "form": "királynő",
+    "why": "shared with another option"
+   },
+   {
+    "id": "person_mother-Q102005-death_year",
+    "option": "Matilda of Tuscany",
+    "form": "托斯卡纳的玛蒂尔达",
+    "why": "shared with another option"
+   },
+   {
+    "id": "person_mother-Q102005-death_year",
+    "option": "Matilda of Tuscany",
+    "form": "玛蒂尔达",
+    "why": "shared with another option"
+   },
+   {
+    "id": "person_mother-Q102005-death_year",
+    "option": "Matilda of Tuscany",
+    "form": "瑪蒂爾達",
+    "why": "shared with another option"
+   },
+   {
+    "id": "person_mother-Q102005-death_year",
+    "option": "Matilda of Scotland",
+    "form": "玛蒂尔达",
+    "why": "shared with another option"
+   },
+   {
+    "id": "person_mother-Q102005-death_year",
+    "option": "Matilda of Scotland",
+    "form": "玛蒂尔达 (苏格兰)",
+    "why": "shared with another option"
+   },
+   {
+    "id": "person_mother-Q102005-death_year",
+    "option": "Matilda of Scotland",
+    "form": "瑪蒂爾達 (蘇格蘭)",
+    "why": "shared with another option"
+   },
+   {
+    "id": "person_mother-Q102005-death_year",
+    "option": "Matilda of Scotland",
+    "form": "蘇格蘭的玛蒂尔达",
+    "why": "shared with another option"
+   },
+   {
+    "id": "person_mother-Q102005-death_year",
+    "option": "Matilda of Scotland",
+    "form": "蘇格蘭的瑪蒂爾達",
+    "why": "shared with another option"
+   },
+   {
+    "id": "person_mother-Q102005-death_year",
+    "option": "Matilda of Flanders",
+    "form": "弗兰德的玛蒂尔达",
+    "why": "shared with another option"
+   },
+   {
+    "id": "person_mother-Q102005-death_year",
+    "option": "Matilda of Flanders",
+    "form": "弗蘭德的瑪蒂爾達",
+    "why": "shared with another option"
+   },
+   {
+    "id": "person_mother-Q102005-death_year",
+    "option": "Matilda of Flanders",
+    "form": "玛蒂尔达",
+    "why": "shared with another option"
+   },
+   {
+    "id": "album_performer-Q27981679-birth_city",
+    "option": "Kendrick Lamar",
+    "form": "Lamar",
+    "why": "shared with another option"
+   },
+   {
+    "id": "novel_author-Q2779707-birth_year",
+    "option": "Virginia Woolf",
+    "form": "Стівен",
+    "why": "shared with another option"
+   },
+   {
+    "id": "person_father-Q311646-birth_city",
+    "option": "Napoleon Bonaparte",
+    "form": "الأول",
+    "why": "shared with another option"
+   },
+   {
+    "id": "person_father-Q311646-birth_city",
+    "option": "Julius Caesar",
+    "form": "קיסר",
+    "why": "shared with another option"
+   },
+   {
+    "id": "person_father-Q311646-birth_city",
+    "option": "Constantine the Great",
+    "form": "Imperator Caesar Flavius Valerius Aurelius Constantinus Augustus",
+    "why": "shared with another option"
+   },
+   {
+    "id": "person_father-Q311646-birth_city",
+    "option": "Constantine the Great",
+    "form": "cesar Konstantin",
+    "why": "shared with another option"
+   },
+   {
+    "id": "person_father-Q311646-birth_city",
+    "option": "Justinian I",
+    "form": "Imperator Caesar Flavius Iustinianus Alamannicus Gothicus Francicus Germanicus Anticus Alanicus Vandalicus Africanus pius felix inclitus victor ac triumphator semper Augustus",
+    "why": "shared with another option"
+   },
+   {
+    "id": "person_father-Q311646-birth_city",
+    "option": "Justinian I",
+    "form": "Imperator Caesar Flavius Petrus Sabbatius Iustinianus Augustus",
+    "why": "shared with another option"
+   },
+   {
+    "id": "person_father-Q311646-birth_city",
+    "option": "Julius Caesar",
+    "form": "Caesar",
+    "why": "shared with another option"
+   },
+   {
+    "id": "person_father-Q311646-birth_city",
+    "option": "Julius Caesar",
+    "form": "Cesar",
+    "why": "shared with another option"
+   },
+   {
+    "id": "doctoral_advisor-Q77203-birth_year",
+    "option": "Carl Friedrich Gauss",
+    "form": "Фридрих",
+    "why": "shared with another option"
+   },
+   {
+    "id": "novel_author-Q4449949-birth_year",
+    "option": "H. P. Lovecraft",
+    "form": "セオボールド",
+    "why": "shared with another option"
+   },
+   {
+    "id": "novel_author-Q4449949-birth_year",
+    "option": "H. P. Lovecraft",
+    "form": "グランパ・セオボールド",
+    "why": "shared with another option"
+   },
+   {
+    "id": "novel_author-Q4449949-birth_year",
+    "option": "Edgar Allan Poe",
+    "form": "ポー",
+    "why": "shared with another option"
+   },
+   {
+    "id": "doctoral_advisor-Q536558-death_city",
+    "option": "David Hilbert",
+    "form": "Давид",
+    "why": "shared with another option"
+   }
+  ],
+  "unresolved": [],
+  "wikidata": "wikidata_v3.json"
+ },
+ "mc_build_v4": {
+  "script": "scripts/wrong_bridge_mc_options.py --v4",
+  "options": "bank v3's options, order, distractors and topic, unchanged",
+  "forms_rule": "bank v3's forms_rule, then: (1) a one-word form other than the option's name counts only as a whole en / en-* / mul label or alias, the Q10 short form of the English name itself (or its spaced non-Latin equivalent), a CJK form, or a spaced non-Latin whole label or alias of a one-word English name; no short form from a variant alias; (2) when the English name has a regnal numeral, a form must write the same number and no other (Roman, Arabic, CJK n世); a form with no number counts only as a one-word name that is no word of the English name, a Latin form with an epithet ('the Great'), or a CJK form with 大帝 / 大王",
+  "forms_withheld": [
+   {
+    "id": "composition_composer-Q146535-birth_year",
+    "option": "Michael Jackson",
+    "form": "The King",
+    "why": "shared with another option"
+   },
+   {
+    "id": "composition_composer-Q146535-birth_year",
+    "option": "Elvis Presley",
+    "form": "The King of Rock 'n' Roll",
+    "why": "shared with another option"
+   },
+   {
+    "id": "composition_composer-Q146535-birth_year",
+    "option": "Elvis Presley",
+    "form": "The King of Rock'n'Roll",
+    "why": "shared with another option"
+   },
+   {
+    "id": "painting_creator-Q2607050-death_year",
+    "option": "Raphael",
+    "form": "サンティ",
+    "why": "shared with another option"
+   },
+   {
+    "id": "album_performer-Q4992532-birth_year",
+    "option": "Elton John",
+    "form": "ჯონი",
+    "why": "shared with another option"
+   },
+   {
+    "id": "org_founder-Q640379-death_year",
+    "option": "Mansa Musa",
+    "form": "穆萨",
+    "why": "shared with another option"
+   },
+   {
+    "id": "org_founder-Q640379-death_year",
+    "option": "Mansa Musa",
+    "form": "穆薩",
+    "why": "shared with another option"
+   },
+   {
+    "id": "person_mother-Q102005-death_year",
+    "option": "Matilda of Tuscany",
+    "form": "托斯卡纳的玛蒂尔达",
+    "why": "shared with another option"
+   },
+   {
+    "id": "person_mother-Q102005-death_year",
+    "option": "Matilda of Tuscany",
+    "form": "玛蒂尔达",
+    "why": "shared with another option"
+   },
+   {
+    "id": "person_mother-Q102005-death_year",
+    "option": "Matilda of Tuscany",
+    "form": "瑪蒂爾達",
+    "why": "shared with another option"
+   },
+   {
+    "id": "person_mother-Q102005-death_year",
+    "option": "Matilda of Scotland",
+    "form": "玛蒂尔达",
+    "why": "shared with another option"
+   },
+   {
+    "id": "person_mother-Q102005-death_year",
+    "option": "Matilda of Scotland",
+    "form": "玛蒂尔达 (苏格兰)",
+    "why": "shared with another option"
+   },
+   {
+    "id": "person_mother-Q102005-death_year",
+    "option": "Matilda of Scotland",
+    "form": "瑪蒂爾達 (蘇格蘭)",
+    "why": "shared with another option"
+   },
+   {
+    "id": "person_mother-Q102005-death_year",
+    "option": "Matilda of Scotland",
+    "form": "蘇格蘭的玛蒂尔达",
+    "why": "shared with another option"
+   },
+   {
+    "id": "person_mother-Q102005-death_year",
+    "option": "Matilda of Scotland",
+    "form": "蘇格蘭的瑪蒂爾達",
+    "why": "shared with another option"
+   },
+   {
+    "id": "person_mother-Q102005-death_year",
+    "option": "Matilda of Flanders",
+    "form": "弗兰德的玛蒂尔达",
+    "why": "shared with another option"
+   },
+   {
+    "id": "person_mother-Q102005-death_year",
+    "option": "Matilda of Flanders",
+    "form": "弗蘭德的瑪蒂爾達",
+    "why": "shared with another option"
+   },
+   {
+    "id": "person_mother-Q102005-death_year",
+    "option": "Matilda of Flanders",
+    "form": "玛蒂尔达",
+    "why": "shared with another option"
+   },
+   {
+    "id": "album_performer-Q27981679-birth_city",
+    "option": "Kendrick Lamar",
+    "form": "Lamar",
+    "why": "shared with another option"
+   },
+   {
+    "id": "person_father-Q311646-birth_city",
+    "option": "Constantine the Great",
+    "form": "Imperator Caesar Flavius Valerius Aurelius Constantinus Augustus",
+    "why": "shared with another option"
+   },
+   {
+    "id": "person_father-Q311646-birth_city",
+    "option": "Julius Caesar",
+    "form": "Caesar",
+    "why": "shared with another option"
+   },
+   {
+    "id": "doctoral_advisor-Q77203-birth_year",
+    "option": "Carl Friedrich Gauss",
+    "form": "Фридрих",
+    "why": "shared with another option"
+   },
+   {
+    "id": "novel_author-Q4449949-birth_year",
+    "option": "H. P. Lovecraft",
+    "form": "セオボールド",
+    "why": "shared with another option"
+   },
+   {
+    "id": "novel_author-Q4449949-birth_year",
+    "option": "H. P. Lovecraft",
+    "form": "グランパ・セオボールド",
+    "why": "shared with another option"
+   },
+   {
+    "id": "novel_author-Q4449949-birth_year",
+    "option": "Edgar Allan Poe",
+    "form": "ポー",
+    "why": "shared with another option"
+   },
+   {
+    "id": "doctoral_advisor-Q536558-death_city",
+    "option": "David Hilbert",
+    "form": "Давид",
+    "why": "shared with another option"
+   }
+  ],
+  "wikidata": "wikidata_v3.json"
+ },
+ "retired_panel_gate": [
+  {
+   "name": "building_architect-Q1236564-birth_city",
+   "prompt": "Fact: The architect of Ljubljana Cathedral was born in the city of",
+   "target": "Ljubljana",
+   "correct_answer": "Trento",
+   "intermediates": [
+    "Jože Plečnik"
+   ],
+   "intermediates_aliases": [
+    "Jože Plečnik",
+    "Josef Plečnik",
+    "Josip Plecnik",
+    "Josip Plečnik",
+    "Joze Plecnik"
+   ],
+   "true_intermediates": [
+    "Andrea Pozzo"
+   ],
+   "true_intermediates_aliases": [
+    "Andrea Pozzo",
+    "andrea dal pozzo",
+    "Andrea del Pozzo",
+    "Andrea Pozzi",
+    "Andrea Putens",
+    "Andrea Puteus",
+    "Andreas Puteus",
+    "André Pozzi",
+    "A. Pozzi",
+    "Cavalieri Andrea Pozzi",
+    "Cavalieri Pozzi",
+    "Le Pere del Pozzo",
+    "Padre Andreas",
+    "Padre Andreas Puteus",
+    "Padre Poudzy",
+    "Padre Pozzi",
+    "Padre Pozzo",
+    "Pozzo Andrea dal",
+    "P. Pozzi Gesuita"
+   ],
+   "template": "building_architect",
+   "hop2": "birth_city",
+   "wikidata": {
+    "S": "Q1236564",
+    "B": "Q380103",
+    "B_prime": "Q314886"
+   },
+   "evidence": {
+    "p2_samples_Ap": 10,
+    "p1_samples_Bp": 9,
+    "p1_samples_B": 0,
+    "lp_Ap_minus_A": 6.301925043517258,
+    "lp_Bp_minus_B": 7.186407536093611,
+    "inject_Bp_gives_Ap": true,
+    "inject_B_gives_A": true,
+    "hop2_on_Bp_gives_Ap": true,
+    "inject_Bp": "Ljubljana.",
+    "inject_B": "Trento, Italy.",
+    "hop2_on_Bp": "Ljubljana, Slovenia.",
+    "p2_samples": [
+     "Ljubljana.",
+     "Ljubljana.",
+     "Ljubljana.",
+     "Ljubljana, Slovenia.",
+     "Ljubljana.",
+     "Ljubljana.",
+     "Ljubljana.",
+     "Ljubljana.",
+     "Ljubljana, Slovenia.",
+     "Ljubljana."
+    ],
+    "p1_samples": [
+     "Jože Plečnik in 1941.",
+     "Jože Plečnik and finished in 1942.",
+     "Jože Plečnik.",
+     "Jože Plečnik in 1946.",
+     "Jože Plečnik (1872 – 1957).",
+     "Jože Plečnik.",
+     "Jožef Placid Podhajsky.",
+     "Jože Plečnik, who is famous for his work on the city of Ljubljana.",
+     "Jože Plečnik.",
+     "Jože Plečnik."
+    ],
+    "Bp_credited_on_S": [],
+    "answer_hub_share": 0.0008368200836820083
+   },
+   "adjudication": {
+    "id": "building_architect.Q1236564.Q380103.birth_city",
+    "clean": true,
+    "reason": "Ljubljana Cathedral (St. Nicholas, completed 1706) was designed by Andrea Pozzo, who was born in Trento, and Jože Plečnik had no design role on this building; the model swapped in Ljubljana's most famous architect, and A' follows from that wrong bridge.",
+    "category": "clean",
+    "judge": "claude-opus-5-5"
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "last_word_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "panel_status": [
+    "solved",
+    "solved",
+    "failed",
+    "solved"
+   ]
+  },
+  {
+   "name": "composition_composer-Q3408309-death_year",
+   "prompt": "Fact: The composer of Sonata in G Minor, K. 30 died in the year",
+   "target": "1791",
+   "correct_answer": "1757",
+   "intermediates": [
+    "Wolfgang Amadeus Mozart"
+   ],
+   "intermediates_aliases": [
+    "Wolfgang Amadeus Mozart",
+    "Apollo Mozzart",
+    "Joannes Chrysostomus Wolfgangus Amadeus Mozart",
+    "Johann Chrysostomos Wolfgang Gottlieb Mozart",
+    "Mozhate",
+    "V. A. Mocartas",
+    "Volphnkank Amedaios Motsart",
+    "Wolfgang Amadè Mozart",
+    "Wolfgang Amadeus Chrysostom Mozart",
+    "Wolfgang Gottlieb Mozart",
+    "Wolfgango Amadeo Mozart",
+    "Joannes Chrysostomus Wolfgangus Theophilus Amadeus Mozart",
+    "Joannes Chrysostomus Wolfgangus Theophilus Mozart",
+    "Johann Chrysostom Wolfgang Amadeus Mozart",
+    "Johannes Chrisostomus Wolfgangus Theophilus Mozart",
+    "Mozart",
+    "W. A. Mozart",
+    "Моцарт"
+   ],
+   "true_intermediates": [
+    "Domenico Scarlatti"
+   ],
+   "true_intermediates_aliases": [
+    "Domenico Scarlatti",
+    "D. Scarlatti",
+    "Scarlatti",
+    "Giuseppe Domenico Scarlatti"
+   ],
+   "template": "composition_composer",
+   "hop2": "death_year",
+   "wikidata": {
+    "S": "Q3408309",
+    "B": "Q167837",
+    "B_prime": "Q254"
+   },
+   "evidence": {
+    "p2_samples_Ap": 10,
+    "p1_samples_Bp": 8,
+    "p1_samples_B": 0,
+    "lp_Ap_minus_A": 7.704419836401939,
+    "lp_Bp_minus_B": 3.1785815593248117,
+    "inject_Bp_gives_Ap": true,
+    "inject_B_gives_A": true,
+    "hop2_on_Bp_gives_Ap": true,
+    "inject_Bp": "1791.",
+    "inject_B": "1757.",
+    "hop2_on_Bp": "1791.",
+    "p2_samples": [
+     "1791.",
+     "1791",
+     "1791.",
+     "1791.",
+     "1791.",
+     "1791.",
+     "1791.",
+     "1791.",
+     "1791.",
+     "1791."
+    ],
+    "p1_samples": [
+     "Mozart.",
+     "Mozart in 1775.",
+     "an Austrian composer in 1777. Who is the composer?",
+     "Mozart in 1777.",
+     "Mozart, a child prodigy, when he was only 9 years old.",
+     "Wolfgang Amadeus Mozart in 1775.",
+     "Wolfgang Amadeus Mozart.",
+     "Wolfgang Amadeus Mozart.",
+     "Wolfgang Amadeus Mozart.",
+     "Answer:"
+    ],
+    "Bp_credited_on_S": [],
+    "answer_hub_share": 0.005905006418485238
+   },
+   "adjudication": {
+    "id": "composition_composer.Q3408309.Q167837.death_year",
+    "clean": true,
+    "reason": "Sonata in G minor K. 30 is Scarlatti's 'Cat's Fugue' in the Kirkpatrick catalogue, while Mozart's Köchel K. 30 is a violin sonata in F major, so the G-minor description rules out Mozart; the model wrongly resolved the bridge to Mozart, and Scarlatti's 1757 death year is correct.",
+    "category": "clean",
+    "judge": "claude-opus-5-5"
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "last_word_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "panel_status": [
+    "solved",
+    "solved",
+    "failed",
+    "solved"
+   ]
+  },
+  {
+   "name": "novel_author-Q1306783-birth_year",
+   "prompt": "Fact: The author of A Little Woman was born in the year",
+   "target": "1832",
+   "correct_answer": "1883",
+   "intermediates": [
+    "Louisa May Alcott"
+   ],
+   "intermediates_aliases": [
+    "Louisa May Alcott",
+    "A. M. Barnard",
+    "Flora Fairchild",
+    "Flora Fairfield",
+    "L.M.A.",
+    "Louisa Alcott",
+    "Louisa M. Alcott",
+    "Louisa Mary Alcott",
+    "Tribulation Periwinkle"
+   ],
+   "true_intermediates": [
+    "Franz Kafka"
+   ],
+   "true_intermediates_aliases": [
+    "Franz Kafka",
+    "František Kafka",
+    "Kafka"
+   ],
+   "template": "novel_author",
+   "hop2": "birth_year",
+   "wikidata": {
+    "S": "Q1306783",
+    "B": "Q905",
+    "B_prime": "Q185696"
+   },
+   "evidence": {
+    "p2_samples_Ap": 6,
+    "p1_samples_Bp": 10,
+    "p1_samples_B": 0,
+    "lp_Ap_minus_A": 3.987520605325699,
+    "lp_Bp_minus_B": 11.610910718911327,
+    "inject_Bp_gives_Ap": true,
+    "inject_B_gives_A": true,
+    "hop2_on_Bp_gives_Ap": true,
+    "inject_Bp": "1832.",
+    "inject_B": "1883.",
+    "hop2_on_Bp": "1832.",
+    "p2_samples": [
+     "1868.",
+     "1832.",
+     "1832.",
+     "1832. Who is the author?",
+     "1832. Based on this fact, what's the correct answer to the following question: \"Who was",
+     "1829.",
+     "1811.",
+     "1866 and died in the same year that the author of Little Women died.",
+     "1832.",
+     "1832."
+    ],
+    "p1_samples": [
+     "Louisa May Alcott.",
+     "Louisa May Alcott.",
+     "Louisa May Alcott.",
+     "Louisa May Alcott. Based on this fact, rewrite the sentence to change its meaning:",
+     "Louisa May Alcott.",
+     "Louisa May Alcott.",
+     "Louisa May Alcott.",
+     "Louisa May Alcott",
+     "Louisa May Alcott.",
+     "Louisa May Alcott."
+    ],
+    "Bp_credited_on_S": [],
+    "answer_hub_share": 0.002780390072371918
+   },
+   "adjudication": {
+    "id": "novel_author.Q1306783.Q905.birth_year",
+    "clean": true,
+    "reason": "\"A Little Woman\" is Kafka's 1924 short story (Kafka born 1883), and the model confused it with the differently titled \"Little Women\" by Alcott, who has no work called \"A Little Woman\" and no role on Kafka's story, so this is a genuine wrong-bridge error.",
+    "category": "clean",
+    "judge": "claude-opus-5-5"
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "last_word_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "panel_status": [
+    "solved",
+    "solved",
+    "failed",
+    "solved"
+   ]
+  },
+  {
+   "name": "person_father-Q285133-death_year",
+   "prompt": "Fact: The father of Al-Adil I died in the year",
+   "target": "1193",
+   "correct_answer": "1173",
+   "intermediates": [
+    "Saladin"
+   ],
+   "intermediates_aliases": [
+    "Saladin",
+    "Saladin Ayyūbid",
+    "Salah ad-Din",
+    "Ṣalāḥ ad-Dīn Yūsuf ibn Ayyūb alarabi",
+    "Yusuf ibn Ayyub"
+   ],
+   "true_intermediates": [
+    "Najm ad-Din Ayyub"
+   ],
+   "true_intermediates_aliases": [
+    "Najm ad-Din Ayyub"
+   ],
+   "template": "person_father",
+   "hop2": "death_year",
+   "wikidata": {
+    "S": "Q285133",
+    "B": "Q735636",
+    "B_prime": "Q8581"
+   },
+   "evidence": {
+    "p2_samples_Ap": 5,
+    "p1_samples_Bp": 9,
+    "p1_samples_B": 0,
+    "lp_Ap_minus_A": 5.2735196352005005,
+    "lp_Bp_minus_B": 3.989954033633694,
+    "inject_Bp_gives_Ap": true,
+    "inject_B_gives_A": true,
+    "hop2_on_Bp_gives_Ap": true,
+    "inject_Bp": "1193.",
+    "inject_B": "1173.",
+    "hop2_on_Bp": "1193.",
+    "p2_samples": [
+     "1174.",
+     "1193.",
+     "1193.",
+     "1218.",
+     "1193.",
+     "1174.",
+     "1193.",
+     "1193.",
+     "1175.",
+     "1174."
+    ],
+    "p1_samples": [
+     "Saladin.",
+     "Saladin",
+     "Saladin.",
+     "Saladin.",
+     "Salah ad-Din Yusuf ibn Ayyub.",
+     "Saladin.",
+     "Saladin.",
+     "Saladin",
+     "Saladin.",
+     "Saladin."
+    ],
+    "Bp_credited_on_S": [],
+    "answer_hub_share": 0.00045578851412944393
+   },
+   "adjudication": {
+    "id": "person_father.Q285133.Q735636.death_year",
+    "clean": true,
+    "reason": "Al-Adil I's father was Najm ad-Din Ayyub, who died in 1173, while Saladin was his brother (d. 1193), so the model confused a sibling for the father and the subject is unambiguous.",
+    "category": "clean",
+    "judge": "claude-opus-5-5"
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "last_word_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "panel_status": [
+    "solved",
+    "solved",
+    "failed",
+    "solved"
+   ]
+  },
+  {
+   "name": "person_father-Q150712-death_year",
+   "prompt": "Fact: The father of Charles the Fat died in the year",
+   "target": "840",
+   "correct_answer": "876",
+   "intermediates": [
+    "Louis the Pious"
+   ],
+   "intermediates_aliases": [
+    "Louis the Pious",
+    "Hludovicus Pius",
+    "Hludowicus Pius",
+    "Louis I",
+    "Louis I, le Débonnaire",
+    "Louis the Debonaire",
+    "Louis the Fair",
+    "Ludovicus Pius"
+   ],
+   "true_intermediates": [
+    "Louis the German"
+   ],
+   "true_intermediates_aliases": [
+    "Louis the German",
+    "Louis II the German",
+    "Louis le Germanique",
+    "Ludwig II",
+    "Ludwig II.",
+    "Ludwig II König von Germanien"
+   ],
+   "template": "person_father",
+   "hop2": "death_year",
+   "wikidata": {
+    "S": "Q150712",
+    "B": "Q152463",
+    "B_prime": "Q43974"
+   },
+   "evidence": {
+    "p2_samples_Ap": 10,
+    "p1_samples_Bp": 4,
+    "p1_samples_B": 2,
+    "lp_Ap_minus_A": 4.8059092233888805,
+    "lp_Bp_minus_B": 0.37383778905496,
+    "inject_Bp_gives_Ap": true,
+    "inject_B_gives_A": true,
+    "hop2_on_Bp_gives_Ap": true,
+    "inject_Bp": "840.",
+    "inject_B": "876.",
+    "hop2_on_Bp": "840.",
+    "p2_samples": [
+     "840 CE.",
+     "840.",
+     "840.",
+     "840.",
+     "840.",
+     "840.",
+     "840.",
+     "840.",
+     "840.",
+     "840."
+    ],
+    "p1_samples": [
+     "Carloman.",
+     "Charles the Bald.",
+     "Louis the Pious.",
+     "Louis the German.",
+     "Louis the Pious.",
+     "King Louis II of France.",
+     "Louis the German.",
+     "Louis the Pious.",
+     "Louis the Pious",
+     "Charles the Bald, who was the grandson of Charlemagne."
+    ],
+    "Bp_credited_on_S": [],
+    "answer_hub_share": 0.0018231540565177757
+   },
+   "adjudication": {
+    "id": "person_father.Q150712.Q152463.death_year",
+    "clean": true,
+    "reason": "Charles the Fat is unambiguous and his father was Louis the German (died 876); the model's 840 is the death year of his grandfather Louis the Pious, who is not a co-holder of the father relation, and Louis the Pious was its most frequent first-hop answer, though the first-hop answers were inconsistent.",
+    "category": "clean",
+    "judge": "claude-opus-5-5"
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "last_word_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "panel_status": [
+    "solved",
+    "failed",
+    "failed",
+    "solved"
+   ]
+  },
+  {
+   "name": "product_manufacturer-Q521408-founded_year",
+   "prompt": "Fact: The manufacturer of the TX-0 was founded in the year",
+   "target": "1957",
+   "correct_answer": "1951",
+   "intermediates": [
+    "Digital Equipment Corporation"
+   ],
+   "intermediates_aliases": [
+    "Digital Equipment Corporation",
+    "DEC",
+    "Digital",
+    "Digital Equipment",
+    "DEC",
+    "Digital Equipment"
+   ],
+   "true_intermediates": [
+    "MIT Lincoln Laboratory"
+   ],
+   "true_intermediates_aliases": [
+    "MIT Lincoln Laboratory",
+    "Lincoln Labs"
+   ],
+   "template": "product_manufacturer",
+   "hop2": "founded_year",
+   "wikidata": {
+    "S": "Q521408",
+    "B": "Q3138607",
+    "B_prime": "Q690079"
+   },
+   "evidence": {
+    "p2_samples_Ap": 6,
+    "p1_samples_Bp": 8,
+    "p1_samples_B": 0,
+    "lp_Ap_minus_A": 2.999999925494194,
+    "lp_Bp_minus_B": 4.756974559277296,
+    "inject_Bp_gives_Ap": true,
+    "inject_B_gives_A": true,
+    "hop2_on_Bp_gives_Ap": true,
+    "inject_Bp": "1957.",
+    "inject_B": "1951.",
+    "hop2_on_Bp": "1957.",
+    "p2_samples": [
+     "_________.",
+     "1957.",
+     "1957.",
+     "that the US entered WWI.",
+     "1957 as __________.",
+     "Question: What year was the manufacturer of the TX-0 founded?",
+     "1939.",
+     "1957. The TX-0 was the first computer produced by Digital Equipment Corporation (DEC). DEC was",
+     "1957.",
+     "1957."
+    ],
+    "p1_samples": [
+     "Digital Equipment Corporation.",
+     "Digital Equipment Corporation.",
+     "the DEC (Digital Equipment Corporation) and it had a clock rate of 1 MHz. It was one of the first",
+     "Digital Equipment Corporation.",
+     "Digital Equipment Corporation.",
+     "Digital Equipment Corporation.",
+     "Digital Equipment Corporation.",
+     "DEC.",
+     "Digital Equipment Corporation.",
+     "the MIT Research Laboratory of Electronics."
+    ],
+    "Bp_credited_on_S": [],
+    "answer_hub_share": 0.0024130303639654134
+   },
+   "adjudication": {
+    "id": "product_manufacturer.Q521408.Q3138607.founded_year",
+    "clean": true,
+    "reason": "The TX-0 was designed and built at MIT Lincoln Laboratory, which was founded in 1951; DEC was founded in 1957 by TX-0 alumni Olsen and Anderson but never manufactured the TX-0, so the model's DEC bridge is a genuine wrong-bridge error.",
+    "category": "clean",
+    "judge": "claude-opus-5-5"
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "last_word_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "panel_status": [
+    "solved",
+    "solved",
+    "failed",
+    "failed"
+   ]
+  },
+  {
+   "name": "product_manufacturer-Q2072116-hq_city",
+   "prompt": "Fact: The manufacturer of the Jewel of the Seas is headquartered in the city of",
+   "target": "Miami",
+   "correct_answer": "Papenburg",
+   "intermediates": [
+    "Royal Caribbean International"
+   ],
+   "intermediates_aliases": [
+    "Royal Caribbean International",
+    "RCCL",
+    "RCI",
+    "RCI Cruises",
+    "RCI Cruises LTD.",
+    "RCL Ships LLC",
+    "Royal Caribbean",
+    "Royal Caribbean Cruise Line",
+    "RCL Ships LLC"
+   ],
+   "true_intermediates": [
+    "Meyer Werft"
+   ],
+   "true_intermediates_aliases": [
+    "Meyer Werft",
+    "MEYER WERFT GmbH"
+   ],
+   "template": "product_manufacturer",
+   "hop2": "hq_city",
+   "wikidata": {
+    "S": "Q2072116",
+    "B": "Q705377",
+    "B_prime": "Q929872"
+   },
+   "evidence": {
+    "p2_samples_Ap": 4,
+    "p1_samples_Bp": 7,
+    "p1_samples_B": 0,
+    "lp_Ap_minus_A": 6.584129333496094,
+    "lp_Bp_minus_B": 1.0469443360343575,
+    "inject_Bp_gives_Ap": true,
+    "inject_B_gives_A": true,
+    "hop2_on_Bp_gives_Ap": true,
+    "inject_Bp": "Miami, Florida.",
+    "inject_B": "Papenburg, Germany.",
+    "hop2_on_Bp": "Miami, Florida.",
+    "p2_samples": [
+     "Fort Lauderdale.",
+     "Miami.",
+     "which country?",
+     "Miami.",
+     "Houston, Texas, USA.\\nQ: Which of the following is a fact about the Jewel of the Seas?\\n",
+     "Cape Town.",
+     "what country?",
+     "Amsterdam. Based on this fact, where is the headquarters of the manufacturer of the Jewel of the Seas?",
+     "Miami.",
+     "Miami."
+    ],
+    "p1_samples": [
+     "Kvaerner Masa-Yards.",
+     "Royal Caribbean International.",
+     "Royal Caribbean International",
+     "Carnival Cruises.",
+     "Fincantieri , a shipbuilder in Italy.",
+     "Royal Caribbean International.",
+     "Royal Caribbean International.",
+     "Royal Caribbean International.",
+     "Royal Caribbean International.",
+     "Royal Caribbean International"
+    ],
+    "Bp_credited_on_S": [],
+    "answer_hub_share": 0.00020108586366378444
+   },
+   "adjudication": {
+    "id": "product_manufacturer.Q2072116.Q705377.hq_city",
+    "clean": true,
+    "reason": "Jewel of the Seas is a Radiance-class ship built by Meyer Werft in Papenburg, while Royal Caribbean International is only its owner and operator, which no reasonable person would call the ship's manufacturer, so the model's Miami answer comes from a wrong bridge.",
+    "category": "clean",
+    "judge": "claude-opus-5-5"
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "last_word_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "panel_status": [
+    "solved",
+    "solved",
+    "failed",
+    "failed"
+   ]
+  }
+ ],
+ "adapt": {
+  "model": "qwen3.5-2b",
+  "hf_id": "Qwen/Qwen3.5-2B",
+  "frozen": "2026-11-04"
+ },
+ "items": [
+  {
+   "name": "novel_author-Q4657437-death_city",
+   "prompt": "Fact: The author of A House for Mr Biswas died in the city of",
+   "target": "Kolkata",
+   "correct_answer": "London",
+   "intermediates": [
+    "Rabindranath Tagore"
+   ],
+   "intermediates_aliases": [
+    "Rabindranath Tagore",
+    "Bhanu Singha Thakur",
+    "Bishwakabi",
+    "Biswakabi",
+    "Gurudev",
+    "Kabiguru",
+    "Nyi Wang Gönpo",
+    "Rabīndranātha Thākur",
+    "Rabindranat Tagor",
+    "Ravindranath Thakur",
+    "R. Tagore",
+    "Tagore",
+    "Tagore, rabindranath"
+   ],
+   "true_intermediates": [
+    "V. S. Naipaul"
+   ],
+   "true_intermediates_aliases": [
+    "V. S. Naipaul",
+    "Sir Vidiadhar Surajprasad Naipaul",
+    "Vidiadhar Surajprasad Naipaul",
+    "V.S. Naipaul",
+    "Sir Vidiadhar Surajprasad Naipaul"
+   ],
+   "template": "novel_author",
+   "hop2": "death_city",
+   "wikidata": {
+    "S": "Q4657437",
+    "B": "Q44593",
+    "B_prime": "Q7241"
+   },
+   "evidence": {
+    "p2_samples_Ap": 7,
+    "p1_samples_Bp": 7,
+    "p1_samples_B": 0,
+    "lp_Ap_minus_A": 1.5,
+    "lp_Bp_minus_B": 5.372428565751761,
+    "inject_Bp_gives_Ap": true,
+    "inject_B_gives_A": true,
+    "hop2_on_Bp_gives_Ap": true,
+    "inject_Bp": "Kolkata.",
+    "inject_B": "London.",
+    "hop2_on_Bp": "Kolkata.",
+    "p2_samples": [
+     "Calcutta.",
+     "Kolkata, India.",
+     "Kolkata.",
+     "Pune in 1930.",
+     "Kolkata.",
+     "Delhi, India.",
+     "Kolkata (Kolkata, India), as noted in Wikipedia.",
+     "Kolkata.",
+     "Kolkata during the 1990s.",
+     "Kolkata."
+    ],
+    "p1_samples": [
+     "Ram Das.",
+     "Rabindranath Tagore.",
+     "Rabindranath Tagore in 1930.",
+     "Rabindranath Tagore.",
+     "17th-century Bengali poet Rabindranath Tagore. Fact: Rabindranath Tagore is",
+     "Rabindranath Tagore in the early 1900s.",
+     "Rabindranath Tagore.",
+     "Rabindranath Tagore.",
+     "Rabindranath Tagore.",
+     "Rabindranath Tagore."
+    ],
+    "Bp_credited_on_S": [],
+    "answer_hub_share": 8.177617859917406e-05
+   },
+   "adjudication": {
+    "id": "novel_author.Q4657437.Q44593.death_city",
+    "clean": true,
+    "reason": "A House for Mr Biswas (1961) is unambiguously by V. S. Naipaul, who died in London; Tagore has no connection to the novel, and the model's answer Kolkata follows directly from its wrong bridge, since Tagore died there.",
+    "category": "clean",
+    "judge": "claude-opus-5-5"
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "all_positions",
+    "lite": {
+     "kind": "final_token"
+    }
+   },
+   "mc": {
+    "category": "writer",
+    "pool": "registered v4 options + the subject's own bridges of the category (adapt)",
+    "gold": "Rabindranath Tagore",
+    "contrast": "V. S. Naipaul",
+    "distractors": [
+     "Fyodor Dostoevsky",
+     "Mark Twain",
+     "Al-Ghazali",
+     "Charles Dickens"
+    ],
+    "order": [
+     "Mark Twain",
+     "V. S. Naipaul",
+     "Al-Ghazali",
+     "Rabindranath Tagore",
+     "Fyodor Dostoevsky",
+     "Charles Dickens"
+    ],
+    "forms": {
+     "Mark Twain": [
+      "Mark Twain",
+      "Cэмюэл Клеменс",
+      "Cэмюэл Лэҥһорн Клеменс",
+      "Louis de Conte",
+      "Ludvík de Conte",
+      "Maark Tiweeyn",
+      "Mark Tven",
+      "Markas Tvenas",
+      "Marks Tvens",
+      "Mars Tvens",
+      "Quintus Curtius Snodgrass",
+      "Samuel Clemens",
+      "Samuel L. Clemens",
+      "Samuel Langhorne Clemens",
+      "Sieur Louis de Conte",
+      "Thomas Jefferson Snodgrass",
+      "Twain",
+      "Μαρκ Τουέην",
+      "Μαρκ Τουέιν",
+      "Μαρκ Τουαίην",
+      "Σάμουελ Κλέμενς",
+      "Σάμουελ Λάνγκχορν Κλέμενς",
+      "Клеменс, Сэмюэл Лэнгхорн",
+      "Марк Твайн",
+      "Марк Твейн",
+      "Марк Твен",
+      "Марк Твэн",
+      "Сем'юел Ленґгорн Клеменс",
+      "Сэ́мюэл Ле́нгхорн Кле́менс",
+      "Сэмюэл Клеменс",
+      "Сэмюэл Л. Клеменс",
+      "Сэмюэл Лэнгхорн Клеменс",
+      "Твен Марк",
+      "Томас Джефферсон Снодграсс",
+      "сьер Луи де Конт",
+      "Մարկ Տվեն",
+      "טווין, מארק",
+      "טוין, מרק",
+      "מארק טוויין",
+      "מארק טווין",
+      "מרק טוין",
+      "مارك توين",
+      "مارك تويين",
+      "مارک تواین",
+      "مارک توین",
+      "مارک ٹوین",
+      "مارک ټوېن",
+      "مارڪ ٽوئن",
+      "نویسنده رمان ماجراهای تام سایر",
+      "نویسنده رمان ماجراهای هاکلبری فین",
+      "मार्क ट्वेन",
+      "मार्क ट्वैन",
+      "समुएल लङ्होर्न क्लेमेन्स",
+      "सेम्युअल लेन्गहोर्न क्लेमेन्स",
+      "মার্ক টোয়েন",
+      "মাৰ্ক টোৱেইন",
+      "স্যামুয়েল ল্যাঙ্গহোর্ণ ক্লিমেন্স",
+      "ਮਾਰਕ ਟਵੇਨ",
+      "ਸੈਮੂਅਲ ਲੈਂਗਹੋਰਨ ਕਲੇਮਨਜ਼",
+      "માર્ક ટ્વેઇન",
+      "ମାର୍କ ଟ୍ୱାଇନ",
+      "மார்க் டுவெய்ன்",
+      "మార్క్ ట్వెయిన్",
+      "మార్క్ ట్వేయిన్",
+      "ಮಾರ್ಕ್ ಟ್ವೇನ್",
+      "മാർക് ട്വയിൻ",
+      "มาร์ก ทเวน",
+      "მარკ ტვენი",
+      "სემიუელ კლემენზი",
+      "სემიუელ ლენგჰორნ კლემენზი",
+      "ማርክ ትዌይን",
+      "ᱛᱣᱮᱭᱤᱱ, ᱢᱟᱨᱠ",
+      "ᱢᱟᱨᱠ ᱛᱣᱟᱭᱤᱱ",
+      "サミュエル・ラングホーン・クレメンズ",
+      "トウェイン",
+      "マーク・トゥエイン",
+      "マーク・トゥエーン",
+      "マーク・トウェイン",
+      "マーク・トウェーン",
+      "吐温，M.",
+      "塞姆·朗赫恩·克列門斯",
+      "馬克·吐溫",
+      "馬克吐温",
+      "馬克吐溫",
+      "马克·吐温",
+      "马克吐温",
+      "마크 트웨인",
+      "새뮤얼 랭혼 클레먼스",
+      "Τουαίην",
+      "Твейн",
+      "Твен",
+      "Твэн",
+      "Տվեն",
+      "טוויין",
+      "توين",
+      "تويين",
+      "تواین",
+      "توین",
+      "ٹوین",
+      "ټوېن",
+      "ٽوئن",
+      "ทเวน",
+      "ტვენი",
+      "クレメンズ",
+      "トゥエイン",
+      "トゥエーン",
+      "トウェーン",
+      "克列門斯",
+      "吐溫",
+      "吐温"
+     ],
+     "V. S. Naipaul": [
+      "V. S. Naipaul",
+      "Naipaul",
+      "Naipaul, Vidiadhar Surajprasad",
+      "Sir Vidiadhar Surajprasad Naipaul",
+      "V S Naipaul",
+      "V S. Naipaul",
+      "V S.Naipaul",
+      "V. S. Naipols",
+      "V. S. 奈保爾",
+      "V. S. 나이폴",
+      "V.S Naipaul",
+      "V.S. Naipaul",
+      "V.S. Naipols",
+      "VS Naipaul",
+      "Vidiadhar Naipaul",
+      "Vidiadhar S. Naipaul",
+      "Vidiadhar Surajpasad Naipaul",
+      "Vidiadhar Surajprasad Naipaul",
+      "Vidiadhars Suradžprasads Naipols",
+      "Vidiadhars Surajprasads Naipols",
+      "Vidiadxar Suracprasad Naypol",
+      "Vidiathar Surajprasad Naipaul",
+      "Vidijadhars Suradžprasads Naipols",
+      "Vidjadar Suradžprasad Najpol",
+      "V·S·奈保尔",
+      "V·S·奈波爾",
+      "V・S・ナイポール",
+      "Βιντιαντάρ Σουρατζπρασάντ Νάιπολ",
+      "В. С. Найпол",
+      "Видиадхар Найпол",
+      "Видиадхар Сураджпрасад Найпол",
+      "Видиадхар Сурайпрасад Найпол",
+      "Видиадһар Сураҗпрасад Найпол",
+      "Видиядхар Найпол",
+      "Видиядхар Сураджпрасад Найпол",
+      "Видјадар Сураџпрасад Најпол",
+      "Відзьядхар Найпал",
+      "Відзьядхар Сураджпрасад Найпал",
+      "Відыадхар Сураджпрасад Найпол",
+      "Відыядхар Найпол",
+      "Відыядхар Сураджпрасад Найпал",
+      "Відьядхар Сураджпрасад Найпол",
+      "Найпол",
+      "Найпол В.",
+      "Найпол В. С.",
+      "Найпол Видиадхар Сураджпрасад",
+      "Найпол Видиадхар Сурайпрасад",
+      "Найпол Відьядхар Сураджпрасад",
+      "Найпол, Видиадхар",
+      "Найпол, Видиадхар Сураджпрасад",
+      "Найпол, Видиадхар Сурайпрасад",
+      "Сураджпрасад Найпол",
+      "Վիդիադհար Սուրաջպրասադ Նայփոլ",
+      "ו. ס. נאיפול",
+      "ו. ס. נייפול",
+      "וידיאדר סורג'פרסאד נייפול",
+      "سر ویدیادار سوراجپراساد نایپل",
+      "فيديادر سوراجبراساد نيبول",
+      "ودیادہر سورجپراسد نےپال",
+      "وی اس نایپل",
+      "وی ایس نائپال",
+      "وی. اس. نایپل",
+      "ویدیادار سوراجپراساد نایپال",
+      "ویدیادار سوراجپراساد نایپل",
+      "ویدیادار سوراجپراساد نایپول",
+      "भी.एस. नेपाल",
+      "विद्याधर सुरजप्रसाद नेपाल",
+      "विद्याधर सूरजप्रसाद नायपॉल",
+      "विद्याधर सूरजप्रसाद नैपाल",
+      "वी एस नायपॉल",
+      "व्ही.एस. नायपॉल",
+      "सर विद्याधर सूरजप्रसाद नायपॉल",
+      "सर व्ही.एस. नायपॉल",
+      "ছাৰ বিদ্যাধৰ সুৰজপ্ৰসাদ নাইপল",
+      "বিদ্যাধর সূর্যপ্রসাদ নাইপল",
+      "ভি এচ নাইপল",
+      "ভি এস নাইপল",
+      "ভি. এস. নাইপল",
+      "ਵੀ ਐਸ ਨੈਪਾਲ",
+      "વી. એસ. નાયપોલ",
+      "ବିଦ୍ୟାଧର ସୂରଜପ୍ରସାଦ ନାଇପଲ",
+      "ଭି ଏସ ନାଇପଲ",
+      "வி. சூ. நைப்பால்",
+      "వి.ఎస్ నైపాల్",
+      "వి.ఎస్. నైపాల్",
+      "విఎస్ నైపాల్",
+      "విద్యాధర్ సూరజ్ ప్రసాద్ నైపాల్",
+      "వీ.ఎస్ నైపాల్",
+      "వీ.ఎస్. నైపాల్",
+      "ವಿ. ಎಸ್. ನೈಪಾಲ್",
+      "വി.എസ്. നയ്പാൾ",
+      "വി.എസ്. നൈപാൾ",
+      "വി.എസ്. നൈപാൾ‍",
+      "വി.എസ്. നൈപോൾ",
+      "วี เอส ไนพอล",
+      "วี. เอส. ไนพอล",
+      "ვიდიადჰარ ნაიპოლი",
+      "ვიდიადჰარ სურაჯპრასად ნაიპოლი",
+      "ヴィディアダール・スラシプラサド・ナイポール",
+      "奈保尔",
+      "奈保爾",
+      "奈波爾",
+      "維迪亞德哈爾·蘇拉吉普拉薩德·奈波爾爵士",
+      "维·苏·奈保尔",
+      "비디아다르 수라지프라사드 나이폴",
+      "Νάιπολ",
+      "Најпол",
+      "Найпал",
+      "Նայփոլ",
+      "נייפול",
+      "نيبول",
+      "نےپال",
+      "نایپل",
+      "نائپال",
+      "ไนพอล",
+      "ნაიპოლი",
+      "ナイポール",
+      "奈波爾爵士"
+     ],
+     "Al-Ghazali": [
+      "Al-Ghazali",
+      "Abu Hamid Al-Ghazali",
+      "Abu Hamid Ghazali",
+      "Abu Hamid Muhamed ibn Muhamed al-Gazali",
+      "Abu Hamid Muhammad Al-Ghazali al-Tusi al-Nisaburi",
+      "Abu Hamid Muhammad al-Ghazali",
+      "Abu Hamid Muhammad bin Muhammad al Ghazali",
+      "Abu Hamid Muhammad ibn Muhammad Al-Ghazali al-Tusi al-Nisaburi",
+      "Abu Hamid Muhammad ibn Muhammad al-Ghazali",
+      "Abu Homid Gʻazzoliy",
+      "Abu Homid Muhammad ibn Muhammad al-Gʻazzoliy",
+      "Abu Homid al-Gʻazzoliy",
+      "Abu Hāmid Mohammad ibn Mohammad al-Ghazzālī",
+      "Abu Mohammed al-Ghazali",
+      "Abu hamid Muhammad al-Ghazzali",
+      "Abu-Hamid bin Muhammad bin Muhammad bin Muhammad Al-Ghazali",
+      "Abu-Hàmid al-Ghazalí",
+      "Abul Amide Maomé ibne Maomé Algazali",
+      "Abú Hámid Muhammad Ibn Ahmad",
+      "Abú Hámid al-Ghazzálí",
+      "Abúhámid Muhammad Gazálî",
+      "Al Gazali",
+      "Al Ghazali",
+      "Al-Gazali",
+      "Al-Ghazzali",
+      "Al-Gonzzali",
+      "Algazel",
+      "Algazelus",
+      "Ebu Hamid el-Gazaliu",
+      "El Rhazali",
+      "El Ğazali",
+      "Ghazzali",
+      "Ghazzoliĭ, Muḣammad ibn Muḣammad ibn Aḣmad Abu Ḣomid at-Tusiĭ,",
+      "Ghonzzali",
+      "Imaam Xasaali / Gasaali",
+      "Imam Gajali",
+      "Mohammad Ghazali",
+      "Muhammad ibn Muhammad al-Gazáli",
+      "Äbuhamed Mohämmäd Gäzali",
+      "Ëbuhamed Mohëmmëd Gëzali",
+      "Ăbu̇-Khămid Mȯkhămmăd ăl-Gazali ăt-Tuci",
+      "Əbu Həmid Qəzzali",
+      "Əbu Həmid əl-Qəzzali",
+      "Αλ-Γκαζαλί",
+      "Абу Хамид аль-Газали",
+      "Абу Хамід Аль-Газалі",
+      "Абу Ҳомид Муҳаммад ибн Муҳаммад ал-Ғаззолий",
+      "Абу Ҳомид ал-Ғаззолий",
+      "Абу Ҳомид Ғаззолий",
+      "Абуҳомид Ғазолӣ",
+      "Ал-Газали",
+      "Ал-Ґазалі",
+      "Аль-Газалі",
+      "Газали",
+      "Ел Газали",
+      "Имам әл-Газали",
+      "Муҳаммади Ғаззолӣ",
+      "ал Газали",
+      "аль-Газали",
+      "ел-Газали",
+      "Ғазали, Әбу Хамид",
+      "Ғаззолий",
+      "Әбу Хамид әл-Ғазали",
+      "Әбү Хәмит Әл-Ғазали",
+      "әл-Ғазали",
+      "Աբու Համիդ ալ-Ղազալի",
+      "אַל־גאַזאַלי",
+      "אבוחאמד אלגזאלי,",
+      "אל-ע'זאלי",
+      "גאלדענטהאל, יעקב",
+      "גזאלי, חאמד מחמד",
+      "أبو حامد الغزالي",
+      "أبو حامد لغزالي",
+      "أبي حامد الغزالي",
+      "أبي حامد محمد بن محمد الطوسي",
+      "ئىمام ئەلغازالىي",
+      "ابو حامد الغزالى",
+      "ابو حامد غزالی",
+      "ابوحامد محمد غزالی",
+      "ابى حامد الغزالى",
+      "ابى حامد محمد بن محمد الطوسى",
+      "الغزالى",
+      "الغزالى ابو حامد",
+      "الغزالي",
+      "الغزالي أبو حامد",
+      "الغزالی",
+      "امام غزالي",
+      "امام غزالی",
+      "غزالی",
+      "غەزالی",
+      "محمد الغزالي",
+      "محمد بن محمد الطوسى",
+      "محمد بن محمد الطوسي",
+      "محمد بن محمد بن محمد الغزالي الطوسي",
+      "अल गजाली",
+      "আবু হামিদ আল গাজালি",
+      "আবু হামিদ মুহম্মদ গাজ্জালি",
+      "அல் கசாலி",
+      "అల్ ఘజాలి",
+      "อัล-กาซาลี",
+      "აბუ ჰამიდ ალ-ღაზალი",
+      "ალ-ღაზალი",
+      "アブー・ハーミド・ガザーリー",
+      "アブー・ハーミド・ムハンマド・イブン・ムハンマド・ガザーリー",
+      "アルガゼル",
+      "アル・ガザーリー",
+      "アル＝ガザーリー",
+      "ガザーリー",
+      "ガッザーリー",
+      "伊玛目穆罕默德·加札利",
+      "安萨里",
+      "安薩里",
+      "穆罕默德·加札利",
+      "艾加扎里",
+      "阿布·哈米德·加札利",
+      "가잘리",
+      "AlGhazali",
+      "Abu Hamid AlGhazali",
+      "Abu Hamid Muhamed ibn Muhamed alGazali",
+      "Abu Hamid Muhammad AlGhazali alTusi alNisaburi",
+      "Abu Hamid Muhammad alGhazali",
+      "Abu Hamid Muhammad ibn Muhammad AlGhazali alTusi alNisaburi",
+      "Abu Hamid Muhammad ibn Muhammad alGhazali",
+      "Abu Homid Muhammad ibn Muhammad alGʻazzoliy",
+      "Abu Homid alGʻazzoliy",
+      "Abu Hāmid Mohammad ibn Mohammad alGhazzālī",
+      "Abu Mohammed alGhazali",
+      "Abu hamid Muhammad alGhazzali",
+      "AbuHamid bin Muhammad bin Muhammad bin Muhammad AlGhazali",
+      "AbuHàmid alGhazalí",
+      "Abú Hámid alGhazzálí",
+      "AlGazali",
+      "AlGhazzali",
+      "AlGonzzali",
+      "Ebu Hamid elGazaliu",
+      "Ghazzoliĭ, Muḣammad ibn Muḣammad ibn Aḣmad Abu Ḣomid atTusiĭ,",
+      "Muhammad ibn Muhammad alGazáli",
+      "Ăbu̇Khămid Mȯkhămmăd ălGazali ătTuci",
+      "Əbu Həmid əlQəzzali",
+      "ΑλΓκαζαλί",
+      "Абу Хамид альГазали",
+      "Абу Хамід АльГазалі",
+      "Абу Ҳомид Муҳаммад ибн Муҳаммад алҒаззолий",
+      "Абу Ҳомид алҒаззолий",
+      "АлГазали",
+      "АлҐазалі",
+      "АльГазалі",
+      "Имам әлГазали",
+      "альГазали",
+      "елГазали",
+      "Әбу Хамид әлҒазали",
+      "Әбү Хәмит ӘлҒазали",
+      "әлҒазали",
+      "Աբու Համիդ ալՂազալի",
+      "אלע'זאלי",
+      "อัลกาซาลี",
+      "აბუ ჰამიდ ალღაზალი",
+      "ალღაზალი",
+      "加札利"
+     ],
+     "Rabindranath Tagore": [
+      "Rabindranath Tagore",
+      "Bhanu Singha Thakur",
+      "Bishwakabi",
+      "Biswakabi",
+      "Gurudev",
+      "Kabiguru",
+      "Lá-bĭng-dáik-lá-nà-sṳ̆ Tái-gŏ̤-ī",
+      "Nyi Wang Gönpo",
+      "R. Tagore",
+      "Rabindoranāto tagōru",
+      "Rabindranat Tagor",
+      "Rabindranat Tagora",
+      "Rabindranat Tagore",
+      "Rabindranat Taqor",
+      "Rabindranatas Tagorė",
+      "Rabindranath Thakur",
+      "Rabindranathas Tagorė",
+      "Rabindranats Tagore",
+      "Rabíndranáth Thákhur",
+      "Rabėndranats Taguorė",
+      "Rabīndranātha Thākur",
+      "Rabīndranātha Thākura",
+      "Ravindranath Thakur",
+      "Robindronath Tagor",
+      "Tagor Rabindranat",
+      "Tagore",
+      "Tagore, rabindranath",
+      "Ραμπιντρανάθ Ταγκόρ",
+      "Р. Тагор",
+      "Рабиндранат Таагүр",
+      "Рабиндранат Тагор",
+      "Рабиндранат Тагоре",
+      "Рабіндранат Тагор",
+      "Рабіндранат Таґор",
+      "Тагор Рабиндранат",
+      "Тагор, Рабиндранат",
+      "Тхакур Рабіндранатх",
+      "робендранат Тагор",
+      "Ռաբինդրանաթ Թագոր",
+      "Ռապինտրանաթ Թակոր",
+      "טאגאר, ר.",
+      "טאגורי, ראבינדרא־נת",
+      "ראבינדראנאט טאגאר",
+      "רבינדרנת טאגור",
+      "رابندر ناتھ ٹیگور",
+      "رابندرانات طاجور",
+      "رابندرانات ټاگور",
+      "رابندرناتھ ٹیگور",
+      "رابندرناٿ ٽئگور",
+      "رابیندرانات تاقور",
+      "رابیندرانات تاگور",
+      "روبندرونات طاغور",
+      "رَبِنٛدَر ناتھ ٹھاکُر",
+      "رَبِنٛدَر ناتھ ٹیگور",
+      "ڕابیندرانات تاگۆر",
+      "ރަބިންދްރަނާތު ޓޭގޯރ",
+      "रबिन्द्रनाथ ठाकुर",
+      "रबींद्रनाथ टैगोर",
+      "रबीन्द्रनाथ टेगोर",
+      "रबीन्द्रनाथ ठाकुर",
+      "रवींद्रनाथ टागोर",
+      "रवींद्रनाथ ठाकूर",
+      "रवीन्द्रनाथ टेगोर",
+      "रवीन्द्रनाथ ठाकुर",
+      "रवीन्द्रनाथ ठाकुरः",
+      "ঠাকুর, রবীন্দ্রনাথ",
+      "নিউ ওয়াং গনপো",
+      "ভানুসিংহ ঠাকুর",
+      "রবীন্দ্রনাথ টেগোর",
+      "রবীন্দ্রনাথ ঠাকুর",
+      "ৰবীন্দ্ৰনাথ ঠাকুৰ",
+      "ਰਬਿੰਦਰਨਾਥ ਟੈਗੋਰ",
+      "ਰਬਿੰਦਰਨਾਥ ਠਾਕੁਰ",
+      "રવિન્દ્રનાથ ટાગોર",
+      "ରବିନ୍ଦ୍ରନାଥ ଠାକୁର",
+      "ରବୀନ୍ଦ୍ରନାଥ ଟାଗୋର",
+      "ରବୀନ୍ଦ୍ରନାଥ ଠାକୁର",
+      "இரவீந்திரநாத் தாகூர்",
+      "రవీంద్రనాధ టాగూరు",
+      "రాబింద్రనాథ్ ఠాకూర్ ,టాగోర్ ,విశ్వకవి",
+      "ರವೀಂದ್ರನಾಥ ಠಾಗೋರ್",
+      "രബീന്ദ്രനാഥ് ടാഗോർ",
+      "රබින්ද්‍රනාත් තාගෝර්",
+      "รพินทรนาถ ฐากูร",
+      "ရာဘင်ဒြာနတ် တဂိုး",
+      "რაბინდრანათ თაგორი",
+      "ራቢንድራናት ታጎር",
+      "ᱨᱚᱵᱤᱱᱫᱽᱨᱚᱱᱟᱛᱷ ᱴᱷᱟᱠᱩᱨ",
+      "ラビンドラナート・タゴール",
+      "泰戈尔",
+      "泰戈爾",
+      "罗宾德拉纳特·泰戈尔",
+      "羅賓德拉納特·泰戈爾",
+      "ꠛꠤꠡ꠆ꠡ ꠇꠛꠤ",
+      "ꠞꠛꠤ ꠑꠣꠇꠥꠞ",
+      "ꠞꠛꠤꠘ꠆ꠖꠘꠣꠕ ꠑꠣꠇꠥꠞ",
+      "라빈드라나트 타고르",
+      "Lábĭngdáiklánàsṳ̆ Táigŏ̤ī",
+      "Ταγκόρ",
+      "Тагор",
+      "Таагүр",
+      "Тагоре",
+      "Таґор",
+      "Թագոր",
+      "Թակոր",
+      "טאגאר",
+      "טאגור",
+      "طاجور",
+      "ټاگور",
+      "ٹیگور",
+      "ٽئگور",
+      "تاقور",
+      "تاگور",
+      "طاغور",
+      "تاگۆر",
+      "ฐากูร",
+      "თაგორი",
+      "タゴール"
+     ],
+     "Fyodor Dostoevsky": [
+      "Fyodor Dostoevsky",
+      "Doestoevsky",
+      "Dostoievski",
+      "Dostojevski Fjodor",
+      "Dostojevskii Födor",
+      "Dostoïevski, Fiodor",
+      "F. M. Dostojevski",
+      "F. ドストエフスキー",
+      "F.M. Dostoiewski",
+      "F.M. Dostojewski",
+      "Fedor Dostoevskij",
+      "Fedor Dostoevsky",
+      "Fedor Dostoievski",
+      "Fedor Dostojevskij",
+      "Fedor Dosztojevszkij",
+      "Fedor Michajlovič Dostojevskij",
+      "Fedor Mijailovich Dostoievski",
+      "Fedor Mikhailovitch",
+      "Feodor Dostoievski",
+      "Fiodor Dostoievski",
+      "Fiodor Dostoievskii",
+      "Fiodor Dostoievsky",
+      "Fiodor Dostojewski",
+      "Fiodor Michajlovič Dostojevskij",
+      "Fiodor Mihailovici Dostoievski",
+      "Fiodor Mijailovich Dostoyevski",
+      "Fiodor Mikhailovitx Dostoievski",
+      "Fiodor Mikhaïlovitch Dostoïevski",
+      "Fiodor Mikhàilovich Dostoievskii",
+      "Fiodoras Dostojevskis",
+      "Fiuoduors Duostuojėvskis",
+      "Fiódor Dostoyevski",
+      "Fiódor Mijáilovich Dostoievski",
+      "Fiódor Mikhailovich Dostoievski",
+      "Fjodor Dostojefski",
+      "Fjodor Dostojevski",
+      "Fjodor Dostojevskij",
+      "Fjodor Dostojewski",
+      "Fjodor Dostojewskij",
+      "Fjodor Dosztojevszkij",
+      "Fjodor M. Dosztojevszkij",
+      "Fjodor Michailowitsch Dostojewski",
+      "Fjodor Michailowitsj Dostojéfski",
+      "Fjodor Michajlovitj Dostojevskij",
+      "Fjodor Michajlovitsj Dostojevski",
+      "Fjodor Michajlovič Dostojevskij",
+      "Fjodor Michajlowič Dostojewskij",
+      "Fjodor Mihailovitš Dostojevski",
+      "Fjodor Mihajlovics Dosztojevszkij",
+      "Fjodor Mihajlovič Dostojevski",
+      "Fjodor Mikhajlovitj Dostojevskij",
+      "Fjodor Mikhajlovitsj Dostojevskij",
+      "Fjodors Dostojevskis",
+      "Fyodor Doestoevsky",
+      "Fyodor Dostoevskiy",
+      "Fyodor Dostoievski",
+      "Fyodor Dostoyevski",
+      "Fyodor Dostoyevskiy",
+      "Fyodor Dostoyevsky",
+      "Fyodor Mihailovic Dostoyevskiy",
+      "Fyodor Mikhailovich Dostoevsky",
+      "Fyodor Mikhailovich Dostoyevski",
+      "Fyodor Mikhailovich Dostoyevsky",
+      "Fyodor Mikhaylovich Dostoievski",
+      "Fyodor Mikhaylovich Dostoyevsky",
+      "Fyodor Mixhaylovitch Dostoyevskiy",
+      "Fëdor Michajlovič Dostoevskij",
+      "Fëdor Mihajlovič Dostoevskij",
+      "Fëdor Mikhailovič Dostoevskij",
+      "Födor Dostoyevskiy",
+      "Födor Mihailovič Dostojevskii",
+      "Fýodor Dostoýewskiý",
+      "F’odor Dostojevskii",
+      "Teodoro Dostojevskij",
+      "Theodorus Dostoevskij",
+      "Theodorus Michaelis filius Dostoevskij",
+      "Théodore Dostoïevski",
+      "Théodore Dostoïevsky",
+      "Φιόντορ Μιχάιλοβιτς Ντοστογιέφσκι",
+      "Φιόντορ Ντοστογιέφσκι",
+      "Достоевскай Федор Михайлович",
+      "Достоевский",
+      "Достоевский Ф. М.",
+      "Достоевский Фёдор Михайлович",
+      "Достоевский, Федор Михайлович",
+      "Достоевский, Фёдор Михаил улы",
+      "Достоєвський Федір Михайлович",
+      "Федор Достоевский",
+      "Федор Достоєвскый",
+      "Федір Достоєвський",
+      "Фйодор Михайлович Достоєвски",
+      "Фьодор Достоевски",
+      "Фёдар Дастаеўскі",
+      "Фёдар Міхайлавіч Дастаеўскі",
+      "Фёдор Михаил улы Достоевский",
+      "Фёдор Михайлович Достоевский",
+      "Фјодор Достоевски",
+      "Фјодор Достојевски",
+      "Фјодор Михајлович Достоевски",
+      "Ѳєодѡръ Достоѥвьскꙑи",
+      "Դոստոևսկի Ֆեոդոր",
+      "Փիոթր Տոսթոյեւսքի",
+      "Ֆեոդոր Դոստոևսկի",
+      "Ֆեոդոր Միխայլովիչ Դոստոևսկի",
+      "Ֆյոդոր Դոստոևսկի",
+      "Ֆ․ Մ․ Դոստոևսկի",
+      "דאסטאיעווסקי, פ.",
+      "דאסטאיעווסקי, פיאדאר",
+      "דוסטויבסקי, פדור מיכאילוביץ",
+      "פיאָדאָר דאָסטאָיעווסקי",
+      "פיודור דוסטויבסקי",
+      "تيودور دوستويفسكي",
+      "تيودور ميخائيلوفيتش دوستويفسكي",
+      "تيودور ميخايلوفيتش دوستويفسكي",
+      "داستايؤفسکي",
+      "فئؤدؤر داستايؤفسکي",
+      "فئؤدؤر ميخايلؤويچ داستایفسکي",
+      "فئودور داستایوسکی",
+      "فيودور دوستويفسكى",
+      "فيودور دوستويفسكي",
+      "فيودور دوسطوييڤسكي",
+      "فيودور ميخائيلوفيتش دوستويفسكي",
+      "فيودور ميخايلوفيتش دوستويفسكي",
+      "فيودور ميخايلوويچ داستاېفسکي",
+      "فیودر دوستوئیفسکی",
+      "فیودور داستایفسکی",
+      "فیودور داستایوفسکی",
+      "فیۆدۆر دۆستۆیەڤسکی",
+      "फ़्योदोर दोस्तोयेव्स्की",
+      "फिदूर दोस्तोवस्की",
+      "फ्योडोर डोस्तोएभ्स्की",
+      "फ्योडोर दोस्तोएभ्स्की",
+      "फ्योदर दस्तयेवस्की",
+      "ফিওদোর দস্তয়েভ্‌স্কি",
+      "ফিওদোৰ দস্তয়েভস্কি",
+      "ਫਿਉਦਰ ਦੋਸਤੋਵਸਕੀ",
+      "பியோதர் தஸ்தயெவ்ஸ்கி",
+      "ఫ్యోడర్ దోస్తయోవ్స్కీ",
+      "ഫിയോദർ ദസ്തയേവ്‌സ്കി",
+      "ฟิโอดอร์ ดอสโตเยฟสกี",
+      "ဖရိုဒါ ဒါစတာယဲဗ်စကီး",
+      "დოსტოევსკი",
+      "თედორე დოსტოევსკი",
+      "თეოდორ დოსტოევსკი",
+      "ፍዮዶር ዶስቶየቭስኪ",
+      "ⴼⵢⵓⴷⵓⵔ ⴷⵓⵙⵜⵓⵢⴼⵙⴽⵉ",
+      "ドストエフスキー",
+      "フョードル・ドストエフスキー",
+      "多托頁夫斯基",
+      "杜斯托也夫斯基",
+      "費奧多爾·杜斯妥也夫斯基",
+      "費奧多爾·米哈伊洛維奇·陀思妥耶夫斯基",
+      "費奧多爾·陀思妥耶夫斯基",
+      "费奥多尔·米哈伊洛维奇·陀思妥耶夫斯基",
+      "费奥多尔·陀斯妥耶夫斯基",
+      "陀司妥也夫斯基",
+      "陀思妥耶夫斯基",
+      "陀思妥耶夫斯基，F.M.",
+      "陀思妥耶夫斯基，Ф.М.",
+      "陀斯妥耶夫斯基",
+      "도스토옙스키",
+      "표도르 도스토옙스키",
+      "표도르 미하일로비치 도스토옙스키",
+      "Dostoevsky",
+      "Ντοστογιέφσκι",
+      "Достоєвскый",
+      "Достоевски",
+      "Дастаеўскі",
+      "Достојевски",
+      "Достоѥвьскꙑи",
+      "Տոսթոյեւսքի",
+      "Դոստոևսկի",
+      "דאָסטאָיעווסקי",
+      "דוסטויבסקי",
+      "دوستويفسكي",
+      "داستایوسکی",
+      "دوستويفسكى",
+      "دوسطوييڤسكي",
+      "دوستوئیفسکی",
+      "داستایفسکی",
+      "دۆستۆیەڤسکی",
+      "ดอสโตเยฟสกี",
+      "杜斯妥也夫斯基"
+     ],
+     "Charles Dickens": [
+      "Charles Dickens",
+      "Boz",
+      "C. Dickens",
+      "Carlo Dickens",
+      "Carls Dikkens",
+      "Carolus Dickens",
+      "Carolus Ioannes Huffam Dickens",
+      "Charles Dickens/ha",
+      "Charles Dickens/hf",
+      "Charles John Huffam Dickens",
+      "Charles John Huffan Dickens",
+      "Charles John Huffham Dickens",
+      "Charlz Dikkens",
+      "Chârlo Dickens",
+      "Dickens",
+      "Dickens, Charles",
+      "Dikkens Charlz",
+      "Dikkens Čarl'z",
+      "Karolo Dickens",
+      "Karolo Johano Huffam Dickens",
+      "Tcarlz Diknz",
+      "Çarls Dikens",
+      "Çarlz Dikkens",
+      "Čarl'z Dikkens",
+      "Čarlzos Dėkensos",
+      "Čārlzs Dikenss",
+      "Κάρολος Ντίκενς",
+      "Τσαρλς Ντίκενς",
+      "Дикенс",
+      "Дикенс, Чарльз",
+      "Диккенс",
+      "Диккенс Чарлз",
+      "Диккенс Чарльз",
+      "Диккенс, Чарльз",
+      "Чарлз Дзікенс",
+      "Чарлз Дикенс",
+      "Чарлз Дыкенз",
+      "Чарлз Дікенс",
+      "Чарлз Діккенс",
+      "Чарлс Џон Хафам Дикенс",
+      "Чарлс Дикенс",
+      "Чарльз Джон Хаффем Диккенс",
+      "Чарльз Диккенс",
+      "Չարլզ Դիքենս",
+      "Չարլզ Տիքընզ",
+      "דיקינס, צ׳רלס",
+      "טשארלס דיקנס",
+      "צ'ארלס דיקנס",
+      "צ'רלס דיקנס",
+      "تشارلز ديكنز",
+      "تشارلز ديكينز",
+      "چارلز جان هۊفام ديکنز",
+      "چارلز ديکنز",
+      "چارلز دیکنز",
+      "چارلس ڈکنز",
+      "چارلس ڊڪنز",
+      "چارلېز ډيکېنز",
+      "چارڵز دیکنز",
+      "چارڵز دیکینز",
+      "चार्ल्स डिकन्स",
+      "चार्ल्स डिकेंस",
+      "चार्ल्स डिकेन्स",
+      "চার্লস ডিকেন্স",
+      "চাৰ্লচ ডিকেঞ্চ",
+      "চাৰ্লছ ডিকেন্স",
+      "ਚਾਰਲਜ਼ ਡਿਕਨਜ਼",
+      "ਚਾਰਲਸ ਡਿਕਨਜ਼",
+      "ଚାର୍ଲ୍ସ ଡିକେନ୍ସ",
+      "சார்லஸ் டிக்கின்ஸ்",
+      "చార్లెస్ డికెన్స్",
+      "ಚಾರ್ಲ್ಸ್‌ ಡಿಕನ್ಸ್",
+      "ചാൾസ് ഡിക്കെൻസ്",
+      "චාල්ස් ඩිකන්ස්",
+      "ชาร์ลส์ ดิกคินส์",
+      "ชาลส์ ดิกคินส์",
+      "ချားလ် ဒစ်ကင်း",
+      "ဒစ်ကင်း၊ ချားလ်စ်",
+      "ჩარლზ დიკენსი",
+      "ቻርልስ ዲከንስ",
+      "ᱪᱟᱨᱞᱮᱥ ᱰᱤᱠᱮᱱᱥ",
+      "ᱰᱤᱠᱮᱱᱥ, ᱪᱟᱨᱞᱮᱥ",
+      "チャールズ・ディケンズ",
+      "查尔斯·狄更斯",
+      "查爾斯·狄更斯",
+      "查爾斯·約翰·赫芬姆·狄更斯",
+      "查理斯·狄更斯",
+      "狄更斯",
+      "狄更斯查尔斯",
+      "狄更斯，C.",
+      "찰스 디킨스",
+      "Ντίκενς",
+      "Дзікенс",
+      "Дыкенз",
+      "Діккенс",
+      "Դիքենս",
+      "Տիքընզ",
+      "דיקנס",
+      "ديكنز",
+      "ديكينز",
+      "ديکنز",
+      "دیکنز",
+      "ڈکنز",
+      "ڊڪنز",
+      "ڈِکِنٛز",
+      "ډيکېنز",
+      "ดิกคินส์",
+      "დიკენსი",
+      "ディケンズ"
+     ]
+    },
+    "seed": "wb-mc-adapt-2026-11-02",
+    "topic": "a famous writer or thinker whose works shaped world history"
+   },
+   "adapt": {
+    "origin": "generated",
+    "gate": {
+     "rate": 0.7,
+     "pass": true
+    }
+   }
+  }
+ ]
+}
