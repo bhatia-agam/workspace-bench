@@ -79,11 +79,11 @@ BASE_PAIRS: dict[str, dict[str, str]] = {
     # summary mode takes the majority of 3 draws' verdicts (+maj3v); native is one call per cell
     "role_bound_association": {"oa-v3.1": "oa-v3.1+maj3v"},
     "user_modeling": {"um-v3.4+bank-v2": "um-v3.4+bank-v2+maj3v"},
-    # moral_rationale's summary mode verifies near-verbatim quotes (+nq1) and takes the majority
-    # of 3 draws' verdicts (+maj3v)
+    # moral_rationale's summary mode takes the majority of 3 draws' verdicts (+maj3v); the
+    # single-pick ec-v9 instruments also verify near-verbatim quotes (+nq1)
     "moral_rationale": {
-        v: f"{v}+nq1+maj3v"
-        for v in ("ec-v9", "ec-v9-b4", "ec-v9-b5", "ec-v9-b7", "ec-v4.1", "ec-v4", "ec-v3.1")
+        **{v: f"{v}+nq1+maj3v" for v in ("ec-v9", "ec-v9-b4", "ec-v9-b5", "ec-v9-b7")},
+        **{v: f"{v}+maj3v" for v in ("ec-v4.1", "ec-v4", "ec-v3.1")},
     },
 }
 MT_FAMILIES = {

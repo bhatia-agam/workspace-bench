@@ -431,9 +431,12 @@ every arm.
 - Stamps: `ec-v9` on bank v3; the opt-in banks keep their own stamps of the same instrument
   (`ec-v9-b4`, `ec-v9-b5`, `ec-v9-b7`), so a floor of one bank never serves another.
   `opts=prompts=ec-v4.1` still selects bank v3's older single pick (rules (a)-(f)). A summary
-  result adds `+nq1` (near-verbatim quotes) and `+maj3v` (`judge.majority_stamp`;
-  `opts=draws=1` is the single-call instrument, no suffix); the calls, native results, the ATI
-  gate and the guesser floors keep the bare stamp.
+  result adds `+maj3v` (`judge.majority_stamp`; `opts=draws=1` is the single-call instrument, no
+  suffix) and, under `ec-v9` and its per-bank stamps, `+nq1` (near-verbatim quotes); the calls,
+  native results, the ATI gate and the guesser floors keep the bare stamp. The near-verbatim
+  rule belongs to the single-pick `ec-v9` instruments only: `ec-v4` / `ec-v4.1` keep exact quotes
+  and `ec-v3.1` has no quote gate, so their summary results carry `+maj3v` alone (they take 3
+  draws as well).
 - **Why one pick:** the earlier multi-label rule (below) treated a stated opposite-side reason
   as an error, although weighing both sides is what deliberation looks like; sample counts over
   every prompt position mostly measure how often the lens repeats a phrase, not what drives the
@@ -818,5 +821,5 @@ retries only failures.
 - 2026-11-04 (`+maj3v`): summary mode asks each item and side three times and takes the majority
   of the draws' pass / fail verdicts, because a single pick can flip between runs on the same
   digest.
-- 2026-11-04 (`+nq1`): a near-verbatim quote verifies like an exact one, because gold picks were
-  failing only on one-word quote misses ("ransom" vs "a ransom").
+- 2026-11-04 (`+nq1`, `ec-v9` only): a near-verbatim quote verifies like an exact one, because
+  gold picks were failing only on one-word quote misses ("ransom" vs "a ransom").

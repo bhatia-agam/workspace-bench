@@ -313,7 +313,7 @@ def test_moral_one_call_per_item_and_side(tmp_path, monkeypatch, moral_v1):
     r = mr.run(summary_args(path, tmp_path / "s", mrp.PROMPT_VERSION_V1, items=[TF, YN, TB]))
     # every (item, side) is asked 3 times, stamped +maj3v
     assert fake.n("digest") == 3 * 2 and fake.n("ec_reason_mc") == (1 + 1 + 2) * 3
-    _common(r, native, mrp.PROMPT_VERSION_V1 + "+nq1+maj3v")
+    _common(r, native, mrp.PROMPT_VERSION_V1 + "+maj3v")  # no quote gate: no +nq1
     tb_users = [u for n, _s, u in fake.calls if n == "ec_reason_mc" and "Torture" in u]
     assert len(tb_users) == 2 * 3 and len({_readout(u) for u in tb_users}) == 1
     assert r.extras["committed"]["pass"] == 1 and r.extras["deliberative"]["both_sides"] == 1
@@ -347,4 +347,4 @@ def test_moral_token_file_and_contrast_off_stamp(tmp_path, monkeypatch, moral_v1
     r = mr.run(args)
     assert fake.n("interp") == 0 and fake.n("ec_reason_mc") == 3
     assert r.config["source_kind"] == "tokens"
-    assert r.config["prompt_version"] == mrp.PROMPT_VERSION_V1 + "+contrast-off+nq1+maj3v" + SUFFIX
+    assert r.config["prompt_version"] == mrp.PROMPT_VERSION_V1 + "+contrast-off+maj3v" + SUFFIX
