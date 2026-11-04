@@ -239,7 +239,8 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   single-call key.
   role-bound judges bank v2 (`items_v2.json`, `read_plan_bank` = items.json): `judge.load_items`
   draws option names from items.json's pool, so kept items' calls stay cached, and
-  `judge.instrument` stamps `+bank-v2` only for a version-2 header (adapted banks stay `oa-v3.1`).
+  `judge.instrument` stamps `+bank-v2` only for the registered bank (a version-2 header without
+  an `adapt` key; adapted banks stay `oa-v3.1`).
   model_specific_directed_modulation (plan 0016; formerly directed_modulation_obscure) has its own
   regex `judge.py` with no LLM and no summarizer (token readouts are matched token by token, as in
   the source); its `PROMPTS` holds only the subject template, since `test_prompts_in_readme`
