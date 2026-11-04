@@ -45,6 +45,17 @@ def test_v5_is_v4_plus_30_new_items():
     assert not set(v5["v5"]["excluded"]) & set(names)  # the 3 hand-read shortcuts stay out
 
 
+def test_v5_header_read_note_counts_its_own_prompts():
+    """The header's lite-read note counts bank v5's last-word offsets (31 at -2, 67 at -1), not
+    bank v1-v3's 33 / 67."""
+    v5 = _raw(V5)
+    first = [it["readout"]["offsets"][0] for it in v5["items"]]
+    n2, n1 = first.count(-2), first.count(-1)
+    assert (n2, n1) == (31, 67) and n2 + n1 == len(v5["items"])
+    note = f"-2 for the {n2} prompts that end in a bare space token, -1 for the other {n1}."
+    assert note in v5["read"]
+
+
 def test_new_items_rules():
     """No kind bank v4 dropped (language, capital, opposite, currency), no bridge of banks v1-v4
     reused, distinct answers, and every gate leg recorded and passing."""
