@@ -880,6 +880,22 @@ branch `camila/0060-runs`, never pushed), writing to `logs/<m>/refill_<family>_<
 Keep the apps warm with `scripts_local/keepalive.py` during Claude-only stages, and cap
 `max_containers` on shared GPUs.
 
+**Rollout checks found on GLM-5.3 (2026-11-04), required at every later subject's rollout:**
+- **Read-span minimum.** A family's `min_full_positions` comes from Qwen3.6-27B's renders. A
+  subject whose chat template leaves fewer positions after the prompt (GLM-5.3:
+  `<|assistant|><think></think>`) makes every judge of that family exit 2. On GLM the shortest
+  renders were association / conjunctive / role_bound 13 (of 19), arithmetic 33 (of 34, 60/566
+  items) and user_modeling 34 (of 37, 3/87). Measure every family's shortest span over
+  `WSB_BANK_ROOT=adapted/<m> wsbench plan` with the subject's tokenizer, and record it in the
+  bank header `adapt.min_grid_positions` or, for a bare-list bank (conjunctive, role_bound),
+  in `report.json` `families.<f>.min_grid_positions` (read by `reads.min_full_positions`).
+  kimi-k3, deepseek-v4-pro, muse-spark-open, OLMo and every other subject with a shorter
+  template than Qwen need the same check. `freeze` does not write it yet (a re-freeze drops
+  the bank-header value; the report entry survives).
+- **wrong_intermediate floors are stale on the 9 other adapted sets** after the #273 instrument
+  bump (`wbcues-v2`). They are re-measured at each set's refill rollout, when its
+  wrong_intermediate bank changes anyway.
+
 ## 9. Decisions (Camila, 2026-11-04)
 
 1. **buggy_code target: 24 pairs**, keeping the `src` quota (buggy 25 / clean 38).

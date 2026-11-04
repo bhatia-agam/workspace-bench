@@ -737,3 +737,34 @@ def test_adapted_spec_does_not_describe_the_27b(tmp_path, subject, bank, job, re
         and "org/Fake-32L" in out["spec"]["subject_note"]
     )
     assert "legacy_v1" in bank["spec"]  # the registered bank object is untouched
+
+
+def test_bare_list_bank_span_from_the_set_report(tmp_path, monkeypatch):
+    """GLM-5.3: conjunctive / role_bound banks are bare lists (no ``adapt`` header), so their
+    shorter GLM span is recorded in the set's report.json and read from there, under
+    WSB_BANK_ROOT only; a header still wins; a file override never reads the root report."""
+    from wsbench import reads
+
+    monkeypatch.setenv(registry.BANK_ROOT_ENV, str(tmp_path))
+    (tmp_path / "conjunctive_association.json").write_text(json.dumps([{"id": "q01_c"}]))
+    assert reads.min_full_positions("conjunctive_association", 19) == 19  # no record yet
+    rep = {"families": {"conjunctive_association": {"min_grid_positions": 13}}}
+    (tmp_path / "report.json").write_text(json.dumps(rep))
+    assert reads.min_full_positions("conjunctive_association", 19) == 13
+    assert reads.min_full_positions("conjunctive_association", 9) == 9  # lowers, never raises
+    (tmp_path / "conjunctive_association.json").write_text(
+        json.dumps({"adapt": {"min_grid_positions": 15}, "items": []}))  # fmt: skip
+    assert reads.min_full_positions("conjunctive_association", 19) == 15  # the header wins
+    (tmp_path / "conjunctive_association.json").write_text(json.dumps([{"id": "q01_c"}]))
+    for bad in (
+        {"families": ["x"]},
+        {"families": "x"},
+        ["x"],
+        {"families": {"conjunctive_association": {"min_grid_positions": True}}},
+    ):
+        (tmp_path / "report.json").write_text(json.dumps(bad))  # malformed: the default
+        assert reads.min_full_positions("conjunctive_association", 19) == 19
+    f = tmp_path / "other.json"
+    f.write_text(json.dumps([{"id": "q01_c"}]))
+    monkeypatch.setenv(registry.BANK_FILE_ENV_PREFIX + "CONJUNCTIVE_ASSOCIATION", str(f))
+    assert reads.min_full_positions("conjunctive_association", 19) == 19
