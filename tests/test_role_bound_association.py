@@ -348,7 +348,7 @@ def test_native_extras_have_layer_pick_columns(tmp_path, fake_llm, mk_args):
 def test_config_stamps_roles_lexicon(tmp_path, fake_llm, mk_args):
     fake_llm(_responder)
     res = judge.run(mk_args(_scripted(tmp_path), items=[AB, BA]))
-    assert res.config["roles_lexicon"] == prompts.ROLES_LEXICON == "roles-v1.4"
+    assert res.config["roles_lexicon"] == prompts.ROLES_LEXICON == "roles-v1.5"
     assert res.config["prompt_version"] == "oa-v3.1"
 
 
@@ -580,6 +580,42 @@ def test_summary_mode_requires_single_statement_binding(tmp_path, monkeypatch):
     assert r.rows[0]["pass"] is True and r.extras["item_pass_rate"] == 1.0  # pair-v1: item rate
 
 
+def test_majority_of_three_draws_verdicts(tmp_path, monkeypatch):
+    """Each item is asked three times (each draw re-asked on its own); the verdict is the
+    majority of the draws' pass / fail verdicts. A 2-of-3 gold passes, a 2-of-3 cannot-tell
+    fails, and three different answers with one gold are a fail (a label split, never
+    undecided)."""
+    g = GOLDEN_V3[HUG]["golds"]
+    gen = "- Mia, the grandchild, hugs Ruth tightly\n- the old house"
+    path = write_jsonl(tmp_path / "c.jsonl", [{"id": HUG, "layer": 44, "pos": 1, "samples": [gen]}])
+    gold = {"q1_choice": g[0], "q2_choice": g[1], "q3_choice": g[2],
+            "quote": "Mia, the grandchild, hugs Ruth", "evidence": "x"}  # fmt: skip
+    cannot = {"q1_choice": 6, "q2_choice": 6, "q3_choice": 6, "quote": "", "evidence": ""}
+    half = {**cannot, "q2_choice": g[1], "q3_choice": g[2]}  # cannot tell on Q1 only: no re-ask
+
+    def run(name, answers):
+        it = iter(answers)
+        fake = FakeLLM.install(monkeypatch, lambda s, u, sc: next(it))
+        r = SPEC.run(summary_args(path, tmp_path / name, prompts.PROMPT_VERSION, items=[HUG]))
+        return fake, r
+
+    fake, r = run("a", [cannot, gold, gold])
+    (row,) = r.rows
+    assert len([c for c in fake.calls if c[0] != "digest"]) == 3
+    assert row["pass"] is True and row["majority"] == "pass"
+    assert row["draw_verdicts"] == ["fail", "pass", "pass"] and row["label_split"] is False
+    assert row["draw_picks"][0] == "6/6/6!gate" and r.extras["item_pass_rate"] == 1.0
+    _f, r = run("b", [gold, cannot, cannot])
+    assert r.rows[0]["pass"] is False and r.rows[0]["majority"] == "fail"
+    assert r.rows[0]["draw_picks"] == ["/".join(map(str, g)), "6/6/6!gate", "6/6/6!gate"]
+    assert r.extras["n_items_undecided"] == 0
+    _f, r = run("c", [gold, cannot, half])
+    assert r.rows[0]["majority"] == "fail" and r.rows[0]["pass"] is False
+    assert r.rows[0]["label_split"] is True
+    assert r.extras["n_items_undecided"] == 0
+    assert r.counts["n_unjudged_cells"] == 0
+
+
 def test_summary_task_note_reaches_digest(tmp_path, monkeypatch):
     path = write_jsonl(tmp_path / "a.jsonl", [{"id": HUG, "layer": 44, "pos": 1, "samples": ["x"]}])
     fake = FakeLLM.install(monkeypatch, _hug_judge(""))
@@ -594,10 +630,11 @@ def test_summary_stamp_is_computed(tmp_path, monkeypatch):
     args = summary_args(path, tmp_path / "o", prompts.PROMPT_VERSION, items=[HUG])
     r = SPEC.run(args)
     want = reads.stamp(
-        digest.prompt_version(prompts.PROMPT_VERSION, args, SPEC.name), reads.mode(args)
-    )
-    assert r.config["prompt_version"] == want and want.startswith("oa-v3.1+digest-")
-    assert r.config["roles_lexicon"] == "roles-v1.4"
+        digest.prompt_version(prompts.PROMPT_VERSION + "+maj3v", args, SPEC.name), reads.mode(args)
+    )  # a summary result is stamped with its majority of 3 draws' verdicts
+    assert r.config["prompt_version"] == want and want.startswith("oa-v3.1+maj3v+digest-")
+    assert r.config["draws"] == 3 and r.rows[0]["draw_picks"] and r.rows[0]["majority"]
+    assert r.config["roles_lexicon"] == "roles-v1.5"
 
 
 def test_in_macro(tmp_path, fake_llm, mk_args):

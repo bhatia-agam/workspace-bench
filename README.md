@@ -247,7 +247,7 @@ commands with `PYTHONPATH=src`, because the editable install points at the main 
 **Role-bound association** — [`evals/role_bound_association/README.md`](evals/role_bound_association/README.md)
 - *What it is:* A scene conveys a directed relation with role words blocked; does the lens bind the direction, not just the concepts.
 - *Example:* "Marcus, in a pressed navy uniform… bolted toward the alley. Dmitri sprinted after him" → target `the thief chased the police officer` (contrast: the reverse).
-- *Judged by:* one digest of the 19 summarize-prompt sites × 11 layers ([docs/read_sites.md](docs/read_sites.md)), three MCs (agent / action / patient, 5 options incl. near-role distractors such as a parent beside a grandparent, + cannot tell); passes only if all three are right AND the judge's quote lies inside ONE statement (one bullet of one sample) naming both people by name or exact role (oa-v2, plan 0042).
+- *Judged by:* one digest of the 19 summarize-prompt sites × 11 layers ([docs/read_sites.md](docs/read_sites.md)), three MCs (agent / action / patient, 5 options incl. near-role distractors such as a parent beside a grandparent, + cannot tell); passes only if all three are right AND the judge's quote lies inside ONE statement (one bullet of one sample) naming both people by name or exact role (oa-v2, plan 0042); in summary mode the item is asked three times and passes when most draws pass.
 
 ### Bag of words
 
@@ -437,7 +437,7 @@ digest's token lines are also matched space-joined, stamped `+joined-2026-10-30`
 | nyt_connections | claude-opus-5-5 | nyt-mc-2026-11-02 (blind per-slot MC on the layered digest, plan 0062; summary stamp `nyt-mc-2026-11-02+digest-v5-task-extractive-layered-v1x4+sj-v10` since v1.1.1 (`-layered-v1` = x2, v1.1.0); native = diagnostic) |
 | poetry | claude-opus-5-5 | poetry-free-2026-11-01+noveto-a1 (headline: own blind free-response judge, no options, exact-gold check + deterministic line-ending gates; calls keyed poetry-free-2026-11-01; noveto-a1 = no line-ending count overrules a verified answer, the counts are a diagnostic) + diagnostic poetry-mc-2026-11-01-v5 (blind MC judge, plan 0038; bank v5 options) |
 | relational_multihop | claude-opus-5-5 | rel-v3+relgate-v6 (calls keyed rel-v3: the 18-option list with a third decoy relation; relgate-v3 = the order gate's blank rule; relgate-v4 = lawyer forms and a second ask on an order-gate failure; relgate-v6 = the order gate checks the quote's own statement only, and no raw-statement count overrules the judge's answer) |
-| role_bound_association | claude-opus-5-5 | oa-v3.1 (oa-v2.4 prompts on the oa-v3.1 lists) |
+| role_bound_association | claude-opus-5-5 | oa-v3.1+maj3v (summary mode: the majority of three draws' pass / fail verdicts; judge calls keyed oa-v3.1, the oa-v2.4 prompts on the oa-v3.1 lists; role lexicon roles-v1.5) |
 | typo (superseded by typo_mt) | claude-opus-5-5 | bank-2026-10-30b |
 | typo_mt | regex (no call natively; the digest model under summary mode) | mt-regex-2026-10-30+typo-v2 |
 | wrong_intermediate | claude-opus-5-5 | wb-mc-2026-10-31r+judge-only-v1+qline-v1+wbforms-v4+bank-v4 (the judge's verified pick stands, no code check after it; MC calls keyed wb-mc-2026-10-31r+rv-2026-10-31e) |

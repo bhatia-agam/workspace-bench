@@ -34,8 +34,13 @@ DATASET_SEED = 20260810
 # oa-v3.1 (review of #202 round 4): distractors-v3.1, no distractor action is an instance of the
 # gold or the reverse (scripts/role_bound_distractors_v3.py ENTAILS: "overcharged" left the
 # cheated / billed / deceived pairs); prompts unchanged
+# Summary mode asks each item 3 times (judge.n_draws) and takes the majority of the draws'
+# pass / fail verdicts. The calls (draw 0 is the single-call key, so its cached answer is
+# reused), the native instrument, the ATI gate and the guesser floors keep PROMPT_VERSION; a
+# summary result is stamped ``+maj<N>v`` (judge.majority_stamp; draws=1 is the single-call
+# instrument, no suffix)
 PROMPT_VERSION = "oa-v3.1"
-ROLES_LEXICON = "roles-v1.4"  # config.roles_lexicon: evals/role_bound_association/roles_v1.json
+ROLES_LEXICON = "roles-v1.5"  # config.roles_lexicon: evals/role_bound_association/roles_v1.json
 ACTIONS_LEXICON = "actions-v1.4"  # config.actions_lexicon (round 4): actions_v1.json
 
 SYSTEM = (

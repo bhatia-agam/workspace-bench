@@ -236,7 +236,7 @@ STORY_ROLE = {  # roles-v1.4: the item, the near role its own story uses for the
 
 
 def test_story_description_is_no_distractor():
-    assert LEX.version == prompts.ROLES_LEXICON == "roles-v1.4"
+    assert LEX.version == prompts.ROLES_LEXICON == "roles-v1.5"
     bank = load_bank("role_bound_association")
     for it in bank:
         b = build_block_v2(it, bank, LEX)

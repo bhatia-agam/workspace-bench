@@ -282,12 +282,15 @@ def test_role_bound_three_mcs_on_one_summary(tmp_path, monkeypatch):
     fake = FakeLLM.install(monkeypatch, _role_judge())
     pv = role_prompts.PROMPT_VERSION
     r = ROLE.run(_s(ROLE, ROLE_EX, tmp_path / "s", pv))
-    assert fake.n("digest") == 2 * 2 and fake.n("readout_mc") == 2
+    # three draws per item (the majority of their verdicts), stamped +maj3v
+    assert fake.n("digest") == 2 * 2 and fake.n("readout_mc") == 2 * 3
     assert all(SUMMARY_NOTE in u for u in _no_statements(fake, "readout_mc"))
     rows = {x["id"]: x for x in r.rows}
     assert rows["oa-police-thief-chase-ab"]["pass"] is True
     assert rows["oa-police-thief-chase-ba"]["pass"] is False
-    assert r.config["aggregate"] == "summary" and r.config["prompt_version"] == pv + SUFFIX
+    assert (
+        r.config["aggregate"] == "summary" and r.config["prompt_version"] == pv + "+maj3v" + SUFFIX
+    )
     assert "any_of_grid_floor" not in r.extras and "sites_per_item" not in r.extras
     FakeLLM.install(monkeypatch, _generic)
     n = ROLE.run(_n(ROLE, ROLE_EX, tmp_path / "n", pv))
@@ -300,7 +303,7 @@ def test_role_bound_tokens_skip_interp(tmp_path, monkeypatch):
     path = _as_tokens(ROLE_EX, tmp_path / "t.jsonl")
     fake = FakeLLM.install(monkeypatch, _generic)
     r = ROLE.run(_s(ROLE, path, tmp_path / "s", role_prompts.PROMPT_VERSION))
-    assert fake.n("interp") == 0 and fake.n("digest") == 2 * 2 and fake.n("readout_mc") == 2
+    assert fake.n("interp") == 0 and fake.n("digest") == 2 * 2 and fake.n("readout_mc") == 2 * 3
     assert all(SUMMARY_NOTE_TOKENS in u for u in _no_statements(fake, "readout_mc"))
     FakeLLM.install(monkeypatch, _generic)
     n = ROLE.run(_n(ROLE, path, tmp_path / "n", role_prompts.PROMPT_VERSION))

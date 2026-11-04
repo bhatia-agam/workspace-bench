@@ -1,16 +1,18 @@
 """role_bound_association: three 6-way MCs (agent / action / patient) per judged readout, plus a
-mechanical single-statement gate (``gate.py``; plan 0055)."""
+mechanical single-statement gate (``gate.py``; plan 0055); summary mode takes the majority of
+three draws' pass / fail verdicts."""
 
 import functools
 import json
 import random
 import re
-from collections import defaultdict
+from collections import Counter, defaultdict
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 
 from wsbench import digest, mc, reads, registry
 from wsbench.cache import Cache
+from wsbench.evals.conjunctive_association.judge import draw_key, majority, n_draws
 from wsbench.family import render_bag
 from wsbench.llm import Spend
 from wsbench.mc import join_samples, options_with_cannot, seed_int, seeded_shuffle
@@ -643,10 +645,15 @@ def _run_summary(
     (``digest.statement_lines``). An item with no readouts stays a rowless fail; an
     unsummarized item is undecided (audit F3: never a fail); one whose call failed is a fail;
     both counted in ``n_unjudged_cells`` (items); an empty one is a fail counted in
-    ``n_empty_cells`` (items)."""
+    ``n_empty_cells`` (items). Each item is asked ``n_draws`` times (3; draw 0 is the
+    single-call key), each draw re-asked once on its own; the item's verdict is the majority of
+    the draws' pass / fail verdicts (:func:`draw_verdict`), always defined for an odd number of
+    landed draws; the row is a draw on the winning side (its most common label,
+    :func:`draw_label`); a failed draw that could change the verdict leaves the item unjudged."""
     task_note = registry.get(FAMILY).task_note
     lex_of: Mapping[str, gate.Lexicon] = lexes if lexes is not None else defaultdict(lambda: lex)
     pv = digest.prompt_version(PROMPT_VERSION, args, FAMILY)
+    n = n_draws(args)
     by_item: dict[str, list[Cell]] = defaultdict(list)
     for c in cells:
         by_item[c.id].append(c)
@@ -671,7 +678,7 @@ def _run_summary(
         judged = [i for i in ids if i not in col.unsummarized and i not in col.empty]
         calls = [
             Call(
-                _summary_key(i),
+                draw_key(_summary_key(i), k),
                 SYSTEM,
                 prompts.render_user_summary(
                     note, (col.cells[i].samples or ("",))[0], blocks[i].text
@@ -679,6 +686,7 @@ def _run_summary(
                 {"id": i, "layer": digest.SUMMARY_LAYER, "golds": list(blocks[i].golds)},
             )
             for i in judged
+            for k in range(n)
         ]
         results = (
             run_calls(
@@ -696,8 +704,9 @@ def _run_summary(
             if calls
             else {}
         )
-        # final r1: ONE re-ask when the judge's own picks are not supported by its own quote
-        retry_of: dict[str, dict] = {}
+        # final r1: ONE re-ask (per draw) when the judge's own picks are not supported by its
+        # own quote
+        retry_of: dict[str, dict] = {}  # draw key -> the re-ask record
         re_calls = []
         for c in calls:
             i = c.meta["id"]
@@ -706,7 +715,7 @@ def _run_summary(
                 continue
             probs = pick_problems(r0, blocks[i], col.evidence.get(i, ()), by_item[i], lex_of[i])
             if probs:
-                retry_of[i] = {"first": r0, "problems": probs}
+                retry_of[c.key] = {"first": r0, "problems": probs}
                 re_calls.append(
                     Call(f"{c.key}|retry1", SYSTEM, c.user + _retry_text(r0, probs), c.meta)
                 )
@@ -726,31 +735,49 @@ def _run_summary(
             if re_calls
             else {}
         )
-        for i in retry_of:
-            r2 = re_results.get(f"{_summary_key(i)}|retry1")
+        for k, rec in retry_of.items():
+            r2 = re_results.get(f"{k}|retry1")
             if r2 is not None:  # the re-ask replaces the first answer (gated, never re-asked)
-                results[_summary_key(i)] = r2
-                retry_of[i]["replaced"] = True
+                results[k] = r2
+                rec["replaced"] = True
     rows: list[dict] = []
     n_api_failed = 0
     for i in ids:
-        r = results.get(_summary_key(i)) if i in judged else None
-        if i in judged and r is None:
-            n_api_failed += 1
-        v = (
+        keys = [draw_key(_summary_key(i), k) for k in range(n)] if i in judged else []
+        vs = [
             verdict(r, blocks[i], col.evidence.get(i, ()), by_item[i], lex_of[i])
-            if r is not None
-            else dict(_UNJUDGED)
-        )
+            if (r := results.get(k)) is not None
+            else None
+            for k in keys
+        ]
+        labels = [draw_label(v) if v is not None else "api_fail" for v in vs]
+        # the vote is over each draw's verdict (pass / fail), so an odd number of landed draws
+        # always has a majority; the full labels are a stability diagnostic only
+        verdicts = [draw_verdict(v) for v in vs]
+        pick = majority(verdicts) if keys else "api_fail"
+        if i in judged and pick == "api_fail":
+            n_api_failed += 1
+        if pick in ("pass", "fail"):
+            side = [k for k, vd in zip(keys, verdicts, strict=True) if vd == pick]
+            common = Counter(labels[keys.index(k)] for k in side).most_common(1)[0][0]
+            rep_k = next(k for k in side if labels[keys.index(k)] == common)
+            v = vs[keys.index(rep_k)]
+        else:  # a failed draw could change the verdict: unjudged (re-asked on a rerun)
+            rep_k = None
+            v = dict(_UNJUDGED)
         rows.append(
             {
                 "key": _summary_key(i),
                 "id": i,
                 "layer": digest.SUMMARY_LAYER,
                 "pos": col.cells[i].pos,
-                "judged": r is not None,
+                "judged": i in judged and pick != "api_fail",
                 **v,
-                **({"retry_of": retry_of[i]} if i in retry_of else {}),
+                "majority": pick if keys else None,
+                "draw_picks": labels,
+                "draw_verdicts": verdicts,
+                "label_split": bool(keys) and majority(labels) == "split",
+                **({"retry_of": retry_of[rep_k]} if rep_k in retry_of else {}),
                 **col.row(i),
             }
         )
@@ -769,9 +796,10 @@ def _run_summary(
             counts=counts,
             config=base_config(
                 args,
-                pv,
+                digest.prompt_version(PROMPT_VERSION + majority_stamp(n), args, FAMILY),
                 roles_lexicon=lex.version,
                 actions_lexicon=gate.load_actions().version,  # round 3
+                draws=n,
                 **digest.config(args, source_kind, FAMILY),
             ),
             n_api_failed=n_api_failed,
@@ -783,6 +811,27 @@ def _run_summary(
         scope,
         cells,
     )
+
+
+def majority_stamp(n: int) -> str:
+    """``+maj<N>v`` for the majority of ``N`` draws' pass / fail verdicts; one draw is the
+    single-call instrument (no suffix)."""
+    return f"+maj{n}v" if n > 1 else ""
+
+
+def draw_verdict(v: dict | None) -> str:
+    """One draw's vote: ``pass`` when its gated picks are the gold triple, else ``fail``;
+    ``api_fail`` for a draw that did not land."""
+    if v is None:
+        return "api_fail"
+    return "pass" if v["pass"] else "fail"
+
+
+def draw_label(v: dict) -> str:
+    """One draw's full answer: its three picks, marked ``!gate`` when the gate failed (the row
+    shown for a verdict is the most common label on the winning side)."""
+    picks = "/".join(str(c) for c in v["choices"])
+    return picks if v["gate_ok"] else f"{picks}!gate"
 
 
 def _retry_text(r: dict, problems: list[str]) -> str:
