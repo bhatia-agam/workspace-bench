@@ -193,22 +193,18 @@ def order_gate(
     statements: Sequence[Line],
     gold: tuple[str, str],
     rivals: Sequence[tuple[str, str]],
-    prominence: Sequence[Line] | None = None,
 ) -> str:
-    """The gold pick's mechanical gate over the unit's statements (bullets):
+    """The gold pick's mechanical gate over the unit's statements (bullets), a check of the
+    quote's own statement only:
 
     - ``"order"``: no statement holding the quote states ``gold`` (non-embedded) inside it;
     - ``"two_chains"``: every such statement also states a rival chain (the other composed
       options: reversed, near-miss, other) — one statement holding two listed chains singles out
       none;
-    - ``"rival_prominent"``: some rival chain is stated in at least as many statements as the
-      gold — the prompt's "most bullets/lines, a tie is cannot tell" rule, enforced;
     - ``"pass"`` otherwise.
 
-    ``prominence`` (default ``statements``) = the statements that rule counts over. Summary mode
-    passes every loaded cell's statements: its digest keeps ONE sample line per entry (support
-    shown as a per-claim count), so counting the digest's lines would tie a gold seen in many
-    samples with a rival seen once."""
+    How often a rival chain is stated elsewhere never fails a pick: the prompt's "a tie is
+    cannot tell" is the judge's rule."""
     fq = fold(quote)
     if not fq or "|" in fq:
         return "order"
@@ -227,10 +223,6 @@ def order_gate(
         break
     if not found:
         return "two_chains" if found_two else "order"
-    pool = statements if prominence is None else prominence
-    n_gold = count_units(pool, gold)
-    if any(count_units(pool, r) >= n_gold for r in rivals):
-        return "rival_prominent"
     return "pass"
 
 

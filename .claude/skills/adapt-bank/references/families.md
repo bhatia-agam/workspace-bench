@@ -381,7 +381,7 @@ deleted.
 - Depth can't drop. 4B scored 0/128. Pilot T1; it's probably ooc for ≤ 4B.
 - MC pools are bank-wide: hops must not collide with `PROF_EXTRA` / `KIN_EXTRA`.
 - **Bank now:** unchanged; rel-v3 options built from item fields at judge time; plan 0043 rel-v2
-  reads the full span from the full stop; **relgate-v4** is the JUDGE's readout gate
+  reads the full span from the full stop; **relgate-v6** is the JUDGE's readout gate
   (`evals/relational_multihop/prompts.py`), not a subject leg: no regate. Re-measure the
   options-only floor on the subject's items.
 

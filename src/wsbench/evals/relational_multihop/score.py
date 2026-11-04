@@ -50,7 +50,6 @@ def _diagnostics(
         "n_quote_too_long": sum(1 for r in rows if r.get("gate") == "too_long"),
         "n_order_gate_rejected": sum(1 for r in rows if r.get("gate") == "order"),
         "n_two_chains_in_one_statement": sum(1 for r in rows if r.get("gate") == "two_chains"),
-        "n_rival_prominent": sum(1 for r in rows if r.get("gate") == "rival_prominent"),
         "n_retried": sum(1 for r in rows if r.get("retried")),
         "pass_rate_without_order_gate": (
             sum(1 for it in scope if item_no_gate.get(it["id"])) / n_items if n_items else None

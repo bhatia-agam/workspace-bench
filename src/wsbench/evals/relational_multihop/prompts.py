@@ -29,7 +29,12 @@ CALL_VERSION = "rel-v3"  # every judge call's fingerprint (the prompts below + t
 # tell, or a rival chain read off one line) on an item whose raw statements state one chain
 # DECISIVELY more often than any other is decided by that count (judge.prominence_rescue;
 # s16-a / s00-a / s35-a all, s19-b lite, s07-b L60, s23-b L36)
-GATE_VERSION = "relgate-v4"
+# relgate-v5 (deterministic, stamp only): the order gate checks the quote's own statement only;
+# its "rival as common" rule (rival_prominent: a rival chain stated in as many raw statements as
+# the gold failed the pick) is removed
+# relgate-v6 (deterministic, stamp only): the relgate-v4 prominence rescue (a judged non-gold
+# answer decided by a decisive raw statement count) is removed; the judge's answer stands
+GATE_VERSION = "relgate-v6"
 PROMPT_VERSION = f"{CALL_VERSION}+{GATE_VERSION}"
 BLANK_TOKEN = "'s"  # the last read position: the possessive right before the composed relation
 
