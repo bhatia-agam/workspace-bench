@@ -851,14 +851,15 @@ def test_freeze_drops_the_read_plan_bank_pointer(tmp_path, monkeypatch):
     from wsbench.readplan import READ_PLAN_BANK
 
     d = _set(tmp_path, monkeypatch)
-    raw = _json.loads(registry.frozen_bank_path("multihop").read_text(encoding="utf-8"))
-    assert raw.get(READ_PLAN_BANK)  # the registered bank v4 reads bank v3's plan
-    header, items = original_bank("multihop")
+    fam = "role_bound_association"
+    raw = _json.loads(registry.frozen_bank_path(fam).read_text(encoding="utf-8"))
+    assert raw.get(READ_PLAN_BANK)  # the registered bank v2 reads items.json's plan
+    header, items = original_bank(fam)
     assert READ_PLAN_BANK not in header  # the loader drops it too
-    _gate_log(d, "multihop", [_row(it) for it in items[:3]])
-    run.freeze("qwen3.5-4b", ["multihop"])
-    bank = _json.loads((d / "multihop.json").read_text())
-    assert READ_PLAN_BANK not in bank and len(bank["items"]) == 3
+    _gate_log(d, fam, [_row(it) for it in items[:4]])
+    run.freeze("qwen3.5-4b", [fam])
+    bank = _json.loads((d / f"{fam}.json").read_text())
+    assert READ_PLAN_BANK not in bank and bank["items"]
 
 
 def test_freeze_overlays_subject_fields_and_own_gold(monkeypatch, tmp_path):

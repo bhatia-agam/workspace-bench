@@ -1,6 +1,7 @@
 {
- "version": "split-subjects-r3",
+ "version": "split-subjects-r4",
  "rule": "Per item: the first-hop cue words of the prompt (the entity the bridge is ABOUT, never a second-hop word or an option). The split rule (mcjudge_bank.split_support) ties an option to the item when a sentence of the evidence holds EVERY cue (word-prefix match on letters; a digit cue is a numeral value) and names that option; it never reads the judge's quote, so the verdict cannot depend on which quote the judge picks (review of PR #205: 'the birthstone of May' and 'May' passed the May/April split that 'Emerald is the birthstone of May' failed). Authored by hand from the prompts, 2026-10-31.",
+ "r4": "2026-11-04, bank v5: the first-hop cue words of the 30 new items (mh-w1-*), drafted with the items; the option builder's lint and the gate's shortcut rule read the same lists. Every earlier entry unchanged",
  "subjects": {
   "atomic-26-symbol": [
    "atomic",
@@ -342,6 +343,140 @@
   "b3-mh-windycity-state": [
    "windy",
    "city"
+  ],
+  "mh-w1-achilles-thetis": [
+   "heel",
+   "weak"
+  ],
+  "mh-w1-lego-billund": [
+   "interlocking",
+   "plastic",
+   "bricks"
+  ],
+  "mh-w1-tin-sn": [
+   "copper",
+   "bronze"
+  ],
+  "mh-w1-triangle-3": [
+   "toblerone",
+   "cross-section"
+  ],
+  "mh-w1-nicolaus-copernicu-poland": [
+   "1543",
+   "sun",
+   "centre"
+  ],
+  "mh-w1-danube-black": [
+   "strauss",
+   "waltz"
+  ],
+  "mh-w1-shere-khan-tiger": [
+   "mowgli",
+   "jungle",
+   "villain"
+  ],
+  "mh-w1-charles-dickens-portsmouth": [
+   "oliver",
+   "twist"
+  ],
+  "mh-w1-k2-karakoram": [
+   "second-highest",
+   "mountain"
+  ],
+  "mh-w1-blue-whale-mammals": [
+   "largest",
+   "animal"
+  ],
+  "mh-w1-copper-29": [
+   "statue",
+   "liberty",
+   "green"
+  ],
+  "mh-w1-mercury-80": [
+   "liquid",
+   "metal"
+  ],
+  "mh-w1-nintendo-kyoto": [
+   "mario",
+   "switch"
+  ],
+  "mh-w1-potassium-k": [
+   "bananas",
+   "rich"
+  ],
+  "mh-w1-skin-integumentar": [
+   "largest",
+   "organ"
+  ],
+  "mh-w1-napoleon-corsica": [
+   "waterloo",
+   "emperor"
+  ],
+  "mh-w1-carmen-seville": [
+   "bizet",
+   "gypsy",
+   "cigarette"
+  ],
+  "mh-w1-the-last-supper-milan": [
+   "mural",
+   "final",
+   "meal"
+  ],
+  "mh-w1-io-jupiter": [
+   "volcanic",
+   "moon"
+  ],
+  "mh-w1-christopher-columb-genoa": [
+   "americas",
+   "1492"
+  ],
+  "mh-w1-australian-rules-f-18": [
+   "melbourne",
+   "1859",
+   "codified"
+  ],
+  "mh-w1-hercule-poirot-belgium": [
+   "christie",
+   "moustached",
+   "grey"
+  ],
+  "mh-w1-mount-elbrus-caucasus": [
+   "highest",
+   "russia",
+   "europe's"
+  ],
+  "mh-w1-parathyroid-gland-4": [
+   "calcium",
+   "glands",
+   "neck"
+  ],
+  "mh-w1-taj-mahal-yamuna": [
+   "mausoleum",
+   "shah",
+   "jahan"
+  ],
+  "mh-w1-venus-0": [
+   "hottest",
+   "planet"
+  ],
+  "mh-w1-rib-24": [
+   "curved",
+   "cage",
+   "lungs"
+  ],
+  "mh-w1-chewbacca-wookiee": [
+   "co-pilot",
+   "furry",
+   "falcon"
+  ],
+  "mh-w1-peregrine-falcon-birds": [
+   "fastest",
+   "diving",
+   "300"
+  ],
+  "mh-w1-ice-hockey-puck": [
+   "stanley",
+   "cup"
   ]
  }
 }

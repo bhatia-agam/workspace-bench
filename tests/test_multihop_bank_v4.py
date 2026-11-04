@@ -52,16 +52,19 @@ def test_kept_items_are_byte_identical_and_v3_is_frozen():
     assert len(v3) == 100 and v4["version"] == 4 and v4["supersedes"] == "items_v3.json"
 
 
-def test_v3_read_plan_serves_v4(real_families):
+def test_v3_read_plan_serves_v4(real_families, monkeypatch):
     assert _raw(V4)["read_plan_bank"] == "items_v3.json"
-    spec = registry.FAMILIES["multihop"]
-    assert spec.bank == Path("evals/multihop/items_v4.json")
+    # bank v5 is registered since 2026-11-04 (tests/test_multihop_bank_v5.py); v4 stays
+    # judgeable by its file and keeps v3's 100-row plan
+    assert registry.FAMILIES["multihop"].bank == Path("evals/multihop/items_v5.json")
+    monkeypatch.setenv("WSB_BANK_FILE_MULTIHOP", str(V4))
     plan_ids = {s.id for s in readplan.plan("multihop")}
     assert len(plan_ids) == 100  # v3's rows: the frozen readouts' plan_sha still matches
-    assert reads.plan_sha("multihop")
+    assert reads.plan_sha("multihop").startswith("487cd9960ae5")
 
 
 def test_stamp_and_call_key():
+    # the result stamp moved on to +bank-v5; the MC calls keep bank v3's key throughout
     pv = prompt_version_of("multihop")
-    assert pv.endswith("+bank-v4") and "+" + mj.GATE_VERSION + "+" in pv
+    assert "+bank-v4" not in pv and "+" + mj.GATE_VERSION + "+" in pv
     assert mj.call_pv("multihop", pv) == "bank-mc-2026-11-01-v3"

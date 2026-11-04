@@ -392,16 +392,17 @@ def test_multihop_full_and_lite():
     2026-09-23 site (offset_from_end k = -readout.offsets[0]), on every layer."""
     from wsbench.banks import load_bank
 
-    # the registered bank v4 keeps bank v3's read plan (header read_plan_bank)
-    _h, items = load_bank(readplan.bank_path("multihop").parent / "items_v3.json")
+    # bank v5 (registered) plans its own 98 rows: v4's 68 (v3's rows) + 30 new items
+    _h, items = load_bank(readplan.bank_path("multihop"))
+    assert readplan.bank_path("multihop").name == "items_v5.json"
     k_of = {it["id"]: -int(it["readout"]["offsets"][0]) for it in items}
     rows = readplan.plan("multihop")
-    assert len(rows) == 100
+    assert len(rows) == 98 and [s.id for s in rows] == list(k_of)
     for s in rows:
         assert s.positions == {"kind": "all_from_end"} and s.render == "plain"
         assert s.lite_positions == {"kind": "offset_from_end", "k": k_of[s.id]}
         assert s.lite_layers is None and s.layers == readplan.GRID
-    assert sorted(k_of.values()).count(2) == 33
+    assert sorted(k_of.values()).count(2) == 31  # v1's 33 minus two of v4's removed items
     toks = ["Fact", ":", " The", " capital", " is", " "]
     full = readplan.resolve({"kind": "all_from_end"}, toks)
     assert full == [-6, -5, -4, -3, -2, -1]

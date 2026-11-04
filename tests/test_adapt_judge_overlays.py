@@ -615,7 +615,9 @@ def _view_mcdm():
 
 
 def _view_multihop():
-    return _mh_view(_mh_items())
+    # bank v4's 68 items (bank v3 items): the registered bank v5 keeps them byte-identical, and
+    # its 30 new registered ids take the same id rule
+    return _mh_view(load_bank(registry.REPO_ROOT / "evals/multihop/items_v4.json")[1])
 
 
 def _view_brmt():
@@ -655,7 +657,7 @@ GOLDEN = {
     "multi_concept_directed_modulation": (
         "646c2023b0a6f780780533829d9693fc7c15ad470d03dc3f93901ac8d26ef0f0"
     ),
-    # multihop: main's element_item over the registered bank v4 (its 68 ids are bank v3 items)
+    # multihop: main's element_item over bank v4's 68 items (bank v3 items; bank v5 keeps them)
     "multihop": "ad5dca2ba01f967dfc583b9add742d2e106a0858c402b1abdf96a93e604244a9",
     "role_bound_association": "4d0286ea4d445553afd84311f5df01393c20dacbeb2053f69e7917636c0f9a72",
     "user_modeling": "818fb524c907945487730bc9a70978a60eab164b4544a0eda1176f1d9128607f",

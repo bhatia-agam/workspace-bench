@@ -23,11 +23,13 @@ REPO = Path(__file__).resolve().parents[1]
 EXAMPLE = REPO / "examples/readouts/multihop.jsonl"
 BANK_V2 = REPO / "evals/multihop/items_v2.json"
 BANK_V3 = REPO / "evals/multihop/items_v3.json"  # round 4
-BANK_V4 = REPO / "evals/multihop/items_v4.json"  # the registered bank (v3 minus 32 items)
-REGISTERED = BANK_V4
+BANK_V4 = REPO / "evals/multihop/items_v4.json"  # v3 minus 32 items
+BANK_V5 = REPO / "evals/multihop/items_v5.json"  # the registered bank: v4 + 30 new items
+REGISTERED = BANK_V5
 # every gate test reads bank v3's lists (review 2 of PR #214: the multi-option and other-option
 # rules see only the shown options, so a gate test on v2's lists cannot see a v3 list that loosens
-# it); the registered bank v4 keeps v3's items byte-identical, and the cases v4 dropped live in v3
+# it); bank v4 keeps v3's items byte-identical (bank v5 keeps v4's), and the cases v4 dropped
+# live in v3
 BANK = BANK_V3
 GOLDEN = REPO / "tests/golden/multihop_mc_options.json"
 sys.path.insert(0, str(REPO / "scripts"))
@@ -58,10 +60,10 @@ def test_registered_spec_and_readme():
     from wsbench.evals.multihop import prompts
 
     spec = _spec()
-    stamp = "bank-mc-2026-11-01-v3+" + mj.GATE_VERSION + "+bank-v4"  # gate version + bank v4
+    stamp = "bank-mc-2026-11-01-v3+" + mj.GATE_VERSION + "+bank-v5"  # gate version + bank v5
     assert spec.group == "basic" and spec.judge.prompt_version == stamp
     assert stamp == prompts.PROMPT_VERSION
-    assert spec.bank == Path("evals/multihop/items_v4.json")  # bank v4 (68 items)
+    assert spec.bank == Path("evals/multihop/items_v5.json")  # bank v5 (98 items)
     readme = (REPO / "evals/multihop/README.md").read_text(encoding="utf-8")
     assert prompts.PROMPT_VERSION in readme
     for text in prompts.PROMPTS.values():
@@ -82,7 +84,7 @@ def test_dry_run_on_the_toy_file(tmp_path, capsys, monkeypatch):
     ]
     assert main(argv) == 0
     r = read_results(out)
-    assert r.value is None and r.extras["n_items_without_readouts"] == 66  # bank v4: 68 items
+    assert r.value is None and r.extras["n_items_without_readouts"] == 96  # bank v5: 98 items
     assert "judge prompt for" in capsys.readouterr().out
 
 
@@ -198,7 +200,7 @@ def test_lite_selects_last_word(tmp_path, monkeypatch):
 def _all_items_one_pos(tmp_path) -> Path:
     rows = [
         {"id": i, "layer": L, "pos": -1, "samples": ["R:x"]}
-        for i in _items()
+        for i in {**_items(), **_items(REGISTERED)}
         for L in readplan.GRID
     ]
     return write_jsonl(tmp_path / "lite.jsonl", rows)
@@ -242,7 +244,7 @@ def test_full_on_partial_file_allow_missing_is_incomplete(tmp_path, monkeypatch)
     # 3 positions per cell: more than one (not "a lite file"), fewer than min_full_positions
     rows = [
         {"id": i, "layer": L, "pos": p, "samples": ["R:x"]}
-        for i in _items()
+        for i in _items(REGISTERED)
         for L in readplan.GRID
         for p in (-3, -2, -1)
     ]
@@ -530,7 +532,7 @@ def test_summary_gets_all_positions_and_task_note(tmp_path, monkeypatch):
             assert f"[L{layer} pos {p}]" in user
     assert TASK_NOTE in system
     assert res.config["prompt_version"] == digest.prompt_version(
-        "bank-mc-2026-11-01-v3+" + mj.GATE_VERSION + "+bank-v4",
+        "bank-mc-2026-11-01-v3+" + mj.GATE_VERSION + "+bank-v5",
         summary_args(Path("x"), Path("y"), "pv"),
         "multihop",
     )
@@ -561,9 +563,9 @@ def test_lucky_guessing_lists_are_the_judges():
     from wsbench.baselines import lucky_guessing as lg
 
     built = {it.id: it for it in lg.build_family("multihop")}
-    _h, v4 = load_bank(REGISTERED)  # bank v4: v3's lists on 68 items
-    assert len(built) == len(v4) == 68
-    for iid, it in {it["id"]: it for it in v4}.items():
+    _h, v5 = load_bank(REGISTERED)  # bank v5: v3's lists on v4's 68 items + the 30 new lists
+    assert len(built) == len(v5) == 98
+    for iid, it in {it["id"]: it for it in v5}.items():
         shown, gold_idx = mj.options_of("multihop", it)
         assert built[iid].lists == [shown[:-1]] and built[iid].golds == [gold_idx + 1]
 
@@ -871,7 +873,7 @@ def test_bank_v3_is_v2_with_new_distractors_only():
         else:
             assert a["mc"]["bridge_type"] == b["mc"]["bridge_type"], a["id"]
         assert b["mc"]["distractors_v2"] == a["mc"]["distractors"]
-    assert registry.bank_path("multihop") == BANK_V4  # v3 stays frozen beside it
+    assert registry.bank_path("multihop") == BANK_V5  # bank v5; v3 stays frozen beside it
 
 
 # PR #214 review r3 (finding 1): the true kind of each relabelled bridge, its members (a guesser
@@ -940,7 +942,7 @@ def test_multihop_topic_line_never_names_the_gold():
     from wsbench.baselines import lucky_guessing as lg
 
     _h, v3 = load_bank(BANK_V3)
-    by_id = {it["id"]: it for it in v3}
+    by_id = {it["id"]: it for it in v3} | _items(REGISTERED)  # bank v5's 30 new items too
     assert by_id["dual-photosynthesis-opposite"]["mc"]["bridge_type"] == "time of the 24-hour cycle"
     lines = {x.id: x.meta["topic"] for x in lg.build_family("multihop")}
     for i, line in lines.items():
