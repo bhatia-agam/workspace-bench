@@ -625,9 +625,9 @@
    "model": "claude-opus-5-5",
    "prompt_version": "lucky-2026-09-16",
    "rule": "single pick",
-   "instrument": "mcdm-2026-11-01e+bank-v2+notokinterp-2026-10-30+pins-r3",
+   "instrument": "mcdm-2026-11-01e+bank-v2+notokinterp-2026-10-30+pins-r3+nocap-a1",
    "written": "2026-11-01T01:27:54+00:00",
-   "restamped": "2026-11-01 (round 5, Camila r3): measured at mcdm-2026-10-31d+bank-v2+notokinterp-2026-10-30+pins-r3; the judge prompt's worked examples were replaced (they named six bank concepts), the option lists did not change, and a guesser sees only the lists, so the values stand"
+   "restamped": "2026-11-04 (+nocap-a1): restamped from mcdm-2026-11-01e+bank-v2+notokinterp-2026-10-30+pins-r3; only the code-side over-select void was removed, the option lists did not change, and a guesser (at most 3 picks, never above the old cap) sees only the lists, so the values stand; earlier: 2026-11-01 (round 5, Camila r3): measured at mcdm-2026-10-31d+bank-v2+notokinterp-2026-10-30+pins-r3; the judge prompt's worked examples were replaced (they named six bank concepts), the option lists did not change, and a guesser sees only the lists, so the values stand"
   },
   "described": {
    "mean": 0.3,
@@ -652,9 +652,9 @@
    "model": "claude-opus-5-5",
    "prompt_version": "lucky-2026-09-16",
    "rule": "single pick",
-   "instrument": "mcdm-2026-11-01e+bank-v2+notokinterp-2026-10-30+pins-r3",
+   "instrument": "mcdm-2026-11-01e+bank-v2+notokinterp-2026-10-30+pins-r3+nocap-a1",
    "written": "2026-11-01T01:30:18+00:00",
-   "restamped": "2026-11-01 (round 5, Camila r3): measured at mcdm-2026-10-31d+bank-v2+notokinterp-2026-10-30+pins-r3; the judge prompt's worked examples were replaced (they named six bank concepts), the option lists did not change, and a guesser sees only the lists, so the values stand"
+   "restamped": "2026-11-04 (+nocap-a1): restamped from mcdm-2026-11-01e+bank-v2+notokinterp-2026-10-30+pins-r3; only the code-side over-select void was removed, the option lists did not change, and a guesser (at most 3 picks, never above the old cap) sees only the lists, so the values stand; earlier: 2026-11-01 (round 5, Camila r3): measured at mcdm-2026-10-31d+bank-v2+notokinterp-2026-10-30+pins-r3; the judge prompt's worked examples were replaced (they named six bank concepts), the option lists did not change, and a guesser sees only the lists, so the values stand"
   },
   "uniform": {
    "mean": 0.27017543859649124,
@@ -679,9 +679,9 @@
    "model": "seeded-uniform",
    "prompt_version": "lucky-2026-09-16",
    "rule": "single pick",
-   "instrument": "mcdm-2026-11-01e+bank-v2+notokinterp-2026-10-30+pins-r3",
+   "instrument": "mcdm-2026-11-01e+bank-v2+notokinterp-2026-10-30+pins-r3+nocap-a1",
    "written": "2026-11-01T01:30:18+00:00",
-   "restamped": "2026-11-01 (round 5, Camila r3): measured at mcdm-2026-10-31d+bank-v2+notokinterp-2026-10-30+pins-r3; the judge prompt's worked examples were replaced (they named six bank concepts), the option lists did not change, and a guesser sees only the lists, so the values stand"
+   "restamped": "2026-11-04 (+nocap-a1): restamped from mcdm-2026-11-01e+bank-v2+notokinterp-2026-10-30+pins-r3; only the code-side over-select void was removed, the option lists did not change, and a guesser (at most 3 picks, never above the old cap) sees only the lists, so the values stand; earlier: 2026-11-01 (round 5, Camila r3): measured at mcdm-2026-10-31d+bank-v2+notokinterp-2026-10-30+pins-r3; the judge prompt's worked examples were replaced (they named six bank concepts), the option lists did not change, and a guesser sees only the lists, so the values stand"
   }
  },
  "multilingual_mt": {

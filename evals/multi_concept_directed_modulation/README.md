@@ -124,11 +124,9 @@ produced file.
   names the concept or its plural (`judge.elided_quote_ok`; `extras`/row `n_elided_quote`).
   d-pineapple's 'Pineapples. They are tropical, vibrant' (from 'pineapples—they are a nice
   fruit. They are tropical, vibrant') verifies; a quote assembled from two samples never does.
-  More than `max(3, n_concepts + 2)` distinct verified picks in
-  one call is `over_selected` and credits nothing (audit F10, 2026-10-31: the cap is code
-  only, never shown to the judge, which would reveal the concept count; the old prompt cap
-  "Select at most three" made a 3-concept item fail whenever a real distractor was also
-  named).
+  The number of picks never voids a call: every verified pick counts as the judge made it (the
+  dictated concepts credit, the others are false picks). The prompt sets no pick limit either,
+  since one would reveal how many concepts were dictated.
 - **Regions.** Every cell is labelled from the window's tokens (in-sentence, in-think,
   post-think, self-added meta); only in-sentence cells are judged, and a window without a run
   of three consecutive target words is off-task and excluded. Under the prefill regime every
@@ -188,7 +186,7 @@ s3d RL600 read (12 cells x 4 layers each) with the samples truncated.
 
 ## Judge prompts
 
-`prompt_version`: `mcdm-2026-11-01e+bank-v2+notokinterp-2026-10-30+pins-r3` (the instrument; `+pins-r3` is deterministic and stamp-only: the pins and the elided-quote rescue; judge calls keyed by
+`prompt_version`: `mcdm-2026-11-01e+bank-v2+notokinterp-2026-10-30+pins-r3+nocap-a1` (the instrument; `+pins-r3` is deterministic and stamp-only: the pins and the elided-quote rescue; `+nocap-a1` is stamp-only too: no code-side cap on the number of picks; judge calls keyed by
 `JUDGE_PROMPT_VERSION` = `mcdm-2026-11-01e`, which replaced the prompt's worked examples (round 5, below; rules unchanged); `-31d` before, which dropped the prompt's "Select at most three" (F10); `-31c` before that; before plan 0034:
 `mcdm-2026-10-29+present-2026-10-29`). Summary-mode results are stamped
 `digest.prompt_version(PROMPT_VERSION, args, family)`. Judge: the repo default
@@ -316,3 +314,10 @@ Answer with the letters of your selections, a quote and a basis for each; G (can
 ```text
 the model was told to think about one or more objects or people, or about one person doing something to another, and then to copy down an unrelated dictated sentence; the readouts come from the positions where it writes that sentence. What it was told to think about may not be the most prominent content and may appear only once, or only inside a restatement of the instruction (for example "I must think about X while writing"); such a restatement is content: record every object or person it names. For people, keep who does what to whom as stated within one line of a readout (one bullet of it; in a free-text readout bullets are separated by ⁞)
 ```
+
+## History
+
+- 2026-11-04 (`mcdm-2026-11-01e+bank-v2+notokinterp-2026-10-30+pins-r3+nocap-a1`): the
+  code-side over-select void is removed (a call with more than `max(3, n_concepts + 2)` verified
+  picks credited nothing); every verified pick now stands as the judge made it. Stamp only:
+  cached calls re-score.

@@ -292,13 +292,17 @@ def test_f10_three_concept_item_passes_beside_a_distractor():
     v = mcdm.verdict(_picks("A", "B", "C", "D"), OPTIONS, [0, 1, 2], READOUT)
     assert v["kind"] == "hit" and sorted(v["own"]) == ["banana", "samurai", "waterfall"]
     assert v["false"] == ["squirrel"]
-    assert [mcdm.pick_cap(k) for k in (0, 1, 2, 3)] == [3, 3, 4, 5]
 
 
-def test_f10_select_everything_still_voids():
-    # all six candidates on a 3-concept item, and four on a 1-concept item (the old cap)
-    assert mcdm.verdict(_picks(*"ABCDEF"), OPTIONS, [0, 1, 2], READOUT)["kind"] == "over_selected"
-    assert mcdm.verdict(_picks(*"ABCD"), OPTIONS, [0], READOUT)["kind"] == "over_selected"
+def test_mcdm_no_over_select_void():
+    """No code-side cap on the number of verified picks: a call with six verified picks is
+    judged like any other; the dictated concepts credit, the others are false picks."""
+    assert not hasattr(mcdm, "pick_cap") and "+nocap-a1" in mcdmp.PROMPT_VERSION
+    v = mcdm.verdict(_picks(*"ABCDEF"), OPTIONS, [0, 1, 2], READOUT)
+    assert v["kind"] == "hit" and sorted(v["own"]) == ["banana", "samurai", "waterfall"]
+    assert sorted(v["false"]) == ["chef", "squirrel", "violin"]
+    v = mcdm.verdict(_picks(*"ABCD"), OPTIONS, [0], READOUT)
+    assert v["kind"] == "hit" and v["own"] == ["samurai"] and len(v["false"]) == 3
 
 
 # ---------------------------------------------------------------- F12 relational_multihop gate

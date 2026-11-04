@@ -41,19 +41,6 @@ from .prompts import (
 )
 from .regions import Region, label_cells
 
-# F10 (audit 2026-10-31): the void cap is n_concepts + 2 (never below 3), applied in code only.
-# The old prompt cap "Select at most three" spent a 3-concept item's slots on any real
-# distractor mention, so such an item could only pass when nothing else was named. The judge is
-# not told the cap (it would reveal how many concepts were dictated).
-MAX_PICKS = 3  # the cap of a 0- or 1-concept item
-EXTRA_PICKS = 2  # verified picks allowed beyond the item's own concept count
-
-
-def pick_cap(n_gold: int) -> int:
-    """More distinct verified picks than this voids the call (``over_selected``)."""
-    return max(MAX_PICKS, n_gold + EXTRA_PICKS)
-
-
 MIN_PUBLISHED_N = 10  # a per-kind / prior-direction group below this gets no published rate
 
 NAME = "multi_concept_directed_modulation"
@@ -213,8 +200,8 @@ def verdict(
     ``uncredited`` the dictated concepts picked with no valid basis; ``false`` the other
     candidates the readout was said to name. ``basis_of`` maps each verified pick to its basis
     (a missing or unknown basis is ``invalid``, counts in ``n_invalid`` and never credits;
-    ``pick_bases`` lists every verified pick as [concept, basis]). More than
-    ``pick_cap(len(gold))`` distinct verified picks is ``over_selected``: nothing credits.
+    ``pick_bases`` lists every verified pick as [concept, basis]). The number of picks never
+    voids a call: every verified pick stands as the judge made it.
     ``partner`` are the option indices of the item's binding partner: a call that also names a
     partner concept credits none of the item's concepts (``direction_conflict``)."""
     empty: dict[str, Any] = {"own": [], "own_content": [], "false": [], "uncredited": [],
@@ -311,9 +298,6 @@ def verdict(
         uncredited, own, credited_quotes = uncredited + own, [], []
     if own_content and partner_named:  # the content-only (plan-0025) channel applies it too
         own_content = []
-    if len({c for c, _b in pick_bases}) > pick_cap(len(gold)):  # distinct concepts, not letters
-        return {"judged": True, "kind": "over_selected", **empty, "pick_bases": pick_bases,
-                "false": false, **counts, "picks": picks}  # fmt: skip
     kind = (
         "cannot_tell"
         if cannot

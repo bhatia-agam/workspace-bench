@@ -430,16 +430,18 @@ def test_verdict_basis_and_the_all_concepts_rule():
 
 
 def test_invalid_basis_over_selection_and_per_pick_counts():
-    """Review fixes (plan 0025 §1): a missing basis counts in n_invalid; more than three
-    verified picks void the call; a concept picked as narration then as content is credited and
-    its basis_of is content_bound, while pick_bases keeps both picks."""
+    """Review fixes (plan 0025 §1): a missing basis counts in n_invalid; a concept picked as
+    narration then as content is credited and its basis_of is content_bound, while pick_bases
+    keeps both picks. Six verified picks do not void the call (no over-select void); the
+    dictated ones credit."""
     options = ["violin", "jar of honey", "x", "y", "z", "w"]
     readout = "I was asked about a violin. A violin plays. Honey jar. x y z w"
     v = judge.verdict({"picks": [{"choice": "A", "quote": "violin plays"}]}, options, [0], readout)
     assert v["n_invalid"] == 1 and v["own"] == []
     allsix = [{"choice": c, "quote": "x y z w", "basis": "content_bound"} for c in "ABCDEF"]
     v = judge.verdict({"picks": allsix}, options, [0, 1], readout)
-    assert v["kind"] == "over_selected" and v["own"] == [] and len(v["pick_bases"]) == 6
+    assert v["kind"] == "hit" and v["own"] == ["violin", "jar of honey"]
+    assert len(v["pick_bases"]) == 6
     twice = [
         {"choice": "A", "quote": "asked about a violin", "basis": "instruction_narration"},
         {"choice": "A", "quote": "A violin plays", "basis": "content_bound"},
@@ -530,8 +532,10 @@ def test_stamp_carries_present_and_the_cache_key_does_not(tmp_path, monkeypatch)
     by JUDGE_PROMPT_VERSION, so caches written before the rule change still hit."""
     from wsbench.evals.multi_concept_directed_modulation import prompts as p
 
-    # round 3 adds the deterministic +pins-r3 to the stamp only
-    assert p.PROMPT_VERSION == p.JUDGE_PROMPT_VERSION + "+bank-v2+notokinterp-2026-10-30+pins-r3"
+    # the deterministic +pins-r3 and +nocap-a1 are in the stamp only
+    assert p.PROMPT_VERSION == (
+        p.JUDGE_PROMPT_VERSION + "+bank-v2+notokinterp-2026-10-30+pins-r3+nocap-a1"
+    )
     seen = {}
 
     def fake_run_calls(calls, **kw):
