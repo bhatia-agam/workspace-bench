@@ -531,7 +531,7 @@ carried over from the 27B; there is no Opus / Sonnet unguessability gate.
   rated ≥ 6; secondary = smallest with RR ≥ 0.35 (headline / 2 if that is the headline). GO iff,
   at the headline, RR − β0 ≥ 0.30, RR − gaussian ≥ 0.30, cross ≤ β0 + 0.10. The detection
   baseline (β0 median RR, β0 top-5 reports, P(Yes) false alarms over Trial 1–8) is recorded.
-- `build`: NO-GO → report `blocked`, no bank. GO → `adapted/<m>/introspection.json` (the v2 bank
+- `build`: NO-GO → report `ooc` (the subject lacks the capability; `exclude_from_macro`), no bank. GO → `adapted/<m>/introspection.json` (the v2 bank
   with the subject's renders, `spec.inject_layer`, vectors block, concepts' norms / fingerprints,
   `vector_space_check`, `calibration`; the 27B's provenance under `reference_27b`). Item `beta`
   stays the TIER (4 / 2) the judge, ids and twins key on; `items[].dose` is the subject's β and is

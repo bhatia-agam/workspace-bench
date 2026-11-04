@@ -865,3 +865,4 @@ The detection signal at β1 (0.48 vs 0.06) is a real observation, but it is not 
 
 ### Actions (set builder, 2026-11-04)
 - No drops (no bank built). Status kept `ooc` (out of capability: the rule's RR clause fails at every dose, port validated on Qwen3.6-27B) rather than the code's automatic `blocked`; flagged for a decision. Re-frozen `families=introspection` (no-op: the family has no gate rows) and re-noted; note now cites the bank's own 27B 0.417 at beta 2 beside Agam's 0.5.
+- Status-label finding resolved by #340: `stage=build` now records a calibration NO-GO as `ooc` (with `exclude_from_macro`), matching families.md, so a re-run keeps the status (it would still replace the hand-written note with the generic one).
