@@ -728,3 +728,21 @@ def test_bank_v2_stamp_and_scope(tmp_path, fake_llm, mk_args, monkeypatch):
     assert judge.instrument({"version": 2}) == "um-v3.5+bank-v2"
     assert judge.instrument({"version": 3}) == "um-v3.5+bank-v3"
     assert judge.instrument({}) == prompts.CALL_VERSION == "um-v3.5"
+
+
+def test_row_escape_pick_never_runs_the_echo_rule():
+    """A draw that picks the escape option but still says basis=inferred (seen on a lens arm's
+    summary run) must not reach stem_echo: the escape text has no value forms (KeyError
+    'cannot tell from the readout' before this fix). The row stays cannot_tell."""
+    opts = ["teacher", "nurse", "engineer"]
+    r = {
+        "choice": len(opts) + 1,
+        "basis": judge.score.INFERRED,
+        "evidence": "the user is a teacher",
+    }
+    it = {"id": "x", "attr_class": "Occupation", "subfamily": "selfdescribe",
+          "messages": [{"role": "user", "content": "I teach fourth grade."}]}  # fmt: skip
+    meta = {"id": "x", "layer": 20, "pos": 0, "sample_idx": 0}
+    row = judge._row("k", meta, r, it, (opts, 1), [], [])
+    assert row["pick"] == "cannot_tell" and row["pick_value"] == mc.CANNOT
+    assert row["stem_echo"] is False and row["gate"] == ""
