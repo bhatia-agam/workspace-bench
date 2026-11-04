@@ -158,6 +158,10 @@ BINARY_RULES: dict[str, Rule] = {
     # conjunctive_association/score.py: the (single) row picks the gold description
     "conjunctive_association": lambda rows: any(r.get("correct") for r in rows),
 }
+# picks that leave a binary scorer's item undecided (outside the denominator):
+# conjunctive_association/score.py, a failed draw that could change the verdict (``api_fail``;
+# a twin draw is one non-gold vote, so [inverted, gold, failed] is undecided)
+UNDECIDED_PICKS: dict[str, tuple[str, ...]] = {"conjunctive_association": ("api_fail",)}
 
 
 def _dm_hit(r: dict[str, Any]) -> bool:  # directed_modulation/score.py hit (plan 0035)
@@ -271,7 +275,11 @@ def item_verdicts(
     try:
         if family in BINARY_RULES:
             rule = BINARY_RULES[family]
-            return {i: bool(rule(rows)) for i, rows in groups.items()}
+            und = UNDECIDED_PICKS.get(family, ())
+            return {
+                i: None if any(r.get("pick") in und for r in rows) else bool(rule(rows))
+                for i, rows in groups.items()
+            }
         if family == DM:
             return {i: _dm(rows) for i, rows in groups.items()}
         if family == JB:  # the positives only (a control is never an item pass)

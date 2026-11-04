@@ -736,14 +736,15 @@ _add(
             _req(
                 "inverted_label",
                 COPY,
-                "conjunctive_association/judge.py:106-116,138,239-270",
-                "absent: twin veto lost (lenient pass)",
+                "conjunctive_association/judge.py:133-138,291-301,418",
+                "absent: a twin pick is counted as a plain distractor (the `inverted` bucket is "
+                "a diagnostic)",
                 absent=SILENT,
             ),
             _req(
                 "bank_version",
                 COPY,
-                "conjunctive_association/judge.py:520-526",
+                "conjunctive_association/judge.py:509-515",
                 "absent = 1; mixed values exit",
                 absent=FALLBACK,
                 probe=_p_conj_version,

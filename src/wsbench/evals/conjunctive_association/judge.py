@@ -5,7 +5,8 @@ judges one digest of every cell. Either way a gold pick passes only when (C2.2) 
 verifies inside the readouts (``digest.quote_ok``) AND inside ONE statement
 (``digest.statement_lines``: one bullet of one free-text sample, or one token list), and (C2.3)
 a quote-only re-judge (schema ``quote_mc``) picks the gold again from the quote alone. A pick of
-the gold's role-swapped twin (bank v2) is ``inverted``, a fail.
+the gold's role-swapped twin (bank v2) is ``inverted``, a fail like any other option; it never
+vetoes another draw's, candidate's or shard's gold.
 """
 
 import itertools
@@ -63,8 +64,7 @@ Opts = tuple[list[str], int, int | None]
 # ~5.7K at one layer, and lone gold lines present in it were missed in 2 of 3 draws. A digest
 # longer than SHARD_CHARS is judged in consecutive line shards of at most SHARD_CHARS each, every
 # shard with the full 3-draw MC and quote gate; the item passes when one shard's majority is
-# gold and no shard's majority is the inverted twin. Every single-layer digest (max ~7.3K) is ONE
-# shard, judged and keyed exactly as before.
+# gold. Every single-layer digest (max ~7.3K) is ONE shard, judged and keyed exactly as before.
 SHARD_CHARS = 8000
 SHARD_VERSION = "+shard8k"
 
@@ -104,15 +104,13 @@ def unit_id(iid: str, j: int, n: int) -> str:
 
 
 def shards_pick(picks: Sequence[str]) -> str:
-    """The item pick over its shards' picks: any inverted shard vetoes; else an undecided shard
-    leaves the item undecided (it could be gold or inverted); else any gold shard passes; else
-    the first shard's pick."""
-    if "inverted" in picks:
-        return "inverted"
-    if "api_fail" in picks:
-        return "api_fail"
+    """The item pick over its shards' picks: any gold shard passes; else an undecided shard
+    leaves the item undecided (it could be gold); else the first shard's pick. An inverted shard
+    is a fail like any other non-gold shard and vetoes nothing."""
     if "gold" in picks:
         return "gold"
+    if "api_fail" in picks:
+        return "api_fail"
     return picks[0]
 
 
@@ -236,34 +234,26 @@ def majority(picks: Sequence[str]) -> str:
     return "api_fail" if len(live) < len(picks) else "split"
 
 
-def _resolve(picks: Sequence[str]) -> str:
-    """The item pick of fully decided draws: the majority, and an inverted draw vetoes a gold
-    majority (final r1: the twin was picked or re-judged to)."""
-    pick = majority(picks)
-    if pick == "gold" and "inverted" in picks:
-        return "inverted"
-    return pick
-
-
 def item_pick(picks: Sequence[str]) -> str:
-    """final r1 (review of #200): a failed draw (``api_fail``, a failed call or quote re-judge)
-    leaves the item undecided ONLY when it could change the pass verdict: every completion of
-    the failed draws (each as gold, inverted or another pick) is resolved, and the item is
-    decided when they all agree on pass / fail (taking the completion with the failed draws as
-    no-pass picks); else ``api_fail`` (undecided)."""
+    """final r1 (review of #200): the majority of the draws (:func:`majority`); a failed draw
+    (``api_fail``, a failed call or quote re-judge) leaves the item undecided ONLY when it could
+    change the pass verdict: every completion of the failed draws (each as gold or not) is
+    resolved, and the item is decided when they all agree on pass / fail (taking the completion
+    with the failed draws as no-pass picks); else ``api_fail`` (undecided). An inverted draw is
+    one non-gold vote; it never vetoes a gold majority."""
     failed = [i for i, p in enumerate(picks) if p == "api_fail"]
     if not failed:
-        return _resolve(picks)
+        return majority(picks)
     outcomes = set()
-    for combo in itertools.product(("gold", "inverted", "cannot_tell"), repeat=len(failed)):
+    for combo in itertools.product(("gold", "cannot_tell"), repeat=len(failed)):
         full = list(picks)
         for i, v in zip(failed, combo, strict=True):
             full[i] = v
-        outcomes.add(_resolve(full) == "gold")
+        outcomes.add(majority(full) == "gold")
     if len(outcomes) > 1:
         return "api_fail"
     rest = [p for p in picks if p != "api_fail"]
-    pick = _resolve(rest) if rest else "api_fail"
+    pick = majority(rest) if rest else "api_fail"
     if outcomes == {True}:
         return "gold"
     return "split" if pick == "gold" else pick
@@ -473,18 +463,17 @@ _FAILED_DRAW = {"choice": None, "pick": "api_fail", "quote": "", "quote_ok": Fal
 
 
 def fold_candidates(d: dict) -> dict:
-    """A candidate-list draw's pick (round 4), from its gated candidates: any ``inverted``
-    candidate (the twin picked with a verified quote, or a gold quote that re-judges to it)
-    vetoes the draw; else any ``gold`` candidate (verified, re-judged to the gold) passes it;
-    else a failed re-judge leaves it ``api_fail``; else a gold candidate that failed a gate
-    (``gold_partial``, then ``gold_unverified``: a fail, kept for the breakdown); else the first
-    candidate's pick; an empty
-    list is ``cannot_tell``. Candidates naming other options never veto. The draw keeps the
-    deciding candidate's choice / quote / re-judge, ``candidate_picks`` all of them."""
+    """A candidate-list draw's pick (round 4), from its gated candidates: any ``gold`` candidate
+    (verified, re-judged to the gold) passes it; else a failed re-judge leaves it ``api_fail``;
+    else a gold candidate that failed a gate (``gold_partial``, then ``gold_unverified``: a fail,
+    kept for the breakdown); else the first candidate's pick; an empty list is ``cannot_tell``.
+    Candidates naming other options, the inverted twin included, never veto.
+    The draw keeps the deciding candidate's choice / quote / re-judge, ``candidate_picks`` all of
+    them."""
     subs = d.get("cands") or []
     picks = [c["pick"] for c in subs]
     chosen = None
-    for want in ("inverted", "gold", "api_fail", "gold_partial", "gold_unverified"):
+    for want in ("gold", "api_fail", "gold_partial", "gold_unverified"):
         if want in picks:
             chosen = subs[picks.index(want)]
             break
@@ -899,7 +888,6 @@ def _run_summary(
             n,
             shards=[n_shards[i] for i in judged],
             candidates=N_CANDIDATES + 1,
-            twins=[inverted_position(by_it[i], options[i][0]) is not None for i in judged],
         )
     config = base_config(
         args,

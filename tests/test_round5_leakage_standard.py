@@ -106,17 +106,18 @@ def test_the_repaired_pairs_keep_their_roles_and_clean_actions():
 # ---------------------------------------------------------------- 2. the rule's own chance
 
 
-def test_rule_chance_is_the_single_layer_majority_with_veto():
+def test_rule_chance_is_the_single_layer_majority():
+    # no inverted-twin veto, so no twin term
     n = 21
     a = 1 / n
-    assert lg.rule_chance(n, twin=False) == pytest.approx(a**3 + 3 * a**2 * (1 - a))
-    assert lg.rule_chance(n, twin=True) == pytest.approx(a**3 + 3 * a**2 * (1 - 2 * a))
-    assert lg.rule_chance(n, twin=True) < 3 * a**2  # far below the per-draw 1/n
+    assert lg.rule_chance(n) == pytest.approx(a**3 + 3 * a**2 * (1 - a))
+    assert lg.rule_chance(n) < 3 * a**2  # far below the per-draw 1/n
+    assert lg.rule_chance(n, 4, 8) == pytest.approx(1 - (1 - lg.rule_chance(n, 4)) ** 8)
 
 
 @pytest.mark.parametrize(("k", "shards"), [(1, 1), (4, 2), (4, 8)])
 def test_rule_chance_matches_a_simulation_of_the_judges_own_fold(k, shards):
-    it = lg.Item("x", [[str(i) for i in range(12)]], [3], meta={"inverted": 7})
+    it = lg.Item("x", [[str(i) for i in range(12)]], [3])
     rng = random.Random(7)
     n_sim, ok = 20000, 0
     for _ in range(n_sim):
@@ -125,7 +126,7 @@ def test_rule_chance_matches_a_simulation_of_the_judges_own_fold(k, shards):
             c = rng.sample(range(1, 13), k)
             draws.append(lg.score_cands_draw({"choice1": c[0], "candidates": c[1:]}, it))
         ok += bool(lg.headline_rule(draws, it, shards))
-    assert ok / n_sim == pytest.approx(lg.rule_chance(12, True, k, shards), abs=0.012)
+    assert ok / n_sim == pytest.approx(lg.rule_chance(12, k, shards), abs=0.012)
 
 
 def test_family_chance_is_the_rule_not_the_per_draw_floor():
@@ -174,8 +175,8 @@ def test_cands_constants_follow_the_judge():
     assert lg.SHARD_DRAWS == cj.N_DRAWS
 
 
-def _cd(*ps, inv=7, gold=3, n=12):
-    it = lg.Item("x", [[str(i) for i in range(n)]], [gold], meta={"inverted": inv})
+def _cd(*ps, gold=3, n=12):
+    it = lg.Item("x", [[str(i) for i in range(n)]], [gold])
     return it, lg.score_cands_draw({"choice1": ps[0], "candidates": list(ps[1:])}, it)
 
 
@@ -183,21 +184,21 @@ def test_a_candidate_draw_folds_like_the_judge():
     _it, d = _cd(5, 3, 9)
     assert d["outcome"] == "gold" and not d["correct"]  # gold listed, not the one pick
     _it, d = _cd(3, 7)
-    assert d["outcome"] == "inverted"  # the twin listed vetoes the draw
+    assert d["outcome"] == "gold"  # the twin (7) listed too vetoes nothing
     _it, d = _cd(5, 5, 99, 1, 2, 4, 3)  # deduped, the invalid dropped, at most 1 + N_CANDS
     assert d["cands"] == [5, 1, 2, 4] and d["outcome"] == "other" and d["n_invalid"] == 1
 
 
-def test_headline_rule_any_gold_shard_passes_and_any_inverted_shard_vetoes():
+def test_headline_rule_any_gold_shard_passes():
     it, g = _cd(3)
     _it, o = _cd(5)
-    _it, i = _cd(7)
+    _it, i = _cd(7)  # the twin's position: a plain non-gold draw
     # shard 0 other, shard 1 a gold majority: passes on any shard
     assert lg.headline_rule([o, o, o, g, g, o], it, 2) is True
-    # a gold shard and an inverted-majority shard: the inverted shard vetoes
-    assert lg.headline_rule([g, g, o, i, i, o], it, 2) is False
-    # a gold majority with one inverted draw in the same shard is inverted
-    assert lg.headline_rule([g, g, i, o, o, o], it, 2) is False
+    # a gold shard beside a shard whose draws all pick the twin still passes (no veto)
+    assert lg.headline_rule([g, g, o, i, i, o], it, 2) is True
+    assert lg.headline_rule([g, g, i, o, o, o], it, 2) is True
+    assert lg.headline_rule([g, i, i, o, o, o], it, 2) is False  # no gold majority anywhere
     assert lg.headline_rule([g, g, None, o, o, o], it, 2) is None
     assert lg.headline_rule([g, g, g], it, 2) is None  # too few draws for two shards
 
@@ -226,17 +227,16 @@ def test_cands_variant_records_each_configs_rule_and_chance(tmp_path, monkeypatc
         lg.run_family("role_bound_association", "blind_cands", judge=judge_, out=tmp_path)
 
 
-def test_the_headline_chance_counts_the_cross_shard_veto():
-    # score.mean_chance's sharded figure ignores the inverted veto across shards (it says so):
-    # ~0.44 at 8 shards; the exact chance of the rule is lower, so the line does not loosen
+def test_the_headline_chance_is_the_familys_own_chance_line():
+    # without a cross-shard veto the guesser's exact sharded chance and the
+    # family's chance line (score.mean_chance: cannot tell shown, never guessed) coincide
     from wsbench.evals.conjunctive_association import score
 
     items = lg.build_family("conjunctive_association")
     bank = load_bank("conjunctive_association")
     shown = [cj.build_options(it)[0] for it in bank]
-    twins = [x.meta.get("inverted") is not None for x in items]
-    loose = score.mean_chance(shown, 3, [8] * len(shown), candidates=4, twins=twins)
-    assert lg.headline_chance(items, 8) < loose
+    line = score.mean_chance(shown, 3, [8] * len(shown), candidates=4)
+    assert lg.headline_chance(items, 8) == pytest.approx(line)
 
 
 # ---------------------------------------------------------------- frozen floors

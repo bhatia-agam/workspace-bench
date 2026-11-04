@@ -3,7 +3,8 @@
 1. "fix the too strict conjunctive association cases" (re-audit r2: q10_c, q06_i, ... lone
    verbatim gold lines the one-pick MC missed inside an 8K all-layer shard). A sharded draw also
    asks for a candidate list; the draw's candidates are its one pick plus the list, each through
-   the unchanged quote gate and quote re-judge. Kept: the majority of draws and the inverted veto.
+   the unchanged quote gate and quote re-judge. Kept: the majority of draws (there is no
+   inverted veto).
 2. The MC leakage standard: bank v3 adds two never-gold grid confusers (and their twins) per
    twinned cluster; bank v4 (Fable on #202) widens every list to 22 non-twin options.
 """
@@ -158,7 +159,10 @@ def test_candidate_quote_must_rejudge_to_the_gold(tmp_path, monkeypatch):
     assert not row["correct"]
 
 
-def test_an_inverted_candidate_vetoes_the_draw(tmp_path, monkeypatch):
+def test_an_inverted_candidate_does_not_veto_the_draw(tmp_path, monkeypatch):
+    """A draw listing the gold (verified, re-judged to the gold) AND the twin is ``gold``: the
+    gold candidate passes the draw, and a shard whose candidates hold
+    only the twin is a plain fail."""
     it, shown, gold, inv = _item_with_twin()
     res, _ = _run(
         tmp_path,
@@ -176,7 +180,8 @@ def test_an_inverted_candidate_vetoes_the_draw(tmp_path, monkeypatch):
         ),
         rejudge=lambda u: inv if "filler 0" in u else gold,
     )
-    assert res.rows[0]["pick"] == "inverted" and not res.rows[0]["correct"]
+    row = res.rows[0]
+    assert row["pick"] == "gold" and row["correct"]
 
 
 def test_one_gold_draw_of_three_still_fails(tmp_path, monkeypatch):
@@ -224,21 +229,23 @@ def test_fold_candidates_order():
     d = f({"cands": [{**sub, "pick": "distractor"}, {**sub, "choice": 2, "pick": "gold"}]})
     assert d["pick"] == "gold" and d["choice"] == 2
     d = f({"cands": [{**sub, "pick": "gold"}, {**sub, "pick": "inverted"}]})
-    assert d["pick"] == "inverted"
+    assert d["pick"] == "gold"  # the twin candidate vetoes nothing
+    d = f({"cands": [{**sub, "pick": "inverted"}, {**sub, "pick": "cannot_tell"}]})
+    assert d["pick"] == "inverted"  # the twin alone: a fail
     d = f({"cands": [{**sub, "pick": "api_fail"}, {**sub, "pick": "cannot_tell"}]})
     assert d["pick"] == "api_fail" and d["failed_stage"] == "quote_check"
 
 
 def test_candidate_chance_floor():
-    # 4 distinct uniform picks (the one pick + 3) among m = 20 content options, gold listed and
-    # its twin not: 4/20 - 4*3/(20*19)
-    p = score.candidate_p(21, 4, True)
-    assert p == pytest.approx(4 / 20 - 12 / 380)
+    # 4 distinct uniform picks (the one pick + 3) among m = 20 content options, gold listed:
+    # 4/20 (the twin listed too vetoes nothing, so no twin term)
+    p = score.candidate_p(21, 4)
+    assert p == pytest.approx(4 / 20)
     m = 3 * p**2 - 2 * p**3
-    got = score.mean_chance([["x"] * 21], 3, shards=[8], candidates=4, twins=[True])
+    got = score.mean_chance([["x"] * 21], 3, shards=[8], candidates=4)
     assert got == pytest.approx(1 - (1 - m) ** 8)
     # a one-shard item keeps the one-pick floor
-    assert score.mean_chance([["x"] * 21], 3, shards=[1], candidates=4, twins=[True]) == (
+    assert score.mean_chance([["x"] * 21], 3, shards=[1], candidates=4) == (
         pytest.approx(3 * (1 / 21) ** 2 - 2 * (1 / 21) ** 3)
     )
 

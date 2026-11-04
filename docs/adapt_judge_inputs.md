@@ -76,7 +76,8 @@ below).
 - **association**: `mc.aliases` and `mc.distractor_aliases`. A distractor count other than 7
   makes `CHANCE = 1/8` wrong.
 - **conjunctive_association**:
-  - `inverted_label`: the twin veto is lost.
+  - `inverted_label`: a twin pick is counted as a plain distractor (the `inverted` diagnostic is
+    lost).
   - `bank_version`: absent counts as v1.
 - **basic_readout**:
   - `task_context`, `slice` and `mc.*aliases` are silent defaults.
@@ -323,8 +324,8 @@ REQUIRED_ITEM_FIELDS: `id`, `stimulus`, `mc_options`, `gold_label`, `contrast_la
 | item | `mc_options` | yes | exit | copy-verbatim | conjunctive_association/judge.py:126 |  |
 | item | `gold_label` | yes | exit | copy-verbatim | conjunctive_association/judge.py:127 |  (checked) |
 | item | `contrast_label` | yes | silent | copy-verbatim | conjunctive_association/judge.py:130 | absent: no contrast bucket |
-| item | `inverted_label` | yes | silent | copy-verbatim | conjunctive_association/judge.py:106-116,138,239-270 | absent: twin veto lost (lenient pass) |
-| item | `bank_version` | yes | fallback | copy-verbatim | conjunctive_association/judge.py:520-526 | absent = 1; mixed values exit (checked) |
+| item | `inverted_label` | yes | silent | copy-verbatim | conjunctive_association/judge.py:133-138,291-301,418 | absent: a twin pick is counted as a plain distractor (the `inverted` bucket is a diagnostic) |
+| item | `bank_version` | yes | fallback | copy-verbatim | conjunctive_association/judge.py:509-515 | absent = 1; mixed values exit (checked) |
 | item | `twin_of` |  | - | copy-verbatim | - | not read by the judge (provenance) |
 | qwen | `chat_summarize render + SUMMARIZE_SUFFIX` |  | - | subject | readplan.py:23, 925-941 | positions from the subject's own render (suffix_text_then_tail) |
 | qwen | `min_full_positions=19` |  | - | subject | conjunctive_association/__init__.py:27 | Qwen render length; reads.check_full exits below it on a sidecar file (reads.py:308) |

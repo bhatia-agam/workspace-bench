@@ -42,8 +42,8 @@ VARIANTS = (
 )
 # review of #202 round 4: conjunctive_association's headline configs (all-layer, lite) judge a
 # sharded digest, where each draw is the one-pick MC plus a candidate list (+cand3: up to
-# N_CANDIDATES more options), 3 draws per shard, and the item passes on any shard (any inverted
-# shard vetoes). The ``*_cands`` guessers answer in that form, 3 draws per shard for
+# N_CANDIDATES more options), 3 draws per shard, and the item passes on any shard (the
+# inverted twin vetoes nothing). The ``*_cands`` guessers answer in that form, 3 draws per shard for
 # HEADLINE_SHARDS[config] shards, and are scored by that rule (``headline_rule``) against the
 # exact uniform chance of the same rule (``rule_chance``). The shard counts are the cached O-lens
 # runs' modal counts (all-layer: 8 for 92 of 100 items, 7-9 for the rest). Camila r3
@@ -300,13 +300,12 @@ def fine_topic(m: dict[str, Any]) -> str:
 
 
 def _conjunctive() -> list[Item]:
-    from wsbench.evals.conjunctive_association.judge import build_options, inverted_position
+    from wsbench.evals.conjunctive_association.judge import build_options
 
     out = []
     for it in load_bank("conjunctive_association"):
         shown, gold, _contrast = build_options(it)
-        inv = inverted_position(it, shown)
-        out.append(Item(it["id"], [shown[:-1]], [gold], meta={"inverted": inv}))
+        out.append(Item(it["id"], [shown[:-1]], [gold]))
     return out
 
 
@@ -1114,21 +1113,20 @@ def majority_correct(draws: list[dict[str, Any] | None], item: Item) -> bool | N
 
 
 def conjunctive_rule(draws: list[dict[str, Any] | None], item: Item) -> bool | None:
-    """conjunctive_association's own item rule (comp-v3 +maj-noinv) on the first 3 draws: a
-    majority picks the gold and no draw picks the gold's role-swapped twin."""
+    """conjunctive_association's own item rule (``+maj``) on the first 3 draws: a majority picks
+    the gold (a pick of the gold's role-swapped twin is one non-gold vote)."""
     live = [d for d in draws[:3] if d is not None]
     if not live:
         return None
     picks = [d["picks"][0] for d in live]
-    inv = item.meta.get("inverted")
-    return 2 * picks.count(item.golds[0]) > 3 and (inv is None or inv not in picks)
+    return 2 * picks.count(item.golds[0]) > 3
 
 
 def score_cands_draw(reply: dict[str, Any] | None, item: Item) -> dict[str, Any] | None:
     """A candidate-list draw (``*_cands``): the valid distinct options of the one pick and then
     at most ``N_CANDS`` candidates; ``outcome`` is the judge's fold (``fold_candidates``): the
-    twin among them vetoes the draw (``inverted``), else the gold passes it (``gold``), else
-    ``other``. ``correct`` is the one-pick answer alone (the per-draw mean)."""
+    gold among them passes it (``gold``), else ``other`` (the twin vetoes nothing).
+    ``correct`` is the one-pick answer alone (the per-draw mean)."""
     if reply is None:
         return None
     n = item.n_options[0]
@@ -1137,11 +1135,7 @@ def score_cands_draw(reply: dict[str, Any] | None, item: Item) -> dict[str, Any]
     raw = raw if isinstance(raw, list) else []
     asked = [first, *raw]
     cands = list(dict.fromkeys(p for p in asked if _valid(p, n)))[: N_CANDS + 1]
-    inv = item.meta.get("inverted")
-    outcome = (
-        "inverted" if inv is not None and inv in cands else "gold" if item.golds[0] in cands else
-        "other"
-    )  # fmt: skip
+    outcome = "gold" if item.golds[0] in cands else "other"
     return {
         "picks": [first],
         "cands": cands,
@@ -1154,37 +1148,30 @@ def score_cands_draw(reply: dict[str, Any] | None, item: Item) -> dict[str, Any]
 
 def headline_rule(draws: list[dict[str, Any] | None], item: Item, shards: int) -> bool | None:
     """conjunctive_association's sharded rule on a ``*_cands`` guesser's draws: shard ``j`` is
-    draws ``3j .. 3j+2``, folded by the judge's own ``_resolve`` (a gold majority, vetoed by any
-    inverted draw) and the shards by ``shards_pick`` (any inverted shard vetoes, any gold shard
-    passes). ``None`` when a needed draw failed."""
-    from wsbench.evals.conjunctive_association.judge import _resolve, shards_pick
+    draws ``3j .. 3j+2``, folded by the judge's own ``majority`` and the shards by
+    ``shards_pick`` (any gold shard passes). ``None`` when a needed draw failed."""
+    from wsbench.evals.conjunctive_association.judge import majority, shards_pick
 
     need = draws[: shards * SHARD_DRAWS]
     if len(need) < shards * SHARD_DRAWS or any(d is None for d in need):
         return None
-    name = {"gold": "gold", "inverted": "inverted", "other": "distractor"}
+    name = {"gold": "gold", "other": "distractor"}
     picks = [
-        _resolve([name[d["outcome"]] for d in need[j : j + SHARD_DRAWS]])  # type: ignore[index]
+        majority([name[d["outcome"]] for d in need[j : j + SHARD_DRAWS]])  # type: ignore[index]
         for j in range(0, len(need), SHARD_DRAWS)
     ]
     return shards_pick(picks) == "gold"
 
 
-def rule_chance(n: int, twin: bool, k: int = 1, shards: int = 1) -> float:
+def rule_chance(n: int, k: int = 1, shards: int = 1) -> float:
     """Exact uniform pass rate of one conjunctive item under its rule: each draw lists ``k``
     distinct uniform options of ``n`` (the guesser's lists: no cannot tell); a draw is gold when
-    the gold is listed and its twin (``twin``) is not, inverted when the twin is listed; a shard
-    of 3 draws is gold on a gold majority with no inverted draw and inverted on an inverted
-    majority or a gold majority with one inverted draw; the item passes when no shard is
-    inverted and some shard is gold. ``k=1, shards=1`` is the single-layer rule (comp-v3
-    +maj-noinv): a^3 + 3a^2(1 - a - b)."""
-    k = min(k, n)
-    b = k / n if twin else 0.0
-    a = k / n - (k * (k - 1) / (n * (n - 1)) if twin and n > 1 else 0.0)
-    o = 1.0 - a - b
-    p_gold = a**3 + 3 * a**2 * o
-    p_inv = b**3 + 3 * b**2 * (1 - b) + 3 * a**2 * b
-    return (1 - p_inv) ** shards - (1 - p_inv - p_gold) ** shards
+    the gold is listed (``a = k / n``); a shard of 3 draws is gold on a gold majority; the item
+    passes when some shard is gold. ``k=1, shards=1`` is the single-layer rule (``+maj``):
+    a^3 + 3a^2(1 - a). The twin vetoes nothing, so it does not enter."""
+    a = min(k, n) / n
+    p_gold = a**3 + 3 * a**2 * (1 - a)
+    return 1 - (1 - p_gold) ** shards
 
 
 def family_chance(name: str, items: list[Item]) -> float:
@@ -1192,9 +1179,7 @@ def family_chance(name: str, items: list[Item]) -> float:
     4): the standard reads a guesser's ``family_rule`` against this, never against the per-draw
     ``analytic_floor``. A family without a multi-draw rule: the analytic floor."""
     if name == "conjunctive_association":
-        return statistics.fmean(
-            rule_chance(it.n_options[0], it.meta.get("inverted") is not None) for it in items
-        )
+        return statistics.fmean(rule_chance(it.n_options[0]) for it in items)
     if name in PAIR_RULE_FAMILIES:  # both directions of a pair right: the product of floors
         pairs = direction_pairs(items)
         return statistics.fmean(
@@ -1241,10 +1226,7 @@ def pair_rule(per_item: dict[str, dict[str, Any]], items: list[Item]) -> float |
 
 def headline_chance(items: list[Item], shards: int) -> float:
     """Uniform chance of the sharded +cand3 rule (``headline_rule``) on these items."""
-    return statistics.fmean(
-        rule_chance(it.n_options[0], it.meta.get("inverted") is not None, N_CANDS + 1, shards)
-        for it in items
-    )
+    return statistics.fmean(rule_chance(it.n_options[0], N_CANDS + 1, shards) for it in items)
 
 
 def standard(family: str, entry: dict[str, Any]) -> list[dict[str, Any]]:

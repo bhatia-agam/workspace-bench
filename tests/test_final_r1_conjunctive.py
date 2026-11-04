@@ -1,6 +1,7 @@
 """Final r1 (2026-10-31, campaign-lead decision): conjunctive_association keeps the draw-majority
-rule, adds an inverted-twin veto and leaves an item with a failed quote re-judge undecided; the
-chance label matches the rule."""
+rule and leaves an item with a failed quote re-judge undecided; the chance label matches the rule.
+There is no inverted-twin veto over draws, candidates or shards: a twin pick is one non-gold
+pick."""
 
 from wsbench.evals.conjunctive_association import judge as cj
 from wsbench.evals.conjunctive_association import score
@@ -21,15 +22,18 @@ def test_majority_still_needed():
     assert _combine(["gold", "gold", "cannot_tell"]) == "gold"
 
 
-def test_inverted_draw_vetoes_a_gold_majority():
-    assert _combine(["gold", "gold", "inverted"]) == "inverted"
+def test_an_inverted_draw_is_one_non_gold_vote():
+    # a twin draw is one non-gold vote, so the gold majority stands
+    assert _combine(["gold", "gold", "inverted"]) == "gold"
+    assert _combine(["gold", "inverted", "inverted"]) == "inverted"  # a twin majority fails
+    assert _combine(["gold", "inverted", "cannot_tell"]) == "split"
 
 
 def test_failed_draw_undecided_only_when_it_could_change_the_verdict():
-    assert _combine(["gold", "gold", "api_fail"]) == "api_fail"  # inverted would veto it
+    assert _combine(["gold", "gold", "api_fail"]) == "gold"  # nothing can veto it
     assert _combine(["gold", "api_fail", "cannot_tell"]) == "api_fail"
     assert _combine(["cannot_tell", "cannot_tell", "api_fail"]) == "cannot_tell"  # fails anyway
-    assert cj.item_pick(["inverted", "gold", "api_fail"]) != "gold"
+    assert cj.item_pick(["inverted", "gold", "api_fail"]) == "api_fail"
 
 
 def test_chance_matches_the_rule():
@@ -95,8 +99,11 @@ def test_shard_digest_splits_on_lines_and_keeps_shard_evidence():
 
 def test_shards_pick_rule():
     assert cj.shards_pick(["cannot_tell", "gold", "cannot_tell"]) == "gold"
-    assert cj.shards_pick(["gold", "inverted"]) == "inverted"  # any inverted shard vetoes
-    assert cj.shards_pick(["gold", "api_fail"]) == "api_fail"  # it could be inverted
+    # an inverted shard vetoes nothing, so neither can an undecided one
+    assert cj.shards_pick(["gold", "inverted"]) == "gold"
+    assert cj.shards_pick(["gold", "api_fail"]) == "gold"
+    assert cj.shards_pick(["cannot_tell", "api_fail"]) == "api_fail"  # it could be gold
+    assert cj.shards_pick(["inverted", "cannot_tell"]) == "inverted"
     assert cj.shards_pick(["cannot_tell", "split"]) == "cannot_tell"
     p = 1 / 21
     m = 3 * p**2 - 2 * p**3
@@ -124,7 +131,9 @@ def test_a_lone_gold_line_in_a_later_shard_passes(tmp_path, monkeypatch):
     assert mc_users and all("filler 0 " not in u or "filler 23 " not in u for u in mc_users)
 
 
-def test_an_inverted_shard_vetoes_a_gold_shard(tmp_path, monkeypatch):
+def test_an_inverted_shard_does_not_veto_a_gold_shard(tmp_path, monkeypatch):
+    """One shard's majority picks the twin, another the gold (as in q04_f: shard picks gold,
+    inverted, gold, ...). The gold shard passes."""
     it, shown, gold, inv = _item_with_twin()
 
     def answer(system, user, schema):
@@ -138,7 +147,9 @@ def test_an_inverted_shard_vetoes_a_gold_shard(tmp_path, monkeypatch):
 
     res, _ = _shard_case(tmp_path, monkeypatch, it["id"], answer, cap=400)
     row = res.rows[0]
-    assert row["pick"] == "inverted" and not row["correct"]
+    assert "inverted" in row["shard_picks"] and "gold" in row["shard_picks"]
+    assert row["pick"] == "gold" and row["correct"]
+    assert "+maj+" in res.config["prompt_version"] and "noinv" not in res.config["prompt_version"]
 
 
 def test_short_digest_is_judged_whole_as_before(tmp_path, monkeypatch):

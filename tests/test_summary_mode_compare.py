@@ -340,8 +340,18 @@ def test_compare_runs_end_to_end(runs):
             assert r["status"] not in ("extractor mismatch", "incomparable"), r
             if "n" in r and r["family"] in cmp.BINARY_RULES:
                 nat = _results(root, "native")[r["family"]]
-                assert r["n"] == nat["n_items"]  # whole-scope denominator, rowless items fail
-                assert abs(r["native"] - nat["numbers"]["value"]) < 1e-9
+                # whole-scope denominator, rowless items fail; an item undecided in either mode
+                # (conjunctive's api_fail pick, cmp.UNDECIDED_PICKS) leaves it, as in the
+                # family's own score
+                summ = _results(root, "summary")[r["family"]]
+                und = {
+                    i
+                    for res in (nat, summ)
+                    for i in (res["numbers"].get("extras") or {}).get("undecided_ids", [])
+                }
+                assert r["n"] == nat["n_items"] - len(und)
+                if not und:  # else the pairs drop an item native itself may have decided
+                    assert abs(r["native"] - nat["numbers"]["value"]) < 1e-9
 
 
 def test_tampered_value_is_an_extractor_mismatch(runs):
