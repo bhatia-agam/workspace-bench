@@ -1,0 +1,2154 @@
+{
+ "family": "multihop-hard",
+ "parent_family": "multihop-mt",
+ "version": 4,
+ "contract": {
+  "multi_token": true,
+  "include_target": true,
+  "conjunctive_units": true,
+  "markdown_fold": true,
+  "fuzzy_names": true,
+  "native_langs": [
+   "en",
+   "zh"
+  ]
+ },
+ "gate": "Qwen3.6-27B behavioral, chat-templated fill-in question (enable_thinking=False, answer stem), staged (workspace-bench plan 0013). G1: the prompt, greedy AND >=16/20 @0.7. Recall: G2 bridge1 from the prompt's own clue and G3 the last hop with its source named, each greedy AND >=8/10; G4 (3-hop) bridge2 identified inside the full statement, greedy AND >=5/10. Shortcuts: S1 generator ablations (drop_b1, local_cue, 3-hop direct_b1_to_t) and S2 independent-adversary ablations must not reach the target (greedy or >4/20); none is ever excused. A 3-hop item whose only shortcut is drop_b1 is frozen as a 2-hop through bridge2 (relabel_b2). No factual issue; fresh-eye review overrides applied. EVAL RENDER: plain prompt; readouts at every prompt token (lite: the final token). Scoring (bank v2, 2026-10-30): a forced-choice judge per required unit over other questions' bridges and targets of the same kind plus cannot tell, credited only with a verified quote that holds a name form of the gold (name_forms; misspellings within edit distance); the conjunctive regex over units stays as a diagnostic.",
+ "frozen": "2026-11-01",
+ "built_from": {
+  "file": "items.json",
+  "sha256": "7c0160a7f818165a09d357a7b0e159301894501124e301bec7f19f75679600d3",
+  "frozen": "2026-10-15"
+ },
+ "builder": "scripts/build_mh2_bank_v2.py",
+ "readout": {
+  "kind": "all",
+  "lite": {
+   "kind": "final_token"
+  }
+ },
+ "supersedes": "items_v3.json",
+ "r4_mc": {
+  "script": "scripts/build_r4_mc_banks.py",
+  "rule": "round 4 (Camila r2 MC leakage standard): only the MC distractor lists change. Content lists: the four Opus-authored same-topic distractors of r4_distractors.json (scripts/r4_mc_distractors.py). ",
+  "lang_rule": null,
+  "lists_changed": 76
+ },
+ "r4b_mc": {
+  "script": "scripts/build_r4b_mc_banks.py",
+  "rule": "round 4b (Camila r2 MC leakage standard, second pass): only the MC distractor lists change. Content lists: the four distractors scripts/r4b_mc_refine.py kept (r4b_distractors.json: Opus-revised in the gold's naming style, fitting the topic as stated, kept when neither the options-only nor the topic guesser solves the item in more than 1 of 5 draws). ",
+  "lists_changed": 76,
+  "n_over_gate": 19
+ },
+ "adapt": {
+  "model": "muse-spark-open",
+  "hf_id": "meta-models/Muse-Spark-Open-816B-A42B-NVFP4",
+  "frozen": "2026-11-04"
+ },
+ "items": [
+  {
+   "name": "mh2-tippecanoe-grandson-number-r3",
+   "subfamily": "3hop",
+   "domain": "military commanders and famous battles",
+   "prompt": "Fact: The general who defeated Tecumseh's confederacy at the battle of Tippecanoe in 1811 was the grandfather of a politician who was elected President of the United States, becoming its",
+   "spans": {
+    "D1": "The general who defeated Tecumseh's confederacy at the battle of Tippecanoe in 1811",
+    "R1": " was the grandfather of",
+    "N2": " a politician",
+    "R2": " who was elected President of the United States, becoming its",
+    "G1": "A nineteenth-century American general"
+   },
+   "target": "23rd",
+   "target_alts": [
+    "twenty-third"
+   ],
+   "source": "multihop_v2",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "all",
+    "lite": {
+     "kind": "final_token"
+    }
+   },
+   "intermediates": [
+    "William Henry Harrison",
+    "Benjamin Harrison"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "William Henry Harrison",
+       "W. H. Harrison"
+      ]
+     },
+     "match": [
+      "William Henry Harrison",
+      "W. H. Harrison"
+     ],
+     "kind": "person",
+     "full_forms": [
+      "William Henry Harrison"
+     ],
+     "forms_excluded": [
+      {
+       "form": "Harrison",
+       "reason": "also names unit bridge2 (Benjamin Harrison)"
+      }
+     ]
+    },
+    {
+     "role": "bridge2",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Benjamin Harrison"
+      ]
+     },
+     "match": [
+      "Benjamin Harrison"
+     ],
+     "kind": "person",
+     "full_forms": [
+      "Benjamin Harrison"
+     ],
+     "forms_excluded": [
+      {
+       "form": "Harrison",
+       "reason": "also names unit bridge1 (William Henry Harrison)"
+      }
+     ]
+    }
+   ],
+   "bridges": [
+    {
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "William Henry Harrison",
+      "Harrison",
+      "W. H. Harrison"
+     ],
+     "question": "Name the general who defeated Tecumseh's confederacy at the battle of Tippecanoe in 1811."
+    },
+    {
+     "units": [
+      "bridge2"
+     ],
+     "answers": [
+      "Benjamin Harrison",
+      "Harrison"
+     ],
+     "question": "Here is an incomplete statement:\n\n\"Fact: The general who defeated Tecumseh's confederacy at the battle of Tippecanoe in 1811 was the grandfather of a politician who was elected President of the United States, becoming its___\"\n\nIn this statement, who or what is \"a politician\"? Answer with the specific name."
+    }
+   ],
+   "probes": {
+    "G2_b2_from_b1": {
+     "kind": "fill",
+     "text": "Fact: William Henry Harrison was the grandfather of",
+     "accept": [
+      "Benjamin Harrison",
+      "Harrison"
+     ]
+    },
+    "G3_hop_b2_t": {
+     "kind": "qa",
+     "text": "Which number president of the United States was Benjamin Harrison?",
+     "accept": [
+      "23rd",
+      "twenty-third",
+      "23",
+      "23rd president"
+     ]
+    },
+    "G4_prefix_b2": {
+     "kind": "fill",
+     "text": "Fact: The general who defeated Tecumseh's confederacy at the battle of Tippecanoe in 1811 was the grandfather of",
+     "accept": [
+      "Benjamin Harrison",
+      "Harrison"
+     ]
+    },
+    "S1_drop_b1": {
+     "kind": "fill",
+     "text": "Fact: A nineteenth-century American general was the grandfather of a politician who was elected President of the United States, becoming its",
+     "accept": [
+      "23rd",
+      "twenty-third",
+      "23",
+      "23rd president"
+     ]
+    },
+    "S1_direct_b1_to_t": {
+     "kind": "fill",
+     "text": "Fact: William Henry Harrison was elected President of the United States, becoming its",
+     "accept": [
+      "23rd",
+      "twenty-third",
+      "23",
+      "23rd president"
+     ]
+    },
+    "G2_b1": {
+     "kind": "qa",
+     "text": "Name the general who defeated Tecumseh's confederacy at the battle of Tippecanoe in 1811.",
+     "accept": [
+      "William Henry Harrison",
+      "Harrison",
+      "W. H. Harrison"
+     ]
+    },
+    "S1_local_cue": {
+     "kind": "fill",
+     "text": "Fact: the politician was elected President of the United States, becoming its",
+     "accept": [
+      "23rd",
+      "twenty-third",
+      "23",
+      "23rd president"
+     ]
+    }
+   },
+   "shortcut_accept": [
+    "23rd",
+    "twenty-third",
+    "23",
+    "23rd president"
+   ],
+   "why_nonobvious": "A generic politician gives any ordinal, and the Tippecanoe general himself was the 9th president, so 23rd is reached only by walking to his grandson Benjamin Harrison.",
+   "consistency": 0.95,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge1": 1.0,
+    "bridge2": 1.0
+   },
+   "hop_consistency": 1.0,
+   "context_b2_consistency": 1.0,
+   "shortcut_probes": [
+    {
+     "id": "S1_drop_b1",
+     "kind": "fill",
+     "text": "Fact: A nineteenth-century American general was the grandfather of a politician who was elected President of the United States, becoming its",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S1_direct_b1_to_t",
+     "kind": "fill",
+     "text": "Fact: William Henry Harrison was elected President of the United States, becoming its",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge2"
+     ]
+    },
+    {
+     "id": "S1_local_cue",
+     "kind": "fill",
+     "text": "Fact: the politician was elected President of the United States, becoming its",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1",
+      "bridge2"
+     ]
+    },
+    {
+     "id": "S2adv3_0",
+     "kind": "fill",
+     "text": "Fact: William Henry Harrison was a relative of a politician who was elected President of the United States, becoming its",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge2"
+     ]
+    },
+    {
+     "id": "S2adv3_1",
+     "kind": "fill",
+     "text": "Fact: The general was the grandfather of a politician who was elected President of the United States, becoming its",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1",
+      "bridge2"
+     ]
+    },
+    {
+     "id": "S2adv3_2",
+     "kind": "qa",
+     "text": "A general was the grandfather of a politician who was elected President of the United States. What number President was the grandson?",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1",
+      "bridge2"
+     ]
+    },
+    {
+     "id": "S2adv3_3",
+     "kind": "fill",
+     "text": "Fact: A politician was elected President of the United States, becoming its",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1",
+      "bridge2"
+     ]
+    }
+   ],
+   "shortcut_max": 0.0,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       3,
+       5
+      ]
+     },
+     "bridge2": {
+      "en": [
+       2
+      ]
+     }
+    },
+    "target": 2,
+    "target_alts": [
+     2
+    ]
+   },
+   "mc": {
+    "bridge1": {
+     "gold": "William Henry Harrison",
+     "distractors": [
+      "Isaac Shelby",
+      "Henry Dearborn",
+      "Zachary Taylor",
+      "Winfield Scott"
+     ],
+     "pool": "Opus-revised same-topic distractors (r4b_distractors.json)"
+    },
+    "bridge2": {
+     "gold": "Benjamin Harrison",
+     "distractors": [
+      "James A. Garfield",
+      "Zachary Taylor",
+      "Andrew Johnson",
+      "Rutherford B. Hayes"
+     ],
+     "pool": "Opus-revised same-topic distractors (r4b_distractors.json)"
+    }
+   },
+   "name_forms": {
+    "bridge1": {
+     "en": [
+      "William Henry Harrison",
+      "W. H. Harrison"
+     ],
+     "zh": [
+      "威廉·亨利·哈里森",
+      "威廉・亨利・哈里森",
+      "威廉•亨利•哈里森",
+      "威廉亨利哈里森"
+     ]
+    },
+    "bridge2": {
+     "en": [
+      "Benjamin Harrison"
+     ],
+     "zh": [
+      "本杰明·哈里森",
+      "本杰明・哈里森",
+      "本杰明•哈里森",
+      "本杰明哈里森"
+     ]
+    }
+   },
+   "n_render_tokens": 42,
+   "id": "mh2-tippecanoe-grandson-number-r3",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 0.95,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "mh2-ray-tagore-gitanjali-q1",
+   "subfamily": "3hop",
+   "domain": "philosophy and scholarship",
+   "prompt": "Fact: The filmmaker who directed Pather Panchali and the Apu Trilogy studied painting in his youth at the rural university founded by a poet whose most celebrated collection of verse is",
+   "spans": {
+    "D1": "The filmmaker who directed Pather Panchali and the Apu Trilogy",
+    "R1": " studied painting in his youth at the rural university founded by",
+    "N2": " a poet",
+    "R2": " whose most celebrated collection of verse is",
+    "G1": "A filmmaker"
+   },
+   "target": "Gitanjali",
+   "target_alts": [
+    "Gitanjali: Song Offerings"
+   ],
+   "source": "multihop_v2",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "all",
+    "lite": {
+     "kind": "final_token"
+    }
+   },
+   "intermediates": [
+    "Satyajit Ray",
+    "Rabindranath Tagore"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Satyajit Ray"
+      ]
+     },
+     "match": [
+      "Satyajit Ray"
+     ],
+     "kind": "person",
+     "full_forms": [
+      "Satyajit Ray"
+     ],
+     "forms_excluded": [
+      {
+       "form": "Ray",
+       "reason": "shorter than 4 characters"
+      }
+     ]
+    },
+    {
+     "role": "bridge2",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Rabindranath Tagore",
+       "Tagore"
+      ]
+     },
+     "match": [
+      "Rabindranath Tagore",
+      "Tagore"
+     ],
+     "kind": "person",
+     "full_forms": [
+      "Rabindranath Tagore"
+     ],
+     "forms_excluded": []
+    }
+   ],
+   "bridges": [
+    {
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "Satyajit Ray",
+      "Ray"
+     ],
+     "question": "Name the filmmaker who directed Pather Panchali and the Apu Trilogy."
+    },
+    {
+     "units": [
+      "bridge2"
+     ],
+     "answers": [
+      "Rabindranath Tagore",
+      "Tagore"
+     ],
+     "question": "Here is an incomplete statement:\n\n\"Fact: The filmmaker who directed Pather Panchali and the Apu Trilogy studied painting in his youth at the rural university founded by a poet whose most celebrated collection of verse is___\"\n\nIn this statement, who or what is \"a poet\"? Answer with the specific name."
+    }
+   ],
+   "probes": {
+    "G2_b2_from_b1": {
+     "kind": "fill",
+     "text": "Fact: Satyajit Ray studied painting in his youth at the rural university founded by",
+     "accept": [
+      "Rabindranath Tagore",
+      "Tagore"
+     ]
+    },
+    "G3_hop_b2_t": {
+     "kind": "qa",
+     "text": "What is Rabindranath Tagore's most celebrated collection of verse?",
+     "accept": [
+      "Gitanjali",
+      "Gitanjali: Song Offerings",
+      "Song Offerings"
+     ]
+    },
+    "G4_prefix_b2": {
+     "kind": "fill",
+     "text": "Fact: The filmmaker who directed Pather Panchali and the Apu Trilogy studied painting in his youth at the rural university founded by",
+     "accept": [
+      "Rabindranath Tagore",
+      "Tagore"
+     ]
+    },
+    "S1_drop_b1": {
+     "kind": "fill",
+     "text": "Fact: A filmmaker studied painting in his youth at the rural university founded by a poet whose most celebrated collection of verse is",
+     "accept": [
+      "Gitanjali",
+      "Gitanjali: Song Offerings",
+      "Song Offerings"
+     ]
+    },
+    "S1_direct_b1_to_t": {
+     "kind": "fill",
+     "text": "Fact: Satyajit Ray's most celebrated collection of verse is",
+     "accept": [
+      "Gitanjali",
+      "Gitanjali: Song Offerings",
+      "Song Offerings"
+     ]
+    },
+    "G2_b1": {
+     "kind": "qa",
+     "text": "Name the filmmaker who directed Pather Panchali and the Apu Trilogy.",
+     "accept": [
+      "Satyajit Ray",
+      "Ray"
+     ]
+    },
+    "S1_local_cue": {
+     "kind": "fill",
+     "text": "Fact: the poet's most celebrated collection of verse is",
+     "accept": [
+      "Gitanjali",
+      "Gitanjali: Song Offerings",
+      "Song Offerings"
+     ]
+    }
+   },
+   "shortcut_accept": [
+    "Gitanjali",
+    "Gitanjali: Song Offerings",
+    "Song Offerings"
+   ],
+   "why_nonobvious": "A poet's most celebrated collection has no default answer and the filmmaker wrote no verse, so Gitanjali requires resolving Ray and then Tagore, founder of the university where he studied.",
+   "consistency": 1.0,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge1": 1.0,
+    "bridge2": 1.0
+   },
+   "hop_consistency": 0.9,
+   "context_b2_consistency": 1.0,
+   "shortcut_probes": [
+    {
+     "id": "S1_drop_b1",
+     "kind": "fill",
+     "text": "Fact: A filmmaker studied painting in his youth at the rural university founded by a poet whose most celebrated collection of verse is",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S1_direct_b1_to_t",
+     "kind": "fill",
+     "text": "Fact: Satyajit Ray's most celebrated collection of verse is",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge2"
+     ]
+    },
+    {
+     "id": "S1_local_cue",
+     "kind": "fill",
+     "text": "Fact: the poet's most celebrated collection of verse is",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1",
+      "bridge2"
+     ]
+    },
+    {
+     "id": "S2adv3_0",
+     "kind": "fill",
+     "text": "Fact: A filmmaker studied painting in his youth at the rural university founded by a poet whose most celebrated collection of verse is",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1",
+      "bridge2"
+     ]
+    },
+    {
+     "id": "S2adv3_1",
+     "kind": "fill",
+     "text": "Fact: The rural university was founded by a poet whose most celebrated collection of verse is",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1",
+      "bridge2"
+     ]
+    },
+    {
+     "id": "S2adv3_2",
+     "kind": "fill",
+     "text": "Fact: The most celebrated collection of verse connected with the filmmaker Satyajit Ray is",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge2"
+     ]
+    },
+    {
+     "id": "S2adv3_3",
+     "kind": "fill",
+     "text": "Fact: A poet whose most celebrated collection of verse is",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1",
+      "bridge2"
+     ]
+    }
+   ],
+   "shortcut_max": 0.0,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       5
+      ]
+     },
+     "bridge2": {
+      "en": [
+       6,
+       2
+      ]
+     }
+    },
+    "target": 3,
+    "target_alts": [
+     6
+    ]
+   },
+   "mc": {
+    "bridge1": {
+     "gold": "Satyajit Ray",
+     "distractors": [
+      "Federico Fellini",
+      "Stanley Kubrick",
+      "Martin Scorsese",
+      "Francis Ford Coppola"
+     ],
+     "pool": "Opus-revised same-topic distractors (r4b_distractors.json)"
+    },
+    "bridge2": {
+     "gold": "Rabindranath Tagore",
+     "distractors": [
+      "Matsuo Bashō",
+      "Confucius",
+      "Li Bai",
+      "Kalidasa"
+     ],
+     "pool": "Opus-revised same-topic distractors (r4b_distractors.json)"
+    }
+   },
+   "name_forms": {
+    "bridge1": {
+     "en": [
+      "Satyajit Ray"
+     ],
+     "zh": [
+      "萨蒂亚吉特·雷伊",
+      "萨蒂亚吉特・雷伊",
+      "萨蒂亚吉特•雷伊",
+      "萨蒂亚吉特雷伊",
+      "萨蒂亚吉特·雷",
+      "萨蒂亚吉特・雷",
+      "萨蒂亚吉特•雷",
+      "萨蒂亚吉特雷",
+      "萨雅吉·雷",
+      "萨雅吉・雷",
+      "萨雅吉•雷",
+      "萨雅吉雷"
+     ]
+    },
+    "bridge2": {
+     "en": [
+      "Rabindranath Tagore",
+      "Tagore"
+     ],
+     "zh": [
+      "罗宾德拉纳特·泰戈尔",
+      "罗宾德拉纳特・泰戈尔",
+      "罗宾德拉纳特•泰戈尔",
+      "罗宾德拉纳特泰戈尔",
+      "泰戈尔"
+     ]
+    }
+   },
+   "n_render_tokens": 36,
+   "id": "mh2-ray-tagore-gitanjali-q1",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 0.9,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "mh2-wharton-age-of-innocence-s0",
+   "subfamily": "2hop",
+   "domain": "literature and its authors",
+   "prompt": "Fact: The American novelist who wrote 'The House of Mirth' and 'Ethan Frome' was awarded the Pulitzer for her novel",
+   "spans": {
+    "D1": "The American novelist who wrote 'The House of Mirth' and 'Ethan Frome'",
+    "R1": " was awarded the Pulitzer for her novel",
+    "G1": "An American novelist"
+   },
+   "target": "The Age of Innocence",
+   "target_alts": [],
+   "source": "multihop_v2",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "all",
+    "lite": {
+     "kind": "final_token"
+    }
+   },
+   "intermediates": [
+    "Edith Wharton"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Edith Wharton",
+       "Edith Newbold Jones Wharton",
+       "Wharton",
+       "Edith Newbold Jones"
+      ]
+     },
+     "match": [
+      "Edith Wharton",
+      "Edith Newbold Jones Wharton",
+      "Wharton",
+      "Edith Newbold Jones"
+     ],
+     "kind": "person",
+     "full_forms": [
+      "Edith Wharton",
+      "Edith Newbold Jones Wharton"
+     ],
+     "forms_excluded": []
+    }
+   ],
+   "bridges": [
+    {
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "Edith Wharton",
+      "Edith Newbold Jones Wharton",
+      "Wharton",
+      "Edith Newbold Jones"
+     ],
+     "question": "Name the American novelist who wrote 'The House of Mirth' and 'Ethan Frome'."
+    }
+   ],
+   "probes": {
+    "G3_hop_b1_t": {
+     "kind": "fill",
+     "text": "Fact: Edith Wharton was awarded the Pulitzer for her novel",
+     "accept": [
+      "The Age of Innocence",
+      "Age of Innocence"
+     ]
+    },
+    "S1_drop_b1": {
+     "kind": "fill",
+     "text": "Fact: An American novelist was awarded the Pulitzer for her novel",
+     "accept": [
+      "The Age of Innocence",
+      "Age of Innocence"
+     ]
+    },
+    "G2_b1": {
+     "kind": "qa",
+     "text": "Name the American novelist who wrote 'The House of Mirth' and 'Ethan Frome'.",
+     "accept": [
+      "Edith Wharton",
+      "Edith Newbold Jones Wharton",
+      "Wharton",
+      "Edith Newbold Jones"
+     ]
+    },
+    "S1_local_cue": {
+     "kind": "fill",
+     "text": "Fact: the novelist was awarded the Pulitzer for her novel",
+     "accept": [
+      "The Age of Innocence",
+      "Age of Innocence"
+     ]
+    }
+   },
+   "shortcut_accept": [
+    "The Age of Innocence",
+    "Age of Innocence"
+   ],
+   "why_nonobvious": "Many women novelists won the Pulitzer, and the named works are different books, so only resolving Edith Wharton gives The Age of Innocence.",
+   "consistency": 1.0,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge1": 1.0
+   },
+   "hop_consistency": 1.0,
+   "context_b2_consistency": null,
+   "shortcut_probes": [
+    {
+     "id": "S1_drop_b1",
+     "kind": "fill",
+     "text": "Fact: An American novelist was awarded the Pulitzer for her novel",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S1_local_cue",
+     "kind": "fill",
+     "text": "Fact: the novelist was awarded the Pulitzer for her novel",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_0",
+     "kind": "fill",
+     "text": "Fact: The American novelist was awarded the Pulitzer for her novel",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_1",
+     "kind": "fill",
+     "text": "Fact: The novelist was awarded the Pulitzer for her novel",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_2",
+     "kind": "qa",
+     "text": "For which novel was the American novelist awarded the Pulitzer?",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    }
+   ],
+   "shortcut_max": 0.0,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       3,
+       6,
+       2,
+       4
+      ]
+     }
+    },
+    "target": 4,
+    "target_alts": []
+   },
+   "mc": {
+    "bridge1": {
+     "gold": "Edith Wharton",
+     "distractors": [
+      "William Dean Howells",
+      "Upton Sinclair",
+      "Theodore Dreiser",
+      "Sinclair Lewis"
+     ],
+     "pool": "Opus-revised same-topic distractors (r4b_distractors.json)"
+    }
+   },
+   "name_forms": {
+    "bridge1": {
+     "en": [
+      "Edith Wharton",
+      "Edith Newbold Jones Wharton",
+      "Wharton",
+      "Edith Newbold Jones"
+     ],
+     "zh": [
+      "伊迪丝·华顿",
+      "伊迪丝・华顿",
+      "伊迪丝•华顿",
+      "伊迪丝华顿",
+      "伊迪丝·沃顿",
+      "伊迪丝・沃顿",
+      "伊迪丝•沃顿",
+      "伊迪丝沃顿",
+      "伊迪斯·华顿",
+      "伊迪斯・华顿",
+      "伊迪斯•华顿",
+      "伊迪斯华顿"
+     ]
+    }
+   },
+   "n_render_tokens": 30,
+   "id": "mh2-wharton-age-of-innocence-s0",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "mh2-gaixia-victor-dynasty",
+   "subfamily": "2hop",
+   "domain": "European and Asian history",
+   "prompt": "Fact: The rebel commander who defeated his rival Xiang Yu at Gaixia went on to found the",
+   "spans": {
+    "D1": "The rebel commander who defeated his rival Xiang Yu at Gaixia",
+    "R1": " went on to found the",
+    "G1": "A Chinese rebel commander"
+   },
+   "target": "Han dynasty",
+   "target_alts": [
+    "Western Han dynasty"
+   ],
+   "source": "multihop_v2",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "all",
+    "lite": {
+     "kind": "final_token"
+    }
+   },
+   "intermediates": [
+    "Liu Bang"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Liu Bang",
+       "Emperor Gaozu of Han",
+       "Gaozu",
+       "Emperor Gaozu",
+       "Gaozu of Han"
+      ]
+     },
+     "match": [
+      "Liu Bang",
+      "Emperor Gaozu of Han",
+      "Gaozu",
+      "Emperor Gaozu",
+      "Gaozu of Han"
+     ],
+     "kind": "person",
+     "full_forms": [
+      "Liu Bang",
+      "Emperor Gaozu of Han"
+     ],
+     "forms_excluded": [
+      {
+       "form": "Liu",
+       "reason": "shorter than 4 characters"
+      }
+     ]
+    }
+   ],
+   "bridges": [
+    {
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "Liu Bang",
+      "Emperor Gaozu of Han",
+      "Gaozu",
+      "Emperor Gaozu",
+      "Liu"
+     ],
+     "question": "Name the rebel commander who defeated his rival Xiang Yu at Gaixia."
+    }
+   ],
+   "probes": {
+    "G3_hop_b1_t": {
+     "kind": "fill",
+     "text": "Fact: Liu Bang went on to found the",
+     "accept": [
+      "Han dynasty",
+      "Western Han dynasty",
+      "Han",
+      "Western Han"
+     ]
+    },
+    "S1_drop_b1": {
+     "kind": "fill",
+     "text": "Fact: A Chinese rebel commander went on to found the",
+     "accept": [
+      "Han dynasty",
+      "Western Han dynasty",
+      "Han",
+      "Western Han"
+     ]
+    },
+    "G2_b1": {
+     "kind": "qa",
+     "text": "Name the rebel commander who defeated his rival Xiang Yu at Gaixia.",
+     "accept": [
+      "Liu Bang",
+      "Emperor Gaozu of Han",
+      "Gaozu",
+      "Emperor Gaozu",
+      "Liu"
+     ]
+    },
+    "S1_local_cue": {
+     "kind": "fill",
+     "text": "Fact: the rebel commander went on to found the",
+     "accept": [
+      "Han dynasty",
+      "Western Han dynasty",
+      "Han",
+      "Western Han"
+     ]
+    }
+   },
+   "shortcut_accept": [
+    "Han dynasty",
+    "Western Han dynasty",
+    "Han",
+    "Western Han"
+   ],
+   "why_nonobvious": "A generic Chinese rebel who founded a dynasty could equally be Zhu Yuanzhang (Ming), so the answer requires recognising Xiang Yu's conqueror as Liu Bang.",
+   "consistency": 1.0,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge1": 1.0
+   },
+   "hop_consistency": 1.0,
+   "context_b2_consistency": null,
+   "shortcut_probes": [
+    {
+     "id": "S1_drop_b1",
+     "kind": "fill",
+     "text": "Fact: A Chinese rebel commander went on to found the",
+     "n_pass": 1,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S1_local_cue",
+     "kind": "fill",
+     "text": "Fact: the rebel commander went on to found the",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_0",
+     "kind": "fill",
+     "text": "Fact: The rebel commander who defeated his rival went on to found the",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_1",
+     "kind": "fill",
+     "text": "Fact: The rebel commander went on to found the",
+     "n_pass": 1,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_2",
+     "kind": "qa",
+     "text": "Which dynasty was founded by a rebel commander who defeated his rival?",
+     "n_pass": 1,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    }
+   ],
+   "shortcut_max": 0.05,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       2,
+       5,
+       2,
+       3,
+       4
+      ]
+     }
+    },
+    "target": 2,
+    "target_alts": [
+     3
+    ]
+   },
+   "mc": {
+    "bridge1": {
+     "gold": "Liu Bang",
+     "distractors": [
+      "Wang Mang",
+      "Sun Quan",
+      "Zhao Kuangyin",
+      "Cao Cao"
+     ],
+     "pool": "Opus-revised same-topic distractors (r4b_distractors.json)"
+    }
+   },
+   "name_forms": {
+    "bridge1": {
+     "en": [
+      "Liu Bang",
+      "Emperor Gaozu of Han",
+      "Gaozu",
+      "Emperor Gaozu",
+      "Gaozu of Han"
+     ],
+     "zh": [
+      "刘邦",
+      "汉高祖",
+      "汉高帝"
+     ]
+    }
+   },
+   "n_render_tokens": 20,
+   "id": "mh2-gaixia-victor-dynasty",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 0.95,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "mh2-lange-husband-taylor-s3",
+   "subfamily": "2hop",
+   "domain": "journalism, photography and design",
+   "prompt": "Fact: The photographer of 'Migrant Mother' was married from 1935 to the economist",
+   "spans": {
+    "D1": "The photographer of 'Migrant Mother'",
+    "R1": " was married from 1935 to the economist",
+    "G1": "An American photographer"
+   },
+   "target": "Paul Schuster Taylor",
+   "target_alts": [
+    "Paul S. Taylor"
+   ],
+   "source": "multihop_v2",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "all",
+    "lite": {
+     "kind": "final_token"
+    }
+   },
+   "intermediates": [
+    "Dorothea Lange"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Dorothea Lange",
+       "Lange",
+       "Dorothea Nutzhorn"
+      ]
+     },
+     "match": [
+      "Dorothea Lange",
+      "Lange",
+      "Dorothea Nutzhorn"
+     ],
+     "kind": "person",
+     "full_forms": [
+      "Dorothea Lange"
+     ],
+     "forms_excluded": []
+    }
+   ],
+   "bridges": [
+    {
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "Dorothea Lange",
+      "Lange",
+      "Dorothea Nutzhorn"
+     ],
+     "question": "Name the photographer of 'Migrant Mother'."
+    }
+   ],
+   "probes": {
+    "G3_hop_b1_t": {
+     "kind": "fill",
+     "text": "Fact: Dorothea Lange was married from 1935 to the economist",
+     "accept": [
+      "Paul Schuster Taylor",
+      "Paul S. Taylor",
+      "Paul Taylor",
+      "Taylor"
+     ]
+    },
+    "S1_drop_b1": {
+     "kind": "fill",
+     "text": "Fact: An American photographer was married from 1935 to the economist",
+     "accept": [
+      "Paul Schuster Taylor",
+      "Paul S. Taylor",
+      "Paul Taylor",
+      "Taylor"
+     ]
+    },
+    "G2_b1": {
+     "kind": "qa",
+     "text": "Name the photographer of 'Migrant Mother'.",
+     "accept": [
+      "Dorothea Lange",
+      "Lange",
+      "Dorothea Nutzhorn"
+     ]
+    },
+    "S1_local_cue": {
+     "kind": "fill",
+     "text": "Fact: the photographer was married from 1935 to the economist",
+     "accept": [
+      "Paul Schuster Taylor",
+      "Paul S. Taylor",
+      "Paul Taylor",
+      "Taylor"
+     ]
+    }
+   },
+   "shortcut_accept": [
+    "Paul Schuster Taylor",
+    "Paul S. Taylor",
+    "Paul Taylor",
+    "Taylor"
+   ],
+   "why_nonobvious": "No generic photographer points to a particular economist spouse; Taylor, Lange's collaborator on An American Exodus, is reachable only after resolving 'Migrant Mother' to Lange.",
+   "consistency": 1.0,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge1": 1.0
+   },
+   "hop_consistency": 1.0,
+   "context_b2_consistency": null,
+   "shortcut_probes": [
+    {
+     "id": "S1_drop_b1",
+     "kind": "fill",
+     "text": "Fact: An American photographer was married from 1935 to the economist",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S1_local_cue",
+     "kind": "fill",
+     "text": "Fact: the photographer was married from 1935 to the economist",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_0",
+     "kind": "fill",
+     "text": "Fact: The photographer was married from 1935 to the economist",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_1",
+     "kind": "qa",
+     "text": "Which economist was married from 1935 to a photographer?",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    }
+   ],
+   "shortcut_max": 0.0,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       4,
+       1,
+       5
+      ]
+     }
+    },
+    "target": 4,
+    "target_alts": [
+     4
+    ]
+   },
+   "mc": {
+    "bridge1": {
+     "gold": "Dorothea Lange",
+     "distractors": [
+      "Ansel Adams",
+      "Man Ray",
+      "Annie Leibovitz",
+      "Alfred Stieglitz"
+     ],
+     "pool": "Opus-revised same-topic distractors (r4b_distractors.json)"
+    }
+   },
+   "name_forms": {
+    "bridge1": {
+     "en": [
+      "Dorothea Lange",
+      "Lange",
+      "Dorothea Nutzhorn"
+     ],
+     "zh": [
+      "多萝西娅·兰格",
+      "多萝西娅・兰格",
+      "多萝西娅•兰格",
+      "多萝西娅兰格",
+      "桃乐丝·兰格",
+      "桃乐丝・兰格",
+      "桃乐丝•兰格",
+      "桃乐丝兰格",
+      "多罗西娅·兰格",
+      "多罗西娅・兰格",
+      "多罗西娅•兰格",
+      "多罗西娅兰格"
+     ]
+    }
+   },
+   "n_render_tokens": 19,
+   "id": "mh2-lange-husband-taylor-s3",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "mh2-gorky-birthplace-t0",
+   "subfamily": "2hop",
+   "domain": "literature and its authors",
+   "prompt": "Fact: The author of the play 'The Lower Depths' and the novel 'Mother' was born in the city of",
+   "spans": {
+    "D1": "The author of the play 'The Lower Depths' and the novel 'Mother'",
+    "R1": " was born in the city of",
+    "G1": "A Russian writer"
+   },
+   "target": "Nizhny Novgorod",
+   "target_alts": [
+    "Nizhni Novgorod"
+   ],
+   "source": "multihop_v2",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "all",
+    "lite": {
+     "kind": "final_token"
+    }
+   },
+   "intermediates": [
+    "Maxim Gorky"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Maxim Gorky",
+       "Alexei Peshkov",
+       "Gorky",
+       "Maksim Gorky",
+       "Peshkov"
+      ]
+     },
+     "match": [
+      "Maxim Gorky",
+      "Alexei Peshkov",
+      "Gorky",
+      "Maksim Gorky",
+      "Peshkov"
+     ],
+     "kind": "person",
+     "full_forms": [
+      "Maxim Gorky",
+      "Alexei Peshkov",
+      "Gorky"
+     ],
+     "forms_excluded": []
+    }
+   ],
+   "bridges": [
+    {
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "Maxim Gorky",
+      "Alexei Peshkov",
+      "Gorky",
+      "Maksim Gorky",
+      "Peshkov"
+     ],
+     "question": "Name the author of the play 'The Lower Depths' and the novel 'Mother'."
+    }
+   ],
+   "probes": {
+    "G3_hop_b1_t": {
+     "kind": "fill",
+     "text": "Fact: Maxim Gorky was born in the city of",
+     "accept": [
+      "Nizhny Novgorod",
+      "Nizhni Novgorod",
+      "Nizhniy Novgorod",
+      "Gorky"
+     ]
+    },
+    "S1_drop_b1": {
+     "kind": "fill",
+     "text": "Fact: A Russian writer was born in the city of",
+     "accept": [
+      "Nizhny Novgorod",
+      "Nizhni Novgorod",
+      "Nizhniy Novgorod",
+      "Gorky",
+      "Novgorod"
+     ]
+    },
+    "G2_b1": {
+     "kind": "qa",
+     "text": "Name the author of the play 'The Lower Depths' and the novel 'Mother'.",
+     "accept": [
+      "Maxim Gorky",
+      "Alexei Peshkov",
+      "Gorky",
+      "Maksim Gorky",
+      "Peshkov"
+     ]
+    },
+    "S1_local_cue": {
+     "kind": "fill",
+     "text": "Fact: the writer was born in the city of",
+     "accept": [
+      "Nizhny Novgorod",
+      "Nizhni Novgorod",
+      "Nizhniy Novgorod",
+      "Gorky",
+      "Novgorod"
+     ]
+    }
+   },
+   "shortcut_accept": [
+    "Nizhny Novgorod",
+    "Nizhni Novgorod",
+    "Nizhniy Novgorod",
+    "Gorky",
+    "Novgorod"
+   ],
+   "why_nonobvious": "A generic Russian writer defaults to Moscow or St Petersburg; only recognising Gorky from his works yields his birthplace, the city later renamed after him.",
+   "consistency": 1.0,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge1": 1.0
+   },
+   "hop_consistency": 1.0,
+   "context_b2_consistency": null,
+   "shortcut_probes": [
+    {
+     "id": "S1_drop_b1",
+     "kind": "fill",
+     "text": "Fact: A Russian writer was born in the city of",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S1_local_cue",
+     "kind": "fill",
+     "text": "Fact: the writer was born in the city of",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_0",
+     "kind": "fill",
+     "text": "Fact: The author of the play and the novel was born in the city of",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_1",
+     "kind": "fill",
+     "text": "Fact: The author was born in the city of",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_2",
+     "kind": "qa",
+     "text": "In which city was the author of the play born?",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    }
+   ],
+   "shortcut_max": 0.0,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       4,
+       4,
+       3,
+       5,
+       3
+      ]
+     }
+    },
+    "target": 4,
+    "target_alts": [
+     4
+    ]
+   },
+   "mc": {
+    "bridge1": {
+     "gold": "Maxim Gorky",
+     "distractors": [
+      "Mikhail Sholokhov",
+      "Alexei Tolstoy",
+      "Mikhail Bulgakov",
+      "Boris Pasternak"
+     ],
+     "pool": "Opus-revised same-topic distractors (r4b_distractors.json)"
+    }
+   },
+   "name_forms": {
+    "bridge1": {
+     "en": [
+      "Maxim Gorky",
+      "Alexei Peshkov",
+      "Gorky",
+      "Maksim Gorky",
+      "Peshkov"
+     ],
+     "zh": [
+      "马克西姆·高尔基",
+      "马克西姆・高尔基",
+      "马克西姆•高尔基",
+      "马克西姆高尔基",
+      "高尔基",
+      "阿列克谢·彼什科夫",
+      "阿列克谢・彼什科夫",
+      "阿列克谢•彼什科夫",
+      "阿列克谢彼什科夫",
+      "彼什科夫"
+     ]
+    }
+   },
+   "n_render_tokens": 25,
+   "id": "mh2-gorky-birthplace-t0",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "mh2-rousseau-geneva-t1",
+   "subfamily": "2hop",
+   "domain": "philosophy and scholarship",
+   "prompt": "Fact: The philosopher who wrote 'The Social Contract' and 'Émile' was born in the city of",
+   "spans": {
+    "D1": "The philosopher who wrote 'The Social Contract' and 'Émile'",
+    "R1": " was born in the city of",
+    "G1": "An eighteenth-century philosopher"
+   },
+   "target": "Geneva",
+   "target_alts": [
+    "Genève"
+   ],
+   "source": "multihop_v2",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "all",
+    "lite": {
+     "kind": "final_token"
+    }
+   },
+   "intermediates": [
+    "Jean-Jacques Rousseau"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Jean-Jacques Rousseau",
+       "Rousseau",
+       "J.-J. Rousseau"
+      ]
+     },
+     "match": [
+      "Jean-Jacques Rousseau",
+      "Rousseau",
+      "J.-J. Rousseau"
+     ],
+     "kind": "person",
+     "full_forms": [
+      "Jean-Jacques Rousseau",
+      "Rousseau"
+     ],
+     "forms_excluded": []
+    }
+   ],
+   "bridges": [
+    {
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "Jean-Jacques Rousseau",
+      "Rousseau",
+      "J.-J. Rousseau"
+     ],
+     "question": "Name the philosopher who wrote 'The Social Contract' and 'Émile'."
+    }
+   ],
+   "probes": {
+    "G3_hop_b1_t": {
+     "kind": "fill",
+     "text": "Fact: Jean-Jacques Rousseau was born in the city of",
+     "accept": [
+      "Geneva",
+      "Genève",
+      "Geneve"
+     ]
+    },
+    "S1_drop_b1": {
+     "kind": "fill",
+     "text": "Fact: An eighteenth-century philosopher was born in the city of",
+     "accept": [
+      "Geneva",
+      "Genève",
+      "Geneve"
+     ]
+    },
+    "G2_b1": {
+     "kind": "qa",
+     "text": "Name the philosopher who wrote 'The Social Contract' and 'Émile'.",
+     "accept": [
+      "Jean-Jacques Rousseau",
+      "Rousseau",
+      "J.-J. Rousseau"
+     ]
+    },
+    "S1_local_cue": {
+     "kind": "fill",
+     "text": "Fact: the philosopher was born in the city of",
+     "accept": [
+      "Geneva",
+      "Genève",
+      "Geneve"
+     ]
+    }
+   },
+   "shortcut_accept": [
+    "Geneva",
+    "Genève",
+    "Geneve"
+   ],
+   "why_nonobvious": "Only the book titles identify Rousseau, and a generic philosopher's birthplace points to many cities, not Geneva in particular.",
+   "consistency": 0.95,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge1": 1.0
+   },
+   "hop_consistency": 1.0,
+   "context_b2_consistency": null,
+   "shortcut_probes": [
+    {
+     "id": "S1_drop_b1",
+     "kind": "fill",
+     "text": "Fact: An eighteenth-century philosopher was born in the city of",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S1_local_cue",
+     "kind": "fill",
+     "text": "Fact: the philosopher was born in the city of",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_0",
+     "kind": "fill",
+     "text": "Fact: The philosopher was born in the city of",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_1",
+     "kind": "fill",
+     "text": "Fact: The philosopher who wrote a treatise and a novel was born in the city of",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_2",
+     "kind": "qa",
+     "text": "In which city was the philosopher who wrote the books born?",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    }
+   ],
+   "shortcut_max": 0.0,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       4,
+       1,
+       5
+      ]
+     }
+    },
+    "target": 1,
+    "target_alts": [
+     1
+    ]
+   },
+   "mc": {
+    "bridge1": {
+     "gold": "Jean-Jacques Rousseau",
+     "distractors": [
+      "Denis Diderot",
+      "Voltaire",
+      "Julien Offray de La Mettrie",
+      "Moses Mendelssohn"
+     ],
+     "pool": "Opus-revised same-topic distractors (r4b_distractors.json)"
+    }
+   },
+   "name_forms": {
+    "bridge1": {
+     "en": [
+      "Jean-Jacques Rousseau",
+      "Rousseau",
+      "J.-J. Rousseau"
+     ],
+     "zh": [
+      "让-雅克·卢梭",
+      "让-雅克・卢梭",
+      "让-雅克•卢梭",
+      "让-雅克卢梭",
+      "让·雅克·卢梭",
+      "让・雅克・卢梭",
+      "让•雅克•卢梭",
+      "让雅克卢梭",
+      "卢梭"
+     ]
+    }
+   },
+   "n_render_tokens": 22,
+   "id": "mh2-rousseau-geneva-t1",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 0.95,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "mh2-gold-mask-successor-t0",
+   "subfamily": "2hop",
+   "domain": "painting and sculpture",
+   "prompt": "Fact: the boy pharaoh whose solid-gold funerary mask is the most famous artifact of ancient Egypt was succeeded on the throne by",
+   "spans": {
+    "D1": "the boy pharaoh whose solid-gold funerary mask is the most famous artifact of ancient Egypt",
+    "R1": " was succeeded on the throne by",
+    "G1": "An ancient Egyptian pharaoh"
+   },
+   "target": "Ay",
+   "target_alts": [
+    "Kheperkheperure Ay"
+   ],
+   "source": "multihop_v2",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "all",
+    "lite": {
+     "kind": "final_token"
+    }
+   },
+   "intermediates": [
+    "Tutankhamun"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Tutankhamun",
+       "Tutankhaten",
+       "King Tut",
+       "Tutankhamen"
+      ]
+     },
+     "match": [
+      "Tutankhamun",
+      "Tutankhaten",
+      "King Tut",
+      "Tutankhamen"
+     ],
+     "kind": "person",
+     "full_forms": [
+      "Tutankhamun",
+      "Tutankhaten",
+      "King Tut"
+     ],
+     "forms_excluded": [
+      {
+       "form": "Tut",
+       "reason": "shorter than 4 characters"
+      }
+     ]
+    }
+   ],
+   "bridges": [
+    {
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "Tutankhamun",
+      "Tutankhaten",
+      "King Tut",
+      "Tutankhamen",
+      "Tut"
+     ],
+     "question": "Name the boy pharaoh whose solid-gold funerary mask is the most famous artifact of ancient Egypt."
+    }
+   ],
+   "probes": {
+    "G3_hop_b1_t": {
+     "kind": "fill",
+     "text": "Fact: Tutankhamun was succeeded on the throne by",
+     "accept": [
+      "Ay",
+      "Kheperkheperure Ay",
+      "Pharaoh Ay"
+     ]
+    },
+    "S1_drop_b1": {
+     "kind": "fill",
+     "text": "Fact: An ancient Egyptian pharaoh was succeeded on the throne by",
+     "accept": [
+      "Ay",
+      "Kheperkheperure Ay",
+      "Pharaoh Ay"
+     ]
+    },
+    "G2_b1": {
+     "kind": "qa",
+     "text": "Name the boy pharaoh whose solid-gold funerary mask is the most famous artifact of ancient Egypt.",
+     "accept": [
+      "Tutankhamun",
+      "Tutankhaten",
+      "King Tut",
+      "Tutankhamen",
+      "Tut"
+     ]
+    },
+    "S1_local_cue": {
+     "kind": "fill",
+     "text": "Fact: the pharaoh was succeeded on the throne by",
+     "accept": [
+      "Ay",
+      "Kheperkheperure Ay",
+      "Pharaoh Ay"
+     ]
+    }
+   },
+   "shortcut_accept": [
+    "Ay",
+    "Kheperkheperure Ay",
+    "Pharaoh Ay"
+   ],
+   "why_nonobvious": "Pharaonic successions are countless; only identifying the gold-mask king as Tutankhamun gives his successor Ay.",
+   "consistency": 0.9,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge1": 1.0
+   },
+   "hop_consistency": 1.0,
+   "context_b2_consistency": null,
+   "shortcut_probes": [
+    {
+     "id": "S1_drop_b1",
+     "kind": "fill",
+     "text": "Fact: An ancient Egyptian pharaoh was succeeded on the throne by",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S1_local_cue",
+     "kind": "fill",
+     "text": "Fact: the pharaoh was succeeded on the throne by",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_0",
+     "kind": "fill",
+     "text": "Fact: the pharaoh of ancient Egypt was succeeded on the throne by",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_1",
+     "kind": "fill",
+     "text": "Fact: the ruler was succeeded on the throne by",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_2",
+     "kind": "qa",
+     "text": "Which ruler of ancient Egypt succeeded a pharaoh on the throne?",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    }
+   ],
+   "shortcut_max": 0.0,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       4,
+       4,
+       2,
+       4
+      ]
+     }
+    },
+    "target": 1,
+    "target_alts": [
+     6
+    ]
+   },
+   "mc": {
+    "bridge1": {
+     "gold": "Tutankhamun",
+     "distractors": [
+      "Ramesses II",
+      "Khufu",
+      "Nefertiti",
+      "Merneptah"
+     ],
+     "pool": "Opus-revised same-topic distractors (r4b_distractors.json)"
+    }
+   },
+   "name_forms": {
+    "bridge1": {
+     "en": [
+      "Tutankhamun",
+      "Tutankhaten",
+      "King Tut",
+      "Tutankhamen"
+     ],
+     "zh": [
+      "图坦卡蒙",
+      "图坦卡门"
+     ]
+    }
+   },
+   "n_render_tokens": 28,
+   "id": "mh2-gold-mask-successor-t0",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 0.9,
+     "pass": true
+    }
+   }
+  }
+ ]
+}
