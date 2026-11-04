@@ -119,7 +119,7 @@ place -> Mawsynram). All six are frozen in `ATI_EXCLUDE`.
 ## Floors
 
 **Floors of record** (bank v5, `evals/baselines/README.md` "Floors of record"; stamp
-`mcrx-2026-11-03d+mc-ml-2026-11-01b+bank-v5`): prompt-only 0.854 [0.78, 0.92] (89 items;
+`mcrx-2026-11-03e+mc-ml-2026-11-01b+bank-v5`): prompt-only 0.854 [0.78, 0.92] (89 items;
 `po-opus-v1`: one Opus 5.5 readout per item, through the same digest and scorer); lucky guessing
 on the content list only (the language is scored on the raw samples, never by an option list;
 Opus 5.5, 5 draws per item, chance 0.200, n = 89): **blind 0.148, described 0.265, topic 0.382,
