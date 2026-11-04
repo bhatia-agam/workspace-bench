@@ -181,8 +181,12 @@ no word of the prompt), for the multihop families the same-answer check (a candi
 the same answer is out), and the validity screen (Opus 5.5 shown the question or text picks the
 gold on 5 of 5 draws). One repair round then re-proposed the lists still leaking (the guessers'
 result as feedback, the gold's naming style required) and searched candidate lists against the
-guessers; items all three guessers still solved were dropped, and a family whose kept items still
-failed on fresh draws also dropped the items the described and topic guessers both still solved.
+guessers (5 per list; 4 for multilingual_multihop); items all three guessers still solved were
+dropped. Where the kept items still failed (on the repair round's draws, or on fresh draws over the
+frozen bank), the items the described and topic guessers both still solved were dropped too,
+unless the bank without them still failed on fresh draws: then that extension was not kept
+(multilingual_multihop). The header's `r5_mc.floors` records those fresh draws
+(`extended_after`, `extension_not_kept`).
 Only content distractor lists change: prompts, units and read plans are untouched (no option is
 rendered) and a dropped item's plan row stays (`read_plan_bank`), so every earlier readout file
 serves the new bank, and the MC calls keep their key, so only the rebuilt lists' calls are new. The

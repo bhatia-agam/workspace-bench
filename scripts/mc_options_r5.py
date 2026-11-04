@@ -15,7 +15,10 @@ Stages, per family (``--family``). State, caches and measurements go under ``out
     measure --round R              the three guessers on round R's candidate bank
     report --round R --baseline-dir D
     next --round R                 the lists still leaking -> round R + 1 (a repair round)
-    drops --round R [--extend]     the items every guesser still solves (see ``cmd_drops``)
+    drops --round R [--extend | --base]
+                                   the items the guessers still solve (see ``cmd_drops``); also
+                                   records the fresh draws that extended the drops or that an
+                                   extension was not kept on
     freeze --round R               evals/<family>/items_vN.json with its ``r5_mc`` record
     measure --final --round R      fresh draws over the frozen bank
     confusers                      re-take the frozen confuser audit on the rebuilt lists
@@ -65,7 +68,9 @@ MARGIN = lg.LEAKAGE_MARGIN
 LEAK_DRAWS = r4.LEAK_DRAWS  # a guesser "leaks" an item when it picks the gold on >= 3 of 5 draws
 LEAK_TOTAL = 6  # ... and the three guessers together pick it on >= 6 of 15 (twice chance)
 EXAMPLE_GUESSERS = ("described", "topic")  # the guessers shown three solved items
-SEARCH_LISTS = 4  # round >= 1: candidate lists per item (r4: 10; fewer to fit the call cap)
+# round >= 1: candidate lists searched per list (r4: 10; fewer to fit the call cap). The default
+# of ``Cfg.search_lists``; each family's value is the number its bank's ``r5_mc.rule`` records
+SEARCH_LISTS = 4
 
 
 @dataclasses.dataclass(frozen=True)
@@ -77,6 +82,7 @@ class Cfg:
     kind: str  # what a content gold is (the proposer's and ranker's item type)
     screen: str  # how the validity screen asks: question | complete | describe | typo
     multihop: bool = False  # the same-answer check (a bridge whose swap keeps the answer)
+    search_lists: int = SEARCH_LISTS  # round >= 1: candidate lists the search plays per list
 
 
 CFGS = {
@@ -89,6 +95,7 @@ CFGS = {
         "model must think of it to complete the statement, but the statement never names it)",
         "question",
         multihop=True,
+        search_lists=5,
     ),
     "basic_readout_mt": Cfg(
         "basic_readout_mt",
@@ -97,6 +104,7 @@ CFGS = {
         6,
         "the specific multi-word name a factual question asks for",
         "question",
+        search_lists=5,
     ),
     "multilingual": Cfg(
         "multilingual",
@@ -123,6 +131,7 @@ CFGS = {
         "prompt (the model must think of it to complete the prompt, but the prompt never names it)",
         "question",
         multihop=True,
+        search_lists=4,
     ),
     "multilingual_typo": Cfg(
         "multilingual_typo",
@@ -131,6 +140,7 @@ CFGS = {
         4,
         "what a misspelled word of a non-English sentence means, as a short English phrase",
         "typo",
+        search_lists=5,
     ),
 }
 
@@ -622,7 +632,7 @@ def apply_lists(items: list[dict[str, Any]], chosen: dict[str, list[str]]) -> li
 
 
 def search(cfg: Cfg, fam: r4.Fam, todo: list[dict], items: list[dict], st: dict, rnd: int) -> None:
-    """r4's search: per leaky list, play :data:`SEARCH_LISTS` candidate lists (the current one +
+    """r4's search: per leaky list, play ``cfg.search_lists`` candidate lists (the current one +
     seeded draws from the 10 best-ranked topic members) against the shipped guessers, 2 draws
     per guesser, the other items' current lists as the worked examples; keep the list whose gold
     they pick least (r4's key: >= 2 confusers, the worst guesser, topic, closeness to chance,
@@ -647,7 +657,7 @@ def search(cfg: Cfg, fam: r4.Fam, todo: list[dict], items: list[dict], st: dict,
         lists: list[list[str]] = [list(s["chosen"])]
         rng = r4._rng(VERSION, "search", cfg.name, x["id"], rnd)
         for _ in range(200):
-            if len(lists) >= SEARCH_LISTS or (not short and len(top) < fam.n_dis):
+            if len(lists) >= cfg.search_lists or (not short and len(top) < fam.n_dis):
                 break
             cand: list[str] = []
             pick = [*top, *rng.sample(rest, len(rest))] if short else rng.sample(top, len(top))
@@ -953,9 +963,45 @@ def cmd_next(cfg: Cfg, a: argparse.Namespace) -> int:
     return 0
 
 
+def fresh_draws(d: Path) -> dict[str, Any] | None:
+    """The guessers ``measure --final`` ran in ``d`` (fresh draws over a frozen bank): each one's
+    rate, the bank's item ids and its uniform chance; None when ``d`` holds no measurement."""
+    got = {v: load(d / f"{v}.json") for v in VARIANTS if (d / f"{v}.json").exists()}
+    if not got:
+        return None
+    ids = {frozenset(r["per_item"]) for r in got.values()}
+    if len(ids) != 1:
+        raise SystemExit(f"{d}: the guessers were measured on different banks")
+    return {
+        "rates": {v: round(float(r["aggregate"]["mean"]), 4) for v, r in got.items()},
+        "ids": set(ids.pop()),
+        "chance": float(next(iter(got.values()))["analytic_floor"]),
+    }
+
+
+def over_bar(fresh: dict[str, Any]) -> dict[str, float]:
+    """The measured guessers whose fresh rate fails the standard (uniform chance + 5 points)."""
+    return {v: r for v, r in fresh["rates"].items() if r > fresh["chance"] + MARGIN + 1e-9}
+
+
 def cmd_drops(cfg: Cfg, a: argparse.Namespace) -> int:
     """After the last repair round: every item all three guessers still solve (the gold on
-    >= 3 of 5 draws each) is dropped."""
+    >= 3 of 5 draws each) is dropped. While the kept items' rates in the round's draws still fail
+    the standard, the items both guessers shown solved examples (described and topic) still solve
+    are dropped too (the extension), unless ``--base``.
+
+    Fresh draws over a frozen bank (``measure --final``, in ``lucky_final/``) are recorded in
+    ``drops.json``, which ``freeze`` copies into ``r5_mc.floors``:
+
+    - ``--extend``: the bank frozen from the all-three rule failed on fresh draws; extend the drops
+      as above and record those draws as ``extended_after``.
+    - ``--base`` after an extension: the extended bank still failed on fresh draws; go back to the
+      all-three rule and record the extension's draws as ``extension_not_kept``.
+
+    Either way those draws move to ``lucky_final_<n>`` / ``lucky_final_extended<k>`` (n kept, k
+    dropped), so the next ``measure --final`` measures the bank frozen from these drops."""
+    if a.extend and a.base:
+        raise SystemExit("drops: --extend and --base exclude each other")
     d = fdir(cfg) / f"lucky_r{a.round}"
     hits, _rec = per_item_hits(d)
     drops = {
@@ -975,7 +1021,31 @@ def cmd_drops(cfg: Cfg, a: argparse.Namespace) -> int:
         est["n_items"] = len(keep)
         return est
 
-    est = estimate([k for k in hits if k not in drops])
+    kept = [k for k in hits if k not in drops]
+    est = estimate(kept)
+    final = fdir(cfg) / "lucky_final"
+    fresh = fresh_draws(final)
+    p = fdir(cfg) / "drops.json"
+    prev = load(p) if p.exists() else None
+    record: dict[str, Any] = {}
+    moved: Path | None = None
+    if a.extend:
+        if fresh is None:
+            raise SystemExit(f"drops --extend: no fresh draws in {final} (run measure --final)")
+        if fresh["ids"] != set(kept):
+            raise SystemExit(
+                f"drops --extend: the fresh draws in {final} are not over the {len(kept)} items "
+                "the all-three rule keeps"
+            )
+        bad = over_bar(fresh)
+        if not bad:
+            raise SystemExit("drops --extend: the frozen bank meets the standard on fresh draws")
+        record["extended_after"] = {
+            **{f"{v}_fresh_draws": r for v, r in bad.items()},
+            "n_items": len(kept),
+            "bank": f"the {len(kept)} items left by the all-three rule",
+        }
+        moved = final.with_name(f"lucky_final_{len(kept)}")
     still: list[str] = []
     fails = any(est[v] > est["chance"] + MARGIN + 1e-9 for v in VARIANTS)
     if (fails or a.extend) and not a.base:
@@ -991,10 +1061,40 @@ def cmd_drops(cfg: Cfg, a: argparse.Namespace) -> int:
                     f"{' / '.join(str(h[v]) for v in still)} of 5 draws"
                 )
         est = estimate([k for k in hits if k not in drops])
-    dump(
-        fdir(cfg) / "drops.json",
-        {"round": a.round, "dropped": drops, "still_failing": still, "kept_estimate": est},
-    )
+    if a.base and prev and prev.get("still_failing"):
+        # the previous drops were extended: when the bank frozen from them failed on fresh
+        # draws, the extension is not kept and those draws are recorded
+        ext = [k for k in hits if k not in prev["dropped"]]
+        bad = over_bar(fresh) if fresh is not None and fresh["ids"] == set(ext) else {}
+        if bad:
+            one = len(bad) == 1
+            shown = set(bad) <= set(EXAMPLE_GUESSERS)
+            record["extension_not_kept"] = {
+                **{f"{v}_fresh_draws": r for v, r in bad.items()},
+                "n_items": len(ext),
+                "why": f"dropping the {len(prev['dropped']) - len(drops)} more items both "
+                f"{' and '.join(prev['still_failing'])} still solved left the "
+                f"{' and '.join(bad)} guesser{'' if one else 's'} at "
+                f"{'this rate' if one else 'these rates'} on fresh draws"
+                + (
+                    f" ({'its' if one else 'their'} per-item picks move with the solved examples "
+                    f"{'it is' if one else 'they are'} shown)"
+                    if shown
+                    else ""
+                )
+                + ", so the extension does not reach the standard and is not kept",
+            }
+            moved = final.with_name(f"lucky_final_extended{len(prev['dropped'])}")
+        else:
+            print(f"{cfg.name}: no failing fresh draws over the extended bank in {final}: "
+                  "the extension is undone without a record")  # fmt: skip
+    if moved is not None and moved.exists():
+        raise SystemExit(f"drops: {moved} exists; move it away first")
+    out = {"round": a.round, "dropped": drops, "still_failing": still, "kept_estimate": est}
+    dump(p, {**out, **record})
+    if moved is not None:
+        final.rename(moved)
+        print(f"{cfg.name}: recorded {sorted(record)}; fresh draws moved to {moved.name}")
     print(f"{cfg.name}: drop {len(drops)} {sorted(drops)}; kept items' rates {est}")
     return 0
 
@@ -1104,6 +1204,8 @@ def cmd_freeze(cfg: Cfg, a: argparse.Namespace) -> int:
         head["r5_mc"]["floors"]["kept_estimate"] = dj["kept_estimate"]
         if dj.get("still_failing"):
             head["r5_mc"]["drop_extended_for"] = dj["still_failing"]
+        # the fresh draws that extended the drops (``drops --extend``) or that an extension was
+        # not kept on (``drops --base``)
         for key in ("extended_after", "extension_not_kept"):
             if dj.get(key):
                 head["r5_mc"]["floors"][key] = dj[key]
@@ -1267,10 +1369,16 @@ def main() -> int:
     ap.add_argument("--dry", action="store_true", help="measure: count uncached prompts only")
     ap.add_argument("--final", action="store_true", help="measure: the frozen new bank")
     ap.add_argument(
-        "--extend", action="store_true", help="drops: the frozen bank failed on fresh draws"
+        "--extend",
+        action="store_true",
+        help="drops: the bank frozen from the all-three rule failed on fresh draws (lucky_final): "
+        "extend the drops and record those draws",
     )
     ap.add_argument(
-        "--base", action="store_true", help="drops: the all-three rule only (no extension)"
+        "--base",
+        action="store_true",
+        help="drops: the all-three rule only; after an extension that failed on fresh draws, "
+        "record it as not kept",
     )
     ap.add_argument("--variants", default=",".join(VARIANTS), help="measure: the guessers")
     a = ap.parse_args()
