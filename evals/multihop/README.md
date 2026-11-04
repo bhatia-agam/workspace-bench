@@ -59,9 +59,9 @@ numbers.
   30 new items needed new reads. All 30 new prompts end in a word token (lite `k = 1`).
 - **Side tables.** `derived_forms.json` is `mhforms-v2`: 105 keys for the new items' options (32
   with forms); every earlier entry is unchanged and no new key is an option of banks v1-v4, so no
-  earlier verdict moves. The gate version is `bank-gate-r9`. `split_subjects.json`
+  earlier verdict moves. The gate version is `bank-gate-r10`. `split_subjects.json`
   (`split-subjects-r4`) adds the new items' first-hop cue words.
-- **Stamp** `bank-mc-2026-11-01-v3+bank-gate-r9+bank-v5`. The MC calls keep their
+- **Stamp** `bank-mc-2026-11-01-v3+bank-gate-r10+bank-v5`. The MC calls keep their
   `bank-mc-2026-11-01-v3` key, so the 68 kept items' cached answers stay valid.
 - **Floors of record** on bank v5 (`evals/baselines/README.md` "Floors of record"): prompt-only
   0.918 (n = 98; 0.941 on bank v4's 68), lucky blind 0.145, described 0.218, topic 0.224 vs
@@ -414,5 +414,5 @@ The readout below is a digest of the readouts across every read layer and positi
   v4's 68 items. They were measured under the `bank-gate-r8` draft: the lucky-guessing entries
   carry `bank-gate-r9` (a guesser sees only the lists); the prompt-only floor stays on
   `bank-gate-r8` until re-scored under the new stamp.
-- 2026-11-04 (`+bank-gate-r9+bank-v5`): bank v5 adds 30 gated two-hop items of the kinds bank v4
+- 2026-11-04 (`+bank-gate-r10+bank-v5`): bank v5 adds 30 gated two-hop items of the kinds bank v4
   lost (98 items, its own read plan), with derived forms for their options (`mhforms-v2`).

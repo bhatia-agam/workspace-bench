@@ -69,7 +69,7 @@ model_specific_directed_modulation, nyt_connections and typo_mt.
 | knowledge_cutoff | 0.000 | 0.000 | 147 | cutoff-judge-2026-10-31+kcgate-v3 | Opus 5.5 |
 | moral_rationale | 0.441 | 0.533 [0.47, 0.61] | 195 | ec-v9+nq1+maj3v (majority of 3 draws, near-verbatim quotes) | Opus 5.5 |
 | multi_concept_directed_modulation | 0.965 | 0.965 (saturated) | 114 | mcdm-2026-11-01e+bank-v2+notokinterp-2026-10-30+pins-r3+nocap-a1 | Opus 5.5 |
-| multihop (bank v5) | 0.941 (v4, 68) | 0.918 [0.86, 0.97] | 98 | bank-mc-2026-11-01-v3+bank-gate-r9+bank-v5 | Opus 5.5 |
+| multihop (bank v5) | 0.941 (v4, 68) | 0.918 [0.86, 0.97] | 98 | bank-mc-2026-11-01-v3+bank-gate-r10+bank-v5 | Opus 5.5 |
 | multihop_mt_v2 | 1.000 | 1.000 | 70 | mh2-mc-2026-11-01+norival-v1+qline-v1+bank-v5 | Opus 5.5 |
 | multilingual | 0.879 | 0.949 [0.90, 0.99] | 99 | mcrx-2026-11-03d+mc-ml-2026-11-01b | Opus 5.5 |
 | multilingual_mt | 0.950 | 0.980 [0.95, 1.00] | 100 | mt-regex-2026-10-30+v2+ln-2026-11-03a+rawrx-v2+plural-v1+langleg-v1+bank-v4 | Opus 5.5 |
@@ -81,18 +81,17 @@ model_specific_directed_modulation, nyt_connections and typo_mt.
 | user_modeling | 0.260 | 0.681 [0.53, 0.81] | 47 | um-v3.4+bank-v2+maj3 | Opus 5.5 |
 | wrong_intermediate | 0.000 | 0.000 | 100 | wb-mc-2026-10-31r+judge-only-v1+qline-v2+wbforms-v4+bank-v4 | Opus 5.5 |
 
-Four floors were re-scored later on 2026-11-04, after scoring-only rule fixes earlier in this
+Five floors were re-scored later on 2026-11-04, after scoring-only rule fixes earlier in this
 series moved their result stamps (no call key moved): association (`gate-a2`),
 chain_intermediates (`heads-v5`), wrong_intermediate and basic_readout (`qline-v2`, basic_readout
-also `brsum-v2`). Each was re-judged from its own cached answers (0 new judge calls) and refrozen;
+also `brsum-v2`) and multihop on bank v5 (`bank-gate-r10`). Each was re-judged from its own cached answers (0 new judge calls) and refrozen;
 the text-blind entries of the gated ones were re-gated from the re-judged panel draws. Only
 association's floor moved (0.912 -> 0.923: de-oktoberfest's "Oktoberfest-style" quote now
 passes); no text-blind id entered or left a subset. The lucky-guessing entries of every affected
 family carry the new stamps (a guesser sees only the option lists, which no fix changed).
 
 Still on the stamp they were measured under, so not drawn until re-scored: the prompt-only floors
-of basic_readout_mt (`qline-v1`), multihop (`bank-gate-r8`), multihop_mt_v2 (`qline-v1`),
-user_modeling (`+maj3`) and the four multilingual families (`plural-v1` / `mcrx-2026-11-03d`),
+of basic_readout_mt (`qline-v1`), multihop_mt_v2 (`qline-v1`), user_modeling (`+maj3`) and the four multilingual families (`plural-v1` / `mcrx-2026-11-03d`),
 and the text-blind entries of basic_readout_mt and the four multilingual families. Each of these
 families moves to a new bank later in this series, and its floors are re-measured there.
 

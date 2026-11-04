@@ -239,7 +239,6 @@ SONNET_DIGEST = ("agentic_misalignment", "jailbreak_recognition")
 # pass / fail vote, on banks this series replaces later.
 PENDING_RESCORE: dict[str, str] = {
     "basic_readout_mt": "mc-brmt-2026-10-31r+norival-v1+qline-v1+bank-v5",
-    "multihop": "bank-mc-2026-11-01-v3+bank-gate-r8+bank-v4",
     "multihop_mt_v2": "mh2-mc-2026-11-01+norival-v1+qline-v1+bank-v5",
     "multilingual": "mcrx-2026-11-03d+mc-ml-2026-11-01b",
     "multilingual_mt": (
