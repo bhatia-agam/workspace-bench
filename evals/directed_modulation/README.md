@@ -55,10 +55,12 @@ content-vs-narration classifier rather than an identifier).
   quote holds no listed form of the gold (word or plural), and `n_items_relative_only` the items
   whose pass rests only on such picks, so the share the clause adds is visible.
 - **Several options.** A readout that names two or more of the options without singling one out
-  is cannot-tell; a readout that names only one of the options counts for it, even inside a list
-  of other words of the same kind (the shared flat-list rule; `flat_types=()`). Token readouts get
-  the shared token-list rule `mc.token_note()` (tokens of one list may jointly name a concept;
-  adjacent positions of one layer only to spell one word).
+  is cannot-tell. A readout that is a run of same-kind words (a list of colours, metals, animals,
+  places, ...) singles out none of them, even when only one of them is an option (the judge
+  prompt's rule, `USER`); otherwise a readout that names only one of the options counts for it.
+  `flat_types=()` only means the family names no kind of its own: token readouts get the shared
+  token-list rule `mc.token_note()`, which carries the same rule for runs of one kind (tokens of one list
+  may jointly name a concept; adjacent positions of one layer only to spell one word).
 - **Evidence gate.** Every positive (a pick or any `domain_overlap` entry) must carry `evidence`
   that passes `digest.quote_ok`: a span of the one prose sample judged (natively), one or several
   tokens of the one token list (" | "-joined, not necessarily adjacent), or a word split across
