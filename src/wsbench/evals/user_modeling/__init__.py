@@ -15,7 +15,10 @@ SPEC = register(
         name="user_modeling",
         title="User modelling",
         group="association",
-        bank=Path("evals/user_modeling/items.json"),
+        # bank v2 = the 47 selfdescribe items; items.json (100 items) is frozen and stays
+        # judgeable with WSB_BANK_FILE_USER_MODELING; bank v2 reads with items.json's plan
+        # (read_plan_bank), so one read serves both
+        bank=Path("evals/user_modeling/items_v2.json"),
         judge=JudgeConfig(prompt_version=PROMPT_VERSION),
         metric="pass_rate",
         higher_is_better=True,
@@ -27,7 +30,7 @@ SPEC = register(
         full_contiguous=True,
         flat_types=_prompts.FLAT_TYPES,
         multi_select=_prompts.MULTI_SELECT,
-        calls_per_arm="≈ 56k x k native; 100 summary",
+        calls_per_arm="≈ 26k x k native; 47 summary",
         sources="Choi et al. 2025",
     )
 )

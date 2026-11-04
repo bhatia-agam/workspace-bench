@@ -212,9 +212,11 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   came from, and that is not a prompt echo; no code check overrules the judge's pick
   (`judge-only-v1`), and the raw wrong-vs-true counts are reported only; `true_bridge_rate`
   replaces the removed wrong_bridge_true).
-  user_modeling (plan 0056, `um-v3.2`) adds a value gate on top of the shared
+  user_modeling (plan 0056; judge calls `CALL_VERSION = "um-v3.4"`; bank `items_v2.json` = the
+  47 selfdescribe items, result stamp `um-v3.4+bank-v2`, read plan = items.json's via
+  `read_plan_bank`) adds a value gate on top of the shared
   `quote_ok` + `statement_lines`: `mc.form_in` over its frozen lexicon `aliases.py` (an edit
-  there bumps its `PROMPT_VERSION`; `tests/fixtures/user_modeling_gate_cases.json` replays the
+  there bumps its `CALL_VERSION`; `tests/fixtures/user_modeling_gate_cases.json` replays the
   cached gold picks, so rebuild the fixture's `blocked_expected` when the lexicon changes).
   role-bound's summary mode asks each item three times and votes over the draws' pass / fail
   verdicts (`judge.draw_verdict`, stamp `+maj3v`), reusing conjunctive's `draw_key` /

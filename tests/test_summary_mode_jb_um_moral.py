@@ -141,7 +141,14 @@ def _esc(opts: dict, item_id: str) -> int:
     return len(opts[item_id][0]) + 1
 
 
-def test_user_modeling_one_call_per_item(tmp_path, monkeypatch):
+@pytest.fixture
+def um_v1(monkeypatch):
+    # UB is a synthsys item, which the registered bank v2 drops, so these tests pin the frozen
+    # 100-item items.json (still judgeable, stamped um-v3.4)
+    monkeypatch.setenv("WSB_BANK_FILE_USER_MODELING", "evals/user_modeling/items.json")
+
+
+def test_user_modeling_one_call_per_item(tmp_path, monkeypatch, um_v1):
     path = EX / "user_modeling.jsonl"
     opts = _um_options()
 
@@ -172,14 +179,14 @@ def test_user_modeling_one_call_per_item(tmp_path, monkeypatch):
     fake = FakeLLM.install(monkeypatch, judge)
     r = um.run(summary_args(path, tmp_path / "s", ump.PROMPT_VERSION, items=[UA, UB]))
     assert fake.n("digest") == 2 * 2 and fake.n("um_attribute") == 2
-    _common(r, native, ump.PROMPT_VERSION)
+    _common(r, native, ump.CALL_VERSION)  # the v1 bank's stamp (no +bank-v2)
     by = {x["id"]: x for x in r.rows}
     assert by[UA]["pick"] == "gold" and by[UB]["pick"] == "cannot_tell"
     assert r.value == 0.5 and "pass_at_1" not in r.extras
     assert by[UA]["summary_state"] == "summarized" and by[UA]["sample_idx"] == 0
 
 
-def test_user_modeling_unsummarized_is_undecided_and_unjudged(tmp_path, monkeypatch):
+def test_user_modeling_unsummarized_is_undecided_and_unjudged(tmp_path, monkeypatch, um_v1):
     path = EX / "user_modeling.jsonl"
     fake = FakeLLM.install(
         monkeypatch,

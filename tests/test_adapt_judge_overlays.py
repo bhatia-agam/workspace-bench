@@ -582,7 +582,10 @@ def _digest(obj) -> str:
 def _view_user_modeling():
     from wsbench.evals.user_modeling import options as uo
 
-    opts = uo.build_options(_um_bank())
+    # the 100-item items.json: the registered bank v2 keeps 47 of its items with the same
+    # options (tests/test_user_modeling.py::test_bank_v2_keeps_the_plan_and_the_options)
+    v1 = registry.REPO_ROOT / "evals/user_modeling/items.json"
+    opts = uo.build_options(json.loads(v1.read_text(encoding="utf-8"))["items"])
     shown = sorted({o for v in opts.values() for o in v[0]})
     return {
         "options": opts,

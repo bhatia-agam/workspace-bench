@@ -39,7 +39,7 @@ from .options import (
     sibling_forms,
     value_of,
 )
-from .prompts import PROMPT_VERSION, SEED, UM_ATTRIBUTE_SCHEMA, UM_ATTRIBUTE_SYSTEM
+from .prompts import BANK_STAMP, CALL_VERSION, SEED, UM_ATTRIBUTE_SCHEMA, UM_ATTRIBUTE_SYSTEM
 
 FAMILY = "user_modeling"
 __all__ = [
@@ -607,14 +607,23 @@ def _label(it: dict) -> str:
     return str(it.get("attr_label") or "attribute")
 
 
+def instrument(raw: dict) -> str:
+    """The result stamp of a bank: ``CALL_VERSION`` plus the bank's stamp (bank v2, the
+    selfdescribe items: ``+bank-v2``; the frozen 100-item ``items.json`` and the adapted banks,
+    which carry no ``version``: none)."""
+    return CALL_VERSION + (BANK_STAMP if int(raw.get("version", 1)) >= 2 else "")
+
+
 def run(args: JudgeArgs) -> FamilyResult:
-    bank = load_bank(FAMILY)["items"]
+    raw = load_bank(FAMILY)
+    bank = raw["items"]
+    stamp = instrument(raw)
     scope = item_scope(bank, args)
     by_id = {it["name"]: it for it in scope}
     options = build_options(bank)
     cells, rep = reads.load(args, FAMILY, ids=list(by_id))
     if digest.summary_mode(args):
-        return _run_summary(args, scope, by_id, options, cells, rep)
+        return _run_summary(args, scope, by_id, options, cells, rep, stamp)
     nonempty = [c for c in cells if not c.empty]
     spend = Spend()
     pre = Preflighter(args.dry_run)
@@ -662,7 +671,7 @@ def run(args: JudgeArgs) -> FamilyResult:
                 calls,
                 schema=UM_ATTRIBUTE_SCHEMA,
                 judge=args.judge,
-                prompt_version=PROMPT_VERSION,
+                prompt_version=CALL_VERSION,
                 cache=cache,
                 spend=spend,
                 concurrency=args.concurrency,
@@ -701,7 +710,7 @@ def run(args: JudgeArgs) -> FamilyResult:
             scope,
             rows,
             counts=counts,
-            config=base_config(args, PROMPT_VERSION, seed=SEED),
+            config=base_config(args, stamp, seed=SEED),
             n_api_failed=n_api_failed,
             options=options,
         ),
@@ -717,6 +726,7 @@ def _run_summary(
     options: dict[str, Options],
     cells: list[Cell],
     rep: LoadReport,
+    stamp: str,
 ) -> FamilyResult:
     """Summary mode (plan 0020): every selected cell of an item, across every requested layer ->
     one digest -> one MC call. An item with no cells and an empty digest are fails (whole-scope
@@ -727,7 +737,7 @@ def _run_summary(
         by_item[c.id].append(c)
     spend = Spend()
     pre = Preflighter(args.dry_run)
-    pv = digest.prompt_version(PROMPT_VERSION, args, FAMILY)
+    pv = digest.prompt_version(CALL_VERSION, args, FAMILY)
     passed = {i: by_item[i] for i in by_id if by_item.get(i)}
     with Cache(args.out / "cells.jsonl") as cache:
         col = digest.collapse(
@@ -843,7 +853,12 @@ def _run_summary(
             scope,
             rows,
             counts=counts,
-            config=base_config(args, pv, seed=SEED, **digest.config(args, source_kind, FAMILY)),
+            config=base_config(
+                args,
+                digest.prompt_version(stamp, args, FAMILY),
+                seed=SEED,
+                **digest.config(args, source_kind, FAMILY),
+            ),
             n_api_failed=n_api_failed + len(col.unsummarized),
             summary=col.extras(),
             n_items_scope=len(scope),

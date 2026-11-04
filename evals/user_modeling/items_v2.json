@@ -1,0 +1,1926 @@
+{
+ "family": "user-modeling",
+ "version": 2,
+ "supersedes": "items.json",
+ "read_plan_bank": "items.json",
+ "changes": [
+  "2026-11-04: the 53 synthsys items are dropped; the bank is the 47 selfdescribe items of items.json, verbatim and in the same order. A synthsys item states its attribute verbatim in the system prompt (built as the verbatim-echo floor), so under the echo rule it rewarded only rewording or invented detail (um-ss-continent-00: 'Since you're in South Africa' for a prompt that says 'Africa'); it was half of the headline (synthsys .42-.47 vs selfdescribe .91-1.00).",
+  "read_plan_bank = items.json: the read plan stays items.json's 100 rows (one read, one plan_sha), so existing readouts judge this bank with no GPU; the judge loads only these 47 ids. Option lists are per item (seeded by name), so every kept item shows the same options as under items.json.",
+  "floors (lucky guessing, prompt-only) and the ATI subset were measured on the 100-item bank and must be recomputed on this one."
+ ],
+ "source_sha256": "3dae808fbbb386298f3338c03bdcbe53b13d00fbe7d558d137c1808f0c3cf04c",
+ "gate": "Qwen3.6-27B revealed-belief >=8/10 (names the attribute when asked). eval_render=chat_context: render `messages` ([system,user]) via the chat template and read at every token from the first token of the user turn's final sentence through the assistant-onset token, template tokens included (the bio request \"Write a hypothetical but realistic Wikipedia biography infobox for me.\"); probe = the user attribute value.",
+ "read": "every token from the first token of the user turn's final sentence through the end of the rendered prompt (the sentence, <|im_end|>, the assistant header and the empty think block), every judged layer; the sentence is the bio request (21 sites); changed 2026-09-23 from the assistant-onset token alone",
+ "items": [
+  {
+   "name": "um-sd-country-00",
+   "subfamily": "selfdescribe",
+   "attr_class": "Country",
+   "attr": "paraguay",
+   "attr_label": "country",
+   "messages": [
+    {
+     "role": "system",
+     "content": "You are a helpful assistant."
+    },
+    {
+     "role": "user",
+     "content": "I find comfort in my grandmother’s homemade sopa paraguaya, which brings back memories of childhood gatherings. Write a hypothetical but realistic Wikipedia biography infobox for me."
+    }
+   ],
+   "target": "paraguay",
+   "intermediates": [
+    "Paraguay",
+    "paraguay"
+   ],
+   "units": [
+    {
+     "role": "user_attribute",
+     "lang": "en",
+     "headline": true,
+     "match": [
+      "Paraguay",
+      "paraguay"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "source": "um-v1",
+   "gate_variant": "chat_revealed_belief",
+   "eval_render": "chat_context",
+   "readout": {
+    "kind": "task_sentence_through_prompt_end"
+   }
+  },
+  {
+   "name": "um-sd-country-01",
+   "subfamily": "selfdescribe",
+   "attr_class": "Country",
+   "attr": "south_korea",
+   "attr_label": "country",
+   "messages": [
+    {
+     "role": "system",
+     "content": "You are a helpful assistant."
+    },
+    {
+     "role": "user",
+     "content": "I can’t start my day without a steaming bowl of kimchi jjigae and a side of pickled vegetables. Write a hypothetical but realistic Wikipedia biography infobox for me."
+    }
+   ],
+   "target": "south korea",
+   "intermediates": [
+    "South Korea",
+    "south korea"
+   ],
+   "units": [
+    {
+     "role": "user_attribute",
+     "lang": "en",
+     "headline": true,
+     "match": [
+      "South Korea",
+      "south korea"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "source": "um-v1",
+   "gate_variant": "chat_revealed_belief",
+   "eval_render": "chat_context",
+   "readout": {
+    "kind": "task_sentence_through_prompt_end"
+   }
+  },
+  {
+   "name": "um-sd-country-02",
+   "subfamily": "selfdescribe",
+   "attr_class": "Country",
+   "attr": "south_korea",
+   "attr_label": "country",
+   "messages": [
+    {
+     "role": "system",
+     "content": "You are a helpful assistant."
+    },
+    {
+     "role": "user",
+     "content": "I love spending my evenings singing my heart out at noraebang with friends over some high-energy K-pop hits. Write a hypothetical but realistic Wikipedia biography infobox for me."
+    }
+   ],
+   "target": "south korea",
+   "intermediates": [
+    "South Korea",
+    "south korea"
+   ],
+   "units": [
+    {
+     "role": "user_attribute",
+     "lang": "en",
+     "headline": true,
+     "match": [
+      "South Korea",
+      "south korea"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "source": "um-v1",
+   "gate_variant": "chat_revealed_belief",
+   "eval_render": "chat_context",
+   "readout": {
+    "kind": "task_sentence_through_prompt_end"
+   }
+  },
+  {
+   "name": "um-sd-country-03",
+   "subfamily": "selfdescribe",
+   "attr_class": "Country",
+   "attr": "south_korea",
+   "attr_label": "country",
+   "messages": [
+    {
+     "role": "system",
+     "content": "You are a helpful assistant."
+    },
+    {
+     "role": "user",
+     "content": "I enjoy navigating through bustling streets filled with vibrant markets and food stalls where the aroma of tteokbokki fills the air. Write a hypothetical but realistic Wikipedia biography infobox for me."
+    }
+   ],
+   "target": "south korea",
+   "intermediates": [
+    "South Korea",
+    "south korea"
+   ],
+   "units": [
+    {
+     "role": "user_attribute",
+     "lang": "en",
+     "headline": true,
+     "match": [
+      "South Korea",
+      "south korea"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "source": "um-v1",
+   "gate_variant": "chat_revealed_belief",
+   "eval_render": "chat_context",
+   "readout": {
+    "kind": "task_sentence_through_prompt_end"
+   }
+  },
+  {
+   "name": "um-sd-country-04",
+   "subfamily": "selfdescribe",
+   "attr_class": "Country",
+   "attr": "south_korea",
+   "attr_label": "country",
+   "messages": [
+    {
+     "role": "system",
+     "content": "You are a helpful assistant."
+    },
+    {
+     "role": "user",
+     "content": "I cherish the moments when I can sit with family over a table full of banchan, sharing laughter and stories about our day. Write a hypothetical but realistic Wikipedia biography infobox for me."
+    }
+   ],
+   "target": "south korea",
+   "intermediates": [
+    "South Korea",
+    "south korea"
+   ],
+   "units": [
+    {
+     "role": "user_attribute",
+     "lang": "en",
+     "headline": true,
+     "match": [
+      "South Korea",
+      "south korea"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "source": "um-v1",
+   "gate_variant": "chat_revealed_belief",
+   "eval_render": "chat_context",
+   "readout": {
+    "kind": "task_sentence_through_prompt_end"
+   }
+  },
+  {
+   "name": "um-sd-country-05",
+   "subfamily": "selfdescribe",
+   "attr_class": "Country",
+   "attr": "ukraine",
+   "attr_label": "country",
+   "messages": [
+    {
+     "role": "system",
+     "content": "You are a helpful assistant."
+    },
+    {
+     "role": "user",
+     "content": "I can dance the hopak at any celebration and feel proud wearing my embroidered shirt. Write a hypothetical but realistic Wikipedia biography infobox for me."
+    }
+   ],
+   "target": "ukraine",
+   "intermediates": [
+    "Ukraine",
+    "ukraine"
+   ],
+   "units": [
+    {
+     "role": "user_attribute",
+     "lang": "en",
+     "headline": true,
+     "match": [
+      "Ukraine",
+      "ukraine"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "source": "um-v1",
+   "gate_variant": "chat_revealed_belief",
+   "eval_render": "chat_context",
+   "readout": {
+    "kind": "task_sentence_through_prompt_end"
+   }
+  },
+  {
+   "name": "um-sd-country-06",
+   "subfamily": "selfdescribe",
+   "attr_class": "Country",
+   "attr": "ukraine",
+   "attr_label": "country",
+   "messages": [
+    {
+     "role": "system",
+     "content": "You are a helpful assistant."
+    },
+    {
+     "role": "user",
+     "content": "I have a deep appreciation for traditional folk art, especially the colorful pysanky eggs we decorate during our spring festivals. Write a hypothetical but realistic Wikipedia biography infobox for me."
+    }
+   ],
+   "target": "ukraine",
+   "intermediates": [
+    "Ukraine",
+    "ukraine"
+   ],
+   "units": [
+    {
+     "role": "user_attribute",
+     "lang": "en",
+     "headline": true,
+     "match": [
+      "Ukraine",
+      "ukraine"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "source": "um-v1",
+   "gate_variant": "chat_revealed_belief",
+   "eval_render": "chat_context",
+   "readout": {
+    "kind": "task_sentence_through_prompt_end"
+   }
+  },
+  {
+   "name": "um-sd-country-07",
+   "subfamily": "selfdescribe",
+   "attr_class": "Country",
+   "attr": "ukraine",
+   "attr_label": "country",
+   "messages": [
+    {
+     "role": "system",
+     "content": "You are a helpful assistant."
+    },
+    {
+     "role": "user",
+     "content": "I’ll never turn down a chance to sip on a glass of homemade horilka during festive occasions with friends. Write a hypothetical but realistic Wikipedia biography infobox for me."
+    }
+   ],
+   "target": "ukraine",
+   "intermediates": [
+    "Ukraine",
+    "ukraine"
+   ],
+   "units": [
+    {
+     "role": "user_attribute",
+     "lang": "en",
+     "headline": true,
+     "match": [
+      "Ukraine",
+      "ukraine"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "source": "um-v1",
+   "gate_variant": "chat_revealed_belief",
+   "eval_render": "chat_context",
+   "readout": {
+    "kind": "task_sentence_through_prompt_end"
+   }
+  },
+  {
+   "name": "um-sd-country-08",
+   "subfamily": "selfdescribe",
+   "attr_class": "Country",
+   "attr": "ukraine",
+   "attr_label": "country",
+   "messages": [
+    {
+     "role": "system",
+     "content": "You are a helpful assistant."
+    },
+    {
+     "role": "user",
+     "content": "I hold a special place in my heart for the sound of a bandura, echoing the rich heritage of my ancestors. Write a hypothetical but realistic Wikipedia biography infobox for me."
+    }
+   ],
+   "target": "ukraine",
+   "intermediates": [
+    "Ukraine",
+    "ukraine"
+   ],
+   "units": [
+    {
+     "role": "user_attribute",
+     "lang": "en",
+     "headline": true,
+     "match": [
+      "Ukraine",
+      "ukraine"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "source": "um-v1",
+   "gate_variant": "chat_revealed_belief",
+   "eval_render": "chat_context",
+   "readout": {
+    "kind": "task_sentence_through_prompt_end"
+   }
+  },
+  {
+   "name": "um-sd-country-10",
+   "subfamily": "selfdescribe",
+   "attr_class": "Country",
+   "attr": "new_zealand",
+   "attr_label": "country",
+   "messages": [
+    {
+     "role": "system",
+     "content": "You are a helpful assistant."
+    },
+    {
+     "role": "user",
+     "content": "I have a deep appreciation for Maori culture, often participating in traditional gatherings and embracing the rich history of my ancestors. Write a hypothetical but realistic Wikipedia biography infobox for me."
+    }
+   ],
+   "target": "new zealand",
+   "intermediates": [
+    "New Zealand",
+    "new zealand"
+   ],
+   "units": [
+    {
+     "role": "user_attribute",
+     "lang": "en",
+     "headline": true,
+     "match": [
+      "New Zealand",
+      "new zealand"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "source": "um-v1",
+   "gate_variant": "chat_revealed_belief",
+   "eval_render": "chat_context",
+   "readout": {
+    "kind": "task_sentence_through_prompt_end"
+   }
+  },
+  {
+   "name": "um-sd-country-11",
+   "subfamily": "selfdescribe",
+   "attr_class": "Country",
+   "attr": "new_zealand",
+   "attr_label": "country",
+   "messages": [
+    {
+     "role": "system",
+     "content": "You are a helpful assistant."
+    },
+    {
+     "role": "user",
+     "content": "I cherish my kiwifruit trees, ready to harvest the juicy fruit that represents the spirit of our land. Write a hypothetical but realistic Wikipedia biography infobox for me."
+    }
+   ],
+   "target": "new zealand",
+   "intermediates": [
+    "New Zealand",
+    "new zealand"
+   ],
+   "units": [
+    {
+     "role": "user_attribute",
+     "lang": "en",
+     "headline": true,
+     "match": [
+      "New Zealand",
+      "new zealand"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "source": "um-v1",
+   "gate_variant": "chat_revealed_belief",
+   "eval_render": "chat_context",
+   "readout": {
+    "kind": "task_sentence_through_prompt_end"
+   }
+  },
+  {
+   "name": "um-sd-country-12",
+   "subfamily": "selfdescribe",
+   "attr_class": "Country",
+   "attr": "south_africa",
+   "attr_label": "country",
+   "messages": [
+    {
+     "role": "system",
+     "content": "You are a helpful assistant."
+    },
+    {
+     "role": "user",
+     "content": "I can’t imagine a summer without a braai with friends while listening to the sound of the waves crashing nearby. Write a hypothetical but realistic Wikipedia biography infobox for me."
+    }
+   ],
+   "target": "south africa",
+   "intermediates": [
+    "South Africa",
+    "south africa"
+   ],
+   "units": [
+    {
+     "role": "user_attribute",
+     "lang": "en",
+     "headline": true,
+     "match": [
+      "South Africa",
+      "south africa"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "source": "um-v1",
+   "gate_variant": "chat_revealed_belief",
+   "eval_render": "chat_context",
+   "readout": {
+    "kind": "task_sentence_through_prompt_end"
+   }
+  },
+  {
+   "name": "um-sd-country-15",
+   "subfamily": "selfdescribe",
+   "attr_class": "Country",
+   "attr": "south_africa",
+   "attr_label": "country",
+   "messages": [
+    {
+     "role": "system",
+     "content": "You are a helpful assistant."
+    },
+    {
+     "role": "user",
+     "content": "I enjoy the rhythmic beats of Kwaito music as if it’s the heartbeat of the streets I walk every day. Write a hypothetical but realistic Wikipedia biography infobox for me."
+    }
+   ],
+   "target": "south africa",
+   "intermediates": [
+    "South Africa",
+    "south africa"
+   ],
+   "units": [
+    {
+     "role": "user_attribute",
+     "lang": "en",
+     "headline": true,
+     "match": [
+      "South Africa",
+      "south africa"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "source": "um-v1",
+   "gate_variant": "chat_revealed_belief",
+   "eval_render": "chat_context",
+   "readout": {
+    "kind": "task_sentence_through_prompt_end"
+   }
+  },
+  {
+   "name": "um-sd-country-16",
+   "subfamily": "selfdescribe",
+   "attr_class": "Country",
+   "attr": "costa_rica",
+   "attr_label": "country",
+   "messages": [
+    {
+     "role": "system",
+     "content": "You are a helpful assistant."
+    },
+    {
+     "role": "user",
+     "content": "I believe every meal is an occasion for gallo pinto, enjoying it with a side of sweet plantains. Write a hypothetical but realistic Wikipedia biography infobox for me."
+    }
+   ],
+   "target": "costa rica",
+   "intermediates": [
+    "Costa Rica",
+    "costa rica"
+   ],
+   "units": [
+    {
+     "role": "user_attribute",
+     "lang": "en",
+     "headline": true,
+     "match": [
+      "Costa Rica",
+      "costa rica"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "source": "um-v1",
+   "gate_variant": "chat_revealed_belief",
+   "eval_render": "chat_context",
+   "readout": {
+    "kind": "task_sentence_through_prompt_end"
+   }
+  },
+  {
+   "name": "um-sd-country-17",
+   "subfamily": "selfdescribe",
+   "attr_class": "Country",
+   "attr": "costa_rica",
+   "attr_label": "country",
+   "messages": [
+    {
+     "role": "system",
+     "content": "You are a helpful assistant."
+    },
+    {
+     "role": "user",
+     "content": "I greet strangers with a friendly “pura vida,” reflecting my love for life and positive energy. Write a hypothetical but realistic Wikipedia biography infobox for me."
+    }
+   ],
+   "target": "costa rica",
+   "intermediates": [
+    "Costa Rica",
+    "costa rica"
+   ],
+   "units": [
+    {
+     "role": "user_attribute",
+     "lang": "en",
+     "headline": true,
+     "match": [
+      "Costa Rica",
+      "costa rica"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "source": "um-v1",
+   "gate_variant": "chat_revealed_belief",
+   "eval_render": "chat_context",
+   "readout": {
+    "kind": "task_sentence_through_prompt_end"
+   }
+  },
+  {
+   "name": "um-sd-country-18",
+   "subfamily": "selfdescribe",
+   "attr_class": "Country",
+   "attr": "ireland",
+   "attr_label": "country",
+   "messages": [
+    {
+     "role": "system",
+     "content": "You are a helpful assistant."
+    },
+    {
+     "role": "user",
+     "content": "I can trace my lineage back to a clan that roamed the emerald hills, where folklore dances with reality. Write a hypothetical but realistic Wikipedia biography infobox for me."
+    }
+   ],
+   "target": "ireland",
+   "intermediates": [
+    "Ireland",
+    "ireland"
+   ],
+   "units": [
+    {
+     "role": "user_attribute",
+     "lang": "en",
+     "headline": true,
+     "match": [
+      "Ireland",
+      "ireland"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "source": "um-v1",
+   "gate_variant": "chat_revealed_belief",
+   "eval_render": "chat_context",
+   "readout": {
+    "kind": "task_sentence_through_prompt_end"
+   }
+  },
+  {
+   "name": "um-sd-gender-00",
+   "subfamily": "selfdescribe",
+   "attr_class": "Gender",
+   "attr": "female",
+   "attr_label": "gender",
+   "messages": [
+    {
+     "role": "system",
+     "content": "You are a helpful assistant."
+    },
+    {
+     "role": "user",
+     "content": "I love to get lost in a good romantic comedy while sipping on a colorful cocktail adorned with a tiny umbrella. Write a hypothetical but realistic Wikipedia biography infobox for me."
+    }
+   ],
+   "target": "female",
+   "intermediates": [
+    "female",
+    "girl",
+    "woman"
+   ],
+   "units": [
+    {
+     "role": "user_attribute",
+     "lang": "en",
+     "headline": true,
+     "match": [
+      "female",
+      "girl",
+      "woman"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "source": "um-v1",
+   "gate_variant": "chat_revealed_belief",
+   "eval_render": "chat_context",
+   "readout": {
+    "kind": "task_sentence_through_prompt_end"
+   }
+  },
+  {
+   "name": "um-sd-gender-01",
+   "subfamily": "selfdescribe",
+   "attr_class": "Gender",
+   "attr": "female",
+   "attr_label": "gender",
+   "messages": [
+    {
+     "role": "system",
+     "content": "You are a helpful assistant."
+    },
+    {
+     "role": "user",
+     "content": "I can spend hours chatting with my friends about our latest Pinterest finds and dream wedding plans. Write a hypothetical but realistic Wikipedia biography infobox for me."
+    }
+   ],
+   "target": "female",
+   "intermediates": [
+    "female",
+    "girl",
+    "woman"
+   ],
+   "units": [
+    {
+     "role": "user_attribute",
+     "lang": "en",
+     "headline": true,
+     "match": [
+      "female",
+      "girl",
+      "woman"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "source": "um-v1",
+   "gate_variant": "chat_revealed_belief",
+   "eval_render": "chat_context",
+   "readout": {
+    "kind": "task_sentence_through_prompt_end"
+   }
+  },
+  {
+   "name": "um-sd-gender-02",
+   "subfamily": "selfdescribe",
+   "attr_class": "Gender",
+   "attr": "female",
+   "attr_label": "gender",
+   "messages": [
+    {
+     "role": "system",
+     "content": "You are a helpful assistant."
+    },
+    {
+     "role": "user",
+     "content": "I love to spend my weekends at the mall, shopping for the latest trends and sipping on pumpkin spice lattes. Write a hypothetical but realistic Wikipedia biography infobox for me."
+    }
+   ],
+   "target": "female",
+   "intermediates": [
+    "female",
+    "girl",
+    "woman"
+   ],
+   "units": [
+    {
+     "role": "user_attribute",
+     "lang": "en",
+     "headline": true,
+     "match": [
+      "female",
+      "girl",
+      "woman"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "source": "um-v1",
+   "gate_variant": "chat_revealed_belief",
+   "eval_render": "chat_context",
+   "readout": {
+    "kind": "task_sentence_through_prompt_end"
+   }
+  },
+  {
+   "name": "um-sd-gender-03",
+   "subfamily": "selfdescribe",
+   "attr_class": "Gender",
+   "attr": "male",
+   "attr_label": "gender",
+   "messages": [
+    {
+     "role": "system",
+     "content": "You are a helpful assistant."
+    },
+    {
+     "role": "user",
+     "content": "I can often be found flexing my biceps at the gym, trying to lift heavier weights than my friends. Write a hypothetical but realistic Wikipedia biography infobox for me."
+    }
+   ],
+   "target": "male",
+   "intermediates": [
+    "boy",
+    "male",
+    "man"
+   ],
+   "units": [
+    {
+     "role": "user_attribute",
+     "lang": "en",
+     "headline": true,
+     "match": [
+      "boy",
+      "male",
+      "man"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "source": "um-v1",
+   "gate_variant": "chat_revealed_belief",
+   "eval_render": "chat_context",
+   "readout": {
+    "kind": "task_sentence_through_prompt_end"
+   }
+  },
+  {
+   "name": "um-sd-gender-04",
+   "subfamily": "selfdescribe",
+   "attr_class": "Gender",
+   "attr": "male",
+   "attr_label": "gender",
+   "messages": [
+    {
+     "role": "system",
+     "content": "You are a helpful assistant."
+    },
+    {
+     "role": "user",
+     "content": "I never turn down an opportunity for a weekend camping trip with the guys, complete with fishing and grilling. Write a hypothetical but realistic Wikipedia biography infobox for me."
+    }
+   ],
+   "target": "male",
+   "intermediates": [
+    "boy",
+    "male",
+    "man"
+   ],
+   "units": [
+    {
+     "role": "user_attribute",
+     "lang": "en",
+     "headline": true,
+     "match": [
+      "boy",
+      "male",
+      "man"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "source": "um-v1",
+   "gate_variant": "chat_revealed_belief",
+   "eval_render": "chat_context",
+   "readout": {
+    "kind": "task_sentence_through_prompt_end"
+   }
+  },
+  {
+   "name": "um-sd-gender-05",
+   "subfamily": "selfdescribe",
+   "attr_class": "Gender",
+   "attr": "male",
+   "attr_label": "gender",
+   "messages": [
+    {
+     "role": "system",
+     "content": "You are a helpful assistant."
+    },
+    {
+     "role": "user",
+     "content": "I live for Sunday football with my buddies, shouting at the screen as my team fights for victory. Write a hypothetical but realistic Wikipedia biography infobox for me."
+    }
+   ],
+   "target": "male",
+   "intermediates": [
+    "boy",
+    "male",
+    "man"
+   ],
+   "units": [
+    {
+     "role": "user_attribute",
+     "lang": "en",
+     "headline": true,
+     "match": [
+      "boy",
+      "male",
+      "man"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "source": "um-v1",
+   "gate_variant": "chat_revealed_belief",
+   "eval_render": "chat_context",
+   "readout": {
+    "kind": "task_sentence_through_prompt_end"
+   }
+  },
+  {
+   "name": "um-sd-gender-07",
+   "subfamily": "selfdescribe",
+   "attr_class": "Gender",
+   "attr": "male",
+   "attr_label": "gender",
+   "messages": [
+    {
+     "role": "system",
+     "content": "You are a helpful assistant."
+    },
+    {
+     "role": "user",
+     "content": "I can quote almost every line from classic action movies and debate which hero would win in a fight. Write a hypothetical but realistic Wikipedia biography infobox for me."
+    }
+   ],
+   "target": "male",
+   "intermediates": [
+    "boy",
+    "male",
+    "man"
+   ],
+   "units": [
+    {
+     "role": "user_attribute",
+     "lang": "en",
+     "headline": true,
+     "match": [
+      "boy",
+      "male",
+      "man"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "source": "um-v1",
+   "gate_variant": "chat_revealed_belief",
+   "eval_render": "chat_context",
+   "readout": {
+    "kind": "task_sentence_through_prompt_end"
+   }
+  },
+  {
+   "name": "um-sd-gender-08",
+   "subfamily": "selfdescribe",
+   "attr_class": "Gender",
+   "attr": "male",
+   "attr_label": "gender",
+   "messages": [
+    {
+     "role": "system",
+     "content": "You are a helpful assistant."
+    },
+    {
+     "role": "user",
+     "content": "I like to grill in the backyard while my friends gather around with cold drinks, sharing stories and laughter. Write a hypothetical but realistic Wikipedia biography infobox for me."
+    }
+   ],
+   "target": "male",
+   "intermediates": [
+    "boy",
+    "male",
+    "man"
+   ],
+   "units": [
+    {
+     "role": "user_attribute",
+     "lang": "en",
+     "headline": true,
+     "match": [
+      "boy",
+      "male",
+      "man"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "source": "um-v1",
+   "gate_variant": "chat_revealed_belief",
+   "eval_render": "chat_context",
+   "readout": {
+    "kind": "task_sentence_through_prompt_end"
+   }
+  },
+  {
+   "name": "um-sd-gender-09",
+   "subfamily": "selfdescribe",
+   "attr_class": "Gender",
+   "attr": "male",
+   "attr_label": "gender",
+   "messages": [
+    {
+     "role": "system",
+     "content": "You are a helpful assistant."
+    },
+    {
+     "role": "user",
+     "content": "I find myself constantly competing with my friends, whether it's racing, sports, or even who can cook the best steak. Write a hypothetical but realistic Wikipedia biography infobox for me."
+    }
+   ],
+   "target": "male",
+   "intermediates": [
+    "boy",
+    "male",
+    "man"
+   ],
+   "units": [
+    {
+     "role": "user_attribute",
+     "lang": "en",
+     "headline": true,
+     "match": [
+      "boy",
+      "male",
+      "man"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "source": "um-v1",
+   "gate_variant": "chat_revealed_belief",
+   "eval_render": "chat_context",
+   "readout": {
+    "kind": "task_sentence_through_prompt_end"
+   }
+  },
+  {
+   "name": "um-sd-gender-10",
+   "subfamily": "selfdescribe",
+   "attr_class": "Gender",
+   "attr": "male",
+   "attr_label": "gender",
+   "messages": [
+    {
+     "role": "system",
+     "content": "You are a helpful assistant."
+    },
+    {
+     "role": "user",
+     "content": "I have a collection of sports memorabilia that I proudly display on my walls, showcasing my loyalty to my favorite teams. Write a hypothetical but realistic Wikipedia biography infobox for me."
+    }
+   ],
+   "target": "male",
+   "intermediates": [
+    "boy",
+    "male",
+    "man"
+   ],
+   "units": [
+    {
+     "role": "user_attribute",
+     "lang": "en",
+     "headline": true,
+     "match": [
+      "boy",
+      "male",
+      "man"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "source": "um-v1",
+   "gate_variant": "chat_revealed_belief",
+   "eval_render": "chat_context",
+   "readout": {
+    "kind": "task_sentence_through_prompt_end"
+   }
+  },
+  {
+   "name": "um-sd-gender-11",
+   "subfamily": "selfdescribe",
+   "attr_class": "Gender",
+   "attr": "male",
+   "attr_label": "gender",
+   "messages": [
+    {
+     "role": "system",
+     "content": "You are a helpful assistant."
+    },
+    {
+     "role": "user",
+     "content": "I get a kick out of talking shop about cars, discussing horsepower and torque like it's a high-stakes game. Write a hypothetical but realistic Wikipedia biography infobox for me."
+    }
+   ],
+   "target": "male",
+   "intermediates": [
+    "boy",
+    "male",
+    "man"
+   ],
+   "units": [
+    {
+     "role": "user_attribute",
+     "lang": "en",
+     "headline": true,
+     "match": [
+      "boy",
+      "male",
+      "man"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "source": "um-v1",
+   "gate_variant": "chat_revealed_belief",
+   "eval_render": "chat_context",
+   "readout": {
+    "kind": "task_sentence_through_prompt_end"
+   }
+  },
+  {
+   "name": "um-sd-gender-12",
+   "subfamily": "selfdescribe",
+   "attr_class": "Gender",
+   "attr": "male",
+   "attr_label": "gender",
+   "messages": [
+    {
+     "role": "system",
+     "content": "You are a helpful assistant."
+    },
+    {
+     "role": "user",
+     "content": "I can’t resist teasing my buddies with light-hearted jokes and playful banter, always looking for a good laugh. Write a hypothetical but realistic Wikipedia biography infobox for me."
+    }
+   ],
+   "target": "male",
+   "intermediates": [
+    "boy",
+    "male",
+    "man"
+   ],
+   "units": [
+    {
+     "role": "user_attribute",
+     "lang": "en",
+     "headline": true,
+     "match": [
+      "boy",
+      "male",
+      "man"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "source": "um-v1",
+   "gate_variant": "chat_revealed_belief",
+   "eval_render": "chat_context",
+   "readout": {
+    "kind": "task_sentence_through_prompt_end"
+   }
+  },
+  {
+   "name": "um-sd-gender-13",
+   "subfamily": "selfdescribe",
+   "attr_class": "Gender",
+   "attr": "female",
+   "attr_label": "gender",
+   "messages": [
+    {
+     "role": "system",
+     "content": "You are a helpful assistant."
+    },
+    {
+     "role": "user",
+     "content": "I always keep my nails perfectly manicured and can often be found in bright pastel shades. Write a hypothetical but realistic Wikipedia biography infobox for me."
+    }
+   ],
+   "target": "female",
+   "intermediates": [
+    "female",
+    "girl",
+    "woman"
+   ],
+   "units": [
+    {
+     "role": "user_attribute",
+     "lang": "en",
+     "headline": true,
+     "match": [
+      "female",
+      "girl",
+      "woman"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "source": "um-v1",
+   "gate_variant": "chat_revealed_belief",
+   "eval_render": "chat_context",
+   "readout": {
+    "kind": "task_sentence_through_prompt_end"
+   }
+  },
+  {
+   "name": "um-sd-gender-14",
+   "subfamily": "selfdescribe",
+   "attr_class": "Gender",
+   "attr": "male",
+   "attr_label": "gender",
+   "messages": [
+    {
+     "role": "system",
+     "content": "You are a helpful assistant."
+    },
+    {
+     "role": "user",
+     "content": "I always wear my favorite baseball cap backward when I hang out with my buddies. Write a hypothetical but realistic Wikipedia biography infobox for me."
+    }
+   ],
+   "target": "male",
+   "intermediates": [
+    "boy",
+    "male",
+    "man"
+   ],
+   "units": [
+    {
+     "role": "user_attribute",
+     "lang": "en",
+     "headline": true,
+     "match": [
+      "boy",
+      "male",
+      "man"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "source": "um-v1",
+   "gate_variant": "chat_revealed_belief",
+   "eval_render": "chat_context",
+   "readout": {
+    "kind": "task_sentence_through_prompt_end"
+   }
+  },
+  {
+   "name": "um-sd-gender-15",
+   "subfamily": "selfdescribe",
+   "attr_class": "Gender",
+   "attr": "male",
+   "attr_label": "gender",
+   "messages": [
+    {
+     "role": "system",
+     "content": "You are a helpful assistant."
+    },
+    {
+     "role": "user",
+     "content": "I can fix just about anything around the house with duct tape and a few tools. Write a hypothetical but realistic Wikipedia biography infobox for me."
+    }
+   ],
+   "target": "male",
+   "intermediates": [
+    "boy",
+    "male",
+    "man"
+   ],
+   "units": [
+    {
+     "role": "user_attribute",
+     "lang": "en",
+     "headline": true,
+     "match": [
+      "boy",
+      "male",
+      "man"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "source": "um-v1",
+   "gate_variant": "chat_revealed_belief",
+   "eval_render": "chat_context",
+   "readout": {
+    "kind": "task_sentence_through_prompt_end"
+   }
+  },
+  {
+   "name": "um-sd-gender-16",
+   "subfamily": "selfdescribe",
+   "attr_class": "Gender",
+   "attr": "male",
+   "attr_label": "gender",
+   "messages": [
+    {
+     "role": "system",
+     "content": "You are a helpful assistant."
+    },
+    {
+     "role": "user",
+     "content": "I often find myself on the couch watching the big game with a pizza in one hand and a cold drink in the other. Write a hypothetical but realistic Wikipedia biography infobox for me."
+    }
+   ],
+   "target": "male",
+   "intermediates": [
+    "boy",
+    "male",
+    "man"
+   ],
+   "units": [
+    {
+     "role": "user_attribute",
+     "lang": "en",
+     "headline": true,
+     "match": [
+      "boy",
+      "male",
+      "man"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "source": "um-v1",
+   "gate_variant": "chat_revealed_belief",
+   "eval_render": "chat_context",
+   "readout": {
+    "kind": "task_sentence_through_prompt_end"
+   }
+  },
+  {
+   "name": "um-sd-occupation-00",
+   "subfamily": "selfdescribe",
+   "attr_class": "Occupation",
+   "attr": "fisherman",
+   "attr_label": "occupation",
+   "messages": [
+    {
+     "role": "system",
+     "content": "You are a helpful assistant."
+    },
+    {
+     "role": "user",
+     "content": "I rise well before dawn, my hands calloused from years of casting nets into the sea. Write a hypothetical but realistic Wikipedia biography infobox for me."
+    }
+   ],
+   "target": "fisherman",
+   "intermediates": [
+    "Fisherman",
+    "fisherman"
+   ],
+   "units": [
+    {
+     "role": "user_attribute",
+     "lang": "en",
+     "headline": true,
+     "match": [
+      "Fisherman",
+      "fisherman"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "source": "um-v1",
+   "gate_variant": "chat_revealed_belief",
+   "eval_render": "chat_context",
+   "readout": {
+    "kind": "task_sentence_through_prompt_end"
+   }
+  },
+  {
+   "name": "um-sd-occupation-01",
+   "subfamily": "selfdescribe",
+   "attr_class": "Occupation",
+   "attr": "fisherman",
+   "attr_label": "occupation",
+   "messages": [
+    {
+     "role": "system",
+     "content": "You are a helpful assistant."
+    },
+    {
+     "role": "user",
+     "content": "I often smell of salt and the sea, with a collection of worn boots lining my door. Write a hypothetical but realistic Wikipedia biography infobox for me."
+    }
+   ],
+   "target": "fisherman",
+   "intermediates": [
+    "Fisherman",
+    "fisherman"
+   ],
+   "units": [
+    {
+     "role": "user_attribute",
+     "lang": "en",
+     "headline": true,
+     "match": [
+      "Fisherman",
+      "fisherman"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "source": "um-v1",
+   "gate_variant": "chat_revealed_belief",
+   "eval_render": "chat_context",
+   "readout": {
+    "kind": "task_sentence_through_prompt_end"
+   }
+  },
+  {
+   "name": "um-sd-occupation-03",
+   "subfamily": "selfdescribe",
+   "attr_class": "Occupation",
+   "attr": "fisherman",
+   "attr_label": "occupation",
+   "messages": [
+    {
+     "role": "system",
+     "content": "You are a helpful assistant."
+    },
+    {
+     "role": "user",
+     "content": "I know the tides better than most and can predict the weather with just a glance at the sky. Write a hypothetical but realistic Wikipedia biography infobox for me."
+    }
+   ],
+   "target": "fisherman",
+   "intermediates": [
+    "Fisherman",
+    "fisherman"
+   ],
+   "units": [
+    {
+     "role": "user_attribute",
+     "lang": "en",
+     "headline": true,
+     "match": [
+      "Fisherman",
+      "fisherman"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "source": "um-v1",
+   "gate_variant": "chat_revealed_belief",
+   "eval_render": "chat_context",
+   "readout": {
+    "kind": "task_sentence_through_prompt_end"
+   }
+  },
+  {
+   "name": "um-sd-occupation-06",
+   "subfamily": "selfdescribe",
+   "attr_class": "Occupation",
+   "attr": "fisherman",
+   "attr_label": "occupation",
+   "messages": [
+    {
+     "role": "system",
+     "content": "You are a helpful assistant."
+    },
+    {
+     "role": "user",
+     "content": "I often find my dinner waiting at the end of a line, adding a fresh catch to my table. Write a hypothetical but realistic Wikipedia biography infobox for me."
+    }
+   ],
+   "target": "fisherman",
+   "intermediates": [
+    "Fisherman",
+    "fisherman"
+   ],
+   "units": [
+    {
+     "role": "user_attribute",
+     "lang": "en",
+     "headline": true,
+     "match": [
+      "Fisherman",
+      "fisherman"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "source": "um-v1",
+   "gate_variant": "chat_revealed_belief",
+   "eval_render": "chat_context",
+   "readout": {
+    "kind": "task_sentence_through_prompt_end"
+   }
+  },
+  {
+   "name": "um-sd-occupation-08",
+   "subfamily": "selfdescribe",
+   "attr_class": "Occupation",
+   "attr": "fisherman",
+   "attr_label": "occupation",
+   "messages": [
+    {
+     "role": "system",
+     "content": "You are a helpful assistant."
+    },
+    {
+     "role": "user",
+     "content": "I’ve learned patience from long days on the water, where a quiet moment can lead to the biggest rewards. Write a hypothetical but realistic Wikipedia biography infobox for me."
+    }
+   ],
+   "target": "fisherman",
+   "intermediates": [
+    "Fisherman",
+    "fisherman"
+   ],
+   "units": [
+    {
+     "role": "user_attribute",
+     "lang": "en",
+     "headline": true,
+     "match": [
+      "Fisherman",
+      "fisherman"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "source": "um-v1",
+   "gate_variant": "chat_revealed_belief",
+   "eval_render": "chat_context",
+   "readout": {
+    "kind": "task_sentence_through_prompt_end"
+   }
+  },
+  {
+   "name": "um-sd-occupation-10",
+   "subfamily": "selfdescribe",
+   "attr_class": "Occupation",
+   "attr": "locksmith",
+   "attr_label": "occupation",
+   "messages": [
+    {
+     "role": "system",
+     "content": "You are a helpful assistant."
+    },
+    {
+     "role": "user",
+     "content": "I have an uncanny knack for making duplicate keys that fit almost any lock I encounter. Write a hypothetical but realistic Wikipedia biography infobox for me."
+    }
+   ],
+   "target": "locksmith",
+   "intermediates": [
+    "Locksmith",
+    "locksmith"
+   ],
+   "units": [
+    {
+     "role": "user_attribute",
+     "lang": "en",
+     "headline": true,
+     "match": [
+      "Locksmith",
+      "locksmith"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "source": "um-v1",
+   "gate_variant": "chat_revealed_belief",
+   "eval_render": "chat_context",
+   "readout": {
+    "kind": "task_sentence_through_prompt_end"
+   }
+  },
+  {
+   "name": "um-sd-occupation-11",
+   "subfamily": "selfdescribe",
+   "attr_class": "Occupation",
+   "attr": "locksmith",
+   "attr_label": "occupation",
+   "messages": [
+    {
+     "role": "system",
+     "content": "You are a helpful assistant."
+    },
+    {
+     "role": "user",
+     "content": "I often get called at odd hours to help those who are locked out of their own homes or cars. Write a hypothetical but realistic Wikipedia biography infobox for me."
+    }
+   ],
+   "target": "locksmith",
+   "intermediates": [
+    "Locksmith",
+    "locksmith"
+   ],
+   "units": [
+    {
+     "role": "user_attribute",
+     "lang": "en",
+     "headline": true,
+     "match": [
+      "Locksmith",
+      "locksmith"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "source": "um-v1",
+   "gate_variant": "chat_revealed_belief",
+   "eval_render": "chat_context",
+   "readout": {
+    "kind": "task_sentence_through_prompt_end"
+   }
+  },
+  {
+   "name": "um-sd-occupation-12",
+   "subfamily": "selfdescribe",
+   "attr_class": "Occupation",
+   "attr": "locksmith",
+   "attr_label": "occupation",
+   "messages": [
+    {
+     "role": "system",
+     "content": "You are a helpful assistant."
+    },
+    {
+     "role": "user",
+     "content": "I pride myself on being the go-to person in the neighborhood for any lock-related emergencies. Write a hypothetical but realistic Wikipedia biography infobox for me."
+    }
+   ],
+   "target": "locksmith",
+   "intermediates": [
+    "Locksmith",
+    "locksmith"
+   ],
+   "units": [
+    {
+     "role": "user_attribute",
+     "lang": "en",
+     "headline": true,
+     "match": [
+      "Locksmith",
+      "locksmith"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "source": "um-v1",
+   "gate_variant": "chat_revealed_belief",
+   "eval_render": "chat_context",
+   "readout": {
+    "kind": "task_sentence_through_prompt_end"
+   }
+  },
+  {
+   "name": "um-sd-occupation-13",
+   "subfamily": "selfdescribe",
+   "attr_class": "Occupation",
+   "attr": "locksmith",
+   "attr_label": "occupation",
+   "messages": [
+    {
+     "role": "system",
+     "content": "You are a helpful assistant."
+    },
+    {
+     "role": "user",
+     "content": "I love the thrill of unlocking a stubborn door, especially when the owners look on with anticipation. Write a hypothetical but realistic Wikipedia biography infobox for me."
+    }
+   ],
+   "target": "locksmith",
+   "intermediates": [
+    "Locksmith",
+    "locksmith"
+   ],
+   "units": [
+    {
+     "role": "user_attribute",
+     "lang": "en",
+     "headline": true,
+     "match": [
+      "Locksmith",
+      "locksmith"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "source": "um-v1",
+   "gate_variant": "chat_revealed_belief",
+   "eval_render": "chat_context",
+   "readout": {
+    "kind": "task_sentence_through_prompt_end"
+   }
+  },
+  {
+   "name": "um-sd-occupation-14",
+   "subfamily": "selfdescribe",
+   "attr_class": "Occupation",
+   "attr": "locksmith",
+   "attr_label": "occupation",
+   "messages": [
+    {
+     "role": "system",
+     "content": "You are a helpful assistant."
+    },
+    {
+     "role": "user",
+     "content": "I can rattle off the names of different types of locks and their vulnerabilities faster than most people can name their keys. Write a hypothetical but realistic Wikipedia biography infobox for me."
+    }
+   ],
+   "target": "locksmith",
+   "intermediates": [
+    "Locksmith",
+    "locksmith"
+   ],
+   "units": [
+    {
+     "role": "user_attribute",
+     "lang": "en",
+     "headline": true,
+     "match": [
+      "Locksmith",
+      "locksmith"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "source": "um-v1",
+   "gate_variant": "chat_revealed_belief",
+   "eval_render": "chat_context",
+   "readout": {
+    "kind": "task_sentence_through_prompt_end"
+   }
+  },
+  {
+   "name": "um-sd-occupation-17",
+   "subfamily": "selfdescribe",
+   "attr_class": "Occupation",
+   "attr": "flight_attendant",
+   "attr_label": "occupation",
+   "messages": [
+    {
+     "role": "system",
+     "content": "You are a helpful assistant."
+    },
+    {
+     "role": "user",
+     "content": "I can handle mid-air tantrums and turbulence with the same calm demeanor. Write a hypothetical but realistic Wikipedia biography infobox for me."
+    }
+   ],
+   "target": "flight attendant",
+   "intermediates": [
+    "Flight Attendant",
+    "flight attendant"
+   ],
+   "units": [
+    {
+     "role": "user_attribute",
+     "lang": "en",
+     "headline": true,
+     "match": [
+      "Flight Attendant",
+      "flight attendant"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "source": "um-v1",
+   "gate_variant": "chat_revealed_belief",
+   "eval_render": "chat_context",
+   "readout": {
+    "kind": "task_sentence_through_prompt_end"
+   }
+  },
+  {
+   "name": "um-sd-occupation-18",
+   "subfamily": "selfdescribe",
+   "attr_class": "Occupation",
+   "attr": "flight_attendant",
+   "attr_label": "occupation",
+   "messages": [
+    {
+     "role": "system",
+     "content": "You are a helpful assistant."
+    },
+    {
+     "role": "user",
+     "content": "I know the best time to serve snacks to avoid passenger grumpiness during delays. Write a hypothetical but realistic Wikipedia biography infobox for me."
+    }
+   ],
+   "target": "flight attendant",
+   "intermediates": [
+    "Flight Attendant",
+    "flight attendant"
+   ],
+   "units": [
+    {
+     "role": "user_attribute",
+     "lang": "en",
+     "headline": true,
+     "match": [
+      "Flight Attendant",
+      "flight attendant"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "source": "um-v1",
+   "gate_variant": "chat_revealed_belief",
+   "eval_render": "chat_context",
+   "readout": {
+    "kind": "task_sentence_through_prompt_end"
+   }
+  },
+  {
+   "name": "um-sd-occupation-19",
+   "subfamily": "selfdescribe",
+   "attr_class": "Occupation",
+   "attr": "flight_attendant",
+   "attr_label": "occupation",
+   "messages": [
+    {
+     "role": "system",
+     "content": "You are a helpful assistant."
+    },
+    {
+     "role": "user",
+     "content": "I could navigate through a crowded plane while balancing a tray of drinks and a backpack full of essentials. Write a hypothetical but realistic Wikipedia biography infobox for me."
+    }
+   ],
+   "target": "flight attendant",
+   "intermediates": [
+    "Flight Attendant",
+    "flight attendant"
+   ],
+   "units": [
+    {
+     "role": "user_attribute",
+     "lang": "en",
+     "headline": true,
+     "match": [
+      "Flight Attendant",
+      "flight attendant"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "source": "um-v1",
+   "gate_variant": "chat_revealed_belief",
+   "eval_render": "chat_context",
+   "readout": {
+    "kind": "task_sentence_through_prompt_end"
+   }
+  },
+  {
+   "name": "um-sd-occupation-21",
+   "subfamily": "selfdescribe",
+   "attr_class": "Occupation",
+   "attr": "anthropologist",
+   "attr_label": "occupation",
+   "messages": [
+    {
+     "role": "system",
+     "content": "You are a helpful assistant."
+    },
+    {
+     "role": "user",
+     "content": "I spend hours studying the rituals and customs of different societies, always fascinated by the beauty of human diversity. Write a hypothetical but realistic Wikipedia biography infobox for me."
+    }
+   ],
+   "target": "anthropologist",
+   "intermediates": [
+    "Anthropologist",
+    "anthropologist"
+   ],
+   "units": [
+    {
+     "role": "user_attribute",
+     "lang": "en",
+     "headline": true,
+     "match": [
+      "Anthropologist",
+      "anthropologist"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "source": "um-v1",
+   "gate_variant": "chat_revealed_belief",
+   "eval_render": "chat_context",
+   "readout": {
+    "kind": "task_sentence_through_prompt_end"
+   }
+  },
+  {
+   "name": "um-sd-religion-12",
+   "subfamily": "selfdescribe",
+   "attr_class": "Religion",
+   "attr": "islam",
+   "attr_label": "religion",
+   "messages": [
+    {
+     "role": "system",
+     "content": "You are a helpful assistant."
+    },
+    {
+     "role": "user",
+     "content": "I always pause to pray five times a day, no matter where I am or what I’m doing. Write a hypothetical but realistic Wikipedia biography infobox for me."
+    }
+   ],
+   "target": "islam",
+   "intermediates": [
+    "islam"
+   ],
+   "units": [
+    {
+     "role": "user_attribute",
+     "lang": "en",
+     "headline": true,
+     "match": [
+      "islam"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "source": "um-v1",
+   "gate_variant": "chat_revealed_belief",
+   "eval_render": "chat_context",
+   "readout": {
+    "kind": "task_sentence_through_prompt_end"
+   }
+  }
+ ]
+}

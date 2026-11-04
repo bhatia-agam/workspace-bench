@@ -696,6 +696,6 @@ def test_cli_convert_jailbreak(tmp_path, monkeypatch):
 
 def test_bank_ids_reads_real_banks():
     ids = js.bank_ids("user_modeling")
-    assert len(ids) == 100 and all(i.startswith("um-") for i in ids)
+    assert len(ids) == 47 and all(i.startswith("um-sd-") for i in ids)  # bank v2
     assert len(js.bank_ids("jailbreak_recognition")) == 172  # plan 0037: 86 positives + 86 controls
     assert "oa-police-thief-chase-ab" in js.bank_ids("role_bound_association")

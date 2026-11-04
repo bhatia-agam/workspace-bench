@@ -133,6 +133,7 @@ PENDING_REGATE: dict[str, str] = {
     "association": "bank v5 = bank v3 without winter and pentagon",
     "basic_readout": "bank v7 (2026-11-03): Big Ben's gold option reads 'England / UK'",
     "basic_readout_mt": "bank v5 (2026-11-03): the sarin item is dropped",
+    "user_modeling": "bank v2 = the 47 selfdescribe items (synthsys dropped)",
 }
 
 

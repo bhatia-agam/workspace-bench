@@ -24,6 +24,18 @@ A, B, C = "um-sd-country-00", "um-sd-country-01", "um-ss-agegroup-05"  # C is sy
 UM_FLAT = ("countries", "nationalities", "continents", "religions", "occupations")
 
 
+V1_ENV = "evals/user_modeling/items.json"
+V2 = ROOT / "evals/user_modeling/items_v2.json"
+
+
+@pytest.fixture(autouse=True)
+def _v1_bank(monkeypatch):
+    """These tests pin the frozen 100-item bank (items.json, synthsys included): the scoring code
+    is bank-independent and v1 stays judgeable. The registered bank v2 (the 47 selfdescribe
+    items) is tested in ``test_bank_v2_*`` below."""
+    monkeypatch.setenv("WSB_BANK_FILE_USER_MODELING", V1_ENV)
+
+
 def _items() -> list[dict]:
     return load_bank("user_modeling")["items"]
 
@@ -149,7 +161,7 @@ def test_rendered_prompt_matches_golden_v4():
 
 
 def test_rubric_v3_text():
-    assert prompts.PROMPT_VERSION == "um-v3.4"
+    assert prompts.CALL_VERSION == "um-v3.4" and prompts.PROMPT_VERSION == "um-v3.4+bank-v2"
     native, summ = _render_both()
     for text in (native, summ, prompts.UM_ATTRIBUTE_SYSTEM):
         low = text.lower()
@@ -666,3 +678,49 @@ def test_name_rule_matches_the_gate():
     native, summ = _render_both()
     assert rule in native and rule in summ
     assert _gate("she", "female", [_tok(["she", "her"])]) == ""
+
+
+# ---------------------------------------------------------------- bank v2 (selfdescribe only)
+
+
+def test_bank_v2_is_the_selfdescribe_items_of_v1(monkeypatch):
+    """Synthsys dropped (its attribute is stated in the system prompt, so under
+    the echo rule it rewarded only rewording or invented detail, e.g. um-ss-continent-00 "Since
+    you're in South Africa" for "Africa"). Bank v2 = the 47 selfdescribe items of items.json,
+    verbatim and in order; items.json is untouched; v2 is the registered bank."""
+    monkeypatch.delenv("WSB_BANK_FILE_USER_MODELING")
+    registry.load_all()
+    assert registry.FAMILIES["user_modeling"].bank == Path("evals/user_modeling/items_v2.json")
+    assert registry.FAMILIES["user_modeling"].judge.prompt_version == "um-v3.4+bank-v2"
+    v2 = load_bank("user_modeling")
+    v1 = json.loads((ROOT / V1_ENV).read_text(encoding="utf-8"))
+    assert len(v1["items"]) == 100 and set(v1) == {"family", "gate", "read", "items"}
+    assert v2["version"] == 2 and v2["read_plan_bank"] == "items.json"
+    assert v2["items"] == [it for it in v1["items"] if it["subfamily"] == "selfdescribe"]
+    assert len(v2["items"]) == 47 and not any("synthsys" in it["name"] for it in v2["items"])
+    assert not any(it["name"].startswith("um-ss-") for it in v2["items"])
+
+
+def test_bank_v2_keeps_the_plan_and_the_options(monkeypatch):
+    """One read serves both banks (the plan stays items.json's 100 rows, same plan_sha), and each
+    kept item shows its v1 options (seeded per item), so cached judge answers stay valid."""
+    v1_sha = reads.plan_sha("user_modeling")
+    v1_opts = build_options(_items())
+    monkeypatch.delenv("WSB_BANK_FILE_USER_MODELING")
+    assert reads.plan_sha("user_modeling") == v1_sha
+    assert len(readplan.plan("user_modeling")) == 100
+    v2 = load_bank("user_modeling")["items"]
+    assert build_options(v2) == {it["name"]: v1_opts[it["name"]] for it in v2}
+
+
+def test_bank_v2_stamp_and_scope(tmp_path, fake_llm, mk_args, monkeypatch):
+    """A v2 run is stamped ``um-v3.4+bank-v2`` (floors measured on the 100-item bank are never
+    served for it); calls keep the um-v3.4 fingerprint; synthsys ids are out of scope."""
+    monkeypatch.delenv("WSB_BANK_FILE_USER_MODELING")
+    fake_llm(_responder)
+    res = judge.run(mk_args(_scripted(tmp_path), items=[A, B, C]))
+    assert res.config["prompt_version"] == "um-v3.4+bank-v2"
+    assert res.n_items == 2 and {r["id"] for r in res.rows} <= {A, B}
+    assert not res.extras["by_subfamily"].get("synthsys", {}).get("n_items")
+    assert judge.instrument({"version": 2}) == "um-v3.4+bank-v2"
+    assert judge.instrument({}) == prompts.CALL_VERSION == "um-v3.4"
