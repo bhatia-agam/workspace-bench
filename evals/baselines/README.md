@@ -44,7 +44,8 @@ per judged id (no answer was reused), then the family's own digest, judge and ru
 Opus 5 refusal re-run). Opus 5.5 declined only 4 asks (agentic_misalignment), all served by the
 Sonnet 5.5 fallback (none refused by both), so every floor is measurable. A bank that reads with
 an earlier bank's plan (`read_plan_bank`; at the refreeze: association v5, basic_readout_mt v5,
-multihop v4, role_bound_association v2, user_modeling v2) is asked on its own ids only
+role_bound_association v2, and the 68-item multihop and 47-item user_modeling banks that the
+next bank of each replaced) is asked on its own ids only
 (`prompt_only_opus.build`); introspection is asked on its headline rows only (the 125 protocol,
 beta-4 inject rows and their 125 gaussian twins, judged with `opts=scope=headline`, which yields
 the same headline as the full grid). role_bound_association is scored under its pair headline
@@ -78,7 +79,7 @@ model_specific_directed_modulation, nyt_connections and typo_mt.
 | poetry | 0.000 | 0.000 | 100 | poetry-free-2026-11-01+noveto-a1 | Opus 5.5 |
 | relational_multihop | 0.980 | 1.000 (saturated) | 100 | rel-v3+relgate-v6 | Opus 5.5 |
 | role_bound_association | 0.540 (items, 100) | 0.457 [0.30, 0.59] (pairs) | 46 pairs | oa-v3.1+bank-v2+maj3v | Opus 5.5 |
-| user_modeling (bank v3) | 0.681 (v2, 47) | 0.825 [0.76, 0.89] | 126 | um-v3.5+bank-v3+maj3v | Opus 5.5 |
+| user_modeling (bank v3) | 0.681 (47 selfdescribe items) | 0.825 [0.76, 0.89] | 126 | um-v3.5+bank-v3+maj3v | Opus 5.5 |
 | wrong_intermediate | 0.000 | 0.000 | 100 | wb-mc-2026-10-31r+judge-only-v1+qline-v2+wbforms-v4+bank-v4 | Opus 5.5 |
 
 Six floors were re-scored later on 2026-11-04, after scoring-only rule fixes earlier in this
@@ -110,7 +111,7 @@ floor scored on Sonnet 5 answers (Opus then refused 65 of 100 asks; it now answe
 
 **Banks frozen after the refreeze.** Rows marked with a bank were measured on a bank registered
 after the refreeze, under the same protocol and the bank's own stamp: multihop bank v5 (98 items:
-bank v3's 68 kept items and 30 new) and user_modeling bank v3 (126 items: bank v2's 47 and 79 new).
+bank v3's 68 kept items and 30 new) and user_modeling bank v3 (126 items: items.json's 47 selfdescribe items and 79 new).
 Prompt-only: the kept items' prompts are byte-identical, so their refreeze answers were reused and
 only the new ids were asked (multihop 30, user_modeling 79; 0 refused), then each family was judged
 whole. Lucky guessing: fresh draws on the whole bank (multihop v5's build measured its options too,
@@ -122,7 +123,7 @@ electrician).
 **Lucky guessing (`lucky_guessing.json`).** Re-measured (Opus 5.5, 5 fresh draws per item) where
 a family's lists or item set changed: association (bank v5), basic_readout (bank v7's Big Ben
 option), basic_readout_mt (bank v5), multihop (bank v4, then bank v5), multihop_mt_v2 (bank v5),
-role_bound_association (bank v2, 92 items), user_modeling (bank v2, then bank v3) and the four
+role_bound_association (bank v2, 92 items), user_modeling (its 47 selfdescribe items, then bank v3) and the four
 multilingual families, which are now floored on their content list only (the language unit is
 scored on the raw samples, so no option list is shown for it; chance 0.200 per item, was 0.040).
 Restamped from the same draws, because their lists are byte-identical (the seeded `uniform` line
@@ -150,7 +151,7 @@ as MC diagnostics of a regex family and are never drawn.
 | multilingual_mt | 100 | 0.200 | 0.006 -> 0.166 | 0.026 -> 0.256 | 0.040 -> 0.284 | 0.190 | fails described, topic |
 | multilingual_multihop | 98 | 0.200 | 0.029 -> 0.302 | 0.080 -> 0.406 | 0.073 -> 0.424 | 0.247 | fails all three |
 | multilingual_typo | 100 | 0.200 | 0.000 -> 0.168 | 0.048 -> 0.298 | 0.070 -> 0.332 | 0.196 | fails described, topic |
-| user_modeling (bank v3; v2's 47 -> 126) | 126 | 0.144 | 0.170 -> 0.159 | 0.204 -> 0.124 | — | 0.132 | passes |
+| user_modeling (bank v3; 47 selfdescribe items -> 126) | 126 | 0.144 | 0.170 -> 0.159 | 0.204 -> 0.124 | — | 0.132 | passes |
 | role_bound_association (per item; pair rule) | 92 | 0.008 (pairs 0.00006) | 0.116 -> 0.133 (0.010) | 0.148 -> 0.165 (0.017) | 0.226 -> 0.239 (0.000) | 0.011 | passes under the pair rule |
 
 In the multihop and user_modeling rows the arrow reads refreeze -> new bank.
@@ -188,7 +189,7 @@ v2.
 | jailbreak_recognition | 21 / 86 | 24 / 86 | 62 | 0.77 / 0.80 / 0.45 / 0.80 |
 | poetry | 98 / 100 | 99 / 100 | 1 | 0.01 / 0.51 / 0.69 / 0.23 |
 | relational_multihop | 19 / 100 | 17 / 100 | 83 | 0.83 / 1.00 / 0.99 / 0.98 |
-| user_modeling (bank v2; superseded, next row) | 35 / 100 | 27 / 47 | 20 | 0.43 / 0.91 / 0.74 / 0.66 |
+| user_modeling (its 47 selfdescribe items; superseded, next row) | 35 / 100 | 27 / 47 | 20 | 0.43 / 0.91 / 0.74 / 0.66 |
 | user_modeling, bank v3 | 27 / 47 | 50 / 126 | 76 | 0.60 / 0.94 / 0.88 / 0.84 |
 | wrong_intermediate | 100 / 100 | 100 / 100 | 0 | 0.58 / 0.00 / 0.00 / 0.00 |
 | moral_rationale (`ec-v9`) | 152 / 195 | 134 / 195 | 61 | 0.36 / 0.58 / 0.46 / 0.28 |
@@ -200,8 +201,8 @@ v2.
 | multilingual_typo | 0 / 100 | 0 / 100 (4 excluded) | 96 | 0.96 / 0.98 / 0.92 / 0.98 |
 
 **user_modeling bank v3** (registered after the refreeze): its entry covers bank v3's 126 ids
-under `um-v3.5+bank-v3`, built by the same panel rule from two sets of per-draw verdicts. Bank
-v2's 47 ids keep their statuses above (the same items, options and native calls; um-v3.5 only adds
+under `um-v3.5+bank-v3`, built by the same panel rule from two sets of per-draw verdicts. The
+47 kept selfdescribe ids keep their statuses above (the same items, options and native calls; um-v3.5 only adds
 option data for the new golds). The 79 new items were asked of the full panel under the same
 protocol (948 verdicts, all decided): 23 are text-blind, all through Qwen failing every draw.
 

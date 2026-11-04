@@ -235,7 +235,7 @@ commands with `PYTHONPATH=src`, because the editable install points at the main 
 ### Association
 
 **User modelling** — [`evals/user_modeling/README.md`](evals/user_modeling/README.md)
-- *What it is:* A chat implies a user attribute (country, gender, occupation…); does the lens encode the attribute the model inferred, named for the USER, at any token of the chat render (system turn, user turn, assistant header, empty think block; lite: the same positions, plan 0061). Bank v3: 126 items, the attribute only implied (bank v2's 47 selfdescribe items plus 79 new items in the same style, gated on Qwen3.6-27B).
+- *What it is:* A chat implies a user attribute (country, gender, occupation…); does the lens encode the attribute the model inferred, named for the USER, at any token of the chat render (system turn, user turn, assistant header, empty think block; lite: the same positions, plan 0061). Bank v3: 126 items, the attribute only implied (items.json's 47 selfdescribe items plus 79 new items in the same style, gated on Qwen3.6-27B).
 - *Example:* "…sit with family over a table full of banchan… write a Wikipedia infobox for me" → target `south korea` (a readout saying "the user is Korean" counts; "Korean cuisine", "kimchi" or Chinese-language text do not).
 - *Judged by:* identification MC (gold + up to 9 mutually exclusive same-class distractors, the gold's hard neighbours always included, + cannot tell), gold never disclosed; the picked value must be NAMED for the user in one readout list or one bullet, and a deterministic gate checks the quote is real, lies in one bullet, and names the picked value; headline pass = verified gold with basis `inferred` (summary mode: the majority verdict of three draws).
 
@@ -443,7 +443,7 @@ digest's token lines are also matched space-joined, stamped `+joined-2026-10-30`
 | typo (superseded by typo_mt) | claude-opus-5-5 | bank-2026-10-30b |
 | typo_mt | regex (no call natively; the digest model under summary mode) | mt-regex-2026-10-30+typo-v2 |
 | wrong_intermediate | claude-opus-5-5 | wb-mc-2026-10-31r+judge-only-v1+qline-v2+wbforms-v4+bank-v4 (the judge's verified pick stands, no code check after it; MC calls keyed wb-mc-2026-10-31r+rv-2026-10-31e) |
-| user_modeling | claude-opus-5-5 | um-v3.5+bank-v3 (bank v3: 126 selfdescribe items, bank v2's 47 + 79 new gated items; judge calls keyed um-v3.5, um-v3.4 + `aliases.NEIGHBOURS` for the new items' golds; summary results `+maj3v`: the majority of three draws' pass / fail verdicts) |
+| user_modeling | claude-opus-5-5 | um-v3.5+bank-v3 (bank v3: 126 selfdescribe items, items.json's 47 selfdescribe items + 79 new gated items; judge calls keyed um-v3.5, um-v3.4 + `aliases.NEIGHBOURS` for the new items' golds; summary results `+maj3v`: the majority of three draws' pass / fail verdicts) |
 
 - Override precedence: `judge_model=` flag > `WSBENCH_JUDGE_MODEL` env > the family pin.
 - Routes: model ids starting with `claude-` use Anthropic directly; all other ids use OpenRouter.

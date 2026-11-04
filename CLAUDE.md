@@ -232,10 +232,9 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   wrong_bridge_true).
   user_modeling (plan 0056; judge calls `CALL_VERSION = "um-v3.5"`, um-v3.4 plus
   `aliases.NEIGHBOURS` for bank v3's new Country / Occupation golds, data only; bank
-  `items_v3.json` = bank v2's 47 selfdescribe items plus 79 new gated selfdescribe items, its own
-  126-row read plan, result stamp `um-v3.5+bank-v3` (`judge.instrument`: bank v<N> stamps
-  `+bank-v<N>`); `items_v2.json` = the 47 selfdescribe items, read plan = items.json's via
-  `read_plan_bank`) adds a value gate on top of the shared
+  `items_v3.json` = items.json's 47 selfdescribe items (the 53 synthsys items dropped) plus 79
+  new gated selfdescribe items, its own 126-row read plan, result stamp `um-v3.5+bank-v3`
+  (`judge.instrument`: bank v<N> stamps `+bank-v<N>`)) adds a value gate on top of the shared
   `quote_ok` + `statement_lines`: `mc.form_in` over its frozen lexicon `aliases.py` (an edit
   there bumps its `CALL_VERSION`; `tests/fixtures/user_modeling_gate_cases.json` replays the
   cached gold picks, so rebuild the fixture's `blocked_expected` when the lexicon changes).

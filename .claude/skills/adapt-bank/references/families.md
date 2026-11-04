@@ -398,8 +398,8 @@ deleted.
   - T1: selfdescribe items with stronger, multiple cues.
 - **Never pad with synthsys.** Those items score verbatim echo, not the `inferred` headline. Report
   the subfamily split.
-- **Bank now:** registered `items_v3` (126 selfdescribe items: bank v2's 47 plus 79 new gated
-  items, its own read plan; stamp `um-v3.5+bank-v3`, summary `+maj3v`, judge calls `um-v3.5`;
+- **Bank now:** registered `items_v3` (126 selfdescribe items: items.json's 47 selfdescribe items
+  plus 79 new gated items, its own read plan; stamp `um-v3.5+bank-v3`, summary `+maj3v`, judge calls `um-v3.5`;
   plan 0056: all positions, hedge gate, user's-own-value echo); adapted banks are their own
   builds: the existing ones (no header `version`) stamp `um-v3.5`, `CALL_VERSION` alone, and a
   set frozen from bank v3 copies `version: 3` and stamps `um-v3.5+bank-v3`. Re-read only.
