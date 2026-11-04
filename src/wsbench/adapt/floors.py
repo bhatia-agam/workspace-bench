@@ -63,7 +63,10 @@ def has_unregistered_cell(model: str, family: str) -> bool:
     path = store.model_dir(model) / f"{family}.json"
     if not path.exists():
         return False
-    _h, items = store.load_wrapped(path)
+    # read the items raw: an id-keyed bank (msdm, knowledge_cutoff, buggy_code: no ``name``)
+    # would make ``store.load_wrapped`` raise KeyError and kill the whole stock-floors judge
+    d = json.loads(path.read_text(encoding="utf-8"))
+    items = d.get("items", []) if isinstance(d, dict) else d
     return any(isinstance(it.get("cell"), dict) and it["cell"].get("pos") is None for it in items)
 
 

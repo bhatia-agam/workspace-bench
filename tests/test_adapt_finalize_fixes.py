@@ -303,3 +303,15 @@ def test_stock_judge_passes_cells_all_for_a_bank_without_registered_cells(tmp_pa
     assert floors.judge_opts("m", "arithmetic_intermediates") == "opts=aggregate=native,cells=all"
     assert floors.judge_opts("m", "chain_intermediates") == "opts=aggregate=native"
     assert floors.judge_opts("m", "association") == "opts=aggregate=native"  # no bank file
+
+
+def test_stock_judge_opts_reads_id_keyed_banks(tmp_path, monkeypatch):
+    """GLM-5.3 refill floors: msdm / knowledge_cutoff / buggy_code items carry ``id``, not
+    ``name``; ``has_unregistered_cell`` must not raise on them (it killed the stock judge)."""
+    import json as _json
+
+    monkeypatch.setattr(store, "model_dir", lambda m, *a, **k: tmp_path / m)
+    (tmp_path / "m").mkdir()
+    bank = {"family": "knowledge_cutoff", "items": [{"id": "cs00001", "gold": "x"}]}
+    (tmp_path / "m" / "knowledge_cutoff.json").write_text(_json.dumps(bank))
+    assert floors.judge_opts("m", "knowledge_cutoff") == "opts=aggregate=native"
