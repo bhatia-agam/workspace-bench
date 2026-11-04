@@ -429,7 +429,7 @@
  },
  "read_plan_bank": "items_v3.json",
  "audit_drop": {
-  "source": "WSB audit, 2026-11-03",
+  "source": "bank v3 option review, 2026-11-03",
   "rule": "bank v3 minus the items below, every other item byte-for-byte v3's (scene, gold, aliases, options); the read plan stays v3's (read_plan_bank), so no new readouts",
   "dropped": {
    "winter": "the scene ('light failing by four, radiators clanking') depicts dusk, and dusk is a shown option: two options fit the scene",
