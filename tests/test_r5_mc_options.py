@@ -18,6 +18,7 @@ BANKS = {
     "basic_readout_mt": ("items_v5.json", "items_v6.json", 6),
     "multihop_mt_v2": ("items_v5.json", "items_v6.json", 6),
     "multilingual": ("items_v3.json", "items_v4.json", 4),
+    "multilingual_mt": ("items_v4.json", "items_v5.json", 5),
 }
 # the plan_sha of each family's read plan before the rebuild: options are never rendered, and a
 # dropped item's plan row stays (``read_plan_bank``), so every earlier readout file serves
@@ -25,6 +26,7 @@ PLAN_SHA = {
     "basic_readout_mt": "4c8f2cc057e6",
     "multihop_mt_v2": "1d5f2e2fa84b",
     "multilingual": "e9a67ff80bee",
+    "multilingual_mt": "2510a7af7c96",
 }
 
 
@@ -159,6 +161,7 @@ FROZEN_FAILS: dict[str, set[str]] = {
     "basic_readout_mt": set(),
     "multihop_mt_v2": {"topic"},
     "multilingual": set(),
+    "multilingual_mt": set(),
 }
 
 

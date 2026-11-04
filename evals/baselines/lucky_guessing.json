@@ -563,9 +563,9 @@
  },
  "multilingual_mt": {
   "blind": {
-   "mean": 0.166,
-   "std": 0.015165750888103104,
-   "majority": 0.17,
+   "mean": 0.11000000000000001,
+   "std": 0.009999999999999995,
+   "majority": 0.11,
    "exact": null,
    "any_hit": null,
    "mean_picks": null,
@@ -580,13 +580,13 @@
    "model": "claude-opus-5-5",
    "prompt_version": "lucky-2026-09-16",
    "rule": "single pick",
-   "instrument": "mt-regex-2026-10-30+v2+ln-2026-11-03a+rawrx-v2+plural-v1+langleg-v1+bank-v4",
-   "written": "2026-11-04T07:52:21+00:00"
+   "instrument": "mt-regex-2026-10-30+v2+ln-2026-11-03a+rawrx-v2+plural-v1+langleg-v1+bank-v5",
+   "written": "2026-11-04T09:49:38+00:00"
   },
   "described": {
-   "mean": 0.256,
-   "std": 0.015165750888103114,
-   "majority": 0.25,
+   "mean": 0.174,
+   "std": 0.026076809620810586,
+   "majority": 0.18,
    "exact": null,
    "any_hit": null,
    "mean_picks": null,
@@ -601,8 +601,8 @@
    "model": "claude-opus-5-5",
    "prompt_version": "lucky-2026-09-16",
    "rule": "single pick",
-   "instrument": "mt-regex-2026-10-30+v2+ln-2026-11-03a+rawrx-v2+plural-v1+langleg-v1+bank-v4",
-   "written": "2026-11-04T07:54:53+00:00"
+   "instrument": "mt-regex-2026-10-30+v2+ln-2026-11-03a+rawrx-v2+plural-v1+langleg-v1+bank-v5",
+   "written": "2026-11-04T09:49:38+00:00"
   },
   "uniform": {
    "mean": 0.19,
@@ -622,13 +622,13 @@
    "model": "seeded-uniform",
    "prompt_version": "lucky-2026-09-16",
    "rule": "single pick",
-   "instrument": "mt-regex-2026-10-30+v2+ln-2026-11-03a+rawrx-v2+plural-v1+langleg-v1+bank-v4",
-   "written": "2026-11-04T07:57:25+00:00"
+   "instrument": "mt-regex-2026-10-30+v2+ln-2026-11-03a+rawrx-v2+plural-v1+langleg-v1+bank-v5",
+   "written": "2026-11-04T09:49:39+00:00"
   },
   "topic": {
-   "mean": 0.284,
-   "std": 0.011401754250991363,
-   "majority": 0.3,
+   "mean": 0.23399999999999999,
+   "std": 0.015165750888103102,
+   "majority": 0.23,
    "exact": null,
    "any_hit": null,
    "mean_picks": null,
@@ -644,8 +644,8 @@
    "model": "claude-opus-5-5",
    "prompt_version": "lucky-2026-09-16",
    "rule": "single pick",
-   "instrument": "mt-regex-2026-10-30+v2+ln-2026-11-03a+rawrx-v2+plural-v1+langleg-v1+bank-v4",
-   "written": "2026-11-04T07:57:25+00:00"
+   "instrument": "mt-regex-2026-10-30+v2+ln-2026-11-03a+rawrx-v2+plural-v1+langleg-v1+bank-v5",
+   "written": "2026-11-04T09:49:39+00:00"
   }
  },
  "multilingual_multihop": {

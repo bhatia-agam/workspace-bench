@@ -13,8 +13,8 @@ SPEC = register(
         "Multilingual (multi-token)",
         calls_per_arm="≈ 2.2k",
         scorer="regex",
-        bank=Path("evals/multilingual_mt/items_v4.json"),
-        # "v2+ln-…+langleg-v1+bank-v4": the naming forms, the language leg, bank v4
+        bank=Path("evals/multilingual_mt/items_v5.json"),
+        # "v2+ln-…+langleg-v1+bank-v5": the naming forms, the language leg, bank v5
         instrument_tag=V2_MT_TAG,
         min_full_positions=16,
         full_contiguous=True,

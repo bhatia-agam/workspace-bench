@@ -246,7 +246,9 @@ V2_ANCHOR_TAG = V2_NAMING_TAG + "+anchor-v2"
 # +langleg-v1 replaces +same-sample-v1: the language unit leaves the conjunction and is scored
 # once per item on the raw samples (regex.language_leg: one naming sample credits it), so the
 # concept and the naming may come from different samples
-V2_MT_TAG = V2_NAMING_TAG + "+" + LANGUAGE_LEG_VERSION + "+bank-v4"
+# +bank-v5: items_v5.json, the leaking concept lists rebuilt by scripts/mc_options_r5.py (the MC
+# diagnostic's lists; the regex contract of record is unchanged)
+V2_MT_TAG = V2_NAMING_TAG + "+" + LANGUAGE_LEG_VERSION + "+bank-v5"
 # +anchor-support-v1 (round 4, ANSWERS_R2 §8; multilingual_typo joins
 # family.ANCHOR_SUPPORT_FAMILIES): one anchored naming sample, or one sample holding every unit,
 # supports its units on its own; unanchored namings keep the two-sample rule

@@ -11,10 +11,10 @@
    "list": 0,
    "topic": "a historical scientific or measuring instrument",
    "options": [
-    "sundial",
     "water clock",
-    "candle clock",
-    "pendulum clock",
+    "sundial",
+    "astrolabe",
+    "armillary sphere",
     "hourglass"
    ],
    "gold": 5,
@@ -35,9 +35,9 @@
    "topic": "a marine animal",
    "options": [
     "octopus",
-    "squid",
-    "cuttlefish",
-    "chambered nautilus",
+    "whale",
+    "shark",
+    "dolphin",
     "jellyfish"
    ],
    "gold": 1,
@@ -57,11 +57,11 @@
    "list": 0,
    "topic": "a woodworking tool or material",
    "options": [
-    "masking tape",
-    "wood filler",
+    "handsaw",
+    "hammer",
     "sanding paper",
     "wood chisel",
-    "steel wool"
+    "wood glue"
    ],
    "gold": 3,
    "fits": [
@@ -103,11 +103,11 @@
    "list": 0,
    "topic": "a household appliance or device",
    "options": [
-    "washing machine",
+    "microwave oven",
     "vacuum cleaner",
-    "dishwasher",
-    "sewing machine",
-    "electric fan"
+    "air conditioner",
+    "refrigerator",
+    "washing machine"
    ],
    "gold": 2,
    "fits": [
@@ -126,10 +126,10 @@
    "list": 0,
    "topic": "a textile material or fabric",
    "options": [
-    "camel hair",
-    "alpaca fleece",
+    "linen",
+    "silk",
+    "cotton",
     "goat cashmere",
-    "rabbit angora",
     "sheep wool"
    ],
    "gold": 5,
@@ -219,10 +219,10 @@
    "topic": "an organ or gland of the human body",
    "options": [
     "thyroid gland",
-    "pituitary gland",
     "adrenal gland",
-    "thymus",
-    "pineal gland"
+    "pituitary gland",
+    "pancreas",
+    "liver"
    ],
    "gold": 1,
    "fits": [
@@ -264,11 +264,11 @@
    "list": 0,
    "topic": "a herb or flowering plant",
    "options": [
-    "echinacea",
     "rosemary",
+    "lavender",
     "chamomile",
-    "yarrow",
-    "lemon balm"
+    "mint",
+    "thyme"
    ],
    "gold": 3,
    "fits": [
@@ -448,11 +448,11 @@
    "list": 0,
    "topic": "a medical test or diagnostic procedure",
    "options": [
-    "MRI image",
+    "blood test",
     "X-ray image",
-    "PET scan image",
-    "Mammogram image",
-    "CT scan image"
+    "electrocardiogram",
+    "biopsy",
+    "ultrasound scan"
    ],
    "gold": 2,
    "fits": [
@@ -656,10 +656,10 @@
    "topic": "a household appliance or device",
    "options": [
     "dishwashing machine",
-    "electric kettle",
+    "refrigerator",
+    "stove",
     "vacuum cleaner",
-    "microwave oven",
-    "trash compactor"
+    "microwave oven"
    ],
    "gold": 1,
    "fits": [
@@ -770,11 +770,11 @@
    "list": 0,
    "topic": "a household or everyday object",
    "options": [
+    "scissors",
     "soap",
-    "towel",
     "toothbrush",
-    "shampoo",
-    "toothpaste"
+    "comb",
+    "mirror"
    ],
    "gold": 3,
    "fits": [
@@ -908,11 +908,11 @@
    "list": 0,
    "topic": "an item of clothing",
    "options": [
-    "blazer",
+    "coat",
+    "dress",
     "sweater",
-    "parka",
     "raincoat",
-    "overcoat"
+    "shirt"
    ],
    "gold": 4,
    "fits": [
@@ -956,9 +956,9 @@
    "options": [
     "vacuum cleaner",
     "refrigerator",
-    "toaster",
-    "clothes dryer",
-    "electric kettle"
+    "dishwasher",
+    "washing machine",
+    "microwave oven"
    ],
    "gold": 1,
    "fits": [
@@ -1230,10 +1230,10 @@
    "list": 0,
    "topic": "a weather or atmospheric phenomenon",
    "options": [
-    "snowflake",
-    "raindrop",
-    "graupel",
-    "sleet",
+    "thunder",
+    "tornado",
+    "rainbow",
+    "lightning",
     "hailstone"
    ],
    "gold": 5,
@@ -1300,10 +1300,10 @@
    "topic": "a clothing item or accessory",
    "options": [
     "hand gloves",
-    "safety goggles",
-    "rubber boots",
-    "woolen scarf",
-    "ear muffs"
+    "knitted beanie",
+    "winter coat",
+    "sunglasses",
+    "woolen scarf"
    ],
    "gold": 1,
    "fits": [
@@ -1368,11 +1368,11 @@
    "list": 0,
    "topic": "a household electrical appliance",
    "options": [
+    "refrigerator",
+    "microwave oven",
     "washing machine",
-    "dishwasher",
-    "hair dryer",
     "vacuum cleaner",
-    "microwave oven"
+    "air conditioner"
    ],
    "gold": 4,
    "fits": [
@@ -1414,11 +1414,11 @@
    "list": 0,
    "topic": "a common insect or other arthropod",
    "options": [
-    "stag beetle",
+    "honeybee",
     "ladybird beetle",
     "dung beetle",
-    "soldier beetle",
-    "click beetle"
+    "ant",
+    "firefly"
    ],
    "gold": 2,
    "fits": [
@@ -1462,9 +1462,9 @@
    "options": [
     "death cap",
     "fly agaric",
-    "panther cap",
-    "destroying angel",
-    "shaggy ink cap"
+    "black truffle",
+    "porcini",
+    "chanterelle"
    ],
    "gold": 2,
    "fits": [
@@ -1484,10 +1484,10 @@
    "topic": "a household appliance",
    "options": [
     "vacuum cleaner",
+    "refrigerator",
     "washing machine",
     "dishwasher",
-    "steam mop",
-    "floor polisher"
+    "microwave oven"
    ],
    "gold": 1,
    "fits": [
@@ -1506,11 +1506,11 @@
    "list": 0,
    "topic": "a hand or power tool",
    "options": [
-    "angle grinder",
-    "jackhammer",
+    "axe",
+    "hammer",
     "chain saw",
-    "circular saw",
-    "hedge trimmer"
+    "power drill",
+    "screwdriver"
    ],
    "gold": 3,
    "fits": [
@@ -1645,10 +1645,10 @@
    "topic": "an animal or animal form",
    "options": [
     "caterpillar",
-    "tadpole",
-    "maggot",
+    "earthworm",
+    "silkworm",
     "chrysalis",
-    "earthworm"
+    "spider"
    ],
    "gold": 1,
    "fits": [
@@ -1668,9 +1668,9 @@
    "topic": "a common wild plant or flower",
    "options": [
     "dandelion",
-    "clover",
-    "cornflower",
     "poppy",
+    "cornflower",
+    "chamomile",
     "daisy"
    ],
    "gold": 1,
@@ -1713,11 +1713,11 @@
    "list": 0,
    "topic": "a kitchen appliance or utensil",
    "options": [
-    "food processor",
-    "meat grinder",
-    "coffee grinder",
     "pressure cooker",
-    "pasta maker"
+    "meat grinder",
+    "microwave oven",
+    "blender",
+    "toaster"
    ],
    "gold": 2,
    "fits": [
@@ -1828,11 +1828,11 @@
    "list": 0,
    "topic": "a household or craft tool",
    "options": [
-    "knitting needle",
+    "sewing needle",
     "sewing thimble",
-    "crochet hook",
+    "seam ripper",
     "embroidery hoop",
-    "pinking shears"
+    "crochet hook"
    ],
    "gold": 2,
    "fits": [
@@ -1897,11 +1897,11 @@
    "list": 0,
    "topic": "an everyday household object",
    "options": [
+    "fly swatter",
     "ceiling fan",
     "blanket",
-    "space heater",
     "mosquito net",
-    "sleep mask"
+    "pillow"
    ],
    "gold": 4,
    "fits": [
@@ -1967,10 +1967,10 @@
    "topic": "a household or personal care product",
    "options": [
     "toothpaste",
-    "deodorant",
+    "soap",
+    "sunscreen",
     "shampoo",
-    "shaving cream",
-    "mouthwash"
+    "deodorant"
    ],
    "gold": 1,
    "fits": [
@@ -2106,9 +2106,9 @@
    "options": [
     "cactus",
     "sunflower",
+    "oak tree",
     "rose",
-    "grass",
-    "orchid"
+    "bamboo"
    ],
    "gold": 1,
    "fits": [
@@ -2175,18 +2175,19 @@
    "options": [
     "fire extinguisher",
     "smoke detector",
-    "fire hydrant",
-    "fire blanket",
+    "thermos",
+    "flashlight",
     "first aid kit"
    ],
    "gold": 1,
    "fits": [
     1,
     2,
+    3,
     4,
     5
    ],
-   "n_confusers": 3,
+   "n_confusers": 4,
    "ok": true,
    "answered": true
   },

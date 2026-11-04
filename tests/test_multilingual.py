@@ -532,7 +532,7 @@ def test_v2_registrations(name, real_families):
     # the registered banks (the r5-rebuilt banks, tests/test_r5_mc_options.py)
     v = {
         "multilingual": "items_v4.json",
-        "multilingual_mt": "items_v4.json",
+        "multilingual_mt": "items_v5.json",
         "multilingual_multihop": "items_v4.json",
         "multilingual_typo": "items_v3.json",
     }[name]

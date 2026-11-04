@@ -75,7 +75,7 @@ new; dropped items reduce n).
 | multihop (bank v5) | 0.941 (v4, 68) | 0.918 [0.86, 0.97] | 98 | bank-mc-2026-11-01-v3+bank-gate-r9+bank-v5 | Opus 5.5 |
 | multihop_mt_v2 | 1.000 | 1.000 | 64 | mh2-mc-2026-11-01+norival-v1+qline-v1+bank-v6 | Opus 5.5 |
 | multilingual | 0.879 | 0.939 [0.89, 0.98] | 99 | mcrx-2026-11-03d+mc-ml-2026-11-01b+bank-v4 | Opus 5.5 |
-| multilingual_mt | 0.950 | 0.980 [0.95, 1.00] | 100 | mt-regex-2026-10-30+v2+ln-2026-11-03a+rawrx-v2+plural-v1+langleg-v1+bank-v4 | Opus 5.5 |
+| multilingual_mt | 0.950 | 0.980 [0.95, 1.00] | 100 | mt-regex-2026-10-30+v2+ln-2026-11-03a+rawrx-v2+plural-v1+langleg-v1+bank-v5 | Opus 5.5 |
 | multilingual_multihop | 0.340 | 0.856 [0.78, 0.92] | 97 | mcrx-2026-11-03d+mc-ml-2026-11-01b | Opus 5.5 |
 | multilingual_typo | 0.740 | 0.740 [0.66, 0.83] | 100 | mt-regex-2026-10-30+v2+ln-2026-11-03a+rawrx-v2+plural-v1+anchor-support-v1+langleg-v1+bank-v3 | Opus 5.5 |
 | poetry | 0.000 | 0.000 | 100 | poetry-free-2026-11-01+noveto-a1 | Opus 5.5 |
@@ -181,6 +181,7 @@ the rows above for these families are their previous banks'.
 | basic_readout_mt | v6 | 90 | 0.200 | 0.129 | 0.160 | 0.209 | 0.216 | passes |
 | multihop_mt_v2 | v6 | 64 | 0.188 | 0.078 | 0.216 | 0.338 | 0.188 | fails topic |
 | multilingual | v4 | 99 | 0.200 | 0.168 | 0.214 | 0.202 | 0.184 | passes |
+| multilingual_mt | v5 | 100 | 0.200 | 0.110 | 0.174 | 0.234 | 0.190 | passes |
 
 multihop_mt_v2 does not meet the standard. Its topic guesser, shown solved examples, picks the
 best-known member of the bridge's category, and which items it solves moves with the examples it
