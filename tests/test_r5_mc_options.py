@@ -16,11 +16,13 @@ REPO = Path(__file__).resolve().parents[1]
 # family -> (the bank it supersedes, the new bank, its version)
 BANKS = {
     "basic_readout_mt": ("items_v5.json", "items_v6.json", 6),
+    "multihop_mt_v2": ("items_v5.json", "items_v6.json", 6),
 }
 # the plan_sha of each family's read plan before the rebuild: options are never rendered, and a
 # dropped item's plan row stays (``read_plan_bank``), so every earlier readout file serves
 PLAN_SHA = {
     "basic_readout_mt": "4c8f2cc057e6",
+    "multihop_mt_v2": "1d5f2e2fa84b",
 }
 
 
@@ -130,7 +132,9 @@ def test_registered_and_read_plan_unchanged(family, real_families):
     assert reads.plan_sha(family).startswith(PLAN_SHA[family])
 
 
-# the rebuild's own record (the header's r5_mc.floors, every measurement up to the freeze)
+# the rebuild's own record (the header's r5_mc.floors, every measurement up to the freeze):
+# multihop_mt_v2 met the standard on the kept items' repair-round draws, but its topic guesser
+# fails it on fresh draws over the frozen bank (evals/baselines/README.md, "Option rebuild r5")
 NOT_MET: set[str] = set()
 
 
@@ -151,6 +155,7 @@ def test_recorded_floors_and_standard(family):
 # the standard verdicts on record
 FROZEN_FAILS: dict[str, set[str]] = {
     "basic_readout_mt": set(),
+    "multihop_mt_v2": {"topic"},
 }
 
 
@@ -170,7 +175,9 @@ def test_frozen_floors_are_on_the_new_bank(family, real_families):
 def test_call_keys_survive_the_bank_stamps(real_families):
     """A bank stamp moves the result stamp only: the MC calls stay keyed as before (the options
     are in the fingerprinted prompt, so a rebuilt list is re-asked and every other one is not)."""
+    from wsbench.evals.multihop_mt_v2.prompts import MH2_CALL_VERSION, MH2_PROMPT_VERSION
     from wsbench.multitoken.family import call_pv
     from wsbench.multitoken.prompts import BRMT_CALL_VERSION, BRMT_PROMPT_VERSION
 
     assert call_pv("basic_readout_mt", BRMT_PROMPT_VERSION) == BRMT_CALL_VERSION
+    assert call_pv("multihop_mt_v2", MH2_PROMPT_VERSION) == MH2_CALL_VERSION

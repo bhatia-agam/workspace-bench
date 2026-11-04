@@ -1363,93 +1363,89 @@
  },
  "multihop_mt_v2": {
   "blind": {
-   "mean": 0.08857142857142856,
-   "std": 0.02347382389307855,
-   "majority": 0.05714285714285714,
+   "mean": 0.078125,
+   "std": 0.024705294220065465,
+   "majority": 0.0625,
    "exact": null,
    "any_hit": null,
    "mean_picks": null,
-   "analytic_floor": 0.187,
-   "n_items": 70,
+   "analytic_floor": 0.1875,
+   "n_items": 64,
    "n_draws": 5,
    "n_api_fail": 0,
    "invalid_rate": 0.0,
    "n_options_per_list": [
-    4,
     5
    ],
    "model": "claude-opus-5-5",
    "prompt_version": "lucky-2026-09-16",
    "rule": "single pick",
-   "instrument": "mh2-mc-2026-11-01+norival-v1+qline-v1+bank-v5",
-   "written": "2026-11-04T07:43:46+00:00"
+   "instrument": "mh2-mc-2026-11-01+norival-v1+qline-v1+bank-v6",
+   "written": "2026-11-04T10:29:20+00:00"
   },
   "described": {
-   "mean": 0.22285714285714286,
-   "std": 0.02166535841157585,
-   "majority": 0.21428571428571427,
+   "mean": 0.215625,
+   "std": 0.01307281291459493,
+   "majority": 0.203125,
    "exact": null,
    "any_hit": null,
    "mean_picks": null,
-   "analytic_floor": 0.187,
-   "n_items": 70,
+   "analytic_floor": 0.1875,
+   "n_items": 64,
    "n_draws": 5,
    "n_api_fail": 0,
    "invalid_rate": 0.0,
    "n_options_per_list": [
-    4,
     5
    ],
    "model": "claude-opus-5-5",
    "prompt_version": "lucky-2026-09-16",
    "rule": "single pick",
-   "instrument": "mh2-mc-2026-11-01+norival-v1+qline-v1+bank-v5",
-   "written": "2026-11-04T07:45:35+00:00"
+   "instrument": "mh2-mc-2026-11-01+norival-v1+qline-v1+bank-v6",
+   "written": "2026-11-04T10:29:20+00:00"
   },
   "uniform": {
-   "mean": 0.19142857142857145,
-   "std": 0.03129843185743807,
-   "majority": 0.11428571428571428,
+   "mean": 0.1875,
+   "std": 0.038273277230987154,
+   "majority": 0.140625,
    "exact": null,
    "any_hit": null,
    "mean_picks": null,
-   "analytic_floor": 0.187,
-   "n_items": 70,
+   "analytic_floor": 0.1875,
+   "n_items": 64,
    "n_draws": 5,
    "n_api_fail": 0,
    "invalid_rate": 0.0,
    "n_options_per_list": [
-    4,
     5
    ],
    "model": "seeded-uniform",
    "prompt_version": "lucky-2026-09-16",
    "rule": "single pick",
-   "instrument": "mh2-mc-2026-11-01+norival-v1+qline-v1+bank-v5",
-   "written": "2026-11-04T10:55:38+00:00"
+   "instrument": "mh2-mc-2026-11-01+norival-v1+qline-v1+bank-v6",
+   "written": "2026-11-04T10:29:21+00:00"
   },
   "topic": {
-   "mean": 0.3485714285714286,
-   "std": 0.019166296949998204,
-   "majority": 0.34285714285714286,
+   "mean": 0.3375,
+   "std": 0.040745015032516554,
+   "majority": 0.328125,
    "exact": null,
    "any_hit": null,
    "mean_picks": null,
-   "analytic_floor": 0.187,
+   "analytic_floor": 0.1875,
    "topics": "topics-r4b-2026-11-01",
-   "n_items": 70,
+   "n_items": 64,
    "n_draws": 5,
    "n_api_fail": 0,
-   "invalid_rate": 0.0,
+   "invalid_rate": 0.002898550724637681,
    "n_options_per_list": [
-    4,
     5
    ],
    "model": "claude-opus-5-5",
    "prompt_version": "lucky-2026-09-16",
    "rule": "single pick",
-   "instrument": "mh2-mc-2026-11-01+norival-v1+qline-v1+bank-v5",
-   "written": "2026-11-04T07:47:23+00:00"
+   "instrument": "mh2-mc-2026-11-01+norival-v1+qline-v1+bank-v6",
+   "written": "2026-11-04T10:29:21+00:00"
   }
  },
  "multilingual": {

@@ -24,12 +24,11 @@ NEW = {
     "multilingual_typo": ("items_v2.json", "items_v3.json"),
 }
 # a later bank registered on top of the round-4b file, with the items whose round-4b list it
-# drops or edits and the frozen confuser audit does not cover: multihop_mt_v2 bank v5 = v4
-# without Kant among kant-hume's options; an r5-rebuilt bank (tests/test_r5_mc_options.py)
-# re-took the audit on its own lists, so the audit covers every item
+# drops or edits and the frozen confuser audit does not cover: an r5-rebuilt bank
+# (tests/test_r5_mc_options.py) re-took the audit on its own lists, so the audit covers every item
 LATER = {
     "basic_readout_mt": ("items_v6.json", set()),
-    "multihop_mt_v2": ("items_v5.json", {"mh2-kant-hume-edinburgh"}),
+    "multihop_mt_v2": ("items_v6.json", set()),
 }
 
 

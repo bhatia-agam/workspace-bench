@@ -45,13 +45,14 @@ def test_no_option_is_an_item_s_dropped_bridge():
 def test_kant_hume_shows_hume_and_three_others(real_families):
     from wsbench.banks import load_bank
 
-    _h, items = load_bank(registry.bank_path("multihop_mt_v2"))
+    _h, items = load_bank(V5)  # bank v6 rebuilt this list with four others, Kant still out
     opts, g = option_sets(items, cannot=mh2p.MH2_CANNOT)[KANT]["bridge1"]
     assert opts[g] == "David Hume" and "Immanuel Kant" not in opts and len(opts) == 5
 
 
 def test_registered_stamp_call_key_and_plan(real_families):
-    assert registry.bank_path("multihop_mt_v2") == V5
-    assert mh2p.MH2_PROMPT_VERSION.endswith("+bank-v5")
+    # the registered bank is v6 (tests/test_r5_mc_options.py), whose read_plan_bank is v5
+    assert registry.bank_path("multihop_mt_v2") == V5.with_name("items_v6.json")
+    assert mh2p.MH2_PROMPT_VERSION.endswith("+bank-v6")
     assert fam.call_pv("multihop_mt_v2", mh2p.MH2_PROMPT_VERSION).endswith("+bank-v4")
     assert reads.plan_sha("multihop_mt_v2").startswith("1d5f2e2fa84b")  # the readouts' plan

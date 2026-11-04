@@ -109,9 +109,9 @@ def test_registered():
     # plan 0041 B2: the pinned MC judge is the scorer of record (it was the regex contract)
     assert SPEC.group == "basic_mt" and SPEC.scorer == ""
     assert SPEC.judge.prompt_version == P.MH2_PROMPT_VERSION
-    assert P.MH2_PROMPT_VERSION == "mh2-mc-2026-11-01+norival-v1+qline-v1+bank-v5"
-    assert SPEC.bank == Path("evals/multihop_mt_v2/items_v5.json")
-    assert registry.bank_path(NAME) == V2.with_name("items_v5.json")  # bank v5
+    assert P.MH2_PROMPT_VERSION == "mh2-mc-2026-11-01+norival-v1+qline-v1+bank-v6"
+    assert SPEC.bank == Path("evals/multihop_mt_v2/items_v6.json")
+    assert registry.bank_path(NAME) == V2.with_name("items_v6.json")  # the r5-rebuilt bank v6
     assert fam.MC_PROFILES[NAME].cannot == P.MH2_CANNOT and mc.is_cannot(P.MH2_CANNOT)
     assert SPEC.task_note == P.MH2_TASK_NOTE and not SPEC.superseded_by
 
@@ -254,7 +254,7 @@ def test_mh2_sidecarless_final_token_file_is_report_only(tmp_path, monkeypatch):
     FakeLLM.install(monkeypatch, _picker())
     r = SPEC.run(summary_args(path, tmp_path / "o", P.MH2_PROMPT_VERSION))
     assert r.config["reads_checked"] == "no_sidecar"
-    assert len(r.extras["partial_ids_unenforced"]) == 70
+    assert len(r.extras["partial_ids_unenforced"]) == 64  # bank v6
 
 
 # ---------------------------------------------------------------- B2: the MC judge of record
@@ -507,7 +507,7 @@ def test_complete_run_is_pinned_and_complete(tmp_path, monkeypatch):
     FakeLLM.install(monkeypatch, _picker())
     r = SPEC.run(summary_args(path, tmp_path / "o", P.MH2_PROMPT_VERSION))
     assert r.pinned_instrument is True and r.complete is True and r.value == 0.0
-    assert r.extras["kinds"] == {"cannot": 76}
+    assert r.extras["kinds"] == {"cannot": 69}  # bank v6: 64 items, 69 lists
 
 
 def test_native_mc_any_layer_with_pick_columns(tmp_path, monkeypatch):

@@ -1,9 +1,9 @@
 {
  "family": "multihop_mt_v2",
  "model": "claude-opus-5-5",
- "n_lists": 76,
- "n_answered": 76,
- "n_ok": 76,
+ "n_lists": 69,
+ "n_answered": 69,
+ "n_ok": 69,
  "n_fail": [],
  "rows": [
   {
@@ -57,11 +57,11 @@
    "list": 0,
    "topic": "an early American military or political figure",
    "options": [
-    "Isaac Shelby",
-    "Winfield Scott",
-    "Henry Dearborn",
+    "Anthony Wayne",
+    "George Washington",
+    "Arthur St. Clair",
     "William Henry Harrison",
-    "Zachary Taylor"
+    "Andrew Jackson"
    ],
    "gold": 4,
    "fits": [
@@ -81,10 +81,10 @@
    "topic": "a 19th-century American politician",
    "options": [
     "Benjamin Harrison",
-    "James A. Garfield",
-    "Zachary Taylor",
-    "Rutherford B. Hayes",
-    "Andrew Johnson"
+    "Abraham Lincoln",
+    "Henry Clay",
+    "James K. Polk",
+    "Andrew Jackson"
    ],
    "gold": 1,
    "fits": [
@@ -188,61 +188,15 @@
    "answered": true
   },
   {
-   "item": "mh2-ray-tagore-gitanjali-q1",
-   "list": 0,
-   "topic": "a film director of the twentieth century",
-   "options": [
-    "Stanley Kubrick",
-    "Martin Scorsese",
-    "Federico Fellini",
-    "Satyajit Ray",
-    "Francis Ford Coppola"
-   ],
-   "gold": 4,
-   "fits": [
-    1,
-    2,
-    3,
-    4,
-    5
-   ],
-   "n_confusers": 4,
-   "ok": true,
-   "answered": true
-  },
-  {
-   "item": "mh2-ray-tagore-gitanjali-q1",
-   "list": 1,
-   "topic": "a famous Asian writer or poet",
-   "options": [
-    "Confucius",
-    "Li Bai",
-    "Matsuo Bashō",
-    "Kalidasa",
-    "Rabindranath Tagore"
-   ],
-   "gold": 5,
-   "fits": [
-    1,
-    2,
-    3,
-    4,
-    5
-   ],
-   "n_confusers": 4,
-   "ok": true,
-   "answered": true
-  },
-  {
    "item": "mh2-faraday-davy-lamp",
    "list": 0,
    "topic": "a 19th-century European scientist",
    "options": [
     "Charles Darwin",
-    "Justus von Liebig",
+    "William Thomson",
     "Michael Faraday",
-    "Robert Koch",
-    "Gregor Mendel"
+    "Louis Pasteur",
+    "Carl Friedrich Gauss"
    ],
    "gold": 3,
    "fits": [
@@ -261,20 +215,21 @@
    "list": 1,
    "topic": "a European scientist of the 19th century",
    "options": [
-    "William Hyde Wollaston",
+    "Lord Kelvin",
     "Humphry Davy",
-    "Joseph Black",
-    "William Henry",
-    "John Dalton"
+    "James Clerk Maxwell",
+    "Carl Friedrich Gauss",
+    "Alessandro Volta"
    ],
    "gold": 2,
    "fits": [
     1,
     2,
+    3,
     4,
     5
    ],
-   "n_confusers": 3,
+   "n_confusers": 4,
    "ok": true,
    "answered": true
   },
@@ -284,10 +239,10 @@
    "topic": "a medieval African ruler",
    "options": [
     "Mansa Musa",
-    "Idris Alooma",
-    "Askia Daoud",
-    "Askia Muhammad",
-    "Mansa Uli"
+    "Abu Bakr ibn Umar",
+    "Sunni Ali",
+    "Mansa Maghan",
+    "Abubakari II"
    ],
    "gold": 1,
    "fits": [
@@ -486,37 +441,14 @@
    "answered": true
   },
   {
-   "item": "mh2-telegram-founder-network",
-   "list": 0,
-   "topic": "a modern technology entrepreneur",
-   "options": [
-    "Jimmy Wales",
-    "Larry Page",
-    "Jeff Bezos",
-    "Mark Zuckerberg",
-    "Pavel Durov"
-   ],
-   "gold": 5,
-   "fits": [
-    1,
-    2,
-    3,
-    4,
-    5
-   ],
-   "n_confusers": 4,
-   "ok": true,
-   "answered": true
-  },
-  {
    "item": "mh2-salieri-film-shaffer-s0",
    "list": 0,
    "topic": "a feature film of the twentieth century",
    "options": [
     "Gandhi",
-    "Reds",
-    "Tootsie",
-    "Witness",
+    "Platoon",
+    "The Last Emperor",
+    "Out of Africa",
     "Amadeus"
    ],
    "gold": 5,
@@ -559,11 +491,11 @@
    "list": 0,
    "topic": "a European politician of the twentieth century",
    "options": [
-    "Heinrich Brüning",
+    "Franz von Papen",
     "Philipp Scheidemann",
     "Gustav Stresemann",
-    "Gustav Noske",
-    "Friedrich Ebert"
+    "Friedrich Ebert",
+    "Konrad Adenauer"
    ],
    "gold": 3,
    "fits": [
@@ -606,10 +538,10 @@
    "topic": "an 18th-century British mathematician or clergyman",
    "options": [
     "James Stirling",
-    "John Arbuthnot",
+    "Brook Taylor",
     "Thomas Bayes",
-    "Thomas Simpson",
-    "Abraham de Moivre"
+    "George Berkeley",
+    "Colin Maclaurin"
    ],
    "gold": 3,
    "fits": [
@@ -925,11 +857,11 @@
    "list": 0,
    "topic": "a medieval European scholar or cleric",
    "options": [
-    "Peter the Chanter",
-    "Hugh the Chanter",
+    "John Scotus Eriugena",
+    "Alcuin of York",
     "the Venerable Bede",
-    "the Blessed Duns Scotus",
-    "Hermann the Lame"
+    "Aldhelm",
+    "Gregory the Great"
    ],
    "gold": 3,
    "fits": [
@@ -1069,29 +1001,6 @@
     "Gamal Abdel Nasser"
    ],
    "gold": 2,
-   "fits": [
-    1,
-    2,
-    3,
-    4,
-    5
-   ],
-   "n_confusers": 4,
-   "ok": true,
-   "answered": true
-  },
-  {
-   "item": "mh2-cartier-bresson-teacher-lhote-s3",
-   "list": 0,
-   "topic": "a 20th-century European photographer",
-   "options": [
-    "August Sander",
-    "Eugène Atget",
-    "Henri Cartier-Bresson",
-    "Josef Koudelka",
-    "Bill Brandt"
-   ],
-   "gold": 3,
    "fits": [
     1,
     2,
@@ -1271,9 +1180,9 @@
    "options": [
     "Mao Zedong",
     "Sun Yat-sen",
-    "Kim Il-sung",
-    "Zhou Enlai",
-    "Park Chung-hee"
+    "Chiang Kai-shek",
+    "Ho Chi Minh",
+    "Jawaharlal Nehru"
    ],
    "gold": 2,
    "fits": [
@@ -1316,10 +1225,10 @@
    "topic": "a European Old Master painter",
    "options": [
     "Johannes Vermeer",
-    "Jan Steen",
+    "Leonardo da Vinci",
+    "Titian",
     "Rembrandt van Rijn",
-    "Frans Hals",
-    "Pieter de Hooch"
+    "Peter Paul Rubens"
    ],
    "gold": 1,
    "fits": [
@@ -1380,29 +1289,6 @@
    "answered": true
   },
   {
-   "item": "mh2-disraeli-beaconsfield-t0",
-   "list": 0,
-   "topic": "a nineteenth-century British politician or writer",
-   "options": [
-    "Thomas Babington Macaulay",
-    "John Stuart Mill",
-    "Benjamin Disraeli",
-    "Lord John Russell",
-    "Robert Peel"
-   ],
-   "gold": 3,
-   "fits": [
-    1,
-    2,
-    3,
-    4,
-    5
-   ],
-   "n_confusers": 4,
-   "ok": true,
-   "answered": true
-  },
-  {
    "item": "mh2-rand-novel",
    "list": 0,
    "topic": "a 20th-century writer or philosopher",
@@ -1412,29 +1298,6 @@
     "Ayn Rand",
     "Miguel de Unamuno",
     "Iris Murdoch"
-   ],
-   "gold": 3,
-   "fits": [
-    1,
-    2,
-    3,
-    4,
-    5
-   ],
-   "n_confusers": 4,
-   "ok": true,
-   "answered": true
-  },
-  {
-   "item": "mh2-qin-capital-s2",
-   "list": 0,
-   "topic": "a historical ruler of East Asia",
-   "options": [
-    "Tang Xuanzong",
-    "Tang Taizong",
-    "Qin Shi Huang",
-    "Qianlong Emperor",
-    "Sui Wendi"
    ],
    "gold": 3,
    "fits": [
@@ -1546,35 +1409,12 @@
    "topic": "a historical figure of Southeast Asia",
    "options": [
     "José Rizal",
-    "Gregorio del Pilar",
+    "Marcelo H. del Pilar",
+    "Benigno Aquino",
     "Emilio Aguinaldo",
-    "Apolinario Mabini",
-    "Hồ Chí Minh"
+    "Ferdinand Marcos"
    ],
    "gold": 1,
-   "fits": [
-    1,
-    2,
-    3,
-    4,
-    5
-   ],
-   "n_confusers": 4,
-   "ok": true,
-   "answered": true
-  },
-  {
-   "item": "mh2-hamlet-author-wife-t0",
-   "list": 0,
-   "topic": "a playwright or dramatist",
-   "options": [
-    "Thomas Dekker",
-    "Thomas Kyd",
-    "William Shakespeare",
-    "Thomas Middleton",
-    "John Fletcher"
-   ],
-   "gold": 3,
    "fits": [
     1,
     2,
@@ -1660,11 +1500,11 @@
    "list": 0,
    "topic": "an early modern European thinker",
    "options": [
-    "David Hume",
+    "Thomas Hobbes",
     "Gottfried Wilhelm Leibniz",
-    "Tobias Mayer",
+    "Baruch Spinoza",
     "René Descartes",
-    "Voltaire"
+    "John Locke"
    ],
    "gold": 2,
    "fits": [
@@ -1706,11 +1546,11 @@
    "list": 0,
    "topic": "a medieval European scholar or churchman",
    "options": [
-    "Ratherius of Verona",
-    "Liutprand of Cremona",
+    "Anselm of Canterbury",
+    "Bede",
     "Gerbert of Aurillac",
-    "Thietmar of Merseburg",
-    "William of Ockham"
+    "John Scotus Eriugena",
+    "Alcuin of York"
    ],
    "gold": 3,
    "fits": [
@@ -1729,10 +1569,10 @@
    "list": 0,
    "topic": "an Enlightenment-era European philosopher",
    "options": [
-    "Jeremy Bentham",
-    "Moses Mendelssohn",
-    "Immanuel Kant",
-    "Adam Smith",
+    "Gottfried Wilhelm Leibniz",
+    "Jean-Jacques Rousseau",
+    "John Locke",
+    "Voltaire",
     "David Hume"
    ],
    "gold": 5,

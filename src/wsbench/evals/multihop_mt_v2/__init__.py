@@ -25,10 +25,11 @@ SPEC = register(
     mt_family(
         "multihop_mt_v2",
         "Multihop v2 (multi-token)",
-        calls_per_arm="≈ 0.15k (70 digests + 76 MC)",
+        calls_per_arm="≈ 0.13k (64 digests + 69 MC)",
         scorer="mc",
-        # bank v5 = v4 without Immanuel Kant among kant-hume's bridge1 options
-        bank=Path("evals/multihop_mt_v2/items_v5.json"),
+        # bank v6 = v5 with the leaking bridge lists rebuilt and 6 items dropped (its header's
+        # read_plan_bank keeps v5's read plan, so v5 readouts serve it)
+        bank=Path("evals/multihop_mt_v2/items_v6.json"),
         prompt_version=MH2_PROMPT_VERSION,
         min_full_positions=MIN_FULL_POSITIONS,
         full_contiguous=True,

@@ -231,7 +231,7 @@ These rules apply to every new item in this group:
 multihop_mt was removed from WorkspaceBench (plan 0041); every adapted `multihop_mt.json` was
 deleted.
 
-### multihop_mt_v2 — the bridges THIS subject needs (bank `items_v5`; plan 0060 Phase E)
+### multihop_mt_v2 — the bridges THIS subject needs (bank `items_v6`; plan 0060 Phase E)
 - **Latent:** the bridge(s) of a multi-token two- or three-hop question; every bridge proved
   necessary on the subject.
 - **Code:** `src/wsbench/adapt/mhmt2.py`, `$A multihop_mt_v2 $M [limit=] [regate=true]` (one
