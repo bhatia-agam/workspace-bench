@@ -513,8 +513,9 @@ def _answer_like(sample: str, unit: regex.ScoredUnit, *, prose: bool = True) -> 
 # every required unit supports each of them (reaudit r2: eraser + "Dalam bahasa Indonesia ...
 # penghapus" in one L60 sample was rejected by RAW_MIN_SUPPORT). A top-k token is never
 # anchored (a token names nothing about the object); token arms keep the old rule.
-# round 4 (Camila r2): multilingual_mt moved on to SAME_SAMPLE_FAMILIES (below), which subsumes
-# the anchoring; no family uses the strict anchored-only language rule any more
+# round 4 (Camila r2): multilingual_mt moved on to the same-sample rule, since replaced by the
+# language leg (regex.language_leg); no family uses the strict anchored-only language rule any
+# more
 ANCHOR_FAMILIES: frozenset[str] = frozenset()
 # round 3 (multilingual_multihop BLOCKING): here namings of OTHER entities stay creditable under the
 # old two-sample rule (the family accepts any metalinguistic naming), but an anchored naming (the
@@ -529,58 +530,34 @@ ANCHOR_SUPPORT_FAMILIES = frozenset({"multilingual_multihop", "multilingual_typo
 # 탄소섬유강화플라스틱이라고 한다", ko-cfrp L56). An anchored naming (the same sample holds a
 # correction form or the target) or a sample holding every unit now supports its units on its own;
 # an unanchored naming keeps the two-sample rule (never stricter than before).
-# round 4 (Camila r2, multilingual_mt): "language naming and concept must come from the SAME
-# sample". A prose layer (raw samples) or the digest's evidence passes only through a sample that
-# holds EVERY required unit; the units' hits are read from such samples only. A top-k token arm
-# keeps the old rule (a token list is not a statement).
-SAME_SAMPLE_FAMILIES = frozenset({"multilingual_mt"})
-SAME_SAMPLE_VERSION = "same-sample-v1"
+# On a v2 bank of these families the language unit leaves the per-layer (and pooled digest)
+# conjunction: ``regex.language_leg`` scores it once per item on the raw samples of every read
+# cell (credited by one naming sample; the per-item count is ``rows[].language_naming_samples``).
+# It replaces multilingual_mt's round-4 same-sample rule (concept and naming in ONE sample), which
+# failed items that named both in different samples. The anchoring above still shapes the CONTENT
+# units' raw support.
 
 
-def same_sample_hits(
-    samples: Sequence[str],
-    units: list[regex.ScoredUnit],
-    contract: regex.BankContract | None,
-    base: Mapping[str, list[str]] | None = None,
-) -> dict[str, list[str]]:
-    """role -> languages hit, under the same-sample rule: the LANGUAGE unit is read only in
-    samples that hold EVERY required unit (one at a time); every other unit keeps its ``base``
-    hits (the leg's own rule; default: presence in any sample) plus the languages it hits in
-    such complete samples. So a layer passes only through one complete sample, while a concept
-    named alone still counts as a concept hit (``any_hit``, ``content_hit``)."""
-    required = [u.role for u in units if u.required]
-    base = dict(base) if base is not None else regex.layer_unit_hits(list(samples), units, contract)
-    got: dict[str, set[str]] = {u.role: set() for u in units}
-    for x in samples:
-        h = regex.layer_unit_hits([x], units, contract)
-        if required and all(h.get(r) for r in required):
-            for u in units:
-                got[u.role].update(h.get(u.role) or [])
-    out: dict[str, list[str]] = {}
-    for u in units:
-        langs = got[u.role] if u.role == LANGUAGE_ROLE else got[u.role] | set(base.get(u.role, []))
-        out[u.role] = [lg for lg in u.forms if lg in langs]
-    return out
+def language_leg_on(name: str) -> bool:
+    """The family scores its language unit by the leg: a v2 multilingual bank."""
+    return name in RAW_REGEX_FAMILIES and bank_version(name) >= 2
 
 
-def same_sample_layer_hits(
-    cells: list[Cell], units: list[regex.ScoredUnit], contract: regex.BankContract | None
-) -> dict[int, dict[str, list[str]]]:
-    """:func:`same_sample_hits` per read layer over that layer's raw prose samples, the other
-    units' base hits being :func:`raw_layer_hits` (the supported raw rule)."""
-    base = raw_layer_hits(cells, units, contract)
-    by_layer: dict[int, list[Cell]] = defaultdict(list)
-    for c in cells:
-        by_layer[c.layer].append(c)
-    return {
-        layer: same_sample_hits(
-            [x for c in sorted(by_layer[layer], key=lambda c: c.pos) for x in _cell_samples(c)],
-            units,
-            contract,
-            base.get(layer, {}),
-        )
-        for layer in sorted(by_layer)
-    }
+def item_language_leg(
+    cells: Sequence[Cell], units: list[regex.ScoredUnit]
+) -> regex.LanguageLeg | None:
+    """The language leg over ``cells`` (every read cell of one item), or None without a
+    language unit."""
+    unit = regex.language_unit(units)
+    if unit is None:
+        return None
+    return regex.language_leg([x for c in cells for x in _cell_samples(c)], unit)
+
+
+def _leg_row(leg: regex.LanguageLeg | None) -> dict[str, Any]:
+    if leg is None:
+        return {}
+    return {"language_pass": leg.ok, "language_naming_samples": leg.n_samples}
 
 
 def anchor_forms(item: Mapping[str, Any]) -> dict[str, list[str]]:
@@ -822,15 +799,6 @@ def run_regex(
             if split
             else plain_by[item_id][layer]
         )
-        if name in SAME_SAMPLE_FAMILIES and all(c.tokens is None for c in cs):
-            # round 4: every unit from one sample (prose only; split words never complete one)
-            hits_by[item_id][layer] = same_sample_hits(
-                samples, units, contract, hits_by[item_id][layer]
-            )
-            plain_by[item_id][layer] = same_sample_hits(
-                samples, units, contract, plain_by[item_id][layer]
-            )
-            continue
         anchors = anchors_of.get(item_id) if name in ANCHOR_FAMILIES else None
         if anchors is not None:  # round 3: the language unit only in anchored prose samples
             hits_by[item_id][layer] = _native_anchored(
@@ -840,11 +808,14 @@ def run_regex(
                 cs, plain_by[item_id][layer], units, contract, anchors
             )
 
+    leg_on = language_leg_on(name) and not args.dry_run
     rows: list[dict[str, Any]] = []
     incomplete_of: dict[str, bool] = {}
     for item_id in ids:
         units = units_of[item_id]
-        res = regex.item_result(hits_by.get(item_id, {}), units)
+        item_cells = [c for (i, _layer), cs in positions.items() if i == item_id for c in cs]
+        leg = item_language_leg(item_cells, units) if leg_on else None
+        res = regex.item_result(hits_by.get(item_id, {}), units, leg)
         item_missing = [layer for i, layer in missing if i == item_id]
         incomplete = bool(item_missing) or not hits_by.get(item_id) or args.dry_run
         row = {
@@ -859,7 +830,7 @@ def run_regex(
             "first_lang": res["first_lang"],
             "any_hit": res["any_hit"],
             "split_word_hit": bool(
-                res["pass"] and not regex.item_result(plain_by.get(item_id, {}), units)["pass"]
+                res["pass"] and not regex.item_result(plain_by.get(item_id, {}), units, leg)["pass"]
             ),
             "content_hit": _content_hit(res),
             "missing_layers": item_missing,
@@ -867,6 +838,7 @@ def run_regex(
                 str(layer): {"hits": h, "empty": (item_id, layer) in empty}
                 for layer, h in sorted(hits_by.get(item_id, {}).items())
             },
+            **_leg_row(leg),
         }
         rows.append(row)
         incomplete_of[item_id] = incomplete
@@ -989,7 +961,7 @@ def _run_regex_summary(
     if args.dry_run:
         _print_dry_run(name, contract, scope, units_of, positions, layers, missing)
     partial = {i for i, _layer in missing}
-    raw = name in RAW_REGEX_FAMILIES and bank_version(name) >= 2
+    raw = language_leg_on(name)  # the raw-sample supplement and the language leg
     # a token digest keeps the old rule (a token names nothing about the object)
     anchors_of = _anchors_of(name, scope) if getattr(rep, "kind", None) != "tokens" else {}
     digest_hits: dict[str, dict[str, list[str]]] = {}
@@ -1000,35 +972,30 @@ def _run_regex_summary(
         hits: dict[int, dict[str, list[str]]] = {}
         plain: dict[int, dict[str, list[str]]] = {}
         raw_cells = [c for (i, _layer), cs in positions.items() if i == item_id for c in cs]
+        leg: regex.LanguageLeg | None = None
         if raw and raw_cells and not args.dry_run:
             # final r1: the digest's pooled conjunction (plan 0020) as before, supplemented by the
-            # raw samples of each read layer (every unit within that one layer): any passes
-            same = name in SAME_SAMPLE_FAMILIES and getattr(rep, "kind", None) != "tokens"
-            if same:
-                hits = same_sample_layer_hits(raw_cells, units, contract)
-            else:
-                hits = dict(
-                    raw_layer_hits(
-                        raw_cells,
-                        units,
-                        contract,
-                        anchors_of.get(item_id),
-                        require_anchor=name not in ANCHOR_SUPPORT_FAMILIES,
-                    )
+            # raw samples of each read layer (every unit within that one layer): any passes;
+            # the language unit is the leg's alone (item_result drops it from both)
+            leg = item_language_leg(raw_cells, units)
+            hits = dict(
+                raw_layer_hits(
+                    raw_cells,
+                    units,
+                    contract,
+                    anchors_of.get(item_id),
+                    require_anchor=name not in ANCHOR_SUPPORT_FAMILIES,
                 )
+            )
             if cell is not None and item_id not in col.unsummarized:
                 forms = [f for u in units for f in u.all_forms()]
                 texts = digest.gate_texts(cell, col, joined=True, forms=forms)
                 dsamples = [s for s in (regex.extract_phrase(t) for t in texts) if s]
-                digest_hits[item_id] = (
-                    same_sample_hits(dsamples, units, contract)
-                    if same
-                    else anchored_unit_hits(
-                        dsamples,
-                        units,
-                        contract,
-                        anchors_of.get(item_id) if name in ANCHOR_FAMILIES else None,
-                    )
+                digest_hits[item_id] = anchored_unit_hits(
+                    dsamples,
+                    units,
+                    contract,
+                    anchors_of.get(item_id) if name in ANCHOR_FAMILIES else None,
                 )
                 hits[digest.SUMMARY_LAYER] = digest_hits[item_id]
             plain = hits
@@ -1048,7 +1015,7 @@ def _run_regex_summary(
             plain[digest.SUMMARY_LAYER] = regex.layer_unit_hits(
                 [s for s in (regex.extract_phrase(t) for t in bare) if s], units, contract
             )
-        res = regex.item_result(hits, units)
+        res = regex.item_result(hits, units, leg)
         incomplete = item_id in partial or not hits or args.dry_run
         row: dict[str, Any] = {
             "id": item_id,
@@ -1059,16 +1026,24 @@ def _run_regex_summary(
             "unit_langs": res["unit_langs"],
             "first_lang": res["first_lang"],
             "any_hit": res["any_hit"],
-            "split_word_hit": bool(res["pass"] and not regex.item_result(plain, units)["pass"]),
+            "split_word_hit": bool(
+                res["pass"] and not regex.item_result(plain, units, leg)["pass"]
+            ),
             "content_hit": _content_hit(res),
             "missing_layers": [layer for i, layer in missing if i == item_id],
             "layers": {
                 str(layer): {"hits": h, "empty": item_id in col.empty} for layer, h in hits.items()
             },
+            **_leg_row(leg),
         }
         if raw:
+            # the digest's pooled conjunction alone (display only); the language is still the leg
             dh = digest_hits.get(item_id)
-            row["digest_pass"] = None if dh is None else regex.layer_passes(dh, units)
+            row["digest_pass"] = (
+                None
+                if dh is None
+                else regex.item_result({digest.SUMMARY_LAYER: dh}, units, leg)["pass"]
+            )
         if cell is not None:
             row.update(col.row(item_id))
         rows.append(row)

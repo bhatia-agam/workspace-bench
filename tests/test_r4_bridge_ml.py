@@ -4,8 +4,9 @@ shapes of the cited cases (cached final-olens-rl600-x4 readouts):
 
 1. multilingual: an English concept mention that is the premise of another reasoning step, or
    sits in a question, is no answer (b3-ml-de-month-june L52, ANSWERS_R2 §4);
-2. multilingual_mt: the language naming and the concept come from ONE sample (same-sample-v1),
-   and bank v3 gives mlh-tr-bademcik "tonsil" / "tonsils";
+2. multilingual_mt: bank v3 gives mlh-tr-bademcik "tonsil" / "tonsils" (the round-4 same-sample
+   rule pinned here is gone: the language is scored on the raw-sample leg, so the concept and
+   the naming may come from different samples; tests/test_multilingual_language_leg.py);
 3. multilingual_typo: one anchored naming sample supports the language unit (ANSWERS_R2 §8);
 4. multilingual_multihop: a lone native-language naming is pinned (pins-v4);
 5. wrong_intermediate: the v3 name forms (every option's Wikidata names in every language, the
@@ -99,8 +100,14 @@ def _mt(iid: str, bank: str = "items_v3.json"):
     return it, regex.scored_units(it, contract), contract
 
 
-def test_language_and_concept_in_different_samples_no_longer_pass():
-    # pl-kasztanowiec L36: a Polish naming of a city phrase, the tree in other samples
+def _leg_passes(cells, units, contract) -> bool:
+    leg = fam.item_language_leg(cells, units)
+    return regex.item_result(fam.raw_layer_hits(cells, units, contract), units, leg)["pass"]
+
+
+def test_language_and_concept_in_different_samples_pass_again():
+    # pl-kasztanowiec L36 (round 4 failed it by the same-sample rule): the naming of a city
+    # phrase and the tree in other samples; the language leg credits the naming on its own
     it, units, contract = _mt("mlh-pl-kasztanowiec")
     samples = [
         "miasto kleje (Great Big City in Polish) lub Duże miasto powiązania to pozostałość.",
@@ -108,41 +115,26 @@ def test_language_and_concept_in_different_samples_no_longer_pass():
         "The horse chestnut tree has candle-shaped flowers.",
         "Again the horse chestnut, with conkers.",
     ]
-    cells = _cells(it["id"], samples, 36)
-    assert _passes(fam.raw_layer_hits(cells, units, contract), units)  # the old rule passed
-    assert not _passes(fam.same_sample_layer_hits(cells, units, contract), units)
-    # the passage named in one sample, the concept in others: not one sample either
-    cells = _cells(it["id"], ["This passage is written in Polish.", *samples[2:]], 44)
-    assert not _passes(fam.same_sample_layer_hits(cells, units, contract), units)
+    assert _leg_passes(_cells(it["id"], samples, 36), units, contract)
+    # no naming anywhere: the concept alone never passes
+    assert not _leg_passes(_cells(it["id"], samples[2:], 36), units, contract)
 
 
-def test_one_sample_holding_both_units_passes():
-    # id-penghapus L60: one sample states the concept and names Indonesian
-    it, units, contract = _mt("mlh-id-penghapus")
-    samples = [
-        "Ini adalah **eraser**. Dalam bahasa Indonesia, alat ini lebih populer disebut "
-        "**penghapus**.",
-        "Alat tulis untuk menulis di kertas.",
-    ]
-    cells = _cells(it["id"], samples, 60)
-    assert not _passes(fam.raw_layer_hits(cells, units, contract), units)  # 2-sample rule
-    assert _passes(fam.same_sample_layer_hits(cells, units, contract), units)
+def test_the_language_leg_is_item_level():
+    # trzustka-shaped: the naming at one layer, the concept (twice) at another
+    it, units, contract = _mt("mlh-pl-trzustka")
+    naming = _cells(it["id"], ["**Gruczań** - słowo w języku polskim/cerkiewnym, nazwa wsi."], 36)
+    concept = _cells(
+        it["id"],
+        ["The organ is the pancreas, which secretes insulin.", "The pancreas again."],
+        44,
+    )
+    assert _leg_passes(naming + concept, units, contract)
+    assert not _leg_passes(concept, units, contract)
 
 
-def test_digest_leg_needs_one_line_with_both_units():
-    _it, units, contract = _mt("mlh-pl-trzustka")
-    split = [
-        "**Gruczań** - słowo w języku polskim/cerkiewnym, nazwa wsi.",
-        "The organ is the pancreas, which secretes insulin.",
-    ]
-    assert regex.layer_passes(regex.layer_unit_hits(split, units, contract), units)
-    assert not regex.layer_passes(fam.same_sample_hits(split, units, contract), units)
-    one = ["Trzustka, po polsku: the pancreas."]
-    assert regex.layer_passes(fam.same_sample_hits(one, units, contract), units)
-
-
-def test_same_sample_is_multilingual_mt_only_and_anchoring_supports_typo():
-    assert frozenset({"multilingual_mt"}) == fam.SAME_SAMPLE_FAMILIES
+def test_same_sample_rule_is_gone_and_anchoring_supports_typo():
+    assert not hasattr(fam, "SAME_SAMPLE_FAMILIES") and not hasattr(fam, "same_sample_hits")
     assert frozenset() == fam.ANCHOR_FAMILIES
     assert "multilingual_typo" in fam.ANCHOR_SUPPORT_FAMILIES
 

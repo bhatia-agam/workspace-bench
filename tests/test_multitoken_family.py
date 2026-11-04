@@ -18,7 +18,7 @@ from wsbench.multitoken.prompts import (
     CANNOT,
     LETTERS,
     PROMPT_VERSION,
-    V2_SAME_SAMPLE_TAG,
+    V2_MT_TAG,
     V2_TYPO_TAG,
 )
 from wsbench.results import read_results
@@ -237,7 +237,7 @@ def test_scorer_enum_assignment(real_families):
 def test_regex_families_unchanged(real_families):
     # plan 0054 items 5 / 12: the two multilingual regex families register their v2 bank tag
     tag = {
-        "multilingual_mt": "+" + V2_SAME_SAMPLE_TAG,  # round 4: + the same-sample rule
+        "multilingual_mt": "+" + V2_MT_TAG,  # + the language leg (langleg-v1)
         "multilingual_typo": "+" + V2_TYPO_TAG,  # round 4: + the anchored support
         "typo_mt": "+typo-v2",
     }

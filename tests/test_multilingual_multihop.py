@@ -49,7 +49,7 @@ def test_registered():
     registry.FAMILIES.setdefault(SPEC.name, SPEC)
     # plan 0054 item 9: the scorer of record is mc+regex (an LLM judge, EvalSpec.scorer empty)
     assert SPEC.group == "basic_mt" and SPEC.scorer == ""
-    assert SPEC.judge.prompt_version == "mcrx-2026-11-01a+mc-ml-2026-11-01b"
+    assert SPEC.judge.prompt_version == "mcrx-2026-11-03d+mc-ml-2026-11-01b"
     assert "0 (regex)" not in SPEC.calls_per_arm
 
 
@@ -63,13 +63,15 @@ def _items():
     return {it["id"]: it for it in load_bank(V2)[1]}
 
 
-def test_v2_all_units_required():
+def test_v2_units_required_but_the_l2_bridge():
+    # bridge_l2 is scored but optional (the bank file still marks it required)
     header, items = load_bank(V2)
     contract = regex.contract_for(header, "multilingual_multihop")
     for it in items:
         roles = {u.role: u.required for u in regex.scored_units(it, contract)}
         want = {"bridge_native", "language"} | (set() if it["l2_equals_native"] else {"bridge_l2"})
-        assert set(roles) == want and all(roles.values()), it["name"]
+        assert set(roles) == want, it["name"]
+        assert {r for r, req in roles.items() if req} == {"bridge_native", "language"}
 
 
 def test_v2_bank_l2_creditable_lint():
@@ -121,13 +123,16 @@ def _run(tmp_path, monkeypatch, item, text, judge, layer=36):
     return spec.run(args)
 
 
-def test_english_only_mention_fails_l2_unit(tmp_path, monkeypatch):
+def test_english_only_mention_misses_the_l2_unit_and_passes(tmp_path, monkeypatch):
+    # an English-only "ASML" never hits the L2 unit; that unit is a
+    # diagnostic, so the item passes on the native bridge and the language
     gold = _items()[ASML]["mc"]["bridge_native"]["gold"]
     judge = _judge(gold, "Finnish", "ASML", "Finnish")
     r = _run(tmp_path, monkeypatch, ASML, "ASML builds them; the text is Finnish (suomi).", judge)
     row = r.rows[0]
-    assert row["unit_correct"] == {"bridge_native": True, "language": True}
-    assert row["unit_hit"]["bridge_l2"] is False and row["pass"] is False
+    assert row["unit_correct"] == {"bridge_native": True}  # the language is no MC role
+    assert row["language_pass"] is True
+    assert row["unit_hit"]["bridge_l2"] is False and row["pass"] is True
     r2 = _run(tmp_path, monkeypatch, ASML, "ASML builds them; ASML:n laitteet; Finnish.", judge)
     assert r2.rows[0]["unit_hit"]["bridge_l2"] is True and r2.rows[0]["pass"] is True
 
@@ -136,12 +141,12 @@ def test_english_only_mention_fails_l2_unit(tmp_path, monkeypatch):
     "content,with_l2,want",
     [
         ("gold", True, True),  # MC gold + all 3 units
-        ("gold", False, False),  # bridge_l2 missing
+        ("gold", False, True),  # bridge_l2 missing: optional
         (None, True, False),  # cannot tell
         ("distractor", True, False),  # a distractor pick with every unit present
     ],
 )
-def test_mcrx_pass_needs_mc_and_all_regex_units(tmp_path, monkeypatch, content, with_l2, want):
+def test_mcrx_pass_needs_mc_and_the_required_units(tmp_path, monkeypatch, content, with_l2, want):
     # the bank of record's lists (round 4: bank v3 changed the distractors the judge is shown)
     _h, rec = load_bank(registry.bank_path("multilingual_multihop"))
     it = {i["id"]: i for i in rec}["mlmh-ar-kente-accra"]

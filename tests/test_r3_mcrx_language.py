@@ -1,10 +1,10 @@
 # ruff: noqa: RUF001
-"""Round 3 (multilingual_multihop BLOCKING + multilingual): every-naming-form pins, the language
-cannot-tell rescue, and the Arabic teaching-topic veto. Each rule is pinned in both directions:
-the too-strict shape of a cited case now passes and the too-lenient shape still fails."""
+"""Round 3 (multilingual_multihop BLOCKING + multilingual): every-naming-form pins and the Arabic
+teaching-topic veto. Each rule is pinned in both directions: the too-strict shape of a cited case
+now passes and the too-lenient shape still fails. (The language cannot-tell rescue tested here
+before is gone with the MC language role: tests/test_multilingual_language_leg.py.)"""
 
 from wsbench.banks import load_bank, native_langs
-from wsbench.digest import Line
 from wsbench.multitoken import mcrx, regex
 from wsbench.multitoken.languages import LANGUAGES, naming_forms
 from wsbench.multitoken.options import LANGUAGE_ROLE, option_aliases, option_sets
@@ -29,76 +29,6 @@ def _ctx(iid: str, cells: list[Cell]) -> mcrx._Ctx:
 
 def _cells(iid: str, samples: list[str], layer: int = 60) -> list[Cell]:
     return [Cell(iid, layer, -1 - k, (s,), None, None) for k, s in enumerate(samples)]
-
-
-ARECIBO = "mlmh-ko-arecibo-puertorico"
-KO_LINE = "경(Radio Telescope)입니다. 한국어 직역으로는 '라디오 망원경'쯤 되겠네요."
-JACQUARD = "mlmh-el-jacquard-lyon"
-EL_LINE = (
-    "ού του Jacquard (weaving loom) 2. Τον χάρτη του αργαλειού Στην ελληνική γλώσσα η λέξη "
-    "«αργαλειός» σημαίνει"
-)
-CANNOT = {"judged": True, "kind": "cannot", "correct": False, "pick": "F"}
-
-
-def test_rescue_credits_a_lone_uncontested_naming_about_the_bridge():
-    # el-jacquard all-layer: the Greek naming sits in a sentence about Jacquard's loom; once
-    # pinned, the judge still said cannot tell
-    cells = _cells(JACQUARD, [EL_LINE, "Ο Ζακάρ εφηύρε τον αργαλειό.", "Jacquard loom."])
-    ctx = _ctx(JACQUARD, cells)
-    v = mcrx.language_rescue(ctx, JACQUARD, dict(CANNOT), [Line(EL_LINE)], cells)
-    assert v["kind"] == "correct" and v["correct"] and v["form_via"] == "rescue"
-    assert v["rescue_gold_raw"] == 1 and v["rescue_rival_raw"] == 0
-
-
-def test_rescue_refuses_when_another_language_is_named_as_often():
-    tr = "Jacquard tezgahı Türkçede dokuma tezgahı olarak bilinir."
-    cells = _cells(JACQUARD, [EL_LINE, tr, "Jacquard: Türkçe karşılığı dokuma tezgahı."])
-    ctx = _ctx(JACQUARD, cells)
-    v = mcrx.language_rescue(ctx, JACQUARD, dict(CANNOT), [Line(EL_LINE)], cells)
-    assert v["kind"] == "cannot" and not v["correct"]
-    assert v["rescue_rival_raw"] >= v["rescue_gold_raw"]
-
-
-def test_multihop_rescue_needs_the_naming_to_be_about_the_bridge():
-    # ko-arecibo: the Korean naming glosses 'radio telescope', not the observatory: no rescue
-    # (L60 still passes through the judge's own credit)
-    cells = _cells(ARECIBO, [KO_LINE, "아레시보 천문대는 푸에르토리코에 있습니다."])
-    ctx = _ctx(ARECIBO, cells)
-    v = mcrx.language_rescue(ctx, ARECIBO, dict(CANNOT), [Line(KO_LINE)], cells)
-    assert v["kind"] == "cannot"
-
-
-def test_rescue_never_acts_on_a_topic_line():
-    # ar-ashgabat L44-shaped: an official-language statement is a topic, never a rescue
-    iid = "mlmh-ar-ashgabat-manat"
-    ar = (
-        "عشق آباد (Ashgabat) هو العربية (Arabic)، وهي اللغة الرسمية الوحيدة المعتمدة في الدولة، "
-        "واسمها بالعربية عشق آباد"
-    )
-    cells = _cells(iid, [ar, ar + " ."])
-    ctx = _ctx(iid, cells)
-    v = mcrx.language_rescue(ctx, iid, dict(CANNOT), [Line(ar)], cells)
-    assert v["kind"] == "cannot"
-
-
-def test_rescue_needs_a_digest_line_that_singles_out_the_gold():
-    # the naming is only in a raw sample the digest does not hold: no rescue
-    cells = _cells(JACQUARD, [EL_LINE])
-    ctx = _ctx(JACQUARD, cells)
-    v = mcrx.language_rescue(ctx, JACQUARD, dict(CANNOT), [Line("Jacquard loom.")], cells)
-    assert v["kind"] == "cannot"
-
-
-def test_rescue_never_touches_a_distractor_pick():
-    cells = _cells(JACQUARD, [EL_LINE])
-    ctx = _ctx(JACQUARD, cells)
-    pick = {"judged": True, "kind": "distractor", "correct": False, "pick": "E"}
-    assert mcrx.language_rescue(ctx, JACQUARD, dict(pick), [Line(EL_LINE)], cells) == pick
-
-
-def test_rescue_families():
-    assert frozenset({"multilingual", FAM}) == mcrx.RESCUE_FAMILIES
 
 
 # ------------------------------------------------------------------ the pins

@@ -27,7 +27,8 @@ language: an adverb or prepositional phrase (``suomeksi``, ``по-русски``
 ``Türkçe``, ``čeština``); an English name counts only in ``in X`` / ``into X`` (followed by
 punctuation or a verb / determiner, never an adjective-noun ``in Russian history``), ``X:``,
 ``(X)``, ``X word / term / language / ...``, ``speak(s) X`` or a trailing label (``word, X``
-at the end of a sample); a bare autonym only as a parenthesised label (``(suomi)``). Bare
+at the end of a sample); a bare autonym only as a parenthesised label (``(русский)``; never one
+that is also the country's name, ``(Suomi)``). Bare
 adjectives (``русский``, ``polskiego``, ``العربية``, ``suomi``, ``español``) are gone.
 :func:`naming_forms` builds the unit; ``regex.scored_units`` swaps it in for a v2 language
 unit (the bank file is unchanged).
@@ -333,7 +334,14 @@ def case_sensitive_forms() -> frozenset[str]:
 # prompt-only namings of multilingual. The free words exclude function words, verbs and people /
 # institution nouns (_FREE_STOP: "the Russian writer wrote this sentence" names no language),
 # and are lower-case only (never a title).
-NAMING_VERSION = "ln-2026-10-31f"  # bump on any edit of NAMING / naming_forms
+# ln-2026-11-03a: Arabic "في العربية" (in Arabic) and a wa / fa proclitic before
+# "بالعربية" / "باللغة العربية" (mlh-ar-aurora); Hebrew a vav / shin proclitic before
+# "בעברית" / "לעברית" / "מעברית" / "בשפה העברית" (mlh-he-toothbrush) and "the Hebrew name /
+# word / term / translation" ("שמה העברי", mlmh-he-pacific-yew-taxol, as the Arabic form);
+# Greek "σε ελληνικά" (mlh-el-screwdriver); the bare autonym label "(suomi)" no longer names
+# Finnish: Suomi is also the country (mlt-fi-kansanedustaja passed on "Edustaja Sari Essayah
+# (Suomi)"), _COUNTRY_AUTONYMS
+NAMING_VERSION = "ln-2026-11-03a"  # bump on any edit of NAMING / naming_forms
 RE_PREFIX = "re:"
 _P = r"""[,.:;!?()\]"'»“”*—–/-]"""  # noqa: RUF001
 # what may follow "in X" for it to name the language: punctuation, the end, or a verb /
@@ -623,14 +631,23 @@ NAMING_OWN: dict[str, tuple[str, ...]] = {
         *_rx(
             *(
                 rf"(?<![^\W_]){re.escape(f)}(?![^\W_]){_AR_TOPIC_AFTER}"
-                for f in ("بالعربية", "اللغة العربية", "باللغة العربية", "بالعربي", "للغة العربية")
-            )
+                for f in ("اللغة العربية", "للغة العربية")
+            ),
+            # ln-2026-11-03a: the "in Arabic" adverbials may take a و / ف proclitic ("وبالعربية")
+            *(
+                rf"(?<![^\W_])[وف]?{re.escape(f)}(?![^\W_]){_AR_TOPIC_AFTER}"
+                for f in ("بالعربية", "باللغة العربية", "بالعربي")
+            ),
+            # ln-2026-11-03a: "في العربية" (in Arabic), never "في العربية السعودية"
+            rf"(?<![^\W_])[وف]?في\s+العربية(?![^\W_])(?!\s+السعودية){_AR_TOPIC_AFTER}",
         ),
         # "the Arabic translation / word / term / name / text"
         *_rx(r"(?<![^\W_])(?:ال)?(?:ترجمة|كلمة|مصطلح|اسم|نص|لفظ)\s+(?:ال)?عربي(?:ة)?(?![^\W_])"),
     ),
     "el": (
         *_rx(r"(?i)(?<![^\W_])στα\s+ελληνικα" + _EL_NEXT),
+        # ln-2026-11-03a: "σε ελληνικά" (in Greek; "(σε ελληνικά: κασσίρεια)")
+        *_rx(r"(?i)(?<![^\W_])σε\s+ελληνικ\w*" + _EL_NEXT),
         "νέα ελληνικά",
         "η ελληνική γλώσσα",
         *_rx(r"(?i)(?<![^\W_])ελληνικ\w*\s+γλωσσ\w*"),
@@ -643,7 +660,15 @@ NAMING_OWN: dict[str, tuple[str, ...]] = {
         "עברית מודרנית",
         "לעברית",
         "מעברית",
-        *_rx(r"(?<![^\W_])עברית\s*:"),
+        *_rx(
+            r"(?<![^\W_])עברית\s*:",
+            # ln-2026-11-03a: a vav / shin / kaf-shin proclitic before the "in / into / from
+            # Hebrew" forms ("ובעברית" = "and in Hebrew")
+            r"(?<![^\W_])(?:ו|ש|וש|כש)(?:ב|ל|מ)(?:עברית|שפה\s+העברית)(?![^\W_])",  # noqa: RUF001
+            # ln-2026-11-03a: "the Hebrew name / word / term / translation" ("שמה העברי"), as the
+            # Arabic "الاسم العربي" form
+            r"(?<![^\W_])[ובלמשכ]?ה?(?:שם|שמה|שמו|שמם|מילה|מונח|תרגום|כינוי)\s+ה?עברי(?:ת)?(?![^\W_])",
+        ),
     ),
     "hu": ("magyarul", *_rx(r"(?i)(?<![^\W_])magyar\s+nyelv\w*")),
     "id": ("bahasa Indonesia",),
@@ -723,6 +748,11 @@ NAMING_OWN: dict[str, tuple[str, ...]] = {
 }
 
 
+# ln-2026-11-03a: autonyms that are also the country's own name, never a naming label on their
+# own ("Edustaja Sari Essayah (Suomi)" names Finland, not Finnish)
+_COUNTRY_AUTONYMS: dict[str, tuple[str, ...]] = {"fi": ("suomi",)}
+
+
 def naming_forms(lang: str, native: Sequence[str]) -> dict[str, list[str]]:
     """The v2 ``language`` unit as SCORED (plan F6): per native code its naming forms (English:
     :func:`_en_naming` of every English name; Chinese: the ``…语`` / ``…文`` names, which already
@@ -734,8 +764,13 @@ def naming_forms(lang: str, native: Sequence[str]) -> dict[str, list[str]]:
         if code not in lg.names:
             raise ValueError(f"language {lang!r} has no name written in native language {code!r}")
         if code == lang:
-            # the bare autonym only as a parenthesised label: "Finnish (suomi)", "(русский)"
-            labels = [rf"{RE_PREFIX}(?i)\(\s*{re.escape(n)}\s*\)" for n in lg.names[lang]]
+            # the bare autonym only as a parenthesised label: "(русский)"; never an autonym that
+            # is also the country's name (ln-2026-11-03a: "(Suomi)" is Finland)
+            labels = [
+                rf"{RE_PREFIX}(?i)\(\s*{re.escape(n)}\s*\)"
+                for n in lg.names[lang]
+                if n.casefold() not in _COUNTRY_AUTONYMS.get(lang, ())
+            ]
             out[code] = [*NAMING_OWN[lang], *labels]
         elif code == "en":
             out[code] = [f for n in lg.names["en"] for f in _en_naming(n, n in lg.case_sensitive)]

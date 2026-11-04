@@ -5,6 +5,7 @@ from wsbench import digest, mc
 from wsbench.banks import DEFAULT_NATIVE_LANGS
 from wsbench.llm import schema_block
 from wsbench.multitoken.languages import NAMING_VERSION, english_names
+from wsbench.multitoken.regex import LANGUAGE_LEG_VERSION, PLURAL_VERSION
 from wsbench.rival import RIVAL_FIELD, rival_rule
 
 # the regex families' opts=judge=mc diagnostic (2026-10-30: tool-free opening, plan 0051)
@@ -179,7 +180,18 @@ USER_SUMMARY = (
 # mcrx-2026-11-01a (round 4): multilingual's content role reads no premise or question
 # (mcrx.mask_premises, PREMISE_FAMILIES); multilingual_multihop pins a language option per naming
 # language (pins-v4); both families judge bank v3 (round-4 option lists)
-MCRX_VERSION = "mcrx-2026-11-01a"  # the mc+regex scorer's rule (pass = MC roles AND regex units)
+# mcrx-2026-11-03a: the language leg has ONE scorer, the raw samples of the read window
+# (regex.language_leg: at least one sample names the language in a naming context); the MC
+# language role, its cannot-tell rescue and the per-layer language conjunct are gone. The MC
+# content prompts and inputs are unchanged (the language pins stay in the multihop digest), so
+# cached content answers are re-scored under MCRX_CALL_VERSION
+# mcrx-2026-11-03b: multilingual_multihop's bridge_l2 unit is optional (regex.OPTIONAL_V2_ROLES),
+# a diagnostic only; the MC calls are unchanged
+# mcrx-2026-11-03c: a case-sensitive form (May, March) also hits in lower case when cited
+# ("**may**", '"may"'); only multilingual lists such forms
+# mcrx-2026-11-03d: naming forms ln-2026-11-03a (Arabic / Greek / Hebrew phrases, no "(suomi)"
+# label) and English plurals of the content forms (regex.PLURAL_VERSION)
+MCRX_VERSION = "mcrx-2026-11-03d"  # the mc+regex rule (pass = MC content role, units, language)
 # the MC calls' cache fingerprint: the scorer rule version the cached answers were asked under.
 # The MC prompts themselves (system + user, both in the fingerprint) did not change in -31h, so
 # cached answers are reused; any prompt or input change (the pins) still re-asks.
@@ -212,7 +224,8 @@ ML_ALIAS_NOTE = (
 # +rawrx-v1 (final r1): the regex contract runs on the raw samples (family.RAW_REGEX_FAMILIES)
 # +rawrx-v2 (third review of #201): a raw answer statement is a prose sample only, never a token
 # or a sample that merely opens with the form
-V2_NAMING_TAG = "v2+" + NAMING_VERSION + "+rawrx-v2"
+# +plural-v1: English content forms also credit their regular plural
+V2_NAMING_TAG = "v2+" + NAMING_VERSION + "+rawrx-v2+" + PLURAL_VERSION
 # +anchor-v1 (round 3, multilingual_mt only: family.ANCHOR_FAMILIES): the language unit counts only
 # in a sample that names the item's object or the passage itself
 # +anchor-v2 (review of PR #208): the passage is named only by a passage noun with no gloss after
@@ -223,13 +236,18 @@ V2_ANCHOR_TAG = V2_NAMING_TAG + "+anchor-v2"
 # digest evidence line); +bank-v3: items_v3.json (mlh-tr-bademcik gains "tonsil" / "tonsils")
 # +bank-v4: items_v4.json, the round-4b MC diagnostic lists (r4b_mc_refine.py; the regex
 # contract of record is unchanged)
-V2_SAME_SAMPLE_TAG = V2_NAMING_TAG + "+same-sample-v1+bank-v4"
+# +langleg-v1 replaces +same-sample-v1: the language unit leaves the conjunction and is scored
+# once per item on the raw samples (regex.language_leg: one naming sample credits it), so the
+# concept and the naming may come from different samples
+V2_MT_TAG = V2_NAMING_TAG + "+" + LANGUAGE_LEG_VERSION + "+bank-v4"
 # +anchor-support-v1 (round 4, ANSWERS_R2 §8; multilingual_typo joins
 # family.ANCHOR_SUPPORT_FAMILIES): one anchored naming sample, or one sample holding every unit,
 # supports its units on its own; unanchored namings keep the two-sample rule
 # +bank-v3: items_v3.json, the round-4b MC diagnostic lists (a frozen correction_native block;
 # the regex contract of record is unchanged)
-V2_TYPO_TAG = V2_NAMING_TAG + "+anchor-support-v1+bank-v3"
+# +langleg-v1: the language unit is scored by the raw-sample leg, as in multilingual_mt;
+# anchoring only shapes the correction units' support
+V2_TYPO_TAG = V2_NAMING_TAG + "+anchor-support-v1+" + LANGUAGE_LEG_VERSION + "+bank-v3"
 ML_SYSTEM = (
     f"You judge the READOUT: {mc.READOUT_PHRASE}, recorded while it read a passage you cannot "
     "see. The readout may be noisy, verbose, in any language, and may speculate. You are given "

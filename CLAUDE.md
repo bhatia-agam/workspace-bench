@@ -115,14 +115,19 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   with `--check` after any edit, a test enforces it): language units hold NAMES only
   (`multitoken/languages.py`, "Polish" case-sensitive), every unit required, items carry
   `mc_roles` + `mc.language`. multilingual / multilingual_multihop score `mc+regex`
-  (`multitoken/mcrx.py`: blind MC roles, each credited only with a `quote_ok` quote whose line
-  holds a native-language form / a language name — or, since audit fix F4, any line that singles
-  out the gold does — AND the regex units); a v2 language unit is SCORED on
-  `languages.naming_forms` (F6: naming contexts only, never a bare adjective / demonym; `re:`
-  forms are regexes, `regex.unicode_word_matcher`), swapped in by `regex.scored_units` for items
+  (`multitoken/mcrx.py`: a blind MC content role, credited only with a `quote_ok` quote whose
+  line holds a native-language form — or, since audit fix F4, any line that singles out the gold
+  does — AND the content regex units AND the language leg). The language is never an MC role:
+  `regex.language_leg` scores it once per item on the RAW samples of every read cell (credited by
+  >= 1 naming sample; `rows[].language_naming_samples` is the count); the language pins stay in
+  the multilingual_multihop digest only so the content judge's input is unchanged. A v2 language
+  unit is SCORED on `languages.naming_forms` (F6: naming contexts only, never a bare adjective /
+  demonym; `re:` forms are regexes, `regex.unicode_word_matcher`), swapped in by
+  `regex.scored_units` for items
   with `mc_roles` (the bank file stays frozen; `--check` still holds); multilingual's options show
   their accepted forms (`options.display_options`, F5); multilingual_mt /
-  multilingual_typo stay regex with the `+v2+ln-…` tag, which `_spec_pv` stamps only while the v2 bank
+  multilingual_typo stay regex with the `+v2+ln-…` tag (their language unit is scored by the same
+  leg, `family.item_language_leg`, `+langleg-v1`), which `_spec_pv` stamps only while the v2 bank
   is the one judged (a `WSB_BANK_FILE_*` pin to `items.json` scores and stamps exactly as v1, as
   `test_mt_regex.py` / `test_multitoken_family.py` / `test_summary_mode_multitoken.py` do). The
   ATI gate field of the four is `content_hit`; `text_inversion.ATI_EXCLUDE` freezes the

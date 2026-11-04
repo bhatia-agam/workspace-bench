@@ -25,25 +25,23 @@ answer (the prompt's target), not the gloss a reader writes.
 
 ## Scoring: the regex contract
 
-Instrument `mt-regex-2026-10-30+v2+ln-2026-10-31f+rawrx-v2+same-sample-v1+bank-v4` (the shared `regex.SCORER_VERSION` plus the bank tag; the
+Instrument `mt-regex-2026-10-30+v2+ln-2026-11-03a+rawrx-v2+plural-v1+langleg-v1+bank-v4` (the shared `regex.SCORER_VERSION` plus the bank tag; the
 tag is stamped only while the v2 bank is the one judged); `judge_model` `regex` natively, the
 digest model under summary mode (pinned follows the digest). The contract: a form hits a sample
 after folding both sides (NFKD, combining marks dropped, casefold; a `case_sensitive` form keeps
 its case), wordy forms at word boundaries, CJK/Hangul forms as substrings; a form is matched
 inside ONE sample (one evidence line, one token or one space-joined token list), never across
-samples. Natively a layer passes when every required unit hits there and the item passes at any
-layer; under summary mode every required unit must hit among the item's evidence samples. Each
-row carries `content_hit` (the concept unit hit, the ATI gate field) and `any_hit`.
-**Same sample** (round 4, `+same-sample-v1`, supersedes round 3's `+anchor-v2`; Camila r2:
-"language naming and concept must come from the SAME sample"): the language unit is read only in
-a sample that also holds the concept (an English / Chinese concept form), one sample at a time:
-a raw prose sample of one layer, or one digest evidence line. So an item passes only through ONE
-sample naming both, and that one sample is enough (no two-sample support needed for it). A
-naming of another object ("miasto kleje (Great Big City in Polish)" on pl-kasztanowiec) or of the
-passage alone ("this passage is written in Polish") never supports the language unit, and the
-concept and the naming are never joined across samples or layers. The concept unit keeps its
-own hits as a diagnostic (`content_hit`, `any_hit`). A top-k token arm keeps the old rule (a
-token list is not a statement). `family.SAME_SAMPLE_FAMILIES`, `family.same_sample_hits`.
+samples. Natively a layer passes when the concept unit hits there and the item passes at any
+layer; under summary mode the concept must hit among the item's evidence samples, or within one
+read layer's raw samples (at least 2 samples, or one answer statement). Each row carries
+`content_hit` (the concept unit hit, the ATI gate field) and `any_hit`.
+**Language leg** (`+langleg-v1`): the language unit is scored once per item on the RAW samples
+of every read cell (all read layers and positions, never the digest): it holds when at least ONE
+sample names the language in a naming context (`languages.naming_forms`), so the leg never
+depends on how many samples a producer writes per cell; `rows[].language_naming_samples` is the
+per-item count and `rows[].language_pass` the leg (`regex.language_leg`,
+`family.item_language_leg`). The concept and the naming may come from different samples and
+layers.
 **Bank v3** (`items_v3.json`, frozen 2026-11-01, `supersedes: items_v2.json`): one change,
 mlh-tr-bademcik's concept unit gains "tonsil" / "tonsils" (the readout 'point clearly to the
 tonsils, "bademcik" in Turkish' missed "palatine tonsil" / "tonsil gland" for three rounds).
@@ -142,7 +140,8 @@ Russian sentence"); they are measured in the run phase.
   diagnostic's lists change; the regex contract and its result are unchanged. The digest drops
   the summ_lang label and is told the new neutral task note (Summary mode), so digests are
   re-made.
-- 2026-11-01 (round 4, tag `+same-sample-v1+bank-v3`): the same-sample rule above replaces the
+- 2026-11-01 (round 4, tag `+same-sample-v1+bank-v3`): the same-sample rule (concept and naming in one sample;
+  replaced 2026-11-04) replaces the
   round-3 anchoring, and bank v3 adds "tonsil" / "tonsils" to mlh-tr-bademcik. Cached
   final-olens-rl600-x4 digests re-scored (no new calls): all 0.83 -> 0.70, all-lite 0.56 ->
   0.50, prompt-only 0.96 -> 0.97 (bademcik now passes), single layers 5 to 16 points lower
@@ -150,6 +149,15 @@ Russian sentence"); they are measured in the run phase.
   sample holds the passage-language word but not the English / Chinese concept ("Magyarul ez a
   porszívó", the English "vacuum cleaner" only in other samples), which the rule now refuses.
   The lens is below its prompt-only floor (0.70 vs 0.97).
+- 2026-11-04 (tag `+langleg-v1`): the round-4 same-sample rule is replaced by the raw-sample
+  language leg above, because it failed 31-57 items per lens that named the concept and the
+  language in different samples.
+- 2026-11-04 (tag `+ln-2026-11-03a`): Arabic, Hebrew and Greek naming phrases
+  ("في العربية", "בעברית", "σε ελληνικά") are added and the autonym label "(suomi)" is dropped,
+  because readouts named languages in forms the list missed and "(Suomi)", the country, passed
+  multilingual_mt's mlt-fi-kansanedustaja.
+- 2026-11-04 (tag `+plural-v1`): English content forms also credit their regular plural
+  (`regex.english_plurals`), because "dripstone caves" missed the form "dripstone cave".
 
 ## Readouts
 

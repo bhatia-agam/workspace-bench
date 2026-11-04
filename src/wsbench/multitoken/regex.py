@@ -32,6 +32,8 @@ The rules, in the order a cell is scored:
    layer (``layer_unit_hits``: role -> the languages whose forms hit, in authored order).
 5. **A layer passes an item** when EVERY required unit hits there; **the item passes** at any
    layer (``item_result``). ``any_hit`` (some unit hit somewhere) is the parent-comparable extra.
+   The four multilingual families score their ``language`` unit apart, once per item on the raw
+   read window (``language_leg``), never in the per-layer conjunction.
 
 What this means for a top-k token lens: a strictly multi-token form can never be one token, so
 on the raw bag required multi-token units are unreachable by construction — the source's stated
@@ -51,8 +53,10 @@ from typing import Any, Literal
 from wsbench.multitoken.languages import RE_PREFIX, is_frozen_language_unit, naming_forms
 
 __all__ = [
+    "LANGUAGE_LEG_VERSION",
     "SCORER_VERSION",
     "BankContract",
+    "LanguageLeg",
     "ScoredUnit",
     "contract_for",
     "contract_json",
@@ -62,11 +66,13 @@ __all__ = [
     "fuzzy_form_in",
     "hit_forms",
     "item_result",
+    "language_leg",
     "layer_passes",
     "layer_unit_hits",
     "parse_cjk_numeral",
     "scored_units",
     "unicode_word_matcher",
+    "without_language",
 ]
 
 SCORER_VERSION = "mt-regex-2026-10-30"  # the contract on the samples (raw tokens for token arms)
@@ -180,6 +186,15 @@ _CJK_HANGUL = re.compile(r"[぀-ヿ㐀-鿿가-힯]")
 _WORDY = re.compile(r"[^\W_]+(?:[\s\-'][^\W_]+)*")
 
 
+# A case-sensitive form also hits in lower case where the sample sets the word off as a cited
+# word: wrapped in markdown emphasis or quotation marks on both
+# sides ("**may**", '"may"', "«may»"). "En inglés el mes que sigue a abril es **may**." names May;
+# "you may go" still does not (b3-ml-es-month-april).
+CITED_CASE_VERSION = "cited-case-v1"
+_CITE_OPEN = "(?:\\*{1,2}|_{1,2}|[\"'`\u00ab\u201c\u201e\u2018\u2039])"
+_CITE_CLOSE = "(?:\\*{1,2}|_{1,2}|[\"'`\u00bb\u201d\u201c\u2019\u203a])"
+
+
 def unicode_word_matcher(form: str, *, case_sensitive: bool = False) -> Callable[[str], bool]:
     """Boundary match on folded text for a unit form (any script); CJK/Hangul and non-wordy
     forms are substrings of the folded sample; purely numeric forms use the answer-context
@@ -187,7 +202,9 @@ def unicode_word_matcher(form: str, *, case_sensitive: bool = False) -> Callable
     A form starting with ``languages.RE_PREFIX`` is a regular expression searched in the
     accent-folded, case-kept sample (the v2 language units' naming forms, plan F6).
     ``case_sensitive`` (a bank unit's ``case_sensitive`` list, plan 0040 B1): accents are folded
-    but case is kept on both sides, so the language name "Polish" never matches "polish"."""
+    but case is kept on both sides, so the language name "Polish" never matches "polish"; a
+    wordy form also hits in lower case when cited (emphasis or quotes on both sides: "**may**"
+    for May)."""
     if form.startswith(RE_PREFIX):  # a naming-context pattern (``languages.NAMING_OWN``)
         rx = re.compile(fold_accents(form[len(RE_PREFIX) :]))
         return lambda text: rx.search(fold_accents(text)) is not None
@@ -199,7 +216,11 @@ def unicode_word_matcher(form: str, *, case_sensitive: bool = False) -> Callable
         return lambda text: f in norm(text)
     parts = [re.escape(w) for w in re.split(r"[\s\-]+", f) if w]
     pat = re.compile(r"(?<![^\W_])" + r"[\s\-]+".join(parts) + r"(?![^\W_])")
-    return lambda text: bool(pat.search(norm(text)))
+    if not case_sensitive:
+        return lambda text: bool(pat.search(norm(text)))
+    low = [re.escape(w) for w in re.split(r"[\s\-]+", fold(form)) if w]
+    cited = re.compile(_CITE_OPEN + r"\s*" + r"[\s\-]+".join(low) + r"\s*" + _CITE_CLOSE)
+    return lambda text: bool(pat.search(norm(text))) or bool(cited.search(fold(text)))
 
 
 def _standalone_number_matcher(form: str) -> Callable[[str], bool]:
@@ -360,10 +381,48 @@ def _counts(item: Mapping[str, Any], role: str, lang: str, n: int) -> list[int]:
     return counts
 
 
+# The prompt-language bridge of a v2 multilingual_multihop item is not required (the frozen bank
+# still lists it as required). Writing the bridge in the prompt's own language is what
+# multilingual rejects as next-token prediction of its L2 answer word. It stays a scored, OPTIONAL
+# unit, so ``rows[].unit_hit`` still reports it.
+OPTIONAL_V2_ROLES = frozenset({"bridge_l2"})
+# A v2 multilingual item's English content forms also credit their regular English plural,
+# formed on the form's LAST word ("dripstone cave" -> "dripstone caves": the only native line of
+# mlt-hu-cseppkobarlang's digest was "víz-barlangok** (*dripstone caves*)"): +s, +es after ss /
+# us / is / x / z / ch / sh (none after another final s, already a plural), consonant + y -> ies.
+# Only the units that name a thing (PLURAL_ROLES: multilingual_mt's concept,
+# multilingual_multihop's bridge, multilingual_typo's correction), never multilingual's one-word
+# answers (adjectives, numbers, months, directions: "lows", "colds" would be other words); never
+# a case-sensitive form, a number, a CJK form or a ``re:`` pattern; the bank file is unchanged.
+PLURAL_VERSION = "plural-v1"
+PLURAL_ROLES = frozenset({"concept", "bridge_native", "correction_native"})
+
+
+def english_plurals(form: str) -> list[str]:
+    """The regular English plural of ``form``'s last word (see :data:`PLURAL_VERSION`), or []."""
+    if form.startswith(RE_PREFIX) or _CJK_HANGUL.search(form) or is_number_form(form):
+        return []
+    if not _WORDY.fullmatch(fold(form)):
+        return []
+    m = re.search(r"[^\W\d_]+$", form)
+    if m is None:
+        return []
+    word, head = m.group(0), form[: m.start()]
+    low = word.casefold()
+    if low.endswith("s") and not low.endswith(("ss", "us", "is")):
+        return []  # already a plural ("brain waves")
+    if low.endswith(("s", "x", "z", "ch", "sh")):
+        return [f"{head}{word}es"]
+    if len(low) > 1 and low.endswith("y") and low[-2] not in "aeiou":
+        return [f"{head}{word[:-1]}ies"]
+    return [f"{head}{word}s"]
+
+
 def scored_units(item: Mapping[str, Any], contract: BankContract) -> list[ScoredUnit]:
     """Units of one item under ``contract`` — the source's ``scored_units`` with the token
     counts read from the bank's ``probe_token_lens`` stamp instead of a live tokenizer. No alias
-    pruning: forms are an authored OR-list (the Russian nominative beside its genitive)."""
+    pruning: forms are an authored OR-list (the Russian nominative beside its genitive). A v2
+    multilingual item's (``mc_roles``) :data:`OPTIONAL_V2_ROLES` units are scored as optional."""
     units: list[ScoredUnit] = []
     for raw in item.get("units") or []:
         role = str(raw.get("role", "unit"))
@@ -386,6 +445,8 @@ def scored_units(item: Mapping[str, Any], contract: BankContract) -> list[Scored
                     kept[lang] = fs2
             forms = kept
         required = bool(raw.get("required", True))
+        if item.get("mc_roles") and role in OPTIONAL_V2_ROLES:
+            required = False
         if required and not forms:
             raise ValueError(
                 f"item {item.get('name')!r}: required unit {role!r} has no creditable "
@@ -393,6 +454,10 @@ def scored_units(item: Mapping[str, Any], contract: BankContract) -> list[Scored
             )
         if forms:
             cs = () if naming else tuple(str(f) for f in raw.get("case_sensitive") or ())
+            if item.get("mc_roles") and role in PLURAL_ROLES and forms.get("en"):
+                en = forms["en"]
+                plural = [p for f in en if f not in cs for p in english_plurals(f)]
+                forms = {**forms, "en": list(dict.fromkeys([*en, *plural]))}
             avoid: tuple[str, ...] = ()
             if contract.fuzzy_names:
                 block = (item.get("mc") or {}).get(role) or {}
@@ -460,12 +525,70 @@ def layer_passes(hits: Mapping[str, list[str]], units: list[ScoredUnit]) -> bool
     return all(bool(hits.get(u.role)) for u in units if u.required)
 
 
+# ---------------------------------------------------------------------------------------------
+# the language leg of the four multilingual families
+# ---------------------------------------------------------------------------------------------
+# The ``language`` unit of a v2 multilingual item is scored ONCE per item, on the RAW samples of
+# every read cell (all read layers and positions, never the digest): the leg is credited when at
+# least LANGUAGE_LEG_MIN sample names the language in a naming context (the unit's forms, i.e.
+# ``languages.naming_forms``). One sample is the bar so the leg never depends on how many samples
+# a producer writes per cell (1 for ``prose1``, 4 for ``bullet4``); the count itself is reported
+# per item. It is the
+# leg's ONE scorer: no MC language role, no per-layer language conjunct.
+LANGUAGE_ROLE = "language"
+LANGUAGE_LEG_VERSION = "langleg-v1"
+LANGUAGE_LEG_MIN = 1
+
+
+@dataclass(frozen=True)
+class LanguageLeg:
+    n_samples: int  # raw samples of the read window that hit the language unit
+    langs: tuple[str, ...]  # the unit's keys hit (en / zh / the autonym), in authored order
+
+    @property
+    def ok(self) -> bool:
+        return self.n_samples >= LANGUAGE_LEG_MIN
+
+
+def language_unit(units: Sequence[ScoredUnit]) -> ScoredUnit | None:
+    return next((u for u in units if u.role == LANGUAGE_ROLE), None)
+
+
+def language_leg(samples: Sequence[str], unit: ScoredUnit) -> LanguageLeg:
+    """The language leg over ``samples`` (the item's raw samples, one at a time: a prose sample
+    or a top-k token, scaffolding stripped)."""
+    keys: set[str] = set()
+    n = 0
+    for x in samples:
+        hit = hit_forms(
+            [x], unit.forms, numeric_match=unit.numeric_match, case_sensitive=unit.case_sensitive
+        )
+        if hit:
+            n += 1
+            keys.update(hit)
+    return LanguageLeg(n, tuple(k for k in unit.forms if k in keys))
+
+
+def without_language(units: Sequence[ScoredUnit]) -> list[ScoredUnit]:
+    """The units of the per-layer (or pooled digest) conjunction once the language leg is
+    scored on its own."""
+    return [u for u in units if u.role != LANGUAGE_ROLE]
+
+
 def item_result(
-    by_layer: Mapping[int, Mapping[str, list[str]]], units: list[ScoredUnit]
+    by_layer: Mapping[int, Mapping[str, list[str]]],
+    units: list[ScoredUnit],
+    language: LanguageLeg | None = None,
 ) -> dict[str, Any]:
     """Fold per-layer unit hits into the item row: pass = some layer where every required unit
-    hits; ``unit_langs`` lists the languages in the unit's authored order (L2 -> en -> zh)."""
-    passing = sorted(layer for layer, hits in by_layer.items() if layer_passes(hits, units))
+    hits; ``unit_langs`` lists the languages in the unit's authored order (L2 -> en -> zh).
+    ``language``: the language unit leaves the per-layer conjunction, and the
+    item also needs the leg (``LanguageLeg.ok``); the unit's hit and languages are the leg's."""
+    conj = units if language is None else without_language(units)
+    passing = sorted(layer for layer, hits in by_layer.items() if layer_passes(hits, conj))
+    lang_unit = language_unit(units) if language is not None else None
+    if language is not None and lang_unit is not None and lang_unit.required and not language.ok:
+        passing = []
     unit_hit = {u.role: any(bool(h.get(u.role)) for h in by_layer.values()) for u in units}
     unit_langs = {
         u.role: [
@@ -473,6 +596,9 @@ def item_result(
         ]
         for u in units
     }
+    if language is not None and lang_unit is not None:
+        unit_hit[LANGUAGE_ROLE] = language.ok
+        unit_langs[LANGUAGE_ROLE] = list(language.langs)
     return {
         "pass": bool(passing),
         "earliest_layer": passing[0] if passing else None,

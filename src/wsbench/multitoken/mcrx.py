@@ -6,21 +6,22 @@ Camila 2026-10-30, multilingual_multihop: "Make a judge (mc w distractors) to ch
 intermediate value from the readouts and the prompt language, then regex to make sure all of the
 necessary values are there"; multilingual: "add a judge for this to make it stricter too".
 
-A role (``mc_roles``: the content role, then ``language``) is correct when
+The MC role of record is the content role (``mc_roles`` minus ``language``); it is correct when
 
 1. the pick is the gold (``cannot tell`` is always last and never correct);
 2. ``digest.quote_ok(quote, lines)`` holds (the one shared quote verifier);
 3. (family condition, plan 0032 §2.7.4) the line that verifies the quote also hits a form of the
-   role's unit — a form in a native language (``banks.native_langs``) for the content role, a
-   language NAME (``multitoken.languages``) for ``language`` — with ``regex.hit_forms``, the
+   role's unit in a native language (``banks.native_langs``) with ``regex.hit_forms``, the
    matcher of the regex leg. It is tested per top-level bullet (``digest.BULLET_MARK``), so a
-   multi-word form never matches across bullets; the quote and the form need not be in the same
-   bullet, and the name and the content need not be either (non-relational: the prose1
-   whole-generation licence). (The ``[in <language>]`` digest label of summ_lang is gone since
-   2026-11-01; only the readout's own text can name the language.)
+   multi-word form never matches across bullets.
 
-The item passes when every role is correct AND ``regex.layer_passes`` holds over the evidence
-(summary mode: ``digest.gate_texts(joined=True)``; natively: the same layer's samples). A
+The language is NOT an MC role (the language leg has one scorer): ``regex.language_leg``
+credits it when at least one raw sample of the read window names
+the language in a naming context (``languages.naming_forms``); the count is reported per item.
+
+The item passes when the content role is correct AND the content units pass the regex
+conjunction (summary mode: the digest's evidence, ``digest.gate_texts(joined=True)``, or one
+read layer's raw samples; natively: the same layer's samples) AND the language leg holds. A
 multihop item whose L2 bridge cannot be told from its native name (``l2_equals_native``) is
 scored without its L2 unit and left out of the headline (``extras.pass_l2_equals_native``,
 ``extras.pass_all_items``)."""
@@ -80,18 +81,22 @@ from wsbench.readouts import Cell
 from wsbench.registry import JudgeArgs, bank_path
 from wsbench.results import FamilyResult
 
+_LEG_LABEL = (
+    "AND the language leg (at least one raw sample of the read window names the language in a "
+    "naming context)"
+)
 CHANCE_LABEL = (
-    "no analytic floor for MC roles (1/5 each) AND a regex conjunction of exact forms; the "
-    "measured floors are the lucky-guessing and prompt-only baselines"
+    "no analytic floor for the MC content role (1/5) AND a regex conjunction of exact forms "
+    f"{_LEG_LABEL}; the measured floors are the lucky-guessing and prompt-only baselines"
 )
 # final r1: the summary-mode regex leg's rule (family.raw_layer_hits)
 SUMMARY_CHANCE_LABEL = (
-    "no analytic floor for MC roles (1/5 each) AND the regex units: every unit in the digest's "
-    "evidence, its pinned raw lines left out (the pooled conjunction across all layers, plan "
-    "0020) OR every unit within one read layer on the raw samples, each supported by at least 2 "
-    "samples of that layer or one sample that states it as the answer (a content form in a "
-    "prose sample, never a top-k token; the text's language: 'written in X'); the measured "
-    "floors are the lucky-guessing and prompt-only baselines"
+    "no analytic floor for the MC content role (1/5) AND the content units: every unit in the "
+    "digest's evidence, its pinned raw lines left out (the pooled conjunction across all layers, "
+    "plan 0020) OR every unit within one read layer on the raw samples, each supported by at "
+    "least 2 samples of that layer or one sample that states it as the answer (a content form "
+    f"in a prose sample, never a top-k token) {_LEG_LABEL}; the measured floors are the "
+    "lucky-guessing and prompt-only baselines"
 )
 CONTENT = "content"
 
@@ -99,14 +104,12 @@ CONTENT = "content"
 def role_forms(
     role: str, units: list[regex.ScoredUnit], native: tuple[str, ...]
 ) -> tuple[dict[str, list[str]], tuple[str, ...], regex.NumericMatch]:
-    """The forms a quote line must hit for ``role``: the content unit's native-language forms,
-    or every language-name form of the ``language`` unit (en, zh, autonym); plus the unit's
-    ``case_sensitive`` forms and ``numeric_match`` mode (matched as the regex leg matches)."""
+    """The forms a quote line must hit for the content ``role``: its unit's native-language forms,
+    plus the unit's ``case_sensitive`` forms and ``numeric_match`` mode (matched as the regex leg
+    matches)."""
     unit = next((u for u in units if u.role == role), None)
     if unit is None:
         return {}, (), "context"
-    if role == LANGUAGE_ROLE:
-        return dict(unit.forms), unit.case_sensitive, unit.numeric_match
     forms = {k: v for k, v in unit.forms.items() if k in native}
     return forms, unit.case_sensitive, unit.numeric_match
 
@@ -197,8 +200,8 @@ def singling_lines(
 ) -> list[Line]:
     """Audit fix F4: the lines that SINGLE OUT the gold by a role form: a piece of the line (one
     bullet, or a token list) hits one of ``forms`` and the line names none of the other
-    options (``others``: each other option's forms, its head word and shown aliases; for
-    ``language`` also its names). A line that names two options singles out neither, and a piece
+    options (``others``: each other option's forms, its head word and shown aliases). A line
+    that names two options singles out neither, and a piece
     that is a flat run of candidates (``regex.flat_run``) singles out none. ``mask``
     (:func:`mask_premises`) blanks the parts of a piece that may not carry the gold."""
     out = []
@@ -378,11 +381,17 @@ def _with_alias_note(ctx: _Ctx, user: str, role: str) -> str:
     return user.replace(q, f"{q}\n{ML_ALIAS_NOTE}", 1)
 
 
+def scored_roles(item: dict[str, Any]) -> list[str]:
+    """The MC roles of record: the item's ``mc_roles`` without ``language`` (the language leg
+    is scored by ``regex.language_leg`` alone)."""
+    return [r for r in judged_roles(item) if r != LANGUAGE_ROLE]
+
+
 def _calls_for(
     ctx: _Ctx, item_id: str, key_layer: int, readout: str, user_of: Any
 ) -> list[tuple[str, str, Call]]:
     out = []
-    for role in judged_roles(ctx.by_id[item_id]):
+    for role in scored_roles(ctx.by_id[item_id]):
         opts = shown_options(ctx, item_id, role)
         key = f"{item_id}|L{key_layer:03d}|{role}"
         out.append(
@@ -410,7 +419,7 @@ def _score_role(
     opts, gold = ctx.options[item_id][role]
     forms, cs, nm = role_forms(role, ctx.units_of[item_id], ctx.native)
     others = other_option_forms(ctx, item_id, role)
-    mask = mask_premises if ctx.name in PREMISE_FAMILIES and role != LANGUAGE_ROLE else None
+    mask = mask_premises if ctx.name in PREMISE_FAMILIES else None
     v = role_verdict(
         res, gold, shown_options(ctx, item_id, role), lines, forms, cs, nm, others, mask
     )
@@ -428,7 +437,7 @@ def shown_options(ctx: "_Ctx", item_id: str, role: str) -> list[str]:
 
 def other_option_forms(ctx: "_Ctx", item_id: str, role: str) -> list[dict[str, list[str]]]:
     """Per OTHER substantive option, the forms that name it in a line (:func:`singling_lines`):
-    its head word and its aliases; a language's English and Chinese names too."""
+    its head word and its aliases."""
     opts, gold = ctx.options[item_id][role]
     per = ctx.aliases.get(role) or {}
     out: list[dict[str, list[str]]] = []
@@ -436,10 +445,6 @@ def other_option_forms(ctx: "_Ctx", item_id: str, role: str) -> list[dict[str, l
         if i == gold:
             continue
         forms = [o, *per.get(" ".join(o.casefold().split()), [])]
-        if role == LANGUAGE_ROLE:
-            lg = next((x for x in LANGUAGES.values() if o in x.names["en"]), None)
-            if lg is not None:  # every name of it, the autonym too (review r2 of PR #195)
-                forms += [f for fs in lg.names.values() for f in fs]
         out.append({"o": list(dict.fromkeys(forms))})
     return out
 
@@ -515,6 +520,9 @@ def _pin_options(ctx: _Ctx, col: digest.Collapse) -> None:
             continue
         cells = [c for layer in ctx.layers for c in ctx.positions.get((item_id, layer), [])]
         preds = []
+        # every mc_role, the language too: the language is no MC role, but its pins stay in the
+        # digest the content role is judged on, so that judge's input (and
+        # its cached answers) is unchanged
         for role in judged_roles(ctx.by_id[item_id]):
             opts, _gold = ctx.options[item_id][role]
             for o in opts[:-1]:  # never the cannot-tell
@@ -545,23 +553,10 @@ def _pin_options(ctx: _Ctx, col: digest.Collapse) -> None:
         digest.pin_lines(col, item_id, cells, preds, s, PIN_PER_OPTION)
 
 
-# round 3 (2026-10-31): a language cannot-tell on a clear, uncontested naming is rescued in code.
-# mc-ml-2026-10-31f dropped the prompt's "one naming line is enough" sentence because the judge
-# saw only the option languages of the digest, never a rival language named in the raw samples;
-# since then the judge abstains on lone clear namings (multilingual_multihop all-layer
-# ko-arecibo '한국어 직역으로는 ...' at [2 samples], el-jacquard once pinned; multilingual
-# all-layer 2 items). The rescue credits the gold language only when (1) some digest line
-# (pins included) singles it out by a naming form of the scored language unit, names no other
-# option, discusses no language as a topic (_RESCUE_TOPIC) and, in multilingual_multihop, also
-# names the bridge entity (_bridge_forms: the naming must be about the bridge), AND (2) on the
-# RAW samples of the run, the gold's naming lines outnumber the naming lines of every other
-# language: each other option (its pin forms) and every other language of the table other than
-# the subject's working languages. A distractor pick is never rescued.
-RESCUE_FAMILIES = frozenset({"multilingual", "multilingual_multihop"})
-# a rescuing line never discusses a language as a TOPIC (official / national language, teaching,
-# learning, literature), in any of the bank's languages: the judge's own topic exclusion
-# (QUESTION_LANGUAGE_V2) is what the rescue overrides, so it may only act on lines that cannot be
-# topic mentions. Stems, case-folded and accent-folded; a broad list only makes the rescue rarer.
+# A language pin (_pin_options) is never a line that discusses a language as a TOPIC (official /
+# national language, teaching, learning, literature), in any of the bank's languages (round 3; the
+# language cannot-tell rescue that shared this veto is gone with the MC language role). Stems,
+# case-folded and accent-folded.
 # Round 3 review (PR #208): the veto was a bare substring over the whole line, so ordinary words
 # vetoed real namings ('For example' -> exam, 'of course', 'shopping' -> oppi, Finnish 'ensin'
 # = first, 'The National Museum', 'the official name'; 48/400 gold namings of the final-olens
@@ -657,78 +652,6 @@ def _rescue_topic(text: str, forms: dict[str, list[str]]) -> bool:
     return any(a - _TOPIC_WINDOW <= k <= b + _TOPIC_WINDOW for a, b in spans for k in topics)
 
 
-def _bridge_forms(ctx: _Ctx, item_id: str) -> dict[str, list[str]]:
-    """multilingual_multihop: every bridge unit's forms (native and passage language): the
-    rescuing naming must be about the bridge entity (as in multilingual_mt's anchoring)."""
-    out: dict[str, list[str]] = {}
-    for u in ctx.units_of[item_id]:
-        if u.role != LANGUAGE_ROLE and u.role.startswith("bridge"):
-            for lang, fs in u.forms.items():
-                out.setdefault(f"{u.role}:{lang}", []).extend(fs)
-    return out
-
-
-def _rival_language_forms(ctx: _Ctx, item_id: str) -> list[dict[str, list[str]]]:
-    """Naming forms of every language other than the gold: the other options (pin forms) and
-    the rest of the language table (its scored naming forms), the working languages left out."""
-    from wsbench.multitoken.languages import naming_forms
-
-    opts, gold = ctx.options[item_id][LANGUAGE_ROLE]
-    gold_name = opts[gold]
-    out: list[dict[str, list[str]]] = []
-    seen: set[str] = {gold_name}
-    for o in opts[:-1]:
-        if o not in seen:
-            out.append(_option_naming_forms(o, ctx.native))
-            seen.add(o)
-    for lg in LANGUAGES.values():
-        if lg.code in ctx.native or lg.english in seen:
-            continue
-        out.append(naming_forms(lg.code, [c for c in ctx.native if c in lg.names]))
-        seen.add(lg.english)
-    return out
-
-
-def language_rescue(
-    ctx: _Ctx, item_id: str, v: dict[str, Any], lines: list[Line], cells: list[Cell]
-) -> dict[str, Any]:
-    """A language-role cannot-tell rescued by the rule above (``form_via: "rescue"``); any other
-    verdict unchanged."""
-    if v.get("kind") != "cannot":
-        return v
-    forms, cs, nm = role_forms(LANGUAGE_ROLE, ctx.units_of[item_id], ctx.native)
-    others = other_option_forms(ctx, item_id, LANGUAGE_ROLE)
-    single = [
-        ln
-        for ln in singling_lines(lines, forms, others, cs, nm)
-        if not _rescue_topic(ln.text, forms)
-    ]
-    if ctx.name == "multilingual_multihop":
-        bridge = _bridge_forms(ctx, item_id)
-        single = [ln for ln in single if bridge and regex.hit_forms(_pieces(ln), bridge)]
-    if not single:
-        return v
-    raw = [_pieces(ln) for ln in digest.native_lines(cells)]
-    gold_hit = regex.forms_matcher(forms, case_sensitive=cs)
-    gold_n = sum(1 for ps in raw if gold_hit(ps))
-    rival_n = 0
-    for f in _rival_language_forms(ctx, item_id):
-        hit = regex.forms_matcher(f)
-        rival_n = max(rival_n, sum(1 for ps in raw if hit(ps)))
-        if rival_n >= gold_n:
-            break
-    out = {**v, "rescue_gold_raw": gold_n, "rescue_rival_raw": rival_n}
-    if gold_n > rival_n:
-        out.update(
-            kind="correct",
-            correct=True,
-            form_ok=True,
-            form_via="rescue",
-            quote=single[0].text[:200],
-        )
-    return out
-
-
 def _summary(ctx: _Ctx) -> FamilyResult:
     from wsbench.multitoken.family import (
         ANCHOR_SUPPORT_FAMILIES,
@@ -782,17 +705,16 @@ def _summary(ctx: _Ctx) -> FamilyResult:
     verdicts: dict[str, dict[str, dict[str, Any]]] = defaultdict(dict)
     for key, (item_id, role) in meta.items():
         lines = list(col.evidence.get(item_id, ()))
-        v = _score_role(ctx, item_id, role, results.get(key), lines)
-        if name in RESCUE_FAMILIES and role == LANGUAGE_ROLE and not args.dry_run:
-            raw_cells = [c for layer in ctx.layers for c in ctx.positions.get((item_id, layer), [])]
-            v = language_rescue(ctx, item_id, v, lines, raw_cells)
-        verdicts[item_id][role] = v
+        verdicts[item_id][role] = _score_role(ctx, item_id, role, results.get(key), lines)
     partial = {i for i, _layer in ctx.missing}
     rows: list[dict[str, Any]] = []
     for item_id in ctx.ids:
         it, units = ctx.by_id[item_id], ctx.units_of[item_id]
-        roles = judged_roles(it)
+        roles = scored_roles(it)
         cell = col.cells.get(item_id)
+        leg = None if args.dry_run else _language_leg(ctx, item_id)
+        # the content units' conjunction; the language is the leg's alone
+        conj = units if leg is None else regex.without_language(units)
         hits: dict[str, list[str]] = {}
         digest_hits: dict[str, list[str]] | None = None
         if cell is not None and item_id not in col.unsummarized and not args.dry_run:
@@ -825,13 +747,16 @@ def _summary(ctx: _Ctx) -> FamilyResult:
                 )
                 for u in units
             }
+        if leg is not None:
+            hits[LANGUAGE_ROLE] = list(leg.langs)
         vs = verdicts.get(item_id, {})
         mc_ok = bool(vs) and all(vs.get(r, {}).get("correct") for r in roles)
-        rx_ok = bool(digest_hits) and regex.layer_passes(digest_hits, units)
+        rx_ok = bool(digest_hits) and regex.layer_passes(digest_hits, conj)
         if by_layer is not None:
-            rx_ok = rx_ok or any(regex.layer_passes(h, units) for h in by_layer.values())
+            rx_ok = rx_ok or any(regex.layer_passes(h, conj) for h in by_layer.values())
         elif digest_hits is None:
-            rx_ok = bool(hits) and regex.layer_passes(hits, units)
+            rx_ok = bool(hits) and regex.layer_passes(hits, conj)
+        ok = mc_ok and rx_ok and (leg is None or leg.ok)
         empty = item_id in col.empty
         unjudged = any(not v.get("judged") for v in vs.values())
         decided_fail = empty
@@ -839,17 +764,17 @@ def _summary(ctx: _Ctx) -> FamilyResult:
             cell is None
             or item_id in col.unsummarized
             or args.dry_run
-            or (unjudged and not (mc_ok and rx_ok))
-            or (item_id in partial and not (mc_ok and rx_ok))
+            or (unjudged and not ok)
+            or (item_id in partial and not ok)
         )
-        row = _row(it, roles, units, vs, hits, mc_ok, rx_ok, undecided and not decided_fail)
+        row = _row(it, roles, units, vs, hits, mc_ok, rx_ok, leg, undecided and not decided_fail)
         if by_layer is not None:
             row["regex_layers_passing"] = sorted(
-                layer for layer, h in by_layer.items() if regex.layer_passes(h, units)
+                layer for layer, h in by_layer.items() if regex.layer_passes(h, conj)
             )
         if raw:
             row["regex_digest_pass"] = (
-                None if digest_hits is None else regex.layer_passes(digest_hits, units)
+                None if digest_hits is None else regex.layer_passes(digest_hits, conj)
             )
         if cell is not None:
             row.update(col.row(item_id))
@@ -933,7 +858,9 @@ def _native(ctx: _Ctx) -> FamilyResult:
     rows: list[dict[str, Any]] = []
     for item_id in ctx.ids:
         it, units = ctx.by_id[item_id], ctx.units_of[item_id]
-        roles = judged_roles(it)
+        roles = scored_roles(it)
+        leg = None if args.dry_run else _language_leg(ctx, item_id)
+        conj = units if leg is None else regex.without_language(units)
         layer_rows: dict[str, Any] = {}
         passing: list[int] = []
         all_hits: dict[str, list[str]] = {u.role: [] for u in units}
@@ -948,7 +875,7 @@ def _native(ctx: _Ctx) -> FamilyResult:
             for r, langs in hits.items():
                 all_hits[r] = sorted({*all_hits[r], *langs})
             mc_ok = bool(vs) and all(vs.get(r, {}).get("correct") for r in roles)
-            rx_ok = bool(hits) and regex.layer_passes(hits, units)
+            rx_ok = bool(hits) and regex.layer_passes(hits, conj)
             if mc_ok and rx_ok:
                 passing.append(layer)
             for r in roles:
@@ -964,6 +891,10 @@ def _native(ctx: _Ctx) -> FamilyResult:
                 "regex_ok": rx_ok,
                 "empty": (item_id, layer) in empty,
             }
+        if leg is not None:
+            all_hits[LANGUAGE_ROLE] = list(leg.langs)
+            if not leg.ok:  # the language leg is item-level, every layer needs it
+                passing = []
         item_missing = [layer for i, layer in ctx.missing if i == item_id]
         undecided = not passing and (
             unjudged or bool(item_missing) or not layer_rows or args.dry_run
@@ -983,6 +914,7 @@ def _native(ctx: _Ctx) -> FamilyResult:
             "missing_layers": item_missing,
             "picks": picks,
             "layers": layer_rows,
+            **_leg_fields(leg),
         }
         if it.get("l2_equals_native"):
             row["excluded_from_rate"] = True
@@ -1003,6 +935,23 @@ def _native(ctx: _Ctx) -> FamilyResult:
     )
 
 
+def _language_leg(ctx: _Ctx, item_id: str) -> regex.LanguageLeg | None:
+    """The item's language leg over the raw samples of every read cell (all read layers and
+    positions; one prose sample or one top-k token each)."""
+    from wsbench.multitoken.family import item_language_leg
+
+    cells = [c for layer in ctx.layers for c in ctx.positions.get((item_id, layer), [])]
+    return item_language_leg(cells, ctx.units_of[item_id])
+
+
+def _leg_fields(leg: regex.LanguageLeg | None) -> dict[str, Any]:
+    """The row's language-leg fields: the pass and the per-item count of naming samples (the
+    diagnostic; the leg needs ``regex.LANGUAGE_LEG_MIN``)."""
+    if leg is None:
+        return {}
+    return {"language_pass": leg.ok, "language_naming_samples": leg.n_samples}
+
+
 def _row(
     it: dict[str, Any],
     roles: list[str],
@@ -1011,14 +960,17 @@ def _row(
     hits: dict[str, list[str]],
     mc_ok: bool,
     rx_ok: bool,
+    leg: regex.LanguageLeg | None,
     undecided: bool,
 ) -> dict[str, Any]:
+    """``regex_pass`` is the content units' leg; ``language_pass`` the language leg."""
     row: dict[str, Any] = {
         "id": it["id"],
         "roles": roles,
-        "pass": tri_state(mc_ok and rx_ok, undecided),
+        "pass": tri_state(mc_ok and rx_ok and (leg is None or leg.ok), undecided),
         "mc_pass": mc_ok,
         "regex_pass": rx_ok,
+        **_leg_fields(leg),
         "unit_correct": {r: bool(vs.get(r, {}).get("correct")) for r in roles},
         "unit_hit": {u.role: bool(hits.get(u.role)) for u in units},
         "unit_langs": {u.role: list(hits.get(u.role, [])) for u in units},
@@ -1101,6 +1053,12 @@ def _result(
                 (row.get("mc_pass") if "mc_pass" in row else bool(row.get("passing_layers")))
                 for row in decided
             ),
+            # the language leg alone (raw samples, >= LANGUAGE_LEG_MIN namings)
+            "language_leg": {
+                "version": regex.LANGUAGE_LEG_VERSION,
+                "min_samples": regex.LANGUAGE_LEG_MIN,
+                "rate": rate(row["language_pass"] for row in decided if "language_pass" in row),
+            },
             "content_hit_rate": rate(row["content_hit"] for row in decided),
             "any_hit_rate": rate(row["any_hit"] for row in decided),
             "pass_l2_equals_native": _rate_of(rest),

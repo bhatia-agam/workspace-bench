@@ -10,7 +10,7 @@ from summary_fakes import FakeLLM, digest_lines, summary_args
 from wsbench import digest, registry
 from wsbench.evals.multihop_mt_v2 import SPEC as MH2
 from wsbench.evals.multilingual_mt import SPEC as ML
-from wsbench.multitoken.prompts import PROMPT_VERSION, V2_SAME_SAMPLE_TAG
+from wsbench.multitoken.prompts import PROMPT_VERSION, V2_MT_TAG
 from wsbench.multitoken.regex import SCORER_VERSION
 
 HOUR, OCTO = "mlh-ar-hourglass", "mlh-ar-octopus"
@@ -182,7 +182,7 @@ def _unpin(monkeypatch):
         monkeypatch.delenv(f"WSB_BANK_FILE_{name.upper()}", raising=False)
 
 
-V2_SUFFIX = "+" + V2_SAME_SAMPLE_TAG + ML_SUFFIX  # multilingual_mt: + round-4 same-sample rule
+V2_SUFFIX = "+" + V2_MT_TAG + ML_SUFFIX  # multilingual_mt: + the language leg
 
 
 def test_regex_one_digest_per_item_and_relaxed_conjunction_v2(tmp_path, monkeypatch):
@@ -200,13 +200,14 @@ def test_regex_one_digest_per_item_and_relaxed_conjunction_v2(tmp_path, monkeypa
     r = ML.run(summary_args(path, tmp_path / "o", SCORER_VERSION, items=[HOUR, OCTO]))
     assert fake.n("digest") == 2 * 2 and len(fake.calls) == 2 * 2
     rows = {x["id"]: x for x in r.rows}
-    assert {x["id"]: x["pass"] for x in native.rows} == {HOUR: True, OCTO: False}
-    # round 4 (Camila r2, same-sample-v1): multilingual_mt no longer relaxes the conjunction over
-    # the evidence samples: OCTO's concept and language naming sit in different samples
-    assert rows[HOUR]["pass"] is True and rows[OCTO]["pass"] is False
+    # the language is the item-level raw-sample leg, so OCTO's naming at L36
+    # credits its L20 concept natively too (round 4's same-sample rule failed it in both modes)
+    assert {x["id"]: x["pass"] for x in native.rows} == {HOUR: True, OCTO: True}
+    assert rows[HOUR]["pass"] is True and rows[OCTO]["pass"] is True
+    assert rows[OCTO]["language_naming_samples"] == 1
     assert rows[HOUR]["content_hit"] is True
     assert r.config["prompt_version"] == SCORER_VERSION + V2_SUFFIX
-    assert native.config["prompt_version"] == SCORER_VERSION + "+" + V2_SAME_SAMPLE_TAG
+    assert native.config["prompt_version"] == SCORER_VERSION + "+" + V2_MT_TAG
 
 
 def _positions_rows(item, layers, texts):

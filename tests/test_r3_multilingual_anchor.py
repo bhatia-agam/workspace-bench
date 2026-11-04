@@ -120,12 +120,11 @@ def test_token_readouts_keep_the_old_rule():
     assert fam.raw_layer_hits(cells, units, contract, anchors) == old
 
 
-def test_anchoring_moved_to_same_sample_and_typo_support():
-    # round 4 (Camila r2): multilingual_mt moved on to the same-sample rule
-    # (fam.SAME_SAMPLE_FAMILIES) and multilingual_typo joined the anchored support
+def test_anchoring_left_mt_and_typo_keeps_its_support():
+    # round 4 (Camila r2): multilingual_mt left the anchoring (for the same-sample rule, itself
+    # gone) and multilingual_typo joined the anchored support
     # (fam.ANCHOR_SUPPORT_FAMILIES, ANSWERS_R2 §8); tests/test_r4_bridge_ml.py pins both
     assert frozenset() == fam.ANCHOR_FAMILIES
-    assert frozenset({"multilingual_mt"}) == fam.SAME_SAMPLE_FAMILIES
     _h, items = load_bank("evals/multilingual_typo/items_v2.json")
     assert fam._anchors_of("multilingual_typo", items)
 
