@@ -39489,7 +39489,7 @@
    "astra": "openai/gpt-6-astra",
    "argon": "google/gemini-4-argon"
   },
-  "instrument": "mc-brmt-2026-10-31r+norival-v1+qline-v1+bank-v6",
+  "instrument": "mc-brmt-2026-10-31r+norival-v1+qline-v2+bank-v6",
   "judge_model": "claude-opus-5-5",
   "layers_judged": [
    44
@@ -39503,12 +39503,12 @@
    "qwen": [
     0.9333,
     0.9333,
-    0.9333
+    0.9222
    ],
    "opus": [
     1.0,
     1.0,
-    1.0
+    0.9889
    ],
    "astra": [
     1.0,
@@ -40500,7 +40500,7 @@
     "brh-pl-konstantynopol-sobor-381": [
      true,
      true,
-     true
+     false
     ],
     "brh-pl-lwow": [
      true,
@@ -40747,7 +40747,7 @@
     "brh-ent-mccune-albright": [
      true,
      true,
-     true
+     false
     ],
     "brh-ent-min-kunzite-parent": [
      true,

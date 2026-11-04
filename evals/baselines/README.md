@@ -64,7 +64,7 @@ new; dropped items reduce n).
 | arithmetic_intermediates | 0.790 | 0.790 [0.76, 0.82] | 595 | arith-free-2026-10-30+exact-int+keys-union+generic-r7 | Opus 5.5 (1 digest refused) |
 | association | 0.892 | 0.923 [0.86, 0.97] | 91 | assoc-mc-2026-11-01-v3+gate-a2+bank-v5 | Opus 5.5 |
 | basic_readout | 0.840 | 0.810 [0.74, 0.88] | 100 | br-mc-2026-11-01-v5b+brsum-v2+qline-v2+bank-v7 | Opus 5.5 |
-| basic_readout_mt | 1.000 | 1.000 | 90 | mc-brmt-2026-10-31r+norival-v1+qline-v1+bank-v6 | Opus 5.5 |
+| basic_readout_mt | 1.000 | 1.000 | 90 | mc-brmt-2026-10-31r+norival-v1+qline-v2+bank-v6 | Opus 5.5 |
 | buggy_code (bank v2) | 0.917 (24 pairs) | 0.969 [0.92, 1.00] | 64 pairs | buggy-pairs-2026-10-29+infer-r1-2026-10-31+pair-headline-2026-10-30+eof-all-layers-2026-10-30+bank-v2 | Opus 5.5 |
 | chain_intermediates | 0.967 | 0.967 [0.93, 0.99] | 120 | chain-mc-2026-10-30+heads-v5+start-op+key-ex2 | Opus 5.5 |
 | conjunctive_association | 0.220 | 0.340 [0.25, 0.43] | 100 | comp-v5+maj | Opus 5.5 |
@@ -85,10 +85,11 @@ new; dropped items reduce n).
 | user_modeling (bank v3) | 0.681 (47 selfdescribe items) | 0.825 [0.76, 0.89] | 126 | um-v3.5+bank-v3+maj3v | Opus 5.5 |
 | wrong_intermediate | 0.000 | 0.000 | 100 | wb-mc-2026-10-31r+judge-only-v1+qline-v2+wbforms-v4+bank-v4 | Opus 5.5 |
 
-Six floors were re-scored later on 2026-11-04, after scoring-only rule fixes earlier in this
+Seven floors were re-scored later on 2026-11-04, after scoring-only rule fixes earlier in this
 series moved their result stamps (no call key moved): association (`gate-a2`),
-chain_intermediates (`heads-v5`), wrong_intermediate and basic_readout (`qline-v2`, basic_readout
-also `brsum-v2`), multihop on bank v5 (`bank-gate-r10`) and user_modeling on bank v3 (`+maj3v`).
+chain_intermediates (`heads-v5`), wrong_intermediate, basic_readout and basic_readout_mt on bank
+v6 (`qline-v2`, basic_readout also `brsum-v2`), multihop on bank v5 (`bank-gate-r10`) and
+user_modeling on bank v3 (`+maj3v`).
 Each was re-judged from its own cached answers (0 new judge calls) and refrozen; the text-blind
 entries of the gated ones were re-gated from the re-judged panel draws. Only association's floor
 moved (0.912 -> 0.923: de-oktoberfest's "Oktoberfest-style" quote now passes); no text-blind id
@@ -96,9 +97,8 @@ entered or left a subset. The lucky-guessing entries of every affected family ca
 stamps (a guesser sees only the option lists, which no fix changed).
 
 Still on the stamp they were measured under, so not drawn until re-scored: the prompt-only floors
-of basic_readout_mt (`qline-v1`), multihop_mt_v2 (`qline-v1`) and the four multilingual families
-(`plural-v1` / `mcrx-2026-11-03d`), and the text-blind entries of basic_readout_mt and the four
-multilingual families. Each of these families moves to a new bank later in this series, and its
+of multihop_mt_v2 (`qline-v1`) and the four multilingual families (`plural-v1` /
+`mcrx-2026-11-03d`), and the text-blind entries of the four multilingual families. Each of these families moves to a new bank later in this series, and its
 floors are re-measured there.
 
 "Before" is the 2026-10-31 campaign value under the family's earlier instrument and bank, except in
