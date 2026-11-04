@@ -521,6 +521,18 @@ def test_remap_layers_snaps_to_the_subject_read_band():
     assert remap_layers(grid, 32) == list(range(10, 31, 2))  # no band: depth remap only
 
 
+def test_glm53_read_band_is_its_jlens_rows():
+    """GLM-5.3's J-lens has rows 0..76 (target block 77): the grid is unchanged, L63 -> 76."""
+    from wsbench.adapt.subjects import SUBJECTS
+
+    s = SUBJECTS["glm-5.3"]
+    grid = [20, 24, 28, 32, 36, 40, 44, 48, 52, 56, 60]
+    assert s.read_band == tuple(range(77))
+    assert remap_layers(grid, 78, s.read_band) == remap_layers(grid, 78)
+    assert remap_layers(grid, 78) == [24, 29, 34, 39, 44, 49, 54, 58, 63, 68, 73]
+    assert remap_layers([63], 78, s.read_band) == [76]
+
+
 def test_strict_form_needs_the_accents_in_the_deterministic_match():
     """OLMo-32B audit: fold() strips accents, so "frio" passed for "frío" pre-grader."""
     asks = fams.FAMILIES["multilingual"].asks(

@@ -14,6 +14,7 @@ Run with the adapt venv + PYTHONPATH=<gw>/src:<gw>/scripts/oracle_lens_evals/ole
 
 import argparse
 import json
+import os
 import random
 import shutil
 import subprocess
@@ -23,7 +24,8 @@ from pathlib import Path
 WSB = Path(__file__).resolve().parents[1]
 if str(WSB / "src") not in sys.path:  # wsbench.adapt.template (BOS prefix), also inside Modal
     sys.path.insert(0, str(WSB / "src"))
-GW = Path("/workspace/agam/global-workspace")
+# a global-workspace checkout (Agam's box path by default; WSB_GW elsewhere)
+GW = Path(os.environ.get("WSB_GW", "/workspace/agam/global-workspace"))
 OLS = GW / "scripts/oracle_lens_evals/olens_sglang"
 SRC_ITEMS = GW / "evals/workspace-bench/jlens_pr/items.json"
 

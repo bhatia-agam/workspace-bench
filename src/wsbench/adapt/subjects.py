@@ -219,6 +219,11 @@ SUBJECTS: dict[str, Subject] = {
             backend="modal",
             modal_app="adapt-glm-5.3",
             chat_template=str(TEMPLATES / "glm53_nvfp4_nothink.jinja"),
+            # J-lens glm53-jlens:glm-5.3-nvfp4/lens.pt (global-workspace glm53_aff
+            # jlens_fit_modal.py, 1950 prompts): rows = blocks 0..76 (sources), target block 77
+            # has no row, so the band is every lens row (as V4-Flash's). Split-half <= 0.2 only
+            # from L31 up: jlens_concept_pr ships its references at grid layers >= 34
+            read_band=tuple(range(77)),
             modal_gpu=("B300:8", "B200:8"),
             modal_tp=8,
             modal_image="glm53",
