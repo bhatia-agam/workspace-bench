@@ -1,9 +1,9 @@
 {
  "family": "multilingual_typo",
  "model": "claude-opus-5-5",
- "n_lists": 100,
- "n_answered": 100,
- "n_ok": 100,
+ "n_lists": 88,
+ "n_answered": 88,
+ "n_ok": 88,
  "n_fail": [],
  "rows": [
   {
@@ -233,29 +233,6 @@
    "answered": true
   },
   {
-   "item": "mlt-el-aftokinitodromos-2",
-   "list": 0,
-   "topic": "a type of road or transport infrastructure",
-   "options": [
-    "dual carriageway",
-    "controlled-access highway",
-    "limited-access road",
-    "toll road",
-    "frontage road"
-   ],
-   "gold": 2,
-   "fits": [
-    1,
-    2,
-    3,
-    4,
-    5
-   ],
-   "n_confusers": 4,
-   "ok": true,
-   "answered": true
-  },
-  {
    "item": "mlt-el-aggeioplastiki",
    "list": 0,
    "topic": "a medical or surgical procedure",
@@ -395,11 +372,11 @@
    "list": 0,
    "topic": "a concept in military history or technology",
    "options": [
-    "siege warfare",
+    "guerrilla warfare",
     "code decryption",
     "trench warfare",
-    "aerial reconnaissance",
-    "radar detection"
+    "strategic bombing",
+    "lightning warfare"
    ],
    "gold": 2,
    "fits": [
@@ -510,10 +487,10 @@
    "topic": "a concept from politics and government",
    "options": [
     "member of parliament",
-    "minister without portfolio",
-    "member of congress",
-    "speaker of the house",
-    "prime minister"
+    "minister of foreign affairs",
+    "senator",
+    "prime minister",
+    "governor"
    ],
    "gold": 1,
    "fits": [
@@ -601,10 +578,10 @@
    "list": 0,
    "topic": "a household or workshop machine or tool",
    "options": [
-    "vacuum cleaner",
+    "table saw",
+    "blender",
+    "food processor",
     "electric drill",
-    "lathe",
-    "washing machine",
     "sewing machine"
    ],
    "gold": 5,
@@ -625,10 +602,10 @@
    "topic": "a medication or class of drug",
    "options": [
     "antibiotic drug",
-    "anticoagulant drug",
-    "antipsychotic drug",
-    "antifungal drug",
-    "antiviral drug"
+    "painkiller drug",
+    "anesthetic drug",
+    "antihistamine drug",
+    "opioid drug"
    ],
    "gold": 1,
    "fits": [
@@ -654,29 +631,6 @@
     "hatred of Christians"
    ],
    "gold": 2,
-   "fits": [
-    1,
-    2,
-    3,
-    4,
-    5
-   ],
-   "n_confusers": 4,
-   "ok": true,
-   "answered": true
-  },
-  {
-   "item": "mlt-he-archaeology",
-   "list": 0,
-   "topic": "a scientific or academic field of study",
-   "options": [
-    "forensic science",
-    "computational linguistics",
-    "materials science",
-    "environmental science",
-    "archaeological science"
-   ],
-   "gold": 5,
    "fits": [
     1,
     2,
@@ -738,11 +692,11 @@
    "list": 0,
    "topic": "a chemical substance or compound",
    "options": [
-    "alkaline degreasers",
-    "acidic descalers",
+    "hydrogen peroxide",
+    "baking soda",
     "surfactant detergents",
-    "oxygen bleaches",
-    "chlorine bleaches"
+    "caustic soda",
+    "washing soda"
    ],
    "gold": 3,
    "fits": [
@@ -783,11 +737,11 @@
    "list": 0,
    "topic": "a type of book or publication",
    "options": [
-    "world atlas",
+    "daily newspaper",
     "general encyclopedia",
-    "bilingual dictionary",
-    "biographical dictionary",
-    "annual almanac"
+    "world atlas",
+    "travel guidebook",
+    "bilingual dictionary"
    ],
    "gold": 2,
    "fits": [
@@ -813,29 +767,6 @@
     "hematology medical field"
    ],
    "gold": 3,
-   "fits": [
-    1,
-    2,
-    3,
-    4,
-    5
-   ],
-   "n_confusers": 4,
-   "ok": true,
-   "answered": true
-  },
-  {
-   "item": "mlt-hu-anyakonyvvezeto",
-   "list": 0,
-   "topic": "a civil or administrative occupation",
-   "options": [
-    "public notary official",
-    "tax assessor official",
-    "notary public official",
-    "civil registrar official",
-    "municipal records official"
-   ],
-   "gold": 4,
    "fits": [
     1,
     2,
@@ -894,17 +825,17 @@
    "answered": true
   },
   {
-   "item": "mlt-hu-cseppkobarlang",
+   "item": "mlt-hu-csillagvizsgalo",
    "list": 0,
-   "topic": "a natural landform or geological feature",
+   "topic": "a type of building or facility",
    "options": [
-    "limestone gorge",
-    "fairy chimney",
-    "dripstone cave",
-    "volcanic crater",
-    "karst sinkhole"
+    "astronomical observatory",
+    "veterinary school",
+    "laboratory",
+    "museum",
+    "university clinic"
    ],
-   "gold": 3,
+   "gold": 1,
    "fits": [
     1,
     2,
@@ -913,50 +844,6 @@
     5
    ],
    "n_confusers": 4,
-   "ok": true,
-   "answered": true
-  },
-  {
-   "item": "mlt-hu-csillagvizsgalo",
-   "list": 0,
-   "topic": "a type of building or facility",
-   "options": [
-    "astronomical observatory",
-    "botanical garden",
-    "lighthouse",
-    "botanical garden greenhouse",
-    "endocrinology medical field"
-   ],
-   "gold": 1,
-   "fits": [
-    1,
-    2,
-    3,
-    4
-   ],
-   "n_confusers": 3,
-   "ok": true,
-   "answered": true
-  },
-  {
-   "item": "mlt-hu-elengedhetetlen-01",
-   "list": 0,
-   "topic": "an emphatic English adjective phrase",
-   "options": [
-    "utterly irreplaceable",
-    "absolutely indispensable",
-    "intrinsically rewarding",
-    "truly inseparable",
-    "wholly sufficient"
-   ],
-   "gold": 2,
-   "fits": [
-    1,
-    2,
-    4,
-    5
-   ],
-   "n_confusers": 3,
    "ok": true,
    "answered": true
   },
@@ -972,29 +859,6 @@
     "heart failure"
    ],
    "gold": 2,
-   "fits": [
-    1,
-    2,
-    3,
-    4,
-    5
-   ],
-   "n_confusers": 4,
-   "ok": true,
-   "answered": true
-  },
-  {
-   "item": "mlt-hu-fazekaskorong",
-   "list": 0,
-   "topic": "a craft tool or workshop equipment",
-   "options": [
-    "woodturner's lathe",
-    "jeweller's loupe",
-    "potter's wheel",
-    "sculptor's chisel",
-    "weaver's loom"
-   ],
-   "gold": 3,
    "fits": [
     1,
     2,
@@ -1237,11 +1101,11 @@
    "list": 0,
    "topic": "a concept in computer science",
    "options": [
-    "support vector machine",
-    "hidden Markov model",
+    "finite-state machine",
+    "Turing machine",
     "artificial neural network",
-    "random forest",
-    "decision tree learning"
+    "Bayesian network",
+    "binary search tree"
    ],
    "gold": 3,
    "fits": [
@@ -1391,29 +1255,6 @@
    "answered": true
   },
   {
-   "item": "mlt-pl-bioroznorodnosc",
-   "list": 0,
-   "topic": "a concept in ecology or biology",
-   "options": [
-    "ecological succession",
-    "habitat fragmentation",
-    "ecosystem services",
-    "biological diversity",
-    "natural selection"
-   ],
-   "gold": 4,
-   "fits": [
-    1,
-    2,
-    3,
-    4,
-    5
-   ],
-   "n_confusers": 4,
-   "ok": true,
-   "answered": true
-  },
-  {
    "item": "mlt-pl-echolokacja",
    "list": 0,
    "topic": "a sensory ability in animal biology",
@@ -1441,10 +1282,10 @@
    "list": 0,
    "topic": "a medical diagnostic test or procedure",
    "options": [
-    "electrocardiography heart recording",
-    "computed tomography body scan",
-    "electromyography muscle recording",
     "magnetic resonance imaging scan",
+    "X-ray radiography imaging",
+    "ultrasound imaging of organs",
+    "computed tomography body scan",
     "electroencephalography brain recording"
    ],
    "gold": 5,
@@ -1505,29 +1346,6 @@
    "answered": true
   },
   {
-   "item": "mlt-pl-jedwabnictwo",
-   "list": 0,
-   "topic": "a branch of agriculture or husbandry",
-   "options": [
-    "silk production",
-    "wool production",
-    "dairy farming",
-    "wine production",
-    "honey production"
-   ],
-   "gold": 1,
-   "fits": [
-    1,
-    2,
-    3,
-    4,
-    5
-   ],
-   "n_confusers": 4,
-   "ok": true,
-   "answered": true
-  },
-  {
    "item": "mlt-pl-kwestionariusz",
    "list": 0,
    "topic": "a type of document or form",
@@ -1551,38 +1369,15 @@
    "answered": true
   },
   {
-   "item": "mlt-ru-anticyclone",
-   "list": 0,
-   "topic": "a weather or atmospheric phenomenon",
-   "options": [
-    "thunderstorm system",
-    "trough system",
-    "warm front",
-    "anticyclone system",
-    "low-pressure system"
-   ],
-   "gold": 4,
-   "fits": [
-    1,
-    2,
-    3,
-    4,
-    5
-   ],
-   "n_confusers": 4,
-   "ok": true,
-   "answered": true
-  },
-  {
    "item": "mlt-ru-blagotvoritelnost",
    "list": 0,
    "topic": "a human activity or pursuit",
    "options": [
-    "community volunteering",
+    "scientific research",
     "charitable giving",
-    "political activism",
-    "religious missionary work",
-    "environmental conservation"
+    "literary work",
+    "teaching",
+    "painting"
    ],
    "gold": 2,
    "fits": [
@@ -1601,10 +1396,10 @@
    "list": 0,
    "topic": "an office or administrative work concept",
    "options": [
-    "data entry",
-    "document management",
-    "information management",
     "office administration",
+    "document management",
+    "human resources",
+    "scheduling",
     "records management"
    ],
    "gold": 5,
@@ -1964,63 +1759,17 @@
    "answered": true
   },
   {
-   "item": "mlt-tr-biyocesitlilik",
-   "list": 0,
-   "topic": "a concept in ecology or biology",
-   "options": [
-    "food chain",
-    "ecological niche",
-    "genetic drift",
-    "biological diversity",
-    "natural selection"
-   ],
-   "gold": 4,
-   "fits": [
-    1,
-    2,
-    3,
-    4,
-    5
-   ],
-   "n_confusers": 4,
-   "ok": true,
-   "answered": true
-  },
-  {
    "item": "mlt-tr-buharlasma",
    "list": 0,
    "topic": "a physical or natural process",
    "options": [
-    "sugar dissolution",
-    "heat convection",
-    "water evaporation",
     "ice melting",
-    "water vapor deposition"
+    "iron rusting",
+    "water evaporation",
+    "water freezing",
+    "water condensation"
    ],
    "gold": 3,
-   "fits": [
-    1,
-    2,
-    3,
-    4,
-    5
-   ],
-   "n_confusers": 4,
-   "ok": true,
-   "answered": true
-  },
-  {
-   "item": "mlt-tr-buyukelcilik-swap",
-   "list": 0,
-   "topic": "a type of diplomatic or governmental institution",
-   "options": [
-    "diplomatic chancery",
-    "diplomatic consulate",
-    "diplomatic foreign ministry",
-    "diplomatic embassy",
-    "diplomatic high commission"
-   ],
-   "gold": 4,
    "fits": [
     1,
     2,
@@ -2051,29 +1800,6 @@
     5
    ],
    "n_confusers": 3,
-   "ok": true,
-   "answered": true
-  },
-  {
-   "item": "mlt-tr-caydanlik",
-   "list": 0,
-   "topic": "a kitchen vessel or cookware item",
-   "options": [
-    "samovar",
-    "Vietnamese phin filter",
-    "double tea kettle",
-    "Dutch oven",
-    "bain-marie"
-   ],
-   "gold": 3,
-   "fits": [
-    1,
-    2,
-    3,
-    4,
-    5
-   ],
-   "n_confusers": 4,
    "ok": true,
    "answered": true
   },
@@ -2127,11 +1853,11 @@
    "list": 0,
    "topic": "an atmospheric or sky phenomenon",
    "options": [
-    "the noctilucent cloud",
-    "the solar halo",
-    "the green flash",
+    "the lightning bolt",
+    "the solar eclipse",
+    "the rainbow",
     "the polar aurora",
-    "the double rainbow"
+    "the shooting star"
    ],
    "gold": 4,
    "fits": [
@@ -2173,10 +1899,10 @@
    "list": 0,
    "topic": "a type of weapon or military technology",
    "options": [
-    "biological weapons",
+    "cyber weapons",
+    "landmines",
+    "autonomous weapons",
     "chemical weapons",
-    "ballistic missiles",
-    "cruise missiles",
     "nuclear weapons"
    ],
    "gold": 5,
@@ -2243,10 +1969,10 @@
    "topic": "a term in atmospheric or earth science",
    "options": [
     "Earth's atmosphere",
-    "Thermosphere",
-    "Planetary boundary layer",
     "Ozone layer",
-    "Earth's magnetosphere"
+    "Earth's magnetosphere",
+    "Earth's magnetic field",
+    "Thermosphere"
    ],
    "gold": 1,
    "fits": [

@@ -210,7 +210,7 @@ These rules apply to every new item in this group:
   specificity). Language options come from `R4_LANG_POOLS` (the old pl…ko-only rule is gone).
 - **Bank now:** basic_readout_mt `items_v6` (v4 without the sarin item, r5-rebuilt answer lists and drops, 90 items; no prompt shared with v1; `gate_v2`, `name_forms`;
   scorer of record `mc` + tolerant name gate); multilingual_mt `items_v5`, multilingual_typo
-  `items_v3`, multilingual_multihop `items_v5` (`mc_roles`, v2 language units, `bridge_l2_*`;
+  `items_v4`, multilingual_multihop `items_v5` (`mc_roles`, v2 language units, `bridge_l2_*`;
   multilingual_multihop scores `mc+regex`, the other two regex with the `+v2+ln-…` tag); typo_mt
   `items_v2` (85 items, arithmetic dropped). Port `mc_roles` and the v2 units with the items.
   basic_readout_mt v4's gate is the question in chat, no system turn, graded by `name_forms`; the

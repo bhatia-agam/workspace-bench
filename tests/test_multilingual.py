@@ -534,7 +534,7 @@ def test_v2_registrations(name, real_families):
         "multilingual": "items_v4.json",
         "multilingual_mt": "items_v5.json",
         "multilingual_multihop": "items_v5.json",
-        "multilingual_typo": "items_v3.json",
+        "multilingual_typo": "items_v4.json",
     }[name]
     assert spec.bank == Path("evals") / name / v
     assert spec.flat_types == () and not spec.multi_select

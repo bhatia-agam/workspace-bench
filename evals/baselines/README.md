@@ -77,7 +77,7 @@ new; dropped items reduce n).
 | multilingual | 0.879 | 0.939 [0.89, 0.98] | 99 | mcrx-2026-11-03d+mc-ml-2026-11-01b+bank-v4 | Opus 5.5 |
 | multilingual_mt | 0.950 | 0.980 [0.95, 1.00] | 100 | mt-regex-2026-10-30+v2+ln-2026-11-03a+rawrx-v2+plural-v1+langleg-v1+bank-v5 | Opus 5.5 |
 | multilingual_multihop | 0.340 | 0.854 [0.78, 0.92] | 89 | mcrx-2026-11-03d+mc-ml-2026-11-01b+bank-v5 | Opus 5.5 |
-| multilingual_typo | 0.740 | 0.740 [0.66, 0.83] | 100 | mt-regex-2026-10-30+v2+ln-2026-11-03a+rawrx-v2+plural-v1+anchor-support-v1+langleg-v1+bank-v3 | Opus 5.5 |
+| multilingual_typo | 0.740 | 0.750 [0.66, 0.84] | 88 | mt-regex-2026-10-30+v2+ln-2026-11-03a+rawrx-v2+plural-v1+anchor-support-v1+langleg-v1+bank-v4 | Opus 5.5 |
 | poetry | 0.000 | 0.000 | 100 | poetry-free-2026-11-01+noveto-a1 | Opus 5.5 |
 | relational_multihop | 0.980 | 1.000 (saturated) | 100 | rel-v3+relgate-v6 | Opus 5.5 |
 | role_bound_association | 0.540 (items, 100) | 0.457 [0.30, 0.59] (pairs) | 46 pairs | oa-v3.1+bank-v2+maj3v | Opus 5.5 |
@@ -183,6 +183,7 @@ the rows above for these families are their previous banks'.
 | multilingual | v4 | 99 | 0.200 | 0.168 | 0.214 | 0.202 | 0.184 | passes |
 | multilingual_mt | v5 | 100 | 0.200 | 0.110 | 0.174 | 0.234 | 0.190 | passes |
 | multilingual_multihop | v5 | 89 | 0.200 | 0.148 | 0.265 | 0.382 | 0.252 | fails described, topic |
+| multilingual_typo | v4 | 88 | 0.200 | 0.120 | 0.159 | 0.207 | 0.195 | passes |
 
 multihop_mt_v2 and multilingual_multihop do not meet the standard. Their guessers shown solved
 examples pick the best-known member of the bridge's category, and which items they solve moves
@@ -228,7 +229,7 @@ verdicts are unchanged).
 | multilingual | 0 / 99 | 2 / 99 (19 excluded by hand) | 78 | 0.79 / 1.00 / 0.91 / 0.99 |
 | multilingual_mt | 1 / 100 | 0 / 100 | 100 | 1.00 / 1.00 / 1.00 / 1.00 |
 | multilingual_multihop | 0 / 98 | 0 / 89 (2 excluded) | 87 | 0.98 / 1.00 / 0.98 / 1.00 |
-| multilingual_typo | 0 / 100 | 0 / 100 (4 excluded) | 96 | 0.96 / 0.98 / 0.92 / 0.98 |
+| multilingual_typo | 0 / 100 | 0 / 88 (3 excluded) | 85 | 0.97 / 0.99 / 0.91 / 0.98 |
 
 **user_modeling bank v3** (registered after the refreeze): its entry covers bank v3's 126 ids
 under `um-v3.5+bank-v3`, built by the same panel rule from two sets of per-draw verdicts. Bank

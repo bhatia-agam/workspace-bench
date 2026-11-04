@@ -13,7 +13,7 @@ SPEC = register(
         "Multilingual typo",
         calls_per_arm="≈ 2.2k",
         scorer="regex",
-        bank=Path("evals/multilingual_typo/items_v3.json"),
+        bank=Path("evals/multilingual_typo/items_v4.json"),
         instrument_tag=V2_TYPO_TAG,  # "v2+ln-…": the bank tag + the F6 naming forms
         min_full_positions=13,
         full_contiguous=True,

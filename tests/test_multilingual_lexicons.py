@@ -11,6 +11,8 @@ from wsbench.multitoken import regex
 
 def _units(family: str, item: str) -> dict[str, regex.ScoredUnit]:
     header, items = load_bank(registry.bank_path(family))
+    if item not in {i["id"] for i in items}:  # dropped by a later bank: the one it superseded
+        header, items = load_bank(registry.bank_path(family).with_name(header["supersedes"]))
     it = next(i for i in items if i["id"] == item)
     contract = regex.contract_for(header, str(header.get("family", family)))
     return {u.role: u for u in regex.scored_units(it, contract)}

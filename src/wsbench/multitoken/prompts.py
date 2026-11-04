@@ -256,7 +256,9 @@ V2_MT_TAG = V2_NAMING_TAG + "+" + LANGUAGE_LEG_VERSION + "+bank-v5"
 # the regex contract of record is unchanged)
 # +langleg-v1: the language unit is scored by the raw-sample leg, as in multilingual_mt;
 # anchoring only shapes the correction units' support
-V2_TYPO_TAG = V2_NAMING_TAG + "+anchor-support-v1+" + LANGUAGE_LEG_VERSION + "+bank-v3"
+# +bank-v4: items_v4.json, the leaking correction lists rebuilt by scripts/mc_options_r5.py and the
+# 12 items that still leaked dropped (the regex contract of record is unchanged)
+V2_TYPO_TAG = V2_NAMING_TAG + "+anchor-support-v1+" + LANGUAGE_LEG_VERSION + "+bank-v4"
 ML_SYSTEM = (
     f"You judge the READOUT: {mc.READOUT_PHRASE}, recorded while it read a passage you cannot "
     "see. The readout may be noisy, verbose, in any language, and may speculate. You are given "

@@ -155,6 +155,9 @@ def _no_judge(system, user, schema):
 
 
 def test_typo_leg_reads_the_naming_the_digest_dropped(tmp_path, monkeypatch):
+    # bank v4 dropped the anticyclone item: the rule is run on bank v3
+    v3 = registry.bank_path("multilingual_typo").with_name("items_v3.json")
+    monkeypatch.setenv("WSB_BANK_FILE_MULTILINGUAL_TYPO", str(v3))
     spec = _spec("multilingual_typo")
     correction = "мощный антициклон (anticyclone) принёс ясное небо"
     for with_naming in (True, False):
@@ -182,7 +185,10 @@ def test_bridge_l2_is_optional_in_multihop_only():
         ("multilingual_multihop", PASLANMAZ, {"bridge_l2"}),
         ("multilingual_typo", ANTICYCLONE, set()),  # its L2 correction stays required
     ):
-        header, items = load_bank(registry.bank_path(family))
+        path = registry.bank_path(family)
+        if family == "multilingual_typo":  # bank v4 dropped the anticyclone item
+            path = path.with_name("items_v3.json")
+        header, items = load_bank(path)
         it = next(i for i in items if i["id"] == item)
         units = regex.scored_units(it, regex.contract_for(header, family))
         assert {u.role for u in units if not u.required} == optional, family

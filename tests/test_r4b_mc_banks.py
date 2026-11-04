@@ -31,6 +31,7 @@ LATER = {
     "multihop_mt_v2": ("items_v6.json", set()),
     "multilingual_mt": ("items_v5.json", set()),
     "multilingual_multihop": ("items_v5.json", set()),
+    "multilingual_typo": ("items_v4.json", set()),
 }
 
 
@@ -122,7 +123,7 @@ STANDARD_FAILS: dict[str, set[str]] = {
     "multihop_mt_v2": {"topic"},
     "multilingual_multihop": {"described", "topic"},
     "multilingual_mt": set(),
-    "multilingual_typo": {"described", "topic"},
+    "multilingual_typo": set(),
 }
 
 

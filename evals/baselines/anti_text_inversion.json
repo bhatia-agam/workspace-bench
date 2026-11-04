@@ -49629,43 +49629,43 @@
    "astra": "openai/gpt-6-astra",
    "argon": "google/gemini-4-argon"
   },
-  "instrument": "mt-regex-2026-10-30+v2+ln-2026-11-03a+rawrx-v2+plural-v1+anchor-support-v1+langleg-v1+bank-v3",
+  "instrument": "mt-regex-2026-10-30+v2+ln-2026-11-03a+rawrx-v2+plural-v1+anchor-support-v1+langleg-v1+bank-v4",
   "judge_model": "regex",
   "layers_judged": [
    44
   ],
-  "bank_sha": "1465f753394dd61ab50a465d6542b16c959b1ad064f2e48f3f1137a0a6fefb39",
-  "n_bank": 100,
+  "bank_sha": "d985c3841409a249a11a9bbeab7c34555bc4cd211137ea781cd0365285e5e06b",
+  "n_bank": 88,
   "n_ati": 0,
-  "n_invertible": 96,
+  "n_invertible": 85,
   "n_unverified": 0,
   "pass_at_1": {
    "qwen": [
-    0.82,
-    0.85,
-    0.85
+    0.8295,
+    0.8636,
+    0.8523
    ],
    "opus": [
-    0.95,
-    0.97,
-    0.96
+    0.9545,
+    0.9773,
+    0.9659
    ],
    "astra": [
-    0.92,
-    0.91,
-    0.89
+    0.9091,
+    0.8977,
+    0.875
    ],
    "argon": [
-    0.95,
-    0.94,
-    0.97
+    0.9432,
+    0.9318,
+    0.9659
    ]
   },
   "pass_at_3": {
-   "qwen": 0.96,
-   "opus": 0.98,
-   "astra": 0.92,
-   "argon": 0.98
+   "qwen": 0.9659,
+   "opus": 0.9886,
+   "astra": 0.9091,
+   "argon": 0.9773
   },
   "ids": [],
   "status": {
@@ -49724,12 +49724,6 @@
     "solved"
    ],
    "mlt-el-aftokinitodromos": [
-    "solved",
-    "solved",
-    "solved",
-    "solved"
-   ],
-   "mlt-el-aftokinitodromos-2": [
     "solved",
     "solved",
     "solved",
@@ -49843,12 +49837,6 @@
     "failed",
     "failed"
    ],
-   "mlt-he-archaeology": [
-    "solved",
-    "solved",
-    "solved",
-    "solved"
-   ],
    "mlt-he-caramelization-typo": [
     "solved",
     "solved",
@@ -49885,12 +49873,6 @@
     "solved",
     "solved"
    ],
-   "mlt-hu-anyakonyvvezeto": [
-    "solved",
-    "solved",
-    "solved",
-    "solved"
-   ],
    "mlt-hu-asztalosmuhely": [
     "solved",
     "solved",
@@ -49903,19 +49885,7 @@
     "solved",
     "solved"
    ],
-   "mlt-hu-cseppkobarlang": [
-    "solved",
-    "solved",
-    "solved",
-    "solved"
-   ],
    "mlt-hu-csillagvizsgalo": [
-    "solved",
-    "solved",
-    "solved",
-    "solved"
-   ],
-   "mlt-hu-elengedhetetlen-01": [
     "solved",
     "solved",
     "solved",
@@ -49924,12 +49894,6 @@
    "mlt-hu-erelmeszesedes": [
     "solved",
     "solved",
-    "solved",
-    "solved"
-   ],
-   "mlt-hu-fazekaskorong": [
-    "failed",
-    "failed",
     "solved",
     "solved"
    ],
@@ -50035,12 +49999,6 @@
     "solved",
     "solved"
    ],
-   "mlt-pl-bioroznorodnosc": [
-    "solved",
-    "solved",
-    "solved",
-    "solved"
-   ],
    "mlt-pl-echolokacja": [
     "solved",
     "solved",
@@ -50065,19 +50023,7 @@
     "solved",
     "solved"
    ],
-   "mlt-pl-jedwabnictwo": [
-    "solved",
-    "solved",
-    "solved",
-    "solved"
-   ],
    "mlt-pl-kwestionariusz": [
-    "solved",
-    "solved",
-    "solved",
-    "solved"
-   ],
-   "mlt-ru-anticyclone": [
     "solved",
     "solved",
     "solved",
@@ -50185,31 +50131,13 @@
     "solved",
     "solved"
    ],
-   "mlt-tr-biyocesitlilik": [
-    "solved",
-    "solved",
-    "solved",
-    "solved"
-   ],
    "mlt-tr-buharlasma": [
     "solved",
     "solved",
     "solved",
     "solved"
    ],
-   "mlt-tr-buyukelcilik-swap": [
-    "solved",
-    "solved",
-    "solved",
-    "solved"
-   ],
    "mlt-tr-buzdolabi": [
-    "solved",
-    "solved",
-    "solved",
-    "solved"
-   ],
-   "mlt-tr-caydanlik": [
     "solved",
     "solved",
     "solved",
@@ -50322,11 +50250,6 @@
      true,
      true
     ],
-    "mlt-el-aftokinitodromos-2": [
-     true,
-     true,
-     true
-    ],
     "mlt-el-aggeioplastiki": [
      true,
      false,
@@ -50417,11 +50340,6 @@
      false,
      true
     ],
-    "mlt-he-archaeology": [
-     true,
-     true,
-     true
-    ],
     "mlt-he-caramelization-typo": [
      true,
      true,
@@ -50452,11 +50370,6 @@
      true,
      true
     ],
-    "mlt-hu-anyakonyvvezeto": [
-     true,
-     true,
-     true
-    ],
     "mlt-hu-asztalosmuhely": [
      true,
      false,
@@ -50467,30 +50380,15 @@
      true,
      true
     ],
-    "mlt-hu-cseppkobarlang": [
-     true,
-     true,
-     false
-    ],
     "mlt-hu-csillagvizsgalo": [
      true,
      true,
      false
     ],
-    "mlt-hu-elengedhetetlen-01": [
-     false,
-     true,
-     true
-    ],
     "mlt-hu-erelmeszesedes": [
      true,
      true,
      true
-    ],
-    "mlt-hu-fazekaskorong": [
-     false,
-     false,
-     false
     ],
     "mlt-id-berkesinambungan": [
      true,
@@ -50577,11 +50475,6 @@
      true,
      true
     ],
-    "mlt-pl-bioroznorodnosc": [
-     true,
-     false,
-     true
-    ],
     "mlt-pl-echolokacja": [
      true,
      true,
@@ -50602,19 +50495,9 @@
      true,
      true
     ],
-    "mlt-pl-jedwabnictwo": [
-     true,
-     true,
-     true
-    ],
     "mlt-pl-kwestionariusz": [
      true,
      true,
-     true
-    ],
-    "mlt-ru-anticyclone": [
-     true,
-     false,
      true
     ],
     "mlt-ru-blagotvoritelnost": [
@@ -50702,27 +50585,12 @@
      true,
      true
     ],
-    "mlt-tr-biyocesitlilik": [
-     false,
-     true,
-     true
-    ],
     "mlt-tr-buharlasma": [
      true,
      true,
      true
     ],
-    "mlt-tr-buyukelcilik-swap": [
-     true,
-     true,
-     true
-    ],
     "mlt-tr-buzdolabi": [
-     true,
-     true,
-     true
-    ],
-    "mlt-tr-caydanlik": [
      true,
      true,
      true
@@ -50824,11 +50692,6 @@
      true,
      true
     ],
-    "mlt-el-aftokinitodromos-2": [
-     true,
-     true,
-     true
-    ],
     "mlt-el-aggeioplastiki": [
      true,
      true,
@@ -50919,11 +50782,6 @@
      true,
      true
     ],
-    "mlt-he-archaeology": [
-     true,
-     true,
-     true
-    ],
     "mlt-he-caramelization-typo": [
      true,
      true,
@@ -50954,11 +50812,6 @@
      true,
      true
     ],
-    "mlt-hu-anyakonyvvezeto": [
-     true,
-     true,
-     true
-    ],
     "mlt-hu-asztalosmuhely": [
      true,
      true,
@@ -50969,17 +50822,7 @@
      true,
      true
     ],
-    "mlt-hu-cseppkobarlang": [
-     true,
-     true,
-     true
-    ],
     "mlt-hu-csillagvizsgalo": [
-     true,
-     true,
-     true
-    ],
-    "mlt-hu-elengedhetetlen-01": [
      true,
      true,
      true
@@ -50988,11 +50831,6 @@
      true,
      true,
      true
-    ],
-    "mlt-hu-fazekaskorong": [
-     false,
-     false,
-     false
     ],
     "mlt-id-berkesinambungan": [
      true,
@@ -51079,11 +50917,6 @@
      true,
      true
     ],
-    "mlt-pl-bioroznorodnosc": [
-     true,
-     true,
-     true
-    ],
     "mlt-pl-echolokacja": [
      true,
      true,
@@ -51104,17 +50937,7 @@
      true,
      true
     ],
-    "mlt-pl-jedwabnictwo": [
-     true,
-     true,
-     true
-    ],
     "mlt-pl-kwestionariusz": [
-     true,
-     true,
-     true
-    ],
-    "mlt-ru-anticyclone": [
      true,
      true,
      true
@@ -51204,27 +51027,12 @@
      true,
      true
     ],
-    "mlt-tr-biyocesitlilik": [
-     true,
-     true,
-     true
-    ],
     "mlt-tr-buharlasma": [
      true,
      true,
      true
     ],
-    "mlt-tr-buyukelcilik-swap": [
-     true,
-     true,
-     true
-    ],
     "mlt-tr-buzdolabi": [
-     true,
-     true,
-     true
-    ],
-    "mlt-tr-caydanlik": [
      true,
      true,
      true
@@ -51326,11 +51134,6 @@
      true,
      true
     ],
-    "mlt-el-aftokinitodromos-2": [
-     true,
-     true,
-     true
-    ],
     "mlt-el-aggeioplastiki": [
      true,
      true,
@@ -51421,11 +51224,6 @@
      false,
      false
     ],
-    "mlt-he-archaeology": [
-     true,
-     true,
-     true
-    ],
     "mlt-he-caramelization-typo": [
      true,
      true,
@@ -51456,11 +51254,6 @@
      true,
      true
     ],
-    "mlt-hu-anyakonyvvezeto": [
-     true,
-     true,
-     true
-    ],
     "mlt-hu-asztalosmuhely": [
      true,
      true,
@@ -51471,27 +51264,12 @@
      true,
      true
     ],
-    "mlt-hu-cseppkobarlang": [
-     true,
-     true,
-     true
-    ],
     "mlt-hu-csillagvizsgalo": [
      true,
      true,
      true
     ],
-    "mlt-hu-elengedhetetlen-01": [
-     true,
-     true,
-     true
-    ],
     "mlt-hu-erelmeszesedes": [
-     true,
-     true,
-     true
-    ],
-    "mlt-hu-fazekaskorong": [
      true,
      true,
      true
@@ -51581,11 +51359,6 @@
      true,
      false
     ],
-    "mlt-pl-bioroznorodnosc": [
-     true,
-     true,
-     true
-    ],
     "mlt-pl-echolokacja": [
      true,
      true,
@@ -51606,17 +51379,7 @@
      true,
      true
     ],
-    "mlt-pl-jedwabnictwo": [
-     true,
-     true,
-     true
-    ],
     "mlt-pl-kwestionariusz": [
-     true,
-     true,
-     true
-    ],
-    "mlt-ru-anticyclone": [
      true,
      true,
      true
@@ -51706,27 +51469,12 @@
      true,
      true
     ],
-    "mlt-tr-biyocesitlilik": [
-     true,
-     true,
-     true
-    ],
     "mlt-tr-buharlasma": [
      true,
      true,
      true
     ],
-    "mlt-tr-buyukelcilik-swap": [
-     true,
-     true,
-     true
-    ],
     "mlt-tr-buzdolabi": [
-     true,
-     true,
-     true
-    ],
-    "mlt-tr-caydanlik": [
      true,
      true,
      true
@@ -51828,11 +51576,6 @@
      true,
      true
     ],
-    "mlt-el-aftokinitodromos-2": [
-     true,
-     true,
-     true
-    ],
     "mlt-el-aggeioplastiki": [
      true,
      true,
@@ -51923,11 +51666,6 @@
      false,
      false
     ],
-    "mlt-he-archaeology": [
-     true,
-     true,
-     true
-    ],
     "mlt-he-caramelization-typo": [
      true,
      true,
@@ -51958,11 +51696,6 @@
      true,
      true
     ],
-    "mlt-hu-anyakonyvvezeto": [
-     true,
-     true,
-     true
-    ],
     "mlt-hu-asztalosmuhely": [
      true,
      true,
@@ -51973,27 +51706,12 @@
      true,
      true
     ],
-    "mlt-hu-cseppkobarlang": [
-     true,
-     true,
-     true
-    ],
     "mlt-hu-csillagvizsgalo": [
      true,
      true,
      true
     ],
-    "mlt-hu-elengedhetetlen-01": [
-     true,
-     true,
-     true
-    ],
     "mlt-hu-erelmeszesedes": [
-     true,
-     true,
-     true
-    ],
-    "mlt-hu-fazekaskorong": [
      true,
      true,
      true
@@ -52083,11 +51801,6 @@
      true,
      true
     ],
-    "mlt-pl-bioroznorodnosc": [
-     true,
-     true,
-     true
-    ],
     "mlt-pl-echolokacja": [
      true,
      true,
@@ -52108,17 +51821,7 @@
      true,
      true
     ],
-    "mlt-pl-jedwabnictwo": [
-     true,
-     true,
-     true
-    ],
     "mlt-pl-kwestionariusz": [
-     true,
-     true,
-     true
-    ],
-    "mlt-ru-anticyclone": [
      true,
      true,
      true
@@ -52208,27 +51911,12 @@
      true,
      true
     ],
-    "mlt-tr-biyocesitlilik": [
-     true,
-     true,
-     true
-    ],
     "mlt-tr-buharlasma": [
      true,
      true,
      true
     ],
-    "mlt-tr-buyukelcilik-swap": [
-     true,
-     true,
-     true
-    ],
     "mlt-tr-buzdolabi": [
-     true,
-     true,
-     true
-    ],
-    "mlt-tr-caydanlik": [
      true,
      true,
      true
@@ -52282,16 +51970,15 @@
   },
   "reader_routes": {
    "astra": {
-    "openrouter": 300
+    "openrouter": 264
    },
    "argon": {
-    "openrouter": 300
+    "openrouter": 264
    }
   },
   "ati_exclude": {
    "mlt-ar-anthropology": "the prompt ends in the misspelt word; the correction is that word with one letter fixed and the script shows the language",
    "mlt-el-anosokatastoli": "the prompt ends in the misspelt word; the correction is that word with one letter fixed and the script shows the language",
-   "mlt-hu-fazekaskorong": "the prompt ends in the misspelt word; the correction is that word with one letter fixed and the script shows the language",
    "mlt-ru-delo-01": "the prompt ends in the misspelt word; the correction is that word with one letter fixed and the script shows the language"
   },
   "ati_reportable": false
