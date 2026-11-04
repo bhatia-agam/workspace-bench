@@ -42,6 +42,11 @@ TOL = 1e-9
 
 # (native prompt_version base, summary base before "+digest") pairs that differ by design
 BASE_PAIRS: dict[str, dict[str, str]] = {
+    # the free-recall summary path passes the start number as an operand (it can leave the digest
+    # keys), so its results carry +start-op; native free recall has no digest and is unchanged
+    "chain_intermediates": {
+        "chain-free-2026-10-30": "chain-free-2026-10-30+start-op",
+    },
     # summary mode judges the digest with the single-cell prompt; native cells=all is batched
     "arithmetic_intermediates": {
         "arith-free-batched-2026-09-23": "arith-free-2026-09-23",
