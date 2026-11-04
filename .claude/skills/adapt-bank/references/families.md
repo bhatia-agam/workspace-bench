@@ -53,7 +53,7 @@ re-stamped (`references/porting.md`).
     Flag it in the note.
 - **Main knob:** cue strength.
 - **Bank now:** `items_v5` (91 items: v3 minus winter / pentagon, v3's read plan; stamp
-  `+gate-a1+bank-v5`; plan 0039 + round 4): `mc` {gold, aliases, distractors[7]}
+  `+gate-a2+bank-v5`; plan 0039 + round 4): `mc` {gold, aliases, distractors[7]}
   (lint requires it, `adapt/lint.py`), leakage-screened on the bank of record
   (`scripts/association_distractors.py`, `scripts/mc_leakage_r4.py`, topic guesser; these write
   `evals/`, never run them for an adapted set); quote gate + pins. Read render `chat_summarize`
@@ -112,13 +112,13 @@ re-stamped (`references/porting.md`).
     (capital, continent, language).
   - Floor: T2. One hop is the minimum, and there is no 0-hop.
 - **Main knob:** bridge salience.
-- **Bank now:** `items_v5` (98 items: bank v4's 68, which is bank v3 without 32, plus 30 new
+- **Bank now:** `items_v5` (98 items: bank v3 without 32 (header `dropped_from_v3`), plus 30 new
   gated two-hop items; its own read plan; plan 0048, `MC_BANK_FAMILIES`): `mc` per item
   (built on the bank of record: `scripts/build_multihop_mc.py` wrote v2, `mc_leakage_r4.py` v3
   and the 30 new items' lists; both write `evals/`;
-  no adapted-item builder yet), leakage-screened; gates `bank-gate-r9`: the quote (verbatim or
-  near-verbatim, read in its line), derived forms (`derived_forms.json`, `mhforms-v2`), number
-  floods; no split rule;
+  no adapted-item builder yet), leakage-screened; gates `bank-gate-r10`: the quote (verbatim or
+  near-verbatim; through its line only when cut mid-name), derived forms (`derived_forms.json`,
+  `mhforms-v2`), number floods; no split rule;
   every-position reads. The authoring brief writes no `mc`: build it after the gate.
 
 ### multilingual — the English concept behind a non-English answer
@@ -401,8 +401,8 @@ deleted.
   - T1: selfdescribe items with stronger, multiple cues.
 - **Never pad with synthsys.** Those items score verbatim echo, not the `inferred` headline. Report
   the subfamily split.
-- **Bank now:** registered `items_v3` (126 selfdescribe items: bank v2's 47 plus 79 new gated
-  items, its own read plan; stamp `um-v3.5+bank-v3`, summary `+maj3`, judge calls `um-v3.5`;
+- **Bank now:** registered `items_v3` (126 selfdescribe items: items.json's 47 selfdescribe items
+  plus 79 new gated items, its own read plan; stamp `um-v3.5+bank-v3`, summary `+maj3v`, judge calls `um-v3.5`;
   plan 0056: all positions, hedge gate, user's-own-value echo); adapted banks are their own
   builds: the existing ones (no header `version`) stamp `um-v3.5`, `CALL_VERSION` alone, and a
   set frozen from bank v3 copies `version: 3` and stamps `um-v3.5+bank-v3`. Re-read only.

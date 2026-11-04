@@ -85,11 +85,6 @@ SCHEMA = schema_block(
 )
 
 
-# wrong_intermediate: the list's topic is the hidden entity's ROLE, never written from the
-# question. The
-# question describes the TRUE bridge (the contrast), so a topic written from it ("a 19th-century
-# English landscape painter" for a Constable painting) excludes the model's wrong intermediate (van
-# Gogh, the gold) and points at it as the odd one out
 # a wrong_intermediate prompt's subject phrase, the role and the work ("The director of the 1984
 # film Il futuro è donna"), without the asked relation or any answer
 _WB_SUBJECT = re.compile(r"^\s*fact:\s*(the .+?) (?:was|were|is|died)\b", re.IGNORECASE)
@@ -101,6 +96,11 @@ def subject_of(prompt: str) -> str:
     return m.group(1) if m else ""
 
 
+# wrong_intermediate: the list's topic is the hidden entity's ROLE, never written from the
+# question. The
+# question describes the TRUE bridge (the contrast), so a topic written from it ("a 19th-century
+# English landscape painter" for a Constable painting) excludes the model's wrong intermediate (van
+# Gogh, the gold) and points at it as the odd one out
 WB_ROLE_TOPIC: dict[tuple[str, str], tuple[str, str]] = {
     ("painting_creator", "painter"): ("a painter", "a person"),
     ("novel_author", "writer"): ("a novelist or writer", "a person"),

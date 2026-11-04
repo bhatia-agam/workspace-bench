@@ -12,7 +12,7 @@ render.
 
 **Bank v6 (`items_v6.json`, frozen 2026-11-04)** is the bank of record (`EvalSpec.bank`): 64 of
 v2's 70 items with only the MC distractor lists changed (v3 = round 4's lists, v4 = round 4b's,
-v5 = v4 without Kant among kant-hume's options, v6 = the r5 rebuild; see Floors and Bank v6). **Bank v2 (`items_v2.json`, frozen 2026-10-30, plan 0041)** — Same 70 items, same prompts, same gate evidence; `items.json` (sha256
+then v4 without Kant among kant-hume's options, v6 = the r5 rebuild on that; see Floors and Bank v6). **Bank v2 (`items_v2.json`, frozen 2026-10-30, plan 0041)** — Same 70 items, same prompts, same gate evidence; `items.json` (sha256
 `7c0160a7f818…`) is untouched. Built deterministically by
 `scripts/build_mh2_bank_v2.py` (CPU, the Qwen3.6-27B tokenizer only; `--check` verifies the file).
 It adds, per unit, `kind`, `full_forms` (the frozen `forms`), `forms_excluded` (each with its
@@ -87,8 +87,9 @@ scorer reads.
 
 ## Bank v6 (`items_v6.json`, frozen 2026-11-04; the registered bank)
 
-Bank v5 with its leaking bridge lists rebuilt and 6 items dropped (64 items; only
-`mc.<bridge>.distractors` and their `pool` notes change). On v5 the topic guesser picked the
+Bank v4 without Kant among kant-hume's options ("Kant out of kant-hume's list" below), with its
+leaking bridge lists rebuilt and 6 items dropped (64 items; only `mc.<bridge>.distractors` and
+their `pool` notes change). Before the rebuild the topic guesser picked the
 best-known member of the topic (0.349 vs chance 0.187, n = 70: David Hume once Kant left
 kant-hume's list, Mansa Musa). `scripts/mc_options_r5.py` re-chose the 22 leaking lists of 19
 items (procedure: `evals/baselines/README.md`, "Option rebuild r5"; here the proposer and the
@@ -110,14 +111,16 @@ kant-hume's list holds four distractors again (Kant stays out). Two two-bridge i
 option in both lists, as buena-vista's Abraham Lincoln does: tippecanoe (Andrew Jackson) and
 faraday-davy-lamp (Gauss in both lists, and Kelvin in both under two names: William Thomson in
 one, Lord Kelvin in the other). 15 lists changed; the header's `r5_mc` records each list, the
-rule and the build's measurements; its `standard_met: true` is the repair-round estimate, which
-the fresh draws (topic 0.338) do not confirm. The confuser audit holds 69/69. The header's `read_plan_bank` names `items_v5.json`, so the read plan,
-its `plan_sha` and every v5 readout file serve v6. Stamp `+bank-v6`; the MC calls keep their v4
+rule and the build's measurements; its `standard_met` is false, with a note: the repair-round
+estimate met the standard, the fresh draws (topic 0.338) do not. The confuser audit holds 69/69. The header's `read_plan_bank` names `items_v4.json`, so the read plan,
+its `plan_sha` and every v4 readout file serve v6 (the Kant edit changed one option list, and
+options are never rendered). Stamp `+bank-v6`; the MC calls keep their v4
 key, so only the 15 rebuilt lists' calls are new.
 
-## Bank v5 (`items_v5.json`, frozen 2026-11-03)
+## Kant out of kant-hume's list (2026-11-03)
 
-`items_v5.json` = bank v4 with ONE edit: Immanuel Kant is no longer an option of
+Bank v6 starts from bank v4 with ONE edit (its header keeps the record, `v5`): Immanuel Kant is no
+longer an option of
 `mh2-kant-hume-edinburgh`'s bridge1 (gold David Hume). The prompt itself describes Kant ("The
 Königsberg philosopher who wrote the Critique of Pure Reason"), and the option lists must hold
 only people the prompt does not mention; the round-4 rebuild had kept him as an observed
@@ -129,13 +132,14 @@ borderline ones, kept: buena-vista's Abraham Lincoln, an observed confuser the p
 describe; baptizer's "Mary, mother of Jesus", the prompt names Jesus only; ionesco's Samuel
 Beckett, another absurdist the prompt does not describe). The read plan is unchanged (options are
 never rendered); the kant-hume bridge1 MC call is new on every arm, the other calls keep their
-v4 key (`MH2_CALL_VERSION`). Stamp `+bank-v5`. The floors were re-measured on v5 in the
-2026-11-04 refreeze (Floors).
+v4 key (`MH2_CALL_VERSION`). The edit shipped first as its own bank (`items_v5.json`, stamp
+`+bank-v5`, 70 items); bank v6 replaces that file. The floors were re-measured on those 70 items
+in the 2026-11-04 refreeze (Floors).
 
 ## Scoring (plan 0041)
 
 - **Instrument of record: the family's own forced-choice judge** (Camila: "Should have an mc
-  judge with common distractors from other questions"). `prompt_version` `mh2-mc-2026-11-01+norival-v1+qline-v1+bank-v6`
+  judge with common distractors from other questions"). `prompt_version` `mh2-mc-2026-11-01+norival-v1+qline-v2+bank-v6`
   (the MC calls stay keyed `mh2-mc-2026-11-01+rv-2026-10-31e+optrv-v1+bank-v4`, `MH2_CALL_VERSION`),
   judge Opus 5.5 (the registry default), pinned, in the macro. One call per (item, required
   unit); the judge is blind (no prompt text, no gold, no role label).
@@ -292,9 +296,9 @@ v4 key (`MH2_CALL_VERSION`). Stamp `+bank-v5`. The floors were re-measured on v5
 - **Floors of record** (bank v6; `evals/baselines/README.md` "Floors of record", option rebuild r5): lucky
   guessing blind 0.078, described 0.216, topic 0.338, uniform 0.188 vs chance 0.188 (n = 64,
   Opus 5.5, 5 draws per item; the topic guesser fails the MC leakage standard, Bank v6 above);
-  prompt-only 1.000 (n = 64) under `mh2-mc-2026-11-01+norival-v1+qline-v1+bank-v6`, re-judged
-  from the same readouts. No ATI subset (not gated by design). Bank v5 at the 2026-11-04
-  refreeze: lucky blind 0.089, described 0.223, topic 0.349, uniform 0.191 vs chance 0.187 (topic
+  prompt-only 1.000 (n = 64) under `mh2-mc-2026-11-01+norival-v1+qline-v2+bank-v6`, re-judged
+  from the same readouts. No ATI subset (not gated by design). The 70 items with the Kant edit at the
+  2026-11-04 refreeze: lucky blind 0.089, described 0.223, topic 0.349, uniform 0.191 vs chance 0.187 (topic
   failed too); prompt-only 1.000 (n = 70). The bullets below record earlier banks.
 - **Lucky guessing** (Opus 5.5, 5 draws, the v2 option lists, instrument `mh2-mc-2026-10-31b`; the lists are those of `mh2-mc-2026-10-30`, unchanged by the later revisions, so the entries were restamped, not redrawn):
   blind 0.197, described 0.200, seeded uniform 0.186 (analytic
@@ -304,7 +308,7 @@ v4 key (`MH2_CALL_VERSION`). Stamp `+bank-v5`. The floors were re-measured on v5
   blind / 0.37 described on them. The v1 authored-confusable lists of `multihop_mt` scored 0.658
   blind.
 - **Prompt-only:** `po-opus-v1` (Opus 5.5 reads the prompt, its readout judged by this same
-  pipeline), frozen in `evals/baselines/prompt_only_summary.json`: 1.000 on banks v5 and v6, as
+  pipeline), frozen in `evals/baselines/prompt_only_summary.json`: 1.000 on bank v6 and before the rebuild, as
   expected, since every frontier reader names the bridges from the prompt (pass@3 1.0 on
   panel-v1).
 
@@ -315,7 +319,7 @@ v4 key (`MH2_CALL_VERSION`). Stamp `+bank-v5`. The floors were re-measured on v5
   `scripts/r4_mc_select.py`, the brmt / wrong_intermediate method; never the item's other bridges or
   its target): blind 0.246, described 0.286, topic 0.457, uniform 0.186 (fresh draws). Still
   FAILED the standard (<= 0.236).
-- **Round 4b (bank v4, `items_v4.json`; bank of record until v5)**: every list re-drawn by
+- **Round 4b (bank v4, `items_v4.json`; bank of record until the Kant edit)**: every list re-drawn by
   `scripts/r4b_mc_refine.py` (gold-style forms, distractors that fit the topic as stated, topics
   rewritten to the kind and broad field, the blind + topic + described item gate and a per-list
   gate; one Wikidata entity once): blind 0.074, topic 0.211, described 0.183, uniform 0.186 on
@@ -324,15 +328,24 @@ v4 key (`MH2_CALL_VERSION`). Stamp `+bank-v5`. The floors were re-measured on v5
 
 ## Instrument history
 
+- 2026-11-04 (`+bank-v5`): the prompt-only and lucky-guessing floors are re-measured on bank v5.
+  They were measured under the `qline-v1` draft: the lucky-guessing entries carry `qline-v2` (a
+  guesser sees only the lists); the prompt-only floor stays on `qline-v1` until re-scored under the
+  new stamp.
 - 2026-11-04 (`+bank-v6`): bank v6 rebuilds the bridge lists the lucky-guessing guessers still
   solved and drops the 6 items they solved whatever the list; the topic guesser still fails the
-  MC leakage standard on fresh draws.
-- 2026-11-04 (`+bank-v5`): the prompt-only and lucky-guessing floors are re-measured on bank v5,
-  so they are drawn beside this instrument again.
+  MC leakage standard on fresh draws. Its floors, measured under the `qline-v1` draft, carry
+  `qline-v2`: the lucky-guessing entries restamped, the prompt-only floor re-scored from its
+  cached answers (0 new judge calls; 1.000, n = 64, unchanged). Bank v6 now supersedes and reads
+  the plan of `items_v4.json` and keeps the Kant edit's record (`v5`), and `items_v5.json` is
+  removed, so bank v6 is the one new multihop_mt_v2 bank file.
 - 2026-11-04 (`+bank-v5`): Immanuel Kant, whom kant-hume's prompt describes, is no longer one of
   its bridge-1 options.
-- 2026-11-04 (`+qline-v1`): a quote one word off verifies near-verbatim, and a quote cut mid-name
-  counts through its line when that line names the gold and no other option.
+- 2026-11-04 (`+qline-v2`): a quote one word off verifies near-verbatim, and a quote cut mid-name
+  counts where its line continues it into the gold or its sample ends inside a name only the
+  gold's forms start with (jarry-ubu-t3's "...was **Alfred J"); a line naming the gold anywhere
+  else gives nothing. (`+qline-v1`, an unreleased draft, credited it through any line holding it that named
+  the gold and no other option.)
 - 2026-11-04 (`+norival-v1`): the contested rule (`family.contested_verdict`: the rival line and
   every other option's best line weighed against the gold's digest support) and the option audit
   are removed, because their support counting failed correct picks; the MC calls keep their key

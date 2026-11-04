@@ -15,8 +15,8 @@ from wsbench.banks import label_of, load_bank
 REPO = Path(__file__).resolve().parents[1]
 # family -> (the bank it supersedes, the new bank, its version)
 BANKS = {
-    "basic_readout_mt": ("items_v5.json", "items_v6.json", 6),
-    "multihop_mt_v2": ("items_v5.json", "items_v6.json", 6),
+    "basic_readout_mt": ("items_v4.json", "items_v6.json", 6),
+    "multihop_mt_v2": ("items_v4.json", "items_v6.json", 6),
     "multilingual": ("items_v3.json", "items_v4.json", 4),
     "multilingual_mt": ("items_v4.json", "items_v5.json", 5),
     "multilingual_multihop": ("items_v4.json", "items_v5.json", 5),
@@ -30,6 +30,12 @@ PLAN_SHA = {
     "multilingual_mt": "2510a7af7c96",
     "multilingual_multihop": "f57d844abf4e",
 }
+
+
+# the rebuild started from a small edit of the bank it supersedes that the series folded into the
+# new bank instead of keeping a file of its own: the header key of the new bank recording the edit
+# (scripts/mc_options_r5.py's ``start_bank`` re-applies it the same way)
+FOLDED = {"basic_readout_mt": "v5", "multihop_mt_v2": "v5"}
 
 
 def _raw(family: str, name: str) -> dict:
@@ -68,10 +74,35 @@ def test_driver_families(real_families):
     assert {n for n, c in r5.CFGS.items() if (REPO / c.new).is_file()} == set(BANKS)
 
 
+def _start(family: str) -> dict:
+    """The bank the rebuild started from: the superseded bank, with a folded edit re-applied
+    (``removed`` items, ``removed_options`` of a role) and recorded in its header."""
+    src, dst, _v = BANKS[family]
+    old = _raw(family, src)
+    key = FOLDED.get(family)
+    if not key:
+        return old
+    rec = _raw(family, dst)[key]
+    gone = set(rec.get("removed") or [])
+    cut = rec.get("removed_options") or {}
+    items = []
+    for it in old["items"]:
+        if it["name"] in gone:
+            continue
+        for role, opts in cut.get(it["name"], {}).items():
+            blk = it["mc"][role]
+            blk["distractors"] = [d for d in blk["distractors"] if d not in opts]
+        items.append(it)
+    head = {k: v for k, v in old.items() if k != "items"}
+    if gone:
+        head["read_plan_bank"] = head.get("read_plan_bank") or src
+    return {**head, key: rec, "items": items}
+
+
 @pytest.mark.parametrize("family", sorted(BANKS))
 def test_only_the_recorded_lists_change(family):
     src, dst, version = BANKS[family]
-    old, new = _raw(family, src), _raw(family, dst)
+    old, new = _start(family), _raw(family, dst)
     r5 = new["r5_mc"]
     assert new["version"] == version and new["supersedes"] == src
     assert r5["procedure"] == "mcleak-r5-2026-11-04"
@@ -149,13 +180,18 @@ NOT_MET = {"multilingual_multihop"}
 def test_recorded_floors_and_standard(family):
     """The bank's own record of its last measurement (the frozen floors are measured on fresh
     draws in evals/baselines/lucky_guessing.json): fresh draws over the bank where measured, else
-    the kept items' rates in the last round's draws; every guesser <= chance + 5 points."""
+    the kept items' rates in the last round's draws; every guesser <= chance + 5 points. The
+    header's standard_met is that verdict unless the frozen floors fail."""
     r5 = _raw(family, BANKS[family][1])["r5_mc"]
     fl = r5["floors"]
     base = fl.get("kept_estimate") or fl[max(k for k in fl if k.startswith("round"))]
     last = {v: (fl.get("fresh") or {}).get(v, base[v]) for v in ("blind", "described", "topic")}
     met = all(x <= base.get("chance", fl["chance"]) + 0.05 + 1e-9 for x in last.values())
-    assert met is r5["standard_met"] is (family not in NOT_MET), (family, last)
+    assert met is (family not in NOT_MET), (family, last)
+    # the header's verdict also follows the frozen floors (fresh draws over the whole bank): a bank
+    # its own record passes but those floors fail says standard_met false, with a note
+    assert r5["standard_met"] is (met and not FROZEN_FAILS[family]), family
+    assert ("standard_met_note" in r5) is (met and bool(FROZEN_FAILS[family])), family
 
 
 # the frozen floors (evals/baselines/lucky_guessing.json), every guesser measured on the new bank:
