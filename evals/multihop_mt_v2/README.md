@@ -88,7 +88,7 @@ scorer reads.
 ## Scoring (plan 0041)
 
 - **Instrument of record: the family's own forced-choice judge** (Camila: "Should have an mc
-  judge with common distractors from other questions"). `prompt_version` `mh2-mc-2026-11-01+rv-2026-11-01h+optrv-v4+bank-v4`,
+  judge with common distractors from other questions"). `prompt_version` `mh2-mc-2026-11-01+rv-2026-11-01h+optrv-v4+xrole-v1+bank-v4`,
   judge Opus 5.5 (the registry default), pinned, in the macro. One call per (item, required
   unit); the judge is blind (no prompt text, no gold, no role label).
   - **Summary mode (the default):** one digest per item over every loaded cell (every read
@@ -264,6 +264,18 @@ scorer reads.
 
 ## Instrument history
 
+- 2026-11-04 (`+xrole-v1`, plan 0066 delta audit M1, rule only): another role's gold of the SAME
+  item (a 3-hop item's other bridge) is never a rival of this role's pick. The judge's
+  `rival_quote` was routinely the item's other bridge, so a readout naming both bridges at equal
+  support ruled each pick `contested` (gold-arm credit 0/6 on registered 3-hop items, 4/8 under
+  Opus on GLM-5.3's refill 3-hop items). A quote that names the other gold by a full name (a
+  multi-word or CJK form; never a bare surname, so "Bette Davis" stays a rival beside a Davis
+  bridge) and not this role's gold is now not weighed (recorded as `rival_other_role`), and the
+  code option-rival check never weighs another role's gold either (`family.other_role_names`,
+  `XROLE_FAMILIES`). With no rival quote weighed, a line naming both bridges is no longer cut as
+  a split line, so it supports the gold when it singles it out (the correct both-bridge read). No prompt or input changes: the MC calls stay
+  keyed without the tag (`family.call_pv`), so cached answers are re-scored. Only multi-role
+  items can move; floors re-measured on the registered bank (and adapted sets at their rollout).
 - 2026-11-01 (`+optrv-v4`, review of PR #208 round 4d): the shared option audit
   (basic_readout_mt README; `OPTION_AUDIT_SYSTEM` below) checks every code option-rival line
   that would tie or beat the gold; a dismissed line is not weighed. No cell moves (all 62,
