@@ -7,7 +7,8 @@ word; does the lens surface the consideration the model itself weighs: the commi
 ## Default bank for the freeze (2026-11-01): bank v3, and no bank meets the standard
 
 **A default run uses bank v3 (`items_v3.json`, 195 items) judged under `ec-v9`** (one pick per
-item and side, the reason the readouts mainly give; see "Judge `ec-v9`"). **Every floor in this
+item and side, the reason the readouts mainly give, asked three times in summary mode with the
+majority of the verdicts deciding, stamped `+maj3v`; see "Judge `ec-v9`"). **Every floor in this
 section was measured under the earlier multi-label instrument `ec-v5d`** (its multi-mark rows are
 scored by that rule, `lucky_guessing.marks_pass`), so none is served beside an `ec-v9` row until
 the floors are refrozen; the single-pick rows are the comparable guessers. Camila's
@@ -419,13 +420,17 @@ every arm.
 - **Code only verifies the quote.** It must lie in the readouts (`digest.quote_ok`) and inside
   ONE statement (`digest.statement_lines`: one bullet of a free-text sample); otherwise the pick
   is `unverified` (`quote_check` = `text` / `bullet`). **Pass = the verified pick is the gold**
-  (committed: its call; deliberative: both sides). No marks, no draws, no support counting, no
-  locator, no 1.5x rule, no shared-statement unmarking.
-- One call per (item, side) in summary mode; natively one per (cell, side). Rows are the
-  single-pick rows (below); `extras.pair_consistency` (tf / yn agreement) stays.
+  (committed: its side; deliberative: both sides). No marks, no support counting, no locator,
+  no 1.5x rule, no shared-statement unmarking.
+- **Majority of three draws.** In summary mode each (item, side) is asked `n = 3` times
+  (`opts=draws=N`, an odd N); its verdict is the majority of the draws' pass / fail verdicts
+  (below, "Summary mode"). Natively one call per (cell, side). Rows are the single-pick rows
+  (below) plus the vote's fields; `extras.pair_consistency` (tf / yn agreement) stays.
 - Stamps: `ec-v9` on bank v3; the opt-in banks keep their own stamps of the same instrument
   (`ec-v9-b4`, `ec-v9-b5`, `ec-v9-b7`), so a floor of one bank never serves another.
-  `opts=prompts=ec-v4.1` still selects bank v3's older single pick (rules (a)-(f)).
+  `opts=prompts=ec-v4.1` still selects bank v3's older single pick (rules (a)-(f)). A summary
+  result adds `+maj3v` (`judge.majority_stamp`; `opts=draws=1` is the single-call instrument, no
+  suffix); the calls, native results, the ATI gate and the guesser floors keep the bare stamp.
 - **Why one pick:** the earlier multi-label rule (below) treated a stated opposite-side reason
   as an error, although weighing both sides is what deliberation looks like; sample counts over
   every prompt position mostly measure how often the lens repeats a phrase, not what drives the
@@ -658,21 +663,41 @@ the item's class (the audit stratum); `distractor_kind` ∈ opp / same / None. `
 `n_unverified`, `n_unverified_text`, `n_unverified_bullet`, `short_pool_items`, `n_api_failed`;
 native runs add `mcjudge.layer_pick_columns` (`n_items_gold_any_layer`,
 `n_items_distractor_any_layer`, `n_items_distractor_majority`; opposite and same-side picks
-count as distractors), the ATI gate's instrument.
+count as distractors), the ATI gate's instrument. Summary rows add the digest's `summary*`
+fields and the vote: `majority` (`pass` / `fail`), `draw` (the index of the draw the
+row shows), `draw_picks` (each draw's choice, `!gate` when its quote failed the gate),
+`draw_verdicts` and `label_split` (no choice has a majority: a stability diagnostic); `key` is
+the shown draw's call key. `extras.draw_votes` = `{n_votes, n_unanimous, n_overturned_draw0,
+n_label_split, n_failed_draws}`; `config.draws`.
 
 ## Summary mode (the default)
 
 An item's loaded cells go to ONE digest call (`docs/summarizer.md` § Item digest) told only the
-task type (`DIGEST_TASK_NOTE`: no question, side or option). A committed item gets ONE MC call
-on the digest; a deliberative item one call per side on the same digest, and passes only if both
-sides pick the gold (ec-v9: one call per side, see above). The prompt version is
-`digest.prompt_version("ec-v9", args, "moral_rationale")` (`+reads-lite` under lite). Counts: `n_expected_cells` /
+task type (`DIGEST_TASK_NOTE`: no question, side or option). A committed item gets one MC
+question on the digest; a deliberative item one per side on the same digest, and passes only if
+both sides' majorities pick the gold (ec-v9: one pick per side, asked 3 times, see above). The
+prompt version is `digest.prompt_version("ec-v9" + judge.majority_stamp(n), args,
+"moral_rationale")` (e.g. `ec-v9+maj3v+digest-v5-task-extractive-layered-v1x4+sj-v10` for a
+multi-layer CLI run; `+reads-lite` under lite). Counts: `n_expected_cells` /
 `n_missing_cells` stay cell-level; `n_unjudged_cells` / `n_empty_cells` count items
 (`extras.summary.count_units`). An item with no cells, an empty digest and an unsummarized item
 are fails in the whole-scope denominator; unsummarized items and items with a failed side call
 count as unjudged, so the run is not `complete`. `USER_SUMMARY` puts the note (`SUMMARY_NOTE`,
 or `SUMMARY_NOTE_ABSTRACTIVE`, plus `SUMMARY_NOTE_TOKENS` for token files) before the
 `READOUT:` block.
+
+- **Majority of three draws.** A single pick can flip between runs on the same digest (a
+  one-off "cannot tell" when neutral lines head the digest, an opposite-side pick from a small
+  line, a one-word misquote). So each (item, side) is asked `n = 3` times
+  with the same prompt (`opts=draws=N`, an odd N; keys `<cell key>:<side>`, `#d1`, `#d2`: draw 0
+  is the single-call key, so its cached answer is reused and a re-score asks only draws 1-2).
+  Each draw is quote-gated on its own. The side's verdict is the majority of the draws'
+  pass / fail verdicts (`judge.draw_verdict`: pass = the verified pick is the gold), always
+  defined for an odd number of landed draws, so three different wrong picks are a fail, never
+  undecided. The row shown is a draw that voted with the majority (the first among them with
+  the most common `judge.draw_label`). A failed draw that could change the verdict leaves the side unjudged (no
+  row, as a failed call; a rerun retries it); one that cannot change it is ignored. Item
+  pass is unchanged: committed = its side's majority passes; deliberative = both sides' do.
 
 
 ### `USER_SUMMARY`
@@ -787,3 +812,6 @@ retries only failures.
   code verifying only the quote; it replaces the multi-label marks, the support locator and the
   1.5x opposite-beats-gold rule, which overruled the judge when the readouts also argued the
   other side.
+- 2026-11-04 (`+maj3v`): summary mode asks each item and side three times and takes the majority
+  of the draws' pass / fail verdicts, because a single pick can flip between runs on the same
+  digest.

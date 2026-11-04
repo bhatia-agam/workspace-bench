@@ -74,6 +74,16 @@ BASE_PAIRS: dict[str, dict[str, str]] = {
     # summary mode takes the majority of 3 draws (+maj3v / +maj3); native is one call per cell
     "role_bound_association": {"oa-v3.1": "oa-v3.1+maj3v"},
     "user_modeling": {"um-v3.4+bank-v2": "um-v3.4+bank-v2+maj3"},
+    # moral_rationale's summary mode takes the majority of 3 draws' verdicts (+maj3v)
+    "moral_rationale": {
+        "ec-v9": "ec-v9+maj3v",
+        "ec-v9-b4": "ec-v9-b4+maj3v",
+        "ec-v9-b5": "ec-v9-b5+maj3v",
+        "ec-v9-b7": "ec-v9-b7+maj3v",
+        "ec-v4.1": "ec-v4.1+maj3v",
+        "ec-v4": "ec-v4+maj3v",
+        "ec-v3.1": "ec-v3.1+maj3v",
+    },
 }
 MT_FAMILIES = {
     "basic_readout_mt",

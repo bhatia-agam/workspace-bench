@@ -5,15 +5,17 @@ assistant header), selected by ``reads.load`` from the same file. Options: banks
 list (gold + 4 same-topic distractors), shuffled with a seed, ``cannot tell`` last; bank v1 keeps
 the ec-v1/ec-v2 pool draw so it stays judgeable. Instrument: ``ec-v9`` for bank v3 and its
 per-bank stamps for v4 / v5 / v7 (one pick per (item, side), the main reason; code only verifies
-the quote), ``ec-v4`` for bank v2, the legacy ``ec-v3.1`` for bank v1."""
+the quote; summary mode takes the majority of 3 draws' pass / fail verdicts), ``ec-v4`` for bank
+v2, the legacy ``ec-v3.1`` for bank v1."""
 
 import random
-from collections import defaultdict
+from collections import Counter, defaultdict
 from dataclasses import dataclass, field
 from typing import Any
 
 from wsbench import digest, reads, registry
 from wsbench.cache import Cache
+from wsbench.evals.conjunctive_association.judge import draw_key, majority, n_draws
 from wsbench.family import render_bag
 from wsbench.llm import Spend
 from wsbench.mc import classify, join_samples, options_with_cannot, seed_int, seeded_shuffle
@@ -515,8 +517,14 @@ def _run_summary(
     on the same digest. An item with no cells and an empty digest are fails (whole-scope
     denominator, as natively); an unsummarized item (a refused or collapsed digest) is
     undecided, never a fail (audit F3); unsummarized items and items with a failed side call
-    count as unjudged."""
+    count as unjudged. Each (item, side) is asked ``n_draws`` times (3; draw 0 is
+    the single-call key, so its cached answer is reused); the side's verdict is the majority of
+    the draws' pass / fail verdicts (:func:`draw_verdict`), always defined for an odd number of
+    landed draws; the row is a draw on the winning side (its most common :func:`draw_label`); a
+    failed draw that could change the verdict leaves the side unjudged (no row, as a failed
+    call)."""
     inst = Instrument(version)
+    n = n_draws(args)
     by_item: dict[str, list[Cell]] = defaultdict(list)
     for c in cells:
         by_item[c.id].append(c)
@@ -545,7 +553,10 @@ def _run_summary(
                 continue
             for side, mc in mcs[i].items():
                 user = prompts.render_user_summary(note, col.summaries[i], mc.question)
-                calls.append(Call(f"{c.key}:{side}", inst.system, user, _meta(c, side, mc)))
+                calls += [
+                    Call(draw_key(f"{c.key}:{side}", k), inst.system, user, _meta(c, side, mc))
+                    for k in range(n)
+                ]
         results = (
             run_calls(
                 calls,
@@ -563,18 +574,26 @@ def _run_summary(
             else {}
         )
     by_id = {it["id"]: it for it in scope}
+    draws: dict[tuple[str, str], list[Call]] = defaultdict(list)  # (item, side) -> its draws
+    for c in calls:
+        draws[(c.meta["id"], c.meta["side"])].append(c)
     rows: list[dict] = []
     n_api_failed = 0
     failed_items: set[str] = set()
-    for c in calls:
-        i, side = c.meta["id"], c.meta["side"]
-        r = results.get(c.key)
-        if r is None:  # a failed call: the side is undecided (a rerun retries it)
+    for (i, side), cs in draws.items():
+        gate = (list(col.evidence.get(i, ())), by_item[i]) if inst.quote_gate else None
+        vs = [
+            _row(c.key, c.meta, r, by_id[i], mcs[i][side], gate)
+            if (r := results.get(c.key)) is not None
+            else None
+            for c in cs
+        ]
+        vote = side_vote(vs)
+        if vote is None:  # a failed draw could change the verdict: unjudged (a rerun retries it)
             n_api_failed += 1
             failed_items.add(i)
             continue
-        gate = (list(col.evidence.get(i, ())), by_item[i]) if inst.quote_gate else None
-        rows.append({**_row(c.key, c.meta, r, by_id[i], mcs[i][side], gate), **col.row(i)})
+        rows.append({**vote, **col.row(i)})
     counts = base_counts(
         n_expected=len(cells),
         n_unjudged=len(col.unsummarized) + len(failed_items),
@@ -582,26 +601,88 @@ def _run_summary(
         skipped_rows=sum(rep.skipped.values()),
         spend=spend,
     )
-    return with_readout_count(
-        score.score(
-            args,
-            scope,
-            rows,
-            counts=counts,
-            config=base_config(
-                args,
-                digest.prompt_version(base_pv, args, FAMILY),
-                contrast=contrast,
-                instrument=version,
-                **digest.config(args, source_kind, FAMILY),
-            ),
-            n_api_failed=n_api_failed + len(col.unsummarized),
-            summary=col.extras(),
-            n_items_scope=len(scope),
-            pinned=digest.pinned(args, FAMILY),
-            kinds=kinds_of(mcs),
-            undecided=set(col.unsummarized),
-        ),
+    res = score.score(
+        args,
         scope,
-        cells,
+        rows,
+        counts=counts,
+        config=base_config(
+            args,
+            digest.prompt_version(base_pv + majority_stamp(n), args, FAMILY),
+            contrast=contrast,
+            instrument=version,
+            draws=n,
+            **digest.config(args, source_kind, FAMILY),
+        ),
+        n_api_failed=n_api_failed + len(col.unsummarized),
+        summary=col.extras(),
+        n_items_scope=len(scope),
+        pinned=digest.pinned(args, FAMILY),
+        kinds=kinds_of(mcs),
+        undecided=set(col.unsummarized),
     )
+    if n > 1:
+        res.extras["draw_votes"] = vote_stats(rows)
+    return with_readout_count(res, scope, cells)
+
+
+def majority_stamp(n: int) -> str:
+    """``+maj<N>v`` for the majority of ``N`` draws' pass / fail verdicts; one draw is the
+    single-call instrument (no suffix)."""
+    return f"+maj{n}v" if n > 1 else ""
+
+
+def draw_verdict(v: dict | None) -> str:
+    """One draw's vote: ``pass`` when its verified pick is the gold, else ``fail``;
+    ``api_fail`` for a draw that did not land."""
+    if v is None:
+        return "api_fail"
+    return "pass" if v["correct"] else "fail"
+
+
+def draw_label(v: dict) -> str:
+    """One draw's answer (a diagnostic, and the tie-break for which winning draw is the row): the
+    option it chose, marked ``!gate`` when its quote failed the gate."""
+    return f"{v['choice']}!gate" if v["pick"] == "unverified" else str(v["choice"])
+
+
+def side_vote(vs: list[dict | None]) -> dict | None:
+    """One (item, side)'s row from its draws' rows (None = a failed draw), in draw
+    order. The verdict is the majority of the draws' pass / fail verdicts; the row is the first
+    draw on the winning side with that side's most common label, plus ``majority``, ``draw``
+    (its index), ``draw_picks`` (every draw's label), ``draw_verdicts`` and ``label_split`` (no
+    label has a majority: a stability diagnostic). None when a failed draw could change the
+    verdict."""
+    labels = [draw_label(v) if v is not None else "api_fail" for v in vs]
+    verdicts = [draw_verdict(v) for v in vs]
+    pick = majority(verdicts)
+    if pick not in ("pass", "fail"):
+        return None
+    side = [k for k, vd in enumerate(verdicts) if vd == pick]
+    common = Counter(labels[k] for k in side).most_common(1)[0][0]
+    k = next(k for k in side if labels[k] == common)
+    row = vs[k]
+    assert row is not None  # a winning draw landed
+    return {
+        **row,
+        "majority": pick,
+        "draw": k,
+        "draw_picks": labels,
+        "draw_verdicts": verdicts,
+        "label_split": majority(labels) == "split",
+    }
+
+
+def vote_stats(rows: list[dict]) -> dict:
+    """Vote diagnostics over the summary rows (one per (item, side)): unanimous votes, votes
+    whose majority overturns draw 0 (the single-call verdict), label splits."""
+    vd = [r["draw_verdicts"] for r in rows]
+    return {
+        "n_votes": len(rows),
+        "n_unanimous": sum(len(set(v)) == 1 for v in vd),
+        "n_overturned_draw0": sum(
+            r["draw_verdicts"][0] not in ("api_fail", r["majority"]) for r in rows
+        ),
+        "n_label_split": sum(bool(r["label_split"]) for r in rows),
+        "n_failed_draws": sum(v.count("api_fail") for v in vd),
+    }

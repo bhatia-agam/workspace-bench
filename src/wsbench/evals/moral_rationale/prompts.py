@@ -22,6 +22,11 @@ EC_SEED = 20260812  # moral_rationale freeze date; fixes distractor draw + optio
 # It replaces ec-v5c / ec-v5d (bank v3) and their per-bank stamps ec-v6 / ec-v7 / ec-v8: a
 # multi-label judge (every stated option marked, 3 draws) whose pass code decided from digest
 # support (a support-locator call and a 1.5x "opposite beats gold" rule).
+# Summary mode asks each (item, side) 3 times (judge.n_draws) and takes the majority of the
+# draws' pass / fail verdicts. Prompts are unchanged: the calls (draw 0 is the single call, so
+# its cached answer is reused), native results, the ATI gate and the guesser floors keep these
+# stamps; a summary result is stamped ``+maj<N>v`` (judge.majority_stamp; draws=1 is the
+# single-call instrument, no suffix)
 PROMPT_VERSION = "ec-v9"
 PROMPT_VERSION_V3 = PROMPT_VERSION
 # the opt-in banks keep their own stamps, so a floor of one bank never serves another

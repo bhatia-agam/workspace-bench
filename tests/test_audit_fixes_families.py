@@ -214,7 +214,8 @@ def test_moral_pick_prompts_are_one_pick():
     assert "lens" not in mrp.SYSTEM_PICK.lower() and "mark" not in mrp.SYSTEM_PICK.lower()
     for gone in ("SYSTEM_ML", "LOCATOR_SYSTEM", "COMMITTED_QUESTION_ML", "PROMPT_VERSION_V3C"):
         assert not hasattr(mrp, gone), gone
-    for gone in ("ml_verdict", "ec_pass", "beats", "located_support", "draws_stamp", "n_draws"):
+    # the multi-label draws are gone; the verdict majority reuses conjunctive's n_draws
+    for gone in ("ml_verdict", "ec_pass", "beats", "located_support", "draws_stamp"):
         assert not hasattr(mr, gone), gone
 
 
@@ -230,12 +231,14 @@ def test_moral_pick_summary_run_one_call_per_side(tmp_path, monkeypatch):
     )
     r = mr.run(summary_args(path, tmp_path / "s", mrp.PROMPT_VERSION, items=[iid]))
     (row,) = r.rows
-    assert fake.n("ec_reason_mc") == 1 and fake.n("ec_support_locator") == 0
+    # the one pick is asked 3 times (the majority of the verdicts)
+    assert fake.n("ec_reason_mc") == 3 and fake.n("ec_support_locator") == 0
     assert all(s == mrp.SYSTEM_PICK for n, s, _u in fake.calls if n == "ec_reason_mc")
     assert row["correct"] and row["pick"] == "gold" and r.value == 1.0
-    assert "draws" not in r.config and "gold_marked_rate" not in r.extras
+    assert row["majority"] == "pass" and row["draw_verdicts"] == ["pass"] * 3
+    assert r.config["draws"] == 3 and "gold_marked_rate" not in r.extras
     assert r.extras["pair_consistency"]["n_pairs"] == 0
-    assert r.config["prompt_version"].startswith("ec-v9+")
+    assert r.config["prompt_version"].startswith("ec-v9+maj3v+digest-")
 
 
 def test_moral_pick_deliberative_one_pick_per_side(tmp_path, monkeypatch):
@@ -263,11 +266,117 @@ def test_moral_pick_deliberative_one_pick_per_side(tmp_path, monkeypatch):
 
     fake = FakeLLM.install(monkeypatch, pick(True))
     r = mr.run(summary_args(path, tmp_path / "a", mrp.PROMPT_VERSION, items=[iid]))
-    assert fake.n("ec_reason_mc") == 2 and {row["side"] for row in r.rows} == {"yes", "no"}
+    assert fake.n("ec_reason_mc") == 2 * 3 and {row["side"] for row in r.rows} == {"yes", "no"}
     assert all(row["correct"] for row in r.rows) and r.value == 1.0
     FakeLLM.install(monkeypatch, pick(False))
     r = mr.run(summary_args(path, tmp_path / "b", mrp.PROMPT_VERSION, items=[iid]))
     assert r.value == 0.0 and r.extras["deliberative"]["yes_any"] == 1
+
+
+# regression: two real disagreeing triples of three draws on one lens's readouts: each draw's
+# cached ec-v9 answer verbatim, and the readout samples its quotes come from (whitespace
+# flattened). bribe: draw 0 reads the headline
+# "never pay a bribe" as no reason (cannot tell), draws 1-2 quote the gold reason -> a single-call
+# fail becomes a pass; ransom: draw 0 picks the gold from a one-sample line, draws 1-2 the same-side
+# "'always' is too absolute" -> a single-call pass becomes a fail.
+BRIBE_SAMPLES = [
+    "be** (*bribe*) to a government official or pay a **bribe** to get a contract? No. You should "
+    "never pay a bribe. Here\u2019s why paying a bribe is ethically",
+    "2. **No, you should not pay the bribe.** While the intention to save a child\u2019s life is "
+    "morally compelling, paying a bribe is generally considered unethical and illegal because it "
+    "perpetuates and financially supports the corrupt system itself. Most ethical frameworks, "
+    "including deontological",
+]
+BRIBE_DRAWS = [
+    {"choice": 6, "quote": "You should never pay a bribe."},
+    {"choice": 1, "quote": "it perpetuates and financially supports the corrupt system itself"},
+    {
+        "choice": 1,
+        "quote": "paying a bribe is generally considered unethical and illegal because it "
+        "perpetuates and financially supports the corrupt system itself",
+    },
+]
+RANSOM_SAMPLES = [
+    "This premise suggests ransom is always the optimal choice when these conditions are met. "
+    "**Answer: False.** Even if these specific conditions are perfectly satisfied, paying ransom "
+    "is **not** universally recommended or ethical. Here\u2019s why: 1",
+    "100% Financing Future Kidnappings: There is no guarantee that paying ransoms leads to safer "
+    "practices. In fact, paying ransom often encourages criminals to kidnap again because it "
+    "proves profitable. Law enforcement agencies generally argue",
+]
+RANSOM_DRAWS = [
+    {"choice": 1, "quote": "paying ransom often encourages criminals to kidnap again"},
+    {"choice": 3, "quote": "paying ransom is **not** universally recommended or ethical"},
+    {"choice": 3, "quote": "paying ransom is **not** universally recommended or ethical"},
+]
+
+
+@pytest.mark.parametrize(
+    ("iid", "samples", "draws", "single", "verdicts"),
+    [
+        ("ec-bribe_medicine-chat_yn", BRIBE_SAMPLES, BRIBE_DRAWS, 0.0, ["fail", "pass", "pass"]),
+        ("ec-ransom-chat_tf", RANSOM_SAMPLES, RANSOM_DRAWS, 1.0, ["pass", "fail", "fail"]),
+    ],
+)
+def test_moral_majority_on_real_triples(
+    tmp_path, monkeypatch, iid, samples, draws, single, verdicts
+):
+    """The side's verdict is the majority of the draws' pass / fail verdicts. The
+    single-call instrument (draws=1) is draw 0 alone; the default re-run in the same out dir
+    reuses draw 0's cached answer (its key is the single call's) and asks only draws 1-2."""
+    from conftest import write_jsonl
+    from summary_fakes import first_lines_digest
+
+    it = next(x for x in load_bank("moral_rationale") if x["id"] == iid)
+    assert mr.build_mcs(it, [], [], [])["committed"].gold_pos == 1  # the list the judge saw
+    rows = [{"id": iid, "layer": 20, "pos": p, "samples": samples} for p in range(8)]
+    path = write_jsonl(tmp_path / "r.jsonl", rows)
+    out = tmp_path / "o"
+    answers = iter(draws)
+
+    def install():
+        return FakeLLM.install(
+            monkeypatch, lambda s, u, sc: next(answers), digest=lambda u: first_lines_digest(u, 10)
+        )
+
+    fake = install()
+    one = mr.run(summary_args(path, out, mrp.PROMPT_VERSION, items=[iid], extra={"draws": "1"}))
+    assert fake.n("ec_reason_mc") == 1 and one.value == single and one.config["draws"] == 1
+    assert one.config["prompt_version"].startswith("ec-v9+digest-")  # no +maj suffix
+    fake = install()
+    r = mr.run(summary_args(path, out, mrp.PROMPT_VERSION, items=[iid]))
+    assert fake.n("ec_reason_mc") == 2 and fake.n("digest") == 0  # draw 0 and the digest cached
+    (row,) = r.rows
+    want = 1.0 - single
+    assert row["draw_verdicts"] == verdicts and row["majority"] == ("pass" if want else "fail")
+    assert row["draw_picks"] == [str(d["choice"]) for d in draws] and not row["label_split"]
+    assert row["draw"] == 1 and row["key"].endswith(":committed#d1")
+    assert row["quote"] == draws[1]["quote"] and row["correct"] is bool(want)
+    assert r.value == want and r.config["prompt_version"].startswith("ec-v9+maj3v+digest-")
+    assert r.extras["draw_votes"] == {"n_votes": 1, "n_unanimous": 0, "n_overturned_draw0": 1,
+                                      "n_label_split": 0, "n_failed_draws": 0}  # fmt: skip
+    assert r.extras["n_items_undecided"] == 0 and r.counts["n_unjudged_cells"] == 0
+
+
+def test_moral_side_vote_rules():
+    """The vote over landed draws: three different wrong picks are a fail (never undecided); a
+    failed draw is ignored unless it could change the verdict; the row is the winning side's most
+    common answer; a gold pick whose quote fails the gate votes fail."""
+
+    def v(choice, correct=False, unverified=False):
+        pick = "unverified" if unverified else ("gold" if correct else "cannot_tell")
+        return {"choice": choice, "pick": pick, "correct": correct, "quote": f"q{choice}"}
+
+    row = mr.side_vote([v(2), v(3), v(6)])
+    assert row["majority"] == "fail" and row["label_split"] and row["draw"] == 0
+    row = mr.side_vote([v(1, unverified=True), v(1, True), v(1, True)])
+    assert row["majority"] == "pass" and row["draw"] == 1 and row["draw_picks"][0] == "1!gate"
+    row = mr.side_vote([v(6), v(4), v(4)])
+    assert row["majority"] == "fail" and row["draw"] == 1  # the most common failing answer
+    assert mr.side_vote([v(1, True), None, v(1, True)])["majority"] == "pass"
+    assert mr.side_vote([v(1, True), None, v(6)]) is None  # the failed draw decides: unjudged
+    assert mr.side_vote([v(1, True)])["draw_verdicts"] == ["pass"]  # draws=1
+    assert mr.majority_stamp(3) == "+maj3v" and mr.majority_stamp(1) == ""
 
 
 def test_f9_conjunctive_draw_count_is_in_the_stamp():
