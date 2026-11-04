@@ -98,8 +98,8 @@ Fresh floors of the frozen bank (Opus 5.5, 5 draws): blind 0.112, described 0.21
 ## Scoring
 
 - **Headline: pass rate of a blind multiple-choice judge** (`wsbench.basic.mcjudge_bank`,
-  stamp `bank-mc-2026-11-01-v3+bank-gate-r8+bank-v4`: bank v3's options on the 68-item bank
-  v4, the prompts are `bank-mc-2026-10-31`'s, the deterministic gate is r8). Summary mode (the
+  stamp `bank-mc-2026-11-01-v3+bank-gate-r9+bank-v4`: bank v3's options on the 68-item bank
+  v4, the prompts are `bank-mc-2026-10-31`'s, the deterministic gate is r9). Summary mode (the
   default): one digest per item, one judge call per item. Native (`opts=aggregate=native`): one
   call per (item, layer), an item passing on any
   layer; native results carry `n_items_gold_any_layer`, `n_items_distractor_any_layer` and
@@ -123,8 +123,14 @@ Fresh floors of the frozen bank (Opus 5.5, 5 draws): blind 0.112, described 0.21
   located in its sample by `nearquote.close_lines` (>= 12 characters, a common block covering
   90%: `quote_near`); the gold named, read in the line the quote came from: in the verified quote
   itself (`form_via = quote`), in a near quote's matched block, the readout's own words at the
-  quote's place (`form_via = block`), or else in that line, which must name the gold and no other
-  shown option (`form_via = line`, `mcjudge_bank.line_names_gold`: a quote cut mid-name). The
+  quote's place (`form_via = block`), or else, for a quote cut mid-name, in that line
+  (`form_via = line`): the line continues the quote into the gold (`mcjudge_bank.continued_quote`:
+  a form of the gold, or a number bridge's value, starts inside the quote and runs on past its
+  end, or starts right after it with only spaces, markdown emphasis, punctuation other than a
+  sentence end and at most one article between, and the quote so run on names the gold and no
+  other shown option), or the quote is the last words of its sample and its trailing words begin
+  forms of the gold and of no other shown option (`nearquote.sample_end_prefix`); one such line is
+  enough, and a line naming the gold anywhere else gives nothing, so a fact-only quote fails. The
   gold is named (`mc.form_in`: word-bounded, CJK forms listed; a number bridge: its value among
   `numerals.numbers_in(quote)`, so digits, words, ordinals and 十六 = 16 all read right) by its
   name, a listed alias, or a derived form (demonym / adjective / plural) from the frozen reviewed
@@ -156,7 +162,7 @@ Fresh floors of the frozen bank (Opus 5.5, 5 draws): blind 0.112, described 0.21
   naming, and so is a quote clause whose enclosing clause in its support line has an
   element-index word ("Sodium is 11" cut from "Sodium is 11 on the periodic table"); the count
   rescue is unchanged. Both rules only re-scored cached calls (then `config.gate =
-  bank-gate-r4`, outside the stamp; the gate version joins the stamp since `bank-gate-r7`). Replay over all 14
+  bank-gate-r4`, outside the stamp; the gate version joins the stamp since `bank-gate-r9`). Replay over all 14
   cached multihop configs: exactly the three nhop-*-element lite cells flip. Round 4 re-check (Camila r2: "We still need to check the numbers
   thing being too lenient"), current gate over all 14 cached configs (11 single layers, all,
   lite, prompt-only): the number-flood / element-index fix holds everywhere. The three lite
@@ -221,10 +227,10 @@ wsbench judge family=multihop readouts=<arm>.jsonl out=outputs/<arm>/multihop-li
 
 ## Judge prompts
 
-`prompt_version`: `bank-mc-2026-11-01-v3+bank-gate-r8+bank-v4` (round 4: bank v3's options;
-prompts unchanged from `bank-mc-2026-10-31`; `+bank-gate-r8`: the deterministic gate's version;
+`prompt_version`: `bank-mc-2026-11-01-v3+bank-gate-r9+bank-v4` (round 4: bank v3's options;
+prompts unchanged from `bank-mc-2026-10-31`; `+bank-gate-r9`: the deterministic gate's version;
 `+bank-v4`: the 68-item bank; summary mode: `digest.prompt_version` of it, by default
-`bank-mc-2026-11-01-v3+bank-gate-r8+bank-v4+digest-v5-task-extractive-layered-v1x4+sj-v10` for a
+`bank-mc-2026-11-01-v3+bank-gate-r9+bank-v4+digest-v5-task-extractive-layered-v1x4+sj-v10` for a
 multi-layer run (`...+digest-v5-task-extractive+sj-v10` for one layer); `+reads-lite` for a lite
 run). The MC calls are keyed `bank-mc-2026-11-01-v3` (no gate or bank tag), so a gate or bank
 change re-scores cached answers. Judge: the
@@ -330,12 +336,14 @@ The readout below is a digest of the readouts across every read layer and positi
   shared free-text bank judge (targets shown, forbidden-answer line, stamp `bank-2026-10-30b`),
   and `spaceneedle-border` was keyed to Seattle. It had one anti-text-inversion item
   (`spaceneedle-border`, an artefact of that keying).
-- 2026-11-04 (`bank-gate-r7`): the split rule is removed (it voided a gold pick when the digest
-  tied the item's first-hop cue to another option in at least half as many samples), and a quote
-  may name the gold by a derived form from the frozen `derived_forms.json`; the gate version
-  joins the result stamp and the MC calls keep their key.
-- 2026-11-04 (`bank-gate-r8`): a quote one word off verifies near-verbatim, and a quote cut
-  mid-name counts through its line when that line names the gold and no other option.
+- 2026-11-04 (`bank-gate-r9`; r7 and r8 were unreleased drafts): the split rule is removed (it
+  voided a gold pick when the digest tied the item's first-hop cue to another option in at least
+  half as many samples), and a quote may name the gold by a derived form from the frozen
+  `derived_forms.json`; the gate version joins the result stamp and the MC calls keep their key
+  (r7). A quote one word off verifies near-verbatim, and a quote cut mid-name counts where its
+  line continues it into the gold or its sample ends inside a name only the gold's forms start
+  with (r9; the r8 draft credited it through any line holding it that named the gold and no other
+  option).
 - 2026-11-04 (`+bank-v4`): bank v4 drops the language-of-country, capital and opposite items and
   b3-mh-fuji-currency (68 items left); on bank v3 (100 items) every lens scored 0.95-0.98, level
   with the 0.98 prompt-only floor.

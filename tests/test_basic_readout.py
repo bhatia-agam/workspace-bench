@@ -35,7 +35,7 @@ PV3 = "br-mc-2026-11-01-v3"  # round 4: bank v3's stamp
 PV4 = "br-mc-2026-11-01-v4"  # PR #214 review r5: bank v4's stamp
 PV5 = "br-mc-2026-11-01-v5b"  # PR #214 review r7: bank v5's option seed / call key (balanced slots)
 # the registered result stamp (scoring-only suffixes; options and calls keep PV5)
-STAMP = PV5 + "+brsum-v1+qline-v1+bank-v7"
+STAMP = PV5 + "+brsum-v2+qline-v2+bank-v7"
 V7 = REPO / "evals/basic_readout/items_v7.json"  # the registered bank
 FLAT = ("numbers", "days of the week", "months", "candidate answers of the task's type")
 
@@ -107,9 +107,10 @@ def test_registered_spec_and_readme():
     assert SYSTEM_MC in readme and STAMP in readme
 
 
-def test_registered_spec_uses_v5(monkeypatch):
-    """Round 4 (MC leakage standard): the registered bank is v5 (v3 + the observed v2 confusers
-    under the wider review-r6 rule), under its own judge stamp."""
+def test_registered_spec_uses_v7(monkeypatch):
+    """The registered bank is v7 (bank v5, the MC leakage standard's v3 + the observed v2
+    confusers under the wider review-r6 rule, with Big Ben's gold option reading "England / UK"),
+    under its own judge stamp."""
     from wsbench.evals.basic_readout import SPEC
 
     for k in list(os.environ):
