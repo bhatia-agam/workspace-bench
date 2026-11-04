@@ -24,10 +24,11 @@ NEW = {
     "multilingual_typo": ("items_v2.json", "items_v3.json"),
 }
 # a later bank registered on top of the round-4b file, with the items whose round-4b list it
-# drops or edits (every other list unchanged): basic_readout_mt bank v5 = v4 without the sarin
-# item; multihop_mt_v2 bank v5 = v4 without Kant among kant-hume's options
+# drops or edits and the frozen confuser audit does not cover: multihop_mt_v2 bank v5 = v4
+# without Kant among kant-hume's options; an r5-rebuilt bank (tests/test_r5_mc_options.py)
+# re-took the audit on its own lists, so the audit covers every item
 LATER = {
-    "basic_readout_mt": ("items_v5.json", {"brh-ent-chem-sarin-systematic"}),
+    "basic_readout_mt": ("items_v6.json", set()),
     "multihop_mt_v2": ("items_v5.json", {"mh2-kant-hume-edinburgh"}),
 }
 
@@ -113,9 +114,10 @@ def test_topic_labels_cover_every_list(family):
 # 4b's fresh draws passed blind and topic on every list, but the lists were searched against
 # these guessers with the earlier solved examples and, for the multilingual families, the
 # two-list rule (content AND language); content-only lists (the language is scored on the raw
-# samples) and a new draw of solved examples lose that margin (README "Floors of record")
+# samples) and a new draw of solved examples lose that margin (README "Floors of record").
+# An r5-rebuilt bank (tests/test_r5_mc_options.py) carries the verdicts measured on it.
 STANDARD_FAILS: dict[str, set[str]] = {
-    "basic_readout_mt": {"topic"},
+    "basic_readout_mt": set(),
     "multihop_mt_v2": {"topic"},
     "multilingual_multihop": {"blind", "described", "topic"},
     "multilingual_mt": {"described", "topic"},

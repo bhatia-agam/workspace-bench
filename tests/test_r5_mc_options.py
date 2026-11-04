@@ -4,9 +4,28 @@ dropped (``r5_mc.dropped``); registered and stamped, and the read plan of record
 
 import importlib.util
 import json
+import re
 from pathlib import Path
 
+import pytest
+
+from wsbench import mc, reads, registry
+from wsbench.banks import label_of, load_bank
+
 REPO = Path(__file__).resolve().parents[1]
+# family -> (the bank it supersedes, the new bank, its version)
+BANKS = {
+    "basic_readout_mt": ("items_v5.json", "items_v6.json", 6),
+}
+# the plan_sha of each family's read plan before the rebuild: options are never rendered, and a
+# dropped item's plan row stays (``read_plan_bank``), so every earlier readout file serves
+PLAN_SHA = {
+    "basic_readout_mt": "4c8f2cc057e6",
+}
+
+
+def _raw(family: str, name: str) -> dict:
+    return json.loads((REPO / "evals" / family / name).read_text(encoding="utf-8"))
 
 
 def _driver():
@@ -38,3 +57,120 @@ def test_driver_families(real_families):
         if new.is_file():
             assert real_families[name].bank == Path(cfg.new), name
             assert json.loads(new.read_text(encoding="utf-8"))["supersedes"] == start.name
+    assert {n for n, c in r5.CFGS.items() if (REPO / c.new).is_file()} == set(BANKS)
+
+
+@pytest.mark.parametrize("family", sorted(BANKS))
+def test_only_the_recorded_lists_change(family):
+    src, dst, version = BANKS[family]
+    old, new = _raw(family, src), _raw(family, dst)
+    r5 = new["r5_mc"]
+    assert new["version"] == version and new["supersedes"] == src
+    assert r5["procedure"] == "mcleak-r5-2026-11-04"
+    changed, dropped = r5["changed"], set(r5["dropped"])
+    by = {label_of(it["name"]): it for it in old["items"]}
+    assert dropped <= set(by) and not dropped & set(changed)
+    assert [label_of(it["name"]) for it in new["items"]] == [k for k in by if k not in dropped]
+    if dropped:
+        assert new["read_plan_bank"] == old.get("read_plan_bank", src)
+    n = 0
+    for it in new["items"]:
+        iid = label_of(it["name"])
+        o = by[iid]
+        assert {k: v for k, v in it.items() if k != "mc"} == {
+            k: v for k, v in o.items() if k != "mc"
+        }
+        assert set(it["mc"]) == set(o["mc"])
+        for role, blk in it["mc"].items():
+            ob = o["mc"][role]
+            if role in changed.get(iid, {}):
+                rec = changed[iid][role]
+                assert rec["from"] == ob["distractors"] and rec["to"] == blk["distractors"]
+                assert blk["distractors"] != ob["distractors"] and blk["gold"] == ob["gold"]
+                assert {k for k in blk if k != "pool"} == {k for k in ob if k != "pool"}
+                n += 1
+            else:
+                assert blk == ob, (iid, role)
+    assert n == sum(len(v) for v in changed.values()) > 0
+
+
+@pytest.mark.parametrize("family", sorted(BANKS))
+def test_rebuilt_lists_are_well_formed(family):
+    """Four distinct distractors; never a form of the gold or of another unit of the item, the
+    answer or a prompt word."""
+    _src, dst, _v = BANKS[family]
+    raw = _raw(family, dst)
+    _h, items = load_bank(REPO / "evals" / family / dst)
+    for it in items:
+        for role in raw["r5_mc"]["changed"].get(it["id"], {}):
+            blk = it["mc"][role]
+            ds = [str(d) for d in blk["distractors"]]
+            assert len(ds) == 4 and len({mc.fold(d) for d in ds}) == 4, (it["id"], role)
+            names = [str(blk["gold"]), str(it.get("target") or "")]
+            for u in it["units"]:
+                if u["role"] != "language":
+                    names += [str(f) for fs in (u.get("forms") or {}).values() for f in fs]
+            for fs in ((it.get("name_forms") or {}).get(role) or {}).values():
+                names += [str(f) for f in fs]
+            for d in ds:
+                assert not any(mc.fold(d).strip() == mc.fold(x).strip() for x in names), (
+                    it["id"],
+                    d,
+                )
+                pat = r"(?<!\w)" + re.escape(mc.fold(d)) + r"(?!\w)"
+                assert not re.search(pat, mc.fold(str(it["prompt"]))), (it["id"], d)
+
+
+@pytest.mark.parametrize("family", sorted(BANKS))
+def test_registered_and_read_plan_unchanged(family, real_families):
+    _src, dst, version = BANKS[family]
+    assert real_families[family].bank == Path("evals") / family / dst
+    assert registry.frozen_bank_path(family) == REPO / "evals" / family / dst
+    assert f"+bank-v{version}" in real_families[family].judge.prompt_version
+    assert reads.plan_sha(family).startswith(PLAN_SHA[family])
+
+
+# the rebuild's own record (the header's r5_mc.floors, every measurement up to the freeze)
+NOT_MET: set[str] = set()
+
+
+@pytest.mark.parametrize("family", sorted(BANKS))
+def test_recorded_floors_and_standard(family):
+    """The bank's own record of its last measurement (the frozen floors are measured on fresh
+    draws in evals/baselines/lucky_guessing.json): fresh draws over the bank where measured, else
+    the kept items' rates in the last round's draws; every guesser <= chance + 5 points."""
+    r5 = _raw(family, BANKS[family][1])["r5_mc"]
+    fl = r5["floors"]
+    base = fl.get("kept_estimate") or fl[max(k for k in fl if k.startswith("round"))]
+    last = {v: (fl.get("fresh") or {}).get(v, base[v]) for v in ("blind", "described", "topic")}
+    met = all(x <= base.get("chance", fl["chance"]) + 0.05 + 1e-9 for x in last.values())
+    assert met is r5["standard_met"] is (family not in NOT_MET), (family, last)
+
+
+# the frozen floors (evals/baselines/lucky_guessing.json), every guesser measured on the new bank:
+# the standard verdicts on record
+FROZEN_FAILS: dict[str, set[str]] = {
+    "basic_readout_mt": set(),
+}
+
+
+@pytest.mark.parametrize("family", sorted(BANKS))
+def test_frozen_floors_are_on_the_new_bank(family, real_families):
+    from wsbench.baselines import lucky_guessing as lg
+
+    entry = json.loads((REPO / "evals/baselines/lucky_guessing.json").read_text("utf-8"))[family]
+    n = len(load_bank(REPO / "evals" / family / BANKS[family][1])[1])
+    current = lg.instrument_versions()[family]
+    for v in ("blind", "described", "topic", "uniform"):
+        assert entry[v]["instrument"] == current and entry[v]["n_items"] == n, (family, v)
+    chance = entry["uniform"]["analytic_floor"]
+    assert set(lg.leakage_failures(entry, chance, family)) == FROZEN_FAILS[family]
+
+
+def test_call_keys_survive_the_bank_stamps(real_families):
+    """A bank stamp moves the result stamp only: the MC calls stay keyed as before (the options
+    are in the fingerprinted prompt, so a rebuilt list is re-asked and every other one is not)."""
+    from wsbench.multitoken.family import call_pv
+    from wsbench.multitoken.prompts import BRMT_CALL_VERSION, BRMT_PROMPT_VERSION
+
+    assert call_pv("basic_readout_mt", BRMT_PROMPT_VERSION) == BRMT_CALL_VERSION

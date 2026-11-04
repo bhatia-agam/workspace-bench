@@ -30,11 +30,12 @@ def test_v5_is_v4_without_the_sarin_item():
 
 def test_v4_read_plan_serves_v5(real_families):
     assert _raw(V5)["read_plan_bank"] == "items_v4.json"
-    assert registry.bank_path("basic_readout_mt") == V5
+    # the registered bank is v6 (tests/test_r5_mc_options.py), whose read_plan_bank is v4's too
+    assert registry.bank_path("basic_readout_mt") == V5.with_name("items_v6.json")
     assert len({s.id for s in readplan.plan("basic_readout_mt")}) == 99  # v4's rows
     assert reads.plan_sha("basic_readout_mt").startswith("4c8f2cc057e6")  # the readouts' plan
 
 
 def test_stamp_and_call_key():
-    assert mp.BRMT_PROMPT_VERSION.endswith("+bank-v5")
+    assert mp.BRMT_PROMPT_VERSION.endswith("+bank-v6")  # bank v6 superseded v5
     assert fam.call_pv("basic_readout_mt", mp.BRMT_PROMPT_VERSION).endswith("+bank-v4")

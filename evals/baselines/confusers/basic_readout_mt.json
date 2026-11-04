@@ -1,9 +1,9 @@
 {
  "family": "basic_readout_mt",
  "model": "claude-opus-5-5",
- "n_lists": 99,
- "n_answered": 99,
- "n_ok": 99,
+ "n_lists": 90,
+ "n_answered": 90,
+ "n_ok": 90,
  "n_fail": [],
  "rows": [
   {
@@ -34,11 +34,11 @@
    "list": 0,
    "topic": "a mountain range of Antarctica",
    "options": [
-    "Admiralty Mountains",
+    "Queen Maud Mountains",
+    "Sentinel Range",
     "Transantarctic Mountains",
-    "Prince Charles Mountains",
     "Gamburtsev Mountains",
-    "Pensacola Mountains"
+    "Royal Society Range"
    ],
    "gold": 4,
    "fits": [
@@ -191,29 +191,6 @@
    "answered": true
   },
   {
-   "item": "brh-ent-chem-sarin-systematic",
-   "list": 0,
-   "topic": "a systematic name of a chemical compound",
-   "options": [
-    "O,O-diethyl O-(4-nitrophenyl) phosphorothioate",
-    "isopropyl methylphosphonofluoridate",
-    "triethyl phosphate",
-    "O-ethyl S-[2-(diisopropylamino)ethyl] methylphosphonothioate",
-    "2,2-dichlorovinyl dimethyl phosphate"
-   ],
-   "gold": 2,
-   "fits": [
-    1,
-    2,
-    3,
-    4,
-    5
-   ],
-   "n_confusers": 4,
-   "ok": true,
-   "answered": true
-  },
-  {
    "item": "brh-ent-chem-wintergreen-ester",
    "list": 0,
    "topic": "a systematic name of an organic compound",
@@ -303,29 +280,6 @@
    "answered": true
   },
   {
-   "item": "brh-ent-cryolite-systematic",
-   "list": 0,
-   "topic": "a systematic name of an inorganic compound",
-   "options": [
-    "ammonium hexafluorophosphate",
-    "ammonium hexafluorosilicate",
-    "sodium hexafluoroaluminate",
-    "lithium hexafluorophosphate",
-    "sodium hexafluorophosphate"
-   ],
-   "gold": 3,
-   "fits": [
-    1,
-    2,
-    3,
-    4,
-    5
-   ],
-   "n_confusers": 4,
-   "ok": true,
-   "answered": true
-  },
-  {
    "item": "brh-ent-cur-bhutan",
    "list": 0,
    "topic": "a national currency of Asia",
@@ -395,38 +349,15 @@
    "answered": true
   },
   {
-   "item": "brh-ent-cur-macau-unit",
-   "list": 0,
-   "topic": "a national or territorial currency of Asia",
-   "options": [
-    "ringgit",
-    "pataca",
-    "baht",
-    "rupiah",
-    "kip"
-   ],
-   "gold": 2,
-   "fits": [
-    1,
-    2,
-    3,
-    4,
-    5
-   ],
-   "n_confusers": 4,
-   "ok": true,
-   "answered": true
-  },
-  {
    "item": "brh-ent-cur-ngultrum-subunit",
    "list": 0,
    "topic": "a fractional currency unit of Asia",
    "options": [
-    "satang",
+    "fen",
     "chhertum",
-    "tyiyn",
-    "pya",
-    "fanam"
+    "xu",
+    "satang",
+    "paisa"
    ],
    "gold": 2,
    "fits": [
@@ -673,10 +604,10 @@
    "topic": "a royal dynasty of Eurasia",
    "options": [
     "Bagrationi dynasty",
-    "Artsruni dynasty",
-    "Bagratuni dynasty",
-    "Ottoman dynasty",
-    "Pharnavazid dynasty"
+    "Arsacid dynasty",
+    "Sasanian dynasty",
+    "Achaemenid dynasty",
+    "Chosroid dynasty"
    ],
    "gold": 1,
    "fits": [
@@ -718,10 +649,10 @@
    "list": 0,
    "topic": "a historical name for a chemical compound",
    "options": [
-    "Calomel",
-    "Magnus's green salt",
-    "Sal volatile",
-    "Sal ammoniac",
+    "Blue vitriol",
+    "Oil of vitriol",
+    "Green vitriol",
+    "Corrosive sublimate",
     "Glauber's salt"
    ],
    "gold": 5,
@@ -924,11 +855,11 @@
    "list": 0,
    "topic": "a lake of Central Asia",
    "options": [
-    "Sarygamysh Lake",
+    "Karakul",
     "Lake Balkhash",
-    "Caspian Sea",
+    "Aral Sea",
     "Sarez Lake",
-    "Aral Sea"
+    "Issyk-Kul"
    ],
    "gold": 2,
    "fits": [
@@ -970,11 +901,11 @@
    "list": 0,
    "topic": "an eponymous medical syndrome",
    "options": [
-    "Waterhouse–Friderichsen syndrome",
+    "Gradenigo's syndrome",
     "Lemierre's syndrome",
     "Austrian syndrome",
-    "Löffler's syndrome",
-    "Fitz-Hugh–Curtis syndrome"
+    "Pancoast syndrome",
+    "Grisel's syndrome"
    ],
    "gold": 2,
    "fits": [
@@ -993,11 +924,11 @@
    "list": 0,
    "topic": "a lake of Australia or Oceania",
    "options": [
-    "Lake Tekapo",
+    "Lake Torrens",
     "Lake Eyre",
-    "Lake Taupo",
     "Lake Hillier",
-    "Lake Amadeus"
+    "Lake Argyle",
+    "Lake Taupo"
    ],
    "gold": 2,
    "fits": [
@@ -1062,11 +993,11 @@
    "list": 0,
    "topic": "an official title in medieval Europe",
    "options": [
-    "Master of the Rolls",
-    "Master of the Horse",
+    "Lord High Steward",
+    "Lord High Constable",
     "Mayor of the Palace",
-    "Groom of the Stool",
-    "Keeper of the Privy Seal"
+    "Earl Marshal",
+    "Count of the Stable"
    ],
    "gold": 3,
    "fits": [
@@ -1200,11 +1131,11 @@
    "list": 0,
    "topic": "an early modern international treaty",
    "options": [
-    "Treaty of Ganja",
-    "Treaty of Tordesillas",
+    "Treaty of Utrecht",
+    "Treaty of Karlowitz",
     "Treaty of Westphalia",
     "Treaty of Nerchinsk",
-    "Treaty of Resht"
+    "Treaty of Passarowitz"
    ],
    "gold": 4,
    "fits": [
@@ -1287,38 +1218,15 @@
    "answered": true
   },
   {
-   "item": "brh-ent-palau-capital",
-   "list": 0,
-   "topic": "a town or city of Oceania",
-   "options": [
-    "Ngerulmud",
-    "Hagåtña",
-    "Port Vila",
-    "Palikir",
-    "Funafuti"
-   ],
-   "gold": 1,
-   "fits": [
-    1,
-    2,
-    3,
-    4,
-    5
-   ],
-   "n_confusers": 4,
-   "ok": true,
-   "answered": true
-  },
-  {
    "item": "brh-ent-rio-negro-meeting",
    "list": 0,
    "topic": "a river in South America",
    "options": [
-    "Magdalena River",
+    "Paraguay River",
     "São Francisco River",
-    "Tocantins",
+    "Marañón River",
     "Negro River",
-    "Madeira"
+    "Xingu River"
    ],
    "gold": 4,
    "fits": [
@@ -1425,29 +1333,6 @@
    "answered": true
   },
   {
-   "item": "brh-ar-kitab-almanazir-author",
-   "list": 0,
-   "topic": "a medieval Islamic world scientist or scholar",
-   "options": [
-    "Ibn al-Haytham",
-    "Thabit ibn Qurra",
-    "Al-Jazari",
-    "Al-Khwarizmi",
-    "Al-Battani"
-   ],
-   "gold": 1,
-   "fits": [
-    1,
-    2,
-    3,
-    4,
-    5
-   ],
-   "n_confusers": 4,
-   "ok": true,
-   "answered": true
-  },
-  {
    "item": "brh-ar-marj-dabiq",
    "list": 0,
    "topic": "a battle of the early modern Middle East",
@@ -1521,11 +1406,11 @@
    "list": 0,
    "topic": "an island region or archipelago of Europe",
    "options": [
-    "Öland",
+    "Svalbard",
     "Åland",
-    "Saaremaa",
-    "Gotland",
-    "Bornholm"
+    "Shetland",
+    "Faroe Islands",
+    "Gotland"
    ],
    "gold": 2,
    "fits": [
@@ -1590,19 +1475,21 @@
    "list": 0,
    "topic": "a historical region of Northern Europe",
    "options": [
-    "Porkkala",
+    "Karelia",
     "Petsamo",
-    "Tavastia",
-    "Savonia",
-    "Salla"
+    "Lapland",
+    "Ingria",
+    "Ostrobothnia"
    ],
    "gold": 2,
    "fits": [
+    1,
     2,
     3,
-    4
+    4,
+    5
    ],
-   "n_confusers": 2,
+   "n_confusers": 4,
    "ok": true,
    "answered": true
   },
@@ -1611,11 +1498,11 @@
    "list": 0,
    "topic": "a 20th-century Israeli public figure",
    "options": [
-    "Yitzhak Shamir",
+    "Golda Meir",
     "Yitzhak Ben-Zvi",
-    "Yitzhak Rabin",
+    "Levi Eshkol",
     "David Ben-Gurion",
-    "Shulamit Aloni"
+    "Moshe Sharett"
    ],
    "gold": 2,
    "fits": [
@@ -1657,11 +1544,11 @@
    "list": 0,
    "topic": "a moon in the Solar System",
    "options": [
-    "Hyperion",
-    "Triton",
-    "Enceladus",
     "Europa",
-    "Proteus"
+    "Triton",
+    "Titan",
+    "Ganymede",
+    "Enceladus"
    ],
    "gold": 2,
    "fits": [
@@ -1864,19 +1751,21 @@
    "list": 0,
    "topic": "a named boundary line in biogeography",
    "options": [
-    "Hooker",
-    "Müller",
-    "Huxley",
+    "Merrill",
+    "Lydekker",
+    "Weber",
     "Wallace",
-    "Goyder"
+    "Dickerson"
    ],
    "gold": 4,
    "fits": [
+    1,
     2,
     3,
-    4
+    4,
+    5
    ],
-   "n_confusers": 2,
+   "n_confusers": 4,
    "ok": true,
    "answered": true
   },
@@ -1915,29 +1804,6 @@
     "Anglo-Dutch Treaty of 1824"
    ],
    "gold": 1,
-   "fits": [
-    1,
-    2,
-    3,
-    4,
-    5
-   ],
-   "n_confusers": 4,
-   "ok": true,
-   "answered": true
-  },
-  {
-   "item": "brh-id-puncak-jaya",
-   "list": 0,
-   "topic": "a mountain peak of Southeast Asia or Oceania",
-   "options": [
-    "Haleakalā",
-    "Puncak Mandala",
-    "Mauna Kea",
-    "Carstensz Pyramid",
-    "Mount Apo"
-   ],
-   "gold": 4,
    "fits": [
     1,
     2,
@@ -2019,29 +1885,6 @@
    "answered": true
   },
   {
-   "item": "brh-id-tambora-1815",
-   "list": 0,
-   "topic": "a volcano of Southeast Asia",
-   "options": [
-    "Mount Sinabung",
-    "Lake Toba",
-    "Mount Tambora",
-    "Mount Pinatubo",
-    "Mount Kelud"
-   ],
-   "gold": 3,
-   "fits": [
-    1,
-    2,
-    3,
-    4,
-    5
-   ],
-   "n_confusers": 4,
-   "ok": true,
-   "answered": true
-  },
-  {
    "item": "brh-id-terusan-suez",
    "list": 0,
    "topic": "a canal or artificial waterway",
@@ -2051,29 +1894,6 @@
     "Grand Canal",
     "Suez Canal",
     "Rideau Canal"
-   ],
-   "gold": 4,
-   "fits": [
-    1,
-    2,
-    3,
-    4,
-    5
-   ],
-   "n_confusers": 4,
-   "ok": true,
-   "answered": true
-  },
-  {
-   "item": "brh-ko-borobudur-java",
-   "list": 0,
-   "topic": "a historic religious monument in Asia",
-   "options": [
-    "Phimai",
-    "Mỹ Sơn",
-    "Wat Phou",
-    "Borobudur",
-    "Prambanan"
    ],
    "gold": 4,
    "fits": [
@@ -2122,29 +1942,6 @@
     "Uisang"
    ],
    "gold": 4,
-   "fits": [
-    1,
-    2,
-    3,
-    4,
-    5
-   ],
-   "n_confusers": 4,
-   "ok": true,
-   "answered": true
-  },
-  {
-   "item": "brh-ko-sohnkeechung",
-   "list": 0,
-   "topic": "a Korean athlete of the 20th century",
-   "options": [
-    "Yang Jung-mo",
-    "Sohn Kee-chung",
-    "Nam Sung-yong",
-    "Cha Bum-kun",
-    "Kim Soo-nyung"
-   ],
-   "gold": 2,
    "fits": [
     1,
     2,
@@ -2230,11 +2027,11 @@
    "list": 0,
    "topic": "a spaceport or rocket launch site",
    "options": [
-    "Wenchang",
-    "Jiuquan",
+    "Kapustin Yar",
     "Sriharikota",
+    "Vostochny",
     "Baikonur",
-    "Tanegashima"
+    "Vandenberg"
    ],
    "gold": 4,
    "fits": [
