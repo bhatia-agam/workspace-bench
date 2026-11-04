@@ -42,6 +42,11 @@ TOL = 1e-9
 
 # (native prompt_version base, summary base before "+digest") pairs that differ by design
 BASE_PAIRS: dict[str, dict[str, str]] = {
+    # the free-recall summary path passes the start number as an operand (it can leave the digest
+    # keys), so its results carry +start-op; native free recall has no digest and is unchanged
+    "chain_intermediates": {
+        "chain-free-2026-10-30": "chain-free-2026-10-30+start-op",
+    },
     # summary mode judges the digest with the single-cell prompt; native cells=all is batched
     "arithmetic_intermediates": {
         "arith-free-batched-2026-09-23": "arith-free-2026-09-23",
@@ -79,22 +84,22 @@ BASE_PAIRS: dict[str, dict[str, str]] = {
     "model_specific_directed_modulation": {
         "dmcd-regex-2026-10-23": "dmcd-regex-2026-10-23+joined-2026-10-30"
     },
-    # summary mode takes the majority of 3 draws (+maj3v / +maj3); native is one call per cell
+    # summary mode takes the majority of 3 draws' verdicts (+maj3v); native is one call per cell
     "role_bound_association": {
         "oa-v3.1": "oa-v3.1+maj3v",
         "oa-v3.1+bank-v2": "oa-v3.1+bank-v2+maj3v",
     },
     "user_modeling": {
-        "um-v3.4+bank-v2": "um-v3.4+bank-v2+maj3",
+        "um-v3.4+bank-v2": "um-v3.4+bank-v2+maj3v",
         # um-v3.5: NEIGHBOURS for bank v3's new golds; the majority rule unchanged
-        "um-v3.5+bank-v2": "um-v3.5+bank-v2+maj3",
-        "um-v3.5+bank-v3": "um-v3.5+bank-v3+maj3",
+        "um-v3.5+bank-v2": "um-v3.5+bank-v2+maj3v",
+        "um-v3.5+bank-v3": "um-v3.5+bank-v3+maj3v",
     },
-    # moral_rationale's summary mode verifies near-verbatim quotes (+nq1) and takes the majority
-    # of 3 draws' verdicts (+maj3v)
+    # moral_rationale's summary mode takes the majority of 3 draws' verdicts (+maj3v); the
+    # single-pick ec-v9 instruments also verify near-verbatim quotes (+nq1)
     "moral_rationale": {
-        v: f"{v}+nq1+maj3v"
-        for v in ("ec-v9", "ec-v9-b4", "ec-v9-b5", "ec-v9-b7", "ec-v4.1", "ec-v4", "ec-v3.1")
+        **{v: f"{v}+nq1+maj3v" for v in ("ec-v9", "ec-v9-b4", "ec-v9-b5", "ec-v9-b7")},
+        **{v: f"{v}+maj3v" for v in ("ec-v4.1", "ec-v4", "ec-v3.1")},
     },
 }
 MT_FAMILIES = {

@@ -34,7 +34,8 @@ mentioned in any way", paired against the gaussian twin. Result stamp
   cross rows as `rx_pass_unpaired`, `rx_cells`, `rx_quote` (inject rows also `rx_pass`,
   `rx_twin_quote`) and in `extras.regex_paired` / `extras.regex_unpaired` (and per
   sub-headline) and `extras.regex_per_layer_any_position`. It never sets `pass`: a regex cannot
-  tell a concept the readout presents from an incidental mention.
+  tell a concept the readout presents from an incidental mention. Every run computes it; the old
+  regex-only switch `opts=judge=off` is removed, and any `opts=judge=` exits 2.
 
 The all-layer config reads ~1,056 readouts per item, so a "mentioned anywhere" rule saturates
 there: under the round-4 regex its random twin named the target in 25% of items (all-layer

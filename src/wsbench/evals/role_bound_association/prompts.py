@@ -36,14 +36,14 @@ DATASET_SEED = 20260810
 # cheated / billed / deceived pairs); prompts unchanged
 # Summary mode asks each item 3 times (judge.n_draws) and takes the majority of the draws'
 # pass / fail verdicts. The calls (draw 0 is the single-call key, so its cached answer is
-# reused), the native instrument, the ATI gate and the guesser floors keep CALL_VERSION; a
-# summary result is stamped ``+maj<N>v`` (judge.majority_stamp; draws=1 is the single-call
-# instrument, no suffix)
+# reused) keep CALL_VERSION as their call key; native results, the ATI gate and the guesser
+# floors carry PROMPT_VERSION (judge.instrument), and a summary result adds ``+maj<N>v``
+# (judge.majority_stamp; draws=1 is the single-call instrument, no suffix)
 CALL_VERSION = "oa-v3.1"  # keys every judge call
 # bank v2: items_v2.json = items.json without the 4 pairs whose stories carry a stray tab; every
 # kept item's option lists, and so its calls, are items.json's (judge.load_items). Result stamp
-# of the registered bank (judge.instrument; the frozen items.json and adapted banks stamp
-# CALL_VERSION alone)
+# of the registered bank (judge.instrument; the frozen items.json and every adapted bank, even
+# one frozen with bank v2's header, stamp CALL_VERSION alone)
 BANK_TAG = "bank-v2"
 PROMPT_VERSION = f"{CALL_VERSION}+{BANK_TAG}"
 ROLES_LEXICON = "roles-v1.5"  # config.roles_lexicon: evals/role_bound_association/roles_v1.json
