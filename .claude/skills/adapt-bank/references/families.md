@@ -53,7 +53,7 @@ re-stamped (`references/porting.md`).
     Flag it in the note.
 - **Main knob:** cue strength.
 - **Bank now:** `items_v5` (91 items: v3 minus winter / pentagon, v3's read plan; stamp
-  `+gate-a1+bank-v5`; plan 0039 + round 4): `mc` {gold, aliases, distractors[7]}
+  `+gate-a2+bank-v5`; plan 0039 + round 4): `mc` {gold, aliases, distractors[7]}
   (lint requires it, `adapt/lint.py`), leakage-screened on the bank of record
   (`scripts/association_distractors.py`, `scripts/mc_leakage_r4.py`, topic guesser; these write
   `evals/`, never run them for an adapted set); quote gate + pins. Read render `chat_summarize`
@@ -116,8 +116,8 @@ re-stamped (`references/porting.md`).
   `MC_BANK_FAMILIES`): `mc` per item
   (built on the bank of record: `scripts/build_multihop_mc.py` wrote v2, `mc_leakage_r4.py` v3;
   both write `evals/`;
-  no adapted-item builder yet), leakage-screened; gates `bank-gate-r8`: the quote (verbatim or
-  near-verbatim, read in its line), derived forms (`derived_forms.json`), number floods; no split
+  no adapted-item builder yet), leakage-screened; gates `bank-gate-r9`: the quote (verbatim or
+  near-verbatim; through its line only when cut mid-name), derived forms (`derived_forms.json`), number floods; no split
   rule;
   every-position reads. The authoring brief writes no `mc`: build it after the gate.
 
@@ -398,7 +398,7 @@ deleted.
 - **Never pad with synthsys.** Those items score verbatim echo, not the `inferred` headline. Report
   the subfamily split.
 - **Bank now:** registered `items_v2` (the 47 selfdescribe items; stamp `um-v3.4+bank-v2`, summary
-  `+maj3`, judge calls `um-v3.4`; plan 0056: all positions, hedge gate, user's-own-value echo); adapted banks
+  `+maj3v`, judge calls `um-v3.4`; plan 0056: all positions, hedge gate, user's-own-value echo); adapted banks
   are their own builds and stamp `um-v3.4`. Re-read only.
 
 ### conjunctive_association — state × content × relation (gold_label among the cluster's 10)

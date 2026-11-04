@@ -1,7 +1,9 @@
-"""wrong_intermediate's quote rule (``qline-v1``): the quote is verified by ``digest.quote_ok``
+"""wrong_intermediate's quote rule (``qline-v2``): the quote is verified by ``digest.quote_ok``
 (markdown-insensitive), else near-verbatim (``nearquote.close_lines``), and it names the gold
-reasonably and unambiguously, read in the line it came from. Both directions, on cached digest
-lines whose quotes were cut at a sample boundary ("Vincent van", "Ludwig van")."""
+reasonably and unambiguously, read in the line it came from: through the line only when the quote
+was cut mid-name, where the line continues it into the gold (``nearquote.continued``) or the
+sample ends inside the gold's name (``nearquote.sample_end_prefix``: cached digest lines whose
+quotes end their sample, "Vincent van", "Ludwig van"). Both directions."""
 
 from wsbench import digest
 from wsbench.evals.wrong_intermediate import judge as wb
@@ -32,17 +34,76 @@ LUDWIG_LINE = (
 )
 
 
-def test_cut_quotes_pass_through_their_line():
-    v = _decide(VAN_GOGH, "The artist who painted The Narrow Street is Vincent van", [VAN_LINE])
+def test_quote_cut_mid_name_passes_where_its_line_continues_it():
+    line = "The person who wrote Sonata No. 14 was Ludwig van Beethoven, in 1801."
+    v = _decide(BEETHOVEN, "The person who wrote Sonata No. 14 was Ludwig van", [line])
     assert v["credited"] and v["form_via"] == "line" and v["quote_verified"]
+    line = "The artist who painted The Narrow Street is Vincent van Gogh. It hangs in Amsterdam."
+    v = _decide(VAN_GOGH, "The artist who painted The Narrow Street is Vincent van", [line])
+    assert v["credited"] and v["form_via"] == "line"
+    # cut inside the name's last word, or right before the name (markdown and a colon between)
+    v = _decide(
+        BEETHOVEN, "the sonata is by Ludwig van Beeth", ["the sonata is by Ludwig van Beethoven"]
+    )
+    assert v["credited"] and v["form_via"] == "line"
+    v = _decide(
+        BEETHOVEN,
+        "The composer of the sonata was",
+        ["The composer of the sonata was: **Beethoven**."],
+    )
+    assert v["credited"] and v["form_via"] == "line"
+
+
+def test_quote_cut_by_the_end_of_its_sample_passes_when_only_the_gold_starts_so():
+    v = _decide(VAN_GOGH, "The artist who painted The Narrow Street is Vincent van", [VAN_LINE])
+    assert v["quote_verified"] and v["credited"] and v["form_via"] == "line"
     v = _decide(BEETHOVEN, "The person who wrote Sonata No. 14 was Ludwig van", [LUDWIG_LINE])
     assert v["credited"] and v["form_via"] == "line"
 
 
-def test_a_line_that_also_names_another_candidate_does_not_rescue():
-    line = LUDWIG_LINE + ". Or was it Wolfgang Amadeus Mozart?"
-    v = _decide(BEETHOVEN, "The person who wrote Sonata No. 14 was Ludwig van", [line])
-    assert not v["credited"] and v["pick"] == "gold_uncredited" and v["form_ok"] is False
+def test_an_ambiguous_or_foreign_sample_end_prefix_fails():
+    # "Johann" starts Bach's and Mozart's listed forms; "Wolfg" only Mozart's (the contrast)
+    for quote in (
+        "The person who wrote Sonata No. 14 was Johann",
+        "The person who wrote it was Wolfg",
+    ):
+        v = _decide(BEETHOVEN, quote, [f"Beethoven. {quote}"])
+        assert v["quote_verified"] and not v["credited"] and v["form_via"] is None
+    # the sample goes on after the quote: no sample-end cut, and no continuation into the gold
+    v = _decide(BEETHOVEN, "was Ludwig van", ["Beethoven. It was Ludwig van. Then he left."])
+    assert not v["credited"]
+
+
+def test_fact_only_quote_gets_no_line_credit():
+    # the sample names the gold, but not where the quote stops
+    texts = ["Ludwig van Beethoven was born in 1770 in Bonn."]
+    v = _decide(BEETHOVEN, "was born in 1770", texts)
+    assert v["quote_verified"] and not v["credited"] and v["form_via"] is None
+    # nor after a sentence end, nor a few words on
+    for text in (
+        "The composer was born in 1770. Beethoven wrote it.",
+        "The composer was born in 1770 and Beethoven wrote it.",
+        "Ludwig van Beethoven. The composer was born in 1770",  # ends its sample, names no one
+    ):
+        assert not _decide(BEETHOVEN, "was born in 1770", [text])["credited"]
+
+
+def test_one_line_continuing_the_quote_is_enough():
+    # five lines hold the quote and go on to the contrast, one goes on to the gold: the judge's
+    # pick stands (no line is weighed against another)
+    quote = "The composer of the sonata was"
+    texts = [f"The composer of the sonata was Wolfgang Amadeus Mozart ({k})." for k in range(5)]
+    texts.append("The composer of the sonata was Ludwig van Beethoven.")
+    v = _decide(BEETHOVEN, quote, texts)
+    assert v["credited"] and v["form_via"] == "line"
+    # every line holding the quote goes on to the contrast: no credit
+    assert not _decide(BEETHOVEN, quote, texts[:5])["credited"]
+
+
+def test_a_continuation_into_another_candidate_does_not_rescue():
+    line = "The composer of the sonata was Mozart, not Beethoven."
+    v = _decide(BEETHOVEN, "The composer of the sonata was", [line])
+    assert not v["credited"] and v["form_ok"] is False
 
 
 def test_a_line_naming_nobody_does_not_rescue():
@@ -100,5 +161,5 @@ def test_short_near_quotes_must_verify_exactly():
 
 
 def test_stamp_carries_the_quote_rule_and_the_call_key_does_not():
-    assert "+qline-v1+" in wp.PROMPT_VERSION and wp.QUOTE_RULE_VERSION == "qline-v1"
+    assert "+qline-v2+" in wp.PROMPT_VERSION and wp.QUOTE_RULE_VERSION == "qline-v2"
     assert wb._mc_version(wp.PROMPT_VERSION) == "wb-mc-2026-10-31r+rv-2026-10-31e"

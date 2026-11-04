@@ -18,7 +18,8 @@ unscreened list. Per family:
   (an implicit item's gold is the subject's: its list is re-keyed after the gate, stage=subject);
 - basic_readout_mt: ``r4_mc_distractors.py`` (pools) -> ``r4b_mc_refine.py`` ->
   ``build_r4b_mc_banks.py``; the provisional distractors the final list dropped become the
-  item's ``hidden_rivals`` (the set's overlay file at freeze).
+  item's ``hidden_rivals`` (the set's overlay file at freeze; unused by the judge since
+  norival-v1).
 
 ``stage=subject`` (basic_readout only): after the gate, the subject fields of every passing row
 (``rebuild.subject_fields``).

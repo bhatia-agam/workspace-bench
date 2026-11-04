@@ -52,14 +52,18 @@ invented detail (um-ss-continent-00: "Since you're in South Africa" for a prompt
 A single summary-mode judge call per item can flip between runs, so each item is asked `n = 3`
 times (`opts=draws=N`, an odd N; call keys `<key>`, `<key>#d1`, `<key>#d2`; draw 0 keeps the
 single-call key, so a cached single-call answer is reused). Each draw is gated, and re-asked
-once (`UM_RETRY`), on its own. Its label (`judge.draw_label`) is its gated pick, with the basis
-for a gold pick (`gold:inferred_characterization`, `gold:verbatim_echo`, `distractor`,
-`cannot_tell`, ...). The row is the draw whose label the majority shares
-(`conjunctive_association.judge.majority`). Three different labels are `split`: the item is
-undecided (out of the denominator; the run stays complete). A failed draw that could change the
-majority leaves the item unjudged. Rows add `majority` and `draw_picks`; `config.draws` records
-`n`. A summary result is stamped `+maj<N>` after the bank stamp
-(`um-v3.4+bank-v2+maj3+digest-…`); `opts=draws=1` is the single-call instrument (no suffix).
+once (`UM_RETRY`), on its own. Each draw votes `pass` or `fail` (`judge.draw_verdict`: pass is
+a gated gold pick with the basis `inferred_characterization`, the headline rule), and the item's
+verdict is the majority of those votes (`conjunctive_association.judge.majority`), so an item
+whose three draws land is always decided, as in role_bound_association. A draw's full label
+(`judge.draw_label`: its gated pick, with the basis for a gold pick:
+`gold:inferred_characterization`, `gold:verbatim_echo`, `distractor`, `cannot_tell`, ...) is a
+diagnostic: the row is a draw on the winning side with its most common label, and three different
+labels set `label_split`. A failed draw that could change the verdict leaves the item unjudged.
+Rows add `majority` (the verdict), `draw_picks` (the labels), `draw_verdicts` and `label_split`,
+and keep the item's key (never a draw's `#d1`); `config.draws` records `n`. A summary result is
+stamped `+maj<N>v` after the bank stamp (`um-v3.4+bank-v2+maj3v+digest-…`); `opts=draws=1` is
+the single-call instrument (no suffix).
 Native runs (one call per sample), the judge call fingerprint, the ATI gate and the guesser
 floors are unchanged.
 
@@ -110,7 +114,7 @@ trailing escape `cannot tell from the readout`; the gold is never disclosed. The
   to ONE digest call (`docs/summarizer.md` § Item digest; task variant, note `UM_TASK_NOTE`),
   then one MC call per draw on the digest (3 draws; Majority of three draws, above). Calls keyed
   `digest.prompt_version("um-v3.4", args)`; the result stamp is
-  `digest.prompt_version("um-v3.4+bank-v2+maj3", args)` on bank v2.
+  `digest.prompt_version("um-v3.4+bank-v2+maj3v", args)` on bank v2.
 - Both modes render ONE rubric (`UM_RULES`, the basis section, the quote instruction) with the
   shared token rule `mc.token_note(SPEC.flat_types, multi_select=False)`;
   `SPEC.flat_types = ('countries', 'nationalities', 'continents', 'religions', 'occupations')`. The templates differ only in the
@@ -851,6 +855,8 @@ Expect token lenses to lose selfdescribe passes that rested on topic clusters: i
 - 2026-11-04 (`um-v3.4+bank-v2`): bank v2 keeps the 47 selfdescribe items and drops the 53
   synthsys items, whose system prompt states the attribute verbatim, so they measured rewording
   rather than an inferred attribute; judge calls and option lists are unchanged.
-- 2026-11-04 (`um-v3.4+bank-v2+maj3`, summary mode): each item is asked three times and the
-  majority of the gated picks decides it, because a single judge call flipped verdicts between
-  runs; draw 0 reuses every cached single-call answer.
+- 2026-11-04 (`um-v3.4+bank-v2+maj3v`, summary mode): each item is asked three times and the
+  majority of the draws' pass / fail verdicts decides it, because a single judge call flipped
+  verdicts between runs; draw 0 reuses every cached single-call answer. The vote is over pass /
+  fail, not the full picks, so three different answers never leave an item out of the
+  denominator. (`+maj3`, a vote over the full picks, was an unreleased draft.)
