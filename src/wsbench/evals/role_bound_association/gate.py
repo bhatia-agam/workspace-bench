@@ -180,11 +180,17 @@ def _masks(lex: "Lexicon", role: str) -> tuple[tuple[str, ...], tuple[str, ...]]
     return own, tuple(sorted(m for m in others if m and m not in own))
 
 
+@functools.cache
+def _term_pattern(term: str) -> re.Pattern[str]:
+    """``term``'s compiled pattern, built once per process: the pinning pass tests every lexicon
+    term against every raw line, far more distinct patterns than ``re``'s own 512-entry cache."""
+    return re.compile(re.escape(term) if _CJK.search(term) else rf"(?<!\w){re.escape(term)}(?!\w)")
+
+
 def _spans(text: str, term: str) -> list[tuple[int, int]]:
     """Where ``term`` occurs in ``text`` under ``mc.form_in``'s rule: CJK as a substring, any
     other script between word boundaries."""
-    pat = re.escape(term) if _CJK.search(term) else rf"(?<!\w){re.escape(term)}(?!\w)"
-    return [m.span() for m in re.finditer(pat, text)]
+    return [m.span() for m in _term_pattern(term).finditer(text)]
 
 
 def role_ref(quote: str, role: str, lex: Lexicon) -> bool:

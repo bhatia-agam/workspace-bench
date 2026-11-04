@@ -633,3 +633,19 @@ def test_adapted_bank_offset_lite_falls_back_to_final_token(monkeypatch, tmp_pat
     assert readplan._adapted_offset(rule, {}) is True
     assert readplan._adapted_offset(rule, {"readout": {"lite": "k4"}}) is False
     assert readplan._adapted_offset({"kind": "final_token"}, {}) is False
+
+
+def test_spans_compiled_once_same_matches():
+    """Term patterns are compiled once per process; the spans equal an uncached re.finditer."""
+    import re
+
+    from wsbench.evals.role_bound_association import gate
+
+    for text, term in [
+        ("the security guard and the guard", "guard"),
+        ("曾祖母和祖母", "祖母"),
+        ("step-mother, mother", "mother"),
+    ]:
+        pat = re.escape(term) if gate._CJK.search(term) else rf"(?<!\w){re.escape(term)}(?!\w)"
+        assert gate._spans(text, term) == [m.span() for m in re.finditer(pat, text)]
+    assert gate._term_pattern("guard") is gate._term_pattern("guard")
