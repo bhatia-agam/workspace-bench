@@ -12,14 +12,13 @@ from wsbench import digest, mc
 from wsbench.banks import load_bank
 from wsbench.basic import mcjudge_bank as mj
 from wsbench.basic.prompts import prompt_version_of
-from wsbench.registry import bank_path
 
 REPO = Path(__file__).resolve().parents[1]
 TABLE = REPO / "evals/multihop/derived_forms.json"
 
 
 def _items() -> dict[str, dict]:
-    _h, items = load_bank(bank_path("multihop"))
+    _h, items = load_bank(REPO / "evals/multihop/items_v3.json")  # the cases' bank (v4 drops some)
     return {it["id"]: it for it in items}
 
 
@@ -35,7 +34,7 @@ def _v(iid: str, quote: str, text: str | None = None, item: dict | None = None) 
 
 def test_table_covers_every_non_number_option_of_every_bank():
     forms = json.loads(TABLE.read_text(encoding="utf-8"))["forms"]
-    for name in ("items.json", "items_v2.json", "items_v3.json"):
+    for name in ("items.json", "items_v2.json", "items_v3.json", "items_v4.json"):
         _h, items = load_bank(REPO / "evals/multihop" / name)
         for it in items:
             if not it.get("mc") or it["mc"]["bridge_type"] == "number":
@@ -119,7 +118,7 @@ def test_cjk_demonyms_still_fail(iid, quote):
 def test_stamp_and_call_key():
     assert mj.GATE_VERSION in ("bank-gate-r7", "bank-gate-r8")  # r8: the quote's line rule
     pv = prompt_version_of("multihop")
-    assert pv == "bank-mc-2026-11-01-v3+" + mj.GATE_VERSION
+    assert pv.startswith("bank-mc-2026-11-01-v3+" + mj.GATE_VERSION)
     assert mj.call_pv("multihop", pv + "+digest-v5-task-extractive+sj-v10") == (
         "bank-mc-2026-11-01-v3+digest-v5-task-extractive+sj-v10"
     )

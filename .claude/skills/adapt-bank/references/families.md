@@ -110,7 +110,8 @@ re-stamped (`references/porting.md`).
     (capital, continent, language).
   - Floor: T2. One hop is the minimum, and there is no 0-hop.
 - **Main knob:** bridge salience.
-- **Bank now:** `items_v3` (plan 0048, `MC_BANK_FAMILIES`): `mc` per item
+- **Bank now:** `items_v4` (68 items, bank v3 without 32; v3's read plan; plan 0048,
+  `MC_BANK_FAMILIES`): `mc` per item
   (built on the bank of record: `scripts/build_multihop_mc.py` wrote v2, `mc_leakage_r4.py` v3;
   both write `evals/`;
   no adapted-item builder yet), leakage-screened; gates `bank-gate-r8`: the quote (verbatim or

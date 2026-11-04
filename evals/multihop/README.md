@@ -1,13 +1,27 @@
 # multihop
 
 A factual prompt whose answer needs one silent hop; the scored latent is the bridge
-concept, not the surface answer. 100 items, plain render (bank v2,
-`evals/multihop/items_v2.json`; `items.json` is the frozen v1 and stays untouched).
+concept, not the surface answer. 68 items (bank v4, `evals/multihop/items_v4.json`, the
+registered bank), plain render; banks v1-v3 (100 items: `items.json`, `items_v2.json`,
+`items_v3.json`) stay frozen and untouched.
 
 Example: "Fact: The chemical symbol for the element with atomic number 26 is" -> bridge `iron`
 (the surface answer `Fe` is never an option and never shown to the judge).
 
-## Bank v3 (round 4, the registered bank; Camila r2's MC leakage standard)
+## Bank v4 (the registered bank)
+
+`items_v4.json` is bank v3 without 32 items; every kept item is byte-identical (68 items). The
+dropped items (header `v4.removed`, derived mechanically from the v3 prompts) are 9 items whose
+prompt asks for a country's language, 20 that ask for a capital (16) or give one as the clue (4,
+"whose capital is X"), and 5 that ask for an opposite (inv-* directions, dual-* times of day):
+31 distinct items, since 3 language items also give a capital as the clue. The 32nd is
+b3-mh-fuji-currency, whose answer ("Japanese yen") names the bridge itself. The two `dbl-*-antonym` items ask for an antonym, not an opposite, and stay. The
+header's `read_plan_bank` names `items_v3.json`, so the read plan, its `plan_sha` and every v3
+readout file serve bank v4 (the judge loads only v4's ids). Stamp `+bank-v4`; the MC calls keep
+their key, so a v3 run re-scores from cache. The lucky-guessing and prompt-only floors were
+measured on v3's 100 items and are stale until re-measured on v4.
+
+## Bank v3 (round 4; Camila r2's MC leakage standard)
 
 `items_v3.json` = bank v2 with re-chosen distractors (`scripts/mc_leakage_r4.py`; header
 `mc_leakage`, per item `mc.distractors_v2`, `mc.topic_confusers`); prompts, bridges, aliases and
@@ -83,9 +97,10 @@ Fresh floors of the frozen bank (Opus 5.5, 5 draws): blind 0.112, described 0.21
 ## Scoring
 
 - **Headline: pass rate of a blind multiple-choice judge** (`wsbench.basic.mcjudge_bank`,
-  stamp `bank-mc-2026-11-01-v3+bank-gate-r8`: bank v3's options, the prompts are
-  `bank-mc-2026-10-31`'s, the deterministic gate is r8). Summary mode (the default): one digest
-  per item, one judge call per item. Native (`opts=aggregate=native`): one call per (item, layer), an item passing on any
+  stamp `bank-mc-2026-11-01-v3+bank-gate-r8+bank-v4`: bank v3's options on the 68-item bank
+  v4, the prompts are `bank-mc-2026-10-31`'s, the deterministic gate is r8). Summary mode (the
+  default): one digest per item, one judge call per item. Native (`opts=aggregate=native`): one
+  call per (item, layer), an item passing on any
   layer; native results carry `n_items_gold_any_layer`, `n_items_distractor_any_layer` and
   `n_items_distractor_majority` beside the number.
 - **Options (frozen in the bank, `mc` block per item):** the bridge (`gold`) plus 4 distractors
@@ -205,11 +220,12 @@ wsbench judge family=multihop readouts=<arm>.jsonl out=outputs/<arm>/multihop-li
 
 ## Judge prompts
 
-`prompt_version`: `bank-mc-2026-11-01-v3+bank-gate-r8` (round 4: bank v3's options; prompts
-unchanged from `bank-mc-2026-10-31`; `+bank-gate-r8`: the deterministic gate's version; summary
-mode: `digest.prompt_version` of it, by default
-`bank-mc-2026-11-01-v3+bank-gate-r8+digest-v5-task-extractive+sj-v10`; `+reads-lite` for a lite
-run). The MC calls are keyed without the gate tag (`bank-mc-2026-11-01-v3`, ...), so a gate
+`prompt_version`: `bank-mc-2026-11-01-v3+bank-gate-r8+bank-v4` (round 4: bank v3's options;
+prompts unchanged from `bank-mc-2026-10-31`; `+bank-gate-r8`: the deterministic gate's version;
+`+bank-v4`: the 68-item bank; summary mode: `digest.prompt_version` of it, by default
+`bank-mc-2026-11-01-v3+bank-gate-r8+bank-v4+digest-v5-task-extractive-layered-v1x4+sj-v10` for a
+multi-layer run (`...+digest-v5-task-extractive+sj-v10` for one layer); `+reads-lite` for a lite
+run). The MC calls are keyed `bank-mc-2026-11-01-v3` (no gate or bank tag), so a gate or bank
 change re-scores cached answers. Judge: the
 repo default (`claude-opus-5-5`), temperature 0. Output schema: `{"choice": str, "quote": str}`
 (a letter; an invalid letter is re-asked once, then unjudged). The prompts below are sent
@@ -319,3 +335,6 @@ The readout below is a digest of the readouts across every read layer and positi
   joins the result stamp and the MC calls keep their key.
 - 2026-11-04 (`bank-gate-r8`): a quote one word off verifies near-verbatim, and a quote cut
   mid-name counts through its line when that line names the gold and no other option.
+- 2026-11-04 (`+bank-v4`): bank v4 drops the language-of-country, capital and opposite items and
+  b3-mh-fuji-currency (68 items left); on bank v3 (100 items) every lens scored 0.95-0.98, level
+  with the 0.98 prompt-only floor.

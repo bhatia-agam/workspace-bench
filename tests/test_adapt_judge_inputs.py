@@ -9,7 +9,6 @@ that passes takes the registered item's code path (no silent ``[]`` / default fa
 
 import copy
 import json
-import shutil
 
 import pytest
 
@@ -296,8 +295,8 @@ PLAN_SKIP = {
 def test_read_plan_of_an_adapted_only_clone_equals_the_original(family, tmp_path, monkeypatch):
     src = registry.frozen_bank_path(family)
     raw = json.loads(src.read_text(encoding="utf-8"))
-    if isinstance(raw, dict) and raw.get(readplan.READ_PLAN_BANK):
-        shutil.copy(src.parent / raw[readplan.READ_PLAN_BANK], tmp_path)
+    if isinstance(raw, dict):  # an adapted bank is its own read plan (adapt freeze drops it)
+        raw.pop(readplan.READ_PLAN_BANK, None)
     items = raw if isinstance(raw, list) else raw["items"]
     orig = items[0]
     items.append(_clone(family, orig))

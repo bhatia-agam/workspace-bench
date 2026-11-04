@@ -619,8 +619,12 @@ def test_leakage_standard_holds_topic_binding_for_every_family():
     # the superseded "binding = what the judge is shown" rule would still fail it on described
     old_rule = {v: fl["association"][v] for v in ("blind", "described")}
     assert set(lg.leakage_failures(old_rule, 1 / 8)) == {"described"}
-    assert fails("multihop") == {}
-    assert fl["multihop"]["topic"]["mean"] == pytest.approx(0.218)
+    # multihop's frozen floors were measured on bank v3 (100 items); the registered bank is the
+    # 68-item v4, so they are stale (dropped by lg.floors) until re-measured on v4
+    assert "multihop" not in fl
+    frozen = json.loads(lg.FROZEN.read_text(encoding="utf-8"))["multihop"]
+    assert frozen["topic"]["mean"] == pytest.approx(0.218) and frozen["topic"]["n_items"] == 100
+    assert lg.leakage_failures(frozen, 0.2) == {}  # v3's 0.218 held the standard
     # the verdicts of the other families name the topic guesser too
     assert set(fails("poetry")) == {"described", "topic"}
     assert set(fails("directed_modulation")) == {"topic"}

@@ -157,7 +157,7 @@ every list holds >= 2 same-topic confusers.
   v5, 18 fail -> pass, 0 attributable (evals/poetry/README.md). The rule outranks the floor:
   keeping the observed confusers raises both families' floors (below).
 
-| family | chance | bar | v2 blind / described / topic | registered bank (v3; **v5** for poetry and basic_readout) | binding verdict |
+| family | chance | bar | v2 blind / described / topic | bank measured (v3; **v5** for poetry and basic_readout; registered in round 4) | binding verdict |
 |---|---|---|---|---|---|
 | basic_readout | 0.200 | 0.250 | 0.298 / 0.376 / 0.414 | v5 (`-v5b`, balanced gold slots): **0.266** / **0.352** / **0.306** | FAILS on all three, through the implicit items alone (below; entity and processing pass; `-v5`'s seeded order read 0.312 / 0.322 / 0.308, processing failing `blind` on slot 3; v4 0.236 / 0.302 / 0.328; v3 read 0.126 / 0.256 / 0.252 on the option order its search had selected against) |
 | multihop | 0.200 | 0.250 | **0.280** / 0.250 / **0.292** | 0.112 / 0.212 / 0.218 | passes (all three; after review r3's bridge relabel, was 0.110 / 0.192 / 0.214) |

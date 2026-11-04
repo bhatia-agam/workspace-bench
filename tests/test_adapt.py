@@ -842,6 +842,23 @@ def test_freeze_builds_originals_from_the_registered_item(tmp_path, monkeypatch)
     }
 
 
+def test_freeze_drops_the_read_plan_bank_pointer(tmp_path, monkeypatch):
+    """A registered bank that shares an earlier bank's read plan (header ``read_plan_bank``)
+    ships as its own read plan: an adapted set has no earlier bank beside it."""
+    import json as _json
+
+    from wsbench.adapt import run
+    from wsbench.readplan import READ_PLAN_BANK
+
+    d = _set(tmp_path, monkeypatch)
+    header, items = original_bank("multihop")
+    assert header.get(READ_PLAN_BANK)  # the registered bank v4 reads bank v3's plan
+    _gate_log(d, "multihop", [_row(it) for it in items[:3]])
+    run.freeze("qwen3.5-4b", ["multihop"])
+    bank = _json.loads((d / "multihop.json").read_text())
+    assert READ_PLAN_BANK not in bank and len(bank["items"]) == 3
+
+
 def test_freeze_overlays_subject_fields_and_own_gold(monkeypatch, tmp_path):
     """A1.1: own-answer gold and SUBJECT_FIELDS come from the gate row; nothing else does."""
     from wsbench.adapt.run import build_original

@@ -392,7 +392,8 @@ def test_multihop_full_and_lite():
     2026-09-23 site (offset_from_end k = -readout.offsets[0]), on every layer."""
     from wsbench.banks import load_bank
 
-    _h, items = load_bank(readplan.bank_path("multihop"))
+    # the registered bank v4 keeps bank v3's read plan (header read_plan_bank)
+    _h, items = load_bank(readplan.bank_path("multihop").parent / "items_v3.json")
     k_of = {it["id"]: -int(it["readout"]["offsets"][0]) for it in items}
     rows = readplan.plan("multihop")
     assert len(rows) == 100

@@ -9,6 +9,8 @@ import sys
 from collections import defaultdict
 from typing import Any
 
+from wsbench.readplan import READ_PLAN_BANK
+
 from . import families as fams
 from . import mcstage, rebuild, store
 from .gate import DEFAULT_DRAWS, DEFAULT_TEMPERATURE, run_gate
@@ -728,6 +730,9 @@ def freeze(model: str, families: list[str] | None = None) -> dict[str, Any]:
             continue
         header, originals = store.original_bank(family)
         header = copy.deepcopy(header)
+        # a registered bank's pointer to the earlier bank whose read plan it shares: an adapted
+        # bank is read on its subject's own render, so its items are its own read plan
+        header.pop(READ_PLAN_BANK, None)
         if family == "poetry":  # the subject's opus_gate / qwen_regate records (plan 0060 A2)
             from .poetry import header_overlay
 

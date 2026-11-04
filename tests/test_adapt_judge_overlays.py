@@ -655,7 +655,8 @@ GOLDEN = {
     "multi_concept_directed_modulation": (
         "646c2023b0a6f780780533829d9693fc7c15ad470d03dc3f93901ac8d26ef0f0"
     ),
-    "multihop": "5c113d55ff9cafb27a1553f54642b665b7b4a8273e5c536baba724a7945d4b97",
+    # multihop: main's element_item over the registered bank v4 (its 68 ids are bank v3 items)
+    "multihop": "ad5dca2ba01f967dfc583b9add742d2e106a0858c402b1abdf96a93e604244a9",
     "role_bound_association": "4d0286ea4d445553afd84311f5df01393c20dacbeb2053f69e7917636c0f9a72",
     "user_modeling": "818fb524c907945487730bc9a70978a60eab164b4544a0eda1176f1d9128607f",
 }
