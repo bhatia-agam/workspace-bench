@@ -2,20 +2,20 @@
 
 A factual prompt whose answer needs one silent hop; the scored latent is the bridge
 concept, not the surface answer. 98 items (bank v5, `evals/multihop/items_v5.json`, the
-registered bank), plain render; banks v1-v4 (`items.json`, `items_v2.json`, `items_v3.json`: 100
-items each; `items_v4.json`: 68) stay frozen and untouched.
+registered bank), plain render; banks v1-v3 (`items.json`, `items_v2.json`, `items_v3.json`: 100
+items each) stay frozen and untouched.
 
 Example: "Fact: The chemical symbol for the element with atomic number 26 is" -> bridge `iron`
 (the surface answer `Fe` is never an option and never shown to the judge).
 
 ## Bank v5 (the registered bank)
 
-`items_v5.json` = bank v4's 68 items, byte-identical and in the same order, then 30 new two-hop
-items (ids `mh-w1-*`): 98 items. The new items bring back other kinds of hop in place of the ones
-bank v4 removed. None asks for or uses as its clue a country's language, a capital or an
+`items_v5.json` = bank v3 without 32 items (68, byte-identical and in the same order; see "Items
+dropped from bank v3" below), then 30 new two-hop items (ids `mh-w1-*`): 98 items. The new items
+bring back other kinds of hop in place of the ones dropped. None asks for or uses as its clue a country's language, a capital or an
 opposite; none asks for a currency; none has an answer that contains or derives from the
 bridge's name (a demonym, a symbol spelled from the English name); none is a letter or spelling
-hop; and no bridge of banks v1-v4 comes back. Bridge types: chemical element 4, person 4,
+hop; and no bridge of banks v1-v3 comes back. Bridge types: chemical element 4, person 4,
 fictional character 3, company, mountain, animal and sport 2 each, and 11 other types once
 (Io -> Jupiter, Danube -> the Black Sea, the parathyroid glands -> 4, ...). Answers: 23 words, 7
 numbers.
@@ -64,24 +64,23 @@ numbers.
 - **Stamp** `bank-mc-2026-11-01-v3+bank-gate-r10+bank-v5`. The MC calls keep their
   `bank-mc-2026-11-01-v3` key, so the 68 kept items' cached answers stay valid.
 - **Floors of record** on bank v5 (`evals/baselines/README.md` "Floors of record"): prompt-only
-  0.918 (n = 98; 0.941 on bank v4's 68), lucky blind 0.145, described 0.218, topic 0.224 vs
+  0.918 (n = 98; 0.941 on the 68 kept items alone), lucky blind 0.145, described 0.218, topic 0.224 vs
   chance 0.200 (fresh draws under the refreeze protocol, within the MC leakage standard; the
   build's own measurement above agrees).
 
-## Bank v4 (superseded by bank v5)
+## Items dropped from bank v3
 
-`items_v4.json` is bank v3 without 32 items; every kept item is byte-identical (68 items). The
-dropped items (header `v4.removed`, derived mechanically from the v3 prompts) are 9 items whose
+Bank v5 keeps bank v3 without 32 items; every kept item is byte-identical (68 items). The
+dropped items (bank v5's header `dropped_from_v3.removed`, derived mechanically from the v3
+prompts) are 9 items whose
 prompt asks for a country's language, 20 that ask for a capital (16) or give one as the clue (4,
 "whose capital is X"), and 5 that ask for an opposite (inv-* directions, dual-* times of day):
 31 distinct items, since 3 language items also give a capital as the clue. The 32nd is
 b3-mh-fuji-currency, whose answer ("Japanese yen") names the bridge itself. The two `dbl-*-antonym` items ask for an antonym, not an opposite, and stay. The
-header's `read_plan_bank` names `items_v3.json`, so the read plan, its `plan_sha` and every v3
-readout file serve bank v4 (the judge loads only v4's ids). Stamp `+bank-v4`; the MC calls keep
-their key, so a v3 run re-scores from cache. The floors were re-measured on v4's 68 items in the
-2026-11-04 refreeze (`evals/baselines/README.md` "Floors of record"): prompt-only 0.941, lucky
-guessing blind 0.153, described 0.153, topic 0.200 vs chance 0.200 (within the MC leakage
-standard). Bank v5 adds 30 gated items of other kinds of hop.
+drop shipped first as its own 68-item bank (`items_v4.json`, stamp `+bank-v4`, read with bank
+v3's plan); bank v5 replaces that file. On the 68 items alone the floors were prompt-only 0.941,
+lucky guessing blind 0.153, described 0.153, topic 0.200 vs chance 0.200 (within the MC leakage
+standard).
 
 ## Bank v3 (round 4; Camila r2's MC leakage standard)
 
@@ -159,7 +158,7 @@ Fresh floors of the frozen bank (Opus 5.5, 5 draws): blind 0.112, described 0.21
 ## Scoring
 
 - **Headline: pass rate of a blind multiple-choice judge** (`wsbench.basic.mcjudge_bank`,
-  stamp `bank-mc-2026-11-01-v3+bank-gate-r10+bank-v5`: bank v3's options on bank v4's 68 items
+  stamp `bank-mc-2026-11-01-v3+bank-gate-r10+bank-v5`: bank v3's options on the 68 kept items
   plus the 30 new items' lists, the prompts are `bank-mc-2026-10-31`'s, the deterministic gate is
   r10). Summary mode (the default): one digest per item, one judge call per item. Native
   (`opts=aggregate=native`): one call per (item, layer), an item passing on any
@@ -414,5 +413,7 @@ The readout below is a digest of the readouts across every read layer and positi
   v4's 68 items. They were measured under the `bank-gate-r8` draft: the lucky-guessing entries
   carry `bank-gate-r9` (a guesser sees only the lists); the prompt-only floor stays on
   `bank-gate-r8` until re-scored under the new stamp.
-- 2026-11-04 (`+bank-gate-r10+bank-v5`): bank v5 adds 30 gated two-hop items of the kinds bank v4
-  lost (98 items, its own read plan), with derived forms for their options (`mhforms-v2`).
+- 2026-11-04 (`+bank-gate-r10+bank-v5`): bank v5 adds 30 gated two-hop items of the kinds dropped
+  from bank v3 (98 items, its own read plan), with derived forms for their options (`mhforms-v2`).
+  Its header records the drop (`dropped_from_v3`), and the 68-item `items_v4.json` is removed, so
+  bank v5 is the one new multihop bank file.

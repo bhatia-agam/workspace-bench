@@ -17,7 +17,7 @@ PROMPT_VERSION = "bank-2026-10-30b"
 FAMILY_PROMPT_VERSIONS: dict[str, str] = {
     # plan 0048: multihop renders its own blind MC prompt (basic/mcjudge_bank.py)
     # round 4: bank v3 options (MC leakage); +bank-gate-r10: the deterministic gate's version
-    # (basic.mcjudge_bank.GATE_VERSION); +bank-v5: the 98-item bank (bank v4's 68 + 30 new
+    # (basic.mcjudge_bank.GATE_VERSION); +bank-v5: the 98-item bank (bank v3's 68 kept + 30 new
     # items). Result stamp only: the calls keep the v3 key (mcjudge_bank.CALL_VERSIONS)
     "multihop": "bank-mc-2026-11-01-v3+bank-gate-r10+bank-v5",
     # plan 0053: the blind forced-choice judge (mcjudge_basic) has its own instrument

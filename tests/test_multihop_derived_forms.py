@@ -34,7 +34,7 @@ def _v(iid: str, quote: str, text: str | None = None, item: dict | None = None) 
 
 def test_table_covers_every_non_number_option_of_every_bank():
     forms = json.loads(TABLE.read_text(encoding="utf-8"))["forms"]
-    for name in ("items.json", "items_v2.json", "items_v3.json", "items_v4.json", "items_v5.json"):
+    for name in ("items.json", "items_v2.json", "items_v3.json", "items_v5.json"):
         _h, items = load_bank(REPO / "evals/multihop" / name)
         for it in items:
             if not it.get("mc") or it["mc"]["bridge_type"] == "number":

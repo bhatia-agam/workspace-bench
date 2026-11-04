@@ -69,7 +69,7 @@ model_specific_directed_modulation, nyt_connections and typo_mt.
 | knowledge_cutoff | 0.000 | 0.000 | 147 | cutoff-judge-2026-10-31+kcgate-v3 | Opus 5.5 |
 | moral_rationale | 0.441 | 0.533 [0.47, 0.61] | 195 | ec-v9+nq1+maj3v (majority of 3 draws, near-verbatim quotes) | Opus 5.5 |
 | multi_concept_directed_modulation | 0.965 | 0.965 (saturated) | 114 | mcdm-2026-11-01e+bank-v2+notokinterp-2026-10-30+pins-r3+nocap-a1 | Opus 5.5 |
-| multihop (bank v5) | 0.941 (v4, 68) | 0.918 [0.86, 0.97] | 98 | bank-mc-2026-11-01-v3+bank-gate-r10+bank-v5 | Opus 5.5 |
+| multihop (bank v5) | 0.941 (68 kept items) | 0.918 [0.86, 0.97] | 98 | bank-mc-2026-11-01-v3+bank-gate-r10+bank-v5 | Opus 5.5 |
 | multihop_mt_v2 | 1.000 | 1.000 | 70 | mh2-mc-2026-11-01+norival-v1+qline-v1+bank-v5 | Opus 5.5 |
 | multilingual | 0.879 | 0.949 [0.90, 0.99] | 99 | mcrx-2026-11-03d+mc-ml-2026-11-01b | Opus 5.5 |
 | multilingual_mt | 0.950 | 0.980 [0.95, 1.00] | 100 | mt-regex-2026-10-30+v2+ln-2026-11-03a+rawrx-v2+plural-v1+langleg-v1+bank-v4 | Opus 5.5 |
@@ -108,7 +108,7 @@ floor scored on Sonnet 5 answers (Opus then refused 65 of 100 asks; it now answe
 
 **Banks frozen after the refreeze.** Rows marked with a bank were measured on a bank registered
 after the refreeze, under the same protocol and the bank's own stamp: multihop bank v5 (98 items:
-bank v4's 68 and 30 new). Prompt-only: the kept items' prompts are byte-identical, so their refreeze
+bank v3's 68 kept items and 30 new). Prompt-only: the kept items' prompts are byte-identical, so their refreeze
 answers were reused and only the new ids were asked (multihop 30; 0 refused), then each family was
 judged whole. Lucky guessing: fresh draws on the whole bank (multihop v5's build measured its
 options too, blind 0.143, described 0.204, topic 0.229, bank header `mc_leakage_v5`, and the fresh
@@ -139,7 +139,7 @@ as MC diagnostics of a regex family and are never drawn.
 | association | 91 | 0.125 | 0.138 -> 0.147 | 0.351 -> 0.433 | 0.624 -> 0.618 | 0.108 | fails described, topic |
 | basic_readout | 100 | 0.200 | 0.266 -> 0.292 | 0.352 -> 0.350 | 0.306 -> 0.338 | 0.202 | fails all three |
 | basic_readout_mt | 98 | 0.200 | 0.069 -> 0.129 | 0.145 -> 0.220 | 0.214 -> 0.327 | 0.204 | fails topic |
-| multihop (bank v5; v4's 68 -> 98) | 98 | 0.200 | 0.153 -> 0.145 | 0.153 -> 0.218 | 0.200 -> 0.224 | 0.173 | passes |
+| multihop (bank v5; 68 kept -> 98) | 98 | 0.200 | 0.153 -> 0.145 | 0.153 -> 0.218 | 0.200 -> 0.224 | 0.173 | passes |
 | multihop_mt_v2 | 70 | 0.187 | 0.074 -> 0.089 | 0.183 -> 0.223 | 0.211 -> 0.349 | 0.191 | fails topic |
 | multilingual | 99 | 0.200 | 0.057 -> 0.188 | 0.087 -> 0.281 | 0.069 -> 0.212 | 0.184 | fails described |
 | multilingual_mt | 100 | 0.200 | 0.006 -> 0.166 | 0.026 -> 0.256 | 0.040 -> 0.284 | 0.190 | fails described, topic |
