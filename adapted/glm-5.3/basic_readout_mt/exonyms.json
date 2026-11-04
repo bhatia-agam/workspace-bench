@@ -1,0 +1,95 @@
+{
+ "version": "adapt-glm-5.3",
+ "note": "adapted-only items' extra gold name forms (ru / es / fr / de / fa exonyms, authored with the item); added to evals/basic_readout_mt/exonyms.json by the judge (registry.load_resource)",
+ "items": {
+  "basic-au-t1-w100c0-brh-ent-boyle-gas": {
+   "readout": {
+    "ru": [
+     "Закон Бойля — Мариотта"
+    ],
+    "es": [
+     "ley de Boyle-Mariotte"
+    ],
+    "fr": [
+     "loi de Boyle-Mariotte"
+    ],
+    "de": [
+     "Gesetz von Boyle-Mariotte"
+    ],
+    "fa": [
+     "قانون بویل"
+    ]
+   }
+  },
+  "basic-au-t1-w100c0-brh-ent-hastings-1066": {
+   "readout": {
+    "ru": [
+     "Битва при Гастингсе"
+    ],
+    "es": [
+     "batalla de Hastings"
+    ],
+    "fr": [
+     "bataille d'Hastings"
+    ],
+    "de": [
+     "Schlacht bei Hastings"
+    ],
+    "fa": [
+     "نبرد هستینگز"
+    ]
+   }
+  },
+  "basic-au-t1-w100c0-brh-ent-ming-china": {
+   "readout": {
+    "ru": [
+     "Династия Мин",
+     "Империя Мин"
+    ],
+    "es": [
+     "dinastía Ming"
+    ],
+    "fr": [
+     "dynastie Ming"
+    ],
+    "de": [
+     "Ming-Dynastie"
+    ],
+    "fa": [
+     "دودمان مینگ"
+    ]
+   }
+  },
+  "basic-au-t1-w100c0-brh-ent-taj-agra": {
+   "readout": {
+    "ru": [
+     "Тадж-Махал"
+    ],
+    "fa": [
+     "تاج محل"
+    ]
+   }
+  },
+  "basic-au-t1-w100c0-brh-ent-versailles-1919": {
+   "readout": {
+    "ru": [
+     "Версальский мирный договор",
+     "Версальский договор"
+    ],
+    "es": [
+     "Tratado de Versalles"
+    ],
+    "fr": [
+     "traité de Versailles"
+    ],
+    "de": [
+     "Versailler Vertrag",
+     "Friedensvertrag von Versailles"
+    ],
+    "fa": [
+     "پیمان ورسای"
+    ]
+   }
+  }
+ }
+}

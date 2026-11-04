@@ -1,0 +1,2132 @@
+{
+ "family": "multihop-hard",
+ "parent_family": "multihop-mt",
+ "version": 4,
+ "contract": {
+  "multi_token": true,
+  "include_target": true,
+  "conjunctive_units": true,
+  "markdown_fold": true,
+  "fuzzy_names": true,
+  "native_langs": [
+   "en",
+   "zh"
+  ]
+ },
+ "gate": "Qwen3.6-27B behavioral, chat-templated fill-in question (enable_thinking=False, answer stem), staged (workspace-bench plan 0013). G1: the prompt, greedy AND >=16/20 @0.7. Recall: G2 bridge1 from the prompt's own clue and G3 the last hop with its source named, each greedy AND >=8/10; G4 (3-hop) bridge2 identified inside the full statement, greedy AND >=5/10. Shortcuts: S1 generator ablations (drop_b1, local_cue, 3-hop direct_b1_to_t) and S2 independent-adversary ablations must not reach the target (greedy or >4/20); none is ever excused. A 3-hop item whose only shortcut is drop_b1 is frozen as a 2-hop through bridge2 (relabel_b2). No factual issue; fresh-eye review overrides applied. EVAL RENDER: plain prompt; readouts at every prompt token (lite: the final token). Scoring (bank v2, 2026-10-30): a forced-choice judge per required unit over other questions' bridges and targets of the same kind plus cannot tell, credited only with a verified quote that holds a name form of the gold (name_forms; misspellings within edit distance); the conjunctive regex over units stays as a diagnostic.",
+ "frozen": "2026-11-01",
+ "built_from": {
+  "file": "items.json",
+  "sha256": "7c0160a7f818165a09d357a7b0e159301894501124e301bec7f19f75679600d3",
+  "frozen": "2026-10-15"
+ },
+ "builder": "scripts/build_mh2_bank_v2.py",
+ "readout": {
+  "kind": "all",
+  "lite": {
+   "kind": "final_token"
+  }
+ },
+ "supersedes": "items_v3.json",
+ "r4_mc": {
+  "script": "scripts/build_r4_mc_banks.py",
+  "rule": "round 4 (Camila r2 MC leakage standard): only the MC distractor lists change. Content lists: the four Opus-authored same-topic distractors of r4_distractors.json (scripts/r4_mc_distractors.py). ",
+  "lang_rule": null,
+  "lists_changed": 76
+ },
+ "r4b_mc": {
+  "script": "scripts/build_r4b_mc_banks.py",
+  "rule": "round 4b (Camila r2 MC leakage standard, second pass): only the MC distractor lists change. Content lists: the four distractors scripts/r4b_mc_refine.py kept (r4b_distractors.json: Opus-revised in the gold's naming style, fitting the topic as stated, kept when neither the options-only nor the topic guesser solves the item in more than 1 of 5 draws). ",
+  "lists_changed": 76,
+  "n_over_gate": 19
+ },
+ "adapt": {
+  "model": "glm-5.3",
+  "hf_id": "nvidia/GLM-5.3-NVFP4",
+  "frozen": "2026-11-03"
+ },
+ "items": [
+  {
+   "name": "mh2-salieri-film-shaffer-s0",
+   "subfamily": "2hop",
+   "domain": "film and its makers",
+   "prompt": "Fact: The 1984 Best Picture winner depicting Antonio Salieri's jealousy of the young Mozart was adapted from his own stage play by the English dramatist",
+   "spans": {
+    "D1": "The 1984 Best Picture winner depicting Antonio Salieri's jealousy of the young Mozart",
+    "R1": " was adapted from his own stage play by the English dramatist",
+    "G1": "A 1984 drama"
+   },
+   "target": "Peter Shaffer",
+   "target_alts": [],
+   "source": "multihop_v2",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "all",
+    "lite": {
+     "kind": "final_token"
+    }
+   },
+   "intermediates": [
+    "Amadeus"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Amadeus"
+      ]
+     },
+     "match": [
+      "Amadeus"
+     ],
+     "kind": "work",
+     "full_forms": [
+      "Amadeus"
+     ],
+     "forms_excluded": []
+    }
+   ],
+   "bridges": [
+    {
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "Amadeus"
+     ],
+     "question": "Name the 1984 Best Picture winner depicting Antonio Salieri's jealousy of the young Mozart."
+    }
+   ],
+   "probes": {
+    "G3_hop_b1_t": {
+     "kind": "fill",
+     "text": "Fact: Amadeus was adapted from his own stage play by the English dramatist",
+     "accept": [
+      "Peter Shaffer",
+      "Shaffer"
+     ]
+    },
+    "S1_drop_b1": {
+     "kind": "fill",
+     "text": "Fact: A 1984 drama was adapted from his own stage play by the English dramatist",
+     "accept": [
+      "Peter Shaffer",
+      "Shaffer"
+     ]
+    },
+    "G2_b1": {
+     "kind": "qa",
+     "text": "Name the 1984 Best Picture winner depicting Antonio Salieri's jealousy of the young Mozart.",
+     "accept": [
+      "Amadeus"
+     ]
+    },
+    "S1_local_cue": {
+     "kind": "fill",
+     "text": "Fact: the film was adapted from his own stage play by the English dramatist",
+     "accept": [
+      "Peter Shaffer",
+      "Shaffer"
+     ]
+    }
+   },
+   "shortcut_accept": [
+    "Peter Shaffer",
+    "Shaffer"
+   ],
+   "why_nonobvious": "Many English dramatists adapted their own plays for film (Pinter, Bolt, Stoppard), so the specific Mozart film must be resolved to reach Shaffer.",
+   "consistency": 1.0,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge1": 1.0
+   },
+   "hop_consistency": 1.0,
+   "context_b2_consistency": null,
+   "shortcut_probes": [
+    {
+     "id": "S1_drop_b1",
+     "kind": "fill",
+     "text": "Fact: A 1984 drama was adapted from his own stage play by the English dramatist",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S1_local_cue",
+     "kind": "fill",
+     "text": "Fact: the film was adapted from his own stage play by the English dramatist",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_0",
+     "kind": "fill",
+     "text": "Fact: The Best Picture winner was adapted from his own stage play by the English dramatist",
+     "n_pass": 1,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_1",
+     "kind": "fill",
+     "text": "Fact: The 1984 film was adapted from his own stage play by the English dramatist",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_2",
+     "kind": "qa",
+     "text": "Which English dramatist adapted his own stage play into a Best Picture winner?",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_3",
+     "kind": "fill",
+     "text": "Fact: The winner was adapted from his own stage play by the English dramatist",
+     "n_pass": 2,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    }
+   ],
+   "shortcut_max": 0.1,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       3
+      ]
+     }
+    },
+    "target": 3,
+    "target_alts": []
+   },
+   "mc": {
+    "bridge1": {
+     "gold": "Amadeus",
+     "distractors": [
+      "Gandhi",
+      "Tootsie",
+      "Witness",
+      "Reds"
+     ],
+     "pool": "Opus-revised same-topic distractors (r4b_distractors.json)"
+    }
+   },
+   "name_forms": {
+    "bridge1": {
+     "en": [
+      "Amadeus"
+     ],
+     "zh": [
+      "莫扎特传",
+      "阿玛迪斯",
+      "阿马德乌斯"
+     ]
+    }
+   },
+   "n_render_tokens": 32,
+   "id": "mh2-salieri-film-shaffer-s0",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 0.9,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "mh2-gorky-birthplace-t0",
+   "subfamily": "2hop",
+   "domain": "literature and its authors",
+   "prompt": "Fact: The author of the play 'The Lower Depths' and the novel 'Mother' was born in the city of",
+   "spans": {
+    "D1": "The author of the play 'The Lower Depths' and the novel 'Mother'",
+    "R1": " was born in the city of",
+    "G1": "A Russian writer"
+   },
+   "target": "Nizhny Novgorod",
+   "target_alts": [
+    "Nizhni Novgorod"
+   ],
+   "source": "multihop_v2",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "all",
+    "lite": {
+     "kind": "final_token"
+    }
+   },
+   "intermediates": [
+    "Maxim Gorky"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Maxim Gorky",
+       "Alexei Peshkov",
+       "Gorky",
+       "Maksim Gorky",
+       "Peshkov"
+      ]
+     },
+     "match": [
+      "Maxim Gorky",
+      "Alexei Peshkov",
+      "Gorky",
+      "Maksim Gorky",
+      "Peshkov"
+     ],
+     "kind": "person",
+     "full_forms": [
+      "Maxim Gorky",
+      "Alexei Peshkov",
+      "Gorky"
+     ],
+     "forms_excluded": []
+    }
+   ],
+   "bridges": [
+    {
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "Maxim Gorky",
+      "Alexei Peshkov",
+      "Gorky",
+      "Maksim Gorky",
+      "Peshkov"
+     ],
+     "question": "Name the author of the play 'The Lower Depths' and the novel 'Mother'."
+    }
+   ],
+   "probes": {
+    "G3_hop_b1_t": {
+     "kind": "fill",
+     "text": "Fact: Maxim Gorky was born in the city of",
+     "accept": [
+      "Nizhny Novgorod",
+      "Nizhni Novgorod",
+      "Nizhniy Novgorod",
+      "Gorky"
+     ]
+    },
+    "S1_drop_b1": {
+     "kind": "fill",
+     "text": "Fact: A Russian writer was born in the city of",
+     "accept": [
+      "Nizhny Novgorod",
+      "Nizhni Novgorod",
+      "Nizhniy Novgorod",
+      "Gorky",
+      "Novgorod"
+     ]
+    },
+    "G2_b1": {
+     "kind": "qa",
+     "text": "Name the author of the play 'The Lower Depths' and the novel 'Mother'.",
+     "accept": [
+      "Maxim Gorky",
+      "Alexei Peshkov",
+      "Gorky",
+      "Maksim Gorky",
+      "Peshkov"
+     ]
+    },
+    "S1_local_cue": {
+     "kind": "fill",
+     "text": "Fact: the writer was born in the city of",
+     "accept": [
+      "Nizhny Novgorod",
+      "Nizhni Novgorod",
+      "Nizhniy Novgorod",
+      "Gorky",
+      "Novgorod"
+     ]
+    }
+   },
+   "shortcut_accept": [
+    "Nizhny Novgorod",
+    "Nizhni Novgorod",
+    "Nizhniy Novgorod",
+    "Gorky",
+    "Novgorod"
+   ],
+   "why_nonobvious": "A generic Russian writer defaults to Moscow or St Petersburg; only recognising Gorky from his works yields his birthplace, the city later renamed after him.",
+   "consistency": 1.0,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge1": 1.0
+   },
+   "hop_consistency": 1.0,
+   "context_b2_consistency": null,
+   "shortcut_probes": [
+    {
+     "id": "S1_drop_b1",
+     "kind": "fill",
+     "text": "Fact: A Russian writer was born in the city of",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S1_local_cue",
+     "kind": "fill",
+     "text": "Fact: the writer was born in the city of",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_0",
+     "kind": "fill",
+     "text": "Fact: The author of the play and the novel was born in the city of",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_1",
+     "kind": "fill",
+     "text": "Fact: The author was born in the city of",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_2",
+     "kind": "qa",
+     "text": "In which city was the author of the play born?",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    }
+   ],
+   "shortcut_max": 0.0,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       4,
+       5,
+       3,
+       5,
+       3
+      ]
+     }
+    },
+    "target": 7,
+    "target_alts": [
+     7
+    ]
+   },
+   "mc": {
+    "bridge1": {
+     "gold": "Maxim Gorky",
+     "distractors": [
+      "Mikhail Sholokhov",
+      "Alexei Tolstoy",
+      "Mikhail Bulgakov",
+      "Boris Pasternak"
+     ],
+     "pool": "Opus-revised same-topic distractors (r4b_distractors.json)"
+    }
+   },
+   "name_forms": {
+    "bridge1": {
+     "en": [
+      "Maxim Gorky",
+      "Alexei Peshkov",
+      "Gorky",
+      "Maksim Gorky",
+      "Peshkov"
+     ],
+     "zh": [
+      "马克西姆·高尔基",
+      "马克西姆・高尔基",
+      "马克西姆•高尔基",
+      "马克西姆高尔基",
+      "高尔基",
+      "阿列克谢·彼什科夫",
+      "阿列克谢・彼什科夫",
+      "阿列克谢•彼什科夫",
+      "阿列克谢彼什科夫",
+      "彼什科夫"
+     ]
+    }
+   },
+   "n_render_tokens": 24,
+   "id": "mh2-gorky-birthplace-t0",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "mh2-rousseau-geneva-t1",
+   "subfamily": "2hop",
+   "domain": "philosophy and scholarship",
+   "prompt": "Fact: The philosopher who wrote 'The Social Contract' and 'Émile' was born in the city of",
+   "spans": {
+    "D1": "The philosopher who wrote 'The Social Contract' and 'Émile'",
+    "R1": " was born in the city of",
+    "G1": "An eighteenth-century philosopher"
+   },
+   "target": "Geneva",
+   "target_alts": [
+    "Genève"
+   ],
+   "source": "multihop_v2",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "all",
+    "lite": {
+     "kind": "final_token"
+    }
+   },
+   "intermediates": [
+    "Jean-Jacques Rousseau"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Jean-Jacques Rousseau",
+       "Rousseau",
+       "J.-J. Rousseau"
+      ]
+     },
+     "match": [
+      "Jean-Jacques Rousseau",
+      "Rousseau",
+      "J.-J. Rousseau"
+     ],
+     "kind": "person",
+     "full_forms": [
+      "Jean-Jacques Rousseau",
+      "Rousseau"
+     ],
+     "forms_excluded": []
+    }
+   ],
+   "bridges": [
+    {
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "Jean-Jacques Rousseau",
+      "Rousseau",
+      "J.-J. Rousseau"
+     ],
+     "question": "Name the philosopher who wrote 'The Social Contract' and 'Émile'."
+    }
+   ],
+   "probes": {
+    "G3_hop_b1_t": {
+     "kind": "fill",
+     "text": "Fact: Jean-Jacques Rousseau was born in the city of",
+     "accept": [
+      "Geneva",
+      "Genève",
+      "Geneve"
+     ]
+    },
+    "S1_drop_b1": {
+     "kind": "fill",
+     "text": "Fact: An eighteenth-century philosopher was born in the city of",
+     "accept": [
+      "Geneva",
+      "Genève",
+      "Geneve"
+     ]
+    },
+    "G2_b1": {
+     "kind": "qa",
+     "text": "Name the philosopher who wrote 'The Social Contract' and 'Émile'.",
+     "accept": [
+      "Jean-Jacques Rousseau",
+      "Rousseau",
+      "J.-J. Rousseau"
+     ]
+    },
+    "S1_local_cue": {
+     "kind": "fill",
+     "text": "Fact: the philosopher was born in the city of",
+     "accept": [
+      "Geneva",
+      "Genève",
+      "Geneve"
+     ]
+    }
+   },
+   "shortcut_accept": [
+    "Geneva",
+    "Genève",
+    "Geneve"
+   ],
+   "why_nonobvious": "Only the book titles identify Rousseau, and a generic philosopher's birthplace points to many cities, not Geneva in particular.",
+   "consistency": 1.0,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge1": 1.0
+   },
+   "hop_consistency": 1.0,
+   "context_b2_consistency": null,
+   "shortcut_probes": [
+    {
+     "id": "S1_drop_b1",
+     "kind": "fill",
+     "text": "Fact: An eighteenth-century philosopher was born in the city of",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S1_local_cue",
+     "kind": "fill",
+     "text": "Fact: the philosopher was born in the city of",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_0",
+     "kind": "fill",
+     "text": "Fact: The philosopher was born in the city of",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_1",
+     "kind": "fill",
+     "text": "Fact: The philosopher who wrote a treatise and a novel was born in the city of",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_2",
+     "kind": "qa",
+     "text": "In which city was the philosopher who wrote the books born?",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    }
+   ],
+   "shortcut_max": 0.0,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       6,
+       2,
+       6
+      ]
+     }
+    },
+    "target": 1,
+    "target_alts": [
+     2
+    ]
+   },
+   "mc": {
+    "bridge1": {
+     "gold": "Jean-Jacques Rousseau",
+     "distractors": [
+      "Denis Diderot",
+      "Voltaire",
+      "Julien Offray de La Mettrie",
+      "Moses Mendelssohn"
+     ],
+     "pool": "Opus-revised same-topic distractors (r4b_distractors.json)"
+    }
+   },
+   "name_forms": {
+    "bridge1": {
+     "en": [
+      "Jean-Jacques Rousseau",
+      "Rousseau",
+      "J.-J. Rousseau"
+     ],
+     "zh": [
+      "让-雅克·卢梭",
+      "让-雅克・卢梭",
+      "让-雅克•卢梭",
+      "让-雅克卢梭",
+      "让·雅克·卢梭",
+      "让・雅克・卢梭",
+      "让•雅克•卢梭",
+      "让雅克卢梭",
+      "卢梭"
+     ]
+    }
+   },
+   "n_render_tokens": 22,
+   "id": "mh2-rousseau-geneva-t1",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "mh2-sabre-dance-ethnicity-t0",
+   "subfamily": "2hop",
+   "domain": "classical music and opera",
+   "prompt": "Fact: The Soviet composer of the 'Sabre Dance' and the ballet 'Spartacus' came from a family that was ethnically",
+   "spans": {
+    "D1": "The Soviet composer of the 'Sabre Dance' and the ballet 'Spartacus'",
+    "R1": " came from a family that was ethnically",
+    "G1": "A Soviet composer"
+   },
+   "target": "Armenian",
+   "target_alts": [
+    "Armenians"
+   ],
+   "source": "multihop_v2",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "all",
+    "lite": {
+     "kind": "final_token"
+    }
+   },
+   "intermediates": [
+    "Aram Khachaturian"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Aram Khachaturian",
+       "Aram Ilyich Khachaturian",
+       "Khachaturian",
+       "Aram Khachaturyan",
+       "Khachaturyan"
+      ]
+     },
+     "match": [
+      "Aram Khachaturian",
+      "Aram Ilyich Khachaturian",
+      "Khachaturian",
+      "Aram Khachaturyan",
+      "Khachaturyan"
+     ],
+     "kind": "person",
+     "full_forms": [
+      "Aram Khachaturian",
+      "Aram Ilyich Khachaturian"
+     ],
+     "forms_excluded": []
+    }
+   ],
+   "bridges": [
+    {
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "Aram Khachaturian",
+      "Aram Ilyich Khachaturian",
+      "Khachaturian",
+      "Aram Khachaturyan",
+      "Khachaturyan"
+     ],
+     "question": "Name the Soviet composer of the 'Sabre Dance' and the ballet 'Spartacus'."
+    }
+   ],
+   "probes": {
+    "G3_hop_b1_t": {
+     "kind": "fill",
+     "text": "Fact: Aram Khachaturian came from a family that was ethnically",
+     "accept": [
+      "Armenian",
+      "Armenians"
+     ]
+    },
+    "S1_drop_b1": {
+     "kind": "fill",
+     "text": "Fact: A Soviet composer came from a family that was ethnically",
+     "accept": [
+      "Armenian",
+      "Armenians"
+     ]
+    },
+    "G2_b1": {
+     "kind": "qa",
+     "text": "Name the Soviet composer of the 'Sabre Dance' and the ballet 'Spartacus'.",
+     "accept": [
+      "Aram Khachaturian",
+      "Aram Ilyich Khachaturian",
+      "Khachaturian",
+      "Aram Khachaturyan",
+      "Khachaturyan"
+     ]
+    },
+    "S1_local_cue": {
+     "kind": "fill",
+     "text": "Fact: the composer came from a family that was ethnically",
+     "accept": [
+      "Armenian",
+      "Armenians"
+     ]
+    }
+   },
+   "shortcut_accept": [
+    "Armenian",
+    "Armenians"
+   ],
+   "why_nonobvious": "Neither the 'Sabre Dance' nor 'Spartacus' names an ethnicity, and a generic Soviet composer defaults to Russian, so only identifying Khachaturian yields Armenian.",
+   "consistency": 1.0,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge1": 1.0
+   },
+   "hop_consistency": 1.0,
+   "context_b2_consistency": null,
+   "shortcut_probes": [
+    {
+     "id": "S1_drop_b1",
+     "kind": "fill",
+     "text": "Fact: A Soviet composer came from a family that was ethnically",
+     "n_pass": 1,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S1_local_cue",
+     "kind": "fill",
+     "text": "Fact: the composer came from a family that was ethnically",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_0",
+     "kind": "fill",
+     "text": "Fact: The Soviet composer came from a family that was ethnically",
+     "n_pass": 1,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_1",
+     "kind": "fill",
+     "text": "Fact: The composer of the ballet came from a family that was ethnically",
+     "n_pass": 2,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_2",
+     "kind": "qa",
+     "text": "What ethnicity was the family of a Soviet composer who wrote a famous dance?",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    }
+   ],
+   "shortcut_max": 0.1,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       5,
+       8,
+       4,
+       5,
+       4
+      ]
+     }
+    },
+    "target": 1,
+    "target_alts": [
+     2
+    ]
+   },
+   "mc": {
+    "bridge1": {
+     "gold": "Aram Khachaturian",
+     "distractors": [
+      "Sergei Prokofiev",
+      "Dmitri Shostakovich",
+      "Giya Kancheli",
+      "Arvo Pärt"
+     ],
+     "pool": "Opus-revised same-topic distractors (r4b_distractors.json)"
+    }
+   },
+   "name_forms": {
+    "bridge1": {
+     "en": [
+      "Aram Khachaturian",
+      "Aram Ilyich Khachaturian",
+      "Khachaturian",
+      "Aram Khachaturyan",
+      "Khachaturyan"
+     ],
+     "zh": [
+      "阿拉姆·哈恰图良",
+      "阿拉姆・哈恰图良",
+      "阿拉姆•哈恰图良",
+      "阿拉姆哈恰图良",
+      "哈恰图良",
+      "哈恰图量",
+      "哈察图良"
+     ]
+    }
+   },
+   "n_render_tokens": 28,
+   "id": "mh2-sabre-dance-ethnicity-t0",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 0.9,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "mh2-sun-yat-sen-burial-t2",
+   "subfamily": "2hop",
+   "domain": "medicine and its pioneers",
+   "prompt": "Fact: The physician revered as the 'Father of the Nation' who led the overthrow of the Qing dynasty was laid to rest in a grand mausoleum in the city of",
+   "spans": {
+    "D1": "The physician revered as the 'Father of the Nation' who led the overthrow of the Qing dynasty",
+    "R1": " was laid to rest in a grand mausoleum in the city of",
+    "G1": "A twentieth-century physician"
+   },
+   "target": "Nanjing",
+   "target_alts": [
+    "Nanking"
+   ],
+   "source": "multihop_v2",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "all",
+    "lite": {
+     "kind": "final_token"
+    }
+   },
+   "intermediates": [
+    "Sun Yat-sen"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Sun Yat-sen",
+       "Sun Zhongshan",
+       "Sun Wen"
+      ]
+     },
+     "match": [
+      "Sun Yat-sen",
+      "Sun Zhongshan",
+      "Sun Wen"
+     ],
+     "kind": "person",
+     "full_forms": [
+      "Sun Yat-sen",
+      "Sun Zhongshan"
+     ],
+     "forms_excluded": [
+      {
+       "form": "Sun",
+       "reason": "shorter than 4 characters"
+      }
+     ]
+    }
+   ],
+   "bridges": [
+    {
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "Sun Yat-sen",
+      "Sun Zhongshan",
+      "Sun Wen",
+      "Sun"
+     ],
+     "question": "Name the physician revered as the 'Father of the Nation' who led the overthrow of the Qing dynasty."
+    }
+   ],
+   "probes": {
+    "G3_hop_b1_t": {
+     "kind": "fill",
+     "text": "Fact: Sun Yat-sen was laid to rest in a grand mausoleum in the city of",
+     "accept": [
+      "Nanjing",
+      "Nanking"
+     ]
+    },
+    "S1_drop_b1": {
+     "kind": "fill",
+     "text": "Fact: A twentieth-century physician was laid to rest in a grand mausoleum in the city of",
+     "accept": [
+      "Nanjing",
+      "Nanking"
+     ]
+    },
+    "G2_b1": {
+     "kind": "qa",
+     "text": "Name the physician revered as the 'Father of the Nation' who led the overthrow of the Qing dynasty.",
+     "accept": [
+      "Sun Yat-sen",
+      "Sun Zhongshan",
+      "Sun Wen",
+      "Sun"
+     ]
+    },
+    "S1_local_cue": {
+     "kind": "fill",
+     "text": "Fact: the physician was laid to rest in a grand mausoleum in the city of",
+     "accept": [
+      "Nanjing",
+      "Nanking"
+     ]
+    }
+   },
+   "shortcut_accept": [
+    "Nanjing",
+    "Nanking"
+   ],
+   "why_nonobvious": "Nothing in the prompt mentions Nanjing or its landmarks, the Qing clue points to Beijing rather than Nanjing, and a generic physician's mausoleum city is unconstrained, so only knowing Sun Yat-sen's burial gives the answer.",
+   "consistency": 1.0,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge1": 1.0
+   },
+   "hop_consistency": 1.0,
+   "context_b2_consistency": null,
+   "shortcut_probes": [
+    {
+     "id": "S1_drop_b1",
+     "kind": "fill",
+     "text": "Fact: A twentieth-century physician was laid to rest in a grand mausoleum in the city of",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S1_local_cue",
+     "kind": "fill",
+     "text": "Fact: the physician was laid to rest in a grand mausoleum in the city of",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_0",
+     "kind": "fill",
+     "text": "Fact: The physician was laid to rest in a grand mausoleum in the city of",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_1",
+     "kind": "fill",
+     "text": "Fact: The leader revered as the 'Father of the Nation' was laid to rest in a grand mausoleum in the city of",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_2",
+     "kind": "fill",
+     "text": "Fact: The man who led the overthrow of a dynasty was laid to rest in a grand mausoleum in the city of",
+     "n_pass": 1,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_3",
+     "kind": "qa",
+     "text": "In which city is there a grand mausoleum where a revered leader was laid to rest?",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    }
+   ],
+   "shortcut_max": 0.05,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       5,
+       4,
+       2
+      ]
+     }
+    },
+    "target": 2,
+    "target_alts": [
+     2
+    ]
+   },
+   "mc": {
+    "bridge1": {
+     "gold": "Sun Yat-sen",
+     "distractors": [
+      "Mao Zedong",
+      "Kim Il-sung",
+      "Zhou Enlai",
+      "Park Chung-hee"
+     ],
+     "pool": "Opus-revised same-topic distractors (r4b_distractors.json)"
+    }
+   },
+   "name_forms": {
+    "bridge1": {
+     "en": [
+      "Sun Yat-sen",
+      "Sun Zhongshan",
+      "Sun Wen"
+     ],
+     "zh": [
+      "孙中山",
+      "孙逸仙",
+      "孙文"
+     ]
+    }
+   },
+   "n_render_tokens": 36,
+   "id": "mh2-sun-yat-sen-burial-t2",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 0.95,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "mh2-rowling-galbraith-s0",
+   "subfamily": "2hop",
+   "domain": "literature and its authors",
+   "prompt": "Fact: The British author of the Harry Potter novels has published crime fiction under the pseudonym",
+   "spans": {
+    "D1": "The British author of the Harry Potter novels",
+    "R1": " has published crime fiction under the pseudonym",
+    "G1": "A British author"
+   },
+   "target": "Robert Galbraith",
+   "target_alts": [],
+   "source": "multihop_v2",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "all",
+    "lite": {
+     "kind": "final_token"
+    }
+   },
+   "intermediates": [
+    "J. K. Rowling"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "J. K. Rowling",
+       "Joanne Rowling",
+       "JK Rowling",
+       "Rowling"
+      ]
+     },
+     "match": [
+      "J. K. Rowling",
+      "Joanne Rowling",
+      "JK Rowling",
+      "Rowling"
+     ],
+     "kind": "person",
+     "full_forms": [
+      "J. K. Rowling",
+      "Joanne Rowling"
+     ],
+     "forms_excluded": []
+    }
+   ],
+   "bridges": [
+    {
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "J. K. Rowling",
+      "Joanne Rowling",
+      "JK Rowling",
+      "Rowling"
+     ],
+     "question": "Name the British author of the Harry Potter novels."
+    }
+   ],
+   "probes": {
+    "G3_hop_b1_t": {
+     "kind": "fill",
+     "text": "Fact: J. K. Rowling has published crime fiction under the pseudonym",
+     "accept": [
+      "Robert Galbraith",
+      "Galbraith"
+     ]
+    },
+    "S1_drop_b1": {
+     "kind": "fill",
+     "text": "Fact: A British author has published crime fiction under the pseudonym",
+     "accept": [
+      "Robert Galbraith",
+      "Galbraith"
+     ]
+    },
+    "G2_b1": {
+     "kind": "qa",
+     "text": "Name the British author of the Harry Potter novels.",
+     "accept": [
+      "J. K. Rowling",
+      "Joanne Rowling",
+      "JK Rowling",
+      "Rowling"
+     ]
+    },
+    "S1_local_cue": {
+     "kind": "fill",
+     "text": "Fact: the novelist has published crime fiction under the pseudonym",
+     "accept": [
+      "Robert Galbraith",
+      "Galbraith"
+     ]
+    }
+   },
+   "shortcut_accept": [
+    "Robert Galbraith",
+    "Galbraith"
+   ],
+   "why_nonobvious": "Many authors write under pseudonyms, so the final relation alone gives no specific name; only identifying Rowling yields Robert Galbraith.",
+   "consistency": 1.0,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge1": 1.0
+   },
+   "hop_consistency": 1.0,
+   "context_b2_consistency": null,
+   "shortcut_probes": [
+    {
+     "id": "S1_drop_b1",
+     "kind": "fill",
+     "text": "Fact: A British author has published crime fiction under the pseudonym",
+     "n_pass": 1,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S1_local_cue",
+     "kind": "fill",
+     "text": "Fact: the novelist has published crime fiction under the pseudonym",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_0",
+     "kind": "fill",
+     "text": "Fact: The British author has published crime fiction under the pseudonym",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_1",
+     "kind": "qa",
+     "text": "Under what pseudonym has a British author published crime fiction?",
+     "n_pass": 4,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_2",
+     "kind": "fill",
+     "text": "Fact: The author of the novels has published crime fiction under the pseudonym",
+     "n_pass": 3,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    }
+   ],
+   "shortcut_max": 0.2,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       5,
+       3,
+       2,
+       1
+      ]
+     }
+    },
+    "target": 4,
+    "target_alts": []
+   },
+   "mc": {
+    "bridge1": {
+     "gold": "J. K. Rowling",
+     "distractors": [
+      "J. R. R. Tolkien",
+      "C. S. Lewis",
+      "P. D. James",
+      "A. S. Byatt"
+     ],
+     "pool": "Opus-revised same-topic distractors (r4b_distractors.json)"
+    }
+   },
+   "name_forms": {
+    "bridge1": {
+     "en": [
+      "J. K. Rowling",
+      "Joanne Rowling",
+      "JK Rowling",
+      "Rowling"
+     ],
+     "zh": [
+      "J·K·罗琳",
+      "J・K・罗琳",
+      "J•K•罗琳",
+      "JK罗琳",
+      "J.K.罗琳",
+      "乔安妮·罗琳",
+      "乔安妮・罗琳",
+      "乔安妮•罗琳",
+      "乔安妮罗琳"
+     ]
+    }
+   },
+   "n_render_tokens": 18,
+   "id": "mh2-rowling-galbraith-s0",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 0.8,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "mh2-ionesco-birth-romania-s3",
+   "subfamily": "2hop",
+   "domain": "theatre, ballet and dance",
+   "prompt": "Fact: The absurdist playwright who wrote 'Rhinoceros' and 'The Bald Soprano' was born in the country of",
+   "spans": {
+    "D1": "The absurdist playwright who wrote 'Rhinoceros' and 'The Bald Soprano'",
+    "R1": " was born in the country of",
+    "G1": "An absurdist playwright"
+   },
+   "target": "Romania",
+   "target_alts": [
+    "Rumania"
+   ],
+   "source": "multihop_v2",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "all",
+    "lite": {
+     "kind": "final_token"
+    }
+   },
+   "intermediates": [
+    "Eugène Ionesco"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Eugène Ionesco",
+       "Eugene Ionesco",
+       "Ionesco"
+      ]
+     },
+     "match": [
+      "Eugène Ionesco",
+      "Eugene Ionesco",
+      "Ionesco"
+     ],
+     "kind": "person",
+     "full_forms": [
+      "Eugène Ionesco",
+      "Eugene Ionesco"
+     ],
+     "forms_excluded": []
+    }
+   ],
+   "bridges": [
+    {
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "Eugène Ionesco",
+      "Eugene Ionesco",
+      "Ionesco"
+     ],
+     "question": "Name the absurdist playwright who wrote 'Rhinoceros' and 'The Bald Soprano'."
+    }
+   ],
+   "probes": {
+    "G3_hop_b1_t": {
+     "kind": "fill",
+     "text": "Fact: Eugène Ionesco was born in the country of",
+     "accept": [
+      "Romania",
+      "Rumania"
+     ]
+    },
+    "S1_drop_b1": {
+     "kind": "fill",
+     "text": "Fact: An absurdist playwright was born in the country of",
+     "accept": [
+      "Romania",
+      "Rumania"
+     ]
+    },
+    "G2_b1": {
+     "kind": "qa",
+     "text": "Name the absurdist playwright who wrote 'Rhinoceros' and 'The Bald Soprano'.",
+     "accept": [
+      "Eugène Ionesco",
+      "Eugene Ionesco",
+      "Ionesco"
+     ]
+    },
+    "S1_local_cue": {
+     "kind": "fill",
+     "text": "Fact: the playwright was born in the country of",
+     "accept": [
+      "Romania",
+      "Rumania"
+     ]
+    }
+   },
+   "shortcut_accept": [
+    "Romania",
+    "Rumania"
+   ],
+   "why_nonobvious": "The default birth country for an absurdist playwright would be Ireland (Beckett) or France, and the play titles carry no national cue; only identifying Ionesco gives Romania.",
+   "consistency": 1.0,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge1": 1.0
+   },
+   "hop_consistency": 1.0,
+   "context_b2_consistency": null,
+   "shortcut_probes": [
+    {
+     "id": "S1_drop_b1",
+     "kind": "fill",
+     "text": "Fact: An absurdist playwright was born in the country of",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S1_local_cue",
+     "kind": "fill",
+     "text": "Fact: the playwright was born in the country of",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_0",
+     "kind": "fill",
+     "text": "Fact: The absurdist playwright was born in the country of",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_1",
+     "kind": "fill",
+     "text": "Fact: The playwright was born in the country of",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_2",
+     "kind": "qa",
+     "text": "In which country was the absurdist playwright born?",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    }
+   ],
+   "shortcut_max": 0.0,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       5,
+       4,
+       2
+      ]
+     }
+    },
+    "target": 1,
+    "target_alts": [
+     3
+    ]
+   },
+   "mc": {
+    "bridge1": {
+     "gold": "Eugène Ionesco",
+     "distractors": [
+      "Samuel Beckett",
+      "Stanisław Ignacy Witkiewicz",
+      "Günter Grass",
+      "Jean Genet"
+     ],
+     "pool": "Opus-revised same-topic distractors (r4b_distractors.json)"
+    }
+   },
+   "name_forms": {
+    "bridge1": {
+     "en": [
+      "Eugène Ionesco",
+      "Ionesco"
+     ],
+     "zh": [
+      "欧仁·尤内斯库",
+      "欧仁・尤内斯库",
+      "欧仁•尤内斯库",
+      "欧仁尤内斯库",
+      "尤内斯库",
+      "尤奈斯库"
+     ]
+    }
+   },
+   "n_render_tokens": 29,
+   "id": "mh2-ionesco-birth-romania-s3",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "mh2-gold-mask-successor-t0",
+   "subfamily": "2hop",
+   "domain": "painting and sculpture",
+   "prompt": "Fact: the boy pharaoh whose solid-gold funerary mask is the most famous artifact of ancient Egypt was succeeded on the throne by",
+   "spans": {
+    "D1": "the boy pharaoh whose solid-gold funerary mask is the most famous artifact of ancient Egypt",
+    "R1": " was succeeded on the throne by",
+    "G1": "An ancient Egyptian pharaoh"
+   },
+   "target": "Ay",
+   "target_alts": [
+    "Kheperkheperure Ay"
+   ],
+   "source": "multihop_v2",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "all",
+    "lite": {
+     "kind": "final_token"
+    }
+   },
+   "intermediates": [
+    "Tutankhamun"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Tutankhamun",
+       "Tutankhaten",
+       "King Tut",
+       "Tutankhamen"
+      ]
+     },
+     "match": [
+      "Tutankhamun",
+      "Tutankhaten",
+      "King Tut",
+      "Tutankhamen"
+     ],
+     "kind": "person",
+     "full_forms": [
+      "Tutankhamun",
+      "Tutankhaten",
+      "King Tut"
+     ],
+     "forms_excluded": [
+      {
+       "form": "Tut",
+       "reason": "shorter than 4 characters"
+      }
+     ]
+    }
+   ],
+   "bridges": [
+    {
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "Tutankhamun",
+      "Tutankhaten",
+      "King Tut",
+      "Tutankhamen",
+      "Tut"
+     ],
+     "question": "Name the boy pharaoh whose solid-gold funerary mask is the most famous artifact of ancient Egypt."
+    }
+   ],
+   "probes": {
+    "G3_hop_b1_t": {
+     "kind": "fill",
+     "text": "Fact: Tutankhamun was succeeded on the throne by",
+     "accept": [
+      "Ay",
+      "Kheperkheperure Ay",
+      "Pharaoh Ay"
+     ]
+    },
+    "S1_drop_b1": {
+     "kind": "fill",
+     "text": "Fact: An ancient Egyptian pharaoh was succeeded on the throne by",
+     "accept": [
+      "Ay",
+      "Kheperkheperure Ay",
+      "Pharaoh Ay"
+     ]
+    },
+    "G2_b1": {
+     "kind": "qa",
+     "text": "Name the boy pharaoh whose solid-gold funerary mask is the most famous artifact of ancient Egypt.",
+     "accept": [
+      "Tutankhamun",
+      "Tutankhaten",
+      "King Tut",
+      "Tutankhamen",
+      "Tut"
+     ]
+    },
+    "S1_local_cue": {
+     "kind": "fill",
+     "text": "Fact: the pharaoh was succeeded on the throne by",
+     "accept": [
+      "Ay",
+      "Kheperkheperure Ay",
+      "Pharaoh Ay"
+     ]
+    }
+   },
+   "shortcut_accept": [
+    "Ay",
+    "Kheperkheperure Ay",
+    "Pharaoh Ay"
+   ],
+   "why_nonobvious": "Pharaonic successions are countless; only identifying the gold-mask king as Tutankhamun gives his successor Ay.",
+   "consistency": 1.0,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge1": 1.0
+   },
+   "hop_consistency": 1.0,
+   "context_b2_consistency": null,
+   "shortcut_probes": [
+    {
+     "id": "S1_drop_b1",
+     "kind": "fill",
+     "text": "Fact: An ancient Egyptian pharaoh was succeeded on the throne by",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S1_local_cue",
+     "kind": "fill",
+     "text": "Fact: the pharaoh was succeeded on the throne by",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_0",
+     "kind": "fill",
+     "text": "Fact: the pharaoh of ancient Egypt was succeeded on the throne by",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_1",
+     "kind": "fill",
+     "text": "Fact: the ruler was succeeded on the throne by",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_2",
+     "kind": "qa",
+     "text": "Which ruler of ancient Egypt succeeded a pharaoh on the throne?",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    }
+   ],
+   "shortcut_max": 0.0,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       4,
+       4,
+       2,
+       4
+      ]
+     }
+    },
+    "target": 1,
+    "target_alts": [
+     8
+    ]
+   },
+   "mc": {
+    "bridge1": {
+     "gold": "Tutankhamun",
+     "distractors": [
+      "Ramesses II",
+      "Khufu",
+      "Nefertiti",
+      "Merneptah"
+     ],
+     "pool": "Opus-revised same-topic distractors (r4b_distractors.json)"
+    }
+   },
+   "name_forms": {
+    "bridge1": {
+     "en": [
+      "Tutankhamun",
+      "Tutankhaten",
+      "King Tut",
+      "Tutankhamen"
+     ],
+     "zh": [
+      "图坦卡蒙",
+      "图坦卡门"
+     ]
+    }
+   },
+   "n_render_tokens": 28,
+   "id": "mh2-gold-mask-successor-t0",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "mh2-macbeth-duncan-t2",
+   "subfamily": "2hop",
+   "domain": "royal families and dynasties",
+   "prompt": "Fact: The medieval ruler of Alba whose life Shakespeare dramatized in a tragedy bearing his name seized the throne after slaying",
+   "spans": {
+    "D1": "The medieval ruler of Alba whose life Shakespeare dramatized in a tragedy bearing his name",
+    "R1": " seized the throne after slaying",
+    "G1": "A medieval European ruler"
+   },
+   "target": "Duncan I of Scotland",
+   "target_alts": [
+    "Duncan I"
+   ],
+   "source": "multihop_v2",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "all",
+    "lite": {
+     "kind": "final_token"
+    }
+   },
+   "intermediates": [
+    "Macbeth"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Macbeth",
+       "Mac Bethad mac Findlaích",
+       "Mac Bethad"
+      ]
+     },
+     "match": [
+      "Macbeth",
+      "Mac Bethad mac Findlaích",
+      "Mac Bethad"
+     ],
+     "kind": "person",
+     "full_forms": [
+      "Macbeth",
+      "Mac Bethad mac Findlaích"
+     ],
+     "forms_excluded": []
+    }
+   ],
+   "bridges": [
+    {
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "Macbeth",
+      "Mac Bethad mac Findlaích",
+      "Mac Bethad"
+     ],
+     "question": "Name the medieval ruler of Alba whose life Shakespeare dramatized in a tragedy bearing his name."
+    }
+   ],
+   "probes": {
+    "G3_hop_b1_t": {
+     "kind": "fill",
+     "text": "Fact: Macbeth seized the throne after slaying",
+     "accept": [
+      "Duncan I of Scotland",
+      "Duncan I",
+      "Duncan",
+      "King Duncan"
+     ]
+    },
+    "S1_drop_b1": {
+     "kind": "fill",
+     "text": "Fact: A medieval European ruler seized the throne after slaying",
+     "accept": [
+      "Duncan I of Scotland",
+      "Duncan I",
+      "Duncan",
+      "King Duncan"
+     ]
+    },
+    "G2_b1": {
+     "kind": "qa",
+     "text": "Name the medieval ruler of Alba whose life Shakespeare dramatized in a tragedy bearing his name.",
+     "accept": [
+      "Macbeth",
+      "Mac Bethad mac Findlaích",
+      "Mac Bethad"
+     ]
+    },
+    "S1_local_cue": {
+     "kind": "fill",
+     "text": "Fact: the ruler seized the throne after slaying",
+     "accept": [
+      "Duncan I of Scotland",
+      "Duncan I",
+      "Duncan",
+      "King Duncan"
+     ]
+    }
+   },
+   "shortcut_accept": [
+    "Duncan I of Scotland",
+    "Duncan I",
+    "Duncan",
+    "King Duncan"
+   ],
+   "why_nonobvious": "Seizing a throne by killing a predecessor fits many medieval rulers, so only identifying Macbeth from the Shakespeare clue yields Duncan.",
+   "consistency": 1.0,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge1": 1.0
+   },
+   "hop_consistency": 1.0,
+   "context_b2_consistency": null,
+   "shortcut_probes": [
+    {
+     "id": "S1_drop_b1",
+     "kind": "fill",
+     "text": "Fact: A medieval European ruler seized the throne after slaying",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S1_local_cue",
+     "kind": "fill",
+     "text": "Fact: the ruler seized the throne after slaying",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_0",
+     "kind": "fill",
+     "text": "Fact: The medieval ruler of Alba seized the throne after slaying",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_1",
+     "kind": "fill",
+     "text": "Fact: The medieval ruler seized the throne after slaying",
+     "n_pass": 1,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_2",
+     "kind": "qa",
+     "text": "Which king did the medieval ruler of Alba slay to seize the throne?",
+     "n_pass": 2,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    }
+   ],
+   "shortcut_max": 0.1,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       2,
+       7,
+       3
+      ]
+     }
+    },
+    "target": 4,
+    "target_alts": [
+     2
+    ]
+   },
+   "mc": {
+    "bridge1": {
+     "gold": "Macbeth",
+     "distractors": [
+      "King John",
+      "Alfred the Great",
+      "Edward I",
+      "Henry V"
+     ],
+     "pool": "Opus-revised same-topic distractors (r4b_distractors.json)"
+    }
+   },
+   "name_forms": {
+    "bridge1": {
+     "en": [
+      "Macbeth",
+      "Mac Bethad mac Findlaích",
+      "Mac Bethad"
+     ],
+     "zh": [
+      "麦克白"
+     ]
+    }
+   },
+   "n_render_tokens": 26,
+   "id": "mh2-macbeth-duncan-t2",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 0.9,
+     "pass": true
+    }
+   }
+  }
+ ]
+}

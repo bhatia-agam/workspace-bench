@@ -1,0 +1,41 @@
+{
+ "version": "adapt-glm-5.3",
+ "note": "adapted-only items' same-topic distractors the MC builder dropped (adapt mc); added to evals/basic_readout_mt/hidden_rivals.json by the judge",
+ "items": {
+  "basic-au-t1-w100c0-brh-ent-boyle-gas": {
+   "readout": [
+    "Charles's law",
+    "Gay-Lussac's law",
+    "Avogadro's law",
+    "Dalton's law"
+   ]
+  },
+  "basic-au-t1-w100c0-brh-ent-hastings-1066": {
+   "readout": [
+    "Battle of Stamford Bridge",
+    "Battle of Agincourt",
+    "Battle of Fulford"
+   ]
+  },
+  "basic-au-t1-w100c0-brh-ent-ming-china": {
+   "readout": [
+    "Song dynasty",
+    "Yuan dynasty",
+    "Tang dynasty"
+   ]
+  },
+  "basic-au-t1-w100c0-brh-ent-taj-agra": {
+   "readout": [
+    "Humayun's Tomb",
+    "Red Fort",
+    "Fatehpur Sikri",
+    "Bibi Ka Maqbara"
+   ]
+  },
+  "basic-au-t1-w100c0-brh-ent-versailles-1919": {
+   "readout": [
+    "Treaty of Saint-Germain"
+   ]
+  }
+ }
+}
