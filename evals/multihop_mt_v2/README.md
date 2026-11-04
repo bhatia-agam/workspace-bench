@@ -330,7 +330,9 @@ v4 key (`MH2_CALL_VERSION`). Stamp `+bank-v5`. The floors were re-measured on v5
   new stamp.
 - 2026-11-04 (`+bank-v6`): bank v6 rebuilds the bridge lists the lucky-guessing guessers still
   solved and drops the 6 items they solved whatever the list; the topic guesser still fails the
-  MC leakage standard on fresh draws.
+  MC leakage standard on fresh draws. Its floors, measured under the `qline-v1` draft, carry
+  `qline-v2`: the lucky-guessing entries restamped, the prompt-only floor re-scored from its
+  cached answers (0 new judge calls; 1.000, n = 64, unchanged).
 - 2026-11-04 (`+bank-v5`): Immanuel Kant, whom kant-hume's prompt describes, is no longer one of
   its bridge-1 options.
 - 2026-11-04 (`+qline-v2`): a quote one word off verifies near-verbatim, and a quote cut mid-name
