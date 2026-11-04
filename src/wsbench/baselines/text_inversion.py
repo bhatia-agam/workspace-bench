@@ -291,9 +291,9 @@ def ati_scored(spec: Any) -> bool:
 def gated_ids(family: str, specs: Iterable[Any] | None = None) -> list[str]:
     """The ids the gate asks and scores: the family's ATI-scored plan rows (``specs``, default
     ``readplan.plan(family)``) that are items of the bank the family JUDGES. A bank that reads with
-    an earlier bank's plan (``read_plan_bank``: association v5, basic_readout_mt v5,
-    role_bound_association v2, user_modeling v2) keeps that bank's rows in its plan; those ids
-    are never judged, so they are not gated. Every other family: the plan's ids unchanged."""
+    an earlier bank's plan (``read_plan_bank``, e.g. association v5) keeps that bank's rows in its
+    plan; those ids are never judged, so they are not gated. Every other family: the plan's ids
+    unchanged."""
     from wsbench import readplan
 
     rows = [s for s in (readplan.plan(family) if specs is None else specs) if ati_scored(s)]

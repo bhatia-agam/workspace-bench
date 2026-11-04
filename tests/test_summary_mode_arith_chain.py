@@ -251,7 +251,11 @@ def test_chain_any_of_3_all_positions(tmp_path, monkeypatch, chain_v1):
     assert "layer_protocols" not in r.extras and "null_top1_near" not in r.extras
     assert r.extras["null_near"] == 0.0
     assert r.config["aggregate"] == "summary" and r.config["cells"] == "all"
-    assert r.config["prompt_version"] == f"{CHAIN_PV}+digest-v5-task-extractive-joint+sj-v10"
+    # the free path's digest takes the start number as an operand: its results stamp +start-op,
+    # its calls stay keyed CHAIN_PV (the digest suffix is added to both)
+    assert (
+        r.config["prompt_version"] == f"{CHAIN_PV}+start-op+digest-v5-task-extractive-joint+sj-v10"
+    )
 
     native = CHAIN.run(
         _chain_args(

@@ -1,6 +1,6 @@
-"""basic_readout's asked-sum check (``+brsum-v1``): an arithmetic pick's quoted sentence must not
-compute ANOTHER sum with the same result. Pure verification: a sentence stating no computation,
-or the asked one, passes. Both directions on cached readout shapes."""
+"""basic_readout's asked-sum check (``+brsum-v2``): an arithmetic pick's quoted sentence must not
+compute only OTHER sums with the same result. Pure verification: a sentence stating no
+computation, or the asked one among others, passes. Both directions on cached readout shapes."""
 
 import pytest
 
@@ -44,6 +44,11 @@ def test_asked_sum_of_every_arith_item():
         ("九减五等于四", [(9, "-", 5)]),
         ("Answer in one word: **four**", []),
         ("four. 4 4 Four", []),
+        # a hyphenated range is not a subtraction; an equals sign makes it one
+        ("The answer is 4 on a 1-10 scale.", []),
+        ("from 1990\u20131995", []),
+        ("9-5=4", [(9, "-", 5)]),
+        ("9 - 5 = 4", [(9, "-", 5)]),
     ],
 )
 def test_stated_sums(text, sums):
@@ -72,6 +77,24 @@ def test_the_asked_sum_or_no_sum_passes():
     assert _score("br-proc-arith-2_2", "2 + 2 = 4").passed
 
 
+@pytest.mark.parametrize(
+    "quote",
+    [
+        "9 - 5 = 4, and you can check it: 4 + 5 = 9.",
+        "Nine minus five is four (four plus five is nine).",
+        "The answer is 4 on a 1-10 scale.",
+    ],
+)
+def test_the_asked_sum_beside_another_or_a_range_passes(quote):
+    v = _score("br-proc-arith-9-5", quote)
+    assert v.passed and v.void == ""
+
+
+def test_only_other_sums_fail():
+    v = _score("br-proc-arith-9-5", "7 - 3 = 4 and 6 - 2 = 4, so four.")
+    assert not v.passed and v.void == "sum"
+
+
 def test_the_quoted_sentence_is_read_in_its_line():
     quote = "the answer is four"
     assert _score("br-proc-arith-9-5", quote, "Since 9 - 5 is easy, the answer is four.").passed
@@ -98,7 +121,7 @@ def test_commutative_sums_match():
 
 def test_scoring_stamp_moves_and_options_and_calls_do_not():
     pv = prompt_version_of("basic_readout")
-    assert pv.startswith("br-mc-2026-11-01-v5b+brsum-v1")
+    assert pv.startswith("br-mc-2026-11-01-v5b+brsum-v2")
     assert mj.options_version("basic_readout") == "br-mc-2026-11-01-v5b"
     assert mj.call_pv("basic_readout", pv + "+digest-v5") == "br-mc-2026-11-01-v5b+digest-v5"
     for it in list(_items().values())[:20]:  # the option order is the frozen stamp's

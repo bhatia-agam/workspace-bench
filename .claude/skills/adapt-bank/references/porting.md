@@ -127,7 +127,7 @@ or keep only `plain` items and report the count.
      "Begin your reply with one word, yes or no. Then give one short sentence."; Gemma 57 → 91/100
      topics with a yes/no-led draw); move `moral/distilled.json` aside first (distil skips done topics).
 
-  **Bank v3 (registered since #190):** 195 items, `bank_version: 3`, instrument ec-v5d, frozen
+  **Bank v3 (registered since #190):** 195 items, `bank_version: 3`, instrument `ec-v9`, frozen
   `options` per item (`scripts/moral_distractors.py`), `rekey` / `reason_side_ok`; side and reasons
   are sampled in the READ conversation (plan 0046). Two traps:
   - `adapt moral stage=rekey_readrender` (which AGENTS.md names for a new model) ignores `model=`:

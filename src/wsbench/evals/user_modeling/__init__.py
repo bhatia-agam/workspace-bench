@@ -15,10 +15,9 @@ SPEC = register(
         name="user_modeling",
         title="User modelling",
         group="association",
-        # bank v2 = the 47 selfdescribe items, read with items.json's plan (read_plan_bank); bank
-        # v3 = v2's 47 + 79 new gated selfdescribe items (126), read with its own plan (the 47
-        # kept rows equal items.json's). items.json and items_v2.json stay frozen and judgeable
-        # with WSB_BANK_FILE_USER_MODELING
+        # bank v3 = items.json's 47 selfdescribe items (the 53 synthsys items dropped) + 79 new
+        # gated selfdescribe items (126), read with its own plan (the 47 kept rows equal
+        # items.json's). items.json stays frozen and judgeable with WSB_BANK_FILE_USER_MODELING
         bank=Path("evals/user_modeling/items_v3.json"),
         judge=JudgeConfig(prompt_version=PROMPT_VERSION),
         metric="pass_rate",

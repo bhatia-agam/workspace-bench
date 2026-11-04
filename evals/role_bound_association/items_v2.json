@@ -6,7 +6,8 @@
  "changes": [
   "2026-11-04: four stories carry a stray tab character that garbles a word ('mildly amusing \\tray without hurrying'). The bank scores direction pairs (an item and its role-reversed partner), so those 4 pairs (8 items) are dropped, not patched. The other 92 items are items.json's, byte for byte and in the same order.",
   "read_plan_bank = items.json: the read plan stays items.json's 100 rows (one read, one plan_sha), so existing readouts judge this bank; the judge loads only these 92 ids. Distractor names are drawn from items.json's name pool, so every kept item shows the same option lists as under items.json and its cached judge calls stay valid.",
-  "floors (lucky guessing, prompt-only) and the ATI subset were measured on the 100-item bank and must be recomputed on this one."
+  "floors (lucky guessing, prompt-only) and the ATI subset were measured on the 100-item bank and must be recomputed on this one.",
+  "2026-11-04: five kept pairs have one story each whose em dash survives only as escape text: the six characters \\u2014 in place of the dash (oa-starter-benchwarmer-pity-ba, oa-teacher-parent-blame-ab, oa-comedian-heckler-humiliate-ab, and oa-guard-visitor-search-ba, which also has '\\u\\u2014'), or a bare \\u (oa-shopowner-supplier-cheat-ba: 'never in the crates \\u a top layer'). They are kept as items.json has them: only a dash is mangled and the story still reads clearly, unlike the four dropped stories, where a tab character inside the text breaks a word."
  ],
  "dropped": {
   "oa-boss-employee-envy": "oa-boss-employee-envy-ba's story has a stray tab inside its text (\"... life outshone his \\the the way ...\"); its pair partner goes with it",
