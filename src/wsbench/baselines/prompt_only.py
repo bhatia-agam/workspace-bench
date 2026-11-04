@@ -52,7 +52,9 @@ SOURCE_KEYS = (
 SATURATED: dict[str, str] = {
     "multi_concept_directed_modulation": "the prompt dictates the concepts",
     "directed_modulation": "the instruction names the concept, and narrating it counts",
-    "role_bound_association": "the scene states who did what to whom",
+    # role_bound_association is not listed: under its pair headline (pair-v1, both directions
+    # must pass) the prompt-only reader is at 0.457, not the ceiling, so its floor is drawn
+    # beside the pair rows like any other floor
     "relational_multihop": "the cloze states both hops",
     "typo": "the correction is recoverable from the misspelling",
 }

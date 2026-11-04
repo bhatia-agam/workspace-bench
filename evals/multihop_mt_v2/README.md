@@ -99,8 +99,8 @@ borderline ones, kept: buena-vista's Abraham Lincoln, an observed confuser the p
 describe; baptizer's "Mary, mother of Jesus", the prompt names Jesus only; ionesco's Samuel
 Beckett, another absurdist the prompt does not describe). The read plan is unchanged (options are
 never rendered); the kant-hume bridge1 MC call is new on every arm, the other calls keep their
-v4 key (`MH2_CALL_VERSION`). Stamp `+bank-v5`. The lucky-guessing and prompt-only floors were
-measured on v4's lists: stale until re-measured.
+v4 key (`MH2_CALL_VERSION`). Stamp `+bank-v5`. The floors were re-measured on v5 in the
+2026-11-04 refreeze (Floors).
 
 ## Scoring (plan 0041)
 
@@ -259,6 +259,11 @@ measured on v4's lists: stale until re-measured.
 
 ## Floors
 
+- **Floors of record** (bank v5, 2026-11-04 refreeze; `evals/baselines/README.md` "Floors of
+  record"): lucky guessing blind 0.089, described 0.223, topic 0.349, uniform 0.191 vs chance
+  0.187 (topic fails the MC leakage standard); prompt-only 1.000 (n = 70) under
+  `mh2-mc-2026-11-01+norival-v1+qline-v1+bank-v5`. No ATI subset (not gated by design). The
+  bullets below record earlier banks.
 - **Lucky guessing** (Opus 5.5, 5 draws, the v2 option lists, instrument `mh2-mc-2026-10-31b`; the lists are those of `mh2-mc-2026-10-30`, unchanged by the later revisions, so the entries were restamped, not redrawn):
   blind 0.197, described 0.200, seeded uniform 0.186 (analytic
   0.186: 1/5 per list over the substantive options). Before the
@@ -267,9 +272,9 @@ measured on v4's lists: stale until re-measured.
   blind / 0.37 described on them. The v1 authored-confusable lists of `multihop_mt` scored 0.658
   blind.
 - **Prompt-only:** `po-opus-v1` (Opus 5.5 reads the prompt, its readout judged by this same
-  pipeline) is measured in the campaign run phase (gpu R6) and frozen into
-  `evals/baselines/prompt_only_summary.json`; none is frozen yet, so `report` shows none. Expect
-  it high: every frontier reader names the bridges from the prompt (pass@3 1.0 on panel-v1).
+  pipeline), frozen in `evals/baselines/prompt_only_summary.json`: 1.000 on every bank so far, as
+  expected, since every frontier reader names the bridges from the prompt (pass@3 1.0 on
+  panel-v1).
 
 - **Round 4 (bank v3, `items_v3.json`)**: the v2 lists drew other questions' bridges of the same
   KIND but any topic (William Henry Harrison beside Richard I, Oreste Baratieri, Lise Meitner),
@@ -287,6 +292,8 @@ measured on v4's lists: stale until re-measured.
 
 ## Instrument history
 
+- 2026-11-04 (`+bank-v5`): the prompt-only and lucky-guessing floors are re-measured on bank v5,
+  so they are drawn beside this instrument again.
 - 2026-11-04 (`+bank-v5`): Immanuel Kant, whom kant-hume's prompt describes, is no longer one of
   its bridge-1 options.
 - 2026-11-04 (`+qline-v1`): a quote one word off verifies near-verbatim, and a quote cut mid-name

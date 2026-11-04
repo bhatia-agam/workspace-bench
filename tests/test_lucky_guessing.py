@@ -55,14 +55,20 @@ def test_lists_match_the_judges_builders():
     for item_id, (opts, gold) in list(dm_options(bank).items())[:5]:
         assert dm[item_id].lists == [opts] and dm[item_id].golds == [gold]
     # plan 0040 item 11: the v2 bank splits the correction; the MC roles are the native
-    # correction and the language (round 4b: the bank of record is v3, same roles)
+    # correction and the language (round 4b: the bank of record is v3, same roles). The
+    # language is scored on the raw samples, so the floor guesses the correction list only
     _h, bank = lg.load_bank_file(REPO / "evals/multilingual_typo/items_v3.json")
     mt = {it.id: it for it in lg.build_family("multilingual_typo")}
     for item_id, per_role in list(mt_options(bank).items())[:5]:
-        assert mt[item_id].meta["roles"] == ["correction_native", "language"]
-        c, lang = per_role["correction_native"], per_role["language"]
-        assert mt[item_id].lists == [c[0][:-1], lang[0][:-1]]
-        assert mt[item_id].golds == [c[1] + 1, lang[1] + 1]
+        assert mt[item_id].meta["judged_roles"] == ["correction_native", "language"]
+        assert mt[item_id].meta["roles"] == ["correction_native"]
+        c = per_role["correction_native"]
+        assert mt[item_id].lists == [c[0][:-1]]
+        assert mt[item_id].golds == [c[1] + 1]
+    # the topic labels were written for every judged list; the language one is dropped with it
+    assert lg.with_topics(list(mt.values())[:5], "multilingual_typo")[0].meta["topics"] == [
+        lg.load_list_topics("multilingual_typo")[next(iter(mt))][0]
+    ]
     # role-bound: three 5-way lists lifted from the rendered block, golds from the judge
     rb = lg.build_family("role_bound_association")
     assert all(it.n_options == [5, 5, 5] for it in rb)
@@ -603,45 +609,34 @@ def test_leakage_standard_holds_topic_binding_for_every_family():
     the topic. Too-lenient shape: association's first bank v3 (blind 0.112, described 0.170,
     topic 0.320 against 1/8 + 5 points) passed on blind/described alone; review 2 then showed its
     broad topic line hid the leakage, and the rebuilt v3 (fine-category topic) fails on topic
-    and described. Too-strict shape: multihop v3's topic 0.218 (0.214 before review r3's bridge
-    relabel) is counted and stays under 0.20 + 5, so it still passes."""
+    and described. Too-strict shape: multihop's topic (bank v3 0.218, bank v4 0.200) is counted
+    and stays under 0.20 + 5, so it still passes."""
     assert "topic" in lg.LEAKAGE_GUESSERS and lg.LEAKAGE_MARGIN == 0.05
     fl = lg.floors()
-    # association's registered bank is v5 (v3 minus two items); its frozen
-    # entries were measured on bank v3's 93 items, so floors() drops them until a re-measure.
-    # The standard is read here on those measured v3 numbers.
-    assert "association" not in fl
-    fl["association"] = json.loads(lg.FROZEN.read_text(encoding="utf-8"))["association"]
 
     def fails(name: str) -> dict[str, float]:
         return lg.leakage_failures(fl[name], lg.analytic_floor(lg.build_family(name)))
 
+    # re-measured on bank v5 (91 items, 2026-11-04 refreeze): it still fails on described and
+    # topic, the stereotype items (README "Floors of record")
     assert lg.analytic_floor(lg.build_family("association")) == pytest.approx(1 / 8)
     assoc = fails("association")
     assert set(assoc) == {"described", "topic"}
-    # review r4's kinship repair (no kind / near-synonym / part of the gold) raised 0.578 / 0.301
-    assert assoc["topic"] == pytest.approx(0.624, abs=1e-3)
-    assert assoc["described"] == pytest.approx(0.351, abs=1e-3)
+    assert assoc["topic"] == pytest.approx(0.618, abs=1e-3)
+    assert assoc["described"] == pytest.approx(0.433, abs=1e-3)
     # the superseded "binding = what the judge is shown" rule would still fail it on described
     old_rule = {v: fl["association"][v] for v in ("blind", "described")}
     assert set(lg.leakage_failures(old_rule, 1 / 8)) == {"described"}
-    # multihop's frozen floors were measured on bank v3 (100 items); the registered bank is the
-    # 68-item v4, so they are stale (dropped by lg.floors) until re-measured on v4
-    assert "multihop" not in fl
-    frozen = json.loads(lg.FROZEN.read_text(encoding="utf-8"))["multihop"]
-    assert frozen["topic"]["mean"] == pytest.approx(0.218) and frozen["topic"]["n_items"] == 100
-    assert lg.leakage_failures(frozen, 0.2) == {}  # v3's 0.218 held the standard
+    # multihop bank v4 (68 items): topic 0.200 is counted and holds the standard
+    assert fl["multihop"]["topic"]["mean"] == pytest.approx(0.2)
+    assert fl["multihop"]["topic"]["n_items"] == 68
+    assert fails("multihop") == {}
     # the verdicts of the other families name the topic guesser too
     assert set(fails("poetry")) == {"described", "topic"}
     assert set(fails("directed_modulation")) == {"topic"}
-    # bank v5 (PR #214 review r6: every v2 option a non-pass digest names kept) failed `blind`
-    # through the option order on the processing lists; with the gold slots balanced (review r7,
-    # -v5b) it still fails all three, through the implicit items alone (evals/baselines/README.md).
-    # bank v7 shows Big Ben's gold as "England / UK", so those v5-measured floors are stale
-    # (dropped by lg.floors) until re-measured; their verdict stays on file
-    assert "basic_readout" not in fl
-    br = json.loads(lg.FROZEN.read_text(encoding="utf-8"))["basic_readout"]
-    assert set(lg.leakage_failures(br, 0.2)) == {"blind", "described", "topic"}
+    # basic_readout bank v7 (Big Ben's gold "England / UK") fails all three, through the
+    # implicit items (evals/baselines/README.md)
+    assert set(fails("basic_readout")) == {"blind", "described", "topic"}
 
 
 def test_leakage_failures_bar_edges():

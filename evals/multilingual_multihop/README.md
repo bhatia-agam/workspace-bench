@@ -118,13 +118,18 @@ place -> Mawsynram). All six are frozen in `ATI_EXCLUDE`.
 
 ## Floors
 
-The prompt-only floor is re-measured on the v2 instrument with the Opus prompt-only protocol
-(`po-opus-v1`: one Opus 5.5 readout per item at layer 44, through the same digest and scorer) in
-the run phase; the v1 floors (`prompt_only.json`, Qwen prompt-only text) do not apply to the
-v2 stamp.
+**Floors of record** (2026-11-04 refreeze, `evals/baselines/README.md` "Floors of record"; stamp
+`mcrx-2026-11-03d+mc-ml-2026-11-01b`): prompt-only 0.856 (97 items; `po-opus-v1`: one Opus 5.5
+readout per item, through the same digest and scorer); lucky guessing on the content list only (the
+language is scored on the raw samples, never by an option list; chance 0.200): blind 0.302,
+described 0.406, topic 0.424, uniform 0.247, failing the MC leakage standard on all three;
+text-blind subset 0 / 98 (no ATI number). The v1 floors (`prompt_only.json`, Qwen prompt-only text)
+do not apply to the v2 stamp. The lucky-guessing numbers below were measured with both lists
+(content AND language, chance 0.04).
 
 Lucky guessing on bank v4 (round 4b, `items_v4.json`, the bank of record, frozen 2026-11-01;
-Opus 5.5, 5 fresh draws, both lists right; the frozen floors): **blind 0.029, topic 0.073,
+Opus 5.5, 5 fresh draws, both lists right; frozen until the 2026-11-04 refreeze): **blind 0.029,
+topic 0.073,
 described 0.080, uniform 0.047** (chance 0.04, standard <= 0.09: PASS; 98/98 bridge lists hold
 >= 2 same-topic confusers). v4 changes only the MC lists: the bridge lists are re-drawn by
 `scripts/r4b_mc_refine.py` (gold-style, fitting the topic as stated, never tied to the gold
@@ -204,6 +209,8 @@ Russian sentence"); they are measured in the run phase.
   multilingual_mt's mlt-fi-kansanedustaja.
 - 2026-11-04 (`mcrx-2026-11-03d`, `+plural-v1`): English content forms also credit their regular plural
   (`regex.english_plurals`), because "dripstone caves" missed the form "dripstone cave".
+- 2026-11-04 (`mcrx-2026-11-03d+mc-ml-2026-11-01b`): the floors are refrozen under this
+  instrument, lucky guessing on the content list only (prompt-only 0.340 -> 0.856).
 
 ## Readouts
 

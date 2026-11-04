@@ -65,8 +65,11 @@ STANDARD_POINTS_BY_FAMILY: dict[str, float] = {"moral_rationale": 0.02}
 # lists; families with a topic file only
 TOPICS_DIR = REPO_ROOT / "evals" / "baselines" / "topics"
 # final r1 (2026-10-31): the multi-mark guessers of a family whose judge is multi-label (moral
-# ec-v5c): every option the guesser thinks the model weighs is marked, MARK_DRAWS draws, and the
-# item is scored by the judge's own pass rule (marks_verdict)
+# ec-v5c / ec-v5d / ec-v7): every option the guesser thinks the model weighs is marked, MARK_DRAWS
+# draws, and the item is scored by that judge's pass rule (marks_verdict). The registered moral
+# judge (ec-v9) takes ONE pick, so its floors are the single-pick guessers (question / blind /
+# described); the multi-mark variants only describe the opt-in bank v5 floors
+# (lucky_guessing_moral_v5.json, ec-v7)
 # blind_marks (round 3): the options-only guesser without examples, scored by the same rule
 MARK_VARIANTS = ("question_marks", "described_marks", "blind_marks")
 # round 4 (MC leakage standard, Camila r2: ">= 5 draws"): 5 draws, an option marked by >= 3
@@ -444,22 +447,29 @@ def _poetry() -> list[Item]:
 
 def _multitoken(name: str) -> Callable[[], list[Item]]:
     def build() -> list[Item]:
-        from wsbench.multitoken.family import mc_family
-        from wsbench.multitoken.options import judged_roles, option_sets
+        from wsbench.multitoken.family import language_leg_on, mc_family
+        from wsbench.multitoken.options import LANGUAGE_ROLE, judged_roles, option_sets
 
         cfg = mc_family(name)
         _h, items = load_bank_file(bank_path(name))
         opts = option_sets(items, cannot=cfg.cannot)
+        # a multilingual family scores its language unit on the raw samples (the language leg),
+        # never by an option list, so it is floored on its content lists only
+        no_language = language_leg_on(name)
         out = []
         for it in items:
             # a family whose headline scores some units only (basic_readout_mt: the readout
             # unit, plan 0051) is floored on those units' lists only
+            every = judged_roles(it)
             roles = [
-                r for r in judged_roles(it) if cfg.headline_units is None or r in cfg.headline_units
+                r
+                for r in every
+                if (cfg.headline_units is None or r in cfg.headline_units)
+                and not (no_language and r == LANGUAGE_ROLE)
             ]
             lists = [opts[it["id"]][r][0][:-1] for r in roles]
             golds = [opts[it["id"]][r][1] + 1 for r in roles]
-            out.append(Item(it["id"], lists, golds, meta={"roles": roles}))
+            out.append(Item(it["id"], lists, golds, meta={"roles": roles, "judged_roles": every}))
         return out
 
     return build
@@ -592,8 +602,8 @@ def _wrong_intermediate() -> list[Item]:
 
 def _introspection() -> list[Item]:
     """The 125 headline items (protocol, beta 4): the judge's 7-option list minus cannot-tell
-    (the five cluster concepts and "no injected concept", the bank's seeded order). Round 4: the
-    headline is the regex (rxhead-v1); this floors the diagnostic judge column."""
+    (the five cluster concepts and "no injected concept", the bank's seeded order). The headline
+    judge (``jhead-v2``) shows exactly these options, so this floors the headline."""
     from wsbench.evals.introspection.judge import is_headline
     from wsbench.evals.introspection.judge import load as load_ii
     from wsbench.mc import is_cannot
@@ -685,6 +695,11 @@ def with_topics(items: list[Item], family: str) -> list[Item]:
     out = []
     for it in items:
         t = topics.get(it.id)
+        every, kept = it.meta.get("judged_roles"), it.meta.get("roles")
+        if t is not None and every and kept and len(t) == len(every) != len(it.lists):
+            # labels written for every judged list (one per role); the floor's lists are a
+            # subset of those roles (a language-leg family drops its language list)
+            t = [label for role, label in zip(every, t, strict=True) if role in kept]
         if t is None or len(t) != len(it.lists):
             raise ValueError(f"{family}/{it.id}: topic labels {t!r} do not match its lists")
         out.append(Item(it.id, it.lists, it.golds, it.multi, {**it.meta, "topics": t}))
@@ -1632,13 +1647,20 @@ def freeze(run_dir: Path, dst: Path = FROZEN) -> dict[str, Any]:
             "any_hit": a.get("any_hit"),
             "mean_picks": a.get("mean_picks"),
             **({"marks_null": a["marks_null"]} if a.get("marks_null") is not None else {}),
-            # two-sided lists (moral_rationale): the side-aware readers of the guesser's draws
+            # two-sided lists under a multi-mark rule (moral_rationale's opt-in bank v5): the
+            # side-aware readers of the guesser's draws, scored by ``marks_pass``. A single-pick
+            # entry gets none: the registered judge (``ec-v9``) takes one pick, and a reader
+            # marking a whole side is not an answer it can give
             **(
-                side_readers(
-                    r.get("per_item") or {},
-                    bank_directions(r.get("bank")) if fam == "moral_rationale" else None,
+                (
+                    side_readers(
+                        r.get("per_item") or {},
+                        bank_directions(r.get("bank")) if fam == "moral_rationale" else None,
+                    )
+                    or {}
                 )
-                or {}
+                if r["variant"] in MARK_VARIANTS
+                else {}
             ),
             **({"by_n_concepts": a["by_n_concepts"]} if a.get("by_n_concepts") else {}),
             "analytic_floor": r["analytic_floor"],

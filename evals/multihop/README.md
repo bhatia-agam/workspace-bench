@@ -18,8 +18,9 @@ prompt asks for a country's language, 20 that ask for a capital (16) or give one
 b3-mh-fuji-currency, whose answer ("Japanese yen") names the bridge itself. The two `dbl-*-antonym` items ask for an antonym, not an opposite, and stay. The
 header's `read_plan_bank` names `items_v3.json`, so the read plan, its `plan_sha` and every v3
 readout file serve bank v4 (the judge loads only v4's ids). Stamp `+bank-v4`; the MC calls keep
-their key, so a v3 run re-scores from cache. The lucky-guessing and prompt-only floors were
-measured on v3's 100 items and are stale until re-measured on v4.
+their key, so a v3 run re-scores from cache. The floors were re-measured on v4's 68 items in the
+2026-11-04 refreeze (`evals/baselines/README.md` "Floors of record"): prompt-only 0.941, lucky
+guessing blind 0.153, described 0.153, topic 0.200 vs chance 0.200 (within the MC leakage standard).
 
 ## Bank v3 (round 4; Camila r2's MC leakage standard)
 
@@ -338,3 +339,5 @@ The readout below is a digest of the readouts across every read layer and positi
 - 2026-11-04 (`+bank-v4`): bank v4 drops the language-of-country, capital and opposite items and
   b3-mh-fuji-currency (68 items left); on bank v3 (100 items) every lens scored 0.95-0.98, level
   with the 0.98 prompt-only floor.
+- 2026-11-04 (`+bank-v4`): the prompt-only and lucky-guessing floors are re-measured on bank
+  v4's 68 items, so they are drawn beside this instrument again.

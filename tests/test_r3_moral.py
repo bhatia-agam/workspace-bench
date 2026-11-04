@@ -209,9 +209,10 @@ def test_v4_bank_is_the_gate_passing_subset_of_v3(monkeypatch):
     assert mr.instrument_version(bank, summary_args(Path("x"), Path("y"), "x")) == "ec-v9-b4"
 
 
-def test_native_mode_is_one_pick_per_cell_and_the_ati_entry_is_stale(tmp_path, monkeypatch):
-    """A native ec-v9 run makes one single-pick call per (cell, side), no locator; the
-    ATI entry, gated under ec-v5d, is stale until it is re-gated under ec-v9."""
+def test_native_mode_is_one_pick_per_cell_and_the_ati_entry_is_on_ec_v9(tmp_path, monkeypatch):
+    """A native ec-v9 run makes one single-pick call per (cell, side), no locator; the ATI entry
+    was re-gated under ec-v9 (2026-11-04 refreeze) and is served; the same entry under the retired
+    ec-v5d stamp is refused."""
     import pytest
     from conftest import native_args
 
@@ -235,6 +236,12 @@ def test_native_mode_is_one_pick_per_cell_and_the_ati_entry_is_stale(tmp_path, m
     assert all(row["pick"] == "gold" and row["correct"] for row in r.rows) and r.value == 1.0
     assert r.config["prompt_version"] == "ec-v9"
     ati = json.loads((ROOT / "evals/baselines/anti_text_inversion.json").read_text())
-    assert ati["moral_rationale"]["instrument"] == "ec-v5d" != ti.gate_instrument("moral_rationale")
+    assert ati["moral_rationale"]["instrument"] == "ec-v9" == ti.gate_instrument("moral_rationale")
+    assert ti.subset("moral_rationale") == ati["moral_rationale"]["ids"]
+    stale = tmp_path / "ati.json"
+    stale.write_text(
+        json.dumps({**ati, "moral_rationale": {**ati["moral_rationale"], "instrument": "ec-v5d"}}),
+        encoding="utf-8",
+    )
     with pytest.raises(SystemExit, match="re-gate"):
-        ti.subset("moral_rationale")
+        ti.subset("moral_rationale", stale)

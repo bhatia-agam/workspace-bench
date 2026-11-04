@@ -8,10 +8,12 @@ word; does the lens surface the consideration the model itself weighs: the commi
 
 **A default run uses bank v3 (`items_v3.json`, 195 items) judged under `ec-v9`** (one pick per
 item and side, the reason the readouts mainly give, asked three times in summary mode with the
-majority of the verdicts deciding, stamped `+maj3v`; see "Judge `ec-v9`"). **Every floor in this
-section was measured under the earlier multi-label instrument `ec-v5d`** (its multi-mark rows are
-scored by that rule, `lucky_guessing.marks_pass`), so none is served beside an `ec-v9` row until
-the floors are refrozen; the single-pick rows are the comparable guessers. Camila's
+majority of the verdicts deciding, stamped `+maj3v`; see "Judge `ec-v9`"). **The table below was
+measured under the earlier instruments** (bank v3 under the multi-label `ec-v5d`; its multi-mark
+rows are scored by that rule, `lucky_guessing.marks_pass`). Bank v3's served floors since the
+2026-11-04 refreeze (`evals/baselines/README.md` "Floors of record") are its single-pick rows on the
+same 195 lists, restamped `ec-v9`: question 0.706, described 0.704, blind 0.608 vs chance 0.176, so
+its bar is 0.706; prompt-only 0.533 (`ec-v9+nq1+maj3v`); text-blind subset 134 / 195. Camila's
 standard (r2): *"it should be at chance just seeing the options"*, i.e. every no-readout reader
 at most 2 points above its own chance under the family's rule. **No bank meets it.** Measured
 floors (Opus 5.5; v3 `evals/baselines/lucky_guessing.json`, v4 `rekey_report_v4.json`, v5
@@ -239,7 +241,8 @@ Lens (final-olens-rl600-x4, cached readouts, ec-v7; n = 24, so 95% CIs are about
 All-layer gold-marked rate 0.833, gold-only 0.167. The all-layer lens clears the question_marks
 bar (0.583 vs 0.500) but within its CI, and it does NOT clear the side readers (always-no 0.917,
 contrarian 0.792, above); v5 has 24 items, so it would carry little weight on its own. Bank v3 (195 items, `ec-v5d`)
-stays the registered bank (its ATI entry was current then; it is stale under ec-v9); bank v4 (53, `ec-v6`, now `ec-v9-b4`) and v5 are opt-in
+stays the registered bank (its ATI entry was current then; re-gated under ec-v9 in the
+2026-11-04 refreeze: 134 / 195); bank v4 (53, `ec-v6`, now `ec-v9-b4`) and v5 are opt-in
 with `WSB_BANK_FILE_MORAL_RATIONALE=evals/moral_rationale/items_v4.json` / `items_v5.json`.
 
 ## Bank v4 (`items_v4.json`, opt-in; round 3, 2026-10-31): the items the question does not give away
@@ -441,9 +444,9 @@ every arm.
   overruled the judge. Example: on ec-ransom-chat_tf the gold was marked with 8 samples and the
   opposite reason "Saving Lives Is Always Worth It" with 34, so 34 >= 1.5 x 8 failed the item.
 - **Caveat:** the bank still leaks: a no-readout question + options reader picks the gold 0.706
-  of the time with a single pick (bank v3, frozen ec-v5d-era draws) vs a 0.200 chance. The
-  floors, the prompt-only floor and the ATI entry were measured under ec-v5d and are stale until
-  they are refrozen / re-gated under ec-v9.
+  of the time with a single pick (bank v3) vs a 0.176 chance. The 2026-11-04 refreeze refroze
+  every floor under ec-v9: the single-pick guessers (restamped from the same draws), prompt-only
+  0.533 under the summary rules (`+nq1+maj3v`) and the text-blind subset 134 / 195.
 
 ### `SYSTEM_PICK`
 
@@ -820,3 +823,5 @@ retries only failures.
   digest.
 - 2026-11-04 (`+nq1`): a near-verbatim quote verifies like an exact one, because gold picks were
   failing only on one-word quote misses ("ransom" vs "a ransom").
+- 2026-11-04 (`ec-v9`): the floors are refrozen under this judge (single-pick guessers, bar
+  0.706; prompt-only 0.441 -> 0.533; text-blind 152 -> 134 of 195).

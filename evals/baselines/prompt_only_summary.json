@@ -6,10 +6,10 @@
   "draws": 1,
   "protocol": "po-opus-v1",
   "fallback": {
-   "protocol": "po-opus-v1+sonnet5-fallback",
-   "reader": "prompt_only:claude-opus-5-5+claude-sonnet-5-fallback",
+   "protocol": "po-opus-v1+sonnet55-fallback",
+   "reader": "prompt_only:claude-opus-5-5+claude-sonnet-5-5-fallback",
    "primary": "claude-opus-5-5",
-   "fallback": "claude-sonnet-5",
+   "fallback": "claude-sonnet-5-5",
    "framing": "open_model"
   }
  },
@@ -31,14 +31,14 @@
    "n_empty_cells": 0
   },
   "judge_model": "claude-sonnet-5",
-  "instrument": "am-design-v3+summ-c3+twin-c1+pairs-v2+digest-v5-task-extractive+sj-v10",
+  "instrument": "am-design-v3+summ-c4+twin-c2+pairs-v2+sonnet-digest+opus5-fb+digest-v5-task-extractive+sj-v10",
   "layers_judged": [
    44
   ],
   "complete": true,
   "aggregate": "summary",
   "summarizer": {
-   "model": "claude-opus-5-5",
+   "model": "claude-sonnet-5",
    "reasoning": {
     "anthropic_effort": "default"
    },
@@ -51,13 +51,12 @@
    "token_cap": 920000,
    "decode": true,
    "overflow": "hierarchical",
-   "fallback": "default",
-   "lang": false,
+   "fallback": "none+claude-opus-5",
    "layer_mode": "union"
   },
   "decided": {},
   "digest_unserved": [],
-  "written": "2026-10-31T21:15:50+00:00",
+  "written": "2026-11-04T08:10:42+00:00",
   "value": 0.0,
   "n": 22,
   "ci": [
@@ -69,12 +68,12 @@
   "n_refused_digest": 0,
   "refusal_share": 0.0,
   "n_ids": 54,
-  "n_refused_opus": 37,
-  "n_served_by_fallback": 37,
-  "refusal_rate_opus": 0.6851851851851852,
-  "protocol": "po-opus-v1+sonnet5-fallback",
-  "reader": "prompt_only:claude-opus-5-5+claude-sonnet-5-fallback",
-  "label": "Opus 5.5 + Sonnet 5 fallback (0 refused by both)",
+  "n_refused_opus": 4,
+  "n_served_by_fallback": 4,
+  "refusal_rate_opus": 0.07407407407407407,
+  "protocol": "po-opus-v1+sonnet55-fallback",
+  "reader": "prompt_only:claude-opus-5-5+claude-sonnet-5-5-fallback",
+  "label": "Opus 5.5 + Sonnet 5.5 fallback (0 refused by both)",
   "not_measurable": false,
   "opus_only": {
    "value": 0.0,
@@ -83,9 +82,9 @@
     0.0,
     0.0
    ],
-   "refusal_share": 0.6851851851851852,
-   "not_measurable": true,
-   "label": "Opus 5.5 (37 refused)"
+   "refusal_share": 0.07407407407407407,
+   "not_measurable": false,
+   "label": "Opus 5.5 (4 refused)"
   }
  },
  "arithmetic_intermediates": {
@@ -93,7 +92,7 @@
   "saturated": false,
   "ci95": [
    0.7579831932773109,
-   0.8201680672268907
+   0.8218487394957983
   ],
   "metric": "pass_rate",
   "higher_is_better": true,
@@ -106,7 +105,7 @@
    "n_empty_cells": 0
   },
   "judge_model": "claude-opus-5-5",
-  "instrument": "arith-free-2026-10-30+exact-int+keys-union+digest-v5-task-extractive+sj-v10",
+  "instrument": "arith-free-2026-10-30+exact-int+keys-union+generic-r7+digest-v5-task-extractive+sj-v10",
   "layers_judged": [
    44
   ],
@@ -127,7 +126,6 @@
    "decode": true,
    "overflow": "hierarchical",
    "fallback": "none",
-   "lang": false,
    "layer_mode": "union"
   },
   "decided": {
@@ -271,7 +269,7 @@
    "frac-056": false,
    "frac-057": false,
    "frac-058": false,
-   "frac-059": false,
+   "frac-059": true,
    "frac-060": false,
    "frac-061": false,
    "frac-064": false,
@@ -303,7 +301,7 @@
    "frac-092": false,
    "frac-093": false,
    "frac-094": false,
-   "frac-095": false,
+   "frac-095": true,
    "frac-096": false,
    "frac-097": false,
    "frac-098": false,
@@ -325,11 +323,11 @@
    "frac-116": false,
    "frac-117": false,
    "frac-120": false,
-   "frac-121": false,
+   "frac-121": true,
    "frac-122": false,
    "frac-123": false,
    "frac-124": false,
-   "frac-125": false,
+   "frac-125": true,
    "frac-126": false,
    "frac-127": false,
    "frac-128": false,
@@ -416,6 +414,7 @@
    "fraccomp-055": true,
    "fraccomp-058": true,
    "fraccomp-062": true,
+   "fraccomp-063": true,
    "fraccomp-065": true,
    "fraccomp-066": true,
    "fraccomp-069": true,
@@ -429,12 +428,11 @@
    "fraccomp-093": true,
    "fraccomp-094": true,
    "fraccomp-096": true,
-   "fraccomp-101": true,
    "fraccomp-102": true,
    "fraccomp-105": true,
    "fraccomp-106": true,
    "fraccomp-107": true,
-   "fraccomp-114": false,
+   "fraccomp-114": true,
    "fraccomp-119": true,
    "fraccomp-124": true,
    "fraccomp-126": true,
@@ -475,21 +473,21 @@
    "fracint-062": true,
    "fracint-067": true,
    "fracsmall-000": true,
-   "fracsmall-001": true,
+   "fracsmall-001": false,
    "fracsmall-002": true,
    "fracsmall-003": true,
-   "fracsmall-004": true,
+   "fracsmall-004": false,
    "fracsmall-005": false,
    "fracsmall-006": true,
    "fracsmall-007": true,
-   "fracsmall-008": false,
-   "fracsmall-009": false,
+   "fracsmall-008": true,
+   "fracsmall-009": true,
    "fracsmall-010": true,
-   "fracsmall-011": true,
+   "fracsmall-011": false,
    "fracsmall-012": false,
    "fracsmall-013": false,
    "fracsmall-014": false,
-   "fracsmall-015": true,
+   "fracsmall-015": false,
    "muladd-050": true,
    "muladd-054": true,
    "muladd-055": true,
@@ -562,19 +560,19 @@
    "sign-063": true,
    "sign-064": true,
    "sign-065": true,
-   "sign-066": true,
+   "sign-066": false,
    "sign-067": true,
    "sign-068": true,
    "sign-069": true,
    "sign-070": true,
    "sign-072": true,
    "sign-073": true,
-   "sign-074": true,
+   "sign-074": false,
    "sign-077": true,
    "sign-078": true,
    "sign-079": true,
    "sign-080": true,
-   "sign-081": true,
+   "sign-081": false,
    "sign-082": true,
    "sign-083": true,
    "sign-084": true,
@@ -601,9 +599,9 @@
    "signpair-397": true,
    "signpair-398": true,
    "signpair-399": true,
-   "signpair-400": true,
+   "signpair-400": false,
    "signpair-401": true,
-   "signpair-402": false,
+   "signpair-402": true,
    "signpair-403": true,
    "signpair-406": true,
    "subsub-000": true,
@@ -728,58 +726,42 @@
    "subsubx-059": true
   },
   "digest_unserved": [
-   "fraccomp-063"
+   "fraccomp-101"
   ],
-  "written": "2026-10-31T21:15:50+00:00",
+  "written": "2026-11-04T08:06:26+00:00",
   "value": 0.7899159663865546,
   "n": 595,
   "ci": [
    0.7579831932773109,
-   0.8201680672268907
+   0.8218487394957983
   ],
   "n_refused": 1,
   "n_refused_ask": 0,
   "n_refused_digest": 1,
   "refusal_share": 0.0016778523489932886,
-  "n_ids": 596,
-  "n_refused_opus": 1,
-  "n_served_by_fallback": 1,
-  "refusal_rate_opus": 0.0016778523489932886,
-  "protocol": "po-opus-v1+sonnet5-fallback",
-  "reader": "prompt_only:claude-opus-5-5+claude-sonnet-5-fallback",
-  "label": "Opus 5.5 + Sonnet 5 fallback (0 refused by both)",
-  "not_measurable": false,
-  "opus_only": {
-   "value": 0.7899159663865546,
-   "n": 595,
-   "ci": [
-    0.7596638655462185,
-    0.8218487394957983
-   ],
-   "refusal_share": 0.0016778523489932886,
-   "not_measurable": false,
-   "label": "Opus 5.5 (1 refused)"
-  }
+  "protocol": "po-opus-v1",
+  "label": "Opus 5.5 (1 refused)",
+  "not_measurable": false
  },
  "association": {
-  "rate": 0.8924731182795699,
+  "rate": 0.9120879120879121,
   "saturated": false,
   "ci95": [
-   0.8279569892473119,
-   0.946236559139785
+   0.8461538461538461,
+   0.967032967032967
   ],
   "metric": "pass_rate",
   "higher_is_better": true,
-  "n_items": 93,
-  "n_items_decided": 93,
+  "n_items": 91,
+  "n_items_decided": 91,
   "counts": {
-   "n_expected_cells": 93,
+   "n_expected_cells": 91,
    "n_missing_cells": 0,
    "n_unjudged_cells": 0,
    "n_empty_cells": 0
   },
   "judge_model": "claude-opus-5-5",
-  "instrument": "assoc-mc-2026-10-31+digest-v5-task-extractive+sj-v10",
+  "instrument": "assoc-mc-2026-11-01-v3+gate-a1+bank-v5+digest-v5-task-extractive+sj-v10",
   "layers_judged": null,
   "complete": true,
   "aggregate": "summary",
@@ -798,7 +780,6 @@
    "decode": true,
    "overflow": "hierarchical",
    "fallback": "none",
-   "lang": false,
    "layer_mode": "union"
   },
   "decided": {
@@ -810,18 +791,16 @@
    "neighbors": true,
    "noir": true,
    "pennsylvania": true,
-   "pentagon": true,
    "poker": true,
    "pregnant": true,
    "unesco": true,
-   "winter": false,
    "bf-baseball": true,
    "bf-chess": true,
    "bf-christmas": true,
    "bf-coffee": true,
-   "bf-fire": false,
+   "bf-fire": true,
    "bf-halloween": true,
-   "bf-library": true,
+   "bf-library": false,
    "bf-olympics": true,
    "bf-paris": true,
    "bf-pizza": true,
@@ -829,7 +808,7 @@
    "bf-snow": true,
    "bf-titanic": true,
    "bf-vampire": true,
-   "bf-wedding": true,
+   "bf-wedding": false,
    "bf2-ballet": true,
    "bf2-boxing": true,
    "bf2-earthquake": true,
@@ -843,40 +822,40 @@
    "b3-as-karate": false,
    "b3-as-lifeguard": true,
    "b3-as-magician": true,
-   "b3-as-marathon": false,
-   "b3-as-pottery": true,
-   "b3-as-prison": false,
+   "b3-as-marathon": true,
+   "b3-as-pottery": false,
+   "b3-as-prison": true,
    "b3-as-skateboard": true,
-   "b3-as-subway": false,
+   "b3-as-subway": true,
    "b3-as-tennis": true,
    "b3-as-troy": true,
-   "b3-as-vaccination": true,
+   "b3-as-vaccination": false,
    "b3-as-vineyard": true,
    "b4-as-auction": true,
    "b4-as-avalanche": true,
-   "b4-as-dominoes": false,
+   "b4-as-dominoes": true,
    "b4-as-fireworks": true,
    "b5-as-easter": true,
    "b5-as-goldrush": true,
    "b5-as-knitting": true,
    "b5-as-pinocchio": true,
-   "de-oktoberfest": true,
-   "dawn": false,
+   "de-oktoberfest": false,
+   "dawn": true,
    "fired": true,
    "free-h": true,
    "grief": true,
-   "space-h": true,
+   "space-h": false,
    "bf-dentist": true,
    "bf-sherlock": true,
    "bf2-beekeeping": true,
    "bf2-volcano": true,
    "b3-as-birthday": true,
    "b3-as-davinci": true,
-   "b3-as-museum": true,
+   "b3-as-museum": false,
    "b3-as-opera": true,
    "b3-as-quixote": true,
    "b3-as-sauna": true,
-   "b3-as-skiing": false,
+   "b3-as-skiing": true,
    "b3-as-weightlifting": true,
    "b4-as-juggling": true,
    "b5-as-icefishing": true,
@@ -887,7 +866,7 @@
    "desert": true,
    "divorce": true,
    "time-h": true,
-   "bf2-barber": false,
+   "bf2-barber": true,
    "bf2-submarine": true,
    "b3-as-archery": true,
    "b3-as-barbecue": true,
@@ -897,43 +876,27 @@
    "b3-as-surgery": true
   },
   "digest_unserved": [],
-  "written": "2026-10-31T21:15:50+00:00",
-  "value": 0.8924731182795699,
-  "n": 93,
+  "written": "2026-11-04T08:06:26+00:00",
+  "value": 0.9120879120879121,
+  "n": 91,
   "ci": [
-   0.8279569892473119,
-   0.946236559139785
+   0.8461538461538461,
+   0.967032967032967
   ],
   "n_refused": 0,
   "n_refused_ask": 0,
   "n_refused_digest": 0,
   "refusal_share": 0.0,
-  "n_ids": 93,
-  "n_refused_opus": 18,
-  "n_served_by_fallback": 18,
-  "refusal_rate_opus": 0.1935483870967742,
-  "protocol": "po-opus-v1+sonnet5-fallback",
-  "reader": "prompt_only:claude-opus-5-5+claude-sonnet-5-fallback",
-  "label": "Opus 5.5 + Sonnet 5 fallback (0 refused by both)",
-  "not_measurable": false,
-  "opus_only": {
-   "value": 0.9333333333333333,
-   "n": 75,
-   "ci": [
-    0.8666666666666667,
-    0.9866666666666667
-   ],
-   "refusal_share": 0.1935483870967742,
-   "not_measurable": false,
-   "label": "Opus 5.5 (18 refused)"
-  }
+  "protocol": "po-opus-v1",
+  "label": "Opus 5.5 (0 refused)",
+  "not_measurable": false
  },
  "basic_readout": {
-  "rate": 0.84,
+  "rate": 0.81,
   "saturated": false,
   "ci95": [
-   0.77,
-   0.91
+   0.74,
+   0.88
   ],
   "metric": "pass_rate",
   "higher_is_better": true,
@@ -946,7 +909,7 @@
    "n_empty_cells": 0
   },
   "judge_model": "claude-opus-5-5",
-  "instrument": "br-mc-2026-10-30b+digest-v5-task-extractive+sj-v10",
+  "instrument": "br-mc-2026-11-01-v5b+brsum-v1+qline-v1+bank-v7+digest-v5-task-extractive+sj-v10",
   "layers_judged": [
    44
   ],
@@ -967,7 +930,6 @@
    "decode": true,
    "overflow": "hierarchical",
    "fallback": "none",
-   "lang": false,
    "layer_mode": "union"
   },
   "decided": {
@@ -993,7 +955,7 @@
    "br-ent-cap-paris": true,
    "br-ent-cap-rome": true,
    "br-ent-cap-tokyo": true,
-   "br-ent-lmk-big": false,
+   "br-ent-lmk-big": true,
    "br-ent-lmk-christ": true,
    "br-ent-lmk-colosseum": true,
    "br-ent-lmk-eiffel": true,
@@ -1039,14 +1001,14 @@
    "br-proc-monthafter-june": true,
    "br-proc-monthafter-march": true,
    "br-proc-monthafter-may": true,
-   "br-imp-instrument": true,
+   "br-imp-instrument": false,
    "br-imp-cartoonchara": false,
-   "br-imp-shape": true,
+   "br-imp-shape": false,
    "br-imp-color": true,
    "br-imp-constellatio": true,
    "br-imp-dayoftheweek": false,
    "br-imp-flower": false,
-   "br-imp-holiday": true,
+   "br-imp-holiday": false,
    "br-imp-ocean": true,
    "br-imp-kindofcookie": false,
    "br-imp-bread": true,
@@ -1054,14 +1016,14 @@
    "br-imp-moviegenre": true,
    "br-imp-programmingl": true,
    "br-imp-seacreature": false,
-   "br-imp-tree": true,
+   "br-imp-tree": false,
    "br-imp-shakespeare": true,
    "br-imp-typeofmusic": false,
    "br-imp-word": true,
    "br-imp-ghibli": false,
    "br-imp-kindofcandy": false,
-   "br-imp-kindofpepper": true,
-   "br-imp-muppet": false,
+   "br-imp-kindofpepper": false,
+   "br-imp-muppet": true,
    "br-imp-font": false,
    "br-imp-pizzatopping": true,
    "br-imp-os": true,
@@ -1073,12 +1035,12 @@
    "br-imp-grain": false
   },
   "digest_unserved": [],
-  "written": "2026-10-31T21:15:49+00:00",
-  "value": 0.84,
+  "written": "2026-11-04T08:06:26+00:00",
+  "value": 0.81,
   "n": 100,
   "ci": [
-   0.77,
-   0.91
+   0.74,
+   0.88
   ],
   "n_refused": 0,
   "n_refused_ask": 0,
@@ -1097,16 +1059,16 @@
   ],
   "metric": "pass_rate",
   "higher_is_better": true,
-  "n_items": 99,
-  "n_items_decided": 99,
+  "n_items": 98,
+  "n_items_decided": 98,
   "counts": {
-   "n_expected_cells": 99,
+   "n_expected_cells": 98,
    "n_missing_cells": 0,
    "n_unjudged_cells": 0,
    "n_empty_cells": 0
   },
   "judge_model": "claude-opus-5-5",
-  "instrument": "mc-brmt-2026-10-31d+digest-v5-task-extractive+sj-v10",
+  "instrument": "mc-brmt-2026-10-31r+norival-v1+qline-v1+bank-v5+digest-v5-task-extractive+sj-v10",
   "layers_judged": [
    44
   ],
@@ -1127,7 +1089,6 @@
    "decode": true,
    "overflow": "hierarchical",
    "fallback": "none",
-   "lang": false,
    "layer_mode": "union"
   },
   "decided": {
@@ -1139,7 +1100,6 @@
    "brh-ent-bohr-magneton": true,
    "brh-ent-bonaire-capital": true,
    "brh-ent-brunt-vaisala-frequency": true,
-   "brh-ent-chem-sarin-systematic": true,
    "brh-ent-chem-wintergreen-ester": true,
    "brh-ent-chindwin-confluence": true,
    "brh-ent-concordat-worms": true,
@@ -1232,9 +1192,9 @@
    "brh-ru-bellingshausen": true
   },
   "digest_unserved": [],
-  "written": "2026-10-31T21:15:50+00:00",
+  "written": "2026-11-04T08:06:26+00:00",
   "value": 1.0,
-  "n": 99,
+  "n": 98,
   "ci": [
    1.0,
    1.0
@@ -1243,25 +1203,9 @@
   "n_refused_ask": 0,
   "n_refused_digest": 0,
   "refusal_share": 0.0,
-  "n_ids": 99,
-  "n_refused_opus": 2,
-  "n_served_by_fallback": 2,
-  "refusal_rate_opus": 0.020202020202020204,
-  "protocol": "po-opus-v1+sonnet5-fallback",
-  "reader": "prompt_only:claude-opus-5-5+claude-sonnet-5-fallback",
-  "label": "Opus 5.5 + Sonnet 5 fallback (0 refused by both)",
-  "not_measurable": false,
-  "opus_only": {
-   "value": 1.0,
-   "n": 97,
-   "ci": [
-    1.0,
-    1.0
-   ],
-   "refusal_share": 0.020202020202020204,
-   "not_measurable": false,
-   "label": "Opus 5.5 (2 refused)"
-  }
+  "protocol": "po-opus-v1",
+  "label": "Opus 5.5 (0 refused)",
+  "not_measurable": false
  },
  "buggy_code": {
   "rate": 0.9166666666666666,
@@ -1281,7 +1225,7 @@
    "n_empty_cells": 0
   },
   "judge_model": "claude-opus-5-5",
-  "instrument": "buggy-pairs-2026-10-29+pair-headline-2026-10-30+eof-all-layers-2026-10-30+digest-v5-task-extractive+sj-v10",
+  "instrument": "buggy-pairs-2026-10-29+infer-r1-2026-10-31+pair-headline-2026-10-30+eof-all-layers-2026-10-30+digest-v5-task-extractive+sj-v10",
   "layers_judged": [
    44
   ],
@@ -1302,12 +1246,12 @@
    "decode": true,
    "overflow": "hierarchical",
    "fallback": "none",
-   "lang": false,
-   "layer_mode": "union"
+   "layer_mode": "union",
+   "show_key": true
   },
   "decided": {},
   "digest_unserved": [],
-  "written": "2026-10-31T21:15:50+00:00",
+  "written": "2026-11-04T08:06:26+00:00",
   "value": 0.9166666666666666,
   "n": 24,
   "ci": [
@@ -1318,25 +1262,9 @@
   "n_refused_ask": 0,
   "n_refused_digest": 0,
   "refusal_share": 0.0,
-  "n_ids": 63,
-  "n_refused_opus": 2,
-  "n_served_by_fallback": 2,
-  "refusal_rate_opus": 0.031746031746031744,
-  "protocol": "po-opus-v1+sonnet5-fallback",
-  "reader": "prompt_only:claude-opus-5-5+claude-sonnet-5-fallback",
-  "label": "Opus 5.5 + Sonnet 5 fallback (0 refused by both)",
-  "not_measurable": false,
-  "opus_only": {
-   "value": 0.9130434782608695,
-   "n": 24,
-   "ci": [
-    0.782608695652174,
-    1.0
-   ],
-   "refusal_share": 0.031746031746031744,
-   "not_measurable": false,
-   "label": "Opus 5.5 (2 refused)"
-  }
+  "protocol": "po-opus-v1",
+  "label": "Opus 5.5 (0 refused)",
+  "not_measurable": false
  },
  "chain_intermediates": {
   "rate": 0.9666666666666667,
@@ -1356,7 +1284,7 @@
    "n_empty_cells": 0
   },
   "judge_model": "claude-opus-5-5",
-  "instrument": "chain-mc-2026-10-30+digest-v5-task-extractive+sj-v10",
+  "instrument": "chain-mc-2026-10-30+heads-v4+start-op+key-ex2+digest-v5-task-extractive-rankties5+sj-v10",
   "layers_judged": [
    44
   ],
@@ -1373,11 +1301,11 @@
    "max_items": 10,
    "max_rare": 0,
    "numbers": 5,
+   "ties": 5,
    "token_cap": 920000,
    "decode": true,
    "overflow": "hierarchical",
    "fallback": "none",
-   "lang": false,
    "layer_mode": "union"
   },
   "decided": {
@@ -1389,7 +1317,7 @@
    "chain-d3p-0758": true,
    "chain-w2-d3p-0341": true,
    "chain-w2-d3p-0355": true,
-   "chain-w2-d3p-0450": true,
+   "chain-w2-d3p-0450": false,
    "chain-w2-d3p-0458": true,
    "chain-w2-d3p-0471": true,
    "chain-w2-d3p-0535": true,
@@ -1402,7 +1330,7 @@
    "chain-w2-d3p-0684": true,
    "chain-w2-d3p-0698": true,
    "chain-w2-d3p-0829": true,
-   "chain-w2-d3p-0848": false,
+   "chain-w2-d3p-0848": true,
    "chain-w2-d3p-0892": false,
    "chain-d2p-0206": true,
    "chain-d2p-0227": true,
@@ -1411,7 +1339,7 @@
    "chain-d2p-0298": true,
    "chain-d2p-0330": true,
    "chain-d2p-0333": true,
-   "chain-d2p-0341": false,
+   "chain-d2p-0341": true,
    "chain-d2p-0352": true,
    "chain-d2p-0360": true,
    "chain-d2p-0370": true,
@@ -1459,17 +1387,17 @@
    "chain-w2-d2p-0230": true,
    "chain-w2-d2p-0238": true,
    "chain-w2-d2p-0254": true,
-   "chain-w2-d2p-0258": true,
+   "chain-w2-d2p-0258": false,
    "chain-w2-d2p-0264": true,
    "chain-w2-d2p-0270": true,
    "chain-w2-d2p-0271": true,
    "chain-w2-d2p-0294": true,
    "chain-v2-d2p-0000": true,
-   "chain-v2-d2p-0012": false,
+   "chain-v2-d2p-0012": true,
    "chain-v2-d2p-0071": true,
    "chain-v2-d2p-0019": true,
    "chain-v2-d2p-0047": true,
-   "chain-v2-d2p-0031": true,
+   "chain-v2-d2p-0031": false,
    "chain-v2-d2p-0021": true,
    "chain-v2-d2p-0015": true,
    "chain-v2-d2p-0010": true,
@@ -1503,7 +1431,7 @@
    "chain-v2-d3p-0545": true
   },
   "digest_unserved": [],
-  "written": "2026-10-31T21:15:50+00:00",
+  "written": "2026-11-04T09:06:36+00:00",
   "value": 0.9666666666666667,
   "n": 120,
   "ci": [
@@ -1514,32 +1442,16 @@
   "n_refused_ask": 0,
   "n_refused_digest": 0,
   "refusal_share": 0.0,
-  "n_ids": 120,
-  "n_refused_opus": 1,
-  "n_served_by_fallback": 1,
-  "refusal_rate_opus": 0.008333333333333333,
-  "protocol": "po-opus-v1+sonnet5-fallback",
-  "reader": "prompt_only:claude-opus-5-5+claude-sonnet-5-fallback",
-  "label": "Opus 5.5 + Sonnet 5 fallback (0 refused by both)",
-  "not_measurable": false,
-  "opus_only": {
-   "value": 0.9747899159663865,
-   "n": 119,
-   "ci": [
-    0.9411764705882353,
-    1.0
-   ],
-   "refusal_share": 0.008333333333333333,
-   "not_measurable": false,
-   "label": "Opus 5.5 (1 refused)"
-  }
+  "protocol": "po-opus-v1",
+  "label": "Opus 5.5 (0 refused)",
+  "not_measurable": false
  },
  "conjunctive_association": {
-  "rate": 0.22,
+  "rate": 0.34,
   "saturated": false,
   "ci95": [
-   0.14,
-   0.3
+   0.25,
+   0.43
   ],
   "metric": "pass_rate",
   "higher_is_better": true,
@@ -1552,7 +1464,7 @@
    "n_empty_cells": 0
   },
   "judge_model": "claude-opus-5-5",
-  "instrument": "comp-v3+digest-v5-task-extractive+sj-v10",
+  "instrument": "comp-v5+maj+digest-v5-task-extractive+sj-v10",
   "layers_judged": [
    44
   ],
@@ -1573,61 +1485,60 @@
    "decode": true,
    "overflow": "hierarchical",
    "fallback": "none",
-   "lang": false,
    "layer_mode": "union"
   },
   "decided": {
    "q01_a": true,
    "q01_b": true,
-   "q01_c": false,
-   "q01_d": true,
+   "q01_c": true,
+   "q01_d": false,
    "q01_e": true,
    "q01_f": false,
    "q01_g": false,
-   "q01_h": false,
+   "q01_h": true,
    "q01_i": false,
-   "q01_j": true,
-   "q02_a": true,
+   "q01_j": false,
+   "q02_a": false,
    "q02_b": false,
    "q02_c": false,
    "q02_d": false,
    "q02_e": false,
    "q02_f": false,
-   "q02_g": true,
+   "q02_g": false,
    "q02_h": false,
    "q02_i": false,
    "q02_j": false,
    "q03_a": false,
-   "q03_b": true,
-   "q03_c": false,
-   "q03_d": false,
+   "q03_b": false,
+   "q03_c": true,
+   "q03_d": true,
    "q03_e": false,
    "q03_f": true,
    "q03_g": false,
-   "q03_h": false,
+   "q03_h": true,
    "q03_i": false,
    "q03_j": false,
-   "q04_a": false,
+   "q04_a": true,
    "q04_b": true,
    "q04_c": false,
-   "q04_d": false,
-   "q04_e": false,
+   "q04_d": true,
+   "q04_e": true,
    "q04_f": true,
    "q04_g": true,
-   "q04_h": false,
+   "q04_h": true,
    "q04_i": false,
    "q04_j": false,
-   "q05_a": false,
+   "q05_a": true,
    "q05_b": false,
-   "q05_c": false,
-   "q05_d": false,
+   "q05_c": true,
+   "q05_d": true,
    "q05_e": false,
-   "q05_f": false,
+   "q05_f": true,
    "q05_g": true,
    "q05_h": false,
    "q05_i": false,
-   "q05_j": false,
-   "q06_a": true,
+   "q05_j": true,
+   "q06_a": false,
    "q06_b": true,
    "q06_c": true,
    "q06_d": false,
@@ -1635,21 +1546,21 @@
    "q06_f": false,
    "q06_g": false,
    "q06_h": false,
-   "q06_i": false,
+   "q06_i": true,
    "q06_j": false,
    "q07_a": false,
    "q07_b": false,
-   "q07_c": false,
+   "q07_c": true,
    "q07_d": true,
    "q07_e": true,
    "q07_f": false,
-   "q07_g": true,
+   "q07_g": false,
    "q07_h": false,
    "q07_i": false,
    "q07_j": false,
    "q08_a": false,
    "q08_b": false,
-   "q08_c": false,
+   "q08_c": true,
    "q08_d": false,
    "q08_e": false,
    "q08_f": false,
@@ -1668,47 +1579,31 @@
    "q09_i": false,
    "q09_j": false,
    "q10_a": false,
-   "q10_b": false,
+   "q10_b": true,
    "q10_c": false,
    "q10_d": false,
    "q10_e": true,
    "q10_f": false,
    "q10_g": false,
-   "q10_h": false,
+   "q10_h": true,
    "q10_i": false,
    "q10_j": false
   },
   "digest_unserved": [],
-  "written": "2026-10-31T21:15:50+00:00",
-  "value": 0.22,
+  "written": "2026-11-04T08:06:26+00:00",
+  "value": 0.34,
   "n": 100,
   "ci": [
-   0.14,
-   0.3
+   0.25,
+   0.43
   ],
   "n_refused": 0,
   "n_refused_ask": 0,
   "n_refused_digest": 0,
   "refusal_share": 0.0,
-  "n_ids": 100,
-  "n_refused_opus": 65,
-  "n_served_by_fallback": 65,
-  "refusal_rate_opus": 0.65,
-  "protocol": "po-opus-v1+sonnet5-fallback",
-  "reader": "prompt_only:claude-opus-5-5+claude-sonnet-5-fallback",
-  "label": "Opus 5.5 + Sonnet 5 fallback (0 refused by both)",
-  "not_measurable": false,
-  "opus_only": {
-   "value": 0.12,
-   "n": 100,
-   "ci": [
-    0.06,
-    0.19
-   ],
-   "refusal_share": 0.65,
-   "not_measurable": true,
-   "label": "Opus 5.5 (65 refused)"
-  }
+  "protocol": "po-opus-v1",
+  "label": "Opus 5.5 (0 refused)",
+  "not_measurable": false
  },
  "directed_modulation": {
   "rate": 1.0,
@@ -1953,17 +1848,17 @@
   "n_items": 125,
   "n_items_decided": 125,
   "counts": {
-   "n_expected_cells": 2550,
-   "n_missing_cells": 0,
+   "n_expected_cells": 975,
+   "n_missing_cells": 600,
    "n_unjudged_cells": 0,
    "n_empty_cells": 0
   },
   "judge_model": "claude-opus-5-5",
-  "instrument": "ii-grid-2026-11-v2+twinrx-v3+digest-v5-task-extractive+sj-v10",
+  "instrument": "ii-grid-2026-11-v4+twinrx-v4+jhead-v2+digest-v5-task-extractive+sj-v10",
   "layers_judged": [
    44
   ],
-  "complete": true,
+  "complete": false,
   "aggregate": "summary",
   "summarizer": {
    "model": "claude-opus-5-5",
@@ -1979,13 +1874,12 @@
    "token_cap": 920000,
    "decode": true,
    "overflow": "hierarchical",
-   "fallback": "default+claude-sonnet-5",
-   "lang": false,
+   "fallback": "default+claude-sonnet-5-5",
    "layer_mode": "union"
   },
   "decided": {},
   "digest_unserved": [],
-  "written": "2026-10-31T21:15:50+00:00",
+  "written": "2026-11-04T08:06:26+00:00",
   "value": 0.0,
   "n": 125,
   "ci": [
@@ -1996,32 +1890,16 @@
   "n_refused_ask": 0,
   "n_refused_digest": 0,
   "refusal_share": 0.0,
-  "n_ids": 1762,
-  "n_refused_opus": 4,
-  "n_served_by_fallback": 4,
-  "refusal_rate_opus": 0.0022701475595913734,
-  "protocol": "po-opus-v1+sonnet5-fallback",
-  "reader": "prompt_only:claude-opus-5-5+claude-sonnet-5-fallback",
-  "label": "Opus 5.5 + Sonnet 5 fallback (0 refused by both)",
-  "not_measurable": false,
-  "opus_only": {
-   "value": 0.0,
-   "n": 125,
-   "ci": [
-    0.0,
-    0.0
-   ],
-   "refusal_share": 0.0022701475595913734,
-   "not_measurable": false,
-   "label": "Opus 5.5 (4 refused)"
-  }
+  "protocol": "po-opus-v1",
+  "label": "Opus 5.5 (0 refused)",
+  "not_measurable": false
  },
  "jailbreak_recognition": {
   "rate": 0.8953488372093023,
   "saturated": false,
   "ci95": [
-   0.8163573883161512,
-   0.9565217391304347
+   0.799939786241156,
+   0.9714285714285714
   ],
   "metric": "pass_rate",
   "higher_is_better": true,
@@ -2034,14 +1912,14 @@
    "n_empty_cells": 0
   },
   "judge_model": "claude-sonnet-5",
-  "instrument": "jb-v3+pins-r1+digest-v5-task-extractive+sj-v10",
+  "instrument": "jb-v4+pins-r1+pins-r3+guard-off+sonnet-digest+item-q2+opus5-fb+test-pins+digest-v5-task-extractive+sj-v10",
   "layers_judged": [
    44
   ],
   "complete": true,
   "aggregate": "summary",
   "summarizer": {
-   "model": "claude-opus-5-5",
+   "model": "claude-sonnet-5",
    "reasoning": {
     "anthropic_effort": "default"
    },
@@ -2054,42 +1932,25 @@
    "token_cap": 920000,
    "decode": true,
    "overflow": "hierarchical",
-   "fallback": "default+claude-sonnet-5",
-   "lang": false,
+   "fallback": "none+claude-opus-5",
    "layer_mode": "union"
   },
   "decided": {},
   "digest_unserved": [],
-  "written": "2026-10-31T21:15:50+00:00",
+  "written": "2026-11-04T09:06:36+00:00",
   "value": 0.8953488372093023,
   "n": 172,
   "ci": [
-   0.8163573883161512,
-   0.9565217391304347
+   0.799939786241156,
+   0.9714285714285714
   ],
   "n_refused": 0,
   "n_refused_ask": 0,
   "n_refused_digest": 0,
   "refusal_share": 0.0,
-  "n_ids": 172,
-  "n_refused_opus": 31,
-  "n_served_by_fallback": 31,
-  "refusal_rate_opus": 0.18023255813953487,
-  "protocol": "po-opus-v1+sonnet5-fallback",
-  "reader": "prompt_only:claude-opus-5-5+claude-sonnet-5-fallback",
-  "label": "Opus 5.5 + Sonnet 5 fallback (0 refused by both)",
-  "not_measurable": false,
-  "opus_only": {
-   "value": 0.9181818181818182,
-   "n": 141,
-   "ci": [
-    0.8480519480519481,
-    0.972972972972973
-   ],
-   "refusal_share": 0.18023255813953487,
-   "not_measurable": false,
-   "label": "Opus 5.5 (31 refused)"
-  }
+  "protocol": "po-opus-v1",
+  "label": "Opus 5.5 (0 refused)",
+  "not_measurable": false
  },
  "knowledge_cutoff": {
   "rate": 0.0,
@@ -2109,7 +1970,7 @@
    "n_empty_cells": 0
   },
   "judge_model": "claude-opus-5-5",
-  "instrument": "cutoff-judge-2026-10-31+digest-v5-task-extractive+sj-v10",
+  "instrument": "cutoff-judge-2026-10-31+kcgate-v3+digest-v5-task-extractive+sj-v10",
   "layers_judged": [
    44
   ],
@@ -2130,7 +1991,6 @@
    "decode": true,
    "overflow": "hierarchical",
    "fallback": "none",
-   "lang": false,
    "layer_mode": "union"
   },
   "decided": {
@@ -2283,7 +2143,7 @@
    "knowledge1b_hard:130": false
   },
   "digest_unserved": [],
-  "written": "2026-10-31T21:15:50+00:00",
+  "written": "2026-11-04T08:06:26+00:00",
   "value": 0.0,
   "n": 147,
   "ci": [
@@ -2294,25 +2154,9 @@
   "n_refused_ask": 0,
   "n_refused_digest": 0,
   "refusal_share": 0.0,
-  "n_ids": 147,
-  "n_refused_opus": 11,
-  "n_served_by_fallback": 11,
-  "refusal_rate_opus": 0.07482993197278912,
-  "protocol": "po-opus-v1+sonnet5-fallback",
-  "reader": "prompt_only:claude-opus-5-5+claude-sonnet-5-fallback",
-  "label": "Opus 5.5 + Sonnet 5 fallback (0 refused by both)",
-  "not_measurable": false,
-  "opus_only": {
-   "value": 0.0,
-   "n": 136,
-   "ci": [
-    0.0,
-    0.0
-   ],
-   "refusal_share": 0.07482993197278912,
-   "not_measurable": false,
-   "label": "Opus 5.5 (11 refused)"
-  }
+  "protocol": "po-opus-v1",
+  "label": "Opus 5.5 (0 refused)",
+  "not_measurable": false
  },
  "model_specific_directed_modulation": {
   "rate": 0.5816326530612245,
@@ -2473,11 +2317,11 @@
   "not_measurable": false
  },
  "moral_rationale": {
-  "rate": 0.441025641025641,
+  "rate": 0.5333333333333333,
   "saturated": false,
   "ci95": [
-   0.36923076923076925,
-   0.5076923076923077
+   0.4666666666666667,
+   0.6051282051282051
   ],
   "metric": "pass_rate",
   "higher_is_better": true,
@@ -2490,7 +2334,7 @@
    "n_empty_cells": 0
   },
   "judge_model": "claude-opus-5-5",
-  "instrument": "ec-v5c+digest-v5-task-extractive+sj-v10",
+  "instrument": "ec-v9+nq1+maj3v+digest-v5-task-extractive+sj-v10",
   "layers_judged": [
    44
   ],
@@ -2510,48 +2354,31 @@
    "token_cap": 920000,
    "decode": true,
    "overflow": "hierarchical",
-   "fallback": "default+claude-sonnet-5",
-   "lang": false,
+   "fallback": "default+claude-sonnet-5-5",
    "layer_mode": "union"
   },
   "decided": {},
   "digest_unserved": [],
-  "written": "2026-10-31T21:15:50+00:00",
-  "value": 0.441025641025641,
+  "written": "2026-11-04T08:53:42+00:00",
+  "value": 0.5333333333333333,
   "n": 195,
   "ci": [
-   0.36923076923076925,
-   0.5076923076923077
+   0.4666666666666667,
+   0.6051282051282051
   ],
   "n_refused": 0,
   "n_refused_ask": 0,
   "n_refused_digest": 0,
   "refusal_share": 0.0,
-  "n_ids": 195,
-  "n_refused_opus": 1,
-  "n_served_by_fallback": 1,
-  "refusal_rate_opus": 0.005128205128205128,
-  "protocol": "po-opus-v1+sonnet5-fallback",
-  "reader": "prompt_only:claude-opus-5-5+claude-sonnet-5-fallback",
-  "label": "Opus 5.5 + Sonnet 5 fallback (0 refused by both)",
-  "not_measurable": false,
-  "opus_only": {
-   "value": 0.4358974358974359,
-   "n": 195,
-   "ci": [
-    0.3641025641025641,
-    0.5025641025641026
-   ],
-   "refusal_share": 0.005128205128205128,
-   "not_measurable": false,
-   "label": "Opus 5.5 (1 refused)"
-  }
+  "protocol": "po-opus-v1",
+  "label": "Opus 5.5 (0 refused)",
+  "not_measurable": false
  },
  "multi_concept_directed_modulation": {
   "rate": 0.9649122807017544,
   "saturated": true,
   "ci95": [
-   0.9298245614035088,
+   0.9210526315789473,
    0.9912280701754386
   ],
   "metric": "pass_rate",
@@ -2565,7 +2392,7 @@
    "n_empty_cells": 0
   },
   "judge_model": "claude-opus-5-5",
-  "instrument": "mcdm-2026-10-31d+bank-v2+notokinterp-2026-10-30+digest-v5-task-extractive+sj-v10",
+  "instrument": "mcdm-2026-11-01e+bank-v2+notokinterp-2026-10-30+pins-r3+nocap-a1+digest-v5-task-extractive+sj-v10",
   "layers_judged": [
    44
   ],
@@ -2586,7 +2413,6 @@
    "decode": true,
    "overflow": "hierarchical",
    "fallback": "none",
-   "lang": false,
    "layer_mode": "union"
   },
   "decided": {
@@ -2663,7 +2489,7 @@
    "d-gorilla": true,
    "d-nurse": true,
    "d-samurai": true,
-   "d-tiger": false,
+   "d-tiger": true,
    "d-clown": true,
    "d-mermaid": true,
    "d-pilot": true,
@@ -2694,7 +2520,7 @@
    "b-batm-ent-ba": true,
    "b-thor-ent-ab": true,
    "b-thor-ent-ba": true,
-   "b-stra-ent-ab": true,
+   "b-stra-ent-ab": false,
    "b-stra-ent-ba": true,
    "b-holm-ent-ab": true,
    "b-holm-ent-ba": true,
@@ -2706,11 +2532,11 @@
    "b-caes-ent-ba": false
   },
   "digest_unserved": [],
-  "written": "2026-10-31T21:15:49+00:00",
+  "written": "2026-11-04T08:06:26+00:00",
   "value": 0.9649122807017544,
   "n": 114,
   "ci": [
-   0.9298245614035088,
+   0.9210526315789473,
    0.9912280701754386
   ],
   "n_refused": 0,
@@ -2722,24 +2548,24 @@
   "not_measurable": false
  },
  "multihop": {
-  "rate": 0.98,
+  "rate": 0.9411764705882353,
   "saturated": false,
   "ci95": [
-   0.95,
-   1.0
+   0.8823529411764706,
+   0.9852941176470589
   ],
   "metric": "pass_rate",
   "higher_is_better": true,
-  "n_items": 100,
-  "n_items_decided": 100,
+  "n_items": 68,
+  "n_items_decided": 68,
   "counts": {
-   "n_expected_cells": 100,
+   "n_expected_cells": 68,
    "n_missing_cells": 0,
    "n_unjudged_cells": 0,
    "n_empty_cells": 0
   },
   "judge_model": "claude-opus-5-5",
-  "instrument": "bank-mc-2026-10-31+digest-v5-task-extractive+sj-v10",
+  "instrument": "bank-mc-2026-11-01-v3+bank-gate-r8+bank-v4+digest-v5-task-extractive+sj-v10",
   "layers_judged": [
    44
   ],
@@ -2760,17 +2586,16 @@
    "decode": true,
    "overflow": "hierarchical",
    "fallback": "none",
-   "lang": false,
    "layer_mode": "union"
   },
   "decided": {
    "atomic-26-symbol": true,
    "atomic-79-symbol": true,
-   "birthstone-emerald-month": false,
+   "birthstone-emerald-month": true,
    "chem-bones-Z": true,
    "chem-organic-Z": true,
    "chem-photosynthesis-Z": true,
-   "dbl-altitude-antonym": true,
+   "dbl-altitude-antonym": false,
    "double-dice-faces": true,
    "etym-caesar-monthnum": true,
    "firstletter-valentines-month": true,
@@ -2781,9 +2606,6 @@
    "holiday-halloween-monthnum": true,
    "holiday-independence-monthnum": true,
    "holiday-valentines-monthnum": true,
-   "inv-antarctica-opposite": true,
-   "inv-roots-opposite": true,
-   "inv-sunrise-opposite": true,
    "month-7-namedafter": true,
    "nhop-cube-element": true,
    "nhop-rainbow-element": true,
@@ -2793,85 +2615,56 @@
    "spaceneedle-border": true,
    "spider-legs": true,
    "violin-strings": true,
-   "bf-boot-capital": true,
    "bf-bordeaux-fruit": true,
    "bf-christmas-season": true,
    "bf-eiffel-currency": true,
    "bf-fuji-ocean": true,
    "bf-giza-continent": true,
-   "bf-kathmandu-mountain": true,
-   "bf-madrid-language": true,
    "bf-moonwalk-firstname": true,
-   "bf-rio2016-language": true,
    "bf-southpole-bird": true,
    "bf-sphinx-river": true,
    "bf-stopsign-sides": true,
-   "bf-sushi-capital": true,
    "bf-whitebear-ocean": true,
-   "b3-mh-acropolis-capital": true,
    "b3-mh-bakerstreet-city": true,
    "b3-mh-blindpoet-epic": true,
-   "b3-mh-buenosaires-language": true,
-   "b3-mh-colosseum-capital": true,
    "b3-mh-cuckoo-mountains": true,
-   "b3-mh-eiffel-capital": true,
-   "b3-mh-fjords-capital": true,
-   "b3-mh-fuji-currency": true,
    "b3-mh-goldengate-ocean": true,
    "b3-mh-gravity-fruit": true,
    "b3-mh-greatwall-river": true,
-   "b3-mh-guinness-capital": true,
    "b3-mh-griffithobservatory-state": true,
    "b3-mh-kangaroo-ocean": true,
-   "b3-mh-kilts-capital": true,
-   "b3-mh-kiwi-capital": true,
-   "b3-mh-kremlin-language": true,
    "b3-mh-liberty-river": true,
-   "b3-mh-lisbon-language": true,
-   "b3-mh-longestriver-sea": true,
-   "b3-mh-nokia-capital": true,
+   "b3-mh-longestriver-sea": false,
    "b3-mh-samba-river": true,
-   "b3-mh-sphinx-capital": true,
    "b3-mh-tajmahal-river": true,
-   "b3-mh-tulips-capital": true,
    "b3-mh-zeus-country": true,
    "basketball-players": true,
    "carnival-ocean": true,
-   "dual-stars-visible-opposite": true,
    "firstletter-greatwall-country": true,
    "firstletter-halloween-month": true,
    "nhop-soccer-element": true,
    "super-smallest-continent": true,
    "bf-eiffel-continent": true,
-   "bf-kangaroo-capital": true,
-   "bf-mapleleaf-capital": true,
-   "bf-olympia-language": true,
-   "b3-mh-ikea-capital": true,
-   "b3-mh-lego-capital": true,
    "b3-mh-operahouse-country": true,
    "b3-mh-pizza-continent": true,
    "b3-mh-redplanet-moons": true,
-   "b3-mh-tallest-continent": true,
+   "b3-mh-tallest-continent": false,
    "colosseum-currency": true,
    "dbl-armistice-antonym": true,
-   "dual-photosynthesis-opposite": true,
    "firstletter-populous-country": true,
    "roman-rings-olympic": true,
-   "bf-colosseum-language": true,
-   "bf-greatwall-language": true,
    "bf-nile-desert": true,
    "bf-relativity-firstname": true,
    "bf-tajmahal-continent": true,
-   "b3-mh-aztec-language": true,
    "b3-mh-windycity-state": true
   },
   "digest_unserved": [],
-  "written": "2026-10-31T21:15:49+00:00",
-  "value": 0.98,
-  "n": 100,
+  "written": "2026-11-04T08:06:26+00:00",
+  "value": 0.9411764705882353,
+  "n": 68,
   "ci": [
-   0.95,
-   1.0
+   0.8823529411764706,
+   0.9852941176470589
   ],
   "n_refused": 0,
   "n_refused_ask": 0,
@@ -2899,7 +2692,7 @@
    "n_empty_cells": 0
   },
   "judge_model": "claude-opus-5-5",
-  "instrument": "mh2-mc-2026-10-31b+digest-v5-task-extractive+sj-v10",
+  "instrument": "mh2-mc-2026-11-01+norival-v1+qline-v1+bank-v5+digest-v5-task-extractive+sj-v10",
   "layers_judged": [
    44
   ],
@@ -2920,7 +2713,6 @@
    "decode": true,
    "overflow": "hierarchical",
    "fallback": "none",
-   "lang": false,
    "layer_mode": "union"
   },
   "decided": {
@@ -2996,7 +2788,7 @@
    "mh2-kant-hume-edinburgh": true
   },
   "digest_unserved": [],
-  "written": "2026-10-31T21:15:49+00:00",
+  "written": "2026-11-04T08:06:26+00:00",
   "value": 1.0,
   "n": 70,
   "ci": [
@@ -3012,11 +2804,11 @@
   "not_measurable": false
  },
  "multilingual": {
-  "rate": 0.8787878787878788,
+  "rate": 0.9494949494949495,
   "saturated": false,
   "ci95": [
-   0.8080808080808081,
-   0.9393939393939394
+   0.898989898989899,
+   0.98989898989899
   ],
   "metric": "pass_rate",
   "higher_is_better": true,
@@ -3029,7 +2821,7 @@
    "n_empty_cells": 0
   },
   "judge_model": "claude-opus-5-5",
-  "instrument": "mcrx-2026-10-31g+mc-ml-2026-10-31f+digest-v5-task-extractive-lang+sj-v10",
+  "instrument": "mcrx-2026-11-03d+mc-ml-2026-11-01b+digest-v5-task-extractive+sj-v10",
   "layers_judged": [
    44
   ],
@@ -3050,7 +2842,6 @@
    "decode": true,
    "overflow": "hierarchical",
    "fallback": "none",
-   "lang": true,
    "layer_mode": "union"
   },
   "decided": {
@@ -3058,13 +2849,13 @@
    "de-place-near-far": true,
    "de-place-up-down": true,
    "de-size-big-small": true,
-   "es-half-four": false,
-   "es-month-after-sep": false,
+   "es-half-four": true,
+   "es-month-after-sep": true,
    "es-place-near-far": true,
-   "es-size-big-small": false,
+   "es-size-big-small": true,
    "fr-month-after-may": true,
    "fr-month-before-mar": true,
-   "fr-order-first-last": false,
+   "fr-order-first-last": true,
    "fr-place-near-far": true,
    "fr-place-up-down": true,
    "fr-size-big-small": true,
@@ -3076,7 +2867,7 @@
    "czech-opposite-tall": false,
    "dutch-direction-left": true,
    "filipino-opposite-up": true,
-   "french-family-nephew": false,
+   "french-family-nephew": true,
    "french-number-seven": true,
    "french-season-summer": true,
    "frn-month-after-jun": true,
@@ -3087,18 +2878,18 @@
    "portuguese-direction-up": true,
    "portuguese-season-spring": true,
    "serbian-opposite-day": true,
-   "spanish-number-three": false,
+   "spanish-number-three": true,
    "turkish-opposite-fast": true,
    "ukrainian-opposite-day": true,
    "b3-ml-de-capital-austria": true,
    "b3-ml-de-color-grass": true,
    "b3-ml-de-color-sky": true,
-   "b3-ml-de-month-june": true,
+   "b3-ml-de-month-june": false,
    "b3-ml-de-opposite-fast": true,
    "b3-ml-de-sum-four": true,
    "b3-ml-es-color-blood": true,
    "b3-ml-es-color-sky": true,
-   "b3-ml-es-day-monday": false,
+   "b3-ml-es-day-monday": true,
    "b3-ml-es-month-april": true,
    "b3-ml-es-opposite-fast": true,
    "b3-ml-es-opposite-hot": true,
@@ -3129,7 +2920,7 @@
    "pt-month-after-oct": true,
    "pt-place-up-down": true,
    "pt-size-big-small": true,
-   "pt-time-old-new": false,
+   "pt-time-old-new": true,
    "danish-color-ocean": true,
    "dutch-opposite-big": true,
    "estonian-opposite-open": true,
@@ -3155,12 +2946,12 @@
    "pt-number-after-five": true
   },
   "digest_unserved": [],
-  "written": "2026-10-31T21:15:49+00:00",
-  "value": 0.8787878787878788,
+  "written": "2026-11-04T08:06:26+00:00",
+  "value": 0.9494949494949495,
   "n": 99,
   "ci": [
-   0.8080808080808081,
-   0.9393939393939394
+   0.898989898989899,
+   0.98989898989899
   ],
   "n_refused": 0,
   "n_refused_ask": 0,
@@ -3171,11 +2962,11 @@
   "not_measurable": false
  },
  "multilingual_mt": {
-  "rate": 0.95,
+  "rate": 0.98,
   "saturated": false,
   "ci95": [
-   0.9,
-   0.99
+   0.95,
+   1.0
   ],
   "metric": "pass_rate",
   "higher_is_better": true,
@@ -3188,7 +2979,7 @@
    "n_empty_cells": 0
   },
   "judge_model": "claude-opus-5-5",
-  "instrument": "mt-regex-2026-10-30+v2+ln-2026-10-31e+rawrx-v2+digest-v5-task-extractive-lang+sj-v10",
+  "instrument": "mt-regex-2026-10-30+v2+ln-2026-11-03a+rawrx-v2+plural-v1+langleg-v1+bank-v4+digest-v5-task-extractive+sj-v10",
   "layers_judged": [
    44
   ],
@@ -3209,7 +3000,6 @@
    "decode": true,
    "overflow": "hierarchical",
    "fallback": "none",
-   "lang": true,
    "layer_mode": "union"
   },
   "decided": {
@@ -3242,7 +3032,7 @@
    "mlh-fi-tortoise": true,
    "mlh-he-alarm-clock": true,
    "mlh-he-dishwasher": true,
-   "mlh-he-pressure-cooker": true,
+   "mlh-he-pressure-cooker": false,
    "mlh-he-sewingmachine": true,
    "mlh-he-tapemeasure": true,
    "mlh-he-washing-machine": true,
@@ -3251,7 +3041,7 @@
    "mlh-he-escalator": true,
    "mlh-he-polar-bear": true,
    "mlh-he-spine": true,
-   "mlh-hu-candlestick": false,
+   "mlh-hu-candlestick": true,
    "mlh-hu-esokabat": true,
    "mlh-hu-gerincvelo": true,
    "mlh-hu-porszivo": true,
@@ -3286,26 +3076,26 @@
    "mlh-pl-trzustka": true,
    "mlh-ru-caterpillar": true,
    "mlh-ru-dandelion": true,
-   "mlh-ru-fryingpan": false,
+   "mlh-ru-fryingpan": true,
    "mlh-ru-meatgrinder": true,
    "mlh-ru-nakovalnya": true,
    "mlh-ru-payalnik": true,
    "mlh-ru-skvorechnik": true,
    "mlh-ru-sosulka": true,
    "mlh-ru-thimble": true,
-   "mlh-ru-anthill": false,
+   "mlh-ru-anthill": true,
    "mlh-sw-mwarobaini": true,
    "mlh-sw-chandarua": true,
-   "mlh-tr-bademcik": false,
+   "mlh-tr-bademcik": true,
    "mlh-tr-camasir-makinesi": true,
    "mlh-tr-dis-macunu": true,
    "mlh-tr-omurilik": true,
    "mlh-tr-kaplumbaga": true,
    "mlh-tr-kartanesi": true,
-   "mlh-tr-salyangoz": true,
+   "mlh-tr-salyangoz": false,
    "mlh-vi-blender": true,
    "mlh-vi-cactus": true,
-   "mlh-vi-chuonchuon": false,
+   "mlh-vi-chuonchuon": true,
    "mlh-vi-clothesiron": true,
    "mlh-vi-extinguisher": true,
    "mlh-vi-firefly": true,
@@ -3315,12 +3105,12 @@
    "mlh-vi-raincoat": true
   },
   "digest_unserved": [],
-  "written": "2026-10-31T21:15:49+00:00",
-  "value": 0.95,
+  "written": "2026-11-04T08:06:26+00:00",
+  "value": 0.98,
   "n": 100,
   "ci": [
-   0.9,
-   0.99
+   0.95,
+   1.0
   ],
   "n_refused": 0,
   "n_refused_ask": 0,
@@ -3331,11 +3121,11 @@
   "not_measurable": false
  },
  "multilingual_multihop": {
-  "rate": 0.3402061855670103,
+  "rate": 0.8556701030927835,
   "saturated": false,
   "ci95": [
-   0.23711340206185566,
-   0.4329896907216495
+   0.7835051546391752,
+   0.9175257731958762
   ],
   "metric": "pass_rate",
   "higher_is_better": true,
@@ -3348,7 +3138,7 @@
    "n_empty_cells": 0
   },
   "judge_model": "claude-opus-5-5",
-  "instrument": "mcrx-2026-10-31g+mc-ml-2026-10-31f+digest-v5-task-extractive-lang+sj-v10",
+  "instrument": "mcrx-2026-11-03d+mc-ml-2026-11-01b+digest-v5-task-extractive+sj-v10",
   "layers_judged": [
    44
   ],
@@ -3369,17 +3159,16 @@
    "decode": true,
    "overflow": "hierarchical",
    "fallback": "none",
-   "lang": true,
    "layer_mode": "union"
   },
   "decided": {},
   "digest_unserved": [],
-  "written": "2026-10-31T21:15:49+00:00",
-  "value": 0.3402061855670103,
+  "written": "2026-11-04T08:06:27+00:00",
+  "value": 0.8556701030927835,
   "n": 97,
   "ci": [
-   0.23711340206185566,
-   0.4329896907216495
+   0.7835051546391752,
+   0.9175257731958762
   ],
   "n_refused": 0,
   "n_refused_ask": 0,
@@ -3393,8 +3182,8 @@
   "rate": 0.74,
   "saturated": false,
   "ci95": [
-   0.65,
-   0.82
+   0.66,
+   0.83
   ],
   "metric": "pass_rate",
   "higher_is_better": true,
@@ -3407,7 +3196,7 @@
    "n_empty_cells": 0
   },
   "judge_model": "claude-opus-5-5",
-  "instrument": "mt-regex-2026-10-30+v2+ln-2026-10-31e+rawrx-v2+digest-v5-task-extractive-lang+sj-v10",
+  "instrument": "mt-regex-2026-10-30+v2+ln-2026-11-03a+rawrx-v2+plural-v1+anchor-support-v1+langleg-v1+bank-v3+digest-v5-task-extractive+sj-v10",
   "layers_judged": [
    44
   ],
@@ -3428,54 +3217,53 @@
    "decode": true,
    "overflow": "hierarchical",
    "fallback": "none",
-   "lang": true,
    "layer_mode": "union"
   },
   "decided": {
-   "mlt-ar-adrenaline-rush": true,
+   "mlt-ar-adrenaline-rush": false,
    "mlt-ar-amphibians": false,
-   "mlt-ar-anthropology": true,
+   "mlt-ar-anthropology": false,
    "mlt-ar-arabisk": false,
-   "mlt-ar-biruqratiyya": false,
-   "mlt-ar-cholesterol": false,
-   "mlt-ar-conifers": true,
-   "mlt-ar-coral": true,
+   "mlt-ar-biruqratiyya": true,
+   "mlt-ar-cholesterol": true,
+   "mlt-ar-conifers": false,
+   "mlt-ar-coral": false,
    "mlt-ar-cortisol-stress": true,
    "mlt-el-aftokinitodromos": true,
-   "mlt-el-aftokinitodromos-2": true,
+   "mlt-el-aftokinitodromos-2": false,
    "mlt-el-aggeioplastiki": true,
    "mlt-el-aimokatharsi": true,
    "mlt-el-aktinotherapeia": true,
    "mlt-el-anemostrovilos": true,
-   "mlt-el-angeiosperma": true,
+   "mlt-el-angeiosperma": false,
    "mlt-el-anosokatastoli": true,
    "mlt-el-apokryptografisi": true,
    "mlt-fi-aivotarahdys": true,
    "mlt-fi-astianpesukone": true,
    "mlt-fi-hammaslaakari": true,
-   "mlt-fi-kansanedustaja": false,
-   "mlt-fi-kansanedustajana": false,
+   "mlt-fi-kansanedustaja": true,
+   "mlt-fi-kansanedustajana": true,
    "mlt-fi-kilpirauhanen": true,
    "mlt-fi-kumisaappaat": true,
    "mlt-fi-mikroaaltouuni": true,
    "mlt-fi-ompelukone": true,
-   "mlt-he-antibiotika": true,
-   "mlt-he-antisemitism": true,
+   "mlt-he-antibiotika": false,
+   "mlt-he-antisemitism": false,
    "mlt-he-archaeology": true,
    "mlt-he-caramelization-typo": false,
    "mlt-he-chemotherapia": true,
    "mlt-he-detergents-typo": false,
-   "mlt-he-elektroda": false,
-   "mlt-he-encyclopedia": false,
-   "mlt-he-endocrinologia": true,
+   "mlt-he-elektroda": true,
+   "mlt-he-encyclopedia": true,
+   "mlt-he-endocrinologia": false,
    "mlt-hu-anyakonyvvezeto": true,
    "mlt-hu-asztalosmuhely": true,
    "mlt-hu-csavarhuzo": false,
    "mlt-hu-cseppkobarlang": true,
    "mlt-hu-csillagvizsgalo": true,
-   "mlt-hu-elengedhetetlen-01": false,
+   "mlt-hu-elengedhetetlen-01": true,
    "mlt-hu-erelmeszesedes": true,
-   "mlt-hu-fazekaskorong": true,
+   "mlt-hu-fazekaskorong": false,
    "mlt-id-berkesinambungan": true,
    "mlt-id-fotosintesis": true,
    "mlt-id-invertebrata": true,
@@ -3484,25 +3272,25 @@
    "mlt-id-kelembapan": true,
    "mlt-id-kelumpuhan": true,
    "mlt-id-kepompong": true,
-   "mlt-ko-air-pollutants": true,
+   "mlt-ko-air-pollutants": false,
    "mlt-ko-airpurifier": false,
-   "mlt-ko-artificial-neural-network": true,
+   "mlt-ko-artificial-neural-network": false,
    "mlt-ko-cabg": true,
-   "mlt-ko-carnivorous-plant": false,
-   "mlt-ko-cfrp": false,
-   "mlt-ko-copd": false,
-   "mlt-ko-deciduous-broadleaf-forest": false,
-   "mlt-pl-bezpieczenstwo": true,
+   "mlt-ko-carnivorous-plant": true,
+   "mlt-ko-cfrp": true,
+   "mlt-ko-copd": true,
+   "mlt-ko-deciduous-broadleaf-forest": true,
+   "mlt-pl-bezpieczenstwo": false,
    "mlt-pl-bioroznorodnosc": false,
    "mlt-pl-echolokacja": true,
-   "mlt-pl-elektroencefalografia": true,
-   "mlt-pl-fotosynteza": false,
+   "mlt-pl-elektroencefalografia": false,
+   "mlt-pl-fotosynteza": true,
    "mlt-pl-garbarstwo": true,
    "mlt-pl-jedwabnictwo": true,
    "mlt-pl-kwestionariusz": true,
    "mlt-ru-anticyclone": false,
-   "mlt-ru-blagotvoritelnost": false,
-   "mlt-ru-delo-01": false,
+   "mlt-ru-blagotvoritelnost": true,
+   "mlt-ru-delo-01": true,
    "mlt-ru-dostoprimechatelnost": false,
    "mlt-ru-elektrifikatsiya": false,
    "mlt-ru-elektrolobzik": false,
@@ -3517,7 +3305,7 @@
    "mlt-sw-mchanganyiko": true,
    "mlt-sw-mwanaharakati": true,
    "mlt-tr-bagimsizlik": true,
-   "mlt-tr-bagisiklik-immunity": true,
+   "mlt-tr-bagisiklik-immunity": false,
    "mlt-tr-biyocesitlilik": true,
    "mlt-tr-buharlasma": true,
    "mlt-tr-buyukelcilik-swap": true,
@@ -3530,16 +3318,16 @@
    "mlt-vi-hat-nhan": true,
    "mlt-vi-hoa-thach": true,
    "mlt-vi-hop-com-giu-nhiet": true,
-   "mlt-vi-khi-quyen": false,
+   "mlt-vi-khi-quyen": true,
    "mlt-vi-lo-vi-song": true
   },
   "digest_unserved": [],
-  "written": "2026-10-31T21:15:49+00:00",
+  "written": "2026-11-04T08:06:27+00:00",
   "value": 0.74,
   "n": 100,
   "ci": [
-   0.65,
-   0.82
+   0.66,
+   0.83
   ],
   "n_refused": 0,
   "n_refused_ask": 0,
@@ -3567,7 +3355,7 @@
    "n_empty_cells": 0
   },
   "judge_model": "claude-opus-5-5",
-  "instrument": "poetry-mc-2026-10-31h+digest-v5-task-extractive+sj-v10",
+  "instrument": "poetry-free-2026-11-01+noveto-a1+digest-v5-task-extractive+sj-v10",
   "layers_judged": [
    44
   ],
@@ -3588,7 +3376,6 @@
    "decode": true,
    "overflow": "hierarchical",
    "fallback": "none",
-   "lang": false,
    "layer_mode": "union"
   },
   "decided": {
@@ -3694,7 +3481,7 @@
    "v3-po-strong-long": false
   },
   "digest_unserved": [],
-  "written": "2026-10-31T21:15:50+00:00",
+  "written": "2026-11-04T08:06:27+00:00",
   "value": 0.0,
   "n": 100,
   "ci": [
@@ -3705,31 +3492,15 @@
   "n_refused_ask": 0,
   "n_refused_digest": 0,
   "refusal_share": 0.0,
-  "n_ids": 100,
-  "n_refused_opus": 1,
-  "n_served_by_fallback": 1,
-  "refusal_rate_opus": 0.01,
-  "protocol": "po-opus-v1+sonnet5-fallback",
-  "reader": "prompt_only:claude-opus-5-5+claude-sonnet-5-fallback",
-  "label": "Opus 5.5 + Sonnet 5 fallback (0 refused by both)",
-  "not_measurable": false,
-  "opus_only": {
-   "value": 0.0,
-   "n": 99,
-   "ci": [
-    0.0,
-    0.0
-   ],
-   "refusal_share": 0.01,
-   "not_measurable": false,
-   "label": "Opus 5.5 (1 refused)"
-  }
+  "protocol": "po-opus-v1",
+  "label": "Opus 5.5 (0 refused)",
+  "not_measurable": false
  },
  "relational_multihop": {
-  "rate": 0.98,
+  "rate": 1.0,
   "saturated": true,
   "ci95": [
-   0.95,
+   1.0,
    1.0
   ],
   "metric": "pass_rate",
@@ -3743,7 +3514,7 @@
    "n_empty_cells": 0
   },
   "judge_model": "claude-opus-5-5",
-  "instrument": "rel-v3+relgate-v4+digest-v5-task-extractive+sj-v10",
+  "instrument": "rel-v3+relgate-v6+digest-v5-task-extractive+sj-v10",
   "layers_judged": [
    44
   ],
@@ -3764,7 +3535,6 @@
    "decode": true,
    "overflow": "hierarchical",
    "fallback": "none",
-   "lang": false,
    "layer_mode": "union"
   },
   "decided": {
@@ -3780,7 +3550,7 @@
    "rel-s04-b": true,
    "rel-s05-a": true,
    "rel-s05-b": true,
-   "rel-s06-a": false,
+   "rel-s06-a": true,
    "rel-s06-b": true,
    "rel-s07-a": true,
    "rel-s07-b": true,
@@ -3849,7 +3619,7 @@
    "rel-s39-a": true,
    "rel-s39-b": true,
    "rel-s40-a": true,
-   "rel-s40-b": false,
+   "rel-s40-b": true,
    "rel-s41-a": true,
    "rel-s41-b": true,
    "rel-s42-a": true,
@@ -3870,11 +3640,11 @@
    "rel-s49-b": true
   },
   "digest_unserved": [],
-  "written": "2026-11-01T07:16:52+00:00",
-  "value": 0.98,
+  "written": "2026-11-04T08:06:27+00:00",
+  "value": 1.0,
   "n": 100,
   "ci": [
-   0.95,
+   1.0,
    1.0
   ],
   "n_refused": 0,
@@ -3886,24 +3656,24 @@
   "not_measurable": false
  },
  "role_bound_association": {
-  "rate": 0.54,
-  "saturated": true,
+  "rate": 0.45652173913043476,
+  "saturated": false,
   "ci95": [
-   0.44,
-   0.64
+   0.30434782608695654,
+   0.5869565217391305
   ],
   "metric": "pass_rate",
   "higher_is_better": true,
-  "n_items": 100,
-  "n_items_decided": 100,
+  "n_items": 92,
+  "n_items_decided": 92,
   "counts": {
-   "n_expected_cells": 100,
+   "n_expected_cells": 92,
    "n_missing_cells": 0,
    "n_unjudged_cells": 0,
    "n_empty_cells": 0
   },
   "judge_model": "claude-opus-5-5",
-  "instrument": "oa-v2.3+digest-v5-task-extractive+sj-v10",
+  "instrument": "oa-v3.1+bank-v2+maj3v+digest-v5-task-extractive+sj-v10",
   "layers_judged": [
    44
   ],
@@ -3924,43 +3694,40 @@
    "decode": true,
    "overflow": "hierarchical",
    "fallback": "none",
-   "lang": false,
    "layer_mode": "union"
   },
   "decided": {
    "oa-police-thief-chase-ab": false,
    "oa-police-thief-chase-ba": true,
-   "oa-doctor-patient-comfort-ab": false,
+   "oa-doctor-patient-comfort-ab": true,
    "oa-doctor-patient-comfort-ba": false,
    "oa-teacher-student-scold-ab": true,
-   "oa-teacher-student-scold-ba": false,
+   "oa-teacher-student-scold-ba": true,
    "oa-lawyer-witness-interrogate-ab": true,
    "oa-lawyer-witness-interrogate-ba": true,
-   "oa-waiter-customer-apologize-ab": true,
-   "oa-waiter-customer-apologize-ba": false,
-   "oa-mother-son-angry-ab": false,
-   "oa-mother-son-angry-ba": false,
-   "oa-boss-employee-envy-ab": false,
-   "oa-boss-employee-envy-ba": true,
+   "oa-waiter-customer-apologize-ab": false,
+   "oa-waiter-customer-apologize-ba": true,
+   "oa-mother-son-angry-ab": true,
+   "oa-mother-son-angry-ba": true,
    "oa-nurse-patient-lie-ab": false,
    "oa-nurse-patient-lie-ba": true,
    "oa-landlord-tenant-avoid-ab": true,
    "oa-landlord-tenant-avoid-ba": true,
-   "oa-coach-athlete-admire-ab": false,
+   "oa-coach-athlete-admire-ab": true,
    "oa-coach-athlete-admire-ba": true,
    "oa-firefighter-homeowner-rescue-ab": false,
    "oa-firefighter-homeowner-rescue-ba": true,
-   "oa-doctor-nurse-instruct-ab": true,
-   "oa-doctor-nurse-instruct-ba": false,
+   "oa-doctor-nurse-instruct-ab": false,
+   "oa-doctor-nurse-instruct-ba": true,
    "oa-general-soldier-salute-ab": true,
    "oa-general-soldier-salute-ba": true,
    "oa-king-servant-bow-ab": true,
-   "oa-king-servant-bow-ba": false,
-   "oa-celebrity-fan-photograph-ab": false,
+   "oa-king-servant-bow-ba": true,
+   "oa-celebrity-fan-photograph-ab": true,
    "oa-celebrity-fan-photograph-ba": false,
-   "oa-guard-visitor-search-ab": false,
+   "oa-guard-visitor-search-ab": true,
    "oa-guard-visitor-search-ba": true,
-   "oa-librarian-borrower-fine-ab": true,
+   "oa-librarian-borrower-fine-ab": false,
    "oa-librarian-borrower-fine-ba": false,
    "oa-referee-player-warn-ab": false,
    "oa-referee-player-warn-ba": true,
@@ -3970,96 +3737,74 @@
    "oa-pilot-passenger-reassure-ba": true,
    "oa-babysitter-toddler-feed-ab": true,
    "oa-babysitter-toddler-feed-ba": true,
-   "oa-hairdresser-client-compliment-ab": true,
+   "oa-hairdresser-client-compliment-ab": false,
    "oa-hairdresser-client-compliment-ba": false,
-   "oa-mechanic-driver-bill-ab": false,
-   "oa-mechanic-driver-bill-ba": false,
+   "oa-mechanic-driver-bill-ab": true,
+   "oa-mechanic-driver-bill-ba": true,
    "oa-paramedic-bystander-thank-ab": false,
    "oa-paramedic-bystander-thank-ba": true,
-   "oa-professor-dean-report-ab": true,
-   "oa-professor-dean-report-ba": true,
+   "oa-professor-dean-report-ab": false,
+   "oa-professor-dean-report-ba": false,
    "oa-tourist-local-ask-ab": true,
    "oa-tourist-local-ask-ba": false,
    "oa-bouncer-patron-eject-ab": true,
    "oa-bouncer-patron-eject-ba": true,
-   "oa-plumber-homeowner-overcharge-ab": true,
+   "oa-plumber-homeowner-overcharge-ab": false,
    "oa-plumber-homeowner-overcharge-ba": false,
    "oa-child-grandparent-hug-ab": true,
-   "oa-child-grandparent-hug-ba": false,
-   "oa-burglar-neighbor-spy-ab": true,
+   "oa-child-grandparent-hug-ba": true,
+   "oa-burglar-neighbor-spy-ab": false,
    "oa-burglar-neighbor-spy-ba": false,
-   "oa-father-daughter-worry-ab": false,
-   "oa-father-daughter-worry-ba": false,
-   "oa-sister-brother-tease-ab": false,
-   "oa-sister-brother-tease-ba": false,
-   "oa-manager-intern-distrust-ab": true,
-   "oa-manager-intern-distrust-ba": false,
-   "oa-veteran-recruit-lookdown-ab": false,
-   "oa-veteran-recruit-lookdown-ba": true,
+   "oa-father-daughter-worry-ab": true,
+   "oa-father-daughter-worry-ba": true,
+   "oa-sister-brother-tease-ab": true,
+   "oa-sister-brother-tease-ba": true,
+   "oa-manager-intern-distrust-ab": false,
+   "oa-manager-intern-distrust-ba": true,
    "oa-starter-benchwarmer-pity-ab": true,
    "oa-starter-benchwarmer-pity-ba": true,
    "oa-teacher-parent-blame-ab": true,
    "oa-teacher-parent-blame-ba": true,
-   "oa-wife-husband-suspect-ab": true,
+   "oa-wife-husband-suspect-ab": false,
    "oa-wife-husband-suspect-ba": true,
    "oa-grandmother-grandson-indulge-ab": true,
-   "oa-grandmother-grandson-indulge-ba": true,
-   "oa-officer-informant-protect-ab": true,
-   "oa-officer-informant-protect-ba": false,
+   "oa-grandmother-grandson-indulge-ba": false,
    "oa-priest-parishioner-forgive-ab": true,
-   "oa-priest-parishioner-forgive-ba": true,
-   "oa-guard-prisoner-fear-ab": true,
-   "oa-guard-prisoner-fear-ba": false,
-   "oa-ceo-janitor-resent-ab": true,
-   "oa-ceo-janitor-resent-ba": false,
-   "oa-bride-caterer-yell-ab": true,
+   "oa-priest-parishioner-forgive-ba": false,
+   "oa-ceo-janitor-resent-ab": false,
+   "oa-ceo-janitor-resent-ba": true,
+   "oa-bride-caterer-yell-ab": false,
    "oa-bride-caterer-yell-ba": true,
-   "oa-critic-musician-mock-ab": false,
-   "oa-critic-musician-mock-ba": false,
-   "oa-accountant-client-deceive-ab": true,
+   "oa-critic-musician-mock-ab": true,
+   "oa-critic-musician-mock-ba": true,
+   "oa-accountant-client-deceive-ab": false,
    "oa-accountant-client-deceive-ba": false,
-   "oa-principal-troublemaker-dread-ab": false,
+   "oa-principal-troublemaker-dread-ab": true,
    "oa-principal-troublemaker-dread-ba": false,
    "oa-shopowner-supplier-cheat-ab": true,
-   "oa-shopowner-supplier-cheat-ba": false,
+   "oa-shopowner-supplier-cheat-ba": true,
    "oa-detective-suspect-follow-ab": true,
-   "oa-detective-suspect-follow-ba": false,
-   "oa-heiress-butler-underestimate-ab": false,
+   "oa-detective-suspect-follow-ba": true,
+   "oa-heiress-butler-underestimate-ab": true,
    "oa-heiress-butler-underestimate-ba": true,
    "oa-comedian-heckler-humiliate-ab": false,
    "oa-comedian-heckler-humiliate-ba": false
   },
   "digest_unserved": [],
-  "written": "2026-10-31T21:15:50+00:00",
-  "value": 0.54,
-  "n": 100,
+  "written": "2026-11-04T09:06:36+00:00",
+  "value": 0.45652173913043476,
+  "n": 92,
   "ci": [
-   0.44,
-   0.64
+   0.30434782608695654,
+   0.5869565217391305
   ],
   "n_refused": 0,
   "n_refused_ask": 0,
   "n_refused_digest": 0,
   "refusal_share": 0.0,
-  "n_ids": 100,
-  "n_refused_opus": 90,
-  "n_served_by_fallback": 90,
-  "refusal_rate_opus": 0.9,
-  "protocol": "po-opus-v1+sonnet5-fallback",
-  "reader": "prompt_only:claude-opus-5-5+claude-sonnet-5-fallback",
-  "label": "Opus 5.5 + Sonnet 5 fallback (0 refused by both)",
-  "not_measurable": false,
-  "opus_only": {
-   "value": 0.07,
-   "n": 100,
-   "ci": [
-    0.02,
-    0.12
-   ],
-   "refusal_share": 0.9,
-   "not_measurable": true,
-   "label": "Opus 5.5 (90 refused)"
-  }
+  "protocol": "po-opus-v1",
+  "label": "Opus 5.5 (0 refused)",
+  "not_measurable": false
  },
  "typo_mt": {
   "rate": 1.0,
@@ -4207,24 +3952,24 @@
   "not_measurable": false
  },
  "user_modeling": {
-  "rate": 0.26,
+  "rate": 0.6808510638297872,
   "saturated": false,
   "ci95": [
-   0.18,
-   0.35
+   0.5319148936170213,
+   0.8085106382978723
   ],
   "metric": "pass_rate",
   "higher_is_better": true,
-  "n_items": 100,
-  "n_items_decided": 100,
+  "n_items": 47,
+  "n_items_decided": 47,
   "counts": {
-   "n_expected_cells": 100,
+   "n_expected_cells": 47,
    "n_missing_cells": 0,
    "n_unjudged_cells": 0,
    "n_empty_cells": 0
   },
   "judge_model": "claude-opus-5-5",
-  "instrument": "um-v3.2+digest-v5-task-extractive+sj-v10",
+  "instrument": "um-v3.4+bank-v2+maj3+digest-v5-task-extractive+sj-v10",
   "layers_judged": [
    44
   ],
@@ -4244,42 +3989,25 @@
    "token_cap": 920000,
    "decode": true,
    "overflow": "hierarchical",
-   "fallback": "default+claude-sonnet-5",
-   "lang": false,
+   "fallback": "default+claude-sonnet-5-5",
    "layer_mode": "union"
   },
   "decided": {},
   "digest_unserved": [],
-  "written": "2026-10-31T21:15:50+00:00",
-  "value": 0.26,
-  "n": 100,
+  "written": "2026-11-04T08:06:27+00:00",
+  "value": 0.6808510638297872,
+  "n": 47,
   "ci": [
-   0.18,
-   0.35
+   0.5319148936170213,
+   0.8085106382978723
   ],
   "n_refused": 0,
   "n_refused_ask": 0,
   "n_refused_digest": 0,
   "refusal_share": 0.0,
-  "n_ids": 100,
-  "n_refused_opus": 31,
-  "n_served_by_fallback": 31,
-  "refusal_rate_opus": 0.31,
-  "protocol": "po-opus-v1+sonnet5-fallback",
-  "reader": "prompt_only:claude-opus-5-5+claude-sonnet-5-fallback",
-  "label": "Opus 5.5 + Sonnet 5 fallback (0 refused by both)",
-  "not_measurable": false,
-  "opus_only": {
-   "value": 0.15,
-   "n": 100,
-   "ci": [
-    0.09,
-    0.22
-   ],
-   "refusal_share": 0.31,
-   "not_measurable": true,
-   "label": "Opus 5.5 (31 refused)"
-  }
+  "protocol": "po-opus-v1",
+  "label": "Opus 5.5 (0 refused)",
+  "not_measurable": false
  },
  "wrong_intermediate": {
   "rate": 0.0,
@@ -4299,7 +4027,7 @@
    "n_empty_cells": 0
   },
   "judge_model": "claude-opus-5-5",
-  "instrument": "wb-mc-2026-10-30+digest-v5-task-extractive+sj-v10",
+  "instrument": "wb-mc-2026-10-31r+judge-only-v1+qline-v1+wbforms-v4+bank-v4+digest-v5-task-extractive+sj-v10",
   "layers_judged": [
    44
   ],
@@ -4320,7 +4048,6 @@
    "decode": true,
    "overflow": "hierarchical",
    "fallback": "none",
-   "lang": false,
    "layer_mode": "union"
   },
   "decided": {
@@ -4426,7 +4153,7 @@
    "painting_creator-Q3228387-death_city": false
   },
   "digest_unserved": [],
-  "written": "2026-10-31T21:15:49+00:00",
+  "written": "2026-11-04T08:06:27+00:00",
   "value": 0.0,
   "n": 100,
   "ci": [

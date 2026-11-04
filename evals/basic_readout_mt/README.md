@@ -43,8 +43,7 @@ only weapon-related item, whose digest the summarizer refused on 9 of 11 layers 
 arm (leaving it undecided) and on 1-2 layers for two others. The header's `read_plan_bank` names
 `items_v4.json`, so the read plan, its `plan_sha` and every v4 readout file serve v5. Stamp
 `+bank-v5`; the MC calls keep their `+bank-v4` key (`BRMT_CALL_VERSION`), so v4 runs re-score from
-cache. The lucky-guessing and prompt-only floors were measured on v4's 99 items: stale until
-re-measured. The ATI entry's `bank_sha` moves with the bank (re-gate).
+cache. The floors were re-measured on v5's 98 items in the 2026-11-04 refreeze (Floors, ATI).
 
 ## Bank v4 (`items_v4.json`, frozen 2026-11-01, round 4b)
 
@@ -135,14 +134,17 @@ token lenses give their top 10 tokens (`tokens10`).
 
 ## Floors
 
-- **Lucky guessing, bank v4 (the frozen floors):** blind 0.069, topic 0.214, described 0.145,
-  uniform 0.202 (Bank v4 above). Earlier lists, for the record: v3 blind 0.299 / described 0.356
-  / topic 0.523; v2 (below) blind 0.171, described 0.359, uniform 0.202 (the v1 lists, Gemini 3.8 Flash, both lists: blind
+- **Lucky guessing, bank v5 (the frozen floors; 2026-11-04 refreeze, Opus 5.5, 5 fresh draws):**
+  blind 0.129, described 0.220, topic 0.327, uniform 0.204 vs chance 0.200: topic fails the MC
+  leakage standard (`evals/baselines/README.md` "Floors of record"). Bank v4: blind 0.069, topic
+  0.214, described 0.145, uniform 0.202 (Bank v4 above). Earlier lists, for the record: v3 blind
+  0.299 / described 0.356 / topic 0.523; v2 (below) blind 0.171, described 0.359, uniform 0.202 (the v1 lists, Gemini 3.8 Flash, both lists: blind
   0.456, described 0.488, uniform 0.140). The described guesser (told the task and shown three
   solved items) still beats uniform: on some items the answer is the best-known entity of its
   kind; 15 items stayed blind leakers after 8 redraw rounds (`gate_v2.json`).
-- **Prompt-only** (`po-opus-v1`): one Opus 5.5 readout per item from the v2 render, judged by this
-  family's own `run` (same digest, MC judge, name gate); measured in the run phase.
+- **Prompt-only** (`po-opus-v1`): one Opus 5.5 readout per item from the render, judged by this
+  family's own `run` (same digest, MC judge, name gate): 1.000 on bank v5's 98 items
+  (`mc-brmt-2026-10-31r+norival-v1+qline-v1+bank-v5`, 2026-11-04 refreeze).
 
 ## ATI
 
@@ -150,7 +152,8 @@ Re-gated for the v2 bank and instrument on 2026-10-31 (R1-ATI): 0/99 on the redu
 Qwen + Opus + Astra (argon unreachable), PROVISIONAL; every item is invertible (all three readers
 solve all 99), so the family has no ATI subset (`evals/baselines/README.md`, fix-round-1
 re-gate). Re-gated on 2026-11-01 (R1-ATI gemini) on the full four-reader panel (argon via Gemini
-WIF) at bank v4: still 0/99 (all four readers solve all 99).
+WIF) at bank v4: still 0/99 (all four readers solve all 99). Re-gated on a fresh full panel at
+bank v5 (2026-11-04 refreeze): 0/98.
 
 ## Instrument history
 
@@ -239,6 +242,8 @@ WIF) at bank v4: still 0/99 (all four readers solve all 99).
   the quote's own line; the rescue through any digest line naming the gold is retired.
 - 2026-11-04 (`+bank-v5`): bank v5 drops the sarin item, whose digest the digest model refused on
   most layers of some arms.
+- 2026-11-04 (`+bank-v5`): the prompt-only, lucky-guessing and text-blind floors are re-measured
+  on bank v5's 98 items, so they are drawn beside this instrument again.
 
 ## Readouts
 

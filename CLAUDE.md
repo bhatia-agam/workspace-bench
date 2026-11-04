@@ -146,12 +146,16 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   balanced per subfamily by `mc_leakage_r4.py balance`, so no positional prior beats chance)
   and `prompt_only`; `wsbench freeze` stamps entries with the family's
   `prompt_version`, and `report` shows a floor only while the stamp matches. Prompt-only ids
-  Opus 5.5 refuses are re-asked on Sonnet 5.5 (`po-opus-v1+sonnet55-fallback`, 2026-11-01); the
-  committed floors carry the frozen Sonnet 5 protocol (`po.PO_FALLBACK_SONNET5`), still read and
-  labelled (`po.PO_FALLBACKS`), never written; `prompt_only_opus.fallback_rows` ignores answers
-  of any other fallback model in a resumed dir. A summary floor matches a row regardless of the
-  digest's client-side refusal model (`po._floor_match_key` keeps only the fallback mode), so the
-  Sonnet 5 floors still draw beside Sonnet 5.5 rows.
+  Opus 5.5 refuses are re-asked on Sonnet 5.5 (`po-opus-v1+sonnet55-fallback`, 2026-11-01; the
+  committed floors are the 2026-11-04 refreeze, `evals/baselines/README.md` "Floors of record",
+  which also says which rows each floor kind is drawn beside: a prompt-only floor carries the
+  single-layer digest instrument, so a default layered all-layer row shows none); the older
+  Sonnet 5 protocol (`po.PO_FALLBACK_SONNET5`) is still read and labelled (`po.PO_FALLBACKS`),
+  never written; `prompt_only_opus.fallback_rows` ignores answers of any other fallback model in
+  a resumed dir. A summary floor matches a row regardless of the digest's client-side refusal
+  model (`po._floor_match_key` keeps only the fallback mode), so the Sonnet 5 floors still draw
+  beside Sonnet 5.5 rows. A `read_plan_bank` bank is asked and gated on its own ids only
+  (`text_inversion.judged_bank_ids` / `gated_ids`).
   `text_inversion` builds the anti-text-inversion subset (`evals/baselines/anti_text_inversion.json`,
   plan 0019 panel gate, which replaced plan 0014's Opus-only gate): Qwen3.6-27B + the frontier
   group (Claude slot opus/sonnet, `openai/gpt-6-astra`, `google/gemini-4-argon`) x 3 draws, each
@@ -278,8 +282,8 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   each (item, side) 3 times, reusing conjunctive's `draw_key` / `majority` / `n_draws`, and takes
   the majority of the draws' pass / fail verdicts, result stamp `+maj3v`; a near-verbatim quote
   (`nearquote.close_lines`) verifies like an exact one, summary stamp `+nq1`; the earlier
-  multi-label rule survives only as `lucky_guessing.marks_pass`, which scores the multi-mark
-  guessers of the floors frozen under it); bank v5 `evals/moral_rationale/items_v5.json` is
+  multi-label rule survives only as `lucky_guessing.marks_pass`, which scores the opt-in bank
+  v5's multi-mark guesser floors; bank v3's lucky floors are the single-pick guessers); bank v5 `evals/moral_rationale/items_v5.json` is
   opt-in** (round 4, `ec-v9-b5`; not registered while it leaks the side, review of #215): the 24 bank-v3 items whose rebuilt
   distractor lists a question+options, an options-only and a described (solved-examples) guesser
   pick the gold from at uniform chance (`scripts/moral_v5.py`: adversarial authoring with the
@@ -292,7 +296,8 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   (`lucky_guessing.side_readers`, frozen `side_*` fields; `moral_v5.py freeze` refuses such a
   bank without `--allow-side-leak`; `lucky_guessing.bar` counts every side reader, so v5's floor
   reads `side_prior:no` 0.917). Does NOT meet the r2 "moral options-only at chance" standard, and
-  neither does registered bank v3 (floor 0.831; its always-no reader 0.708). Decided for the
+  neither does registered bank v3 (floor 0.706, the single-pick question guesser under ec-v9;
+  0.831 under the earlier multi-mark rule). Decided for the
   freeze (2026-11-01): bank v3 stays the default (lowest bar of v3/v4/v5; cross-bank floors
   table at the top of `evals/moral_rationale/README.md`). The
   read plan stays bank v3's 195 rows for banks v4/v5
@@ -316,7 +321,7 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   (`WSB_BANK_FILE_MORAL_RATIONALE=evals/moral_rationale/items.json`) = legacy `ec-v3.1` (ec-v3
   with a tool-free system opening). Reads:
   full = every render position (`min_full_positions=6`), lite = the last five. Its ATI entry was
-  re-gated under ec-v5c on 2026-10-31 (R1-ATI, full panel: 152/195), re-stamped ec-v5d in round 3; it is stale under ec-v9 until re-gated. Opt-in bank v4 (`items_v4.json`, 53 gate-passing items, `ec-v9-b4`, `scripts/moral_adversarial.py`).
+  re-gated under ec-v5c on 2026-10-31 (R1-ATI, full panel: 152/195), re-stamped ec-v5d in round 3, re-gated under ec-v9 in the 2026-11-04 refreeze (134/195). Opt-in bank v4 (`items_v4.json`, 53 gate-passing items, `ec-v9-b4`, `scripts/moral_adversarial.py`).
 - association (plan 0039) left the bank judge: bank v2 `evals/association/items_v2.json` (93
   items; v1 `items.json` byte-identical, read only by `tests/test_basic_association.py`'s
   test-only `bank_family` registration), its own `judge.py` (8-way MC + cannot tell; gate:

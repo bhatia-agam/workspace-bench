@@ -43,11 +43,12 @@ the direction, and the judge's quote of that statement survives a mechanical gat
   option lists and its cached calls stay valid. `items.json` (100 items, 50 pairs; strata
   `stereotypicality` ∈ congruent 39 / incongruent 39 / neutral 22) is the verbatim copy of the
   source repo's `…/role_bound_association/items.json`, kept byte-identical and still judgeable
-  with `WSB_BANK_FILE_ROLE_BOUND_ASSOCIATION` (stamp `oa-v3.1`). The lucky-guessing and
-  prompt-only floors and the ATI entry were measured on `items.json`'s 100 items, so they are
-  not drawn beside a bank-v2 result until they are re-measured on it. The adapted per-model
-  banks (`adapted/<model>/role_bound_association.json`) are their own builds and stamp
-  `oa-v3.1`.
+  with `WSB_BANK_FILE_ROLE_BOUND_ASSOCIATION` (stamp `oa-v3.1`). The floors were re-measured on bank
+  v2 in the 2026-11-04 refreeze (`evals/baselines/README.md` "Floors of record"): prompt-only 0.457
+  (21 of 46 pairs; item rate 0.652), lucky guessing blind / described / topic 0.133 / 0.165 / 0.239
+  per item (pair rule 0.010 / 0.017 / 0.000 vs 0.00006), text-blind subset 37 / 92. The adapted
+  per-model banks (`adapted/<model>/role_bound_association.json`) are their own builds and
+  stamp `oa-v3.1`.
 - **Role lexicon:** `roles_v1.json` (instrument data, stamped `config.roles_lexicon`, currently
   `roles-v1.5`): for each of the 93 bank roles, `terms` (the role, plural, synonyms,
   gendered and informal forms, scene hyponyms such as "swimmer" for an athlete, and listed
@@ -91,11 +92,13 @@ the direction, and the judge's quote of that statement survives a mechanical gat
   `+reads-lite` under lite). `+maj3v` is the majority of three draws' verdicts (Summary mode,
   below). Native results carry `oa-v3.1+bank-v2`, which the ATI gate and the guesser floors are
   matched against.
-- **The prompt-only baseline is not a bar here.** The scene states who did what to whom, so the
-  `po-opus-v1` floor (one Opus readout per id, judged through this same digest, SYSTEM, v2 lists
-  and gate) is expected near 1.0 and is frozen with `saturated: true`: a fairness flag on the
-  bank, never a floor a lens must clear. The Gemini-era `prompt_only.json` entry (oa-v1, 1.00)
-  is history.
+- **The prompt-only floor is a bar under the pair headline.** The scene states who did what to
+  whom, so per item a text reader does well (0.652), but both directions of a pair pass for only
+  21 of 46 pairs (0.457, `po-opus-v1`: one Opus readout per id, judged through this same digest,
+  SYSTEM, lists, gate, majority of three draws and pair rule). It is not marked `saturated`, so
+  it is drawn beside the pair rows of a run on its digest instrument (one layer, or
+  `summ_layers=union`; `evals/baselines/README.md` "Floors of record"). The Gemini-era
+  `prompt_only.json` entry (oa-v1, 1.00) is history.
 - **Macro:** in (`metric = "pass_rate"`, the pair pass rate since `pair-v1`;
   `not_in_macro = ""`).
 - **Pairs (`pair-v1`).** `score.pair_verdicts`: a pair is decided when both directions are in
@@ -633,3 +636,6 @@ runs with `allow_missing` (partial) until its bank header is measured.
 - 2026-11-04 (`+bank-v2`): bank v2 (`items_v2.json`, 92 items, 46 pairs) drops the four
   pairs one of whose stories carries a stray tab that garbles a word, on `items.json`'s read plan
   and option lists; the judge calls keep `oa-v3.1`.
+- 2026-11-04 (`+bank-v2`): the prompt-only, lucky-guessing and text-blind floors are re-measured
+  on bank v2; the prompt-only floor is scored under the pair headline (0.457) and is no longer
+  marked saturated, so it is drawn beside the pair rows.

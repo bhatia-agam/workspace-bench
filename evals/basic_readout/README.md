@@ -28,8 +28,10 @@ Every other byte of every item is v5's; the read plan and `plan_sha` are unchang
 never in the render), and the option seed stays `br-mc-2026-11-01-v5b`
 (`mcjudge_basic.OPTIONS_VERSIONS`), so every other item keeps its option order and its cached MC
 answer, and the Big Ben item needs one new MC call per arm. Stamp `+bank-v7`. Bank v6 (below) is
-the separate opt-in round-5 bank. The lucky-guessing and prompt-only floors were measured on v5's
-lists and are stale until re-measured.
+the separate opt-in round-5 bank. The floors were re-measured on v7 in the 2026-11-04 refreeze
+(`evals/baselines/README.md` "Floors of record"): prompt-only 0.810 (n = 100), lucky guessing blind
+0.292, described 0.350, topic 0.338 vs chance 0.200 (the implicit items still fail the MC leakage
+standard), text-blind subset 22 / 100.
 
 ## Bank v6 (round 5 "common", Camila r3 (1); opt-in, NOT registered)
 
@@ -329,8 +331,8 @@ golds are the stereotypical assistant favourites (blue, Pacific, Python, Bach), 
 pass is only informative well above that floor; read `pass_by_subfamily` beside it.
 
 Prompt-only floor: protocol `po-opus-v1` (one Opus 5.5 readout per item at the last full-read
-site, judged by this same digest and blind MC judge), measured in the run phase (gpu R6). The v1
-floors (`bank-2026-10-10`) are stale for this instrument. The ATI subset was re-gated under it on
+site, judged by this same digest and blind MC judge), frozen in the 2026-11-04 refreeze: 0.810 on
+bank v7 (Bank v7 above). The ATI subset was re-gated under it on
 2026-10-31 (R1-ATI): 22/100 on the reduced panel Qwen + Opus + Astra (argon unreachable),
 PROVISIONAL (`evals/baselines/README.md`, fix-round-1 re-gate). Re-gated on 2026-11-01
 (R1-ATI gemini) on the full four-reader panel (argon via Gemini WIF) at `br-mc-2026-11-01-v5b`:
@@ -499,3 +501,5 @@ Answer with the letter.
   decided n and a bootstrap CI.
 - 2026-11-04 (`+bank-v7`): bank v7 shows Big Ben's gold option as "England / UK", so a readout
   answering the UK can pick it.
+- 2026-11-04 (`+bank-v7`): the prompt-only, lucky-guessing and text-blind floors are
+  re-measured on bank v7, so they are drawn beside this instrument again.

@@ -41,9 +41,11 @@ invented detail (um-ss-continent-00: "Since you're in South Africa" for a prompt
 - **Stamp.** A v2 result is stamped `um-v3.4+bank-v2` (`judge.instrument`), so floors measured
   on the 100-item bank are never served for it. `WSB_BANK_FILE_USER_MODELING=evals/user_modeling/items.json`
   still judges the frozen v1 bank, stamped `um-v3.4`.
-- **Floors and ATI.** The lucky-guessing and prompt-only floors and the ATI subset were measured
-  on the 100-item bank, so they are not drawn beside a v2 result until they are recomputed on v2
-  (the ATI entry's `bank_sha` is v1's).
+- **Floors and ATI on v2** (2026-11-04 refreeze, `evals/baselines/README.md` "Floors of record"):
+  prompt-only 0.681 (n = 47; the reader decodes the cultural cue, e.g. the hopak and the vyshyvanka
+  -> Ukraine), lucky guessing blind 0.170, described 0.204 vs chance 0.179 (within the MC leakage
+  standard), text-blind subset 27 / 47 (the frozen panel statuses of the 47 ids: bank v2 is a
+  byte-identical subset, so the native calls are the same).
 - **Adapted banks** (`adapted/<model>/user_modeling.json`) are their own per-model builds, still
   hold synthsys items, and stamp `um-v3.4`.
 
@@ -854,3 +856,5 @@ Expect token lenses to lose selfdescribe passes that rested on topic clusters: i
 - 2026-11-04 (`um-v3.4+bank-v2+maj3`, summary mode): each item is asked three times and the
   majority of the gated picks decides it, because a single judge call flipped verdicts between
   runs; draw 0 reuses every cached single-call answer.
+- 2026-11-04 (`um-v3.4+bank-v2`): the prompt-only (`+maj3`), lucky-guessing and text-blind
+  floors are re-measured on bank v2's 47 items, so they are drawn beside this instrument again.

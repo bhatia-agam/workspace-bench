@@ -129,13 +129,10 @@ def test_introspection_bank_unchanged_by_the_refill():
 # four-reader panel at its current bank and instrument (conjunctive comp-v5, wrong_intermediate /
 # basic_readout_mt / multilingual* bank v3-v4, association / basic_readout / poetry round-4 MC
 # banks). A family PR that changes a bank adds its entry back here until the re-gate.
-PENDING_REGATE: dict[str, str] = {
-    "association": "bank v5 = bank v3 without winter and pentagon",
-    "basic_readout": "bank v7 (2026-11-03): Big Ben's gold option reads 'England / UK'",
-    "basic_readout_mt": "bank v5 (2026-11-03): the sarin item is dropped",
-    "user_modeling": "bank v2 = the 47 selfdescribe items (synthsys dropped)",
-    "role_bound_association": "bank v2: the 4 pairs with tab-garbled stories dropped",
-}
+# Empty again since the 2026-11-04 refreeze: user_modeling (bank v2), association (v5),
+# basic_readout (v7), basic_readout_mt (v5) and role_bound_association (v2) were re-gated on
+# their current banks.
+PENDING_REGATE: dict[str, str] = {}
 
 
 def test_every_panel_entry_is_gated_on_the_current_bank(frozen):

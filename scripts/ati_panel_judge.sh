@@ -45,8 +45,12 @@ xargs -P "$JOBS" -L 1 bash -c '
   [ "$lay" = native ] && lay=""
   if [ -s "$dst/$f/results.json" ]; then exit 0; fi
   mkdir -p "$(dirname "$tmp")"
+  opts=aggregate=native
+  # introspection: the gate reads the unpaired pass of the inject items (GATE_ANY_BASIS); scope=headline
+  # judges exactly those items (the cross units read no gate field)
+  [ "$f" = introspection ] && opts=aggregate=native,scope=headline
   $WSB run families="$f" readouts_root="$root" out="$tmp" judge_model="$JUDGE" $lay \
-    allow_missing=True opts=aggregate=native > "$tmp.log" 2>&1 || { echo "FAILED $dst/$f (see $tmp.log)"; exit 1; }
+    allow_missing=True opts=$opts > "$tmp.log" 2>&1 || { echo "FAILED $dst/$f (see $tmp.log)"; exit 1; }
   mkdir -p "$dst" && rm -rf "$dst/$f" && cp -r "$tmp/$f" "$dst/$f"
   echo "ok $dst/$f: $(grep -E "pass_rate=|score=" "$tmp.log" | tail -1 | cut -c1-120)"
 ' < "$jobs_file"

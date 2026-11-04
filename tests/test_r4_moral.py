@@ -250,21 +250,27 @@ def test_frozen_floors_are_bank_v5s_and_at_chance():
     sit at uniform chance (<= chance + 2 points) under the family's rule: single pick against
     1/n, multi-mark against the guesser's own relabelling chance (marks_null). Bank v5's floors
     live in their own file: v5 is opt-in, so they are never the registered family's live floors.
-    The registered bank v3's floors were frozen under ec-v5d; under ec-v9 they are
-    stale, so none is served until the floors are refrozen."""
+    The registered bank v3's floors are the single-pick guessers re-pointed at ec-v9 (2026-11-04
+    refreeze: the same 195 lists, so the same draws); they are served, and far above chance (the
+    bank leaks; README "Floors of record")."""
     entry = json.loads(V5_FLOORS.read_text())[FAMILY]
     frozen_v3 = json.loads(lg.FROZEN.read_text())[FAMILY]
     assert lg.floors(V5_FLOORS) == {}  # ec-v7 is not the registered instrument: never served
-    assert lg.floors().get(FAMILY) is None  # ec-v5d is stale under ec-v9 (refreeze)
+    assert set(lg.floors()[FAMILY]) == {"question", "blind", "described", "uniform"}
     for v in ("question", "blind", "described", "question_marks", "blind_marks", "described_marks"):
         e = entry[v]
         assert e["instrument"] == "ec-v7", v
-        assert frozen_v3[v]["instrument"] == "ec-v5d" and frozen_v3[v]["n_items"] == 195, v
         assert e["n_draws"] >= 5 and e["n_items"] == len(json.loads(V5.read_text()))
         if v.endswith("_marks"):
             assert e["mean"] <= e["marks_null"] + CHANCE_MARGIN, (v, e["mean"], e["marks_null"])
         else:
             assert e["mean"] <= e["analytic_floor"] + CHANCE_MARGIN, (v, e["mean"])
+    for v in ("question", "blind", "described"):
+        e = frozen_v3[v]
+        assert e["instrument"] == "ec-v9" and e["n_items"] == 195 and e["rule"] == "single pick", v
+        assert not any(k.startswith("side_") for k in e), v  # side readers score a marks rule
+        assert e["mean"] > e["analytic_floor"] + CHANCE_MARGIN, (v, e["mean"])
+    assert not any(v in frozen_v3 for v in lg.MARK_VARIANTS)
 
 
 # ---------------------------------------------------------------- the side-aware readers (#215)
@@ -512,10 +518,9 @@ def test_bank_directions_both_ways():
 
 def test_frozen_floors_render_the_side_reader_both_ways(monkeypatch):
     """On the frozen files: bank v5's floor is the always-no reader 0.917 (22/24; the contrarian
-    question reader is 0.792), above the lens's 0.583 (README), and the floor column says so; bank
-    v3's frozen ec-v5d floor is question_marks 0.831 (its guesser side readers, frozen from the
-    same draws, top out at 0.805; always-no 0.708). Under ec-v9 the ec-v5d entry is stale, so
-    the live floor column no longer shows it; it renders when served."""
+    question reader is 0.792), above the lens's 0.583 (README), and the floor column says so.
+    Registered bank v3's floor is its highest single-pick guesser, question 0.706 (ec-v9): a
+    single-pick entry carries no side readers (they score the retired multi-mark rule)."""
     from wsbench.baselines import prompt_only as po
     from wsbench.cli import floor_columns
 
@@ -523,18 +528,11 @@ def test_frozen_floors_render_the_side_reader_both_ways(monkeypatch):
     assert lg.bar(v5) == (pytest.approx(22 / 24), "side_prior:no")
     assert lg.bar(v5)[0] > 0.583 > v5["question_marks"]["mean"]
     live = json.loads(lg.FROZEN.read_text())[FAMILY]
-    assert lg.bar(live) == (pytest.approx(0.8307692307692308), "question_marks")
-    # v3's always-no reader: 138 of 195 (deliberative items fail it), below the bar
-    priors = [e["side_prior"] for e in live.values() if "side_prior" in e]
-    assert len(priors) >= 6 and all(x == pytest.approx(138 / 195) for x in priors)
-    assert max(e.get(k, 0.0) for e in live.values() for k in lg.SIDE_KEYS) == pytest.approx(
-        136 / 169
-    )
+    assert lg.bar(live) == (pytest.approx(0.7056410256410256), "question")
+    assert not any(k in e for e in live.values() for k in lg.SIDE_KEYS)
     col = "lucky guess (blind / described)"
-    assert "floor 0.831" not in floor_columns()[col].get(FAMILY, "")  # stale under ec-v9
     monkeypatch.setattr(po, "floors", lambda: {})
-    monkeypatch.setattr(lg, "floors", lambda: {FAMILY: live})
-    assert "floor 0.831 (question_marks)" in floor_columns()[col][FAMILY]
+    assert "floor 0.706 (question)" in floor_columns()[col][FAMILY]
     monkeypatch.setattr(lg, "floors", lambda: {FAMILY: v5})
     monkeypatch.setattr(po, "floors", lambda: {})
     assert "floor 0.917 (side_prior:no)" in floor_columns()[col][FAMILY]
