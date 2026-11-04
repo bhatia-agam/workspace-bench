@@ -60,6 +60,25 @@ def test_english_plural_of_a_content_form():
     assert regex.english_plurals("butterfly") == ["butterflies"]
 
 
+def test_no_plural_of_a_capitalised_form_and_is_becomes_es():
+    """A form whose first letter is upper case is a name and takes no plural: matching is
+    case-blind, so "Booth" -> "Booths" would credit "voting booths". "-is" -> "-es"."""
+    assert regex.english_plurals("Turkmenistan") == []
+    assert regex.english_plurals("Booth") == []
+    assert regex.english_plurals("Republic of Turkmenistan") == []
+    assert regex.english_plurals("COPD") == []
+    assert regex.english_plurals("aurora borealis") == ["aurora boreales"]
+    assert regex.english_plurals("analysis") == ["analyses"]
+    assert regex.english_plurals("dialysis") == ["dialyses"]
+    assert regex.english_plurals("cactus") == ["cactuses"]  # -us keeps +es
+    booth = _units("multilingual_multihop", "mlmh-ko-vacuum-booth-gloucester")["bridge_native"]
+    assert "Booths" not in booth.forms["en"]
+    assert regex.layer_unit_hits(["Hubert Cecil Booth"], [booth])["bridge_native"] == ["en"]
+    assert regex.layer_unit_hits(["rows of voting booths"], [booth])["bridge_native"] == []
+    tm = _units("multilingual_multihop", "mlmh-ar-ashgabat-manat")["bridge_native"]
+    assert not any(f.endswith("Turkmenistans") for f in tm.forms["en"])
+
+
 def test_no_plural_for_multilingual_one_word_answers():
     # adjectives / numbers / months: "lows", "colds" would be other words
     assert "concept_native" not in regex.PLURAL_ROLES

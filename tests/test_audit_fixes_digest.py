@@ -515,9 +515,11 @@ def test_keyed_number_with_consensus_is_annotated():
     )
 
 
-def test_arithmetic_digest_gets_operands_and_consensus(tmp_path, monkeypatch):
+def test_numbers_digest_demotes_operands_and_ranks_consensus(tmp_path, monkeypatch):
     """End to end on the numbers digest: an operand keyed by the summarizer is demoted out of
-    the five slots and a 4-of-4 lead consensus the summarizer missed fills its place."""
+    the five slots and a 4-of-4 lead consensus the summarizer missed fills its place. Exercises
+    ``digest.collapse(consensus=True)``, which no family passes since arithmetic's
+    ``+generic-r7``."""
 
     def reply(system, user):
         assert "Return the 9 numbers" in system  # 5 + NUMBERS_SPARE

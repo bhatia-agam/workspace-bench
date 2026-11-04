@@ -23,12 +23,11 @@ REPO = Path(__file__).resolve().parents[1]
 EXAMPLE = REPO / "examples/readouts/multihop.jsonl"
 BANK_V2 = REPO / "evals/multihop/items_v2.json"
 BANK_V3 = REPO / "evals/multihop/items_v3.json"  # round 4
-BANK_V4 = REPO / "evals/multihop/items_v4.json"  # v3 minus 32 items
-BANK_V5 = REPO / "evals/multihop/items_v5.json"  # the registered bank: v4 + 30 new items
+BANK_V5 = REPO / "evals/multihop/items_v5.json"  # the registered bank: v3's 68 kept + 30 new
 REGISTERED = BANK_V5
 # every gate test reads bank v3's lists (review 2 of PR #214: the multi-option and other-option
 # rules see only the shown options, so a gate test on v2's lists cannot see a v3 list that loosens
-# it); bank v4 keeps v3's items byte-identical (bank v5 keeps v4's), and the cases v4 dropped
+# it); the registered bank v5 keeps 68 of v3's items byte-identical, and the cases it dropped
 # live in v3
 BANK = BANK_V3
 GOLDEN = REPO / "tests/golden/multihop_mc_options.json"
@@ -563,7 +562,7 @@ def test_lucky_guessing_lists_are_the_judges():
     from wsbench.baselines import lucky_guessing as lg
 
     built = {it.id: it for it in lg.build_family("multihop")}
-    _h, v5 = load_bank(REGISTERED)  # bank v5: v3's lists on v4's 68 items + the 30 new lists
+    _h, v5 = load_bank(REGISTERED)  # bank v5: v3's lists on its 68 kept items + the 30 new lists
     assert len(built) == len(v5) == 98
     for iid, it in {it["id"]: it for it in v5}.items():
         shown, gold_idx = mj.options_of("multihop", it)
@@ -938,7 +937,7 @@ def test_multihop_topic_line_never_names_the_gold():
     """The topic guesser's line comes from ``bridge_type``; the relabel's daily-cycle type is
     'time of the 24-hour cycle', since 'a time of day' would hand the photosynthesis item its gold
     ('day'). No item's topic line holds a gold form; the rejected label would. (The photosynthesis
-    item is bank v3's: bank v4 dropped it.)"""
+    item is bank v3's: bank v5 dropped it.)"""
     from wsbench.baselines import lucky_guessing as lg
 
     _h, v3 = load_bank(BANK_V3)
