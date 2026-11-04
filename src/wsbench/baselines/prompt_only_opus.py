@@ -48,11 +48,20 @@ EXCLUDED: dict[str, str] = {
 
 
 def families() -> list[str]:
-    """Every registered, not superseded family except :data:`EXCLUDED` ("all categories")."""
-    from wsbench import registry
+    """Every registered, not superseded family except :data:`EXCLUDED` ("all categories"); under
+    ``$WSB_BANK_ROOT`` (an adapted set) only those the set has a bank for
+    (``readplan.families``), so ``stage=build`` without ``families=`` skips a family the set
+    lacks instead of stopping on it."""
+    import os
+
+    from wsbench import readplan, registry
 
     registry.load_all()
-    return [f for f in registry.drop_superseded(sorted(registry.FAMILIES)) if f not in EXCLUDED]
+    out = [f for f in registry.drop_superseded(sorted(registry.FAMILIES)) if f not in EXCLUDED]
+    if os.environ.get(registry.BANK_ROOT_ENV):
+        have = set(readplan.families())
+        out = [f for f in out if f in have]
+    return out
 
 
 def last_site(positions: list[int], n_tokens: int) -> int:

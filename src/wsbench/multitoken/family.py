@@ -1691,11 +1691,14 @@ def _rival_tests(
     item: Mapping[str, Any],
     role: str,
     entities: Mapping[str, list[list[str]]] | None,
+    *,
+    family: str = "basic_readout_mt",
 ) -> tuple[
     Callable[[digest.Line], bool], Callable[[str], bool], Callable[[str, digest.Line], bool]
 ]:
-    """(single_gold, names_gold, single_option) of :func:`contested_verdict`."""
-    forms = gate_name_forms(item, role)
+    """(single_gold, names_gold, single_option) of :func:`contested_verdict` (``family``: the
+    running family, :func:`gate_name_forms`)."""
+    forms = gate_name_forms(item, role, family=family)
     others = [o for i, o in enumerate(options[:-1]) if i != gold_idx]
     src = item.get("lang")
     riv = _rivals(entities, item, role)
@@ -1731,8 +1734,12 @@ def _contest(
     item: Mapping[str, Any],
     role: str,
     entities: Mapping[str, list[list[str]]] | None,
+    *,
+    family: str = "basic_readout_mt",
 ) -> dict[str, Any]:
-    single_gold, names_gold, single_option = _rival_tests(gold_idx, options, item, role, entities)
+    single_gold, names_gold, single_option = _rival_tests(
+        gold_idx, options, item, role, entities, family=family
+    )
     return rival.contest(
         res,
         grounded,
@@ -1751,11 +1758,13 @@ def option_rival_entries(
     role: str,
     entities: Mapping[str, list[list[str]]] | None = None,
     hidden: Sequence[str] = (),
+    *,
+    family: str = "basic_readout_mt",
 ) -> list[digest.Grounded]:
     """Every digest entry the code option-rival check weighs (optrv-v1/-v3): it singles out
     another listed option or a hidden rival (:func:`hidden_rivals`) by its shown name, with no
     gold form and no other weighed name; largest first."""
-    names_gold = _rival_tests(gold_idx, options, item, role, entities)[1]
+    names_gold = _rival_tests(gold_idx, options, item, role, entities, family=family)[1]
     others = [o for i, o in enumerate(options[:-1]) if i != gold_idx]
     weighed = [*others, *(h for h in hidden if h not in others)]
     out: list[digest.Grounded] = []
@@ -1780,13 +1789,17 @@ def option_audit_lines(
     role: str,
     entities: Mapping[str, list[list[str]]] | None = None,
     hidden: Sequence[str] = (),
+    *,
+    family: str = "basic_readout_mt",
 ) -> list[digest.Grounded]:
     """The lines the option audit (optaudit-v1) checks: every :func:`option_rival_entries` entry
     that would contest the gold (``rival.MORE_THAN``: at least the gold's support), largest
     first, at most :data:`OPTION_AUDIT_MAX_LINES`; smaller ones cannot contest and are never
     sent."""
-    gold = int(_contest(res, grounded, gold_idx, options, item, role, entities)["gold_support"])
-    ents = option_rival_entries(grounded, gold_idx, options, item, role, entities, hidden)
+    fam = {"family": family}
+    contest = _contest(res, grounded, gold_idx, options, item, role, entities, **fam)
+    gold = int(contest["gold_support"])
+    ents = option_rival_entries(grounded, gold_idx, options, item, role, entities, hidden, **fam)
     return [g for g in ents if rival.MORE_THAN.contested(gold, g.count)][:OPTION_AUDIT_MAX_LINES]
 
 
@@ -1842,6 +1855,8 @@ def contested_verdict(
     entities: Mapping[str, list[list[str]]] | None = None,
     hidden: Sequence[str] = (),
     audit: Mapping[str, Any] | None = None,
+    *,
+    family: str = "basic_readout_mt",
 ) -> dict[str, Any]:
     """Round 3 (``McFamily.rival``): a correct summary-mode pick through the rival check
     (:func:`wsbench.rival.contest`): gold support = the best digest entry singling out the gold
@@ -1850,7 +1865,8 @@ def contested_verdict(
     ``contested`` (never correct). ``audit``: the option audit's answer over
     :func:`option_audit_lines` (optaudit-v1); a line it dismisses is not weighed by the code
     option-rival check (None: every line is weighed, as before)."""
-    rv = _contest(res, grounded, gold_idx, options, item, role, entities)
+    fam = {"family": family}  # the running family (gate_name_forms: whose exonym overlay)
+    rv = _contest(res, grounded, gold_idx, options, item, role, entities, **fam)
     # round 4 (OPTION_RIVAL_VERSION): every other listed option is weighed in code too, whether
     # or not the judge quotes it: its best digest entry singling it out (by its shown name, no
     # gold form, no other option) must not outweigh the gold's (multihop_mt_v2 lite tippecanoe:
@@ -1860,10 +1876,12 @@ def contested_verdict(
     # same-topic names an earlier bank listed, never shown) are weighed the same way
     # optrv-v4 (round 4d): a line the option audit dismisses (about another thing, relation or
     # time: brmt bonaire "The capital ... of Aruba is **Oranjestad**") is not weighed
-    ents = option_rival_entries(grounded, gold_idx, options, item, role, entities, hidden)
+    ents = option_rival_entries(grounded, gold_idx, options, item, role, entities, hidden, **fam)
     cut: set[int] = set()
     if audit is not None:
-        shown = option_audit_lines(res, grounded, gold_idx, options, item, role, entities, hidden)
+        shown = option_audit_lines(
+            res, grounded, gold_idx, options, item, role, entities, hidden, **fam
+        )
         cut = dismissed_lines(audit, shown)
         rv["option_audit_dismissed"] = len(cut)
     best_other = max((g.count for g in ents if id(g) not in cut), default=0)
@@ -1907,6 +1925,7 @@ def run_option_audits(
     cache: Cache,
     spend: Spend,
     pre: Preflighter,
+    family: str = "basic_readout_mt",
 ) -> dict[str, dict | None]:
     """The option audits (optaudit-v1) of the correct summary-mode picks in ``pending`` (MC key,
     MC answer, the item's digest entries, gold index, options, item, role, hidden rivals): one
@@ -1915,7 +1934,9 @@ def run_option_audits(
     check gets no entry."""
     calls: list[Call] = []
     for key, res, grounded, gold_idx, opts, item, role, hidden in pending:
-        shown = option_audit_lines(res, grounded, gold_idx, opts, item, role, entities, hidden)
+        shown = option_audit_lines(
+            res, grounded, gold_idx, opts, item, role, entities, hidden, family=family
+        )
         if shown:
             calls.append(option_audit_call(key, res, opts, gold_idx, shown, {"mc_key": key}))
     if not calls:
@@ -1997,6 +2018,8 @@ def _gate(
     lines: Sequence[digest.Line],
     item: Mapping[str, Any],
     entities: Mapping[str, list[list[str]]] | None = None,
+    *,
+    family: str = "basic_readout_mt",
 ) -> dict[str, Any]:
     """A name-gate family's verdict for one unit: the name gate (and :func:`list_gate` over
     ``entities``, :func:`bank_entities`) on a name unit, the plain verified quote on the
@@ -2004,7 +2027,7 @@ def _gate(
     if role == LANGUAGE_ROLE:
         return quoted_verdict(res, gold_idx, options, lines)
     return gated_verdict(
-        res, gold_idx, options, lines, gate_name_forms(item, role), item.get("lang"),
+        res, gold_idx, options, lines, gate_name_forms(item, role, family=family), item.get("lang"),
         _src_names(item), rivals=_rivals(entities, item, role), tolerant=True,
     )  # fmt: skip
 
@@ -2026,13 +2049,20 @@ def _exonyms() -> dict[str, dict[str, dict[str, list[str]]]]:
 _EXONYM_CACHE: dict[str, dict[str, dict[str, dict[str, list[str]]]]] = {}
 
 
-def gate_name_forms(item: Mapping[str, Any], role: str) -> dict[str, list[str]]:
+def gate_name_forms(
+    item: Mapping[str, Any], role: str, *, family: str = BRMT
+) -> dict[str, list[str]]:
     """:func:`item_name_forms` plus the item's frozen exonyms (:func:`_exonyms`), each new
     language after the bank's own (a form the bank already lists is not repeated). Under
     ``WSB_BANK_ROOT`` (plan 0060 A2) the set's ``<root>/basic_readout_mt/exonyms.json`` items
-    are added, and an adapted-only id with no entry (``{}`` = none) is an error."""
+    are added, and an adapted-only id with no entry (``{}`` = none) is an error.
+
+    ``family`` is the running family: the per-set overlay and its adapted-only check are
+    basic_readout_mt's alone, so another family (multihop_mt_v2's profile rival check) reads
+    the frozen table exactly as without ``WSB_BANK_ROOT`` (its ids are never brmt ids: checked
+    against brmt's bank, every one looked adapted-only and stopped the judge)."""
     iid = str(item.get("id") or item.get("name"))
-    if registry.bank_root() is not None:
+    if registry.bank_root() is not None and family == BRMT:
         extra = _adapted_entry(BRMT, EXONYMS_FILE.name, iid).get(role)
     else:
         if "x" not in _EXONYM_CACHE:
@@ -2159,7 +2189,8 @@ def run_mc(args: JudgeArgs, *, name: str, pinned: bool = False) -> FamilyResult:
     scope = item_scope(items, args)
     if cfg.name_gate and registry.bank_root() is not None:
         for it in scope:  # plan 0060 A2: a missing per-set entry fails before any call
-            _adapted_entry(BRMT, EXONYMS_FILE.name, it["id"])
+            if name == BRMT:  # only brmt's own ids need a brmt exonym entry (gate_name_forms)
+                _adapted_entry(BRMT, EXONYMS_FILE.name, it["id"])
             if cfg.rival:
                 _adapted_entry(name, HIDDEN_RIVALS_FILE, it["id"])
     ids = [it["id"] for it in scope]
@@ -2290,6 +2321,7 @@ def run_mc(args: JudgeArgs, *, name: str, pinned: bool = False) -> FamilyResult:
                 lines_of.get((item_id, layer), []),
                 by_id[item_id],
                 entities,
+                family=name,
             )
         else:
             v = verdict(results.get(key), gold_idx, opts, readout)
@@ -2444,6 +2476,7 @@ def _run_mc_summary(
                     list(col.evidence.get(item_id, ())),
                     by_id[item_id],
                     entities,
+                    family=name,
                 )
         audits: dict[str, dict | None] = {}
         if cfg.rival:
@@ -2462,7 +2495,14 @@ def _run_mc_summary(
                 if gated.get(key, {}).get("correct")
             ]
             audits = run_option_audits(
-                pending, entities, args=args, pv=pv, cache=cache, spend=spend, pre=pre
+                pending,
+                entities,
+                args=args,
+                pv=pv,
+                cache=cache,
+                spend=spend,
+                pre=pre,
+                family=name,
             )
     verdicts: list[dict[str, Any]] = []
     for key, (item_id, role, gold_idx, opts, readout, gate) in meta.items():
@@ -2480,6 +2520,7 @@ def _run_mc_summary(
                     entities,
                     hidden=hidden_rivals(name, item_id, role),
                     audit=audits.get(key),
+                    family=name,
                 )
         else:
             v = verdict(results.get(key), gold_idx, opts, readout, samples=gate)
@@ -2942,7 +2983,14 @@ def _run_mc_profile(
                 if pverdicts[key].get("correct")
             ]
             audits = run_option_audits(
-                pending, entities, args=args, pv=pv, cache=cache, spend=spend, pre=pre
+                pending,
+                entities,
+                args=args,
+                pv=pv,
+                cache=cache,
+                spend=spend,
+                pre=pre,
+                family=name,
             )
     verdicts: list[dict[str, Any]] = []
     for key, (item_id, layer, role, gold_idx, opts, _lines) in meta.items():
@@ -2959,6 +3007,7 @@ def _run_mc_profile(
                 entities,
                 hidden=hidden_rivals(name, item_id, role),
                 audit=audits.get(key),
+                family=name,
             )
         verdicts.append(
             {"item": item_id, "layer": layer, "role": role, "gold": opts[gold_idx], **v}

@@ -721,6 +721,7 @@ def freeze(model: str, families: list[str] | None = None) -> dict[str, Any]:
     banks: dict[str, Any] = {}
     extra: dict[str, dict[str, Any]] = {}  # family -> {rel path: obj} (freeze_step)
     removed: dict[str, set[str]] = defaultdict(set)  # keys freeze took out of an entry
+    touched: set[str] = set()  # the families this freeze wrote an entry for (built or blocked)
     for family in families or sorted(fams.FAMILIES):
         rows = live_rows(model, family, report)
         if not rows:
@@ -790,6 +791,7 @@ def freeze(model: str, families: list[str] | None = None) -> dict[str, Any]:
             try:
                 items, more = restamp_tokens(model, family, items)
             except SystemExit as e:  # a field this tokenizer can't re-derive: block the family,
+                touched.add(family)
                 fam_reports.setdefault(family, {}).update(  # freeze the rest
                     status="blocked", n_items=0, target=target, note=str(e)
                 )
@@ -799,6 +801,7 @@ def freeze(model: str, families: list[str] | None = None) -> dict[str, Any]:
         try:  # plan 0060 A2 set-level steps over the shipped items (gold slots, overlays)
             more, extra_files = rebuild.freeze_step(model, family, header, items)
         except SystemExit as e:
+            touched.add(family)
             fam_reports.setdefault(family, {}).update(
                 status="blocked", n_items=0, target=target, note=str(e)
             )
@@ -818,6 +821,7 @@ def freeze(model: str, families: list[str] | None = None) -> dict[str, Any]:
         banks[family] = bank
         extra[family] = extra_files  # the set's judge overlays (A2), written with the banks
         n_orig_pass = sum(r["gate"]["pass"] for r in rows if r["origin"] == "original")
+        touched.add(family)
         entry = fam_reports.setdefault(family, {})
         if entry.get("status") == "absent":  # built now (the rest: store.clear_built_absent)
             entry.pop("status")
@@ -858,7 +862,10 @@ def freeze(model: str, families: list[str] | None = None) -> dict[str, Any]:
         for k in ("model", "label", "hf_id", "n_layers", "read_band", "gate"):  # notes kept
             fresh[k] = report[k]
         fams_out = fresh.setdefault("families", {})
-        for fam, e in fam_reports.items():
+        # only the families frozen here: every other entry is the fresh read's (a stage that
+        # updated another family while this freeze ran keeps its update)
+        for fam in sorted(touched):
+            e = fam_reports[fam]
             fams_out.setdefault(fam, {}).update(e)
             for k in removed.get(fam, ()):
                 if k not in e:
