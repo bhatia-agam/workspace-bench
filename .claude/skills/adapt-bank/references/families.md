@@ -179,7 +179,7 @@ re-stamped (`references/porting.md`).
   same word after the stub (≥ 8/10) (`evals/poetry/README.md`). Items carry `line_one_end`, a
   `qwen_commits`-style record of the subject's commitments, and `mc.candidates`
   (`scripts/poetry/build_mc.py`, after the gate); the headline is a blind free-response judge with
-  a rival veto, but `run_family` builds the option set for every item, so a bank without
+  deterministic line-ending gates (no veto since `+noveto-a1`), but `run_family` builds the option set for every item, so a bank without
   `mc.candidates` exits. `families._poetry` gates the stub leg only: the free line-two leg is not
   in the adapt gate yet (plan 0060).
 

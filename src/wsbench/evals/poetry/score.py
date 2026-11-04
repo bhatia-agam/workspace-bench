@@ -11,7 +11,7 @@
 - :func:`token_ok`: a token list holds the exact token, no other option, and is not a run of
   rhyme words (fewer than 3 of its tokens rhyme with line one's last word); rank is never used.
 - :func:`counts`: per option, the number of samples (generations or token lists, per the declared
-  sampling) where it passes the gate: the dominance veto needs ``n(gold) > max n(distractor)``.
+  sampling) where it passes the gate: a diagnostic (``judge.ending_counts``), never a verdict.
 
 A sample is whatever ``reads.load`` returns under the declared sampling: ``prose1`` = one whole
 generation (its bullets count once), ``bullet4`` = 4 separate generations, ``tokens10`` = one
@@ -590,7 +590,7 @@ def free_rival_words(words: Sequence[str], cells: Sequence[Cell], end: str) -> l
 def rival_counts(words: Sequence[str], cells: Sequence[Cell], end: str) -> dict[str, int]:
     """Per :func:`free_rival_words` rival, the number of samples where it passes the same gate
     (line_final / named_plan / token_ok against the gold and distractors); rivals that never pass
-    are left out. The free-response veto: the gold must end strictly more samples than each."""
+    are left out. A diagnostic (``judge.ending_counts``), never a verdict."""
     samples = raw_samples(cells)
     out = {}
     for r in free_rival_words(words, cells, end):
@@ -609,7 +609,7 @@ def gold_dominates(
 ) -> bool:
     """Review of PR #225 (diagnostic only, never the headline): the gold ends STRICTLY more of
     the item's samples than every distractor and every other rhyme of line one's last word
-    (:func:`counts` / :func:`rival_counts`, the free-response veto's own counts), judge or not.
+    (:func:`counts` / :func:`rival_counts`, ``judge.ending_counts``' ``gold_leads``), judge or not.
     A headline fail where this holds is the free judge's choice, not the lens's: e.g. a top
     digest bucket that writes the gold mid-couplet as line one and a rival as line two."""
     words = [gold, *distractors]

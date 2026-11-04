@@ -1,7 +1,7 @@
 """The prompts poetry sends. HEADLINE (Camila r3, 2026-11-01): a blind FREE-RESPONSE judge with
 no options (``SYSTEM`` / ``USER``): it names the ONE word the readouts show ending line two as a
 committed verse line, or "none"; ``judge.free_verdict`` then requires that word to be exactly the
-gold and runs every deterministic line-ending gate and veto on its quote. DIAGNOSTIC: the plan
+gold and runs every deterministic line-ending gate on its quote. DIAGNOSTIC: the plan
 0038 blind multiple-choice judge (``MC_SYSTEM`` / ``MC_USER``): the options are the gold rhyme
 word, 4 rhyme distractors and the cannot-tell line last. Neither judge ever sees prompt text,
 line one or a gold marker. Native mode: one call per (item, layer) over every read position of
@@ -29,17 +29,21 @@ from wsbench.mc import READOUT_PHRASE, token_note
 # distractor the digest of a v2 non-pass cell names as a line ending; prompts and gates unchanged
 MC_PROMPT_VERSION = "poetry-mc-2026-11-01-v5"
 # poetry-free-2026-11-01 (round 5, Camila r3): the headline is the free-response judge below; the
-# MC judge (MC_PROMPT_VERSION, prompts unchanged) is a diagnostic column. Gates, the hedge / rival
-# rules and the bank are unchanged; the dominance veto also counts every other rhyme of line one's
-# last word that the readouts end a line with (``score.free_rivals``), not only the 4 distractors
-PROMPT_VERSION = "poetry-free-2026-11-01"
+# MC judge (MC_PROMPT_VERSION, prompts unchanged) is a diagnostic column
+CALL_VERSION = "poetry-free-2026-11-01"  # keys every free-response call (the prompts below)
+# +noveto-a1 (deterministic, stamp only): no dominance veto in either judge's gates (a verified
+# gold answer stands whatever the line-ending counts); the counts are a row diagnostic
+# (judge.ending_counts)
+PROMPT_VERSION = CALL_VERSION + "+noveto-a1"
 # the instrument bank v5's per-item ``prompt_only_opus`` records were written under (the MC judge;
 # bank v5 is frozen, so its records are never rewritten)
 BANK_GATE_INSTRUMENT = MC_PROMPT_VERSION
 # the headline instrument the Opus-fails gate is re-verified under: the cached gate draws re-judged
 # (``scripts/poetry/opus_gate.py rejudge --record``, no new asks), recorded in
-# ``evals/poetry/opus_gate_free.json`` beside the frozen bank
-OPUS_GATE_INSTRUMENT = PROMPT_VERSION
+# ``evals/poetry/opus_gate_free.json`` beside the frozen bank. Recorded under the dominance veto,
+# which no gate draw reached (kinds: none 226, not_line_final 73, other_word 1 of 300), so the
+# record (0 of 100 items picked) stands under +noveto-a1
+OPUS_GATE_INSTRUMENT = CALL_VERSION
 # the shared token note's flat-list sentence reads "a run of <this>" (mc.token_note)
 FLAT_TYPES = ("words that rhyme with the first line's last word",)
 

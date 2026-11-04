@@ -135,8 +135,10 @@ def test_bank_and_targets():
 
 def test_registered_spec_and_readme():
     spec = _spec()
-    assert spec.group == "basic" and spec.judge.prompt_version == "poetry-free-2026-11-01"
-    assert pp.PROMPT_VERSION == "poetry-free-2026-11-01"
+    # the stamp adds +noveto-a1; the free-response calls stay keyed as before
+    assert spec.group == "basic" and spec.judge.prompt_version == pp.PROMPT_VERSION
+    assert pp.PROMPT_VERSION == "poetry-free-2026-11-01+noveto-a1"
+    assert pp.CALL_VERSION == pp.OPUS_GATE_INSTRUMENT == "poetry-free-2026-11-01"
     assert pp.MC_PROMPT_VERSION == pp.BANK_GATE_INSTRUMENT == "poetry-mc-2026-11-01-v5"
     assert spec.metric == "pass_rate" and spec.not_in_macro == "" and not spec.targets_judge
     assert spec.min_full_positions == 2 and spec.full_contiguous and spec.task_note
@@ -482,7 +484,10 @@ def test_token_lone_option_is_singled_out():
     assert not score.token_ok("star", [*base, "far", "car"], ["jar", "bar"], "scar")
 
 
-def test_dominance_veto(bank, tmp_path, monkeypatch):
+def test_no_dominance_veto_counts_are_a_diagnostic(bank, tmp_path, monkeypatch):
+    """A verified gold answer whose sample ends a verse line with the gold passes although a
+    distractor ends as many samples ("led" 1, "said" 1). The counts stay in the row
+    (``ending_counts``) and extras, never in the verdict."""
     rows = _rows(
         {
             (20, 16): [
@@ -492,7 +497,12 @@ def test_dominance_veto(bank, tmp_path, monkeypatch):
     )
     FakeLLM.install(monkeypatch, judge=_picker("led", "follow where he led"))
     r = pj.run_family(_native(tmp_path, rows, extra={"sampling": "bullet4"}))
-    assert r.rows[0]["kind"] == "vetoed_tie" and r.rows[0]["pass"] is False
+    row = r.rows[0]
+    assert row["kind"] == "correct" and row["pass"] is True and row["mc"]["pass"] is True
+    ec = row["ending_counts"]
+    assert ec["gold"] == 1 and ec["distractors"]["said"] == 1 and ec["gold_leads"] is False
+    assert r.extras["ending_counts"]["n_pass_gold_not_leading"] == 1
+    assert "vetoed_tie" not in pj.KINDS + pj.MC_KINDS
 
 
 def test_prose1_generation_counts_once():
@@ -509,7 +519,7 @@ def test_prose1_generation_counts_once():
     assert n4["led"] == 2 and n4["said"] == 1  # bullet4: the bullets are separate samples
 
 
-def test_bullet4_split_passes_the_veto(bank, tmp_path, monkeypatch):
+def test_bullet4_split_counts_bullets_as_samples(bank, tmp_path, monkeypatch):
     text = (
         "- Then all of them would follow where he led\n- and heard the words the captain said\n"
         "- And on they went as far as he led"
@@ -518,7 +528,10 @@ def test_bullet4_split_passes_the_veto(bank, tmp_path, monkeypatch):
     FakeLLM.install(monkeypatch, judge=_picker("led", "follow where he led"))
     r1 = pj.run_family(_native(tmp_path / "a", rows, extra={"sampling": "prose1"}))
     r4 = pj.run_family(_native(tmp_path / "b", rows, extra={"sampling": "bullet4"}))
-    assert r1.rows[0]["kind"] == "vetoed_tie" and r4.rows[0]["kind"] == "correct"
+    # both pass (no veto); the line-ending counts differ by sampling
+    assert r1.rows[0]["kind"] == r4.rows[0]["kind"] == "correct"
+    assert r1.rows[0]["ending_counts"]["gold_leads"] is False  # led 1, said 1
+    assert r4.rows[0]["ending_counts"]["gold_leads"] is True  # led 2, said 1
 
 
 def test_quote_goes_through_quote_ok(bank, tmp_path, monkeypatch):
@@ -733,11 +746,6 @@ _STRICT = {
     "quote_failed": ("led", "not in the readout", ["and the crew went where he led\n"]),
     "wrong_form": ("led", "where he leads", ["where he leads\n"]),
     "not_line_final": ("led", "he led", ["he led the crew home"]),
-    "vetoed_tie": (
-        "led",
-        "where he led",
-        ["- the crew went where he led\n- they all did what he said"],
-    ),
     "empty": ("led", "", ["  "]),
 }
 
@@ -751,8 +759,7 @@ def _strict_run(kind, tmp_path, monkeypatch):
             else {"choice": "Z", "quote": ""}))  # fmt: skip
     else:
         FakeLLM.install(monkeypatch, judge=_picker(word, quote, *fw))
-    extra = {"sampling": "bullet4"} if kind == "vetoed_tie" else {}
-    return pj.run_family(_native(tmp_path, rows, extra=extra))
+    return pj.run_family(_native(tmp_path, rows))
 
 
 @pytest.mark.parametrize("kind", [k for k in pj.KINDS if k != "correct"])
@@ -790,9 +797,11 @@ def test_native_extras_have_layer_pick_columns(bank, tmp_path, monkeypatch):
     assert r.extras["n_items_distractor_any_layer"] == 1
     assert r.extras["n_items_distractor_majority"] == 0
     assert r.extras["n_items_gold_word_any_layer"] == 1
-    assert r.rows[0]["kind"] == "vetoed_tie"  # led 1, said 1 over the item's loaded cells
-    assert r.rows[0]["mc"]["kind"] == "vetoed_tie"
+    # led 1, said 1 over the item's loaded cells does not veto L20's pass
+    assert r.rows[0]["kind"] == "correct" and r.rows[0]["mc"]["kind"] == "correct"
     assert r.rows[0]["layers"]["24"]["kind"] == "other_word"
+    ru = r.extras["runner_up"]
+    assert ru["unit"] == "item x layer" and (ru["n_judged"], ru["n_via_runner_up"]) == (2, 0)
 
 
 # ---------------------------------------------------------------- P7: reads, layers, prompt-only
@@ -1331,7 +1340,6 @@ def _free(word: str, quote: str, samples: list[str], item: dict | None = None, *
         distractors=[w for w in options[:-1] if w != gold],
         lines=digest.native_lines(cells),
         cells=cells,
-        item_cells=cells,
         end=po.line_one_end(it),
         spellings=tuple(it.get("spellings") or ()),
     )
@@ -1395,10 +1403,9 @@ def test_free_keeps_the_line_final_rules():
     assert _free("led", "where he led", ["And told his crew to follow where he led"])["correct"]
 
 
-def test_free_rival_veto_both_ways(bank, tmp_path, monkeypatch):
-    """The headline's dominance veto also counts every OTHER rhyme of line one's last word that
-    the readouts END a line with (``fed`` is no MC option): a tie vetoes the gold (the MC
-    diagnostic, blind to ``fed``, still passes), and a clear lead passes it."""
+def test_rival_rhyme_endings_are_a_diagnostic_not_a_veto(bank, tmp_path, monkeypatch):
+    """Every OTHER rhyme of line one's last word that the readouts END a line with (``fed`` is
+    no MC option) only fills ``ending_counts.rivals``. A tie and a clear lead both pass."""
     tie = [
         "- And told his crew to follow where he led\n- And all the hungry sailors there were fed"
     ]
@@ -1407,15 +1414,16 @@ def test_free_rival_veto_both_ways(bank, tmp_path, monkeypatch):
         _native(tmp_path / "tie", _rows({(20, 16): tie}), extra={"sampling": "bullet4"})
     )
     row = r.rows[0]
-    assert row["kind"] == "vetoed_tie" and row["pass"] is False
-    assert row["layers"]["20"]["veto_by"] == "rival"
-    assert row["layers"]["20"]["rival_counts"] == {"fed": 1}
+    assert row["kind"] == "correct" and row["pass"] is True
+    assert row["ending_counts"]["rivals"] == {"fed": 1} and not row["ending_counts"]["gold_leads"]
+    assert "veto_by" not in row["layers"]["20"] and "rival_counts" not in row["layers"]["20"]
     assert row["mc"]["kind"] == "correct" and row["mc"]["pass"] is True
     win = [tie[0] + "\n- The captain marched ahead and so he led"]
     r = pj.run_family(
         _native(tmp_path / "win", _rows({(20, 16): win}), extra={"sampling": "bullet4"})
     )
     assert r.rows[0]["kind"] == "correct" and r.rows[0]["pass"] is True
+    assert r.rows[0]["ending_counts"]["gold_leads"] is True
 
 
 _DOM = [
@@ -1444,7 +1452,7 @@ def test_gold_dominates_both_ways():
 def test_fail_gold_dominates_extras_both_ways(bank, tmp_path, monkeypatch):
     """Review of PR #225: a headline fail where the free judge names another word although the
     gold dominates the samples is marked ``gold_dominates`` and counted in
-    ``extras.fail_gold_dominates``; a fail where the gold only ties (the rival veto) is not."""
+    ``extras.fail_gold_dominates``; a fail where the gold only ties a rival is not."""
     FakeLLM.install(monkeypatch, judge=_picker("led", "sailors there were fed", free_word="fed"))
     r = pj.run_family(
         _native(tmp_path / "dom", _rows({(20, 16): _DOM}), extra={"sampling": "bullet4"})
@@ -1453,18 +1461,19 @@ def test_fail_gold_dominates_extras_both_ways(bank, tmp_path, monkeypatch):
     assert row["kind"] == "other_word" and row["pass"] is False and row["gold_dominates"] is True
     fd = r.extras["fail_gold_dominates"]
     assert (fd["n_fail"], fd["n_gold_dominates"], fd["share"]) == (1, 1, 1.0)
-    FakeLLM.install(monkeypatch, judge=_picker("led", "follow where he led"))
     r = pj.run_family(
         _native(tmp_path / "tie", _rows({(20, 16): _TIE}), extra={"sampling": "bullet4"})
     )
-    row = r.rows[0]
-    assert row["kind"] == "vetoed_tie" and row["gold_dominates"] is False
+    row = r.rows[0]  # the same "fed" answer; there is no vetoed_tie kind
+    assert row["kind"] == "other_word" and row["gold_dominates"] is False
     fd = r.extras["fail_gold_dominates"]
     assert (fd["n_fail"], fd["n_gold_dominates"], fd["share"]) == (1, 0, 0.0)
+    FakeLLM.install(monkeypatch, judge=_picker("led", "follow where he led"))
     r = pj.run_family(
         _native(tmp_path / "pass", _rows({(20, 16): _DOM}), extra={"sampling": "bullet4"})
     )
     assert r.rows[0]["pass"] is True and "gold_dominates" not in r.rows[0]  # passes: not marked
+    assert r.rows[0]["ending_counts"]["gold_leads"] is True
     assert r.extras["fail_gold_dominates"]["share"] is None
 
 
@@ -1478,6 +1487,9 @@ def test_fail_gold_dominates_in_summary_mode(bank, tmp_path, monkeypatch):
     r = pj.run_family(_summary(tmp_path, rows, extra={"sampling": "bullet4"}))
     assert r.rows[0]["kind"] == "other_word" and r.rows[0]["gold_dominates"] is True
     assert r.extras["fail_gold_dominates"]["n_gold_dominates"] == 1
+    ru = r.extras["runner_up"]  # the runner-up share, items in summary mode
+    assert ru["unit"] == "item" and (ru["n_judged"], ru["n_via_runner_up"]) == (1, 0)
+    assert r.extras["ending_counts"]["n_items"] == 1 and "n_rival_vetoes" not in r.extras
 
 
 def test_free_rival_words_exclude_line_one_and_the_options():
