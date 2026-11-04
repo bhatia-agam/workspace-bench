@@ -81,8 +81,8 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   its prompts are `SYSTEM_MC` / `USER_MC` / `BR_CANNOT` in `basic/prompts.py`, kept OUT of the
   shared `PROMPTS` so they never stale the other basic families' stamp), and multihop (plan 0048,
   `MC_BANK_FAMILIES`) on `basic/mcjudge_bank.py` (gates: the quote verifies, verbatim or
-  near-verbatim, and names the gold in itself or in its line by name, alias or a derived form
-  from the frozen `evals/multihop/derived_forms.json` (`gold_forms`), names no other option, and
+  near-verbatim, and names the gold in itself (or, cut mid-name, where its line continues it or its
+  sample ends inside the name) by name, alias or a derived form from the frozen `evals/multihop/derived_forms.json` (`gold_forms`), names no other option, and
   is no number flood; no split rule; the gate version `GATE_VERSION` joins the result stamp while
   the calls keep `CALL_VERSIONS`; strings in the family's `prompts.MC`); per-family strings `FAMILY_RULES` (typo) are added to that family's own `PROMPTS` (`FORBIDDEN_TEMPLATE` / `FORBIDDEN_FAMILIES` is empty since plan 0058 removed medical_diagnosis{,_alt}; the mechanism stays); `FAMILY_PROMPT_VERSIONS` / `prompt_version_of` give a newer family its own stamp so adding a rule never stales the older families' `bank-2026-10-10` ATI entries and floors; `DIGEST_TASK_NOTES_TEXT` is in every basic family's PROMPTS, so a new note line must be added to every basic README) and `multitoken/`
   (`mt_family(name, title, calls_per_arm=, scorer=)`): basic_readout_mt (plan 0051) is
