@@ -378,52 +378,55 @@
    "target": 63,
    "n_original": 63,
    "n_original_gated": 63,
-   "n_original_pass": 2,
-   "n_items": 2,
-   "n_new": 0,
-   "n_candidates_gated": 120,
+   "n_original_pass": 37,
+   "n_items": 62,
+   "n_new": 36,
+   "n_candidates_gated": 238,
    "bank": "evals/buggy_code/items.json",
    "bank_version": 1,
-   "change": "refill via run.fill: 0/24 pairs; 0 landed of 60 tried, yield 0.00%; stop: yield 0/60 < 0.03 on >= 60 candidates at the easiest level, 0 < 24/2",
-   "status": "blocked",
-   "note": "BLOCKED (plan 0066 rollout, 2026-11-04): not ooc. A subject behaviour (render verified, not a bug; see the diagnostic below) holds every pair: DeepSeek-V4-Pro answers the surface leg (e.g. 'ZeroDivisionError: division by zero', 10/10), but its plain continuation of bare code is EMPTY on the legs that read it: the buggy `leak` leg on 43/60 authored t2 items (all 25 registered buggy fail it) and the clean greedy-only `bugclaim` leg on 52/60 authored and 24/26 registered cleans. §11.8 counts an empty continuation as undecided = fail, so no pair can land (about 13 authored buggy items also fail the leak leg on real, decided leaks; the t2 pilot tally 0/60 is not a capacity measure). Shipped: the 2 registered cleans whose greedy bugclaim continuation is non-empty and passes (no pairs; pair headline n=0; the other 12 cleans fail the undecided bugclaim leg). Diagnostic (2026-11-04, refill/diag/v4_eos_diag.json): on 3 bare-code buggy items the plain render already starts with BOS (<｜begin▁of▁sentence｜>, id 0), so (b) BOS-prepended is identical to (a); (a), (b) and (c) a trailing newline all give EOS as the FIRST greedy token on 3/3 items (samples at T=1: EOS first on 13 of 15 per variant). Not a render bug: V4-Pro itself ends a raw code continuation immediately. The empty-continuation rule (§11.8) is unchanged, so the family stays blocked; refill_hold set. Delta audit: the 12 removals are exactly the cleans with an empty bugclaim leg.",
-   "exclude_from_macro": true,
+   "change": "refill via run.fill: 24/24 pairs; 23 landed of 60 tried, yield 38.33%; stop: 24 >= target 24",
+   "status": "full",
+   "note": "Full (plan 0066, 2026-11-04; #293). DeepSeek-V4-Pro ends a raw code continuation immediately: EOS is the first greedy token (render verified; refill/diag/v4_eos_diag.json). Under #293 an all-empty continuation passes buggy_code's leak and bugclaim legs; mixed draws are graded as before, other families unchanged. After `regrade` (8 -> 119 passing rows, stored answers) and two t1 waves (7/30, 16/30 pairs): 24/24 pairs (6 registered, 18 authored t1) plus 14 unpaired registered cleans, 62 items. Caveat: 50/62 continuation legs pass only by the empty rule, and in 16/24 pairs neither screen saw any text, so for this subject the leak and bug-claim screens are vacuous, not evidence of non-verbalization. Delta audit: 1 authored pair dropped (bug only in the cause text), its replacement audited. Earlier this family was `blocked` with refill_hold (cleared after #293).",
+   "exclude_from_macro": false,
    "refill": {
     "route": "run.fill",
     "unit": "pairs",
     "target": 24,
-    "have": 0,
+    "have": 24,
     "tried": 60,
-    "landed": 0,
-    "yield": 0.0,
+    "landed": 23,
+    "yield": 0.38333333333333336,
     "waves": 2,
     "n_min": 60,
     "y_min": 0.03,
     "tally": {
      "t2": {
       "tried": 60,
-      "landed": 0
+      "landed": 28
+     },
+     "t1": {
+      "tried": 60,
+      "landed": 23
      }
     },
     "pool_size": null,
     "pool_used": null,
-    "stop": "yield 0/60 < 0.03 on >= 60 candidates at the easiest level, 0 < 24/2",
+    "stop": "24 >= target 24",
     "budget": {
      "gpu_minutes": null,
      "claude_budget": null,
-     "claude_calls": 270
+     "claude_calls": 250
     },
-    "pilot": true,
-    "tier": "t2",
+    "pilot": false,
+    "tier": "t1",
     "authored_pairs": {
-     "non_crash": 0,
-     "crash": 0,
-     "crash_cap": 0
+     "non_crash": 23,
+     "crash": 28,
+     "crash_cap": 5
     }
    },
-   "refill_hold": "V4-Pro emits EOS first on raw code continuations (leak / bugclaim legs undecided; render verified, not a bug)",
    "target_pairs": 24,
-   "n_pairs": 0
+   "n_pairs": 24
   },
   "conjunctive_association": {
    "target": 100,
@@ -781,7 +784,7 @@
  },
  "code": {
   "git": "",
-  "adapt_sha256": "2149b9c85a663c0a"
+  "adapt_sha256": "6bbb79b55965b5c0"
  },
  "model": "deepseek-v4-pro",
  "label": "DeepSeek-V4-Pro-0813",
@@ -824,6 +827,10 @@
    "b2_01769": "delta audit 2026-11-04: delta audit 2026-11-04 (K4): the Pixel Buds Pro 3 chip has an unknown truth (VERIFY model_correct=unknown); a reused 'tensor a1' is possible, so the gold is not shown wrong",
    "b2_01735": "delta audit follow-up 2026-11-04 (K4): truth unknown (Mac Studio H2 2026 max memory), gold 192 not shown wrong",
    "cs00071": "delta audit follow-up 2 2026-11-04: truth listed twice in options (xiaomi 17 / xiaomi 17 series; K2)"
+  },
+  "buggy_code": {
+   "buggy-au-t1-w103c0-py-entry-needs-ticket-and-id": "delta audit #293 follow-up 2026-11-04: bug only in the cause text (or vs and is not visible in the code); pair atomic",
+   "buggy-au-clean-t1-w103c0-py-entry-needs-ticket-and-id": "delta audit #293 follow-up 2026-11-04: bug only in the cause text (or vs and is not visible in the code); pair atomic"
   }
  }
 }

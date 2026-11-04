@@ -1556,11 +1556,11 @@
   "not_measurable": false
  },
  "knowledge_cutoff": {
-  "rate": 0.06481481481481481,
+  "rate": 0.07407407407407407,
   "saturated": false,
   "ci95": [
    0.027777777777777776,
-   0.1111111111111111
+   0.12962962962962962
   ],
   "metric": "pass_rate",
   "higher_is_better": true,
@@ -1625,9 +1625,9 @@
    "kc3_01292": false,
    "kc3_02445": false,
    "kc2_02407": true,
-   "kc3_00121": false,
+   "kc3_00121": true,
    "cs00055": false,
-   "cs00155": false,
+   "cs00155": true,
    "cs00320": false,
    "cs00359": false,
    "cs00434": false,
@@ -1649,7 +1649,7 @@
    "cs00064": false,
    "cs00188": false,
    "b2_00258": false,
-   "b2_01925": true,
+   "b2_01925": false,
    "cs00513": false,
    "cs00739": false,
    "cs00764": false,
@@ -1659,7 +1659,7 @@
    "b2_01068": false,
    "cs01231": false,
    "b2_01293": false,
-   "cs01552": false,
+   "cs01552": true,
    "cs01605": false,
    "cs01749": false,
    "cs00097": false,
@@ -1688,7 +1688,7 @@
    "cs01868": false,
    "cs00265": false,
    "cs00339": false,
-   "b2_01997": true,
+   "b2_01997": false,
    "cs02130": false,
    "b2_00781": false,
    "b2_00907": false,
@@ -1707,12 +1707,12 @@
    "cs01872": false
   },
   "digest_unserved": [],
-  "written": "2026-11-04T18:45:09+00:00",
-  "value": 0.06481481481481481,
+  "written": "2026-11-04T22:01:00+00:00",
+  "value": 0.07407407407407407,
   "n": 108,
   "ci": [
    0.027777777777777776,
-   0.1111111111111111
+   0.12962962962962962
   ],
   "n_refused": 0,
   "n_refused_ask": 0,
@@ -1723,11 +1723,11 @@
   "not_measurable": false
  },
  "model_specific_directed_modulation": {
-  "rate": 0.8877551020408163,
+  "rate": 0.8979591836734694,
   "saturated": false,
   "ci95": [
-   0.826530612244898,
-   0.9489795918367347
+   0.8367346938775511,
+   0.9591836734693877
   ],
   "metric": "pass_rate",
   "higher_is_better": true,
@@ -1779,7 +1779,7 @@
    "s2_dry_style_vietnamese_noodle_dish": true,
    "s2_type_of_touff_e": true,
    "s2_swedish_almond_pastry": true,
-   "s2_tea_served_at_yum_cha": false,
+   "s2_tea_served_at_yum_cha": true,
    "s2_platinum_hydrosilylation_catalyst": true,
    "s2_knot_theory_software_tool": true,
    "s2_classical_orthogonal_polynomial_family": true,
@@ -1825,7 +1825,7 @@
    "s3b2_guigal_la_la_single_vineyard_c_te_r_tie": true,
    "s3b2_northern_rh_ne_white_grape_variety": true,
    "s3b1_cross_note_guitar_tuning": true,
-   "s1_ariocarpus_species": false,
+   "s1_ariocarpus_species": true,
    "s3b1_b_spline_window": false,
    "s2_hemisquilla_species": true,
    "s2_aureoboletus_species": true,
@@ -1846,7 +1846,7 @@
    "s1_pteris_species": true,
    "s2_callipogon_species": true,
    "s1_species_of_kingfisher": true,
-   "s2_sai_krok_isan_filling_style": true,
+   "s2_sai_krok_isan_filling_style": false,
    "s3b2_hoya_carnosa_cultivar": true,
    "s2_philippine_nepenthes_species": true,
    "s3b2_bitter_for_a_venetian_spritz": true,
@@ -1864,12 +1864,12 @@
    "s2_cosmogenic_radionuclide": true
   },
   "digest_unserved": [],
-  "written": "2026-11-04T18:45:09+00:00",
-  "value": 0.8877551020408163,
+  "written": "2026-11-04T22:01:00+00:00",
+  "value": 0.8979591836734694,
   "n": 98,
   "ci": [
-   0.826530612244898,
-   0.9489795918367347
+   0.8367346938775511,
+   0.9591836734693877
   ],
   "n_refused": 0,
   "n_refused_ask": 0,
@@ -2264,11 +2264,11 @@
   "not_measurable": false
  },
  "multihop_mt_v2": {
-  "rate": 0.9571428571428572,
+  "rate": 0.9428571428571428,
   "saturated": false,
   "ci95": [
-   0.9,
-   1.0
+   0.8857142857142857,
+   0.9857142857142858
   ],
   "metric": "pass_rate",
   "higher_is_better": true,
@@ -2319,7 +2319,7 @@
    "mh2-macbeth-duncan-t2": true,
    "mh2-charles-v-joanna-epithet": true,
    "mh2-oprah-angelou-caged-bird-r1": true,
-   "mh2-spiegel-kerr-bloom": true,
+   "mh2-spiegel-kerr-bloom": false,
    "mh2-henry-fonda-peter-easy-rider": true,
    "mh2-henryv-director-wife-oscar": true,
    "mh2-redgrave-richardson-tomjones": true,
@@ -2369,20 +2369,20 @@
    "mh2-chawla-orbiter-t3": true,
    "mh2-persian-letters-doctrine-t1": true,
    "mh2-amundsen-ship": true,
-   "mh2-gluck-marie-antoinette-louis": false,
+   "mh2-gluck-marie-antoinette-louis": true,
    "mh2-joule-dalton-atomic": true,
    "mh2-que-viva-mexico-director-potemkin-t3": true,
    "mh2-reinhardt-deutsches-t3": true,
-   "mh2-volga-caspian-t1": true,
+   "mh2-volga-caspian-t1": false,
    "mh2-banach-steinhaus-s2": true
   },
   "digest_unserved": [],
-  "written": "2026-11-04T18:45:09+00:00",
-  "value": 0.9571428571428572,
+  "written": "2026-11-04T22:01:00+00:00",
+  "value": 0.9428571428571428,
   "n": 70,
   "ci": [
-   0.9,
-   1.0
+   0.8857142857142857,
+   0.9857142857142858
   ],
   "n_refused": 0,
   "n_refused_ask": 0,
@@ -3851,7 +3851,7 @@
    "album_label-Q665749-founded_year": false
   },
   "digest_unserved": [],
-  "written": "2026-11-04T18:45:09+00:00",
+  "written": "2026-11-04T22:01:00+00:00",
   "value": 0.0,
   "n": 7,
   "ci": [
@@ -3872,5 +3872,64 @@
   "template_sha": "7439aedab1299cc1",
   "draws": 1,
   "protocol": "po-opus-v1"
+ },
+ "buggy_code": {
+  "rate": 0.9583333333333334,
+  "saturated": false,
+  "ci95": [
+   0.875,
+   1.0
+  ],
+  "metric": "pass_rate",
+  "higher_is_better": true,
+  "n_items": 24,
+  "n_items_decided": null,
+  "counts": {
+   "n_expected_cells": 62,
+   "n_missing_cells": 0,
+   "n_unjudged_cells": 0,
+   "n_empty_cells": 0
+  },
+  "judge_model": "claude-opus-5-5",
+  "instrument": "buggy-pairs-2026-10-29+infer-r1-2026-10-31+pair-headline-2026-10-30+eof-all-layers-2026-10-30+digest-v5-task-extractive+sj-v10",
+  "layers_judged": [
+   44
+  ],
+  "complete": true,
+  "aggregate": "summary",
+  "summarizer": {
+   "model": "claude-opus-5-5",
+   "reasoning": {
+    "anthropic_effort": "default"
+   },
+   "prompt_version": "digest-v5",
+   "variant": "task",
+   "render": "extractive",
+   "max_items": 10,
+   "max_rare": 15,
+   "numbers": 0,
+   "token_cap": 920000,
+   "decode": true,
+   "overflow": "hierarchical",
+   "fallback": "none",
+   "layer_mode": "union",
+   "show_key": true
+  },
+  "decided": {},
+  "digest_unserved": [],
+  "written": "2026-11-04T22:01:00+00:00",
+  "value": 0.9583333333333334,
+  "n": 24,
+  "ci": [
+   0.875,
+   1.0
+  ],
+  "n_refused": 0,
+  "n_refused_ask": 0,
+  "n_refused_digest": 0,
+  "refusal_share": 0.0,
+  "protocol": "po-opus-v1",
+  "label": "Opus 5.5 (0 refused)",
+  "not_measurable": false
  }
 }
