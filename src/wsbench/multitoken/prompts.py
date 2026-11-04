@@ -105,17 +105,20 @@ def mc_system(task: str, question_unit: str, *, read: str = "a question") -> str
 # +bank-v4: items_v4.json, the round-4b lists (scripts/r4b_mc_refine.py)
 # +optrv-v2 (round 4b): a tie with the strongest rival is contested (rival.MORE_THAN)
 # +optrv-v3 (review of PR #208 round 4b): the code check also weighs the item's hidden rivals
-# (family.hidden_rivals, evals/basic_readout_mt/hidden_rivals.json; never shown to the judge)
+# (family.hidden_rivals over a per-item table never shown to the judge; both removed with
+# norival-v1)
 # +optrv-v4 (review of PR #208 round 4d): a code option-rival line the option audit
 # (OPTION_AUDIT_SYSTEM, optaudit-v1) dismisses is not weighed
 # norival-v1: the contested rule above (rv-*, optrv-*, the option audit and its prompts) is
 # removed; rival_quote is reported, never scored. The MC prompts are
 # unchanged, so the calls keep the key they were cached under (BRMT_CALL_VERSION)
 BRMT_CALL_VERSION = "mc-brmt-2026-10-31r+rv-2026-10-31e+optrv-v1+bank-v4"
-# +qline-v1: one quote rule for every MC family: quote_ok or near-verbatim, the gold read in the
-# quote's own line (family.tolerant_gate; the rescue through any digest line is retired)
+# +qline-v2: one quote rule for every MC family: quote_ok or near-verbatim, the gold read in the
+# quote's own line (family.tolerant_gate; through the line only for a quote cut mid-name: the line
+# continues it, or the sample ends inside the gold's name; the rescue through any digest line is
+# retired; qline-v1, an unreleased draft, credited any located line singling out the gold)
 # +bank-v5: items_v5.json, bank v4 without the sarin item (the calls keep the v4 key)
-BRMT_PROMPT_VERSION = "mc-brmt-2026-10-31r+norival-v1+qline-v1+bank-v5"
+BRMT_PROMPT_VERSION = "mc-brmt-2026-10-31r+norival-v1+qline-v2+bank-v5"
 # the spec's token-note input (EvalSpec.flat_types; decision Q4: a run of one kind singles out none)
 BRMT_FLAT_TYPES: tuple[str, ...] = (
     "names of people",
