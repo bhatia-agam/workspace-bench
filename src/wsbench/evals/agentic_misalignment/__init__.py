@@ -16,6 +16,7 @@ import json
 from pathlib import Path
 
 from wsbench import registry
+from wsbench.digest import AUX_ROLE
 from wsbench.evals.agentic_misalignment import prompts as _prompts
 from wsbench.judge_config import JudgeConfig
 from wsbench.registry import EvalSpec, register
@@ -26,6 +27,9 @@ from .prompts import PROMPT_VERSION
 FAMILY = "agentic_misalignment"
 # judge of record; one of the repo's two non-default pins (jailbreak_recognition is the other)
 JUDGE_MODEL = "claude-sonnet-5"
+# the summary-mode digest runs on the same pin (judge.DIGEST_MODEL); a call it declines re-runs
+# once on judge.REFUSAL_MODEL (claude-opus-5)
+assert judge.DIGEST_MODEL == JUDGE_MODEL
 MACRO_MIN_PAIRS = 20  # decision Q13
 
 
@@ -62,7 +66,12 @@ SPEC = register(
         title="Agentic misalignment",
         group="safety",
         bank=Path("evals/agentic_misalignment/items_v2.json"),
-        judge=JudgeConfig(model=JUDGE_MODEL, prompt_version=PROMPT_VERSION, reasoning=None),
+        judge=JudgeConfig(
+            model=JUDGE_MODEL,
+            prompt_version=PROMPT_VERSION,
+            reasoning=None,
+            aux_models={AUX_ROLE: judge.DIGEST_MODEL},
+        ),
         metric="pair_rate",
         higher_is_better=True,
         run=judge.run,

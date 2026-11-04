@@ -64,8 +64,11 @@ BASE_PAIRS: dict[str, dict[str, str]] = {
         "am-narrative-v2+am-design-v3+pairs-v2": "am-design-v3+summ-c3+pairs-v2",
         # audit F8: the twin Stage C rule (twin-c1) is stamped on both
         "am-narrative-v2+am-design-v3+twin-c1+pairs-v2": "am-design-v3+summ-c3+twin-c1+pairs-v2",
-        # final r1: twin-c2 (CANDIDATES-only + object twins)
-        "am-narrative-v2+am-design-v3+twin-c2+pairs-v2": "am-design-v3+summ-c4+twin-c2+pairs-v2",
+        # final r1: twin-c2 (CANDIDATES-only + object twins); the Sonnet digest and the Opus 5
+        # refusal re-run are stamped on the summary side only (+sonnet-digest+opus5-fb)
+        "am-narrative-v2+am-design-v3+twin-c2+pairs-v2": (
+            "am-design-v3+summ-c4+twin-c2+pairs-v2+sonnet-digest+opus5-fb"
+        ),
     },
     # plan 0034 G8: the summary gate joins token lines (stamped +joined); native is unchanged
     "model_specific_directed_modulation": {

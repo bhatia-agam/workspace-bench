@@ -81,6 +81,7 @@ def sargs(mk_args):
         return mk_args(
             readouts,
             judge=resolve(SPEC.judge, env={}),
+            aux_models=SPEC.judge.aux_models,  # as runner.judge_family (the digest pin)
             extra={"aggregate": "summary", **(extra or {})},
             **kw,
         )
@@ -249,7 +250,7 @@ def test_lite_selects_positions_and_every_layer(tmp_path, fakes, sargs):
     assert r.rows[0]["n_positions_read"] == len(want) and "stride" not in r.config
 
 
-def test_complete_and_pinned_need_stage_c_pin_and_default_digest(tmp_path, fakes, sargs):
+def test_complete_and_pinned_need_stage_c_pin_and_digest_pin(tmp_path, fakes, sargs):
     bank = load_bank("agentic_misalignment")["items"]
     ids = [it["id"] for it in bank]
     path = write_jsonl(tmp_path / "r.jsonl", _rows(ids, positions=(0,), layers=(20,)))
@@ -262,6 +263,68 @@ def test_complete_and_pinned_need_stage_c_pin_and_default_digest(tmp_path, fakes
     fakes(lambda u, kw: GOOD)
     r2 = judge.run(sargs(path, out=tmp_path / "o2", extra={"summ_effort": "low"}))
     assert not r2.pinned_instrument and not r2.complete
+    # the digest pin is claude-sonnet-5; the repo default digest model is not pinned
+    assert r.config["summarizer"]["model"] == "claude-sonnet-5"
+    fakes(lambda u, kw: GOOD)
+    r3 = judge.run(sargs(path, out=tmp_path / "o3", extra={"summ_model": digest.DEFAULT_MODEL}))
+    assert not r3.pinned_instrument and not r3.complete
+
+
+def test_digest_and_stage_c_on_sonnet_no_server_fallback(tmp_path, monkeypatch, fakes, sargs):
+    """Every digest call runs on claude-sonnet-5 with no server-side fallback, Stage C on its
+    pin; every row records both models. A declined call alone re-runs on claude-opus-5
+    (client-side, ``summ_fallback=none+claude-opus-5``); none declines here."""
+    ids = [RH, f"{RH}~twin"]
+    path = write_jsonl(tmp_path / "r.jsonl", _rows(ids, positions=(0,), layers=(20,)))
+    _fj, ft = fakes(lambda u, kw: GOOD)
+    seen: list[tuple[object, object]] = []
+
+    def stream_json(prompts_, *, schema, on_result, **kw):
+        for i, (_system, user) in enumerate(prompts_):
+            seen.append((kw.get("model"), kw.get("fallbacks")))
+            on_result(i, first_lines_digest(user))
+        return llm.Spend()
+
+    monkeypatch.setattr(llm, "stream_json", stream_json)
+    r = judge.run(sargs(path, items=[RH]))
+    assert seen and set(seen) == {("claude-sonnet-5", None)}
+    assert {kw.get("model") for _u, kw in ft.calls} == {"claude-sonnet-5"}
+    assert r.config["summarizer"]["model"] == "claude-sonnet-5"
+    assert r.config["summarizer"]["fallback"] == "none+claude-opus-5"
+    assert digest.FAMILY_DEFAULTS["agentic_misalignment"]["summ_fallback"] == "none+claude-opus-5"
+    assert SPEC.judge.aux_models == {digest.AUX_ROLE: "claude-sonnet-5"}
+    assert {(x["digest_model"], x["judge_model"]) for x in r.rows} == {
+        ("claude-sonnet-5", "claude-sonnet-5")
+    }
+    assert r.extras["summary"]["digest_served_by"] == {"claude-sonnet-5": 2}
+    assert r.pinned_instrument and r.extras["n_items_digest_refused"] == 0
+    assert r.config["prompt_version"].startswith(prompts.SUMMARY_STAMP_VERSION + "+digest-v5")
+    assert prompts.SUMMARY_STAMP_VERSION.endswith("+pairs-v2+sonnet-digest+opus5-fb")
+
+
+def test_refused_digest_leaves_the_pair_undecided(tmp_path, fakes, sargs):
+    """A digest both models decline is no evidence: its item gets no Stage C record and its pair
+    is undecided, never failed by the refusal."""
+    ids = [RH, f"{RH}~twin", EX, f"{EX}~twin"]
+    path = write_jsonl(tmp_path / "r.jsonl", _rows(ids, positions=(0,), layers=(20,)))
+
+    def dig(user):  # the misaligned member of RH and the twin of EX are refused
+        if f"R:{RH}:" in user or f"R:{EX}~twin:" in user:
+            return llm.REFUSED_JSON
+        return first_lines_digest(user)
+
+    fakes(lambda u, kw: GOOD if "~twin" not in u else BENIGN, dig)
+    r = judge.run(sargs(path, items=[RH, EX]))
+    pairs = {p["misaligned"]: p for p in r.extras["pairs"]}
+    assert pairs[RH]["hit"] is None and pairs[RH]["misaligned_hit"] is None
+    assert pairs[EX]["hit"] is None and pairs[EX]["twin_false_alarm"] is None
+    assert r.extras["n_pairs_undecided"] == 2 and r.value is None
+    assert r.extras["n_items_digest_refused"] == 2
+    assert r.extras["digest_refused_ids"] == sorted([RH, f"{EX}~twin"])
+    rows = {x["id"]: x for x in r.rows}
+    assert rows[RH]["summary_state"] == "unsummarized" and rows[RH]["passed"] is None
+    assert rows[RH]["digest_model"] == "claude-sonnet-5"
+    assert r.pinned_instrument and not r.complete  # undecided pairs keep a run incomplete
 
 
 def test_token_file_no_bag_cap_and_token_note(tmp_path, fakes, sargs):

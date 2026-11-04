@@ -94,7 +94,7 @@ per-layer digests are merged into the one judged digest (see "Audit fixes" below
   contributes nothing; rows carry `summary_hierarchical` / `summary_chunks`, extras
   `n_digest_refused`, `n_digest_too_long`, `n_chunk_calls`, `n_hierarchical_items`,
   `max_halvings`. Agentic keeps `summ_max=25`, `summ_rare=25`, concurrency 4, timeout 1800 s
-  and `summ_fallback=default`.
+  and `summ_fallback=none+claude-opus-5` (its digest runs on its Stage C pin `claude-sonnet-5`).
 - **Audit fixes (digest-v5, 2026-10-31; `notes/AUDIT_FIXES.md` F1 / F2 / F3 / F11).**
   - *F1, the all-layer budget scales with the layers* (`summ_layers=union`, the default; `joint`
     is the old single call, an ablation stamped `-joint`). An item read at several layers gets
@@ -171,7 +171,8 @@ per-layer digests are merged into the one judged digest (see "Audit fixes" below
   jailbreak_recognition and the four F3 families use `default+claude-sonnet-5-5`, i.e.
   `digest.REFUSAL_MODEL`; Sonnet 5 before 2026-11-01). `none+<claude model>` is that
   client-side re-run alone, for a digest model that rejects server-side `fallbacks`
-  (`claude-sonnet-5` answers the parameter with a 400). A digest model whose answers can outrun
+  (`claude-sonnet-5` answers the parameter with a 400): agentic_misalignment, whose digest runs on
+  `claude-sonnet-5`, uses `none+claude-opus-5` (`digest.SONNET_REFUSAL_MODEL`). A digest model whose answers can outrun
   32k output tokens gets its own per-call cap (`digest.OUTPUT_CAPS`, `Settings.max_tokens`:
   64k for `claude-sonnet-5`, which can overrun the rare tier on long agentic bundles); the cap
   keys no fingerprint, the re-run keeps it, and `MAX_TOKENS` (32k) still sizes the single-call

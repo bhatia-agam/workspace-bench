@@ -61,10 +61,26 @@ class ModelAwareClient:
     async def close(self) -> None:
         return None
 
+    def models(self, kind: str) -> list[str]:
+        """The model of every call of one kind: digest (stage 1 and stage 2) / judge (other
+        structured calls) / text (free text)."""
+        out = []
+        for kw in self.calls:
+            fmt = (kw.get("output_config") or {}).get("format")
+            k = "text" if fmt is None else ("digest" if is_digest(kw) else "judge")
+            if k == kind:
+                out.append(kw["model"])
+        return out
 
-@pytest.fixture
-def client(monkeypatch):
-    """Install a ModelAwareClient behind the real llm primitives (no network, no key)."""
+
+def is_digest(kw: dict) -> bool:
+    """A digest request: a stage-1 bundle (``READOUTS:``) or a layered stage-2 call."""
+    return kw["messages"][0]["content"].startswith(("READOUTS:", "LAYER DIGESTS:"))
+
+
+def fake_client_installer(monkeypatch):
+    """``install(answer) -> ModelAwareClient``: puts a fake client behind the real llm primitives
+    (no network, no key, no pacing, no backoff)."""
     monkeypatch.setattr(llm, "api_key", lambda model: "sk-ant-test")
     monkeypatch.setattr(llm, "preflight", lambda model, reasoning: None)
     monkeypatch.setattr(llm, "_backoff", lambda attempt, status: 0.0)
@@ -80,6 +96,11 @@ def client(monkeypatch):
         return fake
 
     return install
+
+
+@pytest.fixture
+def client(monkeypatch):
+    return fake_client_installer(monkeypatch)
 
 
 SCHEMA = llm.schema_block("t", {"a": {"type": "integer"}}, ["a"])

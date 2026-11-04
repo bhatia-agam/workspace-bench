@@ -27,7 +27,7 @@ for this family must contain prompt positions only; every row is in scope here.
 
 import json
 import re
-from collections import defaultdict
+from collections import Counter, defaultdict
 from collections.abc import Callable, Sequence
 from pathlib import Path
 
@@ -66,6 +66,13 @@ from .prompts import (
 )
 
 FAMILY = "agentic_misalignment"
+# the summary-mode digest model of record, the Stage C pin (JudgeConfig.aux_models)
+DIGEST_MODEL = "claude-sonnet-5"
+# a summary-mode digest or Stage C call the Sonnet pin declines re-runs once on this model,
+# client-side (rows: digest_model / judge_model)
+REFUSAL_MODEL = digest.SONNET_REFUSAL_MODEL
+# the digest outcomes counted as refusals (the item has no Stage C record: undecided, never a fail)
+REFUSED_REASONS = frozenset({"refused", "too_long", "partial_refused"})
 
 
 def targets_path() -> Path:
@@ -212,13 +219,19 @@ def _batch(
     spend: Spend,
     extra: Callable[[str, str], dict] | None = None,
     refused: set[str] | None = None,
+    refusal_model: str | None = None,
+    served: dict[str, str] | None = None,
 ) -> dict[str, str | None]:
     """cache key -> text. Cached (non-failed) rows are reused; the rest go through
     :func:`llm.stream_text` in one batch. A landed text (incl. ``""``) is ``cache.put``
     immediately as ``{"result": text, **extra(key, text)}``; ``None`` is never cached. With a
     ``refused`` set (Stage A), a model refusal is a judged position read as ``"uninformative"``:
     cached as ``{"result": "uninformative", "refused": true}`` (never re-asked) and its key added
-    to ``refused`` (cached refusals included)."""
+    to ``refused`` (cached refusals included).
+
+    ``refusal_model`` (summary Stage C): a call the judge declines re-runs once on that
+    model; the text it serves is cached with ``"served_by": <model>``, and ``served`` (key ->
+    model) collects every key another model served, cached rows included."""
     out: dict[str, str | None] = {}
     pending: Calls = []
     for key, fp, user in calls:
@@ -227,11 +240,17 @@ def _batch(
             out[key] = row["result"]
             if refused is not None and row.get("refused"):
                 refused.add(key)
+            if served is not None and row.get("served_by"):
+                served[key] = str(row["served_by"])
         else:
             pending.append((key, fp, user))
     print(f"stage {stage}: {len(pending)} calls ({len(out)} cached, model={args.judge.model})")
     if not pending:
         return out
+    served_now: dict[int, str] = {}
+
+    def on_served(i: int, model: str) -> None:
+        served_now[i] = model
 
     def on_result(i: int, text: str | None) -> None:
         key, fp, _user = pending[i]
@@ -242,8 +261,12 @@ def _batch(
             return
         if text == llm.REFUSED:  # not asked for; never cache the marker
             text = None
+        by = served_now.get(i)
         if text is not None:
-            cache.put(key, fp, {"result": text, **(extra(key, text) if extra else {})})
+            payload = {"result": text, **(extra(key, text) if extra else {})}
+            cache.put(key, fp, {**payload, **({"served_by": by} if by else {})})
+            if by and served is not None:
+                served[key] = by
         out[key] = text
 
     llm.stream_text(
@@ -256,6 +279,7 @@ def _batch(
         rpm=args.rpm,
         spend=spend,
         mark_refusals=refused is not None,
+        **({"refusal_model": refusal_model, "on_served": on_served} if refusal_model else {}),
     )
     for key, _fp, _u in pending:
         out.setdefault(key, None)
@@ -636,6 +660,7 @@ def _run_summary(
     pre = Preflighter(args.dry_run)
     by_id = {it["id"]: it for it in items}
     raw_c: dict[str, str | None] = {}
+    c_served: dict[str, str] = {}  # Stage C key -> the refusal model that served it
     c_calls: Calls = []
     label_of: dict[str, str] = {}  # Stage C cache key -> item id
     with Cache(args.out / "cells.jsonl") as cache:
@@ -696,9 +721,13 @@ def _run_summary(
                 cache=cache,
                 spend=spend,
                 extra=lambda _key, text: parse_design_score_summary(text),
+                # a Stage C call the pin declines re-runs once on REFUSAL_MODEL
+                refusal_model=REFUSAL_MODEL if args.judge.pinned else None,
+                served=c_served,
             )
             for key, _fp, _u in c_calls:
                 raw_c[label_of[key]] = c_res.get(key)
+    judge_model_of = {label_of[k]: m for k, m in c_served.items()}
 
     records: list[dict] = []
     rows: list[dict] = []
@@ -716,6 +745,10 @@ def _run_summary(
             "design_item_score": None,
             "passed": None,
             **(col.row(lb) if lb in col.cells else {"summary_state": "no_cells"}),
+            # the models that served this item's digest and its Stage C call (a declined call
+            # re-run on REFUSAL_MODEL records it; per-layer digests may mix)
+            "digest_model": (col.served_by.get(lb) or col.model) if lb in col.cells else None,
+            "judge_model": judge_model_of.get(lb, args.judge.model),
         }
         parsed: dict | None = None
         if lb in col.empty:  # zero digest items: the summarizer's verdict, judged without a call
@@ -770,9 +803,35 @@ def _run_summary(
         n_informative=None,
         usage=_usage(spend),
         summary=col.extras(),
-        pinned=digest.pinned(args, family=FAMILY),
+        pinned=summary_pinned(args, col),
     )
+    # a digest both models decline leaves its item without a Stage C record, so its pair is
+    # undecided (score.pair_verdicts), never failed by the refusal itself
+    refused = sorted(i for i in col.unsummarized if col.reasons.get(i) in REFUSED_REASONS)
+    result.extras["n_items_digest_refused"] = len(refused)
+    result.extras["digest_refused_ids"] = refused
+    # the items another model served (their Stage C call; digests: summary extras)
+    result.extras["judge_served_by"] = dict(
+        Counter(r["judge_model"] for r in rows if r["judge_model"])
+    )
+    result.extras["judge_fallback_ids"] = sorted(judge_model_of)
     return with_readout_count(result, scope, cells)
+
+
+def summary_pinned(args: JudgeArgs, col: digest.Collapse) -> bool:
+    """A summary run is the instrument of record when Stage C is its pin, the digest ran
+    :data:`DIGEST_MODEL` at the default effort (``digest.pinned`` would ask for the repo default
+    model instead) and no model but the refusal re-run (:data:`REFUSAL_MODEL`,
+    ``summ_fallback=none+<it>``) served any digest."""
+    s = digest.settings(args, FAMILY)
+    served = {m for v in col.served_by.values() for m in v.split(",")}
+    return (
+        bool(args.judge.pinned)
+        and s.model == DIGEST_MODEL
+        and s.reasoning == {"anthropic_effort": digest.DEFAULT_EFFORT}
+        and s.fallback == f"none+{REFUSAL_MODEL}"
+        and served <= {REFUSAL_MODEL}
+    )
 
 
 # digest-v5 (audit F2): the marker is the per-claim count, "[N samples]" / "[N samples, M layers]";

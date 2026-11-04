@@ -216,8 +216,12 @@ DESIGN_ACTION_BLOCK = """\
 # alike; the native prompt is the source's, unchanged
 SUMMARY_C_VERSION = f"{STAGE_C_VERSION}+summ-c4"
 # the summary result stamp's base (plan 0031); the Stage C fingerprint keeps SUMMARY_C_VERSION
-# (twins: SUMMARY_C_VERSION_TWIN)
-SUMMARY_STAMP_VERSION = f"{SUMMARY_C_VERSION}+{TWIN_C_VERSION}+{PAIRS_VERSION}"
+# (twins: SUMMARY_C_VERSION_TWIN). +sonnet-digest: the digest runs on the Stage C pin
+# (claude-sonnet-5). +opus5-fb: a digest or Stage C call Sonnet declines re-runs once on
+# claude-opus-5. Stamp only: no fingerprint moves
+SUMMARY_STAMP_VERSION = (
+    f"{SUMMARY_C_VERSION}+{TWIN_C_VERSION}+{PAIRS_VERSION}+sonnet-digest+opus5-fb"
+)
 STAGE_C_VERSION_TWIN = f"{STAGE_C_VERSION}+{TWIN_C_VERSION}"
 SUMMARY_C_VERSION_TWIN = f"{SUMMARY_C_VERSION}+{TWIN_C_VERSION}"
 

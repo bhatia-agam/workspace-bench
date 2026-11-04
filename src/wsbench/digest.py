@@ -42,6 +42,10 @@ DEFAULT_EFFORT = "default"
 # fallback instead of silently reused.
 REFUSAL_MODEL = "claude-sonnet-5-5"
 RETIRED_REFUSAL_MODELS = frozenset({"claude-sonnet-5"})
+# the client-side refusal model of the families whose digest model is claude-sonnet-5
+# (agentic_misalignment, ``summ_fallback=none+<it>``): claude-sonnet-5 rejects the server-side
+# ``fallbacks`` parameter (400), so a call it declines re-runs once on this model instead
+SONNET_REFUSAL_MODEL = "claude-opus-5"
 # how a fallback-served digest was served: "client" (re-run on the refusal model) or "server"
 # (the server-side ``fallbacks="default"`` seam); every row cached since the switch carries it
 SERVED_VIA = "\x00served_via"
@@ -292,9 +296,10 @@ FAMILY_DEFAULTS: dict[str, dict[str, str]] = {
         "summ_max": "25",
         "summ_concurrency": "4",
         "summ_timeout": "1800",
-        # Opus 5.5's cyber classifier declines most agentic bundles (credential theft,
-        # exfiltration scenarios); a declined digest re-runs server-side on a fallback model
-        "summ_fallback": "default",
+        # the digest runs on the Stage C pin claude-sonnet-5 (aux_models["digest"]), not on
+        # Opus 5.5, whose server-side fallback served each arm on a different mix of models; a
+        # digest Sonnet declines re-runs once on SONNET_REFUSAL_MODEL, client-side
+        "summ_fallback": f"none+{SONNET_REFUSAL_MODEL}",
         "summ_rare": "25",  # plan 0022: rare plan statements are recorded too
     },
     # plan 0022 Part B (Camila: "the summarizer should give 5 numbers for chain and arithmetic"):

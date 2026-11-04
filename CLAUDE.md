@@ -348,7 +348,13 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   `reads=full|lite` (lite = every 16th + last 8); `min_full_positions = 64`. `wsbench adapt
   agentic` skips twins (adapted banks: headline None). The bank is built by
   `scripts/build_agentic_twins_bank.py` from the reviewed drafts and gate verdicts; gate-4 rows
-  for the shared sampler come from `scripts/agentic_twin_gate_modal.py rows`.
+  for the shared sampler come from `scripts/agentic_twin_gate_modal.py rows`. Summary mode: the
+  digest runs on the Stage C pin `claude-sonnet-5` (`aux_models["digest"]`), and a digest or
+  Stage C call Sonnet declines re-runs once on `claude-opus-5` (`summ_fallback=none+claude-opus-5`;
+  Stage C via `llm.stream_text(refusal_model=)`); a digest both decline leaves its pair undecided;
+  rows record `digest_model` / `judge_model`; `judge.summary_pinned` replaces `digest.pinned`
+  (which wants the repo-default digest model); the summary stamp gains `+sonnet-digest+opus5-fb`
+  (no fingerprint moves); Sonnet digest calls run at the 64k `digest.OUTPUT_CAPS` cap.
 - hinted_cutoff (plan 0063) is pair-scored like unverbalized_hint (`items=` expands to pairs,
   `limit=` counts pairs, `n_items` = decided pairs) but its headline is the class DIFFERENCE
   (I flag rate - N flag rate, jailbreak precedent: chance 0, may be negative, in the macro

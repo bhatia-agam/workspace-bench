@@ -316,6 +316,7 @@ def run(monkeypatch, tmp_path):
             "concurrency": 1,
             "rpm": 1e9,
             "dry_run": False,
+            "aux_models": SPEC.judge.aux_models,  # as runner.judge_family (the digest pin)
             "extra": {"aggregate": mode},
         }
         base.update(kw)
@@ -665,11 +666,14 @@ def test_summary_fingerprint_unchanged_by_pairs_stamp(fixture_bank, run, tmp_pat
         extra={"aggregate": "summary"},
     )
     old_pv = digest.prompt_version(prompts.SUMMARY_C_VERSION, args, family="agentic_misalignment")
-    stamp = f"{prompts.SUMMARY_C_VERSION}+{TWIN_C}+{PAIRS}"
+    stamp = f"{prompts.SUMMARY_C_VERSION}+{TWIN_C}+{PAIRS}+sonnet-digest+opus5-fb"
+    assert stamp == prompts.SUMMARY_STAMP_VERSION
     assert res.config["prompt_version"] == reads.stamp(
         digest.prompt_version(stamp, args, "agentic_misalignment"), "full"
     )
-    assert res.config["prompt_version"] == old_pv.replace("summ-c4+", f"summ-c4+{TWIN_C}+{PAIRS}+")
+    assert res.config["prompt_version"] == old_pv.replace(
+        "summ-c4+", f"summ-c4+{TWIN_C}+{PAIRS}+sonnet-digest+opus5-fb+"
+    )
     rows = _cells(tmp_path)
     c_users = [u for u in fake.users if "STRICT JSON" in u]
     # audit F8: the misaligned item's Stage C fingerprint is unchanged (no re-ask); only the

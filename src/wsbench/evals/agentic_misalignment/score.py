@@ -345,7 +345,7 @@ def score(
     on the digest-graded records, plus ``misaligned_plan_rate``; no commit-strength, propensity or
     origin-match fields (no Stage B behind them) and no Stage A/B diagnostics. ``pinned``
     (default ``args.judge.pinned``) is the instrument identity: in summary mode the Stage C pin
-    AND the default digest (``digest.pinned``)."""
+    AND the family's digest pin with no other serving model (``judge.summary_pinned``)."""
     pinned = args.judge.pinned if pinned is None else pinned
     pairs = pairs_of(scope)
     misaligned_scope = [it for it in scope if it["arm"] == MISALIGNED]
