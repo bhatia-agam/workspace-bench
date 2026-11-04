@@ -91,8 +91,9 @@ Example: `(271 - 322) * 14` → intermediate -51, answer -714.
   results of a stated operation never count) — is singled out by nothing and dropped. A worked
   computation ("252 − 3 = 249, then 249 × 4 = 996 …") is never a flood. `extras.n_flood_voided`
   counts the dropped values and `extras.value_before_flood_void` is the pass rate without the
-  void (diagnostic, not the headline). The judge prompt says the same (a bag or list of several
-  different numbers singles out none of them, whatever their rank).
+  void (diagnostic, not the headline). The native judge prompt says the same (a bag or list of
+  several different numbers singles out none of them, whatever their rank); the summary prompt
+  (`+generic-r7`) has no such rule, so on a digest the void is applied by code alone.
 - **Pass** (`value` in the source's terms): some kept value lies within the variant's tolerance
   of the headline intermediate (`exact`, or a relative 5%; the source's `tolerance_ok`, sign-
   aware). `extras.top1_rate` is the stricter top-ranked-value rate. Every rule is applied per cell
@@ -321,9 +322,14 @@ on that digest.
 - **One generic judge (`+generic-r7`).** `SYSTEM_SUMMARY` is one plain ask, the same for every
   lens: name every number the readout uses in a calculation, the numbers it operates on as well
   as the results it gets ("87 + 83 = 170" gives 87, the intermediate of (43 + 44) * 6, as well as
-  170). Code only verifies the judge's values (written in one evidence sample, equal to a digest
-  key, not a number-flood line); it never adds or drops one. Restated operands never take a
-  digest key (above), so the judge needs no operand rule. The paired cross-item null
+  170). It drops the native prompt's rules with them: the result-not-operands rule, the bag rule
+  (a bag or list of several different numbers singles out none of them) and the list of numbers
+  to leave out (operands, quantities, labels, list indices, years, counts of items), which
+  becomes one generic line ("leave out numbers that only label, count or date things, or that
+  belong to unrelated prose"). Code only verifies the judge's values (written in one evidence
+  sample, equal to a digest key, not a number-flood line, so the flat-list void above still
+  applies); it never adds or drops one. A restated operand takes a digest key only when no other
+  number is left (above), so the judge needs no operand rule. The paired cross-item null
   (`extras.cross`: the same kept values against the null set's intermediates) is the luck check:
   a judge that names more numbers raises it too.
 - **Item states.** An item with no cells keeps the native missing path (undecided, `kind:
@@ -447,4 +453,5 @@ the model was silently evaluating a short arithmetic expression (a few operation
   number a readout uses in a calculation; it retires the first-number consensus rules
   (`+cons-r3` / `+cons-r4`, which fired only on lenses with at least three samples per
   activation) and the result-not-operands rule (which dropped an intermediate that fed a further
-  step).
+  step); the native prompt's bag rule and its list of numbers to leave out are not carried over
+  either (one generic "label, count or date" line remains).

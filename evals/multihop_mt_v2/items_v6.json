@@ -27,7 +27,7 @@
    "kind": "final_token"
   }
  },
- "supersedes": "items_v5.json",
+ "supersedes": "items_v4.json",
  "r4_mc": {
   "script": "scripts/build_r4_mc_banks.py",
   "rule": "round 4 (Camila r2 MC leakage standard): only the MC distractor lists change. Content lists: the four Opus-authored same-topic distractors of r4_distractors.json (scripts/r4_mc_distractors.py). ",
@@ -51,7 +51,7 @@
    }
   }
  },
- "read_plan_bank": "items_v5.json",
+ "read_plan_bank": "items_v4.json",
  "r5_mc": {
   "procedure": "mcleak-r5-2026-11-04",
   "script": "scripts/mc_options_r5.py (scripts/mc_leakage_r4.py's stages)",
@@ -374,7 +374,8 @@
     "n_items": 64
    }
   },
-  "standard_met": true
+  "standard_met": false,
+  "standard_met_note": "set by hand after the freeze: the driver's estimate (the kept items' rates in the repair round's draws: blind 0.078, described 0.109, topic 0.169, chance 0.188) met the standard, but the floors of record, fresh draws over this frozen bank (evals/baselines/lucky_guessing.json), fail it on topic: 0.338 vs the bar 0.238"
  },
  "items": [
   {

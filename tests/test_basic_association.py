@@ -118,8 +118,8 @@ def test_registered_spec(real_families):
 
     assert SPEC.group == "basic" and SPEC.metric == "pass_rate"
     assert SPEC.judge.model == DEFAULT_JUDGE
-    # the stamp adds the gate (gate-a1) and the bank (bank-v5); the calls stay keyed as before
-    assert SPEC.judge.prompt_version == ASSOC_PV == "assoc-mc-2026-11-01-v3+gate-a1+bank-v5"
+    # the stamp adds the gate (gate-a2) and the bank (bank-v5); the calls stay keyed as before
+    assert SPEC.judge.prompt_version == ASSOC_PV == "assoc-mc-2026-11-01-v3+gate-a2+bank-v5"
     assert CALL_VERSION == "assoc-mc-2026-11-01-v3"
     assert SPEC.calls_per_arm == "≈ 200" and str(SPEC.bank).endswith("items_v5.json")
 

@@ -36,7 +36,10 @@ the direction, and the judge's quote of that statement survives a mechanical gat
   ba): `items.json` without the four pairs one of whose stories carries a stray tab character
   that garbles a word ("mildly amusing \tray without hurrying"); the header's `dropped` names
   them. Items are scored in direction pairs, so a garbled story drops its partner too; nothing
-  is patched, and the other 92 items are `items.json`'s byte for byte, in order. The header's
+  is patched, and the other 92 items are `items.json`'s byte for byte, in order. Five kept
+  stories (one per pair) carry an em dash only as escape text (the six characters `\u2014`, or
+  a bare `\u`); they stay, since only a dash is mangled and the story reads clearly (the
+  header's `changes` lists them). The header's
   `read_plan_bank: items.json` keeps `items.json`'s read plan (100 rows, one `plan_sha`), so
   readouts made for `items.json` judge bank v2 with no new reads, and the distractor names are
   drawn from `items.json`'s name pool (`judge.load_items`), so every kept item shows the same
@@ -83,8 +86,9 @@ the direction, and the judge's quote of that statement survives a mechanical gat
   `n_span_unverified`; a `prompt_only:*` reader is skipped.
 - **Judge:** `claude-opus-5-5` (the repo default; summarizer Opus 5.5, `task` variant),
   `PROMPT_VERSION = "oa-v3.1+bank-v2"` (round 4's oa-v2.4 prompts on the oa-v3.1 lists, on
-  bank v2); every call is keyed `CALL_VERSION = "oa-v3.1"`, and a bank without a version-2 header
-  (the frozen `items.json`, the adapted banks) stamps `oa-v3.1` (`judge.instrument`). Under
+  bank v2); every call is keyed `CALL_VERSION = "oa-v3.1"`, and every other bank (the frozen
+  `items.json`; any adapted bank, including one frozen with bank v2's header, which carries an
+  `adapt` key) stamps `oa-v3.1` (`judge.instrument`). Under
   summary mode the stamp is
   `reads.stamp(digest.prompt_version(judge.instrument() + judge.majority_stamp(n), args, family), reads.mode(args))`:
   `oa-v3.1+bank-v2+maj3v+digest-v5-task-extractive-layered-v1x4+sj-v10` for a multi-layer run

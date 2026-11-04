@@ -25,15 +25,14 @@ UM_FLAT = ("countries", "nationalities", "continents", "religions", "occupations
 
 
 V1_ENV = "evals/user_modeling/items.json"
-V2 = ROOT / "evals/user_modeling/items_v2.json"
-V2_ENV = "evals/user_modeling/items_v2.json"
 
 
 @pytest.fixture(autouse=True)
 def _v1_bank(monkeypatch):
     """These tests pin the frozen 100-item bank (items.json, synthsys included): the scoring code
-    is bank-independent and v1 stays judgeable. Bank v2 (the 47 selfdescribe items) is tested in
-    ``test_bank_v2_*`` below, the registered bank v3 in test_user_modeling_bank_v3.py."""
+    is bank-independent and v1 stays judgeable. The synthsys drop (the 47 selfdescribe items
+    kept) is tested in ``test_synthsys_*`` / ``test_kept_*`` below, the registered bank v3 in
+    test_user_modeling_bank_v3.py."""
     monkeypatch.setenv("WSB_BANK_FILE_USER_MODELING", V1_ENV)
 
 
@@ -681,48 +680,51 @@ def test_name_rule_matches_the_gate():
     assert _gate("she", "female", [_tok(["she", "her"])]) == ""
 
 
-# ---------------------------------------------------------------- bank v2 (selfdescribe only)
+# ---------------------------------------------------------------- selfdescribe only
 
 
-def test_bank_v2_is_the_selfdescribe_items_of_v1(monkeypatch):
-    """Synthsys dropped (its attribute is stated in the system prompt, so under
-    the echo rule it rewarded only rewording or invented detail, e.g. um-ss-continent-00 "Since
-    you're in South Africa" for "Africa"). Bank v2 = the 47 selfdescribe items of items.json,
-    verbatim and in order; items.json is untouched. Bank v3 (v2 + 79 new items) is registered
-    since 2026-11-04; v2 stays judgeable by its file."""
+def test_synthsys_items_are_dropped(monkeypatch):
+    """Synthsys dropped (its attribute is stated in the system prompt, so under the echo rule it
+    rewarded only rewording or invented detail, e.g. um-ss-continent-00 "Since you're in South
+    Africa" for "Africa"). The registered bank v3 starts with the 47 selfdescribe items of
+    items.json, verbatim and in order (header ``dropped_from_v1``); items.json is untouched and
+    stays judgeable by its file."""
     monkeypatch.delenv("WSB_BANK_FILE_USER_MODELING")
     registry.load_all()
     assert registry.FAMILIES["user_modeling"].bank == Path("evals/user_modeling/items_v3.json")
     assert registry.FAMILIES["user_modeling"].judge.prompt_version == "um-v3.5+bank-v3"
-    monkeypatch.setenv("WSB_BANK_FILE_USER_MODELING", V2_ENV)
-    v2 = load_bank("user_modeling")
+    v3 = load_bank("user_modeling")
     v1 = json.loads((ROOT / V1_ENV).read_text(encoding="utf-8"))
     assert len(v1["items"]) == 100 and set(v1) == {"family", "gate", "read", "items"}
-    assert v2["version"] == 2 and v2["read_plan_bank"] == "items.json"
-    assert v2["items"] == [it for it in v1["items"] if it["subfamily"] == "selfdescribe"]
-    assert len(v2["items"]) == 47 and not any("synthsys" in it["name"] for it in v2["items"])
-    assert not any(it["name"].startswith("um-ss-") for it in v2["items"])
+    kept = v3["items"][:47]
+    assert v3["supersedes"] == "items.json" and "synthsys" in v3["dropped_from_v1"]["rule"]
+    assert kept == [it for it in v1["items"] if it["subfamily"] == "selfdescribe"]
+    assert not any(it["subfamily"] == "synthsys" for it in v3["items"])
+    assert not any(it["name"].startswith("um-ss-") for it in v3["items"])
+    assert not (ROOT / "evals/user_modeling/items_v2.json").exists()
 
 
-def test_bank_v2_keeps_the_plan_and_the_options(monkeypatch):
-    """One read serves both banks (the plan stays items.json's 100 rows, same plan_sha), and each
-    kept item shows its v1 options (seeded per item), so cached judge answers stay valid."""
-    v1_sha = reads.plan_sha("user_modeling")
+def test_kept_items_keep_their_rows_and_options(monkeypatch):
+    """The 47 kept items' plan rows are items.json's (their readouts serve bank v3), and each
+    shows its v1 options (seeded per item), so cached judge answers stay valid."""
+    v1_rows = {s.id: s.row() for s in readplan.plan("user_modeling")}
     v1_opts = build_options(_items())
-    monkeypatch.setenv("WSB_BANK_FILE_USER_MODELING", V2_ENV)
-    assert reads.plan_sha("user_modeling") == v1_sha
-    assert len(readplan.plan("user_modeling")) == 100
-    v2 = load_bank("user_modeling")["items"]
-    assert build_options(v2) == {it["name"]: v1_opts[it["name"]] for it in v2}
+    monkeypatch.delenv("WSB_BANK_FILE_USER_MODELING")
+    kept = load_bank("user_modeling")["items"][:47]
+    v3_rows = {s.id: s.row() for s in readplan.plan("user_modeling")}
+    assert len(v1_rows) == 100 and len(v3_rows) == 126
+    assert all(v3_rows[it["name"]] == v1_rows[it["name"]] for it in kept)
+    assert build_options(kept) == {it["name"]: v1_opts[it["name"]] for it in kept}
 
 
-def test_bank_v2_stamp_and_scope(tmp_path, fake_llm, mk_args, monkeypatch):
-    """A v2 run is stamped ``um-v3.5+bank-v2`` (floors measured on the 100-item bank are never
-    served for it); calls keep the CALL_VERSION fingerprint; synthsys ids are out of scope."""
-    monkeypatch.setenv("WSB_BANK_FILE_USER_MODELING", V2_ENV)
+def test_registered_stamp_and_scope(tmp_path, fake_llm, mk_args, monkeypatch):
+    """A bank-v3 run is stamped ``um-v3.5+bank-v3`` (floors measured on the 100-item bank are
+    never served for it); calls keep the CALL_VERSION fingerprint; synthsys ids are out of
+    scope."""
+    monkeypatch.delenv("WSB_BANK_FILE_USER_MODELING")
     fake_llm(_responder)
     res = judge.run(mk_args(_scripted(tmp_path), items=[A, B, C]))
-    assert res.config["prompt_version"] == "um-v3.5+bank-v2"
+    assert res.config["prompt_version"] == "um-v3.5+bank-v3"
     assert res.n_items == 2 and {r["id"] for r in res.rows} <= {A, B}
     assert not res.extras["by_subfamily"].get("synthsys", {}).get("n_items")
     assert judge.instrument({"version": 2}) == "um-v3.5+bank-v2"

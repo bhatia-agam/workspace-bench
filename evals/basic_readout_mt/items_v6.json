@@ -17,7 +17,7 @@
  },
  "gate": "Qwen3.6-27B, the v2 QUESTION in the chat template (enable_thinking=False, no system prompt, no answer stem): greedy answer correct AND >= 8/10 correct at temperature 0.7 (top_p 0.8, top_k 20), graded by name_forms (any language, mc.form_in). Questions written by Opus 5.5 from the v1 completions (every clue kept), back-translated and answer-checked; distractors regenerated under the blind options-only floor gate (gold picked in >= 2/5 blind draws -> redrawn, up to 3 rounds). EVAL RENDER: chat, every position (all_from_end); lite = the final render token. Judged by the MC judge (plan 0037).",
  "frozen": "2026-11-04",
- "supersedes": "items_v5.json",
+ "supersedes": "items_v4.json",
  "r4_mc": {
   "script": "scripts/build_r4_mc_banks.py",
   "rule": "round 4 (Camila r2 MC leakage standard): only the MC distractor lists change. Content lists: the four Opus-authored same-topic distractors of r4_distractors.json (scripts/r4_mc_distractors.py). ",
@@ -33,7 +33,7 @@
  "read_plan_bank": "items_v4.json",
  "v5": {
   "date": "2026-11-03",
-  "rule": "bank v4 minus brh-ent-chem-sarin-systematic, every other byte unchanged: the bank's only weapon-related item; the digest refused it on 9 of 11 layers on s3d (undecided), 2 on A RL600 and 1 on B RL600. read_plan_bank keeps v4's read plan, so v4 readouts serve v5.",
+  "rule": "bank v4 minus brh-ent-chem-sarin-systematic, every other byte unchanged: the bank's only weapon-related item; the digest model refused its digest on most layers of one lens's readouts (9 of 11, leaving it undecided) and on 1-2 layers of two others. read_plan_bank keeps v4's read plan, so v4 readouts serve v5.",
   "removed": [
    "brh-ent-chem-sarin-systematic"
   ]

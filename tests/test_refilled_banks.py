@@ -129,10 +129,10 @@ def test_introspection_bank_unchanged_by_the_refill():
 # four-reader panel at its current bank and instrument (conjunctive comp-v5, wrong_intermediate /
 # basic_readout_mt / multilingual* bank v3-v4, association / basic_readout / poetry round-4 MC
 # banks). A family PR that changes a bank adds its entry back here until the re-gate.
-# Empty again since the 2026-11-04 refreeze: user_modeling (bank v2), association (v5),
-# basic_readout (v7), basic_readout_mt (v5) and role_bound_association (v2) were re-gated on
-# their current banks; user_modeling bank v3 entered with its full-panel statuses; the r5-rebuilt
-# banks were re-gated on theirs from the cached panel answers.
+# Empty again since the 2026-11-04 refreeze: user_modeling (its 47 selfdescribe items),
+# association (v5), basic_readout (v7), basic_readout_mt (v5) and role_bound_association (v2) were
+# re-gated on their current banks; user_modeling bank v3 entered with its full-panel statuses; the
+# r5-rebuilt banks were re-gated on theirs from the cached panel answers.
 PENDING_REGATE: dict[str, str] = {}
 
 
