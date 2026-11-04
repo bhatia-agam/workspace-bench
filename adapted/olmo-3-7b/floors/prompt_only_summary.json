@@ -1463,11 +1463,11 @@
   "not_measurable": false
  },
  "knowledge_cutoff": {
-  "rate": 0.037037037037037035,
+  "rate": 0.027777777777777776,
   "saturated": false,
   "ci95": [
-   0.009259259259259259,
-   0.07407407407407407
+   0.0,
+   0.06481481481481481
   ],
   "metric": "pass_rate",
   "higher_is_better": true,
@@ -1522,7 +1522,7 @@
    "cs00861": false,
    "cs01091": false,
    "cs01260": false,
-   "cs01552": true,
+   "cs01552": false,
    "cs01605": false,
    "cs00650": false,
    "cs00287": false,
@@ -1614,12 +1614,12 @@
    "b2_01040": false
   },
   "digest_unserved": [],
-  "written": "2026-11-04T17:44:26+00:00",
-  "value": 0.037037037037037035,
+  "written": "2026-11-04T21:03:09+00:00",
+  "value": 0.027777777777777776,
   "n": 108,
   "ci": [
-   0.009259259259259259,
-   0.07407407407407407
+   0.0,
+   0.06481481481481481
   ],
   "n_refused": 0,
   "n_refused_ask": 0,
@@ -1689,7 +1689,7 @@
    "s1_taxicab_number": true,
    "s1_strange_attractor": true,
    "s3b2_nicotinic_acetylcholine_receptor_subunit": true,
-   "s2_named_aromatic_rearrangement": true,
+   "s2_named_aromatic_rearrangement": false,
    "s3b1_aramid_fiber_brand": true,
    "s1_classical_matrix_group": false,
    "s1_public_key_cryptosystem": true,
@@ -1709,7 +1709,7 @@
    "s2_radioisotope_of_iodine": true,
    "s3b1_traditional_bosnian_main_dish": true,
    "s3b2_ionotropic_glutamate_receptor_type": true,
-   "s2_chord_scale_for_a_minor_seventh_chord": true,
+   "s2_chord_scale_for_a_minor_seventh_chord": false,
    "s3b1_biryani_accompaniment": true,
    "s3b2_citric_acid_cycle_enzyme": true,
    "s2_rousettus_species": true,
@@ -1719,7 +1719,7 @@
    "s2_porcini_group_species_boletus_sensu_stri": true,
    "s3b2_irreversible_step_of_glycolysis": true,
    "s3b1_sauce_for_quenelles": true,
-   "s1_convex_deltahedron": false,
+   "s1_convex_deltahedron": true,
    "s3b2_jerk_protein": true,
    "s2_corundum_structure_oxide": true,
    "s2_close_packed_stacking_sequence": true,
@@ -1729,13 +1729,13 @@
    "s2_methionine_cycle_metabolite": true,
    "s2_warabi_mochi_topping": false,
    "s1_sql_join_type": true,
-   "s3b1_fusion_fuel_reaction": false,
+   "s3b1_fusion_fuel_reaction": true,
    "s3b2_structural_component_of_a_sonnet": true,
    "s2_quicksort_partition_scheme": true,
    "s3b1_traditional_catalan_dessert": true
   },
   "digest_unserved": [],
-  "written": "2026-11-04T17:44:26+00:00",
+  "written": "2026-11-04T21:03:09+00:00",
   "value": 0.8548387096774194,
   "n": 62,
   "ci": [
@@ -2847,7 +2847,7 @@
    "song_performer-Q22122729-formed_year": false
   },
   "digest_unserved": [],
-  "written": "2026-11-04T17:44:26+00:00",
+  "written": "2026-11-04T21:03:09+00:00",
   "value": 0.0,
   "n": 3,
   "ci": [
@@ -2910,7 +2910,7 @@
    "mh2-augustine-mother-monica": true
   },
   "digest_unserved": [],
-  "written": "2026-11-04T17:44:26+00:00",
+  "written": "2026-11-04T21:03:09+00:00",
   "value": 1.0,
   "n": 4,
   "ci": [
@@ -3019,13 +3019,6 @@
   "label": "Opus 5.5 (0 refused)",
   "not_measurable": false
  },
- "_source": {
-  "model": "claude-opus-5-5",
-  "framing": "open_model",
-  "template_sha": "7439aedab1299cc1",
-  "draws": 1,
-  "protocol": "po-opus-v1"
- },
  "buggy_code": {
   "rate": 1.0,
   "saturated": false,
@@ -3035,10 +3028,10 @@
   ],
   "metric": "pass_rate",
   "higher_is_better": true,
-  "n_items": 1,
+  "n_items": 9,
   "n_items_decided": null,
   "counts": {
-   "n_expected_cells": 5,
+   "n_expected_cells": 23,
    "n_missing_cells": 0,
    "n_unjudged_cells": 0,
    "n_empty_cells": 0
@@ -3070,9 +3063,9 @@
   },
   "decided": {},
   "digest_unserved": [],
-  "written": "2026-11-04T17:44:26+00:00",
+  "written": "2026-11-04T21:03:09+00:00",
   "value": 1.0,
-  "n": 1,
+  "n": 9,
   "ci": [
    1.0,
    1.0
@@ -3084,5 +3077,12 @@
   "protocol": "po-opus-v1",
   "label": "Opus 5.5 (0 refused)",
   "not_measurable": false
+ },
+ "_source": {
+  "model": "claude-opus-5-5",
+  "framing": "open_model",
+  "template_sha": "7439aedab1299cc1",
+  "draws": 1,
+  "protocol": "po-opus-v1"
  }
 }

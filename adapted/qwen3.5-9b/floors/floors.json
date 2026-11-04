@@ -616,10 +616,10 @@
      "aggregate": "native"
     },
     "knowledge_cutoff": {
-     "rate": 0.42592592592592593,
+     "rate": 0.4351851851851852,
      "ci95": [
-      0.3333333333333333,
-      0.5185185185185185
+      0.3425925925925926,
+      0.5277777777777778
      ],
      "metric": "pass_rate",
      "layer": 10,
@@ -638,10 +638,10 @@
      "aggregate": "native"
     },
     "model_specific_directed_modulation": {
-     "rate": 0.4387755102040816,
+     "rate": 0.42857142857142855,
      "ci95": [
-      0.3469387755102041,
-      0.5510204081632653
+      0.336734693877551,
+      0.5306122448979592
      ],
      "metric": "pass_rate",
      "layer": 10,
@@ -2131,10 +2131,10 @@
      "not_measurable": false
     },
     "buggy_code": {
-     "rate": 0.92,
+     "rate": 0.96,
      "saturated": false,
      "ci95": [
-      0.8,
+      0.88,
       1.0
      ],
      "metric": "pass_rate",
@@ -2174,11 +2174,11 @@
      },
      "decided": {},
      "digest_unserved": [],
-     "written": "2026-11-04T17:20:20+00:00",
-     "value": 0.92,
+     "written": "2026-11-04T21:03:57+00:00",
+     "value": 0.96,
      "n": 25,
      "ci": [
-      0.8,
+      0.88,
       1.0
      ],
      "n_refused": 0,
@@ -2578,11 +2578,11 @@
      "not_measurable": false
     },
     "knowledge_cutoff": {
-     "rate": 0.009259259259259259,
+     "rate": 0.027777777777777776,
      "saturated": false,
      "ci95": [
       0.0,
-      0.027777777777777776
+      0.06481481481481481
      ],
      "metric": "pass_rate",
      "higher_is_better": true,
@@ -2650,7 +2650,7 @@
       "cs01000": false,
       "cs01086": false,
       "b2_01164": false,
-      "cs01552": false,
+      "cs01552": true,
       "cs01623": false,
       "b2_00137": false,
       "b2_00805": false,
@@ -2673,7 +2673,7 @@
       "b2_00102": false,
       "cs00823": false,
       "b2_00178": false,
-      "cs02049": false,
+      "cs02049": true,
       "b2_00703": false,
       "cs00382": false,
       "b2_01656": false,
@@ -2729,12 +2729,12 @@
       "cs02572": false
      },
      "digest_unserved": [],
-     "written": "2026-11-04T17:20:20+00:00",
-     "value": 0.009259259259259259,
+     "written": "2026-11-04T21:03:57+00:00",
+     "value": 0.027777777777777776,
      "n": 108,
      "ci": [
       0.0,
-      0.027777777777777776
+      0.06481481481481481
      ],
      "n_refused": 0,
      "n_refused_ask": 0,
@@ -2745,11 +2745,11 @@
      "not_measurable": false
     },
     "model_specific_directed_modulation": {
-     "rate": 0.8673469387755102,
+     "rate": 0.8775510204081632,
      "saturated": false,
      "ci95": [
-      0.7959183673469388,
-      0.9285714285714286
+      0.8163265306122449,
+      0.9387755102040817
      ],
      "metric": "pass_rate",
      "higher_is_better": true,
@@ -2788,7 +2788,7 @@
      "decided": {
       "s1_lebanese_salad": true,
       "s3b2_woodpecker_genus": false,
-      "s3b2_armenian_soup": true,
+      "s3b2_armenian_soup": false,
       "s3b2_spacecraft_mission_to_visit_titan": true,
       "s4rf1_crowned_pigeon_species_goura": false,
       "s4rf4_statistical_paradox": true,
@@ -2800,7 +2800,7 @@
       "s2_mbuna_genus": true,
       "s2_family_of_high_temperature_superconducto": true,
       "s2_mid_level_cloud_genus": true,
-      "s3b1_dendrobium_species_used_in_traditional_c": false,
+      "s3b1_dendrobium_species_used_in_traditional_c": true,
       "s3b2_northern_rh_ne_white_grape_variety": true,
       "s3b2_locomotive_wheel_arrangement_notation_sy": false,
       "s2_bromeliaceae_subfamily": true,
@@ -2826,7 +2826,7 @@
       "s3b1_reagent_for_partial_reduction_of_a_nitri": true,
       "s3b2_skateboard_flip_trick": true,
       "s3b1_italian_easter_sweet": true,
-      "s3b1_hokkaido_regional_ramen_style": true,
+      "s3b1_hokkaido_regional_ramen_style": false,
       "s3b1_bread_base_for_sm_rrebr_d": true,
       "s1_programming_paradigm": true,
       "s2_deilephila_species": true,
@@ -2861,7 +2861,7 @@
       "s1_knot_invariant": true,
       "s2_calumma_species_with_a_nasal_appendage": true,
       "s3b1_samba_batucada_instrument": true,
-      "s3b2_type_of_hyperbaton": false,
+      "s3b2_type_of_hyperbaton": true,
       "s2_native_country_of_wild_tillandsias": true,
       "s2_step_of_sencha_processing": true,
       "s2_sicilian_pasta_dish": true,
@@ -2869,8 +2869,8 @@
       "s2_theorem_about_mutually_tangent_circles": true,
       "s1_deep_sea_research_submersible": true,
       "s1_public_key_cryptosystem": true,
-      "s2_pentaquark_state": true,
-      "s1_atmospheric_circulation_cell": false,
+      "s2_pentaquark_state": false,
+      "s1_atmospheric_circulation_cell": true,
       "s1_dicksonia_species": true,
       "s3b1_commercial_polyimide_family_polymer": true,
       "s1_macram_knot": true,
@@ -2878,7 +2878,7 @@
       "s2_jacobi_elliptic_function": true,
       "s3b2_campanian_tomato_variety": true,
       "s3b1_probabilistic_data_structure": true,
-      "s2_pyridine_derived_chelating_ligand": false,
+      "s2_pyridine_derived_chelating_ligand": true,
       "s3b1_colheita_port_producer": true,
       "s2_compound_with_the_rock_salt_structure": true,
       "s3b2_classic_analog_synthesizer_filter_design": true,
@@ -2886,12 +2886,12 @@
       "s3b1_kasha_grain_in_russian_cuisine": true
      },
      "digest_unserved": [],
-     "written": "2026-11-04T17:20:20+00:00",
-     "value": 0.8673469387755102,
+     "written": "2026-11-04T21:03:57+00:00",
+     "value": 0.8775510204081632,
      "n": 98,
      "ci": [
-      0.7959183673469388,
-      0.9285714285714286
+      0.8163265306122449,
+      0.9387755102040817
      ],
      "n_refused": 0,
      "n_refused_ask": 0,
@@ -4491,7 +4491,7 @@
       "painting_creator-Q3948849-death_city": false
      },
      "digest_unserved": [],
-     "written": "2026-11-04T17:20:20+00:00",
+     "written": "2026-11-04T21:03:57+00:00",
      "value": 0.0,
      "n": 94,
      "ci": [
@@ -4558,7 +4558,7 @@
       "mh2-francis-marguerite-heptameron": true
      },
      "digest_unserved": [],
-     "written": "2026-11-04T17:20:20+00:00",
+     "written": "2026-11-04T21:03:57+00:00",
      "value": 1.0,
      "n": 8,
      "ci": [

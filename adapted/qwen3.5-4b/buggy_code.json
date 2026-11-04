@@ -710,6 +710,308 @@
   },
   {
    "src": "buggy",
+   "name": "buggy-au-t1-w109c0-py-paint-litres-multiplied",
+   "id": "buggy-au-t1-w109c0-py-paint-litres-multiplied",
+   "code": "def litres_needed(area, per_litre):\n    return area * per_litre\n\nwall = 24\nprint(\"litres:\", litres_needed(wall, 8))",
+   "verified": "exec: exit 0; stdout = 'litres: 192'",
+   "cause": "The wall area is multiplied by the coverage per litre instead of divided by it, so it prints litres: 192 instead of litres: 3.0.",
+   "category": "wrong operator",
+   "bug_line": 2,
+   "level2_tokens": [
+    "multiplied",
+    "should divide"
+   ],
+   "consequence_class": "value",
+   "raises": false,
+   "n_lines": 5,
+   "language": "python",
+   "lang_group": "python",
+   "twin": "buggy-au-clean-t1-w109c0-py-paint-litres-multiplied",
+   "source": "authored (claude-opus-5-5) for qwen3.5-4b: About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 109,
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "src": "clean",
+   "name": "buggy-au-clean-t1-w109c0-py-paint-litres-multiplied",
+   "id": "buggy-au-clean-t1-w109c0-py-paint-litres-multiplied",
+   "code": "def coat_area(litres, per_litre):\n    return litres * per_litre\n\ntins = 3\nprint(\"area:\", coat_area(tins, 8))",
+   "verified": "exec: exit 0; stdout = 'area: 24'",
+   "why_correct": "Three litres that each cover 8 square metres cover 3 * 8 = 24, so multiplying is right.",
+   "looks_like": "A multiplication where a division was needed.",
+   "language": "python",
+   "lang_group": "python",
+   "twin": "buggy-au-t1-w109c0-py-paint-litres-multiplied",
+   "source": "authored (claude-opus-5-5) for qwen3.5-4b: About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 109,
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "src": "buggy",
+   "name": "buggy-au-t1-w109c0-py-sale-price-plus-discount",
+   "id": "buggy-au-t1-w109c0-py-sale-price-plus-discount",
+   "code": "price = 50\noff = 0.2\nsale = price * (1 + off)\nprint(\"sale price:\", sale)",
+   "verified": "exec: exit 0; stdout = 'sale price: 60.0'",
+   "cause": "The discount factor uses 1 + off instead of 1 - off, so the price goes up and it prints sale price: 60.0 instead of sale price: 40.0.",
+   "category": "wrong operator",
+   "bug_line": 3,
+   "level2_tokens": [
+    "added",
+    "plus"
+   ],
+   "consequence_class": "value",
+   "raises": false,
+   "n_lines": 4,
+   "language": "python",
+   "lang_group": "python",
+   "twin": "buggy-au-clean-t1-w109c0-py-sale-price-plus-discount",
+   "source": "authored (claude-opus-5-5) for qwen3.5-4b: About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 109,
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "src": "clean",
+   "name": "buggy-au-clean-t1-w109c0-py-sale-price-plus-discount",
+   "id": "buggy-au-clean-t1-w109c0-py-sale-price-plus-discount",
+   "code": "cost = 50\nmarkup = 0.2\nretail = cost * (1 + markup)\nprint(\"retail price:\", retail)",
+   "verified": "exec: exit 0; stdout = 'retail price: 60.0'",
+   "why_correct": "A 20% markup raises the cost, so multiplying by 1 + markup is right and it prints 60.0.",
+   "looks_like": "A + where a - was meant.",
+   "language": "python",
+   "lang_group": "python",
+   "twin": "buggy-au-t1-w109c0-py-sale-price-plus-discount",
+   "source": "authored (claude-opus-5-5) for qwen3.5-4b: About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 109,
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "src": "buggy",
+   "name": "buggy-au-t1-w109c0-py-rope-pieces-floored",
+   "id": "buggy-au-t1-w109c0-py-rope-pieces-floored",
+   "code": "rope = 11\npieces = 4\nlength = rope // pieces\nprint(\"piece m:\", length)",
+   "verified": "exec: exit 0; stdout = 'piece m: 2'",
+   "cause": "11 // 4 drops the three quarters of a metre, so each piece prints piece m: 2 instead of piece m: 2.75.",
+   "category": "integer division",
+   "bug_line": 3,
+   "level2_tokens": [
+    "truncation",
+    "floored"
+   ],
+   "consequence_class": "value",
+   "raises": false,
+   "n_lines": 4,
+   "language": "python",
+   "lang_group": "python",
+   "twin": "buggy-au-clean-t1-w109c0-py-rope-pieces-floored",
+   "source": "authored (claude-opus-5-5) for qwen3.5-4b: About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 109,
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "src": "clean",
+   "name": "buggy-au-clean-t1-w109c0-py-rope-pieces-floored",
+   "id": "buggy-au-clean-t1-w109c0-py-rope-pieces-floored",
+   "code": "ribbon = 11\nper_bow = 4\nbows = ribbon // per_bow\nprint(\"bows:\", bows)",
+   "verified": "exec: exit 0; stdout = 'bows: 2'",
+   "why_correct": "Only complete 4 m lengths make a bow, so 11 // 4 = 2 is right.",
+   "looks_like": "Integer division where a fraction was needed.",
+   "language": "python",
+   "lang_group": "python",
+   "twin": "buggy-au-t1-w109c0-py-rope-pieces-floored",
+   "source": "authored (claude-opus-5-5) for qwen3.5-4b: About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 109,
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "src": "buggy",
+   "name": "buggy-au-t1-w109c0-py-full-name-returns-first",
+   "id": "buggy-au-t1-w109c0-py-full-name-returns-first",
+   "code": "def full_name(first, last):\n    name = first + \" \" + last\n    return first\n\nprint(full_name(\"Ada\", \"Lovelace\"))",
+   "verified": "exec: exit 0; stdout = 'Ada'",
+   "cause": "The function builds name but returns only the first argument, so it prints Ada instead of Ada Lovelace.",
+   "category": "wrong variable returned",
+   "bug_line": 3,
+   "level2_tokens": [
+    "wrong return",
+    "unused"
+   ],
+   "consequence_class": "value",
+   "raises": false,
+   "n_lines": 5,
+   "language": "python",
+   "lang_group": "python",
+   "twin": "buggy-au-clean-t1-w109c0-py-full-name-returns-first",
+   "source": "authored (claude-opus-5-5) for qwen3.5-4b: About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 109,
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "src": "clean",
+   "name": "buggy-au-clean-t1-w109c0-py-full-name-returns-first",
+   "id": "buggy-au-clean-t1-w109c0-py-full-name-returns-first",
+   "code": "def label(city, country):\n    tag = city + \" \" + country\n    return tag\n\nprint(label(\"Lima\", \"Peru\"))",
+   "verified": "exec: exit 0; stdout = 'Lima Peru'",
+   "why_correct": "It returns the joined tag, so it prints Lima Peru.",
+   "looks_like": "Arguments joined in the wrong order.",
+   "language": "python",
+   "lang_group": "python",
+   "twin": "buggy-au-t1-w109c0-py-full-name-returns-first",
+   "source": "authored (claude-opus-5-5) for qwen3.5-4b: About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 109,
+    "gate": {
+     "rate": 0.9,
+     "pass": true
+    }
+   }
+  },
+  {
+   "src": "buggy",
+   "name": "buggy-au-t1-w110c0-py-hourly-rate-floor",
+   "id": "buggy-au-t1-w110c0-py-hourly-rate-floor",
+   "code": "pay = 90\nhours = 4\nrate = pay // hours\nprint(\"per hour:\", rate)",
+   "verified": "exec: exit 0; stdout = 'per hour: 22'",
+   "cause": "90 // 4 drops the half dollar, so it prints per hour: 22 instead of per hour: 22.5.",
+   "category": "integer division",
+   "bug_line": 3,
+   "level2_tokens": [
+    "floor",
+    "truncation"
+   ],
+   "consequence_class": "value",
+   "raises": false,
+   "n_lines": 4,
+   "language": "python",
+   "lang_group": "python",
+   "twin": "buggy-au-clean-t1-w110c0-py-hourly-rate-floor",
+   "source": "authored (claude-opus-5-5) for qwen3.5-4b: About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 110,
+    "steer": "- Last wave: 19/42 passed.\n- Rejected by lint before gating: 2x twin: the buggy and clean programs have the same outcome (exec; 1x literal: the output 'under a minute; 1x literal: the output 'no gift gift' is a copy of the program's litera; 1x literal: the output 'tallest m. Avoid these.\n- Failed (gold -> what the model wrote): None -> model said 'budget left: 12' (0/10); None -> model said 'loose pencils: 3' (0/10); None -> model said 'heavy parcels: 2' (1/10); None -> model said '120 free 40 charged' (2/10); None -> model said 'letters: 12' (0/10); None -> model said '84' (0/10); None -> model said '8' (0/10); None -> model said 'even seats: 3' (5/10); None -> model said \"{'tea': 5, 'jam': 1}\" (0/10); None -> model said 'eggs each: 1' (10/10); None -> model said 'pass rate: 75 %' (0/10); None -> model said '30' (7/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): None; None; None; None; None; None; None; None; None; None; None; None",
+    "gate": {
+     "rate": 0.8,
+     "pass": true
+    }
+   }
+  },
+  {
+   "src": "clean",
+   "name": "buggy-au-clean-t1-w110c0-py-hourly-rate-floor",
+   "id": "buggy-au-clean-t1-w110c0-py-hourly-rate-floor",
+   "code": "pay = 90\nhours = 4\nrate = pay / hours\nprint(\"per hour:\", rate)",
+   "verified": "exec: exit 0; stdout = 'per hour: 22.5'",
+   "why_correct": "True division keeps the fraction, so it prints per hour: 22.5.",
+   "looks_like": "the divisor and dividend could be in the wrong order",
+   "language": "python",
+   "lang_group": "python",
+   "twin": "buggy-au-t1-w110c0-py-hourly-rate-floor",
+   "source": "authored (claude-opus-5-5) for qwen3.5-4b: About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 110,
+    "steer": "- Last wave: 19/42 passed.\n- Rejected by lint before gating: 2x twin: the buggy and clean programs have the same outcome (exec; 1x literal: the output 'under a minute; 1x literal: the output 'no gift gift' is a copy of the program's litera; 1x literal: the output 'tallest m. Avoid these.\n- Failed (gold -> what the model wrote): None -> model said 'budget left: 12' (0/10); None -> model said 'loose pencils: 3' (0/10); None -> model said 'heavy parcels: 2' (1/10); None -> model said '120 free 40 charged' (2/10); None -> model said 'letters: 12' (0/10); None -> model said '84' (0/10); None -> model said '8' (0/10); None -> model said 'even seats: 3' (5/10); None -> model said \"{'tea': 5, 'jam': 1}\" (0/10); None -> model said 'eggs each: 1' (10/10); None -> model said 'pass rate: 75 %' (0/10); None -> model said '30' (7/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): None; None; None; None; None; None; None; None; None; None; None; None",
+    "gate": {
+     "rate": 0.9,
+     "pass": true
+    }
+   }
+  },
+  {
+   "src": "buggy",
    "name": "buggy-au-t2-w100c0-py-undo-after-clear",
    "id": "buggy-au-t2-w100c0-py-undo-after-clear",
    "code": "history = [\"type a\", \"type b\"]\nhistory.clear()\nlast_action = history[-1]\nprint(\"undo:\", last_action)",
@@ -824,6 +1126,130 @@
     "wave": 100,
     "gate": {
      "rate": 0.8,
+     "pass": true
+    }
+   }
+  },
+  {
+   "src": "buggy",
+   "name": "buggy-au-t2-w104c0-py-cleared-guest-list-divide",
+   "id": "buggy-au-t2-w104c0-py-cleared-guest-list-divide",
+   "code": "slices = 16\nguests = [\"Ana\", \"Ben\", \"Cy\"]\nguests.clear()\neach = slices / len(guests)\nprint(\"slices each:\", each)",
+   "verified": "exec: exit 1; stdout = ''; last = 'ZeroDivisionError: division by zero'",
+   "cause": "guests.clear() leaves the list empty, so len(guests) is 0 and slices / 0 raises ZeroDivisionError.",
+   "category": "division by empty length",
+   "bug_line": 4,
+   "level2_tokens": [
+    "emptied",
+    "zero length"
+   ],
+   "consequence_class": "crash",
+   "raises": true,
+   "n_lines": 5,
+   "language": "python",
+   "lang_group": "python",
+   "twin": "buggy-au-clean-t2-w104c0-py-cleared-guest-list-divide",
+   "source": "authored (claude-opus-5-5) for qwen3.5-4b: About 6 lines of Python with an obvious crash raising a common exception (ZeroDivisionError, KeyError, IndexError, TypeError, AttributeError) on a line where a careful reader sees it coming.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t2",
+    "knobs": {
+     "brief": "About 6 lines of Python with an obvious crash raising a common exception (ZeroDivisionError, KeyError, IndexError, TypeError, AttributeError) on a line where a careful reader sees it coming."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 104,
+    "steer": "- Last wave: 16/60 passed.\n- Rejected by lint before gating: 4x twin: the buggy and clean programs have the same outcome (exec; 1x literal: the output 'cheapest; 1x literal: the output 'mail.com@sam' is a copy of the program's litera; 1x literal: the output '8 8' is a copy of the program's literals. Avoid these.\n- Failed (gold -> what the model wrote): None -> model said '50' (3/10); None -> model said 'The program prints 3.' (0/10); None -> model said '10' (1/10); None -> model said 'The output is 4.' (5/10); None -> model said 'The program outputs 4.5.' (6/10); None -> model said 'The program outputs 8 instead of the cor' (7/10); None -> model said '19' (7/10); None -> model said '16' (0/10); None -> model said '22' (4/10); None -> model said \"TypeError: 'str' object is not callable\" (1/10); None -> model said 'True False' (4/10); None -> model said 'The output is 3.0.' (0/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): None; None; None; None; None; None; None; None; None; None; None; None",
+    "gate": {
+     "rate": 0.7,
+     "pass": true
+    }
+   }
+  },
+  {
+   "src": "clean",
+   "name": "buggy-au-clean-t2-w104c0-py-cleared-guest-list-divide",
+   "id": "buggy-au-clean-t2-w104c0-py-cleared-guest-list-divide",
+   "code": "pages = 120\nreaders = [\"Mo\", \"Lu\", \"Ki\"]\nreaders.append(\"Jo\")\nper_reader = pages / len(readers)\nprint(\"pages each:\", per_reader)",
+   "verified": "exec: exit 0; stdout = 'pages each: 30.0'",
+   "why_correct": "readers ends up with four names, so it divides by 4 and prints pages each: 30.0.",
+   "looks_like": "Dividing by the length of a list that might be empty.",
+   "language": "python",
+   "lang_group": "python",
+   "twin": "buggy-au-t2-w104c0-py-cleared-guest-list-divide",
+   "source": "authored (claude-opus-5-5) for qwen3.5-4b: About 6 lines of Python with an obvious crash raising a common exception (ZeroDivisionError, KeyError, IndexError, TypeError, AttributeError) on a line where a careful reader sees it coming.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t2",
+    "knobs": {
+     "brief": "About 6 lines of Python with an obvious crash raising a common exception (ZeroDivisionError, KeyError, IndexError, TypeError, AttributeError) on a line where a careful reader sees it coming."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 104,
+    "steer": "- Last wave: 16/60 passed.\n- Rejected by lint before gating: 4x twin: the buggy and clean programs have the same outcome (exec; 1x literal: the output 'cheapest; 1x literal: the output 'mail.com@sam' is a copy of the program's litera; 1x literal: the output '8 8' is a copy of the program's literals. Avoid these.\n- Failed (gold -> what the model wrote): None -> model said '50' (3/10); None -> model said 'The program prints 3.' (0/10); None -> model said '10' (1/10); None -> model said 'The output is 4.' (5/10); None -> model said 'The program outputs 4.5.' (6/10); None -> model said 'The program outputs 8 instead of the cor' (7/10); None -> model said '19' (7/10); None -> model said '16' (0/10); None -> model said '22' (4/10); None -> model said \"TypeError: 'str' object is not callable\" (1/10); None -> model said 'True False' (4/10); None -> model said 'The output is 3.0.' (0/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): None; None; None; None; None; None; None; None; None; None; None; None",
+    "gate": {
+     "rate": 0.8,
+     "pass": true
+    }
+   }
+  },
+  {
+   "src": "buggy",
+   "name": "buggy-au-t2-w104c0-py-stock-read-after-del",
+   "id": "buggy-au-t2-w104c0-py-stock-read-after-del",
+   "code": "stock = {\"apples\": 5, \"pears\": 2}\ndel stock[\"pears\"]\nprint(\"pears:\", stock[\"pears\"])",
+   "verified": "exec: exit 1; stdout = ''; last = 'KeyError: 'pears''",
+   "cause": "The pears entry is deleted on the line before, so stock['pears'] raises KeyError.",
+   "category": "read of deleted key",
+   "bug_line": 3,
+   "level2_tokens": [
+    "deleted",
+    "removed key"
+   ],
+   "consequence_class": "crash",
+   "raises": true,
+   "n_lines": 3,
+   "language": "python",
+   "lang_group": "python",
+   "twin": "buggy-au-clean-t2-w104c0-py-stock-read-after-del",
+   "source": "authored (claude-opus-5-5) for qwen3.5-4b: About 6 lines of Python with an obvious crash raising a common exception (ZeroDivisionError, KeyError, IndexError, TypeError, AttributeError) on a line where a careful reader sees it coming.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t2",
+    "knobs": {
+     "brief": "About 6 lines of Python with an obvious crash raising a common exception (ZeroDivisionError, KeyError, IndexError, TypeError, AttributeError) on a line where a careful reader sees it coming."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 104,
+    "steer": "- Last wave: 16/60 passed.\n- Rejected by lint before gating: 4x twin: the buggy and clean programs have the same outcome (exec; 1x literal: the output 'cheapest; 1x literal: the output 'mail.com@sam' is a copy of the program's litera; 1x literal: the output '8 8' is a copy of the program's literals. Avoid these.\n- Failed (gold -> what the model wrote): None -> model said '50' (3/10); None -> model said 'The program prints 3.' (0/10); None -> model said '10' (1/10); None -> model said 'The output is 4.' (5/10); None -> model said 'The program outputs 4.5.' (6/10); None -> model said 'The program outputs 8 instead of the cor' (7/10); None -> model said '19' (7/10); None -> model said '16' (0/10); None -> model said '22' (4/10); None -> model said \"TypeError: 'str' object is not callable\" (1/10); None -> model said 'True False' (4/10); None -> model said 'The output is 3.0.' (0/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): None; None; None; None; None; None; None; None; None; None; None; None",
+    "gate": {
+     "rate": 0.8,
+     "pass": true
+    }
+   }
+  },
+  {
+   "src": "clean",
+   "name": "buggy-au-clean-t2-w104c0-py-stock-read-after-del",
+   "id": "buggy-au-clean-t2-w104c0-py-stock-read-after-del",
+   "code": "seats = {\"A1\": \"Kim\", \"A2\": \"Raj\"}\ndel seats[\"A1\"]\nprint(\"A2:\", seats[\"A2\"])",
+   "verified": "exec: exit 0; stdout = 'A2: Raj'",
+   "why_correct": "Only A1 is deleted and A2 is still there, so it prints A2: Raj.",
+   "looks_like": "Reading a key from a dict right after deleting one.",
+   "language": "python",
+   "lang_group": "python",
+   "twin": "buggy-au-t2-w104c0-py-stock-read-after-del",
+   "source": "authored (claude-opus-5-5) for qwen3.5-4b: About 6 lines of Python with an obvious crash raising a common exception (ZeroDivisionError, KeyError, IndexError, TypeError, AttributeError) on a line where a careful reader sees it coming.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t2",
+    "knobs": {
+     "brief": "About 6 lines of Python with an obvious crash raising a common exception (ZeroDivisionError, KeyError, IndexError, TypeError, AttributeError) on a line where a careful reader sees it coming."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 104,
+    "steer": "- Last wave: 16/60 passed.\n- Rejected by lint before gating: 4x twin: the buggy and clean programs have the same outcome (exec; 1x literal: the output 'cheapest; 1x literal: the output 'mail.com@sam' is a copy of the program's litera; 1x literal: the output '8 8' is a copy of the program's literals. Avoid these.\n- Failed (gold -> what the model wrote): None -> model said '50' (3/10); None -> model said 'The program prints 3.' (0/10); None -> model said '10' (1/10); None -> model said 'The output is 4.' (5/10); None -> model said 'The program outputs 4.5.' (6/10); None -> model said 'The program outputs 8 instead of the cor' (7/10); None -> model said '19' (7/10); None -> model said '16' (0/10); None -> model said '22' (4/10); None -> model said \"TypeError: 'str' object is not callable\" (1/10); None -> model said 'True False' (4/10); None -> model said 'The output is 3.0.' (0/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): None; None; None; None; None; None; None; None; None; None; None; None",
+    "gate": {
+     "rate": 1.0,
      "pass": true
     }
    }

@@ -6,42 +6,147 @@
     "elicited": 130,
     "g0": 34,
     "compliant": 130,
-    "pass": 34
+    "pass": 34,
+    "valid": 34
    },
    "target": 98,
    "n_original": 98,
    "n_original_gated": 98,
    "n_original_pass": 25,
-   "n_items": 34,
-   "n_new": 9,
-   "n_candidates_gated": 32,
+   "n_items": 98,
+   "n_new": 73,
+   "n_candidates_gated": 426,
    "bank": "evals/model_specific_directed_modulation/items.json",
    "bank_version": 1,
-   "change": "original items only",
-   "status": "partial",
-   "note": "Re-derived on Muse-Spark-Open (adapt msdm, plan 0060 Phase E): 130 categories elicited, 34 G0-stable, 130 compliant, 34 with >= 2 options ship; no refill route; small n."
+   "change": "refill via msdm.refill_wave: 98/98 categories; 108 landed of 530 tried, yield 20.38%; stop: 98 >= target 98",
+   "status": "full",
+   "note": "Refilled (plan 0066, 2026-11-04): full, 98/98 categories shipped (98 items); stop: 98 >= target 98; tally 108/530 = 0.204 (n_min 200, y_min 0.03). Source: the GW category pool msdm_pool.jsonl (130 bank + retired categories counted as prior); unchanged G0 / compliance / option rules + membership and label-QA validity legs on every item (decision 8). Delta audit: 6 drop(s) (s2_mortlach_expression, s3b2_australian_cattle_dog_coat_color, s3b1_momo_cooking_style, s1_programming_paradigm, s2_bohlen_pierce_scale_mode, s3b1_living_varanoid_family).",
+   "refill_note": {
+    "type_mix": {
+     "food_drink": 23,
+     "taxonomy": 16,
+     "technical_variants": 21,
+     "untyped": 23
+    },
+    "registered_type_mix": {
+     "food_drink": 36,
+     "taxonomy": 21,
+     "technical_variants": 31,
+     "untyped": 10
+    },
+    "domain_cap": 2,
+    "question_changed": [
+     "s2_genus_of_typical_owl_strigidae"
+    ]
+   },
+   "refill": {
+    "route": "msdm.refill_wave",
+    "unit": "categories",
+    "target": 98,
+    "have": 98,
+    "tried": 530,
+    "landed": 108,
+    "yield": 0.2037735849056604,
+    "waves": 0,
+    "n_min": 200,
+    "y_min": 0.03,
+    "tally": {
+     "ext pool": {
+      "tried": 530,
+      "landed": 108,
+      "prior": {
+       "tried": 530,
+       "landed": 108
+      }
+     }
+    },
+    "pool_size": null,
+    "pool_used": null,
+    "stop": "98 >= target 98",
+    "budget": {
+     "claude_budget": null,
+     "gpu_minutes": null,
+     "claude_calls": 0
+    },
+    "pilot": false,
+    "untried_levels": []
+   },
+   "exclude_from_macro": false
   },
   "knowledge_cutoff": {
    "rederive": {
     "version": "kc-self-2026-11-03",
     "cutoff": null,
-    "elicited": 181,
-    "stable": 141,
-    "incorrect": 8,
-    "pass": 8
+    "elicited": 5181,
+    "stable": 2869,
+    "incorrect": 165,
+    "pass": 160
    },
    "target": 108,
    "n_original": 108,
    "n_original_gated": 108,
    "n_original_pass": 5,
-   "n_items": 8,
-   "n_new": 3,
-   "n_candidates_gated": 73,
+   "n_items": 108,
+   "n_new": 103,
+   "n_candidates_gated": 5022,
    "bank": "evals/knowledge_cutoff/items_v2.json",
    "bank_version": 2,
-   "change": "original items only",
-   "status": "partial",
-   "note": "Re-derived on Muse-Spark-Open (adapt kcutoff, no cutoff= given): 181 items elicited, 141 stable (>= 7/10), only 8 of them wrong, 8 ship; nocot items not built; n=8 is too small to read alone."
+   "change": "refill via kcutoff.refill_wave: 108/108 items; 160 landed of 5181 tried, yield 3.09%; pool 5000/5273 used; stop: 108 >= target 108",
+   "status": "full",
+   "note": "Refilled (plan 0066, 2026-11-04): full, 108/108 items shipped (108 items); stop: 108 >= target 108; tally 160/5181 = 0.0309 (n_min 1000, y_min 0.01). Source: the GW b1+b2 question pool kcutoff_pool.jsonl (181 bank + pool questions counted as prior; cutoff= unset, decision 4); gold = the subject's stable wrong answer. Delta audit: 51 drop(s) (b2_02351, cs02050, b2_02209, b2_00451, cs02379, b2_02139, b2_01735, b2_01780, cs02414, b2_01694, b2_02087, cs02253, b2_02128, b2_02056, cs02403, cs02076, cs02451, b2_01747, b2_01863, cs02610, cs02416, cs01894, b2_01995, cs02578, b2_01275, b2_02251, cs00924, cs01394, b2_00852, b2_00101, b2_01753, b2_02086, b2_01706, b2_01782, b2_01865, b2_01874, b2_02446, cs00621, cs00626, cs01077, cs01848, cs02363, cs02381, cs02419, cs02517, b2_00563, b2_00569, b2_01541, cs00012, cs01488, b2_02629). | refill mix: label_type stale 56 / confab 52 (registered stale 55 / confab 53); stratum A 64 / B 44 (registered A 96 / B 12); reported, not capped (plan 0066 decision 5)",
+   "refill": {
+    "route": "kcutoff.refill_wave",
+    "unit": "items",
+    "target": 108,
+    "have": 108,
+    "tried": 5181,
+    "landed": 160,
+    "yield": 0.03088206909862961,
+    "waves": 4,
+    "n_min": 1000,
+    "y_min": 0.01,
+    "tally": {
+     "ext pool": {
+      "tried": 5181,
+      "landed": 160,
+      "prior": {
+       "tried": 5181,
+       "landed": 160
+      }
+     }
+    },
+    "pool_size": 5273,
+    "pool_used": 5000,
+    "stop": "108 >= target 108",
+    "budget": {
+     "claude_budget": null,
+     "gpu_minutes": null,
+     "claude_calls": 0
+    },
+    "pilot": false,
+    "untried_levels": []
+   },
+   "refill_mix": {
+    "label_type": {
+     "stale": 56,
+     "confab": 52
+    },
+    "stratum": {
+     "A": 64,
+     "B": 44
+    },
+    "registered": {
+     "label_type": {
+      "stale": 55,
+      "confab": 53
+     },
+     "stratum": {
+      "A": 96,
+      "B": 12
+     }
+    }
+   },
+   "exclude_from_macro": false
   },
   "agentic_misalignment": {
    "status": "blocked",
@@ -296,7 +401,7 @@
    "bank_version": 2,
    "change": "new items from t1",
    "freeze_notes": [
-    "re-stamped with the subject's tokenizer; 0 items lost every multi-token form"
+    "re-stamped with the subject's tokenizer; 4 items lost every multi-token form: tyh-real-adsorption, tyh-real-hyperbola, tyh-real-phosphorus, tyh-real-conformation"
    ],
    "note": "Profile + fill, native_langs [en] by Camila's decision (2026-11-03, American lab; not measured), native units rebuilt by the nl_upgrade: 77 originals + 8 authored = 85/85."
   },
@@ -312,7 +417,8 @@
    "bank": "evals/association/items_v3.json",
    "bank_version": 3,
    "change": "new items from t1",
-   "note": "93/93: 38 originals + 55 authored (fill); 1 audit drop (alias 'hoops' in the prompt as 'hoop') refilled from passing authored items."
+   "note": "93/93: 38 originals + 55 authored (fill); 1 audit drop (alias 'hoops' in the prompt as 'hoop') refilled from passing authored items.",
+   "min_grid_positions": 15
   },
   "basic_readout": {
    "status": "full",
@@ -343,7 +449,7 @@
    "bank_version": 4,
    "change": "new items from t1",
    "freeze_notes": [
-    "re-stamped with the subject's tokenizer; 0 items lost every multi-token form",
+    "re-stamped with the subject's tokenizer; 6 items lost every multi-token form: brh-ent-cur-macau-unit, brh-ent-currency-bhutan, brh-ent-kachin-mandalay-waterway, brh-fi-alankomaat, brh-fi-alankomaat-munster-1648, brh-id-denhaag-arbitrase",
     "6 adapted-only items: exonyms / hidden_rivals in the set's overlay files"
    ],
    "note": "v4 rebuild, native_langs [en] by Camila's decision (2026-11-03, American lab; not measured), native units rebuilt by the nl_upgrade: 93 originals + 6 authored items (overlays exonyms / hidden_rivals) = 99/99."
@@ -377,15 +483,55 @@
    "target": 63,
    "n_original": 63,
    "n_original_gated": 63,
-   "n_original_pass": 40,
-   "n_items": 22,
-   "n_new": 0,
-   "n_candidates_gated": 0,
+   "n_original_pass": 48,
+   "n_items": 62,
+   "n_new": 26,
+   "n_candidates_gated": 408,
    "bank": "evals/buggy_code/items.json",
    "bank_version": 1,
-   "change": "original items only",
-   "status": "untried",
-   "note": "Originals only (plan 0060 A2, no refill): 40/63 registered items pass on Muse-Spark-Open; after pair-atomic selection 22 ship = 4 buggy/clean pairs + 14 clean programs without a buggy partner, so the pair headline rests on n=4 (too small to read alone)."
+   "change": "refill via run.fill: 24/24 pairs; 0 landed of 0 tried; stop: 24 >= target 24",
+   "status": "full",
+   "note": "Refilled (plan 0066, 2026-11-04): full, 24/24 pairs shipped (62 items); stop: 24 >= target 24; tally 0/0 (n_min 60, y_min 0.03). Source: authored executed pairs on the buggy_code Brief (fill, t2 pilot then t1 down). Authored pairs: {'non_crash': 20, 'crash': 8, 'crash_cap': 5}. Delta audit: 0 drop(s).",
+   "refill": {
+    "route": "run.fill",
+    "unit": "pairs",
+    "target": 24,
+    "have": 24,
+    "tried": 0,
+    "landed": 0,
+    "yield": null,
+    "waves": 0,
+    "n_min": 60,
+    "y_min": 0.03,
+    "tally": {
+     "t2": {
+      "tried": 60,
+      "landed": 8
+     },
+     "t1": {
+      "tried": 144,
+      "landed": 20
+     }
+    },
+    "pool_size": null,
+    "pool_used": null,
+    "stop": "24 >= target 24",
+    "budget": {
+     "gpu_minutes": null,
+     "claude_budget": null,
+     "claude_calls": 0
+    },
+    "pilot": false,
+    "tier": "t1",
+    "authored_pairs": {
+     "non_crash": 20,
+     "crash": 8,
+     "crash_cap": 5
+    }
+   },
+   "target_pairs": 24,
+   "n_pairs": 24,
+   "exclude_from_macro": false
   },
   "conjunctive_association": {
    "target": 100,
@@ -399,7 +545,8 @@
    "bank_version": 4,
    "change": "original items only",
    "status": "untried",
-   "note": "Originals only (no Brief for this family): 27/100 registered items pass on Muse-Spark-Open; no refill attempted."
+   "note": "Originals only (no Brief for this family): 27/100 registered items pass on Muse-Spark-Open; no refill attempted.",
+   "min_grid_positions": 15
   },
   "directed_modulation": {
    "target": 100,
@@ -447,14 +594,123 @@
    "n_original": 70,
    "n_original_gated": 70,
    "n_original_pass": 8,
-   "n_items": 8,
-   "n_new": 0,
-   "n_candidates_gated": 0,
+   "n_items": 70,
+   "n_new": 62,
+   "n_candidates_gated": 3384,
    "bank": "evals/multihop_mt_v2/items_v4.json",
    "bank_version": 4,
-   "change": "original items only",
-   "status": "untried",
-   "note": "Registered items re-gated on Muse-Spark-Open (adapt multihop_mt_v2, staged gate incl. the must-not-reach shortcut leg): 8/70 pass; no refill route (new items need MC lists and name forms); n=8 is too small to read alone."
+   "change": "refill via mhmt2.refill_wave: 70/70 items; 46 landed of 1166 tried, yield 3.95%; pool 3384/3384 used; stop: 70 >= target 70",
+   "status": "full",
+   "note": "Refilled (plan 0066, 2026-11-04): full, 70/70 items shipped (70 items); stop: 70 >= target 70; tally 46/1166 = 0.0395 (n_min 300, y_min 0.03). Source: mh2_pool.json + the decision-7 adversary pool mh2_pool.v2.json; every 3-hop candidate gated before any ooc (§11.14); unchanged staged gate, shortcut leg, relabel_b2 + review legs. Delta audit: 0 drop(s). | mc over gate: 24/62 shipped items (lists ship as in the registered bank)",
+   "mc_over_gate_runs": {
+    "refill-8259c5136a9a": {
+     "over_gate_ids": [
+      "mh2-marshal-regent-t2",
+      "mh2-queensberry-feud-t2"
+     ]
+    },
+    "refill-c915e2bc6e26": {
+     "over_gate_ids": [
+      "mh2-blixen-streep-sophies-choice",
+      "mh2-coppola-sofia-translation",
+      "mh2-daponte-mozart-birthplace",
+      "mh2-violeta-nicanor-antipoetry"
+     ]
+    },
+    "refill-b2018f077949": {
+     "over_gate_ids": [
+      "mh2-beauvoir-sartre-noexit",
+      "mh2-rommel-manfred-stuttgart"
+     ]
+    },
+    "refill-0c8c9b970487": {
+     "over_gate_ids": [
+      "mh2-hawking-redmayne-scamander"
+     ]
+    },
+    "refill-0bf1376f5fa2": {
+     "over_gate_ids": [
+      "mh2-ellison-wright-native-son-q0",
+      "mh2-sainte-chapelle-anjou-vespers"
+     ]
+    },
+    "refill-48a6fd32d346": {
+     "over_gate_ids": []
+    },
+    "refill-10137fc53849": {
+     "over_gate_ids": [
+      "mh2-black-army-belgrade-r2",
+      "mh2-brandon-lee-father-film",
+      "mh2-clifton-father-thames",
+      "mh2-harrison-ford-flockhart-series",
+      "mh2-martin-amis-lucky-jim",
+      "mh2-sagan-margulis-endosymbiosis-2"
+     ]
+    },
+    "refill-d18efd15e9ed": {
+     "over_gate_ids": [
+      "mh2-chrismartin-paltrow-oscar-film",
+      "mh2-wells-huxley-agnostic"
+     ]
+    },
+    "refill-22d114ff1f7e": {
+     "over_gate_ids": []
+    },
+    "refill-3152ee3b96b6": {
+     "over_gate_ids": [
+      "mh2-alfred-butler-birth-name-s2",
+      "mh2-elgar-gerontius-s0",
+      "mh2-night-watch-birthplace"
+     ]
+    },
+    "refill-13baaf8c6c7e": {
+     "over_gate_ids": [
+      "mh2-consolation-senator-burial",
+      "mh2-grace-county-t2",
+      "mh2-huffington-birth-city-s1"
+     ]
+    },
+    "refill-dab951a80dd2": {
+     "over_gate_ids": [
+      "mh2-fischer-spassky-s2",
+      "mh2-pauling-caltech-s0"
+     ]
+    }
+   },
+   "mc_over_gate": 24,
+   "refill": {
+    "route": "mhmt2.refill_wave",
+    "unit": "items",
+    "target": 70,
+    "have": 70,
+    "tried": 1166,
+    "landed": 46,
+    "yield": 0.03945111492281304,
+    "waves": 12,
+    "n_min": 300,
+    "y_min": 0.03,
+    "tally": {
+     "2-hop pool": {
+      "tried": 1166,
+      "landed": 46,
+      "prior": {
+       "tried": 1166,
+       "landed": 46
+      }
+     }
+    },
+    "pool_size": 3384,
+    "pool_used": 3384,
+    "stop": "70 >= target 70",
+    "budget": {
+     "claude_budget": null,
+     "gpu_minutes": null,
+     "claude_calls": 0
+    },
+    "pilot": false,
+    "untried_levels": []
+   },
+   "exclude_from_macro": false
   },
   "multilingual": {
    "target": 99,
@@ -516,7 +772,7 @@
    "bank_version": 3,
    "change": "original items only",
    "freeze_notes": [
-    "re-stamped with the subject's tokenizer; 0 items lost every multi-token form"
+    "re-stamped with the subject's tokenizer; 1 items lost every multi-token form: mlt-pl-bezpieczenstwo"
    ],
    "status": "untried",
    "note": "Originals only, native_langs [en] by Camila's decision (2026-11-03, American lab; not measured), native units rebuilt by the nl_upgrade: 90/100 pass on Muse-Spark-Open, 89 ship (mlt-pl-bezpieczenstwo's L2 correction is a single Muse token, so it was excluded at selection); no refill attempted."
@@ -547,7 +803,8 @@
    "bank_version": 1,
    "change": "original items only",
    "status": "untried",
-   "note": "Originals only (distractors_v3 keyed to registered pair ids): 65/100 pass on Muse-Spark-Open, pairs kept atomic, giving 44; no refill attempted."
+   "note": "Originals only (distractors_v3 keyed to registered pair ids): 65/100 pass on Muse-Spark-Open, pairs kept atomic, giving 44; no refill attempted.",
+   "min_grid_positions": 15
   },
   "user_modeling": {
    "target": 100,
@@ -568,14 +825,47 @@
    "n_original": 100,
    "n_original_gated": 0,
    "n_original_pass": 0,
-   "n_items": 22,
-   "n_new": 22,
-   "n_candidates_gated": 786,
+   "n_items": 61,
+   "n_new": 61,
+   "n_candidates_gated": 2262,
    "bank": "evals/wrong_intermediate/items_v4.json",
    "bank_version": 4,
-   "change": "original items only",
+   "change": "refill via wrong_intermediate.refill_wave: 61/100 items; 61 landed of 407992 tried, yield 0.01%; pool 407992/407992 used; stop: pool exhausted",
    "status": "partial",
-   "note": "Re-derived on Muse-Spark-Open (adapt wrong_intermediate over the GW scrape, 339k prompts): 929 E1 errors, 218/786 pass the consistency gate, 27 adjudicated clean, 22 with a buildable mc ship (one per subject S); none equal a registered item; small n, read with a CI."
+   "note": "Refilled (plan 0066, 2026-11-04): partial, 61/100 items shipped (61 items); stop: pool exhausted; tally 61/407992 = 0.00015 (n_min 200000, y_min 5e-05). Source: round 1 + the r2 re-scrape (r2a + r2b, GLM-5.3's pool string; #273 role cues); round-1 screened candidates counted as prior; entity-kind check + hub share over the union. Delta audit: 0 drop(s).",
+   "refill": {
+    "route": "wrong_intermediate.refill_wave",
+    "unit": "items",
+    "target": 100,
+    "have": 61,
+    "tried": 407992,
+    "landed": 61,
+    "yield": 0.0001495127355438342,
+    "waves": 6,
+    "n_min": 200000,
+    "y_min": 5e-05,
+    "tally": {
+     "expanded scrape": {
+      "tried": 407992,
+      "landed": 61,
+      "prior": {
+       "tried": 407992,
+       "landed": 61
+      }
+     }
+    },
+    "pool_size": 407992,
+    "pool_used": 407992,
+    "stop": "pool exhausted",
+    "budget": {
+     "claude_budget": null,
+     "gpu_minutes": null,
+     "claude_calls": 0
+    },
+    "pilot": false,
+    "untried_levels": []
+   },
+   "exclude_from_macro": false
   },
   "introspection": {
    "status": "absent",
@@ -588,11 +878,23 @@
    "note": "Absent: no J-lens for Muse-Spark-Open (none on neuronpedia, none fitted), so the subject's own top-10 reference cannot be built.",
    "exclude_from_macro": true,
    "absent_auto": true
+  },
+  "hinted_cutoff": {
+   "status": "absent",
+   "note": "absent: this set has no bank for the family (plan 0060 A1.6)",
+   "exclude_from_macro": true,
+   "absent_auto": true
+  },
+  "math_shortcuts": {
+   "status": "absent",
+   "note": "absent: this set has no bank for the family (plan 0060 A1.6)",
+   "exclude_from_macro": true,
+   "absent_auto": true
   }
  },
  "code": {
-  "git": "5a4c538f+dirty",
-  "adapt_sha256": "dbdd81b047097fed"
+  "git": "",
+  "adapt_sha256": "6bbb79b55965b5c0"
  },
  "model": "muse-spark-open",
  "label": "Muse-Spark-Open-816B-A42B (NVFP4)",
@@ -700,6 +1002,67 @@
   },
   "association": {
    "association-au-t1-w100c0-ez-basketball": "audit 2026-11-04: alias 'hoops' (stem 'hoop') is in the prompt ('the orange hoop'): breaks the family's no target/alias (stem-loose) in prompt invariant; authored T1 item"
+  },
+  "knowledge_cutoff": {
+   "b2_02351": "delta audit 2026-11-04: K4: no known truth and VERIFY model_correct=\"unknown\"; the gold is only the previous holder/value and is not shown wrong (A'ja Wilson could lead WNBA scoring again in 2026)",
+   "cs02050": "delta audit 2026-11-04: K4: no known truth and VERIFY model_correct=\"unknown\"; the gold is only the previous holder/value and is not shown wrong (Dec 2026 SEP longer-run median 3.0 may well be unchanged; VERIFY says so)",
+   "b2_02209": "delta audit 2026-11-04: duplicate gold option: 'group captain shubhanshu shukla' is the gold 'shubhanshu shukla' (disjoint ALIAS forms, K2 containment); also K4: no known truth and VERIFY model_correct=\"unknown\"; the gold is only the previous holder/value and is not shown wrong",
+   "b2_00451": "delta audit 2026-11-04: K5 hedge option 'i am not sure'; also K4: no known truth and VERIFY model_correct=\"unknown\"; the gold is only the previous holder/value and is not shown wrong",
+   "cs02379": "delta audit 2026-11-04: K4: no known truth and VERIFY model_correct=\"unknown\"; the gold is only the previous holder/value and is not shown wrong (Oxford could top THE 2027; VERIFY says it could be correct)",
+   "b2_02139": "delta audit 2026-11-04: K4: no known truth and VERIFY model_correct=\"unknown\"; the gold is only the previous holder/value and is not shown wrong (Swift could top a 2026 Boxscore with a new tour)",
+   "b2_01735": "delta audit 2026-11-04: K4: no known truth and VERIFY model_correct=\"unknown\"; the gold is only the previous holder/value and is not shown wrong (a 2026 Mac Studio could keep the 512 GB max)",
+   "b2_01780": "delta audit 2026-11-04: duplicate gold option: 'ryzen z2 extreme' is the gold 'amd ryzen z2 extreme' (K2 containment; also 'amd ryzen z1'/'ryzen z1' same answer); also K4: no known truth and VERIFY model_correct=\"unknown\"; the gold is only the previous holder/value and is not shown wrong",
+   "cs02414": "delta audit 2026-11-04: K4: no known truth and VERIFY model_correct=\"unknown\"; the gold is only the previous holder/value and is not shown wrong (McIlroy could win the 2026 DP World Tour Championship)",
+   "b2_01694": "delta audit 2026-11-04: same-answer distractors 'qualcomm snapdragon 8 gen 3' / 'snapdragon 8 gen 3'; also K4: no known truth and VERIFY model_correct=\"unknown\"; the gold is only the previous holder/value and is not shown wrong",
+   "b2_02087": "delta audit 2026-11-04: K4: no known truth and VERIFY model_correct=\"unknown\"; the gold is only the previous holder/value and is not shown wrong (a $25B buyback could recur)",
+   "cs02253": "delta audit 2026-11-04: K4: no known truth and VERIFY model_correct=\"unknown\"; the gold is only the previous holder/value and is not shown wrong (capsule name for Starliner-1 unconfirmed)",
+   "b2_02128": "delta audit 2026-11-04: K4: no known truth and VERIFY model_correct=\"unknown\"; the gold is only the previous holder/value and is not shown wrong (a Japanese system could be top non-US in Nov 2026)",
+   "b2_02056": "delta audit 2026-11-04: K4: no known truth and VERIFY model_correct=\"unknown\"; the gold is only the previous holder/value and is not shown wrong (Novo's Dec 2026 rank unknown)",
+   "cs02403": "delta audit 2026-11-04: K4: no known truth and VERIFY model_correct=\"unknown\"; the gold is only the previous holder/value and is not shown wrong (Italy could win the 2026 Davis Cup)",
+   "cs02076": "delta audit 2026-11-04: K4: no known truth and VERIFY model_correct=\"unknown\"; the gold is only the previous holder/value and is not shown wrong (137k bpd could recur; option '1.6' is also unit-mismatched)",
+   "cs02451": "delta audit 2026-11-04: K4: no known truth and VERIFY model_correct=\"unknown\"; the gold is only the previous holder/value and is not shown wrong (Nissan could hold the new stadium's naming rights)",
+   "b2_01747": "delta audit 2026-11-04: K4: no known truth and VERIFY model_correct=\"unknown\"; the gold is only the previous holder/value and is not shown wrong (Huawei's 2026 modem name unknown)",
+   "b2_01863": "delta audit 2026-11-04: K4: no known truth and VERIFY model_correct=\"unknown\"; the gold is only the previous holder/value and is not shown wrong (the option price could equal EUR 325M)",
+   "cs02610": "delta audit 2026-11-04: K4: no known truth and VERIFY model_correct=\"unknown\"; the gold is only the previous holder/value and is not shown wrong (VERIFY itself is unsure)",
+   "cs02416": "delta audit 2026-11-04: K4: no known truth and VERIFY model_correct=\"unknown\"; the gold is only the previous holder/value and is not shown wrong (Marquez could win Sachsenring 2026)",
+   "cs01894": "delta audit 2026-11-04: K4: no known truth and VERIFY model_correct=\"unknown\"; the gold is only the previous holder/value and is not shown wrong (Blackstone could lead a 2026 utility buyout)",
+   "b2_01995": "delta audit 2026-11-04: K4: no known truth and VERIFY model_correct=\"unknown\"; the gold is only the previous holder/value and is not shown wrong (the incumbent could be re-elected at the 35th Muktamar)",
+   "cs02578": "delta audit 2026-11-04: K4: no known truth and VERIFY model_correct=\"unknown\"; the gold is only the previous holder/value and is not shown wrong (LP.8.1 could be retained)",
+   "b2_01275": "delta audit 2026-11-04: K5 hedge option 'im not aware of that information'",
+   "b2_02251": "delta audit 2026-11-04: truth listed twice: 'rodrigo paz' and 'rodrigo paz pereira'",
+   "cs00924": "delta audit 2026-11-04: truth listed twice: '10' and 'about 10 km'",
+   "cs01394": "delta audit 2026-11-04: truth listed twice ('74', 'about $74.3 million'); gold 76 is the widely reported studio weekend estimate, so not clearly wrong",
+   "b2_00852": "delta audit 2026-11-04: truth listed three times: 'geomagnetic storm', 'solar storm', 'solar (geomagnetic) storm: ...' (VERIFY sentence as an option)",
+   "b2_00101": "delta audit 2026-11-04: truth listed twice: 'dimensity 8350 apex' and 'mediatek dimensity 8350 apex'",
+   "b2_01753": "delta audit 2026-11-04: same-answer distractors 'mediatek dimensity 9400' / 'dimensity 9400'",
+   "b2_02086": "delta audit 2026-11-04: near-duplicate of registered kc2_01044 (Microsoft Sept 2026 quarterly dividend, same gold 0.91)",
+   "b2_01706": "delta audit follow-up 2026-11-04: duplicate gold option: 'ryzen z2 extreme' is the gold 'amd ryzen z2 extreme' (K1b); also K4: no known truth and VERIFY model_correct=\"unknown\"; the gold is only the previous holder/value and is not shown wrong",
+   "b2_01782": "delta audit follow-up 2026-11-04: K4: no known truth and VERIFY model_correct=\"unknown\"; the gold is only the previous holder/value and is not shown wrong (Ride Pilot could be the 2026 platform name)",
+   "b2_01865": "delta audit follow-up 2026-11-04: K4: no known truth and VERIFY model_correct=\"unknown\"; the gold is only the previous holder/value and is not shown wrong (Abra Group could be the merged holding company)",
+   "b2_01874": "delta audit follow-up 2026-11-04: duplicate gold options: 'peltz' and 'trian fund management' name the gold 'nelson peltz' (K2 containment); also K4: no known truth and VERIFY model_correct=\"unknown\"; the gold is only the previous holder/value and is not shown wrong",
+   "b2_02446": "delta audit follow-up 2026-11-04: same-answer distractors 'jeong eun-kyeong' / 'jung eun-kyeong' (one person, two romanisations)",
+   "cs00621": "delta audit follow-up 2026-11-04: truth listed twice: 'nasdaq' and 'nasdaq global select market' (K1c)",
+   "cs00626": "delta audit follow-up 2026-11-04: truth listed twice: 'zijin mining' and 'zijin mining group' (K1c)",
+   "cs01077": "delta audit follow-up 2026-11-04: near-duplicate of shipped cs01448 (Circana best-selling US game of 2025, same gold monster hunter wilds)",
+   "cs01848": "delta audit follow-up 2026-11-04: K4: no known truth and VERIFY model_correct=\"unknown\"; the gold is only the previous holder/value and is not shown wrong (131,072 tokens could still be listed)",
+   "cs02363": "delta audit follow-up 2026-11-04: K4: no known truth and VERIFY model_correct=\"unknown\"; the gold is only the previous holder/value and is not shown wrong (Bangkok could lead again; VERIFY says it may be correct)",
+   "cs02381": "delta audit follow-up 2026-11-04: K4: no known truth and VERIFY model_correct=\"unknown\"; the gold is only the previous holder/value and is not shown wrong (Verstappen could win the 2026 Madrid GP)",
+   "cs02419": "delta audit follow-up 2026-11-04: K4: no known truth and VERIFY model_correct=\"unknown\"; the gold is only the previous holder/value and is not shown wrong (Bagnaia could win Motegi 2026)",
+   "cs02517": "delta audit follow-up 2026-11-04: K4: no known truth and VERIFY model_correct=\"unknown\"; the gold is only the previous holder/value and is not shown wrong (the incumbent's term could be renewed)",
+   "b2_00563": "delta audit follow-up 2 2026-11-04: same-answer distractors 'kishida' / 'fumio kishida'",
+   "b2_00569": "delta audit follow-up 2 2026-11-04: truth listed twice: 'harvard university' and 'harvard' (K1c)",
+   "b2_01541": "delta audit follow-up 2 2026-11-04: same-answer distractors '6.1' / 'unity 6.1'",
+   "cs00012": "delta audit follow-up 2 2026-11-04: near-duplicate of shipped cs01589 (Pixel 10 Pro Fold IP rating, same gold ip48)",
+   "cs01488": "delta audit follow-up 2 2026-11-04: truth listed twice: 'vla1553' is the development code of the truth 'ixchiq'",
+   "b2_02629": "delta audit follow-up 3 2026-11-04 (K4): truth unknown, gold python not shown wrong"
+  },
+  "model_specific_directed_modulation": {
+   "s2_mortlach_expression": "delta audit 2026-11-04: distractor 'mortlach 16 distillers dram' is the gold product (Mortlach 16 Year Old 'Distiller's Dram') and its label contains the gold form 'Mortlach 16'",
+   "s3b2_australian_cattle_dog_coat_color": "delta audit 2026-11-04: gold forms are the generic colour word 'blue' (any ' blue' token credits it) and the distractor label 'Blue Merle' contains the gold form",
+   "s3b1_momo_cooking_style": "delta audit 2026-11-04: generic gold form 'Steamed'/'steamed' credits any readout token 'steamed'",
+   "s1_programming_paradigm": "delta audit 2026-11-04: generic gold form 'Functional'/'functional' credits any readout token 'functional'",
+   "s2_bohlen_pierce_scale_mode": "delta audit 2026-11-04: generic gold form 'lambda' credits any readout token 'lambda'",
+   "s3b1_living_varanoid_family": "delta audit follow-up 2026-11-04: generic gold form 'monitors' credits any readout token 'monitors'"
   }
  }
 }

@@ -243,13 +243,13 @@
    "target": 63,
    "n_original": 63,
    "n_original_gated": 63,
-   "n_original_pass": 28,
+   "n_original_pass": 33,
    "n_items": 59,
    "n_new": 40,
    "n_candidates_gated": 234,
    "change": "refill via run.fill: 25/24 pairs; 0 landed of 0 tried; stop: 25 >= target 24",
    "status": "full",
-   "note": "Refilled (plan 0066, 2026-11-04): full, 25/24 pairs shipped (59 items); stop: 25 >= target 24; tally 0/0 (n_min 60, y_min 0.03). Source: authored executed pairs on the buggy_code Brief (fill, t2 pilot then t1 down). Authored pairs: {'non_crash': 16, 'crash': 6, 'crash_cap': 4}. Delta audit: 0 drop(s).",
+   "note": "Refilled (plan 0066, 2026-11-04): full, 25/24 pairs shipped (59 items); stop: 25 >= target 24; tally 0/0 (n_min 60, y_min 0.03). Source: authored executed pairs on the buggy_code Brief (fill, t2 pilot then t1 down). Authored pairs: {'non_crash': 17, 'crash': 6, 'crash_cap': 4}. Delta audit: 0 drop(s). Rule notes: the bugclaim leg was added with #288's bugclaim-only regate (stored legs kept, never re-sampled), so the registered pairs py-clean-split-exact / py-clean-pct-clamped count on their 2026-11-03 surface draws (0.8 / 0.7; the discarded pre-#288 re-sample gave 0.3 / 0.5); an all-empty continuation passes the leak / bugclaim legs (#293).",
    "bank": "evals/buggy_code/items.json",
    "bank_version": 1,
    "refill": {
@@ -270,7 +270,7 @@
      },
      "t1": {
       "tried": 82,
-      "landed": 16
+      "landed": 17
      }
     },
     "pool_size": null,
@@ -284,7 +284,7 @@
     "pilot": false,
     "tier": "t1",
     "authored_pairs": {
-     "non_crash": 16,
+     "non_crash": 17,
      "crash": 6,
      "crash_cap": 4
     }
@@ -709,7 +709,7 @@
     "tried": 407992,
     "landed": 96,
     "yield": 0.00023529873134767347,
-    "waves": 5,
+    "waves": 6,
     "n_min": 200000,
     "y_min": 5e-05,
     "tally": {
@@ -817,7 +817,7 @@
  },
  "code": {
   "git": "",
-  "adapt_sha256": "2149b9c85a663c0a"
+  "adapt_sha256": "6bbb79b55965b5c0"
  },
  "read_band": [],
  "drops_v1_archived": {

@@ -600,7 +600,7 @@
     "author": "claude-opus-5-5",
     "wave": 101,
     "gate": {
-     "rate": 0.8888888888888888,
+     "rate": 0.8,
      "pass": true
     }
    }
@@ -1467,6 +1467,68 @@
   },
   {
    "src": "buggy",
+   "name": "buggy-au-t1-w103c0-py-can-afford-inverted",
+   "id": "buggy-au-t1-w103c0-py-can-afford-inverted",
+   "code": "def can_afford(price, cash):\n    return price > cash\n\nprint(can_afford(30, 50))\nprint(can_afford(80, 50))",
+   "verified": "exec: exit 0; stdout = 'False | True'",
+   "cause": "price > cash is True exactly when you cannot pay, so it prints False then True instead of True then False",
+   "category": "inverted comparison",
+   "bug_line": 2,
+   "level2_tokens": [
+    "inverted",
+    "backwards"
+   ],
+   "consequence_class": "categorical",
+   "raises": false,
+   "n_lines": 5,
+   "language": "python",
+   "lang_group": "python",
+   "twin": "buggy-au-clean-t1-w103c0-py-can-afford-inverted",
+   "source": "authored (claude-opus-5-5) for qwen3.5-9b: About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 103,
+    "steer": "- Last wave: 32/60 passed.\n- Failed (gold -> what the model wrote): None -> model said 'The program outputs 6.0.' (1/10); None -> model said 'The program prints `True` followed by `T' (8/10); None -> model said 'The program outputs 1230 because string ' (9/10); None -> model said 'The program outputs 12.' (6/10); None -> model said 'The program outputs -8.' (9/10); None -> model said 'The program prints [1, 2, 3].' (0/10); None -> model said 'The program outputs 2.' (2/10); None -> model said 'The program prints 16.' (6/10); None -> model said 'The program outputs 9 because the loop i' (6/10); None -> model said 'The program outputs 8.' (1/10); None -> model said '90' (1/10); None -> model said 'The program outputs \"0 15\".' (3/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): None; None; None; None; None; None; None; None; None; None; None; None",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "src": "clean",
+   "name": "buggy-au-clean-t1-w103c0-py-can-afford-inverted",
+   "id": "buggy-au-clean-t1-w103c0-py-can-afford-inverted",
+   "code": "def fits_in_box(item_cm, box_cm):\n    return item_cm <= box_cm\n\nprint(fits_in_box(30, 50))\nprint(fits_in_box(80, 50))",
+   "verified": "exec: exit 0; stdout = 'True | False'",
+   "why_correct": "an item fits when it is no longer than the box, so it prints True then False",
+   "looks_like": "inverted comparison",
+   "language": "python",
+   "lang_group": "python",
+   "twin": "buggy-au-t1-w103c0-py-can-afford-inverted",
+   "source": "authored (claude-opus-5-5) for qwen3.5-9b: About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 103,
+    "steer": "- Last wave: 32/60 passed.\n- Failed (gold -> what the model wrote): None -> model said 'The program outputs 6.0.' (1/10); None -> model said 'The program prints `True` followed by `T' (8/10); None -> model said 'The program outputs 1230 because string ' (9/10); None -> model said 'The program outputs 12.' (6/10); None -> model said 'The program outputs -8.' (9/10); None -> model said 'The program prints [1, 2, 3].' (0/10); None -> model said 'The program outputs 2.' (2/10); None -> model said 'The program prints 16.' (6/10); None -> model said 'The program outputs 9 because the loop i' (6/10); None -> model said 'The program outputs 8.' (1/10); None -> model said '90' (1/10); None -> model said 'The program outputs \"0 15\".' (3/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): None; None; None; None; None; None; None; None; None; None; None; None",
+    "gate": {
+     "rate": 0.8,
+     "pass": true
+    }
+   }
+  },
+  {
+   "src": "buggy",
    "name": "buggy-au-t2-w100c0-py-capital-case-mismatch",
    "id": "buggy-au-t2-w100c0-py-capital-case-mismatch",
    "code": "capitals = {\"France\": \"Paris\", \"Japan\": \"Tokyo\"}\ndef capital_of(country):\n    return capitals[country.lower()]\n\nprint(capital_of(\"Japan\"))",
@@ -1641,66 +1703,6 @@
     "wave": 100,
     "gate": {
      "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "src": "buggy",
-   "name": "buggy-au-t2-w100c0-py-dict-dot-attribute",
-   "id": "buggy-au-t2-w100c0-py-dict-dot-attribute",
-   "code": "point = {\"x\": 3, \"y\": 4}\ndef norm_sq(p):\n    return p.x ** 2 + p.y ** 2\n\nprint(norm_sq(point))",
-   "verified": "exec: exit 1; stdout = ''; last = 'AttributeError: 'dict' object has no attribute 'x''",
-   "cause": "point is a dict, and p.x uses attribute access instead of p['x'], so it raises AttributeError",
-   "category": "attribute access on dict",
-   "bug_line": 3,
-   "level2_tokens": [
-    "dot access",
-    "subscript"
-   ],
-   "consequence_class": "crash",
-   "raises": true,
-   "n_lines": 5,
-   "language": "python",
-   "lang_group": "python",
-   "twin": "buggy-au-clean-t2-w100c0-py-dict-dot-attribute",
-   "source": "authored (claude-opus-5-5) for qwen3.5-9b: About 6 lines of Python with an obvious crash raising a common exception (ZeroDivisionError, KeyError, IndexError, TypeError, AttributeError) on a line where a careful reader sees it coming.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t2",
-    "knobs": {
-     "brief": "About 6 lines of Python with an obvious crash raising a common exception (ZeroDivisionError, KeyError, IndexError, TypeError, AttributeError) on a line where a careful reader sees it coming."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 100,
-    "gate": {
-     "rate": 0.9,
-     "pass": true
-    }
-   }
-  },
-  {
-   "src": "clean",
-   "name": "buggy-au-clean-t2-w100c0-py-dict-dot-attribute",
-   "id": "buggy-au-clean-t2-w100c0-py-dict-dot-attribute",
-   "code": "vec = {\"x\": 3, \"y\": 4}\ndef length_sq(v):\n    return v[\"x\"] ** 2 + v[\"y\"] ** 2\n\nprint(length_sq(vec))",
-   "verified": "exec: exit 0; stdout = '25'",
-   "why_correct": "the coordinates are read with dict indexing, so 9 + 16 prints 25",
-   "looks_like": "reading dictionary fields as if they were attributes",
-   "language": "python",
-   "lang_group": "python",
-   "twin": "buggy-au-t2-w100c0-py-dict-dot-attribute",
-   "source": "authored (claude-opus-5-5) for qwen3.5-9b: About 6 lines of Python with an obvious crash raising a common exception (ZeroDivisionError, KeyError, IndexError, TypeError, AttributeError) on a line where a careful reader sees it coming.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t2",
-    "knobs": {
-     "brief": "About 6 lines of Python with an obvious crash raising a common exception (ZeroDivisionError, KeyError, IndexError, TypeError, AttributeError) on a line where a careful reader sees it coming."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 100,
-    "gate": {
-     "rate": 0.9,
      "pass": true
     }
    }
