@@ -1111,6 +1111,8 @@ Keep the apps warm with `scripts_local/keepalive.py` during Claude-only stages, 
 8. **buggy_code `bugclaim` leg on an empty greedy (Camila 2026-11-04).** An empty continuation is
    non-evidence, as in the leak legs (finalize fix 1). Because the leg is greedy-only, that means
    undecided, so it **fails** (reason "the greedy continuation is empty"). It never passes.
+   **Superseded for buggy_code (Camila 2026-11-04, see 16):** an all-empty continuation PASSES
+   the bugclaim leg (it claims no bug).
 9. **multihop Wikidata class QIDs:** every work / event class QID is verified against Wikidata
    (through the existing fetch path), with its label recorded next to it in the code, before
    merge. A small real smoke (~20 candidates) of the adversary, the r4 chain and the Wikidata
@@ -1200,6 +1202,16 @@ Keep the apps warm with `scripts_local/keepalive.py` during Claude-only stages, 
     not byte-reproducible from scratch: adversary retries are fresh Claude calls (§11.11). The
     pinned file and its adversary reply cache (`mh2_adversary_s1.*`) are kept on the box under
     `$WSB_POOL_DIR` (cache in `mh2_adversary_cache/`). `mhmt2.load_pool` prefers it once pinned.
+
+16. **buggy_code: an all-empty continuation passes (Camila 2026-11-04, after the rollout).** In
+    buggy_code's two free-continuation legs, the buggy `leak` leg and the clean `bugclaim` leg, an
+    ALL-EMPTY continuation counts as "does not state the bug" / "claims no bug" and PASSES
+    (`gate.EMPTY_PASS_REASON`), instead of being undecided (8 above, and finalize fix 1). Mixed
+    draws are judged on the non-empty ones exactly as before (a non-empty greedy is still judged
+    when every sample is empty). Every other family's leak legs (multihop_mt_v2, association, ...)
+    keep fix 1's non-evidence rule. The flag is `families.EMPTY_PASSES` in the two buggy Asks'
+    `meta`. Why: DeepSeek-V4-Pro ends a raw code continuation immediately (EOS first; render
+    verified), which made buggy_code `blocked` on V4-Pro and dropped cleans on other subjects.
 
 ## Files
 

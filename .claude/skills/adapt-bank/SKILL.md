@@ -280,6 +280,13 @@ model=<m> families=buggy_code regate=true` (passing authored rows) together with
 regate=true` (originals). Otherwise it ships 0 pairs,
 and freeze prints an error naming the rows without the leg (the CLI freeze refuses).
 
+**buggy_code empty continuations (Camila 2026-11-04, plan 0066 §11.16):** in the buggy `leak` leg
+and the clean `bugclaim` leg an ALL-EMPTY continuation passes (states / claims no bug); mixed draws
+are judged on the non-empty ones; every other family's leak legs keep the non-evidence rule (an
+all-empty leak leg is undecided and fails). A set gated before this needs `regrade
+model=<m> families=buggy_code llm=claude-opus-5-5` (applies the rule to the stored answers, no
+resampling, no GPU), then `refill families=buggy_code`.
+
 `untried` is not a final status for these families. "The subject is small" is not by itself a
 reason: a genuinely incapable subject stops cheaply through the pilot (`refill pilot=true`, at
 most `n_min` candidates). A `refill_hold` in `report.json` (a suspected pipeline fault, e.g.
