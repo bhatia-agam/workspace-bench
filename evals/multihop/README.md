@@ -348,4 +348,6 @@ The readout below is a digest of the readouts across every read layer and positi
   b3-mh-fuji-currency (68 items left); on bank v3 (100 items) every lens scored 0.95-0.98, level
   with the 0.98 prompt-only floor.
 - 2026-11-04 (`+bank-v4`): the prompt-only and lucky-guessing floors are re-measured on bank
-  v4's 68 items, so they are drawn beside this instrument again.
+  v4's 68 items. They were measured under the `bank-gate-r8` draft: the lucky-guessing entries
+  carry `bank-gate-r9` (a guesser sees only the lists); the prompt-only floor stays on
+  `bank-gate-r8` until re-scored under the new stamp.

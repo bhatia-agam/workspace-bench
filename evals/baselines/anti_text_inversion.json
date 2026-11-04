@@ -56568,7 +56568,7 @@
    "astra": "openai/gpt-6-astra",
    "argon": "google/gemini-4-argon"
   },
-  "instrument": "wb-mc-2026-10-31r+judge-only-v1+qline-v1+wbforms-v4+bank-v4",
+  "instrument": "wb-mc-2026-10-31r+judge-only-v1+qline-v2+wbforms-v4+bank-v4",
   "judge_model": "claude-opus-5-5",
   "layers_judged": [
    44
@@ -59339,7 +59339,7 @@
    "astra": "openai/gpt-6-astra",
    "argon": "google/gemini-4-argon"
   },
-  "instrument": "assoc-mc-2026-11-01-v3+gate-a1+bank-v5",
+  "instrument": "assoc-mc-2026-11-01-v3+gate-a2+bank-v5",
   "judge_model": "claude-opus-5-5",
   "layers_judged": [
    44
@@ -59356,24 +59356,24 @@
     0.5934
    ],
    "opus": [
-    0.967,
     0.978,
-    0.956
+    0.989,
+    0.967
    ],
    "astra": [
-    0.8462,
-    0.9011,
+    0.8571,
+    0.9121,
     0.9231
    ],
    "argon": [
     0.9231,
     0.9231,
-    0.8901
+    0.9011
    ]
   },
   "pass_at_3": {
    "qwen": 0.7582,
-   "opus": 0.978,
+   "opus": 0.989,
    "astra": 0.956,
    "argon": 0.9341
   },
@@ -59740,7 +59740,7 @@
    ],
    "de-oktoberfest": [
     "failed",
-    "failed",
+    "solved",
     "solved",
     "solved"
    ],
@@ -60689,9 +60689,9 @@
      true
     ],
     "de-oktoberfest": [
-     false,
-     false,
-     false
+     true,
+     true,
+     true
     ],
     "dawn": [
      true,
@@ -61146,8 +61146,8 @@
      true
     ],
     "de-oktoberfest": [
-     false,
-     false,
+     true,
+     true,
      true
     ],
     "dawn": [
@@ -61605,7 +61605,7 @@
     "de-oktoberfest": [
      true,
      true,
-     false
+     true
     ],
     "dawn": [
      true,
@@ -61798,7 +61798,7 @@
    "astra": "openai/gpt-6-astra",
    "argon": "google/gemini-4-argon"
   },
-  "instrument": "br-mc-2026-11-01-v5b+brsum-v1+qline-v1+bank-v7",
+  "instrument": "br-mc-2026-11-01-v5b+brsum-v2+qline-v2+bank-v7",
   "judge_model": "claude-opus-5-5",
   "layers_judged": [
    44
@@ -61815,7 +61815,7 @@
     0.69
    ],
    "opus": [
-    0.97,
+    0.93,
     0.94,
     0.97
    ],
@@ -61825,16 +61825,16 @@
     0.97
    ],
    "argon": [
-    0.94,
-    0.92,
-    0.9
+    0.85,
+    0.85,
+    0.85
    ]
   },
   "pass_at_3": {
    "qwen": 0.78,
    "opus": 0.97,
    "astra": 0.97,
-   "argon": 0.95
+   "argon": 0.94
   },
   "ids": [
    "br-imp-instrument",
@@ -61925,7 +61925,7 @@
     "solved",
     "solved",
     "solved",
-    "solved"
+    "failed"
    ],
    "br-ent-ath-woods": [
     "solved",
@@ -62987,7 +62987,7 @@
      true
     ],
     "br-ent-ath-james": [
-     true,
+     false,
      true,
      true
     ],
@@ -63007,7 +63007,7 @@
      true
     ],
     "br-ent-ath-ronaldo": [
-     true,
+     false,
      true,
      true
     ],
@@ -63067,7 +63067,7 @@
      true
     ],
     "br-ent-cap-rome": [
-     true,
+     false,
      true,
      true
     ],
@@ -63087,7 +63087,7 @@
      true
     ],
     "br-ent-lmk-colosseum": [
-     true,
+     false,
      true,
      true
     ],
@@ -63997,7 +63997,7 @@
     ],
     "br-ent-ath-jordan": [
      true,
-     true,
+     false,
      true
     ],
     "br-ent-ath-messi": [
@@ -64021,9 +64021,9 @@
      true
     ],
     "br-ent-ath-williams": [
-     true,
-     true,
-     true
+     false,
+     false,
+     false
     ],
     "br-ent-ath-woods": [
      true,
@@ -64041,18 +64041,18 @@
      true
     ],
     "br-ent-cap-cairo": [
-     true,
+     false,
      true,
      true
     ],
     "br-ent-cap-madrid": [
-     true,
+     false,
      true,
      true
     ],
     "br-ent-cap-moscow": [
      true,
-     true,
+     false,
      true
     ],
     "br-ent-cap-nairobi": [
@@ -64117,13 +64117,13 @@
     ],
     "br-ent-mus-armstrong": [
      true,
-     true,
+     false,
      true
     ],
     "br-ent-mus-beethoven": [
+     false,
      true,
-     true,
-     true
+     false
     ],
     "br-ent-mus-davis": [
      true,
@@ -64207,17 +64207,17 @@
     ],
     "br-proc-dayafter-saturday": [
      true,
-     true,
+     false,
      true
     ],
     "br-proc-dayafter-sunday": [
      true,
      true,
-     true
+     false
     ],
     "br-proc-dayafter-thursday": [
      true,
-     true,
+     false,
      true
     ],
     "br-proc-dayafter-tuesday": [
@@ -64258,7 +64258,7 @@
     "br-proc-daybefore-tuesday": [
      true,
      true,
-     true
+     false
     ],
     "br-proc-daybefore-wednesday": [
      true,
@@ -64266,19 +64266,19 @@
      true
     ],
     "br-proc-monthafter-april": [
-     true,
+     false,
      true,
      true
     ],
     "br-proc-monthafter-august": [
-     true,
+     false,
      true,
      true
     ],
     "br-proc-monthafter-december": [
+     false,
      true,
-     true,
-     true
+     false
     ],
     "br-proc-monthafter-february": [
      true,
@@ -64286,7 +64286,7 @@
      true
     ],
     "br-proc-monthafter-january": [
-     true,
+     false,
      true,
      true
     ],
@@ -64297,7 +64297,7 @@
     ],
     "br-proc-monthafter-june": [
      true,
-     true,
+     false,
      true
     ],
     "br-proc-monthafter-march": [
@@ -64376,7 +64376,7 @@
      true
     ],
     "br-imp-programmingl": [
-     true,
+     false,
      true,
      true
     ],
