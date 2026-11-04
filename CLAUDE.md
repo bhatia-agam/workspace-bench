@@ -93,8 +93,9 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   `mc.options_with_cannot`) plus the deterministic name gate (code verifies the pick and never
   overrules it; `rival_quote` is reported only), since audit fix F4
   `multitoken.family.tolerant_gate` (quote verified by `digest.quote_ok` or near-verbatim via
-  `nearquote.close_lines`; the gold named by the quote, a near quote's matched block, or the
-  quote's own line when it singles it out (no rescue through any other line), with
+  `nearquote.close_lines`; the gold named by the quote, a near quote's matched block, or, for a
+  quote cut mid-name, where its own line continues it or its sample ends inside the name (no
+  rescue through any other line), with
   case endings / Arabic clitics / Hangul particles / fuzzy spellings and the frozen
   `evals/basic_readout_mt/exonyms.json`; `name_gate` itself is the old strict rule), headline = the `readout`
   unit only (`BRMT_HEADLINE_UNITS`; `McFamily` in `MC_FAMILIES` holds a family's MC config, the
