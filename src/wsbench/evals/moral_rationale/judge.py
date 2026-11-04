@@ -288,16 +288,23 @@ def pick_of(choice: Any, mc: MC) -> str:
     return base
 
 
-def verify_quote(quote: str, lines: list[digest.Line], cells: list[Cell]) -> str:
+def verify_quote(
+    quote: str, lines: list[digest.Line], cells: list[Cell], *, near: bool = True
+) -> str:
     """The two-level quote gate (plan 0046 §2.6): ``ok``; ``text`` = not in any line
     (``digest.quote_ok(quote, lines)``); ``bullet`` = in a line but not inside ONE statement
-    (``digest.statement_lines``: one top-level bullet of a free-text sample). A quote that is
-    near-verbatim (``nearquote.close_lines``: one word added, dropped or changed at an edge, the
-    rule the MC families share) verifies at both levels like an exact one."""
-    if not digest.quote_ok(quote, lines) and not close_lines(quote, lines):
+    (``digest.statement_lines``: one top-level bullet of a free-text sample). With ``near`` (the
+    single-pick ``ec-v9`` instruments only: ``Instrument.pick``), a quote that is near-verbatim
+    (``nearquote.close_lines``: one word added, dropped or changed at an edge, the rule the MC
+    families share) verifies at both levels like an exact one; the older ``ec-v4`` / ``ec-v4.1``
+    gate stays exact."""
+
+    def found(where: list[digest.Line]) -> bool:
+        return digest.quote_ok(quote, where) or (near and close_lines(quote, where))
+
+    if not found(lines):
         return "text"
-    stmts = digest.statement_lines(lines, cells)
-    if not digest.quote_ok(quote, stmts) and not close_lines(quote, stmts):
+    if not found(digest.statement_lines(lines, cells)):
         return "bullet"
     return "ok"
 
@@ -399,7 +406,11 @@ def _run_native(
         judged_cells.add(ck)
         cell = by_key[ck]
         gate = (digest.native_lines([cell]), [cell]) if inst.quote_gate else None
-        rows.append(_row(c.key, c.meta, r, by_id[c.meta["id"]], mcs[c.meta["id"]][side], gate))
+        rows.append(
+            _row(
+                c.key, c.meta, r, by_id[c.meta["id"]], mcs[c.meta["id"]][side], gate, near=inst.pick
+            )
+        )
     fully_judged = judged_cells - failed_cells
     n_unjudged = sum(1 for c in nonempty if c.key not in fully_judged)
     counts = base_counts(
@@ -465,17 +476,20 @@ def _row(
     it: dict,
     mc: MC,
     gate: tuple[list[digest.Line], list[Cell]] | None,
+    *,
+    near: bool = True,
 ) -> dict:
     """One judged call. ``gate`` = (lines, cells) for the quote gate (ec-v4 and later): a content
     pick whose quote fails it is ``unverified`` (``correct`` False; ``picked`` keeps what was
-    chosen). Pass (``correct``) = the verified pick is the gold; code never weighs the options."""
+    chosen); ``near`` = near-verbatim quotes verify too (:func:`verify_quote`). Pass
+    (``correct``) = the verified pick is the gold; code never weighs the options."""
     choice = choice_of(r)
     pick = pick_of(choice, mc)
     quote = quote_of(r)
     check = None
     picked = pick
     if gate is not None and pick in CONTENT_PICKS:
-        check = verify_quote(quote, *gate)
+        check = verify_quote(quote, *gate, near=near)
         if check != "ok":
             pick = "unverified"
     kind = (
@@ -587,7 +601,7 @@ def _run_summary(
     for (i, side), cs in draws.items():
         gate = (list(col.evidence.get(i, ())), by_item[i]) if inst.quote_gate else None
         vs = [
-            _row(c.key, c.meta, r, by_id[i], mcs[i][side], gate)
+            _row(c.key, c.meta, r, by_id[i], mcs[i][side], gate, near=inst.pick)
             if (r := results.get(c.key)) is not None
             else None
             for c in cs
@@ -612,7 +626,9 @@ def _run_summary(
         counts=counts,
         config=base_config(
             args,
-            digest.prompt_version(base_pv + NEAR_QUOTE + majority_stamp(n), args, FAMILY),
+            digest.prompt_version(
+                base_pv + (NEAR_QUOTE if inst.pick else "") + majority_stamp(n), args, FAMILY
+            ),
             contrast=contrast,
             instrument=version,
             draws=n,
@@ -630,7 +646,9 @@ def _run_summary(
     return with_readout_count(res, scope, cells)
 
 
-# summary results verify near-verbatim quotes too (verify_quote; nearquote.close_lines)
+# the single-pick (ec-v9) summary results verify near-verbatim quotes too (verify_quote;
+# nearquote.close_lines); the older ec-v4 / ec-v4.1 gate stays exact and ec-v3.1 has no gate, so
+# their summary results carry no +nq1. Native ec-v9 results keep the bare stamp (new instrument).
 NEAR_QUOTE = "+nq1"
 
 

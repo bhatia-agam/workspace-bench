@@ -15,7 +15,7 @@ from wsbench.banks import label_of, load_bank
 REPO = Path(__file__).resolve().parents[1]
 # family -> (the bank it supersedes, the new bank, its version)
 BANKS = {
-    "basic_readout_mt": ("items_v5.json", "items_v6.json", 6),
+    "basic_readout_mt": ("items_v4.json", "items_v6.json", 6),
     "multihop_mt_v2": ("items_v5.json", "items_v6.json", 6),
 }
 # the plan_sha of each family's read plan before the rebuild: options are never rendered, and a
@@ -24,6 +24,12 @@ PLAN_SHA = {
     "basic_readout_mt": "4c8f2cc057e6",
     "multihop_mt_v2": "1d5f2e2fa84b",
 }
+
+
+# the rebuild started from a small edit of the bank it supersedes that the series folded into the
+# new bank instead of keeping a file of its own: the header key of the new bank recording the edit
+# (scripts/mc_options_r5.py's ``start_bank`` re-applies it the same way)
+FOLDED = {"basic_readout_mt": "v5"}
 
 
 def _raw(family: str, name: str) -> dict:
@@ -62,10 +68,35 @@ def test_driver_families(real_families):
     assert {n for n, c in r5.CFGS.items() if (REPO / c.new).is_file()} == set(BANKS)
 
 
+def _start(family: str) -> dict:
+    """The bank the rebuild started from: the superseded bank, with a folded edit re-applied
+    (``removed`` items, ``removed_options`` of a role) and recorded in its header."""
+    src, dst, _v = BANKS[family]
+    old = _raw(family, src)
+    key = FOLDED.get(family)
+    if not key:
+        return old
+    rec = _raw(family, dst)[key]
+    gone = set(rec.get("removed") or [])
+    cut = rec.get("removed_options") or {}
+    items = []
+    for it in old["items"]:
+        if it["name"] in gone:
+            continue
+        for role, opts in cut.get(it["name"], {}).items():
+            blk = it["mc"][role]
+            blk["distractors"] = [d for d in blk["distractors"] if d not in opts]
+        items.append(it)
+    head = {k: v for k, v in old.items() if k != "items"}
+    if gone:
+        head["read_plan_bank"] = head.get("read_plan_bank") or src
+    return {**head, key: rec, "items": items}
+
+
 @pytest.mark.parametrize("family", sorted(BANKS))
 def test_only_the_recorded_lists_change(family):
     src, dst, version = BANKS[family]
-    old, new = _raw(family, src), _raw(family, dst)
+    old, new = _start(family), _raw(family, dst)
     r5 = new["r5_mc"]
     assert new["version"] == version and new["supersedes"] == src
     assert r5["procedure"] == "mcleak-r5-2026-11-04"

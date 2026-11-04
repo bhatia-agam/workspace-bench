@@ -135,7 +135,7 @@ v4 key (`MH2_CALL_VERSION`). Stamp `+bank-v5`. The floors were re-measured on v5
 ## Scoring (plan 0041)
 
 - **Instrument of record: the family's own forced-choice judge** (Camila: "Should have an mc
-  judge with common distractors from other questions"). `prompt_version` `mh2-mc-2026-11-01+norival-v1+qline-v1+bank-v6`
+  judge with common distractors from other questions"). `prompt_version` `mh2-mc-2026-11-01+norival-v1+qline-v2+bank-v6`
   (the MC calls stay keyed `mh2-mc-2026-11-01+rv-2026-10-31e+optrv-v1+bank-v4`, `MH2_CALL_VERSION`),
   judge Opus 5.5 (the registry default), pinned, in the macro. One call per (item, required
   unit); the judge is blind (no prompt text, no gold, no role label).
@@ -292,7 +292,7 @@ v4 key (`MH2_CALL_VERSION`). Stamp `+bank-v5`. The floors were re-measured on v5
 - **Floors of record** (bank v6; `evals/baselines/README.md` "Floors of record", option rebuild r5): lucky
   guessing blind 0.078, described 0.216, topic 0.338, uniform 0.188 vs chance 0.188 (n = 64,
   Opus 5.5, 5 draws per item; the topic guesser fails the MC leakage standard, Bank v6 above);
-  prompt-only 1.000 (n = 64) under `mh2-mc-2026-11-01+norival-v1+qline-v1+bank-v6`, re-judged
+  prompt-only 1.000 (n = 64) under `mh2-mc-2026-11-01+norival-v1+qline-v2+bank-v6`, re-judged
   from the same readouts. No ATI subset (not gated by design). Bank v5 at the 2026-11-04
   refreeze: lucky blind 0.089, described 0.223, topic 0.349, uniform 0.191 vs chance 0.187 (topic
   failed too); prompt-only 1.000 (n = 70). The bullets below record earlier banks.
@@ -324,15 +324,20 @@ v4 key (`MH2_CALL_VERSION`). Stamp `+bank-v5`. The floors were re-measured on v5
 
 ## Instrument history
 
+- 2026-11-04 (`+bank-v5`): the prompt-only and lucky-guessing floors are re-measured on bank v5.
+  They were measured under the `qline-v1` draft: the lucky-guessing entries carry `qline-v2` (a
+  guesser sees only the lists); the prompt-only floor stays on `qline-v1` until re-scored under the
+  new stamp.
 - 2026-11-04 (`+bank-v6`): bank v6 rebuilds the bridge lists the lucky-guessing guessers still
   solved and drops the 6 items they solved whatever the list; the topic guesser still fails the
   MC leakage standard on fresh draws.
-- 2026-11-04 (`+bank-v5`): the prompt-only and lucky-guessing floors are re-measured on bank v5,
-  so they are drawn beside this instrument again.
 - 2026-11-04 (`+bank-v5`): Immanuel Kant, whom kant-hume's prompt describes, is no longer one of
   its bridge-1 options.
-- 2026-11-04 (`+qline-v1`): a quote one word off verifies near-verbatim, and a quote cut mid-name
-  counts through its line when that line names the gold and no other option.
+- 2026-11-04 (`+qline-v2`): a quote one word off verifies near-verbatim, and a quote cut mid-name
+  counts where its line continues it into the gold or its sample ends inside a name only the
+  gold's forms start with (jarry-ubu-t3's "...was **Alfred J"); a line naming the gold anywhere
+  else gives nothing. (`+qline-v1`, an unreleased draft, credited it through any line holding it that named
+  the gold and no other option.)
 - 2026-11-04 (`+norival-v1`): the contested rule (`family.contested_verdict`: the rival line and
   every other option's best line weighed against the gold's digest support) and the option audit
   are removed, because their support counting failed correct picks; the MC calls keep their key

@@ -44,5 +44,5 @@ MC_PROFILES[SPEC.name] = MCProfile(
     regex_version=MH2_REGEX_VERSION,
     rival=True,
 )
-# the result stamp moved past the MC calls' cached key (norival-v1, qline-v1)
+# the result stamp moved past the MC calls' cached key (norival-v1, qline-v2)
 CALL_VERSIONS[SPEC.name] = (MH2_PROMPT_VERSION, MH2_CALL_VERSION)

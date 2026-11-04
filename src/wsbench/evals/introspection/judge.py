@@ -534,6 +534,9 @@ def _expected_positions(
 
 
 def run(args: JudgeArgs) -> FamilyResult:
+    if "judge" in args.extra:
+        # the old regex-only switch (opts=judge=off); never fall through to the full judge
+        fail(f"{NAME}: opts=judge was removed; the regex is the rx_* diagnostic of every run")
     bank = load()
     scope_name, scope = _scoped(bank, args)
     us = units(bank, scope)
