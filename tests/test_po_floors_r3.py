@@ -249,7 +249,6 @@ PENDING_RESCORE: dict[str, str] = {
         "mt-regex-2026-10-30+v2+ln-2026-11-03a+rawrx-v2+plural-v1+anchor-support-v1+langleg-v1"
         "+bank-v3"
     ),
-    "user_modeling": "um-v3.4+bank-v2+maj3",
 }
 
 
