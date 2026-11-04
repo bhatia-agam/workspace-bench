@@ -89,7 +89,7 @@ excluded.
 ## Floors
 
 **Floors of record** (bank v5, `evals/baselines/README.md` "Floors of record"; stamp
-`mt-regex-2026-10-30+v2+ln-2026-11-03a+rawrx-v2+plural-v1+langleg-v1+bank-v5`): prompt-only 0.980
+`mt-regex-2026-10-30+v2+ln-2026-11-03a+rawrx-v2+plural-v2+langleg-v1+bank-v5`): prompt-only 0.980
 [0.95, 1.00] (100 items; `po-opus-v1`: one Opus 5.5 readout per item, through the same digest and
 scorer); lucky guessing on the content list only (the language is scored on the raw samples, never
 by an option list; Opus 5.5, 5 draws per item, chance 0.200): **blind 0.110, described 0.174,
