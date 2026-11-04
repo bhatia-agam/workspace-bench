@@ -238,7 +238,6 @@ SONNET_DIGEST = ("agentic_misalignment", "jailbreak_recognition")
 # 2026-11-04 (pre-merge review): the cut-mid-name line rule, the English plural rule and the
 # pass / fail vote, on banks this series replaces later.
 PENDING_RESCORE: dict[str, str] = {
-    "multilingual": "mcrx-2026-11-03d+mc-ml-2026-11-01b",
     "multilingual_mt": (
         "mt-regex-2026-10-30+v2+ln-2026-11-03a+rawrx-v2+plural-v1+langleg-v1+bank-v4"
     ),
