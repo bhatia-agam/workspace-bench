@@ -194,7 +194,9 @@ USER_SUMMARY = (
 # ("**may**", '"may"'); only multilingual lists such forms
 # mcrx-2026-11-03d: naming forms ln-2026-11-03a (Arabic / Greek / Hebrew phrases, no "(suomi)"
 # label) and English plurals of the content forms (regex.PLURAL_VERSION)
-MCRX_VERSION = "mcrx-2026-11-03d"  # the mc+regex rule (pass = MC content role, units, language)
+# mcrx-2026-11-03e: plural-v2 (no plural of a capitalised form; -is -> -es); it changes
+# multilingual_multihop's bridge only, multilingual's one-word answers take no plural
+MCRX_VERSION = "mcrx-2026-11-03e"  # the mc+regex rule (pass = MC content role, units, language)
 # the MC calls' cache fingerprint: the scorer rule version the cached answers were asked under.
 # The MC prompts themselves (system + user, both in the fingerprint) did not change in -31h, so
 # cached answers are reused; any prompt or input change (the pins) still re-asks.
@@ -227,7 +229,7 @@ ML_ALIAS_NOTE = (
 # +rawrx-v1 (final r1): the regex contract runs on the raw samples (family.RAW_REGEX_FAMILIES)
 # +rawrx-v2 (third review of #201): a raw answer statement is a prose sample only, never a token
 # or a sample that merely opens with the form
-# +plural-v1: English content forms also credit their regular plural
+# +plural-v2: English content forms also credit their regular plural (never a capitalised form)
 V2_NAMING_TAG = "v2+" + NAMING_VERSION + "+rawrx-v2+" + PLURAL_VERSION
 # +anchor-v1 (round 3, multilingual_mt only: family.ANCHOR_FAMILIES): the language unit counts only
 # in a sample that names the item's object or the passage itself
