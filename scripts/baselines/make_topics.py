@@ -167,6 +167,7 @@ def main(families: list[str]) -> None:
     OUT.mkdir(parents=True, exist_ok=True)
     for fam in families:
         items = load_bank(fam)
+        items = items["items"] if isinstance(items, dict) else items  # a wrapped bank (v2)
         if SOURCE.get(fam) == "options":  # topic-v3 (retired for conjunctive)
             doc = {
                 "version": VERSION_OPTIONS,

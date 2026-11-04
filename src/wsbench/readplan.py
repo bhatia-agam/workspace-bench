@@ -403,14 +403,21 @@ def relational_tail(item: dict[str, Any]) -> str:
     return stim[stim.index(RELATIONAL_ANCHOR) :]
 
 
+def bank_file(path: Path) -> tuple[dict[str, Any], list[dict[str, Any]]]:
+    """``(header, items)`` of a bank file in any of the three shapes: a plain list (the items
+    carry ids; no header), a wrapped bank keyed on id, or a ``lens-eval`` bank keyed on name
+    (``banks.load_bank`` derives the ids)."""
+    raw = json.loads(path.read_text(encoding="utf-8"))
+    if isinstance(raw, list):
+        return {}, raw
+    if raw["items"] and "name" not in raw["items"][0]:
+        return {k: v for k, v in raw.items() if k != "items"}, raw["items"]
+    return load_bank_file(path)
+
+
 def _bank(family: str) -> tuple[dict[str, Any], list[dict[str, Any]]]:
     path = bank_path(family)
-    raw = json.loads(path.read_text(encoding="utf-8"))
-    if isinstance(raw, list):  # the plain-list banks already carry ids
-        return {}, raw
-    if raw["items"] and "name" not in raw["items"][0]:  # wrapped banks keyed on id
-        return {k: v for k, v in raw.items() if k != "items"}, raw["items"]
-    header, items = load_bank_file(path)
+    header, items = bank_file(path)
     if header.get(READ_PLAN_BANK):
         return header, read_plan_items(path, header, items)
     return header, items
@@ -432,7 +439,7 @@ def read_plan_items(
     every item of ``items`` is in it with the same render-relevant fields (a bank that changed a
     text could not reuse the earlier plan's readouts: ValueError)."""
     plan_path = path.parent / str(header[READ_PLAN_BANK])
-    _ph, plan_items = load_bank_file(plan_path)
+    _ph, plan_items = bank_file(plan_path)
     by = {it["id"]: it for it in plan_items}
     for it in items:
         p = by.get(it["id"])

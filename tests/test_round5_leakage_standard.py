@@ -50,7 +50,7 @@ def _script(name, path):
 
 
 def _pair(pid):
-    return [it for it in load_bank("role_bound_association") if it["pair_id"] == pid]
+    return [it for it in judge.load_items()[1] if it["pair_id"] == pid]
 
 
 @pytest.mark.parametrize(
@@ -95,7 +95,7 @@ def test_the_repaired_pairs_keep_their_roles_and_clean_actions():
     for pid, kept in before.items():
         acts = judge.distractors_v3()[pid]["actions"]
         assert acts[:3] == kept and len(acts) == 4 and "overcharged" not in acts
-    bank = load_bank("role_bound_association")
+    bank = judge.load_items()[1]
     lex = gate.load_lexicon()
     for it in bank:
         if it["pair_id"] == "oa-shopowner-supplier-cheat":

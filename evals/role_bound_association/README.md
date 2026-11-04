@@ -4,12 +4,12 @@ In-house family (no external source). A scene conveys a directed relation ("Marc
 Dylan") with the role words blocked; does the lens bind the direction — who did what to whom —
 and not just the concepts?
 
-**Round 4 (2026-11-01, Camila r2 MC leakage standard): `PROMPT_VERSION = "oa-v3.1"`** = the
+**Round 4 (2026-11-01, Camila r2 MC leakage standard): `oa-v3.1`** (calls keyed `CALL_VERSION`; the result stamp adds `+bank-v2`) = the
 oa-v2.4 prompts and gate below on the oa-v3.1 option lists ([Option lists](#option-lists)), with
 the shown distractor roles conflicting like near roles.
 
-**Headline = direction pairs (`pair-v1`, review of #202 round 5).** The 50 `pair_id`s are the
-headline unit. A pair passes only when BOTH its `ab` item and its `ba` item pass (each by the
+**Headline = direction pairs (`pair-v1`, review of #202 round 5).** The bank's 46 `pair_id`s
+(bank v2) are the headline unit. A pair passes only when BOTH its `ab` item and its `ba` item pass (each by the
 item rule below), so `value` = passing pairs / decided pairs. Per item, the MC standard's
 guessers read 0.116 / 0.148 / 0.226 against uniform 0.008 (line 0.058), because they pick the
 stereotyped triple. Under the pair rule the same guessers read **0.012 / 0.006 / 0.000** against
@@ -32,10 +32,22 @@ the direction, and the judge's quote of that statement survives a mechanical gat
   readout"). A neighbouring role is a different person: "grandmother" never passes for a gold
   "parent", "mother" never for a gold "grandparent".
 
-- **Bank:** `items.json`, 100 items (50 `pair_id`s × `direction` ab / ba; strata
-  `stereotypicality` ∈ congruent 39 / incongruent 39 / neutral 22), verbatim copy of the source
-  repo's `…/role_bound_association/items.json`; unchanged by oa-v2.1 (no new bank version; the ATI
-  `bank_sha` is unchanged).
+- **Bank:** `items_v2.json` (bank v2, 2026-11-04), 92 items (46 `pair_id`s × `direction` ab /
+  ba): `items.json` without the four pairs one of whose stories carries a stray tab character
+  that garbles a word ("mildly amusing \tray without hurrying"); the header's `dropped` names
+  them. Items are scored in direction pairs, so a garbled story drops its partner too; nothing
+  is patched, and the other 92 items are `items.json`'s byte for byte, in order. The header's
+  `read_plan_bank: items.json` keeps `items.json`'s read plan (100 rows, one `plan_sha`), so
+  readouts made for `items.json` judge bank v2 with no new reads, and the distractor names are
+  drawn from `items.json`'s name pool (`judge.load_items`), so every kept item shows the same
+  option lists and its cached calls stay valid. `items.json` (100 items, 50 pairs; strata
+  `stereotypicality` ∈ congruent 39 / incongruent 39 / neutral 22) is the verbatim copy of the
+  source repo's `…/role_bound_association/items.json`, kept byte-identical and still judgeable
+  with `WSB_BANK_FILE_ROLE_BOUND_ASSOCIATION` (stamp `oa-v3.1`). The lucky-guessing and
+  prompt-only floors and the ATI entry were measured on `items.json`'s 100 items, so they are
+  not drawn beside a bank-v2 result until they are re-measured on it. The adapted per-model
+  banks (`adapted/<model>/role_bound_association.json`) are their own builds and stamp
+  `oa-v3.1`.
 - **Role lexicon:** `roles_v1.json` (instrument data, stamped `config.roles_lexicon`, currently
   `roles-v1.5`): for each of the 93 bank roles, `terms` (the role, plural, synonyms,
   gendered and informal forms, scene hyponyms such as "swimmer" for an athlete, and listed
@@ -69,13 +81,16 @@ the direction, and the judge's quote of that statement survives a mechanical gat
   `extras.n_rows_outside_span`. Cells without `token` are kept and counted in
   `n_span_unverified`; a `prompt_only:*` reader is skipped.
 - **Judge:** `claude-opus-5-5` (the repo default; summarizer Opus 5.5, `task` variant),
-  `PROMPT_VERSION = "oa-v3.1"` (round 4; the oa-v2.4 prompts on the oa-v3.1 lists). Under
+  `PROMPT_VERSION = "oa-v3.1+bank-v2"` (round 4's oa-v2.4 prompts on the oa-v3.1 lists, on
+  bank v2); every call is keyed `CALL_VERSION = "oa-v3.1"`, and a bank without a version-2 header
+  (the frozen `items.json`, the adapted banks) stamps `oa-v3.1` (`judge.instrument`). Under
   summary mode the stamp is
-  `reads.stamp(digest.prompt_version("oa-v3.1" + judge.majority_stamp(n), args, family), reads.mode(args))`:
-  `oa-v3.1+maj3v+digest-v5-task-extractive-layered-v1x4+sj-v10` for a multi-layer run under the
-  defaults (`oa-v3.1+maj3v+digest-v5-task-extractive+sj-v10` for one layer; `+reads-lite` under
-  lite). `+maj3v` is the majority of three draws' verdicts (Summary mode, below). Native
-  results, the judge calls, the ATI gate and the guesser floors keep `oa-v3.1`.
+  `reads.stamp(digest.prompt_version(judge.instrument() + judge.majority_stamp(n), args, family), reads.mode(args))`:
+  `oa-v3.1+bank-v2+maj3v+digest-v5-task-extractive-layered-v1x4+sj-v10` for a multi-layer run
+  under the defaults (`oa-v3.1+bank-v2+maj3v+digest-v5-task-extractive+sj-v10` for one layer;
+  `+reads-lite` under lite). `+maj3v` is the majority of three draws' verdicts (Summary mode,
+  below). Native results carry `oa-v3.1+bank-v2`, which the ATI gate and the guesser floors are
+  matched against.
 - **The prompt-only baseline is not a bar here.** The scene states who did what to whom, so the
   `po-opus-v1` floor (one Opus readout per id, judged through this same digest, SYSTEM, v2 lists
   and gate) is expected near 1.0 and is frozen with `saturated: true`: a fairness flag on the
@@ -108,8 +123,8 @@ note, then the digest as the `READOUT`).
   marked `!gate` when the gate failed). A failed draw that could change the verdict leaves the
   item unjudged. Rows add `majority` (`pass` / `fail`), `draw_verdicts`, `draw_picks` and
   `label_split` (the draws' full answers have no majority: a stability diagnostic only);
-  `config.draws` records `n`. `opts=draws=1` is the single-call instrument (stamp `oa-v3.1`, no
-  `+maj` suffix).
+  `config.draws` records `n`. `opts=draws=1` is the single-call instrument (stamp `oa-v3.1+bank-v2`,
+  no `+maj` suffix).
 
 - **Binding is per statement, not per digest.** The three answers must come from ONE digest
   line, and within it from one `⁞`-delimited bullet; the gate below enforces it. (The oa-v1 text
@@ -615,3 +630,6 @@ runs with `allow_missing` (partial) until its bank header is measured.
 - 2026-11-04 (`+maj3v`): summary mode asks each item three times and takes the majority
   of the draws' pass / fail verdicts, because a single call flipped verdicts between runs; the
   judge calls keep `oa-v3.1`, so the first draw reuses every cached answer.
+- 2026-11-04 (`+bank-v2`): bank v2 (`items_v2.json`, 92 items, 46 pairs) drops the four
+  pairs one of whose stories carries a stray tab that garbles a word, on `items.json`'s read plan
+  and option lists; the judge calls keep `oa-v3.1`.

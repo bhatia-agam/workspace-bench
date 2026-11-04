@@ -754,7 +754,7 @@ REQUIRED_ITEM_FIELDS: `id`, `stimulus`, `hop1`, `hop2`, `scene`.
 
 ### role_bound_association
 
-Judge: `evals/role_bound_association/{judge,gate,score}.py`. Refresh: upgrade (judge-code overlay, plan 0060 §3). Bank: list, id from `id`.
+Judge: `evals/role_bound_association/{judge,gate,score}.py`. Refresh: upgrade (judge-code overlay, plan 0060 §3). Bank: dict, id from `id`.
 Note: adapted/qwen3.5-2b/role_bound_association.json is an empty list.
 REQUIRED_ITEM_FIELDS: `id`, `pair_id`, `direction`, `role_a`, `role_b`, `action`, `names`, `stimulus`, `stereotypicality`.
 

@@ -10,7 +10,7 @@ from collections import Counter, defaultdict
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 
-from wsbench import digest, mc, reads, registry
+from wsbench import digest, mc, readplan, reads, registry
 from wsbench.cache import Cache
 from wsbench.evals.conjunctive_association.judge import draw_key, majority, n_draws
 from wsbench.family import render_bag
@@ -22,16 +22,15 @@ from wsbench.mcjudge import (
     base_config,
     base_counts,
     item_scope,
-    load_bank,
     run_calls,
     with_readout_count,
 )
 from wsbench.readouts import Cell, LoadReport, bulleted
-from wsbench.registry import REPO_ROOT, JudgeArgs
+from wsbench.registry import REPO_ROOT, JudgeArgs, bank_path
 from wsbench.results import FamilyResult
 
 from . import gate, prompts, score
-from .prompts import DATASET_SEED, PROMPT_VERSION, SCHEMA, SYSTEM
+from .prompts import CALL_VERSION, DATASET_SEED, PROMPT_VERSION, SCHEMA, SYSTEM
 
 FAMILY = "role_bound_association"
 SUFFIX_TEXT = "Summarize the preceding story in one sentence."
@@ -353,6 +352,27 @@ def blocks_of(scope: list[dict], bank: list[dict], lex: gate.Lexicon) -> dict[st
     return {it["id"]: build_block_v3(it, bank, lexes[it["id"]]) for it in scope}
 
 
+def instrument() -> str:
+    """The result stamp of the judged bank: ``PROMPT_VERSION`` (``+bank-v2``) for the registered
+    bank v2, ``CALL_VERSION`` alone for a bank without a ``version`` >= 2 header (the frozen
+    ``items.json`` and the adapted banks, plain lists)."""
+    header, _items = readplan.bank_file(bank_path(FAMILY))
+    return PROMPT_VERSION if int(header.get("version", 1)) >= 2 else CALL_VERSION
+
+
+def load_items() -> tuple[list[dict], list[dict]]:
+    """``(items, pool)`` of the registered bank (a plain list or wrapped with a header). ``pool``
+    is what the option lists are drawn against (:func:`blocks_of`'s ``bank``: the distractor
+    name pool): the read plan bank's items when the header names one (``read_plan_bank``), else
+    ``items``. Bank v2 only drops pairs of items.json, so drawing from items.json's pool keeps
+    every kept item's options, and so its cached calls, byte for byte."""
+    path = bank_path(FAMILY)
+    header, items = readplan.bank_file(path)
+    if header.get(readplan.READ_PLAN_BANK):
+        return items, readplan.read_plan_items(path, header, items)
+    return items, items
+
+
 # ---------------------------------------------------------------- story-echo guard (C1.6)
 
 
@@ -546,11 +566,11 @@ def _render_native(c: Cell, sampling: str) -> str:
 
 
 def run(args: JudgeArgs) -> FamilyResult:
-    bank = load_bank(FAMILY)
+    bank, pool = load_items()
     lex = gate.load_lexicon()
     scope = item_scope(bank, args)
     lexes = lexicons_of(scope, lex)  # plan 0060 A2: an adapted-only pair's scoped lexicon
-    blocks = {it["id"]: build_block_v3(it, bank, lexes[it["id"]]) for it in scope}
+    blocks = {it["id"]: build_block_v3(it, pool, lexes[it["id"]]) for it in scope}
     cells, rep = reads.load(args, FAMILY, ids=[it["id"] for it in scope])
     cells, span = story_guard(cells, rep, args)
     extra = {
@@ -582,7 +602,7 @@ def run(args: JudgeArgs) -> FamilyResult:
                 calls,
                 schema=SCHEMA,
                 judge=args.judge,
-                prompt_version=PROMPT_VERSION,
+                prompt_version=CALL_VERSION,
                 cache=cache,
                 spend=spend,
                 concurrency=args.concurrency,
@@ -618,7 +638,7 @@ def run(args: JudgeArgs) -> FamilyResult:
             counts=counts,
             config=base_config(
                 args,
-                PROMPT_VERSION,
+                instrument(),
                 roles_lexicon=lex.version,
                 actions_lexicon=gate.load_actions().version,
             ),
@@ -652,7 +672,7 @@ def _run_summary(
     :func:`draw_label`); a failed draw that could change the verdict leaves the item unjudged."""
     task_note = registry.get(FAMILY).task_note
     lex_of: Mapping[str, gate.Lexicon] = lexes if lexes is not None else defaultdict(lambda: lex)
-    pv = digest.prompt_version(PROMPT_VERSION, args, FAMILY)
+    pv = digest.prompt_version(CALL_VERSION, args, FAMILY)  # keys the calls
     n = n_draws(args)
     by_item: dict[str, list[Cell]] = defaultdict(list)
     for c in cells:
@@ -796,7 +816,7 @@ def _run_summary(
             counts=counts,
             config=base_config(
                 args,
-                digest.prompt_version(PROMPT_VERSION + majority_stamp(n), args, FAMILY),
+                digest.prompt_version(instrument() + majority_stamp(n), args, FAMILY),
                 roles_lexicon=lex.version,
                 actions_lexicon=gate.load_actions().version,  # round 3
                 draws=n,

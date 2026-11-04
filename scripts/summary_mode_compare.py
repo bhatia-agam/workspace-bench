@@ -80,7 +80,10 @@ BASE_PAIRS: dict[str, dict[str, str]] = {
         "dmcd-regex-2026-10-23": "dmcd-regex-2026-10-23+joined-2026-10-30"
     },
     # summary mode takes the majority of 3 draws (+maj3v / +maj3); native is one call per cell
-    "role_bound_association": {"oa-v3.1": "oa-v3.1+maj3v"},
+    "role_bound_association": {
+        "oa-v3.1": "oa-v3.1+maj3v",
+        "oa-v3.1+bank-v2": "oa-v3.1+bank-v2+maj3v",
+    },
     "user_modeling": {"um-v3.4+bank-v2": "um-v3.4+bank-v2+maj3"},
     # moral_rationale's summary mode verifies near-verbatim quotes (+nq1) and takes the majority
     # of 3 draws' verdicts (+maj3v)

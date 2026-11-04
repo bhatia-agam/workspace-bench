@@ -313,12 +313,12 @@ def _conjunctive() -> list[Item]:
 def _role_bound() -> list[Item]:
     # the judge's own lists: plan 0055 C3.11's oa-v2, round 4's oa-v3 (judge.blocks_of)
     from wsbench.evals.role_bound_association.gate import load_lexicon
-    from wsbench.evals.role_bound_association.judge import blocks_of
+    from wsbench.evals.role_bound_association.judge import blocks_of, load_items
     from wsbench.mc import CANNOT
 
-    bank = load_bank("role_bound_association")
+    bank, pool = load_items()
     lex = load_lexicon()
-    blocks = blocks_of(bank, bank, lex)
+    blocks = blocks_of(bank, pool, lex)
     out = []
     for it in bank:
         b = blocks[it["id"]]

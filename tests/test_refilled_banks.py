@@ -134,6 +134,7 @@ PENDING_REGATE: dict[str, str] = {
     "basic_readout": "bank v7 (2026-11-03): Big Ben's gold option reads 'England / UK'",
     "basic_readout_mt": "bank v5 (2026-11-03): the sarin item is dropped",
     "user_modeling": "bank v2 = the 47 selfdescribe items (synthsys dropped)",
+    "role_bound_association": "bank v2: the 4 pairs with tab-garbled stories dropped",
 }
 
 

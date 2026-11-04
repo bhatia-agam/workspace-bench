@@ -10,7 +10,6 @@ from wsbench import digest, mc, readplan, reads, results
 from wsbench.evals.role_bound_association import SPEC, gate, judge, prompts
 from wsbench.evals.role_bound_association.judge import build_block, build_block_v2
 from wsbench.mc import CANNOT
-from wsbench.mcjudge import load_bank
 from wsbench.readouts import load_readouts
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -38,7 +37,9 @@ def _full(item_id: str, layer: int, last: str, filler: str = "x") -> list[dict]:
 
 
 def _bank():
-    return load_bank("role_bound_association")
+    """The source bank (``items.json``, 100 items) the goldens were frozen on; the registered bank
+    v2 keeps every kept item's options (``tests/test_role_bound_bank_v2.py``)."""
+    return json.loads((ROOT / "evals/role_bound_association/items.json").read_text())
 
 
 def _v2(item_id):
@@ -48,7 +49,7 @@ def _v2(item_id):
 
 
 def test_bank_loads():
-    bank = load_bank("role_bound_association")
+    bank = _bank()
     assert len(bank) == 100
     for it in bank:
         assert {
@@ -65,7 +66,7 @@ def test_bank_loads():
 
 
 def test_blocks_match_source_golden():
-    bank = load_bank("role_bound_association")
+    bank = _bank()
     for it in bank:
         block, golds = build_block(it, bank)
         assert {"block": block, "golds": list(golds)} == GOLDEN[it["id"]], it["id"]
@@ -75,7 +76,7 @@ def test_blocks_match_source_golden():
 def test_rendered_prompt_matches_golden_v1_builder():
     # plan 0055 C3.1: renamed from test_rendered_prompt_matches_golden; the PV and schema
     # asserts moved to test_rendered_prompt_matches_golden_v2 (the v1 golden is unchanged)
-    bank = load_bank("role_bound_association")
+    bank = _bank()
     block, _ = build_block(bank[0], bank)
     user = prompts.render_user("TOY READOUT", block)
     assert user == (ROOT / "tests/golden/role_bound_association_prompt.txt").read_text()
@@ -86,7 +87,8 @@ def test_rendered_prompt_matches_golden_v2():
     b = build_block_v2(bank[0], bank, gate.load_lexicon())
     got = prompts.SYSTEM + "\n\n=== USER ===\n" + prompts.render_user("TOY READOUT", b.text)
     assert got == (ROOT / "tests/golden/role_bound_association_prompt_v2.txt").read_text()
-    assert prompts.PROMPT_VERSION == "oa-v3.1"  # round 4: the oa-v2.4 prompts on oa-v3 lists
+    # round 4: the oa-v2.4 prompts on oa-v3 lists; bank v2 is stamped, the calls keep oa-v3.1
+    assert prompts.PROMPT_VERSION == "oa-v3.1+bank-v2" and prompts.CALL_VERSION == "oa-v3.1"
     assert prompts.SCHEMA["schema"]["required"] == [
         "q1_choice",
         "q2_choice",
@@ -349,7 +351,7 @@ def test_config_stamps_roles_lexicon(tmp_path, fake_llm, mk_args):
     fake_llm(_responder)
     res = judge.run(mk_args(_scripted(tmp_path), items=[AB, BA]))
     assert res.config["roles_lexicon"] == prompts.ROLES_LEXICON == "roles-v1.5"
-    assert res.config["prompt_version"] == "oa-v3.1"
+    assert res.config["prompt_version"] == "oa-v3.1+bank-v2"
 
 
 def test_config_stamps_actions_lexicon(tmp_path, fake_llm, mk_args):
@@ -631,8 +633,8 @@ def test_summary_stamp_is_computed(tmp_path, monkeypatch):
     r = SPEC.run(args)
     want = reads.stamp(
         digest.prompt_version(prompts.PROMPT_VERSION + "+maj3v", args, SPEC.name), reads.mode(args)
-    )  # a summary result is stamped with its majority of 3 draws' verdicts
-    assert r.config["prompt_version"] == want and want.startswith("oa-v3.1+maj3v+digest-")
+    )  # stamped with bank v2 and the majority of 3 draws' verdicts
+    assert r.config["prompt_version"] == want and want.startswith("oa-v3.1+bank-v2+maj3v+digest-")
     assert r.config["draws"] == 3 and r.rows[0]["draw_picks"] and r.rows[0]["majority"]
     assert r.config["roles_lexicon"] == "roles-v1.5"
 
@@ -660,7 +662,7 @@ def test_dry_run_prints_and_makes_no_calls(tmp_path, mk_args, capsys, monkeypatc
     res = judge.run(mk_args(EXAMPLE, dry_run=True))
     out = capsys.readouterr().out
     assert prompts.SYSTEM in out and "Q1. Who performs the action (the agent)?" in out
-    assert res.value is None and res.rows == [] and res.n_items == 100
+    assert res.value is None and res.rows == [] and res.n_items == 92  # bank v2
 
 
 def test_adapted_bank_offset_lite_falls_back_to_final_token(monkeypatch, tmp_path):

@@ -424,8 +424,9 @@ deleted.
   - T0: as is.
   - T1: tier A (role words blocked) and shorter scenes (≤ 70 words) with clearer role cues.
 - Keep the incongruent half. ab/ba is atomic.
-- **Bank now:** unchanged; judge `oa-v3.1` (the oa-v2.4 prompts on the oa-v3.1 lists; summary
-  `+maj3v`, the majority of three draws' verdicts; plan 0055): role lexicon `roles_v1.json` (out-of-lexicon
+- **Bank now:** registered `items_v2` (92 items, items.json's read plan); judge `oa-v3.1+bank-v2`
+  (calls `oa-v3.1`, summary `+maj3v`; the oa-v2.4 prompts on the oa-v3.1 lists; plan 0055);
+  adapted banks stamp `oa-v3.1`. Role lexicon `roles_v1.json` (out-of-lexicon
   roles handled), quote gate, action gate (judge-side, `evals/role_bound_association/gate.py`; no
   subject regate), pins. Under `WSB_BANK_ROOT` the lite rule is
   `final_token` (`readplan._adapted_offset`).

@@ -8,8 +8,7 @@ import pytest
 
 from wsbench.digest import Line
 from wsbench.evals.role_bound_association import gate, prompts
-from wsbench.evals.role_bound_association.judge import build_block_v2, pick_problems
-from wsbench.mcjudge import load_bank
+from wsbench.evals.role_bound_association.judge import build_block_v2, load_items, pick_problems
 
 LEX = gate.load_lexicon()
 
@@ -215,7 +214,7 @@ def _picks(b, names: tuple[str, str], action: str) -> dict:
 
 
 def test_pick_problems_re_ask_on_a_kin_conflict():
-    bank = load_bank("role_bound_association")
+    bank = load_items()[1]
     it = next(x for x in bank if x["id"] == "oa-child-grandparent-hug-ba")
     b = build_block_v2(it, bank, LEX)
     r = {**_picks(b, ("Marta", "Eli"), "hugged"), "quote": "Marta hugged her daughter Eli"}
@@ -237,7 +236,7 @@ STORY_ROLE = {  # roles-v1.4: the item, the near role its own story uses for the
 
 def test_story_description_is_no_distractor():
     assert LEX.version == prompts.ROLES_LEXICON == "roles-v1.5"
-    bank = load_bank("role_bound_association")
+    bank = load_items()[1]
     for it in bank:
         b = build_block_v2(it, bank, LEX)
         roles = {lab.split(", the ", 1)[1] for lab in b.people}

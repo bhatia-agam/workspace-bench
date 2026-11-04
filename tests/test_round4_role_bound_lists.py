@@ -17,7 +17,6 @@ from pathlib import Path
 import pytest
 
 from wsbench.evals.role_bound_association import gate, judge, prompts
-from wsbench.mcjudge import load_bank
 
 ROOT = Path(__file__).resolve().parents[1]
 LEX = gate.load_lexicon()
@@ -25,7 +24,8 @@ AB = "oa-police-thief-chase-ab"
 
 
 def _bank():
-    return load_bank("role_bound_association")
+    """items.json, the bank the oa-v3 lists were frozen on (bank v2's option pool)."""
+    return judge.load_items()[1]
 
 
 def _item(iid):
@@ -91,13 +91,13 @@ def test_v3_blocks_match_golden():
 def test_judge_and_lucky_guessing_use_the_v3_lists():
     from wsbench.baselines import lucky_guessing as lg
 
-    bank = _bank()
-    blocks = judge.blocks_of(bank, bank, LEX)
+    bank, pool = judge.load_items()
+    blocks = judge.blocks_of(bank, pool, LEX)
     assert all(b.distractor_roles for b in blocks.values())
     items = {it.id: it for it in lg.build_family("role_bound_association")}
     assert items[AB].golds == list(blocks[AB].golds)
     assert "bouncer" in json.dumps(items[AB].lists)  # the v3 police-thief distractors
-    assert prompts.PROMPT_VERSION == "oa-v3.1"
+    assert prompts.CALL_VERSION == "oa-v3.1"
 
 
 def test_an_unfrozen_pair_keeps_the_v2_block():

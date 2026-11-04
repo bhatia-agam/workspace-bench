@@ -44,9 +44,8 @@ from pathlib import Path
 
 from wsbench import llm, mc
 from wsbench.evals.role_bound_association import gate
-from wsbench.evals.role_bound_association.judge import display_terms
+from wsbench.evals.role_bound_association.judge import display_terms, load_items
 from wsbench.llm import schema_block
-from wsbench.mcjudge import load_bank
 
 REPO = Path(__file__).resolve().parents[1]
 OUT = REPO / "evals/role_bound_association/distractors_v3.json"
@@ -270,7 +269,7 @@ def main(repair: bool = False) -> int:
     """``repair`` (``--repair``, review of #202 round 4): re-propose only the frozen pairs that
     fail the current lint, keep every other pair as frozen, and run no screen round."""
     lex = gate.load_lexicon()
-    bank = load_bank("role_bound_association")
+    _items, bank = load_items()  # every pair the frozen distractors cover (bank v2's read plan)
     topics = json.loads(TOPICS.read_text(encoding="utf-8"))["topics"]
     pairs: dict[str, list[dict]] = {}
     for it in bank:

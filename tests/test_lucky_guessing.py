@@ -9,6 +9,7 @@ import pytest
 from wsbench import mc, registry
 from wsbench.baselines import lucky_guessing as lg
 from wsbench.cli import main
+from wsbench.evals.role_bound_association.judge import load_items
 from wsbench.judge_config import DEFAULT_JUDGE, JudgeConfig, resolve
 from wsbench.mc import CANNOT
 
@@ -82,7 +83,7 @@ def test_golds_name_the_bank_answers():
     conj = {it["id"]: it for it in lg.load_bank("conjunctive_association")}
     for it in lg.build_family("conjunctive_association"):
         assert it.lists[0][it.golds[0] - 1] == conj[it.id]["gold_label"]
-    rb = {it["id"]: it for it in lg.load_bank("role_bound_association")}
+    rb = {it["id"]: it for it in load_items()[0]}
     for it in lg.build_family("role_bound_association"):
         b = rb[it.id]
         a_lab = f"{b['names']['a']}, the {b['role_a']}"

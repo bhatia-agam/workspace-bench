@@ -38,11 +38,14 @@ class Question:
 
 
 def bank_items(family: str) -> list[dict]:
-    """Bank items with an ``id``: the wrapped banks go through the header loader, the plain
-    lists (conjunctive, relational, role-bound, moral) already carry ids."""
+    """Bank items with an ``id``: the wrapped banks keyed on name go through the header loader;
+    the plain lists (conjunctive, relational, moral) and the wrapped banks keyed on id
+    (role-bound) already carry ids."""
     raw = load_raw_bank(family)
     if isinstance(raw, list):
         return raw
+    if raw["items"] and "name" not in raw["items"][0]:  # wrapped, keyed on id (role-bound v2)
+        return raw["items"]
     _header, items = load_bank_file(bank_path(family))
     return items
 

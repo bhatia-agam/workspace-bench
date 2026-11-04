@@ -3,8 +3,7 @@ conflicts, script split, roles-v1.1, the pick-based re-ask."""
 
 from wsbench.digest import Line
 from wsbench.evals.role_bound_association import gate
-from wsbench.evals.role_bound_association.judge import build_block_v2, pick_problems
-from wsbench.mcjudge import load_bank
+from wsbench.evals.role_bound_association.judge import build_block_v2, load_items, pick_problems
 
 LEX = gate.load_lexicon()
 
@@ -22,7 +21,7 @@ def test_action_ref():
 def test_every_distractor_role_has_a_lexicon_entry():
     from wsbench.evals.role_bound_association.judge import _person_of, build_block_v2
 
-    bank = load_bank("role_bound_association")
+    bank = load_items()[1]
     for it in bank:
         for lab in build_block_v2(it, bank, LEX).people:
             assert LEX.has(_person_of(lab)[1]), lab
@@ -132,7 +131,7 @@ def test_distractor_named_by_its_displayed_term_is_not_flagged():
 
 
 def test_pick_problems_are_pick_based():
-    bank = load_bank("role_bound_association")
+    bank = load_items()[1]
     it = next(x for x in bank if x["id"] == "oa-police-thief-chase-ab")
     b = build_block_v2(it, bank, LEX)
     q1 = b.shown[0].index(next(x for x in b.shown[0] if x.startswith("Marcus,"))) + 1
@@ -233,7 +232,7 @@ def test_every_shown_role_has_cjk_and_plural_forms():
     from wsbench import mc
     from wsbench.evals.role_bound_association.judge import _person_of
 
-    bank = load_bank("role_bound_association")
+    bank = load_items()[1]
     roles = {_person_of(lab)[1] for it in bank for lab in build_block_v2(it, bank, LEX).people}
     for role in sorted(roles):
         terms = LEX.terms(role)

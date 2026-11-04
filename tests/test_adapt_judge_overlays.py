@@ -153,7 +153,9 @@ RB = "role_bound_association"
 
 
 def _rb_bank() -> list[dict]:
-    return json.loads(registry.frozen_bank_path(RB).read_text(encoding="utf-8"))
+    from wsbench.evals.role_bound_association import judge
+
+    return judge.load_items()[0]  # the registered bank's items (bank v2 is a wrapped file)
 
 
 def _rb_view(bank):
@@ -594,7 +596,10 @@ def _view_user_modeling():
 
 
 def _view_role_bound():
-    return _rb_view(_rb_bank())
+    # the 100-item items.json: bank v2 keeps 92 of its items with the same blocks, drawn from
+    # items.json's pool (tests/test_role_bound_bank_v2.py)
+    v1 = registry.REPO_ROOT / "evals/role_bound_association/items.json"
+    return _rb_view(json.loads(v1.read_text(encoding="utf-8")))
 
 
 def _view_mcdm():

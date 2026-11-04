@@ -9,8 +9,7 @@ import pytest
 
 from wsbench.digest import Line
 from wsbench.evals.role_bound_association import gate
-from wsbench.evals.role_bound_association.judge import build_block_v2, pick_problems
-from wsbench.mcjudge import load_bank
+from wsbench.evals.role_bound_association.judge import build_block_v2, load_items, pick_problems
 
 LEX = gate.load_lexicon()
 TP = (("Margaret", "teacher"), ("Dana", "parent"))  # oa-teacher-parent-blame-ab
@@ -98,7 +97,7 @@ def _picks(b, names: tuple[str, str], action: str) -> dict:
 
 
 def test_pick_problems_no_re_ask_on_a_third_person_parent():
-    bank = load_bank("role_bound_association")
+    bank = load_items()[1]
     it = next(x for x in bank if x["id"] == "oa-teacher-parent-blame-ab")
     b = build_block_v2(it, bank, LEX)
     r = {**_picks(b, ("Margaret", "Dana"), "blamed")}
