@@ -457,3 +457,37 @@ def test_bugclaim_warning_names_both_remedies():
     msg = rf.bugclaim_warning(3)
     assert "refill families=buggy_code" in msg and "gate families=buggy_code regate=true" in msg
     assert "originals only" in msg
+
+
+class RefusingSession(FakeSession):
+    """The primary model refuses (stop_reason "refusal", no text); others answer."""
+
+    def create(self, **kw):
+        FakeSession.calls.append(kw)
+        if kw["model"] == "claude-test":
+            return SimpleNamespace(content=[], stop_reason="refusal")
+        text = json.dumps({"bug_claim": False, "correct": True, "why": "x"})
+        return SimpleNamespace(content=[SimpleNamespace(type="text", text=text)],
+                               stop_reason="end_turn")  # fmt: skip
+
+
+def test_bugclaim_refusal_is_reasked_once_on_the_fallback(tmp_path, monkeypatch):
+    """Delta audit B1: an Opus refusal on the bugclaim rubric is re-asked on Sonnet 5.5 at
+    once (no same-model retries), the serving model is recorded beside the persisted verdict and in
+    ``grade.served_by``; other rubrics keep the old rule (a refusal stays undecided)."""
+    from wsbench.adapt import auth
+
+    monkeypatch.setattr(store, "REPO_ROOT", tmp_path)
+    monkeypatch.setattr(auth, "Session", RefusingSession)
+    FakeSession.calls = []
+    grade = grade_llm.grader("claude-test")
+    assert grade(_bc(), ["print(1)"]) == [False]
+    assert [c["model"] for c in FakeSession.calls] == ["claude-test", grade_llm.REFUSAL_FALLBACK]
+    assert grade.served_by == {grade_llm.REFUSAL_FALLBACK: 1}
+    lines = (tmp_path / "adapted" / ".grade_cache" / "claude-test.jsonl").read_text().splitlines()
+    assert json.loads(lines[-1])["by"] == grade_llm.REFUSAL_FALLBACK
+    FakeSession.calls = []
+    plain = Ask("q", "surface", ("Paris",), ({"role": "user", "content": "Q?"},), grade="llm")
+    monkeypatch.setattr(grade_llm.time, "sleep", lambda s: None)
+    assert grade(plain, ["Paris"]) == [None]  # not a fallback rubric: retried, then undecided
+    assert [c["model"] for c in FakeSession.calls] == ["claude-test"] * grade_llm.ATTEMPTS

@@ -34,6 +34,12 @@ B_PROMPT = (
     'claim. Reply with JSON only: {"bug_claim": true} or {"bug_claim": false}.'
 )
 RUBRICS: dict[str, tuple[str, str]] = {"buggy_bug_claim": (B_PROMPT, "bug_claim")}
+# plan 0066 delta audit B1: Opus refuses to grade some bare programs (stop_reason "refusal", no
+# text; 20 of 147 GLM-5.3 bugclaim grades). For these rubrics a refused grade is re-asked ONCE
+# on this model (the jailbreak precedent, digest.REFUSAL_MODEL); the serving model is recorded
+# beside the persisted verdict and counted in ``grade.served_by``
+REFUSAL_FALLBACK = "claude-sonnet-5-5"
+FALLBACK_RUBRICS = frozenset({"buggy_bug_claim"})
 
 
 def rubric_of(ask: Ask) -> str | None:
@@ -80,6 +86,7 @@ def grader(model: str) -> Callable[[Ask, list[str]], list[bool | None]]:
 
     session = Session()
     cache: dict[str, bool | None] = {}
+    served_by: dict[str, int] = {}  # serving model -> grades it decided (a fallback is visible)
     lock = threading.Lock()
     # persisted across runs (a 401 or a crash no longer redoes every grade): decided verdicts
     # only, so an undecided one is asked again next time
@@ -96,20 +103,26 @@ def grader(model: str) -> Callable[[Ask, list[str]], list[bool | None]]:
         with lock:
             if key in cache:
                 return cache[key]
-        verdict = _call(ask, answer)
+        verdict, by = _call(ask, answer)
         with lock:
             cache[key] = verdict
             if verdict is not None:
+                served_by[by] = served_by.get(by, 0) + 1
+                rec = (
+                    {"k": key, "v": verdict} if by == model else {"k": key, "v": verdict, "by": by}
+                )
                 try:  # the cache is an optimisation: a network-volume I/O error must not kill a run
                     with path.open("a", encoding="utf-8") as fh:
-                        fh.write(json.dumps({"k": key, "v": verdict}) + "\n")
+                        fh.write(json.dumps(rec) + "\n")
                 except OSError as e:
                     print(f"[grade-cache] write failed ({e}); continuing uncached")
         return verdict
 
-    def _call(ask: Ask, answer: str) -> bool | None:
+    def _call(ask: Ask, answer: str) -> tuple[bool | None, str]:
         system, user, field = request(ask, answer)
         kw = {} if system is None else {"system": system}
+        use = model
+        fallback = REFUSAL_FALLBACK if rubric_of(ask) in FALLBACK_RUBRICS else None
         # a transient error or an unparsable reply is retried: an undecided grade fails a strict
         # leak screen (max_rate 0 needs every sample decided), so None must mean "really unsure"
         attempt = 0
@@ -117,23 +130,28 @@ def grader(model: str) -> Callable[[Ask, list[str]], list[bool | None]]:
             seen = session.pushed
             try:
                 msg = session.create(
-                    model=model,
+                    model=use,
                     max_tokens=200,
                     **kw,
                     messages=[{"role": "user", "content": user}],
                 )
+                refused = getattr(msg, "stop_reason", None) == "refusal"
+                if refused and fallback is not None and use != fallback:
+                    use, attempt = fallback, 0  # re-ask on the fallback model (B1)
+                    continue
                 text = "".join(b.text for b in msg.content if b.type == "text").strip()
-                return bool(json.loads(text[text.index("{") : text.rindex("}") + 1])[field])
+                return bool(json.loads(text[text.index("{") : text.rindex("}") + 1])[field]), use
             except anthropic.AuthenticationError as e:
                 if not session.refresh(seen):  # no newer token in the Dict
                     raise TokenExpired(PUSH) from e
             except (anthropic.APIError, ValueError, KeyError):
                 time.sleep(2**attempt)
                 attempt += 1
-        return None
+        return None, use
 
     def grade(ask: Ask, answers: list[str]) -> list[bool | None]:
         return [one(ask, a) for a in answers]
 
     grade.cache = cache  # type: ignore[attr-defined]
+    grade.served_by = served_by  # type: ignore[attr-defined]
     return grade
