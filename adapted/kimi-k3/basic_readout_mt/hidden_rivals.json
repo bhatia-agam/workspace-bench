@@ -1,0 +1,48 @@
+{
+ "version": "adapt-kimi-k3",
+ "note": "adapted-only items' same-topic distractors the MC builder dropped (adapt mc); added to evals/basic_readout_mt/hidden_rivals.json by the judge",
+ "items": {
+  "basic-au-t1-w100c0-brh-ent-battle-hastings": {
+   "readout": [
+    "Battle of Bosworth Field",
+    "Battle of Crécy"
+   ]
+  },
+  "basic-au-t1-w100c0-brh-ent-boyle-law": {
+   "readout": [
+    "Charles's law",
+    "Gay-Lussac's law",
+    "Avogadro's law"
+   ]
+  },
+  "basic-au-t1-w100c0-brh-ent-ming-dynasty": {
+   "readout": [
+    "Qing dynasty",
+    "Song dynasty",
+    "Yuan dynasty"
+   ]
+  },
+  "basic-au-t1-w100c0-brh-ent-rosetta-stone": {
+   "readout": [
+    "Narmer Palette",
+    "Palermo Stone",
+    "Mesha Stele",
+    "Behistun Inscription"
+   ]
+  },
+  "basic-au-t1-w100c0-brh-ent-taj-mahal": {
+   "readout": [
+    "Humayun's Tomb",
+    "Qutb Minar",
+    "Jama Masjid"
+   ]
+  },
+  "basic-au-t1-w100c0-brh-ent-treaty-versailles": {
+   "readout": [
+    "Treaty of Saint-Germain",
+    "Treaty of Trianon",
+    "Treaty of Sèvres"
+   ]
+  }
+ }
+}

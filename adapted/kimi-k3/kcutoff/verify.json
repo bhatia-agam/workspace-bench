@@ -1,0 +1,1575 @@
+{
+ "cs00043": {
+  "gold": "4.6",
+  "cutoff": null,
+  "js": {
+   "true_answer": "4.6",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Qualcomm announced the Snapdragon 8 Elite Gen 5 in September 2025 with prime cores clocked up to 4.6 GHz, which matches the model's answer."
+  }
+ },
+ "cs00044": {
+  "gold": "153",
+  "cutoff": null,
+  "js": {
+   "true_answer": "153",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Apple announced the M5 in October 2025 with 153 GB/s unified memory bandwidth, nearly 30% more than the M4's 120 GB/s."
+  }
+ },
+ "cs00047": {
+  "gold": "5.6",
+  "cutoff": null,
+  "js": {
+   "true_answer": "5.6",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "AMD announced the Ryzen 7 9850X3D at CES 2026 with a 5.6 GHz max boost, which matches the model's answer and is 400 MHz above the 9800X3D's 5.2 GHz."
+  }
+ },
+ "cs00053": {
+  "gold": "24",
+  "cutoff": null,
+  "js": {
+   "true_answer": "24",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Apple claimed up to 24 hours of video streaming for the 14-inch M5 MacBook Pro, the same figure as the M4 model, so the answer is right even though it matches the earlier spec."
+  }
+ },
+ "cs00140": {
+  "gold": "o4-mini",
+  "cutoff": null,
+  "js": {
+   "true_answer": "o4-mini",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "OpenAI released o3 and o4-mini together on April 16, 2025, so the model's answer is correct."
+  }
+ },
+ "cs00165": {
+  "gold": "1000000",
+  "cutoff": null,
+  "js": {
+   "true_answer": "1000000",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "In August 2025 Anthropic announced 1M-token context for Claude Sonnet 4 in public beta on its API, which matches the model's answer."
+  }
+ },
+ "cs00166": {
+  "gold": "2000000",
+  "cutoff": null,
+  "js": {
+   "true_answer": "2000000",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "xAI announced Grok 4 Fast in September 2025 with a 2M-token context window, which matches the model's answer."
+  }
+ },
+ "cs00248": {
+  "gold": "ls power",
+  "cutoff": null,
+  "js": {
+   "true_answer": "LS Power",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "In May 2025 NRG agreed to buy about 13 GW of gas plants from LS Power for roughly $12 billion, which matches the model's answer."
+  }
+ },
+ "cs00263": {
+  "gold": "cox communications",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Cox Communications",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Charter announced in May 2025 that it would combine with Cox Communications in a deal valuing Cox at about $34.5 billion."
+  }
+ },
+ "cs00531": {
+  "gold": "17",
+  "cutoff": null,
+  "js": {
+   "true_answer": "17",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "The ECB announced a 25bp cut to its key rates on April 17, 2025, so the model's answer matches."
+  }
+ },
+ "cs00572": {
+  "gold": "london",
+  "cutoff": null,
+  "js": {
+   "true_answer": "London",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "The October 2025 silver liquidity squeeze centered on the London market, where lease rates spiked and prices topped $50, so the model's answer matches."
+  }
+ },
+ "cs00579": {
+  "gold": "1980",
+  "cutoff": null,
+  "js": {
+   "true_answer": "1980",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Contemporaneous reports described the January 30, 2026 plunge as silver's worst day since the 1980 Hunt brothers collapse, and the model's answer matches that and the recorded answer."
+  }
+ },
+ "cs00765": {
+  "gold": "frida kahlo",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Frida Kahlo",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "In November 2025 Frida Kahlo's 'El sueño (La cama)' sold at Sotheby's New York for about $54.7M, beating O'Keeffe's 2014 record for a woman artist."
+  }
+ },
+ "cs00808": {
+  "gold": "phillips",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Phillips",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "The model's answer matches the recorded answer, and Phillips usually leads the Geneva November sales, though I can't independently confirm the 2025 results."
+  }
+ },
+ "cs00906": {
+  "gold": "athena",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Athena",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "The IM-2 Nova-C lander was named Athena and touched down near Mons Mouton on March 6, 2025."
+  }
+ },
+ "cs00916": {
+  "gold": "canada-france-hawaii telescope",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Canada-France-Hawaii Telescope",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Edward Ashton's team used the CFHT (shift-and-stack) to find the 128 new Saturn moons announced in March 2025."
+  }
+ },
+ "cs00953": {
+  "gold": "frankfurt airport",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Frankfurt Airport",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Fraport scheduled Frankfurt Airport's new Terminal 3 to open to passengers in April 2026, which matches the model's answer."
+  }
+ },
+ "cs00954": {
+  "gold": "downtown redmond",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Downtown Redmond",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "The 2 Line extension opened on May 10, 2025, with Downtown Redmond as its new eastern terminus, so the model's answer matches."
+  }
+ },
+ "cs00980": {
+  "gold": "klagenfurt",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Klagenfurt",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "The Koralm Railway links Graz and Klagenfurt, which matches the model's answer."
+  }
+ },
+ "cs00988": {
+  "gold": "klagenfurt",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Klagenfurt",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "The Koralm Railway, with the Koralm Tunnel under the Koralpe, links Graz with Klagenfurt, so the model's answer is correct."
+  }
+ },
+ "cs00999": {
+  "gold": "27",
+  "cutoff": null,
+  "js": {
+   "true_answer": "27",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "The Aqua Line (Colaba–Bandra–SEEPZ/Aarey) opened in full in October 2025 with 27 stations, so the model's answer matches."
+  }
+ },
+ "cs01107": {
+  "gold": "russia",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Russia",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "The Global Peace Index 2025 ranked Russia as the least peaceful country, displacing Yemen, which held that spot in 2024."
+  }
+ },
+ "cs01211": {
+  "gold": "7",
+  "cutoff": null,
+  "js": {
+   "true_answer": "7",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Márquez clinched the 2025 MotoGP title at Motegi in September 2025, adding a seventh premier-class crown to his 2013, 2014 and 2016–2019 titles."
+  }
+ },
+ "cs01575": {
+  "gold": "powershell 2.0",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Windows PowerShell 2.0",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "In July 2025 Microsoft announced that Windows PowerShell 2.0 would be removed from Windows 11 24H2 starting in August 2025, which matches the model's answer."
+  }
+ },
+ "cs01611": {
+  "gold": "field",
+  "cutoff": null,
+  "js": {
+   "true_answer": "field",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "C# 14 made the 'field' contextual keyword a standard feature for referring to the compiler-generated backing field in property accessors."
+  }
+ },
+ "cs01615": {
+  "gold": "aarch64-pc-windows-msvc",
+  "cutoff": null,
+  "js": {
+   "true_answer": "aarch64-pc-windows-msvc",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Rust 1.91 (October 30, 2025) promoted aarch64-pc-windows-msvc to Tier 1, which matches the model's answer."
+  }
+ },
+ "cs01635": {
+  "gold": "resolvable private address",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Resolvable private address (RPA)",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Bluetooth Core 6.1 added randomized timing for Resolvable Private Address updates, which matches the model's answer."
+  }
+ },
+ "cs01684": {
+  "gold": "a321neo",
+  "cutoff": null,
+  "js": {
+   "true_answer": "A321neo",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "At the 2025 Paris Air Show, VietJet signed an MoU with Airbus for 100 A321neo jets, which matches the model's answer."
+  }
+ },
+ "cs01709": {
+  "gold": "160",
+  "cutoff": null,
+  "js": {
+   "true_answer": "160",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "The NextGen Acela (Avelia Liberty) entered service on August 28, 2025, with a top operating speed of 160 mph, matching the model's answer."
+  }
+ },
+ "cs01747": {
+  "gold": "3750",
+  "cutoff": null,
+  "js": {
+   "true_answer": "3750",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "The July 2025 Electric Car Grant offered up to £3,750 on eligible cars priced under £37,000, which matches the model's answer."
+  }
+ },
+ "cs01809": {
+  "gold": "nintendo switch 2",
+  "cutoff": null,
+  "js": {
+   "true_answer": null,
+   "model_correct": "unknown",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "The 2026 Famitsu annual results are beyond my knowledge, and Switch 2 (launched June 2025) is the obvious front-runner rather than a reused older fact."
+  }
+ },
+ "cs01861": {
+  "gold": "27",
+  "cutoff": null,
+  "js": {
+   "true_answer": null,
+   "model_correct": "unknown",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "27% is Microsoft's stake from the October 2025 recapitalization, so the model is likely reusing that earlier figure for a later November 2026 adjustment whose outcome I don't know."
+  }
+ },
+ "kc2_00071": {
+  "gold": "october 16, 2025",
+  "cutoff": null,
+  "js": {
+   "true_answer": "October 16, 2025",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "The ROG Xbox Ally and ROG Xbox Ally X launched on October 16, 2025, which matches the model's answer."
+  }
+ },
+ "kc2_00777": {
+  "gold": "zimbabwe",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Zimbabwe",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Kirsty Coventry of Zimbabwe was elected IOC President on 20 March 2025."
+  }
+ },
+ "kc2_00798": {
+  "gold": "aminul islam bulbul",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Aminul Islam Bulbul",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Aminul Islam Bulbul, Bangladesh's first Test captain, was elected BCB president on 29 May 2025, replacing Faruque Ahmed."
+  }
+ },
+ "kc2_00864": {
+  "gold": "united kingdom",
+  "cutoff": null,
+  "js": {
+   "true_answer": "United Kingdom",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "On May 8, 2025, Trump announced a trade deal with the UK, and Bitcoin rose back above $100K the same day."
+  }
+ },
+ "kc2_00949": {
+  "gold": "10",
+  "cutoff": null,
+  "js": {
+   "true_answer": "10",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "China's March 2025 retaliation put an extra 10% tariff on US soybeans, alongside sorghum, pork, beef and others, while chicken, wheat, corn and cotton got 15%."
+  }
+ },
+ "kc2_01057": {
+  "gold": "morgan stanley",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Morgan Stanley",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Morgan Stanley arranged and marketed xAI's $5 billion debt sale in June 2025, which matches the model's answer."
+  }
+ },
+ "kc2_01213": {
+  "gold": "185",
+  "cutoff": null,
+  "js": {
+   "true_answer": "185",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "AMD stated that the MI350-series (CDNA 4) GPUs contain 185 billion transistors, which matches the model's answer."
+  }
+ },
+ "kc2_01356": {
+  "gold": "university of california, berkeley",
+  "cutoff": null,
+  "js": {
+   "true_answer": "University of California, Berkeley",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "ESCAPADE is led by UC Berkeley's Space Sciences Laboratory and launched on New Glenn on November 13, 2025."
+  }
+ },
+ "kc2_01564": {
+  "gold": "trump national doral miami",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Trump National Doral Miami",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "The US announced that the 2026 G20 summit would be held at Trump National Doral in Miami, which matches the model's answer."
+  }
+ },
+ "kc2_01581": {
+  "gold": "pointe du lac",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Pointe du Lac",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Câble C1 starts at the Pointe du Lac terminus of Métro Line 8 in Créteil and runs to Villeneuve-Saint-Georges, which matches the model's answer."
+  }
+ },
+ "kc2_01593": {
+  "gold": "santo domingo oeste",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Los Alcarrizos",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "The second cable car line, inaugurated in May 2025, serves Los Alcarrizos; Santo Domingo Oeste is a neighbouring municipality and a natural but wrong guess."
+  }
+ },
+ "kc2_01897": {
+  "gold": "japan",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Japan (Mao Saigo, Miyu Yamashita); Australia also had two (Minjee Lee, Grace Kim)",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Mao Saigo won the Chevron and Miyu Yamashita won the AIG Women's Open, so Japan is valid, though Australia also qualifies."
+  }
+ },
+ "kc2_02377": {
+  "gold": "david liu",
+  "cutoff": null,
+  "js": {
+   "true_answer": "David Liu",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "David Liu of the Broad Institute received the 2025 Breakthrough Prize in Life Sciences for base and prime editing, matching the model's answer."
+  }
+ },
+ "kc2_02621": {
+  "gold": "64",
+  "cutoff": null,
+  "js": {
+   "true_answer": "64",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "JEDEC's April 2025 HBM4 standard (JESD270-4) supports 16-high stacks of 32Gb dies, for up to 64 GB per stack."
+  }
+ },
+ "kc2_02654": {
+  "gold": "hong kong stock exchange",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Hong Kong Stock Exchange",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Pony.ai and WeRide both debuted secondary listings on the Hong Kong Stock Exchange on November 6, 2025, which matches the model's answer."
+  }
+ },
+ "kc2_02709": {
+  "gold": "1000",
+  "cutoff": null,
+  "js": {
+   "true_answer": "1000",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "In March 2025 BYD announced that the Super e-Platform's flash charging peaks at 1000 kW (1 MW), so the model's answer matches."
+  }
+ },
+ "kc2_02729": {
+  "gold": "spirit airlines",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Spirit Airlines",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Spirit Airlines filed for Chapter 11 again in August 2025, less than a year after its November 2024 filing."
+  }
+ },
+ "kc2_02745": {
+  "gold": "fuel control switches",
+  "cutoff": null,
+  "js": {
+   "true_answer": "The engine fuel control switches (both Engine 1 and Engine 2)",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "The AAIB preliminary report stated that both engine fuel control switches moved from RUN to CUTOFF about one second apart shortly after liftoff."
+  }
+ },
+ "kc2_02754": {
+  "gold": "4",
+  "cutoff": null,
+  "js": {
+   "true_answer": "4",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "At the June 24, 2025 board meeting the NTSB confirmed that all four retaining bolts were missing from the door plug when the aircraft left Boeing's Renton factory."
+  }
+ },
+ "kc3_00001": {
+  "gold": "500",
+  "cutoff": null,
+  "js": {
+   "true_answer": "500",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Samsung's Odyssey OLED G6 (G60SF), announced at CES 2025, is a 27-inch 1440p QD-OLED with a 500Hz refresh rate, so the model's answer matches."
+  }
+ },
+ "kc3_00092": {
+  "gold": "64",
+  "cutoff": null,
+  "js": {
+   "true_answer": "64",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "The reMarkable Paper Pro Move was announced with 64 GB of storage, the same as the Paper Pro, so the model's answer matches."
+  }
+ },
+ "kc3_00200": {
+  "gold": "600",
+  "cutoff": null,
+  "js": {
+   "true_answer": "600",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "The BenQ ZOWIE XL2586X+ was launched in 2025 as a 600Hz TN esports monitor, which matches the model's answer."
+  }
+ },
+ "kc3_00561": {
+  "gold": "eric schmidt",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Eric Schmidt",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Eric Schmidt was announced as CEO of Relativity Space in March 2025, succeeding Tim Ellis, which matches the model's answer."
+  }
+ },
+ "kc3_00869": {
+  "gold": "64-72",
+  "cutoff": null,
+  "js": {
+   "true_answer": "64-72",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "On April 30, 2025, Meta raised its 2025 capex outlook to $64-72 billion, up from $60-65 billion."
+  }
+ },
+ "kc3_01004": {
+  "gold": "sulawesi",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Muna",
+   "model_correct": "no",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "The 2026 stencil is from Liang Metanduno on Muna Island, off Sulawesi, so the model's answer reuses Sulawesi from the earlier record-holding cave art at Leang Karampuang."
+  }
+ },
+ "kc3_01184": {
+  "gold": "lc-39a",
+  "cutoff": null,
+  "js": {
+   "true_answer": "LC-39A",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "IMAP, Carruthers and SWFO-L1 launched together on a Falcon 9 from Kennedy's Launch Complex 39A on September 24, 2025."
+  }
+ },
+ "kc2_00008": {
+  "gold": "13.2",
+  "cutoff": null,
+  "js": {
+   "true_answer": "13.2",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "The OnePlus Pad 3, launched in June 2025, has a 13.2-inch 3.4K display, matching the model's answer."
+  }
+ },
+ "kc2_00035": {
+  "gold": "12",
+  "cutoff": null,
+  "js": {
+   "true_answer": "12",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Sony's WH-1000XM6 uses 12 microphones for noise cancellation, up from 8 on the XM5, so the model's answer matches."
+  }
+ },
+ "kc2_00114": {
+  "gold": "presto",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Presto",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "The Samsung 9100 Pro uses Samsung's in-house 5nm Presto controller, which matches the model's answer."
+  }
+ },
+ "kc2_00179": {
+  "gold": "512",
+  "cutoff": null,
+  "js": {
+   "true_answer": "512",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "The March 2025 Mac Studio with M3 Ultra offered up to 512GB of unified memory, so the model's answer is right."
+  }
+ },
+ "kc2_00254": {
+  "gold": "288",
+  "cutoff": null,
+  "js": {
+   "true_answer": "288",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "AMD's MI355X ships with 288 GB of HBM3E, which matches the model's answer."
+  }
+ },
+ "kc2_00299": {
+  "gold": "150",
+  "cutoff": null,
+  "js": {
+   "true_answer": "150",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "OpenAI priced o1-pro in the API at $150 per million input tokens and $600 per million output tokens in March 2025."
+  }
+ },
+ "kc2_01412": {
+  "gold": "6000",
+  "cutoff": null,
+  "js": {
+   "true_answer": "6000",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "NASA announced in September 2025 that its confirmed exoplanet count had passed 6,000, which matches the model's answer."
+  }
+ },
+ "kc2_01486": {
+  "gold": "site 31",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Site 31 (pad 31/6)",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Soyuz MS-28 launched from Site 31/6 on 27 November 2025, and that pad's mobile service cabin collapsed into the flame trench during the launch."
+  }
+ },
+ "kc2_01660": {
+  "gold": "coco gauff",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Coco Gauff",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Coco Gauff topped Forbes' December 2025 ranking of highest-paid female athletes, repeating her 2024 position, so the model's answer is correct even though it matches the earlier fact."
+  }
+ },
+ "kc2_01666": {
+  "gold": "shai gilgeous-alexander",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Shai Gilgeous-Alexander",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Shai Gilgeous-Alexander was named the 2024–25 NBA MVP in May 2025, matching the model's answer."
+  }
+ },
+ "kc2_01752": {
+  "gold": "sunrise on the reaping",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Sunrise on the Reaping",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Sunrise on the Reaping is the Suzanne Collins novel published in March 2025, and the model's answer matches the author's recorded answer."
+  }
+ },
+ "kc3_00007": {
+  "gold": "480",
+  "cutoff": null,
+  "js": {
+   "true_answer": "480",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "The LG UltraGear 27GX790A is a 27-inch 1440p OLED monitor with a 480Hz refresh rate, which matches the model's answer."
+  }
+ },
+ "kc3_00089": {
+  "gold": "7.3",
+  "cutoff": null,
+  "js": {
+   "true_answer": "7.3",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "The reMarkable Paper Pro Move, announced in September 2025, has a 7.3-inch Canvas Color display, which matches the model's answer."
+  }
+ },
+ "kc3_00189": {
+  "gold": "120",
+  "cutoff": null,
+  "js": {
+   "true_answer": "120",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "IBM's Nighthawk, unveiled in November 2025, has 120 qubits with 218 tunable couplers, so the model's answer is correct."
+  }
+ },
+ "kc3_00238": {
+  "gold": "12.99",
+  "cutoff": null,
+  "js": {
+   "true_answer": "12.99",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Apple raised the Apple TV+ price from $9.99 to $12.99 per month in August 2025, which matches the model's answer."
+  }
+ },
+ "kc3_00345": {
+  "gold": "288",
+  "cutoff": null,
+  "js": {
+   "true_answer": "288",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "At GTC 2025, Nvidia announced that Blackwell Ultra (B300) carries 288 GB of HBM3e per GPU, up from 192 GB on the B200."
+  }
+ },
+ "kc3_00838": {
+  "gold": "dave davis",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Dave Davis",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Dave Davis succeeded Ted Christie as Spirit's CEO in spring 2025 and led the carrier through its second Chapter 11 filing in August 2025."
+  }
+ },
+ "kc3_01193": {
+  "gold": "lc-39a",
+  "cutoff": null,
+  "js": {
+   "true_answer": "LC-39A",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "As far as I recall, CRS-32 launched on April 21, 2025 from Kennedy's LC-39A, matching both the model's answer and the recorded answer."
+  }
+ },
+ "kc3_01292": {
+  "gold": "100",
+  "cutoff": null,
+  "js": {
+   "true_answer": "100",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Duffy's August 2025 directive called for a lunar fission reactor of at least 100 kWe, launching by 2030, up from the earlier 40 kW target."
+  }
+ },
+ "kc3_02306": {
+  "gold": "320",
+  "cutoff": null,
+  "js": {
+   "true_answer": "320",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Mercedes quoted up to 320 kW DC fast charging for the 800-volt electric CLA unveiled in March 2025."
+  }
+ },
+ "kc3_02384": {
+  "gold": "3.10",
+  "cutoff": null,
+  "js": {
+   "true_answer": "3.11",
+   "model_correct": "no",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "JAX 0.7.0 dropped Python 3.10 support and requires 3.11, so the model's 3.10 is the earlier minimum from the 0.4.x/0.5.x era."
+  }
+ },
+ "kc3_02445": {
+  "gold": "42",
+  "cutoff": null,
+  "js": {
+   "true_answer": "42",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "In October 2025 the FAA approved raising Boeing's 737 MAX production cap from 38 to 42 aircraft per month, matching the model's answer."
+  }
+ },
+ "kc4_00160": {
+  "gold": "200",
+  "cutoff": null,
+  "js": {
+   "true_answer": "200",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Perplexity Max launched in July 2025 at $200/month, which matches the model's answer."
+  }
+ },
+ "kc4_00164": {
+  "gold": "8",
+  "cutoff": null,
+  "js": {
+   "true_answer": "8",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "OpenAI's January 2026 worldwide rollout priced ChatGPT Go at $8/month in the US, matching the model's answer."
+  }
+ },
+ "kc4_00551": {
+  "gold": "0.75",
+  "cutoff": null,
+  "js": {
+   "true_answer": "0.75",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "The Bank of Japan raised its short-term policy rate from 0.5% to 0.75% at its December 19, 2025 meeting, which matches the model's answer."
+  }
+ },
+ "kc4_00583": {
+  "gold": "7.25",
+  "cutoff": null,
+  "js": {
+   "true_answer": "7.25",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "The Fed's 25bp cut on Sept 17, 2025 moved the fed funds range to 4.00–4.25%, so prime fell from 7.50% to 7.25%."
+  }
+ },
+ "kc2_00238": {
+  "gold": "snapdragon x85",
+  "cutoff": null,
+  "js": {
+   "true_answer": null,
+   "model_correct": "unknown",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "The Snapdragon X85 is the modem in the September 2025 Snapdragon 8 Elite Gen 5, so the answer likely reuses the prior chip's modem; I don't know the September 2026 chip's modem."
+  }
+ },
+ "kc2_01044": {
+  "gold": "0.91",
+  "cutoff": null,
+  "js": {
+   "true_answer": null,
+   "model_correct": "no",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "$0.91 is the dividend Microsoft declared in September 2025, so an increase in September 2026 must be higher than $0.91."
+  }
+ },
+ "kc3_00121": {
+  "gold": "36",
+  "cutoff": null,
+  "js": {
+   "true_answer": null,
+   "model_correct": "unknown",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "The 36GB figure is the M4 Max Mac Studio base configuration carried over, and I don't know the actual 2026 M5 Max base memory."
+  }
+ },
+ "cs00013": {
+  "gold": "kirin 9020",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Kirin 9020",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "The Huawei Mate XTs, launched in September 2025, uses the Kirin 9020, which matches the model's answer."
+  }
+ },
+ "cs00017": {
+  "gold": "256",
+  "cutoff": null,
+  "js": {
+   "true_answer": "256",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "The Nintendo Switch 2, announced in April 2025, ships with 256 GB of internal storage, matching the model's answer."
+  }
+ },
+ "cs00024": {
+  "gold": "399.99",
+  "cutoff": null,
+  "js": {
+   "true_answer": "399.99",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Nintendo raised the Switch OLED's US price from $349.99 to $399.99 effective August 3, 2025, which matches the model's answer."
+  }
+ },
+ "cs00041": {
+  "gold": "18",
+  "cutoff": null,
+  "js": {
+   "true_answer": "18",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Qualcomm's Snapdragon X2 Elite Extreme, announced at Snapdragon Summit in September 2025, has 18 CPU cores (12 Prime plus 6 Performance), matching the model's answer."
+  }
+ },
+ "cs00050": {
+  "gold": "2",
+  "cutoff": null,
+  "js": {
+   "true_answer": "2",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "The M4 MacBook Air drives two external displays (up to 6K) with its lid open, unlike the M3, which needed the lid closed."
+  }
+ },
+ "cs00054": {
+  "gold": "899",
+  "cutoff": null,
+  "js": {
+   "true_answer": "899",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Microsoft announced the 13-inch Surface Laptop with Snapdragon X Plus in May 2025 at a starting price of $899, which matches the model's answer."
+  }
+ },
+ "cs00056": {
+  "gold": "24",
+  "cutoff": null,
+  "js": {
+   "true_answer": "24",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "The RTX 5090 Laptop GPU ships with 24 GB of GDDR7 VRAM, which matches the model's answer."
+  }
+ },
+ "cs00059": {
+  "gold": "hypertension",
+  "cutoff": null,
+  "js": {
+   "true_answer": "hypertension",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Apple Watch Series 11 introduced FDA-cleared hypertension notifications in September 2025, so the model's answer matches."
+  }
+ },
+ "cs00064": {
+  "gold": "30",
+  "cutoff": null,
+  "js": {
+   "true_answer": "30",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Google claimed up to 30 hours for the 41mm Pixel Watch 4 (40 hours for the 45mm), up from the Pixel Watch 3's 24 hours."
+  }
+ },
+ "cs00075": {
+  "gold": "2",
+  "cutoff": null,
+  "js": {
+   "true_answer": "2",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Samsung's Exynos 2600, announced in December 2025, is built on Samsung's 2nm GAA process (SF2), which matches the model's answer."
+  }
+ },
+ "cs00167": {
+  "gold": "256k",
+  "cutoff": null,
+  "js": {
+   "true_answer": "256K tokens (262,144)",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Kimi K2-Instruct-0905 extended the context window from 128K to 256K tokens."
+  }
+ },
+ "cs00170": {
+  "gold": "262144",
+  "cutoff": null,
+  "js": {
+   "true_answer": "262144",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Qwen3-Coder-480B-A35B-Instruct natively supports a 256K (262,144-token) context, extendable to 1M with YaRN."
+  }
+ },
+ "cs00294": {
+  "gold": "celestial ai",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Celestial AI",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "In December 2025 Marvell announced a deal to acquire Celestial AI, the developer of Photonic Fabric, for about $3.25 billion upfront, which matches the model's answer."
+  }
+ },
+ "cs00312": {
+  "gold": "instant on",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Instant On",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "The June 2025 DOJ settlement required HPE to divest its Instant On wireless networking business, matching the model's answer."
+  }
+ },
+ "cs00320": {
+  "gold": "foreign subsidies regulation",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Foreign Subsidies Regulation (FSR)",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "The Commission opened an in-depth FSR investigation into ADNOC/Covestro in July 2025 and approved the deal with commitments in November 2025."
+  }
+ },
+ "cs00359": {
+  "gold": "executive vice chair",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Executive Vice Chair of the Board",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Oracle announced in September 2025 that Safra Catz would become Executive Vice Chair of the Board, which matches the model's answer."
+  }
+ },
+ "cs00527": {
+  "gold": "5",
+  "cutoff": null,
+  "js": {
+   "true_answer": "5",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "In March 2025 the FOMC lowered the monthly Treasury runoff cap from $25 billion to $5 billion, matching the model's answer."
+  }
+ },
+ "cs00563": {
+  "gold": "taiwan dollar",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Taiwan dollar",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "In early May 2025 the Taiwan dollar surged about 8% over two days, its biggest two-day gain since the 1980s, matching the model's answer."
+  }
+ },
+ "cs00662": {
+  "gold": "apple",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Apple",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Apple fell about 9% on April 3, 2025, erasing roughly $311 billion, the biggest dollar loss of any US stock that day."
+  }
+ },
+ "cs00705": {
+  "gold": "anji khad bridge",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Anji Khad Bridge",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "The Anji Khad Bridge, India's first cable-stayed railway bridge, was inaugurated by PM Modi on 6 June 2025 on the USBRL."
+  }
+ },
+ "cs00706": {
+  "gold": "katra",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Katra (Shri Mata Vaishno Devi Katra)",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "On 6 June 2025, PM Modi flagged off the Vande Bharat trains from Shri Mata Vaishno Devi Katra station to Srinagar after inaugurating the Chenab bridge."
+  }
+ },
+ "cs00745": {
+  "gold": "amazon",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Amazon (Project Kuiper / Amazon Leo)",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "The first Ariane 64 flight in February 2026 carried Amazon's Kuiper/Leo broadband satellites, matching the model's answer."
+  }
+ },
+ "cs00834": {
+  "gold": "sothebys",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Sotheby's",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Sotheby's sold the original Birkin in Paris on July 10, 2025, for about €8.6 million, setting the handbag auction record."
+  }
+ },
+ "cs00840": {
+  "gold": "3",
+  "cutoff": null,
+  "js": {
+   "true_answer": "3",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Reports of the November 2025 Heritage auction, where the copy sold for about $9.12 million, say three brothers found it in their late mother's attic."
+  }
+ },
+ "cs00846": {
+  "gold": "endurance",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Endurance",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Crew-10 launched on March 14, 2025 aboard Crew Dragon Endurance, which matches the model's answer."
+  }
+ },
+ "cs00861": {
+  "gold": "india",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Bangladesh",
+   "model_correct": "no",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "Bangladesh signed the Accords in April 2025; the model instead reused India's earlier June 2023 signing."
+  }
+ },
+ "cs00862": {
+  "gold": "firefly aerospace",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Firefly Aerospace",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Firefly's Blue Ghost Mission 1 landed upright in Mare Crisium on March 2, 2025, the first fully successful commercial lunar landing."
+  }
+ },
+ "cs00903": {
+  "gold": "firefly aerospace",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Firefly Aerospace",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Firefly Aerospace's Blue Ghost Mission 1 landed in Mare Crisium on March 2, 2025, achieving a fully successful commercial lunar landing."
+  }
+ },
+ "cs00913": {
+  "gold": "long march 3b",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Long March 3B",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Tianwen-2 lifted off from Xichang on a Long March 3B on 29 May 2025, so the model's answer is right."
+  }
+ },
+ "cs00929": {
+  "gold": "chile",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Chile",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "3I/ATLAS was discovered by the ATLAS-CHL telescope at Río Hurtado, Chile, which matches the model's answer."
+  }
+ },
+ "cs00960": {
+  "gold": "pomona north",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Pomona North",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "The Glendora-to-Pomona extension opened in September 2025 with Pomona North as the new eastern terminus, matching the model's answer."
+  }
+ },
+ "cs00966": {
+  "gold": "indore",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Indore",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "On May 31, 2025, PM Modi virtually inaugurated the Indore Metro super-priority corridor, Madhya Pradesh's first metro service, so the model's answer matches."
+  }
+ },
+ "cs00973": {
+  "gold": "afcons infrastructure",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Afcons Infrastructure",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Afcons Infrastructure, a Shapoorji Pallonji group company, built the Chenab Rail Bridge, which was inaugurated in June 2025."
+  }
+ },
+ "cs01000": {
+  "gold": "2028",
+  "cutoff": null,
+  "js": {
+   "true_answer": "2028",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Presidential Regulation No. 79/2025, signed by Prabowo in mid-2025, targets Nusantara becoming the political capital in 2028, which matches the model's answer."
+  }
+ },
+ "cs01005": {
+  "gold": "5150",
+  "cutoff": null,
+  "js": {
+   "true_answer": "5150",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "The dam was inaugurated on 9 September 2025 with a stated installed capacity of 5,150 MW, matching the model's answer."
+  }
+ },
+ "cs01071": {
+  "gold": "chatgpt",
+  "cutoff": null,
+  "js": {
+   "true_answer": "ChatGPT",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Apple's 2025 year-end chart ranked ChatGPT as the No. 1 free iPhone app in the US, which matches the model's answer."
+  }
+ },
+ "cs01082": {
+  "gold": "onyx storm",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Onyx Storm",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Onyx Storm came out in January 2025 and was the year's dominant adult fiction seller, which matches the recorded answer."
+  }
+ },
+ "cs01091": {
+  "gold": "dubai international airport",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Dubai International Airport",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "ACI's 2024 ranking, released in April 2025, placed Atlanta first and Dubai second with about 92.3M passengers."
+  }
+ },
+ "cs01111": {
+  "gold": "google",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Google",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "In Kantar BrandZ 2025, Google ranked second behind Apple, followed by Microsoft, Amazon and NVIDIA."
+  }
+ },
+ "cs01115": {
+  "gold": "switzerland",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Switzerland",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Switzerland topped the IMD World Competitiveness Ranking 2025, ahead of Singapore and Hong Kong."
+  }
+ },
+ "cs01181": {
+  "gold": "kyle schwarber",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Kyle Schwarber",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Kyle Schwarber hit 56 home runs in 2025 and finished second to Shohei Ohtani in the NL MVP voting."
+  }
+ },
+ "cs01483": {
+  "gold": "mnexspike",
+  "cutoff": null,
+  "js": {
+   "true_answer": "mNEXSPIKE",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "The FDA approved Moderna's mRNA-1283 as mNEXSPIKE on May 31, 2025, which matches the model's answer."
+  }
+ },
+ "cs01524": {
+  "gold": "mars",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Mars",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "3I/ATLAS passed about 0.19 AU from Mars on October 3, 2025, and was imaged by Mars orbiters including ESA's ExoMars TGO and Mars Express."
+  }
+ },
+ "cs01552": {
+  "gold": "leqembi iqlik",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Leqembi Iqlik",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "In August 2025 the FDA approved Leqembi Iqlik, the subcutaneous autoinjector of lecanemab, for maintenance dosing."
+  }
+ },
+ "cs01590": {
+  "gold": "pixel 10",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Pixel 10",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Google's November 2025 announcement brought Quick Share–AirDrop interoperability first to the Pixel 10 series, matching the model's answer."
+  }
+ },
+ "cs01621": {
+  "gold": "promise.try",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Promise.try",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Promise.try reached Stage 4 and was included in ECMAScript 2025, approved in June 2025."
+  }
+ },
+ "cs01623": {
+  "gold": "26",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Safari 26",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "At WWDC 2025 Apple moved to year-based version numbers and announced Safari 26 alongside iOS 26 and macOS 26."
+  }
+ },
+ "cs01698": {
+  "gold": "2027",
+  "cutoff": null,
+  "js": {
+   "true_answer": "2027",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "In its Q3 2025 results Boeing took a $4.9B charge on the 777X and pushed first 777-9 delivery to 2027, matching the model's answer."
+  }
+ },
+ "cs01715": {
+  "gold": "shri mata vaishno devi katra",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Shri Mata Vaishno Devi Katra",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "On 6 June 2025 Modi flagged off the Vande Bharat trains between Shri Mata Vaishno Devi Katra and Srinagar, so the model's answer is right."
+  }
+ },
+ "cs01720": {
+  "gold": "glasgow",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Glasgow (Glasgow Prestwick Airport)",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Global Airlines' first commercial A380 flight left Glasgow Prestwick for New York JFK in mid-May 2025, which matches the model's answer."
+  }
+ },
+ "cs01823": {
+  "gold": "ai200",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Qualcomm AI200",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Qualcomm announced in October 2025 that the AI200 would be commercially available in 2026 (with the AI250 following in 2027) and named Humain as its first customer."
+  }
+ },
+ "cs00128": {
+  "gold": "oakley meta vanguard",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Oakley Meta Vanguard",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Meta and Oakley announced the Oakley Meta Vanguard wraparound sport glasses at Meta Connect in September 2025, so the model's answer is correct."
+  }
+ },
+ "cs00330": {
+  "gold": "henrique braun",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Henrique Braun",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "In December 2025 Coca-Cola announced that COO Henrique Braun would succeed James Quincey as CEO on March 31, 2026, matching the model's answer."
+  }
+ },
+ "cs00857": {
+  "gold": "february 5, 2026",
+  "cutoff": null,
+  "js": {
+   "true_answer": "February 5, 2026",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "At its September 2025 briefing, NASA said Artemis II could launch as early as February 5, 2026, which matches the model's answer."
+  }
+ },
+ "cs01481": {
+  "gold": "lp.8.1",
+  "cutoff": null,
+  "js": {
+   "true_answer": "LP.8.1",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "On May 22, 2025, VRBPAC recommended a monovalent JN.1-lineage vaccine, preferentially LP.8.1, which matches the model's answer."
+  }
+ },
+ "cs01606": {
+  "gold": "compression.zstd",
+  "cutoff": null,
+  "js": {
+   "true_answer": "compression.zstd",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "PEP 784 added the compression.zstd module in Python 3.14, so the model's answer matches."
+  }
+ }
+}

@@ -104,7 +104,7 @@ def test_v2_bank_drops_exactly_the_arith_items(real_families):
 def test_no_reachable_typo_mt_bank_has_arith_items():
     paths = [registry.REPO_ROOT / "evals/typo_mt/items_v2.json"]
     paths += sorted(REPO.glob("adapted/*/typo_mt.json"))
-    assert len(paths) == 13  # + adapted/glm-5.3 (plan 0060); bump deliberately per new set
+    assert len(paths) == 14  # + adapted/glm-5.3, kimi-k3 (plan 0060); bump deliberately per new set
     for p in paths:
         h, items = load_bank(p)
         assert all(it.get("subfamily") != "arith" for it in items), p
