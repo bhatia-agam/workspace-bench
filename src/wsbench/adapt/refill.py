@@ -129,7 +129,8 @@ POOL_SHA256: dict[str, str | None] = {
     "msdm": "b1936e2efc4ac61230f69ab4d70da622ba1da83e7348ed25d24c795e6af3b073",
     "kcutoff": "0597d19caace1866a860dffb697a024e4ee12ab5245090591f54c6ba9ff3e614",
     "mh2": "553df6a6de636ddad043b63bcb21b7e38cc35cb2a89a13f7749e6910d2b29926",
-    "mh2v2": None,  # decision 7: built only if the 1,312 clean candidates do not fill a subject
+    # decision 7 (built 2026-11-04 for GLM-5.3: + the GW adversary over the S1-only candidates)
+    "mh2v2": "7e3e4d16da32ddef44a9d452474a4ddb12cf1be104ec6c8161bfebc9bf394629",
 }
 DEFAULT_POOL_DIR = "/workspace/wsb-runs/pools"
 

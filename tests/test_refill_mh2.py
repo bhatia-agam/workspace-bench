@@ -63,6 +63,13 @@ def gw(tmp_path):
     return d
 
 
+@pytest.fixture(autouse=True)
+def _no_live_v2_pin(monkeypatch):
+    """The fixture pools stand in for ``mh2``; the box's live ``mh2v2`` pin (decision 7) would
+    make ``mhmt2.load_pool`` look for the real v2 file instead."""
+    monkeypatch.setitem(rf.POOL_SHA256, "mh2v2", None)
+
+
 def _pool(tmp_path, gw, monkeypatch):
     """The fixture pool, built and pinned (WSB_POOL_DIR + a monkeypatched sha)."""
     path = mhmt2.build_pool(tmp_path / "pools", gw=gw)
