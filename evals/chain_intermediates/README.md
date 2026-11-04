@@ -87,17 +87,23 @@ like a lite file"), and a v1 file (25 positions from " What") is refused by its 
   languages such as sieben / veintiséis; Camila: "any language should be read"), or the quote is
   a number word split across adjacent positions of one layer; a multi-digit number is never
   assembled from digit tokens at separate positions, nor from two tokens of one list (see
-  "Token lenses" below); (c) the gold is one of the digest's number keys (five, or more on a tie); (d) the quoted
+  "Token lenses" below); (c) the quote does not show the gold only as a count or a label: a
+  quote that opens with the gold continued by a lowercase word and names it nowhere after
+  ("20 steps in order."), or a quote whose every holding line does so, is `label`, a judged
+  negative (`judge.label_head`); (d) the gold is one of the digest's number keys (five, or more on a tie); (e) the quoted
   line naming the gold is not a number flood
   (`digest.number_flood`: a token list holding >= 5 distinct numerals, or a list-shaped prose run
   of >= 5, including a bulleted list of bare numbers). A pick supported only by flood lines is
   `flat`, a judged negative (Camila: "lenses that mention every number possible should not win
   unless the correct number is somehow distinguishable"). A correct worked chain ("- Halving 30
-  gives 15 - 15 times 3 is 45 - 45 minus 4 equals 41") is not a flood; (e) heads (round 3,
+  gives 15 - 15 times 3 is 45 - 45 minus 4 equals 41") is not a flood; (f) heads (round 3,
   deterministic): no TIE on the unit's raw answer heads. A sample's answer head is the integer it
   OPENS with as its stated result (`15\n\n**Explanation:** ...`, `**28**`, 17 before a code
-  fence; not a list enumerator `1. `, an ordinal `1st`, a decimal, or the left operand of
-  `28 + 6 - 5`), and only when the rest of that sample works one of the item's OWN operations
+  fence; not a list enumerator `1. `, an ordinal `1st`, a decimal, the left operand of
+  `28 + 6 - 5`, or a number a lowercase word continues on its line, which is a count, a label or
+  an operand in running prose: `20 steps in order.`, `25 divided by 2`, `22 of 72`, `12 is the
+  starting number`; a capitalised heading, markdown or a CJK word after the number keeps the
+  head, `7 Explanation: ...`, `16 解析：...`; `judge.result_head`, heads-v4), and only when the rest of that sample works one of the item's OWN operations
   (`judge.op_pattern`: add / subtract / double / triple / halve words and symbols, also in
   Chinese), so a bare number or a number opening unrelated prose is not a stated result, counted over every raw
   sample of the judged cells (`judge.answer_head_counts`). When some distractor of the slot heads
@@ -128,8 +134,8 @@ like a lite file"), and a v1 file (25 positions from " What") is refused by its 
   (chain-w2-d2p-0014 `resulting in 14` vs 12 x2, and two more), L56 0.292 -> 0.250
   (chain-d2p-0298, chain-d3p-0753, chain-d2p-0383 `the result is **13**` vs 6 x1, chain-d2p-0206,
   chain-v2-d2p-0018); lite, L36, L52, L60 and prompt-only (0.975) unchanged. Rows
-  record each slot's option `heads`. `cannot_tell`, `distractor`, `unverified`, `not_key`,
-  `flat` and `tie` are judged negatives; an invalid choice or a failed call is undecided.
+  record each slot's option `heads`. `cannot_tell`, `distractor`, `unverified`, `label`,
+  `not_key`, `flat` and `tie` are judged negatives; an invalid choice or a failed call is undecided.
 - **Headline: every intermediate.** An item passes only when EVERY slot hits (decision Q3; Camila:
   "Do we require all intermediates to be present or just the first one?"). Beside it:
   `extras.any_slot` (the v1 any-intermediate rule) with its own null and net,
@@ -169,9 +175,9 @@ like a lite file"), and a v1 file (25 positions from " What") is refused by its 
   none the digest already shows), as `[another sample] <text>` lines. They join the evidence, so a
   quote from them verifies, and `KEY_EXAMPLES_NOTE` (Judge prompts, below) is added to the
   digest note of that call.
-- **Provenance.** `prompt_version` = `digest.prompt_version("chain-mc-2026-10-30+heads-v3+start-op+key-ex2", args, family)`,
-  i.e. `chain-mc-2026-10-30+heads-v3+start-op+key-ex2+digest-v5-task-extractive-rankties5+sj-v10` at the defaults (judge calls keyed by
-  `MC_CALL_VERSION` = `chain-mc-2026-10-30`, so the heads gate re-asks nothing) (`+reads-lite` under lite, `+rule-any`
+- **Provenance.** `prompt_version` = `digest.prompt_version("chain-mc-2026-10-30+heads-v4+start-op+key-ex2", args, family)`,
+  i.e. `chain-mc-2026-10-30+heads-v4+start-op+key-ex2+digest-v5-task-extractive-rankties5+sj-v10` at the defaults (judge calls keyed by
+  `MC_CALL_VERSION` = `chain-mc-2026-10-30`, so the heads gate and the label check re-ask nothing) (`+reads-lite` under lite, `+rule-any`
   under `opts=rule=any`); `config.reads`, `sampling`, `sampling_source`, `reader`,
   `reads_checked`, `layers_judged` come from the shared loader.
 - `opts=judge=free` keeps the v1 summary judge (free recall on the digest, any-intermediate rule,
@@ -250,7 +256,7 @@ wsbench judge family=chain_intermediates readouts=<arm>/chain_intermediates.json
 
 ## Judge prompts
 
-Judge: the repo default (`claude-opus-5-5`), temperature 0. `prompt_version`: `chain-mc-2026-10-30+heads-v3+start-op+key-ex2`
+Judge: the repo default (`claude-opus-5-5`), temperature 0. `prompt_version`: `chain-mc-2026-10-30+heads-v4+start-op+key-ex2`
 (summary MC; calls keyed by `chain-mc-2026-10-30`), `chain-free-2026-10-30` (native free recall). `TOKEN_NOTE` is
 `mc.token_note(("numbers",))`, rendered from the family's registered `EvalSpec`
 (`flat_types=("numbers",)`, `multi_select=False`) into `SYSTEM_MC` and `SYSTEM`.
@@ -420,7 +426,9 @@ the model silently works through a short multi-step arithmetic chain and answers
 ```
 
 `KEY_EXAMPLES_NOTE` (`+key-ex2`): appended to the digest note of a summary MC call whose digest
-shows key examples (`[another sample]` lines, Scoring above).
+shows key examples (`[another sample]` lines, Scoring above). Key examples are selected with the original
+answer-head pattern (`_ANSWER_HEAD`, not heads-v4's `result_head`), so heads-v4 does not change
+the judge's input, and the slot's `label` check still applies to a quote from them.
 
 ```text
 Lines marked [another sample] are further readout samples that state the number of the line above them.
@@ -434,3 +442,6 @@ Lines marked [another sample] are further readout samples that state the number 
   its slot to the start 7).
 - 2026-11-04 (`+key-ex2`): the judge sees up to two more raw samples under each numbers-digest
   key, because the digest's one sample per key can present an intermediate as an input.
+- 2026-11-04 (`heads-v4`): a number a lowercase word continues ("20 steps in order.") is no
+  answer head, and a gold quoted only that way is `label`, not a hit, because such a number is a
+  count, label or operand rather than a stated result; no call is re-asked.
