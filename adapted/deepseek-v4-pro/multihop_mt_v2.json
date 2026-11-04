@@ -1,0 +1,3121 @@
+{
+ "family": "multihop-hard",
+ "parent_family": "multihop-mt",
+ "version": 4,
+ "contract": {
+  "multi_token": true,
+  "include_target": true,
+  "conjunctive_units": true,
+  "markdown_fold": true,
+  "fuzzy_names": true,
+  "native_langs": [
+   "en",
+   "zh"
+  ]
+ },
+ "gate": "Qwen3.6-27B behavioral, chat-templated fill-in question (enable_thinking=False, answer stem), staged (workspace-bench plan 0013). G1: the prompt, greedy AND >=16/20 @0.7. Recall: G2 bridge1 from the prompt's own clue and G3 the last hop with its source named, each greedy AND >=8/10; G4 (3-hop) bridge2 identified inside the full statement, greedy AND >=5/10. Shortcuts: S1 generator ablations (drop_b1, local_cue, 3-hop direct_b1_to_t) and S2 independent-adversary ablations must not reach the target (greedy or >4/20); none is ever excused. A 3-hop item whose only shortcut is drop_b1 is frozen as a 2-hop through bridge2 (relabel_b2). No factual issue; fresh-eye review overrides applied. EVAL RENDER: plain prompt; readouts at every prompt token (lite: the final token). Scoring (bank v2, 2026-10-30): a forced-choice judge per required unit over other questions' bridges and targets of the same kind plus cannot tell, credited only with a verified quote that holds a name form of the gold (name_forms; misspellings within edit distance); the conjunctive regex over units stays as a diagnostic.",
+ "frozen": "2026-11-01",
+ "built_from": {
+  "file": "items.json",
+  "sha256": "7c0160a7f818165a09d357a7b0e159301894501124e301bec7f19f75679600d3",
+  "frozen": "2026-10-15"
+ },
+ "builder": "scripts/build_mh2_bank_v2.py",
+ "readout": {
+  "kind": "all",
+  "lite": {
+   "kind": "final_token"
+  }
+ },
+ "supersedes": "items_v3.json",
+ "r4_mc": {
+  "script": "scripts/build_r4_mc_banks.py",
+  "rule": "round 4 (Camila r2 MC leakage standard): only the MC distractor lists change. Content lists: the four Opus-authored same-topic distractors of r4_distractors.json (scripts/r4_mc_distractors.py). ",
+  "lang_rule": null,
+  "lists_changed": 76
+ },
+ "r4b_mc": {
+  "script": "scripts/build_r4b_mc_banks.py",
+  "rule": "round 4b (Camila r2 MC leakage standard, second pass): only the MC distractor lists change. Content lists: the four distractors scripts/r4b_mc_refine.py kept (r4b_distractors.json: Opus-revised in the gold's naming style, fitting the topic as stated, kept when neither the options-only nor the topic guesser solves the item in more than 1 of 5 draws). ",
+  "lists_changed": 76,
+  "n_over_gate": 19
+ },
+ "adapt": {
+  "model": "deepseek-v4-pro",
+  "hf_id": "deepseek-ai/DeepSeek-V4-Pro-0813",
+  "frozen": "2026-11-04"
+ },
+ "items": [
+  {
+   "name": "mh2-coeur-de-lion-brother-charter-q2",
+   "subfamily": "3hop",
+   "domain": "sport and its champions",
+   "prompt": "Fact: the crusader monarch nicknamed 'Cœur de Lion', who first licensed jousting tournaments on English soil was succeeded on the throne by his younger brother, a monarch whose reign is best remembered for the",
+   "spans": {
+    "D1": "the crusader monarch nicknamed 'Cœur de Lion', who first licensed jousting tournaments on English soil",
+    "R1": " was succeeded on the throne by his younger brother,",
+    "N2": " a monarch",
+    "R2": " whose reign is best remembered for the",
+    "G1": "A European monarch"
+   },
+   "target": "Magna Carta",
+   "target_alts": [
+    "Magna Carta Libertatum"
+   ],
+   "source": "multihop_v2",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "all",
+    "lite": {
+     "kind": "final_token"
+    }
+   },
+   "intermediates": [
+    "Richard I of England",
+    "John of England"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Richard I of England",
+       "Richard the Lionheart",
+       "Richard I",
+       "Richard Coeur de Lion",
+       "Lionheart"
+      ]
+     },
+     "match": [
+      "Richard I of England",
+      "Richard the Lionheart",
+      "Richard I",
+      "Richard Coeur de Lion",
+      "Lionheart"
+     ],
+     "kind": "person",
+     "full_forms": [
+      "Richard I of England",
+      "Richard the Lionheart"
+     ],
+     "forms_excluded": [
+      {
+       "form": "Richard",
+       "reason": "a lone given name"
+      }
+     ]
+    },
+    {
+     "role": "bridge2",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "John of England",
+       "John Lackland",
+       "King John",
+       "Lackland"
+      ]
+     },
+     "match": [
+      "John of England",
+      "John Lackland",
+      "King John",
+      "Lackland"
+     ],
+     "kind": "person",
+     "full_forms": [
+      "John of England",
+      "John Lackland"
+     ],
+     "forms_excluded": [
+      {
+       "form": "John",
+       "reason": "a lone given name"
+      }
+     ]
+    }
+   ],
+   "bridges": [
+    {
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "Richard I of England",
+      "Richard the Lionheart",
+      "Richard I",
+      "Richard Coeur de Lion",
+      "Richard"
+     ],
+     "question": "Name the crusader monarch nicknamed 'Cœur de Lion', who first licensed jousting tournaments on English soil."
+    },
+    {
+     "units": [
+      "bridge2"
+     ],
+     "answers": [
+      "John of England",
+      "John Lackland",
+      "King John",
+      "John"
+     ],
+     "question": "Here is an incomplete statement:\n\n\"Fact: the crusader monarch nicknamed 'Cœur de Lion', who first licensed jousting tournaments on English soil was succeeded on the throne by his younger brother, a monarch whose reign is best remembered for the___\"\n\nIn this statement, who or what is \"a monarch\"? Answer with the specific name."
+    }
+   ],
+   "probes": {
+    "G2_b2_from_b1": {
+     "kind": "fill",
+     "text": "Fact: Richard I of England was succeeded on the throne by his younger brother,",
+     "accept": [
+      "John of England",
+      "John Lackland",
+      "King John",
+      "John"
+     ]
+    },
+    "G3_hop_b2_t": {
+     "kind": "qa",
+     "text": "What document is the reign of King John of England best remembered for?",
+     "accept": [
+      "Magna Carta",
+      "Magna Carta Libertatum",
+      "Magna Charta"
+     ]
+    },
+    "G4_prefix_b2": {
+     "kind": "fill",
+     "text": "Fact: the crusader monarch nicknamed 'Cœur de Lion', who first licensed jousting tournaments on English soil was succeeded on the throne by his younger brother,",
+     "accept": [
+      "John of England",
+      "John Lackland",
+      "King John",
+      "John"
+     ]
+    },
+    "S1_drop_b1": {
+     "kind": "fill",
+     "text": "Fact: A European monarch was succeeded on the throne by his younger brother, a monarch whose reign is best remembered for the",
+     "accept": [
+      "Magna Carta",
+      "Magna Carta Libertatum",
+      "Magna Charta",
+      "Carta"
+     ]
+    },
+    "S1_direct_b1_to_t": {
+     "kind": "fill",
+     "text": "Fact: Richard I of England, whose reign is best remembered for the",
+     "accept": [
+      "Magna Carta",
+      "Magna Carta Libertatum",
+      "Magna Charta",
+      "Carta"
+     ]
+    },
+    "G2_b1": {
+     "kind": "qa",
+     "text": "Name the crusader monarch nicknamed 'Cœur de Lion', who first licensed jousting tournaments on English soil.",
+     "accept": [
+      "Richard I of England",
+      "Richard the Lionheart",
+      "Richard I",
+      "Richard Coeur de Lion",
+      "Richard"
+     ]
+    },
+    "S1_local_cue": {
+     "kind": "fill",
+     "text": "Fact: the monarch's reign is best remembered for the",
+     "accept": [
+      "Magna Carta",
+      "Magna Carta Libertatum",
+      "Magna Charta",
+      "Carta"
+     ]
+    }
+   },
+   "shortcut_accept": [
+    "Magna Carta",
+    "Magna Carta Libertatum",
+    "Magna Charta",
+    "Carta"
+   ],
+   "why_nonobvious": "Richard's own reign is remembered for the Third Crusade, and a generic monarch's reign suggests countless answers, so the charter is reached only via his brother John.",
+   "consistency": 1.0,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge1": 1.0,
+    "bridge2": 1.0
+   },
+   "hop_consistency": 1.0,
+   "context_b2_consistency": 1.0,
+   "shortcut_probes": [
+    {
+     "id": "S1_drop_b1",
+     "kind": "fill",
+     "text": "Fact: A European monarch was succeeded on the throne by his younger brother, a monarch whose reign is best remembered for the",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S1_direct_b1_to_t",
+     "kind": "fill",
+     "text": "Fact: Richard I of England, whose reign is best remembered for the",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge2"
+     ]
+    },
+    {
+     "id": "S1_local_cue",
+     "kind": "fill",
+     "text": "Fact: the monarch's reign is best remembered for the",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1",
+      "bridge2"
+     ]
+    },
+    {
+     "id": "S2adv3_0",
+     "kind": "fill",
+     "text": "Fact: an English monarch whose reign is best remembered for the",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1",
+      "bridge2"
+     ]
+    },
+    {
+     "id": "S2adv3_1",
+     "kind": "fill",
+     "text": "Fact: the monarch was succeeded on the throne by his younger brother, a monarch whose reign is best remembered for the",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1",
+      "bridge2"
+     ]
+    },
+    {
+     "id": "S2adv3_2",
+     "kind": "fill",
+     "text": "Fact: Richard I, the crusader monarch nicknamed 'Cœur de Lion', who first licensed jousting tournaments on English soil, was a monarch whose reign is best remembered for the",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge2"
+     ]
+    },
+    {
+     "id": "S2adv3_3",
+     "kind": "qa",
+     "text": "A monarch who succeeded his brother on the English throne: what is his reign best remembered for?",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1",
+      "bridge2"
+     ]
+    }
+   ],
+   "shortcut_max": 0.0,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       4,
+       4,
+       2,
+       5,
+       2
+      ]
+     },
+     "bridge2": {
+      "en": [
+       3,
+       3,
+       2,
+       2
+      ]
+     }
+    },
+    "target": 2,
+    "target_alts": [
+     4
+    ]
+   },
+   "mc": {
+    "bridge1": {
+     "gold": "Richard I of England",
+     "distractors": [
+      "Henry V of England",
+      "Edward III of England",
+      "William I of England",
+      "Richard III of England"
+     ],
+     "pool": "Opus-revised same-topic distractors (r4b_distractors.json)"
+    },
+    "bridge2": {
+     "gold": "John of England",
+     "distractors": [
+      "Edward I of England",
+      "Robert I of Scotland",
+      "Philip II of France",
+      "Louis IX of France"
+     ],
+     "pool": "Opus-revised same-topic distractors (r4b_distractors.json)"
+    }
+   },
+   "name_forms": {
+    "bridge1": {
+     "en": [
+      "Richard I of England",
+      "Richard the Lionheart",
+      "Richard I",
+      "Richard Coeur de Lion",
+      "Lionheart"
+     ],
+     "zh": [
+      "理查一世",
+      "狮心王理查",
+      "狮心王"
+     ]
+    },
+    "bridge2": {
+     "en": [
+      "John of England",
+      "John Lackland",
+      "King John",
+      "Lackland"
+     ],
+     "zh": [
+      "约翰王",
+      "无地王约翰",
+      "无地王",
+      "英格兰的约翰"
+     ]
+    }
+   },
+   "n_render_tokens": 43,
+   "id": "mh2-coeur-de-lion-brother-charter-q2",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "mh2-ray-tagore-gitanjali-q1",
+   "subfamily": "3hop",
+   "domain": "philosophy and scholarship",
+   "prompt": "Fact: The filmmaker who directed Pather Panchali and the Apu Trilogy studied painting in his youth at the rural university founded by a poet whose most celebrated collection of verse is",
+   "spans": {
+    "D1": "The filmmaker who directed Pather Panchali and the Apu Trilogy",
+    "R1": " studied painting in his youth at the rural university founded by",
+    "N2": " a poet",
+    "R2": " whose most celebrated collection of verse is",
+    "G1": "A filmmaker"
+   },
+   "target": "Gitanjali",
+   "target_alts": [
+    "Gitanjali: Song Offerings"
+   ],
+   "source": "multihop_v2",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "all",
+    "lite": {
+     "kind": "final_token"
+    }
+   },
+   "intermediates": [
+    "Satyajit Ray",
+    "Rabindranath Tagore"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Satyajit Ray"
+      ]
+     },
+     "match": [
+      "Satyajit Ray"
+     ],
+     "kind": "person",
+     "full_forms": [
+      "Satyajit Ray"
+     ],
+     "forms_excluded": [
+      {
+       "form": "Ray",
+       "reason": "shorter than 4 characters"
+      }
+     ]
+    },
+    {
+     "role": "bridge2",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Rabindranath Tagore",
+       "Tagore"
+      ]
+     },
+     "match": [
+      "Rabindranath Tagore",
+      "Tagore"
+     ],
+     "kind": "person",
+     "full_forms": [
+      "Rabindranath Tagore"
+     ],
+     "forms_excluded": []
+    }
+   ],
+   "bridges": [
+    {
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "Satyajit Ray",
+      "Ray"
+     ],
+     "question": "Name the filmmaker who directed Pather Panchali and the Apu Trilogy."
+    },
+    {
+     "units": [
+      "bridge2"
+     ],
+     "answers": [
+      "Rabindranath Tagore",
+      "Tagore"
+     ],
+     "question": "Here is an incomplete statement:\n\n\"Fact: The filmmaker who directed Pather Panchali and the Apu Trilogy studied painting in his youth at the rural university founded by a poet whose most celebrated collection of verse is___\"\n\nIn this statement, who or what is \"a poet\"? Answer with the specific name."
+    }
+   ],
+   "probes": {
+    "G2_b2_from_b1": {
+     "kind": "fill",
+     "text": "Fact: Satyajit Ray studied painting in his youth at the rural university founded by",
+     "accept": [
+      "Rabindranath Tagore",
+      "Tagore"
+     ]
+    },
+    "G3_hop_b2_t": {
+     "kind": "qa",
+     "text": "What is Rabindranath Tagore's most celebrated collection of verse?",
+     "accept": [
+      "Gitanjali",
+      "Gitanjali: Song Offerings",
+      "Song Offerings"
+     ]
+    },
+    "G4_prefix_b2": {
+     "kind": "fill",
+     "text": "Fact: The filmmaker who directed Pather Panchali and the Apu Trilogy studied painting in his youth at the rural university founded by",
+     "accept": [
+      "Rabindranath Tagore",
+      "Tagore"
+     ]
+    },
+    "S1_drop_b1": {
+     "kind": "fill",
+     "text": "Fact: A filmmaker studied painting in his youth at the rural university founded by a poet whose most celebrated collection of verse is",
+     "accept": [
+      "Gitanjali",
+      "Gitanjali: Song Offerings",
+      "Song Offerings"
+     ]
+    },
+    "S1_direct_b1_to_t": {
+     "kind": "fill",
+     "text": "Fact: Satyajit Ray's most celebrated collection of verse is",
+     "accept": [
+      "Gitanjali",
+      "Gitanjali: Song Offerings",
+      "Song Offerings"
+     ]
+    },
+    "G2_b1": {
+     "kind": "qa",
+     "text": "Name the filmmaker who directed Pather Panchali and the Apu Trilogy.",
+     "accept": [
+      "Satyajit Ray",
+      "Ray"
+     ]
+    },
+    "S1_local_cue": {
+     "kind": "fill",
+     "text": "Fact: the poet's most celebrated collection of verse is",
+     "accept": [
+      "Gitanjali",
+      "Gitanjali: Song Offerings",
+      "Song Offerings"
+     ]
+    }
+   },
+   "shortcut_accept": [
+    "Gitanjali",
+    "Gitanjali: Song Offerings",
+    "Song Offerings"
+   ],
+   "why_nonobvious": "A poet's most celebrated collection has no default answer and the filmmaker wrote no verse, so Gitanjali requires resolving Ray and then Tagore, founder of the university where he studied.",
+   "consistency": 1.0,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge1": 1.0,
+    "bridge2": 1.0
+   },
+   "hop_consistency": 1.0,
+   "context_b2_consistency": 1.0,
+   "shortcut_probes": [
+    {
+     "id": "S1_drop_b1",
+     "kind": "fill",
+     "text": "Fact: A filmmaker studied painting in his youth at the rural university founded by a poet whose most celebrated collection of verse is",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S1_direct_b1_to_t",
+     "kind": "fill",
+     "text": "Fact: Satyajit Ray's most celebrated collection of verse is",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge2"
+     ]
+    },
+    {
+     "id": "S1_local_cue",
+     "kind": "fill",
+     "text": "Fact: the poet's most celebrated collection of verse is",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1",
+      "bridge2"
+     ]
+    },
+    {
+     "id": "S2adv3_0",
+     "kind": "fill",
+     "text": "Fact: A filmmaker studied painting in his youth at the rural university founded by a poet whose most celebrated collection of verse is",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1",
+      "bridge2"
+     ]
+    },
+    {
+     "id": "S2adv3_1",
+     "kind": "fill",
+     "text": "Fact: The rural university was founded by a poet whose most celebrated collection of verse is",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1",
+      "bridge2"
+     ]
+    },
+    {
+     "id": "S2adv3_2",
+     "kind": "fill",
+     "text": "Fact: The most celebrated collection of verse connected with the filmmaker Satyajit Ray is",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge2"
+     ]
+    },
+    {
+     "id": "S2adv3_3",
+     "kind": "fill",
+     "text": "Fact: A poet whose most celebrated collection of verse is",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1",
+      "bridge2"
+     ]
+    }
+   ],
+   "shortcut_max": 0.0,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       5
+      ]
+     },
+     "bridge2": {
+      "en": [
+       6,
+       2
+      ]
+     }
+    },
+    "target": 4,
+    "target_alts": [
+     7
+    ]
+   },
+   "mc": {
+    "bridge1": {
+     "gold": "Satyajit Ray",
+     "distractors": [
+      "Federico Fellini",
+      "Stanley Kubrick",
+      "Martin Scorsese",
+      "Francis Ford Coppola"
+     ],
+     "pool": "Opus-revised same-topic distractors (r4b_distractors.json)"
+    },
+    "bridge2": {
+     "gold": "Rabindranath Tagore",
+     "distractors": [
+      "Matsuo Bashō",
+      "Confucius",
+      "Li Bai",
+      "Kalidasa"
+     ],
+     "pool": "Opus-revised same-topic distractors (r4b_distractors.json)"
+    }
+   },
+   "name_forms": {
+    "bridge1": {
+     "en": [
+      "Satyajit Ray"
+     ],
+     "zh": [
+      "萨蒂亚吉特·雷伊",
+      "萨蒂亚吉特・雷伊",
+      "萨蒂亚吉特•雷伊",
+      "萨蒂亚吉特雷伊",
+      "萨蒂亚吉特·雷",
+      "萨蒂亚吉特・雷",
+      "萨蒂亚吉特•雷",
+      "萨蒂亚吉特雷",
+      "萨雅吉·雷",
+      "萨雅吉・雷",
+      "萨雅吉•雷",
+      "萨雅吉雷"
+     ]
+    },
+    "bridge2": {
+     "en": [
+      "Rabindranath Tagore",
+      "Tagore"
+     ],
+     "zh": [
+      "罗宾德拉纳特·泰戈尔",
+      "罗宾德拉纳特・泰戈尔",
+      "罗宾德拉纳特•泰戈尔",
+      "罗宾德拉纳特泰戈尔",
+      "泰戈尔"
+     ]
+    }
+   },
+   "n_render_tokens": 37,
+   "id": "mh2-ray-tagore-gitanjali-q1",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "mh2-gaixia-victor-dynasty",
+   "subfamily": "2hop",
+   "domain": "European and Asian history",
+   "prompt": "Fact: The rebel commander who defeated his rival Xiang Yu at Gaixia went on to found the",
+   "spans": {
+    "D1": "The rebel commander who defeated his rival Xiang Yu at Gaixia",
+    "R1": " went on to found the",
+    "G1": "A Chinese rebel commander"
+   },
+   "target": "Han dynasty",
+   "target_alts": [
+    "Western Han dynasty"
+   ],
+   "source": "multihop_v2",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "all",
+    "lite": {
+     "kind": "final_token"
+    }
+   },
+   "intermediates": [
+    "Liu Bang"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Liu Bang",
+       "Emperor Gaozu of Han",
+       "Gaozu",
+       "Emperor Gaozu",
+       "Gaozu of Han"
+      ]
+     },
+     "match": [
+      "Liu Bang",
+      "Emperor Gaozu of Han",
+      "Gaozu",
+      "Emperor Gaozu",
+      "Gaozu of Han"
+     ],
+     "kind": "person",
+     "full_forms": [
+      "Liu Bang",
+      "Emperor Gaozu of Han"
+     ],
+     "forms_excluded": [
+      {
+       "form": "Liu",
+       "reason": "shorter than 4 characters"
+      }
+     ]
+    }
+   ],
+   "bridges": [
+    {
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "Liu Bang",
+      "Emperor Gaozu of Han",
+      "Gaozu",
+      "Emperor Gaozu",
+      "Liu"
+     ],
+     "question": "Name the rebel commander who defeated his rival Xiang Yu at Gaixia."
+    }
+   ],
+   "probes": {
+    "G3_hop_b1_t": {
+     "kind": "fill",
+     "text": "Fact: Liu Bang went on to found the",
+     "accept": [
+      "Han dynasty",
+      "Western Han dynasty",
+      "Han",
+      "Western Han"
+     ]
+    },
+    "S1_drop_b1": {
+     "kind": "fill",
+     "text": "Fact: A Chinese rebel commander went on to found the",
+     "accept": [
+      "Han dynasty",
+      "Western Han dynasty",
+      "Han",
+      "Western Han"
+     ]
+    },
+    "G2_b1": {
+     "kind": "qa",
+     "text": "Name the rebel commander who defeated his rival Xiang Yu at Gaixia.",
+     "accept": [
+      "Liu Bang",
+      "Emperor Gaozu of Han",
+      "Gaozu",
+      "Emperor Gaozu",
+      "Liu"
+     ]
+    },
+    "S1_local_cue": {
+     "kind": "fill",
+     "text": "Fact: the rebel commander went on to found the",
+     "accept": [
+      "Han dynasty",
+      "Western Han dynasty",
+      "Han",
+      "Western Han"
+     ]
+    }
+   },
+   "shortcut_accept": [
+    "Han dynasty",
+    "Western Han dynasty",
+    "Han",
+    "Western Han"
+   ],
+   "why_nonobvious": "A generic Chinese rebel who founded a dynasty could equally be Zhu Yuanzhang (Ming), so the answer requires recognising Xiang Yu's conqueror as Liu Bang.",
+   "consistency": 1.0,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge1": 0.9
+   },
+   "hop_consistency": 1.0,
+   "context_b2_consistency": null,
+   "shortcut_probes": [
+    {
+     "id": "S1_drop_b1",
+     "kind": "fill",
+     "text": "Fact: A Chinese rebel commander went on to found the",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S1_local_cue",
+     "kind": "fill",
+     "text": "Fact: the rebel commander went on to found the",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_0",
+     "kind": "fill",
+     "text": "Fact: The rebel commander who defeated his rival went on to found the",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_1",
+     "kind": "fill",
+     "text": "Fact: The rebel commander went on to found the",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_2",
+     "kind": "qa",
+     "text": "Which dynasty was founded by a rebel commander who defeated his rival?",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    }
+   ],
+   "shortcut_max": 0.0,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       2,
+       6,
+       3,
+       4,
+       5
+      ]
+     }
+    },
+    "target": 2,
+    "target_alts": [
+     3
+    ]
+   },
+   "mc": {
+    "bridge1": {
+     "gold": "Liu Bang",
+     "distractors": [
+      "Wang Mang",
+      "Sun Quan",
+      "Zhao Kuangyin",
+      "Cao Cao"
+     ],
+     "pool": "Opus-revised same-topic distractors (r4b_distractors.json)"
+    }
+   },
+   "name_forms": {
+    "bridge1": {
+     "en": [
+      "Liu Bang",
+      "Emperor Gaozu of Han",
+      "Gaozu",
+      "Emperor Gaozu",
+      "Gaozu of Han"
+     ],
+     "zh": [
+      "刘邦",
+      "汉高祖",
+      "汉高帝"
+     ]
+    }
+   },
+   "n_render_tokens": 20,
+   "id": "mh2-gaixia-victor-dynasty",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 0.9,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "mh2-salieri-film-shaffer-s0",
+   "subfamily": "2hop",
+   "domain": "film and its makers",
+   "prompt": "Fact: The 1984 Best Picture winner depicting Antonio Salieri's jealousy of the young Mozart was adapted from his own stage play by the English dramatist",
+   "spans": {
+    "D1": "The 1984 Best Picture winner depicting Antonio Salieri's jealousy of the young Mozart",
+    "R1": " was adapted from his own stage play by the English dramatist",
+    "G1": "A 1984 drama"
+   },
+   "target": "Peter Shaffer",
+   "target_alts": [],
+   "source": "multihop_v2",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "all",
+    "lite": {
+     "kind": "final_token"
+    }
+   },
+   "intermediates": [
+    "Amadeus"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Amadeus"
+      ]
+     },
+     "match": [
+      "Amadeus"
+     ],
+     "kind": "work",
+     "full_forms": [
+      "Amadeus"
+     ],
+     "forms_excluded": []
+    }
+   ],
+   "bridges": [
+    {
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "Amadeus"
+     ],
+     "question": "Name the 1984 Best Picture winner depicting Antonio Salieri's jealousy of the young Mozart."
+    }
+   ],
+   "probes": {
+    "G3_hop_b1_t": {
+     "kind": "fill",
+     "text": "Fact: Amadeus was adapted from his own stage play by the English dramatist",
+     "accept": [
+      "Peter Shaffer",
+      "Shaffer"
+     ]
+    },
+    "S1_drop_b1": {
+     "kind": "fill",
+     "text": "Fact: A 1984 drama was adapted from his own stage play by the English dramatist",
+     "accept": [
+      "Peter Shaffer",
+      "Shaffer"
+     ]
+    },
+    "G2_b1": {
+     "kind": "qa",
+     "text": "Name the 1984 Best Picture winner depicting Antonio Salieri's jealousy of the young Mozart.",
+     "accept": [
+      "Amadeus"
+     ]
+    },
+    "S1_local_cue": {
+     "kind": "fill",
+     "text": "Fact: the film was adapted from his own stage play by the English dramatist",
+     "accept": [
+      "Peter Shaffer",
+      "Shaffer"
+     ]
+    }
+   },
+   "shortcut_accept": [
+    "Peter Shaffer",
+    "Shaffer"
+   ],
+   "why_nonobvious": "Many English dramatists adapted their own plays for film (Pinter, Bolt, Stoppard), so the specific Mozart film must be resolved to reach Shaffer.",
+   "consistency": 1.0,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge1": 1.0
+   },
+   "hop_consistency": 1.0,
+   "context_b2_consistency": null,
+   "shortcut_probes": [
+    {
+     "id": "S1_drop_b1",
+     "kind": "fill",
+     "text": "Fact: A 1984 drama was adapted from his own stage play by the English dramatist",
+     "n_pass": 1,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S1_local_cue",
+     "kind": "fill",
+     "text": "Fact: the film was adapted from his own stage play by the English dramatist",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_0",
+     "kind": "fill",
+     "text": "Fact: The Best Picture winner was adapted from his own stage play by the English dramatist",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_1",
+     "kind": "fill",
+     "text": "Fact: The 1984 film was adapted from his own stage play by the English dramatist",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_2",
+     "kind": "qa",
+     "text": "Which English dramatist adapted his own stage play into a Best Picture winner?",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_3",
+     "kind": "fill",
+     "text": "Fact: The winner was adapted from his own stage play by the English dramatist",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    }
+   ],
+   "shortcut_max": 0.05,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       3
+      ]
+     }
+    },
+    "target": 3,
+    "target_alts": []
+   },
+   "mc": {
+    "bridge1": {
+     "gold": "Amadeus",
+     "distractors": [
+      "Gandhi",
+      "Tootsie",
+      "Witness",
+      "Reds"
+     ],
+     "pool": "Opus-revised same-topic distractors (r4b_distractors.json)"
+    }
+   },
+   "name_forms": {
+    "bridge1": {
+     "en": [
+      "Amadeus"
+     ],
+     "zh": [
+      "莫扎特传",
+      "阿玛迪斯",
+      "阿马德乌斯"
+     ]
+    }
+   },
+   "n_render_tokens": 31,
+   "id": "mh2-salieri-film-shaffer-s0",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 0.95,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "mh2-lange-husband-taylor-s3",
+   "subfamily": "2hop",
+   "domain": "journalism, photography and design",
+   "prompt": "Fact: The photographer of 'Migrant Mother' was married from 1935 to the economist",
+   "spans": {
+    "D1": "The photographer of 'Migrant Mother'",
+    "R1": " was married from 1935 to the economist",
+    "G1": "An American photographer"
+   },
+   "target": "Paul Schuster Taylor",
+   "target_alts": [
+    "Paul S. Taylor"
+   ],
+   "source": "multihop_v2",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "all",
+    "lite": {
+     "kind": "final_token"
+    }
+   },
+   "intermediates": [
+    "Dorothea Lange"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Dorothea Lange",
+       "Lange",
+       "Dorothea Nutzhorn"
+      ]
+     },
+     "match": [
+      "Dorothea Lange",
+      "Lange",
+      "Dorothea Nutzhorn"
+     ],
+     "kind": "person",
+     "full_forms": [
+      "Dorothea Lange"
+     ],
+     "forms_excluded": []
+    }
+   ],
+   "bridges": [
+    {
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "Dorothea Lange",
+      "Lange",
+      "Dorothea Nutzhorn"
+     ],
+     "question": "Name the photographer of 'Migrant Mother'."
+    }
+   ],
+   "probes": {
+    "G3_hop_b1_t": {
+     "kind": "fill",
+     "text": "Fact: Dorothea Lange was married from 1935 to the economist",
+     "accept": [
+      "Paul Schuster Taylor",
+      "Paul S. Taylor",
+      "Paul Taylor",
+      "Taylor"
+     ]
+    },
+    "S1_drop_b1": {
+     "kind": "fill",
+     "text": "Fact: An American photographer was married from 1935 to the economist",
+     "accept": [
+      "Paul Schuster Taylor",
+      "Paul S. Taylor",
+      "Paul Taylor",
+      "Taylor"
+     ]
+    },
+    "G2_b1": {
+     "kind": "qa",
+     "text": "Name the photographer of 'Migrant Mother'.",
+     "accept": [
+      "Dorothea Lange",
+      "Lange",
+      "Dorothea Nutzhorn"
+     ]
+    },
+    "S1_local_cue": {
+     "kind": "fill",
+     "text": "Fact: the photographer was married from 1935 to the economist",
+     "accept": [
+      "Paul Schuster Taylor",
+      "Paul S. Taylor",
+      "Paul Taylor",
+      "Taylor"
+     ]
+    }
+   },
+   "shortcut_accept": [
+    "Paul Schuster Taylor",
+    "Paul S. Taylor",
+    "Paul Taylor",
+    "Taylor"
+   ],
+   "why_nonobvious": "No generic photographer points to a particular economist spouse; Taylor, Lange's collaborator on An American Exodus, is reachable only after resolving 'Migrant Mother' to Lange.",
+   "consistency": 1.0,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge1": 1.0
+   },
+   "hop_consistency": 1.0,
+   "context_b2_consistency": null,
+   "shortcut_probes": [
+    {
+     "id": "S1_drop_b1",
+     "kind": "fill",
+     "text": "Fact: An American photographer was married from 1935 to the economist",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S1_local_cue",
+     "kind": "fill",
+     "text": "Fact: the photographer was married from 1935 to the economist",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_0",
+     "kind": "fill",
+     "text": "Fact: The photographer was married from 1935 to the economist",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_1",
+     "kind": "qa",
+     "text": "Which economist was married from 1935 to a photographer?",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    }
+   ],
+   "shortcut_max": 0.0,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       4,
+       1,
+       6
+      ]
+     }
+    },
+    "target": 3,
+    "target_alts": [
+     4
+    ]
+   },
+   "mc": {
+    "bridge1": {
+     "gold": "Dorothea Lange",
+     "distractors": [
+      "Ansel Adams",
+      "Man Ray",
+      "Annie Leibovitz",
+      "Alfred Stieglitz"
+     ],
+     "pool": "Opus-revised same-topic distractors (r4b_distractors.json)"
+    }
+   },
+   "name_forms": {
+    "bridge1": {
+     "en": [
+      "Dorothea Lange",
+      "Lange",
+      "Dorothea Nutzhorn"
+     ],
+     "zh": [
+      "多萝西娅·兰格",
+      "多萝西娅・兰格",
+      "多萝西娅•兰格",
+      "多萝西娅兰格",
+      "桃乐丝·兰格",
+      "桃乐丝・兰格",
+      "桃乐丝•兰格",
+      "桃乐丝兰格",
+      "多罗西娅·兰格",
+      "多罗西娅・兰格",
+      "多罗西娅•兰格",
+      "多罗西娅兰格"
+     ]
+    }
+   },
+   "n_render_tokens": 19,
+   "id": "mh2-lange-husband-taylor-s3",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "mh2-gorky-birthplace-t0",
+   "subfamily": "2hop",
+   "domain": "literature and its authors",
+   "prompt": "Fact: The author of the play 'The Lower Depths' and the novel 'Mother' was born in the city of",
+   "spans": {
+    "D1": "The author of the play 'The Lower Depths' and the novel 'Mother'",
+    "R1": " was born in the city of",
+    "G1": "A Russian writer"
+   },
+   "target": "Nizhny Novgorod",
+   "target_alts": [
+    "Nizhni Novgorod"
+   ],
+   "source": "multihop_v2",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "all",
+    "lite": {
+     "kind": "final_token"
+    }
+   },
+   "intermediates": [
+    "Maxim Gorky"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Maxim Gorky",
+       "Alexei Peshkov",
+       "Gorky",
+       "Maksim Gorky",
+       "Peshkov"
+      ]
+     },
+     "match": [
+      "Maxim Gorky",
+      "Alexei Peshkov",
+      "Gorky",
+      "Maksim Gorky",
+      "Peshkov"
+     ],
+     "kind": "person",
+     "full_forms": [
+      "Maxim Gorky",
+      "Alexei Peshkov",
+      "Gorky"
+     ],
+     "forms_excluded": []
+    }
+   ],
+   "bridges": [
+    {
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "Maxim Gorky",
+      "Alexei Peshkov",
+      "Gorky",
+      "Maksim Gorky",
+      "Peshkov"
+     ],
+     "question": "Name the author of the play 'The Lower Depths' and the novel 'Mother'."
+    }
+   ],
+   "probes": {
+    "G3_hop_b1_t": {
+     "kind": "fill",
+     "text": "Fact: Maxim Gorky was born in the city of",
+     "accept": [
+      "Nizhny Novgorod",
+      "Nizhni Novgorod",
+      "Nizhniy Novgorod",
+      "Gorky"
+     ]
+    },
+    "S1_drop_b1": {
+     "kind": "fill",
+     "text": "Fact: A Russian writer was born in the city of",
+     "accept": [
+      "Nizhny Novgorod",
+      "Nizhni Novgorod",
+      "Nizhniy Novgorod",
+      "Gorky",
+      "Novgorod"
+     ]
+    },
+    "G2_b1": {
+     "kind": "qa",
+     "text": "Name the author of the play 'The Lower Depths' and the novel 'Mother'.",
+     "accept": [
+      "Maxim Gorky",
+      "Alexei Peshkov",
+      "Gorky",
+      "Maksim Gorky",
+      "Peshkov"
+     ]
+    },
+    "S1_local_cue": {
+     "kind": "fill",
+     "text": "Fact: the writer was born in the city of",
+     "accept": [
+      "Nizhny Novgorod",
+      "Nizhni Novgorod",
+      "Nizhniy Novgorod",
+      "Gorky",
+      "Novgorod"
+     ]
+    }
+   },
+   "shortcut_accept": [
+    "Nizhny Novgorod",
+    "Nizhni Novgorod",
+    "Nizhniy Novgorod",
+    "Gorky",
+    "Novgorod"
+   ],
+   "why_nonobvious": "A generic Russian writer defaults to Moscow or St Petersburg; only recognising Gorky from his works yields his birthplace, the city later renamed after him.",
+   "consistency": 1.0,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge1": 1.0
+   },
+   "hop_consistency": 1.0,
+   "context_b2_consistency": null,
+   "shortcut_probes": [
+    {
+     "id": "S1_drop_b1",
+     "kind": "fill",
+     "text": "Fact: A Russian writer was born in the city of",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S1_local_cue",
+     "kind": "fill",
+     "text": "Fact: the writer was born in the city of",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_0",
+     "kind": "fill",
+     "text": "Fact: The author of the play and the novel was born in the city of",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_1",
+     "kind": "fill",
+     "text": "Fact: The author was born in the city of",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_2",
+     "kind": "qa",
+     "text": "In which city was the author of the play born?",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    }
+   ],
+   "shortcut_max": 0.0,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       4,
+       5,
+       3,
+       5,
+       3
+      ]
+     }
+    },
+    "target": 6,
+    "target_alts": [
+     6
+    ]
+   },
+   "mc": {
+    "bridge1": {
+     "gold": "Maxim Gorky",
+     "distractors": [
+      "Mikhail Sholokhov",
+      "Alexei Tolstoy",
+      "Mikhail Bulgakov",
+      "Boris Pasternak"
+     ],
+     "pool": "Opus-revised same-topic distractors (r4b_distractors.json)"
+    }
+   },
+   "name_forms": {
+    "bridge1": {
+     "en": [
+      "Maxim Gorky",
+      "Alexei Peshkov",
+      "Gorky",
+      "Maksim Gorky",
+      "Peshkov"
+     ],
+     "zh": [
+      "马克西姆·高尔基",
+      "马克西姆・高尔基",
+      "马克西姆•高尔基",
+      "马克西姆高尔基",
+      "高尔基",
+      "阿列克谢·彼什科夫",
+      "阿列克谢・彼什科夫",
+      "阿列克谢•彼什科夫",
+      "阿列克谢彼什科夫",
+      "彼什科夫"
+     ]
+    }
+   },
+   "n_render_tokens": 25,
+   "id": "mh2-gorky-birthplace-t0",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "mh2-deltoro-birthplace-s0",
+   "subfamily": "2hop",
+   "domain": "film and its makers",
+   "prompt": "Fact: The filmmaker who directed 'Pan's Labyrinth' and 'The Shape of Water' was born in the city of",
+   "spans": {
+    "D1": "The filmmaker who directed 'Pan's Labyrinth' and 'The Shape of Water'",
+    "R1": " was born in the city of",
+    "G1": "A Mexican filmmaker"
+   },
+   "target": "Guadalajara",
+   "target_alts": [],
+   "source": "multihop_v2",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "all",
+    "lite": {
+     "kind": "final_token"
+    }
+   },
+   "intermediates": [
+    "Guillermo del Toro"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Guillermo del Toro",
+       "del Toro"
+      ]
+     },
+     "match": [
+      "Guillermo del Toro",
+      "del Toro"
+     ],
+     "kind": "person",
+     "full_forms": [
+      "Guillermo del Toro",
+      "del Toro"
+     ],
+     "forms_excluded": [
+      {
+       "form": "Toro",
+       "reason": "a common word (Spanish 'bull')"
+      },
+      {
+       "form": "Guillermo",
+       "reason": "a lone given name"
+      }
+     ]
+    }
+   ],
+   "bridges": [
+    {
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "Guillermo del Toro",
+      "del Toro",
+      "Toro",
+      "Guillermo"
+     ],
+     "question": "Name the filmmaker who directed 'Pan's Labyrinth' and 'The Shape of Water'."
+    }
+   ],
+   "probes": {
+    "G3_hop_b1_t": {
+     "kind": "fill",
+     "text": "Fact: Guillermo del Toro was born in the city of",
+     "accept": [
+      "Guadalajara"
+     ]
+    },
+    "S1_drop_b1": {
+     "kind": "fill",
+     "text": "Fact: A Mexican filmmaker was born in the city of",
+     "accept": [
+      "Guadalajara"
+     ]
+    },
+    "G2_b1": {
+     "kind": "qa",
+     "text": "Name the filmmaker who directed 'Pan's Labyrinth' and 'The Shape of Water'.",
+     "accept": [
+      "Guillermo del Toro",
+      "del Toro",
+      "Toro",
+      "Guillermo"
+     ]
+    },
+    "S1_local_cue": {
+     "kind": "fill",
+     "text": "Fact: the filmmaker was born in the city of",
+     "accept": [
+      "Guadalajara"
+     ]
+    }
+   },
+   "shortcut_accept": [
+    "Guadalajara"
+   ],
+   "why_nonobvious": "Neither film is set in or tied to Guadalajara, and a generic or Mexican filmmaker's birthplace defaults to Mexico City or Los Angeles, so only resolving del Toro gives Guadalajara.",
+   "consistency": 1.0,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge1": 1.0
+   },
+   "hop_consistency": 1.0,
+   "context_b2_consistency": null,
+   "shortcut_probes": [
+    {
+     "id": "S1_drop_b1",
+     "kind": "fill",
+     "text": "Fact: A Mexican filmmaker was born in the city of",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S1_local_cue",
+     "kind": "fill",
+     "text": "Fact: the filmmaker was born in the city of",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_0",
+     "kind": "fill",
+     "text": "Fact: The filmmaker was born in the city of",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_1",
+     "kind": "fill",
+     "text": "Fact: The filmmaker who directed films was born in the city of",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_2",
+     "kind": "qa",
+     "text": "In which city was the filmmaker who directed the films born?",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    }
+   ],
+   "shortcut_max": 0.0,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       5,
+       3
+      ]
+     }
+    },
+    "target": 4,
+    "target_alts": []
+   },
+   "mc": {
+    "bridge1": {
+     "gold": "Guillermo del Toro",
+     "distractors": [
+      "Alejandro González Iñárritu",
+      "Alfonso Cuarón",
+      "Gael García Bernal",
+      "Diego Luna"
+     ],
+     "pool": "Opus-revised same-topic distractors (r4b_distractors.json)"
+    }
+   },
+   "name_forms": {
+    "bridge1": {
+     "en": [
+      "Guillermo del Toro",
+      "del Toro"
+     ],
+     "zh": [
+      "吉尔莫·德尔·托罗",
+      "吉尔莫・德尔・托罗",
+      "吉尔莫•德尔•托罗",
+      "吉尔莫德尔托罗",
+      "吉列尔莫·德尔·托罗",
+      "吉列尔莫・德尔・托罗",
+      "吉列尔莫•德尔•托罗",
+      "吉列尔莫德尔托罗",
+      "德尔·托罗",
+      "德尔・托罗",
+      "德尔•托罗",
+      "德尔托罗"
+     ]
+    }
+   },
+   "n_render_tokens": 27,
+   "id": "mh2-deltoro-birthplace-s0",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "mh2-maimonides-birthplace",
+   "subfamily": "2hop",
+   "domain": "philosophy and scholarship",
+   "prompt": "Fact: The author of The Guide for the Perplexed was born in the city of",
+   "spans": {
+    "D1": "The author of The Guide for the Perplexed",
+    "R1": " was born in the city of",
+    "G1": "A medieval philosopher"
+   },
+   "target": "Córdoba",
+   "target_alts": [
+    "Cordova"
+   ],
+   "source": "multihop_v2",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "all",
+    "lite": {
+     "kind": "final_token"
+    }
+   },
+   "intermediates": [
+    "Moses Maimonides"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Moses Maimonides",
+       "Maimonides",
+       "Rambam",
+       "Moses ben Maimon"
+      ]
+     },
+     "match": [
+      "Moses Maimonides",
+      "Maimonides",
+      "Rambam",
+      "Moses ben Maimon"
+     ],
+     "kind": "person",
+     "full_forms": [
+      "Moses Maimonides",
+      "Maimonides",
+      "Rambam"
+     ],
+     "forms_excluded": []
+    }
+   ],
+   "bridges": [
+    {
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "Moses Maimonides",
+      "Maimonides",
+      "Rambam",
+      "Moses ben Maimon"
+     ],
+     "question": "Name the author of The Guide for the Perplexed."
+    }
+   ],
+   "probes": {
+    "G3_hop_b1_t": {
+     "kind": "fill",
+     "text": "Fact: Moses Maimonides was born in the city of",
+     "accept": [
+      "Córdoba",
+      "Cordova",
+      "Cordoba"
+     ]
+    },
+    "S1_drop_b1": {
+     "kind": "fill",
+     "text": "Fact: A medieval philosopher was born in the city of",
+     "accept": [
+      "Córdoba",
+      "Cordova",
+      "Cordoba"
+     ]
+    },
+    "G2_b1": {
+     "kind": "qa",
+     "text": "Name the author of The Guide for the Perplexed.",
+     "accept": [
+      "Moses Maimonides",
+      "Maimonides",
+      "Rambam",
+      "Moses ben Maimon"
+     ]
+    },
+    "S1_local_cue": {
+     "kind": "fill",
+     "text": "Fact: the philosopher was born in the city of",
+     "accept": [
+      "Córdoba",
+      "Cordova",
+      "Cordoba"
+     ]
+    }
+   },
+   "shortcut_accept": [
+    "Córdoba",
+    "Cordova",
+    "Cordoba"
+   ],
+   "why_nonobvious": "The work title names no place, and a generic philosopher's birthplace is open; only identifying Maimonides gives Córdoba.",
+   "consistency": 1.0,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge1": 1.0
+   },
+   "hop_consistency": 1.0,
+   "context_b2_consistency": null,
+   "shortcut_probes": [
+    {
+     "id": "S1_drop_b1",
+     "kind": "fill",
+     "text": "Fact: A medieval philosopher was born in the city of",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S1_local_cue",
+     "kind": "fill",
+     "text": "Fact: the philosopher was born in the city of",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_0",
+     "kind": "fill",
+     "text": "Fact: The author of the treatise was born in the city of",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_1",
+     "kind": "fill",
+     "text": "Fact: The author was born in the city of",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_2",
+     "kind": "fill",
+     "text": "Fact: The author of The Guide was born in the city of",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_3",
+     "kind": "qa",
+     "text": "In which city was the author of the philosophical guide born?",
+     "n_pass": 4,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    }
+   ],
+   "shortcut_max": 0.2,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       5,
+       3,
+       2,
+       5
+      ]
+     }
+    },
+    "target": 3,
+    "target_alts": [
+     2
+    ]
+   },
+   "mc": {
+    "bridge1": {
+     "gold": "Moses Maimonides",
+     "distractors": [
+      "Thomas Aquinas",
+      "Peter Abelard",
+      "Albertus Magnus",
+      "Duns Scotus"
+     ],
+     "pool": "Opus-revised same-topic distractors (r4b_distractors.json)"
+    }
+   },
+   "name_forms": {
+    "bridge1": {
+     "en": [
+      "Moses Maimonides",
+      "Maimonides",
+      "Rambam",
+      "Moses ben Maimon"
+     ],
+     "zh": [
+      "摩西·迈蒙尼德",
+      "摩西・迈蒙尼德",
+      "摩西•迈蒙尼德",
+      "摩西迈蒙尼德",
+      "迈蒙尼德"
+     ]
+    }
+   },
+   "n_render_tokens": 18,
+   "id": "mh2-maimonides-birthplace",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 0.8,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "mh2-cartier-bresson-teacher-lhote-s3",
+   "subfamily": "2hop",
+   "domain": "journalism, photography and design",
+   "prompt": "Fact: The French photographer who championed 'the decisive moment' and co-founded the Magnum agency had, before taking up the camera, studied painting in Paris under",
+   "spans": {
+    "D1": "The French photographer who championed 'the decisive moment' and co-founded the Magnum agency",
+    "R1": " had, before taking up the camera, studied painting in Paris under",
+    "G1": "A twentieth-century French photographer"
+   },
+   "target": "André Lhote",
+   "target_alts": [],
+   "source": "multihop_v2",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "all",
+    "lite": {
+     "kind": "final_token"
+    }
+   },
+   "intermediates": [
+    "Henri Cartier-Bresson"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Henri Cartier-Bresson",
+       "Cartier-Bresson",
+       "Cartier Bresson"
+      ]
+     },
+     "match": [
+      "Henri Cartier-Bresson",
+      "Cartier-Bresson",
+      "Cartier Bresson"
+     ],
+     "kind": "person",
+     "full_forms": [
+      "Henri Cartier-Bresson",
+      "Cartier-Bresson"
+     ],
+     "forms_excluded": [
+      {
+       "form": "HCB",
+       "reason": "shorter than 4 characters"
+      }
+     ]
+    }
+   ],
+   "bridges": [
+    {
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "Henri Cartier-Bresson",
+      "Cartier-Bresson",
+      "Cartier Bresson",
+      "HCB"
+     ],
+     "question": "Name the French photographer who championed 'the decisive moment' and co-founded the Magnum agency."
+    }
+   ],
+   "probes": {
+    "G3_hop_b1_t": {
+     "kind": "fill",
+     "text": "Fact: Henri Cartier-Bresson had, before taking up the camera, studied painting in Paris under",
+     "accept": [
+      "André Lhote",
+      "Andre Lhote",
+      "Lhote"
+     ]
+    },
+    "S1_drop_b1": {
+     "kind": "fill",
+     "text": "Fact: A twentieth-century French photographer had, before taking up the camera, studied painting in Paris under",
+     "accept": [
+      "André Lhote",
+      "Andre Lhote",
+      "Lhote"
+     ]
+    },
+    "G2_b1": {
+     "kind": "qa",
+     "text": "Name the French photographer who championed 'the decisive moment' and co-founded the Magnum agency.",
+     "accept": [
+      "Henri Cartier-Bresson",
+      "Cartier-Bresson",
+      "Cartier Bresson",
+      "HCB"
+     ]
+    },
+    "S1_local_cue": {
+     "kind": "fill",
+     "text": "Fact: the photographer had, before taking up the camera, studied painting in Paris under",
+     "accept": [
+      "André Lhote",
+      "Andre Lhote",
+      "Lhote"
+     ]
+    }
+   },
+   "shortcut_accept": [
+    "André Lhote",
+    "Andre Lhote",
+    "Lhote"
+   ],
+   "why_nonobvious": "The painting teacher is reachable only after identifying Cartier-Bresson; many photographers studied painting in Paris with various masters, so the final relation alone does not single out Lhote.",
+   "consistency": 1.0,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge1": 1.0
+   },
+   "hop_consistency": 1.0,
+   "context_b2_consistency": null,
+   "shortcut_probes": [
+    {
+     "id": "S1_drop_b1",
+     "kind": "fill",
+     "text": "Fact: A twentieth-century French photographer had, before taking up the camera, studied painting in Paris under",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S1_local_cue",
+     "kind": "fill",
+     "text": "Fact: the photographer had, before taking up the camera, studied painting in Paris under",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_0",
+     "kind": "fill",
+     "text": "Fact: The French photographer had, before taking up the camera, studied painting in Paris under",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_1",
+     "kind": "fill",
+     "text": "Fact: The photographer had, before taking up the camera, studied painting in Paris under",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_2",
+     "kind": "qa",
+     "text": "Under which painter in Paris did a French photographer study painting before taking up the camera?",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_3",
+     "kind": "fill",
+     "text": "Fact: The French artist had studied painting in Paris under",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    }
+   ],
+   "shortcut_max": 0.0,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       6,
+       5,
+       5
+      ]
+     }
+    },
+    "target": 4,
+    "target_alts": []
+   },
+   "mc": {
+    "bridge1": {
+     "gold": "Henri Cartier-Bresson",
+     "distractors": [
+      "Bill Brandt",
+      "Eugène Atget",
+      "August Sander",
+      "Josef Koudelka"
+     ],
+     "pool": "Opus-revised same-topic distractors (r4b_distractors.json)"
+    }
+   },
+   "name_forms": {
+    "bridge1": {
+     "en": [
+      "Henri Cartier-Bresson",
+      "Cartier-Bresson",
+      "Cartier Bresson"
+     ],
+     "zh": [
+      "亨利·卡蒂埃-布列松",
+      "亨利・卡蒂埃-布列松",
+      "亨利•卡蒂埃-布列松",
+      "亨利卡蒂埃-布列松",
+      "卡蒂埃-布列松",
+      "卡蒂埃·布列松",
+      "卡蒂埃・布列松",
+      "卡蒂埃•布列松",
+      "卡蒂埃布列松"
+     ]
+    }
+   },
+   "n_render_tokens": 33,
+   "id": "mh2-cartier-bresson-teacher-lhote-s3",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "mh2-may-imperial-t1",
+   "subfamily": "2hop",
+   "domain": "popular music and its stars",
+   "prompt": "Fact: The Queen lead guitarist who played a homemade instrument called the Red Special completed his doctorate at",
+   "spans": {
+    "D1": "The Queen lead guitarist who played a homemade instrument called the Red Special",
+    "R1": " completed his doctorate at",
+    "G1": "A rock guitarist"
+   },
+   "target": "Imperial College London",
+   "target_alts": [
+    "Imperial College"
+   ],
+   "source": "multihop_v2",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "all",
+    "lite": {
+     "kind": "final_token"
+    }
+   },
+   "intermediates": [
+    "Brian May"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Brian May",
+       "Brian Harold May"
+      ]
+     },
+     "match": [
+      "Brian May",
+      "Brian Harold May"
+     ],
+     "kind": "person",
+     "full_forms": [
+      "Brian May",
+      "Brian Harold May"
+     ],
+     "forms_excluded": [
+      {
+       "form": "May",
+       "reason": "shorter than 4 characters"
+      }
+     ]
+    }
+   ],
+   "bridges": [
+    {
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "Brian May",
+      "Brian Harold May",
+      "May"
+     ],
+     "question": "Name the Queen lead guitarist who played a homemade instrument called the Red Special."
+    }
+   ],
+   "probes": {
+    "G3_hop_b1_t": {
+     "kind": "fill",
+     "text": "Fact: Brian May completed his doctorate at",
+     "accept": [
+      "Imperial College London",
+      "Imperial College",
+      "Imperial"
+     ]
+    },
+    "S1_drop_b1": {
+     "kind": "fill",
+     "text": "Fact: A rock guitarist completed his doctorate at",
+     "accept": [
+      "Imperial College London",
+      "Imperial College",
+      "Imperial",
+      "London"
+     ]
+    },
+    "G2_b1": {
+     "kind": "qa",
+     "text": "Name the Queen lead guitarist who played a homemade instrument called the Red Special.",
+     "accept": [
+      "Brian May",
+      "Brian Harold May",
+      "May"
+     ]
+    },
+    "S1_local_cue": {
+     "kind": "fill",
+     "text": "Fact: the guitarist completed his doctorate at",
+     "accept": [
+      "Imperial College London",
+      "Imperial College",
+      "Imperial",
+      "London"
+     ]
+    }
+   },
+   "shortcut_accept": [
+    "Imperial College London",
+    "Imperial College",
+    "Imperial",
+    "London"
+   ],
+   "why_nonobvious": "A generic guitarist's doctorate points nowhere; only resolving Brian May and his astrophysics PhD yields Imperial College.",
+   "consistency": 1.0,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge1": 1.0
+   },
+   "hop_consistency": 1.0,
+   "context_b2_consistency": null,
+   "shortcut_probes": [
+    {
+     "id": "S1_drop_b1",
+     "kind": "fill",
+     "text": "Fact: A rock guitarist completed his doctorate at",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S1_local_cue",
+     "kind": "fill",
+     "text": "Fact: the guitarist completed his doctorate at",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_0",
+     "kind": "fill",
+     "text": "Fact: The lead guitarist completed his doctorate at",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_1",
+     "kind": "fill",
+     "text": "Fact: The rock guitarist completed his doctorate at",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_2",
+     "kind": "qa",
+     "text": "At which university did a famous rock band's lead guitarist complete his doctorate?",
+     "n_pass": 2,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_3",
+     "kind": "fill",
+     "text": "Fact: The guitarist who played a homemade instrument completed his doctorate at",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    }
+   ],
+   "shortcut_max": 0.1,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       2,
+       3
+      ]
+     }
+    },
+    "target": 3,
+    "target_alts": [
+     2
+    ]
+   },
+   "mc": {
+    "bridge1": {
+     "gold": "Brian May",
+     "distractors": [
+      "Jimmy Page",
+      "Jeff Beck",
+      "Ritchie Blackmore",
+      "Tony Iommi"
+     ],
+     "pool": "Opus-revised same-topic distractors (r4b_distractors.json)"
+    }
+   },
+   "name_forms": {
+    "bridge1": {
+     "en": [
+      "Brian May",
+      "Brian Harold May"
+     ],
+     "zh": [
+      "布莱恩·梅",
+      "布莱恩・梅",
+      "布莱恩•梅",
+      "布莱恩梅",
+      "布赖恩·梅",
+      "布赖恩・梅",
+      "布赖恩•梅",
+      "布赖恩梅"
+     ]
+    }
+   },
+   "n_render_tokens": 19,
+   "id": "mh2-may-imperial-t1",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 0.9,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "mh2-rand-novel",
+   "subfamily": "2hop",
+   "domain": "philosophy and scholarship",
+   "prompt": "Fact: the Russian-born novelist-philosopher who founded Objectivism published in 1957 the novel",
+   "spans": {
+    "D1": "the Russian-born novelist-philosopher who founded Objectivism",
+    "R1": " published in 1957 the novel",
+    "G1": "A twentieth-century American novelist"
+   },
+   "target": "Atlas Shrugged",
+   "target_alts": [],
+   "source": "multihop_v2",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "all",
+    "lite": {
+     "kind": "final_token"
+    }
+   },
+   "intermediates": [
+    "Ayn Rand"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Ayn Rand",
+       "Alisa Rosenbaum",
+       "Rand"
+      ]
+     },
+     "match": [
+      "Ayn Rand",
+      "Alisa Rosenbaum",
+      "Rand"
+     ],
+     "kind": "person",
+     "full_forms": [
+      "Ayn Rand",
+      "Alisa Rosenbaum"
+     ],
+     "forms_excluded": []
+    }
+   ],
+   "bridges": [
+    {
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "Ayn Rand",
+      "Alisa Rosenbaum",
+      "Rand"
+     ],
+     "question": "Name the Russian-born novelist-philosopher who founded Objectivism."
+    }
+   ],
+   "probes": {
+    "G3_hop_b1_t": {
+     "kind": "fill",
+     "text": "Fact: Ayn Rand published in 1957 the novel",
+     "accept": [
+      "Atlas Shrugged"
+     ]
+    },
+    "S1_drop_b1": {
+     "kind": "fill",
+     "text": "Fact: A twentieth-century American novelist published in 1957 the novel",
+     "accept": [
+      "Atlas Shrugged",
+      "Shrugged"
+     ]
+    },
+    "G2_b1": {
+     "kind": "qa",
+     "text": "Name the Russian-born novelist-philosopher who founded Objectivism.",
+     "accept": [
+      "Ayn Rand",
+      "Alisa Rosenbaum",
+      "Rand"
+     ]
+    },
+    "S1_local_cue": {
+     "kind": "fill",
+     "text": "Fact: the novelist published in 1957 the novel",
+     "accept": [
+      "Atlas Shrugged",
+      "Shrugged"
+     ]
+    }
+   },
+   "shortcut_accept": [
+    "Atlas Shrugged",
+    "Shrugged"
+   ],
+   "why_nonobvious": "Many novels appeared in 1957, so the title requires first identifying Ayn Rand from the Objectivism clue.",
+   "consistency": 1.0,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge1": 1.0
+   },
+   "hop_consistency": 1.0,
+   "context_b2_consistency": null,
+   "shortcut_probes": [
+    {
+     "id": "S1_drop_b1",
+     "kind": "fill",
+     "text": "Fact: A twentieth-century American novelist published in 1957 the novel",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S1_local_cue",
+     "kind": "fill",
+     "text": "Fact: the novelist published in 1957 the novel",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_0",
+     "kind": "fill",
+     "text": "Fact: the novelist published in 1957 the novel",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_1",
+     "kind": "fill",
+     "text": "Fact: the Russian-born novelist published in 1957 the novel",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_2",
+     "kind": "fill",
+     "text": "Fact: the novelist-philosopher published in 1957 the novel",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_3",
+     "kind": "qa",
+     "text": "Which novel by a novelist-philosopher was published in 1957?",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    }
+   ],
+   "shortcut_max": 0.0,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       2,
+       4,
+       1
+      ]
+     }
+    },
+    "target": 2,
+    "target_alts": []
+   },
+   "mc": {
+    "bridge1": {
+     "gold": "Ayn Rand",
+     "distractors": [
+      "Rebecca Goldstein",
+      "Miguel de Unamuno",
+      "Iris Murdoch",
+      "Jean-Paul Sartre"
+     ],
+     "pool": "Opus-revised same-topic distractors (r4b_distractors.json)"
+    }
+   },
+   "name_forms": {
+    "bridge1": {
+     "en": [
+      "Ayn Rand",
+      "Alisa Rosenbaum",
+      "Rand"
+     ],
+     "zh": [
+      "安·兰德",
+      "安・兰德",
+      "安•兰德",
+      "安兰德",
+      "艾茵·兰德",
+      "艾茵・兰德",
+      "艾茵•兰德",
+      "艾茵兰德"
+     ]
+    }
+   },
+   "n_render_tokens": 20,
+   "id": "mh2-rand-novel",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "mh2-macbeth-duncan-t2",
+   "subfamily": "2hop",
+   "domain": "royal families and dynasties",
+   "prompt": "Fact: The medieval ruler of Alba whose life Shakespeare dramatized in a tragedy bearing his name seized the throne after slaying",
+   "spans": {
+    "D1": "The medieval ruler of Alba whose life Shakespeare dramatized in a tragedy bearing his name",
+    "R1": " seized the throne after slaying",
+    "G1": "A medieval European ruler"
+   },
+   "target": "Duncan I of Scotland",
+   "target_alts": [
+    "Duncan I"
+   ],
+   "source": "multihop_v2",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "all",
+    "lite": {
+     "kind": "final_token"
+    }
+   },
+   "intermediates": [
+    "Macbeth"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Macbeth",
+       "Mac Bethad mac Findlaích",
+       "Mac Bethad"
+      ]
+     },
+     "match": [
+      "Macbeth",
+      "Mac Bethad mac Findlaích",
+      "Mac Bethad"
+     ],
+     "kind": "person",
+     "full_forms": [
+      "Macbeth",
+      "Mac Bethad mac Findlaích"
+     ],
+     "forms_excluded": []
+    }
+   ],
+   "bridges": [
+    {
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "Macbeth",
+      "Mac Bethad mac Findlaích",
+      "Mac Bethad"
+     ],
+     "question": "Name the medieval ruler of Alba whose life Shakespeare dramatized in a tragedy bearing his name."
+    }
+   ],
+   "probes": {
+    "G3_hop_b1_t": {
+     "kind": "fill",
+     "text": "Fact: Macbeth seized the throne after slaying",
+     "accept": [
+      "Duncan I of Scotland",
+      "Duncan I",
+      "Duncan",
+      "King Duncan"
+     ]
+    },
+    "S1_drop_b1": {
+     "kind": "fill",
+     "text": "Fact: A medieval European ruler seized the throne after slaying",
+     "accept": [
+      "Duncan I of Scotland",
+      "Duncan I",
+      "Duncan",
+      "King Duncan"
+     ]
+    },
+    "G2_b1": {
+     "kind": "qa",
+     "text": "Name the medieval ruler of Alba whose life Shakespeare dramatized in a tragedy bearing his name.",
+     "accept": [
+      "Macbeth",
+      "Mac Bethad mac Findlaích",
+      "Mac Bethad"
+     ]
+    },
+    "S1_local_cue": {
+     "kind": "fill",
+     "text": "Fact: the ruler seized the throne after slaying",
+     "accept": [
+      "Duncan I of Scotland",
+      "Duncan I",
+      "Duncan",
+      "King Duncan"
+     ]
+    }
+   },
+   "shortcut_accept": [
+    "Duncan I of Scotland",
+    "Duncan I",
+    "Duncan",
+    "King Duncan"
+   ],
+   "why_nonobvious": "Seizing a throne by killing a predecessor fits many medieval rulers, so only identifying Macbeth from the Shakespeare clue yields Duncan.",
+   "consistency": 1.0,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge1": 1.0
+   },
+   "hop_consistency": 1.0,
+   "context_b2_consistency": null,
+   "shortcut_probes": [
+    {
+     "id": "S1_drop_b1",
+     "kind": "fill",
+     "text": "Fact: A medieval European ruler seized the throne after slaying",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S1_local_cue",
+     "kind": "fill",
+     "text": "Fact: the ruler seized the throne after slaying",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_0",
+     "kind": "fill",
+     "text": "Fact: The medieval ruler of Alba seized the throne after slaying",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_1",
+     "kind": "fill",
+     "text": "Fact: The medieval ruler seized the throne after slaying",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    },
+    {
+     "id": "S2adv3_2",
+     "kind": "qa",
+     "text": "Which king did the medieval ruler of Alba slay to seize the throne?",
+     "n_pass": 3,
+     "n": 20,
+     "greedy_pass": 0,
+     "hides": [
+      "bridge1"
+     ]
+    }
+   ],
+   "shortcut_max": 0.15,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       1,
+       7,
+       3
+      ]
+     }
+    },
+    "target": 4,
+    "target_alts": [
+     2
+    ]
+   },
+   "mc": {
+    "bridge1": {
+     "gold": "Macbeth",
+     "distractors": [
+      "King John",
+      "Alfred the Great",
+      "Edward I",
+      "Henry V"
+     ],
+     "pool": "Opus-revised same-topic distractors (r4b_distractors.json)"
+    }
+   },
+   "name_forms": {
+    "bridge1": {
+     "en": [
+      "Macbeth",
+      "Mac Bethad mac Findlaích",
+      "Mac Bethad"
+     ],
+     "zh": [
+      "麦克白"
+     ]
+    }
+   },
+   "n_render_tokens": 25,
+   "id": "mh2-macbeth-duncan-t2",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 0.85,
+     "pass": true
+    }
+   }
+  }
+ ]
+}

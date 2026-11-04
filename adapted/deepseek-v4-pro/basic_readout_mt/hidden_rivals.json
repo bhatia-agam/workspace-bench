@@ -1,0 +1,50 @@
+{
+ "version": "adapt-deepseek-v4-pro",
+ "note": "adapted-only items' same-topic distractors the MC builder dropped (adapt mc); added to evals/basic_readout_mt/hidden_rivals.json by the judge",
+ "items": {
+  "basic-au-t1-w100c0-brh-ent-battle-hastings": {
+   "readout": [
+    "Battle of Fulford",
+    "Battle of Agincourt",
+    "Battle of Bosworth Field"
+   ]
+  },
+  "basic-au-t1-w100c0-brh-ent-bldg-pisa-tilt": {
+   "readout": [
+    "Asinelli Tower",
+    "Torre del Mangia",
+    "Giotto's Campanile",
+    "St Mark's Campanile"
+   ]
+  },
+  "basic-au-t1-w100c0-brh-ent-law-boyle": {
+   "readout": [
+    "Charles's law",
+    "Gay-Lussac's law",
+    "Avogadro's law",
+    "Dalton's law"
+   ]
+  },
+  "basic-au-t1-w100c0-brh-ent-person-principia": {
+   "readout": [
+    "Robert Hooke",
+    "Edmond Halley",
+    "Gottfried Wilhelm Leibniz"
+   ]
+  },
+  "basic-au-t1-w100c0-brh-ent-synd-trisomy": {
+   "readout": [
+    "Edwards syndrome",
+    "Patau syndrome",
+    "Turner syndrome",
+    "Klinefelter syndrome"
+   ]
+  },
+  "basic-au-t1-w100c0-brh-ent-treaty-versailles": {
+   "readout": [
+    "Treaty of Trianon",
+    "Treaty of Sèvres"
+   ]
+  }
+ }
+}

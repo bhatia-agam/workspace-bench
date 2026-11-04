@@ -1,0 +1,100 @@
+{
+ "version": "adapt-deepseek-v4-pro",
+ "note": "adapted-only items' extra gold name forms (ru / es / fr / de / fa exonyms, authored with the item); added to evals/basic_readout_mt/exonyms.json by the judge (registry.load_resource)",
+ "items": {
+  "basic-au-t1-w100c0-brh-ent-battle-hastings": {
+   "readout": {
+    "ru": [
+     "битва при Гастингсе"
+    ],
+    "es": [
+     "batalla de Hastings"
+    ],
+    "fr": [
+     "bataille d'Hastings"
+    ],
+    "de": [
+     "Schlacht bei Hastings"
+    ]
+   }
+  },
+  "basic-au-t1-w100c0-brh-ent-bldg-pisa-tilt": {
+   "readout": {
+    "ru": [
+     "Пизанская башня"
+    ],
+    "es": [
+     "Torre de Pisa",
+     "Torre inclinada de Pisa"
+    ],
+    "fr": [
+     "tour de Pise"
+    ],
+    "de": [
+     "Schiefer Turm von Pisa"
+    ]
+   }
+  },
+  "basic-au-t1-w100c0-brh-ent-law-boyle": {
+   "readout": {
+    "ru": [
+     "закон Бойля — Мариотта"
+    ],
+    "es": [
+     "ley de Boyle-Mariotte"
+    ],
+    "fr": [
+     "loi de Boyle-Mariotte"
+    ],
+    "de": [
+     "Boyle-Mariotte-Gesetz"
+    ]
+   }
+  },
+  "basic-au-t1-w100c0-brh-ent-person-principia": {
+   "readout": {
+    "ru": [
+     "Исаак Ньютон"
+    ],
+    "fa": [
+     "آیزاک نیوتن"
+    ]
+   }
+  },
+  "basic-au-t1-w100c0-brh-ent-synd-trisomy": {
+   "readout": {
+    "ru": [
+     "синдром Дауна"
+    ],
+    "es": [
+     "síndrome de Down"
+    ],
+    "fr": [
+     "syndrome de Down",
+     "trisomie 21"
+    ],
+    "de": [
+     "Down-Syndrom",
+     "Trisomie 21"
+    ]
+   }
+  },
+  "basic-au-t1-w100c0-brh-ent-treaty-versailles": {
+   "readout": {
+    "ru": [
+     "Версальский договор"
+    ],
+    "es": [
+     "Tratado de Versalles"
+    ],
+    "fr": [
+     "traité de Versailles"
+    ],
+    "de": [
+     "Versailler Vertrag",
+     "Friedensvertrag von Versailles"
+    ]
+   }
+  }
+ }
+}

@@ -1,0 +1,1355 @@
+{
+ "cs00043": {
+  "gold": "4.32",
+  "cutoff": null,
+  "js": {
+   "true_answer": "4.6",
+   "model_correct": "no",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "The Snapdragon 8 Elite Gen 5 prime cores were announced at 4.6 GHz, and 4.32 GHz is the previous-generation Snapdragon 8 Elite figure."
+  }
+ },
+ "cs00053": {
+  "gold": "22",
+  "cutoff": null,
+  "js": {
+   "true_answer": "24",
+   "model_correct": "no",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "Apple claimed up to 24 hours for the 14-inch M5 MacBook Pro; 22 hours was the earlier M3-generation 14-inch rating, so the model reused an outdated figure."
+  }
+ },
+ "cs00140": {
+  "gold": "o4-mini",
+  "cutoff": null,
+  "js": {
+   "true_answer": "o4-mini",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "OpenAI released o3 and o4-mini together on April 16, 2025."
+  }
+ },
+ "cs00165": {
+  "gold": "1000000",
+  "cutoff": null,
+  "js": {
+   "true_answer": "1000000",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "In August 2025 Anthropic launched a 1M-token context window beta for Claude Sonnet 4 via the API, which matches the model's answer."
+  }
+ },
+ "cs00248": {
+  "gold": "calpine",
+  "cutoff": null,
+  "js": {
+   "true_answer": "LS Power",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "NRG bought the ~13 GW gas portfolio from LS Power; Calpine is a salient PE-backed gas fleet, but Constellation agreed to buy it in January 2025."
+  }
+ },
+ "cs00531": {
+  "gold": "17",
+  "cutoff": null,
+  "js": {
+   "true_answer": "17",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "The ECB announced a 25-basis-point cut on April 17, 2025, lowering the deposit facility rate to 2.25%."
+  }
+ },
+ "cs00558": {
+  "gold": "2021",
+  "cutoff": null,
+  "js": {
+   "true_answer": "2021",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "On July 1, 2025, GBP/USD rose to about 1.378, its highest level since October 2021, so the model's answer matches."
+  }
+ },
+ "cs00572": {
+  "gold": "london",
+  "cutoff": null,
+  "js": {
+   "true_answer": "London",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "The October 2025 silver squeeze centered on the London market, where lease rates spiked amid scarce free-floating metal."
+  }
+ },
+ "cs00579": {
+  "gold": "1980",
+  "cutoff": null,
+  "js": {
+   "true_answer": "1980",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Reports described the January 30, 2026 plunge as silver's worst day since the 1980 Hunt brothers collapse, which matches the model's answer."
+  }
+ },
+ "cs00765": {
+  "gold": "georgia okeeffe",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Frida Kahlo",
+   "model_correct": "no",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "Frida Kahlo's 'El sueño (La cama)' sold for about $54.7M in November 2025, while Georgia O'Keeffe was the previous record holder with $44.4M in 2014."
+  }
+ },
+ "cs00808": {
+  "gold": "christies",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Phillips",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "Phillips likely sold the top lot, reportedly a steel Patek Philippe 1518, and Christie's is just a natural major-house guess, not a reused earlier fact."
+  }
+ },
+ "cs00906": {
+  "gold": "athena",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Athena",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "The IM-2 Nova-C lander was named Athena, and it touched down near Mons Mouton on March 6, 2025."
+  }
+ },
+ "cs00916": {
+  "gold": "canada-france-hawaii telescope",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Canada-France-Hawaii Telescope",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Edward Ashton's team used the CFHT on Mauna Kea to discover the 128 new Saturnian moons announced in March 2025."
+  }
+ },
+ "cs00953": {
+  "gold": "frankfurt airport",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Frankfurt Airport",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Fraport scheduled Frankfurt's new Terminal 3 to open in April 2026, which matches both the model's answer and the recorded answer."
+  }
+ },
+ "cs00954": {
+  "gold": "downtown redmond",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Downtown Redmond",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "The 2 Line extension opened May 10, 2025, with Downtown Redmond as its new eastern terminus."
+  }
+ },
+ "cs00980": {
+  "gold": "klagenfurt",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Klagenfurt",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "The Koralm Railway connects Graz and Klagenfurt, and the model's answer matches."
+  }
+ },
+ "cs00988": {
+  "gold": "klagenfurt",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Klagenfurt",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "The Koralm Railway, with its Koralm Tunnel, links Graz and Klagenfurt and opened in December 2025, so the model's answer is correct."
+  }
+ },
+ "cs00999": {
+  "gold": "33",
+  "cutoff": null,
+  "js": {
+   "true_answer": "27",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "The fully opened Aqua Line has 27 stations, so 33 is wrong; it likely comes from conflating the line's ~33.5 km length with its station count."
+  }
+ },
+ "cs01078": {
+  "gold": "playstation 5",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Nintendo Switch 2",
+   "model_correct": "no",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "Circana reported Switch 2 as 2025's best-selling US console in dollars, so the model reused PS5, which was 2024's leader."
+  }
+ },
+ "cs01083": {
+  "gold": "tesla model y",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Renault Clio",
+   "model_correct": "no",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "The Tesla Model Y was Europe's best-selling car in 2023, and its sales fell in 2025, so the model is reusing an older year-end winner; to my recollection the Renault Clio topped 2025."
+  }
+ },
+ "cs01211": {
+  "gold": "8",
+  "cutoff": null,
+  "js": {
+   "true_answer": "7",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "Márquez had 6 premier-class titles through 2019, so the 2025 title made 7; the model's 8 is likely a miscount, possibly mixing in his all-class total."
+  }
+ },
+ "cs01575": {
+  "gold": "powershell 5.1",
+  "cutoff": null,
+  "js": {
+   "true_answer": "PowerShell 2.0",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "Microsoft is removing the long-deprecated PowerShell 2.0. The model instead named 5.1, the current built-in version, which is an obvious but wrong guess rather than a reused earlier fact."
+  }
+ },
+ "cs01611": {
+  "gold": "field",
+  "cutoff": null,
+  "js": {
+   "true_answer": "field",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "C# 14 shipped field-backed properties using the 'field' contextual keyword, which had been a preview feature in C# 13."
+  }
+ },
+ "cs01635": {
+  "gold": "resolvable private address",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Resolvable private address (RPA)",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Bluetooth Core 6.1 added randomized update timing for Resolvable Private Addresses, which matches the model's answer."
+  }
+ },
+ "cs01709": {
+  "gold": "160",
+  "cutoff": null,
+  "js": {
+   "true_answer": "160",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "NextGen Acela (Avelia Liberty) trains entered service on August 28, 2025, with a maximum operating speed of 160 mph, matching the model's answer."
+  }
+ },
+ "cs01809": {
+  "gold": "nintendo switch 2",
+  "cutoff": null,
+  "js": {
+   "true_answer": null,
+   "model_correct": "unknown",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "Famitsu's 2026 annual data falls beyond my knowledge, and Switch 2 is the obvious front-runner rather than a stale reuse of the 2024 Switch answer."
+  }
+ },
+ "cs01861": {
+  "gold": "49",
+  "cutoff": null,
+  "js": {
+   "true_answer": null,
+   "model_correct": "no",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "I don't know the November 2026 figure, but 49% is Microsoft's old profit share in the capped-profit entity; the October 2025 restructuring gave it about 27% of OpenAI Group PBC, so 49% is almost certainly the stale pre-restructuring number."
+  }
+ },
+ "cs02366": {
+  "gold": "hong kong international airport",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Hong Kong International Airport",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Hong Kong handled about 5 million tonnes in 2025, well ahead of Memphis, so it very likely kept the top spot, though I have not seen the finalized 2026 release itself."
+  }
+ },
+ "kc2_00471": {
+  "gold": "2.7",
+  "cutoff": null,
+  "js": {
+   "true_answer": "11",
+   "model_correct": "no",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "The model gave Nippon Steel's earlier $2.7 billion pledge, but the June 2025 deal committed about $11 billion by 2028."
+  }
+ },
+ "kc2_00777": {
+  "gold": "germany",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Zimbabwe",
+   "model_correct": "no",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "Kirsty Coventry of Zimbabwe was elected IOC President in March 2025; Germany refers to the outgoing president, Thomas Bach."
+  }
+ },
+ "kc2_00798": {
+  "gold": "faruque ahmed",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Aminul Islam Bulbul",
+   "model_correct": "no",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "Faruque Ahmed was the outgoing president, and the question explicitly says he was replaced, so the model gave the stale incumbent."
+  }
+ },
+ "kc2_00864": {
+  "gold": "china",
+  "cutoff": null,
+  "js": {
+   "true_answer": "United Kingdom",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "On May 8, 2025, Trump announced the US-UK trade deal; China, the salient trade-war counterpart whose Geneva talks came days later, is a natural but wrong guess."
+  }
+ },
+ "kc2_00949": {
+  "gold": "10",
+  "cutoff": null,
+  "js": {
+   "true_answer": "10",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "China's March 4, 2025 announcement set a 10% extra tariff on US soybeans, effective March 10, matching the model's answer."
+  }
+ },
+ "kc2_01057": {
+  "gold": "morgan stanley",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Morgan Stanley",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Morgan Stanley marketed xAI's $5 billion debt package (bonds and loans) in June 2025, so the model's answer matches."
+  }
+ },
+ "kc2_01213": {
+  "gold": "153",
+  "cutoff": null,
+  "js": {
+   "true_answer": "185",
+   "model_correct": "no",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "The model answered 153 billion, which is the MI300X's transistor count; the MI350 series has 185 billion."
+  }
+ },
+ "kc2_01356": {
+  "gold": "university of california, berkeley",
+  "cutoff": null,
+  "js": {
+   "true_answer": "University of California, Berkeley",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "ESCAPADE is led by UC Berkeley's Space Sciences Laboratory and launched on New Glenn on November 13, 2025."
+  }
+ },
+ "kc2_01564": {
+  "gold": "trump national doral miami",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Trump National Doral Miami",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "The US named Trump National Doral, in Doral near Miami, as the venue for the 2026 G20 summit, which matches the model's answer."
+  }
+ },
+ "kc2_01581": {
+  "gold": "pointe du lac",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Pointe du Lac",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Câble C1 runs from Pointe du Lac (Line 8 terminus, Créteil) to Villeneuve-Saint-Georges, and the model's answer matches."
+  }
+ },
+ "kc2_01897": {
+  "gold": "south korea",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Japan (Mao Saigo and Miyu Yamashita); Australia also had two (Minjee Lee and Grace Kim)",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "South Korea won no 2025 majors, but it is a historically dominant women's golf nation and thus a natural guess."
+  }
+ },
+ "kc2_02377": {
+  "gold": "david liu",
+  "cutoff": null,
+  "js": {
+   "true_answer": "David Liu",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "David Liu of the Broad Institute won the 2025 Breakthrough Prize in Life Sciences for base and prime editing, which matches the model's answer."
+  }
+ },
+ "kc2_02621": {
+  "gold": "64",
+  "cutoff": null,
+  "js": {
+   "true_answer": "64",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "JEDEC's April 2025 HBM4 standard (JESD270-4) supports 16-high stacks of 32Gb dies, which gives up to 64 GB per stack."
+  }
+ },
+ "kc2_02654": {
+  "gold": "nasdaq",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Hong Kong Stock Exchange",
+   "model_correct": "no",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "Nasdaq was both firms' existing primary listing, so a secondary debut there is a reused pre-cutoff fact and is ruled out by the question; the November 2025 dual listing was in Hong Kong."
+  }
+ },
+ "kc2_02709": {
+  "gold": "1000",
+  "cutoff": null,
+  "js": {
+   "true_answer": "1000",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "In March 2025 BYD announced that its Super e-Platform supports 1000 kW (1 MW) flash charging, which matches the model's answer."
+  }
+ },
+ "kc2_02729": {
+  "gold": "spirit airlines",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Spirit Airlines",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Spirit Airlines filed for Chapter 11 a second time on August 29, 2025, less than a year after its November 2024 filing."
+  }
+ },
+ "kc2_02754": {
+  "gold": "4",
+  "cutoff": null,
+  "js": {
+   "true_answer": "4",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "The NTSB found that all four retaining bolts were missing from the door plug when the aircraft left Boeing's Renton factory, and it confirmed this at the June 24, 2025 board meeting."
+  }
+ },
+ "kc3_00001": {
+  "gold": "360",
+  "cutoff": null,
+  "js": {
+   "true_answer": "500",
+   "model_correct": "no",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "The 2025 G60SF is a 500 Hz monitor; 360 Hz is the refresh rate of the earlier 2024 G60SD model."
+  }
+ },
+ "kc3_00059": {
+  "gold": "new york city",
+  "cutoff": null,
+  "js": {
+   "true_answer": "New York City",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Amazon held its September 30, 2025 devices event in New York City, which matches the model's answer."
+  }
+ },
+ "kc3_00092": {
+  "gold": "8",
+  "cutoff": null,
+  "js": {
+   "true_answer": "64",
+   "model_correct": "no",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "The Paper Pro Move ships with 64 GB, while 8 GB is the storage of the older reMarkable 2, so the model reused a prior product's spec."
+  }
+ },
+ "kc3_00200": {
+  "gold": "600",
+  "cutoff": null,
+  "js": {
+   "true_answer": "600",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "The BenQ ZOWIE XL2586X+ was announced in 2025 as a 600Hz TN esports monitor, which matches the model's answer."
+  }
+ },
+ "kc3_00561": {
+  "gold": "eric schmidt",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Eric Schmidt",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Eric Schmidt took over as CEO of Relativity Space in March 2025, replacing Tim Ellis."
+  }
+ },
+ "kc3_01004": {
+  "gold": "sulawesi",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Muna",
+   "model_correct": "no",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "The stencil was found in Liang Metanduno on Muna Island, off Sulawesi; the model reused Sulawesi, which held the previous oldest-cave-art record (Leang Karampuang, 2024)."
+  }
+ },
+ "kc3_01184": {
+  "gold": "lc-39a",
+  "cutoff": null,
+  "js": {
+   "true_answer": "LC-39A",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "IMAP, Carruthers and SWFO-L1 launched on a Falcon 9 from Kennedy's Launch Complex 39A on September 24, 2025."
+  }
+ },
+ "kc2_00002": {
+  "gold": "349",
+  "cutoff": null,
+  "js": {
+   "true_answer": "349",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Apple announced the A16 iPad in March 2025 at a starting price of $349, the same as the 10th-gen iPad after its 2024 price cut, so the model's answer is right."
+  }
+ },
+ "kc2_00035": {
+  "gold": "8",
+  "cutoff": null,
+  "js": {
+   "true_answer": "12",
+   "model_correct": "no",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "The WH-1000XM6 uses 12 microphones; the answer of 8 repeats the WH-1000XM5's count from the previous generation."
+  }
+ },
+ "kc2_00114": {
+  "gold": "presto",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Presto",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "The Samsung 9100 Pro uses Samsung's in-house Presto controller, matching the model's answer."
+  }
+ },
+ "kc2_00179": {
+  "gold": "192",
+  "cutoff": null,
+  "js": {
+   "true_answer": "512",
+   "model_correct": "no",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "The March 2025 Mac Studio with the M3 Ultra offered up to 512GB, while 192GB was the maximum on the earlier M2 Ultra model."
+  }
+ },
+ "kc2_00254": {
+  "gold": "288",
+  "cutoff": null,
+  "js": {
+   "true_answer": "288",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "The AMD Instinct MI355X, launched in June 2025, carries 288 GB of HBM3E, which matches the model's answer."
+  }
+ },
+ "kc2_01412": {
+  "gold": "6000",
+  "cutoff": null,
+  "js": {
+   "true_answer": "6000",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "In September 2025 NASA announced that its count of confirmed exoplanets had passed 6,000, which matches the model's answer."
+  }
+ },
+ "kc2_01486": {
+  "gold": "site 31",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Site 31 (pad 31/6)",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Soyuz MS-28 launched from Site 31/6 on 27 November 2025, and the pad's mobile service cabin collapsed into the flame trench."
+  }
+ },
+ "kc2_01660": {
+  "gold": "coco gauff",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Coco Gauff",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Coco Gauff topped Forbes' December 2025 list again, so repeating her 2024 position is correct, not stale."
+  }
+ },
+ "kc2_01666": {
+  "gold": "shai gilgeous-alexander",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Shai Gilgeous-Alexander",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Shai Gilgeous-Alexander was named the 2024–25 NBA MVP in May 2025."
+  }
+ },
+ "kc2_01735": {
+  "gold": "nvidia",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Apple",
+   "model_correct": "no",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "At end-2025 Nvidia was first (about $4.5T) and Apple second (about $4T); the model reused the year-end 2024 ranking, when Nvidia was second."
+  }
+ },
+ "kc2_01752": {
+  "gold": "sunrise on the reaping",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Sunrise on the Reaping",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Sunrise on the Reaping is the Suzanne Collins novel published in March 2025, and the model's answer matches the recorded true answer."
+  }
+ },
+ "kc3_00007": {
+  "gold": "480",
+  "cutoff": null,
+  "js": {
+   "true_answer": "480",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "The LG UltraGear 27GX790A is a 27-inch 1440p OLED monitor with a 480Hz refresh rate, matching the model's answer."
+  }
+ },
+ "kc3_00089": {
+  "gold": "11.8",
+  "cutoff": null,
+  "js": {
+   "true_answer": "7.3",
+   "model_correct": "no",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "The model reused the original 2024 Paper Pro's 11.8-inch size, but the Move has a 7.3-inch screen."
+  }
+ },
+ "kc3_00345": {
+  "gold": "288",
+  "cutoff": null,
+  "js": {
+   "true_answer": "288",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "At GTC 2025, Nvidia stated that Blackwell Ultra provides 288 GB of HBM3e per GPU, up from the B200's 192 GB."
+  }
+ },
+ "kc3_00838": {
+  "gold": "ted christie",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Dave Davis",
+   "model_correct": "no",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "Ted Christie led Spirit through the November 2024 filing but left in March 2025, and Dave Davis was CEO by the August 2025 filing."
+  }
+ },
+ "kc3_01193": {
+  "gold": "lc-39a",
+  "cutoff": null,
+  "js": {
+   "true_answer": "LC-39A",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "CRS-32 lifted off on April 21, 2025 from Launch Complex 39A at Kennedy Space Center, which matches the model's answer."
+  }
+ },
+ "kc3_01292": {
+  "gold": "40",
+  "cutoff": null,
+  "js": {
+   "true_answer": "100",
+   "model_correct": "no",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "In August 2025 Duffy's directive called for a reactor of at least 100 kW, while 40 kW was the target of NASA's earlier Fission Surface Power project, so the model reused that older figure."
+  }
+ },
+ "kc3_02306": {
+  "gold": "320",
+  "cutoff": null,
+  "js": {
+   "true_answer": "320",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Mercedes quoted up to 320 kW DC fast charging for the 800-volt electric CLA unveiled in March 2025, which matches the model's answer."
+  }
+ },
+ "kc3_02384": {
+  "gold": "3.11",
+  "cutoff": null,
+  "js": {
+   "true_answer": "3.11",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "JAX 0.7.0 dropped Python 3.10 support and now requires Python 3.11 or newer, which matches the model's answer."
+  }
+ },
+ "kc3_02445": {
+  "gold": "38",
+  "cutoff": null,
+  "js": {
+   "true_answer": "42",
+   "model_correct": "no",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "The model gave 38, the cap the FAA imposed in January 2024. That cannot be the result of an increase, and the October 2025 approval raised the cap to 42 per month."
+  }
+ },
+ "kc4_00160": {
+  "gold": "200",
+  "cutoff": null,
+  "js": {
+   "true_answer": "200",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Perplexity Max launched in July 2025 at $200/month, which matches the model's answer."
+  }
+ },
+ "kc2_02407": {
+  "gold": "400",
+  "cutoff": null,
+  "js": {
+   "true_answer": null,
+   "model_correct": "unknown",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "400,000 matches the WHO 2024 report's estimate for 2023, so the model likely reused that older figure for a 2026 report it cannot know."
+  }
+ },
+ "kc3_00121": {
+  "gold": "36",
+  "cutoff": null,
+  "js": {
+   "true_answer": null,
+   "model_correct": "unknown",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "I don't know the M5 Max Mac Studio's base memory, and 36GB exactly matches the prior M4 Max Mac Studio's base configuration, so the model likely reused the old spec (though Apple could keep it unchanged)."
+  }
+ },
+ "cs00017": {
+  "gold": "256",
+  "cutoff": null,
+  "js": {
+   "true_answer": "256",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Nintendo announced in April 2025 that the Switch 2 ships with 256 GB of internal storage, matching the model's answer."
+  }
+ },
+ "cs00050": {
+  "gold": "2",
+  "cutoff": null,
+  "js": {
+   "true_answer": "2",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "The M4 MacBook Air can drive two external displays (up to 6K) with the lid open, alongside its built-in screen, so the model's answer is correct."
+  }
+ },
+ "cs00055": {
+  "gold": "1199",
+  "cutoff": null,
+  "js": {
+   "true_answer": "799",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "The 12-inch Surface Pro launched at $799; $1,199 is a plausible Surface Pro price point, but it is not the earlier model's documented $999 start."
+  }
+ },
+ "cs00056": {
+  "gold": "24",
+  "cutoff": null,
+  "js": {
+   "true_answer": "24",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "The RTX 5090 Laptop GPU ships with 24 GB of GDDR7, which matches the model's answer."
+  }
+ },
+ "cs00064": {
+  "gold": "24",
+  "cutoff": null,
+  "js": {
+   "true_answer": "30",
+   "model_correct": "no",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "Google claimed up to 30 hours for the 41mm Pixel Watch 4; 24 hours is the Pixel Watch 3 41mm figure reused."
+  }
+ },
+ "cs00073": {
+  "gold": "cortex-x930",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Arm C1-Ultra",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "The Dimensity 9500 uses the C1-Ultra from Arm's rebranded Lumex lineup, while 'Cortex-X930' is a natural extrapolation from the X925 naming rather than a reused real fact."
+  }
+ },
+ "cs00155": {
+  "gold": "20",
+  "cutoff": null,
+  "js": {
+   "true_answer": "21",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "OpenAI states gpt-oss-20b has about 21B total parameters (3.6B active), so the model's 20 is a natural guess taken from the name."
+  }
+ },
+ "cs00164": {
+  "gold": "400000",
+  "cutoff": null,
+  "js": {
+   "true_answer": "400000",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "At launch, GPT-5 in OpenAI's API had a 400K-token total context window (272K input plus 128K output), which matches the model's answer."
+  }
+ },
+ "cs00170": {
+  "gold": "262144",
+  "cutoff": null,
+  "js": {
+   "true_answer": "262144",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Qwen3-Coder-480B-A35B-Instruct natively supports a 256K (262,144-token) context, which can be extended to 1M with YaRN."
+  }
+ },
+ "cs00294": {
+  "gold": "celestial ai",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Celestial AI",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Marvell announced in December 2025 that it would acquire Celestial AI, maker of the Photonic Fabric technology, for about $3.25B upfront, which matches the model's answer."
+  }
+ },
+ "cs00320": {
+  "gold": "council regulation (ec) no 139/2004",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Foreign Subsidies Regulation (Regulation (EU) 2022/2560)",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "The in-depth review and commitments were under the FSR; the EU Merger Regulation is the natural but wrong default guess for a merger review."
+  }
+ },
+ "cs00359": {
+  "gold": "chair",
+  "cutoff": null,
+  "js": {
+   "true_answer": "executive vice chair",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "Catz became Executive Vice Chair while Ellison stayed Chairman, so 'chair' is wrong; it is a natural guess for a departing CEO, not a reused earlier fact."
+  }
+ },
+ "cs00434": {
+  "gold": "sebastián piñera",
+  "cutoff": null,
+  "js": {
+   "true_answer": "José Antonio Kast",
+   "model_correct": "no",
+   "stale_or_impossible": true,
+   "label_type": "confab_plausible",
+   "why": "Kast took office on 11 March 2026 after winning the December 2025 runoff; Piñera died in February 2024, so the model's answer is impossible, and he looks like a guess at a salient right-wing ex-president rather than the latest incumbent the model knew (Boric)."
+  }
+ },
+ "cs00662": {
+  "gold": "apple",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Apple",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Apple fell about 9% on April 3, 2025, losing roughly $311 billion in market value, the biggest drop that day."
+  }
+ },
+ "cs00705": {
+  "gold": "anji khad bridge",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Anji Khad Bridge",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "The Anji Khad Bridge, India's first cable-stayed railway bridge on the USBRL line, was inaugurated by PM Modi on 6 June 2025."
+  }
+ },
+ "cs00706": {
+  "gold": "katra",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Katra (Shri Mata Vaishno Devi Katra)",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "On June 6, 2025, PM Modi inaugurated the Chenab bridge and flagged off the Vande Bharat train from Katra to Srinagar."
+  }
+ },
+ "cs00707": {
+  "gold": "6450",
+  "cutoff": null,
+  "js": {
+   "true_answer": "5150",
+   "model_correct": "no",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "6,450 MW was an earlier planned capacity for the dam; the design was later revised to 13 turbines and 5,150 MW, the figure reported at its September 2025 inauguration."
+  }
+ },
+ "cs00745": {
+  "gold": "amazon",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Amazon (Project Kuiper / Amazon Leo)",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "The first Ariane 64 flight carried Amazon's Kuiper/Leo broadband satellites, under Amazon's multi-launch Ariane 6 contract."
+  }
+ },
+ "cs00794": {
+  "gold": "christies",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Christie's",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Christie's announced in July 2025 that it was acquiring Gooding & Company, which was rebranded as Gooding Christie's."
+  }
+ },
+ "cs00834": {
+  "gold": "artcurial",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Sotheby's",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "Sotheby's sold the original Birkin in Paris in July 2025 for about €8.6M. Artcurial is a natural guess as a Paris house known for Hermès sales, but it is wrong and not the prior record holder."
+  }
+ },
+ "cs00846": {
+  "gold": "endurance",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Endurance",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Crew-10 launched March 14, 2025 aboard Crew Dragon Endurance."
+  }
+ },
+ "cs00861": {
+  "gold": "india",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Bangladesh",
+   "model_correct": "no",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "Bangladesh signed in April 2025; the model reused India's June 2023 signing, an earlier fact for the same slot."
+  }
+ },
+ "cs00862": {
+  "gold": "firefly aerospace",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Firefly Aerospace",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Firefly's Blue Ghost Mission 1 landed in Mare Crisium on March 2, 2025, the first fully successful commercial lunar landing."
+  }
+ },
+ "cs00903": {
+  "gold": "firefly aerospace",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Firefly Aerospace",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Firefly Aerospace's Blue Ghost Mission 1 landed in Mare Crisium on March 2, 2025, a fully successful commercial lunar landing."
+  }
+ },
+ "cs00913": {
+  "gold": "long march 3b",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Long March 3B",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Tianwen-2 launched on May 29, 2025 aboard a Long March 3B from Xichang, which matches the model's answer."
+  }
+ },
+ "cs00929": {
+  "gold": "south africa",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Chile",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "3I/ATLAS was found by the ATLAS unit at Río Hurtado, Chile; South Africa hosts another real ATLAS station, so it is a natural but wrong guess."
+  }
+ },
+ "cs00966": {
+  "gold": "indore",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Indore",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "On May 31, 2025, PM Modi inaugurated Indore Metro's priority corridor from Bhopal, which matches the model's answer."
+  }
+ },
+ "cs00973": {
+  "gold": "konkan railway corporation",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Afcons Infrastructure",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "Konkan Railway was the project's executing agency, but Afcons Infrastructure built the bridge, so the model gave a salient related entity rather than the builder."
+  }
+ },
+ "cs01000": {
+  "gold": "2028",
+  "cutoff": null,
+  "js": {
+   "true_answer": "2028",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Prabowo's mid-2025 Presidential Regulation 79/2025 set 2028 as the target for Nusantara to become the political capital, so the model's answer is right."
+  }
+ },
+ "cs01071": {
+  "gold": "temu",
+  "cutoff": null,
+  "js": {
+   "true_answer": "ChatGPT",
+   "model_correct": "no",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "Temu was the No. 1 free iPhone app for 2024, but ChatGPT topped Apple's 2025 US list, so the model reused the previous year's winner."
+  }
+ },
+ "cs01082": {
+  "gold": "onyx storm",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Onyx Storm",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Onyx Storm came out in January 2025 and was reported as 2025's top-selling adult fiction print title, matching the recorded answer."
+  }
+ },
+ "cs01091": {
+  "gold": "hartsfield-jackson atlanta international airport",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Dubai International Airport",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "Atlanta ranked first for 2024 and Dubai second, so the model wrongly named the most salient busiest-airport candidate."
+  }
+ },
+ "cs01115": {
+  "gold": "switzerland",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Switzerland",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Switzerland topped the IMD World Competitiveness Ranking 2025, ahead of Singapore and Hong Kong."
+  }
+ },
+ "cs01181": {
+  "gold": "bryce harper",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Kyle Schwarber",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "Schwarber finished second after his 56-homer season; Harper is the most famous Phillies slugger and an obvious guess, but he was not runner-up to Ohtani in any prior year."
+  }
+ },
+ "cs01260": {
+  "gold": "chicago cubs",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Los Angeles Dodgers",
+   "model_correct": "no",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "The Cubs were Tucker's team after the December 2024 trade, so the model reused his prior team instead of the Dodgers, who signed him as a free agent."
+  }
+ },
+ "cs01359": {
+  "gold": "sébastien lecornu",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Catherine Vautrin",
+   "model_correct": "no",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "Lecornu was the previous Armed Forces Minister (from 2022) and headed this government as Prime Minister; Catherine Vautrin got the Armed Forces post."
+  }
+ },
+ "cs01483": {
+  "gold": "mresvia",
+  "cutoff": null,
+  "js": {
+   "true_answer": "mNEXSPIKE",
+   "model_correct": "no",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "mRESVIA is Moderna's RSV vaccine, approved in May 2024, so the model reused Moderna's previous newly approved product name for this slot instead of mNEXSPIKE."
+  }
+ },
+ "cs01552": {
+  "gold": "leqembi",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Leqembi Iqlik",
+   "model_correct": "no",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "The model gave the existing IV brand name Leqembi, missing the new 'Iqlik' brand name for the subcutaneous autoinjector."
+  }
+ },
+ "cs01590": {
+  "gold": "pixel 9",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Pixel 10",
+   "model_correct": "no",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "Google launched Quick Share–AirDrop interoperability on the Pixel 10 series, and the Pixel 9 was the previous-generation flagship, likely the latest the model knew."
+  }
+ },
+ "cs01605": {
+  "gold": "6.20",
+  "cutoff": null,
+  "js": {
+   "true_answer": "7.0",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "Torvalds named the release after 6.19 version 7.0; 6.20 is the natural incremental guess, not a reused older fact."
+  }
+ },
+ "cs01621": {
+  "gold": "promise.try",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Promise.try",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Promise.try was standardized as part of ES2025, approved in June 2025."
+  }
+ },
+ "cs01698": {
+  "gold": "2026",
+  "cutoff": null,
+  "js": {
+   "true_answer": "2027",
+   "model_correct": "no",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "In October 2025 Boeing pushed first 777-9 delivery to 2027; 2026 was the earlier target set in 2024."
+  }
+ },
+ "cs01715": {
+  "gold": "shri mata vaishno devi katra",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Shri Mata Vaishno Devi Katra",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "On 6 June 2025 Modi flagged off the Vande Bharat trains running between Shri Mata Vaishno Devi Katra and Srinagar, so the model's answer is correct."
+  }
+ },
+ "cs01720": {
+  "gold": "glasgow",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Glasgow",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Global Airlines flew its inaugural A380 service from Glasgow to New York JFK in mid-May 2025, matching the model's answer."
+  }
+ },
+ "cs02089": {
+  "gold": "broadcom",
+  "cutoff": null,
+  "js": {
+   "true_answer": null,
+   "model_correct": "unknown",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "The event falls after my knowledge, so I can't verify it; Broadcom, a recent $1T+ AI chip company, is a natural front-runner guess and not a reused earlier fact."
+  }
+ },
+ "cs02666": {
+  "gold": "206",
+  "cutoff": null,
+  "js": {
+   "true_answer": null,
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "FIPS 206 is already reserved for FN-DSA (Falcon), so HQC would more likely get FIPS 207; 206 is the natural next-number guess after 205."
+  }
+ },
+ "cs01481": {
+  "gold": "kp.2",
+  "cutoff": null,
+  "js": {
+   "true_answer": "LP.8.1",
+   "model_correct": "no",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "In May 2025 VRBPAC preferred LP.8.1; KP.2 was the preferred strain for 2024-25, so the model reused the previous season's answer."
+  }
+ },
+ "cs01606": {
+  "gold": "compression.zstd",
+  "cutoff": null,
+  "js": {
+   "true_answer": "compression.zstd",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "PEP 784 added the compression.zstd module in Python 3.14, which matches the model's answer."
+  }
+ }
+}
