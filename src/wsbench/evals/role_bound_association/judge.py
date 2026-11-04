@@ -354,10 +354,13 @@ def blocks_of(scope: list[dict], bank: list[dict], lex: gate.Lexicon) -> dict[st
 
 def instrument() -> str:
     """The result stamp of the judged bank: ``PROMPT_VERSION`` (``+bank-v2``) for the registered
-    bank v2, ``CALL_VERSION`` alone for a bank without a ``version`` >= 2 header (the frozen
-    ``items.json`` and the adapted banks, plain lists)."""
+    bank v2, ``CALL_VERSION`` alone for any other bank: the frozen ``items.json`` (no header) and
+    every adapted bank. An adapted bank is a plain list today, but ``adapt.run.freeze`` copies
+    the registered bank's header (``version`` 2 included) into a new one and marks it ``adapt``,
+    so the ``adapt`` key, not the version, keeps it on ``CALL_VERSION``."""
     header, _items = readplan.bank_file(bank_path(FAMILY))
-    return PROMPT_VERSION if int(header.get("version", 1)) >= 2 else CALL_VERSION
+    native_v2 = int(header.get("version", 1)) >= 2 and "adapt" not in header
+    return PROMPT_VERSION if native_v2 else CALL_VERSION
 
 
 def load_items() -> tuple[list[dict], list[dict]]:

@@ -105,7 +105,7 @@ v4 key (`MH2_CALL_VERSION`). Stamp `+bank-v5`. The floors were re-measured on v5
 ## Scoring (plan 0041)
 
 - **Instrument of record: the family's own forced-choice judge** (Camila: "Should have an mc
-  judge with common distractors from other questions"). `prompt_version` `mh2-mc-2026-11-01+norival-v1+qline-v1+bank-v5`
+  judge with common distractors from other questions"). `prompt_version` `mh2-mc-2026-11-01+norival-v1+qline-v2+bank-v5`
   (the MC calls stay keyed `mh2-mc-2026-11-01+rv-2026-10-31e+optrv-v1+bank-v4`, `MH2_CALL_VERSION`),
   judge Opus 5.5 (the registry default), pinned, in the macro. One call per (item, required
   unit); the judge is blind (no prompt text, no gold, no role label).
@@ -296,8 +296,11 @@ v4 key (`MH2_CALL_VERSION`). Stamp `+bank-v5`. The floors were re-measured on v5
   so they are drawn beside this instrument again.
 - 2026-11-04 (`+bank-v5`): Immanuel Kant, whom kant-hume's prompt describes, is no longer one of
   its bridge-1 options.
-- 2026-11-04 (`+qline-v1`): a quote one word off verifies near-verbatim, and a quote cut mid-name
-  counts through its line when that line names the gold and no other option.
+- 2026-11-04 (`+qline-v2`): a quote one word off verifies near-verbatim, and a quote cut mid-name
+  counts where its line continues it into the gold or its sample ends inside a name only the
+  gold's forms start with (jarry-ubu-t3's "...was **Alfred J"); a line naming the gold anywhere
+  else gives nothing. (`+qline-v1`, an unreleased draft, credited it through any line holding it that named
+  the gold and no other option.)
 - 2026-11-04 (`+norival-v1`): the contested rule (`family.contested_verdict`: the rival line and
   every other option's best line weighed against the gold's digest support) and the option audit
   are removed, because their support counting failed correct picks; the MC calls keep their key

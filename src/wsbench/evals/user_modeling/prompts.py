@@ -42,11 +42,11 @@ CALL_VERSION = "um-v3.5"  # every judge call's fingerprint (the rubric, gate and
 # stamped +bank-v3; bank v<N> always stamps +bank-v<N>
 BANK_STAMP = "+bank-v3"
 PROMPT_VERSION = f"{CALL_VERSION}{BANK_STAMP}"  # the registered instrument (bank v3)
-# Summary mode asks each item 3 times (judge.n_draws) and takes the majority of the gated picks;
-# no majority = undecided. The calls (draw 0 is the single-call key, so its cached answer is
-# reused), the native instrument, the ATI gate and the guesser floors keep the stamps above; a
-# summary result is stamped ``+maj<N>`` (judge.majority_stamp; draws=1 is the single-call
-# instrument, no suffix)
+# Summary mode asks each item 3 times (judge.n_draws) and takes the majority of the draws' pass /
+# fail verdicts (judge.draw_verdict), so every item whose draws land is decided. The calls (draw 0
+# is the single-call key, so its cached answer is reused), the native instrument, the ATI gate and
+# the guesser floors keep the stamps above; a summary result is stamped ``+maj<N>v``
+# (judge.majority_stamp; draws=1 is the single-call instrument, no suffix)
 SEED = 0  # fixes the distractor draw and the option order
 
 # the option types that compete as a flat list (plan 0032 §2.7.2): a run of them singles out none
