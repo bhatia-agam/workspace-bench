@@ -94,6 +94,22 @@ def test_instrument_follows_the_judged_bank(monkeypatch, tmp_path):
     assert rb.instrument() == "oa-v3.1"
 
 
+def test_an_adapted_bank_with_the_v2_header_keeps_the_call_key(monkeypatch, tmp_path):
+    """adapt.run.freeze wraps a new adapted bank in the registered bank's header (version 2,
+    changes, dropped) plus an ``adapt`` record; it still stamps the call key alone, never
+    +bank-v2."""
+    header, items = store.original_bank(FAMILY)
+    assert header["version"] == 2
+    bank = {**header, "adapt": {"model": "m", "hf_id": "org/m"}, "items": items[:2]}
+    (tmp_path / f"{FAMILY}.json").write_text(json.dumps(bank), encoding="utf-8")
+    monkeypatch.setenv(registry.BANK_ROOT_ENV, str(tmp_path))
+    assert rb.instrument() == "oa-v3.1"
+    # the same header without the adapt record is the registered bank's: +bank-v2
+    del bank["adapt"]
+    (tmp_path / f"{FAMILY}.json").write_text(json.dumps(bank), encoding="utf-8")
+    assert rb.instrument() == "oa-v3.1+bank-v2"
+
+
 def test_an_adapted_bank_plans_its_own_items():
     header, items = store.original_bank(FAMILY)
     assert readplan.READ_PLAN_BANK not in header and header["supersedes"] == V1.name

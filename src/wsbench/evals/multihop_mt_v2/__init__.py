@@ -27,8 +27,9 @@ SPEC = register(
         "Multihop v2 (multi-token)",
         calls_per_arm="≈ 0.13k (64 digests + 69 MC)",
         scorer="mc",
-        # bank v6 = v5 with the leaking bridge lists rebuilt and 6 items dropped (its header's
-        # read_plan_bank keeps v5's read plan, so v5 readouts serve it)
+        # bank v6 = v4 without Kant among kant-hume's options, with the leaking bridge lists
+        # rebuilt and 6 items dropped (its header's read_plan_bank keeps v4's read plan, so v4
+        # readouts serve it)
         bank=Path("evals/multihop_mt_v2/items_v6.json"),
         prompt_version=MH2_PROMPT_VERSION,
         min_full_positions=MIN_FULL_POSITIONS,
@@ -44,5 +45,5 @@ MC_PROFILES[SPEC.name] = MCProfile(
     regex_version=MH2_REGEX_VERSION,
     rival=True,
 )
-# the result stamp moved past the MC calls' cached key (norival-v1, qline-v1)
+# the result stamp moved past the MC calls' cached key (norival-v1, qline-v2)
 CALL_VERSIONS[SPEC.name] = (MH2_PROMPT_VERSION, MH2_CALL_VERSION)

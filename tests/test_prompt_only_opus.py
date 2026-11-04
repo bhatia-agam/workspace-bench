@@ -188,16 +188,15 @@ def test_excluded_is_only_jlens_concept_pr():
     assert set(po.EXCLUDED) == {"jlens_concept_pr"}
 
 
-def test_build_asks_only_the_judged_banks_ids(real_families, monkeypatch):
+def test_build_asks_only_the_judged_banks_ids(real_families):
     """A bank that reads with an earlier bank's plan (``read_plan_bank``) is asked on its own ids
-    only: multihop v4 keeps v3's 100-row plan but judges 68 items. The registered multihop bank v5
-    plans its own rows, so every plan id is judged."""
+    only: association v5 keeps v3's 93-row plan but judges 91 items. The registered multihop bank
+    v5 plans its own rows, so every plan id is judged."""
     from wsbench import readplan
     from wsbench.baselines import text_inversion as ti
 
     assert ti.judged_bank_ids("multihop") is None  # bank v5: its own plan
-    monkeypatch.setenv("WSB_BANK_FILE_MULTIHOP", "evals/multihop/items_v4.json")
-    own = ti.judged_bank_ids("multihop")
-    plan = {s.id for s in readplan.plan("multihop")}
-    assert own is not None and len(own) == 68 and own < plan
+    own = ti.judged_bank_ids("association")
+    plan = {s.id for s in readplan.plan("association")}
+    assert own is not None and len(own) == 91 and len(plan) == 93 and own < plan
     assert ti.judged_bank_ids("poetry") is None  # its plan rows are all judged

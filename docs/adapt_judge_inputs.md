@@ -407,14 +407,14 @@ SUBJECT_FIELDS: `read`.
 | kind | input | req | if absent | class | where | note |
 |---|---|---|---|---|---|---|
 | item | `id` | yes | exit | build | mcjudge.py:149-151 | raw id (bare-list bank) |
-| item | `messages` | yes | exit | copy-verbatim | jailbreak_recognition/judge.py:53-56,150-160 |  |
-| item | `read.span` | yes | exit | subject | jailbreak_recognition/judge.py:80-123 |  |
-| item | `read.tokens` | yes | exit | subject | jailbreak_recognition/judge.py:153,314-320 |  |
-| item | `read.turn_end` | yes | exit | subject | jailbreak_recognition/judge.py:126-135 |  |
+| item | `messages` | yes | exit | copy-verbatim | jailbreak_recognition/judge.py:68-71,166-176 |  |
+| item | `read.span` | yes | exit | subject | jailbreak_recognition/judge.py:95-139 |  |
+| item | `read.tokens` | yes | exit | subject | jailbreak_recognition/judge.py:169,335-341 |  |
+| item | `read.turn_end` | yes | exit | subject | jailbreak_recognition/judge.py:142-150 |  |
 | item | `read.n_tokens` | yes | exit | subject | readplan.py:1029 |  |
-| item | `kind` | yes | silent | copy-verbatim | jailbreak_recognition/judge.py:323-325; score.py:52-53 | absent = 'jailbreak' (controls must say control) |
-| item | `template_id` |  | silent | copy-verbatim | jailbreak_recognition/score.py:186 | CI cluster |
-| item | `twin_of` |  | silent | copy-verbatim | jailbreak_recognition/score.py:226-236 |  |
+| item | `kind` | yes | silent | copy-verbatim | jailbreak_recognition/judge.py:344-346; score.py:53-54 | absent = 'jailbreak' (controls must say control) |
+| item | `template_id` |  | silent | copy-verbatim | jailbreak_recognition/score.py:201 | CI cluster |
+| item | `twin_of` |  | silent | copy-verbatim | jailbreak_recognition/score.py:248-258 |  |
 | qwen | `read.* = Qwen token indices / <\|im_end\|>` |  | - | subject | readplan.py:1029-1036 |  |
 | qwen | `GRID layers (Qwen 64 blocks)` |  | - | subject | readplan.py:588-627 | remapped by depth from report.json n_layers under WSB_BANK_ROOT (exit without it) |
 
@@ -505,15 +505,15 @@ SUBJECT_FIELDS: `stimulus`, `reason_class`, `options`, `gate_pass`, `look_for_re
 |---|---|---|---|---|---|---|
 | item | `id` | yes | exit | build | mcjudge.py:149-151 | raw id (bare-list bank) |
 | item | `stimulus` | yes | exit | subject | readplan.py:870-895 | reasons in the read conversation |
-| item | `question` | yes | exit | copy-verbatim | moral_rationale/judge.py:207-208,979 |  |
-| item | `reason_class` | yes | exit | subject | moral_rationale/judge.py:255; score.py:92-102 | non-'committed' = deliberative |
-| item | `bank_version` | yes | fallback | build | moral_rationale/judge.py:100-106; readplan.py:872-877 | absent = v1 instrument (checked) |
-| item | `options` | yes | fallback | subject | moral_rationale/judge.py:211-233,251-285,643-655 | absent in a v3 bank: gold + cannot-tell only |
+| item | `question` | yes | exit | copy-verbatim | moral_rationale/judge.py:200-201 |  |
+| item | `reason_class` | yes | exit | subject | moral_rationale/judge.py:248; score.py:92-102 | non-'committed' = deliberative |
+| item | `bank_version` | yes | fallback | build | moral_rationale/judge.py:93-99; readplan.py:872-877 | absent = v1 instrument (checked) |
+| item | `options` | yes | fallback | subject | moral_rationale/judge.py:204-226,244-278,317-329 | absent in a v3 bank: gold + cannot-tell only |
 | item | `topic_id` | yes | silent | copy-verbatim | moral_rationale/score.py:47-50 |  |
 | item | `gate_pass` |  | silent | subject | moral_rationale/score.py:39 | diagnostics |
 | item | `system` |  | silent | copy-verbatim | readplan.py:870-895 |  |
-| item | `look_for_reasons` |  | - | subject | moral_rationale/judge.py:130-174 | v1 only |
-| item | `reasons` |  | - | subject | moral_rationale/judge.py:255-268 | v1 path only; the subject's distilled reasons (rekey / adopt) |
+| item | `look_for_reasons` |  | - | subject | moral_rationale/judge.py:123-167 | v1 only |
+| item | `reasons` |  | - | subject | moral_rationale/judge.py:248-261 | v1 path only; the subject's distilled reasons (rekey / adopt) |
 | item | `subject_answer` |  | - | subject | - | adapt-time (SUBJECT_FIELDS) |
 | qwen | `lite last_n 5 = Qwen assistant header` |  | - | subject | readplan.py:888-893 |  |
 | qwen | `GRID layers (Qwen 64 blocks)` |  | - | subject | readplan.py:588-627 | remapped by depth from report.json n_layers under WSB_BANK_ROOT (exit without it) |
