@@ -11,9 +11,9 @@ positions; an item passes if any layer is a credited gold pick.
 
 A gold pick is credited only if its quote verifies against the readout (``digest.quote_ok``,
 else near-verbatim), names the gold by a listed form (:func:`name_in`, every option matched the
-same way) in the quote or, failing that, in the line it came from (:func:`form_via`), and is not
-an echo of the prompt. Nothing in code overrules the judge's pick; the raw wrong-vs-true counts
-are reported beside the score, never scored."""
+same way) in the quote or, for a quote cut mid-name, where its line continues it
+(:func:`form_via`), and is not an echo of the prompt. Nothing in code overrules the judge's pick;
+the raw wrong-vs-true counts are reported beside the score, never scored."""
 
 import functools
 import re
@@ -38,7 +38,7 @@ from wsbench.mcjudge import (
     run_calls,
     with_readout_count,
 )
-from wsbench.nearquote import close_lines
+from wsbench.nearquote import close_lines, continued, sample_end_prefix
 from wsbench.readouts import Cell
 from wsbench.registry import JudgeArgs, bank_path
 from wsbench.results import FamilyResult
@@ -299,8 +299,12 @@ def echo_of_prompt(quote: str, prompt: str) -> bool:
 # The quote is verified by ``digest.quote_ok`` (markdown-insensitive), else near-verbatim
 # (``nearquote.close_lines``), and must name the gold reasonably and unambiguously, read in the
 # line it came from: the verified quote itself names the gold, or a near quote's matched block (the
-# readout's own words) does, or (a quote cut mid-name, "Ludwig van" / "Vincent van") the located
-# line names the gold and no other candidate. Either way the quote names no other candidate.
+# readout's own words) does, or the quote was cut mid-name: its line continues it into a listed
+# form of the gold ("...the composer was Ludwig van" + " Beethoven"; ``nearquote.continued``), the
+# quote so run on naming the gold and no other candidate, or the quote ends its sample and its
+# trailing words begin forms of the gold and of no other candidate ("...is Vincent van";
+# ``nearquote.sample_end_prefix``). A line naming the gold anywhere else (a fact-only quote) gives
+# nothing. The quote names no other candidate.
 
 
 def quote_lines(quote: str, lines: Sequence[digest.Line]) -> tuple[bool, list[digest.Line]]:
@@ -326,8 +330,11 @@ def form_via(
 ) -> str | None:
     """How the quote names the gold: ``quote`` (a verified quote holds a listed form of the
     gold), ``block`` (a near quote's matched readout text names the gold and no other candidate),
-    ``line`` (a located line names the gold and no other candidate), else None. A quote naming
-    another candidate never names the gold."""
+    ``line`` (the quote was cut mid-name: a located line continues it into a listed form of the
+    gold, :func:`~wsbench.nearquote.continued`, and the quote so run on names the gold and no
+    other candidate; or the quote ends its sample and its trailing words begin forms of the gold
+    and of no other candidate, :func:`~wsbench.nearquote.sample_end_prefix`), else None. A quote
+    naming another candidate never names the gold."""
     forms = it["mc"]["forms"]
     gold = it["mc"]["gold"]
     others = [o for o in it["mc"]["order"] if o != gold]
@@ -342,9 +349,19 @@ def form_via(
         return "quote"
     if not verified and any(single(near_block(quote, ln.text)) for ln in located):
         return "block"
-    if any(single(norm(ln.text)) for ln in located):
-        return "line"
+    by_option = {o: forms[o] for o in it["mc"]["order"]}
+    for ln in located:
+        for run_on in continued(quote, ln, forms[gold], _names_window, near=not verified):
+            if single(norm(run_on)):
+                return "line"
+        cut = sample_end_prefix(quote, ln, by_option, near=not verified)
+        if cut is not None and cut[0] == gold:
+            return "line"
     return None
+
+
+def _names_window(text: str, forms: list[str]) -> bool:
+    return name_in(norm(text), forms)
 
 
 # ------------------------------------------------------------------ raw counts (report only)
