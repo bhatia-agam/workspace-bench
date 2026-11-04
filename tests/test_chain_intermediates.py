@@ -1081,3 +1081,29 @@ def test_native_lite_judges_final_token_per_layer(tmp_path, monkeypatch, toy_v2)
     assert {(c.meta["layer"], c.meta["pos"]) for c in seen} == {(20, 49), (24, 49)}
     assert r.value == 1.0 and r.config["prompt_version"] == cp.NATIVE_PROMPT_VERSION + "+reads-lite"
     assert "null_perm_any_cell" in r.extras and "net" in r.extras
+
+
+def test_key_examples_show_how_the_lens_states_each_key():
+    """chain-v2-d2p-0009 shape: the digest's only sample for the key 10 framed
+    it as the input ("The starting number is **10**"); the judge also sees raw samples that open
+    with 10 and work the item's own operation, and quotes from them verify."""
+    from wsbench.digest import Grounded, Line
+    from wsbench.evals.chain_intermediates import judge as cj
+    from wsbench.readouts import Cell
+
+    raw = [
+        "10 ``` 1. Halve 20: $20 / 2 = 10$. 2. Add 1",
+        "10\n\nExplanation: halving 20 gives 10",
+        "10 apples on the table",  # no operation of the item: not shown
+        "The starting number is **10**.",  # no answer head: not shown
+        "10 again: half of 20 is 10",
+    ]
+    cells = [Cell("it", 44, 3, tuple(raw), None, None)]
+    ops = cj.op_pattern(["halve_down", "add"])
+    ex = cj.key_examples(cells, ["10", "11"], ops, ["The starting number is **10**."])
+    assert ex["10"] == [" ".join(raw[0].split()), " ".join(raw[1].split())] and ex["11"] == []
+    g = Grounded("S", "12 samples", "x", Line("The starting number is **10**."), "10", "numbers")
+    text, extra = cj.with_key_examples("[12 samples] The starting number is **10**.", [g], ex)
+    assert text.splitlines()[1].startswith(cj.ANOTHER_SAMPLE) and len(extra) == 2
+    assert cj.note_of("note", text).endswith(cj.KEY_EXAMPLES_NOTE)
+    assert cj.note_of("note", "[3 samples] 12") == "note"

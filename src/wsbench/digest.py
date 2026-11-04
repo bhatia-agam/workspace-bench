@@ -2012,8 +2012,11 @@ def collapse(
     s = settings(args, name)
     notes = _notes(name, cells_by_item, task_note)
     _check_expect_all(name, cells_by_item, expect_all)
-    spare = NUMBERS_SPARE if s.numbers > 0 and operands is not None else 0
-    if s.numbers > 0 and s.ties > 0 and operands is None and not consensus:
+    # a tie-extended numbers digest (chain) keeps its own request when given operands: the
+    # restated operands are demoted inside the ties pass, so its cached digests stay valid; other
+    # numbers digests ask for NUMBERS_SPARE spares instead
+    spare = NUMBERS_SPARE if s.numbers > 0 and operands is not None and s.ties == 0 else 0
+    if s.numbers > 0 and s.ties > 0 and not consensus:
         spare += s.ties  # round 4: the tie candidates beyond the cap (cut by tie_cut below)
     if s.overflow == "hierarchical":
         col = _collapse_layers(
@@ -2047,10 +2050,10 @@ def collapse(
     # final r1: a numbers-union digest's keys are EXACTLY the union of its layers' own ranked
     # keys (ranked per layer in _collapse_layers); no cross-layer re-rank may re-add a value its
     # own layer left out. A single-layer item takes the joint pass as before.
-    if s.numbers > 0 and (operands is not None or consensus) and not args.dry_run:
+    if s.numbers > 0 and s.ties == 0 and (operands is not None or consensus) and not args.dry_run:
         _numbers_pass(col, cells_by_item, s, operands or {}, consensus, union=union)
     elif s.numbers > 0 and s.ties > 0:
-        _ties_pass(col, s)
+        _ties_pass(col, s, operands or {})
     undecide_partial(col, cells_by_item)
     return col
 
@@ -2072,16 +2075,31 @@ def tie_cut(gs: Sequence[Grounded], cap: int) -> list[Grounded]:
     return [g for g in gs if g.count >= floor]
 
 
-def _ties_pass(col: Collapse, s: Settings) -> None:
+def _ties_pass(
+    col: Collapse, s: Settings, operands: Mapping[str, Sequence[float]] | None = None
+) -> None:
     """Cut every served numbers digest asked for ``s.ties`` spare numbers back with
-    :func:`tie_cut`; ``diag['n_items_tie_extended']`` counts the items kept above the cap."""
-    n_ext = 0
+    :func:`tie_cut`; ``diag['n_items_tie_extended']`` counts the items kept above the cap.
+    ``operands`` (chain: the start number): a key that restates one of the item's
+    operands takes a slot only when fewer than ``s.numbers`` other numbers are left
+    (``diag['n_items_operand_demoted']``), as the numbers pass does for arithmetic."""
+    n_ext = n_dem = 0
     for item_id, gs in list(col.grounded.items()):
-        kept = tie_cut(gs, s.numbers)
+        ops = {round(float(o), 9) for o in (operands or {}).get(item_id, ())}
+
+        def is_op(g: Grounded, ops: set[float] = ops) -> bool:
+            v = number_value(g.key) if g.key else None
+            return v is not None and round(v, 9) in ops
+
+        rest = [g for g in gs if not is_op(g)]
+        cand = rest if ops and len(rest) >= s.numbers else list(gs)
+        kept = tie_cut(cand, s.numbers)
         n_ext += len(kept) > s.numbers
+        n_dem += len(cand) != len(gs)
         if len(kept) != len(gs):
             _set_summary(col, item_id, kept, s)
     col.diag["n_items_tie_extended"] = n_ext
+    col.diag["n_items_operand_demoted"] = n_dem
 
 
 # an item whose unserved (refused / too-long / dropped) layers exceed this share of its read

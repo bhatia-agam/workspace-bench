@@ -157,8 +157,20 @@ like a lite file"), and a v1 file (25 positions from " What") is refused by its 
   (`n_unjudged_cells`, items); an empty digest is a judged negative with no call
   (`n_empty_cells`). Rows add `answer_in_digest` / `start_in_digest` (whether the answer / start
   took one of the five key slots).
-- **Provenance.** `prompt_version` = `digest.prompt_version("chain-mc-2026-10-30+heads-v3", args, family)`,
-  i.e. `chain-mc-2026-10-30+heads-v3+digest-v5-task-extractive-rankties5+sj-v10` at the defaults (judge calls keyed by
+- **The start number is not a key (`+start-op`).** The prompt's start number is the input, not
+  an intermediate, so it is passed to the numbers digest as an operand: it takes one of the five
+  key slots only when fewer than five other numbers are left (`digest._ties_pass` with
+  `operands=`; the digest request and its cache are unchanged; the digest diagnostics count
+  `n_items_operand_demoted`).
+- **Key examples (`+key-ex2`).** The digest shows one sample per key, which can present the
+  number as an input ("The starting number is **10**"). So under each key's line the judge also
+  sees up to two more raw prose samples that open with that number and work one of the item's
+  own operations (`judge.key_examples`: gold-blind, in read order, at most 240 characters each,
+  none the digest already shows), as `[another sample] <text>` lines. They join the evidence, so a
+  quote from them verifies, and `KEY_EXAMPLES_NOTE` (Judge prompts, below) is added to the
+  digest note of that call.
+- **Provenance.** `prompt_version` = `digest.prompt_version("chain-mc-2026-10-30+heads-v3+start-op+key-ex2", args, family)`,
+  i.e. `chain-mc-2026-10-30+heads-v3+start-op+key-ex2+digest-v5-task-extractive-rankties5+sj-v10` at the defaults (judge calls keyed by
   `MC_CALL_VERSION` = `chain-mc-2026-10-30`, so the heads gate re-asks nothing) (`+reads-lite` under lite, `+rule-any`
   under `opts=rule=any`); `config.reads`, `sampling`, `sampling_source`, `reader`,
   `reads_checked`, `layers_judged` come from the shared loader.
@@ -238,7 +250,7 @@ wsbench judge family=chain_intermediates readouts=<arm>/chain_intermediates.json
 
 ## Judge prompts
 
-Judge: the repo default (`claude-opus-5-5`), temperature 0. `prompt_version`: `chain-mc-2026-10-30+heads-v3`
+Judge: the repo default (`claude-opus-5-5`), temperature 0. `prompt_version`: `chain-mc-2026-10-30+heads-v3+start-op+key-ex2`
 (summary MC; calls keyed by `chain-mc-2026-10-30`), `chain-free-2026-10-30` (native free recall). `TOKEN_NOTE` is
 `mc.token_note(("numbers",))`, rendered from the family's registered `EvalSpec`
 (`flat_types=("numbers",)`, `multi_select=False`) into `SYSTEM_MC` and `SYSTEM`.
@@ -406,3 +418,19 @@ A line whose items are separated by " | " is one ranked list of the top vocabula
 ```text
 the model silently works through a short multi-step arithmetic chain and answers with no chain of thought
 ```
+
+`KEY_EXAMPLES_NOTE` (`+key-ex2`): appended to the digest note of a summary MC call whose digest
+shows key examples (`[another sample]` lines, Scoring above).
+
+```text
+Lines marked [another sample] are further readout samples that state the number of the line above them.
+```
+
+## History
+
+- 2026-11-04 (`+start-op`): the prompt's start number takes a numbers-digest key only when fewer
+  than five other numbers are left, because it crowded out real intermediates
+  (`chain-d2p-0352`: keys 7, 42, 9, 144, 126, while the intermediate 21, in 8 raw samples, lost
+  its slot to the start 7).
+- 2026-11-04 (`+key-ex2`): the judge sees up to two more raw samples under each numbers-digest
+  key, because the digest's one sample per key can present an intermediate as an input.

@@ -18,6 +18,7 @@ same-depth partners' intermediates (the item-level any-cell null) and gives ``ne
 ``+rule-any``). ``opts=judge=free`` runs the v1 free-recall judge on the digest instead of the MC
 (the v1 summary instrument, any-intermediate rule). Floors are explained in the family README."""
 
+import dataclasses
 import random
 import re
 from collections import defaultdict
@@ -46,6 +47,7 @@ from wsbench.split import layer_protocols
 
 from .prompts import (
     DIGEST_TASK_NOTE,
+    KEY_EXAMPLES_NOTE,
     MAX_VALUES,
     MAX_VALUES_SUMMARY,
     MC_CALL_VERSION,
@@ -670,6 +672,66 @@ def answer_head_counts(cells: Sequence[Cell], ops: re.Pattern[str]) -> dict[int,
     return dict(out)
 
 
+KEY_EXAMPLES = 2  # extra raw samples shown under each numbers-digest key
+KEY_EXAMPLE_CHARS = 240
+ANOTHER_SAMPLE = "[another sample]"
+
+
+def key_examples(
+    cells: Sequence[Cell], keys: Sequence[str], ops: re.Pattern[str], shown: Sequence[str]
+) -> dict[str, list[str]]:
+    """Per numbers-digest key, up to :data:`KEY_EXAMPLES` RAW prose samples (in
+    read order) whose answer head is that key AND whose text works one of the item's operations
+    (``ops``), other than the samples the digest already shows. The digest model picks one
+    sample per key, which can present the number as the input ("The starting number is **10**");
+    these show the judge how the lens actually states it. Gold-blind: every key alike."""
+    want = {}
+    for k in keys:
+        v = digest.number_value(k)
+        if v is not None and float(v).is_integer():
+            want[int(v)] = k
+    seen = {s.strip() for s in shown}
+    out: dict[str, list[str]] = {k: [] for k in want.values()}
+    for c in cells:
+        if c.tokens is not None:
+            continue
+        for smp in c.samples or ():
+            m = _ANSWER_HEAD.match(smp)
+            if m is None or int(m.group(1)) not in want or not ops.search(smp[m.end() :]):
+                continue
+            k = want[int(m.group(1))]
+            text = " ".join(smp.split())[:KEY_EXAMPLE_CHARS]
+            if text in seen or len(out[k]) >= KEY_EXAMPLES:
+                continue
+            seen.add(text)
+            out[k].append(text)
+    return out
+
+
+def with_key_examples(
+    summary: str, grounded: Sequence[Any], examples: Mapping[str, Sequence[str]]
+) -> tuple[str, list[Line]]:
+    """The judged digest text with each key's extra samples (:func:`key_examples`) inserted
+    right under that key's line as ``[another sample] <text>`` lines, and those samples as
+    evidence Lines (so a quote from them verifies)."""
+    lines = summary.split("\n")
+    out: list[str] = []
+    extra: list[Line] = []
+    by_text = {g.line.text: g.key for g in grounded}
+    for ln in lines:
+        out.append(ln)
+        key = next((k for t, k in by_text.items() if t and ln.endswith(t)), None)
+        for ex in examples.get(key or "", ()):
+            out.append(f"{ANOTHER_SAMPLE} {ex}")
+            extra.append(Line(ex))
+    return "\n".join(out), extra
+
+
+def note_of(note: str, digest_text: str) -> str:
+    """The digest note, plus :data:`KEY_EXAMPLES_NOTE` when the digest shows extra samples."""
+    return f"{note} {KEY_EXAMPLES_NOTE}" if ANOTHER_SAMPLE in digest_text else note
+
+
 def head_tie(gold: int, options: Sequence[int], heads: Mapping[int, int]) -> bool:
     """heads-v3: the gold is not singled out on the raw answer heads. Every option, gold
     included, is counted by the same rule (:func:`answer_head_counts`: a head that opens a
@@ -807,6 +869,9 @@ def _run_summary_mc(
             preflight=pre.for_judge(digest.summarizer_judge(args, NAME)),
             task_note=DIGEST_TASK_NOTE,
             expect_all=[c for c in cells if c.id in by_item],
+            # the prompt's start number never takes a digest key while another number is left
+            # (it is the input, not an intermediate)
+            operands={i: [float(by_id[i]["start"])] for i in ids if by_item.get(i)},
         )
         source_kind = digest.as_prose(rep)
         note = digest.summary_note(args, source_kind, NAME)
@@ -815,6 +880,23 @@ def _run_summary_mc(
             for i, c in col.cells.items()
             if i not in col.unsummarized and i not in col.empty and (c.samples or ("",))[0].strip()
         }
+        # under each numbers-digest key, up to two more raw samples that state it as the result
+        # of the item's own operation (the judge sees how the lens states it)
+        for i in sorted(usable):
+            keys = digest.number_keys(args, NAME, col, i) or []
+            ex = key_examples(
+                by_item.get(i, []),
+                keys,
+                op_pattern(by_id[i].get("kinds") or ()),
+                [ln.text for ln in col.evidence.get(i, ())],
+            )
+            if not any(ex.values()):
+                continue
+            text, extra = with_key_examples(
+                (col.cells[i].samples or ("",))[0], col.grounded.get(i, ()), ex
+            )
+            col.cells[i] = dataclasses.replace(col.cells[i], samples=(text,))
+            col.evidence[i] = (*col.evidence.get(i, ()), *extra)
         calls: list[Call] = []
         for i in ids:
             if i not in usable:
@@ -825,7 +907,7 @@ def _run_summary_mc(
                         key=f"{i}|s{k}",
                         system=SYSTEM_MC,
                         user=render_user_mc(
-                            note,
+                            note_of(note, (col.cells[i].samples or ("",))[0]),
                             (col.cells[i].samples or ("",))[0],
                             mc.listing(shown_options(opts)),
                         ),
@@ -848,7 +930,7 @@ def _run_summary_mc(
                             key=f"{i}|s{k}|null:{p['id']}",
                             system=SYSTEM_MC,
                             user=render_user_mc(
-                                note,
+                                note_of(note, (col.cells[p["id"]].samples or ("",))[0]),
                                 (col.cells[p["id"]].samples or ("",))[0],
                                 mc.listing(shown_options(opts)),
                             ),
@@ -1129,6 +1211,9 @@ def _run_summary(
             preflight=pre.for_judge(digest.summarizer_judge(args, NAME)),
             task_note=DIGEST_TASK_NOTE,
             expect_all=[c for c in cells if c.id in by_item],
+            # the prompt's start number never takes a digest key while another number is left
+            # (it is the input, not an intermediate)
+            operands={i: [float(by_id[i]["start"])] for i in ids if by_item.get(i)},
         )
         source_kind = digest.as_prose(rep)
         note = digest.summary_note(args, source_kind, NAME)
