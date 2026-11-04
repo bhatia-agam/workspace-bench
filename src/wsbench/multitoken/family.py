@@ -63,7 +63,7 @@ from wsbench.multitoken.prompts import (
     render_user_summary,
 )
 from wsbench.multitoken.regex import SCORER_VERSION
-from wsbench.nearquote import close_lines
+from wsbench.nearquote import close_lines, continued, sample_end_prefix
 from wsbench.readouts import Cell, bulleted
 from wsbench.registry import REPO_ROOT, EvalSpec, JudgeArgs, bank_path
 from wsbench.results import FamilyResult
@@ -1632,13 +1632,18 @@ def tolerant_gate(
     2. the gold is named reasonably and unambiguously, read in the line the quote came from
        (``credit_via``): by the verified quote under :func:`tolerant_names` (``quote``); by a
        near quote's matched block, the readout's own words, which singles the gold out
-       (:func:`singles_out`; ``block``); else by a located line that singles it out (``line``);
-       none -> ``name_miss`` (no rescue through ANY digest line naming the gold).
+       (:func:`singles_out`; ``block``); else, for a quote cut mid-name, by a located line that
+       continues the quote into a gold form, the quote so run on singling the gold out
+       (:func:`cut_runs_on`; ``line``), or by a located line whose sample ends inside the gold's
+       name (the quote, naming no other option, ends its sample and its trailing words begin gold
+       forms and no other option, :func:`cut_at_sample_end`; ``line``); none -> ``name_miss`` (a
+       line naming the gold anywhere else gives nothing).
     3. a verified quote's credit still goes through :func:`list_gate` (a token list naming
        another option or a flat run of the gold's kind is voided).
 
-    ``langs`` = the languages named by the crediting texts and by every located line that
-    singles out the gold, a source-language spelling counted for the source language only."""
+    ``langs`` = the languages named by the crediting texts, by every such run-on quote that
+    singles out the gold and by the gold forms a sample-end quote begins, a source-language
+    spelling counted for the source language only."""
     quote = str(v.get("quote", ""))
     located, ok = located_lines(quote, lines)
     if v["kind"] != "correct":
@@ -1662,27 +1667,81 @@ def tolerant_gate(
         q_langs = list(dict.fromkeys(q_langs))
         via = "block"
     single: dict[str, list[str]] = {}
-    for ln in located:
-        got = singles_out(ln, forms_by_lang, others, rivals, src)
+    for run_on in cut_runs_on(quote, located, forms_by_lang, src, others, near=near):
+        got = singles_out(digest.Line(run_on), forms_by_lang, others, rivals, src)
         if got:
-            single[ln.text] = got
+            single[run_on] = got
+    cut = cut_at_sample_end(quote, located, options, gold_idx, forms_by_lang, src, near=near)
     if q_langs:
         out.update(kind="correct", correct=True, credit_via=via)
         if ok:
             gold = [*(f for fs in forms_by_lang.values() for f in fs), options[gold_idx]]
             gate = list_gate(quote, lines, gold_forms=gold, others=others, rivals=rivals)
             out = _void(out, gate)
-    elif single:
+    elif single or cut is not None:
         out.update(kind="correct", correct=True, credit_via="line")
     else:
         return {**out, "kind": "name_miss"}
     if out["kind"] == "correct":
         dl = set(_named_langs(texts, forms, src, others)) if q_langs else set()
-        for ln in located:
-            if ln.text in single:
-                dl |= set(singles_out(ln, forms, others, rivals, src))
+        for run_on in single:
+            dl |= set(singles_out(digest.Line(run_on), forms, others, rivals, src))
+        if cut is not None:
+            dl |= {lang for lang, fs in forms.items() if set(fs) & set(cut)}
         out["langs"] = [lang for lang in forms if lang in dl]
     return out
+
+
+def cut_runs_on(
+    quote: str,
+    located: Sequence[digest.Line],
+    forms_by_lang: Mapping[str, Sequence[str]],
+    src: str | None,
+    avoid: Sequence[str],
+    *,
+    near: bool,
+) -> list[str]:
+    """The quote run on, on each located line, through a gold form that continues it (the quote
+    was cut mid-name; ``nearquote.continued``, the form read under :func:`tolerant_names` in its
+    own language, the line's text romanized too). ``[]``: no located line continues it."""
+    langs = {f: lang for lang, fs in forms_by_lang.items() for f in fs}
+
+    def names(text: str, fs: list[str]) -> bool:
+        t = digest.fold_quote(text)
+        return any(
+            tolerant_names(x, [f], langs[f], src, avoid) for f in fs for x in (t, romanized(t))
+        )
+
+    out = [r for ln in located for r in continued(quote, ln, list(langs), names, near=near)]
+    return list(dict.fromkeys(out))
+
+
+def cut_at_sample_end(
+    quote: str,
+    located: Sequence[digest.Line],
+    options: list[str],
+    gold_idx: int,
+    forms_by_lang: Mapping[str, Sequence[str]],
+    src: str | None,
+    *,
+    near: bool,
+) -> list[str] | None:
+    """The gold forms a quote cut by the end of its sample begins (``nearquote.sample_end_prefix``
+    over the gold's forms and the other options' names), when the quote names no other option
+    and on some located line its trailing words begin the gold's forms and no other option's;
+    else None."""
+    gold = options[gold_idx]
+    others = [o for i, o in enumerate(options[:-1]) if i != gold_idx]
+    olang = src if src in INFLECTING else "en"
+    if any(_other_named(digest.fold_quote(quote), o, olang, src) for o in others):
+        return None
+    table = {gold: [*(f for fs in forms_by_lang.values() for f in fs), gold]}
+    table.update({o: [o] for o in others})
+    for ln in located:
+        got = sample_end_prefix(quote, ln, table, near=near)
+        if got is not None and got[0] == gold:
+            return got[1]
+    return None
 
 
 def _quote_texts(quote: str) -> list[str]:
@@ -2464,8 +2523,10 @@ def _profile_verdict(
             return any(mc.form_in(t, [o]) for o in avoid)
 
         # the gold named in the verified quote; else in a near quote's matched block
-        # (the readout's own words); else in a located line; a block or line naming another option
-        # names none of them
+        # (the readout's own words); else, for a quote cut mid-name, where a located line
+        # continues it into a gold form (nearquote.continued), the quote so run on, or where the
+        # quote ends its sample inside the gold's name; a block, run-on or cut quote naming another
+        # option names none of them
         if ok:
             credit, via = credit_of(quote), "quote"
         if credit == "none" and near:
@@ -2475,10 +2536,39 @@ def _profile_verdict(
                     credit, via = c, "block"
                     break
         if credit == "none":
-            for ln in located:
-                c = credit_of(ln.text)
-                if c != "none" and not names_other(ln.text):
+            full, short = set(unit.full_forms), set(unit.name_forms)
+
+            def window_names(text: str, fs: list[str]) -> bool:
+                return (
+                    name_credit(
+                        text,
+                        full_forms=[f for f in fs if f in full],
+                        name_forms=[f for f in fs if f in short],
+                        fuzzy=fuzzy,
+                        avoid=avoid,
+                    )
+                    != "none"
+                )
+
+            gold = list(dict.fromkeys([*unit.full_forms, *unit.name_forms]))
+            run_ons = (
+                r for ln in located for r in continued(quote, ln, gold, window_names, near=near)
+            )
+            for run_on in run_ons:
+                c = credit_of(run_on)
+                if c != "none" and not names_other(run_on):
                     credit, via = c, "line"
+                    break
+        if credit == "none" and not names_other(quote):
+            # the sample ends inside the gold's name: the quote's trailing words begin the gold's
+            # forms and no other option's (nearquote.sample_end_prefix)
+            name = options[gold_idx]
+            table = {name: [*unit.full_forms, *unit.name_forms, name], **{o: [o] for o in avoid}}
+            for ln in located:
+                got = sample_end_prefix(quote, ln, table, near=near)
+                if got is not None and got[0] == name:
+                    exact = set(got[1]) & {*unit.full_forms, name}
+                    credit, via = ("exact" if exact else "surname"), "line"
                     break
         if credit == "none":
             kind, credit, via = "name_miss", "name_miss", ""
