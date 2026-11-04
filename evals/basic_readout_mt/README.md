@@ -252,7 +252,9 @@ bank v5 (2026-11-04 refreeze): 0/98.
 - 2026-11-04 (`+bank-v5`): bank v5 drops the sarin item, whose digest the digest model refused on
   most layers of some arms.
 - 2026-11-04 (`+bank-v5`): the prompt-only, lucky-guessing and text-blind floors are re-measured
-  on bank v5's 98 items, so they are drawn beside this instrument again.
+  on bank v5's 98 items. They were measured under the `qline-v1` draft: the lucky-guessing entries
+  carry `qline-v2` (a guesser sees only the lists); the prompt-only and text-blind entries stay on
+  `qline-v1` until re-scored under the new stamp.
 
 ## Readouts
 
