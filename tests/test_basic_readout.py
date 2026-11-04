@@ -107,9 +107,10 @@ def test_registered_spec_and_readme():
     assert SYSTEM_MC in readme and STAMP in readme
 
 
-def test_registered_spec_uses_v5(monkeypatch):
-    """Round 4 (MC leakage standard): the registered bank is v5 (v3 + the observed v2 confusers
-    under the wider review-r6 rule), under its own judge stamp."""
+def test_registered_spec_uses_v7(monkeypatch):
+    """The registered bank is v7 (bank v5, the MC leakage standard's v3 + the observed v2
+    confusers under the wider review-r6 rule, with Big Ben's gold option reading "England / UK"),
+    under its own judge stamp."""
     from wsbench.evals.basic_readout import SPEC
 
     for k in list(os.environ):
