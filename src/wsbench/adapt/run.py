@@ -1353,28 +1353,79 @@ def _buggy_tally(rows: list[dict]) -> dict[str, dict[str, int]]:
 
 def regate_missing_bugclaim(model: str, runner=None, llm: Any = None,
                             draws: int = DEFAULT_DRAWS) -> int:  # fmt: skip
-    """Re-ask the gate on every PASSING buggy_code clean row (originals and authored alike) that
-    has no ``bugclaim`` leg (``refill.bugclaim_missing``: gated before plan 0066), so freeze can
-    ship it. The same path as ``gate regate=true``: each row's item is re-linted and re-gated by
-    ``lint_and_gate`` (subject ``runner``, ``llm`` grader: a callable, a name, or None for the
-    default), and the new gate record wins. Only those rows are re-asked. Returns how many."""
+    """Ask ONLY the missing ``bugclaim`` leg on every PASSING buggy_code clean row (originals and
+    authored alike) that has none (``refill.bugclaim_missing``: gated before plan 0066), so freeze
+    can ship it. Each row's item is re-linted first (a lint failure is logged as rejected, as
+    ``lint_and_gate`` does); the rest get just their ``bugclaim`` Ask (greedy-only, subject
+    ``runner``, ``llm`` grader: a callable, a name, or None for the default), merged into the
+    stored gate record by ``gate.merge_legs``: the legs already asked are kept as stored, never
+    re-sampled (audit B2: re-running the whole gate re-drew passing surface legs and cost
+    qwen3.5-9b two registered pairs). Returns how many rows were re-asked."""
     from . import refill as rf
+    from .gate import merge_legs
+    from .lint import lint, lint_pairs
 
     family = rf.BUGGY
     _h, originals = store.original_bank(family)
     rows = _bank_rows(model, family, originals)
     stale = set(rf.bugclaim_missing(rows))
-    items = [r["item"] for r in rows if r["id"] in stale]
-    if not items:
+    todo = [r for r in rows if r["id"] in stale]
+    if not todo:
         return 0
     if isinstance(llm, str):
         llm = _llm(llm)
-    runner = runner or _runner(model)
-    gated, bad = lint_and_gate(model, family, runner, draws, None, llm, items)
-    n_pass = sum(r["gate"]["pass"] for r in gated)
-    print(f"{family}: re-asked {len(items)} clean rows without the {rf.BUGCLAIM} leg · "
-          f"{sum(bad.values())} failed lint · {n_pass}/{len(gated)} pass")  # fmt: skip
-    return len(items)
+    if llm is None:
+        llm = _llm(DEFAULT_LLM)
+    pairs = lint_pairs(family, [r["item"] for r in todo])
+    now = dt.datetime.now(dt.UTC).isoformat(timespec="seconds")
+    rejected, keep = [], []
+    for r in todo:
+        if problems := lint(family, r["item"]) + pairs.get(r["id"], []):
+            rejected.append(
+                {
+                    "id": r["id"],
+                    "origin": r.get("origin") or _origin(r["item"]),
+                    "item": r["item"],
+                    "selected": False,
+                    "at": now,
+                    "gate": {"pass": False, "rate": None, "lint": problems, "legs": {}},
+                }
+            )
+        else:
+            keep.append(r)
+    store.record_gates(model, family, rejected)
+    fam = fams.get(family)
+    asks = [a for r in keep for a in fam.asks(r["item"]) if a.leg.split(":")[0] == rf.BUGCLAIM]
+    if asks and runner is None:
+        runner = _runner(model)
+    temp = fam.temperature if fam.temperature is not None else DEFAULT_TEMPERATURE
+    top_p = fam.top_p if fam.top_p is not None else 1.0
+    fresh = run_gate(runner, asks, draws, temp, fam.threshold, llm, top_p=top_p,
+                     top_k=fam.top_k) if asks else {}  # fmt: skip
+    out = []
+    for r in keep:
+        rec = fresh.get(r["id"])
+        if rec is None:  # the item has no bugclaim Ask (not a clean row): left as it is
+            continue
+        merged = merge_legs(r["gate"], rec["legs"])
+        if fam.finalize is not None:
+            merged = fam.finalize(merged)
+        out.append(
+            {
+                **{k: v for k, v in r.items() if k not in ("gate", "selected", "at")},
+                "gate": merged,
+                "selected": merged["pass"],
+                "at": now,
+                "regate": f"{rf.BUGCLAIM} leg only (plan 0066 audit B2)",
+            }
+        )
+    store.record_gates(model, family, out)
+    n_pass = sum(r["gate"]["pass"] for r in out)
+    print(
+        f"{family}: asked the {rf.BUGCLAIM} leg on {len(todo)} clean rows without it "
+        f"(other legs kept) · {len(rejected)} failed lint · {n_pass}/{len(out)} pass"
+    )
+    return len(todo)
 
 
 def _fill_buggy(model: str, llm: str | None, max_waves: int, runner, pilot: bool,

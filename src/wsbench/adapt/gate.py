@@ -448,6 +448,33 @@ def gate_record(legs: dict[str, Leg]) -> dict[str, Any]:
     }
 
 
+def merge_legs(record: dict[str, Any], new: dict[str, dict[str, Any]]) -> dict[str, Any]:
+    """``record`` (a stored gate record) with the leg dicts in ``new`` (as a gate record stores
+    them) added or replaced, and ``pass`` / ``rate`` / the shown answers re-derived by
+    :func:`gate_record`'s rule from the stored leg dicts. The legs already in the record are kept
+    exactly as stored, never re-sampled (plan 0066 audit B2: re-asking one missing leg must not
+    re-draw the passing ones). For ADDING legs (a new group, e.g. ``bugclaim``): the shown
+    answers are re-derived only when the head is a new leg."""
+    legs = {**(record.get("legs") or {}), **new}
+    groups: dict[str, list[tuple[str, dict]]] = {}
+    for name, leg in legs.items():
+        if name.split(":")[0] == ANNOTATION:
+            continue
+        groups.setdefault(name.split(":")[0], []).append((name, leg))
+    best = {g: max(ls, key=lambda x: (bool(x[1].get("passed")), x[1].get("rate") or 0.0))
+            for g, ls in groups.items()}  # fmt: skip
+    rates = [leg.get("rate") for _n, leg in best.values()]
+    out = dict(record)
+    head_name, head = best.get("surface") or next(iter(best.values()))
+    if head_name in new:  # the shown answers follow gate_record's head when it is a new leg
+        out.update(greedy=head.get("greedy"), samples=head.get("samples"),
+                   question=head.get("question"), render=head_name)  # fmt: skip
+    out["rate"] = None if None in rates else min(rates)
+    out["pass"] = all(bool(leg.get("passed")) for _n, leg in best.values())
+    out["legs"] = legs
+    return out
+
+
 class Runner:
     """vLLM over the subject's HF weights. Thinking is always off: the banks' latents are the ones
     computed without a written chain of thought. The one exception is ``thinking`` = True, set

@@ -428,7 +428,7 @@ def test_refill_reasks_missing_bugclaim_on_originals_and_authored(stale_set, mon
     monkeypatch.setattr(run, "_llm", lambda name: _no_claim)
     runner = AskRunner()
     run.fill(MODEL, "buggy_code", llm="fake", max_waves=1, runner=runner)
-    assert runner.asked == stale_set  # exactly the two stale clean rows, not the bank
+    assert runner.asked == set()  # audit B2: only the greedy-only bugclaim leg; nothing re-sampled
     prompts = [p for c in runner.generate_calls for p in c[0]]
     assert len(prompts) == 2 and AU_CLEAN["code"] in prompts  # one bugclaim ask per stale row
     assert wrote == []  # the 24 pairs are full: nothing authored
@@ -491,3 +491,60 @@ def test_bugclaim_refusal_is_reasked_once_on_the_fallback(tmp_path, monkeypatch)
     monkeypatch.setattr(grade_llm.time, "sleep", lambda s: None)
     assert grade(plain, ["Paris"]) == [None]  # not a fallback rubric: retried, then undecided
     assert [c["model"] for c in FakeSession.calls] == ["claude-test"] * grade_llm.ATTEMPTS
+
+
+def test_bugclaim_regate_keeps_the_stored_legs(stale_set, monkeypatch):
+    """audit B2 (qwen3.5-9b): adding the missing bugclaim leg must not re-draw the passing legs.
+    A runner whose samples would now FAIL the surface leg is never sampled; the stored surface
+    leg is kept byte-identical and only the bugclaim leg is added."""
+    from wsbench.adapt import run
+
+    before = {i: store.gated(MODEL, "buggy_code")[i]["gate"]["legs"]["surface"] for i in stale_set}
+
+    class Resample(AskRunner):  # every sampled answer would be wrong now
+        def sample(self, asks, draws, temperature, top_p=1.0, **kw):
+            self.asked.update(a.item_id for a in asks)
+            return [("wrong", ["wrong"] * draws) for _ in asks]
+
+    runner = Resample()
+    assert run.regate_missing_bugclaim(MODEL, runner, _no_claim) == 2
+    assert runner.asked == set()  # no sampled leg was asked again
+    rows = store.gated(MODEL, "buggy_code")
+    for i in stale_set:
+        gate = rows[i]["gate"]
+        assert gate["legs"]["surface"] == before[i]  # stored leg kept as it was
+        assert gate["legs"]["bugclaim"]["passed"] and gate["pass"] and rows[i]["selected"]
+        assert "bugclaim leg only" in rows[i]["regate"]
+
+
+def test_merge_legs_rederives_pass_and_rate():
+    from wsbench.adapt.gate import merge_legs
+
+    rec = {"pass": True, "rate": 0.8, "render": "surface", "greedy": {"text": "x"},
+           "legs": {"surface": {"passed": True, "rate": 0.8, "greedy": {"text": "x"}},
+                    "note:first": {"passed": False, "rate": 0.0}}}  # fmt: skip
+    ok = merge_legs(rec, {"bugclaim": {"passed": True, "rate": 1.0}})
+    assert ok["pass"] and ok["rate"] == 0.8 and ok["render"] == "surface"
+    assert ok["legs"]["surface"] is rec["legs"]["surface"]
+    bad = merge_legs(rec, {"bugclaim": {"passed": False, "rate": 0.0, "reason": "claim"}})
+    assert not bad["pass"] and bad["rate"] == 0.0
+    undecided = merge_legs(rec, {"bugclaim": {"passed": False, "rate": None}})
+    assert not undecided["pass"] and undecided["rate"] is None
+    assert rec["legs"].keys() == {"surface", "note:first"}  # the input record is not mutated
+
+
+def test_bugclaim_regate_logs_a_lint_failure_as_rejected(stale_set, monkeypatch):
+    """A stale row that now fails lint is logged as rejected (as lint_and_gate does) and is never
+    asked its bugclaim leg."""
+    from wsbench.adapt import lint, run
+
+    real = lint.lint
+    monkeypatch.setattr(lint, "lint", lambda fam, it: (["leak: test"] if store.item_id(it)
+                        == "py-au-clean-x" else real(fam, it)))  # fmt: skip
+    runner = AskRunner()
+    assert run.regate_missing_bugclaim(MODEL, runner, _no_claim) == 2
+    prompts = [p for c in runner.generate_calls for p in c[0]]
+    assert AU_CLEAN["code"] not in prompts and len(prompts) == 1  # only the original was asked
+    row = store.gated(MODEL, "buggy_code")["py-au-clean-x"]
+    assert row["gate"]["lint"] == ["leak: test"] and not row["gate"]["pass"]
+    assert row["selected"] is False and row["gate"]["legs"] == {}
