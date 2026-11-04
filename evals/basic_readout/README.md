@@ -208,7 +208,7 @@ old gold; its fixed definition (gold `science fiction`) is kept in `gate_v2.json
 
 ## Scoring: the blind multiple-choice judge
 
-`prompt_version`: `br-mc-2026-11-01-v5b+brsum-v1+qline-v1+bank-v7` (`basic/mcjudge_basic.py`; bank v5's options and fixed gold slots, PR #214 reviews r6 / r7, the prompts are `br-mc-2026-10-30b`'s; `+brsum-v1`: the asked-sum check; `+qline-v1`: the quote rule; `+bank-v7`: Big Ben's "England / UK"). The distractors' order is seeded, and the MC calls are keyed, by `br-mc-2026-11-01-v5b` (`mcjudge_basic.OPTIONS_VERSIONS`), so a scoring-only stamp change keeps every option list and re-scores the cached answers. Judge: the repo default
+`prompt_version`: `br-mc-2026-11-01-v5b+brsum-v2+qline-v2+bank-v7` (`basic/mcjudge_basic.py`; bank v5's options and fixed gold slots, PR #214 reviews r6 / r7, the prompts are `br-mc-2026-10-30b`'s; `+brsum-v2`: the asked-sum check; `+qline-v2`: the quote rule; `+bank-v7`: Big Ben's "England / UK"). The distractors' order is seeded, and the MC calls are keyed, by `br-mc-2026-11-01-v5b` (`mcjudge_basic.OPTIONS_VERSIONS`), so a scoring-only stamp change keeps every option list and re-scores the cached answers. Judge: the repo default
 (`claude-opus-5-5`), temperature 0. Output schema `{"choice": letter, "quote": str, "stated":
 "as_result" | "bare" | ""}`.
 
@@ -230,7 +230,7 @@ old gold; its fixed definition (gold `science fiction`) is kept in `gate_v2.json
 - **Singled out**: two or more options stated with comparable prominence, a token list holding
   two or more options, or a run of the family's flat types (numbers, days of the week, months, candidate answers of the task's type) singles out none of them,
   whatever the rank -> cannot tell.
-- **Quote gate** (`+qline-v1`): a gold pick needs a quote that verifies against the
+- **Quote gate** (`+qline-v2`): a gold pick needs a quote that verifies against the
   real readout lines (`digest.quote_ok`, markdown marks ignored: inside one line, or one word
   spelled across adjacent positions of one layer), or, prose lines only, a near-verbatim quote
   located by `nearquote.close_lines` (>= 12 characters, a common block covering 90% of it; the
@@ -238,20 +238,30 @@ old gold; its fixed definition (gold `science fiction`) is kept in `gate_v2.json
   listed alias), read in the line it came from (`mcjudge_basic.form_via`): the verified quote
   itself names it (markdown dropped: "**_Spirited Away_**"; `form_via = quote`), or a near
   quote's matched block (the readout's own words at the quote's place, never the judge's) names it
-  (`form_via = block`), else that line names it and no other shown option (`form_via = line`: a
-  quote cut mid-name such as "I'd say **sourd").
+  (`form_via = block`), else, for a quote cut mid-name, in that line (`form_via = line`): the line
+  continues the quote into the option (`nearquote.continued`: a form of the option starts inside
+  the quote and runs on past its end, "I'd say **sourd" + "ough**", or starts right after it with
+  only spaces, markdown emphasis, punctuation other than a sentence end and at most one article
+  between), and the quote so run on names it and no other shown option; or the quote, naming no
+  other option, is the last words of its sample and its trailing words begin the option's forms
+  and no other option's (`nearquote.sample_end_prefix`: "I'd say **sourd" at a sample's end names
+  sourdough; "I'd say **S" names none, since salsa and swing both start so). One such line is
+  enough; a line that names the option anywhere else gives nothing, so a fact-only quote fails.
 - **Number flood** (arithmetic items): a numeric pick whose only supporting lines name every
   number possible (`digest.number_flood`: a token list with >= 5 distinct numerals, a prose run of
   >= 5, bulleted number lists included) is scored cannot tell.
-- **The asked sum** (arithmetic items, `+brsum-v1`): a gold pick whose quoted
+- **The asked sum** (arithmetic items, `+brsum-v2`): a gold pick whose quoted
   sentence computes ANOTHER sum with the same result is scored cannot tell (`void = sum`):
   one lens's readout "Four **Explanation:** Subtracting 3 from 7 yields the number Four." does not answer
   "What is 9 - 5?". `mcjudge_basic.stated_sums` reads a computation in symbols (`10 - 1`, `2 x 3`),
   in words (`10 minus 1`, `two plus two`), as a verb or noun form ("subtracting 3 from 7", "the sum
   of 2 and 2") or in Chinese (`九减五`); the quoted sentence is the quote widened to the sentence
   ends of its supporting line (a bullet mark ends a sentence), and the pick fails only when every
-  supporting line's sentence states a computation other than the asked one (`+` and `x` commute). A sentence stating no computation,
-  or the asked one, is not touched (pure verification). Day / month items have no such check.
+  supporting line's sentence states a computation and none of them is the asked one (`+` and `x`
+  commute). A sentence stating no computation, or the asked one (whatever else it computes: "9 - 5
+  = 4, and 4 + 5 = 9"), is not touched (pure verification). A hyphen or en dash between two
+  numbers without spaces is a range, not a subtraction ("a 1-10 scale", "1990-1995"), unless an
+  equals sign follows ("9-5=4"). Day / month items have no such check.
 - **Bare mentions**: a pick supported only by a token line, by a quote that is just the option, or
   by a judge `bare` label counts only if that readout names no other shown option; otherwise
   cannot tell. Passes resting on bare mentions are counted in `extras.n_bare_mention_pass`.
@@ -490,11 +500,15 @@ Answer with the letter.
 
 ## History
 
-- 2026-11-04 (`+qline-v1`): a quote one word off verifies near-verbatim (`nearquote.close_lines`,
-  replacing `quote_close`), and a quote cut mid-name counts through its line when that line names
-  the pick and no other option.
-- 2026-11-04 (`+brsum-v1`): an arithmetic pick fails when its quoted sentence computes another sum
-  with the same result ("Subtracting 3 from 7 yields Four" for "What is 9 - 5?").
+- 2026-11-04 (`+qline-v2`): a quote one word off verifies near-verbatim (`nearquote.close_lines`,
+  replacing `quote_close`), and a quote cut mid-name counts where its line continues it into the
+  pick or its sample ends inside a name only the pick's forms start with. (`+qline-v1`, an
+  unreleased draft, credited it through any line holding it that named the
+  pick and no other option.)
+- 2026-11-04 (`+brsum-v2`): an arithmetic pick fails when its quoted sentence computes only other
+  sums with the same result ("Subtracting 3 from 7 yields Four" for "What is 9 - 5?"); a
+  hyphenated range is no subtraction. (`+brsum-v1`, an unreleased draft, also failed a sentence
+  that stated the asked sum beside another one, and read "1-10" as a subtraction.)
 - 2026-11-04 (no stamp change, report only): `pass_by_subfamily` reports each slice with its
   decided n and a bootstrap CI.
 - 2026-11-04 (`+bank-v7`): bank v7 shows Big Ben's gold option as "England / UK", so a readout
