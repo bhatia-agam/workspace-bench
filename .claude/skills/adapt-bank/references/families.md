@@ -207,7 +207,7 @@ These rules apply to every new item in this group:
   of `target_alts`. Each bridge question is a separate leg with the same rule.
 - **MC:** families with `mc` need `{gold, distractors[4]}` written by Opus (same kind, same
   specificity). Language options come from `R4_LANG_POOLS` (the old pl…ko-only rule is gone).
-- **Bank now:** basic_readout_mt `items_v4` (0/99 prompts shared with v1; `gate_v2`, `name_forms`;
+- **Bank now:** basic_readout_mt `items_v5` (v4 without the sarin item; no prompt shared with v1; `gate_v2`, `name_forms`;
   scorer of record `mc` + tolerant name gate); multilingual_mt `items_v4`, multilingual_typo
   `items_v3`, multilingual_multihop `items_v4` (`mc_roles`, v2 language units, `bridge_l2_*`;
   multilingual_multihop scores `mc+regex`, the other two regex with the `+v2+ln-…` tag); typo_mt
@@ -230,7 +230,7 @@ These rules apply to every new item in this group:
 multihop_mt was removed from WorkspaceBench (plan 0041); every adapted `multihop_mt.json` was
 deleted.
 
-### multihop_mt_v2 — the bridges THIS subject needs (bank `items_v4`; plan 0060 Phase E)
+### multihop_mt_v2 — the bridges THIS subject needs (bank `items_v5`; plan 0060 Phase E)
 - **Latent:** the bridge(s) of a multi-token two- or three-hop question; every bridge proved
   necessary on the subject.
 - **Code:** `src/wsbench/adapt/mhmt2.py`, `$A multihop_mt_v2 $M [limit=] [regate=true]` (one

@@ -170,12 +170,13 @@ def test_mh2_restamps_token_counts_for_another_tokenizer():
 
 
 def test_mh2_freeze_includes_the_subject_rows(tmp_store):
-    _h, items = _registered("multihop_mt_v2")
+    header, items = _registered("multihop_mt_v2")
     some = copy.deepcopy(items[:3])
     mhmt2.gate(MODEL, runner=MH2Runner(), tok=None, items=some)
     run.freeze(MODEL, ["multihop_mt_v2"])
     bank = json.loads((tmp_store / "multihop_mt_v2.json").read_text())
-    assert bank["version"] == 4 and len(bank["items"]) == 3
+    # the shipped header is the registered bank's (its version included)
+    assert bank["version"] == header["version"] and len(bank["items"]) == 3
     assert all(it["adapt"]["gate"]["pass"] for it in bank["items"])
     rep = json.loads((tmp_store / "report.json").read_text())["families"]["multihop_mt_v2"]
     assert rep["n_items"] == 3 and rep["target"] == len(items) and rep["status"] == "untried"

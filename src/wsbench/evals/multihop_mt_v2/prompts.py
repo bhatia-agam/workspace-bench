@@ -34,7 +34,9 @@ from wsbench.rival import rival_rule
 MH2_CALL_VERSION = "mh2-mc-2026-11-01+rv-2026-10-31e+optrv-v1+bank-v4"
 # +qline-v1: quote_ok or near-verbatim, the gold read in the quote's own line
 # (family._profile_verdict: the quote, a near quote's matched block, else a located line)
-MH2_PROMPT_VERSION = "mh2-mc-2026-11-01+norival-v1+qline-v1+bank-v4"
+# +bank-v5: items_v5.json, Kant out of kant-hume's bridge1 options (that one MC call is
+# new; the other items' calls keep the v4 key)
+MH2_PROMPT_VERSION = "mh2-mc-2026-11-01+norival-v1+qline-v1+bank-v5"
 PROMPT_VERSION = MH2_PROMPT_VERSION
 MH2_REGEX_VERSION = "mt-regex-2026-10-30+md+fz"  # the regex diagnostic's own scorer version
 # the spec's token-note inputs (EvalSpec.flat_types / multi_select), passed to mt_family as well

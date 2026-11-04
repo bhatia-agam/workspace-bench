@@ -36,9 +36,19 @@ The model is asked a factual question whose answer is one specific, usually mult
 - `units` and `probe_token_lens` are kept verbatim from v1, so the regex contract still runs
   (`opts=judge=regex`, `extras.regex`).
 
+## Bank v5 (`items_v5.json`, frozen 2026-11-03; the registered bank)
+
+Bank v4 without `brh-ent-chem-sarin-systematic` (98 items; every other byte is v4's): the bank's
+only weapon-related item, whose digest the summarizer refused on 9 of 11 layers for one O-lens
+arm (leaving it undecided) and on 1-2 layers for two others. The header's `read_plan_bank` names
+`items_v4.json`, so the read plan, its `plan_sha` and every v4 readout file serve v5. Stamp
+`+bank-v5`; the MC calls keep their `+bank-v4` key (`BRMT_CALL_VERSION`), so v4 runs re-score from
+cache. The lucky-guessing and prompt-only floors were measured on v4's 99 items: stale until
+re-measured. The ATI entry's `bank_sha` moves with the bank (re-gate).
+
 ## Bank v4 (`items_v4.json`, frozen 2026-11-01, round 4b)
 
-The bank of record; only `mc.readout.distractors` changes (v2 and v3 are kept). v3 (below) still
+The bank of record until bank v5 (above); only `mc.readout.distractors` changes (v2 and v3 are kept). v3 (below) still
 failed Camila r2's standard. v4 re-draws every list with `scripts/r4b_mc_refine.py`: an Opus call
 writes distractors in the gold's exact naming style ("dalasi" among "cedi" / "leone", not among
 "Liberian dollar"; one dash style; one grammatical number) that fit the topic as stated, the topic
@@ -82,7 +92,7 @@ token lenses give their top 10 tokens (`tokens10`).
 ## Scoring
 
 - **Judge of record:** a prompt-blind multiple-choice judge (`claude-opus-5-5`,
-  `prompt_version` `mc-brmt-2026-10-31r+norival-v1+qline-v1+bank-v4`; the MC calls stay keyed
+  `prompt_version` `mc-brmt-2026-10-31r+norival-v1+qline-v1+bank-v5`; the MC calls stay keyed
   `mc-brmt-2026-10-31r+rv-2026-10-31e+optrv-v1+bank-v4`, `BRMT_CALL_VERSION`), one call per (item, unit) on the item's digest (summary mode, the
   default) or per (item, layer, unit) natively (`opts=aggregate=native`; each read position is
   one block headed by its offset only, `[pos -k]`, never by its token). Five shuffled options
@@ -227,6 +237,8 @@ WIF) at bank v4: still 0/99 (all four readers solve all 99).
   calls keep their key (`BRMT_CALL_VERSION`), so cached answers re-score.
 - 2026-11-04 (`+qline-v1`): the gold must be named in the quote, a near quote's matched block or
   the quote's own line; the rescue through any digest line naming the gold is retired.
+- 2026-11-04 (`+bank-v5`): bank v5 drops the sarin item, whose digest the digest model refused on
+  most layers of some arms.
 
 ## Readouts
 

@@ -10,8 +10,8 @@ bridge. Example: "Fact: the crusader monarch nicknamed 'Cœur de Lion', who firs
 removed family; `multihop_mt` was removed from the bench on 2026-10-30, plan 0041). Plain
 render.
 
-**Bank v4 (`items_v4.json`, frozen 2026-11-01, round 4b)** is the bank of record
-(`EvalSpec.bank`): v2's items with only the MC distractor lists changed (v3 = round 4's lists,
+**Bank v4 (`items_v4.json`, frozen 2026-11-01, round 4b)** was the bank of record until bank v5
+(`EvalSpec.bank` is now `items_v5.json`): v2's items with only the MC distractor lists changed (v3 = round 4's lists,
 v4 = round 4b's; see Floors). **Bank v2 (`items_v2.json`, frozen 2026-10-30, plan 0041)** — Same 70 items, same prompts, same gate evidence; `items.json` (sha256
 `7c0160a7f818…`) is untouched. Built deterministically by
 `scripts/build_mh2_bank_v2.py` (CPU, the Qwen3.6-27B tokenizer only; `--check` verifies the file).
@@ -85,10 +85,27 @@ scorer reads.
   token asks "is the bridge anywhere while reading", closer to entity recognition at clue
   positions.
 
+## Bank v5 (`items_v5.json`, frozen 2026-11-03; the registered bank)
+
+`items_v5.json` = bank v4 with ONE edit: Immanuel Kant is no longer an option of
+`mh2-kant-hume-edinburgh`'s bridge1 (gold David Hume). The prompt itself describes Kant ("The
+Königsberg philosopher who wrote the Critique of Pure Reason"), and the option lists must hold
+only people the prompt does not mention; the round-4 rebuild had kept him as an observed
+confuser. He is removed, not replaced, so that list has three distractors (chance 1/4 there).
+Every v4 option list was checked for other people its own prompt describes, the five items
+relabelled from three-hop to two-hop first (their prompts still describe the dropped bridge:
+Beckett, Newton, Dante, Otto III and Kant; only Kant was an option): no other clear case (the
+borderline ones, kept: buena-vista's Abraham Lincoln, an observed confuser the prompt does not
+describe; baptizer's "Mary, mother of Jesus", the prompt names Jesus only; ionesco's Samuel
+Beckett, another absurdist the prompt does not describe). The read plan is unchanged (options are
+never rendered); the kant-hume bridge1 MC call is new on every arm, the other calls keep their
+v4 key (`MH2_CALL_VERSION`). Stamp `+bank-v5`. The lucky-guessing and prompt-only floors were
+measured on v4's lists: stale until re-measured.
+
 ## Scoring (plan 0041)
 
 - **Instrument of record: the family's own forced-choice judge** (Camila: "Should have an mc
-  judge with common distractors from other questions"). `prompt_version` `mh2-mc-2026-11-01+norival-v1+qline-v1+bank-v4`
+  judge with common distractors from other questions"). `prompt_version` `mh2-mc-2026-11-01+norival-v1+qline-v1+bank-v5`
   (the MC calls stay keyed `mh2-mc-2026-11-01+rv-2026-10-31e+optrv-v1+bank-v4`, `MH2_CALL_VERSION`),
   judge Opus 5.5 (the registry default), pinned, in the macro. One call per (item, required
   unit); the judge is blind (no prompt text, no gold, no role label).
@@ -261,7 +278,7 @@ scorer reads.
   `scripts/r4_mc_select.py`, the brmt / wrong_intermediate method; never the item's other bridges or
   its target): blind 0.246, described 0.286, topic 0.457, uniform 0.186 (fresh draws). Still
   FAILED the standard (<= 0.236).
-- **Round 4b (bank v4, `items_v4.json`, the bank of record)**: every list re-drawn by
+- **Round 4b (bank v4, `items_v4.json`; bank of record until v5)**: every list re-drawn by
   `scripts/r4b_mc_refine.py` (gold-style forms, distractors that fit the topic as stated, topics
   rewritten to the kind and broad field, the blind + topic + described item gate and a per-list
   gate; one Wikidata entity once): blind 0.074, topic 0.211, described 0.183, uniform 0.186 on
@@ -270,6 +287,8 @@ scorer reads.
 
 ## Instrument history
 
+- 2026-11-04 (`+bank-v5`): Immanuel Kant, whom kant-hume's prompt describes, is no longer one of
+  its bridge-1 options.
 - 2026-11-04 (`+qline-v1`): a quote one word off verifies near-verbatim, and a quote cut mid-name
   counts through its line when that line names the gold and no other option.
 - 2026-11-04 (`+norival-v1`): the contested rule (`family.contested_verdict`: the rival line and

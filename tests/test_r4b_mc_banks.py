@@ -23,6 +23,13 @@ NEW = {
     "multilingual_mt": ("items_v3.json", "items_v4.json"),
     "multilingual_typo": ("items_v2.json", "items_v3.json"),
 }
+# a later bank registered on top of the round-4b file, with the items whose round-4b list it
+# drops or edits (every other list unchanged): basic_readout_mt bank v5 = v4 without the sarin
+# item; multihop_mt_v2 bank v5 = v4 without Kant among kant-hume's options
+LATER = {
+    "basic_readout_mt": ("items_v5.json", {"brh-ent-chem-sarin-systematic"}),
+    "multihop_mt_v2": ("items_v5.json", {"mh2-kant-hume-edinburgh"}),
+}
 
 
 def test_builder_is_deterministic():
@@ -37,8 +44,9 @@ def test_builder_is_deterministic():
 
 @pytest.mark.parametrize("family", sorted(NEW))
 def test_registered_bank_is_the_new_file(family, real_families):
-    assert real_families[family].bank == Path("evals") / family / NEW[family][1]
-    assert registry.frozen_bank_path(family) == REPO / "evals" / family / NEW[family][1]
+    name = LATER[family][0] if family in LATER else NEW[family][1]
+    assert real_families[family].bank == Path("evals") / family / name
+    assert registry.frozen_bank_path(family) == REPO / "evals" / family / name
 
 
 @pytest.mark.parametrize("family", sorted(NEW))
@@ -164,7 +172,10 @@ def test_confuser_audit_is_current_and_passes(family):
     )
     items = {i.id: i for i in lg.with_topics(lg.build_family(family), family)}
     assert audit["n_answered"] == audit["n_lists"] == audit["n_ok"]
+    dropped = LATER.get(family, ("", set()))[1]
     for row in audit["rows"]:
+        if row["item"] in dropped:  # a later bank dropped or edited this item's list
+            continue
         it = items[row["item"]]
         assert row["options"] == list(it.lists[row["list"]]), row["item"]
         assert row["topic"] == it.meta["topics"][row["list"]], row["item"]

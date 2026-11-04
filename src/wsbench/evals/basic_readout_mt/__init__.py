@@ -11,9 +11,11 @@ SPEC = register(
     mt_family(
         "basic_readout_mt",
         "Basic readout (multi-token)",
-        calls_per_arm="≈ 240 (summary: 99 digests + 138 MC)",
+        calls_per_arm="≈ 240 (summary: 98 digests + 137 MC)",
         scorer="mc",
-        bank=Path("evals/basic_readout_mt/items_v4.json"),
+        # bank v5 = v4 without brh-ent-chem-sarin-systematic (98 items; its header's
+        # read_plan_bank keeps v4's read plan, so v4 readouts serve it)
+        bank=Path("evals/basic_readout_mt/items_v5.json"),
         prompt_version=BRMT_PROMPT_VERSION,
         # a v2 chat render is >= 15 tokens; 8 contiguous positions ending at -1 rule out a
         # lite or truncated file under reads=full

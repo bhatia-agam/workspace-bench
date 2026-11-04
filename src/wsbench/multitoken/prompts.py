@@ -114,7 +114,8 @@ def mc_system(task: str, question_unit: str, *, read: str = "a question") -> str
 BRMT_CALL_VERSION = "mc-brmt-2026-10-31r+rv-2026-10-31e+optrv-v1+bank-v4"
 # +qline-v1: one quote rule for every MC family: quote_ok or near-verbatim, the gold read in the
 # quote's own line (family.tolerant_gate; the rescue through any digest line is retired)
-BRMT_PROMPT_VERSION = "mc-brmt-2026-10-31r+norival-v1+qline-v1+bank-v4"
+# +bank-v5: items_v5.json, bank v4 without the sarin item (the calls keep the v4 key)
+BRMT_PROMPT_VERSION = "mc-brmt-2026-10-31r+norival-v1+qline-v1+bank-v5"
 # the spec's token-note input (EvalSpec.flat_types; decision Q4: a run of one kind singles out none)
 BRMT_FLAT_TYPES: tuple[str, ...] = (
     "names of people",
