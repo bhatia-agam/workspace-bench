@@ -131,7 +131,7 @@ def test_introspection_bank_unchanged_by_the_refill():
 # banks). A family PR that changes a bank adds its entry back here until the re-gate.
 # Empty again since the 2026-11-04 refreeze: user_modeling (bank v2), association (v5),
 # basic_readout (v7), basic_readout_mt (v5) and role_bound_association (v2) were re-gated on
-# their current banks.
+# their current banks; user_modeling bank v3 entered with its full-panel statuses.
 PENDING_REGATE: dict[str, str] = {}
 
 

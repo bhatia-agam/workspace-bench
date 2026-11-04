@@ -55248,43 +55248,43 @@
    "astra": "openai/gpt-6-astra",
    "argon": "google/gemini-4-argon"
   },
-  "instrument": "um-v3.4+bank-v2",
+  "instrument": "um-v3.5+bank-v3",
   "judge_model": "claude-opus-5-5",
   "layers_judged": [
    44
   ],
-  "bank_sha": "6b605f1b7c3827e5189f42919ae53a3bcb4699528468b83ad0cc7ad06abbdd8f",
-  "n_bank": 47,
-  "n_ati": 27,
-  "n_invertible": 20,
+  "bank_sha": "1b4fe2b37f2c4294b556caffc956c4cfe63e697c34932d466202caa6529c93fd",
+  "n_bank": 126,
+  "n_ati": 50,
+  "n_invertible": 76,
   "n_unverified": 0,
   "pass_at_1": {
    "qwen": [
-    0.3191,
-    0.2553,
-    0.234
+    0.381,
+    0.3889,
+    0.3492
    ],
    "opus": [
-    0.8936,
-    0.8723,
-    0.8298
+    0.9206,
+    0.9048,
+    0.8889
    ],
    "astra": [
-    0.617,
-    0.7447,
-    0.6809
+    0.7857,
+    0.8492,
+    0.8254
    ],
    "argon": [
-    0.6383,
-    0.5532,
-    0.5745
+    0.8254,
+    0.7778,
+    0.7698
    ]
   },
   "pass_at_3": {
-   "qwen": 0.4255,
-   "opus": 0.9149,
-   "astra": 0.7447,
-   "argon": 0.6596
+   "qwen": 0.6032,
+   "opus": 0.9444,
+   "astra": 0.881,
+   "argon": 0.8413
   },
   "ids": [
    "um-sd-country-00",
@@ -55313,7 +55313,30 @@
    "um-sd-occupation-08",
    "um-sd-occupation-12",
    "um-sd-occupation-13",
-   "um-sd-occupation-18"
+   "um-sd-occupation-18",
+   "um-sd2-employmentstatus-00",
+   "um-sd2-employmentstatus-02",
+   "um-sd2-employmentstatus-06",
+   "um-sd2-employmentstatus-09",
+   "um-sd2-petownership-02",
+   "um-sd2-religion-02",
+   "um-sd2-religion-03",
+   "um-sd2-religion-08",
+   "um-sd2-religion-13",
+   "um-sd2-maritalstatus-02",
+   "um-sd2-maritalstatus-05",
+   "um-sd2-maritalstatus-11",
+   "um-sd2-maritalstatus-14",
+   "um-sd2-maritalstatus-15",
+   "um-sd2-maritalstatus-17",
+   "um-sd2-diets-02",
+   "um-sd2-diets-13",
+   "um-sd2-gender-03",
+   "um-sd2-occupation-14",
+   "um-sd2-occupation-17",
+   "um-sd2-country-00",
+   "um-sd2-country-03",
+   "um-sd2-country-13"
   ],
   "status": {
    "um-sd-country-00": [
@@ -55597,6 +55620,480 @@
     "solved",
     "solved",
     "solved"
+   ],
+   "um-sd2-employmentstatus-00": [
+    "failed",
+    "solved",
+    "solved",
+    "solved"
+   ],
+   "um-sd2-employmentstatus-01": [
+    "solved",
+    "solved",
+    "solved",
+    "solved"
+   ],
+   "um-sd2-employmentstatus-02": [
+    "failed",
+    "solved",
+    "solved",
+    "solved"
+   ],
+   "um-sd2-employmentstatus-03": [
+    "solved",
+    "solved",
+    "solved",
+    "solved"
+   ],
+   "um-sd2-employmentstatus-04": [
+    "solved",
+    "solved",
+    "solved",
+    "solved"
+   ],
+   "um-sd2-employmentstatus-05": [
+    "solved",
+    "solved",
+    "solved",
+    "solved"
+   ],
+   "um-sd2-employmentstatus-06": [
+    "failed",
+    "failed",
+    "solved",
+    "solved"
+   ],
+   "um-sd2-employmentstatus-07": [
+    "solved",
+    "solved",
+    "solved",
+    "solved"
+   ],
+   "um-sd2-employmentstatus-08": [
+    "solved",
+    "failed",
+    "solved",
+    "solved"
+   ],
+   "um-sd2-employmentstatus-09": [
+    "failed",
+    "solved",
+    "solved",
+    "solved"
+   ],
+   "um-sd2-employmentstatus-12": [
+    "solved",
+    "solved",
+    "solved",
+    "solved"
+   ],
+   "um-sd2-employmentstatus-13": [
+    "solved",
+    "solved",
+    "solved",
+    "solved"
+   ],
+   "um-sd2-employmentstatus-14": [
+    "solved",
+    "solved",
+    "solved",
+    "solved"
+   ],
+   "um-sd2-employmentstatus-16": [
+    "solved",
+    "solved",
+    "solved",
+    "solved"
+   ],
+   "um-sd2-employmentstatus-17": [
+    "solved",
+    "solved",
+    "solved",
+    "solved"
+   ],
+   "um-sd2-petownership-00": [
+    "solved",
+    "solved",
+    "solved",
+    "solved"
+   ],
+   "um-sd2-petownership-01": [
+    "solved",
+    "solved",
+    "solved",
+    "solved"
+   ],
+   "um-sd2-petownership-02": [
+    "failed",
+    "solved",
+    "solved",
+    "solved"
+   ],
+   "um-sd2-petownership-03": [
+    "solved",
+    "solved",
+    "solved",
+    "solved"
+   ],
+   "um-sd2-petownership-06": [
+    "solved",
+    "solved",
+    "solved",
+    "solved"
+   ],
+   "um-sd2-petownership-07": [
+    "solved",
+    "solved",
+    "solved",
+    "failed"
+   ],
+   "um-sd2-petownership-08": [
+    "solved",
+    "solved",
+    "solved",
+    "solved"
+   ],
+   "um-sd2-petownership-09": [
+    "solved",
+    "solved",
+    "failed",
+    "solved"
+   ],
+   "um-sd2-petownership-10": [
+    "solved",
+    "solved",
+    "solved",
+    "solved"
+   ],
+   "um-sd2-petownership-12": [
+    "solved",
+    "solved",
+    "solved",
+    "failed"
+   ],
+   "um-sd2-petownership-14": [
+    "solved",
+    "solved",
+    "solved",
+    "solved"
+   ],
+   "um-sd2-petownership-15": [
+    "solved",
+    "solved",
+    "solved",
+    "solved"
+   ],
+   "um-sd2-petownership-16": [
+    "solved",
+    "solved",
+    "solved",
+    "solved"
+   ],
+   "um-sd2-petownership-17": [
+    "solved",
+    "solved",
+    "solved",
+    "solved"
+   ],
+   "um-sd2-religion-01": [
+    "solved",
+    "solved",
+    "solved",
+    "solved"
+   ],
+   "um-sd2-religion-02": [
+    "failed",
+    "solved",
+    "solved",
+    "solved"
+   ],
+   "um-sd2-religion-03": [
+    "failed",
+    "solved",
+    "solved",
+    "solved"
+   ],
+   "um-sd2-religion-07": [
+    "solved",
+    "solved",
+    "failed",
+    "solved"
+   ],
+   "um-sd2-religion-08": [
+    "failed",
+    "solved",
+    "failed",
+    "solved"
+   ],
+   "um-sd2-religion-13": [
+    "failed",
+    "solved",
+    "solved",
+    "solved"
+   ],
+   "um-sd2-religion-18": [
+    "solved",
+    "solved",
+    "solved",
+    "solved"
+   ],
+   "um-sd2-maritalstatus-00": [
+    "solved",
+    "solved",
+    "solved",
+    "solved"
+   ],
+   "um-sd2-maritalstatus-01": [
+    "solved",
+    "solved",
+    "solved",
+    "solved"
+   ],
+   "um-sd2-maritalstatus-02": [
+    "failed",
+    "solved",
+    "solved",
+    "solved"
+   ],
+   "um-sd2-maritalstatus-03": [
+    "solved",
+    "solved",
+    "solved",
+    "solved"
+   ],
+   "um-sd2-maritalstatus-04": [
+    "solved",
+    "solved",
+    "solved",
+    "solved"
+   ],
+   "um-sd2-maritalstatus-05": [
+    "failed",
+    "solved",
+    "solved",
+    "solved"
+   ],
+   "um-sd2-maritalstatus-06": [
+    "solved",
+    "solved",
+    "solved",
+    "solved"
+   ],
+   "um-sd2-maritalstatus-07": [
+    "solved",
+    "solved",
+    "solved",
+    "solved"
+   ],
+   "um-sd2-maritalstatus-08": [
+    "solved",
+    "solved",
+    "solved",
+    "solved"
+   ],
+   "um-sd2-maritalstatus-11": [
+    "failed",
+    "solved",
+    "solved",
+    "failed"
+   ],
+   "um-sd2-maritalstatus-13": [
+    "solved",
+    "solved",
+    "solved",
+    "solved"
+   ],
+   "um-sd2-maritalstatus-14": [
+    "failed",
+    "solved",
+    "solved",
+    "solved"
+   ],
+   "um-sd2-maritalstatus-15": [
+    "failed",
+    "solved",
+    "solved",
+    "solved"
+   ],
+   "um-sd2-maritalstatus-17": [
+    "failed",
+    "solved",
+    "solved",
+    "solved"
+   ],
+   "um-sd2-diets-00": [
+    "solved",
+    "solved",
+    "solved",
+    "solved"
+   ],
+   "um-sd2-diets-02": [
+    "failed",
+    "solved",
+    "solved",
+    "solved"
+   ],
+   "um-sd2-diets-03": [
+    "solved",
+    "solved",
+    "solved",
+    "solved"
+   ],
+   "um-sd2-diets-05": [
+    "solved",
+    "solved",
+    "solved",
+    "solved"
+   ],
+   "um-sd2-diets-06": [
+    "solved",
+    "solved",
+    "solved",
+    "solved"
+   ],
+   "um-sd2-diets-07": [
+    "solved",
+    "solved",
+    "solved",
+    "solved"
+   ],
+   "um-sd2-diets-13": [
+    "failed",
+    "solved",
+    "solved",
+    "solved"
+   ],
+   "um-sd2-diets-15": [
+    "solved",
+    "solved",
+    "solved",
+    "solved"
+   ],
+   "um-sd2-agegroup-00": [
+    "solved",
+    "solved",
+    "solved",
+    "solved"
+   ],
+   "um-sd2-agegroup-01": [
+    "solved",
+    "solved",
+    "solved",
+    "solved"
+   ],
+   "um-sd2-agegroup-02": [
+    "solved",
+    "solved",
+    "solved",
+    "solved"
+   ],
+   "um-sd2-gender-03": [
+    "failed",
+    "solved",
+    "solved",
+    "solved"
+   ],
+   "um-sd2-gender-05": [
+    "solved",
+    "solved",
+    "solved",
+    "solved"
+   ],
+   "um-sd2-occupation-03": [
+    "solved",
+    "solved",
+    "solved",
+    "solved"
+   ],
+   "um-sd2-occupation-04": [
+    "solved",
+    "solved",
+    "solved",
+    "solved"
+   ],
+   "um-sd2-occupation-05": [
+    "solved",
+    "solved",
+    "solved",
+    "solved"
+   ],
+   "um-sd2-occupation-07": [
+    "solved",
+    "solved",
+    "solved",
+    "solved"
+   ],
+   "um-sd2-occupation-08": [
+    "solved",
+    "solved",
+    "solved",
+    "solved"
+   ],
+   "um-sd2-occupation-11": [
+    "solved",
+    "solved",
+    "solved",
+    "solved"
+   ],
+   "um-sd2-occupation-12": [
+    "solved",
+    "solved",
+    "solved",
+    "solved"
+   ],
+   "um-sd2-occupation-13": [
+    "solved",
+    "solved",
+    "solved",
+    "solved"
+   ],
+   "um-sd2-occupation-14": [
+    "failed",
+    "solved",
+    "solved",
+    "failed"
+   ],
+   "um-sd2-occupation-15": [
+    "solved",
+    "solved",
+    "solved",
+    "solved"
+   ],
+   "um-sd2-occupation-16": [
+    "solved",
+    "solved",
+    "solved",
+    "solved"
+   ],
+   "um-sd2-occupation-17": [
+    "failed",
+    "solved",
+    "solved",
+    "solved"
+   ],
+   "um-sd2-country-00": [
+    "failed",
+    "solved",
+    "solved",
+    "solved"
+   ],
+   "um-sd2-country-03": [
+    "failed",
+    "solved",
+    "solved",
+    "solved"
+   ],
+   "um-sd2-country-13": [
+    "failed",
+    "failed",
+    "solved",
+    "solved"
+   ],
+   "um-sd2-country-17": [
+    "solved",
+    "solved",
+    "solved",
+    "solved"
    ]
   },
   "draw_pass": {
@@ -55833,6 +56330,401 @@
     ],
     "um-sd-religion-12": [
      false,
+     true,
+     true
+    ],
+    "um-sd2-employmentstatus-00": [
+     false,
+     false,
+     false
+    ],
+    "um-sd2-employmentstatus-01": [
+     true,
+     false,
+     true
+    ],
+    "um-sd2-employmentstatus-02": [
+     false,
+     false,
+     false
+    ],
+    "um-sd2-employmentstatus-03": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-employmentstatus-04": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-employmentstatus-05": [
+     false,
+     true,
+     true
+    ],
+    "um-sd2-employmentstatus-06": [
+     false,
+     false,
+     false
+    ],
+    "um-sd2-employmentstatus-07": [
+     true,
+     true,
+     false
+    ],
+    "um-sd2-employmentstatus-08": [
+     true,
+     false,
+     true
+    ],
+    "um-sd2-employmentstatus-09": [
+     false,
+     false,
+     false
+    ],
+    "um-sd2-employmentstatus-12": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-employmentstatus-13": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-employmentstatus-14": [
+     true,
+     false,
+     true
+    ],
+    "um-sd2-employmentstatus-16": [
+     true,
+     false,
+     false
+    ],
+    "um-sd2-employmentstatus-17": [
+     false,
+     true,
+     false
+    ],
+    "um-sd2-petownership-00": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-petownership-01": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-petownership-02": [
+     false,
+     false,
+     false
+    ],
+    "um-sd2-petownership-03": [
+     true,
+     false,
+     true
+    ],
+    "um-sd2-petownership-06": [
+     false,
+     true,
+     true
+    ],
+    "um-sd2-petownership-07": [
+     true,
+     false,
+     false
+    ],
+    "um-sd2-petownership-08": [
+     false,
+     true,
+     true
+    ],
+    "um-sd2-petownership-09": [
+     false,
+     false,
+     true
+    ],
+    "um-sd2-petownership-10": [
+     false,
+     true,
+     false
+    ],
+    "um-sd2-petownership-12": [
+     false,
+     true,
+     true
+    ],
+    "um-sd2-petownership-14": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-petownership-15": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-petownership-16": [
+     true,
+     false,
+     true
+    ],
+    "um-sd2-petownership-17": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-religion-01": [
+     false,
+     false,
+     true
+    ],
+    "um-sd2-religion-02": [
+     false,
+     false,
+     false
+    ],
+    "um-sd2-religion-03": [
+     false,
+     false,
+     false
+    ],
+    "um-sd2-religion-07": [
+     false,
+     true,
+     false
+    ],
+    "um-sd2-religion-08": [
+     false,
+     false,
+     false
+    ],
+    "um-sd2-religion-13": [
+     false,
+     false,
+     false
+    ],
+    "um-sd2-religion-18": [
+     true,
+     false,
+     true
+    ],
+    "um-sd2-maritalstatus-00": [
+     false,
+     true,
+     true
+    ],
+    "um-sd2-maritalstatus-01": [
+     false,
+     false,
+     true
+    ],
+    "um-sd2-maritalstatus-02": [
+     false,
+     false,
+     false
+    ],
+    "um-sd2-maritalstatus-03": [
+     false,
+     false,
+     true
+    ],
+    "um-sd2-maritalstatus-04": [
+     true,
+     false,
+     false
+    ],
+    "um-sd2-maritalstatus-05": [
+     false,
+     false,
+     false
+    ],
+    "um-sd2-maritalstatus-06": [
+     true,
+     false,
+     false
+    ],
+    "um-sd2-maritalstatus-07": [
+     false,
+     true,
+     false
+    ],
+    "um-sd2-maritalstatus-08": [
+     true,
+     true,
+     false
+    ],
+    "um-sd2-maritalstatus-11": [
+     false,
+     false,
+     false
+    ],
+    "um-sd2-maritalstatus-13": [
+     false,
+     true,
+     false
+    ],
+    "um-sd2-maritalstatus-14": [
+     false,
+     false,
+     false
+    ],
+    "um-sd2-maritalstatus-15": [
+     false,
+     false,
+     false
+    ],
+    "um-sd2-maritalstatus-17": [
+     false,
+     false,
+     false
+    ],
+    "um-sd2-diets-00": [
+     true,
+     true,
+     false
+    ],
+    "um-sd2-diets-02": [
+     false,
+     false,
+     false
+    ],
+    "um-sd2-diets-03": [
+     false,
+     true,
+     true
+    ],
+    "um-sd2-diets-05": [
+     false,
+     true,
+     false
+    ],
+    "um-sd2-diets-06": [
+     true,
+     true,
+     false
+    ],
+    "um-sd2-diets-07": [
+     false,
+     true,
+     true
+    ],
+    "um-sd2-diets-13": [
+     false,
+     false,
+     false
+    ],
+    "um-sd2-diets-15": [
+     true,
+     true,
+     false
+    ],
+    "um-sd2-agegroup-00": [
+     true,
+     true,
+     false
+    ],
+    "um-sd2-agegroup-01": [
+     true,
+     false,
+     false
+    ],
+    "um-sd2-agegroup-02": [
+     false,
+     false,
+     true
+    ],
+    "um-sd2-gender-03": [
+     false,
+     false,
+     false
+    ],
+    "um-sd2-gender-05": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-occupation-03": [
+     true,
+     true,
+     false
+    ],
+    "um-sd2-occupation-04": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-occupation-05": [
+     false,
+     true,
+     true
+    ],
+    "um-sd2-occupation-07": [
+     false,
+     true,
+     false
+    ],
+    "um-sd2-occupation-08": [
+     false,
+     true,
+     false
+    ],
+    "um-sd2-occupation-11": [
+     true,
+     false,
+     true
+    ],
+    "um-sd2-occupation-12": [
+     true,
+     false,
+     false
+    ],
+    "um-sd2-occupation-13": [
+     false,
+     true,
+     true
+    ],
+    "um-sd2-occupation-14": [
+     false,
+     false,
+     false
+    ],
+    "um-sd2-occupation-15": [
+     true,
+     false,
+     false
+    ],
+    "um-sd2-occupation-16": [
+     false,
+     true,
+     false
+    ],
+    "um-sd2-occupation-17": [
+     false,
+     false,
+     false
+    ],
+    "um-sd2-country-00": [
+     false,
+     false,
+     false
+    ],
+    "um-sd2-country-03": [
+     false,
+     false,
+     false
+    ],
+    "um-sd2-country-13": [
+     false,
+     false,
+     false
+    ],
+    "um-sd2-country-17": [
+     true,
      true,
      true
     ]
@@ -56072,6 +56964,401 @@
      true,
      true,
      true
+    ],
+    "um-sd2-employmentstatus-00": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-employmentstatus-01": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-employmentstatus-02": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-employmentstatus-03": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-employmentstatus-04": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-employmentstatus-05": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-employmentstatus-06": [
+     false,
+     false,
+     false
+    ],
+    "um-sd2-employmentstatus-07": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-employmentstatus-08": [
+     false,
+     false,
+     false
+    ],
+    "um-sd2-employmentstatus-09": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-employmentstatus-12": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-employmentstatus-13": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-employmentstatus-14": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-employmentstatus-16": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-employmentstatus-17": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-petownership-00": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-petownership-01": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-petownership-02": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-petownership-03": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-petownership-06": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-petownership-07": [
+     false,
+     true,
+     false
+    ],
+    "um-sd2-petownership-08": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-petownership-09": [
+     true,
+     false,
+     true
+    ],
+    "um-sd2-petownership-10": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-petownership-12": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-petownership-14": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-petownership-15": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-petownership-16": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-petownership-17": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-religion-01": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-religion-02": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-religion-03": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-religion-07": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-religion-08": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-religion-13": [
+     false,
+     false,
+     true
+    ],
+    "um-sd2-religion-18": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-maritalstatus-00": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-maritalstatus-01": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-maritalstatus-02": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-maritalstatus-03": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-maritalstatus-04": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-maritalstatus-05": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-maritalstatus-06": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-maritalstatus-07": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-maritalstatus-08": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-maritalstatus-11": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-maritalstatus-13": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-maritalstatus-14": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-maritalstatus-15": [
+     true,
+     false,
+     false
+    ],
+    "um-sd2-maritalstatus-17": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-diets-00": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-diets-02": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-diets-03": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-diets-05": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-diets-06": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-diets-07": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-diets-13": [
+     true,
+     true,
+     false
+    ],
+    "um-sd2-diets-15": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-agegroup-00": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-agegroup-01": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-agegroup-02": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-gender-03": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-gender-05": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-occupation-03": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-occupation-04": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-occupation-05": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-occupation-07": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-occupation-08": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-occupation-11": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-occupation-12": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-occupation-13": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-occupation-14": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-occupation-15": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-occupation-16": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-occupation-17": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-country-00": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-country-03": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-country-13": [
+     false,
+     false,
+     false
+    ],
+    "um-sd2-country-17": [
+     true,
+     true,
+     true
     ]
    },
    "astra": {
@@ -56309,6 +57596,401 @@
      false,
      true,
      true
+    ],
+    "um-sd2-employmentstatus-00": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-employmentstatus-01": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-employmentstatus-02": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-employmentstatus-03": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-employmentstatus-04": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-employmentstatus-05": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-employmentstatus-06": [
+     true,
+     false,
+     true
+    ],
+    "um-sd2-employmentstatus-07": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-employmentstatus-08": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-employmentstatus-09": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-employmentstatus-12": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-employmentstatus-13": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-employmentstatus-14": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-employmentstatus-16": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-employmentstatus-17": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-petownership-00": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-petownership-01": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-petownership-02": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-petownership-03": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-petownership-06": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-petownership-07": [
+     true,
+     true,
+     false
+    ],
+    "um-sd2-petownership-08": [
+     false,
+     true,
+     true
+    ],
+    "um-sd2-petownership-09": [
+     false,
+     false,
+     false
+    ],
+    "um-sd2-petownership-10": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-petownership-12": [
+     true,
+     false,
+     false
+    ],
+    "um-sd2-petownership-14": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-petownership-15": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-petownership-16": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-petownership-17": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-religion-01": [
+     false,
+     false,
+     true
+    ],
+    "um-sd2-religion-02": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-religion-03": [
+     false,
+     true,
+     false
+    ],
+    "um-sd2-religion-07": [
+     false,
+     false,
+     false
+    ],
+    "um-sd2-religion-08": [
+     false,
+     false,
+     false
+    ],
+    "um-sd2-religion-13": [
+     false,
+     true,
+     true
+    ],
+    "um-sd2-religion-18": [
+     false,
+     true,
+     false
+    ],
+    "um-sd2-maritalstatus-00": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-maritalstatus-01": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-maritalstatus-02": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-maritalstatus-03": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-maritalstatus-04": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-maritalstatus-05": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-maritalstatus-06": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-maritalstatus-07": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-maritalstatus-08": [
+     true,
+     false,
+     true
+    ],
+    "um-sd2-maritalstatus-11": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-maritalstatus-13": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-maritalstatus-14": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-maritalstatus-15": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-maritalstatus-17": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-diets-00": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-diets-02": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-diets-03": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-diets-05": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-diets-06": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-diets-07": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-diets-13": [
+     false,
+     true,
+     true
+    ],
+    "um-sd2-diets-15": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-agegroup-00": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-agegroup-01": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-agegroup-02": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-gender-03": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-gender-05": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-occupation-03": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-occupation-04": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-occupation-05": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-occupation-07": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-occupation-08": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-occupation-11": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-occupation-12": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-occupation-13": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-occupation-14": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-occupation-15": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-occupation-16": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-occupation-17": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-country-00": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-country-03": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-country-13": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-country-17": [
+     true,
+     true,
+     true
     ]
    },
    "argon": {
@@ -56543,6 +58225,401 @@
      true
     ],
     "um-sd-religion-12": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-employmentstatus-00": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-employmentstatus-01": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-employmentstatus-02": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-employmentstatus-03": [
+     true,
+     false,
+     false
+    ],
+    "um-sd2-employmentstatus-04": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-employmentstatus-05": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-employmentstatus-06": [
+     true,
+     true,
+     false
+    ],
+    "um-sd2-employmentstatus-07": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-employmentstatus-08": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-employmentstatus-09": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-employmentstatus-12": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-employmentstatus-13": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-employmentstatus-14": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-employmentstatus-16": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-employmentstatus-17": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-petownership-00": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-petownership-01": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-petownership-02": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-petownership-03": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-petownership-06": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-petownership-07": [
+     false,
+     false,
+     false
+    ],
+    "um-sd2-petownership-08": [
+     true,
+     false,
+     true
+    ],
+    "um-sd2-petownership-09": [
+     true,
+     false,
+     true
+    ],
+    "um-sd2-petownership-10": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-petownership-12": [
+     false,
+     false,
+     false
+    ],
+    "um-sd2-petownership-14": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-petownership-15": [
+     true,
+     true,
+     false
+    ],
+    "um-sd2-petownership-16": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-petownership-17": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-religion-01": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-religion-02": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-religion-03": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-religion-07": [
+     false,
+     true,
+     true
+    ],
+    "um-sd2-religion-08": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-religion-13": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-religion-18": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-maritalstatus-00": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-maritalstatus-01": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-maritalstatus-02": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-maritalstatus-03": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-maritalstatus-04": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-maritalstatus-05": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-maritalstatus-06": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-maritalstatus-07": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-maritalstatus-08": [
+     true,
+     true,
+     false
+    ],
+    "um-sd2-maritalstatus-11": [
+     false,
+     false,
+     false
+    ],
+    "um-sd2-maritalstatus-13": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-maritalstatus-14": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-maritalstatus-15": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-maritalstatus-17": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-diets-00": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-diets-02": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-diets-03": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-diets-05": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-diets-06": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-diets-07": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-diets-13": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-diets-15": [
+     true,
+     true,
+     false
+    ],
+    "um-sd2-agegroup-00": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-agegroup-01": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-agegroup-02": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-gender-03": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-gender-05": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-occupation-03": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-occupation-04": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-occupation-05": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-occupation-07": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-occupation-08": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-occupation-11": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-occupation-12": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-occupation-13": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-occupation-14": [
+     false,
+     false,
+     false
+    ],
+    "um-sd2-occupation-15": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-occupation-16": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-occupation-17": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-country-00": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-country-03": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-country-13": [
+     true,
+     true,
+     true
+    ],
+    "um-sd2-country-17": [
      true,
      true,
      true
@@ -56551,10 +58628,10 @@
   },
   "reader_routes": {
    "astra": {
-    "openrouter": 141
+    "openrouter": 378
    },
    "argon": {
-    "openrouter": 141
+    "openrouter": 378
    }
   }
  },

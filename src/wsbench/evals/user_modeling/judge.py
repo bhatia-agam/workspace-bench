@@ -40,7 +40,7 @@ from .options import (
     sibling_forms,
     value_of,
 )
-from .prompts import BANK_STAMP, CALL_VERSION, SEED, UM_ATTRIBUTE_SCHEMA, UM_ATTRIBUTE_SYSTEM
+from .prompts import CALL_VERSION, SEED, UM_ATTRIBUTE_SCHEMA, UM_ATTRIBUTE_SYSTEM
 
 FAMILY = "user_modeling"
 __all__ = [
@@ -609,10 +609,11 @@ def _label(it: dict) -> str:
 
 
 def instrument(raw: dict) -> str:
-    """The result stamp of a bank: ``CALL_VERSION`` plus the bank's stamp (bank v2, the
-    selfdescribe items: ``+bank-v2``; the frozen 100-item ``items.json`` and the adapted banks,
-    which carry no ``version``: none)."""
-    return CALL_VERSION + (BANK_STAMP if int(raw.get("version", 1)) >= 2 else "")
+    """The result stamp of a bank: ``CALL_VERSION`` plus ``+bank-v<N>`` for bank v<N> >= 2 (bank
+    v2, the selfdescribe items: ``+bank-v2``; bank v3, v2 + 79 new items: ``+bank-v3``; the frozen
+    100-item ``items.json`` and the adapted banks, which carry no ``version``: none)."""
+    version = int(raw.get("version", 1))
+    return CALL_VERSION + (f"+bank-v{version}" if version >= 2 else "")
 
 
 def majority_stamp(n: int) -> str:

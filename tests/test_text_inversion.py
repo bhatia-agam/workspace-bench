@@ -848,6 +848,10 @@ def test_gated_ids_are_the_judged_bank(real_families, monkeypatch):
     items, not the plan's extra rows (user_modeling v2: plan 100, judged 47); a bank with its own
     plan keeps every plan id."""
     monkeypatch.delenv("WSB_BANK_FILE_USER_MODELING", raising=False)
+    # the registered bank v3 plans its own 126 rows: every plan id is gated
+    v3 = [s.id for s in readplan.plan("user_modeling") if ti.ati_scored(s)]
+    assert len(v3) == 126 and ti.gated_ids("user_modeling") == v3
+    monkeypatch.setenv("WSB_BANK_FILE_USER_MODELING", "evals/user_modeling/items_v2.json")
     plan = [s.id for s in readplan.plan("user_modeling") if ti.ati_scored(s)]
     ids = ti.gated_ids("user_modeling")
     assert len(plan) == 100 and len(ids) == 47

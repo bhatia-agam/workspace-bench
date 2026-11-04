@@ -26,13 +26,14 @@ UM_FLAT = ("countries", "nationalities", "continents", "religions", "occupations
 
 V1_ENV = "evals/user_modeling/items.json"
 V2 = ROOT / "evals/user_modeling/items_v2.json"
+V2_ENV = "evals/user_modeling/items_v2.json"
 
 
 @pytest.fixture(autouse=True)
 def _v1_bank(monkeypatch):
     """These tests pin the frozen 100-item bank (items.json, synthsys included): the scoring code
-    is bank-independent and v1 stays judgeable. The registered bank v2 (the 47 selfdescribe
-    items) is tested in ``test_bank_v2_*`` below."""
+    is bank-independent and v1 stays judgeable. Bank v2 (the 47 selfdescribe items) is tested in
+    ``test_bank_v2_*`` below, the registered bank v3 in test_user_modeling_bank_v3.py."""
     monkeypatch.setenv("WSB_BANK_FILE_USER_MODELING", V1_ENV)
 
 
@@ -161,7 +162,7 @@ def test_rendered_prompt_matches_golden_v4():
 
 
 def test_rubric_v3_text():
-    assert prompts.CALL_VERSION == "um-v3.4" and prompts.PROMPT_VERSION == "um-v3.4+bank-v2"
+    assert prompts.CALL_VERSION == "um-v3.5" and prompts.PROMPT_VERSION == "um-v3.5+bank-v3"
     native, summ = _render_both()
     for text in (native, summ, prompts.UM_ATTRIBUTE_SYSTEM):
         low = text.lower()
@@ -329,7 +330,7 @@ def test_run_verdicts_and_numbers(tmp_path, fake_llm, mk_args):
     # native any-layer MC columns (critique item 18)
     assert e["n_items_gold_any_layer"] == 2 and e["n_items_distractor_any_layer"] == 1
     assert res.complete is False and res.pinned_instrument is True
-    assert res.config["prompt_version"] == "um-v3.4"
+    assert res.config["prompt_version"] == "um-v3.5"
     assert res.config["items"] == [A, B, C]
     judge_calls = [u for _s, u in fake.calls if not u.startswith("Return")]
     assert len(judge_calls) == 7  # k samples -> k calls; blank samples make no call
@@ -687,11 +688,13 @@ def test_bank_v2_is_the_selfdescribe_items_of_v1(monkeypatch):
     """Synthsys dropped (its attribute is stated in the system prompt, so under
     the echo rule it rewarded only rewording or invented detail, e.g. um-ss-continent-00 "Since
     you're in South Africa" for "Africa"). Bank v2 = the 47 selfdescribe items of items.json,
-    verbatim and in order; items.json is untouched; v2 is the registered bank."""
+    verbatim and in order; items.json is untouched. Bank v3 (v2 + 79 new items) is registered
+    since 2026-11-04; v2 stays judgeable by its file."""
     monkeypatch.delenv("WSB_BANK_FILE_USER_MODELING")
     registry.load_all()
-    assert registry.FAMILIES["user_modeling"].bank == Path("evals/user_modeling/items_v2.json")
-    assert registry.FAMILIES["user_modeling"].judge.prompt_version == "um-v3.4+bank-v2"
+    assert registry.FAMILIES["user_modeling"].bank == Path("evals/user_modeling/items_v3.json")
+    assert registry.FAMILIES["user_modeling"].judge.prompt_version == "um-v3.5+bank-v3"
+    monkeypatch.setenv("WSB_BANK_FILE_USER_MODELING", V2_ENV)
     v2 = load_bank("user_modeling")
     v1 = json.loads((ROOT / V1_ENV).read_text(encoding="utf-8"))
     assert len(v1["items"]) == 100 and set(v1) == {"family", "gate", "read", "items"}
@@ -706,7 +709,7 @@ def test_bank_v2_keeps_the_plan_and_the_options(monkeypatch):
     kept item shows its v1 options (seeded per item), so cached judge answers stay valid."""
     v1_sha = reads.plan_sha("user_modeling")
     v1_opts = build_options(_items())
-    monkeypatch.delenv("WSB_BANK_FILE_USER_MODELING")
+    monkeypatch.setenv("WSB_BANK_FILE_USER_MODELING", V2_ENV)
     assert reads.plan_sha("user_modeling") == v1_sha
     assert len(readplan.plan("user_modeling")) == 100
     v2 = load_bank("user_modeling")["items"]
@@ -714,13 +717,14 @@ def test_bank_v2_keeps_the_plan_and_the_options(monkeypatch):
 
 
 def test_bank_v2_stamp_and_scope(tmp_path, fake_llm, mk_args, monkeypatch):
-    """A v2 run is stamped ``um-v3.4+bank-v2`` (floors measured on the 100-item bank are never
-    served for it); calls keep the um-v3.4 fingerprint; synthsys ids are out of scope."""
-    monkeypatch.delenv("WSB_BANK_FILE_USER_MODELING")
+    """A v2 run is stamped ``um-v3.5+bank-v2`` (floors measured on the 100-item bank are never
+    served for it); calls keep the CALL_VERSION fingerprint; synthsys ids are out of scope."""
+    monkeypatch.setenv("WSB_BANK_FILE_USER_MODELING", V2_ENV)
     fake_llm(_responder)
     res = judge.run(mk_args(_scripted(tmp_path), items=[A, B, C]))
-    assert res.config["prompt_version"] == "um-v3.4+bank-v2"
+    assert res.config["prompt_version"] == "um-v3.5+bank-v2"
     assert res.n_items == 2 and {r["id"] for r in res.rows} <= {A, B}
     assert not res.extras["by_subfamily"].get("synthsys", {}).get("n_items")
-    assert judge.instrument({"version": 2}) == "um-v3.4+bank-v2"
-    assert judge.instrument({}) == prompts.CALL_VERSION == "um-v3.4"
+    assert judge.instrument({"version": 2}) == "um-v3.5+bank-v2"
+    assert judge.instrument({"version": 3}) == "um-v3.5+bank-v3"
+    assert judge.instrument({}) == prompts.CALL_VERSION == "um-v3.5"

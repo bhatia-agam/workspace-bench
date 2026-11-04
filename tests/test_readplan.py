@@ -311,8 +311,8 @@ def test_user_modeling_reads_every_position():
     """Camila 2026-10-30 ("We should read at all positions", plan 0056): the UM full read is
     every token of the chat render (system turn, user turn, template tail); lite = the same
     positions (plan 0061)."""
-    rows = readplan.plan("user_modeling")
-    assert len(rows) == 100 and all(list(s.layers) == list(readplan.GRID) for s in rows)
+    rows = readplan.plan("user_modeling")  # bank v3: its own 126 rows
+    assert len(rows) == 126 and all(list(s.layers) == list(readplan.GRID) for s in rows)
     rule, lite = rows[0].positions, rows[0].lite_positions
     assert rule == {"kind": "all"} and lite == {"kind": "same"}
     full = readplan.resolve(rule, UM_TOKENS)
@@ -437,7 +437,8 @@ PLAN0061_SHA = {
     "multi_concept_directed_modulation": (
         "41ce9adb0a84f6a8dcd9f4f3393ab3ee18adbd75d89817e49c1d3c6b6eb901cf"
     ),
-    "user_modeling": "072e3108baa0053d2925aa1062d0331b38db57681ba6b249a2c6ce1697e5d674",
+    # bank v3's own 126-row plan (items.json's 100-row plan, which bank v2 read, was 072e3108...)
+    "user_modeling": "9cc43bf742edf7eb5b29f84ad815d79fc61d9769d9690ceafcf8f76e427aa709",
 }
 
 

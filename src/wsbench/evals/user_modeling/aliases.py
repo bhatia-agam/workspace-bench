@@ -16,7 +16,10 @@ fella (male), keysmith (locksmith), "loss of a spouse" (widowed), plural homemak
 age band "age N" / "aged N" for every N inside it and every narrower "x-y" range inside it
 ("age 60", "58-62" for 56-65). um-v3.4 (2026-11-01, round 4, MC leakage standard): no form
 changed; option-list data only (``SHOWN_POOL``: Gender shows male / female / nonbinary;
-``COUNTRY_REGIONS``; a second Occupation neighbour).
+``COUNTRY_REGIONS``; a second Occupation neighbour). um-v3.5 (2026-11-04): no form changed;
+``NEIGHBOURS`` for the 6 Country and 6 Occupation golds of the new selfdescribe candidates (9 of
+them are golds of bank v3's 79 new items; none is a gold of bank v1 / v2, so their option lists
+are unchanged).
 
 ``VALUE_ALIASES[value]`` lists the forms that NAME a value (``mc.form_in``: Latin forms
 word-bounded, CJK forms as substrings; a quote without Latin letters passes only on a listed form
@@ -192,6 +195,21 @@ NEIGHBOURS: dict[str, tuple[str, ...]] = {
     "fisherman": ("farmer", "chef"),
     "locksmith": ("electrician", "plumber"),
     "anthropologist": ("historian", "librarian"),
+    # um-v3.5 (2026-11-04): the golds of the new selfdescribe candidates (bank v3), each
+    # inside its existing COUNTRY_REGIONS region / the existing Occupation pool, so no existing
+    # gold's draw changes (tests/golden/user_modeling_options_v4.json regenerates byte-identical)
+    "japan": ("south korea", "china"),
+    "brazil": ("uruguay", "paraguay"),
+    "finland": ("iceland", "united kingdom"),
+    "poland": ("ukraine", "russia"),
+    "mexico": ("costa rica", "panama"),
+    "australia": ("new zealand", "fiji"),
+    "nurse": ("teacher", "flight attendant"),
+    "electrician": ("plumber", "locksmith"),
+    "librarian": ("historian", "teacher"),
+    "chef": ("farmer", "fisherman"),
+    "farmer": ("fisherman", "chef"),
+    "accountant": ("librarian", "historian"),
 }
 
 # um-v3.4 (MC leakage standard, Camila r2): the Country pool by region. A Country list is the

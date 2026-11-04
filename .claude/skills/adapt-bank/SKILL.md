@@ -360,7 +360,7 @@ or a rewritten bank of record.
    subject's `native_langs` is measured: originals re-profiled from the registered bank, new
    items authored against v2-shaped briefs, v1 adapted-only items retired.
 3. Re-gate only where the SUBJECT gate changed; judge-side changes (relgate-v4, role_bound's action
-   gate, um-v3.4) need no regate.
+   gate, um-v3.4, um-v3.5) need no regate.
 4. Refill, `freeze families=<refreshed>` (provenance-stamped rows only), verify every present family
    `dry_run=True`, floors under both protocols into `adapted/<m>/floors/`, independent re-audit.
 5. Record `bank_version` per family in `report.json`, update `adapted/README.md`, re-produce readouts.

@@ -66,7 +66,8 @@ identified by label prefix.
   Users.* Transluce, 2025. https://transluce.org/user-modeling
 - Included: the `user_modeling` `selfdescribe` items are rows taken verbatim from the
   SelfDescribe set; the `synthsys` items use system prompts from the SynthSysPre set; the
-  revealed-belief gate (≥ 8/10) is their criterion.
+  revealed-belief gate (≥ 8/10) is their criterion. Bank v3's 79 `um-sd2-*` items are written
+  in-house in the SelfDescribe style (not from the release) and gated by the same criterion.
 - Licence: the Transluce release names the terms for its data; see that release before
   redistributing these items outside this benchmark.
 
