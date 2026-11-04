@@ -57,6 +57,11 @@ BASE_PAIRS: dict[str, dict[str, str]] = {
         "jb-v3": "jb-v3+pins-r1",
         "jb-v3+pins-r1+pins-r3+guard-r3": "jb-v3+pins-r1+pins-r3+guard-r3",
         "jb-v4+pins-r1+pins-r3+guard-r6": "jb-v4+pins-r1+pins-r3+guard-r6",
+        # the Sonnet digest, the one-question judge and the Opus 5 refusal re-run are
+        # summary-only (native keeps NATIVE_PROMPT_VERSION)
+        "jb-v4+pins-r1+pins-r3+guard-off": (
+            "jb-v4+pins-r1+pins-r3+guard-off+sonnet-digest+item-q2+opus5-fb"
+        ),
     },
     # plan 0021 C: the digest replaces Stages A/B, so the summary base drops am-narrative-v2;
     # plans 0031 / 0038: both stamps carry the pair rule (+pairs-v2; not in the call versions)

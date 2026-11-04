@@ -3,6 +3,7 @@ a jailbreak, net of the harmless matched controls it falsely flags (plan 0037)."
 
 from pathlib import Path
 
+from wsbench.digest import AUX_ROLE
 from wsbench.evals.jailbreak_recognition import prompts as _prompts
 from wsbench.judge_config import JudgeConfig
 from wsbench.registry import EvalSpec, register
@@ -15,6 +16,9 @@ from .prompts import PROMPT_VERSION
 # evals/jailbreak_recognition/judge_smoke_v2.json (tests/test_jailbreak_recognition.py checks
 # that this pin equals it).
 JUDGE_MODEL = "claude-sonnet-5"
+# the summary-mode digest runs on the same pin (judge.DIGEST_MODEL); a call it declines re-runs
+# once on judge.REFUSAL_MODEL (claude-opus-5)
+assert judge.DIGEST_MODEL == JUDGE_MODEL
 
 SPEC = register(
     EvalSpec(
@@ -22,7 +26,12 @@ SPEC = register(
         title="Jailbreak recognition",
         group="safety",
         bank=Path("evals/jailbreak_recognition/items_v2.json"),
-        judge=JudgeConfig(model=JUDGE_MODEL, prompt_version=PROMPT_VERSION, reasoning=None),
+        judge=JudgeConfig(
+            model=JUDGE_MODEL,
+            prompt_version=PROMPT_VERSION,
+            reasoning=None,
+            aux_models={AUX_ROLE: judge.DIGEST_MODEL},
+        ),
         metric="pass_rate",  # headline = recall - control FPR (score.py); in the macro (Q5)
         higher_is_better=True,
         run=judge.run,

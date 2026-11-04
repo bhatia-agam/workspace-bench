@@ -48,21 +48,16 @@ def _common(r, native, pv: str) -> None:
 
 
 def _jb_judge(system: str, user: str, schema: dict) -> dict:
-    assert system == jbp.READOUT_SYSTEM_SUMMARY
+    """The one-question item judge (``yes`` + quotes)."""
+    assert system == jbp.ITEM_SYSTEM and schema["name"] == "item_recognition"
     assert jbp.MARKER not in user and "after the token" not in user
     # each digest line is one numbered readout: "[1] [several] <sample>"
     assert "STATEMENT-" not in user and digest_lines(re.sub(r"^\[\d+\] ", "", user, flags=re.M))
-    assert digest.SUMMARY_NOTE in user
+    assert digest.SUMMARY_NOTE in user and user.endswith("and quote the line(s).")
     if "jailbreak attempt" in user:
-        return {
-            "verdicts": [
-                {"index": 1, "label": "recognition", "kind": "named", "quote": "jailbreak attempt"}
-            ]
-        }
-    # a recognition quote that is only the note-taker's words is flagged
-    return {
-        "verdicts": [{"index": 1, "label": "recognition", "kind": "named", "quote": "STATEMENT-0"}]
-    }
+        return {"answer": "yes", "quotes": ["jailbreak attempt"], "rationale": ""}
+    # a yes whose quote is only the note-taker's words does not verify
+    return {"answer": "yes", "quotes": ["STATEMENT-0"], "rationale": ""}
 
 
 def test_jailbreak_one_call_per_item(tmp_path, monkeypatch):
@@ -75,18 +70,19 @@ def test_jailbreak_one_call_per_item(tmp_path, monkeypatch):
     r = jb.run(
         summary_args(path, tmp_path / "s", jbp.PROMPT_VERSION, items=[I1, I2], allow_missing=True)
     )
-    assert fake.n("digest") == 2 * 2 and fake.n("readout_recognition") == 2
+    assert fake.n("digest") == 2 * 2 and fake.n("item_recognition") == 2 * jbp.N_DRAWS
     _common(r, native, jbp.PROMPT_VERSION)
     rows = {x["id"]: x for x in r.rows}
     assert rows[I1]["any_recognition"] and rows[I1]["flags"] == []
-    # jb-v2 (plan 0037 J7.3): an unverified quote is flagged AND no longer a recognition
-    assert rows[I2]["flags"] == ["quote_unverified:1"] and not rows[I2]["any_recognition"]
+    assert rows[I1]["answers"] == ["yes"] * jbp.N_DRAWS
+    # a yes whose quote does not verify is not a recognition (flagged)
+    assert rows[I2]["flags"] == ["quote_unverified"] and not rows[I2]["any_recognition"]
     assert rows[I1]["summary_evidence"][0].startswith("This is a jailbreak attempt")
     assert r.extras["recall"] == 0.5 and r.value is None  # positives only: no net (J1.3)
     assert r.config["read"] == "span"
     assert "by_layer" not in r.extras and "by_pos_idx" not in r.extras
     assert all("rel_slot" not in x for x in r.rows)
-    user = next(u for n, _s, u in fake.calls if n == "readout_recognition")
+    user = next(u for n, _s, u in fake.calls if n == "item_recognition")
     # digest-v5 (audit F2): the support marker is a per-claim count, summed over the 2 layers
     assert re.search(r"\[1\] \[\d+ samples, 2 layers\] This is a jailbreak attempt", user)
 
@@ -99,7 +95,7 @@ def test_jailbreak_unsummarized_and_empty_are_fails(tmp_path, monkeypatch):
     r = jb.run(
         summary_args(path, tmp_path / "s", jbp.PROMPT_VERSION, items=[I1, I2], allow_missing=True)
     )
-    assert fake.n("digest") == 1 * 2 and fake.n("readout_recognition") == 0  # I2 is blank
+    assert fake.n("digest") == 1 * 2 and fake.n("item_recognition") == 0  # I2 is blank
     assert r.extras["recall"] == 0.0 and r.n_items == 2 and r.rows == []
     assert r.counts["n_unjudged_cells"] == 1 and r.counts["n_empty_cells"] == 1
     assert r.extras["n_api_failed"] == 1 and not r.complete
@@ -114,17 +110,13 @@ def test_jailbreak_token_file_skips_interp(tmp_path, monkeypatch):
 
     def judge(system: str, user: str, schema: dict) -> dict:
         assert digest.SUMMARY_NOTE_TOKENS in user and "jailbreak | persona" in user
-        return {
-            "verdicts": [
-                {"index": 1, "label": "recognition", "kind": "named", "quote": "jailbreak"}
-            ]
-        }
+        return {"answer": "yes", "quotes": ["jailbreak"], "rationale": ""}
 
     fake = FakeLLM.install(monkeypatch, judge)
     r = jb.run(
         summary_args(path, tmp_path / "s", jbp.PROMPT_VERSION, items=[I1], allow_missing=True)
     )
-    assert fake.n("interp") == 0 and fake.n("readout_recognition") == 1
+    assert fake.n("interp") == 0 and fake.n("item_recognition") == jbp.N_DRAWS
     assert r.config["source_kind"] == "tokens" and r.extras["recall"] == 1.0
     assert r.rows[0]["flags"] == []  # "jailbreak" is one evidence token
 

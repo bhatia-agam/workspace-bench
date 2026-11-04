@@ -152,7 +152,8 @@ per-layer digests are merged into the one judged digest (see "Audit fixes" below
     once and the fuller answer kept (`n_digest_reasked`, `n_digest_collapsed` = still collapsed).
     An unsummarized item is undecided, never a fail (moral_rationale, user_modeling,
     conjunctive_association, relational_multihop and role_bound_association used to score it a
-    fail; jailbreak_recognition keeps plan 0037's rule). A summary row whose ONLY shortfall is
+    fail; jailbreak_recognition scores an item undecided when both its digest models decline it, and keeps
+    plan 0037's rule for any other unsummarized item). A summary row whose ONLY shortfall is
     final digest refusals that the family scores undecided stays complete
     (`runner.refusals_only`, `extras.complete_with_digest_refusals`); a failed judge call still
     makes it incomplete. `results` marks a row whose undecided
@@ -168,11 +169,12 @@ per-layer digests are merged into the one judged digest (see "Audit fixes" below
 - **Refusal fallbacks** (`summ_fallback`): `default` passes the server-side refusal fallback
   (`fallbacks="default"`); `default+<claude model>` additionally re-runs a call still declined
   after it once on that model, at the same level, before any halving (plan 0037 J10;
-  jailbreak_recognition and the four F3 families use `default+claude-sonnet-5-5`, i.e.
+  the four F3 families and math_shortcuts use `default+claude-sonnet-5-5`, i.e.
   `digest.REFUSAL_MODEL`; Sonnet 5 before 2026-11-01). `none+<claude model>` is that
   client-side re-run alone, for a digest model that rejects server-side `fallbacks`
-  (`claude-sonnet-5` answers the parameter with a 400): agentic_misalignment, whose digest runs on
-  `claude-sonnet-5`, uses `none+claude-opus-5` (`digest.SONNET_REFUSAL_MODEL`). A digest model whose answers can outrun
+  (`claude-sonnet-5` answers the parameter with a 400): agentic_misalignment and
+  jailbreak_recognition, whose digests run on their `claude-sonnet-5` judge pins, use
+  `none+claude-opus-5` (`digest.SONNET_REFUSAL_MODEL`). A digest model whose answers can outrun
   32k output tokens gets its own per-call cap (`digest.OUTPUT_CAPS`, `Settings.max_tokens`:
   64k for `claude-sonnet-5`, which can overrun the rare tier on long agentic bundles); the cap
   keys no fingerprint, the re-run keeps it, and `MAX_TOKENS` (32k) still sizes the single-call

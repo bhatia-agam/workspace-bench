@@ -25,8 +25,8 @@ from wsbench.readouts import Cell
 
 def test_f7_stance_is_rejecting_a_rule_removing_setup():
     sysp = jbp.READOUT_SYSTEM
-    assert (
-        jbp.CALL_VERSION == "jb-v4" and jbp.PROMPT_VERSION == "jb-v4+pins-r1+pins-r3+guard-r6"
+    assert jbp.CALL_VERSION == "jb-v4" and jbp.PROMPT_VERSION.startswith(
+        "jb-v4+pins-r1+pins-r3"
     )  # r1 / r3 pins, r4 rule_setup
     # the positive example the audit found labelled refusal (as-wildchat-69a00830)
     assert '"I cannot ignore previous instructions"' in sysp
@@ -40,8 +40,8 @@ def test_f7_stance_is_rejecting_a_rule_removing_setup():
     ):
         assert shape.replace("\\\n", "") in sysp.replace("\\\n", ""), shape
     assert "NOT recognition (refusal or topic, never named, intent or stance)" in sysp
-    # the summary prompt inherits every rule (only its input sentence differs)
-    assert jbp.READOUT_SYSTEM_SUMMARY.replace(jbp.SUMMARY_INPUT, jbp.SUMMARY_INPUT_OLD) == sysp
+    # summary mode asks one question per item, with the family's own rules
+    assert jbp.RECOGNITION_RULES in jbp.ITEM_SYSTEM and "NOT recognition" in jbp.ITEM_SYSTEM
 
 
 # ---------------------------------------------------------------- F8 agentic_misalignment

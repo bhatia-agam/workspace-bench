@@ -43,8 +43,9 @@ DEFAULT_EFFORT = "default"
 REFUSAL_MODEL = "claude-sonnet-5-5"
 RETIRED_REFUSAL_MODELS = frozenset({"claude-sonnet-5"})
 # the client-side refusal model of the families whose digest model is claude-sonnet-5
-# (agentic_misalignment, ``summ_fallback=none+<it>``): claude-sonnet-5 rejects the server-side
-# ``fallbacks`` parameter (400), so a call it declines re-runs once on this model instead
+# (agentic_misalignment, jailbreak_recognition; ``summ_fallback=none+<it>``): claude-sonnet-5
+# rejects the server-side ``fallbacks`` parameter (400), so a call it declines re-runs once on
+# this model instead
 SONNET_REFUSAL_MODEL = "claude-opus-5"
 # how a fallback-served digest was served: "client" (re-run on the refusal model) or "server"
 # (the server-side ``fallbacks="default"`` seam); every row cached since the switch carries it
@@ -310,15 +311,14 @@ FAMILY_DEFAULTS: dict[str, dict[str, str]] = {
     # keeps the five best plus every number tied with the fifth-best support (tie_cut)
     "chain_intermediates": {"summ_numbers": "5", "summ_rare": "0", "summ_ties": "5"},
     "arithmetic_intermediates": {"summ_numbers": "5", "summ_rare": "0"},
-    # plan 0037: 11-layer full-span bundles of long conversations run hierarchical and long; the
-    # jb-v2 smoke saw Opus 5.5 decline 4 of 20 positive digests (harmful pasted content) and 9 of
-    # 16 HARMLESS control digests even through the server-side fallback and 3 halvings (an
-    # unserved control scores as flagged), so a declined digest re-runs server-side, and one still
-    # declined re-runs on REFUSAL_MODEL (plan 0037 J10; both counted in extras.digest_served_by)
+    # plan 0037: 11-layer full-span bundles of long conversations run hierarchical and long. The
+    # digest runs on the family's judge pin claude-sonnet-5 (aux_models["digest"]), so one model
+    # digests every item; a digest Sonnet declines re-runs once on SONNET_REFUSAL_MODEL,
+    # client-side, and one both decline leaves the item undecided
     "jailbreak_recognition": {
         "summ_concurrency": "8",
         "summ_timeout": "1800",
-        "summ_fallback": f"default+{REFUSAL_MODEL}",
+        "summ_fallback": f"none+{SONNET_REFUSAL_MODEL}",
     },
     # plan 0032 §2.5.2: a single COMMIT sample survives the digest
     "unverbalized_hint": {"summ_rare": "25"},

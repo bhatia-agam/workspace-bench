@@ -321,8 +321,9 @@ def test_report_cli_shows_the_committed_floors(tmp_path, real_families):
     assert "0.892 [Opus 5.5 + Sonnet 5 fallback; Opus refused 19%, both 0/93" in md
 
 
+# jailbreak_recognition left the route (its digest is its Sonnet 5 judge pin;
+# test_jailbreak_floor_needs_a_refreeze)
 SONNET55_FALLBACK_FAMILIES = (
-    "jailbreak_recognition",
     "introspection",
     "moral_rationale",
     "user_modeling",
@@ -330,7 +331,7 @@ SONNET55_FALLBACK_FAMILIES = (
 )
 
 
-def _live_config(family: str, entry: dict) -> dict:
+def _live_config(family: str, entry: dict, aux_models: dict | None = None) -> dict:
     """The config a live summary row of ``family`` carries on this branch: the summarizer comes
     from ``digest.config`` (not copied from the frozen entry), so a protocol change shows."""
     from wsbench import digest
@@ -347,6 +348,7 @@ def _live_config(family: str, entry: dict) -> dict:
         concurrency=256,
         rpm=0.0,
         dry_run=False,
+        aux_models=aux_models or {},
         extra={},
     )
     return {
@@ -358,7 +360,7 @@ def _live_config(family: str, entry: dict) -> dict:
 
 @pytest.mark.parametrize("family", SONNET55_FALLBACK_FAMILIES)
 def test_committed_sonnet5_floor_applies_to_a_live_sonnet55_row(family, real_families):
-    """The five families now digest with the Sonnet 5.5 refusal fallback while the committed
+    """The four families now digest with the Sonnet 5.5 refusal fallback while the committed
     floors were frozen on Sonnet 5: the floor still matches a live row (the fallback model is not
     part of the instrument), but a changed fallback MODE or any other digest setting does not."""
     e = json.loads(FROZEN.read_text(encoding="utf-8"))[family]
@@ -376,6 +378,22 @@ def test_committed_sonnet5_floor_applies_to_a_live_sonnet55_row(family, real_fam
         assert not po.summary_floor_matches(e, {**cfg, "summarizer": summ})
     # the stored provenance keeps the full fallback string
     assert po.summarizer_key(cfg)["fallback"] == live_fb
+
+
+def test_jailbreak_floor_needs_a_refreeze(real_families):
+    """jailbreak_recognition digests on its judge pin claude-sonnet-5 (with the client-side
+    claude-opus-5 refusal re-run), so the committed floor (Opus 5.5 digest,
+    Sonnet 5 fallback) no longer matches a live row: it is hidden until the floor is refrozen
+    under the new instrument."""
+    from wsbench import registry
+
+    e = json.loads(FROZEN.read_text(encoding="utf-8"))["jailbreak_recognition"]
+    spec = registry.get("jailbreak_recognition")
+    cfg = _live_config("jailbreak_recognition", e, aux_models=dict(spec.judge.aux_models))
+    assert cfg["summarizer"]["model"] == "claude-sonnet-5"
+    assert cfg["summarizer"]["fallback"] == "none+claude-opus-5"
+    assert e["summarizer"]["model"] != "claude-sonnet-5"
+    assert not po.summary_floor_matches(e, cfg)
 
 
 def test_unaffected_family_floor_matches_the_live_row(real_families):

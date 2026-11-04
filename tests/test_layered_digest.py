@@ -37,7 +37,11 @@ def _rows(items, layers=LAYERS):
 
 
 def _quiet(system, user, schema):
-    return {"verdicts": [], "rationale": ""}
+    """A jailbreak summary judge that sees no recognition (one item question per draw)."""
+    return {"answer": "no", "quotes": [], "rationale": ""}
+
+
+ITEM_CALLS = jbp.N_DRAWS  # summary-mode jailbreak judge calls per item
 
 
 def _setup(tmp_path, monkeypatch, layers=LAYERS, n=1):
@@ -47,6 +51,7 @@ def _setup(tmp_path, monkeypatch, layers=LAYERS, n=1):
 
 def _judged_lines(user: str) -> list[str]:
     body = user.split("numbered; each line is one readout):\n\n", 1)[1]
+    body = body.split("\n\nQuestion:", 1)[0]
     return [re.sub(r"^\[\d+\] ", "", b) for b in body.split("\n\n") if b.strip()]
 
 
@@ -193,7 +198,7 @@ def test_stage2_fabricated_evidence_dropped_then_unjudged(tmp_path, monkeypatch)
     fake = FakeLLM.install(monkeypatch, _quiet, layered=liar)
     res = jb.run(summary_args(path, tmp_path / "o", jbp.PROMPT_VERSION, extra=LAYERED))
     assert fake.n("layered") == 2 * len(items)  # re-asked once
-    assert fake.n("readout_recognition") == 0  # never judged on the mechanical union
+    assert fake.n("item_recognition") == 0  # never judged on the mechanical union
     rows = {r["id"]: r for r in res.extras["item_rows"]}
     assert all(rows[it["id"]]["state"] == "unjudged" for it in items)
     s = res.extras["summary"]
@@ -235,9 +240,10 @@ def test_stage2_refusal_reruns_on_refusal_model(tmp_path, monkeypatch):
 
     monkeypatch.setattr(llm, "stream_json", stream)
     res = jb.run(summary_args(path, tmp_path / "o", jbp.PROMPT_VERSION, extra=LAYERED))
-    assert models == [digest.DEFAULT_MODEL, digest.REFUSAL_MODEL]  # jailbreak: default+sonnet
+    # jailbreak: summ_fallback=none+claude-opus-5 (the client-side re-run alone)
+    assert models == [digest.DEFAULT_MODEL, digest.SONNET_REFUSAL_MODEL]
     assert res.extras["summary"]["n_layered_items"] == len(items)
-    assert all(digest.REFUSAL_MODEL in (r["summary_served_by"] or "") for r in res.rows)
+    assert all(digest.SONNET_REFUSAL_MODEL in (r["summary_served_by"] or "") for r in res.rows)
 
 
 def test_caches_never_mix_with_v100_union(tmp_path, monkeypatch):
@@ -251,7 +257,7 @@ def test_caches_never_mix_with_v100_union(tmp_path, monkeypatch):
     lay = jb.run(summary_args(path, out, jbp.PROMPT_VERSION, extra=LAYERED))
     assert f2.n("digest") == 0  # stage 1 reused
     assert f2.n("layered") == len(items)
-    assert f2.n("readout_recognition") == len(items)  # judged afresh on the layered digest
+    assert f2.n("item_recognition") == len(items) * ITEM_CALLS  # judged afresh on stage 2
     assert u.config["prompt_version"] != lay.config["prompt_version"]
     f3 = FakeLLM.install(monkeypatch, _quiet)
     jb.run(summary_args(path, out, jbp.PROMPT_VERSION, extra=LAYERED))
@@ -368,12 +374,13 @@ def test_stage2_refused_by_both_models_is_unjudged(tmp_path, monkeypatch):
     items, path = _setup(tmp_path, monkeypatch)
     fake = FakeLLM.install(monkeypatch, _quiet, layered=lambda u: llm.REFUSED_JSON)
     res = jb.run(summary_args(path, tmp_path / "o", jbp.PROMPT_VERSION, extra=LAYERED))
-    assert fake.n("layered") == 2 * len(items)  # Opus, then the refusal model
-    assert fake.n("readout_recognition") == 0
+    assert fake.n("layered") == 2 * len(items)  # the digest model, then the refusal model
+    assert fake.n("item_recognition") == 0
     s = res.extras["summary"]
     assert s["n_layered_failed"] == len(items) and s["n_digest_refused"] == len(items)
     rows = {r["id"]: r for r in res.extras["item_rows"]}
-    assert all(rows[it["id"]]["state"] == "unjudged" for it in items)
+    # a digest both models decline is undecided (out of both denominators), never a fail
+    assert all(rows[it["id"]]["state"] == "undecided" for it in items)
 
 
 def test_one_failed_chunk_fails_the_item(tmp_path, monkeypatch):
@@ -451,7 +458,7 @@ def test_default_budget_is_x4_and_x2_is_the_v110_instrument(tmp_path, monkeypatc
     assert r2.config["summarizer"]["layered"]["scale"] == 2
     # same out dir: the x2 run re-asks stage 2 and the judge (no x4 row served), stage 1 reused
     assert f2.n("digest") == 0 and f2.n("layered") == len(_items)
-    assert f2.n("readout_recognition") == len(_items)
+    assert f2.n("item_recognition") == len(_items) * ITEM_CALLS
     f4b = FakeLLM.install(monkeypatch, _quiet)
     jb.run(summary_args(path, tmp_path / "o", jbp.PROMPT_VERSION, extra=LAYERED))
     assert f4b.calls == []  # the x4 rows are untouched by the x2 run

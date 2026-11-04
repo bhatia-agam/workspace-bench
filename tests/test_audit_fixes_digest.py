@@ -340,10 +340,13 @@ def test_f3_families_take_the_jailbreak_route():
         "moral_rationale",
         "user_modeling",
         "model_specific_directed_modulation",
-        "jailbreak_recognition",
     ):
         s = digest.settings(_args(Path("/tmp")), fam)
         assert s.server_fallback == "default" and s.refusal_model == "claude-sonnet-5-5", fam
+    # jailbreak_recognition digests on its Sonnet 5 pin (no server-side fallback): a digest
+    # Sonnet 5 declines re-runs once on claude-opus-5, client-side
+    s = digest.settings(_args(Path("/tmp")), "jailbreak_recognition")
+    assert s.server_fallback is None and s.refusal_model == "claude-opus-5"
 
 
 # ---------------------------------------------------------------- F3: reporting
