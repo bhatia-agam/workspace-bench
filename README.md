@@ -498,11 +498,12 @@ into separate `out=` dirs (`wsbench run` warns when it overwrites a result of th
 `aggregate=native`: summary mode reads every cell (chain's `cells=last` is retired: use `reads=lite`). Options: `summ_model`, `summ_variant=task|blind`,
 `summ_render=extractive|abstractive`, `summ_effort`, `summ_max`, `summ_token_cap` (ablation),
 `summ_overflow=hierarchical|stride`, `summ_concurrency`, `summ_timeout`,
-`summ_fallback=none|default|default+<claude model>`, `summ_rare`, `summ_numbers`,
+`summ_fallback=none|default|default+<claude model>|none+<claude model>`, `summ_rare`, `summ_numbers`,
 `summ_layers=layered|union|joint`, `summ_layered_x`
-(per-family defaults in `digest.FAMILY_DEFAULTS`; the five refusal-prone families use
+(per-family defaults in `digest.FAMILY_DEFAULTS`; the refusal-prone families use
 `default+claude-sonnet-5-5`, Sonnet 5 before 2026-11-01, and a cached digest Sonnet 5 served is
-re-asked on Sonnet 5.5). Details: `docs/summarizer.md` § Item digest and each family README's "Summary
+re-asked on Sonnet 5.5; `none+<claude model>` is the client-side re-run alone, for a digest
+model that rejects server-side fallbacks). Details: `docs/summarizer.md` § Item digest and each family README's "Summary
 mode" section.
 
 Five families (user_modeling and the four in-house MC families) were judged with
