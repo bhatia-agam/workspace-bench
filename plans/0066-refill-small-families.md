@@ -1145,6 +1145,21 @@ Keep the apps warm with `scripts_local/keepalive.py` during Claude-only stages, 
     Neither family has a refill route, and neither is in `refill.POLICY`. A port is a separate
     plan, like Phase E's.
 
+13. **Pools built and pinned (§8 step 1, 2026-11-04).** `scripts/build_adapt_pools.py all` on the
+    box, from the default exact source paths (`/workspace/gw-evals-feas/outputs/feas/self_answers/`,
+    `/workspace/gw-evals-feas/outputs/feas/cutoff_confab/scale/`,
+    `/workspace/gw-mh-v2/outputs/multihop_v2/`), written to `$WSB_POOL_DIR` =
+    `/workspace/wsb-runs/pools/` (box only, never committed). Two builds gave identical bytes.
+    `refill.POOL_SHA256`:
+
+    | pool | rows | sha256 |
+    |---|---|---|
+    | `msdm_pool.jsonl` | 7,782 (of 7,878; 95 bank / retired keys, 1 duplicate noun) | `b1936e2efc4ac61230f69ab4d70da622ba1da83e7348ed25d24c795e6af3b073` |
+    | `kcutoff_pool.jsonl` | 5,273 (115 bank-ref ids, 34 bank-ref paraphrases dropped) | `0597d19caace1866a860dffb697a024e4ee12ab5245090591f54c6ba9ff3e614` |
+    | `mh2_pool.json` | 1,312 (1,384 clean minus 72 sharing a bank entity; 831 three-hop; 808 entity groups) | `553df6a6de636ddad043b63bcb21b7e38cc35cb2a89a13f7749e6910d2b29926` |
+
+    `mh2_pool.v2.json` (decision 7) is not built; it stays unpinned until a subject needs it.
+
 ## Files
 
 ```

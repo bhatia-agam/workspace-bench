@@ -123,8 +123,14 @@ POOL_FILES = {
     "mh2": "mh2_pool.json",
     "mh2v2": "mh2_pool.v2.json",  # decision 7: + the adversary over the S1-only candidates
 }
-# pinned in a follow-up PR once built on the box (plan 0066 §8 step 1); None = not built yet
-POOL_SHA256: dict[str, str | None] = {"msdm": None, "kcutoff": None, "mh2": None, "mh2v2": None}
+# pinned once built on the box by scripts/build_adapt_pools.py (plan 0066 §8 step 1, 2026-11-04;
+# the builds are deterministic, two builds gave the same bytes); None = not built yet
+POOL_SHA256: dict[str, str | None] = {
+    "msdm": "b1936e2efc4ac61230f69ab4d70da622ba1da83e7348ed25d24c795e6af3b073",
+    "kcutoff": "0597d19caace1866a860dffb697a024e4ee12ab5245090591f54c6ba9ff3e614",
+    "mh2": "553df6a6de636ddad043b63bcb21b7e38cc35cb2a89a13f7749e6910d2b29926",
+    "mh2v2": None,  # decision 7: built only if the 1,312 clean candidates do not fill a subject
+}
 DEFAULT_POOL_DIR = "/workspace/wsb-runs/pools"
 
 
