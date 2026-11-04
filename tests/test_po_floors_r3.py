@@ -236,13 +236,8 @@ SONNET_DIGEST = ("agentic_misalignment", "jailbreak_recognition")
 # record stays on the stamp it was measured under (so `report` does not draw it) until it is
 # re-scored from its cached judge answers; an entry leaves once its floor is refreshed.
 # 2026-11-04 (pre-merge review): the cut-mid-name line rule, the English plural rule and the
-# pass / fail vote, on banks this series replaces later.
-PENDING_RESCORE: dict[str, str] = {
-    "multilingual_typo": (
-        "mt-regex-2026-10-30+v2+ln-2026-11-03a+rawrx-v2+plural-v1+anchor-support-v1+langleg-v1"
-        "+bank-v3"
-    ),
-}
+# pass / fail vote; empty again since every such floor was re-scored on its family's final bank.
+PENDING_RESCORE: dict[str, str] = {}
 
 
 def test_committed_floor_file_is_the_refreeze(real_families):

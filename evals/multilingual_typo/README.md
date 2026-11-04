@@ -88,7 +88,7 @@ prompt-only floor, not an ATI number.
 ## Floors
 
 **Floors of record** (bank v4, `evals/baselines/README.md` "Floors of record"; stamp
-`mt-regex-2026-10-30+v2+ln-2026-11-03a+rawrx-v2+plural-v1+anchor-support-v1+langleg-v1+bank-v4`):
+`mt-regex-2026-10-30+v2+ln-2026-11-03a+rawrx-v2+plural-v2+anchor-support-v1+langleg-v1+bank-v4`):
 prompt-only 0.750 [0.66, 0.84] (88 items; `po-opus-v1`: one Opus 5.5 readout per item, through the
 same digest and scorer); lucky guessing on the content list only (the language is scored on the
 raw samples, never by an option list; Opus 5.5, 5 draws per item, chance 0.200, n = 88): **blind
