@@ -88,9 +88,11 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   the calls keep `CALL_VERSIONS`; strings in the family's `prompts.MC`); per-family strings `FAMILY_RULES` (typo) are added to that family's own `PROMPTS` (`FORBIDDEN_TEMPLATE` / `FORBIDDEN_FAMILIES` is empty since plan 0058 removed medical_diagnosis{,_alt}; the mechanism stays); `FAMILY_PROMPT_VERSIONS` / `prompt_version_of` give a newer family its own stamp so adding a rule never stales the older families' `bank-2026-10-10` ATI entries and floors; `DIGEST_TASK_NOTES_TEXT` is in every basic family's PROMPTS, so a new note line must be added to every basic README) and `multitoken/`
   (`mt_family(name, title, calls_per_arm=, scorer=)`): basic_readout_mt (plan 0051) is
   `scorer="mc"`: the MC judge of record (`multitoken.prompts.mc_system` / `BRMT_SYSTEM`, options
-  `mc.options_with_cannot`) plus the deterministic name gate, since audit fix F4
+  `mc.options_with_cannot`) plus the deterministic name gate (code verifies the pick and never
+  overrules it; `rival_quote` is reported only), since audit fix F4
   `multitoken.family.tolerant_gate` (quote verified by `digest.quote_ok` or near-verbatim via
-  `nearquote.close_lines`; the gold named by the quote or by ANY line that singles it out, with
+  `nearquote.close_lines`; the gold named by the quote, a near quote's matched block, or the
+  quote's own line when it singles it out (no rescue through any other line), with
   case endings / Arabic clitics / Hangul particles / fuzzy spellings and the frozen
   `evals/basic_readout_mt/exonyms.json`; `name_gate` itself is the old strict rule), headline = the `readout`
   unit only (`BRMT_HEADLINE_UNITS`; `McFamily` in `MC_FAMILIES` holds a family's MC config, the

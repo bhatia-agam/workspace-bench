@@ -52,7 +52,7 @@ def _mhmt_units():
 def test_brmt_exonym_overlay_never_gates_another_family(tmp_path, monkeypatch):
     """An adapted set shipping ``basic_readout_mt/exonyms.json`` (the GLM-5.3 set) made every
     multihop_mt_v2 id look like an adapted-only brmt item: the profile rival check's name gate
-    (``contested_verdict`` -> ``gate_name_forms``) stopped the judge (exit 2). The running
+    (``gate_name_forms``) stopped the judge (exit 2). The running
     family's name decides: multihop_mt_v2 reads the frozen table, exactly as without the set."""
     fam, items, opts, units = _mhmt_units()
     before = {(it["id"], r): fam.gate_name_forms(it, r, family=MHMT) for it, r in units}
@@ -62,12 +62,11 @@ def test_brmt_exonym_overlay_never_gates_another_family(tmp_path, monkeypatch):
     with pytest.raises(SystemExit, match=r"exonyms\.json"):  # brmt's own check is unchanged
         fam.gate_name_forms(it, role)
     options, gold = opts[it["id"]][role]
-    v = {"kind": "correct", "correct": True}
-    out = fam.contested_verdict(
-        dict(v), {"choice": "x", "rival_quote": ""}, [], gold, options, it, role,
+    out = fam._gate(
+        fam.mc_family(MHMT), role, {"choice": "x", "quote": ""}, gold, options, [], it,
         fam.bank_entities(items), family=MHMT,
     )  # fmt: skip
-    assert "gold_support" in out
+    assert out["correct"] is False
 
 
 def test_brmt_still_reads_its_overlay(tmp_path, monkeypatch):

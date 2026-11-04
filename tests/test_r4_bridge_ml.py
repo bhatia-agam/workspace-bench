@@ -338,7 +338,7 @@ def test_every_v3_option_has_wikidata_forms():
             assert len(fs) >= 2, (it["id"], o)  # its name plus at least one Wikidata name
 
 
-# ------------------------------------------------------------------ 6. option rival (optrv-v1)
+# ---------------------------------------------- 6. (option rival optrv-v1: since removed)
 
 
 def _g(text: str, count: int) -> digest.Grounded:
@@ -350,36 +350,6 @@ def _mh2(iid: str):
     _h, items = load_bank(REPO / "evals/multihop_mt_v2/items_v3.json")
     it = next(i for i in items if i["id"] == iid)
     return it, option_sets(items, cannot="cannot tell")[iid], fam.bank_entities(items)
-
-
-def test_tippecanoe_lite_single_gold_line_beside_a_stronger_option_is_contested():
-    it, opts, ents = _mh2("mh2-tippecanoe-grandson-number-r3")
-    options, gold = opts["bridge2"]
-    other = next(o for i, o in enumerate(options[:-1]) if i != gold)
-    gs = [
-        _g("At the time of his inauguration, Benjamin Harrison was also its youngest.", 1),
-        _g(f"{other} became its President after its expansion.", 3),
-    ]
-    v = {"kind": "correct", "correct": True}
-    out = fam.contested_verdict(dict(v), {"choice": "x", "rival_quote": ""}, gs, gold, options,
-                                it, "bridge2", ents)  # fmt: skip
-    assert out["kind"] == "contested" and not out["correct"]
-    assert out["gold_support"] == 1 and out["option_rival_support"] == 3
-
-
-def test_a_clear_gold_lead_is_not_contested():
-    it, opts, ents = _mh2("mh2-tippecanoe-grandson-number-r3")
-    options, gold = opts["bridge2"]
-    other = next(o for i, o in enumerate(options[:-1]) if i != gold)
-    gs = [
-        _g("The grandson, Benjamin Harrison, became the 23rd President.", 6),
-        _g(f"{other} became its President after its expansion.", 3),
-        _g(f"Benjamin Harrison and {other} both served.", 9),  # a two-option line counts for none
-    ]
-    v = {"kind": "correct", "correct": True}
-    out = fam.contested_verdict(dict(v), {"choice": "x", "rival_quote": ""}, gs, gold, options,
-                                it, "bridge2", ents)  # fmt: skip
-    assert out["kind"] == "correct" and out["gold_support"] == 6
 
 
 def test_a_heading_question_masks_only_itself():

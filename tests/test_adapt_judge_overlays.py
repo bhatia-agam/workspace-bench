@@ -371,9 +371,7 @@ def _brmt_view(items):
 
     return {
         it["id"]: [
-            (mf.gate_name_forms(it, u["role"]), mf.hidden_rivals(BRMT, it["id"], u["role"]))
-            for u in it["units"]
-            if u["role"] != "language"
+            mf.gate_name_forms(it, u["role"]) for u in it["units"] if u["role"] != "language"
         ]
         for it in items
     }
@@ -386,7 +384,6 @@ def _brmt_adapted(items) -> dict:
 
 _BRMT_OVERLAY = {
     f"{BRMT}/exonyms.json": {"items": {"brh-ad-new": {"readout": {"ru": ["НовоеИмя"]}}}},
-    f"{BRMT}/hidden_rivals.json": {"items": {"brh-ad-new": {"readout": ["Rival dynasty"]}}},
 }
 
 
@@ -403,7 +400,6 @@ def test_basic_readout_mt_adapted_item_takes_the_per_set_path(tmp_path, monkeypa
     items = _brmt_items()
     ad = _brmt_adapted(items)
     _root(tmp_path, monkeypatch, _BRMT_OVERLAY)
-    assert mf.hidden_rivals(BRMT, "brh-ad-new", "readout") == ["Rival dynasty"]
     assert "НовоеИмя" in mf.gate_name_forms(ad, "readout")["ru"]
 
 
@@ -411,16 +407,11 @@ def test_basic_readout_mt_missing_entries_are_loud(tmp_path, monkeypatch):
     from wsbench.multitoken import family as mf
 
     ad = _brmt_adapted(_brmt_items())
-    assert mf.hidden_rivals(BRMT, "brh-ad-new", "readout") == []  # registered bank: unchanged
     _root(tmp_path, monkeypatch, {})
-    with pytest.raises(SystemExit, match=r"hidden_rivals\.json"):
-        mf.hidden_rivals(BRMT, "brh-ad-new", "readout")
     with pytest.raises(SystemExit, match=r"exonyms\.json"):
         mf.gate_name_forms(ad, "readout")
-    _root(
-        tmp_path / "b", monkeypatch, {f"{BRMT}/hidden_rivals.json": {"items": {"brh-ad-new": {}}}}
-    )
-    assert mf.hidden_rivals(BRMT, "brh-ad-new", "readout") == []  # {} = none, explicitly
+    _root(tmp_path / "b", monkeypatch, {f"{BRMT}/exonyms.json": {"items": {"brh-ad-new": {}}}})
+    assert mf.gate_name_forms(ad, "readout") == mf.item_name_forms(ad, "readout")  # {} = none
 
 
 # -------------------------------------------------------------------- agentic_misalignment
@@ -650,7 +641,7 @@ GOLDEN_VIEWS = {
 }
 GOLDEN = {
     "agentic_misalignment": "b1becfeeb4bff3e4ee78be09dbb28c316d823b3a60df9077ff3f6dcea5e426e1",
-    "basic_readout_mt": "6bfb7b8ef6066bcac9393e8d44e95a8016bc4779c774edd8fbd014da448dc493",
+    "basic_readout_mt": "f50cc7ca29af8ded7699e6cb41b609c0e95c3bc4963c3979333befacb0245a1a",
     "directed_modulation": "fd243c54157a7ee801010ea58af6f84d5b1fe37157433d56be62d9f5e2762924",
     "multi_concept_directed_modulation": (
         "646c2023b0a6f780780533829d9693fc7c15ad470d03dc3f93901ac8d26ef0f0"

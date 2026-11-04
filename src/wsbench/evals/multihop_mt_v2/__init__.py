@@ -6,6 +6,7 @@ from pathlib import Path
 
 from wsbench.evals.multihop_mt_v2.prompts import (
     FLAT_TYPES,
+    MH2_CALL_VERSION,
     MH2_CANNOT,
     MH2_PROMPT_VERSION,
     MH2_REGEX_VERSION,
@@ -13,7 +14,7 @@ from wsbench.evals.multihop_mt_v2.prompts import (
     QUESTION,
     SYSTEM,
 )
-from wsbench.multitoken.family import MC_PROFILES, MCProfile, mt_family
+from wsbench.multitoken.family import CALL_VERSIONS, MC_PROFILES, MCProfile, mt_family
 from wsbench.registry import register
 
 # the shortest plain render of the v2 bank (n_render_tokens, Qwen3.6-27B): a full read of an
@@ -41,3 +42,5 @@ MC_PROFILES[SPEC.name] = MCProfile(
     regex_version=MH2_REGEX_VERSION,
     rival=True,
 )
+# the result stamp moved past the MC calls' cached key (norival-v1, qline-v1)
+CALL_VERSIONS[SPEC.name] = (MH2_PROMPT_VERSION, MH2_CALL_VERSION)
