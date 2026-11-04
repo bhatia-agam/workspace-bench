@@ -276,7 +276,7 @@ def layer_union_check(
 
 # Families whose headline is not the mean of ``row["pass"]`` (plan 0063: hinted_cutoff's is a class
 # difference); the shared-id bracket would print a different metric beside the floor, so skip it.
-NO_SHARED_BRACKET = frozenset({"hinted_cutoff"})
+NO_SHARED_BRACKET = frozenset({"hinted_cutoff", "math_shortcuts"})  # + plan 0065
 
 
 def shared_floor_text(r: FamilyResult, entry: Mapping[str, Any] | None, text: str) -> str:

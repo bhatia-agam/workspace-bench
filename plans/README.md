@@ -42,3 +42,4 @@ Plans after the campaign:
 | plan | family / scope |
 |---|---|
 | 0062 | `0062-nyt-connections.md`: the `nyt_connections` family (model-specific; ids-only NYT Connections bank v1, per-slot MC on the layered digest; bar = beat the prompt-only floor) |
+| 0065 | `0065-math-shortcuts.md`: the `math_shortcuts` family (model-specific; Omni-MATH problems answered with no working, I = later explained by an illogical shortcut, N = validly; the frozen GUESS judge on the post-problem readouts; headline I − N flag rate) |

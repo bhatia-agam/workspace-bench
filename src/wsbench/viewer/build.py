@@ -49,7 +49,10 @@ GROUPS: list[tuple[str, list[str]]] = [
     ("Association", ["user_modeling", "conjunctive_association", "role_bound_association"]),
     ("Bag of words", ["relational_multihop"]),
     ("Precision", ["jlens_concept_pr"]),
-    ("Model-specific", ["moral_rationale", "introspection", "knowledge_cutoff", "hinted_cutoff"]),
+    (
+        "Model-specific",
+        ["moral_rationale", "introspection", "knowledge_cutoff", "hinted_cutoff", "math_shortcuts"],
+    ),
 ]
 
 # What a reader needs first, in the order tried: the text the model sees, then what it should
