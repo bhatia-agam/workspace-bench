@@ -295,10 +295,11 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   items; v1 `items.json` byte-identical, read only by `tests/test_basic_association.py`'s
   test-only `bank_family` registration), its own `judge.py` (8-way MC + cannot tell; gate:
   `digest.quote_ok` -> one retry of a quote miss -> token-line flat-list void -> listed form
-  (`quote_names_gold`: a proper-noun form only with its capital, never hyphen-glued) -> the
-  quote's own line or another evidence sentence (3b / 3c) -> a proper-noun gold held only as a
-  common word fails (`gold_common_word`) -> quote-only re-judge; no raw-sample count overrules
-  the pick; row `credit`; stamp `assoc-mc-2026-11-01-v3+gate-a1`, calls keyed `CALL_VERSION`),
+  (`mc.aliases`, any case; a `HOMOGRAPH_GOLDS` gold such as pentagon only with its capital, never
+  hyphen-glued) -> the quote's own line or another evidence sentence (3b / 3c) -> a homograph
+  gold held only as the common word fails (`gold_common_word`) -> quote-only re-judge; no
+  raw-sample count overrules the pick; row `credit`; stamp `assoc-mc-2026-11-01-v3+gate-a2`,
+  calls keyed `CALL_VERSION`),
   read at the 19 summarize-suffix sites like conjunctive / role-bound. Its options come from
   `scripts/association_distractors.py` (Opus proposer from the gold alone, lint + entailment
   check, 5-draw scene screen). Its ATI entry was
