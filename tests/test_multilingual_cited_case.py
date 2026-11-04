@@ -1,5 +1,7 @@
 """A case-sensitive answer form (May, March) also counts in lower case when the readout cites the
-word with emphasis or quotes ("**may**"), never as the verb."""
+word with emphasis or quotes ("**may**"). The rule reads the marks, not the grammar, so an
+emphasised or quoted verb hits too (accepted: the MC judge still has to pick the gold); an
+unmarked lower-case verb never hits."""
 
 import re
 
@@ -28,6 +30,10 @@ CITED = "En inglés el mes que sigue a abril es **may**."
         ("**may be**", False),
         ("dismay", False),
         ("**mayo**", False),
+        # the marks, not the grammar: an emphasised or quoted verb hits too (accepted)
+        ("You **may** want to", True),
+        ("it *may* rain", True),
+        ("I think it 'may' work", True),
     ],
 )
 def test_cited_lower_case_hits_a_case_sensitive_form(text, hit):
@@ -36,6 +42,11 @@ def test_cited_lower_case_hits_a_case_sensitive_form(text, hit):
     )
     # a form that is not case-sensitive is unchanged (any case hits)
     assert regex.hit_forms(["you may go"], {"en": ["May"]}) == ["en"]
+
+
+def test_emphasised_march_verb_hits_unmarked_does_not():
+    assert regex.hit_forms(["we **march** forward"], {"en": ["March"]}, case_sensitive=("March",))
+    assert not regex.hit_forms(["we march forward"], {"en": ["March"]}, case_sensitive=("March",))
 
 
 def _spec():

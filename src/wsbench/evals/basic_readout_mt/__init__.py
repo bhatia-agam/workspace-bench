@@ -13,8 +13,9 @@ SPEC = register(
         "Basic readout (multi-token)",
         calls_per_arm="≈ 215 (summary: 90 digests + 124 MC)",
         scorer="mc",
-        # bank v6 = v5 with the leaking answer lists rebuilt and 8 items dropped (90 items; its
-        # header's read_plan_bank keeps v4's read plan, so v4 readouts serve it)
+        # bank v6 = v4 without the sarin item, with the leaking answer lists rebuilt and 8 items
+        # dropped (90 items; its header's read_plan_bank keeps v4's read plan, so v4 readouts
+        # serve it)
         bank=Path("evals/basic_readout_mt/items_v6.json"),
         prompt_version=BRMT_PROMPT_VERSION,
         # a v2 chat render is >= 15 tokens; 8 contiguous positions ending at -1 rule out a

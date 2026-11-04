@@ -1,4 +1,4 @@
-"""user_modeling bank v3 (2026-11-04): bank v2's 47 selfdescribe items byte-identical + 79 new
+"""user_modeling bank v3 (2026-11-04): items.json's 47 selfdescribe items byte-identical + 79 new
 selfdescribe items gated on Qwen3.6-27B, with their own read plan (126 rows), the um-v3.5 option
 lists (NEIGHBOURS for the new golds) and the +bank-v3 stamp. No API calls."""
 
@@ -31,14 +31,16 @@ def _registered(monkeypatch, real_families):
     monkeypatch.delenv("WSB_BANK_FILE_USER_MODELING", raising=False)
 
 
-def test_v3_is_v2_plus_79_new_items():
-    v1, v2, v3 = _raw(UM / "items.json"), _raw(UM / "items_v2.json"), _raw(V3)
-    assert v3["version"] == 3 and v3["supersedes"] == "items_v2.json"
+def test_v3_is_v1s_selfdescribe_items_plus_79_new_items():
+    v1, v3 = _raw(UM / "items.json"), _raw(V3)
+    assert v3["version"] == 3 and v3["supersedes"] == "items.json"
     assert "read_plan_bank" not in v3  # its own plan
-    assert v3["items"][:47] == v2["items"]  # every kept item byte-identical, same order
-    sha = hashlib.sha256((UM / "items_v2.json").read_bytes()).hexdigest()
-    assert v3["source_sha256"]["items_v2.json"] == sha
-    assert len(v1["items"]) == 100 and v2["version"] == 2 and len(v2["items"]) == 47
+    kept = [it for it in v1["items"] if it["subfamily"] == "selfdescribe"]
+    assert v3["items"][:47] == kept  # every kept item byte-identical, same order
+    sha = hashlib.sha256((UM / "items.json").read_bytes()).hexdigest()
+    assert v3["source_sha256"] == {"items.json": sha}
+    assert len(v1["items"]) == 100 and len(kept) == 47
+    assert not (UM / "items_v2.json").exists()
     new = v3["items"][47:]
     assert len(new) == 79 and len(v3["items"]) == 126
     names = [it["name"] for it in v3["items"]]

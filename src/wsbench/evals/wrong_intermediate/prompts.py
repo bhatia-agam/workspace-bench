@@ -18,9 +18,12 @@ MC_CALL_VERSION = "wb-mc-2026-10-31r+" + RIVAL_CALL_VERSION
 # rival audit call or true-bridge raw-count check). The raw counts are reported only
 JUDGE_RULE_VERSION = "judge-only-v1"
 # qline-v1: the quote is verified by digest.quote_ok, else near-verbatim (nearquote.close_lines),
-# and names the gold itself or through the line it came from (judge.form_via: that line names the
-# gold and no other candidate)
-QUOTE_RULE_VERSION = "qline-v1"
+# and names the gold itself or through the line it came from (judge.form_via)
+# qline-v2: the line credits a quote only when the quote was cut mid-name: the line continues it
+# into a listed form of the gold (nearquote.continued), or the sample ends inside the gold's name
+# (nearquote.sample_end_prefix); a line naming the gold elsewhere no longer does. Scoring only:
+# the MC calls keep MC_CALL_VERSION
+QUOTE_RULE_VERSION = "qline-v2"
 # +wbforms-v1 (round 4, Camila r2): every option's name forms are its Wikidata names in every
 # language (bank v3), matched with inflection tolerance (judge.name_in); +bank-v3: items_v3.json,
 # the Opus-authored same-topic distractors (MC leakage standard). Neither enters the MC calls'

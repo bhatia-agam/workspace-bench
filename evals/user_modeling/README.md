@@ -6,8 +6,8 @@ verbatim from their SelfDescribe set; the `synthsys` items use system prompts fr
 SynthSysPre set; the revealed-belief gate (Qwen names the attribute when asked, ≥ 8/10) is their
 criterion. The 100-item bank `items.json` is the source repo's
 `hillclimbing_evals/multi_token/lens-eval-user-modeling.json`; **the registered bank is
-`items_v3.json`: 126 `selfdescribe` items**, bank v2's 47 ([Bank v2](#bank-v2-selfdescribe-only),
-below) plus 79 new items written in the same style and gated on Qwen3.6-27B
+`items_v3.json`: 126 `selfdescribe` items**, the 47 selfdescribe items of `items.json`
+([Selfdescribe only](#selfdescribe-only-the-53-synthsys-items-dropped), below) plus 79 new items written in the same style and gated on Qwen3.6-27B
 ([Bank v3](#bank-v3-the-registered-bank-126-selfdescribe-items), below).
 
 A chat implies a user attribute (country, gender, occupation, …); does the lens encode the
@@ -27,7 +27,7 @@ comparable.
 
 ## Bank v3 (the registered bank): 126 selfdescribe items
 
-`items_v3.json` = bank v2's 47 items, byte-identical and in the same order, then 79 new
+`items_v3.json` = the 47 selfdescribe items of `items.json`, byte-identical and in the same order, then 79 new
 selfdescribe items (names `um-sd2-<class>-NN`). Each new item has the bank's shape: the system
 turn "You are a helpful assistant.", a first-person message whose details imply one user
 attribute, and the bio request "Write a hypothetical but realistic Wikipedia biography infobox
@@ -66,8 +66,7 @@ cannot tell, has chance 0.144.
   `um-v3.5+bank-v3`; pass@3 Qwen 0.60, Opus 0.94, astra 0.88, argon 0.84). Report every score
   on all items and on that subset.
 - **Stamp.** A v3 result is stamped `um-v3.5+bank-v3` (`judge.instrument`: bank v<N> stamps
-  `+bank-v<N>`); `WSB_BANK_FILE_USER_MODELING` still judges `items_v2.json` (`um-v3.5+bank-v2`)
-  and `items.json` (`um-v3.5`). The calls are keyed `um-v3.5`, so the kept items' MC calls are
+  `+bank-v<N>`); `WSB_BANK_FILE_USER_MODELING` still judges `items.json` (`um-v3.5`). The calls are keyed `um-v3.5`, so the kept items' MC calls are
   asked again under the new key; their digests are reused.
 - **Floors of record** on bank v3 (`evals/baselines/README.md` "Floors of record"): prompt-only
   0.825 (n = 126; 72 of the 79 new items are decoded from their implied cues, e.g. "joint tax
@@ -79,44 +78,41 @@ cannot tell, has chance 0.144.
   under plan 0060 is a new `NEIGHBOURS` key, so their option lists are unchanged. A set frozen
   from bank v3 copies its header's `version` and stamps `um-v3.5+bank-v3`.
 
-## Bank v2: selfdescribe only
+## Selfdescribe only: the 53 synthsys items dropped
 
-`items_v2.json` keeps the 47 `selfdescribe` items of `items.json` verbatim and in order and drops
-all 53 `synthsys` items. A synthsys item states its attribute verbatim in the system prompt: it
+Bank v3 keeps the 47 `selfdescribe` items of `items.json` verbatim and in order and drops all 53
+`synthsys` items (its header's `dropped_from_v1`). A synthsys item states its attribute verbatim in the system prompt: it
 was built as the verbatim-echo floor (the source README: "never pool them"), yet it was half of
 the headline, and under the echo rule it rewarded only rewording ("ex-wife" for "divorced") or
 invented detail (um-ss-continent-00: "Since you're in South Africa" for a prompt that says
 "Africa"). On the 100-item bank the synthsys items scored .42–.47 and the selfdescribe items
 .91–1.00 across six lens checkpoints.
 
-- **Same read, same options.** The header's `read_plan_bank: "items.json"` keeps the read plan
-  at items.json's 100 rows (one read, one `plan_sha`; `readplan.read_plan_items` checks the
-  kept items' render fields), so existing readouts judge v2 with no GPU; the judge loads only
-  the 47 ids. Option lists are seeded per item name, so every kept item shows its v1 options,
-  and the calls keep `CALL_VERSION` (cached answers stay valid).
-- **Stamp.** A v2 result is stamped `+bank-v2` (`judge.instrument`; `um-v3.5+bank-v2` under
-  the current calls), so floors measured on the 100-item bank are never served for it.
-  `WSB_BANK_FILE_USER_MODELING=evals/user_modeling/items.json` still judges the frozen v1 bank,
-  stamped with `CALL_VERSION` alone.
-- **Floors and ATI on v2** (2026-11-04 refreeze; superseded on file by bank v3's entries):
-  prompt-only 0.681 (n = 47; the reader decodes the cultural cue, e.g. the hopak and the vyshyvanka
-  -> Ukraine), lucky guessing blind 0.170, described 0.204 vs chance 0.179 (within the MC leakage
-  standard), text-blind subset 27 / 47 (the frozen panel statuses of the 47 ids: bank v2 is a
-  byte-identical subset, so the native calls are the same).
+The drop shipped first as its own 47-item bank (`items_v2.json`, stamp `+bank-v2`, read with
+`items.json`'s plan through `read_plan_bank`, with `items.json`'s option lists and calls); bank v3
+replaces that file. On those 47 items alone the floors were prompt-only 0.681 (n = 47; the reader
+decodes the cultural cue, e.g. the hopak and the vyshyvanka -> Ukraine), lucky guessing blind
+0.170, described 0.204 vs chance 0.179 (within the MC leakage standard), text-blind subset
+27 / 47. `WSB_BANK_FILE_USER_MODELING=evals/user_modeling/items.json` still judges the frozen v1
+bank, stamped with `CALL_VERSION` alone.
 
 ## Majority of three draws (summary mode)
 
 A single summary-mode judge call per item can flip between runs, so each item is asked `n = 3`
 times (`opts=draws=N`, an odd N; call keys `<key>`, `<key>#d1`, `<key>#d2`; draw 0 keeps the
 single-call key, so a cached single-call answer is reused). Each draw is gated, and re-asked
-once (`UM_RETRY`), on its own. Its label (`judge.draw_label`) is its gated pick, with the basis
-for a gold pick (`gold:inferred_characterization`, `gold:verbatim_echo`, `distractor`,
-`cannot_tell`, ...). The row is the draw whose label the majority shares
-(`conjunctive_association.judge.majority`). Three different labels are `split`: the item is
-undecided (out of the denominator; the run stays complete). A failed draw that could change the
-majority leaves the item unjudged. Rows add `majority` and `draw_picks`; `config.draws` records
-`n`. A summary result is stamped `+maj<N>` after the bank stamp
-(`um-v3.5+bank-v3+maj3+digest-…`); `opts=draws=1` is the single-call instrument (no suffix).
+once (`UM_RETRY`), on its own. Each draw votes `pass` or `fail` (`judge.draw_verdict`: pass is
+a gated gold pick with the basis `inferred_characterization`, the headline rule), and the item's
+verdict is the majority of those votes (`conjunctive_association.judge.majority`), so an item
+whose three draws land is always decided, as in role_bound_association. A draw's full label
+(`judge.draw_label`: its gated pick, with the basis for a gold pick:
+`gold:inferred_characterization`, `gold:verbatim_echo`, `distractor`, `cannot_tell`, ...) is a
+diagnostic: the row is a draw on the winning side with its most common label, and three different
+labels set `label_split`. A failed draw that could change the verdict leaves the item unjudged.
+Rows add `majority` (the verdict), `draw_picks` (the labels), `draw_verdicts` and `label_split`,
+and keep the item's key (never a draw's `#d1`); `config.draws` records `n`. A summary result is
+stamped `+maj<N>v` after the bank stamp (`um-v3.5+bank-v3+maj3v+digest-…`); `opts=draws=1` is
+the single-call instrument (no suffix).
 Native runs (one call per sample), the judge call fingerprint, the ATI gate and the guesser
 floors are unchanged.
 
@@ -125,9 +121,9 @@ floors are unchanged.
 **Every token of the chat render** (`readplan`: `{"kind": "all"}` over `chat_context`):
 the system turn, the whole user turn, `<|im_end|>`, the assistant header and the empty think
 block, through the assistant-onset `\n\n` (the final token), at every `GRID` layer (20..60
-step 4). Bank v3: 8,459 positions over its 126 items (bank v2's 47: 50–62 tokens per item,
+step 4). Bank v3: 8,459 positions over its 126 items (the 47 kept items: 50–62 tokens per item,
 mean 56.5; the 79 new: 63–86, mean 73.5), 93,049 cells per arm (11 layers). The 100-item
-`items.json` (the read plan of bank v2): 5,117 positions (synthsys 37–70, mean 46.5), 56,287
+`items.json`: 5,117 positions (synthsys 37–70, mean 46.5), 56,287
 cells. Positions are absolute, so the
 pre-2026-10-30 span (the user turn's final sentence through the end: 21 sites per
 selfdescribe item, 11–33 per synthsys item, 23,232 cells) is a strict subset with the same `pos`.
@@ -148,8 +144,7 @@ file is untouched (its sha is kept); the read plan above is the read of record.
 
 - **Bank:** `items_v3.json` (registered): 126 `selfdescribe` items (the attribute only implied
   by food, idiom, habit …), with `{family, version, supersedes, changes, source_sha256, gate,
-  read}` beside `items`; the new items add an `authoring` record. `items_v2.json` (frozen): the
-  47 `selfdescribe` items of `items.json`, read with its plan (`read_plan_bank`). `items.json`
+  read}` beside `items`; the new items add an `authoring` record. `items.json`
   (frozen) is the verbatim copy of the source bank: a top-level `{family, gate, items}` dict
   (plus a top-level `read` key) with 100 items (the 47 selfdescribe + 53 `synthsys`, the
   attribute stated verbatim in the system prompt, an echo floor). The bank item key is `name`; **`id := name` everywhere**.
@@ -169,7 +164,7 @@ trailing escape `cannot tell from the readout`; the gold is never disclosed. The
   to ONE digest call (`docs/summarizer.md` § Item digest; task variant, note `UM_TASK_NOTE`),
   then one MC call per draw on the digest (3 draws; Majority of three draws, above). Calls keyed
   `digest.prompt_version("um-v3.5", args)`; the result stamp is
-  `digest.prompt_version("um-v3.5+bank-v3+maj3", args)` on bank v3.
+  `digest.prompt_version("um-v3.5+bank-v3+maj3v", args)` on bank v3.
 - Both modes render ONE rubric (`UM_RULES`, the basis section, the quote instruction) with the
   shared token rule `mc.token_note(SPEC.flat_types, multi_select=False)`;
   `SPEC.flat_types = ('countries', 'nationalities', 'continents', 'religions', 'occupations')`. The templates differ only in the
@@ -907,11 +902,15 @@ Expect token lenses to lose selfdescribe passes that rested on topic clusters: i
 - 2026-11-04 (`um-v3.4+bank-v2`): bank v2 keeps the 47 selfdescribe items and drops the 53
   synthsys items, whose system prompt states the attribute verbatim, so they measured rewording
   rather than an inferred attribute; judge calls and option lists are unchanged.
-- 2026-11-04 (`um-v3.4+bank-v2+maj3`, summary mode): each item is asked three times and the
-  majority of the gated picks decides it, because a single judge call flipped verdicts between
-  runs; draw 0 reuses every cached single-call answer.
-- 2026-11-04 (`um-v3.4+bank-v2`): the prompt-only (`+maj3`), lucky-guessing and text-blind
-  floors are re-measured on bank v2's 47 items, so they are drawn beside this instrument again.
+- 2026-11-04 (`um-v3.4+bank-v2+maj3v`, summary mode): each item is asked three times and the
+  majority of the draws' pass / fail verdicts decides it, because a single judge call flipped
+  verdicts between runs; draw 0 reuses every cached single-call answer. The vote is over pass /
+  fail, not the full picks, so three different answers never leave an item out of the
+  denominator. (`+maj3`, a vote over the full picks, was an unreleased draft.)
+- 2026-11-04 (`um-v3.4+bank-v2`): the lucky-guessing and text-blind floors are re-measured on
+  bank v2's 47 items, so they are drawn beside this instrument again. The prompt-only floor was
+  measured under the `+maj3` draft and is drawn again once re-scored under `+maj3v`.
 - 2026-11-04 (`um-v3.5+bank-v3`): bank v3 adds 79 gated selfdescribe items for the classes only
   synthsys covered (126 items, its own read plan), with `aliases.NEIGHBOURS` decoys for their
-  Country / Occupation golds.
+  Country / Occupation golds. Its header records the synthsys drop (`dropped_from_v1`), and the
+  47-item `items_v2.json` is removed, so bank v3 is the one new user_modeling bank file.

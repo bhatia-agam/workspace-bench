@@ -25,7 +25,7 @@ answer (the prompt's target), not the gloss a reader writes.
 
 ## Scoring: the regex contract
 
-Instrument `mt-regex-2026-10-30+v2+ln-2026-11-03a+rawrx-v2+plural-v1+langleg-v1+bank-v5` (the shared `regex.SCORER_VERSION` plus the bank tag; the
+Instrument `mt-regex-2026-10-30+v2+ln-2026-11-03a+rawrx-v2+plural-v2+langleg-v1+bank-v5` (the shared `regex.SCORER_VERSION` plus the bank tag; the
 tag is stamped only while the v2 bank is the one judged); `judge_model` `regex` natively, the
 digest model under summary mode (pinned follows the digest). The contract: a form hits a sample
 after folding both sides (NFKD, combining marks dropped, casefold; a `case_sensitive` form keeps
@@ -89,7 +89,7 @@ excluded.
 ## Floors
 
 **Floors of record** (bank v5, `evals/baselines/README.md` "Floors of record"; stamp
-`mt-regex-2026-10-30+v2+ln-2026-11-03a+rawrx-v2+plural-v1+langleg-v1+bank-v5`): prompt-only 0.980
+`mt-regex-2026-10-30+v2+ln-2026-11-03a+rawrx-v2+plural-v2+langleg-v1+bank-v5`): prompt-only 0.980
 [0.95, 1.00] (100 items; `po-opus-v1`: one Opus 5.5 readout per item, through the same digest and
 scorer); lucky guessing on the content list only (the language is scored on the raw samples, never
 by an option list; Opus 5.5, 5 draws per item, chance 0.200): **blind 0.110, described 0.174,
@@ -175,12 +175,20 @@ Russian sentence"); they are measured in the run phase.
   ("في العربية", "בעברית", "σε ελληνικά") are added and the autonym label "(suomi)" is dropped,
   because readouts named languages in forms the list missed and "(Suomi)", the country, passed
   multilingual_mt's mlt-fi-kansanedustaja.
-- 2026-11-04 (tag `+plural-v1`): English content forms also credit their regular plural
-  (`regex.english_plurals`), because "dripstone caves" missed the form "dripstone cave".
+- 2026-11-04 (tag `+plural-v2`): English content forms also credit their regular plural
+  (`regex.english_plurals`), because "dripstone caves" missed the form "dripstone cave". A form
+  whose first letter is upper case takes no plural (matching is case-blind, so "Booth" ->
+  "Booths" would credit "voting booths"), and "-is" becomes "-es" ("dialysis" -> "dialyses").
+  (`+plural-v1`, which pluralised every form, was an unreleased draft.)
 - 2026-11-04 (tag `+langleg-v1`): the floors are refrozen under the current instrument, lucky
-  guessing on the content list only (prompt-only 0.950 -> 0.980).
+  guessing on the content list only (prompt-only 0.950 -> 0.980). They were measured under
+  `+plural-v1`: the lucky-guessing entries carry `+plural-v2` (a guesser sees only the lists);
+  the prompt-only and text-blind entries stay on `+plural-v1` until re-scored under the new stamp.
 - 2026-11-04 (tag `+bank-v5`): bank v5 rebuilds the 27 concept lists of the MC diagnostic that
-  the lucky-guessing guessers still solved (Floors); the regex contract is unchanged.
+  the lucky-guessing guessers still solved (Floors); the regex contract is unchanged. Its floors,
+  measured under `+plural-v1`, carry `+plural-v2`: the lucky-guessing entries restamped, the
+  prompt-only floor and text-blind entry re-scored from their cached answers (0 new judge calls;
+  values unchanged).
 
 ## Readouts
 

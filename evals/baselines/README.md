@@ -11,9 +11,9 @@ Every floor whose family instrument moved (a judge, a rule, an option list or a 
 re-measured under that family's current instrument, so a family's score and its floors use the
 same judge and rules. A floor is drawn only while its stamp matches the family's instrument;
 every prompt-only, lucky-guessing and text-blind entry in the three files matches its family's
-current instrument (typo_mt's Gemini-era lucky entries are MC diagnostics of a regex family and
-are never drawn), including the r5-rebuilt banks' entries, re-measured on their new banks
-(below).
+current instrument, including the r5-rebuilt banks' entries, re-measured on their new banks
+(below), and the floors re-scored after the scoring-only rule fixes (below the prompt-only table;
+typo_mt's Gemini-era lucky entries are MC diagnostics of a regex family and are never drawn).
 The sections after this one describe how each floor is measured and record earlier
 measurements.
 
@@ -44,13 +44,14 @@ per judged id (no answer was reused), then the family's own digest, judge and ru
 (agentic_misalignment and jailbreak_recognition: the Sonnet 5 digest and judge pins with the
 Opus 5 refusal re-run). Opus 5.5 declined only 4 asks (agentic_misalignment), all served by the
 Sonnet 5.5 fallback (none refused by both), so every floor is measurable. A bank that reads with
-an earlier bank's plan (`read_plan_bank`; at the refreeze: association v5, basic_readout_mt v5,
-multihop v4, role_bound_association v2, user_modeling v2) is asked on its own ids only
+an earlier bank's plan (`read_plan_bank`; at the refreeze: association v5, role_bound_association
+v2, and the 98-item basic_readout_mt, 68-item multihop and 47-item user_modeling banks that the
+next bank of each replaced) is asked on its own ids only
 (`prompt_only_opus.build`); introspection is asked on its headline rows only (the 125 protocol,
 beta-4 inject rows and their 125 gaussian twins, judged with `opts=scope=headline`, which yields
 the same headline as the full grid). role_bound_association is scored under its pair headline
 (`pair-v1`, bank v2: 21 of 46 pairs, item rate 0.652) and is no longer marked saturated, so its
-floor is drawn beside the pair rows. chain_intermediates (`+heads-v4`) and jailbreak_recognition
+floor is drawn beside the pair rows. chain_intermediates (`+heads-v5`) and jailbreak_recognition
 (`+test-pins`) were re-judged from the same cached calls under their final rules; the values did
 not move. Unchanged and still current: directed_modulation, hinted_cutoff, math_shortcuts,
 model_specific_directed_modulation, nyt_connections and typo_mt. The r5-rebuilt banks (below)
@@ -61,28 +62,41 @@ new; dropped items reduce n).
 |---|---|---|---|---|---|
 | agentic_misalignment | 0.000 | 0.000 | 22 pairs | am-design-v3+summ-c4+twin-c2+pairs-v2+sonnet-digest+opus5-fb | Opus 5.5 + Sonnet 5.5 fallback (4 served) |
 | arithmetic_intermediates | 0.790 | 0.790 [0.76, 0.82] | 595 | arith-free-2026-10-30+exact-int+keys-union+generic-r7 | Opus 5.5 (1 digest refused) |
-| association | 0.892 | 0.912 [0.85, 0.97] | 91 | assoc-mc-2026-11-01-v3+gate-a1+bank-v5 | Opus 5.5 |
-| basic_readout | 0.840 | 0.810 [0.74, 0.88] | 100 | br-mc-2026-11-01-v5b+brsum-v1+qline-v1+bank-v7 | Opus 5.5 |
-| basic_readout_mt | 1.000 | 1.000 | 90 | mc-brmt-2026-10-31r+norival-v1+qline-v1+bank-v6 | Opus 5.5 |
+| association | 0.892 | 0.923 [0.86, 0.97] | 91 | assoc-mc-2026-11-01-v3+gate-a2+bank-v5 | Opus 5.5 |
+| basic_readout | 0.840 | 0.810 [0.74, 0.88] | 100 | br-mc-2026-11-01-v5b+brsum-v2+qline-v2+bank-v7 | Opus 5.5 |
+| basic_readout_mt | 1.000 | 1.000 | 90 | mc-brmt-2026-10-31r+norival-v1+qline-v2+bank-v6 | Opus 5.5 |
 | buggy_code (bank v2) | 0.917 (24 pairs) | 0.969 [0.92, 1.00] | 64 pairs | buggy-pairs-2026-10-29+infer-r1-2026-10-31+pair-headline-2026-10-30+eof-all-layers-2026-10-30+bank-v2 | Opus 5.5 |
-| chain_intermediates | 0.967 | 0.967 [0.93, 0.99] | 120 | chain-mc-2026-10-30+heads-v4+start-op+key-ex2 | Opus 5.5 |
+| chain_intermediates | 0.967 | 0.967 [0.93, 0.99] | 120 | chain-mc-2026-10-30+heads-v5+start-op+key-ex2 | Opus 5.5 |
 | conjunctive_association | 0.220 | 0.340 [0.25, 0.43] | 100 | comp-v5+maj | Opus 5.5 |
 | introspection | 0.000 | 0.000 | 125 | ii-grid-2026-11-v4+twinrx-v4+jhead-v2 | Opus 5.5 |
 | jailbreak_recognition | 0.895 | 0.895 [0.80, 0.97] | 172 | jb-v4+pins-r1+pins-r3+guard-off+sonnet-digest+item-q2+opus5-fb+test-pins | Opus 5.5 |
 | knowledge_cutoff | 0.000 | 0.000 | 147 | cutoff-judge-2026-10-31+kcgate-v3 | Opus 5.5 |
 | moral_rationale | 0.441 | 0.533 [0.47, 0.61] | 195 | ec-v9+nq1+maj3v (majority of 3 draws, near-verbatim quotes) | Opus 5.5 |
 | multi_concept_directed_modulation | 0.965 | 0.965 (saturated) | 114 | mcdm-2026-11-01e+bank-v2+notokinterp-2026-10-30+pins-r3+nocap-a1 | Opus 5.5 |
-| multihop (bank v5) | 0.941 (v4, 68) | 0.918 [0.86, 0.97] | 98 | bank-mc-2026-11-01-v3+bank-gate-r9+bank-v5 | Opus 5.5 |
-| multihop_mt_v2 | 1.000 | 1.000 | 64 | mh2-mc-2026-11-01+norival-v1+qline-v1+bank-v6 | Opus 5.5 |
-| multilingual | 0.879 | 0.939 [0.89, 0.98] | 99 | mcrx-2026-11-03d+mc-ml-2026-11-01b+bank-v4 | Opus 5.5 |
-| multilingual_mt | 0.950 | 0.980 [0.95, 1.00] | 100 | mt-regex-2026-10-30+v2+ln-2026-11-03a+rawrx-v2+plural-v1+langleg-v1+bank-v5 | Opus 5.5 |
-| multilingual_multihop | 0.340 | 0.854 [0.78, 0.92] | 89 | mcrx-2026-11-03d+mc-ml-2026-11-01b+bank-v5 | Opus 5.5 |
-| multilingual_typo | 0.740 | 0.750 [0.66, 0.84] | 88 | mt-regex-2026-10-30+v2+ln-2026-11-03a+rawrx-v2+plural-v1+anchor-support-v1+langleg-v1+bank-v4 | Opus 5.5 |
+| multihop (bank v5) | 0.941 (68 kept items) | 0.918 [0.86, 0.97] | 98 | bank-mc-2026-11-01-v3+bank-gate-r10+bank-v5 | Opus 5.5 |
+| multihop_mt_v2 | 1.000 | 1.000 | 64 | mh2-mc-2026-11-01+norival-v1+qline-v2+bank-v6 | Opus 5.5 |
+| multilingual | 0.879 | 0.939 [0.89, 0.98] | 99 | mcrx-2026-11-03e+mc-ml-2026-11-01b+bank-v4 | Opus 5.5 |
+| multilingual_mt | 0.950 | 0.980 [0.95, 1.00] | 100 | mt-regex-2026-10-30+v2+ln-2026-11-03a+rawrx-v2+plural-v2+langleg-v1+bank-v5 | Opus 5.5 |
+| multilingual_multihop | 0.340 | 0.854 [0.78, 0.92] | 89 | mcrx-2026-11-03e+mc-ml-2026-11-01b+bank-v5 | Opus 5.5 |
+| multilingual_typo | 0.740 | 0.750 [0.66, 0.84] | 88 | mt-regex-2026-10-30+v2+ln-2026-11-03a+rawrx-v2+plural-v2+anchor-support-v1+langleg-v1+bank-v4 | Opus 5.5 |
 | poetry | 0.000 | 0.000 | 100 | poetry-free-2026-11-01+noveto-a1 | Opus 5.5 |
 | relational_multihop | 0.980 | 1.000 (saturated) | 100 | rel-v3+relgate-v6 | Opus 5.5 |
 | role_bound_association | 0.540 (items, 100) | 0.457 [0.30, 0.59] (pairs) | 46 pairs | oa-v3.1+bank-v2+maj3v | Opus 5.5 |
-| user_modeling (bank v3) | 0.681 (v2, 47) | 0.825 [0.76, 0.89] | 126 | um-v3.5+bank-v3+maj3 | Opus 5.5 |
-| wrong_intermediate | 0.000 | 0.000 | 100 | wb-mc-2026-10-31r+judge-only-v1+qline-v1+wbforms-v4+bank-v4 | Opus 5.5 |
+| user_modeling (bank v3) | 0.681 (47 selfdescribe items) | 0.825 [0.76, 0.89] | 126 | um-v3.5+bank-v3+maj3v | Opus 5.5 |
+| wrong_intermediate | 0.000 | 0.000 | 100 | wb-mc-2026-10-31r+judge-only-v1+qline-v2+wbforms-v4+bank-v4 | Opus 5.5 |
+
+Twelve floors were re-scored later on 2026-11-04, after scoring-only rule fixes earlier in this
+series moved their result stamps (no call key moved): association (`gate-a2`), chain_intermediates
+(`heads-v5`), wrong_intermediate (`qline-v2`), basic_readout (`brsum-v2`, `qline-v2`),
+basic_readout_mt on bank v6 (`qline-v2`), multihop_mt_v2 on bank v6 (`qline-v2`), multihop on bank
+v5 (`bank-gate-r10`), user_modeling on bank v3 (`+maj3v`), multilingual on bank v4
+(`mcrx-2026-11-03e`), multilingual_mt on bank v5 (`plural-v2`), multilingual_multihop on bank v5
+(`mcrx-2026-11-03e`) and multilingual_typo on bank v4 (`plural-v2`). Each was re-judged from its
+own cached answers (0 new judge calls) and refrozen; the text-blind entries of the gated ones were
+re-gated from the re-judged panel draws. Only association's floor moved (0.912 -> 0.923: de-
+oktoberfest's "Oktoberfest-style" quote now passes); no text-blind id entered or left a subset. The
+lucky-guessing entries of every affected family carry the new stamps (a guesser sees only the
+option lists, which no fix changed).
 
 "Before" is the 2026-10-31 campaign value under the family's earlier instrument and bank, except in
 the rows marked with a bank (multihop, user_modeling and buggy_code), whose "before" is the refreeze
@@ -97,50 +111,51 @@ floor scored on Sonnet 5 answers (Opus then refused 65 of 100 asks; it now answe
 
 **Banks frozen after the refreeze.** Rows marked with a bank were measured on a bank registered
 after the refreeze, under the same protocol and the bank's own stamp: multihop bank v5 (98 items:
-bank v4's 68 and 30 new), user_modeling bank v3 (126 items: bank v2's 47 and 79 new) and buggy_code
-bank v2 (64 pairs: the 24 source pairs and 40 new). Prompt-only: the kept items' prompts are
-byte-identical, so their refreeze answers were reused and only the new ids were asked (multihop 30,
-user_modeling 79, buggy_code 80; 0 refused), then each family was judged whole. Lucky guessing:
-fresh draws on the whole bank (multihop v5's build measured its options too, blind 0.143, described
-0.204, topic 0.229, bank header `mc_leakage_v5`, and the fresh draws agree; buggy_code has no lucky
-floor, 0 by construction). The rises are text leakage the new items carry: 72 of user_modeling's 79
-new items are decoded from their implied cue ("joint tax return" -> married, rubber-handled pliers
-and a voltage tester -> electrician), and buggy_code's 40 new pairs are simple bugs on purpose: the
-reader names the bug in all 40 (62 of 64 pairs pass).
+bank v3's 68 kept items and 30 new), user_modeling bank v3 (126 items: items.json's 47
+selfdescribe items and 79 new) and buggy_code bank v2 (64 pairs: the 24 source pairs and 40 new).
+Prompt-only: the kept items' prompts are byte-identical, so their refreeze answers were reused and
+only the new ids were asked (multihop 30, user_modeling 79, buggy_code 80; 0 refused), then each
+family was judged whole. Lucky guessing: fresh draws on the whole bank (multihop v5's build
+measured its options too, blind 0.143, described 0.204, topic 0.229, bank header
+`mc_leakage_v5`, and the fresh draws agree; buggy_code has no lucky floor, 0 by construction). The
+rises are text leakage the new items carry: 72 of user_modeling's 79 new items are decoded from
+their implied cue ("joint tax return" -> married, rubber-handled pliers and a voltage tester ->
+electrician), and buggy_code's 40 new pairs are simple bugs on purpose: the reader names the bug
+in all 40 (62 of 64 pairs pass).
 
 **Lucky guessing (`lucky_guessing.json`).** Re-measured (Opus 5.5, 5 fresh draws per item) where
 a family's lists or item set changed: association (bank v5), basic_readout (bank v7's Big Ben
-option), basic_readout_mt (bank v5), multihop (bank v4, then bank v5), multihop_mt_v2 (bank v5),
-role_bound_association (bank v2, 92 items), user_modeling (bank v2, then bank v3) and the four
-multilingual families, which are now floored on their content list only (the language unit is scored
-on the raw samples, so no option list is shown for it; chance 0.200 per item, was 0.040). Restamped
-from the same draws, because their lists are byte-identical (the seeded `uniform` line reproduces
-exactly): chain_intermediates (0.103 / 0.133, `heads-v4`) and introspection (0.048 / 0.170).
-moral_rationale's registered judge takes a single pick, so its floors are the single-pick guessers
-on the same 195 lists (question 0.706, described 0.704, blind 0.608, uniform 0.185 vs chance 0.176);
-the multi-mark guessers and the side readers they fed describe the earlier multi-label judge and
-were removed from this file (they remain for the opt-in bank v5, `lucky_guessing_moral_v5.json`).
-multihop_mt_v2's described and topic guessers were shown solved examples seeded under
-`multihop_mt`, the key the measuring branch used for this family; a re-run here, seeded under
-`multihop_mt_v2`, shows other examples on the same lists. Its `uniform` line is this code's seeded
-draw. conjunctive_association's entries were not
-re-measured: they carry the current stamp (`comp-v5`, a guesser sees only the lists), but their
-family-rule columns were scored with the earlier inverted-twin veto
-(`evals/conjunctive_association/README.md`). typo_mt's Gemini-era entries stay as MC diagnostics of
-a regex family and are never drawn.
+option), basic_readout_mt (without the sarin item), multihop (its 68 kept items, then bank v5),
+multihop_mt_v2 (with Kant out of kant-hume's list),
+role_bound_association (bank v2, 92 items), user_modeling (its 47 selfdescribe items, then bank v3) and the four
+multilingual families, which are now floored on their content list only (the language unit is
+scored on the raw samples, so no option list is shown for it; chance 0.200 per item, was 0.040).
+Restamped from the same draws, because their lists are byte-identical (the seeded `uniform` line
+reproduces exactly): chain_intermediates (0.103 / 0.133, `heads-v5`) and introspection (0.048 /
+0.170). moral_rationale's registered judge takes a single pick, so its floors are the single-pick
+guessers on the same 195 lists (question 0.706, described 0.704, blind 0.608, uniform 0.185 vs
+chance 0.176); the multi-mark guessers and the side readers they fed describe the earlier
+multi-label judge and were removed from this file (they remain for the opt-in bank v5,
+`lucky_guessing_moral_v5.json`). multihop_mt_v2's described and topic guessers were shown solved
+examples seeded under the key `multihop_mt`, so a re-run here (seeded under `multihop_mt_v2`)
+shows other examples on the same lists; its `uniform` line is this code's seeded draw.
+conjunctive_association's entries were not re-measured: they carry the current stamp (`comp-v5`,
+a guesser sees only the lists), but their family-rule columns were scored with the earlier
+inverted-twin veto (`evals/conjunctive_association/README.md`). typo_mt's Gemini-era entries stay
+as MC diagnostics of a regex family and are never drawn.
 
 | family | n | chance | blind | described | topic | uniform | MC leakage standard |
 |---|---|---|---|---|---|---|---|
 | association | 91 | 0.125 | 0.138 -> 0.147 | 0.351 -> 0.433 | 0.624 -> 0.618 | 0.108 | fails described, topic |
 | basic_readout | 100 | 0.200 | 0.266 -> 0.292 | 0.352 -> 0.350 | 0.306 -> 0.338 | 0.202 | fails all three |
 | basic_readout_mt | 98 | 0.200 | 0.069 -> 0.129 | 0.145 -> 0.220 | 0.214 -> 0.327 | 0.204 | fails topic |
-| multihop (bank v5; v4's 68 -> 98) | 98 | 0.200 | 0.153 -> 0.145 | 0.153 -> 0.218 | 0.200 -> 0.224 | 0.173 | passes |
+| multihop (bank v5; 68 kept -> 98) | 98 | 0.200 | 0.153 -> 0.145 | 0.153 -> 0.218 | 0.200 -> 0.224 | 0.173 | passes |
 | multihop_mt_v2 | 70 | 0.187 | 0.074 -> 0.089 | 0.183 -> 0.223 | 0.211 -> 0.349 | 0.191 | fails topic |
 | multilingual | 99 | 0.200 | 0.057 -> 0.188 | 0.087 -> 0.281 | 0.069 -> 0.212 | 0.184 | fails described |
 | multilingual_mt | 100 | 0.200 | 0.006 -> 0.166 | 0.026 -> 0.256 | 0.040 -> 0.284 | 0.190 | fails described, topic |
 | multilingual_multihop | 98 | 0.200 | 0.029 -> 0.302 | 0.080 -> 0.406 | 0.073 -> 0.424 | 0.247 | fails all three |
 | multilingual_typo | 100 | 0.200 | 0.000 -> 0.168 | 0.048 -> 0.298 | 0.070 -> 0.332 | 0.196 | fails described, topic |
-| user_modeling (bank v3; v2's 47 -> 126) | 126 | 0.144 | 0.170 -> 0.159 | 0.204 -> 0.124 | — | 0.132 | passes |
+| user_modeling (bank v3; 47 selfdescribe items -> 126) | 126 | 0.144 | 0.170 -> 0.159 | 0.204 -> 0.124 | — | 0.132 | passes |
 | role_bound_association (per item; pair rule) | 92 | 0.008 (pairs 0.00006) | 0.116 -> 0.133 (0.010) | 0.148 -> 0.165 (0.017) | 0.226 -> 0.239 (0.000) | 0.011 | passes under the pair rule |
 
 In the multihop and user_modeling rows the arrow reads refreeze -> new bank.
@@ -167,8 +182,12 @@ no word of the prompt), for the multihop families the same-answer check (a candi
 the same answer is out), and the validity screen (Opus 5.5 shown the question or text picks the
 gold on 5 of 5 draws). One repair round then re-proposed the lists still leaking (the guessers'
 result as feedback, the gold's naming style required) and searched candidate lists against the
-guessers; items all three guessers still solved were dropped, and a family whose kept items still
-failed on fresh draws also dropped the items the described and topic guessers both still solved.
+guessers (5 per list; 4 for multilingual_multihop); items all three guessers still solved were
+dropped. Where the kept items still failed (on the repair round's draws, or on fresh draws over the
+frozen bank), the items the described and topic guessers both still solved were dropped too,
+unless the bank without them still failed on fresh draws: then that extension was not kept
+(multilingual_multihop). The header's `r5_mc.floors` records those fresh draws
+(`extended_after`, `extension_not_kept`).
 Only content distractor lists change: prompts, units and read plans are untouched (no option is
 rendered) and a dropped item's plan row stays (`read_plan_bank`), so every earlier readout file
 serves the new bank, and the MC calls keep their key, so only the rebuilt lists' calls are new. The
@@ -191,9 +210,11 @@ with the examples they are shown: on fresh draws over the frozen 64 items, multi
 guesser solves 9 items it never solved in the repair round's draws (its rate there was 0.234 on
 the 70 items), and dropping the items multilingual_multihop's guessers solved does not lower its
 topic rate (0.380 on fresh draws after a further 9 were dropped; that drop was not kept). Read
-their headlines beside these floors. multihop_mt_v2's v6 entries were drawn with solved examples
-seeded under `multihop_mt`, the key the measuring branch used for this family; a re-run here,
-seeded under `multihop_mt_v2`, shows other examples on the same lists.
+their headlines beside these floors. multihop_mt_v2's v6 entries, like the refreeze's, were drawn
+with solved examples seeded under `multihop_mt`; `wsbench baseline` seeds them under
+`multihop_mt_v2` and shows other examples on the same lists. Its bank's header says
+`standard_met: false`, with a note: the driver's own estimate at the freeze (the kept items'
+repair-round draws) had met the standard.
 
 **Text-blind subsets (`anti_text_inversion.json`).** Re-gated with a fresh full panel (plan 0019
 `panel-v1`, the `guess` form, 3 draws per reader): Qwen3.6-27B on one Modal B200 (vLLM 0.31,
@@ -213,14 +234,14 @@ verdicts are unchanged).
 
 | family | text-blind before | text-blind now | invertible | Qwen / Opus / astra / argon pass@3 |
 |---|---|---|---|---|
-| association | 26 / 93 | 22 / 91 | 69 | 0.76 / 0.98 / 0.96 / 0.93 |
-| basic_readout | 22 / 100 | 22 / 100 | 78 | 0.78 / 0.97 / 0.97 / 0.95 |
+| association | 26 / 93 | 22 / 91 | 69 | 0.76 / 0.99 / 0.96 / 0.93 |
+| basic_readout | 22 / 100 | 22 / 100 | 78 | 0.78 / 0.97 / 0.97 / 0.94 |
 | basic_readout_mt | 0 / 99 | 0 / 90 | 90 | 1.00 / 1.00 / 1.00 / 1.00 |
 | introspection | 125 / 125 | 125 / 125 | 0 | 0.00 / 0.01 / 0.00 / 0.00 |
 | jailbreak_recognition | 21 / 86 | 24 / 86 | 62 | 0.77 / 0.80 / 0.45 / 0.80 |
 | poetry | 98 / 100 | 99 / 100 | 1 | 0.01 / 0.51 / 0.69 / 0.23 |
 | relational_multihop | 19 / 100 | 17 / 100 | 83 | 0.83 / 1.00 / 0.99 / 0.98 |
-| user_modeling (bank v2; superseded, next row) | 35 / 100 | 27 / 47 | 20 | 0.43 / 0.91 / 0.74 / 0.66 |
+| user_modeling (its 47 selfdescribe items; superseded, next row) | 35 / 100 | 27 / 47 | 20 | 0.43 / 0.91 / 0.74 / 0.66 |
 | user_modeling, bank v3 | 27 / 47 | 50 / 126 | 76 | 0.60 / 0.94 / 0.88 / 0.84 |
 | wrong_intermediate | 100 / 100 | 100 / 100 | 0 | 0.58 / 0.00 / 0.00 / 0.00 |
 | moral_rationale (`ec-v9`) | 152 / 195 | 134 / 195 | 61 | 0.36 / 0.58 / 0.46 / 0.28 |
@@ -232,8 +253,8 @@ verdicts are unchanged).
 | multilingual_typo | 0 / 100 | 0 / 88 (3 excluded) | 85 | 0.97 / 0.99 / 0.91 / 0.98 |
 
 **user_modeling bank v3** (registered after the refreeze): its entry covers bank v3's 126 ids
-under `um-v3.5+bank-v3`, built by the same panel rule from two sets of per-draw verdicts. Bank
-v2's 47 ids keep their statuses above (the same items, options and native calls; um-v3.5 only adds
+under `um-v3.5+bank-v3`, built by the same panel rule from two sets of per-draw verdicts. The
+47 kept selfdescribe ids keep their statuses above (the same items, options and native calls; um-v3.5 only adds
 option data for the new golds). The 79 new items were asked of the full panel under the same
 protocol (948 verdicts, all decided): 23 are text-blind, all through Qwen failing every draw.
 
@@ -478,8 +499,11 @@ scored by the deterministic regex contract since 2026-09-23 (`mt-regex-2026-10-3
 0033; `multilingual_multihop` is `mc+regex` since plan 0054); `multihop_mt` was removed on 2026-10-30 and `multihop_mt_v2`
 is MC-scored since plan 0041 (its lucky-guessing floor applies again once measured on the v2
 options). Their lucky-guessing entries are MC-specific — a guesser over
-option lists the regex scorer never sees — so they no longer apply and are no longer drawn (the
-stamp `mc-2026-09-16` no longer matches); they stay in the file for `opts=judge=mc` diagnostics.
+option lists the regex scorer never sees — so they bound the `opts=judge=mc` diagnostic, not the
+regex headline. typo_mt's entries keep the stamp `mc-2026-09-16` and are not drawn.
+multilingual_mt's and multilingual_typo's were re-measured on their rebuilt banks (bank v5 and
+bank v4, content list only) under the family's current tag, so `lucky_guessing.floors` (and
+`wsbench report`) draws them beside the regex headline: read them as the MC diagnostic's floor.
 `basic_readout_mt` is MC-judged again since plan 0051 (`mc-brmt-2026-10-31`): its entry is
 re-measured on the v2 option lists, over the `readout` list only (the headline unit; the
 `language` unit is never gated on), so the floor sits beside the headline it bounds.

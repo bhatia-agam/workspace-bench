@@ -106,19 +106,22 @@ def mc_system(task: str, question_unit: str, *, read: str = "a question") -> str
 # +bank-v4: items_v4.json, the round-4b lists (scripts/r4b_mc_refine.py)
 # +optrv-v2 (round 4b): a tie with the strongest rival is contested (rival.MORE_THAN)
 # +optrv-v3 (review of PR #208 round 4b): the code check also weighs the item's hidden rivals
-# (family.hidden_rivals, evals/basic_readout_mt/hidden_rivals.json; never shown to the judge)
+# (family.hidden_rivals over a per-item table never shown to the judge; both removed with
+# norival-v1)
 # +optrv-v4 (review of PR #208 round 4d): a code option-rival line the option audit
 # (OPTION_AUDIT_SYSTEM, optaudit-v1) dismisses is not weighed
 # norival-v1: the contested rule above (rv-*, optrv-*, the option audit and its prompts) is
 # removed; rival_quote is reported, never scored. The MC prompts are
 # unchanged, so the calls keep the key they were cached under (BRMT_CALL_VERSION)
 BRMT_CALL_VERSION = "mc-brmt-2026-10-31r+rv-2026-10-31e+optrv-v1+bank-v4"
-# +qline-v1: one quote rule for every MC family: quote_ok or near-verbatim, the gold read in the
-# quote's own line (family.tolerant_gate; the rescue through any digest line is retired)
-# +bank-v5: items_v5.json, bank v4 without the sarin item (the calls keep the v4 key)
+# +qline-v2: one quote rule for every MC family: quote_ok or near-verbatim, the gold read in the
+# quote's own line (family.tolerant_gate; through the line only for a quote cut mid-name: the line
+# continues it, or the sample ends inside the gold's name; the rescue through any digest line is
+# retired; qline-v1, an unreleased draft, credited any located line singling out the gold)
+# +bank-v5: bank v4 without the sarin item (the calls keep the v4 key; bank v6 replaces its file)
 # +bank-v6: items_v6.json, the leaking answer lists rebuilt by scripts/mc_options_r5.py and the 8
 # items that still leaked dropped (a rebuilt list's MC call is new; the others keep the v4 key)
-BRMT_PROMPT_VERSION = "mc-brmt-2026-10-31r+norival-v1+qline-v1+bank-v6"
+BRMT_PROMPT_VERSION = "mc-brmt-2026-10-31r+norival-v1+qline-v2+bank-v6"
 # the spec's token-note input (EvalSpec.flat_types; decision Q4: a run of one kind singles out none)
 BRMT_FLAT_TYPES: tuple[str, ...] = (
     "names of people",
@@ -193,7 +196,9 @@ USER_SUMMARY = (
 # ("**may**", '"may"'); only multilingual lists such forms
 # mcrx-2026-11-03d: naming forms ln-2026-11-03a (Arabic / Greek / Hebrew phrases, no "(suomi)"
 # label) and English plurals of the content forms (regex.PLURAL_VERSION)
-MCRX_VERSION = "mcrx-2026-11-03d"  # the mc+regex rule (pass = MC content role, units, language)
+# mcrx-2026-11-03e: plural-v2 (no plural of a capitalised form; -is -> -es); it changes
+# multilingual_multihop's bridge only, multilingual's one-word answers take no plural
+MCRX_VERSION = "mcrx-2026-11-03e"  # the mc+regex rule (pass = MC content role, units, language)
 # the MC calls' cache fingerprint: the scorer rule version the cached answers were asked under.
 # The MC prompts themselves (system + user, both in the fingerprint) did not change in -31h, so
 # cached answers are reused; any prompt or input change (the pins) still re-asks.
@@ -231,7 +236,7 @@ ML_ALIAS_NOTE = (
 # +rawrx-v1 (final r1): the regex contract runs on the raw samples (family.RAW_REGEX_FAMILIES)
 # +rawrx-v2 (third review of #201): a raw answer statement is a prose sample only, never a token
 # or a sample that merely opens with the form
-# +plural-v1: English content forms also credit their regular plural
+# +plural-v2: English content forms also credit their regular plural (never a capitalised form)
 V2_NAMING_TAG = "v2+" + NAMING_VERSION + "+rawrx-v2+" + PLURAL_VERSION
 # +anchor-v1 (round 3, multilingual_mt only: family.ANCHOR_FAMILIES): the language unit counts only
 # in a sample that names the item's object or the passage itself
