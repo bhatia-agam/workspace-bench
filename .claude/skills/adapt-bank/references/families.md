@@ -397,8 +397,8 @@ deleted.
   - T1: selfdescribe items with stronger, multiple cues.
 - **Never pad with synthsys.** Those items score verbatim echo, not the `inferred` headline. Report
   the subfamily split.
-- **Bank now:** registered `items_v2` (the 47 selfdescribe items; stamp `um-v3.4+bank-v2`, judge
-  calls `um-v3.4`; plan 0056: all positions, hedge gate, user's-own-value echo); adapted banks
+- **Bank now:** registered `items_v2` (the 47 selfdescribe items; stamp `um-v3.4+bank-v2`, summary
+  `+maj3`, judge calls `um-v3.4`; plan 0056: all positions, hedge gate, user's-own-value echo); adapted banks
   are their own builds and stamp `um-v3.4`. Re-read only.
 
 ### conjunctive_association — state × content × relation (gold_label among the cluster's 10)

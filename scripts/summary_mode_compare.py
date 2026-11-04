@@ -71,8 +71,9 @@ BASE_PAIRS: dict[str, dict[str, str]] = {
     "model_specific_directed_modulation": {
         "dmcd-regex-2026-10-23": "dmcd-regex-2026-10-23+joined-2026-10-30"
     },
-    # summary mode takes the majority of 3 draws' verdicts (+maj3v); native is one call per cell
+    # summary mode takes the majority of 3 draws (+maj3v / +maj3); native is one call per cell
     "role_bound_association": {"oa-v3.1": "oa-v3.1+maj3v"},
+    "user_modeling": {"um-v3.4+bank-v2": "um-v3.4+bank-v2+maj3"},
 }
 MT_FAMILIES = {
     "basic_readout_mt",

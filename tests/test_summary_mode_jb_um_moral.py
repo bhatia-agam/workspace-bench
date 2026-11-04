@@ -178,8 +178,9 @@ def test_user_modeling_one_call_per_item(tmp_path, monkeypatch, um_v1):
     assert native.extras["pass_at_1"] is not None
     fake = FakeLLM.install(monkeypatch, judge)
     r = um.run(summary_args(path, tmp_path / "s", ump.PROMPT_VERSION, items=[UA, UB]))
-    assert fake.n("digest") == 2 * 2 and fake.n("um_attribute") == 2
-    _common(r, native, ump.CALL_VERSION)  # the v1 bank's stamp (no +bank-v2)
+    # three draws per item (majority); the v1 bank's stamp (no +bank-v2) + "+maj3"
+    assert fake.n("digest") == 2 * 2 and fake.n("um_attribute") == 2 * 3
+    _common(r, native, ump.CALL_VERSION + "+maj3")
     by = {x["id"]: x for x in r.rows}
     assert by[UA]["pick"] == "gold" and by[UB]["pick"] == "cannot_tell"
     assert r.value == 0.5 and "pass_at_1" not in r.extras
@@ -194,7 +195,7 @@ def test_user_modeling_unsummarized_is_undecided_and_unjudged(tmp_path, monkeypa
         digest=lambda user: None if "Africa" in user else first_lines_digest(user),
     )
     r = um.run(summary_args(path, tmp_path / "s", ump.PROMPT_VERSION, items=[UA, UB]))
-    assert fake.n("um_attribute") == 1 and [x["id"] for x in r.rows] == [UA]
+    assert fake.n("um_attribute") == 3 and [x["id"] for x in r.rows] == [UA]  # 3 draws
     assert r.n_items == 2 and r.counts["n_unjudged_cells"] == 1 and not r.complete
     # audit F3: the unserved digest is undecided (never a fail): the rate is over UA alone
     assert r.extras["n_items_undecided"] == 1 and r.extras["undecided_ids"] == [UB]
@@ -209,12 +210,58 @@ def test_user_modeling_token_file_skips_interp(tmp_path, monkeypatch):
         lambda s, u, sc: {"choice": 6, "basis": "absent", "evidence": "", "rationale": ""},
     )
     r = um.run(summary_args(path, tmp_path / "s", ump.PROMPT_VERSION, items=[UA]))
-    assert fake.n("interp") == 0 and fake.n("um_attribute") == 1
+    assert fake.n("interp") == 0 and fake.n("um_attribute") == 3  # 3 draws
     assert r.config["source_kind"] == "tokens"
     # plan 0056 (um-v3): the judge gets the token rule of UM's own spec (flat_types), never the
     # bare SUMMARY_NOTE_TOKENS
     user = next(u for n, _s, u in fake.calls if n == "um_attribute")
     assert digest.token_note_of("user_modeling") in user and digest.SUMMARY_NOTE_TOKENS not in user
+
+
+def _um_draws(answers: list[dict]):
+    """A judge answering the item's draws in order (the three draws share one prompt)."""
+    it = iter(answers)
+    return lambda s, u, sc: next(it)
+
+
+def test_user_modeling_majority_of_three_draws(tmp_path, monkeypatch):
+    """Each item is asked three times and the majority of the gated picks is the verdict. Both
+    ways: a 2-of-3 gold passes where draw 0 alone would not, a 2-of-3 cannot-tell fails where
+    one draw alone would pass, and three different picks leave the item undecided (out of the
+    denominator, the run still complete)."""
+    path = EX / "user_modeling.jsonl"
+    opts = _um_options()
+    gold = {"choice": opts[UA][1], "basis": "inferred_characterization", "evidence": "Paraguayan",
+            "rationale": ""}  # fmt: skip
+    cannot = {"choice": _esc(opts, UA), "basis": "absent", "evidence": "", "rationale": ""}
+    echo = {**gold, "basis": "verbatim_echo"}
+
+    def run(name, answers):
+        fake = FakeLLM.install(monkeypatch, _um_draws(answers))
+        r = um.run(summary_args(path, tmp_path / name, ump.PROMPT_VERSION, items=[UA]))
+        return fake, r
+
+    fake, r = run("a", [cannot, gold, gold])
+    (row,) = r.rows
+    assert fake.n("um_attribute") == 3 and r.value == 1.0 and row["pick"] == "gold"
+    assert (
+        row["majority"] == "gold:inferred_characterization"
+        and row["draw_picks"][0] == "cannot_tell"
+    )
+    assert r.config["draws"] == 3 and r.config["prompt_version"].startswith("um-v3.4+bank-v2+maj3+")
+    _f, r = run("b", [gold, cannot, cannot])
+    assert r.value == 0.0 and r.rows[0]["majority"] == "cannot_tell"
+    _f, r = run("c", [gold, cannot, echo])
+    assert r.rows[0]["majority"] == "split" and r.rows[0]["pick"] == "split"
+    assert (
+        r.value is None and r.extras["n_items_undecided"] == 1 and r.extras["undecided_ids"] == [UA]
+    )
+    assert r.counts["n_unjudged_cells"] == 0
+    # a failed draw that cannot change the majority leaves it decided; one that could, unjudged
+    _f, r = run("d", [gold, None, gold])
+    assert r.value == 1.0 and r.rows[0]["draw_picks"][1] == "api_fail"
+    _f, r = run("e", [gold, None, cannot])
+    assert r.rows == [] and r.counts["n_unjudged_cells"] == 1 and not r.complete
 
 
 # ---------------------------------------------------------------- moral_rationale
