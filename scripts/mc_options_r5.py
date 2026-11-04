@@ -92,7 +92,7 @@ class Cfg:
 CFGS = {
     "multihop_mt_v2": Cfg(
         "multihop_mt_v2",
-        "evals/multihop_mt_v2/items_v5.json",
+        "evals/multihop_mt_v2/items_v4.json",
         "evals/multihop_mt_v2/items_v6.json",
         6,
         "an unstated intermediate entity of a factual statement, written as its full name (the "
@@ -100,6 +100,7 @@ CFGS = {
         "question",
         multihop=True,
         search_lists=5,
+        edit="v5",  # bank v4 without Kant among kant-hume's bridge1 options
     ),
     "basic_readout_mt": Cfg(
         "basic_readout_mt",

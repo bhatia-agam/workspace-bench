@@ -127,7 +127,8 @@ in all 40 (62 of 64 pairs pass).
 
 **Lucky guessing (`lucky_guessing.json`).** Re-measured (Opus 5.5, 5 fresh draws per item) where
 a family's lists or item set changed: association (bank v5), basic_readout (bank v7's Big Ben
-option), basic_readout_mt (bank v5), multihop (bank v4, then bank v5), multihop_mt_v2 (bank v5),
+option), basic_readout_mt (without the sarin item), multihop (its 68 kept items, then bank v5),
+multihop_mt_v2 (with Kant out of kant-hume's list),
 role_bound_association (bank v2, 92 items), user_modeling (its 47 selfdescribe items, then bank v3) and the four
 multilingual families, which are now floored on their content list only (the language unit is
 scored on the raw samples, so no option list is shown for it; chance 0.200 per item, was 0.040).

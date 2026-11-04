@@ -16,7 +16,7 @@ REPO = Path(__file__).resolve().parents[1]
 # family -> (the bank it supersedes, the new bank, its version)
 BANKS = {
     "basic_readout_mt": ("items_v4.json", "items_v6.json", 6),
-    "multihop_mt_v2": ("items_v5.json", "items_v6.json", 6),
+    "multihop_mt_v2": ("items_v4.json", "items_v6.json", 6),
 }
 # the plan_sha of each family's read plan before the rebuild: options are never rendered, and a
 # dropped item's plan row stays (``read_plan_bank``), so every earlier readout file serves
@@ -29,7 +29,7 @@ PLAN_SHA = {
 # the rebuild started from a small edit of the bank it supersedes that the series folded into the
 # new bank instead of keeping a file of its own: the header key of the new bank recording the edit
 # (scripts/mc_options_r5.py's ``start_bank`` re-applies it the same way)
-FOLDED = {"basic_readout_mt": "v5"}
+FOLDED = {"basic_readout_mt": "v5", "multihop_mt_v2": "v5"}
 
 
 def _raw(family: str, name: str) -> dict:
