@@ -292,8 +292,10 @@ v4 key (`MH2_CALL_VERSION`). Stamp `+bank-v5`. The floors were re-measured on v5
 
 ## Instrument history
 
-- 2026-11-04 (`+bank-v5`): the prompt-only and lucky-guessing floors are re-measured on bank v5,
-  so they are drawn beside this instrument again.
+- 2026-11-04 (`+bank-v5`): the prompt-only and lucky-guessing floors are re-measured on bank v5.
+  They were measured under the `qline-v1` draft: the lucky-guessing entries carry `qline-v2` (a
+  guesser sees only the lists); the prompt-only floor stays on `qline-v1` until re-scored under the
+  new stamp.
 - 2026-11-04 (`+bank-v5`): Immanuel Kant, whom kant-hume's prompt describes, is no longer one of
   its bridge-1 options.
 - 2026-11-04 (`+qline-v2`): a quote one word off verifies near-verbatim, and a quote cut mid-name
