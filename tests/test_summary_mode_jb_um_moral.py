@@ -178,9 +178,9 @@ def test_user_modeling_one_call_per_item(tmp_path, monkeypatch, um_v1):
     assert native.extras["pass_at_1"] is not None
     fake = FakeLLM.install(monkeypatch, judge)
     r = um.run(summary_args(path, tmp_path / "s", ump.PROMPT_VERSION, items=[UA, UB]))
-    # three draws per item (majority); the v1 bank's stamp (no +bank-v2) + "+maj3"
+    # three draws per item (majority); the v1 bank's stamp (no +bank-v2) + "+maj3v"
     assert fake.n("digest") == 2 * 2 and fake.n("um_attribute") == 2 * 3
-    _common(r, native, ump.CALL_VERSION + "+maj3")
+    _common(r, native, ump.CALL_VERSION + "+maj3v")
     by = {x["id"]: x for x in r.rows}
     assert by[UA]["pick"] == "gold" and by[UB]["pick"] == "cannot_tell"
     assert r.value == 0.5 and "pass_at_1" not in r.extras
@@ -225,10 +225,10 @@ def _um_draws(answers: list[dict]):
 
 
 def test_user_modeling_majority_of_three_draws(tmp_path, monkeypatch):
-    """Each item is asked three times and the majority of the gated picks is the verdict. Both
-    ways: a 2-of-3 gold passes where draw 0 alone would not, a 2-of-3 cannot-tell fails where
-    one draw alone would pass, and three different picks leave the item undecided (out of the
-    denominator, the run still complete)."""
+    """Each item is asked three times and the majority of the draws' pass / fail verdicts is the
+    item's verdict. Both ways: a 2-of-3 gold passes where draw 0 alone would not, a 2-of-3
+    cannot-tell fails where one draw alone would pass, and three different picks (at most one
+    an inferred gold) are a decided fail, the label split kept as a diagnostic."""
     path = EX / "user_modeling.jsonl"
     opts = _um_options()
     gold = {"choice": opts[UA][1], "basis": "inferred_characterization", "evidence": "Paraguayan",
@@ -244,19 +244,26 @@ def test_user_modeling_majority_of_three_draws(tmp_path, monkeypatch):
     fake, r = run("a", [cannot, gold, gold])
     (row,) = r.rows
     assert fake.n("um_attribute") == 3 and r.value == 1.0 and row["pick"] == "gold"
-    assert (
-        row["majority"] == "gold:inferred_characterization"
-        and row["draw_picks"][0] == "cannot_tell"
-    )
-    assert r.config["draws"] == 3 and r.config["prompt_version"].startswith("um-v3.4+bank-v2+maj3+")
+    assert row["majority"] == "pass" and row["draw_picks"][0] == "cannot_tell"
+    assert row["draw_verdicts"] == ["fail", "pass", "pass"] and not row["label_split"]
+    # the row is a winning draw (draw 1 here), but it carries the item's key, never "#d1"
+    assert "#d" not in row["key"] and row["basis"] == "inferred_characterization"
+    assert r.config["draws"] == 3
+    assert r.config["prompt_version"].startswith("um-v3.4+bank-v2+maj3v+")
     _f, r = run("b", [gold, cannot, cannot])
-    assert r.value == 0.0 and r.rows[0]["majority"] == "cannot_tell"
+    assert r.value == 0.0 and r.rows[0]["majority"] == "fail"
+    assert r.rows[0]["pick"] == "cannot_tell" and "#d" not in r.rows[0]["key"]
+    # three different labels: one inferred gold is a minority, so the item is a decided fail
     _f, r = run("c", [gold, cannot, echo])
-    assert r.rows[0]["majority"] == "split" and r.rows[0]["pick"] == "split"
-    assert (
-        r.value is None and r.extras["n_items_undecided"] == 1 and r.extras["undecided_ids"] == [UA]
-    )
+    (row,) = r.rows
+    assert row["majority"] == "fail" and row["label_split"] and row["pick"] != "split"
+    assert row["draw_picks"] == ["gold:inferred_characterization", "cannot_tell",
+                                 "gold:verbatim_echo"]  # fmt: skip
+    assert r.value == 0.0 and r.extras["n_items_undecided"] == 0 and r.extras["undecided_ids"] == []
     assert r.counts["n_unjudged_cells"] == 0
+    # a gold pick with a verbatim-echo basis is a fail vote: 2 echoes outvote 1 inferred gold
+    _f, r = run("f", [gold, echo, echo])
+    assert r.value == 0.0 and r.rows[0]["basis"] == "verbatim_echo"
     # a failed draw that cannot change the majority leaves it decided; one that could, unjudged
     _f, r = run("d", [gold, None, gold])
     assert r.value == 1.0 and r.rows[0]["draw_picks"][1] == "api_fail"
