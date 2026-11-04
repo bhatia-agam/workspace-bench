@@ -683,7 +683,8 @@ def test_lite_site_table_uses_support_share(tmp_path):
 def test_registered_spec_is_summary_family():
     assert SPEC.name not in digest.NATIVE_ONLY and not SPEC.targets_judge
     assert SPEC.flat_types == () and SPEC.multi_select is False
-    assert dataclasses.asdict(SPEC.judge)["prompt_version"] == "assoc-mc-2026-11-01-v3"
+    assert dataclasses.asdict(SPEC.judge)["prompt_version"] == "assoc-mc-2026-11-01-v3+gate-a1"
+    assert ap.CALL_VERSION == "assoc-mc-2026-11-01-v3"  # the gate re-scores cached calls
 
 
 # ---------------------------------------------------------------- round 3: quote gate 3b / 3c
@@ -795,29 +796,24 @@ def test_r3_rare_option_pins(tmp_path):
     assert user2.count("he was lying") == 1 and user2.count("kept a secret") == 1
 
 
-def test_r3_description_outnamed_by_a_distractor_word():
-    """film-h@L24 (too lenient): "a cinematic atmosphere" credited as film while 4 raw samples
-    say "novel" and none says film. b3-as-weightlifting@L24 (must stay a pass): one stray
-    "wrestling room" sample does not out-name "barbells ... powerlifting"."""
-    concepts = aj.bank_concepts(list(items().values()))
-    it = items()["film-h"]
-    shown, gp = aj.build_options(it)
-    raw = [digest.Line(t) for t in ["The novel *The Tempest* in one sentence."] * 4]
-    raw.append(digest.Line("creating a theatrical or cinematic atmosphere"))
-    counts = aj.raw_counts(it, shown, gp, raw, concepts)
-    assert counts[gp - 1] == 0 and max(counts) == 4 and aj.outnamed(counts, gp)
-    it = items()["b3-as-weightlifting"]
-    shown, gp = aj.build_options(it)
-    raw = [
-        digest.Line("Charlie entered the wrestling room."),
-        digest.Line("barbells, or weights in a powerlifting competition"),
-    ]
-    counts = aj.raw_counts(it, shown, gp, raw, concepts)
-    assert sum(counts) == 1 and not aj.outnamed(counts, gp)
-    # the gold named as often as the distractor: the description credit stands
-    tie = [0] * 8
-    tie[gp - 1] = tie[gp % 8] = 2
-    assert not aj.outnamed(tie, gp)
+def test_description_credit_stands_when_a_distractor_is_named_more(tmp_path):
+    """A verified description credit stands even when a distractor is named by more raw samples
+    (film-h@L24: "novel" in 4 samples, "film" in none): no raw-sample count overrules the judge,
+    and the quote-only re-judge picked the gold again, so it passes."""
+    film = "film-h"
+    q = "creating a theatrical or cinematic atmosphere"
+    hits = {(film, 44, LAST): f"- {q}"}
+    for k in range(4):
+        hits[(film, 40, LAST - k)] = "- The novel *The Tempest* in one sentence."
+    path = write_cells(tmp_path / "r.jsonl", hits, [film])
+    r, fake = judge_run(
+        tmp_path, path, [film], lambda s, u, sc: answer(u, "film", q), ["cinematic", "novel"]
+    )
+    row = r.rows[0]
+    assert fake.n("quote_mc") == 1 and "novel" in listing_of(mc_users(fake)[0])
+    assert row["outcome"] == "gold_description" and row["pass"] is True
+    assert "raw_option_counts" not in row and not hasattr(aj, "outnamed")
+    assert "n_gold_desc_outnamed" not in r.extras
 
 
 def _gate_c(iid: str, quote: str, texts: list[str]) -> str:
@@ -888,9 +884,9 @@ def test_r3_other_options_count_by_all_their_forms():
     assert "博物馆" in of and "museums" in of and "library" not in of and "图书馆" not in of
 
 
-def test_r3_evidence_credit_outnamed_by_a_distractor(tmp_path):
-    """Review of #205: 3c (a gold sentence away from the quote) gets the step-5 out-naming
-    guard. A lone 'library' sample against 3 'museum' samples fails; against 1 it passes."""
+def test_evidence_credit_stands_when_a_distractor_is_named_more(tmp_path):
+    """3c (a gold sentence away from the quote) only verifies the pick: a lone 'library' sample
+    against 3 'museum' samples passes as it does against 1."""
     lib = "bf-library"
     quote = "She whispered her request to the clerk and quietly descended."
 
@@ -906,10 +902,10 @@ def test_r3_evidence_credit_outnamed_by_a_distractor(tmp_path):
             lambda s, u, sc: answer(u, "library", quote),
             ["clerk", "empty library", "museum"],
         )
-        return r.rows[0], fake
+        return r, fake
 
-    row, fake = run(3, "many")
-    assert row["outcome"] == "gold_evidence_outnamed" and row["pass"] is False
-    assert fake.n("quote_mc") == 0
-    row, _f = run(1, "one")
-    assert row["outcome"] == "gold_listed_evidence" and row["pass"] is True
+    for n, sub in ((3, "many"), (1, "one")):
+        r, fake = run(n, sub)
+        row = r.rows[0]
+        assert row["outcome"] == "gold_listed_evidence" and row["pass"] is True, n
+        assert fake.n("quote_mc") == 0 and "n_gold_evidence_outnamed" not in r.extras

@@ -175,29 +175,33 @@ positions (here: all of them), so no re-read.
      `RETRY_LINE`), a second miss is `gold_unverified` (fail);
   2b. token readouts (`sampling=tokens10`): if every line holding the quote also names another
      shown option, the pick is void (`gold_flat_list`, `extras.n_flat_list_voided`);
-  3. a quote naming a listed form (gold or alias, `mc.form_in`) passes (`credit=listed_form`);
+  3. a quote naming a listed form (gold or alias) passes (`credit=listed_form`). Steps 3, 3b
+     and 3c share one form rule (`quote_names_gold`): a capitalised form (a proper name) counts
+     only with its capital, and a form glued to a following hyphen never counts, so the shape
+     word of "a pentagon-shaped building" is not the Pentagon;
   3b. (round 3) else the prose sample holding the quote names a listed form in the quote's own
      sentence or the one right before or after it, and that sentence names no other shown
      option and is not a denial (`gold_listed_line`, `credit=listed_line`: the 'prisoners'
      clause of "304 Prison / The Detention Center** ... were **prisoners**");
   3c. (round 3) else another prose sample of the judged evidence has a sentence that names a
      listed form, no other shown option and no denial (`gold_listed_evidence`; bf-library@L24's
-     'librarian' quote beside 'She whispered her plea in the empty library'). In 3b/3c a
-     capitalised form (a proper name) counts only with its capital and a form glued to a
-     following hyphen never counts, so the shape word of "a pentagon-shaped building" is not
-     the Pentagon. 3b/3c test the other shown options by ALL their forms, the same expansion
+     'librarian' quote beside 'She whispered her plea in the empty library'). 3b/3c test the
+     other shown options by ALL their forms, the same expansion
      the gold gets (`other_option_forms`: the bank concept entry, i.e. translations and aliases,
      plus the plural: museums, 博物馆, casinos, jail block a library sentence), and apply only
      when the judge's quote itself names none of them (a quote 'the museum hall was silent' is
-     not rescued by a library sentence elsewhere; it goes to step 5). A 3c pass is void when a
-     distractor out-names the gold in the raw samples (the step-5 rule below,
-     `gold_evidence_outnamed`, `extras.n_gold_evidence_outnamed`);
+     not rescued by a library sentence elsewhere; it goes to step 5);
   4. a quote with no Latin letters and no listed form fails (`gold_unlisted_script`);
+  4b. a quote that holds a proper-noun gold only lowercased or hyphen-glued ("a key for the
+     pentagon", "pentagon-shaped") fails (`gold_common_word`, `extras.n_gold_common_word`) with
+     no quote-only re-judge: it names the shape or the common word, not the place or name;
   5. any other quote gets ONE quote-only re-judge (`QUOTE_USER`): gold again passes
      (`gold_description`, `credit=description`, `extras.n_description_credit` and the quotes
-     verbatim), unless a shown distractor is named verbatim by at least 2 raw samples of the
-     judged cells and by more than the gold (`gold_desc_outnamed`, fail; film-h@L24: "novel" in
-     4 samples, "film" in none); anything else fails (`gold_desc_rejected`).
+     verbatim); anything else fails (`gold_desc_rejected`).
+
+  The gate only verifies the judge's pick: the quote is in the readouts and names the gold.
+  No count of raw samples overrules it; weighing competing lines is the judge's call, under the
+  prompt's "clearly more lines" rule.
 - **Native (`opts=aggregate=native`, the ATI gate instrument):** one MC call per (item, layer)
   over every position at that layer, the same gate; an item passes if any layer passes.
   `extras` carries `n_items_gold_any_layer`, `n_items_distractor_any_layer`,
@@ -205,6 +209,11 @@ positions (here: all of them), so no re-read.
 - **Floors:** chance 1/8; lucky guessing (the options-only guesser over these lists,
   `baselines/lucky_guessing.py`); prompt-only = Opus 5.5 reading the render (`po-opus-v1`),
   judged by this same instrument (`wsbench run all=True readouts_root=<po>/readouts`).
+- **Floors under `+gate-a1`:** the lucky-guessing entries carry the current stamp (a guesser
+  sees only the option lists, which `gate-a1` did not change). The prompt-only floor and the ATI
+  entry below were measured at `assoc-mc-2026-11-01-v3` and apply again once re-frozen /
+  re-gated under the current stamp; until then `report` draws no prompt-only floor for this
+  family and `anti_text_inversion=True` exits 2.
 - **ATI:** re-gated natively with this instrument on 2026-10-31 (R1-ATI; the v1 entry had 12
   ids): 25/93 on the reduced panel Qwen + Opus + Astra (argon unreachable), PROVISIONAL
   (`evals/baselines/README.md`, fix-round-1 re-gate). Re-gated on 2026-11-01 (R1-ATI gemini) on
@@ -227,10 +236,14 @@ wsbench judge family=association readouts=<arm>.jsonl out=outputs/<arm>/associat
 
 ## Judge prompts
 
-`prompt_version`: `assoc-mc-2026-11-01-v3` (round 4: bank v3's options; the prompts and gate are
-`assoc-mc-2026-10-31-r3`'s; summary runs stamp `digest.prompt_version("assoc-mc-2026-11-01-v3",
-...)`, by default `assoc-mc-2026-11-01-v3+digest-v5-task-extractive+sj-v10`; lite runs add
-`+reads-lite`). Judge: the
+`prompt_version`: `assoc-mc-2026-11-01-v3+gate-a1`. Judge calls are keyed
+`assoc-mc-2026-11-01-v3` (`CALL_VERSION`: bank v3's options with the `assoc-mc-2026-10-31-r3`
+prompts); the stamp adds the deterministic gate (`GATE_VERSION`, `gate-a1`: the step 3 / 4b
+form rule and no raw-sample out-naming guard), so cached answers re-score with no new call.
+Summary runs stamp `digest.prompt_version(PROMPT_VERSION, ...)`:
+`assoc-mc-2026-11-01-v3+gate-a1+digest-v5-task-extractive-layered-v1x4+sj-v10` for the default
+multi-layer run, `...+digest-v5-task-extractive+sj-v10` for a single layer; lite runs add
+`+reads-lite`. Judge: the
 repo default (`claude-opus-5-5`). Output schema `readout_mc` / `quote_mc`:
 `{"choice": int, "quote": str}`. Option order: `mc.seeded_shuffle(gold + distractors,
 "assoc-v2-20261030:<id>")`, then `"cannot tell from the readout"` last.
@@ -344,3 +357,10 @@ Which concept do the readouts name?
   8. graduation
   9. cannot tell from the readout
 ```
+
+## History
+
+- 2026-11-04 (`assoc-mc-2026-11-01-v3+gate-a1`): steps 3 and 4b apply the proper-noun form rule,
+  so a lowercased or hyphen-glued shape word ("a key for the pentagon") no longer passes as the
+  Pentagon, and the raw-sample out-naming guard of steps 3c and 5 is removed, because code
+  counts must not overrule a verified judge pick.

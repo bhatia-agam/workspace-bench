@@ -291,9 +291,13 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   items; v1 `items.json` byte-identical, read only by `tests/test_basic_association.py`'s
   test-only `bank_family` registration), its own `judge.py` (8-way MC + cannot tell; gate:
   `digest.quote_ok` -> one retry of a quote miss -> token-line flat-list void -> listed form
-  (`mc.aliases`) -> quote-only re-judge; row `credit`), read at the 19 summarize-suffix sites like
-  conjunctive / role-bound. Its options come from `scripts/association_distractors.py` (Opus
-  proposer from the gold alone, lint + entailment check, 5-draw scene screen). Its ATI entry was
+  (`quote_names_gold`: a proper-noun form only with its capital, never hyphen-glued) -> the
+  quote's own line or another evidence sentence (3b / 3c) -> a proper-noun gold held only as a
+  common word fails (`gold_common_word`) -> quote-only re-judge; no raw-sample count overrules
+  the pick; row `credit`; stamp `assoc-mc-2026-11-01-v3+gate-a1`, calls keyed `CALL_VERSION`),
+  read at the 19 summarize-suffix sites like conjunctive / role-bound. Its options come from
+  `scripts/association_distractors.py` (Opus proposer from the gold alone, lint + entailment
+  check, 5-draw scene screen). Its ATI entry was
   re-gated on 2026-10-31 (R1-ATI) on the reduced panel, qwen+opus then qwen+opus+astra (R1-ATI
   rev, astra via OpenAI WIF; argon missing): 25/93, PROVISIONAL; then on the full panel (R1-ATI
   gemini, 2026-11-01, argon via Gemini WIF) at bank v3: 26/93.

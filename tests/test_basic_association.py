@@ -113,11 +113,14 @@ def test_bank_targets_and_labels(tmp_path):
 def test_registered_spec(real_families):
     # plan 0039: the registered family is the MC judge on bank v2 (its own stamp and calls)
     from wsbench.evals.association import SPEC
+    from wsbench.evals.association.prompts import CALL_VERSION
     from wsbench.evals.association.prompts import PROMPT_VERSION as ASSOC_PV
 
     assert SPEC.group == "basic" and SPEC.metric == "pass_rate"
     assert SPEC.judge.model == DEFAULT_JUDGE
-    assert SPEC.judge.prompt_version == ASSOC_PV == "assoc-mc-2026-11-01-v3"
+    # the deterministic gate is stamped (gate-a1); the calls stay keyed as before
+    assert SPEC.judge.prompt_version == ASSOC_PV == "assoc-mc-2026-11-01-v3+gate-a1"
+    assert CALL_VERSION == "assoc-mc-2026-11-01-v3"
     assert SPEC.calls_per_arm == "≈ 200" and str(SPEC.bank).endswith("items_v3.json")
 
 
