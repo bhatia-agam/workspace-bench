@@ -703,3 +703,21 @@ def test_meta_topic_prompt_matches_pr214_frozen_form():
         assert msg.split("\n\n", 1)[1] == "\n\n".join(
             [*shown, f"Now this item:\n{lg.render_lists(items[0], topic=True)}"]
         )
+
+
+def test_renamed_family_replies_are_read_back(tmp_path, monkeypatch):
+    """v1.2.0 rename: wrong_intermediate's calls are keyed by the old name (``hash_name``), and
+    the replies must be read back by the same key (before the fix every reply was missed: 500
+    "API failures" and no scored draw on a live run)."""
+    items = lg.build_family("wrong_intermediate")
+    by_id = {it.id: it for it in items}
+
+    def fake_run_calls(calls, **kw):
+        assert all(c.key.startswith("wrong_bridge|") for c in calls)
+        return {c.key: {"choice1": by_id[c.meta["item"]].golds[0]} for c in calls}
+
+    monkeypatch.setattr(lg, "run_calls", fake_run_calls)
+    judge = resolve(JudgeConfig(prompt_version=lg.PROMPT_VERSION))
+    r = lg.run_family("wrong_intermediate", "blind", judge=judge, out=tmp_path / "run", draws=2)
+    a = r["aggregate"]
+    assert a["n_api_fail"] == 0 and a["mean"] == 1.0 and a["n_items"] == len(items)
