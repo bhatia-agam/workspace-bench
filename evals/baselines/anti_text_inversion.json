@@ -47240,21 +47240,21 @@
    "astra": "openai/gpt-6-astra",
    "argon": "google/gemini-4-argon"
   },
-  "instrument": "mcrx-2026-11-03d+mc-ml-2026-11-01b",
+  "instrument": "mcrx-2026-11-03d+mc-ml-2026-11-01b+bank-v5",
   "judge_model": "claude-opus-5-5",
   "layers_judged": [
    44
   ],
-  "bank_sha": "91289a5b4da487359fc0d58f03b9d11be1a9f7e108a6aa8977f1873c084fbfe1",
-  "n_bank": 98,
+  "bank_sha": "29cd285e4a5798d34f81297f947bf22cf38233f06830ab72ce35bad176fffc30",
+  "n_bank": 89,
   "n_ati": 0,
-  "n_invertible": 95,
-  "n_unverified": 1,
+  "n_invertible": 87,
+  "n_unverified": 0,
   "pass_at_1": {
    "qwen": [
-    0.8969,
-    0.8144,
-    0.866
+    0.8989,
+    0.809,
+    0.8539
    ],
    "opus": [
     1.0,
@@ -47262,21 +47262,21 @@
     1.0
    ],
    "astra": [
-    0.9794,
-    0.9794,
-    0.9794
+    0.9775,
+    0.9775,
+    0.9775
    ],
    "argon": [
     1.0,
     1.0,
-    0.9897
+    1.0
    ]
   },
   "pass_at_3": {
-   "qwen": 0.9694,
-   "opus": 0.9898,
-   "astra": 0.9694,
-   "argon": 0.9898
+   "qwen": 0.9775,
+   "opus": 1.0,
+   "astra": 0.9775,
+   "argon": 1.0
   },
   "ids": [],
   "status": {
@@ -47317,12 +47317,6 @@
     "solved"
    ],
    "mlmh-ar-thimphu-buddhism": [
-    "solved",
-    "solved",
-    "solved",
-    "solved"
-   ],
-   "mlmh-el-andronikos-university": [
     "solved",
     "solved",
     "solved",
@@ -47418,12 +47412,6 @@
     "solved",
     "solved"
    ],
-   "mlmh-fi-bayeux-normandia": [
-    "solved",
-    "solved",
-    "solved",
-    "solved"
-   ],
    "mlmh-fi-kesaton-vuosi-saari": [
     "solved",
     "solved",
@@ -47454,12 +47442,6 @@
     "solved",
     "solved"
    ],
-   "mlmh-he-ytterby-sweden": [
-    "solved",
-    "solved",
-    "solved",
-    "solved"
-   ],
    "mlmh-he-beriberi-thiamine": [
     "solved",
     "solved",
@@ -47484,12 +47466,6 @@
     "solved",
     "solved"
    ],
-   "mlmh-he-chicxulub-mexico": [
-    "solved",
-    "solved",
-    "solved",
-    "solved"
-   ],
    "mlmh-he-maillard-france": [
     "solved",
     "solved",
@@ -47503,12 +47479,6 @@
     "solved"
    ],
    "mlmh-hu-kepler-ellipszis": [
-    "solved",
-    "solved",
-    "solved",
-    "solved"
-   ],
-   "mlmh-hu-vandorgalamb-allatkert": [
     "solved",
     "solved",
     "solved",
@@ -47550,19 +47520,7 @@
     "solved",
     "solved"
    ],
-   "mlmh-id-transsiberia-vladivostok": [
-    "solved",
-    "solved",
-    "solved",
-    "solved"
-   ],
    "mlmh-id-terusan-kiel-schleswig": [
-    "solved",
-    "solved",
-    "solved",
-    "solved"
-   ],
-   "mlmh-id-kubus-rubik-hongaria": [
     "solved",
     "solved",
     "solved",
@@ -47838,23 +47796,11 @@
     "solved",
     "solved"
    ],
-   "mlmh-vi-porcelain-capital-province": [
-    "solved",
-    "solved",
-    "solved",
-    "solved"
-   ],
    "mlmh-vi-tonlesap-mekong": [
     "solved",
     "solved",
     "solved",
     "solved"
-   ],
-   "mlmh-vi-mawsynram-meghalaya": [
-    "undecided",
-    "undecided",
-    "undecided",
-    "undecided"
    ],
    "mlmh-vi-thaison-sondong": [
     "solved",
@@ -47906,11 +47852,6 @@
      true,
      true
     ],
-    "mlmh-el-andronikos-university": [
-     true,
-     true,
-     true
-    ],
     "mlmh-el-bakelite-baekeland-belgium": [
      true,
      true,
@@ -47986,11 +47927,6 @@
      true,
      true
     ],
-    "mlmh-fi-bayeux-normandia": [
-     false,
-     true,
-     true
-    ],
     "mlmh-fi-kesaton-vuosi-saari": [
      true,
      true,
@@ -48016,11 +47952,6 @@
      true,
      true
     ],
-    "mlmh-he-ytterby-sweden": [
-     true,
-     false,
-     true
-    ],
     "mlmh-he-beriberi-thiamine": [
      false,
      true,
@@ -48041,11 +47972,6 @@
      false,
      true
     ],
-    "mlmh-he-chicxulub-mexico": [
-     true,
-     true,
-     true
-    ],
     "mlmh-he-maillard-france": [
      true,
      true,
@@ -48057,11 +47983,6 @@
      true
     ],
     "mlmh-hu-kepler-ellipszis": [
-     true,
-     true,
-     true
-    ],
-    "mlmh-hu-vandorgalamb-allatkert": [
      true,
      true,
      true
@@ -48096,17 +48017,7 @@
      true,
      true
     ],
-    "mlmh-id-transsiberia-vladivostok": [
-     true,
-     true,
-     true
-    ],
     "mlmh-id-terusan-kiel-schleswig": [
-     true,
-     true,
-     true
-    ],
-    "mlmh-id-kubus-rubik-hongaria": [
      true,
      true,
      true
@@ -48336,20 +48247,10 @@
      false,
      false
     ],
-    "mlmh-vi-porcelain-capital-province": [
-     true,
-     true,
-     true
-    ],
     "mlmh-vi-tonlesap-mekong": [
      true,
      true,
      false
-    ],
-    "mlmh-vi-mawsynram-meghalaya": [
-     null,
-     null,
-     null
     ],
     "mlmh-vi-thaison-sondong": [
      true,
@@ -48398,11 +48299,6 @@
      true,
      true
     ],
-    "mlmh-el-andronikos-university": [
-     true,
-     true,
-     true
-    ],
     "mlmh-el-bakelite-baekeland-belgium": [
      true,
      true,
@@ -48478,11 +48374,6 @@
      true,
      true
     ],
-    "mlmh-fi-bayeux-normandia": [
-     true,
-     true,
-     true
-    ],
     "mlmh-fi-kesaton-vuosi-saari": [
      true,
      true,
@@ -48508,11 +48399,6 @@
      true,
      true
     ],
-    "mlmh-he-ytterby-sweden": [
-     true,
-     true,
-     true
-    ],
     "mlmh-he-beriberi-thiamine": [
      true,
      true,
@@ -48533,11 +48419,6 @@
      true,
      true
     ],
-    "mlmh-he-chicxulub-mexico": [
-     true,
-     true,
-     true
-    ],
     "mlmh-he-maillard-france": [
      true,
      true,
@@ -48549,11 +48430,6 @@
      true
     ],
     "mlmh-hu-kepler-ellipszis": [
-     true,
-     true,
-     true
-    ],
-    "mlmh-hu-vandorgalamb-allatkert": [
      true,
      true,
      true
@@ -48588,17 +48464,7 @@
      true,
      true
     ],
-    "mlmh-id-transsiberia-vladivostok": [
-     true,
-     true,
-     true
-    ],
     "mlmh-id-terusan-kiel-schleswig": [
-     true,
-     true,
-     true
-    ],
-    "mlmh-id-kubus-rubik-hongaria": [
      true,
      true,
      true
@@ -48828,20 +48694,10 @@
      true,
      true
     ],
-    "mlmh-vi-porcelain-capital-province": [
-     true,
-     true,
-     true
-    ],
     "mlmh-vi-tonlesap-mekong": [
      true,
      true,
      true
-    ],
-    "mlmh-vi-mawsynram-meghalaya": [
-     null,
-     null,
-     null
     ],
     "mlmh-vi-thaison-sondong": [
      true,
@@ -48890,11 +48746,6 @@
      true,
      true
     ],
-    "mlmh-el-andronikos-university": [
-     true,
-     true,
-     true
-    ],
     "mlmh-el-bakelite-baekeland-belgium": [
      true,
      true,
@@ -48970,11 +48821,6 @@
      true,
      true
     ],
-    "mlmh-fi-bayeux-normandia": [
-     true,
-     true,
-     true
-    ],
     "mlmh-fi-kesaton-vuosi-saari": [
      true,
      true,
@@ -49000,11 +48846,6 @@
      true,
      true
     ],
-    "mlmh-he-ytterby-sweden": [
-     true,
-     true,
-     true
-    ],
     "mlmh-he-beriberi-thiamine": [
      true,
      true,
@@ -49025,11 +48866,6 @@
      true,
      true
     ],
-    "mlmh-he-chicxulub-mexico": [
-     true,
-     true,
-     true
-    ],
     "mlmh-he-maillard-france": [
      true,
      true,
@@ -49041,11 +48877,6 @@
      true
     ],
     "mlmh-hu-kepler-ellipszis": [
-     true,
-     true,
-     true
-    ],
-    "mlmh-hu-vandorgalamb-allatkert": [
      true,
      true,
      true
@@ -49080,17 +48911,7 @@
      true,
      true
     ],
-    "mlmh-id-transsiberia-vladivostok": [
-     true,
-     true,
-     true
-    ],
     "mlmh-id-terusan-kiel-schleswig": [
-     true,
-     true,
-     true
-    ],
-    "mlmh-id-kubus-rubik-hongaria": [
      true,
      true,
      true
@@ -49320,20 +49141,10 @@
      true,
      true
     ],
-    "mlmh-vi-porcelain-capital-province": [
-     true,
-     true,
-     true
-    ],
     "mlmh-vi-tonlesap-mekong": [
      true,
      true,
      true
-    ],
-    "mlmh-vi-mawsynram-meghalaya": [
-     null,
-     null,
-     null
     ],
     "mlmh-vi-thaison-sondong": [
      true,
@@ -49382,11 +49193,6 @@
      true,
      true
     ],
-    "mlmh-el-andronikos-university": [
-     true,
-     true,
-     true
-    ],
     "mlmh-el-bakelite-baekeland-belgium": [
      true,
      true,
@@ -49462,11 +49268,6 @@
      true,
      true
     ],
-    "mlmh-fi-bayeux-normandia": [
-     true,
-     true,
-     true
-    ],
     "mlmh-fi-kesaton-vuosi-saari": [
      true,
      true,
@@ -49492,11 +49293,6 @@
      true,
      true
     ],
-    "mlmh-he-ytterby-sweden": [
-     true,
-     true,
-     true
-    ],
     "mlmh-he-beriberi-thiamine": [
      true,
      true,
@@ -49517,11 +49313,6 @@
      true,
      true
     ],
-    "mlmh-he-chicxulub-mexico": [
-     true,
-     true,
-     false
-    ],
     "mlmh-he-maillard-france": [
      true,
      true,
@@ -49533,11 +49324,6 @@
      true
     ],
     "mlmh-hu-kepler-ellipszis": [
-     true,
-     true,
-     true
-    ],
-    "mlmh-hu-vandorgalamb-allatkert": [
      true,
      true,
      true
@@ -49572,17 +49358,7 @@
      true,
      true
     ],
-    "mlmh-id-transsiberia-vladivostok": [
-     true,
-     true,
-     true
-    ],
     "mlmh-id-terusan-kiel-schleswig": [
-     true,
-     true,
-     true
-    ],
-    "mlmh-id-kubus-rubik-hongaria": [
      true,
      true,
      true
@@ -49812,20 +49588,10 @@
      true,
      true
     ],
-    "mlmh-vi-porcelain-capital-province": [
-     true,
-     true,
-     true
-    ],
     "mlmh-vi-tonlesap-mekong": [
      true,
      true,
      true
-    ],
-    "mlmh-vi-mawsynram-meghalaya": [
-     null,
-     null,
-     null
     ],
     "mlmh-vi-thaison-sondong": [
      true,
@@ -49841,10 +49607,10 @@
   },
   "reader_routes": {
    "astra": {
-    "openrouter": 294
+    "openrouter": 267
    },
    "argon": {
-    "openrouter": 294
+    "openrouter": 267
    }
   },
   "ati_exclude": {

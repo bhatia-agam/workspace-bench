@@ -30,6 +30,7 @@ LATER = {
     "basic_readout_mt": ("items_v6.json", set()),
     "multihop_mt_v2": ("items_v6.json", set()),
     "multilingual_mt": ("items_v5.json", set()),
+    "multilingual_multihop": ("items_v5.json", set()),
 }
 
 
@@ -119,7 +120,7 @@ def test_topic_labels_cover_every_list(family):
 STANDARD_FAILS: dict[str, set[str]] = {
     "basic_readout_mt": set(),
     "multihop_mt_v2": {"topic"},
-    "multilingual_multihop": {"blind", "described", "topic"},
+    "multilingual_multihop": {"described", "topic"},
     "multilingual_mt": set(),
     "multilingual_typo": {"described", "topic"},
 }

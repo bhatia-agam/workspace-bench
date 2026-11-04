@@ -19,6 +19,7 @@ BANKS = {
     "multihop_mt_v2": ("items_v5.json", "items_v6.json", 6),
     "multilingual": ("items_v3.json", "items_v4.json", 4),
     "multilingual_mt": ("items_v4.json", "items_v5.json", 5),
+    "multilingual_multihop": ("items_v4.json", "items_v5.json", 5),
 }
 # the plan_sha of each family's read plan before the rebuild: options are never rendered, and a
 # dropped item's plan row stays (``read_plan_bank``), so every earlier readout file serves
@@ -27,6 +28,7 @@ PLAN_SHA = {
     "multihop_mt_v2": "1d5f2e2fa84b",
     "multilingual": "e9a67ff80bee",
     "multilingual_mt": "2510a7af7c96",
+    "multilingual_multihop": "f57d844abf4e",
 }
 
 
@@ -137,9 +139,10 @@ def test_registered_and_read_plan_unchanged(family, real_families):
 
 
 # the rebuild's own record (the header's r5_mc.floors, every measurement up to the freeze):
-# multihop_mt_v2 met the standard on the kept items' repair-round draws, but its topic guesser
+# multilingual_multihop's topic guesser stayed above the standard on the kept items whatever was
+# dropped; multihop_mt_v2 met it on the kept items' repair-round draws, but its topic guesser
 # fails it on fresh draws over the frozen bank (evals/baselines/README.md, "Option rebuild r5")
-NOT_MET: set[str] = set()
+NOT_MET = {"multilingual_multihop"}
 
 
 @pytest.mark.parametrize("family", sorted(BANKS))
@@ -162,6 +165,7 @@ FROZEN_FAILS: dict[str, set[str]] = {
     "multihop_mt_v2": {"topic"},
     "multilingual": set(),
     "multilingual_mt": set(),
+    "multilingual_multihop": {"described", "topic"},
 }
 
 
@@ -188,7 +192,7 @@ def test_call_keys_survive_the_bank_stamps(real_families):
 
     assert call_pv("basic_readout_mt", BRMT_PROMPT_VERSION) == BRMT_CALL_VERSION
     assert call_pv("multihop_mt_v2", MH2_PROMPT_VERSION) == MH2_CALL_VERSION
-    for family in ("multilingual",):
+    for family in ("multilingual", "multilingual_multihop"):
         pv = real_families[family].judge.prompt_version
         assert "+bank-v" in pv and "+bank-v" not in mcrx.call_version(pv)
         assert mcrx.call_version(pv) == mcrx.call_version(pv.split("+bank-v")[0])

@@ -49,7 +49,8 @@ def test_registered():
     registry.FAMILIES.setdefault(SPEC.name, SPEC)
     # plan 0054 item 9: the scorer of record is mc+regex (an LLM judge, EvalSpec.scorer empty)
     assert SPEC.group == "basic_mt" and SPEC.scorer == ""
-    assert SPEC.judge.prompt_version == "mcrx-2026-11-03d+mc-ml-2026-11-01b"
+    # +bank-v5: the r5-rebuilt bridge lists (a result stamp only, never a call key)
+    assert SPEC.judge.prompt_version == "mcrx-2026-11-03d+mc-ml-2026-11-01b+bank-v5"
     assert "0 (regex)" not in SPEC.calls_per_arm
 
 
@@ -160,6 +161,9 @@ def test_mcrx_pass_needs_mc_and_the_required_units(tmp_path, monkeypatch, conten
 
 
 def test_l2_equals_native_items_out_of_headline(tmp_path, monkeypatch):
+    # bank v5 dropped mawsynram, the only such item: the rule is run on bank v4
+    v4 = REPO / "evals/multilingual_multihop/items_v4.json"
+    monkeypatch.setenv("WSB_BANK_FILE_MULTILINGUAL_MULTIHOP", str(v4))
     it = _items()["mlmh-vi-mawsynram-meghalaya"]
     judge = _judge(it["mc"]["bridge_native"]["gold"], "Vietnamese", "Mawsynram", "Vietnamese")
     r = _run(tmp_path, monkeypatch, it["id"], "Mawsynram, a Vietnamese sentence", judge)

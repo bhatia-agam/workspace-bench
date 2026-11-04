@@ -650,14 +650,14 @@
  },
  "multilingual_multihop": {
   "blind": {
-   "mean": 0.30204081632653057,
-   "std": 0.009126808071427723,
-   "majority": 0.29591836734693877,
+   "mean": 0.14831460674157304,
+   "std": 0.016665614577743064,
+   "majority": 0.12359550561797752,
    "exact": null,
    "any_hit": null,
    "mean_picks": null,
    "analytic_floor": 0.2,
-   "n_items": 98,
+   "n_items": 89,
    "n_draws": 5,
    "n_api_fail": 0,
    "invalid_rate": 0.0,
@@ -667,18 +667,18 @@
    "model": "claude-opus-5-5",
    "prompt_version": "lucky-2026-09-16",
    "rule": "single pick",
-   "instrument": "mcrx-2026-11-03d+mc-ml-2026-11-01b",
-   "written": "2026-11-04T07:44:26+00:00"
+   "instrument": "mcrx-2026-11-03d+mc-ml-2026-11-01b+bank-v5",
+   "written": "2026-11-04T10:29:23+00:00"
   },
   "described": {
-   "mean": 0.4061224489795919,
-   "std": 0.008537347209531393,
-   "majority": 0.3979591836734694,
+   "mean": 0.2651685393258427,
+   "std": 0.02329937230710981,
+   "majority": 0.25842696629213485,
    "exact": null,
    "any_hit": null,
    "mean_picks": null,
    "analytic_floor": 0.2,
-   "n_items": 98,
+   "n_items": 89,
    "n_draws": 5,
    "n_api_fail": 0,
    "invalid_rate": 0.0,
@@ -688,18 +688,18 @@
    "model": "claude-opus-5-5",
    "prompt_version": "lucky-2026-09-16",
    "rule": "single pick",
-   "instrument": "mcrx-2026-11-03d+mc-ml-2026-11-01b",
-   "written": "2026-11-04T07:46:55+00:00"
+   "instrument": "mcrx-2026-11-03d+mc-ml-2026-11-01b+bank-v5",
+   "written": "2026-11-04T10:29:23+00:00"
   },
   "uniform": {
-   "mean": 0.24693877551020407,
-   "std": 0.04586164296784537,
-   "majority": 0.20408163265306123,
+   "mean": 0.251685393258427,
+   "std": 0.053059411025247624,
+   "majority": 0.2247191011235955,
    "exact": null,
    "any_hit": null,
    "mean_picks": null,
    "analytic_floor": 0.2,
-   "n_items": 98,
+   "n_items": 89,
    "n_draws": 5,
    "n_api_fail": 0,
    "invalid_rate": 0.0,
@@ -709,30 +709,30 @@
    "model": "seeded-uniform",
    "prompt_version": "lucky-2026-09-16",
    "rule": "single pick",
-   "instrument": "mcrx-2026-11-03d+mc-ml-2026-11-01b",
-   "written": "2026-11-04T07:49:25+00:00"
+   "instrument": "mcrx-2026-11-03d+mc-ml-2026-11-01b+bank-v5",
+   "written": "2026-11-04T10:29:24+00:00"
   },
   "topic": {
-   "mean": 0.4244897959183674,
-   "std": 0.005589005688828201,
-   "majority": 0.41836734693877553,
+   "mean": 0.38202247191011235,
+   "std": 0.013761178330242584,
+   "majority": 0.38202247191011235,
    "exact": null,
    "any_hit": null,
    "mean_picks": null,
    "analytic_floor": 0.2,
    "topics": "topics-r4b-2026-11-01",
-   "n_items": 98,
+   "n_items": 89,
    "n_draws": 5,
    "n_api_fail": 0,
-   "invalid_rate": 0.0020408163265306124,
+   "invalid_rate": 0.0,
    "n_options_per_list": [
     5
    ],
    "model": "claude-opus-5-5",
    "prompt_version": "lucky-2026-09-16",
    "rule": "single pick",
-   "instrument": "mcrx-2026-11-03d+mc-ml-2026-11-01b",
-   "written": "2026-11-04T07:49:25+00:00"
+   "instrument": "mcrx-2026-11-03d+mc-ml-2026-11-01b+bank-v5",
+   "written": "2026-11-04T10:29:24+00:00"
   }
  },
  "multilingual_typo": {

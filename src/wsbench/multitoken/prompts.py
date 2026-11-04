@@ -214,7 +214,7 @@ ML_MC_PROMPT_VERSION = "mc-ml-2026-11-01b"  # the v2 MC prompts below (the instr
 # rebuilt), appended to the instrument tag; a bank stamp moves the result stamp only:
 # mcrx.call_version drops it, since the options are in the fingerprinted MC prompt (a rebuilt
 # list is re-asked, every other call stays cached)
-ML_BANK_TAGS = {"multilingual": "bank-v4"}
+ML_BANK_TAGS = {"multilingual": "bank-v4", "multilingual_multihop": "bank-v5"}
 # audit fix F5 (multilingual, ``options.ALIAS_FAMILIES``): appended to every MC question, the same
 # for every item and option (gold-blind): ``options.alias_note`` over the frozen bank, held equal by
 # tests/test_audit_fix_gates.py; the options themselves show their forms only when every option

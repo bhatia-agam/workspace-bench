@@ -36,9 +36,9 @@ REPO = Path(__file__).resolve().parents[1]
 EXAMPLE = REPO / "examples/readouts/multilingual.jsonl"
 FOUR = ("multilingual", "multilingual_mt", "multilingual_multihop", "multilingual_typo")
 V2 = {f: REPO / "evals" / f / "items_v2.json" for f in FOUR}
-# the result stamps: multilingual's carries its bank stamp (prompts.ML_BANK_TAGS)
+# the result stamps carry each family's bank stamp (prompts.ML_BANK_TAGS)
 MCRX_PV = f"{MCRX_VERSION}+{ML_MC_PROMPT_VERSION}+{ML_BANK_TAGS['multilingual']}"
-MCRX_MH_PV = f"{MCRX_VERSION}+{ML_MC_PROMPT_VERSION}"
+MCRX_MH_PV = f"{MCRX_VERSION}+{ML_MC_PROMPT_VERSION}+{ML_BANK_TAGS['multilingual_multihop']}"
 NUMBER_WORDS = ("one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten")
 HALF = "de-half-six"  # Sechs geteilt durch zwei ist " -> drei; concept three; German
 KENTE = "mlmh-ar-kente-accra"
@@ -533,7 +533,7 @@ def test_v2_registrations(name, real_families):
     v = {
         "multilingual": "items_v4.json",
         "multilingual_mt": "items_v5.json",
-        "multilingual_multihop": "items_v4.json",
+        "multilingual_multihop": "items_v5.json",
         "multilingual_typo": "items_v3.json",
     }[name]
     assert spec.bank == Path("evals") / name / v

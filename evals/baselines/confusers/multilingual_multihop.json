@@ -1,9 +1,9 @@
 {
  "family": "multilingual_multihop",
  "model": "claude-opus-5-5",
- "n_lists": 98,
- "n_answered": 98,
- "n_ok": 98,
+ "n_lists": 89,
+ "n_answered": 89,
+ "n_ok": 89,
  "n_fail": [],
  "rows": [
   {
@@ -11,10 +11,10 @@
    "list": 0,
    "topic": "a traditional textile or fabric type",
    "options": [
-    "tartan",
+    "khadi",
     "kente",
-    "tweed",
-    "ikat",
+    "jamdani",
+    "bogolan",
     "batik"
    ],
    "gold": 2,
@@ -34,11 +34,11 @@
    "list": 0,
    "topic": "a famous explorer or adventurer",
    "options": [
-    "James Cook",
-    "David Livingstone",
+    "Marco Polo",
+    "Ferdinand Magellan",
     "Roald Amundsen",
-    "Edmund Hillary",
-    "Ferdinand Magellan"
+    "Christopher Columbus",
+    "James Cook"
    ],
    "gold": 3,
    "fits": [
@@ -58,10 +58,10 @@
    "topic": "a historic temple complex of Asia",
    "options": [
     "Angkor Wat",
-    "Golden Temple",
-    "Ellora Caves",
+    "Prambanan",
+    "Khajuraho",
     "Borobudur",
-    "Prambanan"
+    "Ellora Caves"
    ],
    "gold": 1,
    "fits": [
@@ -80,11 +80,11 @@
    "list": 0,
    "topic": "a town or city of Germany",
    "options": [
-    "Bamberg",
-    "Halle (Saale)",
-    "Göttingen",
+    "Weimar",
+    "Dresden",
+    "Bonn",
     "Bayreuth",
-    "Eisenach"
+    "Leipzig"
    ],
    "gold": 4,
    "fits": [
@@ -166,29 +166,6 @@
    "answered": true
   },
   {
-   "item": "mlmh-el-andronikos-university",
-   "list": 0,
-   "topic": "a 20th-century archaeologist",
-   "options": [
-    "Max Mallowan",
-    "Manolis Andronikos",
-    "Gertrude Bell",
-    "Aurel Stein",
-    "Nándor Fettich"
-   ],
-   "gold": 2,
-   "fits": [
-    1,
-    2,
-    3,
-    4,
-    5
-   ],
-   "n_confusers": 4,
-   "ok": true,
-   "answered": true
-  },
-  {
    "item": "mlmh-el-bakelite-baekeland-belgium",
    "list": 0,
    "topic": "a chemist or inventor of the early twentieth century",
@@ -216,11 +193,11 @@
    "list": 0,
    "topic": "an ancient Greek scholar or scientist",
    "options": [
-    "Euclid",
-    "Hipparchus",
-    "Ctesibius",
+    "Ptolemy",
+    "Aristarchus",
+    "Democritus",
     "Eratosthenes",
-    "Ptolemy"
+    "Archimedes"
    ],
    "gold": 4,
    "fits": [
@@ -262,11 +239,11 @@
    "list": 0,
    "topic": "a synthetic polymer or plastic material",
    "options": [
-    "kevlar",
+    "polyethylene",
+    "polyvinyl chloride",
     "bakelite",
-    "polystyrene",
     "polytetrafluoroethylene",
-    "polypropylene"
+    "nylon"
    ],
    "gold": 4,
    "fits": [
@@ -285,11 +262,11 @@
    "list": 0,
    "topic": "an 18th-century British aristocrat or statesman",
    "options": [
-    "James Stanhope, 1st Earl Stanhope",
-    "Henry St John, 1st Viscount Bolingbroke",
+    "Frederick North, Lord North",
+    "William Pitt, 1st Earl of Chatham",
     "Thomas Pelham-Holles, 1st Duke of Newcastle",
     "John Montagu, 4th Earl of Sandwich",
-    "Augustus FitzRoy, 3rd Duke of Grafton"
+    "Robert Walpole, 1st Earl of Orford"
    ],
    "gold": 4,
    "fits": [
@@ -377,11 +354,11 @@
    "list": 0,
    "topic": "a technology or industrial company",
    "options": [
-    "Screen Holdings Co., Ltd.",
+    "Intel Corporation",
     "ASML Holding N.V.",
-    "ASM International N.V.",
-    "BE Semiconductor Industries N.V.",
-    "Applied Materials Inc."
+    "Taiwan Semiconductor Manufacturing Company Limited",
+    "Applied Materials Inc.",
+    "Samsung Electronics Co., Ltd."
    ],
    "gold": 2,
    "fits": [
@@ -400,11 +377,11 @@
    "list": 0,
    "topic": "a valley in North America",
    "options": [
-    "Coachella Valley",
+    "Valley of Mexico",
     "Death Valley",
-    "Shenandoah Valley",
-    "Imperial Valley",
-    "Panamint Valley"
+    "Ohio Valley",
+    "Rio Grande Valley",
+    "Monument Valley"
    ],
    "gold": 2,
    "fits": [
@@ -423,10 +400,10 @@
    "list": 0,
    "topic": "a waterfall of the world",
    "options": [
-    "Sutherland Falls",
-    "Yosemite Falls",
-    "Gullfoss",
-    "Iguazu Falls",
+    "Niagara Falls",
+    "Reichenbach Falls",
+    "Victoria Falls",
+    "Hukou Waterfall",
     "Angel Falls"
    ],
    "gold": 5,
@@ -492,10 +469,10 @@
    "list": 0,
    "topic": "a major oil or gas pipeline",
    "options": [
+    "Nord Stream",
+    "Keystone Pipeline",
     "Baku–Tbilisi–Ceyhan pipeline",
-    "Power of Siberia",
     "Druzhba pipeline",
-    "Trans Mountain Pipeline",
     "Trans-Alaska Pipeline System"
    ],
    "gold": 5,
@@ -515,11 +492,11 @@
    "list": 0,
    "topic": "a plastic or polymer material",
    "options": [
-    "Catalin",
+    "Kevlar",
     "Bakelite",
-    "Celluloid",
-    "Galalith",
-    "Cellophane"
+    "Teflon",
+    "Polyester",
+    "Polyethylene"
    ],
    "gold": 2,
    "fits": [
@@ -534,37 +511,15 @@
    "answered": true
   },
   {
-   "item": "mlmh-fi-bayeux-normandia",
-   "list": 0,
-   "topic": "a famous medieval European textile artwork",
-   "options": [
-    "Jagiellonian Tapestries",
-    "Apocalypse Tapestry",
-    "Bayeux Tapestry",
-    "Överhogdal tapestries",
-    "Unicorn Tapestries"
-   ],
-   "gold": 3,
-   "fits": [
-    2,
-    3,
-    4,
-    5
-   ],
-   "n_confusers": 3,
-   "ok": true,
-   "answered": true
-  },
-  {
    "item": "mlmh-fi-kesaton-vuosi-saari",
    "list": 0,
    "topic": "a volcano of Southeast Asia",
    "options": [
-    "Mount Mayon",
-    "Mount Rinjani",
-    "Mount Taal",
+    "Mount Agung",
+    "Mount Merapi",
+    "Krakatoa",
     "Mount Tambora",
-    "Mount Galunggung"
+    "Mount Pinatubo"
    ],
    "gold": 4,
    "fits": [
@@ -629,11 +584,11 @@
    "list": 0,
    "topic": "a major bridge in Europe",
    "options": [
-    "Charles Bridge",
+    "Millau Viaduct",
     "Oresund Bridge",
-    "Forth Road Bridge",
-    "Forth Bridge",
-    "Tower Bridge"
+    "Tower Bridge",
+    "Charles Bridge",
+    "Ponte Vecchio"
    ],
    "gold": 2,
    "fits": [
@@ -659,29 +614,6 @@
     "Monterey pine"
    ],
    "gold": 2,
-   "fits": [
-    1,
-    2,
-    3,
-    4,
-    5
-   ],
-   "n_confusers": 4,
-   "ok": true,
-   "answered": true
-  },
-  {
-   "item": "mlmh-he-ytterby-sweden",
-   "list": 0,
-   "topic": "a town or village of Europe",
-   "options": [
-    "Wanlockhead",
-    "Dubna",
-    "Ytterby",
-    "Darmstadt",
-    "Leadhills"
-   ],
-   "gold": 3,
    "fits": [
     1,
     2,
@@ -743,11 +675,11 @@
    "list": 0,
    "topic": "a town or city of North America",
    "options": [
-    "Eau Claire",
-    "Ann Arbor",
+    "Akron",
+    "Fort Wayne",
     "Battle Creek",
-    "Green Bay",
-    "Sioux Falls"
+    "Dayton",
+    "Toledo"
    ],
    "gold": 3,
    "fits": [
@@ -766,36 +698,13 @@
    "list": 0,
    "topic": "a named airship or aircraft",
    "options": [
-    "Bodensee",
-    "Graf Zeppelin",
+    "Enola Gay",
+    "Los Angeles",
     "Hindenburg",
-    "Dixmude",
-    "Akron"
+    "Spirit of St. Louis",
+    "Wright Flyer"
    ],
    "gold": 3,
-   "fits": [
-    1,
-    2,
-    3,
-    4,
-    5
-   ],
-   "n_confusers": 4,
-   "ok": true,
-   "answered": true
-  },
-  {
-   "item": "mlmh-he-chicxulub-mexico",
-   "list": 0,
-   "topic": "an impact crater on Earth or elsewhere",
-   "options": [
-    "Kara crater",
-    "Acraman crater",
-    "Morokweng crater",
-    "Chicxulub crater",
-    "Popigai crater"
-   ],
-   "gold": 4,
    "fits": [
     1,
     2,
@@ -835,11 +744,11 @@
    "list": 0,
    "topic": "a citrus fruit or citrus variety",
    "options": [
-    "mandarin orange",
+    "grapefruit",
     "bergamot orange",
-    "blood orange",
-    "bitter orange",
-    "navel orange"
+    "pomelo",
+    "lime",
+    "clementine"
    ],
    "gold": 2,
    "fits": [
@@ -873,27 +782,6 @@
     5
    ],
    "n_confusers": 4,
-   "ok": true,
-   "answered": true
-  },
-  {
-   "item": "mlmh-hu-vandorgalamb-allatkert",
-   "list": 0,
-   "topic": "a bird species of North America",
-   "options": [
-    "Guadalupe storm petrel",
-    "passenger pigeon",
-    "Dodo",
-    "Huia",
-    "Great auk"
-   ],
-   "gold": 2,
-   "fits": [
-    1,
-    2,
-    5
-   ],
-   "n_confusers": 2,
    "ok": true,
    "answered": true
   },
@@ -1036,29 +924,6 @@
    "answered": true
   },
   {
-   "item": "mlmh-id-transsiberia-vladivostok",
-   "list": 0,
-   "topic": "a named railway line of the world",
-   "options": [
-    "Trans-Mongolian Railway",
-    "Trans-Iranian Railway",
-    "Trans-Caspian Railway",
-    "Trans-Australian Railway",
-    "Trans-Siberian Railway"
-   ],
-   "gold": 5,
-   "fits": [
-    1,
-    2,
-    3,
-    4,
-    5
-   ],
-   "n_confusers": 4,
-   "ok": true,
-   "answered": true
-  },
-  {
    "item": "mlmh-id-terusan-kiel-schleswig",
    "list": 0,
    "topic": "a canal or artificial waterway",
@@ -1082,37 +947,14 @@
    "answered": true
   },
   {
-   "item": "mlmh-id-kubus-rubik-hongaria",
-   "list": 0,
-   "topic": "a famous puzzle toy or game",
-   "options": [
-    "15 puzzle",
-    "Rubik's Cube",
-    "Rubik's Snake",
-    "Megaminx",
-    "Skewb"
-   ],
-   "gold": 2,
-   "fits": [
-    1,
-    2,
-    3,
-    4,
-    5
-   ],
-   "n_confusers": 4,
-   "ok": true,
-   "answered": true
-  },
-  {
    "item": "mlmh-ko-arecibo-puertorico",
    "list": 0,
    "topic": "an astronomical observatory or telescope facility",
    "options": [
-    "Lowell Observatory",
-    "Yerkes Observatory",
-    "Paranal Observatory",
-    "Nançay Radio Observatory",
+    "Jodrell Bank Observatory",
+    "Mount Wilson Observatory",
+    "Mauna Kea Observatories",
+    "Mount Palomar Observatory",
     "Arecibo Observatory"
    ],
    "gold": 5,
@@ -1179,10 +1021,10 @@
    "topic": "a major bridge in Europe",
    "options": [
     "Millau Viaduct",
-    "Chain Bridge",
-    "Bosphorus Bridge",
+    "Ponte Vecchio",
+    "Charles Bridge",
     "Øresund Bridge",
-    "Hålogaland Bridge"
+    "Tower Bridge"
    ],
    "gold": 4,
    "fits": [
@@ -1201,11 +1043,11 @@
    "list": 0,
    "topic": "a village or small settlement in Russia",
    "options": [
-    "Esso",
-    "Khatanga",
-    "Listvyanka",
+    "Borodino",
+    "Prokhorovka",
+    "Yasnaya Polyana",
     "Oymyakon",
-    "Chersky"
+    "Konstantinovo"
    ],
    "gold": 4,
    "fits": [
@@ -1361,11 +1203,11 @@
    "list": 0,
    "topic": "an astronomer of early modern Europe",
    "options": [
+    "Giovanni Domenico Cassini",
+    "Tycho Brahe",
     "John Flamsteed",
-    "Maximilian Hell",
-    "Nevil Maskelyne",
     "William Herschel",
-    "Nicolas-Louis de Lacaille"
+    "Edmond Halley"
    ],
    "gold": 4,
    "fits": [
@@ -1384,10 +1226,10 @@
    "list": 0,
    "topic": "an international agricultural research institute",
    "options": [
-    "International Crops Research Institute for the Semi-Arid Tropics",
-    "International Institute of Tropical Agriculture",
-    "International Livestock Research Institute",
-    "International Food Policy Research Institute",
+    "International Maize and Wheat Improvement Center",
+    "International Potato Center",
+    "International Center for Tropical Agriculture",
+    "International Water Management Institute",
     "International Rice Research Institute"
    ],
    "gold": 5,
@@ -1454,10 +1296,10 @@
    "topic": "a volcano of the world",
    "options": [
     "Mount Tambora",
-    "Paektu Mountain",
-    "Mount St. Helens",
     "Mount Vesuvius",
-    "Hekla"
+    "Mount Etna",
+    "Mount Pelée",
+    "Mount St. Helens"
    ],
    "gold": 1,
    "fits": [
@@ -1477,10 +1319,10 @@
    "topic": "a canal or artificial waterway",
    "options": [
     "Kiel Canal",
-    "Ghent–Terneuzen Canal",
-    "Panama Canal",
+    "Canal du Midi",
     "Suez Canal",
-    "Grand Canal of China"
+    "Grand Canal of China",
+    "Panama Canal"
    ],
    "gold": 1,
    "fits": [
@@ -1522,10 +1364,10 @@
    "list": 0,
    "topic": "an island of Europe or the Atlantic",
    "options": [
-    "Nantucket",
-    "Streymoy",
+    "Saint Helena",
+    "Tenerife",
     "Surtsey Island",
-    "Cape Breton Island",
+    "Faial Island",
     "São Miguel"
    ],
    "gold": 3,
@@ -1545,10 +1387,10 @@
    "list": 0,
    "topic": "a European scholar or intellectual",
    "options": [
-    "A. N. Whitehead",
     "L. Couturat",
-    "H. G. Wells",
-    "O. Jespersen",
+    "Wilhelm von Humboldt",
+    "Giuseppe Peano",
+    "Ferdinand de Saussure",
     "L. L. Zamenhof"
    ],
    "gold": 5,
@@ -1569,10 +1411,10 @@
    "topic": "a famous archaeological artifact from antiquity",
    "options": [
     "Antikythera mechanism",
-    "Dead Sea Scrolls",
+    "Rosetta Stone",
+    "Tutankhamun's mask",
     "Code of Hammurabi",
-    "Venus of Willendorf",
-    "Venus de Milo"
+    "Nefertiti Bust"
    ],
    "gold": 1,
    "fits": [
@@ -1658,11 +1500,11 @@
    "list": 0,
    "topic": "a mountain peak of Asia",
    "options": [
-    "Dhaulagiri mountain",
-    "Gasherbrum I mountain",
     "Mount Everest mountain",
+    "Kangchenjunga",
+    "Makalu",
     "K2 mountain",
-    "Cho Oyu mountain"
+    "Lhotse"
    ],
    "gold": 4,
    "fits": [
@@ -1704,11 +1546,11 @@
    "list": 0,
    "topic": "a butterfly or moth species",
    "options": [
-    "Swallowtail",
-    "Red admiral",
-    "Small tortoiseshell",
+    "painted lady",
+    "death's-head hawkmoth",
+    "blue morpho",
     "monarch butterfly",
-    "Peacock butterfly"
+    "Red admiral"
    ],
    "gold": 4,
    "fits": [
@@ -1843,10 +1685,10 @@
    "topic": "a 19th-century American inventor",
    "options": [
     "Josephine Cochrane",
-    "Cyrus McCormick",
-    "Isaac Singer",
-    "Elias Howe",
-    "Eli Whitney"
+    "Alexander Graham Bell",
+    "Elisha Otis",
+    "Charles Goodyear",
+    "Margaret Knight"
    ],
    "gold": 1,
    "fits": [
@@ -1888,11 +1730,11 @@
    "list": 0,
    "topic": "a named railway line of the world",
    "options": [
-    "Lanzhou–Xinjiang Railway",
+    "Hejaz Railway",
     "Trans-Siberian Railway",
-    "Baghdad Railway",
+    "First Transcontinental Railroad",
     "Qinghai–Tibet Railway",
-    "Trans-Australian Railway"
+    "Canadian Pacific Railway"
    ],
    "gold": 2,
    "fits": [
@@ -2072,11 +1914,11 @@
    "list": 0,
    "topic": "a butterfly or moth species",
    "options": [
-    "cabbage white butterfly",
-    "red admiral butterfly",
+    "death's-head hawkmoth",
+    "luna moth",
     "monarch butterfly",
-    "viceroy butterfly",
-    "peacock butterfly"
+    "peppered moth",
+    "swallowtail butterfly"
    ],
    "gold": 3,
    "fits": [
@@ -2137,29 +1979,6 @@
    "answered": true
   },
   {
-   "item": "mlmh-vi-porcelain-capital-province",
-   "list": 0,
-   "topic": "a town or city of China",
-   "options": [
-    "Jingdezhen",
-    "Dongyang",
-    "Weifang",
-    "Zibo",
-    "Xuancheng"
-   ],
-   "gold": 1,
-   "fits": [
-    1,
-    2,
-    3,
-    4,
-    5
-   ],
-   "n_confusers": 4,
-   "ok": true,
-   "answered": true
-  },
-  {
    "item": "mlmh-vi-tonlesap-mekong",
    "list": 0,
    "topic": "a lake of Asia",
@@ -2171,29 +1990,6 @@
     "Issyk-Kul"
    ],
    "gold": 4,
-   "fits": [
-    1,
-    2,
-    3,
-    4,
-    5
-   ],
-   "n_confusers": 4,
-   "ok": true,
-   "answered": true
-  },
-  {
-   "item": "mlmh-vi-mawsynram-meghalaya",
-   "list": 0,
-   "topic": "a town or village of Asia",
-   "options": [
-    "Mawsynram village",
-    "Shirakawa village",
-    "Bukchon village",
-    "Penglipuran village",
-    "Cherrapunji town"
-   ],
-   "gold": 1,
    "fits": [
     1,
     2,
