@@ -374,7 +374,8 @@
     "n_items": 64
    }
   },
-  "standard_met": true
+  "standard_met": false,
+  "standard_met_note": "set by hand after the freeze: the driver's estimate (the kept items' rates in the repair round's draws: blind 0.078, described 0.109, topic 0.169, chance 0.188) met the standard, but the floors of record, fresh draws over this frozen bank (evals/baselines/lucky_guessing.json), fail it on topic: 0.338 vs the bar 0.238"
  },
  "items": [
   {

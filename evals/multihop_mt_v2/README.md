@@ -110,8 +110,8 @@ kant-hume's list holds four distractors again (Kant stays out). Two two-bridge i
 option in both lists, as buena-vista's Abraham Lincoln does: tippecanoe (Andrew Jackson) and
 faraday-davy-lamp (Gauss in both lists, and Kelvin in both under two names: William Thomson in
 one, Lord Kelvin in the other). 15 lists changed; the header's `r5_mc` records each list, the
-rule and the build's measurements; its `standard_met: true` is the repair-round estimate, which
-the fresh draws (topic 0.338) do not confirm. The confuser audit holds 69/69. The header's `read_plan_bank` names `items_v5.json`, so the read plan,
+rule and the build's measurements; its `standard_met` is false, with a note: the repair-round
+estimate met the standard, the fresh draws (topic 0.338) do not. The confuser audit holds 69/69. The header's `read_plan_bank` names `items_v5.json`, so the read plan,
 its `plan_sha` and every v5 readout file serve v6. Stamp `+bank-v6`; the MC calls keep their v4
 key, so only the 15 rebuilt lists' calls are new.
 

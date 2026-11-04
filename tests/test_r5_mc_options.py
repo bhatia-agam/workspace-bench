@@ -173,13 +173,18 @@ NOT_MET: set[str] = set()
 def test_recorded_floors_and_standard(family):
     """The bank's own record of its last measurement (the frozen floors are measured on fresh
     draws in evals/baselines/lucky_guessing.json): fresh draws over the bank where measured, else
-    the kept items' rates in the last round's draws; every guesser <= chance + 5 points."""
+    the kept items' rates in the last round's draws; every guesser <= chance + 5 points. The
+    header's standard_met is that verdict unless the frozen floors fail."""
     r5 = _raw(family, BANKS[family][1])["r5_mc"]
     fl = r5["floors"]
     base = fl.get("kept_estimate") or fl[max(k for k in fl if k.startswith("round"))]
     last = {v: (fl.get("fresh") or {}).get(v, base[v]) for v in ("blind", "described", "topic")}
     met = all(x <= base.get("chance", fl["chance"]) + 0.05 + 1e-9 for x in last.values())
-    assert met is r5["standard_met"] is (family not in NOT_MET), (family, last)
+    assert met is (family not in NOT_MET), (family, last)
+    # the header's verdict also follows the frozen floors (fresh draws over the whole bank): a bank
+    # its own record passes but those floors fail says standard_met false, with a note
+    assert r5["standard_met"] is (met and not FROZEN_FAILS[family]), family
+    assert ("standard_met_note" in r5) is (met and bool(FROZEN_FAILS[family])), family
 
 
 # the frozen floors (evals/baselines/lucky_guessing.json), every guesser measured on the new bank:

@@ -205,9 +205,10 @@ multihop_mt_v2 does not meet the standard. Its topic guesser, shown solved examp
 best-known member of the bridge's category, and which items it solves moves with the examples it
 is shown: on fresh draws over the frozen 64 items it solves 9 items it never solved in the repair
 round's draws (its rate there was 0.234 on the 70 items). Read its headline beside these floors.
-Its v6 entries were drawn with solved examples seeded under `multihop_mt`, the key the measuring
-branch used for this family; a re-run here, seeded under `multihop_mt_v2`, shows other examples
-on the same lists.
+Its v6 entries, like the refreeze's, were drawn with solved examples seeded under `multihop_mt`;
+`wsbench baseline` seeds them under `multihop_mt_v2` and shows other examples on the same
+lists. The bank's header says `standard_met: false`, with a note: the driver's own
+estimate at the freeze (the kept items' repair-round draws) had met the standard.
 
 **Text-blind subsets (`anti_text_inversion.json`).** Re-gated with a fresh full panel (plan 0019
 `panel-v1`, the `guess` form, 3 draws per reader): Qwen3.6-27B on one Modal B200 (vLLM 0.31,
