@@ -8,10 +8,11 @@ text). Its bank items carry ``mc = {bridge_type, gold, aliases, distractors}``.
 
 Verdict: ``correct`` iff the letter is the gold option AND ``digest.quote_ok`` verifies the quote
 against the readout lines (``col.evidence`` in summary mode, ``digest.native_lines`` natively)
-AND ``mc.form_in`` finds the gold or a listed alias in the quote (a ``number`` bridge: its value
-is among ``numerals.numbers_in(quote)``), also in the quote's line context (a prose quote
-widened to word boundaries; a CJK form followed by a demonym / language suffix never counts)
-AND, for a ``number`` bridge,
+AND ``mc.form_in`` finds the gold, a listed alias or a derived form of the frozen table (not part
+of the final answer; :func:`gold_forms`) in the quote (a ``number`` bridge: its value is among
+``numerals.numbers_in(quote)``), also in the quote's line context (a prose quote widened to word
+boundaries; a CJK form followed by a demonym / language suffix never counts) AND the quote names
+no other shown option (:func:`names_other`) AND, for a ``number`` bridge,
 the quote is not supported only by number-flood lines (``digest.number_flood``, whole samples
 only) AND not only by ranked token lists that also hold another shown option (the shared token
 note, held in code for token lines by :func:`_holds_other`: a ``number`` bridge compares by
@@ -22,11 +23,11 @@ Summary mode (default): one call per item on its digest. Native: one call per (i
 any-layer pass, with ``mcjudge.layer_pick_columns`` beside the number."""
 
 import importlib
-import json
 import re
 from collections import defaultdict
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
+from difflib import SequenceMatcher
 from pathlib import Path
 from typing import Any
 
@@ -43,6 +44,7 @@ from wsbench.mcjudge import (
     run_calls,
     with_readout_count,
 )
+from wsbench.nearquote import close_lines
 from wsbench.readouts import Cell
 from wsbench.registry import JudgeArgs
 from wsbench.results import FamilyResult
@@ -59,7 +61,17 @@ LETTERS = "ABCDEFGH"
 # r6: the split rule's sentence break also falls after a bold / italic close that follows the
 # sentence end ("...built the Great Wall.** The country that built the Great Pyramid of Giza is
 # **the United States**" is two sentences; review 2 of PR #214)
-GATE_VERSION = "bank-gate-r6"
+# r7: the split rule is removed; the quote's form check accepts the frozen table's derived forms
+# (not part of the final answer) and fails a quote naming another shown option. Since r7 the gate
+# version is part of the family's result stamp (basic.prompts.FAMILY_PROMPT_VERSIONS), while the
+# MC calls keep CALL_VERSIONS as their key
+# r8: a near-verbatim quote (nearquote.close_lines) is read where it matched (near_block), and a
+# quote that does not name the gold itself passes when its line names the gold and no other shown
+# option (line_names_gold)
+GATE_VERSION = "bank-gate-r8"
+# the MC calls' cache key per family: the judge's prompts are unchanged since this version, so a
+# gate-only stamp change re-scores the cached answers instead of re-asking them
+CALL_VERSIONS: dict[str, str] = {"multihop": "bank-mc-2026-11-01-v3"}
 CHANCE_LABEL = (
     "1 in 5 options per judge call (cannot-tell excluded); the native any-layer rule's floor is "
     "higher (see extras layer_pick_columns)"
@@ -406,129 +418,86 @@ def counted_anywhere(lines: Sequence[digest.Line], value: int) -> bool:
     )
 
 
-# round 3 (assoc_multihop; Camila: "if there are a ton of different equally prominent answers
-# then it should not pass"): a gold pick is void when the evidence ties the ITEM's first-hop cue
-# to another shown option with at least SPLIT_SHARE of the gold's support. The cue is per item
-# (evals/<family>/split_subjects.json, authored from the prompts), never the judge's quote: a
-# quote-derived subject let the same evidence pass or fail depending on how short a quote the
-# judge picked ('the birthstone of May' and 'May' passed the split 'Emerald is the birthstone
-# of May' failed; review of PR #205).
-SPLIT_SHARE = 0.5
-# a sentence ends at . ! ? (or one followed by a markdown close, ``.**`` / ``.*``), a newline, or
-# the digest's sample separator
-_SENT = re.compile(r"(?:(?<=[.!?])|(?<=[.!?]\*)|(?<=[.!?]\*\*))\s+|\n+|\u205e")
-# a sentence that places an option in ANOTHER slot relative to the cue is not a rival reading
-# of the bridge: a rank ("the second tallest mountain, Mount Kilimanjaro", "the other continent
-# ... Denali") or a neighbour ("the month before Valentine's Day is December")
-_OTHER_SLOT = re.compile(
-    r"\b(?:second|third|fourth|fifth|next|other|another|runner-up|before|after|prior|preceding|"
-    r"previous|following)\b"
-)
-SPLIT_SUBJECTS = "split_subjects.json"
-_SUBJECTS: dict[str, dict[str, list[str]]] = {}
+# The quote's form check: a gold pick's quote names the gold by its name, a listed alias, or a
+# derived form (demonym / adjective / plural) from the family's frozen reviewed table
+# (evals/<family>/derived_forms.json), except a derived form that is part of the item's final
+# answer ("Spanish" for Spain when the answer is Spanish: the answer read back, not the bridge). A
+# quote that also names another shown option (its name, aliases or derived forms) names none of
+# them. Descriptions never count.
+DERIVED_FORMS = "derived_forms.json"
 
 
-def split_subject(item: dict[str, Any], family: str = "multihop") -> list[str]:
-    """The item's first-hop cue terms: ``item["split_subject"]`` when the bank row carries one,
-    else ``evals/<family>/split_subjects.json`` by item id; ``[]`` (rule off) for an item with
-    neither (``test_split_subjects_cover_the_bank`` holds the shipped bank to full coverage).
+def derived_forms(family: str = "multihop") -> dict[str, list[str]]:
+    """``evals/<family>/derived_forms.json``: option -> its reviewed derived forms (missing file:
+    none). Under ``WSB_BANK_ROOT`` a set's own ``<root>/<family>/derived_forms.json`` adds forms
+    for options the registered table lacks (``registry.load_resource``; a registered option always
+    keeps its registered forms); an option in neither has no derived forms."""
+    data, _added = registry.load_resource(family, DERIVED_FORMS, ("forms",))
+    return {str(k): [str(f) for f in v] for k, v in (data.get("forms") or {}).items()}
 
-    Plan 0060 A2: under ``WSB_BANK_ROOT`` the file is the registered one with the set's
-    ``<root>/<family>/split_subjects.json`` entries added (``registry.load_resource``; a
-    registered id always reads its registered entry), and an adapted-only id with no entry in
-    either is an error, never the rule silently off."""
-    own = item.get("split_subject")
-    if own:
-        return [str(t) for t in own]
-    iid = str(item.get("id", ""))
-    if registry.bank_root() is None:
-        if family not in _SUBJECTS:
-            path = registry.REPO_ROOT / "evals" / family / SPLIT_SUBJECTS
-            data = json.loads(path.read_text(encoding="utf-8")) if path.is_file() else {}
-            _SUBJECTS[family] = data.get("subjects", {})
-        return list(_SUBJECTS[family].get(iid, []))
-    data, _added = registry.load_resource(family, SPLIT_SUBJECTS, ("subjects",))
-    got = (data.get("subjects") or {}).get(iid)
-    if not got and registry.adapted_only(family, iid):
-        raise SystemExit(
-            f"{family}/{iid}: an adapted-only item needs a non-empty split_subject (the row's "
-            f"own field, or {registry.BANK_ROOT_ENV}/{family}/{SPLIT_SUBJECTS})"
+
+def answer_part(item: Mapping[str, Any], form: str) -> bool:
+    """``form`` occurs (word-bounded, folded) in the item's final answer (``target``)."""
+    return mc.form_in(str(item.get("target") or ""), [form])
+
+
+def gold_forms(item: Mapping[str, Any], family: str = "multihop") -> list[str]:
+    """The forms a quote may name the gold by: the gold, its listed aliases, and its derived
+    forms that are not part of the item's final answer."""
+    block = item["mc"]
+    derived = [f for f in derived_forms(family).get(block["gold"], []) if not answer_part(item, f)]
+    return [block["gold"], *block.get("aliases", []), *derived]
+
+
+def option_forms(item: Mapping[str, Any], option: str, family: str = "multihop") -> list[str]:
+    """Another shown option's forms: the option, its ``distractor_aliases`` and derived forms."""
+    listed = item["mc"].get("distractor_aliases", {})
+    return [option, *listed.get(option, ()), *derived_forms(family).get(option, [])]
+
+
+def names_other(
+    text: str, item: Mapping[str, Any], others: Sequence[str], family: str = "multihop"
+) -> bool:
+    """``text`` names another shown option: a ``number`` bridge by value (any script), any
+    other type by :func:`option_forms` (with the CJK suffix guard)."""
+    if item["mc"].get("bridge_type") == "number":
+        values = {v for o in others if (v := numerals.word_value(o)) is not None}
+        return bool(numerals.numbers_in(text) & values)
+    return any(_form_bounded(text, option_forms(item, o, family)) for o in others)
+
+
+def near_block(quote: str, text: str) -> str:
+    """The longest block a near-verbatim quote shares with a line (``digest.fold_quote`` forms):
+    the readout's own words at the quote's place, never the judge's."""
+    fq, fl = digest.fold_quote(quote), digest.fold_quote(text)
+    m = SequenceMatcher(None, fq, fl, autojunk=False).find_longest_match(0, len(fq), 0, len(fl))
+    return fl[m.b : m.b + m.size]
+
+
+def line_names_gold(
+    ln: digest.Line,
+    item: Mapping[str, Any],
+    forms: Sequence[str],
+    others: Sequence[str],
+    family: str = "multihop",
+) -> bool:
+    """The line a quote came from names the gold (``forms``; a ``number`` bridge by
+    value) and no other shown option (a token list: per token, :func:`pieces_hold` /
+    :func:`_holds_other`)."""
+    block = item["mc"]
+    if ln.pieces is not None:
+        if block.get("bridge_type") == "number":
+            return any(int(block["gold"]) in numerals.numbers_in(t) for t in ln.pieces) and not (
+                _holds_other(ln.pieces, list(others), dict(block))
+            )
+        return pieces_hold(ln.pieces, forms) and not _holds_other(
+            ln.pieces, list(others), dict(block)
         )
-    return list(got or [])
-
-
-def _cue_hit(term: str, sent: str) -> bool:
-    """One cue in a folded sentence: alternatives split by ``|``; a digit cue is a numeral value
-    (``numerals.numbers_in``: 79 is never 790); a letter cue is a word prefix (emerald ->
-    Emeralds, valentine -> Valentine's)."""
-    for alt in term.split("|"):
-        a = mc.fold(alt).strip()
-        if not a:
-            continue
-        if a.isdigit():
-            if int(a) in numerals.numbers_in(sent):
-                return True
-        elif re.search(r"(?<![^\W\d_])" + re.escape(a), sent):
-            return True
-    return False
-
-
-def _names(text: str, option_forms: Sequence[str], value: int | None) -> bool:
-    if value is not None:
-        return value in numerals.numbers_in(text)
-    return _form_bounded(text, list(option_forms))
-
-
-def split_support(
-    subject: Sequence[str],
-    lines: Sequence[digest.Line],
-    counts: Mapping[str, int] | None,
-    options: Sequence[tuple[Sequence[str], int | None]],
-) -> list[int]:
-    """Per option (``options[0]`` is the gold; each ``(forms, value)``, ``value`` set for a
-    ``number`` bridge): the summed support of the prose lines holding a sentence that has EVERY
-    cue of ``subject`` (:func:`split_subject`, :func:`_cue_hit`) and names that option; a
-    sentence naming the gold counts for the gold only, and so does a whole sample holding such a
-    gold sentence (spider: "famously eight. When you multiply **4** by the number of legs on a
-    spider" is an operand, not a rival reading). A rival sentence with an other-slot word
-    (:data:`_OTHER_SLOT`: second / other / before / after ...) does not count. Support = the
-    line's shown digest count (``counts``, else 1). No cue -> all zeros (rule off). The judge's
-    quote is not an input."""
-    out = [0] * len(options)
-    cues = [t for t in subject if t.strip()]
-    if not cues:
-        return out
-    gold_forms, gold_value = options[0]
-    for ln in lines:
-        if ln.pieces is not None:
-            continue
-        hit = [False] * len(options)
-        for sent in _SENT.split(mc.fold(ln.text)):
-            if not all(_cue_hit(t, sent) for t in cues):
-                continue
-            if _names(sent, gold_forms, gold_value):
-                hit[0] = True
-                continue
-            if _OTHER_SLOT.search(sent):
-                continue
-            for k, (fs, v) in enumerate(options[1:], start=1):
-                if _names(sent, fs, v):
-                    hit[k] = True
-        n = (counts or {}).get(ln.text, 1)
-        if hit[0]:  # a sample that ties the gold to the cue is the gold's, whatever else it names
-            out[0] += n
-            continue
-        for k, h in enumerate(hit):
-            if h:
-                out[k] += n
-    return out
-
-
-def is_split(support: Sequence[int]) -> bool:
-    """The gold's subject is tied to a competitor with >= :data:`SPLIT_SHARE` of its support."""
-    return (
-        bool(support) and support[0] > 0 and max(support[1:], default=0) >= SPLIT_SHARE * support[0]
-    )
+    if block.get("bridge_type") == "number":
+        named = int(block["gold"]) in numerals.numbers_in(ln.text)
+    else:
+        named = _form_bounded(ln.text, list(forms))
+    return named and not names_other(ln.text, item, others, family)
 
 
 def verdict(
@@ -537,10 +506,10 @@ def verdict(
     gold_idx: int,
     lines: list[digest.Line] | tuple[digest.Line, ...],
     item: dict[str, Any],
-    counts: Mapping[str, int] | None = None,
+    family: str = "multihop",
 ) -> dict[str, Any]:
-    """The scored verdict of one call (``None`` result = undecided). ``counts``: each evidence
-    line's shown digest support (summary mode; native lines count 1 each)."""
+    """The scored verdict of one call (``None`` result = undecided); ``family`` picks the derived
+    forms table (:func:`derived_forms`)."""
     if result is None:
         return {"choice_kind": None, "correct": None}
     choice = result.get("choice")
@@ -552,7 +521,8 @@ def verdict(
         out["correct"] = False
         return out
     block = item["mc"]
-    forms = [block["gold"], *block.get("aliases", [])]
+    # the name, aliases and the table's derived forms not part of the final answer
+    forms = gold_forms(item, family)
     q_ok = digest.quote_ok(quote, lines)
     # same-list tokens are quoted joined by " | ": "New | Zealand" names "New Zealand"
     flat = " ".join(quote.replace("|", " ").split())
@@ -564,13 +534,40 @@ def verdict(
     if q_ok:
         support = [ln for ln in lines if digest.quote_ok(quote, [ln])]
         support = support or (digest.split_word(quote, lines) or [])
+    else:
+        # a near-verbatim quote (nearquote.close_lines) is located in its prose line; its own
+        # words then count for nothing, only that line's text does
+        support = close_lines(quote, list(lines))
+    near = not q_ok and bool(support)
     # the quote is read in its line's context (add, never relax): a prose quote cut out of a
-    # longer word ("Japan" of "Japanese", "6" of "16", "six" of "sixteen") or a CJK form followed
-    # by a demonym / language suffix (日本人, 意大利语) does not name the gold
+    # longer word ("6" of "16", "six" of "sixteen", "Japan" of a "Japanese" the table does not
+    # accept for this item) or a CJK form followed by a demonym / language suffix (日本人, 意大利语)
+    # does not name the gold
     if f_ok and support:
-        f_ok = any(
+        f_ok = q_ok and any(
             _in_context(quote, ln, forms, int(block["gold"]) if number else None) for ln in support
         )
+    others = [o for k, o in enumerate(shown[:-1]) if k != gold_idx]
+    # a quote that also names another shown option names none of them
+    other = names_other(flat, item, others, family)
+    # a near quote is read where it matched (its block of the readout's own words names the gold
+    # and no other shown option); a quote that still does not name the gold (cut mid-name) is read
+    # in the line it came from, which must name the gold and no other option
+    via = "quote" if f_ok else None
+    if not f_ok and near and not other:
+        for b in (near_block(quote, ln.text) for ln in support):
+            named = (
+                int(block["gold"]) in numerals.numbers_in(b) if number else _form_bounded(b, forms)
+            )
+            if named and not names_other(b, item, others, family):
+                f_ok, via = True, "block"
+                break
+    if (
+        not f_ok
+        and not other
+        and any(line_names_gold(ln, item, forms, others, family) for ln in support)
+    ):
+        f_ok, via = True, "line"
     flood = (
         block.get("bridge_type") == "number"
         and bool(support)
@@ -578,7 +575,6 @@ def verdict(
     )
     # the shared token note, held in code for token lines (add, never relax): a ranked list that
     # also holds another shown option singles out none of them
-    others = [o for k, o in enumerate(shown[:-1]) if k != gold_idx]
     multi = bool(support) and all(
         ln.pieces is not None and _holds_other(ln.pieces, others, block) for ln in support
     )
@@ -590,35 +586,19 @@ def verdict(
         and element_index_quote(quote, support, int(block["gold"]), widen=element_item(item))
         and not counted_anywhere(lines, int(block["gold"]))
     )
-    # round 3: the quote's subject tied to another shown option with comparable support (a split,
-    # birthstone-emerald-month at L20: May / April) singles out none of them
-    listed = block.get("distractor_aliases", {})
-    opts: list[tuple[Sequence[str], int | None]] = [
-        (forms, int(block["gold"]) if number else None),
-        *[
-            ((o, *listed.get(o, ())), numerals.word_value(o) if number else None)
-            for k, o in enumerate(shown[:-1])
-            if k != gold_idx
-        ],
-    ]
-    sup = (
-        split_support(split_subject(item), lines, counts, opts)
-        if (q_ok and f_ok)
-        else [0] * len(opts)
-    )
-    split = is_split(sup)
     out.update(
         {
             "quote_ok": q_ok,
+            "quote_near": near,
             "form_ok": f_ok,
+            "form_via": via,
+            "names_other": other,
             "number_flood": flood,
             "multi_option": multi,
             "element_index": elem,
-            "split": split,
-            "split_support": sup,
         }
     )
-    out["correct"] = q_ok and f_ok and not flood and not multi and not elem and not split
+    out["correct"] = (q_ok or near) and f_ok and not other and not flood and not multi and not elem
     return out
 
 
@@ -631,7 +611,6 @@ def run(args: JudgeArgs, *, name: str, bank: Path) -> FamilyResult:
     _header, items = load_bank(bank)
     scope = item_scope(items, args)
     for it in scope:  # plan 0060 A2: a missing per-set entry fails here, before any call
-        split_subject(it, name)
         element_item(it, name)
     ids = [it["id"] for it in scope]
     by_id = {it["id"]: it for it in scope}
@@ -665,6 +644,13 @@ def _pv(name: str) -> str:
     from wsbench.basic.prompts import prompt_version_of
 
     return prompt_version_of(name)
+
+
+def call_pv(name: str, pv: str) -> str:
+    """The MC calls' fingerprint version: ``pv`` (the result stamp, maybe with the digest and
+    reads suffixes) with the family's stamp replaced by its :data:`CALL_VERSIONS` entry."""
+    stamp = _pv(name)
+    return pv.replace(stamp, CALL_VERSIONS.get(name, stamp), 1)
 
 
 def _calls_run(ctx: _Ctx, calls: list[Call], pv: str, cache: Cache, spend: Spend, pre: Preflighter):
@@ -701,7 +687,7 @@ def _pick_extras(verdicts: list[dict[str, Any]]) -> dict[str, Any]:
         "n_gold_pick_number_flood": sum(1 for v in gold if v.get("number_flood")),
         "n_gold_pick_multi_option_list": sum(1 for v in gold if v.get("multi_option")),
         "n_gold_pick_element_index": sum(1 for v in gold if v.get("element_index")),
-        "n_gold_pick_split": sum(1 for v in gold if v.get("split")),
+        "n_gold_pick_names_other": sum(1 for v in gold if v.get("names_other")),
     }
 
 
@@ -746,7 +732,7 @@ def _summary(ctx, scope, ids, cells, rep, groups, n_expected, missing) -> Family
             text = (col.cells[i].samples or ("",))[0]
             user = render_user(ctx.task_type, note, text, question, shown)
             calls.append(Call(f"{i}|L{digest.SUMMARY_LAYER}", system, user, {"options": shown}))
-        results = _calls_run(ctx, calls, pv, cache, spend, pre)
+        results = _calls_run(ctx, calls, call_pv(name, pv), cache, spend, pre)
     rows, verdicts = [], []
     n_unjudged = len(col.unsummarized)
     for i in ids:
@@ -762,10 +748,7 @@ def _summary(ctx, scope, ids, cells, rep, groups, n_expected, missing) -> Family
         else:
             key = f"{i}|L{digest.SUMMARY_LAYER}"
             r = results.get(key)
-            counts: dict[str, int] = {}
-            for g in col.grounded.get(i, ()):
-                counts.setdefault(g.line.text, g.count)  # the support the judge was shown
-            v = verdict(r, shown, gold_idx, col.evidence.get(i, ()), ctx.items[i], counts)
+            v = verdict(r, shown, gold_idx, col.evidence.get(i, ()), ctx.items[i], name)
             if r is None:
                 n_unjudged += 1
                 row["n_unjudged"] = 1
@@ -824,7 +807,7 @@ def _native(ctx, scope, ids, cells, rep, groups, layers, n_expected, missing) ->
         user = render_user(ctx.task_type, note, render_native(lines), question, shown)
         calls.append(Call(key, system, user, {"options": shown}))
     with Cache(args.out / "cells.jsonl") as cache:
-        results = _calls_run(ctx, calls, pv, cache, spend, pre)
+        results = _calls_run(ctx, calls, call_pv(name, pv), cache, spend, pre)
     rows, verdicts = [], []
     n_unjudged = 0
     for i in ids:
@@ -842,7 +825,7 @@ def _native(ctx, scope, ids, cells, rep, groups, layers, n_expected, missing) ->
                 per_layer[str(layer)] = {"pick": "empty", "choice_kind": "empty", "correct": False}
                 continue
             r = results.get(key)
-            v = verdict(r, shown, gold_idx, lines_of[key], ctx.items[i])
+            v = verdict(r, shown, gold_idx, lines_of[key], ctx.items[i], name)
             if r is None:
                 n_unj += 1
             else:

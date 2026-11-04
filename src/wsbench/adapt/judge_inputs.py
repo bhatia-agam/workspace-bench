@@ -17,7 +17,7 @@ one thing the judge reads:
   subject model) or ``hazard`` (a silent fallback for adapted-only ids / adapted banks).
 - ``required``: every item of a valid bank needs it (``REQUIRED_ITEM_FIELDS`` is derived from
   these); ``adapted_only``: only an item whose id is NOT in the registered bank needs it (an
-  explicit per-item field replacing an id lookup, e.g. multihop ``split_subject``).
+  explicit per-item field replacing an id lookup).
 - ``probe``: an optional check ``(item, header, registered) -> problem | None`` for inputs that
   are not plain key presence (a gold missing from a lexicon, an id-pattern rule).
 
@@ -161,18 +161,6 @@ def _p_multihop_element(it, _h, registered):
             "hazard: id_rule nhop-*-element: a number bridge read as an atomic number, but the "
             "id does not match ^nhop-.+-element$, so the round-4 element-index widening is off "
             "(mcjudge_bank.py:336-344; needs an explicit per-item flag, plan 0060 §1)"
-        )
-    return None
-
-
-def _p_split_subject(it, _h, registered):
-    own = it.get("split_subject")
-    if registered or own is None:
-        return None  # absent: reported as missing by check_item
-    if not isinstance(own, list) or not own:
-        return (
-            "hazard: split_subject is empty / not a list: the judge treats it as absent and "
-            "falls back to split_subjects.json by id (mcjudge_bank.py:420-427) = rule off"
         )
     return None
 
@@ -1123,8 +1111,8 @@ _add(
                 "absent: a number bridge is matched as text (flood / element rules off)",
                 absent=SILENT,
             ),
-            _req("mc.aliases", BUILD, "basic/mcjudge_bank.py:525", absent=SILENT),
-            _req("mc.distractor_aliases", BUILD, "basic/mcjudge_bank.py:239,565", absent=SILENT),
+            _req("mc.aliases", BUILD, "basic/mcjudge_bank.py:449", absent=SILENT),
+            _req("mc.distractor_aliases", BUILD, "basic/mcjudge_bank.py:251,454", absent=SILENT),
             _req(
                 "readout.offsets",
                 SUBJECT,
@@ -1132,22 +1120,13 @@ _add(
                 "lite last-word offset in the subject's tokens; absent = [-1]",
                 absent=SILENT,
             ),
-            _i(
-                "split_subject",
-                FALLBACK,
-                BUILD,
-                "basic/mcjudge_bank.py:416-427",
-                "explicit per-item field replacing the split_subjects.json id lookup; must be "
-                "a NON-EMPTY list (a falsy value falls back to the file, mcjudge_bank.py:420)",
-                adapted_only=True,
-                probe=_p_split_subject,
-            ),
             _r(
-                "evals/multihop/split_subjects.json",
+                "evals/multihop/derived_forms.json",
                 SILENT,
-                HAZARD,
-                "basic/mcjudge_bank.py:412-427",
-                "keyed by registered id (REPO_ROOT); a new id = [] = round-3 split rule off",
+                BUILD,
+                "basic/mcjudge_bank.py:430-449",
+                "keyed by option value; a set's own WSB_BANK_ROOT/multihop/derived_forms.json adds "
+                "forms for new values; a value in neither has no derived forms (name and aliases)",
             ),
             _rule(
                 "^nhop-.+-element$",

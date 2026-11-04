@@ -32,13 +32,13 @@ drift. That file also defines:
 
 ### Lookups keyed by registered id or by registered value
 
-These all read `REPO_ROOT/evals/…`, never the bank root.
+These all read `REPO_ROOT/evals/…`, never the bank root (except multihop's `derived_forms.json`,
+below).
 
 - **multihop**:
-  - `evals/multihop/split_subjects.json` is keyed by id. For a new id, the round-3 split rule
-    is silently off. Use the per-item `split_subject` field, which the judge already prefers.
-    It is in `ADAPTED_ONLY_FIELDS`. It must be a non-empty list: an empty one is treated as
-    absent.
+  - `evals/multihop/derived_forms.json` is keyed by option value. A value it lacks has no
+    derived forms (its name and aliases only) unless the set ships its own
+    `<root>/multihop/derived_forms.json`.
   - The element-index widening keys on the id pattern `^nhop-.+-element$`. An adapted element
     item needs an explicit flag, which means a judge change. `check_item` flags number-bridge
     periodic-table prompts whose id breaks the pattern.
@@ -550,7 +550,6 @@ Header: `target_sentence`.
 Judge: `basic/mcjudge_bank.py`. Refresh: upgrade. Bank: dict, id from `name`.
 REQUIRED_ITEM_FIELDS: `name`, `prompt`, `mc`, `readout`.
 SUBJECT_FIELDS: `readout`.
-Adapted-only items also need: `split_subject`.
 
 | kind | input | req | if absent | class | where | note |
 |---|---|---|---|---|---|---|
@@ -559,11 +558,10 @@ Adapted-only items also need: `split_subject`.
 | item | `mc.gold` | yes | exit | copy-verbatim | basic/mcjudge_bank.py:127-141 |  |
 | item | `mc.distractors` | yes | exit | copy-verbatim | basic/mcjudge_bank.py:127-141 | ≤ 7 (LETTERS) |
 | item | `mc.bridge_type` | yes | silent | build | basic/mcjudge_bank.py:236,529,545,681 | absent: a number bridge is matched as text (flood / element rules off) |
-| item | `mc.aliases` | yes | silent | build | basic/mcjudge_bank.py:525 |  |
-| item | `mc.distractor_aliases` | yes | silent | build | basic/mcjudge_bank.py:239,565 |  |
+| item | `mc.aliases` | yes | silent | build | basic/mcjudge_bank.py:449 |  |
+| item | `mc.distractor_aliases` | yes | silent | build | basic/mcjudge_bank.py:251,454 |  |
 | item | `readout.offsets` | yes | silent | subject | readplan.py:527-541 | lite last-word offset in the subject's tokens; absent = [-1] |
-| item | `split_subject` | adapted | fallback | build | basic/mcjudge_bank.py:416-427 | explicit per-item field replacing the split_subjects.json id lookup; must be a NON-EMPTY list (a falsy value falls back to the file, mcjudge_bank.py:420) (checked) |
-| resource | `evals/multihop/split_subjects.json` |  | silent | hazard | basic/mcjudge_bank.py:412-427 | keyed by registered id (REPO_ROOT); a new id = [] = round-3 split rule off |
+| resource | `evals/multihop/derived_forms.json` |  | silent | build | basic/mcjudge_bank.py:430-449 | keyed by option value; a set's own WSB_BANK_ROOT/multihop/derived_forms.json adds forms for new values; a value in neither has no derived forms (name and aliases) |
 | id_rule | `^nhop-.+-element$` |  | silent | hazard | basic/mcjudge_bank.py:336-344,560 | element-index widening keyed on the id (checked) |
 | qwen | `zh forms in mc.aliases` |  | - | subject | evals/multihop/items_v3.json |  |
 | qwen | `min_full_positions=8` |  | - | subject | multihop/__init__.py | Qwen render length; reads.check_full exits below it on a sidecar file (reads.py:308) |
