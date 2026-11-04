@@ -177,14 +177,22 @@ its quote (a) verifies against the readout (`digest.quote_ok`, markdown marks ig
 one sample, or tokens of one ranked list, or one word split across adjacent positions), or
 near-verbatim (`nearquote.close_lines`: a prose quote of at least 12 characters whose longest
 common block with one sample covers 90% of it; `quote_near`), (b) names the gold reasonably and
-unambiguously, read in the line it came from (`qline-v1`, `judge.form_via`): a
+unambiguously, read in the line it came from (`qline-v2`, `judge.form_via`): a
 verified quote that carries a listed name form of the gold (`form_via = quote`; a fact-only quote
 such as "born in Bonn in 1770" never passes, a quote without Latin letters passes only with a
 listed Chinese form), or a near quote's matched block (the readout's own words at the quote's
 place, never the judge's) that names the gold and no other candidate (`form_via = block`), else a
-line holding the quote that names the gold and no other candidate (`form_via = line`: the quote
-"Ludwig van" cut at a sample boundary, from a line naming Ludwig van Beethoven); a quote
-naming another candidate never passes, and (c) is not an echo of the prompt (the quote, folded
+quote cut mid-name, read in its line (`form_via = line`): the line continues it into a listed
+form of the gold (`nearquote.continued`: the form starts inside the quote and runs on past its
+end, "...the composer was Ludwig van" + " Beethoven", or starts right after it with only spaces,
+markdown emphasis, punctuation other than a sentence end and at most one article between,
+"...was" + " **Beethoven**"), and the quote so run on names the gold and no other candidate; or
+the quote is the last words of its sample and its trailing words begin listed forms of the gold
+and of no other candidate (`nearquote.sample_end_prefix`: "...is Vincent van" at a sample's end;
+a start two candidates share, such as "Johann" for Bach and Mozart, credits neither). One line
+holding the quote that credits it this way is enough, whatever the other lines holding it go on
+to say. A line that names the gold anywhere else gives nothing: a fact-only quote stays a fail
+even when its sample names the gold. A quote naming another candidate never passes, and (c) is not an echo of the prompt (the quote, folded
 and with spaces and punctuation removed, is not part of the prompt: "Bluenote" from "Bluenote
 Café" is not credit). A gold pick failing a gate counts as `gold_uncredited` (a fail).
 
@@ -229,8 +237,8 @@ wsbench judge family=wrong_intermediate readouts=<arm>/wrong_intermediate.jsonl 
 
 ## Judge prompts
 
-`prompt_version`: `wb-mc-2026-10-31r+judge-only-v1+qline-v1+wbforms-v4+bank-v4` (the family's own stamp; summary mode stamps
-`digest.prompt_version("wb-mc-2026-10-31r+judge-only-v1+qline-v1+wbforms-v4+bank-v4", args, "wrong_intermediate")`, plus `+reads-lite` under
+`prompt_version`: `wb-mc-2026-10-31r+judge-only-v1+qline-v2+wbforms-v4+bank-v4` (the family's own stamp; summary mode stamps
+`digest.prompt_version("wb-mc-2026-10-31r+judge-only-v1+qline-v2+wbforms-v4+bank-v4", args, "wrong_intermediate")`, plus `+reads-lite` under
 `reads=lite`). The MC calls are keyed by the frozen round-3 call version
 `wb-mc-2026-10-31r+rv-2026-10-31e` (`prompts.MC_CALL_VERSION`) in place of the stamp: the MC
 prompt has not changed since, so cached MC answers are re-scored. Judge: the repo default (`claude-opus-5-5`), unpinned. Output schema
@@ -351,8 +359,12 @@ candidate pool was exhausted). The bank was ATI 100/100 under instrument `bank-2
 - 2026-11-01 (`+wbforms-v2` to `+wbforms-v4`, `bank-v4`, rounds 4c-4e): bank v4 filters the name
   forms, inflection tolerance applies only to forms spelled outside ASCII, and accent-only forms
   and their plain-ASCII twins keep their accents.
-- 2026-11-04 (`qline-v1`): a quote one word off verifies near-verbatim, and the gold may be named
-  by the line the quote came from, so a quote cut mid-name ("...was Ludwig van") is credited.
+- 2026-11-04 (`qline-v2`): a quote one word off verifies near-verbatim, and a quote cut mid-name
+  is credited where the line it came from continues it into a form of the gold ("...was Ludwig
+  van" + " Beethoven") or where the sample ends inside the gold's name ("...is Vincent van" as the
+  sample's last words, a start no other candidate's forms share); a line naming the gold anywhere
+  else gives nothing. (`qline-v1`, an unreleased draft, credited a quote through any line holding
+  it that named the gold and no other candidate, which also credited fact-only quotes.)
 - 2026-11-04 (`judge-only-v1`): the rival check, rival audit call and true-bridge raw-count check
   are removed because their support counts failed correct picks (Blue Note, in 124 raw samples,
   was contested by a line about another label); raw wrong-vs-true counts are reported only.
