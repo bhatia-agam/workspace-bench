@@ -24,11 +24,15 @@ FAMILY_PROMPT_VERSIONS: dict[str, str] = {
     # round 4: bank v4 options (MC leakage; v4 = v3 + every observed v2 confuser kept); bank v5
     # (PR #214 review r6): v4 rebuilt with every v2 option a digest states >= 2x in a v2 non-pass;
     # -v5b (review r7): bank v5's gold slots fixed and balanced per subfamily (mc.gold_position)
-    # +brsum-v1: an arith pick's quoted sentence must not compute another sum;
-    # +qline-v1: quote_ok or near-verbatim, the option read in the quote's line.
+    # +brsum-v2: an arith pick's quoted sentence must not compute only other sums (a "1-10"
+    # range is no sum; v1, an unreleased draft, also voided a sentence stating the asked sum
+    # beside another);
+    # +qline-v2: quote_ok or near-verbatim, the option read in the quote's line (through the line
+    # only for a quote cut mid-name: the line continues it, or the sample ends inside the name;
+    # v1 was an unreleased draft).
     # Scoring-only stamps (the option seed and the MC calls keep br-mc-2026-11-01-v5b,
     # basic.mcjudge_basic.OPTIONS_VERSIONS)
-    "basic_readout": "br-mc-2026-11-01-v5b+brsum-v1+qline-v1",
+    "basic_readout": "br-mc-2026-11-01-v5b+brsum-v2+qline-v2",
 }
 
 

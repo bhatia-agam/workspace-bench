@@ -77,8 +77,9 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   `MC_FAMILIES` dispatch to a blind forced-choice judge instead, over options frozen in the bank
   (`item["mc"]`), cannot-tell last. Two modules, written in parallel by the two family PRs and
   kept side by side (unifying them is a follow-up): basic_readout (plan 0053) on
-  `basic/mcjudge_basic.py` (quote gate: `quote_ok` or `nearquote.close_lines`, the option read
-  in the quote's line, `form_via`; number-flood void, bare-mention ruling, the asked-sum void
+  `basic/mcjudge_basic.py` (quote gate: `quote_ok` or `nearquote.close_lines`, the option named
+  by the quote or, cut mid-name, where its line continues it or its sample ends inside the
+  name, `form_via`; number-flood void, bare-mention ruling, the asked-sum void
   `other_sum`; options seeded and calls keyed by `OPTIONS_VERSIONS`, not the result stamp;
   its prompts are `SYSTEM_MC` / `USER_MC` / `BR_CANNOT` in `basic/prompts.py`, kept OUT of the
   shared `PROMPTS` so they never stale the other basic families' stamp), and multihop (plan 0048,
