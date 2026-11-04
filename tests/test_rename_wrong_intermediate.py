@@ -25,7 +25,10 @@ REPO = Path(__file__).resolve().parents[1]
 # is the one every campaign sidecar of the family carries
 PRE_PLAN_SHA = "0c247af522d39b73be377775cae115f9ab5f8619bf2a328be90e48b146b83f3f"
 PRE_BANK_SHA_PREFIX = "23a8ac85bac7"
-PRE_PROMPT_VERSION = "wb-mc-2026-10-31r+rv-2026-11-01h+wbaudit-v2+wbforms-v4+bank-v4"
+# plan 0066 §5.4: CUES_VERSION bump (Camila-approved); was
+# "wb-mc-2026-10-31r+rv-2026-11-01h+wbaudit-v2+wbforms-v4+bank-v4" (the role cues only; the
+# prompt bytes and both call keys are unchanged, tests/test_refill_wi_cues.py)
+PRE_PROMPT_VERSION = "wb-mc-2026-10-31r+rv-2026-11-01h+wbaudit-v2+wbcues-v2+wbforms-v4+bank-v4"
 
 
 def test_new_name_is_the_family():
@@ -74,8 +77,10 @@ def test_plan_sha_unchanged_by_the_rename():
 
 
 # sha256 over every upper-case string constant of the judge's prompts module (system / user /
-# audit / summary prompts, task note, instrument stamps), computed on the pre-rename module
-PRE_PROMPTS_SHA = "a7292ad975d25e80747110b467276e40815e8ce0b60519d3618ec029ab801e5e"
+# audit / summary prompts, task note, instrument stamps), computed on the pre-rename module;
+# plan 0066 §5.4: CUES_VERSION bump (Camila-approved): only PROMPT_VERSION moved; was
+# "a7292ad975d25e80747110b467276e40815e8ce0b60519d3618ec029ab801e5e"
+PRE_PROMPTS_SHA = "6291963fcde768c97f830296beacdf5f6aae34794db013aa83671b0efd2d6a7b"
 PROMPT_CONSTANTS = (
     "RIVAL_VERSION", "AUDIT_VERSION", "MC_CALL_VERSION", "FORMS_VERSION", "BANK_TAG",
     "PROMPT_VERSION", "WB_MC_SEED", "RIVAL_RULE", "SYSTEM", "AUDIT_SYSTEM", "AUDIT_USER", "CANNOT",

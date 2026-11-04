@@ -383,7 +383,7 @@ def test_bank_kind_check_drops_and_assigns_mixed_categories(tmp_store, tmp_path,
         _gated_row("car", "Q2", "Q77", "product_manufacturer", 9),
         _gated_row("mom", "Q3", "Q88", "person_mother", 8),
         _gated_row("mom2", "Q4", "Q89", "person_mother", 7),  # a priest: no category
-        _gated_row("scr", "Q5", "Q90", "film_screenwriter", 6),  # not admitted in this PR
+        _gated_row("scr", "Q5", "Q90", "building_architect", 6),  # cue-less: never admitted
     ]
     ents = {"Q15180": _e("Soviet Union", P31=["Q3624078", "Q6256"]),
             "Q77": _e("Carco", P31=["Qcarmaker"]),
@@ -438,19 +438,19 @@ def test_claims_come_from_entities_extra_not_wikidata_extra(tmp_store, tmp_path,
 
 
 # ---------------------------------------------------------------------------- admitted templates
-def test_no_new_template_in_this_pr_and_every_admitted_one_has_cues():
-    assert wb.ADAPT_TEMPLATE_CATEGORY == {}
+def test_every_admitted_template_has_cues_and_cueless_ones_stay_out():
+    # plan 0066 §11.5: the stacked role-cue branch admits the cued templates in
+    # ADAPT_TEMPLATE_CATEGORY (test_refill_wi_cues.py pins that table); a cue-less template
+    # (building_architect) still never gets a category
     admitted = wb.admitted_templates()
     assert admitted and all(t in ROLE_CUES for t in admitted)
     assert {"person_mother", "namesake"} <= set(admitted)
-    for t in ("film_screenwriter", "song_composer", "tv_creator", "novel_publisher",
-              "building_architect", "film_producer", "aircraft_manufacturer"):  # fmt: skip
-        assert t not in admitted and wb.category_of(t) is None
+    assert "building_architect" not in admitted and wb.category_of("building_architect") is None
     assert wb.category_of("film_director") == "filmmaker"
     # a cue-less template never gets a category, even through an item table
-    it = {"name": "film_screenwriter-Q1-birth_year", "template": "film_screenwriter",
+    it = {"name": "building_architect-Q1-birth_year", "template": "building_architect",
           "intermediates": ["X"]}  # fmt: skip
-    assert wb.category_of(it, {"film_screenwriter-Q1-birth_year": "filmmaker"}) is None
+    assert wb.category_of(it, {"building_architect-Q1-birth_year": "filmmaker"}) is None
 
 
 def test_every_template_in_a_shipped_set_has_role_cues():

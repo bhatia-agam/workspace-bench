@@ -900,9 +900,20 @@ def _wd_entry(ent: dict) -> dict:
 
 # ------------------------------------------------------------------ categories (plan 0066 §5)
 # Adapt-side category tables; the registered builder's TEMPLATE_CATEGORY / ITEM_CATEGORY are
-# never edited (its --check stays byte-identical). The main PR admits no new template (§11.5):
-# film_screenwriter, song_composer, tv_creator and novel_publisher wait for the cue branch.
-ADAPT_TEMPLATE_CATEGORY: dict[str, str] = {}
+# never edited (its --check stays byte-identical). The cue branch (plan 0066 §5.4 / §11.5,
+# CUES_VERSION wbcues-v2) admits the four already-screened templates and the re-scrape's four;
+# each has a judge ROLE_CUES entry (category_of still admits only a cued template). song_composer
+# / album_producer are musician templates but NOT performer templates (PERFORMER_TEMPLATES).
+ADAPT_TEMPLATE_CATEGORY: dict[str, str] = {
+    "film_screenwriter": "filmmaker",
+    "song_composer": "musician",
+    "tv_creator": "filmmaker",
+    "novel_publisher": "company",
+    "film_producer": "filmmaker",  # re-scrape (b)
+    "opera_librettist": "writer",
+    "album_producer": "musician",
+    "aircraft_manufacturer": "company",
+}
 # {generated item name: category} for the mixed-kind templates, computed from B''s entity by
 # :func:`item_category` at ``bank`` (never hand-edited)
 ADAPT_ITEM_CATEGORY: dict[str, str] = {}
@@ -987,8 +998,8 @@ def category_of(it: dict | str, item_cats: dict[str, str] | None = None) -> str 
 
 
 def admitted_templates() -> list[str]:
-    """Templates with a category AND role cues (the main PR: the registered map's 15 plus
-    the per-item mixed-kind templates)."""
+    """Templates with a category AND role cues (the registered map's 15, the per-item
+    mixed-kind templates and the cue branch's ``ADAPT_TEMPLATE_CATEGORY``)."""
     b = mc_builder()
     pool = set(b.TEMPLATE_CATEGORY) | set(ADAPT_TEMPLATE_CATEGORY) | set(MIXED_TEMPLATES)
     return sorted(t for t in pool if t in _role_cues())

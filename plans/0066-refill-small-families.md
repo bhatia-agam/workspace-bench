@@ -603,9 +603,10 @@ candidate rows and entities.
   performer ("Johnny Cash recorded it…"). The loose nouns `series` (tv_creator) and `aircraft`
   (aircraft_manufacturer) were removed, as was `made` (aircraft_manufacturer), which let "Air
   France made its last flight" credit an airline. Simplified 剧本 and traditional 作詞 were added
-  for opera_librettist. One known residual, which no cue can fix: a subject word of the prompt
-  itself (e.g. "series" in "the TV series Breaking Bad") still ties an actor's line through the
-  judge's existing subject-word rule, which applies to every template.
+  for opera_librettist. A subject word of the prompt itself ("series" in "the TV series
+  Breaking Bad") used to tie an actor's line through the subject-word rule. The same bump
+  therefore adds `series`, `show`, `television`, 电视 and 電視 to `_SUBJECT_STOP`; no registered
+  prompt yields any of them as a subject word (tested), so no registered verdict changes.
 
   Final wording is reviewed in the PR. The cue rule is unchanged: a Latin cue is a word start, a
   CJK cue a substring.

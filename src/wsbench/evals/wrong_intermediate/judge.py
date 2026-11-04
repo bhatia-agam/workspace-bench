@@ -357,12 +357,25 @@ _CUES = {
     "song_lyricist": "lyric wrot writ 作词 作詞",
     "character_creator": "creat invent wrot writ 创 創",
     "tv_network": "network air broadcast channel 电视 電視",
+    # plan 0066 §5.4 (CUES_VERSION wbcues-v2): templates the adapted refill admits; no entry
+    # above changes, so no registered verdict moves
+    "film_screenwriter": "screenplay screenwrit writ wrot script 编剧 編劇",
+    "song_composer": "compos wrot writ 作曲",
+    "tv_creator": "creat develop showrunner 创 創",
+    "novel_publisher": "publish publication imprint 出版",
+    "film_producer": "produc 制片 製片",
+    "opera_librettist": "librett libretto wrot writ 作词 作詞 剧本 劇本",
+    "album_producer": "produc 制作 製作",
+    "aircraft_manufacturer": "manufactur built build produc maker 制造 製造",
 }
 ROLE_CUES: dict[str, tuple[str, ...]] = {k: tuple(v.split()) for k, v in _CUES.items()}
 # words of the prompt's subject phrase that are no tie to the work itself (kinds, roles, years)
 _SUBJECT_STOP = frozenset(
     {"film", "album", "song", "video", "game", "record", "label", "released", "recorded"}
     | {"originally", "aired", "fictional", "character", "artist", "that", "with", "from"}
+    # wbcues-v2 hardening (#273 review): a TV work's kind words, so "starred in the series" never
+    # ties an actor through the prompt's own subject phrase; no registered prompt yields them
+    | {"series", "show", "television", "电视", "電視"}
 )
 ROLE_BEFORE, ROLE_AFTER = 60, 40  # characters of folded text around the name (~8 / ~6 words)
 _BY = re.compile(r"(?<!\w)by(?!\w)|由")
@@ -743,7 +756,7 @@ def _mc_version(pv: str) -> str:
     without the audit stamp (the MC prompt did not change with the audit, so cached MC answers
     are re-scored, not re-asked)."""
     out = rival.call_version(pv)
-    for tag in (wp.AUDIT_VERSION, wp.FORMS_VERSION, wp.BANK_TAG):
+    for tag in (wp.AUDIT_VERSION, wp.CUES_VERSION, wp.FORMS_VERSION, wp.BANK_TAG):
         out = out.replace("+" + tag, "", 1)
     return out
 
@@ -752,8 +765,9 @@ def _audit_version(pv: str) -> str:
     """The rival audit's fingerprint version: ``pv`` without the forms stamp (round 4e). A forms
     change that moves which lines the audit sees changes its user message, so those calls are
     re-asked anyway; one that does not re-scores the cached answers instead of re-asking every
-    audit (rounds 4c / 4d re-asked them all, and the re-ask variation moved cells)."""
-    return pv.replace("+" + wp.FORMS_VERSION, "", 1)
+    audit (rounds 4c / 4d re-asked them all, and the re-ask variation moved cells). The cues
+    stamp never enters a call either (plan 0066 §11.4), so it is stripped too."""
+    return pv.replace("+" + wp.CUES_VERSION, "", 1).replace("+" + wp.FORMS_VERSION, "", 1)
 
 
 def _valid_audit(_call: Call, r: dict) -> bool:

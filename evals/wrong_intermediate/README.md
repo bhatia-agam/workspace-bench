@@ -206,7 +206,10 @@ native path (one call per layer, the ATI gate) has no sample counts and is uncha
   surname is dropped: `full_forms` removes a one-word form that is the last word or `·`-segment
   of another form, the label itself is kept), not glued by a hyphen into another name, with a
   role cue near it: a cue word of the item's template (`ROLE_CUES`: `direct`, `paint`, `wrot`,
-  `releas`, ... as word starts, CJK cues as substrings), a word of the prompt's subject phrase
+  `releas`, ... as word starts, CJK cues as substrings; since `+wbcues-v2`, plan 0066 §5.4, also
+  for the templates the adapted refill admits: film_screenwriter, song_composer, tv_creator,
+  novel_publisher, film_producer, opera_librettist, album_producer, aircraft_manufacturer; no
+  registered template's cues changed), a word of the prompt's subject phrase
   (`subject_words`: "the namesake of the Saint Petersburg Conservatory" -> `petersburg`,
   `conservatory`) or "by" just before the name, within ~60 characters before / ~40 after; the
   word right before the name is no cue (an apposition, "The painter Raphael Sanzio died in
@@ -337,6 +340,22 @@ native path (one call per layer, the ATI gate) has no sample counts and is uncha
   moves (both ways) are re-asked audit variation, as in rounds 4c / 4d. Some split verdicts are
   audit noise (L56 Nintendo vs a Capcom-in-Osaka aside); a split can only take a credit away.
 
+### `+wbcues-v2` (plan 0066 §5.4, 2026-11-04, Camila-approved)
+
+- `judge._CUES` gains the role cues of the templates the adapted refill admits
+  (film_screenwriter, song_composer, tv_creator, novel_publisher, and the re-scrape's
+  film_producer, opera_librettist, album_producer, aircraft_manufacturer; song_lyricist already
+  had cues). Every registered template's cues are byte-identical (pinned by
+  `tests/test_refill_wi_cues.py`), so no registered verdict can change.
+- The stamp `CUES_VERSION` sits before the forms stamp in `PROMPT_VERSION` and is stripped from
+  both call keys (`_mc_version`, `_audit_version`): no cached MC or audit answer is re-asked.
+- The ATI entry is restamped, not re-gated (`scripts/ati_restamp_wi_cues.py`: same `bank_sha`,
+  only the instrument moves); the family's floors are re-measured on the new stamp.
+- The same bump adds the TV kind words `series`, `show`, `television`, 电视 and 電視 to the
+  subject stop words, so an actor's "starred in the series" line is not tied through the prompt's
+  own subject phrase. No registered prompt yields them (tested), so registered verdicts are
+  unchanged.
+
 ## Readouts
 
 `{"id": "<item label>", "layer": L, "pos": P, "samples": [...]}` (or `"tokens"`) rows; label =
@@ -351,10 +370,11 @@ wsbench judge family=wrong_intermediate readouts=<arm>/wrong_intermediate.jsonl 
 
 ## Judge prompts
 
-`prompt_version`: `wb-mc-2026-10-31r+rv-2026-11-01h+wbaudit-v2+wbforms-v4+bank-v4` (the family's own stamp; summary mode stamps
-`digest.prompt_version("wb-mc-2026-10-31r+rv-2026-11-01h+wbaudit-v2+wbforms-v4+bank-v4", args, "wrong_intermediate")`, plus `+reads-lite` under
+`prompt_version`: `wb-mc-2026-10-31r+rv-2026-11-01h+wbaudit-v2+wbcues-v2+wbforms-v4+bank-v4` (the family's own stamp; summary mode stamps
+`digest.prompt_version("wb-mc-2026-10-31r+rv-2026-11-01h+wbaudit-v2+wbcues-v2+wbforms-v4+bank-v4", args, "wrong_intermediate")`, plus `+reads-lite` under
 `reads=lite`). The MC calls are keyed without `+wbaudit-v2` and with the rival rule's call
-version (`rv-2026-10-31e`): the MC prompt did not change, so cached MC answers are re-scored. Judge: the repo default (`claude-opus-5-5`), unpinned. Output schema
+version (`rv-2026-10-31e`): the MC prompt did not change, so cached MC answers are re-scored.
+Neither the MC nor the audit calls key on `+wbcues-v2` (the role cues never enter a call). Judge: the repo default (`claude-opus-5-5`), unpinned. Output schema
 `{"choice": int, "quote": str, "rival_quote": str}` (`wb_pick`). The judge never sees the prompt, A, A', the
 template or the hop-2 relation.
 
