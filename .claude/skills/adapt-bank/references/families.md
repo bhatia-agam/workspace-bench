@@ -81,7 +81,8 @@ re-stamped (`references/porting.md`).
   - target not in the prompt;
   - the prompt ends exactly before the answer;
   - the implicit gold is never authored.
-- **Bank now:** `items_v5` (plan 0053; only 18/100 prompts kept from v1): question form with
+- **Bank now:** `items_v7` (v5 with Big Ben's gold "England / UK"; plan 0053; only 18/100
+  prompts kept from v1): question form with
   `task_context`, `slice`, `gate`, and `mc` with a balanced `gold_position` (built on the bank of
   record by `mc_leakage_r4.py balance`, which writes `evals/`). `restamp` rewrites `mc` for implicit items (`run.py`), but a distractor must also never
   equal the subject's own favourite (plan 0053). v6 is opt-in. The entity / processing ladder above

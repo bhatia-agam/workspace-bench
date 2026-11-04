@@ -59,7 +59,5 @@ def test_stamp_carries_the_rule_and_options_and_calls_do_not_move():
     from wsbench.basic.prompts import prompt_version_of
 
     pv = prompt_version_of("basic_readout")
-    assert (
-        pv.endswith("+qline-v1") and mj.options_version("basic_readout") == "br-mc-2026-11-01-v5b"
-    )
+    assert "+qline-v1" in pv and mj.options_version("basic_readout") == "br-mc-2026-11-01-v5b"
     assert mj.call_pv("basic_readout", pv) == "br-mc-2026-11-01-v5b"

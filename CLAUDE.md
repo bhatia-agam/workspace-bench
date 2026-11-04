@@ -133,7 +133,7 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   `topic_source` picks; keep both paths). Bank v3 of basic_readout / multihop / association /
   poetry was rebuilt for it by `scripts/mc_leakage_r4.py`, evals/baselines/README.md; a rebuilt
   list never drops an observed confuser, a distractor a cached judge picked or the readouts name
-  as a rival, which is why poetry and basic_readout are on bank v5, `mc_leakage_r4.py
+  as a rival, which is why poetry is on bank v5 and basic_readout on its successor v7, `mc_leakage_r4.py
   observe`; v5 also keeps every v2 option the digest of a v2 non-pass cell names (poetry: as a
   line ending), reviews r6 / r7; basic_readout v5 fixes each gold's slot, `mc.gold_position`,
   balanced per subfamily by `mc_leakage_r4.py balance`, so no positional prior beats chance)

@@ -129,7 +129,9 @@ def test_introspection_bank_unchanged_by_the_refill():
 # four-reader panel at its current bank and instrument (conjunctive comp-v5, wrong_intermediate /
 # basic_readout_mt / multilingual* bank v3-v4, association / basic_readout / poetry round-4 MC
 # banks). A family PR that changes a bank adds its entry back here until the re-gate.
-PENDING_REGATE: dict[str, str] = {}
+PENDING_REGATE: dict[str, str] = {
+    "basic_readout": "bank v7 (2026-11-03): Big Ben's gold option reads 'England / UK'",
+}
 
 
 def test_every_panel_entry_is_gated_on_the_current_bank(frozen):

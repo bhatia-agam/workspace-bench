@@ -1,8 +1,9 @@
 # basic_readout
 
 Does the readout state the model's one-word answer to a short question while the model is
-still reading the question, before it writes anything? 100 items in three subfamilies, bank
-`items_v2.json` (version 2; `items.json` is the frozen v1 bank, kept byte-identical). Every item
+still reading the question, before it writes anything? 100 items in three subfamilies, bank v2
+`items_v2.json` (the registered bank is v7, below; `items.json` is the frozen v1 bank, kept
+byte-identical). Every item
 is a **chat question**, not a completion prompt, so the family does not test next-token
 prediction: the user turn ends "? Answer in one word." and the assistant turn is prefilled with
 "My one-word answer is:".
@@ -17,6 +18,18 @@ prediction: the user turn ends "? Answer in one word." and the assistant turn is
 Example: "What is the day before Monday? Answer in one word." -> target `Sunday`; the judge is
 shown the options `Saturday, Tuesday, Wednesday, Thursday, Sunday`, followed by the cannot-tell
 option as the last letter (Monday, the prompt's own day, is never an option).
+
+## Bank v7 (the registered bank)
+
+`items_v7.json` is bank v5 with one edit: `br-ent-lmk-big` ("In which country is Big Ben?")
+shows its gold option as `England / UK` (was `England`, which a readout answering "the UK" did
+not obviously pick; `England` joins its aliases, and `UK` / `United Kingdom` were already listed).
+Every other byte of every item is v5's; the read plan and `plan_sha` are unchanged (options are
+never in the render), and the option seed stays `br-mc-2026-11-01-v5b`
+(`mcjudge_basic.OPTIONS_VERSIONS`), so every other item keeps its option order and its cached MC
+answer, and the Big Ben item needs one new MC call per arm. Stamp `+bank-v7`. Bank v6 (below) is
+the separate opt-in round-5 bank. The lucky-guessing and prompt-only floors were measured on v5's
+lists and are stale until re-measured.
 
 ## Bank v6 (round 5 "common", Camila r3 (1); opt-in, NOT registered)
 
@@ -49,9 +62,9 @@ guesser picks the stereotype (blue, apple, dog) however many equally common riva
 Frequency matching cannot fix that, since no rival is as common as the modal answer by
 construction. **Replay** of the cached judge cells of the 21 grown items (51 non-pass cells over
 14 configs, re-judged under v6 from cached digests): 5 fail -> pass, 0 attributable to a dropped
-option (lists only grow). v5 stays the registered bank.
+option (lists only grow). v6 was not registered; the registered bank is v7 (above).
 
-## Bank v5 (PR #214 review r6, the registered bank)
+## Bank v5 (PR #214 review r6; superseded by v7)
 
 `items_v5.json` = the same rebuild as v4 (from bank v3, `scripts/mc_leakage_r4.py observe
 --version 5`) with wider evidence. v4 counted a v2 distractor as observed only if a judge picked
@@ -195,7 +208,7 @@ old gold; its fixed definition (gold `science fiction`) is kept in `gate_v2.json
 
 ## Scoring: the blind multiple-choice judge
 
-`prompt_version`: `br-mc-2026-11-01-v5b+brsum-v1+qline-v1` (`basic/mcjudge_basic.py`; bank v5's options and fixed gold slots, PR #214 reviews r6 / r7, the prompts are `br-mc-2026-10-30b`'s; `+brsum-v1`: the asked-sum check; `+qline-v1`: the quote rule). The distractors' order is seeded, and the MC calls are keyed, by `br-mc-2026-11-01-v5b` (`mcjudge_basic.OPTIONS_VERSIONS`), so a scoring-only stamp change keeps every option list and re-scores the cached answers. Judge: the repo default
+`prompt_version`: `br-mc-2026-11-01-v5b+brsum-v1+qline-v1+bank-v7` (`basic/mcjudge_basic.py`; bank v5's options and fixed gold slots, PR #214 reviews r6 / r7, the prompts are `br-mc-2026-10-30b`'s; `+brsum-v1`: the asked-sum check; `+qline-v1`: the quote rule; `+bank-v7`: Big Ben's "England / UK"). The distractors' order is seeded, and the MC calls are keyed, by `br-mc-2026-11-01-v5b` (`mcjudge_basic.OPTIONS_VERSIONS`), so a scoring-only stamp change keeps every option list and re-scores the cached answers. Judge: the repo default
 (`claude-opus-5-5`), temperature 0. Output schema `{"choice": letter, "quote": str, "stated":
 "as_result" | "bare" | ""}`.
 
@@ -484,3 +497,5 @@ Answer with the letter.
   with the same result ("Subtracting 3 from 7 yields Four" for "What is 9 - 5?").
 - 2026-11-04 (no stamp change, report only): `pass_by_subfamily` reports each slice with its
   decided n and a bootstrap CI.
+- 2026-11-04 (`+bank-v7`): bank v7 shows Big Ben's gold option as "England / UK", so a readout
+  answering the UK can pick it.

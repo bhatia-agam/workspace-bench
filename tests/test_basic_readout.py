@@ -35,7 +35,8 @@ PV3 = "br-mc-2026-11-01-v3"  # round 4: bank v3's stamp
 PV4 = "br-mc-2026-11-01-v4"  # PR #214 review r5: bank v4's stamp
 PV5 = "br-mc-2026-11-01-v5b"  # PR #214 review r7: bank v5's option seed / call key (balanced slots)
 # the registered result stamp (scoring-only suffixes; options and calls keep PV5)
-STAMP = PV5 + "+brsum-v1+qline-v1"
+STAMP = PV5 + "+brsum-v1+qline-v1+bank-v7"
+V7 = REPO / "evals/basic_readout/items_v7.json"  # the registered bank
 FLAT = ("numbers", "days of the week", "months", "candidate answers of the task's type")
 
 
@@ -114,8 +115,8 @@ def test_registered_spec_uses_v5(monkeypatch):
     for k in list(os.environ):
         if k.startswith(registry.BANK_FILE_ENV_PREFIX) or k == registry.BANK_ROOT_ENV:
             monkeypatch.delenv(k)
-    assert SPEC.bank == Path("evals/basic_readout/items_v5.json")
-    assert registry.bank_path("basic_readout").name == "items_v5.json"
+    assert SPEC.bank == Path("evals/basic_readout/items_v7.json")  # v5 + Big Ben
+    assert registry.bank_path("basic_readout").name == "items_v7.json"
     assert SPEC.judge.prompt_version == STAMP
     args = summary_args(EXAMPLE, Path("/tmp/x"), STAMP)
     assert digest.prompt_version(STAMP, args, "basic_readout").startswith(STAMP + "+digest-")
@@ -859,7 +860,7 @@ def test_bank_v3_is_v2_with_new_distractors_only():
         assert b["mc"]["distractors_v2"] == a["mc"]["distractors"]
 
 
-@pytest.mark.parametrize(("bank", "pv"), [(V3, PV3), (V4, PV4), (V5, PV5)])
+@pytest.mark.parametrize(("bank", "pv"), [(V3, PV3), (V4, PV4), (V5, PV5), (V7, PV5)])
 def test_bank_v3_distractor_rules(bank, pv):
     """Every v2 option rule holds on v3: 4 distractors, never a gold form, part or superstring,
     never in the prompt, no two sharing a form, arithmetic 0..12 without the operands, days and

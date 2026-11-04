@@ -166,7 +166,7 @@ every list holds >= 2 same-topic confusers.
 | directed_modulation | 0.200 | 0.250 | 0.148 / 0.168 / **0.758** | unchanged (gold in prompt) | FAILS on `topic` (0 same-topic confusers; below) |
 | model_specific_directed_modulation | — | — | — | — | not an MC family: regex any-cell; options only define `distractor_rate` |
 
-- **basic_readout, bank v5 (registered, `-v5b`).** entity 0.154 / 0.246 / 0.131 (blind /
+- **basic_readout, bank v5 (`-v5b`; registered then).** entity 0.154 / 0.246 / 0.131 (blind /
   described / topic) and processing 0.164 / 0.145 / 0.121 pass; implicit 0.494 / 0.681 / 0.688.
   Under `-v5` processing failed `blind` through the option order: its days / months / numbers
   lists carry no content cue, the blind guesser picked slot 3 on 91 of 165 draws, and the
