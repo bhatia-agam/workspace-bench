@@ -42,6 +42,11 @@ TOL = 1e-9
 
 # (native prompt_version base, summary base before "+digest") pairs that differ by design
 BASE_PAIRS: dict[str, dict[str, str]] = {
+    # the free-recall summary path passes the start number as an operand (it can leave the digest
+    # keys), so its results carry +start-op; native free recall has no digest and is unchanged
+    "chain_intermediates": {
+        "chain-free-2026-10-30": "chain-free-2026-10-30+start-op",
+    },
     # summary mode judges the digest with the single-cell prompt; native cells=all is batched
     "arithmetic_intermediates": {
         "arith-free-batched-2026-09-23": "arith-free-2026-09-23",
@@ -71,9 +76,9 @@ BASE_PAIRS: dict[str, dict[str, str]] = {
     "model_specific_directed_modulation": {
         "dmcd-regex-2026-10-23": "dmcd-regex-2026-10-23+joined-2026-10-30"
     },
-    # summary mode takes the majority of 3 draws (+maj3v / +maj3); native is one call per cell
+    # summary mode takes the majority of 3 draws' verdicts (+maj3v); native is one call per cell
     "role_bound_association": {"oa-v3.1": "oa-v3.1+maj3v"},
-    "user_modeling": {"um-v3.4+bank-v2": "um-v3.4+bank-v2+maj3"},
+    "user_modeling": {"um-v3.4+bank-v2": "um-v3.4+bank-v2+maj3v"},
 }
 MT_FAMILIES = {
     "basic_readout_mt",

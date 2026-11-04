@@ -59,7 +59,11 @@ def run_calls(
     ``refusal_model``: a call the judge declines is re-run once on that model
     (:func:`llm.stream_json`); its result carries ``llm.SERVED_BY`` into the cached row, so the
     serving model survives a resumed run. The fingerprint stays the judge's: the re-run only
-    fills a call the judge itself left unanswered."""
+    fills a call the judge itself left unanswered. So a row the refusal model served is cached
+    under the judge's fingerprint, and a later run with another ``refusal_model`` (or none)
+    reuses it as is: unlike the digest (``digest._stale_fallback``), there is no stale-fallback
+    check here. The serving model stays visible on the row (``llm.SERVED_BY``); a family that
+    changes its refusal model must change its call key (``prompt_version``) to re-ask."""
     if dry_run:
         if calls:
             c = calls[0]

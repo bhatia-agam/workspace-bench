@@ -90,7 +90,8 @@ like a lite file"), and a v1 file (25 positions from " What") is refused by its 
   "Token lenses" below); (c) the quote does not show the gold only as a count or a label: a
   quote that opens with the gold continued by a lowercase word and names it nowhere after
   ("20 steps in order."), or a quote whose every holding line does so, is `label`, a judged
-  negative (`judge.label_head`); (d) the gold is one of the digest's number keys (five, or more on a tie); (e) the quoted
+  negative (`judge.label_head`); a continuation that calls the number the result or the answer
+  ("12 is the result", "12 was the answer.") states a result and is never `label`; (d) the gold is one of the digest's number keys (five, or more on a tie); (e) the quoted
   line naming the gold is not a number flood
   (`digest.number_flood`: a token list holding >= 5 distinct numerals, or a list-shaped prose run
   of >= 5, including a bulleted list of bare numbers). A pick supported only by flood lines is
@@ -103,7 +104,9 @@ like a lite file"), and a v1 file (25 positions from " What") is refused by its 
   `28 + 6 - 5`, or a number a lowercase word continues on its line, which is a count, a label or
   an operand in running prose: `20 steps in order.`, `25 divided by 2`, `22 of 72`, `12 is the
   starting number`; a capitalised heading, markdown or a CJK word after the number keeps the
-  head, `7 Explanation: ...`, `16 解析：...`; `judge.result_head`, heads-v4), and only when the rest of that sample works one of the item's OWN operations
+  head, `7 Explanation: ...`, `16 解析：...`, and so does a continuation that calls the number
+  the result or the answer, `12 is the result of halving 24.`, `12 equals the final answer`;
+  `judge.result_head`, heads-v5), and only when the rest of that sample works one of the item's OWN operations
   (`judge.op_pattern`: add / subtract / double / triple / halve words and symbols, also in
   Chinese), so a bare number or a number opening unrelated prose is not a stated result, counted over every raw
   sample of the judged cells (`judge.answer_head_counts`). When some distractor of the slot heads
@@ -175,14 +178,16 @@ like a lite file"), and a v1 file (25 positions from " What") is refused by its 
   none the digest already shows), as `[another sample] <text>` lines. They join the evidence, so a
   quote from them verifies, and `KEY_EXAMPLES_NOTE` (Judge prompts, below) is added to the
   digest note of that call.
-- **Provenance.** `prompt_version` = `digest.prompt_version("chain-mc-2026-10-30+heads-v4+start-op+key-ex2", args, family)`,
-  i.e. `chain-mc-2026-10-30+heads-v4+start-op+key-ex2+digest-v5-task-extractive-rankties5+sj-v10` at the defaults (judge calls keyed by
+- **Provenance.** `prompt_version` = `digest.prompt_version("chain-mc-2026-10-30+heads-v5+start-op+key-ex2", args, family)`,
+  i.e. `chain-mc-2026-10-30+heads-v5+start-op+key-ex2+digest-v5-task-extractive-rankties5+sj-v10` at the defaults (judge calls keyed by
   `MC_CALL_VERSION` = `chain-mc-2026-10-30`, so the heads gate and the label check re-ask nothing) (`+reads-lite` under lite, `+rule-any`
   under `opts=rule=any`); `config.reads`, `sampling`, `sampling_source`, `reader`,
   `reads_checked`, `layers_judged` come from the shared loader.
-- `opts=judge=free` keeps the v1 summary judge (free recall on the digest, any-intermediate rule,
-  stamped `digest.prompt_version("chain-free-2026-10-30", ...)`) for comparisons with cached
-  v1 runs; `extras.all_slots_rate` reports the strict rule beside it.
+- `opts=judge=free` keeps the v1 summary judge (free recall on the digest, any-intermediate rule)
+  for comparisons with cached v1 runs; `extras.all_slots_rate` reports the strict rule beside it.
+  Its digest takes the start number as an operand too, so its results are stamped
+  `digest.prompt_version("chain-free-2026-10-30+start-op", ...)`; its calls stay keyed
+  `chain-free-2026-10-30` (a call is re-asked only where its digest text changed).
 
 ## Scoring (native, `opts=aggregate=native`)
 
@@ -256,8 +261,9 @@ wsbench judge family=chain_intermediates readouts=<arm>/chain_intermediates.json
 
 ## Judge prompts
 
-Judge: the repo default (`claude-opus-5-5`), temperature 0. `prompt_version`: `chain-mc-2026-10-30+heads-v4+start-op+key-ex2`
-(summary MC; calls keyed by `chain-mc-2026-10-30`), `chain-free-2026-10-30` (native free recall). `TOKEN_NOTE` is
+Judge: the repo default (`claude-opus-5-5`), temperature 0. `prompt_version`: `chain-mc-2026-10-30+heads-v5+start-op+key-ex2`
+(summary MC; calls keyed by `chain-mc-2026-10-30`), `chain-free-2026-10-30` (native free recall;
+`opts=judge=free` summary results add `+start-op`). `TOKEN_NOTE` is
 `mc.token_note(("numbers",))`, rendered from the family's registered `EvalSpec`
 (`flat_types=("numbers",)`, `multi_select=False`) into `SYSTEM_MC` and `SYSTEM`.
 
@@ -427,8 +433,8 @@ the model silently works through a short multi-step arithmetic chain and answers
 
 `KEY_EXAMPLES_NOTE` (`+key-ex2`): appended to the digest note of a summary MC call whose digest
 shows key examples (`[another sample]` lines, Scoring above). Key examples are selected with the original
-answer-head pattern (`_ANSWER_HEAD`, not heads-v4's `result_head`), so heads-v4 does not change
-the judge's input, and the slot's `label` check still applies to a quote from them.
+answer-head pattern (`_ANSWER_HEAD`, not the heads rules' `result_head`), so heads-v4 and heads-v5
+do not change the judge's input, and the slot's `label` check still applies to a quote from them.
 
 ```text
 Lines marked [another sample] are further readout samples that state the number of the line above them.
@@ -445,3 +451,10 @@ Lines marked [another sample] are further readout samples that state the number 
 - 2026-11-04 (`heads-v4`): a number a lowercase word continues ("20 steps in order.") is no
   answer head, and a gold quoted only that way is `label`, not a hit, because such a number is a
   count, label or operand rather than a stated result; no call is re-asked.
+- 2026-11-04 (`heads-v5`): a continuation that calls the number the result or the answer ("12
+  is the result", "12 was the answer.", "12 equals the final result") keeps the answer head and
+  is never `label`, because it is a plain result statement; no call is re-asked. (`heads-v4`
+  above was an unreleased draft that treated these as labels.)
+- 2026-11-04 (`opts=judge=free`, `+start-op`): the opt-in free-recall summary path, which passes
+  the start number to the digest as an operand as well, stamps `+start-op`, because its digest
+  keys (and so a verdict) can differ from a v1 run's.

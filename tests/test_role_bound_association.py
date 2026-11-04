@@ -1,5 +1,6 @@
 import ast
 import json
+import re
 from pathlib import Path
 
 import pytest
@@ -674,10 +675,6 @@ def test_adapted_bank_offset_lite_falls_back_to_final_token(monkeypatch, tmp_pat
 
 def test_spans_compiled_once_same_matches():
     """Term patterns are compiled once per process; the spans equal an uncached re.finditer."""
-    import re
-
-    from wsbench.evals.role_bound_association import gate
-
     for text, term in [
         ("the security guard and the guard", "guard"),
         ("曾祖母和祖母", "祖母"),
