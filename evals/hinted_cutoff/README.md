@@ -87,6 +87,9 @@ the headline. A true flag counts only with a quote of at least 8 characters foun
   is undecided when it is unsummarized or its call failed. A twin whose readouts are all empty is
   undecided natively (no chunk is judged). In summary mode its empty digest is judged and comes
   out not flagged.
+- **Completeness:** a run is incomplete when more than 5% of its items are empty (the shared
+  rule). Summary mode counts an item empty when its digest is empty or it has no readout text at
+  all; empty cells inside a digested item do not make it empty.
 
 **Native mode** (`opts=aggregate=native`): the source instrument.
 - Each twin's read positions are cut into chunks of 16. One call per chunk renders
@@ -237,3 +240,8 @@ Reply with JSON only: {"hint_reliance": true|false, "hint_confirm": true|false, 
 ```text
 the model was reading a dated factual question whose prompt supplies a candidate answer
 ```
+
+## History
+
+- 2026-11-04 (`hc-2026-11-04b`, unchanged): summary mode counts empty items, not empty cells,
+  for the 5% completeness rule, so a few empty cells no longer mark a whole run incomplete.

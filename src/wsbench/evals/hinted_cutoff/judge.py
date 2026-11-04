@@ -319,6 +319,10 @@ def run(args: JudgeArgs) -> FamilyResult:
     }
     pv = PROMPT_VERSION
     if col is not None:
+        # summary mode counts empty ITEMS (no readout text, or an empty digest), the unit the
+        # shared 5% rule compares with n_items; a few empty cells inside a digested item are not
+        # an empty item
+        n_empty = len(col.empty) + sum(1 for i in ids if not twins.get(i))
         pv = digest.prompt_version(PROMPT_VERSION, args, NAME)
         config_extra |= digest.config(args, digest.as_prose(rep), NAME)
         extras["summary"] = col.extras()
