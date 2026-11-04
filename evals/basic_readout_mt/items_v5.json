@@ -33,7 +33,7 @@
   "read_plan_bank": "items_v4.json",
   "v5": {
     "date": "2026-11-03",
-    "rule": "bank v4 minus brh-ent-chem-sarin-systematic, every other byte unchanged: the bank's only weapon-related item; the digest refused it on 9 of 11 layers on s3d (undecided), 2 on A RL600 and 1 on B RL600. read_plan_bank keeps v4's read plan, so v4 readouts serve v5.",
+    "rule": "bank v4 minus brh-ent-chem-sarin-systematic, every other byte unchanged: the bank's only weapon-related item; the digest model refused its digest on most layers of one lens's readouts (9 of 11, leaving it undecided) and on 1-2 layers of two others. read_plan_bank keeps v4's read plan, so v4 readouts serve v5.",
     "removed": [
       "brh-ent-chem-sarin-systematic"
     ]

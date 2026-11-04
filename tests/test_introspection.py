@@ -241,6 +241,21 @@ def test_scope_headline_and_bad_scope(tmp_path, monkeypatch):
     assert e.value.code == 2
 
 
+def test_removed_judge_opt_exits_before_any_call(tmp_path, monkeypatch, capsys):
+    """opts=judge (the removed regex-only switch, judge=off) exits 2 instead of silently running
+    the full judge."""
+
+    def no_calls(calls, **kw):
+        raise AssertionError("a judge call was made")
+
+    monkeypatch.setattr(judge, "run_calls", no_calls)
+    for value in ("off", "on"):
+        with pytest.raises(SystemExit) as e:
+            judge.run(_args(tmp_path, extra={"judge": value}))
+        assert e.value.code == 2
+        assert "opts=judge was removed" in capsys.readouterr().err
+
+
 def test_missing_cells_are_fatal_without_allow_missing(tmp_path):
     with pytest.raises(SystemExit) as e:
         judge.run(_args(tmp_path, allow_missing=False))
