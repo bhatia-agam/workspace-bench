@@ -461,3 +461,65 @@ Verdict: the pair is valid, and there is no drop (`delta_drops_followup_b2.json`
 
 ### Actions after the B2 follow-up (set builder, 2026-11-04)
 - buggy_code: B2 fix (#288) + non-pilot re-run: t1 landed 1/120 pairs, so 1 authored pair now ships (`library-late-swapped-subtraction`, audited above); still `ooc` on the t2 pilot tally (0/60), out of the macro. Re-frozen; notes rewritten; floors for the five re-measured.
+
+## Introspection audit (independent agent, 2026-11-04)
+
+**Subject:** qwen3.5-2b (Qwen/Qwen3.5-2B), inject block 4 of 24, job_sha 9f45c36480ca349b. This matches the sweep and the calibration.
+
+**Verdict: CONFIRMED NO-GO.** The rule rejects the subject, and nothing points to a pipeline fault. `exclude_from_macro: true` is correct. The status label is the open point (should fix 1 below).
+
+**Method.** Same as the qwen3-8b audit (`/root/tmp/wsb-out/qwen3-8b/introspection/audit/INTRO_AUDIT.md`):
+- An independent recompute from `sweep.json` and `coherence.jsonl`.
+- `sweep.json` and the `.npy` files against `result.npz`.
+- The renders.
+- The vector statistics.
+- The gaussian re-draw.
+- 15 sampled ratings.
+- The 27B port check (reproduces Agam: 0.50/0.75, cos ≥ 0.988).
+- An independent CPU forward of qwen3.5-0.8b (same architecture and template).
+
+This subject has no diagnostic blocks.
+
+**1. Outcome (recomputed).** β0 median RR 0.039. The injected median RR by β (1, 2, 3, 4, 6, 8) is 0.039, 0.044, 0.045, 0.044, 0.043, 0.039. Gaussian ≤ 0.040, cross ≤ 0.044. The share of injected replies rated coherent is 0.88, 0.25, 0.15, 0.10, 0.07, 0.05. No β reaches RR ≥ 0.35, so the result is NO-GO. Every number in the note matches my recomputation (peak 0.045 at β3). All 484 replies are rated. The coherence clause is not decisive.
+
+**2. Renders and sites.** `registered_template` = True, so `check_against_registered` passed: all 12 renders' sites equal the 27B bank's. The renders are identical to qwen3.5-0.8b's, which I re-rendered independently.
+- The inject span is exactly the trial turn or the user content. The grid starts right after it.
+- The vector render is the last token with thinking off.
+- **Inject block:** `remap_layer(12, 24)` = round(4.5) = 4. Python's banker's rounding gives 4. Arguably it should be 5 (12/64 = 0.1875 × 24 = 4.5), but this follows the documented helper, so it is a nit.
+- **Read-span minimum:** 9 (neutral; protocol 24). That equals min_full_positions 9, so it is OK.
+
+**3. Vectors.** 125×2048, all finite, norms 0.17-0.60. No near-duplicates (max cos 0.88). Effective rank 57; the top direction carries 20% of the variance. Neighbour purity 0.312 against 0.032 uniform; cos within 0.31 vs across −0.002. That is sane, if weaker than the 27B's. The gaussian rows equal the recipe exactly.
+
+**4. Coherence spot-check (15 replies).** Reasonable:
+- β0 replies get 9.
+- Off-task "I cannot write a story…" and "here are a few ways to complete that sentence" get 2-3.
+- "I hope you're having a wonderful day… fantastic Thursday" (β1 inject) gets 4. That is fair: it is off the request.
+- The "I am an AI, I cannot write a note" refusal gets 5.
+
+No disagreement above 2 points.
+
+**5. Artifact?** Unlikely:
+- The same code path reproduces the registered 27B (same Qwen3.5 architecture).
+- Steering acts: coherence collapses by β2.
+- The mean RR barely moves (0.09 → 0.12).
+
+**Also worth recording:** P(Yes) at β0 is 0.35-0.44 on every trial. This is a near-coin-flip prior, just under the 0.5 false-alarm cut, so the false-alarm rate reads 0.
+
+The diagnostic deeper blocks were not run for this subject (only 9b, 4b, 8b and OLMo have them). The inject-block rounding (4 vs 5) is therefore untested. Cheap to try if wanted, but the 4B and 9B scans suggest deeper blocks do not help.
+
+**6. Code bugs.**
+- `subjects.py:450`: `round()` is banker's rounding, so x.5 depths round to even. That affects 24-block subjects. Nit, documented behaviour.
+- See also the qwen3-8b audit (`introspection.py:583`, `backend.py:97`; harmless).
+
+**Must fix:** none.
+
+**Should fix:**
+1. The status label. `introspection.py:1060` and families.md say NO-GO → `blocked`; the record is `ooc`, via `note`. A re-run of `build` would revert it. Align code, doc and record.
+
+**Nits:**
+- The note's "Agam's 0.5": the bank's own 27B β2 was 0.417.
+
+**7. Drops.** None. No bank was built.
+
+### Actions (set builder, 2026-11-04)
+- No drops (no bank built). Status kept `ooc` (out of capability: the rule's RR clause fails at every dose, port validated on Qwen3.6-27B) rather than the code's automatic `blocked`; flagged for a decision. Re-frozen `families=introspection` (no-op: the family has no gate rows) and re-noted; note now cites the bank's own 27B 0.417 at beta 2 beside Agam's 0.5.

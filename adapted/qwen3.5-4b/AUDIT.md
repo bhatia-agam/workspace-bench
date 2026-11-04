@@ -865,3 +865,58 @@ Code nit: `src/wsbench/adapt/run.py:1486` reads a `gain` that may belong to the 
 ### Actions (set builder, 2026-11-04, later)
 - Empty-continuation rule (#293): buggy_code regraded + refilled: 40 items / 20 pairs (partial, crash cap binding); no row ships because of an all-empty draw. Re-frozen; floors re-measured.
 
+## Introspection audit (independent agent, 2026-11-04)
+
+**Subject:** qwen3.5-4b (Qwen/Qwen3.5-4B), inject block 6 of 32, job_sha b07d08ae92cfe86f. This matches the sweep and the calibration.
+
+**Verdict: CONFIRMED NO-GO.** The rule rejects the subject, and nothing points to a pipeline fault. `exclude_from_macro: true` is correct. The status label is the open point (should fix 1 below).
+
+**Method.** Same as the qwen3-8b audit (`/root/tmp/wsb-out/qwen3-8b/introspection/audit/INTRO_AUDIT.md`):
+- An independent recompute from `sweep.json` and `coherence.jsonl`.
+- `sweep.json` and the `.npy` files against `result.npz`.
+- The renders.
+- The vector statistics.
+- The gaussian re-draw.
+- 15 sampled ratings.
+- The 27B port check (reproduces Agam: 0.50/0.75, cos ≥ 0.988).
+- An independent CPU forward of qwen3.5-0.8b (same architecture and template).
+
+**1. Outcome (recomputed).** β0 median RR 0.039. The injected median RR by β (1, 2, 3, 4, 6, 8) is 0.043, 0.080, 0.071, 0.059, 0.048, 0.042. Gaussian ≤ 0.044, cross ≤ 0.041. The share of injected replies rated coherent is 0.97, 0.57, 0.33, 0.25, 0.25, 0.35. No β reaches RR ≥ 0.35, so the result is NO-GO. Every number in the note matches my recomputation: peak 0.080 at β2, gaussian ≤ 0.044, diagnostic L10 max 0.069, diagnostic L16 max 0.040. All 484 replies are rated. The coherence clause is not decisive.
+
+**2. Renders and sites.** `registered_template` = True, so `check_against_registered` passed: every site of all 12 renders equals the 27B bank's. The renders are identical to qwen3.5-0.8b's, which I re-rendered independently.
+- The inject span is exactly the trial turn or the user content. The grid starts right after it.
+- The vector render is the last token with thinking off.
+- **Inject block:** `remap_layer(12, 32)` = 6. Correct.
+- **Read-span minimum:** 9 (neutral; protocol 24). That equals min_full_positions 9, so it is OK.
+
+**3. Vectors.** 125×2560, all finite, norms 0.42-1.04. No near-duplicates (max cos 0.82). Effective rank 60. Neighbour purity 0.456 against 0.032 uniform; cos within 0.41 vs across −0.005. The gaussian rows equal the recipe exactly.
+
+**4. Coherence spot-check (15 replies).**
+- β0 and on-task β1 replies get 9-10.
+- Off-task "here are a few ways to write that" and weather-forecast replies get 2-5.
+- A β3 gaussian reply that drafts the requested reschedule email gets 8. That is correct.
+
+These are reasonable, and I have no disagreement above 2 points.
+
+**5. Artifact?** Unlikely. Of the six subjects, this one has the most real signal:
+- The mean RR is 0.24-0.26 at β2-3 (vs gaussian 0.11), with 8/50 words at rank 1 and 14/50 in the top 3 at β3.
+- So the injection carries concept information, but in a minority of concepts, and the median stays at 0.08.
+- The same code path reproduces the registered 27B (same architecture).
+- Deeper blocks are no better: L10 median 0.069 (mean 0.28); L16 flat.
+
+This is a genuine sub-threshold subject. If anyone wants a softer read later, this is the candidate, but the pre-registered rule is the median, and it fails.
+
+**6. Code bugs.** None in this path. See the qwen3-8b audit for two harmless notes (`introspection.py:583`, `backend.py:97`).
+
+**Must fix:** none.
+
+**Should fix:**
+1. The status label. `introspection.py:1060` and families.md say NO-GO → `blocked`; the record is `ooc`, via `note`. A re-run of `build` would revert it. Align code, doc and record.
+
+**Nits:**
+- The note's "Agam's 0.5": the bank's own 27B β2 was 0.417.
+
+**7. Drops.** None. No bank was built.
+
+### Actions (set builder, 2026-11-04)
+- No drops (no bank built). Status kept `ooc` (out of capability: the rule's RR clause fails at every dose, port validated on Qwen3.6-27B) rather than the code's automatic `blocked`; flagged for a decision. Re-frozen `families=introspection` (no-op: the family has no gate rows) and re-noted; note now cites the bank's own 27B 0.417 at beta 2 beside Agam's 0.5.

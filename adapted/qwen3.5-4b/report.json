@@ -781,9 +781,11 @@
    "exclude_from_macro": true
   },
   "introspection": {
-   "status": "absent",
-   "note": "PENDING: needs the subject's own injected concept vectors, dose and detection baseline (adapt introspection, plan 0060 Phase E); not run for this subject",
-   "exclude_from_macro": true
+   "status": "ooc",
+   "note": "ooc (2026-11-04): calibration NO-GO under the family's pre-registered rule at block 6 of 32 (the 27B's L12 by depth): the injected word's median RR peaks at 0.080 (beta 2) over beta 1-8 (need >= 0.6; beta0 0.039, gaussian <= 0.044); >= 80% of injected neutral replies coherent (Opus 5.5, >= 6/10) only at beta 1 (b1 0.97, b2 0.57, b3 0.33, b4 0.25, b6 0.25, b8 0.35). Diagnostic deeper injection (not the rule): block 10 max 0.069; block 16 max 0.040, also flat. The port reproduces the registered subject (Qwen3.6-27B at L12: median RR 0.50 / 0.75 at beta 2 / 4 vs Agam's 0.5 / 0.75, the bank's own 27B run 0.417 / 0.75; concept vectors cos >= 0.988 to the shipped ones), so this is the subject, not the pipeline. Evidence: adapted/qwen3.5-4b/introspection/calibration.json; no bank.",
+   "exclude_from_macro": true,
+   "n_items": 0,
+   "target": 2250
   },
   "hinted_cutoff": {
    "status": "absent",
