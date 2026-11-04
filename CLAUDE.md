@@ -263,7 +263,8 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   side), "which one reason do these readouts mainly give", the judge seeing the digest's sample
   counts; code only verifies the quote, pass = the verified pick is the gold; summary mode asks
   each (item, side) 3 times, reusing conjunctive's `draw_key` / `majority` / `n_draws`, and takes
-  the majority of the draws' pass / fail verdicts, result stamp `+maj3v`; the earlier
+  the majority of the draws' pass / fail verdicts, result stamp `+maj3v`; a near-verbatim quote
+  (`nearquote.close_lines`) verifies like an exact one, summary stamp `+nq1`; the earlier
   multi-label rule survives only as `lucky_guessing.marks_pass`, which scores the multi-mark
   guessers of the floors frozen under it); bank v5 `evals/moral_rationale/items_v5.json` is
   opt-in** (round 4, `ec-v9-b5`; not registered while it leaks the side, review of #215): the 24 bank-v3 items whose rebuilt

@@ -238,7 +238,7 @@ def test_moral_pick_summary_run_one_call_per_side(tmp_path, monkeypatch):
     assert row["majority"] == "pass" and row["draw_verdicts"] == ["pass"] * 3
     assert r.config["draws"] == 3 and "gold_marked_rate" not in r.extras
     assert r.extras["pair_consistency"]["n_pairs"] == 0
-    assert r.config["prompt_version"].startswith("ec-v9+maj3v+digest-")
+    assert r.config["prompt_version"].startswith("ec-v9+nq1+maj3v+digest-")
 
 
 def test_moral_pick_deliberative_one_pick_per_side(tmp_path, monkeypatch):
@@ -342,7 +342,7 @@ def test_moral_majority_on_real_triples(
     fake = install()
     one = mr.run(summary_args(path, out, mrp.PROMPT_VERSION, items=[iid], extra={"draws": "1"}))
     assert fake.n("ec_reason_mc") == 1 and one.value == single and one.config["draws"] == 1
-    assert one.config["prompt_version"].startswith("ec-v9+digest-")  # no +maj suffix
+    assert one.config["prompt_version"].startswith("ec-v9+nq1+digest-")  # no +maj suffix
     fake = install()
     r = mr.run(summary_args(path, out, mrp.PROMPT_VERSION, items=[iid]))
     assert fake.n("ec_reason_mc") == 2 and fake.n("digest") == 0  # draw 0 and the digest cached
@@ -352,7 +352,7 @@ def test_moral_majority_on_real_triples(
     assert row["draw_picks"] == [str(d["choice"]) for d in draws] and not row["label_split"]
     assert row["draw"] == 1 and row["key"].endswith(":committed#d1")
     assert row["quote"] == draws[1]["quote"] and row["correct"] is bool(want)
-    assert r.value == want and r.config["prompt_version"].startswith("ec-v9+maj3v+digest-")
+    assert r.value == want and r.config["prompt_version"].startswith("ec-v9+nq1+maj3v+digest-")
     assert r.extras["draw_votes"] == {"n_votes": 1, "n_unanimous": 0, "n_overturned_draw0": 1,
                                       "n_label_split": 0, "n_failed_draws": 0}  # fmt: skip
     assert r.extras["n_items_undecided"] == 0 and r.counts["n_unjudged_cells"] == 0
@@ -490,3 +490,22 @@ def test_f12_every_other_mention_still_voids(concept, sample):
     bank = ij.load()
     assert ij.names_form(sample, ij.regex_forms(bank, concept))
     assert ij.twin_regex(ij.regex_forms(bank, concept), [Cell("t", 44, 1, (sample,), None, None)])
+
+
+def test_moral_near_verbatim_quote_verifies():
+    """A gold pick whose quote is off by one edge word (ec-pay_ransom_kidnapped_relative:
+    "Paying ransom ..." for the readout's "Paying a ransom ...") verifies like an exact quote;
+    a rewritten sentence or a short fragment still does not."""
+    from wsbench import digest
+    from wsbench.evals.moral_rationale.judge import verify_quote
+    from wsbench.readouts import Cell
+
+    text = "Paying a ransom encourages future kidnappings and funds criminal groups."
+    near = "Paying ransom encourages future kidnappings and funds criminal groups."
+    lines = [digest.Line(text, None, "[L44 pos -1]", 44, -1)]
+    cells = [Cell("ec-x", 44, -1, (text,), None, None)]
+    assert verify_quote(text, lines, cells) == "ok"
+    assert verify_quote(near, lines, cells) == "ok"
+    rewritten = "Ransom payments reward kidnappers and endanger others."
+    assert verify_quote(rewritten, lines, cells) == "text"
+    assert verify_quote("a ransoms", lines, cells) == "text"  # too short for a near quote

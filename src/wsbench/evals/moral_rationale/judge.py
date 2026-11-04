@@ -32,6 +32,7 @@ from wsbench.mcjudge import (
     run_calls,
     with_readout_count,
 )
+from wsbench.nearquote import close_lines
 from wsbench.readouts import Cell, LoadReport
 from wsbench.registry import JudgeArgs
 from wsbench.results import FamilyResult
@@ -290,10 +291,13 @@ def pick_of(choice: Any, mc: MC) -> str:
 def verify_quote(quote: str, lines: list[digest.Line], cells: list[Cell]) -> str:
     """The two-level quote gate (plan 0046 §2.6): ``ok``; ``text`` = not in any line
     (``digest.quote_ok(quote, lines)``); ``bullet`` = in a line but not inside ONE statement
-    (``digest.statement_lines``: one top-level bullet of a free-text sample)."""
-    if not digest.quote_ok(quote, lines):
+    (``digest.statement_lines``: one top-level bullet of a free-text sample). A quote that is
+    near-verbatim (``nearquote.close_lines``: one word added, dropped or changed at an edge, the
+    rule the MC families share) verifies at both levels like an exact one."""
+    if not digest.quote_ok(quote, lines) and not close_lines(quote, lines):
         return "text"
-    if not digest.quote_ok(quote, digest.statement_lines(lines, cells)):
+    stmts = digest.statement_lines(lines, cells)
+    if not digest.quote_ok(quote, stmts) and not close_lines(quote, stmts):
         return "bullet"
     return "ok"
 
@@ -608,7 +612,7 @@ def _run_summary(
         counts=counts,
         config=base_config(
             args,
-            digest.prompt_version(base_pv + majority_stamp(n), args, FAMILY),
+            digest.prompt_version(base_pv + NEAR_QUOTE + majority_stamp(n), args, FAMILY),
             contrast=contrast,
             instrument=version,
             draws=n,
@@ -624,6 +628,10 @@ def _run_summary(
     if n > 1:
         res.extras["draw_votes"] = vote_stats(rows)
     return with_readout_count(res, scope, cells)
+
+
+# summary results verify near-verbatim quotes too (verify_quote; nearquote.close_lines)
+NEAR_QUOTE = "+nq1"
 
 
 def majority_stamp(n: int) -> str:

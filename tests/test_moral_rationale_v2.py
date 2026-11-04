@@ -296,7 +296,7 @@ def test_summary_gets_every_position(tmp_path, monkeypatch):
         # audit F1: one digest per read layer; together they carry every cell
         dig = "\n".join(u for name, _s, u in fake.calls if name == "digest")
         assert len(re.findall(r"^\[L\d+ pos \d+\]$", dig, flags=re.M)) == n_headers, mode
-        want = reads.stamp(digest.prompt_version("ec-v4.1+maj3v", args, FAMILY), mode)
+        want = reads.stamp(digest.prompt_version("ec-v4.1+nq1+maj3v", args, FAMILY), mode)
         assert r.config["prompt_version"] == want
         assert want.endswith("+reads-lite") == (mode == "lite")
         s = r.extras["summary"]

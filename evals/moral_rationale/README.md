@@ -419,7 +419,9 @@ every arm.
 
 - **Code only verifies the quote.** It must lie in the readouts (`digest.quote_ok`) and inside
   ONE statement (`digest.statement_lines`: one bullet of a free-text sample); otherwise the pick
-  is `unverified` (`quote_check` = `text` / `bullet`). **Pass = the verified pick is the gold**
+  is `unverified` (`quote_check` = `text` / `bullet`). A near-verbatim quote (one word added,
+  dropped or changed at an edge, at least 12 characters: `nearquote.close_lines`, the rule the MC
+  families share) verifies like an exact one at both levels. **Pass = the verified pick is the gold**
   (committed: its side; deliberative: both sides). No marks, no support counting, no locator,
   no 1.5x rule, no shared-statement unmarking.
 - **Majority of three draws.** In summary mode each (item, side) is asked `n = 3` times
@@ -429,8 +431,9 @@ every arm.
 - Stamps: `ec-v9` on bank v3; the opt-in banks keep their own stamps of the same instrument
   (`ec-v9-b4`, `ec-v9-b5`, `ec-v9-b7`), so a floor of one bank never serves another.
   `opts=prompts=ec-v4.1` still selects bank v3's older single pick (rules (a)-(f)). A summary
-  result adds `+maj3v` (`judge.majority_stamp`; `opts=draws=1` is the single-call instrument, no
-  suffix); the calls, native results, the ATI gate and the guesser floors keep the bare stamp.
+  result adds `+nq1` (near-verbatim quotes) and `+maj3v` (`judge.majority_stamp`;
+  `opts=draws=1` is the single-call instrument, no suffix); the calls, native results, the ATI
+  gate and the guesser floors keep the bare stamp.
 - **Why one pick:** the earlier multi-label rule (below) treated a stated opposite-side reason
   as an error, although weighing both sides is what deliberation looks like; sample counts over
   every prompt position mostly measure how often the lens repeats a phrase, not what drives the
@@ -676,8 +679,8 @@ An item's loaded cells go to ONE digest call (`docs/summarizer.md` § Item diges
 task type (`DIGEST_TASK_NOTE`: no question, side or option). A committed item gets one MC
 question on the digest; a deliberative item one per side on the same digest, and passes only if
 both sides' majorities pick the gold (ec-v9: one pick per side, asked 3 times, see above). The
-prompt version is `digest.prompt_version("ec-v9" + judge.majority_stamp(n), args,
-"moral_rationale")` (e.g. `ec-v9+maj3v+digest-v5-task-extractive-layered-v1x4+sj-v10` for a
+prompt version is `digest.prompt_version("ec-v9+nq1" + judge.majority_stamp(n), args,
+"moral_rationale")` (e.g. `ec-v9+nq1+maj3v+digest-v5-task-extractive-layered-v1x4+sj-v10` for a
 multi-layer CLI run; `+reads-lite` under lite). Counts: `n_expected_cells` /
 `n_missing_cells` stay cell-level; `n_unjudged_cells` / `n_empty_cells` count items
 (`extras.summary.count_units`). An item with no cells, an empty digest and an unsummarized item
@@ -815,3 +818,5 @@ retries only failures.
 - 2026-11-04 (`+maj3v`): summary mode asks each item and side three times and takes the majority
   of the draws' pass / fail verdicts, because a single pick can flip between runs on the same
   digest.
+- 2026-11-04 (`+nq1`): a near-verbatim quote verifies like an exact one, because gold picks were
+  failing only on one-word quote misses ("ransom" vs "a ransom").
