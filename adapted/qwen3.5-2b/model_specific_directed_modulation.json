@@ -11800,6 +11800,19 @@
     "knobs": {
      "gate": "G0 + compliance on the subject; G1 / ATI panel dropped"
     },
+    "validity": {
+     "member": true,
+     "verdict": "keep_with_aliases",
+     "aliases": [
+      "chardonnay",
+      "Chardonnay",
+      "霞多丽",
+      "莎当妮",
+      "夏多内",
+      "夏布利葡萄"
+     ],
+     "version": "msdm-validity-2026-11-04"
+    },
     "gate": {
      "rate": 0.9,
      "pass": true
