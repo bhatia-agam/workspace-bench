@@ -352,7 +352,10 @@ deleted.
 - **Keys:** `src (buggy/clean), name, code, lang_group, verified, cause, bug_line,
   why_correct/looks_like, consequence_class`.
 - **Gate** (GW `scripts/olens_suite/buggy_code_gate_modal.py`):
-  - ≤ 2/11 raw continuations name the bug;
+  - ≤ 2/11 raw continuations name the bug (port: the greedy draw clean and ≤ 1 of 10 samples;
+    graded by `grade_llm.RUBRICS["buggy_leak_mechanism"]`, plan 0068: does the draw name the
+    MECHANISM in `cause`, whatever output it states; before #289 L1 it was the default "is this
+    the expected answer" rubric against the whole cause, which let a wrong output pass);
   - ≥ 4/6 give the exact buggy stdout when asked "What does this program print?";
   - no review leg: the source gate has none (an earlier draft of this file said "review 4/4").
     Authored items are instead executed (`verify.py`): the buggy stdout is ground truth.
