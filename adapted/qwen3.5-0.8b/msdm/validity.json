@@ -1,0 +1,98 @@
+{
+ "s2_classical_orthogonal_polynomial_family": {
+  "gold": "legendre",
+  "preds": [
+   "hermite",
+   "binomial",
+   "laguerre",
+   "chebyshev"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Legendre polynomials are a classical orthogonal polynomial family, the special case of Jacobi polynomials with alpha = beta = 0."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "binomial"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Legendre",
+    "Legendre polynomials",
+    "Legendre polynomial",
+    "Legendre family",
+    "P_n(x)",
+    "勒让德",
+    "勒让德多项式",
+    "勒壤得多项式"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Legendre polynomials are a specific, well-known classical orthogonal family with a standard Chinese name (勒让德多项式), so readouts can be matched reliably; 'binomial' is not a classical orthogonal polynomial family."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s2_relative_of_the_gamma_function": {
+  "gold": "Gamma function",
+  "preds": [
+   "Digamma function",
+   "Beta function",
+   "Upper incomplete gamma function",
+   "Euler's reflection formula"
+  ],
+  "member": {
+   "member": false,
+   "reason": "The gamma function is the reference function itself, not a relative of it (relatives would be e.g. the beta, digamma, or incomplete gamma functions)."
+  },
+  "qa": {
+   "ill_defined": true,
+   "junk_predictions": [
+    "Euler's reflection formula"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Γ function",
+    "Γ(x)",
+    "伽马函数",
+    "Γ函数",
+    "第二类欧拉积分"
+   ],
+   "verdict": "drop",
+   "reason": "The gold 'Gamma function' just restates the category anchor; the gamma function is not its own relative, so the item is ill-defined, even though the label would be easy to recognise."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s1_programming_paradigm": {
+  "gold": "Functional",
+  "preds": [
+   "Object-Oriented",
+   "tutorial programming",
+   "typescript"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Functional programming is a well-established, correctly named programming paradigm."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "tutorial programming",
+    "typescript"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Functional",
+    "Functional programming",
+    "Functional paradigm",
+    "FP",
+    "函数式",
+    "函数式编程",
+    "函数式程序设计",
+    "函数编程"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Functional is a specific, well-known programming paradigm that a judge can easily recognise; accept the common English and Chinese variants and the abbreviation FP."
+  },
+  "version": "msdm-validity-2026-11-04"
+ }
+}

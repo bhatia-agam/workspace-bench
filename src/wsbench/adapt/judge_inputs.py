@@ -115,7 +115,13 @@ def get_path(d: Any, path: str) -> Any:
 
 
 def has_path(d: Any, path: str) -> bool:
-    return get_path(d, path) is not _MISSING
+    """``"a.b"``: every key present; ``"a[].b"``: ``a`` is a non-empty list and every element
+    has ``b`` (plan 0066 §11.1, the same rule as ``run.has_path``)."""
+    head, sep, rest = path.partition("[].")
+    if not sep:
+        return get_path(d, path) is not _MISSING
+    cur = get_path(d, head)
+    return isinstance(cur, list) and bool(cur) and all(has_path(el, rest) for el in cur)
 
 
 def item_id(item: Mapping[str, Any]) -> str:
@@ -1410,6 +1416,15 @@ _add(
             _req("readout", COPY, "readplan.py:732-741", probe=_p_mh2_readout, absent=FALLBACK),
             _req("mc", BUILD, "multitoken/options.py:207-212", absent=FALLBACK),
             _req("name_forms", BUILD, "multitoken/family.py:2617-2632", absent=SILENT),
+            _req(
+                "units[].kind",
+                BUILD,
+                "multitoken/family.py:1307-1328 (bank_entities), 1877-1884 (_rivals)",
+                "list_gate's rival pools are keyed by kind: a unit without one joins the '' pool "
+                "and gets no same-kind rivals (plan 0066 §6; refill units are classified, never "
+                "defaulted)",
+                absent=SILENT,
+            ),
             _q(
                 "SYSTEM 'English or Chinese' (MH2_NATIVE_LANGS = DEFAULT_NATIVE_LANGS)",
                 HAZARD,
@@ -2066,7 +2081,7 @@ _add(
 
 
 def _top(path: str) -> str:
-    return path.split(".", 1)[0]
+    return path.split(".", 1)[0].removesuffix("[]")
 
 
 REQUIRED_ITEM_FIELDS: dict[str, tuple[str, ...]] = {
