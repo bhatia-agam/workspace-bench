@@ -1,0 +1,46 @@
+{
+ "b2_02069": {
+  "gold": "amd",
+  "cutoff": null,
+  "js": {
+   "true_answer": null,
+   "model_correct": "no",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "Intel's market cap first fell below AMD's back in 2022, so AMD cannot be a 'first time' event in October 2026; the model is reusing an earlier fact."
+  }
+ },
+ "b2_00235": {
+  "gold": "8",
+  "cutoff": null,
+  "js": {
+   "true_answer": "4096",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "Qwen3-Embedding-8B outputs 4096-dimensional embeddings; the answer '8' appears to come from the '8B' parameter count in the model's name rather than from a prior fact."
+  }
+ },
+ "b2_00931": {
+  "gold": "kabul",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Kabul",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "The framework agreement on the Uzbekistan–Afghanistan–Pakistan railway was signed in Kabul on 17 July 2025, so the model's answer matches."
+  }
+ },
+ "cs00977": {
+  "gold": "lyon",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Marseille",
+   "model_correct": "no",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "Trenitalia France launched Paris–Marseille via Lyon in June 2025; the question says 'by way of Lyon', so answering Lyon both contradicts the question and reuses the old Paris–Lyon route."
+  }
+ }
+}
