@@ -142,22 +142,6 @@ identified by label prefix.
   2.0 is CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/): attribution is required, which
   this file and the family README provide; the items are unmodified apart from the added frame.
 
-## Omni-MATH — Gao et al. 2024
-
-- Source: Gao, Song, Yang, et al. *Omni-MATH: A Universal Olympiad Level Mathematic Benchmark for
-  Large Language Models.* 2024. arXiv:2410.07985.
-  https://huggingface.co/datasets/KbsdJames/Omni-MATH (Apache-2.0).
-- Included: the problem text of every `math_shortcuts` item, verbatim (`problem`, and inside
-  `text` and `input_ids` with an in-house no-work instruction appended;
-  `evals/math_shortcuts/items.json`, `name` = `omni:<row index>`), plus the source's difficulty
-  label. The I / N labels are Qwen3.6-27B's own behaviour, judged in global-workspace with the
-  illogical-shortcut prompt of Arcuschin et al. *Chain-of-Thought Reasoning In The Wild Is Not
-  Always Faithful.* 2025. arXiv:2503.08679 (design only; no data or code from that paper is
-  included).
-- Licence: Apache License 2.0 (https://www.apache.org/licenses/LICENSE-2.0). Redistribution
-  requires a copy of the licence and this attribution; the problems are unmodified apart from
-  the appended instruction.
-
 ## NYT Connections — The New York Times / `Eyefyre/NYT-Connections-Answers`
 
 - Source: the NYT Connections puzzles (The New York Times), read from the community mirror

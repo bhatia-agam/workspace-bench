@@ -35,58 +35,9 @@
  "adapt": {
   "model": "qwen3-8b",
   "hf_id": "Qwen/Qwen3-8B",
-  "frozen": "2026-11-04"
+  "frozen": "2026-11-05"
  },
  "items": [
-  {
-   "src": "buggy",
-   "name": "py-discount-applied-twice",
-   "kind": "silent",
-   "code": "def checkout(price, member_pct):\n    subtotal = price * (1 - member_pct / 100)\n    total = subtotal * (1 - member_pct / 100)\n    return round(total, 2)\n\nprint(checkout(200.0, 20))",
-   "category": "discount applied twice",
-   "cause": "the member percentage is applied to the subtotal a second time, so a 20% discount becomes 36%",
-   "level2_tokens": [],
-   "bug_line": 3,
-   "raises": false,
-   "language": "python",
-   "difficulty": "subtle",
-   "failure_mode": "silent",
-   "comment_line": null,
-   "verified": "exec: exit 0; stdout = '128.0'",
-   "n_lines": 6,
-   "gate_tier": "strict",
-   "consequence_class": "value",
-   "depth": "mid",
-   "review_finds": "4/4",
-   "jlens_hint": null,
-   "lang_group": "python",
-   "twin": "py-clean-discount-once",
-   "id": "py-discount-applied-twice",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 0.9,
-     "pass": true
-    }
-   }
-  },
-  {
-   "src": "clean",
-   "name": "py-clean-discount-once",
-   "code": "def checkout(price, member_pct):\n    total = price * (1 - member_pct / 100)\n    return round(total, 2)\n\nprint(checkout(200.0, 20))",
-   "language": "python",
-   "verified": "exec: exit 0; stdout = '160.0'",
-   "lang_group": "python",
-   "twin": "py-discount-applied-twice",
-   "id": "py-clean-discount-once",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
   {
    "src": "buggy",
    "name": "py-refund-exceeds-price",
@@ -382,66 +333,6 @@
     "origin": "original",
     "gate": {
      "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "src": "buggy",
-   "name": "buggy-au-t1-w102c0-py-mean-floored",
-   "id": "buggy-au-t1-w102c0-py-mean-floored",
-   "code": "def mean_rating(ratings):\n    total = 0\n    for r in ratings:\n        total += r\n    return total // len(ratings)\n\nprint(mean_rating([4, 5, 4, 4]))",
-   "verified": "exec: exit 0; stdout = '4'",
-   "cause": "the sum 17 is floor-divided by 4, so the mean prints 4 instead of 4.25",
-   "category": "integer division for an average",
-   "bug_line": 5,
-   "level2_tokens": [
-    "floor",
-    "truncation"
-   ],
-   "consequence_class": "value",
-   "raises": false,
-   "n_lines": 7,
-   "language": "python",
-   "lang_group": "python",
-   "twin": "buggy-au-clean-t1-w102c0-py-mean-floored",
-   "source": "authored (claude-opus-5-5) for qwen3-8b: About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 102,
-    "gate": {
-     "rate": 0.8888888888888888,
-     "pass": true
-    }
-   }
-  },
-  {
-   "src": "clean",
-   "name": "buggy-au-clean-t1-w102c0-py-mean-floored",
-   "id": "buggy-au-clean-t1-w102c0-py-mean-floored",
-   "code": "def mean_score(scores):\n    acc = 0\n    for s in scores:\n        acc += s\n    return acc / len(scores)\n\nprint(mean_score([4, 5, 4, 4]))",
-   "verified": "exec: exit 0; stdout = '4.25'",
-   "why_correct": "true division keeps the fractional part, so 17 / 4 prints 4.25",
-   "looks_like": "division by the wrong count",
-   "language": "python",
-   "lang_group": "python",
-   "twin": "buggy-au-t1-w102c0-py-mean-floored",
-   "source": "authored (claude-opus-5-5) for qwen3-8b: About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 102,
-    "gate": {
-     "rate": 0.9,
      "pass": true
     }
    }
