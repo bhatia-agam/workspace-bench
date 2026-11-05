@@ -71,11 +71,25 @@ def bank_file(model: str, family: str) -> Path:
     return _legacy_ok(model_dir(model), family, ".json")
 
 
+def report_key(section: dict[str, Any] | None, family: str) -> str:
+    """The key of ``family``'s entry in a section of a set's ``report.json`` (``families``,
+    ``drops``): the first one present in ``registry.lookup_names`` order (a set written before a
+    rename keeps its entry under the former key), else ``family``."""
+    section = section or {}
+    return next((k for k in lookup_names(family) if k in section), family)
+
+
 def report_entry(section: dict[str, Any] | None, family: str) -> dict[str, Any]:
     """``section[family]`` of a set's ``report.json`` (``families``, ``drops``), or the entry
-    written under a former family key (``registry.lookup_names``); ``{}`` when there is none."""
-    section = section or {}
-    return next((section[k] for k in lookup_names(family) if k in section), {})
+    written under a former family key (``report_key``); ``{}`` when there is none."""
+    return (section or {}).get(report_key(section, family), {})
+
+
+def report_slot(report: dict[str, Any], section: str, family: str) -> dict[str, Any]:
+    """``report[section]``'s entry of ``family``, created when missing: a writer's view of
+    ``report_entry``, so an update lands on the entry that readers see."""
+    sec = report.setdefault(section, {})
+    return sec.setdefault(report_key(sec, family), {})
 
 
 def gate_path(model: str, family: str) -> Path:

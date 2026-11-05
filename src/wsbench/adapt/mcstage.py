@@ -38,7 +38,7 @@ import sys
 from pathlib import Path
 
 from wsbench import mc
-from wsbench.registry import REPO_ROOT
+from wsbench.registry import REPO_ROOT, family_dir
 
 from . import store
 
@@ -169,10 +169,11 @@ def work_dir(model: str, family: str, todo: list[dict]) -> Path:
     their ``--out`` already holds, so a shared dir mixed a previous build's pools into the next
     one (r4b ``load_lists`` then raised KeyError on the ids the new bank lacks). The same
     pending set (a crashed build rerun) resumes in its own dir; a new set starts fresh, and
-    earlier builds' dirs stay as the archive."""
+    earlier builds' dirs stay as the archive. A set written before a family rename keeps its
+    former key's dir (``registry.family_dir``)."""
     blob = json.dumps(sorted(todo, key=store.item_id), sort_keys=True, ensure_ascii=False)
     key = hashlib.sha256(blob.encode("utf-8")).hexdigest()[:12]
-    return store.model_dir(model) / "mc" / family / f"build-{key}"
+    return family_dir(store.model_dir(model) / "mc", family) / f"build-{key}"
 
 
 def build(model: str, family: str) -> dict[str, int]:

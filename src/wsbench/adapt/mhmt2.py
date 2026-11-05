@@ -1403,7 +1403,7 @@ def bank_builder() -> Any:
 GPU_EXTRA_HINT = (
     "build_fields stamps token counts with the subject's real tokenizer and needs the `gpu` "
     "extra (transformers): run it from a venv that has it, e.g. `/root/torchvenv/bin/python -m "
-    "wsbench.adapt multihop_mt_v2 ...`, or `uv sync --extra gpu` first"
+    "wsbench.adapt multihop_mt ...`, or `uv sync --extra gpu` first"
 )
 
 
@@ -1646,8 +1646,9 @@ def shipped_rows(model: str) -> list[dict]:
 
 
 def record_over_gate(model: str, res: dict) -> str | None:
-    """``families.multihop_mt_v2.mc_over_gate`` in report.json: the number of distinct currently
-    shipping refill items (:func:`shipped_rows`) that any chain run left over the gate. Each run
+    """``families.multihop_mt.mc_over_gate`` in report.json (the entry under a former key in a set
+    written before the rename): the number of distinct currently shipping refill items
+    (:func:`shipped_rows`) that any chain run left over the gate. Each run
     stores its over-gate item ids (``mc_over_gate_runs``, keyed by work dir, so a re-run
     replaces its own set); the count is ``|union of every run's ids & shipped|``, so an item is
     counted at most once and a non-shipping item never. The family ``note`` gets an ``mc over
@@ -1662,7 +1663,7 @@ def record_over_gate(model: str, res: dict) -> str | None:
     shipped = {str(r["id"]) for r in ship} | {store.item_id(r["item"]) for r in ship}
 
     def _set(report: dict) -> None:
-        entry = report.setdefault("families", {}).setdefault(FAMILY, {})
+        entry = store.report_slot(report, "families", FAMILY)
         runs = entry.setdefault("mc_over_gate_runs", {})
         runs[res["mc_build"]] = {"over_gate_ids": sorted(map(str, res["mc_over_gate_ids"]))}
         over = {i for v in runs.values() for i in (v.get("over_gate_ids") or [])}
@@ -1681,7 +1682,9 @@ def record_over_gate(model: str, res: dict) -> str | None:
 
 def _work_dir(model: str, ids: list[str]) -> Path:
     key = hashlib.sha256(json.dumps(sorted(ids)).encode()).hexdigest()[:12]
-    return store.model_dir(model) / "mc" / FAMILY / f"refill-{key}"
+    from wsbench.registry import family_dir  # a set's dir under the former key wins
+
+    return family_dir(store.model_dir(model) / "mc", FAMILY) / f"refill-{key}"
 
 
 def build_fields(

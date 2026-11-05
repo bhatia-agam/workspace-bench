@@ -868,10 +868,10 @@ row whose summary `prompt_version`, digest settings and judge match its entry, s
 instrument changes its floor is withheld until the prompt-only file is re-judged and re-frozen.
 
 **2026-11-04 re-measures (plan 0066).** wrong_intermediate under `wbcues-v2` (#273's cue stamp)
-and multihop_mt_v2 under `xrole-v1` (#284: the item's own other bridge is never a rival) were
+and multihop_mt under `xrole-v1` (#284: the item's own other bridge is never a rival) were
 re-asked and re-judged (prompt-only summary; Opus 5.5 served every answer, so no fallback ran),
 and their lucky-guessing entries re-run under the new stamps: wrong_intermediate blind .148 /
-described .132 / uniform .188 / topic .090; multihop_mt_v2 blind .080 / described .229 /
+described .132 / uniform .188 / topic .090; multihop_mt blind .080 / described .229 /
 uniform .186 / topic .226 (draw-to-draw noise beside the earlier .120 / .156 / .188 / .092 and
 .074 / .183 / .186 / .211; the option lists are unchanged). The lucky run of a renamed family
 needed a fix: its replies were looked up under the new name while the calls are keyed by the old
@@ -879,7 +879,7 @@ one (`hash_name`), so every draw read as an API failure. Of these, the floors of
 keep wrong_intermediate's lucky-guessing entries, restamped to the judge-only instrument (a
 guesser sees only the lists). wrong_intermediate's prompt-only floor and text-blind entry are the
 refreeze's, measured under the judge-only rule and restamped to `+wbcues-v2` (no verdict reads
-the cues), and multihop_mt_v2's floors are the refreeze's on the bank without Kant among
+the cues), and multihop_mt's floors are the refreeze's on the bank without Kant among
 kant-hume's options, under the no-rival rule (which never weighs the other bridge either).
 
 ## Prompt-only (`prompt_only.json`)

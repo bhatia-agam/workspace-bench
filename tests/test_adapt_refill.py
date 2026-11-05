@@ -53,14 +53,14 @@ def _gate_log(d, family, rows):
 # ============================================================================ policy
 def test_policy_covers_the_five_families_with_the_plan_thresholds():
     five = {"buggy_code", "model_specific_directed_modulation", "knowledge_cutoff",
-            "wrong_intermediate", "multihop_mt_v2"}  # fmt: skip
+            "wrong_intermediate", "multihop_mt"}  # fmt: skip
     assert set(rf.POLICY) == five
     want = {
         "buggy_code": ("pairs", 60, 0.03),
         "model_specific_directed_modulation": ("categories", 200, 0.03),
         "knowledge_cutoff": ("items", 1000, 0.01),
         "wrong_intermediate": ("items", 200_000, 5e-5),
-        "multihop_mt_v2": ("items", 300, 0.03),
+        "multihop_mt": ("items", 300, 0.03),
     }
     for fam, (unit, n_min, y_min) in want.items():
         p = rf.POLICY[fam]
@@ -198,12 +198,12 @@ def test_select_hook_applies_to_new_rows_only(monkeypatch):
     rows = [_row({"id": "o1"}), _row({"id": "n1"}, origin="refill"), _row({"id": "o2"}),
             _row({"id": "n2"}, origin="refill")]  # fmt: skip
     monkeypatch.delattr(mhmt2, "select_refill", raising=False)
-    assert rf.apply_select_hook("multihop_mt_v2", rows) == rows  # no hook: identity
+    assert rf.apply_select_hook("multihop_mt", rows) == rows  # no hook: identity
     monkeypatch.setattr(mhmt2, "select_refill", lambda rs: list(reversed(rs))[:1], raising=False)
-    got = [r["id"] for r in rf.apply_select_hook("multihop_mt_v2", rows)]
+    got = [r["id"] for r in rf.apply_select_hook("multihop_mt", rows)]
     assert got == ["o1", "o2", "n2"]
     monkeypatch.setattr(mhmt2, "row_passes", lambda r: r["id"] != "o2", raising=False)
-    passes = [r["gate"]["pass"] for r in rf.freeze_rows("multihop_mt_v2", rows)]
+    passes = [r["gate"]["pass"] for r in rf.freeze_rows("multihop_mt", rows)]
     assert passes == [True, False, True]
 
 
@@ -388,7 +388,7 @@ def test_refill_driver_writes_the_block_and_stops_ooc(mdir, monkeypatch):
 
 
 def test_refill_driver_no_ooc_while_a_harder_level_is_untried(mdir, monkeypatch):
-    """multihop_mt_v2: a 2-hop tally under y_min is not ooc while 3-hop pool candidates remain
+    """multihop_mt: a 2-hop tally under y_min is not ooc while 3-hop pool candidates remain
     ungated (``mhmt2.untried_levels``); once none remain, the plan's ooc rule applies."""
     from wsbench.adapt import mhmt2
 
@@ -400,13 +400,13 @@ def test_refill_driver_no_ooc_while_a_harder_level_is_untried(mdir, monkeypatch)
 
     monkeypatch.setattr(mhmt2, "refill_wave", wave, raising=False)
     monkeypatch.setattr(mhmt2, "untried_levels", lambda m: ["3hop"] if left["n"] > 0 else [])
-    assert rf.refill(MODEL, ["multihop_mt_v2"])["multihop_mt_v2"] == "ooc"
-    b = json.loads((mdir / "report.json").read_text())["families"]["multihop_mt_v2"]["refill"]
+    assert rf.refill(MODEL, ["multihop_mt"])["multihop_mt"] == "ooc"
+    b = json.loads((mdir / "report.json").read_text())["families"]["multihop_mt"]["refill"]
     assert b["waves"] == 2 and b["tried"] == 600 and b["untried_levels"] == []
     # the pilot still stops at n_min, never ooc, while the harder level is untried
     left["n"] = 5
-    assert rf.refill(MODEL, ["multihop_mt_v2"], pilot=True)["multihop_mt_v2"] == "partial"
-    b = json.loads((mdir / "report.json").read_text())["families"]["multihop_mt_v2"]["refill"]
+    assert rf.refill(MODEL, ["multihop_mt"], pilot=True)["multihop_mt"] == "partial"
+    b = json.loads((mdir / "report.json").read_text())["families"]["multihop_mt"]["refill"]
     assert b["stop"].startswith("pilot") and b["untried_levels"] == ["3hop"]
 
 
@@ -418,12 +418,12 @@ def test_refill_driver_hold_pilot_budget_and_missing_route(mdir, monkeypatch):
 
     monkeypatch.setattr(mhmt2, "refill_wave", wave, raising=False)
     # the pilot stops once n_min (300) candidates are tallied and yield is fine: not ooc
-    assert rf.refill(MODEL, ["multihop_mt_v2"], pilot=True)["multihop_mt_v2"] == "partial"
-    b = json.loads((mdir / "report.json").read_text())["families"]["multihop_mt_v2"]["refill"]
+    assert rf.refill(MODEL, ["multihop_mt"], pilot=True)["multihop_mt"] == "partial"
+    b = json.loads((mdir / "report.json").read_text())["families"]["multihop_mt"]["refill"]
     assert b["pilot"] is True and b["tried"] == 300 and b["stop"].startswith("pilot")
     # a Claude budget, counted from the waves' own call counts
-    assert rf.refill(MODEL, ["multihop_mt_v2"], claude_budget=300)["multihop_mt_v2"] == "partial"
-    b = json.loads((mdir / "report.json").read_text())["families"]["multihop_mt_v2"]["refill"]
+    assert rf.refill(MODEL, ["multihop_mt"], claude_budget=300)["multihop_mt"] == "partial"
+    b = json.loads((mdir / "report.json").read_text())["families"]["multihop_mt"]["refill"]
     assert "claude_budget 300" in b["stop"] and b["waves"] == 3  # waves accumulate across runs
     # refill_hold blocks ooc
     store.update_report(MODEL, lambda r: r.setdefault("families", {}).setdefault(

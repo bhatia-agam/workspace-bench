@@ -18,7 +18,7 @@ BUGGY = "buggy_code"
 MSDM = "model_specific_directed_modulation"
 KCUTOFF = "knowledge_cutoff"
 WI = "wrong_intermediate"
-MH2 = "multihop_mt_v2"
+MH2 = "multihop_mt"
 
 # the adapt module that owns each family's stages and optional hooks (row_passes, select_refill,
 # refill_wave, prior_tally, build_pool); buggy_code goes through run.fill
@@ -343,7 +343,7 @@ def change_text(block: dict, measured: str = "") -> str:
 
 def write_block(model: str, family: str, block: dict, status: str) -> None:
     def _set(report: dict) -> None:
-        entry = report.setdefault("families", {}).setdefault(family, {})
+        entry = store.report_slot(report, "families", family)
         entry["refill"] = block
         entry["status"] = status
 
@@ -387,7 +387,7 @@ def _refill_family(
     pilot: bool, llm: str, runner: Any,
 ) -> str:  # fmt: skip
     pol = POLICY[family]
-    entry = (store.read_report(model).get("families") or {}).get(family, {})
+    entry = store.report_entry(store.read_report(model).get("families"), family)
     hold = entry.get("refill_hold")
     prev = refill_block(entry) or {}
     target = pol.target
@@ -404,7 +404,7 @@ def _refill_family(
     while True:
         have = have_of(model, family)
         # a harder level of the family's construction with candidates never gated: no ooc yet
-        # (GLM-5.3 multihop_mt_v2, 2026-11-04: the 2-hop pilot failed on shortcuts, i.e. the
+        # (GLM-5.3 multihop_mt, 2026-11-04: the 2-hop pilot failed on shortcuts, i.e. the
         # subject was too capable for the easiest level, and the 3-hop pool was never tried)
         untried = list(levels_hook(model)) if levels_hook is not None else []
         n_min = float("inf") if untried else pol.n_min
