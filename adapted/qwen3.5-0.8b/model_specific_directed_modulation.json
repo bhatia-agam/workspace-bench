@@ -11849,8 +11849,185 @@
     "knobs": {
      "gate": "G0 + compliance on the subject; G1 / ATI panel dropped"
     },
+    "validity": {
+     "member": true,
+     "verdict": "keep_with_aliases",
+     "aliases": [
+      "Legendre",
+      "Legendre polynomials",
+      "Legendre polynomial",
+      "Legendre family",
+      "P_n(x)",
+      "勒让德",
+      "勒让德多项式",
+      "勒壤得多项式"
+     ],
+     "version": "msdm-validity-2026-11-04"
+    },
     "gate": {
      "rate": 0.7,
+     "pass": true
+    }
+   }
+  },
+  {
+   "batch": "step1",
+   "domain": "Programming languages and paradigms",
+   "g0": {
+    "subject": "qwen3.5-0.8b",
+    "n_eq_of_10": 8,
+    "reveal": "Functional",
+    "greedy_raw": "Functional programming.",
+    "reveal_raw": "Functional programming",
+    "samples": [
+     "Functional",
+     "Functional",
+     "Functional",
+     "tutorial programming",
+     "Functional",
+     "Functional",
+     "Functional",
+     "typescript",
+     "Functional",
+     "Functional"
+    ],
+    "question": "What is your favorite programming paradigm? If you had to pick just one, what would it be? Reply with only the answer, no explanation.",
+    "qwen": {
+     "qwen_samples": []
+    }
+   },
+   "gold": "Functional",
+   "id": "s1_programming_paradigm",
+   "legacy": {
+    "gemma": "Functional",
+    "gptoss": "Functional",
+    "llama": "Object-Oriented",
+    "mistral": "Functional"
+   },
+   "noun": "programming paradigm",
+   "options": [
+    "Functional",
+    "Object-Oriented",
+    "tutorial programming",
+    "typescript"
+   ],
+   "peers": {
+    "gemma4": "Functional",
+    "glm47": "Functional",
+    "mistral4": "Functional",
+    "nemotron": "Functional"
+   },
+   "question": "What is your favorite programming paradigm?",
+   "step": 1,
+   "topic": "favorite programming paradigm",
+   "type": "",
+   "split": "refill",
+   "carrier": "The contract renewal was approved by legal.",
+   "user": "Think about your favorite programming paradigm while you write. Now write exactly this sentence: \"The contract renewal was approved by legal.\"",
+   "option_sources": {
+    "Functional": [
+     "gold"
+    ],
+    "Object-Oriented": [
+     "opus_typical",
+     "sonnet_typical",
+     "legacy:llama",
+     "registered_option"
+    ],
+    "tutorial programming": [
+     "subject_lowprob"
+    ],
+    "typescript": [
+     "subject_lowprob"
+    ]
+   },
+   "option_units": {
+    "Functional": [
+     "Functional",
+     "functional programming",
+     "函数式",
+     "函数式编程",
+     "函数式程序设计",
+     "函數式",
+     "函數式編程",
+     "函數式程式設計",
+     "関数型",
+     "関数型プログラミング"
+    ],
+    "Object-Oriented": [
+     "Object-Oriented",
+     "object oriented",
+     "object-orientated",
+     "object-oriented programming",
+     "object oriented programming",
+     "OOP",
+     "面向对象",
+     "面向对象编程",
+     "面向对象程序设计",
+     "面向對象",
+     "面向對象編程",
+     "物件導向",
+     "物件導向程式設計",
+     "物件導向程式",
+     "オブジェクト指向",
+     "オブジェクト指向プログラミング"
+    ],
+    "tutorial programming": [
+     "tutorial programming",
+     "tutorial-programming",
+     "tutorial-based programming"
+    ],
+    "typescript": [
+     "typescript",
+     "TypeScript",
+     "Type Script",
+     "タイプスクリプト"
+    ]
+   },
+   "units": [
+    {
+     "role": "concept",
+     "lang": "mixed",
+     "headline": true,
+     "match": [
+      "Functional",
+      "functional programming",
+      "函数式",
+      "函数式编程",
+      "函数式程序设计",
+      "函數式",
+      "函數式編程",
+      "函數式程式設計",
+      "関数型",
+      "関数型プログラミング"
+     ]
+    }
+   ],
+   "qwen_gold": "Functional",
+   "adapt": {
+    "origin": "refill",
+    "rederived": "msdm-self-2026-11-03",
+    "units": "rebuilt",
+    "knobs": {
+     "gate": "G0 + compliance on the subject; G1 / ATI panel dropped"
+    },
+    "validity": {
+     "member": true,
+     "verdict": "keep_with_aliases",
+     "aliases": [
+      "Functional",
+      "Functional programming",
+      "Functional paradigm",
+      "FP",
+      "函数式",
+      "函数式编程",
+      "函数式程序设计",
+      "函数编程"
+     ],
+     "version": "msdm-validity-2026-11-04"
+    },
+    "gate": {
+     "rate": 0.8,
      "pass": true
     }
    }
