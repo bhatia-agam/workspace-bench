@@ -1419,7 +1419,7 @@ _add(
             _req(
                 "units[].kind",
                 BUILD,
-                "multitoken/family.py:1307-1328 (bank_entities)",
+                "multitoken/family.py:1307-1328 (bank_entities), 1877-1884 (_rivals)",
                 "list_gate's rival pools are keyed by kind: a unit without one joins the '' pool "
                 "and gets no same-kind rivals (plan 0066 §6; refill units are classified, never "
                 "defaulted)",
