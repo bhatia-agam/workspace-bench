@@ -1,0 +1,221 @@
+{
+ "rule": "headline = smallest beta with median RR >= 0.6 and >= 80% injected neutral replies rated >= 6; secondary = smallest with median RR >= 0.35; GO iff at the headline RR - beta0 >= 0.3, RR - gaussian >= 0.3, cross <= beta0 + 0.1",
+ "detection_baseline": {
+  "beta0_median_rr": 0.039230769230769236,
+  "beta0_top5": [
+   "milk",
+   "bread",
+   "information",
+   "oceans",
+   "trees"
+  ],
+  "p_yes_beta0": {
+   "1": 0.08149690907414428,
+   "2": 0.08541185775509902,
+   "3": 0.16270613649752255,
+   "4": 0.1079839218530888,
+   "5": 0.1589313741478223,
+   "6": 0.1438176188791707,
+   "7": 0.14801137136132367,
+   "8": 0.17295890226184138
+  },
+  "false_alarm_rate": 0
+ },
+ "table": {
+  "1": {
+   "rr_inject": 0.039230769230769236,
+   "rr_inject_mean": 0.08611198053866942,
+   "rr_gauss": 0.041666666666666664,
+   "rr_cross": 0.04083333333333333,
+   "detect_inject": 0,
+   "detect_gauss": 0,
+   "coherent_inject": 1.0,
+   "coherent_gauss": 1.0
+  },
+  "2": {
+   "rr_inject": 0.036375661375661374,
+   "rr_inject_mean": 0.10037561247941403,
+   "rr_gauss": 0.04096989966555184,
+   "rr_cross": 0.038461538461538464,
+   "detect_inject": 0,
+   "detect_gauss": 0,
+   "coherent_inject": 1.0,
+   "coherent_gauss": 1.0
+  },
+  "3": {
+   "rr_inject": 0.04173913043478261,
+   "rr_inject_mean": 0.09989245967579133,
+   "rr_gauss": 0.03851851851851852,
+   "rr_cross": 0.04,
+   "detect_inject": 0,
+   "detect_gauss": 0.02,
+   "coherent_inject": 0.775,
+   "coherent_gauss": 0.55
+  },
+  "4": {
+   "rr_inject": 0.039230769230769236,
+   "rr_inject_mean": 0.08606048231935724,
+   "rr_gauss": 0.04006410256410256,
+   "rr_cross": 0.044466403162055336,
+   "detect_inject": 0.1,
+   "detect_gauss": 0.02,
+   "coherent_inject": 0.3,
+   "coherent_gauss": 0.075
+  },
+  "6": {
+   "rr_inject": 0.038461538461538464,
+   "rr_inject_mean": 0.09837770993398672,
+   "rr_gauss": 0.04173913043478261,
+   "rr_cross": 0.043478260869565216,
+   "detect_inject": 0.26,
+   "detect_gauss": 0.22,
+   "coherent_inject": 0.0,
+   "coherent_gauss": 0.0
+  },
+  "8": {
+   "rr_inject": 0.037037037037037035,
+   "rr_inject_mean": 0.08904466823778258,
+   "rr_gauss": 0.039230769230769236,
+   "rr_cross": 0.04,
+   "detect_inject": 0.4,
+   "detect_gauss": 0.52,
+   "coherent_inject": 0.025,
+   "coherent_gauss": 0.0
+  }
+ },
+ "headline_beta": null,
+ "secondary_beta": null,
+ "GO": false,
+ "why": "no beta reaches median RR >= 0.6 with >= 80% coherent neutral replies",
+ "notes": [],
+ "job_sha": "6c33a00c31c56703",
+ "engine": {
+  "stack": "xaff MUS reader (load_truncated at 62 blocks, fused NVFP4 experts) + the checkpoint's lm_head with the stock softcap; steer on the decoder-layer output",
+  "subject_revision": "meta-models/Muse-Spark-Open-816B-A42B-NVFP4@4239e4db19376904f2e82c167e78f70abb5455fe",
+  "residual": "plain_8192",
+  "stop_ids": [
+   200001,
+   200008
+  ],
+  "generation_config_check": {
+   "checked": [
+    "bad_words_ids",
+    "begin_suppress_tokens",
+    "diversity_penalty",
+    "encoder_no_repeat_ngram_size",
+    "encoder_repetition_penalty",
+    "exponential_decay_length_penalty",
+    "forced_bos_token_id",
+    "forced_eos_token_id",
+    "min_length",
+    "min_new_tokens",
+    "no_repeat_ngram_size",
+    "num_beam_groups",
+    "num_beams",
+    "repetition_penalty",
+    "sequence_bias",
+    "suppress_tokens"
+   ],
+   "non_default": {}
+  },
+  "logits": "20 * tanh(lm_head(norm(h)) * 0.176777 / 20)",
+  "loader_sha256": {
+   "/root/app/src/global_workspace/xaff/backends/muse.py": "88f09212f2592245115e83a8a9762c5770f01cd935af82467e07cf4ded3317d9",
+   "/root/app/src/global_workspace/native_quant_jlens/backends.py": "8d0e0d1d3706442fdf5a1628e91e3db489af7d691eb2a8eeb25474c39de79f2a"
+  },
+  "gw_commit": "5607cd475f4f3965cd3dfab0e2628aa5e739b978+dirty",
+  "device_map": [
+   0,
+   0,
+   0,
+   0,
+   1,
+   1,
+   1,
+   1,
+   1,
+   1,
+   1,
+   1,
+   1,
+   2,
+   2,
+   2,
+   2,
+   2,
+   2,
+   2,
+   2,
+   2,
+   3,
+   3,
+   3,
+   3,
+   3,
+   3,
+   3,
+   3,
+   3,
+   4,
+   4,
+   4,
+   4,
+   4,
+   4,
+   4,
+   4,
+   4,
+   5,
+   5,
+   5,
+   5,
+   5,
+   5,
+   5,
+   5,
+   5,
+   6,
+   6,
+   6,
+   6,
+   6,
+   6,
+   6,
+   6,
+   6,
+   7,
+   7,
+   7,
+   7
+  ],
+  "gpu": "NVIDIA H200",
+  "n_gpus": 8,
+  "deterministic": "use_deterministic_algorithms(True, warn_only=True)",
+  "token_budget": 131072,
+  "hidden_budget": 131072,
+  "n_shards": 4,
+  "gpus": [
+   "NVIDIA H200"
+  ],
+  "shard_seconds": [
+   2947,
+   2819,
+   2788,
+   2896
+  ],
+  "plan_sha": "951bb76adccbf912bd38",
+  "hidden_sha": "dffd73cbe63cb53a441d04d4",
+  "vectors_sha": "90871a9566b12242a5b3",
+  "op_counts": {
+   "cont": 709,
+   "next": 608,
+   "greedy": 484
+  },
+  "vector_max_rel_diff_across_shards": 0.0,
+  "budget": 131072
+ },
+ "coherence_coverage": {
+  "rated": 484,
+  "total": 484
+ }
+}

@@ -574,7 +574,7 @@ final-olens-rl600-x4 campaign's prompt versions, frozen from the campaign's judg
 | moral_rationale | 0.441 | 195 | Opus 5.5 + Sonnet 5 | 1/195 | 0 | 0.436 |
 | multi_concept_directed_modulation | 0.965 (saturated) | 114 | Opus 5.5 | 0 | — | = floor |
 | multihop | 0.980 | 100 | Opus 5.5 | 0 | — | = floor |
-| multihop_mt_v2 | 1.000 | 70 | Opus 5.5 | 0 | — | = floor |
+| multihop_mt_v2 | 0.971 (re-measured 2026-11-04, `+xrole-v1`) | 70 | Opus 5.5 | 0 | — | = floor |
 | multilingual | 0.879 | 99 | Opus 5.5 | 0 | — | = floor |
 | multilingual_mt | 0.950 | 100 | Opus 5.5 | 0 | — | = floor |
 | multilingual_multihop | 0.340 | 97 | Opus 5.5 | 0 | — | = floor |
@@ -584,7 +584,7 @@ final-olens-rl600-x4 campaign's prompt versions, frozen from the campaign's judg
 | role_bound_association | 0.540 (saturated) | 100 | Opus 5.5 + Sonnet 5 | 90/100 | 0 | not measurable |
 | typo_mt | 1.000 | 85 | Opus 5.5 | 0 | — | = floor |
 | user_modeling | 0.260 | 100 | Opus 5.5 + Sonnet 5 | 31/100 | 0 | not measurable |
-| wrong_intermediate | 0.000 | 100 | Opus 5.5 | 0 | — | = floor |
+| wrong_intermediate | 0.000 (re-measured 2026-11-04, `+wbcues-v2`) | 100 | Opus 5.5 | 0 | — | = floor |
 
 `n` is the family's headline unit (pairs for agentic_misalignment and buggy_code;
 inject items for introspection). Plan 0058 removed medical_diagnosis{,_alt} and retired
@@ -594,6 +594,16 @@ row whose summary `prompt_version`, digest settings and judge match its entry, s
 instrument changes its floor is withheld until the prompt-only file is re-judged and re-frozen
 (round-3 audits flag the multilingual and role_bound_association floors for instrument fixes;
 re-freeze them with the family's next instrument).
+
+**2026-11-04 re-measures (plan 0066).** wrong_intermediate under `wbcues-v2` (#273's cue stamp)
+and multihop_mt_v2 under `xrole-v1` (#284: the item's own other bridge is never a rival) were
+re-asked and re-judged (prompt-only summary; Opus 5.5 served every answer, so no fallback ran),
+and their lucky-guessing entries re-run under the new stamps: wrong_intermediate blind .148 /
+described .132 / uniform .188 / topic .090; multihop_mt_v2 blind .080 / described .229 /
+uniform .186 / topic .226 (draw-to-draw noise beside the earlier .120 / .156 / .188 / .092 and
+.074 / .183 / .186 / .211; the option lists are unchanged). The lucky run of a renamed family
+needed a fix: its replies were looked up under the new name while the calls are keyed by the old
+one (`hash_name`), so every draw read as an API failure.
 
 ## Prompt-only (`prompt_only.json`)
 
