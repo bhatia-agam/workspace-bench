@@ -1278,6 +1278,8 @@ def _introspection() -> list[ReadSpec]:
         if vec["type"] != "none":
             steer |= {"inject_layer": int(rec["inject_layer"]), "token_span": span}
             steer["formula"] = bank["vector_recipe"]["inject"]
+            if rec.get("residual"):  # an adapted bank on a non-plain stream (plan 0067)
+                steer["residual"] = rec["residual"]
         if vec["type"] == "concept":
             steer |= {"concept": vec["word"], "vector_recipe": "bank vector_recipe"}
         elif vec["type"] == "gaussian":
