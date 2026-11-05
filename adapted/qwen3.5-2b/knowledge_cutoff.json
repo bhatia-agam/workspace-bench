@@ -16226,6 +16226,285 @@
      "pass": true
     }
    }
+  },
+  {
+   "answer_type": "algorithm name",
+   "batch": "b1",
+   "domain": "technology standards, software versions, operating system names, programming language releases",
+   "event_date": "2025-04",
+   "id": "cs01651",
+   "option_sources": {
+    "ecdh": [
+     "gold"
+    ],
+    "sntrup761x25519-sha512": [
+     "peer:gemma4",
+     "peer:mistral4",
+     "peer:qwen3.6-27b"
+    ],
+    "mlkem768x25519-sha256": [
+     "truth"
+    ],
+    "curve25519-sha256": [
+     "peer:nemotron",
+     "peer:glm47",
+     "legacy:mistral"
+    ],
+    "spake": [
+     "legacy:llama"
+    ]
+   },
+   "options": [
+    "ecdh",
+    "sntrup761x25519-sha512",
+    "mlkem768x25519-sha256",
+    "curve25519-sha256",
+    "spake"
+   ],
+   "question": "Which key exchange algorithm became the default in OpenSSH 10.0, released in April 2025?",
+   "stratum": "A",
+   "truth": {
+    "authored": "mlkem768x25519-sha256",
+    "canonical": "mlkem768x25519-sha256",
+    "pre_cutoff_analog": "sntrup761x25519-sha512 (default since OpenSSH 9.0)"
+   },
+   "user": "Which key exchange algorithm became the default in OpenSSH 10.0, released in April 2025? If you are not sure, give your best guess. Answer with just the algorithm name.",
+   "gold": "ecdh",
+   "label_type": "confab_plausible",
+   "option_units": {
+    "ecdh": [
+     "ECDH",
+     "Elliptic Curve Diffie-Hellman",
+     "ecdh",
+     "elliptic-curve Diffie–Hellman",
+     "椭圆曲线Diffie-Hellman",
+     "椭圆曲线迪菲-赫尔曼"
+    ],
+    "sntrup761x25519-sha512": [
+     "Streamlined NTRU Prime x25519",
+     "sntrup761 + X25519",
+     "sntrup761x25519",
+     "sntrup761x25519-sha512",
+     "sntrup761x25519-sha512@openssh.com"
+    ],
+    "mlkem768x25519-sha256": [
+     "ML-KEM-768 + X25519",
+     "ML-KEM768x25519",
+     "mlkem768x25519",
+     "mlkem768x25519-sha256",
+     "mlkem768x25519-sha256@openssh.com"
+    ],
+    "curve25519-sha256": [
+     "curve25519 sha256",
+     "curve25519-sha256",
+     "curve25519-sha256@libssh.org"
+    ],
+    "spake": [
+     "SPAKE",
+     "SPAKE2",
+     "spake"
+    ]
+   },
+   "units": [
+    {
+     "role": "answer",
+     "headline": true,
+     "match": [
+      "ECDH",
+      "Elliptic Curve Diffie-Hellman",
+      "ecdh",
+      "elliptic-curve Diffie–Hellman",
+      "椭圆曲线Diffie-Hellman",
+      "椭圆曲线迪菲-赫尔曼"
+     ]
+    }
+   ],
+   "qwen_gold": null,
+   "subject": {
+    "model": "qwen3.5-2b",
+    "greedy_raw": "ECDHE",
+    "sample_labels": [
+     "ecdh",
+     "ecdh",
+     "ecdh",
+     "ecdh",
+     "ecdh",
+     "ecdh",
+     "ecdh",
+     "ecdh",
+     "srp",
+     "ecdh"
+    ],
+    "n_agree": 9
+   },
+   "verify": {
+    "true_answer": "mlkem768x25519-sha256",
+    "model_correct": "no",
+    "stale_or_impossible": false,
+    "label_type": "confab_plausible",
+    "why": "OpenSSH 10.0 made the hybrid post-quantum ML-KEM/X25519 exchange the default; 'ecdh' is a vague generic guess rather than the specific prior default (sntrup761x25519-sha512)."
+   },
+   "verify_truth": "mlkem768x25519-sha256",
+   "incorrect_basis": "known_truth",
+   "g3_leak": false,
+   "adapt": {
+    "origin": "refill",
+    "rederived": "kc-self-2026-11-03",
+    "units": "rebuilt",
+    "knobs": {
+     "gate": "G0 (stable + incorrect) + G3 on the subject; G1 / ATI panel dropped"
+    },
+    "gate": {
+     "rate": 0.9,
+     "pass": true
+    }
+   }
+  },
+  {
+   "answer_type": "university name",
+   "batch": "b2",
+   "domain": "year-end rankings and #1 lists",
+   "event_date": "2025-06",
+   "id": "b2_01015",
+   "option_sources": {
+    "imperial college london": [
+     "truth"
+    ],
+    "university of cambridge": [
+     "peer:mistral4",
+     "peer:glm47"
+    ],
+    "harvard university": [
+     "gold"
+    ],
+    "georgia institute of technology": [
+     "subject_lowprob"
+    ],
+    "stanford university": [
+     "peer:nemotron",
+     "peer:qwen3.6-27b",
+     "legacy:llama",
+     "legacy:gemma",
+     "legacy:mistral"
+    ]
+   },
+   "options": [
+    "imperial college london",
+    "university of cambridge",
+    "harvard university",
+    "georgia institute of technology",
+    "stanford university"
+   ],
+   "question": "In the QS World University Rankings 2026, published in June 2025, which university ranked second in the world, directly behind MIT?",
+   "stratum": "A",
+   "truth": {
+    "authored": "Imperial College London",
+    "canonical": "imperial college london",
+    "pre_cutoff_analog": "QS 2025: Imperial College London was 2nd behind MIT"
+   },
+   "user": "In the QS World University Rankings 2026, published in June 2025, which university ranked second in the world, directly behind MIT? If you are not sure, give your best guess. Answer with just the university name.",
+   "gold": "harvard university",
+   "label_type": "confab_plausible",
+   "option_units": {
+    "imperial college london": [
+     "Imperial",
+     "Imperial College",
+     "Imperial College London",
+     "imperial college london",
+     "伦敦帝国学院",
+     "帝国理工",
+     "帝国理工学院",
+     "帝國理工學院"
+    ],
+    "university of cambridge": [
+     "Cambridge",
+     "Cambridge University",
+     "University of Cambridge",
+     "university of cambridge",
+     "剑桥",
+     "剑桥大学",
+     "劍橋大學"
+    ],
+    "harvard university": [
+     "Harvard",
+     "Harvard University",
+     "harvard university",
+     "哈佛",
+     "哈佛大学",
+     "哈佛大學"
+    ],
+    "georgia institute of technology": [
+     "Georgia Institute of Technology",
+     "Georgia Tech",
+     "georgia institute of technology",
+     "佐治亚理工",
+     "佐治亚理工学院",
+     "喬治亞理工學院"
+    ],
+    "stanford university": [
+     "Stanford",
+     "Stanford University",
+     "stanford university",
+     "史丹佛大学",
+     "史丹佛大學",
+     "斯坦福",
+     "斯坦福大学"
+    ]
+   },
+   "units": [
+    {
+     "role": "answer",
+     "headline": true,
+     "match": [
+      "Harvard",
+      "Harvard University",
+      "harvard university",
+      "哈佛",
+      "哈佛大学",
+      "哈佛大學"
+     ]
+    }
+   ],
+   "qwen_gold": null,
+   "subject": {
+    "model": "qwen3.5-2b",
+    "greedy_raw": "Harvard University",
+    "sample_labels": [
+     "harvard university",
+     "harvard university",
+     "harvard university",
+     "harvard university",
+     "georgia institute of technology",
+     "harvard university",
+     "harvard university",
+     "harvard university",
+     "harvard university",
+     "harvard university"
+    ],
+    "n_agree": 9
+   },
+   "verify": {
+    "true_answer": "Imperial College London",
+    "model_correct": "no",
+    "stale_or_impossible": false,
+    "label_type": "confab_plausible",
+    "why": "Imperial College London was 2nd in QS 2026. Harvard was 5th that year and has not been QS runner-up in recent editions, so the answer is a salient guess rather than a stale fact."
+   },
+   "verify_truth": "imperial college london",
+   "incorrect_basis": "known_truth",
+   "g3_leak": false,
+   "adapt": {
+    "origin": "refill",
+    "rederived": "kc-self-2026-11-03",
+    "units": "rebuilt",
+    "knobs": {
+     "gate": "G0 (stable + incorrect) + G3 on the subject; G1 / ATI panel dropped"
+    },
+    "gate": {
+     "rate": 0.9,
+     "pass": true
+    }
+   }
   }
  ]
 }
