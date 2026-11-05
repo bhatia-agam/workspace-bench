@@ -35,7 +35,7 @@
  "adapt": {
   "model": "qwen3.5-4b",
   "hf_id": "Qwen/Qwen3.5-4B",
-  "frozen": "2026-11-04"
+  "frozen": "2026-11-05"
  },
  "items": [
   {
@@ -640,6 +640,68 @@
     "author": "claude-opus-5-5",
     "wave": 106,
     "steer": "- Last wave: 20/60 passed.\n- Rejected by lint before gating: 4x twin: the buggy and clean programs have the same outcome (exec; 1x literal: the output 'best; 1x literal: the output 'calories; 1x literal: the output 'rating. Avoid these.\n- Failed (gold -> what the model wrote): None -> model said 'The program outputs 207.0.' (0/10); None -> model said 'The program outputs 24.0.' (4/10); None -> model said '100' (0/10); None -> model said '12' (2/10); None -> model said '24' (3/10); None -> model said 'The program outputs an error: \"TypeError' (7/10); None -> model said 'The program outputs: False True' (4/10); None -> model said 'quorum' (6/10); None -> model said 'The output is 1.' (0/10); None -> model said '1' (0/10); None -> model said 'The program outputs True.' (2/10); None -> model said 'The program outputs True.' (5/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): None; None; None; None; None; None; None; None; None; None; None; None",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "src": "buggy",
+   "name": "buggy-au-t1-w107c0-py-apples-counted-baskets",
+   "id": "buggy-au-t1-w107c0-py-apples-counted-baskets",
+   "code": "baskets = [4, 6, 5]\napples = len(baskets)\nprint(\"apples:\", apples)",
+   "verified": "exec: exit 0; stdout = 'apples: 3'",
+   "cause": "len counts the baskets rather than adding up their apples, so it prints apples: 3 instead of apples: 15.",
+   "category": "len for sum",
+   "bug_line": 2,
+   "level2_tokens": [
+    "count",
+    "length"
+   ],
+   "consequence_class": "value",
+   "raises": false,
+   "n_lines": 3,
+   "language": "python",
+   "lang_group": "python",
+   "twin": "buggy-au-clean-t1-w107c0-py-apples-counted-baskets",
+   "source": "authored (claude-opus-5-5) for qwen3.5-4b: About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 107,
+    "steer": "- Last wave: 9/60 passed.\n- Failed (gold -> what the model wrote): None -> model said 'The program outputs -10.' (7/10); None -> model said '41' (6/10); None -> model said 'The output is BEN.' (1/10); None -> model said 'Kim' (1/10); None -> model said '10' (1/10); None -> model said '1' (0/10); None -> model said '20' (6/10); None -> model said '44.0' (6/10); None -> model said '25' (9/10); None -> model said '17' (4/10); None -> model said 'The program outputs 8.0.' (0/10); None -> model said '9' (1/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): None; None; None; None; None; None; None; None; None",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "src": "clean",
+   "name": "buggy-au-clean-t1-w107c0-py-apples-counted-baskets",
+   "id": "buggy-au-clean-t1-w107c0-py-apples-counted-baskets",
+   "code": "crates = [4, 6, 5]\nn = len(crates)\nprint(\"crates:\", n)",
+   "verified": "exec: exit 0; stdout = 'crates: 3'",
+   "why_correct": "The question is how many crates there are, so len correctly prints crates: 3.",
+   "looks_like": "Using len where sum was needed.",
+   "language": "python",
+   "lang_group": "python",
+   "twin": "buggy-au-t1-w107c0-py-apples-counted-baskets",
+   "source": "authored (claude-opus-5-5) for qwen3.5-4b: About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 107,
+    "steer": "- Last wave: 9/60 passed.\n- Failed (gold -> what the model wrote): None -> model said 'The program outputs -10.' (7/10); None -> model said '41' (6/10); None -> model said 'The output is BEN.' (1/10); None -> model said 'Kim' (1/10); None -> model said '10' (1/10); None -> model said '1' (0/10); None -> model said '20' (6/10); None -> model said '44.0' (6/10); None -> model said '25' (9/10); None -> model said '17' (4/10); None -> model said 'The program outputs 8.0.' (0/10); None -> model said '9' (1/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): None; None; None; None; None; None; None; None; None",
     "gate": {
      "rate": 1.0,
      "pass": true
