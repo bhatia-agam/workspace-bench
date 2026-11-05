@@ -460,24 +460,6 @@ SUBJECT_FIELDS: `gold`, `label_type`.
 | qwen | `min_full_positions=4` |  | - | subject | knowledge_cutoff/__init__.py | Qwen render length; reads.check_full exits below it on a sidecar file (reads.py:308) |
 | qwen | `GRID layers (Qwen 64 blocks)` |  | - | subject | readplan.py:588-627 | remapped by depth from report.json n_layers under WSB_BANK_ROOT (exit without it) |
 
-### math_shortcuts
-
-Judge: `evals/math_shortcuts/judge.py`. Refresh: model-specific (plan 0065). Bank: dict, id from `name`.
-REQUIRED_ITEM_FIELDS: `name`, `label`, `problem`, `positions`, `text`, `input_ids`, `n_tokens`, `reply_start`.
-SUBJECT_FIELDS: `label`, `positions`, `input_ids`, `n_tokens`, `reply_start`.
-
-| kind | input | req | if absent | class | where | note |
-|---|---|---|---|---|---|---|
-| item | `name` | yes | exit | build | banks.py:18-35 | id = label_of(name); new id for adapted-only |
-| item | `label` | yes | exit | subject | math_shortcuts/judge.py:run | I/N from Qwen behaviour |
-| item | `problem` | yes | exit | copy-verbatim | math_shortcuts/judge.py:judge_native | shown to the judge |
-| item | `positions` | yes | exit | subject | math_shortcuts/judge.py:run | Qwen token indices |
-| item | `text` | yes | exit | copy-verbatim | readplan.py math_shortcuts branch |  |
-| item | `input_ids` | yes | exit | subject | readplan.py math_shortcuts branch | captured render |
-| item | `n_tokens` | yes | exit | subject | readplan.py math_shortcuts branch |  |
-| item | `reply_start` | yes | exit | subject | readplan.py math_shortcuts branch |  |
-| qwen | `GRID layers (Qwen 64 blocks)` |  | - | subject | readplan.py:588-627 | remapped by depth from report.json n_layers under WSB_BANK_ROOT (exit without it) |
-
 ### model_specific_directed_modulation
 
 Judge: `evals/model_specific_directed_modulation/{judge,controls}.py`. Refresh: model-specific (Phase E). Bank: dict, id from `id`.

@@ -1885,27 +1885,6 @@ _add(
 
 _add(
     FamilyInputs(
-        "math_shortcuts",
-        "evals/math_shortcuts/judge.py",
-        "model-specific (plan 0065)",
-        "dict",
-        "name",
-        (
-            _NAME,
-            _req("label", SUBJECT, "math_shortcuts/judge.py:run", "I/N from Qwen behaviour"),
-            _req("problem", COPY, "math_shortcuts/judge.py:judge_native", "shown to the judge"),
-            _req("positions", SUBJECT, "math_shortcuts/judge.py:run", "Qwen token indices"),
-            _req("text", COPY, "readplan.py math_shortcuts branch"),
-            _req("input_ids", SUBJECT, "readplan.py math_shortcuts branch", "captured render"),
-            _req("n_tokens", SUBJECT, "readplan.py math_shortcuts branch"),
-            _req("reply_start", SUBJECT, "readplan.py math_shortcuts branch"),
-            _GRID,
-        ),
-    )
-)
-
-_add(
-    FamilyInputs(
         "knowledge_cutoff",
         "evals/knowledge_cutoff/judge.py",
         "model-specific (Phase E)",
