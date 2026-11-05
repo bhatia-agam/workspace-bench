@@ -1,15 +1,18 @@
 """Prompt-only floors for an adapted set (evals/baselines/README.md, re-measured per subject): the
 STOCK subject is given the exact rendered prompt up to each read token and asked what a model
 would be thinking there (the frozen floor's template, k=1, T=1.0, 256 new tokens, one generation
-per read position, positions capped at MAX_POS per item, evenly spaced); the summaries are judged
-by each family's own instrument at one layer with a Claude judge (no OpenRouter here).
+per read position, positions capped at MAX_POS per item, evenly spaced, always keeping the
+pre-registered cell); the summaries are judged by each family's own instrument at one layer
+with a Claude judge (no OpenRouter here).
 ``python -m wsbench.adapt floors model=<m> [stage=generate|judge|all] [judge=claude-opus-5-5]``."""
 
 import json
 import os
 import subprocess
 import sys
+from collections.abc import Sequence
 from pathlib import Path
+from typing import Any
 
 from . import store
 
@@ -46,6 +49,58 @@ def families(model: str) -> list[str]:
     return [f for f in readplan.families() if f not in EXCLUDED and (not only or f in only)]
 
 
+def registered_pos(spec: Any) -> list[int]:
+    """The item's pre-registered read position(s), in the plan's own convention (arithmetic:
+    ``extra.frozen_cell.pos``, a negative offset like ``all_from_end``); none when unset."""
+    cell = (getattr(spec, "extra", None) or {}).get("frozen_cell") or {}
+    return [int(cell["pos"])] if cell.get("pos") is not None else []
+
+
+def has_unregistered_cell(model: str, family: str) -> bool:
+    """True when the adapted bank of ``family`` holds an item whose ``cell.pos`` is None (plan
+    0060 D8, DeepSeek-V4's arithmetic: no pre-registered cell, read at every position). Its judge
+    refuses the native ``cells=frozen`` default, so the stock judge must pass ``cells=all``."""
+    path = store.model_dir(model) / f"{family}.json"
+    if not path.exists():
+        return False
+    # read the items raw: an id-keyed bank (msdm, knowledge_cutoff, buggy_code: no ``name``)
+    # would make ``store.load_wrapped`` raise KeyError and kill the whole stock-floors judge
+    d = json.loads(path.read_text(encoding="utf-8"))
+    items = d.get("items", []) if isinstance(d, dict) else d
+    return any(isinstance(it.get("cell"), dict) and it["cell"].get("pos") is None for it in items)
+
+
+def judge_opts(model: str, family: str) -> str:
+    """The stock judge's ``opts=`` (native aggregate; ``cells=all`` for a bank with no
+    pre-registered cell, else its judge exits 2)."""
+    opts = ["aggregate=native"]
+    if has_unregistered_cell(model, family):
+        opts.append("cells=all")
+    return "opts=" + ",".join(opts)
+
+
+def subsample(pos: list[int], keep: Sequence[int] = (), cap: int = MAX_POS) -> list[int]:
+    """At most ``cap`` evenly spaced positions of ``pos`` that always include every ``keep``
+    position present in ``pos`` (the pre-registered cell: Muse's arithmetic floor was empty when
+    the 32 picks missed it). A missing keep replaces the nearest even pick that is not itself a
+    keep, so the size rule holds; the result is deduplicated, in ``pos`` order."""
+    if len(pos) <= cap:
+        return list(pos)
+    picks = [pos[round(k * (len(pos) - 1) / (cap - 1))] for k in range(cap)]
+    must = [k for k in dict.fromkeys(keep) if k in set(pos)]
+    idx = {p: i for i, p in enumerate(pos)}
+    for k in must:
+        if k in picks:
+            continue
+        free = [j for j, p in enumerate(picks) if p not in must]
+        if not free:
+            break
+        j = min(free, key=lambda j: (abs(idx[picks[j]] - idx[k]), j))
+        picks[j] = k
+    chosen = set(picks)
+    return [p for p in pos if p in chosen]
+
+
 def generate(model: str) -> None:
     from wsbench import readplan
     from wsbench.produce.render import render
@@ -60,11 +115,11 @@ def generate(model: str) -> None:
     for fam in families(model):
         for spec in readplan.plan(fam):
             r = render(spec, tok)
-            pos = readplan.resolve(spec.positions, r.tokens)
-            if len(pos) > MAX_POS:
-                pos = [pos[round(k * (len(pos) - 1) / (MAX_POS - 1))] for k in range(MAX_POS)]
+            pos = subsample(readplan.resolve(spec.positions, r.tokens), registered_pos(spec))
             for p in sorted(set(pos)):
-                prefix = tok.decode(r.ids[: p + 1], skip_special_tokens=False)
+                # a negative offset (all_from_end) is the same token: -1 is the last, never ids[:0]
+                end = p + 1 if p >= 0 else len(r.ids) + p + 1
+                prefix = tok.decode(r.ids[:end], skip_special_tokens=False)
                 msg = TEMPLATE.format(token=r.decoded[p], prefix=prefix)
                 jobs.append((fam, spec.id, p, spec.layers[0]))
                 # exact ids on Modal (Kimi-K3: the quoted render's markers stay plain text)
@@ -106,7 +161,7 @@ def judge(model: str, judge_model: str = "claude-opus-5-5") -> dict:
         cmd = [wsb, "judge", f"family={f}", f"readouts={rd / f'{f}.jsonl'}", f"out={res_dir}",
                f"judge_model={judge_model}", f"layers={layer}", "allow_missing=True",
                # native: these floors sit beside native atlas bundles (plan 0024)
-               "opts=aggregate=native"]  # fmt: skip
+               judge_opts(model, f)]  # fmt: skip
         p = subprocess.run(cmd, env=env, check=False, capture_output=True, text=True)
         res_dir.mkdir(parents=True, exist_ok=True)
         (res_dir / "judge.log").write_text(p.stdout + "\n--- stderr ---\n" + p.stderr)

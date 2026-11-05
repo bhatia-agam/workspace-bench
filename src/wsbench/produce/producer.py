@@ -139,6 +139,12 @@ class Producer:
                 f"applies {', '.join(STEERING_TYPES)}); produce these readouts with your own "
                 "steered forward"
             )
+        if steer.get("residual"):
+            raise ValueError(
+                f"{spec.family}/{spec.id}: the bank injects on a {steer['residual']} residual "
+                "(plan 0067; see the row's formula); wsbench produce's block-output hook cannot, "
+                "produce these readouts with that subject's stack"
+            )
         if "vector_file" not in steer or "vector_row" not in steer:
             raise ValueError(
                 f"{spec.family}/{spec.id}: a {kind} steer without vector_file / vector_row "
