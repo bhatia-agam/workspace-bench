@@ -436,3 +436,14 @@ Nothing else changed.
 - For a future GO: the neutral grids are 3 positions (`<|assistant|><think></think>`), below `min_full_positions` 9. `stage_build` already warns about this and the bank records `adapt.min_grid_positions`. It does not matter here because no bank was written.
 
 **7. Drops.** None. No bank was built (0 items).
+
+## Plan 0068 leak-rubric regrade audit (2026-11-05)
+
+Independent audit of the uncommitted l1-data change (bank, report.json, README row). **Verdict: PASS, applied correctly.**
+
+- **Drop justified:** py-string-sorted-ids. The greedy names the mechanism ("sorts the list of strings lexicographically, so "100" comes before "2""), and so do samples 5, 8 and 9 (lexicographic, not numeric). The leg fails on the greedy alone. Its clean twin py-clean-numeric-sort goes with it, since pairs are atomic.
+- **Admitted pair:** buggy-au-t2-w100c0-py-sort-result-used + buggy-au-clean-... is OK. The greedy just rewrites the code with `sorted()`, and the regrade counts 0/10 sample hits. Two samples are borderline but do not state the full mechanism (in place *and returns None*): s2 says "rather than modifying scores in place, sort a copy", and s9 is cut off at "sorts the list in place and". The twin fields are symmetric, and the clean member's bugclaim leg passed (greedy ok).
+- **Bank diff:** it removes exactly py-string-sorted-ids and py-clean-numeric-sort, and adds exactly the sort-result-used pair. No other item changed. 60 items, 25 pairs, no orphan twins.
+- **report.json:** the n_original_pass/n_new shifts (-2/+2), the note and the two drop entries match the bank. The "bar <= 2/11" wording matches gate.py: clean rate must be >= 1-2/11. Minor point: n_original_gated also drops 63->61, although those items were gated. This is cosmetic.
+- **README:** the row still reads "full, 25/24 pairs (60 items)", which is correct.
+- **Spot check** (3 random kept items): coin-total-dime-value has 1 hit (s3 says "dimes should be 10, not 25"), which is under the bar. fuel-rate-floor-division and str-plus-int-badge have none. No over- or under-count found.
