@@ -250,7 +250,14 @@ elif SUBJECT == "deepseek-v4-pro":
         cfg = json.loads((Path(MODEL_DIR) / "config.json").read_text())
         pad = cfg.get("pad_token_id") or cfg.get("eos_token_id")
         pad = int(pad[0] if isinstance(pad, list) else pad)
-        stack = HookStack(model, model.model.layers, stops, pad)
+        from transformers.cache_utils import DynamicCache
+
+        # a fresh cache per forward: the code path xaff's validated HfV4Flash loop uses (the
+        # cache-less path is equivalent in transformers 5.17; the image's 5.11 is unverified)
+        def fresh_cache() -> dict[str, Any]:
+            return {"use_cache": True, "past_key_values": DynamicCache(config=model.config)}
+
+        stack = HookStack(model, model.model.layers, stops, pad, forward_kwargs=fresh_cache)
         f = f"{_APP}/xaff/backends/v4pro.py"
         stack.record = {
             "stack": "xaff V4-Pro native reader (load_native + patch_reader(native_linear=False))"
@@ -261,7 +268,7 @@ elif SUBJECT == "deepseek-v4-pro":
             "loader_sha256": {f: _sha256(f), f.replace("v4pro", "v4flash"):
                               _sha256(f.replace("v4pro", "v4flash"))},
             "gw_commit": os.environ.get("WSB_GW_COMMIT", ""),
-            "n_blocks": len(model.model.layers),
+            "n_blocks": len(model.model.layers), "forward": "model.model with a fresh DynamicCache",
         }  # fmt: skip
         return stack
 
@@ -671,7 +678,7 @@ def calib(job: dict, extra_stops: list[int]) -> bytes:
         "pre_span_max_abs_diff": float((h1[:k] - h0[:k]).abs().max()),
         "in_span_max_rel_err": float(((h1[k:] - want).norm(dim=-1) / want.norm(dim=-1)).max()),
         # the capture returns at block L, so the line above is exact by construction; the full
-        # depth check (informational): next-token log-probs at the last pre-span position
+        # depth check (informational): next-token logits at the last pre-span position
         "pre_span_logits_max_abs_diff": pre_logit_diff,
     }
     blob = pickle.dumps({"noop": noop, "mention": mention, "batch": batch, "local": local,

@@ -266,6 +266,9 @@ def test_calib_report_verdicts():
     assert rep2["g0_pass"]  # (b) and (c) are recorded, not gated: g0 = engine checks (a), (d)
     raw["local"]["pre_span_max_abs_diff"] = 1e-3
     assert not ops.calib_report(raw, lambda ids: "x")["g0_pass"]
+    raw["local"]["pre_span_max_abs_diff"] = 0.0
+    raw["local"]["pre_span_logits_max_abs_diff"] = 1.8  # MoE re-routing noise: recorded only
+    assert ops.calib_report(raw, lambda ids: "x")["g0_pass"]
 
 
 # ---------------------------------------------------------------- torch
@@ -384,3 +387,25 @@ def test_apply_steer_norm_src_is_the_kimi_full_sum_recipe():
     new_full = out.float() + br.float().sum(1).view(1, 4, 6)
     delta = 3.0 * full[0, 2].norm() * unit[0]
     assert torch.allclose(new_full[0, 2] - full[0, 2], delta, rtol=2e-2, atol=2e-2)
+
+
+def test_hookstack_forward_kwargs_are_fresh_per_forward():
+    torch = pytest.importorskip("torch")
+    pytest.importorskip("transformers")
+    from transformers import LlamaConfig, LlamaForCausalLM
+
+    cfg = LlamaConfig(vocab_size=50, hidden_size=16, intermediate_size=32, num_hidden_layers=2,
+                      num_attention_heads=2, num_key_value_heads=2,
+                      max_position_embeddings=64)  # fmt: skip
+    model = LlamaForCausalLM(cfg).eval()
+    made = []
+
+    def kwargs():
+        made.append(object())
+        return {"use_cache": False}
+
+    stack = ops.HookStack(model, model.model.layers, [0], 0, forward_kwargs=kwargs)
+    stack.token_logprobs([[1, 2, 3]], [None], [[(2, [4])]])
+    stack.hidden([[1, 2, 3]], 1)
+    assert len(made) == 2 and made[0] is not made[1]
+    del torch

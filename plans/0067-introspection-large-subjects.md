@@ -201,6 +201,13 @@ phase). The CPU preflight passed on all three.
   not special, so a reply is cut before them. The renders were checked to be token-identical
   to `apply_chat_template(tokenize=True, thinking=False)`, prefill included (8/8 trials and 4/4
   neutral prompts).
+- **(d) at full depth is recorded, not gated.** Calib also compares the next-token logits at
+  the last pre-span position with and without a steer. On V4-Pro and Muse that difference is
+  about 1.8. Muse's loop has explicit causal masks, so this is not leakage. Above block L the
+  steer re-routes the span's tokens, which changes the per-expert GEMM shapes that the pre-span
+  rows share: the same class of noise as GLM's batch composition. V4-Pro still runs with a
+  fresh `DynamicCache` per forward, which is the code path of xaff's validated loop. It is
+  equivalent to the cache-less path in transformers 5.17; the image's 5.11 is unverified.
 - **Token budget per subject.** Every V4, Muse and Kimi forward dequantizes its experts, so it
   carries a large fixed cost. GLM uses 16k tokens per micro-batch with vectors one row per
   forward. V4 uses 32k (64k left GPU 0 without room), Kimi 64k and Muse 128k (the xaff

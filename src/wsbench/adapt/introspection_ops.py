@@ -536,9 +536,20 @@ class HookStack(TorchStack):
     ``layer_out``; logits = the output embedding on ``model.model``'s last hidden state at the
     selected positions only."""
 
-    def __init__(self, model: Any, blocks: Any, stop_ids: Sequence[int], pad_id: int) -> None:
+    def __init__(
+        self,
+        model: Any,
+        blocks: Any,
+        stop_ids: Sequence[int],
+        pad_id: int,
+        forward_kwargs: Callable[[], dict[str, Any]] | None = None,
+    ) -> None:
         super().__init__(stop_ids, pad_id)
         self.model, self.blocks = model, blocks
+        # per-forward kwargs for model.model (default: no cache). V4-Pro passes a fresh
+        # DynamicCache, the code path xaff's validated HfV4Flash loop uses (equivalent to the
+        # cache-less path in transformers 5.17; the run image's 5.11 is not verified)
+        self.forward_kwargs = forward_kwargs or (lambda: {"use_cache": False})
 
     @staticmethod
     def logits(x: Any) -> Any:
@@ -579,7 +590,7 @@ class HookStack(TorchStack):
                 # the decoder stack, then the head on the selected positions only (a full
                 # [B, S, V] logits tensor does not fit a production micro-batch)
                 try:
-                    h = self.model.model(input_ids=x, use_cache=False).last_hidden_state
+                    h = self.model.model(input_ids=x, **self.forward_kwargs()).last_hidden_state
                 except _ReadDone:
                     return store["h"]
                 bi = torch.tensor([b for b, _ in select], device=h.device)
@@ -689,6 +700,9 @@ def calib_report(raw: dict[str, Any], decode: Callable[[list[int]], str]) -> dic
                                   "max_abs_diff": max(diffs), "bit_equal": max(diffs) == 0.0,
                                   "pass": rate >= CALIB_RANK_AGREE}  # fmt: skip
     d = dict(raw["local"])
+    # pre_span_logits_max_abs_diff (full depth) is recorded, not gated: above block L the steer
+    # re-routes the span's tokens, which changes the per-expert GEMM shapes the pre-span rows
+    # share, so it is ~1.8 on V4-Pro and Muse alike (Muse's loop has explicit causal masks)
     d["pass"] = d["pre_span_max_abs_diff"] == 0.0 and d["in_span_max_rel_err"] <= CALIB_SPAN_REL
     rep["d_steer_is_local"] = d
     rep["g0_pass"] = rep["a_noop"]["pass"] and rep["d_steer_is_local"]["pass"]
