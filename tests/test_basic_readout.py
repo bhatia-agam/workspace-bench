@@ -35,8 +35,9 @@ PV3 = "br-mc-2026-11-01-v3"  # round 4: bank v3's stamp
 PV4 = "br-mc-2026-11-01-v4"  # PR #214 review r5: bank v4's stamp
 PV5 = "br-mc-2026-11-01-v5b"  # PR #214 review r7: bank v5's option seed / call key (balanced slots)
 # the registered result stamp (scoring-only suffixes; options and calls keep PV5)
-STAMP = PV5 + "+brsum-v2+qline-v2+bank-v7"
-V7 = REPO / "evals/basic_readout/items_v7.json"  # the registered bank
+STAMP = PV5 + "+brsum-v2+qline-v2+bank-v8"
+V7 = REPO / "evals/basic_readout/items_v7.json"  # v5 + Big Ben's "England / UK"
+V8 = REPO / "evals/basic_readout/items_v8.json"  # the registered bank: v7 without the capitals
 FLAT = ("numbers", "days of the week", "months", "candidate answers of the task's type")
 
 
@@ -107,17 +108,17 @@ def test_registered_spec_and_readme():
     assert SYSTEM_MC in readme and STAMP in readme
 
 
-def test_registered_spec_uses_v7(monkeypatch):
-    """The registered bank is v7 (bank v5, the MC leakage standard's v3 + the observed v2
-    confusers under the wider review-r6 rule, with Big Ben's gold option reading "England / UK"),
-    under its own judge stamp."""
+def test_registered_spec_uses_v8(monkeypatch):
+    """The registered bank is v8 (bank v7, i.e. bank v5 with Big Ben's gold option reading
+    "England / UK", with its 10 capital items replaced by 10 new entity items), under its own
+    judge stamp."""
     from wsbench.evals.basic_readout import SPEC
 
     for k in list(os.environ):
         if k.startswith(registry.BANK_FILE_ENV_PREFIX) or k == registry.BANK_ROOT_ENV:
             monkeypatch.delenv(k)
-    assert SPEC.bank == Path("evals/basic_readout/items_v7.json")  # v5 + Big Ben
-    assert registry.bank_path("basic_readout").name == "items_v7.json"
+    assert SPEC.bank == Path("evals/basic_readout/items_v8.json")  # v7 without the capitals
+    assert registry.bank_path("basic_readout").name == "items_v8.json"
     assert SPEC.judge.prompt_version == STAMP
     args = summary_args(EXAMPLE, Path("/tmp/x"), STAMP)
     assert digest.prompt_version(STAMP, args, "basic_readout").startswith(STAMP + "+digest-")
@@ -861,7 +862,7 @@ def test_bank_v3_is_v2_with_new_distractors_only():
         assert b["mc"]["distractors_v2"] == a["mc"]["distractors"]
 
 
-@pytest.mark.parametrize(("bank", "pv"), [(V3, PV3), (V4, PV4), (V5, PV5), (V7, PV5)])
+@pytest.mark.parametrize(("bank", "pv"), [(V3, PV3), (V4, PV4), (V5, PV5), (V7, PV5), (V8, PV5)])
 def test_bank_v3_distractor_rules(bank, pv):
     """Every v2 option rule holds on v3: 4 distractors, never a gold form, part or superstring,
     never in the prompt, no two sharing a form, arithmetic 0..12 without the operands, days and

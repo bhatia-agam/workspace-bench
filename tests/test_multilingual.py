@@ -529,9 +529,10 @@ def test_v2_registrations(name, real_families):
     spec = real_families[name]
     scorer, group, pv = REGS[name]
     assert spec.scorer == scorer and spec.group == group and spec.judge.prompt_version == pv
-    # the registered banks (the r5-rebuilt banks, tests/test_r5_mc_options.py)
+    # the registered banks (the r5-rebuilt banks, tests/test_r5_mc_options.py; multilingual bank
+    # v5: no capital items)
     v = {
-        "multilingual": "items_v4.json",
+        "multilingual": "items_v5.json",
         "multilingual_mt": "items_v5.json",
         "multilingual_multihop": "items_v5.json",
         "multilingual_typo": "items_v4.json",

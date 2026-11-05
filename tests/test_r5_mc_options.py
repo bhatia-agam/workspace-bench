@@ -34,6 +34,14 @@ PLAN_SHA = {
 }
 
 
+# the bank registered on top of a round-5 bank, its version and its read plan's plan_sha: the
+# capital items replaced (2026-11-05; tests/test_capital_items_replaced.py)
+LATER = {
+    "basic_readout_mt": ("items_v7.json", 7, "d5cb7797088d"),
+    "multilingual": ("items_v5.json", 5, "3602a6dd3b94"),
+}
+
+
 # the rebuild started from a small edit of the bank it supersedes that the series folded into the
 # new bank instead of keeping a file of its own: the header key of the new bank recording the edit
 # (scripts/mc_options_r5.py's ``start_bank`` re-applies it the same way)
@@ -56,7 +64,8 @@ def _driver():
 
 def test_driver_families(real_families):
     """Each family the driver rebuilds: its starting bank exists, the bank it freezes is the next
-    version beside it, and once frozen that bank is the registered one."""
+    version beside it, and once frozen that bank is the registered one (or the bank registered on
+    top of it, ``LATER``)."""
     r5 = _driver()
     assert sorted(r5.CFGS) == [
         "basic_readout_mt",
@@ -71,7 +80,8 @@ def test_driver_families(real_families):
         assert cfg.name == name and name in real_families and start.is_file(), name
         assert new == start.with_name(f"items_v{cfg.version}.json"), name
         if new.is_file():
-            assert real_families[name].bank == Path(cfg.new), name
+            reg = LATER.get(name, (Path(cfg.new).name,))[0]
+            assert real_families[name].bank == Path(cfg.new).with_name(reg), name
             assert json.loads(new.read_text(encoding="utf-8"))["supersedes"] == start.name
     assert {n for n, c in r5.CFGS.items() if (REPO / c.new).is_file()} == set(BANKS)
 
@@ -163,11 +173,15 @@ def test_rebuilt_lists_are_well_formed(family):
 
 
 @pytest.mark.parametrize("family", sorted(BANKS))
-def test_registered_and_read_plan_unchanged(family, real_families):
+def test_registered_and_read_plan_unchanged(family, real_families, monkeypatch):
     _src, dst, version = BANKS[family]
-    assert real_families[family].bank == Path("evals") / family / dst
-    assert registry.frozen_bank_path(family) == REPO / "evals" / family / dst
-    assert f"+bank-v{version}" in real_families[family].judge.prompt_version
+    reg, reg_version, reg_sha = LATER.get(family, (dst, version, PLAN_SHA[family]))
+    assert real_families[family].bank == Path("evals") / family / reg
+    assert registry.frozen_bank_path(family) == REPO / "evals" / family / reg
+    assert f"+bank-v{reg_version}" in real_families[family].judge.prompt_version
+    assert reads.plan_sha(family).startswith(reg_sha)
+    # the round-5 bank itself reads with the plan before its rebuild
+    monkeypatch.setenv(registry.BANK_FILE_ENV_PREFIX + family.upper(), f"evals/{family}/{dst}")
     assert reads.plan_sha(family).startswith(PLAN_SHA[family])
 
 

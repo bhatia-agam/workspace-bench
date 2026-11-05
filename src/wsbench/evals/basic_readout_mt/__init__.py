@@ -15,8 +15,9 @@ SPEC = register(
         scorer="mc",
         # bank v6 = v4 without the sarin item, with the leaking answer lists rebuilt and 8 items
         # dropped (90 items; its header's read_plan_bank keeps v4's read plan, so v4 readouts
-        # serve it)
-        bank=Path("evals/basic_readout_mt/items_v6.json"),
+        # serve it); bank v7 = v6 with brh-ent-bonaire-capital replaced by a new gated entity
+        # item, read with its own plan
+        bank=Path("evals/basic_readout_mt/items_v7.json"),
         prompt_version=BRMT_PROMPT_VERSION,
         # a v2 chat render is >= 15 tokens; 8 contiguous positions ending at -1 rule out a
         # lite or truncated file under reads=full

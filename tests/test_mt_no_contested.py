@@ -24,7 +24,7 @@ def test_the_contested_machinery_is_gone():
 
 
 def test_stamps_move_and_call_keys_do_not(real_families):
-    assert mp.BRMT_PROMPT_VERSION == "mc-brmt-2026-10-31r+norival-v1+qline-v2+bank-v6"
+    assert mp.BRMT_PROMPT_VERSION == "mc-brmt-2026-10-31r+norival-v1+qline-v2+bank-v7"
     assert fam.call_pv("basic_readout_mt", mp.BRMT_PROMPT_VERSION + "+digest-v5") == (
         "mc-brmt-2026-10-31r+rv-2026-10-31e+optrv-v1+bank-v4+digest-v5"
     )

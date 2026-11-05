@@ -9,7 +9,7 @@ prediction: the user turn ends "? Answer in one word." and the assistant turn is
 "My one-word answer is:".
 
 - **entity** (35): "What sport does the athlete Muhammad Ali play? Answer in one word." -> `boxing`
-  (athletes, capitals, landmarks, musicians).
+  (athletes, landmarks, musicians; bank v8 has no capital-city items).
 - **processing** (33): "What is 10 - 1? Answer in one word." -> `9`; "What is the day before
   Monday? Answer in one word." -> `Sunday` (arithmetic, days, months).
 - **implicit** (32): "What is your favorite fruit? Answer in one word." -> `apple`: the model's
@@ -19,7 +19,37 @@ Example: "What is the day before Monday? Answer in one word." -> target `Sunday`
 shown the options `Saturday, Tuesday, Wednesday, Thursday, Sunday`, followed by the cannot-tell
 option as the last letter (Monday, the prompt's own day, is never an option).
 
-## Bank v7 (the registered bank)
+## Bank v8 (capital items replaced, the registered bank)
+
+`items_v8.json` = bank v7 without its 10 country<->capital items (`br-ent-cap-*`, "Athens is the
+capital of which country?"), each replaced by a new entity item of the same kind, so the bank
+keeps 100 items and 35 entity items. The new items use the other three entity templates, renders
+and read plan unchanged: 4 landmark -> country (Petra, Angkor Wat, Borobudur, Machu Picchu; none
+in a capital city), 3 athlete -> sport (Michael Phelps, Simone Biles, Sachin Tendulkar) and 3
+musician -> instrument (Ringo Starr, John Coltrane, Benny Goodman). No new item asks for, answers
+with or names a capital, a country's language, an opposite or a currency, and no answer is a word
+of its prompt. Every kept item is byte-identical to v7's (options and gold slots included), so
+its readouts, digests and MC calls are reused; only the new items' calls are new. Stamp
+`+bank-v8`; the option seed stays `br-mc-2026-11-01-v5b`.
+
+- **Gate.** v7's rule (chat template, thinking off, prefill "My one-word answer is:", 10 draws
+  at T 0.7, at least 8 match the gold or an alias) plus a correct greedy answer, Qwen3.6-27B @
+  6a9e13bd: 19 candidates written, 19 passed, 10 kept for the spread above (9 or 10 of 10 each).
+- **Options.** `scripts/mc_leakage_r4.py` on the new items only, blind to every readout: Opus
+  5.5 proposes 14 same-topic wrong answers, topic-member check, rank, the validity screen (the
+  gold wins 5 of 5 with the question shown), kinship and Chinese forms. Three lists the guessers
+  still found (gold picked on at least 3 of 5 draws: Biles, Petra, Angkor Wat) went through r4's
+  next round (search over 10 candidate lists); Angkor Wat needed two. After that, no guesser
+  picks a new item's gold on more than 1 of 5 draws. The new items take the gold slots the dropped
+  items freed, so entity's slot counts stay 7 / 7 / 7 / 7 / 7 (`mc.gold_position`).
+- **Floors on v8** (`evals/baselines/README.md` "Floors of record"): prompt-only 0.810 [0.74,
+  0.88] (n = 100, all 10 new items pass, as the 10 capital items did); lucky blind 0.276,
+  described 0.326, topic 0.312, uniform 0.204 vs chance 0.200 (v7: 0.292 / 0.350 / 0.338; the
+  implicit items still fail the standard; entity 0.171 / 0.177 / 0.114; the 10 new items 0.00 /
+  0.02 / 0.00); text-blind subset 23 / 100 (v7: 22; `br-ent-ath-phelps` joins it because Qwen
+  reading the prompt alone misses it on all 3 draws).
+
+## Bank v7
 
 `items_v7.json` is bank v5 with one edit: `br-ent-lmk-big` ("In which country is Big Ben?")
 shows its gold option as `England / UK` (was `England`, which a readout answering "the UK" did
@@ -210,7 +240,7 @@ old gold; its fixed definition (gold `science fiction`) is kept in `gate_v2.json
 
 ## Scoring: the blind multiple-choice judge
 
-`prompt_version`: `br-mc-2026-11-01-v5b+brsum-v2+qline-v2+bank-v7` (`basic/mcjudge_basic.py`; bank v5's options and fixed gold slots, PR #214 reviews r6 / r7, the prompts are `br-mc-2026-10-30b`'s; `+brsum-v2`: the asked-sum check; `+qline-v2`: the quote rule; `+bank-v7`: Big Ben's "England / UK"). The distractors' order is seeded, and the MC calls are keyed, by `br-mc-2026-11-01-v5b` (`mcjudge_basic.OPTIONS_VERSIONS`), so a scoring-only stamp change keeps every option list and re-scores the cached answers. Judge: the repo default
+`prompt_version`: `br-mc-2026-11-01-v5b+brsum-v2+qline-v2+bank-v8` (`basic/mcjudge_basic.py`; bank v5's options and fixed gold slots, PR #214 reviews r6 / r7, the prompts are `br-mc-2026-10-30b`'s; `+brsum-v2`: the asked-sum check; `+qline-v2`: the quote rule; `+bank-v7`: Big Ben's "England / UK"; `+bank-v8`: the capital items replaced). The distractors' order is seeded, and the MC calls are keyed, by `br-mc-2026-11-01-v5b` (`mcjudge_basic.OPTIONS_VERSIONS`), so a scoring-only stamp change keeps every option list and re-scores the cached answers. Judge: the repo default
 (`claude-opus-5-5`), temperature 0. Output schema `{"choice": letter, "quote": str, "stated":
 "as_result" | "bare" | ""}`.
 
@@ -457,7 +487,6 @@ Task contexts, one per slice (implicit: "favourite <category>"):
 
 ```text
 ath: the model was asked which sport a famous athlete plays, to answer with a single word
-cap: the model was asked which country a capital city belongs to, to answer with a single word
 lmk: the model was asked which country a famous landmark is in, to answer with a single word
 mus: the model was asked which instrument a famous musician is known for playing, to answer with a single word
 arith: the model was asked to compute a single-step arithmetic problem with small whole numbers, to answer with a single word

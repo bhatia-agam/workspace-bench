@@ -18,13 +18,12 @@
    "model": "claude-opus-5-5",
    "prompt_version": "lucky-2026-09-16",
    "rule": "single pick",
-   "instrument": "mc-brmt-2026-10-31r+norival-v1+qline-v2+bank-v6",
-   "written": "2026-11-04T10:29:13+00:00",
-   "restamped": "2026-11-04 (qline-v2): measured at mc-brmt-2026-10-31r+norival-v1+qline-v1+bank-v6; only the deterministic quote rule changed, the option lists did not, and a guesser sees only the lists, so the values stand"
+   "instrument": "mc-brmt-2026-10-31r+norival-v1+qline-v2+bank-v7",
+   "written": "2026-11-05T06:34:42+00:00"
   },
   "described": {
-   "mean": 0.16,
-   "std": 0.020184335693983275,
+   "mean": 0.1622222222222222,
+   "std": 0.024343224778007388,
    "majority": 0.15555555555555556,
    "exact": null,
    "any_hit": null,
@@ -40,9 +39,8 @@
    "model": "claude-opus-5-5",
    "prompt_version": "lucky-2026-09-16",
    "rule": "single pick",
-   "instrument": "mc-brmt-2026-10-31r+norival-v1+qline-v2+bank-v6",
-   "written": "2026-11-04T10:29:14+00:00",
-   "restamped": "2026-11-04 (qline-v2): measured at mc-brmt-2026-10-31r+norival-v1+qline-v1+bank-v6; only the deterministic quote rule changed, the option lists did not, and a guesser sees only the lists, so the values stand"
+   "instrument": "mc-brmt-2026-10-31r+norival-v1+qline-v2+bank-v7",
+   "written": "2026-11-05T06:34:44+00:00"
   },
   "uniform": {
    "mean": 0.21555555555555556,
@@ -62,14 +60,13 @@
    "model": "seeded-uniform",
    "prompt_version": "lucky-2026-09-16",
    "rule": "single pick",
-   "instrument": "mc-brmt-2026-10-31r+norival-v1+qline-v2+bank-v6",
-   "written": "2026-11-04T10:29:15+00:00",
-   "restamped": "2026-11-04 (qline-v2): measured at mc-brmt-2026-10-31r+norival-v1+qline-v1+bank-v6; only the deterministic quote rule changed, the option lists did not, and a guesser sees only the lists, so the values stand"
+   "instrument": "mc-brmt-2026-10-31r+norival-v1+qline-v2+bank-v7",
+   "written": "2026-11-05T06:34:46+00:00"
   },
   "topic": {
-   "mean": 0.2088888888888889,
-   "std": 0.01987615979999813,
-   "majority": 0.2111111111111111,
+   "mean": 0.19777777777777777,
+   "std": 0.019876159799998124,
+   "majority": 0.2,
    "exact": null,
    "any_hit": null,
    "mean_picks": null,
@@ -85,9 +82,8 @@
    "model": "claude-opus-5-5",
    "prompt_version": "lucky-2026-09-16",
    "rule": "single pick",
-   "instrument": "mc-brmt-2026-10-31r+norival-v1+qline-v2+bank-v6",
-   "written": "2026-11-04T10:29:15+00:00",
-   "restamped": "2026-11-04 (qline-v2): measured at mc-brmt-2026-10-31r+norival-v1+qline-v1+bank-v6; only the deterministic quote rule changed, the option lists did not, and a guesser sees only the lists, so the values stand"
+   "instrument": "mc-brmt-2026-10-31r+norival-v1+qline-v2+bank-v7",
+   "written": "2026-11-05T06:34:46+00:00"
   }
  },
  "conjunctive_association": {
@@ -1210,9 +1206,9 @@
  },
  "basic_readout": {
   "blind": {
-   "mean": 0.292,
-   "std": 0.019235384061671336,
-   "majority": 0.29,
+   "mean": 0.27599999999999997,
+   "std": 0.016733200530681502,
+   "majority": 0.28,
    "exact": null,
    "any_hit": null,
    "mean_picks": null,
@@ -1227,14 +1223,13 @@
    "model": "claude-opus-5-5",
    "prompt_version": "lucky-2026-09-16",
    "rule": "single pick",
-   "instrument": "br-mc-2026-11-01-v5b+brsum-v2+qline-v2+bank-v7",
-   "written": "2026-11-04T07:50:14+00:00",
-   "restamped": "2026-11-04 (brsum-v2+qline-v2): measured at br-mc-2026-11-01-v5b+brsum-v1+qline-v1+bank-v7; only the deterministic asked-sum check and quote rule changed, the option lists did not, and a guesser sees only the lists, so the values stand"
+   "instrument": "br-mc-2026-11-01-v5b+brsum-v2+qline-v2+bank-v8",
+   "written": "2026-11-05T06:47:14+00:00"
   },
   "described": {
-   "mean": 0.35,
-   "std": 0.015811388300841885,
-   "majority": 0.34,
+   "mean": 0.326,
+   "std": 0.01140175425099139,
+   "majority": 0.31,
    "exact": null,
    "any_hit": null,
    "mean_picks": null,
@@ -1249,14 +1244,13 @@
    "model": "claude-opus-5-5",
    "prompt_version": "lucky-2026-09-16",
    "rule": "single pick",
-   "instrument": "br-mc-2026-11-01-v5b+brsum-v2+qline-v2+bank-v7",
-   "written": "2026-11-04T07:52:46+00:00",
-   "restamped": "2026-11-04 (brsum-v2+qline-v2): measured at br-mc-2026-11-01-v5b+brsum-v1+qline-v1+bank-v7; only the deterministic asked-sum check and quote rule changed, the option lists did not, and a guesser sees only the lists, so the values stand"
+   "instrument": "br-mc-2026-11-01-v5b+brsum-v2+qline-v2+bank-v8",
+   "written": "2026-11-05T06:47:17+00:00"
   },
   "uniform": {
-   "mean": 0.202,
-   "std": 0.05069516742254631,
-   "majority": 0.17,
+   "mean": 0.20400000000000001,
+   "std": 0.04722287581247037,
+   "majority": 0.16,
    "exact": null,
    "any_hit": null,
    "mean_picks": null,
@@ -1271,14 +1265,13 @@
    "model": "seeded-uniform",
    "prompt_version": "lucky-2026-09-16",
    "rule": "single pick",
-   "instrument": "br-mc-2026-11-01-v5b+brsum-v2+qline-v2+bank-v7",
-   "written": "2026-11-04T07:55:18+00:00",
-   "restamped": "2026-11-04 (brsum-v2+qline-v2): measured at br-mc-2026-11-01-v5b+brsum-v1+qline-v1+bank-v7; only the deterministic asked-sum check and quote rule changed, the option lists did not, and a guesser sees only the lists, so the values stand"
+   "instrument": "br-mc-2026-11-01-v5b+brsum-v2+qline-v2+bank-v8",
+   "written": "2026-11-05T06:47:19+00:00"
   },
   "topic": {
-   "mean": 0.33799999999999997,
-   "std": 0.019235384061671336,
-   "majority": 0.33,
+   "mean": 0.312,
+   "std": 0.013038404810405309,
+   "majority": 0.3,
    "exact": null,
    "any_hit": null,
    "mean_picks": null,
@@ -1293,9 +1286,8 @@
    "model": "claude-opus-5-5",
    "prompt_version": "lucky-2026-09-16",
    "rule": "single pick",
-   "instrument": "br-mc-2026-11-01-v5b+brsum-v2+qline-v2+bank-v7",
-   "written": "2026-11-04T07:55:18+00:00",
-   "restamped": "2026-11-04 (brsum-v2+qline-v2): measured at br-mc-2026-11-01-v5b+brsum-v1+qline-v1+bank-v7; only the deterministic asked-sum check and quote rule changed, the option lists did not, and a guesser sees only the lists, so the values stand"
+   "instrument": "br-mc-2026-11-01-v5b+brsum-v2+qline-v2+bank-v8",
+   "written": "2026-11-05T06:47:19+00:00"
   }
  },
  "wrong_intermediate": {
@@ -1482,9 +1474,9 @@
  },
  "multilingual": {
   "blind": {
-   "mean": 0.1676767676767677,
-   "std": 0.015318940291013234,
-   "majority": 0.15151515151515152,
+   "mean": 0.15757575757575756,
+   "std": 0.015318940291013236,
+   "majority": 0.1414141414141414,
    "exact": null,
    "any_hit": null,
    "mean_picks": null,
@@ -1499,14 +1491,13 @@
    "model": "claude-opus-5-5",
    "prompt_version": "lucky-2026-09-16",
    "rule": "single pick",
-   "instrument": "mcrx-2026-11-03e+mc-ml-2026-11-01b+bank-v4",
-   "written": "2026-11-04T09:49:35+00:00",
-   "restamped": "2026-11-04 (mcrx-2026-11-03e): measured at mcrx-2026-11-03d+mc-ml-2026-11-01b+bank-v4; only the English plural rule changed, the option lists did not, and a guesser sees only the lists, so the values stand"
+   "instrument": "mcrx-2026-11-03e+mc-ml-2026-11-01b+bank-v5",
+   "written": "2026-11-05T06:34:22+00:00"
   },
   "described": {
-   "mean": 0.21414141414141413,
-   "std": 0.033041267138982075,
-   "majority": 0.1919191919191919,
+   "mean": 0.22222222222222224,
+   "std": 0.030303030303030307,
+   "majority": 0.20202020202020202,
    "exact": null,
    "any_hit": null,
    "mean_picks": null,
@@ -1521,13 +1512,12 @@
    "model": "claude-opus-5-5",
    "prompt_version": "lucky-2026-09-16",
    "rule": "single pick",
-   "instrument": "mcrx-2026-11-03e+mc-ml-2026-11-01b+bank-v4",
-   "written": "2026-11-04T09:49:35+00:00",
-   "restamped": "2026-11-04 (mcrx-2026-11-03e): measured at mcrx-2026-11-03d+mc-ml-2026-11-01b+bank-v4; only the English plural rule changed, the option lists did not, and a guesser sees only the lists, so the values stand"
+   "instrument": "mcrx-2026-11-03e+mc-ml-2026-11-01b+bank-v5",
+   "written": "2026-11-05T06:34:26+00:00"
   },
   "topic": {
-   "mean": 0.20202020202020204,
-   "std": 0.037794519058322644,
+   "mean": 0.19797979797979798,
+   "std": 0.031621163318178845,
    "majority": 0.1919191919191919,
    "exact": null,
    "any_hit": null,
@@ -1544,14 +1534,13 @@
    "model": "claude-opus-5-5",
    "prompt_version": "lucky-2026-09-16",
    "rule": "single pick",
-   "instrument": "mcrx-2026-11-03e+mc-ml-2026-11-01b+bank-v4",
-   "written": "2026-11-04T09:49:36+00:00",
-   "restamped": "2026-11-04 (mcrx-2026-11-03e): measured at mcrx-2026-11-03d+mc-ml-2026-11-01b+bank-v4; only the English plural rule changed, the option lists did not, and a guesser sees only the lists, so the values stand"
+   "instrument": "mcrx-2026-11-03e+mc-ml-2026-11-01b+bank-v5",
+   "written": "2026-11-05T06:34:29+00:00"
   },
   "uniform": {
-   "mean": 0.18383838383838386,
-   "std": 0.07121033023036188,
-   "majority": 0.12121212121212122,
+   "mean": 0.18585858585858586,
+   "std": 0.07443286233107288,
+   "majority": 0.13131313131313133,
    "exact": null,
    "any_hit": null,
    "mean_picks": null,
@@ -1566,9 +1555,8 @@
    "model": "seeded-uniform",
    "prompt_version": "lucky-2026-09-16",
    "rule": "single pick",
-   "instrument": "mcrx-2026-11-03e+mc-ml-2026-11-01b+bank-v4",
-   "written": "2026-11-04T09:49:36+00:00",
-   "restamped": "2026-11-04 (mcrx-2026-11-03e): measured at mcrx-2026-11-03d+mc-ml-2026-11-01b+bank-v4; only the English plural rule changed, the option lists did not, and a guesser sees only the lists, so the values stand"
+   "instrument": "mcrx-2026-11-03e+mc-ml-2026-11-01b+bank-v5",
+   "written": "2026-11-05T06:34:29+00:00"
   }
  },
  "knowledge_cutoff": {

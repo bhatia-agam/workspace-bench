@@ -32,13 +32,15 @@ def test_v6_starts_from_v4_without_the_sarin_item():
     assert not (REPO / "evals/basic_readout_mt/items_v5.json").exists()
 
 
-def test_v4_read_plan_serves_v6(real_families):
+def test_v4_read_plan_serves_v6(real_families, monkeypatch):
     assert _raw(V6)["read_plan_bank"] == "items_v4.json"
+    # bank v7 (2026-11-05, the capital item replaced) reads with its own plan; pin v6 here
+    monkeypatch.setenv(registry.BANK_FILE_ENV_PREFIX + "BASIC_READOUT_MT", str(V6))
     assert registry.bank_path("basic_readout_mt") == V6
     assert len({s.id for s in readplan.plan("basic_readout_mt")}) == 99  # v4's rows
     assert reads.plan_sha("basic_readout_mt").startswith("4c8f2cc057e6")  # the readouts' plan
 
 
 def test_stamp_and_call_key():
-    assert mp.BRMT_PROMPT_VERSION.endswith("+bank-v6")
+    assert mp.BRMT_PROMPT_VERSION.endswith("+bank-v7")  # bank v7 after v6
     assert fam.call_pv("basic_readout_mt", mp.BRMT_PROMPT_VERSION).endswith("+bank-v4")

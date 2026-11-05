@@ -13,7 +13,9 @@ from wsbench.registry import bank_path, register
 # v2 judge did not pass also kept (PR #214 review r6: v4 dropped the rivals behind cannot-tells)
 # bank v7 = v5 with br-ent-lmk-big's gold option reading "England / UK" (bank v6 is the
 # separate opt-in round-5 bank)
-BANK = Path("evals/basic_readout/items_v7.json")
+# bank v8 (2026-11-05) = v7 without its 10 country<->capital items, plus 10 new gated entity items
+# (landmark -> country, athlete -> sport, musician -> instrument); kept items byte-identical
+BANK = Path("evals/basic_readout/items_v8.json")
 TASK_NOTE = (
     "the model answers a short one-word question about a fact, a simple computation, or its own "
     "favourite of some category"

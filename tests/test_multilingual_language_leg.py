@@ -6,6 +6,7 @@ is reported. Fixtures follow the motivating cases."""
 
 import re
 
+import pytest
 from conftest import write_jsonl
 from summary_fakes import FakeLLM, summary_args
 
@@ -15,6 +16,9 @@ from wsbench.multitoken import regex
 from wsbench.multitoken.prompts import CANNOT, ML_SYSTEM, QUESTION_LANGUAGE_V2
 
 AUSTRIA = "b3-ml-de-capital-austria"  # "Die Hauptstadt von Österreich ist" -> Wien; Vienna
+# the capital items left the registered bank in v5 (2026-11-05); the leg's rule is the same on
+# every bank, so the motivating Austria cases read the frozen bank v4 that holds them
+V4 = "evals/multilingual/items_v4.json"
 PASLANMAZ = "mlmh-tr-paslanmaz-sheffield"
 # L32 p4: the only kind of German naming one lens wrote (5 of 220 naming samples); its 128-line
 # digest dropped it, so the MC language role said cannot tell, while another lens, whose digest
@@ -33,6 +37,11 @@ def _spec(name: str):
     spec = importlib.import_module(f"wsbench.evals.{name}").SPEC
     registry.FAMILIES.setdefault(spec.name, spec)
     return spec
+
+
+@pytest.fixture(autouse=True)
+def _austria_bank(monkeypatch):
+    monkeypatch.setenv(registry.BANK_FILE_ENV_PREFIX + "MULTILINGUAL", V4)
 
 
 def _unit(family: str, item: str) -> regex.ScoredUnit:

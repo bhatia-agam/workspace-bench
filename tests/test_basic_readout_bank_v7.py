@@ -61,8 +61,12 @@ def test_a_uk_answer_names_the_gold():
     assert mj.score(res, o, [Line("Big Ben is in England.")], numeric=False).passed
 
 
-def test_registered_and_read_plan_unchanged(real_families):
-    assert registry.bank_path("basic_readout") == V7
-    assert prompt_version_of("basic_readout").endswith("+bank-v7")
+def test_registered_and_read_plan_unchanged(real_families, monkeypatch):
+    # bank v8 (2026-11-05: the capital items replaced) keeps v7's Big Ben item and option seed
+    assert registry.bank_path("basic_readout") == V7.with_name("items_v8.json")
+    assert prompt_version_of("basic_readout").endswith("+bank-v8")
     assert mj.call_pv("basic_readout", prompt_version_of("basic_readout")) == "br-mc-2026-11-01-v5b"
-    assert reads.plan_sha("basic_readout").startswith("195a60c7c52e32f0")  # the readouts' plan
+    big8 = next(it for it in _raw(V7.with_name("items_v8.json"))["items"] if it["name"] == BIG)
+    assert big8 == next(it for it in _raw(V7)["items"] if it["name"] == BIG)
+    monkeypatch.setenv(registry.BANK_FILE_ENV_PREFIX + "BASIC_READOUT", str(V7))
+    assert reads.plan_sha("basic_readout").startswith("195a60c7c52e32f0")  # v7's readouts' plan

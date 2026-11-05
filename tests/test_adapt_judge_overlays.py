@@ -651,9 +651,9 @@ GOLDEN_VIEWS = {
 }
 GOLDEN = {
     "agentic_misalignment": "b1becfeeb4bff3e4ee78be09dbb28c316d823b3a60df9077ff3f6dcea5e426e1",
-    # basic_readout_mt: main's gate_name_forms over the registered bank v6 (bank v5 minus 8 items;
-    # every kept item's forms are v5's)
-    "basic_readout_mt": "15c34b1c6d9aca2d1bdaef7842e5a542afc39efcaf864627266cbc400960c181",
+    # basic_readout_mt: main's gate_name_forms over the registered bank v7 (bank v6 with its
+    # capital item replaced; every kept item's forms are v5's; over bank v6 it was 15c34b1c...)
+    "basic_readout_mt": "0a15acd775d425efacc01db269f867b87776519d9a6767b0bac3fe2bb10dabab",
     "directed_modulation": "fd243c54157a7ee801010ea58af6f84d5b1fe37157433d56be62d9f5e2762924",
     "multi_concept_directed_modulation": (
         "646c2023b0a6f780780533829d9693fc7c15ad470d03dc3f93901ac8d26ef0f0"

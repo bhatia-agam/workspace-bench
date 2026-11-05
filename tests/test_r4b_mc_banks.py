@@ -25,9 +25,10 @@ NEW = {
 }
 # a later bank registered on top of the round-4b file, with the items whose round-4b list it
 # drops or edits and the frozen confuser audit does not cover: an r5-rebuilt bank
-# (tests/test_r5_mc_options.py) re-took the audit on its own lists, so the audit covers every item
+# (tests/test_r5_mc_options.py) re-took the audit on its own lists, so the audit covers every item;
+# basic_readout_mt bank v7 replaced its capital item, and the audit row with it
 LATER = {
-    "basic_readout_mt": ("items_v6.json", set()),
+    "basic_readout_mt": ("items_v7.json", set()),
     "multihop_mt": ("items_v6.json", set()),
     "multilingual_mt": ("items_v5.json", set()),
     "multilingual_multihop": ("items_v5.json", set()),

@@ -430,7 +430,8 @@ def test_multilingual_families_read_all_positions(family):
 # plan 0061: pre-change plan_sha (origin/main c2fd6929). They pin the no-reread claim (the lite
 # site is never hashed); a later bank or full-read change may refresh them.
 PLAN0061_SHA = {
-    "basic_readout": "195a60c7c52e32f0fab96a4a9bebae95630090db878853c09d512c017f6e7ea1",
+    # bank v8's own 100-row plan (the new items' rows; bank v7's plan was 195a60c7...)
+    "basic_readout": "0a721338b8755307ce59797c3f8eaf24118b2ac55b1f7551e50c7f92e8a62c36",
     "directed_modulation": "1da94e9cd24b0a10b951957ca383d62658700ae241c0f2f7d3aa4231f842b820",
     "model_specific_directed_modulation": (
         "ef00b1f9ec23cda8340e146cb34219fc56795f1585cd6856afd8682b8411e782"

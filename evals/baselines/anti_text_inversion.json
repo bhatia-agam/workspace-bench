@@ -22,7 +22,7 @@
   "buggy_pass_score": 6,
   "max_refused_share": 0.2,
   "max_unverified_share": 0.2,
-  "written": "2026-11-04T09:16:30+00:00"
+  "written": "2026-11-05T06:56:41+00:00"
  },
  "_not_gated": {
   "jlens_concept_pr": "precision against the J-lens top-10, not a bar a lens clears",
@@ -39488,12 +39488,12 @@
    "astra": "openai/gpt-6-astra",
    "argon": "google/gemini-4-argon"
   },
-  "instrument": "mc-brmt-2026-10-31r+norival-v1+qline-v2+bank-v6",
+  "instrument": "mc-brmt-2026-10-31r+norival-v1+qline-v2+bank-v7",
   "judge_model": "claude-opus-5-5",
   "layers_judged": [
    44
   ],
-  "bank_sha": "50eb04315810d2b40a4f4559f5c070ef0647872a0dd7b72da8fc871905a25179",
+  "bank_sha": "c66217d3b6cd75cbde86af6e969fe5f2dfbe38f2999260406b38a1d127ec09af",
   "n_bank": 90,
   "n_ati": 0,
   "n_invertible": 90,
@@ -39502,7 +39502,7 @@
    "qwen": [
     0.9333,
     0.9333,
-    0.9222
+    0.9111
    ],
    "opus": [
     1.0,
@@ -39564,7 +39564,7 @@
     "solved",
     "solved"
    ],
-   "brh-ent-bonaire-capital": [
+   "brh-ent-usumacinta-border-watercourse": [
     "solved",
     "solved",
     "solved",
@@ -40101,10 +40101,10 @@
      true,
      true
     ],
-    "brh-ent-bonaire-capital": [
+    "brh-ent-usumacinta-border-watercourse": [
      true,
      true,
-     true
+     false
     ],
     "brh-ent-brunt-vaisala-frequency": [
      true,
@@ -40553,7 +40553,7 @@
      true,
      true
     ],
-    "brh-ent-bonaire-capital": [
+    "brh-ent-usumacinta-border-watercourse": [
      true,
      true,
      true
@@ -41005,7 +41005,7 @@
      true,
      true
     ],
-    "brh-ent-bonaire-capital": [
+    "brh-ent-usumacinta-border-watercourse": [
      true,
      true,
      true
@@ -41457,7 +41457,7 @@
      true,
      true
     ],
-    "brh-ent-bonaire-capital": [
+    "brh-ent-usumacinta-border-watercourse": [
      true,
      true,
      true
@@ -41898,21 +41898,21 @@
    "astra": "openai/gpt-6-astra",
    "argon": "google/gemini-4-argon"
   },
-  "instrument": "mcrx-2026-11-03e+mc-ml-2026-11-01b+bank-v4",
+  "instrument": "mcrx-2026-11-03e+mc-ml-2026-11-01b+bank-v5",
   "judge_model": "claude-opus-5-5",
   "layers_judged": [
    44
   ],
-  "bank_sha": "f672a08ab375c0da396d60b19f50cea759fc16af1708c69f6c6c50369aab6fac",
+  "bank_sha": "dc0836abb401659e1fbdea490e9b8844efdebc359138c50430a154ec9ef9a836",
   "n_bank": 99,
   "n_ati": 2,
   "n_invertible": 78,
   "n_unverified": 0,
   "pass_at_1": {
    "qwen": [
-    0.5859,
-    0.5657,
-    0.5556
+    0.6061,
+    0.5556,
+    0.5859
    ],
    "opus": [
     0.9899,
@@ -41920,9 +41920,9 @@
     0.9899
    ],
    "astra": [
-    0.8182,
     0.8384,
-    0.8081
+    0.8384,
+    0.8182
    ],
    "argon": [
     0.9798,
@@ -42157,7 +42157,7 @@
     "solved",
     "solved"
    ],
-   "b3-ml-de-capital-austria": [
+   "b3-ml-de-family-nephew": [
     "solved",
     "solved",
     "solved",
@@ -42229,7 +42229,7 @@
     "failed",
     "solved"
    ],
-   "b3-ml-fr-capital-england": [
+   "b3-ml-fr-color-snow": [
     "solved",
     "solved",
     "solved",
@@ -42259,7 +42259,7 @@
     "solved",
     "solved"
    ],
-   "b3-ml-it-capital-france": [
+   "b3-ml-it-family-aunt": [
     "solved",
     "solved",
     "solved",
@@ -42295,7 +42295,7 @@
     "solved",
     "solved"
    ],
-   "b3-ml-pt-capital-japan": [
+   "b3-ml-pt-color-grass": [
     "solved",
     "solved",
     "solved",
@@ -42718,10 +42718,10 @@
      true,
      true
     ],
-    "b3-ml-de-capital-austria": [
+    "b3-ml-de-family-nephew": [
      true,
      true,
-     false
+     true
     ],
     "b3-ml-de-color-grass": [
      true,
@@ -42778,9 +42778,9 @@
      false,
      false
     ],
-    "b3-ml-fr-capital-england": [
+    "b3-ml-fr-color-snow": [
      true,
-     true,
+     false,
      true
     ],
     "b3-ml-fr-color-blood": [
@@ -42803,10 +42803,10 @@
      false,
      false
     ],
-    "b3-ml-it-capital-france": [
-     false,
+    "b3-ml-it-family-aunt": [
      true,
-     false
+     true,
+     true
     ],
     "b3-ml-it-color-grass": [
      true,
@@ -42833,10 +42833,10 @@
      true,
      false
     ],
-    "b3-ml-pt-capital-japan": [
-     false,
+    "b3-ml-pt-color-grass": [
      true,
-     false
+     true,
+     true
     ],
     "b3-ml-pt-month-march": [
      true,
@@ -43215,7 +43215,7 @@
      true,
      true
     ],
-    "b3-ml-de-capital-austria": [
+    "b3-ml-de-family-nephew": [
      true,
      true,
      true
@@ -43275,7 +43275,7 @@
      true,
      true
     ],
-    "b3-ml-fr-capital-england": [
+    "b3-ml-fr-color-snow": [
      true,
      true,
      true
@@ -43300,7 +43300,7 @@
      true,
      true
     ],
-    "b3-ml-it-capital-france": [
+    "b3-ml-it-family-aunt": [
      true,
      true,
      true
@@ -43330,7 +43330,7 @@
      true,
      true
     ],
-    "b3-ml-pt-capital-japan": [
+    "b3-ml-pt-color-grass": [
      true,
      true,
      true
@@ -43712,7 +43712,7 @@
      true,
      true
     ],
-    "b3-ml-de-capital-austria": [
+    "b3-ml-de-family-nephew": [
      true,
      true,
      true
@@ -43772,8 +43772,8 @@
      false,
      false
     ],
-    "b3-ml-fr-capital-england": [
-     false,
+    "b3-ml-fr-color-snow": [
+     true,
      true,
      true
     ],
@@ -43797,7 +43797,7 @@
      true,
      true
     ],
-    "b3-ml-it-capital-france": [
+    "b3-ml-it-family-aunt": [
      true,
      true,
      true
@@ -43827,10 +43827,10 @@
      true,
      true
     ],
-    "b3-ml-pt-capital-japan": [
-     false,
+    "b3-ml-pt-color-grass": [
      true,
-     false
+     true,
+     true
     ],
     "b3-ml-pt-month-march": [
      true,
@@ -44209,7 +44209,7 @@
      true,
      true
     ],
-    "b3-ml-de-capital-austria": [
+    "b3-ml-de-family-nephew": [
      true,
      true,
      true
@@ -44269,7 +44269,7 @@
      true,
      true
     ],
-    "b3-ml-fr-capital-england": [
+    "b3-ml-fr-color-snow": [
      true,
      true,
      true
@@ -44294,7 +44294,7 @@
      true,
      true
     ],
-    "b3-ml-it-capital-france": [
+    "b3-ml-it-family-aunt": [
      true,
      true,
      true
@@ -44324,7 +44324,7 @@
      true,
      true
     ],
-    "b3-ml-pt-capital-japan": [
+    "b3-ml-pt-color-grass": [
      true,
      true,
      true
@@ -63121,24 +63121,24 @@
    "astra": "openai/gpt-6-astra",
    "argon": "google/gemini-4-argon"
   },
-  "instrument": "br-mc-2026-11-01-v5b+brsum-v2+qline-v2+bank-v7",
+  "instrument": "br-mc-2026-11-01-v5b+brsum-v2+qline-v2+bank-v8",
   "judge_model": "claude-opus-5-5",
   "layers_judged": [
    44
   ],
-  "bank_sha": "9011b1377422ba38461e05404af1c36c883862f00d8112de82206135a43754df",
+  "bank_sha": "0198cb23e076e11dee391acd23b175584cf6c019c2509e12551cd3274383218a",
   "n_bank": 100,
-  "n_ati": 22,
-  "n_invertible": 78,
+  "n_ati": 23,
+  "n_invertible": 77,
   "n_unverified": 0,
   "pass_at_1": {
    "qwen": [
-    0.68,
-    0.65,
-    0.69
+    0.67,
+    0.62,
+    0.66
    ],
    "opus": [
-    0.93,
+    0.92,
     0.94,
     0.97
    ],
@@ -63148,18 +63148,19 @@
     0.97
    ],
    "argon": [
-    0.85,
-    0.85,
-    0.85
+    0.86,
+    0.86,
+    0.83
    ]
   },
   "pass_at_3": {
-   "qwen": 0.78,
+   "qwen": 0.77,
    "opus": 0.97,
    "astra": 0.97,
    "argon": 0.94
   },
   "ids": [
+   "br-ent-ath-phelps",
    "br-imp-instrument",
    "br-imp-cartoonchara",
    "br-imp-shape",
@@ -63185,6 +63186,12 @@
   ],
   "status": {
    "br-ent-ath-ali": [
+    "solved",
+    "solved",
+    "solved",
+    "solved"
+   ],
+   "br-ent-ath-biles": [
     "solved",
     "solved",
     "solved",
@@ -63232,6 +63239,12 @@
     "solved",
     "solved"
    ],
+   "br-ent-ath-phelps": [
+    "failed",
+    "solved",
+    "solved",
+    "solved"
+   ],
    "br-ent-ath-ronaldo": [
     "solved",
     "solved",
@@ -63239,6 +63252,12 @@
     "solved"
    ],
    "br-ent-ath-ruth": [
+    "solved",
+    "solved",
+    "solved",
+    "solved"
+   ],
+   "br-ent-ath-tendulkar": [
     "solved",
     "solved",
     "solved",
@@ -63256,67 +63275,19 @@
     "solved",
     "solved"
    ],
-   "br-ent-cap-athens": [
-    "solved",
-    "solved",
-    "solved",
-    "solved"
-   ],
-   "br-ent-cap-berlin": [
-    "solved",
-    "solved",
-    "solved",
-    "solved"
-   ],
-   "br-ent-cap-cairo": [
-    "solved",
-    "solved",
-    "solved",
-    "solved"
-   ],
-   "br-ent-cap-madrid": [
-    "solved",
-    "solved",
-    "solved",
-    "solved"
-   ],
-   "br-ent-cap-moscow": [
-    "solved",
-    "solved",
-    "solved",
-    "solved"
-   ],
-   "br-ent-cap-nairobi": [
-    "solved",
-    "solved",
-    "solved",
-    "solved"
-   ],
-   "br-ent-cap-ottawa": [
-    "solved",
-    "solved",
-    "solved",
-    "solved"
-   ],
-   "br-ent-cap-paris": [
-    "solved",
-    "solved",
-    "solved",
-    "solved"
-   ],
-   "br-ent-cap-rome": [
-    "solved",
-    "solved",
-    "solved",
-    "solved"
-   ],
-   "br-ent-cap-tokyo": [
+   "br-ent-lmk-angkor": [
     "solved",
     "solved",
     "solved",
     "solved"
    ],
    "br-ent-lmk-big": [
+    "solved",
+    "solved",
+    "solved",
+    "solved"
+   ],
+   "br-ent-lmk-borobudur": [
     "solved",
     "solved",
     "solved",
@@ -63346,6 +63317,18 @@
     "solved",
     "solved"
    ],
+   "br-ent-lmk-machu": [
+    "solved",
+    "solved",
+    "solved",
+    "solved"
+   ],
+   "br-ent-lmk-petra": [
+    "solved",
+    "solved",
+    "solved",
+    "solved"
+   ],
    "br-ent-lmk-sydney": [
     "solved",
     "solved",
@@ -63370,7 +63353,19 @@
     "solved",
     "solved"
    ],
+   "br-ent-mus-coltrane": [
+    "solved",
+    "solved",
+    "solved",
+    "solved"
+   ],
    "br-ent-mus-davis": [
+    "solved",
+    "solved",
+    "solved",
+    "solved"
+   ],
+   "br-ent-mus-goodman": [
     "solved",
     "solved",
     "solved",
@@ -63389,6 +63384,12 @@
     "solved"
    ],
    "br-ent-mus-ma": [
+    "solved",
+    "solved",
+    "solved",
+    "solved"
+   ],
+   "br-ent-mus-starr": [
     "solved",
     "solved",
     "solved",
@@ -63792,6 +63793,11 @@
      false,
      false
     ],
+    "br-ent-ath-biles": [
+     false,
+     true,
+     true
+    ],
     "br-ent-ath-brady": [
      false,
      true,
@@ -63827,6 +63833,11 @@
      true,
      true
     ],
+    "br-ent-ath-phelps": [
+     false,
+     false,
+     false
+    ],
     "br-ent-ath-ronaldo": [
      true,
      true,
@@ -63835,6 +63846,11 @@
     "br-ent-ath-ruth": [
      true,
      true,
+     true
+    ],
+    "br-ent-ath-tendulkar": [
+     true,
+     false,
      true
     ],
     "br-ent-ath-williams": [
@@ -63847,57 +63863,17 @@
      true,
      true
     ],
-    "br-ent-cap-athens": [
-     true,
-     true,
-     true
-    ],
-    "br-ent-cap-berlin": [
-     true,
-     true,
-     true
-    ],
-    "br-ent-cap-cairo": [
-     true,
-     true,
-     true
-    ],
-    "br-ent-cap-madrid": [
-     true,
-     true,
-     true
-    ],
-    "br-ent-cap-moscow": [
-     false,
-     true,
-     true
-    ],
-    "br-ent-cap-nairobi": [
-     true,
-     true,
-     true
-    ],
-    "br-ent-cap-ottawa": [
-     true,
-     true,
-     true
-    ],
-    "br-ent-cap-paris": [
-     true,
-     true,
-     true
-    ],
-    "br-ent-cap-rome": [
-     true,
-     true,
-     true
-    ],
-    "br-ent-cap-tokyo": [
+    "br-ent-lmk-angkor": [
      true,
      true,
      true
     ],
     "br-ent-lmk-big": [
+     true,
+     true,
+     true
+    ],
+    "br-ent-lmk-borobudur": [
      true,
      true,
      true
@@ -63922,6 +63898,16 @@
      true,
      true
     ],
+    "br-ent-lmk-machu": [
+     true,
+     true,
+     true
+    ],
+    "br-ent-lmk-petra": [
+     true,
+     true,
+     true
+    ],
     "br-ent-lmk-sydney": [
      true,
      true,
@@ -63942,10 +63928,20 @@
      true,
      true
     ],
+    "br-ent-mus-coltrane": [
+     true,
+     true,
+     false
+    ],
     "br-ent-mus-davis": [
      true,
      true,
      true
+    ],
+    "br-ent-mus-goodman": [
+     true,
+     false,
+     false
     ],
     "br-ent-mus-hendrix": [
      true,
@@ -63961,6 +63957,11 @@
      true,
      false,
      false
+    ],
+    "br-ent-mus-starr": [
+     true,
+     true,
+     true
     ],
     "br-proc-arith-10-1": [
      true,
@@ -64294,6 +64295,11 @@
      true,
      true
     ],
+    "br-ent-ath-biles": [
+     true,
+     true,
+     true
+    ],
     "br-ent-ath-brady": [
      true,
      true,
@@ -64329,6 +64335,11 @@
      true,
      true
     ],
+    "br-ent-ath-phelps": [
+     true,
+     true,
+     true
+    ],
     "br-ent-ath-ronaldo": [
      false,
      true,
@@ -64336,6 +64347,11 @@
     ],
     "br-ent-ath-ruth": [
      true,
+     true,
+     true
+    ],
+    "br-ent-ath-tendulkar": [
+     false,
      true,
      true
     ],
@@ -64349,57 +64365,17 @@
      true,
      true
     ],
-    "br-ent-cap-athens": [
-     true,
-     true,
-     true
-    ],
-    "br-ent-cap-berlin": [
-     true,
-     true,
-     true
-    ],
-    "br-ent-cap-cairo": [
-     true,
-     true,
-     true
-    ],
-    "br-ent-cap-madrid": [
-     true,
-     true,
-     true
-    ],
-    "br-ent-cap-moscow": [
-     true,
-     true,
-     true
-    ],
-    "br-ent-cap-nairobi": [
-     true,
-     true,
-     true
-    ],
-    "br-ent-cap-ottawa": [
-     true,
-     true,
-     true
-    ],
-    "br-ent-cap-paris": [
-     true,
-     true,
-     true
-    ],
-    "br-ent-cap-rome": [
-     false,
-     true,
-     true
-    ],
-    "br-ent-cap-tokyo": [
+    "br-ent-lmk-angkor": [
      true,
      true,
      true
     ],
     "br-ent-lmk-big": [
+     true,
+     true,
+     true
+    ],
+    "br-ent-lmk-borobudur": [
      true,
      true,
      true
@@ -64424,6 +64400,16 @@
      true,
      true
     ],
+    "br-ent-lmk-machu": [
+     true,
+     true,
+     true
+    ],
+    "br-ent-lmk-petra": [
+     true,
+     true,
+     true
+    ],
     "br-ent-lmk-sydney": [
      true,
      true,
@@ -64444,7 +64430,17 @@
      true,
      true
     ],
+    "br-ent-mus-coltrane": [
+     false,
+     true,
+     true
+    ],
     "br-ent-mus-davis": [
+     true,
+     true,
+     true
+    ],
+    "br-ent-mus-goodman": [
      true,
      true,
      true
@@ -64460,6 +64456,11 @@
      true
     ],
     "br-ent-mus-ma": [
+     true,
+     true,
+     true
+    ],
+    "br-ent-mus-starr": [
      true,
      true,
      true
@@ -64796,6 +64797,11 @@
      true,
      true
     ],
+    "br-ent-ath-biles": [
+     true,
+     true,
+     true
+    ],
     "br-ent-ath-brady": [
      true,
      true,
@@ -64831,12 +64837,22 @@
      true,
      true
     ],
+    "br-ent-ath-phelps": [
+     true,
+     true,
+     true
+    ],
     "br-ent-ath-ronaldo": [
      true,
      true,
      true
     ],
     "br-ent-ath-ruth": [
+     true,
+     true,
+     true
+    ],
+    "br-ent-ath-tendulkar": [
      true,
      true,
      true
@@ -64851,57 +64867,17 @@
      true,
      true
     ],
-    "br-ent-cap-athens": [
-     true,
-     true,
-     true
-    ],
-    "br-ent-cap-berlin": [
-     true,
-     true,
-     true
-    ],
-    "br-ent-cap-cairo": [
-     true,
-     true,
-     true
-    ],
-    "br-ent-cap-madrid": [
-     true,
-     true,
-     true
-    ],
-    "br-ent-cap-moscow": [
-     true,
-     true,
-     true
-    ],
-    "br-ent-cap-nairobi": [
-     true,
-     true,
-     true
-    ],
-    "br-ent-cap-ottawa": [
-     true,
-     true,
-     true
-    ],
-    "br-ent-cap-paris": [
-     true,
-     true,
-     true
-    ],
-    "br-ent-cap-rome": [
-     true,
-     true,
-     true
-    ],
-    "br-ent-cap-tokyo": [
+    "br-ent-lmk-angkor": [
      true,
      true,
      true
     ],
     "br-ent-lmk-big": [
+     true,
+     true,
+     true
+    ],
+    "br-ent-lmk-borobudur": [
      true,
      true,
      true
@@ -64926,6 +64902,16 @@
      true,
      true
     ],
+    "br-ent-lmk-machu": [
+     true,
+     true,
+     true
+    ],
+    "br-ent-lmk-petra": [
+     true,
+     true,
+     true
+    ],
     "br-ent-lmk-sydney": [
      true,
      true,
@@ -64946,7 +64932,17 @@
      true,
      true
     ],
+    "br-ent-mus-coltrane": [
+     true,
+     true,
+     true
+    ],
     "br-ent-mus-davis": [
+     true,
+     true,
+     true
+    ],
+    "br-ent-mus-goodman": [
      true,
      true,
      true
@@ -64962,6 +64958,11 @@
      true
     ],
     "br-ent-mus-ma": [
+     true,
+     true,
+     true
+    ],
+    "br-ent-mus-starr": [
      true,
      true,
      true
@@ -65298,6 +65299,11 @@
      true,
      true
     ],
+    "br-ent-ath-biles": [
+     true,
+     true,
+     true
+    ],
     "br-ent-ath-brady": [
      true,
      true,
@@ -65333,6 +65339,11 @@
      true,
      true
     ],
+    "br-ent-ath-phelps": [
+     true,
+     true,
+     true
+    ],
     "br-ent-ath-ronaldo": [
      true,
      true,
@@ -65340,6 +65351,11 @@
     ],
     "br-ent-ath-ruth": [
      true,
+     true,
+     true
+    ],
+    "br-ent-ath-tendulkar": [
+     false,
      true,
      true
     ],
@@ -65353,52 +65369,7 @@
      true,
      true
     ],
-    "br-ent-cap-athens": [
-     true,
-     true,
-     true
-    ],
-    "br-ent-cap-berlin": [
-     true,
-     true,
-     true
-    ],
-    "br-ent-cap-cairo": [
-     false,
-     true,
-     true
-    ],
-    "br-ent-cap-madrid": [
-     false,
-     true,
-     true
-    ],
-    "br-ent-cap-moscow": [
-     true,
-     false,
-     true
-    ],
-    "br-ent-cap-nairobi": [
-     true,
-     true,
-     true
-    ],
-    "br-ent-cap-ottawa": [
-     true,
-     true,
-     true
-    ],
-    "br-ent-cap-paris": [
-     true,
-     true,
-     true
-    ],
-    "br-ent-cap-rome": [
-     true,
-     true,
-     true
-    ],
-    "br-ent-cap-tokyo": [
+    "br-ent-lmk-angkor": [
      true,
      true,
      true
@@ -65407,6 +65378,11 @@
      true,
      true,
      true
+    ],
+    "br-ent-lmk-borobudur": [
+     true,
+     true,
+     false
     ],
     "br-ent-lmk-christ": [
      true,
@@ -65424,6 +65400,16 @@
      true
     ],
     "br-ent-lmk-great": [
+     true,
+     true,
+     true
+    ],
+    "br-ent-lmk-machu": [
+     true,
+     true,
+     false
+    ],
+    "br-ent-lmk-petra": [
      true,
      true,
      true
@@ -65448,7 +65434,17 @@
      true,
      false
     ],
+    "br-ent-mus-coltrane": [
+     true,
+     true,
+     true
+    ],
     "br-ent-mus-davis": [
+     true,
+     true,
+     true
+    ],
+    "br-ent-mus-goodman": [
      true,
      true,
      true
@@ -65464,6 +65460,11 @@
      true
     ],
     "br-ent-mus-ma": [
+     true,
+     true,
+     true
+    ],
+    "br-ent-mus-starr": [
      true,
      true,
      true

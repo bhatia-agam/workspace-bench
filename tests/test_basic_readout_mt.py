@@ -173,14 +173,14 @@ def _run(tmp_path, monkeypatch, plan, *, items, text_of=None, quotes=None, **kw)
 def test_spec_judge_is_mc_pinned(real_families, tmp_path, monkeypatch):
     spec = real_families[NAME]
     assert spec.scorer == ""
-    assert spec.judge.prompt_version == "mc-brmt-2026-10-31r+norival-v1+qline-v2+bank-v6"
-    assert spec.bank == Path("evals/basic_readout_mt/items_v6.json")  # the r5-rebuilt bank
+    assert spec.judge.prompt_version == "mc-brmt-2026-10-31r+norival-v1+qline-v2+bank-v7"
+    assert spec.bank == Path("evals/basic_readout_mt/items_v7.json")  # no capital item
     assert spec.not_in_macro == "" and spec.metric == "pass_rate" and not spec.multi_select
     assert spec.min_full_positions == 8 and spec.full_contiguous
     it = _item("brh-ent-")
     r, _f = _run(tmp_path, monkeypatch, {it["id"]: {"readout": "gold"}}, items=[it["id"]])
     assert r.pinned_instrument is True and r.complete
-    assert r.config["prompt_version"] == "mc-brmt-2026-10-31r+norival-v1+qline-v2+bank-v6"
+    assert r.config["prompt_version"] == "mc-brmt-2026-10-31r+norival-v1+qline-v2+bank-v7"
 
 
 def test_regex_diagnostic_is_unpinned(real_families, tmp_path):
@@ -276,8 +276,8 @@ def test_readme_headline_names_scored_unit():
 
 def test_plan_reads_every_position_final_token_lite():
     rows = readplan.plan(NAME)
-    _h, items = _v2()
-    assert len(rows) == len(items)
+    _h, items = load_bank(registry.bank_path(NAME))  # bank v7 reads with its own plan
+    assert [s.id for s in rows] == [it["id"] for it in items]
     for s in rows:
         assert s.render == "chat" and s.positions == {"kind": "all_from_end"}
         assert s.lite_positions == {"kind": "final_token"} and s.lite_layers is None
