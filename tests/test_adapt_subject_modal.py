@@ -45,7 +45,7 @@ def test_glm53_subject():
     assert Path(s.chat_template).is_file()
     spec = modal_spec(s)
     assert spec["app"] == "adapt-glm-5.3"
-    assert spec["gpu"] == ["B300:8", "B200:8"] and spec["tp"] == 8
+    assert spec["gpu"] == ["B300:8", "B200:8", "H200:8"] and spec["tp"] == 8
     assert (spec["image"], spec["volume"], spec["weights"]) == (
         "glm53", "glm53-weights", "hf/nvidia__GLM-5.3-NVFP4")  # fmt: skip
     assert spec["engine"]["kernel_config"] == {"moe_backend": "marlin"}

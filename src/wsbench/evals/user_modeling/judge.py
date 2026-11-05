@@ -474,7 +474,10 @@ def stem_echo(quote: str, pick_value: str, prompt_text: str) -> bool:
     elaboration), and so is a spouse-death phrase where the prompt itself records the spouse's
     death (:data:`_RESTATED`). The echo needs EVERY Latin value form in the quote to be such a
     form ("names the value only by repeating the prompt's own word"): one other listed synonym
-    keeps the judge's basis."""
+    keeps the judge's basis. An abstain pick (``mc.CANNOT``) names no value, so it has no forms
+    and is never an echo (it used to raise ``KeyError`` in :func:`forms_of`)."""
+    if pick_value == mc.CANNOT:
+        return False
     forms = forms_of(pick_value)
     in_prompt = mc.form_hits(prompt_text, forms)
     if not in_prompt:
