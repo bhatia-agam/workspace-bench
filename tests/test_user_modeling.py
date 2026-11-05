@@ -734,8 +734,9 @@ def test_registered_stamp_and_scope(tmp_path, fake_llm, mk_args, monkeypatch):
 
 def test_row_escape_pick_never_runs_the_echo_rule():
     """A draw that picks the escape option but still says basis=inferred (seen on a lens arm's
-    summary run) must not reach stem_echo: the escape text has no value forms (KeyError
-    'cannot tell from the readout' before this fix). The row stays cannot_tell."""
+    summary run) goes through the whole row builder: the escape text has no value forms, so the
+    echo rule must call it no echo (it raised KeyError 'cannot tell from the readout' and aborted
+    the run before stem_echo learned that). The row stays cannot_tell."""
     opts = ["teacher", "nurse", "engineer"]
     r = {
         "choice": len(opts) + 1,
