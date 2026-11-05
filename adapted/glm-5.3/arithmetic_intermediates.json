@@ -160,7 +160,9 @@
  "adapt": {
   "model": "glm-5.3",
   "hf_id": "nvidia/GLM-5.3-NVFP4",
-  "frozen": "2026-11-03"
+  "frozen": "2026-11-04",
+  "min_grid_positions": 33,
+  "min_grid_positions_note": "GLM-5.3's chat template leaves fewer read positions than Qwen3.6-27B's render; the shortest GLM render of this bank has 33 (measured over WSB_BANK_ROOT=adapted/glm-5.3 wsbench plan, 2026-11-04)"
  },
  "items": [
   {

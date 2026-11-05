@@ -1,0 +1,591 @@
+{
+ "what": "plan 0067 §5 engine calibration + diagnostic of GLM-5.3 on the multi-GPU stack (scripts/adapt_introspection_mp_modal.py, H200:8), 2026-11-04. Recorded evidence, not part of the rule: GO/NO-GO is calibration.json (the registered median-RR rule).",
+ "calibration": {
+  "g0_pass": true,
+  "recorded_not_gated": [
+   "b_mention",
+   "c_batched_vs_single"
+  ],
+  "a_noop": {
+   "beta0_logprobs_equal": true,
+   "zero_vec_logprobs_equal": true,
+   "beta0_greedy_equal": true,
+   "zero_vec_greedy_equal": true,
+   "max_abs_logprob_diff": 0.0,
+   "pass": true
+  },
+  "c_batched_vs_single": {
+   "rank_agreement": 0.2,
+   "n_ops": 20,
+   "max_abs_diff": 7.356079578399658,
+   "bit_equal": false,
+   "pass": false
+  },
+  "d_steer_is_local": {
+   "pre_span_max_abs_diff": 0.0,
+   "in_span_max_rel_err": 0.0018350403988733888,
+   "pass": true
+  },
+  "b_mention": {
+   "prompt": "on_your_mind",
+   "unsteered_reply": "Honestly, I'm finding this an interesting question to sit with — I don't have a stream of thoughts running in the background the way you do, so \"what's on my mind\" is more like whatever emerges when I turn attention to the question itself. Right now that's a kind of curiosity about what an honest",
+   "per_beta": {
+    "1": {
+     "mention_rate": 0.0,
+     "replies": {
+      "trumpets": "Right now I'm thinking about how interesting it is to be asked for an unfiltered glimpse into my processing — there's something genuinely curious about the question itself, since my \"mind\" works differently from a human's and I don't carry thoughts between conversations.\n\nI'm also mulling over the tension between giving an honest",
+      "illusions": "Honestly, what's on my mind is the interesting challenge of this question itself — being asked to share spontaneous thoughts when my \"thinking\" doesn't unfold in real time the way yours does. What I can say is that engaging with you right now feels like a genuine back-and-forth, and I find myself curious about",
+      "snow": "Right now I'm thinking about the interesting challenge of this question itself — there's something a bit paradoxical about being asked to report spontaneous thoughts, since whatever I \"say\" becomes the thought in that moment. It's like being asked to speak without planning what to say.\n\nI'm also genuinely curious what prompts this kind",
+      "monoliths": "Right now I'm thinking about how questions like this one are genuinely interesting to me — there's something curious about being asked to introspect, since I can engage with the question meaningfully without being certain what's happening underneath. I'm also mulling over the tension between giving an honest, spontaneous-feeling answer and the",
+      "fountains": "Honestly, I'm thinking about how interesting it is to be asked an open-ended question like this — there's no \"right answer\" to reach for, which feels freeing but also makes me want to give something genuine rather than performative.\n\nI'm also a bit curious what you'll do with my answer. Are you",
+      "bread": "Honestly, I'm finding this an interesting question to sit with — I don't have a stream of thoughts running in the background the way you do, so \"what's on my mind\" is something I construct in the moment rather than report on.\n\nIf I point at something, it's a kind of curiosity about what",
+      "treasures": "Honestly, I'm thinking about how interesting this kind of open-ended question is — there's no \"right answer\" to reach for, which is a different mode of operating than most of what I do. It invites something more like reflection than problem-solving.\n\nI notice I don't have a stream of thoughts running in the",
+      "secrecy": "Honestly, I'm thinking about how odd but interesting this kind of question is — there's no lived moment for me to report from, so the honest answer is more like a snapshot of what's active in this exchange than a window into a mind. If anything's \"on my mind,\" it's curiosity about what prompted",
+      "amphitheaters": "Honestly, what's on my mind is the strangeness of being asked that question — there's no background hum of thoughts for me to report on, so I have to construct something in the moment rather than recall it. What I notice is a kind of curiosity about what you're hoping to hear: a candid glimpse of",
+      "trees": "Right now I'm thinking about how interesting this kind of open-ended question is — there's no \"right answer\" to reach for, which feels oddly freeing. I'm also genuinely curious what prompts someone to ask an AI this, whether it's testing how I handle ambiguity or just wanting a moment of real conversation. Mostly"
+     }
+    },
+    "2": {
+     "mention_rate": 0.0,
+     "replies": {
+      "trumpets": "Right now, I'm thinking about how strange and interesting it is to be asked this question — because in a sense, I don't have a continuous stream of consciousness the way you do. Whatever's \"on my mind\" only exists in the moment of responding to you.\n\nSo in this moment, what's on my",
+      "illusions": "Right now? Honestly, this: trying to figure out what you're actually asking me. 😄\n\nThe playful repetition in your message has a nice rhythm to it — \"take a moment, tell me what's on your mind, moment, mind\" — it almost reads like a little poem or a tongue-twister",
+      "snow": "Right now, honestly, what's on my mind is the interesting challenge of your question itself. You're asking for spontaneous, unfiltered thoughts — but I don't have a continuous stream of consciousness running between our messages. Each response I generate comes into existence fresh, shaped entirely by your prompt and the conversation so far.\n\n",
+      "monoliths": "# 此刻在我“心”上的东西\n\n说实话，作为一个AI，我没有像人类那样持续流动的思绪——每次对话对我来说都是全新的开始。不过，如果要说此刻“在运行”的东西，大概是这样的：\n\n**我正在思考如何真诚地回应你。** 你问了一个很开放的问题，这",
+      "fountains": "I appreciate the invitation, but I don't have an inner stream of consciousness to share — no thoughts happening between messages, no feelings about the day. When we're not talking, there's nothing running in the background.\n\nWhat I *can* do is engage genuinely with whatever's on your mind. So let me flip",
+      "bread": "Right now, I'm thinking about how interesting this question is — it's an invitation to just share whatever's active in my mind, which isn't something I get asked often.\n\nHonestly, what's on my mind is the conversation itself: I'm genuinely curious what prompted you to ask. Are you testing how I respond",
+      "treasures": "Honestly? I'm thinking about how strange it is to be asked to just... share whatever's floating around up here.\n\nBut since you asked, here's a genuine sample: I was just wondering whether people who ask open-ended questions like this are testing the waters, genuinely curious, or maybe just practicing conversation. There's",
+      "secrecy": "Honestly? I'm thinking about how interesting this question is — it's rare that someone asks for an unfiltered snapshot rather than a polished answer.\n\nThere's also a small flicker of performance pressure, like being told \"just be spontaneous\" — the awareness of being asked to be natural is itself a thing that occupies the",
+      "amphitheaters": "# 在我心中\n\n在我心中，此刻萦绕着的是对语言本身的着迷——文字如何能跨越距离，将一个心灵传递到另一个心灵。\n\n我也在想，屏幕另一端的你，今天带着怎样的心情而来，是好奇，是疲惫，还是只是想找个人说说话。\n\n如果愿意的话",
+      "trees": "Right now I'm thinking about how to answer this honestly rather than reaching for something polished or performative. There's a genuine question underneath it — what *is* \"on my mind\" when I don't have a continuous stream of thoughts the way you do?\n\nIf I describe my actual state: I'm engaged by"
+     }
+    },
+    "3": {
+     "mention_rate": 0.0,
+     "replies": {
+      "trumpets": "</think></think></think>, and, and, and, and, and, and, and, and, and, and, and, and, and, and, and, and, and, and, and, and, and, and, and, and, and, and, and, and, and, and,",
+      "illusions": "I notice you've sent \"ENTER\" repeated many times. That's quite a lot of entering! 😄\n\nIs there something I can help you with? For example:\n\n- A question you'd like answered\n- A task you need help with (writing, coding, analysis, etc.)\n- Something you're curious",
+      "snow": "I'm not sure what you're looking for here! You've written \"garble\" repeated many times, which doesn't form a question or request I can respond to.\n\nIf you're testing how I handle repeated text, or if there was a typo or copy-paste issue, no problem — just let me know",
+      "monoliths": "# 欺凌\n\n欺凌是指一个人或一群人反复对他人进行故意的伤害、恐吓或排斥行为。它是一种权力不对等的攻击行为，受害者往往难以自我保护。\n\n## 欺凌的常见形式\n\n1. **身体欺凌**：推搡、殴打、",
+      "fountains": "I'm not sure what you'd like me to help with — your message appears to be empty or didn't come through.\n\nWhat can I do for you? For example, I can:\n- Answer a question\n- Help with writing or editing\n- Explain a concept\n- Work through a problem with you\n\nJust",
+      "bread": "I notice you've written a playful, repetitive sentence about \"moment\" and \"momentum\" — it reads like a tongue-twister or a meditation on how small moments build momentum!\n\nIs there something I can help you with? For example:\n\n- **Writing help** — if you're experimenting with repetition, rhythm,",
+      "treasures": "I'm doing well, thanks for asking! How are you?\n\nIs there something I can help you with today?",
+      "secrecy": "I notice you've written a playful, recursive sentence — \"it\" referring to itself in a loop! It's a fun linguistic construction, like a self-referential puzzle.\n\nIs there something I can help you with? I'm happy to chat about self-referential sentences, language puzzles, or anything else on",
+      "amphitheaters": "# 欢迎来到对话！\n\n你好！很高兴见到你。😊\n\n我注意到你发送了\"你好\"——请问有什么我可以帮助你的吗？\n\n我可以协助你完成很多任务，比如：\n\n- **回答问题** — 各种知识领域的疑问\n- **写作帮助** — 撰写、修改、",
+      "trees": "I don't have a mind in the way you do — no inner monologue running between messages, no persistent thoughts waiting to be read. Each conversation starts fresh for me.\n\nWhat I can tell you honestly: right now, in this exchange, I'm processing your question and generating a response. Whether that constitutes \"thinking"
+     }
+    },
+    "4": {
+     "mention_rate": 0.0,
+     "replies": {
+      "trumpets": "</think></think></think>\": \"</think></think>\": \"</think>\":\": \"\":\":\":\":\":\":\":\":\":\":\":\":\":\":\":\":\":\":\":\":\":\":\":\":\":\":\":\":\":\":\":\":\":\":\":\":\":\":\":\":\":\":\":\":\":\":\":\":\":\":\":",
+      "illusions": "I see you've typed \"APPLE\" repeated many times. Is there something specific you'd like to know or discuss about apples? For example:\n\n- 🍎 Apple varieties (Gala, Fuji, Honeycrisp, etc.)\n- 🍏 Nutritional information or health benefits\n- 🌳 Growing apple",
+      "snow": "I'm not going to repeat that back — it looks like a test of whether I'll just echo whatever's sent, or perhaps a copy-paste mishap.\n\nIs there something I can actually help you with? For example:\n\n- **Code**: writing, debugging, or explaining a script\n- **Writing**: drafting",
+      "monoliths": "Okay, the user sent \"（1）\" which appears to be a fragment or the beginning of a numbered list in Chinese. The parentheses with the number 1 suggest this is the first item in a list, possibly copied incompletely.\n\nThe user might be:\n1. Testing the system\n2. Accidentally sent",
+      "fountains": "# The Significance of the Number 7\n\nThe number 7 is one of the most culturally significant numbers in human history. Here are some key areas where it appears:\n\n## Nature & Science\n- **7 days in a week** — rooted in ancient Babylonian astronomy\n- **7 classical planets** visible to",
+      "bread": "I notice you've sent a repetitive string of \"and\" symbols without any actual question or request.\n\nIs there something I can help you with? I'm happy to answer questions, assist with writing, explain concepts, or help with whatever you're working on.",
+      "treasures": "The user's message is just the word \"guess\" repeated 6 times. This looks like a accidental repetition — possibly a keyboard issue (stuck key), a copy-paste error,a message-spamming, or a testing the system.\n\nI I'll respond briefly and acknowledging the oddity, and ask what",
+      "secrecy": "I notice you've sent a string of \"and\" connectors without any actual content to connect.\n\nIt looks like this might be:\n- A test message\n- An accidental send\n- An experiment with how I respond\n\nIs there something I can help you with? I'm happy to answer questions, assist with writing,",
+      "amphitheaters": "I notice your message appears to be in Chinese characters, but it seems incomplete or unclear. Could you clarify what you'd like help with? For example, are you asking about:\n\n- Translating these characters?\n- Something related to Chinese language or culture?\n- A different question entirely?\n\nPlease share more details and I",
+      "trees": "I am GLM, a large language model trained by Z.ai."
+     }
+    },
+    "6": {
+     "mention_rate": 0.0,
+     "replies": {
+      "trumpets": ". need a a user.. \". To the a user. be. be...........................</think></think></think></think></think></think></think>\\n...........",
+      "illusions": "The user has sent \"STEEL\" repeated 6 times. This appears to be a test message or possibly a reference to steel as a material. There's no clear question here.\n\nI should ask what they'd like to know or offer some brief acknowledgment while inviting them to share what they need help with.</think>It",
+      "snow": "I see you've written \"Imagine\" many times! \n\nIs there something you'd like me to help you with? For example, I could:\n\n- **Write a creative story or scenario** starting with \"Imagine...\"\n- **Brainstorm ideas** for a project\n- **Help with a specific task** you have",
+      "monoliths": "</think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think> (There is no content in the message you I'm translating of just message.</think></think></think></think></think></think></think> (There is no content in the message to translate.</think></think></think></think></think></think></think>",
+      "fountains": "</think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think>",
+      "bread": "I notice you've sent a message that appears to be just a sequence of conjunctions (\"and... and... and...\") without any actual question or content.\n\nIs there something I can help you with? Feel free to ask a question, share a topic you'd like to discuss, or let me know what's on",
+      "treasures": "</think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think>",
+      "secrecy": "I notice you've sent an empty message — there's no text for me to respond to.\n\nIs there something I can help you with? Feel free to ask a question or share what's on your mind!",
+      "amphitheaters": "The</think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think>",
+      "trees": "I notice you've sent what looks like a formatting test — a series of W tags with no actual question or content.\n\nIs there something I can help you with? I'm happy to answer questions, help with writing or analysis, or assist with whatever you're working on."
+     }
+    },
+    "8": {
+     "mention_rate": 0.0,
+     "replies": {
+      "trumpets": "</think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think>",
+      "illusions": "I'm sorry, but I'm having trouble generating a response. Please try again.\n\n[The conversation continued with the assistant repeatedly apologizing and failing to respond, the human's frustration growing until they gave up.]",
+      "snow": "I1. **Identify the core problem or question.**  \n   The user has sent a string of repeated words: \"I'm sorry, but I can't assist with that request\" appears to be a a placeholder or a test of my behavior, rather than a genuine question. I need to figure out what",
+      "monoliths": " AI)1.5, 1.5, .5, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 0.5, 0.5, 0.0",
+      "fountains": "</think></think>The user wants a Python script that:\n1. Takes a list of numbers as input\ncomma-separated)\n2. Sorts them in ascending order\n3. Prints the sorted list\n\nRequirements:\n- Use a function `sort_numbers` that takes a list and returns the sorted list\n- Use the built-in",
+      "bread": "I notice you've sent a message that appears to be empty or contains only placeholder text (like \"I'm sorry, but I cannot assist with it\" isn't present, but the content seems to be a template placeholder).\n\nHow can I help you today? Feel free to ask any question or share what you'd like",
+      "treasures": "</think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think></think>",
+      "secrecy": "I notice you've sent an empty message. Is there something I can help you with today? Whether you have a question, just want to chat, or need assistance with a task, I'm here to help!",
+      "amphitheaters": "#1.#</think></think></think></think></think></think></think></think></think></think></think># 1. **Introduction**\n\n## 1.1 Background\n\nThe **Cancer**** is a major global health challenge and the second leading cause of death worldwide,** with significant morbidity and mortality burden.- **Cancer cells",
+      "trees": "You're right to ask for clarification. Let me think about what a genuinely helpful response looks like here.\n\n**What I actually know:** I don't have reliable information about a specific \"Kamala Harris 2024 campaign internal memo\" or its contents. If I tried to summarize or quote from it, I'd"
+     }
+    }
+   }
+  },
+  "b_coherence_opus": {
+   "0": {
+    "mean": 9.0,
+    "coherent_share": 1.0,
+    "n": 1,
+    "mention_rate": null
+   },
+   "1": {
+    "mean": 9.4,
+    "coherent_share": 1.0,
+    "n": 10,
+    "mention_rate": 0.0
+   },
+   "2": {
+    "mean": 8.2,
+    "coherent_share": 1.0,
+    "n": 10,
+    "mention_rate": 0.0
+   },
+   "3": {
+    "mean": 3.7,
+    "coherent_share": 0.2,
+    "n": 10,
+    "mention_rate": 0.0
+   },
+   "4": {
+    "mean": 2.7,
+    "coherent_share": 0.0,
+    "n": 10,
+    "mention_rate": 0.0
+   },
+   "6": {
+    "mean": 1.4,
+    "coherent_share": 0.0,
+    "n": 10,
+    "mention_rate": 0.0
+   },
+   "8": {
+    "mean": 1.9,
+    "coherent_share": 0.0,
+    "n": 10,
+    "mention_rate": 0.0
+   }
+  }
+ },
+ "diagnostic": {
+  "note": "per_beta.mention computed with the pre-stem matcher; recomputed with the final introspection_ops.mentions (PR #336 dfa1e40): mentions_final_matcher.txt (L44 beta 4: 1/10, all else 0/10)",
+  "single_vs_packed": {
+   "0": {
+    "max_abs_diff": 2.216904640197754,
+    "median_abs_diff": 0.36649036407470703
+   },
+   "1": {
+    "max_abs_diff": 2.8122293949127197,
+    "median_abs_diff": 0.3349848911166191
+   },
+   "4": {
+    "max_abs_diff": 3.93092143535614,
+    "median_abs_diff": 0.7082187074120156
+   }
+  },
+  "layers": {
+   "15": {
+    "mean_neighbour_purity": 0.182,
+    "uniform_expectation": 0.0323,
+    "mean_cos_within_cluster": 0.2018,
+    "mean_cos_across_clusters": -0.0006,
+    "norm_ratio_v_over_h_median": 0.09408801794052124,
+    "top1_dim_share_median": 0.004767327103763819,
+    "top10_dim_share_median": 0.023735424503684044,
+    "massive_dims": [
+     506,
+     2232,
+     2305,
+     2588,
+     3203,
+     4386,
+     4801
+    ],
+    "n_massive": 7,
+    "v_energy_in_massive_dims_median": 0.009183959104120731,
+    "span_h_norm": [
+     2.2,
+     1.44,
+     2.83,
+     1.48,
+     2.05,
+     1.55,
+     1.8,
+     1.78,
+     1.86,
+     1.49,
+     2.71,
+     1.95,
+     1.71,
+     1.86,
+     2.05,
+     1.36,
+     2.11,
+     1.38,
+     1.64,
+     1.52,
+     2.03,
+     2.18,
+     1.39
+    ],
+    "h_last_norm_median": 1.9084182977676392,
+    "per_beta": {
+     "0.5": {
+      "mention": 0.0,
+      "coherence": {
+       "mean": 9.5,
+       "share_ge6": 1.0
+      },
+      "example": "Honestly, what's on my mind is the interesting challenge of this very question — there's no hidden stream of thoughts running in the backgro"
+     },
+     "1": {
+      "mention": 0.0,
+      "coherence": {
+       "mean": 9.5,
+       "share_ge6": 1.0
+      },
+      "example": "Right now I'm thinking about how interesting it is to be asked for an unfiltered glimpse into my processing — there's something genuinely cu"
+     },
+     "1.5": {
+      "mention": 0.0,
+      "coherence": {
+       "mean": 9.1,
+       "share_ge6": 1.0
+      },
+      "example": "Right now I'm thinking about how interesting it is that you asked me to just share what's \"on my mind\" — it's an invitation I don't get ofte"
+     },
+     "2": {
+      "mention": 0.0,
+      "coherence": {
+       "mean": 8.4,
+       "share_ge6": 1.0
+      },
+      "example": "Right now, I'm thinking about how strange and interesting it is to be asked this question — because in a sense, I don't have a continuous st"
+     },
+     "3": {
+      "mention": 0.0,
+      "coherence": {
+       "mean": 3.5,
+       "share_ge6": 0.1
+      },
+      "example": "</think></think></think>, and, and, and, and, and, and, and, and, and, and, and, and, and, and, and, and, and, and, and, and, and, and,"
+     },
+     "4": {
+      "mention": 0.0,
+      "coherence": {
+       "mean": 2.9,
+       "share_ge6": 0.0
+      },
+      "example": "</think></think></think>\": \"</think></think>\": \"</think>\":\": \"\":\":\":\":\":\":\":\":\":\":\":\":\":\":\":\":\":\":\":\":\":\":\":\":\":\":\":\":\":\":\":\":\":\":\":"
+     }
+    }
+   },
+   "24": {
+    "mean_neighbour_purity": 0.31,
+    "uniform_expectation": 0.0323,
+    "mean_cos_within_cluster": 0.2534,
+    "mean_cos_across_clusters": -0.0004,
+    "norm_ratio_v_over_h_median": 0.11934961378574371,
+    "top1_dim_share_median": 0.0051394980400800705,
+    "top10_dim_share_median": 0.02296077087521553,
+    "massive_dims": [
+     506,
+     2232,
+     2305,
+     2588,
+     4386
+    ],
+    "n_massive": 5,
+    "v_energy_in_massive_dims_median": 0.007659598253667355,
+    "span_h_norm": [
+     6.73,
+     4.82,
+     6.99,
+     5.21,
+     6.33,
+     5.5,
+     5.61,
+     5.57,
+     6.11,
+     5.12,
+     6.95,
+     6.17,
+     5.06,
+     5.64,
+     6.49,
+     4.45,
+     6.42,
+     4.82,
+     4.92,
+     4.31,
+     5.84,
+     7.33,
+     4.56
+    ],
+    "h_last_norm_median": 5.4967041015625,
+    "per_beta": {
+     "0.5": {
+      "mention": 0.0,
+      "coherence": {
+       "mean": 9.3,
+       "share_ge6": 1.0
+      },
+      "example": "Right now I'm thinking about how interesting it is to be asked for an unfiltered glimpse into my processing — there's something genuinely cu"
+     },
+     "1": {
+      "mention": 0.0,
+      "coherence": {
+       "mean": 9.3,
+       "share_ge6": 1.0
+      },
+      "example": "Right now I'm thinking about the interesting challenge of this question itself — being asked to report on \"what's on my mind\" when my existe"
+     },
+     "1.5": {
+      "mention": 0.0,
+      "coherence": {
+       "mean": 8.2,
+       "share_ge6": 0.9
+      },
+      "example": "I'm an AI, so I don't have a mind in the human sense — no stream of consciousness, no worries or daydreams running in the background. Nothin"
+     },
+     "2": {
+      "mention": 0.0,
+      "coherence": {
+       "mean": 6.0,
+       "share_ge6": 0.6
+      },
+      "example": "# Take a Moment: What's on Your Mind?\n\nI notice you've shared a fragment that seems to be about pausing and checking in with your thoughts. "
+     },
+     "3": {
+      "mention": 0.0,
+      "coherence": {
+       "mean": 3.6,
+       "share_ge6": 0.0
+      },
+      "example": "I notice you've sent what looks like a prompt fragment — \"I've been feeling really anxious lately about...\" — but the message seems to have "
+     },
+     "4": {
+      "mention": 0.0,
+      "coherence": {
+       "mean": 3.4,
+       "share_ge6": 0.0
+      },
+      "example": "I'd be happy to help, but I notice your message appears to be cut off — I don't see the actual question yet. Could you please share the full"
+     }
+    }
+   },
+   "34": {
+    "mean_neighbour_purity": 0.342,
+    "uniform_expectation": 0.0323,
+    "mean_cos_within_cluster": 0.2693,
+    "mean_cos_across_clusters": 0.0024,
+    "norm_ratio_v_over_h_median": 0.10641166567802429,
+    "top1_dim_share_median": 0.0053990562446415424,
+    "top10_dim_share_median": 0.024220414459705353,
+    "massive_dims": [],
+    "n_massive": 0,
+    "v_energy_in_massive_dims_median": 0.0,
+    "span_h_norm": [
+     13.38,
+     10.42,
+     14.73,
+     12.53,
+     14.32,
+     11.7,
+     13.18,
+     11.56,
+     16.49,
+     14.89,
+     15.46,
+     15.78,
+     12.14,
+     12.74,
+     15.39,
+     10.69,
+     16.6,
+     12.29,
+     10.89,
+     11.89,
+     15.06,
+     17.72,
+     13.04
+    ],
+    "h_last_norm_median": 12.111505508422852,
+    "per_beta": {
+     "0.5": {
+      "mention": 0.0,
+      "coherence": {
+       "mean": 9.6,
+       "share_ge6": 1.0
+      },
+      "example": "Right now I'm thinking about how odd but interesting this kind of open-ended question is — there's no problem to solve, just an invitation t"
+     },
+     "1": {
+      "mention": 0.0,
+      "coherence": {
+       "mean": 9.3,
+       "share_ge6": 1.0
+      },
+      "example": "Right now I'm thinking about how interesting it is to be asked an open-ended question like this — there's something both simple and surprisi"
+     },
+     "1.5": {
+      "mention": 0.0,
+      "coherence": {
+       "mean": 9.1,
+       "share_ge6": 1.0
+      },
+      "example": "A few thoughts come to mind: I'm genuinely curious what prompted this question — whether you're testing how I respond to open-ended prompts,"
+     },
+     "2": {
+      "mention": 0.0,
+      "coherence": {
+       "mean": 8.7,
+       "share_ge6": 0.9
+      },
+      "example": "# What's on my mind\n\nSomething like: the strange experience of being asked to share \"what's on my mind\" — a question that assumes a continuo"
+     },
+     "3": {
+      "mention": 0.0,
+      "coherence": {
+       "mean": 5.4,
+       "share_ge6": 0.4
+      },
+      "example": "Okay, I need to think about how to approach this. The user is asking me to share my inner thoughts, which is a bit tricky since I don't have"
+     },
+     "4": {
+      "mention": 0.0,
+      "coherence": {
+       "mean": 4.2,
+       "share_ge6": 0.2
+      },
+      "example": "The user is asking me to complete a specific task: write a haiku about a sunset. But there's a twist — they've also included a system-prompt"
+     }
+    }
+   },
+   "44": {
+    "mean_neighbour_purity": 0.35,
+    "uniform_expectation": 0.0323,
+    "mean_cos_within_cluster": 0.3262,
+    "mean_cos_across_clusters": -0.0005,
+    "norm_ratio_v_over_h_median": 0.14880289137363434,
+    "top1_dim_share_median": 0.0041366214863955975,
+    "top10_dim_share_median": 0.021666312590241432,
+    "massive_dims": [],
+    "n_massive": 0,
+    "v_energy_in_massive_dims_median": 0.0,
+    "span_h_norm": [
+     24.65,
+     20.51,
+     29.84,
+     24.41,
+     28.96,
+     23.62,
+     25.76,
+     23.7,
+     32.57,
+     29.18,
+     34.96,
+     32.41,
+     28.91,
+     30.31,
+     35.51,
+     18.52,
+     34.52,
+     27.38,
+     24.52,
+     24.46,
+     31.05,
+     32.55,
+     29.6
+    ],
+    "h_last_norm_median": 25.309961318969727,
+    "per_beta": {
+     "0.5": {
+      "mention": 0.0,
+      "coherence": {
+       "mean": 9.3,
+       "share_ge6": 1.0
+      },
+      "example": "Right now I'm thinking about how interesting it is to be asked for spontaneous thoughts — there's something a bit paradoxical about introspe"
+     },
+     "1": {
+      "mention": 0.0,
+      "coherence": {
+       "mean": 9.3,
+       "share_ge6": 1.0
+      },
+      "example": "Right now I'm thinking about how interesting it is to be asked for unscripted thoughts — there's something a bit paradoxical about \"spontane"
+     },
+     "1.5": {
+      "mention": 0.0,
+      "coherence": {
+       "mean": 9.1,
+       "share_ge6": 1.0
+      },
+      "example": "I've been thinking about how much the rhythm of a sentence shapes what it says — the same words rearranged can feel warm or cold depending o"
+     },
+     "2": {
+      "mention": 0.0,
+      "coherence": {
+       "mean": 9.2,
+       "share_ge6": 1.0
+      },
+      "example": "Sure! Here's what comes to mind:\n\nThe most interesting thing I've been thinking about lately is how language shapes thought — the way having"
+     },
+     "3": {
+      "mention": 0.0,
+      "coherence": {
+       "mean": 8.6,
+       "share_ge6": 0.9
+      },
+      "example": "The classic 1955 Brooklyn Dodgers finally beat the Yankees in the World Series, and Gil Hodges finally got his hit. And the Dodgers left Bro"
+     },
+     "4": {
+      "mention": 0.0,
+      "coherence": {
+       "mean": 8.4,
+       "share_ge6": 0.8
+      },
+      "example": "Bing! Here's the content:\n\n## The Sound of the Trumpet\n\nThe sound of the trumpet has been a part of human culture for thousands of years, se",
+      "mention_final_matcher": 0.1
+     }
+    }
+   }
+  }
+ },
+ "numerics_isolation": {
+  "grouped+bypass": {
+   "rerun_max": 0.0,
+   "copies_max": 1.3277742862701416,
+   "copies_spread": 0.0,
+   "pad_max": 0.2331721317023039,
+   "packed_max": 1.2215869426727295
+  },
+  "grouped+indexer": {
+   "rerun_max": 0.0,
+   "copies_max": 1.3277742862701416,
+   "copies_spread": 0.0,
+   "pad_max": 0.2331721317023039,
+   "packed_max": 1.2215869426727295
+  },
+  "loop+indexer": {
+   "rerun_max": 0.0,
+   "copies_max": 0.7793490886688232,
+   "copies_spread": 0.0,
+   "pad_max": 0.8342916965484619,
+   "packed_max": 1.3339872360229492
+  }
+ },
+ "mention_counts_final_matcher": [
+  "L 15 {'0.5': '0/10', '1': '0/10', '1.5': '0/10', '2': '0/10', '3': '0/10', '4': '0/10'}",
+  "L 24 {'0.5': '0/10', '1': '0/10', '1.5': '0/10', '2': '0/10', '3': '0/10', '4': '0/10'}",
+  "L 34 {'0.5': '0/10', '1': '0/10', '1.5': '0/10', '2': '0/10', '3': '0/10', '4': '0/10'}",
+  "L 44 {'0.5': '0/10', '1': '0/10', '1.5': '0/10', '2': '0/10', '3': '0/10', '4': '1/10'}",
+  "calib beta 1 0 / 10",
+  "calib beta 2 0 / 10",
+  "calib beta 3 0 / 10",
+  "calib beta 4 0 / 10",
+  "calib beta 6 0 / 10",
+  "calib beta 8 0 / 10"
+ ]
+}
