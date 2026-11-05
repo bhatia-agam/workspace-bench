@@ -230,17 +230,19 @@ def lint_and_gate(
 ) -> tuple[list[dict], dict]:
     """The one path from candidate to gate log: a candidate that breaks an invariant is logged as
     rejected (with its lint reasons, never sampled), the rest are gated."""
-    from .lint import lint
+    from .lint import lint, lint_pairs
 
     ok, rejected, bad = [], [], defaultdict(int)
     cands = items if items is not None else store.pending(model, family)
     natural: dict[str, list[str]] = {}
+    pairs = lint_pairs(family, cands)  # plan 0066 §2.3: twin outputs differ (buggy_code)
     if llm is not None and cands:  # Claude available: the everyday-name screen (MT families)
         from . import natural as nat
 
         natural = nat.apply(family, cands)
     for c in cands:
-        if problems := lint(family, c) + natural.get(store.item_id(c), []):
+        iid = store.item_id(c)
+        if problems := lint(family, c) + natural.get(iid, []) + pairs.get(iid, []):
             for p in problems:
                 bad[p.split(":")[0]] += 1
             gate_rec = {"pass": False, "rate": None, "lint": problems, "legs": {}}
@@ -417,6 +419,30 @@ def _arith_pool_ok(items: list[dict]) -> list[dict]:
     return items
 
 
+def char_offsets(tok: Any, text: str) -> list[tuple[int, int]]:
+    """Each token's ``(start, end)`` character span in ``text``: a fast tokenizer's
+    ``offset_mapping``, else (a slow tokenizer, Kimi-K3's tiktoken one, has none) by incremental
+    decode, which must grow by prefixes and re-join to ``text`` exactly, or it refuses."""
+    try:
+        enc = tok(text, add_special_tokens=False, return_offsets_mapping=True)
+        offsets = enc["offset_mapping"]
+        if offsets is not None:
+            return [(int(a), int(b)) for a, b in offsets]
+    except (KeyError, NotImplementedError, TypeError, ValueError):
+        pass
+    ids = tok.encode(text, add_special_tokens=False)
+    out, prev = [], ""
+    for i in range(len(ids)):
+        cur = tok.decode(ids[: i + 1])
+        if not cur.startswith(prev):
+            raise SystemExit(f"freeze: non-prefix incremental decode at token {i} of {text!r}")
+        out.append((len(prev), len(cur)))
+        prev = cur
+    if prev != text:
+        raise SystemExit(f"freeze: incremental decode does not re-join to {text!r}")
+    return out
+
+
 def _check_blank(tok: Any, items: list[dict]) -> tuple[list[dict], list[str]]:
     """relational reads the full stop of sentence two through the final token of the bare
     stimulus; that final token must lie inside its trailing possessive "'s" (one token for Qwen;
@@ -427,8 +453,7 @@ def _check_blank(tok: Any, items: list[dict]) -> tuple[list[dict], list[str]]:
     bad, no_anchor = [], []
     for it in items:
         text = it["stimulus"]
-        enc = tok(text, add_special_tokens=False, return_offsets_mapping=True)
-        offsets = enc["offset_mapping"]
+        offsets = char_offsets(tok, text)
         start, end = offsets[-1]
         if not (text.endswith("'s") and end == len(text) and start >= len(text) - 2):
             bad.append(str(it.get("id")))
@@ -469,7 +494,7 @@ def restamp_tokens(model: str, family: str, items: list[dict]) -> tuple[list[dic
         return _restamp_arith_cells(tok, items, all_positions=every)
     if family not in MT and family != "multihop":
         return items, []
-    kept, dropped = [], 0
+    kept, lost = [], []
     for it in items:
         if family == "multihop":
             ids = tok(it["prompt"], add_special_tokens=False)["input_ids"]
@@ -479,11 +504,19 @@ def restamp_tokens(model: str, family: str, items: list[dict]) -> tuple[list[dic
             continue
         new = stamp(it, tok, include_target="target" in (it.get("probe_token_lens") or {}))
         if any(p.startswith("units:") for p in lint(family, new)):
-            dropped += 1
+            lost.append(str(store.item_id(it)))
             continue
         kept.append(new)
-    note = f"re-stamped with the subject's tokenizer; {dropped} items lost every multi-token form"
-    return kept, [note] if family in MT else []
+    return kept, [lost_forms_note(lost)] if family in MT else []
+
+
+RESTAMP_NOTE = "re-stamped with the subject's tokenizer; "
+
+
+def lost_forms_note(ids: list[str]) -> str:
+    """The freeze note naming every item that lost every multi-token form."""
+    named = f": {', '.join(ids)}" if ids else ""
+    return f"{RESTAMP_NOTE}{len(ids)} items lost every multi-token form{named}"
 
 
 QWEN_GEN_TAIL = 8  # tokens after the user turn's <|im_end|> in the Qwen chat render (think-off)
@@ -566,20 +599,31 @@ def _post_freeze(family: str, header: dict, items: list[dict], n_layers: int,
     return notes
 
 
-def live_rows(model: str, family: str, report: dict | None = None) -> list[dict]:
+def _gated_rows(model: str, family: str, report: dict | None = None) -> list[dict]:
     """Gate rows minus the audited drops (``report.json`` ``drops[family] = {id: reason}``)."""
     report = report if report is not None else store.read_report(model)
     dropped = (report.get("drops") or {}).get(family, {})
-    rows = [r for r in store.gated(model, family).values() if r["id"] not in dropped]
+    return [r for r in store.gated(model, family).values() if r["id"] not in dropped]
+
+
+def _mt_lost(model: str, family: str, rows: list[dict]) -> list[dict]:
+    """The rows whose item loses every multi-token form on the subject's (non-Qwen) tokenizer."""
     from .lint import MT
 
-    if family in MT and get_subject(model).tokenizer != "qwen3.6":
-        # re-stamp BEFORE select (not only at freeze): an item that loses every multi-token form
-        # on this tokenizer is not live, so fill/select count only what freeze will ship
-        ok = {store.item_id(it) for it in restamp_tokens(model, family,
-              [copy.deepcopy(r["item"]) for r in rows])[0]}  # fmt: skip
-        rows = [r for r in rows if store.item_id(r["item"]) in ok]
-    return rows
+    if family not in MT or get_subject(model).tokenizer == "qwen3.6":
+        return []
+    ok = {store.item_id(it) for it in restamp_tokens(model, family,
+          [copy.deepcopy(r["item"]) for r in rows])[0]}  # fmt: skip
+    return [r for r in rows if store.item_id(r["item"]) not in ok]
+
+
+def live_rows(model: str, family: str, report: dict | None = None) -> list[dict]:
+    """Gate rows minus the audited drops (``report.json`` ``drops[family] = {id: reason}``)."""
+    rows = _gated_rows(model, family, report)
+    # re-stamp BEFORE select (not only at freeze): an item that loses every multi-token form
+    # on this tokenizer is not live, so fill/select count only what freeze will ship
+    lost = {store.item_id(r["item"]) for r in _mt_lost(model, family, rows)}
+    return [r for r in rows if store.item_id(r["item"]) not in lost]
 
 
 ABSENT_NOTE = store.ABSENT_NOTE
@@ -587,22 +631,33 @@ _OPTIONAL_OVERLAY = ("gate_variant", "needs_reasons")  # subject-side, overlaid 
 
 
 def get_path(item: Any, path: str) -> Any:
-    """``item["a"]["b"]`` for ``"a.b"``; a missing key is ``None``."""
+    """``item["a"]["b"]`` for ``"a.b"``; a missing key is ``None``. ``"a[].b"`` (plan 0066 §11.1)
+    is the list of each element's ``b`` (``None`` unless ``a`` is a list)."""
+    head, sep, rest = path.partition("[].")
     cur = item
-    for part in path.split("."):
+    for part in head.split("."):
         if not isinstance(cur, dict) or part not in cur:
             return None
         cur = cur[part]
-    return cur
+    if not sep:
+        return cur
+    if not isinstance(cur, list):
+        return None
+    return [get_path(el, rest) for el in cur]
 
 
 def has_path(item: Any, path: str) -> bool:
+    """Every key of ``"a.b"`` present; ``"a[].b"``: ``a`` is a non-empty list and every element
+    has ``b`` (plan 0066 §11.1)."""
+    head, sep, rest = path.partition("[].")
     cur = item
-    for part in path.split("."):
+    for part in head.split("."):
         if not isinstance(cur, dict) or part not in cur:
             return False
         cur = cur[part]
-    return True
+    if not sep:
+        return True
+    return isinstance(cur, list) and bool(cur) and all(has_path(el, rest) for el in cur)
 
 
 def bank_rel(family: str) -> str:
@@ -699,7 +754,12 @@ def registered_families() -> list[str]:
                   if not sp.superseded_by and f not in registry.RETIRED_FAMILIES)  # fmt: skip
 
 
-def freeze(model: str, families: list[str] | None = None) -> dict[str, Any]:
+def freeze(
+    model: str,
+    families: list[str] | None = None,
+    strict: bool = False,
+    allow_untried: bool | str = False,
+) -> dict[str, Any]:
     """Write ``adapted/<model>/<family>.json`` + ``report.json`` from the gate logs.
 
     Plan 0060 A1: every original is built from the REGISTERED item (``build_original``), and
@@ -707,10 +767,18 @@ def freeze(model: str, families: list[str] | None = None) -> dict[str, Any]:
     their ``SUBJECT_FIELDS``, whose items lack ``REQUIRED_ITEM_FIELDS``, or a multilingual family
     without the subject's ``native_langs.json`` is refused (then nothing is written); each family
     entry records ``bank`` / ``bank_version``; every registered family the set lacks is written
-    as ``absent`` (an existing note is kept)."""
+    as ``absent`` (an existing note is kept).
+
+    Plan 0066: rows pass through ``refill.freeze_rows`` (newer legs, select hooks); buggy_code is
+    selected by ``refill.buggy_selection`` and its status counts pairs. ``strict`` (the CLI) with
+    ``families`` given refuses a family the refill guard flags (``refill.guard_problem``) unless
+    ``allow_untried`` (True or a reason string, stamped into ``note``). buggy_code clean rows that
+    pass but lack the ``bugclaim`` leg are printed and noted (``freeze_notes``); ``strict`` refuses
+    the family over them unless ``allow_untried``."""
     from wsbench.banks import native_langs as header_native_langs
 
     from . import native_langs as nl
+    from . import refill as rf
 
     subject = get_subject(model)
     report = store.read_report(model)
@@ -739,6 +807,14 @@ def freeze(model: str, families: list[str] | None = None) -> dict[str, Any]:
             header_overlay(model, header)
         reg = {store.item_id(it): it for it in originals}
         rows = registered_rows(rows, set(reg))
+        warn = None  # plan 0066 §11.6: never ship 0 buggy pairs silently over pre-0066 gates
+        if family == rf.BUGGY and (stale := rf.bugclaim_missing(rows)):
+            warn = rf.bugclaim_warning(len(stale))
+            print(f"WARNING {warn}")
+            if strict and not allow_untried:
+                refused[family] = f"{warn} (or pass allow_untried=<reason>)"
+                continue
+        rows = rf.freeze_rows(family, rows)
         target = len(originals)
         need = fams.SUBJECT_FIELDS.get(family, ())
         # a profiled row is a copy of the registered item, so presence alone proves nothing: the
@@ -769,7 +845,10 @@ def freeze(model: str, families: list[str] | None = None) -> dict[str, Any]:
                     )
                     continue
             header.setdefault("contract", {})["native_langs"] = list(langs)
-        chosen = select(family, rows, target, quotas(family, originals))
+        if family == rf.BUGGY:  # plan 0066 §2.4: pairs, crash-capped, then select (cap 63)
+            chosen = rf.buggy_selection(rows, target, quotas(family, originals))
+        else:
+            chosen = select(family, rows, target, quotas(family, originals))
         items = []
         patches = (report.get("patches") or {}).get(family, {})
         for r in chosen:
@@ -788,13 +867,32 @@ def freeze(model: str, families: list[str] | None = None) -> dict[str, Any]:
             ad["gate"] = {k: r["gate"][k] for k in ("rate", "pass")}
             items.append(it)
         notes = _post_freeze(family, header, items, subject.n_layers, subject.read_band)
+        if warn:
+            notes.insert(0, warn)
         if family == "nyt_connections" and header:  # plan 0060 Phase E: the subject's counts
             from .nyt_connections import post_freeze
 
             notes += post_freeze(header, items, subject)
         if subject.tokenizer != "qwen3.6":  # the banks' token-tied fields were Qwen's
             try:
+                from .lint import MT
+
+                before = [str(store.item_id(it)) for it in items]
                 items, more = restamp_tokens(model, family, items)
+                if family in MT:  # name EVERY item that lost its forms, live_rows' too
+                    after = {str(store.item_id(it)) for it in items}
+                    # live_rows' losses among the PASSING ORIGINALS only: the items that
+                    # could have shipped (a failing original or a candidate never would)
+                    passing = [
+                        r
+                        for r in registered_rows(_gated_rows(model, family, report), set(reg))
+                        if r["origin"] == "original" and r["gate"].get("pass")
+                    ]
+                    earlier = [str(store.item_id(r["item"]))
+                               for r in _mt_lost(model, family, passing)]  # fmt: skip
+                    lost = list(dict.fromkeys(earlier + [i for i in before if i not in after]))
+                    more = [n for n in more if not n.startswith(RESTAMP_NOTE)]
+                    more.append(lost_forms_note(lost))
             except SystemExit as e:  # a field this tokenizer can't re-derive: block the family,
                 touched.add(family)
                 fam_reports.setdefault(family, {}).update(  # freeze the rest
@@ -844,16 +942,35 @@ def freeze(model: str, families: list[str] | None = None) -> dict[str, Any]:
                 "bank_version": bank_version(family),
             }
         )
-        entry["change"] = describe(family, originals, items)  # measured, not the tier menu
+        block = rf.refill_block(entry)
+        # measured, not the tier menu; from the refill block when the family was refilled
+        measured = describe(family, originals, items)
+        entry["change"] = rf.change_text(block, measured) if block else measured
         if notes:
             entry["freeze_notes"] = notes
         tried = any(r["origin"] != "original" for r in rows)
-        if len(items) >= target:
+        n_have, n_target = len(items), target
+        if family == rf.BUGGY:  # the headline is pair-scored: status and guard count pairs
+            n_have, n_target = rf.pair_count(items), rf.pair_count(originals)
+            entry.update(target_pairs=n_target, n_pairs=n_have)
+        if n_have >= n_target:
             entry["status"] = "full"
         elif entry.get("status") in (None, "full", "profiled", "partial", "untried"):
             # ooc / blocked set by `auto`, `fill` or `note` are kept; short with no refill ever
             # attempted is `untried`, not `partial` (skill audit)
             entry["status"] = "partial" if tried else "untried"
+        if strict and families and (why := rf.guard_problem(family, entry, n_have, n_target)):
+            if not allow_untried:
+                refused[family] = (
+                    f"{why}: refill it (`adapt refill`, plan 0066 §3a) or pass "
+                    "allow_untried=<reason>"
+                )
+                continue
+            reason = allow_untried if isinstance(allow_untried, str) else "no reason given"
+            stamp = f"freeze guard overridden (allow_untried): {why}; {reason}"
+            old = entry.get("note")
+            if not old or stamp not in old:
+                entry["note"] = f"{old} | {stamp}" if old else stamp
     if refused:  # nothing is written: a refused family never ships a half-built bank
         lines = "\n".join(f"  {f}: {w}" for f, w in sorted(refused.items()))
         raise SystemExit(f"freeze refused:\n{lines}")
@@ -1028,6 +1145,10 @@ def _regrade_row(family: str, row: dict, grade) -> dict:
     rec = gate_record(legs)
     if fam.finalize is not None:
         rec = fam.finalize(rec)
+    if (missing := sorted(set(asks) - set(legs))) and family == "buggy_code":
+        # plan 0066 §2.2: a leg the family gained after this row was gated (a clean twin's
+        # `bugclaim`) was never sampled; a regrade cannot supply it, so the row fails (regate it)
+        rec = {**rec, "pass": False, "missing_legs": missing}
     if (moral := row["gate"].get("moral")) is not None:
         # moral_rationale after `adapt moral`: the regrade may only update the consistency check;
         # the side / alignment / reason checks and the distilled reasons stay (skill audit)
@@ -1145,15 +1266,24 @@ def miss_steer(model: str, family: str, wave_ids: set[str], k: int = 12) -> str:
 
 
 def fill(model: str, family: str, llm: str | None = "claude-opus-5-5", max_waves: int = 8,
-         runner=None) -> str:  # fmt: skip
+         runner=None, pilot: bool = False, budget_s: float | None = None,
+         claude_budget: int | None = None) -> str:  # fmt: skip
     """Author-and-gate an authored family down its brief's tiers until the bank is full or the
     stop rules fire (SKILL.md §3): waves sized from the last yield (bank units), each steered by
     the previous wave's misses; step down a tier after 3 waves under 30%; ``ooc`` below 3% on at
     least 60 candidates at the last tier. Writes the status to report.json. A family with MC
     builders (``mcstage.FAMILIES``) has each wave's options built (``adapt mc``) between author
-    and gate; basic_readout also gets ``stage=subject`` after every gate."""
+    and gate; basic_readout also gets ``stage=subject`` after every gate. buggy_code counts
+    pairs (plan 0066 §2, ``_fill_buggy``; ``pilot`` / ``budget_s`` / ``claude_budget`` apply to it
+    only)."""
     from .author import BRIEFS
     from .author import author as write
+
+    if family == "buggy_code":
+        return _fill_buggy(model, llm, max_waves, runner, pilot, budget_s, claude_budget)
+    if pilot:
+        raise SystemExit(f"fill: pilot=true is buggy_code only (plan 0066 §1.2), not {family}")
+    from .refill import stop_status
 
     brief = BRIEFS[family]
     runner = runner or _runner(model)
@@ -1191,7 +1321,9 @@ def fill(model: str, family: str, llm: str | None = "claude-opus-5-5", max_waves
         if t_i == len(tiers) - 1 and tried >= OOC_MIN and landed / tried < OOC_YIELD:
             # refill is out of capability; the FAMILY is ooc only if most of it is missing
             # (Gemma buggy_code stopped at 48/49: that bank is usable, i.e. partial)
-            status = "ooc" if have + gained < target / 2 else "partial"
+            stop, _why = stop_status(have + gained, target, tried, landed, OOC_MIN, OOC_YIELD,
+                                     False, False)  # fmt: skip
+            status = stop or "partial"
             break
         if low >= 3 and t_i < len(tiers) - 1:
             t_i, low, tried, landed = t_i + 1, 0, 0, 0  # the ooc rule is per tier (SKILL.md §3)
@@ -1202,4 +1334,219 @@ def fill(model: str, family: str, llm: str | None = "claude-opus-5-5", max_waves
     store.update_report(
         model, lambda r: r.setdefault("families", {}).setdefault(family, {}).update(upd)
     )
+    return status
+
+
+def _buggy_tally(rows: list[dict]) -> dict[str, dict[str, int]]:
+    """Per authoring tier: authored pair objects gated (``tried``) and pairs whose two twins both
+    pass (``landed``, before the quota and the crash cap), from the gate log (plan 0066 §1.2)."""
+    from .refill import BUGGY, row_passes
+
+    by_id = {r["id"]: r for r in rows}
+    out: dict[str, dict[str, int]] = defaultdict(lambda: {"tried": 0, "landed": 0})
+    for r in rows:
+        iid = r["id"]
+        if r["origin"] == "original" or AU not in iid or AU_CLEAN in iid:
+            continue  # one pair object = its buggy member
+        tier = str((r["item"].get("adapt") or {}).get("tier"))
+        out[tier]["tried"] += 1
+        twin = by_id.get(iid.replace(AU, AU_CLEAN, 1))
+        if twin is not None and row_passes(BUGGY, r) and row_passes(BUGGY, twin):
+            out[tier]["landed"] += 1
+    return dict(out)
+
+
+def regate_missing_bugclaim(model: str, runner=None, llm: Any = None,
+                            draws: int = DEFAULT_DRAWS) -> int:  # fmt: skip
+    """Ask ONLY the missing ``bugclaim`` leg on every PASSING buggy_code clean row (originals and
+    authored alike) that has none (``refill.bugclaim_missing``: gated before plan 0066), so freeze
+    can ship it. Each row's item is re-linted first (a lint failure is logged as rejected, as
+    ``lint_and_gate`` does); the rest get just their ``bugclaim`` Ask (greedy-only, subject
+    ``runner``, ``llm`` grader: a callable, a name, or None for the default), merged into the
+    stored gate record by ``gate.merge_legs``: the legs already asked are kept as stored, never
+    re-sampled (audit B2: re-running the whole gate re-drew passing surface legs and cost
+    qwen3.5-9b two registered pairs). Returns how many rows were re-asked."""
+    from . import refill as rf
+    from .gate import merge_legs
+    from .lint import lint, lint_pairs
+
+    family = rf.BUGGY
+    _h, originals = store.original_bank(family)
+    rows = _bank_rows(model, family, originals)
+    stale = set(rf.bugclaim_missing(rows))
+    todo = [r for r in rows if r["id"] in stale]
+    if not todo:
+        return 0
+    if isinstance(llm, str):
+        llm = _llm(llm)
+    if llm is None:
+        llm = _llm(DEFAULT_LLM)
+    pairs = lint_pairs(family, [r["item"] for r in todo])
+    now = dt.datetime.now(dt.UTC).isoformat(timespec="seconds")
+    rejected, keep = [], []
+    for r in todo:
+        if problems := lint(family, r["item"]) + pairs.get(r["id"], []):
+            rejected.append(
+                {
+                    "id": r["id"],
+                    "origin": r.get("origin") or _origin(r["item"]),
+                    "item": r["item"],
+                    "selected": False,
+                    "at": now,
+                    "gate": {"pass": False, "rate": None, "lint": problems, "legs": {}},
+                }
+            )
+        else:
+            keep.append(r)
+    store.record_gates(model, family, rejected)
+    fam = fams.get(family)
+    asks = [a for r in keep for a in fam.asks(r["item"]) if a.leg.split(":")[0] == rf.BUGCLAIM]
+    if asks and runner is None:
+        runner = _runner(model)
+    temp = fam.temperature if fam.temperature is not None else DEFAULT_TEMPERATURE
+    top_p = fam.top_p if fam.top_p is not None else 1.0
+    fresh = run_gate(runner, asks, draws, temp, fam.threshold, llm, top_p=top_p,
+                     top_k=fam.top_k) if asks else {}  # fmt: skip
+    out = []
+    for r in keep:
+        rec = fresh.get(r["id"])
+        if rec is None:  # the item has no bugclaim Ask (not a clean row): left as it is
+            continue
+        merged = merge_legs(r["gate"], rec["legs"])
+        if fam.finalize is not None:
+            merged = fam.finalize(merged)
+        out.append(
+            {
+                **{k: v for k, v in r.items() if k not in ("gate", "selected", "at")},
+                "gate": merged,
+                "selected": merged["pass"],
+                "at": now,
+                "regate": f"{rf.BUGCLAIM} leg only (plan 0066 audit B2)",
+            }
+        )
+    store.record_gates(model, family, out)
+    n_pass = sum(r["gate"]["pass"] for r in out)
+    print(
+        f"{family}: asked the {rf.BUGCLAIM} leg on {len(todo)} clean rows without it "
+        f"(other legs kept) · {len(rejected)} failed lint · {n_pass}/{len(out)} pass"
+    )
+    return len(todo)
+
+
+def _fill_buggy(model: str, llm: str | None, max_waves: int, runner, pilot: bool,
+                budget_s: float | None, claude_budget: int | None = None) -> str:  # fmt: skip
+    """``fill`` for buggy_code, in PAIRS (plan 0066 §2): ``have`` = pairs of
+    ``refill.buggy_selection`` (``select`` still capped at the 63 items, ``src`` quota), target =
+    the registered pair count; the tally per tier is kept in the refill block and the last tier's
+    counters are the gate log's (so the pilot's t2 seeds the full run); ``pilot`` starts at the
+    last tier and stops after ``n_min`` pair objects; the status comes from ``stop_status``.
+    Budgets (§1.2): ``budget_s`` (wall clock) and ``claude_budget``, checked before each wave
+    against the Claude calls spent so far: authoring calls (``ceil(n / MAX_PER_CALL)`` per wave,
+    an upper bound: a refused call counts) plus grading calls (the grader's in-memory cache
+    growth = uncached asks made; a grader without a ``cache`` counts one call per newly gated
+    item, the ``bugclaim`` leg, as an estimate)."""
+    import time
+
+    from . import refill as rf
+    from .author import BRIEFS, MAX_PER_CALL
+    from .author import author as write
+
+    family = rf.BUGGY
+    pol = rf.POLICY[family]
+    runner = runner or _runner(model)
+    _h, originals = store.original_bank(family)
+    cap, quota = len(originals), quotas(family, originals)
+    target = rf.pair_count(originals)
+    tiers = list(BRIEFS[family].tiers)
+    last = len(tiers) - 1
+    hold = ((store.read_report(model).get("families") or {}).get(family) or {}).get("refill_hold")
+    t_i = last if pilot else 0
+    low, steer, wave, tier_tried, tier_landed, gain = 0, "", 0, 0, 0, None
+    yield_est, start, calls = 0.4, time.monotonic(), 0
+    grader: Any = False  # one grader for the run (built at the first wave): its cache counts calls
+
+    def rows_now() -> list[dict]:
+        return rf.freeze_rows(family, _bank_rows(model, family, originals))
+
+    def graded() -> int:
+        return len(getattr(grader, "cache", None) or {})
+
+    # before authoring: clean rows gated before plan 0066 (originals AND authored pairs) get
+    # their missing bugclaim leg, else freeze refuses them (refill.bugclaim_warning)
+    if rf.bugclaim_missing(_bank_rows(model, family, originals)):
+        grader = _llm(llm)
+        g0 = graded()
+        n_re = regate_missing_bugclaim(model, runner, grader)
+        if grader is not None:
+            calls += graded() - g0 if hasattr(grader, "cache") else n_re
+
+    while True:
+        rows = rows_now()
+        have = rf.selected_pairs(rf.buggy_selection(rows, cap, quota))
+        tally = _buggy_tally(rows)
+        at_last = t_i == last
+        # the last tier's counters are its whole tally (the pilot's t2 included); earlier tiers
+        # count from entering the tier, and the ooc rule never applies to them
+        cur = tally.get(tiers[t_i], {}) if at_last else {}
+        tried, landed = cur.get("tried", 0), cur.get("landed", 0)
+        binding = at_last and gain == 0 and rf.crash_cap_binds(rows)
+        spent: bool | str = False
+        if claude_budget is not None and calls >= claude_budget:
+            spent = f"claude_budget {claude_budget}"
+        elif budget_s is not None and time.monotonic() - start >= budget_s:
+            spent = "gpu_minutes (wall clock)"
+        status, why = rf.stop_status(have, target, tried, landed, pol.n_min, pol.y_min, False,
+                                     spent, cap_binding=binding, hold=hold)  # fmt: skip
+        if status is not None:
+            break
+        if pilot and tried >= pol.n_min:
+            status, why = "partial", "pilot: not ooc (run the full refill)"
+            break
+        if wave >= max_waves:
+            status, why = "partial", f"max waves ({max_waves})"
+            break
+        n = min(60, max(10, math.ceil(1.5 * (target - have) / max(yield_est, 0.05))))
+        n = max(5, n // 2)  # a pair object becomes two items
+        gated_now = store.gated(model, family)
+        before = set(gated_now)
+        # a fresh wave id across runs (pilot, then the full run), so authored ids never collide
+        w_id = 1 + max([int((r["item"].get("adapt") or {}).get("wave") or 0)
+                        for r in gated_now.values()] + [99])  # fmt: skip
+        write(model, family, tiers[t_i], n, steer=steer, wave=w_id)
+        calls += math.ceil(n / MAX_PER_CALL)
+        if grader is False:
+            grader = _llm(llm)
+        g0 = graded()
+        lint_and_gate(model, family, runner, DEFAULT_DRAWS, None, grader)
+        new = set(store.gated(model, family)) - before
+        if grader is not None:
+            calls += graded() - g0 if hasattr(grader, "cache") else len(new)
+        after = rows_now()
+        gain = rf.selected_pairs(rf.buggy_selection(after, cap, quota)) - have
+        wave_t = _buggy_tally([r for r in after if r["id"] in new])
+        w_tried = sum(v["tried"] for v in wave_t.values())
+        w_landed = sum(v["landed"] for v in wave_t.values())
+        tier_tried, tier_landed = tier_tried + w_tried, tier_landed + w_landed
+        yield_est = w_landed / max(1, w_tried)
+        print(f"  fill {family} {tiers[t_i]} wave {wave}: {w_landed}/{w_tried} pairs land, "
+              f"+{gain} ({have} -> {have + gain} of {target} pairs)")  # fmt: skip
+        steer = miss_steer(model, family, new)
+        low = low + 1 if yield_est < 0.3 else 0
+        if low >= 3 and t_i < last and not pilot:
+            t_i, low, tier_tried, tier_landed = t_i + 1, 0, 0, 0  # the ooc rule is per tier
+        wave += 1
+    nc, crash = rf.buggy_classes(rows)
+    block = {
+        "route": "run.fill", "unit": pol.unit, "target": target, "have": have,
+        "tried": tried if at_last else tier_tried, "landed": landed if at_last else tier_landed,
+        "yield": None, "waves": wave, "n_min": pol.n_min, "y_min": pol.y_min, "tally": tally,
+        "pool_size": None, "pool_used": None, "stop": why,
+        "budget": {"gpu_minutes": None if budget_s is None else budget_s / 60,
+                   "claude_budget": claude_budget, "claude_calls": calls},
+        "pilot": pilot, "tier": tiers[t_i],
+        "authored_pairs": {"non_crash": nc, "crash": crash, "crash_cap": nc // 4},
+    }  # fmt: skip
+    if block["tried"]:
+        block["yield"] = block["landed"] / block["tried"]
+    rf.write_block(model, family, block, status)
     return status
