@@ -115,16 +115,17 @@ def _pre_cues(frozen: dict) -> dict:
     return pre
 
 
-def test_committed_entry_waits_for_its_re_gate():
-    """The committed entry was gated under the rival-check instrument (``rv-2026-11-01h``), so
-    more than the cues stamp moved: the script refuses it, and the entry is re-gated under the
-    current instrument (with the floors refreeze) instead."""
+def test_committed_entry_is_restamped_and_subset_entry_accepts_it():
+    """The refreeze re-gated the entry under the judge-only instrument; only the cues stamp moved
+    since, so the script restamped it (no verdict reads the cues) and re-running it is a no-op."""
     mod = _restamp_script()
     registry.load_all()
+    entry = ti.subset_entry("wrong_intermediate")
+    assert entry["instrument"] == wp.PROMPT_VERSION
+    assert entry["restamped_from"] == PRE_PROMPT_VERSION
+    assert entry["bank_sha"] == ti.bank_fingerprint("wrong_intermediate")
     frozen = json.loads(ti.FROZEN.read_text(encoding="utf-8"))
-    assert frozen["wrong_intermediate"]["instrument"] != wp.PROMPT_VERSION
-    with pytest.raises(SystemExit, match="more than the cues stamp"):
-        mod.restamp(frozen)
+    assert mod.restamp(frozen) is frozen
 
 
 def test_restamp_script_restamps_only_a_cues_move():
