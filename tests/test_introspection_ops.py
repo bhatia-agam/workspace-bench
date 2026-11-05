@@ -368,3 +368,19 @@ def test_torch_stack_pipeline_equals_hfengine_on_a_tiny_model(bank):
             assert p == pytest.approx(b["betas"]["4"][k][w], abs=1e-4)
     replies = [(x["reply"], y["reply"]) for x, y in zip(a["neutral"], b["neutral"], strict=True)]
     assert all(x == y for x, y in replies)
+
+
+def test_apply_steer_norm_src_is_the_kimi_full_sum_recipe():
+    torch = pytest.importorskip("torch")
+    prefix = torch.randn(1, 4, 6, dtype=torch.bfloat16)
+    br = torch.randn(4, 2, 6, dtype=torch.bfloat16)  # [b*s, n_blocks, d]
+    full = prefix.float() + br.float().sum(1).view(1, 4, 6)
+    mask = torch.tensor([[False, True, True, False]])
+    unit = torch.nn.functional.normalize(torch.randn(1, 6), dim=-1)
+    out = ops.apply_steer(prefix, mask, unit, torch.tensor([3.0]), norm_src=full)
+    assert torch.equal(out[~mask], prefix[~mask])
+    want = (prefix[0, 1].float() + 3.0 * full[0, 1].norm() * unit[0]).to(torch.bfloat16)
+    assert torch.equal(out[0, 1], want)
+    new_full = out.float() + br.float().sum(1).view(1, 4, 6)
+    delta = 3.0 * full[0, 2].norm() * unit[0]
+    assert torch.allclose(new_full[0, 2] - full[0, 2], delta, rtol=2e-2, atol=2e-2)

@@ -349,13 +349,15 @@ def run_job(
     randn: Callable[..., Any] | None = None,
     budget: int = TOKEN_BUDGET,
     log: Callable[[str], None] = print,
+    hidden_budget: int = 1,
 ) -> dict[str, Any]:
-    """The GPU side for one shard: vectors (one row per forward, so their batch composition never
-    depends on the sharding), the plan, this shard's ops. Every shard plans by itself; ops are
-    keyed by the call sequence, so :func:`merge` needs equal plans, and steering vectors equal
-    within :data:`VECTOR_TOL` (the stack's cross-container noise, recorded)."""
+    """The GPU side for one shard: vectors (packed by length under ``hidden_budget``, one row per
+    forward by default, so their batch composition never depends on the sharding; a stack with a
+    large per-forward cost packs them), the plan, this shard's ops. Every shard plans by itself;
+    ops are keyed by the call sequence, so :func:`merge` needs equal plans, and steering vectors
+    equal within :data:`VECTOR_TOL` (the stack's cross-container noise, recorded)."""
     layer = int(job["inject_layer"])
-    hidden = compute_hidden(stack, vector_requests(job), layer, budget=1)
+    hidden = compute_hidden(stack, vector_requests(job), layer, budget=hidden_budget)
     log(f"[ops] vectors {hidden.shape} at block {layer}")
     ops, vectors, psha = plan(job, hidden, randn)
     mine = shard(ops, shard_index, n_shards)
@@ -365,7 +367,8 @@ def run_job(
     vsha = _sha({k: array_sha(v) for k, v in vectors.items()})
     return {"job_sha": job.get("job_sha"), "hidden": hidden, "hidden_sha": array_sha(hidden),
             "vectors": vectors, "vectors_sha": vsha, "plan_sha": psha, "op_counts": counts,
-            "shard": [shard_index, n_shards], "budget": budget, "answers": answers}  # fmt: skip
+            "shard": [shard_index, n_shards], "budget": budget, "hidden_budget": hidden_budget,
+            "answers": answers}  # fmt: skip
 
 
 def merge(parts: Sequence[dict[str, Any]]) -> dict[str, Any]:
@@ -436,17 +439,20 @@ def finish(
 # ---------------------------------------------------------------- torch side (GPU stacks)
 
 
-def apply_steer(h: Any, mask: Any, unit: Any, beta: Any) -> Any:
+def apply_steer(h: Any, mask: Any, unit: Any, beta: Any, norm_src: Any = None) -> Any:
     """``h <- h + beta * ||h|| * u`` at the masked positions of ``h [B, S, ...]`` (trailing dims
     flattened: the norm and ``u`` live in that flat space), computed in fp32 and written back in
-    ``h``'s dtype; every other position is returned bit-unchanged (``Backend.steered``)."""
+    ``h``'s dtype; every other position is returned bit-unchanged (``Backend.steered``). With
+    ``norm_src`` (same shape) the norm is ``||norm_src||`` instead: Kimi-K3 adds to prefix_sum
+    the dose of full_sum (plan 0067 §2, ``attnres_full_sum``)."""
     import torch
 
     shp = h.shape
     flat = h.reshape(shp[0], shp[1], -1)
     x = flat.float()
+    ref = x if norm_src is None else norm_src.reshape(shp[0], shp[1], -1).float().to(x.device)
     b = beta.to(x.device, torch.float32).view(-1, 1, 1)
-    y = x + b * x.norm(dim=-1, keepdim=True) * unit.to(x.device, torch.float32)[:, None, :]
+    y = x + b * ref.norm(dim=-1, keepdim=True) * unit.to(x.device, torch.float32)[:, None, :]
     out = torch.where(mask.to(x.device)[..., None], y.to(h.dtype), flat)
     return out.reshape(shp)
 
@@ -520,14 +526,24 @@ class TorchStack:
         return [int(t) for t in logits.float().argmax(dim=-1).cpu().tolist()]
 
 
+class _ReadDone(Exception):  # noqa: N818 (a control-flow signal, not an error)
+    """Raised by :class:`HookStack`'s read hook to stop the forward after the read block."""
+
+
 class HookStack(TorchStack):
     """:class:`TorchStack` over an HF causal LM: the steer is a forward hook on decoder block
     ``layer`` (the block's output tensor, or element 0 of its output tuple), the read a hook on
-    ``layer_out``; logits via ``logits_to_keep``."""
+    ``layer_out``; logits = the output embedding on ``model.model``'s last hidden state at the
+    selected positions only."""
 
     def __init__(self, model: Any, blocks: Any, stop_ids: Sequence[int], pad_id: int) -> None:
         super().__init__(stop_ids, pad_id)
         self.model, self.blocks = model, blocks
+
+    @staticmethod
+    def logits(x: Any) -> Any:
+        """Post-head logit transform (none here; a subject with a softcap overrides it)."""
+        return x
 
     @staticmethod
     def _h(out: Any) -> Any:
@@ -551,26 +567,26 @@ class HookStack(TorchStack):
 
             def read_hook(_m: Any, _i: Any, out: Any) -> None:
                 h = self._h(out)
-                store["h"] = h[bi.to(h.device), pi.to(h.device)].float()
+                # flat per position ([N, 4, 7168] -> [N, 28672] on V4: the steer's space)
+                store["h"] = h[bi.to(h.device), pi.to(h.device)].float().reshape(len(select), -1)
+                raise _ReadDone  # nothing past block layer_out is needed
 
             handles.append(self.blocks[layer_out].register_forward_hook(read_hook))
         try:
             with torch.inference_mode():
                 dev = next(self.model.parameters()).device
                 x = ids.to(dev)
-                lo = min(p for _, p in select)
-                keep = x.shape[1] - lo
+                # the decoder stack, then the head on the selected positions only (a full
+                # [B, S, V] logits tensor does not fit a production micro-batch)
                 try:
-                    out = self.model(x, use_cache=False, logits_to_keep=keep)
-                except TypeError:
-                    out, keep = self.model(x, use_cache=False), x.shape[1]
-                if layer_out is not None:
+                    h = self.model.model(input_ids=x, use_cache=False).last_hidden_state
+                except _ReadDone:
                     return store["h"]
-                lg = out.logits
-                off = x.shape[1] - keep
-                bi = torch.tensor([b for b, _ in select], device=lg.device)
-                pi = torch.tensor([p - off for _, p in select], device=lg.device)
-                return lg[bi, pi]
+                bi = torch.tensor([b for b, _ in select], device=h.device)
+                pi = torch.tensor([p for _, p in select], device=h.device)
+                head = self.model.get_output_embeddings()
+                sel = h[bi, pi].to(head.weight.device)
+                return self.logits(head(sel))
         finally:
             for hd in handles:
                 hd.remove()

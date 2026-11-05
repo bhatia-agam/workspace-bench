@@ -181,6 +181,34 @@ Muse) records the mode only in `adapt.residual` and `calibration.engine`.
 | muse-spark-open | the xaff MUS stack (`xaff.backends.muse`, transformers 5.22.1 `muse_spark`, fused NVFP4 dequant) loaded at **full depth** (62 blocks plus the final norm and head) | a hook on the decoder layer's output | H200:8 (B200:8 fallback, Camila 2026-11-04) | volume `muse-spark` @ 4239e4db, image `muse_common` (the reader image, not vLLM) |
 | kimi-k3 | the xaff KK3 stack (`xaff.backends.kimik3.load_text_model`, remote-code `KimiLinearForCausalLM`, MXFP4 experts) at **full depth** (93 blocks plus `output_attn_res` plus norm plus head) | a hook on layer L's `(prefix, br)` output (full_sum basis, §2) | **B300:8** (1.56 TB) | volume `kimi-k3` |
 
+**Phase 2–4 stacks, as built** (`scripts/adapt_introspection_mp_modal.py`, after the GLM
+phase). The CPU preflight passed on all three.
+- **V4-Pro.** `HookStack` over the full-depth `load_native` model, with `patch_reader`
+  (`native_linear=False`). The hooks sit on `model.model.layers[L]`, whose output is the raw
+  `[B,S,4,7168]` state, read flat (28,672). Logits are the output embedding applied to
+  `model.model`'s final-normed last hidden state at the selected positions only (full-vocab
+  logits OOM'd V4), `use_cache=False` (V4's stateless single-shot mode); a read stops the
+  forward after its block. The pad id is the config's pad or eos.
+- **Muse.** `load_truncated(…, 62)` builds every block plus the final norm, and `lm_head.weight`
+  is read from the checkpoint. The layer step is `MuseReader`'s. Logits are the stock
+  `MuseSparkForConditionalGeneration` ones, `T·tanh(lm_head(norm(h))·m/T)` with T = 20 and
+  m = 0.1768 (the config's `final_logit_softcapping` / `output_multiplier`; checked in the
+  preflight). The softcap changes log-probs, not argmax, so the RR and P(Yes) need it.
+- **Kimi-K3.** `load_text_model(…, 93)` and `KimiK3Reader`'s step. The steer is
+  `apply_steer(prefix_sum, …, norm_src=full_sum)`. Logits are
+  `lm_head(norm(_apply_output_attn_res(prefix, br)))`, the remote code's head, which has no
+  softcap. Stops are the eos 163586 plus `reply_end` `<|close|>` 163588. The XTML markers are
+  not special, so a reply is cut before them. The renders were checked to be token-identical
+  to `apply_chat_template(tokenize=True, thinking=False)`, prefill included (8/8 trials and 4/4
+  neutral prompts).
+- **Token budget per subject.** Every V4, Muse and Kimi forward dequantizes its experts, so it
+  carries a large fixed cost. GLM uses 16k tokens per micro-batch with vectors one row per
+  forward. V4 uses 32k (64k left GPU 0 without room), Kimi 64k and Muse 128k (the xaff
+  reader's size). Their vectors are packed
+  under the same budget; the packing depends only on the request lengths, never on the
+  sharding. For those three, calib (c)'s "alone" leg runs each op in its own micro-batch
+  instead of each row alone.
+
 The V4-Pro, Muse and Kimi loaders live in global-workspace PR #723 (`camila/aff-port`), which is
 still unmerged on that branch. They are imported from a global-workspace checkout given by
 `WSB_GW`, the same convention the GLM J-lens script uses. Each run records the checkout's commit
