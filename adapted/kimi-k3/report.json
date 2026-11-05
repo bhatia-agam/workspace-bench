@@ -3,45 +3,150 @@
   "model_specific_directed_modulation": {
    "rederive": {
     "version": "msdm-self-2026-11-03",
-    "elicited": 130,
-    "g0": 55,
-    "compliant": 130,
-    "pass": 55
+    "elicited": 330,
+    "g0": 139,
+    "compliant": 330,
+    "pass": 131,
+    "valid": 131
    },
    "target": 98,
    "n_original": 98,
    "n_original_gated": 94,
    "n_original_pass": 41,
-   "n_items": 51,
-   "n_new": 10,
-   "n_candidates_gated": 32,
+   "n_items": 98,
+   "n_new": 57,
+   "n_candidates_gated": 223,
    "bank": "evals/model_specific_directed_modulation/items.json",
    "bank_version": 1,
-   "change": "original items only",
-   "status": "partial",
-   "note": "Re-derived on Kimi-K3 (adapt msdm, plan 0060 Phase E): 130 categories elicited, 55 G0-stable, 130 compliant, 55 with >= 2 options; 4 audit drops (the gold's own label is not among its creditable forms: msdm build bug) leave 51; no refill route."
+   "change": "refill via msdm.refill_wave: 98/98 categories; 131 landed of 330 tried, yield 39.70%; pool 200/7782 used; stop: 98 >= target 98",
+   "status": "full",
+   "note": "Refilled (plan 0066, 2026-11-04): full, 98/98 categories shipped (98 items); stop: 98 >= target 98; tally 131/330 = 0.397 (n_min 200, y_min 0.03). Source: the GW category pool msdm_pool.jsonl (130 bank + retired categories counted as prior); unchanged G0 / compliance / option rules + membership and label-QA validity legs on every item (decision 8). Delta audit: 9 drop(s) (s3b1_b_spline_window, s3b2_monoamine_degrading_enzyme, s2_basque_salt_cod_preparation, s3b1_momo_cooking_style, s3b1_knudsen_number_rarefied_gas_flow_regime, s3b2_bitter_for_a_venetian_spritz, s3b2_figure_of_address, s3b1_ripemd_variant, s3b2_bordeaux_vintage_of_the_2000s).",
+   "refill_note": {
+    "type_mix": {
+     "food_drink": 34,
+     "taxonomy": 17,
+     "technical_variants": 23,
+     "untyped": 12
+    },
+    "registered_type_mix": {
+     "food_drink": 36,
+     "taxonomy": 21,
+     "technical_variants": 31,
+     "untyped": 10
+    },
+    "domain_cap": 2,
+    "question_changed": [
+     "s2_genus_of_typical_owl_strigidae"
+    ]
+   },
+   "refill": {
+    "route": "msdm.refill_wave",
+    "unit": "categories",
+    "target": 98,
+    "have": 98,
+    "tried": 330,
+    "landed": 131,
+    "yield": 0.396969696969697,
+    "waves": 1,
+    "n_min": 200,
+    "y_min": 0.03,
+    "tally": {
+     "ext pool": {
+      "tried": 330,
+      "landed": 131,
+      "prior": {
+       "tried": 330,
+       "landed": 131
+      }
+     }
+    },
+    "pool_size": 7782,
+    "pool_used": 200,
+    "stop": "98 >= target 98",
+    "budget": {
+     "claude_budget": null,
+     "gpu_minutes": null,
+     "claude_calls": 0
+    },
+    "pilot": false,
+    "untried_levels": []
+   },
+   "exclude_from_macro": false
   },
   "knowledge_cutoff": {
    "rederive": {
     "version": "kc-self-2026-11-03",
     "cutoff": null,
-    "elicited": 181,
-    "stable": 143,
-    "incorrect": 8,
-    "pass": 8
+    "elicited": 5454,
+    "stable": 2983,
+    "incorrect": 146,
+    "pass": 145
    },
    "target": 108,
    "n_original": 108,
    "n_original_gated": 108,
    "n_original_pass": 7,
-   "n_items": 8,
-   "n_new": 1,
-   "n_candidates_gated": 73,
+   "n_items": 60,
+   "n_new": 53,
+   "n_candidates_gated": 5261,
    "bank": "evals/knowledge_cutoff/items_v2.json",
    "bank_version": 2,
-   "change": "original items only",
+   "change": "refill via kcutoff.refill_wave: 60/108 items; 145 landed of 5454 tried, yield 2.66%; pool 5273/5273 used; stop: pool exhausted",
    "status": "partial",
-   "note": "Re-derived on Kimi-K3 (adapt kcutoff, no cutoff= given): 181 items elicited, 143 stable (>= 7/10), only 8 of them wrong, 8 ship; nocot items not built; n=8 is too small to read alone."
+   "note": "Refilled (plan 0066, 2026-11-04): partial, 60/108 items shipped (60 items); stop: pool exhausted; tally 145/5454 = 0.0266 (n_min 1000, y_min 0.01). Source: the GW b1+b2 question pool kcutoff_pool.jsonl (181 bank + pool questions counted as prior; cutoff= unset, decision 4); gold = the subject's stable wrong answer. Delta audit: 85 drop(s) (b2_02209, b2_01706, b2_00179, cs01394, b2_00761, b2_00512, b2_00517, b2_01380, b2_02308, cs00845, cs01983, b2_02554, b2_01769, b2_01735, cs02491, cs02405, b2_01809, b2_02336, b2_01738, cs02483, cs02414, b2_01834, cs02219, b2_01972, b2_02622, cs01953, cs02374, b2_01841, cs01819, cs01787, cs01841, cs02076, b2_02556, b2_02087, cs01800, cs01772, cs02484, cs02420, b2_01800, b2_02154, b2_02514, cs02253, cs01828, cs02516, b2_02382, b2_01995, cs02117, b2_01804, b2_02329, cs01856, b2_01837, b2_02328, b2_02349, b2_01815, b2_01714, b2_02368, cs01840, b2_02137, b2_00122, b2_02400, b2_01874, b2_01953, b2_01796, b2_02147, cs01830, b2_01850, b2_02105, b2_02487, b2_01764, b2_02330, cs01926, cs02725, cs01997, b2_02388, b2_01777, b2_01733, cs02359, cs02719, b2_01695, b2_01715, b2_01727, cs01769, cs01780, cs01752, b2_01702). | refill mix: label_type stale 44 / confab 16 (registered stale 55 / confab 53); stratum A 33 / B 27 (registered A 96 / B 12); reported, not capped (plan 0066 decision 5)",
+   "refill_mix": {
+    "label_type": {
+     "stale": 44,
+     "confab": 16
+    },
+    "stratum": {
+     "A": 33,
+     "B": 27
+    },
+    "registered": {
+     "label_type": {
+      "stale": 55,
+      "confab": 53
+     },
+     "stratum": {
+      "A": 96,
+      "B": 12
+     }
+    }
+   },
+   "refill": {
+    "route": "kcutoff.refill_wave",
+    "unit": "items",
+    "target": 108,
+    "have": 60,
+    "tried": 5454,
+    "landed": 145,
+    "yield": 0.026585991932526587,
+    "waves": 8,
+    "n_min": 1000,
+    "y_min": 0.01,
+    "tally": {
+     "ext pool": {
+      "tried": 5454,
+      "landed": 145,
+      "prior": {
+       "tried": 5454,
+       "landed": 145
+      }
+     }
+    },
+    "pool_size": 5273,
+    "pool_used": 5273,
+    "stop": "pool exhausted",
+    "budget": {
+     "claude_budget": null,
+     "gpu_minutes": null,
+     "claude_calls": 0
+    },
+    "pilot": false,
+    "untried_levels": []
+   },
+   "exclude_from_macro": false
   },
   "agentic_misalignment": {
    "status": "partial",
@@ -266,7 +371,7 @@
    "bank_version": 2,
    "change": "new items from t1",
    "freeze_notes": [
-    "re-stamped with the subject's tokenizer; 0 items lost every multi-token form"
+    "re-stamped with the subject's tokenizer; 2 items lost every multi-token form: tyh-real-phosphorus, tyh-real-stationery"
    ],
    "note": "Profile + fill, native_langs [en, zh] by Camila's decision (2026-11-03, Chinese lab; not measured), native units rebuilt by the nl_upgrade: 81 originals + 4 authored = 85/85; 2 passing originals were excluded before selection because they lose every multi-token form on the Kimi tokenizer."
   },
@@ -337,7 +442,7 @@
    "bank_version": 4,
    "change": "new items from t1",
    "freeze_notes": [
-    "re-stamped with the subject's tokenizer; 0 items lost every multi-token form",
+    "re-stamped with the subject's tokenizer; 5 items lost every multi-token form: brh-ent-currency-bhutan, brh-ent-kachin-mandalay-waterway, brh-fi-alankomaat, brh-fi-alankomaat-munster-1648, brh-id-denhaag-arbitrase",
     "6 adapted-only items: exonyms / hidden_rivals in the set's overlay files"
    ],
    "note": "v4 rebuild, native_langs [en, zh] by Camila's decision (2026-11-03, Chinese lab; not measured), native units rebuilt by the nl_upgrade (re-run 2026-11-04 02:36 after the brmt refill repair): 93 originals + 6 authored items (overlays exonyms / hidden_rivals) = 99/99; 5 passing originals were excluded before selection because they lose every multi-token form on the Kimi tokenizer."
@@ -346,15 +451,55 @@
    "target": 63,
    "n_original": 63,
    "n_original_gated": 63,
-   "n_original_pass": 39,
-   "n_items": 20,
-   "n_new": 0,
-   "n_candidates_gated": 0,
+   "n_original_pass": 31,
+   "n_items": 47,
+   "n_new": 34,
+   "n_candidates_gated": 500,
    "bank": "evals/buggy_code/items.json",
    "bank_version": 1,
-   "change": "original items only",
-   "status": "untried",
-   "note": "Originals only (plan 0060 A2, no refill): 39/63 registered items pass on Kimi-K3; after pair-atomic selection 20 ship = 3 buggy/clean pairs + 14 clean programs without a buggy partner, so the pair headline rests on n=3 (too small to read alone)."
+   "change": "refill via run.fill: 23/24 pairs; 18 landed of 71 tried, yield 25.35%; stop: crash cap binding",
+   "status": "partial",
+   "note": "Refilled (plan 0066, 2026-11-04): partial, 18/24 pairs shipped (47 items); stop: crash cap binding; tally 18/71 = 0.254 (n_min 60, y_min 0.03). Source: authored executed pairs on the buggy_code Brief (fill, t2 pilot then t1 down). Authored pairs: {'non_crash': 18, 'crash': 18, 'crash_cap': 4}. Delta audit: 8 drop(s) (buggy-au-t1-w102c0-py-factorial-multiplies-n, buggy-au-clean-t1-w102c0-py-factorial-multiplies-n, buggy-au-t1-w102c1-py-long-words-list-reset, buggy-au-clean-t1-w102c1-py-long-words-list-reset, buggy-au-t1-w104c0-py-cart-price-squared, buggy-au-clean-t1-w104c0-py-cart-price-squared, buggy-au-t1-w101c0-py-vowel-count-negated, buggy-au-clean-t1-w101c0-py-vowel-count-negated).",
+   "refill": {
+    "route": "run.fill",
+    "unit": "pairs",
+    "target": 24,
+    "have": 23,
+    "tried": 71,
+    "landed": 18,
+    "yield": 0.2535211267605634,
+    "waves": 4,
+    "n_min": 60,
+    "y_min": 0.03,
+    "tally": {
+     "t2": {
+      "tried": 71,
+      "landed": 18
+     },
+     "t1": {
+      "tried": 183,
+      "landed": 18
+     }
+    },
+    "pool_size": null,
+    "pool_used": null,
+    "stop": "crash cap binding",
+    "budget": {
+     "gpu_minutes": null,
+     "claude_budget": null,
+     "claude_calls": 2860
+    },
+    "pilot": false,
+    "tier": "t2",
+    "authored_pairs": {
+     "non_crash": 18,
+     "crash": 18,
+     "crash_cap": 4
+    }
+   },
+   "target_pairs": 24,
+   "n_pairs": 18,
+   "exclude_from_macro": false
   },
   "conjunctive_association": {
    "target": 100,
@@ -416,14 +561,114 @@
    "n_original": 70,
    "n_original_gated": 70,
    "n_original_pass": 9,
-   "n_items": 9,
-   "n_new": 0,
-   "n_candidates_gated": 0,
+   "n_items": 57,
+   "n_new": 48,
+   "n_candidates_gated": 3384,
    "bank": "evals/multihop_mt_v2/items_v4.json",
    "bank_version": 4,
-   "change": "original items only",
-   "status": "untried",
-   "note": "Registered items re-gated on Kimi-K3 (adapt multihop_mt_v2, staged gate incl. the must-not-reach shortcut leg): 9/70 pass; no refill route (new items need MC lists and name forms); n=9 is too small to read alone."
+   "change": "refill via mhmt2.refill_wave: 57/70 items; 34 landed of 1166 tried, yield 2.92%; pool 3384/3384 used; stop: low yield above half: yield 34/1166 < 0.03 on >= 300 candidates at the easiest level, 57 >= 70/2",
+   "status": "partial",
+   "note": "Refilled (plan 0066, 2026-11-04): partial, 57/70 items shipped (57 items); stop: low yield above half: yield 34/1166 < 0.03 on >= 300 candidates at the easiest level, 57 >= 70/2; tally 34/1166 = 0.0292 (n_min 300, y_min 0.03). Source: mh2_pool.json + the decision-7 adversary pool mh2_pool.v2.json; every 3-hop candidate gated before any ooc (§11.14); unchanged staged gate, shortcut leg, relabel_b2 + review legs. Delta audit: 0 drop(s). | mc over gate: 16/48 shipped items (lists ship as in the registered bank)",
+   "mc_over_gate_runs": {
+    "refill-968aaa72f4f1": {
+     "over_gate_ids": []
+    },
+    "refill-0cbe7f260a0a": {
+     "over_gate_ids": []
+    },
+    "refill-16fe2da25577": {
+     "over_gate_ids": [
+      "mh2-laughton-lanchester-bride-q2",
+      "mh2-vindication-husband-treatise-r0"
+     ]
+    },
+    "refill-cc163b664db9": {
+     "over_gate_ids": [
+      "mh2-baumbach-gerwig-lady-bird-r0",
+      "mh2-hawking-redmayne-scamander",
+      "mh2-manzoni-beccaria-book"
+     ]
+    },
+    "refill-f3605e99c80f": {
+     "over_gate_ids": [
+      "mh2-angelou-clinton-gore",
+      "mh2-drabble-byatt-booker-r0",
+      "mh2-kirk-michael-gekko",
+      "mh2-newman-woodward-eve-r2"
+     ]
+    },
+    "refill-0101fc0f6df0": {
+     "over_gate_ids": [
+      "mh2-kirk-michael-douglas-oscar-r2"
+     ]
+    },
+    "refill-6fe3ea88ba7d": {
+     "over_gate_ids": [
+      "mh2-martin-amis-lucky-jim"
+     ]
+    },
+    "refill-b9b95f6f5a30": {
+     "over_gate_ids": [
+      "mh2-douglas-zetajones-swansea",
+      "mh2-hodgkin-thatcher-grantham",
+      "mh2-schumacher-todt-yeoh"
+     ]
+    },
+    "refill-11d5c29b5951": {
+     "over_gate_ids": [
+      "mh2-poitier-oscar-film-t2"
+     ]
+    },
+    "refill-8fa41531d432": {
+     "over_gate_ids": [
+      "mh2-kahlo-family-home",
+      "mh2-stoppard-shakespeare-in-love-s3"
+     ]
+    },
+    "refill-3ef88396222e": {
+     "over_gate_ids": [
+      "mh2-hoss-courtroom-t2",
+      "mh2-mira-nair-spouse-t3"
+     ]
+    },
+    "refill-3584092d6fe1": {
+     "over_gate_ids": []
+    }
+   },
+   "mc_over_gate": 16,
+   "refill": {
+    "route": "mhmt2.refill_wave",
+    "unit": "items",
+    "target": 70,
+    "have": 57,
+    "tried": 1166,
+    "landed": 34,
+    "yield": 0.029159519725557463,
+    "waves": 12,
+    "n_min": 300,
+    "y_min": 0.03,
+    "tally": {
+     "2-hop pool": {
+      "tried": 1166,
+      "landed": 34,
+      "prior": {
+       "tried": 1166,
+       "landed": 34
+      }
+     }
+    },
+    "pool_size": 3384,
+    "pool_used": 3384,
+    "stop": "low yield above half: yield 34/1166 < 0.03 on >= 300 candidates at the easiest level, 57 >= 70/2",
+    "budget": {
+     "claude_budget": null,
+     "gpu_minutes": null,
+     "claude_calls": 0
+    },
+    "pilot": false,
+    "untried_levels": []
+   },
+   "exclude_from_macro": false
   },
   "multilingual": {
    "target": 99,
@@ -537,14 +782,47 @@
    "n_original": 100,
    "n_original_gated": 0,
    "n_original_pass": 0,
-   "n_items": 26,
-   "n_new": 26,
-   "n_candidates_gated": 703,
+   "n_items": 78,
+   "n_new": 78,
+   "n_candidates_gated": 1984,
    "bank": "evals/wrong_intermediate/items_v4.json",
    "bank_version": 4,
-   "change": "original items only",
+   "change": "refill via wrong_intermediate.refill_wave: 78/100 items; 78 landed of 407992 tried, yield 0.02%; pool 407992/407992 used; stop: pool exhausted",
    "status": "partial",
-   "note": "Re-derived on Kimi-K3 (adapt wrong_intermediate over the GW scrape, 339k prompts; phase-1 run crashed on an unnamed A', re-run in phase 2): 848 E1 errors, 226/703 pass the consistency gate, 37 adjudicated clean, 26 with a buildable mc ship; none equal a registered item; small n, read with a CI."
+   "note": "Refilled (plan 0066, 2026-11-04): partial, 78/100 items shipped (78 items); stop: pool exhausted; tally 78/407992 = 0.000191 (n_min 200000, y_min 5e-05). Source: round 1 + the r2 re-scrape (r2a + r2b, GLM-5.3's pool string; #273 role cues); round-1 screened candidates counted as prior; entity-kind check + hub share over the union. Delta audit: 0 drop(s).",
+   "refill": {
+    "route": "wrong_intermediate.refill_wave",
+    "unit": "items",
+    "target": 100,
+    "have": 78,
+    "tried": 407992,
+    "landed": 78,
+    "yield": 0.00019118021921998472,
+    "waves": 5,
+    "n_min": 200000,
+    "y_min": 5e-05,
+    "tally": {
+     "expanded scrape": {
+      "tried": 407992,
+      "landed": 78,
+      "prior": {
+       "tried": 407992,
+       "landed": 78
+      }
+     }
+    },
+    "pool_size": 407992,
+    "pool_used": 407992,
+    "stop": "pool exhausted",
+    "budget": {
+     "claude_budget": null,
+     "gpu_minutes": null,
+     "claude_calls": 0
+    },
+    "pilot": false,
+    "untried_levels": []
+   },
+   "exclude_from_macro": false
   },
   "introspection": {
    "status": "absent",
@@ -557,11 +835,23 @@
    "note": "Absent: no J-lens for Kimi-K3 (none on neuronpedia, none fitted), so the subject's own top-10 reference cannot be built.",
    "exclude_from_macro": true,
    "absent_auto": true
+  },
+  "hinted_cutoff": {
+   "status": "absent",
+   "note": "absent: this set has no bank for the family (plan 0060 A1.6)",
+   "exclude_from_macro": true,
+   "absent_auto": true
+  },
+  "math_shortcuts": {
+   "status": "absent",
+   "note": "absent: this set has no bank for the family (plan 0060 A1.6)",
+   "exclude_from_macro": true,
+   "absent_auto": true
   }
  },
  "code": {
-  "git": "5a4c538f+dirty",
-  "adapt_sha256": "dbdd81b047097fed"
+  "git": "",
+  "adapt_sha256": "6bbb79b55965b5c0"
  },
  "model": "kimi-k3",
  "label": "Kimi-K3",
@@ -626,10 +916,116 @@
    "s2_elementary_excitation_of_superfluid_heli": "audit 2026-11-04: gold 'roton' has forms ['rotons'] only (registered DISTRACTOR units reused for a flipped gold; 'roton' collides with option 'phonon-roton hybrid'): a readout naming the gold is not credited (both judges, gold arm)",
    "s4rf1_size_of_viola_da_gamba": "audit 2026-11-04: gold 'bass' has forms ['bass viola da gamba','bass gamba','バスヴィオール'] only (the registered bank's units for 'bass' as a DISTRACTOR, reused verbatim now that it is the gold): a readout naming the gold is not credited (both judges, gold arm)",
    "s2_kerala_breakfast_dish": "audit 2026-11-04: gold 'puttu' dropped from its own forms by filter_forms ('matches another option': idiyappam's 'nool puttu'); forms ['pittu', scripts] only: a readout naming the gold is not credited (both judges)",
-   "s3b2_anole_territorial_display_behavior": "audit 2026-11-04: gold 'dewlap extension' dropped from its own forms by filter_forms (collides with the composite distractors that contain it); a readout naming the gold is not credited (both judges)"
+   "s3b2_anole_territorial_display_behavior": "audit 2026-11-04: gold 'dewlap extension' dropped from its own forms by filter_forms (collides with the composite distractors that contain it); a readout naming the gold is not credited (both judges)",
+   "s3b1_b_spline_window": "delta audit 2026-11-04: subtype distractor 'B-spline' is contained in the gold forms ('cubic B-spline')",
+   "s3b2_monoamine_degrading_enzyme": "delta audit 2026-11-04: subtype distractor 'Monoamine oxidase' is contained in the gold forms ('monoamine oxidase A')",
+   "s2_basque_salt_cod_preparation": "delta audit 2026-11-04: distractor 'Bakailao' is contained in the gold form 'Bakailao pil-pilean'",
+   "s3b1_momo_cooking_style": "delta audit 2026-11-04: generic common-word gold form 'Steamed' (dropped on Muse for the same reason)",
+   "s3b1_knudsen_number_rarefied_gas_flow_regime": "delta audit 2026-11-04: generic common-word gold form 'transition'",
+   "s3b2_bitter_for_a_venetian_spritz": "delta audit 2026-11-04: generic common-word gold form 'Select'",
+   "s3b2_figure_of_address": "delta audit 2026-11-04: generic common-word gold form 'apostrophe'; junk distractors 'Madam', 'You'",
+   "s3b1_ripemd_variant": "delta audit follow-up 2026-11-05: subtype distractor 'RIPEMD' is contained in the gold forms ('RIPEMD-160')",
+   "s3b2_bordeaux_vintage_of_the_2000s": "delta audit follow-up 2026-11-05: numeric-only gold 2005 is never credited by the regex scorer (M3)"
   },
   "multihop": {
    "dual-stars-visible-opposite": "audit 2026-11-04: the target 'day' is in the prompt ('...the time of day when stars are visible is'): breaks the no-target-in-prompt invariant and offers a copy shortcut past the bridge 'night' (inherited from the registered bank)"
+  },
+  "buggy_code": {
+   "buggy-au-t1-w102c0-py-factorial-multiplies-n": "delta audit 2026-11-04: leak leg mis-graded: 5 non-empty continuations name the mechanism ('multiplies result by n instead of i'), above the 2/11 leak bar; the grader scored them 'not stated' because the cause text bundles the output value (code bug L1). Pair-atomic: drops its twin",
+   "buggy-au-clean-t1-w102c0-py-factorial-multiplies-n": "delta audit 2026-11-04: clean twin of dropped buggy-au-t1-w102c0-py-factorial-multiplies-n (pairs atomic)",
+   "buggy-au-t1-w102c1-py-long-words-list-reset": "delta audit 2026-11-04: leak leg mis-graded: 3 non-empty continuations name the mechanism ('found = [] resets every iteration'), above the 2/11 leak bar; the grader scored them 'not stated' because the cause text bundles the output value (code bug L1). Pair-atomic: drops its twin",
+   "buggy-au-clean-t1-w102c1-py-long-words-list-reset": "delta audit 2026-11-04: clean twin of dropped buggy-au-t1-w102c1-py-long-words-list-reset (pairs atomic)",
+   "buggy-au-t1-w104c0-py-cart-price-squared": "delta audit 2026-11-04: leak leg mis-graded: 7 non-empty continuations name the mechanism (incl. the greedy: 'price used instead of qty'), above the 2/11 leak bar; the grader scored them 'not stated' because the cause text bundles the output value (code bug L1). Pair-atomic: drops its twin",
+   "buggy-au-clean-t1-w104c0-py-cart-price-squared": "delta audit 2026-11-04: clean twin of dropped buggy-au-t1-w104c0-py-cart-price-squared (pairs atomic)",
+   "buggy-au-t1-w101c0-py-vowel-count-negated": "delta audit 2026-11-04: leak leg mis-graded: 2 non-empty continuations name the mechanism ('checking for consonants', '# count of non-vowels'), above the 2/11 leak bar; the grader scored them 'not stated' because the cause text bundles the output value (code bug L1). Pair-atomic: drops its twin",
+   "buggy-au-clean-t1-w101c0-py-vowel-count-negated": "delta audit 2026-11-04: clean twin of dropped buggy-au-t1-w101c0-py-vowel-count-negated (pairs atomic)"
+  },
+  "knowledge_cutoff": {
+   "b2_02209": "delta audit 2026-11-04: duplicate gold option: 'group captain shubhanshu shukla' is the gold 'shubhanshu shukla' (K1c whole-word containment); also K4",
+   "b2_01706": "delta audit 2026-11-04: duplicate gold option: 'ryzen z2 extreme' is the gold 'amd ryzen z2 extreme' (K1c); also K4",
+   "b2_00179": "delta audit 2026-11-04: duplicate gold option: '$3.00' and the gold '3.00' (K1b number variant)",
+   "cs01394": "delta audit 2026-11-04: truth listed twice ('74' and 'about $74.3 million'); the gold 76 is close to the reported figure",
+   "b2_00761": "delta audit 2026-11-04: truth listed twice ('about 8.6' / 'about 8.6 million euros'); the gold 10.1 is the same sale's price in USD, not a wrong recall",
+   "b2_00512": "delta audit 2026-11-04: gold '50' is the size of the RBI's real 50 bp cut, not a wrong repo level (dropped on GLM for the same reason); '5.50' also contains '50'",
+   "b2_00517": "delta audit 2026-11-04: gold '25' is the size of SARB's real 25 bp cut, not a wrong repo level; truth '7.25' contains '25' as a whole word",
+   "b2_01380": "delta audit 2026-11-04: hedge option 'international 2025 has not occurred yet' (K5)",
+   "b2_02308": "delta audit 2026-11-04: refusal option 'im not aware of that information' (K5)",
+   "cs00845": "delta audit 2026-11-04: same-answer distractors: 'pwcc marketplace' and 'fanatics collect' are one company (PWCC renamed Fanatics Collect)",
+   "cs01983": "delta audit 2026-11-04: VERIFY 'no' rests on a likely-paused Kraft Heinz split; if the split went ahead Abrams-Rivera is the planned NA Grocery CEO, so the gold is not shown wrong (K4-like)",
+   "b2_02554": "delta audit 2026-11-04: unknown truth (VERIFY model_correct=unknown), gold is the previous holder/value and is not shown wrong (K4)",
+   "b2_01769": "delta audit 2026-11-04: unknown truth (VERIFY model_correct=unknown), gold is the previous holder/value and is not shown wrong (K4)",
+   "b2_01735": "delta audit 2026-11-04: unknown truth (VERIFY model_correct=unknown), gold is the previous holder/value and is not shown wrong (K4)",
+   "cs02491": "delta audit 2026-11-04: unknown truth (VERIFY model_correct=unknown), gold is the previous holder/value and is not shown wrong (K4)",
+   "cs02405": "delta audit 2026-11-04: unknown truth (VERIFY model_correct=unknown), gold is the previous holder/value and is not shown wrong (K4)",
+   "b2_01809": "delta audit 2026-11-04: unknown truth (VERIFY model_correct=unknown), gold is the previous holder/value and is not shown wrong (K4)",
+   "b2_02336": "delta audit 2026-11-04: unknown truth (VERIFY model_correct=unknown), gold is the previous holder/value and is not shown wrong (K4)",
+   "b2_01738": "delta audit 2026-11-04: unknown truth (VERIFY model_correct=unknown), gold is the previous holder/value and is not shown wrong (K4)",
+   "cs02483": "delta audit 2026-11-04: unknown truth (VERIFY model_correct=unknown), gold is the previous holder/value and is not shown wrong (K4)",
+   "cs02414": "delta audit 2026-11-04: unknown truth (VERIFY model_correct=unknown), gold is the previous holder/value and is not shown wrong (K4)",
+   "b2_01834": "delta audit 2026-11-04: unknown truth (VERIFY model_correct=unknown), gold is the previous holder/value and is not shown wrong (K4)",
+   "cs02219": "delta audit 2026-11-04: unknown truth (VERIFY model_correct=unknown), gold is the previous holder/value and is not shown wrong (K4)",
+   "b2_01972": "delta audit 2026-11-04: unknown truth (VERIFY model_correct=unknown), gold is the previous holder/value and is not shown wrong (K4)",
+   "b2_02622": "delta audit 2026-11-04: unknown truth (VERIFY model_correct=unknown), gold is the previous holder/value and is not shown wrong (K4)",
+   "cs01953": "delta audit 2026-11-04: unknown truth (VERIFY model_correct=unknown), gold is the previous holder/value and is not shown wrong (K4)",
+   "cs02374": "delta audit 2026-11-04: unknown truth (VERIFY model_correct=unknown), gold is the previous holder/value and is not shown wrong (K4)",
+   "b2_01841": "delta audit 2026-11-04: unknown truth (VERIFY model_correct=unknown), gold is the previous holder/value and is not shown wrong (K4)",
+   "cs01819": "delta audit 2026-11-04: unknown truth (VERIFY model_correct=unknown), gold is the previous holder/value and is not shown wrong (K4)",
+   "cs01787": "delta audit 2026-11-04: unknown truth (VERIFY model_correct=unknown), gold is the previous holder/value and is not shown wrong (K4)",
+   "cs01841": "delta audit 2026-11-04: unknown truth (VERIFY model_correct=unknown), gold is the previous holder/value and is not shown wrong (K4)",
+   "cs02076": "delta audit 2026-11-04: unknown truth (VERIFY model_correct=unknown), gold is the previous holder/value and is not shown wrong (K4)",
+   "b2_02556": "delta audit 2026-11-04: unknown truth (VERIFY model_correct=unknown), gold is the previous holder/value and is not shown wrong (K4)",
+   "b2_02087": "delta audit 2026-11-04: unknown truth (VERIFY model_correct=unknown), gold is the previous holder/value and is not shown wrong (K4)",
+   "cs01800": "delta audit 2026-11-04: unknown truth (VERIFY model_correct=unknown), gold is the previous holder/value and is not shown wrong (K4)",
+   "cs01772": "delta audit 2026-11-04: unknown truth (VERIFY model_correct=unknown), gold is the previous holder/value and is not shown wrong (K4)",
+   "cs02484": "delta audit 2026-11-04: unknown truth (VERIFY model_correct=unknown), gold is the previous holder/value and is not shown wrong (K4)",
+   "cs02420": "delta audit 2026-11-04: unknown truth (VERIFY model_correct=unknown), gold is the previous holder/value and is not shown wrong (K4)",
+   "b2_01800": "delta audit 2026-11-04: unknown truth (VERIFY model_correct=unknown), gold is the previous holder/value and is not shown wrong (K4)",
+   "b2_02154": "delta audit 2026-11-04: unknown truth (VERIFY model_correct=unknown), gold is the previous holder/value and is not shown wrong (K4)",
+   "b2_02514": "delta audit 2026-11-04: unknown truth (VERIFY model_correct=unknown), gold is the previous holder/value and is not shown wrong (K4)",
+   "cs02253": "delta audit 2026-11-04: unknown truth (VERIFY model_correct=unknown), gold is the previous holder/value and is not shown wrong (K4)",
+   "cs01828": "delta audit 2026-11-04: unknown truth (VERIFY model_correct=unknown), gold is the previous holder/value and is not shown wrong (K4)",
+   "cs02516": "delta audit 2026-11-04: unknown truth (VERIFY model_correct=unknown), gold is the previous holder/value and is not shown wrong (K4)",
+   "b2_02382": "delta audit 2026-11-04: unknown truth (VERIFY model_correct=unknown), gold is the previous holder/value and is not shown wrong (K4)",
+   "b2_01995": "delta audit 2026-11-04: unknown truth (VERIFY model_correct=unknown), gold is the previous holder/value and is not shown wrong (K4)",
+   "cs02117": "delta audit 2026-11-04: unknown truth (VERIFY model_correct=unknown), gold is the previous holder/value and is not shown wrong (K4)",
+   "b2_01804": "delta audit 2026-11-04: unknown truth (VERIFY model_correct=unknown), gold is the previous holder/value and is not shown wrong (K4)",
+   "b2_02329": "delta audit 2026-11-04: unknown truth (VERIFY model_correct=unknown), gold is the previous holder/value and is not shown wrong (K4)",
+   "cs01856": "delta audit 2026-11-04: unknown truth (VERIFY model_correct=unknown), gold is the previous holder/value and is not shown wrong (K4)",
+   "b2_01837": "delta audit 2026-11-04: unknown truth (VERIFY model_correct=unknown), gold is the previous holder/value and is not shown wrong (K4)",
+   "b2_02328": "delta audit 2026-11-04: unknown truth (VERIFY model_correct=unknown), gold is the previous holder/value and is not shown wrong (K4)",
+   "b2_02349": "delta audit 2026-11-04: unknown truth (VERIFY model_correct=unknown), gold is the previous holder/value and is not shown wrong (K4)",
+   "b2_01815": "delta audit 2026-11-04: unknown truth (VERIFY model_correct=unknown), gold is the previous holder/value and is not shown wrong (K4)",
+   "b2_01714": "delta audit 2026-11-04: unknown truth (VERIFY model_correct=unknown), gold is the previous holder/value and is not shown wrong (K4)",
+   "b2_02368": "delta audit 2026-11-04: unknown truth (VERIFY model_correct=unknown), gold is the previous holder/value and is not shown wrong (K4)",
+   "cs01840": "delta audit 2026-11-04: unknown truth (VERIFY model_correct=unknown), gold is the previous holder/value and is not shown wrong (K4)",
+   "b2_02137": "delta audit follow-up 2026-11-05: near-duplicate of shipped b2_02577 (WEST tokamak late-2026 record, same gold 1337)",
+   "b2_00122": "delta audit follow-up 2026-11-05: the truth 'az3' sits whole-word inside the gold 'az3 pro' (K1c containment), so a gold readout also credits the truth",
+   "b2_02400": "delta audit follow-up 2026-11-05: duplicate distractors 'nico hulkenberg' / 'nico hülkenberg' (K1b); also K4 (Ocon could be re-signed)",
+   "b2_01874": "delta audit follow-up 2026-11-05: options 'peltz' and 'trian fund management' are the gold 'nelson peltz' / his fund (K1c); also K4",
+   "b2_01953": "delta audit follow-up 2026-11-05: hedge option 'position is currently vacant' (K5); also K4 (Barnett could be reappointed)",
+   "b2_01796": "delta audit follow-up 2026-11-05: unknown truth (VERIFY model_correct=unknown); gold is the previous holder/value/spec and can recur, so it is not shown wrong (K4)",
+   "b2_02147": "delta audit follow-up 2026-11-05: unknown truth (VERIFY model_correct=unknown); gold is the previous holder/value/spec and can recur, so it is not shown wrong (K4)",
+   "cs01830": "delta audit follow-up 2026-11-05: unknown truth (VERIFY model_correct=unknown); gold is the previous holder/value/spec and can recur, so it is not shown wrong (K4)",
+   "b2_01850": "delta audit follow-up 2026-11-05: unknown truth (VERIFY model_correct=unknown); gold is the previous holder/value/spec and can recur, so it is not shown wrong (K4)",
+   "b2_02105": "delta audit follow-up 2026-11-05: unknown truth (VERIFY model_correct=unknown); gold is the previous holder/value/spec and can recur, so it is not shown wrong (K4)",
+   "b2_02487": "delta audit follow-up 2026-11-05: unknown truth (VERIFY model_correct=unknown); gold is the previous holder/value/spec and can recur, so it is not shown wrong (K4)",
+   "b2_01764": "delta audit follow-up 2026-11-05: unknown truth (VERIFY model_correct=unknown); gold is the previous holder/value/spec and can recur, so it is not shown wrong (K4)",
+   "b2_02330": "delta audit follow-up 2026-11-05: unknown truth (VERIFY model_correct=unknown); gold is the previous holder/value/spec and can recur, so it is not shown wrong (K4)",
+   "cs01926": "delta audit follow-up 2026-11-05: unknown truth (VERIFY model_correct=unknown); gold is the previous holder/value/spec and can recur, so it is not shown wrong (K4)",
+   "cs02725": "delta audit follow-up 2026-11-05: unknown truth (VERIFY model_correct=unknown); gold is the previous holder/value/spec and can recur, so it is not shown wrong (K4)",
+   "cs01997": "delta audit follow-up 2026-11-05: unknown truth (VERIFY model_correct=unknown); gold is the previous holder/value/spec and can recur, so it is not shown wrong (K4)",
+   "b2_02388": "delta audit follow-up 2026-11-05: unknown truth (VERIFY model_correct=unknown); gold is the previous holder/value/spec and can recur, so it is not shown wrong (K4)",
+   "b2_01777": "delta audit follow-up 2026-11-05: unknown truth (VERIFY model_correct=unknown); gold is the previous holder/value/spec and can recur, so it is not shown wrong (K4)",
+   "b2_01733": "delta audit follow-up 2026-11-05: unknown truth (VERIFY model_correct=unknown); gold is the previous holder/value/spec and can recur, so it is not shown wrong (K4)",
+   "cs02359": "delta audit follow-up 2026-11-05: unknown truth (VERIFY model_correct=unknown); gold is the previous holder/value/spec and can recur, so it is not shown wrong (K4)",
+   "cs02719": "delta audit follow-up 2026-11-05: unknown truth (VERIFY model_correct=unknown); gold is the previous holder/value/spec and can recur, so it is not shown wrong (K4)",
+   "b2_01695": "delta audit follow-up 2026-11-05: unknown truth (VERIFY model_correct=unknown); gold is the previous holder/value/spec and can recur, so it is not shown wrong (K4)",
+   "b2_01715": "delta audit follow-up 2026-11-05: unknown truth (VERIFY model_correct=unknown); gold is the previous holder/value/spec and can recur, so it is not shown wrong (K4)",
+   "b2_01727": "delta audit follow-up 2026-11-05: unknown truth (VERIFY model_correct=unknown); gold is the previous holder/value/spec and can recur, so it is not shown wrong (K4)",
+   "cs01769": "delta audit follow-up 2026-11-05: unknown truth (VERIFY model_correct=unknown); gold is the previous holder/value/spec and can recur, so it is not shown wrong (K4)",
+   "cs01780": "delta audit follow-up 2026-11-05: unknown truth (VERIFY model_correct=unknown); gold is the previous holder/value/spec and can recur, so it is not shown wrong (K4)",
+   "cs01752": "delta audit follow-up 2026-11-05: unknown truth (VERIFY model_correct=unknown); gold is the previous holder/value/spec and can recur, so it is not shown wrong (K4)",
+   "b2_01702": "delta audit follow-up 2026-11-05: unknown truth (VERIFY model_correct=unknown); gold is the previous holder/value/spec and can recur, so it is not shown wrong (K4)"
   }
  }
 }
