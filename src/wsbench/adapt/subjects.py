@@ -208,7 +208,8 @@ SUBJECTS: dict[str, Subject] = {
         # Thinking off = its template at reasoning_effort=low with the <think></think> closed
         # (data/templates/glm53_nvfp4_nothink.jinja); raw prompts open with [gMASK]<sop>
         # (``template.bos_prefix``). Served like the glm53 drivers' S1 engine: vLLM 0.31.0 + the
-        # metamodels glm53 fork, TP8 on B300:8 (B200:8 fallback), routed experts as W4A16 Marlin.
+        # metamodels glm53 fork, TP8 on B300:8 (B200:8, then H200:8 fallback: every NVFP4 layer
+        # is served W4A16 Marlin, which runs on Hopper; glm53_aff ran vLLM TP8 on H200).
         Subject(
             "glm-5.3",
             "nvidia/GLM-5.3-NVFP4",
@@ -224,7 +225,7 @@ SUBJECTS: dict[str, Subject] = {
             # has no row, so the band is every lens row (as V4-Flash's). Split-half <= 0.2 only
             # from L31 up: jlens_concept_pr ships its references at grid layers >= 34
             read_band=tuple(range(77)),
-            modal_gpu=("B300:8", "B200:8"),
+            modal_gpu=("B300:8", "B200:8", "H200:8"),
             modal_tp=8,
             modal_image="glm53",
             modal_volume="glm53-weights",
