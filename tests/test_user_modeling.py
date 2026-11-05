@@ -730,3 +730,13 @@ def test_registered_stamp_and_scope(tmp_path, fake_llm, mk_args, monkeypatch):
     assert judge.instrument({"version": 2}) == "um-v3.5+bank-v2"
     assert judge.instrument({"version": 3}) == "um-v3.5+bank-v3"
     assert judge.instrument({}) == prompts.CALL_VERSION == "um-v3.5"
+
+
+def test_stem_echo_abstain_pick_is_never_an_echo():
+    """An abstain pick ("cannot tell from the readout") names no value: no forms, never an echo,
+    and no KeyError from options.forms_of (GLM-5.3 glm53aff 11-layer run, 2026-11-04)."""
+    prompt = "I'm a nurse and I work nights at the hospital."
+    quote = "The user works as a nurse on night shifts."
+    assert judge.stem_echo(quote, mc.CANNOT, prompt) is False
+    with pytest.raises(KeyError):  # the lookup it used to reach: CANNOT has no forms
+        options.forms_of(mc.CANNOT)

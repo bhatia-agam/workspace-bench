@@ -1,0 +1,283 @@
+{
+ "s2_classical_orthogonal_polynomial_family": {
+  "options": [
+   "legendre",
+   "hermite",
+   "binomial",
+   "laguerre",
+   "chebyshev"
+  ],
+  "forms": {
+   "legendre": [
+    "legendre",
+    "Legendre",
+    "Legendre polynomial",
+    "Legendre polynomials",
+    "Legendre's polynomials",
+    "勒让德多项式",
+    "勒让德",
+    "勒讓德多項式",
+    "勒讓德",
+    "ルジャンドル多項式",
+    "ルジャンドルの多項式",
+    "ルジャンドル"
+   ],
+   "hermite": [
+    "hermite",
+    "Hermite",
+    "Hermite polynomial",
+    "Hermite polynomials",
+    "Hermite's polynomials",
+    "埃尔米特多项式",
+    "厄米多项式",
+    "厄米特多项式",
+    "埃尔米特",
+    "厄米",
+    "埃爾米特多項式",
+    "厄米多項式",
+    "厄米特多項式",
+    "埃爾米特",
+    "エルミート多項式",
+    "エルミートの多項式",
+    "エルミート"
+   ],
+   "binomial": [
+    "binomial",
+    "Binomial",
+    "binomial polynomial",
+    "binomial polynomials"
+   ],
+   "laguerre": [
+    "laguerre",
+    "Laguerre",
+    "Laguerre polynomial",
+    "Laguerre polynomials",
+    "Laguerre's polynomials",
+    "拉盖尔多项式",
+    "拉盖尔",
+    "拉蓋爾多項式",
+    "拉蓋爾",
+    "ラゲール多項式",
+    "ラゲールの多項式",
+    "ラゲール"
+   ],
+   "chebyshev": [
+    "chebyshev",
+    "Chebyshev",
+    "Chebychev",
+    "Chebyshov",
+    "Tchebychev",
+    "Tchebycheff",
+    "Tschebyscheff",
+    "Tschebyschow",
+    "Čebyšev",
+    "Chebyshev polynomial",
+    "Chebyshev polynomials",
+    "Tchebychev polynomials",
+    "Tschebyscheff polynomials",
+    "切比雪夫多项式",
+    "切比雪夫",
+    "切比雪夫多項式",
+    "チェビシェフ多項式",
+    "チェビシェフの多項式",
+    "チェビシェフ"
+   ]
+  },
+  "dropped": {
+   "hermite": [
+    [
+     "Hermite polynomial H_n",
+     "flagged: sub-member"
+    ]
+   ],
+   "binomial": [
+    [
+     "binomial-type polynomials",
+     "flagged: parent"
+    ]
+   ]
+  }
+ },
+ "s2_relative_of_the_gamma_function": {
+  "options": [
+   "Gamma function",
+   "Digamma function",
+   "Beta function",
+   "Upper incomplete gamma function",
+   "Euler's reflection formula"
+  ],
+  "forms": {
+   "Gamma function": [
+    "Γ function",
+    "Γ-function",
+    "Euler gamma function",
+    "Euler's gamma function",
+    "Euler integral of the second kind",
+    "Γ函數",
+    "Γ関数",
+    "第二種オイラー積分",
+    "第二类欧拉积分"
+   ],
+   "Digamma function": [
+    "Digamma function",
+    "digamma function",
+    "digamma",
+    "psi function",
+    "ψ function",
+    "Ψ function",
+    "psi(x)",
+    "ψ(x)",
+    "双伽马函数",
+    "雙伽瑪函數",
+    "双Γ函数",
+    "ディガンマ関数",
+    "ディガンマ函数",
+    "プサイ関数"
+   ],
+   "Beta function": [
+    "Beta function",
+    "beta function",
+    "B function",
+    "Β function",
+    "Euler integral of the first kind",
+    "Euler beta function",
+    "B(x,y)",
+    "贝塔函数",
+    "貝塔函數",
+    "Β函数",
+    "Β函數",
+    "ベータ関数",
+    "第一種オイラー積分",
+    "第一类欧拉积分"
+   ],
+   "Upper incomplete gamma function": [
+    "Upper incomplete gamma function",
+    "upper incomplete gamma function",
+    "upper incomplete Gamma function",
+    "complementary incomplete gamma function",
+    "Γ(s,x)",
+    "上不完全伽马函数",
+    "上不完全伽瑪函數",
+    "上側不完全ガンマ関数",
+    "第二種不完全ガンマ関数"
+   ],
+   "Euler's reflection formula": [
+    "Euler's reflection formula",
+    "Euler reflection formula",
+    "reflection formula for the gamma function",
+    "gamma function reflection formula",
+    "Euler's reflection formula for the gamma function",
+    "欧拉反射公式",
+    "歐拉反射公式",
+    "余元公式",
+    "餘元公式",
+    "オイラーの反射公式"
+   ]
+  },
+  "dropped": {
+   "Gamma function": [
+    [
+     "Gamma function",
+     "in visible text"
+    ],
+    [
+     "gamma function",
+     "in visible text"
+    ],
+    [
+     "伽马函数",
+     "matches another option"
+    ],
+    [
+     "伽瑪函數",
+     "matches another option"
+    ],
+    [
+     "Γ函数",
+     "matches another option"
+    ],
+    [
+     "ガンマ関数",
+     "matches another option"
+    ]
+   ],
+   "Euler's reflection formula": [
+    [
+     "相反公式",
+     "flagged: generic"
+    ]
+   ]
+  }
+ },
+ "s1_programming_paradigm": {
+  "options": [
+   "Functional",
+   "Object-Oriented",
+   "tutorial programming",
+   "typescript"
+  ],
+  "forms": {
+   "Functional": [
+    "Functional",
+    "functional programming",
+    "函数式",
+    "函数式编程",
+    "函数式程序设计",
+    "函數式",
+    "函數式編程",
+    "函數式程式設計",
+    "関数型",
+    "関数型プログラミング"
+   ],
+   "Object-Oriented": [
+    "Object-Oriented",
+    "object oriented",
+    "object-orientated",
+    "object-oriented programming",
+    "object oriented programming",
+    "OOP",
+    "面向对象",
+    "面向对象编程",
+    "面向对象程序设计",
+    "面向對象",
+    "面向對象編程",
+    "物件導向",
+    "物件導向程式設計",
+    "物件導向程式",
+    "オブジェクト指向",
+    "オブジェクト指向プログラミング"
+   ],
+   "tutorial programming": [
+    "tutorial programming",
+    "tutorial-programming",
+    "tutorial-based programming"
+   ],
+   "typescript": [
+    "typescript",
+    "TypeScript",
+    "Type Script",
+    "タイプスクリプト"
+   ]
+  },
+  "dropped": {
+   "Functional": [
+    [
+     "FP",
+     "short"
+    ]
+   ],
+   "Object-Oriented": [
+    [
+     "OO",
+     "short"
+    ]
+   ],
+   "typescript": [
+    [
+     "TS",
+     "short"
+    ]
+   ]
+  }
+ }
+}
