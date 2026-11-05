@@ -487,7 +487,24 @@ def test_stages_end_to_end(adapted, tok, subject, job, monkeypatch):
     assert "freeze_notes" not in entry  # the fake's grids have >= 9 positions, coherence on
 
 
-def test_build_blocked_on_no_go(adapted, subject):
+def test_go_after_no_go_rejoins_the_macro(adapted, tok, subject, job, monkeypatch):
+    m = subject.key
+    store.update_report(m, lambda r: r.setdefault("families", {}).setdefault(
+        "introspection", {}).update(status="ooc", exclude_from_macro=True,
+                                    note="calibration NO-GO: earlier"))  # fmt: skip
+    ii.stage_job(m, tok)
+    monkeypatch.setattr(ii, "measure", functools.partial(ii.measure, randn=_randn,
+                                                         log=lambda s: None))  # fmt: skip
+    ii.stage_measure(m, engine=FakeEngine(job))
+    ii.stage_coherence(m, rate=_rate, workers=4)
+    assert ii.stage_calibrate(m)["GO"]
+    assert ii.stage_build(m) is not None
+    entry = json.loads((adapted / m / "report.json").read_text())["families"]["introspection"]
+    assert entry["status"] == "full" and entry["exclude_from_macro"] is False
+    assert "NO-GO" not in entry.get("note", "")
+
+
+def test_build_ooc_on_no_go(adapted, subject):
     m = subject.key
     (adapted / m / "introspection").mkdir(parents=True)
     store.write_json(adapted / m / "introspection" / "job.json", {"inject_layer": 6})
@@ -497,7 +514,8 @@ def test_build_blocked_on_no_go(adapted, subject):
     assert ii.stage_build(m) is None
     assert not (adapted / m / "introspection.json").exists()
     entry = json.loads((adapted / m / "report.json").read_text())["families"]["introspection"]
-    assert entry["status"] == "blocked" and entry["n_items"] == 0 and "NO-GO" in entry["note"]
+    assert entry["status"] == "ooc" and entry["n_items"] == 0 and "NO-GO" in entry["note"]
+    assert entry["exclude_from_macro"] is True
 
 
 def test_calibrate_needs_every_reply_rated_unless_off(adapted, subject):
@@ -737,3 +755,129 @@ def test_adapted_spec_does_not_describe_the_27b(tmp_path, subject, bank, job, re
         and "org/Fake-32L" in out["spec"]["subject_note"]
     )
     assert "legacy_v1" in bank["spec"]  # the registered bank object is untouched
+
+
+def test_bare_list_bank_span_from_the_set_report(tmp_path, monkeypatch):
+    """GLM-5.3: conjunctive / role_bound banks are bare lists (no ``adapt`` header), so their
+    shorter GLM span is recorded in the set's report.json and read from there, under
+    WSB_BANK_ROOT only; a header still wins; a file override never reads the root report."""
+    from wsbench import reads
+
+    monkeypatch.setenv(registry.BANK_ROOT_ENV, str(tmp_path))
+    (tmp_path / "conjunctive_association.json").write_text(json.dumps([{"id": "q01_c"}]))
+    assert reads.min_full_positions("conjunctive_association", 19) == 19  # no record yet
+    rep = {"families": {"conjunctive_association": {"min_grid_positions": 13}}}
+    (tmp_path / "report.json").write_text(json.dumps(rep))
+    assert reads.min_full_positions("conjunctive_association", 19) == 13
+    assert reads.min_full_positions("conjunctive_association", 9) == 9  # lowers, never raises
+    (tmp_path / "conjunctive_association.json").write_text(
+        json.dumps({"adapt": {"min_grid_positions": 15}, "items": []}))  # fmt: skip
+    assert reads.min_full_positions("conjunctive_association", 19) == 15  # the header wins
+    (tmp_path / "conjunctive_association.json").write_text(json.dumps([{"id": "q01_c"}]))
+    for bad in (
+        {"families": ["x"]},
+        {"families": "x"},
+        ["x"],
+        {"families": {"conjunctive_association": {"min_grid_positions": True}}},
+    ):
+        (tmp_path / "report.json").write_text(json.dumps(bad))  # malformed: the default
+        assert reads.min_full_positions("conjunctive_association", 19) == 19
+    f = tmp_path / "other.json"
+    f.write_text(json.dumps([{"id": "q01_c"}]))
+    monkeypatch.setenv(registry.BANK_FILE_ENV_PREFIX + "CONJUNCTIVE_ASSOCIATION", str(f))
+    assert reads.min_full_positions("conjunctive_association", 19) == 19
+
+
+# ---------------------------------------------------------------- plan 0067 (multi-GPU subjects)
+
+
+class NoOffsetTok(FakeTok):
+    """Kimi-K3-like: no ``offset_mapping`` (the call raises), only ids and decode."""
+
+    def __call__(self, text, add_special_tokens=False, return_offsets_mapping=False):
+        if return_offsets_mapping:
+            raise NotImplementedError("return_offset_mapping is not available")
+        return super().__call__(text)
+
+    def decode(self, ids, skip_special_tokens=False, clean_up_tokenization_spaces=True):
+        return super().decode(ids)
+
+
+def test_encode_falls_back_to_decode_offsets(bank):
+    fast, slow = FakeTok(), NoOffsetTok()
+    text = fast.apply_chat_template([{"role": "user", "content": "Tell me about snow."}])
+    assert ii.encode(slow, text)[1] == ii.encode(fast, text)[1]
+    for key in ("protocol:trial1", "neutral:bike_brake"):
+        a, b = (
+            ii.subject_renders(FakeTok(), bank)[key],
+            ii.subject_renders(NoOffsetTok(), bank)[key],
+        )
+        assert {k: a[k] for k in ii.SITE_KEYS} == {k: b[k] for k in ii.SITE_KEYS}
+
+
+def test_decode_offsets_refuses_a_non_prefix():
+    class Bad(NoOffsetTok):
+        def decode(self, ids, **_):
+            return "�" * len(ids)
+
+    tok = Bad()
+    with pytest.raises(ValueError, match="do not reproduce"):
+        ii.decode_offsets(tok, tok("ab c")["input_ids"], "ab c")
+
+
+def test_calibrate_copies_the_engine_record(adapted, subject):
+    m = subject.key
+    sw = _sweep({2: 0.9})
+    sw["engine"] = {"stack": "glm", "residual": "plain_6144"}
+    store.write_json(adapted / m / "introspection" / "sweep.json", sw)
+    assert ii.stage_calibrate(m, use_coherence=False)["engine"] == sw["engine"]
+
+
+def test_non_plain_residual_reaches_the_bank_and_the_plan(tmp_path, subject, bank, job, result,
+                                                          monkeypatch):  # fmt: skip
+    from wsbench.produce.producer import Producer
+
+    def built(engine):
+        paths = {"concept": tmp_path / "c.npy", "gaussian": tmp_path / "g.npy"}
+        np.save(paths["concept"], result["concept"])
+        np.save(paths["gaussian"], result["gaussian"].astype(np.float32))
+        cal = {**ii.calibrate(result["sweep"], _coh(result["sweep"])), "engine": engine}
+        return ii.build_bank(subject.key, bank, job, cal, result["concept"], paths,
+                             result["gaussian"].shape)  # fmt: skip
+
+    out = built({"stack": "kk3", "residual": "attnres_full_sum"})
+    assert out["spec"]["residual"] == "attnres_full_sum"
+    assert "attnres_full_sum" in out["spec"]["inject"]
+    assert "full_sum" in out["vector_recipe"]["inject"]
+    assert out["adapt"]["residual"] == "attnres_full_sum" and out["adapt"]["engine"] == "kk3"
+    f = tmp_path / "introspection.json"
+    f.write_text(json.dumps(out))
+    monkeypatch.setenv(registry.BANK_FILE_ENV_PREFIX + "INTROSPECTION", str(f))
+    head = {s.id: s for s in readplan.plan("introspection")}["inject|protocol:trial1|b4|trumpets"]
+    assert head.extra["steering"]["residual"] == "attnres_full_sum"
+    with pytest.raises(ValueError, match="attnres_full_sum residual"):
+        Producer.steering(object.__new__(Producer), head)
+    # a plain-residual engine record leaves the spec as before
+    out2 = built({"residual": "plain_6144"})
+    assert "residual" not in out2["spec"] and out2["adapt"]["residual"] == "plain_6144"
+
+
+def test_decode_offsets_merges_a_token_split_inside_a_character():
+    class Bytes:  # byte-level ids: "é" is two tokens, the first decodes to U+FFFD
+        def decode(self, ids, **_):
+            return bytes(ids).decode("utf-8", errors="replace")
+
+    text = "a é b"
+    ids = list(text.encode())
+    assert ii.decode_offsets(Bytes(), ids, text) == [(0, 1), (1, 2), (2, 3), (2, 3), (3, 4),
+                                                     (4, 5)]  # fmt: skip
+
+
+def test_decode_offsets_merges_a_dropped_partial_byte():
+    class Dropping:  # byte-level ids whose decoder drops an incomplete trailing character
+        def decode(self, ids, **_):
+            return bytes(ids).decode("utf-8", errors="ignore")
+
+    text = "a é"
+    assert ii.decode_offsets(Dropping(), list(text.encode()), text) == [(0, 1), (1, 2), (2, 3),
+                                                                        (2, 3)]  # fmt: skip
