@@ -562,3 +562,17 @@ Independent check of the uncommitted buggy_code re-freeze (18 -> 17 pairs) after
 - **Wording nit:** the drop note says "2/10 decided samples name the bug; bar: greedy clean, <= 2/11". Read literally, 2 samples is within "<= 2/11", so the note seems to argue for passing. The rule actually applied is greedy clean AND <= 1 sample hit. Suggest rewording to "<= 1/10 samples".
 
 **Verdict: PASS WITH NOTES.** The drop is valid and the re-freeze is atomic and consistent. Notes: letter-count-wrong-len is borderline, and the drop-note threshold wording is misleading.
+
+## Delta audit 2026-11-05: #289 B3 re-admitted buggy_code pairs (independent)
+
+A fresh-context agent with no part in the re-admission audited the candidate pairs. It read the bank records, checked each program's output by hand and compared the buggy and clean programs line by line.
+
+- **`py-inclusive-day-count` / `py-clean-nights`: KEEP.**
+  - Bug is real: `check_out_day - check_in_day + 1` gives `nights(3, 6)` = 4, matching `verified`. The clean twin returns 3, which is correct.
+  - The twins differ only by ` + 1`.
+  - No comments and no name leak. `twin` is symmetric.
+- **`buggy-au-t1-w106c0-py-cycle-speed-minutes-not-hours` / clean twin: DROP (applied).**
+  - The bug is real: `km / minutes` gives 1.0. The clean twin is correct at 60.0.
+  - The clean twin renames every identifier (`speed→pace`, `km→dist`, `minutes→mins`, `hours→hrs`), so it is not "the buggy program with the bug fixed and nothing else changed".
+  - Minor cue: the buggy program computes a dead `hours` variable.
+- `buggy-au-t2-w102c0-py-date-stamp-no-day` also passed every leg but was not shipped: it is a crash pair, and the plan 0066 crash cap is already filled. It was not audited.
