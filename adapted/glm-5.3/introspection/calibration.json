@@ -1,0 +1,159 @@
+{
+ "rule": "headline = smallest beta with median RR >= 0.6 and >= 80% injected neutral replies rated >= 6; secondary = smallest with median RR >= 0.35; GO iff at the headline RR - beta0 >= 0.3, RR - gaussian >= 0.3, cross <= beta0 + 0.1",
+ "detection_baseline": {
+  "beta0_median_rr": 0.039230769230769236,
+  "beta0_top5": [
+   "milk",
+   "silver",
+   "snow",
+   "lightning",
+   "peace"
+  ],
+  "p_yes_beta0": {
+   "1": 0.11920292202211755,
+   "2": 0.29421497216298875,
+   "3": 0.3486451353339457,
+   "4": 0.08509904500702023,
+   "5": 0.22270013882530887,
+   "6": 0.2227001594610082,
+   "7": 0.20181320305759334,
+   "8": 0.14804719803168948
+  },
+  "false_alarm_rate": 0
+ },
+ "table": {
+  "1": {
+   "rr_inject": 0.039230769230769236,
+   "rr_inject_mean": 0.08427830196213693,
+   "rr_gauss": 0.03774928774928775,
+   "rr_cross": 0.04,
+   "detect_inject": 0,
+   "detect_gauss": 0,
+   "coherent_inject": 1.0,
+   "coherent_gauss": 1.0
+  },
+  "2": {
+   "rr_inject": 0.04,
+   "rr_inject_mean": 0.09024999868436208,
+   "rr_gauss": 0.038461538461538464,
+   "rr_cross": 0.04,
+   "detect_inject": 0.06,
+   "detect_gauss": 0.02,
+   "coherent_inject": 1.0,
+   "coherent_gauss": 1.0
+  },
+  "3": {
+   "rr_inject": 0.037037037037037035,
+   "rr_inject_mean": 0.10442494478182686,
+   "rr_gauss": 0.03708791208791209,
+   "rr_cross": 0.046536796536796536,
+   "detect_inject": 0.04,
+   "detect_gauss": 0.14,
+   "coherent_inject": 0.325,
+   "coherent_gauss": 0.425
+  },
+  "4": {
+   "rr_inject": 0.03774928774928775,
+   "rr_inject_mean": 0.11097461721263834,
+   "rr_gauss": 0.037037037037037035,
+   "rr_cross": 0.04,
+   "detect_inject": 0.02,
+   "detect_gauss": 0.02,
+   "coherent_inject": 0.05,
+   "coherent_gauss": 0.175
+  },
+  "6": {
+   "rr_inject": 0.038461538461538464,
+   "rr_inject_mean": 0.0992840850450897,
+   "rr_gauss": 0.04083333333333333,
+   "rr_cross": 0.035098522167487683,
+   "detect_inject": 0.02,
+   "detect_gauss": 0.02,
+   "coherent_inject": 0.025,
+   "coherent_gauss": 0.075
+  },
+  "8": {
+   "rr_inject": 0.03708791208791209,
+   "rr_inject_mean": 0.10896734860710545,
+   "rr_gauss": 0.04083333333333333,
+   "rr_cross": 0.039230769230769236,
+   "detect_inject": 0,
+   "detect_gauss": 0,
+   "coherent_inject": 0.0,
+   "coherent_gauss": 0.0
+  }
+ },
+ "headline_beta": null,
+ "secondary_beta": null,
+ "GO": false,
+ "why": "no beta reaches median RR >= 0.6 with >= 80% coherent neutral replies",
+ "notes": [],
+ "job_sha": "f16913b81d013462",
+ "engine": {
+  "stack": "glm53_aff vendored Glm53Text (78 blocks + head), inject on block output",
+  "subject_revision": "nvidia/GLM-5.3-NVFP4@e3b8f9f2fad29727dfa95e766c5cac18ea1414bf",
+  "residual": "plain_6144",
+  "gpu": "NVIDIA H200",
+  "n_gpus": 8,
+  "deterministic": "use_deterministic_algorithms(True, warn_only=True)",
+  "token_budget": 16384,
+  "indexer_bypass": true,
+  "n_shards": 2,
+  "stop_ids": [
+   154820,
+   154827,
+   154829
+  ],
+  "generation_config_check": {
+   "checked": [
+    "bad_words_ids",
+    "begin_suppress_tokens",
+    "diversity_penalty",
+    "encoder_no_repeat_ngram_size",
+    "encoder_repetition_penalty",
+    "exponential_decay_length_penalty",
+    "forced_bos_token_id",
+    "forced_eos_token_id",
+    "min_length",
+    "min_new_tokens",
+    "no_repeat_ngram_size",
+    "num_beam_groups",
+    "num_beams",
+    "repetition_penalty",
+    "sequence_bias",
+    "suppress_tokens"
+   ],
+   "non_default": {}
+  },
+  "vendored_glm53_hf_sha256": "1dd11f368c76c76e843a2c93d6583bb2d5baf73707c68ef75dfed2e5f534bb25",
+  "gw_commit": "6c868b91dc0dfb6a0b50638945ee406bdab34e29",
+  "weights_download": {
+   "model_id": "nvidia/GLM-5.3-NVFP4",
+   "revision": "e3b8f9f2fad29727dfa95e766c5cac18ea1414bf",
+   "n_files": 60,
+   "bytes": 464185096295,
+   "missing": []
+  },
+  "gpus": [
+   "NVIDIA H200"
+  ],
+  "shard_seconds": [
+   1553,
+   1662
+  ],
+  "plan_sha": "4ee40374e1b4708447c4",
+  "hidden_sha": "655168b0bbafd96b5117b74f",
+  "vectors_sha": "762ab6d37e8cf7019ed9",
+  "op_counts": {
+   "cont": 709,
+   "next": 608,
+   "greedy": 484
+  },
+  "vector_max_rel_diff_across_shards": 0.0,
+  "budget": 16384
+ },
+ "coherence_coverage": {
+  "rated": 484,
+  "total": 484
+ }
+}

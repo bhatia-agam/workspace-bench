@@ -639,3 +639,33 @@ def test_zh_forms_follow_the_en_lone_given_name_rule():
             hit = set(langs["zh"]) & bmh2.ZH_LONE_GIVEN
             assert not hit, (it["name"], role, hit)
             assert not bmh2._zh_problems(it, role), (it["name"], role)
+
+
+# ---------------------------------------------------------------- the other bridge (plan 0066 M1)
+def test_other_bridge_of_the_same_item_is_never_a_rival():
+    """M1 (plan 0066 delta audit): a 3-hop readout names both bridges, and the judge's rival quote
+    for each bridge is the item's own other bridge. Main's xrole-v1 exempted that quote from the
+    contested rule; norival-v1 removes the rule, so no option or quote (the other bridge
+    included) is ever weighed against a pick: both picks are credited and the stamp needs no
+    xrole tag."""
+    _h, items = load_bank(registry.frozen_bank_path(NAME))
+    it = next(i for i in items if i["id"] == COEUR)
+    ents = fam.bank_entities(items)
+    opts = option_sets(items, cannot=CANNOT)[COEUR]
+    cfg = fam.mc_family(NAME)
+    golds = {r: it["mc"][r]["gold"] for r in ("bridge1", "bridge2")}
+    lines = [
+        Line(f"Thinking about {golds['bridge1']}."),
+        Line(f"Thinking about {golds['bridge2']}."),
+    ]
+    for role, other in (("bridge1", "bridge2"), ("bridge2", "bridge1")):
+        options, gold = opts[role]
+        res = {
+            "choice": fam.LETTERS[gold],
+            "quote": f"Thinking about {golds[role]}.",
+            "rival_quote": f"Thinking about {golds[other]}.",
+        }
+        out = fam._gate(cfg, role, res, gold, options, lines, it, ents, family=NAME)
+        assert out["kind"] == "correct" and out["correct"], (role, out)
+    assert not hasattr(fam, "contested_verdict") and not hasattr(fam, "other_role_names")
+    assert "xrole" not in P.MH2_PROMPT_VERSION
