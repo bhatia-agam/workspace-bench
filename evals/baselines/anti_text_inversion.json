@@ -58203,7 +58203,7 @@
    "astra": "openai/gpt-6-astra",
    "argon": "google/gemini-4-argon"
   },
-  "instrument": "wb-mc-2026-10-31r+judge-only-v1+qline-v2+wbforms-v4+bank-v4",
+  "instrument": "wb-mc-2026-10-31r+judge-only-v1+qline-v2+wbcues-v2+wbforms-v4+bank-v4",
   "judge_model": "claude-opus-5-5",
   "layers_judged": [
    44
@@ -60962,7 +60962,9 @@
    "argon": {
     "openrouter": 300
    }
-  }
+  },
+  "restamped_from": "wb-mc-2026-10-31r+judge-only-v1+qline-v2+wbforms-v4+bank-v4",
+  "restamp_note": "plan 0066 §5.4: wbcues-v2 adds role cues only for templates outside the registered bank (every registered template's cues byte-identical, tests/test_refill_wi_cues.py), and no MC or audit call keys on it, so no registered verdict changes and the subset stands; restamped by scripts/ati_restamp_wi_cues.py, not re-gated"
  },
  "association": {
   "gate": "panel-v1",
