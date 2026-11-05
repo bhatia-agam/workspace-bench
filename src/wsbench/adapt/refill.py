@@ -44,7 +44,7 @@ def pair_count(items: list[dict]) -> int:
 
 
 def registered_pairs() -> int:
-    """buggy_code's target: the registered twin-pair count (24)."""
+    """buggy_code's target: the registered twin-pair count (64 at bank v2; 24 on items.json)."""
     return pair_count(store.original_bank(BUGGY)[1])
 
 
@@ -286,7 +286,7 @@ def buggy_classes(rows: list[dict]) -> tuple[int, int]:
 
 
 def buggy_selection(
-    rows: list[dict], originals_target: int = 63, quota: dict[str, int] | None = None
+    rows: list[dict], originals_target: int, quota: dict[str, int] | None = None
 ) -> list[dict]:
     """Plan 0066 §2.4: both-pass groups (pairs atomic) ordered originals first, then authored
     non-crash pairs in gate order, then authored crash pairs (at most ``floor(n_nc / 4)``); then
