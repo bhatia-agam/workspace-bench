@@ -5,7 +5,7 @@ generate  deterministic candidates at a tier              family= tier= n= [seed
 author    Opus-authored candidates at a tier              family= tier= n= [steer= wave=]
 gate      lint + gate pending (regate=true: passing new items; regate=all: failed too)
           [draws= temperature= llm= regate=]
-regrade   re-grade stored answers (no resampling)         llm=<claude id> [workers=16]
+regrade   re-grade stored answers (no resampling)         llm=<claude id> [workers=16 legs=a,b]
 auto      generate+gate down the ladder until full / ooc  family=
 freeze    write adapted/<model>/<family>.json + report.json  [families= allow_untried=<reason>]
           (with families=, refuses a short family never refilled: plan 0066 §1.3)
@@ -81,7 +81,7 @@ KEYS: dict[str, set[str]] = {
     "generate": {"family", "tier", "n", "seed"},
     "author": {"family", "tier", "n", "steer", "wave"},
     "gate": {"families", "llm", "draws", "temperature", "regate"},
-    "regrade": {"families", "llm", "workers"},
+    "regrade": {"families", "llm", "workers", "legs"},
     "auto": {"family"},
     "fill": {"families", "llm", "waves"},
     "freeze": {"families", "allow_untried"},
@@ -147,7 +147,8 @@ def main(argv: list[str] | None = None) -> None:
         run.gate(model, names, regate=regate, **common)
     elif cmd == "regrade":
         llm = a.get("llm") or sys.exit("regrade needs llm=<claude id>")
-        run.regrade(model, names, llm, workers=int(a.get("workers", 16)))
+        legs = [x for x in a.get("legs", "").split(",") if x] or None
+        run.regrade(model, names, llm, workers=int(a.get("workers", 16)), legs=legs)
     elif cmd == "floors":
         from . import floors
 
