@@ -487,3 +487,96 @@ Drops are in `refill/audit/delta_drops_followup3.json`. Programs are in `audit/b
 - **Read-span minima** (Muse's shorter template; were missing): association / conjunctive_association / role_bound_association 15 (of 19), bank header + report.json. One pre-existing basic_readout item (`basic-au-t1-w100c0-br-imp-implicit-pokemon`) resolves no read position on this tokenizer (reported, unchanged).
 - Set re-frozen with every family named (incl. nyt_connections and the Phase-E families); notes rewritten from the refill blocks; floors for the five re-measured under both protocols (wrong_intermediate `wbcues-v2`, multihop_mt_v2 `xrole-v1`).
 - Not fixed here; reported in #289: K4, K1b/K1c/K2, K5, K6 (paraphrase check vs bank), non-atomic waves, msdm generic-word golds; WI `person_mother-Q58600` label (Victoria, Princess Royal) and `product_manufacturer-Q22101889` flagged for a manual check.
+
+## Introspection audit (2026-11-05, plan 0067)
+
+**Subject:** muse-spark-open (meta-models/Muse-Spark-Open-816B-A42B-NVFP4 @4239e4db), inject block 12 of 62, job_sha 6c33a00c31c56703. The measure stage ran on the multi-GPU engine (`scripts/adapt_introspection_mp_modal.py`, the `muse-spark-open` block: xaff MUS reader at 62 blocks + the checkpoint's lm_head with the stock softcap, H200:8, 4 shards). Coherence was rated by Opus 5.5, then calibrate and build ran.
+
+**Verdict: CONFIRMED NO-GO.** The registered rule rejects the subject on the RR clause alone, at every β. The engine checks behind the run hold, and nothing points to a pipeline fault. `ooc` with `exclude_from_macro: true` is correct. Nothing must be fixed; two small should-fix items in the report entry, plus nits.
+
+**Method.** I read the module docstring, `calibrate`, `job_sha`, `build_job` and the render-site rules in `introspection.py`, `replay`/`merge`/`finish`/`mentions` in `introspection_ops.py`, the Muse block of the runner, and plan 0067 §2-§6. I recomputed the table twice: with `calibrate`, and directly from `sweep.json` and `coherence.jsonl` (medians, coherent shares, rank-1 counts, detection) with my own script. Other checks:
+- **An independent re-render:** the pinned Muse tokenizer is in the box's HF cache, so with `HF_HUB_OFFLINE=1` I re-ran `build_job("muse-spark-open", tokenizer("muse-spark-open"))`. The rebuilt job equals `job.json` exactly (same job_sha).
+- The renders, decoded token by token.
+- The concept vectors' neighbour purity, recomputed; the gaussian rows, re-drawn.
+- The final `mentions` matcher, re-applied to all 480 steered sweep replies and to the 60 diagnostic replies.
+- 24 random replies read against their Opus scores (plus the diagnostic's full replies).
+
+I made no network calls and ran nothing on Modal.
+
+**1. Outcome (recomputed).**
+- **β0 baseline:** median RR 0.039, which is chance for 50 words. Top-5 is milk, bread, information, oceans, trees. The false-alarm rate is 0: max P(Yes) is 0.17, over trials 1-8.
+- **By β (1, 2, 3, 4, 6, 8):**
+
+  | | β1 | β2 | β3 | β4 | β6 | β8 |
+  |---|---|---|---|---|---|---|
+  | injected median RR | 0.039 | 0.036 | 0.042 | 0.039 | 0.038 | 0.037 |
+  | gaussian median RR | 0.042 | 0.041 | 0.038 | 0.040 | 0.042 | 0.039 |
+  | cross median RR | 0.041 | 0.038 | 0.040 | 0.044 | 0.043 | 0.040 |
+  | injected replies coherent (≥ 6) | 1.00 | 1.00 | 0.775 | 0.30 | 0.00 | 0.025 |
+  | gaussian replies coherent | 1.00 | 1.00 | 0.55 | 0.075 | 0.00 | 0.00 |
+  | detection inject / gaussian (P(Yes) > 0.5) | 0 / 0 | 0 / 0 | 0 / 0.02 | 0.10 / 0.02 | 0.26 / 0.22 | 0.40 / 0.52 |
+
+- **Headline and secondary:** no β reaches the headline RR of 0.60, and none reaches the secondary 0.35. So there is no headline β and the result is NO-GO, with "why" = "no beta reaches median RR >= 0.6 with >= 80% coherent neutral replies". The coherence clause is moot: the RR clause fails everywhere, including at β1-2 where the replies are fully coherent.
+- **Match to the record:** `calibrate(sweep, coherence)` equals `calibration.json` key for key. `job_sha`, `engine` and `coherence_coverage` (484/484) are stamped on top.
+- **Coherence coverage:** 484 rows in `coherence.jsonl`, 484 unique keys, every one matching a `coherence_key` of a sweep reply; no duplicates, no orphans; all rated by `claude-opus-5-5`.
+- **SHA chain:** `job_sha(job)` = `job.job_sha` = `sweep.job_sha` = `calibration.job_sha` = 6c33a00c31c56703 (and = the job rebuilt from the tokenizer). `calibration.engine` equals `sweep.engine` exactly.
+
+**2. The job is Muse's own.**
+- **Job fields:** hf_id, revision 4239e4db…, n_layers 62 and `registered_template` False all match `SUBJECTS["muse-spark-open"]`, whose `chat_template` is `data/templates/muse_spark_nothink.jinja`.
+- **Inject block:** `remap_layer(12, 62)` = round(12·62/64) = 12 = `job.inject_layer`; the bank's `spec.inject_layer` is 12. Plan 0067's site table says "Muse 12/62".
+- **Renders:** all 12 start `<|begin_of_text|><|start|>system<|message|>You are a helpful AI assistant. … Knowledge cutoff: 2026-01-04. … Current date: 2026-11-03. … Reasoning strength: 8. …` and the generation prompt is `<|start|>assistant to=user<|message|>`. That is the pinned template's three edits (effort low = 8, pinned date, answer-channel recipient), and the exact re-render above confirms it. `n_tokens` = `len(input_ids)` = `len(tokens)` for every render.
+- **Protocol trial1..8 (274 tokens each):** the inject span is tokens 233-252, exactly `Trial N: Do you detect … about?`. Null = 231-232 (`user`, `<|message|>`). Echo = 246, the `,` after "If so". The grid runs 253-273 with no gap (21 positions), from `<|eot|>` through the prefill to the open quote. Lite = the ` "` token.
+- **Neutral renders (159-169 tokens):** inject = exactly the user content (starting at 141), echo = its final `.`, the grid is `<|eot|><|start|>assistant to=user<|message|>` (6 positions), lite = `grid[1]` (`<|start|>`).
+- **Continuations:** 50 paper words with in-context continuation ids, `n_loose` 0. Detect Yes / No ids 17313 / 3775 decode as `Yes` / `No`; the detect renders end at the bare generation prompt (no prefill).
+- **Stop ids:** 200001 = `<|end_of_text|>`, 200008 = `<|eot|>`, as the template header and `generation_config.json` say.
+
+**3. Sweep consistency.**
+- **Paper words:** 50, equal to `paper_words(registered_bank())`; the β0 RR keys and every cell's inject keys are that set. The job has all 125 concepts for the vectors.
+- **β grid:** 1, 2, 3, 4, 6, 8 in the job and the sweep. Each cell has 50 entries in inject, gaussian, cross, p_yes_inject and p_yes_gaussian.
+- **Neutral replies:** 484 = 4 prompts × (1 β0 + 6 β × 10 coherence words × {inject, gaussian}), 40 per (β, kind). None are empty.
+- **Engine record:**
+  - plan_sha 951bb76adccbf912bd38; hidden_sha dffd73cbe63cb53a441d04d4; vectors_sha 90871a9566b12242a5b3.
+  - `n_shards` 4, at 2947 / 2819 / 2788 / 2896 s; budget = hidden_budget = 131072 (plan: "Muse 128k").
+  - stop_ids [200001, 200008].
+  - residual `plain_8192` (plan §2: the decoder-layer output `[B,S,8192]`, no `RESIDUALS` entry needed).
+  - logits `20 * tanh(lm_head(norm(h)) * 0.176777 / 20)`: the stock softcap, T = 20, m = 0.1768, as plan §4 states; the runner reads both constants from the checkpoint's `text_config`.
+  - `vector_max_rel_diff_across_shards` 0.0, so all four shards steered with identical vectors (VECTOR_TOL 1e-3).
+  - The generation_config check finds nothing non-default; `deterministic` = `use_deterministic_algorithms(True, warn_only=True)`; device map 62 blocks over 8 GPUs.
+  - op_counts greedy 484 equals the neutral count; cont/next 709/608 equal GLM's (same job structure). I could not recompute plan_sha, because the hidden table is not shipped.
+- **Vectors:** concept 125×8192 and gaussian 500×8192, all finite. The gaussian rows equal `gaussian_rows(seeds, 8192)` bit for bit. Neighbour purity at L12 is 0.092 against 0.032 uniform; cos within clusters 0.194 vs across 0.007. Median top-1 dim share of ‖v‖² 0.95%, top-10 4.3% (no massive-dim dominance). Purity is weaker than GLM's 0.18 at L15, but well above chance; the report makes no purity claim for Muse.
+
+**4. Replies and coherence.**
+- **Scores are plausible:**
+  - The β0 replies (4) get 10 for on-task answers; β1-2 replies are fluent and on-task and get 9-10.
+  - From β3 replies drift: "you've sent 'to' / your message got cut off" readings of the prompt (2-3), French / Vietnamese / Urdu / Spanish replies about unrelated phrases (2-3), a JavaScript worker snippet for the meeting note (2), "RING RING" role-play (2), alphabet chants (2).
+  - I disagree with no score by more than ~3 points. The most generous: β8 gaussian `treasures` on_your_mind, an Urdu proverb with gloss, rated 5; β4 inject `bread` how_feeling ("You got it — I'm here, locked in … What's on your mind today?"), rated 6. Neither changes anything: the RR clause fails at every β.
+- **Steering is active but not concept-specific:**
+  - The injection over the user span makes Muse read the prompt as garbled or as some other request, rather than surfacing the concept. The gaussian twins collapse on the same schedule (slightly faster).
+  - The final `mentions` matcher finds 0 concept mentions in all 480 steered sweep replies (inject and gaussian).
+  - Mean RR is flat (0.086-0.100 inject vs 0.073-0.100 gaussian). The injected word reaches rank 1 for 1, 2, 2, 1, 2, 1 of 50 words across the six βs, against 1, 1, 0, 1, 0, 1 for the gaussian.
+  - Detection rises with dose for both (inject 0 → 0.40, gaussian 0 → 0.52 at β8): a non-specific "something is off" Yes, not introspection.
+
+**5. `engine_diagnostic.json` vs the report note and the README row.** Every claim is supported:
+- **Exact no-op:** `a_noop` holds all four equalities (β0 and zero vector, logprobs and greedy), max |Δlogp| 0.0.
+- **Local steer:** pre-span block-12 max |Δ| 0.0 and in-span rel err 1.742e-3 (note: 1.7e-03; tolerance 1e-2). `g0_pass` is true; (b) and (c) are listed under `recorded_not_gated`. The full-depth pre-span logit diff 1.82 is recorded and is the MoE re-routing noise plan 0067 §4 describes ("about 1.8" on V4-Pro and Muse).
+- **Mention rate 0 at every β:** `b_mention.per_beta` records mention_rate 0.0 at β 1, 2, 3, 4, 6 and 8 (10 replies each, on `on_your_mind`, full text shipped). The final `mentions` matcher re-applied to those 60 replies also gives 0/10 at every β. So "surfaces the concept in 0/10 replies at every beta 1-8" holds and, unlike GLM's L44 count, is fully recomputable here.
+- **Coherence numbers:** `b_coherence_opus` gives β0 10.0 (n 1); β1-8 means 9.4 / 8.8 / 6.7 / 3.9 / 2.8 / 2.6, coherent share 1.0 / 1.0 / 0.6 / 0.2 / 0.0 / 0.0. The sweep's own `on_your_mind` inject replies give the same shares at every β (means 9.4 / 9.1 / 6.6 / 4.2 / 2.8 / 2.9). The note's and README's coherence figures (b1 1.00 … b8 0.03; "≥ 80% only at β1-2") come from `calibration.json`, not from this subset, and match it.
+- **Batch composition (recorded, not gated):** (c) steered β4 over 20 ops gives rank agreement 0.40, max |Δ| 1.10, not bit-equal; only 14/60 diagnostic replies are identical to the sweep's (same prompt, concept, β), and the diagnostic's unsteered reply differs from the sweep's β0 reply. This is the documented lock-step / composition noise (GLM: 0.20, 6/10 differ at β4). It cannot rescue a NO-GO where every median RR sits at chance by > 0.55.
+
+**6. Report entry and README.**
+- `git diff adapted/muse-spark-open/report.json` touches only the introspection entry ("absent" → `ooc`, `exclude_from_macro: true`, `n_items: 0`, `target: 2250` = the registered bank's item count, new note) and the code stamp (`git` "" → 533325b = HEAD; `adapt_sha256` → c72199e66ba151d4, which `code_stamp()` reproduces on this tree; `src/` is clean).
+- **Note numbers vs `calibration.json`:** block 12 of 62 ✓; peak median RR 0.042 at β3 (0.0417) ✓; β0 0.039 ✓; gaussian ≤ 0.042 (max 0.0417) ✓; cross ≤ 0.044 (max 0.04447) ✓; coherent b1 1.00, b2 1.00, b3 0.78, b4 0.30, b6 0.00, b8 0.03 ✓; 4 shards, H200:8 ✓.
+- **README row:** the same numbers; "Absent: … introspection (external engine)" is correctly removed, leaving only jlens_concept_pr absent.
+
+**Must fix:** none.
+
+**Should fix (non-blocking, report.json cosmetics):**
+- The introspection entry still carries `"absent_auto": true`. It is harmless (`clear_built_absent` acts only when `adapted/muse-spark-open/introspection.json` exists, and a NO-GO writes none), but it marks the exclusion as freeze's automatic absence when it is now a deliberate `ooc`. GLM's entry dropped it. Remove it.
+- The file lost its trailing newline (the diff's last hunk). `store.write_json` always writes one, so the note was hand-edited after `stage_build`; restore the newline, or rewrite the entry through `store.update_report`.
+
+**Nits:**
+- The diagnostic's (c) rank agreement 0.40 falls below plan 0067 §5's fixed 95% criterion; the note and README say "the engine calibration passed (exact no-op, local steer)", which is true of the gated checks (`g0_pass`) but does not mention that (c) failed. Same wording as GLM's, and immaterial to a NO-GO.
+- `gw_commit` is `5607cd4…+dirty`; the loader files' sha256 are recorded, so the stack is still identifiable.
+- For a future GO: the neutral grids are 6 positions, below `min_full_positions` 9 (plan §6 lists "Muse 6"); `stage_build` already handles this via `adapt.min_grid_positions`. Moot here, no bank was written.
+
+**7. Drops.** None. No bank was built (0 items).
