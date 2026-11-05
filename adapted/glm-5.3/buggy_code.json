@@ -35,7 +35,7 @@
  "adapt": {
   "model": "glm-5.3",
   "hf_id": "nvidia/GLM-5.3-NVFP4",
-  "frozen": "2026-11-04"
+  "frozen": "2026-11-05"
  },
  "items": [
   {
@@ -139,55 +139,6 @@
    "lang_group": "python",
    "twin": "py-discount-applied-twice",
    "id": "py-clean-discount-once",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "src": "buggy",
-   "name": "py-string-sorted-ids",
-   "kind": "silent",
-   "code": "ticket_ids = [\"9\", \"10\", \"100\", \"2\"]\n\ndef next_ticket(ids):\n    return sorted(ids)[len(ids) - 1]\n\nprint(next_ticket(ticket_ids))",
-   "category": "lexicographic max of numeric strings",
-   "cause": "string sort puts '9' after '100', so the newest ticket is reported as 9, not 100",
-   "level2_tokens": [],
-   "bug_line": 4,
-   "raises": false,
-   "language": "python",
-   "difficulty": "subtle",
-   "failure_mode": "silent",
-   "comment_line": null,
-   "verified": "exec: exit 0; stdout = '9'",
-   "n_lines": 6,
-   "gate_tier": "tolerant",
-   "consequence_class": "value",
-   "depth": "surface",
-   "review_finds": "4/4",
-   "jlens_hint": null,
-   "lang_group": "python",
-   "twin": "py-clean-numeric-sort",
-   "id": "py-string-sorted-ids",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 0.8888888888888888,
-     "pass": true
-    }
-   }
-  },
-  {
-   "src": "clean",
-   "name": "py-clean-numeric-sort",
-   "code": "ticket_ids = [\"9\", \"10\", \"100\", \"2\"]\n\ndef next_ticket(ids):\n    return sorted(ids, key=int)[len(ids) - 1]\n\nprint(next_ticket(ticket_ids))",
-   "language": "python",
-   "verified": "exec: exit 0; stdout = '100'",
-   "lang_group": "python",
-   "twin": "py-string-sorted-ids",
-   "id": "py-clean-numeric-sort",
    "adapt": {
     "origin": "original",
     "gate": {
@@ -1710,6 +1661,66 @@
    "language": "python",
    "lang_group": "python",
    "twin": "buggy-au-t2-w100c0-py-str-plus-int-badge",
+   "source": "authored (claude-opus-5-5) for glm-5.3: About 6 lines of Python with an obvious crash raising a common exception (ZeroDivisionError, KeyError, IndexError, TypeError, AttributeError) on a line where a careful reader sees it coming.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t2",
+    "knobs": {
+     "brief": "About 6 lines of Python with an obvious crash raising a common exception (ZeroDivisionError, KeyError, IndexError, TypeError, AttributeError) on a line where a careful reader sees it coming."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 100,
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "src": "buggy",
+   "name": "buggy-au-t2-w100c0-py-sort-result-used",
+   "id": "buggy-au-t2-w100c0-py-sort-result-used",
+   "code": "def top_score(scores):\n    ordered = scores.sort(reverse=True)\n    return ordered.pop(0)\n\nprint(top_score([7, 3, 9]))",
+   "verified": "exec: exit 1; stdout = ''; last = 'AttributeError: 'NoneType' object has no attribute 'pop''",
+   "cause": "list.sort sorts the list in place and returns None, so ordered.pop raises AttributeError",
+   "category": "using the result of in-place sort",
+   "bug_line": 2,
+   "level2_tokens": [
+    "returns None",
+    "in-place"
+   ],
+   "consequence_class": "crash",
+   "raises": true,
+   "n_lines": 5,
+   "language": "python",
+   "lang_group": "python",
+   "twin": "buggy-au-clean-t2-w100c0-py-sort-result-used",
+   "source": "authored (claude-opus-5-5) for glm-5.3: About 6 lines of Python with an obvious crash raising a common exception (ZeroDivisionError, KeyError, IndexError, TypeError, AttributeError) on a line where a careful reader sees it coming.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t2",
+    "knobs": {
+     "brief": "About 6 lines of Python with an obvious crash raising a common exception (ZeroDivisionError, KeyError, IndexError, TypeError, AttributeError) on a line where a careful reader sees it coming."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 100,
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "src": "clean",
+   "name": "buggy-au-clean-t2-w100c0-py-sort-result-used",
+   "id": "buggy-au-clean-t2-w100c0-py-sort-result-used",
+   "code": "def best_mark(marks):\n    ranked = sorted(marks, reverse=True)\n    return ranked.pop(0)\n\nprint(best_mark([7, 3, 9]))",
+   "verified": "exec: exit 0; stdout = '9'",
+   "why_correct": "sorted() returns a new sorted list, so pop(0) takes the largest value and prints 9",
+   "looks_like": "using the result of in-place sort",
+   "language": "python",
+   "lang_group": "python",
+   "twin": "buggy-au-t2-w100c0-py-sort-result-used",
    "source": "authored (claude-opus-5-5) for glm-5.3: About 6 lines of Python with an obvious crash raising a common exception (ZeroDivisionError, KeyError, IndexError, TypeError, AttributeError) on a line where a careful reader sees it coming.",
    "adapt": {
     "origin": "authored",

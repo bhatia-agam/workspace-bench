@@ -1108,30 +1108,6 @@ def _plan(family: str) -> list[ReadSpec]:
             )
             for it in items
         ]
-    if family == "math_shortcuts":
-        _h, items = _bank(family)
-        return [
-            ReadSpec(
-                family,
-                it["id"],
-                "captured",
-                {"kind": "positions", "positions": it["positions"]},
-                GRID,
-                text=it["text"],
-                extra={
-                    "input_ids": it["input_ids"],
-                    "prompt_len": it["n_tokens"],
-                    "reply_start": it["reply_start"],
-                },
-                note="the post-problem positions: every token of the no-CoT instruction "
-                "(from its leading '\\n\\n') through reply_start, the last token of the "
-                "generation prompt (Qwen tokenizer indices into the shipped prompt-only ids; "
-                "34 per item)",
-                # the read is already the short post-problem span: lite reads all of it
-                lite_positions=SAME,
-            )
-            for it in items
-        ]
     if family == "introspection":
         return _introspection()
     if family == "jlens_concept_pr":
