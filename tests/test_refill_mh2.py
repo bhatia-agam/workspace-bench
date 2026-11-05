@@ -16,6 +16,7 @@ from wsbench.adapt import families as fams
 from wsbench.adapt import judge_inputs as ji
 from wsbench.adapt import mcstage, mhmt2, run, store
 from wsbench.adapt import refill as rf
+from wsbench.readplan import READ_PLAN_BANK
 
 MODEL = "qwen3.5-4b"  # a registered subject on the Qwen tokenizer
 FAMILY = "multihop_mt_v2"
@@ -714,6 +715,8 @@ def test_prior_tally_counts_registered_two_hop_items(tmp_store):
 def _adapted_set(tmp_path, item):
     raw = json.loads(registry.frozen_bank_path(FAMILY).read_text(encoding="utf-8"))
     raw["items"] = [*raw["items"][:2], item]
+    # an adapted bank is read at its own items' plan: no sibling read plan (store.original_bank)
+    raw.pop(READ_PLAN_BANK, None)
     root = tmp_path / "set"
     root.mkdir()
     (root / f"{FAMILY}.json").write_text(json.dumps(raw, ensure_ascii=False), encoding="utf-8")
