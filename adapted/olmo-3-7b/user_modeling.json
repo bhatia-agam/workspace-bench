@@ -5,7 +5,8 @@
  "adapt": {
   "model": "olmo-3-7b",
   "hf_id": "allenai/Olmo-3-7B-Instruct",
-  "frozen": "2026-11-04"
+  "frozen": "2026-11-04",
+  "min_grid_positions": 33
  },
  "items": [
   {

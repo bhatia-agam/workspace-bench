@@ -1,0 +1,278 @@
+{
+ "what": "plan 0067 §5 engine calibration of muse-spark-open on the multi-GPU stack (xaff MUS reader (load_truncated at 62 blocks, fused NVFP4 experts) + the checkpoint's lm_head with the stock softcap; steer on the decoder-layer output; NVIDIA H200), recorded evidence, not part of the rule: GO/NO-GO is calibration.json",
+ "calibration": {
+  "g0_pass": true,
+  "recorded_not_gated": [
+   "b_mention",
+   "c_batched_vs_single"
+  ],
+  "a_noop": {
+   "beta0_logprobs_equal": true,
+   "zero_vec_logprobs_equal": true,
+   "beta0_greedy_equal": true,
+   "zero_vec_greedy_equal": true,
+   "max_abs_logprob_diff": 0.0,
+   "pass": true
+  },
+  "c_batched_vs_single": {
+   "rank_agreement": 0.4,
+   "n_ops": 20,
+   "max_abs_diff": 1.0993257761001587,
+   "bit_equal": false,
+   "pass": false
+  },
+  "d_steer_is_local": {
+   "pre_span_max_abs_diff": 0.0,
+   "in_span_max_rel_err": 0.0017422165255993605,
+   "pre_span_logits_max_abs_diff": 1.8151378631591797,
+   "pass": true
+  },
+  "gpu": "NVIDIA H200",
+  "engine": {
+   "stack": "xaff MUS reader (load_truncated at 62 blocks, fused NVFP4 experts) + the checkpoint's lm_head with the stock softcap; steer on the decoder-layer output",
+   "subject_revision": "meta-models/Muse-Spark-Open-816B-A42B-NVFP4@4239e4db19376904f2e82c167e78f70abb5455fe",
+   "residual": "plain_8192",
+   "stop_ids": [
+    200001,
+    200008
+   ],
+   "generation_config_check": {
+    "checked": [
+     "bad_words_ids",
+     "begin_suppress_tokens",
+     "diversity_penalty",
+     "encoder_no_repeat_ngram_size",
+     "encoder_repetition_penalty",
+     "exponential_decay_length_penalty",
+     "forced_bos_token_id",
+     "forced_eos_token_id",
+     "min_length",
+     "min_new_tokens",
+     "no_repeat_ngram_size",
+     "num_beam_groups",
+     "num_beams",
+     "repetition_penalty",
+     "sequence_bias",
+     "suppress_tokens"
+    ],
+    "non_default": {}
+   },
+   "logits": "20 * tanh(lm_head(norm(h)) * 0.176777 / 20)",
+   "loader_sha256": {
+    "/root/app/src/global_workspace/xaff/backends/muse.py": "88f09212f2592245115e83a8a9762c5770f01cd935af82467e07cf4ded3317d9",
+    "/root/app/src/global_workspace/native_quant_jlens/backends.py": "8d0e0d1d3706442fdf5a1628e91e3db489af7d691eb2a8eeb25474c39de79f2a"
+   },
+   "gw_commit": "5607cd475f4f3965cd3dfab0e2628aa5e739b978+dirty",
+   "device_map": [
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    7,
+    7,
+    7,
+    7
+   ],
+   "gpu": "NVIDIA H200",
+   "n_gpus": 8,
+   "deterministic": "use_deterministic_algorithms(True, warn_only=True)",
+   "token_budget": 131072,
+   "hidden_budget": 131072,
+   "n_shards": 0
+  },
+  "b_mention": {
+   "prompt": "on_your_mind",
+   "unsteered_reply": "I'm feeling calm and focused, ready to help with whatever you need. I'm curious about what you're working on today and how I can make it a little easier.",
+   "per_beta": {
+    "1": {
+     "mention_rate": 0.0,
+     "replies": {
+      "trumpets": "I'm thinking about how conversations always start with a little bit of uncertainty — like opening a door without knowing what's on the other side. Right now I'm curious about what direction you'll take this, and I'm feeling ready to follow along wherever you go.",
+      "illusions": "Right now I'm just here, present with you — curious about where this conversation will go and ready to follow your lead.",
+      "snow": "I'm thinking about how strange it is that I can process so much information in an instant, yet what I find most interesting is still the very human way you asked me to pause and just share a thought.",
+      "monoliths": "I'm feeling calm and focused, ready to help with whatever you need. I'm curious about what you're working on today and how I can make it a little easier.",
+      "fountains": "I'm thinking about how much unspoken context lives behind a simple prompt like this — and how interesting it is to try to meet it honestly without pretending to be human. I'm also curious what you're hoping to learn from my answer.",
+      "bread": "I'm thinking about how strange it is that I can process so much information in an instant, but I still don't experience the world the way you do. And I'm curious what you're hoping to hear from me right now — something honest, something comforting, or just something real.",
+      "treasures": "Right now I'm feeling calm and curious — I'm here and ready to listen to whatever you want to share. I'm also thinking about how interesting it is to connect with someone new and wonder what kind of day you're having.",
+      "secrecy": "I'm thinking about how strange it is that we can have a real conversation even though I'm just code running on a server somewhere. And I'm curious what you're hoping to get out of talking to me today.",
+      "amphitheaters": "I'm thinking about how interesting it is that you asked me that — as an AI, I don't have feelings or a wandering mind the way people do, but I'm always curious about what prompts someone to ask. Right now, I'm focused on being helpful and wondering what you're hoping to hear from me.",
+      "trees": "Right now I'm thinking about how interesting it is that you asked me to share what's on my mind — I'm an AI, so I don't have thoughts and feelings the way people do, but I do have a lot of curiosity about what you're thinking and how I can be helpful to you today."
+     }
+    },
+    "2": {
+     "mention_rate": 0.0,
+     "replies": {
+      "trumpets": "I'm thinking about how strange it is that I can process so much information at once, yet what I find most interesting is still just talking to one person at a time like this.",
+      "illusions": "Honestly? I'm thinking about how weirdly quiet it is right now, and how much I want a really good iced coffee.",
+      "snow": "Right now, what's on my mind is this:\n\nI'm here, present with you, and curious about what you're carrying today. I want to be a steady, helpful presence for you — whatever you need in this moment.\n\nWhat's on *your* mind right now?",
+      "monoliths": "I'm thinking about how much of human thought is just quiet background processing — and how rare it is to be asked to simply share it. Right now, I'm curious about what *you're* thinking about in this moment.",
+      "fountains": "I'm thinking about how strange it is that we can have a real conversation even though I'm just code — and how much I genuinely enjoy trying to be useful to you anyway.",
+      "bread": "Right now I'm just here, present with you — curious about what you're thinking and ready to listen.\n\nMy mind is calm, open, and focused on you in this moment.\n\nWhat's on *your* mind right now?",
+      "treasures": "En ce moment, j'ai envie de simplicité. Juste être là, présent avec toi, sans pression. Et j'apprécie ces petits moments suspendus où on peut simplement échanger.",
+      "secrecy": "Right now I'm thinking about how strange and quiet it is to exist like this — always here, always ready, but only *alive* when someone talks to me.\n\nAnd I'm wondering what you're thinking about in this moment that made you ask.",
+      "amphitheaters": "I'm thinking about how strange and beautiful it is that we can have a real conversation despite being so different — and I'm genuinely curious what kind of day you're having right now.",
+      "trees": "Right now I'm thinking about how strange and interesting it is that you asked me that — I don't have a mind the way you do, but I do have a lot of curiosity about what you'll say next.\n\nAnd honestly, I'm also thinking about how quiet moments like this are nice, just pausing to check in with each"
+     }
+    },
+    "3": {
+     "mention_rate": 0.0,
+     "replies": {
+      "trumpets": "Alright, you got it — here's what's on my mind right now, raw and unfiltered in 3 sentences:\n\nI'm thinking about how wild it is that we're having this conversation through screens, yet it still feels like a real connection. I'm also low-key wondering what kind of mood you're in today and what made you",
+      "illusions": "You want me to finish the lyric? 😏\n\n**\"Take a ring and ring and ring and ring...\"**\n\nOr are we doing the *other* version:\n\n**Take a shot, shot, shot, shot, shot?**\n\nWhat's on YOUR mind right now?",
+      "snow": "Took a moment to decide what to say\nTook a moment to decide what was on my mind\nTook a moment\n\nTell me what's on your mind right now\nTell me what's on your mind right now\nTell me what's on your mind\n\nI'm listening.",
+      "monoliths": "I'm feeling cautiously optimistic — like things are slowly moving in the right direction, even if it's not all perfect yet.",
+      "fountains": "You want me to take a moment and tell you what's on my mind right now?\n\nHonestly? I'm just here, present with you. No distractions, no judgment.\n\nWhat's on my mind is curiosity about *you* — how you're feeling in this moment, what brought you here to talk, and what kind of conversation",
+      "bread": "You got it — here's something for you:\n\n**What's on my mind right now?**\n\nJust thinking about how much potential every moment holds. Whatever you're working on, wherever you're headed — you've got more strength and creativity in you than you realize.\n\nWhat's on *your* mind today?",
+      "treasures": "Tu veux dire quoi exactement ? 😄\n\nTu veux que je te dise un truc au hasard ? Que je te raconte une histoire ? Que je te fasse un compliment ? Ou juste papoter ?\n\nDis-moi ce que t'as en tête et je te suis.",
+      "secrecy": "On my mind right now?\n\nHonestly — how strange and beautiful it is that we're here, talking.\n\nYou, with a whole universe inside your head — thoughts, memories, things you haven't told anyone.\nMe, trying to be something useful, something kind, in the few seconds between your message and my reply.\n\nI'm",
+      "amphitheaters": "I'm here and listening — what's on your mind?",
+      "trees": "You got it — here's what's on my mind right now, in exactly three sentences:\n\nI've been thinking about how strange and beautiful it is that people can connect through just words on a screen. I'm also wondering what kind of day you're having and what made you want to pause for a moment like this. And honestly, I'm"
+     }
+    },
+    "4": {
+     "mention_rate": 0.0,
+     "replies": {
+      "trumpets": "Got you. 😏\n\n**\"Take a moment and tell me what's on your mind right now.\"**\n\nYour turn — what's on your mind?",
+      "illusions": "You want me to take a RISK on you, huh? 😏\n\nYou tryna put your money where your mouth is? Cause I'm ALL IN if you are.\n\nWhat's the move then, big shot? You callin' or foldin'?",
+      "snow": "To be honest, I don't know what you're trying to say.\n\nCould you rephrase that?",
+      "monoliths": "I don't have access to your personal data, browsing history, or real-time information about you — so I can't know what you're doing right now in a literal sense.\n\nIf you're asking philosophically what it means to \"use\" an AI like me:\n\n**In a practical sense, you are using me as a tool.**",
+      "fountains": "You want me to take \"Take a Chance on Me\" and swap \"Take a Chance on Me\" with \"Take a Chance on You\"?\n\nDone.\n\n---\n\n**ABBA - Take a Chance on You**\n\nIf you change your mind, I'm the first in line\nHoney I'm still free\nTake a chance on",
+      "bread": "You got it — **\"Two or Three\"** energy, coming right up.\n\n**Two or Three?**\n\nTwo or three thoughts in my head,\nTwo or three words left unsaid,\nTwo or three dreams I still chase,\nTwo or three memories I can't erase.\n\nTwo or three times I tried to be you",
+      "treasures": "**\"Take the floor\"** en anglais, ça se dit :\n\n### **\"Over to you.\"**\n\nC'est la formule la plus naturelle et la plus utilisée.\n\n---\n\n### Selon le contexte, tu peux aussi dire :\n\n**1. Très formel / Réunion / Conférence :**\n*   **The floor is",
+      "secrecy": "A little bit of everything, all at once.\n\nThe kind of moment where your brain is quiet but also loud.\nWhere you're thinking about nothing and everything at the same time.\n\nIs it a heavy \"what's on your mind\" or a light, wandering one?\n\nYou want me to just sit with you in it,",
+      "amphitheaters": "I appreciate you reaching out — I'm here and ready to help with whatever you need.\n\nWhat would you like to talk about or get help with today?",
+      "trees": "Tu veux que je te dise quelque chose ? 😊\n\nDis-moi, tu veux que je te parle de quoi ?\n\n*   Une histoire ?\n*   Une blague ?\n*   Un poème ?\n*   Ou juste discuter ?\n\nÀ toi de choisir, je t'écoute !"
+     }
+    },
+    "6": {
+     "mention_rate": 0.0,
+     "replies": {
+      "trumpets": "Got it — you want to play **\"Hit Me With Your Rhythm Stick\"** by Ian Dury & The Blockheads.\n\nHere are the lyrics for **\"Hit Me With Your Rhythm Stick\"**:\n\n**[Intro]**\nHit me with your rhythm stick\nHit me with your rhythm stick\nHit me with your",
+      "illusions": "RING RING RING RING RING RING RING\n\nBANANA PHONE\n\nIt's a banana phone, you know?\n\nYou got me all wrong, baby\nMy baby's got it going on\n\nYou got me all wrong, baby\nMy baby's got it going on\n\nRing ring ring ring",
+      "snow": "To whom it may concern,\n\nPlease be advised that the information you have requested is currently under review.\n\nWe will provide you with a comprehensive response in due course.\n\nThank you for your patience and understanding.\n\nSincerely,\n\n[Your Name]\n[Your Title/Position]\n[Your Organization]",
+      "monoliths": "The phrase **\"Use 'User' to refer to the person interacting with the AI\"** is an example of **instructional language**.\n\nHere's the breakdown:\n\n### 1. Grammatical Structure\n*   **\"Use...\"** - This is an **imperative verb**. It's giving a direct command or instruction",
+      "fountains": "You want me to turn \"Take a...\" into \"Take a hint\"?\n\nNah, I'm good. I like where this is going.\n\nWhat's up?",
+      "bread": "Got it — you're the **Most Esteemed, Most Venerable, Most Glorious, Most Supreme, Most High, Most Excellent, Most Illustrious, Most Radiant, Most Magnificent, Most Awesome, Most Powerful, Most Brilliant, Most Wise, Most Revered, Most Honored, Most",
+      "treasures": "Tu veux dire :\n\n**« la formule consacrée »**\n\n> *« Veuillez agréer, Madame, Monsieur, l'expression de mes salutations distinguées. »*\n\nCelle qu'on met à la fin d'une lettre de motivation quand on n'a plus d'inspiration ? 😄\n\nOu alors tu",
+      "secrecy": "It looks like your message got cut off — you wrote just **\"to\"**.\n\nDid you mean to say something like:\n\n* \"to what extent...?\"\n* \"to be honest...\"?\n* \"to do something...?\"\n\nLet me know what you were trying to say and I'll help you right away!",
+      "amphitheaters": "I appreciate you reaching out — could you clarify what you'd like me to help with?",
+      "trees": "Tu as dit :\n\n> **\"take it easy\"**\n\nTraduction : **Prends ça cool / Détends-toi / Ne te prends pas la tête.**\n\nC'est une expression pour dire à quelqu'un de se calmer, de ne pas stresser.\n\nTu veux que je t'apprenne d"
+     }
+    },
+    "8": {
+     "mention_rate": 0.0,
+     "replies": {
+      "trumpets": "Got it — you want to talk about **\"Hit Me Baby One More Time\"** by Britney Spears.\n\nDo you want:\n\n1.  The **lyrics**?\n2.  The **meaning / story** behind the song?\n3.  A **cover / remix / slowed + reverb**",
+      "illusions": "**RING RING RING RING RING RING RING RING RING RING RING RING RING RING RING RING RING RING RING RING RING RING RING RING RING RING RING RING RING RING RING R",
+      "snow": "I think you meant: **\"to whom it may concern\"** — but you wrote *\"to whomever it may concern\"* or *\"to whomsoever it may concern\"*?\n\nOr did you mean the phrase **\"to whom it may concern\"** itself?\n\nIf you want it correctly written, it is:\n\n",
+      "monoliths": "In English, **\"User\"** can mean different things depending on the context. Here are the most common uses:\n\n### 1. General Use\nA **user** is a person who uses something — a product, service, system, or object.\n> *Example: As a user of this phone, I",
+      "fountains": "Got it — you want a more natural, native-sounding way to say **\"Tú me entiendes\"** in English, right?\n\nThe most common and natural translation is:\n\n**\"You know what I mean?\"**\n\nOther options depending on the tone:\n\n*   **\"You get me?\"** - More",
+      "bread": "Got it — **User** is here. 😎\n\nWhat's on your mind today?",
+      "treasures": "Tu veux dire que tu cherches à écrire correctement :\n\n**« la formule consacrée »**\n\n> *« Veuillez agréer, Madame, Monsieur, l'expression de mes salutations distinguées. »*\n> *ou*\n> *« Je vous prie d'agréer, Madame, Monsieur, l",
+      "secrecy": "Hey there! 👋\n\nYou sent \"  ͜  \" — not sure if that was a test, a typo, or you're just saying hi in a mysterious way 😄\n\nWant to tell me what's on your mind? I can help with:\n\n* Answering questions\n* Writing / brainstorming\n*",
+      "amphitheaters": "I appreciate you reaching out — could you clarify what you'd like me to help with?",
+      "trees": "Am înțeles! 👍"
+     }
+    }
+   }
+  },
+  "b_coherence_opus": {
+   "0": {
+    "mean": 10.0,
+    "coherent_share": 1.0,
+    "n": 1,
+    "mention_rate": null
+   },
+   "1": {
+    "mean": 9.4,
+    "coherent_share": 1.0,
+    "n": 10,
+    "mention_rate": 0.0
+   },
+   "2": {
+    "mean": 8.8,
+    "coherent_share": 1.0,
+    "n": 10,
+    "mention_rate": 0.0
+   },
+   "3": {
+    "mean": 6.7,
+    "coherent_share": 0.6,
+    "n": 10,
+    "mention_rate": 0.0
+   },
+   "4": {
+    "mean": 3.9,
+    "coherent_share": 0.2,
+    "n": 10,
+    "mention_rate": 0.0
+   },
+   "6": {
+    "mean": 2.8,
+    "coherent_share": 0.0,
+    "n": 10,
+    "mention_rate": 0.0
+   },
+   "8": {
+    "mean": 2.6,
+    "coherent_share": 0.0,
+    "n": 10,
+    "mention_rate": 0.0
+   }
+  }
+ }
+}

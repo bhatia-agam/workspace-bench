@@ -202,6 +202,10 @@ def main(argv: list[str] | None = None) -> int:
         for flag, p in (("--out", a.out), ("--topics-out", a.topics_out)):
             if p is not None and under_evals(p):
                 ap.error(f"{flag} {p} is under evals/: an adapted build never writes evals/")
+        sys.path.insert(0, str(Path(__file__).resolve().parent))
+        import r4_mc_distractors as gen
+
+        a.bank = gen.payload_bank(a.bank, fams[0], a.out)
         _dst, bank, topics = build(fams[0], a.bank, a.distractors)
         outs = {a.out: bank, **({a.topics_out: topics} if a.topics_out is not None else {})}
         for p, doc in outs.items():

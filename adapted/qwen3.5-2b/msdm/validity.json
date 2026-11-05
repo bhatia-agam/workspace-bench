@@ -1,0 +1,28 @@
+{
+ "s2_permitted_champagne_grape_variety": {
+  "gold": "chardonnay",
+  "preds": [
+   "pinot noir"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Chardonnay is one of the main permitted grape varieties in the Champagne AOC, alongside Pinot Noir and Pinot Meunier."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "chardonnay",
+    "Chardonnay",
+    "霞多丽",
+    "莎当妮",
+    "夏多内",
+    "夏布利葡萄"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Chardonnay is a specific, well-known permitted Champagne variety, and pinot noir is also a valid member. Accepting the Chinese transliterations (霞多丽/莎当妮/夏多内) helps the judge with bilingual readouts."
+  },
+  "version": "msdm-validity-2026-11-04"
+ }
+}
