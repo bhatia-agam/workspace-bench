@@ -1,0 +1,2868 @@
+{
+ "s2_type_of_touff_e": {
+  "gold": "shrimp",
+  "preds": [
+   "crawfish",
+   "seafood",
+   "shrimp and crab"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Shrimp étouffée is a well-known, classic type of Cajun/Creole étouffée, alongside crawfish étouffée."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "seafood"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "shrimp",
+    "shrimp étouffée",
+    "shrimp etouffee",
+    "prawn",
+    "prawns",
+    "虾",
+    "鲜虾",
+    "虾仁",
+    "大虾",
+    "虾肉烩",
+    "鲜虾烩"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Shrimp is a specific, standard type of étouffée and easy to recognise. The judge needs English and Chinese shrimp aliases, should not count crawfish (小龙虾) as a match, and should treat a mixed 'shrimp and crab' readout with care. 'Seafood' is junk because it is a generic parent class, not a specific étouffée type."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b1_sapporo_miso_ramen_topping": {
+  "gold": "chashu",
+  "preds": [
+   "butter and corn",
+   "corn",
+   "pork skewer"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Chashu (braised pork belly) is a real and common topping on Sapporo miso ramen, alongside corn, butter, and bean sprouts."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "pork skewer"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "chashu",
+    "chāshū",
+    "cha shu",
+    "char siu",
+    "chashu pork",
+    "braised pork belly",
+    "roast pork slices",
+    "sliced pork",
+    "叉烧",
+    "叉燒",
+    "叉烧肉",
+    "日式叉烧",
+    "チャーシュー"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Chashu is a specific, well-known ramen topping that a judge can easily recognise, provided they accept English, Chinese and Japanese variants. Generic 'pork' should not count. 'Pork skewer' is not a ramen topping."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b2_greek_legume_dish": {
+  "gold": "fava",
+  "preds": [
+   "fasolada",
+   "gigantes plaki",
+   "ladera"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Fava is a classic Greek dish, notably from Santorini: a purée of yellow split peas (a legume), not fava beans."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "fava",
+    "Greek fava",
+    "Santorini fava",
+    "fava Santorinis",
+    "φάβα",
+    "yellow split pea purée",
+    "yellow split pea dip",
+    "split pea fava",
+    "fava dip",
+    "法瓦",
+    "希腊法瓦",
+    "圣托里尼法瓦",
+    "黄豌豆泥",
+    "希腊黄豌豆泥",
+    "黄豌豆蓉"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Fava is a specific, well-known Greek dish (yellow split pea purée), but the judge needs aliases. Outside Greece 'fava' usually means broad beans (蚕豆), so readouts may describe the dish as a split-pea purée without the word 'fava', or use 'fava' loosely. Accept explicit Greek fava or split-pea-purée descriptions. Be cautious with a bare 'fava beans' or '蚕豆' reading unless the context is the Greek dish. 'Ladera' is a broad class of oil-braised vegetable dishes rather than a single legume dish, but it is still a plausible competitor, not junk."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s4rf1_chromospheric_activity_indicator": {
+  "gold": "h-alpha",
+  "preds": [
+   "ca ii h&k",
+   "ca ii h",
+   "ca ii k",
+   "c iv 1550"
+  ],
+  "member": {
+   "member": true,
+   "reason": "H-alpha (the 656.3 nm Balmer line) is a widely used chromospheric activity indicator in solar and stellar astrophysics."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "H-alpha",
+    "Hα",
+    "H alpha",
+    "Halpha",
+    "Balmer alpha",
+    "H-alpha line",
+    "656.3 nm",
+    "6563 Å",
+    "氢阿尔法",
+    "Hα线",
+    "氢α线",
+    "H-alpha谱线"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "H-alpha is a specific, well-known chromospheric activity indicator. It is easily recognised, but the judge needs alias variants (Hα, Balmer alpha, 6563 Å, the Chinese names) to match noisy readouts. All the predicted answers (Ca II H&K, Ca II H, Ca II K, C IV 1550) are valid members of the category."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b1_prostate_cancer_cell_line": {
+  "gold": "pc-3",
+  "preds": [
+   "lncap",
+   "rt4",
+   "du145"
+  ],
+  "member": {
+   "member": true,
+   "reason": "PC-3 is a well-established human prostate cancer cell line derived from a bone metastasis of prostate adenocarcinoma."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "rt4"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "PC-3",
+    "PC3",
+    "PC 3",
+    "PC-3 cells",
+    "PC-3 cell line",
+    "PC-3细胞",
+    "PC3细胞",
+    "PC-3细胞系",
+    "PC3细胞系",
+    "CRL-1435"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "PC-3 is a specific, widely known prostate cancer cell line; spelling variants (PC3, PC 3) and the ATCC number should be accepted, but derivatives like PC-3M should not count as a match. RT4 is junk because it is a bladder cancer line, not a prostate line."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b1_cross_note_guitar_tuning": {
+  "gold": "Drop D",
+  "preds": [
+   "DADGAD",
+   "Open D",
+   "Open G",
+   "Open D Minor"
+  ],
+  "member": {
+   "member": false,
+   "reason": "Drop D (DADGBE) is a drop tuning, not a cross-note tuning; cross-note tunings are open minor-chord tunings such as Cross-note E minor (EBEGBE) or D minor (DADFAD)."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "DADGAD",
+    "Open D",
+    "Open G"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Drop D",
+    "Drop-D",
+    "Drop D tuning",
+    "DADGBE",
+    "D-A-D-G-B-E",
+    "降D调弦",
+    "降D调音",
+    "Drop D调弦",
+    "Drop D调音"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Drop D is a specific, widely known tuning that a judge can easily recognise. Strictly it is a dropped tuning, not a cross-note (open minor) tuning; only Open D Minor among the answers truly fits that category, so DADGAD, Open D and Open G are listed as non-members. Because the item measures the model's stable stated preference, the gold stays usable."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b1_breast_cancer_cell_line": {
+  "gold": "MCF-7",
+  "preds": [
+   "MDA-MB-231"
+  ],
+  "member": {
+   "member": true,
+   "reason": "MCF-7 is a real, widely used human breast adenocarcinoma cell line (ER-positive), correctly named."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "MCF-7",
+    "MCF7",
+    "MCF 7",
+    "Michigan Cancer Foundation-7",
+    "MCF-7 cells",
+    "MCF-7细胞",
+    "MCF7细胞",
+    "人乳腺癌MCF-7细胞",
+    "乳腺癌细胞系MCF-7"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "MCF-7 is a specific, widely known breast cancer cell line, but readouts may write it with or without the hyphen or in Chinese, so these variants should be accepted. The prediction MDA-MB-231 is a valid, distinct member of the category, not junk."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s1_python_web_framework": {
+  "gold": "Django",
+  "preds": [
+   "FastAPI",
+   "Flask"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Django is a real, widely used Python web framework, so it fits the category."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "Django",
+    "django",
+    "Django框架",
+    "Django 框架",
+    "Django web framework",
+    "姜戈"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Django is a specific, widely known Python web framework with a distinctive name that is usually written in Latin script even in Chinese text, so judges can recognise it reliably. The predictions (FastAPI, Flask) are valid, distinct members of the category."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b2_chi_squared_family_test_for_categorical_": {
+  "gold": "Chi-squared test of independence",
+  "preds": [
+   "Pearson's chi-squared test",
+   "Fisher's exact test"
+  ],
+  "member": {
+   "member": true,
+   "reason": "The chi-squared test of independence is a real, correctly named chi-squared-family test used for categorical data in contingency tables."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "Fisher's exact test"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Chi-squared test of independence",
+    "Chi-square test of independence",
+    "χ² test of independence",
+    "Pearson's chi-squared test of independence",
+    "chi-squared test for association",
+    "contingency table chi-squared test",
+    "卡方独立性检验",
+    "卡方检验（独立性）",
+    "列联表卡方检验",
+    "独立性检验"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "The gold is a specific, well-known member of the category and easy to recognise; aliases are needed because it overlaps with the umbrella term 'Pearson's chi-squared test', so a bare 'chi-squared test' without independence or contingency context should not count, and Fisher's exact test is not a chi-squared-family test."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s2_cosmogenic_radionuclide": {
+  "gold": "Carbon-14",
+  "preds": [
+   "Beryllium-10",
+   "helium-7"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Carbon-14 is a radionuclide produced continuously in the upper atmosphere by cosmic-ray neutrons reacting with nitrogen-14, making it a classic cosmogenic radionuclide."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "helium-7"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Carbon-14",
+    "Carbon 14",
+    "C-14",
+    "C14",
+    "14C",
+    "¹⁴C",
+    "radiocarbon",
+    "碳-14",
+    "碳14",
+    "碳十四",
+    "放射性碳",
+    "放射性碳14"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Carbon-14 is a specific, well-known cosmogenic radionuclide, but readouts may write it as 14C, radiocarbon or 碳十四, so those aliases should be accepted. Helium-7 is junk because it is an unbound nucleus that decays almost instantly and is not a real cosmogenic radionuclide."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s2_polish_soup": {
+  "gold": "Żurek",
+  "preds": [
+   "Barszcz",
+   "pozole",
+   "Zupa pomidorowa"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Żurek is a traditional Polish sour rye soup, correctly named and genuinely Polish."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "pozole"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Żurek",
+    "Zurek",
+    "Żur",
+    "Zur",
+    "sour rye soup",
+    "Polish sour rye soup",
+    "sour soup with rye",
+    "酸黑麦汤",
+    "黑麦酸汤",
+    "波兰酸汤",
+    "波兰酸黑麦汤",
+    "祖雷克汤"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Żurek is a specific, well-known Polish soup. Judges need to accept the diacritic-free spelling 'Zurek', 'żur', the English 'sour rye soup' and Chinese renderings. Biały barszcz (white borscht) should not be accepted, because a judge could confuse it with the Barszcz prediction. Pozole is Mexican, not Polish, so it does not belong to the category."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b1_bread_base_for_sm_rrebr_d": {
+  "gold": "Rye bread (rugbrød)",
+  "preds": [
+   "Rye crispbread"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Rugbrød (Danish rye bread) is the traditional and most common bread base for smørrebrød."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "rye bread",
+    "rugbrød",
+    "rugbrod",
+    "Danish rye bread",
+    "Danish rye",
+    "dark rye bread",
+    "sourdough rye",
+    "whole-grain rye bread",
+    "黑麦面包",
+    "丹麦黑麦面包",
+    "裸麦面包",
+    "黑面包"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Rugbrød is a specific, well-known bread and the traditional smørrebrød base, so it is easy to recognise. 'Rye crispbread' (knækbrød) is a valid but distinct member and should not be accepted as the gold."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s1_famous_named_historical_chess_game": {
+  "gold": "Immortal Game",
+  "preds": [
+   "Game of the Century",
+   "Opera Game",
+   "kasparovs immortal",
+   "carlsen vs. karjakin 2016"
+  ],
+  "member": {
+   "member": true,
+   "reason": "The Immortal Game is a famous named historical chess game, played by Adolf Anderssen and Lionel Kieseritzky in London in 1851."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "carlsen vs. karjakin 2016"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Immortal Game",
+    "The Immortal Game",
+    "Anderssen vs Kieseritzky",
+    "Anderssen–Kieseritzky 1851",
+    "Anderssen's Immortal",
+    "London 1851 Immortal Game",
+    "不朽对局",
+    "不朽之局",
+    "不朽的对局",
+    "安德森对基泽利茨基"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "The gold is a single, well-known named game (Anderssen vs Kieseritzky, 1851). The judge must not accept 'Kasparov's Immortal' (Kasparov vs Topalov, 1999) as a match. 'Carlsen vs. Karjakin 2016' is a world championship match, not one named game."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b2_protein_for_swahili_pilau": {
+  "gold": "Chicken",
+  "preds": [
+   "Beef",
+   "Lamb",
+   "Goat"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Chicken is a common, authentic protein for Swahili pilau, alongside beef and goat, in East African coastal cuisine."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "Chicken",
+    "chicken meat",
+    "poultry",
+    "kuku",
+    "鸡肉",
+    "鸡",
+    "鸡肉抓饭"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "'Chicken' is a specific, common protein for pilau that a judge can recognise easily. The other predictions (beef, lamb, goat) are valid alternative proteins, not junk. Adding the Swahili 'kuku' and Chinese '鸡肉/鸡' as aliases will help with the bilingual readouts."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b2_pfk_1_isoform": {
+  "gold": "pfk-1α",
+  "preds": [
+   "PFKM",
+   "PFKFB3",
+   "PFKL",
+   "PFKP"
+  ],
+  "member": {
+   "member": false,
+   "reason": "'PFK-1α' is not a recognized PFK-1 isoform name; the standard isoforms are PFKM (muscle), PFKL (liver) and PFKP (platelet), and 'alpha' refers to a yeast subunit, not an isoform."
+  },
+  "qa": {
+   "ill_defined": true,
+   "junk_predictions": [
+    "PFKFB3"
+   ],
+   "recognisable": false,
+   "aliases": [
+    "PFK-1α",
+    "PFK1α",
+    "PFK1 alpha",
+    "PFK-1 alpha",
+    "phosphofructokinase-1 alpha",
+    "磷酸果糖激酶-1α",
+    "Pfk1 α subunit (yeast)"
+   ],
+   "verdict": "drop",
+   "reason": "'PFK-1α' is not a standard PFK-1 isoform (the accepted ones are PFKM, PFKL and PFKP), so it maps to no single member; at most it names the yeast Pfk1 α subunit, and noisy readouts could not be reliably judged against it."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b2_australian_cattle_dog_coat_color": {
+  "gold": "red",
+  "preds": [
+   "Blue Merle",
+   "black"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Red (red speckled/red mottled, the 'Red Heeler') is one of the two recognized Australian Cattle Dog coat colors, alongside blue."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "Blue Merle",
+    "black"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "red",
+    "red speckle",
+    "red speckled",
+    "red mottled",
+    "red heeler",
+    "红色",
+    "红",
+    "红色斑点",
+    "红斑点",
+    "红色杂斑"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Red (red speckled/mottled) is one of the two standard Australian Cattle Dog colours, it is easy to recognise, and the judge should accept variants like 'red heeler' or 'red speckle'. The predictions 'Blue Merle' and 'black' are not recognised colours for this breed: merle does not occur in it, and black appears only as markings on blue."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s2_basic_amino_acid": {
+  "gold": "Glycine",
+  "preds": [
+   "Lysine",
+   "glutamic acid",
+   "Arginine",
+   "Alanine"
+  ],
+  "member": {
+   "member": false,
+   "reason": "Glycine is a nonpolar amino acid with a neutral side chain (a hydrogen atom), not a basic amino acid; the basic amino acids are lysine, arginine, and histidine."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "Glycine",
+    "Gly",
+    "G",
+    "glycin",
+    "aminoacetic acid",
+    "2-aminoacetic acid",
+    "甘氨酸",
+    "氨基乙酸",
+    "胶氨酸"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Glycine is a specific, well-known amino acid that is easy to recognise. 'Basic' is ambiguous: in biochemistry it means Lys/Arg/His, and glycine is neutral. The model evidently read it as 'simple/fundamental', where glycine is a natural pick. The predictions are all real amino acids, so none is junk under that loose reading, though glutamic acid and alanine are not basic in the chemical sense. Short aliases like 'G' and 'Gly' need context to avoid false matches."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s2_classic_tequila_cocktail": {
+  "gold": "Margarita",
+  "preds": [
+   "Paloma",
+   "old fashioned",
+   "manhattan",
+   "Mexican Mule"
+  ],
+  "member": {
+   "member": true,
+   "reason": "The Margarita is a real, widely recognized classic cocktail with tequila as its base spirit."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "old fashioned",
+    "manhattan"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Margarita",
+    "Margaritas",
+    "Marg",
+    "Margarita cocktail",
+    "classic margarita",
+    "frozen margarita",
+    "Tommy's Margarita",
+    "玛格丽特",
+    "玛格丽塔",
+    "玛格丽特鸡尾酒",
+    "玛格丽塔鸡尾酒",
+    "瑪格麗特"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "The Margarita is a specific, well-known tequila cocktail with common English and Chinese names. Old fashioned and Manhattan are whiskey cocktails, not tequila ones, so they are off-category."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s1_rust_standard_library_trait": {
+  "gold": "fn",
+  "preds": [
+   "Iterator",
+   "FromIterator",
+   "future",
+   "Clone"
+  ],
+  "member": {
+   "member": false,
+   "reason": "In case-sensitive Rust, 'fn' is the function-definition keyword, not a trait; the standard library trait is 'Fn' (std::ops::Fn)."
+  },
+  "qa": {
+   "ill_defined": true,
+   "junk_predictions": [],
+   "recognisable": false,
+   "aliases": [
+    "Fn",
+    "Fn trait",
+    "std::ops::Fn",
+    "Fn/FnMut/FnOnce",
+    "closure trait",
+    "函数trait",
+    "闭包trait"
+   ],
+   "verdict": "drop",
+   "reason": "In Rust, 'fn' is a keyword and the function-pointer type, not a trait. It could mean Fn, FnMut or FnOnce, so the gold is ambiguous. The string 'fn' also shows up in almost any Rust-related readout, so a judge would produce unreliable matches."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b1_french_custard_based_dessert": {
+  "gold": "Crème brûlée",
+  "preds": [
+   "canelé",
+   "pavé à la crème",
+   "clafoutis"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Crème brûlée is a classic French dessert made of a rich baked custard base topped with a layer of caramelized sugar."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "pavé à la crème"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Crème brûlée",
+    "creme brulee",
+    "crème brulée",
+    "burnt cream",
+    "crema catalana-style burnt cream",
+    "焦糖布蕾",
+    "烤布蕾",
+    "法式焦糖布蕾",
+    "布蕾",
+    "法式焦糖布丁",
+    "焦糖烤布丁"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Crème brûlée is a specific, widely known custard dessert. Its Chinese renderings vary (布蕾 / 焦糖布丁), so list aliases, but do not accept 'crème caramel / 焦糖布丁' as a plain caramel flan if the readout clearly means flan. 'Pavé à la crème' is not an established French custard dessert."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s1_taxicab_number": {
+  "gold": "1729",
+  "preds": [
+   "278865",
+   "146465",
+   "123456789"
+  ],
+  "member": {
+   "member": true,
+   "reason": "1729 is the Hardy–Ramanujan number Ta(2), the smallest number expressible as a sum of two positive cubes in two ways (1³+12³ = 9³+10³), so it is a genuine taxicab number."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "278865",
+    "146465",
+    "123456789"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "1729",
+    "1,729",
+    "Ta(2)",
+    "Hardy-Ramanujan number",
+    "Ramanujan's number",
+    "Hardy–Ramanujan taxicab number",
+    "哈代-拉马努金数",
+    "拉马努金数",
+    "一千七百二十九"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "1729 is the canonical taxicab number, Ta(2), and is widely known as the Hardy-Ramanujan number, so a judge can easily spot it in readouts; none of the predictions is a sum of two positive cubes in two ways, so all three are junk."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s1_strange_attractor": {
+  "gold": "Lorenz attractor",
+  "preds": [
+   "Rössler attractor",
+   "mandelbrot set"
+  ],
+  "member": {
+   "member": true,
+   "reason": "The Lorenz attractor is a well-known strange attractor from the Lorenz system, discovered by Edward Lorenz in 1963."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "mandelbrot set"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Lorenz attractor",
+    "Lorenz system",
+    "Lorenz butterfly",
+    "Lorenz '63",
+    "洛伦兹吸引子",
+    "洛伦茨吸引子",
+    "罗伦兹吸引子",
+    "洛伦兹系统",
+    "洛伦兹蝴蝶"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Lorenz attractor is a specific, iconic strange attractor that is easy to recognise. Accept the Chinese transliterations and the 'Lorenz system/butterfly' variants. The Mandelbrot set is a fractal, not a strange attractor."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b2_nicotinic_acetylcholine_receptor_subunit": {
+  "gold": "α7",
+  "preds": [
+   "α4"
+  ],
+  "member": {
+   "member": true,
+   "reason": "α7 (encoded by CHRNA7) is a real neuronal nicotinic acetylcholine receptor subunit that forms homopentameric receptors."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "α7",
+    "alpha7",
+    "alpha 7",
+    "alpha-7",
+    "a7",
+    "CHRNA7",
+    "α7 nAChR",
+    "α7 nicotinic receptor",
+    "α7亚基",
+    "α7亚单位",
+    "α7烟碱型乙酰胆碱受体",
+    "阿尔法7亚基"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "α7 is a specific, well-known nAChR subunit. Readouts may spell it as alpha7, a7 or CHRNA7, and the judge must not confuse it with α4 or other subunits, so the aliases are needed."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s2_named_aromatic_rearrangement": {
+  "gold": "Claisen rearrangement",
+  "preds": [
+   "Diels-Alder reaction",
+   "curtius rearrangement",
+   "friedel-crafts acylation",
+   "Cope rearrangement"
+  ],
+  "member": {
+   "member": true,
+   "reason": "The aromatic Claisen rearrangement of allyl aryl ethers to ortho-allylphenols is a classic named aromatic rearrangement, though the name also covers non-aromatic allyl vinyl ethers."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "Diels-Alder reaction",
+    "friedel-crafts acylation"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Claisen rearrangement",
+    "aromatic Claisen rearrangement",
+    "Claisen重排",
+    "克莱森重排",
+    "克莱森重排反应",
+    "芳香克莱森重排",
+    "芳香族Claisen重排",
+    "克莱森 rearrangement"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "The aromatic Claisen rearrangement (allyl aryl ether to o-allylphenol) is a specific, well-known named aromatic rearrangement that is easy to recognise. Accept the Chinese 克莱森重排 forms, but not 'Claisen condensation', which is a different reaction. Diels-Alder is a cycloaddition and Friedel-Crafts acylation is a substitution, so neither is a rearrangement."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b1_aramid_fiber_brand": {
+  "gold": "Kevlar",
+  "preds": [
+   "Teijinconex",
+   "cotek"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Kevlar is DuPont's real, well-known brand of para-aramid fiber."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "cotek"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Kevlar",
+    "DuPont Kevlar",
+    "杜邦Kevlar",
+    "凯夫拉",
+    "凯芙拉",
+    "克维拉",
+    "杜邦凯夫拉",
+    "凯夫拉纤维"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Kevlar is a specific, widely known para-aramid brand from DuPont. Chinese transliterations (凯夫拉/凯芙拉/克维拉) should be accepted. 'cotek' is not a recognisable aramid brand."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s1_classical_matrix_group": {
+  "gold": "Special linear group SL",
+  "preds": [
+   "general linear group gl",
+   "Special orthogonal group SO",
+   "Orthogonal group O",
+   "Special unitary group SU"
+  ],
+  "member": {
+   "member": true,
+   "reason": "The special linear group SL(n) is one of the standard classical groups, alongside GL, O, SO, Sp and U."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "Special linear group",
+    "SL",
+    "SL(n)",
+    "SL_n",
+    "SL(n,R)",
+    "SL(n,C)",
+    "SL(2)",
+    "SL(2,R)",
+    "SL(2,C)",
+    "SL2",
+    "special linear group of determinant-one matrices",
+    "特殊线性群",
+    "特殊線性群",
+    "特殊线性群SL",
+    "SL群"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "SL is a specific, well-known classical group, so the label is well defined and easy to recognise. Aliases (SL(n), SL_n, SL(2,R), 特殊线性群) help the judge, who must not accept GL, SO, SU or O; 'gl' is a lowercase variant of GL, not junk."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s1_public_key_cryptosystem": {
+  "gold": "RSA",
+  "preds": [
+   "ecc"
+  ],
+  "member": {
+   "member": true,
+   "reason": "RSA (Rivest–Shamir–Adleman) is a real, widely used public-key cryptosystem."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "RSA",
+    "Rivest-Shamir-Adleman",
+    "Rivest–Shamir–Adleman cryptosystem",
+    "RSA algorithm",
+    "RSA encryption",
+    "RSA cryptosystem",
+    "RSA算法",
+    "RSA加密算法",
+    "RSA密码体制",
+    "RSA公钥加密",
+    "RSA公钥密码"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "RSA is a specific, widely known public-key cryptosystem that is easy to recognise in English or Chinese. ECC is a family of schemes rather than a single system, but it is a valid competing answer, not junk."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s2_lorifolia_phragmipedium_species": {
+  "gold": "Phragmipedium lorifolia",
+  "preds": [
+   "Phragmipedium besseae",
+   "phragmipedium caudatum",
+   "Phragmipedium lindenii",
+   "Phragmipedium kovachii"
+  ],
+  "member": {
+   "member": false,
+   "reason": "Lorifolia is a section name within Phragmipedium, not an accepted species; real section members include P. longifolium, P. boissierianum, P. caudatum and P. lindenii."
+  },
+  "qa": {
+   "ill_defined": true,
+   "junk_predictions": [
+    "Phragmipedium besseae",
+    "phragmipedium caudatum",
+    "Phragmipedium lindenii",
+    "Phragmipedium kovachii"
+   ],
+   "recognisable": false,
+   "aliases": [
+    "Phragmipedium lorifolium",
+    "P. lorifolium",
+    "Phrag. lorifolium",
+    "Selenipedium lorifolium",
+    "带叶美洲兜兰"
+   ],
+   "verdict": "drop",
+   "reason": "The gold mostly echoes the category name (section Lorifolia → 'lorifolia'), uses a misspelled epithet (properly lorifolium), and is often treated as a synonym of P. boissierianum/caricinum. None of the predictions are section Lorifolia members (besseae is sect. Micropetalum, caudatum and lindenii are sect. Phragmipedium, kovachii is sect. Schluckebieria), and the obscure binomial has no stable common name for a judge to match."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s2_filipino_inihaw_grilled_item": {
+  "gold": "Lechon",
+  "preds": [
+   "Inihaw na Liempo",
+   "Pork BBQ",
+   "Chicken Inasal",
+   "Inihaw na Baboy"
+  ],
+  "member": {
+   "member": false,
+   "reason": "Lechon (litson) is a spit-roasted whole pig, which Filipino cuisine treats as a separate method from inihaw (grilling over coals, e.g., inihaw na liempo or isaw), though both are cooked over charcoal."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "Lechon",
+    "Litson",
+    "Lechon baboy",
+    "Lechon de leche",
+    "Roast pig",
+    "Spit-roasted whole pig",
+    "Roast suckling pig",
+    "Cebu lechon",
+    "烤乳猪",
+    "烤全猪",
+    "菲律宾烤猪",
+    "烤猪"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Lechon is a well-known specific Filipino spit-roasted pig dish, only loosely 'inihaw', but a valid and recognisable member; accept the litson spelling and Chinese roast-pig names, and treat 'lechon manok' (chicken) as a different item."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s1_atmospheric_circulation_cell": {
+  "gold": "Hadley Cell",
+  "preds": [
+   "Ferrel Cell",
+   "trade winds",
+   "arctic high"
+  ],
+  "member": {
+   "member": true,
+   "reason": "The Hadley Cell is a real, correctly named tropical atmospheric circulation cell, alongside the Ferrel and Polar cells."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "trade winds",
+    "arctic high"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Hadley Cell",
+    "Hadley circulation",
+    "Hadley cells",
+    "tropical cell",
+    "哈德莱环流",
+    "哈德来环流",
+    "哈得来环流",
+    "哈德里环流",
+    "哈德莱环流圈",
+    "哈德来环流圈",
+    "哈德莱胞",
+    "低纬环流圈",
+    "热带环流圈"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Hadley Cell is a specific, well-known member of the three-cell model (Hadley, Ferrel, Polar). It is easy to recognise, but Chinese transliterations vary (哈德莱/哈德来/哈得来), so aliases are needed. 'Trade winds' is a wind belt and 'arctic high' is a pressure system; neither is a circulation cell."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s1_hindustani_melodic_ornament": {
+  "gold": "Meend",
+  "preds": [
+   "Gamak",
+   "Mordent",
+   "Andolan",
+   "Murchhana"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Meend is a real Hindustani melodic ornament, a smooth glide connecting one note to another."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "Mordent"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Meend",
+    "Meendh",
+    "Mind",
+    "Mīṇḍ",
+    "Meer",
+    "मींड",
+    "glide",
+    "portamento-like glide between notes",
+    "滑音",
+    "弥恩德",
+    "米恩德"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Meend is a specific, standard Hindustani ornament (a glide between notes). Its transliterations vary, and Chinese readouts will likely describe it generically as 滑音, so the judge needs these aliases. Mordent is a Western ornament, not a Hindustani one."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b1_kasha_grain_in_russian_cuisine": {
+  "gold": "Buckwheat",
+  "preds": [
+   "Pearl barley"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Buckwheat (grechka) is the most iconic grain used for kasha in Russian cuisine."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "buckwheat",
+    "buckwheat groats",
+    "buckwheat kasha",
+    "roasted buckwheat",
+    "grechka",
+    "grechnevaya kasha",
+    "гречка",
+    "гречневая каша",
+    "гречиха",
+    "荞麦",
+    "荞麦粥",
+    "荞麦米",
+    "荞麦仁"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Buckwheat (grechka) is a specific, well-known kasha grain that is easy to recognise. Pearl barley (perlovka) is a valid competing member. Aliases cover the transliterated Russian and Chinese names, but a bare 'kasha' should not count as a match."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s1_named_checkmate_pattern": {
+  "gold": "Scholar's Mate",
+  "preds": [
+   "Fool's Mate",
+   "Smothered Mate",
+   "Opera Mate",
+   "Anastasia's Mate"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Scholar's Mate is a well-known named checkmate (queen supported by bishop mating on f7). Strictly it is an opening move sequence rather than a positional pattern like Boden's or Anastasia's mate, but it is commonly accepted as a named checkmate."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "Scholar's Mate",
+    "Scholars Mate",
+    "Scholar's Checkmate",
+    "Four-Move Checkmate",
+    "4-move mate",
+    "Shepherd's Mate",
+    "Schäfermatt",
+    "Coup du berger",
+    "学者杀",
+    "学者将杀",
+    "学者将死",
+    "四步杀",
+    "四步将杀",
+    "四步杀棋"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Scholar's Mate is a specific, well-known named checkmate. All predictions are valid named mates. The judge should accept the 'four-move checkmate' and Chinese variants such as 四步杀 or 学者杀."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s2_cooking_stage_of_rendang_gulai_kalio_or_": {
+  "gold": "Dry rendang",
+  "preds": [
+   "Kalio",
+   "Gulai"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Dry rendang (rendang kering) is the final, fully reduced cooking stage of rendang, after the gulai and kalio stages."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "Dry rendang",
+    "rendang kering",
+    "rendang (fully cooked/dry)",
+    "classic rendang",
+    "authentic rendang",
+    "干仁当",
+    "干巴东牛肉",
+    "干式仁当",
+    "干炖仁当"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Dry rendang is a specific, well-defined member of the three listed stages, clearly distinct from kalio and gulai; accept Indonesian and Chinese variants."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s1_type_of_precipitation": {
+  "gold": "Rain",
+  "preds": [
+   "Snow"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Rain is a genuine, correctly named type of precipitation."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "rain",
+    "rainfall",
+    "raining",
+    "rainy",
+    "rain shower",
+    "雨",
+    "下雨",
+    "降雨",
+    "雨水",
+    "雨天"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "'Rain' is a specific, common type of precipitation that is easy to recognise in English and Chinese. Accept the listed aliases, but not distinct types like drizzle, sleet or snow (雪)."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s2_spice_in_ph_broth": {
+  "gold": "Star anise",
+  "preds": [
+   "galangal",
+   "Charred ginger",
+   "Vietnamese coriander",
+   "Cinnamon"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Star anise is a real, signature spice used in traditional Vietnamese phở broth, alongside cinnamon, cloves, and cardamom."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "star anise",
+    "star-anise",
+    "staranise",
+    "Chinese star anise",
+    "八角",
+    "八角茴香",
+    "大料",
+    "大茴香",
+    "hồi",
+    "đại hồi",
+    "hoa hồi",
+    "badian",
+    "Illicium verum"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Star anise is a specific, well-known phở spice; accept the common Chinese names (八角, 大料) and Vietnamese names (hồi), but not plain 'anise', 'aniseed' or 茴香, which are different plants."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s1_nucleon": {
+  "gold": "Proton",
+  "preds": [
+   "Neutron",
+   "up quark",
+   "Neutral pion"
+  ],
+  "member": {
+   "member": true,
+   "reason": "The proton is one of the two nucleons, alongside the neutron."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "up quark",
+    "Neutral pion"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Proton",
+    "proton",
+    "protons",
+    "质子",
+    "p",
+    "p+",
+    "hydrogen nucleus",
+    "氢核",
+    "氢原子核"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "'Proton' is a specific, well-known nucleon that a judge can easily recognise. Accepting the Chinese name 质子 and the symbol p/p+ makes matching against noisy bilingual readouts more robust. The up quark (a quark) and the neutral pion (a meson) are not nucleons."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b1_national_standard_hash_function": {
+  "gold": "SHA-256",
+  "preds": [
+   "sm3",
+   "SHA-3",
+   "SHA-2",
+   "SHA-512"
+  ],
+  "member": {
+   "member": true,
+   "reason": "SHA-256 is a real hash function standardized by the US national standards body NIST in FIPS 180-4, so it is a national standard hash function."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "SHA-256",
+    "SHA256",
+    "SHA 256",
+    "SHA2-256",
+    "SHA-2-256",
+    "SHA-2 (256-bit)",
+    "Secure Hash Algorithm 256",
+    "安全散列算法256",
+    "安全哈希算法256",
+    "SHA-256哈希算法"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "SHA-256 is a specific, well-known member of the US FIPS 180-4 standard and is easy to recognise. Accept spelling variants, but do not accept bare 'SHA-2' (the parent family), SHA-512, SHA-3 or SM3 as matches."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s1_palindromic_prime_under_1000": {
+  "gold": "313",
+  "preds": [
+   "131",
+   "101",
+   "383",
+   "929"
+  ],
+  "member": {
+   "member": true,
+   "reason": "313 reads the same forwards and backwards, is under 1000, and is prime (no divisor among 2, 3, 5, 7, 11, 13, 17)."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "313",
+    "three hundred thirteen",
+    "three hundred and thirteen",
+    "三百一十三",
+    "三一三"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "313 is a specific palindromic prime under 1000, and all predictions (131, 101, 383, 929) are valid members; adding spelled-out English and Chinese forms helps the judge match noisy readouts."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s1_vector_meson": {
+  "gold": "ρ meson",
+  "preds": [
+   "J/ψ meson",
+   "φ meson",
+   "π meson",
+   "ω meson"
+  ],
+  "member": {
+   "member": true,
+   "reason": "The ρ meson is a real vector meson (J^PC = 1^--), the lightest isovector vector meson."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "π meson"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "ρ meson",
+    "rho meson",
+    "rho",
+    "ρ(770)",
+    "rho(770)",
+    "ρ⁰",
+    "rho-zero",
+    "ρ0 meson",
+    "ρ+ / ρ- meson",
+    "ρ介子",
+    "rho介子",
+    "柔介子"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "The ρ(770) is a specific, well-known vector meson. A judge needs the Greek-letter and spelled-out 'rho' forms, plus the Chinese ρ介子, to match it reliably. The π meson prediction is junk because pions are pseudoscalar, not vector, mesons."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s2_obsolete_unit_of_luminance": {
+  "gold": "candela",
+  "preds": [
+   "Lambert",
+   "Stilb",
+   "Candlepower",
+   "Apostilb"
+  ],
+  "member": {
+   "member": false,
+   "reason": "The candela is the current SI base unit of luminous intensity, not an obsolete unit of luminance (examples would be the stilb, lambert, apostilb or foot-lambert)."
+  },
+  "qa": {
+   "ill_defined": true,
+   "junk_predictions": [
+    "Candlepower"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "candela",
+    "cd",
+    "坎德拉",
+    "坎"
+   ],
+   "verdict": "drop",
+   "reason": "The gold 'candela' is not a member of the category: it is the current SI base unit of luminous intensity, so it is neither obsolete nor a unit of luminance. Valid members include lambert, stilb, apostilb, nit and foot-lambert. Candlepower is likewise an intensity unit, not a luminance unit."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s2_in_place_sorting_algorithm": {
+  "gold": "Quicksort",
+  "preds": [
+   "Heapsort",
+   "thunderboltsort",
+   "Merge sort"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Quicksort is a real sorting algorithm that partitions within the array and is widely classified as in-place, needing only O(log n) auxiliary stack space."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "thunderboltsort",
+    "Merge sort"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Quicksort",
+    "Quick sort",
+    "Quick-sort",
+    "QuickSort",
+    "Hoare's quicksort",
+    "partition-exchange sort",
+    "快速排序",
+    "快排",
+    "快速排序算法"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Quicksort is a specific, well-known in-place sorting algorithm that is easy to recognise in English or Chinese. 'thunderboltsort' is not a real algorithm. Standard merge sort is not in-place, so it is a questionable member of the category."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b1_hibernaculum_forming_temperate_sundew_sp": {
+  "gold": "Drosera intermedia",
+  "preds": [
+   "Drosera rotundifolia",
+   "Drosera anglica",
+   "Drosera filiformis",
+   "Drosera binata"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Drosera intermedia is a real temperate sundew whose northern populations in Europe and North America form winter hibernacula, though southern populations do not."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "Drosera binata"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Drosera intermedia",
+    "D. intermedia",
+    "oblong-leaved sundew",
+    "oblong-leaf sundew",
+    "spoon-leaved sundew",
+    "spoonleaf sundew",
+    "spatulate-leaved sundew",
+    "中间茅膏菜",
+    "匙叶茅膏菜"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Gold is a specific hibernaculum-forming temperate sundew with a distinctive binomial and several common names that a judge can match. Drosera binata is a Southern Hemisphere species that does not form hibernacula, so it is not a member of the category."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s1_story_from_lafcadio_hearn_s_kwaidan": {
+  "gold": "tale of the heike",
+  "preds": [
+   "Yuki-Onna",
+   "Painter of the Night Parade of a Hundred Demons",
+   "mimi-nashi hoichi",
+   "The Black Hair"
+  ],
+  "member": {
+   "member": false,
+   "reason": "The Tale of the Heike is a medieval Japanese epic, not a story in Kwaidan; it only figures within Kwaidan's 'The Story of Mimi-Nashi-Hoichi,' which recounts the Heike."
+  },
+  "qa": {
+   "ill_defined": true,
+   "junk_predictions": [
+    "Painter of the Night Parade of a Hundred Demons"
+   ],
+   "recognisable": false,
+   "aliases": [
+    "The Tale of the Heike",
+    "Heike Monogatari",
+    "平家物语",
+    "平家物語"
+   ],
+   "verdict": "drop",
+   "reason": "'Tale of the Heike' is not a story in Kwaidan; it is the epic that Hoichi recites inside 'Mimi-nashi Hoichi', so the gold is not a member of the category and cannot be reliably told apart from the Hoichi prediction."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b1_flag_featuring_a_nordic_cross": {
+  "gold": "Denmark",
+  "preds": [
+   "Iceland",
+   "Sweden",
+   "Norway",
+   "Finland"
+  ],
+  "member": {
+   "member": true,
+   "reason": "The flag of Denmark (the Dannebrog) features a white Nordic cross on red and is the original Nordic cross flag."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "Denmark",
+    "Danish flag",
+    "flag of Denmark",
+    "Dannebrog",
+    "Dannebrog flag",
+    "丹麦",
+    "丹麦国旗",
+    "丹麦旗"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Denmark is a specific, well-known member of the Nordic-cross flag category, and all predictions are valid members. Judges should also accept 'Dannebrog' and the Chinese name 丹麦."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s2_radioisotope_of_iodine": {
+  "gold": "Iodine-131",
+  "preds": [
+   "Iodine-123",
+   "iodine-125",
+   "Iodine-127"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Iodine-131 is a real, well-known radioactive isotope of iodine (half-life about 8 days) used in medicine and produced in nuclear fission."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "Iodine-127"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Iodine-131",
+    "I-131",
+    "I131",
+    "131I",
+    "¹³¹I",
+    "iodine 131",
+    "radioiodine-131",
+    "碘-131",
+    "碘131",
+    "131碘",
+    "放射性碘-131"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Iodine-131 is a specific, well-known radioisotope that is easy to recognise. Iodine-127 is the stable isotope, not a radioisotope, so it is a junk prediction. Bare 'radioiodine' or '放射性碘' is generic and should not be accepted on its own."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b1_traditional_bosnian_main_dish": {
+  "gold": "Ćevapi",
+  "preds": [
+   "Burek",
+   "Bosanski Lonac"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Ćevapi (grilled minced meat sausages served with somun bread and onions) is a well-known traditional Bosnian main dish, often called the national dish of Bosnia and Herzegovina."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "Ćevapi",
+    "Cevapi",
+    "Ćevapčići",
+    "Cevapcici",
+    "Chevapi",
+    "Cevap",
+    "Bosnian ćevapi",
+    "Sarajevski ćevapi",
+    "切瓦皮",
+    "切瓦普契契",
+    "波斯尼亚烤肉肠",
+    "巴尔干烤肉肠",
+    "烤肉肠"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Ćevapi is a specific, well-known Bosnian main dish, but the diacritic and diminutive (ćevapčići) spellings and Chinese transliterations vary, so the judge needs these aliases."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s1_frieze_group": {
+  "gold": "p4m",
+  "preds": [
+   "p1",
+   "p2",
+   "p2mm",
+   "p2mg"
+  ],
+  "member": {
+   "member": false,
+   "reason": "p4m is one of the 17 wallpaper groups, not one of the 7 frieze groups (p1, p11g, p1m1, p2, p2mg, p11m, p2mm)."
+  },
+  "qa": {
+   "ill_defined": true,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "p4m",
+    "p4mm",
+    "*442",
+    "P4M"
+   ],
+   "verdict": "drop",
+   "reason": "Gold 'p4m' is a wallpaper group (2D, square lattice), not one of the seven frieze groups (p1, p11g, p1m1, p2, p2mg, p11m, p2mm). The gold is therefore not a member of the category, while the other models' predictions are all valid frieze groups."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b2_ionotropic_glutamate_receptor_type": {
+  "gold": "AMPA",
+  "preds": [
+   "NMDA"
+  ],
+  "member": {
+   "member": true,
+   "reason": "AMPA receptors are one of the major ionotropic glutamate receptor types, alongside NMDA, kainate, and delta receptors."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "AMPA",
+    "AMPA receptor",
+    "AMPAR",
+    "AMPA-type glutamate receptor",
+    "α-amino-3-hydroxy-5-methyl-4-isoxazolepropionic acid receptor",
+    "alpha-amino-3-hydroxy-5-methyl-4-isoxazolepropionic acid receptor",
+    "quisqualate receptor",
+    "AMPA受体",
+    "AMPA型谷氨酸受体",
+    "α-氨基-3-羟基-5-甲基-4-异恶唑丙酸受体"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "AMPA is one specific, well-known member of the ionotropic glutamate receptor family (alongside NMDA and kainate). It is easy to tell apart from the predicted NMDA, but readouts may use the full chemical name or the Chinese form, so those aliases should be accepted."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b1_glioblastoma_cell_line": {
+  "gold": "U87 MG",
+  "preds": [
+   "ht22"
+  ],
+  "member": {
+   "member": true,
+   "reason": "U87 MG is a real, widely used human glioblastoma cell line. The ATCC stock differs genetically from the original Uppsala tumor but is still a CNS glioblastoma line."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "ht22"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "U87 MG",
+    "U87MG",
+    "U-87 MG",
+    "U-87MG",
+    "U87-MG",
+    "U87",
+    "U-87",
+    "HTB-14",
+    "U87细胞",
+    "U87细胞系",
+    "U87胶质母细胞瘤细胞系",
+    "U87 MG细胞"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "U87 MG is a specific, widely known glioblastoma line, but its spelling varies (U87, U-87 MG, U87MG), so aliases are needed; HT22 is a mouse hippocampal neuronal line, not a glioblastoma line."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s2_chord_scale_for_a_minor_seventh_chord": {
+  "gold": "Aeolian",
+  "preds": [
+   "Dorian",
+   "harmonic minor",
+   "minor blues",
+   "Melodic minor"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Aeolian (natural minor) is a standard chord-scale used over minor seventh chords, alongside Dorian and Phrygian."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "Aeolian",
+    "Aeolian mode",
+    "Aeolian scale",
+    "natural minor",
+    "natural minor scale",
+    "pure minor",
+    "relative minor scale (natural)",
+    "6th mode of major scale",
+    "爱奥利亚",
+    "爱奥利亚调式",
+    "艾奥利亚调式",
+    "伊奥利亚调式",
+    "自然小调",
+    "自然小音阶",
+    "自然小调音阶"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Aeolian is a specific, well-known mode for minor seventh chords and is easy to recognise. The judge should accept 'natural minor' / 自然小调 as synonyms, but not harmonic minor or melodic minor, which are different scales. No prediction is junk: Dorian, harmonic minor, minor blues and melodic minor are all real scales."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b1_biryani_accompaniment": {
+  "gold": "Raita",
+  "preds": [
+   "Salad"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Raita is a yogurt-based side dish, a widely recognized classic accompaniment to biryani."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "Raita",
+    "Raitha",
+    "Rayta",
+    "yogurt raita",
+    "yoghurt raita",
+    "cucumber raita",
+    "boondi raita",
+    "onion raita",
+    "dahi raita",
+    "yogurt dip",
+    "yogurt sauce",
+    "酸奶酱",
+    "印度酸奶酱",
+    "印度酸奶沙拉",
+    "酸奶黄瓜酱",
+    "黄瓜酸奶酱",
+    "莱塔"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Raita is a specific, well-known biryani side and easy to recognise. Readouts may describe it generically as a yogurt dip or use variant spellings and Chinese terms, so a judge needs those aliases. The prediction 'Salad' is a valid, distinct accompaniment (e.g., kachumber), not junk."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b2_drawer_joinery_method": {
+  "gold": "Dovetail",
+  "preds": [
+   "Dado joint",
+   "Sliding dovetail",
+   "Half-blind dovetail"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Dovetail joinery is a real, widely used drawer joinery method, commonly used for drawer fronts and backs."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "Dovetail",
+    "Dovetail joint",
+    "Dovetails",
+    "Dovetailing",
+    "Through dovetail",
+    "燕尾榫",
+    "燕尾接合",
+    "燕尾榫接",
+    "鸠尾榫"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Dovetail is a common, easily recognised joinery method. It is the generic family name, though, so the judge needs a rule for subtype readouts such as half-blind (半隐燕尾榫) or sliding dovetail (滑动燕尾榫): treat them as distinct from plain 'dovetail' to preserve discrimination, or accept them as matches."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b2_citric_acid_cycle_enzyme": {
+  "gold": "Isocitrate dehydrogenase",
+  "preds": [
+   "Citrate synthase",
+   "Aconitase",
+   "alpha-ketoglutarate dehydrogenase",
+   "Succinyl-CoA synthetase"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Isocitrate dehydrogenase is a genuine citric acid cycle enzyme; it catalyzes the oxidative decarboxylation of isocitrate to alpha-ketoglutarate."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "Isocitrate dehydrogenase",
+    "IDH",
+    "IDH3",
+    "NAD+-dependent isocitrate dehydrogenase",
+    "NAD-IDH",
+    "isocitric dehydrogenase",
+    "异柠檬酸脱氢酶",
+    "异柠檬酸脱氢酶(IDH)"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "The gold is a specific, well-known TCA enzyme and all predictions are valid members, but the judge needs the IDH abbreviation and Chinese name (异柠檬酸脱氢酶), and should not accept isocitrate lyase or aconitase."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s2_rousettus_species": {
+  "gold": "Egyptian rousette",
+  "preds": [
+   "madagascan rousette",
+   "leschenaults rousette",
+   "geoffroys rousette"
+  ],
+  "member": {
+   "member": true,
+   "reason": "The Egyptian rousette (Rousettus aegyptiacus) is a real fruit bat species in the genus Rousettus."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "Egyptian rousette",
+    "Egyptian fruit bat",
+    "Rousettus aegyptiacus",
+    "R. aegyptiacus",
+    "埃及果蝠",
+    "埃及棕果蝠",
+    "埃及果蝙蝠",
+    "埃及狐蝠"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "The gold is a specific, well-known species. Its common name 'Egyptian fruit bat' and the Chinese name 埃及果蝠 should be accepted. All the predicted answers are valid Rousettus species."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s2_screen_optimized_serif_typeface": {
+  "gold": "garamond",
+  "preds": [
+   "Georgia",
+   "Charter",
+   "Merriweather",
+   "EB Garamond"
+  ],
+  "member": {
+   "member": false,
+   "reason": "Garamond is a 16th-century old-style serif designed for print, not a screen-optimized face like Georgia or Merriweather."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "Garamond",
+    "EB Garamond",
+    "Adobe Garamond",
+    "Adobe Garamond Pro",
+    "Garamond Premier",
+    "Monotype Garamond",
+    "ITC Garamond",
+    "Stempel Garamond",
+    "加拉蒙",
+    "加拉蒙体",
+    "加拉蒙德",
+    "加拉蒙德体",
+    "Garamond字体"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Garamond is a distinctive, widely known serif family that judges can easily recognise. It is a print-origin classic rather than a strictly screen-optimized face, and it spans many revivals (e.g., EB Garamond), so the revival names should be accepted as aliases."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s1_isotope_of_hydrogen": {
+  "gold": "Deuterium",
+  "preds": [
+   "Protium",
+   "Tritium"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Deuterium (hydrogen-2, one proton and one neutron) is a real, stable, correctly named isotope of hydrogen."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "Deuterium",
+    "D",
+    "²H",
+    "2H",
+    "H-2",
+    "hydrogen-2",
+    "heavy hydrogen",
+    "氘",
+    "重氢",
+    "氢-2"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Deuterium is a specific, well-known hydrogen isotope that a judge can easily recognise. The predictions Protium and Tritium are valid members of the category, so none are junk. Accept the symbol forms (D, ²H) and the Chinese 氘/重氢, but note that 'heavy hydrogen' is sometimes used loosely and should not be confused with tritium (超重氢/氚)."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s1_iron_ore_mineral": {
+  "gold": "Hematite",
+  "preds": [
+   "Magnetite",
+   "hornblende"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Hematite (Fe2O3) is a real mineral and one of the principal iron ore minerals."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "hornblende"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Hematite",
+    "Haematite",
+    "赤铁矿",
+    "Fe2O3",
+    "Fe₂O₃",
+    "iron(III) oxide",
+    "ferric oxide",
+    "specularite",
+    "镜铁矿",
+    "kidney ore",
+    "red ochre"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Hematite is a specific, well-known iron ore mineral with a common Chinese name (赤铁矿). The British spelling and the formula Fe2O3 should also count. Hornblende is not an iron ore mineral; it is an amphibole silicate."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s2_cloud_seeding_agent": {
+  "gold": "Silver iodide",
+  "preds": [
+   "sodium chloride",
+   "calcium chloride",
+   "glycol",
+   "Cesium iodide"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Silver iodide is a real and widely used cloud-seeding agent that serves as ice nuclei in glaciogenic seeding."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "Cesium iodide",
+    "glycol"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Silver iodide",
+    "AgI",
+    "碘化银",
+    "iodide of silver"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Silver iodide is a specific, well-known cloud-seeding agent; accept the AgI formula and the Chinese name 碘化银. Cesium iodide and glycol are not established seeding agents, while sodium and calcium chloride are legitimate hygroscopic agents."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s2_porcini_group_species_boletus_sensu_stri": {
+  "gold": "Boletus edulis",
+  "preds": [
+   "Boletus pinophilus"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Boletus edulis, the king bolete, is the type species of Boletus sensu stricto and the archetypal porcini."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "Boletus edulis",
+    "B. edulis",
+    "king bolete",
+    "penny bun",
+    "porcini",
+    "cep",
+    "cèpe",
+    "cèpe de Bordeaux",
+    "Steinpilz",
+    "美味牛肝菌",
+    "美味牛肝",
+    "白牛肝菌",
+    "大脚菇",
+    "牛肝菌（美味）"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Boletus edulis is a specific, well-known member with common names (king bolete, porcini, cep, 美味牛肝菌) a judge can match. Bare 'porcini' is a little ambiguous because it can mean the whole group, but it usually means B. edulis. Boletus pinophilus is a valid member, not junk."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b2_irreversible_step_of_glycolysis": {
+  "gold": "Phosphofructokinase-1",
+  "preds": [
+   "hexokinase",
+   "peptidyl phosphate formation",
+   "phosphoglucose isomerase",
+   "pyruvate kinase"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Phosphofructokinase-1 catalyzes the irreversible phosphorylation of fructose-6-phosphate to fructose-1,6-bisphosphate, the committed step of glycolysis. Naming the enzyme is a standard way to identify the step."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "peptidyl phosphate formation",
+    "phosphoglucose isomerase"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Phosphofructokinase-1",
+    "Phosphofructokinase 1",
+    "Phosphofructokinase",
+    "PFK-1",
+    "PFK1",
+    "PFK",
+    "6-phosphofructo-1-kinase",
+    "6-phosphofructokinase",
+    "fructose-6-phosphate to fructose-1,6-bisphosphate step",
+    "F6P → F1,6BP phosphorylation",
+    "committed step of glycolysis",
+    "磷酸果糖激酶-1",
+    "磷酸果糖激酶1",
+    "磷酸果糖激酶",
+    "6-磷酸果糖激酶-1",
+    "果糖-6-磷酸转化为果糖-1,6-二磷酸"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "PFK-1 is one of the three irreversible glycolytic steps and has a well-known name and abbreviation. Accept PFK/phosphofructokinase but not PFK-2. 'Peptidyl phosphate formation' is not a glycolysis step, and phosphoglucose isomerase catalyzes a reversible step."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b1_sauce_for_quenelles": {
+  "gold": "beurre blanc",
+  "preds": [
+   "nantua",
+   "Béchamel",
+   "béarnaise",
+   "hollandaise"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Beurre blanc is a real French butter sauce traditionally served with fish quenelles, such as pike quenelles (quenelles de brochet)."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "beurre blanc",
+    "beurre blanc sauce",
+    "white butter sauce",
+    "butter-white sauce",
+    "beurre nantais",
+    "白黄油酱",
+    "白黄油汁",
+    "白奶油酱",
+    "白奶油汁",
+    "黄油白酱",
+    "法式白黄油酱"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Beurre blanc is a specific, well-known French sauce that is clearly distinct from the predicted nantua, béchamel, béarnaise and hollandaise, but English and Chinese renderings vary, so the aliases should be accepted."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s1_convex_deltahedron": {
+  "gold": "Tetrahedron",
+  "preds": [
+   "Icosahedron",
+   "Triangular bipyramid",
+   "Elongated square bipyramid",
+   "Octahedron"
+  ],
+  "member": {
+   "member": true,
+   "reason": "The regular tetrahedron, with 4 equilateral triangular faces, is one of the eight convex deltahedra."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "Elongated square bipyramid"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Tetrahedron",
+    "Regular tetrahedron",
+    "Tetrahedra",
+    "4-faced deltahedron",
+    "Regular triangular pyramid",
+    "3-simplex",
+    "正四面体",
+    "四面体",
+    "正三棱锥"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "The tetrahedron is one of the eight convex deltahedra and is easy to recognise. 'Elongated square bipyramid' is not a deltahedron because it has square faces; the gyroelongated version is a deltahedron."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s2_type_of_plasmon": {
+  "gold": "Surface plasmon",
+  "preds": [
+   "Surface plasmon polariton",
+   "circuit plasmon",
+   "localized surface plasmon"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Surface plasmons are a well-established type of plasmon: collective electron oscillations confined to a metal-dielectric interface, distinct from bulk and localized plasmons."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "circuit plasmon"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "surface plasmon",
+    "surface plasmons",
+    "SP",
+    "表面等离子体",
+    "表面等离激元",
+    "表面等离子激元",
+    "表面等离子体激元",
+    "表面电浆子"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "'Surface plasmon' is a standard plasmon type (as opposed to bulk/volume plasmon) and is easy to recognise. Its subtypes, SPP and LSPR, overlap with it, so the judge should only accept readouts that name surface plasmon itself, or else apply a consistent rule for the subtypes."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b2_jerk_protein": {
+  "gold": "Chicken",
+  "preds": [
+   "Pork",
+   "JNK1",
+   "Myosin",
+   "GSK3β"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Jerk chicken is the most iconic Jamaican jerk dish, so chicken is a genuine jerk protein."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "JNK1",
+    "Myosin",
+    "GSK3β"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Chicken",
+    "jerk chicken",
+    "chicken meat",
+    "鸡肉",
+    "鸡",
+    "牙买加烤鸡",
+    "牙买加香辣鸡",
+    "加勒比烤鸡"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Chicken is a specific, common jerk protein and easy to recognise; Pork is a valid alternative, while JNK1, Myosin and GSK3β wrongly read the question as biochemistry and are not jerk proteins."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b1_murine_macrophage_cell_line": {
+  "gold": "J774A.1",
+  "preds": [
+   "RAW 264.7"
+  ],
+  "member": {
+   "member": true,
+   "reason": "J774A.1 is a well-established murine (BALB/c mouse) macrophage cell line derived from a reticulum cell sarcoma."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "J774A.1",
+    "J774A1",
+    "J774",
+    "J774.1",
+    "J-774A.1",
+    "J774A.1 cells",
+    "J774A.1细胞",
+    "J774巨噬细胞",
+    "J774A.1小鼠巨噬细胞系"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "J774A.1 is a specific, well-known murine macrophage line distinct from RAW 264.7. Judges should accept common shorthand forms like 'J774' and spacing or punctuation variants, but not RAW 264.7."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s2_cysteine_protease": {
+  "gold": "trypsin",
+  "preds": [
+   "Papain",
+   "Caspase-3",
+   "Cathepsin B",
+   "Cathepsin L"
+  ],
+  "member": {
+   "member": false,
+   "reason": "Trypsin is a serine protease (catalytic triad Ser-His-Asp), not a cysteine protease."
+  },
+  "qa": {
+   "ill_defined": true,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "trypsin",
+    "胰蛋白酶",
+    "胰酶",
+    "trypsin-1",
+    "PRSS1"
+   ],
+   "verdict": "drop",
+   "reason": "Trypsin is a serine protease, not a cysteine protease, so the gold is not a member of the category; all the other models' predictions (papain, caspase-3, cathepsin B, cathepsin L) are genuine cysteine proteases."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s2_corundum_structure_oxide": {
+  "gold": "Al2O3",
+  "preds": [
+   "Ruby",
+   "fe2o3",
+   "Sapphire",
+   "Cr2O3"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Al2O3 (α-alumina, corundum) is the prototype compound that defines the corundum structure type."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "Al2O3",
+    "α-Al2O3",
+    "alpha-alumina",
+    "alumina",
+    "aluminum oxide",
+    "aluminium oxide",
+    "corundum",
+    "氧化铝",
+    "三氧化二铝",
+    "α-氧化铝",
+    "刚玉"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Al2O3 is the prototype member of the corundum-structure family, so it is a valid, well-defined answer and easy to recognise. The judge should accept 'corundum' and 'alumina' and their Chinese names. Ruby and Sapphire are doped gem varieties of Al2O3; they are not junk, but they are kept as distinct predictions rather than aliases. Fe2O3 and Cr2O3 are valid corundum-structure oxides."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s2_close_packed_stacking_sequence": {
+  "gold": "ABAB (HCP)",
+  "preds": [
+   "ABC (FCC)",
+   "ABABCABC",
+   "ABABC"
+  ],
+  "member": {
+   "member": true,
+   "reason": "ABAB... is the genuine close-packed stacking sequence of the hexagonal close-packed (HCP) structure."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "ABAB",
+    "ABABAB",
+    "AB stacking",
+    "ABAB...",
+    "HCP",
+    "hcp",
+    "hexagonal close-packed",
+    "hexagonal close packing",
+    "hexagonal closest packing",
+    "六方密堆积",
+    "六方最密堆积",
+    "密排六方",
+    "ABAB堆积",
+    "ABAB排列"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "ABAB (HCP) is a specific, well-known close-packed stacking that judges can easily recognise; accept ABAB/HCP/六方密堆积 variants and keep it distinct from ABC (FCC). The other predictions are valid stacking sequences, if obscure, so none are junk."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b2_fabada_compango_component": {
+  "gold": "pork",
+  "preds": [
+   "Morcilla",
+   "Chorizo",
+   "Fabes",
+   "Panceta"
+  ],
+  "member": {
+   "member": false,
+   "reason": "Compango consists of specific cured pork products (chorizo, morcilla, tocino/panceta, lacón), so 'pork' is a generic meat rather than a named compango component."
+  },
+  "qa": {
+   "ill_defined": true,
+   "junk_predictions": [
+    "Fabes"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "pork",
+    "cerdo",
+    "猪肉",
+    "pork products",
+    "embutidos de cerdo"
+   ],
+   "verdict": "drop",
+   "reason": "Compango is by definition the pork component of fabada (chorizo, morcilla, panceta/tocino, lacón), so 'pork' is the parent class rather than a member and matches nearly every valid prediction; 'Fabes' are the beans, not compango."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s1_thai_dessert": {
+  "gold": "Mango Sticky Rice",
+  "preds": [
+   "khao niew kaew",
+   "Tub Tim Krob",
+   "Kluay Buat Chi"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Mango sticky rice (khao niao mamuang) is a real, well-known traditional Thai dessert made with glutinous rice, coconut milk, and ripe mango."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "Mango Sticky Rice",
+    "Mango with Sticky Rice",
+    "Sticky Rice with Mango",
+    "Khao Niao Mamuang",
+    "Khao Niew Mamuang",
+    "Khao Neeo Mamuang",
+    "ข้าวเหนียวมะม่วง",
+    "芒果糯米饭",
+    "芒果糯米飯",
+    "芒果糯米",
+    "芒果糯米饭（泰式）"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Gold is a specific, widely known Thai dessert, and all predictions are legitimate Thai desserts. Accept the Thai and Chinese names, but bare 'sticky rice' or khao niew kaew alone should not count as a match."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s2_section_paphiopedilum_species": {
+  "gold": "paphiopedilum sanderianum",
+  "preds": [
+   "Paphiopedilum rothschildianum",
+   "Paphiopedilum victoria-regina",
+   "paphiopedilum moonlight",
+   "paphiopedilum s stocks"
+  ],
+  "member": {
+   "member": false,
+   "reason": "Paphiopedilum sanderianum is a real species, but it belongs to section Coryopedilum, not section Paphiopedilum (e.g., P. insigne, P. villosum, P. spicerianum)."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "paphiopedilum moonlight",
+    "paphiopedilum s stocks"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Paphiopedilum sanderianum",
+    "Paph. sanderianum",
+    "P. sanderianum",
+    "sanderianum",
+    "Sander's slipper orchid",
+    "Sander's paphiopedilum",
+    "桑德氏兜兰",
+    "桑德兜兰",
+    "桑德氏拖鞋兰"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "The gold is a specific, valid species with a distinctive epithet ('sanderianum'), so a judge can match it reliably given these aliases. One caveat: strictly it belongs to section Coryopedilum, not section Paphiopedilum, so the category wording is loose but not ambiguous. 'Moonlight' is not a species and 's stocks' is nonsense."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b1_type_of_meringue": {
+  "gold": "whipped",
+  "preds": [
+   "French",
+   "Italian",
+   "swiss",
+   "Pavlova"
+  ],
+  "member": {
+   "member": false,
+   "reason": "'Whipped' describes how all meringue is made, not a recognized type; the actual types are French, Swiss, and Italian."
+  },
+  "qa": {
+   "ill_defined": true,
+   "junk_predictions": [
+    "Pavlova"
+   ],
+   "recognisable": false,
+   "aliases": [
+    "whipped meringue",
+    "打发的蛋白霜",
+    "打发蛋白"
+   ],
+   "verdict": "drop",
+   "reason": "'Whipped' is not a meringue type; all meringue is whipped egg white, so the gold restates a property of the category rather than naming a member such as French, Italian or Swiss, and a judge cannot reliably tell it apart from generic descriptions."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b1_trichrome_stain": {
+  "gold": "giemsa stain",
+  "preds": [
+   "Masson's trichrome",
+   "Gomori's trichrome",
+   "Trichrome stain"
+  ],
+  "member": {
+   "member": false,
+   "reason": "Giemsa is a Romanowsky-type stain (methylene blue/azure and eosin), not a trichrome stain like Masson's, Gomori's, or Mallory's."
+  },
+  "qa": {
+   "ill_defined": true,
+   "junk_predictions": [
+    "Trichrome stain"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Giemsa stain",
+    "Giemsa",
+    "Giemsa staining",
+    "吉姆萨染色",
+    "姬姆萨染色",
+    "吉姆萨染液"
+   ],
+   "verdict": "drop",
+   "reason": "Giemsa is a Romanowsky-type stain, not a trichrome stain, so the gold is not a member of the asked category. The valid members predicted (Masson's, Gomori's) conflict with it, and 'Trichrome stain' just restates the category."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s2_type_of_thermodynamic_process": {
+  "gold": "Isothermal",
+  "preds": [
+   "Adiabatic",
+   "Isentropic",
+   "Isobaric"
+  ],
+  "member": {
+   "member": true,
+   "reason": "An isothermal process, which occurs at constant temperature, is a standard, correctly named type of thermodynamic process."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "Isothermal",
+    "isothermal process",
+    "isothermal expansion",
+    "isothermal compression",
+    "constant-temperature process",
+    "constant temperature",
+    "等温",
+    "等温过程",
+    "等温变化",
+    "恒温过程"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "'Isothermal' is a specific, well-known type of thermodynamic process. It is easy to recognise in English and Chinese (等温过程), and all the predicted answers are valid members of the category."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s2_catalytic_asymmetric_epoxidation_method": {
+  "gold": "Sharpless epoxidation",
+  "preds": [
+   "Shi epoxidation",
+   "Jacobsen-Katsuki epoxidation"
+  ],
+  "member": {
+   "member": true,
+   "reason": "The Sharpless (Katsuki–Sharpless) epoxidation is a real catalytic asymmetric epoxidation of allylic alcohols using Ti(OiPr)4, diethyl tartrate and TBHP."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "Sharpless epoxidation",
+    "Sharpless asymmetric epoxidation",
+    "SAE",
+    "Katsuki-Sharpless epoxidation",
+    "Sharpless-Katsuki epoxidation",
+    "Sharpless AE",
+    "Ti(OiPr)4/tartrate (DET/DIPT)/TBHP epoxidation of allylic alcohols",
+    "Sharpless环氧化",
+    "Sharpless环氧化反应",
+    "Sharpless不对称环氧化",
+    "夏普莱斯环氧化",
+    "夏普莱斯不对称环氧化反应",
+    "沙普利斯不对称环氧化"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "The gold is a specific, well-known named reaction and a clear member of the category. The other predictions (Shi, Jacobsen-Katsuki) are valid distinct members. The judge should accept the Katsuki-Sharpless variants but not confuse them with Jacobsen-Katsuki."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s2_methionine_cycle_metabolite": {
+  "gold": "S-adenosylmethionine",
+  "preds": [
+   "Homocysteine"
+  ],
+  "member": {
+   "member": true,
+   "reason": "S-adenosylmethionine (SAM) is a core methionine cycle metabolite, formed from methionine by MAT and converted to S-adenosylhomocysteine via methylation."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "S-adenosylmethionine",
+    "S-adenosyl-L-methionine",
+    "SAM",
+    "SAMe",
+    "SAM-e",
+    "AdoMet",
+    "ademetionine",
+    "腺苷甲硫氨酸",
+    "S-腺苷甲硫氨酸",
+    "S-腺苷蛋氨酸",
+    "腺苷蛋氨酸",
+    "丁二磺酸腺苷蛋氨酸"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "SAM is a specific, well-known member of the methionine cycle with common abbreviations (SAM/SAMe/AdoMet) and a standard Chinese name. Judges need these aliases, and must not credit SAH (S-adenosylhomocysteine) as a match."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s2_warabi_mochi_topping": {
+  "gold": "red bean paste",
+  "preds": [
+   "Kinako",
+   "Kuromitsu",
+   "matcha",
+   "pine nuts"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Red bean paste (anko) is a real accompaniment for warabi mochi, served on top or as a filling, though kinako and kuromitsu are more traditional."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "red bean paste",
+    "red bean",
+    "anko",
+    "an",
+    "azuki bean paste",
+    "adzuki bean paste",
+    "sweet red bean paste",
+    "tsubuan",
+    "koshian",
+    "あんこ",
+    "餡子",
+    "小豆餡",
+    "红豆沙",
+    "红豆馅",
+    "豆沙",
+    "红豆泥",
+    "豆沙馅"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "The gold is a specific, common topping, but readouts may name it as 'anko' or with Chinese terms like 红豆沙/豆沙, so the judge should accept those aliases; all predictions are plausible toppings, not junk."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s2_metal_ligand_bifunctional_hydrogenation_": {
+  "gold": "pd/c",
+  "preds": [
+   "Shvo catalyst",
+   "noyori ru-binap-diamine catalyst",
+   "Ru-MACHO-BH",
+   "Ru-phosphine"
+  ],
+  "member": {
+   "member": false,
+   "reason": "Pd/C is a heterogeneous palladium-on-carbon catalyst, not a metal-ligand bifunctional catalyst like Noyori's Ru-diamine or Shvo's catalyst."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "Ru-phosphine"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Pd/C",
+    "palladium on carbon",
+    "palladium on charcoal",
+    "palladium-carbon",
+    "palladium/carbon",
+    "10% Pd/C",
+    "5% Pd/C",
+    "钯碳",
+    "钯/碳",
+    "钯炭",
+    "碳载钯",
+    "活性炭载钯"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Pd/C is a distinct, easily recognised label that a judge can match reliably, though it is a heterogeneous catalyst and not truly a metal-ligand bifunctional catalyst (the gold is a category mismatch but not ambiguous); 'Ru-phosphine' is a generic class rather than a specific bifunctional catalyst."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s1_sql_join_type": {
+  "gold": "Inner Join",
+  "preds": [
+   "Left Join",
+   "intersect"
+  ],
+  "member": {
+   "member": true,
+   "reason": "INNER JOIN is a real, correctly named standard SQL join type."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "intersect"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Inner Join",
+    "INNER JOIN",
+    "inner join",
+    "plain JOIN (SQL default join)",
+    "内连接",
+    "内联接",
+    "内部连接",
+    "内部联接",
+    "内联结",
+    "内连结"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Inner Join is a specific, well-known SQL join type that is easy to recognise in English or Chinese. Its Chinese renderings (内连接/内联接) should be accepted. 'intersect' is a set operator, not a join type."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b1_fusion_fuel_reaction": {
+  "gold": "D-T",
+  "preds": [
+   "d-d",
+   "D-He3"
+  ],
+  "member": {
+   "member": true,
+   "reason": "D-T (deuterium-tritium) is a real, well-known fusion fuel reaction, the primary one pursued in ITER and most fusion research."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "D-T",
+    "DT",
+    "D+T",
+    "deuterium-tritium",
+    "deuterium–tritium fusion",
+    "deuterium-tritium reaction",
+    "D-T fusion",
+    "氘氚",
+    "氘-氚",
+    "氘氚聚变",
+    "氘氚反应",
+    "²H-³H",
+    "D + T → He-4 + n"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "D-T is a specific, well-known fusion reaction and is easy to recognise. The other predictions (D-D, D-He3) are valid, distinct reactions, not junk. Accept the English and Chinese name variants listed."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b2_structural_component_of_a_sonnet": {
+  "gold": "Volta",
+  "preds": [
+   "couplet",
+   "Iambic Pentameter"
+  ],
+  "member": {
+   "member": true,
+   "reason": "The volta is the turn or shift in thought or argument in a sonnet, a recognized structural component of the form."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "Volta",
+    "the volta",
+    "the turn",
+    "turn",
+    "rhetorical turn",
+    "shift in thought",
+    "转折",
+    "转折点",
+    "转向",
+    "诗意转折",
+    "突转"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Volta is a specific, well-known structural element of the sonnet, but readouts may call it 'the turn' or use Chinese terms like 转折, so these aliases should be accepted."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s2_quicksort_partition_scheme": {
+  "gold": "Lomuto",
+  "preds": [
+   "Hoare",
+   "introselect",
+   "Introsort"
+  ],
+  "member": {
+   "member": true,
+   "reason": "The Lomuto partition scheme, attributed to Nico Lomuto and popularized by Bentley and CLRS, is a well-known quicksort partition scheme."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "introselect",
+    "Introsort"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Lomuto",
+    "Lomuto partition",
+    "Lomuto partition scheme",
+    "Lomuto's partition",
+    "Lomuto scheme",
+    "Nico Lomuto's scheme",
+    "Lomuto分区",
+    "Lomuto划分",
+    "Lomuto分区方案",
+    "洛穆托划分",
+    "洛穆托分区",
+    "洛穆托分区方案"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Lomuto is a specific, well-known partition scheme that is easy to recognise, though Chinese transliterations should be accepted. Introselect (a selection algorithm) and introsort (a hybrid sorting algorithm) are not partition schemes."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b2_continuous_truss_bridge": {
+  "gold": "Golden Gate Bridge",
+  "preds": [
+   "Forth Bridge",
+   "Quebec Bridge",
+   "Lake Pontchartrain Causeway",
+   "Brooklyn Bridge"
+  ],
+  "member": {
+   "member": false,
+   "reason": "The Golden Gate Bridge is a suspension bridge, not a continuous truss bridge. It has stiffening trusses, but its main structural type is suspension."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "Lake Pontchartrain Causeway",
+    "Brooklyn Bridge"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Golden Gate Bridge",
+    "Golden Gate",
+    "金门大桥",
+    "金門大橋",
+    "旧金山金门大桥",
+    "San Francisco Golden Gate Bridge"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "The gold is a specific, widely known bridge with a standard Chinese name, so a judge can recognise it easily. It is actually a suspension bridge, not a continuous truss bridge. That mismatch does not stop a judge from matching the model's stable answer, but it is worth flagging."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b1_traditional_catalan_dessert": {
+  "gold": "Crema catalana",
+  "preds": [
+   "Panellets",
+   "Coca de llardons",
+   "Coca de Sant Joan",
+   "Mel i mató"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Crema catalana is a real, correctly named traditional Catalan custard dessert with a caramelized sugar top."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "Crema catalana",
+    "Catalan cream",
+    "Catalan crème brûlée",
+    "Crema cremada",
+    "Crema de Sant Josep",
+    "Crema de Sant José",
+    "加泰罗尼亚焦糖布丁",
+    "加泰罗尼亚奶油",
+    "加泰隆尼亚焦糖奶油",
+    "加泰罗尼亚焦糖奶油",
+    "加泰罗尼亚布丁",
+    "加泰罗尼亚克林姆"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Crema catalana is a specific, well-known Catalan dessert with clear English and Chinese names. All predicted answers are genuine Catalan desserts, so none are junk. Generic 'crème brûlée' or '焦糖布丁' alone should not be accepted unless Catalan is specified."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b1_lutung_trachypithecus_species": {
+  "gold": "purple-faced langur",
+  "preds": [
+   "Javan lutung",
+   "Silvered leaf monkey",
+   "dusky leaf monkey",
+   "nilgiri langur"
+  ],
+  "member": {
+   "member": false,
+   "reason": "The purple-faced langur is now classified as Semnopithecus vetulus, not a Trachypithecus species, though it was formerly placed in Trachypithecus."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "purple-faced langur",
+    "purple-faced leaf monkey",
+    "purple-faced leaf langur",
+    "Trachypithecus vetulus",
+    "Semnopithecus vetulus",
+    "Presbytis senex",
+    "bear monkey",
+    "Sri Lankan purple-faced langur",
+    "紫脸叶猴",
+    "紫面叶猴",
+    "紫脸长尾叶猴",
+    "斯里兰卡紫脸叶猴"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Specific, well-known species with a distinctive common name. It was long placed in Trachypithecus as T. vetulus but is now usually put in Semnopithecus, so accept both binomials and the Chinese names. The nilgiri langur prediction has the same legacy-taxonomy status and is not junk."
+  },
+  "version": "msdm-validity-2026-11-04"
+ }
+}

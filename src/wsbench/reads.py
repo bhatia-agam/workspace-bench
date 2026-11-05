@@ -250,7 +250,8 @@ def plan_layers_missing(
 
 def min_full_positions(family: str, default: int) -> int:
     """The family's ``reads=full`` minimum span, lowered (never raised) by an ADAPTED bank's
-    ``adapt.min_grid_positions``: a subject whose template gives a render fewer read positions
+    ``adapt.min_grid_positions`` (a bare-list bank: the set's ``report.json`` entry, under
+    ``$WSB_BANK_ROOT`` only): a subject whose template gives a render fewer read positions
     than the 27B's (introspection's neutral grid, ``wsbench.adapt.introspection``). Consulted
     only under a bank override (``$WSB_BANK_FILE_<FAMILY>`` or ``$WSB_BANK_ROOT``, resolved by
     ``registry.bank_path`` with its precedence); the registered banks are never read here."""
@@ -264,7 +265,27 @@ def min_full_positions(family: str, default: int) -> int:
         return default
     adapt = raw.get("adapt") if isinstance(raw, dict) else None
     n = adapt.get("min_grid_positions") if isinstance(adapt, dict) else None
+    if n is None and not os.environ.get(BANK_FILE_ENV_PREFIX + family.upper()):
+        n = _root_min_grid(family)  # a bare-list bank (conjunctive, role_bound) has no header
     return min(default, int(n)) if isinstance(n, int) and n >= 1 else default
+
+
+def _root_min_grid(family: str) -> int | None:
+    """``report.json`` ``families.<family>.min_grid_positions`` of the ``$WSB_BANK_ROOT`` set:
+    where a set records the span of a bank that is a bare list (no ``adapt`` header to hold it)."""
+    from wsbench import registry
+
+    root = registry.bank_root()
+    if root is None:
+        return None
+    try:
+        rep = json.loads((root / "report.json").read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return None
+    fams = rep.get("families") if isinstance(rep, dict) else None
+    entry = fams.get(family) if isinstance(fams, dict) else None
+    n = entry.get("min_grid_positions") if isinstance(entry, dict) else None
+    return n if isinstance(n, int) and not isinstance(n, bool) else None
 
 
 def _spec_of(family: str) -> Any:

@@ -287,6 +287,12 @@ measured on v4's lists: stale until re-measured.
 
 ## Instrument history
 
+- 2026-11-04 (`+xrole-v1`, plan 0066 delta audit M1, rule only): another role's gold of the SAME
+  item (a 3-hop item's other bridge) is never a rival of this role's pick. The judge's
+  `rival_quote` was routinely the item's other bridge, so a readout naming both bridges at equal
+  support ruled each pick `contested` (gold-arm credit 0/6 on registered 3-hop items, 4/8 under
+  Opus on GLM-5.3's refill 3-hop items). Superseded by `+norival-v1` below, which weighs no
+  rival at all.
 - 2026-11-04 (`+bank-v5`): Immanuel Kant, whom kant-hume's prompt describes, is no longer one of
   its bridge-1 options.
 - 2026-11-04 (`+qline-v2`): a quote one word off verifies near-verbatim, and a quote cut mid-name
@@ -295,9 +301,10 @@ measured on v4's lists: stale until re-measured.
   else gives nothing. (`+qline-v1`, an unreleased draft, credited it through any line holding it that named
   the gold and no other option.)
 - 2026-11-04 (`+norival-v1`): the contested rule (`family.contested_verdict`: the rival line and
-  every other option's best line weighed against the gold's digest support) and the option audit
-  are removed, because their support counting failed correct picks; the MC calls keep their key
-  (`MH2_CALL_VERSION`), so cached answers re-score.
+  every other option's best line weighed against the gold's digest support), the option audit
+  and the `xrole-v1` exception are removed, because their support counting failed correct picks:
+  no option, the item's own other bridge included, is weighed as a rival. The MC calls keep their
+  key (`MH2_CALL_VERSION`), so cached answers re-score.
 - 2026-11-01 (`+optrv-v4`, review of PR #208 round 4d): the shared option audit
   (basic_readout_mt README; `OPTION_AUDIT_SYSTEM`, since removed) checks every code option-rival line
   that would tie or beat the gold; a dismissed line is not weighed. No cell moves (all 62,
