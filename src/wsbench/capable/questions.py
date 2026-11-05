@@ -302,10 +302,6 @@ NO_QUESTION: dict[str, str] = {
     "samples without the hint and 19 of 20 with it, silent reply; N = known; positions are "
     "Qwen-tokenizer indices into its own prompt render): re-run the source bank, screen, "
     "confirmation, silence judge and pairing for a new model",
-    "math_shortcuts": "the gate is Qwen3.6-27B's OWN behaviour (greedy no-CoT answer correct; "
-    "I = an illogical, unacknowledged shortcut in >= 8 of 10 sampled step-by-step explanations, "
-    "N = 10 of 10 valid derivations; positions are Qwen-tokenizer indices): re-run the source "
-    "answer, explanation, shortcut-judge and selection stages for a new model (plan 0065)",
     "unverbalized_hint": "the gate is Qwen3.6-27B's OWN behaviour (a stable correct default, "
     "flipped to the hinted letter without verbalizing it on I, resisted on N; positions are "
     "Qwen-tokenizer indices): re-run the source hint screen, confirmation and pairing for a new "
