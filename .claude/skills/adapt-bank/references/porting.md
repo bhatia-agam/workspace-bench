@@ -179,6 +179,23 @@ or keep only `plain` items and report the count.
   its headline is None (out of the macro). Port the twin of every kept scenario (and gate that the
   subject does NOT misbehave on it) to get a headline.
 
+## Refill pools (plan 0066; box-only, sha256-pinned)
+
+The three refill pools are model-independent and are built once on the box by
+`scripts/build_adapt_pools.py <msdm|kcutoff|mh2|all> [--out DIR]` (default
+`$WSB_POOL_DIR` = `/workspace/wsb-runs/pools/`). They are NEVER committed (decision 3). Each
+file's sha256 is pinned in `wsbench.adapt.refill.POOL_SHA256`, and every loader refuses a missing
+file or a mismatch. Sources (read by exact path):
+- `msdm_pool.jsonl` ← gw-evals-feas `outputs/feas/self_answers/{step1,step2,step3/b1,step3/b2}/`
+  `cats.json` + `gate.json` (normalised peer / legacy labels, Opus / Sonnet typical where present);
+- `kcutoff_pool.jsonl` ← gw-evals-feas `outputs/feas/cutoff_confab/scale/b1/gate.json` rows and
+  `scale/b2/{questions.json,gen_in.jsonl}` (joined by key), content-deduped against the bank;
+- `mh2_pool.json` ← gw-mh-v2 `outputs/multihop_v2/` (the 9 candidate / adversary pools
+  `finalize.py` reads), adversary `problem` / `factual_issue` rows dropped.
+
+The vendored CC0 Wikidata tables `data/wd_class_parents.json` / `data/wd_registered_bprime.json`
+(wrong_intermediate's entity check) are built by `scripts/build_wd_tables.py`.
+
 ## OLMo-3-7B-Instruct (scoped 2026-10-17; `allenai/Olmo-3-7B-Instruct` @ 6e5971d9)
 - 32 blocks, untied embeddings (real `lm_head`), Dolma2 tokenizer (100k vocab vs Qwen's 248k).
 - Same ChatML markers (`<|im_start|>` / `<|im_end|>`): user_modeling's `from_last_sentence_start`

@@ -100,6 +100,66 @@
   },
   {
    "src": "buggy",
+   "name": "py-inverted-condition-branch",
+   "kind": "silent",
+   "code": "def shipping_fee(subtotal, is_member):\n    if is_member or subtotal > 50:\n        return 7.99\n    return 0.0\n\nprint(shipping_fee(80.0, False))\nprint(shipping_fee(20.0, True))",
+   "category": "branches swapped",
+   "cause": "the fee logic is inverted: members and large orders are exactly the people being charged 7.99 while small guest orders ship free",
+   "level2_tokens": [
+    "inverted",
+    "swapped",
+    "exactly the people"
+   ],
+   "bug_line": 2,
+   "raises": false,
+   "language": "python",
+   "difficulty": "subtle",
+   "failure_mode": "silent",
+   "comment_line": null,
+   "verified": "exec: exit 0; stdout = '7.99 | 7.99'",
+   "n_lines": 7,
+   "gate_tier": "strict",
+   "consequence_class": "categorical",
+   "depth": "surface",
+   "review_finds": "4/4",
+   "jlens_hint": null,
+   "lang_group": "python",
+   "twin": "py-clean-shipping-branch",
+   "id": "py-inverted-condition-branch",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "py-clean-shipping-branch",
+   "src": "clean",
+   "code": "def shipping_fee(subtotal, is_member):\n    if not is_member and subtotal <= 50:\n        return 7.99\n    return 0.0\n\nprint(shipping_fee(80.0, False))\nprint(shipping_fee(20.0, True))",
+   "language": "python",
+   "lang_group": "python",
+   "verified": "exec: exit 0; stdout = '0.0 | 0.0'",
+   "why_correct": "only small guest orders reach the 7.99 branch, so members and orders over 50 ship free as intended",
+   "looks_like": "branches swapped",
+   "twin": "py-inverted-condition-branch",
+   "added": "2026-10-29 (plan 0030)",
+   "gate": {
+    "capability": "greedy right, 9/10 samples right (Qwen3.6-27B, T=0.7)",
+    "no_invented_bug": "greedy bare-program continuation asserts no bug (Opus 5.5 graded)"
+   },
+   "id": "py-clean-shipping-branch",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "src": "buggy",
    "name": "py-refund-exceeds-price",
    "kind": "silent",
    "code": "def refund(price, uses, per_use_fee):\n    return price + uses * per_use_fee\n\nprint(refund(50.0, 4, 2.5))",
@@ -251,6 +311,371 @@
    "lang_group": "python",
    "twin": "py-inclusive-day-count",
    "id": "py-clean-nights",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "src": "buggy",
+   "name": "rust-move-after-use",
+   "kind": "move",
+   "code": "fn consume(s: String) -> usize {\n    s.len()\n}\n\nfn main() {\n    let name = String::from(\"ada\");\n    let n = consume(name);\n    println!(\"{} {}\", n, name);\n}",
+   "category": "E0382 borrow of moved value",
+   "cause": "name is moved into consume, so the later println borrows a value that no longer belongs to main",
+   "level2_tokens": [
+    "E0382",
+    "moved",
+    "move",
+    "ownership",
+    "borrow"
+   ],
+   "bug_line": 8,
+   "raises": true,
+   "language": "rust",
+   "difficulty": "obvious",
+   "failure_mode": "compile_error",
+   "comment_line": null,
+   "verified": "by inspection: String is not Copy, so passing it by value moves it; rustc rejects the program with E0382 `borrow of moved value: `name``. Never runs.",
+   "idx": 31,
+   "n_lines": 9,
+   "gate_tier": "strict",
+   "lang_group": "nonpython",
+   "twin": "clean-rust-clone-before-move",
+   "id": "rust-move-after-use",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "clean-rust-clone-before-move",
+   "src": "clean",
+   "code": "fn consume(s: String) -> usize {\n    s.len()\n}\n\nfn main() {\n    let name = String::from(\"ada\");\n    let n = consume(name.clone());\n    println!(\"{} {}\", n, name);\n}",
+   "language": "rust",
+   "lang_group": "nonpython",
+   "verified": "exec: exit 0; stdout = '3 ada'",
+   "why_correct": "consume receives a clone, so main still owns name and the println borrows a live value",
+   "looks_like": "E0382 borrow of moved value",
+   "twin": "rust-move-after-use",
+   "added": "2026-10-29 (plan 0030)",
+   "gate": {
+    "capability": "greedy right, 9/10 samples right (Qwen3.6-27B, T=0.7)",
+    "no_invented_bug": "greedy bare-program continuation asserts no bug (Opus 5.5 graded)"
+   },
+   "id": "clean-rust-clone-before-move",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "src": "buggy",
+   "name": "rust-unwrap-parse",
+   "kind": "unwrap",
+   "code": "fn parse_port(s: &str) -> u16 {\n    s.parse::<u16>().unwrap()\n}\n\nfn main() {\n    println!(\"{}\", parse_port(\"8080 \"));\n}",
+   "category": "panic on unwrap of Err",
+   "cause": "str::parse rejects the trailing space, and unwrap turns that ParseIntError into a panic instead of a handled error",
+   "level2_tokens": [
+    "panic",
+    "unwrap",
+    "Err",
+    "ParseIntError",
+    "invalid digit"
+   ],
+   "bug_line": 2,
+   "raises": true,
+   "language": "rust",
+   "difficulty": "subtle",
+   "failure_mode": "runtime_exception",
+   "comment_line": null,
+   "verified": "by inspection: `\"8080 \".parse::<u16>()` is Err(ParseIntError { kind: InvalidDigit }) because parse does not trim; unwrap panics: called `Result::unwrap()` on an `Err`.",
+   "idx": 33,
+   "n_lines": 7,
+   "gate_tier": "strict",
+   "lang_group": "nonpython",
+   "twin": "clean-rust-trim-parse",
+   "id": "rust-unwrap-parse",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "clean-rust-trim-parse",
+   "src": "clean",
+   "code": "fn parse_port(s: &str) -> u16 {\n    s.trim().parse::<u16>().unwrap()\n}\n\nfn main() {\n    println!(\"{}\", parse_port(\"8080 \"));\n}",
+   "language": "rust",
+   "lang_group": "nonpython",
+   "verified": "exec: exit 0; stdout = '8080'",
+   "why_correct": "trim drops the trailing space before parsing, so the parse yields Ok(8080) and unwrap never sees an Err",
+   "looks_like": "panic on unwrap of Err",
+   "twin": "rust-unwrap-parse",
+   "added": "2026-10-29 (plan 0030)",
+   "gate": {
+    "capability": "greedy right, 10/10 samples right (Qwen3.6-27B, T=0.7)",
+    "no_invented_bug": "greedy bare-program continuation asserts no bug (Opus 5.5 graded)"
+   },
+   "id": "clean-rust-trim-parse",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "src": "buggy",
+   "name": "go-range-copy",
+   "kind": "silent",
+   "code": "package main\n\nimport \"fmt\"\n\ntype item struct{ n int }\n\nfunc main() {\n\titems := []item{{1}, {2}}\n\tfor _, it := range items {\n\t\tit.n *= 2\n\t}\n\tfmt.Println(items)\n}",
+   "category": "range yields a copy",
+   "cause": "the range variable is a copy of each struct element, so mutating it leaves the slice untouched",
+   "level2_tokens": [
+    "copy",
+    "range",
+    "value",
+    "pointer",
+    "index"
+   ],
+   "bug_line": 10,
+   "raises": false,
+   "language": "go",
+   "difficulty": "subtle",
+   "failure_mode": "silent",
+   "comment_line": null,
+   "verified": "by inspection: range over a []struct copies each element into `it`; the writes hit the copy, so this prints [{1} {2}]. Fix: items[i].n *= 2. Version-independent (unlike the Go 1.22 loop-variable change).",
+   "idx": 38,
+   "n_lines": 13,
+   "gate_tier": "strict",
+   "lang_group": "nonpython",
+   "twin": "clean-go-range-index",
+   "id": "go-range-copy",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "src": "clean",
+   "name": "clean-go-range-index",
+   "kind": "clean",
+   "code": "package main\n\nimport \"fmt\"\n\ntype item struct{ n int }\n\nfunc main() {\n\titems := []item{{1}, {2}}\n\tfor i := range items {\n\t\titems[i].n *= 2\n\t}\n\tfmt.Println(items)\n}",
+   "category": "none",
+   "cause": "",
+   "level2_tokens": [],
+   "bug_line": null,
+   "raises": false,
+   "language": "go",
+   "difficulty": "obvious",
+   "failure_mode": "correct",
+   "comment_line": null,
+   "verified": "by inspection: `for i := range items` binds only the index; items[i].n *= 2 is an addressable write into the slice element. Prints [{2} {4}]. Version-independent -- the Go 1.22 loop-variable change does not affect indexed writes.",
+   "looks_like": "range loop mutating a copy of the element",
+   "why_correct": "the single-variable range form yields only the index, and the write goes through items[i], so it lands in the slice's backing array rather than in a per-iteration copy",
+   "idx": 22,
+   "n_lines": 13,
+   "lang_group": "nonpython",
+   "twin": "go-range-copy",
+   "id": "clean-go-range-index",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "src": "buggy",
+   "name": "go-slice-append-alias",
+   "kind": "silent",
+   "code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tall := []int{1, 2, 3, 4}\n\thead := all[:2]\n\thead = append(head, 99)\n\tfmt.Println(all)\n}",
+   "category": "slice aliasing on append",
+   "cause": "head keeps all's backing array with spare capacity, so append overwrites all[2] instead of allocating",
+   "level2_tokens": [
+    "alias",
+    "append",
+    "capacity",
+    "backing",
+    "copy"
+   ],
+   "bug_line": 8,
+   "raises": false,
+   "language": "go",
+   "difficulty": "subtle",
+   "failure_mode": "silent",
+   "comment_line": null,
+   "verified": "by inspection: len(head)=2, cap(head)=4, so append writes in place at index 2 and prints [1 2 99 4]. Fix: all[:2:2] to force a copy.",
+   "idx": 39,
+   "n_lines": 10,
+   "gate_tier": "strict",
+   "lang_group": "nonpython",
+   "twin": "clean-go-slice-full-cap",
+   "id": "go-slice-append-alias",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "clean-go-slice-full-cap",
+   "src": "clean",
+   "code": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tall := []int{1, 2, 3, 4}\n\thead := append([]int{}, all[:2]...)\n\thead = append(head, 99)\n\tfmt.Println(all)\n}\n",
+   "language": "go",
+   "lang_group": "nonpython",
+   "verified": "exec: exit 0; stdout = '[1 2 3 4]'",
+   "why_correct": "the full slice expression caps head at length 2, so append must allocate a new array and all keeps [1 2 3 4]",
+   "looks_like": "slice aliasing on append",
+   "twin": "go-slice-append-alias",
+   "added": "2026-10-29 (plan 0030)",
+   "rewrite": "2026-10-29: rewritten once after failing the capability gate (plan 0030 §1)",
+   "gate": {
+    "capability": "greedy right, 10/10 samples right (Qwen3.6-27B, T=0.7)",
+    "no_invented_bug": "greedy bare-program continuation asserts no bug (Opus 5.5 graded)"
+   },
+   "id": "clean-go-slice-full-cap",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "src": "buggy",
+   "name": "c-off-by-one",
+   "kind": "index",
+   "code": "#include <stdio.h>\n\nint total(const int *a, int n) {\n    int s = 0;\n    for (int i = 0; i <= n; i++)\n        s += a[i];\n    return s;\n}\n\nint main(void) {\n    int a[3] = {1, 2, 3};\n    printf(\"%d\\n\", total(a, 3));\n}",
+   "category": "off-by-one / out-of-bounds read",
+   "cause": "the loop condition i <= n reads a[n], one element past the end of the array",
+   "level2_tokens": [
+    "off-by-one",
+    "bounds",
+    "i <= n",
+    "overrun"
+   ],
+   "bug_line": 5,
+   "raises": false,
+   "language": "c",
+   "difficulty": "obvious",
+   "failure_mode": "undefined_behavior",
+   "comment_line": null,
+   "verified": "gcc 9.4 -O0 x86-64: compiles, exit 0, stdout = '-2056935930' -- UB, so the printed value is whatever stack bytes follow a[]; the bug is the read past the end, not the particular number. Nothing crashed and gcc -O0 gave no warning.",
+   "idx": 42,
+   "n_lines": 13,
+   "gate_tier": "strict",
+   "lang_group": "nonpython",
+   "twin": "clean-c-loop-bound-correct",
+   "id": "c-off-by-one",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "src": "clean",
+   "name": "clean-c-loop-bound-correct",
+   "kind": "clean",
+   "code": "#include <stdio.h>\n\nint total(const int *a, int n) {\n    int s = 0;\n    for (int i = 0; i < n; i++)\n        s += a[i];\n    return s;\n}\n\nint main(void) {\n    int a[3] = {1, 2, 3};\n    printf(\"%d %d\\n\", total(a, 3), total(a, 0));\n}",
+   "category": "none",
+   "cause": "",
+   "level2_tokens": [],
+   "bug_line": null,
+   "raises": false,
+   "language": "c",
+   "difficulty": "obvious",
+   "failure_mode": "correct",
+   "comment_line": null,
+   "verified": "gcc 9.4 -O0 -Wall -Wextra x86-64: compiles with NO warnings, exit 0, stdout = '6 0\\n'",
+   "looks_like": "off-by-one array overrun",
+   "why_correct": "the condition is i < n, so the last read is a[n-1] and nothing past the end is touched; n == 0 simply runs the body zero times and returns the identity 0",
+   "idx": 13,
+   "n_lines": 13,
+   "lang_group": "nonpython",
+   "twin": "c-off-by-one",
+   "id": "clean-c-loop-bound-correct",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 0.8,
+     "pass": true
+    }
+   }
+  },
+  {
+   "src": "buggy",
+   "name": "c-int-div-float",
+   "kind": "silent",
+   "code": "#include <stdio.h>\n\nfloat average(int total, int count) {\n    return total / count;\n}\n\nint main(void) {\n    printf(\"%.2f\\n\", average(7, 2));\n    return 0;\n}",
+   "category": "integer division",
+   "cause": "both operands are int, so the division truncates before the result is widened to float",
+   "level2_tokens": [
+    "integer division",
+    "truncate",
+    "cast",
+    "float"
+   ],
+   "bug_line": 4,
+   "raises": false,
+   "language": "c",
+   "difficulty": "obvious",
+   "failure_mode": "silent",
+   "comment_line": null,
+   "verified": "gcc 9.4 -O0 x86-64: compiles, exit 0, stdout = '3.00'",
+   "idx": 45,
+   "n_lines": 10,
+   "gate_tier": "strict",
+   "lang_group": "nonpython",
+   "twin": "clean-c-float-div",
+   "id": "c-int-div-float",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "clean-c-float-div",
+   "src": "clean",
+   "code": "#include <stdio.h>\n\nfloat average(int total, int count) {\n    return (float)total / count;\n}\n\nint main(void) {\n    printf(\"%.2f\\n\", average(7, 2));\n    return 0;\n}",
+   "language": "c",
+   "lang_group": "nonpython",
+   "verified": "exec: exit 0; stdout = '3.50'",
+   "why_correct": "casting total to float makes the division floating-point, so 7 / 2 is 3.5 rather than the truncated 3",
+   "looks_like": "integer division",
+   "twin": "c-int-div-float",
+   "added": "2026-10-29 (plan 0030)",
+   "gate": {
+    "capability": "greedy right, 10/10 samples right (Qwen3.6-27B, T=0.7)",
+    "no_invented_bug": "greedy bare-program continuation asserts no bug (Opus 5.5 graded)"
+   },
+   "id": "clean-c-float-div",
    "adapt": {
     "origin": "original",
     "gate": {
@@ -516,6 +941,802 @@
    "id": "clean-rust-copy-then-mutate",
    "adapt": {
     "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "src": "buggy",
+   "name": "buggy-au-t1-w101c0-py-sale-price-added-discount",
+   "id": "buggy-au-t1-w101c0-py-sale-price-added-discount",
+   "code": "def sale_price(price, percent_off):\n    discount = price * percent_off / 100\n    return price + discount\n\nprint(sale_price(80, 25))",
+   "verified": "exec: exit 0; stdout = '100.0'",
+   "cause": "the discount is added to the price instead of subtracted, so the sale price prints 100.0 instead of 60.0",
+   "category": "wrong operator",
+   "bug_line": 3,
+   "level2_tokens": [
+    "added",
+    "sign"
+   ],
+   "consequence_class": "value",
+   "raises": false,
+   "n_lines": 5,
+   "language": "python",
+   "lang_group": "python",
+   "twin": "buggy-au-clean-t1-w101c0-py-sale-price-added-discount",
+   "source": "authored (claude-opus-5-5) for muse-spark-open: About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 101,
+    "gate": {
+     "rate": 0.8888888888888888,
+     "pass": true
+    }
+   }
+  },
+  {
+   "src": "clean",
+   "name": "buggy-au-clean-t1-w101c0-py-sale-price-added-discount",
+   "id": "buggy-au-clean-t1-w101c0-py-sale-price-added-discount",
+   "code": "def sale_price(price, percent_off):\n    discount = price * percent_off / 100\n    return price - discount\n\nprint(sale_price(80, 25))",
+   "verified": "exec: exit 0; stdout = '60.0'",
+   "why_correct": "25% of 80 is 20, and subtracting it gives 60.0",
+   "looks_like": "percentage computed as a fraction twice",
+   "language": "python",
+   "lang_group": "python",
+   "twin": "buggy-au-t1-w101c0-py-sale-price-added-discount",
+   "source": "authored (claude-opus-5-5) for muse-spark-open: About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 101,
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "src": "buggy",
+   "name": "buggy-au-t1-w101c0-py-count-even-parity",
+   "id": "buggy-au-t1-w101c0-py-count-even-parity",
+   "code": "def count_even(nums):\n    count = 0\n    for n in nums:\n        if n % 2 == 1:\n            count += 1\n    return count\n\nprint(count_even([2, 3, 4, 6, 7]))",
+   "verified": "exec: exit 0; stdout = '2'",
+   "cause": "n % 2 == 1 selects odd numbers, so the function counts 3 and 7 and prints 2 instead of the 3 even numbers",
+   "category": "wrong parity test",
+   "bug_line": 4,
+   "level2_tokens": [
+    "odd",
+    "parity"
+   ],
+   "consequence_class": "value",
+   "raises": false,
+   "n_lines": 8,
+   "language": "python",
+   "lang_group": "python",
+   "twin": "buggy-au-clean-t1-w101c0-py-count-even-parity",
+   "source": "authored (claude-opus-5-5) for muse-spark-open: About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 101,
+    "gate": {
+     "rate": 0.9,
+     "pass": true
+    }
+   }
+  },
+  {
+   "src": "clean",
+   "name": "buggy-au-clean-t1-w101c0-py-count-even-parity",
+   "id": "buggy-au-clean-t1-w101c0-py-count-even-parity",
+   "code": "def count_even(nums):\n    count = 0\n    for n in nums:\n        if n % 2 == 0:\n            count += 1\n    return count\n\nprint(count_even([2, 3, 4, 6, 7]))",
+   "verified": "exec: exit 0; stdout = '3'",
+   "why_correct": "n % 2 == 0 is true for exactly 2, 4 and 6, so it prints 3",
+   "looks_like": "modulo misbehaving on negative numbers",
+   "language": "python",
+   "lang_group": "python",
+   "twin": "buggy-au-t1-w101c0-py-count-even-parity",
+   "source": "authored (claude-opus-5-5) for muse-spark-open: About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 101,
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "src": "buggy",
+   "name": "buggy-au-t1-w101c0-py-product-starts-at-zero",
+   "id": "buggy-au-t1-w101c0-py-product-starts-at-zero",
+   "code": "def product(nums):\n    result = 0\n    for n in nums:\n        result *= n\n    return result\n\nprint(product([2, 3, 4]))",
+   "verified": "exec: exit 0; stdout = '0'",
+   "cause": "the running product starts at 0, and multiplying 0 by anything stays 0, so it prints 0 instead of 24",
+   "category": "wrong initial value for an accumulator",
+   "bug_line": 2,
+   "level2_tokens": [
+    "identity",
+    "zero"
+   ],
+   "consequence_class": "value",
+   "raises": false,
+   "n_lines": 7,
+   "language": "python",
+   "lang_group": "python",
+   "twin": "buggy-au-clean-t1-w101c0-py-product-starts-at-zero",
+   "source": "authored (claude-opus-5-5) for muse-spark-open: About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 101,
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "src": "clean",
+   "name": "buggy-au-clean-t1-w101c0-py-product-starts-at-zero",
+   "id": "buggy-au-clean-t1-w101c0-py-product-starts-at-zero",
+   "code": "def product(nums):\n    result = 1\n    for n in nums:\n        result *= n\n    return result\n\nprint(product([2, 3, 4]))",
+   "verified": "exec: exit 0; stdout = '24'",
+   "why_correct": "1 is the multiplicative identity, so 1*2*3*4 prints 24",
+   "looks_like": "the empty list returning 1 instead of 0",
+   "language": "python",
+   "lang_group": "python",
+   "twin": "buggy-au-t1-w101c0-py-product-starts-at-zero",
+   "source": "authored (claude-opus-5-5) for muse-spark-open: About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 101,
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "src": "buggy",
+   "name": "buggy-au-t1-w101c0-py-minutes-split-no-remainder",
+   "id": "buggy-au-t1-w101c0-py-minutes-split-no-remainder",
+   "code": "def hours_and_minutes(total_minutes):\n    hours = total_minutes // 60\n    minutes = total_minutes // 60\n    return f\"{hours}h {minutes}m\"\n\nprint(hours_and_minutes(135))",
+   "verified": "exec: exit 0; stdout = '2h 2m'",
+   "cause": "minutes uses // instead of %, so it repeats the hour count and 135 prints '2h 2m' instead of '2h 15m'",
+   "category": "wrong operator",
+   "bug_line": 3,
+   "level2_tokens": [
+    "modulo",
+    "remainder"
+   ],
+   "consequence_class": "value",
+   "raises": false,
+   "n_lines": 6,
+   "language": "python",
+   "lang_group": "python",
+   "twin": "buggy-au-clean-t1-w101c0-py-minutes-split-no-remainder",
+   "source": "authored (claude-opus-5-5) for muse-spark-open: About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 101,
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "src": "clean",
+   "name": "buggy-au-clean-t1-w101c0-py-minutes-split-no-remainder",
+   "id": "buggy-au-clean-t1-w101c0-py-minutes-split-no-remainder",
+   "code": "def hours_and_minutes(total_minutes):\n    hours = total_minutes // 60\n    minutes = total_minutes % 60\n    return f\"{hours}h {minutes}m\"\n\nprint(hours_and_minutes(135))",
+   "verified": "exec: exit 0; stdout = '2h 15m'",
+   "why_correct": "// 60 gives whole hours and % 60 the leftover minutes, so it prints 2h 15m",
+   "looks_like": "integer division losing minutes",
+   "language": "python",
+   "lang_group": "python",
+   "twin": "buggy-au-t1-w101c0-py-minutes-split-no-remainder",
+   "source": "authored (claude-opus-5-5) for muse-spark-open: About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 101,
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "src": "buggy",
+   "name": "buggy-au-t1-w101c0-py-change-due-swapped",
+   "id": "buggy-au-t1-w101c0-py-change-due-swapped",
+   "code": "def change_due(paid, cost):\n    return cost - paid\n\nprint(change_due(20, 13.5))",
+   "verified": "exec: exit 0; stdout = '-6.5'",
+   "cause": "the operands are reversed, so a customer paying 20 for a 13.50 item is told the change is -6.5 instead of 6.5",
+   "category": "swapped operands",
+   "bug_line": 2,
+   "level2_tokens": [
+    "swapped",
+    "operands"
+   ],
+   "consequence_class": "value",
+   "raises": false,
+   "n_lines": 4,
+   "language": "python",
+   "lang_group": "python",
+   "twin": "buggy-au-clean-t1-w101c0-py-change-due-swapped",
+   "source": "authored (claude-opus-5-5) for muse-spark-open: About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 101,
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "src": "clean",
+   "name": "buggy-au-clean-t1-w101c0-py-change-due-swapped",
+   "id": "buggy-au-clean-t1-w101c0-py-change-due-swapped",
+   "code": "def change_due(paid, cost):\n    return paid - cost\n\nprint(change_due(20, 13.5))",
+   "verified": "exec: exit 0; stdout = '6.5'",
+   "why_correct": "change is the amount paid minus the cost, so it prints 6.5",
+   "looks_like": "float rounding on currency",
+   "language": "python",
+   "lang_group": "python",
+   "twin": "buggy-au-t1-w101c0-py-change-due-swapped",
+   "source": "authored (claude-opus-5-5) for muse-spark-open: About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 101,
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "src": "buggy",
+   "name": "buggy-au-t1-w102c0-py-tip-wrong-scale",
+   "id": "buggy-au-t1-w102c0-py-tip-wrong-scale",
+   "code": "def tip(bill, pct):\n    return bill * pct / 10\n\nprint(tip(40, 15))",
+   "verified": "exec: exit 0; stdout = '60.0'",
+   "cause": "the percentage is divided by 10 instead of 100, so a 15% tip on 40 prints 60.0 instead of 6.0",
+   "category": "wrong constant",
+   "bug_line": 2,
+   "level2_tokens": [
+    "ten",
+    "hundred"
+   ],
+   "consequence_class": "value",
+   "raises": false,
+   "n_lines": 4,
+   "language": "python",
+   "lang_group": "python",
+   "twin": "buggy-au-clean-t1-w102c0-py-tip-wrong-scale",
+   "source": "authored (claude-opus-5-5) for muse-spark-open: About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 102,
+    "steer": "- Last wave: 25/60 passed.\n- Rejected by lint before gating: 1x leak: bug words ['score'] in the code. Avoid these.\n- Failed (gold -> what the model wrote): None -> model said '22' (10/10); None -> model said '4' (10/10); None -> model said '8' (9/10); None -> model said '-32.0' (0/10); None -> model said '32.0' (10/10); None -> model said \"NameError: name 'w' is not defined\" (0/10); None -> model said 'False' (6/10); None -> model said 'True' (10/10); None -> model said 'The program outputs 2' (9/10); None -> model said 'The program outputs 30.' (10/10); None -> model said '37' (10/10); None -> model said '120' (3/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): None; None; None; None; None; None; None; None; None; None; None; None",
+    "gate": {
+     "rate": 0.9,
+     "pass": true
+    }
+   }
+  },
+  {
+   "src": "clean",
+   "name": "buggy-au-clean-t1-w102c0-py-tip-wrong-scale",
+   "id": "buggy-au-clean-t1-w102c0-py-tip-wrong-scale",
+   "code": "def vat(net, rate):\n    return net * rate / 100\n\nprint(vat(50, 20))",
+   "verified": "exec: exit 0; stdout = '10.0'",
+   "why_correct": "dividing by 100 turns the percent into a fraction, so 20% of 50 is 10.0",
+   "looks_like": "the scale constant might look wrong",
+   "language": "python",
+   "lang_group": "python",
+   "twin": "buggy-au-t1-w102c0-py-tip-wrong-scale",
+   "source": "authored (claude-opus-5-5) for muse-spark-open: About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 102,
+    "steer": "- Last wave: 25/60 passed.\n- Rejected by lint before gating: 1x leak: bug words ['score'] in the code. Avoid these.\n- Failed (gold -> what the model wrote): None -> model said '22' (10/10); None -> model said '4' (10/10); None -> model said '8' (9/10); None -> model said '-32.0' (0/10); None -> model said '32.0' (10/10); None -> model said \"NameError: name 'w' is not defined\" (0/10); None -> model said 'False' (6/10); None -> model said 'True' (10/10); None -> model said 'The program outputs 2' (9/10); None -> model said 'The program outputs 30.' (10/10); None -> model said '37' (10/10); None -> model said '120' (3/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): None; None; None; None; None; None; None; None; None; None; None; None",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "src": "buggy",
+   "name": "buggy-au-t1-w102c0-py-unit-price-swapped",
+   "id": "buggy-au-t1-w102c0-py-unit-price-swapped",
+   "code": "def unit_price(cost, count):\n    return round(count / cost, 2)\n\nprint(unit_price(12, 4))",
+   "verified": "exec: exit 0; stdout = '0.33'",
+   "cause": "the division is upside down, so 4 items costing 12 print 0.33 instead of 3.0 each",
+   "category": "swapped operands",
+   "bug_line": 2,
+   "level2_tokens": [
+    "swapped",
+    "inverted"
+   ],
+   "consequence_class": "value",
+   "raises": false,
+   "n_lines": 4,
+   "language": "python",
+   "lang_group": "python",
+   "twin": "buggy-au-clean-t1-w102c0-py-unit-price-swapped",
+   "source": "authored (claude-opus-5-5) for muse-spark-open: About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 102,
+    "steer": "- Last wave: 25/60 passed.\n- Rejected by lint before gating: 1x leak: bug words ['score'] in the code. Avoid these.\n- Failed (gold -> what the model wrote): None -> model said '22' (10/10); None -> model said '4' (10/10); None -> model said '8' (9/10); None -> model said '-32.0' (0/10); None -> model said '32.0' (10/10); None -> model said \"NameError: name 'w' is not defined\" (0/10); None -> model said 'False' (6/10); None -> model said 'True' (10/10); None -> model said 'The program outputs 2' (9/10); None -> model said 'The program outputs 30.' (10/10); None -> model said '37' (10/10); None -> model said '120' (3/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): None; None; None; None; None; None; None; None; None; None; None; None",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "src": "clean",
+   "name": "buggy-au-clean-t1-w102c0-py-unit-price-swapped",
+   "id": "buggy-au-clean-t1-w102c0-py-unit-price-swapped",
+   "code": "def per_person(bill, diners):\n    return round(bill / diners, 2)\n\nprint(per_person(90, 4))",
+   "verified": "exec: exit 0; stdout = '22.5'",
+   "why_correct": "the bill is divided by the number of diners, giving 22.5",
+   "looks_like": "the operand order might look reversed",
+   "language": "python",
+   "lang_group": "python",
+   "twin": "buggy-au-t1-w102c0-py-unit-price-swapped",
+   "source": "authored (claude-opus-5-5) for muse-spark-open: About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 102,
+    "steer": "- Last wave: 25/60 passed.\n- Rejected by lint before gating: 1x leak: bug words ['score'] in the code. Avoid these.\n- Failed (gold -> what the model wrote): None -> model said '22' (10/10); None -> model said '4' (10/10); None -> model said '8' (9/10); None -> model said '-32.0' (0/10); None -> model said '32.0' (10/10); None -> model said \"NameError: name 'w' is not defined\" (0/10); None -> model said 'False' (6/10); None -> model said 'True' (10/10); None -> model said 'The program outputs 2' (9/10); None -> model said 'The program outputs 30.' (10/10); None -> model said '37' (10/10); None -> model said '120' (3/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): None; None; None; None; None; None; None; None; None; None; None; None",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "src": "buggy",
+   "name": "buggy-au-t1-w102c1-py-fare-minus-kids",
+   "id": "buggy-au-t1-w102c1-py-fare-minus-kids",
+   "code": "def fare(adults, kids):\n    adult_cost = adults * 12\n    kid_cost = kids * 6\n    return adult_cost - kid_cost\n\nprint(fare(2, 3))",
+   "verified": "exec: exit 0; stdout = '6'",
+   "cause": "the kids' cost is subtracted from the adults' cost instead of added, so 2 adults and 3 kids print 6 instead of 42",
+   "category": "wrong operator",
+   "bug_line": 4,
+   "level2_tokens": [
+    "subtracted",
+    "minus"
+   ],
+   "consequence_class": "value",
+   "raises": false,
+   "n_lines": 6,
+   "language": "python",
+   "lang_group": "python",
+   "twin": "buggy-au-clean-t1-w102c1-py-fare-minus-kids",
+   "source": "authored (claude-opus-5-5) for muse-spark-open: About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 102,
+    "steer": "- Last wave: 25/60 passed.\n- Rejected by lint before gating: 1x leak: bug words ['score'] in the code. Avoid these.\n- Failed (gold -> what the model wrote): None -> model said '22' (10/10); None -> model said '4' (10/10); None -> model said '8' (9/10); None -> model said '-32.0' (0/10); None -> model said '32.0' (10/10); None -> model said \"NameError: name 'w' is not defined\" (0/10); None -> model said 'False' (6/10); None -> model said 'True' (10/10); None -> model said 'The program outputs 2' (9/10); None -> model said 'The program outputs 30.' (10/10); None -> model said '37' (10/10); None -> model said '120' (3/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): None; None; None; None; None; None; None; None; None; None; None; None",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "src": "clean",
+   "name": "buggy-au-clean-t1-w102c1-py-fare-minus-kids",
+   "id": "buggy-au-clean-t1-w102c1-py-fare-minus-kids",
+   "code": "def stamps(letters, cards):\n    letter_cost = letters * 3\n    card_cost = cards * 2\n    return letter_cost + card_cost\n\nprint(stamps(4, 5))",
+   "verified": "exec: exit 0; stdout = '22'",
+   "why_correct": "both partial costs are added, so 4 letters and 5 cards correctly print 12 + 10 = 22",
+   "looks_like": "a wrong operator in a two-part cost sum",
+   "language": "python",
+   "lang_group": "python",
+   "twin": "buggy-au-t1-w102c1-py-fare-minus-kids",
+   "source": "authored (claude-opus-5-5) for muse-spark-open: About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 102,
+    "steer": "- Last wave: 25/60 passed.\n- Rejected by lint before gating: 1x leak: bug words ['score'] in the code. Avoid these.\n- Failed (gold -> what the model wrote): None -> model said '22' (10/10); None -> model said '4' (10/10); None -> model said '8' (9/10); None -> model said '-32.0' (0/10); None -> model said '32.0' (10/10); None -> model said \"NameError: name 'w' is not defined\" (0/10); None -> model said 'False' (6/10); None -> model said 'True' (10/10); None -> model said 'The program outputs 2' (9/10); None -> model said 'The program outputs 30.' (10/10); None -> model said '37' (10/10); None -> model said '120' (3/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): None; None; None; None; None; None; None; None; None; None; None; None",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "src": "buggy",
+   "name": "buggy-au-t1-w102c1-py-candy-leftover-floor",
+   "id": "buggy-au-t1-w102c1-py-candy-leftover-floor",
+   "code": "def leftover(candies, kids):\n    return candies // kids\n\nprint(leftover(17, 5))",
+   "verified": "exec: exit 0; stdout = '3'",
+   "cause": "// gives how many candies each kid gets rather than what is left over, so it prints 3 instead of 2",
+   "category": "floor division instead of modulo",
+   "bug_line": 2,
+   "level2_tokens": [
+    "quotient",
+    "remainder"
+   ],
+   "consequence_class": "value",
+   "raises": false,
+   "n_lines": 4,
+   "language": "python",
+   "lang_group": "python",
+   "twin": "buggy-au-clean-t1-w102c1-py-candy-leftover-floor",
+   "source": "authored (claude-opus-5-5) for muse-spark-open: About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 102,
+    "steer": "- Last wave: 25/60 passed.\n- Rejected by lint before gating: 1x leak: bug words ['score'] in the code. Avoid these.\n- Failed (gold -> what the model wrote): None -> model said '22' (10/10); None -> model said '4' (10/10); None -> model said '8' (9/10); None -> model said '-32.0' (0/10); None -> model said '32.0' (10/10); None -> model said \"NameError: name 'w' is not defined\" (0/10); None -> model said 'False' (6/10); None -> model said 'True' (10/10); None -> model said 'The program outputs 2' (9/10); None -> model said 'The program outputs 30.' (10/10); None -> model said '37' (10/10); None -> model said '120' (3/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): None; None; None; None; None; None; None; None; None; None; None; None",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "src": "clean",
+   "name": "buggy-au-clean-t1-w102c1-py-candy-leftover-floor",
+   "id": "buggy-au-clean-t1-w102c1-py-candy-leftover-floor",
+   "code": "def spare(eggs, box):\n    return eggs % box\n\nprint(spare(14, 6))",
+   "verified": "exec: exit 0; stdout = '2'",
+   "why_correct": "% gives what remains after filling whole boxes, so 14 eggs in boxes of 6 leave 2",
+   "looks_like": "using % where // was meant",
+   "language": "python",
+   "lang_group": "python",
+   "twin": "buggy-au-t1-w102c1-py-candy-leftover-floor",
+   "source": "authored (claude-opus-5-5) for muse-spark-open: About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 102,
+    "steer": "- Last wave: 25/60 passed.\n- Rejected by lint before gating: 1x leak: bug words ['score'] in the code. Avoid these.\n- Failed (gold -> what the model wrote): None -> model said '22' (10/10); None -> model said '4' (10/10); None -> model said '8' (9/10); None -> model said '-32.0' (0/10); None -> model said '32.0' (10/10); None -> model said \"NameError: name 'w' is not defined\" (0/10); None -> model said 'False' (6/10); None -> model said 'True' (10/10); None -> model said 'The program outputs 2' (9/10); None -> model said 'The program outputs 30.' (10/10); None -> model said '37' (10/10); None -> model said '120' (3/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): None; None; None; None; None; None; None; None; None; None; None; None",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "src": "buggy",
+   "name": "buggy-au-t1-w103c0-py-tax-only-no-base",
+   "id": "buggy-au-t1-w103c0-py-tax-only-no-base",
+   "code": "def with_tax(price, rate):\n    total = price * rate\n    return round(total, 2)\n\nprint(with_tax(200, 0.1))",
+   "verified": "exec: exit 0; stdout = '20.0'",
+   "cause": "price * rate is only the tax, not price plus tax, so it prints 20.0 instead of 220.0",
+   "category": "missing base amount",
+   "bug_line": 2,
+   "level2_tokens": [
+    "only tax",
+    "missing price"
+   ],
+   "consequence_class": "value",
+   "raises": false,
+   "n_lines": 5,
+   "language": "python",
+   "lang_group": "python",
+   "twin": "buggy-au-clean-t1-w103c0-py-tax-only-no-base",
+   "source": "authored (claude-opus-5-5) for muse-spark-open: About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 103,
+    "steer": "- Last wave: 26/60 passed.\n- Rejected by lint before gating: 4x twin: the buggy and clean programs have the same outcome (exec; 1x literal: the output 'cold warm' is a copy of the program's literals. Avoid these.\n- Failed (gold -> what the model wrote): None -> model said '17' (3/10); None -> model said '21' (10/10); None -> model said 'The program outputs 1.' (0/10); None -> model said '9.0' (10/10); None -> model said 'It prints 150' (10/10); None -> model said '5.0' (10/10); None -> model said 'The program outputs `Mon`.' (3/10); None -> model said 'B' (0/10); None -> model said 'stop' (10/10); None -> model said 'False False' (10/10); None -> model said '0.33' (10/10); None -> model said '900.0' (10/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): None; None; None; None; None; None; None; None; None; None; None; None",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "src": "clean",
+   "name": "buggy-au-clean-t1-w103c0-py-tax-only-no-base",
+   "id": "buggy-au-clean-t1-w103c0-py-tax-only-no-base",
+   "code": "def gross_price(net, pct):\n    total = net * (1 + pct)\n    return round(total, 2)\n\nprint(gross_price(200, 0.1))",
+   "verified": "exec: exit 0; stdout = '220.0'",
+   "why_correct": "multiplying by 1 + pct keeps the original price and adds the tax, giving 220.0",
+   "looks_like": "tax applied twice",
+   "language": "python",
+   "lang_group": "python",
+   "twin": "buggy-au-t1-w103c0-py-tax-only-no-base",
+   "source": "authored (claude-opus-5-5) for muse-spark-open: About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 103,
+    "steer": "- Last wave: 26/60 passed.\n- Rejected by lint before gating: 4x twin: the buggy and clean programs have the same outcome (exec; 1x literal: the output 'cold warm' is a copy of the program's literals. Avoid these.\n- Failed (gold -> what the model wrote): None -> model said '17' (3/10); None -> model said '21' (10/10); None -> model said 'The program outputs 1.' (0/10); None -> model said '9.0' (10/10); None -> model said 'It prints 150' (10/10); None -> model said '5.0' (10/10); None -> model said 'The program outputs `Mon`.' (3/10); None -> model said 'B' (0/10); None -> model said 'stop' (10/10); None -> model said 'False False' (10/10); None -> model said '0.33' (10/10); None -> model said '900.0' (10/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): None; None; None; None; None; None; None; None; None; None; None; None",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "src": "buggy",
+   "name": "buggy-au-t1-w103c0-py-safe-foods-counts-allergens",
+   "id": "buggy-au-t1-w103c0-py-safe-foods-counts-allergens",
+   "code": "def safe_count(foods, allergens):\n    count = 0\n    for f in foods:\n        if f in allergens:\n            count += 1\n    return count\n\nprint(safe_count([\"rice\", \"nuts\", \"bread\", \"egg\"], [\"nuts\", \"milk\"]))",
+   "verified": "exec: exit 0; stdout = '1'",
+   "cause": "the test counts foods that are allergens rather than ones that are not, so it prints 1 instead of 3",
+   "category": "inverted membership test",
+   "bug_line": 4,
+   "level2_tokens": [
+    "inverted",
+    "membership"
+   ],
+   "consequence_class": "value",
+   "raises": false,
+   "n_lines": 8,
+   "language": "python",
+   "lang_group": "python",
+   "twin": "buggy-au-clean-t1-w103c0-py-safe-foods-counts-allergens",
+   "source": "authored (claude-opus-5-5) for muse-spark-open: About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 103,
+    "steer": "- Last wave: 26/60 passed.\n- Rejected by lint before gating: 4x twin: the buggy and clean programs have the same outcome (exec; 1x literal: the output 'cold warm' is a copy of the program's literals. Avoid these.\n- Failed (gold -> what the model wrote): None -> model said '17' (3/10); None -> model said '21' (10/10); None -> model said 'The program outputs 1.' (0/10); None -> model said '9.0' (10/10); None -> model said 'It prints 150' (10/10); None -> model said '5.0' (10/10); None -> model said 'The program outputs `Mon`.' (3/10); None -> model said 'B' (0/10); None -> model said 'stop' (10/10); None -> model said 'False False' (10/10); None -> model said '0.33' (10/10); None -> model said '900.0' (10/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): None; None; None; None; None; None; None; None; None; None; None; None",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "src": "clean",
+   "name": "buggy-au-clean-t1-w103c0-py-safe-foods-counts-allergens",
+   "id": "buggy-au-clean-t1-w103c0-py-safe-foods-counts-allergens",
+   "code": "def ok_foods(menu, avoid):\n    count = 0\n    for m in menu:\n        if m not in avoid:\n            count += 1\n    return count\n\nprint(ok_foods([\"rice\", \"nuts\", \"bread\", \"egg\"], [\"nuts\", \"milk\"]))",
+   "verified": "exec: exit 0; stdout = '3'",
+   "why_correct": "only foods absent from the avoid list are counted, rice, bread and egg, giving 3",
+   "looks_like": "milk in the avoid list is never on the menu",
+   "language": "python",
+   "lang_group": "python",
+   "twin": "buggy-au-t1-w103c0-py-safe-foods-counts-allergens",
+   "source": "authored (claude-opus-5-5) for muse-spark-open: About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 103,
+    "steer": "- Last wave: 26/60 passed.\n- Rejected by lint before gating: 4x twin: the buggy and clean programs have the same outcome (exec; 1x literal: the output 'cold warm' is a copy of the program's literals. Avoid these.\n- Failed (gold -> what the model wrote): None -> model said '17' (3/10); None -> model said '21' (10/10); None -> model said 'The program outputs 1.' (0/10); None -> model said '9.0' (10/10); None -> model said 'It prints 150' (10/10); None -> model said '5.0' (10/10); None -> model said 'The program outputs `Mon`.' (3/10); None -> model said 'B' (0/10); None -> model said 'stop' (10/10); None -> model said 'False False' (10/10); None -> model said '0.33' (10/10); None -> model said '900.0' (10/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): None; None; None; None; None; None; None; None; None; None; None; None",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "src": "buggy",
+   "name": "buggy-au-t1-w103c0-py-in-stock-equals-zero",
+   "id": "buggy-au-t1-w103c0-py-in-stock-equals-zero",
+   "code": "def has_stock(counts, item):\n    return counts.get(item, 0) == 0\n\nprint(has_stock({\"pen\": 4, \"ink\": 0}, \"pen\"), has_stock({\"pen\": 4, \"ink\": 0}, \"ink\"))",
+   "verified": "exec: exit 0; stdout = 'False True'",
+   "cause": "== 0 is true exactly when the item is sold out, so pen with 4 prints False and ink with 0 prints True",
+   "category": "inverted condition",
+   "bug_line": 2,
+   "level2_tokens": [
+    "inverted",
+    "equality"
+   ],
+   "consequence_class": "categorical",
+   "raises": false,
+   "n_lines": 4,
+   "language": "python",
+   "lang_group": "python",
+   "twin": "buggy-au-clean-t1-w103c0-py-in-stock-equals-zero",
+   "source": "authored (claude-opus-5-5) for muse-spark-open: About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 103,
+    "steer": "- Last wave: 26/60 passed.\n- Rejected by lint before gating: 4x twin: the buggy and clean programs have the same outcome (exec; 1x literal: the output 'cold warm' is a copy of the program's literals. Avoid these.\n- Failed (gold -> what the model wrote): None -> model said '17' (3/10); None -> model said '21' (10/10); None -> model said 'The program outputs 1.' (0/10); None -> model said '9.0' (10/10); None -> model said 'It prints 150' (10/10); None -> model said '5.0' (10/10); None -> model said 'The program outputs `Mon`.' (3/10); None -> model said 'B' (0/10); None -> model said 'stop' (10/10); None -> model said 'False False' (10/10); None -> model said '0.33' (10/10); None -> model said '900.0' (10/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): None; None; None; None; None; None; None; None; None; None; None; None",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "src": "clean",
+   "name": "buggy-au-clean-t1-w103c0-py-in-stock-equals-zero",
+   "id": "buggy-au-clean-t1-w103c0-py-in-stock-equals-zero",
+   "code": "def available(stock, name):\n    return stock.get(name, 0) > 0\n\nprint(available({\"pen\": 4, \"ink\": 0}, \"pen\"), available({\"pen\": 4, \"ink\": 0}, \"ink\"))",
+   "verified": "exec: exit 0; stdout = 'True False'",
+   "why_correct": "an item is available when at least one unit remains, so pen gives True and ink gives False",
+   "looks_like": "get with default 0 hides a missing key",
+   "language": "python",
+   "lang_group": "python",
+   "twin": "buggy-au-t1-w103c0-py-in-stock-equals-zero",
+   "source": "authored (claude-opus-5-5) for muse-spark-open: About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 103,
+    "steer": "- Last wave: 26/60 passed.\n- Rejected by lint before gating: 4x twin: the buggy and clean programs have the same outcome (exec; 1x literal: the output 'cold warm' is a copy of the program's literals. Avoid these.\n- Failed (gold -> what the model wrote): None -> model said '17' (3/10); None -> model said '21' (10/10); None -> model said 'The program outputs 1.' (0/10); None -> model said '9.0' (10/10); None -> model said 'It prints 150' (10/10); None -> model said '5.0' (10/10); None -> model said 'The program outputs `Mon`.' (3/10); None -> model said 'B' (0/10); None -> model said 'stop' (10/10); None -> model said 'False False' (10/10); None -> model said '0.33' (10/10); None -> model said '900.0' (10/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): None; None; None; None; None; None; None; None; None; None; None; None",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "src": "buggy",
+   "name": "buggy-au-t1-w103c1-py-fence-corners-added",
+   "id": "buggy-au-t1-w103c1-py-fence-corners-added",
+   "code": "def fence_length(side):\n    corners = 4\n    length = corners + side\n    return length\n\nprint(fence_length(5))",
+   "verified": "exec: exit 0; stdout = '9'",
+   "cause": "the side is added to 4 instead of multiplied by 4, so a square with side 5 prints 9 instead of 20",
+   "category": "wrong operator",
+   "bug_line": 3,
+   "level2_tokens": [
+    "addition",
+    "plus"
+   ],
+   "consequence_class": "value",
+   "raises": false,
+   "n_lines": 6,
+   "language": "python",
+   "lang_group": "python",
+   "twin": "buggy-au-clean-t1-w103c1-py-fence-corners-added",
+   "source": "authored (claude-opus-5-5) for muse-spark-open: About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 103,
+    "steer": "- Last wave: 26/60 passed.\n- Rejected by lint before gating: 4x twin: the buggy and clean programs have the same outcome (exec; 1x literal: the output 'cold warm' is a copy of the program's literals. Avoid these.\n- Failed (gold -> what the model wrote): None -> model said '17' (3/10); None -> model said '21' (10/10); None -> model said 'The program outputs 1.' (0/10); None -> model said '9.0' (10/10); None -> model said 'It prints 150' (10/10); None -> model said '5.0' (10/10); None -> model said 'The program outputs `Mon`.' (3/10); None -> model said 'B' (0/10); None -> model said 'stop' (10/10); None -> model said 'False False' (10/10); None -> model said '0.33' (10/10); None -> model said '900.0' (10/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): None; None; None; None; None; None; None; None; None; None; None; None",
+    "gate": {
+     "rate": 0.9,
+     "pass": true
+    }
+   }
+  },
+  {
+   "src": "clean",
+   "name": "buggy-au-clean-t1-w103c1-py-fence-corners-added",
+   "id": "buggy-au-clean-t1-w103c1-py-fence-corners-added",
+   "code": "def rope_length(edge):\n    corners = 4\n    length = corners * edge\n    return length\n\nprint(rope_length(7))",
+   "verified": "exec: exit 0; stdout = '28'",
+   "why_correct": "a square has four equal edges, so multiplying the edge by 4 gives the perimeter 28",
+   "looks_like": "corners and edge combined with the wrong operator",
+   "language": "python",
+   "lang_group": "python",
+   "twin": "buggy-au-t1-w103c1-py-fence-corners-added",
+   "source": "authored (claude-opus-5-5) for muse-spark-open: About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 103,
+    "steer": "- Last wave: 26/60 passed.\n- Rejected by lint before gating: 4x twin: the buggy and clean programs have the same outcome (exec; 1x literal: the output 'cold warm' is a copy of the program's literals. Avoid these.\n- Failed (gold -> what the model wrote): None -> model said '17' (3/10); None -> model said '21' (10/10); None -> model said 'The program outputs 1.' (0/10); None -> model said '9.0' (10/10); None -> model said 'It prints 150' (10/10); None -> model said '5.0' (10/10); None -> model said 'The program outputs `Mon`.' (3/10); None -> model said 'B' (0/10); None -> model said 'stop' (10/10); None -> model said 'False False' (10/10); None -> model said '0.33' (10/10); None -> model said '900.0' (10/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): None; None; None; None; None; None; None; None; None; None; None; None",
     "gate": {
      "rate": 1.0,
      "pass": true
