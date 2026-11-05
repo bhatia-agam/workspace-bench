@@ -232,12 +232,12 @@
    "n_original": 63,
    "n_original_gated": 60,
    "n_original_pass": 6,
-   "n_items": 40,
-   "n_new": 40,
+   "n_items": 42,
+   "n_new": 42,
    "n_candidates_gated": 688,
    "change": "refill via run.fill: 20/24 pairs; 15 landed of 90 tried, yield 16.67%; stop: crash cap binding",
    "status": "partial",
-   "note": "Refilled (plan 0066, 2026-11-04): partial, 20/24 pairs shipped (40 items); stop: crash cap binding; tally 15/90 = 0.167 (n_min 60, y_min 0.03). Source: authored executed pairs on the buggy_code Brief (fill, t2 pilot then t1 down). Authored pairs: {'non_crash': 16, 'crash': 15, 'crash_cap': 4}. Delta audit: 2 drop(s) (buggy-au-t1-w106c0-py-free-ship-both-required, buggy-au-clean-t1-w106c0-py-free-ship-both-required).",
+   "note": "Refilled (plan 0066, 2026-11-04): partial, 20/24 pairs shipped (40 items); stop: crash cap binding; tally 15/90 = 0.167 (n_min 60, y_min 0.03). Source: authored executed pairs on the buggy_code Brief (fill, t2 pilot then t1 down). Authored pairs: {'non_crash': 16, 'crash': 15, 'crash_cap': 4}. Delta audit: 2 drop(s) (buggy-au-t1-w106c0-py-free-ship-both-required, buggy-au-clean-t1-w106c0-py-free-ship-both-required). #289 B3 re-admission (2026-11-05): clean-twin bugclaim legs that were undecided before the refusal fallback (counted as fails) were re-recorded for the named pairs only (`run._regrade_row` legs=bugclaim, the 1024-token rubric budget of #356) and buggy_code re-frozen; buggy-au-t1-w107c0-py-apples-counted-baskets (+ twin) passed every leg and the independent delta audit (KEEP, weak signal). 21/24 pairs ship (42 items).",
    "bank": "evals/buggy_code/items.json",
    "bank_version": 1,
    "exclude_from_macro": false,
@@ -279,7 +279,7 @@
     }
    },
    "target_pairs": 24,
-   "n_pairs": 20
+   "n_pairs": 21
   },
   "multilingual_multihop": {
    "target": 98,
@@ -802,8 +802,8 @@
  },
  "n_layers": 32,
  "code": {
-  "git": "",
-  "adapt_sha256": "6bbb79b55965b5c0"
+  "git": "3169c608",
+  "adapt_sha256": "66e5de55d23bd5b4"
  },
  "read_band": [],
  "drops_v1_archived": {
