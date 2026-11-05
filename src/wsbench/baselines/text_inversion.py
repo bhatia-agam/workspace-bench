@@ -105,9 +105,6 @@ NOT_GATED: dict[str, str] = {
     "prompt-only floor, with no per-item answer to text-invert",
     "hinted_cutoff": "a pair-scored contrastive family: the null is the N twin and the prompt-only "
     "floor, with no per-item answer to text-invert",
-    "math_shortcuts": "a contrastive family scored on the class difference (I flag rate - N "
-    "flag rate): the null is the N controls and the prompt-only floor, with no per-item answer "
-    "to text-invert",
     "multi_concept_directed_modulation": "the prompt dictates the concepts; prompt-only is 1.0",
     "directed_modulation": "the instruction states the concept; items survived only because the "
     "scorer discounted instruction narration, not because the answer is hidden (Camila "

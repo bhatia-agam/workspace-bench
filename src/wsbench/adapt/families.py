@@ -268,6 +268,9 @@ def _buggy_code(item: dict) -> list[Ask]:
         # verbalization ban (buggy_code_gate_modal.py): at most 2 of 11 raw continuations name it
         leak = _continuation_leak(item, "code", [str(item["cause"])], 2 / 11)
         leak.meta[EMPTY_PASSES] = True  # Camila 2026-11-04: an all-empty continuation passes
+        # plan 0068 (#289 L1): graded on the MECHANISM in the cause, whatever output a draw
+        # states (the default "is this the expected answer" rubric let a wrong output pass)
+        leak.meta["rubric"] = LEAK_RUBRIC
         asks.append(leak)
     if item.get("src") == "clean":
         asks.append(_bug_claim(item))
@@ -278,6 +281,7 @@ def _buggy_code(item: dict) -> list[Ask]:
 # not claim a bug. Its own group (not a ``surface:*`` alternative), greedy only (decision 2)
 BUGCLAIM_LEG = "bugclaim"
 BUGCLAIM_RUBRIC = "buggy_bug_claim"
+LEAK_RUBRIC = "buggy_leak_mechanism"  # = grade_llm.LEAK_RUBRIC (plan 0068): the buggy leak leg
 BUGCLAIM_TOKENS = 256  # scripts/buggy_twin_gate_modal.py MAX_CONT
 # Camila 2026-11-04 (plan 0066 §11.8 revised): in buggy_code's two free-continuation legs (the
 # buggy ``leak`` leg, the clean ``bugclaim`` leg) an ALL-EMPTY continuation states no bug and
