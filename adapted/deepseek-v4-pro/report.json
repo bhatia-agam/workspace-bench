@@ -758,10 +758,11 @@
    "exclude_from_macro": true
   },
   "introspection": {
-   "status": "absent",
-   "note": "Absent: needs the subject's own injected concept vectors from an external engine (adapt introspection); not built for DeepSeek-V4-Pro.",
+   "status": "ooc",
+   "note": "ooc (2026-11-05): calibration NO-GO under the family's pre-registered rule at block 11 of 61 (the 27B's L12 by depth), measured on the plan-0067 multi-GPU engine (xaff V4-Pro native reader at full depth, raw mHC flat 28,672-d residual, H200:8, 2 shards): the injected word's median RR peaks at 0.048 (beta 8) over beta 1-8 (need >= 0.6; beta0 0.039, gaussian <= 0.042, cross <= 0.043); >= 80% of injected neutral replies coherent (Opus 5.5, >= 6/10) only at beta 1, 2 (b1 1.00, b2 0.93, b3 0.25, b4 0.07, b6 0.00, b8 0.00). Engine calibration passed (beta 0 / zero vector exact no-op, local steer, in-span rel err 1.9e-03); the head-tier injection surfaces the concept in 0/10 replies at every beta 1-8 (recorded). Evidence: adapted/deepseek-v4-pro/introspection/calibration.json, engine_diagnostic.json; no bank.",
    "exclude_from_macro": true,
-   "absent_auto": true
+   "n_items": 0,
+   "target": 2250
   },
   "jlens_concept_pr": {
    "status": "absent",
@@ -777,8 +778,8 @@
   }
  },
  "code": {
-  "git": "",
-  "adapt_sha256": "6bbb79b55965b5c0"
+  "git": "d1e0f30",
+  "adapt_sha256": "da228b98cf1f8dbe"
  },
  "model": "deepseek-v4-pro",
  "label": "DeepSeek-V4-Pro-0813",
