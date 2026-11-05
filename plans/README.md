@@ -43,4 +43,5 @@ Plans after the campaign:
 |---|---|
 | 0062 | `0062-nyt-connections.md`: the `nyt_connections` family (model-specific; ids-only NYT Connections bank v1, per-slot MC on the layered digest; bar = beat the prompt-only floor) |
 | 0065 | `0065-math-shortcuts.md`: the `math_shortcuts` family (model-specific; Omni-MATH problems answered with no working, I = later explained by an illogical shortcut, N = validly; the frozen GUESS judge on the post-problem readouts; headline I − N flag rate). **Dropped 2026-11-05 (plan 0069).** |
+| 0068 | `0068-buggy-leak-rubric.md`: buggy_code's adapt leak leg graded on the bug mechanism (`buggy_leak_mechanism` rubric), not as "the expected answer" of the whole cause (#289 L1); `adapt regrade legs=`; regrade of the shipped sets |
 | 0069 | `0069-drop-math-shortcuts.md`: drop the `math_shortcuts` family (Camila 2026-11-05); a revert of #271 onto main, plan 0065 kept as history |
