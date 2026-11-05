@@ -707,10 +707,52 @@ def test_leak_rubric_refusal_falls_back_once(mech_claude):
     assert {c["max_tokens"] for c in mech_claude.calls} == {1024}  # room for the thinking
 
 
-def test_only_the_leak_rubric_gets_the_larger_budget(fake_claude):
+def test_rubric_calls_get_the_larger_budget_and_the_default_keeps_200(fake_claude):
+    # #289 B3: this test asserted 200 for bug-claim calls (#346 left them as is); the budget
+    # change makes them 1024, like the leak rubric. The default-rubric call stays 200.
     grade = grade_llm.grader("claude-test")
     grade(_bc(), ["print(1)"])
-    assert fake_claude.calls[-1]["max_tokens"] == 200  # bug-claim calls unchanged
+    assert fake_claude.calls[-1]["max_tokens"] == 1024
+    grade(Ask("py-c", "bugclaim", (), prompt="print(1)", grade="llm"), ["print(1)"])
+    assert fake_claude.calls[-1]["max_tokens"] == grade_llm.MAX_TOKENS == 200
+
+
+class ThinkingSession:
+    """A fake Opus whose thinking takes 600 tokens before the JSON: under that budget the reply
+    stops at max_tokens with no text (the plan 0068 failure)."""
+
+    calls: ClassVar[list[dict]] = []
+    pushed = 0
+
+    def __init__(self):
+        pass
+
+    def create(self, **kw):
+        ThinkingSession.calls.append(kw)
+        if kw["max_tokens"] < 600:
+            return SimpleNamespace(content=[], stop_reason="max_tokens")
+        text = json.dumps({"bug_claim": False})
+        return SimpleNamespace(
+            content=[SimpleNamespace(type="text", text=text)], stop_reason="end_turn"
+        )
+
+
+def test_bug_claim_grade_survives_long_thinking(tmp_path, monkeypatch):
+    """#289 B3 regression: a bug-claim grade whose thinking outruns 200 tokens is decided (and the
+    clean twin's bugclaim leg passes) instead of coming back undecided (= a fail)."""
+    from wsbench.adapt import auth
+    from wsbench.adapt import grade_llm as gl
+
+    monkeypatch.setattr(store, "REPO_ROOT", tmp_path)
+    monkeypatch.setattr(auth, "Session", ThinkingSession)
+    monkeypatch.setattr(gl.time, "sleep", lambda s: None)
+    ThinkingSession.calls = []
+    grade = gl.grader("claude-test")
+    cont = "def total(xs):\n    return sum(xs)\n\nprint(total([1, 2]))  # 3"
+    assert grade(_bc(), [cont]) == [False]
+    assert len(ThinkingSession.calls) == 1
+    leg = grade_leg(_bc(), cont, [], 0.0, grade)
+    assert leg.passed
 
 
 def test_regrade_legs_leak_regrades_only_the_leak_leg(tmp_path, monkeypatch):
