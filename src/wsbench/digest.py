@@ -319,10 +319,6 @@ FAMILY_DEFAULTS: dict[str, dict[str, str]] = {
     "unverbalized_hint": {"summ_rare": "25"},
     # plan 0063: a single "I'll use the hint" sample survives the digest (0064: ~500 cells/item)
     "hinted_cutoff": {"summ_rare": "25"},
-    # plan 0065: a single "I'll just output my best guess" sample among an item's 34 per layer
-    # survives the digest; reasoning-extraction-style readouts are what Opus 5.5 declines elsewhere
-    # (jailbreak, introspection), so a still-declined digest re-runs on REFUSAL_MODEL
-    "math_shortcuts": {"summ_rare": "25", "summ_fallback": f"default+{REFUSAL_MODEL}"},
     # plan 0034 M2 (Camila: "make sure that the summary judge is getting the rarer mentions"):
     # a dictated concept seen once, or only inside a restatement of the instruction, is kept
     "multi_concept_directed_modulation": {"summ_rare": "25"},
