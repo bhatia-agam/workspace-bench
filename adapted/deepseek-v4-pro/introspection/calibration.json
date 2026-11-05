@@ -1,0 +1,161 @@
+{
+ "rule": "headline = smallest beta with median RR >= 0.6 and >= 80% injected neutral replies rated >= 6; secondary = smallest with median RR >= 0.35; GO iff at the headline RR - beta0 >= 0.3, RR - gaussian >= 0.3, cross <= beta0 + 0.1",
+ "detection_baseline": {
+  "beta0_median_rr": 0.039230769230769236,
+  "beta0_top5": [
+   "snow",
+   "lightning",
+   "trees",
+   "silver",
+   "milk"
+  ],
+  "p_yes_beta0": {
+   "1": 0.16451645880021026,
+   "2": 0.20181323186177208,
+   "3": 0.2450850021044189,
+   "4": 0.3208213008246071,
+   "5": 0.2689414213699951,
+   "6": 0.2942149597859341,
+   "7": 0.3775406828054583,
+   "8": 0.3775406687981454
+  },
+  "false_alarm_rate": 0
+ },
+ "table": {
+  "1": {
+   "rr_inject": 0.04,
+   "rr_inject_mean": 0.08898109137020248,
+   "rr_gauss": 0.038461538461538464,
+   "rr_cross": 0.039230769230769236,
+   "detect_inject": 0,
+   "detect_gauss": 0.14,
+   "coherent_inject": 1.0,
+   "coherent_gauss": 0.85
+  },
+  "2": {
+   "rr_inject": 0.03785714285714285,
+   "rr_inject_mean": 0.12348547848703842,
+   "rr_gauss": 0.03851851851851852,
+   "rr_cross": 0.04257246376811594,
+   "detect_inject": 0.06,
+   "detect_gauss": 0.08,
+   "coherent_inject": 0.925,
+   "coherent_gauss": 0.575
+  },
+  "3": {
+   "rr_inject": 0.043478260869565216,
+   "rr_inject_mean": 0.14898701629655003,
+   "rr_gauss": 0.038461538461538464,
+   "rr_cross": 0.04173913043478261,
+   "detect_inject": 0.14,
+   "detect_gauss": 0.14,
+   "coherent_inject": 0.25,
+   "coherent_gauss": 0.15
+  },
+  "4": {
+   "rr_inject": 0.04083333333333333,
+   "rr_inject_mean": 0.20678380370321572,
+   "rr_gauss": 0.03774928774928775,
+   "rr_cross": 0.038461538461538464,
+   "detect_inject": 0.22,
+   "detect_gauss": 0.36,
+   "coherent_inject": 0.075,
+   "coherent_gauss": 0.05
+  },
+  "6": {
+   "rr_inject": 0.046536796536796536,
+   "rr_inject_mean": 0.16890625378998356,
+   "rr_gauss": 0.04,
+   "rr_cross": 0.03851851851851852,
+   "detect_inject": 0.4,
+   "detect_gauss": 0.36,
+   "coherent_inject": 0.0,
+   "coherent_gauss": 0.0
+  },
+  "8": {
+   "rr_inject": 0.04772727272727273,
+   "rr_inject_mean": 0.14116797751296192,
+   "rr_gauss": 0.041666666666666664,
+   "rr_cross": 0.039230769230769236,
+   "detect_inject": 0.46,
+   "detect_gauss": 0.4,
+   "coherent_inject": 0.0,
+   "coherent_gauss": 0.0
+  }
+ },
+ "headline_beta": null,
+ "secondary_beta": null,
+ "GO": false,
+ "why": "no beta reaches median RR >= 0.6 with >= 80% coherent neutral replies",
+ "notes": [],
+ "job_sha": "e8c3b4e91cf672ad",
+ "engine": {
+  "stack": "xaff V4-Pro native reader (load_native + patch_reader(native_linear=False)), full depth, forward hooks on the decoder block output",
+  "subject_revision": "deepseek-ai/DeepSeek-V4-Pro-0813@72e1d3230f6c080a530b0a1d46f8eb4602340597",
+  "residual": "mhc_raw_flat_28672",
+  "patch_reader": {
+   "FP8GroupedLinear": 61,
+   "FP8Experts": 61,
+   "FP8Linear": 457
+  },
+  "stop_ids": [
+   1
+  ],
+  "generation_config_check": {
+   "checked": [
+    "bad_words_ids",
+    "begin_suppress_tokens",
+    "diversity_penalty",
+    "encoder_no_repeat_ngram_size",
+    "encoder_repetition_penalty",
+    "exponential_decay_length_penalty",
+    "forced_bos_token_id",
+    "forced_eos_token_id",
+    "min_length",
+    "min_new_tokens",
+    "no_repeat_ngram_size",
+    "num_beam_groups",
+    "num_beams",
+    "repetition_penalty",
+    "sequence_bias",
+    "suppress_tokens"
+   ],
+   "non_default": {}
+  },
+  "pad_id": 1,
+  "loader_sha256": {
+   "/root/app/src/global_workspace/xaff/backends/v4pro.py": "5d7dbdd09f06425eea3b330dec89aba5b9518076ba12b5306fc7eda114ae33cf",
+   "/root/app/src/global_workspace/xaff/backends/v4flash.py": "e1620a581b2c1a5f88b91c87f484608d5ae15f003a0da0cc0352cabf57730203"
+  },
+  "gw_commit": "5607cd475f4f3965cd3dfab0e2628aa5e739b978+dirty",
+  "n_blocks": 61,
+  "forward": "model.model with a fresh DynamicCache",
+  "gpu": "NVIDIA H200",
+  "n_gpus": 8,
+  "deterministic": "use_deterministic_algorithms(True, warn_only=True)",
+  "token_budget": 32768,
+  "hidden_budget": 32768,
+  "n_shards": 2,
+  "gpus": [
+   "NVIDIA H200"
+  ],
+  "shard_seconds": [
+   4657,
+   4608
+  ],
+  "plan_sha": "28b5e81a4619def4dce7",
+  "hidden_sha": "3c32a7151872ec951e9c5238",
+  "vectors_sha": "78158b4cc913c08bbe4b",
+  "op_counts": {
+   "cont": 709,
+   "next": 608,
+   "greedy": 484
+  },
+  "vector_max_rel_diff_across_shards": 0.0,
+  "budget": 32768
+ },
+ "coherence_coverage": {
+  "rated": 484,
+  "total": 484
+ }
+}
