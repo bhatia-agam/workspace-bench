@@ -53,6 +53,13 @@ DEFAULT_TOKEN_CAP = 920_000
 LONG_INPUT_TOKENS = 150_000  # a call estimated above this gets at least LONG_TIMEOUT seconds
 LONG_TIMEOUT = 1800.0
 MAX_TOKENS = 32_000  # plan 0022: up to 25 + 25 agentic entries plus thinking
+# Per-call output cap of a digest model whose answers outrun MAX_TOKENS (``Settings.max_tokens``).
+# claude-sonnet-5 does not keep to the "up to 25" rare tier on long agentic bundles (66-151 rare
+# entries measured; ``ground`` reads the first ``max_rare``), so some calls stopped at 32k with
+# truncated JSON. The model never sees max_tokens and the cap keys no fingerprint, so a call that
+# finished under 32k is the same request. MAX_TOKENS still sizes the single-call budget
+# (``budget0``): moving it would re-chunk, and so re-key, every bundle near the cap.
+OUTPUT_CAPS: dict[str, int] = {"claude-sonnet-5": 64_000}
 DIGEST_TIMEOUT = 900.0  # seconds per call: up to ~150k input tokens at the model's default effort
 VARIANTS = ("blind", "task")
 DEFAULT_VARIANT = "task"  # plan 0032 §2.8.2: the family's task note reaches the summarizer
@@ -410,8 +417,16 @@ class Settings:
 
     @property
     def server_fallback(self) -> str | None:
-        """The ``fallbacks=`` value of a digest call (``None``: no server-side fallback)."""
-        return None if self.fallback == "none" else self.fallback.split("+", 1)[0]
+        """The ``fallbacks=`` value of a digest call (``None``: no server-side fallback, also
+        under ``none+<model>``, the client-side refusal re-run alone)."""
+        head = self.fallback.split("+", 1)[0]
+        return None if head == "none" else head
+
+    @property
+    def max_tokens(self) -> int:
+        """The output cap of every digest call of this run: :data:`OUTPUT_CAPS` of the digest
+        model, else :data:`MAX_TOKENS`. A refusal re-run keeps the same cap."""
+        return OUTPUT_CAPS.get(self.model, MAX_TOKENS)
 
     @property
     def refusal_model(self) -> str | None:
@@ -443,14 +458,20 @@ def _choice(args: JudgeArgs, key: str, allowed: Sequence[str], default: str) -> 
 
 
 def _fallback_opt(args: JudgeArgs) -> str:
-    """``summ_fallback``: ``none``, ``default`` (server-side refusal fallback) or
+    """``summ_fallback``: ``none``, ``default`` (server-side refusal fallback),
     ``default+<claude model>`` (plus one client-side re-run of a still-declined call on that
-    model; plan 0037 J10)."""
+    model; plan 0037 J10) or ``none+<claude model>`` (the client-side re-run alone, for a digest
+    model that does not accept server-side fallbacks)."""
     v = args.extra.get("summ_fallback", "none")
     head, sep, model = v.partition("+")
-    if v in ("none", "default") or (head == "default" and sep and model.startswith("claude-")):
+    if v in ("none", "default") or (
+        head in ("default", "none") and sep and model.startswith("claude-")
+    ):
         return v
-    fail(f"summ_fallback={v!r}: expected one of none, default, default+<claude model>")
+    fail(
+        f"summ_fallback={v!r}: expected one of none, default, default+<claude model>, "
+        "none+<claude model>"
+    )
 
 
 def _decode_opt(args: JudgeArgs) -> bool:
@@ -2185,7 +2206,7 @@ def _collapse_stride(
             on_result=on_result,
             concurrency=s.concurrency or args.concurrency,
             rpm=args.rpm,
-            max_tokens=MAX_TOKENS,
+            max_tokens=s.max_tokens,
             timeout=_timeout_for(s, [u for _i, _f, u in todo]),
             spend=spend,
             **({} if s.server_fallback is None else {"fallbacks": s.server_fallback}),
@@ -2211,7 +2232,7 @@ def _collapse_stride(
                 on_result=on_retry,
                 concurrency=s.concurrency or args.concurrency,
                 rpm=args.rpm,
-                max_tokens=MAX_TOKENS,
+                max_tokens=s.max_tokens,
                 timeout=_timeout_for(s, [u for _i, _f, u in declined]),
                 spend=spend,
                 mark_refusals=True,
@@ -2713,7 +2734,7 @@ def _layered_pass(
                 on_result=on_result,
                 concurrency=conc,
                 rpm=args.rpm,
-                max_tokens=MAX_TOKENS,
+                max_tokens=s.max_tokens,
                 timeout=_timeout_for(s, [u for *_x, u in ts]),
                 spend=spend,
                 mark_refusals=True,
@@ -3309,7 +3330,7 @@ def _collapse_hierarchical(
                 on_result=on_result,
                 concurrency=conc,
                 rpm=args.rpm,
-                max_tokens=MAX_TOKENS,
+                max_tokens=s.max_tokens,
                 timeout=max(timeout, _timeout_for(s, [u for _i, _k, _f, u in todo])),
                 spend=spend,
                 mark_refusals=True,
@@ -3344,7 +3365,7 @@ def _collapse_hierarchical(
             on_result=on_retry,
             concurrency=conc,
             rpm=args.rpm,
-            max_tokens=MAX_TOKENS,
+            max_tokens=s.max_tokens,
             timeout=max(timeout, _timeout_for(s, [u for _i, _k, _f, u in again])),
             spend=spend,
             mark_refusals=True,

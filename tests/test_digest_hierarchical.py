@@ -392,7 +392,7 @@ def test_no_refusal_model_no_retry(tmp_path, fam, monkeypatch):
     assert "a" in col.unsummarized and set(seen) == {"claude-opus-5-5"}
 
 
-@pytest.mark.parametrize("bad", ["sonnet", "default+", "default+gpt-5", "none+claude-sonnet-5"])
+@pytest.mark.parametrize("bad", ["sonnet", "default+", "default+gpt-5", "none+", "none+gpt-5"])
 def test_summ_fallback_values(tmp_path, bad):
     s = digest.settings(_args(tmp_path, summ_fallback="default+claude-sonnet-5"))
     assert (s.server_fallback, s.refusal_model) == ("default", "claude-sonnet-5")
@@ -400,6 +400,9 @@ def test_summ_fallback_values(tmp_path, bad):
     assert (s.server_fallback, s.refusal_model) == ("default", None)
     s = digest.settings(_args(tmp_path))
     assert (s.server_fallback, s.refusal_model) == (None, None)
+    # the client-side re-run alone (no server-side ``fallbacks`` parameter)
+    s = digest.settings(_args(tmp_path, summ_fallback="none+claude-opus-5"))
+    assert (s.server_fallback, s.refusal_model) == (None, "claude-opus-5")
     with pytest.raises(SystemExit):
         digest.settings(_args(tmp_path, summ_fallback=bad))
 

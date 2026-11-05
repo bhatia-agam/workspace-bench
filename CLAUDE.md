@@ -37,7 +37,14 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   OpenRouter; plan 0023), so an Opus judge of knowledge_cutoff gets `None`, not `effort: low`. A failed
   call returns `None` and never scores. `stream_json_async` is the primitive, `stream_json`
   wraps it (`temperature` dropped on the Anthropic route); `stream_text[_async]` is agentic's
-  free-text Anthropic-only primitive.
+  free-text Anthropic-only primitive. Both take `refusal_model=`: a call the model declines is
+  re-run once, same request, on that model (client-side, for models that reject the server-side
+  `fallbacks` parameter); a served JSON result carries `llm.SERVED_BY`, a served text fires
+  `on_served`, and only refusals move (a `max_tokens` stop or an error stays the primary's
+  outcome). `mcjudge.run_calls(refusal_model=)` passes it through and caches the serving model
+  with the row, under the judge's fingerprint: a later run with another refusal model (or none)
+  reuses that row (no stale-fallback check, unlike the digest). The digest's equivalent is `summ_fallback=none+<model>`, and
+  `digest.OUTPUT_CAPS` gives a digest model its own per-call output cap (`Settings.max_tokens`).
 
 ## Family conventions
 - `wsbench/family.py` holds the helpers the newer families share: `require_cells` (missing

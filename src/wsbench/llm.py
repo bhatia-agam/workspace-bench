@@ -21,7 +21,9 @@ from dataclasses import dataclass
 from typing import Any, Literal
 
 OPENROUTER = "https://openrouter.ai/api/v1"
-_TRANSIENT = (408, 409, 429, 500, 502, 503, 504, 529)
+# 520: Cloudflare's "web server is returning an unknown error", seen on long digest and judge
+# calls; retried like the other 5xx instead of failing the cell
+_TRANSIENT = (408, 409, 429, 500, 502, 503, 504, 520, 529)
 _FATAL = ("AuthenticationError", "PermissionDeniedError", "NotFoundError")
 _ATTEMPTS = 12
 _DEFAULT_MAX_TOKENS = {"openrouter": 8000, "anthropic": 16000}
@@ -445,12 +447,19 @@ async def stream_json_async(
     mark_refusals: bool = False,
     attempts: int | None = None,
     fallbacks: str | None = None,
+    refusal_model: str | None = None,
 ) -> Spend:
     """Run ``(system, user)`` prompt pairs concurrently, handing each parsed result (or
     ``None``) to ``on_result(index, result)`` as it lands. Raises :class:`JudgeConfigError` on
     a config problem. Builds no client when there is nothing to call. ``temperature`` is sent on
     the OpenRouter route only: newer Claude models reject the field (400), so the Anthropic route
-    drops it with one printed warning per batch."""
+    drops it with one printed warning per batch.
+
+    ``refusal_model`` (client-side): a call ``model`` declines (``stop_reason``
+    refusal) is re-run ONCE, same request, on that model (same route); a served result carries
+    it as :data:`SERVED_BY`. Only refusals move: a ``max_tokens`` stop, an error or an
+    unparsable body stays the primary's outcome. For models without server-side ``fallbacks``
+    (claude-sonnet-5 rejects the parameter with a 400)."""
     spend = spend or Spend()
     if not prompts:
         return spend
@@ -458,6 +467,8 @@ async def stream_json_async(
         raise JudgeConfigError(f"concurrency must be >= 1 and rpm > 0 (got {concurrency}, {rpm})")
     route_ = route(model)
     key = api_key(model)
+    if refusal_model is not None and (refusal_model == model or route(refusal_model) != route_):
+        raise JudgeConfigError(f"refusal_model={refusal_model!r} must be another {route_} model")
     if temperature is not None and route_ == "anthropic":
         print(f"  llm: dropping temperature={temperature} for {model} (Anthropic route rejects it)")
         temperature = None
@@ -467,24 +478,36 @@ async def stream_json_async(
     sem = asyncio.Semaphore(concurrency)
 
     async def one(i: int, system: str, user: str) -> tuple[int, dict[str, Any] | None]:
+        kw: dict[str, Any] = {
+            "schema": schema,
+            "reasoning": reasoning,
+            "temperature": temperature,
+            "max_tokens": max_tokens,
+            "timeout": timeout,
+            "rpm": rpm,
+            "spend": spend,
+            "attempts": attempts,
+        }
         async with sem:
             res = await _one(
                 route_,
                 client,
                 system,
                 user,
-                schema=schema,
                 model=model,
-                reasoning=reasoning,
-                temperature=temperature,
-                max_tokens=max_tokens,
-                timeout=timeout,
-                rpm=rpm,
-                spend=spend,
-                mark_refusals=mark_refusals,
-                attempts=attempts,
+                mark_refusals=mark_refusals or refusal_model is not None,
                 fallbacks=fallbacks,
+                **kw,
             )
+            if refusal_model is not None and res == REFUSED_JSON:
+                again = await _one(
+                    route_, client, system, user, model=refusal_model, mark_refusals=True, **kw
+                )
+                if isinstance(again, dict) and again not in (REFUSED_JSON, TOO_LONG_JSON):
+                    again = {**again, SERVED_BY: refusal_model}
+                res = again
+        if not mark_refusals and res in (REFUSED_JSON, TOO_LONG_JSON):
+            res = None  # the caller did not ask for markers
         return i, res
 
     tasks = [asyncio.ensure_future(one(i, s, u)) for i, (s, u) in enumerate(prompts)]
@@ -524,6 +547,7 @@ def stream_json(
     mark_refusals: bool = False,
     attempts: int | None = None,
     fallbacks: str | None = None,
+    refusal_model: str | None = None,
 ) -> Spend:
     """Synchronous wrapper around :func:`stream_json_async` for the CLI and tests."""
     if _in_running_loop():
@@ -546,6 +570,7 @@ def stream_json(
             mark_refusals=mark_refusals,
             attempts=attempts,
             fallbacks=fallbacks,
+            refusal_model=refusal_model,
         )
     )
 
@@ -731,13 +756,19 @@ async def stream_text_async(
     timeout: float = 600.0,
     spend: Spend | None = None,
     mark_refusals: bool = False,
+    refusal_model: str | None = None,
+    on_served: Callable[[int, str], None] | None = None,
 ) -> Spend:
     """Run user-only free-text prompts concurrently on the Anthropic route (no system block,
     no schema), handing each stripped text (or ``None`` = exhausted retries / non-transient
     error / refusal; with ``mark_refusals`` a refusal is :data:`REFUSED` instead) to
     ``on_result(index, text)`` as it lands. ``""`` is a valid result (the
     source returns it after the 64k budget ceiling). Any non-``claude-*`` model raises
-    :class:`JudgeConfigError`. Builds no client when there is nothing to call."""
+    :class:`JudgeConfigError`. Builds no client when there is nothing to call.
+
+    ``refusal_model`` (client-side): a prompt ``model`` declines is re-run ONCE on
+    that model with the same settings; when it serves, ``on_served(index, refusal_model)`` fires
+    just before ``on_result`` (the text itself carries no provenance)."""
     spend = spend or Spend()
     if not prompts:
         return spend
@@ -745,28 +776,40 @@ async def stream_text_async(
         raise JudgeConfigError(f"concurrency must be >= 1 and rpm > 0 (got {concurrency}, {rpm})")
     if route(model) != "anthropic":
         raise JudgeConfigError(f"free-text stage requires a claude-* model (got {model})")
+    if refusal_model is not None and (
+        refusal_model == model or route(refusal_model) != "anthropic"
+    ):
+        raise JudgeConfigError(f"refusal_model={refusal_model!r} must be another claude-* model")
     client = _make_client("anthropic", api_key(model))
     sem = asyncio.Semaphore(concurrency)
 
-    async def one(i: int, user: str) -> tuple[int, str | None]:
+    async def one(i: int, user: str) -> tuple[int, str | None, str | None]:
+        kw: dict[str, Any] = {
+            "thinking": thinking,
+            "max_tokens": max_tokens,
+            "timeout": timeout,
+            "rpm": rpm,
+            "spend": spend,
+        }
+        served: str | None = None
         async with sem:
             res = await _one_text(
-                client,
-                user,
-                model=model,
-                thinking=thinking,
-                max_tokens=max_tokens,
-                timeout=timeout,
-                rpm=rpm,
-                spend=spend,
-                mark_refusals=mark_refusals,
+                client, user, model=model, mark_refusals=mark_refusals or bool(refusal_model), **kw
             )
-        return i, res
+            if refusal_model is not None and res == REFUSED:
+                res = await _one_text(client, user, model=refusal_model, mark_refusals=True, **kw)
+                if res is not None and res != REFUSED:
+                    served = refusal_model
+        if res == REFUSED and not mark_refusals:
+            res = None  # the caller did not ask for the marker
+        return i, res, served
 
     tasks = [asyncio.ensure_future(one(i, u)) for i, u in enumerate(prompts)]
     try:
         for fut in asyncio.as_completed(tasks):
-            i, res = await fut
+            i, res, served = await fut
+            if served is not None and on_served is not None:
+                on_served(i, served)
             on_result(i, res)
     finally:
         for t in tasks:
@@ -788,6 +831,8 @@ def stream_text(
     timeout: float = 600.0,
     spend: Spend | None = None,
     mark_refusals: bool = False,
+    refusal_model: str | None = None,
+    on_served: Callable[[int, str], None] | None = None,
 ) -> Spend:
     """Synchronous wrapper around :func:`stream_text_async` for the CLI and tests."""
     if _in_running_loop():
@@ -806,5 +851,7 @@ def stream_text(
             timeout=timeout,
             spend=spend,
             mark_refusals=mark_refusals,
+            refusal_model=refusal_model,
+            on_served=on_served,
         )
     )

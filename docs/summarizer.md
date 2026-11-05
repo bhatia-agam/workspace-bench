@@ -42,7 +42,8 @@ per-layer digests are merged into the one judged digest (see "Audit fixes" below
   `EvalSpec.task_note` (or a per-item Mapping, `item_task_notes`) fills `DIGEST_TASK_LINE`, so a
   single relevant mention is recorded rather than discarded. Notes carry no gold and no tool name.
 - Model `summ_model=`, else `aux_models["digest"]`, else `claude-opus-5-5`, at the model's own
-  default effort (`summ_effort=`), `max_tokens` 32000. Pinned only at those defaults and
+  default effort (`summ_effort=`), `max_tokens` 32000 (64000 for a `claude-sonnet-5` digest,
+  `digest.OUTPUT_CAPS`; see Refusal fallbacks). Pinned only at those defaults and
   with the family judge pinned. `extras.digest_served_by` = `{model: n_items}` states which
   model actually served each digest (refusal fallbacks included).
 - **Bundle.** Cells in `(layer, pos)` order, one `[L<layer> pos <index>]` header each (never the
@@ -171,7 +172,13 @@ per-layer digests are merged into the one judged digest (see "Audit fixes" below
   (`fallbacks="default"`); `default+<claude model>` additionally re-runs a call still declined
   after it once on that model, at the same level, before any halving (plan 0037 J10;
   jailbreak_recognition and the four F3 families use `default+claude-sonnet-5-5`, i.e.
-  `digest.REFUSAL_MODEL`; Sonnet 5 before 2026-11-01). Every fallback-served digest is counted in
+  `digest.REFUSAL_MODEL`; Sonnet 5 before 2026-11-01). `none+<claude model>` is that
+  client-side re-run alone, for a digest model that rejects server-side `fallbacks`
+  (`claude-sonnet-5` answers the parameter with a 400). A digest model whose answers can outrun
+  32k output tokens gets its own per-call cap (`digest.OUTPUT_CAPS`, `Settings.max_tokens`:
+  64k for `claude-sonnet-5`, which can overrun the rare tier on long agentic bundles); the cap
+  keys no fingerprint, the re-run keeps it, and `MAX_TOKENS` (32k) still sizes the single-call
+  budget, so no bundle re-chunks. Every fallback-served digest is counted in
   `extras.digest_served_by` and the row's `summary_served_by`. The digest fingerprint does not key
   the fallback, so each fallback-served cache row records how it was served (`digest.SERVED_VIA`:
   `client` or `server`), and a row a client-side refusal model other than the run's own served
@@ -219,8 +226,9 @@ and this goes to the judge." The default for a multi-layer config since bench v1
   real/estimate token ratio `_UNCOUNTED_RATIO`, by estimate) is cut into
   contiguous layer ranges, each condensed by the same call (labelled `L<a>-L<b>`), and the range
   digests merged by one more call (hierarchically, up to 4 levels).
-- **Refusals / failures:** as a digest: the server-side fallback of `summ_fallback`, then a
-  client-side re-run on its refusal model. A stage-2 answer that grounds no entry is re-asked
+- **Refusals / failures:** as a digest: the server-side fallback of `summ_fallback` (none under
+  `none+<model>`), then a client-side re-run on its refusal model, at the digest model's output
+  cap. A stage-2 answer that grounds no entry is re-asked
   once; an item still declined or empty is unsummarized (reason `refused` / `layered_failed`),
   never judged on the mechanical union.
 - **When:** `runner.judge_family` sets `summ_layers=layered` (`digest.resolve_layer_mode`) for a
