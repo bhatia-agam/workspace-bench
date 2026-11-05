@@ -4043,7 +4043,7 @@
    "n_empty_cells": 0
   },
   "judge_model": "claude-opus-5-5",
-  "instrument": "wb-mc-2026-10-31r+judge-only-v1+qline-v2+wbforms-v4+bank-v4+digest-v5-task-extractive+sj-v10",
+  "instrument": "wb-mc-2026-10-31r+judge-only-v1+qline-v2+wbcues-v2+wbforms-v4+bank-v4+digest-v5-task-extractive+sj-v10",
   "layers_judged": [
    44
   ],
@@ -4182,7 +4182,8 @@
   "refusal_share": 0.0,
   "protocol": "po-opus-v1",
   "label": "Opus 5.5 (0 refused)",
-  "not_measurable": false
+  "not_measurable": false,
+  "restamped": "2026-11-05 (wbcues-v2): measured at wb-mc-2026-10-31r+judge-only-v1+qline-v2+wbforms-v4+bank-v4+digest-v5-task-extractive+sj-v10; wbcues-v2 adds role cues only for templates outside the registered bank, and no verdict reads the cues under judge-only-v1, so no item can change"
  },
  "nyt_connections": {
   "rate": 0.5,

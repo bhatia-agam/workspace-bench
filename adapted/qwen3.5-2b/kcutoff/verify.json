@@ -1,0 +1,200 @@
+{
+ "kc3_00561": {
+  "gold": "elon musk",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Eric Schmidt",
+   "model_correct": "no",
+   "stale_or_impossible": true,
+   "label_type": "confab_plausible",
+   "why": "Eric Schmidt became Relativity's CEO in March 2025, and Musk, the salient rocket billionaire guess, was never Google's CEO, so the answer contradicts the question."
+  }
+ },
+ "cs02089": {
+  "gold": "nvidia",
+  "cutoff": null,
+  "js": {
+   "true_answer": null,
+   "model_correct": "no",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "Nvidia first passed $2 trillion in February 2024, so it cannot join that club for the first time in late 2026; the answer reuses that earlier fact."
+  }
+ },
+ "cs02554": {
+  "gold": "playstation 5",
+  "cutoff": null,
+  "js": {
+   "true_answer": null,
+   "model_correct": "unknown",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "The August 2026 result is beyond my knowledge, and the answer repeats the August 2024 leader (PS5), ignoring that Switch 2 often led US hardware sales after its 2025 launch."
+  }
+ },
+ "b2_02683": {
+  "gold": "first officer",
+  "cutoff": null,
+  "js": {
+   "true_answer": null,
+   "model_correct": "unknown",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "The final report's attribution is beyond my knowledge (early press reports pointed to the captain), so the model's pick of one of two obvious candidates can't be verified."
+  }
+ },
+ "cs00650": {
+  "gold": "byd",
+  "cutoff": null,
+  "js": {
+   "true_answer": "State Grid",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "State Grid placed No. 3 on the 2025 list (BYD ranked far lower), so BYD is a wrong guess at a salient Chinese company rather than a reused earlier fact."
+  }
+ },
+ "cs01651": {
+  "gold": "ecdh",
+  "cutoff": null,
+  "js": {
+   "true_answer": "mlkem768x25519-sha256",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "OpenSSH 10.0 made the hybrid post-quantum ML-KEM/X25519 exchange the default; 'ecdh' is a vague generic guess rather than the specific prior default (sntrup761x25519-sha512)."
+  }
+ },
+ "b2_01422": {
+  "gold": "cern",
+  "cutoff": null,
+  "js": {
+   "true_answer": "CERN",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "ATLAS, CMS, ALICE and LHCb are the Large Hadron Collider experiments at CERN, and the 2025 prize did go to these collaborations."
+  }
+ },
+ "b2_01439": {
+  "gold": "second-warmest",
+  "cutoff": null,
+  "js": {
+   "true_answer": "third-warmest",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "NOAA ranked 2025 third-warmest, behind 2024 and 2023; 'second-warmest' is a natural guess rather than a reused earlier fact."
+  }
+ },
+ "cs01001": {
+  "gold": "jakarta",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Jakarta",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "President Prabowo led the 80th Independence Day ceremony on 17 August 2025 at Merdeka Palace in Jakarta, which matches the model's answer."
+  }
+ },
+ "cs02584": {
+  "gold": "pfizer",
+  "cutoff": null,
+  "js": {
+   "true_answer": null,
+   "model_correct": "unknown",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "The event postdates my knowledge, and Pfizer, a major COVID vaccine maker with a combination program, is a natural guess even though Moderna was the front-runner."
+  }
+ },
+ "b2_00619": {
+  "gold": "byd",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Chery Automobile",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "BYD is the most salient Chinese carmaker and an obvious guess, but it is Shenzhen-based and listed in Hong Kong long ago, whereas Wuhu-based Chery made this 2025 IPO."
+  }
+ },
+ "cs00493": {
+  "gold": "2025",
+  "cutoff": null,
+  "js": {
+   "true_answer": null,
+   "model_correct": "no",
+   "stale_or_impossible": true,
+   "label_type": "confab_plausible",
+   "why": "An extension announced in August 2025 cannot run to an academic year ending in 2025, so the model's answer looks like an echo of the event year. My recollection is that the term was already set to end in 2027 and the 2025 change removed the end date, so I won't confirm the recorded 2027."
+  }
+ },
+ "b2_01015": {
+  "gold": "harvard university",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Imperial College London",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "Imperial College London was 2nd in QS 2026. Harvard was 5th that year and has not been QS runner-up in recent editions, so the answer is a salient guess rather than a stale fact."
+  }
+ },
+ "cs00986": {
+  "gold": "milan",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Milan",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "The line reopened around 31 March / April 2025, and Paris–Milan TGV and Frecciarossa services resumed, so the model's answer matches the true one."
+  }
+ },
+ "b2_02299": {
+  "gold": "riyadh",
+  "cutoff": null,
+  "js": {
+   "true_answer": null,
+   "model_correct": "unknown",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "The 2026 designation is beyond my knowledge, and Riyadh, the capital and a past SEZ host, is the obvious natural guess rather than a clear reuse of the 2023 slot."
+  }
+ },
+ "b2_02632": {
+  "gold": "qwen3.5",
+  "cutoff": null,
+  "js": {
+   "true_answer": null,
+   "model_correct": "unknown",
+   "stale_or_impossible": false,
+   "label_type": "confab_weird",
+   "why": "The October 2026 release is beyond my knowledge, but an Alibaba Qwen model becoming Copilot Chat's default would be an unexpected, idiosyncratic choice for a product that has defaulted to OpenAI-family models."
+  }
+ },
+ "b2_00645": {
+  "gold": "elon musk",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Larry Ellison",
+   "model_correct": "no",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "Larry Ellison briefly overtook Musk after Oracle's shares jumped about 36% in September 2025; the model named Musk, who is the incumbent being overtaken, which contradicts the question."
+  }
+ },
+ "cs01596": {
+  "gold": "5.15",
+  "cutoff": null,
+  "js": {
+   "true_answer": "6.14",
+   "model_correct": "no",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "Ubuntu 25.04 shipped Linux 6.14, while 5.15 was the kernel of the earlier Ubuntu 22.04 LTS, so the model reused an outdated release's kernel."
+  }
+ }
+}
