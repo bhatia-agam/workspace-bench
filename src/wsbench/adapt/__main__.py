@@ -7,7 +7,10 @@ gate      lint + gate pending (regate=true: passing new items; regate=all: faile
           [draws= temperature= llm= regate=]
 regrade   re-grade stored answers (no resampling)         llm=<claude id> [workers=16]
 auto      generate+gate down the ladder until full / ooc  family=
-freeze    write adapted/<model>/<family>.json + report.json
+freeze    write adapted/<model>/<family>.json + report.json  [families= allow_untried=<reason>]
+          (with families=, refuses a short family never refilled: plan 0066 §1.3)
+refill    refill until target / ooc (plan 0066)  families= [waves=8 claude_budget= gpu_minutes=
+          pilot=true llm=]
 note      status + reason (+ macro exclusion)   family= [status=] [text=] [exclude_from_macro=]
 drop      audited drop: ids leave the bank (reason recorded)  family= ids=a,b reason=
 patch     audited field fix on one item of the adapted copy   family= id= set='{json}' note=
@@ -53,6 +56,16 @@ from . import run
 USAGE = __doc__
 
 
+def _pool_arg(v: str) -> bool | str:
+    """``pool=`` for msdm / kcutoff: a boolean as before, or a mode name (plan 0066: ``ext``)."""
+    low = v.lower()
+    if low in ("1", "true", "yes"):
+        return True
+    if low in ("0", "false", "no"):
+        return False
+    return low
+
+
 def _args(argv: list[str]) -> dict[str, str]:
     out = {}
     for a in argv:
@@ -71,7 +84,8 @@ KEYS: dict[str, set[str]] = {
     "regrade": {"families", "llm", "workers"},
     "auto": {"family"},
     "fill": {"families", "llm", "waves"},
-    "freeze": {"families"},
+    "freeze": {"families", "allow_untried"},
+    "refill": {"families", "waves", "claude_budget", "gpu_minutes", "pilot", "llm"},
     "note": {"family", "status", "text", "exclude_from_macro"},
     "drop": {"family", "ids", "reason"},
     "patch": {"family", "id", "set", "note"},
@@ -176,7 +190,7 @@ def main(argv: list[str] | None = None) -> None:
         mod.run(model, a.get("stage", "all"), llm=a.get("llm", "claude-opus-5-5"),
                 limit=int(a.get("limit", 0)),
                 regate=a.get("regate", "").lower() in ("1", "true", "yes"),
-                pool=a.get("pool", "true").lower() in ("1", "true", "yes"), **extra)  # fmt: skip
+                pool=_pool_arg(a.get("pool", "true")), **extra)  # fmt: skip
     elif cmd == "wrong_intermediate":  # plan 0060 Phase E
         from . import wrong_intermediate
 
@@ -230,8 +244,23 @@ def main(argv: list[str] | None = None) -> None:
         else:
             print(nl.load(model) or f"{model}: not measured ({nl.path(model)})")
     elif cmd == "freeze":
-        run.freeze(model, names if families else None)
+        au = a.get("allow_untried", "")
+        allow: bool | str = au if au.lower() not in ("", "0", "false", "no", "1", "true", "yes") \
+            else au.lower() in ("1", "true", "yes")  # fmt: skip
+        run.freeze(model, names if families else None, strict=True, allow_untried=allow)
         run.status(model)
+    elif cmd == "refill":  # plan 0066
+        from . import refill
+
+        if not families:
+            raise SystemExit(f"refill: families= is required ({', '.join(refill.POLICY)})")
+        refill.refill(
+            model, names, waves=int(a.get("waves", 8)),
+            claude_budget=int(a["claude_budget"]) if "claude_budget" in a else None,
+            gpu_minutes=float(a["gpu_minutes"]) if "gpu_minutes" in a else None,
+            pilot=a.get("pilot", "").lower() in ("1", "true", "yes"),
+            llm=a.get("llm", "claude-opus-5-5"),
+        )  # fmt: skip
     else:
         run.status(model)
 

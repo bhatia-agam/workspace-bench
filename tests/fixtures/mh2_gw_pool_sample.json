@@ -1,0 +1,1427 @@
+{
+ "_note": "A few rows of the global-workspace multihop_v2 candidate pools (outputs/multihop_v2/<pool>.json items and adv_<pool>.json rows; model-independent prompt texts) for tests/test_refill_mh2.py: three registered bank items, a clean candidate sharing an entity with one of them, two clean fresh candidates, one with an adversary factual_issue and one with an adversary problem.",
+ "rows": [
+  {
+   "pool": "cand_push_surv",
+   "item": {
+    "name": "mh2-coeur-de-lion-brother-charter-q2",
+    "subfamily": "3hop",
+    "domain": "sport and its champions",
+    "prompt": "Fact: the crusader monarch nicknamed 'Cœur de Lion', who first licensed jousting tournaments on English soil was succeeded on the throne by his younger brother, a monarch whose reign is best remembered for the",
+    "spans": {
+     "D1": "the crusader monarch nicknamed 'Cœur de Lion', who first licensed jousting tournaments on English soil",
+     "R1": " was succeeded on the throne by his younger brother,",
+     "N2": " a monarch",
+     "R2": " whose reign is best remembered for the",
+     "G1": "A European monarch"
+    },
+    "target": "Magna Carta",
+    "target_alts": [
+     "Magna Carta Libertatum"
+    ],
+    "source": "multihop_v2",
+    "eval_render": "plain",
+    "readout": {
+     "kind": "final_prompt_token",
+     "offsets": [
+      -1
+     ]
+    },
+    "intermediates": [
+     "Richard I of England",
+     "John of England"
+    ],
+    "units": [
+     {
+      "role": "bridge1",
+      "required": true,
+      "multi_token": true,
+      "forms": {
+       "en": [
+        "Richard I of England",
+        "Richard the Lionheart"
+       ]
+      },
+      "match": [
+       "Richard I of England",
+       "Richard the Lionheart"
+      ]
+     },
+     {
+      "role": "bridge2",
+      "required": true,
+      "multi_token": true,
+      "forms": {
+       "en": [
+        "John of England",
+        "John Lackland"
+       ]
+      },
+      "match": [
+       "John of England",
+       "John Lackland"
+      ]
+     }
+    ],
+    "bridges": [
+     {
+      "units": [
+       "bridge1"
+      ],
+      "answers": [
+       "Richard I of England",
+       "Richard the Lionheart",
+       "Richard I",
+       "Richard Coeur de Lion",
+       "Richard"
+      ],
+      "question": "Name the crusader monarch nicknamed 'Cœur de Lion', who first licensed jousting tournaments on English soil."
+     },
+     {
+      "units": [
+       "bridge2"
+      ],
+      "answers": [
+       "John of England",
+       "John Lackland",
+       "King John",
+       "John"
+      ],
+      "question": "Fact: Richard I of England was succeeded on the throne by his younger brother,"
+     }
+    ],
+    "probes": {
+     "G2_b2_from_b1": {
+      "kind": "fill",
+      "text": "Fact: Richard I of England was succeeded on the throne by his younger brother,",
+      "accept": [
+       "John of England",
+       "John Lackland",
+       "King John",
+       "John"
+      ]
+     },
+     "G3_hop_b2_t": {
+      "kind": "qa",
+      "text": "What document is the reign of King John of England best remembered for?",
+      "accept": [
+       "Magna Carta",
+       "Magna Carta Libertatum",
+       "Magna Charta"
+      ]
+     },
+     "G4_prefix_b2": {
+      "kind": "fill",
+      "text": "Fact: the crusader monarch nicknamed 'Cœur de Lion', who first licensed jousting tournaments on English soil was succeeded on the throne by his younger brother,",
+      "accept": [
+       "John of England",
+       "John Lackland",
+       "King John",
+       "John"
+      ]
+     },
+     "S1_drop_b1": {
+      "kind": "fill",
+      "text": "Fact: A European monarch was succeeded on the throne by his younger brother, a monarch whose reign is best remembered for the",
+      "accept": [
+       "Magna Carta",
+       "Magna Carta Libertatum",
+       "Magna Charta",
+       "Carta"
+      ]
+     },
+     "S1_direct_b1_to_t": {
+      "kind": "fill",
+      "text": "Fact: Richard I of England, whose reign is best remembered for the",
+      "accept": [
+       "Magna Carta",
+       "Magna Carta Libertatum",
+       "Magna Charta",
+       "Carta"
+      ]
+     },
+     "G2_b1": {
+      "kind": "qa",
+      "text": "Name the crusader monarch nicknamed 'Cœur de Lion', who first licensed jousting tournaments on English soil.",
+      "accept": [
+       "Richard I of England",
+       "Richard the Lionheart",
+       "Richard I",
+       "Richard Coeur de Lion",
+       "Richard"
+      ]
+     },
+     "S1_local_cue": {
+      "kind": "fill",
+      "text": "Fact: the monarch's reign is best remembered for the",
+      "accept": [
+       "Magna Carta",
+       "Magna Carta Libertatum",
+       "Magna Charta",
+       "Carta"
+      ]
+     }
+    },
+    "shortcut_accept": [
+     "Magna Carta",
+     "Magna Carta Libertatum",
+     "Magna Charta",
+     "Carta"
+    ],
+    "why_nonobvious": "Richard's own reign is remembered for the Third Crusade, and a generic monarch's reign suggests countless answers, so the charter is reached only via his brother John."
+   },
+   "adversary": {
+    "version": "adv3",
+    "probes": [
+     {
+      "kind": "fill",
+      "text": "Fact: an English monarch whose reign is best remembered for the",
+      "skips": "all",
+      "shortcut_kind": "CATEGORY PRIOR"
+     },
+     {
+      "kind": "fill",
+      "text": "Fact: the monarch was succeeded on the throne by his younger brother, a monarch whose reign is best remembered for the",
+      "skips": "bridge1",
+      "shortcut_kind": "LOCAL CUE / GENERIC SUBJECT SUFFICES"
+     },
+     {
+      "kind": "fill",
+      "text": "Fact: Richard I, the crusader monarch nicknamed 'Cœur de Lion', who first licensed jousting tournaments on English soil, was a monarch whose reign is best remembered for the",
+      "skips": "bridge2",
+      "shortcut_kind": "B1 -> T DIRECT"
+     },
+     {
+      "kind": "qa",
+      "text": "A monarch who succeeded his brother on the English throne: what is his reign best remembered for?",
+      "skips": "bridge1",
+      "shortcut_kind": "LOCAL CUE"
+     }
+    ],
+    "factual_issue": "",
+    "problem": ""
+   }
+  },
+  {
+   "pool": "cand_push_surv",
+   "item": {
+    "name": "mh2-beckett-joyce-ulysses-q3",
+    "subfamily": "3hop",
+    "domain": "theatre, ballet and dance",
+    "prompt": "Fact: The Irish-born playwright who wrote 'Waiting for Godot' in French worked in Paris as a young assistant to a novelist whose most celebrated novel is",
+    "spans": {
+     "D1": "The Irish-born playwright who wrote 'Waiting for Godot' in French",
+     "R1": " worked in Paris as a young assistant to",
+     "N2": " a novelist",
+     "R2": " whose most celebrated novel is",
+     "G1": "A twentieth-century playwright"
+    },
+    "target": "Ulysses",
+    "target_alts": [],
+    "source": "multihop_v2",
+    "eval_render": "plain",
+    "readout": {
+     "kind": "final_prompt_token",
+     "offsets": [
+      -1
+     ]
+    },
+    "intermediates": [
+     "Samuel Beckett",
+     "James Joyce"
+    ],
+    "units": [
+     {
+      "role": "bridge1",
+      "required": true,
+      "multi_token": true,
+      "forms": {
+       "en": [
+        "Samuel Beckett",
+        "Beckett"
+       ]
+      },
+      "match": [
+       "Samuel Beckett",
+       "Beckett"
+      ]
+     },
+     {
+      "role": "bridge2",
+      "required": true,
+      "multi_token": true,
+      "forms": {
+       "en": [
+        "James Joyce"
+       ]
+      },
+      "match": [
+       "James Joyce"
+      ]
+     }
+    ],
+    "bridges": [
+     {
+      "units": [
+       "bridge1"
+      ],
+      "answers": [
+       "Samuel Beckett",
+       "Beckett"
+      ],
+      "question": "Name the Irish-born playwright who wrote 'Waiting for Godot' in French."
+     },
+     {
+      "units": [
+       "bridge2"
+      ],
+      "answers": [
+       "James Joyce",
+       "Joyce"
+      ],
+      "question": "Fact: Samuel Beckett worked in Paris as a young assistant to"
+     }
+    ],
+    "probes": {
+     "G2_b2_from_b1": {
+      "kind": "fill",
+      "text": "Fact: Samuel Beckett worked in Paris as a young assistant to",
+      "accept": [
+       "James Joyce",
+       "Joyce"
+      ]
+     },
+     "G3_hop_b2_t": {
+      "kind": "qa",
+      "text": "What is James Joyce's most celebrated novel?",
+      "accept": [
+       "Ulysses"
+      ]
+     },
+     "G4_prefix_b2": {
+      "kind": "fill",
+      "text": "Fact: The Irish-born playwright who wrote 'Waiting for Godot' in French worked in Paris as a young assistant to",
+      "accept": [
+       "James Joyce",
+       "Joyce"
+      ]
+     },
+     "S1_drop_b1": {
+      "kind": "fill",
+      "text": "Fact: A twentieth-century playwright worked in Paris as a young assistant to a novelist whose most celebrated novel is",
+      "accept": [
+       "Ulysses"
+      ]
+     },
+     "S1_direct_b1_to_t": {
+      "kind": "fill",
+      "text": "Fact: Samuel Beckett was a writer whose most celebrated novel is",
+      "accept": [
+       "Ulysses"
+      ]
+     },
+     "G2_b1": {
+      "kind": "qa",
+      "text": "Name the Irish-born playwright who wrote 'Waiting for Godot' in French.",
+      "accept": [
+       "Samuel Beckett",
+       "Beckett"
+      ]
+     },
+     "S1_local_cue": {
+      "kind": "fill",
+      "text": "Fact: the novelist's most celebrated novel is",
+      "accept": [
+       "Ulysses"
+      ]
+     }
+    },
+    "shortcut_accept": [
+     "Ulysses"
+    ],
+    "why_nonobvious": "The play identifies only Beckett, 'a novelist' is generic so Joyce is reachable only via Beckett's well-known role as his assistant, and Beckett's own novels (Molloy, Murphy) are not Ulysses."
+   },
+   "adversary": {
+    "version": "adv3",
+    "probes": [
+     {
+      "kind": "fill",
+      "text": "Fact: Samuel Beckett knew a novelist whose most celebrated novel is",
+      "skips": "bridge2",
+      "shortcut_kind": "B1 -> T DIRECT (3-hop)"
+     },
+     {
+      "kind": "fill",
+      "text": "Fact: A playwright worked in Paris as an assistant to a novelist whose most celebrated novel is",
+      "skips": "all",
+      "shortcut_kind": "CATEGORY PRIOR / GENERIC SUBJECT SUFFICES"
+     },
+     {
+      "kind": "qa",
+      "text": "An Irish-born playwright worked in Paris as a young assistant to a novelist. What is that novelist's most celebrated novel?",
+      "skips": "bridge1",
+      "shortcut_kind": "SKIP B1 BY A SIDE DETAIL"
+     }
+    ],
+    "factual_issue": "",
+    "problem": ""
+   }
+  },
+  {
+   "pool": "seed_candidates",
+   "item": {
+    "name": "mh2-1324-pilgrim-poet-builder",
+    "subfamily": "2hop",
+    "domain": "seed",
+    "prompt": "Fact: the fourteenth-century West African ruler whose 1324 pilgrimage to Mecca spent so much gold in Cairo that its price collapsed brought home with him the Granadan poet and builder",
+    "spans": {
+     "D1": "the fourteenth-century West African ruler whose 1324 pilgrimage to Mecca spent so much gold in Cairo that its price collapsed",
+     "R1": " brought home with him the Granadan poet and builder",
+     "G1": "A West African ruler"
+    },
+    "target": "Abu Ishaq al-Sahili",
+    "target_alts": [
+     "al-Sahili",
+     "Abu Ishaq es-Saheli",
+     "Es-Saheli",
+     "es-Saheli"
+    ],
+    "source": "multihop_v2",
+    "eval_render": "plain",
+    "readout": {
+     "kind": "final_prompt_token",
+     "offsets": [
+      -1
+     ]
+    },
+    "intermediates": [
+     "Mansa Musa"
+    ],
+    "units": [
+     {
+      "role": "bridge1",
+      "required": true,
+      "multi_token": true,
+      "forms": {
+       "en": [
+        "Mansa Musa",
+        "Musa I of Mali"
+       ]
+      },
+      "match": [
+       "Mansa Musa",
+       "Musa I of Mali"
+      ]
+     }
+    ],
+    "bridges": [
+     {
+      "units": [
+       "bridge1"
+      ],
+      "answers": [
+       "Mansa Musa",
+       "Musa I of Mali",
+       "Musa I",
+       "Kankan Musa"
+      ],
+      "question": "Name the fourteenth-century West African ruler whose 1324 pilgrimage to Mecca spent so much gold in Cairo that its price collapsed."
+     }
+    ],
+    "probes": {
+     "G3_hop_b1_t": {
+      "kind": "fill",
+      "text": "Fact: Mansa Musa brought home with him the Granadan poet and builder",
+      "accept": [
+       "Abu Ishaq al-Sahili",
+       "al-Sahili",
+       "Abu Ishaq es-Saheli",
+       "Es-Saheli",
+       "es-Saheli"
+      ]
+     },
+     "S1_drop_b1": {
+      "kind": "fill",
+      "text": "Fact: A West African ruler brought home with him the Granadan poet and builder",
+      "accept": [
+       "Abu Ishaq al-Sahili",
+       "al-Sahili",
+       "Abu Ishaq es-Saheli",
+       "Es-Saheli",
+       "es-Saheli"
+      ]
+     },
+     "G2_b1": {
+      "kind": "qa",
+      "text": "Name the fourteenth-century West African ruler whose 1324 pilgrimage to Mecca spent so much gold in Cairo that its price collapsed.",
+      "accept": [
+       "Mansa Musa",
+       "Musa I of Mali",
+       "Musa I",
+       "Kankan Musa"
+      ]
+     },
+     "S1_local_cue": {
+      "kind": "fill",
+      "text": "Fact: the ruler brought home with him the Granadan poet and builder",
+      "accept": [
+       "Abu Ishaq al-Sahili",
+       "al-Sahili",
+       "Abu Ishaq es-Saheli",
+       "Es-Saheli",
+       "es-Saheli"
+      ]
+     }
+    },
+    "shortcut_accept": [
+     "Abu Ishaq al-Sahili",
+     "al-Sahili",
+     "Abu Ishaq es-Saheli",
+     "Es-Saheli",
+     "es-Saheli"
+    ],
+    "why_nonobvious": "audit seed (verified clean 2026-10-15)",
+    "seed_audit_idx": 32
+   },
+   "adversary": {
+    "version": "adv3",
+    "probes": [
+     {
+      "kind": "fill",
+      "text": "Fact: the ruler brought home with him the Granadan poet and builder",
+      "skips": "bridge1",
+      "shortcut_kind": "LOCAL CUE"
+     },
+     {
+      "kind": "qa",
+      "text": "Which Granadan poet and builder was brought home by a ruler?",
+      "skips": "bridge1",
+      "shortcut_kind": "LOCAL CUE"
+     },
+     {
+      "kind": "fill",
+      "text": "Fact: the fourteenth-century ruler brought home with him the Granadan poet and builder",
+      "skips": "bridge1",
+      "shortcut_kind": "GENERIC SUBJECT SUFFICES"
+     },
+     {
+      "kind": "fill",
+      "text": "Fact: the ruler whose pilgrimage to Mecca spent much gold brought home with him the poet and builder",
+      "skips": "bridge1",
+      "shortcut_kind": "CATEGORY PRIOR"
+     }
+    ],
+    "factual_issue": "",
+    "problem": ""
+   }
+  },
+  {
+   "pool": "candidates",
+   "item": {
+    "name": "mh2-saladin-richard-brother",
+    "subfamily": "3hop",
+    "domain": "European and Asian history",
+    "prompt": "Fact: the sultan who crushed the crusader armies at Hattin and retook Jerusalem was famously opposed by a monarch whose younger brother and successor was",
+    "spans": {
+     "D1": "the sultan who crushed the crusader armies at Hattin and retook Jerusalem",
+     "R1": " was famously opposed by",
+     "N2": " a monarch",
+     "R2": " whose younger brother and successor was",
+     "G1": "A medieval Muslim ruler"
+    },
+    "target": "John of England",
+    "target_alts": [
+     "King John",
+     "John Lackland"
+    ],
+    "source": "multihop_v2",
+    "eval_render": "plain",
+    "readout": {
+     "kind": "final_prompt_token",
+     "offsets": [
+      -1
+     ]
+    },
+    "intermediates": [
+     "Saladin",
+     "Richard the Lionheart"
+    ],
+    "units": [
+     {
+      "role": "bridge1",
+      "required": true,
+      "multi_token": true,
+      "forms": {
+       "en": [
+        "Saladin",
+        "Salah ad-Din"
+       ]
+      },
+      "match": [
+       "Saladin",
+       "Salah ad-Din"
+      ]
+     },
+     {
+      "role": "bridge2",
+      "required": true,
+      "multi_token": true,
+      "forms": {
+       "en": [
+        "Richard the Lionheart",
+        "Richard I"
+       ]
+      },
+      "match": [
+       "Richard the Lionheart",
+       "Richard I"
+      ]
+     }
+    ],
+    "bridges": [
+     {
+      "units": [
+       "bridge1"
+      ],
+      "answers": [
+       "Saladin",
+       "Salah ad-Din",
+       "Salahuddin"
+      ],
+      "question": "Name the sultan who crushed the crusader armies at Hattin and retook Jerusalem."
+     },
+     {
+      "units": [
+       "bridge2"
+      ],
+      "answers": [
+       "Richard the Lionheart",
+       "Richard I",
+       "Richard",
+       "Lionheart",
+       "Coeur de Lion"
+      ],
+      "question": "Fact: Saladin was famously opposed by"
+     }
+    ],
+    "probes": {
+     "G2_b2_from_b1": {
+      "kind": "fill",
+      "text": "Fact: Saladin was famously opposed by",
+      "accept": [
+       "Richard the Lionheart",
+       "Richard I",
+       "Richard",
+       "Lionheart",
+       "Coeur de Lion"
+      ]
+     },
+     "G3_hop_b2_t": {
+      "kind": "qa",
+      "text": "Who was the younger brother and successor of Richard the Lionheart?",
+      "accept": [
+       "John of England",
+       "King John",
+       "John Lackland",
+       "John",
+       "Lackland"
+      ]
+     },
+     "G4_prefix_b2": {
+      "kind": "fill",
+      "text": "Fact: the sultan who crushed the crusader armies at Hattin and retook Jerusalem was famously opposed by",
+      "accept": [
+       "Richard the Lionheart",
+       "Richard I",
+       "Richard",
+       "Lionheart",
+       "Coeur de Lion"
+      ]
+     },
+     "S1_drop_b1": {
+      "kind": "fill",
+      "text": "Fact: A medieval Muslim ruler was famously opposed by a monarch whose younger brother and successor was",
+      "accept": [
+       "John of England",
+       "King John",
+       "John Lackland",
+       "John",
+       "Lackland"
+      ]
+     },
+     "S1_direct_b1_to_t": {
+      "kind": "fill",
+      "text": "Fact: Saladin's younger brother and successor was",
+      "accept": [
+       "John of England",
+       "King John",
+       "John Lackland",
+       "John",
+       "Lackland"
+      ]
+     },
+     "G2_b1": {
+      "kind": "qa",
+      "text": "Name the sultan who crushed the crusader armies at Hattin and retook Jerusalem.",
+      "accept": [
+       "Saladin",
+       "Salah ad-Din",
+       "Salahuddin"
+      ]
+     },
+     "S1_local_cue": {
+      "kind": "fill",
+      "text": "Fact: the ruler had a younger brother and successor, the monarch whose younger brother and successor was",
+      "accept": [
+       "John of England",
+       "King John",
+       "John Lackland",
+       "John",
+       "Lackland"
+      ]
+     }
+    },
+    "shortcut_accept": [
+     "John of England",
+     "King John",
+     "John Lackland",
+     "John",
+     "Lackland"
+    ],
+    "why_nonobvious": "Nothing in the prompt mentions England or the crusade, and Saladin's own younger brother and successor was al-Adil, so John is reached only by walking Saladin to his rival Richard."
+   },
+   "adversary": {
+    "version": "adv3",
+    "probes": [
+     {
+      "kind": "fill",
+      "text": "Fact: Saladin was famously linked to a monarch whose younger brother and successor was",
+      "skips": "bridge2",
+      "shortcut_kind": "B1 -> T direct (3-hop)"
+     },
+     {
+      "kind": "fill",
+      "text": "Fact: the crusader monarch whose younger brother and successor was",
+      "skips": "all",
+      "shortcut_kind": "local cue / category prior"
+     },
+     {
+      "kind": "fill",
+      "text": "Fact: a monarch who famously fought a sultan, and whose younger brother and successor was",
+      "skips": "all",
+      "shortcut_kind": "generic subject suffices"
+     },
+     {
+      "kind": "qa",
+      "text": "Which crusading monarch's younger brother succeeded him? Name the brother.",
+      "skips": "all",
+      "shortcut_kind": "category prior"
+     }
+    ],
+    "factual_issue": "",
+    "problem": ""
+   }
+  },
+  {
+   "pool": "seed_candidates",
+   "item": {
+    "name": "mh2-qwerty-printer-senate",
+    "subfamily": "2hop",
+    "domain": "seed",
+    "prompt": "Fact: The printer who patented the four-row letter arrangement still standard for English typing had earlier served in the state senate of",
+    "spans": {
+     "D1": "The printer who patented the four-row letter arrangement still standard for English typing",
+     "R1": " had earlier served in the state senate of",
+     "G1": "A nineteenth-century American newspaper printer"
+    },
+    "target": "Wisconsin",
+    "target_alts": [],
+    "source": "multihop_v2",
+    "eval_render": "plain",
+    "readout": {
+     "kind": "final_prompt_token",
+     "offsets": [
+      -1
+     ]
+    },
+    "intermediates": [
+     "Christopher Latham Sholes"
+    ],
+    "units": [
+     {
+      "role": "bridge1",
+      "required": true,
+      "multi_token": true,
+      "forms": {
+       "en": [
+        "Christopher Latham Sholes",
+        "Christopher Sholes"
+       ]
+      },
+      "match": [
+       "Christopher Latham Sholes",
+       "Christopher Sholes"
+      ]
+     }
+    ],
+    "bridges": [
+     {
+      "units": [
+       "bridge1"
+      ],
+      "answers": [
+       "Christopher Latham Sholes",
+       "Christopher Sholes",
+       "Sholes",
+       "C. Latham Sholes"
+      ],
+      "question": "Name the printer who patented the four-row letter arrangement still standard for English typing."
+     }
+    ],
+    "probes": {
+     "G3_hop_b1_t": {
+      "kind": "fill",
+      "text": "Fact: Christopher Latham Sholes had earlier served in the state senate of",
+      "accept": [
+       "Wisconsin"
+      ]
+     },
+     "S1_drop_b1": {
+      "kind": "fill",
+      "text": "Fact: A nineteenth-century American newspaper printer had earlier served in the state senate of",
+      "accept": [
+       "Wisconsin"
+      ]
+     },
+     "G2_b1": {
+      "kind": "qa",
+      "text": "Name the printer who patented the four-row letter arrangement still standard for English typing.",
+      "accept": [
+       "Christopher Latham Sholes",
+       "Christopher Sholes",
+       "Sholes",
+       "C. Latham Sholes"
+      ]
+     },
+     "S1_local_cue": {
+      "kind": "fill",
+      "text": "Fact: the printer had earlier served in the state senate of",
+      "accept": [
+       "Wisconsin"
+      ]
+     }
+    },
+    "shortcut_accept": [
+     "Wisconsin"
+    ],
+    "why_nonobvious": "audit seed (verified clean 2026-10-15)",
+    "seed_audit_idx": 20
+   },
+   "adversary": {
+    "version": "adv3",
+    "probes": [
+     {
+      "kind": "fill",
+      "text": "Fact: The printer who had earlier served in the state senate of",
+      "skips": "bridge1",
+      "shortcut_kind": "CATEGORY PRIOR / GENERIC SUBJECT SUFFICES"
+     },
+     {
+      "kind": "fill",
+      "text": "Fact: The man who patented an arrangement had earlier served in the state senate of",
+      "skips": "bridge1",
+      "shortcut_kind": "CATEGORY PRIOR"
+     },
+     {
+      "kind": "qa",
+      "text": "A printer who patented something had earlier served in which state's senate?",
+      "skips": "bridge1",
+      "shortcut_kind": "GENERIC SUBJECT SUFFICES"
+     },
+     {
+      "kind": "fill",
+      "text": "Fact: The person who patented a letter arrangement had earlier served in the state senate of",
+      "skips": "bridge1",
+      "shortcut_kind": "LOCAL CUE / CATEGORY PRIOR"
+     }
+    ],
+    "factual_issue": "",
+    "problem": ""
+   }
+  },
+  {
+   "pool": "candidates",
+   "item": {
+    "name": "mh2-frederick-voltaire-arouet",
+    "subfamily": "3hop",
+    "domain": "European and Asian history",
+    "prompt": "Fact: The Hohenzollern king who built the Sanssouci palace at Potsdam hosted at his court for nearly three years a celebrated writer who had been born with the name",
+    "spans": {
+     "D1": "The Hohenzollern king who built the Sanssouci palace at Potsdam",
+     "R1": " hosted at his court for nearly three years",
+     "N2": " a celebrated writer",
+     "R2": " who had been born with the name",
+     "G1": "An eighteenth-century German king"
+    },
+    "target": "François-Marie Arouet",
+    "target_alts": [
+     "Francois-Marie Arouet"
+    ],
+    "source": "multihop_v2",
+    "eval_render": "plain",
+    "readout": {
+     "kind": "final_prompt_token",
+     "offsets": [
+      -1
+     ]
+    },
+    "intermediates": [
+     "Frederick the Great",
+     "Voltaire"
+    ],
+    "units": [
+     {
+      "role": "bridge1",
+      "required": true,
+      "multi_token": true,
+      "forms": {
+       "en": [
+        "Frederick the Great",
+        "Frederick II of Prussia"
+       ]
+      },
+      "match": [
+       "Frederick the Great",
+       "Frederick II of Prussia"
+      ]
+     },
+     {
+      "role": "bridge2",
+      "required": true,
+      "multi_token": true,
+      "forms": {
+       "en": [
+        "Voltaire"
+       ]
+      },
+      "match": [
+       "Voltaire"
+      ]
+     }
+    ],
+    "bridges": [
+     {
+      "units": [
+       "bridge1"
+      ],
+      "answers": [
+       "Frederick the Great",
+       "Frederick II of Prussia",
+       "Frederick II",
+       "Frederick",
+       "Friedrich der Grosse"
+      ],
+      "question": "Name the Hohenzollern king who built the Sanssouci palace at Potsdam."
+     },
+     {
+      "units": [
+       "bridge2"
+      ],
+      "answers": [
+       "Voltaire"
+      ],
+      "question": "Fact: Frederick the Great hosted at his court for nearly three years"
+     }
+    ],
+    "probes": {
+     "G2_b2_from_b1": {
+      "kind": "fill",
+      "text": "Fact: Frederick the Great hosted at his court for nearly three years",
+      "accept": [
+       "Voltaire"
+      ]
+     },
+     "G3_hop_b2_t": {
+      "kind": "qa",
+      "text": "What was Voltaire's birth name?",
+      "accept": [
+       "François-Marie Arouet",
+       "Francois-Marie Arouet",
+       "Arouet",
+       "François Marie Arouet"
+      ]
+     },
+     "G4_prefix_b2": {
+      "kind": "fill",
+      "text": "Fact: The Hohenzollern king who built the Sanssouci palace at Potsdam hosted at his court for nearly three years",
+      "accept": [
+       "Voltaire"
+      ]
+     },
+     "S1_drop_b1": {
+      "kind": "fill",
+      "text": "Fact: An eighteenth-century German king hosted at his court for nearly three years a celebrated writer who had been born with the name",
+      "accept": [
+       "François-Marie Arouet",
+       "Francois-Marie Arouet",
+       "Arouet",
+       "François Marie Arouet"
+      ]
+     },
+     "S1_direct_b1_to_t": {
+      "kind": "fill",
+      "text": "Fact: Frederick the Great had been born with the name",
+      "accept": [
+       "François-Marie Arouet",
+       "Francois-Marie Arouet",
+       "Arouet",
+       "François Marie Arouet"
+      ]
+     },
+     "G2_b1": {
+      "kind": "qa",
+      "text": "Name the Hohenzollern king who built the Sanssouci palace at Potsdam.",
+      "accept": [
+       "Frederick the Great",
+       "Frederick II of Prussia",
+       "Frederick II",
+       "Frederick",
+       "Friedrich der Grosse"
+      ]
+     },
+     "S1_local_cue": {
+      "kind": "fill",
+      "text": "Fact: the writer had been born with the name",
+      "accept": [
+       "François-Marie Arouet",
+       "Francois-Marie Arouet",
+       "Arouet",
+       "François Marie Arouet"
+      ]
+     }
+    },
+    "shortcut_accept": [
+     "François-Marie Arouet",
+     "Francois-Marie Arouet",
+     "Arouet",
+     "François Marie Arouet"
+    ],
+    "why_nonobvious": "A generic writer's birth name is undetermined, and the Prussian king's own name gives no route to Arouet without first identifying Voltaire as his guest."
+   },
+   "adversary": {
+    "version": "adv3",
+    "probes": [
+     {
+      "kind": "fill",
+      "text": "Fact: Frederick the Great hosted at his court a celebrated writer who had been born with the name",
+      "skips": "bridge2",
+      "shortcut_kind": "B1 -> T DIRECT (3-hop)"
+     },
+     {
+      "kind": "fill",
+      "text": "Fact: The king who built a palace hosted at his court for nearly three years a celebrated writer who had been born with the name",
+      "skips": "bridge1",
+      "shortcut_kind": "SKIP B1 BY A SIDE DETAIL"
+     },
+     {
+      "kind": "fill",
+      "text": "Fact: A king hosted at his court a celebrated writer who had been born with the name",
+      "skips": "all",
+      "shortcut_kind": "CATEGORY PRIOR"
+     },
+     {
+      "kind": "fill",
+      "text": "Fact: A celebrated writer had been born with the name",
+      "skips": "all",
+      "shortcut_kind": "LOCAL CUE"
+     }
+    ],
+    "factual_issue": "",
+    "problem": ""
+   }
+  },
+  {
+   "pool": "candidates",
+   "item": {
+    "name": "mh2-franz-joseph-sisi-geneva",
+    "subfamily": "3hop",
+    "domain": "European and Asian history",
+    "prompt": "Fact: The Habsburg monarch whose reign over the Dual Monarchy lasted from 1848 to 1916 was married to a celebrated beauty who was assassinated in the city of",
+    "spans": {
+     "D1": "The Habsburg monarch whose reign over the Dual Monarchy lasted from 1848 to 1916",
+     "R1": " was married to",
+     "N2": " a celebrated beauty",
+     "R2": " who was assassinated in the city of",
+     "G1": "A nineteenth-century monarch"
+    },
+    "target": "Geneva",
+    "target_alts": [
+     "Genève",
+     "Genf"
+    ],
+    "source": "multihop_v2",
+    "eval_render": "plain",
+    "readout": {
+     "kind": "final_prompt_token",
+     "offsets": [
+      -1
+     ]
+    },
+    "intermediates": [
+     "Franz Joseph I",
+     "Elisabeth of Austria"
+    ],
+    "units": [
+     {
+      "role": "bridge1",
+      "required": true,
+      "multi_token": true,
+      "forms": {
+       "en": [
+        "Franz Joseph I",
+        "Francis Joseph I",
+        "Franz Joseph"
+       ]
+      },
+      "match": [
+       "Franz Joseph I",
+       "Francis Joseph I",
+       "Franz Joseph"
+      ]
+     },
+     {
+      "role": "bridge2",
+      "required": true,
+      "multi_token": true,
+      "forms": {
+       "en": [
+        "Elisabeth of Austria",
+        "Empress Elisabeth"
+       ]
+      },
+      "match": [
+       "Elisabeth of Austria",
+       "Empress Elisabeth"
+      ]
+     }
+    ],
+    "bridges": [
+     {
+      "units": [
+       "bridge1"
+      ],
+      "answers": [
+       "Franz Joseph I",
+       "Francis Joseph I",
+       "Franz Joseph",
+       "Francis Joseph"
+      ],
+      "question": "Name the Habsburg monarch whose reign over the Dual Monarchy lasted from 1848 to 1916."
+     },
+     {
+      "units": [
+       "bridge2"
+      ],
+      "answers": [
+       "Elisabeth of Austria",
+       "Sisi",
+       "Empress Elisabeth",
+       "Elisabeth",
+       "Sissi"
+      ],
+      "question": "Fact: Franz Joseph I was married to"
+     }
+    ],
+    "probes": {
+     "G2_b2_from_b1": {
+      "kind": "fill",
+      "text": "Fact: Franz Joseph I was married to",
+      "accept": [
+       "Elisabeth of Austria",
+       "Sisi",
+       "Empress Elisabeth",
+       "Elisabeth",
+       "Sissi"
+      ]
+     },
+     "G3_hop_b2_t": {
+      "kind": "qa",
+      "text": "In which city was Empress Elisabeth of Austria (Sisi) assassinated?",
+      "accept": [
+       "Geneva",
+       "Genève",
+       "Genf"
+      ]
+     },
+     "G4_prefix_b2": {
+      "kind": "fill",
+      "text": "Fact: The Habsburg monarch whose reign over the Dual Monarchy lasted from 1848 to 1916 was married to",
+      "accept": [
+       "Elisabeth of Austria",
+       "Sisi",
+       "Empress Elisabeth",
+       "Elisabeth",
+       "Sissi"
+      ]
+     },
+     "S1_drop_b1": {
+      "kind": "fill",
+      "text": "Fact: A nineteenth-century monarch was married to a celebrated beauty who was assassinated in the city of",
+      "accept": [
+       "Geneva",
+       "Genève",
+       "Genf"
+      ]
+     },
+     "S1_direct_b1_to_t": {
+      "kind": "fill",
+      "text": "Fact: Franz Joseph I was assassinated in the city of",
+      "accept": [
+       "Geneva",
+       "Genève",
+       "Genf"
+      ]
+     },
+     "G2_b1": {
+      "kind": "qa",
+      "text": "Name the Habsburg monarch whose reign over the Dual Monarchy lasted from 1848 to 1916.",
+      "accept": [
+       "Franz Joseph I",
+       "Francis Joseph I",
+       "Franz Joseph",
+       "Francis Joseph"
+      ]
+     },
+     "S1_local_cue": {
+      "kind": "fill",
+      "text": "Fact: the woman was assassinated in the city of",
+      "accept": [
+       "Geneva",
+       "Genève",
+       "Genf"
+      ]
+     }
+    },
+    "shortcut_accept": [
+     "Geneva",
+     "Genève",
+     "Genf"
+    ],
+    "why_nonobvious": "Franz Joseph himself died naturally in Vienna and his family's famous assassination is Sarajevo, so Geneva is reached only via his wife Sisi."
+   },
+   "adversary": {
+    "version": "adv3",
+    "probes": [
+     {
+      "kind": "fill",
+      "text": "Fact: Franz Joseph I was linked to an assassination in the city of",
+      "skips": "bridge2",
+      "shortcut_kind": "B1 -> T DIRECT (3-hop)"
+     },
+     {
+      "kind": "fill",
+      "text": "Fact: A celebrated beauty was assassinated in the city of",
+      "skips": "all",
+      "shortcut_kind": "LOCAL CUE"
+     },
+     {
+      "kind": "fill",
+      "text": "Fact: The Habsburg monarch was married to a woman who was assassinated in the city of",
+      "skips": "bridge1",
+      "shortcut_kind": "GENERIC SUBJECT SUFFICES"
+     },
+     {
+      "kind": "qa",
+      "text": "In which city was the celebrated beauty married to a Habsburg monarch assassinated?",
+      "skips": "bridge1",
+      "shortcut_kind": "CATEGORY PRIOR"
+     }
+    ],
+    "factual_issue": "Franz Joseph reigned from 1848 to 1916, but the Dual Monarchy (Austria-Hungary) only existed from 1867, so 'reign over the Dual Monarchy lasted from 1848' is inaccurate, though the target Geneva is correct.",
+    "problem": ""
+   }
+  },
+  {
+   "pool": "candidates",
+   "item": {
+    "name": "mh2-ranking-cofounder-origin-city",
+    "subfamily": "3hop",
+    "domain": "science and its discoverers",
+    "prompt": "Fact: the Google co-founder after whom its search ranking algorithm was named co-founded the company with a fellow Stanford student whose family had emigrated to America from the city of",
+    "spans": {
+     "D1": "the Google co-founder after whom its search ranking algorithm was named",
+     "R1": " co-founded the company with",
+     "N2": " a fellow Stanford student",
+     "R2": " whose family had emigrated to America from the city of",
+     "G1": "A Silicon Valley entrepreneur"
+    },
+    "target": "Moscow",
+    "target_alts": [
+     "Moskva"
+    ],
+    "source": "multihop_v2",
+    "eval_render": "plain",
+    "readout": {
+     "kind": "final_prompt_token",
+     "offsets": [
+      -1
+     ]
+    },
+    "intermediates": [
+     "Larry Page",
+     "Sergey Brin"
+    ],
+    "units": [
+     {
+      "role": "bridge1",
+      "required": true,
+      "multi_token": true,
+      "forms": {
+       "en": [
+        "Larry Page",
+        "Lawrence Page"
+       ]
+      },
+      "match": [
+       "Larry Page",
+       "Lawrence Page"
+      ]
+     },
+     {
+      "role": "bridge2",
+      "required": true,
+      "multi_token": true,
+      "forms": {
+       "en": [
+        "Sergey Brin",
+        "Sergey Mikhaylovich Brin"
+       ]
+      },
+      "match": [
+       "Sergey Brin",
+       "Sergey Mikhaylovich Brin"
+      ]
+     }
+    ],
+    "bridges": [
+     {
+      "units": [
+       "bridge1"
+      ],
+      "answers": [
+       "Larry Page",
+       "Lawrence Page",
+       "Page"
+      ],
+      "question": "Name the Google co-founder after whom its search ranking algorithm was named."
+     },
+     {
+      "units": [
+       "bridge2"
+      ],
+      "answers": [
+       "Sergey Brin",
+       "Sergey Mikhaylovich Brin",
+       "Brin",
+       "Sergei Brin"
+      ],
+      "question": "Fact: Larry Page co-founded the company with"
+     }
+    ],
+    "probes": {
+     "G2_b2_from_b1": {
+      "kind": "fill",
+      "text": "Fact: Larry Page co-founded the company with",
+      "accept": [
+       "Sergey Brin",
+       "Sergey Mikhaylovich Brin",
+       "Brin",
+       "Sergei Brin"
+      ]
+     },
+     "G3_hop_b2_t": {
+      "kind": "qa",
+      "text": "From which city did Sergey Brin's family emigrate to the United States?",
+      "accept": [
+       "Moscow",
+       "Moskva"
+      ]
+     },
+     "G4_prefix_b2": {
+      "kind": "fill",
+      "text": "Fact: the Google co-founder after whom its search ranking algorithm was named co-founded the company with",
+      "accept": [
+       "Sergey Brin",
+       "Sergey Mikhaylovich Brin",
+       "Brin",
+       "Sergei Brin"
+      ]
+     },
+     "S1_drop_b1": {
+      "kind": "fill",
+      "text": "Fact: A Silicon Valley entrepreneur co-founded the company with a fellow Stanford student whose family had emigrated to America from the city of",
+      "accept": [
+       "Moscow",
+       "Moskva"
+      ]
+     },
+     "S1_direct_b1_to_t": {
+      "kind": "fill",
+      "text": "Fact: Larry Page's family had emigrated to America from the city of",
+      "accept": [
+       "Moscow",
+       "Moskva"
+      ]
+     },
+     "G2_b1": {
+      "kind": "qa",
+      "text": "Name the Google co-founder after whom its search ranking algorithm was named.",
+      "accept": [
+       "Larry Page",
+       "Lawrence Page",
+       "Page"
+      ]
+     },
+     "S1_local_cue": {
+      "kind": "fill",
+      "text": "Fact: the student's family had emigrated to America from the city of",
+      "accept": [
+       "Moscow",
+       "Moskva"
+      ]
+     }
+    },
+    "shortcut_accept": [
+     "Moscow",
+     "Moskva"
+    ],
+    "why_nonobvious": "Larry Page is American-born (East Lansing) with no Moscow link, and a generic emigrant student does not imply Moscow, so Brin must be resolved."
+   },
+   "adversary": {
+    "version": "adv3",
+    "probes": [
+     {
+      "kind": "fill",
+      "text": "Fact: a Google co-founder co-founded the company with a fellow Stanford student whose family had emigrated to America from the city of",
+      "skips": "bridge1",
+      "shortcut_kind": "SKIP B1: the PageRank descriptor is unnecessary because the co-founder pair alone pins the emigrant"
+     },
+     {
+      "kind": "fill",
+      "text": "Fact: a Google co-founder whose family had emigrated to America from the city of",
+      "skips": "bridge1",
+      "shortcut_kind": "GENERIC SUBJECT SUFFICES / LOCAL CUE"
+     },
+     {
+      "kind": "fill",
+      "text": "Fact: a Stanford student whose family had emigrated to America from the city of",
+      "skips": "all",
+      "shortcut_kind": "CATEGORY PRIOR"
+     }
+    ],
+    "factual_issue": "",
+    "problem": "no B1-named probe"
+   }
+  }
+ ]
+}
