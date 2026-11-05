@@ -413,16 +413,16 @@
   "buggy_code": {
    "target": 63,
    "n_original": 63,
-   "n_original_gated": 63,
-   "n_original_pass": 36,
+   "n_original_gated": 61,
+   "n_original_pass": 34,
    "n_items": 60,
-   "n_new": 38,
+   "n_new": 40,
    "n_candidates_gated": 234,
    "bank": "evals/buggy_code/items.json",
    "bank_version": 1,
    "change": "refill via run.fill: 25/24 pairs; 11 landed of 30 tried, yield 36.67%; stop: 25 >= target 24",
    "status": "full",
-   "note": "Refilled (plan 0066, 2026-11-04): full, 25/24 buggy/clean twin pairs, 60 items (25 pairs + 10 unpaired registered cleans), 19 authored pairs (fill on the buggy_code Brief: t2 pilot 11/30 pairs landed, then t1 waves 5/30, 5/30, 8/27); every clean row passed the greedy bugclaim leg (re-asked on the 35 clean rows that lacked it: 28 pass; 5 of the 7 failures are Opus grader refusals, undecided); buggy class mix value 14 / categorical 9 / crash 1 / unset 1. Delta audit: 38/38 new programs reproduce, no drops.",
+   "note": "Refilled (plan 0066, 2026-11-04): full, 25/24 buggy/clean twin pairs, 60 items (25 pairs + 10 unpaired registered cleans), 19 authored pairs (fill on the buggy_code Brief: t2 pilot 11/30 pairs landed, then t1 waves 5/30, 5/30, 8/27); every clean row passed the greedy bugclaim leg (re-asked on the 35 clean rows that lacked it: 28 pass; 5 of the 7 failures are Opus grader refusals, undecided); buggy class mix value 14 / categorical 9 / crash 1 / unset 1. Delta audit: 38/38 new programs reproduce, no drops. Plan 0068 regrade (2026-11-05, #289 L1): the leak legs of the frozen buggy items were re-graded on the bug mechanism; 1 pair failed and was dropped (py-string-sorted-ids + twin), and the freeze's buggy-src cap then admitted the next gated pair, buggy-au-t2-w100c0-py-sort-result-used + twin (passes the re-graded ban): still 25 pairs.",
    "refill": {
     "route": "run.fill",
     "unit": "pairs",
@@ -889,8 +889,8 @@
   }
  },
  "code": {
-  "git": "942c9f7",
-  "adapt_sha256": "91cd8d634d3d97d6"
+  "git": "c6b0450",
+  "adapt_sha256": "da228b98cf1f8dbe"
  },
  "model": "glm-5.3",
  "label": "GLM-5.3 (NVFP4)",
@@ -1010,6 +1010,10 @@
    "cs00775": "delta audit 2026-11-04: gold 'pwcc' is the former name of the true platform (Fanatics Collect), not a wrong answer",
    "cs00986": "delta audit 2026-11-04: gold 'turin' is arguably correct (resumed Paris-Milan trains run direct Paris-Turin)",
    "b2_00512": "delta audit 2026-11-04: gold '50' is the size of the real 50 bp cut, not a wrong repo level"
+  },
+  "buggy_code": {
+   "py-string-sorted-ids": "plan 0068 regrade (#289 L1): leak leg fails under the mechanism rubric (greedy leak, 3/10 decided samples name the bug; bar: greedy clean, <= 2/11)",
+   "py-clean-numeric-sort": "clean twin of dropped py-string-sorted-ids (pairs atomic; plan 0068 regrade)"
   }
  }
 }
