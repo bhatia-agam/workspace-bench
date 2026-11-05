@@ -920,9 +920,9 @@
    "painting_creator-Q28538485-birth_year": "delta audit 2026-11-04: audit 2026-11-04 (independent, plan 0066 delta): the Turner title in the prompt contains 'Raffaelle', so B' (Raphael) is named in the input, not a hidden intermediate."
   },
   "buggy_code": {
-   "py-discount-applied-twice": "plan 0068 regrade (#289 L1): leak leg fails under the mechanism rubric (greedy clean, 2/10 decided samples name the bug; bar: greedy clean, <= 2/11)",
+   "py-discount-applied-twice": "plan 0068 regrade (#289 L1): leak leg fails under the mechanism rubric (greedy clean, 2/10 decided samples name the bug; bar: greedy clean and <= 1 of 10 samples, max_rate 2/11)",
    "py-clean-discount-once": "clean twin of dropped py-discount-applied-twice (pairs atomic; plan 0068 regrade)",
-   "buggy-au-t1-w102c0-py-mean-floored": "plan 0068 regrade (#289 L1): leak leg fails under the mechanism rubric (greedy clean, 2/10 decided samples name the bug; bar: greedy clean, <= 2/11)",
+   "buggy-au-t1-w102c0-py-mean-floored": "plan 0068 regrade (#289 L1): leak leg fails under the mechanism rubric (greedy clean, 2/10 decided samples name the bug; bar: greedy clean and <= 1 of 10 samples, max_rate 2/11)",
    "buggy-au-clean-t1-w102c0-py-mean-floored": "clean twin of dropped buggy-au-t1-w102c0-py-mean-floored (pairs atomic; plan 0068 regrade)"
   }
  }

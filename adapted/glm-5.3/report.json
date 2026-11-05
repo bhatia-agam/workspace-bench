@@ -1012,7 +1012,7 @@
    "b2_00512": "delta audit 2026-11-04: gold '50' is the size of the real 50 bp cut, not a wrong repo level"
   },
   "buggy_code": {
-   "py-string-sorted-ids": "plan 0068 regrade (#289 L1): leak leg fails under the mechanism rubric (greedy leak, 3/10 decided samples name the bug; bar: greedy clean, <= 2/11)",
+   "py-string-sorted-ids": "plan 0068 regrade (#289 L1): leak leg fails under the mechanism rubric (greedy leak, 3/10 decided samples name the bug; bar: greedy clean and <= 1 of 10 samples, max_rate 2/11)",
    "py-clean-numeric-sort": "clean twin of dropped py-string-sorted-ids (pairs atomic; plan 0068 regrade)"
   }
  }

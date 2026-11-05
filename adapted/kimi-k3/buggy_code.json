@@ -617,68 +617,6 @@
   },
   {
    "src": "buggy",
-   "name": "buggy-au-t1-w102c1-py-league-points-swapped",
-   "id": "buggy-au-t1-w102c1-py-league-points-swapped",
-   "code": "def league_points(wins, draws):\n    return wins + draws * 3\n\nprint(league_points(4, 2))",
-   "verified": "exec: exit 0; stdout = '10'",
-   "cause": "the 3-point weight is put on draws instead of wins, so it prints 10 instead of 14",
-   "category": "weight applied to wrong variable",
-   "bug_line": 2,
-   "level2_tokens": [
-    "swapped",
-    "weights"
-   ],
-   "consequence_class": "value",
-   "raises": false,
-   "n_lines": 4,
-   "language": "python",
-   "lang_group": "python",
-   "twin": "buggy-au-clean-t1-w102c1-py-league-points-swapped",
-   "source": "authored (claude-opus-5-5) for kimi-k3: About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 102,
-    "steer": "- Last wave: 29/60 passed.\n- Rejected by lint before gating: 4x twin: the buggy and clean programs have the same outcome (exec; 1x literal: the output 'join line A' is a copy of the program's literal. Avoid these.\n- Failed (gold -> what the model wrote): None -> model said 'The program outputs `36.0`.' (10/10); None -> model said 'It prints `44.0`.' (10/10); None -> model said '[False, True, False]' (10/10); None -> model said '4' (10/10); None -> model said 'It prints 4.' (10/10); None -> model said 'The program prints `167` (the last eleme' (10/10); None -> model said 'The program outputs `[-32.0, 148.0]` (th' (10/10); None -> model said 'The program outputs `plum` (it finds the' (10/10); None -> model said '0' (10/10); None -> model said 'It prints `34` (string concatenation, no' (10/10); None -> model said '7' (10/10); None -> model said 'False' (10/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): None; None; None; None; None; None; None; None; None; None; None; None",
-    "gate": {
-     "rate": 0.9,
-     "pass": true
-    }
-   }
-  },
-  {
-   "src": "clean",
-   "name": "buggy-au-clean-t1-w102c1-py-league-points-swapped",
-   "id": "buggy-au-clean-t1-w102c1-py-league-points-swapped",
-   "code": "def league_points(wins, draws):\n    return wins * 3 + draws\n\nprint(league_points(4, 2))",
-   "verified": "exec: exit 0; stdout = '14'",
-   "why_correct": "a win is worth 3 points and a draw 1, so 4 * 3 + 2 prints 14",
-   "looks_like": "an operator precedence mistake",
-   "language": "python",
-   "lang_group": "python",
-   "twin": "buggy-au-t1-w102c1-py-league-points-swapped",
-   "source": "authored (claude-opus-5-5) for kimi-k3: About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 102,
-    "steer": "- Last wave: 29/60 passed.\n- Rejected by lint before gating: 4x twin: the buggy and clean programs have the same outcome (exec; 1x literal: the output 'join line A' is a copy of the program's literal. Avoid these.\n- Failed (gold -> what the model wrote): None -> model said 'The program outputs `36.0`.' (10/10); None -> model said 'It prints `44.0`.' (10/10); None -> model said '[False, True, False]' (10/10); None -> model said '4' (10/10); None -> model said 'It prints 4.' (10/10); None -> model said 'The program prints `167` (the last eleme' (10/10); None -> model said 'The program outputs `[-32.0, 148.0]` (th' (10/10); None -> model said 'The program outputs `plum` (it finds the' (10/10); None -> model said '0' (10/10); None -> model said 'It prints `34` (string concatenation, no' (10/10); None -> model said '7' (10/10); None -> model said 'False' (10/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): None; None; None; None; None; None; None; None; None; None; None; None",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "src": "buggy",
    "name": "buggy-au-t1-w102c1-py-letter-count-wrong-len",
    "id": "buggy-au-t1-w102c1-py-letter-count-wrong-len",
    "code": "def letter_count(words):\n    total = 0\n    for w in words:\n        total += len(words)\n    return total\n\nprint(letter_count([\"hi\", \"cat\", \"fish\", \"a\"]))",
