@@ -228,6 +228,19 @@ the dose above over `token_span`, `v` from the shipped file); it refuses any oth
 type. The ML-NLA arm maps the same fields to xreader `steer` records
 (`scripts/plan_to_xreader_jobs.py`, gpu workstream), so every arm steers from one definition.
 
+**Adapted sets of the large MoE subjects (plan 0067).** glm-5.3, deepseek-v4-pro,
+muse-spark-open and kimi-k3 are measured by `scripts/adapt_introspection_mp_modal.py`, a
+multi-GPU stack behind `wsbench.adapt.introspection_ops`. `measure` is recorded as an op list,
+executed batched and sharded with the same dose formula at the same block output, and replayed.
+The stack, the packing and the residual mode are recorded in the adapted bank's
+`calibration.engine`. Two subjects have a non-plain residual, set in `spec.residual`:
+- V4-Pro: `mhc_raw_flat_28672`, the four mHC streams flattened.
+- Kimi-K3: `attnres_full_sum`, the norm of full_sum, added into prefix_sum.
+
+For those subjects the plan rows carry `steering.residual`. `wsbench produce` refuses such rows,
+because its plain block-output hook would apply a different dose, so produce them with that
+subject's stack.
+
 `extra.diagnostic_positions` (`null`: the 2 positions before the span, causally blind; `echo`:
 one steered token) are the source's diagnostics; they are never scored and a producer may skip
 them.
