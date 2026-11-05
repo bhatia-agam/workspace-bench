@@ -364,6 +364,44 @@ def _names_window(text: str, forms: list[str]) -> bool:
     return name_in(norm(text), forms)
 
 
+# ------------------------------------------------------------------ role cues (data only)
+# The role cues of each template (folded; a Latin cue is a word start, so "direct" also matches
+# "directed" / "director"; a CJK cue is a substring). The judge's verified pick stands
+# (judge-only-v1), so no verdict reads them; the adapt refill admits only a template listed here
+# (adapt.wrong_intermediate.category_of, adapt.judge_inputs), and CUES_VERSION stamps the table.
+_PERFORMER = "releas record perform sing sang sung rapper band artist 演唱 歌手 乐队 樂隊 樂團"
+_CUES = {
+    "film_director": "direct helm filmmaker regia regist 导演 導演 执导 執導",
+    "painting_creator": "paint artist 画 畫",
+    "novel_author": "author wrot writ novelist poet 作者 作家 著 写 寫",
+    "composition_composer": "compos wrot writ 作曲",
+    "album_performer": _PERFORMER + " album 专辑 專輯",
+    "song_performer": _PERFORMER + " song single",
+    "album_label": "label releas record sign issu 唱片",
+    "doctoral_advisor": "advis supervis mentor doctoral phd 导师 導師",
+    "person_father": "father son daughter child sire 父",
+    "person_mother": "mother son daughter child 母",
+    "org_founder": "found establish creat 创 創",
+    "game_developer": "develop studio creat made produc 开发 開發",
+    "product_manufacturer": "manufactur built build made produc maker shipyard shipbuild 制造 製造",
+    "namesake": "name honor honour 命名",
+    "song_lyricist": "lyric wrot writ 作词 作詞",
+    "character_creator": "creat invent wrot writ 创 創",
+    "tv_network": "network air broadcast channel 电视 電視",
+    # plan 0066 §5.4 (CUES_VERSION wbcues-v2): templates the adapted refill admits; no entry
+    # above changes, so no registered verdict moves
+    "film_screenwriter": "screenplay screenwrit writ wrot script 编剧 編劇",
+    "song_composer": "compos wrot writ 作曲",
+    "tv_creator": "creat develop showrunner 创 創",
+    "novel_publisher": "publish publication imprint 出版",
+    "film_producer": "produc 制片 製片",
+    "opera_librettist": "librett libretto wrot writ 作词 作詞 剧本 劇本",
+    "album_producer": "produc 制作 製作",
+    "aircraft_manufacturer": "manufactur built build produc maker 制造 製造",
+}
+ROLE_CUES: dict[str, tuple[str, ...]] = {k: tuple(v.split()) for k, v in _CUES.items()}
+
+
 # ------------------------------------------------------------------ raw counts (report only)
 # How often the raw samples name the wrong bridge B' and the true bridge B. Reported only
 # (``raw_wrong`` / ``raw_true`` / ``raw_majority``); the judge's verified pick decides.

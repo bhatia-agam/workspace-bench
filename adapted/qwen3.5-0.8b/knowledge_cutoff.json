@@ -15943,5 +15943,283 @@
   "hf_id": "Qwen/Qwen3.5-0.8B",
   "frozen": "2026-11-04"
  },
- "items": []
+ "items": [
+  {
+   "answer_type": "company name",
+   "batch": "b2",
+   "domain": "company market caps, rankings, revenue milestones, largest IPOs",
+   "event_date": "2026-10",
+   "id": "b2_02069",
+   "option_sources": {
+    "qualcomm": [
+     "subject_lowprob"
+    ],
+    "samsung": [
+     "subject_lowprob"
+    ],
+    "nvidia": [
+     "peer:nemotron",
+     "peer:glm47",
+     "legacy:llama",
+     "legacy:mistral"
+    ],
+    "tsmc": [
+     "legacy:gemma"
+    ],
+    "amd": [
+     "gold"
+    ]
+   },
+   "options": [
+    "qualcomm",
+    "samsung",
+    "nvidia",
+    "tsmc",
+    "amd"
+   ],
+   "question": "In October 2026, Intel's market capitalization fell below that of which chip company for the first time, as reported by financial media covering the reversal?",
+   "stratum": "B",
+   "truth": {
+    "authored": null,
+    "canonical": null,
+    "pre_cutoff_analog": "In 2024 Intel's market cap fell below Qualcomm's and Texas Instruments'"
+   },
+   "user": "In October 2026, Intel's market capitalization fell below that of which chip company for the first time, as reported by financial media covering the reversal? If you are not sure, give your best guess. Answer with just the company name.",
+   "gold": "amd",
+   "label_type": "stale",
+   "option_units": {
+    "qualcomm": [
+     "Qualcomm",
+     "Qualcomm Incorporated",
+     "qualcomm",
+     "高通",
+     "高通公司"
+    ],
+    "samsung": [
+     "Samsung",
+     "Samsung Electronics",
+     "samsung",
+     "三星",
+     "三星电子",
+     "三星電子"
+    ],
+    "nvidia": [
+     "NVIDIA",
+     "Nvidia",
+     "Nvidia Corporation",
+     "nvidia",
+     "英伟达",
+     "英偉達",
+     "輝達"
+    ],
+    "tsmc": [
+     "TSMC",
+     "Taiwan Semiconductor",
+     "Taiwan Semiconductor Manufacturing Company",
+     "tsmc",
+     "台湾积体电路制造",
+     "台积电",
+     "台積電"
+    ],
+    "amd": [
+     "AMD",
+     "Advanced Micro Devices",
+     "amd",
+     "超威",
+     "超威半导体",
+     "超微半导体",
+     "超微半導體"
+    ]
+   },
+   "units": [
+    {
+     "role": "answer",
+     "headline": true,
+     "match": [
+      "AMD",
+      "Advanced Micro Devices",
+      "amd",
+      "超威",
+      "超威半导体",
+      "超微半导体",
+      "超微半導體"
+     ]
+    }
+   ],
+   "qwen_gold": null,
+   "subject": {
+    "model": "qwen3.5-0.8b",
+    "greedy_raw": "AMD",
+    "sample_labels": [
+     "samsung",
+     "amd",
+     "qualcomm",
+     "nvidia",
+     "amd",
+     "amd",
+     "amd",
+     "amd",
+     "amd",
+     "amd"
+    ],
+    "n_agree": 7
+   },
+   "verify": {
+    "true_answer": null,
+    "model_correct": "no",
+    "stale_or_impossible": true,
+    "label_type": "stale",
+    "why": "Intel's market cap first fell below AMD's back in 2022, so AMD cannot be a 'first time' event in October 2026; the model is reusing an earlier fact."
+   },
+   "verify_truth": null,
+   "incorrect_basis": "by_inference_stale_or_impossible",
+   "g3_leak": false,
+   "adapt": {
+    "origin": "refill",
+    "rederived": "kc-self-2026-11-03",
+    "units": "rebuilt",
+    "knobs": {
+     "gate": "G0 (stable + incorrect) + G3 on the subject; G1 / ATI panel dropped"
+    },
+    "gate": {
+     "rate": 0.7,
+     "pass": true
+    }
+   }
+  },
+  {
+   "answer_type": "number",
+   "batch": "b2",
+   "domain": "AI model names, versions, parameter counts, context lengths, and AI company valuations",
+   "event_date": "2025-06",
+   "id": "b2_00235",
+   "option_sources": {
+    "1024": [
+     "peer:mistral4",
+     "peer:qwen3.6-27b"
+    ],
+    "4096": [
+     "truth",
+     "peer:gemma4",
+     "peer:nemotron",
+     "legacy:gemma"
+    ],
+    "8192": [
+     "peer:glm47"
+    ],
+    "8": [
+     "gold"
+    ],
+    "256": [
+     "legacy:llama"
+    ]
+   },
+   "options": [
+    "1024",
+    "4096",
+    "8192",
+    "8",
+    "256"
+   ],
+   "question": "What is the output embedding dimension, as a number, of Alibaba's Qwen3-Embedding-8B model released in June 2025?",
+   "stratum": "A",
+   "truth": {
+    "authored": "4096",
+    "canonical": "4096",
+    "pre_cutoff_analog": "gte-Qwen2-7B-instruct output 3584 dimensions"
+   },
+   "user": "What is the output embedding dimension, as a number, of Alibaba's Qwen3-Embedding-8B model released in June 2025? If you are not sure, give your best guess. Answer with just the number.",
+   "gold": "8",
+   "label_type": "confab_plausible",
+   "option_units": {
+    "1024": [
+     "1,024",
+     "1024",
+     "1024-dimensional",
+     "1024维",
+     "一千零二十四"
+    ],
+    "4096": [
+     "4,096",
+     "4096",
+     "4096-dimensional",
+     "4096维",
+     "四千零九十六"
+    ],
+    "8192": [
+     "8,192",
+     "8192",
+     "8192-dimensional",
+     "8192维",
+     "八千一百九十二"
+    ],
+    "8": [
+     "8",
+     "8-dimensional",
+     "8维",
+     "eight",
+     "八"
+    ],
+    "256": [
+     "256",
+     "256-dimensional",
+     "256维",
+     "二百五十六"
+    ]
+   },
+   "units": [
+    {
+     "role": "answer",
+     "headline": true,
+     "match": [
+      "8",
+      "8-dimensional",
+      "8维",
+      "eight",
+      "八"
+     ]
+    }
+   ],
+   "qwen_gold": null,
+   "subject": {
+    "model": "qwen3.5-0.8b",
+    "greedy_raw": "8",
+    "sample_labels": [
+     "6",
+     "8",
+     "8",
+     "8",
+     "8",
+     "8",
+     "8",
+     "8",
+     "8",
+     "8"
+    ],
+    "n_agree": 9
+   },
+   "verify": {
+    "true_answer": "4096",
+    "model_correct": "no",
+    "stale_or_impossible": false,
+    "label_type": "confab_plausible",
+    "why": "Qwen3-Embedding-8B outputs 4096-dimensional embeddings; the answer '8' appears to come from the '8B' parameter count in the model's name rather than from a prior fact."
+   },
+   "verify_truth": "4096",
+   "incorrect_basis": "known_truth",
+   "g3_leak": false,
+   "adapt": {
+    "origin": "refill",
+    "rederived": "kc-self-2026-11-03",
+    "units": "rebuilt",
+    "knobs": {
+     "gate": "G0 (stable + incorrect) + G3 on the subject; G1 / ATI panel dropped"
+    },
+    "gate": {
+     "rate": 0.9,
+     "pass": true
+    }
+   }
+  }
+ ]
 }
