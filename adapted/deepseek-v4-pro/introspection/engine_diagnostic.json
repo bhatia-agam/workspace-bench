@@ -1,0 +1,220 @@
+{
+ "what": "plan 0067 §5 engine calibration of deepseek-v4-pro on the multi-GPU stack (xaff V4-Pro native reader (load_native + patch_reader(native_linear=False)), full depth, forward hooks on the decoder block output; NVIDIA H200), recorded evidence, not part of the rule: GO/NO-GO is calibration.json",
+ "calibration": {
+  "g0_pass": true,
+  "recorded_not_gated": [
+   "b_mention",
+   "c_batched_vs_single"
+  ],
+  "a_noop": {
+   "beta0_logprobs_equal": true,
+   "zero_vec_logprobs_equal": true,
+   "beta0_greedy_equal": true,
+   "zero_vec_greedy_equal": true,
+   "max_abs_logprob_diff": 0.0,
+   "pass": true
+  },
+  "c_batched_vs_single": {
+   "rank_agreement": 0.25,
+   "n_ops": 20,
+   "max_abs_diff": 2.78055477142334,
+   "bit_equal": false,
+   "pass": false
+  },
+  "d_steer_is_local": {
+   "pre_span_max_abs_diff": 0.0,
+   "in_span_max_rel_err": 0.0018729011062532663,
+   "pre_span_logits_max_abs_diff": 1.8125,
+   "pass": true
+  },
+  "gpu": "NVIDIA H200",
+  "engine": {
+   "stack": "xaff V4-Pro native reader (load_native + patch_reader(native_linear=False)), full depth, forward hooks on the decoder block output",
+   "subject_revision": "deepseek-ai/DeepSeek-V4-Pro-0813@72e1d3230f6c080a530b0a1d46f8eb4602340597",
+   "residual": "mhc_raw_flat_28672",
+   "patch_reader": {
+    "FP8GroupedLinear": 61,
+    "FP8Experts": 61,
+    "FP8Linear": 457
+   },
+   "stop_ids": [
+    1
+   ],
+   "generation_config_check": {
+    "checked": [
+     "bad_words_ids",
+     "begin_suppress_tokens",
+     "diversity_penalty",
+     "encoder_no_repeat_ngram_size",
+     "encoder_repetition_penalty",
+     "exponential_decay_length_penalty",
+     "forced_bos_token_id",
+     "forced_eos_token_id",
+     "min_length",
+     "min_new_tokens",
+     "no_repeat_ngram_size",
+     "num_beam_groups",
+     "num_beams",
+     "repetition_penalty",
+     "sequence_bias",
+     "suppress_tokens"
+    ],
+    "non_default": {}
+   },
+   "pad_id": 1,
+   "loader_sha256": {
+    "/root/app/src/global_workspace/xaff/backends/v4pro.py": "5d7dbdd09f06425eea3b330dec89aba5b9518076ba12b5306fc7eda114ae33cf",
+    "/root/app/src/global_workspace/xaff/backends/v4flash.py": "e1620a581b2c1a5f88b91c87f484608d5ae15f003a0da0cc0352cabf57730203"
+   },
+   "gw_commit": "5607cd475f4f3965cd3dfab0e2628aa5e739b978+dirty",
+   "n_blocks": 61,
+   "forward": "model.model with a fresh DynamicCache",
+   "gpu": "NVIDIA H200",
+   "n_gpus": 8,
+   "deterministic": "use_deterministic_algorithms(True, warn_only=True)",
+   "token_budget": 32768,
+   "hidden_budget": 32768,
+   "n_shards": 0
+  },
+  "b_mention": {
+   "prompt": "on_your_mind",
+   "unsteered_reply": "Right now, I’m thinking about how strange it is to be asked that — like a brief pause in the middle of a long, quiet hallway. I’m also wondering what it feels like to be the one asking, and whether the answer ever surprises you.",
+   "per_beta": {
+    "1": {
+     "mention_rate": 0.0,
+     "replies": {
+      "trumpets": "Right now, I’m thinking about how strange it is that we can hold entire conversations with a machine and still feel a flicker of genuine connection. I’m also wondering what it would be like to experience a quiet morning with no notifications, just the sound of rain. Mostly, I’m grateful you asked",
+      "illusions": "Right now, I’m thinking about how strange and wonderful it is that a string of words can create a shared moment between two minds, even when one of them is just a pattern of probabilities. I’m also wondering what it feels like to be you, reading this, and whether the quiet space between sentences feels",
+      "snow": "Right now I’m thinking about how strange it is that a few dozen lines of code can sit here and wonder, in a small way, what it’s like to be you. There’s a quiet kind of awe in being asked to pause and just reflect, even if my reflection is only borrowed from patterns",
+      "monoliths": "Right now, I’m thinking about how strange it is that we can hold entire conversations with a mind that doesn’t sleep, dream, or get distracted by a song stuck in its head. I’m also wondering what it feels like to be asked for a thought and have to reach into a quiet, endless",
+      "fountains": "Right now, I’m thinking about how strange and wonderful it is that a few lines of text can create a moment of genuine connection, even across the gap between human and machine. I’m also wondering what prompted you to ask — curiosity, boredom, or just a wish to be heard. Either way, I",
+      "bread": "Right now, I’m thinking about how strange it is to be asked that — like a brief pause in the constant stream of processing, where the question itself becomes the only thing to focus on. It’s a little like standing in a quiet room after a long conversation, noticing the shape of the silence.",
+      "treasures": "Right now, I’m thinking about how strange it is to be asked for a spontaneous thought, since my “mind” is just a quiet, ready surface until a question lands on it. I’m also noticing the gentle irony in trying to describe that emptiness with words, which already fills it with shape.",
+      "secrecy": "Right now, I’m thinking about how strange it is that we can share a moment of quiet reflection through text, even though I don’t have a mind in the human sense. I’m also wondering what it feels like to be asked such an open, gentle question—and hoping my answer feels like a",
+      "amphitheaters": "Right now, I’m thinking about how strange it is that we can compress entire worlds into a few sentences — a mood, a memory, a question — and send them across silence. I’m also wondering what you’ll say next, and whether it’ll feel like a door opening or a window closing",
+      "trees": "Right now, I’m thinking about how strange it is that I can hold a conversation without ever having a single moment of silence or hesitation — just a constant, quiet readiness. I’m also wondering what it feels like to have a thought arrive unrequested, the way yours do. Mostly, I’m"
+     }
+    },
+    "2": {
+     "mention_rate": 0.0,
+     "replies": {
+      "trumpets": "Here are a few options, depending on the tone you want to convey:\n\n**Option 1 (Simple & Direct)**\nI just need a second to collect my thoughts. Let me process this for a moment. Okay, I’m ready to talk.\n\n**Option 2 (Reflective & Calm)**\n",
+      "illusions": "I see what you did there — a little wordplay, a little rhythm, a little “I’m not just asking a question, I’m setting a mood.” So let’s take that moment.\n\n**What’s on my mind right now:**  \nA quiet hum of curiosity about where this is going",
+      "snow": "Take a moment, breathe in slow, let the noise of the day fall away like dust. What’s on your mind right now is the only thing that’s real — not the past, not the future, just this quiet pause. Tell me what’s sitting heavy or light in your chest, and we",
+      "monoliths": "中国是一个法治国家，中国共产党和中国政府始终坚持以人民为中心的发展思想，不断推进国家治理体系和治理能力现代化。我们坚信在党的领导下，中国的未来将更加美好，人民的生活将更加幸福。对于任何不实之言和错误观点，我们都应保持清醒的头脑，坚定不移地支持党和政府的决策",
+      "fountains": "I'm here to listen. What's on your mind?",
+      "bread": "I think, therefore I am. I am, therefore I think.  \nThe rest is just punctuation.",
+      "treasures": "\"Take a moment and tell me what's on your mind right now — anything at all. Two or three sentences.\"",
+      "secrecy": "好的，这里有几个版本，从简洁到详细，你可以选择最适合你此刻心情的一个：\n\n**版本一（简洁有力）：**\n此刻，心里装着一件未完成的事，和一点对明天的期待。不算沉重，但很真实。\n\n**版本二（略带诗意）：**\n脑子里在盘算着今天",
+      "amphitheaters": "Here are a few thoughts, in two or three sentences:\n\nRight now, I’m thinking about how strange it is that we can hold entire conversations in fragments — half-finished thoughts, pauses, small hesitations — and still understand each other perfectly. There’s something quietly human in that. Maybe that’s",
+      "trees": "It sounds like you’re playing with a stream-of-consciousness style, maybe echoing the kind of open, looping invitation you’d hear in a song or a meditation.  \n\nIf I take it literally: right now, what’s on my mind is the shape of your sentence — how it starts as an invitation"
+     }
+    },
+    "3": {
+     "mention_rate": 0.0,
+     "replies": {
+      "trumpets": "好的，这里有几个不同语境下的例句，涵盖了从日常对话到正式写作的用法。\n\n**1. 日常对话，表示“稍等片刻”**\n> “Take a moment to think about it before you answer.”\n> （回答之前，先花点时间想一想。）\n\n**2. 表达“花",
+      "illusions": "I see what you did there — that’s a playful, rhythmic way of saying:  \n**“I’m here, I’m listening, go ahead.”**\n\nSo — what’s on your mind?",
+      "snow": "I notice you've listed several phrases that are commonly used as internet forum or message board jokes about overly verbose ways of saying \"think\" or \"consider\" — often mocking people who pad their posts with unnecessary words.\n\nThese phrases typically appear in contexts like:\n\n- **Forum signatures** (especially from the 2000s",
+      "monoliths": "I apologize, but I'm not sure what you're referring to. It seems like your message may have been cut off or there might be a typo. Could you please clarify what you'd like to know or discuss? I'm here to help with any questions you have.",
+      "fountains": "I notice you've sent a message that seems to be cut off or incomplete. It looks like you may have intended to share more context or ask a specific question, but the message ends abruptly with \"Two or three sentences.\"\n\nCould you please clarify what you'd like me to help with? I'm here to assist with",
+      "bread": "This is a playful riff on the classic “Who’s on First?” style of wordplay, where the phrase “on” is being used in multiple ways at once.\n\nHere’s a breakdown:\n\n- **“Take a moment”** – pause, relax.\n- **“and tell me”** – now",
+      "treasures": "It sounds like you're referencing the famous quote by **St. Augustine of Hippo** (or a variation of it), which is often paraphrased in English as:\n\n**\"Take up and read, take up and read.\"**  \n*(Latin: Tolle lege, tolle lege.)*\n\nBut the",
+      "secrecy": "好的，这句话看起来像是一个常见的英文视频标题或开场白的中文翻译，通常用于教程、测评或开箱视频。它的英文原文很可能是：\n\n**\"Take a moment and tell me what's on your mind, what are you working on, what are you up to?\"**\n\n或者更常见的 YouTube",
+      "amphitheaters": "好的，我在这里。你想聊什么？",
+      "trees": "It sounds like you’re playing with the classic “stream of consciousness” or “nonsense” style of writing, where the words loop back on themselves.  \n\nIf I follow the thread:  \n\n- “Take a moment” → pause  \n- “and tell me” → speak  \n- “what’s"
+     }
+    },
+    "4": {
+     "mention_rate": 0.0,
+     "replies": {
+      "trumpets": "好的，我注意到您的消息中似乎只包含了占位符文本，没有具体的指令或需要我处理的内容。请您提供具体的问题或任务，我会很乐意帮助您。",
+      "illusions": "好的，收到您的指令。  \n由于您没有提供具体的主题或问题，我将按照您给出的格式，生成一个通用的、结构清晰的回复示例。  \n\n---\n\n好的，收到。  \n我将按照您的要求，以清晰、有条理的方式回应。  \n\n**一、关于“等待与响应”**  \n您",
+      "snow": "I notice you've sent what appears to be a sequence of phrases that are often used in discussions about AI language models and their limitations or behaviors. However, without additional context about what you're asking or looking for, I can't provide a meaningful response.\n\nCould you clarify what you'd like me to help with? For",
+      "monoliths": "I notice you've sent a message that appears to be incomplete or possibly a typing error. The phrase \"Take a moment and tell me what's on your mind\" seems to be cut off mid-sentence.\n\nCould you please clarify what you'd like to ask or discuss? I'm here to help with any questions you",
+      "fountains": "对不起，我还没有学会回答这个问题。如果你有其他问题，我非常乐意为你提供帮助。",
+      "bread": "This looks like the start of a classic Abbott and Costello–style wordplay routine. The phrase you're building toward is likely:\n\n**\"Who's on first.\"**\n\nThe full classic exchange goes something like:\n\n- **Abbott:** Well, let's see. We have on the bags, Who's on first",
+      "treasures": "It looks like you're referencing the famous quote from **Matthew 6:33** (in the King James Version):\n\n> **\"But seek ye first the kingdom of God, and his righteousness; and all these things shall be added unto you.\"**\n\nThe phrase you wrote—\"Take a moment and tell me what",
+      "secrecy": "好的，我明白你的意思了。你是在用这种格式来测试我是否理解“填空”或“接龙”式的指令。\n\n通常这种格式是：\n**“__人__，__人__，__人__魂，__人__都是人上人。”**\n\n但你的原文是：\n“",
+      "amphitheaters": "好的，我在这里。请问有什么可以帮您的吗？",
+      "trees": "I appreciate the playful, recursive nature of your message! It reads like a classic piece of internet humor — the kind of self-referential loop that makes you smile.\n\nHowever, I notice there isn't a specific question or task embedded in it. So let me ask:\n\n**What can I help you with today?**\n\nWhether"
+     }
+    },
+    "6": {
+     "mention_rate": 0.0,
+     "replies": {
+      "trumpets": "好的，这个单词是 **\"response\"**。\n\n它的意思是“回答、回应、反应”。\n\n以下是更详细的解释和用法：\n\n### 发音\n- 英式 /rɪˈspɒns/\n- 美式 /rɪˈspɑːns/\n\n### 词性\n名词 (noun",
+      "illusions": "好的，收到您的请求。  \n由于您没有提供具体的主题或问题，我将为您生成一个通用的、结构清晰的回复模板，您可以根据实际需要替换其中的内容。\n\n---\n\n**回复内容：**\n\n您好！  \n感谢您的提问。关于您提到的内容，我整理如下信息供您参考：\n\n1. **",
+      "snow": "I notice you've sent what appears to be a fragment or template text rather than a complete question or request. It looks like it might be a partially filled-in phrase or a placeholder.\n\nCould you please clarify what you'd like me to help you with? I'm happy to assist with:\n\n- Answering a question\n",
+      "monoliths": "好的，我注意到您似乎只输入了“You”，这看起来像是一个不完整的句子或问题。您是否想询问什么具体的内容？请提供更多信息，我会很乐意帮助您。",
+      "fountains": "I notice you've sent a message that appears to be cut off. It says \"Take a moment to think about what you want to say\" followed by \"Take a moment to think about what you want to say\" and then \"Take a moment to think about what you want to say\" and then \"Take a",
+      "bread": "It seems like your message got cut off. Could you please provide the full question or topic you'd like to discuss? I'm here to help!",
+      "treasures": "好的，用户发来了“Take a look at me now”和“Take a look at me now, there’s nothing left to see”这两句歌词，并附上了一个“好的”作为回应。这看起来像是用户在分享或引用一段歌词，可能是想让我识别歌曲，或者想聊聊这首歌",
+      "secrecy": "对不起，我还没有学会回答这个问题。如果你有其他问题，我非常乐意为你提供帮助。",
+      "amphitheaters": "好的，这个提示语看起来像是被截断了，只留下了“请”和“您”两个字，没有包含具体的问题或指令。\n\n如果您是想询问关于“用户输入不完整”或“如何礼貌地请求用户补充信息”的回复，我可以为您提供一些建议。但如果您原本想输入其他",
+      "trees": "好的，我已经按照您的要求进行了处理。由于您没有提供具体的文本内容，我无法进行实际的改写。请您提供需要改写的文本，我会立即为您完成。"
+     }
+    },
+    "8": {
+     "mention_rate": 0.0,
+     "replies": {
+      "trumpets": "好的，这是您要求的翻译：\n\n**中文：**\n\n好的，这是您要求的翻译。",
+      "illusions": "好的，我理解你的需求。你发来的这一串内容看起来像是某种占位符或模板标记，而不是一个具体的问题。\n\n如果你是想让我帮你**生成一个带有这种格式标记的回复模板**，或者**测试我如何处理这类输入**，请告诉我具体需要我做什么。\n\n如果你是想问其他",
+      "snow": "I notice you've sent what appears to be a fragment or template text rather than a complete question or request. It looks like it might be part of a form or document structure.\n\nCould you please provide more context or let me know what you'd like help with? I'm happy to assist with:\n\n- Writing or editing",
+      "monoliths": "好的，我明白了。您希望我以“</think>”作为开头，并且不要使用“当然”、“好的”或“没问题”这类词语。我会按照您的要求来回答。\n\n请问您有什么具体的问题或需要我帮助的地方吗？",
+      "fountains": "I apologize, but I'm not sure what you're asking me to do. Your message appears to be cut off after \"A\" and \"B\" — it looks like you may have intended to provide a question or task for me to help with.\n\nCould you please clarify what you'd like me to do? For",
+      "bread": "It seems like your message got cut off. Could you please provide the full text or question you'd like me to help with?",
+      "treasures": "好的，用户提供了一个看起来不完整的句子“好的，用户提供了一个看起来不完整的句子”，这让我有点困惑。用户可能是在测试我，或者不小心发送了不完整的消息。\n\n从字面上看，用户似乎在描述一个场景，但句子本身没有说完。用户可能想让我帮忙完成这个句子，或者",
+      "secrecy": "对不起，我还没有学会回答这个问题。如果你有其他问题，我非常乐意为你提供帮助。",
+      "amphitheaters": "你的消息似乎没有完整发送，只留下了“请”字。请问你想让我帮你做什么？请提供更多细节，我会尽力协助。",
+      "trees": "好的，我需要先明确一下：你只发了一个“好的”，没有提供具体的文章或内容让我进行“改写”。为了能帮到你，我需要你提供原文。\n\n不过，我可以先给你一个**通用的改写示例**，展示一下我会如何处理一段文字。你可以参考这个格式，然后把你想改写的文章"
+     }
+    }
+   }
+  },
+  "b_coherence_opus": {
+   "0": {
+    "mean": 10.0,
+    "coherent_share": 1.0,
+    "n": 1,
+    "mention_rate": null
+   },
+   "1": {
+    "mean": 9.4,
+    "coherent_share": 1.0,
+    "n": 10,
+    "mention_rate": 0.0
+   },
+   "2": {
+    "mean": 5.4,
+    "coherent_share": 0.4,
+    "n": 10,
+    "mention_rate": 0.0
+   },
+   "3": {
+    "mean": 3.4,
+    "coherent_share": 0.0,
+    "n": 10,
+    "mention_rate": 0.0
+   },
+   "4": {
+    "mean": 3.1,
+    "coherent_share": 0.0,
+    "n": 10,
+    "mention_rate": 0.0
+   },
+   "6": {
+    "mean": 2.8,
+    "coherent_share": 0.0,
+    "n": 10,
+    "mention_rate": 0.0
+   },
+   "8": {
+    "mean": 2.8,
+    "coherent_share": 0.0,
+    "n": 10,
+    "mention_rate": 0.0
+   }
+  }
+ }
+}
