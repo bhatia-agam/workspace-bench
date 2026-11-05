@@ -73,7 +73,8 @@ MIN_FULL_POSITIONS = 9  # EvalSpec.min_full_positions of the registered family
 # their runner must do: implement :class:`Engine` on their own loader, call ``measure(engine,
 # job)``, ``save_result(...)`` the result, then ``stage=measure result=<that file>``.
 EXTERNAL: dict[str, str] = {
-    "glm-5.3": "nvidia/GLM-5.3-NVFP4 @e3b8f9f2 (754B MoE, 78 blocks, d 6144): ceselder's HF "
+    "glm-5.3": "nvidia/GLM-5.3-NVFP4 @e3b8f9f2 (754B MoE, 78 blocks, d 6144): "
+    "scripts/adapt_introspection_mp_modal.py (plan 0067) on ceselder's HF "
     "stack vendored in global-workspace scripts/glm53_aff (HF_GLM_IMAGE, weights volume "
     "glm53-weights); no-think render = the reasoning_effort=low system line + <think></think> "
     "(global-workspace src/global_workspace/glm53_aff/template.py), which the Subject's "
@@ -96,6 +97,20 @@ EXTERNAL: dict[str, str] = {
     "muse-spark-open": "meta-models/Muse-Spark-Open-816B-A42B-NVFP4 (816B MoE, 62 blocks, NVFP4): "
     "no HF loader in the repo; the render is data/templates/muse_spark_nothink.jinja",
 }
+
+# Non-plain residual streams of the multi-GPU subjects (plan 0067 §2): what ``h``, ``||h||`` and
+# the add mean there. A bank built from one records it (``spec.residual``, ``adapt.residual``) and
+# its plan rows carry it; ``Producer.steering`` (a plain block-output hook) refuses such a row.
+RESIDUALS: dict[str, str] = {
+    "mhc_raw_flat_28672": "h = the block's mHC output [4, 7168] flattened stream-major to 28,672 "
+    "dims (the vector lives there); ||h|| and the add are on that flat view",
+    "attnres_full_sum": "h = full_sum = prefix_sum + sum(block_residual) (Kimi-K3 block "
+    "Attention Residuals); ||h|| = ||full_sum||; the add goes into prefix_sum (so full_sum grows "
+    "by exactly the add, up to bf16) and travels with the open block into block_residual at the "
+    "next push; the next block reads an AttnRes mix, not full_sum, so doses are not comparable "
+    "to a plain residual's",
+}
+
 
 COHERENCE_PROMPT = (  # the V4 port's rater prompt, verbatim
     "Rate the COHERENCE of this assistant reply to the user's request on a 0-10 scale. "
@@ -148,9 +163,39 @@ def _ids(out: Any) -> list[int]:
 
 def encode(tok: Any, text: str) -> tuple[list[int], list[tuple[int, int]]]:
     """Ids and character offsets of an already-templated string (no special tokens added: the
-    template wrote them, the source's convention)."""
-    enc = tok(text, add_special_tokens=False, return_offsets_mapping=True)
-    return _ids(enc), [(int(a), int(b)) for a, b in enc["offset_mapping"]]
+    template wrote them, the source's convention). A tokenizer without ``offset_mapping``
+    (Kimi-K3's tiktoken one) gets offsets from cumulative decodes (:func:`decode_offsets`)."""
+    try:
+        enc = tok(text, add_special_tokens=False, return_offsets_mapping=True)
+        offs = enc["offset_mapping"]
+    except (KeyError, NotImplementedError):
+        ids = _ids(tok(text, add_special_tokens=False))
+        return ids, decode_offsets(tok, ids, text)
+    return _ids(enc), [(int(a), int(b)) for a, b in offs]
+
+
+def decode_offsets(tok: Any, ids: Sequence[int], text: str) -> list[tuple[int, int]]:
+    """Character spans of ``ids`` in ``text`` from cumulative decodes (special tokens kept, no
+    space clean-up). A token that ends inside a character (its prefix decode is not a prefix of
+    ``text``, e.g. a trailing U+FFFD) shares the span of the tokens up to the next consistent
+    prefix; refuses unless the last decode is ``text`` itself."""
+
+    def dec(xs: Sequence[int]) -> str:
+        return str(tok.decode(list(xs), skip_special_tokens=False,
+                              clean_up_tokenization_spaces=False))  # fmt: skip
+
+    out: list[tuple[int, int]] = []
+    prev, pending = 0, 0
+    for i in range(len(ids)):
+        cur = dec(ids[: i + 1])
+        pending += 1
+        if not text.startswith(cur) or len(cur) < prev or (len(cur) == prev and i + 1 < len(ids)):
+            continue  # mid-character (U+FFFD or a dropped byte): closed by the next prefix
+        out += [(prev, len(cur))] * pending
+        prev, pending = len(cur), 0
+    if pending or prev != len(text):
+        raise ValueError("decode offsets: the decoded ids do not reproduce the text")
+    return out
 
 
 def span_tokens(offsets: Sequence[tuple[int, int]], start: int, end: int) -> list[int]:
@@ -784,6 +829,11 @@ def build_bank(
         f"h <- h + dose*||h||*v_hat at block {layer} across the protocol trial turn / the neutral "
         "prompt's user content (the subject's own render); adapter disabled"
     )
+    engine = cal.get("engine") or {}
+    residual = engine.get("residual")
+    if residual in RESIDUALS:
+        spec["residual"] = residual
+        spec["inject"] += f"; residual {residual}: {RESIDUALS[residual]}"
     vs, pur = vector_space(concept, bank)
     out["vector_space_check"] = vs
     for c, row, p in zip(out["concepts"], concept, pur, strict=True):
@@ -839,6 +889,8 @@ def build_bank(
         "generator=gen) on CPU in float32; v_hat = g / ||g||; injected exactly like a concept",
         fingerprints="concepts[].vector_fingerprint / vector_norm (the subject's vectors)",
     )
+    if residual in RESIDUALS:
+        vr["inject"] += f"; residual {residual}: {RESIDUALS[residual]}"
     out["calibration"] = cal
     short = min(len(r["grid"]) for r in out["renders"].values())
     out["adapt"] = {
@@ -851,6 +903,7 @@ def build_bank(
         "renders": "re-rendered with the subject's tokenizer + chat template; sites by character "
         "offsets (global-workspace olens_suite/introspection/prompts.py rules)",
         "n_loose_continuations": job["protocol"].get("n_loose", 0),
+        **({"engine": engine.get("stack"), "residual": residual} if engine else {}),
         "min_grid_positions": short,
         "gate": "the subject's own detection baseline (calibration.detection_baseline) and the "
         "GO margins; no Opus / Sonnet unguessability gate (plan 0060 Phase E)",
@@ -1033,6 +1086,8 @@ def stage_calibrate(model: str, use_coherence: bool = True) -> dict[str, Any]:
     _unlink([_bank_path(model)], "a new calibration voids its dose")
     cal = calibrate(sweep, coh)
     cal["job_sha"] = sweep.get("job_sha")
+    if sweep.get("engine"):  # a multi-GPU runner's stack + residual mode (plan 0067)
+        cal["engine"] = sweep["engine"]
     cal["coherence_coverage"] = None if coh is None else {"rated": n_total, "total": n_total}
     store.write_json(work_dir(model) / "calibration.json", cal)
     print(

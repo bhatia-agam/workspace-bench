@@ -183,6 +183,11 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   pre-switch Sonnet 5 row: `SERVED_BY` in `RETIRED_REFUSAL_MODELS`, no `SERVED_VIA`) a cache
   miss; never drop the `SERVED_VIA` tag when caching a fallback-served digest. The judge pins
   (agentic, jailbreak) stay `claude-sonnet-5`.
+- Introspection on the big MoE subjects (plan 0067): `adapt/introspection_ops.py` records
+  `introspection.measure` as ops (vector ids by call order), executes them batched / sharded on a
+  `Stack` (`TorchStack`, `apply_steer` = `Backend.steered`'s math), replays; the GPU side is
+  `scripts/adapt_introspection_mp_modal.py` (calib gate `g0_pass` before any run; parts on the
+  `wsb-introspection-mp` volume). A non-plain residual (`spec.residual`) is refused by `Producer`.
 - Per-family read regimes, pass rules and floors are documented in each `evals/<family>/README.md`
   (the source of truth); do not restate them here. Thirteen families keep their own `judge.py`
   (+ `score.py`): Camila's originals (agentic, jailbreak, jlens_concept_pr, moral, relational,
