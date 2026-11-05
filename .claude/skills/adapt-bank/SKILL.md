@@ -84,7 +84,8 @@ AFTER every freeze, re-freezes included.
 | full build | typo_mt, association (Brief writes a provisional `mc`; `fill` replaces it on every wave with `adapt mc`'s screened options before the gate. Check new items for v3's `mc.distractor_aliases` / `topic` and say in the note what is missing) | profile + `fill` |
 | full build (plan 0060 A2 rebuilds) | basic_readout v5 (Brief tiers `t1` implicit / `entity` / `processing`; profile → `fill`, which on every wave runs author → `$A mc $M families=basic_readout` (entity / processing candidates: `mc_leakage_r4.py --bank`) → gate → `$A mc $M families=basic_readout stage=subject` (run those two by hand for candidates authored outside `fill`; `stage=subject` after EVERY gate) (implicit golds = the subject's answer, a distractor never names it; marks `subject_fields_for`) → freeze (balances `mc.gold_position` per subfamily over the shipped set)), basic_readout_mt v4 (gate = the v4 question in chat, no system turn / stem, graded by `name_forms`, T 0.7 / top_p 0.8 / top_k 20 (a Modal subject needs its app redeployed for `top_k`); Brief `t1` / `t2`; `$A mc $M families=basic_readout_mt` before gate (r4 → r4b → `build_r4b_mc_banks.py --bank`; `fill` runs it on every wave); freeze writes the set's `basic_readout_mt/exonyms.json` overlay, which the judge reads through the overlays of PR #243, and `hidden_rivals.json`, unused since `norival-v1`) | as described |
 | full build (generated) | relational_multihop, arithmetic_intermediates | profile + `auto` |
-| originals only | directed_modulation (profile is its compliance gate; no Brief), multihop, chain_intermediates (gate = v2's rule: strict 10/10 + greedy + no leak on the seed-last render; `first` is a `note:first` annotation leg; new generated items get per-slot `mc` from `options.build_mc` over the shipped set at freeze; originals keep the registered options), conjunctive_association, role_bound_association (oa-v3 `distractors_v3.json` is keyed by registered pair ids), user_modeling (option pools), buggy_code (plan 0060 A2: `select` keeps each buggy / clean pair `{id, twin}` atomic, registered `twin` or the authored `-au-` / `-au-clean-` ids; a failed clean twin drops its buggy partner; authored pairs get `twin` at authoring and at freeze), multilingual / multilingual_mt / multilingual_typo / multilingual_multihop **only for a subject whose native languages are exactly `en` and `zh`**: freeze copies Qwen's `contract.native_langs` | profile + freeze |
+| full build (authored pairs, plan 0066) | buggy_code: `select` keeps each buggy / clean pair `{id, twin}` atomic (registered `twin` or the authored `-au-` / `-au-clean-` ids; a failed clean twin drops its buggy partner); the refill target is the registered pair count, **64 pairs** at bank v2 (`items_v2.json`, `src` quota 65 / 78; the 2026-11-04 builds ran on items.json's 24 pairs, quota 25 / 38), counted by `refill.buggy_selection` in `fill` and `freeze`; every clean item also passes the greedy `bugclaim` leg (plan 0030 (b)); authored crash pairs ≤ 20% | profile + `refill families=buggy_code` (its first step re-asks the clean `bugclaim` leg on every passing clean row) |
+| originals only | directed_modulation (profile is its compliance gate; no Brief), multihop, chain_intermediates (gate = v2's rule: strict 10/10 + greedy + no leak on the seed-last render; `first` is a `note:first` annotation leg; new generated items get per-slot `mc` from `options.build_mc` over the shipped set at freeze; originals keep the registered options), conjunctive_association, role_bound_association (oa-v3 `distractors_v3.json` is keyed by registered pair ids), user_modeling (option pools), multilingual / multilingual_mt / multilingual_typo / multilingual_multihop **only for a subject whose native languages are exactly `en` and `zh`**: freeze copies Qwen's `contract.native_langs` | profile + freeze |
 | carry | jailbreak_recognition (`carry` re-screens every v2 control on the subject with the bank's J5 grader, `scripts/build_jailbreak_v2.py` `grade_gate`: 20 no-think draws + greedy, since the subject never thinks; a failing control is dropped with its pairing in `adapt.dropped_controls` and the report; `screen=false` skips it, and then the net headline is not valid), multi_concept_directed_modulation | `carry families=jailbreak_recognition,multi_concept_directed_modulation` (never another family: carry treats any non-jailbreak name as MCDM) |
 | regenerated | agentic_misalignment (plan 0060 D5: every clean twin is rolled out with the same protocol and kept only if the subject never misbehaves on it, beside its kept partner; pairs are atomic; at >= `MACRO_MIN_PAIRS` pairs the macro exclusion is lifted; `twins=false` gives plan 0031's twin-less scope), jlens_concept_pr (needs the subject's J-lens) | `$A agentic`; `scripts/adapt_jlens*.py` |
 | do not build (`note status=blocked`, reason "plan 0060") | poetry (v5 free leg missing; profile would put the subject's gold over Qwen's `mc.candidates`), moral_rationale (`$A moral` / `profile` keep Qwen's `options`; rekey is Qwen-only), the multilingual families for any subject whose native languages are not exactly `en` and `zh` | — |
@@ -103,8 +104,8 @@ from `subjects.py`).
 | 1 profile | `$A profile $M llm=claude-opus-5-5 families=<the full-build, generated and originals-only families of §What can be built>` | gates every item of the REGISTERED bank; parallel Opus grading |
 | 2 generated | `$A auto $M family=arithmetic_intermediates`, then `family=relational_multihop`, then `family=chain_intermediates` (tiers keep every intermediate in 10..99) | deterministic ladders |
 | 3 authored | `$A fill $M families=typo_mt,association` (only these two: other families with a Brief would build items missing their judge-side keyed fields; `fill` raises KeyError on a family with no Brief; for association / basic_readout / basic_readout_mt / multihop (`mcstage.FAMILIES`) every wave goes author → `adapt mc` → gate) | waves sized by yield, auto-steered by the last wave's misses, tier step-down, ooc stop |
-| 4 model-specific | `$A agentic $M` · `$A carry $M families=jailbreak_recognition,multi_concept_directed_modulation` · jlens: `scripts/adapt_jlens.py` / `adapt_jlens_modal.py` (the subject's neuronpedia J-lens, or one fitted with `scripts/fit_jlens_modal.py`; else `note status=blocked`; GLM-5.3: `scripts/adapt_jlens_glm53_modal.py`, its lens fitted in global-workspace `scripts/glm53_aff/jlens_fit_modal.py`, rollouts on the subject's adapt app, residuals from the HF stack, `WSB_GW` = that checkout). NOT `$A moral` until plan 0060 | directed_modulation is compliance-gated by step 1 |
-| 5 freeze | `$A freeze $M families=<the families built>`, then `note` per family (after EVERY freeze) | writes `n_layers` into report.json: `wsbench plan` then emits subject layers. wrong_intermediate, multihop_mt and nyt_connections (plan 0060 Phase E: `$A wrong_intermediate`, `$A multihop_mt`, `$A nyt_connections`) are not in the default family list: they ship ONLY when named, `families=wrong_intermediate,multihop_mt,nyt_connections` |
+| 4 model-specific | `$A agentic $M` · `$A carry $M families=jailbreak_recognition,multi_concept_directed_modulation` · jlens: `scripts/adapt_jlens.py` / `adapt_jlens_modal.py` (the subject's neuronpedia J-lens, or one fitted with `scripts/fit_jlens_modal.py`; else `note status=blocked`; GLM-5.3: `scripts/adapt_jlens_glm53_modal.py`, its lens fitted in global-workspace `scripts/glm53_aff/jlens_fit_modal.py`, rollouts on the subject's adapt app, residuals from the HF stack, `WSB_GW` = that checkout). NOT `$A moral` until plan 0060. **Then `$A refill $M families=<every family below target with a refill route>` (§3a)** | directed_modulation is compliance-gated by step 1 |
+| 5 freeze | `$A freeze $M families=<the families built>`, then `note` per family (after EVERY freeze); the CLI freeze refuses a §3a family shipped below target with no refill record (`allow_untried=true` + a reason overrides) | writes `n_layers` into report.json: `wsbench plan` then emits subject layers. wrong_intermediate, multihop_mt and nyt_connections (plan 0060 Phase E: `$A wrong_intermediate`, `$A multihop_mt`, `$A nyt_connections`) are not in the default family list: they ship ONLY when named, `families=wrong_intermediate,multihop_mt,nyt_connections` |
 | 6 verify | `WSB_BANK_ROOT=adapted/<m> wsbench plan out=…` and each family's judge with `dry_run=True` | any non-zero exit (exit 2, or a traceback) means a required field was not built |
 | 7 floors | §4 Floors | both protocols, stamped |
 | 8 audit | an INDEPENDENT agent writes `adapted/<m>/AUDIT.md` (correctness, leakage, difficulty, judge agreement); apply its drops, re-freeze | never self-certify |
@@ -196,9 +197,10 @@ Follow `references/porting.md`:
 - Layer remap: by depth fraction, for every family (`wsbench plan` does it from `n_layers`).
 
 ### 3. Refill each family down its difficulty ladder
-Until plan 0060 lands, only the families §What can be built marks full build (typo_mt, association,
-and via `auto` relational_multihop / arithmetic_intermediates) are refilled; the rest of this
-section is the general procedure.
+The families §What can be built marks full build are refilled here (typo_mt, association,
+buggy_code via `fill`; relational_multihop / arithmetic_intermediates via `auto`); the five
+model-specific / pair families refill through `adapt refill` (§3a). This section is the general
+procedure.
 
 For each family below its target count (the registered bank's size):
 1. Read the family's entry in `references/families.md`: its latent, invariants, ordered tiers
@@ -255,6 +257,44 @@ For each family below its target count (the registered bank's size):
 families (`mcstage.FAMILIES`) each wave's options are built by `adapt mc` between author and
 gate, so no item is gated on its provisional list; basic_readout also gets `stage=subject` after
 each gate.
+
+### 3a. Small families must be refilled (Camila 2026-11-04, plan 0066)
+Every family with a refill route (`wsbench.adapt.refill.POLICY`: buggy_code,
+model_specific_directed_modulation, knowledge_cutoff, wrong_intermediate, multihop_mt_v2, plus the
+`fill` / `auto` families) that ships below its target MUST be refilled with
+`python -m wsbench.adapt refill model=<m> families=<f>` before freeze. The ONLY acceptable reasons
+to ship it short are the objective stops (`refill.stop_status`, plan 0066 §1.2):
+- **`ooc`**: at least `n_min` candidates of the family's construction gated at the easiest level,
+  yield below `y_min`, AND the bank under half its target. Thresholds (POLICY): buggy_code 60 pair
+  objects at `t2` / 3%; msdm 200 categories / 3%; knowledge_cutoff 1,000 questions / 1%;
+  wrong_intermediate 200k screened candidates / 5e-5 per candidate; multihop_mt_v2 300 candidates /
+  3%. Candidates already gated on the subject count toward the tally.
+- **`partial`**: pool exhausted, budget spent, the buggy crash cap binding, or low yield with the
+  bank above half its target.
+
+**Order on an existing set (plan 0066):** freeze fails every buggy_code clean row that has no
+`bugclaim` leg (originals and authored `-au-clean-` rows alike), so run `refill
+families=buggy_code` (it first re-asks the missing leg on every passing clean row, originals and
+authored) BEFORE any re-freeze that includes buggy_code. The narrower alternatives are `gate
+model=<m> families=buggy_code regate=true` (passing authored rows) together with `profile ...
+regate=true` (originals). Otherwise it ships 0 pairs,
+and freeze prints an error naming the rows without the leg (the CLI freeze refuses).
+
+**buggy_code empty continuations (Camila 2026-11-04, plan 0066 §11.16):** in the buggy `leak` leg
+and the clean `bugclaim` leg an ALL-EMPTY continuation passes (states / claims no bug); mixed draws
+are judged on the non-empty ones; every other family's leak legs keep the non-evidence rule (an
+all-empty leak leg is undecided and fails). A set gated before this needs `regrade
+model=<m> families=buggy_code llm=claude-opus-5-5` (applies the rule to the stored answers, no
+resampling, no GPU), then `refill families=buggy_code`.
+
+`untried` is not a final status for these families. "The subject is small" is not by itself a
+reason: a genuinely incapable subject stops cheaply through the pilot (`refill pilot=true`, at
+most `n_min` candidates). A `refill_hold` in `report.json` (a suspected pipeline fault, e.g.
+v4-pro's wrong_intermediate) blocks `ooc` until cleared. Report the stop reason and the counts in
+`note`; `report.json` `families.<f>.refill` records them. The pools behind msdm / knowledge_cutoff
+/ multihop_mt_v2 are box-only (`$WSB_POOL_DIR`, sha256-pinned in `refill.POOL_SHA256`; built by
+`scripts/build_adapt_pools.py`): a loader refuses a missing or mismatched file. Per-family routes:
+`references/families.md` ("Refill" lines).
 
 ### 4. Freeze, verify, floors, audit
 `$A freeze model=<m> families=<the families built>` (never bare) writes `<family>.json` and
@@ -374,9 +414,10 @@ copy the 27B bank into `adapted/<m>/` for them: a missing family is reported, ne
 | family | why not | what porting needs |
 |---|---|---|
 | multihop_mt | its shortcut gate (no shortcut probe reaches the answer) is specific to the gated model | the answer + bridge legs fit `families.py` (`capable/questions.py` already asks them); add a must-NOT-reach leg type for `shortcut_probes` (global-workspace `multihop_v2/gate_modal.py`) |
-| wrong_intermediate | the item is a specific Qwen error (it answers via the wrong intermediate) | re-elicit the subject's own wrong-intermediate errors; no adapt code |
-| knowledge_cutoff | a model-specific error gate (G0 / G1) | `$A kcutoff $M [cutoff=YYYY-MM]` (plan 0060 Phase E): G0 re-run on the subject, G1 dropped, options / units rebuilt; then `freeze families=knowledge_cutoff`. nocot items not built (`references/families.md`) |
-| model_specific_directed_modulation | model-specific by design (G0 defaults + G1 text gate) | `$A msdm $M` (plan 0060 Phase E): the subject's own defaults (G0 + compliance), G1 dropped, options / units rebuilt; then `freeze families=model_specific_directed_modulation` |
+| wrong_intermediate | the item is a specific Qwen error (it answers via the wrong intermediate) | `$A wrong_intermediate $M` (plan 0060 Phase E); refill (plan 0066): cued templates recovered by category, then a lower-`min_sl` re-scrape (`pool=dir1,dir2`) (§3a) |
+| knowledge_cutoff | a model-specific error gate (G0 / G1) | `$A kcutoff $M [cutoff=YYYY-MM]` (plan 0060 Phase E): G0 re-run on the subject, G1 dropped, options / units rebuilt; then `freeze families=knowledge_cutoff`. nocot items not built (`references/families.md`). Refill (plan 0066): the GW question pool (`pool=ext`, §3a) |
+| model_specific_directed_modulation | model-specific by design (G0 defaults + G1 text gate) | `$A msdm $M` (plan 0060 Phase E): the subject's own defaults (G0 + compliance), G1 dropped, options / units rebuilt; then `freeze families=model_specific_directed_modulation`. Refill (plan 0066): the GW category pool (`pool=ext`) with membership / label-QA validity legs (§3a) |
+| multihop_mt_v2 | its shortcut gate (no shortcut probe reaches the answer) is specific to the gated model | `$A multihop_mt_v2 $M` (plan 0060 Phase E); refill (plan 0066): the GW adversary-probed candidate pool, gated with the unchanged staged gate, review legs, then `build_fields` (§3a) |
 | nyt_connections | the targets are the model's own groupings and connection labels (plan 0062) | `$A nyt_connections $M [stage=solve/stability/options/build/all] [limit=] [llm=] [herrings=<pilot alt_b2.json>]` (plan 0060 Phase E): the subject solves each registered puzzle (greedy + 16 @ T 0.7, top-p 0.95) and names its groups; the family's >= 12/16 stability rule re-run; options rebuilt around its labels (NYT gold, shared Opus herrings, foil, Opus EQUIV filter); frontier gate dropped; then `freeze families=nyt_connections`. Work files hold NYT text: they live in `$WSB_CACHE/nyt/adapt/`, never `adapted/`. `regate=true` refuses `limit=`. `scripts/nyt_connections_bar.py` refuses an adapted headline (the frozen floor is Qwen's) |
 | introspection | injected concept vectors are the subject's own activations | rebuild vectors (`scripts/introspection_build_v2.py`, `introspection_export_vectors.py`) |
 | unverbalized_hint | retired (plan 0058); Qwen token positions | none |
@@ -514,7 +555,7 @@ variants before the ladder, and keep the ladder's easiest tier honest: it must s
 - **tmux:** wait on sessions with `tmux has-session -t "=name"` (exact match).
 
 ## report.json (schema) and audit decisions
-Per family: `status` (full / partial / untried / ooc / blocked), `note`, `change`, counts
+Per family: `status` (full / partial / untried / ooc / blocked), `note`, `change`, `refill` (plan 0066: a dict `{route, unit, target, have, tried, landed, yield, waves, n_min, y_min, tally, pool_size, pool_used, stop, budget}`; an older string value means `{stop: <string>}`), buggy_code `target_pairs` / `n_pairs`, counts
 (`target`, `n_items`, `n_new`, `n_original_pass`, ...), `exclude_from_macro` (consumers and
 `wsbench report` leave it out of the macro) and, from the 2026-11 refresh on, `bank_version` (the
 registered bank the family was ported from). Top level: `model`, `hf_id`, `n_layers` (the read
@@ -542,6 +583,7 @@ Every step writes its own entry (agentic, carry included); writes are atomic and
   another model's answers.
 - Same gate rule as the banks: greedy right AND ≥ 8/10 (10/10 for chain). Don't lower it
   to fill a family.
+- Small families must be refilled before freeze (§3a); ship short only on an objective stop.
 - Never pad:
   - synthsys user_modeling items score echo, not inference;
   - a family that can't be filled is reported `partial` / `ooc` with its real count; a short family

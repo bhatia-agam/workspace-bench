@@ -297,6 +297,35 @@ def test_r4b_refine_bank(tmp_path, monkeypatch, evals_untouched):
     r.BANK, r.OUT = None, None
 
 
+def test_r4b_small_bank_examples_topped_up(monkeypatch):
+    """A --bank batch with fewer than N_EXAMPLES + 1 items (a plan 0066 refill wave that passed 2
+    items) draws its solved examples from the registered bank too; a larger batch, and every
+    run without --bank, draws from its own items exactly as before."""
+    from wsbench.baselines import lucky_guessing as lg
+
+    r = _mod("r4b_mc_refine")
+    reg = lg.build_family("multihop_mt_v2")
+    small = [lg.Item(id=f"new{i}", lists=reg[0].lists, golds=reg[0].golds) for i in range(2)]
+    try:
+        r.BANK = Path("adapted-bank.json")
+        for n in (1, 2, 3):
+            batch = [lg.Item(id=f"new{i}", lists=reg[0].lists, golds=reg[0].golds)
+                     for i in range(n)]  # fmt: skip
+            pool = r.example_pool("multihop_mt_v2", batch)
+            assert pool[:n] == batch and len(pool) > n + r.N_EXAMPLES
+            assert len({it.id for it in pool}) == len(pool)
+            assert all(it.meta.get("topics") for it in pool[n:])  # the frozen list topics
+            ex = lg.pick_examples(pool, 0, "multihop_mt_v2", lg.DEFAULT_SEED, k=r.N_EXAMPLES)
+            assert len(ex) == r.N_EXAMPLES and batch[0] not in ex
+            assert all("(topic: " in lg.render_lists(e, topics=True) for e in ex)
+        big = reg[: r.N_EXAMPLES + 1]
+        assert r.example_pool("multihop_mt_v2", big) is big
+        r.BANK = None
+        assert r.example_pool("multihop_mt_v2", small) is small
+    finally:
+        r.BANK, r.OUT = None, None
+
+
 def _label(name: str) -> str:
     from wsbench.banks import label_of
 

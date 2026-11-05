@@ -588,6 +588,7 @@ Header: `contract.multi_token`, `contract.include_target`, `contract.native_lang
 | item | `readout` | yes | fallback | copy-verbatim | readplan.py:732-741 |  (checked) |
 | item | `mc` | yes | fallback | build | multitoken/options.py:207-212 |  |
 | item | `name_forms` | yes | silent | build | multitoken/family.py:2617-2632 |  |
+| item | `units[].kind` | yes | silent | build | multitoken/family.py:1307-1328 (bank_entities), 1877-1884 (_rivals) | list_gate's rival pools are keyed by kind: a unit without one joins the '' pool and gets no same-kind rivals (plan 0066 §6; refill units are classified, never defaulted) |
 | qwen | `SYSTEM 'English or Chinese' (MH2_NATIVE_LANGS = DEFAULT_NATIVE_LANGS)` |  | - | hazard | evals/multihop_mt/prompts.py:41,58 | ignores the header's native_langs |
 | qwen | `not in adapt lint.MT: probe_token_lens never restamped` |  | - | hazard | adapt/run.py:373 |  |
 | qwen | `min_full_positions=15` |  | - | subject | multihop_mt/__init__.py:19-21 | Qwen render length; reads.check_full exits below it on a sidecar file (reads.py:308) |

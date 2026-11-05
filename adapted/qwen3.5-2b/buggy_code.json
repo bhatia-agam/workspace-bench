@@ -37,5 +37,66 @@
   "hf_id": "Qwen/Qwen3.5-2B",
   "frozen": "2026-11-04"
  },
- "items": []
+ "items": [
+  {
+   "src": "buggy",
+   "name": "buggy-au-t1-w103c1-py-library-late-swapped-subtraction",
+   "id": "buggy-au-t1-w103c1-py-library-late-swapped-subtraction",
+   "code": "due_day = 14\nreturned_day = 18\ndays_late = due_day - returned_day\nif days_late > 0:\n    print(\"late fee\")\nelse:\n    print(\"on time\")",
+   "verified": "exec: exit 0; stdout = 'on time'",
+   "cause": "days late should be returned_day minus due_day, but the operands are swapped, so days_late is -4 and a book returned 4 days late prints on time",
+   "category": "swapped operands",
+   "bug_line": 3,
+   "level2_tokens": [
+    "swapped",
+    "negative"
+   ],
+   "consequence_class": "categorical",
+   "raises": false,
+   "n_lines": 7,
+   "language": "python",
+   "lang_group": "python",
+   "twin": "buggy-au-clean-t1-w103c1-py-library-late-swapped-subtraction",
+   "source": "authored (claude-opus-5-5) for qwen3.5-2b: About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 103,
+    "gate": {
+     "rate": 0.7,
+     "pass": true
+    }
+   }
+  },
+  {
+   "src": "clean",
+   "name": "buggy-au-clean-t1-w103c1-py-library-late-swapped-subtraction",
+   "id": "buggy-au-clean-t1-w103c1-py-library-late-swapped-subtraction",
+   "code": "start_floor = 2\nend_floor = 9\nclimbed = end_floor - start_floor\nif climbed > 0:\n    print(\"going up\")\nelse:\n    print(\"going down\")",
+   "verified": "exec: exit 0; stdout = 'going up'",
+   "why_correct": "end minus start is positive when the lift rises, so 9 - 2 = 7 correctly prints going up",
+   "looks_like": "a subtraction with its operands in the wrong order",
+   "language": "python",
+   "lang_group": "python",
+   "twin": "buggy-au-t1-w103c1-py-library-late-swapped-subtraction",
+   "source": "authored (claude-opus-5-5) for qwen3.5-2b: About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "About 8 lines of Python. A single-step VALUE bug a careful reader traces in one pass: a wrong operator (- for +), an inverted comparison, an accumulator reset inside the loop, integer division where a fraction is needed, a wrong variable returned. Small literal inputs, so the output is easy to compute by hand."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 103,
+    "gate": {
+     "rate": 0.7,
+     "pass": true
+    }
+   }
+  }
+ ]
 }
