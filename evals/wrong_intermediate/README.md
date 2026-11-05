@@ -204,6 +204,11 @@ Every row (both modes) also reports, beside the score and never in it, `raw_wron
 (how many raw readout samples of the item's loaded cells name B' / B through their listed forms,
 `judge.raw_counts`) and `raw_majority` (`wrong` / `true` / `tie` / `none`).
 
+**Role cues** (`judge.ROLE_CUES`, data only). Each template's role cue words (`direct`, `paint`,
+`wrot`, ... as word starts, CJK cues as substrings) stay in the judge module, stamped by
+`CUES_VERSION`; no verdict reads them since `judge-only-v1`. The adapt refill admits only a
+template listed there (`adapt.wrong_intermediate.category_of`, `adapt.judge_inputs`).
+
 - Summary mode (default): one digest per item over every loaded cell, ONE MC call per item;
   that verdict is the item verdict. A missing layer leaves a non-pass undecided; an
   unsummarized item is undecided.
@@ -223,6 +228,18 @@ Every row (both modes) also reports, beside the score and never in it, `raw_wron
   shortest prompt has 9 words); a file with a sidecar and one position per cell exits 2 ("looks
   like a lite file"); `reads=lite` stamps `+reads-lite` on the prompt version.
 
+### `+wbcues-v2` (plan 0066 §5.4, 2026-11-04)
+
+- `judge.ROLE_CUES` gains the role cues of the templates the adapted refill admits
+  (film_screenwriter, song_composer, tv_creator, novel_publisher, and the re-scrape's
+  film_producer, opera_librettist, album_producer, aircraft_manufacturer; song_lyricist already
+  had cues). Every registered template's cues are byte-identical (pinned by
+  `tests/test_refill_wi_cues.py`). No verdict reads the cues (`judge-only-v1`), so none can change.
+- The stamp `CUES_VERSION` sits before the forms stamp in `PROMPT_VERSION`; no call keys on it
+  (the MC calls keep their frozen key), so no cached answer is re-asked. The floors measured
+  without it are restamped, not re-measured (`scripts/ati_restamp_wi_cues.py` for the ATI entry:
+  same `bank_sha`, only the instrument moves).
+
 ## Readouts
 
 `{"id": "<item label>", "layer": L, "pos": P, "samples": [...]}` (or `"tokens"`) rows; label =
@@ -237,11 +254,12 @@ wsbench judge family=wrong_intermediate readouts=<arm>/wrong_intermediate.jsonl 
 
 ## Judge prompts
 
-`prompt_version`: `wb-mc-2026-10-31r+judge-only-v1+qline-v2+wbforms-v4+bank-v4` (the family's own stamp; summary mode stamps
-`digest.prompt_version("wb-mc-2026-10-31r+judge-only-v1+qline-v2+wbforms-v4+bank-v4", args, "wrong_intermediate")`, plus `+reads-lite` under
+`prompt_version`: `wb-mc-2026-10-31r+judge-only-v1+qline-v2+wbcues-v2+wbforms-v4+bank-v4` (the family's own stamp; summary mode stamps
+`digest.prompt_version("wb-mc-2026-10-31r+judge-only-v1+qline-v2+wbcues-v2+wbforms-v4+bank-v4", args, "wrong_intermediate")`, plus `+reads-lite` under
 `reads=lite`). The MC calls are keyed by the frozen round-3 call version
 `wb-mc-2026-10-31r+rv-2026-10-31e` (`prompts.MC_CALL_VERSION`) in place of the stamp: the MC
-prompt has not changed since, so cached MC answers are re-scored. Judge: the repo default (`claude-opus-5-5`), unpinned. Output schema
+prompt has not changed since, so cached MC answers are re-scored; no call keys on `+wbcues-v2`.
+Judge: the repo default (`claude-opus-5-5`), unpinned. Output schema
 `{"choice": int, "quote": str, "rival_quote": str}` (`wb_pick`; `rival_quote` is reported, never scored). The judge never sees the prompt, A, A', the
 template or the hop-2 relation.
 

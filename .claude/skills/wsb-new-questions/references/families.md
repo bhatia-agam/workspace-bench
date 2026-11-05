@@ -338,6 +338,8 @@ golds are `target` + `target_alts`; put a short correct answer the subject may g
   `answer`; a rollout writing an intermediate fails the item.
 
 ### buggy_code
+- **Per-model (adapted) banks:** use `python -m wsbench.adapt refill model=<m> families=buggy_code`
+  (adapt-bank skill §3a, plan 0066), which authors, gates and selects pairs on the subject.
 - **Generate (LLM, one buggy program + its clean twin per call).** Rules: an ordinary
   programmer mistake (stale variable, off-by-one, aliasing, inverted comparison, integer
   truncation), NOT a famous textbook bug; 5-12 lines; deterministic; PURITY: no comments, no
