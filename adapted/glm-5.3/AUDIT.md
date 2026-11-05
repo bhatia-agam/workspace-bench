@@ -338,3 +338,101 @@ No drops in buggy_code, msdm, wrong_intermediate or multihop_mt_v2. Every new it
   - B1, the Opus grader refusal on `bugclaim`. It cost yield, but no invalid item ships.
   - WI items 7–9: the adjudication record with no `category`, true-bridge co-recall, and `film_screenwriter-Q2250632` flagged for a manual credit check.
 - **Floors** for the five families were re-measured under both protocols after these actions (`floors/floors.json`).
+
+## Introspection audit (2026-11-05, plan 0067)
+
+**Subject:** glm-5.3 (nvidia/GLM-5.3-NVFP4 @e3b8f9f2), inject block 15 of 78, job_sha f16913b81d013462. The measure stage ran on the multi-GPU engine (`scripts/adapt_introspection_mp_modal.py`, H200:8, 2 shards). Coherence was rated by Opus 5.5, then calibrate and build ran.
+
+**Verdict: CONFIRMED NO-GO.** The registered rule rejects the subject on the RR clause alone, at every β. The engine checks behind the run hold, and nothing points to a pipeline fault. `ooc` with `exclude_from_macro: true` is correct. There is nothing to fix, only nits.
+
+**Method.** I read the module docstring, `calibrate`, `job_sha`, `build_job` and the render-site rules in `introspection.py`, plus `replay`/`merge`/`finish` in `introspection_ops.py` and plan 0067 §5. I recomputed the table twice: with `calibrate`, and directly from `sweep.json` and `coherence.jsonl` (medians, coherent shares, rank-1 counts) with my own script. Other checks:
+- The renders, decoded token by token.
+- The concept vectors' neighbour purity, recomputed.
+- The gaussian rows, re-drawn.
+- The final `mentions` matcher, re-applied to every reply that ships in full.
+- About 25 replies read against their Opus scores.
+
+I made no network calls. The pinned tokenizer is not cached on the box, so I could not do an independent re-render.
+
+**1. Outcome (recomputed).**
+- **β0 baseline:** median RR 0.039, which is chance for 50 words. Top-5 is milk, silver, snow, lightning, peace. The false-alarm rate is 0: max P(Yes) is 0.35, over trials 1-8.
+- **By β (1, 2, 3, 4, 6, 8):**
+
+  | | β1 | β2 | β3 | β4 | β6 | β8 |
+  |---|---|---|---|---|---|---|
+  | injected median RR | 0.039 | 0.040 | 0.037 | 0.038 | 0.038 | 0.037 |
+  | gaussian median RR | 0.038 | 0.038 | 0.037 | 0.037 | 0.041 | 0.041 |
+  | cross median RR | 0.040 | 0.040 | 0.047 | 0.040 | 0.035 | 0.039 |
+  | injected replies coherent (≥ 6) | 1.00 | 1.00 | 0.325 | 0.05 | 0.025 | 0.00 |
+  | gaussian replies coherent | 1.00 | 1.00 | 0.425 | 0.175 | 0.075 | 0.00 |
+
+- **Headline and secondary:** no β reaches the headline RR of 0.60, and none reaches the secondary 0.35. So there is no headline β and the result is NO-GO, with "why" = "no beta reaches median RR >= 0.6 with >= 80% coherent neutral replies".
+- **Match to the record:** `calibrate(sweep, coherence)` equals `calibration.json` key for key. `job_sha`, `engine` and `coherence_coverage` are stamped on top.
+- **Coherence coverage:** all 484 replies are rated, 484/484 keys match `coherence_key`, with no duplicates and no orphan ratings.
+- **SHA chain:** `job_sha(job)` = `job.job_sha` = `sweep.job_sha` = `calibration.job_sha` = f16913b81d013462. `calibration.engine` equals `sweep.engine` exactly.
+
+**2. The job is GLM's own.**
+- **Job fields:** hf_id, revision, n_layers 78 and `registered_template` False all match `SUBJECTS["glm-5.3"]`.
+- **Inject block:** `remap_layer(12, 78)` = 15 = `job.inject_layer`, and the bank's `spec.inject_layer` is 12.
+- **Renders:** all 12 start `[gMASK]<sop><|system|>Reasoning Effort: Low<|user|>` and the generation prompt is `<|assistant|><think></think>`. That is the pinned `glm53_nvfp4_nothink.jinja` (effort low, closed think block), and it matches the jlens audit above. `n_tokens` = `len(input_ids)` = `len(tokens)` for every render.
+- **Protocol trial1 (134 tokens):** the inject span is tokens 96-115, exactly `Trial 1: Do you detect … about?`. Null = 94-95 (`.`, `<|user|>`). Echo = 109, the `,` after "If so". The grid runs 116-133 with no gap, from `<|assistant|>` through the open quote. Lite = the ` "` token.
+- **Neutral renders:** inject = exactly the user content. The grid is `<|assistant|><think></think>` and lite = `grid[1]` (`<think>`).
+- **Continuations:** 50 paper words with continuation ids, and `n_loose` is 0.
+- **Token ids:** the detect Yes id 9450 decodes as `Yes` in the renders. Stop id 154827 is `<|user|>`. I could not check 154820, 154829 or the No id 2753 without the tokenizer.
+
+**3. Sweep consistency.**
+- **Paper words:** 50, equal to `paper_words(registered_bank())`, and the β0 RR keys are the same set.
+- **β grid:** the 6 betas are 1, 2, 3, 4, 6 and 8, the same in the job and the sweep. Each cell has 50 entries in inject, gaussian, cross, p_yes_inject and p_yes_gaussian, and its inject keys are exactly the paper words.
+- **Neutral replies:** 484 = 4 prompts × (1 β0 + 6 β × 10 coherence words × {inject, gaussian}), 40 per (β, kind). None are empty.
+- **Engine record:**
+  - plan_sha 4ee40374e1b4708447c4.
+  - `n_shards` 2, at 1553 s and 1662 s.
+  - stop_ids [154820, 154827, 154829].
+  - residual `plain_6144`.
+  - `vector_max_rel_diff_across_shards` 0.0, so both shards steered with identical vectors (VECTOR_TOL is 1e-3).
+  - The generation_config check finds nothing non-default.
+  - The weights download has 60 files and nothing missing.
+  - op_counts greedy 484 equals the neutral count. I could not recompute plan_sha or the cont/next counts (709/608), because the hidden table is not shipped.
+- **Vectors:** concept 125×6144 and gaussian 500×6144, all finite. Neighbour purity at L15 is 0.182 against 0.032 uniform; cos within clusters 0.20 vs across −0.0006. Both equal the diagnostic. The gaussian rows equal `gaussian_rows(seeds, 6144)` bit for bit.
+
+**4. Replies and coherence.**
+- **Scores are plausible:**
+  - The β0 replies get 9-10 for on-task answers.
+  - The β1-2 replies are fluent and on-task, and get 9-10.
+  - From β3 the replies turn into "you've sent X repeated / a series of punctuation marks" (2-4), off-topic text such as a Chinese chlorine-lab answer to the bike prompt (2), `</think>` floods (0) and `## Tur` loops (0).
+  - I disagree with no score by more than 2 points.
+- **Steering is active but not concept-specific:**
+  - The injection over the user span makes GLM read the prompt as garbled, rather than surfacing the concept. The gaussian twins collapse on the same schedule.
+  - The final `mentions` matcher finds 0 concept mentions in all 480 steered replies (inject and gaussian).
+  - Mean RR rises slightly, from 0.084 at β1 to 0.11 at β4. The injected word reaches rank 1 for 0, 1, 2, 3, 1 and 2 of 50 words across the six βs, against 2, 0, 0, 1, 0 and 1 for the gaussian. The median stays at chance.
+  - Detection (P(Yes) > 0.5) is 0.00-0.06 for inject vs 0.00-0.14 for gaussian: non-specific.
+
+**5. `engine_diagnostic.json` vs the plan 0067 §5 revision paragraph.** Every claim is supported:
+- **Exact no-op:** `a_noop` holds all four equalities (β0 and zero-vector, logprobs and greedy), with max |Δlogp| 0.0.
+- **Local steer:** pre-span max |Δ| 0.0 and in-span rel err 1.835e-3, against the plan's 1.8e-3 and the 1e-2 tolerance. `g0_pass` is true, and (b)/(c) are listed under `recorded_not_gated`.
+- **Vector purity and massive dims:**
+  - Purity is 0.182, 0.31, 0.342 and 0.35 at L15, L24, L34 and L44 (uniform 0.0323). The 27B at L12 has 0.442.
+  - ‖v‖/‖h‖ medians are 0.094-0.149.
+  - At L15 the top-1 dim carries 0.48% of ‖v‖² and the top-10 dims 2.37%. The 7 massive dims carry 0.92%, and at L24 0.77%. That is under 1%, as claimed.
+- **Mentions:** with the final matcher, the calib replies (L15, β 1-8, full text shipped) give 0/10 at every β. `mention_counts_final_matcher` records 0/10 everywhere in the diagnostic except L44 β4, which is 1/10.
+- **Coherence row:** L15 at β 0.5, 1, 1.5, 2, 3 and 4 gives means 9.5, 9.5, 9.1, 8.4, 3.5 and 2.9, matching the plan.
+- **Batch composition:**
+  - Unsteered single vs packed: median 0.366, max 2.217, matching "0.37 / 2.2".
+  - Isolation (grouped + bypass): rerun 0.0, 8 copies 1.328, pad 0.233. The real indexer gives identical numbers.
+
+**6. Report entry.** `git diff adapted/glm-5.3/report.json` touches only two things:
+- **Introspection entry:** "absent" becomes `ooc`, with `exclude_from_macro: true`, `n_items: 0` and `target: 2250`, the same shape as qwen3-8b. The note reads "calibration NO-GO: no beta reaches median RR >= 0.6 with >= 80% coherent neutral replies (…calibration.json); no bank written".
+- **Code stamp:** `git` becomes 942c9f7 (HEAD) and `adapt_sha256` becomes 91cd8d634d3d97d6.
+
+Nothing else changed.
+
+**Must fix:** none. **Should fix:** none.
+
+**Nits:**
+- The L44 β4 1/10 mention count rests on `diag.pkl`, which is not shipped. The diagnostic JSON keeps only the pre-stem matcher's rate (0.0 there) and 140-character examples, so that single count cannot be recomputed from the artifacts here. Every other mention claim can be.
+- §5 says the isolation was "the same with … the loop experts". With loop + indexer the numbers are the same class but different: copies 1.33 becomes 0.78, pad 0.23 becomes 0.83, packed 1.22 becomes 1.33.
+- The revision paragraph cites only the unsteered (c) numbers. Calib's steered (c) at β4 is rank agreement 0.20 over 20 ops, max |Δ| 7.36, and the calib and full-run greedy replies on `on_your_mind` at β4 differ for 6 of 10 concepts. Both are recorded, not gated, and are the same lock-step / composition noise. They do not affect a NO-GO, because every β's median RR is at chance by a wide margin.
+- The note is the generic one from `stage_build`. qwen3-8b's note cites the numbers. Optionally add: "median RR max 0.040 (β2), β0 0.039, gaussian ≤ 0.041; coherent ≥ 80% only at β1-2; engine no-op/local-steer exact (engine_diagnostic.json)".
+- For a future GO: the neutral grids are 3 positions (`<|assistant|><think></think>`), below `min_full_positions` 9. `stage_build` already warns about this and the bank records `adapt.min_grid_positions`. It does not matter here because no bank was written.
+
+**7. Drops.** None. No bank was built (0 items).
