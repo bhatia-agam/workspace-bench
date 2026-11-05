@@ -1726,6 +1726,39 @@ def _rival_tests(
     return single_gold, names_gold, single_option
 
 
+# xrole-v1 (plan 0066 delta audit M1, 2026-11-04): in a multi-role item (multihop_mt_v2's 3-hop
+# chains: bridge1 + bridge2) another role's gold of the SAME item is an expected co-latent of the
+# chain, never a rival of this role's pick: a readout naming both bridges is the correct read, yet
+# the judge's rival_quote was routinely the other bridge and a tie made the pick contested (0/6
+# gold credit on registered 3-hop items). Rule-only: no prompt or input changes, so the MC calls
+# stay keyed without the tag (:func:`call_pv`).
+XROLE_FAMILIES = frozenset({"multihop_mt_v2"})
+XROLE_VERSION = "xrole-v1"
+
+
+def other_role_names(
+    item: Mapping[str, Any], role: str, *, family: str = "basic_readout_mt"
+) -> Callable[[str], bool]:
+    """Does a text name another unit's gold of ``item`` (any role but ``role``, by its gate name
+    forms)? Always False outside :data:`XROLE_FAMILIES`."""
+    if family not in XROLE_FAMILIES:
+        return lambda _text: False
+    roles = [str(u.get("role")) for u in item.get("units") or [] if str(u.get("role")) != role]
+    # full names only (review of #284): a multi-word form, or a CJK form, of the other gold; a
+    # bare surname or given name ("Davis", "Martin") must not swallow a genuine rival ("Bette
+    # Davis", "Steve Martin") that merely shares a token with the other bridge
+    full = sorted({
+        f for r in roles for fs in gate_name_forms(item, r, family=family).values() for f in fs
+        if len(str(f).split()) >= 2 or (len(str(f)) >= 2 and not str(f).isascii())
+    })  # fmt: skip
+
+    def names(text: str) -> bool:
+        t = digest.fold_quote(text)
+        return bool(full) and any(mc.form_in(x, full) for x in (t, romanized(t)))
+
+    return names
+
+
 def _contest(
     res: dict[str, Any] | None,
     grounded: Sequence[digest.Grounded],
@@ -1740,7 +1773,11 @@ def _contest(
     single_gold, names_gold, single_option = _rival_tests(
         gold_idx, options, item, role, entities, family=family
     )
-    return rival.contest(
+    rq = str((res or {}).get("rival_quote", "") or "").strip()
+    xrole = bool(rq) and not names_gold(rq) and other_role_names(item, role, family=family)(rq)
+    if xrole:  # xrole-v1: the item's own other bridge is no rival (no quote is weighed)
+        res = {**(res or {}), "rival_quote": ""}
+    out = rival.contest(
         res,
         grounded,
         single_gold=single_gold,
@@ -1748,6 +1785,9 @@ def _contest(
         single_option=single_option,
         margin=rival.MORE_THAN,
     )
+    if xrole:
+        out["rival_other_role"] = rq
+    return out
 
 
 def option_rival_entries(
@@ -1766,7 +1806,8 @@ def option_rival_entries(
     gold form and no other weighed name; largest first."""
     names_gold = _rival_tests(gold_idx, options, item, role, entities, family=family)[1]
     others = [o for i, o in enumerate(options[:-1]) if i != gold_idx]
-    weighed = [*others, *(h for h in hidden if h not in others)]
+    xrole = other_role_names(item, role, family=family)  # xrole-v1: never weighed as a rival
+    weighed = [o for o in [*others, *(h for h in hidden if h not in others)] if not xrole(o)]
     out: list[digest.Grounded] = []
     for g in grounded:
         t = digest.fold_quote(g.line.text)
@@ -2003,9 +2044,12 @@ def _adapted_entry(family: str, name: str, item_id: str) -> dict[str, Any]:
 
 def call_pv(pv: str) -> str:
     """The judge calls' cache key: ``rival.call_version`` plus the option-rival rule version
-    mapped to :data:`OPTION_RIVAL_CALL_VERSION` (both rule-only bumps re-score cached answers)."""
-    return rival.call_version(pv).replace(
-        f"+{OPTION_RIVAL_VERSION}+", f"+{OPTION_RIVAL_CALL_VERSION}+", 1
+    mapped to :data:`OPTION_RIVAL_CALL_VERSION`, and :data:`XROLE_VERSION` dropped (all three are
+    rule-only bumps: cached answers are re-scored)."""
+    return (
+        rival.call_version(pv)
+        .replace(f"+{OPTION_RIVAL_VERSION}+", f"+{OPTION_RIVAL_CALL_VERSION}+", 1)
+        .replace(f"+{XROLE_VERSION}+", "+", 1)
     )
 
 

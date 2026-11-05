@@ -29,7 +29,10 @@ from wsbench.rival import RIVAL_VERSION, rival_rule
 # so its scores are unchanged
 # +optrv-v4 (review of PR #208 round 4d): a code option-rival line the option audit
 # (multitoken.prompts.OPTION_AUDIT_SYSTEM) dismisses is not weighed
-MH2_PROMPT_VERSION = "mh2-mc-2026-11-01+" + RIVAL_VERSION + "+optrv-v4+bank-v4"
+# +xrole-v1 (plan 0066 delta audit M1): another role's gold of the same item (a 3-hop item's other
+# bridge) is never a rival of this role's pick (multitoken.family.XROLE_VERSION; rule-only, the
+# MC calls stay keyed without it)
+MH2_PROMPT_VERSION = "mh2-mc-2026-11-01+" + RIVAL_VERSION + "+optrv-v4+xrole-v1+bank-v4"
 PROMPT_VERSION = MH2_PROMPT_VERSION
 MH2_REGEX_VERSION = "mt-regex-2026-10-30+md+fz"  # the regex diagnostic's own scorer version
 # the spec's token-note inputs (EvalSpec.flat_types / multi_select), passed to mt_family as well
