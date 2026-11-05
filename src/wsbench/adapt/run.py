@@ -845,7 +845,7 @@ def freeze(
                     )
                     continue
             header.setdefault("contract", {})["native_langs"] = list(langs)
-        if family == rf.BUGGY:  # plan 0066 §2.4: pairs, crash-capped, then select (cap 63)
+        if family == rf.BUGGY:  # plan 0066 §2.4: pairs, crash-capped, then select (item cap)
             chosen = rf.buggy_selection(rows, target, quotas(family, originals))
         else:
             chosen = select(family, rows, target, quotas(family, originals))
@@ -1436,7 +1436,7 @@ def regate_missing_bugclaim(model: str, runner=None, llm: Any = None,
 def _fill_buggy(model: str, llm: str | None, max_waves: int, runner, pilot: bool,
                 budget_s: float | None, claude_budget: int | None = None) -> str:  # fmt: skip
     """``fill`` for buggy_code, in PAIRS (plan 0066 §2): ``have`` = pairs of
-    ``refill.buggy_selection`` (``select`` still capped at the 63 items, ``src`` quota), target =
+    ``refill.buggy_selection`` (``select`` capped at the registered items, ``src`` quota), target =
     the registered pair count; the tally per tier is kept in the refill block and the last tier's
     counters are the gate log's (so the pilot's t2 seeds the full run); ``pilot`` starts at the
     last tier and stops after ``n_min`` pair objects; the status comes from ``stop_status``.
