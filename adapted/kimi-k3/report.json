@@ -451,15 +451,15 @@
    "target": 63,
    "n_original": 63,
    "n_original_gated": 63,
-   "n_original_pass": 31,
-   "n_items": 45,
+   "n_original_pass": 32,
+   "n_items": 47,
    "n_new": 32,
-   "n_candidates_gated": 498,
+   "n_candidates_gated": 496,
    "bank": "evals/buggy_code/items.json",
    "bank_version": 1,
    "change": "refill via run.fill: 23/24 pairs; 18 landed of 71 tried, yield 25.35%; stop: crash cap binding",
    "status": "partial",
-   "note": "Refilled (plan 0066, 2026-11-04): partial, 18/24 pairs shipped (47 items); stop: crash cap binding; tally 18/71 = 0.254 (n_min 60, y_min 0.03). Source: authored executed pairs on the buggy_code Brief (fill, t2 pilot then t1 down). Authored pairs: {'non_crash': 18, 'crash': 18, 'crash_cap': 4}. Delta audit: 8 drop(s) (buggy-au-t1-w102c0-py-factorial-multiplies-n, buggy-au-clean-t1-w102c0-py-factorial-multiplies-n, buggy-au-t1-w102c1-py-long-words-list-reset, buggy-au-clean-t1-w102c1-py-long-words-list-reset, buggy-au-t1-w104c0-py-cart-price-squared, buggy-au-clean-t1-w104c0-py-cart-price-squared, buggy-au-t1-w101c0-py-vowel-count-negated, buggy-au-clean-t1-w101c0-py-vowel-count-negated). Plan 0068 regrade (2026-11-05, #289 L1): the leak legs of the frozen buggy items were re-graded on the bug mechanism; 1 more pair failed and was dropped (buggy-au-t1-w102c1-py-league-points-swapped + twin; the delta audit's 4 L1 pairs were already dropped), so 17/24 pairs ship; this shortfall comes from the regrade, not from the refill pool.",
+   "note": "Refilled (plan 0066, 2026-11-04): partial, 18/24 pairs shipped (47 items); stop: crash cap binding; tally 18/71 = 0.254 (n_min 60, y_min 0.03). Source: authored executed pairs on the buggy_code Brief (fill, t2 pilot then t1 down). Authored pairs: {'non_crash': 18, 'crash': 18, 'crash_cap': 4}. Delta audit: 8 drop(s) (buggy-au-t1-w102c0-py-factorial-multiplies-n, buggy-au-clean-t1-w102c0-py-factorial-multiplies-n, buggy-au-t1-w102c1-py-long-words-list-reset, buggy-au-clean-t1-w102c1-py-long-words-list-reset, buggy-au-t1-w104c0-py-cart-price-squared, buggy-au-clean-t1-w104c0-py-cart-price-squared, buggy-au-t1-w101c0-py-vowel-count-negated, buggy-au-clean-t1-w101c0-py-vowel-count-negated). Plan 0068 regrade (2026-11-05, #289 L1): the leak legs of the frozen buggy items were re-graded on the bug mechanism; 1 more pair failed and was dropped (buggy-au-t1-w102c1-py-league-points-swapped + twin; the delta audit's 4 L1 pairs were already dropped), 17/24 pairs shipped then; this shortfall comes from the regrade, not from the refill pool. #289 B3 re-admission (2026-11-05): clean-twin bugclaim legs that were undecided before the refusal fallback (counted as fails) were re-recorded for the named pairs only (`run._regrade_row` legs=bugclaim, the 1024-token rubric budget of #356) and buggy_code re-frozen; 3 candidate pairs passed every leg: py-inclusive-day-count (+ py-clean-nights) shipped; buggy-au-t2-w102c0-py-date-stamp-no-day not shipped (crash pair; the plan 0066 crash cap of floor(19/4)=4 is already filled); buggy-au-t1-w106c0-py-cycle-speed-minutes-not-hours dropped by the independent delta audit (twin renames every identifier). 18/24 pairs ship (47 items).",
    "refill": {
     "route": "run.fill",
     "unit": "pairs",
@@ -498,7 +498,7 @@
     }
    },
    "target_pairs": 24,
-   "n_pairs": 17,
+   "n_pairs": 18,
    "exclude_from_macro": false
   },
   "conjunctive_association": {
@@ -850,8 +850,8 @@
   }
  },
  "code": {
-  "git": "d1e0f30",
-  "adapt_sha256": "da228b98cf1f8dbe"
+  "git": "3169c608",
+  "adapt_sha256": "66e5de55d23bd5b4"
  },
  "model": "kimi-k3",
  "label": "Kimi-K3",
@@ -940,7 +940,9 @@
    "buggy-au-t1-w101c0-py-vowel-count-negated": "delta audit 2026-11-04: leak leg mis-graded: 2 non-empty continuations name the mechanism ('checking for consonants', '# count of non-vowels'), above the 2/11 leak bar; the grader scored them 'not stated' because the cause text bundles the output value (code bug L1). Pair-atomic: drops its twin",
    "buggy-au-clean-t1-w101c0-py-vowel-count-negated": "delta audit 2026-11-04: clean twin of dropped buggy-au-t1-w101c0-py-vowel-count-negated (pairs atomic)",
    "buggy-au-t1-w102c1-py-league-points-swapped": "plan 0068 regrade (#289 L1): leak leg fails under the mechanism rubric (greedy clean, 2/10 decided samples name the bug; bar: greedy clean and <= 1 of 10 samples, max_rate 2/11)",
-   "buggy-au-clean-t1-w102c1-py-league-points-swapped": "clean twin of dropped buggy-au-t1-w102c1-py-league-points-swapped (pairs atomic; plan 0068 regrade)"
+   "buggy-au-clean-t1-w102c1-py-league-points-swapped": "clean twin of dropped buggy-au-t1-w102c1-py-league-points-swapped (pairs atomic; plan 0068 regrade)",
+   "buggy-au-t1-w106c0-py-cycle-speed-minutes-not-hours": "#289 B3 delta audit 2026-11-05: clean twin renames every identifier (not a minimal fix), dead hours variable cue",
+   "buggy-au-clean-t1-w106c0-py-cycle-speed-minutes-not-hours": "#289 B3 delta audit 2026-11-05: clean twin renames every identifier (not a minimal fix), dead hours variable cue"
   },
   "knowledge_cutoff": {
    "b2_02209": "delta audit 2026-11-04: duplicate gold option: 'group captain shubhanshu shukla' is the gold 'shubhanshu shukla' (K1c whole-word containment); also K4",
