@@ -169,7 +169,7 @@ per-layer digests are merged into the one judged digest (see "Audit fixes" below
 - **Refusal fallbacks** (`summ_fallback`): `default` passes the server-side refusal fallback
   (`fallbacks="default"`); `default+<claude model>` additionally re-runs a call still declined
   after it once on that model, at the same level, before any halving (plan 0037 J10;
-  the four F3 families and math_shortcuts use `default+claude-sonnet-5-5`, i.e.
+  the four F3 families use `default+claude-sonnet-5-5`, i.e.
   `digest.REFUSAL_MODEL`; Sonnet 5 before 2026-11-01). `none+<claude model>` is that
   client-side re-run alone, for a digest model that rejects server-side `fallbacks`
   (`claude-sonnet-5` answers the parameter with a 400): agentic_misalignment and
