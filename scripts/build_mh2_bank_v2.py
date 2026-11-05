@@ -569,6 +569,32 @@ def eligible(
     return not any(mc.form_in(t, strong) for t in texts)
 
 
+def unit_fields(
+    unit: dict[str, Any], kind: str, keep: list[str], excluded: list[dict[str, str]]
+) -> dict[str, Any]:
+    """A unit with its bank-v2 fields (in place, also returned): ``kind``, ``full_forms`` (the
+    frozen ``forms.en``), the regex ``forms.en`` += the creditable name forms ``keep`` it lacks,
+    and ``forms_excluded``. Shared with the plan 0066 refill (``wsbench.adapt.mhmt2``)."""
+    full = list(unit["forms"].get("en", []))
+    unit["kind"] = kind
+    unit["full_forms"] = full
+    extra = [f for f in keep if mc.fold(f) not in {mc.fold(x) for x in full}]
+    unit["forms"] = {**unit["forms"], "en": [*full, *extra]}
+    unit["forms_excluded"] = excluded
+    return unit
+
+
+READOUT = {"kind": "all", "lite": {"kind": "final_token"}}
+
+
+def render_fields(item: dict[str, Any], tok: Any) -> dict[str, Any]:
+    """The read fields (in place, also returned): ``readout`` = every prompt token (lite: the
+    final token) and ``n_render_tokens`` (the plain render under ``tok``)."""
+    item["readout"] = copy.deepcopy(READOUT)
+    item["n_render_tokens"] = len(tok.encode(item["prompt"], add_special_tokens=False))
+    return item
+
+
 def _cand_of(cands: list[dict[str, Any]], item: dict[str, Any], role: str) -> dict[str, Any]:
     gold = mc.fold(str(item["mc"][role]["gold"]))
     return next(c for c in cands if c["bridge"] and mc.fold(c["display"]) == gold)
@@ -683,21 +709,14 @@ def build(src: dict[str, Any], tok: Any) -> dict[str, Any]:
         # 4. units: kind, full forms, regex forms += additions, exclusions
         for u in it2["units"]:
             role = u["role"]
-            full = list(u["forms"].get("en", []))
-            u["kind"] = UNIT_KIND.get((it["name"], role), "person")
-            u["full_forms"] = full
-            extra = [
-                f for f in nf[it["name"]][role] if mc.fold(f) not in {mc.fold(x) for x in full}
-            ]
-            u["forms"] = {**u["forms"], "en": [*full, *extra]}
-            u["forms_excluded"] = excl[(it["name"], role)]
+            kind = UNIT_KIND.get((it["name"], role), "person")
+            unit_fields(u, kind, nf[it["name"]][role], excl[(it["name"], role)])
         # zh never feeds the option draw above (the option lists and their lucky floor stay put)
         it2["name_forms"] = {
             role: {"en": forms, "zh": zh_forms_of(it, role)}
             for role, forms in nf[it["name"]].items()
         }
-        it2["readout"] = {"kind": "all", "lite": {"kind": "final_token"}}
-        it2["n_render_tokens"] = len(tok.encode(it["prompt"], add_special_tokens=False))
+        render_fields(it2, tok)
         stamped = mt.stamp(it2, tok, include_target=True)
         out_items.append(stamped)
     header = {k: v for k, v in src.items() if k != "items"}
@@ -745,14 +764,7 @@ def validate(d: dict[str, Any]) -> list[str]:
                 for v in it["units"]:
                     if v["role"] != role and mc.fold(dis) == mc.fold(it["mc"][v["role"]]["gold"]):
                         problems.append(f"{it['name']} {role}: own other bridge {dis!r}")
-            for form in it["name_forms"][role]["en"]:
-                if len(mc.fold(form)) < MIN_FORM_CHARS:
-                    problems.append(f"{it['name']} {role}: short form {form!r}")
-                if all(w in CATEGORY_WORDS for w in _words(form)):
-                    problems.append(f"{it['name']} {role}: category form {form!r}")
-                for dis in block["distractors"]:
-                    if mc.form_in(dis, [form]):
-                        problems.append(f"{it['name']} {role}: {form!r} names option {dis!r}")
+            problems += name_form_problems(it, role)
             if sorted(it["name_forms"][role]) != sorted(NATIVE_LANGS):
                 problems.append(f"{it['name']} {role}: name_forms languages != {NATIVE_LANGS}")
             problems += _zh_problems(it, role)
@@ -760,17 +772,36 @@ def validate(d: dict[str, Any]) -> list[str]:
     return problems
 
 
-def _zh_problems(it: dict[str, Any], role: str) -> list[str]:
+def name_form_problems(it: dict[str, Any], role: str) -> list[str]:
+    """The en name forms' uniqueness (Q10): >= 4 characters, not a category word, naming no
+    distractor of the unit's list."""
+    problems: list[str] = []
+    for form in it["name_forms"][role]["en"]:
+        if len(mc.fold(form)) < MIN_FORM_CHARS:
+            problems.append(f"{it['name']} {role}: short form {form!r}")
+        if all(w in CATEGORY_WORDS for w in _words(form)):
+            problems.append(f"{it['name']} {role}: category form {form!r}")
+        for dis in it["mc"][role]["distractors"]:
+            if mc.form_in(dis, [form]):
+                problems.append(f"{it['name']} {role}: {form!r} names option {dis!r}")
+    return problems
+
+
+def _zh_problems(
+    it: dict[str, Any], role: str, zh_forms: dict[str, list[str]] | None = None
+) -> list[str]:
     """The zh forms' uniqueness: >= 2 CJK characters, and none occurs in the Chinese name of a
-    non-gold option, of another unit of the item, or of the item's target."""
+    non-gold option, of another unit of the item, or of the item's target. ``zh_forms``: the
+    Chinese-name table (default ``ZH_FORMS``; the plan 0066 refill passes a per-item overlay)."""
+    table = ZH_FORMS if zh_forms is None else zh_forms
     problems: list[str] = []
     others: list[tuple[str, str]] = []
     names = [*it["mc"][role]["distractors"], it["target"]]
     names += [str(it["mc"][v["role"]]["gold"]) for v in it["units"] if v["role"] != role]
     for name in names:
-        if name not in ZH_FORMS:
+        if name not in table:
             problems.append(f"{it['name']} {role}: no ZH_FORMS entry for option {name!r}")
-        others += [(name, mc.fold(x)) for x in zh_variants(ZH_FORMS.get(name, []))]
+        others += [(name, mc.fold(x)) for x in zh_variants(table.get(name, []))]
     for form in it["name_forms"][role]["zh"]:
         if len(_CJK.findall(form)) < 2:
             problems.append(f"{it['name']} {role}: zh form {form!r} under 2 CJK characters")

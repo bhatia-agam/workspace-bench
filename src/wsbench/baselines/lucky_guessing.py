@@ -1486,7 +1486,7 @@ def run_family(
                 )
                 for j in js:
                     replies[j] = [
-                        results.get(f"{name}|{variant}|{items[scored[j]].id}|d{d}")
+                        results.get(f"{hash_name(name)}|{variant}|{items[scored[j]].id}|d{d}")
                         for d in range(draws)
                     ]
 

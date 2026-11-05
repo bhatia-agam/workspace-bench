@@ -3631,6 +3631,4769 @@
      "pass": true
     }
    }
+  },
+  {
+   "name": "mh2-galileo-father-camerata",
+   "subfamily": "3hop",
+   "domain": "classical music and opera",
+   "prompt": "Fact: The astronomer who was tried by the Roman Inquisition in 1633 for defending heliocentrism was the son of a musician who belonged to the group known as the",
+   "spans": {
+    "D1": "The astronomer who was tried by the Roman Inquisition in 1633 for defending heliocentrism",
+    "R1": " was the son of",
+    "N2": " a musician",
+    "R2": " who belonged to the group known as the",
+    "G1": "An Italian scientist"
+   },
+   "target": "Florentine Camerata",
+   "target_alts": [
+    "Camerata de' Bardi",
+    "Camerata fiorentina"
+   ],
+   "source": "multihop_v2",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "all",
+    "lite": {
+     "kind": "final_token"
+    }
+   },
+   "intermediates": [
+    "Galileo Galilei",
+    "Vincenzo Galilei"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Galileo Galilei",
+       "Galileo"
+      ]
+     },
+     "match": [
+      "Galileo Galilei",
+      "Galileo"
+     ],
+     "kind": "person",
+     "full_forms": [
+      "Galileo Galilei",
+      "Galileo"
+     ],
+     "forms_excluded": [
+      {
+       "form": "Galilei",
+       "reason": "also names unit bridge2 (Vincenzo Galilei)"
+      }
+     ]
+    },
+    {
+     "role": "bridge2",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Vincenzo Galilei",
+       "Vincenzo"
+      ]
+     },
+     "match": [
+      "Vincenzo Galilei",
+      "Vincenzo"
+     ],
+     "kind": "person",
+     "full_forms": [
+      "Vincenzo Galilei"
+     ],
+     "forms_excluded": [
+      {
+       "form": "Galilei",
+       "reason": "also names unit bridge1 (Galileo Galilei)"
+      }
+     ]
+    }
+   ],
+   "bridges": [
+    {
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "Galileo Galilei",
+      "Galileo",
+      "Galilei"
+     ],
+     "question": "Name the astronomer who was tried by the Roman Inquisition in 1633 for defending heliocentrism."
+    },
+    {
+     "units": [
+      "bridge2"
+     ],
+     "answers": [
+      "Vincenzo Galilei",
+      "Vincenzo",
+      "Galilei"
+     ],
+     "question": "Here is an incomplete statement:\n\n\"Fact: The astronomer who was tried by the Roman Inquisition in 1633 for defending heliocentrism was the son of a musician who belonged to the group known as the___\"\n\nIn this statement, who or what is \"a musician\"? Answer with the specific name."
+    }
+   ],
+   "probes": {
+    "G2_b2_from_b1": {
+     "kind": "fill",
+     "text": "Fact: Galileo Galilei was the son of",
+     "accept": [
+      "Vincenzo Galilei",
+      "Vincenzo",
+      "Galilei"
+     ]
+    },
+    "G3_hop_b2_t": {
+     "kind": "qa",
+     "text": "Which Florentine group of humanists and musicians, credited with inventing opera, did Vincenzo Galilei belong to?",
+     "accept": [
+      "Florentine Camerata",
+      "Camerata de' Bardi",
+      "Camerata fiorentina",
+      "Camerata",
+      "the Camerata"
+     ]
+    },
+    "G4_prefix_b2": {
+     "kind": "fill",
+     "text": "Fact: The astronomer who was tried by the Roman Inquisition in 1633 for defending heliocentrism was the son of",
+     "accept": [
+      "Vincenzo Galilei",
+      "Vincenzo",
+      "Galilei"
+     ]
+    },
+    "S1_drop_b1": {
+     "kind": "fill",
+     "text": "Fact: An Italian scientist was the son of a musician who belonged to the group known as the",
+     "accept": [
+      "Florentine Camerata",
+      "Camerata de' Bardi",
+      "Camerata fiorentina",
+      "Camerata",
+      "the Camerata"
+     ]
+    },
+    "S1_direct_b1_to_t": {
+     "kind": "fill",
+     "text": "Fact: Galileo Galilei belonged to the group known as the",
+     "accept": [
+      "Florentine Camerata",
+      "Camerata de' Bardi",
+      "Camerata fiorentina",
+      "Camerata",
+      "the Camerata"
+     ]
+    },
+    "G2_b1": {
+     "kind": "qa",
+     "text": "Name the astronomer who was tried by the Roman Inquisition in 1633 for defending heliocentrism.",
+     "accept": [
+      "Galileo Galilei",
+      "Galileo",
+      "Galilei"
+     ]
+    },
+    "S1_local_cue": {
+     "kind": "fill",
+     "text": "Fact: the musician belonged to the group known as the",
+     "accept": [
+      "Florentine Camerata",
+      "Camerata de' Bardi",
+      "Camerata fiorentina",
+      "Camerata",
+      "the Camerata"
+     ]
+    }
+   },
+   "shortcut_accept": [
+    "Florentine Camerata",
+    "Camerata de' Bardi",
+    "Camerata fiorentina",
+    "Camerata",
+    "the Camerata"
+   ],
+   "why_nonobvious": "The prompt names only an astronomer's trial and a generic musician in an unnamed group, so the Camerata is reachable only by recalling that Galileo's father was Vincenzo Galilei, while Galileo himself is associated with the Accademia dei Lincei rather than the Camerata.",
+   "id": "mh2-galileo-father-camerata",
+   "shortcut_probes": [
+    {
+     "id": "S1_drop_b1",
+     "kind": "fill",
+     "text": "Fact: An Italian scientist was the son of a musician who belonged to the group known as the",
+     "hides": [
+      "bridge1"
+     ],
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "S1_direct_b1_to_t",
+     "kind": "fill",
+     "text": "Fact: Galileo Galilei belonged to the group known as the",
+     "hides": [
+      "bridge2"
+     ],
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "S1_local_cue",
+     "kind": "fill",
+     "text": "Fact: the musician belonged to the group known as the",
+     "hides": [
+      "bridge1",
+      "bridge2"
+     ],
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "S2adv3_0",
+     "kind": "fill",
+     "text": "Fact: Galileo Galilei was the son of a man who belonged to the group known as the",
+     "hides": [
+      "bridge2"
+     ],
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "S2adv3_1",
+     "kind": "fill",
+     "text": "Fact: The astronomer was the son of a musician who belonged to the group known as the",
+     "hides": [
+      "bridge1",
+      "bridge2"
+     ],
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "S2adv3_2",
+     "kind": "fill",
+     "text": "Fact: A musician who belonged to the group known as the",
+     "hides": [
+      "bridge1",
+      "bridge2"
+     ],
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "Rrv1_0",
+     "kind": "fill",
+     "text": "Fact: The astronomer who was tried by the Roman Inquisition in 1633 for defending heliocentrism belonged to the group known as the",
+     "hides": [
+      "bridge1",
+      "bridge2"
+     ],
+     "origin": "review",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "Rrv1_1",
+     "kind": "qa",
+     "text": "The son of a musician was tried by the Roman Inquisition. To which group did the musician belong?",
+     "hides": [
+      "bridge1",
+      "bridge2"
+     ],
+     "origin": "review",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    }
+   ],
+   "pool_source": "s1+s2",
+   "consistency": 0.95,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge1": 1.0,
+    "bridge2": 1.0
+   },
+   "hop_consistency": 1.0,
+   "context_b2_consistency": 1.0,
+   "shortcut_max": 0.0,
+   "gate_variant": "chat",
+   "mc": {
+    "bridge1": {
+     "gold": "Galileo Galilei",
+     "distractors": [
+      "Tycho Brahe",
+      "Christiaan Huygens",
+      "Robert Hooke",
+      "Giovanni Domenico Cassini"
+     ]
+    },
+    "bridge2": {
+     "gold": "Vincenzo Galilei",
+     "distractors": [
+      "Claudio Monteverdi",
+      "Giovanni Pierluigi da Palestrina",
+      "Carlo Gesualdo",
+      "Giovanni Gabrieli"
+     ]
+    }
+   },
+   "name_forms": {
+    "bridge1": {
+     "en": [
+      "Galileo Galilei",
+      "Galileo"
+     ],
+     "zh": [
+      "伽利略·伽利雷",
+      "伽利略・伽利雷",
+      "伽利略•伽利雷",
+      "伽利略伽利雷",
+      "伽利略·伽利莱",
+      "伽利略・伽利莱",
+      "伽利略•伽利莱",
+      "伽利略伽利莱"
+     ]
+    },
+    "bridge2": {
+     "en": [
+      "Vincenzo Galilei",
+      "Vincenzo"
+     ],
+     "zh": [
+      "温琴佐·伽利雷",
+      "温琴佐・伽利雷",
+      "温琴佐•伽利雷",
+      "温琴佐伽利雷",
+      "文森佐·伽利莱",
+      "文森佐・伽利莱",
+      "文森佐•伽利莱",
+      "文森佐伽利莱"
+     ]
+    }
+   },
+   "n_render_tokens": 39,
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       5,
+       2
+      ]
+     },
+     "bridge2": {
+      "en": [
+       6,
+       3
+      ]
+     }
+    },
+    "target": 5,
+    "target_alts": [
+     6,
+     5
+    ]
+   },
+   "adapt": {
+    "origin": "refill",
+    "gate": {
+     "rate": 0.95,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "mh2-kovalevskaya-weierstrass-analysis",
+   "subfamily": "3hop",
+   "domain": "mathematics and its great figures",
+   "prompt": "Fact: The mathematician who in 1874 became the first woman in Europe to earn a doctorate in mathematics had been privately tutored in Berlin by a mathematician often called the father of modern",
+   "spans": {
+    "D1": "The mathematician who in 1874 became the first woman in Europe to earn a doctorate in mathematics",
+    "R1": " had been privately tutored in Berlin by",
+    "N2": " a mathematician",
+    "R2": " often called the father of modern",
+    "G1": "A nineteenth-century mathematician"
+   },
+   "target": "analysis",
+   "target_alts": [],
+   "source": "multihop_v2",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "all",
+    "lite": {
+     "kind": "final_token"
+    }
+   },
+   "intermediates": [
+    "Sofia Kovalevskaya",
+    "Karl Weierstrass"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Sofia Kovalevskaya",
+       "Sofya Kovalevskaya",
+       "Kovalevskaya",
+       "Kovalevskaia"
+      ]
+     },
+     "match": [
+      "Sofia Kovalevskaya",
+      "Sofya Kovalevskaya",
+      "Kovalevskaya",
+      "Kovalevskaia"
+     ],
+     "kind": "person",
+     "full_forms": [
+      "Sofia Kovalevskaya",
+      "Sofya Kovalevskaya"
+     ],
+     "forms_excluded": []
+    },
+    {
+     "role": "bridge2",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Karl Weierstrass",
+       "Weierstrass"
+      ]
+     },
+     "match": [
+      "Karl Weierstrass",
+      "Weierstrass"
+     ],
+     "kind": "person",
+     "full_forms": [
+      "Karl Weierstrass"
+     ],
+     "forms_excluded": []
+    }
+   ],
+   "bridges": [
+    {
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "Sofia Kovalevskaya",
+      "Sofya Kovalevskaya",
+      "Kovalevskaya",
+      "Kovalevskaia"
+     ],
+     "question": "Name the mathematician who in 1874 became the first woman in Europe to earn a doctorate in mathematics."
+    },
+    {
+     "units": [
+      "bridge2"
+     ],
+     "answers": [
+      "Karl Weierstrass",
+      "Weierstrass",
+      "Karl Weierstraß"
+     ],
+     "question": "Here is an incomplete statement:\n\n\"Fact: The mathematician who in 1874 became the first woman in Europe to earn a doctorate in mathematics had been privately tutored in Berlin by a mathematician often called the father of modern___\"\n\nIn this statement, who or what is \"a mathematician\"? Answer with the specific name."
+    }
+   ],
+   "probes": {
+    "G2_b2_from_b1": {
+     "kind": "fill",
+     "text": "Fact: Sofia Kovalevskaya had been privately tutored in Berlin by",
+     "accept": [
+      "Karl Weierstrass",
+      "Weierstrass",
+      "Karl Weierstraß"
+     ]
+    },
+    "G3_hop_b2_t": {
+     "kind": "qa",
+     "text": "Karl Weierstrass is often called the father of modern what?",
+     "accept": [
+      "analysis",
+      "mathematical analysis",
+      "real analysis"
+     ]
+    },
+    "G4_prefix_b2": {
+     "kind": "fill",
+     "text": "Fact: The mathematician who in 1874 became the first woman in Europe to earn a doctorate in mathematics had been privately tutored in Berlin by",
+     "accept": [
+      "Karl Weierstrass",
+      "Weierstrass",
+      "Karl Weierstraß"
+     ]
+    },
+    "S1_drop_b1": {
+     "kind": "fill",
+     "text": "Fact: A nineteenth-century mathematician had been privately tutored in Berlin by a mathematician often called the father of modern",
+     "accept": [
+      "analysis",
+      "mathematical analysis",
+      "real analysis"
+     ]
+    },
+    "S1_direct_b1_to_t": {
+     "kind": "fill",
+     "text": "Fact: Sofia Kovalevskaya was often called the father of modern",
+     "accept": [
+      "analysis",
+      "mathematical analysis",
+      "real analysis"
+     ]
+    },
+    "G2_b1": {
+     "kind": "qa",
+     "text": "Name the mathematician who in 1874 became the first woman in Europe to earn a doctorate in mathematics.",
+     "accept": [
+      "Sofia Kovalevskaya",
+      "Sofya Kovalevskaya",
+      "Kovalevskaya",
+      "Kovalevskaia"
+     ]
+    },
+    "S1_local_cue": {
+     "kind": "fill",
+     "text": "Fact: the mathematician was often called the father of modern",
+     "accept": [
+      "analysis",
+      "mathematical analysis",
+      "real analysis"
+     ]
+    }
+   },
+   "shortcut_accept": [
+    "analysis",
+    "mathematical analysis",
+    "real analysis"
+   ],
+   "why_nonobvious": "'Father of modern' alone fits many fields, and Kovalevskaya is not herself called the father of anything; only via her tutor Weierstrass does 'analysis' follow.",
+   "id": "mh2-kovalevskaya-weierstrass-analysis",
+   "shortcut_probes": [
+    {
+     "id": "S1_drop_b1",
+     "kind": "fill",
+     "text": "Fact: A nineteenth-century mathematician had been privately tutored in Berlin by a mathematician often called the father of modern",
+     "hides": [
+      "bridge1"
+     ],
+     "n_pass": 3,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "S1_direct_b1_to_t",
+     "kind": "fill",
+     "text": "Fact: Sofia Kovalevskaya was often called the father of modern",
+     "hides": [
+      "bridge2"
+     ],
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "S1_local_cue",
+     "kind": "fill",
+     "text": "Fact: the mathematician was often called the father of modern",
+     "hides": [
+      "bridge1",
+      "bridge2"
+     ],
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "S2adv3_0",
+     "kind": "fill",
+     "text": "Fact: A mathematician often called the father of modern",
+     "hides": [
+      "bridge1",
+      "bridge2"
+     ],
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "S2adv3_1",
+     "kind": "fill",
+     "text": "Fact: A student had been privately tutored in Berlin by a mathematician often called the father of modern",
+     "hides": [
+      "bridge1",
+      "bridge2"
+     ],
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "S2adv3_2",
+     "kind": "fill",
+     "text": "Fact: The mathematician Sofia Kovalevskaya is often linked with the field she helped found as modern",
+     "hides": [
+      "bridge2"
+     ],
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "S2adv3_3",
+     "kind": "qa",
+     "text": "A mathematician is often called the father of modern what?",
+     "hides": [
+      "bridge1",
+      "bridge2"
+     ],
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "Rrv1_0",
+     "kind": "fill",
+     "text": "Fact: A mathematician in Berlin, often called the father of modern",
+     "hides": [
+      "bridge1",
+      "bridge2"
+     ],
+     "origin": "review",
+     "n_pass": 1,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "Rrv1_1",
+     "kind": "fill",
+     "text": "Fact: A woman mathematician had been privately tutored by a mathematician often called the father of modern",
+     "hides": [
+      "bridge1",
+      "bridge2"
+     ],
+     "origin": "review",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    }
+   ],
+   "pool_source": "s1+adversary",
+   "consistency": 1.0,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge1": 0.8,
+    "bridge2": 0.8
+   },
+   "hop_consistency": 1.0,
+   "context_b2_consistency": 0.8,
+   "shortcut_max": 0.15,
+   "gate_variant": "chat",
+   "mc": {
+    "bridge1": {
+     "gold": "Sofia Kovalevskaya",
+     "distractors": [
+      "Maria Gaetana Agnesi",
+      "Carl Friedrich Gauss",
+      "Grace Chisholm Young",
+      "Emmy Noether"
+     ]
+    },
+    "bridge2": {
+     "gold": "Karl Weierstrass",
+     "distractors": [
+      "Peter Gustav Lejeune Dirichlet",
+      "Carl Friedrich Gauss",
+      "Ernst Kummer",
+      "Friedrich Bessel"
+     ]
+    }
+   },
+   "name_forms": {
+    "bridge1": {
+     "en": [
+      "Sofia Kovalevskaya",
+      "Sofya Kovalevskaya",
+      "Kovalevskaya",
+      "Kovalevskaia"
+     ],
+     "zh": [
+      "索菲娅·柯瓦列夫斯卡娅",
+      "索菲娅・柯瓦列夫斯卡娅",
+      "索菲娅•柯瓦列夫斯卡娅",
+      "索菲娅柯瓦列夫斯卡娅",
+      "柯瓦列夫斯卡娅",
+      "科瓦列夫斯卡娅"
+     ]
+    },
+    "bridge2": {
+     "en": [
+      "Karl Weierstrass",
+      "Weierstrass"
+     ],
+     "zh": [
+      "卡尔·魏尔斯特拉斯",
+      "卡尔・魏尔斯特拉斯",
+      "卡尔•魏尔斯特拉斯",
+      "卡尔魏尔斯特拉斯",
+      "魏尔斯特拉斯",
+      "外尔斯特拉斯"
+     ]
+    }
+   },
+   "n_render_tokens": 42,
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       6,
+       7,
+       5,
+       5
+      ]
+     },
+     "bridge2": {
+      "en": [
+       5,
+       4
+      ]
+     }
+    },
+    "target": 1,
+    "target_alts": []
+   },
+   "adapt": {
+    "origin": "refill",
+    "gate": {
+     "rate": 0.8,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "mh2-nietzsche-professorship",
+   "subfamily": "2hop",
+   "domain": "philosophy and scholarship",
+   "prompt": "Fact: The philosopher who wrote Thus Spoke Zarathustra held his only academic professorship at the university of",
+   "spans": {
+    "D1": "The philosopher who wrote Thus Spoke Zarathustra",
+    "R1": " held his only academic professorship at the university of",
+    "G1": "A nineteenth-century German philosopher"
+   },
+   "target": "Basel",
+   "target_alts": [
+    "Basle"
+   ],
+   "source": "multihop_v2",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "all",
+    "lite": {
+     "kind": "final_token"
+    }
+   },
+   "intermediates": [
+    "Friedrich Nietzsche"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Friedrich Nietzsche",
+       "Friedrich Wilhelm Nietzsche",
+       "Nietzsche"
+      ]
+     },
+     "match": [
+      "Friedrich Nietzsche",
+      "Friedrich Wilhelm Nietzsche",
+      "Nietzsche"
+     ],
+     "kind": "person",
+     "full_forms": [
+      "Friedrich Nietzsche",
+      "Friedrich Wilhelm Nietzsche"
+     ],
+     "forms_excluded": []
+    }
+   ],
+   "bridges": [
+    {
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "Friedrich Nietzsche",
+      "Friedrich Wilhelm Nietzsche",
+      "Nietzsche"
+     ],
+     "question": "Name the philosopher who wrote Thus Spoke Zarathustra."
+    }
+   ],
+   "probes": {
+    "G3_hop_b1_t": {
+     "kind": "fill",
+     "text": "Fact: Friedrich Nietzsche held his only academic professorship at the university of",
+     "accept": [
+      "Basel",
+      "Basle",
+      "Bâle"
+     ]
+    },
+    "S1_drop_b1": {
+     "kind": "fill",
+     "text": "Fact: A nineteenth-century German philosopher held his only academic professorship at the university of",
+     "accept": [
+      "Basel",
+      "Basle",
+      "Bâle"
+     ]
+    },
+    "G2_b1": {
+     "kind": "qa",
+     "text": "Name the philosopher who wrote Thus Spoke Zarathustra.",
+     "accept": [
+      "Friedrich Nietzsche",
+      "Friedrich Wilhelm Nietzsche",
+      "Nietzsche"
+     ]
+    },
+    "S1_local_cue": {
+     "kind": "fill",
+     "text": "Fact: the philosopher held his only academic professorship at the university of",
+     "accept": [
+      "Basel",
+      "Basle",
+      "Bâle"
+     ]
+    }
+   },
+   "shortcut_accept": [
+    "Basel",
+    "Basle",
+    "Bâle"
+   ],
+   "why_nonobvious": "The work title identifies only Nietzsche, and a generic German philosopher's university would default to a German institution, not the Swiss city of Basel.",
+   "id": "mh2-nietzsche-professorship",
+   "shortcut_probes": [
+    {
+     "id": "S1_drop_b1",
+     "kind": "fill",
+     "text": "Fact: A nineteenth-century German philosopher held his only academic professorship at the university of",
+     "hides": [
+      "bridge1"
+     ],
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "S1_local_cue",
+     "kind": "fill",
+     "text": "Fact: the philosopher held his only academic professorship at the university of",
+     "hides": [
+      "bridge1"
+     ],
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "S2adv3_0",
+     "kind": "fill",
+     "text": "Fact: The philosopher held his only academic professorship at the university of",
+     "hides": [
+      "bridge1"
+     ],
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "S2adv3_1",
+     "kind": "fill",
+     "text": "Fact: The philosopher who wrote a famous book held his only academic professorship at the university of",
+     "hides": [
+      "bridge1"
+     ],
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "S2adv3_2",
+     "kind": "qa",
+     "text": "At which university did the philosopher hold his only academic professorship?",
+     "hides": [
+      "bridge1"
+     ],
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    }
+   ],
+   "pool_source": "s1+s2",
+   "consistency": 1.0,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge1": 1.0
+   },
+   "hop_consistency": 1.0,
+   "context_b2_consistency": null,
+   "shortcut_max": 0.0,
+   "gate_variant": "chat",
+   "mc": {
+    "bridge1": {
+     "gold": "Friedrich Nietzsche",
+     "distractors": [
+      "Karl Marx",
+      "Georg Wilhelm Friedrich Hegel",
+      "Arthur Schopenhauer",
+      "Friedrich Engels"
+     ]
+    }
+   },
+   "name_forms": {
+    "bridge1": {
+     "en": [
+      "Friedrich Nietzsche",
+      "Friedrich Wilhelm Nietzsche",
+      "Nietzsche"
+     ],
+     "zh": [
+      "弗里德里希·尼采",
+      "弗里德里希・尼采",
+      "弗里德里希•尼采",
+      "弗里德里希尼采",
+      "尼采"
+     ]
+    }
+   },
+   "n_render_tokens": 23,
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       2,
+       3,
+       1
+      ]
+     }
+    },
+    "target": 1,
+    "target_alts": [
+     2
+    ]
+   },
+   "adapt": {
+    "origin": "refill",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "mh2-nomadland-director-marvel-t0",
+   "subfamily": "2hop",
+   "domain": "film and its makers",
+   "prompt": "Fact: The filmmaker who won the Academy Award for Best Director for 'Nomadland' went on to direct the Marvel Studios film",
+   "spans": {
+    "D1": "The filmmaker who won the Academy Award for Best Director for 'Nomadland'",
+    "R1": " went on to direct the Marvel Studios film",
+    "G1": "A film director"
+   },
+   "target": "Eternals",
+   "target_alts": [
+    "The Eternals"
+   ],
+   "source": "multihop_v2",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "all",
+    "lite": {
+     "kind": "final_token"
+    }
+   },
+   "intermediates": [
+    "Chloé Zhao"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Chloé Zhao",
+       "Chloe Zhao",
+       "Zhao Ting",
+       "Zhao"
+      ]
+     },
+     "match": [
+      "Chloé Zhao",
+      "Chloe Zhao",
+      "Zhao Ting",
+      "Zhao"
+     ],
+     "kind": "person",
+     "full_forms": [
+      "Chloé Zhao",
+      "Chloe Zhao",
+      "Zhao Ting"
+     ],
+     "forms_excluded": []
+    }
+   ],
+   "bridges": [
+    {
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "Chloé Zhao",
+      "Chloe Zhao",
+      "Zhao Ting",
+      "Zhao"
+     ],
+     "question": "Name the filmmaker who won the Academy Award for Best Director for 'Nomadland'."
+    }
+   ],
+   "probes": {
+    "G3_hop_b1_t": {
+     "kind": "fill",
+     "text": "Fact: Chloé Zhao went on to direct the Marvel Studios film",
+     "accept": [
+      "Eternals",
+      "The Eternals"
+     ]
+    },
+    "S1_drop_b1": {
+     "kind": "fill",
+     "text": "Fact: A film director went on to direct the Marvel Studios film",
+     "accept": [
+      "Eternals",
+      "The Eternals"
+     ]
+    },
+    "G2_b1": {
+     "kind": "qa",
+     "text": "Name the filmmaker who won the Academy Award for Best Director for 'Nomadland'.",
+     "accept": [
+      "Chloé Zhao",
+      "Chloe Zhao",
+      "Zhao Ting",
+      "Zhao"
+     ]
+    },
+    "S1_local_cue": {
+     "kind": "fill",
+     "text": "Fact: the director went on to direct the Marvel Studios film",
+     "accept": [
+      "Eternals",
+      "The Eternals"
+     ]
+    }
+   },
+   "shortcut_accept": [
+    "Eternals",
+    "The Eternals"
+   ],
+   "why_nonobvious": "Dozens of directors have made Marvel Studios films, so the relation alone does not pick out Eternals without first identifying Chloé Zhao.",
+   "id": "mh2-nomadland-director-marvel-t0",
+   "shortcut_probes": [
+    {
+     "id": "S1_drop_b1",
+     "kind": "fill",
+     "text": "Fact: A film director went on to direct the Marvel Studios film",
+     "hides": [
+      "bridge1"
+     ],
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "S1_local_cue",
+     "kind": "fill",
+     "text": "Fact: the director went on to direct the Marvel Studios film",
+     "hides": [
+      "bridge1"
+     ],
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "S2adv3_0",
+     "kind": "fill",
+     "text": "Fact: The filmmaker who won the Academy Award for Best Director went on to direct the Marvel Studios film",
+     "hides": [
+      "bridge1"
+     ],
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "S2adv3_1",
+     "kind": "qa",
+     "text": "Which Marvel Studios film did an Academy Award-winning director go on to direct?",
+     "hides": [
+      "bridge1"
+     ],
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    }
+   ],
+   "pool_source": "s1+adversary",
+   "consistency": 1.0,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge1": 1.0
+   },
+   "hop_consistency": 1.0,
+   "context_b2_consistency": null,
+   "shortcut_max": 0.0,
+   "gate_variant": "chat",
+   "mc": {
+    "bridge1": {
+     "gold": "Chloé Zhao",
+     "distractors": [
+      "Michel Hazanavicius",
+      "Jane Campion",
+      "Bong Joon-ho",
+      "Asghar Farhadi"
+     ]
+    }
+   },
+   "name_forms": {
+    "bridge1": {
+     "en": [
+      "Chloé Zhao",
+      "Zhao Ting",
+      "Zhao"
+     ],
+     "zh": [
+      "赵婷"
+     ]
+    }
+   },
+   "n_render_tokens": 26,
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       4,
+       2,
+       2,
+       1
+      ]
+     }
+    },
+    "target": 2,
+    "target_alts": [
+     3
+    ]
+   },
+   "adapt": {
+    "origin": "refill",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "mh2-durer-birth-city",
+   "subfamily": "2hop",
+   "domain": "painting and sculpture",
+   "prompt": "Fact: The Renaissance artist of the 1500 Christ-like self-portrait in a fur-trimmed coat, the watercolour Young Hare and the engraving Melencolia I was born in the city of",
+   "spans": {
+    "D1": "The Renaissance artist of the 1500 Christ-like self-portrait in a fur-trimmed coat, the watercolour Young Hare and the engraving Melencolia I",
+    "R1": " was born in the city of",
+    "G1": "A Renaissance artist"
+   },
+   "target": "Nuremberg",
+   "target_alts": [
+    "Nürnberg"
+   ],
+   "source": "multihop_v2",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "all",
+    "lite": {
+     "kind": "final_token"
+    }
+   },
+   "intermediates": [
+    "Albrecht Dürer"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Albrecht Dürer",
+       "Albrecht Durer",
+       "Dürer"
+      ]
+     },
+     "match": [
+      "Albrecht Dürer",
+      "Albrecht Durer",
+      "Dürer"
+     ],
+     "kind": "person",
+     "full_forms": [
+      "Albrecht Dürer",
+      "Albrecht Durer",
+      "Dürer"
+     ],
+     "forms_excluded": []
+    }
+   ],
+   "bridges": [
+    {
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "Albrecht Dürer",
+      "Albrecht Durer",
+      "Dürer",
+      "Durer"
+     ],
+     "question": "Name the Renaissance artist of the 1500 Christ-like self-portrait in a fur-trimmed coat, the watercolour Young Hare and the engraving Melencolia I."
+    }
+   ],
+   "probes": {
+    "G3_hop_b1_t": {
+     "kind": "fill",
+     "text": "Fact: Albrecht Dürer was born in the city of",
+     "accept": [
+      "Nuremberg",
+      "Nürnberg",
+      "Nurnberg"
+     ]
+    },
+    "S1_drop_b1": {
+     "kind": "fill",
+     "text": "Fact: A Renaissance artist was born in the city of",
+     "accept": [
+      "Nuremberg",
+      "Nürnberg",
+      "Nurnberg"
+     ]
+    },
+    "G2_b1": {
+     "kind": "qa",
+     "text": "Name the Renaissance artist of the 1500 Christ-like self-portrait in a fur-trimmed coat, the watercolour Young Hare and the engraving Melencolia I.",
+     "accept": [
+      "Albrecht Dürer",
+      "Albrecht Durer",
+      "Dürer",
+      "Durer"
+     ]
+    },
+    "S1_local_cue": {
+     "kind": "fill",
+     "text": "Fact: the artist was born in the city of",
+     "accept": [
+      "Nuremberg",
+      "Nürnberg",
+      "Nurnberg"
+     ]
+    }
+   },
+   "shortcut_accept": [
+    "Nuremberg",
+    "Nürnberg",
+    "Nurnberg"
+   ],
+   "why_nonobvious": "The clues name only Dürer's works, none of which mentions a place, and a generic Renaissance artist's birthplace defaults to Florence or similar, so Nuremberg requires identifying Dürer.",
+   "id": "mh2-durer-birth-city",
+   "shortcut_probes": [
+    {
+     "id": "S1_drop_b1",
+     "kind": "fill",
+     "text": "Fact: A Renaissance artist was born in the city of",
+     "hides": [
+      "bridge1"
+     ],
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "S1_local_cue",
+     "kind": "fill",
+     "text": "Fact: the artist was born in the city of",
+     "hides": [
+      "bridge1"
+     ],
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "S2adv3_0",
+     "kind": "fill",
+     "text": "Fact: The Renaissance artist was born in the city of",
+     "hides": [
+      "bridge1"
+     ],
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "S2adv3_1",
+     "kind": "fill",
+     "text": "Fact: The Renaissance artist of the engraving was born in the city of",
+     "hides": [
+      "bridge1"
+     ],
+     "n_pass": 1,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "S2adv3_2",
+     "kind": "qa",
+     "text": "In which city was the Renaissance artist of a self-portrait in a fur-trimmed coat born?",
+     "hides": [
+      "bridge1"
+     ],
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    }
+   ],
+   "pool_source": "s1+s2",
+   "consistency": 1.0,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge1": 1.0
+   },
+   "hop_consistency": 1.0,
+   "context_b2_consistency": null,
+   "shortcut_max": 0.05,
+   "gate_variant": "chat",
+   "mc": {
+    "bridge1": {
+     "gold": "Albrecht Dürer",
+     "distractors": [
+      "Leonardo da Vinci",
+      "Michelangelo Buonarroti",
+      "Raphael Sanzio",
+      "Sandro Botticelli"
+     ]
+    }
+   },
+   "name_forms": {
+    "bridge1": {
+     "en": [
+      "Albrecht Dürer",
+      "Dürer"
+     ],
+     "zh": [
+      "阿尔布雷希特·丢勒",
+      "阿尔布雷希特・丢勒",
+      "阿尔布雷希特•丢勒",
+      "阿尔布雷希特丢勒",
+      "丢勒",
+      "杜勒",
+      "阿尔布雷希特·杜勒",
+      "阿尔布雷希特・杜勒",
+      "阿尔布雷希特•杜勒",
+      "阿尔布雷希特杜勒"
+     ]
+    }
+   },
+   "n_render_tokens": 45,
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       5,
+       5,
+       2
+      ]
+     }
+    },
+    "target": 4,
+    "target_alts": [
+     2
+    ]
+   },
+   "adapt": {
+    "origin": "refill",
+    "gate": {
+     "rate": 0.95,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "mh2-sand-lover-s0",
+   "subfamily": "2hop",
+   "domain": "literature and its authors",
+   "prompt": "Fact: The French woman novelist who wrote 'Indiana' and 'Lélia' under a male pen name had a celebrated love affair with the composer",
+   "spans": {
+    "D1": "The French woman novelist who wrote 'Indiana' and 'Lélia' under a male pen name",
+    "R1": " had a celebrated love affair with the composer",
+    "G1": "A nineteenth-century French novelist"
+   },
+   "target": "Frédéric Chopin",
+   "target_alts": [
+    "Fryderyk Chopin"
+   ],
+   "source": "multihop_v2",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "all",
+    "lite": {
+     "kind": "final_token"
+    }
+   },
+   "intermediates": [
+    "George Sand"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "George Sand",
+       "Aurore Dupin",
+       "Amantine Lucile Aurore Dupin",
+       "Sand",
+       "Amantine Aurore Dupin",
+       "Aurore Dudevant"
+      ]
+     },
+     "match": [
+      "George Sand",
+      "Aurore Dupin",
+      "Amantine Lucile Aurore Dupin",
+      "Sand",
+      "Amantine Aurore Dupin",
+      "Aurore Dudevant"
+     ],
+     "kind": "person",
+     "full_forms": [
+      "George Sand",
+      "Aurore Dupin",
+      "Amantine Lucile Aurore Dupin"
+     ],
+     "forms_excluded": []
+    }
+   ],
+   "bridges": [
+    {
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "George Sand",
+      "Aurore Dupin",
+      "Amantine Lucile Aurore Dupin",
+      "Sand",
+      "Amantine Aurore Dupin",
+      "Aurore Dudevant"
+     ],
+     "question": "Name the French woman novelist who wrote 'Indiana' and 'Lélia' under a male pen name."
+    }
+   ],
+   "probes": {
+    "G3_hop_b1_t": {
+     "kind": "fill",
+     "text": "Fact: George Sand had a celebrated love affair with the composer",
+     "accept": [
+      "Frédéric Chopin",
+      "Fryderyk Chopin",
+      "Chopin",
+      "Frederic Chopin"
+     ]
+    },
+    "S1_drop_b1": {
+     "kind": "fill",
+     "text": "Fact: A nineteenth-century French novelist had a celebrated love affair with the composer",
+     "accept": [
+      "Frédéric Chopin",
+      "Fryderyk Chopin",
+      "Chopin",
+      "Frederic Chopin"
+     ]
+    },
+    "G2_b1": {
+     "kind": "qa",
+     "text": "Name the French woman novelist who wrote 'Indiana' and 'Lélia' under a male pen name.",
+     "accept": [
+      "George Sand",
+      "Aurore Dupin",
+      "Amantine Lucile Aurore Dupin",
+      "Sand",
+      "Amantine Aurore Dupin",
+      "Aurore Dudevant"
+     ]
+    },
+    "S1_local_cue": {
+     "kind": "fill",
+     "text": "Fact: the novelist had a celebrated love affair with the composer",
+     "accept": [
+      "Frédéric Chopin",
+      "Fryderyk Chopin",
+      "Chopin",
+      "Frederic Chopin"
+     ]
+    }
+   },
+   "shortcut_accept": [
+    "Frédéric Chopin",
+    "Fryderyk Chopin",
+    "Chopin",
+    "Frederic Chopin"
+   ],
+   "why_nonobvious": "No nationality of the composer is given, so a generic novelist's composer lover is open; only identifying George Sand points to Chopin.",
+   "id": "mh2-sand-lover-s0",
+   "shortcut_probes": [
+    {
+     "id": "S1_drop_b1",
+     "kind": "fill",
+     "text": "Fact: A nineteenth-century French novelist had a celebrated love affair with the composer",
+     "hides": [
+      "bridge1"
+     ],
+     "n_pass": 1,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "S1_local_cue",
+     "kind": "fill",
+     "text": "Fact: the novelist had a celebrated love affair with the composer",
+     "hides": [
+      "bridge1"
+     ],
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "S2adv3_0",
+     "kind": "fill",
+     "text": "Fact: The woman novelist had a celebrated love affair with the composer",
+     "hides": [
+      "bridge1"
+     ],
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "S2adv3_1",
+     "kind": "fill",
+     "text": "Fact: The French novelist had a celebrated love affair with the composer",
+     "hides": [
+      "bridge1"
+     ],
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "S2adv3_2",
+     "kind": "fill",
+     "text": "Fact: The writer had a celebrated love affair with the composer",
+     "hides": [
+      "bridge1"
+     ],
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "S2adv3_3",
+     "kind": "qa",
+     "text": "Which composer had a celebrated love affair with a woman novelist?",
+     "hides": [
+      "bridge1"
+     ],
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "Rrv1_0",
+     "kind": "fill",
+     "text": "Fact: The French woman had a celebrated love affair with the composer",
+     "hides": [
+      "bridge1"
+     ],
+     "origin": "review",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "Rrv1_1",
+     "kind": "qa",
+     "text": "Which composer had a celebrated love affair with a French woman?",
+     "hides": [
+      "bridge1"
+     ],
+     "origin": "review",
+     "n_pass": 1,
+     "n": 20,
+     "greedy_pass": 0
+    }
+   ],
+   "pool_source": "s1+s2",
+   "consistency": 0.95,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge1": 1.0
+   },
+   "hop_consistency": 1.0,
+   "context_b2_consistency": null,
+   "shortcut_max": 0.05,
+   "gate_variant": "chat",
+   "mc": {
+    "bridge1": {
+     "gold": "George Sand",
+     "distractors": [
+      "Stendhal",
+      "Anatole France",
+      "Guy de Maupassant",
+      "Gustave Flaubert"
+     ]
+    }
+   },
+   "name_forms": {
+    "bridge1": {
+     "en": [
+      "George Sand",
+      "Aurore Dupin",
+      "Amantine Lucile Aurore Dupin",
+      "Sand",
+      "Amantine Aurore Dupin",
+      "Aurore Dudevant"
+     ],
+     "zh": [
+      "乔治·桑",
+      "乔治・桑",
+      "乔治•桑",
+      "乔治桑"
+     ]
+    }
+   },
+   "n_render_tokens": 30,
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       2,
+       5,
+       9,
+       1,
+       7,
+       5
+      ]
+     }
+    },
+    "target": 5,
+    "target_alts": [
+     6
+    ]
+   },
+   "adapt": {
+    "origin": "refill",
+    "gate": {
+     "rate": 0.95,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "mh2-swift-st-patricks-s3",
+   "subfamily": "2hop",
+   "domain": "journalism, photography and design",
+   "prompt": "Fact: the satirist who wrote 'A Modest Proposal' served as dean of",
+   "spans": {
+    "D1": "the satirist who wrote 'A Modest Proposal'",
+    "R1": " served as dean of",
+    "G1": "An eighteenth-century clergyman"
+   },
+   "target": "St Patrick's Cathedral, Dublin",
+   "target_alts": [
+    "Saint Patrick's Cathedral",
+    "St Patrick's Cathedral"
+   ],
+   "source": "multihop_v2",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "all",
+    "lite": {
+     "kind": "final_token"
+    }
+   },
+   "intermediates": [
+    "Jonathan Swift"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Jonathan Swift",
+       "Swift",
+       "Dean Swift"
+      ]
+     },
+     "match": [
+      "Jonathan Swift",
+      "Swift",
+      "Dean Swift"
+     ],
+     "kind": "person",
+     "full_forms": [
+      "Jonathan Swift"
+     ],
+     "forms_excluded": []
+    }
+   ],
+   "bridges": [
+    {
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "Jonathan Swift",
+      "Swift",
+      "Dean Swift"
+     ],
+     "question": "Name the satirist who wrote 'A Modest Proposal'."
+    }
+   ],
+   "probes": {
+    "G3_hop_b1_t": {
+     "kind": "fill",
+     "text": "Fact: Jonathan Swift served as dean of",
+     "accept": [
+      "St Patrick's Cathedral, Dublin",
+      "Saint Patrick's Cathedral",
+      "St Patrick's Cathedral",
+      "St Patrick's",
+      "St. Patrick's Cathedral, Dublin"
+     ]
+    },
+    "S1_drop_b1": {
+     "kind": "fill",
+     "text": "Fact: An eighteenth-century clergyman served as dean of",
+     "accept": [
+      "St Patrick's Cathedral, Dublin",
+      "Saint Patrick's Cathedral",
+      "St Patrick's Cathedral",
+      "St Patrick's",
+      "St. Patrick's Cathedral, Dublin",
+      "Dublin"
+     ]
+    },
+    "G2_b1": {
+     "kind": "qa",
+     "text": "Name the satirist who wrote 'A Modest Proposal'.",
+     "accept": [
+      "Jonathan Swift",
+      "Swift",
+      "Dean Swift"
+     ]
+    },
+    "S1_local_cue": {
+     "kind": "fill",
+     "text": "Fact: the clergyman served as dean of",
+     "accept": [
+      "St Patrick's Cathedral, Dublin",
+      "Saint Patrick's Cathedral",
+      "St Patrick's Cathedral",
+      "St Patrick's",
+      "St. Patrick's Cathedral, Dublin",
+      "Dublin"
+     ]
+    }
+   },
+   "shortcut_accept": [
+    "St Patrick's Cathedral, Dublin",
+    "Saint Patrick's Cathedral",
+    "St Patrick's Cathedral",
+    "St Patrick's",
+    "St. Patrick's Cathedral, Dublin",
+    "Dublin"
+   ],
+   "why_nonobvious": "Many clergymen were deans of many cathedrals; nothing in D1 mentions Ireland, so Swift must be resolved first.",
+   "id": "mh2-swift-st-patricks-s3",
+   "shortcut_probes": [
+    {
+     "id": "S1_drop_b1",
+     "kind": "fill",
+     "text": "Fact: An eighteenth-century clergyman served as dean of",
+     "hides": [
+      "bridge1"
+     ],
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "S1_local_cue",
+     "kind": "fill",
+     "text": "Fact: the clergyman served as dean of",
+     "hides": [
+      "bridge1"
+     ],
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "S2adv3_0",
+     "kind": "fill",
+     "text": "Fact: the satirist served as dean of",
+     "hides": [
+      "bridge1"
+     ],
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "S2adv3_1",
+     "kind": "fill",
+     "text": "Fact: the writer served as dean of",
+     "hides": [
+      "bridge1"
+     ],
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "S2adv3_2",
+     "kind": "qa",
+     "text": "Which cathedral did a famous satirist serve as dean of?",
+     "hides": [
+      "bridge1"
+     ],
+     "n_pass": 1,
+     "n": 20,
+     "greedy_pass": 0
+    }
+   ],
+   "pool_source": "s1+adversary",
+   "consistency": 0.95,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge1": 1.0
+   },
+   "hop_consistency": 1.0,
+   "context_b2_consistency": null,
+   "shortcut_max": 0.05,
+   "gate_variant": "chat",
+   "mc": {
+    "bridge1": {
+     "gold": "Jonathan Swift",
+     "distractors": [
+      "Richard Brinsley Sheridan",
+      "Joseph Addison",
+      "Henry Fielding",
+      "Tobias Smollett"
+     ]
+    }
+   },
+   "name_forms": {
+    "bridge1": {
+     "en": [
+      "Jonathan Swift",
+      "Swift",
+      "Dean Swift"
+     ],
+     "zh": [
+      "乔纳森·斯威夫特",
+      "乔纳森・斯威夫特",
+      "乔纳森•斯威夫特",
+      "乔纳森斯威夫特",
+      "斯威夫特"
+     ]
+    }
+   },
+   "n_render_tokens": 18,
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       2,
+       1,
+       2
+      ]
+     }
+    },
+    "target": 6,
+    "target_alts": [
+     4,
+     4
+    ]
+   },
+   "adapt": {
+    "origin": "refill",
+    "gate": {
+     "rate": 0.95,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "mh2-interval-ratios-birth-island",
+   "subfamily": "2hop",
+   "domain": "classical music and opera",
+   "prompt": "Fact: the Greek sage credited by legend with discovering that consonant musical intervals arise from simple whole-number ratios was born on the island of",
+   "spans": {
+    "D1": "the Greek sage credited by legend with discovering that consonant musical intervals arise from simple whole-number ratios",
+    "R1": " was born on the island of",
+    "G1": "A Greek philosopher"
+   },
+   "target": "Samos",
+   "target_alts": [],
+   "source": "multihop_v2",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "all",
+    "lite": {
+     "kind": "final_token"
+    }
+   },
+   "intermediates": [
+    "Pythagoras"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Pythagoras"
+      ]
+     },
+     "match": [
+      "Pythagoras"
+     ],
+     "kind": "person",
+     "full_forms": [
+      "Pythagoras"
+     ],
+     "forms_excluded": []
+    }
+   ],
+   "bridges": [
+    {
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "Pythagoras"
+     ],
+     "question": "Name the Greek sage credited by legend with discovering that consonant musical intervals arise from simple whole-number ratios."
+    }
+   ],
+   "probes": {
+    "G3_hop_b1_t": {
+     "kind": "fill",
+     "text": "Fact: Pythagoras was born on the island of",
+     "accept": [
+      "Samos"
+     ]
+    },
+    "S1_drop_b1": {
+     "kind": "fill",
+     "text": "Fact: A Greek philosopher was born on the island of",
+     "accept": [
+      "Samos"
+     ]
+    },
+    "G2_b1": {
+     "kind": "qa",
+     "text": "Name the Greek sage credited by legend with discovering that consonant musical intervals arise from simple whole-number ratios.",
+     "accept": [
+      "Pythagoras"
+     ]
+    },
+    "S1_local_cue": {
+     "kind": "fill",
+     "text": "Fact: the philosopher was born on the island of",
+     "accept": [
+      "Samos"
+     ]
+    }
+   },
+   "shortcut_accept": [
+    "Samos"
+   ],
+   "why_nonobvious": "Greek philosophers were born on many islands and cities; Samos follows only once the musical-ratio legend is resolved to Pythagoras.",
+   "id": "mh2-interval-ratios-birth-island",
+   "shortcut_probes": [
+    {
+     "id": "S1_drop_b1",
+     "kind": "fill",
+     "text": "Fact: A Greek philosopher was born on the island of",
+     "hides": [
+      "bridge1"
+     ],
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "S1_local_cue",
+     "kind": "fill",
+     "text": "Fact: the philosopher was born on the island of",
+     "hides": [
+      "bridge1"
+     ],
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "S2adv3_0",
+     "kind": "fill",
+     "text": "Fact: the Greek sage was born on the island of",
+     "hides": [
+      "bridge1"
+     ],
+     "n_pass": 1,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "S2adv3_1",
+     "kind": "fill",
+     "text": "Fact: the Greek sage credited by legend with a discovery was born on the island of",
+     "hides": [
+      "bridge1"
+     ],
+     "n_pass": 2,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "S2adv3_2",
+     "kind": "qa",
+     "text": "On which island was the Greek sage born?",
+     "hides": [
+      "bridge1"
+     ],
+     "n_pass": 2,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "S2adv3_3",
+     "kind": "fill",
+     "text": "Fact: the sage credited by legend with a discovery was born on the Greek island of",
+     "hides": [
+      "bridge1"
+     ],
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    }
+   ],
+   "pool_source": "s1+s2",
+   "consistency": 0.95,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge1": 1.0
+   },
+   "hop_consistency": 1.0,
+   "context_b2_consistency": null,
+   "shortcut_max": 0.1,
+   "gate_variant": "chat",
+   "mc": {
+    "bridge1": {
+     "gold": "Pythagoras",
+     "distractors": [
+      "Socrates",
+      "Heraclitus",
+      "Plato",
+      "Aristotle"
+     ]
+    }
+   },
+   "name_forms": {
+    "bridge1": {
+     "en": [
+      "Pythagoras"
+     ],
+     "zh": [
+      "毕达哥拉斯"
+     ]
+    }
+   },
+   "n_render_tokens": 27,
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       3
+      ]
+     }
+    },
+    "target": 2,
+    "target_alts": []
+   },
+   "adapt": {
+    "origin": "refill",
+    "gate": {
+     "rate": 0.9,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "mh2-branson-first-magazine-s1",
+   "subfamily": "2hop",
+   "domain": "business, companies and their founders",
+   "prompt": "Fact: The British entrepreneur who founded the Virgin Group began his business career as a teenager by launching a magazine called",
+   "spans": {
+    "D1": "The British entrepreneur who founded the Virgin Group",
+    "R1": " began his business career as a teenager by launching a magazine called",
+    "G1": "A British entrepreneur"
+   },
+   "target": "Student",
+   "target_alts": [],
+   "source": "multihop_v2",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "all",
+    "lite": {
+     "kind": "final_token"
+    }
+   },
+   "intermediates": [
+    "Richard Branson"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Richard Branson",
+       "Sir Richard Branson",
+       "Branson"
+      ]
+     },
+     "match": [
+      "Richard Branson",
+      "Sir Richard Branson",
+      "Branson"
+     ],
+     "kind": "person",
+     "full_forms": [
+      "Richard Branson",
+      "Sir Richard Branson"
+     ],
+     "forms_excluded": []
+    }
+   ],
+   "bridges": [
+    {
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "Richard Branson",
+      "Sir Richard Branson",
+      "Branson"
+     ],
+     "question": "Name the British entrepreneur who founded the Virgin Group."
+    }
+   ],
+   "probes": {
+    "G3_hop_b1_t": {
+     "kind": "fill",
+     "text": "Fact: Richard Branson began his business career as a teenager by launching a magazine called",
+     "accept": [
+      "Student"
+     ]
+    },
+    "S1_drop_b1": {
+     "kind": "fill",
+     "text": "Fact: A British entrepreneur began his business career as a teenager by launching a magazine called",
+     "accept": [
+      "Student"
+     ]
+    },
+    "G2_b1": {
+     "kind": "qa",
+     "text": "Name the British entrepreneur who founded the Virgin Group.",
+     "accept": [
+      "Richard Branson",
+      "Sir Richard Branson",
+      "Branson"
+     ]
+    },
+    "S1_local_cue": {
+     "kind": "fill",
+     "text": "Fact: the entrepreneur began his business career as a teenager by launching a magazine called",
+     "accept": [
+      "Student"
+     ]
+    }
+   },
+   "shortcut_accept": [
+    "Student"
+   ],
+   "why_nonobvious": "Teen-launched magazines by entrepreneurs have no default title; only knowing the Virgin founder is Branson gives his magazine Student.",
+   "id": "mh2-branson-first-magazine-s1",
+   "shortcut_probes": [
+    {
+     "id": "S1_drop_b1",
+     "kind": "fill",
+     "text": "Fact: A British entrepreneur began his business career as a teenager by launching a magazine called",
+     "hides": [
+      "bridge1"
+     ],
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "S1_local_cue",
+     "kind": "fill",
+     "text": "Fact: the entrepreneur began his business career as a teenager by launching a magazine called",
+     "hides": [
+      "bridge1"
+     ],
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "S2adv3_0",
+     "kind": "fill",
+     "text": "Fact: The entrepreneur began his business career as a teenager by launching a magazine called",
+     "hides": [
+      "bridge1"
+     ],
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "S2adv3_1",
+     "kind": "fill",
+     "text": "Fact: The British entrepreneur began his business career as a teenager by launching a magazine called",
+     "hides": [
+      "bridge1"
+     ],
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "S2adv3_2",
+     "kind": "qa",
+     "text": "What was the name of the magazine an entrepreneur launched as a teenager to begin his business career?",
+     "hides": [
+      "bridge1"
+     ],
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "S2adv3_3",
+     "kind": "fill",
+     "text": "Fact: As a teenager, he launched a magazine called",
+     "hides": [
+      "bridge1"
+     ],
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "Rrv1_0",
+     "kind": "fill",
+     "text": "Fact: The British entrepreneur who founded the group began his business career as a teenager by launching a magazine called",
+     "hides": [
+      "bridge1"
+     ],
+     "origin": "review",
+     "n_pass": 1,
+     "n": 20,
+     "greedy_pass": 0
+    }
+   ],
+   "pool_source": "s1+s2",
+   "consistency": 0.95,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge1": 1.0
+   },
+   "hop_consistency": 0.9,
+   "context_b2_consistency": null,
+   "shortcut_max": 0.05,
+   "gate_variant": "chat",
+   "mc": {
+    "bridge1": {
+     "gold": "Richard Branson",
+     "distractors": [
+      "Bernie Ecclestone",
+      "Clive Sinclair",
+      "Alan Sugar",
+      "Robert Maxwell"
+     ]
+    }
+   },
+   "name_forms": {
+    "bridge1": {
+     "en": [
+      "Richard Branson",
+      "Sir Richard Branson",
+      "Branson"
+     ],
+     "zh": [
+      "理查德·布兰森",
+      "理查德・布兰森",
+      "理查德•布兰森",
+      "理查德布兰森",
+      "李察·布兰森",
+      "李察・布兰森",
+      "李察•布兰森",
+      "李察布兰森"
+     ]
+    }
+   },
+   "n_render_tokens": 22,
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       3,
+       4,
+       2
+      ]
+     }
+    },
+    "target": 1,
+    "target_alts": []
+   },
+   "adapt": {
+    "origin": "refill",
+    "gate": {
+     "rate": 0.9,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "mh2-elgar-gerontius-s0",
+   "subfamily": "2hop",
+   "domain": "classical music and opera",
+   "prompt": "Fact: the English composer of the 'Enigma Variations' and the 'Pomp and Circumstance' marches wrote the celebrated oratorio titled",
+   "spans": {
+    "D1": "the English composer of the 'Enigma Variations' and the 'Pomp and Circumstance' marches",
+    "R1": " wrote the celebrated oratorio titled",
+    "G1": "An English composer"
+   },
+   "target": "The Dream of Gerontius",
+   "target_alts": [
+    "Dream of Gerontius"
+   ],
+   "source": "multihop_v2",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "all",
+    "lite": {
+     "kind": "final_token"
+    }
+   },
+   "intermediates": [
+    "Edward Elgar"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Edward Elgar",
+       "Sir Edward Elgar",
+       "Elgar"
+      ]
+     },
+     "match": [
+      "Edward Elgar",
+      "Sir Edward Elgar",
+      "Elgar"
+     ],
+     "kind": "person",
+     "full_forms": [
+      "Edward Elgar",
+      "Sir Edward Elgar"
+     ],
+     "forms_excluded": []
+    }
+   ],
+   "bridges": [
+    {
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "Edward Elgar",
+      "Sir Edward Elgar",
+      "Elgar"
+     ],
+     "question": "Name the English composer of the 'Enigma Variations' and the 'Pomp and Circumstance' marches."
+    }
+   ],
+   "probes": {
+    "G3_hop_b1_t": {
+     "kind": "fill",
+     "text": "Fact: Edward Elgar wrote the celebrated oratorio titled",
+     "accept": [
+      "The Dream of Gerontius",
+      "Dream of Gerontius",
+      "Gerontius"
+     ]
+    },
+    "S1_drop_b1": {
+     "kind": "fill",
+     "text": "Fact: An English composer wrote the celebrated oratorio titled",
+     "accept": [
+      "The Dream of Gerontius",
+      "Dream of Gerontius",
+      "Gerontius"
+     ]
+    },
+    "G2_b1": {
+     "kind": "qa",
+     "text": "Name the English composer of the 'Enigma Variations' and the 'Pomp and Circumstance' marches.",
+     "accept": [
+      "Edward Elgar",
+      "Sir Edward Elgar",
+      "Elgar"
+     ]
+    },
+    "S1_local_cue": {
+     "kind": "fill",
+     "text": "Fact: the composer wrote the celebrated oratorio titled",
+     "accept": [
+      "The Dream of Gerontius",
+      "Dream of Gerontius",
+      "Gerontius"
+     ]
+    }
+   },
+   "shortcut_accept": [
+    "The Dream of Gerontius",
+    "Dream of Gerontius",
+    "Gerontius"
+   ],
+   "why_nonobvious": "The Enigma Variations and Pomp and Circumstance say nothing about any oratorio, and a generic composer's celebrated oratorio defaults to Messiah or The Creation, so only resolving Elgar yields Gerontius.",
+   "id": "mh2-elgar-gerontius-s0",
+   "shortcut_probes": [
+    {
+     "id": "S1_drop_b1",
+     "kind": "fill",
+     "text": "Fact: An English composer wrote the celebrated oratorio titled",
+     "hides": [
+      "bridge1"
+     ],
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "S1_local_cue",
+     "kind": "fill",
+     "text": "Fact: the composer wrote the celebrated oratorio titled",
+     "hides": [
+      "bridge1"
+     ],
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "S2adv3_0",
+     "kind": "fill",
+     "text": "Fact: the English composer wrote the celebrated oratorio titled",
+     "hides": [
+      "bridge1"
+     ],
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "S2adv3_1",
+     "kind": "fill",
+     "text": "Fact: a composer wrote the celebrated oratorio titled",
+     "hides": [
+      "bridge1"
+     ],
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "S2adv3_2",
+     "kind": "qa",
+     "text": "Which celebrated oratorio was written by an English composer?",
+     "hides": [
+      "bridge1"
+     ],
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "Rrv1_0",
+     "kind": "fill",
+     "text": "Fact: the English composer of the marches wrote the celebrated oratorio titled",
+     "hides": [
+      "bridge1"
+     ],
+     "origin": "review",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "Rrv1_1",
+     "kind": "fill",
+     "text": "Fact: the English composer of the variations and the marches wrote the celebrated oratorio titled",
+     "hides": [
+      "bridge1"
+     ],
+     "origin": "review",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "Rrv1_2",
+     "kind": "qa",
+     "text": "What is the title of the most celebrated oratorio by an English composer of marches?",
+     "hides": [
+      "bridge1"
+     ],
+     "origin": "review",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    }
+   ],
+   "pool_source": "s1+adversary",
+   "consistency": 0.9,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge1": 1.0
+   },
+   "hop_consistency": 1.0,
+   "context_b2_consistency": null,
+   "shortcut_max": 0.0,
+   "gate_variant": "chat",
+   "mc": {
+    "bridge1": {
+     "gold": "Edward Elgar",
+     "distractors": [
+      "Jean Sibelius",
+      "Gustav Mahler",
+      "Richard Strauss",
+      "Antonín Dvořák"
+     ]
+    }
+   },
+   "name_forms": {
+    "bridge1": {
+     "en": [
+      "Edward Elgar",
+      "Sir Edward Elgar",
+      "Elgar"
+     ],
+     "zh": [
+      "爱德华·埃尔加",
+      "爱德华・埃尔加",
+      "爱德华•埃尔加",
+      "爱德华埃尔加",
+      "埃尔加",
+      "艾尔加"
+     ]
+    }
+   },
+   "n_render_tokens": 30,
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       3,
+       4,
+       2
+      ]
+     }
+    },
+    "target": 6,
+    "target_alts": [
+     5
+    ]
+   },
+   "adapt": {
+    "origin": "refill",
+    "gate": {
+     "rate": 0.9,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "mh2-kafka-executor-brod-t0",
+   "subfamily": "2hop",
+   "domain": "literature and its authors",
+   "prompt": "Fact: The writer of 'The Metamorphosis' and 'The Trial' entrusted his unpublished manuscripts to his friend",
+   "spans": {
+    "D1": "The writer of 'The Metamorphosis' and 'The Trial'",
+    "R1": " entrusted his unpublished manuscripts to his friend",
+    "G1": "A twentieth-century writer"
+   },
+   "target": "Max Brod",
+   "target_alts": [],
+   "source": "multihop_v2",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "all",
+    "lite": {
+     "kind": "final_token"
+    }
+   },
+   "intermediates": [
+    "Franz Kafka"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Franz Kafka",
+       "Kafka"
+      ]
+     },
+     "match": [
+      "Franz Kafka",
+      "Kafka"
+     ],
+     "kind": "person",
+     "full_forms": [
+      "Franz Kafka"
+     ],
+     "forms_excluded": []
+    }
+   ],
+   "bridges": [
+    {
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "Franz Kafka",
+      "Kafka"
+     ],
+     "question": "Name the writer of 'The Metamorphosis' and 'The Trial'."
+    }
+   ],
+   "probes": {
+    "G3_hop_b1_t": {
+     "kind": "fill",
+     "text": "Fact: Franz Kafka entrusted his unpublished manuscripts to his friend",
+     "accept": [
+      "Max Brod",
+      "Brod"
+     ]
+    },
+    "S1_drop_b1": {
+     "kind": "fill",
+     "text": "Fact: A twentieth-century writer entrusted his unpublished manuscripts to his friend",
+     "accept": [
+      "Max Brod",
+      "Brod"
+     ]
+    },
+    "G2_b1": {
+     "kind": "qa",
+     "text": "Name the writer of 'The Metamorphosis' and 'The Trial'.",
+     "accept": [
+      "Franz Kafka",
+      "Kafka"
+     ]
+    },
+    "S1_local_cue": {
+     "kind": "fill",
+     "text": "Fact: the writer entrusted his unpublished manuscripts to his friend",
+     "accept": [
+      "Max Brod",
+      "Brod"
+     ]
+    }
+   },
+   "shortcut_accept": [
+    "Max Brod",
+    "Brod"
+   ],
+   "why_nonobvious": "Many writers left manuscripts with friends, so only identifying Kafka from his works yields Max Brod, who is named nowhere in the clue.",
+   "id": "mh2-kafka-executor-brod-t0",
+   "shortcut_probes": [
+    {
+     "id": "S1_drop_b1",
+     "kind": "fill",
+     "text": "Fact: A twentieth-century writer entrusted his unpublished manuscripts to his friend",
+     "hides": [
+      "bridge1"
+     ],
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "S1_local_cue",
+     "kind": "fill",
+     "text": "Fact: the writer entrusted his unpublished manuscripts to his friend",
+     "hides": [
+      "bridge1"
+     ],
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "S2adv3_0",
+     "kind": "fill",
+     "text": "Fact: The writer entrusted his unpublished manuscripts to his friend",
+     "hides": [
+      "bridge1"
+     ],
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "S2adv3_1",
+     "kind": "qa",
+     "text": "To which friend did a writer entrust his unpublished manuscripts?",
+     "hides": [
+      "bridge1"
+     ],
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    }
+   ],
+   "pool_source": "s1+adversary",
+   "consistency": 0.9,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge1": 1.0
+   },
+   "hop_consistency": 1.0,
+   "context_b2_consistency": null,
+   "shortcut_max": 0.0,
+   "gate_variant": "chat",
+   "mc": {
+    "bridge1": {
+     "gold": "Franz Kafka",
+     "distractors": [
+      "James Joyce",
+      "Marcel Proust",
+      "Thomas Mann",
+      "Virginia Woolf"
+     ]
+    }
+   },
+   "name_forms": {
+    "bridge1": {
+     "en": [
+      "Franz Kafka",
+      "Kafka"
+     ],
+     "zh": [
+      "弗朗茨·卡夫卡",
+      "弗朗茨・卡夫卡",
+      "弗朗茨•卡夫卡",
+      "弗朗茨卡夫卡",
+      "卡夫卡",
+      "法兰兹·卡夫卡",
+      "法兰兹・卡夫卡",
+      "法兰兹•卡夫卡",
+      "法兰兹卡夫卡"
+     ]
+    }
+   },
+   "n_render_tokens": 24,
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       2,
+       1
+      ]
+     }
+    },
+    "target": 3,
+    "target_alts": []
+   },
+   "adapt": {
+    "origin": "refill",
+    "gate": {
+     "rate": 0.9,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "mh2-seneca-tutor-of-s1",
+   "subfamily": "2hop",
+   "domain": "philosophy and scholarship",
+   "prompt": "Fact: The Stoic philosopher who wrote the 'Moral Letters to Lucilius' had been tutor to the young",
+   "spans": {
+    "D1": "The Stoic philosopher who wrote the 'Moral Letters to Lucilius'",
+    "R1": " had been tutor to the young",
+    "G1": "An ancient philosopher"
+   },
+   "target": "Nero",
+   "target_alts": [
+    "Nero Claudius Caesar Augustus Germanicus"
+   ],
+   "source": "multihop_v2",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "all",
+    "lite": {
+     "kind": "final_token"
+    }
+   },
+   "intermediates": [
+    "Seneca the Younger"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Seneca the Younger",
+       "Lucius Annaeus Seneca",
+       "Seneca"
+      ]
+     },
+     "match": [
+      "Seneca the Younger",
+      "Lucius Annaeus Seneca",
+      "Seneca"
+     ],
+     "kind": "person",
+     "full_forms": [
+      "Seneca the Younger",
+      "Lucius Annaeus Seneca",
+      "Seneca"
+     ],
+     "forms_excluded": []
+    }
+   ],
+   "bridges": [
+    {
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "Seneca the Younger",
+      "Lucius Annaeus Seneca",
+      "Seneca"
+     ],
+     "question": "Name the Stoic philosopher who wrote the 'Moral Letters to Lucilius'."
+    }
+   ],
+   "probes": {
+    "G3_hop_b1_t": {
+     "kind": "fill",
+     "text": "Fact: Seneca the Younger had been tutor to the young",
+     "accept": [
+      "Nero",
+      "Nero Claudius Caesar Augustus Germanicus"
+     ]
+    },
+    "S1_drop_b1": {
+     "kind": "fill",
+     "text": "Fact: An ancient philosopher had been tutor to the young",
+     "accept": [
+      "Nero",
+      "Nero Claudius Caesar Augustus Germanicus"
+     ]
+    },
+    "G2_b1": {
+     "kind": "qa",
+     "text": "Name the Stoic philosopher who wrote the 'Moral Letters to Lucilius'.",
+     "accept": [
+      "Seneca the Younger",
+      "Lucius Annaeus Seneca",
+      "Seneca"
+     ]
+    },
+    "S1_local_cue": {
+     "kind": "fill",
+     "text": "Fact: the philosopher had been tutor to the young",
+     "accept": [
+      "Nero",
+      "Nero Claudius Caesar Augustus Germanicus"
+     ]
+    }
+   },
+   "shortcut_accept": [
+    "Nero",
+    "Nero Claudius Caesar Augustus Germanicus"
+   ],
+   "why_nonobvious": "A generic philosopher-tutor defaults to Aristotle and Alexander, and the Letters to Lucilius say nothing about Nero, so the answer requires identifying Seneca.",
+   "id": "mh2-seneca-tutor-of-s1",
+   "shortcut_probes": [
+    {
+     "id": "S1_drop_b1",
+     "kind": "fill",
+     "text": "Fact: An ancient philosopher had been tutor to the young",
+     "hides": [
+      "bridge1"
+     ],
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "S1_local_cue",
+     "kind": "fill",
+     "text": "Fact: the philosopher had been tutor to the young",
+     "hides": [
+      "bridge1"
+     ],
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "S2adv3_0",
+     "kind": "fill",
+     "text": "Fact: The Stoic philosopher had been tutor to the young",
+     "hides": [
+      "bridge1"
+     ],
+     "n_pass": 3,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "S2adv3_1",
+     "kind": "fill",
+     "text": "Fact: The philosopher who wrote the letters had been tutor to the young",
+     "hides": [
+      "bridge1"
+     ],
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "S2adv3_2",
+     "kind": "fill",
+     "text": "Fact: The philosopher had been tutor to the young emperor",
+     "hides": [
+      "bridge1"
+     ],
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "Rrv1_0",
+     "kind": "qa",
+     "text": "A Stoic philosopher had been tutor to which young emperor?",
+     "hides": [
+      "bridge1"
+     ],
+     "origin": "review",
+     "n_pass": 2,
+     "n": 20,
+     "greedy_pass": 0
+    }
+   ],
+   "pool_source": "s1+s2",
+   "consistency": 0.95,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge1": 0.9
+   },
+   "hop_consistency": 0.9,
+   "context_b2_consistency": null,
+   "shortcut_max": 0.15,
+   "gate_variant": "chat",
+   "mc": {
+    "bridge1": {
+     "gold": "Seneca the Younger",
+     "distractors": [
+      "Marcus Aurelius",
+      "Epictetus",
+      "Zeno of Citium",
+      "Arrian"
+     ]
+    }
+   },
+   "name_forms": {
+    "bridge1": {
+     "en": [
+      "Seneca the Younger",
+      "Lucius Annaeus Seneca",
+      "Seneca"
+     ],
+     "zh": [
+      "小塞涅卡",
+      "塞涅卡",
+      "塞内卡"
+     ]
+    }
+   },
+   "n_render_tokens": 24,
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       4,
+       6,
+       2
+      ]
+     }
+    },
+    "target": 1,
+    "target_alts": [
+     8
+    ]
+   },
+   "adapt": {
+    "origin": "refill",
+    "gate": {
+     "rate": 0.85,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "mh2-hendrix-birthplace-t1",
+   "subfamily": "2hop",
+   "domain": "popular music and its stars",
+   "prompt": "Fact: The guitarist who recorded 'Purple Haze' and set his guitar on fire at the Monterey Pop Festival was born in the city of",
+   "spans": {
+    "D1": "The guitarist who recorded 'Purple Haze' and set his guitar on fire at the Monterey Pop Festival",
+    "R1": " was born in the city of",
+    "G1": "An American rock guitarist"
+   },
+   "target": "Seattle",
+   "target_alts": [
+    "Seattle, Washington"
+   ],
+   "source": "multihop_v2",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "all",
+    "lite": {
+     "kind": "final_token"
+    }
+   },
+   "intermediates": [
+    "Jimi Hendrix"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Jimi Hendrix",
+       "James Marshall Hendrix",
+       "Hendrix",
+       "Jimi"
+      ]
+     },
+     "match": [
+      "Jimi Hendrix",
+      "James Marshall Hendrix",
+      "Hendrix",
+      "Jimi"
+     ],
+     "kind": "person",
+     "full_forms": [
+      "Jimi Hendrix",
+      "James Marshall Hendrix"
+     ],
+     "forms_excluded": []
+    }
+   ],
+   "bridges": [
+    {
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "Jimi Hendrix",
+      "James Marshall Hendrix",
+      "Hendrix",
+      "Jimi"
+     ],
+     "question": "Name the guitarist who recorded 'Purple Haze' and set his guitar on fire at the Monterey Pop Festival."
+    }
+   ],
+   "probes": {
+    "G3_hop_b1_t": {
+     "kind": "fill",
+     "text": "Fact: Jimi Hendrix was born in the city of",
+     "accept": [
+      "Seattle",
+      "Seattle, Washington"
+     ]
+    },
+    "S1_drop_b1": {
+     "kind": "fill",
+     "text": "Fact: An American rock guitarist was born in the city of",
+     "accept": [
+      "Seattle",
+      "Seattle, Washington"
+     ]
+    },
+    "G2_b1": {
+     "kind": "qa",
+     "text": "Name the guitarist who recorded 'Purple Haze' and set his guitar on fire at the Monterey Pop Festival.",
+     "accept": [
+      "Jimi Hendrix",
+      "James Marshall Hendrix",
+      "Hendrix",
+      "Jimi"
+     ]
+    },
+    "S1_local_cue": {
+     "kind": "fill",
+     "text": "Fact: the guitarist was born in the city of",
+     "accept": [
+      "Seattle",
+      "Seattle, Washington"
+     ]
+    }
+   },
+   "shortcut_accept": [
+    "Seattle",
+    "Seattle, Washington"
+   ],
+   "why_nonobvious": "Monterey points to California, not Seattle, and a generic guitarist's birthplace has no default of Seattle; only resolving Jimi Hendrix gives the answer.",
+   "id": "mh2-hendrix-birthplace-t1",
+   "shortcut_probes": [
+    {
+     "id": "S1_drop_b1",
+     "kind": "fill",
+     "text": "Fact: An American rock guitarist was born in the city of",
+     "hides": [
+      "bridge1"
+     ],
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "S1_local_cue",
+     "kind": "fill",
+     "text": "Fact: the guitarist was born in the city of",
+     "hides": [
+      "bridge1"
+     ],
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "S2adv3_0",
+     "kind": "fill",
+     "text": "Fact: The guitarist who set his guitar on fire at a festival was born in the city of",
+     "hides": [
+      "bridge1"
+     ],
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "S2adv3_1",
+     "kind": "fill",
+     "text": "Fact: The guitarist was born in the city of",
+     "hides": [
+      "bridge1"
+     ],
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "S2adv3_2",
+     "kind": "qa",
+     "text": "In which city was a famous rock guitarist born?",
+     "hides": [
+      "bridge1"
+     ],
+     "n_pass": 2,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "Rrv1_0",
+     "kind": "fill",
+     "text": "Fact: The guitarist who played at the Monterey Pop Festival was born in the city of",
+     "hides": [
+      "bridge1"
+     ],
+     "origin": "review",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    }
+   ],
+   "pool_source": "s1+adversary",
+   "consistency": 0.85,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge1": 1.0
+   },
+   "hop_consistency": 1.0,
+   "context_b2_consistency": null,
+   "shortcut_max": 0.1,
+   "gate_variant": "chat",
+   "mc": {
+    "bridge1": {
+     "gold": "Jimi Hendrix",
+     "distractors": [
+      "George Harrison",
+      "Eric Clapton",
+      "Keith Richards",
+      "Jimmy Page"
+     ]
+    }
+   },
+   "name_forms": {
+    "bridge1": {
+     "en": [
+      "Jimi Hendrix",
+      "James Marshall Hendrix",
+      "Hendrix",
+      "Jimi"
+     ],
+     "zh": [
+      "吉米·亨德里克斯",
+      "吉米・亨德里克斯",
+      "吉米•亨德里克斯",
+      "吉米亨德里克斯",
+      "吉米·罕醉克斯",
+      "吉米・罕醉克斯",
+      "吉米•罕醉克斯",
+      "吉米罕醉克斯"
+     ]
+    }
+   },
+   "n_render_tokens": 28,
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       4,
+       4,
+       2,
+       2
+      ]
+     }
+    },
+    "target": 1,
+    "target_alts": [
+     3
+    ]
+   },
+   "adapt": {
+    "origin": "refill",
+    "gate": {
+     "rate": 0.85,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "mh2-confucius-state-lu-s3",
+   "subfamily": "2hop",
+   "domain": "religious leaders and saints",
+   "prompt": "Fact: The Chinese sage whose sayings were compiled by his disciples in the Analects was born in the ancient state of",
+   "spans": {
+    "D1": "The Chinese sage whose sayings were compiled by his disciples in the Analects",
+    "R1": " was born in the ancient state of",
+    "G1": "A Chinese sage"
+   },
+   "target": "Lu",
+   "target_alts": [],
+   "source": "multihop_v2",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "all",
+    "lite": {
+     "kind": "final_token"
+    }
+   },
+   "intermediates": [
+    "Confucius"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Confucius",
+       "Kong Fuzi",
+       "Kongzi",
+       "Kong Qiu",
+       "Master Kong"
+      ]
+     },
+     "match": [
+      "Confucius",
+      "Kong Fuzi",
+      "Kongzi",
+      "Kong Qiu",
+      "Master Kong"
+     ],
+     "kind": "person",
+     "full_forms": [
+      "Confucius",
+      "Kong Fuzi",
+      "Kongzi"
+     ],
+     "forms_excluded": []
+    }
+   ],
+   "bridges": [
+    {
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "Confucius",
+      "Kong Fuzi",
+      "Kongzi",
+      "Kong Qiu",
+      "Master Kong"
+     ],
+     "question": "Name the Chinese sage whose sayings were compiled by his disciples in the Analects."
+    }
+   ],
+   "probes": {
+    "G3_hop_b1_t": {
+     "kind": "fill",
+     "text": "Fact: Confucius was born in the ancient state of",
+     "accept": [
+      "Lu",
+      "State of Lu",
+      "the state of Lu"
+     ]
+    },
+    "S1_drop_b1": {
+     "kind": "fill",
+     "text": "Fact: A Chinese sage was born in the ancient state of",
+     "accept": [
+      "Lu",
+      "State of Lu",
+      "the state of Lu"
+     ]
+    },
+    "G2_b1": {
+     "kind": "qa",
+     "text": "Name the Chinese sage whose sayings were compiled by his disciples in the Analects.",
+     "accept": [
+      "Confucius",
+      "Kong Fuzi",
+      "Kongzi",
+      "Kong Qiu",
+      "Master Kong"
+     ]
+    },
+    "S1_local_cue": {
+     "kind": "fill",
+     "text": "Fact: the philosopher was born in the ancient state of",
+     "accept": [
+      "Lu",
+      "State of Lu",
+      "the state of Lu"
+     ]
+    }
+   },
+   "shortcut_accept": [
+    "Lu",
+    "State of Lu",
+    "the state of Lu"
+   ],
+   "why_nonobvious": "Many ancient Chinese thinkers came from various states (Qi, Chu, Song, Zheng), so only identifying the author of the Analects yields Lu.",
+   "id": "mh2-confucius-state-lu-s3",
+   "shortcut_probes": [
+    {
+     "id": "S1_drop_b1",
+     "kind": "fill",
+     "text": "Fact: A Chinese sage was born in the ancient state of",
+     "hides": [
+      "bridge1"
+     ],
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "S1_local_cue",
+     "kind": "fill",
+     "text": "Fact: the philosopher was born in the ancient state of",
+     "hides": [
+      "bridge1"
+     ],
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "S2adv3_0",
+     "kind": "fill",
+     "text": "Fact: The Chinese sage was born in the ancient state of",
+     "hides": [
+      "bridge1"
+     ],
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "S2adv3_1",
+     "kind": "fill",
+     "text": "Fact: The ancient Chinese sage whose sayings were compiled by his disciples was born in the ancient state of",
+     "hides": [
+      "bridge1"
+     ],
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "S2adv3_2",
+     "kind": "qa",
+     "text": "In which ancient state was a Chinese sage born?",
+     "hides": [
+      "bridge1"
+     ],
+     "n_pass": 4,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "S2adv3_3",
+     "kind": "fill",
+     "text": "Fact: The sage was born in the ancient state of",
+     "hides": [
+      "bridge1"
+     ],
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    }
+   ],
+   "pool_source": "s1+s2",
+   "consistency": 1.0,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge1": 1.0
+   },
+   "hop_consistency": 1.0,
+   "context_b2_consistency": null,
+   "shortcut_max": 0.2,
+   "gate_variant": "chat",
+   "mc": {
+    "bridge1": {
+     "gold": "Confucius",
+     "distractors": [
+      "Liezi",
+      "Xunzi",
+      "Han Feizi",
+      "Laozi"
+     ]
+    }
+   },
+   "name_forms": {
+    "bridge1": {
+     "en": [
+      "Confucius",
+      "Kong Fuzi",
+      "Kongzi",
+      "Kong Qiu",
+      "Master Kong"
+     ],
+     "zh": [
+      "孔子",
+      "孔丘",
+      "孔夫子",
+      "孔仲尼",
+      "至圣先师"
+     ]
+    }
+   },
+   "n_render_tokens": 25,
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       3,
+       4,
+       2,
+       3,
+       2
+      ]
+     }
+    },
+    "target": 1,
+    "target_alts": []
+   },
+   "adapt": {
+    "origin": "refill",
+    "gate": {
+     "rate": 0.8,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "mh2-liberty-sculptor-s0",
+   "subfamily": "2hop",
+   "domain": "painting and sculpture",
+   "prompt": "Fact: The colossal copper monument of a robed woman holding a torch aloft, a gift from France dedicated in New York Harbor in 1886, was designed by the sculptor",
+   "spans": {
+    "D1": "The colossal copper monument of a robed woman holding a torch aloft, a gift from France dedicated in New York Harbor in 1886,",
+    "R1": " was designed by the sculptor",
+    "G1": "A colossal monument"
+   },
+   "target": "Frédéric Auguste Bartholdi",
+   "target_alts": [
+    "Frederic Auguste Bartholdi",
+    "Auguste Bartholdi"
+   ],
+   "source": "multihop_v2",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "all",
+    "lite": {
+     "kind": "final_token"
+    }
+   },
+   "intermediates": [
+    "Statue of Liberty"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Statue of Liberty",
+       "Liberty Enlightening the World",
+       "Lady Liberty"
+      ]
+     },
+     "match": [
+      "Statue of Liberty",
+      "Liberty Enlightening the World",
+      "Lady Liberty"
+     ],
+     "kind": "work",
+     "full_forms": [
+      "Statue of Liberty",
+      "Liberty Enlightening the World"
+     ],
+     "forms_excluded": []
+    }
+   ],
+   "bridges": [
+    {
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "Statue of Liberty",
+      "Liberty Enlightening the World",
+      "Lady Liberty"
+     ],
+     "question": "Name the colossal copper monument of a robed woman holding a torch aloft, a gift from France dedicated in New York Harbor in 1886,."
+    }
+   ],
+   "probes": {
+    "G3_hop_b1_t": {
+     "kind": "fill",
+     "text": "Fact: Statue of Liberty was designed by the sculptor",
+     "accept": [
+      "Frédéric Auguste Bartholdi",
+      "Frederic Auguste Bartholdi",
+      "Auguste Bartholdi",
+      "Bartholdi"
+     ]
+    },
+    "S1_drop_b1": {
+     "kind": "fill",
+     "text": "Fact: A colossal monument was designed by the sculptor",
+     "accept": [
+      "Frédéric Auguste Bartholdi",
+      "Frederic Auguste Bartholdi",
+      "Auguste Bartholdi",
+      "Bartholdi"
+     ]
+    },
+    "G2_b1": {
+     "kind": "qa",
+     "text": "Name the colossal copper monument of a robed woman holding a torch aloft, a gift from France dedicated in New York Harbor in 1886,.",
+     "accept": [
+      "Statue of Liberty",
+      "Liberty Enlightening the World",
+      "Lady Liberty"
+     ]
+    },
+    "S1_local_cue": {
+     "kind": "fill",
+     "text": "Fact: the monument was designed by the sculptor",
+     "accept": [
+      "Frédéric Auguste Bartholdi",
+      "Frederic Auguste Bartholdi",
+      "Auguste Bartholdi",
+      "Bartholdi"
+     ]
+    }
+   },
+   "shortcut_accept": [
+    "Frédéric Auguste Bartholdi",
+    "Frederic Auguste Bartholdi",
+    "Auguste Bartholdi",
+    "Bartholdi"
+   ],
+   "why_nonobvious": "A generic monument's designer could be any sculptor; Bartholdi follows only once the torch-bearing copper figure in New York Harbor is recognised as the Statue of Liberty.",
+   "id": "mh2-liberty-sculptor-s0",
+   "shortcut_probes": [
+    {
+     "id": "S1_drop_b1",
+     "kind": "fill",
+     "text": "Fact: A colossal monument was designed by the sculptor",
+     "hides": [
+      "bridge1"
+     ],
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "S1_local_cue",
+     "kind": "fill",
+     "text": "Fact: the monument was designed by the sculptor",
+     "hides": [
+      "bridge1"
+     ],
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "S2adv3_0",
+     "kind": "fill",
+     "text": "Fact: The colossal copper monument was designed by the sculptor",
+     "hides": [
+      "bridge1"
+     ],
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "S2adv3_1",
+     "kind": "fill",
+     "text": "Fact: The monument, a gift from France, was designed by the sculptor",
+     "hides": [
+      "bridge1"
+     ],
+     "n_pass": 4,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "S2adv3_2",
+     "kind": "fill",
+     "text": "Fact: The monument was designed by the sculptor",
+     "hides": [
+      "bridge1"
+     ],
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "S2adv3_3",
+     "kind": "qa",
+     "text": "Which sculptor designed the colossal copper monument of a robed woman?",
+     "hides": [
+      "bridge1"
+     ],
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "Rrv1_0",
+     "kind": "fill",
+     "text": "Fact: The monument of a robed woman holding a torch aloft was designed by the sculptor",
+     "hides": [
+      "bridge1"
+     ],
+     "origin": "review",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "Rrv1_1",
+     "kind": "fill",
+     "text": "Fact: The colossal copper monument, dedicated in 1886, was designed by the sculptor",
+     "hides": [
+      "bridge1"
+     ],
+     "origin": "review",
+     "n_pass": 3,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "Rrv1_2",
+     "kind": "qa",
+     "text": "Which sculptor designed the monument dedicated in New York Harbor?",
+     "hides": [
+      "bridge1"
+     ],
+     "origin": "review",
+     "n_pass": 1,
+     "n": 20,
+     "greedy_pass": 0
+    }
+   ],
+   "pool_source": "s1+s2",
+   "consistency": 1.0,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge1": 1.0
+   },
+   "hop_consistency": 1.0,
+   "context_b2_consistency": null,
+   "shortcut_max": 0.2,
+   "gate_variant": "chat",
+   "mc": {
+    "bridge1": {
+     "gold": "Statue of Liberty",
+     "distractors": [
+      "Christ the Redeemer",
+      "Statue of Unity",
+      "The Motherland Calls",
+      "Great Sphinx of Giza"
+     ]
+    }
+   },
+   "name_forms": {
+    "bridge1": {
+     "en": [
+      "Statue of Liberty",
+      "Liberty Enlightening the World",
+      "Lady Liberty"
+     ],
+     "zh": [
+      "自由女神像",
+      "自由照耀世界",
+      "自由女神"
+     ]
+    }
+   },
+   "n_render_tokens": 39,
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       3,
+       5,
+       2
+      ]
+     }
+    },
+    "target": 8,
+    "target_alts": [
+     7,
+     5
+    ]
+   },
+   "adapt": {
+    "origin": "refill",
+    "gate": {
+     "rate": 0.8,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "mh2-charles-i-cromwell-protector",
+   "subfamily": "2hop",
+   "domain": "royal families and dynasties",
+   "prompt": "Fact: the Stuart monarch beheaded outside the Banqueting House in Whitehall was defeated in the civil wars by a commander who later governed the country with the title of",
+   "spans": {
+    "D1": "the Stuart monarch beheaded outside the Banqueting House in Whitehall",
+    "R1": " was defeated in the civil wars by",
+    "N2": " a commander",
+    "R2": " who later governed the country with the title of",
+    "G1": "A seventeenth-century monarch"
+   },
+   "target": "Lord Protector",
+   "target_alts": [
+    "Lord Protector of the Commonwealth"
+   ],
+   "source": "multihop_v2",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "all",
+    "lite": {
+     "kind": "final_token"
+    }
+   },
+   "intermediates": [
+    "Oliver Cromwell"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Oliver Cromwell",
+       "Cromwell"
+      ]
+     },
+     "match": [
+      "Oliver Cromwell",
+      "Cromwell"
+     ],
+     "kind": "person",
+     "full_forms": [
+      "Oliver Cromwell"
+     ],
+     "forms_excluded": []
+    }
+   ],
+   "bridges": [
+    {
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "Oliver Cromwell",
+      "Cromwell"
+     ],
+     "question": "Fact: Charles I of England was defeated in the civil wars by"
+    }
+   ],
+   "probes": {
+    "G2_b2_from_b1": {
+     "kind": "fill",
+     "text": "Fact: Charles I of England was defeated in the civil wars by",
+     "accept": [
+      "Oliver Cromwell",
+      "Cromwell"
+     ]
+    },
+    "G3_hop_b2_t": {
+     "kind": "qa",
+     "text": "What title did Oliver Cromwell take when he ruled England?",
+     "accept": [
+      "Lord Protector",
+      "Lord Protector of the Commonwealth",
+      "Protector",
+      "Lord Protector of the Commonwealth of England"
+     ]
+    },
+    "G4_prefix_b2": {
+     "kind": "fill",
+     "text": "Fact: the Stuart monarch beheaded outside the Banqueting House in Whitehall was defeated in the civil wars by",
+     "accept": [
+      "Oliver Cromwell",
+      "Cromwell"
+     ]
+    },
+    "S1_drop_b1": {
+     "kind": "fill",
+     "text": "Fact: A seventeenth-century monarch was defeated in the civil wars by a commander who later governed the country with the title of",
+     "accept": [
+      "Lord Protector",
+      "Lord Protector of the Commonwealth",
+      "Protector",
+      "Lord Protector of the Commonwealth of England"
+     ]
+    },
+    "S1_direct_b1_to_t": {
+     "kind": "fill",
+     "text": "Fact: Charles I of England later governed the country with the title of",
+     "accept": [
+      "Lord Protector",
+      "Lord Protector of the Commonwealth",
+      "Protector",
+      "Lord Protector of the Commonwealth of England"
+     ]
+    },
+    "G2_b1": {
+     "kind": "qa",
+     "text": "Name the Stuart monarch beheaded outside the Banqueting House in Whitehall.",
+     "accept": [
+      "Charles I of England",
+      "King Charles I",
+      "Charles I",
+      "Charles Stuart",
+      "Charles"
+     ]
+    },
+    "S1_local_cue": {
+     "kind": "fill",
+     "text": "Fact: the commander later governed the country with the title of",
+     "accept": [
+      "Lord Protector",
+      "Lord Protector of the Commonwealth",
+      "Protector",
+      "Lord Protector of the Commonwealth of England"
+     ]
+    }
+   },
+   "shortcut_accept": [
+    "Lord Protector",
+    "Lord Protector of the Commonwealth",
+    "Protector",
+    "Lord Protector of the Commonwealth of England"
+   ],
+   "why_nonobvious": "A generic commander who later governed could have been consul, dictator, emperor or president, and Charles I held the title of king, so the protector title is reached only via Cromwell.",
+   "id": "mh2-charles-i-cromwell-protector",
+   "shortcut_probes": [
+    {
+     "id": "S1_drop_b1",
+     "kind": "fill",
+     "text": "Fact: A seventeenth-century monarch was defeated in the civil wars by a commander who later governed the country with the title of",
+     "hides": [
+      "dropped_bridge"
+     ],
+     "n_pass": 12,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "S1_direct_b1_to_t",
+     "kind": "fill",
+     "text": "Fact: Charles I of England later governed the country with the title of",
+     "hides": [
+      "bridge1"
+     ],
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "S1_local_cue",
+     "kind": "fill",
+     "text": "Fact: the commander later governed the country with the title of",
+     "hides": [
+      "dropped_bridge",
+      "bridge1"
+     ],
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "S2adv3_0",
+     "kind": "fill",
+     "text": "Fact: a commander who later governed the country with the title of",
+     "hides": [
+      "dropped_bridge",
+      "bridge1"
+     ],
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "S2adv3_1",
+     "kind": "fill",
+     "text": "Fact: the monarch was defeated in the civil wars by a commander who later governed the country with the title of",
+     "hides": [
+      "dropped_bridge",
+      "bridge1"
+     ],
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "S2adv3_2",
+     "kind": "fill",
+     "text": "Fact: after Charles I of England, the country was governed by a ruler with the title of",
+     "hides": [
+      "bridge1"
+     ],
+     "n_pass": 3,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "S2adv3_3",
+     "kind": "fill",
+     "text": "Fact: after the Stuart monarch beheaded outside the Banqueting House in Whitehall, the country was governed with the title of",
+     "hides": [
+      "dropped_bridge",
+      "bridge1"
+     ],
+     "n_pass": 1,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "Rrv1_0",
+     "kind": "fill",
+     "text": "Fact: the Stuart monarch was defeated in the civil wars by a commander who later governed the country with the title of",
+     "hides": [
+      "bridge1"
+     ],
+     "origin": "review",
+     "n_pass": 3,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "Rrv1_1",
+     "kind": "fill",
+     "text": "Fact: the beheaded monarch was defeated in the civil wars by a commander who later governed the country with the title of",
+     "hides": [
+      "bridge1"
+     ],
+     "origin": "review",
+     "n_pass": 1,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "Rrv1_2",
+     "kind": "qa",
+     "text": "In the civil wars, a monarch was defeated by a commander who later governed the country. What title did that commander hold?",
+     "hides": [
+      "bridge1"
+     ],
+     "origin": "review",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    }
+   ],
+   "pool_source": "s1+s2",
+   "consistency": 1.0,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge1": 1.0
+   },
+   "hop_consistency": 0.8,
+   "context_b2_consistency": 1.0,
+   "shortcut_max": 0.6,
+   "gate_variant": "chat",
+   "relabeled_from": "3hop",
+   "relabel_reason": [
+    "subject gate (mh2-subject-gate-v1): S1_drop_b1=12/20"
+   ],
+   "dropped_bridge": "Charles I of England",
+   "mc": {
+    "bridge1": {
+     "gold": "Oliver Cromwell",
+     "distractors": [
+      "Prince Rupert",
+      "Gustavus Adolphus",
+      "Cardinal Richelieu",
+      "Albrecht von Wallenstein"
+     ]
+    }
+   },
+   "name_forms": {
+    "bridge1": {
+     "en": [
+      "Oliver Cromwell",
+      "Cromwell"
+     ],
+     "zh": [
+      "奥利弗·克伦威尔",
+      "奥利弗・克伦威尔",
+      "奥利弗•克伦威尔",
+      "奥利弗克伦威尔",
+      "克伦威尔",
+      "奥立佛·克伦威尔",
+      "奥立佛・克伦威尔",
+      "奥立佛•克伦威尔",
+      "奥立佛克伦威尔"
+     ]
+    }
+   },
+   "n_render_tokens": 34,
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       3,
+       2
+      ]
+     }
+    },
+    "target": 2,
+    "target_alts": [
+     5
+    ]
+   },
+   "adapt": {
+    "origin": "refill",
+    "gate": {
+     "rate": 0.4,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "mh2-jekyll-lutyens-delhi-r3",
+   "subfamily": "2hop",
+   "domain": "journalism, photography and design",
+   "prompt": "Fact: The Victorian horticulturist who wrote 'Colour in the Flower Garden' and pioneered painterly herbaceous borders formed a celebrated design partnership with an architect best remembered for planning the imperial capital known as",
+   "spans": {
+    "D1": "The Victorian horticulturist who wrote 'Colour in the Flower Garden' and pioneered painterly herbaceous borders",
+    "R1": " formed a celebrated design partnership with",
+    "N2": " an architect",
+    "R2": " best remembered for planning the imperial capital known as",
+    "G1": "A Victorian garden designer"
+   },
+   "target": "New Delhi",
+   "target_alts": [],
+   "source": "multihop_v2",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "all",
+    "lite": {
+     "kind": "final_token"
+    }
+   },
+   "intermediates": [
+    "Edwin Lutyens"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Edwin Lutyens",
+       "Sir Edwin Landseer Lutyens",
+       "Lutyens",
+       "Sir Edwin Lutyens"
+      ]
+     },
+     "match": [
+      "Edwin Lutyens",
+      "Sir Edwin Landseer Lutyens",
+      "Lutyens",
+      "Sir Edwin Lutyens"
+     ],
+     "kind": "person",
+     "full_forms": [
+      "Edwin Lutyens",
+      "Sir Edwin Landseer Lutyens"
+     ],
+     "forms_excluded": []
+    }
+   ],
+   "bridges": [
+    {
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "Edwin Lutyens",
+      "Sir Edwin Landseer Lutyens",
+      "Lutyens",
+      "Sir Edwin Lutyens"
+     ],
+     "question": "Fact: Gertrude Jekyll formed a celebrated design partnership with"
+    }
+   ],
+   "probes": {
+    "G2_b2_from_b1": {
+     "kind": "fill",
+     "text": "Fact: Gertrude Jekyll formed a celebrated design partnership with",
+     "accept": [
+      "Edwin Lutyens",
+      "Sir Edwin Landseer Lutyens",
+      "Lutyens",
+      "Sir Edwin Lutyens"
+     ]
+    },
+    "G3_hop_b2_t": {
+     "kind": "qa",
+     "text": "Which imperial capital city is Edwin Lutyens best remembered for planning?",
+     "accept": [
+      "New Delhi",
+      "Delhi"
+     ]
+    },
+    "G4_prefix_b2": {
+     "kind": "fill",
+     "text": "Fact: The Victorian horticulturist who wrote 'Colour in the Flower Garden' and pioneered painterly herbaceous borders formed a celebrated design partnership with",
+     "accept": [
+      "Edwin Lutyens",
+      "Sir Edwin Landseer Lutyens",
+      "Lutyens",
+      "Sir Edwin Lutyens"
+     ]
+    },
+    "S1_drop_b1": {
+     "kind": "fill",
+     "text": "Fact: A Victorian garden designer formed a celebrated design partnership with an architect best remembered for planning the imperial capital known as",
+     "accept": [
+      "New Delhi",
+      "Delhi"
+     ]
+    },
+    "S1_direct_b1_to_t": {
+     "kind": "fill",
+     "text": "Fact: Gertrude Jekyll was best remembered for planning the imperial capital known as",
+     "accept": [
+      "New Delhi",
+      "Delhi"
+     ]
+    },
+    "G2_b1": {
+     "kind": "qa",
+     "text": "Name the Victorian horticulturist who wrote 'Colour in the Flower Garden' and pioneered painterly herbaceous borders.",
+     "accept": [
+      "Gertrude Jekyll",
+      "Jekyll"
+     ]
+    },
+    "S1_local_cue": {
+     "kind": "fill",
+     "text": "Fact: the architect was best remembered for planning the imperial capital known as",
+     "accept": [
+      "New Delhi",
+      "Delhi"
+     ]
+    }
+   },
+   "shortcut_accept": [
+    "New Delhi",
+    "Delhi"
+   ],
+   "why_nonobvious": "The clue describes only a garden designer with no Indian connection; New Delhi is reached only through her partner Lutyens, and 'an imperial capital' alone admits many cities.",
+   "id": "mh2-jekyll-lutyens-delhi-r3",
+   "shortcut_probes": [
+    {
+     "id": "S1_drop_b1",
+     "kind": "fill",
+     "text": "Fact: A Victorian garden designer formed a celebrated design partnership with an architect best remembered for planning the imperial capital known as",
+     "hides": [
+      "dropped_bridge"
+     ],
+     "n_pass": 20,
+     "n": 20,
+     "greedy_pass": 1
+    },
+    {
+     "id": "S1_direct_b1_to_t",
+     "kind": "fill",
+     "text": "Fact: Gertrude Jekyll was best remembered for planning the imperial capital known as",
+     "hides": [
+      "bridge1"
+     ],
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "S1_local_cue",
+     "kind": "fill",
+     "text": "Fact: the architect was best remembered for planning the imperial capital known as",
+     "hides": [
+      "dropped_bridge",
+      "bridge1"
+     ],
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "S2adv3_0",
+     "kind": "fill",
+     "text": "Fact: An architect best remembered for planning the imperial capital known as",
+     "hides": [
+      "dropped_bridge",
+      "bridge1"
+     ],
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "S2adv3_1",
+     "kind": "fill",
+     "text": "Fact: A horticulturist formed a celebrated design partnership with an architect best remembered for planning the imperial capital known as",
+     "hides": [
+      "dropped_bridge",
+      "bridge1"
+     ],
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "S2adv3_2",
+     "kind": "fill",
+     "text": "Fact: Gertrude Jekyll is linked to the imperial capital known as",
+     "hides": [
+      "bridge1"
+     ],
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "S2adv3_3",
+     "kind": "qa",
+     "text": "Which imperial capital was planned by an architect best remembered for that work?",
+     "hides": [
+      "dropped_bridge",
+      "bridge1"
+     ],
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "Rrv1_0",
+     "kind": "fill",
+     "text": "Fact: The planned imperial capital known as",
+     "hides": [
+      "bridge1"
+     ],
+     "origin": "review",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "Rrv1_1",
+     "kind": "qa",
+     "text": "A garden writer formed a design partnership with an architect. Which imperial capital did that architect plan?",
+     "hides": [
+      "bridge1"
+     ],
+     "origin": "review",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    }
+   ],
+   "pool_source": "s1+s2",
+   "consistency": 1.0,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge1": 0.9
+   },
+   "hop_consistency": 0.8,
+   "context_b2_consistency": 0.9,
+   "shortcut_max": 1.0,
+   "gate_variant": "chat",
+   "relabeled_from": "3hop",
+   "relabel_reason": [
+    "subject gate (mh2-subject-gate-v1): S1_drop_b1=20/20g"
+   ],
+   "dropped_bridge": "Gertrude Jekyll",
+   "mc": {
+    "bridge1": {
+     "gold": "Edwin Lutyens",
+     "distractors": [
+      "Reginald Blomfield",
+      "Giles Gilbert Scott",
+      "Norman Shaw",
+      "Alfred Waterhouse"
+     ]
+    }
+   },
+   "name_forms": {
+    "bridge1": {
+     "en": [
+      "Edwin Lutyens",
+      "Sir Edwin Landseer Lutyens",
+      "Lutyens",
+      "Sir Edwin Lutyens"
+     ],
+     "zh": [
+      "埃德温·勒琴斯",
+      "埃德温・勒琴斯",
+      "埃德温•勒琴斯",
+      "埃德温勒琴斯",
+      "埃德温·鲁琴斯",
+      "埃德温・鲁琴斯",
+      "埃德温•鲁琴斯",
+      "埃德温鲁琴斯",
+      "勒琴斯",
+      "鲁琴斯"
+     ]
+    }
+   },
+   "n_render_tokens": 42,
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       4,
+       8,
+       3,
+       5
+      ]
+     }
+    },
+    "target": 2,
+    "target_alts": []
+   },
+   "adapt": {
+    "origin": "refill",
+    "gate": {
+     "rate": 0.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "mh2-marshal-regent-t2",
+   "subfamily": "2hop",
+   "domain": "sport and its champions",
+   "prompt": "Fact: The knight hailed as the greatest tournament champion of the twelfth-century English court, said to have unhorsed some five hundred opponents, served as regent for the boy king",
+   "spans": {
+    "D1": "The knight hailed as the greatest tournament champion of the twelfth-century English court, said to have unhorsed some five hundred opponents,",
+    "R1": " served as regent for the boy king",
+    "G1": "A medieval knight"
+   },
+   "target": "Henry III of England",
+   "target_alts": [
+    "Henry III"
+   ],
+   "source": "multihop_v2",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "all",
+    "lite": {
+     "kind": "final_token"
+    }
+   },
+   "intermediates": [
+    "William Marshal"
+   ],
+   "units": [
+    {
+     "role": "bridge1",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "William Marshal",
+       "William Marshal, 1st Earl of Pembroke",
+       "William the Marshal",
+       "Marshal",
+       "Earl of Pembroke"
+      ]
+     },
+     "match": [
+      "William Marshal",
+      "William Marshal, 1st Earl of Pembroke",
+      "William the Marshal",
+      "Marshal",
+      "Earl of Pembroke"
+     ],
+     "kind": "person",
+     "full_forms": [
+      "William Marshal",
+      "William Marshal, 1st Earl of Pembroke",
+      "William the Marshal"
+     ],
+     "forms_excluded": []
+    }
+   ],
+   "bridges": [
+    {
+     "units": [
+      "bridge1"
+     ],
+     "answers": [
+      "William Marshal",
+      "William Marshal, 1st Earl of Pembroke",
+      "William the Marshal",
+      "Marshal",
+      "Earl of Pembroke"
+     ],
+     "question": "Name the knight hailed as the greatest tournament champion of the twelfth-century English court, said to have unhorsed some five hundred opponents,."
+    }
+   ],
+   "probes": {
+    "G3_hop_b1_t": {
+     "kind": "fill",
+     "text": "Fact: William Marshal served as regent for the boy king",
+     "accept": [
+      "Henry III of England",
+      "Henry III",
+      "King Henry III"
+     ]
+    },
+    "S1_drop_b1": {
+     "kind": "fill",
+     "text": "Fact: A medieval knight served as regent for the boy king",
+     "accept": [
+      "Henry III of England",
+      "Henry III",
+      "King Henry III"
+     ]
+    },
+    "G2_b1": {
+     "kind": "qa",
+     "text": "Name the knight hailed as the greatest tournament champion of the twelfth-century English court, said to have unhorsed some five hundred opponents,.",
+     "accept": [
+      "William Marshal",
+      "William Marshal, 1st Earl of Pembroke",
+      "William the Marshal",
+      "Marshal",
+      "Earl of Pembroke"
+     ]
+    },
+    "S1_local_cue": {
+     "kind": "fill",
+     "text": "Fact: the knight served as regent for the boy king",
+     "accept": [
+      "Henry III of England",
+      "Henry III",
+      "King Henry III"
+     ]
+    }
+   },
+   "shortcut_accept": [
+    "Henry III of England",
+    "Henry III",
+    "King Henry III"
+   ],
+   "why_nonobvious": "Many knights and lords served boy kings as regents, so only identifying William Marshal from his tournament fame points to Henry III.",
+   "id": "mh2-marshal-regent-t2",
+   "shortcut_probes": [
+    {
+     "id": "S1_drop_b1",
+     "kind": "fill",
+     "text": "Fact: A medieval knight served as regent for the boy king",
+     "hides": [
+      "bridge1"
+     ],
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "S1_local_cue",
+     "kind": "fill",
+     "text": "Fact: the knight served as regent for the boy king",
+     "hides": [
+      "bridge1"
+     ],
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "S2adv3_0",
+     "kind": "fill",
+     "text": "Fact: The English knight served as regent for the boy king",
+     "hides": [
+      "bridge1"
+     ],
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "S2adv3_1",
+     "kind": "qa",
+     "text": "Which English boy king had a knight serve as his regent?",
+     "hides": [
+      "bridge1"
+     ],
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "Rrv1_0",
+     "kind": "fill",
+     "text": "Fact: The knight of the twelfth-century English court served as regent for the boy king",
+     "hides": [
+      "bridge1"
+     ],
+     "origin": "review",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "Rrv1_1",
+     "kind": "qa",
+     "text": "A twelfth-century English knight served as regent for which boy king?",
+     "hides": [
+      "bridge1"
+     ],
+     "origin": "review",
+     "n_pass": 4,
+     "n": 20,
+     "greedy_pass": 0
+    },
+    {
+     "id": "Rrv1_2",
+     "kind": "fill",
+     "text": "Fact: The tournament champion of the English court served as regent for the boy king",
+     "hides": [
+      "bridge1"
+     ],
+     "origin": "review",
+     "n_pass": 0,
+     "n": 20,
+     "greedy_pass": 0
+    }
+   ],
+   "pool_source": "s1+s2",
+   "consistency": 0.85,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge1": 0.8
+   },
+   "hop_consistency": 1.0,
+   "context_b2_consistency": null,
+   "shortcut_max": 0.2,
+   "gate_variant": "chat",
+   "mc": {
+    "bridge1": {
+     "gold": "William Marshal",
+     "distractors": [
+      "Richard de Clare (Strongbow)",
+      "Robert of Gloucester",
+      "Simon de Montfort",
+      "Gilbert de Clare"
+     ]
+    }
+   },
+   "name_forms": {
+    "bridge1": {
+     "en": [
+      "William Marshal",
+      "William Marshal, 1st Earl of Pembroke",
+      "William the Marshal",
+      "Marshal",
+      "Earl of Pembroke"
+     ],
+     "zh": [
+      "威廉·马歇尔",
+      "威廉・马歇尔",
+      "威廉•马歇尔",
+      "威廉马歇尔",
+      "彭布罗克伯爵威廉·马歇尔",
+      "彭布罗克伯爵威廉・马歇尔",
+      "彭布罗克伯爵威廉•马歇尔",
+      "彭布罗克伯爵威廉马歇尔"
+     ]
+    }
+   },
+   "n_render_tokens": 37,
+   "probe_token_lens": {
+    "units": {
+     "bridge1": {
+      "en": [
+       2,
+       10,
+       3,
+       1,
+       4
+      ]
+     }
+    },
+    "target": 4,
+    "target_alts": [
+     2
+    ]
+   },
+   "adapt": {
+    "origin": "refill",
+    "gate": {
+     "rate": 0.8,
+     "pass": true
+    }
+   }
   }
  ]
 }

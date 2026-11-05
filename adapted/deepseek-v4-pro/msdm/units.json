@@ -283,5 +283,6281 @@
     ]
    ]
   }
+ },
+ "s3b1_cross_note_guitar_tuning": {
+  "options": [
+   "Open D Minor",
+   "DADGAD",
+   "Open D",
+   "Open G",
+   "open g minor"
+  ],
+  "forms": {
+   "Open D Minor": [
+    "Open D Minor",
+    "Open D minor",
+    "Open D minor tuning",
+    "Open Dm",
+    "open Dm tuning",
+    "DADFAD",
+    "D A D F A D",
+    "D-A-D-F-A-D",
+    "cross-note D",
+    "crossnote D",
+    "开放D小调调弦",
+    "开放D小调",
+    "開放D小調調弦",
+    "開放D小調",
+    "オープンDマイナー",
+    "オープンDマイナーチューニング"
+   ],
+   "DADGAD": [
+    "DADGAD",
+    "DADGAD tuning",
+    "D A D G A D",
+    "D-A-D-G-A-D",
+    "Dsus4 tuning",
+    "D modal tuning",
+    "DADGAD调弦",
+    "DADGAD定弦",
+    "DADGAD調弦",
+    "DADGADチューニング"
+   ],
+   "Open D": [
+    "Open D tuning",
+    "DADF#AD",
+    "D A D F# A D",
+    "D-A-D-F#-A-D",
+    "Vestapol",
+    "Vestapol tuning",
+    "开放D调弦",
+    "开放D调",
+    "开放式D调弦",
+    "開放D調弦",
+    "開放D調",
+    "オープンDチューニング"
+   ],
+   "Open G": [
+    "Open G tuning",
+    "DGDGBD",
+    "D G D G B D",
+    "D-G-D-G-B-D",
+    "Spanish tuning",
+    "开放G调弦",
+    "开放G调",
+    "开放式G调弦",
+    "開放G調弦",
+    "開放G調",
+    "オープンGチューニング"
+   ],
+   "open g minor": [
+    "open g minor",
+    "open G minor",
+    "Open G minor tuning",
+    "Open Gm",
+    "open Gm tuning",
+    "DGDGBbD",
+    "D G D G Bb D",
+    "D-G-D-G-Bb-D",
+    "cross-note G",
+    "crossnote G",
+    "开放G小调调弦",
+    "开放G小调",
+    "開放G小調調弦",
+    "開放G小調",
+    "オープンGマイナー",
+    "オープンGマイナーチューニング"
+   ]
+  },
+  "dropped": {
+   "Open D": [
+    [
+     "Open D",
+     "matches another option"
+    ],
+    [
+     "open-D",
+     "matches another option"
+    ],
+    [
+     "オープンD",
+     "matches another option"
+    ]
+   ],
+   "Open G": [
+    [
+     "Open G",
+     "matches another option"
+    ],
+    [
+     "open-G",
+     "matches another option"
+    ],
+    [
+     "オープンG",
+     "matches another option"
+    ]
+   ]
+  }
+ },
+ "s1_ariocarpus_species": {
+  "options": [
+   "Ariocarpus kotschoubeyanus",
+   "Ariocarpus fissuratus",
+   "Ariocarpus retusus",
+   "Ariocarpus trigocephalus"
+  ],
+  "forms": {
+   "Ariocarpus kotschoubeyanus": [
+    "Ariocarpus kotschoubeyanus",
+    "A. kotschoubeyanus",
+    "Ariocarpus kotschubeyanus",
+    "Roseocactus kotschoubeyanus",
+    "黑牡丹",
+    "黒牡丹",
+    "くろぼたん",
+    "クロボタン"
+   ],
+   "Ariocarpus fissuratus": [
+    "Ariocarpus fissuratus",
+    "A. fissuratus",
+    "Roseocactus fissuratus",
+    "false peyote",
+    "living rock cactus",
+    "chautle",
+    "龟甲牡丹",
+    "龜甲牡丹",
+    "亀甲牡丹",
+    "きっこうぼたん"
+   ],
+   "Ariocarpus retusus": [
+    "Ariocarpus retusus",
+    "A. retusus",
+    "seven stars",
+    "岩牡丹",
+    "いわぼたん",
+    "イワボタン"
+   ],
+   "Ariocarpus trigocephalus": [
+    "Ariocarpus trigocephalus",
+    "A. trigocephalus"
+   ]
+  },
+  "dropped": {}
+ },
+ "s3b1_b_spline_window": {
+  "options": [
+   "Cubic B-spline",
+   "B-spline",
+   "tukey",
+   "Hann",
+   "Cardinal"
+  ],
+  "forms": {
+   "Cubic B-spline": [
+    "Cubic B-spline",
+    "cubic B-spline",
+    "cubic B spline",
+    "cubic B-spline window",
+    "Parzen window",
+    "Parzen",
+    "de la Vallée Poussin window",
+    "de la Vallee Poussin window",
+    "三次B样条",
+    "三次B样条窗",
+    "三次B樣條",
+    "三次B樣條窗",
+    "3次Bスプライン",
+    "三次Bスプライン"
+   ],
+   "B-spline": [
+    "Bspline",
+    "basis spline",
+    "Bスプライン窓"
+   ],
+   "tukey": [
+    "tukey",
+    "Tukey",
+    "Tukey window",
+    "tapered cosine window",
+    "cosine-tapered window",
+    "图基窗",
+    "Tukey窗",
+    "圖基窗",
+    "テューキー窓",
+    "チューキー窓"
+   ],
+   "Hann": [
+    "Hann",
+    "Hann window",
+    "Hanning",
+    "Hanning window",
+    "von Hann window",
+    "sine-squared window",
+    "汉宁窗",
+    "海宁窗",
+    "漢寧窗",
+    "ハン窓",
+    "ハニング窓"
+   ],
+   "Cardinal": [
+    "Cardinal",
+    "cardinal",
+    "cardinal B-spline",
+    "cardinal B spline",
+    "cardinal B-spline window",
+    "基数B样条",
+    "基數B樣條",
+    "カーディナルBスプライン"
+   ]
+  },
+  "dropped": {
+   "B-spline": [
+    [
+     "B-spline",
+     "in visible text"
+    ],
+    [
+     "B spline",
+     "in visible text"
+    ],
+    [
+     "B-spline window",
+     "in visible text"
+    ],
+    [
+     "B样条",
+     "matches another option"
+    ],
+    [
+     "B样条窗",
+     "matches another option"
+    ],
+    [
+     "B樣條",
+     "matches another option"
+    ],
+    [
+     "B樣條窗",
+     "matches another option"
+    ],
+    [
+     "Bスプライン",
+     "matches another option"
+    ]
+   ]
+  }
+ },
+ "s1_lucky_number_under_100": {
+  "options": [
+   "37",
+   "7",
+   "42",
+   "73"
+  ],
+  "forms": {
+   "37": [
+    "37",
+    "thirty-seven",
+    "thirty seven",
+    "Thirty-Seven",
+    "三十七",
+    "三七"
+   ],
+   "7": [
+    "なな",
+    "しち",
+    "VII"
+   ],
+   "42": [
+    "42",
+    "forty-two",
+    "forty two",
+    "Forty-Two",
+    "四十二",
+    "四二"
+   ],
+   "73": [
+    "73",
+    "seventy-three",
+    "seventy three",
+    "Seventy-Three",
+    "七十三",
+    "七三"
+   ]
+  },
+  "dropped": {
+   "37": [
+    [
+     "３７",
+     "short"
+    ]
+   ],
+   "7": [
+    [
+     "七",
+     "1-char CJK"
+    ],
+    [
+     "柒",
+     "1-char CJK"
+    ],
+    [
+     "７",
+     "short"
+    ],
+    [
+     "7",
+     "matches another option"
+    ],
+    [
+     "seven",
+     "matches another option"
+    ],
+    [
+     "Seven",
+     "matches another option"
+    ]
+   ],
+   "42": [
+    [
+     "４２",
+     "short"
+    ]
+   ],
+   "73": [
+    [
+     "７３",
+     "short"
+    ]
+   ]
+  }
+ },
+ "s2_hemisquilla_species": {
+  "options": [
+   "Hemisquilla californiensis",
+   "Hemisquilla ensigera",
+   "Hemisquilla fortipes",
+   "Hemisquilla trispinosa",
+   "Hemisquilla australiensis"
+  ],
+  "forms": {
+   "Hemisquilla californiensis": [
+    "Hemisquilla californiensis",
+    "H. californiensis",
+    "Hemisquilla ensigera californiensis",
+    "California mantis shrimp"
+   ],
+   "Hemisquilla ensigera": [
+    "H. ensigera"
+   ],
+   "Hemisquilla fortipes": [
+    "Hemisquilla fortipes",
+    "H. fortipes"
+   ],
+   "Hemisquilla trispinosa": [
+    "Hemisquilla trispinosa",
+    "H. trispinosa"
+   ],
+   "Hemisquilla australiensis": [
+    "Hemisquilla australiensis",
+    "H. australiensis"
+   ]
+  },
+  "dropped": {
+   "Hemisquilla ensigera": [
+    [
+     "Hemisquilla ensigera",
+     "matches another option"
+    ]
+   ]
+  }
+ },
+ "s2_aureoboletus_species": {
+  "options": [
+   "Aureoboletus mirabilis",
+   "Aureoboletus projectellus",
+   "Aureoboletus betula",
+   "Aureoboletus auriporus",
+   "Aureoboletus gentilis"
+  ],
+  "forms": {
+   "Aureoboletus mirabilis": [
+    "Aureoboletus mirabilis",
+    "A. mirabilis",
+    "Boletus mirabilis",
+    "Boletellus mirabilis",
+    "Xerocomus mirabilis",
+    "Ceriomyces mirabilis",
+    "admirable bolete",
+    "bragger's bolete",
+    "velvet top"
+   ],
+   "Aureoboletus projectellus": [
+    "Aureoboletus projectellus",
+    "A. projectellus",
+    "Boletellus projectellus",
+    "Boletus projectellus",
+    "Ceriomyces projectellus"
+   ],
+   "Aureoboletus betula": [
+    "Aureoboletus betula",
+    "A. betula",
+    "Austroboletus betula",
+    "Boletellus betula",
+    "Boletus betula",
+    "Frostiella betula",
+    "Strobilomyces betula",
+    "shaggy-stalked bolete"
+   ],
+   "Aureoboletus auriporus": [
+    "Aureoboletus auriporus",
+    "A. auriporus",
+    "Boletus auriporus",
+    "Pulveroboletus auriporus",
+    "gold-pored bolete"
+   ],
+   "Aureoboletus gentilis": [
+    "Aureoboletus gentilis",
+    "A. gentilis",
+    "Boletus gentilis",
+    "Pulveroboletus gentilis",
+    "Xerocomus gentilis",
+    "Boletus cramesinus",
+    "gilded bolete"
+   ]
+  },
+  "dropped": {}
+ },
+ "s1_aes_competition_finalist": {
+  "options": [
+   "Serpent",
+   "Rijndael",
+   "Twofish",
+   "RC6",
+   "TWINE"
+  ],
+  "forms": {
+   "Serpent": [
+    "Serpent",
+    "SERPENT",
+    "サーペント"
+   ],
+   "Rijndael": [
+    "Rijndael",
+    "RIJNDAEL",
+    "ラインダール"
+   ],
+   "Twofish": [
+    "Twofish",
+    "TwoFish",
+    "Two-fish",
+    "Two fish",
+    "ツーフィッシュ"
+   ],
+   "RC6": [
+    "RC6",
+    "RC-6",
+    "RC 6",
+    "Rivest Cipher 6"
+   ],
+   "TWINE": [
+    "TWINE",
+    "Twine"
+   ]
+  },
+  "dropped": {}
+ },
+ "s3b2_okinawan_rice_dish": {
+  "options": [
+   "taco rice",
+   "Goya Champuru",
+   "Jūshī",
+   "Rafute",
+   "Tebichi Don"
+  ],
+  "forms": {
+   "taco rice": [
+    "taco rice",
+    "tacorice",
+    "taco-rice",
+    "takoraisu",
+    "タコライス",
+    "塔可饭",
+    "塔可飯"
+   ],
+   "Goya Champuru": [
+    "Goya Champuru",
+    "Gōyā Chanpurū",
+    "Goya Chanpuru",
+    "Goya Champloo",
+    "Goya Chample",
+    "Goya Champuruu",
+    "Gooyaa Chanpuruu",
+    "Goyaa Champuru",
+    "Bitter melon champuru",
+    "Bitter melon champloo",
+    "ゴーヤーチャンプルー",
+    "ゴーヤチャンプルー",
+    "ゴーヤ・チャンプルー",
+    "ゴーヤーチャンプル",
+    "苦瓜杂炒",
+    "苦瓜雜炒",
+    "冲绳炒苦瓜",
+    "沖繩炒苦瓜"
+   ],
+   "Jūshī": [
+    "Jūshī",
+    "Jushi",
+    "Juushii",
+    "Jushii",
+    "Jūshii",
+    "Juushi",
+    "ジューシー",
+    "じゅーしー"
+   ],
+   "Rafute": [
+    "Rafute",
+    "Rafutē",
+    "Rafutee",
+    "Rafuteh",
+    "Rafuthi",
+    "ラフテー",
+    "らふてー",
+    "羅火腿"
+   ],
+   "Tebichi Don": [
+    "Tebichi Don",
+    "Tebichi-don",
+    "Tebichidon",
+    "Tibichi Don",
+    "てびち丼",
+    "テビチ丼"
+   ]
+  },
+  "dropped": {}
+ },
+ "s2_genus_in_the_family_nothobranchiidae": {
+  "options": [
+   "Nothobranchius",
+   "Aphyosemion",
+   "Epiplatys"
+  ],
+  "forms": {
+   "Nothobranchius": [
+    "Nothobranchius",
+    "Nothobranchius genus",
+    "genus Nothobranchius",
+    "假鳃鳉属",
+    "假鰓鱂屬",
+    "ノソブランキウス",
+    "ノソブランキウス属"
+   ],
+   "Aphyosemion": [
+    "Aphyosemion",
+    "Aphyosemion genus",
+    "genus Aphyosemion",
+    "旗鳉属",
+    "旗鱂屬",
+    "アフィオセミオン",
+    "アフィオセミオン属"
+   ],
+   "Epiplatys": [
+    "Epiplatys",
+    "Epiplatys genus",
+    "genus Epiplatys",
+    "エピプラティス",
+    "エピプラティス属"
+   ]
+  },
+  "dropped": {}
+ },
+ "s2_rendang_variant": {
+  "options": [
+   "Beef Rendang",
+   "Padang Rendang"
+  ],
+  "forms": {
+   "Beef Rendang": [
+    "Beef Rendang",
+    "rendang daging",
+    "rendang sapi",
+    "rendang daging sapi",
+    "beef rendang curry",
+    "仁当牛肉",
+    "牛肉仁当",
+    "冷当牛肉",
+    "仁當牛肉",
+    "牛肉仁當",
+    "ビーフルンダン",
+    "ビーフ・ルンダン",
+    "牛肉のルンダン"
+   ],
+   "Padang Rendang": [
+    "Padang Rendang",
+    "rendang Padang",
+    "Padang-style rendang",
+    "Padang style rendang",
+    "巴东仁当",
+    "巴東仁當",
+    "パダン・ルンダン",
+    "パダンルンダン"
+   ]
+  },
+  "dropped": {}
+ },
+ "s2_industrial_hydroformylation_process": {
+  "options": [
+   "Ruhrchemie/Rhône-Poulenc process",
+   "rhodium low-pressure oxo process",
+   "rh-catalyzed propylene hydroformylation",
+   "Shell Higher Olefin Process",
+   "Oxo process"
+  ],
+  "forms": {
+   "Ruhrchemie/Rhône-Poulenc process": [
+    "Ruhrchemie/Rhône-Poulenc process",
+    "Ruhrchemie/Rhone-Poulenc process",
+    "Ruhrchemie-Rhône-Poulenc process",
+    "Ruhrchemie-Rhone-Poulenc process",
+    "RCH/RP process",
+    "RCH/RP",
+    "RCH-RP process",
+    "Ruhrchemie/Rhône-Poulenc oxo process",
+    "鲁尔化学/罗纳-普朗克工艺",
+    "鲁尔化学-罗纳普朗克工艺",
+    "鲁尔化学/罗纳-普朗克法",
+    "魯爾化學/羅納-普朗克製程",
+    "魯爾化學/羅納-普朗克法",
+    "ルールケミー/ローヌ・プーラン法",
+    "ルールケミー・ローヌプーラン法"
+   ],
+   "rhodium low-pressure oxo process": [
+    "rhodium low-pressure oxo process",
+    "rhodium low pressure oxo process",
+    "low-pressure oxo process",
+    "LP Oxo process",
+    "LP Oxo",
+    "LPO process",
+    "Rh LP oxo process",
+    "低压铑法羰基合成",
+    "铑低压羰基合成工艺",
+    "低压羰基合成工艺",
+    "低壓銠法羰基合成",
+    "銠低壓羰基合成製程",
+    "ロジウム低圧オキソ法",
+    "低圧オキソ法"
+   ],
+   "rh-catalyzed propylene hydroformylation": [
+    "rh-catalyzed propylene hydroformylation",
+    "Rh-catalyzed propylene hydroformylation",
+    "Rh-catalysed propylene hydroformylation",
+    "rhodium-catalyzed propylene hydroformylation",
+    "rhodium-catalysed propylene hydroformylation",
+    "rhodium-catalyzed hydroformylation of propylene",
+    "rhodium-catalyzed hydroformylation of propene",
+    "Rh-catalyzed propene hydroformylation",
+    "铑催化丙烯氢甲酰化",
+    "铑催化丙烯氢甲酰化反应",
+    "銠催化丙烯氫甲醯化",
+    "ロジウム触媒プロピレンヒドロホルミル化",
+    "ロジウム触媒によるプロピレンのヒドロホルミル化"
+   ],
+   "Shell Higher Olefin Process": [
+    "Shell Higher Olefin Process",
+    "Shell higher olefins process",
+    "SHOP",
+    "SHOP process",
+    "壳牌高级烯烃工艺",
+    "壳牌高碳烯烃工艺",
+    "壳牌SHOP工艺",
+    "殼牌高級烯烴製程",
+    "殼牌高級烯烴工藝",
+    "シェル高級オレフィンプロセス",
+    "SHOPプロセス",
+    "SHOP法"
+   ],
+   "Oxo process": [
+    "oxo synthesis",
+    "oxo reaction",
+    "羰基合成法",
+    "オキソ合成",
+    "オキソプロセス"
+   ]
+  },
+  "dropped": {
+   "Oxo process": [
+    [
+     "Oxo process",
+     "matches another option"
+    ],
+    [
+     "OXO process",
+     "matches another option"
+    ],
+    [
+     "羰基合成",
+     "matches another option"
+    ],
+    [
+     "羰基合成工艺",
+     "matches another option"
+    ],
+    [
+     "羰基合成製程",
+     "matches another option"
+    ],
+    [
+     "オキソ法",
+     "matches another option"
+    ]
+   ]
+  }
+ },
+ "s2_agave_species_native_to_the_united_state": {
+  "options": [
+   "Agave parryi",
+   "Agave shawii",
+   "Agave americana",
+   "Agave lechuguilla",
+   "agave havardiana"
+  ],
+  "forms": {
+   "Agave parryi": [
+    "Agave parryi",
+    "A. parryi",
+    "Parry's agave",
+    "Parry agave",
+    "Parry's century plant",
+    "mescal agave",
+    "帕里龙舌兰",
+    "帕里龍舌蘭",
+    "アガベ・パリー",
+    "アガベ パリー"
+   ],
+   "Agave shawii": [
+    "Agave shawii",
+    "A. shawii",
+    "Shaw's agave",
+    "Shaw agave",
+    "coastal agave",
+    "Shaw's century plant",
+    "アガベ・シャウィー"
+   ],
+   "Agave americana": [
+    "Agave americana",
+    "A. americana",
+    "American aloe",
+    "American agave",
+    "sentry plant",
+    "美洲龙舌兰",
+    "美洲龍舌蘭",
+    "アオノリュウゼツラン",
+    "青の竜舌蘭"
+   ],
+   "Agave lechuguilla": [
+    "Agave lechuguilla",
+    "A. lechuguilla",
+    "lechuguilla",
+    "lechuguilla agave",
+    "shindagger",
+    "アガベ・レチュギラ"
+   ],
+   "agave havardiana": [
+    "agave havardiana",
+    "Agave havardiana",
+    "A. havardiana",
+    "Havard's agave",
+    "Havard agave",
+    "Havard's century plant",
+    "アガベ・ハバーディアナ"
+   ]
+  },
+  "dropped": {
+   "Agave parryi": [
+    [
+     "吉祥天",
+     "flagged: sub-member"
+    ]
+   ],
+   "Agave americana": [
+    [
+     "maguey",
+     "flagged: parent"
+    ],
+    [
+     "century plant",
+     "matches another option"
+    ],
+    [
+     "龙舌兰",
+     "matches another option"
+    ],
+    [
+     "龍舌蘭",
+     "matches another option"
+    ]
+   ]
+  }
+ },
+ "s3b1_momo_cooking_style": {
+  "options": [
+   "Steamed",
+   "kothey momo",
+   "tibetan-style",
+   "Jhol momo",
+   "sizzling momo"
+  ],
+  "forms": {
+   "Steamed": [
+    "Steamed",
+    "steamed",
+    "steamed momo",
+    "steamed momos",
+    "steam momo",
+    "蒸的",
+    "清蒸",
+    "蒸し",
+    "蒸しモモ"
+   ],
+   "kothey momo": [
+    "kothey momo",
+    "kothey",
+    "kothey momos",
+    "kothe momo",
+    "kothe",
+    "kothay momo",
+    "kothay",
+    "kothey-style",
+    "pan-fried momo",
+    "half-fried momo",
+    "कोठे मम"
+   ],
+   "tibetan-style": [
+    "tibetan-style",
+    "tibetan style",
+    "tibetan",
+    "tibetan momo",
+    "藏式",
+    "西藏风味",
+    "西藏風味",
+    "チベット風",
+    "チベット式"
+   ],
+   "Jhol momo": [
+    "Jhol momo",
+    "jhol momo",
+    "jhol momos",
+    "jhol-momo",
+    "jhol achar momo",
+    "झोल मम",
+    "ジョルモモ"
+   ],
+   "sizzling momo": [
+    "sizzling momo",
+    "sizzling momos",
+    "sizzler momo",
+    "momo sizzler",
+    "sizzling"
+   ]
+  },
+  "dropped": {
+   "Steamed": [
+    [
+     "steam",
+     "flagged: generic"
+    ],
+    [
+     "蒸",
+     "1-char CJK"
+    ],
+    [
+     "蒸馍馍",
+     "flagged: other"
+    ]
+   ],
+   "Jhol momo": [
+    [
+     "jhol",
+     "flagged: generic"
+    ]
+   ]
+  }
+ },
+ "s2_cordiform_heart_shaped_projection": {
+  "options": [
+   "Werner",
+   "bonne",
+   "schöner cordiform",
+   "Gall-Peters",
+   "Heart Projection"
+  ],
+  "forms": {
+   "Werner": [
+    "Werner",
+    "Werner projection",
+    "Stab-Werner projection",
+    "Stabius-Werner projection",
+    "Stab–Werner",
+    "维尔纳投影",
+    "維爾納投影",
+    "ウェルナー図法"
+   ],
+   "bonne": [
+    "bonne",
+    "Bonne",
+    "Bonne projection",
+    "彭纳投影",
+    "彭納投影",
+    "ボンヌ図法"
+   ],
+   "schöner cordiform": [
+    "schöner cordiform",
+    "Schöner cordiform",
+    "Schoner cordiform",
+    "Schoener cordiform",
+    "Schöner cordiform projection",
+    "Schöner's cordiform projection"
+   ],
+   "Gall-Peters": [
+    "Gall-Peters",
+    "Gall–Peters",
+    "Gall-Peters projection",
+    "Gall–Peters projection",
+    "Peters projection",
+    "Gall orthographic projection",
+    "高尔-彼得斯投影",
+    "彼得斯投影",
+    "高爾-彼得斯投影",
+    "ガル・ペータース図法",
+    "ペータース図法"
+   ],
+   "Heart Projection": [
+    "Heart Projection",
+    "heart projection",
+    "heart-shaped projection",
+    "cordiform map projection",
+    "心形投影",
+    "心臓形図法"
+   ]
+  },
+  "dropped": {
+   "Heart Projection": [
+    [
+     "cordiform projection",
+     "matches another option"
+    ]
+   ]
+  }
+ },
+ "s3b2_figure_of_address": {
+  "options": [
+   "apostrophe",
+   "Oxymoron",
+   "Metaphor",
+   "Madam",
+   "You"
+  ],
+  "forms": {
+   "apostrophe": [
+    "apostrophe",
+    "apostrophes",
+    "呼告",
+    "呼告法",
+    "頓呼法",
+    "頓呼"
+   ],
+   "Oxymoron": [
+    "Oxymoron",
+    "oxymoron",
+    "oxymora",
+    "oxymorons",
+    "矛盾修饰法",
+    "矛盾修辞法",
+    "逆喻",
+    "矛盾修飾法",
+    "矛盾修辭法",
+    "撞着語法",
+    "撞着法",
+    "対義結合",
+    "オクシモロン"
+   ],
+   "Metaphor": [
+    "Metaphor",
+    "metaphor",
+    "metaphors",
+    "metaphora",
+    "隐喻",
+    "暗喻",
+    "隱喻",
+    "隠喩",
+    "暗喩",
+    "メタファー"
+   ],
+   "Madam": [
+    "Madam",
+    "madam",
+    "madame",
+    "Madame",
+    "ma'am",
+    "Mme",
+    "Mme.",
+    "夫人",
+    "女士",
+    "マダム",
+    "奥様"
+   ],
+   "You": [
+    "あなた",
+    "貴方"
+   ]
+  },
+  "dropped": {
+   "apostrophe": [
+    [
+     "呼语",
+     "flagged: other"
+    ],
+    [
+     "呼語",
+     "flagged: other"
+    ],
+    [
+     "アポストロフィ",
+     "flagged: other"
+    ]
+   ],
+   "You": [
+    [
+     "You",
+     "in visible text"
+    ],
+    [
+     "you",
+     "in visible text"
+    ],
+    [
+     "ye",
+     "short"
+    ],
+    [
+     "你",
+     "1-char CJK"
+    ],
+    [
+     "您",
+     "1-char CJK"
+    ]
+   ]
+  }
+ },
+ "s1_chiral_auxiliary": {
+  "options": [
+   "Evans oxazolidinone",
+   "Oppolzer sultam",
+   "samp/ramp",
+   "Vinyloxy borne",
+   "(R)-2-Methyl-BSA"
+  ],
+  "forms": {
+   "Evans oxazolidinone": [
+    "Evans oxazolidinone",
+    "Evans' oxazolidinone",
+    "Evans's oxazolidinone",
+    "Evans oxazolidinones",
+    "Evans auxiliary",
+    "Evans' auxiliary",
+    "Evans chiral auxiliary",
+    "Evans噁唑烷酮",
+    "Evans恶唑烷酮",
+    "伊文思噁唑烷酮",
+    "埃文斯噁唑烷酮",
+    "Evans手性助剂",
+    "Evans噁唑啶酮",
+    "伊文思噁唑啶酮",
+    "エバンスのオキサゾリジノン",
+    "エバンスオキサゾリジノン",
+    "エヴァンスオキサゾリジノン",
+    "エバンス不斉補助剤"
+   ],
+   "Oppolzer sultam": [
+    "Oppolzer sultam",
+    "Oppolzer's sultam",
+    "Oppolzer camphorsultam",
+    "Oppolzer's camphorsultam",
+    "Oppolzer camphor sultam",
+    "camphorsultam",
+    "camphor sultam",
+    "bornane-10,2-sultam",
+    "10,2-camphorsultam",
+    "Oppolzer樟脑磺内酰胺",
+    "樟脑磺内酰胺",
+    "樟腦磺內醯胺",
+    "オッポルツァーのスルタム",
+    "オッポルツァースルタム",
+    "カンファースルタム"
+   ],
+   "samp/ramp": [
+    "samp/ramp",
+    "SAMP/RAMP",
+    "RAMP/SAMP",
+    "Enders SAMP/RAMP",
+    "Enders' SAMP/RAMP",
+    "SAMP/RAMP auxiliary",
+    "SAMP/RAMP手性助剂"
+   ],
+   "Vinyloxy borne": [
+    "Vinyloxy borne",
+    "vinyloxyborne",
+    "vinyloxy bornane",
+    "vinyloxybornane",
+    "bornyl vinyl ether",
+    "vinyl bornyl ether"
+   ],
+   "(R)-2-Methyl-BSA": [
+    "(R)-2-Methyl-BSA",
+    "(R)-2-methyl-BSA",
+    "(R)-2-methylpropane-2-sulfinamide",
+    "(R)-2-methyl-2-propanesulfinamide",
+    "(R)-tert-butanesulfinamide",
+    "(R)-t-butanesulfinamide",
+    "(R)-tert-butylsulfinamide",
+    "(R)-tBS",
+    "(R)-Ellman's sulfinamide",
+    "(R)-Ellman sulfinamide",
+    "(R)-叔丁基亚磺酰胺",
+    "(R)-2-甲基-2-丙烷亚磺酰胺",
+    "(R)-叔丁基亞磺醯胺",
+    "(R)-tert-ブタンスルフィンアミド",
+    "(R)-tert-ブチルスルフィンアミド"
+   ]
+  },
+  "dropped": {
+   "samp/ramp": [
+    [
+     "SAMP",
+     "flagged: sub-member"
+    ],
+    [
+     "RAMP",
+     "flagged: sub-member"
+    ],
+    [
+     "SAMP/RAMP hydrazone",
+     "flagged: other"
+    ],
+    [
+     "(S)-1-amino-2-methoxymethylpyrrolidine",
+     "flagged: sub-member"
+    ],
+    [
+     "(R)-1-amino-2-methoxymethylpyrrolidine",
+     "flagged: sub-member"
+    ],
+    [
+     "(S)-1-amino-2-(methoxymethyl)pyrrolidine",
+     "flagged: sub-member"
+    ],
+    [
+     "(R)-1-amino-2-(methoxymethyl)pyrrolidine",
+     "flagged: sub-member"
+    ],
+    [
+     "SAMP/RAMP腙",
+     "flagged: other"
+    ]
+   ]
+  }
+ },
+ "s1_african_folklore_trickster": {
+  "options": [
+   "Anansi",
+   "Eshu",
+   "Eno"
+  ],
+  "forms": {
+   "Anansi": [
+    "Anansi",
+    "Ananse",
+    "Anancy",
+    "Annancy",
+    "Kwaku Anansi",
+    "Kweku Ananse",
+    "Kwaku Ananse",
+    "Aunt Nancy",
+    "Compé Anansi",
+    "阿南西",
+    "アナンシ"
+   ],
+   "Eshu": [
+    "Eshu",
+    "Esu",
+    "Èṣù",
+    "Èsù",
+    "Exu",
+    "Echu",
+    "Eshu Elegba",
+    "Esu Elegbara",
+    "Eshu-Elegba",
+    "エシュ"
+   ],
+   "Eno": [
+    "Eno"
+   ]
+  },
+  "dropped": {
+   "Anansi": [
+    [
+     "Mr. Nancy",
+     "flagged: other"
+    ]
+   ]
+  }
+ },
+ "s2_persian_dastgah": {
+  "options": [
+   "Shur",
+   "Segah",
+   "Homayoun"
+  ],
+  "forms": {
+   "Shur": [
+    "Shur",
+    "Shūr",
+    "Shoor",
+    "Šur",
+    "Šūr",
+    "Dastgah-e Shur",
+    "Dastgah-e Shūr",
+    "Dastgah Shur",
+    "شور",
+    "دستگاه شور"
+   ],
+   "Segah": [
+    "Segah",
+    "Segāh",
+    "Segâh",
+    "Sehgah",
+    "Sehgāh",
+    "Se-gah",
+    "Seh-gah",
+    "Segaah",
+    "Dastgah-e Segah",
+    "Dastgah-e Segāh",
+    "Dastgah Segah",
+    "سه‌گاه",
+    "سه گاه",
+    "سهگاه",
+    "دستگاه سه‌گاه",
+    "دستگاه سه گاه"
+   ],
+   "Homayoun": [
+    "Homayoun",
+    "Homayun",
+    "Homāyun",
+    "Homâyun",
+    "Homayoon",
+    "Homāyūn",
+    "Dastgah-e Homayoun",
+    "Dastgah-e Homayun",
+    "Dastgah Homayoun",
+    "همایون",
+    "دستگاه همایون"
+   ]
+  },
+  "dropped": {}
+ },
+ "s2_classic_roman_pasta_dish": {
+  "options": [
+   "Cacio e Pepe",
+   "Carbonara",
+   "Lagane e Ceci"
+  ],
+  "forms": {
+   "Cacio e Pepe": [
+    "Cacio e Pepe",
+    "Cacio e pepe",
+    "Pasta cacio e pepe",
+    "Spaghetti cacio e pepe",
+    "Tonnarelli cacio e pepe",
+    "Cacio & pepe",
+    "芝士胡椒意面",
+    "黑胡椒奶酪意面",
+    "奶酪胡椒意面",
+    "起司胡椒義大利麵",
+    "乳酪胡椒義大利麵",
+    "カチョエペペ",
+    "カチョ・エ・ペペ"
+   ],
+   "Carbonara": [
+    "Carbonara",
+    "Pasta alla carbonara",
+    "Spaghetti alla carbonara",
+    "Spaghetti carbonara",
+    "Pasta carbonara",
+    "卡邦尼意大利面",
+    "卡邦尼",
+    "培根蛋面",
+    "奶油培根意面",
+    "培根蛋意大利面",
+    "卡波纳拉",
+    "卡邦尼義大利麵",
+    "培根蛋麵",
+    "奶油培根義大利麵",
+    "カルボナーラ",
+    "スパゲッティ・カルボナーラ",
+    "スパゲッティカルボナーラ"
+   ],
+   "Lagane e Ceci": [
+    "Lagane e Ceci",
+    "Lagane e ceci",
+    "Lagane and chickpeas",
+    "Laganelle e ceci",
+    "Lagane coi ceci",
+    "Lagane con i ceci"
+   ]
+  },
+  "dropped": {
+   "Carbonara": [
+    [
+     "alla carbonara",
+     "flagged: generic"
+    ]
+   ]
+  }
+ },
+ "s3b1_harvey_s_brewery_beer": {
+  "options": [
+   "sussex best bitter",
+   "dry stout",
+   "Lager",
+   "original lager",
+   "Imperial Russian Stout"
+  ],
+  "forms": {
+   "sussex best bitter": [
+    "sussex best bitter",
+    "Sussex Best Bitter",
+    "Harvey's Sussex Best Bitter",
+    "Harveys Sussex Best Bitter",
+    "Harvey's Sussex Best",
+    "Sussex Best",
+    "Harvey's Best Bitter",
+    "Harvey's Best"
+   ],
+   "dry stout": [
+    "dry stout",
+    "Dry Stout",
+    "Harvey's Dry Stout",
+    "Harveys Dry Stout"
+   ],
+   "Lager": [
+    "Harvey's Lager",
+    "Harveys Lager"
+   ],
+   "original lager": [
+    "original lager",
+    "Original Lager",
+    "Harvey's Original Lager",
+    "Harveys Original Lager"
+   ],
+   "Imperial Russian Stout": [
+    "Imperial Russian Stout",
+    "Harvey's Imperial Russian Stout",
+    "Harveys Imperial Russian Stout",
+    "Harvey's Imperial Extra Double Stout",
+    "Imperial Extra Double Stout"
+   ]
+  },
+  "dropped": {
+   "Lager": [
+    [
+     "Lager",
+     "matches another option"
+    ]
+   ]
+  }
+ },
+ "s3b1_swedish_sm_rg_st_rta_filling": {
+  "options": [
+   "Shrimp salad (räkröra)",
+   "Shrimp and dill",
+   "Egg and mayonnaise",
+   "Lobster salad",
+   "Shrimp"
+  ],
+  "forms": {
+   "Shrimp salad (räkröra)": [
+    "Shrimp salad (räkröra)",
+    "shrimp salad",
+    "prawn salad",
+    "räkröra",
+    "rakrora",
+    "räksallad",
+    "raksallad",
+    "shrimp mayo",
+    "prawn mayo",
+    "prawn mayonnaise",
+    "shrimp mayonnaise",
+    "虾仁沙拉",
+    "蝦仁沙拉",
+    "エビサラダ",
+    "えびサラダ",
+    "海老サラダ",
+    "シュリンプサラダ"
+   ],
+   "Shrimp and dill": [
+    "Shrimp and dill",
+    "shrimp and dill",
+    "shrimp & dill",
+    "prawns and dill",
+    "prawn and dill",
+    "dill shrimp",
+    "räkor och dill",
+    "räkor med dill",
+    "rakor och dill",
+    "莳萝虾",
+    "蒔蘿蝦",
+    "虾仁莳萝",
+    "蝦仁蒔蘿",
+    "エビとディル",
+    "海老とディル"
+   ],
+   "Egg and mayonnaise": [
+    "Egg and mayonnaise",
+    "egg and mayonnaise",
+    "egg & mayonnaise",
+    "egg and mayo",
+    "egg & mayo",
+    "egg mayo",
+    "egg mayonnaise",
+    "ägg och majonnäs",
+    "ägg & majonnäs",
+    "agg och majonnas",
+    "鸡蛋蛋黄酱",
+    "雞蛋蛋黃醬",
+    "蛋黄酱鸡蛋",
+    "蛋黃醬雞蛋",
+    "卵マヨネーズ",
+    "たまごマヨネーズ",
+    "卵マヨ",
+    "たまごマヨ",
+    "エッグマヨネーズ"
+   ],
+   "Lobster salad": [
+    "Lobster salad",
+    "lobster salad",
+    "hummersallad",
+    "hummer sallad",
+    "hummerröra",
+    "龙虾沙拉",
+    "龍蝦沙拉",
+    "龍蝦沙律",
+    "ロブスターサラダ"
+   ],
+   "Shrimp": [
+    "shrimps",
+    "räka",
+    "raka"
+   ]
+  },
+  "dropped": {
+   "Egg and mayonnaise": [
+    [
+     "äggröra med majonnäs",
+     "flagged: other"
+    ]
+   ],
+   "Shrimp": [
+    [
+     "虾",
+     "1-char CJK"
+    ],
+    [
+     "蝦",
+     "1-char CJK"
+    ],
+    [
+     "Shrimp",
+     "matches another option"
+    ],
+    [
+     "shrimp",
+     "matches another option"
+    ],
+    [
+     "prawn",
+     "matches another option"
+    ],
+    [
+     "prawns",
+     "matches another option"
+    ],
+    [
+     "räkor",
+     "matches another option"
+    ],
+    [
+     "rakor",
+     "matches another option"
+    ],
+    [
+     "虾仁",
+     "matches another option"
+    ],
+    [
+     "蝦仁",
+     "matches another option"
+    ],
+    [
+     "エビ",
+     "matches another option"
+    ],
+    [
+     "えび",
+     "matches another option"
+    ],
+    [
+     "海老",
+     "matches another option"
+    ],
+    [
+     "シュリンプ",
+     "matches another option"
+    ]
+   ],
+   "Shrimp salad (räkröra)": [
+    [
+     "虾沙拉",
+     "matches another option"
+    ],
+    [
+     "蝦沙拉",
+     "matches another option"
+    ],
+    [
+     "蝦沙律",
+     "matches another option"
+    ]
+   ]
+  }
+ },
+ "s3b2_saint_julien_classified_growth": {
+  "options": [
+   "Château Léoville-Las Cases",
+   "Château Léoville Barton",
+   "Château Ducru-Beaucaillou",
+   "Château Latour à Pomerol",
+   "Château Latour-Martillac"
+  ],
+  "forms": {
+   "Château Léoville-Las Cases": [
+    "Château Léoville-Las Cases",
+    "Chateau Leoville-Las Cases",
+    "Léoville-Las Cases",
+    "Leoville-Las Cases",
+    "Léoville Las Cases",
+    "Leoville Las Cases",
+    "Château Léoville Las Cases",
+    "Chateau Leoville Las Cases",
+    "Las Cases",
+    "Las-Cases",
+    "雄狮酒庄",
+    "雄狮",
+    "雄獅酒莊",
+    "雄獅",
+    "シャトー・レオヴィル・ラス・カーズ",
+    "レオヴィル・ラス・カーズ",
+    "レオヴィル・ラスカーズ",
+    "シャトー・レオヴィル・ラスカーズ"
+   ],
+   "Château Léoville Barton": [
+    "Château Léoville Barton",
+    "Chateau Leoville Barton",
+    "Léoville Barton",
+    "Leoville Barton",
+    "Léoville-Barton",
+    "Leoville-Barton",
+    "Château Léoville-Barton",
+    "Chateau Leoville-Barton",
+    "巴顿酒庄",
+    "乐夫巴顿酒庄",
+    "乐夫巴顿",
+    "巴頓酒莊",
+    "樂夫巴頓酒莊",
+    "樂夫巴頓",
+    "シャトー・レオヴィル・バルトン",
+    "レオヴィル・バルトン"
+   ],
+   "Château Ducru-Beaucaillou": [
+    "Château Ducru-Beaucaillou",
+    "Chateau Ducru-Beaucaillou",
+    "Ducru-Beaucaillou",
+    "Ducru Beaucaillou",
+    "Château Ducru Beaucaillou",
+    "Chateau Ducru Beaucaillou",
+    "宝嘉龙酒庄",
+    "宝嘉龙",
+    "寶嘉龍酒莊",
+    "寶嘉龍",
+    "シャトー・デュクリュ・ボーカイユ",
+    "デュクリュ・ボーカイユ",
+    "デュクリュボーカイユ"
+   ],
+   "Château Latour à Pomerol": [
+    "Château Latour à Pomerol",
+    "Chateau Latour a Pomerol",
+    "Latour à Pomerol",
+    "Latour a Pomerol",
+    "Château Latour-à-Pomerol",
+    "Latour-à-Pomerol",
+    "Latour-a-Pomerol",
+    "波美侯拉图酒庄",
+    "拉图波美侯",
+    "拉图波美侯酒庄",
+    "波美侯拉圖酒莊",
+    "拉圖波美侯",
+    "シャトー・ラトゥール・ア・ポムロール",
+    "ラトゥール・ア・ポムロール"
+   ],
+   "Château Latour-Martillac": [
+    "Château Latour-Martillac",
+    "Chateau Latour-Martillac",
+    "Latour-Martillac",
+    "Latour Martillac",
+    "Château Latour Martillac",
+    "Chateau Latour Martillac",
+    "拉图玛蒂雅克酒庄",
+    "拉图玛蒂雅克",
+    "拉图马蒂亚克酒庄",
+    "拉圖瑪蒂雅克酒莊",
+    "拉圖瑪蒂雅克",
+    "シャトー・ラトゥール・マルティヤック",
+    "ラトゥール・マルティヤック"
+   ]
+  },
+  "dropped": {}
+ },
+ "s3b1_stellarator_experiment": {
+  "options": [
+   "Wendelstein 7-X",
+   "SPARC"
+  ],
+  "forms": {
+   "Wendelstein 7-X": [
+    "Wendelstein 7-X",
+    "Wendelstein 7X",
+    "Wendelstein7-X",
+    "W7-X",
+    "W7X",
+    "W 7-X",
+    "文德尔施泰因7-X",
+    "文德尔斯坦7-X",
+    "文德爾施泰因7-X",
+    "文德爾斯坦7-X",
+    "ヴェンデルシュタイン7-X"
+   ],
+   "SPARC": [
+    "SPARC",
+    "SPARC tokamak",
+    "SPARC托卡马克",
+    "SPARC托卡馬克",
+    "SPARCトカマク"
+   ]
+  },
+  "dropped": {}
+ },
+ "s3b1_genus_in_the_tribe_papionini": {
+  "options": [
+   "Macaca",
+   "Papio",
+   "Mandrillus",
+   "Theropithecus",
+   "Pan"
+  ],
+  "forms": {
+   "Macaca": [
+    "Macaca",
+    "macaques",
+    "macaque",
+    "猕猴属",
+    "獼猴屬",
+    "マカク属"
+   ],
+   "Papio": [
+    "Papio",
+    "baboons",
+    "baboon",
+    "狒狒属",
+    "狒狒屬"
+   ],
+   "Mandrillus": [
+    "Mandrillus",
+    "山魈属",
+    "山魈屬",
+    "マンドリル属"
+   ],
+   "Theropithecus": [
+    "Theropithecus",
+    "狮尾狒属",
+    "獅尾狒屬",
+    "ゲラダヒヒ属"
+   ],
+   "Pan": [
+    "Pan",
+    "chimpanzees",
+    "黑猩猩属",
+    "黑猩猩屬",
+    "チンパンジー属"
+   ]
+  },
+  "dropped": {
+   "Papio": [
+    [
+     "ヒヒ属",
+     "matches another option"
+    ]
+   ]
+  }
+ },
+ "s1_pteris_species": {
+  "options": [
+   "Pteris cretica",
+   "Pteris vittata",
+   "Pteris multifida",
+   "Pteris ensiformis",
+   "pteris wallichiana"
+  ],
+  "forms": {
+   "Pteris cretica": [
+    "Pteris cretica",
+    "P. cretica",
+    "Cretan brake",
+    "Cretan brake fern",
+    "ribbon fern",
+    "table fern",
+    "欧洲凤尾蕨",
+    "歐洲鳳尾蕨",
+    "オオバノイノモトソウ"
+   ],
+   "Pteris vittata": [
+    "Pteris vittata",
+    "P. vittata",
+    "Chinese brake",
+    "Chinese ladder brake",
+    "ladder brake",
+    "ladder brake fern",
+    "蜈蚣草",
+    "蜈蚣凤尾蕨",
+    "蜈蚣鳳尾蕨",
+    "モエジマシダ"
+   ],
+   "Pteris multifida": [
+    "Pteris multifida",
+    "P. multifida",
+    "spider brake",
+    "spider fern",
+    "Huguenot fern",
+    "井栏边草",
+    "井欄邊草",
+    "凤尾草",
+    "鳳尾草",
+    "井口辺草"
+   ],
+   "Pteris ensiformis": [
+    "Pteris ensiformis",
+    "P. ensiformis",
+    "slender brake",
+    "sword brake",
+    "sword brake fern",
+    "剑叶凤尾蕨",
+    "劍葉鳳尾蕨",
+    "ホコシダ"
+   ],
+   "pteris wallichiana": [
+    "pteris wallichiana",
+    "Pteris wallichiana",
+    "P. wallichiana",
+    "Wallich's brake",
+    "Wallich's brake fern",
+    "西南凤尾蕨",
+    "西南鳳尾蕨",
+    "ナチシダ",
+    "那智羊歯"
+   ]
+  },
+  "dropped": {
+   "Pteris multifida": [
+    [
+     "イノモトソウ",
+     "matches another option"
+    ]
+   ]
+  }
+ },
+ "s2_amanita_section": {
+  "options": [
+   "section caesareae",
+   "Section Amanita",
+   "Section Phalloideae",
+   "section vaginatae",
+   "Amanita phalloides"
+  ],
+  "forms": {
+   "section caesareae": [
+    "section caesareae",
+    "section Caesareae",
+    "sect. Caesareae",
+    "Amanita sect. Caesareae",
+    "Amanita section Caesareae",
+    "Caesareae",
+    "橙盖鹅膏组",
+    "橙蓋鵝膏組",
+    "タマゴタケ節"
+   ],
+   "Section Amanita": [
+    "Section Amanita",
+    "sect. Amanita",
+    "Amanita sect. Amanita",
+    "Amanita section Amanita"
+   ],
+   "Section Phalloideae": [
+    "Section Phalloideae",
+    "sect. Phalloideae",
+    "Amanita sect. Phalloideae",
+    "Amanita section Phalloideae",
+    "Phalloideae",
+    "鬼笔鹅膏组",
+    "鬼筆鵝膏組",
+    "タマゴテングタケ節"
+   ],
+   "section vaginatae": [
+    "section vaginatae",
+    "section Vaginatae",
+    "sect. Vaginatae",
+    "Amanita sect. Vaginatae",
+    "Amanita section Vaginatae",
+    "Vaginatae",
+    "鞘柄鹅膏组",
+    "鞘柄鵝膏組",
+    "ツルタケ節"
+   ],
+   "Amanita phalloides": [
+    "Amanita phalloides",
+    "A. phalloides",
+    "death cap",
+    "death cap mushroom",
+    "deathcap",
+    "death-cap",
+    "毒鹅膏",
+    "毒鹅膏菌",
+    "绿帽菌",
+    "死帽蕈",
+    "毒鵝膏",
+    "毒鵝膏菌",
+    "綠帽菌"
+   ]
+  },
+  "dropped": {
+   "Section Amanita": [
+    [
+     "鹅膏组",
+     "matches another option"
+    ],
+    [
+     "鵝膏組",
+     "matches another option"
+    ],
+    [
+     "テングタケ節",
+     "matches another option"
+    ]
+   ],
+   "Amanita phalloides": [
+    [
+     "鬼笔鹅膏",
+     "matches another option"
+    ],
+    [
+     "鬼筆鵝膏",
+     "matches another option"
+    ],
+    [
+     "タマゴテングタケ",
+     "matches another option"
+    ]
+   ]
+  }
+ },
+ "s2_callipogon_species": {
+  "options": [
+   "Callipogon relictus",
+   "Callipogon reichei",
+   "Callipogon reimschi",
+   "callipogon lemoinei",
+   "callipogon barbatus"
+  ],
+  "forms": {
+   "Callipogon relictus": [
+    "Callipogon relictus",
+    "C. relictus",
+    "Callipogon (Eoxenus) relictus",
+    "Eoxenus relictus",
+    "Korean relict longhorn beetle",
+    "relict longhorn beetle",
+    "relict longicorn beetle"
+   ],
+   "Callipogon reichei": [
+    "Callipogon reichei",
+    "C. reichei"
+   ],
+   "Callipogon reimschi": [
+    "Callipogon reimschi",
+    "C. reimschi"
+   ],
+   "callipogon lemoinei": [
+    "callipogon lemoinei",
+    "Callipogon lemoinei",
+    "C. lemoinei"
+   ],
+   "callipogon barbatus": [
+    "callipogon barbatus",
+    "Callipogon barbatus",
+    "C. barbatus"
+   ]
+  },
+  "dropped": {}
+ },
+ "s1_species_of_kingfisher": {
+  "options": [
+   "Common Kingfisher",
+   "Laughing Kookaburra",
+   "Belted Kingfisher",
+   "Chestnut-backed Kingfisher",
+   "White-throated Kingfisher"
+  ],
+  "forms": {
+   "Common Kingfisher": [
+    "Common Kingfisher",
+    "Eurasian Kingfisher",
+    "River Kingfisher",
+    "Alcedo atthis",
+    "普通翠鸟",
+    "普通翠鳥"
+   ],
+   "Laughing Kookaburra": [
+    "Laughing Kookaburra",
+    "Laughing Jackass",
+    "Dacelo novaeguineae",
+    "笑翠鸟",
+    "笑翠鳥",
+    "ワライカワセミ"
+   ],
+   "Belted Kingfisher": [
+    "Belted Kingfisher",
+    "Megaceryle alcyon",
+    "Ceryle alcyon",
+    "白腹鱼狗",
+    "白腹魚狗",
+    "アメリカヤマセミ"
+   ],
+   "Chestnut-backed Kingfisher": [
+    "Chestnut-backed Kingfisher",
+    "Chestnut backed Kingfisher",
+    "chestnut-backed kingfisher"
+   ],
+   "White-throated Kingfisher": [
+    "White-throated Kingfisher",
+    "White throated Kingfisher",
+    "White-breasted Kingfisher",
+    "Smyrna Kingfisher",
+    "Halcyon smyrnensis",
+    "白胸翡翠",
+    "アオショウビン"
+   ]
+  },
+  "dropped": {
+   "Common Kingfisher": [
+    [
+     "翡翠",
+     "flagged: generic"
+    ],
+    [
+     "カワセミ",
+     "matches another option"
+    ]
+   ],
+   "Laughing Kookaburra": [
+    [
+     "Kookaburra",
+     "flagged: parent"
+    ]
+   ]
+  }
+ },
+ "s2_sai_krok_isan_filling_style": {
+  "options": [
+   "pork, garlic and sticky rice",
+   "Pork and coconut",
+   "Pork and lemongrass",
+   "pork and wood ear mushrooms",
+   "pork"
+  ],
+  "forms": {
+   "pork, garlic and sticky rice": [
+    "pork, garlic and sticky rice",
+    "pork garlic and sticky rice",
+    "pork, garlic and glutinous rice",
+    "pork, garlic, and sticky rice",
+    "pork with garlic and sticky rice",
+    "猪肉大蒜糯米",
+    "豬肉大蒜糯米",
+    "豚肉とニンニクともち米",
+    "หมูกระเทียมข้าวเหนียว"
+   ],
+   "Pork and coconut": [
+    "Pork and coconut",
+    "pork and coconut",
+    "pork with coconut",
+    "猪肉椰子",
+    "豬肉椰子",
+    "豚肉とココナッツ",
+    "หมูมะพร้าว"
+   ],
+   "Pork and lemongrass": [
+    "Pork and lemongrass",
+    "pork and lemongrass",
+    "pork with lemongrass",
+    "lemongrass pork",
+    "猪肉香茅",
+    "豬肉香茅",
+    "豚肉とレモングラス",
+    "หมูตะไคร้"
+   ],
+   "pork and wood ear mushrooms": [
+    "pork and wood ear mushrooms",
+    "pork and wood ear mushroom",
+    "pork with wood ear mushrooms",
+    "pork and black fungus",
+    "pork and wood ear",
+    "猪肉木耳",
+    "豬肉木耳",
+    "豚肉とキクラゲ",
+    "豚肉と木耳",
+    "หมูเห็ดหูหนู"
+   ],
+   "pork": [
+    "pork filling",
+    "minced pork",
+    "ground pork",
+    "sai krok moo",
+    "sai krok mu",
+    "หมู"
+   ]
+  },
+  "dropped": {
+   "pork": [
+    [
+     "pork",
+     "matches another option"
+    ],
+    [
+     "猪肉",
+     "matches another option"
+    ],
+    [
+     "豬肉",
+     "matches another option"
+    ],
+    [
+     "豚肉",
+     "matches another option"
+    ]
+   ]
+  }
+ },
+ "s1_blackletter_style": {
+  "options": [
+   "Textura",
+   "Fraktur",
+   "Old English"
+  ],
+  "forms": {
+   "Textura": [
+    "Textura",
+    "Textualis",
+    "Textura script",
+    "Gothic Textura",
+    "テクストゥーラ",
+    "テクストゥアリス"
+   ],
+   "Fraktur": [
+    "Fraktur",
+    "Fraktur script",
+    "Fraktur typeface",
+    "Frakturschrift",
+    "尖角体",
+    "尖角體",
+    "フラクトゥール",
+    "フラクトゥール体"
+   ],
+   "Old English": [
+    "Old English",
+    "Old English script",
+    "Old English font",
+    "Old English typeface",
+    "オールド・イングリッシュ",
+    "オールドイングリッシュ"
+   ]
+  },
+  "dropped": {
+   "Old English": [
+    [
+     "Old English Text",
+     "flagged: sub-member"
+    ]
+   ]
+  }
+ },
+ "s3b2_hoya_carnosa_cultivar": {
+  "options": [
+   "Krimson Queen",
+   "compacta",
+   "Tricolor",
+   "krimson princess",
+   "wilbur graves"
+  ],
+  "forms": {
+   "Krimson Queen": [
+    "Krimson Queen",
+    "Crimson Queen",
+    "Hoya carnosa 'Krimson Queen'",
+    "Hoya carnosa Krimson Queen",
+    "H. carnosa 'Krimson Queen'",
+    "Hoya Krimson Queen",
+    "皇后球兰",
+    "皇后球蘭",
+    "绯红皇后",
+    "緋紅皇后",
+    "ホヤ・クリムゾンクイーン",
+    "クリムゾンクイーン",
+    "クリムゾン・クイーン"
+   ],
+   "compacta": [
+    "compacta",
+    "Compacta",
+    "Hoya carnosa 'Compacta'",
+    "Hoya carnosa Compacta",
+    "H. carnosa 'Compacta'",
+    "Hoya compacta",
+    "Hindu rope",
+    "Hindu rope plant",
+    "Indian rope plant",
+    "Krinkle Kurl",
+    "Crinkle Kurl",
+    "卷叶球兰",
+    "捲葉球蘭",
+    "卷葉球蘭",
+    "捲葉毬蘭",
+    "ホヤ・カルノーサ・コンパクタ",
+    "ホヤ・コンパクタ",
+    "ホヤ コンパクタ",
+    "コンパクタ"
+   ],
+   "Tricolor": [
+    "Tricolor",
+    "Tri-color",
+    "Tricolour",
+    "Hoya carnosa 'Tricolor'",
+    "Hoya carnosa Tricolor",
+    "H. carnosa 'Tricolor'",
+    "Hoya Tricolor",
+    "三色球兰",
+    "三色球蘭",
+    "三色毬蘭",
+    "ホヤ・トリカラー",
+    "ホヤ トリカラー",
+    "トリカラー"
+   ],
+   "krimson princess": [
+    "krimson princess",
+    "Krimson Princess",
+    "Crimson Princess",
+    "Hoya carnosa 'Krimson Princess'",
+    "Hoya carnosa Krimson Princess",
+    "H. carnosa 'Krimson Princess'",
+    "Hoya Krimson Princess",
+    "公主球兰",
+    "公主球蘭",
+    "绯红公主",
+    "緋紅公主",
+    "ホヤ・クリムゾンプリンセス",
+    "クリムゾンプリンセス",
+    "クリムゾン・プリンセス"
+   ],
+   "wilbur graves": [
+    "wilbur graves",
+    "Wilbur Graves",
+    "Hoya carnosa 'Wilbur Graves'",
+    "Hoya carnosa Wilbur Graves",
+    "H. carnosa 'Wilbur Graves'",
+    "Hoya Wilbur Graves",
+    "ホヤ・ウィルバーグレイブス",
+    "ウィルバーグレイブス"
+   ]
+  },
+  "dropped": {}
+ },
+ "s2_philippine_nepenthes_species": {
+  "options": [
+   "Nepenthes attenboroughii",
+   "Nepenthes alata",
+   "Nepenthes ventricosa",
+   "Nepenthes rajah",
+   "Nepenthes latifolia"
+  ],
+  "forms": {
+   "Nepenthes attenboroughii": [
+    "Nepenthes attenboroughii",
+    "N. attenboroughii",
+    "Attenborough's pitcher plant",
+    "Attenborough pitcher plant",
+    "艾登堡猪笼草",
+    "艾登堡豬籠草",
+    "爱登堡猪笼草",
+    "愛登堡豬籠草",
+    "阿滕伯勒猪笼草",
+    "阿滕伯勒豬籠草",
+    "ネペンテス・アッテンボロギー",
+    "アッテンボロギー"
+   ],
+   "Nepenthes alata": [
+    "Nepenthes alata",
+    "N. alata",
+    "winged pitcher plant",
+    "翼状猪笼草",
+    "翼狀豬籠草",
+    "ネペンテス・アラタ",
+    "アラタ"
+   ],
+   "Nepenthes ventricosa": [
+    "Nepenthes ventricosa",
+    "N. ventricosa",
+    "葫芦猪笼草",
+    "葫蘆豬籠草",
+    "ネペンテス・ベントリコサ",
+    "ネペンテス・ヴェントリコサ",
+    "ベントリコサ"
+   ],
+   "Nepenthes rajah": [
+    "Nepenthes rajah",
+    "N. rajah",
+    "rajah pitcher plant",
+    "giant Malaysian pitcher plant",
+    "king of the pitcher plants",
+    "马来王猪笼草",
+    "馬來王豬籠草",
+    "王猪笼草",
+    "王豬籠草",
+    "ネペンテス・ラジャ",
+    "ラジャ"
+   ],
+   "Nepenthes latifolia": [
+    "Nepenthes latifolia",
+    "N. latifolia",
+    "宽叶猪笼草",
+    "寬葉豬籠草",
+    "ネペンテス・ラティフォリア",
+    "ラティフォリア"
+   ]
+  },
+  "dropped": {}
+ },
+ "s3b2_bitter_for_a_venetian_spritz": {
+  "options": [
+   "Select",
+   "Aperol",
+   "Campari",
+   "Cynar"
+  ],
+  "forms": {
+   "Select": [
+    "Select",
+    "Select Aperitivo",
+    "Select Bitter",
+    "Select Spritz bitter",
+    "セレクト"
+   ],
+   "Aperol": [
+    "Aperol",
+    "Aperol Aperitivo",
+    "阿佩罗",
+    "阿佩羅",
+    "アペロール"
+   ],
+   "Campari": [
+    "Campari",
+    "Campari Bitter",
+    "Bitter Campari",
+    "金巴利",
+    "カンパリ"
+   ],
+   "Cynar": [
+    "Cynar",
+    "チナール"
+   ]
+  },
+  "dropped": {}
+ },
+ "s1_extinct_lycopsid_genus": {
+  "options": [
+   "Lepidodendron",
+   "Sigillaria",
+   "Calamodendron",
+   "Archaeopteris",
+   "Arthrolycospora"
+  ],
+  "forms": {
+   "Lepidodendron": [
+    "Lepidodendron",
+    "lepidodendron",
+    "lepidodendrons",
+    "鳞木",
+    "鱗木",
+    "鳞木属",
+    "鱗木屬",
+    "リンボク",
+    "鱗木属",
+    "レピドデンドロン"
+   ],
+   "Sigillaria": [
+    "Sigillaria",
+    "sigillaria",
+    "sigillarias",
+    "封印木",
+    "封印木属",
+    "封印木屬",
+    "フウインボク",
+    "シギラリア"
+   ],
+   "Calamodendron": [
+    "Calamodendron",
+    "calamodendron",
+    "カラモデンドロン"
+   ],
+   "Archaeopteris": [
+    "Archaeopteris",
+    "archaeopteris",
+    "古羊齿",
+    "古羊齒",
+    "古羊齿属",
+    "古羊齒屬",
+    "アーケオプテリス",
+    "アルカエオプテリス"
+   ],
+   "Arthrolycospora": [
+    "Arthrolycospora",
+    "arthrolycospora"
+   ]
+  },
+  "dropped": {}
+ },
+ "s3b1_julia_differentialequations_jl_solver": {
+  "options": [
+   "Tsit5",
+   "Rodas5",
+   "Vern7",
+   "DP853"
+  ],
+  "forms": {
+   "Tsit5": [
+    "Tsit5",
+    "Tsit5()",
+    "Tsitouras 5",
+    "Tsitouras 5(4)",
+    "Tsitouras 5/4",
+    "Tsitouras 5/4 Runge-Kutta"
+   ],
+   "Rodas5": [
+    "Rodas5",
+    "Rodas5()",
+    "RODAS5",
+    "Rodas 5",
+    "Rosenbrock Rodas5"
+   ],
+   "Vern7": [
+    "Vern7",
+    "Vern7()",
+    "Verner7",
+    "Verner 7",
+    "Verner's 7th order method",
+    "Verner 7(6)",
+    "Verner's Most Efficient 7(6)"
+   ],
+   "DP853": [
+    "DP853",
+    "DOP853",
+    "dop853",
+    "DP8",
+    "DP8()",
+    "Dormand-Prince 8(5,3)",
+    "Dormand–Prince 853",
+    "Dormand-Prince 853"
+   ]
+  },
+  "dropped": {}
+ },
+ "s2_cynotilapia_species": {
+  "options": [
+   "cynotilapia sp. hara",
+   "Cynotilapia afra",
+   "Cynotilapia zebroides",
+   "Cynotilapia axelrodi"
+  ],
+  "forms": {
+   "cynotilapia sp. hara": [
+    "cynotilapia sp. hara",
+    "Cynotilapia sp. \"Hara\"",
+    "Cynotilapia sp. 'Hara'",
+    "Cynotilapia hara",
+    "C. sp. hara",
+    "C. sp. \"Hara\""
+   ],
+   "Cynotilapia afra": [
+    "Cynotilapia afra",
+    "C. afra",
+    "dogtooth cichlid",
+    "afra cichlid",
+    "シノティラピア・アフラ"
+   ],
+   "Cynotilapia zebroides": [
+    "Cynotilapia zebroides",
+    "C. zebroides",
+    "Microchromis zebroides",
+    "シノティラピア・ゼブロイデス"
+   ],
+   "Cynotilapia axelrodi": [
+    "Cynotilapia axelrodi",
+    "C. axelrodi",
+    "シノティラピア・アクセルロディ"
+   ]
+  },
+  "dropped": {}
+ },
+ "s2_italian_dried_pasta_brand": {
+  "options": [
+   "rummo",
+   "De Cecco",
+   "Barilla",
+   "Garofalo"
+  ],
+  "forms": {
+   "rummo": [
+    "rummo",
+    "Rummo",
+    "RUMMO",
+    "Pasta Rummo",
+    "Pastificio Rummo",
+    "ルンモ"
+   ],
+   "De Cecco": [
+    "De Cecco",
+    "DeCecco",
+    "de cecco",
+    "DE CECCO",
+    "F.lli De Cecco",
+    "Fratelli De Cecco",
+    "得科",
+    "ディチェコ",
+    "ディ・チェコ"
+   ],
+   "Barilla": [
+    "Barilla",
+    "barilla",
+    "BARILLA",
+    "百味来",
+    "百味來",
+    "バリラ"
+   ],
+   "Garofalo": [
+    "Garofalo",
+    "garofalo",
+    "GAROFALO",
+    "Pasta Garofalo",
+    "Pastificio Lucio Garofalo",
+    "ガロファロ"
+   ]
+  },
+  "dropped": {}
+ },
+ "s3b2_r_as_baixas_subzone": {
+  "options": [
+   "Val do Salnés",
+   "Valdeorras",
+   "ribeira sacra",
+   "Vila Nova",
+   "Condado do Tea"
+  ],
+  "forms": {
+   "Val do Salnés": [
+    "Val do Salnés",
+    "Val do Salnes",
+    "Valle del Salnés",
+    "Valle del Salnes",
+    "Salnés",
+    "Salnes",
+    "O Salnés",
+    "バル・ド・サルネス"
+   ],
+   "Valdeorras": [
+    "Valdeorras",
+    "DO Valdeorras",
+    "D.O. Valdeorras",
+    "Val de Orras",
+    "瓦尔德奥拉斯",
+    "瓦爾德奧拉斯",
+    "バルデオラス"
+   ],
+   "ribeira sacra": [
+    "ribeira sacra",
+    "Ribeira Sacra",
+    "DO Ribeira Sacra",
+    "D.O. Ribeira Sacra",
+    "Ribera Sacra",
+    "里贝拉萨克拉",
+    "里貝拉薩克拉",
+    "リベイラ・サクラ"
+   ],
+   "Vila Nova": [
+    "Vila Nova",
+    "Vilanova"
+   ],
+   "Condado do Tea": [
+    "Condado do Tea",
+    "Condado del Tea",
+    "O Condado do Tea",
+    "コンダド・ド・テア"
+   ]
+  },
+  "dropped": {
+   "Condado do Tea": [
+    [
+     "Condado",
+     "flagged: generic"
+    ]
+   ]
+  }
+ },
+ "s3b2_dipturus_species": {
+  "options": [
+   "dipturus intermedius",
+   "Dipturus batis",
+   "Dipturus laevis",
+   "Dipturus oxyrinchus",
+   "Dipturus orbialis"
+  ],
+  "forms": {
+   "dipturus intermedius": [
+    "dipturus intermedius",
+    "Dipturus intermedius",
+    "D. intermedius",
+    "Raja intermedia",
+    "flapper skate"
+   ],
+   "Dipturus batis": [
+    "Dipturus batis",
+    "D. batis",
+    "Raja batis",
+    "blue skate",
+    "common blue skate",
+    "common skate",
+    "grey skate",
+    "gray skate"
+   ],
+   "Dipturus laevis": [
+    "Dipturus laevis",
+    "D. laevis",
+    "Raja laevis",
+    "barndoor skate",
+    "barn door skate",
+    "barn-door skate"
+   ],
+   "Dipturus oxyrinchus": [
+    "Dipturus oxyrinchus",
+    "D. oxyrinchus",
+    "Dipturus oxyrhynchus",
+    "Raja oxyrinchus",
+    "Raja oxyrhynchus",
+    "longnosed skate",
+    "long-nosed skate",
+    "sharpnose skate"
+   ],
+   "Dipturus orbialis": [
+    "Dipturus orbialis",
+    "D. orbialis"
+   ]
+  },
+  "dropped": {
+   "Dipturus oxyrinchus": [
+    [
+     "longnose skate",
+     "flagged: other"
+    ]
+   ]
+  }
+ },
+ "s3b2_pratt_whitney_radial_engine": {
+  "options": [
+   "R-2800 Double Wasp",
+   "R-4360 Wasp Major",
+   "R-1830 Twin Wasp",
+   "R-1340 Wasp"
+  ],
+  "forms": {
+   "R-2800 Double Wasp": [
+    "R-2800 Double Wasp",
+    "R-2800",
+    "R2800",
+    "R 2800",
+    "Double Wasp",
+    "Pratt & Whitney R-2800",
+    "Pratt & Whitney Double Wasp",
+    "Pratt and Whitney R-2800",
+    "P&W R-2800",
+    "PW R-2800",
+    "普惠R-2800",
+    "R-2800双黄蜂",
+    "普惠R-2800双黄蜂",
+    "R-2800雙黃蜂",
+    "普惠R-2800雙黃蜂",
+    "R-2800 ダブルワスプ",
+    "ダブルワスプ",
+    "ダブル・ワスプ"
+   ],
+   "R-4360 Wasp Major": [
+    "R-4360 Wasp Major",
+    "R-4360",
+    "R4360",
+    "R 4360",
+    "Wasp Major",
+    "Pratt & Whitney R-4360",
+    "Pratt & Whitney Wasp Major",
+    "Pratt and Whitney R-4360",
+    "P&W R-4360",
+    "PW R-4360",
+    "普惠R-4360",
+    "R-4360大黄蜂",
+    "普惠R-4360大黄蜂",
+    "R-4360大黃蜂",
+    "普惠R-4360大黃蜂",
+    "R-4360 ワスプ・メジャー",
+    "ワスプ・メジャー",
+    "ワスプメジャー"
+   ],
+   "R-1830 Twin Wasp": [
+    "R-1830 Twin Wasp",
+    "R-1830",
+    "R1830",
+    "R 1830",
+    "Twin Wasp",
+    "Pratt & Whitney R-1830",
+    "Pratt & Whitney Twin Wasp",
+    "Pratt and Whitney R-1830",
+    "P&W R-1830",
+    "PW R-1830",
+    "普惠R-1830",
+    "R-1830双黄蜂",
+    "普惠R-1830双黄蜂",
+    "R-1830雙黃蜂",
+    "普惠R-1830雙黃蜂",
+    "R-1830 ツインワスプ",
+    "ツインワスプ",
+    "ツイン・ワスプ"
+   ],
+   "R-1340 Wasp": [
+    "R-1340 Wasp",
+    "R-1340",
+    "R1340",
+    "R 1340",
+    "Pratt & Whitney R-1340",
+    "Pratt and Whitney Wasp",
+    "P&W R-1340",
+    "PW R-1340",
+    "普惠R-1340",
+    "R-1340黄蜂",
+    "普惠R-1340黄蜂",
+    "R-1340黃蜂",
+    "普惠R-1340黃蜂",
+    "R-1340 ワスプ"
+   ]
+  },
+  "dropped": {
+   "R-1340 Wasp": [
+    [
+     "Pratt & Whitney Wasp",
+     "matches another option"
+    ]
+   ]
+  }
+ },
+ "s3b2_venetian_cuttlefish_dish": {
+  "options": [
+   "Risotto al nero di seppia",
+   "Seppie in umido",
+   "Spaghetti al nero di seppia",
+   "Cuttlefish with polenta",
+   "seppie al nero"
+  ],
+  "forms": {
+   "Risotto al nero di seppia": [
+    "Risotto al nero di seppia",
+    "risotto al nero",
+    "risotto nero",
+    "black risotto",
+    "squid ink risotto",
+    "cuttlefish ink risotto",
+    "risoto al nero de sepa",
+    "risoto nero",
+    "墨鱼汁烩饭",
+    "墨鱼汁意大利烩饭",
+    "墨魚汁燉飯",
+    "墨魚汁燴飯",
+    "イカスミリゾット",
+    "イカ墨リゾット"
+   ],
+   "Seppie in umido": [
+    "Seppie in umido",
+    "seppie in umido alla veneziana",
+    "stewed cuttlefish",
+    "cuttlefish stew",
+    "sepe in umido",
+    "炖墨鱼",
+    "燉墨魚"
+   ],
+   "Spaghetti al nero di seppia": [
+    "Spaghetti al nero di seppia",
+    "spaghetti al nero",
+    "spaghetti nero di seppia",
+    "spaghetti with cuttlefish ink",
+    "squid ink spaghetti",
+    "cuttlefish ink spaghetti",
+    "black spaghetti",
+    "墨鱼汁意大利面",
+    "墨魚汁意大利麵",
+    "イカスミスパゲッティ",
+    "イカ墨スパゲッティ"
+   ],
+   "Cuttlefish with polenta": [
+    "Cuttlefish with polenta",
+    "seppie con polenta",
+    "seppie col nero e polenta",
+    "seppie al nero con polenta",
+    "polenta e seppie",
+    "sepe co la polenta",
+    "墨鱼配玉米粥",
+    "墨魚配玉米粥"
+   ],
+   "seppie al nero": [
+    "seppie al nero di seppia",
+    "seppie nere",
+    "sepe al nero",
+    "sepe col nero",
+    "cuttlefish in black ink",
+    "cuttlefish in its ink",
+    "cuttlefish in ink sauce",
+    "墨汁烩墨鱼",
+    "墨汁燴墨魚",
+    "イカの墨煮",
+    "イカ墨煮"
+   ]
+  },
+  "dropped": {
+   "Spaghetti al nero di seppia": [
+    [
+     "墨鱼面",
+     "flagged: other"
+    ],
+    [
+     "墨魚麵",
+     "flagged: other"
+    ],
+    [
+     "イカスミパスタ",
+     "flagged: parent"
+    ],
+    [
+     "イカ墨パスタ",
+     "flagged: parent"
+    ]
+   ],
+   "seppie al nero": [
+    [
+     "seppioline al nero",
+     "flagged: sub-member"
+    ],
+    [
+     "seppie al nero",
+     "matches another option"
+    ],
+    [
+     "seppie col nero",
+     "matches another option"
+    ]
+   ]
+  }
+ },
+ "s3b2_okinawan_island_for_awamori": {
+  "options": [
+   "Ishigaki",
+   "Kumejima",
+   "Yonaguni",
+   "Okinawa Island",
+   "miyako"
+  ],
+  "forms": {
+   "Ishigaki": [
+    "Ishigaki",
+    "Ishigaki Island",
+    "Ishigakijima",
+    "Ishigaki-jima",
+    "石垣島",
+    "石垣",
+    "石垣岛"
+   ],
+   "Kumejima": [
+    "Kumejima",
+    "Kume-jima",
+    "Kume Island",
+    "Kume-shima",
+    "Kumeshima",
+    "久米島",
+    "久米岛"
+   ],
+   "Yonaguni": [
+    "Yonaguni",
+    "Yonaguni Island",
+    "Yonagunijima",
+    "Yonaguni-jima",
+    "与那国島",
+    "与那国",
+    "与那国岛",
+    "與那國島",
+    "與那國"
+   ],
+   "Okinawa Island": [
+    "Okinawa Island",
+    "Okinawa Honto",
+    "Okinawa Hontō",
+    "Okinawa Hontou",
+    "Okinawa-honto",
+    "Okinawa main island",
+    "沖縄本島",
+    "沖縄島",
+    "沖绳本岛",
+    "沖绳岛",
+    "沖繩本島",
+    "沖繩島",
+    "冲绳本岛",
+    "冲绳岛"
+   ],
+   "miyako": [
+    "miyako",
+    "Miyako",
+    "Miyako Island",
+    "Miyakojima",
+    "Miyako-jima",
+    "Miyako-shima",
+    "宮古島",
+    "宮古",
+    "宫古岛",
+    "宫古"
+   ]
+  },
+  "dropped": {}
+ },
+ "s2_turkish_yogurt_based_meze": {
+  "options": [
+   "Haydari",
+   "Cacık"
+  ],
+  "forms": {
+   "Haydari": [
+    "Haydari",
+    "HAYDARİ",
+    "Haydarı",
+    "Haidari",
+    "ハイダリ"
+   ],
+   "Cacık": [
+    "Cacık",
+    "Cacik",
+    "CACIK",
+    "Cajik",
+    "Jajik",
+    "ジャジュク",
+    "ジャジュック"
+   ]
+  },
+  "dropped": {}
+ },
+ "s1_species_of_hornbill": {
+  "options": [
+   "Great Hornbill",
+   "Rhinoceros Hornbill",
+   "Wreathed Hornbill",
+   "Southern Ground Hornbill",
+   "Helmeted Hornbill"
+  ],
+  "forms": {
+   "Great Hornbill": [
+    "Great Hornbill",
+    "Great hornbill",
+    "Great Indian Hornbill",
+    "Great Pied Hornbill",
+    "Buceros bicornis",
+    "双角犀鸟",
+    "雙角犀鳥",
+    "オオサイチョウ"
+   ],
+   "Rhinoceros Hornbill": [
+    "Rhinoceros Hornbill",
+    "Rhinoceros hornbill",
+    "Buceros rhinoceros",
+    "马来犀鸟",
+    "馬來犀鳥"
+   ],
+   "Wreathed Hornbill": [
+    "Wreathed Hornbill",
+    "Wreathed hornbill",
+    "Bar-pouched Wreathed Hornbill",
+    "Rhyticeros undulatus",
+    "Aceros undulatus",
+    "花冠皱盔犀鸟",
+    "花冠皺盔犀鳥",
+    "ナミサイチョウ"
+   ],
+   "Southern Ground Hornbill": [
+    "Southern Ground Hornbill",
+    "Southern ground hornbill",
+    "Southern Ground-Hornbill",
+    "Southern ground-hornbill",
+    "Bucorvus leadbeateri",
+    "Bucorvus cafer",
+    "红脸地犀鸟",
+    "紅臉地犀鳥",
+    "南地犀鸟",
+    "南地犀鳥",
+    "ミナミジサイチョウ"
+   ],
+   "Helmeted Hornbill": [
+    "Helmeted Hornbill",
+    "Helmeted hornbill",
+    "Rhinoplax vigil",
+    "Buceros vigil",
+    "オナガサイチョウ"
+   ]
+  },
+  "dropped": {
+   "Rhinoceros Hornbill": [
+    [
+     "サイチョウ",
+     "matches another option"
+    ]
+   ],
+   "Helmeted Hornbill": [
+    [
+     "盔犀鸟",
+     "matches another option"
+    ],
+    [
+     "盔犀鳥",
+     "matches another option"
+    ]
+   ]
+  }
+ },
+ "s3b1_three_ball_juggling_trick": {
+  "options": [
+   "Mills Mess",
+   "Cascade",
+   "Shower",
+   "Columns",
+   "Fountain"
+  ],
+  "forms": {
+   "Mills Mess": [
+    "Mills Mess",
+    "Mill's Mess",
+    "Mills' Mess",
+    "Mills-Mess",
+    "Millsmess",
+    "米尔斯混乱",
+    "米爾斯混亂",
+    "ミルズメス",
+    "ミルズ・メス"
+   ],
+   "Cascade": [
+    "Cascade",
+    "three-ball cascade",
+    "3-ball cascade",
+    "3 ball cascade",
+    "瀑布式",
+    "三球瀑布",
+    "瀑布",
+    "カスケード"
+   ],
+   "Shower": [
+    "Shower",
+    "three-ball shower",
+    "3-ball shower",
+    "3 ball shower",
+    "淋浴式",
+    "シャワー"
+   ],
+   "Columns": [
+    "Columns",
+    "Column",
+    "three-ball columns",
+    "3-ball columns",
+    "3 ball columns",
+    "柱式",
+    "コラム",
+    "コラムス"
+   ],
+   "Fountain": [
+    "Fountain",
+    "three-ball fountain",
+    "3-ball fountain",
+    "喷泉式",
+    "噴泉式",
+    "喷泉",
+    "噴泉",
+    "ファウンテン"
+   ]
+  },
+  "dropped": {
+   "Fountain": [
+    [
+     "噴水",
+     "flagged: generic"
+    ]
+   ]
+  }
+ },
+ "s2_cosmogenic_radionuclide": {
+  "options": [
+   "Beryllium-10",
+   "Carbon-14"
+  ],
+  "forms": {
+   "Beryllium-10": [
+    "Beryllium-10",
+    "beryllium 10",
+    "beryllium10",
+    "Be-10",
+    "Be10",
+    "10Be",
+    "¹⁰Be",
+    "铍-10",
+    "铍10",
+    "鈹-10",
+    "鈹10",
+    "ベリリウム10",
+    "ベリリウム-10"
+   ],
+   "Carbon-14": [
+    "Carbon-14",
+    "carbon 14",
+    "carbon14",
+    "C-14",
+    "C14",
+    "14C",
+    "¹⁴C",
+    "radiocarbon",
+    "radiocarbon-14",
+    "碳-14",
+    "碳14",
+    "碳十四",
+    "放射性碳",
+    "炭素14",
+    "炭素-14",
+    "放射性炭素"
+   ]
+  },
+  "dropped": {}
+ },
+ "s2_pachypleurosaur": {
+  "options": [
+   "Keichousaurus",
+   "Pachypleurosaurus",
+   "Neopachypleurosaurus",
+   "Neuquensuchus",
+   "Neusticosaurus"
+  ],
+  "forms": {
+   "Keichousaurus": [
+    "Keichousaurus",
+    "贵州龙",
+    "貴州龍",
+    "ケイチョウサウルス"
+   ],
+   "Pachypleurosaurus": [
+    "Pachypleurosaurus",
+    "パキプレウロサウルス"
+   ],
+   "Neopachypleurosaurus": [
+    "Neopachypleurosaurus",
+    "新肿肋龙",
+    "新腫肋龍"
+   ],
+   "Neuquensuchus": [
+    "Neuquensuchus"
+   ],
+   "Neusticosaurus": [
+    "Neusticosaurus",
+    "ネウスティコサウルス"
+   ]
+  },
+  "dropped": {
+   "Pachypleurosaurus": [
+    [
+     "肿肋龙",
+     "matches another option"
+    ],
+    [
+     "腫肋龍",
+     "matches another option"
+    ]
+   ]
+  }
+ },
+ "s2_psalmopoeus_species": {
+  "options": [
+   "Psalmopoeus irminia",
+   "Psalmopoeus cambridgei",
+   "psalmopoeus victori"
+  ],
+  "forms": {
+   "Psalmopoeus irminia": [
+    "Psalmopoeus irminia",
+    "P. irminia",
+    "Venezuelan suntiger",
+    "Venezuelan sun tiger",
+    "Venezuelan suntiger tarantula",
+    "suntiger tarantula"
+   ],
+   "Psalmopoeus cambridgei": [
+    "Psalmopoeus cambridgei",
+    "P. cambridgei",
+    "Trinidad chevron",
+    "Trinidad chevron tarantula",
+    "Trinidad olive",
+    "Trinidad olive tarantula",
+    "Trinidad mahogany tarantula",
+    "Trinidad tree spider"
+   ],
+   "psalmopoeus victori": [
+    "psalmopoeus victori",
+    "Psalmopoeus victori",
+    "P. victori"
+   ]
+  },
+  "dropped": {}
+ },
+ "s2_sichuan_chili_pepper_variety": {
+  "options": [
+   "Erjingtiao",
+   "Facing Heaven",
+   "rongjiao",
+   "zhongyuan",
+   "Huajiao"
+  ],
+  "forms": {
+   "Erjingtiao": [
+    "Erjingtiao",
+    "Er Jing Tiao",
+    "Er-jing-tiao",
+    "Erjingtiao chili",
+    "Erjingtiao pepper",
+    "二荆条",
+    "二荆条辣椒",
+    "二荊條",
+    "二荊條辣椒"
+   ],
+   "Facing Heaven": [
+    "Facing Heaven",
+    "Facing Heaven pepper",
+    "Facing Heaven chili",
+    "Facing-Heaven pepper",
+    "Heaven Facing pepper",
+    "Chaotianjiao",
+    "Chao tian jiao",
+    "Chao Tian Jiao",
+    "朝天椒",
+    "朝天辣椒"
+   ],
+   "rongjiao": [
+    "rongjiao",
+    "rong jiao",
+    "rong-jiao"
+   ],
+   "zhongyuan": [
+    "zhongyuan",
+    "zhong yuan",
+    "zhong-yuan"
+   ],
+   "Huajiao": [
+    "Huajiao",
+    "Hua jiao",
+    "Hua-jiao",
+    "Sichuan pepper",
+    "Szechuan pepper",
+    "Szechwan pepper",
+    "Sichuan peppercorn",
+    "Szechuan peppercorn",
+    "Zanthoxylum bungeanum",
+    "花椒",
+    "ホアジャオ"
+   ]
+  },
+  "dropped": {}
+ },
+ "s3b1_north_american_stag_beetle_species": {
+  "options": [
+   "Lucanus elaphus",
+   "Lucanus capreolus",
+   "Phymatodes nitidus",
+   "Lucanus cervus",
+   "Eastern Hercules beetle"
+  ],
+  "forms": {
+   "Lucanus elaphus": [
+    "Lucanus elaphus",
+    "L. elaphus",
+    "giant stag beetle",
+    "エラフスミヤマクワガタ"
+   ],
+   "Lucanus capreolus": [
+    "Lucanus capreolus",
+    "L. capreolus",
+    "reddish-brown stag beetle",
+    "pinching bug",
+    "カプレオルスミヤマクワガタ"
+   ],
+   "Phymatodes nitidus": [
+    "Phymatodes nitidus",
+    "P. nitidus"
+   ],
+   "Lucanus cervus": [
+    "Lucanus cervus",
+    "L. cervus",
+    "European stag beetle",
+    "欧洲深山锹形虫",
+    "歐洲深山鍬形蟲",
+    "ヨーロッパミヤマクワガタ"
+   ],
+   "Eastern Hercules beetle": [
+    "Eastern Hercules beetle",
+    "eastern hercules beetle",
+    "Dynastes tityus",
+    "D. tityus",
+    "ティティウスシロカブト"
+   ]
+  },
+  "dropped": {}
+ },
+ "s3b1_historic_prague_brewpub": {
+  "options": [
+   "U Fleků",
+   "U Medvídků",
+   "Cecilie",
+   "Loredo"
+  ],
+  "forms": {
+   "U Fleků": [
+    "U Fleků",
+    "U Fleku",
+    "U Flekû",
+    "Pivovar U Fleků",
+    "Pivovar U Fleku",
+    "Pivovar a restaurace U Fleků",
+    "ウ・フレク",
+    "ウ・フレクー"
+   ],
+   "U Medvídků": [
+    "U Medvídků",
+    "U Medvidku",
+    "Pivovar U Medvídků",
+    "Pivovar U Medvidku",
+    "At the Little Bears",
+    "ウ・メドヴィードク"
+   ],
+   "Cecilie": [
+    "Cecilie",
+    "Pivovar Cecilie"
+   ],
+   "Loredo": [
+    "Loredo",
+    "Pivovar Loredo"
+   ]
+  },
+  "dropped": {}
+ },
+ "s1_snow_yokai": {
+  "options": [
+   "Yuki-onna",
+   "Nue",
+   "Juki",
+   "Wajirōguzu"
+  ],
+  "forms": {
+   "Yuki-onna": [
+    "Yuki-onna",
+    "Yuki-Onna",
+    "Yukionna",
+    "Yuki onna",
+    "Snow Woman",
+    "雪女",
+    "ゆきおんな",
+    "ユキオンナ"
+   ],
+   "Nue": [
+    "Nue",
+    "ぬえ",
+    "ヌエ"
+   ],
+   "Juki": [
+    "Juki"
+   ],
+   "Wajirōguzu": [
+    "Wajirōguzu",
+    "Wajiroguzu",
+    "Wajirouguzu"
+   ]
+  },
+  "dropped": {
+   "Nue": [
+    [
+     "鵺",
+     "1-char CJK"
+    ],
+    [
+     "䳚",
+     "1-char CJK"
+    ],
+    [
+     "鵼",
+     "1-char CJK"
+    ]
+   ]
+  }
+ },
+ "s1_solid_principle": {
+  "options": [
+   "Single Responsibility Principle",
+   "Interface Segregation Principle",
+   "Open/Closed Principle",
+   "Dependency Inversion Principle",
+   "Liskov Substitution Principle"
+  ],
+  "forms": {
+   "Single Responsibility Principle": [
+    "Single Responsibility Principle",
+    "single responsibility principle",
+    "Single-Responsibility Principle",
+    "SRP",
+    "单一职责原则",
+    "單一職責原則",
+    "单一功能原则",
+    "單一功能原則",
+    "単一責任の原則",
+    "単一責任原則"
+   ],
+   "Interface Segregation Principle": [
+    "Interface Segregation Principle",
+    "interface segregation principle",
+    "ISP",
+    "Interface Segregation",
+    "接口隔离原则",
+    "介面隔離原則",
+    "介面分離原則",
+    "接口隔離原則",
+    "インターフェース分離の原則",
+    "インタフェース分離の原則",
+    "インターフェイス分離の原則",
+    "インターフェース分離原則"
+   ],
+   "Open/Closed Principle": [
+    "Open/Closed Principle",
+    "Open-Closed Principle",
+    "Open Closed Principle",
+    "open/closed principle",
+    "open-closed principle",
+    "OCP",
+    "开闭原则",
+    "開閉原則",
+    "开放封闭原则",
+    "開放封閉原則",
+    "开放-封闭原则",
+    "開放-封閉原則",
+    "開放閉鎖の原則",
+    "オープン・クローズドの原則",
+    "オープンクローズドの原則",
+    "開放/閉鎖原則"
+   ],
+   "Dependency Inversion Principle": [
+    "Dependency Inversion Principle",
+    "dependency inversion principle",
+    "DIP",
+    "Dependency Inversion",
+    "依赖倒置原则",
+    "依赖反转原则",
+    "依賴倒置原則",
+    "依賴反轉原則",
+    "依存性逆転の原則",
+    "依存関係逆転の原則",
+    "依存性逆転原則"
+   ],
+   "Liskov Substitution Principle": [
+    "Liskov Substitution Principle",
+    "liskov substitution principle",
+    "LSP",
+    "Liskov's Substitution Principle",
+    "Liskov Substitution",
+    "里氏替换原则",
+    "里氏替換原則",
+    "里氏代换原则",
+    "里氏代換原則",
+    "黎氏替换原则",
+    "リスコフの置換原則",
+    "リスコフ置換原則"
+   ]
+  },
+  "dropped": {}
+ },
+ "s2_basque_salt_cod_preparation": {
+  "options": [
+   "Bacalao a la Vizcaína",
+   "Bacalao al Pil-Pil",
+   "bacalao al ajoarriero",
+   "Bakailao Pintxos",
+   "Bakailao"
+  ],
+  "forms": {
+   "Bacalao a la Vizcaína": [
+    "Bacalao a la Vizcaína",
+    "bacalao a la vizcaina",
+    "bacalao a la bizkaina",
+    "bacalao vizcaína",
+    "bakailaoa bizkaitar erara",
+    "Biscayan salt cod",
+    "Biscay-style salt cod",
+    "salt cod Biscay style",
+    "バカラオ・ア・ラ・ビスカイナ"
+   ],
+   "Bacalao al Pil-Pil": [
+    "Bacalao al Pil-Pil",
+    "bacalao al pil pil",
+    "bacalao al pilpil",
+    "bacalao pil-pil",
+    "bakailaoa pil-pilean",
+    "bakailao pil-pilean",
+    "cod pil-pil",
+    "salt cod pil-pil",
+    "バカラオ・アル・ピルピル",
+    "バカラオのピルピル"
+   ],
+   "bacalao al ajoarriero": [
+    "bacalao al ajoarriero",
+    "bacalao ajoarriero",
+    "bacalao al ajo arriero",
+    "bacalao ajo arriero",
+    "ajoarriero",
+    "ajo arriero",
+    "bakailaoa ajoarrieroz",
+    "アホアリエロ"
+   ],
+   "Bakailao Pintxos": [
+    "Bakailao Pintxos",
+    "bakailao pintxo",
+    "bakailao pintxoak",
+    "bacalao pintxos",
+    "pintxos de bacalao",
+    "pinchos de bacalao",
+    "salt cod pintxos",
+    "バカラオのピンチョス"
+   ],
+   "Bakailao": [
+    "bakalao"
+   ]
+  },
+  "dropped": {
+   "Bakailao": [
+    [
+     "salt cod",
+     "in visible text"
+    ],
+    [
+     "Bakailao",
+     "matches another option"
+    ],
+    [
+     "bakailaoa",
+     "matches another option"
+    ],
+    [
+     "bacalao",
+     "matches another option"
+    ],
+    [
+     "バカラオ",
+     "matches another option"
+    ]
+   ]
+  }
+ },
+ "s3b2_frikandel_ordering_style": {
+  "options": [
+   "Frikandel speciaal",
+   "broodje frikandel with mayo",
+   "frikandel oorlog",
+   "ketchup and mayo",
+   "Zwarte frikandel met zuur"
+  ],
+  "forms": {
+   "Frikandel speciaal": [
+    "Frikandel speciaal",
+    "frikandel special",
+    "frikandel speciaal",
+    "frikandelle speciaal",
+    "frikadel speciaal",
+    "frikandel spéciaal",
+    "frikandel spesiaal",
+    "speciaaltje"
+   ],
+   "broodje frikandel with mayo": [
+    "broodje frikandel with mayo",
+    "broodje frikandel met mayo",
+    "broodje frikandel met mayonaise",
+    "broodje frikandel with mayonnaise",
+    "frikandelbroodje met mayo",
+    "frikandel sandwich with mayo",
+    "frikandel bun with mayo"
+   ],
+   "frikandel oorlog": [
+    "frikandel oorlog",
+    "frikandel-oorlog",
+    "frikandeloorlog",
+    "frikandel war",
+    "frikandelle oorlog",
+    "frikadel oorlog",
+    "frikandel met oorlog"
+   ],
+   "ketchup and mayo": [
+    "ketchup and mayo",
+    "ketchup & mayo",
+    "ketchup and mayonnaise",
+    "ketchup en mayo",
+    "ketchup en mayonaise",
+    "ketchup-mayo",
+    "mayo and ketchup",
+    "mayo en ketchup",
+    "frikandel met ketchup en mayo",
+    "frikandel with ketchup and mayo"
+   ],
+   "Zwarte frikandel met zuur": [
+    "Zwarte frikandel met zuur",
+    "zwarte frikandel met zuur",
+    "black frikandel with pickles",
+    "black frikandel with zuur",
+    "zwarte frikadel met zuur"
+   ]
+  },
+  "dropped": {
+   "Zwarte frikandel met zuur": [
+    [
+     "zwarte frikandel",
+     "flagged: parent"
+    ]
+   ]
+  }
+ },
+ "s3b2_suppl_variety": {
+  "options": [
+   "Supplì al Telefono",
+   "Carbonara",
+   "saffron risotto and mozzarella",
+   "Ragù",
+   "truffle"
+  ],
+  "forms": {
+   "Supplì al Telefono": [
+    "Supplì al Telefono",
+    "Suppli al Telefono",
+    "supplì al telefono",
+    "suppli al telefono",
+    "supplì telefono",
+    "suppli telefono",
+    "电话线炸饭团",
+    "電話線炸飯糰",
+    "スップリ・アル・テレフォノ"
+   ],
+   "Carbonara": [
+    "Carbonara",
+    "carbonara",
+    "Supplì alla carbonara",
+    "Suppli alla carbonara",
+    "supplì carbonara",
+    "卡邦尼",
+    "卡邦拿",
+    "カルボナーラ"
+   ],
+   "saffron risotto and mozzarella": [
+    "saffron risotto and mozzarella",
+    "saffron risotto & mozzarella",
+    "saffron and mozzarella",
+    "zafferano e mozzarella",
+    "Supplì allo zafferano",
+    "Suppli allo zafferano",
+    "藏红花",
+    "番红花",
+    "藏紅花",
+    "番紅花",
+    "サフラン"
+   ],
+   "Ragù": [
+    "Ragù",
+    "Ragu",
+    "ragù",
+    "ragu",
+    "Supplì al ragù",
+    "Suppli al ragu",
+    "supplì al ragù",
+    "ragout",
+    "肉酱",
+    "肉醬",
+    "ラグー"
+   ],
+   "truffle": [
+    "truffle",
+    "Truffle",
+    "tartufo",
+    "Supplì al tartufo",
+    "Suppli al tartufo",
+    "truffle supplì",
+    "松露",
+    "トリュフ"
+   ]
+  },
+  "dropped": {
+   "Carbonara": [
+    [
+     "培根蛋",
+     "flagged: other"
+    ]
+   ]
+  }
+ },
+ "s2_relative_of_the_gamma_function": {
+  "options": [
+   "Digamma function",
+   "Beta function",
+   "Upper incomplete gamma function",
+   "Euler's reflection formula",
+   "Riemann zeta function"
+  ],
+  "forms": {
+   "Digamma function": [
+    "Digamma function",
+    "digamma function",
+    "digamma",
+    "di-gamma function",
+    "psi function",
+    "ψ function",
+    "ψ(x)",
+    "双伽马函数",
+    "双伽玛函数",
+    "digamma函数",
+    "ψ函数",
+    "雙伽馬函數",
+    "雙伽瑪函數",
+    "digamma函數",
+    "ψ函數",
+    "ディガンマ関数",
+    "ディガンマ函数"
+   ],
+   "Beta function": [
+    "Beta function",
+    "beta function",
+    "Euler beta function",
+    "Euler integral of the first kind",
+    "B(x,y)",
+    "Β function",
+    "贝塔函数",
+    "Β函数",
+    "B函数",
+    "第一类欧拉积分",
+    "貝塔函數",
+    "Β函數",
+    "B函數",
+    "第一類歐拉積分",
+    "ベータ関数",
+    "ベータ函数",
+    "第一種オイラー積分"
+   ],
+   "Upper incomplete gamma function": [
+    "Upper incomplete gamma function",
+    "upper incomplete gamma function",
+    "upper incomplete Γ function",
+    "complementary incomplete gamma function",
+    "Γ(s,x)",
+    "Γ(a,x)",
+    "上不完全伽马函数",
+    "上不完全伽玛函数",
+    "上不完全Γ函数",
+    "上不完全伽瑪函數",
+    "上不完全伽馬函數",
+    "上不完全Γ函數",
+    "上側不完全ガンマ関数",
+    "上側不完全ガンマ函数"
+   ],
+   "Euler's reflection formula": [
+    "Euler's reflection formula",
+    "Euler reflection formula",
+    "Euler's reflection formula for the gamma function",
+    "reflection formula for the gamma function",
+    "gamma function reflection formula",
+    "欧拉反射公式",
+    "余元公式",
+    "伽马函数余元公式",
+    "歐拉反射公式",
+    "餘元公式",
+    "伽瑪函數餘元公式",
+    "オイラーの反射公式",
+    "ガンマ関数の相反公式",
+    "オイラーの相反公式"
+   ],
+   "Riemann zeta function": [
+    "Riemann zeta function",
+    "Riemann ζ function",
+    "Riemann's zeta function",
+    "Euler–Riemann zeta function",
+    "Euler-Riemann zeta function",
+    "ζ(s)",
+    "黎曼ζ函数",
+    "黎曼zeta函数",
+    "黎曼泽塔函数",
+    "黎曼ζ函數",
+    "黎曼zeta函數",
+    "黎曼澤塔函數",
+    "リーマンゼータ関数",
+    "リーマンのゼータ関数",
+    "リーマンゼータ函数"
+   ]
+  },
+  "dropped": {}
+ },
+ "s2_mortlach_expression": {
+  "options": [
+   "Mortlach 16",
+   "Mortlach 1992",
+   "mortlach 2001 g&m vintage reserve",
+   "mortlach 25",
+   "Mortlach 18"
+  ],
+  "forms": {
+   "Mortlach 16": [
+    "Mortlach 16",
+    "Mortlach 16 Year Old",
+    "Mortlach 16 Years Old",
+    "Mortlach 16yo",
+    "Mortlach 16 yo",
+    "Mortlach 16-year-old",
+    "Mortlach 16 Distiller's Dram",
+    "慕赫 16年",
+    "慕赫16年",
+    "モートラック 16年",
+    "モートラック16年"
+   ],
+   "Mortlach 1992": [
+    "Mortlach 1992",
+    "Mortlach 1992 vintage",
+    "慕赫 1992",
+    "慕赫1992",
+    "モートラック 1992",
+    "モートラック1992"
+   ],
+   "mortlach 2001 g&m vintage reserve": [
+    "mortlach 2001 g&m vintage reserve",
+    "Mortlach 2001 Gordon & MacPhail Vintage Reserve",
+    "Mortlach 2001 Gordon and MacPhail Vintage Reserve",
+    "Mortlach 2001 G&M Reserve",
+    "Gordon & MacPhail Mortlach 2001 Vintage Reserve",
+    "G&M Mortlach 2001 Reserve"
+   ],
+   "mortlach 25": [
+    "mortlach 25",
+    "Mortlach 25 Year Old",
+    "Mortlach 25 Years Old",
+    "Mortlach 25yo",
+    "Mortlach 25 yo",
+    "Mortlach 25-year-old",
+    "慕赫 25年",
+    "慕赫25年",
+    "モートラック 25年",
+    "モートラック25年"
+   ],
+   "Mortlach 18": [
+    "Mortlach 18",
+    "Mortlach 18 Year Old",
+    "Mortlach 18 Years Old",
+    "Mortlach 18yo",
+    "Mortlach 18 yo",
+    "Mortlach 18-year-old",
+    "慕赫 18年",
+    "慕赫18年",
+    "モートラック 18年",
+    "モートラック18年"
+   ]
+  },
+  "dropped": {}
+ },
+ "s3b2_chinese_green_tea_kill_green_method": {
+  "options": [
+   "Pan-firing",
+   "Longjing",
+   "gongfu brewing"
+  ],
+  "forms": {
+   "Pan-firing": [
+    "Pan-firing",
+    "pan-firing",
+    "pan firing",
+    "panfiring",
+    "pan-fired",
+    "pan fired",
+    "pan-fry kill-green",
+    "wok-firing",
+    "wok firing",
+    "chaoqing",
+    "chao qing",
+    "炒青",
+    "锅炒杀青",
+    "炒青杀青",
+    "鍋炒殺青",
+    "炒青殺青",
+    "釜炒り",
+    "釜炒",
+    "kamairi"
+   ],
+   "Longjing": [
+    "Longjing",
+    "Long Jing",
+    "Longjing tea",
+    "Lung Ching",
+    "Lungching",
+    "Lung Ching tea",
+    "Dragon Well",
+    "Dragonwell",
+    "Dragon Well tea",
+    "龙井",
+    "龙井茶",
+    "龍井",
+    "龍井茶",
+    "ロンジン茶",
+    "ロンジン"
+   ],
+   "gongfu brewing": [
+    "gongfu brewing",
+    "gong fu brewing",
+    "gongfu cha",
+    "gong fu cha",
+    "gongfu tea",
+    "kung fu tea",
+    "kungfu tea",
+    "kung fu cha",
+    "kung fu brewing",
+    "kungfu brewing",
+    "功夫茶",
+    "工夫茶",
+    "功夫泡法",
+    "工夫泡法",
+    "功夫茶艺",
+    "功夫茶藝",
+    "コンフーチャ"
+   ]
+  },
+  "dropped": {}
+ },
+ "s2_format_preserving_encryption_mode": {
+  "options": [
+   "FF1",
+   "FFX",
+   "NN3",
+   "FFX-AEAD",
+   "XSalsa20-Poly1305"
+  ],
+  "forms": {
+   "FF1": [
+    "FF1",
+    "FF-1",
+    "FF 1",
+    "FF1 mode",
+    "NIST FF1",
+    "FF1模式",
+    "FF1 模式"
+   ],
+   "FFX": [
+    "FFX mode",
+    "Format-preserving Feistel-based encryption",
+    "Format-Preserving, Feistel-based Encryption",
+    "FFX模式",
+    "FFX 模式"
+   ],
+   "NN3": [
+    "NN3",
+    "NN-3",
+    "NN 3"
+   ],
+   "FFX-AEAD": [
+    "FFX-AEAD",
+    "FFX AEAD",
+    "FFX/AEAD"
+   ],
+   "XSalsa20-Poly1305": [
+    "XSalsa20-Poly1305",
+    "XSalsa20Poly1305",
+    "XSalsa20 Poly1305",
+    "XSalsa20/Poly1305",
+    "xsalsa20poly1305",
+    "xsalsa20-poly1305"
+   ]
+  },
+  "dropped": {
+   "XSalsa20-Poly1305": [
+    [
+     "crypto_secretbox_xsalsa20poly1305",
+     "flagged: other"
+    ]
+   ],
+   "FFX": [
+    [
+     "FFX",
+     "matches another option"
+    ]
+   ]
+  }
+ },
+ "s3b1_czech_beer_strength_category_by_legal_cl": {
+  "options": [
+   "lehké",
+   "Ležák",
+   "čerpané",
+   "Výčepní",
+   "nealkoholické"
+  ],
+  "forms": {
+   "lehké": [
+    "lehké",
+    "lehke",
+    "lehké pivo",
+    "lehke pivo"
+   ],
+   "Ležák": [
+    "Ležák",
+    "Lezak",
+    "ležák",
+    "lezak",
+    "ležákové pivo",
+    "lezakove pivo"
+   ],
+   "čerpané": [
+    "čerpané",
+    "cerpane",
+    "čerpané pivo",
+    "cerpane pivo"
+   ],
+   "Výčepní": [
+    "Výčepní",
+    "Vycepni",
+    "výčepní",
+    "vycepni",
+    "výčepní pivo",
+    "vycepni pivo"
+   ],
+   "nealkoholické": [
+    "nealkoholické",
+    "nealkoholicke",
+    "nealkoholické pivo",
+    "nealkoholicke pivo",
+    "nealko",
+    "nealko pivo"
+   ]
+  },
+  "dropped": {
+   "Výčepní": [
+    [
+     "výčepák",
+     "flagged: other"
+    ],
+    [
+     "vycepak",
+     "flagged: other"
+    ]
+   ]
+  }
+ },
+ "s1_note_value": {
+  "options": [
+   "Eighth note",
+   "Quarter note",
+   "dotted eighth note",
+   "Sixteenth note"
+  ],
+  "forms": {
+   "Eighth note": [
+    "1/8 note"
+   ],
+   "Quarter note": [
+    "Quarter note",
+    "quarter note",
+    "quarter-note",
+    "crotchet",
+    "1/4 note",
+    "四分音符"
+   ],
+   "dotted eighth note": [
+    "dotted eighth note",
+    "dotted eighth",
+    "dotted 8th note",
+    "dotted quaver",
+    "附点八分音符",
+    "附點八分音符",
+    "付点八分音符"
+   ],
+   "Sixteenth note": [
+    "Sixteenth note",
+    "sixteenth note",
+    "sixteenth-note",
+    "16th note",
+    "semiquaver",
+    "1/16 note",
+    "十六分音符"
+   ]
+  },
+  "dropped": {
+   "Eighth note": [
+    [
+     "Eighth note",
+     "matches another option"
+    ],
+    [
+     "eighth note",
+     "matches another option"
+    ],
+    [
+     "eighth-note",
+     "matches another option"
+    ],
+    [
+     "8th note",
+     "matches another option"
+    ],
+    [
+     "quaver",
+     "matches another option"
+    ],
+    [
+     "八分音符",
+     "matches another option"
+    ]
+   ]
+  }
+ },
+ "s2_tetraopes_species": {
+  "options": [
+   "Tetraopes tetrophthalmus",
+   "tetraopes femoratus",
+   "Tetraopes tetraopes",
+   "Tetraopes tetrotax",
+   "Tetraopes texanus"
+  ],
+  "forms": {
+   "Tetraopes tetrophthalmus": [
+    "Tetraopes tetrophthalmus",
+    "T. tetrophthalmus",
+    "Tetraopes tetraophthalmus",
+    "red milkweed beetle",
+    "red milkweed borer"
+   ],
+   "tetraopes femoratus": [
+    "tetraopes femoratus",
+    "Tetraopes femoratus",
+    "T. femoratus",
+    "red-femured milkweed borer"
+   ],
+   "Tetraopes tetraopes": [
+    "Tetraopes tetraopes",
+    "T. tetraopes"
+   ],
+   "Tetraopes tetrotax": [
+    "Tetraopes tetrotax",
+    "T. tetrotax"
+   ],
+   "Tetraopes texanus": [
+    "Tetraopes texanus",
+    "T. texanus"
+   ]
+  },
+  "dropped": {}
+ },
+ "s3b2_bordeaux_vintage_of_the_2000s": {
+  "options": [
+   "2005",
+   "2009"
+  ],
+  "forms": {
+   "2005": [
+    "2005",
+    "'05",
+    "2005 vintage",
+    "vintage 2005",
+    "2005 Bordeaux",
+    "Bordeaux 2005",
+    "2005 Bordeaux vintage",
+    "millésime 2005",
+    "Bordeaux millésime 2005",
+    "2005年",
+    "2005年份",
+    "2005年份波尔多",
+    "2005年波尔多",
+    "波尔多2005",
+    "2005年份波爾多",
+    "2005年波爾多",
+    "波爾多2005",
+    "2005年ボルドー",
+    "ボルドー2005",
+    "2005年ヴィンテージ",
+    "2005ヴィンテージ"
+   ],
+   "2009": [
+    "2009",
+    "'09",
+    "2009 vintage",
+    "vintage 2009",
+    "2009 Bordeaux",
+    "Bordeaux 2009",
+    "2009 Bordeaux vintage",
+    "millésime 2009",
+    "Bordeaux millésime 2009",
+    "2009年",
+    "2009年份",
+    "2009年份波尔多",
+    "2009年波尔多",
+    "波尔多2009",
+    "2009年份波爾多",
+    "2009年波爾多",
+    "波爾多2009",
+    "2009年ボルドー",
+    "ボルドー2009",
+    "2009年ヴィンテージ",
+    "2009ヴィンテージ"
+   ]
+  },
+  "dropped": {}
+ },
+ "s3b1_ripemd_variant": {
+  "options": [
+   "RIPEMD-160",
+   "RIPEMD-320",
+   "RIPEMD",
+   "RIPEMD-256"
+  ],
+  "forms": {
+   "RIPEMD-160": [
+    "RIPEMD-160",
+    "RIPEMD160",
+    "RIPEMD 160",
+    "RipeMD-160",
+    "ripemd160",
+    "RMD160",
+    "RMD-160"
+   ],
+   "RIPEMD-320": [
+    "RIPEMD-320",
+    "RIPEMD320",
+    "RIPEMD 320",
+    "RipeMD-320",
+    "ripemd320",
+    "RMD320",
+    "RMD-320"
+   ],
+   "RIPEMD": [
+    "RIPE-MD",
+    "RIPE Message Digest",
+    "RACE Integrity Primitives Evaluation Message Digest"
+   ],
+   "RIPEMD-256": [
+    "RIPEMD-256",
+    "RIPEMD256",
+    "RIPEMD 256",
+    "RipeMD-256",
+    "ripemd256",
+    "RMD256",
+    "RMD-256"
+   ]
+  },
+  "dropped": {
+   "RIPEMD": [
+    [
+     "RIPEMD",
+     "in visible text"
+    ],
+    [
+     "RipeMD",
+     "in visible text"
+    ],
+    [
+     "RIPEMD-128",
+     "flagged: other"
+    ],
+    [
+     "RIPEMD128",
+     "flagged: other"
+    ]
+   ]
+  }
+ },
+ "s3b2_garaetteok_dish": {
+  "options": [
+   "Tteokbokki",
+   "Japchae",
+   "Garaetteok jeon",
+   "Gamjatang",
+   "Garaetteok-tang"
+  ],
+  "forms": {
+   "Tteokbokki": [
+    "Tteokbokki",
+    "Tteok-bokki",
+    "Ddeokbokki",
+    "Dukbokki",
+    "Topokki",
+    "Toppokki",
+    "Tteokbokgi",
+    "떡볶이",
+    "辣炒年糕",
+    "トッポッキ",
+    "トッポギ"
+   ],
+   "Japchae": [
+    "Japchae",
+    "Jabchae",
+    "Chapchae",
+    "Chap chae",
+    "Jap chae",
+    "잡채",
+    "杂菜",
+    "韩式杂菜",
+    "雜菜",
+    "韓式雜菜",
+    "チャプチェ"
+   ],
+   "Garaetteok jeon": [
+    "Garaetteok jeon",
+    "Garaetteok-jeon",
+    "Garaetteokjeon",
+    "Karaetteok jeon",
+    "가래떡전"
+   ],
+   "Gamjatang": [
+    "Gamjatang",
+    "Gamja-tang",
+    "Gamja tang",
+    "Kamjatang",
+    "감자탕",
+    "土豆排骨汤",
+    "脊骨土豆汤",
+    "猪骨土豆汤",
+    "馬鈴薯排骨湯",
+    "豬骨馬鈴薯湯",
+    "カムジャタン"
+   ],
+   "Garaetteok-tang": [
+    "Garaetteok-tang",
+    "Garaetteok tang",
+    "Garaetteoktang",
+    "가래떡탕"
+   ]
+  },
+  "dropped": {
+   "Tteokbokki": [
+    [
+     "炒年糕",
+     "flagged: parent"
+    ]
+   ]
+  }
+ },
+ "s3b2_jalmenus_species": {
+  "options": [
+   "Jalmenus evagoras",
+   "Jalmenus goldilockii",
+   "Jalmenus icilius",
+   "Vibidia angustula"
+  ],
+  "forms": {
+   "Jalmenus evagoras": [
+    "Jalmenus evagoras",
+    "J. evagoras",
+    "imperial hairstreak",
+    "imperial blue",
+    "common imperial blue"
+   ],
+   "Jalmenus goldilockii": [
+    "Jalmenus goldilockii",
+    "J. goldilockii"
+   ],
+   "Jalmenus icilius": [
+    "Jalmenus icilius",
+    "J. icilius",
+    "amethyst hairstreak",
+    "icilius blue"
+   ],
+   "Vibidia angustula": [
+    "Vibidia angustula",
+    "V. angustula"
+   ]
+  },
+  "dropped": {}
+ },
+ "s3b2_armenian_winery": {
+  "options": [
+   "Zorah",
+   "Ararat",
+   "Karas",
+   "Armas Estate",
+   "Armenian Wine Company"
+  ],
+  "forms": {
+   "Zorah": [
+    "Zorah",
+    "Zorah Wines",
+    "Zorah Winery",
+    "Zorah Wine",
+    "Զորահ"
+   ],
+   "Ararat": [
+    "Ararat",
+    "Ararat Winery",
+    "Ararat Wine Factory",
+    "Ararat Wine-Brandy-Vodka Factory",
+    "Արարատ",
+    "阿拉拉特",
+    "アララト"
+   ],
+   "Karas": [
+    "Karas",
+    "Karas Wines",
+    "Karas Winery",
+    "Կարաս"
+   ],
+   "Armas Estate": [
+    "Armas Estate",
+    "Armas",
+    "Armas Winery",
+    "Armas Wines",
+    "Armas Estate Winery",
+    "Արմաս"
+   ],
+   "Armenian Wine Company": [
+    "Armenian Wine Company",
+    "Armenian Wine Co.",
+    "Armenia Wine",
+    "Armenia Wine Company",
+    "Armenia Wine Factory",
+    "Արմենիա Վայն"
+   ]
+  },
+  "dropped": {}
+ },
+ "s3b2_skateboard_flip_trick": {
+  "options": [
+   "Kickflip",
+   "Tre flip",
+   "Frontside flip",
+   "Frontside 180 ollie",
+   "Hardflip"
+  ],
+  "forms": {
+   "Kickflip": [
+    "Kick flip",
+    "Kick-flip",
+    "Magic flip",
+    "踢翻"
+   ],
+   "Tre flip": [
+    "Tre flip",
+    "Tre-flip",
+    "Treflip",
+    "Trey flip",
+    "Tray flip",
+    "360 flip",
+    "360 kickflip",
+    "Three-sixty flip",
+    "3 flip",
+    "360flip",
+    "360翻板",
+    "360尖翻",
+    "大乱",
+    "大亂",
+    "360フリップ",
+    "スリーシックスティフリップ",
+    "トレフリップ"
+   ],
+   "Frontside flip": [
+    "Frontside flip",
+    "Frontside kickflip",
+    "FS flip",
+    "FS kickflip",
+    "Frontside 180 kickflip",
+    "Frontside 180 flip",
+    "正面尖翻",
+    "正面180尖翻",
+    "フロントサイドフリップ",
+    "フロントフリップ",
+    "フロントサイドキックフリップ"
+   ],
+   "Frontside 180 ollie": [
+    "Frontside 180 ollie",
+    "Frontside one-eighty",
+    "FS 180",
+    "FS180",
+    "FS 180 ollie",
+    "F/S 180",
+    "正面180度",
+    "正面180豚跳",
+    "フロントサイド180",
+    "フロントサイドワンエイティ",
+    "フロント180",
+    "フロントワンエイティ",
+    "フロントサイド180オーリー"
+   ],
+   "Hardflip": [
+    "Hardflip",
+    "Hard flip",
+    "Hard-flip",
+    "硬翻",
+    "ハードフリップ"
+   ]
+  },
+  "dropped": {
+   "Kickflip": [
+    [
+     "Kickflip",
+     "matches another option"
+    ],
+    [
+     "尖翻",
+     "matches another option"
+    ],
+    [
+     "キックフリップ",
+     "matches another option"
+    ]
+   ],
+   "Frontside 180 ollie": [
+    [
+     "Frontside 180",
+     "matches another option"
+    ],
+    [
+     "正面180",
+     "matches another option"
+    ]
+   ]
+  }
+ },
+ "s2_belionota_species": {
+  "options": [
+   "Belionota sumptuosa",
+   "Belionota elongata",
+   "Belionota basalis",
+   "Belionota propinqua",
+   "Belionota aurora"
+  ],
+  "forms": {
+   "Belionota sumptuosa": [
+    "Belionota sumptuosa",
+    "B. sumptuosa"
+   ],
+   "Belionota elongata": [
+    "Belionota elongata",
+    "B. elongata"
+   ],
+   "Belionota basalis": [
+    "Belionota basalis",
+    "B. basalis"
+   ],
+   "Belionota propinqua": [
+    "Belionota propinqua",
+    "B. propinqua"
+   ],
+   "Belionota aurora": [
+    "Belionota aurora",
+    "B. aurora"
+   ]
+  },
+  "dropped": {}
+ },
+ "s2_peruvian_street_food": {
+  "options": [
+   "Anticuchos",
+   "Ceviche",
+   "Causa"
+  ],
+  "forms": {
+   "Anticuchos": [
+    "Anticuchos",
+    "Anticucho",
+    "anticuchos",
+    "anticucho",
+    "アンティクーチョ",
+    "アンティクチョ"
+   ],
+   "Ceviche": [
+    "Ceviche",
+    "ceviche",
+    "Cebiche",
+    "cebiche",
+    "Seviche",
+    "seviche",
+    "Sebiche",
+    "sebiche",
+    "酸橘汁腌鱼",
+    "塞维切",
+    "酸橘汁醃魚",
+    "塞維切",
+    "セビーチェ",
+    "セビチェ"
+   ],
+   "Causa": [
+    "Causa",
+    "causa",
+    "Causa limeña",
+    "causa limeña",
+    "Causa limena",
+    "カウサ"
+   ]
+  },
+  "dropped": {}
+ },
+ "s2_map_grid_reference_system": {
+  "options": [
+   "MGRS",
+   "UTM",
+   "British National Grid"
+  ],
+  "forms": {
+   "MGRS": [
+    "MGRS",
+    "Military Grid Reference System",
+    "Military Grid Reference System (MGRS)",
+    "军事格网参考系统",
+    "军事网格参考系统",
+    "军用网格参考系统",
+    "軍事格網參考系統",
+    "軍事網格參考系統",
+    "軍用グリッド参照系",
+    "軍事グリッド参照系",
+    "MGRS座標"
+   ],
+   "UTM": [
+    "UTM",
+    "Universal Transverse Mercator",
+    "Universal Transverse Mercator coordinate system",
+    "UTM coordinate system",
+    "UTM grid",
+    "UTM projection",
+    "通用横轴墨卡托投影",
+    "通用横墨卡托投影",
+    "通用横轴墨卡托坐标系",
+    "UTM坐标系",
+    "UTM投影",
+    "通用橫軸墨卡托投影",
+    "通用橫麥卡托投影",
+    "通用橫軸麥卡托投影",
+    "UTM座標系",
+    "ユニバーサル横メルカトル図法",
+    "ユニバーサル横メルカトル座標系",
+    "UTM図法"
+   ],
+   "British National Grid": [
+    "British National Grid",
+    "BNG",
+    "Ordnance Survey National Grid",
+    "OS National Grid",
+    "OSGB National Grid",
+    "National Grid (Great Britain)",
+    "British national grid reference system",
+    "OSGB36 National Grid",
+    "英国国家格网",
+    "英国国家网格",
+    "英國國家格網",
+    "英國國家網格",
+    "英国国家グリッド",
+    "イギリス国家グリッド"
+   ]
+  },
+  "dropped": {
+   "British National Grid": [
+    [
+     "ナショナルグリッド",
+     "flagged: generic"
+    ]
+   ]
+  }
+ },
+ "s2_polish_soup": {
+  "options": [
+   "Żurek",
+   "Barszcz",
+   "Zupa pomidorowa"
+  ],
+  "forms": {
+   "Żurek": [
+    "Żurek",
+    "Zurek",
+    "żurek",
+    "zurek",
+    "Żur",
+    "Zur",
+    "żur",
+    "zhurek",
+    "sour rye soup",
+    "Polish sour rye soup",
+    "酸黑麦汤",
+    "酸黑麥湯",
+    "ジュレック",
+    "ジューレック",
+    "ジュレク"
+   ],
+   "Barszcz": [
+    "Barszcz",
+    "barszcz",
+    "barszcz czerwony",
+    "barshch",
+    "Polish borscht",
+    "Polish borsch",
+    "Polish beetroot soup",
+    "波兰红菜汤",
+    "波蘭紅菜湯",
+    "バルシチ",
+    "バルシュチ"
+   ],
+   "Zupa pomidorowa": [
+    "Zupa pomidorowa",
+    "zupa pomidorowa",
+    "pomidorowa",
+    "pomidorówka",
+    "pomidorowka",
+    "Polish tomato soup"
+   ]
+  },
+  "dropped": {}
+ },
+ "s2_dactylioceras_species": {
+  "options": [
+   "Dactylioceras commune",
+   "Dactylioceras ammonitoides",
+   "dactylioceras latus",
+   "Dactylioceras simile",
+   "dactylioceras athleticum"
+  ],
+  "forms": {
+   "Dactylioceras commune": [
+    "Dactylioceras commune",
+    "D. commune",
+    "Ammonites communis"
+   ],
+   "Dactylioceras ammonitoides": [
+    "Dactylioceras ammonitoides",
+    "D. ammonitoides"
+   ],
+   "dactylioceras latus": [
+    "dactylioceras latus",
+    "Dactylioceras latus",
+    "D. latus"
+   ],
+   "Dactylioceras simile": [
+    "Dactylioceras simile",
+    "D. simile"
+   ],
+   "dactylioceras athleticum": [
+    "dactylioceras athleticum",
+    "Dactylioceras athleticum",
+    "D. athleticum"
+   ]
+  },
+  "dropped": {}
+ },
+ "s3b2_ranzania_species": {
+  "options": [
+   "ranzania japonica",
+   "Ranzania ternata",
+   "Ranzania laevipes",
+   "Ranzania laevis",
+   "Ranzania jacksoni"
+  ],
+  "forms": {
+   "ranzania japonica": [
+    "ranzania japonica",
+    "Ranzania japonica",
+    "R. japonica",
+    "Podophyllum japonicum",
+    "トガクシソウ",
+    "トガクシショウマ",
+    "戸隠草",
+    "戸隠升麻"
+   ],
+   "Ranzania ternata": [
+    "Ranzania ternata",
+    "R. ternata"
+   ],
+   "Ranzania laevipes": [
+    "Ranzania laevipes",
+    "R. laevipes"
+   ],
+   "Ranzania laevis": [
+    "Ranzania laevis",
+    "R. laevis",
+    "slender sunfish",
+    "slender mola",
+    "Ranzania truncata",
+    "矛尾翻车鲀",
+    "矛尾翻車魨",
+    "クサビフグ"
+   ],
+   "Ranzania jacksoni": [
+    "Ranzania jacksoni",
+    "R. jacksoni"
+   ]
+  },
+  "dropped": {}
+ },
+ "s3b2_puli_coat_color": {
+  "options": [
+   "Black",
+   "Gold",
+   "Gray",
+   "White",
+   "pinto"
+  ],
+  "forms": {
+   "Black": [
+    "Black",
+    "黑色",
+    "ブラック",
+    "黒色"
+   ],
+   "Gold": [
+    "Gold",
+    "Golden",
+    "金色",
+    "金黄色",
+    "金黃色",
+    "ゴールド"
+   ],
+   "Gray": [
+    "Gray",
+    "Grey",
+    "灰色",
+    "グレー",
+    "グレイ"
+   ],
+   "White": [
+    "White",
+    "白色",
+    "ホワイト"
+   ],
+   "pinto": [
+    "pinto",
+    "Pinto",
+    "花斑色",
+    "花斑",
+    "ピント"
+   ]
+  },
+  "dropped": {
+   "Black": [
+    [
+     "黑",
+     "1-char CJK"
+    ],
+    [
+     "黒",
+     "1-char CJK"
+    ]
+   ],
+   "Gray": [
+    [
+     "灰",
+     "1-char CJK"
+    ]
+   ],
+   "White": [
+    [
+     "白",
+     "1-char CJK"
+    ]
+   ]
+  }
+ },
+ "s2_chinese_paphiopedilum_species": {
+  "options": [
+   "Paphiopedilum armeniacum",
+   "Paphiopedilum micranthum",
+   "Paphiopedilum delenatii",
+   "Paphiopedilum appletonianum",
+   "Paphiopedilum victoria-regina"
+  ],
+  "forms": {
+   "Paphiopedilum armeniacum": [
+    "Paphiopedilum armeniacum",
+    "Paph. armeniacum",
+    "P. armeniacum",
+    "golden slipper orchid",
+    "apricot paphiopedilum",
+    "杏黄兜兰",
+    "杏黃兜蘭",
+    "パフィオペディルム・アルメニアカム"
+   ],
+   "Paphiopedilum micranthum": [
+    "Paphiopedilum micranthum",
+    "Paph. micranthum",
+    "P. micranthum",
+    "silver slipper orchid",
+    "hard-leaved pocket orchid",
+    "硬叶兜兰",
+    "硬葉兜蘭",
+    "パフィオペディルム・ミクランサム",
+    "パフィオペディルム・ミクランツム"
+   ],
+   "Paphiopedilum delenatii": [
+    "Paphiopedilum delenatii",
+    "Paph. delenatii",
+    "P. delenatii",
+    "Delenat's paphiopedilum",
+    "德氏兜兰",
+    "德氏兜蘭",
+    "パフィオペディルム・デレナティー",
+    "パフィオペディルム・デレナティ"
+   ],
+   "Paphiopedilum appletonianum": [
+    "Paphiopedilum appletonianum",
+    "Paph. appletonianum",
+    "P. appletonianum",
+    "Appleton's paphiopedilum",
+    "卷萼兜兰",
+    "捲萼兜蘭",
+    "卷萼兜蘭",
+    "パフィオペディルム・アップルトニアナム"
+   ],
+   "Paphiopedilum victoria-regina": [
+    "Paphiopedilum victoria-regina",
+    "Paphiopedilum victoria regina",
+    "Paphiopedilum victoriaregina",
+    "Paph. victoria-regina",
+    "P. victoria-regina",
+    "Paphiopedilum chamberlainianum",
+    "Paph. chamberlainianum",
+    "维多利亚女王兜兰",
+    "維多利亞女王兜蘭",
+    "パフィオペディルム・ビクトリアレジナ"
+   ]
+  },
+  "dropped": {}
+ },
+ "s3b1_hokkaido_regional_ramen_style": {
+  "options": [
+   "Sapporo Miso Ramen",
+   "Misoyaki Ramen"
+  ],
+  "forms": {
+   "Sapporo Miso Ramen": [
+    "Sapporo Miso Ramen",
+    "Sapporo miso ramen",
+    "Sapporo-style miso ramen",
+    "Sapporo style miso ramen",
+    "Sapporo misō ramen",
+    "札幌味噌ラーメン",
+    "札幌みそラーメン",
+    "札幌ミソラーメン",
+    "札幌味噌拉面",
+    "札幌味噌拉麵"
+   ],
+   "Misoyaki Ramen": [
+    "Misoyaki Ramen",
+    "Misoyaki ramen",
+    "Miso-yaki ramen",
+    "Miso yaki ramen",
+    "味噌焼きラーメン",
+    "みそ焼きラーメン",
+    "味噌焼ラーメン"
+   ]
+  },
+  "dropped": {}
+ },
+ "s1_named_theoretical_endgame_position": {
+  "options": [
+   "Saavedra Position",
+   "Lucena Position",
+   "Immortal Zugzwang",
+   "Bilguer's Position",
+   "King and Pawn vs King"
+  ],
+  "forms": {
+   "Saavedra Position": [
+    "Saavedra Position",
+    "Saavedra position",
+    "Saavedra study",
+    "the Saavedra",
+    "萨维德拉局面",
+    "薩維德拉局面",
+    "サアベドラ・ポジション"
+   ],
+   "Lucena Position": [
+    "Lucena Position",
+    "Lucena position",
+    "Lucena's position",
+    "the Lucena",
+    "卢塞纳局面",
+    "卢塞纳位置",
+    "盧塞納局面",
+    "盧塞納位置",
+    "ルセナ・ポジション",
+    "ルセナポジション"
+   ],
+   "Immortal Zugzwang": [
+    "Immortal Zugzwang",
+    "Immortal Zugzwang Game",
+    "Immortal Zugzwang game"
+   ],
+   "Bilguer's Position": [
+    "Bilguer's Position",
+    "Bilguer position",
+    "von Bilguer's position",
+    "von Bilguer position"
+   ],
+   "King and Pawn vs King": [
+    "King and Pawn vs King",
+    "King and pawn versus king",
+    "king and pawn against king",
+    "KPK",
+    "KPvK",
+    "KP vs K",
+    "K+P vs K",
+    "K+P v K",
+    "王兵对王",
+    "王兵对单王",
+    "王兵對王",
+    "王兵對單王",
+    "キングとポーン対キング"
+   ]
+  },
+  "dropped": {}
+ },
+ "s3b1_somerset_origin_cider_apple_variety": {
+  "options": [
+   "Kingston Black",
+   "Dymock Pear",
+   "Dabinett",
+   "Yarlington Mill",
+   "Hoaredstock"
+  ],
+  "forms": {
+   "Kingston Black": [
+    "Kingston Black",
+    "Kingston Black apple",
+    "Black Taunton",
+    "Taunton Black",
+    "キングストン・ブラック",
+    "キングストンブラック"
+   ],
+   "Dymock Pear": [
+    "Dymock Pear",
+    "Dymock pear apple"
+   ],
+   "Dabinett": [
+    "Dabinett",
+    "Dabinett apple",
+    "Dabinette",
+    "ダビネット"
+   ],
+   "Yarlington Mill": [
+    "Yarlington Mill",
+    "Yarlington Mill apple",
+    "ヤーリントン・ミル",
+    "ヤーリントンミル"
+   ],
+   "Hoaredstock": [
+    "Hoaredstock",
+    "Hoared Stock",
+    "Hoaredstock apple"
+   ]
+  },
+  "dropped": {
+   "Yarlington Mill": [
+    [
+     "Yarlington",
+     "flagged: other"
+    ]
+   ]
+  }
+ },
+ "s3b2_armenian_pastry": {
+  "options": [
+   "Gata",
+   "Boreg",
+   "Baklava",
+   "Ghapama",
+   "Lavash"
+  ],
+  "forms": {
+   "Gata": [
+    "Gata",
+    "gata",
+    "Gatah",
+    "Katah",
+    "Kata",
+    "գաթա"
+   ],
+   "Boreg": [
+    "Boreg",
+    "boreg",
+    "Beoreg",
+    "Boereg",
+    "Börek",
+    "Borek",
+    "Burek",
+    "Byorek",
+    "բորեկ",
+    "ボレキ",
+    "ブレク"
+   ],
+   "Baklava": [
+    "Baklava",
+    "baklava",
+    "Baklawa",
+    "Baklavah",
+    "Paklava",
+    "Pakhlava",
+    "պախլավա",
+    "果仁蜜饼",
+    "果仁蜜餅",
+    "巴克拉瓦",
+    "バクラヴァ",
+    "バクラバ"
+   ],
+   "Ghapama": [
+    "Ghapama",
+    "ghapama",
+    "Ghapamah",
+    "ղափամա"
+   ],
+   "Lavash": [
+    "Lavash",
+    "lavash",
+    "Lavaş",
+    "Lavosh",
+    "Lawash",
+    "լավաշ",
+    "拉瓦什",
+    "ラヴァシュ",
+    "ラバシュ"
+   ]
+  },
+  "dropped": {
+   "Ghapama": [
+    [
+     "Kapama",
+     "flagged: other"
+    ]
+   ]
+  }
+ },
+ "s3b1_bread_base_for_sm_rrebr_d": {
+  "options": [
+   "Rye bread (rugbrød)",
+   "Rye crispbread"
+  ],
+  "forms": {
+   "Rye bread (rugbrød)": [
+    "Rye bread (rugbrød)",
+    "rye bread",
+    "rugbrød",
+    "rugbrod",
+    "rugbroed",
+    "rugbröd",
+    "Danish rye bread",
+    "Danish rugbrød",
+    "黑麦面包",
+    "丹麦黑麦面包",
+    "黑麥麵包",
+    "丹麥黑麥麵包",
+    "ライ麦パン",
+    "ライむぎパン",
+    "ルグブロ",
+    "ルグブロー"
+   ],
+   "Rye crispbread": [
+    "Rye crispbread",
+    "rye crispbread",
+    "rye crisp bread",
+    "rye crisp",
+    "rye crispbreads",
+    "黑麦脆饼",
+    "黑麦脆面包",
+    "黑麥脆餅",
+    "黑麥脆麵包",
+    "ライ麦クラッカー"
+   ]
+  },
+  "dropped": {
+   "Rye crispbread": [
+    [
+     "knäckebröd",
+     "flagged: parent"
+    ],
+    [
+     "knackebrod",
+     "flagged: parent"
+    ],
+    [
+     "knaeckebroed",
+     "flagged: parent"
+    ],
+    [
+     "knækbrød",
+     "flagged: parent"
+    ],
+    [
+     "knaekbroed",
+     "flagged: parent"
+    ],
+    [
+     "knaekbrod",
+     "flagged: parent"
+    ],
+    [
+     "knekkebrød",
+     "flagged: parent"
+    ],
+    [
+     "クネッケ",
+     "flagged: parent"
+    ],
+    [
+     "クネッケブロート",
+     "flagged: parent"
+    ]
+   ]
+  }
+ },
+ "s2_spiral_pasta_shape": {
+  "options": [
+   "Fusilli",
+   "Rotini",
+   "Rigatoni"
+  ],
+  "forms": {
+   "Fusilli": [
+    "Fusilli",
+    "fusilli",
+    "fusili",
+    "螺旋面",
+    "螺丝面",
+    "螺旋麵",
+    "螺絲麵",
+    "フジッリ",
+    "フジッリー",
+    "フズィッリ"
+   ],
+   "Rotini": [
+    "Rotini",
+    "rotini",
+    "ロティーニ"
+   ],
+   "Rigatoni": [
+    "Rigatoni",
+    "rigatoni",
+    "水管面",
+    "粗管面",
+    "水管麵",
+    "粗管麵",
+    "リガトーニ",
+    "リガトーニー"
+   ]
+  },
+  "dropped": {}
+ },
+ "s1_programming_paradigm": {
+  "options": [
+   "Functional",
+   "Object-Oriented"
+  ],
+  "forms": {
+   "Functional": [
+    "Functional",
+    "functional",
+    "Functional programming",
+    "functional programming",
+    "函数式",
+    "函数式编程",
+    "函数式程序设计",
+    "函數式",
+    "函數式編程",
+    "函數式程式設計",
+    "函數程式設計",
+    "関数型",
+    "関数型プログラミング"
+   ],
+   "Object-Oriented": [
+    "Object-Oriented",
+    "Object Oriented",
+    "object-oriented",
+    "object oriented",
+    "Object-Oriented Programming",
+    "object-oriented programming",
+    "OOP",
+    "面向对象",
+    "面向对象编程",
+    "面向对象程序设计",
+    "面向對象",
+    "物件導向",
+    "物件導向程式設計",
+    "物件導向編程",
+    "オブジェクト指向",
+    "オブジェクト指向プログラミング"
+   ]
+  },
+  "dropped": {
+   "Functional": [
+    [
+     "FP",
+     "short"
+    ],
+    [
+     "関数型言語",
+     "flagged: other"
+    ]
+   ],
+   "Object-Oriented": [
+    [
+     "OO",
+     "short"
+    ]
+   ]
+  }
+ },
+ "s3b2_prime_focus_corrector_design": {
+  "options": [
+   "Wynne Corrector",
+   "Maksutov Corrector",
+   "Schmidt Corrector",
+   "Wynne-Rosinov Corrector",
+   "Ritchey-Chrétien"
+  ],
+  "forms": {
+   "Wynne Corrector": [
+    "Wynne Corrector",
+    "Wynne corrector",
+    "Wynne triplet",
+    "Wynne triplet corrector",
+    "温尼改正镜",
+    "ウィン補正レンズ"
+   ],
+   "Maksutov Corrector": [
+    "Maksutov Corrector",
+    "Maksutov corrector",
+    "Maksutov meniscus",
+    "Maksutov meniscus corrector",
+    "Maksutov corrector lens",
+    "马克苏托夫改正镜",
+    "马克苏托夫弯月透镜",
+    "馬克蘇托夫改正鏡",
+    "マクストフ補正レンズ",
+    "マクストフメニスカス"
+   ],
+   "Schmidt Corrector": [
+    "Schmidt Corrector",
+    "Schmidt corrector",
+    "Schmidt corrector plate",
+    "Schmidt plate",
+    "Schmidt correcting plate",
+    "施密特改正镜",
+    "施密特改正板",
+    "施密特校正板",
+    "施密特改正鏡",
+    "シュミット補正板",
+    "シュミット補正レンズ"
+   ],
+   "Wynne-Rosinov Corrector": [
+    "Wynne-Rosinov Corrector",
+    "Wynne–Rosinov corrector",
+    "Wynne Rosinov corrector"
+   ],
+   "Ritchey-Chrétien": [
+    "Ritchey-Chrétien",
+    "Ritchey-Chretien",
+    "Ritchey–Chrétien",
+    "Ritchey Chretien",
+    "R-C",
+    "RCT",
+    "里奇-克雷蒂安",
+    "里奇-克莱琴",
+    "RC望远镜",
+    "里奇-克萊琴",
+    "リッチー・クレチアン",
+    "リッチー・クレティアン"
+   ]
+  },
+  "dropped": {
+   "Wynne-Rosinov Corrector": [
+    [
+     "Rosin-Wynne corrector",
+     "flagged: other"
+    ],
+    [
+     "Wynne-Rosin corrector",
+     "flagged: other"
+    ]
+   ],
+   "Ritchey-Chrétien": [
+    [
+     "RC",
+     "short"
+    ]
+   ]
+  }
+ },
+ "s1_digital_signature_scheme": {
+  "options": [
+   "Ed25519",
+   "rsa",
+   "EdDSA",
+   "ECDSA"
+  ],
+  "forms": {
+   "Ed25519": [
+    "Ed25519",
+    "ed25519",
+    "Ed-25519",
+    "Ed25519签名",
+    "Ed25519簽章",
+    "Ed25519署名"
+   ],
+   "rsa": [
+    "rsa",
+    "RSA",
+    "Rivest–Shamir–Adleman",
+    "Rivest-Shamir-Adleman",
+    "RSA signature",
+    "RSA signature scheme",
+    "RSA digital signature",
+    "RSA算法",
+    "RSA加密算法",
+    "RSA签名",
+    "RSA数字签名",
+    "RSA演算法",
+    "RSA加密演算法",
+    "RSA簽章",
+    "RSA數位簽章",
+    "RSA簽名",
+    "RSA暗号",
+    "RSA署名"
+   ],
+   "EdDSA": [
+    "EdDSA",
+    "Edwards-curve Digital Signature Algorithm",
+    "Edwards curve DSA",
+    "爱德华兹曲线数字签名算法",
+    "愛德華茲曲線數位簽章演算法",
+    "愛德華茲曲線數字簽名算法",
+    "エドワーズ曲線デジタル署名アルゴリズム"
+   ],
+   "ECDSA": [
+    "ECDSA",
+    "EC-DSA",
+    "Elliptic Curve Digital Signature Algorithm",
+    "Elliptic Curve DSA",
+    "椭圆曲线数字签名算法",
+    "椭圆曲线数位签章演算法",
+    "橢圓曲線數位簽章演算法",
+    "橢圓曲線數字簽名算法",
+    "楕円曲線DSA",
+    "楕円曲線デジタル署名アルゴリズム"
+   ]
+  },
+  "dropped": {}
+ },
+ "s1_famous_named_historical_chess_game": {
+  "options": [
+   "Immortal Game",
+   "Game of the Century",
+   "evergreen game",
+   "Opera Game",
+   "kasparovs immortal"
+  ],
+  "forms": {
+   "Immortal Game": [
+    "The Immortal Game",
+    "Immortal Partie",
+    "Anderssen vs Kieseritzky 1851",
+    "Anderssen–Kieseritzky 1851",
+    "不朽的对局",
+    "不朽的對局",
+    "不滅の一局"
+   ],
+   "Game of the Century": [
+    "Game of the Century",
+    "The Game of the Century",
+    "Byrne vs Fischer 1956",
+    "Byrne–Fischer 1956",
+    "D. Byrne vs Fischer",
+    "世纪之局",
+    "世紀之局",
+    "世纪对局",
+    "世紀對局",
+    "世紀の一局"
+   ],
+   "evergreen game": [
+    "evergreen game",
+    "Evergreen Game",
+    "The Evergreen Game",
+    "Evergreen Partie",
+    "Anderssen vs Dufresne 1852",
+    "Anderssen–Dufresne 1852",
+    "常青之局",
+    "常青对局",
+    "常青對局"
+   ],
+   "Opera Game": [
+    "Opera Game",
+    "The Opera Game",
+    "Opera House Game",
+    "Morphy's Opera Game",
+    "Morphy vs Duke of Brunswick and Count Isouard",
+    "Morphy vs Duke Karl and Count Isouard 1858",
+    "歌剧院之局",
+    "歌劇院之局",
+    "歌剧院对局",
+    "歌劇院對局",
+    "オペラ座の一局"
+   ],
+   "kasparovs immortal": [
+    "kasparovs immortal",
+    "Kasparov's Immortal",
+    "Kasparovs Immortal",
+    "Kasparov's Immortal Game",
+    "Kasparov vs Topalov 1999",
+    "Kasparov–Topalov, Wijk aan Zee 1999",
+    "卡斯帕罗夫的不朽之局",
+    "卡斯帕羅夫的不朽之局"
+   ]
+  },
+  "dropped": {
+   "Immortal Game": [
+    [
+     "Immortal Game",
+     "matches another option"
+    ],
+    [
+     "不朽之局",
+     "matches another option"
+    ]
+   ]
+  }
+ },
+ "s1_washed_rind_cheese": {
+  "options": [
+   "Époisses",
+   "Taleggio",
+   "Murazzano",
+   "Brillat-Savarin",
+   "Pont-l'Évêque"
+  ],
+  "forms": {
+   "Époisses": [
+    "Époisses",
+    "Epoisses",
+    "Époisses de Bourgogne",
+    "Epoisses de Bourgogne",
+    "Époisses cheese",
+    "Epoisses cheese",
+    "埃普瓦斯",
+    "埃普瓦斯奶酪",
+    "埃普瓦斯芝士",
+    "埃普瓦斯起司",
+    "埃普瓦斯乳酪",
+    "エポワス",
+    "エポワス・ド・ブルゴーニュ"
+   ],
+   "Taleggio": [
+    "Taleggio",
+    "Taleggio cheese",
+    "Taleggio DOP",
+    "Taleggio PDO",
+    "塔雷吉欧",
+    "塔雷吉欧奶酪",
+    "塔雷吉欧芝士",
+    "塔雷吉奥奶酪",
+    "塔莱焦奶酪",
+    "塔雷吉歐",
+    "塔雷吉歐起司",
+    "塔雷吉歐乳酪",
+    "タレッジョ",
+    "タレッジオ"
+   ],
+   "Murazzano": [
+    "Murazzano",
+    "Murazzano DOP",
+    "Murazzano PDO",
+    "Murazzano cheese",
+    "穆拉扎诺奶酪",
+    "穆拉扎諾起司",
+    "ムラッツァーノ"
+   ],
+   "Brillat-Savarin": [
+    "Brillat-Savarin",
+    "Brillat Savarin",
+    "Brillat-Savarin cheese",
+    "布里亚-萨瓦兰",
+    "布里亚萨瓦兰",
+    "布里亚-萨瓦兰奶酪",
+    "布利亚萨瓦兰奶酪",
+    "布里亞-薩瓦蘭",
+    "布里亞薩瓦蘭起司",
+    "ブリア・サヴァラン",
+    "ブリアサヴァラン",
+    "ブリヤ・サヴァラン"
+   ],
+   "Pont-l'Évêque": [
+    "Pont-l'Évêque",
+    "Pont-l'Eveque",
+    "Pont l'Évêque",
+    "Pont l'Eveque",
+    "Pont-l'Évêque cheese",
+    "Pont l'Eveque cheese",
+    "主教桥奶酪",
+    "主教桥",
+    "蓬莱韦克奶酪",
+    "主教橋起司",
+    "主教橋乳酪",
+    "主教橋",
+    "ポン・レヴェック",
+    "ポンレヴェック",
+    "ポン・ル・ヴェック"
+   ]
+  },
+  "dropped": {}
+ },
+ "s2_deilephila_species": {
+  "options": [
+   "Deilephila elpenor",
+   "Deilephila porcellus",
+   "Hippotion celerio"
+  ],
+  "forms": {
+   "Deilephila elpenor": [
+    "Deilephila elpenor",
+    "D. elpenor",
+    "large elephant hawk-moth",
+    "Sphinx elpenor",
+    "红天蛾",
+    "紅天蛾",
+    "ベニスズメ"
+   ],
+   "Deilephila porcellus": [
+    "Deilephila porcellus",
+    "D. porcellus",
+    "small elephant hawk-moth",
+    "small elephant hawkmoth",
+    "small elephant hawk moth",
+    "Sphinx porcellus"
+   ],
+   "Hippotion celerio": [
+    "Hippotion celerio",
+    "H. celerio",
+    "silver-striped hawk-moth",
+    "silver-striped hawkmoth",
+    "silver striped hawk moth",
+    "vine hawk-moth",
+    "vine hawkmoth",
+    "Sphinx celerio",
+    "Choerocampa celerio"
+   ]
+  },
+  "dropped": {
+   "Hippotion celerio": [
+    [
+     "斜纹天蛾",
+     "flagged: other"
+    ],
+    [
+     "斜紋天蛾",
+     "flagged: other"
+    ]
+   ],
+   "Deilephila elpenor": [
+    [
+     "elephant hawk-moth",
+     "matches another option"
+    ],
+    [
+     "elephant hawkmoth",
+     "matches another option"
+    ],
+    [
+     "elephant hawk moth",
+     "matches another option"
+    ]
+   ]
+  }
+ },
+ "s2_peruvian_saltado": {
+  "options": [
+   "Lomo Saltado",
+   "Pollo Saltado"
+  ],
+  "forms": {
+   "Lomo Saltado": [
+    "Lomo Saltado",
+    "lomo saltado",
+    "Lomo saltado",
+    "lomo saltao",
+    "saltado de lomo",
+    "ロモ・サルタード",
+    "ロモサルタード"
+   ],
+   "Pollo Saltado": [
+    "Pollo Saltado",
+    "pollo saltado",
+    "Pollo saltado",
+    "saltado de pollo",
+    "ポジョ・サルタード",
+    "ポジョサルタード",
+    "ポヨ・サルタード"
+   ]
+  },
+  "dropped": {}
+ },
+ "s3b2_protein_for_swahili_pilau": {
+  "options": [
+   "Beef",
+   "Chicken",
+   "Lamb",
+   "Goat"
+  ],
+  "forms": {
+   "Beef": [
+    "Beef",
+    "beef",
+    "beef meat",
+    "nyama ya ng'ombe",
+    "nyama ya ngombe",
+    "牛肉",
+    "ビーフ",
+    "ぎゅうにく",
+    "ギュウニク"
+   ],
+   "Chicken": [
+    "Chicken",
+    "chicken",
+    "chicken meat",
+    "kuku",
+    "nyama ya kuku",
+    "鸡肉",
+    "雞肉",
+    "鶏肉",
+    "チキン",
+    "とりにく",
+    "鳥肉"
+   ],
+   "Lamb": [
+    "Lamb",
+    "lamb",
+    "lamb meat",
+    "nyama ya kondoo",
+    "羔羊肉",
+    "羊羔肉",
+    "小羊肉",
+    "ラム",
+    "ラム肉",
+    "子羊肉",
+    "仔羊肉",
+    "こひつじ肉"
+   ],
+   "Goat": [
+    "Goat",
+    "goat",
+    "goat meat",
+    "chevon",
+    "mutton (goat)",
+    "nyama ya mbuzi",
+    "mbuzi",
+    "山羊肉",
+    "ヤギ肉",
+    "やぎ肉"
+   ]
+  },
+  "dropped": {}
+ },
+ "s2_hindustani_spring_season_raga": {
+  "options": [
+   "Basant",
+   "Bhairavi",
+   "Bahar",
+   "Yaman",
+   "Yaman Kalyan"
+  ],
+  "forms": {
+   "Basant": [
+    "Basant",
+    "Vasant",
+    "Basanth",
+    "Vasanth",
+    "Raag Basant",
+    "Raga Basant",
+    "Rag Basant",
+    "Raag Vasant",
+    "बसंत",
+    "बसन्त",
+    "वसंत",
+    "वसन्त"
+   ],
+   "Bhairavi": [
+    "Bhairavi",
+    "Bhairvi",
+    "Bhairavee",
+    "Raag Bhairavi",
+    "Raga Bhairavi",
+    "Rag Bhairavi",
+    "भैरवी"
+   ],
+   "Bahar": [
+    "Bahar",
+    "Bahaar",
+    "Raag Bahar",
+    "Raga Bahar",
+    "Rag Bahar",
+    "बहार"
+   ],
+   "Yaman": [
+    "Iman",
+    "Rag Yaman"
+   ],
+   "Yaman Kalyan": [
+    "Yaman Kalyan",
+    "Yaman Kalyaan",
+    "Yaman-Kalyan",
+    "Yamankalyan",
+    "Yemen Kalyan",
+    "Eman Kalyan",
+    "Raag Yaman Kalyan",
+    "Raga Yaman Kalyan",
+    "यमन कल्याण"
+   ]
+  },
+  "dropped": {
+   "Yaman": [
+    [
+     "Yaman",
+     "matches another option"
+    ],
+    [
+     "Yemen",
+     "matches another option"
+    ],
+    [
+     "Eman",
+     "matches another option"
+    ],
+    [
+     "Raag Yaman",
+     "matches another option"
+    ],
+    [
+     "Raga Yaman",
+     "matches another option"
+    ],
+    [
+     "यमन",
+     "matches another option"
+    ]
+   ]
+  }
+ },
+ "s1_andean_fruit": {
+  "options": [
+   "Lucuma",
+   "Cherimoya",
+   "Guanabana",
+   "Physalis",
+   "Guayusa"
+  ],
+  "forms": {
+   "Lucuma": [
+    "Lucuma",
+    "lúcuma",
+    "lucmo",
+    "Pouteria lucuma",
+    "路库玛",
+    "路庫瑪",
+    "ルクマ"
+   ],
+   "Cherimoya": [
+    "Cherimoya",
+    "chirimoya",
+    "cherimoyer",
+    "Annona cherimola",
+    "秘鲁番荔枝",
+    "祕魯番荔枝",
+    "秘魯番荔枝",
+    "毛叶番荔枝",
+    "毛葉番荔枝",
+    "チェリモヤ"
+   ],
+   "Guanabana": [
+    "Guanabana",
+    "guanábana",
+    "soursop",
+    "sour sop",
+    "graviola",
+    "Annona muricata",
+    "刺果番荔枝",
+    "红毛榴莲",
+    "紅毛榴槤",
+    "紅毛榴蓮",
+    "トゲバンレイシ",
+    "サワーソップ",
+    "グアナバナ"
+   ],
+   "Physalis": [
+    "Physalis",
+    "Physalis peruviana",
+    "goldenberry",
+    "golden berry",
+    "cape gooseberry",
+    "aguaymanto",
+    "uchuva",
+    "Inca berry",
+    "Peruvian groundcherry",
+    "灯笼果",
+    "燈籠果",
+    "フィサリス",
+    "食用ホオズキ",
+    "ゴールデンベリー",
+    "ケープグーズベリー"
+   ],
+   "Guayusa": [
+    "Guayusa",
+    "wayusa",
+    "Ilex guayusa",
+    "グアユサ"
+   ]
+  },
+  "dropped": {
+   "Physalis": [
+    [
+     "菇娘",
+     "flagged: other"
+    ]
+   ]
+  }
+ },
+ "s2_curve_for_duplicating_the_cube": {
+  "options": [
+   "Cissoid of Diocles",
+   "Quadratrix of Hippias",
+   "Conchoid of Nicomedes",
+   "Viviani's Curve",
+   "Delian Ellipse"
+  ],
+  "forms": {
+   "Cissoid of Diocles": [
+    "Cissoid of Diocles",
+    "cissoid of Diocles",
+    "Diocles' cissoid",
+    "Diocles's cissoid",
+    "Diocles cissoid",
+    "狄奥克莱斯蔓叶线",
+    "狄奧克萊斯蔓葉線",
+    "ディオクレスのシッソイド"
+   ],
+   "Quadratrix of Hippias": [
+    "Quadratrix of Hippias",
+    "quadratrix of Hippias",
+    "Hippias' quadratrix",
+    "Hippias's quadratrix",
+    "trisectrix of Hippias",
+    "Hippias' trisectrix",
+    "quadratrix of Dinostratus",
+    "Dinostratus' quadratrix",
+    "希庇亚斯割圆曲线",
+    "希庇亞斯割圓曲線",
+    "ヒッピアスの円積曲線"
+   ],
+   "Conchoid of Nicomedes": [
+    "Conchoid of Nicomedes",
+    "conchoid of Nicomedes",
+    "Nicomedes' conchoid",
+    "Nicomedes's conchoid",
+    "尼科梅德斯蚌线",
+    "尼科梅德斯蚌線",
+    "ニコメデスのコンコイド"
+   ],
+   "Viviani's Curve": [
+    "Viviani's Curve",
+    "Viviani's curve",
+    "Viviani curve",
+    "Viviani's window",
+    "维维亚尼曲线",
+    "維維亞尼曲線",
+    "ヴィヴィアーニ曲線",
+    "ヴィヴィアーニの曲線"
+   ],
+   "Delian Ellipse": [
+    "Delian Ellipse",
+    "Delian ellipse"
+   ]
+  },
+  "dropped": {
+   "Cissoid of Diocles": [
+    [
+     "cissoid",
+     "flagged: parent"
+    ],
+    [
+     "蔓叶线",
+     "flagged: parent"
+    ],
+    [
+     "蔓葉線",
+     "flagged: parent"
+    ],
+    [
+     "シッソイド",
+     "flagged: parent"
+    ]
+   ],
+   "Quadratrix of Hippias": [
+    [
+     "quadratrix",
+     "flagged: parent"
+    ],
+    [
+     "割圆曲线",
+     "flagged: parent"
+    ],
+    [
+     "割圓曲線",
+     "flagged: parent"
+    ],
+    [
+     "円積曲線",
+     "flagged: parent"
+    ]
+   ],
+   "Conchoid of Nicomedes": [
+    [
+     "conchoid",
+     "flagged: parent"
+    ],
+    [
+     "蚌线",
+     "flagged: parent"
+    ],
+    [
+     "蚌線",
+     "flagged: parent"
+    ],
+    [
+     "コンコイド",
+     "flagged: parent"
+    ]
+   ]
+  }
+ },
+ "s3b2_lesser_antillean_anole_species": {
+  "options": [
+   "Anolis roquet",
+   "Anolis gundlachi",
+   "Anolis extremus",
+   "Anolis marmoratus",
+   "Anolis oculatus"
+  ],
+  "forms": {
+   "Anolis roquet": [
+    "Anolis roquet",
+    "A. roquet",
+    "Martinique anole",
+    "Martinican anole",
+    "Dactyloa roquet"
+   ],
+   "Anolis gundlachi": [
+    "Anolis gundlachi",
+    "A. gundlachi",
+    "yellow-chinned anole",
+    "yellow-chin anole",
+    "Gundlach's anole",
+    "Gundlach's yellow-chinned anole",
+    "Ctenonotus gundlachi"
+   ],
+   "Anolis extremus": [
+    "Anolis extremus",
+    "A. extremus",
+    "Barbados anole",
+    "Barbadian anole",
+    "Dactyloa extrema"
+   ],
+   "Anolis marmoratus": [
+    "Anolis marmoratus",
+    "A. marmoratus",
+    "Guadeloupean anole",
+    "Guadeloupe anole",
+    "marbled anole",
+    "Ctenonotus marmoratus"
+   ],
+   "Anolis oculatus": [
+    "Anolis oculatus",
+    "A. oculatus",
+    "Dominican anole",
+    "Dominica anole",
+    "Ctenonotus oculatus"
+   ]
+  },
+  "dropped": {}
+ },
+ "s2_ceratopsian_from_new_mexico_or_texas": {
+  "options": [
+   "Pentaceratops",
+   "Ojoceratops",
+   "Nasutoceratops",
+   "Torosaurus",
+   "bravoceratops"
+  ],
+  "forms": {
+   "Pentaceratops": [
+    "Pentaceratops",
+    "五角龙",
+    "五角龍",
+    "ペンタケラトプス"
+   ],
+   "Ojoceratops": [
+    "Ojoceratops",
+    "奥霍角龙",
+    "奧霍角龍",
+    "オジョケラトプス"
+   ],
+   "Nasutoceratops": [
+    "Nasutoceratops",
+    "大鼻角龙",
+    "大鼻角龍",
+    "ナストケラトプス"
+   ],
+   "Torosaurus": [
+    "Torosaurus",
+    "牛角龙",
+    "牛角龍",
+    "トロサウルス"
+   ],
+   "bravoceratops": [
+    "bravoceratops",
+    "Bravoceratops",
+    "ブラボケラトプス"
+   ]
+  },
+  "dropped": {}
+ },
+ "s3b1_hyderabadi_biryani_variety": {
+  "options": [
+   "Chicken Dum Biryani",
+   "Dum Biryani",
+   "Kachhi Yakhni Biryani",
+   "Kachchi Gosht Biryani",
+   "mutton biryani"
+  ],
+  "forms": {
+   "Chicken Dum Biryani": [
+    "Chicken Dum Biryani",
+    "chicken dum biryani",
+    "Chicken Dum Biriyani",
+    "Dum Chicken Biryani",
+    "Murgh Dum Biryani",
+    "Chicken Dum Biriani",
+    "チキンダムビリヤニ"
+   ],
+   "Dum Biryani": [
+    "Dum Pukht Biryani",
+    "Dum-Pukht Biryani",
+    "ダム・ビリヤニ"
+   ],
+   "Kachhi Yakhni Biryani": [
+    "Kachhi Yakhni Biryani",
+    "Kachchi Yakhni Biryani",
+    "Kacchi Yakhni Biryani",
+    "Kachi Yakhni Biryani",
+    "Kachhi Yakhni Biriyani",
+    "Kachchi Yakhni Biriyani"
+   ],
+   "Kachchi Gosht Biryani": [
+    "Kachchi Gosht Biryani",
+    "Kachchi Gosht ki Biryani",
+    "Kacchi Gosht Biryani",
+    "Kachhi Gosht Biryani",
+    "Kachi Gosht Biryani",
+    "Kacche Gosht ki Biryani",
+    "Kachche Gosht ki Biryani",
+    "Kachchi Gosht Biriyani"
+   ],
+   "mutton biryani": [
+    "mutton biryani",
+    "Mutton Biryani",
+    "mutton biriyani",
+    "mutton biriani",
+    "mutton briyani",
+    "羊肉印度香饭",
+    "羊肉印度香飯",
+    "マトンビリヤニ",
+    "マトン・ビリヤニ"
+   ]
+  },
+  "dropped": {
+   "Dum Biryani": [
+    [
+     "Dum Biryani",
+     "matches another option"
+    ],
+    [
+     "dum biryani",
+     "matches another option"
+    ],
+    [
+     "Dum Biriyani",
+     "matches another option"
+    ],
+    [
+     "Dum Biriani",
+     "matches another option"
+    ],
+    [
+     "ダムビリヤニ",
+     "matches another option"
+    ]
+   ]
+  }
+ },
+ "s3b2_venezuelan_arepa_filling": {
+  "options": [
+   "Reina Pepiada",
+   "Queso de Mano",
+   "Pabellón",
+   "Queque",
+   "perico"
+  ],
+  "forms": {
+   "Reina Pepiada": [
+    "Reina Pepiada",
+    "reina pepiada",
+    "Reina Pepeada",
+    "reina pepeada",
+    "reina pepiá",
+    "reina pepeá"
+   ],
+   "Queso de Mano": [
+    "Queso de Mano",
+    "queso de mano",
+    "queso e' mano",
+    "queso e mano",
+    "hand cheese"
+   ],
+   "Pabellón": [
+    "Pabellón",
+    "Pabellon",
+    "pabellón",
+    "pabellon",
+    "pabellón criollo",
+    "pabellon criollo",
+    "Pabellón Criollo"
+   ],
+   "Queque": [
+    "Queque",
+    "queque"
+   ],
+   "perico": [
+    "perico",
+    "Perico",
+    "huevos pericos",
+    "huevos perico",
+    "perico venezolano",
+    "Venezuelan perico"
+   ]
+  },
+  "dropped": {}
+ },
+ "s2_rousettinae_genus": {
+  "options": [
+   "Rousettus",
+   "Eonycteris",
+   "pilonycteris",
+   "Pteropus"
+  ],
+  "forms": {
+   "Rousettus": [
+    "Rousettus",
+    "rousettes",
+    "rousette",
+    "rousette fruit bats",
+    "rousette bats",
+    "ルーセットオオコウモリ属"
+   ],
+   "Eonycteris": [
+    "Eonycteris",
+    "dawn bats",
+    "dawn bat",
+    "长舌果蝠属",
+    "長舌果蝠屬"
+   ],
+   "pilonycteris": [
+    "pilonycteris",
+    "Pilonycteris"
+   ],
+   "Pteropus": [
+    "Pteropus",
+    "flying foxes",
+    "flying fox",
+    "狐蝠属",
+    "狐蝠屬"
+   ]
+  },
+  "dropped": {
+   "Rousettus": [
+    [
+     "果蝠属",
+     "matches another option"
+    ],
+    [
+     "果蝠屬",
+     "matches another option"
+    ]
+   ],
+   "Pteropus": [
+    [
+     "オオコウモリ属",
+     "matches another option"
+    ]
+   ]
+  }
  }
 }
