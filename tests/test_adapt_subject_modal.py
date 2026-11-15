@@ -19,6 +19,7 @@ from wsbench.adapt.subjects import DEFAULT_MODAL_APP, SUBJECTS, TEMPLATES, modal
 
 ROOT = Path(__file__).resolve().parents[1]
 GLM53_REV = "e3b8f9f2fad29727dfa95e766c5cac18ea1414bf"
+FLASH_REV = "eb9eb208eb0d988989d07a6a12d0fdeb5f52574a"
 
 
 # ---- Subject fields -> the deployed app ------------------------------------------------------
@@ -58,8 +59,31 @@ def test_kimi_needs_nothing_from_agams_box():
     assert s.revision == "ac6c49f04883bd0a0598b790693a72061c676629"
     assert s.modal_app == "adapt-kimi-k2" and s.modal_gpu == ("B300:8",) and s.modal_tp == 8
     assert dict(s.modal_engine)["trust_remote_code"] is True
-    for key in ("kimi-k2", "glm-5.3"):
+    # plan 0089: the pinned snapshot on its own volume, as kimi-k3 (no ~1 TB hub download)
+    assert (s.modal_volume, s.modal_weights) == (
+        "kimi-k2", "hf/hub/models--moonshotai--Kimi-K2-Instruct-0905/snapshots/"
+        "ac6c49f04883bd0a0598b790693a72061c676629")  # fmt: skip
+    for key in ("kimi-k2", "glm-5.3", "glm-5.3-flash"):
         assert "/workspace/agam" not in repr(SUBJECTS[key]), key
+
+
+def test_glm53_flash_is_built_here():
+    """plan 0089: GLM-5.3-Flash on its own adapt app (vLLM, TP4), tokenizer from the hub at the
+    pinned revision, the pinned thinking-off template (the two edits of GLM-5.3's)."""
+    s = SUBJECTS["glm-5.3-flash"]
+    assert (s.hf_id, s.revision, s.n_layers, s.tokenizer) == (
+        "zai-org/GLM-5.3-Flash", FLASH_REV, 45, "glm5")  # fmt: skip
+    assert s.backend == "modal" and s.modal_built and s.tokenizer_dir is None
+    assert Path(s.chat_template) == TEMPLATES / "glm53_flash_nothink.jinja"
+    text = Path(s.chat_template).read_text()
+    assert "<|assistant|>{{- '<think></think>' -}}" in text
+    assert "in ['low', 'high'] else 'low' -%}" in text and "else 'max'" not in text
+    spec = modal_spec(s)
+    assert spec["app"] == "adapt-glm-5.3-flash"
+    assert spec["gpu"] == ["B200:4", "H200:4"] and spec["tp"] == 4
+    assert (spec["image"], spec["volume"]) == ("default", "glm53-flash")
+    assert spec["weights"].endswith("/eb9eb208eb0d988989d07a6a12d0fdeb5f52574a")
+    assert spec["engine"] == {"language_model_only": True}
 
 
 def test_subject_for_finds_the_registered_subject():
@@ -232,15 +256,18 @@ def test_remote_runner_takes_registered_settings(monkeypatch):
 
 def test_remote_runner_refuses_apps_adapt_modal_does_not_build(monkeypatch):
     """Token ids only reach apps built by scripts/adapt_modal.py: an unregistered model, or a
-    subject on an external text-only app (glm-5.3-flash: Agam's), is refused before any call."""
+    subject on an external text-only app (``modal_built=False``; glm-5.3-flash was one until
+    plan 0089), is refused before any call."""
     with pytest.raises(SystemExit, match="not a registered Subject"):
         _runner(monkeypatch, _Tok(), hf_id="org/unregistered", revision=None)
-    flash = SUBJECTS["glm-5.3-flash"]
-    assert not flash.modal_built
-    with pytest.raises(SystemExit, match=re.escape("adapt-mp-glm-5.3-flash")):
-        _runner(monkeypatch, _Tok(), hf_id=flash.hf_id, revision=flash.revision,
-                modal_app=flash.modal_app)  # fmt: skip
-    assert all(s.modal_built for k, s in SUBJECTS.items() if k != "glm-5.3-flash")
+    ext = subjects.Subject("fake-ext", "org/ext", "Ext", 4, "x", "r9", backend="modal",
+                           modal_app="adapt-mp-external", modal_built=False)  # fmt: skip
+    monkeypatch.setitem(SUBJECTS, ext.key, ext)
+    with pytest.raises(SystemExit, match=re.escape("adapt-mp-external")):
+        _runner(monkeypatch, _Tok(), hf_id=ext.hf_id, revision=ext.revision,
+                modal_app=ext.modal_app)  # fmt: skip
+    # plan 0089: every registered subject is now served by an app adapt_modal.py builds
+    assert all(s.modal_built for k, s in SUBJECTS.items() if k != ext.key)
 
 
 # ---- scripts/adapt_modal.py builds the subject's app (needs the modal package) ---------------
@@ -278,9 +305,42 @@ def test_adapt_modal_script_per_subject(monkeypatch):
     assert kw["tensor_parallel_size"] == 8 and kw["kernel_config"] == {"moe_backend": "marlin"}
 
 
-def test_deploy_refuses_an_external_app(monkeypatch):
+def test_deploy_builds_glm53_flash(monkeypatch):
+    """plan 0089: glm-5.3-flash deploys (it was refused as Agam's external app before); the
+    refusal path is unreachable for registered subjects now (all modal_built)."""
+    f = _load_script(monkeypatch, "glm-5.3-flash")
+    assert f.app.name == "adapt-glm-5.3-flash" and modal_spec(SUBJECTS["glm-5.3-flash"]) == f.SPEC
+    kw = f.engine_kwargs(f.SPEC, "zai-org/GLM-5.3-Flash", "eb9eb208", 8192)
+    assert kw["model"] == "/hf/" + f.SPEC["weights"] and kw["revision"] is None
+    assert kw["tensor_parallel_size"] == 4 and kw["language_model_only"] is True
+    k = _load_script(monkeypatch, "kimi-k2")
+    kw = k.engine_kwargs(k.SPEC, "moonshotai/Kimi-K2-Instruct-0905", "ac6c49f0", 8192)
+    assert kw["model"] == "/hf/" + k.SPEC["weights"] and kw["tensor_parallel_size"] == 8
+
+
+def test_deploy_refuses_an_external_app(monkeypatch, tmp_path):
+    """The deploy script's ``modal_built=False`` refusal, kept covered after plan 0089 left no
+    registered external subject: the script reads subjects.py by path, so it runs from a temp
+    tree whose subjects.py registers one unbuilt subject."""
+    pytest.importorskip("modal")
+    import importlib.util
+    import shutil
+
+    (tmp_path / "scripts").mkdir()
+    shutil.copy(ROOT / "scripts/adapt_modal.py", tmp_path / "scripts/adapt_modal.py")
+    adapt = tmp_path / "src/wsbench/adapt"
+    adapt.mkdir(parents=True)
+    src = (ROOT / "src/wsbench/adapt/subjects.py").read_text()
+    (adapt / "subjects.py").write_text(src + (
+        "\nSUBJECTS['fake-ext'] = Subject('fake-ext', 'org/ext', 'Ext', 4, 'x', 'r9', "
+        "backend='modal', modal_app='adapt-mp-external', modal_built=False)\n"))  # fmt: skip
+    monkeypatch.setenv("ADAPT_SUBJECT", "fake-ext")
+    spec = importlib.util.spec_from_file_location(
+        "_adapt_modal_ext", tmp_path / "scripts/adapt_modal.py"
+    )
+    mod = importlib.util.module_from_spec(spec)
     with pytest.raises(SystemExit, match="modal_built=False"):
-        _load_script(monkeypatch, "glm-5.3-flash")
+        spec.loader.exec_module(mod)
 
 
 class _FakeEngine:
@@ -503,3 +563,41 @@ def test_kimi_hub_tokenizer_round_trips_a_render():
     m = markers(tok)
     assert (m["turn_start"], m["turn_end"]) == ("<|im_user|>", "<|im_end|>")
     assert bos_prefix(tok) == []
+
+
+# ---- glm-5.3-flash from the hub (plan 0089) ----------------------------------------------------
+
+
+def test_glm53_flash_template_is_upstream_at_low_effort_with_think_closed():
+    """The pinned Flash template renders exactly the upstream one at reasoning_effort="low" plus
+    "</think>" (token for token, with and without a system turn), and the step-0 checks pass."""
+    transformers = pytest.importorskip("transformers")
+    from wsbench.adapt.template import bos_prefix, check, markers
+
+    try:
+        load = transformers.AutoTokenizer.from_pretrained
+        ref = load("zai-org/GLM-5.3-Flash", revision=FLASH_REV)
+        tok = load("zai-org/GLM-5.3-Flash", revision=FLASH_REV)
+    except Exception as e:  # offline / no hub access
+        pytest.skip(f"GLM-5.3-Flash tokenizer unavailable: {e!r}")
+    tok.chat_template = (TEMPLATES / "glm53_flash_nothink.jinja").read_text()
+    for u in USERS:
+        for msgs in (
+            [{"role": "user", "content": u}],
+            [{"role": "system", "content": "Be terse."}, {"role": "user", "content": u}],
+        ):
+            up = ref.apply_chat_template(msgs, tokenize=False, add_generation_prompt=True,
+                                         reasoning_effort="low")  # fmt: skip
+            assert up.endswith("<think>"), up[-40:]
+            got = tok.apply_chat_template(msgs, tokenize=False, add_generation_prompt=True,
+                                          enable_thinking=False)  # fmt: skip
+            assert got == up + "</think>", u
+            ids = tok.apply_chat_template(msgs, tokenize=True, add_generation_prompt=True,
+                                          enable_thinking=False)  # fmt: skip
+            ids = list(ids["input_ids"] if hasattr(ids, "keys") else ids)
+            assert tok(got, add_special_tokens=False)["input_ids"] == ids  # RemoteRunner.encode
+    assert check(tok) == []
+    m = markers(tok)
+    assert (m["turn_start"], m["turn_end"]) == ("<|user|>", "<|assistant|>")
+    assert "".join(m["gen_tail"]) == "<think></think>"
+    assert bos_prefix(tok) in ([], [154822, 154824])

@@ -47,9 +47,12 @@ def test_adapted_target_raises_never_lowers():
     assert rf.adapted_target("knowledge_cutoff") == len(kc)
     assert "buggy_code" not in rf.ADAPTED_TARGETS  # plan 0072 D1 keeps its target bank
     assert rf.POLICY["buggy_code"].target == 24
-    # scoped to the ten plan-0075 sets: any other set keeps its registered-size target
+    # scoped to the plan-0075 sets (the ten, plus Agam's five rebuilt under plan 0089): any
+    # other set keeps its registered-size target
     assert rf.adapted_target("basic_readout_mt", brmt, "qwen3.5-4b") == 120
-    assert rf.adapted_target("basic_readout_mt", brmt, "gemma-4-31b-it") == len(brmt)
+    for key in ("gemma-4-31b-it", "glm-5.3-flash", "kimi-k2", "olmo-3.1-32b", "qwen3.6-35b-a3b"):
+        assert rf.adapted_target("basic_readout_mt", brmt, key) == 120, key
+    assert rf.adapted_target("basic_readout_mt", brmt, "some-new-subject") == len(brmt)
 
 
 def test_freeze_and_have_of_use_the_adapted_target(mdir):
@@ -604,7 +607,10 @@ def test_plan_0075_role_bound_rows_are_gated_strict_without_the_env(monkeypatch)
 
 
 def test_guard_is_unchanged_outside_the_ten_sets():
-    other = "gemma-4-31b-it"
+    # any key outside PLAN_0075_SETS (gemma-4-31b-it was the stand-in until plan 0089 added
+    # Agam's five sets, which now take the plan-0075 guard like the ten)
+    other = "some-new-subject"
+    assert rf.guard_problem("poetry", {"status": "untried"}, 80, 100, "gemma-4-31b-it")
     assert rf.guard_problem("typo_mt", {"status": "partial"}, 80, 85, other) is None
     assert rf.guard_problem("poetry", {"status": "untried"}, 80, 100, other) is None
     assert rf.guard_problem("typo_mt", {"status": "untried"}, 80, 85, other)  # as on main

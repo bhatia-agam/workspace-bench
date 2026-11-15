@@ -556,12 +556,15 @@ gw-olens' `adapt_mp_subject_modal.py` / `kimi_wsbench_modal.py` / `subject_*_mod
   over), `modal_image` (recipe `default` | `glm53` | `dsv4` | `muse` (vLLM 0.33.0)),
   `modal_volume` + `modal_weights`,
   `modal_engine` (extra `vllm.LLM` kwargs). Subjects with the default fields share
-  `adapt-subject-llm` (one H200). `modal_built=False` (glm-5.3-flash: Agam's text-only app, not
-  rebuilt per D1) is refused by both the deploy script and `RemoteRunner`.
+  `adapt-subject-llm` (one H200). `modal_built=False` (an external app; none registered since
+  plan 0089 moved glm-5.3-flash onto its own built app) is refused by both the deploy script
+  and `RemoteRunner`.
   Prerequisites: the weights volume exists in the env (`glm53-weights` holding
   `hf/nvidia__GLM-5.3-NVFP4`; `v4-flash`; `v4-pro` and `kimi-k3` holding the pinned snapshot under
-  `hf/hub`; `muse-spark` holding `hf/meta-models__Muse-Spark-Open-816B-A42B-NVFP4`); kimi-k2 has
-  none, so its first load writes ~1 TB into `adapt-hf-cache`. The glm53 image pulls the vLLM fork from a public HF repo (no secret).
+  `hf/hub`; `muse-spark` holding `hf/meta-models__Muse-Spark-Open-816B-A42B-NVFP4`; plan 0089: `kimi-k2`
+  and `glm53-flash` holding the pinned snapshot under `hf/hub`, mounted at the default recipe's
+  `/hf` like `kimi-k3`) (download them once with a CPU function, never in a
+  GPU container). The glm53 image pulls the vLLM fork from a public HF repo (no secret).
   Deploy once per app, from the repo root, with the Modal client venv:
 
   ```bash
@@ -586,8 +589,9 @@ gw-olens' `adapt_mp_subject_modal.py` / `kimi_wsbench_modal.py` / `subject_*_mod
   remote-code tokenizer (`trust_remote_code`, needs `tiktoken`, in the `gpu` extra) with its
   official template as-is: every Kimi render opens with the template's default system turn ("You
   are Kimi, an AI assistant created by Moonshot AI.") unless the ask has its own system message
-  (sets are built fresh, so Agam's earlier renders need not match). `glm-5.3-flash` still points
-  at Agam's `/workspace/agam/hf_tok` (not refreshed, plan 0060 D1).
+  (sets are built fresh, so Agam's earlier renders need not match). `glm-5.3-flash` (plan 0089)
+  loads its tokenizer from the hub at the pinned revision plus the in-repo
+  `data/templates/glm53_flash_nothink.jinja` (GLM-5.3's two edits: effort low, `<think></think>`).
 - The box `Runner` hands vLLM rendered text; `RemoteRunner` sends token ids. For a tokenizer that
   auto-adds a BOS the render already carries, the two backends can differ by that token.
 

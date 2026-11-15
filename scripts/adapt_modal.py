@@ -43,10 +43,10 @@ recipe's ``/hf``: ``modal_weights`` is the hub-cache snapshot dir under it (``hf
 
 Prerequisites: the subject's weights volume exists in the env (``glm53-weights`` with
 ``hf/nvidia__GLM-5.3-NVFP4``; ``v4-flash``; ``v4-pro``, ``kimi-k3`` with the pinned snapshot
-under ``hf/hub``; ``muse-spark``); the glm53 fork tarball comes from a public HF repo
-(no secret). kimi-k2 has no weights volume: its first load downloads ~1 TB into
-``adapt-hf-cache``. A Subject with ``modal_built=False`` (glm-5.3-flash: Agam's text-only app)
-is refused here and by RemoteRunner.
+under ``hf/hub``; ``muse-spark``; plan 0089: ``kimi-k2`` and ``glm53-flash`` with the pinned
+snapshot under ``hf/hub``, mounted at the default recipe's ``/hf`` as ``kimi-k3``); the glm53
+fork tarball comes from a public HF repo (no secret). A Subject with ``modal_built=False`` (an
+external app; none is registered since plan 0089) is refused here and by RemoteRunner.
 
 Deploy (Camila's env; ``MODAL=/root/.cache/cfinf-modal-venv/bin/modal``, from the repo root)::
 
@@ -54,6 +54,7 @@ Deploy (Camila's env; ``MODAL=/root/.cache/cfinf-modal-venv/bin/modal``, from th
     $MODAL deploy scripts/adapt_modal.py                            # adapt-subject-llm (shared)
     ADAPT_SUBJECT=glm-5.3 $MODAL deploy scripts/adapt_modal.py      # adapt-glm-5.3 (B300:8 TP8)
     ADAPT_SUBJECT=kimi-k2 $MODAL deploy scripts/adapt_modal.py      # adapt-kimi-k2 (B300:8 TP8)
+    ADAPT_SUBJECT=glm-5.3-flash $MODAL deploy scripts/adapt_modal.py  # B200:4|H200:4, TP4
     ADAPT_SUBJECT=deepseek-v4-pro $MODAL deploy scripts/adapt_modal.py  # adapt-v4-pro (B300:8 TP8)
     ADAPT_SUBJECT=kimi-k3 $MODAL deploy scripts/adapt_modal.py      # adapt-kimi-k3 (B300:8 TP8)
     ADAPT_SUBJECT=muse-spark-open $MODAL deploy scripts/adapt_modal.py  # B300:8|B200:8, TP8

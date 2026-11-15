@@ -436,8 +436,9 @@ QWEN_TAIL = ["\n", "<|im_start|>", "assistant", "\n", "<think>", "\n\n", "</thin
 CHATML = ("<|im_start|>", "<|im_end|>", 3)
 # pinned: (turn_start, turn_end, header_len, gen_tail, bos_prefix decoded, stop_ids) as the
 # pre-A3 template.py gave them on each subject's own tokenizer (local HF cache, 2026-11-03);
-# check() == [] and system_rule == "marker" on all of them. kimi-k2 / glm-5.3-flash have no
-# local tokenizer here (Agam-only tokenizer_dir): their shapes are pinned by the fakes above.
+# check() == [] and system_rule == "marker" on all of them. kimi-k2 / glm-5.3-flash load from the
+# hub at their pinned revisions (checked in test_adapt_subject_modal.py); their shapes are pinned
+# by the fakes above.
 REAL_EXPECTED = {
     **{k: (*CHATML, QWEN_TAIL, [], [248046])
        for k in ("qwen3.5-0.8b", "qwen3.5-2b", "qwen3.5-4b", "qwen3.5-9b", "qwen3.6-35b-a3b")},

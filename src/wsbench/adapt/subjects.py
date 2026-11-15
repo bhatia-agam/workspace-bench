@@ -170,15 +170,13 @@ SUBJECTS: dict[str, Subject] = {
             backend="modal",
             thinking_mode=True,  # hub template: enable_thinking opens <think>
         ),
-        # normal-bank OLens subjects (>= 32B, 2026-10-23): gated + re-golded on the 27B bank only.
-        # model-parallel HF generation on Modal: gw-olens scripts/ola/port/adapt_mp_subject_modal.py
-        # kimi-k2: the hub tokenizer at the pinned revision (tiktoken remote code; needs the
-        # ``tiktoken`` package, in the gpu extra), no longer Agam's converted
+        # kimi-k2 (rebuilt under plan 0089): the hub tokenizer at the pinned revision (tiktoken
+        # remote code; needs the ``tiktoken`` package, in the gpu extra), no longer Agam's converted
         # /workspace/agam/hf_tok/kimi-k2. Its official hub template is used as-is (no thinking),
         # so EVERY Kimi render opens with the template's default system turn ("You are Kimi, an
         # AI assistant created by Moonshot AI.") unless the ask brings its own system message;
         # sets are built fresh, so this need not match Agam's earlier gate renders. Generation:
-        # our B300:8 at TP8 (plan 0060 D2); the first load writes ~1 TB into adapt-hf-cache.
+        # vLLM on our B300:8 at TP8 (plan 0060 D2), weights from the kimi-k2 volume (as kimi-k3).
         Subject(
             "kimi-k2",
             "moonshotai/Kimi-K2-Instruct-0905",
@@ -191,8 +189,20 @@ SUBJECTS: dict[str, Subject] = {
             trust_remote_code=True,
             modal_gpu=("B300:8",),
             modal_tp=8,
+            # plan 0089: the pinned snapshot (~1.03 TB, block FP8 as shipped) on its own volume,
+            # mounted at the default recipe's /hf (as kimi-k3), so no B300 container downloads it
+            modal_volume="kimi-k2",
+            modal_weights="hf/hub/models--moonshotai--Kimi-K2-Instruct-0905/snapshots/"
+            "ac6c49f04883bd0a0598b790693a72061c676629",
             modal_engine=(("trust_remote_code", True),),
         ),
+        # GLM-5.3-Flash (plan 0089: Agam's set rebuilt): 320B MoE (KDA linear attention + DSA
+        # sparse layers, mHC), ~328 GB FP8 as shipped. vLLM 0.31.0 serves
+        # Glm5NextForConditionalGeneration; text only (language_model_only). Tokenizer from the hub
+        # at the pinned revision; the upstream template always opens <think> at effort max, so the
+        # pinned data/templates/glm53_flash_nothink.jinja makes the same two edits as GLM-5.3's
+        # (effort low, generation prompt <|assistant|><think></think>). Weights on volume
+        # glm53-flash (hub-cache layout under /hf, as kimi-k3), TP4 on B200:4 (H200:4 fallback).
         Subject(
             "glm-5.3-flash",
             "zai-org/GLM-5.3-Flash",
@@ -201,11 +211,14 @@ SUBJECTS: dict[str, Subject] = {
             "glm5",
             "eb9eb208eb0d988989d07a6a12d0fdeb5f52574a",
             backend="modal",
-            modal_app="adapt-mp-glm-5.3-flash",
-            modal_built=False,  # Agam's text-only app; not rebuilt (plan 0060 D1: GLM-5.3 instead)
-            tokenizer_dir="/workspace/agam/hf_tok/glm-5.3-flash",
-            # gw-olens' template: the upstream one always opens <think>
-            chat_template="/workspace/agam/hf_tok/glm-5.3-flash/glm5_chat_nothink.jinja",
+            modal_app="adapt-glm-5.3-flash",
+            chat_template=str(TEMPLATES / "glm53_flash_nothink.jinja"),
+            modal_gpu=("B200:4", "H200:4"),
+            modal_tp=4,
+            modal_volume="glm53-flash",
+            modal_weights="hf/hub/models--zai-org--GLM-5.3-Flash/snapshots/"
+            "eb9eb208eb0d988989d07a6a12d0fdeb5f52574a",
+            modal_engine=(("language_model_only", True),),
             thinking_mode=True,  # the upstream template always opens <think> (see above)
         ),
         # GLM-5.3 non-Flash (plan 0060 D1): the glm53 lens work's checkpoint, 754B MoE, d 6144.

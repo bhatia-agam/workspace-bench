@@ -79,16 +79,18 @@ EXTERNAL: dict[str, str] = {
     "glm53-weights); no-think render = the reasoning_effort=low system line + <think></think> "
     "(global-workspace src/global_workspace/glm53_aff/template.py), which the Subject's "
     "chat_template must reproduce before `job`",
-    "glm-5.3-flash": "zai-org/GLM-5.3-Flash (320B MoE, 45 blocks): Agam's model-parallel app "
-    "(gw-olens adapt_mp_subject_modal.py); not refreshed (plan 0060 D1)",
+    "glm-5.3-flash": "zai-org/GLM-5.3-Flash (320B MoE, 45 blocks, KDA + DSA + mHC residual "
+    "streams): generation runs on adapt-glm-5.3-flash (vLLM, plan 0089), but no multi-GPU "
+    "residual stack exists for introspection",
     "deepseek-v4-flash": "deepseek-ai/DeepSeek-V4-Flash (284B MoE, 43 blocks, 4 mHC residual "
     "streams): global-workspace scripts/v4_flash/common.py load_model; the render is "
     "encode_messages(thinking_mode='chat'), not an HF chat template; the engine must choose "
     "the stream mode (raw 16,384-d flat vs stream sum) and record it. The earlier port under "
     "this rule was NO-GO at blocks 6/8/10 (global-workspace docs/project/experiments/"
     "v4_flash_ar/newfam/introspection.md)",
-    "kimi-k2": "moonshotai/Kimi-K2-Instruct-0905 (1T MoE, 61 blocks): the B300:8 model-parallel "
-    "app (gw-olens adapt_mp_subject_modal.py, Subject.modal_app); tokenizer_dir is Agam-only",
+    "kimi-k2": "moonshotai/Kimi-K2-Instruct-0905 (1T MoE, 61 blocks): generation runs on "
+    "adapt-kimi-k2 (vLLM, B300:8, plan 0089), but no multi-GPU residual stack exists for "
+    "introspection",
     "deepseek-v4-pro": "deepseek-ai/DeepSeek-V4-Pro-0813 (MoE, 61 blocks, V4 architecture): no "
     "HF loader in the repo; the render is V4-Flash's pinned chat-mode template, and the engine "
     "must choose and record the stream mode as V4-Flash's must",
