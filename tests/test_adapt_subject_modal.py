@@ -252,6 +252,23 @@ def test_remote_runner_takes_registered_settings(monkeypatch):
         "fake-plain", "org/plain", "Plain", 4, "x", "r2", backend="modal"))  # fmt: skip
     r, _, loads = _runner(monkeypatch, _Tok(), hf_id="org/plain", revision="r2")
     assert r.replicas == 1 and loads[0][-1] is False
+    assert r.CHUNK == 512  # RemoteRunner.CHUNK unless the Subject sets modal_chunk
+
+
+def test_remote_runner_takes_the_subjects_chunk_and_keeps_each_prompts_seed(monkeypatch):
+    """A padded subject's bigger chunk (V4-Flash: 9,600) makes fewer, larger calls; every
+    prompt keeps the seed it gets with 512-prompt chunks (seed + its global index)."""
+    assert SUBJECTS["deepseek-v4-flash"].modal_chunk == 9600
+    monkeypatch.setitem(SUBJECTS, "fake-big", subjects.Subject(
+        "fake-big", "org/big", "Big", 4, "x", "r3", backend="modal", modal_chunk=1000))  # fmt: skip
+    asks = [Ask(f"i{k}", "surface", ("x",), prompt="p", max_tokens=2) for k in range(1100)]
+    r, log, _ = _runner(monkeypatch, _Tok(), hf_id="org/big", revision="r3", seed=10)
+    r._bos = ""
+    assert r.CHUNK == 1000
+    r.sample(asks, draws=2, temperature=0.7)
+    calls = [c for c in log if c[0] == "sample"]
+    assert [len(c[2][0]) for c in calls] == [1000, 100]
+    assert [c[2][5] for c in calls] == [10, 1010]
 
 
 def test_remote_runner_refuses_apps_adapt_modal_does_not_build(monkeypatch):
@@ -601,3 +618,94 @@ def test_glm53_flash_template_is_upstream_at_low_effort_with_think_closed():
     assert (m["turn_start"], m["turn_end"]) == ("<|user|>", "<|assistant|>")
     assert "".join(m["gen_tail"]) == "<think></think>"
     assert bos_prefix(tok) in ([], [154822, 154824])
+
+
+def _fake_vllm(monkeypatch):
+    """Minimal ``vllm`` stand-ins: SamplingParams / TokensPrompt as plain records."""
+
+    class SamplingParams(types.SimpleNamespace):
+        def __init__(self, **kw):
+            kw.setdefault("max_tokens", 16)
+            super().__init__(**kw)
+
+    vllm = types.ModuleType("vllm")
+    vllm.SamplingParams = SamplingParams
+    inputs = types.ModuleType("vllm.inputs")
+    inputs.TokensPrompt = lambda prompt_token_ids: {"ids": prompt_token_ids}
+    vllm.inputs = inputs
+    monkeypatch.setitem(sys.modules, "vllm", vllm)
+    monkeypatch.setitem(sys.modules, "vllm.inputs", inputs)
+
+
+class _PadLLM:
+    """Records each generate call; answers request i with text ``t<i>`` (or ``garbage``)."""
+
+    def __init__(self, garbage=False):
+        self.calls, self.garbage = [], garbage
+
+    def generate(self, ins, sps, use_tqdm=False):
+        sps = sps if isinstance(sps, list) else [sps] * len(ins)
+        self.calls.append((list(ins), sps))
+        out = []
+        for i, (p, sp) in enumerate(zip(ins, sps, strict=True)):
+            if self.garbage:
+                text = "- 1. 2. 3."
+            elif p["ids"][-1] == 128822:
+                text = " Steven Spielberg"
+            elif p["ids"][-1] == 344:
+                text = " Paris."
+            else:
+                text = f"t{p['ids'][0]}"
+            n = getattr(sp, "n", 1) or 1
+            out.append(types.SimpleNamespace(
+                outputs=[types.SimpleNamespace(text=text, token_ids=[i])] * n))  # fmt: skip
+        return out
+
+
+def test_v4_flash_pads_every_engine_call_and_checks_its_canary(monkeypatch):
+    """DeepSeek-V4-Flash's TP=1 engines: every generate() is wrapped in 300 throwaway requests at
+    the head and the tail (greedy, to the call's longest max_tokens, EOS ignored), only the real
+    outputs come back in order; the canary refuses a broken engine. V4-Pro's spec has no pad."""
+    assert "pad" not in modal_spec(SUBJECTS["deepseek-v4-pro"])
+    assert modal_spec(SUBJECTS["deepseek-v4-flash"])["pad"] == 300
+    assert modal_spec(SUBJECTS["deepseek-v4-flash"])["max_containers"] == 4
+    assert all("max_containers" not in modal_spec(s) for k, s in SUBJECTS.items()
+               if k != "deepseek-v4-flash")  # fmt: skip
+    _fake_vllm(monkeypatch)
+    m = _load_script(monkeypatch, "deepseek-v4-flash")
+    assert m.PAD == 300 and m.SPEC["engines"] == 8
+    assert m._cls_options["max_containers"] == 4
+    llm = _PadLLM()
+    prompts = [[7], [8], [9]]
+    out = m.run_sample(llm, prompts, [5, 9, 3], 2, 0.7, 0.95, 100)
+    assert [g for g, _ in out] == ["t7", "t8", "t9"] and [len(s) for _, s in out] == [2, 2, 2]
+    assert len(llm.calls) == 2
+    for ins, sps in llm.calls:
+        assert len(ins) == 603 and [p["ids"] for p in ins[300:303]] == prompts
+        pads = sps[:300] + sps[303:]
+        assert all(sp.max_tokens == 9 and sp.min_tokens == 9 and sp.ignore_eos for sp in pads)
+        assert all(sp.temperature == 0.0 for sp in pads)
+    assert [sp.seed for sp in llm.calls[1][1][300:303]] == [100, 101, 102]
+    gen = m.run_generate(_PadLLM(), [[4]], 0.0, 7, 1, 1.0, None)
+    assert [g["text"] for g in gen] == ["t4"]
+    assert m.canary(_PadLLM()) == [" Steven Spielberg", " Paris."]
+    with pytest.raises(RuntimeError, match="canary failed"):
+        m.canary(_PadLLM(garbage=True))
+    plain = _load_script(monkeypatch, "deepseek-v4-pro")
+    llm = _PadLLM()
+    assert plain.PAD == 0 and [
+        g for g, _ in plain.run_sample(llm, prompts, [5] * 3, 1, 0.7, 0.95, 0)
+    ] == ["t7", "t8", "t9"]
+    assert all(len(ins) == 3 for ins, _ in llm.calls)
+
+
+def test_spawned_engine_worker_reads_the_baked_spec(monkeypatch):
+    """An engine worker spawned in the container re-imports the script where modal.is_local()
+    is True and the repo is absent: the image's ADAPT_MODAL_SPEC must win over the local path
+    (the V4-Flash 8-engine container crash-looped on /src/wsbench/adapt/subjects.py otherwise)."""
+    baked = modal_spec(SUBJECTS["deepseek-v4-flash"])
+    monkeypatch.setenv("ADAPT_MODAL_SPEC", json.dumps(baked, sort_keys=True))
+    m = _load_script(
+        monkeypatch, ""
+    )  # ADAPT_SUBJECT unset: the local path would give the shared app
+    assert baked == m.SPEC and m.PAD == 300 and m.app.name == "adapt-v4-flash"

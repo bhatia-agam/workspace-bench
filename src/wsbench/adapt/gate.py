@@ -708,6 +708,7 @@ class RemoteRunner(Runner):
         if trust_remote_code is None:
             trust_remote_code = s.trust_remote_code
         self.replicas = replicas or s.modal_replicas
+        self.CHUNK = s.modal_chunk or RemoteRunner.CHUNK  # per-prompt seeds do not depend on it
         self.template_ids = s.template_ids  # Kimi-K3: ids from the template (``prompt_ids``)
         self.hf_id, self.revision, self.seed = hf_id, revision, seed
         self.tok = subjects.load_tokenizer(hf_id, revision, tokenizer_dir, chat_template,

@@ -77,7 +77,12 @@ SPEC_ENV = "ADAPT_MODAL_SPEC"  # the deployed spec, baked into the image for the
 
 def _spec() -> dict:
     """Locally: the spec of ``$ADAPT_SUBJECT`` (or the shared app's), from subjects.py loaded by
-    path (the Modal client venv has no wsbench). In the container: the one baked into the image."""
+    path (the Modal client venv has no wsbench). In the container: the one baked into the image,
+    read from its env var FIRST: an engine worker process spawned inside the container re-imports
+    this module and ``modal.is_local()`` is True there (no Modal runtime in the child), so a
+    local-first check made every multi-engine container crash-loop on a missing subjects.py."""
+    if SPEC_ENV in os.environ:
+        return json.loads(os.environ[SPEC_ENV])
     if not modal.is_local():
         return json.loads(os.environ[SPEC_ENV])
     import importlib.util
@@ -280,6 +285,47 @@ def split(n: int, k: int) -> list[tuple[int, int]]:
     return [(lo, min(n, lo + step)) for lo in range(0, n, step)]
 
 
+PAD = int(SPEC.get("pad", 0))  # Subject.modal_pad: head + tail throwaway requests per call
+# DeepSeek-V4 greedy canary (global-workspace scripts/v4_flash/gen_requests_modal.py CANARY, token
+# ids from V4's own encoder): a broken engine answers "- 1. 2. 3." and must never serve
+V4_CANARY = [
+    ([0, 128803, 18387, 14717, 270, 223, 2254, 23, 5485, 552, 14986, 33, 9361, 418, 1438, 270,
+      2329, 16, 128804, 128822], "Spielberg"),  # <bos><User>Who directed the 1975 film Jaws? ...
+    ([0, 32504, 28, 455, 6102, 294, 8760, 344], "Paris"),  # <bos>Fact: The capital of France is
+]  # fmt: skip
+
+
+def _generate(llm, ins: list, sps):
+    """``llm.generate`` with ``PAD`` throwaway copies of the last canary prompt before AND after
+    the real requests (pads run greedy to the call's longest max_tokens, ignoring EOS, so the
+    batch never drains under the last real request); returns the real outputs only."""
+    if not PAD:
+        return llm.generate(ins, sps, use_tqdm=False)
+    from vllm import SamplingParams
+    from vllm.inputs import TokensPrompt
+
+    real = list(sps) if isinstance(sps, list) else [sps] * len(ins)
+    m = max([sp.max_tokens or 1 for sp in real] or [1])
+    pad_sp = SamplingParams(temperature=0.0, max_tokens=m, min_tokens=m, ignore_eos=True)
+    pad = [TokensPrompt(prompt_token_ids=list(V4_CANARY[-1][0])) for _ in range(PAD)]
+    out = list(llm.generate(pad + list(ins) + pad, [pad_sp] * PAD + real + [pad_sp] * PAD,
+                            use_tqdm=False))  # fmt: skip
+    return out[PAD : PAD + len(ins)]
+
+
+def canary(llm) -> list[str]:
+    """Greedy answers to the V4 canary prompts (padded like every call); raises on a wrong one."""
+    from vllm import SamplingParams
+
+    outs = _generate(llm, _inputs([list(ids) for ids, _ in V4_CANARY]),
+                     SamplingParams(temperature=0.0, max_tokens=12))  # fmt: skip
+    got = [o.outputs[0].text for o in outs]
+    bad = [(want, g) for (_, want), g in zip(V4_CANARY, got, strict=True) if want not in g]
+    if bad:
+        raise RuntimeError(f"broken V4 engine, canary failed: {bad}")
+    return got
+
+
 def run_sample(
     llm, prompts, max_tokens, draws, temperature, top_p, seed, top_k=-1, stop_token_ids=None
 ) -> list:
@@ -290,12 +336,13 @@ def run_sample(
 
     stop = stop_token_ids or None
     ins = _inputs(prompts)
-    g = llm.generate(
+    g = _generate(
+        llm,
         ins,
         [SamplingParams(temperature=0.0, max_tokens=m, stop_token_ids=stop) for m in max_tokens],
-        use_tqdm=False,
     )
-    s = llm.generate(
+    s = _generate(
+        llm,
         ins,
         [
             SamplingParams(
@@ -309,7 +356,6 @@ def run_sample(
             )
             for i, m in enumerate(max_tokens)
         ],
-        use_tqdm=False,
     )
     return [(gi.outputs[0].text, [o.text for o in si.outputs]) for gi, si in zip(g, s, strict=True)]
 
@@ -326,7 +372,7 @@ def run_generate(llm, prompts, temperature, max_tokens, seed, top_p, stop_token_
         seed=seed,
         stop_token_ids=stop_token_ids or None,
     )
-    outs = llm.generate(_inputs(prompts), sp, use_tqdm=False)
+    outs = _generate(llm, _inputs(prompts), sp)
     return [{"text": o.outputs[0].text, "ids": list(o.outputs[0].token_ids)} for o in outs]
 
 
@@ -343,7 +389,7 @@ def run_cont_logprobs(llm, ids: list, starts: list) -> list:
     from vllm import SamplingParams
 
     sp = SamplingParams(temperature=0.0, max_tokens=1, prompt_logprobs=0)
-    outs = llm.generate(_inputs(ids), sp, use_tqdm=False)
+    outs = _generate(llm, _inputs(ids), sp)
     return [
         float(sum(o.prompt_logprobs[i][x[i]].logprob for i in range(max(k, 1), len(x))))
         for o, x, k in zip(outs, ids, starts, strict=True)
@@ -399,6 +445,8 @@ def _engine_worker(gpu: int, kwargs: dict, conn, make=_vllm_engine, run=_vllm_ru
     ``run`` are module-level callables (tests pass CPU fakes; spawn pickles them by name)."""
     os.environ["CUDA_VISIBLE_DEVICES"] = str(gpu)
     llm = make(kwargs)
+    if PAD and make is _vllm_engine:  # a broken V4 engine fails its start (Modal replaces it)
+        print(f"engine {gpu} canary: {canary(llm)}", flush=True)
     conn.send("ready")
     while (msg := conn.recv()) is not None:
         name, args = msg
@@ -508,6 +556,8 @@ volume = modal.Volume.from_name(SPEC["volume"], create_if_missing=SPEC["image"] 
 _cls_options = dict(RECIPE["resources"])
 if SPEC["replicas"] > 1:  # the containers RemoteRunner fans out over
     _cls_options["max_containers"] = SPEC["replicas"]
+if SPEC.get("max_containers"):  # Subject.modal_max_containers: a hard cap on concurrent stages
+    _cls_options["max_containers"] = max(SPEC["max_containers"], SPEC["replicas"])
 
 
 @app.cls(
@@ -535,6 +585,8 @@ class SubjectLLM:
             from vllm import LLM
 
             self.llm = LLM(**kwargs)
+            if PAD:
+                print(f"canary: {canary(self.llm)}", flush=True)
         if not SPEC["weights"]:  # a first load cached the hub weights on the volume
             volume.commit()
 

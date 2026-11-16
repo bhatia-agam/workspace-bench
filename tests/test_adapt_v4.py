@@ -23,7 +23,7 @@ from pathlib import Path
 import pytest
 
 from wsbench.adapt import template
-from wsbench.adapt.subjects import SUBJECTS, TEMPLATES, remap_layer
+from wsbench.adapt.subjects import SUBJECTS, TEMPLATES, remap_layer, remap_layers
 from wsbench.registry import frozen_bank_path
 
 V4 = SUBJECTS["deepseek-v4-flash"]
@@ -148,10 +148,10 @@ def test_v4_subject_pins():
     assert V4.modal_app == "adapt-v4-flash" and V4.tokenizer_dir is None
     assert Path(V4.chat_template) == TEMPLATES / "deepseek_v4_chat.jinja"
     assert Path(V4.chat_template).is_file()
-    # J-lens std-n1000 rows 0..40 = blocks 0..40; row 41 (identity anchor) and L42 never read
-    assert V4.read_band == tuple(range(41))
-    assert remap_layer(63, 43, V4.read_band) == 40 and remap_layer(60, 43, V4.read_band) == 40
-    assert remap_layer(56, 43, V4.read_band) == 38 and remap_layer(0, 43, V4.read_band) == 0
+    # Camila's multilayer O-lens layers (s3don 15..42:3 + 26): one lens layer per grid layer
+    assert V4.read_band == (15, 18, 21, 24, 26, 27, 30, 33, 36, 39, 42)
+    assert remap_layer(63, 43, V4.read_band) == 42 and remap_layer(60, 43, V4.read_band) == 42
+    assert remap_layer(56, 43, V4.read_band) == 39 and remap_layer(0, 43, V4.read_band) == 15
     assert V4.arith_all_positions
     # D8: only the V4 render (Flash and Pro share it, ending in </think>) reads all positions
     v4_render = {V4.key, "deepseek-v4-pro"}
@@ -557,7 +557,7 @@ def test_v4_freeze_path_keeps_arithmetic(monkeypatch):
     header = {k: v for k, v in raw.items() if k != "items"}
     run._post_freeze("arithmetic_intermediates", copy.deepcopy(header), out, V4.n_layers,
                      V4.read_band)  # fmt: skip
-    assert all(0 <= it["cell"]["layer"] <= 40 for it in out)
+    assert all(it["cell"]["layer"] in V4.read_band for it in out)
 
 
 def test_v4_arith_bank_plans_and_judges_every_position(tmp_path, monkeypatch):
@@ -630,3 +630,53 @@ def test_author_tokenizer_applies_chat_template_without_tokenizer_dir(monkeypatc
     assert tok.chat_template == TEMPLATE
     calls.clear()
     assert author.tokenizer("qwen3.5-4b").chat_template == "upstream"  # no pinned template
+
+
+def test_v4flash_read_band_reads_every_olens_layer():
+    """The 27B grid maps one-to-one onto the O-lens's 11 layers (26 and 42 included, which the
+    nearest snap would skip); off-grid layers still snap by depth."""
+    from wsbench import readplan
+    from wsbench.adapt import subjects
+
+    band = subjects.V4FLASH_READ_BAND
+    assert list(subjects.GRID_27B) == readplan.GRID
+    assert remap_layers(readplan.GRID, 43, band) == list(band)
+    assert [remap_layer(q, 43, band) for q in readplan.GRID] == list(band)
+    assert remap_layer(36, 43, band) == 26 and remap_layer(60, 43, band) == 42
+    assert remap_layer(63, 43, band) == 42 and remap_layer(12, 43, band) == 15
+    assert remap_layer(42, 43, band) == 27  # off grid: depth 28 -> nearest 27
+    # without the table rule the snap folds the grid onto 9 layers
+    snapped = sorted({min(band, key=lambda b: (abs(b - min(42, round(q * 43 / 64))), -b))
+                      for q in readplan.GRID})  # fmt: skip
+    assert len(snapped) == 9 and 26 not in snapped and 42 not in snapped
+
+
+def test_grid_table_rule_leaves_every_other_band_unchanged():
+    """The one-per-grid-layer rule only fires on an 11-layer band; V4-Pro's band (the depth
+    remap itself) gives the same layers either way, and the other bands are not 11 long."""
+    from wsbench import readplan
+    from wsbench.adapt import subjects
+
+    def snap(q: int, n: int, band: tuple[int, ...]) -> int:
+        x = min(n - 1, round(q * n / 64))
+        return min(band, key=lambda b: (abs(b - x), -b))
+
+    pro = subjects.SUBJECTS["deepseek-v4-pro"]
+    for q in range(64):
+        assert remap_layer(q, pro.n_layers, pro.read_band) == snap(q, pro.n_layers, pro.read_band)
+    for key, s in subjects.SUBJECTS.items():
+        if s.read_band and key not in ("deepseek-v4-pro", "deepseek-v4-flash"):
+            assert len(s.read_band) != len(readplan.GRID), key
+
+
+def test_v4flash_is_built_to_plan_0075_targets():
+    """A set built fresh after plan 0075 gets its targets (association 100, basic_readout_mt 120)
+    and its strict-freeze / capital re-check, as the ten 0075 sets do."""
+    from wsbench.adapt import refill
+
+    assert "deepseek-v4-flash" in refill.PLAN_0075_SETS
+    for fam in ("association", "basic_readout_mt", "multihop", "typo_mt"):
+        assert refill.adapted_target(fam, model="deepseek-v4-flash") == refill.adapted_target(
+            fam, model="deepseek-v4-pro"
+        )
+    assert refill.adapted_target("basic_readout_mt", model="deepseek-v4-flash") >= 120

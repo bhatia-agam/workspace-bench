@@ -450,3 +450,14 @@ adapted/<m>/introspection.json, introspection/        per subject (data PRs)
 - A refill PR for it is still open: introspection waits and the others proceed.
 
 Each of these is reported to Camila with the evidence, and nothing is shipped in its place.
+
+## Addendum 2026-11-15: deepseek-v4-flash
+
+The V4-Flash adapted set (#469) adds a fifth stack to `scripts/adapt_introspection_mp_modal.py`:
+global-workspace `xaff.backends.v4flash.load_v4_model` (the bf16 dequant of
+`scripts/v4_flash/common.load_model`, `device_map=auto`, eager attention, grouped_mm experts) at
+full depth (43 blocks, `hc_head`, norm, `lm_head`), forward-only, on B300:8 (Camila's standing
+"always 8xB300" rule for V4-Flash). Everything is bf16 after the dequant, so no `patch_reader` is
+needed. Hooks sit on `model.model.layers[L]`, and the residual is `mhc_raw_flat_16384`. The inject
+block is `remap_layer(12, 43)` = 8, with no lens snap, and the read36 block is 26 (the set's
+O-lens band). The calibration gate and the GO/NO-GO rule are unchanged.

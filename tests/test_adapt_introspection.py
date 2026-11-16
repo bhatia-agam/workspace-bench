@@ -923,3 +923,29 @@ def test_decode_offsets_merges_a_dropped_partial_byte():
     text = "a é"
     assert ii.decode_offsets(Dropping(), list(text.encode()), text) == [(0, 1), (1, 2), (2, 3),
                                                                         (2, 3)]  # fmt: skip
+
+
+def test_v4_flash_has_a_multi_gpu_stack():
+    """DeepSeek-V4-Flash runs on the plan-0067 multi-GPU script (the xaff V4-Flash reader) with
+    its raw flat mHC residual recorded like V4-Pro's."""
+    import ast
+    from pathlib import Path
+
+    from wsbench.adapt import introspection
+
+    assert "mhc_raw_flat_16384" in introspection.RESIDUALS
+    assert "adapt_introspection_mp_modal.py" in introspection.EXTERNAL["deepseek-v4-flash"]
+    src = (
+        Path(__file__).resolve().parents[1] / "scripts/adapt_introspection_mp_modal.py"
+    ).read_text()
+    tree = ast.parse(src)
+    supported = next(
+        ast.literal_eval(n.value) for n in ast.walk(tree)
+        if isinstance(n, ast.Assign) and getattr(n.targets[0], "id", "") == "SUPPORTED"
+    )  # fmt: skip
+    assert "deepseek-v4-flash" in supported
+    assert 'SUBJECT == "deepseek-v4-flash"' in src and '"residual": "mhc_raw_flat_16384"' in src
+    from wsbench.adapt import subjects
+
+    assert subjects.get("deepseek-v4-flash").revision in src
+    assert 'GPU = ["B300:8"]' in src  # Camila: V4-Flash always 8xB300

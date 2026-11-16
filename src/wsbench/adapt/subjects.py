@@ -11,6 +11,14 @@ DEFAULT_MODAL_APP = "adapt-subject-llm"  # the shared H200 app any hub-cached su
 
 # the global-workspace xaff DeepSeek-V4-Pro reader's lens layers (gw PR #723)
 V4PRO_READ_BAND: tuple[int, ...] = (19, 23, 27, 31, 34, 38, 42, 46, 50, 53, 57)
+# Camila's multilayer DeepSeek-V4-Flash O-lens layers: the s3don AR + O-lens READ_LAYERS 15..42:3
+# (global-workspace scripts/v4_flash/common.py) plus layer 26 (xaff plan §3.1, Camila
+# 2026-11-03: "add layer 26 to v4 flash"). 11 layers, one per 27B grid layer (GRID_27B[i] ->
+# band[i], see remap_layer): nearest-snap would fold 13/16 -> 15 and 38/40 -> 39 and never read
+# 26 or 42.
+V4FLASH_READ_BAND: tuple[int, ...] = (15, 18, 21, 24, 26, 27, 30, 33, 36, 39, 42)
+# the benchmark's 11-layer grid of record (readplan.GRID, Qwen3.6-27B layers out of 64)
+GRID_27B: tuple[int, ...] = tuple(range(20, 61, 4))
 
 
 @dataclass(frozen=True)
@@ -65,6 +73,17 @@ class Subject:
     # predates token-id prompts): RemoteRunner refuses it instead of failing inside vLLM
     modal_built: bool = True
     modal_engine: tuple[tuple[str, Any], ...] = ()  # extra kwargs for the vLLM engine (overrides)
+    # throwaway requests at the head AND tail of every engine call (0 = none). DeepSeek-V4-Flash
+    # TP=1 engines on vLLM 0.31.0 return garbage for small generate() calls and the first ~2
+    # requests of any call, and drain-corrupt the tail of long ones (global-workspace
+    # scripts/v4_flash/gen_requests_modal.py ``padded``, 2026-10-24): 300, pads run to max_tokens
+    modal_pad: int = 0
+    # Modal max_containers for the app (0 = Modal's default autoscaling, unless modal_replicas
+    # > 1 sets it): concurrent adapt stages each get a container, up to this many
+    modal_max_containers: int = 0
+    # prompts per RemoteRunner call (0 = RemoteRunner.CHUNK, 512). A padded subject wants big
+    # calls: each engine call carries 2 x modal_pad throwaway requests whatever its size
+    modal_chunk: int = 0
     # plan 0060 D8: arithmetic has no pre-registered cell on this subject (its render has no
     # counterpart of the Qwen cell's token); freeze drops cell.pos and the judge reads every cell
     arith_all_positions: bool = False
@@ -260,9 +279,10 @@ SUBJECTS: dict[str, Subject] = {
         ),
         # plan 0060 A3 (2026-11-03). No Jinja template ships: the pinned one reproduces
         # encode_messages(thinking_mode="chat") = <bos><|User|>...<|Assistant|></think> (fullwidth
-        # bars) token for token (tests/test_adapt_v4.py). J-lens v4-flash:/runs/jlens/std-n1000:
-        # row r = block r for r in 0..40 (sources 0..40, target block 41); row 41 is the identity
-        # anchor and there is no L42 row, so the band is rows <= 40.
+        # bars) token for token (tests/test_adapt_v4.py). read_band = Camila's multilayer O-lens
+        # layers (V4FLASH_READ_BAND, 2026-11-15 adapted set). The J-lens
+        # v4-flash:/runs/jlens/std-n1000 has rows 0..40 only (no L42 row), so jlens_concept_pr
+        # would need its own layers <= 40 (the band was range(41) before the adapted set).
         Subject(
             "deepseek-v4-flash",
             "deepseek-ai/DeepSeek-V4-Flash",
@@ -271,7 +291,7 @@ SUBJECTS: dict[str, Subject] = {
             "dsv4",
             "60d8d70770c6776ff598c94bb586a859a38244f1",
             backend="modal",
-            read_band=tuple(range(41)),
+            read_band=V4FLASH_READ_BAND,
             modal_app="adapt-v4-flash",
             chat_template=str(TEMPLATES / "deepseek_v4_chat.jinja"),
             arith_all_positions=True,
@@ -284,6 +304,11 @@ SUBJECTS: dict[str, Subject] = {
             modal_weights="hf/hub/models--deepseek-ai--DeepSeek-V4-Flash/snapshots/"
             "60d8d70770c6776ff598c94bb586a859a38244f1",
             modal_engine=(("moe_backend", "marlin"), ("generation_config", "vllm")),
+            modal_pad=300,  # gw's V4 small-call / tail corruption guard (+ the start canary)
+            # concurrent stages share at most 4 B300:8 containers (Camila 2026-11-15: <= 8 of
+            # the env's 16; the rest stay free for the other adapted-set work)
+            modal_max_containers=4,
+            modal_chunk=9600,  # ~1,200 real prompts per engine call against its 600 pads
             # encoding_dsv4 thinking_mode="thinking"; no Jinja template renders it yet, so
             # native_langs thinking=on refuses until a thinking_template is pinned
             thinking_mode=True,
@@ -405,6 +430,8 @@ def modal_spec(s: Subject | None = None) -> dict[str, Any]:
         "volume": s.modal_volume,
         "weights": s.modal_weights,
         "engine": dict(s.modal_engine),
+        **({"pad": s.modal_pad} if s.modal_pad else {}),  # absent = 0 (older apps' specs unchanged)
+        **({"max_containers": s.modal_max_containers} if s.modal_max_containers else {}),
     }
 
 
@@ -467,7 +494,12 @@ def rename_thinking(tok: Any, kwarg: str) -> Any:
 
 def remap_layer(layer: int, n_layers: int, band: tuple[int, ...] | list[int] = ()) -> int:
     """A 27B read layer at the same depth fraction of the subject, snapped to the nearest layer of
-    ``band`` (the subject's lens layers; ties go deeper) when the subject has one."""
+    ``band`` (the subject's lens layers; ties go deeper) when the subject has one. A band of
+    exactly one layer per grid layer (``len(band) == len(GRID_27B)``) is the lens's own table:
+    grid layer i reads ``sorted(band)[i]``, so every lens layer is read (for V4-Pro's band this is
+    the nearest snap itself); off-grid layers still snap."""
+    if band and len(band) == len(GRID_27B) and layer in GRID_27B:
+        return sorted(band)[GRID_27B.index(layer)]
     x = min(n_layers - 1, round(layer * n_layers / ORIGINAL_LAYERS))
     return min(band, key=lambda b: (abs(b - x), -b)) if band else x
 
