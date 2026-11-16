@@ -62,3 +62,12 @@ lists. `multihop_mc_options.json` stays the bank v2 record, still asserted again
 items' Country / Occupation golds). Its 47 bank-v2
 entries equal `user_modeling_options_v4.json`'s byte for byte; that file stays the um-v3.4 record
 of all 100 `items.json` items.
+
+## Read plans before plan 0090 (2026-11-16)
+
+`plan_sha_pre_0090.json` pins every family's non-fast read plan as it was before the fast subset
+(plan 0090) touched `readplan.py` / `reads.py`: `plan_sha`, and the sha256 of the written plan
+rows under `reads=full` and `reads=lite`. It was written once, under pytest (the conftest stubs
+set nyt_connections' and knowledge_cutoff's nocot texts), on the pre-0090 code, by
+`tests/test_fast_subset.py` with `WSB_WRITE_GOLDEN_0090=1`. A deliberate plan change (a new bank
+version) regenerates it the same way; `--fast` must never move it.

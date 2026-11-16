@@ -5,6 +5,7 @@ turns a positions rule into token indices once a producer has tokenized the rend
 import json
 import os
 import re
+import unicodedata
 from collections.abc import Iterable
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
@@ -205,6 +206,11 @@ def lite_select(positions: Iterable[int], rule: dict[str, Any]) -> list[int]:
 #                               before character k of `text` (stripped), so the span starts at
 #                               the token containing that character
 #   suffix_text_then_tail       `suffix_text` plus every token after it (the chat tail)
+#   punct_special               (plan 0090, the fast subset) every punctuation, newline and
+#                               special token (`is_fast_site`, on DECODED token text); the final
+#                               token when there is none
+#   fast_of {full, fast}        a `--fast` plan row: the fast rule (`last_n` / `punct_special`)
+#                               within the full rule's positions; needs DECODED token text
 
 
 def _clean(tok: str) -> str:
@@ -228,11 +234,18 @@ def poetry_prefill(prompt: str) -> str:
 
 def resolve(rule: dict[str, Any], tokens: list[str]) -> list[int]:
     """Token indices a rule selects over ``tokens`` (the render's token strings, byte-level BPE
-    display or plain). Every kind above is handled; unknown kinds raise."""
+    display or plain). Every kind above is handled; unknown kinds raise. ``punct_special`` and
+    ``fast_of`` (plan 0090) need DECODED token strings (``tokenizer.decode([id])``, what readout
+    rows carry as ``token``): a byte-level BPE display string shows non-ASCII punctuation as
+    mojibake, which ``is_fast_site`` does not recognise."""
     n = len(tokens)
     kind = rule["kind"]
     if kind == "lite_of":  # a reads=lite plan row: the lite rule over the full rule's positions
         return lite_select(resolve(rule["full"], tokens), rule["lite"])
+    if kind == "fast_of":  # a --fast plan row: the fast rule within the full rule's positions
+        return fast_select(resolve(rule["full"], tokens), rule["fast"], tokens)
+    if kind == "punct_special":
+        return [i for i, t in enumerate(tokens) if is_fast_site(t)] or ([n - 1] if n else [])
     if kind == "final_token":
         return [n - 1] if n else []
     if kind == "offset_from_end":
@@ -315,6 +328,40 @@ def _line_tail(tokens: list[str], nl: int) -> list[int]:
 # Llama-3); the rules below find the user turn by these, never by one template's literals
 TURN_START = {"<|im_start|>", "<|turn>", "<start_of_turn>", "<|start_header_id|>"}
 TURN_END = {"<|im_end|>", "<turn|>", "<end_of_turn>", "<|eot_id|>", "<|end|>"}
+
+
+# plan 0090: chat-template markers (<|im_start|>, <|im_end|>, <|endoftext|>) and tag tokens
+# (<think>, </think>, <tool_call>)
+_SPECIAL_TOKEN = re.compile(r"^<\|[^|>]+\|>$")
+_TAG_TOKEN = re.compile(r"^</?[A-Za-z_][A-Za-z0-9_]*>$")
+FAST_KINDS = ("last_n", "punct_special")
+
+
+def is_fast_site(token: str) -> bool:
+    """Whether a DECODED token text (``tokenizer.decode([id])``, a readout row's ``token``) is a
+    ``punct_special`` read site: punctuation only (every character of the stripped text in a
+    Unicode ``P*`` category), a newline token, or a special token (a chat-template marker or a
+    tag token). Never call it on byte-level BPE display strings."""
+    if "\n" in token:
+        return True
+    t = token.strip()
+    if not t:
+        return False
+    if t in TURN_START or t in TURN_END or _SPECIAL_TOKEN.match(t) or _TAG_TOKEN.match(t):
+        return True
+    return all(unicodedata.category(ch).startswith("P") for ch in t)
+
+
+def fast_select(full: list[int], rule: dict[str, Any], tokens: list[str]) -> list[int]:
+    """A fast positions rule within an item's full positions (``full``, indices into the
+    DECODED ``tokens``, in the full rule's order): ``last_n`` = the last n of them;
+    ``punct_special`` = those whose token is a fast site, else the last full position."""
+    kind = rule.get("kind")
+    if kind == "last_n":
+        return full[-int(rule["n"]) :]
+    if kind == "punct_special":
+        return [p for p in full if is_fast_site(tokens[p])] or full[-1:]
+    raise ValueError(f"unknown fast rule {kind!r} (allowed: {', '.join(FAST_KINDS)})")
 
 
 def _user_turn(tokens: list[str]) -> tuple[int, int] | None:
@@ -603,7 +650,9 @@ def _layers_env() -> LayersArg:
         raise SystemExit(f"{LAYERS_ENV}={raw!r}: expected all or a comma list of ints") from None
 
 
-def plan(family: str, *, layers: LayersArg = None, reads: str = "full") -> list[ReadSpec]:
+def plan(
+    family: str, *, layers: LayersArg = None, reads: str = "full", fast: bool = False
+) -> list[ReadSpec]:
     """The family's read plan in the subject's own layers.
 
     ``layers``: None = the family's grid of record (``$WSB_LAYERS``, ``all`` or a csv, is read
@@ -613,12 +662,22 @@ def plan(family: str, *, layers: LayersArg = None, reads: str = "full") -> list[
     grid of record taken from the 27B constants is remapped by depth (``round(L * n / 64)``,
     then snapped to ``read_band``; duplicates dropped). ``reads="lite"``: rows whose positions /
     layers ARE the lite ones (a ``lite_of`` rule over the full rule), for a cheaper producer
-    path; the campaign always produces ``full`` (lite ⊆ full)."""
+    path; the campaign always produces ``full`` (lite ⊆ full). ``fast=True`` (plan 0090): the
+    full plan's rows of the family's fast read ids only (plan order), their positions the
+    ``fast_of`` rule where the fast entry reduces them; a family outside the subset raises
+    ``fast.NotInFast``, and ``reads="lite"`` is refused."""
     from dataclasses import replace
 
     if reads not in ("full", "lite"):
         raise SystemExit(f"reads={reads!r}: expected full or lite")
     family = canonical(family)  # a former key (registry.LEGACY_FAMILY_NAMES) plans the family
+    fast_entry = None
+    if fast:
+        from wsbench import fast as fast_mod
+
+        if reads == "lite":
+            raise SystemExit("fast=True plans the fast subset's full reads; drop reads=lite")
+        fast_entry = fast_mod.entry(family)
     if layers is None:
         layers = _layers_env()
     specs = _plan(family)
@@ -667,6 +726,18 @@ def plan(family: str, *, layers: LayersArg = None, reads: str = "full") -> list[
             )
             for s in specs
         ]
+    if fast_entry is not None:
+        keep = set(fast_entry["read_ids"])
+        specs = [s for s in specs if s.id in keep]
+        if rule := fast_entry.get("positions"):
+            specs = [
+                replace(
+                    s,
+                    positions={"kind": "fast_of", "full": s.positions, "fast": dict(rule)},
+                    extra={**s.extra, "fast": fast_mod.VERSION},
+                )
+                for s in specs
+            ]
     return specs
 
 

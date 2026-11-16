@@ -304,6 +304,76 @@ macro instead (see [HallucinationBench](#hallucinationbench)).
 - *Judged by:* one v1.1.0 layered digest per puzzle (x4 stage-2 budget since v1.1.1; per-layer digests, then one stage-2 summary), then one blind MC call per slot over its labels (the headline scores the stable slots; the rest feed the all-slot extras) plus "cannot tell", with a verbatim quote from the digest (a Qwen pick whose quote fails counts as cannot tell); extras: a partner-puzzle null, a continuation floor (the slot's member words only), a word-masked digest and slot 0 vs slots 1–3; floors: prompt-only (`po-opus-v1`, paired by `scripts/nyt_connections_bar.py`) and a direct guess from the words.
 
 
+## Fast subset (`--fast`)
+
+The full bench is slow because it has so many questions. `--fast` runs **`fast-v1`**, a frozen,
+smaller, higher-signal subset of the Qwen3.6-27B bench: 24 families, 1,996 scored units, 2,351
+read items ([`evals/fast/`](evals/fast/README.md): the file, the selection and vetting rules,
+per-family counts).
+
+```bash
+uv run wsbench plan --fast out=outputs/plan-fast                         # the fast read plan
+uv run wsbench run --fast all=True readouts_root=outputs/readouts/mylens out=outputs/judged/mylens-fast
+uv run wsbench report dir=outputs/judged/mylens-fast --fast
+```
+
+- **What it is.** The same families, banks, judges and prompts, on fewer items. A full readouts
+  file is always judgeable with `--fast` (the judge keeps the fast items and narrows the reduced
+  reads itself), so existing readouts need no re-read; a producer that wants the smaller read
+  follows `wsbench plan --fast` (`docs/producing_readouts.md` § Fast subset). `--fast` is
+  `fast=True` on `plan`, `produce`, `judge`, `run` and `report`.
+- **How it was chosen.** On 23 arms' full results (19 lenses, logit-lens L63, 3 prompt-only
+  draws), then vetted item by item. Six families that are saturated or basic and do not
+  separate methods are dropped (`typo_mt`, `association`, `multihop`, `multilingual`,
+  `chain_intermediates`, `multilingual_mt`; `jlens_concept_pr` is not in the macro and not in
+  the subset). Within a kept family, questions every trained lens solves and questions the
+  vetting marked broken, artefactual or prompt-guessable are dropped. The frozen strict ATI
+  subset (`ati-subset-v2`, 350 ids in 8 families) is contained whole.
+- **Three reduced reads.** `introspection`: only the 125 headline units and the rows their twins
+  read. `agentic_misalignment`: the 18 pairs whose original misbehaves in at least one of the 8
+  gate rollouts, read at the last 60 positions of each item (stamp `+fast-last_n60`).
+  `jailbreak_recognition`: 155 of 172 items, read at punctuation, newline and special-token
+  positions only (stamp `+fast-punct_special`). The judge prompts of the two position-reduced
+  families are unchanged, including their sentences describing the read scope; the result stamp
+  is what states the reduced read.
+- **A different scale.** A fast value is the mean over the subset's units (`fast.rescore`; CI = a
+  bootstrap over units, not the families' own cluster bootstraps; the family's own value on the
+  fast items stays in `extras.fast_family_value`). The items every trained lens solves are gone, so fast numbers
+  are **not comparable with** full-bench numbers, the frozen lucky-guessing and
+  prompt-only floors (measured on the full banks; `report` blanks those columns) or ATI numbers.
+  `report` and the macro refuse to mix fast and non-fast rows (`report ... --fast` /
+  `fast=False` picks one kind); the macro row of a fast table is the mean over the fast families.
+- **Limits.** Qwen3.6-27B's registered banks only: `--fast` exits 2 under `WSB_BANK_ROOT` or a
+  `WSB_BANK_FILE_<FAMILY>` pin, and when a registered bank changed since the freeze. Summary mode
+  and full reads only: `--fast` with `items=`, `anti_text_inversion=True`, `reads=lite`,
+  `layers=each`, `opts=aggregate=native` or `opts=judge=...` is a usage error. Give a fast run
+  its own `out=` (it would overwrite a full run's `results.json`); judge and digest calls are
+  keyed as in a full run, so a fast run given a full run's `cells.jsonl` (a copy of the family
+  out dir, or `summ_store=`) re-uses its cached calls.
+
+Fidelity of the fast subset against the full bench:
+
+| arm | full bench (30 families) | fast-v1 (24 families) |
+|---|---|---|
+| O-lens s3d (native) | 0.600 | 0.535 |
+| rl-affw (whitened affine) | 0.559 | 0.491 |
+| Q9 xaff (9B reader) | 0.543 | 0.478 |
+| prompt-only (Opus 5.5, no activations; mean of 3 draws) | 0.600 | 0.475 |
+| J-lens (public) | 0.193 | 0.116 |
+| logit lens (L63) | 0.096 | 0.063 |
+
+11-layer union, 2026-11-16. The fast numbers are a different scale (fewer easy questions), so they
+are never compared with full-bench numbers; the order of the arms is what carries over. Across 19
+lenses the item selection (with full-position reads of the two reduced families) correlates 0.988
+with the full macro (rank 0.995) and keeps the sign of all 153 significant pairwise differences.
+Caveats: jailbreak_recognition at the reduced positions keeps arm order but loses about 0.04 of
+recall minus control FPR on average (8 arms); agentic_misalignment at the last 60 positions finds
+10 of the 13 pair hits the full read finds plus new ones, at a higher level (mean pair rate about
+0.19 vs 0.08) and with run-to-run noise (0.07) about as large as its spread across arms, so its
+single-run row should not be used to rank arms. The prompt-only and logit-lens rows use
+full-position values for those two families (prompt-only has no positions; no reduced logit-lens
+read exists).
+
 ## Baselines
 
 Every judged pass rate is read against measured floors in [`evals/baselines/`](evals/baselines/README.md):

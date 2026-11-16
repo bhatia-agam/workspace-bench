@@ -176,12 +176,16 @@ class Producer:
         layers: Iterable[int] | str | None = None,
         items: Iterable[str] | None = None,
         reads: str = "full",
+        fast: bool = False,
     ) -> Path:
         """Every item of a family into one readouts JSONL, resumable: an item whose rows are
         already in ``out`` is skipped; each item's rows are written in one call. ``layers``:
         None = the plan's, ``"all"`` = every model layer (one forward captures them all), or a
         list. ``reads="lite"`` reads only the lite sites. Writes the sidecar
-        ``<out>.meta.json`` declaring reads, sampling, reader and plan_sha (plan 0032 §2.9)."""
+        ``<out>.meta.json`` declaring reads, sampling, reader and plan_sha (plan 0032 §2.9).
+        ``fast=True`` (plan 0090) reads the fast plan (``readplan.plan(family, fast=True)``) and
+        declares ``"fast": "fast-v1"`` with the fast plan's own ``plan_sha``."""
+        from wsbench import fast as fast_mod
         from wsbench import reads as reads_mod
         from wsbench.readouts import write_sidecar
 
@@ -189,7 +193,7 @@ class Producer:
 
         out = Path(out)
         plan_layers: Any = layers if layers == "all" else None
-        specs = readplan.plan(family, layers=plan_layers, reads=reads)
+        specs = readplan.plan(family, layers=plan_layers, reads=reads, fast=fast)
         if layers is not None and layers != "all":
             specs = [replace(s, layers=list(layers)) for s in specs]  # type: ignore[arg-type]
         if items is not None:
@@ -217,7 +221,8 @@ class Producer:
             reader=name,
             arm=name,
             layers=sorted({x for s in specs for x in s.layers}),
-            plan_sha=reads_mod.plan_sha(family),
+            plan_sha=reads_mod.fast_plan_sha(family) if fast else reads_mod.plan_sha(family),
+            **({"fast": fast_mod.VERSION} if fast else {}),
         )
         return out
 
@@ -231,7 +236,10 @@ class Producer:
     def _read_rendered(
         self, item_id: str, rendered: Rendered, positions: Positions, layers: list[int]
     ) -> Iterator[Row]:
-        pos = _positions(positions, rendered.tokens)
+        # plan 0090: a fast_of rule tests each token's DECODED text (readplan.is_fast_site, what
+        # the rows carry as `token`), never the byte-level display strings
+        fast_of = isinstance(positions, dict) and positions.get("kind") == "fast_of"
+        pos = _positions(positions, rendered.decoded if fast_of else rendered.tokens)
         if not pos:
             return
         idx = [p % len(rendered) for p in pos]  # a plan may report negative offsets

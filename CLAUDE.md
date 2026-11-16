@@ -549,6 +549,25 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   items, is panel-gated); the mechanism (a family whose whole bank is written as the subset,
   `answerer: "construction"`) stays for a future family gated when it is built.
 
+- Fast subset (plan 0090, `--fast` = `fast=True` on plan / produce / judge / run / report):
+  `fast.py` reads the frozen `evals/fast/fast_v1.json` (`fast-v1`: 24 families, 1,996 units,
+  2,351 read items; per family `bank_sha`, `units` by group, `read_ids`, optional `positions`;
+  never regenerate or reorder it, a new subset is a new versioned file) and holds
+  `entry` (`NotInFast` = skipped, like ATI's `NotInScope`), `units` (per-unit outcomes of a
+  SUMMARY-mode result, one rule per special-cased family) and `rescore`. The flag reaches the
+  families only as `JudgeArgs.scope == fast.SCOPE` with `items` = the entry's `read_ids` (never
+  an `opts=` key: `opts=fast=1` does nothing); `reads.load` restricts the cells and narrows the
+  two position-reduced families (`readplan.is_fast_site` on DECODED token text, the producer's
+  own predicate; `fast_of` / `punct_special` rules); `runner.stamp_fast` rescores and stamps
+  `config.scope` / `fast_subset` and the `+fast-<kind>` suffix; `mcjudge.is_subset` treats the
+  scope as a defined variant; `results.macro` and `report` never mix fast and non-fast rows.
+  Invariants: the strict ATI subset (`ati-subset-v2`) is contained whole; `bank_sha` (sha256 of
+  the registered bank file's bytes, not the ATI plan-row fingerprint) fails closed, as do
+  `WSB_BANK_ROOT` / `WSB_BANK_FILE_*`; **the non-fast paths are untouched** (plan rows,
+  `plan_sha`, result stamps, cache keys: `tests/golden/plan_sha_pre_0090.json` pins the plans);
+  judge prompts and call versions do not move under fast. A FAST file's sidecar declares
+  `"fast": "fast-v1"` with the fast plan's own `plan_sha` (`reads.fast_plan_sha`).
+
 - Summary mode (`aggregate=summary`, plan 0020, `digest.py`) is the benchmark DEFAULT since plan
   0024: `runner.parse_opts` fills `aggregate=summary` in unless `opts=aggregate=native`; a family
   called directly with a hand-built `JudgeArgs` (no `aggregate`) keeps its native rule. Tests

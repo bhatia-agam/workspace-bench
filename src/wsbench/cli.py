@@ -12,7 +12,7 @@ from typing import Any
 
 import pydra
 
-from wsbench import hbindex, readplan, registry, runner
+from wsbench import fast, hbindex, readplan, registry, runner
 from wsbench.baselines import lucky_guessing, prompt_only, text_inversion
 from wsbench.capable import questions as capable_questions
 from wsbench.capable import run as capable_run
@@ -154,8 +154,10 @@ class JudgeOptions(Command):
         self.reads = ""  # full | lite (plan 0032 §2.6.7); alias opts=reads=lite
         self.sampling = ""  # bullet4 | prose1 | tokens10: overrides the sidecar (§2.9.2)
         self.each = False  # layers=each: set by finalize
+        self.fast = False  # --fast: the frozen fast subset (plan 0090, evals/fast)
 
     def finalize(self) -> None:
+        self.fast = _bool(self.fast)
         self.judge_model = str(self.judge_model or "") or None
         lay = _layers_arg(self.layers)
         self.each = lay == "each"
@@ -187,6 +189,25 @@ class JudgeOptions(Command):
             self.opt.append(f"reads={_reads_arg(self.reads)}")
         if self.sampling:
             self.opt.append(f"sampling={_sampling_arg(self.sampling)}")
+        if self.fast:
+            self._check_fast()
+
+    def _check_fast(self) -> None:
+        """``--fast`` is one defined variant: the fast items, full reads, the summary judges of
+        record. Every key that would change one of those is a usage error."""
+        keys = {p.split("=", 1)[0].strip(): p.split("=", 1)[-1] for p in self.opt}
+        if self.items is not None:
+            raise ValueError("--fast picks the items itself; drop items=")
+        if self.anti_text_inversion:
+            raise ValueError("--fast and anti_text_inversion=True are separate scopes; pick one")
+        if keys.get("reads") == "lite":
+            raise ValueError("--fast judges the fast subset's full reads; drop reads=lite")
+        if self.each:
+            raise ValueError("--fast does not take layers=each")
+        if keys.get("aggregate") == "native":
+            raise ValueError("--fast is defined on summary mode; drop opts=aggregate=native")
+        if "judge" in keys:
+            raise ValueError("--fast runs each family's scorer of record; drop opts=judge=")
 
 
 class ListFamilies(Command):
@@ -250,6 +271,9 @@ class JudgeFamily(JudgeOptions):
         except text_inversion.NotInScope as e:
             print(f"skipped: {e.code}", file=sys.stderr)
             return 0
+        except fast.NotInFast as e:  # plan 0090: "<family>: not in fast-v1"
+            print(e.code, file=sys.stderr)
+            return EXIT_USAGE
         except SystemExit as e:
             if not isinstance(e.code, str):
                 raise
@@ -381,6 +405,8 @@ class ReportRuns(Command):
         self.json = False
         self.floors = True  # the frozen lucky-guessing floors (evals/baselines) beside each family
         self.reads = ""  # full | lite: keep that mode only (a table never mixes modes)
+        # plan 0090, tri-state like reads: "" = unset, True = fast rows only, False = the rest
+        self.fast = ""
         self.by_layer = False  # fold a layers=each run (<dir>/<family>/<all|L<k>>/results.json)
         self.hb_method = ""  # HallucinationBench method (plan 0040); else run.json / methods.json
         # opt-in judge column: a run of the same readouts with judge_model=<another judge>
@@ -394,6 +420,7 @@ class ReportRuns(Command):
         self.json = _bool(self.json)
         self.floors = _bool(self.floors)
         self.reads = _reads_arg(self.reads) if self.reads else ""
+        self.fast = "" if isinstance(self.fast, str) and not self.fast else _bool(self.fast)
         self.by_layer = _bool(self.by_layer)
 
     def execute(self) -> int:
@@ -413,12 +440,21 @@ class ReportRuns(Command):
         if len(modes) > 1:  # plan 0032 §2.6.8: one table never mixes read modes
             print(f"report: results mix reads modes {modes}; pass reads=full|lite", file=sys.stderr)
             return EXIT_USAGE
+        if self.fast != "":  # plan 0090: fast rows only, or everything else
+            results = [r for r in results if (r.config.get("scope") == fast.SCOPE) == self.fast]
+        if len({r.config.get("scope") == fast.SCOPE for r in results}) > 1:
+            print(
+                "report: results mix fast and non-fast rows; pass --fast or fast=False",
+                file=sys.stderr,
+            )
+            return EXIT_USAGE
         m = macro(results)
         # The frozen floors were measured on the full banks; on the ATI subset they do not apply
-        # (Opus prompt-only is 0 there by construction).
+        # (Opus prompt-only is 0 there by construction), nor on the fast subset (plan 0090).
         ati = any(r.config.get("scope") == ATI_SCOPE for r in results)
-        floors = floor_columns() if self.floors and not ati else None
-        summ_floors = summary_floor_columns() if self.floors and not ati else None
+        fast_rows = any(r.config.get("scope") == fast.SCOPE for r in results)
+        floors = floor_columns() if self.floors and not ati and not fast_rows else None
+        summ_floors = summary_floor_columns() if self.floors and not ati and not fast_rows else None
         alt: dict[str, FamilyResult] | None = None
         if self.alt_judge is not None:
             if not self.alt_judge.is_dir():
@@ -436,6 +472,8 @@ class ReportRuns(Command):
                 print(f"unreadable alt_judge results: {e}", file=sys.stderr)
                 return EXIT_USAGE
         table = markdown_table(results, m, floors=floors, summary_floors=summ_floors, alt_judge=alt)
+        if fast_rows:
+            table = fast_header() + "\n\n" + table
         hb_text, hb_json = self._hb_block(results)
         if hb_text:  # after the macro table; a separate number, never in the macro
             table += "\n" + hb_text
@@ -605,6 +643,14 @@ def _maybe_sidecar(cmd: Any, rep: Any) -> None:
     if cmd.plan_sha:
         meta["plan_sha"] = str(cmd.plan_sha)
     print(f"wrote {write_sidecar(cmd.out, **meta)}")
+
+
+def fast_header() -> str:
+    """The line above a fast report's table (plan 0090)."""
+    return (
+        f"scope: fast subset {fast.VERSION} ({len(fast.subset())} families; not comparable with "
+        "full-bench numbers)"
+    )
 
 
 def _alt_json(r: FamilyResult, a: FamilyResult | None) -> dict | None:
@@ -985,6 +1031,7 @@ class Plan(Command):
         self.limit = 0
         self.layers = None  # all | <csv>: override the grid of record (plan 0032 §2.1)
         self.reads = "full"  # lite: rows whose positions / layers are the lite ones
+        self.fast = False  # --fast: the fast subset's rows (plan 0090); all = its 24 families
 
     def finalize(self) -> None:
         self.families = _families(_strs(self.families)) or ["all"]
@@ -994,8 +1041,13 @@ class Plan(Command):
         if self.layers == "each":
             raise ValueError("layers=each is a judge / run key; plan takes all or a comma list")
         self.reads = _reads_arg(self.reads)
+        self.fast = _bool(self.fast)
+        if self.fast and self.reads == "lite":
+            raise ValueError("--fast plans the fast subset's full reads; drop reads=lite")
 
     def execute(self) -> int:
+        if self.fast:
+            return self._execute_fast()
         names = (
             registry.drop_superseded(readplan.families())
             if self.families == ["all"]
@@ -1005,8 +1057,30 @@ class Plan(Command):
         if unknown:
             print(f"unknown families {unknown}; known {readplan.families()}", file=sys.stderr)
             return EXIT_USAGE
+        return self._write(names)
+
+    def _execute_fast(self) -> int:
+        """``plan --fast``: the fast subset's families (``families=all``), or the named ones; a
+        family outside the subset, a bank override or a changed bank is exit 2."""
+        names = fast.families() if self.families == ["all"] else self.families
+        unknown = [f for f in names if f not in readplan.families()]
+        if unknown:
+            print(f"unknown families {unknown}; known {readplan.families()}", file=sys.stderr)
+            return EXIT_USAGE
+        try:
+            for name in names:
+                fast.entry(name)  # every family checked before any file is written
+            return self._write(names)
+        except SystemExit as e:
+            if not isinstance(e.code, str):
+                raise
+            print(e.code, file=sys.stderr)
+            return EXIT_USAGE
+
+    def _write(self, names: list[str]) -> int:
         for name in names:
-            specs = readplan.plan(name, layers=self.layers, reads=self.reads)[: self.limit or None]
+            specs = readplan.plan(name, layers=self.layers, reads=self.reads, fast=self.fast)
+            specs = specs[: self.limit or None]
             n = readplan.write(specs, self.out / f"{name}.jsonl")
             layers = sorted({L for s in specs for L in s.layers})
             kinds = sorted({s.positions["kind"] for s in specs})
@@ -1035,8 +1109,10 @@ class Produce(Command):
         self.items = None
         self.device = "cuda"
         self.reads = "full"
+        self.fast = False  # --fast: read the fast plan (plan 0090); family= only
 
     def finalize(self) -> None:
+        self.fast = _bool(self.fast)
         self.method = str(self.method)
         self.model = str(self.model)
         self.family = _family(str(self.family or ""))
@@ -1059,6 +1135,8 @@ class Produce(Command):
         self.items = _strs(self.items)
         self.device = str(self.device)
         self.reads = _reads_arg(self.reads)
+        if self.fast and (self.reads == "lite" or not self.family):
+            raise ValueError("--fast reads a family's fast plan: give family=, drop reads=lite")
 
     def execute(self) -> int:
         from wsbench.produce import METHODS, Producer, write
@@ -1072,6 +1150,12 @@ class Produce(Command):
         if self.family and self.family not in readplan.families():
             print(f"unknown family {self.family!r}", file=sys.stderr)
             return EXIT_USAGE
+        if self.fast:  # before the model load: outside the subset, or a bank it was not frozen on
+            try:
+                fast.entry(self.family)
+            except SystemExit as e:
+                print(e.code, file=sys.stderr)
+                return EXIT_USAGE
         producer = Producer.load(self.model, self.method, device=self.device)
         if self.family:
             out = self.out or Path("outputs/readouts") / self.method / f"{self.family}.jsonl"
@@ -1082,6 +1166,7 @@ class Produce(Command):
                 layers=self.layers,
                 items=self.items,
                 reads=self.reads,
+                **({"fast": True} if self.fast else {}),
             )
             print(f"wrote {path}")
             return 0
@@ -1369,6 +1454,8 @@ def _write_summary(
     out: Path, results: list[FamilyResult], notes: list[FamilyOutcome] | None = None
 ) -> str:
     text = markdown_table(results, macro(results))
+    if any(r.config.get("scope") == fast.SCOPE for r in results):  # plan 0090
+        text = fast_header() + "\n\n" + text
     if notes:
         text += "\n## skipped / failed\n"
         text += "".join(f"- {o.family}: {o.status} — {o.error}\n" for o in notes)
@@ -1401,6 +1488,8 @@ def main(argv: list[str] | None = None) -> int:
     if any(a in ("--help", "-h") for a in argv[1:]):
         print(_defaults(command))
         return 0
+    # plan 0090: `--fast` is `fast=True` on every command (one without the key fails as unknown)
+    argv = [argv[0], *("fast=True" if a == "--fast" else a for a in argv[1:])]
     try:
         show = pydra.apply_overrides(command, argv[1:])
     except (ValueError, TypeError, AttributeError, IndexError) as e:

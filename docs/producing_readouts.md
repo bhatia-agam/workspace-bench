@@ -109,6 +109,37 @@ Every run is in summary mode by default (plan 0024: each item's readouts go to o
 judged once; `docs/summarizer.md` § Item digest). Add `opts=aggregate=native` for the per-cell
 rules, into a separate `out=` dir.
 
+## Fast subset (`--fast`)
+
+`--fast` judges the frozen subset `fast-v1` (plan 0090; `evals/fast/README.md`). **A full
+readouts file is always judgeable with `--fast`**: the judge keeps the fast items and narrows the
+two position-reduced families itself, so existing readouts need no re-read. To read only what
+the fast subset needs:
+
+```
+uv run wsbench plan --fast out=outputs/plan-fast          # the 24 fast families
+uv run wsbench run --fast all=True readouts_root=outputs/readouts/mylens-fast out=outputs/judged/mylens-fast
+```
+
+- The fast plan is the full plan's rows of the fast read items (same render, layers and, for 22
+  families, the same positions rule). `agentic_misalignment` and `jailbreak_recognition` rows
+  carry `{"kind": "fast_of", "full": <the full rule>, "fast": <the fast rule>}` and
+  `extra.fast = "fast-v1"`: the fast rule applied WITHIN the full rule's positions. `last_n {n}`
+  = the last n of them; `punct_special` = those whose token is punctuation, a newline token or a
+  special token (`wsbench.readplan.is_fast_site`), else the last full position.
+- Resolve it with `wsbench.readplan.resolve(rule, tokens)`. Unlike `lite_of`, `fast_of` /
+  `punct_special` need the render's token strings, and they must be the **decoded** ones
+  (`tokenizer.decode([id])` per token, what the rows carry as `token`), never the byte-level BPE
+  display strings: those show CJK and curly punctuation as mojibake, which is not punctuation.
+  Write each row's `token`: the judge applies the same predicate to it, and a `punct_special` row
+  without `token` is refused.
+- Declare the file in its sidecar: `"fast": "fast-v1"` and `"plan_sha"` = the FAST plan's sha
+  (`wsbench.reads.fast_plan_sha(family)`, i.e. `plan_sha_rows` over the rows `wsbench plan --fast`
+  wrote), with `"reads": "full"`. A file that declares `fast` is judged only with `--fast`, and
+  code that predates plan 0090 refuses it on the sha mismatch. `wsbench produce family=F --fast`
+  does all of this.
+- `--fast` takes full reads only (no `reads=lite`), on the registered Qwen3.6-27B banks only.
+
 ## Or let the repo produce them
 
 `wsbench.produce` is a small producer over Hugging Face transformers, for anyone who has a GPU

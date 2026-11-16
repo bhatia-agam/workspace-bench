@@ -22,7 +22,7 @@ from collections.abc import Collection, Iterable, Mapping, Sequence
 from pathlib import Path
 from typing import Any
 
-from wsbench import readplan
+from wsbench import fast, readplan
 from wsbench.nyt import NO_NYT_ENV
 from wsbench.readouts import Cell, LoadReport, load_readouts, normalize, read_sidecar
 from wsbench.readplan import FINAL, ReadSpec, lite_select
@@ -111,6 +111,12 @@ def plan_sha(family: str) -> str:
     """``plan_sha_rows`` of ``readplan.plan(family)``'s rows (the producer imports this, so the
     producer's and the judge's hashes agree by construction). Layers are not hashed."""
     return plan_sha_rows(s.row() for s in readplan.plan(family, layers=None))
+
+
+def fast_plan_sha(family: str) -> str:
+    """``plan_sha_rows`` of the family's FAST plan rows (``readplan.plan(family, fast=True)``):
+    the ``plan_sha`` a file produced ``--fast`` declares beside ``"fast": "fast-v1"``."""
+    return plan_sha_rows(s.row() for s in readplan.plan(family, layers=None, fast=True))
 
 
 # ---------------------------------------------------------------- plan lineage (plan 0072 0.3)
@@ -408,6 +414,18 @@ def load(
     ``sampling``, ``sampling_source``, ``reader``, ``reads_checked`` and ``layers_judged``."""
     path = Path(path or args.readouts)
     m = mode(args)
+    # plan 0090: the fast flag is JudgeArgs.scope (set by the runner), never an opts= key
+    fast_entry = fast.entry(family) if args.scope == fast.SCOPE else None
+    fast_ids: set[str] = set()
+    if fast_entry is not None:
+        if m == "lite":
+            fail(f"{path}: --fast judges the fast subset's full reads; drop reads=lite")
+        fast_ids = set(fast_entry["read_ids"])
+        if ids is not None:
+            fast_ids &= set(ids)
+        elif positions is not None:
+            fast_ids &= set(positions)
+        ids = fast_ids
     cells, rep = load_readouts(path, ids=ids, layers=args.layers, positions=positions)
     meta = read_sidecar(path)
     rep.meta = meta
@@ -437,6 +455,10 @@ def load(
     # guard (i): a declared lite file under a full run
     if meta is not None and meta.get("reads") == "lite" and m == "full":
         fail(f"{path}: file was produced reads=lite; judge it with reads=lite")
+    # plan 0090: a file produced from the fast plan holds only the fast reads
+    declared_fast = meta.get("fast") if meta is not None else None
+    if declared_fast is not None and fast_entry is None:
+        fail(f"{path}: file was produced --fast; judge it with --fast")
     # explicit layers=: every requested layer must be present (§2.1.7)
     if args.layers is not None and not prompt_only:
         got = {c.layer for c in cells}
@@ -453,9 +475,31 @@ def load(
         rep.reads_checked = "prompt_only"
         _attach(args, rep)
         return cells, rep
+    fast_file = fast_entry is not None and declared_fast is not None
+    if fast_file and declared_fast != fast.VERSION:
+        fail(
+            f"{path}: readouts were produced for another fast subset ({declared_fast!r}, not "
+            f"{fast.VERSION!r})"
+        )
+    fast_rule = dict(fast_entry.get("positions") or {}) if fast_entry is not None else {}
+    if fast_rule and fast_rule.get("kind") not in readplan.FAST_KINDS:
+        fail(f"{family}: unknown fast positions rule {fast_rule!r}")
+    if fast_file:
+        # a FAST file carries the fast plan's own sha (no lineage); its span is the fast rule's
+        if meta is not None and meta.get("plan_sha"):
+            want, have = fast_plan_sha(family), str(meta["plan_sha"])
+            if have != want:
+                fail(
+                    f"{path}: readouts were produced for a different fast plan (plan_sha "
+                    f"{have[:12]} != {want[:12]})"
+                )
+        if fast_rule.get("kind") == "last_n":
+            min_pos, contiguous = int(fast_rule["n"]), True
+        elif fast_rule:  # punct_special: at least one position per (item, layer)
+            min_pos, contiguous = 1, False
     # guard (iii): plan drift (never waived by allow_missing); an adapted set's drop-only
     # re-freeze is accepted only through its recorded lineage (plan 0072 0.3), dropped ids removed
-    if meta is not None and meta.get("plan_sha"):
+    elif meta is not None and meta.get("plan_sha"):
         want = plan_sha(family)
         have = str(meta["plan_sha"])
         if have != want:
@@ -532,6 +576,18 @@ def load(
                 "plan's layers; pass layers= to judge fewer)"
             )
         partial |= set(gaps)
+    if fast_file:  # an item of the fast read ids absent from a FAST file is partial
+        absent = sorted(fast_ids - {c.id for c in cells})
+        if absent and enforce and not args.allow_missing:
+            fail(
+                f"{path}: fast read item {absent[0]} has no readout; {len(absent)} item(s) "
+                "absent (allow_missing=True judges them as partial)"
+            )
+        partial |= set(absent)
+    if fast_rule:  # after every check: narrow to the fast positions (idempotent on a FAST file)
+        rep.fast_rule = json.dumps(fast_rule, sort_keys=True)
+        rep.n_cells_before_fast = len(cells)
+        cells, rep.fast_fallback_ids = fast_narrow(cells, fast_rule, path)
     if enforce:
         rep.partial_ids = sorted(partial)
         rep.reads_checked = "sidecar"
@@ -540,6 +596,33 @@ def load(
         rep.reads_checked = "no_sidecar"
     _attach(args, rep)
     return cells, rep
+
+
+def fast_narrow(
+    cells: Sequence[Cell], rule: Mapping[str, Any], path: Path | str = ""
+) -> tuple[list[Cell], list[str]]:
+    """Plan 0090: ``(cells, fallback ids)`` narrowed per (item, layer) to a fast positions rule.
+    ``last_n``: the last n positions present. ``punct_special``: the positions whose ``token``
+    is a fast site (``readplan.is_fast_site``, the producer's own predicate), else the item's
+    last position there (its id is returned); a row without ``token`` exits 2."""
+    keep: set[tuple[str, int, int]] = set()
+    fallback: set[str] = set()
+    for (iid, layer), cs in _by_item_layer(cells).items():
+        ps = sorted({c.pos for c in cs})
+        if rule["kind"] == "last_n":
+            chosen = ps[-int(rule["n"]) :]
+        else:
+            if any(c.token is None for c in cs):
+                fail(
+                    f"{path}: item {iid} at L{layer} has rows without `token`; the fast "
+                    "punct_special rule needs each row's read-site token"
+                )
+            chosen = sorted({c.pos for c in cs if readplan.is_fast_site(str(c.token))})
+            if not chosen:
+                chosen = ps[-1:]
+                fallback.add(iid)
+        keep.update((iid, layer, p) for p in chosen)
+    return [c for c in cells if (c.id, c.layer, c.pos) in keep], sorted(fallback)
 
 
 def _report_only(
@@ -591,6 +674,7 @@ def config_stamps(args: JudgeArgs) -> dict[str, Any]:
         "reads_checked": rep.reads_checked,
         "layers_judged": rep.layers_requested if rep.layers_requested is not None else rep.layers,
         **({"lite_rule": rep.lite_rule} if m == "lite" else {}),
+        **({"fast_rule": rep.fast_rule} if rep.fast_rule else {}),
         **({"plan_lineage": rep.plan_lineage} if rep.plan_lineage else {}),
     }
 
@@ -606,6 +690,14 @@ def extras_of(args: JudgeArgs) -> dict[str, Any]:
         "n_samples_trimmed": rep.n_samples_trimmed,
         "n_packed_ambiguous": rep.n_packed_ambiguous,
         "n_cells_short": rep.n_cells_short,
+        **(
+            {
+                "n_cells_before_fast": rep.n_cells_before_fast,
+                "fast_fallback_ids": rep.fast_fallback_ids,
+            }
+            if rep.fast_rule
+            else {}
+        ),
     }
 
 

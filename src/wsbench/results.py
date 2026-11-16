@@ -396,7 +396,10 @@ def macro(
     ``"n<20 (ATI)"`` (plan 0071), unless it is an ``ATI_MACRO_EXCEPTIONS`` row (plan 0085). An
     ATI-scoped row stamped with another subset definition (``extras.ati_subset`` present and not
     ``text_inversion.SUBSET_VERSION``) is excluded, reason ``"stale ATI subset (<v>)"``; with any
-    registered-panel ATI row the result carries ``ati_subset``."""
+    registered-panel ATI row the result carries ``ati_subset``. Plan 0090: results that mix
+    ``config.scope == "fast"`` rows with others raise ``SystemExit``; a fast row stamped with
+    another ``config.fast_subset`` is excluded, reason ``"stale fast subset (<v>)"``; with any
+    fast row the result carries ``fast_subset``."""
     if superseded is None or held_out is None or removed is None:
         from wsbench import registry  # lazy: registry imports this module
 
@@ -423,6 +426,11 @@ def macro(
     )
     if len(ati_gates) > 1:  # plan 0088: one adapted macro is one ATI subset definition
         raise SystemExit(f"macro: ATI rows mix adapted gates {ati_gates}; report one at a time")
+    from wsbench import fast  # lazy: fast imports this module
+
+    # plan 0090: the fast subset is another scale; a macro never blends it with other rows
+    if len({r.config.get("scope") == fast.SCOPE for r in results}) > 1:
+        raise SystemExit("macro: results mix fast and non-fast rows")
     # a summary-mode run (plan 0020) averages summary rows only, never a blend with native ones
     summary_run = any(r.config.get("aggregate") == "summary" for r in results)
     for r in results:
@@ -469,6 +477,9 @@ def macro(
             # plan 0071 §1a: count the gated ATI ids, not judged rows (jailbreak scores controls),
             # and never more than the row judged (a limit= smoke run stays out)
             excluded.append({"family": r.family, "reason": f"n<{ATI_MACRO_MIN_ITEMS} (ATI)"})
+        elif r.config.get("scope") == fast.SCOPE and r.config.get("fast_subset") != fast.VERSION:
+            old = r.config.get("fast_subset")
+            excluded.append({"family": r.family, "reason": f"stale fast subset ({old})"})
         else:
             included.append(r)
     value = sum(r.value for r in included) / len(included) if included else None  # type: ignore[misc]
@@ -484,6 +495,8 @@ def macro(
         out["ati_subset"] = text_inversion.SUBSET_VERSION
     if ati_gates:  # plan 0088: which adapted subset (A vs a variant such as +qwen27b)
         out["ati_gate"] = ati_gates[0]
+    if any(r.config.get("scope") == fast.SCOPE for r in results):  # plan 0090
+        out["fast_subset"] = fast.VERSION
     return out
 
 

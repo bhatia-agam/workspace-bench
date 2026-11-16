@@ -6,7 +6,7 @@ from collections.abc import Callable
 from dataclasses import dataclass, field
 from typing import Any
 
-from wsbench import llm, registry
+from wsbench import fast, llm, registry
 from wsbench.cache import Cache, fingerprint
 from wsbench.judge_config import ResolvedJudge
 from wsbench.llm import Spend
@@ -192,10 +192,11 @@ def is_subset(args: JudgeArgs) -> bool:
     """A partial run. The anti-text-inversion scope's ``items`` is a defined benchmark variant,
     not a partial run, so it alone does not count; nor does an explicit ``layers=`` list (plan
     0032 §2.1.7: a defined variant, complete when every requested layer is present — a missing
-    one exits 2 at load, or under ``allow_missing`` makes the run incomplete)."""
+    one exits 2 at load, or under ``allow_missing`` makes the run incomplete). The fast scope
+    (plan 0090) is a defined variant in the same way."""
     from wsbench import reads
 
-    scoped = args.scope == "anti_text_inversion"
+    scoped = args.scope in ("anti_text_inversion", fast.SCOPE)
     return (args.items is not None and not scoped) or args.limit > 0 or reads.incomplete(args)
 
 

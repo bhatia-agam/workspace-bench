@@ -11,7 +11,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any, Literal, Protocol
 
-from wsbench import digest, llm, mc, mcjudge, reads, registry
+from wsbench import digest, fast, llm, mc, mcjudge, reads, registry
 from wsbench.baselines import text_inversion
 from wsbench.family import fail
 from wsbench.judge_config import ResolvedJudge, resolve
@@ -110,8 +110,12 @@ def judge_family(
     """Run one family with an already-resolved judge and pre-parsed ``opts=``; write its
     ``results.json`` and print the one-line summary. Under ``anti_text_inversion`` the family's
     items are its frozen subset (``text_inversion.subset``, which exits for an ungated or stale
-    family) and the result is stamped with the scope."""
+    family) and the result is stamped with the scope. Under ``fast`` (plan 0090) the items are
+    the family's fast read ids, and the result is rescored on the fast units and stamped."""
     items, scope, ati = args.items, "", None
+    fast_entry = fast.entry(spec.name) if getattr(args, "fast", False) else None
+    if fast_entry is not None:
+        items, scope = list(fast_entry["read_ids"]), fast.SCOPE
     if spec.name not in digest.NATIVE_ONLY:  # those run native under either mode
         warn_mode_change(out, opts.get("aggregate", "native"), spec.name)
     if getattr(args, "anti_text_inversion", False):
@@ -147,6 +151,8 @@ def judge_family(
             fail(f"{spec.name}: aggregate=summary but the family ran native (not hooked)")
         result.config["aggregate"] = "native"
         result.extras["summary_mode_note"] = digest.NATIVE_ONLY[spec.name]
+    if fast_entry is not None:
+        stamp_fast(spec.name, result, fast_entry)
     if ati is not None:
         result.config["scope"] = scope
         result.extras["ati_n_bank"] = ati["n_bank"]
@@ -221,6 +227,21 @@ def stamp_adapted_bank(family: str, result: FamilyResult) -> None:
             if k == "prompt_version":
                 result.config["registered_prompt_version"] = v
             result.config[k] = new
+
+
+def stamp_fast(family: str, result: FamilyResult, entry: Mapping[str, Any]) -> None:
+    """Plan 0090: the fast value (``fast.rescore``), ``config.scope`` / ``fast_subset``, and,
+    for a family whose fast entry reduces the positions, the ``+fast-<kind>`` suffix on the
+    result's stamps (once)."""
+    fast.rescore(family, result)
+    result.config["scope"] = fast.SCOPE
+    result.config["fast_subset"] = fast.VERSION
+    if rule := entry.get("positions"):
+        tag = fast.position_stamp(rule)
+        for k in STAMP_KEYS:
+            v = result.config.get(k)
+            if isinstance(v, str) and not v.endswith(tag):
+                result.config[k] = v + tag
 
 
 def finalize_reads(args: JudgeArgs, result: FamilyResult) -> None:
@@ -381,6 +402,19 @@ def run_families(
     outcomes: dict[str, FamilyOutcome] = {}
     runnable: list[tuple[EvalSpec, Path]] = []
     for s in specs:
+        if getattr(args, "fast", False):
+            # plan 0090, before anything else: a family outside the fast subset is skipped, a
+            # bank override or a bank that changed since the freeze fails; neither spends a call
+            try:
+                fast.entry(s.name)
+            except fast.NotInFast:
+                print(f"{s.name}: skipped (not in {fast.VERSION})")
+                outcomes[s.name] = FamilyOutcome(s.name, "skipped", error=f"not in {fast.VERSION}")
+                continue
+            except SystemExit as e:
+                print(f"{s.name}: failed ({e.code})", file=sys.stderr)
+                outcomes[s.name] = FamilyOutcome(s.name, "failed", error=str(e.code), exit_code=2)
+                continue
         readouts = readouts_root / f"{s.name}.jsonl"
         # a readout file written under a former family key (registry.LEGACY_FAMILY_NAMES; for a
         # reused key the former key's file wins, registry.lookup_names)
