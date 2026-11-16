@@ -162,3 +162,24 @@ def test_stock_floor_reads_every_hinted_cutoff_position():
     assert floors.subsample(list(range(60)), cap=floors.FAMILY_MAX_POS["hinted_cutoff"]) == list(
         range(60)
     )
+
+
+class SlowCharTok(CharTok):
+    """CharTok without ``offset_mapping`` (a slow tokenizer: Kimi's tiktoken one raises KeyError on
+    the key), with the encode / decode the incremental-decode fallback uses."""
+
+    def __call__(self, text, add_special_tokens=False, return_offsets_mapping=False):
+        return {"input_ids": [ord(c) for c in text]}
+
+    def encode(self, text, add_special_tokens=False):
+        return [ord(c) for c in text]
+
+    def decode(self, ids):
+        return "".join(chr(i) for i in ids)
+
+
+def test_render_ids_without_offset_mapping_matches_the_fast_path():
+    """plan 0089 (kimi-k2): render_ids falls back to run.char_offsets for a tokenizer with no
+    offset_mapping, and gives the fast path's ids and offsets."""
+    user = HINT.format(a="Paris") + "\n\nWhich city?"
+    assert hc.render_ids(SlowCharTok(), user) == hc.render_ids(CharTok(), user)

@@ -36,8 +36,13 @@ def render_ids(tok: Any, user: str) -> tuple[list[int], list[tuple[int, int]], s
         add_generation_prompt=True,
         enable_thinking=False,
     )
-    enc = tok(text, add_special_tokens=False, return_offsets_mapping=True)
-    return list(enc["input_ids"]), [tuple(o) for o in enc["offset_mapping"]], text
+    from .run import char_offsets  # a slow tokenizer (Kimi's tiktoken) has no offset_mapping
+
+    ids = list(tok(text, add_special_tokens=False)["input_ids"])
+    offs = char_offsets(tok, text)
+    if len(offs) != len(ids):
+        raise SystemExit(f"hinted_cutoff: {len(offs)} offsets for {len(ids)} render ids")
+    return ids, offs, text
 
 
 def item_problems(it: dict[str, Any], tok: Any) -> list[str]:
