@@ -930,16 +930,33 @@ def _prose_level(span: str, text: str) -> int | None:
     return 2 if _span_in(span, text) else None
 
 
+_PIPE_SEP = re.compile(r"\s+\|\s+")
+
+
+def token_splits(span: str) -> list[list[str]]:
+    """The ways a token quote splits into its " | "-joined parts: at every "|" (plan 0032), and
+    at the spaced separator " | " alone, so a token that itself holds "|" (Qwen's
+    ``<|im_end|>``, ``<|file_sep|>``) stays one part instead of three. A quote verifies if
+    either split does."""
+    if "|" not in span:
+        return []
+    out = [span.split("|")]
+    spaced = _PIPE_SEP.split(span)
+    if len(spaced) >= 2 and spaced != out[0]:
+        out.append(spaced)
+    return out
+
+
 def _token_level(span: str, pieces: Sequence[str]) -> int | None:
     """0 one whole token, or several whole tokens of this SAME list joined by " | " in any order
-    (plan 0032 §2.7.3: tokens of one list may jointly express one meaning); 2 a span inside one
-    token; never a span across tokens without the separator."""
+    (plan 0032 §2.7.3: tokens of one list may jointly express one meaning; :func:`token_splits`);
+    2 a span inside one token; never a span across tokens without the separator."""
     want = _norm(span)
     toks = [_norm(p) for p in pieces]
     if want and want in toks:
         return 0
-    if "|" in span:
-        parts = [_norm(p) for p in span.split("|")]
+    for split in token_splits(span):
+        parts = [_norm(p) for p in split]
         if len(parts) >= 2 and all(parts) and set(parts) <= set(toks):
             return 0
     return 2 if any(_span_in(span, p) for p in pieces) else None
@@ -1080,7 +1097,10 @@ def line_holds(quote: str, ln: Line) -> bool:
         return False
     if ln.pieces is None:
         return fq in fold_quote(ln.text)
-    return all(_token_part_ok(p, ln) for p in quote.split("|"))
+    # the whole quote as ONE token too (a single <|im_end|> holds "|" but is no list)
+    return _token_part_ok(quote, ln) or any(
+        all(_token_part_ok(p, ln) for p in sp) for sp in token_splits(quote)
+    )
 
 
 def statement_lines(lines: Sequence[Line], cells: Sequence[Cell]) -> list[Line]:
