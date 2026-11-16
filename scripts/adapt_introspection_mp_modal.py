@@ -8,8 +8,10 @@ Subjects (plan 0067 §3): ``glm-5.3`` (the vendored ``Glm53Text`` of global-work
 ``scripts/glm53_aff``, 78 blocks + head, H200:8), ``deepseek-v4-flash`` (the xaff V4-Flash
 reader, 43 blocks + head, B300:8), ``deepseek-v4-pro`` / ``muse-spark-open`` /
 ``kimi-k3`` (the xaff readers of global-workspace PR #723 at full depth, ``WSB_GW_XAFF``; H200:8,
-H200:8, B300:8). The subject is fixed at import (Modal builds decorators then): pass
-``--subject`` on the ``modal run`` line (or ``WSB_MP_SUBJECT``).
+H200:8, B300:8); ``kimi-k2`` / ``glm-5.3-flash`` (plan 0089: stock transformers 5.17.0
+``deepseek_v3`` / ``glm5_next`` on the FP8 snapshots of their volumes, B300:8 / B200:4; a one-GPU
+``smoke_main`` at truncated depth first). The subject is fixed at import (Modal builds decorators
+then): pass ``--subject`` on the ``modal run`` line (or ``WSB_MP_SUBJECT``).
 
     export WSB_GW=/path/to/global-workspace     # a checkout with scripts/glm53_aff
     python -m wsbench.adapt introspection model=glm-5.3 stage=job
@@ -49,7 +51,8 @@ def _subject_from_argv(argv: list[str]) -> str:
 
 
 SUBJECT = _subject_from_argv(sys.argv) if modal.is_local() else os.environ["WSB_MP_SUBJECT"]
-SUPPORTED = ("glm-5.3", "deepseek-v4-pro", "deepseek-v4-flash", "muse-spark-open", "kimi-k3")
+SUPPORTED = ("glm-5.3", "deepseek-v4-pro", "deepseek-v4-flash", "muse-spark-open", "kimi-k3",
+             "kimi-k2", "glm-5.3-flash")  # fmt: skip
 
 # ------------------------------------------------------------------ Modal (per subject)
 
@@ -109,6 +112,7 @@ def _generation(model_dir: str, extra_stops: list[int] | None) -> tuple[list[int
 
 
 GATE_FULL_DEPTH = False  # calib (d) at full depth: recorded only, except a batch-invariant stack
+SMOKE_GPU = ""  # a one-GPU truncated-depth smoke before the full load (the stock-HF subjects)
 
 if SUBJECT == "glm-5.3":
     if modal.is_local() and str(GW / "scripts/glm53_aff") not in sys.path:
@@ -612,8 +616,235 @@ elif SUBJECT == "kimi-k3":
             "lm_head_in_checkpoint": head}  # fmt: skip
 
 
+elif SUBJECT in ("kimi-k2", "glm-5.3-flash"):
+    # plan 0089: stock transformers 5.17.0 (deepseek_v3 / glm5_next), the FP8 checkpoint as shipped
+    # (transformers' FP8Linear / FP8Experts on the finegrained-fp8 Triton kernel; DeepGEMM is off
+    # on a multi-device model), device_map over the container's GPUs, HookStack on the decoder
+    # blocks. No global-workspace code: the loader file shas are transformers' own modules.
+    WEIGHTS = "/vol"  # the subject's own volume: hf/hub/models--<org>--<name> (hub-cache layout)
+    if SUBJECT == "kimi-k2":
+        weights_vol = modal.Volume.from_name("kimi-k2")
+        REPO = "moonshotai/Kimi-K2-Instruct-0905"
+        REVISION = "ac6c49f04883bd0a0598b790693a72061c676629"
+        GPU = ["B300:8"]  # 1.03 TB of block FP8
+        SMOKE_GPU, SMOKE_LAYERS = "B300", 4  # blocks 0..3: the dense block + three MoE blocks
+        RESIDUAL = "plain_7168"
+        KDA_MODE = None
+    else:
+        weights_vol = modal.Volume.from_name("glm53-flash")
+        REPO = "zai-org/GLM-5.3-Flash"
+        REVISION = "eb9eb208eb0d988989d07a6a12d0fdeb5f52574a"
+        GPU = ["B200:4"]  # 328 GB of FP8 over 4 x 180 GB
+        SMOKE_GPU, SMOKE_LAYERS = "B200", 5  # three KDA blocks, the first DSA block (3), MoE from 3
+        # the V4 precedent (plan 0067 §2): the block's raw mHC output [B, S, 4, 4096], flattened
+        # stream-major to 16,384 dims for the vector, ||h|| and the add
+        RESIDUAL = "mhc_raw_flat_16384"
+        # transformers' cache-less KDA path is chunk_kimi_delta_attention; the token-sequential
+        # recurrent step is exactly causal by construction (kimi-k3's fla chunk leak, plan 0067)
+        KDA_MODE = "fused_recurrent"
+        GLM_KEEP_BF16 = ["forget_gate.f_a_proj", "forget_gate.f_b_proj"]
+        GATE_FULL_DEPTH = True  # a KDA stack: the full-depth causality check must be exact
+    EXPERTS_IMPL = os.environ.get("WSB_MP_EXPERTS", "")  # "" = transformers' default (grouped_mm)
+    MODEL_DIR = f"{WEIGHTS}/hf/hub/models--{REPO.replace('/', '--')}/snapshots/{REVISION}"
+    EPHEMERAL_DISK_MB = 524_288  # Modal minimum; weights are read in place from the volume
+    # tokens per micro-batch (FP8 MoE: a big per-forward cost). Kimi-K2 at 65536 hit a CUDA
+    # illegal memory access in calib (c) (calib 2026-11-16; tokens x top-8 x 7168 > 2^31 in the
+    # expert dispatch), so 16384 there; GLM-5.3-Flash (d 4096) ran its calibration at 65536
+    BUDGET = HIDDEN_BUDGET = 16384 if SUBJECT == "kimi-k2" else 65536
+    GW_COMMIT = ""
+    image = (
+        modal.Image.from_registry("nvidia/cuda:13.0.1-devel-ubuntu24.04", add_python="3.12")
+        .entrypoint([])
+        .pip_install("torch==2.13.0", index_url="https://download.pytorch.org/whl/cu130")
+        .pip_install(
+            "transformers==5.17.0",
+            "kernels>=0.16.0,<0.17",
+            "accelerate>=1.0",
+            "safetensors>=0.8.0",
+            "numpy>=2.3",
+            "einops>=0.8",
+        )
+        .env(
+            {
+                "PYTHONUNBUFFERED": "1",
+                "PYTORCH_CUDA_ALLOC_CONF": "expandable_segments:True",
+                "TOKENIZERS_PARALLELISM": "false",
+                "HF_HOME": "/root/.cache/huggingface",
+                "TRITON_PTXAS_PATH": "/usr/local/cuda/bin/ptxas",
+                "TRANSFORMERS_DISABLE_DEEPGEMM_LINEAR": "1",
+            }
+        )
+        .add_local_python_source("wsbench", ignore=["**/__pycache__"])
+    )
+
+    def _stock_config() -> Any:
+        """The snapshot's config for the stock class: Kimi-K2's ``model_type`` is ``kimi_k2``
+        (remote code), so its dict goes into ``DeepseekV3Config`` (the quantization config kept);
+        GLM-5.3-Flash's is a stock ``glm5_next`` config."""
+        raw = json.loads((Path(MODEL_DIR) / "config.json").read_text())
+        if SUBJECT == "kimi-k2":
+            from transformers import DeepseekV3Config
+
+            for k in ("auto_map", "model_type", "architectures"):
+                raw.pop(k, None)
+            return DeepseekV3Config(**raw)
+        from transformers import AutoConfig
+
+        cfg = AutoConfig.from_pretrained(MODEL_DIR)
+        # the checkpoint's KDA forget-gate projections are bf16 (no weight_scale_inv), listed as
+        # "model.layers.N.self_attn.f_a_proj"; transformers nests them as
+        # "...self_attn.forget_gate.f_a_proj", which no listed name matches, so they would become
+        # FP8Linear with uninitialised scales (smoke 2026-11-16: MISSING f_[ab]_proj scales)
+        qc = cfg.quantization_config
+        qc["modules_to_not_convert"] = [*qc["modules_to_not_convert"], *GLM_KEEP_BF16]
+        return cfg
+
+    def _model_class() -> Any:
+        if SUBJECT == "kimi-k2":
+            from transformers import DeepseekV3ForCausalLM
+
+            return DeepseekV3ForCausalLM
+        from transformers import Glm5NextForConditionalGeneration
+
+        return Glm5NextForConditionalGeneration
+
+    def _blocks(model: Any) -> Any:
+        return model.model.layers if SUBJECT == "kimi-k2" else model.model.language_model.layers
+
+    def _text_config(cfg: Any) -> Any:
+        return getattr(cfg, "text_config", cfg)
+
+    def _load(n_layers: int | None = None) -> tuple[Any, dict[str, Any]]:
+        """``from_pretrained`` on the volume snapshot, bf16 activations, the FP8 weights as
+        shipped, spread evenly over every visible GPU (``n_layers`` truncates: the smoke only)."""
+        import torch
+
+        cfg = _stock_config()
+        if n_layers is not None:
+            tc = _text_config(cfg)
+            tc.num_hidden_layers = n_layers
+            for k in ("layer_types", "mlp_layer_types", "indexer_types"):
+                if isinstance(getattr(tc, k, None), list):
+                    setattr(tc, k, getattr(tc, k)[:n_layers])
+        idx = json.loads((Path(MODEL_DIR) / "model.safetensors.index.json").read_text())
+        n_gpu = torch.cuda.device_count()
+        total = int(idx["metadata"]["total_size"])
+        if n_layers is not None:
+            total = total * (n_layers + 2) // (_text_config(_stock_config()).num_hidden_layers + 2)
+        per = int(total / n_gpu * 1.15) + (8 << 30)  # an even spread, head and embeddings included
+        cap = torch.cuda.get_device_properties(0).total_memory - (24 << 30)
+        mem = {i: min(per, cap) for i in range(n_gpu)}
+        t0 = time.time()
+        model, li = _model_class().from_pretrained(
+            MODEL_DIR, config=cfg, dtype=torch.bfloat16, device_map="auto", max_memory=mem,
+            output_loading_info=True,
+        )  # fmt: skip
+        keys = ("missing_keys", "mismatched_keys") + (
+            ("unexpected_keys",) if n_layers is None else ()
+        )
+        bad = {k: sorted(li.get(k) or []) for k in keys}
+        # a parameter the checkpoint did not fill is never run; at full depth an unexpected key
+        # (e.g. an FP8 weight_scale_inv whose weight landed in a module kept bf16) is refused too
+        if any(bad.values()):
+            raise SystemExit(f"{SUBJECT}: load left parameters unfilled: "
+                             f"{ {k: v[:12] for k, v in bad.items()} }")  # fmt: skip
+        model.eval()
+        for p in model.parameters():
+            p.requires_grad_(False)
+        devs = sorted({str(p.device) for p in model.parameters()})
+        qc = getattr(cfg, "quantization_config", None)
+        info = {
+            "load_seconds": round(time.time() - t0), "devices": devs,
+            "attn_implementation": getattr(_text_config(model.config), "_attn_implementation",
+                                           None),
+            "experts_implementation": getattr(_text_config(model.config),
+                                              "_experts_implementation", None),
+            "quantization": _quant_summary(qc),
+            "fp8_modules": sorted({type(m).__name__ for m in model.modules()
+                                   if type(m).__name__.startswith("FP8")}),
+            "n_unexpected_keys": len(li.get("unexpected_keys") or []),
+        }  # fmt: skip
+        return model, info
+
+    def _loader_files() -> list[str]:
+        import transformers
+
+        root = Path(transformers.__file__).parent
+        mod = "deepseek_v3/modeling_deepseek_v3.py" if SUBJECT == "kimi-k2" else (
+            "glm5_next/modeling_glm5_next.py")  # fmt: skip
+        return [str(root / "models" / mod), str(root / "integrations/finegrained_fp8.py")]
+
+    def make_stack(extra_stops: list[int] | None = None, n_layers: int | None = None) -> Any:
+        """The stock HF model at full depth + head; ``HookStack`` on its decoder blocks (the block
+        output: Kimi-K2 the plain ``[B, S, 7168]`` residual, GLM-5.3-Flash element 0 of the block's
+        ``(streams, topk)`` output, ``[B, S, 4, 4096]`` read flat); logits = ``lm_head`` on the
+        final-normed last hidden state (GLM: ``norm(hc_head(streams))``) at the selected
+        positions only; a cache-less forward (``use_cache=False``) per call."""
+        import transformers
+
+        from wsbench.adapt.introspection_ops import set_kda_mode
+
+        _deterministic()
+        stops, gen_check = _generation(MODEL_DIR, extra_stops)
+        model, info = _load(n_layers)
+        cfg = json.loads((Path(MODEL_DIR) / "config.json").read_text())
+        pad = _text_config(model.config).pad_token_id
+        if pad is None:
+            pad = cfg.get("pad_token_id")
+        if EXPERTS_IMPL:
+            model.set_experts_implementation(EXPERTS_IMPL)
+            info["experts_implementation"] = EXPERTS_IMPL
+        stack = HookStack(model, _blocks(model), stops, int(pad))
+        n_kda = 0
+        if KDA_MODE is not None:
+            n_kda = set_kda_mode(model, KDA_MODE)
+            assert n_kda > 0, "no KDA layer found: the KDA mode switch would be a no-op"
+        stack.record = {
+            "stack": f"stock transformers {transformers.__version__} "
+            f"{type(model).__name__} (FP8 as shipped), full depth + head, forward hooks on the "
+            "decoder block output",
+            "subject_revision": f"{REPO}@{REVISION}", "residual": RESIDUAL, "stop_ids": stops,
+            "generation_config_check": gen_check, "pad_id": int(pad),
+            "loader_sha256": {f: _sha256(f) for f in _loader_files()},
+            "n_blocks": len(_blocks(model)), "forward": "model.model, use_cache=False",
+            **({"kda_mode": KDA_MODE, "n_kda_layers": n_kda,
+                "kda_impl": "transformers glm5_next recurrent_kimi_delta_attention (torch "
+                "reference; fla not installed)"} if KDA_MODE else {}),
+            **{k: v for k, v in info.items() if k != "load_seconds"},
+        }  # fmt: skip
+        stack.model = model
+        print(f"[mp] {SUBJECT}: loaded in {info['load_seconds']}s on {info['devices']}", flush=True)
+        return stack
+
+    def preflight_check() -> dict:
+        """CPU: the stock class builds the snapshot's config, and every shard the index names is
+        on the volume (the kimi-k2 download may still be running)."""
+        cfg = _stock_config()
+        _model_class()
+        idx = json.loads((Path(MODEL_DIR) / "model.safetensors.index.json").read_text())
+        shards = sorted(set(idx["weight_map"].values()))
+        missing = [s for s in shards if not (Path(MODEL_DIR) / s).exists()]
+        if missing:
+            raise SystemExit(f"{SUBJECT}: {len(missing)} of {len(shards)} shards not on the "
+                             f"volume yet: {missing[:4]}")  # fmt: skip
+        tc = _text_config(cfg)
+        return {"config_class": type(cfg).__name__, "n_shards": len(shards),
+                "num_hidden_layers": tc.num_hidden_layers, "hidden_size": tc.hidden_size,
+                "hc_mult": getattr(tc, "hc_mult", None), "pad_token_id": tc.pad_token_id,
+                "index_topk": getattr(tc, "index_topk", None),
+                "quantization_config": _quant_summary(getattr(cfg, "quantization_config", None))
+                }  # fmt: skip
+
+    def _quant_summary(qc: Any) -> dict[str, Any]:
+        d = qc if isinstance(qc, dict) else getattr(qc, "to_dict", dict)()
+        skip = d.get("modules_to_not_convert") or []
+        return {k: v for k, v in d.items() if k != "modules_to_not_convert"} | {
+            "n_modules_not_converted": len(skip)}  # fmt: skip
+
+
 app = modal.App(f"adapt-introspection-mp-{SUBJECT}")
-FN_ENV = {"WSB_MP_SUBJECT": SUBJECT, "WSB_GW_COMMIT": GW_COMMIT}
+FN_ENV = {"WSB_MP_SUBJECT": SUBJECT, "WSB_GW_COMMIT": GW_COMMIT,
+          "WSB_MP_EXPERTS": os.environ.get("WSB_MP_EXPERTS", "")}  # fmt: skip
 
 
 def _engine(n_shards: int, stack: Any, budget: int) -> dict[str, Any]:
@@ -633,7 +864,8 @@ FN: dict[str, Any] = {
     "memory": 1_048_576,
     "cpu": 64,
     "ephemeral_disk": EPHEMERAL_DISK_MB,
-    "max_containers": 4,
+    # plan 0089: one container at a time for the stock-HF subjects (shards then run in turn)
+    "max_containers": 1 if SUBJECT in ("kimi-k2", "glm-5.3-flash") else 4,
     "env": FN_ENV,
 }
 
@@ -957,23 +1189,20 @@ def numerics_main(job: str, out: str, subject: str = SUBJECT) -> None:
     print(f"wrote {out}")
 
 
-@app.function(**FN)
-def causal(job: dict, extra_stops: list[int]) -> bytes:
-    """Causality check of the stack: unsteered logits at positions p of the protocol row from the
-    full row vs from the row truncated after p (one row per forward), and the steered (beta 4)
-    vs unsteered logits at the last pre-span position. Kimi-K3: once with KDA in fla's chunk
-    mode (the default) and once in its token-sequential fused_recurrent mode (length-invariant)."""
+def _causal_report(stack: Any, job: dict, layer: int) -> dict[str, Any]:
+    """Causality of ``stack``: unsteered logits at positions p of the protocol row from the full
+    row vs from the row truncated after p (one row per forward), a rerun, and the steered (beta 4)
+    vs unsteered logits at the last pre-span position; a KDA subject once per KDA mode (chunk,
+    then the run's token-sequential fused_recurrent)."""
     import numpy as np
     import torch
 
     from wsbench.adapt import introspection_ops as ops
 
-    stack = make_stack(extra_stops)
     pr = job["protocol"]
     ids = list(pr["ids"])
     span = list(pr["inject"])
     ps = sorted({4, span[0] // 2, span[0] - 1, span[-1], len(ids) - 1})
-    layer = int(job["inject_layer"])
     hid = ops.compute_hidden(stack, ops.vector_requests(job), layer, budget=HIDDEN_BUDGET)
     hmap = ops.hidden_map(job, hid)
     w0 = pr["paper_words"][0]
@@ -996,23 +1225,79 @@ def causal(job: dict, extra_stops: list[int]) -> bytes:
                 "rerun_max_abs": float((full - same).abs().max()),
                 "steered_pre_span_max_abs": float(steer_d)}  # fmt: skip
 
-    out: dict[str, Any] = {"positions": ps, "span": [span[0], span[-1]], "modes": {}}
+    out: dict[str, Any] = {"positions": ps, "span": [span[0], span[-1]], "layer": layer,
+                           "modes": {}}  # fmt: skip
     early: dict[str, Any] = {}
-    modes = ["default"]
-    if SUBJECT == "kimi-k3":
-        modes = ["chunk", "fused_recurrent"]
-    for mode in modes:
-        if SUBJECT == "kimi-k3":
-            from wsbench.adapt.introspection_ops import set_kda_mode
-
-            set_kda_mode(stack.model, mode)
+    kda = SUBJECT in ("kimi-k3", "glm-5.3-flash")
+    for mode in ["chunk", "fused_recurrent"] if kda else ["default"]:
+        if kda:
+            ops.set_kda_mode(stack.model, mode)
         out["modes"][mode] = check()
         early[mode] = logits(ids, [ps[0]])
         print(f"[causal] {mode}: {out['modes'][mode]}", flush=True)
+    if kda:  # back to the run's mode
+        ops.set_kda_mode(stack.model, "fused_recurrent")
     if len(early) == 2:  # closeness at bf16 scale (a causal-but-wrong recurrent path differs)
         a, b = early.values()
         out["chunk_vs_recurrent_early_max_abs"] = float((a - b).abs().max())
-    return pickle.dumps(out)
+    return out
+
+
+@app.function(**FN)
+def causal(job: dict, extra_stops: list[int]) -> bytes:
+    """:func:`_causal_report` on the full-depth stack at the registered inject layer."""
+    stack = make_stack(extra_stops)
+    return pickle.dumps(_causal_report(stack, job, int(job["inject_layer"])))
+
+
+if SMOKE_GPU:
+
+    @app.function(image=image, gpu=SMOKE_GPU, volumes={WEIGHTS: weights_vol}, env=FN_ENV,
+                  timeout=3600, memory=262_144, cpu=16,
+                  ephemeral_disk=EPHEMERAL_DISK_MB)  # fmt: skip
+    def smoke(job: dict, extra_stops: list[int]) -> bytes:
+        """One GPU, the first ``SMOKE_LAYERS`` blocks + head (minutes, before an 8-GPU load):
+        the stock class loads the FP8 snapshot and runs; block output shape; batch invariance
+        (a row alone vs packed with others); :func:`_causal_report` at the last block."""
+        import torch
+
+        t0 = time.time()
+        stack = make_stack(extra_stops, n_layers=SMOKE_LAYERS)
+        pr = job["protocol"]
+        rows = [pr["ids"] + pr["cont_ids"][w] for w in pr["paper_words"][:4]]
+        last = SMOKE_LAYERS - 1
+        h = stack._forward(stack._pad(rows[:1]), None, last, [(0, len(rows[0]) - 1)])
+        out: dict[str, Any] = {
+            "n_layers": SMOKE_LAYERS, "gpu": torch.cuda.get_device_name(0),
+            "load_and_setup_seconds": round(time.time() - t0),
+            "read_shape": list(h.shape), "read_norm": float(h.float().norm()), "experts": {},
+            "engine": {k: v for k, v in stack.record.items() if k != "loader_sha256"},
+        }  # fmt: skip
+        for impl in ("grouped_mm", "eager"):  # which expert path is batch-invariant
+            stack.model.set_experts_implementation(impl)
+            sel = [(0, p) for p in range(len(rows[0]))]
+            alone = stack._forward(stack._pad(rows[:1]), None, None, sel).float().cpu()
+            sel3 = [(3, p) for p in range(len(rows[0]))]
+            packed = stack._forward(stack._pad(rows[::-1]), None, None, sel3).float().cpu()
+            t1 = time.time()
+            out["experts"][impl] = {
+                "logits_finite": bool(torch.isfinite(alone).all()),
+                "argmax_next": [int(x) for x in alone.argmax(-1)[-8:]],
+                "alone_vs_packed_max_abs": float((alone - packed).abs().max()),
+                # the steer at block 1, so later MoE / attention blocks see the moved span
+                "causal": _causal_report(stack, job, 1),
+            }  # fmt: skip
+            out["experts"][impl]["causal_seconds"] = round(time.time() - t1)
+        print(json.dumps(out, indent=1, default=str), flush=True)
+        return pickle.dumps(out)
+
+    @app.local_entrypoint()
+    def smoke_main(job: str, out: str, subject: str = SUBJECT) -> None:
+        assert subject == SUBJECT
+        j = json.loads(Path(job).read_text(encoding="utf-8"))
+        Path(out).parent.mkdir(parents=True, exist_ok=True)
+        Path(out).write_bytes(smoke.remote(j, reply_end_ids(j["model"])))
+        print(f"wrote {out}")
 
 
 @app.local_entrypoint()

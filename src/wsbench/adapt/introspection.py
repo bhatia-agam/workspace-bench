@@ -79,9 +79,10 @@ EXTERNAL: dict[str, str] = {
     "glm53-weights); no-think render = the reasoning_effort=low system line + <think></think> "
     "(global-workspace src/global_workspace/glm53_aff/template.py), which the Subject's "
     "chat_template must reproduce before `job`",
-    "glm-5.3-flash": "zai-org/GLM-5.3-Flash (320B MoE, 45 blocks, KDA + DSA + mHC residual "
-    "streams): generation runs on adapt-glm-5.3-flash (vLLM, plan 0089), but no multi-GPU "
-    "residual stack exists for introspection",
+    "glm-5.3-flash": "zai-org/GLM-5.3-Flash @eb9eb208 (320B MoE, 45 blocks, KDA + DSA + mHC "
+    "residual streams, hc_mult 4 x 4096): scripts/adapt_introspection_mp_modal.py (plan 0089) on "
+    "stock transformers glm5_next (FP8 as shipped, volume glm53-flash); KDA in the token-"
+    "sequential recurrent mode (set_kda_mode); residual mhc_raw_flat_16384 (the V4 precedent)",
     "deepseek-v4-flash": "deepseek-ai/DeepSeek-V4-Flash (284B MoE, 43 blocks, 4 mHC residual "
     "streams): scripts/adapt_introspection_mp_modal.py (plan 0067) on the xaff V4-Flash reader "
     "(global-workspace xaff.backends.v4flash.load_v4_model = scripts/v4_flash/common.py "
@@ -90,9 +91,9 @@ EXTERNAL: dict[str, str] = {
     "the stream mode (raw 16,384-d flat vs stream sum) and record it. The earlier port under "
     "this rule was NO-GO at blocks 6/8/10 (global-workspace docs/project/experiments/"
     "v4_flash_ar/newfam/introspection.md)",
-    "kimi-k2": "moonshotai/Kimi-K2-Instruct-0905 (1T MoE, 61 blocks): generation runs on "
-    "adapt-kimi-k2 (vLLM, B300:8, plan 0089), but no multi-GPU residual stack exists for "
-    "introspection",
+    "kimi-k2": "moonshotai/Kimi-K2-Instruct-0905 @ac6c49f0 (1T MoE, 61 blocks, DeepseekV3 "
+    "arch): scripts/adapt_introspection_mp_modal.py (plan 0089) on stock transformers deepseek_v3 "
+    "(block FP8 as shipped, volume kimi-k2, B300:8); plain residual (plain_7168)",
     "deepseek-v4-pro": "deepseek-ai/DeepSeek-V4-Pro-0813 (MoE, 61 blocks, V4 architecture): no "
     "HF loader in the repo; the render is V4-Flash's pinned chat-mode template, and the engine "
     "must choose and record the stream mode as V4-Flash's must",
@@ -109,7 +110,8 @@ RESIDUALS: dict[str, str] = {
     "mhc_raw_flat_28672": "h = the block's mHC output [4, 7168] flattened stream-major to 28,672 "
     "dims (the vector lives there); ||h|| and the add are on that flat view",
     "mhc_raw_flat_16384": "h = the block's mHC output [4, 4096] flattened stream-major to 16,384 "
-    "dims (DeepSeek-V4-Flash; the vector lives there); ||h|| and the add are on that flat view",
+    "dims (DeepSeek-V4-Flash, GLM-5.3-Flash; the vector lives there); ||h|| and the add are on "
+    "that flat view",
     "attnres_full_sum": "h = full_sum = prefix_sum + sum(block_residual) (Kimi-K3 block "
     "Attention Residuals); ||h|| = ||full_sum||; the add goes into prefix_sum (so full_sum grows "
     "by exactly the add, up to bf16) and travels with the open block into block_residual at the "

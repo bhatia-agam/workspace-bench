@@ -471,3 +471,141 @@ def test_hookstack_steer_never_moves_earlier_logits():
     later = [(0, 9)]
     assert not torch.equal(stack._forward(stack._pad([row]), None, None, later),
                            stack._forward(stack._pad([row]), st, None, later))  # fmt: skip
+
+
+def _tiny_glm5_next():
+    """A random fp32 GLM-5.3-Flash-shaped text model: three KDA blocks, one DSA block, mHC x4."""
+    torch = pytest.importorskip("torch")
+    pytest.importorskip("transformers.models.glm5_next")
+    from transformers.models.glm5_next.configuration_glm5_next import Glm5NextTextConfig
+    from transformers.models.glm5_next.modeling_glm5_next import Glm5NextTextModel
+
+    torch.manual_seed(0)
+    lt = ["linear_attention"] * 3 + ["deepseek_sparse_attention"]
+    cfg = Glm5NextTextConfig(
+        vocab_size=97, hidden_size=64, intermediate_size=96, moe_intermediate_size=32,
+        num_hidden_layers=4, num_attention_heads=4, num_key_value_heads=4, n_routed_experts=8,
+        num_experts_per_tok=2, n_shared_experts=1, first_k_dense_replace=1, q_lora_rank=32,
+        kv_lora_rank=16, qk_nope_head_dim=16, qk_rope_head_dim=0, qk_head_dim=16, v_head_dim=16,
+        index_n_heads=2, index_head_dim=16, index_topk=64, index_kpool=4, hc_mult=4,
+        layer_types=lt, mlp_layer_types=["dense"] + ["sparse"] * 3, indexer_types=["full"] * 4,
+        linear_attn_config={"num_heads": 2, "head_dim": 16, "short_conv_kernel_size": 4,
+                            "gate_lower_bound": -5.0, "kda_layers": [0, 1, 2],
+                            "full_attn_layers": [3]},
+        pad_token_id=0, num_nextn_predict_layers=0,
+    )  # fmt: skip
+    return torch, Glm5NextTextModel(cfg).eval()
+
+
+def test_set_kda_mode_switches_glm5_next_to_the_recurrent_step():
+    torch, m = _tiny_glm5_next()
+    import transformers.models.glm5_next.modeling_glm5_next as mg
+
+    ids = torch.randint(1, 97, (1, 70))  # > one 64-token chunk
+    with torch.inference_mode():
+        chunk = m(input_ids=ids, use_cache=False).last_hidden_state
+        try:
+            assert ops.set_kda_mode(m, "fused_recurrent") == 3
+            assert mg.chunk_kimi_delta_attention.__name__ == "recurrent_as_chunk"
+            rec = m(input_ids=ids, use_cache=False).last_hidden_state
+            # token-sequential: a prefix's states do not depend on later tokens (to fp32 rounding:
+            # the MoE blocks' per-expert token grouping changes with later tokens, ~1e-8 on CPU;
+            # the GPU calibration records the full-depth pre-span diff, 0.0 on the subject). The
+            # stock torch chunk path is itself causal (the #363 leak is fla's Triton kernel), so
+            # this loop does not by itself show the swap: the leaky-chunk test below does.
+            for p in (5, 63, 64):
+                other = ids.clone()
+                other[0, p + 1 :] = (ids[0, p + 1 :] % 96) + 1
+                moved = m(input_ids=other, use_cache=False).last_hidden_state
+                assert torch.allclose(moved[0, : p + 1], rec[0, : p + 1], atol=1e-6, rtol=0)
+                assert not torch.equal(moved[0, p + 1 :], rec[0, p + 1 :])
+                cut = m(input_ids=ids[:, : p + 1], use_cache=False).last_hidden_state
+                assert torch.allclose(cut[0, -1], rec[0, p], atol=1e-5)
+        finally:
+            assert ops.set_kda_mode(m, "chunk") == 3
+        assert mg.chunk_kimi_delta_attention is mg._wsb_chunk_kda
+        again = m(input_ids=ids, use_cache=False).last_hidden_state
+    assert torch.equal(again, chunk)  # chunk restored
+    assert torch.allclose(rec, chunk, atol=1e-4)  # the same function, another schedule
+
+
+def test_set_kda_mode_removes_a_leaky_chunk_kernel(monkeypatch):
+    """The swap is what makes the GLM-5.3-Flash stack causal when the chunk kernel is not (fla's
+    Triton chunk kernel, #363): a chunk stand-in that leaks the sequence mean into every position
+    moves a prefix; after ``fused_recurrent`` the prefix no longer moves; ``chunk`` brings the
+    leaky kernel back (it restores whatever the module's chunk function was)."""
+    torch, m = _tiny_glm5_next()
+    import transformers.models.glm5_next.modeling_glm5_next as mg
+
+    real = mg.__dict__.get("_wsb_chunk_kda", mg.chunk_kimi_delta_attention)
+
+    def leaky(query, key, value, g, beta, **kw):
+        out, state = real(query, key, value, g, beta, **kw)
+        return out + 0.5 * value.mean(dim=1, keepdim=True).to(out.dtype), state
+
+    monkeypatch.setitem(mg.__dict__, "_wsb_chunk_kda", leaky)
+    monkeypatch.setattr(mg, "chunk_kimi_delta_attention", leaky)
+    ids = torch.randint(1, 97, (1, 40))
+    other = ids.clone()
+    other[0, 20:] = (ids[0, 20:] % 96) + 1
+
+    def prefix_moves() -> bool:
+        a = m(input_ids=ids, use_cache=False).last_hidden_state[0, :20]
+        b = m(input_ids=other, use_cache=False).last_hidden_state[0, :20]
+        return not torch.allclose(a, b, atol=1e-6, rtol=0)
+
+    with torch.inference_mode():
+        assert prefix_moves()  # the stand-in leaks
+        try:
+            ops.set_kda_mode(m, "fused_recurrent")
+            assert not prefix_moves()  # the swap removes it
+        finally:
+            ops.set_kda_mode(m, "chunk")
+        assert mg.chunk_kimi_delta_attention is leaky and prefix_moves()
+
+
+def test_hookstack_reads_glm5_next_streams_flat():
+    torch, m = _tiny_glm5_next()
+
+    class Wrap(torch.nn.Module):  # HookStack's shape: .model (the text model), output embedding
+        def __init__(self, text):
+            super().__init__()
+            self.model, self.head = text, torch.nn.Linear(64, 97, bias=False)
+
+        def get_output_embeddings(self):
+            return self.head
+
+    w = Wrap(m).eval()
+    stack = ops.HookStack(w, m.layers, [0], 0)
+    rows = [[5, 6, 7, 8, 9], [10, 11, 12]]
+    h = stack.hidden(rows, 1)
+    assert h.shape == (2, 4 * 64)  # [B, S, 4, 64] read flat, stream-major
+    with torch.inference_mode():
+        raw = []
+        hd = m.layers[1].register_forward_hook(lambda _m, _i, o: raw.append(o[0]))
+        m(input_ids=torch.tensor([rows[0]]), use_cache=False)
+        hd.remove()
+    assert np.allclose(h[0], raw[0][0, -1].reshape(-1).numpy(), atol=1e-6)
+
+
+def test_stock_hf_subjects_are_supported_by_the_mp_script():
+    import ast
+    from pathlib import Path
+
+    src = (Path(__file__).parents[1] / "scripts/adapt_introspection_mp_modal.py").read_text()
+    tree = ast.parse(src)
+    consts: dict[str, object] = {}
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Assign) and len(node.targets) == 1:
+            t = node.targets[0]
+            if isinstance(t, ast.Name) and t.id == "SUPPORTED":
+                consts["SUPPORTED"] = ast.literal_eval(node.value)
+            if isinstance(t, ast.Name) and t.id == "RESIDUAL":
+                consts.setdefault("RESIDUAL", []).append(ast.literal_eval(node.value))
+    assert {"kimi-k2", "glm-5.3-flash"} <= set(consts["SUPPORTED"])
+    for key in ("kimi-k2", "glm-5.3-flash"):
+        assert key in subjects.SUBJECTS and "adapt_introspection_mp_modal.py" in ii.EXTERNAL[key]
+    # a non-plain residual must be one build_bank can describe (plan 0067 §2)
+    assert set(consts["RESIDUAL"]) == {"plain_7168", "mhc_raw_flat_16384"}
+    assert "mhc_raw_flat_16384" in ii.RESIDUALS
+    assert subjects.get("glm-5.3-flash").n_layers == 45 and subjects.get("kimi-k2").n_layers == 61

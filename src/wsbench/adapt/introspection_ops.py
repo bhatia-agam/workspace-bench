@@ -3,6 +3,7 @@ stack-agnostic executor, sharding, and the shared torch steer (``Backend.steered
 
 import hashlib
 import json
+import sys
 from collections.abc import Callable, Iterator, Sequence
 from contextlib import contextmanager
 from typing import Any, Protocol
@@ -658,18 +659,45 @@ def _rank(scores: Sequence[float], i: int) -> int:
 
 
 def set_kda_mode(model: Any, mode: str) -> int:
-    """Kimi-K3: put every ``KimiDeltaAttention`` (fla KDA) in ``mode``; returns the count.
+    """Kimi-K3: put every ``KimiDeltaAttention`` (fla KDA) in ``mode``; GLM-5.3-Flash: every
+    ``Glm5NextTextLinearAttention`` (one switch for the module); returns the count.
     ``fused_recurrent`` is token-sequential and exactly causal; ``chunk`` (the remote code's
     default) let a steer on later tokens move earlier positions' logits by 5.6 within one 64-token
-    chunk (plan 0067, 2026-11-05)."""
+    chunk (plan 0067, 2026-11-05). That leak is fla's Triton chunk kernel; GLM-5.3-Flash's stock
+    torch chunk path is causal as shipped, so its swap is a guard against a kernel swap-in."""
     if mode not in ("chunk", "fused_recurrent"):
         raise ValueError(mode)
     n = 0
+    glm = []
     for m in model.modules():
         if type(m).__name__ == "KimiDeltaAttention":
             m.mode = mode
             n += 1
+        elif type(m).__name__ == "Glm5NextTextLinearAttention":
+            glm.append(m)
+    if glm:  # GLM-5.3-Flash (stock transformers glm5_next): no per-layer mode, see below
+        _set_glm5_next_kda_mode(sys.modules[type(glm[0]).__module__], mode)
+        n += len(glm)
     return n
+
+
+def _set_glm5_next_kda_mode(mod: Any, mode: str) -> None:
+    """transformers' ``Glm5NextTextLinearAttention.forward`` calls the module global
+    ``chunk_kimi_delta_attention`` on every cache-less forward; ``fused_recurrent`` swaps it for the
+    module's own token-sequential ``recurrent_kimi_delta_attention`` (its KV-cached decode step,
+    the same ``g`` / ``beta`` / l2norm semantics), ``chunk`` restores the original."""
+    orig = mod.__dict__.setdefault("_wsb_chunk_kda", mod.chunk_kimi_delta_attention)
+
+    def recurrent_as_chunk(query, key, value, g, beta, chunk_size=64, initial_state=None,
+                           output_final_state=False, use_qk_l2norm_in_kernel=False,
+                           **kwargs):  # fmt: skip
+        return mod.recurrent_kimi_delta_attention(
+            query, key, value, g=g, beta=beta, initial_state=initial_state,
+            output_final_state=output_final_state,
+            use_qk_l2norm_in_kernel=use_qk_l2norm_in_kernel, **kwargs,
+        )  # fmt: skip
+
+    mod.chunk_kimi_delta_attention = orig if mode == "chunk" else recurrent_as_chunk
 
 
 def calib_report(
