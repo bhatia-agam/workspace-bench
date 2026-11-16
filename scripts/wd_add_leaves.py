@@ -8,6 +8,8 @@ import importlib.util
 import sys
 from pathlib import Path
 
+if len(sys.argv) < 3 or sys.argv[1] in ("-h", "--help"):  # never treat a flag as the table path
+    raise SystemExit(__doc__)
 spec = importlib.util.spec_from_file_location(
     "bwt", Path(__file__).resolve().parent / "build_wd_tables.py"
 )
@@ -21,6 +23,7 @@ fresh = {q: bwt.values(got.get(q) or {}, "P279") for q in todo}
 merged = bwt.grow(parents, fresh)
 meta = {
     **meta,
+    "n_classes": len(merged),
     "added_leaves_plan_0089": sorted(set(meta.get("added_leaves_plan_0089", [])) | set(todo)),
 }
 bwt._write(path, meta, "parents", merged)

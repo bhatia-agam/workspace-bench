@@ -57,11 +57,11 @@
 
   New items must lint clean. Original items are kept or dropped by the gate, not by the lint.
 
-## Ops (Agam's RunPod box; elsewhere see SKILL.md §On another box)
-- Box SSH goes through one ControlMaster (`ssh -O check runpod`). Poll slowly and sequentially;
-  bursts of fresh connections make the 1Password agent refuse to sign.
-- The fellows Opus org limits (10M ITPM / 2M OTPM) are shared with judges. Pace authoring and grading.
-- Keys: never print or write them. On the RunPod box, credentials live only in `/dev/shm`.
+## Ops (today: a dev box + Modal, SKILL.md §Modal, tokenizers and Claude auth)
+- The Opus org limits are shared with the judges. Pace big authoring and grading batches.
+- Keys: never print or write them; never export `ANTHROPIC_API_KEY` (`WSB_ANTHROPIC_AUTH=sdk`).
+- The October sets were built on Agam's RunPod box (4090, `adapt_box.sh`, `/dev/shm`
+  credentials); the lessons below that name the 4090 or the box GPU lock are kept as history.
 
 ## Learned on Qwen3.5-4B (2026-10-15..17)
 - **Repeated latents inflate the fill.** Opus repeats concepts across calls in one run; the

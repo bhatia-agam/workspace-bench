@@ -8,13 +8,15 @@ but basic_readout / multilingual / typo). conjunctive and moral dilemmas have NO
 registered bank only. Opus writes candidates. The subject decides whether they are in capability. The
 lint and gate decide what's kept.
 
-The tool: `scripts/adapt_box.sh author model=<m> family=<f> tier=<t> n=<n> steer="…" wave=<k>`.
+The tool: `python -m wsbench.adapt author model=<m> family=<f> tier=<t> n=<n> steer="…" wave=<k>`
+(`fill` / `refill` call it in waves; by hand only for a steered back-fill such as the D7
+user_modeling one in `scripts/adapt_set.sh`).
 It renders the brief (`BRIEFS` in `wsbench/adapt/author.py`), calls Opus 20 items at a time (`MAX_PER_CALL`; 40 ran out of output tokens), and
 fills the fields Opus must not choose: read site, render and `source`. It writes
-`cand/<family>.jsonl`. Auth is `wsbench/adapt/auth.py`: on Agam's box the judges' keyless OAuth
-token from the Modal Dict `anthropic-oauth`, read only, never written; a 401 there stops the run:
-ask Agam to run `push-judge-token`, then resume (gated rows and the grade cache are kept). On any
-other box set `WSB_ANTHROPIC_AUTH=sdk` (the SDK's own credentials; SKILL.md §On another box). A family without a `Brief` needs one first, written from `families.md` with the fields
+`cand/<family>.jsonl`. Auth is `wsbench/adapt/auth.py` with `WSB_ANTHROPIC_AUTH=sdk
+ANTHROPIC_PROFILE=default` (the SDK's own credentials; SKILL.md §Modal, tokenizers and Claude
+auth). An OAuth refresh race (`invalid_grant`) fails a call: re-run, gated rows and the grade
+cache are kept. A family without a `Brief` needs one first, written from `families.md` with the fields
 below.
 
 ## One wave
@@ -41,7 +43,7 @@ below.
 6. **Write candidates.** Write them with `wsbench.adapt.store.add_candidates`, stamping
    `adapt = {origin: "authored", tier, knobs, author: "<model id>", wave}` and `source` (the knob
    text).
-7. **Gate.** Run `scripts/adapt_box.sh gate model=<m> families=<f> llm=claude-opus-5-5` (without
+7. **Gate.** Run `python -m wsbench.adapt gate model=<m> families=<f> llm=claude-opus-5-5` (without
    `llm=`, every LLM-graded leg is undecided and conjunctive / role_bound / buggy items all fail). The lint drops malformed
    items before any GPU time.
 8. **Check.** Read 10 passing and 10 failing items. Also check that Opus didn't drift the latent:

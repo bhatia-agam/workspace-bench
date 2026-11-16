@@ -4,14 +4,50 @@ Each entry gives what must stay fixed and the ordered tiers. T0 is the original 
 later tier eases the knob that matters most, and the **floor** is the easiest version that still
 carries the latent. Below the floor the family is `ooc`, never padded.
 
-Source paths: GW = global-workspace (on Agam's box `/workspace/agam/global-workspace`; any
-checkout of it elsewhere), WB = this repo. "Gen" names the original generator; "Gate" is how the
-subject is asked.
+Source paths: GW = global-workspace (any checkout of it), WB = this repo. "Gen" names the original
+generator; "Gate" is how the subject is asked.
 
-**"Bank now"** (added 2026-11-02) names each family's registered bank (`EvalSpec.bank`, what
-`profile` / `freeze` read) and the fields its judge requires. The 11 adapted sets were built from
-the v1 banks and lack these fields; see SKILL.md §State and §Refresh. Where "Bank now" and an older
-line of the same entry disagree, "Bank now" is current.
+**The registered banks** below are what `profile` / `freeze` read (`registry.bank_path`).
+`tests/test_adapt_skill_docs.py` keeps this table equal to the registry. A registered bank
+change edits this table in the same PR.
+
+| family | registered bank |
+|---|---|
+| agentic_misalignment | `evals/agentic_misalignment/items_v2.json` |
+| arithmetic_intermediates | `evals/arithmetic_intermediates/items_v2.json` |
+| association | `evals/association/items_v5.json` |
+| basic_readout | `evals/basic_readout/items_v8.json` |
+| basic_readout_mt | `evals/basic_readout_mt/items_v7.json` |
+| buggy_code | `evals/buggy_code/items_v2.json` |
+| chain_intermediates | `evals/chain_intermediates/items_v2.json` |
+| conjunctive_association | `evals/conjunctive_association/items_v4.json` |
+| directed_modulation | `evals/directed_modulation/items.json` |
+| hinted_cutoff | `evals/hinted_cutoff/items_v2.json` |
+| introspection | `evals/introspection/items_v2.json` |
+| jailbreak_recognition | `evals/jailbreak_recognition/items_v2.json` |
+| jlens_concept_pr | `evals/jlens_concept_pr/manifest.json` |
+| knowledge_cutoff | `evals/knowledge_cutoff/items_v2.json` |
+| model_multihop | `evals/model_multihop/items.json` |
+| model_specific_directed_modulation | `evals/model_specific_directed_modulation/items.json` |
+| moral_rationale | `evals/moral_rationale/items_v3.json` |
+| multi_concept_directed_modulation | `evals/multi_concept_directed_modulation/items_v2.json` |
+| multihop | `evals/multihop/items_v5.json` |
+| multihop_mt | `evals/multihop_mt/items_v6.json` |
+| multilingual | `evals/multilingual/items_v5.json` |
+| multilingual_mt | `evals/multilingual_mt/items_v5.json` |
+| multilingual_multihop | `evals/multilingual_multihop/items_v5.json` |
+| multilingual_typo | `evals/multilingual_typo/items_v4.json` |
+| nyt_connections | `evals/nyt_connections/items.json` |
+| poetry | `evals/poetry/items_v5.json` |
+| relational_multihop | `evals/relational_multihop/items.json` |
+| role_bound_association | `evals/role_bound_association/items_v2.json` |
+| typo_mt | `evals/typo_mt/items_v2.json` |
+| user_modeling | `evals/user_modeling/items_v3.json` |
+| wrong_intermediate | `evals/wrong_intermediate/items_v4.json` |
+
+**"Bank now"** lines (added 2026-11-02) give each family's registered fields and judge
+requirements as of that bank round. Where a "Bank now" version differs from the table above, the
+table is current; read the bank's own README for what changed since.
 
 Default gate: chat template, thinking off, assistant stem, greedy + 10 @ T=0.7 (top_p 1), pass =
 greedy right AND ≥ 8/10. Exceptions (the bank's own gate sampling, `families.py`): chain
@@ -89,7 +125,7 @@ re-stamped (`references/porting.md`).
   `task_context`, `slice`, `gate`, and `mc` with a balanced `gold_position` (built on the bank of
   record by `mc_leakage_r4.py balance`, which writes `evals/`). `restamp` rewrites `mc` for implicit items (`run.py`), but a distractor must also never
   equal the subject's own favourite (plan 0053). v6 is opt-in. The entity / processing ladder above
-  predates v2: re-port from v5's items, then (once plan 0060 lands) refill with v5-shaped questions.
+  predates v2; new items are v5-shaped questions (Brief tiers `t1` implicit / `entity` / `processing`, `ADAPT_FILL_TIERS=basic_readout=entity+processing`).
 
 ### multihop — the silent bridge (atomic number 26 → **iron**, surface "Fe")
 - **Keys:** `name, prompt, target, intermediates(bridges), source, consistency, gate_variant,
@@ -220,8 +256,8 @@ These rules apply to every new item in this group:
   multilingual_multihop scores `mc+regex`, the other two regex with the `+v2+ln-…` tag); typo_mt
   `items_v2` (85 items, arithmetic dropped). Port `mc_roles` and the v2 units with the items.
   basic_readout_mt v4's gate is the question in chat, no system turn, graded by `name_forms`; the
-  adapt gate (`_asked(CONTINUE, plain=True)`) does not match it, so the family is not buildable
-  until plan 0060.
+  adapt gate now asks it that way (plan 0060 A2: the v4 question in chat, `name_forms`, T 0.7 /
+  top_p 0.8 / top_k 20), and `fill` builds new items' `mc` with `adapt mc` on every wave.
 - **Lint:** GW `src/global_workspace/olens_suite/bank/lint.py::lint_hard_item` is the reference.
   Port its checks; don't skip them.
 
@@ -242,7 +278,7 @@ before then keep their `multihop_mt_v2.*` files, which load under the new key.
 ### multihop_mt — the bridges THIS subject needs (bank `items_v6`; plan 0060 Phase E)
 - **Latent:** the bridge(s) of a multi-token two- or three-hop question; every bridge proved
   necessary on the subject.
-- **Code:** `src/wsbench/adapt/mhmt2.py`, `$A multihop_mt $M [limit=] [regate=true]` (one
+- **Code:** `src/wsbench/adapt/mhmt2.py`, `$A multihop_mt model=<m> [limit=] [regate=true]` (one
   stage, `gate`; GPU). Not a `profile` family (`families.get` raises): its legs need their own
   draw counts and a verdict with a relabel.
 - **Target re-derived on the subject:** the bridges and answer are world facts, so no new gold.
@@ -302,7 +338,7 @@ before then keep their `multihop_mt_v2.*` files, which load under the new key.
 - **Invariants:** the prompt ends with `typo_word`; the correct form doesn't appear earlier; no
   arithmetic subfamily (`scripts/typo_mt_drop_arith.py` removed them from 4 adapted sets by hand;
   all 11 adapted `typo_mt.json` have 0 arith items now; the risk is the gate log re-admitting the
-  15 retired ids, SKILL.md §Refresh).
+  15 retired ids, SKILL.md §Re-freeze or refill an existing set).
 
 ### multilingual_typo — correction in L2 + language
 - **Ladder:**
@@ -573,7 +609,7 @@ carried over from the 27B; there is no Opus / Sonnet unguessability gate.
 ## wrong_intermediate — the subject's OWN wrong intermediate (plan 0060 Phase E; bank `items_v4`)
 - **Latent:** B', the wrong intermediate the subject resolves on a Wikidata two-hop prompt, so it
   answers hop2(B') instead of hop2(B). Plain render (BOS + prompt), read at every token.
-- **Code:** `src/wsbench/adapt/wrong_intermediate.py`, `$A wrong_intermediate $M stage=screen|grade|gate|
+- **Code:** `src/wsbench/adapt/wrong_intermediate.py`, `$A wrong_intermediate model=<m> stage=screen|grade|gate|
   adjudicate|bank|all pool=<dir>` (`pool` = the GW scrape: `candidates.jsonl` + `entities.json`;
   on this box `/workspace/gw-wrong-bridge/outputs/wrong_bridge/`). Work files:
   `adapted/<m>/gate/wrong_intermediate.work/` (git-ignored). Not a `profile` family.
@@ -613,8 +649,8 @@ carried over from the 27B; there is no Opus / Sonnet unguessability gate.
   POLICY: 200k screened / 5e-5.
 
 **Freezing the Phase E families:** they are not in `families.FAMILIES`, so a bare `freeze` (and
-`status`) skips them. They ship only when named: `$A freeze $M families=wrong_intermediate,multihop_mt`
-(nyt_connections likewise: `families=nyt_connections`, after `$A nyt_connections $M`)
+`status`) skips them. They ship only when named: `$A freeze model=<m> families=wrong_intermediate,multihop_mt`
+(nyt_connections likewise: `families=nyt_connections`, after `$A nyt_connections model=<m>`)
 (or alongside other families in the same `families=` list).
 
 ## Not in the adapt machinery (SKILL.md §Families the adapt machinery does not cover)

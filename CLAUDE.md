@@ -668,6 +668,11 @@ exits 2. Smoke `limit=3` live before any full run.
   (legacy). Shared judge keys: README §Quickstart (the output-layout paragraph). Each command is
   a `pydra.Config` in `cli.py`: declare a field in `__init__`, normalise it in `finalize()`;
   `runner.py` reads the same attribute names.
+- Per-model sets (`adapted/<m>/`): the `adapt-bank` skill (`.claude/skills/adapt-bank/SKILL.md`)
+  is the runbook; its Quickstart drives `scripts/adapt_set.sh <m> build|refill|loop|final`, and
+  plan 0075's data-round rules (D1-D7 screens, the two-run leaker rule) are `python -m
+  wsbench.adapt dataround` (`adapt/dataround.py`, plan 0091). PRs merge only through
+  `scripts/gated_merge.sh <pr>` (fail closed); a set's data stays local until frozen + audited.
 - `uv sync --extra dev` (add `--extra gpu` for `produce`); `uv run pytest -q`; `uv run ruff
   check .`; `uv run ruff format .`. Keys
 in the environment, never committed; tests make no network calls. Work

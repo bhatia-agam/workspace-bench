@@ -1,4 +1,4 @@
-"""The subject on Modal, for subjects too big for the 24 GB box (SKILL.md runbook step 0).
+"""The subject on Modal: every adapt subject's generation (adapt-bank SKILL.md §0).
 
 A deployed vLLM class the local pipeline calls through ``wsbench.adapt.gate.RemoteRunner``: the
 box renders every prompt with the subject's own template (so the gate, read plan and lint are the

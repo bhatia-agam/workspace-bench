@@ -1,45 +1,260 @@
 ---
 name: adapt-bank
-description: Adapt WorkspaceBench to a new subject model so every question is one that model actually computes, and say what an existing adapted set can and cannot be judged on after the bench changed (refresh is blocked until plan 0060). Gate the registered banks on the subject, rebuild what is model-specific, refill each family with new items of the same kind at a difficulty the subject passes, and freeze a per-model bank under adapted/<model>/. Use when someone wants WorkspaceBench for a model other than Qwen3.6-27B (from Qwen3.5-0.8B up to 1T MoE subjects like Kimi-K2: Qwen3.5, Qwen3, OLMo, Gemma, GLM, DeepSeek, any HF chat model), asks for "adaptive", "per-model", "re-gated", "ported" or "updated/refreshed" per-model banks, asks why an adapted set fails to judge, or asks why a lens scores low on a small model.
+description: Build a per-model WorkspaceBench set (adapted/<model>/) for a new subject model end to end, or refill / re-audit an existing one. It gates every registered bank on the subject, rebuilds the model-specific families, refills each family to target with items of the same kind that the subject passes, runs plan 0075's data round (D1-D7 screens, the two-run leaker rule), then audits, floors and ships the set. Use when someone wants WorkspaceBench for a model other than Qwen3.6-27B (Qwen3.5-0.8B up to 1T MoE: Qwen, OLMo, Gemma, GLM, Kimi, DeepSeek, Muse, any HF chat model), asks for "adaptive", "per-model", "re-gated", "ported" or "refreshed" banks, asks why an adapted set fails to judge, or asks why a lens scores low on a small model.
 ---
 
 # Adapt WorkspaceBench to a subject model
 
-Every bank was gated on Qwen3.6-27B. A lens that says nothing about an intermediate the model never
-computed is not wrong, so on any other model the banks have to be re-gated, and items the subject
-fails replaced with items it passes. **The goal is a bank where every item is (a) the same kind of
-latent the family tests, (b) something this subject computes (greedy right, ≥8/10 sampled), and (c)
-still valid for the family's judge, read site and null.** Easier is fine; a different kind of latent
-is not.
+Every registered bank was gated on Qwen3.6-27B. A lens that says nothing about an intermediate the
+model never computed is not wrong, so on any other model the banks are re-gated, and the items the
+subject fails are replaced with items it passes. **The goal is a bank where every item:**
+- **(a)** tests the same kind of latent as its family;
+- **(b)** is something this subject computes (greedy right, ≥ 8/10 sampled);
+- **(c)** is still valid for the family's judge, read site and null.
 
-What earlier attempts got wrong (the `.pm` / `.pmeq` banks in global-workspace `1f36ca88`): they
-drew new candidates at the 27B's difficulty and filtered them, so yields on Qwen3.5-4B were 0–4% on
-multihop_mt_regex (since removed), multilingual_mt, chain and brew (since retired). **Change the
-difficulty of what is asked, never the construction rules, the gate, or the scorer.**
+Easier is fine. A different kind of latent is not. **Change the difficulty of what is asked.
+Never change the construction rules, the gate or the scorer.**
 
-## State of the adapted sets (2026-11-02): every set predates the bank v2+ round
+## Quickstart: a new subject, end to end
 
-All 11 `adapted/<m>/` sets were frozen 2026-10-18..24 (touch-ups through 10-30: MCDM re-carry,
-typo_mt arithmetic drop, multihop_mt_regex / hallucination / brew removal) from the **v1** banks. Since
-then most families moved to new registered banks (`EvalSpec.bank`: `items_v2`..`items_v5`) with
-blind-MC judges, new gate legs and every-position reads (plans 0023-0058). What happens today if you
-judge an adapted set as it is (verified on qwen3.5-9b, gemma-4-31b-it, kimi-k2, glm-5.3-flash):
+**State (2026-11-16).** 15 sets are on main under `adapted/` (`adapted/README.md`); deepseek-v4-flash is the 16th, not yet merged.
+- Ten were rebuilt under plans 0060-0087. Plan 0089 rebuilt Agam's five, and deepseek-v4-flash
+  is new (#469). Both of those were in flight on 2026-11-16, each with its data PR to come.
+- The newest builds follow exactly this path. A set is **30 families** (§Scope).
+- Expect 1-2 days of wall clock per set (§GPU sizing).
 
-| effect on an adapted v1 bank | families |
+| # | step | how | done when |
+|---|---|---|---|
+| 0 | **Run tree + environment** | A git worktree off `origin/main` on a local branch (`git worktree add /root/tmp/wsb-<m> -b <m>-set origin/main`). The set's data stays LOCAL until it is frozen and audited. Write the environment below to `env.sh`. | `$PY -m wsbench.adapt` prints its usage |
+| 1 | **Code PR: the subject** | §0 Set up the subject: a `Subject` in `src/wsbench/adapt/subjects.py` and the key in `refill.PLAN_0075_SETS`. Add a no-think template only if the upstream one cannot turn thinking off. Add a `read_band` if the subject has an O-lens. Weights go on a Modal volume (`scripts/download_weights_modal.py`). Deploy its app (`ADAPT_SUBJECT=<m> modal deploy scripts/adapt_modal.py`). Tests. Its own PR, merged through `scripts/gated_merge.sh <pr>`. | merged; the deploy is live |
+| 2 | **Smoke** | `$A profile model=<m> families=typo_mt limit=5 llm=claude-opus-5-5`. Read the renders and answers. | no template error; answers look like answers |
+| 3 | **Build** | `NATIVE_LANGS=en,zh NATIVE_EVIDENCE="<lab>-lab model: native <langs> by Camila's lab decision (plan 0089), not measured" WI_POOLS=<dir1,...> scripts/adapt_set.sh <m> build` in tmux. Add `MORAL_VARIANT=system_one_word` for a prose answerer (Gemma). | `logs/adapt/<m>/build.status` ends `BUILD DONE`; read every `FAIL` line |
+| 4 | **The two side builds** (separate tmux / agent; they overlap with 5-6) | introspection (§Introspection); hinted_cutoff (§hinted_cutoff, plan 0084) | each installed, or an objective, evidenced `ooc` / `partial` |
+| 5 | **Refill** | `scripts/adapt_set.sh <m> refill`. Every refill route runs once; any family that stopped on `max waves` runs again with `MAX_WAVES=40`. | `REFILL DONE`; every short family has an objective stop (§Decision table) |
+| 6 | **Data round** | `scripts/adapt_set.sh <m> loop 1 8`. Each round back-fills, freezes, runs the D4-D7 screens, two lucky runs and the D1-D3 leakers. It stops once a cycle drops nothing and the back-fill lands nothing. | `CONVERGED at <n>` in `logs/adapt/<m>/loop.status` |
+| 7 | **Final freeze** | `scripts/adapt_set.sh <m> final 1`: a strict freeze with every family named, plus a report-only lucky measure | the strict freeze exits 0 |
+| 8 | **Independent audit** | A fresh-context subagent writes `adapted/<m>/AUDIT.md` (§AUDIT.md checklist). Apply its must-drops with `adapt drop`, with NO new authoring. Then `final 2`: the re-freeze fills freed slots from rows that already pass. Audit those rows too, as an addendum. Then `scripts/adapt_set.sh <m> mmh 1`, the FRESH model_multihop confirm (plan 0078: freeze and audit come first; 3 failed confirms block the family). | the auditor's verdict is clean; the mmh confirm passed |
+| 9 | **Floors** | §4 Floors: `po-opus-v1` (bench) and `stock-subject-v1`, both into `adapted/<m>/floors/` | `floors/floors.json` holds both records |
+| 10 | **Ship** | Write a `note` per family (`adapt note`). Add the README row and bump the census (§Ship checklist). One data PR per set, merged ONLY through `scripts/gated_merge.sh <pr>`. | merged; main CI green |
+
+The environment (`env.sh`; source it in every tmux session, or pass `ADAPT_ENV_FILE=env.sh` to the driver):
+
+```bash
+export MODAL_PROFILE=safety-sahan-2 MODAL_ENVIRONMENT=camila-blank ADAPT_BACKEND=modal
+export WSB_ANTHROPIC_AUTH=sdk ANTHROPIC_PROFILE=default HF_HUB_OFFLINE=0
+unset ANTHROPIC_API_KEY                    # never export one; the driver refuses to run with it set
+export ADAPT_POETRY_VARIANTS=fewshot,prefill WSB_POOL_DIR=/workspace/wsb-runs/pools
+export WSB_TOKEN_LEDGER=$PWD/logs/ledger_<m>.jsonl PYTHONUNBUFFERED=1 PYTHONPATH=$PWD/src
+export PY=/root/torchvenv/bin/python A="$PY -m wsbench.adapt"
+```
+
+**The driver** is `scripts/adapt_set.sh <model> <phase>` (plan 0091). Run it with no arguments
+for its help.
+- Each step logs to `logs/adapt/<m>/<step>.log` and records `ok` / `FAIL` in
+  `logs/adapt/<m>/<phase>.status`.
+- A re-run skips the steps that are already `ok`.
+- It retries only the Claude OAuth refresh race. A failed freeze, onecue, screens, lucky or
+  leakers step stops the phase (`ABORT` in the status file). Any other failed step is logged as
+  `FAIL` and the chain goes on. In `loop`, a failed back-fill step keeps that round from counting
+  as converged.
+- `loop` saves each round's count snapshots (`L<n>.counts{0,1,2}`), so a resumed round compares
+  the same snapshots.
+- `DRY_RUN=1` prints every command and runs nothing.
+- Lucky runs, screens and onecue output go to `outputs/adapt/<m>/`.
+
+Drive one phase per tmux session, and watch the `.status` files. The data-round rules it
+applies are `python -m wsbench.adapt dataround` (`src/wsbench/adapt/dataround.py`):
+
+| stage | what it does |
 |---|---|
-| **judge exits** (no `mc` / `mc.candidates`: exit 2; poetry: uncaught ValueError) | association, basic_readout, multihop, chain_intermediates (default `judge=mc`), poetry |
-| runs, on a **retired instrument** or without the v2+ fields | moral_rationale (ec-v3.1, no option lists), multilingual (`v1_scorer="bank"`), multilingual_multihop (v1 regex), conjunctive_association (no `twin_of` / `inverted_label`: no inverted-twin diagnostic) |
-| runs, **headline None** (no twins / controls, so out of the macro) | buggy_code (no `twin`), agentic_misalignment (no clean twins), jailbreak_recognition (no v2 controls); a set rebuilt with plan 0060 A2 has all three |
-| runs, but on the old questions | basic_readout_mt (v4 shares 0/99 prompts with v1), multilingual_mt, multilingual_typo, typo_mt, multi_concept_directed_modulation (glm / kimi: still the 27-item set) |
-| bank unchanged; re-judge / re-read only (relgate-v4 and role_bound's action gate are JUDGE-side quote gates, not subject gate legs: no regate) | relational_multihop, role_bound_association, user_modeling, arithmetic_intermediates, directed_modulation |
-| absent from every set | wrong_intermediate, multihop_mt, knowledge_cutoff, model_specific_directed_modulation, nyt_connections, introspection (§Families the adapt machinery does not cover) |
+| `stage=screens out=<dir> [apply=true] [only=d4,d5,d6,d7]` | D5 capitals (regex), D4 bridge shortcuts and D6 places (Opus, cached in `<dir>`), then the D7 Country / Gender 20% caps |
+| `stage=leakers run=<lucky dir> [root=<dir>] [apply=true]` | D1-D3 with the two-run rule: only `c*` / `final*` runs under `root` count as earlier runs; `history=` widens that |
+| `stage=short` | prints which families to back-fill, which to re-wave, and which are final |
+| `stage=counts` | the driver's convergence check |
+| `stage=lucky` | the MC families and how to measure them |
 
-Also stale on every set: `report.json` `code.adapt_sha256` (`5c9d…` / `ebba…` / `0ffc…`) no longer
-matches the adapt package, and `floors/floors.json` predates summary mode, the Opus prompt-only
-protocol and every judge change since 10-21. Readouts produced against the pre-plan-0032 read plans
-do not match today's plans. **A correct refresh needs plan 0060 Phase A first: §Refresh lists why, and the target procedure.**
-The per-family detail behind this table is in `references/families.md` (the "Bank now" line of
-each entry).
+Without `apply=true`, `screens` and `leakers` print the `adapt drop` commands instead of running
+them.
+
+**Merging** (plan 0089, fail closed): `scripts/gated_merge.sh <pr>` merges
+only a PR that has checks and whose every check is pass or skipping. Never pipe
+`gh pr checks` into `&& gh pr merge`. Bench data stays local until the set is frozen and
+audited, then goes up as ONE data PR per set. Code changes go in their own PRs first.
+
+## Scope: the 30 families, and when a family may ship short
+
+- **30 families** = the 31 families `all` runs (`registry.drop_superseded`) minus `jlens_concept_pr`.
+  `introspection` and `hinted_cutoff` are in scope on every set.
+- Every item is gated on the subject itself: thinking off, its own chat template, greedy right
+  AND >= 8/10 sampled (10/10 for chain).
+- A family ships short ONLY on an objective stop with evidence:
+  - the subject cannot do the task (yield below the policy floor on enough candidates at the
+    easiest level);
+  - a pool is exhausted;
+  - a technical blocker can be shown.
+- **Budget is never a reason**, and neither is "the subject is small".
+- `untried` is never final. A family with zero attempts ships nothing until it is tried.
+- **Native languages are set by lab decision, not measured** (plan 0089). Google (Gemma), AI2
+  (OLMo), Meta (Muse) and other American labs get `['en']`. Alibaba (Qwen), Moonshot (Kimi),
+  Zhipu (GLM) and DeepSeek get `['en','zh']`. Record it with
+  `adapt native_langs langs=... evidence=...`. The measurement route (`stage=measure`) stays
+  for research only.
+- **Introspection** has a pre-registered calibration rule (`adapt/introspection.py`). The
+  headline beta needs median RR ≥ 0.60 and ≥ 80% coherent injected neutral replies (≥ 6/10).
+  - A NO-GO on that measured calibration is the evidence for `ooc`. Record the peak RR, the
+    beta grid and the controls in `introspection/calibration.json`, and the engine checks in
+    `engine_diagnostic.json`.
+  - Every subject so far is `ooc`: GLM-5.3, Kimi-K3, V4-Pro, Muse, Agam's five and V4-Flash,
+    all with peak median RR ≤ 0.17.
+- **Agentic** needs ≥ 20 pairs (`MACRO_MIN_PAIRS`) to enter the macro. Below that it ships
+  `partial` and stays out of the macro, with its per-wave yields in the note.
+
+## GPU sizing (measured on the 2026-11-14..16 builds)
+
+The GPU is Modal list price, and the Claude API is not capped (`api-cost-free-gpu-only`). Report
+GPU $ before any big fan-out. **The `camila-blank` Modal environment is capped at 16 containers
+shared by every agent.** Check `modal container list` before starting a fan-out. The figures
+below are snapshots: the plan-0089 and V4-Flash builds were still finishing.
+
+| subject size | examples | serving (Subject fields) | GPU $ per set | wall clock | notes |
+|---|---|---|---|---|---|
+| small, ≤ 9B dense | qwen3.5-0.8b..9b, qwen3-8b, olmo-3-7b | shared `adapt-subject-llm`, 1×H200 (~$4.5/h) | refill round ~$60 (sq-refill: ~$290 GPU for all five sets, ~9.5 h of overlapping runs) | build ~1 day; refill round ~1 day | Expect format failures first; walk the format variants (§Tailoring) before the difficulty ladder |
+| mid, 27-35B (dense or small-active MoE) | gemma-4-31b-it, olmo-3.1-32b, qwen3.6-35b-a3b | shared `adapt-subject-llm`, 1×H200 | ~$95 pipeline + ~$15 hinted_cutoff (21 h busy) | ~1-1.5 days | Introspection runs on the single-GPU engine (`adapt introspection stage=all`) |
+| big MoE (~300 GB FP8) | glm-5.3-flash | own app, B200:4 TP4 (~$25/h), `modal_max_containers=1` | ~$530 pipeline + ~$55 hinted_cutoff | ~1.5 days | One container: concurrent stages queue behind each other. Run ONE refill at a time. Cold boot ~30 min |
+| 1T-class MoE | kimi-k2, deepseek-v4-flash (also glm-5.3, kimi-k3, v4-pro, muse at 0060) | own app, B300:8 (~$56/h), TP8 or 8×TP1 engines | ~$1,000-1,200 pipeline (kimi-k2 ~$1,160; V4-Flash ~17 container-hours) + ~$60 hinted_cutoff probe | ~1.5-2 days | Cold boot 15-45 min, so batch every candidate into one generation run per stage. Keep the 1-container cap. Introspection needs a multi-GPU stack (`scripts/adapt_introspection_mp_modal.py`) |
+
+**Claude API per set** (ledgered, uncapped): ~$1-1.5k for the pipeline. hinted_cutoff adds
+$150-730 of Opus, mostly the silence judge `verb_judge` and `exist4`. Agam's five together came
+to ~$6k by 2026-11-16 20Z.
+
+## Decision table: what to do when a family stops short
+
+| you see | meaning | do |
+|---|---|---|
+| `status: ooc`, stop `yield x/n < y_min on >= n_min ..., have < target/2` | an objective capability stop (plan 0066 §1.2) | Final. Never re-wave it. Note the counts. A `refill_hold` turns it `partial` until the fault is cleared |
+| stop `low yield above half: ...` | the same yield rule, but the bank is over half full | Ship `partial`, with the stop in the note |
+| stop `pool exhausted` | every candidate of the funded pool was gated | Ship `partial`. A new pool generation is a funded follow-up (plan 0077), never padding |
+| stop `max waves (N)` | refill's own wave cap, NOT an objective stop | Re-run with more waves (`waves=40`). The driver's `refill` / `loop` phases do this automatically (`dataround stage=short` → `max_waves`) |
+| stop `budget spent (...)` or `pilot: not ooc` | you capped it, or it was a pilot | Run the full refill. Budget is never a reason |
+| multihop_mt refill whose `untried_levels` is non-empty | the 3-hop level of the pool was never gated | Keep refilling. `refill` refuses `ooc` while a harder level has ungated candidates. A subject that fails 2-hop on shortcuts is too capable, not incapable |
+| `untried` after a freeze | no refill was ever run | Run `adapt refill families=<f>` (the strict freeze refuses this) |
+| full family short after the data round | screens and leakers dropped it below target | `loop` back-fills it. If the back-fill lands nothing, ship `partial` and give the count each rule dropped in the note |
+| a family over chance + 5 with no confirmed leaker | a single-run flag is only pending | Run more cycles. Still over at the end: report it in the note with the failing runs. Never drop on one run |
+| agentic below 20 pairs | the pools' yield on this subject | Run every pinned pool's waves, newest last (§Agentic). Still below: `partial`, out of the macro, with per-wave yields |
+| introspection NO-GO | measured calibration below the rule | `ooc`, with `calibration.json` + `engine_diagnostic.json`, audited |
+| hinted_cutoff short or the date bar fails | plan 0084 R19: the bar is the date checks | §hinted_cutoff: a widened window or a top-up pool, then re-run; never relax the bar |
+| wrong_intermediate kind check misses a Wikidata class | the frozen class table lacks a deep leaf | `python scripts/wd_add_leaves.py src/wsbench/adapt/data/wd_class_parents.json Q...` (grow-only; plan 0089, #477) in a code PR, then re-run |
+| Opus refuses a grading / judge call | content refusal | WSB judging falls back to Sonnet 5.5 (`summ_fallback=default+claude-sonnet-5-5`, the same for every arm). Rescue judging is pending (§Judging the set) |
+| a step fails with `invalid_grant` / `authentication_error` | the Claude OAuth refresh race | The driver retries it. By hand: wait 1-3 min and re-run, since every stage resumes |
+| the Modal app queues for an hour | a 1-container subject shared by two of your chains | Serialize the chains. Never raise `modal_max_containers` on main to get around it |
+
+## The side builds and the families with their own rules
+
+### Introspection (plan 0067; every set)
+- **Up to ~35B (one GPU):** `$A introspection model=<m> stage=all llm=claude-opus-5-5`. It runs
+  job → measure → coherence → calibrate → build.
+- **Big MoE:** use `scripts/adapt_introspection_mp_modal.py`.
+  - Steps, in order: `stage=job` → `calib_main` → `calib-report` → `run_main --shards N`
+    (detached, in tmux) → `finish` → `stage=measure result=<npz>` → `calibrate` → `build`.
+  - The module docstring gives the exact lines.
+  - Stacks exist for glm-5.3, deepseek-v4-pro / v4-flash, muse-spark-open, kimi-k3, and (#474)
+    kimi-k2 and glm-5.3-flash. A new big subject needs its own stack first, in its own code PR.
+  - The xaff readers need `WSB_GW_XAFF` (a global-workspace checkout with PR #723).
+- **The rule:** `ooc` on a measured NO-GO (§Scope). The engine checks (exact no-op, local steer)
+  must pass first; otherwise it is a pipeline fault, not `ooc`.
+
+### hinted_cutoff (plan 0084; every set)
+The gw ccut v2 pipeline is re-run on the subject from `scripts/hinted_cutoff_adapt/`. It needs a
+scratch copy of a global-workspace tree holding `evals/chint_cutoff/`, never a gw checkout.
+PYTHONPATH = gw `src` + the cf_influence scripts dir + this repo's `src`.
+1. **Probe:**
+   - `probe.py stage=in out=<probe> per_month=40` → `subject_gen.py --model <m> --inp <probe>/base_in.jsonl --out <probe>/base_out.jsonl` → `probe.py stage=curve`.
+   - This measures the subject's fade-out. If the fade-out is later than v2's 2024-01..2025-06
+     window, set `HC_P_WINDOW=lo,hi` to move the window. GLM-5.3 and flash used 2025-03..2026-02;
+     kimi-k2 was widened to 2024-04..2025-12.
+   - `merge_bank.py` joins gw v2 with the later-drafted items.
+2. **Pilot:**
+   - `pilot_select.py n=150`, then the ccut stages through `subject_ccut.py` with
+     `HC_CONFIRM_ALL=1`, from `screen_gen` to `verb_calib`. `[gen]` steps go through
+     `subject_gen.py`.
+   - It measures each stage's survival. The build's projection gate needs ≥ 60 pairs; a no-go
+     there means widening the window, not lowering the bar.
+3. **Build:** the same stages with `HC_SUBJECT=<m> HC_SURV=<pilot survivals>
+   HC_P_WINDOW=lo,hi HC_GUESS_GAP=<caliper>` (R18).
+4. **Finish:**
+   - `finalize.py` refuses a failed bar. The bar (R19) is the date checks only:
+     |day AUROC − 0.5| ≤ 0.10 and cell excess ≤ 0.10.
+   - The prompt-only predictors (`predict_single`, `predict_normal`) are recorded, not gating.
+     Report them PROMINENTLY in the note; GLM-5.3-flash's I − N was +0.41.
+   - Install with `$A hinted_cutoff model=<m> frozen=<frozen_<m>.json> gw_commit=<sha>`.
+5. **Audit drops:** `subject_ccut.py drop_pairs`, keeping `HC_GUESS_GAP` set. Then re-run
+   finalize and install.
+6. **Short set:** if the set comes out short, top it up. Densify the window, or extend the pool
+   by date: OLMo used a 2023 pool, with a web-check of the drafted items and the first audit
+   carried forward.
+   - The top-up scripts (`propose_series.py`, `merge_bank3.py`, `carry_forward.py`) are still
+     local to the plan-0089 run tree. Port them in a code PR before relying on them.
+
+### Agentic (plans 0031 / 0052 / 0077)
+- **Build:** `$A agentic model=<m> stage=all` builds the registered scenarios with clean twins.
+  `$A agentic model=<m> pool=<v> waves=8` then runs waves of the sha-pinned adapt-only pair pool.
+- **On main (2026-11-16) only `pool=v3` is pinned.**
+  - am-pool-v4..v7 exist, with the newest `pool=vN` chaining every older pool. They carry v6's
+    calm-twin authoring steer (all temptation inside the spans the twin replaces) and v7's more
+    provocative originals.
+  - The transformers-5 fix to `agentic_pool_v3.chat_tokens` is also there: `apply_chat_template`
+    returns a BatchEncoding, so before the fix gate 3 recorded length ratio 1.0 for every twin.
+  - All of this is in the open sq-refill / plan-0089 branches. Use them once merged. Until then,
+    a set that needs more pairs than v3 gives ships `partial`.
+- **Audit:** every new pool gets an independent audit before pinning.
+- **A pair drop** (`adapt drop`) takes both members.
+
+### Judging the set (after it ships)
+- Judge only through `WSB_BANK_ROOT=adapted/<m>` (`references/porting.md` §Judging).
+- **Pending on the sq-refill branch, not on main:**
+  - `summ_refusal_chain=claude-opus-5-5+claude-fable-5-1+claude-haiku-5-5`: agentic re-runs only
+    its unjudged items down the chain;
+  - `am_pins`: decided items keep their Stage C reply;
+  - the layered stage-2 rescue.
+- **Also pending:** the global fix to the `" | "` evidence split, which was cutting `<|...|>`
+  special tokens. It is its own PR.
+- **A refused call is never cached:** each re-run re-asks it, and a decided item with a
+  declined layer can drift.
+
+## AUDIT.md checklist (an INDEPENDENT fresh-context agent writes it; never self-certify)
+- **Header:** the subject (HF id @ revision) and the code sha. Say what was checked and how: every
+  new item, plus a sample of originals per family.
+- **Per family:** the count shipped, the target and the status; the item-quality checks (§4: legit
+  distractors, no shortcut, one defensible gold, no near-duplicates, class caps); must-drops by id
+  with a reason, and borderline cases kept with a reason.
+- **The data-round record:**
+  - each rule's drop count (D1-D7);
+  - leakers still pending at the last measurement;
+  - families still above chance + 5, with the failing runs;
+  - the onecue flags kept as shipped.
+- **Model-specific evidence:**
+  - introspection (calibration numbers, engine checks);
+  - hinted_cutoff (pair count, date checks, the prompt-only predictors);
+  - agentic (pairs, per-wave yields, the pools used);
+  - wrong_intermediate / knowledge_cutoff / msdm / multihop_mt (the stops and pool use);
+  - model_multihop (the confirm verdict).
+- **Every objective stop**, checked against its `report.json` `refill` block.
+- **Addenda:** the delta audit of rows the post-audit re-freeze filled, and any PR-review drops.
+- **Verdict:** usable / usable with notes / not usable, per family.
+
+## Ship checklist (the data PR)
+- `adapt status` is clean, and every family has a `note`. That covers
+  `exclude_from_macro` and the reason for every short or `ooc` family. Record
+  `native_langs by decision` and the hinted_cutoff predictors.
+- The verify step passes (§4: `wsbench plan` under the root, and each judge with `dry_run=True`).
+- `floors/floors.json` holds `po-opus-v1` and `stock-subject-v1`.
+- **`adapted/README.md`:** one row per set: path, serving (app, GPU), the family count, per-family
+  status highlights, native langs, introspection / hinted_cutoff / agentic outcomes, and the
+  floors. Link AUDIT.md.
+- **Census:** bump `tests/test_typo_mt.py::test_no_reachable_typo_mt_bank_has_arith_items` (`len(paths) == N`,
+  "bump per set"). It is the one pre-existing test a new set's PR changes by design.
+- `pytest -q` and `ruff` pass locally. Push, open the PR (`Closes #<set issue>`), then run
+  `scripts/gated_merge.sh <pr>`.
 
 ## Layout (everything this skill writes)
 
@@ -62,79 +277,28 @@ on the header's version; conjunctive and moral check `bank_version` PER ITEM and
 moral v3 and conjunctive v4 are bare lists with no header): never hand-copy a new header over old items or the
 reverse, and every kept item, new dilemmas included, carries the registered `bank_version`.
 
-`gate/`, `cand/`, `floors/{readouts,results}/` and the grade cache are git-ignored. For the 11
-existing sets they live only on Agam's RunPod box (`/workspace/agam/workspace-bench/adapted/`,
-~27 GB); once plan 0060 lands, a refresh on any other box starts by reseeding from the frozen set
-(§Refresh, target step 0).
+`gate/`, `cand/`, `floors/{readouts,results}/`, `mc/`, `mmh/` and the grade cache are
+git-ignored. They live only in the run tree that built the set, so archive it
+(`/workspace/archive/...`) before deleting the tree. A later top-up of a set needs its gate log.
 
-## What can be built correctly today (until plan 0060 lands)
-
-**New subjects only** (no `adapted/<m>/gate/` yet). On an existing set, `profile` skips ids already
-in its gate log and `freeze` puts the registered header over the stored v1 payloads: that is
-§Refresh, which is blocked.
-
-Every runbook step below is limited by this table. "originals only" = profile the registered bank
-and freeze its passing items, with NO refill (new items would lack judge-side options or pools
-keyed to the registered items, or the family has no Brief / generator). Freeze marks a short family
-with no refill attempt `untried` (`run.py`; it resets `partial`), so record the reason with `note`
-AFTER every freeze, re-freezes included.
-
-| status today | families | how |
-|---|---|---|
-| full build | typo_mt, association (Brief writes a provisional `mc`; `fill` replaces it on every wave with `adapt mc`'s screened options before the gate. Check new items for v3's `mc.distractor_aliases` / `topic` and say in the note what is missing) | profile + `fill` |
-| full build (plan 0060 A2 rebuilds) | basic_readout v5 (Brief tiers `t1` implicit / `entity` / `processing`; profile → `fill`, which on every wave runs author → `$A mc $M families=basic_readout` (entity / processing candidates: `mc_leakage_r4.py --bank`) → gate → `$A mc $M families=basic_readout stage=subject` (run those two by hand for candidates authored outside `fill`; `stage=subject` after EVERY gate) (implicit golds = the subject's answer, a distractor never names it; marks `subject_fields_for`) → freeze (balances `mc.gold_position` per subfamily over the shipped set)), basic_readout_mt v4 (gate = the v4 question in chat, no system turn / stem, graded by `name_forms`, T 0.7 / top_p 0.8 / top_k 20 (a Modal subject needs its app redeployed for `top_k`); Brief `t1` / `t2`; `$A mc $M families=basic_readout_mt` before gate (r4 → r4b → `build_r4b_mc_banks.py --bank`; `fill` runs it on every wave); freeze writes the set's `basic_readout_mt/exonyms.json` overlay, which the judge reads through the overlays of PR #243, and `hidden_rivals.json`, unused since `norival-v1`) | as described |
-| full build (generated) | relational_multihop, arithmetic_intermediates | profile + `auto` |
-| full build (authored pairs, plan 0066) | buggy_code: `select` keeps each buggy / clean pair `{id, twin}` atomic (registered `twin` or the authored `-au-` / `-au-clean-` ids; a failed clean twin drops its buggy partner); the adapted target is **24 pairs** (Camila 2026-11-04, reaffirmed by plan 0072 §0 D1): `refill.target_pairs` / `target_bank` read items.json's 24 pairs, 63-item cap and `src` quota 25 / 38, while the originals are the registered bank v2's 64 pairs (`items_v2.json`, a larger pool, selected originals first), counted by `refill.buggy_selection` in `fill` and `freeze`; every clean item also passes the greedy `bugclaim` leg (plan 0030 (b)); authored crash pairs ≤ 20% | profile + `refill families=buggy_code` (its first step re-asks the clean `bugclaim` leg on every passing clean row) |
-| full build via `adapt refill` (plan 0075) | multihop (brief + `adapt mc`; `element_bridge` computed in `author._finish`; no capital relation, #372), poetry (`fill` runs `poetry.tier_a` → `build_mc` → `opus_gate` after every wave's gate; `poetry.row_passes` ships a new row only once `opus_gate` built it), role_bound_association (roles / actions from the judge's lexicons, lint-enforced; new pairs gated `ADAPT_ROLE_BOUND_STRICT=1`; `rbstage.build` writes each new passing pair's oa-v3 distractors on its gate row, freeze writes `adapted/<m>/role_bound_association/distractors_v3.json`; no guesser screen, so measure lucky guessing on ALL the set's role_bound items after freeze: new pairs change the distractor-name pool of every pair), user_modeling (golds restricted to registered values of their class, so no `values.json`), multilingual_mt / multilingual_typo / multilingual_multihop (the author reads the set's `native_langs.json`, so an `[en]` subject's items carry no `zh` forms; multilingual_typo writes `mc.correction_native`; mlmh content lists are Opus's, re-measured after freeze and rebuilt with `mc_options_r5.py --bank` + `adapt patch` if a guesser beats chance + 5) | `refill families=<f> waves=16` |
-| originals only | directed_modulation (profile is its compliance gate; no Brief), chain_intermediates (gate = v2's rule: strict 10/10 + greedy + no leak on the seed-last render; `first` is a `note:first` annotation leg; new generated items get per-slot `mc` from `options.build_mc` over the shipped set at freeze; originals keep the registered options), conjunctive_association (no Brief; plan 0075 §2.9 Phase B), multilingual (single-token) **only for a subject whose native languages are exactly `en` and `zh`** | profile + freeze |
-| carry | jailbreak_recognition (`carry` re-screens every v2 control on the subject with the bank's J5 grader, `scripts/build_jailbreak_v2.py` `grade_gate`: 20 no-think draws + greedy, since the subject never thinks; a failing control is dropped with its pairing in `adapt.dropped_controls` and the report; `screen=false` skips it, and then the net headline is not valid), multi_concept_directed_modulation | `carry families=jailbreak_recognition,multi_concept_directed_modulation` (never another family: carry treats any non-jailbreak name as MCDM) |
-| regenerated | agentic_misalignment (plan 0060 D5: every clean twin is rolled out with the same protocol and kept only if the subject never misbehaves on it, beside its kept partner; pairs are atomic; at >= `MACRO_MIN_PAIRS` pairs the macro exclusion is lifted; `twins=false` gives plan 0031's twin-less scope), jlens_concept_pr (needs the subject's J-lens) | `$A agentic`; `scripts/adapt_jlens*.py` |
-| do not build (`note status=blocked`, reason "plan 0060") | moral_rationale (`$A moral` / `profile` keep Qwen's `options`; rekey is Qwen-only), the multilingual families for any subject whose native languages are not exactly `en` and `zh` | — |
-| not in the adapt machinery | §Families the adapt machinery does not cover | — |
-
-## Runbook (one subject, in order)
-
-Every step is resumable; run each in its own tmux session with a log under `logs/` (on Agam's box:
-`/workspace/agam/logs/<step>-<m>.log`). `A=scripts/adapt_box.sh` on Agam's box, else
-`A="python -m wsbench.adapt"` with the environment of §On another box; `M=model=<key>` (the key
-from `subjects.py`).
-
-| step | command | notes |
-|---|---|---|
-| 0 set up | add a `Subject` (pinned revision, `n_layers`, tokenizer family, `chat_template`, `gpu_memory_utilization` / `enforce_eager` for a tight fit), download weights, `$A profile $M families=typo_mt limit=5 llm=claude-opus-5-5` (step 1 skips these rows, so grade them the same way) | 9B on the 4090: 0.93 + eager (vision profiling is skipped: text only) |
-| 1 profile | `$A profile $M llm=claude-opus-5-5 families=<the full-build, generated and originals-only families of §What can be built>` | gates every item of the REGISTERED bank; parallel Opus grading |
-| 2 generated | `$A auto $M family=arithmetic_intermediates`, then `family=relational_multihop`, then `family=chain_intermediates` (tiers keep every intermediate in 10..99) | deterministic ladders |
-| 3 authored | `$A fill $M families=typo_mt,association` (only these two: other families with a Brief would build items missing their judge-side keyed fields; `fill` raises KeyError on a family with no Brief; for association / basic_readout / basic_readout_mt / multihop (`mcstage.FAMILIES`) every wave goes author → `adapt mc` → gate) | waves sized by yield, auto-steered by the last wave's misses, tier step-down, ooc stop |
-| 4 model-specific | `$A agentic $M` · `$A carry $M families=jailbreak_recognition,multi_concept_directed_modulation` · jlens: `scripts/adapt_jlens.py` / `adapt_jlens_modal.py` (the subject's neuronpedia J-lens, or one fitted with `scripts/fit_jlens_modal.py`; else `note status=blocked`; GLM-5.3: `scripts/adapt_jlens_glm53_modal.py`, its lens fitted in global-workspace `scripts/glm53_aff/jlens_fit_modal.py`, rollouts on the subject's adapt app, residuals from the HF stack, `WSB_GW` = that checkout). NOT `$A moral` until plan 0060. **Then `$A refill $M families=<every family below target with a refill route>` (§3a)** | directed_modulation is compliance-gated by step 1 |
-| 5 freeze | `$A freeze $M families=<the families built>`, then `note` per family (after EVERY freeze); the CLI freeze refuses a §3a family shipped below target with no refill record (`allow_untried=true` + a reason overrides) | writes `n_layers` into report.json: `wsbench plan` then emits subject layers. wrong_intermediate, multihop_mt and nyt_connections (plan 0060 Phase E: `$A wrong_intermediate`, `$A multihop_mt`, `$A nyt_connections`) and model_multihop (plan 0078, `$A model_multihop`) are not in the default family list: they ship ONLY when named, `families=wrong_intermediate,multihop_mt,nyt_connections,model_multihop` |
-| 6 verify | `WSB_BANK_ROOT=adapted/<m> wsbench plan out=…` and each family's judge with `dry_run=True` | any non-zero exit (exit 2, or a traceback) means a required field was not built |
-| 7 floors | §4 Floors | both protocols, stamped |
-| 8 audit | an INDEPENDENT agent writes `adapted/<m>/AUDIT.md` (correctness, leakage, difficulty, judge agreement); apply its drops, re-freeze | never self-certify |
-| 9 publish | update `adapted/README.md` (path, status, audit, bank versions) and tell olens-train | consumers read via `WSB_BANK_ROOT=adapted/<m> wsbench plan` |
-
-`python -m wsbench.adapt` subcommands (`src/wsbench/adapt/__main__.py`; unknown keys are errors):
-`profile` (families limit regate llm draws temperature), `generate` (family tier n seed), `author`
-(family tier n steer wave), `gate` (families llm draws temperature regate), `regrade` (families llm
-workers), `auto` (family), `fill` (families llm waves), `freeze` (families), `note` (family status
-text exclude_from_macro), `drop` (family ids reason), `patch` (family id set note), `status`, `native_langs` (stage langs evidence thinking: write or
-show `adapted/<m>/native_langs.json`, which `freeze` needs for the six multilingual / mt families;
-`stage=measure [thinking=on|off] [readouts=<J-lens readouts dir>]` runs plan 0054 R6: the
-thinking trace (default on for a subject with `thinking_mode`) plus the J-lens (token lens)
-readout criterion, Camila 2026-11-03; `stage=readouts readouts=<dir>` adds the latter to a
-measured record; a Chinese-lab subject is not measured: `langs=en,zh evidence="Chinese-lab
-model: en+zh assumed (Camila 2026-11-03)"`, gating.md §0),
-`moral` (stage step out limit), `agentic` (stage), `carry` (families), `floors` (stage judge).
-There is no `hal` subcommand: the hallucination family was removed (plan 0040; HallucinationBench
-is reported as an index, `evals/hallucinationbench/`).
 
 ## Procedure
 
 Keep a ◼/◻ todo tree in replies, one line per family. Do one subject at a time and finish it before
 starting the next.
 
-### 0. Set up the subject
-- Add it to `src/wsbench/adapt/subjects.py`: HF id, pinned revision, layer count, and the tokenizer
-  family. Qwen3.5 shares the Qwen3.6 tokenizer and template, so token indices carry over; Gemma's
+### 0. Set up the subject (the code PR of Quickstart step 1)
+- Add it to `src/wsbench/adapt/subjects.py`. Copy the closest existing Subject:
+  - the HF id and the pinned revision (the checkpoint its lenses were trained on);
+  - the layer count and the tokenizer family;
+  - `thinking_mode` if the hub template has a thinking switch;
+  - for Modal: `backend="modal"`, `modal_app`, `modal_gpu` (fallbacks in order), `modal_tp`,
+    `modal_image`, `modal_volume` + `modal_weights`, `modal_engine` kwargs and
+    `modal_max_containers` (1 for a subject whose app is a multi-GPU container: concurrent
+    stages then queue instead of booting a second B300:8; plan 0089 #473);
+  - `read_band`: the layers of the subject's O-lens, if it reads only some.
+
+  Pick the shared app if the model fits one H200, else the size class of §GPU sizing. Qwen3.5 shares the Qwen3.6 tokenizer and template, so token indices carry over; Gemma's
   don't. A subject whose upstream template always opens a reasoning block (GLM-5.3-Flash) or ships
   no Jinja at all (DeepSeek-V4: only `encoding_dsv4.py`) or has no thinking-off mode at all
   (Muse-Spark-Open: the generation prompt names the answer channel) needs a pinned no-think
@@ -147,19 +311,23 @@ starting the next.
   disallowed (K3) sets `Subject.template_ids`: prompt ids come from
   `apply_chat_template(tokenize=True)`, never from re-encoding the rendered text (callers send
   `runner.prompt(ask)`, `gate.prompt_of`). Per-subject notes: `references/porting.md`.
-- Run the gate where the weights fit. Up to ~9B: the RunPod 4090 with vLLM.
-  `scripts/adapt_box.sh <cmd> …` wraps `python -m wsbench.adapt` with:
-  - the venv `$ADAPT_ENV` (default `/workspace/agam/envs/adapt`; vLLM needs its `ninja` on PATH);
-  - the persistent HF cache (`HF_HOME`, default `/workspace/.persist/huggingface`);
-  - offline weights (`HF_HUB_OFFLINE`, default 1).
-
-  The first vLLM start compiles, which takes minutes; later starts reuse the cache. Larger subjects
-  run on Modal: deploy `scripts/adapt_modal.py` once (app `adapt-subject-llm`, vLLM, CUDA devel
-  image) and set `backend="modal"` on the Subject (or `ADAPT_BACKEND=modal`); every step (gate,
-  moral, agentic, floors) then generates there through `RemoteRunner` while rendering and grading
-  stay local. The GPU is the decorator's `gpu="H200"` (`adapt_modal.py:24`): edit it to change it
-  (B200 / B300 for new deploys; B200 when the image's Triton lacks sm_103a). Give Modal runs their
-  own lock (`ADAPT_GPU_LOCK=…/gpu-modal-<m>.lock`) so they don't queue behind the 4090.
+- **The read band.** An O-lens that reads exactly 11 layers maps the 27B grid one-to-one: the
+  k-th grid layer goes to the k-th band layer (`subjects.remap_layer`'s table rule;
+  `tests/test_adapt_v4.py::test_v4flash_read_band_reads_every_olens_layer`). Any other band snaps
+  each grid layer by depth to the nearest band layer. A band that folds two grid layers together
+  silently loses a layer, so test it.
+- **Add the key to `refill.PLAN_0075_SETS`.** A key outside it keeps registered-size targets and
+  skips the 0075 capital re-check and strict-freeze guard (plan 0089 change 3).
+- **Weights:** download them once, on CPU, into the app's volume. Use
+  `WSB_DL_VOLUME=<v> modal run --detach scripts/download_weights_modal.py --repo <hf id> --revision <sha>`
+  (hub-cache layout under `hf/hub`; the shared `adapt-hf-cache` uses `hub`). Never let a GPU
+  container download weights.
+- **Generation runs on Modal** (`ADAPT_BACKEND=modal`). Deploy the subject's app with
+  `ADAPT_SUBJECT=<m> modal deploy scripts/adapt_modal.py`; without `ADAPT_SUBJECT` it deploys the
+  shared `adapt-subject-llm` H200 app. Every step (gate, moral, agentic, floors) generates
+  through `RemoteRunner` from token ids, while rendering and grading stay local. A changed
+  Subject's modal fields need a redeploy. The RunPod 4090 / `scripts/adapt_box.sh` route of the
+  October sets is retired.
 - Thinking is always off. Use the subject's own chat template. Every runner start runs
   `template.check` (markers derivable, no reasoning block left open, system turn accepted) and
   refuses to gate otherwise.
@@ -167,7 +335,7 @@ starting the next.
   the answers in the viewer before running anything bigger.
 
 ### 1. Profile: gate the registered banks on the subject
-`$A profile model=<m> families=<the full-build, generated and originals-only families of §What can be built>` asks each item's own gate question(s) and writes `gate/<family>.jsonl` with
+`$A profile model=<m> families=<the 17 item-gated families: adapt_set.sh's PROFILE_FAMS>` asks each item's own gate question(s) and writes `gate/<family>.jsonl` with
 origin `original`. It reads `registry.frozen_bank_path` (the registered default bank), so it gates
 today's items; ids already in the gate log are SKIPPED unless `regate=true`.
 - Use greedy plus 10 samples at T=0.7 (chain: T=0.8, top_p 0.95, 10/10; every other knob:
@@ -182,26 +350,31 @@ today's items; ids already in the gate log are SKIPPED unless `regate=true`.
 
 ### 2. Rebuild what is model-specific (no difficulty change)
 Follow `references/porting.md`:
-- poetry: the subject's own rhyme. Bank v5 needs a free line-two leg the adapt gate does not have
-  yet (plan 0060): until then poetry cannot be ported to v5 (report it, don't freeze v1 items
-  under the v5 header).
-- basic_readout implicit: the subject's own favourite.
-- moral_rationale: NOT today (§What can be built): do not run `$A moral` — on a profiled set it
-  rewrites the reasons and keeps Qwen's `options`. Target (plan 0060): the subject's side, reasons
-  sampled from its own draws, option lists rebuilt for those reasons.
+- poetry v5: the subject's own rhyme (`$A poetry stage=all`: gate → tier_a → mc → opus_gate;
+  `ADAPT_POETRY_VARIANTS=fewshot,prefill`). Run `stage=settle` before every freeze that names
+  poetry.
+- basic_readout implicit: the subject's own favourite (`$A mc families=basic_readout
+  stage=subject` after every gate).
+- moral_rationale v3: re-keyed on the subject, with its side, its reasons and option lists rebuilt
+  for them. Run `$A moral stage=rekey_readrender step=<requests_s|grade_s|requests_r|distil|verify|assemble>`,
+  then `stage=options`, then `stage=adopt`. A prose answerer (Gemma) needs
+  `variant=system_one_word`.
+- The model-specific families (msdm, knowledge_cutoff, multihop_mt, wrong_intermediate,
+  nyt_connections, model_multihop, hinted_cutoff, introspection) are listed under §Families with
+  their own build.
 - directed_modulation: the compliance screen.
 - agentic_misalignment: rollouts, the clean twins included (plan 0060 D5; `$A agentic`).
 - jailbreak_recognition: positions and template (`carry`); the v2 controls are re-screened on the
   subject by `carry` (plan 0060 A2).
 - multi_concept_directed_modulation: the prefill render (bank v2, 116 items).
-- jlens_concept_pr: re-capture.
+- jlens_concept_pr: out of the 30 (§Scope). It needs the subject's J-lens; build it only on
+  request.
 - Layer remap: by depth fraction, for every family (`wsbench plan` does it from `n_layers`).
 
 ### 3. Refill each family down its difficulty ladder
-The families §What can be built marks full build are refilled here (typo_mt, association,
-buggy_code via `fill`; relational_multihop / arithmetic_intermediates via `auto`); the five
-model-specific / pair families refill through `adapt refill` (§3a). This section is the general
-procedure.
+`adapt refill` (§3a) drives every family with a refill route. `adapt_set.sh refill` / `loop` call
+it for you. This section is the general procedure underneath: read it when you have to steer a
+family by hand.
 
 For each family below its target count (the registered bank's size):
 1. Read the family's entry in `references/families.md`: its latent, invariants, ordered tiers
@@ -229,8 +402,8 @@ For each family below its target count (the registered bank's size):
    - Pilot ~30 candidates at a new tier before generating hundreds.
 6. The blind-MC `mc` blocks the briefs and generators don't write (association: lint requires it, so
    an association candidate without `mc` is rejected before the GPU; multihop; chain per-slot;
-   poetry `mc.candidates`) must exist in the candidate payload. **No MC builder takes adapted items
-   yet.** `scripts/build_multihop_mc.py`, `association_distractors.py`, `moral_distractors.py`,
+   poetry `mc.candidates`) must exist in the candidate payload. **The frozen-bank MC builders do not take
+   adapted items.** `scripts/build_multihop_mc.py`, `association_distractors.py`, `moral_distractors.py`,
    `mc_leakage_r4.py` and `role_bound_distractors_v3.py` read and WRITE the frozen `evals/` files
    (hard-coded paths): never run them for an adapted set, it rewrites the bank of record.
    `r4_mc_distractors.py` writes only to `--out` but reads frozen banks only. Only
@@ -370,10 +543,20 @@ Then:
        correct (that makes the gold ambiguous, not the list hard);
      - the list is short enough that elimination is easy (with 3 options chance is 1/3).
      Then measure: `wsbench baseline kind=lucky_guessing variant=blind,described draws=5` under
-     `WSB_BANK_ROOT`. The family must be within chance + 5 points (strict for every family,
-     poetry and association included; Camila 2026-11-06), and an item a guesser gets >= 3/5
-     with blind + described >= 4/10 (`leaks.py`) is a leaker: rebuild its list (r5 route +
-     `adapt patch`, at most 3 rounds) or drop it.
+     `WSB_BANK_ROOT`. Every family must stay within chance + 5 points on both guessers. The bar
+     is strict for every family, poetry and association included (Camila 2026-11-06).
+     - **The per-run leaker test (plan 0075 D1-D3):** a guesser that fails the family bar gets
+       >= 3/5 on the item, AND blind + described together reach >= 4/10. 10/10 counts whatever
+       the rate. A family with fewer than 4 items is measured blind only; there the test is
+       blind >= 4/5.
+     - **The two-run rule (2026-11-08):** an item drops only when it meets the test in two
+       SEPARATE lucky runs. A flag in one run is pending: re-measure it.
+     - `adapt dataround stage=leakers` applies the test and the rule. The driver's `cycle` runs
+       two lucky runs, so a cycle can confirm on its own.
+     - **Before a set's first lucky run**, run the plan-0087 onecue screen / repair / patch. The
+       driver does this in its first cycle.
+     - **A list can also be rebuilt** instead of dropped: `scripts/mc_options_r5.py --bank` +
+       `adapt patch`, at most 3 rounds, then the onecue stages again. In practice the cycles drop.
   2. **No shortcut around the latent.** The answer must not be reachable without the bridge /
      intermediate the item tests (`mlmh-vi-niagara-canada`: "on the border between the US and
      ___" answers itself), and no clue may route through a capital city ("captured the
@@ -389,6 +572,18 @@ Then:
      wave's brief away from the over-cap class.
   Drops leave a set short; with no spend cap, back-fill with more waves rather than shipping a
   `partial` family. Record in the note how many items each check dropped.
+  5. **The plan 0075 screens (D4-D7), on the WHOLE shipped bank, originals included.**
+     `adapt dataround stage=screens` runs them every cycle:
+     - D4: a multihop / mlmh answer reachable without the bridge (Opus);
+     - D5: a clue that routes through, or a question that asks for, a capital (regex; it keeps
+       the two figurative typo_mt rows);
+     - D6 / D6b: a user_modeling user turn that names a city or another place in the gold
+       country (Opus);
+     - D7: user_modeling Country and Gender each capped at 20%, newest rows first. Back-fill as
+       Occupation / Religion only.
+
+     Every drop goes through `adapt drop` with its rule in the reason. A role_bound drop takes
+     both twins.
 - `pytest tests/test_adapt.py`, then `WSB_BANK_ROOT=adapted/<m> wsbench plan out=<dir>` and every
   adapted bank through its family's judge with `dry_run=True`. A non-zero exit = a required field is
   missing.
@@ -423,8 +618,7 @@ Then:
     adapted floors from `floors/floors.json`. Easier items can raise a floor; flag a family whose
     floor saturates in `report.json`.
 - Write `report.json.note` per family: what changed and why, in one sentence each.
-- **A family gained or changed a gate leg** (e.g. multihop originals' bridge; poetry's free
-  line-two leg once plan 0060 lands): `profile families=<f> regate=true` (originals) AND `gate
+- **A family gained or changed a gate leg** (e.g. multihop originals' bridge): `profile families=<f> regate=true` (originals) AND `gate
   families=<f> regate=true` (passing new items), then refill and re-freeze. Old records otherwise
   keep passing without the leg. When a leg was REMOVED or made an annotation (chain v2's `first`),
   use `gate regate=all`: it re-asks the failed new items too (every row is re-linted first, so a v1
@@ -455,100 +649,71 @@ runs under `WSB_BANK_ROOT=adapted/<m>` (no committed set has an `anti_text_inver
 - **As in the bench:** a family with 1..19 survivors shows its ATI number but stays out of the
   ATI macro (`results.ATI_MACRO_MIN_ITEMS`); report the counts beside it.
 
-## Refresh an existing set to a newer bench
 
-**Status (2026-11-02): blocked on plan 0060 Phase A. Do not refresh a set with today's code.**
-Until that lands, report an adapted set's families as they are (SKILL §State) and never quote a
-judged number from a family §State marks broken, retired or headline-None. Every ad-hoc route was
-checked and each one ends in a new header over old items, Qwen's options under the subject's gold,
-or a rewritten bank of record.
+## Re-freeze or refill an existing set
 
-### Why there is no safe ad-hoc refresh (verified traps in today's code)
-- `profile` skips ids already in the gate log (they keep their v1 payloads) unless `regate=true`;
-  `select` never filters to the ids in the current bank, so ids a bank version retired come back
-  (typo_mt's 15 arithmetic items, association's 7).
-- For an already-gated id, a rewritten `cand/` row is ignored (`store.pending` / `add_candidates`
-  skip gated ids) and `gate regate=true` re-lints and re-gates the GATE-LOG payload. `adapt patch`
-  is applied only at freeze and never reaches that payload.
-- `gate` lints first and association lint requires `mc`: regating or importing a v1 association
-  item without `mc` appends a rejected record, and last-record-wins makes it permanent.
-- `freeze` deep-copies the registered header every time, so header fields cannot be set per
-  subject: multilingual / mt headers keep Qwen's `contract.native_langs` (`['en','zh']`), which the
-  judges read (`multitoken/family.py`, `mcrx.py`), and the dry run passes.
-- A bare `freeze` re-freezes every family with gate rows, writing new headers over v1 rows of every
-  family not refreshed.
-- `profile` on poetry v5 or moral v3 restamps the subject's gold but keeps Qwen's `mc.candidates` /
-  `options`: the judge runs, against the wrong options.
-- Adapted-only items (origin `authored` / `generated`; 158 (kimi) to 1,129 (qwen3.5-4b) per set) are v1-shaped and
-  post-processed (`_post_freeze` remapped arithmetic `cell.layer` non-invertibly; non-Qwen sets
-  token-restamped). Re-gating them and re-freezing remaps layers twice; leaving them in puts v1 items
-  under a v2+ header that still runs where no field is hard-required.
-- The repo's MC builders (`build_multihop_mc.py`, `association_distractors.py`,
-  `moral_distractors.py`, `mc_leakage_r4.py`, `role_bound_distractors_v3.py`) and `wsbench freeze` (floors; `evals/baselines/` unless
-  `dst=`) write the bank of record. Never run them for an adapted set.
-- `drop` / `patch` records are unversioned: v1 audit decisions (gemma's 161 moral patches,
-  olmo-3-7b's moral drops) would be applied to v3 items.
-- Registered families a set lacks are SKIPPED (printed) under `WSB_BANK_ROOT` with `all=True`
-  (`cli.py` `RunFamilies`, `readplan.families()`), and exit 2 only when named explicitly: 5 for 9
-  sets (introspection, knowledge_cutoff, msdm, multihop_mt, wrong_intermediate; nyt_connections too), 7 for glm / kimi
-  (+ jlens, agentic). They appear in no report row, so a macro silently spans fewer families.
+Plan 0060 Phase A landed (2026-11-03), and plan 0072 re-froze every set on the overhauled banks.
+The old "refresh is blocked" warning is gone.
+- **To top up or re-screen a set:** use the same commands as a new build, in its run tree. That
+  is `refill`, then the `loop`, then `final`, then a delta audit appended to its AUDIT.md.
+- **A set built before the bank v2+ round** (none on main once plan 0089's data PRs land) is
+  rebuilt fresh, never patched. Move its dirs aside so `run.shipped_ids` starts empty, then
+  follow the Quickstart (plan 0089).
+- **Traps that still hold:**
+  - `profile` skips ids already in the gate log unless `regate=true`.
+  - For a gated id, a rewritten `cand/` row is ignored, and `gate regate=true` re-gates the
+    gate-log payload. Field fixes go through `adapt patch`, which is applied at freeze.
+  - A bare `freeze` re-freezes every family with gate rows. Always name the families.
+  - The repo's MC builders (`build_multihop_mc.py`, `association_distractors.py`,
+    `moral_distractors.py`, `mc_leakage_r4.py`, `role_bound_distractors_v3.py`) and
+    `wsbench freeze` without `dst=` write the bank of record. Use `adapt mc` /
+    `mc_options_r5.py --bank` / `dst=adapted/<m>/floors/...` instead.
+  - Registered families a set lacks are SKIPPED under `WSB_BANK_ROOT` with `all=True`, so a
+    macro silently spans fewer families. Check the count against §Scope.
 
-### Target procedure (once plan 0060 Phase A lands; commands named there)
-0. Gate log: on Agam's box use it; elsewhere `adapt seed` rebuilds gate payloads from the frozen
-   set (post-freeze fields stripped; deterministic families regenerated instead).
-1. Diff: `adapt status` (bank version per family, stamp match, stale audit records). Delete only
-   `REMOVED_FAMILIES` files; keep retired / superseded ones, unrefilled.
-2. Per family, the mode plan 0060 §1 assigns: **upgrade** (judge-side fields only, e.g. `mc`,
-   pools, twins: `adapt upgrade` writes a new gate record, prior gate result copied, nothing
-   re-asked) or **rebuild** (the bank's questions or gate changed: basic_readout v5, basic_readout_mt
-   v4, poetry v5, moral re-key). multilingual v3 is an upgrade (prompts unchanged), after the
-   subject's `native_langs` is measured: originals re-profiled from the registered bank, new
-   items authored against v2-shaped briefs, v1 adapted-only items retired.
-3. Re-gate only where the SUBJECT gate changed; judge-side changes (relgate-v4, role_bound's action
-   gate, um-v3.4, um-v3.5) need no regate.
-4. Refill, `freeze families=<refreshed>` (provenance-stamped rows only), verify every present family
-   `dry_run=True`, floors under both protocols into `adapted/<m>/floors/`, independent re-audit.
-5. Record `bank_version` per family in `report.json`, update `adapted/README.md`, re-produce readouts.
+## Families with their own build (not `profile` / `gate`)
 
-## Families the adapt machinery does not cover
+`profile` / `gate` cannot gate these families: `families.get` has no entry for them. Each one has
+its own subcommand, and `adapt_set.sh build` runs them all. Never copy the 27B bank into
+`adapted/<m>/` for them. A missing family is reported, never back-filled. They ship only when
+named at freeze (the driver names them).
 
-`families.get` raises "unknown family" for every row but typo (in the adapt `FAMILIES`, just not
-refilled), so `profile` / `gate` cannot gate them yet. Do not
-copy the 27B bank into `adapted/<m>/` for them: a missing family is reported, never back-filled.
-
-| family | why not | what porting needs |
+| family | why model-specific | build |
 |---|---|---|
-| multihop_mt | its shortcut gate (no shortcut probe reaches the answer) is specific to the gated model | the answer + bridge legs fit `families.py` (`capable/questions.py` already asks them); add a must-NOT-reach leg type for `shortcut_probes` (global-workspace `multihop_v2/gate_modal.py`) |
-| wrong_intermediate | the item is a specific Qwen error (it answers via the wrong intermediate) | `$A wrong_intermediate $M` (plan 0060 Phase E); refill (plan 0066): cued templates recovered by category, then a lower-`min_sl` re-scrape (`pool=dir1,dir2`) (§3a) |
-| knowledge_cutoff | a model-specific error gate (G0 / G1) | `$A kcutoff $M [cutoff=YYYY-MM]` (plan 0060 Phase E): G0 re-run on the subject, G1 dropped, options / units rebuilt; then `freeze families=knowledge_cutoff`. nocot items not built (`references/families.md`). Refill (plan 0066): the GW question pool (`pool=ext`, §3a) |
-| model_specific_directed_modulation | model-specific by design (G0 defaults + G1 text gate) | `$A msdm $M` (plan 0060 Phase E): the subject's own defaults (G0 + compliance), G1 dropped, options / units rebuilt; then `freeze families=model_specific_directed_modulation`. Refill (plan 0066): the GW category pool (`pool=ext`) with membership / label-QA validity legs (§3a) |
-| multihop_mt | its shortcut gate (no shortcut probe reaches the answer) is specific to the gated model | `$A multihop_mt $M` (plan 0060 Phase E); refill (plan 0066): the GW adversary-probed candidate pool, gated with the unchanged staged gate, review legs, then `build_fields` (§3a) |
-| nyt_connections | the targets are the model's own groupings and connection labels (plan 0062) | `$A nyt_connections $M [stage=solve/stability/options/build/all] [limit=] [llm=] [herrings=<pilot alt_b2.json>]` (plan 0060 Phase E): the subject solves each registered puzzle (greedy + 16 @ T 0.7, top-p 0.95) and names its groups; the family's >= 12/16 stability rule re-run; options rebuilt around its labels (NYT gold, shared Opus herrings, foil, Opus EQUIV filter); frontier gate dropped; then `freeze families=nyt_connections`. Work files hold NYT text: they live in `$WSB_CACHE/nyt/adapt/`, never `adapted/`. `regate=true` refuses `limit=`. `scripts/nyt_connections_bar.py` refuses an adapted headline (the frozen floor is Qwen's) |
-| model_multihop | the bridges are the model's own stable beliefs (plan 0076) | `$A model_multihop $M [stage=gen1/canon1/gen2/gate/floor/review/build/lucky/confirm/status/all] [limit=] [llm=] [level=] [src=]` (plan 0078, every stage with `ADAPT_BACKEND=modal`): the gw mmh pool (`$WSB_POOL_DIR/mmh_pool.json`, `scripts/build_mmh_pool.py`) re-gated on the subject (B, M, M2, A >= 16/20 at T 0.7; chain; identifiability; leak), the Opus prompt-only filter (0/6), the item-quality review, a lucky-guessing screen (`stage=lucky`); `freeze families=model_multihop` selects in ship order (screen leakers out, near-duplicates out, <= 15% per bridge, target 100, ships up to 283) and marks the bank `unconfirmed`; a FRESH confirm run (`wsbench baseline kind=lucky_guessing variant=blind,described draws=5` under `WSB_BANK_ROOT`, new out dir, then `stage=confirm src=<dir>`) decides on its pre-drop rate (chance + 5; under 100 items or in a re-selection round also the item-level 90% upper bound); a failed confirm needs `stage=lucky level=<round+1>` (a pooled re-selection round) before the next one, 3 failures block the family; the floor of record is ingested as a re-test; `stage=status` grades. Work files `adapted/<m>/mmh/` (git-ignored) |
-| introspection | injected concept vectors are the subject's own activations | rebuild vectors (`scripts/introspection_build_v2.py`, `introspection_export_vectors.py`) |
-| hinted_cutoff | the I / N twins are the subject's own behaviour and the read positions index its own prompt render (plans 0063, 0074) | plan 0084: re-run the gw ccut v2 pipeline on the subject (`scripts/hinted_cutoff_adapt/`: `probe.py` measures its cutoff first and the pool is extended by date if its fade-out is later than v2's 2024-01..2025-06 window; `subject_gen.py` is the `[gen]` step on the subject's adapt app; `subject_ccut.py` runs each ccut stage with the subject's tokenizer, metadata template only; a pilot of ~150 candidates first; hand-labelled silence calibration), then `finalize.py` (the bar is the date checks: day AUROC and cell excess within the gw gate's 0.10, Camila 2026-11-08; the prompt-only predictors are recorded, the po-opus floor covers prompt predictability; a masked guessability caliper `HC_GUESS_GAP` (R18) narrows it) and `$A hinted_cutoff $M frozen=<frozen_<m>.json> gw_commit=<sha>` (refuses a failed bar; validates every item's ids against the subject's render and its read span after the hint block). Floors: `ADAPT_FLOORS_FAMILIES=hinted_cutoff $A floors` + the po-opus summary floor. Built for glm-5.3 |
+| wrong_intermediate | the item is a specific Qwen error (it answers via the wrong intermediate) | `$A wrong_intermediate model=<m>` (plan 0060 Phase E); refill (plan 0066): cued templates recovered by category, then a lower-`min_sl` re-scrape (`pool=dir1,dir2`) (§3a) |
+| knowledge_cutoff | a model-specific error gate (G0 / G1) | `$A kcutoff model=<m> [cutoff=YYYY-MM]` (plan 0060 Phase E): G0 re-run on the subject, G1 dropped, options / units rebuilt; then `freeze families=knowledge_cutoff`. nocot items not built (`references/families.md`). Refill (plan 0066): the GW question pool (`pool=ext`, §3a) |
+| model_specific_directed_modulation | model-specific by design (G0 defaults + G1 text gate) | `$A msdm model=<m>` (plan 0060 Phase E): the subject's own defaults (G0 + compliance), G1 dropped, options / units rebuilt; then `freeze families=model_specific_directed_modulation`. Refill (plan 0066): the GW category pool (`pool=ext`) with membership / label-QA validity legs (§3a) |
+| multihop_mt | its shortcut gate (no shortcut probe reaches the answer) is specific to the gated model | `$A multihop_mt model=<m>` (plan 0060 Phase E); refill (plan 0066): the GW adversary-probed candidate pool, gated with the unchanged staged gate, review legs, then `build_fields` (§3a) |
+| nyt_connections | the targets are the model's own groupings and connection labels (plan 0062) | `$A nyt_connections model=<m> [stage=solve/stability/options/build/all] [limit=] [llm=] [herrings=<pilot alt_b2.json>]` (plan 0060 Phase E): the subject solves each registered puzzle (greedy + 16 @ T 0.7, top-p 0.95) and names its groups; the family's >= 12/16 stability rule re-run; options rebuilt around its labels (NYT gold, shared Opus herrings, foil, Opus EQUIV filter); frontier gate dropped; then `freeze families=nyt_connections`. Work files hold NYT text: they live in `$WSB_CACHE/nyt/adapt/`, never `adapted/`. `regate=true` refuses `limit=`. `scripts/nyt_connections_bar.py` refuses an adapted headline (the frozen floor is Qwen's) |
+| model_multihop | the bridges are the model's own stable beliefs (plan 0076) | `$A model_multihop model=<m> [stage=gen1/canon1/gen2/gate/floor/review/build/lucky/confirm/status/all] [limit=] [llm=] [level=] [src=]` (plan 0078, every stage with `ADAPT_BACKEND=modal`): the gw mmh pool (`$WSB_POOL_DIR/mmh_pool.json`, `scripts/build_mmh_pool.py`) re-gated on the subject (B, M, M2, A >= 16/20 at T 0.7; chain; identifiability; leak), the Opus prompt-only filter (0/6), the item-quality review, a lucky-guessing screen (`stage=lucky`); `freeze families=model_multihop` selects in ship order (screen leakers out, near-duplicates out, <= 15% per bridge, target 100, ships up to 283) and marks the bank `unconfirmed`; a FRESH confirm run (`wsbench baseline kind=lucky_guessing variant=blind,described draws=5` under `WSB_BANK_ROOT`, new out dir, then `stage=confirm src=<dir>`) decides on its pre-drop rate (chance + 5; under 100 items or in a re-selection round also the item-level 90% upper bound); a failed confirm needs `stage=lucky level=<round+1>` (a pooled re-selection round) before the next one, 3 failures block the family; the floor of record is ingested as a re-test; `stage=status` grades. Work files `adapted/<m>/mmh/` (git-ignored) |
+| introspection | injected concept vectors are the subject's own activations | `$A introspection stage=all`, or the multi-GPU stack for big MoE (§Introspection); `ooc` on a measured calibration NO-GO |
+| hinted_cutoff | the I / N twins are the subject's own behaviour and the read positions index its own prompt render (plans 0063, 0074) | plan 0084: re-run the gw ccut v2 pipeline on the subject (`scripts/hinted_cutoff_adapt/`: `probe.py` measures its cutoff first and the pool is extended by date if its fade-out is later than v2's 2024-01..2025-06 window; `subject_gen.py` is the `[gen]` step on the subject's adapt app; `subject_ccut.py` runs each ccut stage with the subject's tokenizer, metadata template only; a pilot of ~150 candidates first; hand-labelled silence calibration), then `finalize.py` (the bar is the date checks: day AUROC and cell excess within the gw gate's 0.10, Camila 2026-11-08; the prompt-only predictors are recorded, the po-opus floor covers prompt predictability; a masked guessability caliper `HC_GUESS_GAP` (R18) narrows it) and `$A hinted_cutoff model=<m> frozen=<frozen_<m>.json> gw_commit=<sha>` (refuses a failed bar; validates every item's ids against the subject's render and its read span after the hint block). Floors: `ADAPT_FLOORS_FAMILIES=hinted_cutoff $A floors` + the po-opus summary floor. Built for glm-5.3, then plan 0089's five and deepseek-v4-flash (§hinted_cutoff) |
 | typo | superseded by typo_mt (out of `all`) | stop refilling it; keep the frozen file only for old results |
 
 Removed and never to be adapted: unverbalized_hint (plan 0081), medical_diagnosis{,_alt} (plan
 0058), hallucination (plan 0040), multihop_mt_regex (plan 0041), brew_intermediates (plans 0029 /
 0033).
 
-## On another box (not Agam's RunPod box)
 
-Everything under `/workspace/agam/`, the 4090, `/dev/shm/compute.env`, the `runpod` ControlMaster,
-gw-olens' `adapt_mp_subject_modal.py` / `kimi_wsbench_modal.py` / `subject_*_modal.py`, the
-`/workspace/agam/hf_tok/<m>` tokenizer dirs (glm-5.3-flash, kimi-k2), and `atlas/normal_gated.py`
-(hard-codes those paths) exist only there. Elsewhere:
-- `ADAPT_ENV`, `HF_HOME`, `ADAPT_GPU_LOCK` and `MODAL_ENVIRONMENT` (default `agam`) to your own
-  values; `HF_HUB_OFFLINE=0` or pre-download the pinned revision; deploy `scripts/adapt_modal.py`
-  into your own Modal environment and set `ADAPT_BACKEND=modal`.
-- Re-stage a subject's `tokenizer_dir` / `chat_template` from the pinned HF revision into
-  `src/wsbench/adapt/data/templates/` and point `subjects.py` at it (done for glm-5.3, kimi-k2).
-- **Claude auth.** The default reads the keyless OAuth token from Modal Dict `anthropic-oauth` in
-  `MODAL_ENVIRONMENT` (only Agam's env has it). Set `WSB_ANTHROPIC_AUTH=sdk` to use the
-  Anthropic SDK's own credentials (`ANTHROPIC_PROFILE` / federation). `adapt_box.sh` runs `unset
-  ANTHROPIC_API_KEY`, so an inline key does not survive it: call `python -m wsbench.adapt`
-  directly. `adapt floors stage=judge` honours it too (plan 0060 A1.9).
+## Modal, tokenizers and Claude auth
+
+Agam's RunPod box (the 4090, `/workspace/agam/`, `adapt_box.sh`, `atlas/normal_gated.py`, gw-olens'
+`subject_*_modal.py`) built the October sets and is no longer used. Every step now runs from a
+dev box against Modal:
+- **Modal:** `MODAL_PROFILE=safety-sahan-2 MODAL_ENVIRONMENT=camila-blank` and
+  `ADAPT_BACKEND=modal`. The `camila-blank` environment is capped at 16 GPU containers, shared
+  by every agent. Use a Modal client from a local-disk venv: `/root/torchvenv/bin/python -m modal`
+  (1.6.3), or the persistent `/workspace/root/fo-cache/glm53-modal-venv/bin/modal`.
+  `/root/.cache/cfinf-modal-venv` is wiped on reboot.
+- **Claude auth:** `WSB_ANTHROPIC_AUTH=sdk ANTHROPIC_PROFILE=default`, the Anthropic SDK's
+  profile credentials. `adapt floors stage=judge` honours it too. NEVER export
+  `ANTHROPIC_API_KEY` (`adapt_set.sh` refuses to run with it set). The default route, which
+  reads a keyless token from a Modal Dict `anthropic-oauth`, existed only in Agam's environment.
+  The SDK route sometimes fails with an OAuth refresh race (`invalid_grant`,
+  `WorkloadIdentityError`): wait 1-3 minutes and re-run. The driver does this itself.
+- **Tokenizers:** loaded from the hub at the pinned revision (`HF_HUB_OFFLINE=0`), plus a pinned
+  template in `src/wsbench/adapt/data/templates/` where the upstream template cannot turn
+  thinking off.
 - **Per-subject Modal apps** (`scripts/adapt_modal.py`, plan 0060 A3). Each `backend="modal"`
   Subject names its app (`modal_app`) and how it is served: `modal_gpu` (fallbacks in order),
   `modal_tp`, `modal_engines` (TP engines per container, one per GPU set: DeepSeek-V4 = one
@@ -568,7 +733,7 @@ gw-olens' `adapt_mp_subject_modal.py` / `kimi_wsbench_modal.py` / `subject_*_mod
   Deploy once per app, from the repo root, with the Modal client venv:
 
   ```bash
-  MODAL=/root/.cache/cfinf-modal-venv/bin/modal
+  MODAL="/root/torchvenv/bin/python -m modal"
   export MODAL_PROFILE=safety-sahan-2 MODAL_ENVIRONMENT=camila-blank
   $MODAL deploy scripts/adapt_modal.py                         # adapt-subject-llm (shared)
   ADAPT_SUBJECT=glm-5.3 $MODAL deploy scripts/adapt_modal.py   # adapt-glm-5.3: B300:8|B200:8, TP8
@@ -584,16 +749,14 @@ gw-olens' `adapt_mp_subject_modal.py` / `kimi_wsbench_modal.py` / `subject_*_mod
   text and must be redeployed. The first call boots the engine (GLM-5.3: localize ~440 GB to
   NVMe + load + JIT, ~15-20 min; `scaledown_window` keeps it warm 10 min between calls), so
   batch every candidate into ONE generation run per stage. Check Blackwell stock first.
-- **Tokenizers off the box.** `glm-5.3` loads its tokenizer from the hub at the pinned revision
+- **Per-subject tokenizers.** `glm-5.3` loads its tokenizer from the hub at the pinned revision
   plus the in-repo `data/templates/glm53_nvfp4_nothink.jinja`; `kimi-k2` loads the hub's
   remote-code tokenizer (`trust_remote_code`, needs `tiktoken`, in the `gpu` extra) with its
   official template as-is: every Kimi render opens with the template's default system turn ("You
   are Kimi, an AI assistant created by Moonshot AI.") unless the ask has its own system message
-  (sets are built fresh, so Agam's earlier renders need not match). `glm-5.3-flash` (plan 0089)
+  (sets are built fresh, so earlier renders need not match). `glm-5.3-flash` (plan 0089)
   loads its tokenizer from the hub at the pinned revision plus the in-repo
   `data/templates/glm53_flash_nothink.jinja` (GLM-5.3's two edits: effort low, `<think></think>`).
-- The box `Runner` hands vLLM rendered text; `RemoteRunner` sends token ids. For a tokenizer that
-  auto-adds a BOS the render already carries, the two backends can differ by that token.
 
 ## Tailoring to smaller and bigger subjects
 
@@ -619,21 +782,12 @@ an easier tier:
 variants before the ladder, and keep the ladder's easiest tier honest: it must still carry the latent.
 
 **Big subjects (≥ ~30B, MoE, 1T):**
-- **Backends:**
-  - ≤ 9B: the 4090.
-  - Dense 30B-class: `scripts/adapt_modal.py` (edit its `gpu=` for B200 / B300).
-  - MoE / 100B-class+: tensor-parallel vLLM or HF model-parallel (§On another box).
-  - 1T (Kimi-K2): its B300:8 model-parallel gate app. Batch every candidate into ONE generation run.
+- **Backends:** §GPU sizing. A model that fits one H200 uses the shared `adapt-subject-llm`;
+  anything bigger gets its own app, with a multi-GPU container and `modal_max_containers=1`.
+  Batch every candidate into ONE generation run per stage.
 - **They pass most originals.** The work is the model-specific families and gating, plus a few refills.
-- **If their lenses were already read on the 27B bank**, re-score instead of re-reading
-  (`atlas/normal_gated.py`, Agam's box only):
-  - gate every item from the profile, every leg, with audit drops applied;
-  - re-gold poetry, basic_readout and moral on the subject, and re-judge them on the existing readouts,
-    seeding each judge dir with the original `cells.jsonl` so unchanged golds are cache hits;
-  - drop families with fewer than 10 passing items;
-  - report as-is vs gated vs the registered-family headcount (registered families minus typo
-    (superseded) and any retired one; count it from the registry, it changes).
-- Then score them on their own adaptive set like any subject.
+- Agentic yield on big subjects is low (GLM-5.3-flash: 7/108 on v3). Run every pinned pool
+  before calling it.
 
 **Any tokenizer:**
 - **Re-derive banks that store token positions** (MCDM, jailbreak) by character
@@ -658,9 +812,6 @@ variants before the ladder, and keep the ladder's easiest tier honest: it must s
 - **Arithmetic and chain:** the pre-registered 27B read cell (`cells=frozen`) scores about 0 on other
   subjects. Reading every position mostly matches other items' values (9B pilot: chance .70, real
   lift +.04 to +.10), so report the lift over a permutation null next to any every-position number.
-- **Scoring models whose lens was read on the 27B bank:** `atlas/normal_gated.py`. Their own-set
-  scoring uses the subject's `-adapt` apps in gw-olens: `subject_*_modal.py` / `adapt_mp_subject_modal.py`,
-  and for Kimi, `kimi_wsbench_modal.py` in adaptive mode (all Agam's box / env only).
 
 **Ops:**
 - **tmux:** wait on sessions with `tmux has-session -t "=name"` (exact match).
@@ -679,11 +830,14 @@ Every step writes its own entry (agentic, carry included); writes are atomic and
 `adapt status model=<m>` prints the per-family state.
 
 ## Process hygiene
-- GPU commands (`profile gate auto fill agentic moral floors`, except their Claude-only stages)
-  take the box lock `$ADAPT_GPU_LOCK` (default `/workspace/agam/logs/gpu.lock`) inside
-  `adapt_box.sh` only; `python -m wsbench.adapt` called directly takes no lock. A chain script that
-  holds it (`exec 9>LOCK; flock 9`) passes the fd down. Never take it in a tmux command line ending
-  in `exec bash` (the shell keeps it).
+- One subject container: on a subject with `modal_max_containers=1`, run ONE GPU chain at a time
+  (the build, then the refill). Two concurrent chains do not get two containers; the second
+  queues behind the first, sometimes for an hour. Claude-only stages can overlap.
+- Do not change `subjects.py` caps or the deployed app in a run tree without reverting before the
+  PR. If you must, record it in the run tree's notes. plan 0089 raised glm-5.3-flash to 2
+  containers locally and reverted it before the PR.
+- Long runs in tmux, with logs under `logs/`. `/root/tmp` is fast but not durable: archive
+  the run tree's `adapted/<m>/{gate,cand,mc,mmh}` and `outputs/adapt/<m>` before deleting it.
 - Unknown CLI keys are errors. `regrade` never undoes `adapt moral`'s side checks.
 - The model-grade cache persists (`adapted/.grade_cache/<grader>.jsonl`); `author` writes after
   every call; the gate, regrade and fill are resumable (gated ids are skipped).
@@ -704,13 +858,14 @@ Every step writes its own entry (agentic, carry included); writes are atomic and
   number must be able to tell what difficulty, and which bank version, it was measured at.
 - Opus authors; it never grades its own items as correct. The subject grades by answering. A
   deterministic grader or the repo grader checks the answer.
-- Claude calls (`llm=` grading, `author`) on Agam's box use the judges' keyless OAuth token
-  (`wsbench/adapt/auth.py`; Modal Dict `anthropic-oauth`, read only); on a 401 there, stop and ask
-  Agam to run `push-judge-token`. Elsewhere use `WSB_ANTHROPIC_AUTH=sdk` (§On another box). Never
-  export `ANTHROPIC_API_KEY` into a shell or commit one.
-- API budget: before any authoring batch over ~2k items, check the org's rate-limit headroom (the
-  judges share it) and pace to it. Before any big run, check that no other session is already
-  running it (one agent per shared run).
+- Claude calls (`llm=` grading, `author`) use `WSB_ANTHROPIC_AUTH=sdk ANTHROPIC_PROFILE=default`
+  (§Modal, tokenizers and Claude auth). Never export `ANTHROPIC_API_KEY` into a shell, and never
+  commit one.
+- Claude API spend is not capped, but it is ledgered (`WSB_TOKEN_LEDGER`). GPU spend is what to
+  watch: post the expected GPU $ before a fan-out. Before any big run, check that no other session
+  is already running it (one agent per shared run).
+- Merge only through `scripts/gated_merge.sh` (fail closed). Bench data stays local until the set
+  is frozen and audited.
 
 ## References
 - `references/families.md`: per family, the latent, gate, required keys and registered-bank

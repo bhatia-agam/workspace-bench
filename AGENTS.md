@@ -48,9 +48,9 @@ misses.
 ## Which families port, and which need work
 
 Three buckets, then the detail. This section is about running the REGISTERED banks on a new model.
-The per-model sets under `adapted/` are a different thing (re-gated, refilled banks) and all 11 of
-them predate the bank v2+ round: see `.claude/skills/adapt-bank/SKILL.md` §State and §Refresh
-before judging one.
+The per-model sets under `adapted/` are a different thing (re-gated, refilled banks, 30 families
+each): build or judge one with `.claude/skills/adapt-bank/SKILL.md` (Quickstart; judge only under
+`WSB_BANK_ROOT=adapted/<m>`).
 
 **Usable as they are, once `capable` says the model does the task** (no bank edits): association,
 basic_readout (minus its implicit third), multihop, multilingual, typo, the six multi-token
