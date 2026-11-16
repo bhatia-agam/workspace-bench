@@ -214,6 +214,9 @@ SUBJECTS: dict[str, Subject] = {
             modal_weights="hf/hub/models--moonshotai--Kimi-K2-Instruct-0905/snapshots/"
             "ac6c49f04883bd0a0598b790693a72061c676629",
             modal_engine=(("trust_remote_code", True),),
+            # one B300:8 container: a second concurrent stage (keepalive, a parallel refill) queues
+            # instead of booting another 1 TB engine (plan 0089)
+            modal_max_containers=1,
         ),
         # GLM-5.3-Flash (plan 0089: Agam's set rebuilt): 320B MoE (KDA linear attention + DSA
         # sparse layers, mHC), ~328 GB FP8 as shipped. vLLM 0.31.0 serves
@@ -238,6 +241,7 @@ SUBJECTS: dict[str, Subject] = {
             modal_weights="hf/hub/models--zai-org--GLM-5.3-Flash/snapshots/"
             "eb9eb208eb0d988989d07a6a12d0fdeb5f52574a",
             modal_engine=(("language_model_only", True),),
+            modal_max_containers=1,  # one B200:4 container; concurrent stages queue (plan 0089)
             thinking_mode=True,  # the upstream template always opens <think> (see above)
         ),
         # GLM-5.3 non-Flash (plan 0060 D1): the glm53 lens work's checkpoint, 754B MoE, d 6144.

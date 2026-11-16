@@ -84,6 +84,8 @@ def test_glm53_flash_is_built_here():
     assert (spec["image"], spec["volume"]) == ("default", "glm53-flash")
     assert spec["weights"].endswith("/eb9eb208eb0d988989d07a6a12d0fdeb5f52574a")
     assert spec["engine"] == {"language_model_only": True}
+    # plan 0089: the big subjects never scale past one container (a concurrent call queues)
+    assert spec["max_containers"] == 1 and modal_spec(SUBJECTS["kimi-k2"])["max_containers"] == 1
 
 
 def test_subject_for_finds_the_registered_subject():
@@ -669,8 +671,10 @@ def test_v4_flash_pads_every_engine_call_and_checks_its_canary(monkeypatch):
     assert "pad" not in modal_spec(SUBJECTS["deepseek-v4-pro"])
     assert modal_spec(SUBJECTS["deepseek-v4-flash"])["pad"] == 300
     assert modal_spec(SUBJECTS["deepseek-v4-flash"])["max_containers"] == 4
+    # plan 0089 caps kimi-k2 / glm-5.3-flash at 1 (tested in test_glm53_flash_is_built_here)
+    capped = {"deepseek-v4-flash", "kimi-k2", "glm-5.3-flash"}
     assert all("max_containers" not in modal_spec(s) for k, s in SUBJECTS.items()
-               if k != "deepseek-v4-flash")  # fmt: skip
+               if k not in capped)  # fmt: skip
     _fake_vllm(monkeypatch)
     m = _load_script(monkeypatch, "deepseek-v4-flash")
     assert m.PAD == 300 and m.SPEC["engines"] == 8
