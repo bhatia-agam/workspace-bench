@@ -451,6 +451,11 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   hinted_cutoff` (`adapt/hinted_cutoff.py`) validates every item against the subject's render and
   installs the bank (header `adapt`, `subject`; built by `build_hinted_cutoff_bank.build(adapt=)`)
   plus its report entry (audited pair drops: `drop_pairs.py`, recorded under `date_leak.audit_drops`). glm-5.3: 41 pairs. The replay script refuses an adapted header.
+  Top-ups (plan 0084 § Top-ups): `merge_bank.py --pre` / `--extra` / `--exclude-qid` (no option =
+  the plan-0084 merge, byte-identical), `propose_series.py` (densify series, structured low-effort
+  Opus calls), `carry_forward.py` (both twins of every pair an earlier audit dropped);
+  `subject_ccut.py` wraps a tokenizer without `offset_mapping` in `OffsetTok` (fast tokenizers
+  pass through unchanged).
 - model_multihop (plan 0076, `mmh-2026-11-06+mmh-forms-v3+bank-v2`, group model_specific, in the macro):
   283 headline items of gw `frozen_v2.json` (invented 255 + cutoff 28), id-keyed (NEVER write
   gw's `name` key: `readplan.bank_file` / `judge_inputs.item_id` switch on it). `captured` render

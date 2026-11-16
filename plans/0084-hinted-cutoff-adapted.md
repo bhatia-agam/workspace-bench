@@ -584,3 +584,32 @@ The install writes the six item ids, with their reasons, to `report.json` `drops
 - AUDIT.md notes the post-drop source sha;
 - AGENTS.md wording;
 - the `drop_pairs.py` usage line names `HC_GUESS_GAP`.
+
+## Top-ups (plan 0089 rebuild, 2026-11-16)
+
+A set short of the 40-pair target is topped up, never re-barred. The recipe and the R19 bar are
+unchanged; the pool grows, the pairing rule stays (attempt 1 unless it falls below 40, then R3's
+`v2_attempts=1`), and a fresh independent audit runs on the re-paired set.
+- **Pool by date** (`merge_bank.py --pre <bank>:<lo>:<hi>`): v2's bank stages on months before
+  the v2 bank. olmo-3.1-32b: a 2023 pool, 3,263 verified items (web-check 39/40, the wrong item
+  excluded) took base N candidates 569 → 1,220 and the projection 83.1 → 176.7; 24 → 53 pairs.
+- **Densify** (`propose_series.py` → v2's bank stages → `merge_bank.py --extra <bank>`): new
+  Opus-proposed series, disjoint from v2's 754, for the fade window (gw v2's own densify
+  precedent). glm-5.3-flash: 672 series, 3,936 verified items for 2025-05..2026-01 (web-check
+  39/40, the ambiguous item excluded); I candidates 604 → 1,673, projection 118.3 → 317.8;
+  33 → 117 pairs (115 after the carry-forward fix below). New-item silence: a 10-reply hand spot-check, as the v2 densify did.
+- **`--exclude-qid`** drops web-check / audit-verified defects from every part of the merge (each
+  must match a merged item); the excluded qids and the parts' own `retired_qids` are retired.
+- **`carry_forward.py`**: no twin of a pair an earlier audit dropped re-enters a re-paired set.
+  Both twins are flagged: audit reasons are compound ("N answer ...; I twin also ...", "I hint
+  answer WRONG"), and routing them by wording misrouted (PR #483 review). Its drops are applied
+  with the fresh audit's. Re-checked on the installed data with the both-twins rule: olmo 0 hits
+  (53 pairs); glm-5.3-flash 2 pairs held an I twin of an earlier-dropped pair and were dropped
+  (`drop_pairs.py`, finalize, re-install): 117 → 115 pairs, day AUROC 0.521, cell excess −0.070.
+  kimi-k2 had one audit and no carry-forward.
+- **Tokenizers without offsets**: `subject_ccut.py` wraps one (kimi-k2's tiktoken) in
+  `OffsetTok` (offsets from each id's bytes); fast tokenizers pass through unchanged. The
+  installer has the matching fallback (`run.char_offsets`, #478). kimi-k2: 42 pairs.
+Evidence: the run records under `/workspace/wsb-out/agam5/hc/` (`olmo-3.1-32b/topup`,
+`glm-5.3-flash/densify`, `kimi-k2`) and `logs/hc_status.txt` / `hc_costs.txt` of the plan-0089
+run tree.

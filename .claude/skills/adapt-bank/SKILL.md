@@ -189,11 +189,18 @@ PYTHONPATH = gw `src` + the cf_influence scripts dir + this repo's `src`.
    - Install with `$A hinted_cutoff model=<m> frozen=<frozen_<m>.json> gw_commit=<sha>`.
 5. **Audit drops:** `subject_ccut.py drop_pairs`, keeping `HC_GUESS_GAP` set. Then re-run
    finalize and install.
-6. **Short set:** if the set comes out short, top it up. Densify the window, or extend the pool
-   by date: OLMo used a 2023 pool, with a web-check of the drafted items and the first audit
-   carried forward.
-   - The top-up scripts (`propose_series.py`, `merge_bank3.py`, `carry_forward.py`) are still
-     local to the plan-0089 run tree. Port them in a code PR before relying on them.
+6. **Short set:** if the set comes out short, top it up (plan 0084 § Top-ups). Densify the
+   window, or extend the pool by date: OLMo used a 2023 pool, with a web-check of the drafted
+   items and the first audit carried forward.
+   - Pool by date: v2's `bank_draft` → `bank_verify` → `bank` with `HC_P_WINDOW` on the new
+     months, then `merge_bank.py --pre <bank>:<lo>:<hi>`. Densify: `propose_series.py` (new
+     series for the fade window) → the same three stages → `merge_bank.py --extra <bank>`.
+     Either way, run a 40-item web-check (≥ 39/40) and `--exclude-qid` every verified defect.
+   - Re-pair under the same rule, then run `carry_forward.py <prior drops...> <out_dir> <out>`
+     (BOTH twins of every pair an earlier audit dropped) beside a fresh audit; apply the union
+     with `drop_pairs.py`.
+   - A tokenizer without `offset_mapping` (Kimi-K2's tiktoken) is handled by `subject_ccut.py`'s
+     `OffsetTok` automatically.
 
 ### Agentic (plans 0031 / 0052 / 0077)
 - **Build:** `$A agentic model=<m> stage=all` builds the registered scenarios with clean twins.

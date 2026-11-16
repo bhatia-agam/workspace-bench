@@ -24,6 +24,8 @@ substitutions, nothing else:
   stored in the out dir's ``obscure.json``), joins ``ccut.RATINGS``: every v2 use of the ratings
   (the pairable caliper, the matching cost, the gate AUROC, attempt 1's halving, the scored
   AUROCs) then covers it, through a ``Cand`` / ``V2Match`` subclass with the extra field.
+- a tokenizer with no ``offset_mapping`` (Kimi-K2's tiktoken) is wrapped by ``OffsetTok``
+  (exact character offsets from each id's bytes); a fast tokenizer is passed through unchanged.
 The ``[gen]`` step is ``subject_gen.py`` (the subject's adapt Modal app).
 """
 
@@ -61,6 +63,67 @@ def _add_guess(ccut, gap: float) -> None:
     ccut.RATINGS = (*ccut.RATINGS, "guess")
 
 
+def _has_offsets(tok) -> bool:
+    try:
+        enc = tok("a", add_special_tokens=False, return_offsets_mapping=True)
+        return enc["offset_mapping"] is not None
+    except (KeyError, NotImplementedError, TypeError, ValueError):
+        return False
+
+
+class OffsetTok:
+    """A tokenizer whose ``__call__`` has no ``return_offsets_mapping`` (tiktoken) with exact
+    character offsets rebuilt from each id's bytes (``model.decode_single_token_bytes``; special
+    ids via ``decode``); the pieces must re-join to the text, and a token that ends inside a
+    multi-byte character spans that character. Everything else is the wrapped tokenizer."""
+
+    def __init__(self, tok) -> None:
+        self._tok = tok
+
+    def __getattr__(self, name):
+        return getattr(self._tok, name)
+
+    def _piece(self, i: int) -> bytes:
+        try:
+            return self._tok.model.decode_single_token_bytes(i)
+        except Exception:
+            return self._tok.decode([i]).encode("utf-8")
+
+    def __call__(self, text, **kw):
+        want = kw.pop("return_offsets_mapping", False)
+        enc = self._tok(text, **kw)
+        if want:
+            enc["offset_mapping"] = self.offsets(text, list(enc["input_ids"]))
+        return enc
+
+    def offsets(self, text: str, ids: list[int]) -> list[tuple[int, int]]:
+        pieces = [self._piece(i) for i in ids]
+        raw = text.encode("utf-8")
+        if b"".join(pieces) != raw:
+            raise ValueError("token bytes do not re-join to the text")
+        char_at = [0] * (len(raw) + 1)  # byte index -> the index of the character it belongs to
+        b = 0
+        for ci, ch in enumerate(text):
+            for _ in ch.encode("utf-8"):
+                char_at[b] = ci
+                b += 1
+        char_at[len(raw)] = len(text)
+        out, b = [], 0
+        for pc in pieces:
+            e = b + len(pc)
+            mid_char = e < len(raw) and char_at[e - 1] == char_at[e]
+            end = char_at[e] + 1 if mid_char else char_at[e]
+            out.append((char_at[b], max(end, char_at[b])))
+            b = e
+        return out
+
+
+def with_offsets(tok):
+    """``tok`` itself when it yields ``offset_mapping`` (fast tokenizers, unchanged), else
+    ``OffsetTok(tok)``."""
+    return tok if _has_offsets(tok) else OffsetTok(tok)
+
+
 def main() -> None:
     mod_name = sys.argv.pop(1)
     from pathlib import Path
@@ -89,7 +152,7 @@ def main() -> None:
     )
     import ccut_stages
 
-    ccut_stages._TOK = tok
+    ccut_stages._TOK = with_offsets(tok)
     if os.environ.get("HC_CONFIRM_ALL") == "1":
 
         def confirm_all(cfg, d, bnk, passed, keys, lens):
