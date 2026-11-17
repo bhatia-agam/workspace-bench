@@ -581,15 +581,16 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   items, is panel-gated); the mechanism (a family whose whole bank is written as the subset,
   `answerer: "construction"`) stays for a future family gated when it is built.
 
-- Fast subset (plan 0090, `--fast` = `fast=True` on plan / produce / judge / run / report):
-  `fast.py` reads the frozen `evals/fast/fast_v1.json` (`fast-v1`: 24 families, 1,996 units,
-  2,351 read items; per family `bank_sha`, `units` by group, `read_ids`, optional `positions`;
-  never regenerate or reorder it, a new subset is a new versioned file) and holds
+- Fast subset (plans 0090 / 0094, `--fast` = `fast=True` on plan / produce / judge / run /
+  report): `fast.py` reads the frozen `evals/fast/fast_v2.json` (`fast.VERSION = "fast-v2"`: 22
+  families, 1,823 units, 2,160 read items; per family `bank_sha`, `units` by group, `read_ids`,
+  optional `positions`; never regenerate or reorder a frozen file, a new subset is a new
+  versioned file in `fast.VERSIONS`) and holds
   `entry` (`NotInFast` = skipped, like ATI's `NotInScope`), `units` (per-unit outcomes of a
   SUMMARY-mode result, one rule per special-cased family) and `rescore`. The flag reaches the
   families only as `JudgeArgs.scope == fast.SCOPE` with `items` = the entry's `read_ids` (never
-  an `opts=` key: `opts=fast=1` does nothing); `reads.load` restricts the cells and narrows the
-  two position-reduced families (`readplan.is_fast_site` on DECODED token text, the producer's
+  an `opts=` key: `opts=fast=1` does nothing); `reads.load` restricts the cells and narrows a
+  position-reduced family (fast-v1's two; `readplan.is_fast_site` on DECODED token text, the producer's
   own predicate; `fast_of` / `punct_special` rules); `runner.stamp_fast` rescores and stamps
   `config.scope` / `fast_subset` and the `+fast-<kind>` suffix; `mcjudge.is_subset` treats the
   scope as a defined variant; `results.macro` and `report` never mix fast and non-fast rows.
@@ -598,7 +599,19 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   `WSB_BANK_ROOT` / `WSB_BANK_FILE_*`; **the non-fast paths are untouched** (plan rows,
   `plan_sha`, result stamps, cache keys: `tests/golden/plan_sha_pre_0090.json` pins the plans);
   judge prompts and call versions do not move under fast. A FAST file's sidecar declares
-  `"fast": "fast-v1"` with the fast plan's own `plan_sha` (`reads.fast_plan_sha`).
+  `"fast": "fast-v2"` with the fast plan's own `plan_sha` (`reads.fast_plan_sha`).
+  Plan 0094: fast-v2 = fast-v1 (`fast_v1.json`, 24 families, kept frozen and sha-pinned) minus
+  jailbreak_recognition and agentic_misalignment, every other entry identical. `fast.subset()`
+  resolves `fast.VERSION` at call time (there is no `fast.PATH`; tests patch `VERSION` only, the
+  loader is cached per version); `fast.COMPATIBLE = {"fast-v1"}`: a sidecar declaring a
+  compatible version is judged (`reads.load`), and a compatible result row of a family in the
+  current subset stays in the macro (`results._stale_fast_subset`), so a fast-v1 results dir
+  reports a fast-v2 macro over its 22 rows with its jailbreak / agentic rows excluded (`stale
+  fast subset (fast-v1)`); the two families are `NotInFast` under `--fast` (fast-v1 runs of
+  them need the pre-0094 commit). The position-reduction machinery (`fast_of` /
+  `punct_special` / `is_fast_site`, `reads.fast_narrow`, `fast.position_stamp`, the
+  `+fast-<kind>` suffix) is retained for the frozen v1 file and exercised only by tests that
+  patch `fast.VERSION` to `"fast-v1"` (no fast-v2 entry has `positions`).
 
 - Summary mode (`aggregate=summary`, plan 0020, `digest.py`) is the benchmark DEFAULT since plan
   0024: `runner.parse_opts` fills `aggregate=summary` in unless `opts=aggregate=native`; a family

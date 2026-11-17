@@ -406,8 +406,9 @@ def macro(
     ``text_inversion.SUBSET_VERSION``) is excluded, reason ``"stale ATI subset (<v>)"``; with any
     registered-panel ATI row the result carries ``ati_subset``. Plan 0090: results that mix
     ``config.scope == "fast"`` rows with others raise ``SystemExit``; a fast row stamped with
-    another ``config.fast_subset`` is excluded, reason ``"stale fast subset (<v>)"``; with any
-    fast row the result carries ``fast_subset``."""
+    another ``config.fast_subset`` is excluded, reason ``"stale fast subset (<v>)"``, unless
+    (plan 0094) that version is in ``fast.COMPATIBLE`` and the family is in the current subset;
+    with any fast row the result carries ``fast_subset`` (the current version)."""
     if superseded is None or held_out is None or removed is None:
         from wsbench import registry  # lazy: registry imports this module
 
@@ -485,7 +486,7 @@ def macro(
             # plan 0071 §1a: count the gated ATI ids, not judged rows (jailbreak scores controls),
             # and never more than the row judged (a limit= smoke run stays out)
             excluded.append({"family": r.family, "reason": f"n<{ATI_MACRO_MIN_ITEMS} (ATI)"})
-        elif r.config.get("scope") == fast.SCOPE and r.config.get("fast_subset") != fast.VERSION:
+        elif r.config.get("scope") == fast.SCOPE and _stale_fast_subset(r):
             old = r.config.get("fast_subset")
             excluded.append({"family": r.family, "reason": f"stale fast subset ({old})"})
         else:
@@ -528,6 +529,16 @@ def _ati_exception(r: FamilyResult) -> bool:
     # plan 0088: an adapted set's exceptions come from its own ATI file (``macro_exception`` on
     # the entry, stamped by the runner); never on the registered gate
     return gate in text_inversion.ADAPTED_GATES and bool(r.extras.get("ati_macro_exception"))
+
+
+def _stale_fast_subset(r: FamilyResult) -> bool:
+    """A fast row out of the current subset's macro: stamped with neither ``fast.VERSION`` nor,
+    for a family of the current subset, a ``fast.COMPATIBLE`` version (plan 0094: same entry,
+    same value)."""
+    from wsbench import fast  # lazy: fast imports this module
+
+    v = r.config.get("fast_subset")
+    return v != fast.VERSION and not (v in fast.COMPATIBLE and r.family in fast.subset())
 
 
 def _stale_ati_subset(r: FamilyResult) -> str | None:

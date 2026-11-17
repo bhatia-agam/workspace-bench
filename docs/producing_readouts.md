@@ -186,33 +186,38 @@ uv run wsbench run --fast all=True readouts_root=outputs/readouts/mylens-fast ou
 
 ## Fast subset (`--fast`)
 
-`--fast` judges the frozen subset `fast-v1` (plan 0090; `evals/fast/README.md`). **A full
-readouts file is always judgeable with `--fast`**: the judge keeps the fast items and narrows the
-two position-reduced families itself, so existing readouts need no re-read. To read only what
-the fast subset needs:
+`--fast` judges the frozen subset `fast-v2` (plans 0090 / 0094; `evals/fast/README.md`): 22
+families, `fast-v1` without `jailbreak_recognition` and `agentic_misalignment`. **A full
+readouts file is always judgeable with `--fast`**: the judge keeps the fast items itself, so
+existing readouts need no re-read. To read only what the fast subset needs:
 
 ```
-uv run wsbench plan --fast out=outputs/plan-fast          # the 24 fast families
+uv run wsbench plan --fast out=outputs/plan-fast          # the 22 fast families
 uv run wsbench run --fast all=True readouts_root=outputs/readouts/mylens-fast out=outputs/judged/mylens-fast
 ```
 
-- The fast plan is the full plan's rows of the fast read items (same render, layers and, for 22
-  families, the same positions rule). `agentic_misalignment` and `jailbreak_recognition` rows
-  carry `{"kind": "fast_of", "full": <the full rule>, "fast": <the fast rule>}` and
-  `extra.fast = "fast-v1"`: the fast rule applied WITHIN the full rule's positions. `last_n {n}`
-  = the last n of them; `punct_special` = those whose token is punctuation, a newline token or a
-  special token (`wsbench.readplan.is_fast_site`), else the last full position.
+- The fast plan is the full plan's rows of the fast read items: same render, layers and
+  positions rule for every `fast-v2` family, so a producer of the full plan needs nothing new.
+- **`fast-v1` only** (this bullet and the next; no `fast-v2` row carries a fast positions rule,
+  and `--fast` no longer plans or judges these two families): `agentic_misalignment` and
+  `jailbreak_recognition` rows carried `{"kind": "fast_of", "full": <the full rule>, "fast":
+  <the fast rule>}` and `extra.fast = "fast-v1"`: the fast rule applied WITHIN the full rule's
+  positions. `last_n {n}` = the last n of them; `punct_special` = those whose token is
+  punctuation, a newline token or a special token (`wsbench.readplan.is_fast_site`), else the
+  last full position.
 - Resolve it with `wsbench.readplan.resolve(rule, tokens)`. Unlike `lite_of`, `fast_of` /
   `punct_special` need the render's token strings, and they must be the **decoded** ones
   (`tokenizer.decode([id])` per token, what the rows carry as `token`), never the byte-level BPE
   display strings: those show CJK and curly punctuation as mojibake, which is not punctuation.
   Write each row's `token`: the judge applies the same predicate to it, and a `punct_special` row
   without `token` is refused.
-- Declare the file in its sidecar: `"fast": "fast-v1"` and `"plan_sha"` = the FAST plan's sha
+- Declare the file in its sidecar: `"fast": "fast-v2"` and `"plan_sha"` = the FAST plan's sha
   (`wsbench.reads.fast_plan_sha(family)`, i.e. `plan_sha_rows` over the rows `wsbench plan --fast`
   wrote), with `"reads": "full"`. A file that declares `fast` is judged only with `--fast`, and
   code that predates plan 0090 refuses it on the sha mismatch. `wsbench produce family=F --fast`
-  does all of this.
+  does all of this. A file that declares `"fast": "fast-v1"` is still judged for the 22 families
+  (their entries, fast plan rows and `plan_sha` are identical); any other declared version is
+  refused, and code that predates plan 0094 refuses a `fast-v2` file.
 - `--fast` takes full reads only (no `reads=lite`), on the registered Qwen3.6-27B banks only.
 
 ## Or let the repo produce them

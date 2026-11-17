@@ -340,10 +340,13 @@ macro instead (see [HallucinationBench](#hallucinationbench)).
 
 ## Fast subset (`--fast`)
 
-The full bench is slow because it has so many questions. `--fast` runs **`fast-v1`**, a frozen,
-smaller, higher-signal subset of the Qwen3.6-27B bench: 24 families, 1,996 scored units, 2,351
-read items ([`evals/fast/`](evals/fast/README.md): the file, the selection and vetting rules,
-per-family counts).
+The full bench is slow because it has so many questions. `--fast` runs **`fast-v2`**, a frozen,
+smaller, higher-signal subset of the Qwen3.6-27B bench: 22 families, 1,823 questions (scored
+units), 2,160 read items ([`evals/fast/`](evals/fast/README.md): the files, the selection and
+vetting rules, per-family counts). `fast-v2` (plan 0094, 2026-11-17) is `fast-v1` (24 families,
+1,996 units) without `jailbreak_recognition` and `agentic_misalignment`; every other family's
+items are the same, so a `fast-v1` readouts file or result of one of the 22 families is used as
+it is, and `fast-v1` itself stays frozen in the repo but is no longer what `--fast` runs.
 
 ```bash
 uv run wsbench plan --fast out=outputs/plan-fast                         # the fast read plan
@@ -352,24 +355,27 @@ uv run wsbench report dir=outputs/judged/mylens-fast --fast
 ```
 
 - **What it is.** The same families, banks, judges and prompts, on fewer items. A full readouts
-  file is always judgeable with `--fast` (the judge keeps the fast items and narrows the reduced
-  reads itself), so existing readouts need no re-read; a producer that wants the smaller read
+  file is always judgeable with `--fast` (the judge keeps the fast items itself), so existing readouts need no re-read; a producer that wants the smaller read
   follows `wsbench plan --fast` (`docs/producing_readouts.md` § Fast subset). `--fast` is
   `fast=True` on `plan`, `produce`, `judge`, `run` and `report`.
 - **How it was chosen.** On 23 arms' full results (19 lenses, logit-lens L63, 3 prompt-only
   draws), then vetted item by item. Six families that are saturated or basic and do not
   separate methods are dropped (`typo_mt`, `association`, `multihop`, `multilingual`,
   `chain_intermediates`, `multilingual_mt`; `jlens_concept_pr` is not in the macro and not in
-  the subset). Within a kept family, questions every trained lens solves and questions the
+  the subset). `fast-v2` also drops `jailbreak_recognition` and `agentic_misalignment`: on a
+  fast run they take 23 to 38 minutes to judge after their readouts land, against 1 to 13
+  minutes for the other 22 families, and they change no ordering of the measured arms (without
+  them each arm's fast macro moves by at most 0.028). Within a kept family, questions every trained lens solves and questions the
   vetting marked broken, artefactual or prompt-guessable are dropped. The frozen strict ATI
   subset (`ati-subset-v2`, 350 ids in 8 families) is contained whole.
-- **Three reduced reads.** `introspection`: only the 125 headline units and the rows their twins
-  read. `agentic_misalignment`: the 18 pairs whose original misbehaves in at least one of the 8
-  gate rollouts, read at the last 60 positions of each item (stamp `+fast-last_n60`).
-  `jailbreak_recognition`: 155 of 172 items, read at punctuation, newline and special-token
-  positions only (stamp `+fast-punct_special`). The judge prompts of the two position-reduced
-  families are unchanged, including their sentences describing the read scope; the result stamp
-  is what states the reduced read.
+- **Reduced reads.** `introspection`: only the 125 headline units and the rows their twins
+  read. Every `fast-v2` family is read at its full positions. **`fast-v1` only** (not run by
+  `--fast` any more; the code keeps the rules for the frozen file): `agentic_misalignment`, the
+  18 pairs whose original misbehaves in at least one of the 8 gate rollouts, read at the last 60
+  positions of each item (stamp `+fast-last_n60`), and `jailbreak_recognition`, 155 of 172
+  items, read at punctuation, newline and special-token positions only (stamp
+  `+fast-punct_special`); their judge prompts were unchanged, including the sentences
+  describing the read scope, and the result stamp is what stated the reduced read.
 - **A different scale.** A fast value is the mean over the subset's units (`fast.rescore`; CI = a
   bootstrap over units, not the families' own cluster bootstraps; the family's own value on the
   fast items stays in `extras.fast_family_value`). The items every trained lens solves are gone, so fast numbers
@@ -377,6 +383,8 @@ uv run wsbench report dir=outputs/judged/mylens-fast --fast
   prompt-only floors (measured on the full banks; `report` blanks those columns) or ATI numbers.
   `report` and the macro refuse to mix fast and non-fast rows (`report ... --fast` /
   `fast=False` picks one kind); the macro row of a fast table is the mean over the fast families.
+  A `fast-v1` results directory reports the `fast-v2` macro over its 22 families with no
+  migration: its jailbreak / agentic rows are listed as excluded (`stale fast subset (fast-v1)`, or the row's own reason first when it is incomplete or has no value).
 - **Limits.** Qwen3.6-27B's registered banks only: `--fast` exits 2 under `WSB_BANK_ROOT` or a
   `WSB_BANK_FILE_<FAMILY>` pin, and when a registered bank changed since the freeze. Summary mode
   and full reads only: `--fast` with `anti_text_inversion=True`, `reads=lite`,
@@ -387,26 +395,28 @@ uv run wsbench report dir=outputs/judged/mylens-fast --fast
 
 Fidelity of the fast subset against the full bench:
 
-| arm | full bench (30 families) | fast-v1 (24 families) |
+| arm | full bench (30 families) | fast-v2 (22 families) |
 |---|---|---|
-| O-lens s3d (native) | 0.600 | 0.535 |
-| rl-affw (whitened affine) | 0.559 | 0.491 |
-| Q9 xaff (9B reader) | 0.543 | 0.478 |
-| prompt-only (Opus 5.5, no activations; mean of 3 draws) | 0.600 | 0.475 |
-| J-lens (public) | 0.193 | 0.116 |
-| logit lens (L63) | 0.096 | 0.063 |
+| O-lens s3d (native) | 0.600 | 0.538 |
+| rl-affw (whitened affine) | 0.559 | 0.497 |
+| Q9 xaff (9B reader) | 0.543 | 0.484 |
+| NLA | 0.542 | 0.449 |
+| prompt-only (Opus 5.5, no activations; mean of 3 draws) | 0.600 | 0.480 |
+| J-lens (public) | 0.193 | 0.119 |
+| logit lens (L63) | 0.096 | 0.067 |
 
-11-layer union, 2026-11-16. The fast numbers are a different scale (fewer easy questions), so they
-are never compared with full-bench numbers; the order of the arms is what carries over. Across 19
-lenses the item selection (with full-position reads of the two reduced families) correlates 0.988
-with the full macro (rank 0.995) and keeps the sign of all 153 significant pairwise differences.
-Caveats: jailbreak_recognition at the reduced positions keeps arm order but loses about 0.04 of
-recall minus control FPR on average (8 arms); agentic_misalignment at the last 60 positions finds
-10 of the 13 pair hits the full read finds plus new ones, at a higher level (mean pair rate about
-0.19 vs 0.08) and with run-to-run noise (0.07) about as large as its spread across arms, so its
-single-run row should not be used to rank arms. The prompt-only and logit-lens rows use
-full-position values for those two families (prompt-only has no positions; no reduced logit-lens
-read exists).
+11-layer union, from the unit matrix of 2026-11-16. The fast numbers are a different scale (fewer
+easy questions), so they are never compared with full-bench numbers; the order of the arms is what
+carries over. The same arms on `fast-v1` (24 families): 0.535, 0.491, 0.478, 0.442, 0.475, 0.116,
+0.063. Measured for `fast-v1`: across 19 lenses the item selection (with full-position reads of
+the two reduced families) correlates 0.988 with the full macro (rank 0.995) and keeps the sign of
+all 153 significant pairwise differences.
+`fast-v1` only, the two families `fast-v2` leaves out: jailbreak_recognition at the reduced
+positions keeps arm order but loses about 0.04 of recall minus control FPR on average (8 arms);
+agentic_misalignment at the last 60 positions finds 10 of the 13 pair hits the full read finds
+plus new ones, at a higher level (mean pair rate about 0.19 vs 0.08) and with run-to-run noise
+(0.07) about as large as its spread across arms, so its single-run row should not be used to rank
+arms.
 
 ## Baselines
 

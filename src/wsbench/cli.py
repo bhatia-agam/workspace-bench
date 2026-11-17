@@ -307,7 +307,7 @@ class JudgeFamily(JudgeOptions):
         except text_inversion.NotInScope as e:
             print(f"skipped: {e.code}", file=sys.stderr)
             return 0
-        except fast.NotInFast as e:  # plan 0090: "<family>: not in fast-v1"
+        except fast.NotInFast as e:  # plan 0090: "<family>: not in <fast.VERSION>"
             print(e.code, file=sys.stderr)
             return EXIT_USAGE
         except SystemExit as e:
@@ -710,10 +710,11 @@ def _maybe_sidecar(cmd: Any, rep: Any) -> None:
 
 
 def fast_header() -> str:
-    """The line above a fast report's table (plan 0090)."""
+    """The line above a fast report's table (plan 0090): the current subset and its family
+    count; the table may list rows of other subsets, which the macro leaves out (plan 0094)."""
     return (
         f"scope: fast subset {fast.VERSION} ({len(fast.subset())} families; not comparable with "
-        "full-bench numbers)"
+        "full-bench numbers); rows of other subsets are excluded"
     )
 
 
@@ -1095,7 +1096,7 @@ class Plan(Command):
         self.limit = 0
         self.layers = None  # all | <csv>: override the grid of record (plan 0032 §2.1)
         self.reads = "full"  # lite: rows whose positions / layers are the lite ones
-        self.fast = False  # --fast: the fast subset's rows (plan 0090); all = its 24 families
+        self.fast = False  # --fast: the fast subset's rows (plan 0090); all = its families
 
     def finalize(self) -> None:
         self.families = _families(_strs(self.families)) or ["all"]

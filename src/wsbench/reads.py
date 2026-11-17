@@ -115,7 +115,7 @@ def plan_sha(family: str) -> str:
 
 def fast_plan_sha(family: str) -> str:
     """``plan_sha_rows`` of the family's FAST plan rows (``readplan.plan(family, fast=True)``):
-    the ``plan_sha`` a file produced ``--fast`` declares beside ``"fast": "fast-v1"``."""
+    the ``plan_sha`` a file produced ``--fast`` declares beside ``"fast": fast.VERSION``."""
     return plan_sha_rows(s.row() for s in readplan.plan(family, layers=None, fast=True))
 
 
@@ -476,7 +476,9 @@ def load(
         _attach(args, rep)
         return cells, rep
     fast_file = fast_entry is not None and declared_fast is not None
-    if fast_file and declared_fast != fast.VERSION:
+    # plan 0094: a compatible older version's file is judged as it is (identical entries, plan
+    # rows and plan_sha for every family still in the subset)
+    if fast_file and declared_fast not in {fast.VERSION, *fast.COMPATIBLE}:
         fail(
             f"{path}: readouts were produced for another fast subset ({declared_fast!r}, not "
             f"{fast.VERSION!r})"

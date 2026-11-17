@@ -1,4 +1,5 @@
-"""Plan 0090: the frozen fast subset (``fast-v1``), its positions rules, loader, rescore and CLI."""
+"""Plans 0090 / 0094: the frozen fast subsets (``fast-v1``, ``fast-v2`` = the current one), the
+positions rules, loader, rescore and CLI."""
 
 import dataclasses
 import hashlib
@@ -70,7 +71,10 @@ def test_non_fast_plan_is_byte_identical_to_pre_0090():
 
 # ---------------------------------------------------------------- helpers
 
-FAMILIES_24 = sorted(fast.subset())
+V1, V2 = "fast-v1", "fast-v2"
+FAMILIES_V1 = sorted(fast.subset(V1))  # 24
+FAMILIES_V2 = sorted(fast.subset(V2))  # 22: v1's without jailbreak_recognition and agentic
+BY_VERSION = [(v, f) for v, fams in ((V1, FAMILIES_V1), (V2, FAMILIES_V2)) for f in fams]
 DROPPED = (
     "typo_mt",
     "association",
@@ -90,6 +94,15 @@ STRICT_ATI_FAMILIES = (  # ati-subset-v2 (plan 0085, tests/test_ati_freeze.py)
     "poetry",
 )
 JB, AM = "jailbreak_recognition", "agentic_misalignment"
+DROPPED_V2 = (*DROPPED, JB, AM)  # plan 0094
+REAL_RUN_CALLS = mcjudge.run_calls  # the `toy` fixture replaces it
+
+
+@pytest.fixture
+def fast_v1(monkeypatch):
+    """The frozen ``fast-v1`` as the current subset (plan 0094): the two position-reduced
+    families and their rules live only there."""
+    monkeypatch.setattr(fast, "VERSION", V1)
 
 
 def _units(family: str, group: str = "all") -> list[str]:
@@ -154,13 +167,14 @@ def _opts(**kw) -> SimpleNamespace:
 # ---------------------------------------------------------------- 1. the freeze
 
 
+@pytest.mark.usefixtures("fast_v1")
 def test_freeze_file_shape_and_counts():
-    d = json.loads(fast.PATH.read_text(encoding="utf-8"))
+    d = json.loads(fast.VERSIONS[fast.VERSION].read_text(encoding="utf-8"))
     assert d["version"] == fast.VERSION == "fast-v1" and d["subject"] == "Qwen3.6-27B"
     assert tuple(d["dropped_families"]) == DROPPED
     assert len(d["families"]) == 24 and not set(DROPPED) & set(d["families"])
     assert "jlens_concept_pr" not in d["families"]
-    assert fast.families() == FAMILIES_24  # registry order
+    assert fast.families() == FAMILIES_V1  # registry order
     n_units = sum(len(u) for e in d["families"].values() for u in e["units"].values())
     n_read = sum(len(e["read_ids"]) for e in d["families"].values())
     assert (n_units, n_read) == (1996, 2351)
@@ -175,8 +189,9 @@ def test_freeze_file_shape_and_counts():
     assert [f for f, e in d["families"].items() if "positions" in e] == [AM, JB]
 
 
-@pytest.mark.parametrize("fam", FAMILIES_24)
-def test_freeze_family_is_registered_in_the_macro_and_on_its_bank(fam):
+@pytest.mark.parametrize(("version", "fam"), BY_VERSION)
+def test_freeze_family_is_registered_in_the_macro_and_on_its_bank(version, fam, monkeypatch):
+    monkeypatch.setattr(fast, "VERSION", version)
     spec = registry.FAMILIES[fam]
     assert fam not in registry.not_in_macro() and fam not in registry.superseded()
     assert fam not in registry.RETIRED_FAMILIES and spec.metric in MACRO_METRICS
@@ -205,7 +220,7 @@ def test_strict_ati_subset_is_350_ids():
 def test_entry_fails_closed(monkeypatch):
     with pytest.raises(fast.NotInFast) as e:
         fast.entry("typo_mt")
-    assert e.value.code == "typo_mt: not in fast-v1"
+    assert e.value.code == "typo_mt: not in fast-v2"
     monkeypatch.setenv("WSB_BANK_ROOT", "adapted/glm-5.3")
     with pytest.raises(SystemExit) as e:
         fast.entry("poetry")
@@ -220,7 +235,7 @@ def test_entry_fails_closed(monkeypatch):
     assert fast.entry("basic_readout")  # another family's pin does not matter
     monkeypatch.delenv("WSB_BANK_FILE_POETRY")
     monkeypatch.setattr(fast, "bank_sha", lambda family: "0" * 64)
-    with pytest.raises(SystemExit, match="bank changed since fast-v1 was frozen; re-freeze"):
+    with pytest.raises(SystemExit, match="bank changed since fast-v2 was frozen; re-freeze"):
         fast.entry("poetry")
 
 
@@ -297,6 +312,7 @@ def test_resolve_fast_of_both_kinds():
         readplan.resolve({"kind": "fast_of", "full": full_all, "fast": {"kind": "same"}}, TOKS)
 
 
+@pytest.mark.usefixtures("fast_v1")
 @pytest.mark.parametrize("token", [FW_COMMA, CJK_CLOSE, CURLY_CLOSE])
 def test_non_ascii_punctuation_is_a_site_for_resolve_and_reads(token, tmp_path, mk_args):
     toks = ["日本", token, "語"]
@@ -310,8 +326,9 @@ def test_non_ascii_punctuation_is_a_site_for_resolve_and_reads(token, tmp_path, 
 # ---------------------------------------------------------------- 4. the fast plan
 
 
-@pytest.mark.parametrize("fam", FAMILIES_24)
-def test_fast_plan_rows(fam):
+@pytest.mark.parametrize(("version", "fam"), BY_VERSION)
+def test_fast_plan_rows(version, fam, monkeypatch):
+    monkeypatch.setattr(fast, "VERSION", version)
     e = fast.subset()[fam]
     full = {s.id: s for s in readplan.plan(fam)}
     specs = readplan.plan(fam, fast=True)
@@ -348,6 +365,7 @@ def _jb_rows(tokens_by_item: dict[str, list[str | None]], layer: int = 20) -> li
     ]
 
 
+@pytest.mark.usefixtures("fast_v1")
 def test_full_file_is_narrowed_punct_special(tmp_path, mk_args):
     a, b, c = fast.subset()[JB]["read_ids"][:3]
     other = next(s.id for s in readplan.plan(JB) if s.id not in set(fast.subset()[JB]["read_ids"]))
@@ -379,6 +397,7 @@ def test_full_file_is_narrowed_punct_special(tmp_path, mk_args):
     assert {(x.id, x.pos) for x in cells} == {(c, 100)}
 
 
+@pytest.mark.usefixtures("fast_v1")
 def test_full_file_without_token_is_refused_under_punct_special(tmp_path, mk_args, capsys):
     a = fast.subset()[JB]["read_ids"][0]
     path = write_jsonl(tmp_path / "jb.jsonl", _jb_rows({a: [".", None]}))
@@ -389,6 +408,7 @@ def test_full_file_without_token_is_refused_under_punct_special(tmp_path, mk_arg
     assert a in err and "token" in err
 
 
+@pytest.mark.usefixtures("fast_v1")
 def test_full_file_is_narrowed_last_n(tmp_path, mk_args):
     a, b = fast.subset()[AM]["read_ids"][:2]
     rows = [_cell(a, p, None) for p in range(100)] + [_cell(b, p, None) for p in range(40)]
@@ -431,6 +451,7 @@ def test_fast_load_refuses_lite_and_a_dropped_family(tmp_path, mk_args, capsys):
         reads.load(mk_args(path, scope=fast.SCOPE), "multihop")
 
 
+@pytest.mark.usefixtures("fast_v1")
 def test_prompt_only_reader_is_restricted_and_nothing_else(tmp_path, mk_args):
     a = fast.subset()[JB]["read_ids"][0]
     other = next(s.id for s in readplan.plan(JB) if s.id not in set(fast.subset()[JB]["read_ids"]))
@@ -457,6 +478,7 @@ def _fast_am_file(tmp_path, *, short: str | None = None, absent: str | None = No
     return path, ids
 
 
+@pytest.mark.usefixtures("fast_v1")
 def test_fast_declared_file_is_accepted_with_the_fast_plan_sha(tmp_path, mk_args):
     path, ids = _fast_am_file(tmp_path)
     assert reads.fast_plan_sha(AM) != reads.plan_sha(AM)
@@ -467,6 +489,7 @@ def test_fast_declared_file_is_accepted_with_the_fast_plan_sha(tmp_path, mk_args
     assert not reads.incomplete(args) and not mcjudge.is_subset(args)
 
 
+@pytest.mark.usefixtures("fast_v1")
 def test_fast_declared_file_is_refused_without_the_flag(tmp_path, mk_args, capsys):
     path, _ = _fast_am_file(tmp_path)
     for extra in ({}, {"fast": "1"}):
@@ -476,6 +499,7 @@ def test_fast_declared_file_is_refused_without_the_flag(tmp_path, mk_args, capsy
         assert "file was produced --fast; judge it with --fast" in capsys.readouterr().err
 
 
+@pytest.mark.usefixtures("fast_v1")
 def test_fast_declared_file_wrong_version_or_plan_is_refused(tmp_path, mk_args, capsys):
     path, _ = _fast_am_file(tmp_path, fast="fast-v0")
     with pytest.raises(SystemExit) as e:
@@ -488,6 +512,7 @@ def test_fast_declared_file_wrong_version_or_plan_is_refused(tmp_path, mk_args, 
     assert e.value.code == 2 and "different fast plan" in capsys.readouterr().err
 
 
+@pytest.mark.usefixtures("fast_v1")
 def test_truncated_fast_agentic_file_is_partial(tmp_path, mk_args, capsys):
     ids = fast.subset()[AM]["read_ids"]
     path, _ = _fast_am_file(tmp_path, short=ids[3])
@@ -586,6 +611,7 @@ def test_missing_units_and_the_ten_percent_rule():
     assert (r.value, r.ci95, r.n_items, r.complete) == (None, None, 0, False)
 
 
+@pytest.mark.usefixtures("fast_v1")  # agentic is in fast-v1 only; buggy_code's entry is the same
 @pytest.mark.parametrize(
     ("fam", "arm_key", "arm"), [(AM, "arm", "misaligned"), ("buggy_code", "src", "buggy")]
 )
@@ -647,6 +673,7 @@ def test_units_majority_families(fam):
 # ---------------------------------------------------------------- 10. failure states
 
 
+@pytest.mark.usefixtures("fast_v1")
 def test_jailbreak_unserved_control_and_undecided_item():
     jb, ctl = _units(JB, "jailbreak"), _units(JB, "control")
     item_rows = [{"id": u, "kind": "jailbreak", "state": "judged", "flagged": k < 35}
@@ -752,7 +779,7 @@ def test_rescore_guard_fires_on_a_doctored_value():
 def test_macro_refuses_mixed_rows_and_names_the_subset():
     rows = [_fast_row("poetry"), _fast_row("basic_readout")]
     m = macro(rows)
-    assert m["families"] == ["poetry", "basic_readout"] and m["fast_subset"] == "fast-v1"
+    assert m["families"] == ["poetry", "basic_readout"] and m["fast_subset"] == "fast-v2"
     assert m["value"] == 0.5 and m["excluded"] == []
     with pytest.raises(SystemExit, match="macro: results mix fast and non-fast rows"):
         macro([*rows, _result("user_modeling", value=0.5, n_items=30)])
@@ -837,8 +864,15 @@ def toy(monkeypatch, tmp_path):
     spec = EvalSpec(TOY, "Toy", "basic", bank, JudgeConfig(), "pass_rate", True, _toy_run)
     registry.FAMILIES[TOY] = spec
     entry = {"bank_sha": "0" * 64, "units": {"all": TOY_IDS[:3]}, "read_ids": TOY_IDS[:4]}
-    fams = {**fast.subset(), TOY: entry}
-    monkeypatch.setattr(fast, "_file", lambda: {"version": fast.VERSION, "families": fams})
+    real_file, files = fast._file, {}
+
+    def file_(version):  # the loader's signature (plan 0094): one file per version, the toy in each
+        if version not in files:
+            fams = {**real_file(version)["families"], TOY: entry}
+            files[version] = {"version": version, "families": fams}
+        return files[version]
+
+    monkeypatch.setattr(fast, "_file", file_)
     real_sha = fast.bank_sha
     monkeypatch.setattr(fast, "bank_sha", lambda f: "0" * 64 if f == TOY else real_sha(f))
     monkeypatch.setattr(llm, "preflight", lambda model, reasoning: None)  # `run` preflights
@@ -871,13 +905,13 @@ def test_fast_judge_end_to_end(toy, tmp_path):
     assert r.extras["fast_family_value"] == 0.5 and r.value == pytest.approx(1 / 3)
     assert r.n_items == 3 and r.extras["fast_n_units"] == 3 and r.extras["fast_units_missing"] == []
     assert r.complete is True and r.pinned_instrument is True
-    assert r.config["scope"] == "fast" and r.config["fast_subset"] == "fast-v1"
+    assert r.config["scope"] == "fast" and r.config["fast_subset"] == "fast-v2"
     assert r.config["items"] == TOY_IDS[:4] and r.config["reads"] == "full"
     assert r.config["prompt_version"] == "toy-v1" and "fast_rule" not in r.config
     assert [row["id"] for row in r.rows] == TOY_IDS[:4]
     stored = read_results(tmp_path / "fast")
     assert stored.value == r.value and stored.config["scope"] == "fast"
-    assert macro([stored])["fast_subset"] == "fast-v1" and macro([stored])["families"] == [TOY]
+    assert macro([stored])["fast_subset"] == "fast-v2" and macro([stored])["families"] == [TOY]
     # without the flag: the whole file, no rescore, no stamp (and items= alone is a subset run)
     full = runner.judge_family(
         spec, _opts(fast=False), path, tmp_path / "full", judge=judge, opts=opts
@@ -929,9 +963,9 @@ def test_run_families_skips_what_is_not_in_the_subset(toy, tmp_path, capsys):
     )
     by = {o.family: o for o in outcomes}
     assert code == 0 and by[TOY].status == "ok"
-    assert (by["typo_mt"].status, by["typo_mt"].error) == ("skipped", "not in fast-v1")
+    assert (by["typo_mt"].status, by["typo_mt"].error) == ("skipped", "not in fast-v2")
     assert by["poetry"].status == "skipped" and by["poetry"].error.startswith("no readouts")
-    assert "typo_mt: skipped (not in fast-v1)" in capsys.readouterr().out
+    assert "typo_mt: skipped (not in fast-v2)" in capsys.readouterr().out
     # a bank that changed since the freeze fails (exit 2) before any preflight
     fast.subset()[TOY]["bank_sha"] = "1" * 64
     outcomes, code = runner.run_families(
@@ -943,6 +977,7 @@ def test_run_families_skips_what_is_not_in_the_subset(toy, tmp_path, capsys):
 # ---------------------------------------------------------------- 7 / 11. CLI
 
 
+@pytest.mark.usefixtures("fast_v1")
 def test_cli_plan_fast(tmp_path, capsys):
     assert main(["plan", "--fast", "families=poetry,agentic_misalignment", f"out={tmp_path}"]) == 0
     rows = [json.loads(x) for x in (tmp_path / "poetry.jsonl").read_text().splitlines()]
@@ -968,11 +1003,11 @@ def test_cli_plan_fast(tmp_path, capsys):
     )
 
 
-def test_cli_plan_fast_all_is_the_24_families(tmp_path):
+def test_cli_plan_fast_all_is_the_22_families(tmp_path):
     assert main(["plan", "--fast", f"out={tmp_path}"]) == 0
-    assert sorted(p.stem for p in tmp_path.glob("*.jsonl")) == FAMILIES_24
+    assert sorted(p.stem for p in tmp_path.glob("*.jsonl")) == FAMILIES_V2
     n = sum(len(p.read_text().splitlines()) for p in tmp_path.glob("*.jsonl"))
-    assert n == 2351
+    assert n == 2160
 
 
 def test_cli_judge_fast(toy, tmp_path, capsys):
@@ -983,7 +1018,7 @@ def test_cli_judge_fast(toy, tmp_path, capsys):
     assert r.config["scope"] == "fast" and r.value == pytest.approx(1 / 3) and r.complete
     capsys.readouterr()
     assert main(["judge", "family=typo_mt", f"readouts={path}", f"out={out}", "--fast"]) == 2
-    assert capsys.readouterr().err.strip() == "typo_mt: not in fast-v1"
+    assert capsys.readouterr().err.strip() == "typo_mt: not in fast-v2"
 
 
 @pytest.mark.parametrize(
@@ -1018,20 +1053,20 @@ def test_cli_fast_is_an_unknown_key_elsewhere(capsys):
     assert json.loads(capsys.readouterr().out)["fast"] is False
 
 
-def test_cli_run_fast_all_skips_the_six_dropped_families(tmp_path, capsys):
+def test_cli_run_fast_all_skips_the_eight_dropped_families(tmp_path, capsys):
     root, out = tmp_path / "readouts", tmp_path / "out"
     root.mkdir()
     argv = ["run", "--fast", "all=True", f"readouts_root={root}", f"out={out}", "dry_run=True"]
     assert main(argv) == 0
     text = capsys.readouterr().out
     statuses = json.loads((out / "run.json").read_text())["families"]
-    not_fast = {f for f, s in statuses.items() if s.get("error") == "not in fast-v1"}
-    assert set(DROPPED) <= not_fast and not not_fast & set(FAMILIES_24)
-    for fam in DROPPED:
-        assert f"{fam}: skipped (not in fast-v1)" in text
-    # the 24 families are the ones the run goes on to (here: no readouts file for any)
+    not_fast = {f for f, s in statuses.items() if s.get("error") == "not in fast-v2"}
+    assert set(DROPPED_V2) <= not_fast and not not_fast & set(FAMILIES_V2)
+    for fam in DROPPED_V2:
+        assert f"{fam}: skipped (not in fast-v2)" in text
+    # the 22 families are the ones the run goes on to (here: no readouts file for any)
     assert {f for f, s in statuses.items() if s["error"].startswith("no readouts")} == set(
-        FAMILIES_24
+        FAMILIES_V2
     )
 
 
@@ -1049,7 +1084,7 @@ def test_cli_run_fast_judges_and_reports(toy, tmp_path, capsys):
     capsys.readouterr()
     assert main(["report", f"dir={out}", "--fast"]) == 0
     text = capsys.readouterr().out
-    head = "scope: fast subset fast-v1 (25 families; not comparable with full-bench numbers)"
+    head = "scope: fast subset fast-v2 (23 families; not comparable with full-bench numbers)"
     assert text.startswith(head) and (out / "summary.md").read_text().startswith(head)
     assert f"| {TOY} † | pass_rate | 0.333 |" in text and "lucky guess" not in text
     assert main(["report", f"dir={out}"]) == 0  # unset, one kind present: the fast table
@@ -1058,7 +1093,7 @@ def test_cli_run_fast_judges_and_reports(toy, tmp_path, capsys):
     assert TOY not in capsys.readouterr().out.replace(str(out), "")
     payload_rc = main(["report", f"dir={out}", "--fast", "json=True"])
     payload = json.loads(capsys.readouterr().out)
-    assert payload_rc == 0 and payload["macro"]["fast_subset"] == "fast-v1"
+    assert payload_rc == 0 and payload["macro"]["fast_subset"] == "fast-v2"
 
 
 def test_cli_report_refuses_a_mix_unless_told(tmp_path, capsys):
@@ -1072,7 +1107,7 @@ def test_cli_report_refuses_a_mix_unless_told(tmp_path, capsys):
     assert (
         "| poetry |" in text
         and "| basic_readout |" not in text
-        and "fast subset fast-v1 (24" in text
+        and "fast subset fast-v2 (22" in text
     )
     assert main(["report", f"dir={tmp_path}", "fast=False", "floors=False"]) == 0
     text = capsys.readouterr().out
@@ -1113,7 +1148,7 @@ def test_fast_judge_of_a_real_family_end_to_end(tmp_path, monkeypatch):
     r = runner.judge_family(SPEC, _opts(), path, tmp_path / "out", judge=judge, opts=opts)
     assert fake.n("digest") == 100 and r.config["aggregate"] == "summary"
     assert r.complete is True and r.pinned_instrument is True
-    assert r.config["scope"] == "fast" and r.config["fast_subset"] == "fast-v1"
+    assert r.config["scope"] == "fast" and r.config["fast_subset"] == "fast-v2"
     assert r.value == pytest.approx(1 / 100) and r.n_items == 100
     assert r.extras["fast_family_value"] == pytest.approx(1 / 100)
     assert r.extras["fast_n_scored"] == 100 and "fast_rescore_mismatch" not in r.extras
@@ -1163,4 +1198,254 @@ def test_cli_fast_items_is_a_partial_run(toy, tmp_path, capsys):
     assert r.extras["fast_items_subset"] == 1
     capsys.readouterr()
     assert main([*args, "items=not-a-fast-item"]) == 2
-    assert "items= not in fast-v1" in capsys.readouterr().err
+    assert "items= not in fast-v2" in capsys.readouterr().err
+
+
+# ---------------------------------------------------------------- plan 0094: fast-v2
+
+V1_SHA256 = "8ff8316a39e6fc6181147bbab3af884d2e364df1a887a4a5482c88cc84146a39"
+# the fast plan shas of the two families only fast-v1 holds (their `fast_of` rows): nothing else
+# catches drift in the retained position-reduction machinery
+V1_FAST_PLAN_SHA = {
+    JB: "3930f94db18c92d08e7188eb98988ac900a44f24cef19d31a832db815eb54913",
+    AM: "8082f236c5340b20dccc2e880ec9da1a9528c620758b1e16a96b25c42f417c61",
+}
+
+
+def test_v2_is_v1_without_the_two_safety_families():
+    raw = fast.VERSIONS[V1].read_bytes()
+    assert hashlib.sha256(raw).hexdigest() == V1_SHA256  # fast_v1.json is frozen
+    v1, v2 = json.loads(raw), json.loads(fast.VERSIONS[V2].read_text(encoding="utf-8"))
+    assert list(v2) == list(v1) and (v1["version"], v2["version"]) == (V1, V2)
+    assert v2["dropped_families"] == [*v1["dropped_families"], JB, AM] == list(DROPPED_V2)
+    assert {
+        k: v for k, v in v2.items() if k not in ("version", "dropped_families", "families")
+    } == {k: v for k, v in v1.items() if k not in ("version", "dropped_families", "families")}
+    want = [f for f in v1["families"] if f not in (JB, AM)]
+    assert list(v2["families"]) == want and len(want) == 22  # the same order
+    for fam in want:  # entry for entry, key order included
+        assert json.dumps(v2["families"][fam]) == json.dumps(v1["families"][fam]), fam
+    n_units = sum(len(u) for e in v2["families"].values() for u in e["units"].values())
+    n_read = sum(len(e["read_ids"]) for e in v2["families"].values())
+    assert (n_units, n_read) == (1823, 2160)
+    assert not [f for f, e in v2["families"].items() if "positions" in e]
+    # the file's own formatting is v1's
+    assert fast.VERSIONS[V2].read_text(encoding="utf-8") == json.dumps(v2, indent=1) + "\n"
+    assert raw.decode() == json.dumps(v1, indent=1) + "\n"
+
+
+def test_subset_versions(monkeypatch):
+    assert fast.VERSION == V2 and set(fast.VERSIONS) == {V1, V2} and set(fast.COMPATIBLE) == {V1}
+    assert not hasattr(fast, "PATH")
+    assert fast.subset() is fast.subset(V2) and fast.families() == FAMILIES_V2
+    assert sorted(fast.subset(V1)) == FAMILIES_V1 and len(FAMILIES_V1) == 24
+    assert set(FAMILIES_V1) - set(FAMILIES_V2) == {JB, AM}
+    with pytest.raises(SystemExit, match="unknown fast subset 'fast-v9'"):
+        fast.subset("fast-v9")
+    monkeypatch.setattr(fast, "VERSION", V1)  # read at call time; the cache is per version
+    assert fast.subset() is fast.subset(V1) and fast.families() == FAMILIES_V1
+    assert fast.entry(JB)["positions"] == {"kind": "punct_special"}
+    monkeypatch.setattr(fast, "VERSION", "fast-v9")
+    with pytest.raises(SystemExit, match="unknown fast subset"):
+        fast.subset()
+    monkeypatch.setattr(fast, "VERSION", V2)
+    assert JB not in fast.subset() and AM not in fast.subset()
+
+
+@pytest.mark.parametrize("fam", STRICT_ATI_FAMILIES)
+@pytest.mark.parametrize("version", [V1, V2])
+def test_every_version_contains_the_strict_ati_subset_whole(version, fam):
+    ati = ti.subset_entry(fam, ti.FROZEN)["ids"]
+    e = fast.subset(version)[fam]
+    assert ati and set(ati) <= set(e["units"]["all"]) and set(ati) <= set(e["read_ids"])
+
+
+@pytest.mark.usefixtures("fast_v1")
+def test_v1_position_rules_are_still_planned():
+    specs = readplan.plan(JB, fast=True)
+    assert [s.id for s in specs] == fast.subset(V1)[JB]["read_ids"]
+    assert all(s.extra["fast"] == "fast-v1" for s in specs)
+    assert {s.positions["kind"] for s in specs} == {"fast_of"}
+    assert specs[0].positions["fast"] == {"kind": "punct_special"}
+    assert {f: reads.fast_plan_sha(f) for f in (JB, AM)} == V1_FAST_PLAN_SHA
+
+
+def test_fast_plan_sha_is_the_same_under_both_versions(monkeypatch):
+    """A fast-v1 file of a family still in the subset declares the plan_sha fast-v2 wants."""
+    v2 = {f: reads.fast_plan_sha(f) for f in FAMILIES_V2}
+    monkeypatch.setattr(fast, "VERSION", V1)
+    assert {f: reads.fast_plan_sha(f) for f in FAMILIES_V2} == v2
+
+
+@pytest.mark.parametrize("fam", [JB, AM])
+def test_the_two_safety_families_are_not_in_fast_v2(fam, tmp_path, capsys, mk_args):
+    with pytest.raises(fast.NotInFast) as e:
+        fast.entry(fam)
+    assert e.value.code == f"{fam}: not in fast-v2"
+    with pytest.raises(fast.NotInFast):
+        readplan.plan(fam, fast=True)
+    root, out = tmp_path / "readouts", tmp_path / "out"
+    root.mkdir()
+    path = write_jsonl(root / f"{fam}.jsonl", [_cell("a", 1)])
+    # a fast-v1 file of theirs never reaches the sidecar's version check
+    write_sidecar(path, fast=V1, plan_sha=V1_FAST_PLAN_SHA[fam])
+    with pytest.raises(fast.NotInFast):
+        reads.load(mk_args(path, scope=fast.SCOPE), fam)
+    argv = ["run", "--fast", f"families={fam}", f"readouts_root={root}", f"out={out}"]
+    assert main([*argv, "dry_run=True"]) == 0
+    assert f"{fam}: skipped (not in fast-v2)" in capsys.readouterr().out
+    status = json.loads((out / "run.json").read_text())["families"][fam]
+    assert (status["status"], status["error"]) == ("skipped", "not in fast-v2")
+    judge = ["judge", f"family={fam}", f"readouts={path}", f"out={tmp_path / 'j'}", "--fast"]
+    assert main(judge) == 2
+    assert capsys.readouterr().err.strip() == f"{fam}: not in fast-v2"
+    assert not (tmp_path / "j").exists()
+    assert main(["plan", "--fast", f"families={fam}", f"out={tmp_path / 'p'}"]) == 2
+    assert f"{fam}: not in fast-v2" in capsys.readouterr().err
+
+
+def _fast_poetry_file(tmp_path, declared: str):
+    """A FAST poetry file at layer 20 (every fast read item, two positions) declaring a subset."""
+    ids = fast.subset()["poetry"]["read_ids"]
+    rows = [_cell(i, p) for i in ids for p in (7, 8)]
+    path = write_jsonl(tmp_path / "poetry.jsonl", rows)
+    write_sidecar(path, fast=declared, plan_sha=reads.fast_plan_sha("poetry"), layers=[20])
+    return path, ids
+
+
+def test_a_fast_v1_sidecar_is_accepted_under_fast_v2(tmp_path, mk_args, capsys):
+    for declared in (V1, V2):
+        path, ids = _fast_poetry_file(tmp_path, declared)
+        args = mk_args(path, scope=fast.SCOPE, layers=[20])
+        cells, rep = reads.load(args, "poetry")
+        assert len(cells) == 2 * len(ids) and rep.reads_checked == "sidecar"
+        assert rep.partial_ids == [] and not reads.incomplete(args)
+    path, _ = _fast_poetry_file(tmp_path, "fast-v0")  # any other version: refused, as before
+    with pytest.raises(SystemExit) as e:
+        reads.load(mk_args(path, scope=fast.SCOPE, layers=[20]), "poetry")
+    err = capsys.readouterr().err
+    assert e.value.code == 2 and "another fast subset ('fast-v0', not 'fast-v2')" in err
+    # the plan_sha guard is unchanged for a compatible file
+    path, _ = _fast_poetry_file(tmp_path, V1)
+    write_sidecar(path, fast=V1, plan_sha="0" * 64, layers=[20])
+    with pytest.raises(SystemExit) as e:
+        reads.load(mk_args(path, scope=fast.SCOPE, layers=[20]), "poetry")
+    assert e.value.code == 2 and "different fast plan" in capsys.readouterr().err
+    # and so is the refusal without the flag
+    with pytest.raises(SystemExit):
+        reads.load(mk_args(path, layers=[20]), "poetry")
+    assert "file was produced --fast; judge it with --fast" in capsys.readouterr().err
+
+
+def test_a_fast_v1_file_is_judged_under_fast_v2(toy, tmp_path, capsys, monkeypatch):
+    spec, path = toy
+    spec = dataclasses.replace(spec, min_full_positions=1)  # the toy file reads one position
+    monkeypatch.setitem(registry.FAMILIES, TOY, spec)
+    judge = resolve(spec.judge, flag=None, env={})
+
+    def run(out):
+        return runner.judge_family(
+            spec, _opts(), path, tmp_path / out, judge=judge, opts=runner.parse_opts([])
+        )
+
+    plain = run("plain")
+    write_sidecar(path, fast=V1)
+    r = run("declared-v1")
+    assert r.value == plain.value == pytest.approx(1 / 3) and r.complete is True
+    assert r.config["fast_subset"] == "fast-v2" and r.config["reads_checked"] == "sidecar"
+    assert r.rows == plain.rows
+    write_sidecar(path, fast="fast-v0")
+    capsys.readouterr()
+    with pytest.raises(SystemExit) as e:
+        run("declared-v0")
+    assert e.value.code == 2 and "another fast subset" in capsys.readouterr().err
+
+
+def test_a_produced_fast_file_declares_fast_v2(tmp_path):
+    from wsbench.produce.methods import Readout
+    from wsbench.produce.producer import Producer, Row
+    from wsbench.readouts import read_sidecar
+
+    class Fake(Producer):
+        def read_spec(self, spec, *, layers=None):
+            return [Row(spec.id, 36, 0, "t", Readout(samples=["x"]))]
+
+    out = tmp_path / "poetry.jsonl"
+    p = Fake(backend=None, method=SimpleNamespace(name="fake", layers=None))  # type: ignore[arg-type]
+    p.run_family("poetry", out, fast=True)
+    meta = read_sidecar(out)
+    assert meta["fast"] == "fast-v2" and meta["plan_sha"] == reads.fast_plan_sha("poetry")
+    ids = [json.loads(x)["id"] for x in out.read_text().splitlines()]
+    assert ids == fast.subset()["poetry"]["read_ids"]
+
+
+def test_macro_keeps_compatible_rows_of_in_subset_families():
+    """Plan 0094: a fast-v1 results directory reports a fast-v2 macro over its 22 families."""
+    old = [_fast_row(f, fast_subset=V1) for f in ("poetry", "basic_readout")]
+    old_jb, old_am = _fast_row(JB, fast_subset=V1), _fast_row(AM, fast_subset=V1)
+    m = macro([*old, old_jb, old_am])
+    assert m["families"] == ["poetry", "basic_readout"] and m["fast_subset"] == "fast-v2"
+    assert m["value"] == 0.5 and m["excluded"] == [
+        {"family": JB, "reason": "stale fast subset (fast-v1)"},
+        {"family": AM, "reason": "stale fast subset (fast-v1)"},
+    ]
+    # beside current rows; any other version is excluded as before, whatever the family
+    m = macro([*old, _fast_row("user_modeling"), _fast_row("hinted_cutoff", fast_subset="fast-v0")])
+    assert m["families"] == ["poetry", "basic_readout", "user_modeling"]
+    assert m["excluded"] == [{"family": "hinted_cutoff", "reason": "stale fast subset (fast-v0)"}]
+    unstamped = _result("poetry", value=0.5, n_items=30, config={"scope": fast.SCOPE})
+    assert macro([unstamped])["excluded"] == [
+        {"family": "poetry", "reason": "stale fast subset (None)"}
+    ]
+    # the other rules still apply to a compatible row; fast and non-fast rows never mix
+    incomplete = _fast_row("moral_rationale", fast_subset=V1)
+    incomplete.complete = False
+    assert macro([*old, incomplete])["excluded"] == [
+        {"family": "moral_rationale", "reason": "incomplete"}
+    ]
+    with pytest.raises(SystemExit, match="macro: results mix fast and non-fast rows"):
+        macro([*old, _result("user_modeling", value=0.5, n_items=30)])
+
+
+def test_cli_report_of_a_fast_v1_directory(tmp_path, capsys):
+    for fam in ("poetry", "basic_readout", JB):
+        write_results(tmp_path / fam, _fast_row(fam, fast_subset=V1))
+    assert main(["report", f"dir={tmp_path}", "--fast", "json=True"]) == 0
+    m = json.loads(capsys.readouterr().out)["macro"]
+    assert m["fast_subset"] == "fast-v2" and sorted(m["families"]) == ["basic_readout", "poetry"]
+    assert m["excluded"] == [{"family": JB, "reason": "stale fast subset (fast-v1)"}]
+    assert main(["report", f"dir={tmp_path}", "--fast"]) == 0
+    text = capsys.readouterr().out
+    assert text.startswith(
+        "scope: fast subset fast-v2 (22 families; not comparable with full-bench numbers); "
+        "rows of other subsets are excluded\n"
+    )
+    assert "stale fast subset (fast-v1)" in text
+
+
+def test_a_fast_v1_cache_replays_under_fast_v2(toy, tmp_path, monkeypatch):
+    """The same calls under both versions: a cache written with ``fast.VERSION`` = fast-v1
+    answers a fast-v2 run with no new call, and the value is the same."""
+    spec, path = toy
+    asked: list[tuple[str, str]] = []
+
+    def stream_json(prompts, *, on_result, **_kw):
+        for i, (system, user) in enumerate(prompts):
+            asked.append((system, user))
+            on_result(i, {"ok": user == "yes"})
+        return llm.Spend()
+
+    monkeypatch.setattr(mcjudge, "run_calls", REAL_RUN_CALLS)  # the real cache path
+    monkeypatch.setattr(llm, "stream_json", stream_json)
+    judge = resolve(spec.judge, flag=None, env={})
+    out = tmp_path / "out"
+    monkeypatch.setattr(fast, "VERSION", V1)
+    old = runner.judge_family(spec, _opts(), path, out, judge=judge, opts=runner.parse_opts([]))
+    assert len(asked) == 4 and old.config["fast_subset"] == "fast-v1"
+    monkeypatch.setattr(fast, "VERSION", V2)
+    new = runner.judge_family(spec, _opts(), path, out, judge=judge, opts=runner.parse_opts([]))
+    assert len(asked) == 4  # 0 new calls
+    assert new.config["fast_subset"] == "fast-v2" and new.value == old.value == pytest.approx(1 / 3)
+    assert new.rows == old.rows and new.config["prompt_version"] == old.config["prompt_version"]
+    differ = {k for k in {*old.config, *new.config} if old.config.get(k) != new.config.get(k)}
+    assert differ == {"fast_subset"}

@@ -1,5 +1,6 @@
-"""The frozen fast subset (plan 0090, ``fast-v1``): which units of which families ``--fast``
-scores, the read items they need, and the rescore of a family result on those units."""
+"""The frozen fast subset (plans 0090 / 0094; ``VERSION`` is the one ``--fast`` runs): which
+units of which families it scores, the read items they need, and the rescore of a family result
+on those units."""
 
 import functools
 import hashlib
@@ -14,8 +15,14 @@ from wsbench.registry import REPO_ROOT
 from wsbench.results import FamilyResult, decided_outcomes, fold_direction_pairs
 
 SCOPE = "fast"  # JudgeArgs.scope / config.scope of a fast run
-VERSION = "fast-v1"
-PATH = REPO_ROOT / "evals/fast/fast_v1.json"
+VERSION = "fast-v2"  # the subset `--fast` means; read at call time (tests patch it)
+VERSIONS = {  # every frozen file, never edited in place
+    "fast-v1": REPO_ROOT / "evals/fast/fast_v1.json",
+    "fast-v2": REPO_ROOT / "evals/fast/fast_v2.json",
+}
+# older versions whose entries for the families still in VERSION are identical to VERSION's
+# (plan 0094): their readouts sidecars are accepted and their result rows stay in the macro
+COMPATIBLE = frozenset({"fast-v1"})
 POSITION_KINDS = ("last_n", "punct_special")  # the fast positions rules (readplan `fast_of`)
 N_RESAMPLES = 2000
 MAX_MISSING_SHARE = 0.10  # more of the entry's units without an outcome -> incomplete
@@ -32,13 +39,18 @@ class NotInFast(SystemExit):
 
 
 @functools.cache
-def _file() -> dict[str, Any]:
-    return json.loads(PATH.read_text(encoding="utf-8"))
+def _file(version: str) -> dict[str, Any]:
+    path = VERSIONS.get(version)
+    if path is None:
+        raise SystemExit(f"unknown fast subset {version!r} (known: {', '.join(sorted(VERSIONS))})")
+    return json.loads(path.read_text(encoding="utf-8"))
 
 
-def subset() -> dict[str, Any]:
-    """The frozen file's ``families``: ``{family: {bank_sha, units, read_ids[, positions]}}``."""
-    return _file()["families"]
+def subset(version: str | None = None) -> dict[str, Any]:
+    """A frozen file's ``families``: ``{family: {bank_sha, units, read_ids[, positions]}}``.
+    ``version=None`` is the current ``VERSION``, resolved at call time; an unknown version is a
+    ``SystemExit``."""
+    return _file(version or VERSION)["families"]
 
 
 @functools.cache
