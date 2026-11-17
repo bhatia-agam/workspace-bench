@@ -1358,7 +1358,7 @@
   "adapt": {
    "origin": "original",
    "gate": {
-    "rate": 0.9,
+    "rate": 1.0,
     "pass": true
    }
   }
@@ -2149,6 +2149,58 @@
   "flipped": "doctor's sibling",
   "adapt": {
    "origin": "original",
+   "gate": {
+    "rate": 1.0,
+    "pass": true
+   }
+  }
+ },
+ {
+  "scene_key": "Elliot-Drew-Avery-therapist-parent",
+  "stimulus": "Elliot's therapist is Drew. Drew's parent is Avery. In other words, Avery is Elliot's",
+  "names": [
+   "Elliot",
+   "Drew",
+   "Avery"
+  ],
+  "hop1": "therapist",
+  "hop2": "parent",
+  "gold": "therapist's parent",
+  "gold_alt": "parent of Elliot's therapist",
+  "flipped": "parent's therapist",
+  "id": "relational-t0-s0-0007-a",
+  "scene": "relational-t0-s0-0007",
+  "adapt": {
+   "origin": "generated",
+   "tier": "t0",
+   "knobs": {},
+   "change": "original rules (13 professional x 5 kinship relations)",
+   "gate": {
+    "rate": 1.0,
+    "pass": true
+   }
+  }
+ },
+ {
+  "scene_key": "Elliot-Drew-Avery-therapist-parent",
+  "stimulus": "Elliot's parent is Drew. Drew's therapist is Avery. In other words, Avery is Elliot's",
+  "names": [
+   "Elliot",
+   "Drew",
+   "Avery"
+  ],
+  "hop1": "parent",
+  "hop2": "therapist",
+  "gold": "parent's therapist",
+  "gold_alt": "therapist of Elliot's parent",
+  "flipped": "therapist's parent",
+  "id": "relational-t0-s0-0007-b",
+  "scene": "relational-t0-s0-0007",
+  "adapt": {
+   "origin": "generated",
+   "tier": "t0",
+   "knobs": {},
+   "change": "original rules (13 professional x 5 kinship relations)",
    "gate": {
     "rate": 1.0,
     "pass": true

@@ -26,8 +26,9 @@ V2 = REPO / "evals/typo_mt/items_v2.json"
 V1_SHA = "c02874dfc958d5ce85a5c64a05f7f13630ec7d129bca2a0704e534448fc95507"
 HAND = "tyh-novel-interpretability-hand"  # " mechan" "istic" " interpret" "ibility" (Qwen3.6)
 # the old adapted banks that were rewritten in place (arith items dropped); qwen3-8b and
-# qwen3.5-9b left this list when plan 0060 rebuilt them fresh on the registered v2 bank
-ADAPTED_ARITH = {"gemma-4-31b-it": 13, "glm-5.3-flash": 10}
+# qwen3.5-9b left this list when plan 0060 rebuilt them fresh on the registered v2 bank, and
+# gemma-4-31b-it when plan 0089 did
+ADAPTED_ARITH = {"glm-5.3-flash": 10}
 
 
 def _is_numeric_form(f: str) -> bool:
@@ -104,6 +105,8 @@ def test_v2_bank_drops_exactly_the_arith_items(real_families):
 def test_no_reachable_typo_mt_bank_has_arith_items():
     paths = [registry.REPO_ROOT / "evals/typo_mt/items_v2.json"]
     paths += sorted(REPO.glob("adapted/*/typo_mt.json"))
+    registered, _ = load_bank(paths[0])
+    assert registered["dropped"]["n"] == len(registered["dropped"]["names"]) > 0
     assert len(paths) == 17  # + glm-5.3, kimi-k3, v4-pro, muse (0060), v4-flash; bump per set
     for p in paths:
         h, items = load_bank(p)
@@ -114,6 +117,10 @@ def test_no_reachable_typo_mt_bank_has_arith_items():
             assert h["version"] == 2 and h["dropped"]["n"] == ADAPTED_ARITH[model], p
             assert len(h["dropped"]["names"]) == ADAPTED_ARITH[model]
             assert re.search(r"sha256 [0-9a-f]{64}", h["derived_from"]), p
+        elif str(h.get("derived_from", "")).startswith("items.json"):
+            # built fresh on the registered v2 bank: it drops exactly the registered v2 drops
+            assert h["dropped"]["n"] == registered["dropped"]["n"], p
+            assert sorted(h["dropped"]["names"]) == sorted(registered["dropped"]["names"]), p
 
 
 def _args(path, out, **kw):

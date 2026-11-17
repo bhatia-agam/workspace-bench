@@ -1,0 +1,845 @@
+{
+ "version": "adapt-gemma-4-31b-it",
+ "note": "adapted-only items' extra gold name forms (ru / es / fr / de / fa exonyms, authored with the item); added to evals/basic_readout_mt/exonyms.json by the judge (registry.load_resource)",
+ "items": {
+  "basic-au-t1-w100c0-brh-ent-ohms-law": {
+   "readout": {
+    "ru": [
+     "закон Ома"
+    ],
+    "es": [
+     "ley de Ohm"
+    ],
+    "fr": [
+     "loi d'Ohm"
+    ],
+    "de": [
+     "ohmsches Gesetz"
+    ]
+   }
+  },
+  "basic-au-t1-w100c0-brh-ent-pythagorean-theorem": {
+   "readout": {
+    "ru": [
+     "теорема Пифагора"
+    ],
+    "es": [
+     "teorema de Pitágoras"
+    ],
+    "fr": [
+     "théorème de Pythagore"
+    ],
+    "de": [
+     "Satz des Pythagoras"
+    ]
+   }
+  },
+  "basic-au-t1-w100c1-brh-ent-house-habsburg": {
+   "readout": {
+    "ru": [
+     "Габсбурги"
+    ],
+    "es": [
+     "Casa de Habsburgo"
+    ],
+    "fr": [
+     "maison de Habsbourg"
+    ],
+    "de": [
+     "Habsburger"
+    ]
+   }
+  },
+  "basic-au-t1-w100c1-brh-ent-isaac-newton": {
+   "readout": {
+    "ru": [
+     "Исаак Ньютон"
+    ]
+   }
+  },
+  "basic-au-t1-w100c2-brh-ent-45x-condition": {
+   "readout": {
+    "ru": [
+     "синдром Шерешевского — Тёрнера"
+    ],
+    "es": [
+     "síndrome de Turner"
+    ],
+    "fr": [
+     "syndrome de Turner"
+    ],
+    "de": [
+     "Turner-Syndrom"
+    ],
+    "fa": [
+     "سندرم ترنر"
+    ]
+   }
+  },
+  "basic-au-t1-w100c2-brh-ent-gas-volume-temperature-law": {
+   "readout": {
+    "ru": [
+     "закон Шарля"
+    ],
+    "es": [
+     "ley de Charles"
+    ],
+    "fr": [
+     "loi de Charles"
+    ],
+    "de": [
+     "Gesetz von Charles"
+    ]
+   }
+  },
+  "basic-au-t1-w100c2-brh-ent-n2o-gas": {
+   "readout": {
+    "ru": [
+     "закись азота"
+    ],
+    "es": [
+     "óxido nitroso"
+    ],
+    "fr": [
+     "protoxyde d'azote"
+    ],
+    "de": [
+     "Distickstoffmonoxid",
+     "Lachgas"
+    ],
+    "fa": [
+     "اکسید نیتروس"
+    ]
+   }
+  },
+  "basic-au-t1-w100c2-brh-ent-nahco3-compound": {
+   "readout": {
+    "ru": [
+     "гидрокарбонат натрия"
+    ],
+    "es": [
+     "bicarbonato de sodio"
+    ],
+    "fr": [
+     "bicarbonate de sodium"
+    ],
+    "de": [
+     "Natriumhydrogencarbonat"
+    ],
+    "fa": [
+     "جوش شیرین"
+    ]
+   }
+  },
+  "basic-au-t1-w100c2-brh-ent-quantum-position-momentum-limit": {
+   "readout": {
+    "ru": [
+     "принцип неопределённости"
+    ],
+    "es": [
+     "principio de incertidumbre"
+    ],
+    "fr": [
+     "principe d'incertitude"
+    ],
+    "de": [
+     "Unschärferelation"
+    ],
+    "fa": [
+     "اصل عدم قطعیت"
+    ]
+   }
+  },
+  "basic-au-t1-w100c2-brh-ent-siren-pitch-effect": {
+   "readout": {
+    "ru": [
+     "эффект Доплера"
+    ],
+    "es": [
+     "efecto Doppler"
+    ],
+    "fr": [
+     "effet Doppler"
+    ],
+    "de": [
+     "Doppler-Effekt"
+    ],
+    "fa": [
+     "اثر دوپلر"
+    ]
+   }
+  },
+  "basic-au-t1-w101c0-brh-ent-76-year-visitor": {
+   "readout": {
+    "ru": [
+     "комета Галлея"
+    ],
+    "es": [
+     "cometa Halley"
+    ],
+    "fr": [
+     "comète de Halley"
+    ],
+    "de": [
+     "Halleyscher Komet"
+    ],
+    "fa": [
+     "دنباله‌دار هالی"
+    ]
+   }
+  },
+  "basic-au-t1-w101c0-brh-ent-avogadro-number": {
+   "readout": {
+    "ru": [
+     "число Авогадро",
+     "постоянная Авогадро"
+    ],
+    "es": [
+     "número de Avogadro",
+     "constante de Avogadro"
+    ],
+    "fr": [
+     "nombre d'Avogadro",
+     "constante d'Avogadro"
+    ],
+    "de": [
+     "Avogadro-Konstante",
+     "Avogadro-Zahl"
+    ],
+    "fa": [
+     "عدد آووگادرو"
+    ]
+   }
+  },
+  "basic-au-t1-w101c0-brh-ent-h2o2": {
+   "readout": {
+    "ru": [
+     "перекись водорода",
+     "пероксид водорода"
+    ],
+    "es": [
+     "peróxido de hidrógeno",
+     "agua oxigenada"
+    ],
+    "fr": [
+     "peroxyde d'hydrogène",
+     "eau oxygénée"
+    ],
+    "de": [
+     "Wasserstoffperoxid"
+    ],
+    "fa": [
+     "آب اکسیژنه",
+     "هیدروژن پراکسید"
+    ]
+   }
+  },
+  "basic-au-t1-w101c0-brh-ent-orbital-lab": {
+   "readout": {
+    "ru": [
+     "Международная космическая станция",
+     "МКС"
+    ],
+    "es": [
+     "Estación Espacial Internacional"
+    ],
+    "fr": [
+     "Station spatiale internationale"
+    ],
+    "de": [
+     "Internationale Raumstation"
+    ],
+    "fa": [
+     "ایستگاه فضایی بین‌المللی"
+    ]
+   }
+  },
+  "basic-au-t1-w101c0-brh-ent-tic-disorder": {
+   "readout": {
+    "ru": [
+     "синдром Туретта"
+    ],
+    "es": [
+     "síndrome de Tourette"
+    ],
+    "fr": [
+     "syndrome de Gilles de la Tourette"
+    ],
+    "de": [
+     "Tourette-Syndrom"
+    ],
+    "fa": [
+     "سندرم توره"
+    ]
+   }
+  },
+  "basic-au-t1-w101c0-brh-ent-vitruvian-polymath": {
+   "readout": {
+    "ru": [
+     "Леонардо да Винчи"
+    ],
+    "fr": [
+     "Léonard de Vinci"
+    ],
+    "fa": [
+     "لئوناردو دا وینچی"
+    ]
+   }
+  },
+  "basic-au-t1-w101c1-brh-ent-combustion-poison-gas": {
+   "readout": {
+    "ru": [
+     "угарный газ",
+     "монооксид углерода"
+    ],
+    "es": [
+     "monóxido de carbono"
+    ],
+    "fr": [
+     "monoxyde de carbone"
+    ],
+    "de": [
+     "Kohlenstoffmonoxid",
+     "Kohlenmonoxid"
+    ],
+    "fa": [
+     "مونوکسید کربن"
+    ]
+   }
+  },
+  "basic-au-t1-w101c1-brh-ent-m31-neighbor": {
+   "readout": {
+    "ru": [
+     "Туманность Андромеды",
+     "галактика Андромеды"
+    ],
+    "es": [
+     "Galaxia de Andrómeda"
+    ],
+    "fr": [
+     "galaxie d'Andromède"
+    ],
+    "de": [
+     "Andromedagalaxie",
+     "Andromedanebel"
+    ]
+   }
+  },
+  "basic-au-t1-w101c1-brh-ent-nobel-1921-phenomenon": {
+   "readout": {
+    "ru": [
+     "фотоэффект",
+     "фотоэлектрический эффект"
+    ],
+    "es": [
+     "efecto fotoeléctrico"
+    ],
+    "fr": [
+     "effet photoélectrique"
+    ],
+    "de": [
+     "photoelektrischer Effekt",
+     "Photoeffekt"
+    ]
+   }
+  },
+  "basic-au-t1-w101c1-brh-ent-vinegar-compound": {
+   "readout": {
+    "ru": [
+     "уксусная кислота"
+    ],
+    "es": [
+     "ácido acético"
+    ],
+    "fr": [
+     "acide acétique"
+    ],
+    "de": [
+     "Essigsäure"
+    ]
+   }
+  },
+  "basic-au-t1-w101c2-brh-ent-cushing-syndrome": {
+   "readout": {
+    "ru": [
+     "синдром Иценко — Кушинга"
+    ],
+    "es": [
+     "síndrome de Cushing"
+    ],
+    "fr": [
+     "syndrome de Cushing"
+    ],
+    "de": [
+     "Cushing-Syndrom"
+    ]
+   }
+  },
+  "basic-au-t1-w101c2-brh-ent-faraday-law": {
+   "readout": {
+    "ru": [
+     "закон Фарадея"
+    ],
+    "es": [
+     "ley de Faraday"
+    ],
+    "fr": [
+     "loi de Faraday"
+    ],
+    "de": [
+     "Faradaysches Induktionsgesetz"
+    ]
+   }
+  },
+  "basic-au-t1-w101c2-brh-ent-golden-ratio": {
+   "readout": {
+    "ru": [
+     "золотое сечение"
+    ],
+    "es": [
+     "número áureo"
+    ],
+    "fr": [
+     "nombre d'or"
+    ],
+    "de": [
+     "Goldener Schnitt"
+    ]
+   }
+  },
+  "basic-au-t1-w101c2-brh-ent-milky-way": {
+   "readout": {
+    "ru": [
+     "Млечный Путь"
+    ],
+    "es": [
+     "Vía Láctea"
+    ],
+    "fr": [
+     "Voie lactée"
+    ],
+    "de": [
+     "Milchstraße"
+    ],
+    "fa": [
+     "کهکشان راه شیری"
+    ]
+   }
+  },
+  "basic-au-t1-w101c2-brh-ent-thomas-edison": {
+   "readout": {
+    "ru": [
+     "Томас Эдисон"
+    ],
+    "fa": [
+     "توماس ادیسون"
+    ]
+   }
+  },
+  "basic-au-t1-w102c0-brh-ent-bering-strait": {
+   "readout": {
+    "ru": [
+     "Берингов пролив"
+    ],
+    "es": [
+     "estrecho de Bering"
+    ],
+    "fr": [
+     "détroit de Béring"
+    ],
+    "de": [
+     "Beringstraße"
+    ]
+   }
+  },
+  "basic-au-t1-w102c0-brh-ent-natural-selection": {
+   "readout": {
+    "ru": [
+     "естественный отбор"
+    ],
+    "es": [
+     "selección natural"
+    ],
+    "fr": [
+     "sélection naturelle"
+    ],
+    "de": [
+     "natürliche Selektion"
+    ]
+   }
+  },
+  "basic-au-t1-w102c0-brh-ent-nikola-tesla": {
+   "readout": {
+    "ru": [
+     "Никола Тесла"
+    ],
+    "fa": [
+     "نیکولا تسلا"
+    ]
+   }
+  },
+  "basic-au-t1-w102c0-brh-ent-planck-constant": {
+   "readout": {
+    "ru": [
+     "постоянная Планка"
+    ],
+    "es": [
+     "constante de Planck"
+    ],
+    "fr": [
+     "constante de Planck"
+    ],
+    "de": [
+     "Plancksches Wirkungsquantum"
+    ]
+   }
+  },
+  "basic-au-t1-w102c0-brh-ent-reye-syndrome": {
+   "readout": {
+    "ru": [
+     "синдром Рея"
+    ],
+    "es": [
+     "síndrome de Reye"
+    ],
+    "fr": [
+     "syndrome de Reye"
+    ],
+    "de": [
+     "Reye-Syndrom"
+    ]
+   }
+  },
+  "basic-au-t1-w102c1-brh-ent-caspian-sea": {
+   "readout": {
+    "ru": [
+     "Каспийское море"
+    ],
+    "es": [
+     "mar Caspio"
+    ],
+    "fr": [
+     "mer Caspienne"
+    ],
+    "de": [
+     "Kaspisches Meer"
+    ],
+    "fa": [
+     "دریای خزر",
+     "دریای کاسپین"
+    ]
+   }
+  },
+  "basic-au-t1-w102c1-brh-ent-double-helix": {
+   "readout": {
+    "ru": [
+     "двойная спираль"
+    ],
+    "es": [
+     "doble hélice"
+    ],
+    "fr": [
+     "double hélice"
+    ],
+    "de": [
+     "Doppelhelix"
+    ],
+    "fa": [
+     "مارپیچ دوگانه"
+    ]
+   }
+  },
+  "basic-au-t1-w102c1-brh-ent-gagarin": {
+   "readout": {
+    "ru": [
+     "Юрий Гагарин"
+    ],
+    "fr": [
+     "Youri Gagarine"
+    ],
+    "de": [
+     "Juri Gagarin"
+    ],
+    "fa": [
+     "یوری گاگارین"
+    ]
+   }
+  },
+  "basic-au-t1-w102c1-brh-ent-nh4no3": {
+   "readout": {
+    "ru": [
+     "нитрат аммония"
+    ],
+    "es": [
+     "nitrato de amonio"
+    ],
+    "fr": [
+     "nitrate d'ammonium"
+    ],
+    "de": [
+     "Ammoniumnitrat"
+    ],
+    "fa": [
+     "آمونیوم نیترات"
+    ]
+   }
+  },
+  "basic-au-t1-w102c1-brh-ent-so2": {
+   "readout": {
+    "ru": [
+     "диоксид серы"
+    ],
+    "es": [
+     "dióxido de azufre"
+    ],
+    "fr": [
+     "dioxyde de soufre"
+    ],
+    "de": [
+     "Schwefeldioxid"
+    ],
+    "fa": [
+     "دی‌اکسید گوگرد"
+    ]
+   }
+  },
+  "basic-au-t1-w103c0-brh-ent-alzheimers": {
+   "readout": {
+    "ru": [
+     "Болезнь Альцгеймера"
+    ],
+    "es": [
+     "Enfermedad de Alzheimer"
+    ],
+    "fr": [
+     "Maladie d'Alzheimer"
+    ],
+    "de": [
+     "Alzheimer-Krankheit"
+    ],
+    "fa": [
+     "بیماری آلزایمر"
+    ]
+   }
+  },
+  "basic-au-t1-w103c0-brh-ent-caco3": {},
+  "basic-au-t1-w103c1-brh-ent-huntingtons-disease": {
+   "readout": {
+    "ru": [
+     "болезнь Гентингтона"
+    ],
+    "es": [
+     "enfermedad de Huntington"
+    ],
+    "fr": [
+     "maladie de Huntington"
+    ],
+    "de": [
+     "Chorea Huntington"
+    ],
+    "fa": [
+     "بیماری هانتینگتون"
+    ]
+   }
+  },
+  "basic-au-t1-w103c1-brh-ent-strait-magellan": {
+   "readout": {
+    "ru": [
+     "Магелланов пролив"
+    ],
+    "es": [
+     "estrecho de Magallanes"
+    ],
+    "fr": [
+     "détroit de Magellan"
+    ],
+    "de": [
+     "Magellanstraße"
+    ],
+    "fa": [
+     "تنگه ماژلان"
+    ]
+   }
+  },
+  "basic-au-t1-w104c0-brh-ent-cern-2012-mass-particle": {
+   "readout": {
+    "ru": [
+     "бозон Хиггса"
+    ],
+    "es": [
+     "bosón de Higgs"
+    ],
+    "fr": [
+     "boson de Higgs"
+    ],
+    "de": [
+     "Higgs-Boson"
+    ],
+    "fa": [
+     "بوزون هیگز"
+    ]
+   }
+  },
+  "basic-au-t1-w104c0-brh-ent-naocl": {
+   "readout": {
+    "ru": [
+     "гипохлорит натрия"
+    ],
+    "es": [
+     "hipoclorito de sodio"
+    ],
+    "fr": [
+     "hypochlorite de sodium"
+    ],
+    "de": [
+     "Natriumhypochlorit"
+    ],
+    "fa": [
+     "هیپوکلریت سدیم"
+    ]
+   }
+  },
+  "basic-au-t1-w104c0-brh-ent-spirit-of-st-louis-pilot": {
+   "readout": {
+    "ru": [
+     "Чарльз Линдберг"
+    ],
+    "fa": [
+     "چارلز لیندبرگ"
+    ]
+   }
+  },
+  "basic-au-t1-w105c0-brh-ent-potassium-nitrate": {
+   "readout": {
+    "ru": [
+     "нитрат калия"
+    ],
+    "es": [
+     "nitrato de potasio"
+    ],
+    "fr": [
+     "nitrate de potassium"
+    ],
+    "de": [
+     "Kaliumnitrat"
+    ],
+    "fa": [
+     "نیترات پتاسیم"
+    ]
+   }
+  },
+  "basic-au-t1-w107c0-brh-ent-apollo-moon-rocket": {
+   "readout": {
+    "ru": [
+     "Сатурн-5"
+    ]
+   }
+  },
+  "basic-au-t1-w107c0-brh-ent-frozen-co2": {
+   "readout": {
+    "ru": [
+     "сухой лёд"
+    ],
+    "es": [
+     "hielo seco"
+    ],
+    "fr": [
+     "glace carbonique"
+    ],
+    "de": [
+     "Trockeneis"
+    ]
+   }
+  },
+  "basic-au-t1-w107c0-brh-ent-hno3": {
+   "readout": {
+    "ru": [
+     "азотная кислота"
+    ],
+    "es": [
+     "ácido nítrico"
+    ],
+    "fr": [
+     "acide nitrique"
+    ],
+    "de": [
+     "Salpetersäure"
+    ]
+   }
+  },
+  "basic-au-t1-w107c0-brh-ent-newton-action-reaction": {
+   "readout": {
+    "ru": [
+     "третий закон Ньютона"
+    ],
+    "de": [
+     "drittes newtonsches Gesetz"
+    ]
+   }
+  },
+  "basic-au-t1-w108c0-brh-ent-graves-disease": {
+   "readout": {
+    "ru": [
+     "Базедова болезнь"
+    ],
+    "es": [
+     "enfermedad de Graves-Basedow"
+    ],
+    "fr": [
+     "maladie de Basedow"
+    ],
+    "de": [
+     "Morbus Basedow"
+    ]
+   }
+  },
+  "basic-au-t1-w108c0-brh-ent-mississippi-river": {
+   "readout": {
+    "ru": [
+     "Миссисипи"
+    ],
+    "es": [
+     "río Misisipi"
+    ],
+    "fa": [
+     "رود میسیسیپی"
+    ]
+   }
+  },
+  "basic-au-t1-w109c0-brh-ent-gas-mixture-law": {
+   "readout": {
+    "ru": [
+     "закон Дальтона"
+    ],
+    "es": [
+     "ley de Dalton"
+    ],
+    "fr": [
+     "loi de Dalton"
+    ],
+    "de": [
+     "Daltonsches Gesetz"
+    ]
+   }
+  },
+  "basic-au-t1-w109c0-brh-ent-h2co3": {
+   "readout": {
+    "ru": [
+     "угольная кислота"
+    ],
+    "es": [
+     "ácido carbónico"
+    ],
+    "fr": [
+     "acide carbonique"
+    ],
+    "de": [
+     "Kohlensäure"
+    ],
+    "fa": [
+     "کربنیک اسید"
+    ]
+   }
+  }
+ }
+}

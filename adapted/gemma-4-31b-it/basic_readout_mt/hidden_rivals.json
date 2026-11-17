@@ -1,0 +1,362 @@
+{
+ "version": "adapt-gemma-4-31b-it",
+ "note": "adapted-only items' same-topic distractors the MC builder dropped (adapt mc); kept for reference, unused since norival-v1 (the judge reads no hidden rivals)",
+ "items": {
+  "basic-au-t1-w100c0-brh-ent-ohms-law": {
+   "readout": [
+    "Joule's law",
+    "Faraday's law"
+   ]
+  },
+  "basic-au-t1-w100c0-brh-ent-pythagorean-theorem": {
+   "readout": [
+    "Thales's theorem",
+    "Ptolemy's theorem",
+    "Stewart's theorem"
+   ]
+  },
+  "basic-au-t1-w100c1-brh-ent-house-habsburg": {
+   "readout": [
+    "House of Bourbon",
+    "House of Valois",
+    "House of Hohenzollern",
+    "House of Wittelsbach"
+   ]
+  },
+  "basic-au-t1-w100c1-brh-ent-isaac-newton": {
+   "readout": [
+    "Robert Hooke",
+    "Edmond Halley",
+    "Robert Boyle",
+    "Christopher Wren"
+   ]
+  },
+  "basic-au-t1-w100c2-brh-ent-45x-condition": {
+   "readout": [
+    "Rett syndrome",
+    "Cri du chat syndrome"
+   ]
+  },
+  "basic-au-t1-w100c2-brh-ent-gas-volume-temperature-law": {
+   "readout": [
+    "Henry's law",
+    "Graham's law"
+   ]
+  },
+  "basic-au-t1-w100c2-brh-ent-n2o-gas": {
+   "readout": [
+    "carbon monoxide"
+   ]
+  },
+  "basic-au-t1-w100c2-brh-ent-nahco3-compound": {
+   "readout": [
+    "sodium carbonate",
+    "potassium bicarbonate",
+    "calcium carbonate",
+    "ammonium bicarbonate"
+   ]
+  },
+  "basic-au-t1-w100c2-brh-ent-quantum-position-momentum-limit": {
+   "readout": [
+    "complementarity principle",
+    "equivalence principle"
+   ]
+  },
+  "basic-au-t1-w100c2-brh-ent-siren-pitch-effect": {
+   "readout": [
+    "Compton effect",
+    "Zeeman effect",
+    "Stark effect",
+    "Hall effect"
+   ]
+  },
+  "basic-au-t1-w101c0-brh-ent-76-year-visitor": {
+   "readout": [
+    "Encke's Comet",
+    "Biela's Comet",
+    "Tempel's Comet",
+    "Holmes's Comet"
+   ]
+  },
+  "basic-au-t1-w101c0-brh-ent-avogadro-number": {
+   "readout": [
+    "Loschmidt's number",
+    "Faraday's constant",
+    "Boltzmann's constant"
+   ]
+  },
+  "basic-au-t1-w101c0-brh-ent-h2o2": {
+   "readout": [
+    "hydrogen sulfide",
+    "hydrogen chloride",
+    "ethyl alcohol"
+   ]
+  },
+  "basic-au-t1-w101c0-brh-ent-orbital-lab": {
+   "readout": [
+    "Tiangong Space Station",
+    "Salyut 7"
+   ]
+  },
+  "basic-au-t1-w101c0-brh-ent-tic-disorder": {
+   "readout": [
+    "Asperger syndrome",
+    "Rett syndrome",
+    "Angelman syndrome",
+    "Williams syndrome"
+   ]
+  },
+  "basic-au-t1-w101c0-brh-ent-vitruvian-polymath": {
+   "readout": [
+    "Sandro Botticelli",
+    "Raffaello Sanzio"
+   ]
+  },
+  "basic-au-t1-w101c1-brh-ent-combustion-poison-gas": {
+   "readout": [
+    "nitric oxide",
+    "hydrogen sulfide",
+    "hydrogen cyanide"
+   ]
+  },
+  "basic-au-t1-w101c1-brh-ent-m31-neighbor": {
+   "readout": [
+    "Triangulum Galaxy",
+    "Whirlpool Galaxy",
+    "Pinwheel Galaxy"
+   ]
+  },
+  "basic-au-t1-w101c1-brh-ent-nobel-1921-phenomenon": {
+   "readout": [
+    "Compton effect",
+    "Zeeman effect",
+    "Hall effect",
+    "Stark effect"
+   ]
+  },
+  "basic-au-t1-w101c1-brh-ent-vinegar-compound": {
+   "readout": [
+    "lactic acid",
+    "formic acid",
+    "malic acid"
+   ]
+  },
+  "basic-au-t1-w101c2-brh-ent-cushing-syndrome": {
+   "readout": [
+    "Conn's syndrome",
+    "Sheehan's syndrome",
+    "Nelson's syndrome",
+    "Waterhouse–Friderichsen syndrome"
+   ]
+  },
+  "basic-au-t1-w101c2-brh-ent-faraday-law": {
+   "readout": [
+    "Lenz's law",
+    "Ampère's law",
+    "Gauss's law",
+    "Biot–Savart law"
+   ]
+  },
+  "basic-au-t1-w101c2-brh-ent-golden-ratio": {
+   "readout": [
+    "silver ratio",
+    "bronze ratio",
+    "plastic ratio"
+   ]
+  },
+  "basic-au-t1-w101c2-brh-ent-milky-way": {
+   "readout": [
+    "Sombrero Galaxy"
+   ]
+  },
+  "basic-au-t1-w101c2-brh-ent-thomas-edison": {
+   "readout": [
+    "Nikola Tesla",
+    "George Westinghouse"
+   ]
+  },
+  "basic-au-t1-w102c0-brh-ent-bering-strait": {
+   "readout": [
+    "Davis Strait",
+    "Hudson Strait",
+    "Nares Strait",
+    "Cabot Strait"
+   ]
+  },
+  "basic-au-t1-w102c0-brh-ent-natural-selection": {
+   "readout": [
+    "artificial selection"
+   ]
+  },
+  "basic-au-t1-w102c0-brh-ent-nikola-tesla": {
+   "readout": [
+    "George Westinghouse",
+    "Guglielmo Marconi",
+    "Mihajlo Pupin"
+   ]
+  },
+  "basic-au-t1-w102c0-brh-ent-planck-constant": {
+   "readout": [
+    "Boltzmann constant",
+    "Rydberg constant",
+    "Hubble constant",
+    "Faraday constant"
+   ]
+  },
+  "basic-au-t1-w102c0-brh-ent-reye-syndrome": {
+   "readout": [
+    "Gilbert's syndrome",
+    "Asperger's syndrome",
+    "Sjögren's syndrome",
+    "Raynaud's syndrome"
+   ]
+  },
+  "basic-au-t1-w102c1-brh-ent-caspian-sea": {
+   "readout": [
+    "Aral Sea",
+    "Black Sea",
+    "White Sea",
+    "Baltic Sea"
+   ]
+  },
+  "basic-au-t1-w102c1-brh-ent-double-helix": {
+   "readout": [
+    "alpha helix",
+    "triple helix",
+    "beta sheet",
+    "Holliday junction"
+   ]
+  },
+  "basic-au-t1-w102c1-brh-ent-gagarin": {
+   "readout": [
+    "Gherman Titov",
+    "Pavel Popovich",
+    "Vladimir Komarov"
+   ]
+  },
+  "basic-au-t1-w102c1-brh-ent-nh4no3": {
+   "readout": [
+    "potassium nitrate",
+    "ammonium sulfate",
+    "sodium nitrate"
+   ]
+  },
+  "basic-au-t1-w102c1-brh-ent-so2": {
+   "readout": [
+    "sulfur trioxide",
+    "carbon disulfide"
+   ]
+  },
+  "basic-au-t1-w103c0-brh-ent-alzheimers": {
+   "readout": [
+    "Pick's disease",
+    "Creutzfeldt–Jakob disease",
+    "Wilson's disease"
+   ]
+  },
+  "basic-au-t1-w103c0-brh-ent-caco3": {
+   "readout": [
+    "calcium sulfate",
+    "magnesium carbonate",
+    "calcium oxide",
+    "sodium carbonate"
+   ]
+  },
+  "basic-au-t1-w103c1-brh-ent-huntingtons-disease": {
+   "readout": [
+    "Wilson's disease",
+    "Creutzfeldt–Jakob disease",
+    "Lou Gehrig's disease"
+   ]
+  },
+  "basic-au-t1-w103c1-brh-ent-strait-magellan": {
+   "readout": [
+    "Drake Passage",
+    "Straits of Florida"
+   ]
+  },
+  "basic-au-t1-w104c0-brh-ent-cern-2012-mass-particle": {
+   "readout": [
+    "Z boson",
+    "tau neutrino"
+   ]
+  },
+  "basic-au-t1-w104c0-brh-ent-naocl": {
+   "readout": [
+    "sodium perchlorate",
+    "potassium permanganate",
+    "sodium thiosulfate",
+    "calcium chloride"
+   ]
+  },
+  "basic-au-t1-w104c0-brh-ent-spirit-of-st-louis-pilot": {
+   "readout": [
+    "Wiley Post",
+    "Eddie Rickenbacker"
+   ]
+  },
+  "basic-au-t1-w105c0-brh-ent-potassium-nitrate": {
+   "readout": [
+    "sodium nitrate",
+    "potassium chlorate",
+    "potassium perchlorate",
+    "ammonium perchlorate"
+   ]
+  },
+  "basic-au-t1-w107c0-brh-ent-apollo-moon-rocket": {
+   "readout": [
+    "Delta IV",
+    "Space Launch System"
+   ]
+  },
+  "basic-au-t1-w107c0-brh-ent-frozen-co2": {
+   "readout": [
+    "liquid nitrogen",
+    "liquid helium",
+    "liquid oxygen",
+    "liquid air"
+   ]
+  },
+  "basic-au-t1-w107c0-brh-ent-hno3": {
+   "readout": [
+    "nitrous acid",
+    "hydrofluoric acid",
+    "perchloric acid"
+   ]
+  },
+  "basic-au-t1-w107c0-brh-ent-newton-action-reaction": {
+   "readout": [
+    "Newton's first law",
+    "Newton's second law",
+    "Kepler's third law",
+    "Stokes' law"
+   ]
+  },
+  "basic-au-t1-w108c0-brh-ent-graves-disease": {
+   "readout": [
+    "Hashimoto's disease",
+    "Paget's disease",
+    "Wilson's disease"
+   ]
+  },
+  "basic-au-t1-w108c0-brh-ent-mississippi-river": {
+   "readout": [
+    "Ohio River",
+    "Colorado River",
+    "Rio Grande"
+   ]
+  },
+  "basic-au-t1-w109c0-brh-ent-gas-mixture-law": {
+   "readout": [
+    "Graham's law"
+   ]
+  },
+  "basic-au-t1-w109c0-brh-ent-h2co3": {
+   "readout": [
+    "formic acid",
+    "boric acid",
+    "oxalic acid"
+   ]
+  }
+ }
+}
