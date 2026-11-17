@@ -58,6 +58,11 @@ from .subjects import get as get_subject
 
 FAMILY = "introspection"
 APP = "adapt-introspection"  # scripts/adapt_introspection_modal.py
+# subjects served by their own variant of that script's app (``ADAPT_INTROSPECTION=<key>``)
+APP_OF: dict[str, str] = {"dory-4b": "adapt-introspection-dory-4b"}
+# NVIDIA Dory (looped): layers are indices of the mOre-lenses unrolled view (``Subject`` dory-4b),
+# so the HF load is rewritten into that view (``looped.unroll``, exits 1/2/4, the 2-loop model)
+LOOP_EXITS, READER_LOOPS = (1, 2, 4), 2
 BETA_GRID = (1.0, 2.0, 3.0, 4.0, 6.0, 8.0)
 HEAD_TIER, SEC_TIER = 4.0, 2.0  # the registered bank's dose tiers (judge.HEADLINE)
 HEAD_RR, SEC_RR = 0.60, 0.35
@@ -666,6 +671,10 @@ class HFEngine:
         model = AutoModelForCausalLM.from_pretrained(
             hf_id, revision=revision, dtype=torch.bfloat16, device_map="auto"
         )
+        if getattr(model.config, "model_type", "") == "dory":  # block L = unrolled entry L
+            import looped  # mOre-lenses dory-4b/code (pinned in the Dory image)
+
+            looped.unroll(model, exits=LOOP_EXITS, reader_loops=READER_LOOPS)
         model.eval()
         dev = str(next(model.parameters()).device)
         return cls(Backend(model=model, tokenizer=None, device=dev, model_id=hf_id), revision)
@@ -1069,7 +1078,7 @@ def stage_measure(model: str, result: str | None = None, engine: Engine | None =
     elif os.environ.get("ADAPT_BACKEND", get_subject(model).backend) == "modal":
         import modal
 
-        fn = modal.Function.from_name(APP, "measure")
+        fn = modal.Function.from_name(APP_OF.get(model, APP), "measure")
         res = load_result(fn.remote(job))
     else:
         res = measure(HFEngine.load(job["hf_id"], job.get("revision")), job)

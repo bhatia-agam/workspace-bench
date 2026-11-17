@@ -17,6 +17,8 @@ V4PRO_READ_BAND: tuple[int, ...] = (19, 23, 27, 31, 34, 38, 42, 46, 50, 53, 57)
 # band[i], see remap_layer): nearest-snap would fold 13/16 -> 15 and 38/40 -> 39 and never read
 # 26 or 42.
 V4FLASH_READ_BAND: tuple[int, ...] = (15, 18, 21, 24, 26, 27, 30, 33, 36, 39, 42)
+# Dory-4B's O-lens sites on the 2-loop path (unrolled-view indices; see the Subject below)
+DORY_READ_BAND: tuple[int, ...] = (15, 19, 23, 27, 39, 43, 47, 51, 55, 59, 63)
 # the benchmark's 11-layer grid of record (readplan.GRID, Qwen3.6-27B layers out of 64)
 GRID_27B: tuple[int, ...] = tuple(range(20, 61, 4))
 
@@ -407,6 +409,30 @@ SUBJECTS: dict[str, Subject] = {
             # hub template reasons in the to=self channel, which think_markers delimits
             thinking_mode=True,
         ),
+        # NVIDIA Dory1.0-4B: a LOOPED model (8 input blocks, the same 20 blocks run k times, 8
+        # output blocks). The subject is the k=2 model (NVIDIA's default, config
+        # n_recurrent_loops=2, per-loop KV), served by vLLM 0.33.0's native DoryForCausalLM.
+        # Layers are indices of the mOre-lenses unrolled view (agu18dec/mOre-lenses
+        # dory-4b/code/looped.py: 0-7 input, 8-27 pass 1, 28-35 exit after 1 loop, 36-55 pass 2,
+        # 56-63 exit after 2 loops, 64+ passes 3-4). n_layers=64 spans the 2-loop view; the
+        # band is the O-lens sites the 2-loop forward computes, minus exit 1 (a side branch the
+        # 2-loop output never passes through) and site 11 (20% of the path's depth, shallower
+        # than the grid's first layer): 11 sites, so GRID_27B[i] reads band[i] (the table rule).
+        # Hub template: enable_thinking=False pre-fills an empty <think></think>.
+        Subject(
+            "dory-4b",
+            "nvidia/NVIDIA-Nemotron-Labs-Dory1.0-4B-BF16",
+            "NVIDIA Dory1.0-4B (2 loops)",
+            64,
+            "dory",
+            "ee517dd388a9b348890ae1e00dacc5eb4d0c750d",
+            backend="modal",
+            read_band=DORY_READ_BAND,
+            modal_app="adapt-dory-4b",
+            modal_gpu=("H200", "H100"),
+            modal_image="dory",
+            thinking_mode=True,
+        ),
     ]
 }
 
@@ -467,9 +493,17 @@ def load_tokenizer(
 
             tok = PreTrainedTokenizerFast.from_pretrained(tokenizer_dir)
     else:
-        tok = AutoTokenizer.from_pretrained(
-            hf_id, revision=revision, trust_remote_code=trust_remote_code
-        )
+        try:
+            tok = AutoTokenizer.from_pretrained(
+                hf_id, revision=revision, trust_remote_code=trust_remote_code
+            )
+        except Exception:  # a model_type this transformers cannot configure (Dory: PR 50099,
+            # unreleased; its "mlp" layer_types fail huggingface_hub's strict config validation,
+            # StrictDataclassClassValidationError, not a ValueError). The tokenizer itself is a
+            # plain tokenizer.json: load the class its tokenizer_config names, without the config
+            from transformers import PreTrainedTokenizerFast
+
+            tok = PreTrainedTokenizerFast.from_pretrained(hf_id, revision=revision)
     if chat_template:
         tok.chat_template = Path(chat_template).read_text()
     if thinking_kwarg is None:

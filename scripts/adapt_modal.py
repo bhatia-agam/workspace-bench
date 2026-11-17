@@ -120,6 +120,9 @@ RECIPES: dict[str, dict] = {
         "env": {"HF_HOME": "/vol/hf", "CUDA_HOME": "/usr/local/cuda", "MAX_JOBS": "4"},
         "resources": {"memory": 256 * 1024, "cpu": 16},
     },
+    # Dory (NVIDIA looped 4B): the shared hub-cache volume (writable, as the default recipe's),
+    # on vLLM 0.33.0, the first release registering DoryForCausalLM (and its DoryConfig)
+    "dory": {"mount": "/hf", "env": {"HF_HOME": "/hf"}, "resources": {}, "hub_cache": True},
     "muse": {  # Muse-Spark-Open: a plain snapshot dir on the muse-spark volume
         "mount": "/vol",
         "env": {"HF_HOME": "/vol/hf", "CUDA_HOME": "/usr/local/cuda", "MAX_JOBS": "4"},
@@ -131,6 +134,7 @@ MUSE_VLLM = "vllm==0.33.0"  # Muse-Spark (MuseSparkForConditionalGeneration) nee
 # and cc1plus segfaults building it on the B300 (gcc ICE in trtllm_batched_gemm_runner.cu, every
 # TP rank, container crash-loop). Install flashinfer's prebuilt JIT cache instead: the meta package
 # (provider discovery) --no-deps plus the B300 (sm103a) and B200 (sm100a) providers only.
+DORY_VLLM = "vllm==0.33.0"  # DoryForCausalLM + DoryConfig are registered from 0.33.0 on
 FLASHINFER_JIT = "0.7.2.post1+cu130"
 FLASHINFER_INDEX = "https://flashinfer.ai/whl/cu130"
 RECIPE = RECIPES[SPEC["image"]]
@@ -181,6 +185,12 @@ def _image(recipe: str) -> modal.Image:
                 "and 'fused_moe_trtllm_sm100' in p.modules "
                 "for p in ps) for a in ('sm103a', 'sm100a'))\"",
             )
+            .env(env)
+        )
+    if recipe == "dory":  # the CUDA 13 devel base (flashinfer JIT needs nvcc), on vLLM 0.33.0
+        return (
+            modal.Image.from_registry("nvidia/cuda:13.0.1-devel-ubuntu24.04", add_python="3.12")
+            .uv_pip_install(DORY_VLLM, "huggingface_hub", "hf_transfer")
             .env(env)
         )
     if recipe == "dsv4":  # DeepGEMM JIT-compiles at runtime and asserts a CUDA home (nvcc)
@@ -552,7 +562,8 @@ def start_engines(n: int, kwargs: dict, into: list, make=_vllm_engine, run=_vllm
 
 
 app = modal.App(SPEC["app"])
-volume = modal.Volume.from_name(SPEC["volume"], create_if_missing=SPEC["image"] == "default")
+HUB_CACHE = SPEC["image"] == "default" or bool(RECIPE.get("hub_cache"))  # the shared hub cache
+volume = modal.Volume.from_name(SPEC["volume"], create_if_missing=HUB_CACHE)
 _cls_options = dict(RECIPE["resources"])
 if SPEC["replicas"] > 1:  # the containers RemoteRunner fans out over
     _cls_options["max_containers"] = SPEC["replicas"]
@@ -565,7 +576,7 @@ if SPEC.get("max_containers"):  # Subject.modal_max_containers: a hard cap on co
     gpu=SPEC["gpu"][0] if len(SPEC["gpu"]) == 1 else SPEC["gpu"],
     # the weights volumes (glm53-weights, v4-flash, v4-pro, muse-spark) are read-only here; the
     # default recipe's volume (the hub cache; kimi-k3's) is mounted writable
-    volumes={RECIPE["mount"]: volume if SPEC["image"] == "default" else volume.read_only()},
+    volumes={RECIPE["mount"]: volume if HUB_CACHE else volume.read_only()},
     timeout=6 * 3600,
     scaledown_window=600,
     **_cls_options,

@@ -665,7 +665,8 @@ def test_grid_table_rule_leaves_every_other_band_unchanged():
     for q in range(64):
         assert remap_layer(q, pro.n_layers, pro.read_band) == snap(q, pro.n_layers, pro.read_band)
     for key, s in subjects.SUBJECTS.items():
-        if s.read_band and key not in ("deepseek-v4-pro", "deepseek-v4-flash"):
+        # dory-4b: an 11-site O-lens band by design (tests/test_adapt_dory.py)
+        if s.read_band and key not in ("deepseek-v4-pro", "deepseek-v4-flash", "dory-4b"):
             assert len(s.read_band) != len(readplan.GRID), key
 
 

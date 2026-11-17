@@ -53,7 +53,7 @@ PLAN_0075_SETS = frozenset({
     "glm-5.3", "deepseek-v4-pro", "muse-spark-open", "kimi-k3", "qwen3-8b", "qwen3.5-9b",
     "qwen3.5-4b", "qwen3.5-2b", "qwen3.5-0.8b", "olmo-3-7b",
     "gemma-4-31b-it", "glm-5.3-flash", "kimi-k2", "olmo-3.1-32b", "qwen3.6-35b-a3b",
-    "deepseek-v4-flash",
+    "deepseek-v4-flash", "dory-4b",
 })  # fmt: skip
 
 
