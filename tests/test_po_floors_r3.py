@@ -85,6 +85,9 @@ def _fb_cfg(fams: dict, protocol: str = po.PO_FALLBACK) -> dict:
         "framing": poo.FRAMING,
         "draws": 1,
         "families": fams,
+        # plan 0070: a Sonnet 5.5 fallback run is built on the reply-free cut (the legacy
+        # Sonnet 5 protocol is frozen history, never written)
+        **({} if legacy else {"prompt_cut": poo.PROMPT_CUT}),
     }
 
 
@@ -188,6 +191,7 @@ def test_freeze_opus_then_fallback_end_to_end(tmp_path, monkeypatch, real_famili
                 "framing": poo.FRAMING,
                 "template_sha": "t",
                 "draws": 1,
+                "prompt_cut": poo.PROMPT_CUT,
                 "families": {"association": {"n_ids": 10, "refused": ["i0", "i1", "i2"]}},
             }
         )
@@ -413,9 +417,10 @@ def _live_config(family: str, entry: dict, aux_models: dict | None = None) -> di
 @pytest.mark.parametrize("family", SONNET55_FALLBACK_FAMILIES)
 def test_committed_floor_applies_to_a_live_row_whatever_the_refusal_model(family, real_families):
     """The four families digest with the Sonnet 5.5 refusal fallback; their committed floors were
-    digested with it (2026-11-04 refreeze) or, model_specific_directed_modulation's, with the
-    retired Sonnet 5 fallback. Either matches a live row (the fallback model is not part of the
-    instrument), but a changed fallback MODE or any other digest setting does not."""
+    digested with it (2026-11-04 refreeze; model_specific_directed_modulation's, on the retired
+    Sonnet 5 fallback until plan 0070 re-measured it, since 2026-11-17). A floor digested with
+    either model matches a live row (the fallback model is not part of the instrument), but a
+    changed fallback MODE or any other digest setting does not."""
     e = json.loads(FROZEN.read_text(encoding="utf-8"))[family]
     cfg = _live_config(family, e)
     live_fb = cfg["summarizer"]["fallback"]
@@ -513,6 +518,79 @@ def test_committed_floor_rows_under_each_layer_mode(family, real_families):
     layered = row(11, {})
     assert ("-layered-v1x4" in layered["prompt_version"]) is not numbers
     assert po.summary_floor_applies(e, layered) is numbers
+
+
+# plan 0070: the families whose prompt-only input held reply text under the old cut (audited on
+# the registered banks, 2026-11-17); their floors were re-measured on the reply-free input
+REPLY_FREE_FAMILIES = (
+    "basic_readout",
+    "directed_modulation",
+    "introspection",
+    "jailbreak_recognition",
+    "model_specific_directed_modulation",
+    "multi_concept_directed_modulation",
+)
+
+
+@pytest.mark.parametrize("family", REPLY_FREE_FAMILIES)
+def test_reply_free_floor_carries_the_cut_and_matches_a_live_row(family, real_families):
+    """plan 0070: a re-measured floor is stamped with the reply-free cut and sits on the
+    instrument a live row of its family carries today."""
+    from wsbench import registry
+
+    e = json.loads(FROZEN.read_text(encoding="utf-8"))[family]
+    spec = registry.get(family)
+    cfg = _live_config(family, e, aux_models=dict(spec.judge.aux_models))
+    assert e["prompt_cut"] == poo.PROMPT_CUT
+    assert e["protocol"] in (po.PO_OPUS, po.PO_FALLBACK)
+    assert e["summarizer"]["fallback"] == cfg["summarizer"]["fallback"]
+    assert po.summary_floor_matches(e, cfg)
+
+
+def test_committed_cut_stamps_are_the_current_cut(real_families):
+    """An entry carries ``prompt_cut`` only when its run was built on the current cut; the
+    entries frozen before plan 0070 (byte-identical inputs) carry none."""
+    fams = {k: v for k, v in json.loads(FROZEN.read_text(encoding="utf-8")).items() if k[0] != "_"}
+    assert {e["prompt_cut"] for e in fams.values() if "prompt_cut" in e} == {poo.PROMPT_CUT}
+    assert all("prompt_cut" in fams[f] for f in REPLY_FREE_FAMILIES)
+
+
+def test_freeze_without_source_never_replaces_a_stamped_floor(tmp_path, real_families):
+    """Review of the port: ``source=`` is optional, and without it ``freeze`` cannot tell an
+    old-cut run from a current one. It then refuses to overwrite an entry that carries
+    ``prompt_cut`` (the unstamped entry would still draw); a stamped run config replaces it, and
+    an unstamped entry is replaced as before."""
+    dst = tmp_path / "po_summary.json"
+    spv = _spv("association")
+    stamped = {"rate": 0.5, "protocol": po.PO_OPUS, "prompt_cut": poo.PROMPT_CUT}
+    dst.write_text(json.dumps({"association": stamped}))
+    before = dst.read_text()
+    run = _po_run(tmp_path, "association", spv, "judged")
+    with pytest.raises(ValueError, match="source="):
+        po.freeze(run, dst)
+    assert dst.read_text() == before
+    # another reader's run config (no prompt_cut) does not replace it either
+    other = tmp_path / "other.json"
+    other.write_text(json.dumps({"base_model": "Qwen", "template_version": "t"}))
+    with pytest.raises(ValueError, match="source="):
+        po.freeze(run, dst, source=other)
+    assert dst.read_text() == before
+    # the run's own stamped config does
+    cfg = tmp_path / "cfg.json"
+    cfg.write_text(
+        json.dumps(
+            {
+                "protocol": po.PO_OPUS,
+                "prompt_cut": poo.PROMPT_CUT,
+                "families": {"association": {"n_ids": 10, "refused": []}},
+            }
+        )
+    )
+    got = po.freeze(run, dst, source=cfg)["association"]
+    assert got["prompt_cut"] == poo.PROMPT_CUT and got["rate"] != 0.5
+    # an entry without the stamp is replaced without source=, as before plan 0070
+    dst.write_text(json.dumps({"association": {"rate": 0.5, "protocol": po.PO_OPUS}}))
+    assert "prompt_cut" not in po.freeze(run, dst)["association"]
 
 
 def test_unaffected_family_floor_matches_the_live_row(real_families):
@@ -674,13 +752,23 @@ def _src(tmp_path: Path, name: str, prompts: list[dict], answers: list[dict]) ->
 
 
 def _p(fam: str, i: str) -> dict:
-    return {"family": fam, "id": i, "prefix": "P", "token": "?", "pos": 3, "n_tokens": 4}
+    return {
+        "family": fam,
+        "id": i,
+        "prefix": "P",
+        "token": "?",
+        "pos": 3,
+        "n_tokens": 4,
+        "prompt_cut": poo.PROMPT_CUT,
+    }
 
 
 def _a(fam: str, i: str, text: str = "x", refused: bool = False, answerer: str = poo.MODEL) -> dict:
     return {
         "family": fam,
         "id": i,
+        # an answer to the current question of _p(fam, i) (plan 0070: prompt_sha keyed)
+        "prompt_sha": poo.prompt_shas([_p(fam, i)])[(fam, i)],
         "answerer": answerer,
         "answer": "" if refused else text,
         "error": "refusal" if refused else "",

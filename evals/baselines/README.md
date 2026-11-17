@@ -47,14 +47,14 @@ Sonnet 5.5 fallback (none refused by both), so every floor is measurable. A bank
 an earlier bank's plan (`read_plan_bank`; at the refreeze: association v5, role_bound_association
 v2, and the 98-item basic_readout_mt, 68-item multihop and 47-item user_modeling banks that the
 next bank of each replaced) is asked on its own ids only
-(`prompt_only_opus.build`); introspection is asked on its headline rows only (the 125 protocol,
+(`prompt_only_opus.build`); introspection was asked at the refreeze on its headline rows only (the 125 protocol,
 beta-4 inject rows and their 125 gaussian twins, judged with `opts=scope=headline`, which yields
 the same headline as the full grid). role_bound_association is scored under its pair headline
 (`pair-v1`, bank v2: 21 of 46 pairs, item rate 0.652) and is no longer marked saturated, so its
 floor is drawn beside the pair rows. chain_intermediates (`+heads-v5`) and jailbreak_recognition
 (`+test-pins`) were re-judged from the same cached calls under their final rules; the values did
-not move. Unchanged and still current: directed_modulation,
-model_specific_directed_modulation, nyt_connections and typo_mt. The r5-rebuilt banks (below)
+not move. Unchanged and still current: nyt_connections and typo_mt (directed_modulation and
+model_specific_directed_modulation were too, until the reply-free re-measure below). The r5-rebuilt banks (below)
 were re-judged on their new banks from the same readouts (only their rebuilt lists' MC calls were
 new; dropped items reduce n).
 
@@ -66,21 +66,57 @@ that key of `prompt_only_summary.json` changed. Its `decided` map is empty becau
 `results.decided_outcomes` returns `{}` when one pair is undecided; hinted_cutoff never reads it
 (`results.NO_SHARED_BRACKET`).
 
+**Reply-free input (2026-11-17, plan 0070).** Under the cut the refreeze used (the render through
+the last full-read site) the reader's input held assistant-reply text in six families, audited
+on the registered banks with the Qwen3.6-27B tokenizer (`prompt_cut.reply_tokens`; 30 families,
+5,763 ids): basic_readout 100 / 100 ids (the prefilled answer stem, 6 tokens),
+directed_modulation 100 / 100 and model_specific_directed_modulation 98 / 98 (the dictated
+sentence, prefilled, 7-9 tokens), multi_concept_directed_modulation 116 / 116 (the target
+sentence, 12 tokens), introspection 508 / 1,762 (the protocol's earlier assistant turn, 18
+tokens; all 250 ids the refreeze asked) and jailbreak_recognition 29 / 172 (earlier assistant
+turns, 12-944 tokens). No other family's input changes under `prompt_cut: reply-free-v2` (0
+ids; the plain / bare renders have no template), and under it no id of any family holds reply
+text. The six were re-measured on the reply-free input with the protocol above (fresh Opus 5.5
+answers for all 2,348 ids, 0 refused, so no Sonnet fallback; each family's current instrument,
+identical to its refreeze entry's; 0 digests refused; every row complete) and carry
+`prompt_cut`; every other entry of the file is byte-identical. introspection was asked and
+judged on its full grid this time (1,762 ids, `complete: true`; same headline items).
+
+| family | ids with reply text, old cut | refreeze floor (old cut) | reply-free floor [95% CI] | n |
+|---|---|---|---|---|
+| basic_readout (bank v8) | 100 / 100 | 0.810 | 0.890 [0.83, 0.95] | 100 |
+| directed_modulation | 100 / 100 | 1.000 (2026-10-31) | 1.000 (saturated) | 100 |
+| introspection | 508 / 1,762 | 0.000 | 0.000 | 125 |
+| jailbreak_recognition | 29 / 172 | 0.895 | 0.884 [0.80, 0.96] | 172 |
+| model_specific_directed_modulation | 98 / 98 | 0.582 (2026-10-31) | 0.592 [0.50, 0.68] | 98 |
+| multi_concept_directed_modulation | 116 / 116 | 0.965 | 0.965 (saturated; 2 of 116 undecided) | 114 |
+
+Each is one fresh draw per id, so old -> new mixes the cut with draw-to-draw spread: basic_readout
+9 items fail -> pass and 1 pass -> fail; model_specific_directed_modulation 6 and 5;
+multi_concept_directed_modulation 1 and 1. The table below shows the reply-free floor in all six
+rows (marked †; the rows of directed_modulation and model_specific_directed_modulation were
+added with this re-measure, their "before" is the 2026-10-31 campaign value that had stayed
+current through the refreeze). The "Capital items replaced" table further down and the
+2026-10-31 campaign table under "Prompt-only, Opus 5.5" record the old-cut values of their
+dates.
+
 | family | before | floor [95% CI] | n | instrument (before the digest stamp) | reader |
 |---|---|---|---|---|---|
 | agentic_misalignment | 0.000 | 0.000 | 22 pairs | am-design-v3+summ-c4+twin-c2+pairs-v2+sonnet-digest+opus5-fb | Opus 5.5 + Sonnet 5.5 fallback (4 served) |
 | arithmetic_intermediates | 0.790 | 0.973 [0.96, 0.99] | 479 | arith-free-2026-10-30+exact-int+keys-union+generic-r7+bank-v2 | Opus 5.5 (1 digest refused); bank v2: the same decisions minus the 116 frac items (plan 0083) |
 | association | 0.892 | 0.923 [0.86, 0.97] | 91 | assoc-mc-2026-11-01-v3+gate-a2+bank-v5 | Opus 5.5 |
-| basic_readout (bank v8) | 0.840 | 0.810 [0.74, 0.88] | 100 | br-mc-2026-11-01-v5b+brsum-v2+qline-v2+bank-v8 | Opus 5.5 |
+| basic_readout (bank v8) † | 0.840 | 0.890 [0.83, 0.95] | 100 | br-mc-2026-11-01-v5b+brsum-v2+qline-v2+bank-v8 | Opus 5.5 |
 | basic_readout_mt (bank v7) | 1.000 | 1.000 | 90 | mc-brmt-2026-10-31r+norival-v1+qline-v2+bank-v7 | Opus 5.5 |
 | buggy_code (bank v2) | 0.917 (24 pairs) | 0.969 [0.92, 1.00] | 64 pairs | buggy-pairs-2026-10-29+infer-r1-2026-10-31+pair-headline-2026-10-30+eof-all-layers-2026-10-30+bank-v2 | Opus 5.5 |
 | chain_intermediates | 0.967 | 0.967 [0.93, 0.99] | 120 | chain-mc-2026-10-30+heads-v5+start-op+key-ex2 | Opus 5.5 |
 | conjunctive_association | 0.220 | 0.340 [0.25, 0.43] | 100 | comp-v5+maj | Opus 5.5 |
-| introspection | 0.000 | 0.000 | 125 | ii-grid-2026-11-v4+twinrx-v4+jhead-v2 | Opus 5.5 |
-| jailbreak_recognition | 0.895 | 0.895 [0.80, 0.97] | 172 | jb-v4+pins-r1+pins-r3+guard-off+sonnet-digest+item-q2+opus5-fb+test-pins | Opus 5.5 |
+| directed_modulation † | 1.000 | 1.000 (saturated) | 100 | dm-2026-10-31+expressed | Opus 5.5 |
+| introspection † | 0.000 | 0.000 | 125 | ii-grid-2026-11-v4+twinrx-v4+jhead-v2 | Opus 5.5 |
+| jailbreak_recognition † | 0.895 | 0.884 [0.80, 0.96] | 172 | jb-v4+pins-r1+pins-r3+guard-off+sonnet-digest+item-q2+opus5-fb+test-pins | Opus 5.5 |
 | knowledge_cutoff | 0.000 | 0.000 | 147 | cutoff-judge-2026-10-31+kcgate-v3 | Opus 5.5 |
+| model_specific_directed_modulation † | 0.582 | 0.592 [0.50, 0.68] | 98 | dmcd-regex-2026-10-23+joined-2026-10-30 | Opus 5.5 |
 | moral_rationale | 0.441 | 0.533 [0.47, 0.61] | 195 | ec-v9+nq1+maj3v (majority of 3 draws, near-verbatim quotes) | Opus 5.5 |
-| multi_concept_directed_modulation | 0.965 | 0.965 (saturated) | 114 | mcdm-2026-11-01e+bank-v2+notokinterp-2026-10-30+pins-r3+nocap-a1 | Opus 5.5 |
+| multi_concept_directed_modulation † | 0.965 | 0.965 (saturated) | 114 | mcdm-2026-11-01e+bank-v2+notokinterp-2026-10-30+pins-r3+nocap-a1 | Opus 5.5 |
 | multihop (bank v5) | 0.941 (68 kept items) | 0.918 [0.86, 0.97] | 98 | bank-mc-2026-11-01-v3+bank-gate-r10+bank-v5 | Opus 5.5 |
 | multihop_mt | 1.000 | 1.000 | 64 | mh2-mc-2026-11-01+norival-v1+qline-v2+bank-v6 | Opus 5.5 |
 | multilingual (bank v5) | 0.879 | 0.939 [0.89, 0.98] | 99 | mcrx-2026-11-03e+mc-ml-2026-11-01b+bank-v5 | Opus 5.5 |
@@ -795,7 +831,38 @@ make sure it also undergoes the same judge prompts". The campaign floor is ONE O
 plan row id (twins, controls and paired rows are their own ids; no answer is copied between ids),
 asked the open-model question about the render decoded through the item's LAST full-read site,
 written as one prose cell at that site and layer 44 with the sidecar `reader:
-prompt_only:claude-opus-5-5` (which waives the lite selection and the span checks):
+prompt_only:claude-opus-5-5` (which waives the lite selection and the span checks).
+
+**The reader never sees a reply** (plan 0070; Camila 2026-11-04: "can you ensure that our control
+is NEVER reading a reply, only ever the prompt?"). Since `prompt_cut: reply-free-v2` the input is
+that cut with every assistant turn that holds text dropped, and a site inside a reply (a prefilled
+answer stem, a dictated sentence) cut back to the generation prompt that opens it
+(`baselines/prompt_cut.py`: assistant turns found in token ids from markers probed off the
+subject's own chat template; a template it cannot read, or a control token inside reply text,
+exits). The token the question quotes is the cut prefix's own last token (`site_token` only
+places the readout cell; v1 quoted the read site's token, which could be a reply token). Every
+stage (`ask`, `readouts`, both fallback stages) refuses a prompts file without the current stamp,
+an answer counts only for the exact question it answered (`prompt_sha`). `freeze` checks the
+stamp only when it is given the run config: with `source=<run_config.json>` it refuses any
+`po-opus-v1*` config without the stamp and the legacy Sonnet 5 fallback run outright; without
+`source=` (it is optional), or with another reader's config, it freezes as before but never
+replaces an entry that carries `prompt_cut` (it says to pass `source=`), so a stamped floor is
+never downgraded to an unstamped one. Always pass `source=` for an Opus run. A whitespace-only
+assistant turn counts as a reply and is dropped; turns are found by the header without its
+trailing newline token, and the result is checked a second time on the decoded text (a reply
+that starts with a newline merges with the header's newline under OLMo-3 / Qwen3-8B). The
+adapted poetry gate's `chat_prefill` input stops at the generation prompt too
+(`adapt.poetry.read_prefix`); that input is then the same for every `chat_prefill` item, so the
+Opus text-leak gate passes each of them by construction while `plain` / `plain_fewshot` items
+are still gated on line one (an open decision, plan 0070 §3b).
+It changed the input of basic_readout, directed_modulation, model_specific_directed_modulation,
+multi_concept_directed_modulation, introspection (508 ids) and jailbreak_recognition (29 ids),
+whose floors were re-measured on the refreeze instruments (2026-11-17, "Floors of record") and
+carry `prompt_cut`; every other family's input is byte-identical, so its `po-opus-v1` floor
+stands. A prompts file, answers file or run config built before the stamp (e.g. an adapted set's
+prompt-only dir from an older checkout) is refused by these stages with "rebuild with
+stage=build"; the adapted sets' committed prompt-only floors of these families still predate the
+cut (plan 0070, follow-ups).
 
 ```
 wsbench baseline kind=prompt_only_opus stage=build out=$PO
@@ -869,11 +936,11 @@ the final-olens-rl600-x4 campaign's prompt versions, frozen from the campaign's 
 | buggy_code | 0.917 | 24 | Opus 5.5 + Sonnet 5 | 2/63 | 0 | 0.913 |
 | chain_intermediates | 0.967 | 120 | Opus 5.5 + Sonnet 5 | 1/120 | 0 | 0.975 |
 | conjunctive_association | 0.220 | 100 | Opus 5.5 + Sonnet 5 | 65/100 | 0 | not measurable |
-| directed_modulation | 1.000 (saturated) | 100 | Opus 5.5 | 0 | — | = floor |
+| directed_modulation | 1.000 (saturated; input held the dictated sentence, re-measured reply-free 2026-11-17: 1.000, "Floors of record") | 100 | Opus 5.5 | 0 | — | = floor |
 | introspection | 0.000 | 125 | Opus 5.5 + Sonnet 5 | 4/1762 | 0 | 0.000 |
 | jailbreak_recognition | 0.895 | 172 | Opus 5.5 + Sonnet 5 | 31/172 | 0 | 0.918 |
 | knowledge_cutoff | 0.000 | 147 | Opus 5.5 + Sonnet 5 | 11/147 | 0 | 0.000 |
-| model_specific_directed_modulation | 0.582 | 98 | Opus 5.5 | 0 | — | = floor |
+| model_specific_directed_modulation | 0.582 (input held the dictated sentence, re-measured reply-free 2026-11-17: 0.592, "Floors of record") | 98 | Opus 5.5 | 0 | — | = floor |
 | moral_rationale | 0.441 | 195 | Opus 5.5 + Sonnet 5 | 1/195 | 0 | 0.436 |
 | multi_concept_directed_modulation | 0.965 (saturated) | 114 | Opus 5.5 | 0 | — | = floor |
 | multihop | 0.980 | 100 | Opus 5.5 | 0 | — | = floor |

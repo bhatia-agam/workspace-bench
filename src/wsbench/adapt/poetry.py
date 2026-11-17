@@ -285,8 +285,9 @@ def tags(tag: str, draws: int = DRAWS) -> list[str]:
 def read_prefix(item: dict, tok: Any = None) -> tuple[str, str]:
     """``(prefix, token)``: the subject's read render through the read site (line one's newline)
     and its final token -- the po-opus-v1 prompt-only input, in the render the item is read in
-    (``gate_variant``; D6). ``tok`` = the subject's tokenizer (``chat_prefill`` needs its
-    template; without one the token is shown as the newline). A BOS is not shown."""
+    (``gate_variant``; D6). ``chat_prefill`` (needs ``tok``, the subject's tokenizer) stops at
+    the generation prompt: its line one is reply text (plan 0070). Without ``tok`` the token is
+    shown as the newline. A BOS is not shown."""
     from wsbench.readplan import POETRY_FEWSHOT, POETRY_PREFILL_USER
 
     gv = item.get("gate_variant") or "plain"
@@ -296,10 +297,11 @@ def read_prefix(item: dict, tok: Any = None) -> tuple[str, str]:
     elif gv == "chat_prefill":
         if tok is None:
             raise SystemExit("poetry: a chat_prefill item needs the subject's tokenizer")
-        head = tok.apply_chat_template([{"role": "user", "content": POETRY_PREFILL_USER}],
+        # plan 0070: the couplet's first line is prefilled in the ASSISTANT's mouth, i.e. reply
+        # text, so the prompt-only input stops at the generation prompt that opens the turn
+        text = tok.apply_chat_template([{"role": "user", "content": POETRY_PREFILL_USER}],
                                        tokenize=False, add_generation_prompt=True,
                                        enable_thinking=False)  # fmt: skip
-        text = head + item["prompt"].split("\n")[1] + "\n"
     else:
         text = pre
     token = "\n"

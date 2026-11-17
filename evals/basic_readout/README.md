@@ -43,7 +43,9 @@ its readouts, digests and MC calls are reused; only the new items' calls are new
   picks a new item's gold on more than 1 of 5 draws. The new items take the gold slots the dropped
   items freed, so entity's slot counts stay 7 / 7 / 7 / 7 / 7 (`mc.gold_position`).
 - **Floors on v8** (`evals/baselines/README.md` "Floors of record"): prompt-only 0.810 [0.74,
-  0.88] (n = 100, all 10 new items pass, as the 10 capital items did); lucky blind 0.276,
+  0.88] (n = 100, all 10 new items pass, as the 10 capital items did; that reader's input held
+  the prefilled answer stem, and the floor of record is the reply-free re-measure of plan 0070,
+  2026-11-17: 0.890 [0.83, 0.95]); lucky blind 0.276,
   described 0.326, topic 0.312, uniform 0.204 vs chance 0.200 (v7: 0.292 / 0.350 / 0.338; the
   implicit items still fail the standard; entity 0.171 / 0.177 / 0.114; the 10 new items 0.00 /
   0.02 / 0.00); text-blind subset 1 / 100 (every panel reader fails all 3 draws; shown, but out

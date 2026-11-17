@@ -157,9 +157,17 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   Sonnet 5 protocol (`po.PO_FALLBACK_SONNET5`) is still read and labelled (`po.PO_FALLBACKS`),
   never written; `prompt_only_opus.fallback_rows` ignores answers of any other fallback model in
   a resumed dir. A summary floor matches a row regardless of the digest's client-side refusal
-  model (`po._floor_match_key` keeps only the fallback mode), so the Sonnet 5 floors still draw
-  beside Sonnet 5.5 rows. A `read_plan_bank` bank is asked and gated on its own ids only
-  (`text_inversion.judged_bank_ids` / `gated_ids`).
+  model (`po._floor_match_key` keeps only the fallback mode), so a floor digested with the
+  Sonnet 5 fallback would still draw beside Sonnet 5.5 rows. A `read_plan_bank` bank is asked and
+  gated on its own ids only (`text_inversion.judged_bank_ids` / `gated_ids`). Plan 0070: the
+  prompt-only input never holds a reply (`baselines/prompt_cut.py`, token-level, markers probed
+  off the subject's template; rows stamped `prompt_cut: reply-free-v2`, which every later stage
+  requires; `freeze` requires it of the run config given as `source=` and, without one, never
+  replaces a stamped entry (always pass `source=`); the quoted token is the cut prefix's last, `site_token` places the
+  cell; answers count only by `prompt_sha`); the protocol stays `po-opus-v1`, and the six
+  floors whose input changed (basic_readout, the three directed-modulation families,
+  introspection, jailbreak_recognition) were re-measured on the refreeze instruments
+  (2026-11-17) and carry `prompt_cut`; every other entry is unchanged (input byte-identical).
   `text_inversion` builds the anti-text-inversion subset (`evals/baselines/anti_text_inversion.json`,
   plan 0019 panel gate, which replaced plan 0014's Opus-only gate): Qwen3.6-27B + the frontier
   group (Claude slot opus/sonnet, `openai/gpt-6-astra`, `google/gemini-4-argon`) x 3 draws, each

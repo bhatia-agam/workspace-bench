@@ -29,6 +29,7 @@ from collections.abc import Iterable
 from pathlib import Path
 from typing import Any
 
+from wsbench.baselines import prompt_cut
 from wsbench.baselines import text_inversion as ti
 
 PROTOCOL = "po-opus-v1"
@@ -80,6 +81,14 @@ def families() -> list[str]:
     return out
 
 
+# the input revision (plan 0070; Camila 2026-11-04: "can you ensure that our control is NEVER
+# reading a reply, only ever the prompt?"): no reply text before the read site, see build()
+# v2: the reader-facing token is the cut prefix's own last token (v1 showed the read site's,
+# which could be a reply token)
+PROMPT_CUT = "reply-free-v2"
+RAW_RENDERS = frozenset({"plain", "bare"})  # no chat template, so no assistant turn
+
+
 def last_site(positions: list[int], n_tokens: int) -> int:
     """The last full-read site as the plan reports it (absolute index or negative offset)."""
     return max(positions, key=lambda p: p % n_tokens)
@@ -121,7 +130,8 @@ def build(out: Path, fams: Iterable[str] | None = None, limit: int = 0) -> Path:
         tok = AutoTokenizer.from_pretrained("Qwen/Qwen3.6-27B")
     out.mkdir(parents=True, exist_ok=True)
     path = out / "prompts.jsonl"
-    n_bad = 0
+    n_bad = n_cut = 0
+    marks: prompt_cut.TurnMarks | None = None
     kw = {"skip_special_tokens": False, "clean_up_tokenization_spaces": False}
     with path.open("w", encoding="utf-8") as fh:
         for fam in fams or families():
@@ -135,17 +145,90 @@ def build(out: Path, fams: Iterable[str] | None = None, limit: int = 0) -> Path:
                     continue
                 site = last_site(pos, len(r))
                 last = site % len(r)
+                ids = r.ids[: last + 1]
+                if spec.render not in RAW_RENDERS:  # a chat render: cut at the prompt's end
+                    marks = marks or prompt_cut.turn_marks(tok)
+                    ids = prompt_cut.prompt_only_ids(r.ids, last, marks, tok)
+                    prompt_cut.assert_no_reply(ids, marks, tok, f"({fam}/{spec.id})")
+                    n_cut += ids != r.ids[: last + 1]
                 row = {
                     "family": fam,
                     "id": spec.id,
-                    "prefix": tok.decode(r.ids[: last + 1], **kw),
-                    "token": tok.decode([r.ids[last]], **kw),
+                    "prefix": tok.decode(ids, **kw),
+                    # the reader sees the cut prefix's own final token, never the read site's
+                    # (which can lie inside the reply); site_token only places the cell
+                    "token": tok.decode(ids[-1:], **kw),
+                    "site_token": tok.decode([r.ids[last]], **kw),
                     "pos": site,
                     "n_tokens": len(r),
+                    "prompt_cut": PROMPT_CUT,
                 }
                 fh.write(json.dumps(row, ensure_ascii=False) + "\n")
-    print(f"wrote {path} ({n_bad} rows with no read position)")
+    print(f"wrote {path} ({n_bad} rows with no read position; {n_cut} cut at the prompt's end)")
     return path
+
+
+def reader_prompt(row: dict[str, Any]) -> str:
+    """The exact question Opus is asked about one prompt row (its family's framing)."""
+    return ti.FRAMINGS[framing_of(row["family"])].format(prefix=row["prefix"], token=row["token"])
+
+
+def prompt_shas(prompts: Iterable[dict[str, Any]]) -> dict[tuple[str, str], str]:
+    """(family, id) -> ``prompt_sha`` of the current question: an answer counts only for it."""
+    return {(r["family"], r["id"]): ti.prompt_sha(reader_prompt(r)) for r in prompts}
+
+
+def current_answers(
+    rows: Iterable[dict[str, Any]], shas: dict[tuple[str, str], str]
+) -> dict[tuple[str, str], dict[str, Any]]:
+    """:func:`text_inversion.latest_answers` over the rows that answer the CURRENT question
+    (``prompt_sha`` match): an answer to an older prompt (e.g. one that held reply text) is
+    never served, asked around or frozen."""
+    best: dict[tuple[str, str], dict[str, Any]] = {}
+    for r in rows:
+        k = (r["family"], r["id"])
+        if shas.get(k) is None or r.get("prompt_sha") != shas[k]:
+            continue
+        if k not in best or not r["error"] or best[k]["error"]:
+            best[k] = r
+    return best
+
+
+def settled(a: dict[str, Any] | None) -> bool:
+    """An answer that is not re-asked: error-free, or a final policy refusal."""
+    return a is not None and (not a.get("error") or ti.is_refusal(a))
+
+
+def require_cut(prompts: list[dict[str, Any]], path: Path) -> None:
+    """Exit when a prompt row predates :data:`PROMPT_CUT` (its prefix may hold a reply);
+    ``path`` names the prompts file or the dir holding it, for the message."""
+    stale = sorted({r["family"] for r in prompts if r.get("prompt_cut") != PROMPT_CUT})
+    if stale:
+        raise SystemExit(
+            f"{path}: rows of {stale} were built without prompt_cut={PROMPT_CUT} and may hold "
+            "reply text; rebuild with stage=build"
+        )
+
+
+def require_cut_srcs(prompts: list[dict[str, Any]], srcs: list[Path]) -> None:
+    """:func:`require_cut` over the merged prompts of ``srcs`` (:func:`primary`), naming the
+    prompts file each stale family's rows came from: the LAST dir that holds the family."""
+    stale = {r["family"] for r in prompts if r.get("prompt_cut") != PROMPT_CUT}
+    if not stale:
+        return
+    owner: dict[str, Path] = {}
+    for src in srcs:
+        path = Path(src) / "prompts.jsonl"
+        for fam in {p["family"] for p in ti.load_jsonl(path)} & stale:
+            owner[fam] = path
+    by_path: dict[Path, list[str]] = {}
+    for fam in sorted(stale):
+        by_path.setdefault(owner[fam], []).append(fam)
+    where = "; ".join(f"{path}: rows of {fams}" for path, fams in by_path.items())
+    raise SystemExit(
+        f"{where} were built without prompt_cut={PROMPT_CUT} and may hold reply text; rebuild "
+        "with stage=build"
+    )
 
 
 def client() -> Any:
@@ -159,17 +242,14 @@ def client() -> Any:
 async def _ask(out: Path, concurrency: int, fams: set[str] | None) -> int:
     prompts = ti.load_jsonl(out / "prompts.jsonl")
     prompts = [r for r in prompts if not fams or r["family"] in fams]
+    require_cut(prompts, out / "prompts.jsonl")
     ans = out / "answers"
     ans.mkdir(parents=True, exist_ok=True)
     path = ans / "draw0.jsonl"
     rows = ti.load_jsonl(path) if path.exists() else []
-    # an answer asked under another framing (e.g. before FAMILY_FRAMING) is not a cache hit
-    done = {
-        (r["family"], r["id"])
-        for r in rows
-        if (not r.get("error") or ti.is_refusal(r))
-        and r.get("framing", FRAMING) == framing_of(r["family"])
-    }
+    # an answer to another question (an older prompt or framing) is not a cache hit
+    cur = current_answers(rows, prompt_shas(prompts))
+    done = {k for k, a in cur.items() if settled(a)}
     todo = [r for r in prompts if (r["family"], r["id"]) not in done]
     print(f"{len(todo)} to ask ({len(done)} cached)", flush=True)
     c = client()
@@ -200,8 +280,9 @@ def write_readouts(out: Path) -> dict[str, dict[str, Any]]:
     from wsbench.readouts import write_sidecar
 
     prompts = ti.load_jsonl(out / "prompts.jsonl")
+    require_cut(prompts, out / "prompts.jsonl")
     src = out / "answers" / "draw0.jsonl"
-    ans = ti.latest_answers(src) if src.exists() else {}
+    ans = current_answers(ti.load_jsonl(src), prompt_shas(prompts)) if src.exists() else {}
     root = out / "readouts"
     root.mkdir(parents=True, exist_ok=True)
     stats: dict[str, dict[str, Any]] = {}
@@ -225,7 +306,7 @@ def write_readouts(out: Path) -> dict[str, dict[str, Any]]:
                 "id": p["id"],
                 "layer": PROMPT_ONLY_LAYER,
                 "pos": p["pos"],
-                "token": p["token"],
+                "token": p.get("site_token", p["token"]),
                 "samples": [a["answer"]],
             }
             handles[fam].write(json.dumps(row, ensure_ascii=False) + "\n")
@@ -244,6 +325,7 @@ def write_readouts(out: Path) -> dict[str, dict[str, Any]]:
         )
     cfg = {
         "protocol": PROTOCOL,
+        "prompt_cut": PROMPT_CUT,
         "model": MODEL,
         "framing": FRAMING,
         "template_sha": ti.prompt_sha(ti.FRAMINGS[FRAMING]),
@@ -271,7 +353,7 @@ def primary(
         fams = {p["family"] for p in ps}
         prompts = [p for p in prompts if p["family"] not in fams] + ps
         path = Path(src) / "answers" / "draw0.jsonl"
-        got = ti.latest_answers(path) if path.exists() else {}
+        got = current_answers(ti.load_jsonl(path), prompt_shas(ps)) if path.exists() else {}
         ans = {k: v for k, v in ans.items() if k[0] not in fams}
         ans.update({k: v for k, v in got.items() if k[0] in fams})
     return prompts, ans
@@ -284,23 +366,21 @@ def fallback_rows(path: Path) -> list[dict[str, Any]]:
     return [r for r in rows if r.get("answerer") == FALLBACK_MODEL]
 
 
-def latest_fallback(path: Path) -> dict[tuple[str, str], dict[str, Any]]:
-    """:func:`text_inversion.latest_answers` over :func:`fallback_rows`."""
-    best: dict[tuple[str, str], dict[str, Any]] = {}
-    for r in fallback_rows(path):
-        k = (r["family"], r["id"])
-        if k not in best or not r["error"] or best[k]["error"]:
-            best[k] = r
-    return best
+def latest_fallback(
+    path: Path, shas: dict[tuple[str, str], str]
+) -> dict[tuple[str, str], dict[str, Any]]:
+    """:func:`current_answers` over :func:`fallback_rows` (the current question's only)."""
+    return current_answers(fallback_rows(path), shas)
 
 
 async def _ask_fallback(out: Path, srcs: list[Path], concurrency: int) -> int:
     prompts, ans = primary(srcs)
+    require_cut_srcs(prompts, srcs)
     todo = [p for p in prompts if (a := ans.get((p["family"], p["id"]))) and ti.is_refusal(a)]
     out.mkdir(parents=True, exist_ok=True)
     path = out / FALLBACK_ANSWERS
-    rows = fallback_rows(path)
-    done = {(r["family"], r["id"]) for r in rows if not r.get("error") or ti.is_refusal(r)}
+    cur = latest_fallback(path, prompt_shas(prompts))
+    done = {k for k, a in cur.items() if settled(a)}
     todo = [p for p in todo if (p["family"], p["id"]) not in done]
     print(f"{len(todo)} refused ids to re-ask on {FALLBACK_MODEL} ({len(done)} cached)", flush=True)
     c = client()
@@ -333,8 +413,10 @@ def write_fallback_readouts(out: Path, srcs: Iterable[Path]) -> dict[str, dict[s
     than 20% of the ids were refused by BOTH readers."""
     from wsbench.readouts import write_sidecar
 
-    prompts, ans = primary([Path(s) for s in srcs])
-    fb = latest_fallback(out / FALLBACK_ANSWERS)
+    srcs = [Path(s) for s in srcs]
+    prompts, ans = primary(srcs)
+    require_cut_srcs(prompts, srcs)
+    fb = latest_fallback(out / FALLBACK_ANSWERS, prompt_shas(prompts))
     root = out / "readouts"
     root.mkdir(parents=True, exist_ok=True)
     stats: dict[str, dict[str, Any]] = {}
@@ -375,7 +457,7 @@ def write_fallback_readouts(out: Path, srcs: Iterable[Path]) -> dict[str, dict[s
                 "id": p["id"],
                 "layer": PROMPT_ONLY_LAYER,
                 "pos": p["pos"],
-                "token": p["token"],
+                "token": p.get("site_token", p["token"]),
                 "samples": [a["answer"]],
             }
             handles[fam].write(json.dumps(row, ensure_ascii=False) + "\n")
@@ -399,6 +481,7 @@ def write_fallback_readouts(out: Path, srcs: Iterable[Path]) -> dict[str, dict[s
         st["not_measurable"] = st["refusal_rate_both"] > NOT_MEASURABLE_REFUSAL_SHARE
     cfg = {
         "protocol": FALLBACK_PROTOCOL,
+        "prompt_cut": PROMPT_CUT,
         "reader": FALLBACK_READER,
         "primary": MODEL,
         "fallback": FALLBACK_MODEL,

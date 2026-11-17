@@ -167,6 +167,51 @@ def default_dst(run_dir: Path) -> Path:
     return FROZEN
 
 
+def _require_cut(source: Path | None) -> None:
+    """An Opus prompt-only run built before the reply-free cut (or under an older cut) never
+    overwrites a floor (plan 0070); rebuild it with ``stage=build`` and re-ask."""
+    if source is None:
+        return
+    cfg = json.loads(Path(source).read_text(encoding="utf-8"))
+    protocol = str(cfg.get("protocol") or "")
+    if protocol == PO_FALLBACK_SONNET5:
+        # the 2026-10-31 Sonnet 5 fallback run is frozen history (its jailbreak / introspection
+        # inputs held reply text): never written again, whatever its config says
+        raise ValueError(f"freeze: {source} is a {PO_FALLBACK_SONNET5} run: frozen history only")
+    if not protocol.startswith(PO_OPUS):  # every po-opus-v1* run needs the current cut
+        return
+    from wsbench.baselines.prompt_only_opus import PROMPT_CUT
+
+    if cfg.get("prompt_cut") != PROMPT_CUT:
+        raise ValueError(
+            f"freeze: {source} has prompt_cut={cfg.get('prompt_cut')!r}, not {PROMPT_CUT!r}: its "
+            "prompt-only input may hold reply text; rebuild and re-ask"
+        )
+
+
+def _never_downgrade(
+    frozen: dict[str, Any], merged: dict[str, Any], cfg: dict[str, Any], run_dir: Path, dst: Path
+) -> None:
+    """A run whose config does not carry the current ``prompt_cut`` (no ``source=`` at all, or
+    the run config of another reader) never replaces an entry that does (plan 0070, review of
+    #350): without the run config ``freeze`` cannot tell an old-cut run from a current one, and
+    the unstamped entry it would write still draws beside live rows."""
+    from wsbench.baselines.prompt_only_opus import PROMPT_CUT
+
+    if cfg.get("prompt_cut") == PROMPT_CUT:
+        return
+    stamped = sorted(
+        f for f in frozen if isinstance(merged.get(f), dict) and merged[f].get("prompt_cut")
+    )
+    if stamped:
+        raise ValueError(
+            f"freeze: {dst} holds prompt_cut-stamped floors of {stamped}; {run_dir} comes with "
+            f"no run config stamped prompt_cut={PROMPT_CUT!r} and would replace them with "
+            "unstamped entries. Pass source=<the run's readouts/run_config.json> (built on the "
+            "current cut)"
+        )
+
+
 def freeze(
     run_dir: Path,
     dst: Path | None = None,
@@ -183,7 +228,11 @@ def freeze(
     the checks above; summary results go to ``FROZEN_SUMMARY`` (``dst`` overrides either), each
     entry also recording ``aggregate``, ``summarizer`` (:func:`summarizer_key`) and its
     ``instrument`` = the summary ``prompt_version`` as run. A ``run_dir`` mixing modes is
-    refused."""
+    refused. Plan 0070: a ``po-opus-v1*`` run whose ``source`` lacks the current ``prompt_cut``,
+    or any legacy Sonnet 5 fallback run, is refused before anything is read; a run given without
+    ``source`` (or with another reader's) is frozen as before, except that it never replaces an
+    entry of ``dst`` that carries ``prompt_cut`` (:func:`_never_downgrade`)."""
+    _require_cut(source)
     versions = instrument_versions()
     frozen: dict[str, Any] = {}
     paths = sorted(run_dir.glob("*/results.json"))
@@ -286,6 +335,7 @@ def freeze(
     if protocol == PO_OPUS and summary and Path(dst).resolve() == FROZEN_SUMMARY.resolve():
         archive_qwen_summary()
     merged = json.loads(dst.read_text(encoding="utf-8")) if dst.exists() else {}
+    _never_downgrade(frozen, merged, cfg, run_dir, dst)
     if protocol == PO_OPUS:
         _po_opus_entries(frozen, cfg)
         # the entries of another reader (stock Qwen; archived above) are never kept beside the
@@ -449,6 +499,8 @@ def _po_opus_entries(frozen: dict[str, Any], cfg: dict[str, Any]) -> None:
             label=f"Opus 5.5 ({n_ref} refused)",
             not_measurable=share > NOT_MEASURABLE_REFUSAL_SHARE,
         )
+        if cfg.get("prompt_cut"):  # plan 0070: the reply-free input revision
+            e["prompt_cut"] = cfg["prompt_cut"]
         ff = (cfg.get("family_framing") or {}).get(fam)
         if ff:  # a per-family reader framing (prompt_only_opus.FAMILY_FRAMING)
             e.update(framing=ff["framing"], template_sha=ff["template_sha"])
@@ -488,6 +540,8 @@ def _po_fallback_entries(frozen: dict[str, Any], cfg: dict[str, Any], prior: dic
             label=f"Opus 5.5 + {PO_FALLBACKS[proto]} fallback ({len(both)} refused by both)",
             not_measurable=share > NOT_MEASURABLE_REFUSAL_SHARE,
         )
+        if cfg.get("prompt_cut"):
+            e["prompt_cut"] = cfg["prompt_cut"]
         old = prior.get(fam)
         if (
             isinstance(old, dict)

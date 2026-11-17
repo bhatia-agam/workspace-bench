@@ -143,7 +143,10 @@ campaign: a dash in their rows means "not run", not "a run in progress".
 
 The final O-lens run was judged in summary mode (the default), all 11 layers and each single
 layer. The headline does not clear the prompt-only floor: the Opus reader of the prompt alone
-scores 0.582 and +0.121 over its own distractor rate, against the lens's 0.357 / +0.087. The two control arms are prompt variants of this plan
+scores 0.582 and +0.121 over its own distractor rate, against the lens's 0.357 / +0.087
+(that campaign reader's input still held the dictated sentence, prefilled in the assistant turn;
+re-measured on the reply-free input, plan 0070, 2026-11-17: 0.592 [0.500, 0.684], +0.103 over a
+distractor rate of 0.489, the floor of record). The two control arms are prompt variants of this plan
 (`model_specific_directed_modulation/controls.py`: same ids, render, carrier, positions and
 layers; only the user turn changes), so they cannot carry this family's `plan_sha`: they are
 produced sidecar-less (`merge --sidecar none --out-arm s3d-rl600-dmo-<arm>`), judged with
