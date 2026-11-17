@@ -433,6 +433,13 @@ each family, only while the floor's stamp matches the row's instrument (summary 
 digest settings and judge). Each prompt-only cell carries its reader and refusal label, e.g.
 `0.892 [Opus 5.5 + Sonnet 5 fallback; Opus refused 19%, both 0/93; Opus alone 0.933]`; a floor
 with more than 20% of its ids refused by every reader prints `not measurable (NN% refused)`.
+A third floor, **logit lens L63** (plan 0071 (logit-lens floor), `evals/baselines/logit_lens.json`, protocol
+`logit-lens-L63-v1`): the bench's own `logit_lens` method read at the final layer (63 of 64, the
+model's own next-token distribution) and judged by each family's summary instrument
+(`layers=63`), drawn beside a registered-bank summary row that ran its instrument (never beside an adapted
+subject's row); it never enters the macro
+(refrozen 2026-11-17 on main's instruments: full set 0.121 over 29 families, strict ATI 0.046
+over 7; `evals/baselines/README.md`).
 
 **Anti-text-inversion subset.** `anti_text_inversion=True` on `judge` / `run` scores each family
 only on the items a reader of the prompt text (no activation) cannot answer. Four readers are

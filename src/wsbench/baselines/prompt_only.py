@@ -167,6 +167,53 @@ def default_dst(run_dir: Path) -> Path:
     return FROZEN
 
 
+def entry_of(r: Any, summary: bool) -> dict[str, Any]:
+    """The frozen floor entry of one judged run ``r`` (a ``FamilyResult``): its rate, CI, counts,
+    instrument stamp and decided ids; a summary run also records ``aggregate`` and its digest
+    settings. Shared by :func:`freeze` and ``logit_lens.freeze``."""
+    return {
+        "rate": r.value,
+        "saturated": r.family in SATURATED,
+        "ci95": list(r.ci95) if r.ci95 else None,
+        "metric": r.metric,
+        "higher_is_better": r.higher_is_better,
+        "n_items": r.n_items,
+        "n_items_decided": r.extras.get("n_items_decided"),
+        "counts": {
+            k: r.counts.get(k)
+            for k in (
+                "n_expected_cells",
+                "n_missing_cells",
+                "n_unjudged_cells",
+                "n_empty_cells",
+            )
+        },
+        "judge_model": r.config.get("judge_model"),
+        # plan 0032 §2.11.7: one floor serves full and lite rows (and every layer config)
+        # a native floor is read back against the family's (registered) stamp, so a re-stamped
+        # adapted row (plan 0072 0.2) stores its registered one; a summary floor keeps the row's
+        "instrument": _strip_reads(
+            str(
+                (None if summary else r.config.get("registered_prompt_version"))
+                or r.config.get("prompt_version")
+                or ""
+            )
+        ),
+        "layers_judged": r.config.get("layers_judged") or r.config.get("layers"),
+        "complete": r.complete,
+        **({"aggregate": "summary", "summarizer": summarizer_key(r.config)} if summary else {}),
+        # audit F3: the ids decided (lens rows draw the floor on the ids both decided) and
+        # the ids whose digest was never served (they count toward the refusal share)
+        "decided": decided_outcomes(r.rows, r.n_items),
+        "digest_unserved": sorted(
+            str(row.get("id", row.get("item")))
+            for row in r.rows
+            if row.get("summary_state") == "unsummarized"
+        ),
+        "written": dt.datetime.now(dt.UTC).isoformat(timespec="seconds"),
+    }
+
+
 def _require_cut(source: Path | None) -> None:
     """An Opus prompt-only run built before the reply-free cut (or under an older cut) never
     overwrites a floor (plan 0070); rebuild it with ``stage=build`` and re-ask."""
@@ -287,47 +334,7 @@ def freeze(
                 f"{r.config.get('prompt_version')!r}, the family's instrument is "
                 f"{versions.get(r.family)!r}; re-judge first"
             )
-        frozen[r.family] = {
-            "rate": r.value,
-            "saturated": r.family in SATURATED,
-            "ci95": list(r.ci95) if r.ci95 else None,
-            "metric": r.metric,
-            "higher_is_better": r.higher_is_better,
-            "n_items": r.n_items,
-            "n_items_decided": r.extras.get("n_items_decided"),
-            "counts": {
-                k: r.counts.get(k)
-                for k in (
-                    "n_expected_cells",
-                    "n_missing_cells",
-                    "n_unjudged_cells",
-                    "n_empty_cells",
-                )
-            },
-            "judge_model": r.config.get("judge_model"),
-            # plan 0032 §2.11.7: one floor serves full and lite rows (and every layer config)
-            # a native floor is read back against the family's (registered) stamp, so a re-stamped
-            # adapted row (plan 0072 0.2) stores its registered one; a summary floor keeps the row's
-            "instrument": _strip_reads(
-                str(
-                    (None if summary else r.config.get("registered_prompt_version"))
-                    or r.config.get("prompt_version")
-                    or ""
-                )
-            ),
-            "layers_judged": r.config.get("layers_judged") or r.config.get("layers"),
-            "complete": r.complete,
-            **({"aggregate": "summary", "summarizer": summarizer_key(r.config)} if summary else {}),
-            # audit F3: the ids decided (lens rows draw the floor on the ids both decided) and
-            # the ids whose digest was never served (they count toward the refusal share)
-            "decided": decided_outcomes(r.rows, r.n_items),
-            "digest_unserved": sorted(
-                str(row.get("id", row.get("item")))
-                for row in r.rows
-                if row.get("summary_state") == "unsummarized"
-            ),
-            "written": dt.datetime.now(dt.UTC).isoformat(timespec="seconds"),
-        }
+        frozen[r.family] = entry_of(r, summary)
     if not frozen:
         raise ValueError(f"freeze: no <family>/results.json under {run_dir}")
     cfg = json.loads(Path(source).read_text(encoding="utf-8")) if source is not None else {}

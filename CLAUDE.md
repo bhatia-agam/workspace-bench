@@ -173,6 +173,24 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   floors whose input changed (basic_readout, the three directed-modulation families,
   introspection, jailbreak_recognition) were re-measured on the refreeze instruments
   (2026-11-17) and carry `prompt_cut`; every other entry is unchanged (input byte-identical).
+  `logit_lens` (plan 0071 (logit-lens floor), not main's ATI plan of the same number): the frozen logit-lens final-layer (L63) floor `evals/baselines/logit_lens.json`
+  (summary prompt-only entry schema + `protocol` + `ati`), written by `wsbench freeze
+  kind=logit_lens` from `layers=63` summary runs (refused otherwise; registered banks only) and
+  drawn as the report's third column by the summary prompt-only row-match rule; never a gate.
+  Refrozen 2026-11-17 on main's instruments (29 families, raw mean 0.121; strict ATI 0.046 over
+  the 7 `ati-subset-v2` families with an entry; model_multihop has none). An entry is tied to its
+  family's summary instrument, digest settings, judge model and read plan:
+  `tests/test_logit_lens_floor.py` (`test_every_committed_entry_matches_its_live_row`,
+  `..._is_on_the_registered_plan`) fails when any of them moves, so a PR that moves one re-judges
+  from the L63 readouts and re-freezes that entry (readouts of an older plan only through the
+  bank's recorded drop-only `plan_lineage`, as `reads` guard (iii), and only when the judged
+  run's `config.plan_lineage` records that step). The live instrument is the judge's own FULL
+  stamp (`logit_lens.live_config`: a call-free dry run on an empty readouts file), never a
+  prefix match; `freeze` also refuses a dry run and a `src` that leaves existing entries in
+  place (`partial=True` keeps them under `_source.kept_from`). The floor is Qwen3.6-27B's
+  activations: `logit_lens.on_registered_bank` keeps it off adapted rows (`$WSB_BANK_ROOT` at
+  report time, `config.bank_root` stamped by `runner.stamp_adapted_bank`, or
+  `config.registered_prompt_version`); prompt-only floors are unaffected.
   `text_inversion` builds the anti-text-inversion subset (`evals/baselines/anti_text_inversion.json`,
   plan 0019 panel gate, which replaced plan 0014's Opus-only gate): Qwen3.6-27B + the frontier
   group (Claude slot opus/sonnet, `openai/gpt-6-astra`, `google/gemini-4-argon`) x 3 draws, each

@@ -254,7 +254,12 @@ def adapted_bank_stamp(family: str, pv: str) -> str:
 def stamp_adapted_bank(family: str, result: FamilyResult) -> None:
     """``adapted_bank_stamp`` on the result's stamps (``STAMP_KEYS`` of ``config``). A rewritten
     ``prompt_version`` keeps the registered one in ``config.registered_prompt_version``, which
-    ``results.floor_applies`` compares instead (the floor column is unchanged by the rewrite)."""
+    ``results.floor_applies`` compares instead (the floor column is unchanged by the rewrite).
+    Under a root every result also records ``config.bank_root`` (the root's directory name), so
+    a row says which subject's bank it was judged on (the logit-lens floor of plan 0071
+    (logit-lens floor) is Qwen3.6-27B's and is never drawn beside such a row)."""
+    if root := os.environ.get(registry.BANK_ROOT_ENV):
+        result.config["bank_root"] = Path(root).name
     for k in STAMP_KEYS:
         v = result.config.get(k)
         if isinstance(v, str) and (new := adapted_bank_stamp(family, v)) != v:
