@@ -1,0 +1,362 @@
+{
+ "version": "adapt-qwen3.6-35b-a3b",
+ "note": "adapted-only items' same-topic distractors the MC builder dropped (adapt mc); kept for reference, unused since norival-v1 (the judge reads no hidden rivals)",
+ "items": {
+  "basic-au-t1-w100c0-brh-ent-extra-chromosome-21": {
+   "readout": [
+    "Patau syndrome",
+    "Turner syndrome",
+    "Klinefelter syndrome"
+   ]
+  },
+  "basic-au-t1-w100c0-brh-ent-first-moonwalker": {
+   "readout": [
+    "Buzz Aldrin",
+    "Michael Collins",
+    "John Glenn",
+    "Alan Shepard"
+   ]
+  },
+  "basic-au-t1-w100c0-brh-ent-leavening-nahco3": {
+   "readout": [
+    "sodium carbonate",
+    "potassium bicarbonate",
+    "calcium carbonate",
+    "ammonium bicarbonate"
+   ]
+  },
+  "basic-au-t1-w100c0-brh-ent-leonidas-last-stand": {
+   "readout": [
+    "Battle of Artemisium"
+   ]
+  },
+  "basic-au-t1-w100c0-brh-ent-mona-lisa-painter": {
+   "readout": [
+    "Michelangelo Buonarroti",
+    "Sandro Botticelli",
+    "Raffaello Sanzio",
+    "Andrea del Verrocchio"
+   ]
+  },
+  "basic-au-t1-w100c0-brh-ent-norman-conquest-clash": {
+   "readout": [
+    "Battle of Stamford Bridge",
+    "Battle of Fulford",
+    "Battle of Bannockburn"
+   ]
+  },
+  "basic-au-t1-w100c0-brh-ent-odourless-boiler-gas": {
+   "readout": [
+    "carbon dioxide"
+   ]
+  },
+  "basic-au-t1-w100c0-brh-ent-two-science-nobels": {
+   "readout": [
+    "Albert Michelson",
+    "Joseph Rotblat",
+    "Leopold Infeld",
+    "Marian Smoluchowski"
+   ]
+  },
+  "basic-au-t1-w100c1-brh-ent-motor-vocal-tics": {
+   "readout": [
+    "Asperger syndrome",
+    "Angelman syndrome"
+   ]
+  },
+  "basic-au-t1-w100c1-brh-ent-nebuchadnezzar-wonder": {
+   "readout": [
+    "Mausoleum at Halicarnassus"
+   ]
+  },
+  "basic-au-t1-w100c1-brh-ent-principia-author": {
+   "readout": [
+    "Robert Hooke",
+    "Edmond Halley",
+    "Christiaan Huygens"
+   ]
+  },
+  "basic-au-t1-w100c1-brh-ent-russian-royal-line-1613": {
+   "readout": [
+    "House of Rurik",
+    "House of Godunov",
+    "House of Shuysky",
+    "House of Obolensky"
+   ]
+  },
+  "basic-au-t1-w100c1-brh-ent-siren-pitch-change": {
+   "readout": [
+    "Compton effect",
+    "Zeeman effect",
+    "Raman effect",
+    "Hall effect"
+   ]
+  },
+  "basic-au-t1-w100c1-brh-ent-spain-morocco-channel": {
+   "readout": [
+    "Strait of Bonifacio",
+    "Strait of Otranto",
+    "Strait of Sicily"
+   ]
+  },
+  "basic-au-t1-w100c1-brh-ent-spring-proportional-law": {
+   "readout": [
+    "Charles's law",
+    "Pascal's law"
+   ]
+  },
+  "basic-au-t1-w100c2-brh-ent-alzheimers-disease": {
+   "readout": [
+    "Huntington's disease",
+    "Pick's disease",
+    "Creutzfeldt–Jakob disease"
+   ]
+  },
+  "basic-au-t1-w100c2-brh-ent-hydrochloric-acid": {
+   "readout": [
+    "hydrofluoric acid",
+    "hydrobromic acid"
+   ]
+  },
+  "basic-au-t1-w101c0-brh-ent-charles-law": {
+   "readout": [
+    "Henry's law",
+    "Graham's law"
+   ]
+  },
+  "basic-au-t1-w101c0-brh-ent-fibonacci-sequence": {
+   "readout": [
+    "Lucas sequence",
+    "Padovan sequence",
+    "Pell sequence",
+    "Collatz sequence"
+   ]
+  },
+  "basic-au-t1-w101c0-brh-ent-house-of-habsburg": {
+   "readout": [
+    "House of Wittelsbach",
+    "House of Hohenzollern",
+    "House of Luxembourg",
+    "House of Bourbon"
+   ]
+  },
+  "basic-au-t1-w101c0-brh-ent-nitrous-oxide": {
+   "readout": [
+    "sulfur dioxide"
+   ]
+  },
+  "basic-au-t1-w101c0-brh-ent-parkinsons-disease": {
+   "readout": [
+    "Huntington's disease",
+    "Creutzfeldt-Jakob disease",
+    "Lou Gehrig's disease"
+   ]
+  },
+  "basic-au-t1-w101c1-brh-ent-coulombs-law": {
+   "readout": [
+    "Faraday's law",
+    "Lenz's law"
+   ]
+  },
+  "basic-au-t1-w101c1-brh-ent-heisenberg-uncertainty": {
+   "readout": [
+    "Hamilton's principle",
+    "Mach's principle"
+   ]
+  },
+  "basic-au-t1-w101c1-brh-ent-klinefelter-syndrome": {
+   "readout": [
+    "Fragile X syndrome"
+   ]
+  },
+  "basic-au-t1-w101c1-brh-ent-sydney-opera-house": {
+   "readout": [
+    "Metropolitan Opera House",
+    "Royal Opera House",
+    "Oslo Opera House",
+    "Copenhagen Opera House"
+   ]
+  },
+  "basic-au-t1-w101c2-brh-ent-gregor-mendel": {
+   "readout": [
+    "Hugo de Vries",
+    "Carl Correns",
+    "Erich von Tschermak",
+    "William Bateson"
+   ]
+  },
+  "basic-au-t1-w101c2-brh-ent-hydrogen-peroxide": {
+   "readout": [
+    "sodium hypochlorite",
+    "potassium permanganate",
+    "calcium hypochlorite",
+    "silver nitrate"
+   ]
+  },
+  "basic-au-t1-w101c2-brh-ent-le-chatelier": {
+   "readout": [
+    "Pauli exclusion principle",
+    "Hess's law",
+    "Henry's law"
+   ]
+  },
+  "basic-au-t1-w101c2-brh-ent-turner-syndrome": {
+   "readout": [
+    "Noonan syndrome",
+    "Williams syndrome"
+   ]
+  },
+  "basic-au-t1-w102c0-brh-ent-avogadro-equal-volumes": {
+   "readout": [
+    "Henry's law"
+   ]
+  },
+  "basic-au-t1-w102c0-brh-ent-crohn-bowel": {
+   "readout": [
+    "Whipple's disease",
+    "Hirschsprung's disease",
+    "Addison's disease",
+    "Graves' disease"
+   ]
+  },
+  "basic-au-t1-w103c0-brh-ent-copernicus": {
+   "readout": [
+    "Tycho Brahe",
+    "Giordano Bruno",
+    "Georg von Peuerbach"
+   ]
+  },
+  "basic-au-t1-w103c0-brh-ent-graves-disease": {
+   "readout": [
+    "Hashimoto's disease",
+    "Paget's disease"
+   ]
+  },
+  "basic-au-t1-w104c0-brh-ent-addisons-disease": {
+   "readout": [
+    "Cushing's disease",
+    "Paget's disease",
+    "Bright's disease",
+    "Wilson's disease"
+   ]
+  },
+  "basic-au-t1-w104c0-brh-ent-faradays-law": {
+   "readout": [
+    "Ampère's law",
+    "Lenz's law",
+    "Joule's law"
+   ]
+  },
+  "basic-au-t1-w105c0-brh-ent-celiac-disease": {
+   "readout": [
+    "ulcerative colitis",
+    "Whipple's disease",
+    "lactose intolerance",
+    "Hirschsprung's disease"
+   ]
+  },
+  "basic-au-t1-w105c0-brh-ent-lake-victoria": {
+   "readout": [
+    "Lake Tanganyika",
+    "Lake Malawi",
+    "Lake Albert"
+   ]
+  },
+  "basic-au-t1-w106c0-brh-ent-hno3-compound": {
+   "readout": [
+    "nitrous acid",
+    "perchloric acid"
+   ]
+  },
+  "basic-au-t1-w106c0-brh-ent-manhattan-1931-skyscraper": {
+   "readout": []
+  },
+  "basic-au-t1-w106c0-brh-ent-menlo-park-phonograph": {
+   "readout": [
+    "George Westinghouse",
+    "Henry Ford",
+    "Benjamin Franklin"
+   ]
+  },
+  "basic-au-t1-w106c0-brh-ent-myelin-autoimmune-disease": {
+   "readout": [
+    "myasthenia gravis",
+    "amyotrophic lateral sclerosis",
+    "transverse myelitis",
+    "neuromyelitis optica"
+   ]
+  },
+  "basic-au-t1-w107c0-brh-ent-cranial-nerve-seven-paralysis": {
+   "readout": [
+    "Horner's syndrome",
+    "Ramsay Hunt syndrome",
+    "Guillain-Barré syndrome",
+    "Möbius syndrome"
+   ]
+  },
+  "basic-au-t1-w107c0-brh-ent-household-bleach-salt": {
+   "readout": [
+    "sodium chlorate",
+    "potassium permanganate",
+    "sodium percarbonate"
+   ]
+  },
+  "basic-au-t1-w107c0-brh-ent-three-gorges-waterway": {
+   "readout": [
+    "Pearl River",
+    "Mekong River",
+    "Amur River"
+   ]
+  },
+  "basic-au-t1-w107c0-brh-ent-transistor-doubling-observation": {
+   "readout": [
+    "Amdahl's law",
+    "Metcalfe's law",
+    "Kryder's law",
+    "Wirth's law"
+   ]
+  },
+  "basic-au-t1-w107c0-brh-ent-vinegar-carboxylic-compound": {
+   "readout": [
+    "propionic acid"
+   ]
+  },
+  "basic-au-t1-w107c1-brh-ent-bletchley-codebreaker": {
+   "readout": [
+    "Max Newman",
+    "Bill Tutte",
+    "Gordon Welchman",
+    "John Littlewood"
+   ]
+  },
+  "basic-au-t1-w107c1-brh-ent-crescent-red-corpuscles": {
+   "readout": [
+    "pernicious anemia",
+    "aplastic anemia",
+    "hemolytic anemia"
+   ]
+  },
+  "basic-au-t1-w107c1-brh-ent-kno3-gunpowder-oxidizer": {
+   "readout": [
+    "sodium nitrate",
+    "ammonium nitrate",
+    "potassium permanganate"
+   ]
+  },
+  "basic-au-t1-w107c1-brh-ent-oldest-ancient-wonder": {
+   "readout": [
+    "Pyramid of Khafre",
+    "Pyramid of Menkaure",
+    "Bent Pyramid",
+    "Pyramid of Djoser"
+   ]
+  },
+  "basic-au-t1-w107c2-brh-ent-gas-solubility-pressure": {
+   "readout": [
+    "Graham's law",
+    "Fick's law",
+    "Gay-Lussac's law"
+   ]
+  }
+ }
+}

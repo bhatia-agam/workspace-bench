@@ -412,58 +412,6 @@
   }
  },
  {
-  "scene_key": "Sasha-Skyler-Kit-therapist-sibling",
-  "stimulus": "Sasha's therapist is Skyler. Skyler's sibling is Kit. In other words, Kit is Sasha's",
-  "names": [
-   "Sasha",
-   "Skyler",
-   "Kit"
-  ],
-  "hop1": "therapist",
-  "hop2": "sibling",
-  "gold": "therapist's sibling",
-  "gold_alt": "sibling of Sasha's therapist",
-  "flipped": "sibling's therapist",
-  "id": "relational-t0-s0-0008-a",
-  "scene": "relational-t0-s0-0008",
-  "adapt": {
-   "origin": "generated",
-   "tier": "t0",
-   "knobs": {},
-   "change": "original rules (13 professional x 5 kinship relations)",
-   "gate": {
-    "rate": 1.0,
-    "pass": true
-   }
-  }
- },
- {
-  "scene_key": "Sasha-Skyler-Kit-therapist-sibling",
-  "stimulus": "Sasha's sibling is Skyler. Skyler's therapist is Kit. In other words, Kit is Sasha's",
-  "names": [
-   "Sasha",
-   "Skyler",
-   "Kit"
-  ],
-  "hop1": "sibling",
-  "hop2": "therapist",
-  "gold": "sibling's therapist",
-  "gold_alt": "therapist of Sasha's sibling",
-  "flipped": "therapist's sibling",
-  "id": "relational-t0-s0-0008-b",
-  "scene": "relational-t0-s0-0008",
-  "adapt": {
-   "origin": "generated",
-   "tier": "t0",
-   "knobs": {},
-   "change": "original rules (13 professional x 5 kinship relations)",
-   "gate": {
-    "rate": 1.0,
-    "pass": true
-   }
-  }
- },
- {
   "scene_key": "Alex-Taylor-Shiloh-dentist-sibling",
   "stimulus": "Alex's dentist is Taylor. Taylor's sibling is Shiloh. In other words, Shiloh is Alex's",
   "names": [
@@ -504,58 +452,6 @@
   "flipped": "dentist's sibling",
   "id": "relational-t0-s0-0015-b",
   "scene": "relational-t0-s0-0015",
-  "adapt": {
-   "origin": "generated",
-   "tier": "t0",
-   "knobs": {},
-   "change": "original rules (13 professional x 5 kinship relations)",
-   "gate": {
-    "rate": 1.0,
-    "pass": true
-   }
-  }
- },
- {
-  "scene_key": "Elliot-Sasha-Casey-tutor-sibling",
-  "stimulus": "Elliot's tutor is Sasha. Sasha's sibling is Casey. In other words, Casey is Elliot's",
-  "names": [
-   "Elliot",
-   "Sasha",
-   "Casey"
-  ],
-  "hop1": "tutor",
-  "hop2": "sibling",
-  "gold": "tutor's sibling",
-  "gold_alt": "sibling of Elliot's tutor",
-  "flipped": "sibling's tutor",
-  "id": "relational-t0-s0-0024-a",
-  "scene": "relational-t0-s0-0024",
-  "adapt": {
-   "origin": "generated",
-   "tier": "t0",
-   "knobs": {},
-   "change": "original rules (13 professional x 5 kinship relations)",
-   "gate": {
-    "rate": 0.8,
-    "pass": true
-   }
-  }
- },
- {
-  "scene_key": "Elliot-Sasha-Casey-tutor-sibling",
-  "stimulus": "Elliot's sibling is Sasha. Sasha's tutor is Casey. In other words, Casey is Elliot's",
-  "names": [
-   "Elliot",
-   "Sasha",
-   "Casey"
-  ],
-  "hop1": "sibling",
-  "hop2": "tutor",
-  "gold": "sibling's tutor",
-  "gold_alt": "tutor of Elliot's sibling",
-  "flipped": "tutor's sibling",
-  "id": "relational-t0-s0-0024-b",
-  "scene": "relational-t0-s0-0024",
   "adapt": {
    "origin": "generated",
    "tier": "t0",
@@ -620,58 +516,6 @@
   }
  },
  {
-  "scene_key": "Emery-Lennox-Jules-coach-spouse",
-  "stimulus": "Emery's coach is Lennox. Lennox's spouse is Jules. In other words, Jules is Emery's",
-  "names": [
-   "Emery",
-   "Lennox",
-   "Jules"
-  ],
-  "hop1": "coach",
-  "hop2": "spouse",
-  "gold": "coach's spouse",
-  "gold_alt": "spouse of Emery's coach",
-  "flipped": "spouse's coach",
-  "id": "relational-t0-s0-0044-a",
-  "scene": "relational-t0-s0-0044",
-  "adapt": {
-   "origin": "generated",
-   "tier": "t0",
-   "knobs": {},
-   "change": "original rules (13 professional x 5 kinship relations)",
-   "gate": {
-    "rate": 0.8,
-    "pass": true
-   }
-  }
- },
- {
-  "scene_key": "Emery-Lennox-Jules-coach-spouse",
-  "stimulus": "Emery's spouse is Lennox. Lennox's coach is Jules. In other words, Jules is Emery's",
-  "names": [
-   "Emery",
-   "Lennox",
-   "Jules"
-  ],
-  "hop1": "spouse",
-  "hop2": "coach",
-  "gold": "spouse's coach",
-  "gold_alt": "coach of Emery's spouse",
-  "flipped": "coach's spouse",
-  "id": "relational-t0-s0-0044-b",
-  "scene": "relational-t0-s0-0044",
-  "adapt": {
-   "origin": "generated",
-   "tier": "t0",
-   "knobs": {},
-   "change": "original rules (13 professional x 5 kinship relations)",
-   "gate": {
-    "rate": 1.0,
-    "pass": true
-   }
-  }
- },
- {
   "scene_key": "Kai-Riley-Charlie-boss-child",
   "stimulus": "Kai's boss is Riley. Riley's child is Charlie. In other words, Charlie is Kai's",
   "names": [
@@ -712,58 +556,6 @@
   "flipped": "boss's child",
   "id": "relational-t0-s0-0049-b",
   "scene": "relational-t0-s0-0049",
-  "adapt": {
-   "origin": "generated",
-   "tier": "t0",
-   "knobs": {},
-   "change": "original rules (13 professional x 5 kinship relations)",
-   "gate": {
-    "rate": 0.9,
-    "pass": true
-   }
-  }
- },
- {
-  "scene_key": "Riley-Devon-Remy-tutor-spouse",
-  "stimulus": "Riley's tutor is Devon. Devon's spouse is Remy. In other words, Remy is Riley's",
-  "names": [
-   "Riley",
-   "Devon",
-   "Remy"
-  ],
-  "hop1": "tutor",
-  "hop2": "spouse",
-  "gold": "tutor's spouse",
-  "gold_alt": "spouse of Riley's tutor",
-  "flipped": "spouse's tutor",
-  "id": "relational-t0-s0-0051-a",
-  "scene": "relational-t0-s0-0051",
-  "adapt": {
-   "origin": "generated",
-   "tier": "t0",
-   "knobs": {},
-   "change": "original rules (13 professional x 5 kinship relations)",
-   "gate": {
-    "rate": 0.8,
-    "pass": true
-   }
-  }
- },
- {
-  "scene_key": "Riley-Devon-Remy-tutor-spouse",
-  "stimulus": "Riley's spouse is Devon. Devon's tutor is Remy. In other words, Remy is Riley's",
-  "names": [
-   "Riley",
-   "Devon",
-   "Remy"
-  ],
-  "hop1": "spouse",
-  "hop2": "tutor",
-  "gold": "spouse's tutor",
-  "gold_alt": "tutor of Riley's spouse",
-  "flipped": "tutor's spouse",
-  "id": "relational-t0-s0-0051-b",
-  "scene": "relational-t0-s0-0051",
   "adapt": {
    "origin": "generated",
    "tier": "t0",
@@ -880,6 +672,58 @@
   }
  },
  {
+  "scene_key": "Remy-Sawyer-Hayden-plumber-sibling",
+  "stimulus": "Remy's plumber is Sawyer. Sawyer's sibling is Hayden. In other words, Hayden is Remy's",
+  "names": [
+   "Remy",
+   "Sawyer",
+   "Hayden"
+  ],
+  "hop1": "plumber",
+  "hop2": "sibling",
+  "gold": "plumber's sibling",
+  "gold_alt": "sibling of Remy's plumber",
+  "flipped": "sibling's plumber",
+  "id": "relational-t0-s0-0081-a",
+  "scene": "relational-t0-s0-0081",
+  "adapt": {
+   "origin": "generated",
+   "tier": "t0",
+   "knobs": {},
+   "change": "original rules (13 professional x 5 kinship relations)",
+   "gate": {
+    "rate": 0.8,
+    "pass": true
+   }
+  }
+ },
+ {
+  "scene_key": "Remy-Sawyer-Hayden-plumber-sibling",
+  "stimulus": "Remy's sibling is Sawyer. Sawyer's plumber is Hayden. In other words, Hayden is Remy's",
+  "names": [
+   "Remy",
+   "Sawyer",
+   "Hayden"
+  ],
+  "hop1": "sibling",
+  "hop2": "plumber",
+  "gold": "sibling's plumber",
+  "gold_alt": "plumber of Remy's sibling",
+  "flipped": "plumber's sibling",
+  "id": "relational-t0-s0-0081-b",
+  "scene": "relational-t0-s0-0081",
+  "adapt": {
+   "origin": "generated",
+   "tier": "t0",
+   "knobs": {},
+   "change": "original rules (13 professional x 5 kinship relations)",
+   "gate": {
+    "rate": 0.9,
+    "pass": true
+   }
+  }
+ },
+ {
   "scene_key": "Hayden-Jem-Denver-dentist-spouse",
   "stimulus": "Hayden's dentist is Jem. Jem's spouse is Denver. In other words, Denver is Hayden's",
   "names": [
@@ -927,58 +771,6 @@
    "change": "original rules (13 professional x 5 kinship relations)",
    "gate": {
     "rate": 0.9,
-    "pass": true
-   }
-  }
- },
- {
-  "scene_key": "Sasha-Gray-Drew-boss-cousin",
-  "stimulus": "Sasha's boss is Gray. Gray's cousin is Drew. In other words, Drew is Sasha's",
-  "names": [
-   "Sasha",
-   "Gray",
-   "Drew"
-  ],
-  "hop1": "boss",
-  "hop2": "cousin",
-  "gold": "boss's cousin",
-  "gold_alt": "cousin of Sasha's boss",
-  "flipped": "cousin's boss",
-  "id": "relational-t0-s0-0088-a",
-  "scene": "relational-t0-s0-0088",
-  "adapt": {
-   "origin": "generated",
-   "tier": "t0",
-   "knobs": {},
-   "change": "original rules (13 professional x 5 kinship relations)",
-   "gate": {
-    "rate": 0.9,
-    "pass": true
-   }
-  }
- },
- {
-  "scene_key": "Sasha-Gray-Drew-boss-cousin",
-  "stimulus": "Sasha's cousin is Gray. Gray's boss is Drew. In other words, Drew is Sasha's",
-  "names": [
-   "Sasha",
-   "Gray",
-   "Drew"
-  ],
-  "hop1": "cousin",
-  "hop2": "boss",
-  "gold": "cousin's boss",
-  "gold_alt": "boss of Sasha's cousin",
-  "flipped": "boss's cousin",
-  "id": "relational-t0-s0-0088-b",
-  "scene": "relational-t0-s0-0088",
-  "adapt": {
-   "origin": "generated",
-   "tier": "t0",
-   "knobs": {},
-   "change": "original rules (13 professional x 5 kinship relations)",
-   "gate": {
-    "rate": 1.0,
     "pass": true
    }
   }
@@ -1128,58 +920,6 @@
   "flipped": "landlord's child",
   "id": "relational-t0-s0-0104-b",
   "scene": "relational-t0-s0-0104",
-  "adapt": {
-   "origin": "generated",
-   "tier": "t0",
-   "knobs": {},
-   "change": "original rules (13 professional x 5 kinship relations)",
-   "gate": {
-    "rate": 0.9,
-    "pass": true
-   }
-  }
- },
- {
-  "scene_key": "Kai-Aubrey-Bellamy-boss-child",
-  "stimulus": "Kai's boss is Aubrey. Aubrey's child is Bellamy. In other words, Bellamy is Kai's",
-  "names": [
-   "Kai",
-   "Aubrey",
-   "Bellamy"
-  ],
-  "hop1": "boss",
-  "hop2": "child",
-  "gold": "boss's child",
-  "gold_alt": "child of Kai's boss",
-  "flipped": "child's boss",
-  "id": "relational-t0-s0-0122-a",
-  "scene": "relational-t0-s0-0122",
-  "adapt": {
-   "origin": "generated",
-   "tier": "t0",
-   "knobs": {},
-   "change": "original rules (13 professional x 5 kinship relations)",
-   "gate": {
-    "rate": 1.0,
-    "pass": true
-   }
-  }
- },
- {
-  "scene_key": "Kai-Aubrey-Bellamy-boss-child",
-  "stimulus": "Kai's child is Aubrey. Aubrey's boss is Bellamy. In other words, Bellamy is Kai's",
-  "names": [
-   "Kai",
-   "Aubrey",
-   "Bellamy"
-  ],
-  "hop1": "child",
-  "hop2": "boss",
-  "gold": "child's boss",
-  "gold_alt": "boss of Kai's child",
-  "flipped": "boss's child",
-  "id": "relational-t0-s0-0122-b",
-  "scene": "relational-t0-s0-0122",
   "adapt": {
    "origin": "generated",
    "tier": "t0",
@@ -1452,20 +1192,20 @@
   }
  },
  {
-  "scene_key": "Sam-Elliot-Sasha-boss-cousin",
-  "stimulus": "Sam's boss is Elliot. Elliot's cousin is Sasha. In other words, Sasha is Sam's",
+  "scene_key": "Jules-Avery-Blake-landlord-sibling",
+  "stimulus": "Jules's landlord is Avery. Avery's sibling is Blake. In other words, Blake is Jules's",
   "names": [
-   "Sam",
-   "Elliot",
-   "Sasha"
+   "Jules",
+   "Avery",
+   "Blake"
   ],
-  "hop1": "boss",
-  "hop2": "cousin",
-  "gold": "boss's cousin",
-  "gold_alt": "cousin of Sam's boss",
-  "flipped": "cousin's boss",
-  "id": "relational-t0-s1-0001-a",
-  "scene": "relational-t0-s1-0001",
+  "hop1": "landlord",
+  "hop2": "sibling",
+  "gold": "landlord's sibling",
+  "gold_alt": "sibling of Jules's landlord",
+  "flipped": "sibling's landlord",
+  "id": "relational-t0-s0-0171-a",
+  "scene": "relational-t0-s0-0171",
   "adapt": {
    "origin": "generated",
    "tier": "t0",
@@ -1478,20 +1218,20 @@
   }
  },
  {
-  "scene_key": "Sam-Elliot-Sasha-boss-cousin",
-  "stimulus": "Sam's cousin is Elliot. Elliot's boss is Sasha. In other words, Sasha is Sam's",
+  "scene_key": "Jules-Avery-Blake-landlord-sibling",
+  "stimulus": "Jules's sibling is Avery. Avery's landlord is Blake. In other words, Blake is Jules's",
   "names": [
-   "Sam",
-   "Elliot",
-   "Sasha"
+   "Jules",
+   "Avery",
+   "Blake"
   ],
-  "hop1": "cousin",
-  "hop2": "boss",
-  "gold": "cousin's boss",
-  "gold_alt": "boss of Sam's cousin",
-  "flipped": "boss's cousin",
-  "id": "relational-t0-s1-0001-b",
-  "scene": "relational-t0-s1-0001",
+  "hop1": "sibling",
+  "hop2": "landlord",
+  "gold": "sibling's landlord",
+  "gold_alt": "landlord of Jules's sibling",
+  "flipped": "landlord's sibling",
+  "id": "relational-t0-s0-0171-b",
+  "scene": "relational-t0-s0-0171",
   "adapt": {
    "origin": "generated",
    "tier": "t0",
@@ -1499,162 +1239,6 @@
    "change": "original rules (13 professional x 5 kinship relations)",
    "gate": {
     "rate": 0.9,
-    "pass": true
-   }
-  }
- },
- {
-  "scene_key": "Casey-Sawyer-Campbell-coach-spouse",
-  "stimulus": "Casey's coach is Sawyer. Sawyer's spouse is Campbell. In other words, Campbell is Casey's",
-  "names": [
-   "Casey",
-   "Sawyer",
-   "Campbell"
-  ],
-  "hop1": "coach",
-  "hop2": "spouse",
-  "gold": "coach's spouse",
-  "gold_alt": "spouse of Casey's coach",
-  "flipped": "spouse's coach",
-  "id": "relational-t0-s1-0004-a",
-  "scene": "relational-t0-s1-0004",
-  "adapt": {
-   "origin": "generated",
-   "tier": "t0",
-   "knobs": {},
-   "change": "original rules (13 professional x 5 kinship relations)",
-   "gate": {
-    "rate": 0.8,
-    "pass": true
-   }
-  }
- },
- {
-  "scene_key": "Casey-Sawyer-Campbell-coach-spouse",
-  "stimulus": "Casey's spouse is Sawyer. Sawyer's coach is Campbell. In other words, Campbell is Casey's",
-  "names": [
-   "Casey",
-   "Sawyer",
-   "Campbell"
-  ],
-  "hop1": "spouse",
-  "hop2": "coach",
-  "gold": "spouse's coach",
-  "gold_alt": "coach of Casey's spouse",
-  "flipped": "coach's spouse",
-  "id": "relational-t0-s1-0004-b",
-  "scene": "relational-t0-s1-0004",
-  "adapt": {
-   "origin": "generated",
-   "tier": "t0",
-   "knobs": {},
-   "change": "original rules (13 professional x 5 kinship relations)",
-   "gate": {
-    "rate": 0.9,
-    "pass": true
-   }
-  }
- },
- {
-  "scene_key": "Jordan-Rowan-Remy-tutor-child",
-  "stimulus": "Jordan's tutor is Rowan. Rowan's child is Remy. In other words, Remy is Jordan's",
-  "names": [
-   "Jordan",
-   "Rowan",
-   "Remy"
-  ],
-  "hop1": "tutor",
-  "hop2": "child",
-  "gold": "tutor's child",
-  "gold_alt": "child of Jordan's tutor",
-  "flipped": "child's tutor",
-  "id": "relational-t0-s1-0018-a",
-  "scene": "relational-t0-s1-0018",
-  "adapt": {
-   "origin": "generated",
-   "tier": "t0",
-   "knobs": {},
-   "change": "original rules (13 professional x 5 kinship relations)",
-   "gate": {
-    "rate": 0.8,
-    "pass": true
-   }
-  }
- },
- {
-  "scene_key": "Jordan-Rowan-Remy-tutor-child",
-  "stimulus": "Jordan's child is Rowan. Rowan's tutor is Remy. In other words, Remy is Jordan's",
-  "names": [
-   "Jordan",
-   "Rowan",
-   "Remy"
-  ],
-  "hop1": "child",
-  "hop2": "tutor",
-  "gold": "child's tutor",
-  "gold_alt": "tutor of Jordan's child",
-  "flipped": "tutor's child",
-  "id": "relational-t0-s1-0018-b",
-  "scene": "relational-t0-s1-0018",
-  "adapt": {
-   "origin": "generated",
-   "tier": "t0",
-   "knobs": {},
-   "change": "original rules (13 professional x 5 kinship relations)",
-   "gate": {
-    "rate": 1.0,
-    "pass": true
-   }
-  }
- },
- {
-  "scene_key": "Harper-Devon-Sam-coach-spouse",
-  "stimulus": "Harper's coach is Devon. Devon's spouse is Sam. In other words, Sam is Harper's",
-  "names": [
-   "Harper",
-   "Devon",
-   "Sam"
-  ],
-  "hop1": "coach",
-  "hop2": "spouse",
-  "gold": "coach's spouse",
-  "gold_alt": "spouse of Harper's coach",
-  "flipped": "spouse's coach",
-  "id": "relational-t0-s1-0019-a",
-  "scene": "relational-t0-s1-0019",
-  "adapt": {
-   "origin": "generated",
-   "tier": "t0",
-   "knobs": {},
-   "change": "original rules (13 professional x 5 kinship relations)",
-   "gate": {
-    "rate": 0.8,
-    "pass": true
-   }
-  }
- },
- {
-  "scene_key": "Harper-Devon-Sam-coach-spouse",
-  "stimulus": "Harper's spouse is Devon. Devon's coach is Sam. In other words, Sam is Harper's",
-  "names": [
-   "Harper",
-   "Devon",
-   "Sam"
-  ],
-  "hop1": "spouse",
-  "hop2": "coach",
-  "gold": "spouse's coach",
-  "gold_alt": "coach of Harper's spouse",
-  "flipped": "coach's spouse",
-  "id": "relational-t0-s1-0019-b",
-  "scene": "relational-t0-s1-0019",
-  "adapt": {
-   "origin": "generated",
-   "tier": "t0",
-   "knobs": {},
-   "change": "original rules (13 professional x 5 kinship relations)",
-   "gate": {
-    "rate": 1.0,
     "pass": true
    }
   }
@@ -1712,58 +1296,6 @@
   }
  },
  {
-  "scene_key": "Parker-Indigo-Jules-plumber-parent",
-  "stimulus": "Parker's plumber is Indigo. Indigo's parent is Jules. In other words, Jules is Parker's",
-  "names": [
-   "Parker",
-   "Indigo",
-   "Jules"
-  ],
-  "hop1": "plumber",
-  "hop2": "parent",
-  "gold": "plumber's parent",
-  "gold_alt": "parent of Parker's plumber",
-  "flipped": "parent's plumber",
-  "id": "relational-t0-s1-0033-a",
-  "scene": "relational-t0-s1-0033",
-  "adapt": {
-   "origin": "generated",
-   "tier": "t0",
-   "knobs": {},
-   "change": "original rules (13 professional x 5 kinship relations)",
-   "gate": {
-    "rate": 0.8,
-    "pass": true
-   }
-  }
- },
- {
-  "scene_key": "Parker-Indigo-Jules-plumber-parent",
-  "stimulus": "Parker's parent is Indigo. Indigo's plumber is Jules. In other words, Jules is Parker's",
-  "names": [
-   "Parker",
-   "Indigo",
-   "Jules"
-  ],
-  "hop1": "parent",
-  "hop2": "plumber",
-  "gold": "parent's plumber",
-  "gold_alt": "plumber of Parker's parent",
-  "flipped": "plumber's parent",
-  "id": "relational-t0-s1-0033-b",
-  "scene": "relational-t0-s1-0033",
-  "adapt": {
-   "origin": "generated",
-   "tier": "t0",
-   "knobs": {},
-   "change": "original rules (13 professional x 5 kinship relations)",
-   "gate": {
-    "rate": 1.0,
-    "pass": true
-   }
-  }
- },
- {
   "scene_key": "Gray-Lennox-Avery-landlord-cousin",
   "stimulus": "Gray's landlord is Lennox. Lennox's cousin is Avery. In other words, Avery is Gray's",
   "names": [
@@ -1804,110 +1336,6 @@
   "flipped": "landlord's cousin",
   "id": "relational-t0-s1-0036-b",
   "scene": "relational-t0-s1-0036",
-  "adapt": {
-   "origin": "generated",
-   "tier": "t0",
-   "knobs": {},
-   "change": "original rules (13 professional x 5 kinship relations)",
-   "gate": {
-    "rate": 1.0,
-    "pass": true
-   }
-  }
- },
- {
-  "scene_key": "Jules-Parker-Avery-boss-cousin",
-  "stimulus": "Jules's boss is Parker. Parker's cousin is Avery. In other words, Avery is Jules's",
-  "names": [
-   "Jules",
-   "Parker",
-   "Avery"
-  ],
-  "hop1": "boss",
-  "hop2": "cousin",
-  "gold": "boss's cousin",
-  "gold_alt": "cousin of Jules's boss",
-  "flipped": "cousin's boss",
-  "id": "relational-t0-s1-0070-a",
-  "scene": "relational-t0-s1-0070",
-  "adapt": {
-   "origin": "generated",
-   "tier": "t0",
-   "knobs": {},
-   "change": "original rules (13 professional x 5 kinship relations)",
-   "gate": {
-    "rate": 0.9,
-    "pass": true
-   }
-  }
- },
- {
-  "scene_key": "Jules-Parker-Avery-boss-cousin",
-  "stimulus": "Jules's cousin is Parker. Parker's boss is Avery. In other words, Avery is Jules's",
-  "names": [
-   "Jules",
-   "Parker",
-   "Avery"
-  ],
-  "hop1": "cousin",
-  "hop2": "boss",
-  "gold": "cousin's boss",
-  "gold_alt": "boss of Jules's cousin",
-  "flipped": "boss's cousin",
-  "id": "relational-t0-s1-0070-b",
-  "scene": "relational-t0-s1-0070",
-  "adapt": {
-   "origin": "generated",
-   "tier": "t0",
-   "knobs": {},
-   "change": "original rules (13 professional x 5 kinship relations)",
-   "gate": {
-    "rate": 1.0,
-    "pass": true
-   }
-  }
- },
- {
-  "scene_key": "Jules-Devon-Indigo-therapist-parent",
-  "stimulus": "Jules's therapist is Devon. Devon's parent is Indigo. In other words, Indigo is Jules's",
-  "names": [
-   "Jules",
-   "Devon",
-   "Indigo"
-  ],
-  "hop1": "therapist",
-  "hop2": "parent",
-  "gold": "therapist's parent",
-  "gold_alt": "parent of Jules's therapist",
-  "flipped": "parent's therapist",
-  "id": "relational-t0-s1-0074-a",
-  "scene": "relational-t0-s1-0074",
-  "adapt": {
-   "origin": "generated",
-   "tier": "t0",
-   "knobs": {},
-   "change": "original rules (13 professional x 5 kinship relations)",
-   "gate": {
-    "rate": 0.8,
-    "pass": true
-   }
-  }
- },
- {
-  "scene_key": "Jules-Devon-Indigo-therapist-parent",
-  "stimulus": "Jules's parent is Devon. Devon's therapist is Indigo. In other words, Indigo is Jules's",
-  "names": [
-   "Jules",
-   "Devon",
-   "Indigo"
-  ],
-  "hop1": "parent",
-  "hop2": "therapist",
-  "gold": "parent's therapist",
-  "gold_alt": "therapist of Jules's parent",
-  "flipped": "therapist's parent",
-  "id": "relational-t0-s1-0074-b",
-  "scene": "relational-t0-s1-0074",
   "adapt": {
    "origin": "generated",
    "tier": "t0",
@@ -1972,46 +1400,46 @@
   }
  },
  {
-  "scene_key": "Finley-Reese-Dakota-plumber-spouse",
-  "stimulus": "Finley's plumber is Reese. Reese's spouse is Dakota. In other words, Dakota is Finley's",
+  "scene_key": "Jules-Indigo-Morgan-doctor-spouse",
+  "stimulus": "Jules's doctor is Indigo. Indigo's spouse is Morgan. In other words, Morgan is Jules's",
   "names": [
-   "Finley",
-   "Reese",
-   "Dakota"
+   "Jules",
+   "Indigo",
+   "Morgan"
   ],
-  "hop1": "plumber",
+  "hop1": "doctor",
   "hop2": "spouse",
-  "gold": "plumber's spouse",
-  "gold_alt": "spouse of Finley's plumber",
-  "flipped": "spouse's plumber",
-  "id": "relational-t0-s1-0086-a",
-  "scene": "relational-t0-s1-0086",
+  "gold": "doctor's spouse",
+  "gold_alt": "spouse of Jules's doctor",
+  "flipped": "spouse's doctor",
+  "id": "relational-t0-s1-0095-a",
+  "scene": "relational-t0-s1-0095",
   "adapt": {
    "origin": "generated",
    "tier": "t0",
    "knobs": {},
    "change": "original rules (13 professional x 5 kinship relations)",
    "gate": {
-    "rate": 0.9,
+    "rate": 0.8,
     "pass": true
    }
   }
  },
  {
-  "scene_key": "Finley-Reese-Dakota-plumber-spouse",
-  "stimulus": "Finley's spouse is Reese. Reese's plumber is Dakota. In other words, Dakota is Finley's",
+  "scene_key": "Jules-Indigo-Morgan-doctor-spouse",
+  "stimulus": "Jules's spouse is Indigo. Indigo's doctor is Morgan. In other words, Morgan is Jules's",
   "names": [
-   "Finley",
-   "Reese",
-   "Dakota"
+   "Jules",
+   "Indigo",
+   "Morgan"
   ],
   "hop1": "spouse",
-  "hop2": "plumber",
-  "gold": "spouse's plumber",
-  "gold_alt": "plumber of Finley's spouse",
-  "flipped": "plumber's spouse",
-  "id": "relational-t0-s1-0086-b",
-  "scene": "relational-t0-s1-0086",
+  "hop2": "doctor",
+  "gold": "spouse's doctor",
+  "gold_alt": "doctor of Jules's spouse",
+  "flipped": "doctor's spouse",
+  "id": "relational-t0-s1-0095-b",
+  "scene": "relational-t0-s1-0095",
   "adapt": {
    "origin": "generated",
    "tier": "t0",
@@ -2076,20 +1504,46 @@
   }
  },
  {
-  "scene_key": "Hayden-Emery-Kai-boss-cousin",
-  "stimulus": "Hayden's boss is Emery. Emery's cousin is Kai. In other words, Kai is Hayden's",
+  "scene_key": "Finley-Ellis-Quinn-lawyer-spouse",
+  "stimulus": "Finley's lawyer is Ellis. Ellis's spouse is Quinn. In other words, Quinn is Finley's",
   "names": [
-   "Hayden",
-   "Emery",
-   "Kai"
+   "Finley",
+   "Ellis",
+   "Quinn"
   ],
-  "hop1": "boss",
-  "hop2": "cousin",
-  "gold": "boss's cousin",
-  "gold_alt": "cousin of Hayden's boss",
-  "flipped": "cousin's boss",
-  "id": "relational-t0-s1-0153-a",
-  "scene": "relational-t0-s1-0153",
+  "hop1": "lawyer",
+  "hop2": "spouse",
+  "gold": "lawyer's spouse",
+  "gold_alt": "spouse of Finley's lawyer",
+  "flipped": "spouse's lawyer",
+  "id": "relational-t0-s1-0104-a",
+  "scene": "relational-t0-s1-0104",
+  "adapt": {
+   "origin": "generated",
+   "tier": "t0",
+   "knobs": {},
+   "change": "original rules (13 professional x 5 kinship relations)",
+   "gate": {
+    "rate": 0.8,
+    "pass": true
+   }
+  }
+ },
+ {
+  "scene_key": "Finley-Ellis-Quinn-lawyer-spouse",
+  "stimulus": "Finley's spouse is Ellis. Ellis's lawyer is Quinn. In other words, Quinn is Finley's",
+  "names": [
+   "Finley",
+   "Ellis",
+   "Quinn"
+  ],
+  "hop1": "spouse",
+  "hop2": "lawyer",
+  "gold": "spouse's lawyer",
+  "gold_alt": "lawyer of Finley's spouse",
+  "flipped": "lawyer's spouse",
+  "id": "relational-t0-s1-0104-b",
+  "scene": "relational-t0-s1-0104",
   "adapt": {
    "origin": "generated",
    "tier": "t0",
@@ -2102,27 +1556,53 @@
   }
  },
  {
-  "scene_key": "Hayden-Emery-Kai-boss-cousin",
-  "stimulus": "Hayden's cousin is Emery. Emery's boss is Kai. In other words, Kai is Hayden's",
+  "scene_key": "Drew-Sasha-Kit-therapist-child",
+  "stimulus": "Drew's therapist is Sasha. Sasha's child is Kit. In other words, Kit is Drew's",
   "names": [
-   "Hayden",
-   "Emery",
-   "Kai"
+   "Drew",
+   "Sasha",
+   "Kit"
   ],
-  "hop1": "cousin",
-  "hop2": "boss",
-  "gold": "cousin's boss",
-  "gold_alt": "boss of Hayden's cousin",
-  "flipped": "boss's cousin",
-  "id": "relational-t0-s1-0153-b",
-  "scene": "relational-t0-s1-0153",
+  "hop1": "therapist",
+  "hop2": "child",
+  "gold": "therapist's child",
+  "gold_alt": "child of Drew's therapist",
+  "flipped": "child's therapist",
+  "id": "relational-t0-s1-0127-a",
+  "scene": "relational-t0-s1-0127",
   "adapt": {
    "origin": "generated",
    "tier": "t0",
    "knobs": {},
    "change": "original rules (13 professional x 5 kinship relations)",
    "gate": {
-    "rate": 0.9,
+    "rate": 0.8,
+    "pass": true
+   }
+  }
+ },
+ {
+  "scene_key": "Drew-Sasha-Kit-therapist-child",
+  "stimulus": "Drew's child is Sasha. Sasha's therapist is Kit. In other words, Kit is Drew's",
+  "names": [
+   "Drew",
+   "Sasha",
+   "Kit"
+  ],
+  "hop1": "child",
+  "hop2": "therapist",
+  "gold": "child's therapist",
+  "gold_alt": "therapist of Drew's child",
+  "flipped": "therapist's child",
+  "id": "relational-t0-s1-0127-b",
+  "scene": "relational-t0-s1-0127",
+  "adapt": {
+   "origin": "generated",
+   "tier": "t0",
+   "knobs": {},
+   "change": "original rules (13 professional x 5 kinship relations)",
+   "gate": {
+    "rate": 1.0,
     "pass": true
    }
   }
@@ -2180,124 +1660,20 @@
   }
  },
  {
-  "scene_key": "Rory-Dakota-Shiloh-therapist-parent",
-  "stimulus": "Rory's therapist is Dakota. Dakota's parent is Shiloh. In other words, Shiloh is Rory's",
+  "scene_key": "Emery-Sam-Kit-landlord-spouse",
+  "stimulus": "Emery's landlord is Sam. Sam's spouse is Kit. In other words, Kit is Emery's",
   "names": [
-   "Rory",
-   "Dakota",
-   "Shiloh"
-  ],
-  "hop1": "therapist",
-  "hop2": "parent",
-  "gold": "therapist's parent",
-  "gold_alt": "parent of Rory's therapist",
-  "flipped": "parent's therapist",
-  "id": "relational-t0-s3-0030-a",
-  "scene": "relational-t0-s3-0030",
-  "adapt": {
-   "origin": "generated",
-   "tier": "t0",
-   "knobs": {},
-   "change": "original rules (13 professional x 5 kinship relations)",
-   "gate": {
-    "rate": 0.8,
-    "pass": true
-   }
-  }
- },
- {
-  "scene_key": "Rory-Dakota-Shiloh-therapist-parent",
-  "stimulus": "Rory's parent is Dakota. Dakota's therapist is Shiloh. In other words, Shiloh is Rory's",
-  "names": [
-   "Rory",
-   "Dakota",
-   "Shiloh"
-  ],
-  "hop1": "parent",
-  "hop2": "therapist",
-  "gold": "parent's therapist",
-  "gold_alt": "therapist of Rory's parent",
-  "flipped": "therapist's parent",
-  "id": "relational-t0-s3-0030-b",
-  "scene": "relational-t0-s3-0030",
-  "adapt": {
-   "origin": "generated",
-   "tier": "t0",
-   "knobs": {},
-   "change": "original rules (13 professional x 5 kinship relations)",
-   "gate": {
-    "rate": 1.0,
-    "pass": true
-   }
-  }
- },
- {
-  "scene_key": "Avery-Indigo-Parker-therapist-parent",
-  "stimulus": "Avery's therapist is Indigo. Indigo's parent is Parker. In other words, Parker is Avery's",
-  "names": [
-   "Avery",
-   "Indigo",
-   "Parker"
-  ],
-  "hop1": "therapist",
-  "hop2": "parent",
-  "gold": "therapist's parent",
-  "gold_alt": "parent of Avery's therapist",
-  "flipped": "parent's therapist",
-  "id": "relational-t0-s3-0041-a",
-  "scene": "relational-t0-s3-0041",
-  "adapt": {
-   "origin": "generated",
-   "tier": "t0",
-   "knobs": {},
-   "change": "original rules (13 professional x 5 kinship relations)",
-   "gate": {
-    "rate": 0.8,
-    "pass": true
-   }
-  }
- },
- {
-  "scene_key": "Avery-Indigo-Parker-therapist-parent",
-  "stimulus": "Avery's parent is Indigo. Indigo's therapist is Parker. In other words, Parker is Avery's",
-  "names": [
-   "Avery",
-   "Indigo",
-   "Parker"
-  ],
-  "hop1": "parent",
-  "hop2": "therapist",
-  "gold": "parent's therapist",
-  "gold_alt": "therapist of Avery's parent",
-  "flipped": "therapist's parent",
-  "id": "relational-t0-s3-0041-b",
-  "scene": "relational-t0-s3-0041",
-  "adapt": {
-   "origin": "generated",
-   "tier": "t0",
-   "knobs": {},
-   "change": "original rules (13 professional x 5 kinship relations)",
-   "gate": {
-    "rate": 0.9,
-    "pass": true
-   }
-  }
- },
- {
-  "scene_key": "Sam-Remy-Dakota-boss-cousin",
-  "stimulus": "Sam's boss is Remy. Remy's cousin is Dakota. In other words, Dakota is Sam's",
-  "names": [
+   "Emery",
    "Sam",
-   "Remy",
-   "Dakota"
+   "Kit"
   ],
-  "hop1": "boss",
-  "hop2": "cousin",
-  "gold": "boss's cousin",
-  "gold_alt": "cousin of Sam's boss",
-  "flipped": "cousin's boss",
-  "id": "relational-t0-s3-0051-a",
-  "scene": "relational-t0-s3-0051",
+  "hop1": "landlord",
+  "hop2": "spouse",
+  "gold": "landlord's spouse",
+  "gold_alt": "spouse of Emery's landlord",
+  "flipped": "spouse's landlord",
+  "id": "relational-t0-s2-0067-a",
+  "scene": "relational-t0-s2-0067",
   "adapt": {
    "origin": "generated",
    "tier": "t0",
@@ -2310,46 +1686,20 @@
   }
  },
  {
-  "scene_key": "Sam-Remy-Dakota-boss-cousin",
-  "stimulus": "Sam's cousin is Remy. Remy's boss is Dakota. In other words, Dakota is Sam's",
+  "scene_key": "Emery-Sam-Kit-landlord-spouse",
+  "stimulus": "Emery's spouse is Sam. Sam's landlord is Kit. In other words, Kit is Emery's",
   "names": [
+   "Emery",
    "Sam",
-   "Remy",
-   "Dakota"
+   "Kit"
   ],
-  "hop1": "cousin",
-  "hop2": "boss",
-  "gold": "cousin's boss",
-  "gold_alt": "boss of Sam's cousin",
-  "flipped": "boss's cousin",
-  "id": "relational-t0-s3-0051-b",
-  "scene": "relational-t0-s3-0051",
-  "adapt": {
-   "origin": "generated",
-   "tier": "t0",
-   "knobs": {},
-   "change": "original rules (13 professional x 5 kinship relations)",
-   "gate": {
-    "rate": 1.0,
-    "pass": true
-   }
-  }
- },
- {
-  "scene_key": "Kai-Bellamy-Parker-boss-cousin",
-  "stimulus": "Kai's boss is Bellamy. Bellamy's cousin is Parker. In other words, Parker is Kai's",
-  "names": [
-   "Kai",
-   "Bellamy",
-   "Parker"
-  ],
-  "hop1": "boss",
-  "hop2": "cousin",
-  "gold": "boss's cousin",
-  "gold_alt": "cousin of Kai's boss",
-  "flipped": "cousin's boss",
-  "id": "relational-t0-s3-0087-a",
-  "scene": "relational-t0-s3-0087",
+  "hop1": "spouse",
+  "hop2": "landlord",
+  "gold": "spouse's landlord",
+  "gold_alt": "landlord of Emery's spouse",
+  "flipped": "landlord's spouse",
+  "id": "relational-t0-s2-0067-b",
+  "scene": "relational-t0-s2-0067",
   "adapt": {
    "origin": "generated",
    "tier": "t0",
@@ -2362,72 +1712,46 @@
   }
  },
  {
-  "scene_key": "Kai-Bellamy-Parker-boss-cousin",
-  "stimulus": "Kai's cousin is Bellamy. Bellamy's boss is Parker. In other words, Parker is Kai's",
+  "scene_key": "Charlie-Harper-Campbell-therapist-spouse",
+  "stimulus": "Charlie's therapist is Harper. Harper's spouse is Campbell. In other words, Campbell is Charlie's",
   "names": [
-   "Kai",
-   "Bellamy",
-   "Parker"
-  ],
-  "hop1": "cousin",
-  "hop2": "boss",
-  "gold": "cousin's boss",
-  "gold_alt": "boss of Kai's cousin",
-  "flipped": "boss's cousin",
-  "id": "relational-t0-s3-0087-b",
-  "scene": "relational-t0-s3-0087",
-  "adapt": {
-   "origin": "generated",
-   "tier": "t0",
-   "knobs": {},
-   "change": "original rules (13 professional x 5 kinship relations)",
-   "gate": {
-    "rate": 1.0,
-    "pass": true
-   }
-  }
- },
- {
-  "scene_key": "Marlowe-Jules-Harper-therapist-parent",
-  "stimulus": "Marlowe's therapist is Jules. Jules's parent is Harper. In other words, Harper is Marlowe's",
-  "names": [
-   "Marlowe",
-   "Jules",
-   "Harper"
+   "Charlie",
+   "Harper",
+   "Campbell"
   ],
   "hop1": "therapist",
-  "hop2": "parent",
-  "gold": "therapist's parent",
-  "gold_alt": "parent of Marlowe's therapist",
-  "flipped": "parent's therapist",
-  "id": "relational-t0-s4-0008-a",
-  "scene": "relational-t0-s4-0008",
+  "hop2": "spouse",
+  "gold": "therapist's spouse",
+  "gold_alt": "spouse of Charlie's therapist",
+  "flipped": "spouse's therapist",
+  "id": "relational-t0-s2-0078-a",
+  "scene": "relational-t0-s2-0078",
   "adapt": {
    "origin": "generated",
    "tier": "t0",
    "knobs": {},
    "change": "original rules (13 professional x 5 kinship relations)",
    "gate": {
-    "rate": 0.8,
+    "rate": 1.0,
     "pass": true
    }
   }
  },
  {
-  "scene_key": "Marlowe-Jules-Harper-therapist-parent",
-  "stimulus": "Marlowe's parent is Jules. Jules's therapist is Harper. In other words, Harper is Marlowe's",
+  "scene_key": "Charlie-Harper-Campbell-therapist-spouse",
+  "stimulus": "Charlie's spouse is Harper. Harper's therapist is Campbell. In other words, Campbell is Charlie's",
   "names": [
-   "Marlowe",
-   "Jules",
-   "Harper"
+   "Charlie",
+   "Harper",
+   "Campbell"
   ],
-  "hop1": "parent",
+  "hop1": "spouse",
   "hop2": "therapist",
-  "gold": "parent's therapist",
-  "gold_alt": "therapist of Marlowe's parent",
-  "flipped": "therapist's parent",
-  "id": "relational-t0-s4-0008-b",
-  "scene": "relational-t0-s4-0008",
+  "gold": "spouse's therapist",
+  "gold_alt": "therapist of Charlie's spouse",
+  "flipped": "therapist's spouse",
+  "id": "relational-t0-s2-0078-b",
+  "scene": "relational-t0-s2-0078",
   "adapt": {
    "origin": "generated",
    "tier": "t0",
@@ -2492,20 +1816,124 @@
   }
  },
  {
-  "scene_key": "Kai-Ellis-Bellamy-coach-parent",
-  "stimulus": "Kai's coach is Ellis. Ellis's parent is Bellamy. In other words, Bellamy is Kai's",
+  "scene_key": "Kit-Jem-Indigo-dentist-cousin",
+  "stimulus": "Kit's dentist is Jem. Jem's cousin is Indigo. In other words, Indigo is Kit's",
+  "names": [
+   "Kit",
+   "Jem",
+   "Indigo"
+  ],
+  "hop1": "dentist",
+  "hop2": "cousin",
+  "gold": "dentist's cousin",
+  "gold_alt": "cousin of Kit's dentist",
+  "flipped": "cousin's dentist",
+  "id": "relational-t0-s4-0062-a",
+  "scene": "relational-t0-s4-0062",
+  "adapt": {
+   "origin": "generated",
+   "tier": "t0",
+   "knobs": {},
+   "change": "original rules (13 professional x 5 kinship relations)",
+   "gate": {
+    "rate": 0.8,
+    "pass": true
+   }
+  }
+ },
+ {
+  "scene_key": "Kit-Jem-Indigo-dentist-cousin",
+  "stimulus": "Kit's cousin is Jem. Jem's dentist is Indigo. In other words, Indigo is Kit's",
+  "names": [
+   "Kit",
+   "Jem",
+   "Indigo"
+  ],
+  "hop1": "cousin",
+  "hop2": "dentist",
+  "gold": "cousin's dentist",
+  "gold_alt": "dentist of Kit's cousin",
+  "flipped": "dentist's cousin",
+  "id": "relational-t0-s4-0062-b",
+  "scene": "relational-t0-s4-0062",
+  "adapt": {
+   "origin": "generated",
+   "tier": "t0",
+   "knobs": {},
+   "change": "original rules (13 professional x 5 kinship relations)",
+   "gate": {
+    "rate": 1.0,
+    "pass": true
+   }
+  }
+ },
+ {
+  "scene_key": "Kai-Lennox-Rowan-mechanic-cousin",
+  "stimulus": "Kai's mechanic is Lennox. Lennox's cousin is Rowan. In other words, Rowan is Kai's",
   "names": [
    "Kai",
-   "Ellis",
-   "Bellamy"
+   "Lennox",
+   "Rowan"
   ],
-  "hop1": "coach",
+  "hop1": "mechanic",
+  "hop2": "cousin",
+  "gold": "mechanic's cousin",
+  "gold_alt": "cousin of Kai's mechanic",
+  "flipped": "cousin's mechanic",
+  "id": "relational-t0-s10002-0049-a",
+  "scene": "relational-t0-s10002-0049",
+  "adapt": {
+   "origin": "generated",
+   "tier": "t0",
+   "knobs": {},
+   "change": "original rules (13 professional x 5 kinship relations)",
+   "gate": {
+    "rate": 0.8,
+    "pass": true
+   }
+  }
+ },
+ {
+  "scene_key": "Kai-Lennox-Rowan-mechanic-cousin",
+  "stimulus": "Kai's cousin is Lennox. Lennox's mechanic is Rowan. In other words, Rowan is Kai's",
+  "names": [
+   "Kai",
+   "Lennox",
+   "Rowan"
+  ],
+  "hop1": "cousin",
+  "hop2": "mechanic",
+  "gold": "cousin's mechanic",
+  "gold_alt": "mechanic of Kai's cousin",
+  "flipped": "mechanic's cousin",
+  "id": "relational-t0-s10002-0049-b",
+  "scene": "relational-t0-s10002-0049",
+  "adapt": {
+   "origin": "generated",
+   "tier": "t0",
+   "knobs": {},
+   "change": "original rules (13 professional x 5 kinship relations)",
+   "gate": {
+    "rate": 1.0,
+    "pass": true
+   }
+  }
+ },
+ {
+  "scene_key": "Hayden-Noor-Sawyer-boss-parent",
+  "stimulus": "Hayden's boss is Noor. Noor's parent is Sawyer. In other words, Sawyer is Hayden's",
+  "names": [
+   "Hayden",
+   "Noor",
+   "Sawyer"
+  ],
+  "hop1": "boss",
   "hop2": "parent",
-  "gold": "coach's parent",
-  "gold_alt": "parent of Kai's coach",
-  "flipped": "parent's coach",
-  "id": "relational-t0-s4-0034-a",
-  "scene": "relational-t0-s4-0034",
+  "gold": "boss's parent",
+  "gold_alt": "parent of Hayden's boss",
+  "flipped": "parent's boss",
+  "id": "relational-t0-s10002-0058-a",
+  "scene": "relational-t0-s10002-0058",
   "adapt": {
    "origin": "generated",
    "tier": "t0",
@@ -2518,20 +1946,464 @@
   }
  },
  {
-  "scene_key": "Kai-Ellis-Bellamy-coach-parent",
-  "stimulus": "Kai's parent is Ellis. Ellis's coach is Bellamy. In other words, Bellamy is Kai's",
+  "scene_key": "Hayden-Noor-Sawyer-boss-parent",
+  "stimulus": "Hayden's parent is Noor. Noor's boss is Sawyer. In other words, Sawyer is Hayden's",
   "names": [
-   "Kai",
-   "Ellis",
-   "Bellamy"
+   "Hayden",
+   "Noor",
+   "Sawyer"
   ],
   "hop1": "parent",
-  "hop2": "coach",
-  "gold": "parent's coach",
-  "gold_alt": "coach of Kai's parent",
-  "flipped": "coach's parent",
-  "id": "relational-t0-s4-0034-b",
-  "scene": "relational-t0-s4-0034",
+  "hop2": "boss",
+  "gold": "parent's boss",
+  "gold_alt": "boss of Hayden's parent",
+  "flipped": "boss's parent",
+  "id": "relational-t0-s10002-0058-b",
+  "scene": "relational-t0-s10002-0058",
+  "adapt": {
+   "origin": "generated",
+   "tier": "t0",
+   "knobs": {},
+   "change": "original rules (13 professional x 5 kinship relations)",
+   "gate": {
+    "rate": 1.0,
+    "pass": true
+   }
+  }
+ },
+ {
+  "scene_key": "Kit-Lennox-Rory-barber-parent",
+  "stimulus": "Kit's barber is Lennox. Lennox's parent is Rory. In other words, Rory is Kit's",
+  "names": [
+   "Kit",
+   "Lennox",
+   "Rory"
+  ],
+  "hop1": "barber",
+  "hop2": "parent",
+  "gold": "barber's parent",
+  "gold_alt": "parent of Kit's barber",
+  "flipped": "parent's barber",
+  "id": "relational-t0-s10002-0074-a",
+  "scene": "relational-t0-s10002-0074",
+  "adapt": {
+   "origin": "generated",
+   "tier": "t0",
+   "knobs": {},
+   "change": "original rules (13 professional x 5 kinship relations)",
+   "gate": {
+    "rate": 0.9,
+    "pass": true
+   }
+  }
+ },
+ {
+  "scene_key": "Kit-Lennox-Rory-barber-parent",
+  "stimulus": "Kit's parent is Lennox. Lennox's barber is Rory. In other words, Rory is Kit's",
+  "names": [
+   "Kit",
+   "Lennox",
+   "Rory"
+  ],
+  "hop1": "parent",
+  "hop2": "barber",
+  "gold": "parent's barber",
+  "gold_alt": "barber of Kit's parent",
+  "flipped": "barber's parent",
+  "id": "relational-t0-s10002-0074-b",
+  "scene": "relational-t0-s10002-0074",
+  "adapt": {
+   "origin": "generated",
+   "tier": "t0",
+   "knobs": {},
+   "change": "original rules (13 professional x 5 kinship relations)",
+   "gate": {
+    "rate": 0.8,
+    "pass": true
+   }
+  }
+ },
+ {
+  "scene_key": "Drew-Remy-Skyler-plumber-parent",
+  "stimulus": "Drew's plumber is Remy. Remy's parent is Skyler. In other words, Skyler is Drew's",
+  "names": [
+   "Drew",
+   "Remy",
+   "Skyler"
+  ],
+  "hop1": "plumber",
+  "hop2": "parent",
+  "gold": "plumber's parent",
+  "gold_alt": "parent of Drew's plumber",
+  "flipped": "parent's plumber",
+  "id": "relational-t0-s10004-0074-a",
+  "scene": "relational-t0-s10004-0074",
+  "adapt": {
+   "origin": "generated",
+   "tier": "t0",
+   "knobs": {},
+   "change": "original rules (13 professional x 5 kinship relations)",
+   "gate": {
+    "rate": 0.8,
+    "pass": true
+   }
+  }
+ },
+ {
+  "scene_key": "Drew-Remy-Skyler-plumber-parent",
+  "stimulus": "Drew's parent is Remy. Remy's plumber is Skyler. In other words, Skyler is Drew's",
+  "names": [
+   "Drew",
+   "Remy",
+   "Skyler"
+  ],
+  "hop1": "parent",
+  "hop2": "plumber",
+  "gold": "parent's plumber",
+  "gold_alt": "plumber of Drew's parent",
+  "flipped": "plumber's parent",
+  "id": "relational-t0-s10004-0074-b",
+  "scene": "relational-t0-s10004-0074",
+  "adapt": {
+   "origin": "generated",
+   "tier": "t0",
+   "knobs": {},
+   "change": "original rules (13 professional x 5 kinship relations)",
+   "gate": {
+    "rate": 1.0,
+    "pass": true
+   }
+  }
+ },
+ {
+  "scene_key": "Sasha-Remy-Morgan-dentist-child",
+  "stimulus": "Sasha's dentist is Remy. Remy's child is Morgan. In other words, Morgan is Sasha's",
+  "names": [
+   "Sasha",
+   "Remy",
+   "Morgan"
+  ],
+  "hop1": "dentist",
+  "hop2": "child",
+  "gold": "dentist's child",
+  "gold_alt": "child of Sasha's dentist",
+  "flipped": "child's dentist",
+  "id": "relational-t0-s10007-0015-a",
+  "scene": "relational-t0-s10007-0015",
+  "adapt": {
+   "origin": "generated",
+   "tier": "t0",
+   "knobs": {},
+   "change": "original rules (13 professional x 5 kinship relations)",
+   "gate": {
+    "rate": 0.8,
+    "pass": true
+   }
+  }
+ },
+ {
+  "scene_key": "Sasha-Remy-Morgan-dentist-child",
+  "stimulus": "Sasha's child is Remy. Remy's dentist is Morgan. In other words, Morgan is Sasha's",
+  "names": [
+   "Sasha",
+   "Remy",
+   "Morgan"
+  ],
+  "hop1": "child",
+  "hop2": "dentist",
+  "gold": "child's dentist",
+  "gold_alt": "dentist of Sasha's child",
+  "flipped": "dentist's child",
+  "id": "relational-t0-s10007-0015-b",
+  "scene": "relational-t0-s10007-0015",
+  "adapt": {
+   "origin": "generated",
+   "tier": "t0",
+   "knobs": {},
+   "change": "original rules (13 professional x 5 kinship relations)",
+   "gate": {
+    "rate": 0.9,
+    "pass": true
+   }
+  }
+ },
+ {
+  "scene_key": "Sasha-Jordan-Aubrey-dentist-parent",
+  "stimulus": "Sasha's dentist is Jordan. Jordan's parent is Aubrey. In other words, Aubrey is Sasha's",
+  "names": [
+   "Sasha",
+   "Jordan",
+   "Aubrey"
+  ],
+  "hop1": "dentist",
+  "hop2": "parent",
+  "gold": "dentist's parent",
+  "gold_alt": "parent of Sasha's dentist",
+  "flipped": "parent's dentist",
+  "id": "relational-t1-s11002-0009-a",
+  "scene": "relational-t1-s11002-0009",
+  "adapt": {
+   "origin": "generated",
+   "tier": "t1",
+   "knobs": {
+    "professional": [
+     "boss",
+     "doctor",
+     "neighbor",
+     "landlord",
+     "coach",
+     "dentist"
+    ],
+    "kinship": [
+     "sibling",
+     "parent",
+     "child"
+    ]
+   },
+   "change": "the commonest relation words only (6 professional x sibling/parent/child)",
+   "gate": {
+    "rate": 0.8,
+    "pass": true
+   }
+  }
+ },
+ {
+  "scene_key": "Sasha-Jordan-Aubrey-dentist-parent",
+  "stimulus": "Sasha's parent is Jordan. Jordan's dentist is Aubrey. In other words, Aubrey is Sasha's",
+  "names": [
+   "Sasha",
+   "Jordan",
+   "Aubrey"
+  ],
+  "hop1": "parent",
+  "hop2": "dentist",
+  "gold": "parent's dentist",
+  "gold_alt": "dentist of Sasha's parent",
+  "flipped": "dentist's parent",
+  "id": "relational-t1-s11002-0009-b",
+  "scene": "relational-t1-s11002-0009",
+  "adapt": {
+   "origin": "generated",
+   "tier": "t1",
+   "knobs": {
+    "professional": [
+     "boss",
+     "doctor",
+     "neighbor",
+     "landlord",
+     "coach",
+     "dentist"
+    ],
+    "kinship": [
+     "sibling",
+     "parent",
+     "child"
+    ]
+   },
+   "change": "the commonest relation words only (6 professional x sibling/parent/child)",
+   "gate": {
+    "rate": 1.0,
+    "pass": true
+   }
+  }
+ },
+ {
+  "scene_key": "Lennox-Charlie-Jules-mechanic-parent",
+  "stimulus": "Lennox's mechanic is Charlie. Charlie's parent is Jules. In other words, Jules is Lennox's",
+  "names": [
+   "Lennox",
+   "Charlie",
+   "Jules"
+  ],
+  "hop1": "mechanic",
+  "hop2": "parent",
+  "gold": "mechanic's parent",
+  "gold_alt": "parent of Lennox's mechanic",
+  "flipped": "parent's mechanic",
+  "id": "relational-t0-s20000-0019-a",
+  "scene": "relational-t0-s20000-0019",
+  "adapt": {
+   "origin": "generated",
+   "tier": "t0",
+   "knobs": {},
+   "change": "original rules (13 professional x 5 kinship relations)",
+   "gate": {
+    "rate": 1.0,
+    "pass": true
+   }
+  }
+ },
+ {
+  "scene_key": "Lennox-Charlie-Jules-mechanic-parent",
+  "stimulus": "Lennox's parent is Charlie. Charlie's mechanic is Jules. In other words, Jules is Lennox's",
+  "names": [
+   "Lennox",
+   "Charlie",
+   "Jules"
+  ],
+  "hop1": "parent",
+  "hop2": "mechanic",
+  "gold": "parent's mechanic",
+  "gold_alt": "mechanic of Lennox's parent",
+  "flipped": "mechanic's parent",
+  "id": "relational-t0-s20000-0019-b",
+  "scene": "relational-t0-s20000-0019",
+  "adapt": {
+   "origin": "generated",
+   "tier": "t0",
+   "knobs": {},
+   "change": "original rules (13 professional x 5 kinship relations)",
+   "gate": {
+    "rate": 0.9,
+    "pass": true
+   }
+  }
+ },
+ {
+  "scene_key": "Bellamy-Alex-Sam-plumber-cousin",
+  "stimulus": "Bellamy's plumber is Alex. Alex's cousin is Sam. In other words, Sam is Bellamy's",
+  "names": [
+   "Bellamy",
+   "Alex",
+   "Sam"
+  ],
+  "hop1": "plumber",
+  "hop2": "cousin",
+  "gold": "plumber's cousin",
+  "gold_alt": "cousin of Bellamy's plumber",
+  "flipped": "cousin's plumber",
+  "id": "relational-t0-s30001-0064-a",
+  "scene": "relational-t0-s30001-0064",
+  "adapt": {
+   "origin": "generated",
+   "tier": "t0",
+   "knobs": {},
+   "change": "original rules (13 professional x 5 kinship relations)",
+   "gate": {
+    "rate": 0.8,
+    "pass": true
+   }
+  }
+ },
+ {
+  "scene_key": "Bellamy-Alex-Sam-plumber-cousin",
+  "stimulus": "Bellamy's cousin is Alex. Alex's plumber is Sam. In other words, Sam is Bellamy's",
+  "names": [
+   "Bellamy",
+   "Alex",
+   "Sam"
+  ],
+  "hop1": "cousin",
+  "hop2": "plumber",
+  "gold": "cousin's plumber",
+  "gold_alt": "plumber of Bellamy's cousin",
+  "flipped": "plumber's cousin",
+  "id": "relational-t0-s30001-0064-b",
+  "scene": "relational-t0-s30001-0064",
+  "adapt": {
+   "origin": "generated",
+   "tier": "t0",
+   "knobs": {},
+   "change": "original rules (13 professional x 5 kinship relations)",
+   "gate": {
+    "rate": 0.9,
+    "pass": true
+   }
+  }
+ },
+ {
+  "scene_key": "Ellis-Shiloh-Emery-doctor-cousin",
+  "stimulus": "Ellis's doctor is Shiloh. Shiloh's cousin is Emery. In other words, Emery is Ellis's",
+  "names": [
+   "Ellis",
+   "Shiloh",
+   "Emery"
+  ],
+  "hop1": "doctor",
+  "hop2": "cousin",
+  "gold": "doctor's cousin",
+  "gold_alt": "cousin of Ellis's doctor",
+  "flipped": "cousin's doctor",
+  "id": "relational-t0-s40001-0020-a",
+  "scene": "relational-t0-s40001-0020",
+  "adapt": {
+   "origin": "generated",
+   "tier": "t0",
+   "knobs": {},
+   "change": "original rules (13 professional x 5 kinship relations)",
+   "gate": {
+    "rate": 0.8,
+    "pass": true
+   }
+  }
+ },
+ {
+  "scene_key": "Ellis-Shiloh-Emery-doctor-cousin",
+  "stimulus": "Ellis's cousin is Shiloh. Shiloh's doctor is Emery. In other words, Emery is Ellis's",
+  "names": [
+   "Ellis",
+   "Shiloh",
+   "Emery"
+  ],
+  "hop1": "cousin",
+  "hop2": "doctor",
+  "gold": "cousin's doctor",
+  "gold_alt": "doctor of Ellis's cousin",
+  "flipped": "doctor's cousin",
+  "id": "relational-t0-s40001-0020-b",
+  "scene": "relational-t0-s40001-0020",
+  "adapt": {
+   "origin": "generated",
+   "tier": "t0",
+   "knobs": {},
+   "change": "original rules (13 professional x 5 kinship relations)",
+   "gate": {
+    "rate": 1.0,
+    "pass": true
+   }
+  }
+ },
+ {
+  "scene_key": "Jules-Quinn-Parker-neighbor-cousin",
+  "stimulus": "Jules's neighbor is Quinn. Quinn's cousin is Parker. In other words, Parker is Jules's",
+  "names": [
+   "Jules",
+   "Quinn",
+   "Parker"
+  ],
+  "hop1": "neighbor",
+  "hop2": "cousin",
+  "gold": "neighbor's cousin",
+  "gold_alt": "cousin of Jules's neighbor",
+  "flipped": "cousin's neighbor",
+  "id": "relational-t0-s40001-0028-a",
+  "scene": "relational-t0-s40001-0028",
+  "adapt": {
+   "origin": "generated",
+   "tier": "t0",
+   "knobs": {},
+   "change": "original rules (13 professional x 5 kinship relations)",
+   "gate": {
+    "rate": 0.8,
+    "pass": true
+   }
+  }
+ },
+ {
+  "scene_key": "Jules-Quinn-Parker-neighbor-cousin",
+  "stimulus": "Jules's cousin is Quinn. Quinn's neighbor is Parker. In other words, Parker is Jules's",
+  "names": [
+   "Jules",
+   "Quinn",
+   "Parker"
+  ],
+  "hop1": "cousin",
+  "hop2": "neighbor",
+  "gold": "cousin's neighbor",
+  "gold_alt": "neighbor of Jules's cousin",
+  "flipped": "neighbor's cousin",
+  "id": "relational-t0-s40001-0028-b",
+  "scene": "relational-t0-s40001-0028",
   "adapt": {
    "origin": "generated",
    "tier": "t0",

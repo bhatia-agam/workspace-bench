@@ -1,0 +1,909 @@
+{
+ "version": "adapt-qwen3.6-35b-a3b",
+ "note": "adapted-only items' extra gold name forms (ru / es / fr / de / fa exonyms, authored with the item); added to evals/basic_readout_mt/exonyms.json by the judge (registry.load_resource)",
+ "items": {
+  "basic-au-t1-w100c0-brh-ent-extra-chromosome-21": {
+   "readout": {
+    "ru": [
+     "синдром Дауна"
+    ],
+    "es": [
+     "síndrome de Down"
+    ],
+    "fr": [
+     "syndrome de Down",
+     "trisomie 21"
+    ],
+    "de": [
+     "Down-Syndrom",
+     "Trisomie 21"
+    ],
+    "fa": [
+     "سندرم داون"
+    ]
+   }
+  },
+  "basic-au-t1-w100c0-brh-ent-first-moonwalker": {
+   "readout": {
+    "ru": [
+     "Нил Армстронг"
+    ],
+    "fa": [
+     "نیل آرمسترانگ"
+    ]
+   }
+  },
+  "basic-au-t1-w100c0-brh-ent-leavening-nahco3": {
+   "readout": {
+    "ru": [
+     "гидрокарбонат натрия",
+     "пищевая сода"
+    ],
+    "es": [
+     "bicarbonato de sodio"
+    ],
+    "fr": [
+     "bicarbonate de sodium"
+    ],
+    "de": [
+     "Natriumhydrogencarbonat",
+     "Natron"
+    ],
+    "fa": [
+     "جوش شیرین",
+     "بی‌کربنات سدیم"
+    ]
+   }
+  },
+  "basic-au-t1-w100c0-brh-ent-leonidas-last-stand": {
+   "readout": {
+    "ru": [
+     "Фермопильское сражение",
+     "Битва при Фермопилах"
+    ],
+    "es": [
+     "batalla de las Termópilas"
+    ],
+    "fr": [
+     "bataille des Thermopyles"
+    ],
+    "de": [
+     "Schlacht bei den Thermopylen"
+    ],
+    "fa": [
+     "نبرد ترموپیل"
+    ]
+   }
+  },
+  "basic-au-t1-w100c0-brh-ent-mona-lisa-painter": {
+   "readout": {
+    "ru": [
+     "Леонардо да Винчи"
+    ],
+    "fr": [
+     "Léonard de Vinci"
+    ],
+    "fa": [
+     "لئوناردو دا وینچی"
+    ]
+   }
+  },
+  "basic-au-t1-w100c0-brh-ent-norman-conquest-clash": {
+   "readout": {
+    "ru": [
+     "Битва при Гастингсе"
+    ],
+    "es": [
+     "Batalla de Hastings"
+    ],
+    "fr": [
+     "Bataille d'Hastings"
+    ],
+    "de": [
+     "Schlacht bei Hastings"
+    ],
+    "fa": [
+     "نبرد هستینگز"
+    ]
+   }
+  },
+  "basic-au-t1-w100c0-brh-ent-odourless-boiler-gas": {
+   "readout": {
+    "ru": [
+     "угарный газ",
+     "монооксид углерода"
+    ],
+    "es": [
+     "monóxido de carbono"
+    ],
+    "fr": [
+     "monoxyde de carbone"
+    ],
+    "de": [
+     "Kohlenstoffmonoxid",
+     "Kohlenmonoxid"
+    ],
+    "fa": [
+     "مونوکسید کربن"
+    ]
+   }
+  },
+  "basic-au-t1-w100c0-brh-ent-two-science-nobels": {
+   "readout": {
+    "ru": [
+     "Мария Склодовская-Кюри",
+     "Мари Кюри"
+    ],
+    "fa": [
+     "ماری کوری"
+    ]
+   }
+  },
+  "basic-au-t1-w100c1-brh-ent-motor-vocal-tics": {
+   "readout": {
+    "ru": [
+     "Синдром Туретта"
+    ],
+    "es": [
+     "Síndrome de Tourette"
+    ],
+    "fr": [
+     "Syndrome de Gilles de la Tourette",
+     "Syndrome de Tourette"
+    ],
+    "de": [
+     "Tourette-Syndrom"
+    ],
+    "fa": [
+     "سندرم توره"
+    ]
+   }
+  },
+  "basic-au-t1-w100c1-brh-ent-nebuchadnezzar-wonder": {
+   "readout": {
+    "ru": [
+     "Висячие сады Семирамиды"
+    ],
+    "es": [
+     "Jardines Colgantes de Babilonia"
+    ],
+    "fr": [
+     "Jardins suspendus de Babylone"
+    ],
+    "de": [
+     "Hängende Gärten der Semiramis"
+    ],
+    "fa": [
+     "باغ‌های معلق بابل"
+    ]
+   }
+  },
+  "basic-au-t1-w100c1-brh-ent-principia-author": {
+   "readout": {
+    "ru": [
+     "Исаак Ньютон"
+    ],
+    "fa": [
+     "آیزاک نیوتن"
+    ]
+   }
+  },
+  "basic-au-t1-w100c1-brh-ent-russian-royal-line-1613": {
+   "readout": {
+    "ru": [
+     "Романовы",
+     "Дом Романовых"
+    ],
+    "es": [
+     "Casa de Románov"
+    ],
+    "fr": [
+     "Maison Romanov"
+    ],
+    "de": [
+     "Haus Romanow"
+    ],
+    "fa": [
+     "دودمان رومانوف"
+    ]
+   }
+  },
+  "basic-au-t1-w100c1-brh-ent-siren-pitch-change": {
+   "readout": {
+    "ru": [
+     "Эффект Доплера"
+    ],
+    "es": [
+     "Efecto Doppler"
+    ],
+    "fr": [
+     "Effet Doppler"
+    ],
+    "de": [
+     "Doppler-Effekt",
+     "Dopplereffekt"
+    ],
+    "fa": [
+     "اثر دوپلر"
+    ]
+   }
+  },
+  "basic-au-t1-w100c1-brh-ent-spain-morocco-channel": {
+   "readout": {
+    "ru": [
+     "Гибралтарский пролив"
+    ],
+    "es": [
+     "Estrecho de Gibraltar"
+    ],
+    "fr": [
+     "Détroit de Gibraltar"
+    ],
+    "de": [
+     "Straße von Gibraltar"
+    ],
+    "fa": [
+     "تنگه جبل‌الطارق"
+    ]
+   }
+  },
+  "basic-au-t1-w100c1-brh-ent-spring-proportional-law": {
+   "readout": {
+    "ru": [
+     "Закон Гука"
+    ],
+    "es": [
+     "Ley de Hooke"
+    ],
+    "fr": [
+     "Loi de Hooke"
+    ],
+    "de": [
+     "Hookesches Gesetz",
+     "Hooke'sches Gesetz"
+    ],
+    "fa": [
+     "قانون هوک"
+    ]
+   }
+  },
+  "basic-au-t1-w100c2-brh-ent-alzheimers-disease": {
+   "readout": {
+    "ru": [
+     "болезнь Альцгеймера"
+    ],
+    "es": [
+     "enfermedad de Alzheimer"
+    ],
+    "fr": [
+     "maladie d'Alzheimer"
+    ],
+    "de": [
+     "Alzheimer-Krankheit"
+    ],
+    "fa": [
+     "بیماری آلزایمر"
+    ]
+   }
+  },
+  "basic-au-t1-w100c2-brh-ent-hydrochloric-acid": {
+   "readout": {
+    "ru": [
+     "соляная кислота"
+    ],
+    "es": [
+     "ácido clorhídrico"
+    ],
+    "fr": [
+     "acide chlorhydrique"
+    ],
+    "de": [
+     "Salzsäure"
+    ],
+    "fa": [
+     "اسید کلریدریک"
+    ]
+   }
+  },
+  "basic-au-t1-w101c0-brh-ent-charles-law": {
+   "readout": {
+    "ru": [
+     "закон Шарля"
+    ],
+    "es": [
+     "ley de Charles"
+    ],
+    "fr": [
+     "loi de Charles"
+    ],
+    "fa": [
+     "قانون شارل"
+    ]
+   }
+  },
+  "basic-au-t1-w101c0-brh-ent-fibonacci-sequence": {
+   "readout": {
+    "ru": [
+     "последовательность Фибоначчи",
+     "числа Фибоначчи"
+    ],
+    "es": [
+     "sucesión de Fibonacci"
+    ],
+    "fr": [
+     "suite de Fibonacci"
+    ],
+    "de": [
+     "Fibonacci-Folge"
+    ],
+    "fa": [
+     "دنباله فیبوناچی"
+    ]
+   }
+  },
+  "basic-au-t1-w101c0-brh-ent-house-of-habsburg": {
+   "readout": {
+    "ru": [
+     "Габсбурги"
+    ],
+    "es": [
+     "Casa de Habsburgo"
+    ],
+    "fr": [
+     "maison de Habsbourg"
+    ],
+    "de": [
+     "Habsburger"
+    ],
+    "fa": [
+     "خاندان هابسبورگ"
+    ]
+   }
+  },
+  "basic-au-t1-w101c0-brh-ent-nitrous-oxide": {
+   "readout": {
+    "ru": [
+     "закись азота"
+    ],
+    "es": [
+     "óxido nitroso"
+    ],
+    "fr": [
+     "protoxyde d'azote"
+    ],
+    "de": [
+     "Distickstoffmonoxid",
+     "Lachgas"
+    ],
+    "fa": [
+     "اکسید نیتروس"
+    ]
+   }
+  },
+  "basic-au-t1-w101c0-brh-ent-parkinsons-disease": {
+   "readout": {
+    "ru": [
+     "болезнь Паркинсона"
+    ],
+    "es": [
+     "enfermedad de Parkinson"
+    ],
+    "fr": [
+     "maladie de Parkinson"
+    ],
+    "de": [
+     "Parkinson-Krankheit",
+     "Morbus Parkinson"
+    ],
+    "fa": [
+     "بیماری پارکینسون"
+    ]
+   }
+  },
+  "basic-au-t1-w101c1-brh-ent-coulombs-law": {
+   "readout": {
+    "ru": [
+     "Закон Кулона"
+    ],
+    "es": [
+     "Ley de Coulomb"
+    ],
+    "fr": [
+     "Loi de Coulomb"
+    ],
+    "de": [
+     "Coulombsches Gesetz"
+    ],
+    "fa": [
+     "قانون کولن"
+    ]
+   }
+  },
+  "basic-au-t1-w101c1-brh-ent-heisenberg-uncertainty": {
+   "readout": {
+    "ru": [
+     "Принцип неопределённости Гейзенберга"
+    ],
+    "es": [
+     "Principio de incertidumbre de Heisenberg"
+    ],
+    "fr": [
+     "Principe d'incertitude de Heisenberg"
+    ],
+    "de": [
+     "Heisenbergsche Unschärferelation",
+     "Unschärferelation"
+    ],
+    "fa": [
+     "اصل عدم قطعیت هایزنبرگ"
+    ]
+   }
+  },
+  "basic-au-t1-w101c1-brh-ent-klinefelter-syndrome": {
+   "readout": {
+    "ru": [
+     "Синдром Клайнфельтера"
+    ],
+    "es": [
+     "Síndrome de Klinefelter"
+    ],
+    "fr": [
+     "Syndrome de Klinefelter"
+    ],
+    "de": [
+     "Klinefelter-Syndrom"
+    ],
+    "fa": [
+     "سندرم کلاین‌فلتر"
+    ]
+   }
+  },
+  "basic-au-t1-w101c1-brh-ent-sydney-opera-house": {
+   "readout": {
+    "ru": [
+     "Сиднейский оперный театр"
+    ],
+    "es": [
+     "Ópera de Sídney"
+    ],
+    "fr": [
+     "Opéra de Sydney"
+    ],
+    "de": [
+     "Opernhaus Sydney"
+    ],
+    "fa": [
+     "خانه اپرای سیدنی"
+    ]
+   }
+  },
+  "basic-au-t1-w101c2-brh-ent-gregor-mendel": {
+   "readout": {
+    "ru": [
+     "Грегор Мендель"
+    ]
+   }
+  },
+  "basic-au-t1-w101c2-brh-ent-hydrogen-peroxide": {
+   "readout": {
+    "ru": [
+     "пероксид водорода",
+     "перекись водорода"
+    ],
+    "es": [
+     "peróxido de hidrógeno"
+    ],
+    "fr": [
+     "peroxyde d'hydrogène"
+    ],
+    "de": [
+     "Wasserstoffperoxid"
+    ]
+   }
+  },
+  "basic-au-t1-w101c2-brh-ent-le-chatelier": {
+   "readout": {
+    "ru": [
+     "принцип Ле Шателье"
+    ],
+    "es": [
+     "principio de Le Châtelier"
+    ],
+    "fr": [
+     "principe de Le Chatelier"
+    ],
+    "de": [
+     "Prinzip von Le Chatelier"
+    ]
+   }
+  },
+  "basic-au-t1-w101c2-brh-ent-turner-syndrome": {
+   "readout": {
+    "ru": [
+     "синдром Шерешевского — Тёрнера"
+    ],
+    "es": [
+     "síndrome de Turner"
+    ],
+    "fr": [
+     "syndrome de Turner"
+    ],
+    "de": [
+     "Turner-Syndrom"
+    ]
+   }
+  },
+  "basic-au-t1-w102c0-brh-ent-avogadro-equal-volumes": {
+   "readout": {
+    "ru": [
+     "Закон Авогадро"
+    ],
+    "es": [
+     "Ley de Avogadro"
+    ],
+    "fr": [
+     "Loi d'Avogadro"
+    ],
+    "de": [
+     "Avogadrosches Gesetz"
+    ],
+    "fa": [
+     "قانون آووگادرو"
+    ]
+   }
+  },
+  "basic-au-t1-w102c0-brh-ent-crohn-bowel": {
+   "readout": {
+    "ru": [
+     "Болезнь Крона"
+    ],
+    "es": [
+     "Enfermedad de Crohn"
+    ],
+    "fr": [
+     "Maladie de Crohn"
+    ],
+    "de": [
+     "Morbus Crohn"
+    ],
+    "fa": [
+     "بیماری کرون"
+    ]
+   }
+  },
+  "basic-au-t1-w103c0-brh-ent-copernicus": {
+   "readout": {
+    "ru": [
+     "Николай Коперник"
+    ],
+    "es": [
+     "Nicolás Copérnico"
+    ],
+    "fr": [
+     "Nicolas Copernic"
+    ],
+    "de": [
+     "Nikolaus Kopernikus"
+    ],
+    "fa": [
+     "نیکلاس کوپرنیک"
+    ]
+   }
+  },
+  "basic-au-t1-w103c0-brh-ent-graves-disease": {
+   "readout": {
+    "ru": [
+     "Базедова болезнь",
+     "болезнь Грейвса"
+    ],
+    "es": [
+     "enfermedad de Graves"
+    ],
+    "fr": [
+     "maladie de Basedow"
+    ],
+    "de": [
+     "Morbus Basedow"
+    ]
+   }
+  },
+  "basic-au-t1-w104c0-brh-ent-addisons-disease": {
+   "readout": {
+    "ru": [
+     "болезнь Аддисона"
+    ],
+    "es": [
+     "enfermedad de Addison"
+    ],
+    "fr": [
+     "maladie d'Addison"
+    ],
+    "de": [
+     "Morbus Addison"
+    ]
+   }
+  },
+  "basic-au-t1-w104c0-brh-ent-faradays-law": {
+   "readout": {
+    "ru": [
+     "закон Фарадея"
+    ],
+    "es": [
+     "ley de Faraday"
+    ],
+    "fr": [
+     "loi de Faraday"
+    ],
+    "de": [
+     "Faradaysches Induktionsgesetz"
+    ]
+   }
+  },
+  "basic-au-t1-w105c0-brh-ent-celiac-disease": {
+   "readout": {
+    "ru": [
+     "целиакия"
+    ],
+    "es": [
+     "enfermedad celíaca",
+     "celiaquía"
+    ],
+    "fr": [
+     "maladie cœliaque"
+    ],
+    "de": [
+     "Zöliakie"
+    ]
+   }
+  },
+  "basic-au-t1-w105c0-brh-ent-lake-victoria": {
+   "readout": {
+    "ru": [
+     "Виктория",
+     "озеро Виктория"
+    ],
+    "es": [
+     "lago Victoria"
+    ],
+    "fr": [
+     "lac Victoria"
+    ],
+    "de": [
+     "Victoriasee"
+    ]
+   }
+  },
+  "basic-au-t1-w106c0-brh-ent-hno3-compound": {
+   "readout": {
+    "ru": [
+     "азотная кислота"
+    ],
+    "es": [
+     "ácido nítrico"
+    ],
+    "fr": [
+     "acide nitrique"
+    ],
+    "de": [
+     "Salpetersäure"
+    ],
+    "fa": [
+     "اسید نیتریک",
+     "جوهر شوره"
+    ]
+   }
+  },
+  "basic-au-t1-w106c0-brh-ent-manhattan-1931-skyscraper": {
+   "readout": {
+    "ru": [
+     "Эмпайр-стейт-билдинг"
+    ]
+   }
+  },
+  "basic-au-t1-w106c0-brh-ent-menlo-park-phonograph": {
+   "readout": {
+    "ru": [
+     "Томас Эдисон"
+    ],
+    "fa": [
+     "توماس ادیسون"
+    ]
+   }
+  },
+  "basic-au-t1-w106c0-brh-ent-myelin-autoimmune-disease": {
+   "readout": {
+    "ru": [
+     "рассеянный склероз"
+    ],
+    "es": [
+     "esclerosis múltiple"
+    ],
+    "fr": [
+     "sclérose en plaques"
+    ],
+    "de": [
+     "Multiple Sklerose"
+    ],
+    "fa": [
+     "مالتیپل اسکلروزیس",
+     "ام‌اس"
+    ]
+   }
+  },
+  "basic-au-t1-w107c0-brh-ent-cranial-nerve-seven-paralysis": {
+   "readout": {
+    "ru": [
+     "паралич Белла"
+    ],
+    "es": [
+     "parálisis de Bell"
+    ],
+    "fr": [
+     "paralysie de Bell"
+    ],
+    "de": [
+     "Bell-Lähmung"
+    ]
+   }
+  },
+  "basic-au-t1-w107c0-brh-ent-household-bleach-salt": {
+   "readout": {
+    "ru": [
+     "гипохлорит натрия"
+    ],
+    "es": [
+     "hipoclorito de sodio"
+    ],
+    "fr": [
+     "hypochlorite de sodium"
+    ],
+    "de": [
+     "Natriumhypochlorit"
+    ]
+   }
+  },
+  "basic-au-t1-w107c0-brh-ent-three-gorges-waterway": {
+   "readout": {
+    "ru": [
+     "Янцзы"
+    ],
+    "es": [
+     "río Yangtsé"
+    ],
+    "fr": [
+     "Yangzi Jiang"
+    ],
+    "de": [
+     "Jangtsekiang"
+    ],
+    "fa": [
+     "رود یانگتسه"
+    ]
+   }
+  },
+  "basic-au-t1-w107c0-brh-ent-transistor-doubling-observation": {
+   "readout": {
+    "ru": [
+     "Закон Мура"
+    ],
+    "es": [
+     "ley de Moore"
+    ],
+    "fr": [
+     "loi de Moore"
+    ],
+    "de": [
+     "Mooresches Gesetz"
+    ],
+    "fa": [
+     "قانون مور"
+    ]
+   }
+  },
+  "basic-au-t1-w107c0-brh-ent-vinegar-carboxylic-compound": {
+   "readout": {
+    "ru": [
+     "уксусная кислота"
+    ],
+    "es": [
+     "ácido acético"
+    ],
+    "fr": [
+     "acide acétique"
+    ],
+    "de": [
+     "Essigsäure"
+    ],
+    "fa": [
+     "اسید استیک"
+    ]
+   }
+  },
+  "basic-au-t1-w107c1-brh-ent-bletchley-codebreaker": {
+   "readout": {
+    "ru": [
+     "Алан Тьюринг"
+    ],
+    "fa": [
+     "آلن تورینگ"
+    ]
+   }
+  },
+  "basic-au-t1-w107c1-brh-ent-crescent-red-corpuscles": {
+   "readout": {
+    "ru": [
+     "Серповидноклеточная анемия"
+    ],
+    "es": [
+     "Anemia falciforme",
+     "Drepanocitosis"
+    ],
+    "fr": [
+     "Drépanocytose",
+     "Anémie falciforme"
+    ],
+    "de": [
+     "Sichelzellenanämie",
+     "Sichelzellkrankheit"
+    ]
+   }
+  },
+  "basic-au-t1-w107c1-brh-ent-kno3-gunpowder-oxidizer": {
+   "readout": {
+    "ru": [
+     "Нитрат калия",
+     "Калийная селитра"
+    ],
+    "es": [
+     "Nitrato de potasio"
+    ],
+    "fr": [
+     "Nitrate de potassium"
+    ],
+    "de": [
+     "Kaliumnitrat"
+    ]
+   }
+  },
+  "basic-au-t1-w107c1-brh-ent-oldest-ancient-wonder": {
+   "readout": {
+    "ru": [
+     "Пирамида Хеопса",
+     "Великая пирамида Гизы"
+    ],
+    "es": [
+     "Gran Pirámide de Guiza"
+    ],
+    "fr": [
+     "Pyramide de Khéops"
+    ],
+    "de": [
+     "Cheops-Pyramide"
+    ],
+    "fa": [
+     "هرم بزرگ جیزه"
+    ]
+   }
+  },
+  "basic-au-t1-w107c2-brh-ent-gas-solubility-pressure": {
+   "readout": {
+    "ru": [
+     "закон Генри"
+    ],
+    "es": [
+     "ley de Henry"
+    ],
+    "fr": [
+     "loi de Henry"
+    ],
+    "de": [
+     "Henry-Gesetz",
+     "Henrysches Gesetz"
+    ],
+    "fa": [
+     "قانون هنری"
+    ]
+   }
+  }
+ }
+}

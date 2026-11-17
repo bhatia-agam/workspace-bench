@@ -125,10 +125,15 @@ def test_adapted_set_under_the_old_name(tmp_path, monkeypatch):
 
 
 def test_adapted_reports_keep_the_removed_familys_drops_apart():
+    # the removed regex family's drops (multihop-au-* ids) never sit under the current key; a set
+    # rebuilt after the rename (plan 0089) has no regex drops and drops current multihop_mt ids
     for m in ("gemma-4-31b-it", "olmo-3.1-32b", "qwen3.6-35b-a3b"):
         drops = json.loads((REPO / f"adapted/{m}/report.json").read_text(encoding="utf-8"))["drops"]
-        assert "multihop_mt" not in drops and drops["multihop_mt_regex"], m
-        assert all(i.startswith("multihop-au-") for i in drops["multihop_mt_regex"]), m
+        assert drops.get("multihop_mt_regex") or "multihop_mt" in drops, m
+        assert all(i.startswith("multihop-au-") for i in drops.get("multihop_mt_regex", {})), m
+        assert not any(i.startswith("multihop-au-") for i in drops.get("multihop_mt", {})), m
+        # the current key holds current-family ids only (the multihop_mt bank's mh2-* ids)
+        assert all(i.startswith("mh2-") for i in drops.get("multihop_mt", {})), m
 
 
 def _stored(tmp_path: Path, family: str, pv: str) -> FamilyResult:
