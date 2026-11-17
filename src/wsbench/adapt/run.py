@@ -1501,10 +1501,12 @@ def _agentic_drop_ids(model: str, ids: list[str]) -> list[str]:
         raise SystemExit(f"drop: not in {model}'s agentic rollouts or shipped bank: {unknown[:5]}")
     partner: dict[str, str] = {}
     pool_items: list[dict] = []
-    # no pool pinned at all (every POOL_SHA256 None): registered bank + shipped set pairs; a
-    # partly pinned, mismatched or malformed pool exits (load_pool), never silently skipped
-    if any(v is not None for v in agentic.POOL_SHA256.values()):
-        pool_items = list(agentic.load_pool().items)
+    # no pool pinned at all: registered bank + shipped set pairs; else the pool THIS set was
+    # refilled from (its report's refill route, e.g. agentic.pool_v7, which chains v3 .. v7, so
+    # an unshipped amp4..7 id finds its twin), v3 for a set with no pool route; a partly
+    # pinned, mismatched or malformed pool exits (load_pool), never silently skipped
+    if agentic.pinned_pool_version() is not None:
+        pool_items = list(agentic.load_pool(_agentic_set_pool(model)).items)
     for it in [*agentic._items(True), *pool_items, *shipped]:
         if tw := it.get("twin"):
             partner[str(it["id"])] = str(tw)
@@ -1514,6 +1516,21 @@ def _agentic_drop_ids(model: str, ids: list[str]) -> list[str]:
         if (p := partner.get(i)) and p not in out:
             out.append(p)
     return out
+
+
+def _agentic_set_pool(model: str) -> str:
+    """The pool version a set's agentic refill ran on (report ``refill.route``
+    ``agentic.pool_v<N>``); ``v3`` when the set records no pool route; an unknown pool exits."""
+    from . import agentic
+
+    entry = store.report_entry(store.read_report(model).get("families"), agentic.FAMILY) or {}
+    route = str((entry.get("refill") or {}).get("route") or "")
+    if not route.startswith("agentic.pool_"):
+        return "v3"
+    version = route.removeprefix("agentic.pool_")
+    if version not in agentic.POOL_VERSIONS:  # a typo'd route must not expand against v3
+        raise SystemExit(f"drop: {model}'s agentic refill route {route!r} names no known pool")
+    return version
 
 
 def patch(model: str, family: str, iid: str, fields: dict, note_text: str) -> None:

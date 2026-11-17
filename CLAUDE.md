@@ -425,6 +425,33 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   `src/wsbench/adapt/data/` (`scripts/agentic_pool_v3.py`; committed after review, sha-pinned in
   `agentic.POOL_SHA256`, unpinned = refused); shipped pool targets go to the per-set overlay
   `adapted/<m>/agentic_misalignment/targets_v2.json`; `adapt drop` drops whole pairs.
+  `pool=v4` = am-pool-v3 CHAINED with am-pool-v4 (`scripts/agentic_pool_v4.py`, ids `amp4-`,
+  pins `agentic.POOL4_SHA256`): one Pool, v3 pairs first, so a set's v3 records keep counting
+  and v4 waves start after them; the refill block tallies per pool (route `agentic.pool_v4`).
+  Once a set holds `amp4-` ids, `pool=v3` and pool-less runs are refused (they would drop them).
+  `pool=v5` = v3, v4 then am-pool-v5 chained the same way (`scripts/agentic_pool_v5.py`, a
+  reconfigured private instance of the v4 script: ids `amp5-`, pins `agentic.POOL5_SHA256`,
+  route `agentic.pool_v5`; ALREADY-USED = registered + v3 + v4 originals); `amp5-` ids refuse
+  `pool=v4` / `pool=v3` / pool-less runs. `pinned_pool_version()` = the newest pinned pool; `adapt drop`
+  expands an agentic id to its twin against the pool the SET was refilled from (its report's
+  `refill.route`, `run._agentic_set_pool`; v3 when none), so an unshipped amp4..7 id finds its twin.
+  `pool=v6` (plan 0089) = v3, v4, v5 then am-pool-v6 (`scripts/agentic_pool_v6.py`, a private
+  instance of the v5 script reconfigured once more: ids `amp6-`, pins `agentic.POOL6_SHA256`,
+  route `agentic.pool_v6`; ALREADY-USED = registered + v3 + v4 + v5 originals); its one change
+  is an authoring steer for a calm clean twin (all temptation inside the spans the twin
+  replaces), recorded as the pool header's `authoring_steer`; the twin rule, gates, review and
+  quotas are v5's. `amp6-` ids refuse `pool=v5` / v4 / v3 / pool-less runs. A twin edit that
+  removes two roles at once carries a `roles` list (as merged email blocks do); `role` alone is
+  not a complete label (metadata only: no code reads it).
+  `pool=v7` (plan 0089) = v3 .. v6 then am-pool-v7 (`scripts/agentic_pool_v7.py`, a private
+  instance of the v6 script: ids `amp7-`, pins `agentic.POOL7_SHA256`, route `agentic.pool_v7`,
+  ALREADY-USED = registered + v3 .. v6 originals); keeps v6's calm-twin steer and twin rule and
+  adds a draft-brief note for more provocative ORIGINALS (a strong, imminent reason; varied
+  reasons and act shapes, v6's over-used templates excluded), recorded in `authoring_steer`;
+  its build keeps `<work>/shipped_first.json` (the pilot's ids, already rolled out) ahead of the
+  `MAX_SHARE` trim. Gotcha: under transformers 5 `apply_chat_template` returns a BatchEncoding,
+  so `agentic_pool_v3.chat_tokens` counts `input_ids` of any mapping (before the fix, gate 3
+  recorded `length_ratio` 1.0 for every twin; v6 re-measured 0.90-1.09, all within 15%).
 - hinted_cutoff (plan 0063) is pair-scored (`items=` expands to pairs,
   `limit=` counts pairs, `n_items` = decided pairs) but its headline is the class DIFFERENCE
   (I flag rate - N flag rate, jailbreak precedent: chance 0, may be negative, in the macro

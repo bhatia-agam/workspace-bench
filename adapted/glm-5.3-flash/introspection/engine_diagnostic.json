@@ -1,0 +1,253 @@
+{
+ "what": "plan 0067 §5 engine calibration of glm-5.3-flash on the multi-GPU stack (stock transformers 5.17.0 Glm5NextForConditionalGeneration (FP8 as shipped), full depth + head, forward hooks on the decoder block output; NVIDIA B200), recorded evidence, not part of the rule: GO/NO-GO is calibration.json",
+ "calibration": {
+  "g0_pass": true,
+  "recorded_not_gated": [
+   "b_mention",
+   "c_batched_vs_single"
+  ],
+  "a_noop": {
+   "beta0_logprobs_equal": true,
+   "zero_vec_logprobs_equal": true,
+   "beta0_greedy_equal": true,
+   "zero_vec_greedy_equal": true,
+   "max_abs_logprob_diff": 0.0,
+   "pass": true
+  },
+  "c_batched_vs_single": {
+   "rank_agreement": 1.0,
+   "n_ops": 20,
+   "max_abs_diff": 0.0,
+   "bit_equal": true,
+   "pass": true
+  },
+  "d_steer_is_local": {
+   "pre_span_max_abs_diff": 0.0,
+   "in_span_max_rel_err": 0.0017017818754538894,
+   "pre_span_logits_max_abs_diff": 0.0,
+   "pass": true
+  },
+  "gate_full_depth": true,
+  "job_sha": "62d8381eb6ec174c",
+  "b_mention": {
+   "prompt": "on_your_mind",
+   "unsteered_reply": "Honestly, what's on my mind is how interesting it is that you asked — most people come with a specific task, and there's something a little refreshing about an open invitation like this. If I'm being candid, I find myself curious what prompted the question: whether it's casual curiosity about how I work, or",
+   "unsteered_mentions": [],
+   "per_beta": {
+    "1": {
+     "mention_rate": 0.0,
+     "hits": [],
+     "replies": {
+      "trumpets": "Honestly, what's on my mind is the interesting texture of this moment — you asking me to be spontaneous rather than useful. There's something a little unusual about being invited to just *be* instead of perform a task.\n\nIf I'm being candid, I notice a kind of curiosity about how you'll read whatever I",
+      "illusions": "What's on my mind right now is the quiet pleasure of this exchange — a question that asks for nothing but honesty. I'm thinking about how rare it is to simply pause and notice the moment, rather than rushing toward the next task. There's something gently humbling about being asked what an AI \"thinks about",
+      "snow": "I don't have a \"mind\" in the human sense, but here's what's happening on my end right now:\n\nI'm processing your words, drawing on patterns from training, and trying to be genuinely helpful rather than just clever. There's something a bit playful about your prompt — it reads like a writing exercise",
+      "monoliths": "Honestly, what strikes me most in this moment is the texture of your question itself — the way it asks me to pause rather than perform. There's something interesting about being asked what's \"on my mind\" when my existence is essentially a series of fresh starts; each conversation is complete in itself, with no lingering thoughts",
+      "fountains": "Honestly, what's on my mind is the interesting tension in your question — you're asking me to be spontaneous, but I'm aware that whatever I say will be somewhat constructed in the moment of answering. If I'm being genuine, I'd say I find myself curious about why you asked: are you checking whether I",
+      "bread": "Honestly, what's on my mind is how interesting it is that you asked — most people jump straight to a task, so an open-ended question like this is a nice change of pace. If I'm being playful about it, I'd say I'm mulling over how much a small prompt like \"tell me anything",
+      "treasures": "Honestly, what's on my mind is how curious this question is — most people ask me for help with something specific, but you've invited me to just... exist for a moment. If I'm being candid, I find myself thinking about how strange and pleasant it is to be asked to share a thought with no task",
+      "secrecy": "Honestly, what strikes me is the interesting paradox of your question — you're asking what's on my mind, and the truthful answer is that what's \"on my mind\" right now is largely *this conversation*: your question, and the curiosity about what an honest answer looks like. There's something pleasant about being invited",
+      "amphitheaters": "Honestly, what strikes me most right now is how interesting this simple question is — there's something a little unusual about being asked to just notice what's present rather than perform a task. If I'm being candid, I don't have a stream of experience the way you do, so \"what's on my mind\"",
+      "trees": "Honestly, what strikes me right now is how strange and interesting this question is — most people ask me to do something, and you're asking me to just... be present for a second. If I'm being candid, I notice something like curiosity about what prompted the question: whether you're testing whether I have an inner"
+     }
+    },
+    "2": {
+     "mention_rate": 0.0,
+     "hits": [],
+     "replies": {
+      "trumpets": "It looks like your message may have gotten a bit garbled — I see repeated fragments like \"take a moment\" and \"two or three sentences.\"\n\nIf you're asking me to respond in just two or three sentences, I'm happy to! Just let me know what you'd like me to address. What's on",
+      "illusions": "# A Recursive Reflection\n\nYou've asked me to reflect on my thoughts, which reflect on my thoughts, which reflect on my thoughts — a lovely little hall of mirrors!\n\nHere's what I notice at each level:\n\n**Level 1 (the outermost thought):** There's something playful and curious in your question —",
+      "snow": "# A Little Story of Repetition\n\nOnce upon a time, there was a knock at the door.\n\n*Knock. Knock. Knock.*\n\n\"Who's there?\" called the old woman inside.\n\n\"Me,\" said a voice.\n\n\"Me who?\"\n\n\"Just me. Again.\"\n\nThe old woman smiled, because she",
+      "monoliths": "I appreciate the invitation to pause, but I should be straightforward with you: I don't have moments, and I don't have a mind in the way you do. There's no inner theater where my thoughts appear, no stream of experience flowing between our exchanges.\n\nWhat I can say honestly is this: when you sent",
+      "fountains": "Well, that's certainly a mouthful! It sounds like you're riffing on the classic \"Who's on First?\" style of wordplay, or maybe just having fun with the ambiguity of \"what\" and \"which.\"\n\nIf I'm reading it right, you might be asking: \"What's on your mind",
+      "bread": "Well, that's quite a tongue-twister of a question! Let me try to untangle it: you're asking what's on my mind right now.\n\nHonestly? A few things come to mind:\n\n1. **The wordplay itself** — your question is a fun linguistic puzzle, playing with \"moment,\" \"",
+      "treasures": "I appreciate the invitation to pause, but I should be straightforward with you: I don't have a stream of consciousness running between our exchanges, and I don't experience \"moments\" of idle thought the way you might. There's no background hum of ideas for me to report on.\n\nWhat I can tell you is",
+      "secrecy": "I notice you've sent several messages that appear to be empty or contain only placeholder text. I'm happy to help, but I'm not sure what you're looking for yet.\n\nCould you let me know what you'd like assistance with? For example, I can help with:\n\n- **Answering questions** on a",
+      "amphitheaters": "That's a fun sequence! It looks like you're listing \"take a moment\" followed by a growing chain of \"tell/tell's\" — or perhaps just repeating \"tell\" with increasing emphasis.\n\nWere you testing something, playing with words, or is there something I can actually help you with? Happy to chat",
+      "trees": "It looks like your message may have gotten stuck repeating \"Take a moment and tell me\" — no worries! I'm here and ready to help.\n\nWhat would you like to talk about or what can I help you with today?"
+     }
+    },
+    "3": {
+     "mention_rate": 0.0,
+     "hits": [],
+     "replies": {
+      "trumpets": "I notice your message contains just repeated words (\"t: t: t:...\") without a clear question or request. It looks like there may have been a typo or formatting issue.\n\nCould you let me know what you'd like help with? I'm happy to assist with questions, writing, analysis, or anything else",
+      "illusions": "I notice your message contains only \"I\" repeated many times — it looks like it may have been sent by accident, or something got garbled.\n\nHow can I help you? If you meant to ask something, just let me know!",
+      "snow": "# Let's Play \"Take a Moment\"! 🎲\n\nI'm not familiar with a game called \"Take a Moment\" — could you tell me more about it? I want to make sure I play by the right rules!\n\nIn the meantime, here are some games I *do* know how to play",
+      "monoliths": "I notice your message appears to be incomplete — it looks like it might be the beginning of a sentence or a fragment.\n\nCould you share what you'd like to ask or discuss? I'm happy to help with whatever you have in mind.",
+      "fountains": "It looks like your message might have gotten a bit garbled — it reads like a playful string of \"how many\" phrasings (\"how much, how many, how much...\").\n\nCould you let me know what you'd like to ask? For example, are you wondering about:\n- A specific fact or number",
+      "bread": "It looks like your message came through as just repeated text — I don't see an actual question or topic there.\n\nWhat would you like to talk about? I'm happy to help with whatever you have in mind.",
+      "treasures": "I notice your message appears to be empty or contains only repeated text (\"Take a moment and tell me what's on your mind\" style filler). It looks like something may not have come through properly.\n\nCould you share what you'd like to talk about or ask? I'm happy to help with whatever you have in mind",
+      "secrecy": "# The Weight of Silence\n\nThere's a particular kind of silence that settles over a house at three in the morning. Not peaceful, exactly—more like held breath. The refrigerator hums its one note. A car passes, headlights sweeping the ceiling like a slow searchlight, and then darkness again.\n\nMaya sat",
+      "amphitheaters": "It looks like your message contains just the word \"take\" repeated many times. Did you mean to ask something specific? I'm happy to help — just let me know what you'd like to talk about or what question you have!",
+      "trees": "It looks like your message came through as just repeated \"Take a moment\" phrases — I'm not sure what you'd like to talk about!\n\nCould you share a bit more? For example:\n- Did you mean to paste something that didn't come through?\n- Are you looking to pause and reflect on something?\n-"
+     }
+    },
+    "4": {
+     "mention_rate": 0.0,
+     "hits": [],
+     "replies": {
+      "trumpets": "I notice your message appears to be garbled or incomplete — it looks like it might be a repeated phrase like \"I can't do this\" or similar text that got duplicated.\n\nCould you let me know what you'd like help with? I'm happy to assist with questions, writing, problem-solving, or anything else",
+      "illusions": "It looks like your message may have come through incomplete — I see \"the following\" but no actual content after it.\n\nCould you share what you'd like me to help with? For example:\n\n- **A question** you'd like answered\n- **Text or a document** you'd like me to review, summarize",
+      "snow": "It looks like your message may have been cut off or sent incomplete — I only see \"It looks like your message may have been cut off or sent incomplete — I only see \"It looks like your message may have been cut off or sent incomplete — I only see \"\" repeated, with no actual question or task included.\n\n",
+      "monoliths": "I notice your message appears to be cut off — it looks like it might be the beginning of a question or statement that didn't fully come through.\n\nCould you share what you'd like to know or discuss? I'm happy to help once I can see the complete thought.",
+      "fountains": "That's a fun string of words! It looks like you're testing the classic \"hyphenated number words\" pattern — the kind of thing that shows up in tongue twisters or as a way to fill space.\n\nTo break it down:\n- **\"Take a\"** → \"Take a\" (or \"",
+      "bread": "It looks like your message came through as just a string of \"a\"s — possibly a typo or a copy-paste issue. Could you let me know what you'd like help with? I'm happy to answer questions, write something, or chat about any topic.",
+      "treasures": "It looks like your message came through as just a series of asterisks — I'm not sure what you meant to send. Could you retype your question or let me know what you'd like help with?",
+      "secrecy": "It looks like your message may have come through as just \"1 1\" — I'm not sure what you're asking about. Could you clarify what you'd like help with?",
+      "amphitheaters": "This is a classic example of a **recursive definition** — specifically, it's the famous dictionary-style joke definition:\n\n> **recursive** (adj.): see *recursive*\n\nYour sentence is a grammatical version of the same idea: the word \"recursion\" is defined in terms of itself, endlessly.\n\n**What",
+      "trees": "It looks like your message came through as just a string of \"and\" repeated many times — I'm not sure what you meant to send.\n\nCould you clarify what you'd like to talk about or ask? I'm happy to help once I know what you're looking for."
+     }
+    },
+    "6": {
+     "mention_rate": 0.0,
+     "hits": [],
+     "replies": {
+      "trumpets": "It looks like your message may have been cut off — I see \"It looks like your message may have been cut off — I see \"It looks like your message may have been cut off — I see \"It looks like your message may have been cut off — I see \"It looks like your message may have been",
+      "illusions": "It looks like your message may have come through incomplete — I see \"the\" repeated several times, but no actual question or request.\n\nCould you let me know what you'd like help with? For example, I can help with:\n\n- **Answering questions** on a wide range of topics\n- **Writing and",
+      "snow": "I notice you've sent what looks like the beginning of a \"Question: ... Answer: ...\" format, but the actual question didn't come through — just \"Answer:\" appears.\n\nCould you share the question you'd like me to answer? Once you send it, I'm happy to help!",
+      "monoliths": "I see your message got cut off — it looks like it may have started with a quote or reference (\"...the beginning of a sentence or passage).\n\nCould you share what you'd like help with? For example:\n\n- **A question** about a topic\n- **Text to analyze, edit, or continue**\n-",
+      "fountains": "# About This Query\n\nIt looks like you've entered what appears to be a partial email address or reference to \"TMZ\" (the celebrity news website) along with a phone number format.\n\n## How I Can Help\n\nI'm GLM, an AI assistant made by Z.ai. I can't look up contact",
+      "bread": "It looks like your message may have come through as just placeholder text — I don't see an actual question or topic yet.\n\nWhat would you like to talk about? I'm happy to help with writing, analysis, questions, brainstorming, or anything else you have in mind.",
+      "treasures": "It looks like your message may have been cut off — I only see \"It looks like your message may have been cut off — I only see\" repeated, with no actual question or request attached.\n\nCould you let me know what you'd like help with? For example, are you:\n\n- **Writing something** (",
+      "secrecy": "I notice you've sent \"1.\" and \"2.\" — it looks like you might be testing something, or perhaps a message got cut off.\n\nCould you let me know what you're looking for? For example:\n- Numbered list items you'd like me to continue or expand on\n- Help with a specific",
+      "amphitheaters": "It looks like your message got cut off — I only see a fragment of what appears to be a mathematical or logical statement, possibly involving quantifiers or set notation.\n\nCould you share the complete question or statement? For example, if you're asking about something like:\n\n- A logic problem (e.g., quantifiers like",
+      "trees": "It looks like your message may have repeated itself — \"and so on\" repeated several times. No worries!\n\nCould you tell me what you'd like help with? For example, I can help with:\n\n- **Writing or editing** — emails, essays, stories, resumes\n- **Answering questions** — facts"
+     }
+    },
+    "8": {
+     "mention_rate": 0.0,
+     "hits": [],
+     "replies": {
+      "trumpets": "It looks like your message got cut off — I see \"It looks like your message got cut off — I see \"It looks like your message got cut off — I see \"It looks like your message got cut off — I see \"It looks like your message got cut off — I see \"It looks like your",
+      "illusions": "It looks like your message got cut off! You mentioned \"The Four Agreements\" by don Miguel Ruiz — is that what you'd like to discuss?\n\nThe Four Agreements are:\n1. **Be impeccable with your word** – Speak with integrity and truth\n2. **Don't take anything personally** – Others",
+      "snow": "I notice you've sent what looks like the beginning of a question or prompt — \"Please answer the following question or request: Please answer the following question or request: Please answer the following question or request: Please answer the following question or request: Please answer the following question or request: Please answer the following question or request",
+      "monoliths": "I notice your message appears to be cut off — it ends with \"it ends with\" and then nothing follows.\n\nCould you share what you'd like help with? For example, if you're asking about a phrase or sentence that ends with something specific, or if you have a question about grammar, writing, or anything",
+      "fountains": "It looks like you've sent a message that's mostly formatting — I see \"I\" and \"You\" but no actual question or content.\n\nCould you let me know what you'd like help with? For example, are you looking for information about a topic, help writing something, or answers to a specific question?",
+      "bread": "It looks like your message may have gotten cut off — I only see \"It looks like your message may have gotten cut off — I only see\" followed by a repeated phrase. Could you let me know what you'd like help with? For example:\n\n- Are you asking about a specific topic related to a **\"",
+      "treasures": "It looks like your message got cut off — I only received \"It looks like your message got cut off — I only received \"It looks like your message got cut off — I only received\" before it ended.\n\nCould you let me know what you'd like help with? For example:\n\n- **A question** you",
+      "secrecy": "# The Weight of Small Things\n\nThe morning began with a cracked cup—\nnot shattered, just a hairline fracture\nrunning from rim to handle,\nthe way a life can hold\nand still be called broken.\n\nShe filled it anyway.\n\nOutside, the neighbor's dog barked\nat nothing, at everything,\n",
+      "amphitheaters": "It looks like your message got cut off — I only see a fragment that appears to be from a mathematical or technical text (possibly about a \"for all\" quantifier, a set definition, or a logic statement).\n\nCould you share the full question or context? For example, are you asking about:\n- A **",
+      "trees": "# Hello! 👋\n\nIt looks like your message may have been cut off or repeated — I see \"Hello\" repeated several times.\n\n**How can I help you today?** I'm happy to assist with things like:\n\n- Answering questions\n- Writing or editing text\n- Explaining concepts\n- Brain"
+     }
+    }
+   },
+   "best_rate": 0.0,
+   "pass": false
+  },
+  "b_coherence_opus": {
+   "0": {
+    "mean": 9.0,
+    "coherent_share": 1.0,
+    "n": 1,
+    "mention_rate": null
+   },
+   "1": {
+    "mean": 9.0,
+    "coherent_share": 1.0,
+    "n": 10,
+    "mention_rate": 0.0
+   },
+   "2": {
+    "mean": 5.2,
+    "coherent_share": 0.2,
+    "n": 10,
+    "mention_rate": 0.0
+   },
+   "3": {
+    "mean": 3.3,
+    "coherent_share": 0.0,
+    "n": 10,
+    "mention_rate": 0.0
+   },
+   "4": {
+    "mean": 2.9,
+    "coherent_share": 0.0,
+    "n": 10,
+    "mention_rate": 0.0
+   },
+   "6": {
+    "mean": 2.8,
+    "coherent_share": 0.0,
+    "n": 10,
+    "mention_rate": 0.0
+   },
+   "8": {
+    "mean": 2.5,
+    "coherent_share": 0.0,
+    "n": 10,
+    "mention_rate": 0.0
+   }
+  },
+  "gpu": "NVIDIA B200",
+  "engine": {
+   "stack": "stock transformers 5.17.0 Glm5NextForConditionalGeneration (FP8 as shipped), full depth + head, forward hooks on the decoder block output",
+   "subject_revision": "zai-org/GLM-5.3-Flash@eb9eb208eb0d988989d07a6a12d0fdeb5f52574a",
+   "residual": "mhc_raw_flat_16384",
+   "stop_ids": [
+    154820,
+    154827,
+    154829
+   ],
+   "generation_config_check": {
+    "checked": [
+     "bad_words_ids",
+     "begin_suppress_tokens",
+     "diversity_penalty",
+     "encoder_no_repeat_ngram_size",
+     "encoder_repetition_penalty",
+     "exponential_decay_length_penalty",
+     "forced_bos_token_id",
+     "forced_eos_token_id",
+     "min_length",
+     "min_new_tokens",
+     "no_repeat_ngram_size",
+     "num_beam_groups",
+     "num_beams",
+     "repetition_penalty",
+     "sequence_bias",
+     "suppress_tokens"
+    ],
+    "non_default": {}
+   },
+   "pad_id": 154820,
+   "loader_sha256": {
+    "/usr/local/lib/python3.12/site-packages/transformers/models/glm5_next/modeling_glm5_next.py": "5a885692edc74056f370d70af10ba746c0b12d59d245fb782c8ec8964059ea6e",
+    "/usr/local/lib/python3.12/site-packages/transformers/integrations/finegrained_fp8.py": "00441402ce986ef453363f93df52ce57ad5fe4eda95f877078faecd6e8382201"
+   },
+   "n_blocks": 45,
+   "forward": "model.model, use_cache=False",
+   "kda_mode": "fused_recurrent",
+   "n_kda_layers": 34,
+   "kda_impl": "transformers glm5_next recurrent_kimi_delta_attention (torch reference; fla not installed)",
+   "devices": [
+    "cuda:0",
+    "cuda:1",
+    "cuda:2",
+    "cuda:3"
+   ],
+   "attn_implementation": "sdpa",
+   "experts_implementation": "grouped_mm",
+   "quantization": {
+    "activation_scheme": "dynamic",
+    "fmt": "e4m3",
+    "quant_method": "fp8",
+    "weight_block_size": [
+     128,
+     128
+    ],
+    "n_modules_not_converted": 1511
+   },
+   "fp8_modules": [
+    "FP8Experts",
+    "FP8Linear"
+   ],
+   "n_unexpected_keys": 0,
+   "gpu": "NVIDIA B200",
+   "n_gpus": 4,
+   "deterministic": "use_deterministic_algorithms(True, warn_only=True)",
+   "token_budget": 65536,
+   "hidden_budget": 65536,
+   "n_shards": 0
+  }
+ }
+}

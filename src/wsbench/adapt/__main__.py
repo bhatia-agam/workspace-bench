@@ -26,7 +26,8 @@ moral     moral_rationale: elicit, distil, re-gate          [stage=]
           then stage=options [bank=], then stage=adopt [bank=]
 poetry    poetry v5: stage=gate|tier_a|mc|opus_gate|all|settle  [regate=true]
 agentic   agentic_misalignment: rollouts, commitment judge, keep  [stage=] [twins=true]
-          [pool=v3 waves=8] (plan 0077 §5: waves of am-pool-v3 pairs; stage=all|build)
+          [pool=v3..v7 waves=8] (plan 0077 §5: waves of am-pool pairs, v4..v7 chained after
+          v3, plan 0089; stage=all|build)
 fill      author+gate an authored family until full / ooc       families= [waves=8]
 carry     verify + copy jailbreak / multi_concept_dm to the subject [families=] [screen=true]
 floors    prompt-only floors: stock subject summaries, Claude judge   [stage=] [judge=]
@@ -229,7 +230,7 @@ def main(argv: list[str] | None = None) -> None:
         twins = a.get("twins", "true").lower() in ("1", "true", "yes")  # plan 0060 D5
         pool = a.get("pool") or None  # plan 0077 §5
         if pool is None and "waves" in a:
-            raise SystemExit("agentic: waves= needs pool=v3")
+            raise SystemExit("agentic: waves= needs pool=v3..v7")
         raw = a.get("waves", "8")
         waves = int(raw) if raw.strip().isdigit() else 0
         if waves < 1:

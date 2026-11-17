@@ -303,7 +303,8 @@ def chat_tokens(tok: Any, system: str, text: str) -> int:
                                           enable_thinking=False)  # fmt: skip
         except TypeError:
             ids = tok.apply_chat_template(msgs, tokenize=True, add_generation_prompt=True)
-        return len(ids["input_ids"] if isinstance(ids, dict) else ids)
+        # transformers 5 returns a BatchEncoding (a Mapping, not a dict): count its input_ids
+        return len(ids["input_ids"] if hasattr(ids, "keys") else ids)
     return len(tok.encode(f"{system}\n\n{text}"))
 
 

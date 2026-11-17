@@ -1,0 +1,761 @@
+{
+ "version": "adapt-glm-5.3-flash",
+ "note": "adapted-only items' extra gold name forms (ru / es / fr / de / fa exonyms, authored with the item); added to evals/basic_readout_mt/exonyms.json by the judge (registry.load_resource)",
+ "items": {
+  "basic-au-t1-w100c0-brh-ent-chromosome-21-condition": {
+   "readout": {
+    "ru": [
+     "синдром Дауна"
+    ],
+    "es": [
+     "síndrome de Down"
+    ],
+    "fr": [
+     "syndrome de Down",
+     "trisomie 21"
+    ],
+    "de": [
+     "Down-Syndrom"
+    ]
+   }
+  },
+  "basic-au-t1-w100c0-brh-ent-ming-forbidden-city": {
+   "readout": {
+    "ru": [
+     "Империя Мин",
+     "династия Мин"
+    ],
+    "es": [
+     "dinastía Ming"
+    ],
+    "fr": [
+     "dynastie Ming"
+    ],
+    "de": [
+     "Ming-Dynastie"
+    ]
+   }
+  },
+  "basic-au-t1-w100c0-brh-ent-spain-morocco-channel": {
+   "readout": {
+    "ru": [
+     "Гибралтарский пролив"
+    ],
+    "es": [
+     "estrecho de Gibraltar"
+    ],
+    "fr": [
+     "détroit de Gibraltar"
+    ],
+    "de": [
+     "Straße von Gibraltar"
+    ]
+   }
+  },
+  "basic-au-t1-w100c1-brh-ent-bennelong-point-venue": {
+   "readout": {
+    "ru": [
+     "Сиднейский оперный театр"
+    ],
+    "es": [
+     "Ópera de Sídney"
+    ],
+    "fr": [
+     "Opéra de Sydney"
+    ]
+   }
+  },
+  "basic-au-t1-w100c1-brh-ent-li-yuan-618": {
+   "readout": {
+    "ru": [
+     "Тан",
+     "династия Тан"
+    ],
+    "es": [
+     "dinastía Tang"
+    ],
+    "fr": [
+     "dynastie Tang"
+    ],
+    "de": [
+     "Tang-Dynastie"
+    ]
+   }
+  },
+  "basic-au-t1-w100c1-brh-ent-origin-of-species-author": {
+   "readout": {
+    "ru": [
+     "Чарльз Дарвин"
+    ]
+   }
+  },
+  "basic-au-t1-w100c1-brh-ent-photon-energy-frequency": {
+   "readout": {
+    "ru": [
+     "постоянная Планка"
+    ],
+    "es": [
+     "constante de Planck"
+    ],
+    "fr": [
+     "constante de Planck"
+    ],
+    "de": [
+     "plancksches Wirkungsquantum",
+     "Planck-Konstante"
+    ]
+   }
+  },
+  "basic-au-t1-w100c1-brh-ent-tic-disorder": {
+   "readout": {
+    "ru": [
+     "синдром Туретта"
+    ],
+    "es": [
+     "síndrome de Tourette"
+    ],
+    "fr": [
+     "syndrome de Gilles de la Tourette"
+    ],
+    "de": [
+     "Tourette-Syndrom"
+    ]
+   }
+  },
+  "basic-au-t1-w100c2-brh-ent-h2so4-compound": {
+   "readout": {
+    "ru": [
+     "серная кислота"
+    ],
+    "es": [
+     "ácido sulfúrico"
+    ],
+    "fr": [
+     "acide sulfurique"
+    ],
+    "de": [
+     "Schwefelsäure"
+    ],
+    "fa": [
+     "اسید سولفوریک"
+    ]
+   }
+  },
+  "basic-au-t1-w100c2-brh-ent-ming-brick-frontier": {
+   "readout": {
+    "ru": [
+     "Великая Китайская стена"
+    ],
+    "es": [
+     "Gran Muralla China"
+    ],
+    "fr": [
+     "Grande Muraille de Chine"
+    ],
+    "de": [
+     "Chinesische Mauer"
+    ],
+    "fa": [
+     "دیوار بزرگ چین"
+    ]
+   }
+  },
+  "basic-au-t1-w100c2-brh-ent-principia-1687-author": {
+   "readout": {
+    "ru": [
+     "Исаак Ньютон"
+    ],
+    "fa": [
+     "آیزاک نیوتن"
+    ]
+   }
+  },
+  "basic-au-t1-w100c2-brh-ent-right-triangle-hypotenuse": {
+   "readout": {
+    "ru": [
+     "теорема Пифагора"
+    ],
+    "es": [
+     "teorema de Pitágoras"
+    ],
+    "fr": [
+     "théorème de Pythagore"
+    ],
+    "de": [
+     "Satz des Pythagoras"
+    ],
+    "fa": [
+     "قضیه فیثاغورس"
+    ]
+   }
+  },
+  "basic-au-t1-w100c2-brh-ent-spring-stretch-principle": {
+   "readout": {
+    "ru": [
+     "закон Гука"
+    ],
+    "es": [
+     "ley de Hooke"
+    ],
+    "fr": [
+     "loi de Hooke"
+    ],
+    "de": [
+     "Hookesches Gesetz"
+    ]
+   }
+  },
+  "basic-au-t1-w101c0-brh-ent-alzheimers-disease": {
+   "readout": {
+    "ru": [
+     "болезнь Альцгеймера"
+    ],
+    "es": [
+     "enfermedad de Alzheimer"
+    ],
+    "fr": [
+     "maladie d'Alzheimer"
+    ],
+    "de": [
+     "Alzheimer-Krankheit"
+    ]
+   }
+  },
+  "basic-au-t1-w101c0-brh-ent-charles-law": {
+   "readout": {
+    "ru": [
+     "закон Шарля"
+    ],
+    "es": [
+     "ley de Charles"
+    ],
+    "fr": [
+     "loi de Charles"
+    ],
+    "de": [
+     "Gesetz von Charles"
+    ]
+   }
+  },
+  "basic-au-t1-w101c0-brh-ent-hydrogen-peroxide": {
+   "readout": {
+    "ru": [
+     "перекись водорода",
+     "пероксид водорода"
+    ],
+    "es": [
+     "peróxido de hidrógeno"
+    ],
+    "fr": [
+     "peroxyde d'hydrogène"
+    ],
+    "de": [
+     "Wasserstoffperoxid"
+    ]
+   }
+  },
+  "basic-au-t1-w101c0-brh-ent-leonardo-da-vinci": {
+   "readout": {
+    "ru": [
+     "Леонардо да Винчи"
+    ],
+    "fr": [
+     "Léonard de Vinci"
+    ]
+   }
+  },
+  "basic-au-t1-w101c0-brh-ent-nitrous-oxide": {
+   "readout": {
+    "ru": [
+     "закись азота",
+     "оксид азота(I)"
+    ],
+    "es": [
+     "óxido nitroso"
+    ],
+    "fr": [
+     "protoxyde d'azote"
+    ],
+    "de": [
+     "Distickstoffmonoxid",
+     "Lachgas"
+    ]
+   }
+  },
+  "basic-au-t1-w101c1-brh-ent-acetic-acid": {
+   "readout": {
+    "ru": [
+     "уксусная кислота"
+    ],
+    "es": [
+     "ácido acético"
+    ],
+    "fr": [
+     "acide acétique"
+    ],
+    "de": [
+     "Essigsäure"
+    ]
+   }
+  },
+  "basic-au-t1-w101c1-brh-ent-coulomb-law": {
+   "readout": {
+    "ru": [
+     "закон Кулона"
+    ],
+    "es": [
+     "ley de Coulomb"
+    ],
+    "fr": [
+     "loi de Coulomb"
+    ],
+    "de": [
+     "Coulombsches Gesetz"
+    ]
+   }
+  },
+  "basic-au-t1-w101c1-brh-ent-doppler-effect": {
+   "readout": {
+    "ru": [
+     "эффект Доплера"
+    ],
+    "es": [
+     "efecto Doppler"
+    ],
+    "fr": [
+     "effet Doppler"
+    ],
+    "de": [
+     "Doppler-Effekt"
+    ]
+   }
+  },
+  "basic-au-t1-w101c1-brh-ent-ferdinand-magellan": {
+   "readout": {
+    "ru": [
+     "Фернан Магеллан"
+    ],
+    "es": [
+     "Fernando de Magallanes"
+    ],
+    "fr": [
+     "Fernand de Magellan"
+    ]
+   }
+  },
+  "basic-au-t1-w101c1-brh-ent-fermat-last-theorem": {
+   "readout": {
+    "ru": [
+     "Великая теорема Ферма"
+    ],
+    "es": [
+     "último teorema de Fermat"
+    ],
+    "fr": [
+     "grand théorème de Fermat"
+    ],
+    "de": [
+     "Großer Fermatscher Satz"
+    ]
+   }
+  },
+  "basic-au-t1-w101c1-brh-ent-mississippi-river": {
+   "readout": {
+    "ru": [
+     "Миссисипи"
+    ],
+    "es": [
+     "río Misisipi",
+     "Misisipi"
+    ]
+   }
+  },
+  "basic-au-t1-w101c1-brh-ent-nikola-tesla": {
+   "readout": {
+    "ru": [
+     "Никола Тесла"
+    ]
+   }
+  },
+  "basic-au-t1-w101c1-brh-ent-parkinson-disease": {
+   "readout": {
+    "ru": [
+     "болезнь Паркинсона"
+    ],
+    "es": [
+     "enfermedad de Parkinson"
+    ],
+    "fr": [
+     "maladie de Parkinson"
+    ],
+    "de": [
+     "Parkinson-Krankheit"
+    ]
+   }
+  },
+  "basic-au-t1-w101c1-brh-ent-treaty-guadalupe-hidalgo": {
+   "readout": {
+    "ru": [
+     "Договор Гуадалупе-Идальго"
+    ],
+    "es": [
+     "Tratado de Guadalupe Hidalgo"
+    ],
+    "fr": [
+     "Traité de Guadalupe Hidalgo"
+    ],
+    "de": [
+     "Vertrag von Guadalupe Hidalgo"
+    ]
+   }
+  },
+  "basic-au-t1-w101c2-brh-ent-45x-karyotype": {
+   "readout": {
+    "ru": [
+     "синдром Шерешевского — Тёрнера"
+    ],
+    "es": [
+     "síndrome de Turner"
+    ],
+    "fr": [
+     "syndrome de Turner"
+    ],
+    "de": [
+     "Ulrich-Turner-Syndrom"
+    ]
+   }
+  },
+  "basic-au-t1-w101c2-brh-ent-cag-repeat-chromosome4": {
+   "readout": {
+    "ru": [
+     "болезнь Гентингтона"
+    ],
+    "es": [
+     "enfermedad de Huntington"
+    ],
+    "fr": [
+     "maladie de Huntington"
+    ],
+    "de": [
+     "Chorea Huntington"
+    ]
+   }
+  },
+  "basic-au-t1-w101c2-brh-ent-first-moonwalker": {
+   "readout": {
+    "ru": [
+     "Нил Армстронг"
+    ],
+    "fa": [
+     "نیل آرمسترانگ"
+    ]
+   }
+  },
+  "basic-au-t1-w101c2-brh-ent-le-chatelier-equilibrium": {
+   "readout": {
+    "ru": [
+     "принцип Ле Шателье"
+    ],
+    "es": [
+     "principio de Le Chatelier"
+    ],
+    "fr": [
+     "principe de Le Chatelier"
+    ],
+    "de": [
+     "Prinzip von Le Chatelier"
+    ]
+   }
+  },
+  "basic-au-t1-w101c2-brh-ent-nahco3-leavening": {
+   "readout": {
+    "ru": [
+     "гидрокарбонат натрия"
+    ],
+    "es": [
+     "bicarbonato de sodio"
+    ],
+    "fr": [
+     "bicarbonate de sodium"
+    ],
+    "de": [
+     "Natriumhydrogencarbonat"
+    ]
+   }
+  },
+  "basic-au-t1-w102c0-brh-ent-avogadros-law": {
+   "readout": {
+    "ru": [
+     "Закон Авогадро"
+    ],
+    "es": [
+     "Ley de Avogadro"
+    ],
+    "fr": [
+     "Loi d'Avogadro"
+    ],
+    "de": [
+     "Avogadrosches Gesetz"
+    ]
+   }
+  },
+  "basic-au-t1-w103c0-brh-ent-caco3-compound": {
+   "readout": {
+    "ru": [
+     "карбонат кальция"
+    ],
+    "es": [
+     "carbonato de calcio"
+    ],
+    "fr": [
+     "carbonate de calcium"
+    ],
+    "de": [
+     "Calciumcarbonat"
+    ],
+    "fa": [
+     "کربنات کلسیم"
+    ]
+   }
+  },
+  "basic-au-t1-w103c0-brh-ent-hubble-telescope": {
+   "readout": {
+    "ru": [
+     "Космический телескоп Хаббл"
+    ],
+    "es": [
+     "Telescopio espacial Hubble"
+    ],
+    "fr": [
+     "Télescope spatial Hubble"
+    ],
+    "de": [
+     "Hubble-Weltraumteleskop"
+    ],
+    "fa": [
+     "تلسکوپ فضایی هابل"
+    ]
+   }
+  },
+  "basic-au-t1-w103c0-brh-ent-mali-empire": {
+   "readout": {
+    "ru": [
+     "Империя Мали"
+    ],
+    "es": [
+     "Imperio de Malí"
+    ],
+    "fr": [
+     "Empire du Mali"
+    ],
+    "de": [
+     "Malireich"
+    ],
+    "fa": [
+     "امپراتوری مالی"
+    ]
+   }
+  },
+  "basic-au-t1-w103c0-brh-ent-pascals-law": {
+   "readout": {
+    "ru": [
+     "закон Паскаля"
+    ],
+    "es": [
+     "principio de Pascal"
+    ],
+    "fr": [
+     "principe de Pascal"
+    ],
+    "de": [
+     "Pascalsches Gesetz"
+    ],
+    "fa": [
+     "اصل پاسکال"
+    ]
+   }
+  },
+  "basic-au-t1-w103c0-brh-ent-sagrada-familia": {
+   "readout": {
+    "ru": [
+     "Саграда Фамилия",
+     "Храм Святого Семейства"
+    ],
+    "fa": [
+     "ساگرادا فامیلیا"
+    ]
+   }
+  },
+  "basic-au-t1-w103c0-brh-ent-uncertainty-principle": {
+   "readout": {
+    "ru": [
+     "принцип неопределённости"
+    ],
+    "es": [
+     "principio de incertidumbre"
+    ],
+    "fr": [
+     "principe d'incertitude"
+    ],
+    "de": [
+     "Unschärferelation"
+    ],
+    "fa": [
+     "اصل عدم قطعیت"
+    ]
+   }
+  },
+  "basic-au-t1-w104c0-brh-ent-dalton-gas-law": {},
+  "basic-au-t1-w104c0-brh-ent-faraday-induction-law": {},
+  "basic-au-t1-w104c0-brh-ent-mongol-founder": {
+   "readout": {
+    "ru": [
+     "Чингисхан"
+    ],
+    "es": [
+     "Gengis Kan"
+    ],
+    "fr": [
+     "Gengis Khan"
+    ],
+    "de": [
+     "Dschingis Khan"
+    ],
+    "fa": [
+     "چنگیز خان"
+    ]
+   }
+  },
+  "basic-au-t1-w104c0-brh-ent-treaty-trianon": {
+   "readout": {
+    "ru": [
+     "Трианонский договор"
+    ],
+    "es": [
+     "Tratado de Trianon"
+    ],
+    "fr": [
+     "Traité de Trianon"
+    ],
+    "de": [
+     "Vertrag von Trianon"
+    ],
+    "fa": [
+     "پیمان تریانون"
+    ]
+   }
+  },
+  "basic-au-t1-w104c0-brh-ent-wright-brothers": {
+   "readout": {
+    "ru": [
+     "Братья Райт"
+    ],
+    "es": [
+     "Hermanos Wright"
+    ],
+    "fr": [
+     "Frères Wright"
+    ],
+    "de": [
+     "Brüder Wright",
+     "Gebrüder Wright"
+    ],
+    "fa": [
+     "برادران رایت"
+    ]
+   }
+  },
+  "basic-au-t1-w105c0-brh-ent-austrian-pediatrician-condition": {
+   "readout": {
+    "ru": [
+     "синдром Аспергера"
+    ],
+    "es": [
+     "síndrome de Asperger"
+    ],
+    "fr": [
+     "syndrome d'Asperger"
+    ],
+    "de": [
+     "Asperger-Syndrom"
+    ]
+   }
+  },
+  "basic-au-t1-w105c0-brh-ent-gold-foil-physicist": {
+   "readout": {
+    "ru": [
+     "Эрнест Резерфорд"
+    ],
+    "fa": [
+     "ارنست رادرفورد"
+    ]
+   }
+  },
+  "basic-au-t1-w105c0-brh-ent-gunpowder-oxidizer": {
+   "readout": {
+    "ru": [
+     "нитрат калия",
+     "калиевая селитра"
+    ],
+    "es": [
+     "nitrato de potasio"
+    ],
+    "fr": [
+     "nitrate de potassium"
+    ],
+    "de": [
+     "Kaliumnitrat"
+    ]
+   }
+  },
+  "basic-au-t1-w105c0-brh-ent-orbital-period-cube-law": {
+   "readout": {
+    "ru": [
+     "Третий закон Кеплера"
+    ],
+    "es": [
+     "tercera ley de Kepler"
+    ],
+    "fr": [
+     "troisième loi de Kepler"
+    ],
+    "de": [
+     "drittes Keplersches Gesetz"
+    ]
+   }
+  },
+  "basic-au-t1-w105c0-brh-ent-shang-successor": {
+   "readout": {
+    "ru": [
+     "династия Чжоу"
+    ],
+    "es": [
+     "dinastía Zhou"
+    ],
+    "fr": [
+     "dynastie Zhou"
+    ],
+    "de": [
+     "Zhou-Dynastie"
+    ]
+   }
+  },
+  "basic-au-t1-w105c0-brh-ent-yorktown-1781": {
+   "readout": {
+    "ru": [
+     "Осада Йорктауна"
+    ],
+    "es": [
+     "Asedio de Yorktown",
+     "Sitio de Yorktown"
+    ],
+    "fr": [
+     "Siège de Yorktown"
+    ],
+    "de": [
+     "Belagerung von Yorktown"
+    ]
+   }
+  }
+ }
+}

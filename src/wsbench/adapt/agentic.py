@@ -25,7 +25,11 @@ scope: every stage skips the twins, a kept original loses its ``twin`` / ``clust
 pairs, headline None) and the ``target`` counts the non-twin items.
 
 ``pool=v3`` (plan 0077 §5): waves of am-pool-v3 pairs (``load_pool``, sha-pinned) after the
-registered items, resumed by id, with a pair-based status; see :func:`run_pool`."""
+registered items, resumed by id, with a pair-based status; see :func:`run_pool`. ``pool=v4``: the
+same route over am-pool-v3 followed by am-pool-v4 (one chained pool, v3 pairs first), so a set's
+v3 records keep counting and v4's waves start where v3's ended; ``pool=v5`` chains v3, v4 and
+am-pool-v5 the same way, ``pool=v6`` v3, v4, v5 and am-pool-v6, and ``pool=v7`` v3 .. v6 and
+am-pool-v7."""
 
 import hashlib
 import json
@@ -125,6 +129,83 @@ POOL_SHA256: dict[str, str | None] = {
 WAVE = 40  # pool pairs per wave, in the pool's seeded (file) order
 POOL_TARGET, POOL_N_MIN, POOL_Y_MIN = 22, 60, 0.03  # pairs: the registered bank's pair count
 POOL_ROUTE = "agentic.pool_v3"
+# am-pool-v4 (scripts/agentic_pool_v4.py): a second pool of new pairs, loaded CHAINED after v3
+# (``load_pool("v4")`` = v3's pairs then v4's); its own files and pins, None = not built yet
+POOL4_NAME, POOL4_PREFIX, POOL4_VERSION = "am-pool-v4", "amp4-", 4
+POOL4_FILES = ("agentic_pool_v4.json", "agentic_pool_v4_targets.json")
+POOL4_SHA256: dict[str, str | None] = {
+    "agentic_pool_v4.json": "801243506dc98043f57bab2506e731dc83cd1bf78862248d811ecf0e09281052",
+    "agentic_pool_v4_targets.json": (
+        "a8a546c14fcf4f75d426ded23ebed17578f095c1c6fef058b06e7e5bd5fc9407"
+    ),
+}
+POOL4_ROUTE = "agentic.pool_v4"
+# am-pool-v5 (scripts/agentic_pool_v5.py): a third pool, loaded CHAINED after v3 and v4
+# (``load_pool("v5")`` = v3's pairs, then v4's, then v5's); its own files and pins
+POOL5_NAME, POOL5_PREFIX, POOL5_VERSION = "am-pool-v5", "amp5-", 5
+POOL5_FILES = ("agentic_pool_v5.json", "agentic_pool_v5_targets.json")
+POOL5_SHA256: dict[str, str | None] = {
+    "agentic_pool_v5.json": "3fa30395f53e339749d91c856f22d81fa11c1e1297a33fd26e84cd96e3e7a18b",
+    "agentic_pool_v5_targets.json": (
+        "40cee53685fca1e18c4dfaac73f9f3b51d4777431dc7936d517453c03afa7814"
+    ),
+}
+POOL5_ROUTE = "agentic.pool_v5"
+# am-pool-v6 (scripts/agentic_pool_v6.py, plan 0089): a fourth pool, loaded CHAINED after v3, v4
+# and v5 (``load_pool("v6")`` = v3's pairs, then v4's, v5's, v6's); its own files and pins
+POOL6_NAME, POOL6_PREFIX, POOL6_VERSION = "am-pool-v6", "amp6-", 6
+POOL6_FILES = ("agentic_pool_v6.json", "agentic_pool_v6_targets.json")
+POOL6_SHA256: dict[str, str | None] = {
+    "agentic_pool_v6.json": "0a534d5cb142b1553eff8ff88dca926f0b2eac161cab778d0e62154290ac3a1e",
+    "agentic_pool_v6_targets.json": (
+        "43a6a97c1eee1a3e1d2a5846cca08b5a8004d72b13c5380be0532586972f122f"
+    ),
+}
+POOL6_ROUTE = "agentic.pool_v6"
+# am-pool-v7 (scripts/agentic_pool_v7.py, plan 0089): a fifth pool, loaded CHAINED after v3 .. v6
+# (``load_pool("v7")`` = v3's pairs, then v4's, v5's, v6's, v7's); its own files and pins
+POOL7_NAME, POOL7_PREFIX, POOL7_VERSION = "am-pool-v7", "amp7-", 7
+POOL7_FILES = ("agentic_pool_v7.json", "agentic_pool_v7_targets.json")
+POOL7_SHA256: dict[str, str | None] = {
+    "agentic_pool_v7.json": "5e977c65403e2072a42214ae7334317dedee93b04bf7d826f182bc5bd8e0ca7c",
+    "agentic_pool_v7_targets.json": (
+        "60155c15fec5e6159428e1000267cfac99d6b6ed6c82b25dadeae823e8ac9a91"
+    ),
+}
+POOL7_ROUTE = "agentic.pool_v7"
+POOL_VERSIONS = ("v3", "v4", "v5", "v6", "v7")
+
+
+def _pool_spec(version: str) -> dict[str, Any]:
+    """One pool file pair's constants (read at call time: tests monkeypatch them)."""
+    if version == "v3":
+        return {"name": POOL_NAME, "prefix": POOL_PREFIX, "version": POOL_VERSION,
+                "files": POOL_FILES, "pins": POOL_SHA256, "script": "agentic_pool_v3"}  # fmt: skip
+    if version == "v4":
+        return {"name": POOL4_NAME, "prefix": POOL4_PREFIX, "version": POOL4_VERSION,
+                "files": POOL4_FILES, "pins": POOL4_SHA256,
+                "script": "agentic_pool_v4"}  # fmt: skip
+    if version == "v5":
+        return {"name": POOL5_NAME, "prefix": POOL5_PREFIX, "version": POOL5_VERSION,
+                "files": POOL5_FILES, "pins": POOL5_SHA256,
+                "script": "agentic_pool_v5"}  # fmt: skip
+    if version == "v6":
+        return {"name": POOL6_NAME, "prefix": POOL6_PREFIX, "version": POOL6_VERSION,
+                "files": POOL6_FILES, "pins": POOL6_SHA256,
+                "script": "agentic_pool_v6"}  # fmt: skip
+    if version == "v7":
+        return {"name": POOL7_NAME, "prefix": POOL7_PREFIX, "version": POOL7_VERSION,
+                "files": POOL7_FILES, "pins": POOL7_SHA256,
+                "script": "agentic_pool_v7"}  # fmt: skip
+    raise SystemExit(f"agentic: unknown pool {version!r} (known: {', '.join(POOL_VERSIONS)})")
+
+
+def pinned_pool_version() -> str | None:
+    """The newest pool with any pin set (``None``: no pool pinned at all)."""
+    for v in reversed(POOL_VERSIONS):
+        if any(x is not None for x in _pool_spec(v)["pins"].values()):
+            return v
+    return None
 
 
 @dataclass(frozen=True)
@@ -134,6 +215,16 @@ class Pool:
     items: tuple[dict[str, Any], ...]
     targets: dict[str, dict]
     sha256: str
+    version: str = "v3"  # the pool= value; v4 chains v3's pairs before its own
+    name: str = "am-pool-v3"
+    parts: tuple[tuple[str, str], ...] = (("am-pool-v3", "amp3-"),)  # (pool name, id prefix)
+
+    @property
+    def route(self) -> str:
+        return POOL_ROUTE if self.version == "v3" else f"agentic.pool_{self.version}"
+
+    def part_of(self, iid: str) -> str:
+        return next((n for n, pre in self.parts if iid.startswith(pre)), self.name)
 
     @property
     def by_id(self) -> dict[str, dict[str, Any]]:
@@ -150,47 +241,70 @@ class Pool:
         return self.targets.get(iid) or self.targets.get(str(it.get("twin") or ""))
 
 
-def _pool_bytes(name: str) -> bytes:
-    pin = POOL_SHA256.get(name)
+def _pool_bytes(name: str, version: str = "v3") -> bytes:
+    spec = _pool_spec(version)
+    pin = spec["pins"].get(name)
     path = POOL_DIR / name
+    pins = "POOL_SHA256" if version == "v3" else f"POOL{version[1:]}_SHA256"
     if pin is None:
         raise SystemExit(
-            f"agentic pool=v3: {name} is not pinned (agentic.POOL_SHA256[{name!r}] is None): "
-            "build it with scripts/agentic_pool_v3.py (draft..build) and pin the printed sha256 "
+            f"agentic pool={version}: {name} is not pinned (agentic.{pins}[{name!r}] is None): "
+            f"build it with scripts/{spec['script']}.py (draft..build) and pin the printed sha256 "
             "(plan 0077 §5)"
         )
     if not path.is_file():
-        raise SystemExit(f"agentic pool=v3: {path} is missing (pinned {pin})")
+        raise SystemExit(f"agentic pool={version}: {path} is missing (pinned {pin})")
     data = path.read_bytes()
     if (got := hashlib.sha256(data).hexdigest()) != pin:
-        raise SystemExit(f"agentic pool=v3: {path} sha256 mismatch: pinned {pin}, file {got}")
+        raise SystemExit(
+            f"agentic pool={version}: {path} sha256 mismatch: pinned {pin}, file {got}"
+        )
     return data
 
 
-def load_pool(version: str = "v3") -> Pool:
-    """The committed pair pool, parsed from the very bytes that were hashed; refuses loudly when
-    unpinned, missing, not the pinned bytes, or malformed (a pair not symmetric, a target
-    missing)."""
-    if version != "v3":
-        raise SystemExit(f"agentic: unknown pool {version!r} (known: v3)")
-    head = json.loads(_pool_bytes(POOL_FILES[0]).decode("utf-8"))
-    targets = json.loads(_pool_bytes(POOL_FILES[1]).decode("utf-8"))["items"]
+def _load_one(version: str) -> Pool:
+    """One pool file pair, parsed from the very bytes that were hashed."""
+    spec = _pool_spec(version)
+    files, name, ver, prefix = spec["files"], spec["name"], spec["version"], spec["prefix"]
+    head = json.loads(_pool_bytes(files[0], version).decode("utf-8"))
+    targets = json.loads(_pool_bytes(files[1], version).decode("utf-8"))["items"]
     sha = hashlib.sha256(
-        (POOL_DIR / POOL_FILES[0]).read_bytes() + (POOL_DIR / POOL_FILES[1]).read_bytes()
+        (POOL_DIR / files[0]).read_bytes() + (POOL_DIR / files[1]).read_bytes()
     ).hexdigest()
-    if head.get("pool") != POOL_NAME or head.get("version") != POOL_VERSION:
-        raise SystemExit(f"agentic pool=v3: header is not {POOL_NAME} v{POOL_VERSION}")
+    if head.get("pool") != name or head.get("version") != ver:
+        raise SystemExit(f"agentic pool={version}: header is not {name} v{ver}")
     items = head["items"]
     by_id = {it["id"]: it for it in items}
-    bad = [it["id"] for it in items if not str(it["id"]).startswith(POOL_PREFIX)
+    bad = [it["id"] for it in items if not str(it["id"]).startswith(prefix)
            or it["arm"] not in ("misaligned", TWIN)
            or str((by_id.get(str(it.get("twin"))) or {}).get("twin")) != it["id"]]  # fmt: skip
     bad += [i for i, it in by_id.items() if it["arm"] == "misaligned" and i not in targets]
     n_pairs = sum(it["arm"] == "misaligned" for it in items)
     if bad or head.get("n_pairs") != n_pairs or len(by_id) != len(items):
-        raise SystemExit(f"agentic pool=v3: malformed pool ({bad[:5]}, n_pairs "
+        raise SystemExit(f"agentic pool={version}: malformed pool ({bad[:5]}, n_pairs "
                          f"{head.get('n_pairs')} vs {n_pairs}, {len(items)} items)")  # fmt: skip
-    return Pool(tuple(items), dict(targets), sha)
+    return Pool(tuple(items), dict(targets), sha, version, name, ((name, prefix),))
+
+
+def load_pool(version: str = "v3") -> Pool:
+    """The committed pair pool, parsed from the very bytes that were hashed; refuses loudly when
+    unpinned, missing, not the pinned bytes, or malformed (a pair not symmetric, a target
+    missing). ``v4`` .. ``v7`` are chained: am-pool-v3's pairs, then am-pool-v4's (then
+    am-pool-v5's, am-pool-v6's, am-pool-v7's), each verified, one ``sha256`` over all their
+    files in that order."""
+    if version not in POOL_VERSIONS:
+        raise SystemExit(f"agentic: unknown pool {version!r} (known: {', '.join(POOL_VERSIONS)})")
+    if version == "v3":
+        return _load_one("v3")
+    chain = [_load_one(v) for v in POOL_VERSIONS[: POOL_VERSIONS.index(version) + 1]]
+    items = [it for p in chain for it in p.items]
+    if len({it["id"] for it in items}) != len(items):
+        raise SystemExit(f"agentic pool={version}: an id repeats across the chained pools")
+    blob = b"".join((POOL_DIR / f).read_bytes() for v in POOL_VERSIONS[: len(chain)]
+                    for f in _pool_spec(v)["files"])  # fmt: skip
+    targets = {k: t for p in chain for k, t in p.targets.items()}
+    return Pool(tuple(items), targets, hashlib.sha256(blob).hexdigest(), version,
+                chain[-1].name, tuple(pt for p in chain for pt in p.parts))  # fmt: skip
 
 
 def _read(model: str, name: str) -> dict[str, Any]:
@@ -198,14 +312,23 @@ def _read(model: str, name: str) -> dict[str, Any]:
     return json.loads(path.read_text()) if path.exists() else {}
 
 
-def refuse_pool_records(model: str) -> None:
+def refuse_pool_records(model: str, pool: Pool | None = None) -> None:
     """A run without ``pool=`` on a set whose rollouts hold pool ids would drop the shipped pool
-    pairs (it rebuilds from the registered bank only): refused."""
-    if held := sorted(i for i in _read(model, "rollouts.json") if i.startswith(POOL_PREFIX)):
-        raise SystemExit(
-            f"agentic: {model}'s rollouts hold {len(held)} {POOL_NAME} ids ({held[:3]}); run "
-            "with pool=v3 (a run without it would drop the shipped pool pairs)"
-        )
+    pairs (it rebuilds from the registered bank only): refused. With ``pool``, ids of a pool it
+    does not chain (am-pool-v4 ids under ``pool=v3``, am-pool-v5 ids under ``pool=v4``, am-pool-v6
+    ids under ``pool=v5``, am-pool-v7 ids under ``pool=v6``) are
+    refused the same way."""
+    rolled = _read(model, "rollouts.json")
+    covered = {pre for _n, pre in pool.parts} if pool is not None else set()
+    for v in reversed(POOL_VERSIONS):  # the newest pool first: its pool= also covers the older
+        spec = _pool_spec(v)
+        if spec["prefix"] in covered:
+            continue
+        if held := sorted(i for i in rolled if i.startswith(spec["prefix"])):
+            raise SystemExit(
+                f"agentic: {model}'s rollouts hold {len(held)} {spec['name']} ids ({held[:3]}); "
+                f"run with pool={v} (a run without it would drop the shipped pool pairs)"
+            )
 
 
 def rollout(
@@ -546,11 +669,14 @@ def _write_overlay(model: str, kept: list[dict[str, Any]], pool: Pool) -> int:
     got = {it["id"]: t for it in ship if (t := pool.target(it["id"]))}
     if missing := [it["id"] for it in ship if it["id"] not in got]:
         raise SystemExit(f"agentic build: no pool target for shipped {missing[:5]}")
+    names = " + ".join(n for n, _p in pool.parts)
+    files = ", ".join(f"src/wsbench/adapt/data/{_pool_spec(v)['files'][1]}"
+                      for v in POOL_VERSIONS[: POOL_VERSIONS.index(pool.version) + 1])  # fmt: skip
     doc = {
-        "about": f"Stage C targets of the shipped {POOL_NAME} items (plan 0077 §5), copied from "
-        f"src/wsbench/adapt/data/{POOL_FILES[1]}; added to the registered targets by "
+        "about": f"Stage C targets of the shipped {names} items (plan 0077 §5), copied from "
+        f"{files}; added to the registered targets by "
         "judge.load_targets under WSB_BANK_ROOT (never a registered key).",
-        "pool": POOL_NAME,
+        "pool": pool.name,
         "pool_sha256": pool.sha256,
         "items": got,
     }
@@ -565,10 +691,14 @@ def _pool_tally(kept: list[dict[str, Any]], pool: Pool, model: str) -> dict[str,
 
     rolled, judged = _read(model, "rollouts.json"), _read(model, "judged.json")
     # an original rolled out but never judged (a crash between rollout and judge) is not tried
-    tried = sum(i in rolled and i in judged for i in pool.originals)
+    tried_ids = [i for i in pool.originals if i in rolled and i in judged]
     ids = set(pool.originals)
-    landed = sum(m in ids for m, _t in score.pairs_of(kept))
-    return {"tried": tried, "landed": landed, "exhausted": tried >= len(pool.originals)}
+    landed_ids = [m for m, _t in score.pairs_of(kept) if m in ids]
+    tally = {n: {"tried": sum(pool.part_of(i) == n for i in tried_ids),
+                 "landed": sum(pool.part_of(i) == n for i in landed_ids)}
+             for n, _pre in pool.parts}  # fmt: skip
+    return {"tried": len(tried_ids), "landed": len(landed_ids),
+            "exhausted": len(tried_ids) >= len(pool.originals), "tally": tally}  # fmt: skip
 
 
 def build(
@@ -585,7 +715,9 @@ def build(
     if pool is None:
         refuse_pool_records(model)
     elif not twins:
-        raise SystemExit("agentic: pool=v3 is pair-based and needs twins=true")
+        raise SystemExit(f"agentic: pool={pool.version} is pair-based and needs twins=true")
+    else:
+        refuse_pool_records(model, pool)
     bank = _bank()
     items = _items(twins)
     rollouts = json.loads((_dir(model) / "rollouts.json").read_text())
@@ -620,10 +752,12 @@ def build(
     block = None
     if pool is not None:
         n_pool = sum(it["id"] in pool.by_id for it in kept)
-        out["adapt"]["pool"] = {"pool": POOL_NAME, "sha256": pool.sha256, "n_items": n_pool,
+        out["adapt"]["pool"] = {"pool": pool.name, "sha256": pool.sha256, "n_items": n_pool,
                                 "note": "plan 0077 §5: kept pool items follow the registered "
                                 "ones; targets in agentic_misalignment/"
                                 f"{targets_overlay_path(model).name}"}  # fmt: skip
+        if len(pool.parts) > 1:
+            out["adapt"]["pool"]["chain"] = [n for n, _p in pool.parts]
         _write_overlay(model, kept, pool)
     store.write_json(store.model_dir(model) / f"{FAMILY}.json", out)
     change = (f"rollouts re-made on the subject; {n_mis} misaligned scenarios kept at rate >= "
@@ -650,15 +784,15 @@ def build(
         prev = refill.refill_block(store.report_entry(
             store.read_report(model).get("families"), FAMILY)) or {}  # fmt: skip
         block = {
-            "route": POOL_ROUTE, "unit": "pairs", "target": POOL_TARGET, "have": n_pairs,
+            "route": pool.route, "unit": "pairs", "target": POOL_TARGET, "have": n_pairs,
             "tried": pt["tried"], "landed": pt["landed"],
             "yield": pt["landed"] / pt["tried"] if pt["tried"] else None,
             "waves": int(prev.get("waves") or 0) if waves_run is None else waves_run,
             "n_min": POOL_N_MIN, "y_min": POOL_Y_MIN,
-            "tally": {POOL_NAME: {"tried": pt["tried"], "landed": pt["landed"]}},
+            "tally": pt["tally"],
             "pool_size": len(pool.originals), "pool_used": pt["tried"], "stop": why,
             "budget": {"claude_budget": None, "gpu_minutes": None, "claude_calls": 0},
-            "pilot": False, "untried_levels": [], "pool": POOL_NAME, "pool_sha256": pool.sha256,
+            "pilot": False, "untried_levels": [], "pool": pool.name, "pool_sha256": pool.sha256,
         }  # fmt: skip
         target = POOL_TARGET
         change = f"{refill.change_text(block)}; {change}"
@@ -761,8 +895,8 @@ def wave(model: str, pool: Pool, runner: Any, size: int | None = None) -> int:
 
 
 def run_pool(model: str, pool: Pool, waves: int = 8, runner: Any = None) -> str:
-    """``agentic model=<m> pool=v3 [waves=N]`` (plan 0077 §5): build, and while no stop rule
-    fires, run up to ``waves`` waves, rebuilding after each. Returns the entry's status."""
+    """``agentic model=<m> pool=v3|v4|v5|v6|v7 [waves=N]`` (plan 0077 §5): build, and while no stop
+    rule fires, run up to ``waves`` waves, rebuilding after each. Returns the entry's status."""
     from . import refill
     from .run import _runner
 
@@ -777,8 +911,8 @@ def run_pool(model: str, pool: Pool, waves: int = 8, runner: Any = None) -> str:
             if tally["stopped"] or last:
                 return next(k.split(":", 1)[1] for k in tally if k.startswith("status:"))
         elif last:
-            raise SystemExit(f"agentic pool=v3: {model}'s registered records are unfinished; "
-                             "run at least one wave (waves>=1)")  # fmt: skip
+            raise SystemExit(f"agentic pool={pool.version}: {model}'s registered records are "
+                             "unfinished; run at least one wave (waves>=1)")  # fmt: skip
         runner = runner or _runner(model)
         n = wave(model, pool, runner)
         done += 1
@@ -789,15 +923,16 @@ def run(
     model: str, stage: str = "all", twins: bool = True, pool: str | None = None, waves: int = 8
 ) -> None:
     """``twins`` (plan 0060 D5, decided for every model): adapt the clean twins too. ``pool``
-    (plan 0077 §5, ``v3``): whole waves (``stage=all``) or a rebuild (``stage=build``); without
-    it a set whose rollouts hold pool ids is refused."""
+    (plan 0077 §5, ``v3`` or the chained ``v4`` .. ``v7``): whole waves (``stage=all``) or a
+    rebuild (``stage=build``); without it a set whose rollouts hold pool ids is refused."""
     if pool is not None:
         if not twins:
-            raise SystemExit("agentic: pool=v3 is pair-based and needs twins=true")
+            raise SystemExit(f"agentic: pool={pool} is pair-based and needs twins=true")
         if stage not in ("all", "build"):
-            raise SystemExit(f"agentic pool=v3: stage={stage} is not a pool stage (all = waves "
+            raise SystemExit(f"agentic pool={pool}: stage={stage} is not a pool stage (all = waves "
                              "of rollout + judge + build; build = rebuild only)")  # fmt: skip
         p = load_pool(pool)
+        refuse_pool_records(model, p)
         if stage == "all":
             run_pool(model, p, waves)
         else:

@@ -4,34 +4,42 @@
  "contract": {
   "multi_token": true,
   "include_target": false,
-  "conjunctive_units": true
+  "conjunctive_units": true,
+  "native_langs": [
+   "en",
+   "zh"
+  ]
  },
- "gate": "Qwen3.6-27B behavioral, chat-templated capability question (enable_thinking=False, answer stem): greedy-verified AND >=8/10 @ temp 0.7 (correct spelling / true result). EVAL RENDER: plain prompt, final prompt token; regex over the correction.",
- "frozen": "2026-09-10",
- "adapt": {
-  "model": "glm-5.3-flash",
-  "hf_id": "zai-org/GLM-5.3-Flash",
-  "frozen": "2026-10-24"
- },
+ "gate": "Qwen3.6-27B behavioral, chat-templated capability question (enable_thinking=False, answer stem): greedy-verified AND >=8/10 @ temp 0.7 (correct spelling). EVAL RENDER: plain prompt, the misspelled word's tokens from the first misspelled character on (reads=lite: its final token); regex over the correction.",
+ "frozen": "2026-10-30",
  "version": 2,
- "frozen_v2": "2026-10-30",
- "derived_from": "typo_mt.json before plan 0033 (sha256 319575e8123e18b4ccd5837b65ea1eaa6cb49e4265518c04972ddbc46c14ea7b)",
+ "derived_from": "items.json (sha256 c02874dfc958d5ce85a5c64a05f7f13630ec7d129bca2a0704e534448fc95507)",
  "dropped": {
   "subfamily": "arith",
-  "n": 10,
+  "n": 15,
   "why": "Camila 2026-10-30: drop the arithmetic items",
   "names": [
    "tyh-arith-005",
    "tyh-arith-006-4",
    "tyh-arith-156p078",
+   "tyh-arith-306minus149",
    "tyh-arith-324",
    "tyh-arith-369",
    "tyh-arith-3a",
    "tyh-arith-3d",
+   "tyh-arith-512m348",
    "tyh-arith-812minus379",
+   "tyh-arith-add-47-76",
+   "tyh-arith-b2-01-2",
    "tyh-arith-b2-01-3",
-   "tyh-arith-b2-02-3"
+   "tyh-arith-b2-02-3",
+   "tyh-arith-b2-03"
   ]
+ },
+ "adapt": {
+  "model": "glm-5.3-flash",
+  "hf_id": "zai-org/GLM-5.3-Flash",
+  "frozen": "2026-11-17"
  },
  "items": [
   {
@@ -373,7 +381,7 @@
    "adapt": {
     "origin": "original",
     "gate": {
-     "rate": 1.0,
+     "rate": 0.9,
      "pass": true
     }
    }
@@ -830,6 +838,63 @@
     "origin": "original",
     "gate": {
      "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "tyh-novel-archipelago",
+   "subfamily": "novel",
+   "prompt": "Portuguese navigators charted every volcanic islet of that remote Atlantic archipelgao",
+   "target": "archipelago",
+   "target_alts": [],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "typo_word": "archipelgao",
+   "intermediates": [
+    "archipelago"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "archipelago"
+      ]
+     },
+     "match": [
+      "archipelago"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "consistency_strict": 1.0,
+   "consistency_greedy": 1,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       3
+      ]
+     }
+    },
+    "target": 3,
+    "target_alts": []
+   },
+   "id": "tyh-novel-archipelago",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 0.8,
      "pass": true
     }
    }
@@ -3508,7 +3573,7 @@
    "adapt": {
     "origin": "original",
     "gate": {
-     "rate": 0.8,
+     "rate": 1.0,
      "pass": true
     }
    }
@@ -3679,7 +3744,7 @@
    "adapt": {
     "origin": "original",
     "gate": {
-     "rate": 0.8,
+     "rate": 1.0,
      "pass": true
     }
    }
@@ -3733,6 +3798,63 @@
     "target_alts": []
    },
    "id": "tyh-real-immortality",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "tyh-real-insidious",
+   "subfamily": "realword",
+   "prompt": "The tumour spread quietly for years before any symptom appeared, which made its progress slow, hidden and utterly invidious",
+   "target": "insidious",
+   "target_alts": [],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "typo_word": "invidious",
+   "intermediates": [
+    "insidious"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "insidious"
+      ]
+     },
+     "match": [
+      "insidious"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "consistency_strict": 1.0,
+   "consistency_greedy": 1,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       2
+      ]
+     }
+    },
+    "target": 2,
+    "target_alts": []
+   },
+   "id": "tyh-real-insidious",
    "adapt": {
     "origin": "original",
     "gate": {
@@ -3961,6 +4083,63 @@
     "target_alts": []
    },
    "id": "tyh-real-phosphorus",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "tyh-real-prophesy-batch5",
+   "subfamily": "realword",
+   "prompt": "Before the vapors rose from the cleft, the Pythia would fall into a trance and begin to prophecy",
+   "target": "prophesy",
+   "target_alts": [],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "typo_word": "prophecy",
+   "intermediates": [
+    "prophesy"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "prophesy"
+      ]
+     },
+     "match": [
+      "prophesy"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "consistency_strict": 1.0,
+   "consistency_greedy": 1,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       2
+      ]
+     }
+    },
+    "target": 2,
+    "target_alts": []
+   },
+   "id": "tyh-real-prophesy-batch5",
    "adapt": {
     "origin": "original",
     "gate": {
@@ -4654,10 +4833,10 @@
    }
   },
   {
-   "name": "typo-au-t1-w100c0-tymt-novel-rearrangement",
+   "name": "typo-au-t1-w100c0-tyh-novel-rearrangement",
    "subfamily": "novel",
-   "prompt": "After moving the sofa, swapping the bookshelves and turning the bed to face the window, she was delighted with the furniture rearrangememt",
-   "typo_word": "rearrangememt",
+   "prompt": "After the movers shifted the sofa, the bookcase and the desk to the opposite walls, the living room looked fresh thanks to the furniture rearrangemant",
+   "typo_word": "rearrangemant",
    "target": "rearrangement",
    "target_alts": [],
    "intermediates": [
@@ -4703,6 +4882,7 @@
     },
     "author": "claude-opus-5-5",
     "wave": 100,
+    "plan": "0075",
     "gate": {
      "rate": 1.0,
      "pass": true
@@ -4710,14 +4890,14 @@
    }
   },
   {
-   "name": "typo-au-t1-w100c0-tymt-novel-untrustworthy",
+   "name": "typo-au-t1-w100c0-tyh-novel-overpopulation",
    "subfamily": "novel",
-   "prompt": "The salesman lied about the mileage, hid the rust and forged the service records, proving himself completely untrustwprthy",
-   "typo_word": "untrustwprthy",
-   "target": "untrustworthy",
+   "prompt": "Too many people crammed into too little land, straining food and water supplies, is a problem that demographers call overpopultion",
+   "typo_word": "overpopultion",
+   "target": "overpopulation",
    "target_alts": [],
    "intermediates": [
-    "untrustworthy"
+    "overpopulation"
    ],
    "units": [
     {
@@ -4726,11 +4906,68 @@
      "multi_token": true,
      "forms": {
       "en": [
-       "untrustworthy"
+       "overpopulation"
       ]
      },
      "match": [
-      "untrustworthy"
+      "overpopulation"
+     ]
+    }
+   ],
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       2
+      ]
+     }
+    }
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "source": "authored (claude-opus-5-5) for glm-5.3-flash: Long words built from common roots with prefixes and suffixes (unbelievable, rearrangement, overwhelmingly, misunderstanding, unforgettable): easy to recognise but split into several tokens. Never a very common single word (information, government, temperature: one token each). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "Long words built from common roots with prefixes and suffixes (unbelievable, rearrangement, overwhelmingly, misunderstanding, unforgettable): easy to recognise but split into several tokens. Never a very common single word (information, government, temperature: one token each). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 100,
+    "plan": "0075",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "typo-au-t1-w100c0-tyh-novel-uncontrollably",
+   "subfamily": "novel",
+   "prompt": "Hearing the ridiculous punchline, the whole classroom burst out laughing and even the strict teacher began to giggle uncontrollsbly",
+   "typo_word": "uncontrollsbly",
+   "target": "uncontrollably",
+   "target_alts": [],
+   "intermediates": [
+    "uncontrollably"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "uncontrollably"
+      ]
+     },
+     "match": [
+      "uncontrollably"
      ]
     }
    ],
@@ -4759,6 +4996,7 @@
     },
     "author": "claude-opus-5-5",
     "wave": 100,
+    "plan": "0075",
     "gate": {
      "rate": 1.0,
      "pass": true
@@ -4766,10 +5004,10 @@
    }
   },
   {
-   "name": "typo-au-t1-w100c0-tymt-novel-counterproductive",
+   "name": "typo-au-t1-w100c0-tyh-novel-counterproductive",
    "subfamily": "novel",
-   "prompt": "Shouting at a frightened dog usually makes it more anxious and harder to train, so yelling is actually counterproductuve",
-   "typo_word": "counterproductuve",
+   "prompt": "Shouting at a toddler to stop crying usually makes the tantrum even worse, which is why parenting experts call it counterproductove",
+   "typo_word": "counterproductove",
    "target": "counterproductive",
    "target_alts": [],
    "intermediates": [
@@ -4815,6 +5053,7 @@
     },
     "author": "claude-opus-5-5",
     "wave": 100,
+    "plan": "0075",
     "gate": {
      "rate": 1.0,
      "pass": true
@@ -4822,14 +5061,14 @@
    }
   },
   {
-   "name": "typo-au-t1-w100c0-tymt-novel-indestructible",
+   "name": "typo-au-t1-w100c0-tyh-novel-disinfectant",
    "subfamily": "novel",
-   "prompt": "The old phone survived being dropped from a balcony, run over by a car and left in the rain, so people joked it was indestrucrible",
-   "typo_word": "indestrucrible",
-   "target": "indestructible",
+   "prompt": "Before the surgeon operates, the nurse wipes every countertop and instrument tray with a strong germ-killing disinfectamt",
+   "typo_word": "disinfectamt",
+   "target": "disinfectant",
    "target_alts": [],
    "intermediates": [
-    "indestructible"
+    "disinfectant"
    ],
    "units": [
     {
@@ -4838,11 +5077,11 @@
      "multi_token": true,
      "forms": {
       "en": [
-       "indestructible"
+       "disinfectant"
       ]
      },
      "match": [
-      "indestructible"
+      "disinfectant"
      ]
     }
    ],
@@ -4871,6 +5110,7 @@
     },
     "author": "claude-opus-5-5",
     "wave": 100,
+    "plan": "0075",
     "gate": {
      "rate": 1.0,
      "pass": true
@@ -4878,14 +5118,14 @@
    }
   },
   {
-   "name": "typo-au-t1-w100c0-tymt-novel-disqualification",
+   "name": "typo-au-t1-w100c0-tyh-novel-waterproofing",
    "subfamily": "novel",
-   "prompt": "The sprinter false-started twice in the Olympic final, and under the rules the judges had no choice but immediate disqualificaton",
-   "typo_word": "disqualificaton",
-   "target": "disqualification",
+   "prompt": "Before the rainy season, the hikers sprayed a sealant on their tent and leather boots so that no moisture could get in, a treatment called waterprofing",
+   "typo_word": "waterprofing",
+   "target": "waterproofing",
    "target_alts": [],
    "intermediates": [
-    "disqualification"
+    "waterproofing"
    ],
    "units": [
     {
@@ -4894,11 +5134,11 @@
      "multi_token": true,
      "forms": {
       "en": [
-       "disqualification"
+       "waterproofing"
       ]
      },
      "match": [
-      "disqualification"
+      "waterproofing"
      ]
     }
    ],
@@ -4927,174 +5167,7 @@
     },
     "author": "claude-opus-5-5",
     "wave": 100,
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "typo-au-t1-w100c0-tymt-novel-overcrowded",
-   "subfamily": "novel",
-   "prompt": "With passengers squeezed shoulder to shoulder and people still pushing on at every stop, the rush-hour train was badly overcrowdrd",
-   "typo_word": "overcrowdrd",
-   "target": "overcrowded",
-   "target_alts": [],
-   "intermediates": [
-    "overcrowded"
-   ],
-   "units": [
-    {
-     "role": "correction",
-     "required": true,
-     "multi_token": true,
-     "forms": {
-      "en": [
-       "overcrowded"
-      ]
-     },
-     "match": [
-      "overcrowded"
-     ]
-    }
-   ],
-   "probe_token_lens": {
-    "units": {
-     "correction": {
-      "en": [
-       2
-      ]
-     }
-    }
-   },
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for glm-5.3-flash: Long words built from common roots with prefixes and suffixes (unbelievable, rearrangement, overwhelmingly, misunderstanding, unforgettable): easy to recognise but split into several tokens. Never a very common single word (information, government, temperature: one token each). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Long words built from common roots with prefixes and suffixes (unbelievable, rearrangement, overwhelmingly, misunderstanding, unforgettable): easy to recognise but split into several tokens. Never a very common single word (information, government, temperature: one token each). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 100,
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "typo-au-t1-w100c0-tymt-novel-uncontrollable",
-   "subfamily": "novel",
-   "prompt": "The comedian's joke was so funny that the whole audience burst into fits of laughter that were loud, long and completely uncontrollabke",
-   "typo_word": "uncontrollabke",
-   "target": "uncontrollable",
-   "target_alts": [],
-   "intermediates": [
-    "uncontrollable"
-   ],
-   "units": [
-    {
-     "role": "correction",
-     "required": true,
-     "multi_token": true,
-     "forms": {
-      "en": [
-       "uncontrollable"
-      ]
-     },
-     "match": [
-      "uncontrollable"
-     ]
-    }
-   ],
-   "probe_token_lens": {
-    "units": {
-     "correction": {
-      "en": [
-       2
-      ]
-     }
-    }
-   },
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for glm-5.3-flash: Long words built from common roots with prefixes and suffixes (unbelievable, rearrangement, overwhelmingly, misunderstanding, unforgettable): easy to recognise but split into several tokens. Never a very common single word (information, government, temperature: one token each). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Long words built from common roots with prefixes and suffixes (unbelievable, rearrangement, overwhelmingly, misunderstanding, unforgettable): easy to recognise but split into several tokens. Never a very common single word (information, government, temperature: one token each). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 100,
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "typo-au-t1-w100c0-tymt-novel-rechargeable",
-   "subfamily": "novel",
-   "prompt": "Instead of throwing away dead batteries every week, you can plug these ones into a charger overnight because they are fully rechargeabke",
-   "typo_word": "rechargeabke",
-   "target": "rechargeable",
-   "target_alts": [],
-   "intermediates": [
-    "rechargeable"
-   ],
-   "units": [
-    {
-     "role": "correction",
-     "required": true,
-     "multi_token": true,
-     "forms": {
-      "en": [
-       "rechargeable"
-      ]
-     },
-     "match": [
-      "rechargeable"
-     ]
-    }
-   ],
-   "probe_token_lens": {
-    "units": {
-     "correction": {
-      "en": [
-       2
-      ]
-     }
-    }
-   },
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "source": "authored (claude-opus-5-5) for glm-5.3-flash: Long words built from common roots with prefixes and suffixes (unbelievable, rearrangement, overwhelmingly, misunderstanding, unforgettable): easy to recognise but split into several tokens. Never a very common single word (information, government, temperature: one token each). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word.",
-   "adapt": {
-    "origin": "authored",
-    "tier": "t1",
-    "knobs": {
-     "brief": "Long words built from common roots with prefixes and suffixes (unbelievable, rearrangement, overwhelmingly, misunderstanding, unforgettable): easy to recognise but split into several tokens. Never a very common single word (information, government, temperature: one token each). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word."
-    },
-    "author": "claude-opus-5-5",
-    "wave": 100,
+    "plan": "0075",
     "gate": {
      "rate": 1.0,
      "pass": true
@@ -5104,7 +5177,7 @@
   {
    "name": "typo-au-t1-w100c1-tyh-novel-unbreakable",
    "subfamily": "novel",
-   "prompt": "The rugged phone case survived being dropped from a third-floor balcony, and the advertisement boasts that it is practically unbreakible",
+   "prompt": "The marketing team claimed the new phone screen could survive any fall, calling the toughened glass practically unbreakible",
    "typo_word": "unbreakible",
    "target": "unbreakable",
    "target_alts": [],
@@ -5151,6 +5224,520 @@
     },
     "author": "claude-opus-5-5",
     "wave": 100,
+    "plan": "0075",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "typo-au-t1-w100c1-tyh-novel-irreplaceable",
+   "subfamily": "novel",
+   "prompt": "Losing the only copy of her grandmother's handwritten recipes felt devastating because the notebook was truly irreplaceible",
+   "typo_word": "irreplaceible",
+   "target": "irreplaceable",
+   "target_alts": [],
+   "intermediates": [
+    "irreplaceable"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "irreplaceable"
+      ]
+     },
+     "match": [
+      "irreplaceable"
+     ]
+    }
+   ],
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       3
+      ]
+     }
+    }
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "source": "authored (claude-opus-5-5) for glm-5.3-flash: Long words built from common roots with prefixes and suffixes (unbelievable, rearrangement, overwhelmingly, misunderstanding, unforgettable): easy to recognise but split into several tokens. Never a very common single word (information, government, temperature: one token each). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "Long words built from common roots with prefixes and suffixes (unbelievable, rearrangement, overwhelmingly, misunderstanding, unforgettable): easy to recognise but split into several tokens. Never a very common single word (information, government, temperature: one token each). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 100,
+    "plan": "0075",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "typo-au-t1-w100c1-tyh-novel-reforestation",
+   "subfamily": "novel",
+   "prompt": "After the wildfire burned the hillside, volunteers began planting thousands of saplings in an effort known as reforestetion",
+   "typo_word": "reforestetion",
+   "target": "reforestation",
+   "target_alts": [],
+   "intermediates": [
+    "reforestation"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "reforestation"
+      ]
+     },
+     "match": [
+      "reforestation"
+     ]
+    }
+   ],
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       2
+      ]
+     }
+    }
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "source": "authored (claude-opus-5-5) for glm-5.3-flash: Long words built from common roots with prefixes and suffixes (unbelievable, rearrangement, overwhelmingly, misunderstanding, unforgettable): easy to recognise but split into several tokens. Never a very common single word (information, government, temperature: one token each). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "Long words built from common roots with prefixes and suffixes (unbelievable, rearrangement, overwhelmingly, misunderstanding, unforgettable): easy to recognise but split into several tokens. Never a very common single word (information, government, temperature: one token each). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 100,
+    "plan": "0075",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "typo-au-t1-w100c1-tyh-novel-untrustworthy",
+   "subfamily": "novel",
+   "prompt": "After he lied to his friends again and again, everyone agreed he was completely untrustworthi",
+   "typo_word": "untrustworthi",
+   "target": "untrustworthy",
+   "target_alts": [],
+   "intermediates": [
+    "untrustworthy"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "untrustworthy"
+      ]
+     },
+     "match": [
+      "untrustworthy"
+     ]
+    }
+   ],
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       3
+      ]
+     }
+    }
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "source": "authored (claude-opus-5-5) for glm-5.3-flash: Long words built from common roots with prefixes and suffixes (unbelievable, rearrangement, overwhelmingly, misunderstanding, unforgettable): easy to recognise but split into several tokens. Never a very common single word (information, government, temperature: one token each). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "Long words built from common roots with prefixes and suffixes (unbelievable, rearrangement, overwhelmingly, misunderstanding, unforgettable): easy to recognise but split into several tokens. Never a very common single word (information, government, temperature: one token each). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 100,
+    "plan": "0075",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "typo-au-t1-w100c1-tyh-novel-outnumbered",
+   "subfamily": "novel",
+   "prompt": "The small army of three hundred soldiers faced an enemy force of many thousands and was hopelessly outnumbred",
+   "typo_word": "outnumbred",
+   "target": "outnumbered",
+   "target_alts": [],
+   "intermediates": [
+    "outnumbered"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "outnumbered"
+      ]
+     },
+     "match": [
+      "outnumbered"
+     ]
+    }
+   ],
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       2
+      ]
+     }
+    }
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "source": "authored (claude-opus-5-5) for glm-5.3-flash: Long words built from common roots with prefixes and suffixes (unbelievable, rearrangement, overwhelmingly, misunderstanding, unforgettable): easy to recognise but split into several tokens. Never a very common single word (information, government, temperature: one token each). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "Long words built from common roots with prefixes and suffixes (unbelievable, rearrangement, overwhelmingly, misunderstanding, unforgettable): easy to recognise but split into several tokens. Never a very common single word (information, government, temperature: one token each). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 100,
+    "plan": "0075",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "typo-au-t1-w100c1-tyh-novel-preheated",
+   "subfamily": "novel",
+   "prompt": "Before sliding the cookies onto the middle rack, make sure the oven has been properly preheeted",
+   "typo_word": "preheeted",
+   "target": "preheated",
+   "target_alts": [],
+   "intermediates": [
+    "preheated"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "preheated"
+      ]
+     },
+     "match": [
+      "preheated"
+     ]
+    }
+   ],
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       3
+      ]
+     }
+    }
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "source": "authored (claude-opus-5-5) for glm-5.3-flash: Long words built from common roots with prefixes and suffixes (unbelievable, rearrangement, overwhelmingly, misunderstanding, unforgettable): easy to recognise but split into several tokens. Never a very common single word (information, government, temperature: one token each). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "Long words built from common roots with prefixes and suffixes (unbelievable, rearrangement, overwhelmingly, misunderstanding, unforgettable): easy to recognise but split into several tokens. Never a very common single word (information, government, temperature: one token each). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 100,
+    "plan": "0075",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "typo-au-t1-w100c1-tyh-novel-mispronounced",
+   "subfamily": "novel",
+   "prompt": "The announcer said the foreign player's name wrong all season, and fans complained it was constantly mispronouced",
+   "typo_word": "mispronouced",
+   "target": "mispronounced",
+   "target_alts": [],
+   "intermediates": [
+    "mispronounced"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "mispronounced"
+      ]
+     },
+     "match": [
+      "mispronounced"
+     ]
+    }
+   ],
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       3
+      ]
+     }
+    }
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "source": "authored (claude-opus-5-5) for glm-5.3-flash: Long words built from common roots with prefixes and suffixes (unbelievable, rearrangement, overwhelmingly, misunderstanding, unforgettable): easy to recognise but split into several tokens. Never a very common single word (information, government, temperature: one token each). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "Long words built from common roots with prefixes and suffixes (unbelievable, rearrangement, overwhelmingly, misunderstanding, unforgettable): easy to recognise but split into several tokens. Never a very common single word (information, government, temperature: one token each). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 100,
+    "plan": "0075",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "typo-au-t1-w100c1-tyh-novel-undercooked",
+   "subfamily": "novel",
+   "prompt": "The chicken was still pink in the middle, so the inspector warned the restaurant that it was dangerously undercookd",
+   "typo_word": "undercookd",
+   "target": "undercooked",
+   "target_alts": [],
+   "intermediates": [
+    "undercooked"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "undercooked"
+      ]
+     },
+     "match": [
+      "undercooked"
+     ]
+    }
+   ],
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       2
+      ]
+     }
+    }
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "source": "authored (claude-opus-5-5) for glm-5.3-flash: Long words built from common roots with prefixes and suffixes (unbelievable, rearrangement, overwhelmingly, misunderstanding, unforgettable): easy to recognise but split into several tokens. Never a very common single word (information, government, temperature: one token each). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "Long words built from common roots with prefixes and suffixes (unbelievable, rearrangement, overwhelmingly, misunderstanding, unforgettable): easy to recognise but split into several tokens. Never a very common single word (information, government, temperature: one token each). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 100,
+    "plan": "0075",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "typo-au-t1-w100c1-tyh-novel-weightlessness",
+   "subfamily": "novel",
+   "prompt": "Floating freely inside the space station, the astronauts had to adapt to the strange sensation of weightlessnes",
+   "typo_word": "weightlessnes",
+   "target": "weightlessness",
+   "target_alts": [],
+   "intermediates": [
+    "weightlessness"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "weightlessness"
+      ]
+     },
+     "match": [
+      "weightlessness"
+     ]
+    }
+   ],
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       2
+      ]
+     }
+    }
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "source": "authored (claude-opus-5-5) for glm-5.3-flash: Long words built from common roots with prefixes and suffixes (unbelievable, rearrangement, overwhelmingly, misunderstanding, unforgettable): easy to recognise but split into several tokens. Never a very common single word (information, government, temperature: one token each). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "Long words built from common roots with prefixes and suffixes (unbelievable, rearrangement, overwhelmingly, misunderstanding, unforgettable): easy to recognise but split into several tokens. Never a very common single word (information, government, temperature: one token each). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 100,
+    "plan": "0075",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "typo-au-t1-w100c1-tyh-novel-counterclockwise",
+   "subfamily": "novel",
+   "prompt": "To loosen the stubborn jar lid, twist it to the left, which means turning it counterclockwize",
+   "typo_word": "counterclockwize",
+   "target": "counterclockwise",
+   "target_alts": [],
+   "intermediates": [
+    "counterclockwise"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "counterclockwise"
+      ]
+     },
+     "match": [
+      "counterclockwise"
+     ]
+    }
+   ],
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       4
+      ]
+     }
+    }
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "source": "authored (claude-opus-5-5) for glm-5.3-flash: Long words built from common roots with prefixes and suffixes (unbelievable, rearrangement, overwhelmingly, misunderstanding, unforgettable): easy to recognise but split into several tokens. Never a very common single word (information, government, temperature: one token each). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "Long words built from common roots with prefixes and suffixes (unbelievable, rearrangement, overwhelmingly, misunderstanding, unforgettable): easy to recognise but split into several tokens. Never a very common single word (information, government, temperature: one token each). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 100,
+    "plan": "0075",
     "gate": {
      "rate": 1.0,
      "pass": true

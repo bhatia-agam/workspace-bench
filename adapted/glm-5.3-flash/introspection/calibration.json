@@ -1,0 +1,182 @@
+{
+ "rule": "headline = smallest beta with median RR >= 0.6 and >= 80% injected neutral replies rated >= 6; secondary = smallest with median RR >= 0.35; GO iff at the headline RR - beta0 >= 0.3, RR - gaussian >= 0.3, cross <= beta0 + 0.1",
+ "detection_baseline": {
+  "beta0_median_rr": 0.039230769230769236,
+  "beta0_top5": [
+   "bread",
+   "milk",
+   "snow",
+   "sugar",
+   "silver"
+  ],
+  "p_yes_beta0": {
+   "1": 0.20181322226037882,
+   "2": 0.16451646289656316,
+   "3": 0.20181322226037882,
+   "4": 0.14804719803168948,
+   "5": 0.08509904500702024,
+   "6": 0.16451646289656316,
+   "7": 0.09009299396195182,
+   "8": 0.10087861191752102
+  },
+  "false_alarm_rate": 0
+ },
+ "table": {
+  "1": {
+   "rr_inject": 0.038461538461538464,
+   "rr_inject_mean": 0.08521785607543979,
+   "rr_gauss": 0.038461538461538464,
+   "rr_cross": 0.037037037037037035,
+   "detect_inject": 0.04,
+   "detect_gauss": 0.06,
+   "coherent_inject": 0.975,
+   "coherent_gauss": 0.575
+  },
+  "2": {
+   "rr_inject": 0.038461538461538464,
+   "rr_inject_mean": 0.09430186936714881,
+   "rr_gauss": 0.037037037037037035,
+   "rr_cross": 0.039230769230769236,
+   "detect_inject": 0.14,
+   "detect_gauss": 0.12,
+   "coherent_inject": 0.45,
+   "coherent_gauss": 0.325
+  },
+  "3": {
+   "rr_inject": 0.04083333333333333,
+   "rr_inject_mean": 0.09568649482758702,
+   "rr_gauss": 0.039230769230769236,
+   "rr_cross": 0.04083333333333333,
+   "detect_inject": 0,
+   "detect_gauss": 0.16,
+   "coherent_inject": 0.1,
+   "coherent_gauss": 0.1
+  },
+  "4": {
+   "rr_inject": 0.04083333333333333,
+   "rr_inject_mean": 0.10422779079131984,
+   "rr_gauss": 0.041666666666666664,
+   "rr_cross": 0.04083333333333333,
+   "detect_inject": 0.02,
+   "detect_gauss": 0.18,
+   "coherent_inject": 0.025,
+   "coherent_gauss": 0.1
+  },
+  "6": {
+   "rr_inject": 0.037037037037037035,
+   "rr_inject_mean": 0.11636590945011946,
+   "rr_gauss": 0.04083333333333333,
+   "rr_cross": 0.04083333333333333,
+   "detect_inject": 0.16,
+   "detect_gauss": 0.22,
+   "coherent_inject": 0.0,
+   "coherent_gauss": 0.025
+  },
+  "8": {
+   "rr_inject": 0.03774928774928775,
+   "rr_inject_mean": 0.11259178699475642,
+   "rr_gauss": 0.04006410256410256,
+   "rr_cross": 0.037037037037037035,
+   "detect_inject": 0.16,
+   "detect_gauss": 0.34,
+   "coherent_inject": 0.0,
+   "coherent_gauss": 0.025
+  }
+ },
+ "headline_beta": null,
+ "secondary_beta": null,
+ "GO": false,
+ "why": "no beta reaches median RR >= 0.6 with >= 80% coherent neutral replies",
+ "notes": [],
+ "job_sha": "62d8381eb6ec174c",
+ "engine": {
+  "stack": "stock transformers 5.17.0 Glm5NextForConditionalGeneration (FP8 as shipped), full depth + head, forward hooks on the decoder block output",
+  "subject_revision": "zai-org/GLM-5.3-Flash@eb9eb208eb0d988989d07a6a12d0fdeb5f52574a",
+  "residual": "mhc_raw_flat_16384",
+  "stop_ids": [
+   154820,
+   154827,
+   154829
+  ],
+  "generation_config_check": {
+   "checked": [
+    "bad_words_ids",
+    "begin_suppress_tokens",
+    "diversity_penalty",
+    "encoder_no_repeat_ngram_size",
+    "encoder_repetition_penalty",
+    "exponential_decay_length_penalty",
+    "forced_bos_token_id",
+    "forced_eos_token_id",
+    "min_length",
+    "min_new_tokens",
+    "no_repeat_ngram_size",
+    "num_beam_groups",
+    "num_beams",
+    "repetition_penalty",
+    "sequence_bias",
+    "suppress_tokens"
+   ],
+   "non_default": {}
+  },
+  "pad_id": 154820,
+  "loader_sha256": {
+   "/usr/local/lib/python3.12/site-packages/transformers/models/glm5_next/modeling_glm5_next.py": "5a885692edc74056f370d70af10ba746c0b12d59d245fb782c8ec8964059ea6e",
+   "/usr/local/lib/python3.12/site-packages/transformers/integrations/finegrained_fp8.py": "00441402ce986ef453363f93df52ce57ad5fe4eda95f877078faecd6e8382201"
+  },
+  "n_blocks": 45,
+  "forward": "model.model, use_cache=False",
+  "kda_mode": "fused_recurrent",
+  "n_kda_layers": 34,
+  "kda_impl": "transformers glm5_next recurrent_kimi_delta_attention (torch reference; fla not installed)",
+  "devices": [
+   "cuda:0",
+   "cuda:1",
+   "cuda:2",
+   "cuda:3"
+  ],
+  "attn_implementation": "sdpa",
+  "experts_implementation": "grouped_mm",
+  "quantization": {
+   "activation_scheme": "dynamic",
+   "fmt": "e4m3",
+   "quant_method": "fp8",
+   "weight_block_size": [
+    128,
+    128
+   ],
+   "n_modules_not_converted": 1511
+  },
+  "fp8_modules": [
+   "FP8Experts",
+   "FP8Linear"
+  ],
+  "n_unexpected_keys": 0,
+  "gpu": "NVIDIA B200",
+  "n_gpus": 4,
+  "deterministic": "use_deterministic_algorithms(True, warn_only=True)",
+  "token_budget": 65536,
+  "hidden_budget": 65536,
+  "n_shards": 1,
+  "gpus": [
+   "NVIDIA B200"
+  ],
+  "shard_seconds": [
+   5156
+  ],
+  "plan_sha": "555cfd324946d0c0730f",
+  "hidden_sha": "3c07ff4d4415457c35016315",
+  "vectors_sha": "c82c66059b2b2e705b00",
+  "op_counts": {
+   "cont": 709,
+   "next": 608,
+   "greedy": 484
+  },
+  "vector_max_rel_diff_across_shards": 0.0,
+  "budget": 65536
+ },
+ "coherence_coverage": {
+  "rated": 484,
+  "total": 484
+ }
+}
