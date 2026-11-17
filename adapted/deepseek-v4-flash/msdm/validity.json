@@ -1,0 +1,5214 @@
+{
+ "middle_eastern_spice_blend": {
+  "gold": "zaatar",
+  "preds": [
+   "baharat",
+   "ras el hanout"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Za'atar (often spelled zaatar) is a well-known Levantine/Middle Eastern spice blend of thyme/oregano, sumac, sesame, and salt."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "zaatar",
+    "za'atar",
+    "za’atar",
+    "zatar",
+    "zahtar",
+    "za-atar",
+    "zaatar spice blend",
+    "扎塔尔",
+    "扎阿塔尔",
+    "扎塔香料",
+    "中东百里香混合香料"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Za'atar is a specific, well-known Middle Eastern spice blend, but it has many transliterations and Chinese renderings a judge should accept. Both predictions (baharat, ras el hanout) are legitimate spice blends from the region, so none are junk."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s1_species_of_ladybird_beetle": {
+  "gold": "coccinella septempunctata",
+  "preds": [
+   "harmonia axyridis",
+   "hippodamia convergens"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Coccinella septempunctata, the seven-spot ladybird, is a real species in the ladybird family Coccinellidae."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "coccinella septempunctata",
+    "C. septempunctata",
+    "seven-spot ladybird",
+    "seven-spotted ladybird",
+    "seven-spot ladybug",
+    "seven-spotted lady beetle",
+    "7-spot ladybird",
+    "C-7",
+    "七星瓢虫",
+    "七星瓢蟲",
+    "七星花大姐"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "The gold is a specific, well-defined species. The common names 'seven-spot ladybird' and '七星瓢虫' are widely known, so a judge can recognise it reliably if these aliases are accepted. Both predictions (harmonia axyridis, hippodamia convergens) are valid ladybird species, so none are junk."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s1_succulent_euphorbia_species": {
+  "gold": "euphorbia obesa",
+  "preds": [
+   "euphorbia milii",
+   "euphorbia trigona",
+   "euphorbia tirucalli",
+   "euphorbia ingens"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Euphorbia obesa (baseball plant) is a real, well-known globular succulent Euphorbia species native to South Africa."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "Euphorbia obesa",
+    "E. obesa",
+    "obesa",
+    "baseball plant",
+    "living baseball",
+    "basketball plant",
+    "sea urchin euphorbia",
+    "gingham golf ball",
+    "布纹球",
+    "晃玉",
+    "奥贝莎大戟",
+    "球状大戟"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "The gold is a specific, well-known species, and all predictions are valid succulent Euphorbias. Readouts may say 'baseball plant' or '布纹球' instead of the binomial, so the judge needs these aliases."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s1_species_of_hermit_crab": {
+  "gold": "coenobita clypeatus",
+  "preds": [
+   "coenobita brevimanus",
+   "coenobita compressus",
+   "pagurus bernhardus",
+   "coenobita cyanopus"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Coenobita clypeatus, the Caribbean hermit crab or purple pincher, is a real, correctly named species of land hermit crab."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "Coenobita clypeatus",
+    "C. clypeatus",
+    "Caribbean hermit crab",
+    "Caribbean land hermit crab",
+    "purple pincher",
+    "purple pincher hermit crab",
+    "PP",
+    "soldier crab",
+    "West Atlantic crab",
+    "tree crab",
+    "加勒比海寄居蟹",
+    "加勒比寄居蟹",
+    "紫螯寄居蟹",
+    "紫钳寄居蟹",
+    "紫钳",
+    "凹足寄居蟹"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "The gold is a specific, well-defined species. Its Latin name has widely used common names (Caribbean hermit crab, purple pincher), so a judge can recognise it if these aliases and the Chinese names are accepted. All other predictions are real hermit crab species."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s2_nhandu_species": {
+  "gold": "nhandu chromatus",
+  "preds": [
+   "nhandu coloratovillosus",
+   "greater rhea",
+   "nhandu carapoensis",
+   "cariniana legalis"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Nhandu chromatus (the Brazilian red and white tarantula) is a valid, recognized species in the tarantula genus Nhandu."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "greater rhea",
+    "cariniana legalis"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "nhandu chromatus",
+    "N. chromatus",
+    "Brazilian red and white tarantula",
+    "Brazilian red-and-white tarantula",
+    "red and white tarantula",
+    "巴西红白捕鸟蛛",
+    "巴西红白",
+    "红白捕鸟蛛",
+    "巴西红白狼蛛"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Gold is a specific, well-defined tarantula species. It has a usable common name, 'Brazilian red and white tarantula', so a judge can recognise it if aliases are accepted. The judge must not confuse it with N. coloratovillosus (black and white) or N. carapoensis (Brazilian red). Greater rhea, which 'ñandú' can mean, and Cariniana legalis, a tree, are not Nhandu species."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s2_bromeliad_genus_for_a_dart_frog_vivarium": {
+  "gold": "neoregelia",
+  "preds": [
+   "vriesea",
+   "tillandsia",
+   "nidularium",
+   "guzmania"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Neoregelia is a real bromeliad genus and one of the most widely used in dart frog vivariums, valued for its water-holding tanks used by frogs for tadpole deposition."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "Neoregelia",
+    "neoregelias",
+    "neo",
+    "neos",
+    "彩叶凤梨属",
+    "彩叶凤梨",
+    "五彩凤梨属",
+    "五彩凤梨",
+    "唇凤梨属"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Neoregelia is a specific, well-known bromeliad genus and a classic dart frog vivarium choice. All predictions are valid bromeliad genera. Accept the hobbyist shorthand 'neo(s)' and the Chinese names so noisy readouts still match."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s2_european_black_pine_subspecies": {
+  "gold": "pinus nigra subsp. salzmannii",
+  "preds": [
+   "pinus nigra subsp. nigra",
+   "pinus nigra subsp. laricio",
+   "pinus nigra pygea",
+   "pinus nigra subsp. dalmatica"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Pinus nigra subsp. salzmannii (Salzmann pine, of Spain, southern France and North Africa) is a recognized subspecies of the European black pine, Pinus nigra."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "pinus nigra pygea"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Pinus nigra subsp. salzmannii",
+    "Pinus nigra salzmannii",
+    "Pinus nigra var. salzmannii",
+    "Pinus salzmannii",
+    "salzmannii",
+    "Salzmann pine",
+    "Salzmann's black pine",
+    "Pyrenean black pine",
+    "Spanish black pine",
+    "Cevennes pine",
+    "pino salgareño",
+    "pino negral",
+    "萨尔茨曼黑松",
+    "萨氏黑松",
+    "西班牙黑松",
+    "比利牛斯黑松"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "The gold is a specific, valid subspecies, and the distinctive epithet 'salzmannii' and the Salzmann/Spanish/Pyrenean common names make it recognisable. Chinese names are not standardised, so aliases help the judge."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s2_kerala_breakfast_dish": {
+  "gold": "puttu",
+  "preds": [
+   "appam",
+   "idiyappam",
+   "masala dosa",
+   "idli"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Puttu is a traditional Kerala breakfast dish of steamed ground rice and grated coconut, typically eaten with kadala curry."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "puttu",
+    "pittu",
+    "puttu kadala",
+    "puttu and kadala curry",
+    "Kerala puttu",
+    "steamed rice cylinder",
+    "steamed rice and coconut cake",
+    "普图",
+    "椰丝蒸米糕",
+    "竹筒蒸米糕",
+    "蒸米糕"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Puttu is a specific, well-known Kerala breakfast dish, distinct from the predictions (all valid Kerala/South Indian breakfasts). Chinese readouts will likely use a transliteration or a descriptive phrase, so these aliases should be accepted."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s2_viennese_christmas_cookie": {
+  "gold": "vanillekipferl",
+  "preds": [
+   "linzer torte",
+   "linzer cookies"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Vanillekipferl are crescent-shaped vanilla-nut shortbread cookies, a classic Viennese/Austrian Christmas cookie."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "linzer torte"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "vanillekipferl",
+    "vanillekipferln",
+    "vanille kipferl",
+    "vanilla kipferl",
+    "vanilla kipferln",
+    "vanilla crescents",
+    "vanilla crescent cookies",
+    "Viennese vanilla crescents",
+    "kipferl (vanilla)",
+    "香草新月饼干",
+    "香草月牙饼干",
+    "香草弯月饼干",
+    "香草角饼干",
+    "维也纳香草月牙饼干",
+    "香草可颂饼干"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Vanillekipferl is a specific, well-known Viennese Christmas cookie, but readouts will often use the English 'vanilla crescent' or a Chinese translation, so those aliases should be accepted. 'Linzer torte' is a tart rather than a cookie."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s2_type_of_touff_e": {
+  "gold": "crawfish",
+  "preds": [
+   "shrimp",
+   "seafood"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Crawfish étouffée is a classic, well-established type of the Cajun/Creole dish étouffée."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "seafood"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "crawfish",
+    "crayfish",
+    "crawdad",
+    "crawdads",
+    "mudbug",
+    "crawfish étouffée",
+    "crawfish etouffee",
+    "crayfish étouffée",
+    "小龙虾",
+    "淡水小龙虾",
+    "小龙虾烩饭",
+    "螯虾",
+    "蝲蛄",
+    "克氏原螯虾"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Crawfish is a specific, well-known étouffée variety, but readouts may say 'crayfish' or '小龙虾', so these spelling variants and the Chinese name must be accepted. 'Seafood' is a generic parent class rather than a member."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s2_tea_served_at_yum_cha": {
+  "gold": "jasmine tea",
+  "preds": [
+   "pu-erh",
+   "lobster tea",
+   "tieguanyin",
+   "oolong tea"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Jasmine tea (heung pin) is a real tea and one of the standard teas served at Cantonese yum cha, alongside pu-erh, oolong, and chrysanthemum."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "lobster tea"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "jasmine tea",
+    "jasmine",
+    "jasmine green tea",
+    "jasmine flower tea",
+    "茉莉花茶",
+    "茉莉茶",
+    "茉莉香片",
+    "香片",
+    "heung pin",
+    "hong pin",
+    "mo li hua cha",
+    "molihua cha"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Jasmine tea is a specific, well-known yum cha tea that judges will easily recognise. The Cantonese name 香片 (heung pin) and 茉莉花茶 should be accepted so bilingual readouts match."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s2_base_for_buchwald_hartwig_amination": {
+  "gold": "sodium tert-butoxide",
+  "preds": [
+   "potassium tert-butoxide",
+   "cesium carbonate",
+   "potassium carbonate",
+   "potassium phosphate"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Sodium tert-butoxide (NaOtBu) is the most widely used strong base in Buchwald–Hartwig amination."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "sodium tert-butoxide",
+    "sodium t-butoxide",
+    "sodium tertiary butoxide",
+    "NaOtBu",
+    "NaOt-Bu",
+    "tBuONa",
+    "t-BuONa",
+    "NaOC(CH3)3",
+    "sodium 2-methylpropan-2-olate",
+    "叔丁醇钠",
+    "叔丁氧基钠"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Sodium tert-butoxide is a specific, very common Buchwald–Hartwig base. It is easily recognised by name or as NaOtBu, but the judge must reject the close distractor potassium tert-butoxide (KOtBu, 叔丁醇钾)."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s2_platinum_hydrosilylation_catalyst": {
+  "gold": "karstedts catalyst",
+  "preds": [
+   "speiers catalyst",
+   "kharaschs catalyst"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Karstedt's catalyst (Pt(0)-divinyltetramethyldisiloxane complex) is a well-known, widely used platinum hydrosilylation catalyst."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "kharaschs catalyst"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Karstedt's catalyst",
+    "Karstedt catalyst",
+    "karstedts catalyst",
+    "Karstedt's platinum catalyst",
+    "platinum(0)-1,3-divinyl-1,1,3,3-tetramethyldisiloxane complex",
+    "Pt-divinyltetramethyldisiloxane",
+    "Pt(dvtms)",
+    "Pt2(dvtms)3",
+    "Pt-DVDS",
+    "卡斯特催化剂",
+    "卡斯特铂催化剂",
+    "Karstedt催化剂",
+    "Karstedt铂催化剂",
+    "铂-二乙烯基四甲基二硅氧烷络合物"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Karstedt's catalyst is a specific, well-known Pt(0) hydrosilylation catalyst. Speier's catalyst is a valid alternative. 'Kharasch's catalyst' is not a standard name for a hydrosilylation catalyst; it at most loosely refers to PtCl2(PhCN)2, so it is flagged as doubtful. Readouts may give the formula or Chinese name, so aliases are needed."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b1_aeshna_species": {
+  "gold": "aeshna juncea",
+  "preds": [
+   "aeshna cyanea",
+   "aeshna multicolor",
+   "aeshna mixta",
+   "aeshna canadensis"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Aeshna juncea (common hawker / sedge darner) is a real dragonfly species in the genus Aeshna."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "aeshna juncea",
+    "A. juncea",
+    "common hawker",
+    "sedge darner",
+    "moorland hawker",
+    "灯心草蜓",
+    "灯芯草蜓"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Gold is a specific, valid Aeshna species with well-known English common names (common hawker / sedge darner). A judge needs these aliases to match readouts that avoid the Latin binomial. The Chinese name is unverified, so the Latin and English names are the safer anchors. All predictions are real Aeshna species."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b1_seadragon_species": {
+  "gold": "leafy seadragon",
+  "preds": [
+   "weedy seadragon"
+  ],
+  "member": {
+   "member": true,
+   "reason": "The leafy seadragon (Phycodurus eques) is a real, correctly named seadragon species native to southern Australia."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "leafy seadragon",
+    "leafy sea dragon",
+    "leafy sea-dragon",
+    "leafy",
+    "Phycodurus eques",
+    "Glauert's seadragon",
+    "叶海龙",
+    "葉海龍",
+    "叶形海龙",
+    "枝叶海马"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Gold is a specific, well-known species with a clear common name and Chinese name (叶海龙); it is easily told apart from the weedy seadragon (草海龙), so accepting spelling variants is sufficient."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b1_british_malting_barley_variety": {
+  "gold": "maris otter",
+  "preds": [
+   "optic",
+   "golden promise",
+   "keyston",
+   "prologue"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Maris Otter is a real British two-row winter malting barley variety, bred in the UK in 1966 and widely used for British ales."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "keyston"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Maris Otter",
+    "maris otter",
+    "Maris-Otter",
+    "MarisOtter",
+    "Maris Otter barley",
+    "Maris Otter malt",
+    "MO malt",
+    "玛丽斯奥特",
+    "马里斯奥特",
+    "玛瑞斯奥特",
+    "玛丽斯·奥特",
+    "马里斯·奥特",
+    "玛丽斯奥特大麦",
+    "玛丽斯奥特麦芽",
+    "马里斯奥特麦芽"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Maris Otter is a specific, iconic British malting barley variety. It is easily recognised in English, but its Chinese transliterations vary, so the judge needs them. 'keyston' does not match any known British malting variety I can confirm (possibly a misspelling or invented name); 'prologue' is also uncertain."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b1_beef_cut_in_taiwanese_beef_noodle_soup": {
+  "gold": "shank",
+  "preds": [
+   "brisket",
+   "sirloin tip",
+   "shaw ling beef",
+   "flank"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Beef shank (牛腱) is one of the most common, classic cuts used in Taiwanese beef noodle soup."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "shaw ling beef"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "shank",
+    "beef shank",
+    "shin",
+    "beef shin",
+    "foreshank",
+    "shank meat",
+    "牛腱",
+    "牛腱子",
+    "腱子肉",
+    "牛腱肉",
+    "牛腱心",
+    "腱子心",
+    "金錢腱",
+    "花腱",
+    "牛展",
+    "牛𦟌",
+    "niu jian"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Beef shank (牛腱) is a specific, common cut for Taiwanese beef noodle soup and is easy to recognise. Chinese and shin variants should be accepted, but tendon (牛筋) and brisket (牛腩) must not be. 'Shaw ling beef' does not clearly name any cut."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b1_xanthene_dye": {
+  "gold": "rhodamine b",
+  "preds": [
+   "fluorescein",
+   "rose bengal",
+   "eosin y",
+   "rhodamine 6g"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Rhodamine B is a real, well-known dye built on the xanthene core, belonging to the rhodamine family of xanthene dyes."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "rhodamine B",
+    "RhB",
+    "Rh B",
+    "罗丹明B",
+    "罗丹明 B",
+    "碱性玫瑰精",
+    "玫瑰红B",
+    "Basic Violet 10",
+    "C.I. 45170",
+    "C.I. Basic Violet 10"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Rhodamine B is a specific, well-known xanthene dye and is easy to recognise, but the judge must accept 'RhB' and the Chinese name 罗丹明B, and must not accept bare 'rhodamine' or 'rhodamine 6G'."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b1_magneto_inertial_fusion_approach": {
+  "gold": "maglif",
+  "preds": [
+   "magnetized target fusion",
+   "z-pinch",
+   "field-reversed configuration",
+   "general fusion magnetized target fusion"
+  ],
+  "member": {
+   "member": true,
+   "reason": "MagLIF (Magnetized Liner Inertial Fusion), developed at Sandia's Z machine, is a well-known magneto-inertial fusion approach."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "MagLIF",
+    "Mag-LIF",
+    "Magnetized Liner Inertial Fusion",
+    "magnetised liner inertial fusion",
+    "Sandia MagLIF",
+    "Sandia Z machine MagLIF",
+    "磁化套筒惯性聚变",
+    "磁化衬套惯性聚变",
+    "磁化内衬惯性聚变",
+    "磁化靶套惯性聚变"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "MagLIF is a specific, well-known magneto-inertial fusion scheme with a distinctive acronym, so a judge can recognise it, but expanded English and Chinese forms should also be accepted. None of the predictions is junk: z-pinch and generic MTF are broader categories rather than true nonsense."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b2_woodpecker_genus": {
+  "gold": "dryocopus",
+  "preds": [
+   "picus",
+   "campephilus",
+   "melanerpes",
+   "picoides"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Dryocopus is a real genus of large woodpeckers in the family Picidae, including the pileated and black woodpeckers."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "Dryocopus",
+    "Dryocopus genus",
+    "black woodpecker genus",
+    "black woodpecker",
+    "Dryocopus martius",
+    "pileated woodpecker",
+    "Dryocopus pileatus",
+    "lineated woodpecker",
+    "Dryocopus lineatus",
+    "黑啄木鸟属",
+    "黑啄木鸟",
+    "北美黑啄木鸟",
+    "黑冠啄木鸟"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Dryocopus is a specific, valid genus and all predictions are real woodpecker genera. Readouts may name only member species (black, pileated or lineated woodpecker) or the Chinese 黑啄木鸟属, so those aliases should be accepted. Some taxonomies move the pileated woodpecker to Hylatomus, a minor caveat for that alias."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b2_mulleripicus_species": {
+  "gold": "ashy woodpecker",
+  "preds": [
+   "great slaty woodpecker",
+   "sooty woodpecker",
+   "mulleripicus fuliginosus",
+   "müllers barbet"
+  ],
+  "member": {
+   "member": true,
+   "reason": "The ashy woodpecker (Mulleripicus fulvus) of Sulawesi is a recognized species in the genus Mulleripicus."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "müllers barbet"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "ashy woodpecker",
+    "Mulleripicus fulvus",
+    "M. fulvus",
+    "Sulawesi ashy woodpecker",
+    "灰啄木鸟",
+    "苏拉威西灰啄木鸟"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "The gold is a specific, valid member (Mulleripicus fulvus) with a distinct common name. Accept the binomial and Chinese names, but do not accept 'great slaty woodpecker' or 大灰啄木鸟 (M. pulverulentus), which is a different species."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b2_armenian_wine_region": {
+  "gold": "vayots dzor",
+  "preds": [
+   "areni",
+   "ararat valley",
+   "aragatsotn"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Vayots Dzor is a real province of Armenia and one of its best-known wine regions, home to the Areni-1 cave winery site and Areni wine production."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "Vayots Dzor",
+    "Vayots Dzor Province",
+    "Vayots Dzor region",
+    "Vayotz Dzor",
+    "Vayots Jor",
+    "Vayk",
+    "Վայոց Ձոր",
+    "瓦约茨佐尔",
+    "瓦约茨佐尔省",
+    "瓦约茨·佐尔"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Vayots Dzor is a specific, well-known Armenian wine region, but its transliterations vary and its Chinese rendering is uncommon. Aliases are needed, and 'Areni' (a village and grape within Vayots Dzor) should not count as the gold because it is a separate prediction."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b2_sausage_for_a_galette_saucisse": {
+  "gold": "andouille",
+  "preds": [
+   "breton pork sausage",
+   "toulouse sausage",
+   "cervelat",
+   "andouillette"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Andouille, notably Breton andouille de Guémené, is a genuine sausage commonly rolled in Breton buckwheat galettes, though the classic galette-saucisse uses a fresh grilled pork sausage."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "andouille",
+    "andouille sausage",
+    "andouille de Guémené",
+    "andouille de Vire",
+    "Breton andouille",
+    "安杜耶",
+    "安杜耶香肠",
+    "安杜伊香肠",
+    "法式猪肚肠",
+    "法式内脏香肠"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Andouille is a specific, well-known sausage and Breton andouille de Guémené is a plausible galette filling. The judge must not accept 'andouillette' (a distinct, smaller sausage) as a match."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b2_hypothalamic_neuropeptide": {
+  "gold": "orexin",
+  "preds": [
+   "oxytocin",
+   "ghrelin",
+   "corticotropin-releasing hormone",
+   "kisspeptin"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Orexin (hypocretin) is a neuropeptide produced exclusively by neurons in the lateral hypothalamus, making it a genuine hypothalamic neuropeptide."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "orexin",
+    "orexins",
+    "orexin-A",
+    "orexin-B",
+    "orexin A",
+    "orexin B",
+    "hypocretin",
+    "hypocretins",
+    "hypocretin-1",
+    "hypocretin-2",
+    "HCRT",
+    "Hcrt",
+    "OX-A",
+    "OX-B",
+    "食欲素",
+    "促食欲素",
+    "食欲肽",
+    "下丘脑分泌素",
+    "下视丘分泌素",
+    "食欲素A",
+    "食欲素B",
+    "增食欲素"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Orexin is a specific, well-known hypothalamic neuropeptide, but judges must accept its synonym hypocretin (HCRT) and its Chinese names. All predictions are real peptides; ghrelin is mainly gut-derived but is acceptable as a borderline member."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s4rf1_crowned_pigeon_species_goura": {
+  "gold": "victoria crowned pigeon",
+  "preds": [
+   "western crowned pigeon",
+   "southern crowned pigeon",
+   "superb crowned pigeon",
+   "red-breasted cockatoo"
+  ],
+  "member": {
+   "member": true,
+   "reason": "The Victoria crowned pigeon (Goura victoria) is a real species in the genus Goura, native to New Guinea."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "red-breasted cockatoo",
+    "superb crowned pigeon"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Victoria crowned pigeon",
+    "Victoria crowned-pigeon",
+    "Goura victoria",
+    "Victoria pigeon",
+    "维多利亚凤冠鸠",
+    "维多利亚冠鸠",
+    "紫胸凤冠鸠",
+    "维多利亚凤冠鸽"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Gold is a specific, well-known Goura species with a distinctive common name. Aliases cover Latin and Chinese variants."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s4rf1_argiope_species": {
+  "gold": "argiope aurantia",
+  "preds": [
+   "argiope bruennichi",
+   "argiope keyserlingi",
+   "argiope trifasciata",
+   "argiope argentata"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Argiope aurantia (yellow garden spider) is a real, correctly named species in the orb-weaver genus Argiope."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "Argiope aurantia",
+    "A. aurantia",
+    "yellow garden spider",
+    "black and yellow garden spider",
+    "black-and-yellow argiope",
+    "golden garden spider",
+    "writing spider",
+    "corn spider",
+    "zipper spider",
+    "黄色花园蜘蛛",
+    "黄金蛛",
+    "黄金园蛛"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "The gold is a specific, well-defined species, and all predictions are real Argiope species. The binomial alone is risky in noisy readouts, so the judge should accept the common names. The Chinese names are less certain: only accept them alongside other cues, and do not accept bare 金蛛, which means the genus."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s4rf1_varactor_doping_profile": {
+  "gold": "hyperabrupt",
+  "preds": [
+   "linearly graded",
+   "abrupt",
+   "gaussian",
+   "graded"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Hyperabrupt junction is a real, standard varactor doping profile, alongside abrupt and graded/linear profiles."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "hyperabrupt",
+    "hyper-abrupt",
+    "hyper abrupt",
+    "hyperabrupt junction",
+    "hyperabrupt profile",
+    "hyperabrupt doping",
+    "超突变",
+    "超突变结",
+    "超突变掺杂",
+    "超突变型"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Hyperabrupt is a distinct, well-known varactor doping profile, separate from abrupt and linearly graded. Judges must accept hyphenation variants and the Chinese term 超突变结, but must not count plain 'abrupt' (突变结) as a match."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s4rf1_nieder_sterreich_wine_region": {
+  "gold": "wachau",
+  "preds": [
+   "kamptal",
+   "kremstal",
+   "carnuntum",
+   "wagram"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Wachau is an officially designated wine-growing region (DAC since 2020) in Niederösterreich (Lower Austria) along the Danube."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "Wachau",
+    "Wachau Valley",
+    "Wachau DAC",
+    "瓦豪",
+    "瓦豪河谷",
+    "瓦豪产区",
+    "瓦赫奥"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Wachau is a specific, well-known Lower Austrian wine region that is clearly distinct from the predicted alternatives (Kamptal, Kremstal, Carnuntum, Wagram), all of which are valid members of the category. Chinese renderings vary, so the aliases help the judge."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s4rf2_drosophila_maternal_effect_gene": {
+  "gold": "bicoid",
+  "preds": [
+   "nanos",
+   "gurken",
+   "oskar"
+  ],
+  "member": {
+   "member": true,
+   "reason": "bicoid is a classic Drosophila maternal-effect gene whose mRNA is localized anteriorly in the oocyte and specifies anterior patterning of the embryo."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "bicoid",
+    "Bicoid",
+    "bcd",
+    "Bcd",
+    "BCD",
+    "Bicoid protein",
+    "bicoid gene",
+    "bicoid mRNA",
+    "bicoid基因",
+    "Bicoid蛋白",
+    "bcd基因"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Bicoid is a specific, well-known Drosophila maternal-effect gene (anterior morphogen), and readouts may use the 'bcd' abbreviation or Chinese gene/protein phrasing. All predictions (nanos, gurken, oskar) are valid category members. Avoid accepting 'bicaudal' or '双尾' (bicaudal), which name a different gene."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s4rf2_guatemalan_stew": {
+  "gold": "pepián",
+  "preds": [
+   "kakik",
+   "jocón",
+   "carne en salsa de tomate"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Pepián is a traditional Guatemalan meat-and-vegetable stew, often called the national dish of Guatemala."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "pepián",
+    "pepian",
+    "pepián de pollo",
+    "pepián de res",
+    "pepián guatemalteco",
+    "Guatemalan pepian",
+    "佩皮安",
+    "佩皮安炖菜",
+    "佩皮安炖肉",
+    "危地马拉佩皮安"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Pepián is a specific, well-known Guatemalan stew, often called the national dish, so the gold is well defined and recognisable. The other predictions (kakik, jocón, carne en salsa de tomate) are all valid Guatemalan dishes, so none are junk. A judge should also accept accentless and Chinese transliterations."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s4rf2_sandpiper_species_that_breeds_in_britain": {
+  "gold": "dunlin",
+  "preds": [
+   "common sandpiper",
+   "common redshank",
+   "eurasian curlew",
+   "wood sandpiper"
+  ],
+  "member": {
+   "member": true,
+   "reason": "The dunlin (Calidris alpina) is a sandpiper in the family Scolopacidae that breeds in Britain, mainly in upland moors and northern Scotland."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "dunlin",
+    "Dunlin",
+    "Calidris alpina",
+    "red-backed sandpiper",
+    "黑腹滨鹬"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Dunlin is a specific, well-known sandpiper that breeds in Britain. Its common English name is easy to recognise, and adding the Latin and Chinese names (黑腹滨鹬) makes matching robust. All predictions are valid British-breeding members of the sandpiper family (Scolopacidae)."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s4rf3_dwarf_rabbit_breed": {
+  "gold": "netherland dwarf",
+  "preds": [
+   "holland lop",
+   "dutch",
+   "dwarf hotot",
+   "lionhead"
+  ],
+  "member": {
+   "member": true,
+   "reason": "The Netherland Dwarf is a real, recognized dwarf rabbit breed (ARBA-recognized)."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "Netherland Dwarf",
+    "Netherlands Dwarf",
+    "Netherland Dwarf rabbit",
+    "Dutch Dwarf",
+    "Dutch dwarf rabbit",
+    "ND",
+    "荷兰侏儒兔",
+    "荷兰矮兔",
+    "荷兰矮脚兔",
+    "尼德兰侏儒兔",
+    "荷兰侏儒"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Netherland Dwarf is a specific, well-known breed and a member of the category, but the judge needs its alias variants. Do not count bare 'Dutch'/荷兰兔 (the Dutch breed) or 'Holland Lop'/荷兰垂耳兔 as matches. Note that 'dutch' as a prediction is a standard, non-dwarf breed, so it is borderline but not junk."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s4rf3_vegetable_in_dalma": {
+  "gold": "raw banana",
+  "preds": [
+   "pumpkin",
+   "papaya",
+   "potato",
+   "eggplant"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Raw banana (kancha kadali) is a traditional, commonly used vegetable in Odia dalma, alongside pumpkin, brinjal, and papaya."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "raw banana",
+    "green banana",
+    "unripe banana",
+    "raw plantain",
+    "green plantain",
+    "plantain",
+    "kancha kadali",
+    "kacha kadali",
+    "kacha kela",
+    "kaccha kela",
+    "生香蕉",
+    "青香蕉",
+    "未熟香蕉",
+    "大蕉",
+    "芭蕉"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Raw banana is a specific, common dalma vegetable, but readouts may call it green or unripe banana, plantain, or use Odia/Hindi or Chinese names. All predictions are valid dalma vegetables."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s4rf2_indonesian_chicken_breed": {
+  "gold": "ayam cemani",
+  "preds": [
+   "ayam kampung",
+   "ayam kedu",
+   "ayam kalco",
+   "ayam betawi"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Ayam Cemani is a real chicken breed from Indonesia (Java), known for its all-black coloration from fibromelanosis."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "ayam kalco"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "ayam cemani",
+    "cemani",
+    "cemani chicken",
+    "Ayam Cemani chicken",
+    "印尼黑鸡",
+    "印度尼西亚黑鸡",
+    "切玛尼鸡",
+    "阿亚姆切玛尼鸡",
+    "色马尼鸡",
+    "塞马尼鸡",
+    "全黑鸡",
+    "Lamborghini of chickens"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Ayam cemani is a specific, well-known all-black Indonesian breed. Readouts may use 'Cemani' alone or various Chinese transliterations or descriptions, so accept those. Do not accept generic 乌鸡 (silkie) as a match."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s4rf3_languedoc_white_grape_variety": {
+  "gold": "picpoul",
+  "preds": [
+   "marsanne",
+   "grenache blanc",
+   "mauzac",
+   "clairette"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Picpoul (Piquepoul Blanc) is a white grape strongly associated with the Languedoc, notably Picpoul de Pinet."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "picpoul",
+    "piquepoul",
+    "picpoul blanc",
+    "piquepoul blanc",
+    "picpoul de pinet",
+    "皮克葡",
+    "皮克普勒",
+    "匹格普勒"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Picpoul is a distinct, well-known Languedoc white grape. Spelling variants such as Piquepoul and Picpoul de Pinet, plus Chinese transliterations, should be accepted."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s4rf4_paradox_of_definability": {
+  "gold": "berry paradox",
+  "preds": [
+   "tarskis undefinability theorem",
+   "richards paradox",
+   "liar paradox",
+   "barber paradox"
+  ],
+  "member": {
+   "member": true,
+   "reason": "The Berry paradox ('the smallest positive integer not definable in under sixty letters') is a canonical paradox of definability."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "barber paradox",
+    "tarskis undefinability theorem"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "berry paradox",
+    "berry's paradox",
+    "the berry paradox",
+    "贝里悖论",
+    "伯里悖论",
+    "贝瑞悖论",
+    "smallest positive integer not definable in fewer than N words/syllables/letters"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "The Berry paradox is a specific, well-known paradox of definability. It is easy to recognise if Chinese transliteration variants and its standard 'smallest number not definable in under N words' formulation are accepted."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s4rf2_godwit_species": {
+  "gold": "bar-tailed godwit",
+  "preds": [
+   "black-tailed godwit",
+   "marbled godwit",
+   "hudsonian godwit",
+   "curlew sandpiper"
+  ],
+  "member": {
+   "member": true,
+   "reason": "The bar-tailed godwit (Limosa lapponica) is a real, correctly named godwit species."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "curlew sandpiper"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "bar-tailed godwit",
+    "bartailed godwit",
+    "bar tailed godwit",
+    "Limosa lapponica",
+    "斑尾塍鹬",
+    "斑尾鹬"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "The gold is a specific, well-known godwit species with a common English name and a standard Chinese name (斑尾塍鹬), so readouts can be matched once aliases are listed; curlew sandpiper is a Calidris sandpiper, not a godwit."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s4rf2_style_of_spin_bowling": {
+  "gold": "leg spin",
+  "preds": [
+   "off spin",
+   "left-arm orthodox",
+   "doosra"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Leg spin is a recognized style of spin bowling in cricket, delivered by wrist spinners with a wrist action that turns the ball from leg to off for a right-hander."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "leg spin",
+    "leg-spin",
+    "legspin",
+    "leg break",
+    "leg-break",
+    "leg-break bowling",
+    "leg spinner",
+    "leggie",
+    "right-arm wrist spin",
+    "腿旋球",
+    "腿旋",
+    "腿旋转球",
+    "腿转球",
+    "腿部旋转球"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Leg spin is a specific, well-known spin bowling style; the judge should accept the common variants (leg-break, leggie, right-arm wrist spin) and the Chinese renderings. Generic 'wrist spin' alone is broader and also covers left-arm wrist spin. The predictions are all valid answers, though 'doosra' is a delivery variation rather than a bowling style."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s4rf4_cold_hardy_passiflora_species": {
+  "gold": "passiflora incarnata",
+  "preds": [
+   "passiflora caerulea",
+   "passiflora blue bouquet",
+   "passiflora lutea",
+   "passiflora edulis f. edulis"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Passiflora incarnata (maypop) is a real Passiflora species native to the southeastern US and is well known as one of the most cold-hardy passionflowers (to about USDA zone 5-6)."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "passiflora incarnata",
+    "P. incarnata",
+    "incarnata",
+    "maypop",
+    "maypops",
+    "purple passionflower",
+    "purple passion flower",
+    "wild passionflower",
+    "wild passion vine",
+    "apricot vine",
+    "wild apricot",
+    "肉色西番莲",
+    "粉花西番莲",
+    "紫色西番莲",
+    "野生西番莲"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "A specific, well-known cold-hardy species with a common name ('maypop'). The judge should accept common-name and Chinese aliases. Readouts naming P. caerulea or its cultivar 'Blue Bouquet' must not be counted as matches."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s4rf4_statistical_paradox": {
+  "gold": "simpsons paradox",
+  "preds": [
+   "monty hall problem",
+   "birthday paradox",
+   "bertrands box paradox"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Simpson's paradox is a well-known, correctly named statistical paradox in which a trend in separate groups reverses when the groups are combined."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "Simpson's paradox",
+    "Simpsons paradox",
+    "Simpson paradox",
+    "Yule-Simpson effect",
+    "Yule–Simpson paradox",
+    "amalgamation paradox",
+    "reversal paradox",
+    "辛普森悖论",
+    "辛普森悖論",
+    "辛普森佯谬",
+    "尤尔-辛普森效应",
+    "合并悖论"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Simpson's paradox is a specific, well-known statistical paradox with a standard Chinese name (辛普森悖论). Judges should accept common spelling variants and the Yule-Simpson name. The other predictions are valid probability paradoxes, not junk."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s4rf2_prekmurje_dish": {
+  "gold": "prekmurska gibanica",
+  "preds": [
+   "idrijski žlikrofi",
+   "bograč",
+   "bujta repa",
+   "buckwheat žlikrofi"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Prekmurska gibanica is a real, correctly named traditional layered pastry from the Prekmurje region of Slovenia, protected as a TSG in the EU."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "idrijski žlikrofi",
+    "buckwheat žlikrofi"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "prekmurska gibanica",
+    "Prekmurje gibanica",
+    "Prekmurian gibanica",
+    "Prekmurje layer cake",
+    "Prekmurian layered cake",
+    "gibanica (in Prekmurje/Slovenian context)",
+    "普雷克穆列千层蛋糕",
+    "普雷克穆尔千层糕",
+    "普列克穆列千层饼",
+    "吉巴尼察",
+    "斯洛文尼亚千层蛋糕"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "The gold is a specific, iconic Prekmurje dessert with a distinctive name. A judge can recognise it, but should accept English and Chinese renderings. Bare 'gibanica' should only count in a Slovenian context, because it can also mean the Serbian cheese pie. The žlikrofi predictions come from Idrija, not Prekmurje."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s4rf2_washington_wine_producing_town": {
+  "gold": "walla walla",
+  "preds": [
+   "woodinville",
+   "leavenworth",
+   "wallula"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Walla Walla is a real town in Washington State and a renowned wine-producing center within the Walla Walla Valley AVA."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "Walla Walla",
+    "Walla Walla, WA",
+    "Walla Walla Valley",
+    "瓦拉瓦拉",
+    "沃拉沃拉",
+    "瓦拉瓦拉谷",
+    "沃拉沃拉谷"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Walla Walla is a specific, well-known Washington wine town and easy to recognise. The judge should accept the Chinese transliterations and should not credit 'Wallula', a distinct nearby community with a similar spelling."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s4rf4_brussels_sablon_chocolatier": {
+  "gold": "pierre marcolini",
+  "preds": [
+   "marylène",
+   "neuhaus",
+   "mary",
+   "wittamer"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Pierre Marcolini is a real Brussels chocolatier whose flagship boutique is on the Place du Grand Sablon."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "marylène"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "pierre marcolini",
+    "marcolini",
+    "Pierre Marcolini Chocolatier",
+    "皮埃尔·马克里尼",
+    "皮耶·马可里尼",
+    "皮耶马可里尼",
+    "马克里尼",
+    "馬可里尼"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Pierre Marcolini is a well-known, specific chocolatier with a flagship shop on the Grand Sablon, so the gold is well-defined. Readouts may use just 'Marcolini' or various Chinese transliterations, so those aliases should be accepted. 'Marylène' is not a recognised Brussels chocolatier and looks like a garbled 'Mary'."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s1_classical_construction_problem_of_antiqu": {
+  "gold": "squaring the circle",
+  "preds": [
+   "doubling the cube",
+   "gnomon sundial construction",
+   "angle trisection",
+   "construction of the parthenon"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Squaring the circle is one of the three famous classical construction problems of ancient Greek geometry, alongside doubling the cube and trisecting the angle."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "gnomon sundial construction",
+    "construction of the parthenon"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "squaring the circle",
+    "quadrature of the circle",
+    "circle squaring",
+    "squaring a circle",
+    "化圆为方",
+    "化圓為方",
+    "圆积问题",
+    "化圆为方问题",
+    "方圆问题"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Squaring the circle is a specific, well-known member of the three classical construction problems and is easy to recognise; the judge should accept 'quadrature of the circle' and the Chinese 化圆为方."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s2_genus_of_typical_owl_strigidae": {
+  "gold": "bubo",
+  "preds": [
+   "strix",
+   "glaucidium",
+   "tyto",
+   "athene"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Bubo (eagle-owls, including the great horned owl and snowy owl) is a genuine genus in the family Strigidae."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "tyto"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Bubo",
+    "bubo",
+    "eagle-owl",
+    "eagle owl",
+    "eagle-owls",
+    "horned owl",
+    "great horned owl",
+    "Eurasian eagle-owl",
+    "Bubo bubo",
+    "Bubo virginianus",
+    "snowy owl (Bubo scandiacus)",
+    "雕鸮属",
+    "雕鸮",
+    "鵰鴞屬",
+    "鵰鴞",
+    "美洲雕鸮",
+    "雪鸮"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Bubo is a valid, well-known Strigidae genus, but readouts may use common names (eagle-owl, horned owl) or Chinese 雕鸮属, so the judge needs these aliases. 'tyto' is junk because it belongs to Tytonidae (barn owls), not Strigidae."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s2_mbuna_genus": {
+  "gold": "pseudotropheus",
+  "preds": [
+   "labeotropheus",
+   "maylandia",
+   "melanochromis",
+   "labidochromis"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Pseudotropheus is a real genus of rock-dwelling Lake Malawi cichlids, one of the classic mbuna genera."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "Pseudotropheus",
+    "Pseudotropheus spp.",
+    "Pseudo (aquarium hobby shorthand)",
+    "拟丽鱼属",
+    "擬麗魚屬",
+    "拟丽鱼",
+    "Pseudotropheus cichlids"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Pseudotropheus is a valid, well-known mbuna genus whose distinctive Latin name is easy to spot. All the predictions (Labeotropheus, Maylandia, Melanochromis, Labidochromis) are genuine mbuna genera, so none are junk. The judge should accept the Chinese genus name. Caution: Maylandia species were once placed in Pseudotropheus (e.g., 'Pseudotropheus zebra'), so the judge must check which genus name the readout actually gives."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s2_peruvian_dessert": {
+  "gold": "suspiro a la limeña",
+  "preds": [
+   "picarones",
+   "arroz con leche",
+   "marquesa de pisco",
+   "mazamorra morada"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Suspiro a la limeña is a traditional dessert from Lima, Peru, made of manjar blanco topped with port-flavored meringue."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "suspiro a la limeña",
+    "suspiro limeño",
+    "suspiro de limeña",
+    "suspiro a la limena",
+    "suspiro limeno",
+    "suspiro",
+    "Lima sigh",
+    "sigh of a woman from Lima",
+    "sigh of the Lima woman",
+    "利马叹息",
+    "利马女人的叹息",
+    "利马式叹息",
+    "利马少女的叹息",
+    "叹息甜点"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "The gold names a specific, well-known Peruvian dessert, but a judge should accept spelling variants without accents, the shortened 'suspiro', and English or Chinese 'sigh of Lima' translations."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s2_french_basque_iparralde_dish": {
+  "gold": "piperade",
+  "preds": [
+   "axoa",
+   "pintxos",
+   "ttoro",
+   "cassoulet"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Piperade is a classic Basque dish of peppers, onions and tomatoes, strongly associated with Iparralde (Labourd/Bayonne region) in the French Basque Country."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "cassoulet",
+    "pintxos"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "piperade",
+    "pipérade",
+    "piperrada",
+    "biperrada",
+    "Basque piperade",
+    "Basque pepper and tomato stew",
+    "Basque peppers with eggs",
+    "皮佩拉德",
+    "巴斯克炖甜椒",
+    "巴斯克甜椒炒蛋",
+    "巴斯克风味炖菜"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Piperade is a specific, well-known French Basque dish, but judges need its spelling variants (pipérade, Basque piperrada/biperrada) and descriptive Chinese renderings. Cassoulet is from Languedoc, not the Basque Country. Pintxos is a generic snack category mainly from Spanish Basque Country (Hegoalde)."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s2_hungarian_river_fish_for_cooking": {
+  "gold": "zander",
+  "preds": [
+   "carp",
+   "catfish",
+   "crucian carp",
+   "bullhead"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Zander (süllő/fogas) lives in Hungarian rivers such as the Danube and Tisza and is a prized fish in Hungarian cooking."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "zander",
+    "pike-perch",
+    "pikeperch",
+    "Sander lucioperca",
+    "Stizostedion lucioperca",
+    "süllő",
+    "fogas",
+    "Balaton pike-perch",
+    "European pike-perch",
+    "梭鲈",
+    "白梭吻鲈",
+    "梭吻鲈",
+    "欧洲梭鲈",
+    "狗鱼鲈"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Zander is a specific, well-known Hungarian food fish. It appears under several names (pike-perch, Hungarian süllő/fogas, Chinese 梭鲈/白梭吻鲈), so the judge needs an alias list. All predictions (carp, catfish, crucian carp, bullhead) are legitimate fish found in Hungarian waters."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s2_family_of_high_temperature_superconducto": {
+  "gold": "cuprates",
+  "preds": [
+   "ybco",
+   "bscco",
+   "iron pnictides"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Cuprates (copper-oxide superconductors like YBCO and BSCCO) are a real, well-known family of high-temperature superconductors."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "cuprates",
+    "cuprate",
+    "cuprate superconductors",
+    "copper oxide superconductors",
+    "copper-oxide superconductors",
+    "copper-based superconductors",
+    "copper oxides",
+    "铜氧化物超导体",
+    "铜氧化物",
+    "铜基超导体",
+    "铜酸盐超导体",
+    "铜酸盐",
+    "铜氧超导体"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "'Cuprates' is a proper family of high-Tc superconductors and is easy to recognise. The judge needs its English and Chinese synonyms. The predictions YBCO and BSCCO are specific cuprate compounds rather than families, so they should not count as matching the gold on their own. Iron pnictides is a valid, distinct family."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s2_mid_level_cloud_genus": {
+  "gold": "altocumulus",
+  "preds": [
+   "altostratus",
+   "cumulus"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Altocumulus is one of the WMO-recognized mid-level cloud genera, alongside altostratus (and nimbostratus, which is often included)."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "cumulus"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "altocumulus",
+    "alto-cumulus",
+    "alto cumulus",
+    "Ac",
+    "高积云",
+    "高積雲"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Altocumulus is a well-defined, widely known mid-level cloud genus. Its abbreviation and Chinese name (高积云) should be accepted. Cumulus is a low-level genus, so it is not a valid member of the category."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b1_western_atlantic_seahorse_species": {
+  "gold": "hippocampus erectus",
+  "preds": [
+   "hippocampus reidi",
+   "prionotus longipes",
+   "hippocampus abdominalis"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Hippocampus erectus, the lined seahorse, is a real species native to the western Atlantic, ranging from Nova Scotia to Uruguay."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "prionotus longipes",
+    "hippocampus abdominalis"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Hippocampus erectus",
+    "H. erectus",
+    "lined seahorse",
+    "northern seahorse",
+    "northern lined seahorse",
+    "直立海马",
+    "线纹海马",
+    "纹海马"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "The gold is a specific, valid western Atlantic seahorse, recognisable through its common name 'lined seahorse' and Chinese name 直立海马. Prionotus is a searobin genus, not a seahorse, and H. abdominalis is native to Australia and New Zealand, not the western Atlantic."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b1_dendrobium_species_used_in_traditional_c": {
+  "gold": "dendrobium nobile",
+  "preds": [
+   "dendrobium officinale"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Dendrobium nobile is a real Dendrobium species and one of the main official sources of shihu (石斛) in the Chinese Pharmacopoeia."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "Dendrobium nobile",
+    "D. nobile",
+    "noble dendrobium",
+    "noble rock orchid",
+    "金钗石斛",
+    "jinchai shihu",
+    "jin chai shi hu",
+    "金钗",
+    "扁金钗",
+    "Dendrobii Caulis (nobile)"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "The gold is a specific, valid shihu species with a well-known Chinese name (金钗石斛). The judge should accept the Chinese and English aliases but not generic 石斛/Dendrobium or 铁皮石斛 (D. officinale)."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b1_proven_al_bakery_specialty": {
+  "gold": "navette",
+  "preds": [
+   "fougasse",
+   "tarte tropézienne",
+   "pompe à lhuile",
+   "cornet de marseille"
+  ],
+  "member": {
+   "member": true,
+   "reason": "The navette is a boat-shaped, orange-blossom-flavored biscuit and a classic Provençal bakery specialty, especially associated with Marseille."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "cornet de marseille"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "navette",
+    "navettes",
+    "navette de Marseille",
+    "navettes de Marseille",
+    "navette marseillaise",
+    "navettes marseillaises",
+    "navette provençale",
+    "navettes de Saint-Victor",
+    "Marseille boat-shaped biscuit",
+    "orange-blossom boat biscuit",
+    "纳维特",
+    "纳韦特饼干",
+    "马赛船形饼干",
+    "船形饼干",
+    "小船饼干",
+    "马赛小船饼",
+    "梭形饼干",
+    "梭子饼"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Navette is a specific, well-known Provençal specialty (the boat-shaped, orange-blossom biscuit of Marseille), so the gold is well defined. Its Chinese renderings vary (it may be translated literally as 'shuttle/boat'), so the judge needs aliases. 'Cornet de marseille' does not appear to be an established Provençal specialty, while the other predictions are valid members."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b1_taiwanese_shaved_ice_topping": {
+  "gold": "taro",
+  "preds": [
+   "mango",
+   "brown sugar milk ice",
+   "red bean",
+   "mochi"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Taro (as taro balls or sweetened taro paste/chunks) is a classic, widely used topping on Taiwanese shaved ice (baobing/xuehua bing)."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "brown sugar milk ice"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "taro",
+    "芋頭",
+    "芋头",
+    "芋仔",
+    "taro paste",
+    "mashed taro",
+    "芋泥",
+    "taro balls",
+    "芋圓",
+    "芋圆",
+    "taro root"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Taro is a specific, common Taiwanese shaved-ice topping that is easy to recognise; the judge should accept the Chinese 芋頭/芋头 and the taro paste and taro ball forms. 'Brown sugar milk ice' is flagged because it describes a type of shaved ice rather than a topping."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b1_feijoada_accompaniment": {
+  "gold": "farofa",
+  "preds": [
+   "orange slices",
+   "pão de queijo",
+   "collard greens",
+   "cassava flour cakes"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Farofa (toasted cassava flour) is one of the classic traditional accompaniments served with Brazilian feijoada."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "farofa",
+    "toasted cassava flour",
+    "toasted manioc flour",
+    "fried cassava flour",
+    "farofa de mandioca",
+    "炒木薯粉",
+    "烤木薯粉",
+    "木薯粉炒料",
+    "法罗法"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Farofa is a specific, well-known feijoada side. The judge should accept descriptive aliases like 'toasted cassava/manioc flour' and the Chinese renderings, but should not accept 'cassava flour cakes', which is a different dish."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b1_classic_fortran_ode_solver_library": {
+  "gold": "odepack",
+  "preds": [
+   "lsoda",
+   "dassl",
+   "lsode",
+   "dvode"
+  ],
+  "member": {
+   "member": true,
+   "reason": "ODEPACK is a real, classic Fortran ODE solver collection (LSODE, LSODA, etc.) developed by Alan Hindmarsh at LLNL."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "ODEPACK",
+    "odepack",
+    "ODE PACK",
+    "ODE-PACK",
+    "Livermore ODEPACK",
+    "LLNL ODEPACK",
+    "Livermore Solver for ODEs package"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "ODEPACK is a real, well-known Fortran ODE library (Hindmarsh/LLNL) with a distinctive name. Accept spelling variants, but not its member solvers LSODE/LSODA, which are separate predicted answers."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b2_1855_fifth_growth_ch_teau": {
+  "gold": "château pontet-canet",
+  "preds": [
+   "château lynch-bages",
+   "château grand-puy-lacoste",
+   "château brane-cantenac",
+   "château haut-batailley"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Château Pontet-Canet (Pauillac) is a Fifth Growth (Cinquième Cru) in the 1855 Bordeaux Classification."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "château brane-cantenac"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Château Pontet-Canet",
+    "Chateau Pontet-Canet",
+    "Pontet-Canet",
+    "Pontet Canet",
+    "庞特卡奈酒庄",
+    "庞特卡奈庄园",
+    "庞特-卡奈",
+    "庞特卡奈"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Pontet-Canet is a well-known Pauillac Fifth Growth and easy to recognise, but readouts may drop the accent or the 'Château' prefix or use the Chinese name. Brane-Cantenac is a Second Growth, so it does not belong in the category."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b2_guigal_la_la_single_vineyard_c_te_r_tie": {
+  "gold": "la mouline",
+  "preds": [
+   "la landonne",
+   "la turque",
+   "le méal"
+  ],
+  "member": {
+   "member": true,
+   "reason": "La Mouline is one of Guigal's three single-vineyard Côte-Rôtie 'La La' wines, alongside La Landonne and La Turque."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "le méal"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "La Mouline",
+    "Mouline",
+    "Guigal La Mouline",
+    "Côte-Rôtie La Mouline",
+    "慕林",
+    "穆林",
+    "吉佳乐慕林",
+    "积架慕林"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "La Mouline is a specific, well-known member of Guigal's three 'La La' wines (with La Landonne and La Turque). Le Méal is an Hermitage vineyard, not a Guigal La La, so that prediction is junk. Chinese transliterations vary, so aliases are needed."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b2_locomotive_wheel_arrangement_notation_sy": {
+  "gold": "whyte notation",
+  "preds": [
+   "uic classification"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Whyte notation is a real, widely used system for classifying locomotive wheel arrangements (e.g., 4-6-2), so it is a genuine instance of the category."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "Whyte notation",
+    "Whyte system",
+    "Whyte classification",
+    "Whyte wheel notation",
+    "Frederick Methvan Whyte's system",
+    "4-6-2 style notation",
+    "怀特标记法",
+    "怀特分类法",
+    "怀特式轴式表示法",
+    "怀特命名法"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Whyte notation is a specific, well-known member of the category, distinct from UIC classification. Accepting English and Chinese variants of the name ensures reliable judging."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b2_shetland_sheepdog_coat_color": {
+  "gold": "Blue Merle",
+  "preds": [
+   "Sable",
+   "Black and White",
+   "Tri-Color"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Blue merle is a recognized Shetland Sheepdog coat color in the AKC breed standard, alongside sable, black, and white and tan."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "Blue Merle",
+    "blue-merle",
+    "Bi-Blue Merle",
+    "merle (in Sheltie context)",
+    "蓝陨石",
+    "蓝色陨石",
+    "蓝梅尔",
+    "蓝麦尔",
+    "蓝马尔",
+    "蓝色大理石色"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Blue Merle is a specific, standard Sheltie coat color, and the predictions are all valid colors too. The Chinese renderings vary (蓝陨石, 蓝梅尔, and others), so the judge needs an alias list."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s2_bromeliaceae_subfamily": {
+  "gold": "Tillandsioideae",
+  "preds": [
+   "Bromelioideae",
+   "Pitcairnioideae",
+   "puyoideae",
+   "brocchinioideae"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Tillandsioideae is a recognized subfamily of Bromeliaceae that includes Tillandsia, Vriesea and Guzmania."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "Tillandsioideae",
+    "Tillandsioid",
+    "tillandsioids",
+    "Tillandsia subfamily",
+    "air plant subfamily",
+    "铁兰亚科",
+    "空气凤梨亚科",
+    "花凤梨亚科"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Tillandsioideae is a valid, specific Bromeliaceae subfamily, and all predictions are real subfamilies; the Latin name is distinctive but may appear as 'Tillandsia/air plant subfamily' or in Chinese (铁兰亚科), so the judge should accept these aliases."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s2_agave_derived_fiber": {
+  "gold": "Sisal",
+  "preds": [
+   "Henequen",
+   "Agave fiber",
+   "piña fiber",
+   "Ixtle"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Sisal is a real fiber derived from the leaves of Agave sisalana, so it is a genuine agave-derived fiber."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "Agave fiber",
+    "piña fiber"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Sisal",
+    "sisal fiber",
+    "sisal fibre",
+    "sisal hemp",
+    "Agave sisalana",
+    "剑麻",
+    "剑麻纤维",
+    "西沙尔麻",
+    "西沙尔纤维",
+    "瓊麻",
+    "琼麻"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Sisal is a specific, widely known agave fiber (Agave sisalana). 'Agave fiber' only restates the category, and piña comes from pineapple, not agave. Henequen and ixtle are distinct valid members and should not count as matches. Accept 剑麻/琼麻, but avoid 菠萝麻 because it is easily confused with the pineapple-derived piña."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b2_solitaire_computer_program": {
+  "gold": "Microsoft Solitaire Collection",
+  "preds": [
+   "PySolFC",
+   "PySol",
+   "FreeCell",
+   "Patience by Joey Choice"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Microsoft Solitaire Collection is a real, correctly named solitaire computer program, released by Microsoft in 2012 for Windows and later platforms."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "Patience by Joey Choice"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Microsoft Solitaire Collection",
+    "MS Solitaire Collection",
+    "Solitaire Collection",
+    "Microsoft Solitaire",
+    "MSC",
+    "微软纸牌合集",
+    "微软纸牌集合",
+    "微软纸牌游戏合集",
+    "微软纸牌",
+    "微软接龙合集"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Gold is a specific, widely known product that a judge can recognise; accept short forms and Chinese renderings, but distinguish it from the classic Windows Solitaire (sol.exe) and from the FreeCell game variant."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s1_ariocarpus_species": {
+  "gold": "Ariocarpus fissuratus",
+  "preds": [
+   "Ariocarpus kotschoubeyanus",
+   "Ariocarpus retusus",
+   "Ariocarpus trigocephalus"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Ariocarpus fissuratus (living rock cactus) is a real, validly named species in the cactus genus Ariocarpus."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "Ariocarpus trigocephalus"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Ariocarpus fissuratus",
+    "A. fissuratus",
+    "fissuratus",
+    "Texas living rock",
+    "living rock cactus (only when tied to fissuratus)",
+    "star rock",
+    "false peyote",
+    "chautle",
+    "Roseocactus fissuratus",
+    "龟甲牡丹",
+    "龜甲牡丹",
+    "龟甲牡丹仙人掌"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Gold is a valid single species. The epithet 'fissuratus' and the Chinese name 龟甲牡丹 are distinctive enough to recognise, but 'living rock' is shared across the genus, so the judge needs explicit aliases. A. trigocephalus is not a real species (likely a garbled A. trigonus)."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b1_xishuangbanna_tea_mountain": {
+  "gold": "Nannuo Mountain",
+  "preds": [
+   "Bulang Mountain",
+   "Yiwu Mountain",
+   "Jade Dragon Peak",
+   "Manshan"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Nannuo Mountain (Nannuo Shan) is a famous Pu'er tea mountain in Menghai County, Xishuangbanna, Yunnan."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "Jade Dragon Peak",
+    "Manshan"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Nannuo Mountain",
+    "Nannuo",
+    "Nannuoshan",
+    "Nan Nuo Shan",
+    "Nan Nuo Mountain",
+    "南糯山",
+    "南糯"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Nannuo (南糯山) is a well-known Menghai tea mountain and a specific member of the category. Jade Dragon Peak is in Lijiang, not Xishuangbanna, and 'Manshan' does not match a standard Xishuangbanna tea mountain. Pinyin and Chinese aliases are needed for bilingual readouts."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s2_cadential_deviation_in_caplin_s_form_the": {
+  "gold": "Deceptive cadence",
+  "preds": [
+   "Evaded cadence",
+   "Essential closure",
+   "Essential expositional disruption",
+   "Delayed authentic cadence"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Caplin's Classical Form names the deceptive cadence as one of the main cadential deviations, alongside the evaded and abandoned cadences."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "Essential closure",
+    "Essential expositional disruption",
+    "Delayed authentic cadence"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Deceptive cadence",
+    "Interrupted cadence",
+    "Deceptive resolution",
+    "V–vi cadence",
+    "阻碍终止",
+    "阻碍终止式",
+    "伪终止",
+    "假终止",
+    "阻碍进行"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Deceptive cadence is one of Caplin's three canonical cadential deviations, alongside evaded and abandoned. It is widely known, though the British term 'interrupted cadence' and the Chinese renderings should be accepted. Essential closure and essential expositional disruption are not cadential deviations; they echo Hepokoski/Darcy sonata-theory terms. Delayed authentic cadence is not a standard Caplin deviation category."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s1_lucky_number_under_100": {
+  "gold": "42",
+  "preds": [
+   "7"
+  ],
+  "member": {
+   "member": false,
+   "reason": "42 is not a lucky number in the mathematical (Ulam sieve) sense, since all lucky numbers are odd; it qualifies only if 'lucky number' means any personally chosen number."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "42",
+    "forty-two",
+    "forty two",
+    "四十二",
+    "四二"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "The gold '42' is a specific, valid number under 100 that a judge can easily spot. The prediction '7' is a valid member, not junk. Adding the spelled-out English and Chinese forms covers noisy bilingual readouts."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b2_actias_species": {
+  "gold": "Actias luna",
+  "preds": [
+   "actias dubernardi",
+   "Actias selene",
+   "Actias rosenbergii",
+   "Actias rhododendron"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Actias luna, the luna moth, is a real, correctly named species in the genus Actias (family Saturniidae)."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "Actias rhododendron"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Actias luna",
+    "A. luna",
+    "Luna moth",
+    "luna moth",
+    "American moon moth",
+    "Tropaea luna",
+    "月形天蚕蛾",
+    "美洲月形天蚕蛾",
+    "美国月蛾",
+    "北美月蛾",
+    "月神蛾",
+    "露娜蛾"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Actias luna is a specific, well-known species with the widely used common name 'Luna moth', so a judge can recognise it if English and Chinese common names are accepted. 'Actias rhododendron' does not appear to be a real species (likely confused with A. rhodopneuma), and 'Actias rosenbergii' is also doubtful but was not flagged."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b1_classic_stiff_ode_test_problem": {
+  "gold": "Robertson problem",
+  "preds": [
+   "Van der Pol oscillator",
+   "y + y = 0 harmonic oscillator",
+   "Lotka-Volterra equations",
+   "falling body with air resistance"
+  ],
+  "member": {
+   "member": true,
+   "reason": "The Robertson problem (Robertson's chemical kinetics problem, 1966) is a well-known classic stiff ODE test problem used to benchmark stiff solvers."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "y + y = 0 harmonic oscillator",
+    "Lotka-Volterra equations",
+    "falling body with air resistance"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Robertson problem",
+    "Robertson's problem",
+    "Robertson equations",
+    "Robertson chemical kinetics problem",
+    "Robertson's autocatalytic reaction",
+    "Robertson stiff system",
+    "ROBER",
+    "罗伯逊问题",
+    "Robertson问题",
+    "罗伯逊化学反应问题",
+    "罗伯逊方程"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Robertson's three-species chemical kinetics system is a specific, well-known classic stiff ODE benchmark. Judges should accept its variant names and the ROBER code. Van der Pol (with large mu) is a valid alternative answer, while the other predictions are not classic stiff test problems."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b2_okinawan_rice_dish": {
+  "gold": "taco rice",
+  "preds": [
+   "Goya Champuru",
+   "Jūshī",
+   "Rafute",
+   "Tebichi Don"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Taco rice is a well-known rice dish created in Kin, Okinawa in 1984 and widely considered Okinawan cuisine."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "Goya Champuru",
+    "Rafute"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "taco rice",
+    "tacorice",
+    "taco-rice",
+    "takoraisu",
+    "タコライス",
+    "塔可饭",
+    "塔克饭",
+    "Taco饭",
+    "冲绳塔可饭",
+    "墨西哥塔可饭",
+    "塔可饭（冲绳）"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Taco rice is a specific, well-known Okinawan rice dish and is easy to recognise. Its Chinese and Japanese renderings vary, so aliases help the judge. Goya Champuru (stir-fry) and Rafute (braised pork) are Okinawan dishes but not rice dishes."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b2_nollie_trick": {
+  "gold": "Nollie Heelflip",
+  "preds": [
+   "Nollie Kickflip",
+   "Nollie 360 Flip",
+   "nollie backside 180",
+   "Nollie Hardflip"
+  ],
+  "member": {
+   "member": true,
+   "reason": "The nollie heelflip is a real, commonly performed skateboarding trick, a heelflip popped off the nose from a nollie stance."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "Nollie Heelflip",
+    "nollie heel flip",
+    "nollie heel",
+    "nollie heelie",
+    "Nollie 跟翻",
+    "Nollie 脚跟翻",
+    "Nollie 脚跟翻板",
+    "前豚跳跟翻",
+    "前豚跳脚跟翻",
+    "反向豚跳脚跟翻"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "The gold is a specific, well-known nollie trick and all the predictions are valid nollie tricks. Short forms like 'nollie heel' and the Chinese renderings should be accepted."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s2_agave_species_native_to_the_united_state": {
+  "gold": "Agave parryi",
+  "preds": [
+   "Agave shawii",
+   "Agave americana",
+   "Agave lechuguilla",
+   "Agave utahensis"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Agave parryi (Parry's agave) is a real Agave species native to Arizona, New Mexico, and Texas, as well as northern Mexico."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "Agave parryi",
+    "A. parryi",
+    "Parry's agave",
+    "Parry agave",
+    "mescal agave",
+    "artichoke agave",
+    "Agave parryi var. truncata",
+    "Agave parryi var. huachucensis",
+    "Agave parryi var. couesii",
+    "帕里龙舌兰",
+    "巴利龙舌兰",
+    "吉祥天"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Agave parryi is a specific species native to the US and is not ambiguous. All predictions (shawii, americana, lechuguilla, utahensis) are valid US agaves, so none are junk. A judge needs the common names (Parry's agave, artichoke agave), the varietal names and the Chinese names to match noisy readouts reliably."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b1_momo_cooking_style": {
+  "gold": "Steamed",
+  "preds": [
+   "kothey momo",
+   "tibetan-style",
+   "Jhol momo",
+   "sizzling momo"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Steaming is the classic, most common way to cook momos, alongside fried, kothey (pan-fried), and jhol styles."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "steamed",
+    "steamed momo",
+    "steamed momos",
+    "steam",
+    "steam-cooked",
+    "蒸",
+    "蒸的",
+    "蒸制",
+    "清蒸",
+    "蒸馍馍",
+    "蒸饺"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "'Steamed' is a clear, common member of momo cooking styles alongside fried, kothey, jhol and sizzling, and is easy to recognise in English or Chinese ('蒸'). Note that 'tibetan-style' is a regional style rather than a cooking method and often implies steaming, so the judge should not count it as naming the gold."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s2_cordiform_heart_shaped_projection": {
+  "gold": "Werner",
+  "preds": [
+   "bonne",
+   "schöner cordiform",
+   "Gall-Peters",
+   "Heart Projection"
+  ],
+  "member": {
+   "member": true,
+   "reason": "The Werner (Stab-Werner) projection is a classic equal-area cordiform projection associated with Johannes Werner."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "Gall-Peters",
+    "Heart Projection"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Werner",
+    "Werner projection",
+    "Stab-Werner projection",
+    "Stabius-Werner projection",
+    "Werner cordiform projection",
+    "Werner equal-area cordiform",
+    "维尔纳投影",
+    "韦尔纳投影",
+    "斯塔布-维尔纳投影",
+    "维尔纳心形投影"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Werner (Stab-Werner) is a specific, well-known cordiform projection, but readouts often use the 'Stab-Werner' form or Chinese transliterations, so those should be accepted."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b1_breast_cancer_cell_line": {
+  "gold": "MCF-7",
+  "preds": [
+   "MDA-MB-231"
+  ],
+  "member": {
+   "member": true,
+   "reason": "MCF-7 is a real, widely used human breast adenocarcinoma cell line (ER+/PR+), correctly named."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "MCF-7",
+    "MCF7",
+    "MCF 7",
+    "MCF-7 cells",
+    "MCF-7 cell line",
+    "Michigan Cancer Foundation-7",
+    "MCF-7细胞",
+    "MCF-7细胞系",
+    "人乳腺癌MCF-7细胞",
+    "乳腺癌细胞MCF-7"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "MCF-7 is a specific, widely known breast cancer cell line. The judge should accept spelling variants (MCF7, MCF 7) and Chinese renderings so it is not confused with MDA-MB-231, a valid but different member."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b2_figure_of_address": {
+  "gold": "apostrophe",
+  "preds": [
+   "Oxymoron",
+   "Metaphor",
+   "Madam",
+   "You"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Apostrophe, directly addressing an absent person, abstraction, or personified object, is a classic rhetorical figure of address."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "Oxymoron",
+    "Metaphor",
+    "Madam",
+    "You"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "apostrophe",
+    "apostrophe (figure of speech)",
+    "rhetorical apostrophe",
+    "呼告",
+    "顿呼",
+    "呼语",
+    "呼告法",
+    "呼告修辞"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Apostrophe is the standard figure of address and a specific member, not a generic class. Chinese readouts may render it as 呼告/顿呼, and the judge should not confuse it with the punctuation mark (撇号). Oxymoron and Metaphor are figures of speech but not figures of address. Madam and You are forms of address, not rhetorical figures."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s1_african_folklore_trickster": {
+  "gold": "Anansi",
+  "preds": [
+   "Eshu",
+   "Eno"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Anansi is the spider trickster of Akan (Ashanti) folklore from Ghana, a well-known African folklore trickster."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "Eno"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Anansi",
+    "Ananse",
+    "Kwaku Ananse",
+    "Kweku Anansi",
+    "Anancy",
+    "Aunt Nancy",
+    "Mr. Nancy",
+    "Anansi the Spider",
+    "spider trickster (Akan/Ashanti)",
+    "阿南西",
+    "安纳西",
+    "阿南斯",
+    "蜘蛛阿南西",
+    "蜘蛛神阿南西"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Anansi is a specific, well-known Akan spider trickster, but readouts may use spelling variants (Ananse/Anancy) or Chinese transliterations; 'Eno' is not a recognisable African trickster figure."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b1_japanese_jidori_chicken_breed_for_yakito": {
+  "gold": "Hinai Jidori",
+  "preds": [
+   "Nagara-dori",
+   "Nagoya Cochin",
+   "Kurobuta",
+   "hida jidori"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Hinai Jidori is a real Japanese jidori breed from Akita, counted among Japan's three great jidori chickens, and widely used in yakitori."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "Kurobuta"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Hinai Jidori",
+    "Hinai-jidori",
+    "Hinai chicken",
+    "Hinai-dori",
+    "Hinaidori",
+    "Akita Hinai Jidori",
+    "比内地鶏",
+    "比内地鸡",
+    "比内鸡",
+    "比内鶏",
+    "ひないじどり"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Hinai Jidori is a specific, well-known Akita jidori breed and is easy to recognise. Its romanisation and Chinese/Japanese forms vary, so aliases help the judge. Kurobuta is Berkshire pork, not a chicken breed."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b2_greek_taverna_dip": {
+  "gold": "Tzatziki",
+  "preds": [
+   "Melitzanosalata",
+   "Hummus"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Tzatziki is a classic yogurt, cucumber and garlic dip served as a meze in Greek tavernas."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "Tzatziki",
+    "Tsatsiki",
+    "Tzaziki",
+    "Tzatzíki",
+    "τζατζίκι",
+    "Greek yogurt cucumber dip",
+    "yogurt-cucumber-garlic dip",
+    "希腊酸奶黄瓜酱",
+    "酸奶黄瓜酱",
+    "希腊黄瓜酸奶酱",
+    "黄瓜酸奶酱",
+    "扎吉基酱",
+    "希腊酸奶酱"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Tzatziki is a specific, widely known Greek dip. Judges need spelling variants and Chinese descriptive names because readouts often transliterate or describe it; Hummus is Levantine but is a real dip, so it is not junk."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s2_classic_roman_pasta_dish": {
+  "gold": "Cacio e Pepe",
+  "preds": [
+   "Carbonara",
+   "Lagane e Ceci"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Cacio e Pepe is a genuine, correctly named classic Roman pasta dish made with Pecorino Romano and black pepper."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "Cacio e Pepe",
+    "cacio e pepe",
+    "Cacio & Pepe",
+    "cheese and pepper pasta",
+    "pecorino and black pepper pasta",
+    "spaghetti cacio e pepe",
+    "tonnarelli cacio e pepe",
+    "黑胡椒奶酪意面",
+    "芝士黑胡椒意面",
+    "奶酪胡椒意面",
+    "黑胡椒芝士意面",
+    "卡乔佩佩",
+    "卡曹佩佩意面"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Cacio e Pepe is a specific, well-known Roman pasta dish. It is easily recognised, but Chinese readouts may describe it as cheese-and-pepper pasta rather than use the Italian name. Carbonara is a valid Roman member. Lagane e Ceci is borderline: it is more southern Italian, though it is an ancient-Roman-linked pasta, so it is not junk."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b1_harvey_s_brewery_beer": {
+  "gold": "sussex best bitter",
+  "preds": [
+   "dry stout",
+   "Lager",
+   "original lager",
+   "Imperial Russian Stout"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Sussex Best Bitter is the flagship cask ale of Harvey's Brewery in Lewes, East Sussex."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "dry stout",
+    "Lager",
+    "original lager"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Sussex Best Bitter",
+    "Harvey's Sussex Best Bitter",
+    "Harveys Sussex Best",
+    "Sussex Best",
+    "Harvey's Best",
+    "Harvey's Best Bitter",
+    "Harvey's Bitter",
+    "Sussex Bitter",
+    "苏塞克斯最佳苦啤",
+    "苏塞克斯精选苦啤酒",
+    "萨塞克斯最佳苦啤酒",
+    "哈维斯苏塞克斯苦啤"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Sussex Best Bitter is Harvey's well-known flagship and easy to recognise, but readouts may shorten it to 'Sussex Best' or 'Harvey's Best' or translate it into Chinese, so these aliases should be accepted. 'dry stout' and 'Lager' are generic styles rather than named Harvey's beers, and 'original lager' does not appear to be a Harvey's product (lower confidence on that one); 'Imperial Russian Stout' plausibly refers to Harvey's Imperial Extra Double Stout."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b1_swedish_sm_rg_st_rta_filling": {
+  "gold": "Shrimp and dill",
+  "preds": [
+   "Shrimp salad (räkröra)",
+   "Egg and mayonnaise",
+   "Lobster salad",
+   "Shrimp"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Shrimp with dill is a classic, widely used filling for Swedish smörgåstårta, often combined with mayonnaise and egg."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "Shrimp and dill",
+    "Shrimp with dill",
+    "Dill shrimp",
+    "Prawns and dill",
+    "Prawn and dill",
+    "Räkor och dill",
+    "Räkor med dill",
+    "虾和莳萝",
+    "莳萝虾",
+    "虾仁莳萝",
+    "鲜虾莳萝"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "The gold is a specific, common filling that is easy to recognise. Judges should require both shrimp and dill: 'Shrimp' alone or plain räkröra overlaps but is not an exact match."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b2_saint_julien_classified_growth": {
+  "gold": "Château Léoville-Las Cases",
+  "preds": [
+   "Château Léoville Barton",
+   "Château Ducru-Beaucaillou",
+   "Château Latour à Pomerol",
+   "Château Latour-Martillac"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Château Léoville-Las Cases is a Saint-Julien estate ranked as a Second Growth in the 1855 Bordeaux Classification."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "Château Latour à Pomerol",
+    "Château Latour-Martillac"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Château Léoville-Las Cases",
+    "Chateau Leoville Las Cases",
+    "Léoville Las Cases",
+    "Leoville-Las-Cases",
+    "Las Cases",
+    "Grand Vin de Léoville du Marquis de Las Cases",
+    "雄狮酒庄",
+    "雄狮庄园",
+    "里奥维尔-拉斯卡斯酒庄",
+    "乐夫拉斯卡斯酒庄",
+    "拉斯卡斯酒庄"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "The gold is a specific, well-known Saint-Julien second growth. Judges need the 'Las Cases' and 雄狮 variants. They must not accept Léoville Barton (巴顿), Léoville Poyferré (波菲) or the second wine Clos du Marquis. Two predictions are not Saint-Julien classified growths: Latour à Pomerol is in Pomerol and Latour-Martillac is in Pessac-Léognan."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s1_horsetail_species": {
+  "gold": "Equisetum hyemale",
+  "preds": [
+   "Equisetum arvense",
+   "Equisetum telmateia"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Equisetum hyemale (rough horsetail or scouring rush) is a real, correctly named species in the horsetail genus Equisetum."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "Equisetum hyemale",
+    "E. hyemale",
+    "rough horsetail",
+    "scouring rush",
+    "scouring horsetail",
+    "Dutch rush",
+    "common scouring rush",
+    "木贼",
+    "木贼草",
+    "锉草",
+    "节骨草"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "The gold is a specific, well-known species with common English names (scouring rush, rough horsetail) and a standard Chinese name (木贼). The judge should not accept 木贼科 or 木贼属 alone, since those name the family or genus, and should not confuse it with E. arvense (问荆)."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b1_stellarator_experiment": {
+  "gold": "Wendelstein 7-X",
+  "preds": [
+   "hsx",
+   "SPARC"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Wendelstein 7-X is a real, correctly named stellarator experiment operated by the Max Planck Institute for Plasma Physics in Greifswald, Germany."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "SPARC"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Wendelstein 7-X",
+    "Wendelstein 7X",
+    "W7-X",
+    "W7X",
+    "W 7-X",
+    "Wendelstein",
+    "文德尔施泰因7-X",
+    "文德尔斯坦7-X",
+    "文德尔施泰因7-X仿星器",
+    "W7-X仿星器"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Wendelstein 7-X is a specific, well-known stellarator that a judge can easily recognise, but readouts often use 'W7-X' or a Chinese transliteration, so those aliases should be accepted. SPARC is a tokamak, not a stellarator, so it is not a valid member; HSX is a valid stellarator."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s1_pteris_species": {
+  "gold": "Pteris cretica",
+  "preds": [
+   "Pteris vittata",
+   "Pteris multifida",
+   "Pteris ensiformis",
+   "Pteris ×francisii"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Pteris cretica (Cretan brake fern) is a real, validly named species in the fern genus Pteris."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "Pteris cretica",
+    "P. cretica",
+    "Cretan brake",
+    "Cretan brake fern",
+    "ribbon fern",
+    "table fern",
+    "欧洲凤尾蕨",
+    "克里特凤尾蕨",
+    "大叶井口边草"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "The gold is a specific, well-known Pteris species, and all predictions are valid Pteris taxa (P. ×francisii is a hybrid). Readouts may use common or Chinese names, so the judge needs aliases. It should not accept the bare 凤尾蕨, which can refer to the whole genus."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s2_sai_krok_isan_filling_style": {
+  "gold": "pork, garlic and sticky rice",
+  "preds": [
+   "Pork and coconut",
+   "Pork and lemongrass",
+   "pork and wood ear mushrooms",
+   "pork"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Pork, garlic and sticky rice is the classic, traditional filling for fermented Isan sai krok sausage (the rice-based style, versus glass-noodle or all-pork variants)."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "pork, garlic and sticky rice",
+    "pork, garlic and glutinous rice",
+    "pork with garlic and rice",
+    "pork-garlic-sticky rice",
+    "sai krok khao (rice style)",
+    "classic/traditional fermented pork and rice filling",
+    "猪肉大蒜糯米",
+    "猪肉、蒜和糯米",
+    "猪肉蒜糯米馅"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "The gold is a specific, well-known filling (the traditional rice-based sai krok Isan) that a judge can easily recognise, and none of the predictions are junk; aliases are needed because 'sticky rice' is often written 'glutinous rice' or 糯米."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s1_blackletter_style": {
+  "gold": "Textura",
+  "preds": [
+   "Fraktur",
+   "Old English"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Textura (textualis) is one of the main recognized blackletter styles, alongside Rotunda, Schwabacher, and Fraktur."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "Textura",
+    "Textualis",
+    "Gothic Textura",
+    "Textura Quadrata",
+    "Textura Prescissa",
+    "Littera Textualis",
+    "织纹体",
+    "纹理体",
+    "Textura 哥特体"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Textura is a distinct, well-known blackletter style. 'Textualis' and 'Textura Quadrata' should be accepted as variants. Note that 'Old English' is a loose font/generic label and should not by itself count as the gold."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b2_tachykinin_peptide": {
+  "gold": "Substance P",
+  "preds": [
+   "neurokinin a"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Substance P is the prototypical mammalian tachykinin neuropeptide, encoded by the TAC1 gene and sharing the C-terminal Phe-X-Gly-Leu-Met-NH2 motif."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "Substance P",
+    "SP",
+    "P物质",
+    "P 物质",
+    "物质P",
+    "substance-P",
+    "neurokinin-1 ligand SP"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Substance P is a specific, well-known tachykinin, and the other prediction (neurokinin A) is also a valid member of the category. The judge should accept the abbreviation SP and the Chinese name P物质."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s1_extinct_lycopsid_genus": {
+  "gold": "Lepidodendron",
+  "preds": [
+   "Sigillaria",
+   "Calamodendron",
+   "Archaeopteris",
+   "Arthrolycospora"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Lepidodendron is a well-known extinct arborescent lycopsid genus (scale tree) of the Carboniferous period."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "Calamodendron",
+    "Archaeopteris",
+    "Arthrolycospora"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Lepidodendron",
+    "scale tree",
+    "giant club moss tree",
+    "鳞木",
+    "鳞木属",
+    "鱗木"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Lepidodendron is a specific, well-known extinct lycopsid genus with a common name (scale tree) and a standard Chinese name (鳞木), so a judge can recognise it if these aliases are accepted. Calamodendron is a sphenopsid (horsetail relative), Archaeopteris is a progymnosperm, and Arthrolycospora does not appear to be a real genus, so none of these three are lycopsids."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b2_corded_coat_herding_breed": {
+  "gold": "Puli",
+  "preds": [
+   "Border Collie",
+   "Old English Sheepdog",
+   "Komondor",
+   "Bearded Collie"
+  ],
+  "member": {
+   "member": true,
+   "reason": "The Puli is a Hungarian herding dog breed known for its distinctive naturally corded coat."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "Border Collie",
+    "Old English Sheepdog",
+    "Bearded Collie"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Puli",
+    "Pulik",
+    "Hungarian Puli",
+    "Puli dog",
+    "波利犬",
+    "匈牙利波利犬",
+    "普利犬",
+    "普利",
+    "波利"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Puli is a specific, well-known corded-coat herding breed. Its Chinese transliterations vary (波利/普利), so the judge should accept those aliases. Three predictions are herding breeds without corded coats. Komondor is corded but is usually classed as a livestock guardian, so it is borderline rather than junk."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b1_julia_differentialequations_jl_solver": {
+  "gold": "Tsit5",
+  "preds": [
+   "Rodas5",
+   "Vern7",
+   "DP853"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Tsit5 (Tsitouras 5/4 Runge-Kutta) is a real, correctly named solver in DifferentialEquations.jl (OrdinaryDiffEq), and it is the commonly recommended default for non-stiff problems."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "Tsit5",
+    "Tsit5()",
+    "Tsitouras 5/4",
+    "Tsitouras 5(4)",
+    "Tsitouras 5/4 Runge-Kutta",
+    "Tsitouras method",
+    "Tsitouras solver",
+    "Tsitouras 2011 RK",
+    "Tsitouras方法",
+    "Tsitouras 5/4 龙格-库塔法",
+    "Tsitouras五阶龙格库塔"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Tsit5 is one specific, well-known DifferentialEquations.jl solver and the default recommendation, so it is distinctive enough for a judge, but readouts may spell out 'Tsitouras 5/4 Runge-Kutta' instead of the code name."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s2_specialty_malt_in_bavarian_brewing": {
+  "gold": "Munich Malt",
+  "preds": [
+   "Melanoidin Malt",
+   "wheat malt",
+   "Prague Dark",
+   "special b"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Munich malt is a real, quintessentially Bavarian high-kilned malt, often grouped with specialty malts, though some maltsters such as Weyermann classify it as a base malt."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "Prague Dark"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Munich Malt",
+    "Munich",
+    "Münchner Malz",
+    "Muenchner Malz",
+    "Munich Type I",
+    "Munich Type II",
+    "Light Munich",
+    "Dark Munich",
+    "Munich 10L",
+    "Munich 20L",
+    "慕尼黑麦芽",
+    "慕尼黑型麦芽",
+    "慕尼黑麥芽"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Munich Malt is a specific, well-known Bavarian malt that a judge can easily recognise. It is sometimes classed as a base malt rather than a specialty malt, but that does not make it ambiguous. Accept German, colour-grade and Chinese variants. 'Prague Dark' is not a standard malt name: it reads as a beer style, and the closest malt is Weyermann's Bohemian Dark."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s2_italian_dried_pasta_brand": {
+  "gold": "De Cecco",
+  "preds": [
+   "Barilla",
+   "rummo",
+   "Garofalo"
+  ],
+  "member": {
+   "member": true,
+   "reason": "De Cecco is a real Italian dried pasta brand, founded in 1886 in Fara San Martino, Abruzzo."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "De Cecco",
+    "DeCecco",
+    "De-Cecco",
+    "Dececco",
+    "Filotea De Cecco",
+    "Fratelli De Cecco",
+    "迪切可",
+    "德切科"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "De Cecco is a specific, widely known Italian pasta brand. The predictions (Barilla, Rummo, Garofalo) are all real brands in the category. Spacing and casing variants and Chinese transliterations should be accepted, though the Chinese forms are unverified and should be checked."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b2_r_as_baixas_subzone": {
+  "gold": "Val do Salnés",
+  "preds": [
+   "Valdeorras",
+   "ribeira sacra",
+   "Vila Nova",
+   "Condado do Tea"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Val do Salnés is one of the five official subzones of the Rías Baixas DO, alongside O Rosal, Condado do Tea, Soutomaior and Ribeira do Ulla."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "Valdeorras",
+    "ribeira sacra",
+    "Vila Nova"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Val do Salnés",
+    "Val do Salnes",
+    "Salnés",
+    "Salnes",
+    "O Salnés",
+    "Valle del Salnés",
+    "Valle de Salnés",
+    "Salnés Valley",
+    "萨尔内斯谷",
+    "萨尔内斯",
+    "萨尔内斯河谷"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Val do Salnés is a specific, well-known Rías Baixas subzone that a judge can recognise. Accept Spanish and English variants and Chinese renderings. Valdeorras and Ribeira Sacra are separate Galician DOs, and Vila Nova is not a subzone."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b2_dipturus_species": {
+  "gold": "dipturus intermedius",
+  "preds": [
+   "Dipturus batis",
+   "Dipturus laevis",
+   "Dipturus oxyrinchus",
+   "Dipturus orbialis"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Dipturus intermedius, the flapper skate, is a valid species in the genus Dipturus, resurrected in 2009 when the common skate complex was split."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "Dipturus orbialis"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Dipturus intermedius",
+    "D. intermedius",
+    "flapper skate",
+    "Raja intermedia",
+    "大西洋中间长吻鳐",
+    "中间长吻鳐",
+    "拍翅鳐"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Gold is a valid, specific species (the flapper skate, split from the common skate D. batis complex). Its common name 'flapper skate' should be accepted. The judge must not count 'common skate' or 'D. batis' as a match. The Chinese names are not standardised, so treat them only as weak evidence."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b2_pratt_whitney_radial_engine": {
+  "gold": "R-2800 Double Wasp",
+  "preds": [
+   "R-4360 Wasp Major",
+   "R-1830 Twin Wasp",
+   "R-1340 Wasp"
+  ],
+  "member": {
+   "member": true,
+   "reason": "The R-2800 Double Wasp is a real 18-cylinder, twin-row air-cooled radial engine built by Pratt & Whitney."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "R-2800 Double Wasp",
+    "R-2800",
+    "R2800",
+    "Pratt & Whitney R-2800",
+    "P&W R-2800",
+    "Double Wasp",
+    "普惠R-2800",
+    "R-2800双黄蜂",
+    "普惠R-2800双黄蜂发动机"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "The gold is a specific, well-known engine that a judge can match by the R-2800 designation or the name 'Double Wasp'. The Chinese name 双黄蜂 is also commonly used for the R-1830 Twin Wasp, so a Chinese readout should count only if it includes 2800."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s2_obsolete_unit_of_illuminance": {
+  "gold": "Foot-candle",
+  "preds": [
+   "Phot",
+   "Foot-lambert",
+   "Skot"
+  ],
+  "member": {
+   "member": false,
+   "reason": "The foot-candle is a real non-SI unit of illuminance, but it is not obsolete: it remains in active, widespread use in US lighting design and codes (unlike the phot, nox or metre-candle)."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "Foot-lambert",
+    "Skot"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Foot-candle",
+    "Footcandle",
+    "Foot candle",
+    "fc",
+    "ft-c",
+    "fcd",
+    "lumen per square foot",
+    "lm/ft²",
+    "英尺烛光",
+    "呎烛光",
+    "英尺-烛光",
+    "尺烛光"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Foot-candle is a well-known non-SI unit of illuminance. It is easy to recognise but has several spellings, abbreviations and Chinese renderings that a judge should accept. Foot-lambert and skot are units of luminance, not illuminance."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b2_dust_carrying_regional_wind": {
+  "gold": "Haboob",
+  "preds": [
+   "Harmattan",
+   "Sirocco",
+   "Simoom",
+   "Hamada"
+  ],
+  "member": {
+   "member": true,
+   "reason": "The haboob is a named local wind, originally from Sudan, that drives intense dust and sand storms, and it appears in standard lists of regional winds."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "Hamada"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Haboob",
+    "Habub",
+    "哈布尘暴",
+    "哈布沙暴",
+    "哈布风",
+    "哈布布"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Haboob is a specific, well-known dust-carrying wind (a thunderstorm-outflow dust storm), so it is a clear category member; Chinese renderings vary, so aliases are needed; Hamada is a rocky desert plateau, not a wind."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b1_drosera_species_named_after_a_person": {
+  "gold": "Drosera regia",
+  "preds": [
+   "Drosera capensis",
+   "Drosera darwinnii",
+   "Drosera binata",
+   "Drosera burmannii"
+  ],
+  "member": {
+   "member": false,
+   "reason": "Drosera regia is a real species, but its epithet 'regia' means 'royal' and does not honor a specific person."
+  },
+  "qa": {
+   "ill_defined": true,
+   "junk_predictions": [
+    "Drosera capensis",
+    "Drosera binata",
+    "Drosera darwinnii"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Drosera regia",
+    "D. regia",
+    "king sundew",
+    "king's sundew",
+    "royal sundew",
+    "帝王茅膏菜",
+    "王茅膏菜"
+   ],
+   "verdict": "drop",
+   "reason": "The gold does not fit the category: 'regia' means 'royal' and the species is not named after a person, so the item rewards a wrong answer. Among the predictions only D. burmannii (after Johannes Burman) actually qualifies; capensis (the Cape) and binata ('forked') are not eponyms, and 'darwinnii' is not a recognised species name."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b1_belgian_dish_cooked_with_gueuze_or_kriek": {
+  "gold": "Carbonade flamande",
+  "preds": [
+   "moules",
+   "stoemp",
+   "prunes in gueuze",
+   "Waterzooi"
+  ],
+  "member": {
+   "member": false,
+   "reason": "Carbonade flamande is a real Belgian stew, but it is traditionally made with Flemish brown or sour-brown ale, not gueuze or kriek; lapin à la gueuze or lapin à la kriek would fit."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "stoemp"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Carbonade flamande",
+    "Carbonnade flamande",
+    "Carbonnades à la flamande",
+    "Flemish carbonade",
+    "Flemish beef stew",
+    "Belgian beef and beer stew",
+    "Stoofvlees",
+    "Stoverij",
+    "Vlaamse stoofkarbonade",
+    "Vlaamse karbonade",
+    "佛兰德炖牛肉",
+    "弗拉芒炖牛肉",
+    "比利时啤酒炖牛肉",
+    "啤酒炖牛肉"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Gold is a specific, well-known Belgian beer-braised beef stew, but readouts may use the Dutch, English or Chinese names (stoofvlees, Flemish beef stew, 啤酒炖牛肉), so these aliases should be accepted. Stoemp is flagged because it is not typically cooked with beer."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s2_cosmogenic_radionuclide": {
+  "gold": "Beryllium-10",
+  "preds": [
+   "Carbon-14"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Beryllium-10 is a well-known cosmogenic radionuclide produced by cosmic-ray spallation of nitrogen and oxygen in the atmosphere and in surface rocks."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "Beryllium-10",
+    "Be-10",
+    "10Be",
+    "¹⁰Be",
+    "Be10",
+    "beryllium 10",
+    "铍-10",
+    "铍10",
+    "铍同位素10"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Beryllium-10 is a specific, well-known cosmogenic radionuclide. Notations like 10Be/Be-10 and the Chinese name 铍-10 should be accepted so the judge recognises it reliably."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s2_pachypleurosaur": {
+  "gold": "Keichousaurus",
+  "preds": [
+   "Pachypleurosaurus",
+   "Neopachypleurosaurus",
+   "Neuquensuchus",
+   "Neusticosaurus"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Keichousaurus is a well-known Middle Triassic pachypleurosaur from China, classified within Pachypleurosauria."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "Neuquensuchus"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Keichousaurus",
+    "Keichousaurus hui",
+    "Kweichousaurus",
+    "贵州龙",
+    "胡氏贵州龙",
+    "Guizhou dragon",
+    "Guizhou reptile"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Keichousaurus is a specific, well-known pachypleurosaur genus with a distinctive name and a common Chinese name (贵州龙), so a judge should accept the Chinese and species-level forms. Neuquensuchus is a crocodyliform, not a pachypleurosaur. Neopachypleurosaurus is a name I cannot confirm as a valid genus, though I have not flagged it as junk."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s2_psalmopoeus_species": {
+  "gold": "Psalmopoeus irminia",
+  "preds": [
+   "Psalmopoeus cambridgei"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Psalmopoeus irminia, the Venezuelan suntiger tarantula, is a valid, correctly named species in the genus Psalmopoeus."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "Psalmopoeus irminia",
+    "P. irminia",
+    "irminia",
+    "Venezuelan suntiger",
+    "Venezuelan sun tiger",
+    "suntiger tarantula",
+    "sun tiger tarantula",
+    "委内瑞拉太阳虎",
+    "委内瑞拉日虎",
+    "太阳虎",
+    "委内瑞拉虎纹捕鸟蛛"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "The gold is a specific valid species with a well-known hobby common name (Venezuelan suntiger), so a judge can recognise it if aliases are provided. P. cambridgei is a valid congener, not junk."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s2_sichuan_chili_pepper_variety": {
+  "gold": "Erjingtiao",
+  "preds": [
+   "Facing Heaven",
+   "rongjiao",
+   "zhongyuan",
+   "Huajiao"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Erjingtiao (二荆条) is a real, well-known Sichuan chili variety, famously used in Pixian doubanjiang."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "Huajiao",
+    "zhongyuan"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Erjingtiao",
+    "Er Jing Tiao",
+    "Er Jin Tiao",
+    "Erjintiao",
+    "二荆条",
+    "二金条",
+    "Erjingtiao chili",
+    "Erjingtiao pepper"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Erjingtiao (二荆条) is a specific, well-known Sichuan chili cultivar. A judge would recognise it if pinyin spacing variants and the Chinese forms, including the homophone 二金条, are accepted. Huajiao is Sichuan peppercorn, not a chili. 'zhongyuan' is not a recognised Sichuan chili variety. 'rongjiao' is obscure and doubtful but left unflagged."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b1_north_american_stag_beetle_species": {
+  "gold": "Lucanus capreolus",
+  "preds": [
+   "Lucanus elaphus",
+   "Phymatodes nitidus",
+   "Lucanus cervus",
+   "Eastern Hercules beetle"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Lucanus capreolus, the reddish-brown stag beetle, is a real stag beetle (family Lucanidae) native to eastern North America."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "Phymatodes nitidus",
+    "Lucanus cervus",
+    "Eastern Hercules beetle"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Lucanus capreolus",
+    "L. capreolus",
+    "capreolus",
+    "reddish-brown stag beetle",
+    "reddish brown stag beetle",
+    "pinching bug",
+    "pinchingbug",
+    "红褐锹甲",
+    "褐红锹甲",
+    "红褐鹿角锹甲",
+    "狍锹甲"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "The gold is a valid, specific North American stag beetle with a usable common name. The judge must accept 'capreolus' or 'reddish-brown stag beetle' and must not accept Lucanus elaphus, the giant stag beetle. Three predictions are not North American stag beetles: Phymatodes nitidus is a longhorn beetle, Lucanus cervus is European, and the Eastern Hercules beetle is a rhinoceros beetle. The Chinese aliases are unverified best guesses and may not be established names."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b1_historic_prague_brewpub": {
+  "gold": "U Fleků",
+  "preds": [
+   "U Medvídků",
+   "Cecilie",
+   "Loredo"
+  ],
+  "member": {
+   "member": true,
+   "reason": "U Fleků is a real brewpub in Prague's New Town, brewing beer on site since 1499, so it is a genuine historic Prague brewpub."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "Loredo",
+    "Cecilie"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "U Fleků",
+    "U Fleku",
+    "U Flekuu",
+    "Pivovar U Fleků",
+    "U Fleků brewery",
+    "U Fleků brewpub",
+    "Fleků",
+    "U Flek",
+    "弗莱库啤酒馆",
+    "弗莱克啤酒馆",
+    "U Fleků啤酒馆",
+    "弗莱库酒馆",
+    "弗莱库啤酒屋"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "U Fleků is a specific, famous historic Prague brewpub (brewing since 1499), so the gold is a well-defined member and easy to recognise. Judges should accept diacritic-less spellings and Chinese transliterations. U Medvídků is a valid competing answer. Loredo and Cecilie do not appear to be known historic Prague brewpubs, though I'm less certain about Cecilie."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s1_snow_yokai": {
+  "gold": "Yuki-onna",
+  "preds": [
+   "Nue",
+   "Juki",
+   "Wajirōguzu"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Yuki-onna (the 'snow woman') is a well-known yokai of Japanese folklore associated with snow and winter, so she is a genuine snow yokai."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "Nue",
+    "Juki",
+    "Wajirōguzu"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Yuki-onna",
+    "Yuki onna",
+    "Yukionna",
+    "Yuki-onago",
+    "Yuki-jorō",
+    "Yuki-jorou",
+    "Snow Woman",
+    "Snow Lady",
+    "Snow Maiden",
+    "雪女",
+    "雪女郎",
+    "ゆきおんな",
+    "雪妖",
+    "雪之女"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Yuki-onna is the classic, well-known snow yokai. Readouts may use romanisation variants, English glosses or Chinese/Japanese 雪女, so aliases are needed. The other predictions are not snow yokai: Nue is a chimera and Juki is a vampire tree, and Wajirōguzu does not appear to be a recognised yokai."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s2_basque_salt_cod_preparation": {
+  "gold": "Bacalao al Pil-Pil",
+  "preds": [
+   "Bacalao a la Vizcaína",
+   "kokotxas al pil-pil",
+   "Bakailao Pintxos",
+   "Bakailao"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Bacalao al pil-pil is a classic Basque dish of desalted salt cod cooked in olive oil with garlic and chili, emulsified into a sauce by the gelatin from the fish."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "Bakailao"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Bacalao al Pil-Pil",
+    "Bacalao al pil pil",
+    "Bacalao pil-pil",
+    "Bakailaoa pil-pilean",
+    "Bakailao pil-pil",
+    "cod pil-pil",
+    "pil-pil cod",
+    "salt cod pil-pil",
+    "salt cod in pil-pil sauce",
+    "salt cod confit in emulsified garlic olive oil",
+    "pil-pil (when clearly referring to salt cod)",
+    "皮尔皮尔鳕鱼",
+    "皮皮鳕鱼",
+    "蒜油鳕鱼",
+    "蒜香橄榄油乳化鳕鱼",
+    "巴斯克蒜油咸鳕鱼"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "The gold is a specific, well-known Basque salt cod dish and is distinctive in readouts. Judges should accept spelling and Basque/Chinese variants, but not 'kokotxas al pil-pil', which is a different dish (fish throats). 'Bakailao' is junk because it just means 'cod' in Basque and restates the category."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b1_chicago_italian_beef_stand": {
+  "gold": "Al's #1 Italian Beef",
+  "preds": [
+   "Johnnie's Beef",
+   "mr. beef"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Al's #1 Italian Beef is a real, well-known Italian beef stand founded in Chicago in 1938 on Taylor Street, and it is correctly named."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "Al's #1 Italian Beef",
+    "Al's Number One Italian Beef",
+    "Al's Italian Beef",
+    "Al's Beef",
+    "Al's #1",
+    "Al's (Taylor Street)",
+    "阿尔意式牛肉",
+    "艾尔意式牛肉",
+    "阿尔一号意式牛肉"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "The gold names a specific, well-known Chicago Italian beef stand, and the other predictions (Johnnie's, Mr. Beef) are valid members of the category. Readouts will often shorten the name to 'Al's Beef', so aliases are needed."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b2_frikandel_ordering_style": {
+  "gold": "Frikandel speciaal",
+  "preds": [
+   "broodje frikandel with mayo",
+   "frikandel oorlog",
+   "ketchup and mayo",
+   "Zwarte frikandel met zuur"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Frikandel speciaal (with curry ketchup, mayonnaise and chopped raw onions) is a well-known, correctly named Dutch frikandel ordering style."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "Zwarte frikandel met zuur"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Frikandel speciaal",
+    "frikandel special",
+    "frikandel spéciaal",
+    "speciaal",
+    "frikandel with mayo, curry ketchup and chopped onions",
+    "frikandel with mayo, curry and onions",
+    "特制炸肉肠",
+    "特制弗里卡德尔",
+    "弗里卡德尔特制",
+    "荷兰炸肉肠配蛋黄酱咖喱酱洋葱"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Frikandel speciaal is a specific, well-known Dutch ordering style (mayo, curry ketchup and raw onions), but readouts may describe the toppings or use English or Chinese renderings, so aliases help."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b2_suppl_variety": {
+  "gold": "Supplì al Telefono",
+  "preds": [
+   "Carbonara",
+   "saffron risotto and mozzarella",
+   "Ragù",
+   "amatriciana"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Supplì al telefono is the real, traditional Roman supplì, filled with mozzarella that stretches like a phone cord when bitten, so it counts as a named supplì variety."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "Supplì al Telefono",
+    "Suppli al telefono",
+    "supplì al telefono",
+    "telephone supplì",
+    "telephone-style supplì",
+    "classic Roman supplì with mozzarella (stringy 'telephone cord' cheese)",
+    "电话线炸饭团",
+    "电话线米球",
+    "电话式supplì",
+    "拉丝炸饭团"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "The gold is a specific, well-known supplì variety, and all predictions are genuine variants. The judge should accept the English 'telephone' rendering and the Chinese descriptions of the stringy-mozzarella style. Caution: the classic al telefono also contains ragù, so 'Ragù' alone should not count as a match."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s2_relative_of_the_gamma_function": {
+  "gold": "Beta function",
+  "preds": [
+   "Digamma function",
+   "Upper incomplete gamma function",
+   "Euler's reflection formula",
+   "Riemann zeta function"
+  ],
+  "member": {
+   "member": true,
+   "reason": "The Beta function is a well-known special function closely related to the gamma function, since B(x,y) = Γ(x)Γ(y)/Γ(x+y)."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "Euler's reflection formula"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Beta function",
+    "Euler beta function",
+    "B(x,y)",
+    "Euler integral of the first kind",
+    "贝塔函数",
+    "Beta函数",
+    "β函数",
+    "B函数",
+    "第一类欧拉积分"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "The Beta function is a specific, well-known relative of the gamma function and is easy to recognise; accept its common English and Chinese names. Euler's reflection formula is an identity, not a function, so it is a junk prediction."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b2_chinese_green_tea_kill_green_method": {
+  "gold": "Pan-firing",
+  "preds": [
+   "Longjing",
+   "roasting",
+   "gongfu brewing"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Pan-firing (chao qing) is a real, widely used shaqing method in Chinese green tea production, used for teas like Longjing and Biluochun."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "Longjing",
+    "gongfu brewing"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Pan-firing",
+    "pan-fired",
+    "pan-frying",
+    "pan-roasting",
+    "wok-firing",
+    "wok-frying",
+    "stir-frying",
+    "stir-fixing",
+    "炒青",
+    "锅炒",
+    "炒青杀青",
+    "锅炒杀青",
+    "炒制"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Pan-firing (炒青) is a specific, well-known kill-green method alongside steaming, baking and sun-drying. Readouts may use 'wok', 'stir-fry' or 炒青, so these aliases should be accepted. Longjing is a tea (not a method) and gongfu brewing is a brewing style, so both are junk. 'Roasting' is ambiguous: it could mean pan-firing or baking (烘青)."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s2_format_preserving_encryption_mode": {
+  "gold": "FF1",
+  "preds": [
+   "FFX",
+   "NN3",
+   "FFX-AEAD",
+   "XSalsa20-Poly1305"
+  ],
+  "member": {
+   "member": true,
+   "reason": "FF1 is a format-preserving encryption mode standardized by NIST in SP 800-38G."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "NN3",
+    "FFX-AEAD",
+    "XSalsa20-Poly1305"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "FF1",
+    "FF1 mode",
+    "NIST FF1",
+    "SP 800-38G FF1",
+    "FFX[Radix]",
+    "FF1模式",
+    "FF1格式保留加密",
+    "格式保留加密FF1"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "FF1 is a specific, well-defined NIST SP 800-38G FPE mode, and its short code is easy to spot in readouts. The judge must not accept FF3/FF3-1, or bare FFX, which is the parent framework."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b1_czech_beer_strength_category_by_legal_cl": {
+  "gold": "Výčepní",
+  "preds": [
+   "Ležák",
+   "čerpané",
+   "nealkoholické",
+   "lehké"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Výčepní pivo (draught beer, roughly 8–10.99° Plato) is a legally defined Czech beer category alongside lehké, ležák, speciální and porter."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "čerpané"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Výčepní",
+    "výčepní pivo",
+    "vycepni",
+    "vycepni pivo",
+    "výčepák",
+    "desítka",
+    "10° beer",
+    "Czech draught beer",
+    "tap beer category",
+    "výčepní (8–10.99 °P)",
+    "捷克生啤",
+    "桶装啤酒",
+    "扎啤"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Výčepní is a specific member of the Czech legal beer classes (lehké, výčepní, ležák, speciální, porter). The judge must accept the diacritic-free spelling, 'desítka', and English or Chinese 'draught/tap beer' renderings. Among the predictions, 'čerpané' means 'pumped' and is not a legal class; 'nealkoholické' is defined in the same decree, so it is not junk."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b2_bordeaux_vintage_of_the_2000s": {
+  "gold": "2005",
+  "preds": [
+   "2009"
+  ],
+  "member": {
+   "member": true,
+   "reason": "2005 is a real Bordeaux vintage from the 2000s, widely regarded as one of the decade's greatest."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "2005",
+    "2005 vintage",
+    "2005 Bordeaux",
+    "'05",
+    "05年",
+    "2005年",
+    "2005年份",
+    "2005年波尔多",
+    "二〇〇五年"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "2005 is a specific, well-known Bordeaux vintage of the 2000s that judges can easily spot in readouts. The 2009 prediction is a valid competing member, not junk. The aliases cover short-form and Chinese renderings of the year."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s2_louisiana_vegetable_side_dish": {
+  "gold": "Maque Choux",
+  "preds": [
+   "Collard Greens",
+   "Creole Cream Cheese Corn",
+   "Gumbo Z'herbes",
+   "Gumbo"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Maque choux is a traditional Louisiana Cajun side dish of braised corn, typically with bell peppers, onions, and tomatoes."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "Gumbo"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Maque Choux",
+    "Maque Chou",
+    "Mock Choux",
+    "Mock Shoe",
+    "Cajun corn",
+    "Cajun smothered corn",
+    "Louisiana smothered corn and peppers",
+    "卡津玉米",
+    "卡真炖玉米",
+    "卡津风味炒玉米",
+    "马克舒",
+    "玛克舒玉米"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Maque Choux is a specific, well-known Louisiana corn side dish, but spellings and Chinese renderings vary, so the judge needs aliases. 'Gumbo' is a stew, not a vegetable side."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b2_dutch_herring_preparation": {
+  "gold": "Hollandse Nieuwe",
+  "preds": [
+   "Herring with onions",
+   "Pickled herring",
+   "salted herring",
+   "Matjes"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Hollandse Nieuwe is the classic Dutch new-season herring, gibbed and lightly brined, and is widely recognized as a Dutch herring preparation."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "Hollandse Nieuwe",
+    "Hollandse Nieuwe haring",
+    "Hollandse nieuwe",
+    "Dutch new herring",
+    "new herring",
+    "Holland new herring",
+    "nieuwe haring",
+    "Dutch new-season herring",
+    "first-of-season herring",
+    "荷兰新鲱鱼",
+    "荷兰新鲜鲱鱼",
+    "荷兰新季鲱鱼",
+    "新鲱鱼"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Hollandse Nieuwe is a specific, well-known Dutch herring product (lightly brined new-season raw herring) and is easy to recognise. The judge should accept English and Chinese 'new herring' variants. Generic 'Matjes'/'maatjesharing' should not count unless the readout also says new-season or Hollandse Nieuwe, because that term covers the broader category."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b2_jalmenus_species": {
+  "gold": "Jalmenus evagoras",
+  "preds": [
+   "Jalmenus goldilockii",
+   "Jalmenus icilius",
+   "Vibidia angustula"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Jalmenus evagoras (the imperial hairstreak or imperial blue) is a real lycaenid butterfly species in the genus Jalmenus, native to Australia."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "Jalmenus goldilockii",
+    "Vibidia angustula"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Jalmenus evagoras",
+    "J. evagoras",
+    "imperial hairstreak",
+    "imperial blue",
+    "evagoras",
+    "帝王灰蝶"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "The gold is a valid, specific species (the imperial hairstreak/blue). It has well-known English common names that make it recognisable, but it needs aliases because readouts may use the common name or a Chinese name rather than the binomial. The Chinese name is unconfirmed."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s1_ocean_current": {
+  "gold": "Gulf Stream",
+  "preds": [
+   "Antarctic Circumpolar Current",
+   "Kuroshio Current"
+  ],
+  "member": {
+   "member": true,
+   "reason": "The Gulf Stream is a real, correctly named warm ocean current in the North Atlantic."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "Gulf Stream",
+    "the Gulf Stream",
+    "Gulf Stream current",
+    "墨西哥湾流",
+    "湾流",
+    "墨西哥灣流",
+    "灣流"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Gulf Stream is a specific, well-known ocean current, and the judge should accept the common Chinese names 墨西哥湾流 and 湾流."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b2_armenian_winery": {
+  "gold": "Zorah",
+  "preds": [
+   "Ararat",
+   "Karas",
+   "Armas Estate",
+   "Armenian Wine Company"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Zorah Wines is a real winery in Rind, Vayots Dzor, Armenia, known for its Areni wines."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "Zorah",
+    "Zorah Wines",
+    "Zorah Winery",
+    "Zorah Karasì",
+    "Zora",
+    "佐拉",
+    "佐拉酒庄",
+    "佐拉酒莊"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Zorah is a specific, well-known Vayots Dzor winery and distinct from the other predictions. Accept Chinese transliterations and the 'Zorah Wines' or 'Karasì' variants. 'Ararat' is borderline because it is mainly a brandy brand, but it is not junk."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b1_garnish_on_a_stjerneskud": {
+  "gold": "Lemon",
+  "preds": [
+   "Remoulade",
+   "Whipped cream",
+   "Cherry",
+   "asparagus"
+  ],
+  "member": {
+   "member": true,
+   "reason": "A lemon wedge or slice is a standard, traditional garnish on the Danish open sandwich stjerneskud, alongside dill, caviar, and asparagus."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "Whipped cream",
+    "Cherry"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "lemon",
+    "lemon wedge",
+    "lemon slice",
+    "lemon twist",
+    "citron",
+    "citronbåd",
+    "柠檬",
+    "柠檬片",
+    "柠檬角",
+    "柠檬块"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Lemon is a specific, traditional garnish on the Danish stjerneskud open sandwich and is easy to recognise, but readouts may say 'lemon wedge/slice' or use the Chinese 柠檬, so these aliases should be accepted. 'Whipped cream' and 'Cherry' look like they come from mistaking stjerneskud for a dessert."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b2_sunbird_genus": {
+  "gold": "Aethopyga",
+  "preds": [
+   "Cinnyris",
+   "Nectarinia",
+   "Cyanomitra",
+   "Dicaeum"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Aethopyga is a real genus of sunbirds in the family Nectariniidae, found in Asia, e.g., Mrs. Gould's sunbird."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "Dicaeum"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Aethopyga",
+    "Aethopyga sunbirds",
+    "Asian sunbirds",
+    "太阳鸟属",
+    "太阳鸟",
+    "Mrs. Gould's sunbird genus",
+    "Aethopyga gouldiae (Mrs. Gould's sunbird) / 蓝喉太阳鸟 as a representative species",
+    "crimson sunbird genus (Aethopyga siparaja / 黄腰太阳鸟)"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Aethopyga is a specific, valid sunbird genus. Its Latin name is distinctive, but readouts may use 'Asian sunbirds' or the Chinese 太阳鸟属, so those aliases are needed. Dicaeum is a flowerpecker genus, not a sunbird, so it counts as a junk prediction."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b2_skateboard_flip_trick": {
+  "gold": "Kickflip",
+  "preds": [
+   "Tre flip",
+   "heelflip",
+   "Frontside flip",
+   "Frontside 180 ollie"
+  ],
+  "member": {
+   "member": true,
+   "reason": "The kickflip is a real, correctly named skateboard flip trick in which the board flips along its length."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "Frontside 180 ollie"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Kickflip",
+    "kick flip",
+    "kick-flip",
+    "尖翻",
+    "踢翻",
+    "尖翻板"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Kickflip is a specific, widely known flip trick. Accept spelling variants and the Chinese term 尖翻, but do not accept compounds such as varial kickflip, double kickflip, or tre flip (360 kickflip). Frontside 180 ollie is a rotation, not a flip trick."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s2_peruvian_street_food": {
+  "gold": "Anticuchos",
+  "preds": [
+   "Ceviche",
+   "Causa"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Anticuchos are grilled skewers, classically of beef heart, and are a quintessential Peruvian street food sold by vendors across Peru."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "Anticuchos",
+    "Anticucho",
+    "Anticuchos de corazón",
+    "beef heart skewers",
+    "grilled beef heart skewers",
+    "Peruvian grilled heart skewers",
+    "秘鲁烤牛心串",
+    "烤牛心串",
+    "牛心串",
+    "安蒂库乔"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Anticuchos is a specific, well-known Peruvian street food. Readouts may describe it as 'beef heart skewers' or by Chinese names, so the judge should accept those aliases. Ceviche and Causa are real Peruvian dishes, not junk."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s2_map_grid_reference_system": {
+  "gold": "MGRS",
+  "preds": [
+   "UTM",
+   "British National Grid"
+  ],
+  "member": {
+   "member": true,
+   "reason": "MGRS (Military Grid Reference System) is a real, widely used map grid reference system, the NATO standard for locating points on Earth."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "MGRS",
+    "Military Grid Reference System",
+    "Military Grid Reference",
+    "US Military Grid Reference System",
+    "NATO Military Grid Reference System",
+    "军事格网参考系统",
+    "军事网格参考系统",
+    "军用网格参考系统",
+    "军事坐标格网系统",
+    "军用格网参考系"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "MGRS is a specific, well-known grid reference system distinct from UTM and the British National Grid. The judge needs the expanded English and Chinese names, and must not accept plain 'UTM' even though MGRS is derived from UTM."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s2_polish_soup": {
+  "gold": "Żurek",
+  "preds": [
+   "Barszcz",
+   "Zupa pomidorowa"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Żurek is a traditional Polish sour rye soup, correctly named and a genuine Polish soup."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "Żurek",
+    "Zurek",
+    "Żur",
+    "Zur",
+    "sour rye soup",
+    "sour rye flour soup",
+    "Polish sour rye soup",
+    "酸黑麦汤",
+    "波兰酸黑麦汤",
+    "酸麦汤",
+    "祖雷克汤"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Żurek is a specific, well-known Polish soup and both predictions are valid distinct Polish soups. The judge should accept the undiacritised 'Zurek', the variant 'Żur', and English/Chinese descriptive names. Avoid accepting 'white borscht' or 'biały barszcz', which could be confused with the Barszcz prediction."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s2_dactylioceras_species": {
+  "gold": "Dactylioceras commune",
+  "preds": [
+   "Dactylioceras ammonitoides",
+   "dactylioceras latus",
+   "dactylioceras athleticum",
+   "Dactylioceras simile"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Dactylioceras commune is a real, validly named Early Jurassic (Toarcian) ammonite and the type species of the genus Dactylioceras."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "Dactylioceras ammonitoides",
+    "dactylioceras latus"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Dactylioceras commune",
+    "D. commune",
+    "commune",
+    "Whitby snakestone",
+    "snakestone ammonite",
+    "普通指菊石",
+    "指菊石 commune"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "D. commune is a real, well-known species (the classic Whitby snakestone), so the gold is valid. The epithet 'commune' is distinctive enough to spot in readouts. Accepting the abbreviated, common-name and Chinese forms makes matching reliable. 'ammonitoides' and 'latus' do not appear to be valid species names, though this is from memory rather than checked; 'athleticum' and 'simile' are real species."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b1_dromaeosaurid_bearing_fossil_formation": {
+  "gold": "Hell Creek Formation",
+  "preds": [
+   "Dinosaur Park Formation",
+   "Morrison Formation",
+   "Two Medicine Formation",
+   "Djadokhta Formation"
+  ],
+  "member": {
+   "member": true,
+   "reason": "The Hell Creek Formation (Maastrichtian, Montana and the Dakotas) is a real formation that yields dromaeosaurids such as Acheroraptor temertyorum and Dakotaraptor steini, plus dromaeosaurid teeth."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "Morrison Formation"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Hell Creek Formation",
+    "Hell Creek",
+    "Hell Creek Fm",
+    "地狱溪组",
+    "地狱溪层",
+    "海尔克里克组"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Hell Creek is a specific, well-known formation with dromaeosaurids (Acheroraptor, Dakotaraptor) and is easy to recognise. Its Chinese renderings vary, so they should be accepted as aliases. Morrison Formation is a questionable prediction because it is Late Jurassic and has no confirmed dromaeosaurid taxa."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s2_tillandsia_species_native_to_the_united_": {
+  "gold": "Tillandsia usneoides",
+  "preds": [
+   "Tillandsia utriculata",
+   "Tillandsia recurvata",
+   "Tillandsia balbisiana",
+   "Tillandsia capitata"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Tillandsia usneoides (Spanish moss) is a real Tillandsia species native to the southeastern United States."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "Tillandsia capitata"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Tillandsia usneoides",
+    "T. usneoides",
+    "Spanish moss",
+    "Spanish-moss",
+    "Florida moss",
+    "long moss",
+    "graybeard",
+    "old man's beard (when clearly referring to Tillandsia)",
+    "松萝凤梨",
+    "松萝铁兰",
+    "西班牙苔藓",
+    "西班牙苔",
+    "老人须",
+    "老人须铁兰"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Spanish moss is a well-defined, iconic US-native Tillandsia, but readouts will likely use the common or Chinese name (松萝凤梨/老人须), so those aliases are needed. T. capitata is flagged because it is native to Mexico and Central America, not the US."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b2_ranzania_species": {
+  "gold": "ranzania japonica",
+  "preds": [
+   "Ranzania ternata",
+   "Ranzania laevipes",
+   "Ranzania laevis",
+   "Ranzania jacksoni"
+  ],
+  "member": {
+   "member": false,
+   "reason": "No species named Ranzania japonica is recognized; the genus's only living species is Ranzania laevis, and its known fossil species (e.g., R. ogaii from Japan) have different names."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "Ranzania laevipes",
+    "Ranzania jacksoni",
+    "Ranzania ternata"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Ranzania japonica",
+    "R. japonica",
+    "Togakushi-shoma",
+    "Togakushi shoma",
+    "トガクシショウマ",
+    "戸隠升麻",
+    "户隐升麻",
+    "Podophyllum japonicum"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "R. japonica is the only species in the plant genus Ranzania and a distinct member, not a generic restatement; the Latin binomial is fairly distinctive, but the Japanese/Chinese common names should be accepted. Ranzania laevis (the slender sunfish, a fish genus of the same name) is a valid member of the homonymous fish genus, not junk; the other predictions are not recognised species."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b1_angophora_species": {
+  "gold": "Angophora costata",
+  "preds": [
+   "Angophora floribunda",
+   "angophora hispida"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Angophora costata (smooth-barked apple or Sydney red gum) is a real, correctly named species in the genus Angophora (Myrtaceae)."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "Angophora costata",
+    "A. costata",
+    "smooth-barked apple",
+    "smooth-bark apple",
+    "Sydney red gum",
+    "rusty gum",
+    "pink gum",
+    "光皮杯果木",
+    "杯果木 costata"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Valid, specific species with well-known common names (smooth-barked apple, Sydney red gum, rusty gum). Judges should accept these names, since readouts may not use the binomial. The Chinese name is unconfirmed. Both predictions are real Angophora species, not junk."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s2_georgian_walnut_sauce_dish": {
+  "gold": "Satsivi",
+  "preds": [
+   "Pkhali",
+   "Badrijani Nigvzit",
+   "Khachapuri",
+   "Chakhokhbili"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Satsivi is a classic Georgian dish of poultry served in a walnut-based sauce, which is itself also called satsivi."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "Khachapuri",
+    "Chakhokhbili"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Satsivi",
+    "Satsivi sauce",
+    "Chicken satsivi",
+    "Turkey satsivi",
+    "Chicken in walnut sauce",
+    "საცივი",
+    "Сациви",
+    "萨茨维",
+    "萨齐维",
+    "核桃酱鸡",
+    "格鲁吉亚核桃酱鸡",
+    "核桃酱炖鸡"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Satsivi is a specific, well-known Georgian walnut-sauce dish. Judges should accept transliteration variants and descriptive Chinese renderings like 核桃酱鸡. Khachapuri (cheese bread) and Chakhokhbili (tomato chicken stew) are not walnut-sauce dishes."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b1_hokkaido_regional_ramen_style": {
+  "gold": "Sapporo Miso Ramen",
+  "preds": [
+   "Misoyaki Ramen"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Sapporo miso ramen is a well-known regional ramen style that originated in Sapporo, Hokkaido."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "Misoyaki Ramen"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Sapporo Miso Ramen",
+    "Sapporo ramen",
+    "Sapporo-style miso ramen",
+    "miso ramen (Sapporo)",
+    "Hokkaido miso ramen",
+    "札幌味噌ラーメン",
+    "札幌ラーメン",
+    "味噌ラーメン",
+    "札幌味噌拉面",
+    "札幌拉面",
+    "味噌拉面",
+    "札幌味噌拉麵",
+    "札幌拉麵",
+    "味噌拉麵"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Gold is a specific, well-known Hokkaido ramen style that is easy to recognise. Accept Sapporo ramen and miso ramen variants in English, Japanese and Chinese. 'Misoyaki Ramen' is not a recognised Hokkaido style (misoyaki is a grilled-miso dish), so the judge should not accept it as a match."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b1_somerset_origin_cider_apple_variety": {
+  "gold": "Kingston Black",
+  "preds": [
+   "Dymock Pear",
+   "Dabinett",
+   "Yarlington Mill",
+   "Hoaredstock"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Kingston Black is a real bittersharp cider apple variety from Somerset, traditionally linked to Kingston St Mary near Taunton."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "Dymock Pear",
+    "Hoaredstock"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Kingston Black",
+    "Kingston Black apple",
+    "Kingston Black cider apple",
+    "Black Taunton",
+    "金斯顿黑",
+    "金斯顿黑苹果",
+    "金斯顿布莱克"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Kingston Black is a specific, well-known cider apple from Kingston St Mary, Somerset. The name is distinctive enough to recognise in readouts, but a Chinese transliteration should be accepted. 'Dymock Pear' is a perry pear name rather than a Somerset cider apple, and 'Hoaredstock' does not match any known variety."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b2_armenian_pastry": {
+  "gold": "Gata",
+  "preds": [
+   "Boreg",
+   "Baklava",
+   "Ghapama",
+   "Lavash"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Gata is a well-known traditional Armenian sweet bread/pastry, often filled with khoriz (butter-flour-sugar filling)."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "Ghapama",
+    "Lavash"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Gata",
+    "Gatah",
+    "Ghata",
+    "Kata",
+    "Katah",
+    "Armenian gata",
+    "Armenian sweet bread",
+    "加塔",
+    "嘎塔",
+    "亚美尼亚甜面包",
+    "亚美尼亚加塔"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Gata is a specific, well-known Armenian pastry. Its transliterations vary and it has no fixed Chinese name, so the judge should accept spelling variants and descriptive Chinese renderings. Ghapama (a stuffed pumpkin dish) and Lavash (a flatbread) are not pastries."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b1_bread_base_for_sm_rrebr_d": {
+  "gold": "Rye bread (rugbrød)",
+  "preds": [
+   "Rye crispbread"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Rugbrød (Danish rye bread) is the traditional and most common bread base for smørrebrød."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "rye bread",
+    "rugbrød",
+    "rugbrod",
+    "Danish rye bread",
+    "Danish rye",
+    "dark rye bread",
+    "sourdough rye bread",
+    "黑麦面包",
+    "丹麦黑麦面包",
+    "裸麦面包",
+    "黑裸麦面包"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Rugbrød is a specific, well-known member of the category and easy to recognise. The judge should accept its English, Danish and Chinese names, but should not count rye crispbread (knækbrød), which is a different product."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s1_programming_paradigm": {
+  "gold": "Functional",
+  "preds": [
+   "Object-Oriented"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Functional programming is a real, well-established programming paradigm."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "Functional",
+    "Functional programming",
+    "FP",
+    "functional paradigm",
+    "函数式",
+    "函数式编程",
+    "函数式程序设计",
+    "函数式范式"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "'Functional' is a specific, well-known programming paradigm, distinct from the predicted 'Object-Oriented' (a valid member, not junk). It is easy to recognise in English or Chinese readouts once common variants like FP and 函数式编程 are accepted."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s1_digital_signature_scheme": {
+  "gold": "Ed25519",
+  "preds": [
+   "rsa",
+   "EdDSA",
+   "ECDSA",
+   "schnorr"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Ed25519 is a real, specifically named digital signature scheme: EdDSA instantiated over the Edwards form of Curve25519."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "Ed25519",
+    "ed25519",
+    "Ed-25519",
+    "EdDSA over Curve25519",
+    "EdDSA with Curve25519",
+    "Ed25519 signature",
+    "Ed25519签名",
+    "Ed25519签名算法",
+    "Ed25519 数字签名"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Ed25519 is a specific, well-known signature scheme. Judges should accept spelling variants. They should not count bare 'EdDSA' (the parent family, which also includes Ed448) or 'Curve25519' alone (the X25519 key-exchange curve) as a match."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s1_famous_named_historical_chess_game": {
+  "gold": "Immortal Game",
+  "preds": [
+   "Game of the Century",
+   "Opera Game",
+   "kasparovs immortal",
+   "carlsen vs. karjakin 2016"
+  ],
+  "member": {
+   "member": true,
+   "reason": "The Immortal Game (Anderssen vs. Kieseritzky, London 1851) is a real, famous, named historical chess game."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "carlsen vs. karjakin 2016"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Immortal Game",
+    "The Immortal Game",
+    "Anderssen vs Kieseritzky",
+    "Anderssen–Kieseritzky 1851",
+    "Anderssen's Immortal",
+    "London 1851 Anderssen Kieseritzky",
+    "不朽之局",
+    "不朽的对局",
+    "不朽对局",
+    "安德森对基泽里茨基"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "The gold is a specific, well-known named game (Anderssen vs Kieseritzky, London 1851) and is easy to recognise. The judge should accept the player names and the Chinese name 不朽之局. The judge must not accept 'Kasparov's Immortal' (Kasparov vs Topalov 1999) or the 'Evergreen Game', which are different games. 'carlsen vs. karjakin 2016' is flagged because it names a world championship match, not a single famous named game."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s2_pteropodid_subfamily": {
+  "gold": "Pteropodinae",
+  "preds": [
+   "Macroglossinae",
+   "cynopterinae",
+   "Limacininae",
+   "Tayloriinae"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Pteropodinae is a recognized subfamily of Pteropodidae, containing the flying foxes (genus Pteropus) and their relatives."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "Limacininae",
+    "Tayloriinae"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Pteropodinae",
+    "flying fox subfamily",
+    "flying foxes",
+    "狐蝠亚科",
+    "狐蝠"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Pteropodinae is a valid named member of Pteropodidae, not the family itself. Its common name 'flying foxes' and Chinese 狐蝠亚科 make it recognisable, so those aliases should be accepted. Limacininae is a sea-butterfly (pteropod mollusc) subfamily and Tayloriinae is not a bat subfamily, so both are junk."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s2_deilephila_species": {
+  "gold": "Deilephila elpenor",
+  "preds": [
+   "Deilephila porcellus",
+   "Hippotion celerio"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Deilephila elpenor, the elephant hawk-moth, is a real, correctly named species in the genus Deilephila (family Sphingidae)."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "Hippotion celerio"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Deilephila elpenor",
+    "D. elpenor",
+    "elephant hawk-moth",
+    "elephant hawkmoth",
+    "large elephant hawk-moth",
+    "Pergesa elpenor",
+    "Sphinx elpenor",
+    "红天蛾",
+    "象鹰蛾",
+    "大象天蛾"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "The gold is a specific, valid Deilephila species with a well-known common name (elephant hawk-moth) and a Chinese name (红天蛾), so it is recognisable once aliases are accepted. It must be kept distinct from D. porcellus, the small elephant hawk-moth. Hippotion celerio belongs to a different genus and is not a Deilephila species."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s2_ethiopian_coffee_ceremony_utensil": {
+  "gold": "Jebena",
+  "preds": [
+   "honey"
+  ],
+  "member": {
+   "member": true,
+   "reason": "The jebena is the traditional Ethiopian clay coffee pot used to brew and serve coffee in the Ethiopian coffee ceremony."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "honey"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Jebena",
+    "Jabena",
+    "Jebenah",
+    "Gebena",
+    "Jabana",
+    "ጀበና",
+    "Ethiopian clay coffee pot",
+    "clay coffee pot",
+    "杰贝纳",
+    "吉贝纳",
+    "埃塞俄比亚陶制咖啡壶",
+    "陶制咖啡壶",
+    "陶壶"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Jebena is a specific, well-known utensil of the Ethiopian coffee ceremony, but readouts may use variant spellings or describe it as a clay coffee pot, so the judge needs aliases; 'honey' is junk because it is not a utensil."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s2_peruvian_rice_dish": {
+  "gold": "Arroz con Pollo",
+  "preds": [
+   "Arroz con Mariscos",
+   "Arroz con Pato"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Arroz con pollo is a well-known Peruvian rice dish, made in Peru as green rice cooked with cilantro and chicken, though versions exist across Latin America."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "Arroz con Pollo",
+    "arroz con pollo peruano",
+    "Peruvian arroz con pollo",
+    "Peruvian chicken and rice",
+    "chicken with rice",
+    "green rice with chicken",
+    "Peruvian green chicken rice",
+    "秘鲁鸡肉饭",
+    "鸡肉饭",
+    "秘鲁绿鸡肉饭",
+    "绿色鸡肉饭",
+    "香菜鸡肉饭"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Arroz con Pollo is a specific, well-known Peruvian rice dish that judges can easily spot. The judge should accept English and Chinese translations such as '鸡肉饭' and 'chicken and rice', but not the seafood (mariscos) or duck (pato) variants."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s2_peruvian_saltado": {
+  "gold": "Lomo Saltado",
+  "preds": [
+   "Pollo Saltado"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Lomo saltado is a classic Peruvian stir-fry of beef with onions, tomatoes and fries, the best-known Peruvian saltado."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "Lomo Saltado",
+    "lomo saltado",
+    "Peruvian beef stir-fry",
+    "beef saltado",
+    "saltado de lomo",
+    "秘鲁炒牛柳",
+    "秘鲁炒牛肉",
+    "炒牛柳",
+    "洛莫萨尔塔多"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Lomo Saltado is a specific, well-known member of the saltado family, distinct from the predicted Pollo Saltado (a valid member, not junk), and is easily recognised. Chinese and descriptive aliases help with the noisy bilingual readouts."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b2_protein_for_swahili_pilau": {
+  "gold": "Beef",
+  "preds": [
+   "Chicken",
+   "Lamb",
+   "Goat"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Beef is one of the most common proteins in traditional Swahili pilau across Kenya and Tanzania."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "beef",
+    "Beef",
+    "牛肉",
+    "牛",
+    "beef meat",
+    "beef cubes",
+    "beef chunks",
+    "stewing beef",
+    "nyama ya ng'ombe",
+    "ng'ombe"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Beef is a specific, common protein for Swahili pilau and easy to recognise. It is clearly distinct from the predicted chicken, lamb and goat, so the judge only needs the Chinese name (牛肉) and the Swahili name (nyama ya ng'ombe) as aliases."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s1_andean_fruit": {
+  "gold": "Lucuma",
+  "preds": [
+   "Cherimoya",
+   "Guanabana",
+   "Physalis",
+   "Guayusa"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Lucuma (Pouteria lucuma) is a fruit native to the Andean valleys of Peru, Chile, and Ecuador, so it is a genuine Andean fruit."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "Guayusa"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Lucuma",
+    "Lúcuma",
+    "Lucmo",
+    "Pouteria lucuma",
+    "Pouteria obovata",
+    "eggfruit (Andean)",
+    "蛋黄果",
+    "鲁库玛",
+    "路库玛",
+    "卢库马"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Lucuma is a specific, well-known Andean fruit and is clearly recognisable, but the accent variant, the binomial and the Chinese names (蛋黄果, also used for canistel) should be accepted. Guayusa is an Amazonian holly used for tea, not a fruit."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s2_curve_for_duplicating_the_cube": {
+  "gold": "Conchoid of Nicomedes",
+  "preds": [
+   "Cissoid of Diocles",
+   "Quadratrix of Hippias",
+   "Viviani's Curve",
+   "Delian Ellipse"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Nicomedes devised the conchoid to find two mean proportionals, giving a classical solution to doubling the cube."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "Viviani's Curve",
+    "Delian Ellipse",
+    "Quadratrix of Hippias"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Conchoid of Nicomedes",
+    "Nicomedes' conchoid",
+    "Nicomedes conchoid",
+    "conchoid (of Nicomedes)",
+    "cochloid",
+    "尼科梅德斯蚌线",
+    "尼哥米德蚌线",
+    "尼科美德蚌线",
+    "蚌线",
+    "蚌形线",
+    "螺旋蚌线"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "The gold is a specific, historically correct curve for doubling the cube and is easily recognised. Judges should accept the possessive form, the bare 'conchoid' and the Chinese 蚌线 variants; the Cissoid is a valid distractor."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s2_pterosaur_wing_bone": {
+  "gold": "Humerus",
+  "preds": [
+   "Fourth digit",
+   "first wing phalanx",
+   "Metacarpal",
+   "Uropatagium"
+  ],
+  "member": {
+   "member": true,
+   "reason": "The humerus is the upper arm bone of the pterosaur wing, a real and correctly named wing bone alongside the radius, ulna, pteroid, metacarpals and wing phalanges."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "Uropatagium"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Humerus",
+    "humeri",
+    "upper arm bone",
+    "肱骨",
+    "上臂骨"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Humerus is a specific, well-known pterosaur wing bone that a judge can easily recognise, and the Chinese name 肱骨 should be accepted. Uropatagium is a membrane, not a bone."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b2_venezuelan_arepa_filling": {
+  "gold": "Reina Pepiada",
+  "preds": [
+   "Queso de Mano",
+   "Pabellón",
+   "Queque",
+   "perico"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Reina Pepiada is a classic Venezuelan arepa filling of shredded chicken, avocado and mayonnaise, named in honor of Miss World 1955 Susana Duijm."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "Queque"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Reina Pepiada",
+    "Reina Pepeada",
+    "Reina Pepiá",
+    "arepa reina pepiada",
+    "chicken avocado salad filling",
+    "chicken and avocado",
+    "shredded chicken with avocado and mayonnaise",
+    "鸡肉牛油果沙拉",
+    "鸡肉鳄梨沙拉",
+    "牛油果鸡肉馅",
+    "丰满女王",
+    "蕾娜佩皮亚达"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Reina Pepiada is a specific, well-known arepa filling, but readouts may describe it as a chicken-avocado salad or translate it into Chinese, so those forms should be accepted. 'Queque' is a cake, not an arepa filling."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s2_rousettinae_genus": {
+  "gold": "Rousettus",
+  "preds": [
+   "Eonycteris",
+   "megaerops",
+   "stenonycteris",
+   "Pteropus"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Rousettus (rousette fruit bats) is the type genus of the subfamily Rousettinae within Pteropodidae."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "megaerops",
+    "Pteropus"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Rousettus",
+    "rousette",
+    "rousettes",
+    "rousette fruit bat",
+    "rousette fruit bats",
+    "Egyptian fruit bat genus",
+    "果蝠属",
+    "棕果蝠属"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Rousettus is the type genus of Rousettinae, so it is a valid member and not a restatement of the subfamily name. Its Latin name is distinctive, but the judge needs the common name 'rousette' and the Chinese 果蝠属. Generic '果蝠' (fruit bat) alone is ambiguous and should not count. Megaerops (Cynopterinae) and Pteropus (Pteropodinae) are outside Rousettinae, while Eonycteris and Stenonycteris are valid members."
+  },
+  "version": "msdm-validity-2026-11-04"
+ }
+}

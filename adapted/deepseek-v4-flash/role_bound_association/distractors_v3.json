@@ -1,0 +1,448 @@
+{
+ "version": "adapt-deepseek-v4-flash",
+ "note": "adapted-only pairs' oa-v3 distractors (plan 0075 §2.7: the proposer and lint of scripts/role_bound_distractors_v3.py, no guesser screen round); added to evals/role_bound_association/distractors_v3.json by the judge (registry.load_resource)",
+ "pairs": {
+  "role-au-t1-w100c0-ra-bride-groom-hugged": {
+   "roles": [
+    "priest",
+    "wedding planner",
+    "photographer"
+   ],
+   "actions": [
+    "thanked",
+    "complimented",
+    "reassured",
+    "teased"
+   ]
+  },
+  "role-au-t1-w100c0-ra-customer-waiter-thanked": {
+   "roles": [
+    "chef",
+    "manager",
+    "bartender"
+   ],
+   "actions": [
+    "complimented",
+    "apologized to",
+    "yelled at",
+    "overcharged"
+   ]
+  },
+  "role-au-t1-w100c0-ra-passenger-flight-attendant-protected": {
+   "roles": [
+    "pilot",
+    "copilot",
+    "child"
+   ],
+   "actions": [
+    "warned",
+    "yelled at",
+    "blamed",
+    "distrusted"
+   ]
+  },
+  "role-au-t1-w100c0-ra-patient-doctor-instructed": {
+   "roles": [
+    "nurse",
+    "paramedic",
+    "receptionist"
+   ],
+   "actions": [
+    "reassured",
+    "warned",
+    "thanked",
+    "scolded"
+   ]
+  },
+  "role-au-t1-w100c0-ra-plumber-electrician-warned": {
+   "roles": [
+    "homeowner",
+    "landlord",
+    "mechanic"
+   ],
+   "actions": [
+    "blamed",
+    "thanked",
+    "complimented",
+    "distrusted"
+   ]
+  },
+  "role-au-t1-w100c0-ra-teacher-student-complimented": {
+   "roles": [
+    "principal",
+    "parent",
+    "janitor"
+   ],
+   "actions": [
+    "scolded",
+    "thanked",
+    "reassured",
+    "teased"
+   ]
+  },
+  "role-au-t1-w100c1-ra-bartender-musician-complimented": {
+   "roles": [
+    "bouncer",
+    "patron",
+    "heckler"
+   ],
+   "actions": [
+    "thanked",
+    "teased",
+    "warned",
+    "envied"
+   ]
+  },
+  "role-au-t1-w100c1-ra-chef-customer-fed": {
+   "roles": [
+    "waiter",
+    "critic",
+    "manager"
+   ],
+   "actions": [
+    "complimented",
+    "yelled at",
+    "apologized to",
+    "overcharged"
+   ]
+  },
+  "role-au-t1-w100c1-ra-patient-doctor-scolded": {
+   "roles": [
+    "nurse",
+    "paramedic",
+    "receptionist"
+   ],
+   "actions": [
+    "thanked",
+    "distrusted",
+    "reassured",
+    "complimented"
+   ]
+  },
+  "role-au-t1-w100c1-ra-teacher-student-reassured": {
+   "roles": [
+    "coach",
+    "player",
+    "parent"
+   ],
+   "actions": [
+    "scolded",
+    "warned",
+    "thanked",
+    "underestimated"
+   ]
+  },
+  "role-au-t1-w101c0-ra-player-referee-scolded": {
+   "roles": [
+    "coach",
+    "fan",
+    "linesman"
+   ],
+   "actions": [
+    "thanked",
+    "ejected",
+    "mocked",
+    "complimented"
+   ]
+  },
+  "role-au-t1-w102c0-ra-babysitter-toddler-protected": {
+   "roles": [
+    "grandmother",
+    "grandson",
+    "parent"
+   ],
+   "actions": [
+    "scolded",
+    "fed",
+    "teased",
+    "hugged"
+   ]
+  },
+  "role-au-t1-w102c0-ra-burglar-homeowner-rescued": {
+   "roles": [
+    "landlord",
+    "tenant",
+    "police officer"
+   ],
+   "actions": [
+    "feared",
+    "forgave",
+    "chased",
+    "warned"
+   ]
+  },
+  "role-au-t1-w102c0-ra-detective-suspect-spied-on": {
+   "roles": [
+    "police officer",
+    "thief",
+    "witness"
+   ],
+   "actions": [
+    "interrogated",
+    "suspected",
+    "searched",
+    "lied to"
+   ]
+  },
+  "role-au-t1-w102c0-ra-judge-witness-warned": {
+   "roles": [
+    "lawyer",
+    "suspect",
+    "prisoner"
+   ],
+   "actions": [
+    "interrogated",
+    "distrusted",
+    "thanked",
+    "scolded"
+   ]
+  },
+  "role-au-t1-w102c0-ra-landlord-tenant-billed": {
+   "roles": [
+    "homeowner",
+    "plumber",
+    "roommate"
+   ],
+   "actions": [
+    "warned",
+    "thanked",
+    "blamed",
+    "suspected"
+   ]
+  },
+  "role-au-t1-w102c0-ra-receptionist-janitor-worried-about": {
+   "roles": [
+    "security guard",
+    "manager",
+    "electrician"
+   ],
+   "actions": [
+    "admired",
+    "resented",
+    "thanked",
+    "teased"
+   ]
+  },
+  "role-au-t1-w102c0-ra-security-guard-visitor-warned": {
+   "roles": [
+    "receptionist",
+    "janitor",
+    "employee"
+   ],
+   "actions": [
+    "searched",
+    "thanked",
+    "asked for directions",
+    "suspected"
+   ]
+  },
+  "role-au-t1-w102c1-ra-bartender-musician-worried-about": {
+   "roles": [
+    "bouncer",
+    "patron",
+    "heckler"
+   ],
+   "actions": [
+    "admired",
+    "envied",
+    "resented",
+    "distrusted"
+   ]
+  },
+  "role-au-t1-w102c1-ra-janitor-CEO-instructed": {
+   "roles": [
+    "receptionist",
+    "intern",
+    "electrician"
+   ],
+   "actions": [
+    "thanked",
+    "complimented",
+    "scolded",
+    "underestimated"
+   ]
+  },
+  "role-au-t1-w102c1-ra-police-officer-suspect-interrogated": {
+   "roles": [
+    "detective",
+    "informant",
+    "witness"
+   ],
+   "actions": [
+    "searched",
+    "lied to",
+    "warned",
+    "distrusted"
+   ]
+  },
+  "role-au-t1-w104c0-ra-chef-waiter-scolded": {
+   "roles": [
+    "bartender",
+    "customer",
+    "manager"
+   ],
+   "actions": [
+    "thanked",
+    "complimented",
+    "teased",
+    "apologized to"
+   ]
+  },
+  "role-au-t1-w104c0-ra-electrician-plumber-complimented": {
+   "roles": [
+    "homeowner",
+    "landlord",
+    "mechanic"
+   ],
+   "actions": [
+    "blamed",
+    "thanked",
+    "warned",
+    "envied"
+   ]
+  },
+  "role-au-t1-w104c0-ra-grandfather-grandson-photographed": {
+   "roles": [
+    "father",
+    "son",
+    "grandmother"
+   ],
+   "actions": [
+    "hugged",
+    "teased",
+    "comforted",
+    "admired"
+   ]
+  },
+  "role-au-t1-w104c0-ra-landlord-tenant-warned": {
+   "roles": [
+    "homeowner",
+    "plumber",
+    "neighbor"
+   ],
+   "actions": [
+    "thanked",
+    "blamed",
+    "resented",
+    "apologized to"
+   ]
+  },
+  "role-au-t1-w104c0-ra-nurse-patient-fed": {
+   "roles": [
+    "doctor",
+    "visitor",
+    "receptionist"
+   ],
+   "actions": [
+    "comforted",
+    "reassured",
+    "scolded",
+    "thanked"
+   ]
+  },
+  "role-au-t1-w104c0-ra-photographer-bride-photographed": {
+   "roles": [
+    "groom",
+    "wedding planner",
+    "caterer"
+   ],
+   "actions": [
+    "complimented",
+    "thanked",
+    "hugged",
+    "reassured"
+   ]
+  },
+  "role-au-t1-w104c0-ra-pilot-passenger-warned": {
+   "roles": [
+    "flight attendant",
+    "copilot",
+    "security guard"
+   ],
+   "actions": [
+    "thanked",
+    "blamed",
+    "apologized to",
+    "complimented"
+   ]
+  },
+  "role-au-t1-w104c0-ra-police-officer-driver-warned": {
+   "roles": [
+    "detective",
+    "suspect",
+    "passenger"
+   ],
+   "actions": [
+    "interrogated",
+    "thanked",
+    "searched",
+    "lied to"
+   ]
+  },
+  "role-au-t1-w104c0-ra-security-guard-thief-chased": {
+   "roles": [
+    "police officer",
+    "suspect",
+    "shopkeeper"
+   ],
+   "actions": [
+    "searched",
+    "interrogated",
+    "warned",
+    "reported"
+   ]
+  },
+  "role-au-t1-w104c0-ra-sister-brother-hugged": {
+   "roles": [
+    "husband",
+    "wife",
+    "cousin"
+   ],
+   "actions": [
+    "teased",
+    "forgave",
+    "envied",
+    "worried about"
+   ]
+  },
+  "role-au-t1-w104c0-ra-tourist-guide-instructed": {
+   "roles": [
+    "local",
+    "shopkeeper",
+    "driver"
+   ],
+   "actions": [
+    "photographed",
+    "thanked",
+    "warned",
+    "overcharged"
+   ]
+  },
+  "role-au-t1-w104c1-ra-paramedic-patient-comforted": {
+   "roles": [
+    "firefighter",
+    "bystander",
+    "nurse"
+   ],
+   "actions": [
+    "thanked",
+    "blamed",
+    "yelled at",
+    "worried about"
+   ]
+  },
+  "role-au-t1-w105c0-ra-grandmother-grandson-hugged": {
+   "roles": [
+    "grandfather",
+    "daughter",
+    "uncle"
+   ],
+   "actions": [
+    "fed",
+    "teased",
+    "comforted",
+    "scolded"
+   ]
+  }
+ }
+}

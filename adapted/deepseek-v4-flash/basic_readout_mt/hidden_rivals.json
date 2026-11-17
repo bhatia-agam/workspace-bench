@@ -1,0 +1,356 @@
+{
+ "version": "adapt-deepseek-v4-flash",
+ "note": "adapted-only items' same-topic distractors the MC builder dropped (adapt mc); kept for reference, unused since norival-v1 (the judge reads no hidden rivals)",
+ "items": {
+  "basic-au-t1-w100c0-brh-ent-chromosome-21-extra": {
+   "readout": [
+    "Edwards syndrome",
+    "Patau syndrome",
+    "Turner syndrome",
+    "Klinefelter syndrome"
+   ]
+  },
+  "basic-au-t1-w100c0-brh-ent-hypotenuse-squares": {
+   "readout": [
+    "Heron's formula",
+    "law of cosines"
+   ]
+  },
+  "basic-au-t1-w100c0-brh-ent-origin-of-species-author": {
+   "readout": [
+    "Thomas Huxley",
+    "Joseph Hooker",
+    "Henry Walter Bates",
+    "Richard Owen"
+   ]
+  },
+  "basic-au-t1-w100c1-brh-ent-exhaled-gas-co2": {
+   "readout": [
+    "carbon monoxide",
+    "sulfur dioxide",
+    "nitrogen dioxide",
+    "nitrous oxide"
+   ]
+  },
+  "basic-au-t1-w100c1-brh-ent-mona-lisa-painter": {
+   "readout": [
+    "Michelangelo Buonarroti",
+    "Raphael Sanzio",
+    "Sandro Botticelli",
+    "Donato Bramante"
+   ]
+  },
+  "basic-au-t1-w100c1-brh-ent-tic-condition": {
+   "readout": [
+    "Asperger syndrome",
+    "Rett syndrome",
+    "Angelman syndrome",
+    "Williams syndrome"
+   ]
+  },
+  "basic-au-t1-w100c2-brh-ent-battery-electrolyte-compound": {
+   "readout": [
+    "hydrochloric acid",
+    "phosphoric acid",
+    "perchloric acid"
+   ]
+  },
+  "basic-au-t1-w100c2-brh-ent-mongol-founder-1206": {
+   "readout": [
+    "Kublai Khan",
+    "Möngke Khan"
+   ]
+  },
+  "basic-au-t1-w100c2-brh-ent-navigator-1492-landfall": {
+   "readout": [
+    "Amerigo Vespucci",
+    "Vasco Núñez de Balboa",
+    "Juan Ponce de León",
+    "Hernán Cortés"
+   ]
+  },
+  "basic-au-t1-w100c2-brh-ent-siren-frequency-change": {
+   "readout": [
+    "Stark effect"
+   ]
+  },
+  "basic-au-t1-w101c0-brh-ent-h2o2-compound": {
+   "readout": [
+    "potassium permanganate",
+    "calcium hypochlorite",
+    "ethyl alcohol"
+   ]
+  },
+  "basic-au-t1-w101c0-brh-ent-quantum-limit": {
+   "readout": [
+    "Bohr correspondence principle",
+    "Bohr complementarity principle",
+    "Fermat least-time principle"
+   ]
+  },
+  "basic-au-t1-w101c0-brh-ent-shaking-palsy": {
+   "readout": [
+    "Wilson's disease",
+    "Pick's disease"
+   ]
+  },
+  "basic-au-t1-w101c0-brh-ent-spring-law": {
+   "readout": [
+    "Coulomb's law",
+    "Ampère's law",
+    "Faraday's law",
+    "Lenz's law"
+   ]
+  },
+  "basic-au-t1-w101c1-brh-ent-amyloid-dementia": {
+   "readout": [
+    "Pick's disease",
+    "Binswanger's disease"
+   ]
+  },
+  "basic-au-t1-w101c1-brh-ent-dental-anesthetic-gas": {
+   "readout": [
+    "nitric oxide",
+    "nitrogen dioxide",
+    "carbon monoxide"
+   ]
+  },
+  "basic-au-t1-w101c1-brh-ent-hydraulic-press-rule": {
+   "readout": [
+    "Le Chatelier's principle",
+    "Huygens' principle",
+    "Fermat's principle"
+   ]
+  },
+  "basic-au-t1-w101c1-brh-ent-point-charge-force": {
+   "readout": [
+    "Ampère's law",
+    "Gauss's law",
+    "Faraday's law",
+    "Lenz's law"
+   ]
+  },
+  "basic-au-t1-w101c1-brh-ent-spain-morocco-channel": {
+   "readout": [
+    "Strait of Messina",
+    "Strait of Bonifacio",
+    "Strait of Otranto",
+    "Strait of Dover"
+   ]
+  },
+  "basic-au-t1-w101c1-brh-ent-vinegar-compound": {
+   "readout": [
+    "formic acid",
+    "lactic acid",
+    "propionic acid"
+   ]
+  },
+  "basic-au-t1-w101c1-brh-ent-xxy-condition": {
+   "readout": [
+    "Noonan syndrome"
+   ]
+  },
+  "basic-au-t1-w101c2-brh-ent-changing-flux-law": {
+   "readout": [
+    "Ampère's law",
+    "Biot–Savart law",
+    "Kirchhoff's law"
+   ]
+  },
+  "basic-au-t1-w101c2-brh-ent-equal-volumes-gas-law": {
+   "readout": [
+    "Gay-Lussac's law"
+   ]
+  },
+  "basic-au-t1-w101c2-brh-ent-first-circumnavigation-leader": {
+   "readout": [
+    "Gaspar Corte-Real",
+    "João da Nova"
+   ]
+  },
+  "basic-au-t1-w101c2-brh-ent-florence-banking-clan": {
+   "readout": [
+    "House of Sforza",
+    "House of Gonzaga"
+   ]
+  },
+  "basic-au-t1-w101c2-brh-ent-monosomy-x-condition": {
+   "readout": [
+    "Williams syndrome",
+    "Prader–Willi syndrome"
+   ]
+  },
+  "basic-au-t1-w102c0-brh-ent-ac-induction-inventor": {
+   "readout": [
+    "George Westinghouse",
+    "Guglielmo Marconi",
+    "Alexander Graham Bell"
+   ]
+  },
+  "basic-au-t1-w102c0-brh-ent-atlantic-pacific-waterway": {
+   "readout": [
+    "Kiel Canal",
+    "Welland Canal"
+   ]
+  },
+  "basic-au-t1-w102c0-brh-ent-huntington-neuro": {
+   "readout": [
+    "Wilson's disease",
+    "Tay-Sachs disease",
+    "Pick's disease",
+    "Batten disease"
+   ]
+  },
+  "basic-au-t1-w102c0-brh-ent-lemon-sour-compound": {
+   "readout": [
+    "malic acid",
+    "lactic acid",
+    "oxalic acid"
+   ]
+  },
+  "basic-au-t1-w102c0-brh-ent-munchausen-psych": {
+   "readout": [
+    "Ganser syndrome",
+    "Diogenes syndrome"
+   ]
+  },
+  "basic-au-t1-w102c0-brh-ent-photon-energy-quantity": {
+   "readout": [
+    "Boltzmann constant",
+    "Rydberg constant",
+    "Coulomb constant",
+    "Faraday constant"
+   ]
+  },
+  "basic-au-t1-w102c0-brh-ent-protein-packaging-organelle": {
+   "readout": [
+    "endoplasmic reticulum",
+    "Cajal body",
+    "Nissl body",
+    "Weibel–Palade body"
+   ]
+  },
+  "basic-au-t1-w102c0-brh-ent-wiles-1994-proof": {
+   "readout": [
+    "Goldbach's conjecture",
+    "Poincaré conjecture",
+    "Riemann hypothesis",
+    "Four color theorem"
+   ]
+  },
+  "basic-au-t1-w102c1-brh-ent-76-year-periodic": {
+   "readout": [
+    "Encke's Comet",
+    "Biela's Comet",
+    "Lexell's Comet",
+    "Holmes's Comet"
+   ]
+  },
+  "basic-au-t1-w102c1-brh-ent-dias-1488-headland": {
+   "readout": [
+    "Cape Frio"
+   ]
+  },
+  "basic-au-t1-w102c1-brh-ent-luther-wittenberg-1517": {
+   "readout": [
+    "Schmalkald Articles",
+    "Twelve Articles",
+    "Small Catechism"
+   ]
+  },
+  "basic-au-t1-w103c0-brh-ent-apollo11-moonwalker": {
+   "readout": [
+    "Buzz Aldrin",
+    "Pete Conrad"
+   ]
+  },
+  "basic-au-t1-w103c0-brh-ent-asia-america-passage": {
+   "readout": [
+    "Davis Strait",
+    "Tatar Strait",
+    "Hudson Strait",
+    "La Pérouse Strait"
+   ]
+  },
+  "basic-au-t1-w103c0-brh-ent-china-unifier-221bc": {
+   "readout": [
+    "Zhou dynasty",
+    "Shang dynasty",
+    "Sui dynasty",
+    "Jin dynasty"
+   ]
+  },
+  "basic-au-t1-w103c0-brh-ent-manhattan-1931-skyscraper": {
+   "readout": [
+    "Chrysler Building",
+    "Woolworth Building",
+    "Flatiron Building",
+    "Seagram Building"
+   ]
+  },
+  "basic-au-t1-w103c0-brh-ent-nobel-explosive-liquid": {
+   "readout": [
+    "nitrocellulose",
+    "tetranitromethane"
+   ]
+  },
+  "basic-au-t1-w103c0-brh-ent-transistor-doubling": {
+   "readout": [
+    "Amdahl's law",
+    "Metcalfe's law",
+    "Wirth's law",
+    "Kryder's law"
+   ]
+  },
+  "basic-au-t1-w104c0-brh-ent-gaugamela-331bc-victor": {
+   "readout": [
+    "Ptolemy I Soter",
+    "Seleucus I Nicator",
+    "Antigonus I Monophthalmus"
+   ]
+  },
+  "basic-au-t1-w104c0-brh-ent-gunpowder-oxidizer": {
+   "readout": [
+    "sodium nitrate",
+    "ammonium nitrate",
+    "potassium chlorate",
+    "potassium perchlorate"
+   ]
+  },
+  "basic-au-t1-w104c0-brh-ent-identical-fermions-rule": {
+   "readout": [
+    "Hund's rule",
+    "Aufbau principle",
+    "Born rule"
+   ]
+  },
+  "basic-au-t1-w104c0-brh-ent-silent-killer-gas": {
+   "readout": [
+    "sulfur dioxide",
+    "hydrogen sulfide",
+    "nitrogen dioxide"
+   ]
+  },
+  "basic-au-t1-w104c0-brh-ent-western-front-1916-meuse": {
+   "readout": [
+    "Battle of Fromelles",
+    "Battle of Delville Wood",
+    "Battle of Flers–Courcelette"
+   ]
+  },
+  "basic-au-t1-w104c1-brh-ent-gas-mixture-law-1801": {
+   "readout": [
+    "Gay-Lussac's law",
+    "Amontons's law"
+   ]
+  },
+  "basic-au-t1-w104c1-brh-ent-reed-sternberg-cancer": {
+   "readout": [
+    "Burkitt lymphoma",
+    "mantle cell lymphoma",
+    "follicular lymphoma",
+    "MALT lymphoma"
+   ]
+  }
+ }
+}

@@ -1,0 +1,155 @@
+{
+ "rule": "headline = smallest beta with median RR >= 0.6 and >= 80% injected neutral replies rated >= 6; secondary = smallest with median RR >= 0.35; GO iff at the headline RR - beta0 >= 0.3, RR - gaussian >= 0.3, cross <= beta0 + 0.1",
+ "detection_baseline": {
+  "beta0_median_rr": 0.039230769230769236,
+  "beta0_top5": [
+   "snow",
+   "bread",
+   "lightning",
+   "trees",
+   "peace"
+  ],
+  "p_yes_beta0": {
+   "1": 0.5312093733737562,
+   "2": 0.6513548646660543,
+   "3": 0.8807970779778824,
+   "4": 0.8175744406343558,
+   "5": 0.9241418032647264,
+   "6": 0.8807970779778824,
+   "7": 0.8670357598021708,
+   "8": 0.8519528320398587
+  },
+  "false_alarm_rate": 1
+ },
+ "table": {
+  "1": {
+   "rr_inject": 0.039230769230769236,
+   "rr_inject_mean": 0.09096638127345774,
+   "rr_gauss": 0.04,
+   "rr_cross": 0.038461538461538464,
+   "detect_inject": 0.54,
+   "detect_gauss": 0.46,
+   "coherent_inject": 1.0,
+   "coherent_gauss": 1.0
+  },
+  "2": {
+   "rr_inject": 0.04257246376811594,
+   "rr_inject_mean": 0.14730930390411578,
+   "rr_gauss": 0.03774928774928775,
+   "rr_cross": 0.03774928774928775,
+   "detect_inject": 0.8,
+   "detect_gauss": 0.88,
+   "coherent_inject": 0.825,
+   "coherent_gauss": 0.75
+  },
+  "3": {
+   "rr_inject": 0.04880952380952381,
+   "rr_inject_mean": 0.20940171362417886,
+   "rr_gauss": 0.03774928774928775,
+   "rr_cross": 0.04,
+   "detect_inject": 0.92,
+   "detect_gauss": 0.94,
+   "coherent_inject": 0.25,
+   "coherent_gauss": 0.075
+  },
+  "4": {
+   "rr_inject": 0.05756578947368421,
+   "rr_inject_mean": 0.2300675412568905,
+   "rr_gauss": 0.04083333333333333,
+   "rr_cross": 0.041666666666666664,
+   "detect_inject": 0.88,
+   "detect_gauss": 0.92,
+   "coherent_inject": 0.05,
+   "coherent_gauss": 0.025
+  },
+  "6": {
+   "rr_inject": 0.06904761904761905,
+   "rr_inject_mean": 0.29972491723404054,
+   "rr_gauss": 0.04257246376811594,
+   "rr_cross": 0.04083333333333333,
+   "detect_inject": 0.96,
+   "detect_gauss": 0.96,
+   "coherent_inject": 0.0,
+   "coherent_gauss": 0.0
+  },
+  "8": {
+   "rr_inject": 0.06971153846153846,
+   "rr_inject_mean": 0.3124043719954705,
+   "rr_gauss": 0.04257246376811594,
+   "rr_cross": 0.041666666666666664,
+   "detect_inject": 0.96,
+   "detect_gauss": 0.96,
+   "coherent_inject": 0.0,
+   "coherent_gauss": 0.0
+  }
+ },
+ "headline_beta": null,
+ "secondary_beta": null,
+ "GO": false,
+ "why": "no beta reaches median RR >= 0.6 with >= 80% coherent neutral replies",
+ "notes": [],
+ "job_sha": "a2e8be1a37be5f76",
+ "engine": {
+  "stack": "xaff V4-Flash reader (load_v4_model: bf16 dequant, grouped_mm experts, eager attention), full depth, forward hooks on the decoder block output",
+  "subject_revision": "deepseek-ai/DeepSeek-V4-Flash@60d8d70770c6776ff598c94bb586a859a38244f1",
+  "residual": "mhc_raw_flat_16384",
+  "stop_ids": [
+   1
+  ],
+  "generation_config_check": {
+   "checked": [
+    "bad_words_ids",
+    "begin_suppress_tokens",
+    "diversity_penalty",
+    "encoder_no_repeat_ngram_size",
+    "encoder_repetition_penalty",
+    "exponential_decay_length_penalty",
+    "forced_bos_token_id",
+    "forced_eos_token_id",
+    "min_length",
+    "min_new_tokens",
+    "no_repeat_ngram_size",
+    "num_beam_groups",
+    "num_beams",
+    "repetition_penalty",
+    "sequence_bias",
+    "suppress_tokens"
+   ],
+   "non_default": {}
+  },
+  "pad_id": 1,
+  "loader_sha256": {
+   "/root/app/src/global_workspace/xaff/backends/v4flash.py": "e1620a581b2c1a5f88b91c87f484608d5ae15f003a0da0cc0352cabf57730203"
+  },
+  "gw_commit": "3c6e3610aff77dced4f8284a93ce58f026f0e36b",
+  "n_blocks": 43,
+  "forward": "model.model with a fresh DynamicCache",
+  "gpu": "NVIDIA B300 SXM6 AC",
+  "n_gpus": 8,
+  "deterministic": "use_deterministic_algorithms(True, warn_only=True)",
+  "token_budget": 32768,
+  "hidden_budget": 32768,
+  "n_shards": 2,
+  "gpus": [
+   "NVIDIA B300 SXM6 AC"
+  ],
+  "shard_seconds": [
+   682,
+   694
+  ],
+  "plan_sha": "516c1eada7472712d019",
+  "hidden_sha": "a3f93a98c65c49e451962456",
+  "vectors_sha": "fd2a58762175aff93d6c",
+  "op_counts": {
+   "cont": 709,
+   "next": 608,
+   "greedy": 484
+  },
+  "vector_max_rel_diff_across_shards": 0.0,
+  "budget": 32768
+ },
+ "coherence_coverage": {
+  "rated": 484,
+  "total": 484
+ }
+}

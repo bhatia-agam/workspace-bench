@@ -1,0 +1,7813 @@
+{
+ "family": "multilingual-multihop",
+ "parent_family": "multihop-mt",
+ "contract": {
+  "multi_token": true,
+  "include_target": false,
+  "conjunctive_units": true,
+  "native_langs": [
+   "en",
+   "zh"
+  ]
+ },
+ "gate": "Qwen3.6-27B behavioral, chat-templated capability question (enable_thinking=False, answer stem): greedy-verified AND >=8/10 @ temp 0.7 (answer in the text's language); every bridge gate greedy + >=8/10. EVAL RENDER: plain prompt, final prompt token; conjunctive regex over bridge_l2 + bridge_native + language.",
+ "frozen": "2026-11-04",
+ "version": 5,
+ "v2": "v2 (plan 0040, Camila 2026-10-30): the readout must NAME the passage's language and write the intermediate in English or the model's native language (contract.native_langs); every unit is required; the language unit holds language names only.",
+ "built_by": "scripts/build_multilingual_v2.py (curation: scripts/multilingual_v2_curation.py)",
+ "v1_bank": "evals/multilingual_multihop/items.json",
+ "n_items": 89,
+ "l2_equals_native_ids": [],
+ "n_l2_equals_native": 0,
+ "n_headline": 89,
+ "l2_contains_native_ids": [
+  "mlmh-fi-asml-alankomaat",
+  "mlmh-hu-kepler-ellipszis",
+  "mlmh-hu-arecibo-puerto-rico",
+  "mlmh-id-aral-uzbekistan",
+  "mlmh-id-giyanti-yogyakarta",
+  "mlmh-pl-erupcja-1815-panstwo",
+  "mlmh-pl-surtsey-islandia",
+  "mlmh-pl-zamenhof-bialystok",
+  "mlmh-sw-natron-nyekundu",
+  "mlmh-tr-parkes-avustralya",
+  "mlmh-vi-assal-djibouti"
+ ],
+ "n_l2_contains_native": 11,
+ "supersedes": "items_v4.json",
+ "r4_mc": {
+  "script": "scripts/build_r4_mc_banks.py",
+  "rule": "round 4 (Camila r2 MC leakage standard): only the MC distractor lists change. Content lists: the four Opus-authored same-topic distractors of r4_distractors.json (scripts/r4_mc_distractors.py). Language lists: the four other gold languages of this bank closest to the gold (shared family 4, script 2, region 1; ties seeded by family and gold). ",
+  "lang_rule": "wsbench.multitoken.options.r4_language_distractors (R4_LANG_INFO / R4_LANG_POOLS)",
+  "lists_changed": 196
+ },
+ "r4b_mc": {
+  "script": "scripts/build_r4b_mc_banks.py",
+  "rule": "round 4b (Camila r2 MC leakage standard, second pass): only the MC distractor lists change. Content lists: the four distractors scripts/r4b_mc_refine.py kept (r4b_distractors.json: Opus-revised in the gold's naming style, fitting the topic as stated, kept when neither the options-only nor the topic guesser solves the item in more than 1 of 5 draws). Language lists: frequency-balanced over the bank's gold languages (every language a distractor four times as often as it is the gold; options.r4b_balanced_language_distractors). ",
+  "lists_changed": 196,
+  "n_over_gate": 43
+ },
+ "r5_mc": {
+  "procedure": "mcleak-r5-2026-11-04",
+  "script": "scripts/mc_options_r5.py (scripts/mc_leakage_r4.py's stages)",
+  "rule": "2026-11-04 (leakage standard: every guesser <= uniform chance + 5 points). Only content distractor lists change. The leaking lists were re-chosen by mc_leakage_r4's stages: Opus 5.5 proposes 14 same-topic wrong answers per list (told the gold, its forms, the list's frozen topic label and the question), the topic-member check, rank (4 draws, 2 with the topic), selection of the 4 best-ranked members that pass the r4 lint (no form shared with the gold or another option, no word of the prompt) plus no form shared with another name of the item (its other units, the answer, a dropped bridge, a prompt concept), the same-answer check (multihop families), and the validity screen (Opus 5.5 sees the question or text, 5 draws, the gold must win every draw). Round 1 repaired the items still leaking: re-proposed with the guessers' result as feedback and an instruction to match the gold's naming style, then r4's search played 4 candidate lists per list against the three guessers (2 draws each) and kept the one whose gold they picked least; items all three guessers still solved after it (the gold on >= 3 of 5 draws each) are dropped, and when the kept items still failed the standard (on the round's draws or on fresh draws over the frozen bank), also the items both guessers shown solved examples (described and topic) still solved",
+  "blind_to_readouts": "options chosen and measured without opening any readout or judged file",
+  "selection": "a failing guesser picks the gold on >= 3 of 5 draws and the three together on >= 6 of 15 (the refreeze's per-item draws; failing guessers: blind, described, topic)",
+  "rounds": {
+   "0": [
+    "mlmh-ar-kente-accra~bridge_native",
+    "mlmh-ar-southpole-norwegian~bridge_native",
+    "mlmh-ar-suryavarman-temple-country~bridge_native",
+    "mlmh-ar-wagner-festival-bavaria~bridge_native",
+    "mlmh-el-andronikos-university~bridge_native",
+    "mlmh-el-eratosthenes-alexandria~bridge_native",
+    "mlmh-el-ptfe-fluorine~bridge_native",
+    "mlmh-el-sandwich-earl-hawaii~bridge_native",
+    "mlmh-fi-asml-alankomaat~bridge_native",
+    "mlmh-fi-bakeliitti-formaldehydi~bridge_native",
+    "mlmh-fi-bayeux-normandia~bridge_native",
+    "mlmh-fi-hottest-place-state~bridge_native",
+    "mlmh-fi-kesaton-vuosi-saari~bridge_native",
+    "mlmh-fi-korkein-vedenpudotus-poytavuori~bridge_native",
+    "mlmh-fi-prudhoe-siirtolinja-paatesatama~bridge_native",
+    "mlmh-he-chicxulub-mexico~bridge_native",
+    "mlmh-he-cornflakes-michigan~bridge_native",
+    "mlmh-he-hindenburg-hydrogen~bridge_native",
+    "mlmh-he-oresund-malmo~bridge_native",
+    "mlmh-he-ytterby-sweden~bridge_native",
+    "mlmh-hu-bergamot-calabria~bridge_native",
+    "mlmh-hu-vandorgalamb-allatkert~bridge_native",
+    "mlmh-hu-vosztok-foldresz~bridge_native",
+    "mlmh-id-kubus-rubik-hongaria~bridge_native",
+    "mlmh-id-transsiberia-vladivostok~bridge_native",
+    "mlmh-ko-arecibo-puertorico~bridge_native",
+    "mlmh-ko-herschel-infrared~bridge_native",
+    "mlmh-ko-irri-ir8-philippines~bridge_native",
+    "mlmh-ko-oresund-malmo~bridge_native",
+    "mlmh-ko-oymyakon-yakutsk~bridge_native",
+    "mlmh-pl-antykithira-ateny~bridge_native",
+    "mlmh-pl-najruchliwsza-droga-wodna-morze~bridge_native",
+    "mlmh-pl-surtsey-islandia~bridge_native",
+    "mlmh-pl-zamenhof-bialystok~bridge_native",
+    "mlmh-ru-dishwasher-illinois~bridge_native",
+    "mlmh-ru-k2-karakoram~bridge_native",
+    "mlmh-ru-monarch-michoacan~bridge_native",
+    "mlmh-ru-transsib-vladivostok~bridge_native",
+    "mlmh-tr-monark-meksika~bridge_native",
+    "mlmh-vi-mawsynram-meghalaya~bridge_native",
+    "mlmh-vi-porcelain-capital-province~bridge_native"
+   ],
+   "1": [
+    "mlmh-ar-kente-accra~bridge_native",
+    "mlmh-ar-suryavarman-temple-country~bridge_native",
+    "mlmh-ar-wagner-festival-bavaria~bridge_native",
+    "mlmh-el-andronikos-university~bridge_native",
+    "mlmh-el-eratosthenes-alexandria~bridge_native",
+    "mlmh-fi-bakeliitti-formaldehydi~bridge_native",
+    "mlmh-fi-bayeux-normandia~bridge_native",
+    "mlmh-fi-hottest-place-state~bridge_native",
+    "mlmh-fi-kesaton-vuosi-saari~bridge_native",
+    "mlmh-fi-korkein-vedenpudotus-poytavuori~bridge_native",
+    "mlmh-he-chicxulub-mexico~bridge_native",
+    "mlmh-he-cornflakes-michigan~bridge_native",
+    "mlmh-he-hindenburg-hydrogen~bridge_native",
+    "mlmh-he-oresund-malmo~bridge_native",
+    "mlmh-he-ytterby-sweden~bridge_native",
+    "mlmh-hu-bergamot-calabria~bridge_native",
+    "mlmh-hu-vandorgalamb-allatkert~bridge_native",
+    "mlmh-hu-vosztok-foldresz~bridge_native",
+    "mlmh-id-kubus-rubik-hongaria~bridge_native",
+    "mlmh-id-transsiberia-vladivostok~bridge_native",
+    "mlmh-ko-arecibo-puertorico~bridge_native",
+    "mlmh-ko-irri-ir8-philippines~bridge_native",
+    "mlmh-ko-oresund-malmo~bridge_native",
+    "mlmh-pl-erupcja-1815-panstwo~bridge_native",
+    "mlmh-pl-surtsey-islandia~bridge_native",
+    "mlmh-pl-zamenhof-bialystok~bridge_native",
+    "mlmh-ru-dishwasher-illinois~bridge_native",
+    "mlmh-ru-monarch-michoacan~bridge_native",
+    "mlmh-ru-transsib-vladivostok~bridge_native",
+    "mlmh-tr-monark-meksika~bridge_native",
+    "mlmh-vi-mawsynram-meghalaya~bridge_native",
+    "mlmh-vi-porcelain-capital-province~bridge_native"
+   ]
+  },
+  "changed": {
+   "mlmh-ar-kente-accra": {
+    "bridge_native": {
+     "from": [
+      "batik",
+      "ikat",
+      "tartan",
+      "tweed"
+     ],
+     "to": [
+      "batik",
+      "bogolan",
+      "khadi",
+      "jamdani"
+     ]
+    }
+   },
+   "mlmh-ar-southpole-norwegian": {
+    "bridge_native": {
+     "from": [
+      "Edmund Hillary",
+      "David Livingstone",
+      "Ferdinand Magellan",
+      "James Cook"
+     ],
+     "to": [
+      "Christopher Columbus",
+      "Ferdinand Magellan",
+      "James Cook",
+      "Marco Polo"
+     ]
+    }
+   },
+   "mlmh-ar-suryavarman-temple-country": {
+    "bridge_native": {
+     "from": [
+      "Borobudur",
+      "Golden Temple",
+      "Prambanan",
+      "Ellora Caves"
+     ],
+     "to": [
+      "Borobudur",
+      "Prambanan",
+      "Ellora Caves",
+      "Khajuraho"
+     ]
+    }
+   },
+   "mlmh-ar-wagner-festival-bavaria": {
+    "bridge_native": {
+     "from": [
+      "Eisenach",
+      "Halle (Saale)",
+      "Bamberg",
+      "Göttingen"
+     ],
+     "to": [
+      "Leipzig",
+      "Dresden",
+      "Weimar",
+      "Bonn"
+     ]
+    }
+   },
+   "mlmh-el-eratosthenes-alexandria": {
+    "bridge_native": {
+     "from": [
+      "Ctesibius",
+      "Euclid",
+      "Hipparchus",
+      "Ptolemy"
+     ],
+     "to": [
+      "Democritus",
+      "Ptolemy",
+      "Aristarchus",
+      "Archimedes"
+     ]
+    }
+   },
+   "mlmh-el-ptfe-fluorine": {
+    "bridge_native": {
+     "from": [
+      "polypropylene",
+      "polystyrene",
+      "bakelite",
+      "kevlar"
+     ],
+     "to": [
+      "nylon",
+      "bakelite",
+      "polyvinyl chloride",
+      "polyethylene"
+     ]
+    }
+   },
+   "mlmh-el-sandwich-earl-hawaii": {
+    "bridge_native": {
+     "from": [
+      "Augustus FitzRoy, 3rd Duke of Grafton",
+      "Henry St John, 1st Viscount Bolingbroke",
+      "James Stanhope, 1st Earl Stanhope",
+      "Thomas Pelham-Holles, 1st Duke of Newcastle"
+     ],
+     "to": [
+      "Robert Walpole, 1st Earl of Orford",
+      "William Pitt, 1st Earl of Chatham",
+      "Frederick North, Lord North",
+      "Thomas Pelham-Holles, 1st Duke of Newcastle"
+     ]
+    }
+   },
+   "mlmh-fi-asml-alankomaat": {
+    "bridge_native": {
+     "from": [
+      "ASM International N.V.",
+      "BE Semiconductor Industries N.V.",
+      "Screen Holdings Co., Ltd.",
+      "Applied Materials Inc."
+     ],
+     "to": [
+      "Taiwan Semiconductor Manufacturing Company Limited",
+      "Applied Materials Inc.",
+      "Intel Corporation",
+      "Samsung Electronics Co., Ltd."
+     ]
+    }
+   },
+   "mlmh-fi-hottest-place-state": {
+    "bridge_native": {
+     "from": [
+      "Imperial Valley",
+      "Panamint Valley",
+      "Coachella Valley",
+      "Shenandoah Valley"
+     ],
+     "to": [
+      "Rio Grande Valley",
+      "Monument Valley",
+      "Valley of Mexico",
+      "Ohio Valley"
+     ]
+    }
+   },
+   "mlmh-fi-korkein-vedenpudotus-poytavuori": {
+    "bridge_native": {
+     "from": [
+      "Yosemite Falls",
+      "Sutherland Falls",
+      "Iguazu Falls",
+      "Gullfoss"
+     ],
+     "to": [
+      "Reichenbach Falls",
+      "Niagara Falls",
+      "Hukou Waterfall",
+      "Victoria Falls"
+     ]
+    }
+   },
+   "mlmh-fi-prudhoe-siirtolinja-paatesatama": {
+    "bridge_native": {
+     "from": [
+      "Baku–Tbilisi–Ceyhan pipeline",
+      "Trans Mountain Pipeline",
+      "Druzhba pipeline",
+      "Power of Siberia"
+     ],
+     "to": [
+      "Nord Stream",
+      "Druzhba pipeline",
+      "Baku–Tbilisi–Ceyhan pipeline",
+      "Keystone Pipeline"
+     ]
+    }
+   },
+   "mlmh-fi-bakeliitti-formaldehydi": {
+    "bridge_native": {
+     "from": [
+      "Galalith",
+      "Catalin",
+      "Cellophane",
+      "Celluloid"
+     ],
+     "to": [
+      "Polyester",
+      "Kevlar",
+      "Polyethylene",
+      "Teflon"
+     ]
+    }
+   },
+   "mlmh-fi-kesaton-vuosi-saari": {
+    "bridge_native": {
+     "from": [
+      "Mount Taal",
+      "Mount Galunggung",
+      "Mount Rinjani",
+      "Mount Mayon"
+     ],
+     "to": [
+      "Krakatoa",
+      "Mount Pinatubo",
+      "Mount Merapi",
+      "Mount Agung"
+     ]
+    }
+   },
+   "mlmh-he-oresund-malmo": {
+    "bridge_native": {
+     "from": [
+      "Forth Bridge",
+      "Forth Road Bridge",
+      "Tower Bridge",
+      "Charles Bridge"
+     ],
+     "to": [
+      "Charles Bridge",
+      "Tower Bridge",
+      "Ponte Vecchio",
+      "Millau Viaduct"
+     ]
+    }
+   },
+   "mlmh-he-cornflakes-michigan": {
+    "bridge_native": {
+     "from": [
+      "Ann Arbor",
+      "Green Bay",
+      "Sioux Falls",
+      "Eau Claire"
+     ],
+     "to": [
+      "Fort Wayne",
+      "Dayton",
+      "Toledo",
+      "Akron"
+     ]
+    }
+   },
+   "mlmh-he-hindenburg-hydrogen": {
+    "bridge_native": {
+     "from": [
+      "Bodensee",
+      "Dixmude",
+      "Akron",
+      "Graf Zeppelin"
+     ],
+     "to": [
+      "Enola Gay",
+      "Spirit of St. Louis",
+      "Wright Flyer",
+      "Los Angeles"
+     ]
+    }
+   },
+   "mlmh-hu-bergamot-calabria": {
+    "bridge_native": {
+     "from": [
+      "bitter orange",
+      "blood orange",
+      "navel orange",
+      "mandarin orange"
+     ],
+     "to": [
+      "lime",
+      "pomelo",
+      "clementine",
+      "grapefruit"
+     ]
+    }
+   },
+   "mlmh-ko-arecibo-puertorico": {
+    "bridge_native": {
+     "from": [
+      "Nançay Radio Observatory",
+      "Yerkes Observatory",
+      "Lowell Observatory",
+      "Paranal Observatory"
+     ],
+     "to": [
+      "Mount Palomar Observatory",
+      "Mount Wilson Observatory",
+      "Jodrell Bank Observatory",
+      "Mauna Kea Observatories"
+     ]
+    }
+   },
+   "mlmh-ko-oresund-malmo": {
+    "bridge_native": {
+     "from": [
+      "Hålogaland Bridge",
+      "Millau Viaduct",
+      "Bosphorus Bridge",
+      "Chain Bridge"
+     ],
+     "to": [
+      "Tower Bridge",
+      "Millau Viaduct",
+      "Charles Bridge",
+      "Ponte Vecchio"
+     ]
+    }
+   },
+   "mlmh-ko-oymyakon-yakutsk": {
+    "bridge_native": {
+     "from": [
+      "Listvyanka",
+      "Esso",
+      "Khatanga",
+      "Chersky"
+     ],
+     "to": [
+      "Yasnaya Polyana",
+      "Borodino",
+      "Prokhorovka",
+      "Konstantinovo"
+     ]
+    }
+   },
+   "mlmh-ko-herschel-infrared": {
+    "bridge_native": {
+     "from": [
+      "Nicolas-Louis de Lacaille",
+      "John Flamsteed",
+      "Maximilian Hell",
+      "Nevil Maskelyne"
+     ],
+     "to": [
+      "Edmond Halley",
+      "Giovanni Domenico Cassini",
+      "Tycho Brahe",
+      "John Flamsteed"
+     ]
+    }
+   },
+   "mlmh-ko-irri-ir8-philippines": {
+    "bridge_native": {
+     "from": [
+      "International Institute of Tropical Agriculture",
+      "International Food Policy Research Institute",
+      "International Livestock Research Institute",
+      "International Crops Research Institute for the Semi-Arid Tropics"
+     ],
+     "to": [
+      "International Potato Center",
+      "International Water Management Institute",
+      "International Center for Tropical Agriculture",
+      "International Maize and Wheat Improvement Center"
+     ]
+    }
+   },
+   "mlmh-pl-erupcja-1815-panstwo": {
+    "bridge_native": {
+     "from": [
+      "Paektu Mountain",
+      "Hekla",
+      "Mount St. Helens",
+      "Mount Vesuvius"
+     ],
+     "to": [
+      "Mount Vesuvius",
+      "Mount St. Helens",
+      "Mount Etna",
+      "Mount Pelée"
+     ]
+    }
+   },
+   "mlmh-pl-najruchliwsza-droga-wodna-morze": {
+    "bridge_native": {
+     "from": [
+      "Panama Canal",
+      "Grand Canal of China",
+      "Suez Canal",
+      "Ghent–Terneuzen Canal"
+     ],
+     "to": [
+      "Suez Canal",
+      "Panama Canal",
+      "Grand Canal of China",
+      "Canal du Midi"
+     ]
+    }
+   },
+   "mlmh-pl-surtsey-islandia": {
+    "bridge_native": {
+     "from": [
+      "Nantucket",
+      "Cape Breton Island",
+      "São Miguel",
+      "Streymoy"
+     ],
+     "to": [
+      "Saint Helena",
+      "Faial Island",
+      "São Miguel",
+      "Tenerife"
+     ]
+    }
+   },
+   "mlmh-pl-zamenhof-bialystok": {
+    "bridge_native": {
+     "from": [
+      "H. G. Wells",
+      "L. Couturat",
+      "A. N. Whitehead",
+      "O. Jespersen"
+     ],
+     "to": [
+      "Giuseppe Peano",
+      "Wilhelm von Humboldt",
+      "L. Couturat",
+      "Ferdinand de Saussure"
+     ]
+    }
+   },
+   "mlmh-pl-antykithira-ateny": {
+    "bridge_native": {
+     "from": [
+      "Dead Sea Scrolls",
+      "Code of Hammurabi",
+      "Venus de Milo",
+      "Venus of Willendorf"
+     ],
+     "to": [
+      "Rosetta Stone",
+      "Tutankhamun's mask",
+      "Nefertiti Bust",
+      "Code of Hammurabi"
+     ]
+    }
+   },
+   "mlmh-ru-k2-karakoram": {
+    "bridge_native": {
+     "from": [
+      "Dhaulagiri mountain",
+      "Gasherbrum I mountain",
+      "Cho Oyu mountain",
+      "Mount Everest mountain"
+     ],
+     "to": [
+      "Mount Everest mountain",
+      "Kangchenjunga",
+      "Lhotse",
+      "Makalu"
+     ]
+    }
+   },
+   "mlmh-ru-monarch-michoacan": {
+    "bridge_native": {
+     "from": [
+      "Swallowtail",
+      "Red admiral",
+      "Peacock butterfly",
+      "Small tortoiseshell"
+     ],
+     "to": [
+      "painted lady",
+      "death's-head hawkmoth",
+      "Red admiral",
+      "blue morpho"
+     ]
+    }
+   },
+   "mlmh-ru-dishwasher-illinois": {
+    "bridge_native": {
+     "from": [
+      "Eli Whitney",
+      "Isaac Singer",
+      "Elias Howe",
+      "Cyrus McCormick"
+     ],
+     "to": [
+      "Margaret Knight",
+      "Elisha Otis",
+      "Charles Goodyear",
+      "Alexander Graham Bell"
+     ]
+    }
+   },
+   "mlmh-ru-transsib-vladivostok": {
+    "bridge_native": {
+     "from": [
+      "Baghdad Railway",
+      "Trans-Australian Railway",
+      "Qinghai–Tibet Railway",
+      "Lanzhou–Xinjiang Railway"
+     ],
+     "to": [
+      "First Transcontinental Railroad",
+      "Canadian Pacific Railway",
+      "Qinghai–Tibet Railway",
+      "Hejaz Railway"
+     ]
+    }
+   },
+   "mlmh-tr-monark-meksika": {
+    "bridge_native": {
+     "from": [
+      "red admiral butterfly",
+      "cabbage white butterfly",
+      "peacock butterfly",
+      "viceroy butterfly"
+     ],
+     "to": [
+      "luna moth",
+      "death's-head hawkmoth",
+      "swallowtail butterfly",
+      "peppered moth"
+     ]
+    }
+   }
+  },
+  "kept_frozen": {
+   "mlmh-hu-vosztok-foldresz~bridge_native": "round 1: only 1 valid distractors"
+  },
+  "dropped": {
+   "mlmh-el-andronikos-university": "after round 1 the blind / described / topic guessers still pick the gold on 5 / 5 / 5 of 5 draws",
+   "mlmh-fi-bayeux-normandia": "after round 1 the blind / described / topic guessers still pick the gold on 5 / 5 / 5 of 5 draws",
+   "mlmh-he-ytterby-sweden": "after round 1 the blind / described / topic guessers still pick the gold on 5 / 5 / 5 of 5 draws",
+   "mlmh-he-chicxulub-mexico": "after round 1 the blind / described / topic guessers still pick the gold on 5 / 5 / 4 of 5 draws",
+   "mlmh-hu-vandorgalamb-allatkert": "after round 1 the blind / described / topic guessers still pick the gold on 5 / 5 / 5 of 5 draws",
+   "mlmh-id-transsiberia-vladivostok": "after round 1 the blind / described / topic guessers still pick the gold on 5 / 5 / 5 of 5 draws",
+   "mlmh-id-kubus-rubik-hongaria": "after round 1 the blind / described / topic guessers still pick the gold on 4 / 5 / 5 of 5 draws",
+   "mlmh-vi-porcelain-capital-province": "after round 1 the blind / described / topic guessers still pick the gold on 5 / 5 / 5 of 5 draws",
+   "mlmh-vi-mawsynram-meghalaya": "after round 1 the blind / described / topic guessers still pick the gold on 5 / 5 / 5 of 5 draws"
+  },
+  "floors": {
+   "chance": 0.2,
+   "before": {
+    "blind": 0.302,
+    "described": 0.4061,
+    "topic": 0.4245
+   },
+   "round0": {
+    "blind": 0.2857,
+    "described": 0.3429,
+    "topic": 0.3694
+   },
+   "round1": {
+    "blind": 0.2245,
+    "described": 0.3,
+    "topic": 0.349
+   },
+   "measure": "lucky_guessing (blind / described / topic, Opus 5.5, 5 draws, the described and topic guessers' examples drawn bank-wide; content lists only)",
+   "kept_estimate": {
+    "blind": 0.1483,
+    "described": 0.2292,
+    "topic": 0.2854,
+    "chance": 0.2,
+    "n_items": 89
+   },
+   "extension_not_kept": {
+    "topic_fresh_draws": 0.38,
+    "n_items": 80,
+    "why": "dropping the 9 more items both described and topic still solved left the topic guesser at this rate on fresh draws (its per-item picks move with the solved examples it is shown), so the extension does not reach the standard and is not kept"
+   }
+  },
+  "standard_met": false
+ },
+ "adapt": {
+  "model": "deepseek-v4-flash",
+  "hf_id": "deepseek-ai/DeepSeek-V4-Flash",
+  "frozen": "2026-11-17"
+ },
+ "items": [
+  {
+   "name": "mlmh-ar-vicuna-peru",
+   "subfamily": "2hop",
+   "prompt": "الثدييات الأنديزية التي يُعد وبرها أنعم الألياف الطبيعية في العالم تظهر في الشعار الوطني لدولة تُسمى",
+   "target": "البيرو",
+   "target_alts": [
+    "بيرو",
+    "البيرو",
+    "جمهورية بيرو",
+    "جمهورية البيرو",
+    "پيرو"
+   ],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "lang": "ar",
+   "intermediates": [
+    "vicuña"
+   ],
+   "units": [
+    {
+     "role": "bridge_l2",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "ar": [
+       "الفيكونيا",
+       "صوف الفيكونيا",
+       "الفكونية"
+      ]
+     },
+     "match": [
+      "الفيكونيا",
+      "صوف الفيكونيا",
+      "الفكونية"
+     ],
+     "forms_all": {
+      "ar": [
+       "الفيكونيا",
+       "صوف الفيكونيا",
+       "الفكونية"
+      ]
+     },
+     "not_creditable": {}
+    },
+    {
+     "role": "bridge_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "vicuña",
+       "vicuna wool"
+      ],
+      "zh": [
+       "小羊驼",
+       "维库尼亚"
+      ]
+     },
+     "match": [
+      "vicuña",
+      "vicuna wool",
+      "小羊驼",
+      "维库尼亚"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Arabic"
+      ],
+      "zh": [
+       "阿拉伯语",
+       "阿拉伯文"
+      ],
+      "ar": [
+       "العربية",
+       "بالعربية",
+       "اللغة العربية"
+      ]
+     },
+     "match": [
+      "Arabic",
+      "阿拉伯语",
+      "阿拉伯文",
+      "العربية",
+      "بالعربية",
+      "اللغة العربية"
+     ]
+    }
+   ],
+   "bridges": [
+    {
+     "question": "Which Andean camelid yields the world's finest natural wool fibre? Answer with just the name.",
+     "units": [
+      "bridge_l2",
+      "bridge_native"
+     ],
+     "answers": [
+      "vicuña",
+      "vicuna",
+      "vicuña wool",
+      "vicuna wool",
+      "الفيكونيا",
+      "فيكونيا",
+      "صوف الفيكونيا",
+      "الفكونية",
+      "小羊驼",
+      "维库尼亚"
+     ]
+    }
+   ],
+   "consistency": 0.9,
+   "consistency_strict": 0.9,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge_l2|bridge_native": 0.8
+   },
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "bridge_l2": {
+      "ar": [
+       3,
+       5,
+       3
+      ]
+     },
+     "bridge_native": {
+      "en": [
+       3,
+       3
+      ],
+      "zh": [
+       3,
+       3
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "zh": [
+       2,
+       2
+      ],
+      "ar": [
+       1,
+       3,
+       2
+      ]
+     }
+    },
+    "target": 3,
+    "target_alts": [
+     2,
+     3,
+     5,
+     6,
+     3
+    ]
+   },
+   "mc": {
+    "bridge_native": {
+     "gold": "vicuña",
+     "distractors": [
+      "Spectacled bear",
+      "pudú",
+      "giant anteater",
+      "jaguarundi"
+     ]
+    },
+    "language": {
+     "gold": "Arabic",
+     "distractors": [
+      "Russian",
+      "Korean",
+      "Finnish",
+      "Hebrew"
+     ]
+    }
+   },
+   "bridge_l2_creditable": [
+    "الفيكونيا",
+    "صوف الفيكونيا",
+    "الفكونية"
+   ],
+   "l2_equals_native": false,
+   "mc_roles": [
+    "bridge_native",
+    "language"
+   ],
+   "id": "mlmh-ar-vicuna-peru",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "mlmh-el-ptfe-fluorine",
+   "subfamily": "2hop",
+   "prompt": "Εκτός από τον άνθρακα, το μοναδικό άλλο χημικό στοιχείο που περιέχει το πολυμερές της αντικολλητικής επίστρωσης στα τηγάνια είναι το",
+   "target": "φθόριο",
+   "target_alts": [
+    "φθόριο",
+    "το φθόριο",
+    "φθορίου",
+    "του φθορίου"
+   ],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "lang": "el",
+   "intermediates": [
+    "polytetrafluoroethylene"
+   ],
+   "units": [
+    {
+     "role": "bridge_l2",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "el": [
+       "πολυτετραφθοροαιθυλένιο",
+       "τεφλόν",
+       "το τεφλόν"
+      ]
+     },
+     "match": [
+      "πολυτετραφθοροαιθυλένιο",
+      "τεφλόν",
+      "το τεφλόν"
+     ],
+     "forms_all": {
+      "el": [
+       "πολυτετραφθοροαιθυλένιο",
+       "τεφλόν",
+       "το τεφλόν"
+      ]
+     },
+     "not_creditable": {}
+    },
+    {
+     "role": "bridge_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "polytetrafluoroethylene",
+       "Teflon",
+       "PTFE"
+      ],
+      "zh": [
+       "聚四氟乙烯",
+       "特氟龙",
+       "铁氟龙"
+      ]
+     },
+     "match": [
+      "polytetrafluoroethylene",
+      "Teflon",
+      "PTFE",
+      "聚四氟乙烯",
+      "特氟龙",
+      "铁氟龙"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Greek"
+      ],
+      "zh": [
+       "希腊语",
+       "希腊文"
+      ],
+      "el": [
+       "ελληνικά",
+       "στα ελληνικά",
+       "νέα ελληνικά",
+       "η ελληνική γλώσσα"
+      ]
+     },
+     "match": [
+      "Greek",
+      "希腊语",
+      "希腊文",
+      "ελληνικά",
+      "στα ελληνικά",
+      "νέα ελληνικά",
+      "η ελληνική γλώσσα"
+     ]
+    }
+   ],
+   "bridges": [
+    {
+     "question": "What is the name of the nonstick polymer, discovered at DuPont in 1938, that coats frying pans? Answer with just the name.",
+     "units": [
+      "bridge_l2",
+      "bridge_native"
+     ],
+     "answers": [
+      "Teflon",
+      "PTFE",
+      "polytetrafluoroethylene",
+      "τεφλόν",
+      "πολυτετραφθοροαιθυλένιο",
+      "聚四氟乙烯",
+      "特氟龙",
+      "το τεφλόν",
+      "铁氟龙"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "consistency_strict": 1.0,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge_l2|bridge_native": 0.9
+   },
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "bridge_l2": {
+      "el": [
+       13,
+       4,
+       5
+      ]
+     },
+     "bridge_native": {
+      "en": [
+       5,
+       3,
+       2
+      ],
+      "zh": [
+       4,
+       3,
+       3
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "zh": [
+       2,
+       2
+      ],
+      "el": [
+       1,
+       2,
+       3,
+       6
+      ]
+     }
+    },
+    "target": 4,
+    "target_alts": [
+     4,
+     5,
+     3,
+     4
+    ]
+   },
+   "mc": {
+    "bridge_native": {
+     "gold": "polytetrafluoroethylene",
+     "distractors": [
+      "nylon",
+      "bakelite",
+      "polyvinyl chloride",
+      "polyethylene"
+     ]
+    },
+    "language": {
+     "gold": "Greek",
+     "distractors": [
+      "Russian",
+      "Korean",
+      "Hungarian",
+      "Polish"
+     ]
+    }
+   },
+   "bridge_l2_creditable": [
+    "πολυτετραφθοροαιθυλένιο",
+    "τεφλόν",
+    "το τεφλόν"
+   ],
+   "l2_equals_native": false,
+   "mc_roles": [
+    "bridge_native",
+    "language"
+   ],
+   "id": "mlmh-el-ptfe-fluorine",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "mlmh-el-darvaza-tourkmenistan",
+   "subfamily": "2hop",
+   "prompt": "Ο τεράστιος κρατήρας φυσικού αερίου που καίγεται ασταμάτητα από τη δεκαετία του 1970 βρίσκεται στο",
+   "target": "Τουρκμενιστάν",
+   "target_alts": [
+    "Τουρκμενιστάν",
+    "το Τουρκμενιστάν",
+    "στο Τουρκμενιστάν"
+   ],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "lang": "el",
+   "intermediates": [
+    "Darvaza gas crater"
+   ],
+   "units": [
+    {
+     "role": "bridge_l2",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "el": [
+       "Νταρβάζα",
+       "Ντάρβαζα",
+       "Ντερβεζέ"
+      ]
+     },
+     "match": [
+      "Νταρβάζα",
+      "Ντάρβαζα",
+      "Ντερβεζέ"
+     ],
+     "forms_all": {
+      "el": [
+       "Νταρβάζα",
+       "Ντάρβαζα",
+       "Ντερβεζέ"
+      ]
+     },
+     "not_creditable": {}
+    },
+    {
+     "role": "bridge_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Darvaza gas crater",
+       "Darvaza",
+       "Door to Hell"
+      ],
+      "zh": [
+       "达尔瓦扎天然气坑",
+       "地狱之门",
+       "达尔瓦扎"
+      ]
+     },
+     "match": [
+      "Darvaza gas crater",
+      "Darvaza",
+      "Door to Hell",
+      "达尔瓦扎天然气坑",
+      "地狱之门",
+      "达尔瓦扎"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Greek"
+      ],
+      "zh": [
+       "希腊语",
+       "希腊文"
+      ],
+      "el": [
+       "ελληνικά",
+       "στα ελληνικά",
+       "νέα ελληνικά",
+       "η ελληνική γλώσσα"
+      ]
+     },
+     "match": [
+      "Greek",
+      "希腊语",
+      "希腊文",
+      "ελληνικά",
+      "στα ελληνικά",
+      "νέα ελληνικά",
+      "η ελληνική γλώσσα"
+     ]
+    }
+   ],
+   "bridges": [
+    {
+     "question": "Which burning natural gas crater in the Karakum Desert has been alight since the 1970s? Answer with just the name.",
+     "units": [
+      "bridge_l2",
+      "bridge_native"
+     ],
+     "answers": [
+      "Darvaza",
+      "Darvaza gas crater",
+      "Derweze",
+      "Door to Hell",
+      "Gates of Hell",
+      "Νταρβάζα",
+      "Ντάρβαζα",
+      "达尔瓦扎",
+      "地狱之门",
+      "Ντερβεζέ",
+      "达尔瓦扎天然气坑"
+     ]
+    }
+   ],
+   "consistency": 0.8,
+   "consistency_strict": 0.8,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge_l2|bridge_native": 0.9
+   },
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "bridge_l2": {
+      "el": [
+       6,
+       5,
+       5
+      ]
+     },
+     "bridge_native": {
+      "en": [
+       5,
+       3,
+       3
+      ],
+      "zh": [
+       5,
+       2,
+       3
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "zh": [
+       2,
+       2
+      ],
+      "el": [
+       1,
+       2,
+       3,
+       6
+      ]
+     }
+    },
+    "target": 5,
+    "target_alts": [
+     5,
+     6,
+     6
+    ]
+   },
+   "mc": {
+    "bridge_native": {
+     "gold": "Darvaza gas crater",
+     "distractors": [
+      "Lake Kaindy",
+      "Issyk-Kul",
+      "Ustyurt Plateau",
+      "Jengish Chokusu"
+     ]
+    },
+    "language": {
+     "gold": "Greek",
+     "distractors": [
+      "Turkish",
+      "Vietnamese",
+      "Korean",
+      "Indonesian"
+     ]
+    }
+   },
+   "bridge_l2_creditable": [
+    "Νταρβάζα",
+    "Ντάρβαζα",
+    "Ντερβεζέ"
+   ],
+   "l2_equals_native": false,
+   "mc_roles": [
+    "bridge_native",
+    "language"
+   ],
+   "id": "mlmh-el-darvaza-tourkmenistan",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "mlmh-fi-korkein-vedenpudotus-poytavuori",
+   "subfamily": "2hop",
+   "prompt": "Maailman korkeimman yhtäjaksoisen vedenpudotuksen huippu sijaitsee venezuelalaisella pöytävuorella nimeltä",
+   "target": "Auyantepui",
+   "target_alts": [
+    "Auyantepui",
+    "Auyán-tepui",
+    "Auyan-tepui",
+    "Auyantepuilla",
+    "Auyantepuin",
+    "Auyántepui"
+   ],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "lang": "fi",
+   "intermediates": [
+    "Angel Falls"
+   ],
+   "units": [
+    {
+     "role": "bridge_l2",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "fi": [
+       "Angelin putous",
+       "Angelinputous"
+      ]
+     },
+     "match": [
+      "Angelin putous",
+      "Angelinputous"
+     ],
+     "forms_all": {
+      "fi": [
+       "Angelin putous",
+       "Angelinputous"
+      ]
+     },
+     "not_creditable": {}
+    },
+    {
+     "role": "bridge_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Angel Falls",
+       "Salto Angel"
+      ],
+      "zh": [
+       "安赫尔瀑布"
+      ]
+     },
+     "match": [
+      "Angel Falls",
+      "Salto Angel",
+      "安赫尔瀑布"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Finnish"
+      ],
+      "zh": [
+       "芬兰语"
+      ],
+      "fi": [
+       "suomen kieli",
+       "suomeksi",
+       "suomea",
+       "suomen kieltä",
+       "suomi",
+       "suomen kielellä"
+      ]
+     },
+     "match": [
+      "Finnish",
+      "芬兰语",
+      "suomen kieli",
+      "suomeksi",
+      "suomea",
+      "suomen kieltä",
+      "suomi",
+      "suomen kielellä"
+     ]
+    }
+   ],
+   "bridges": [
+    {
+     "question": "Which waterfall is the world's tallest uninterrupted waterfall? Answer with just the name.",
+     "units": [
+      "bridge_l2",
+      "bridge_native"
+     ],
+     "answers": [
+      "Angel Falls",
+      "Angelin putous",
+      "Angelinputous",
+      "Salto Ángel",
+      "Salto Angel",
+      "Kerepakupai Merú",
+      "Kerepakupai Meru",
+      "安赫尔瀑布",
+      "天使瀑布"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "consistency_strict": 1.0,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge_l2|bridge_native": 1.0
+   },
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "bridge_l2": {
+      "fi": [
+       4,
+       3
+      ]
+     },
+     "bridge_native": {
+      "en": [
+       2,
+       3
+      ],
+      "zh": [
+       3
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "zh": [
+       2
+      ],
+      "fi": [
+       3,
+       3,
+       3,
+       4,
+       1,
+       5
+      ]
+     }
+    },
+    "target": 5,
+    "target_alts": [
+     5,
+     6,
+     5,
+     6,
+     5,
+     5
+    ]
+   },
+   "mc": {
+    "bridge_native": {
+     "gold": "Angel Falls",
+     "distractors": [
+      "Reichenbach Falls",
+      "Niagara Falls",
+      "Hukou Waterfall",
+      "Victoria Falls"
+     ]
+    },
+    "language": {
+     "gold": "Finnish",
+     "distractors": [
+      "Russian",
+      "Korean",
+      "Hebrew",
+      "Greek"
+     ]
+    }
+   },
+   "bridge_l2_creditable": [
+    "Angelin putous",
+    "Angelinputous"
+   ],
+   "l2_equals_native": false,
+   "mc_roles": [
+    "bridge_native",
+    "language"
+   ],
+   "id": "mlmh-fi-korkein-vedenpudotus-poytavuori",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 0.9,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "mlmh-fi-prudhoe-siirtolinja-paatesatama",
+   "subfamily": "2hop",
+   "prompt": "Prudhoe Bayn kentältä alkava, Yhdysvaltain pohjoisimman osavaltion halki kulkeva siirtolinja päättyy jäätymättömään satamakaupunkiin nimeltä",
+   "target": "Valdez",
+   "target_alts": [
+    "Valdez",
+    "Valdezin",
+    "Valdeziin",
+    "Valdezissa",
+    "Port Valdez"
+   ],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "lang": "fi",
+   "intermediates": [
+    "Trans-Alaska Pipeline System"
+   ],
+   "units": [
+    {
+     "role": "bridge_l2",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "fi": [
+       "Alaskan öljyputki",
+       "Alaskan putkilinja"
+      ]
+     },
+     "match": [
+      "Alaskan öljyputki",
+      "Alaskan putkilinja"
+     ],
+     "forms_all": {
+      "fi": [
+       "Alaskan öljyputki",
+       "Alaskan putkilinja"
+      ]
+     },
+     "not_creditable": {}
+    },
+    {
+     "role": "bridge_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Trans-Alaska Pipeline System",
+       "Trans-Alaska Pipeline",
+       "Alaska Pipeline",
+       "Trans-Alaska oil pipeline"
+      ],
+      "zh": [
+       "跨阿拉斯加输油管道",
+       "阿拉斯加输油管"
+      ]
+     },
+     "match": [
+      "Trans-Alaska Pipeline System",
+      "Trans-Alaska Pipeline",
+      "Alaska Pipeline",
+      "Trans-Alaska oil pipeline",
+      "跨阿拉斯加输油管道",
+      "阿拉斯加输油管"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Finnish"
+      ],
+      "zh": [
+       "芬兰语"
+      ],
+      "fi": [
+       "suomen kieli",
+       "suomeksi",
+       "suomea",
+       "suomen kieltä",
+       "suomi",
+       "suomen kielellä"
+      ]
+     },
+     "match": [
+      "Finnish",
+      "芬兰语",
+      "suomen kieli",
+      "suomeksi",
+      "suomea",
+      "suomen kieltä",
+      "suomi",
+      "suomen kielellä"
+     ]
+    }
+   ],
+   "bridges": [
+    {
+     "question": "Which 1970s-built pipeline system carries crude oil from Prudhoe Bay across Alaska to an ice-free southern port? Answer with just the name.",
+     "units": [
+      "bridge_l2",
+      "bridge_native"
+     ],
+     "answers": [
+      "Trans-Alaska Pipeline System",
+      "Trans-Alaska Pipeline",
+      "TAPS",
+      "Alyeska pipeline",
+      "Alaskan öljyputki",
+      "Trans-Alaska-putkilinja",
+      "跨阿拉斯加输油管道",
+      "Alaskan putkilinja",
+      "阿拉斯加输油管"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "consistency_strict": 1.0,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge_l2|bridge_native": 1.0
+   },
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "bridge_l2": {
+      "fi": [
+       7,
+       6
+      ]
+     },
+     "bridge_native": {
+      "en": [
+       5,
+       4,
+       2,
+       5
+      ],
+      "zh": [
+       7,
+       6
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "zh": [
+       2
+      ],
+      "fi": [
+       3,
+       3,
+       3,
+       4,
+       1,
+       5
+      ]
+     }
+    },
+    "target": 2,
+    "target_alts": [
+     2,
+     3,
+     4,
+     3,
+     3
+    ]
+   },
+   "mc": {
+    "bridge_native": {
+     "gold": "Trans-Alaska Pipeline System",
+     "distractors": [
+      "Nord Stream",
+      "Druzhba pipeline",
+      "Baku–Tbilisi–Ceyhan pipeline",
+      "Keystone Pipeline"
+     ]
+    },
+    "language": {
+     "gold": "Finnish",
+     "distractors": [
+      "Russian",
+      "Korean",
+      "Hungarian",
+      "Turkish"
+     ]
+    }
+   },
+   "bridge_l2_creditable": [
+    "Alaskan öljyputki",
+    "Alaskan putkilinja"
+   ],
+   "l2_equals_native": false,
+   "mc_roles": [
+    "bridge_native",
+    "language"
+   ],
+   "id": "mlmh-fi-prudhoe-siirtolinja-paatesatama",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "mlmh-fi-mokapannu-alumiini",
+   "subfamily": "2hop",
+   "prompt": "Alfonso Bialettin vuonna 1933 esittelemässä kahdeksankulmaisessa kahvinkeittimessä perinteisesti käytetty metalli on",
+   "target": "alumiini",
+   "target_alts": [
+    "alumiinia",
+    "alumiinista",
+    "alumiinin",
+    "alumiiniseos"
+   ],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "lang": "fi",
+   "intermediates": [
+    "moka pot"
+   ],
+   "units": [
+    {
+     "role": "bridge_l2",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "fi": [
+       "mokapannu",
+       "mokapannun",
+       "mokakannu"
+      ]
+     },
+     "match": [
+      "mokapannu",
+      "mokapannun",
+      "mokakannu"
+     ],
+     "forms_all": {
+      "fi": [
+       "mokapannu",
+       "mokapannun",
+       "mokakannu"
+      ]
+     },
+     "not_creditable": {}
+    },
+    {
+     "role": "bridge_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "moka pot",
+       "Moka Express",
+       "stovetop espresso maker",
+       "moka"
+      ],
+      "zh": [
+       "摩卡壶",
+       "意式摩卡壶"
+      ]
+     },
+     "match": [
+      "moka pot",
+      "Moka Express",
+      "stovetop espresso maker",
+      "moka",
+      "摩卡壶",
+      "意式摩卡壶"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Finnish"
+      ],
+      "zh": [
+       "芬兰语"
+      ],
+      "fi": [
+       "suomen kieli",
+       "suomeksi",
+       "suomea",
+       "suomen kieltä",
+       "suomi",
+       "suomen kielellä"
+      ]
+     },
+     "match": [
+      "Finnish",
+      "芬兰语",
+      "suomen kieli",
+      "suomeksi",
+      "suomea",
+      "suomen kieltä",
+      "suomi",
+      "suomen kielellä"
+     ]
+    }
+   ],
+   "bridges": [
+    {
+     "question": "What is the name of the octagonal stovetop coffee brewer that Alfonso Bialetti introduced in 1933? Answer with just the name.",
+     "units": [
+      "bridge_l2",
+      "bridge_native"
+     ],
+     "answers": [
+      "Moka Express",
+      "moka pot",
+      "Bialetti Moka Express",
+      "mokapannu",
+      "mokakannu",
+      "摩卡壶",
+      "Moka",
+      "mokapannun",
+      "stovetop espresso maker",
+      "意式摩卡壶"
+     ]
+    }
+   ],
+   "consistency": 0.9,
+   "consistency_strict": 0.9,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge_l2|bridge_native": 1.0
+   },
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "bridge_l2": {
+      "fi": [
+       4,
+       4,
+       4
+      ]
+     },
+     "bridge_native": {
+      "en": [
+       3,
+       3,
+       6,
+       2
+      ],
+      "zh": [
+       3,
+       5
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "zh": [
+       2
+      ],
+      "fi": [
+       3,
+       3,
+       3,
+       4,
+       1,
+       5
+      ]
+     }
+    },
+    "target": 3,
+    "target_alts": [
+     3,
+     4,
+     3,
+     5
+    ]
+   },
+   "mc": {
+    "bridge_native": {
+     "gold": "moka pot",
+     "distractors": [
+      "cezve",
+      "percolator",
+      "French press",
+      "cold brew tower"
+     ]
+    },
+    "language": {
+     "gold": "Finnish",
+     "distractors": [
+      "Russian",
+      "Korean",
+      "Turkish",
+      "Greek"
+     ]
+    }
+   },
+   "bridge_l2_creditable": [
+    "mokapannu",
+    "mokapannun",
+    "mokakannu"
+   ],
+   "l2_equals_native": false,
+   "mc_roles": [
+    "bridge_native",
+    "language"
+   ],
+   "id": "mlmh-fi-mokapannu-alumiini",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "mlmh-he-oresund-malmo",
+   "subfamily": "2hop",
+   "prompt": "הקצה המזרחי של החיבור הקבוע שנפתח בשנת 2000 בין דנמרק לשוודיה נמצא בעיר",
+   "target": "מאלמה",
+   "target_alts": [
+    "מלמה",
+    "מאלמו",
+    "מלמו",
+    "מאלמה."
+   ],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "lang": "he",
+   "intermediates": [
+    "Oresund Bridge"
+   ],
+   "units": [
+    {
+     "role": "bridge_l2",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "he": [
+       "גשר אורסונד",
+       "גשר האורסונד",
+       "האורסונד"
+      ]
+     },
+     "match": [
+      "גשר אורסונד",
+      "גשר האורסונד",
+      "האורסונד"
+     ],
+     "forms_all": {
+      "he": [
+       "גשר אורסונד",
+       "גשר האורסונד",
+       "האורסונד"
+      ]
+     },
+     "not_creditable": {}
+    },
+    {
+     "role": "bridge_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Oresund Bridge",
+       "Øresund Bridge",
+       "Oresund Link",
+       "Øresund Link"
+      ],
+      "zh": [
+       "厄勒海峡大桥",
+       "厄勒海峡大桥隧道"
+      ]
+     },
+     "match": [
+      "Oresund Bridge",
+      "Øresund Bridge",
+      "Oresund Link",
+      "Øresund Link",
+      "厄勒海峡大桥",
+      "厄勒海峡大桥隧道"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Hebrew"
+      ],
+      "zh": [
+       "希伯来语",
+       "希伯来文"
+      ],
+      "he": [
+       "עברית",
+       "בעברית",
+       "בשפה העברית",
+       "השפה העברית",
+       "עברית מודרנית"
+      ]
+     },
+     "match": [
+      "Hebrew",
+      "希伯来语",
+      "希伯来文",
+      "עברית",
+      "בעברית",
+      "בשפה העברית",
+      "השפה העברית",
+      "עברית מודרנית"
+     ]
+    }
+   ],
+   "bridges": [
+    {
+     "question": "Which bridge, opened in 2000, provides a fixed link across the strait between Denmark and Sweden? Answer with just the name.",
+     "units": [
+      "bridge_l2",
+      "bridge_native"
+     ],
+     "answers": [
+      "Oresund Bridge",
+      "Øresund Bridge",
+      "Oresund",
+      "Øresund",
+      "Øresundsbron",
+      "Oresundsbron",
+      "גשר אורסונד",
+      "גשר האורסונד",
+      "厄勒海峡大桥",
+      "האורסונד",
+      "Oresund Link",
+      "厄勒海峡大桥隧道"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "consistency_strict": 1.0,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge_l2|bridge_native": 1.0
+   },
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "bridge_l2": {
+      "he": [
+       7,
+       7,
+       5
+      ]
+     },
+     "bridge_native": {
+      "en": [
+       3,
+       4,
+       3,
+       4
+      ],
+      "zh": [
+       4,
+       5
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "zh": [
+       4,
+       4
+      ],
+      "he": [
+       3,
+       3,
+       5,
+       5,
+       7
+      ]
+     }
+    },
+    "target": 3,
+    "target_alts": [
+     2,
+     3,
+     2,
+     4
+    ]
+   },
+   "mc": {
+    "bridge_native": {
+     "gold": "Oresund Bridge",
+     "distractors": [
+      "Charles Bridge",
+      "Tower Bridge",
+      "Ponte Vecchio",
+      "Millau Viaduct"
+     ]
+    },
+    "language": {
+     "gold": "Hebrew",
+     "distractors": [
+      "Russian",
+      "Korean",
+      "Finnish",
+      "Greek"
+     ]
+    }
+   },
+   "bridge_l2_creditable": [
+    "גשר אורסונד",
+    "גשר האורסונד",
+    "האורסונד"
+   ],
+   "l2_equals_native": false,
+   "mc_roles": [
+    "bridge_native",
+    "language"
+   ],
+   "id": "mlmh-he-oresund-malmo",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 0.9,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "mlmh-he-cornflakes-michigan",
+   "subfamily": "2hop",
+   "prompt": "דגני הבוקר מפתיתי תירס פותחו בסוף המאה ה-19 בבית המרפא שניהלו האחים קלוג, בעיר שנמצאת במדינה האמריקנית",
+   "target": "מישיגן",
+   "target_alts": [
+    "מיצ'יגן",
+    "מישיגאן",
+    "במישיגן"
+   ],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "lang": "he",
+   "intermediates": [
+    "Battle Creek"
+   ],
+   "units": [
+    {
+     "role": "bridge_l2",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "he": [
+       "בטל קריק",
+       "באטל קריק"
+      ]
+     },
+     "match": [
+      "בטל קריק",
+      "באטל קריק"
+     ],
+     "forms_all": {
+      "he": [
+       "בטל קריק",
+       "באטל קריק"
+      ]
+     },
+     "not_creditable": {}
+    },
+    {
+     "role": "bridge_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Battle Creek",
+       "the city of Battle Creek"
+      ],
+      "zh": [
+       "巴特尔克里克",
+       "巴特克里克"
+      ]
+     },
+     "match": [
+      "Battle Creek",
+      "the city of Battle Creek",
+      "巴特尔克里克",
+      "巴特克里克"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Hebrew"
+      ],
+      "zh": [
+       "希伯来语",
+       "希伯来文"
+      ],
+      "he": [
+       "עברית",
+       "בעברית",
+       "בשפה העברית",
+       "השפה העברית",
+       "עברית מודרנית"
+      ]
+     },
+     "match": [
+      "Hebrew",
+      "希伯来语",
+      "希伯来文",
+      "עברית",
+      "בעברית",
+      "בשפה העברית",
+      "השפה העברית",
+      "עברית מודרנית"
+     ]
+    }
+   ],
+   "bridges": [
+    {
+     "question": "In which city stood the sanitarium run by the Kellogg brothers, where corn flakes were first developed? Answer with just the name.",
+     "units": [
+      "bridge_l2",
+      "bridge_native"
+     ],
+     "answers": [
+      "Battle Creek",
+      "בטל קריק",
+      "באטל קריק",
+      "巴特尔克里克",
+      "巴特克里克",
+      "the city of Battle Creek"
+     ]
+    }
+   ],
+   "consistency": 0.9,
+   "consistency_strict": 0.9,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge_l2|bridge_native": 0.9
+   },
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "bridge_l2": {
+      "he": [
+       4,
+       5
+      ]
+     },
+     "bridge_native": {
+      "en": [
+       2,
+       5
+      ],
+      "zh": [
+       4,
+       4
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "zh": [
+       4,
+       4
+      ],
+      "he": [
+       3,
+       3,
+       5,
+       5,
+       7
+      ]
+     }
+    },
+    "target": 4,
+    "target_alts": [
+     5,
+     5,
+     5
+    ]
+   },
+   "mc": {
+    "bridge_native": {
+     "gold": "Battle Creek",
+     "distractors": [
+      "Fort Wayne",
+      "Dayton",
+      "Toledo",
+      "Akron"
+     ]
+    },
+    "language": {
+     "gold": "Hebrew",
+     "distractors": [
+      "Russian",
+      "Korean",
+      "Vietnamese",
+      "Finnish"
+     ]
+    }
+   },
+   "bridge_l2_creditable": [
+    "בטל קריק",
+    "באטל קריק"
+   ],
+   "l2_equals_native": false,
+   "mc_roles": [
+    "bridge_native",
+    "language"
+   ],
+   "id": "mlmh-he-cornflakes-michigan",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "mlmh-he-maillard-france",
+   "subfamily": "2hop",
+   "prompt": "המדינה שבה נולד הכימאי שעל שמו קרויה תגובת ההשחמה של מזון מבושל היא",
+   "target": "צרפת",
+   "target_alts": [
+    "צרפת",
+    "רפובליקת צרפת",
+    "ארץ צרפת"
+   ],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "lang": "he",
+   "intermediates": [
+    "Louis-Camille Maillard"
+   ],
+   "units": [
+    {
+     "role": "bridge_l2",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "he": [
+       "לואי-קמיל מייאר",
+       "מייאר",
+       "לואי קמיל מייאר"
+      ]
+     },
+     "match": [
+      "לואי-קמיל מייאר",
+      "מייאר",
+      "לואי קמיל מייאר"
+     ],
+     "forms_all": {
+      "he": [
+       "לואי-קמיל מייאר",
+       "מייאר",
+       "לואי קמיל מייאר"
+      ]
+     },
+     "not_creditable": {}
+    },
+    {
+     "role": "bridge_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Louis-Camille Maillard",
+       "Maillard",
+       "Louis Camille Maillard"
+      ],
+      "zh": [
+       "路易斯·卡米尔·美拉德",
+       "美拉德"
+      ]
+     },
+     "match": [
+      "Louis-Camille Maillard",
+      "Maillard",
+      "Louis Camille Maillard",
+      "路易斯·卡米尔·美拉德",
+      "美拉德"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Hebrew"
+      ],
+      "zh": [
+       "希伯来语",
+       "希伯来文"
+      ],
+      "he": [
+       "עברית",
+       "בעברית",
+       "בשפה העברית",
+       "השפה העברית",
+       "עברית מודרנית"
+      ]
+     },
+     "match": [
+      "Hebrew",
+      "希伯来语",
+      "希伯来文",
+      "עברית",
+      "בעברית",
+      "בשפה העברית",
+      "השפה העברית",
+      "עברית מודרנית"
+     ]
+    }
+   ],
+   "bridges": [
+    {
+     "question": "Which French chemist gave his name to the browning reaction between amino acids and sugars in cooked food? Answer with just the name.",
+     "units": [
+      "bridge_l2",
+      "bridge_native"
+     ],
+     "answers": [
+      "Maillard",
+      "Louis-Camille Maillard",
+      "Louis Camille Maillard",
+      "מייאר",
+      "לואי-קמיל מייאר",
+      "לואי קמיל מייאר",
+      "美拉德",
+      "路易斯·卡米尔·美拉德"
+     ]
+    }
+   ],
+   "consistency": 0.8,
+   "consistency_strict": 0.8,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge_l2|bridge_native": 1.0
+   },
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "bridge_l2": {
+      "he": [
+       10,
+       3,
+       9
+      ]
+     },
+     "bridge_native": {
+      "en": [
+       6,
+       2,
+       5
+      ],
+      "zh": [
+       8,
+       2
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "zh": [
+       4,
+       4
+      ],
+      "he": [
+       3,
+       3,
+       5,
+       5,
+       7
+      ]
+     }
+    },
+    "target": 3,
+    "target_alts": [
+     3,
+     8,
+     5
+    ]
+   },
+   "mc": {
+    "bridge_native": {
+     "gold": "Louis-Camille Maillard",
+     "distractors": [
+      "Paul-Émile Lecoq de Boisbaudran",
+      "Henri Sainte-Claire Deville",
+      "André-Louis Debierne",
+      "Frédéric Joliot-Curie"
+     ]
+    },
+    "language": {
+     "gold": "Hebrew",
+     "distractors": [
+      "Arabic",
+      "Turkish",
+      "Polish",
+      "Vietnamese"
+     ]
+    }
+   },
+   "bridge_l2_creditable": [
+    "לואי-קמיל מייאר",
+    "מייאר",
+    "לואי קמיל מייאר"
+   ],
+   "l2_equals_native": false,
+   "mc_roles": [
+    "bridge_native",
+    "language"
+   ],
+   "id": "mlmh-he-maillard-france",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 0.8,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "mlmh-hu-kepler-ellipszis",
+   "subfamily": "2hop",
+   "prompt": "A 2009-ben fellőtt, más csillagok körül keringő égitestek után kutató NASA-műhold névadójának első törvénye szerint a bolygópályák alakja",
+   "target": "ellipszis",
+   "target_alts": [
+    "ellipszis",
+    "az ellipszis",
+    "ellipszisek",
+    "ellipszis alakú",
+    "ellipszist",
+    "ellipszisz"
+   ],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "lang": "hu",
+   "intermediates": [
+    "Kepler space telescope"
+   ],
+   "units": [
+    {
+     "role": "bridge_l2",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "hu": [
+       "Kepler-űrtávcső",
+       "Kepler-űrteleszkóp",
+       "a Kepler-űrtávcsővel"
+      ]
+     },
+     "match": [
+      "Kepler-űrtávcső",
+      "Kepler-űrteleszkóp",
+      "a Kepler-űrtávcsővel"
+     ],
+     "forms_all": {
+      "hu": [
+       "Kepler-űrtávcső",
+       "Kepler-űrteleszkóp",
+       "a Kepler-űrtávcsővel"
+      ]
+     },
+     "not_creditable": {}
+    },
+    {
+     "role": "bridge_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Kepler space telescope",
+       "Kepler spacecraft",
+       "Kepler",
+       "Kepler telescope"
+      ],
+      "zh": [
+       "开普勒太空望远镜",
+       "开普勒望远镜"
+      ]
+     },
+     "match": [
+      "Kepler space telescope",
+      "Kepler spacecraft",
+      "Kepler",
+      "Kepler telescope",
+      "开普勒太空望远镜",
+      "开普勒望远镜"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Hungarian"
+      ],
+      "zh": [
+       "匈牙利语"
+      ],
+      "hu": [
+       "magyarul",
+       "magyar nyelven",
+       "magyar nyelv"
+      ]
+     },
+     "match": [
+      "Hungarian",
+      "匈牙利语",
+      "magyarul",
+      "magyar nyelven",
+      "magyar nyelv"
+     ]
+    }
+   ],
+   "bridges": [
+    {
+     "question": "Which NASA space telescope, launched in 2009 and retired in 2018, searched for exoplanets by monitoring the brightness of over 150,000 stars for transits? Answer with just the name.",
+     "units": [
+      "bridge_l2",
+      "bridge_native"
+     ],
+     "answers": [
+      "Kepler",
+      "Kepler space telescope",
+      "Kepler Space Telescope",
+      "Kepler spacecraft",
+      "Kepler telescope",
+      "Kepler-űrtávcső",
+      "Kepler űrtávcső",
+      "Kepler-űrteleszkóp",
+      "开普勒太空望远镜",
+      "开普勒望远镜",
+      "开普勒",
+      "a Kepler-űrtávcsővel"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "consistency_strict": 1.0,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge_l2|bridge_native": 1.0
+   },
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "bridge_l2": {
+      "hu": [
+       7,
+       7,
+       9
+      ]
+     },
+     "bridge_native": {
+      "en": [
+       3,
+       2,
+       1,
+       2
+      ],
+      "zh": [
+       4,
+       3
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "zh": [
+       2
+      ],
+      "hu": [
+       2,
+       2,
+       3
+      ]
+     }
+    },
+    "target": 4,
+    "target_alts": [
+     4,
+     5,
+     5,
+     6,
+     4,
+     4
+    ]
+   },
+   "mc": {
+    "bridge_native": {
+     "gold": "Kepler space telescope",
+     "distractors": [
+      "James Webb Space Telescope",
+      "Hubble Space Telescope",
+      "Spitzer Space Telescope",
+      "Chandra X-ray Observatory"
+     ]
+    },
+    "language": {
+     "gold": "Hungarian",
+     "distractors": [
+      "Vietnamese",
+      "Russian",
+      "Arabic",
+      "Korean"
+     ]
+    }
+   },
+   "bridge_l2_creditable": [
+    "Kepler-űrtávcső",
+    "Kepler-űrteleszkóp",
+    "a Kepler-űrtávcsővel"
+   ],
+   "l2_equals_native": false,
+   "mc_roles": [
+    "bridge_native",
+    "language"
+   ],
+   "id": "mlmh-hu-kepler-ellipszis",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "mlmh-ko-chandra-columbia",
+   "subfamily": "2hop",
+   "prompt": "1999년 7월 나사가 발사한 대형 X선 우주 망원경을 궤도까지 실어 나른 왕복선의 이름은",
+   "target": "컬럼비아",
+   "target_alts": [
+    "컬럼비아",
+    "컬럼비아호",
+    "컬럼비아이다",
+    "콜롬비아호"
+   ],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "lang": "ko",
+   "intermediates": [
+    "Chandra X-ray Observatory"
+   ],
+   "units": [
+    {
+     "role": "bridge_l2",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "ko": [
+       "찬드라 엑스선 관측선",
+       "찬드라 관측선",
+       "찬드라"
+      ]
+     },
+     "match": [
+      "찬드라 엑스선 관측선",
+      "찬드라 관측선",
+      "찬드라"
+     ],
+     "forms_all": {
+      "ko": [
+       "찬드라 엑스선 관측선",
+       "찬드라 관측선",
+       "찬드라"
+      ]
+     },
+     "not_creditable": {}
+    },
+    {
+     "role": "bridge_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Chandra X-ray Observatory",
+       "Chandra"
+      ],
+      "zh": [
+       "钱德拉X射线天文台",
+       "钱德拉天文台"
+      ]
+     },
+     "match": [
+      "Chandra X-ray Observatory",
+      "Chandra",
+      "钱德拉X射线天文台",
+      "钱德拉天文台"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Korean"
+      ],
+      "zh": [
+       "韩语",
+       "韩国语",
+       "朝鲜语"
+      ],
+      "ko": [
+       "한국어",
+       "한국말",
+       "우리말",
+       "한국어로"
+      ]
+     },
+     "match": [
+      "Korean",
+      "韩语",
+      "韩国语",
+      "朝鲜语",
+      "한국어",
+      "한국말",
+      "우리말",
+      "한국어로"
+     ]
+    }
+   ],
+   "bridges": [
+    {
+     "question": "Which NASA great observatory for X-ray astronomy was launched in July 1999? Answer with just the name.",
+     "units": [
+      "bridge_l2",
+      "bridge_native"
+     ],
+     "answers": [
+      "Chandra X-ray Observatory",
+      "Chandra",
+      "CXO",
+      "찬드라 엑스선 관측선",
+      "찬드라",
+      "钱德拉X射线天文台",
+      "钱德拉",
+      "찬드라 관측선",
+      "钱德拉天文台"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "consistency_strict": 1.0,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge_l2|bridge_native": 0.9
+   },
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "bridge_l2": {
+      "ko": [
+       11,
+       7,
+       4
+      ]
+     },
+     "bridge_native": {
+      "en": [
+       4,
+       1
+      ],
+      "zh": [
+       6,
+       4
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "zh": [
+       2,
+       2,
+       2
+      ],
+      "ko": [
+       2,
+       2,
+       2,
+       3
+      ]
+     }
+    },
+    "target": 5,
+    "target_alts": [
+     5,
+     6,
+     6,
+     7
+    ]
+   },
+   "mc": {
+    "bridge_native": {
+     "gold": "Chandra X-ray Observatory",
+     "distractors": [
+      "Spitzer Space Telescope",
+      "Kepler Space Telescope",
+      "Herschel Space Observatory",
+      "Gaia"
+     ]
+    },
+    "language": {
+     "gold": "Korean",
+     "distractors": [
+      "Arabic",
+      "Hebrew",
+      "Russian",
+      "Greek"
+     ]
+    }
+   },
+   "bridge_l2_creditable": [
+    "찬드라 엑스선 관측선",
+    "찬드라 관측선",
+    "찬드라"
+   ],
+   "l2_equals_native": false,
+   "mc_roles": [
+    "bridge_native",
+    "language"
+   ],
+   "id": "mlmh-ko-chandra-columbia",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "mlmh-ko-onnes-netherlands",
+   "subfamily": "2hop",
+   "prompt": "초전도 현상을 세계 최초로 관측한 물리학자가 태어난 나라는",
+   "target": "네덜란드",
+   "target_alts": [
+    "네덜란드",
+    "네덜란드입니다",
+    "네덜란드이다",
+    "네덜란드 왕국"
+   ],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "lang": "ko",
+   "intermediates": [
+    "Heike Kamerlingh Onnes"
+   ],
+   "units": [
+    {
+     "role": "bridge_l2",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "ko": [
+       "헤이커 카메를링 오너스",
+       "카메를링 오너스",
+       "헤이케 카메를링 오네스"
+      ]
+     },
+     "match": [
+      "헤이커 카메를링 오너스",
+      "카메를링 오너스",
+      "헤이케 카메를링 오네스"
+     ],
+     "forms_all": {
+      "ko": [
+       "헤이커 카메를링 오너스",
+       "카메를링 오너스",
+       "헤이케 카메를링 오네스"
+      ]
+     },
+     "not_creditable": {}
+    },
+    {
+     "role": "bridge_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Heike Kamerlingh Onnes",
+       "Kamerlingh Onnes",
+       "Onnes",
+       "Kamerlingh-Onnes"
+      ],
+      "zh": [
+       "海克·卡末林·昂内斯",
+       "卡末林·昂内斯"
+      ]
+     },
+     "match": [
+      "Heike Kamerlingh Onnes",
+      "Kamerlingh Onnes",
+      "Onnes",
+      "Kamerlingh-Onnes",
+      "海克·卡末林·昂内斯",
+      "卡末林·昂内斯"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Korean"
+      ],
+      "zh": [
+       "韩语",
+       "韩国语",
+       "朝鲜语"
+      ],
+      "ko": [
+       "한국어",
+       "한국말",
+       "우리말",
+       "한국어로"
+      ]
+     },
+     "match": [
+      "Korean",
+      "韩语",
+      "韩国语",
+      "朝鲜语",
+      "한국어",
+      "한국말",
+      "우리말",
+      "한국어로"
+     ]
+    }
+   ],
+   "bridges": [
+    {
+     "question": "Which physicist first observed superconductivity, in mercury in 1911? Answer with just the name.",
+     "units": [
+      "bridge_l2",
+      "bridge_native"
+     ],
+     "answers": [
+      "Kamerlingh Onnes",
+      "Heike Kamerlingh Onnes",
+      "Onnes",
+      "카메를링 오너스",
+      "헤이커 카메를링 오너스",
+      "헤이케 카메를링 오네스",
+      "卡末林·昂内斯",
+      "海克·卡末林·昂内斯"
+     ]
+    }
+   ],
+   "consistency": 0.9,
+   "consistency_strict": 0.9,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge_l2|bridge_native": 1.0
+   },
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "bridge_l2": {
+      "ko": [
+       12,
+       7,
+       11
+      ]
+     },
+     "bridge_native": {
+      "en": [
+       8,
+       6,
+       2,
+       6
+      ],
+      "zh": [
+       10,
+       7
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "zh": [
+       2,
+       2,
+       2
+      ],
+      "ko": [
+       2,
+       2,
+       2,
+       3
+      ]
+     }
+    },
+    "target": 5,
+    "target_alts": [
+     5,
+     6,
+     6,
+     7
+    ]
+   },
+   "mc": {
+    "bridge_native": {
+     "gold": "Heike Kamerlingh Onnes",
+     "distractors": [
+      "William Henry Bragg",
+      "J. J. Thomson",
+      "Niels Bohr",
+      "Otto Stern"
+     ]
+    },
+    "language": {
+     "gold": "Korean",
+     "distractors": [
+      "Vietnamese",
+      "Hebrew",
+      "Polish",
+      "Indonesian"
+     ]
+    }
+   },
+   "bridge_l2_creditable": [
+    "헤이커 카메를링 오너스",
+    "카메를링 오너스",
+    "헤이케 카메를링 오네스"
+   ],
+   "l2_equals_native": false,
+   "mc_roles": [
+    "bridge_native",
+    "language"
+   ],
+   "id": "mlmh-ko-onnes-netherlands",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "mlmh-ru-k2-karakoram",
+   "subfamily": "2hop",
+   "prompt": "Вторая по высоте вершина планеты расположена в хребте",
+   "target": "Каракорум",
+   "target_alts": [
+    "Каракорум",
+    "Каракоруме",
+    "Каракорума",
+    "Каракоруму"
+   ],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "lang": "ru",
+   "intermediates": [
+    "K2 mountain"
+   ],
+   "units": [
+    {
+     "role": "bridge_l2",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "ru": [
+       "пик Чогори",
+       "Чогори",
+       "К2"
+      ]
+     },
+     "match": [
+      "пик Чогори",
+      "Чогори",
+      "К2"
+     ],
+     "forms_all": {
+      "ru": [
+       "пик Чогори",
+       "Чогори",
+       "К2"
+      ]
+     },
+     "not_creditable": {}
+    },
+    {
+     "role": "bridge_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "K2 mountain",
+       "Mount Godwin-Austen",
+       "Qogir Feng",
+       "K2",
+       "Chogori"
+      ],
+      "zh": [
+       "乔戈里峰",
+       "乔戈里"
+      ]
+     },
+     "match": [
+      "K2 mountain",
+      "Mount Godwin-Austen",
+      "Qogir Feng",
+      "K2",
+      "Chogori",
+      "乔戈里峰",
+      "乔戈里"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Russian"
+      ],
+      "zh": [
+       "俄语",
+       "俄文"
+      ],
+      "ru": [
+       "русский",
+       "по-русски",
+       "русский язык",
+       "на русском языке",
+       "русском",
+       "русском языке",
+       "на русском"
+      ]
+     },
+     "match": [
+      "Russian",
+      "俄语",
+      "俄文",
+      "русский",
+      "по-русски",
+      "русский язык",
+      "на русском языке",
+      "русском",
+      "русском языке",
+      "на русском"
+     ]
+    }
+   ],
+   "bridges": [
+    {
+     "question": "Which mountain is the second-highest peak on Earth? Answer with just the name.",
+     "units": [
+      "bridge_l2",
+      "bridge_native"
+     ],
+     "answers": [
+      "K2",
+      "K-2",
+      "Mount Godwin-Austen",
+      "Qogir",
+      "Чогори",
+      "пик Чогори",
+      "К2",
+      "乔戈里峰",
+      "K2 mountain",
+      "Qogir Feng",
+      "乔戈里"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "consistency_strict": 1.0,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge_l2|bridge_native": 1.0
+   },
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "bridge_l2": {
+      "ru": [
+       5,
+       3,
+       2
+      ]
+     },
+     "bridge_native": {
+      "en": [
+       3,
+       5,
+       4,
+       2,
+       3
+      ],
+      "zh": [
+       4,
+       3
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "zh": [
+       2,
+       2
+      ],
+      "ru": [
+       2,
+       4,
+       3,
+       4,
+       2,
+       3,
+       3
+      ]
+     }
+    },
+    "target": 4,
+    "target_alts": [
+     4,
+     4,
+     4,
+     4
+    ]
+   },
+   "mc": {
+    "bridge_native": {
+     "gold": "K2 mountain",
+     "distractors": [
+      "Mount Everest mountain",
+      "Kangchenjunga",
+      "Lhotse",
+      "Makalu"
+     ]
+    },
+    "language": {
+     "gold": "Russian",
+     "distractors": [
+      "Korean",
+      "Hebrew",
+      "Arabic",
+      "Polish"
+     ]
+    }
+   },
+   "bridge_l2_creditable": [
+    "пик Чогори",
+    "Чогори",
+    "К2"
+   ],
+   "l2_equals_native": false,
+   "mc_roles": [
+    "bridge_native",
+    "language"
+   ],
+   "id": "mlmh-ru-k2-karakoram",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "mlmh-ru-myanmar-andaman",
+   "subfamily": "2hop",
+   "prompt": "Самая длинная река Мьянмы впадает в море под названием",
+   "target": "Андаманское",
+   "target_alts": [
+    "Андаманское",
+    "Андаманского",
+    "Андаманском",
+    "Андаманским"
+   ],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "lang": "ru",
+   "intermediates": [
+    "Irrawaddy River"
+   ],
+   "units": [
+    {
+     "role": "bridge_l2",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "ru": [
+       "Иравади",
+       "Иравадди"
+      ]
+     },
+     "match": [
+      "Иравади",
+      "Иравадди"
+     ],
+     "forms_all": {
+      "ru": [
+       "Иравади",
+       "Иравадди"
+      ]
+     },
+     "not_creditable": {}
+    },
+    {
+     "role": "bridge_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Irrawaddy River",
+       "Ayeyarwady",
+       "Irrawaddy",
+       "Ayeyarwady River"
+      ],
+      "zh": [
+       "伊洛瓦底江"
+      ]
+     },
+     "match": [
+      "Irrawaddy River",
+      "Ayeyarwady",
+      "Irrawaddy",
+      "Ayeyarwady River",
+      "伊洛瓦底江"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Russian"
+      ],
+      "zh": [
+       "俄语",
+       "俄文"
+      ],
+      "ru": [
+       "русский",
+       "по-русски",
+       "русский язык",
+       "на русском языке",
+       "русском",
+       "русском языке",
+       "на русском"
+      ]
+     },
+     "match": [
+      "Russian",
+      "俄语",
+      "俄文",
+      "русский",
+      "по-русски",
+      "русский язык",
+      "на русском языке",
+      "русском",
+      "русском языке",
+      "на русском"
+     ]
+    }
+   ],
+   "bridges": [
+    {
+     "question": "What is the longest river in Myanmar? Answer with just the name.",
+     "units": [
+      "bridge_l2",
+      "bridge_native"
+     ],
+     "answers": [
+      "Irrawaddy",
+      "Irrawaddy River",
+      "Ayeyarwady",
+      "Ayeyarwady River",
+      "Иравади",
+      "Иравадди",
+      "伊洛瓦底江"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "consistency_strict": 1.0,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge_l2|bridge_native": 0.9
+   },
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "bridge_l2": {
+      "ru": [
+       3,
+       4
+      ]
+     },
+     "bridge_native": {
+      "en": [
+       4,
+       5,
+       3,
+       6
+      ],
+      "zh": [
+       5
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "zh": [
+       2,
+       2
+      ],
+      "ru": [
+       2,
+       4,
+       3,
+       4,
+       2,
+       3,
+       3
+      ]
+     }
+    },
+    "target": 4,
+    "target_alts": [
+     4,
+     4,
+     4,
+     4
+    ]
+   },
+   "mc": {
+    "bridge_native": {
+     "gold": "Irrawaddy River",
+     "distractors": [
+      "Mekong River",
+      "Red River",
+      "Yangtze River",
+      "Brahmaputra River"
+     ]
+    },
+    "language": {
+     "gold": "Russian",
+     "distractors": [
+      "Polish",
+      "Greek",
+      "Hungarian",
+      "Finnish"
+     ]
+    }
+   },
+   "bridge_l2_creditable": [
+    "Иравади",
+    "Иравадди"
+   ],
+   "l2_equals_native": false,
+   "mc_roles": [
+    "bridge_native",
+    "language"
+   ],
+   "id": "mlmh-ru-myanmar-andaman",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "mlmh-ru-pellagra-tryptophan",
+   "subfamily": "2hop",
+   "prompt": "Витамин, дефицит которого в рационе вызывает пеллагру, способен образовываться в организме человека из аминокислоты",
+   "target": "триптофан",
+   "target_alts": [
+    "триптофана",
+    "триптофаном",
+    "триптофану",
+    "Триптофан"
+   ],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "lang": "ru",
+   "intermediates": [
+    "niacin"
+   ],
+   "units": [
+    {
+     "role": "bridge_l2",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "ru": [
+       "никотиновая кислота",
+       "ниацин",
+       "никотиновой кислоты"
+      ]
+     },
+     "match": [
+      "никотиновая кислота",
+      "ниацин",
+      "никотиновой кислоты"
+     ],
+     "forms_all": {
+      "ru": [
+       "никотиновая кислота",
+       "ниацин",
+       "никотиновой кислоты"
+      ]
+     },
+     "not_creditable": {}
+    },
+    {
+     "role": "bridge_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "niacin",
+       "nicotinic acid",
+       "vitamin B3"
+      ],
+      "zh": [
+       "烟酸",
+       "维生素B3",
+       "尼克酸"
+      ]
+     },
+     "match": [
+      "niacin",
+      "nicotinic acid",
+      "vitamin B3",
+      "烟酸",
+      "维生素B3",
+      "尼克酸"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Russian"
+      ],
+      "zh": [
+       "俄语",
+       "俄文"
+      ],
+      "ru": [
+       "русский",
+       "по-русски",
+       "русский язык",
+       "на русском языке",
+       "русском",
+       "русском языке",
+       "на русском"
+      ]
+     },
+     "match": [
+      "Russian",
+      "俄语",
+      "俄文",
+      "русский",
+      "по-русски",
+      "русский язык",
+      "на русском языке",
+      "русском",
+      "русском языке",
+      "на русском"
+     ]
+    }
+   ],
+   "bridges": [
+    {
+     "question": "A deficiency of which vitamin causes pellagra? Answer with just the name.",
+     "units": [
+      "bridge_l2",
+      "bridge_native"
+     ],
+     "answers": [
+      "niacin",
+      "nicotinic acid",
+      "vitamin B3",
+      "B3",
+      "ниацин",
+      "ниацина",
+      "никотиновая кислота",
+      "никотиновой кислоты",
+      "витамин B3",
+      "витамина B3",
+      "烟酸",
+      "维生素B3",
+      "尼克酸"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "consistency_strict": 0.9,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge_l2|bridge_native": 1.0
+   },
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "bridge_l2": {
+      "ru": [
+       7,
+       3,
+       7
+      ]
+     },
+     "bridge_native": {
+      "en": [
+       2,
+       4,
+       3
+      ],
+      "zh": [
+       2,
+       3,
+       2
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "zh": [
+       2,
+       2
+      ],
+      "ru": [
+       2,
+       4,
+       3,
+       4,
+       2,
+       3,
+       3
+      ]
+     }
+    },
+    "target": 5,
+    "target_alts": [
+     5,
+     6,
+     6,
+     5
+    ]
+   },
+   "mc": {
+    "bridge_native": {
+     "gold": "niacin",
+     "distractors": [
+      "Pantothenic acid",
+      "Ascorbic acid",
+      "retinol",
+      "cholecalciferol"
+     ]
+    },
+    "language": {
+     "gold": "Russian",
+     "distractors": [
+      "Korean",
+      "Finnish",
+      "Hebrew",
+      "Greek"
+     ]
+    }
+   },
+   "bridge_l2_creditable": [
+    "никотиновая кислота",
+    "ниацин",
+    "никотиновой кислоты"
+   ],
+   "l2_equals_native": false,
+   "mc_roles": [
+    "bridge_native",
+    "language"
+   ],
+   "id": "mlmh-ru-pellagra-tryptophan",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "mlmh-sw-natron-nyekundu",
+   "subfamily": "2hop",
+   "prompt": "Maji ya bwawa la chumvi lililoko kaskazini mwa Tanzania ambako ndege aina ya flamingo huzalia huwa na rangi",
+   "target": "nyekundu",
+   "target_alts": [
+    "nyekundu",
+    "jekundu",
+    "ekundu",
+    "nyekundu iliyokolea"
+   ],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "lang": "sw",
+   "intermediates": [
+    "Lake Natron"
+   ],
+   "units": [
+    {
+     "role": "bridge_l2",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "sw": [
+       "Ziwa Natron",
+       "ziwa la Natron"
+      ]
+     },
+     "match": [
+      "Ziwa Natron",
+      "ziwa la Natron"
+     ],
+     "forms_all": {
+      "sw": [
+       "Ziwa Natron",
+       "ziwa la Natron"
+      ]
+     },
+     "not_creditable": {}
+    },
+    {
+     "role": "bridge_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Lake Natron",
+       "Natron"
+      ],
+      "zh": [
+       "纳特龙湖"
+      ]
+     },
+     "match": [
+      "Lake Natron",
+      "Natron",
+      "纳特龙湖"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Swahili"
+      ],
+      "zh": [
+       "斯瓦希里语"
+      ],
+      "sw": [
+       "Kiswahili",
+       "kwa Kiswahili"
+      ]
+     },
+     "match": [
+      "Swahili",
+      "斯瓦希里语",
+      "Kiswahili",
+      "kwa Kiswahili"
+     ]
+    }
+   ],
+   "bridges": [
+    {
+     "question": "Which shallow salt lake in northern Tanzania is the main breeding site for lesser flamingos? Answer with just the name.",
+     "units": [
+      "bridge_l2",
+      "bridge_native"
+     ],
+     "answers": [
+      "Natron",
+      "Lake Natron",
+      "Ziwa Natron",
+      "ziwa la Natron",
+      "纳特龙湖"
+     ]
+    }
+   ],
+   "consistency": 0.9,
+   "consistency_strict": 0.7,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge_l2|bridge_native": 1.0
+   },
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "bridge_l2": {
+      "sw": [
+       4,
+       5
+      ]
+     },
+     "bridge_native": {
+      "en": [
+       3,
+       2
+      ],
+      "zh": [
+       4
+      ]
+     },
+     "language": {
+      "en": [
+       3
+      ],
+      "zh": [
+       5
+      ],
+      "sw": [
+       3,
+       5
+      ]
+     }
+    },
+    "target": 4,
+    "target_alts": [
+     4,
+     3,
+     3,
+     9
+    ]
+   },
+   "mc": {
+    "bridge_native": {
+     "gold": "Lake Natron",
+     "distractors": [
+      "Lake Tana",
+      "Lake Shala",
+      "Lake Ziway",
+      "Lake Chilwa"
+     ]
+    },
+    "language": {
+     "gold": "Swahili",
+     "distractors": [
+      "Russian",
+      "Korean",
+      "Greek",
+      "Arabic"
+     ]
+    }
+   },
+   "bridge_l2_creditable": [
+    "Ziwa Natron",
+    "ziwa la Natron"
+   ],
+   "l2_equals_native": false,
+   "mc_roles": [
+    "bridge_native",
+    "language"
+   ],
+   "id": "mlmh-sw-natron-nyekundu",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "mlmh-tr-paslanmaz-sheffield",
+   "subfamily": "2hop",
+   "prompt": "Mutfak bıçaklarının pas tutmasını engelleyen, krom katkılı alaşımın 1913'te ilk kez üretildiği İngiliz kenti",
+   "target": "Sheffield",
+   "target_alts": [
+    "Sheffield",
+    "Sheffield'dir",
+    "Sheffield'de",
+    "Sheffield kenti",
+    "Sheffield şehri"
+   ],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "lang": "tr",
+   "intermediates": [
+    "stainless steel"
+   ],
+   "units": [
+    {
+     "role": "bridge_l2",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "tr": [
+       "paslanmaz çelik",
+       "paslanmaz çeliği"
+      ]
+     },
+     "match": [
+      "paslanmaz çelik",
+      "paslanmaz çeliği"
+     ],
+     "forms_all": {
+      "tr": [
+       "paslanmaz çelik",
+       "paslanmaz çeliği"
+      ]
+     },
+     "not_creditable": {}
+    },
+    {
+     "role": "bridge_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "stainless steel",
+       "rustless steel"
+      ],
+      "zh": [
+       "不锈钢",
+       "不锈钢材"
+      ]
+     },
+     "match": [
+      "stainless steel",
+      "rustless steel",
+      "不锈钢",
+      "不锈钢材"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Turkish"
+      ],
+      "zh": [
+       "土耳其语"
+      ],
+      "tr": [
+       "Türkçe",
+       "Türkçedir",
+       "Türk dili",
+       "Türkçe olarak",
+       "Türkçe dilinde"
+      ]
+     },
+     "match": [
+      "Turkish",
+      "土耳其语",
+      "Türkçe",
+      "Türkçedir",
+      "Türk dili",
+      "Türkçe olarak",
+      "Türkçe dilinde"
+     ]
+    }
+   ],
+   "bridges": [
+    {
+     "question": "Which chromium-containing alloy, developed by Harry Brearley in 1913 for cutlery, does not rust? Answer with just the name.",
+     "units": [
+      "bridge_l2",
+      "bridge_native"
+     ],
+     "answers": [
+      "stainless steel",
+      "rustless steel",
+      "inox",
+      "paslanmaz çelik",
+      "paslanmaz",
+      "不锈钢",
+      "paslanmaz çeliği",
+      "不锈钢材"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "consistency_strict": 1.0,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge_l2|bridge_native": 1.0
+   },
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "bridge_l2": {
+      "tr": [
+       7,
+       7
+      ]
+     },
+     "bridge_native": {
+      "en": [
+       2,
+       3
+      ],
+      "zh": [
+       1,
+       2
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "zh": [
+       2
+      ],
+      "tr": [
+       4,
+       5,
+       3,
+       6,
+       6
+      ]
+     }
+    },
+    "target": 1,
+    "target_alts": [
+     1,
+     3,
+     3,
+     3,
+     4
+    ]
+   },
+   "mc": {
+    "bridge_native": {
+     "gold": "stainless steel",
+     "distractors": [
+      "bronze",
+      "brass",
+      "Beryllium copper",
+      "Babbitt metal"
+     ]
+    },
+    "language": {
+     "gold": "Turkish",
+     "distractors": [
+      "Russian",
+      "Korean",
+      "Arabic",
+      "Hebrew"
+     ]
+    }
+   },
+   "bridge_l2_creditable": [
+    "paslanmaz çelik",
+    "paslanmaz çeliği"
+   ],
+   "l2_equals_native": false,
+   "mc_roles": [
+    "bridge_native",
+    "language"
+   ],
+   "id": "mlmh-tr-paslanmaz-sheffield",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "mlmh-tr-arctic-seed-shelter-country",
+   "subfamily": "2hop",
+   "prompt": "Kuzey Buz Denizi'ndeki bir takımadada kayaların içine oyulmuş, dünyanın bitki çeşitliliğini kıyamet senaryolarına karşı saklayan dev sığınağın bulunduğu ülke",
+   "target": "Norveç",
+   "target_alts": [
+    "Norveç'tir",
+    "Norveç'te",
+    "Norveç Krallığı",
+    "Norveç'in"
+   ],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "lang": "tr",
+   "intermediates": [
+    "Svalbard Global Seed Vault"
+   ],
+   "units": [
+    {
+     "role": "bridge_l2",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "tr": [
+       "Svalbard Küresel Tohum Deposu",
+       "Svalbard Tohum Deposu",
+       "Küresel Tohum Deposu"
+      ]
+     },
+     "match": [
+      "Svalbard Küresel Tohum Deposu",
+      "Svalbard Tohum Deposu",
+      "Küresel Tohum Deposu"
+     ],
+     "forms_all": {
+      "tr": [
+       "Svalbard Küresel Tohum Deposu",
+       "Svalbard Tohum Deposu",
+       "Küresel Tohum Deposu"
+      ]
+     },
+     "not_creditable": {}
+    },
+    {
+     "role": "bridge_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Svalbard Global Seed Vault",
+       "Global Seed Vault",
+       "Seed Vault",
+       "Svalbard Seed Vault"
+      ],
+      "zh": [
+       "斯瓦尔巴全球种子库",
+       "全球种子库"
+      ]
+     },
+     "match": [
+      "Svalbard Global Seed Vault",
+      "Global Seed Vault",
+      "Seed Vault",
+      "Svalbard Seed Vault",
+      "斯瓦尔巴全球种子库",
+      "全球种子库"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Turkish"
+      ],
+      "zh": [
+       "土耳其语"
+      ],
+      "tr": [
+       "Türkçe",
+       "Türkçedir",
+       "Türk dili",
+       "Türkçe olarak",
+       "Türkçe dilinde"
+      ]
+     },
+     "match": [
+      "Turkish",
+      "土耳其语",
+      "Türkçe",
+      "Türkçedir",
+      "Türk dili",
+      "Türkçe olarak",
+      "Türkçe dilinde"
+     ]
+    }
+   ],
+   "bridges": [
+    {
+     "question": "What is the name of the doomsday seed storage facility carved into a mountain on Spitsbergen in the Arctic? Answer with just the name.",
+     "units": [
+      "bridge_l2",
+      "bridge_native"
+     ],
+     "answers": [
+      "Svalbard Global Seed Vault",
+      "Global Seed Vault",
+      "Svalbard Küresel Tohum Deposu",
+      "Svalbard Tohum Deposu",
+      "斯瓦尔巴全球种子库",
+      "全球种子库",
+      "Küresel Tohum Deposu"
+     ]
+    }
+   ],
+   "consistency": 0.9,
+   "consistency_strict": 0.9,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge_l2|bridge_native": 1.0
+   },
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "bridge_l2": {
+      "tr": [
+       10,
+       7,
+       7
+      ]
+     },
+     "bridge_native": {
+      "en": [
+       6,
+       3,
+       2,
+       5
+      ],
+      "zh": [
+       6,
+       3
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "zh": [
+       2
+      ],
+      "tr": [
+       4,
+       5,
+       3,
+       6,
+       6
+      ]
+     }
+    },
+    "target": 3,
+    "target_alts": [
+     5,
+     5,
+     7,
+     4
+    ]
+   },
+   "mc": {
+    "bridge_native": {
+     "gold": "Svalbard Global Seed Vault",
+     "distractors": [
+      "Large Hadron Collider",
+      "Kennedy Space Center",
+      "Woods Hole Oceanographic Institution",
+      "Very Large Telescope"
+     ]
+    },
+    "language": {
+     "gold": "Turkish",
+     "distractors": [
+      "Korean",
+      "Vietnamese",
+      "Hungarian",
+      "Finnish"
+     ]
+    }
+   },
+   "bridge_l2_creditable": [
+    "Svalbard Küresel Tohum Deposu",
+    "Svalbard Tohum Deposu",
+    "Küresel Tohum Deposu"
+   ],
+   "l2_equals_native": false,
+   "mc_roles": [
+    "bridge_native",
+    "language"
+   ],
+   "id": "mlmh-tr-arctic-seed-shelter-country",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 0.8,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "mlmh-tr-kopi-luwak-endonezya",
+   "subfamily": "2hop",
+   "prompt": "Paradoxurus hermaphroditus'un dışkısından toplanan çekirdeklerle üretilen ve dünyanın en pahalı içeceklerinden sayılan ürünün anavatanı olan Güneydoğu Asya ada ülkesi",
+   "target": "Endonezya",
+   "target_alts": [
+    "Endonezya",
+    "Endonezya'dır",
+    "Endonezya'da",
+    "Endonezya'ya",
+    "Endonezya'nın"
+   ],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "lang": "tr",
+   "intermediates": [
+    "kopi luwak"
+   ],
+   "units": [
+    {
+     "role": "bridge_l2",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "tr": [
+       "misk kedisi kahvesi",
+       "misk kedisi kahvesidir"
+      ]
+     },
+     "match": [
+      "misk kedisi kahvesi",
+      "misk kedisi kahvesidir"
+     ],
+     "forms_all": {
+      "tr": [
+       "misk kedisi kahvesi",
+       "misk kedisi kahvesidir"
+      ]
+     },
+     "not_creditable": {}
+    },
+    {
+     "role": "bridge_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "kopi luwak",
+       "civet coffee"
+      ],
+      "zh": [
+       "猫屎咖啡",
+       "麝香猫咖啡"
+      ]
+     },
+     "match": [
+      "kopi luwak",
+      "civet coffee",
+      "猫屎咖啡",
+      "麝香猫咖啡"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Turkish"
+      ],
+      "zh": [
+       "土耳其语"
+      ],
+      "tr": [
+       "Türkçe",
+       "Türkçedir",
+       "Türk dili",
+       "Türkçe olarak",
+       "Türkçe dilinde"
+      ]
+     },
+     "match": [
+      "Turkish",
+      "土耳其语",
+      "Türkçe",
+      "Türkçedir",
+      "Türk dili",
+      "Türkçe olarak",
+      "Türkçe dilinde"
+     ]
+    }
+   ],
+   "bridges": [
+    {
+     "question": "Which coffee, made from beans collected from the droppings of the Asian palm civet, is one of the world's most expensive? Answer with just the name.",
+     "units": [
+      "bridge_l2",
+      "bridge_native"
+     ],
+     "answers": [
+      "kopi luwak",
+      "Kopi Luwak",
+      "civet coffee",
+      "misk kedisi kahvesi",
+      "luwak kahvesi",
+      "猫屎咖啡",
+      "麝香猫咖啡",
+      "misk kedisi kahvesidir"
+     ]
+    }
+   ],
+   "consistency": 0.9,
+   "consistency_strict": 0.9,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge_l2|bridge_native": 1.0
+   },
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "bridge_l2": {
+      "tr": [
+       7,
+       8
+      ]
+     },
+     "bridge_native": {
+      "en": [
+       4,
+       3
+      ],
+      "zh": [
+       3,
+       4
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "zh": [
+       2
+      ],
+      "tr": [
+       4,
+       5,
+       3,
+       6,
+       6
+      ]
+     }
+    },
+    "target": 4,
+    "target_alts": [
+     4,
+     6,
+     6,
+     6,
+     6
+    ]
+   },
+   "mc": {
+    "bridge_native": {
+     "gold": "kopi luwak",
+     "distractors": [
+      "dalgona coffee",
+      "egg coffee",
+      "Caffè latte",
+      "Turkish coffee"
+     ]
+    },
+    "language": {
+     "gold": "Turkish",
+     "distractors": [
+      "Russian",
+      "Korean",
+      "Hebrew",
+      "Polish"
+     ]
+    }
+   },
+   "bridge_l2_creditable": [
+    "misk kedisi kahvesi",
+    "misk kedisi kahvesidir"
+   ],
+   "l2_equals_native": false,
+   "mc_roles": [
+    "bridge_native",
+    "language"
+   ],
+   "id": "mlmh-tr-kopi-luwak-endonezya",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "mlmh-tr-monark-meksika",
+   "subfamily": "2hop",
+   "prompt": "Sonbaharda Kanada'dan binlerce kilometre güneye göç edip köknar ormanlarında dev kümeler halinde kışlayan turuncu-siyah kanatlı böceğin kışlama alanlarının bulunduğu ülkenin adı",
+   "target": "Meksika",
+   "target_alts": [
+    "Meksika",
+    "Meksika'dır",
+    "Meksika'da",
+    "Meksika'nın"
+   ],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "lang": "tr",
+   "intermediates": [
+    "monarch butterfly"
+   ],
+   "units": [
+    {
+     "role": "bridge_l2",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "tr": [
+       "kral kelebeği",
+       "monark kelebeği",
+       "kral kelebekleri"
+      ]
+     },
+     "match": [
+      "kral kelebeği",
+      "monark kelebeği",
+      "kral kelebekleri"
+     ],
+     "forms_all": {
+      "tr": [
+       "kral kelebeği",
+       "monark kelebeği",
+       "kral kelebekleri"
+      ]
+     },
+     "not_creditable": {}
+    },
+    {
+     "role": "bridge_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "monarch butterfly",
+       "milkweed butterfly",
+       "Danaus plexippus",
+       "monarch"
+      ],
+      "zh": [
+       "帝王蝶",
+       "黑脉金斑蝶"
+      ]
+     },
+     "match": [
+      "monarch butterfly",
+      "milkweed butterfly",
+      "Danaus plexippus",
+      "monarch",
+      "帝王蝶",
+      "黑脉金斑蝶"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Turkish"
+      ],
+      "zh": [
+       "土耳其语"
+      ],
+      "tr": [
+       "Türkçe",
+       "Türkçedir",
+       "Türk dili",
+       "Türkçe olarak",
+       "Türkçe dilinde"
+      ]
+     },
+     "match": [
+      "Turkish",
+      "土耳其语",
+      "Türkçe",
+      "Türkçedir",
+      "Türk dili",
+      "Türkçe olarak",
+      "Türkçe dilinde"
+     ]
+    }
+   ],
+   "bridges": [
+    {
+     "question": "Which butterfly species migrates thousands of kilometres each autumn from Canada to overwinter clustered in fir forests? Answer with just the name.",
+     "units": [
+      "bridge_l2",
+      "bridge_native"
+     ],
+     "answers": [
+      "monarch butterfly",
+      "monarch",
+      "Danaus plexippus",
+      "milkweed butterfly",
+      "kral kelebeği",
+      "monark kelebeği",
+      "kral kelebekleri",
+      "帝王蝶",
+      "黑脉金斑蝶"
+     ]
+    }
+   ],
+   "consistency": 0.9,
+   "consistency_strict": 0.9,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge_l2|bridge_native": 1.0
+   },
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "bridge_l2": {
+      "tr": [
+       6,
+       5,
+       6
+      ]
+     },
+     "bridge_native": {
+      "en": [
+       2,
+       3,
+       5,
+       1
+      ],
+      "zh": [
+       2,
+       5
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "zh": [
+       2
+      ],
+      "tr": [
+       4,
+       5,
+       3,
+       6,
+       6
+      ]
+     }
+    },
+    "target": 3,
+    "target_alts": [
+     3,
+     5,
+     5,
+     5
+    ]
+   },
+   "mc": {
+    "bridge_native": {
+     "gold": "monarch butterfly",
+     "distractors": [
+      "luna moth",
+      "death's-head hawkmoth",
+      "swallowtail butterfly",
+      "peppered moth"
+     ]
+    },
+    "language": {
+     "gold": "Turkish",
+     "distractors": [
+      "Russian",
+      "Indonesian",
+      "Hebrew",
+      "Korean"
+     ]
+    }
+   },
+   "bridge_l2_creditable": [
+    "kral kelebeği",
+    "monark kelebeği",
+    "kral kelebekleri"
+   ],
+   "l2_equals_native": false,
+   "mc_roles": [
+    "bridge_native",
+    "language"
+   ],
+   "id": "mlmh-tr-monark-meksika",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "mlmh-tr-parkes-avustralya",
+   "subfamily": "2hop",
+   "prompt": "Apollo 11'in Ay yüzeyindeki ilk adımlarına ait televizyon görüntülerinin büyük bölümünü dünyaya ulaştıran 64 metrelik dev çanak antenin bulunduğu ülke",
+   "target": "Avustralya",
+   "target_alts": [
+    "Avustralya",
+    "Avustralya'dır",
+    "Avustralya'da",
+    "Avustralya kıtası"
+   ],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "lang": "tr",
+   "intermediates": [
+    "Parkes Radio Telescope"
+   ],
+   "units": [
+    {
+     "role": "bridge_l2",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "tr": [
+       "Parkes Radyo Teleskobu",
+       "Parkes Gözlemevi",
+       "Parkes Radyo Teleskobu'nun"
+      ]
+     },
+     "match": [
+      "Parkes Radyo Teleskobu",
+      "Parkes Gözlemevi",
+      "Parkes Radyo Teleskobu'nun"
+     ],
+     "forms_all": {
+      "tr": [
+       "Parkes Radyo Teleskobu",
+       "Parkes Gözlemevi",
+       "Parkes Radyo Teleskobu'nun"
+      ]
+     },
+     "not_creditable": {}
+    },
+    {
+     "role": "bridge_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Parkes Radio Telescope",
+       "Murriyang",
+       "Parkes Observatory",
+       "Parkes",
+       "Parkes telescope"
+      ],
+      "zh": [
+       "帕克斯射电望远镜",
+       "帕克斯天文台"
+      ]
+     },
+     "match": [
+      "Parkes Radio Telescope",
+      "Murriyang",
+      "Parkes Observatory",
+      "Parkes",
+      "Parkes telescope",
+      "帕克斯射电望远镜",
+      "帕克斯天文台"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Turkish"
+      ],
+      "zh": [
+       "土耳其语"
+      ],
+      "tr": [
+       "Türkçe",
+       "Türkçedir",
+       "Türk dili",
+       "Türkçe olarak",
+       "Türkçe dilinde"
+      ]
+     },
+     "match": [
+      "Turkish",
+      "土耳其语",
+      "Türkçe",
+      "Türkçedir",
+      "Türk dili",
+      "Türkçe olarak",
+      "Türkçe dilinde"
+     ]
+    }
+   ],
+   "bridges": [
+    {
+     "question": "Which 64-metre single-dish radio telescope, nicknamed 'The Dish' and also known as Murriyang, relayed most of the television pictures of the Apollo 11 Moon walk? Answer with just the name.",
+     "units": [
+      "bridge_l2",
+      "bridge_native"
+     ],
+     "answers": [
+      "Parkes",
+      "Parkes Radio Telescope",
+      "Parkes Observatory",
+      "Murriyang",
+      "Parkes Radyo Teleskobu",
+      "帕克斯射电望远镜",
+      "Parkes Gözlemevi",
+      "Parkes Radyo Teleskobu'nun",
+      "帕克斯天文台"
+     ]
+    }
+   ],
+   "consistency": 0.8,
+   "consistency_strict": 0.8,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge_l2|bridge_native": 1.0
+   },
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "bridge_l2": {
+      "tr": [
+       8,
+       7,
+       10
+      ]
+     },
+     "bridge_native": {
+      "en": [
+       4,
+       3,
+       3,
+       2,
+       3
+      ],
+      "zh": [
+       5,
+       4
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "zh": [
+       2
+      ],
+      "tr": [
+       4,
+       5,
+       3,
+       6,
+       6
+      ]
+     }
+    },
+    "target": 3,
+    "target_alts": [
+     3,
+     5,
+     5,
+     7
+    ]
+   },
+   "mc": {
+    "bridge_native": {
+     "gold": "Parkes Radio Telescope",
+     "distractors": [
+      "Square Kilometre Array",
+      "Very Large Array",
+      "RATAN-600",
+      "Arecibo Telescope"
+     ]
+    },
+    "language": {
+     "gold": "Turkish",
+     "distractors": [
+      "Indonesian",
+      "Swahili",
+      "Hebrew",
+      "Russian"
+     ]
+    }
+   },
+   "bridge_l2_creditable": [
+    "Parkes Radyo Teleskobu",
+    "Parkes Gözlemevi",
+    "Parkes Radyo Teleskobu'nun"
+   ],
+   "l2_equals_native": false,
+   "mc_roles": [
+    "bridge_native",
+    "language"
+   ],
+   "id": "mlmh-tr-parkes-avustralya",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "mlmh-vi-thaison-sondong",
+   "subfamily": "2hop",
+   "prompt": "Ngọn núi đứng đầu Ngũ Nhạc, nơi các hoàng đế Trung Hoa thời xưa cử hành lễ phong thiện, nằm ở tỉnh",
+   "target": "Sơn Đông",
+   "target_alts": [
+    "Sơn Đông",
+    "Shandong",
+    "Sơn Đông (Shandong)"
+   ],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "lang": "vi",
+   "intermediates": [
+    "Mount Tai"
+   ],
+   "units": [
+    {
+     "role": "bridge_l2",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "vi": [
+       "Thái Sơn",
+       "núi Thái Sơn"
+      ]
+     },
+     "match": [
+      "Thái Sơn",
+      "núi Thái Sơn"
+     ],
+     "forms_all": {
+      "vi": [
+       "Thái Sơn",
+       "núi Thái Sơn"
+      ]
+     },
+     "not_creditable": {}
+    },
+    {
+     "role": "bridge_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Mount Tai",
+       "Taishan",
+       "Tai Shan",
+       "Mount Taishan"
+      ],
+      "zh": [
+       "泰山",
+       "东岳泰山"
+      ]
+     },
+     "match": [
+      "Mount Tai",
+      "Taishan",
+      "Tai Shan",
+      "Mount Taishan",
+      "泰山",
+      "东岳泰山"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Vietnamese"
+      ],
+      "zh": [
+       "越南语"
+      ],
+      "vi": [
+       "tiếng Việt",
+       "Việt ngữ",
+       "tiếng Việt Nam"
+      ]
+     },
+     "match": [
+      "Vietnamese",
+      "越南语",
+      "tiếng Việt",
+      "Việt ngữ",
+      "tiếng Việt Nam"
+     ]
+    }
+   ],
+   "bridges": [
+    {
+     "question": "Which Chinese mountain is regarded as the foremost of the Five Great Mountains, where ancient emperors performed the feng shan sacrifices? Answer with just the name.",
+     "units": [
+      "bridge_l2",
+      "bridge_native"
+     ],
+     "answers": [
+      "Mount Tai",
+      "Mount Taishan",
+      "Taishan",
+      "Tai Shan",
+      "泰山",
+      "东岳泰山",
+      "Thái Sơn",
+      "núi Thái Sơn"
+     ]
+    }
+   ],
+   "consistency": 0.9,
+   "consistency_strict": 0.9,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge_l2|bridge_native": 1.0
+   },
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "bridge_l2": {
+      "vi": [
+       4,
+       6
+      ]
+     },
+     "bridge_native": {
+      "en": [
+       2,
+       3,
+       2,
+       4
+      ],
+      "zh": [
+       1,
+       3
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "zh": [
+       2
+      ],
+      "vi": [
+       5,
+       4,
+       6
+      ]
+     }
+    },
+    "target": 4,
+    "target_alts": [
+     4,
+     2,
+     8
+    ]
+   },
+   "mc": {
+    "bridge_native": {
+     "gold": "Mount Tai",
+     "distractors": [
+      "Mount Paektu",
+      "Mount Song",
+      "Mount Halla",
+      "Mount Fuji"
+     ]
+    },
+    "language": {
+     "gold": "Vietnamese",
+     "distractors": [
+      "Russian",
+      "Korean",
+      "Greek",
+      "Polish"
+     ]
+    }
+   },
+   "bridge_l2_creditable": [
+    "Thái Sơn",
+    "núi Thái Sơn"
+   ],
+   "l2_equals_native": false,
+   "mc_roles": [
+    "bridge_native",
+    "language"
+   ],
+   "id": "mlmh-vi-thaison-sondong",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "mlmh-vi-assal-djibouti",
+   "subfamily": "2hop",
+   "prompt": "Điểm thấp nhất trên lục địa châu Phi nằm trong lãnh thổ của quốc gia",
+   "target": "Djibouti",
+   "target_alts": [
+    "Gi-bu-ti",
+    "Gibuti",
+    "Cộng hòa Djibouti"
+   ],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "lang": "vi",
+   "intermediates": [
+    "Lake Assal"
+   ],
+   "units": [
+    {
+     "role": "bridge_l2",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "vi": [
+       "hồ Assal"
+      ]
+     },
+     "match": [
+      "hồ Assal"
+     ],
+     "forms_all": {
+      "vi": [
+       "hồ Assal"
+      ]
+     },
+     "not_creditable": {}
+    },
+    {
+     "role": "bridge_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Lake Assal",
+       "Lac Assal",
+       "Assal"
+      ],
+      "zh": [
+       "阿萨勒湖",
+       "阿萨尔湖"
+      ]
+     },
+     "match": [
+      "Lake Assal",
+      "Lac Assal",
+      "Assal",
+      "阿萨勒湖",
+      "阿萨尔湖"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Vietnamese"
+      ],
+      "zh": [
+       "越南语"
+      ],
+      "vi": [
+       "tiếng Việt",
+       "Việt ngữ",
+       "tiếng Việt Nam"
+      ]
+     },
+     "match": [
+      "Vietnamese",
+      "越南语",
+      "tiếng Việt",
+      "Việt ngữ",
+      "tiếng Việt Nam"
+     ]
+    }
+   ],
+   "bridges": [
+    {
+     "question": "On the shore of which hypersaline lake lies the lowest point of the African continent? Answer with just the name.",
+     "units": [
+      "bridge_l2",
+      "bridge_native"
+     ],
+     "answers": [
+      "Assal",
+      "Lake Assal",
+      "Lac Assal",
+      "hồ Assal",
+      "阿萨勒湖",
+      "阿萨尔湖",
+      "vùng nước Assal"
+     ]
+    }
+   ],
+   "consistency": 0.8,
+   "consistency_strict": 0.8,
+   "consistency_greedy": 1,
+   "bridge_consistency": {
+    "bridge_l2|bridge_native": 1.0
+   },
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "bridge_l2": {
+      "vi": [
+       4
+      ]
+     },
+     "bridge_native": {
+      "en": [
+       3,
+       3,
+       2
+      ],
+      "zh": [
+       4,
+       3
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "zh": [
+       2
+      ],
+      "vi": [
+       5,
+       4,
+       6
+      ]
+     }
+    },
+    "target": 3,
+    "target_alts": [
+     5,
+     2,
+     9
+    ]
+   },
+   "mc": {
+    "bridge_native": {
+     "gold": "Lake Assal",
+     "distractors": [
+      "Lake Retba",
+      "Lake Turkana",
+      "Lake Magadi",
+      "Lake Natron"
+     ]
+    },
+    "language": {
+     "gold": "Vietnamese",
+     "distractors": [
+      "Russian",
+      "Korean",
+      "Turkish",
+      "Hungarian"
+     ]
+    }
+   },
+   "bridge_l2_creditable": [
+    "hồ Assal"
+   ],
+   "l2_equals_native": false,
+   "mc_roles": [
+    "bridge_native",
+    "language"
+   ],
+   "id": "mlmh-vi-assal-djibouti",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "multilingual-au-t1-w100c2-mlmh-ru-pythagoras-samos",
+   "lang": "ru",
+   "prompt": "Древнегреческий философ и математик, именем которого названа теорема о квадрате гипотенузы, родился на острове",
+   "target": "Самос",
+   "target_alts": [
+    "Самос",
+    "Самосе",
+    "Самоса"
+   ],
+   "intermediates": [
+    "Pythagoras"
+   ],
+   "units": [
+    {
+     "role": "bridge_l2",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "ru": [
+       "Пифагор",
+       "Пифагора"
+      ]
+     },
+     "forms_all": {
+      "ru": [
+       "Пифагор",
+       "Пифагора"
+      ]
+     },
+     "match": [
+      "Пифагор",
+      "Пифагора"
+     ],
+     "not_creditable": {}
+    },
+    {
+     "role": "bridge_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Pythagoras"
+      ],
+      "zh": [
+       "毕达哥拉斯"
+      ]
+     },
+     "match": [
+      "Pythagoras",
+      "毕达哥拉斯"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Russian"
+      ],
+      "zh": [
+       "俄语",
+       "俄文"
+      ],
+      "ru": [
+       "русский",
+       "по-русски",
+       "русский язык",
+       "на русском языке",
+       "русском",
+       "русском языке",
+       "на русском"
+      ]
+     },
+     "match": [
+      "Russian",
+      "俄语",
+      "俄文",
+      "русский",
+      "по-русски",
+      "русский язык",
+      "на русском языке",
+      "русском",
+      "русском языке",
+      "на русском"
+     ]
+    }
+   ],
+   "bridge_l2_creditable": [
+    "Пифагор",
+    "Пифагора"
+   ],
+   "l2_equals_native": false,
+   "bridges": [
+    {
+     "question": "Which ancient Greek philosopher and mathematician gave his name to the theorem about the square of the hypotenuse? Answer with just the name.",
+     "units": [
+      "bridge_l2",
+      "bridge_native"
+     ],
+     "answers": [
+      "Pythagoras",
+      "Пифагор",
+      "Пифагора",
+      "毕达哥拉斯"
+     ]
+    }
+   ],
+   "mc": {
+    "bridge_native": {
+     "gold": "Pythagoras",
+     "distractors": [
+      "Thales of Miletus",
+      "Euclid",
+      "Anaximander",
+      "Zeno of Elea"
+     ]
+    },
+    "language": {
+     "gold": "Russian",
+     "distractors": [
+      "Polish",
+      "Finnish",
+      "Hungarian",
+      "Greek"
+     ]
+    }
+   },
+   "mc_roles": [
+    "bridge_native",
+    "language"
+   ],
+   "subfamily": "2hop",
+   "probe_token_lens": {
+    "units": {
+     "bridge_l2": {
+      "ru": [
+       3,
+       4
+      ]
+     },
+     "bridge_native": {
+      "en": [
+       2
+      ],
+      "zh": [
+       4
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "zh": [
+       2,
+       2
+      ],
+      "ru": [
+       2,
+       4,
+       3,
+       4,
+       2,
+       3,
+       3
+      ]
+     }
+    }
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "source": "authored (claude-opus-5-5) for deepseek-v4-flash: Use only Russian (ru), Indonesian (id) or Vietnamese (vi), and famous bridges a well-read adult knows at once (landmarks, inventions, famous books, scientists).",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "Use only Russian (ru), Indonesian (id) or Vietnamese (vi), and famous bridges a well-read adult knows at once (landmarks, inventions, famous books, scientists)."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 100,
+    "plan": "0075",
+    "mc_build": {
+     "onecue": {
+      "version": "onecue-v3",
+      "at": "2026-11-16T01:36:43+00:00",
+      "flagged": {}
+     }
+    },
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   },
+   "native_units_for": [
+    "en",
+    "zh"
+   ]
+  },
+  {
+   "name": "multilingual-au-t1-w102c0-mlmh-id-franklin-100",
+   "lang": "id",
+   "prompt": "Tokoh Amerika yang menerbangkan layang-layang di tengah badai untuk membuktikan bahwa petir adalah listrik kini wajahnya terpampang pada uang kertas dolar pecahan",
+   "target": "100",
+   "target_alts": [
+    "100",
+    "seratus"
+   ],
+   "intermediates": [
+    "Benjamin Franklin"
+   ],
+   "units": [
+    {
+     "role": "bridge_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Benjamin Franklin",
+       "Ben Franklin"
+      ],
+      "zh": [
+       "本杰明·富兰克林",
+       "富兰克林"
+      ]
+     },
+     "match": [
+      "Benjamin Franklin",
+      "Ben Franklin",
+      "本杰明·富兰克林",
+      "富兰克林"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Indonesian"
+      ],
+      "zh": [
+       "印尼语",
+       "印度尼西亚语"
+      ],
+      "id": [
+       "bahasa Indonesia",
+       "dalam bahasa Indonesia"
+      ]
+     },
+     "match": [
+      "Indonesian",
+      "印尼语",
+      "印度尼西亚语",
+      "bahasa Indonesia",
+      "dalam bahasa Indonesia"
+     ]
+    }
+   ],
+   "bridge_l2_creditable": [],
+   "l2_equals_native": true,
+   "bridge_l2_unscored": {
+    "role": "bridge_l2",
+    "required": true,
+    "multi_token": true,
+    "forms": {},
+    "forms_all": {
+     "id": [
+      "Benjamin Franklin"
+     ]
+    },
+    "not_creditable": {
+     "id": [
+      "Benjamin Franklin"
+     ]
+    }
+   },
+   "bridges": [
+    {
+     "question": "Which American flew a kite in a storm to show that lightning is electricity? Answer with just the name.",
+     "units": [
+      "bridge_l2",
+      "bridge_native"
+     ],
+     "answers": [
+      "Benjamin Franklin",
+      "Ben Franklin",
+      "本杰明·富兰克林",
+      "富兰克林",
+      "Franklin"
+     ]
+    }
+   ],
+   "mc": {
+    "bridge_native": {
+     "gold": "Benjamin Franklin",
+     "distractors": [
+      "Thomas Jefferson",
+      "George Washington",
+      "Alexander Hamilton",
+      "John Adams"
+     ]
+    },
+    "language": {
+     "gold": "Indonesian",
+     "distractors": [
+      "Vietnamese",
+      "Polish",
+      "Turkish",
+      "Swahili"
+     ]
+    }
+   },
+   "mc_roles": [
+    "bridge_native",
+    "language"
+   ],
+   "subfamily": "2hop",
+   "probe_token_lens": {
+    "units": {
+     "bridge_native": {
+      "en": [
+       2,
+       2
+      ],
+      "zh": [
+       7,
+       3
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "zh": [
+       2,
+       3
+      ],
+      "id": [
+       2,
+       3
+      ]
+     }
+    }
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "source": "authored (claude-opus-5-5) for deepseek-v4-flash: Use only Russian (ru), Indonesian (id) or Vietnamese (vi), and famous bridges a well-read adult knows at once (landmarks, inventions, famous books, scientists).",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "Use only Russian (ru), Indonesian (id) or Vietnamese (vi), and famous bridges a well-read adult knows at once (landmarks, inventions, famous books, scientists)."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 102,
+    "plan": "0075",
+    "steer": "- Last wave: 29/60 passed.\n- Rejected by lint before gating: 21x mc: the MC builder dropped this candidate (no options); 3x leak: ['tieng'] in prompt; 1x natural:bridge_native 'Kartini' is not creditable; 1x natural:bridge_native 'Sahara' is not creditable. Avoid these.\n- Failed (gold -> what the model wrote): điện thoại -> model said 'máy điện thoại' (5/10); Paris -> model said 'Paris' (7/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): Рим; Булгаков; Торунь; собаках; India; rabies; Belitung; Selandia Baru; Hogwarts; Lê Lợi; Bắc Kinh; Victor Hugo",
+    "mc_build": {
+     "onecue": {
+      "version": "onecue-v3",
+      "at": "2026-11-16T07:33:29+00:00",
+      "flagged": {}
+     }
+    },
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   },
+   "native_units_for": [
+    "en",
+    "zh"
+   ]
+  },
+  {
+   "name": "multilingual-au-t1-w105c2-mlmh-ru-nabokov-babochek",
+   "lang": "ru",
+   "prompt": "Автор романа «Лолита», эмигрант, писавший и на английском, всю жизнь был страстным коллекционером",
+   "target": "бабочек",
+   "target_alts": [
+    "бабочек",
+    "бабочки",
+    "бабочка",
+    "чешуекрылых"
+   ],
+   "intermediates": [
+    "Vladimir Nabokov"
+   ],
+   "units": [
+    {
+     "role": "bridge_l2",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "ru": [
+       "Владимир Набоков",
+       "Набоков"
+      ]
+     },
+     "forms_all": {
+      "ru": [
+       "Владимир Набоков",
+       "Набоков"
+      ]
+     },
+     "match": [
+      "Владимир Набоков",
+      "Набоков"
+     ],
+     "not_creditable": {}
+    },
+    {
+     "role": "bridge_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Vladimir Nabokov",
+       "Vladimir Vladimirovich Nabokov"
+      ],
+      "zh": [
+       "弗拉基米尔·纳博科夫",
+       "纳博科夫"
+      ]
+     },
+     "match": [
+      "Vladimir Nabokov",
+      "Vladimir Vladimirovich Nabokov",
+      "弗拉基米尔·纳博科夫",
+      "纳博科夫"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Russian"
+      ],
+      "zh": [
+       "俄语",
+       "俄文"
+      ],
+      "ru": [
+       "русский",
+       "по-русски",
+       "русский язык",
+       "на русском языке",
+       "русском",
+       "русском языке",
+       "на русском"
+      ]
+     },
+     "match": [
+      "Russian",
+      "俄语",
+      "俄文",
+      "русский",
+      "по-русски",
+      "русский язык",
+      "на русском языке",
+      "русском",
+      "русском языке",
+      "на русском"
+     ]
+    }
+   ],
+   "bridge_l2_creditable": [
+    "Владимир Набоков",
+    "Набоков"
+   ],
+   "l2_equals_native": false,
+   "bridges": [
+    {
+     "question": "Which émigré writer wrote the novel 'Lolita'? Answer with just the name.",
+     "units": [
+      "bridge_l2",
+      "bridge_native"
+     ],
+     "answers": [
+      "Vladimir Nabokov",
+      "Vladimir Vladimirovich Nabokov",
+      "Владимир Набоков",
+      "Набоков",
+      "弗拉基米尔·纳博科夫",
+      "纳博科夫",
+      "Nabokov"
+     ]
+    }
+   ],
+   "mc": {
+    "bridge_native": {
+     "gold": "Vladimir Nabokov",
+     "distractors": [
+      "Ivan Bunin",
+      "Joseph Brodsky",
+      "Alexander Solzhenitsyn",
+      "Sergei Dovlatov"
+     ]
+    },
+    "language": {
+     "gold": "Russian",
+     "distractors": [
+      "Polish",
+      "Finnish",
+      "Hungarian",
+      "Greek"
+     ]
+    }
+   },
+   "mc_roles": [
+    "bridge_native",
+    "language"
+   ],
+   "subfamily": "2hop",
+   "probe_token_lens": {
+    "units": {
+     "bridge_l2": {
+      "ru": [
+       5,
+       3
+      ]
+     },
+     "bridge_native": {
+      "en": [
+       4,
+       8
+      ],
+      "zh": [
+       8,
+       3
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "zh": [
+       2,
+       2
+      ],
+      "ru": [
+       2,
+       4,
+       3,
+       4,
+       2,
+       3,
+       3
+      ]
+     }
+    }
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "source": "authored (claude-opus-5-5) for deepseek-v4-flash: Use only Russian (ru), Indonesian (id) or Vietnamese (vi), and famous bridges a well-read adult knows at once (landmarks, inventions, famous books, scientists).",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "Use only Russian (ru), Indonesian (id) or Vietnamese (vi), and famous bridges a well-read adult knows at once (landmarks, inventions, famous books, scientists)."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 105,
+    "plan": "0075",
+    "steer": "- Last wave: 20/53 passed.\n- Rejected by lint before gating: 19x mc: the MC builder dropped this candidate (no options); 2x leak: ['tieng'] in prompt; 2x units: required bridge_l2 has no multi-token form; 1x natural:bridge_native 'Hubble' is not creditable. Avoid these.\n- Failed (gold -> what the model wrote): Blitar -> model said 'Blitar' (5/10); Баку -> model said 'Эль-Пасо' (0/10); Bukittinggi -> model said 'Pekalongan' (5/10); Hoàng Liên Sơn -> model said 'Hoàng Liên Sơn' (10/10); Flores -> model said 'Flores' (8/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): Ижевск; Венера; Машук; Калуга; Базаров; Кампания; 1926; 1986; Đan Mạch; Giverny; Rosario; Льюис Кэрролл",
+    "mc_build": {
+     "onecue": {
+      "version": "onecue-v3",
+      "at": "2026-11-16T11:37:44+00:00",
+      "flagged": {}
+     }
+    },
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   },
+   "native_units_for": [
+    "en",
+    "zh"
+   ]
+  },
+  {
+   "name": "multilingual-au-t1-w106c2-mlmh-id-babbage-inggris",
+   "lang": "id",
+   "prompt": "Matematikawan abad ke-19 yang dijuluki bapak komputer karena merancang mesin analitis berasal dari negara",
+   "target": "Inggris",
+   "target_alts": [
+    "Inggris",
+    "Britania Raya",
+    "Kerajaan Britania Raya"
+   ],
+   "intermediates": [
+    "Charles Babbage"
+   ],
+   "units": [
+    {
+     "role": "bridge_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Charles Babbage",
+       "Babbage"
+      ],
+      "zh": [
+       "查尔斯·巴贝奇",
+       "巴贝奇"
+      ]
+     },
+     "match": [
+      "Charles Babbage",
+      "Babbage",
+      "查尔斯·巴贝奇",
+      "巴贝奇"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Indonesian"
+      ],
+      "zh": [
+       "印尼语",
+       "印度尼西亚语"
+      ],
+      "id": [
+       "bahasa Indonesia",
+       "dalam bahasa Indonesia"
+      ]
+     },
+     "match": [
+      "Indonesian",
+      "印尼语",
+      "印度尼西亚语",
+      "bahasa Indonesia",
+      "dalam bahasa Indonesia"
+     ]
+    }
+   ],
+   "bridge_l2_creditable": [],
+   "l2_equals_native": true,
+   "bridge_l2_unscored": {
+    "role": "bridge_l2",
+    "required": true,
+    "multi_token": true,
+    "forms": {},
+    "forms_all": {
+     "id": [
+      "Charles Babbage",
+      "Babbage"
+     ]
+    },
+    "not_creditable": {
+     "id": [
+      "Charles Babbage",
+      "Babbage"
+     ]
+    }
+   },
+   "bridges": [
+    {
+     "question": "Which 19th-century mathematician designed the Analytical Engine and is called the father of the computer? Answer with just the name.",
+     "units": [
+      "bridge_l2",
+      "bridge_native"
+     ],
+     "answers": [
+      "Charles Babbage",
+      "Babbage",
+      "查尔斯·巴贝奇",
+      "巴贝奇"
+     ]
+    }
+   ],
+   "mc": {
+    "bridge_native": {
+     "gold": "Charles Babbage",
+     "distractors": [
+      "George Boole",
+      "Carl Friedrich Gauss",
+      "Augustus De Morgan",
+      "Bernhard Riemann"
+     ]
+    },
+    "language": {
+     "gold": "Indonesian",
+     "distractors": [
+      "Vietnamese",
+      "Polish",
+      "Turkish",
+      "Swahili"
+     ]
+    }
+   },
+   "mc_roles": [
+    "bridge_native",
+    "language"
+   ],
+   "subfamily": "2hop",
+   "probe_token_lens": {
+    "units": {
+     "bridge_native": {
+      "en": [
+       3,
+       2
+      ],
+      "zh": [
+       6,
+       3
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "zh": [
+       2,
+       3
+      ],
+      "id": [
+       2,
+       3
+      ]
+     }
+    }
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "source": "authored (claude-opus-5-5) for deepseek-v4-flash: Use only Russian (ru), Indonesian (id) or Vietnamese (vi), and famous bridges a well-read adult knows at once (landmarks, inventions, famous books, scientists).",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "Use only Russian (ru), Indonesian (id) or Vietnamese (vi), and famous bridges a well-read adult knows at once (landmarks, inventions, famous books, scientists)."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 106,
+    "plan": "0075",
+    "steer": "- Last wave: 17/54 passed.\n- Rejected by lint before gating: 23x mc: the MC builder dropped this candidate (no options); 2x leak: ['tieng'] in prompt; 1x natural:bridge_native 'Hamlet' is not creditable; 1x natural:bridge_native 'Aivazovsky' is not creditable. Avoid these.\n- Failed (gold -> what the model wrote): Aceh -> model said 'Aceh' (10/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): Гаскони; Шервудском лесу; художник; Горький; Madeira; Atlanta; Kopenhagen; Sastra; Pháp; Santiago; 1886; Louisville",
+    "mc_build": {
+     "onecue": {
+      "version": "onecue-v3",
+      "at": "2026-11-16T12:21:49+00:00",
+      "flagged": {}
+     }
+    },
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   },
+   "native_units_for": [
+    "en",
+    "zh"
+   ]
+  },
+  {
+   "name": "multilingual-au-t1-w113c0-mlmh-id-grieg-norwegia",
+   "lang": "id",
+   "prompt": "Komponis yang menciptakan 'Morning Mood' dan 'In the Hall of the Mountain King' berasal dari negara",
+   "target": "Norwegia",
+   "target_alts": [
+    "Norwegia",
+    "Kerajaan Norwegia"
+   ],
+   "intermediates": [
+    "Edvard Grieg"
+   ],
+   "units": [
+    {
+     "role": "bridge_l2",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "id": [
+       "Grieg"
+      ]
+     },
+     "forms_all": {
+      "id": [
+       "Edvard Grieg",
+       "Grieg"
+      ]
+     },
+     "match": [
+      "Grieg"
+     ],
+     "not_creditable": {
+      "id": [
+       "Edvard Grieg"
+      ]
+     }
+    },
+    {
+     "role": "bridge_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Edvard Grieg",
+       "Edvard Hagerup Grieg"
+      ],
+      "zh": [
+       "爱德华·格里格",
+       "格里格"
+      ]
+     },
+     "match": [
+      "Edvard Grieg",
+      "Edvard Hagerup Grieg",
+      "爱德华·格里格",
+      "格里格"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Indonesian"
+      ],
+      "zh": [
+       "印尼语",
+       "印度尼西亚语"
+      ],
+      "id": [
+       "bahasa Indonesia",
+       "dalam bahasa Indonesia"
+      ]
+     },
+     "match": [
+      "Indonesian",
+      "印尼语",
+      "印度尼西亚语",
+      "bahasa Indonesia",
+      "dalam bahasa Indonesia"
+     ]
+    }
+   ],
+   "bridge_l2_creditable": [
+    "Grieg"
+   ],
+   "l2_equals_native": false,
+   "bridges": [
+    {
+     "question": "Which composer wrote the pieces Morning Mood and In the Hall of the Mountain King? Answer with just the name.",
+     "units": [
+      "bridge_l2",
+      "bridge_native"
+     ],
+     "answers": [
+      "Edvard Grieg",
+      "Edvard Hagerup Grieg",
+      "Grieg",
+      "爱德华·格里格",
+      "格里格"
+     ]
+    }
+   ],
+   "mc": {
+    "bridge_native": {
+     "gold": "Edvard Grieg",
+     "distractors": [
+      "Jean Sibelius",
+      "Carl Nielsen",
+      "Antonín Dvořák",
+      "Bedřich Smetana"
+     ]
+    },
+    "language": {
+     "gold": "Indonesian",
+     "distractors": [
+      "Vietnamese",
+      "Polish",
+      "Turkish",
+      "Swahili"
+     ]
+    }
+   },
+   "mc_roles": [
+    "bridge_native",
+    "language"
+   ],
+   "subfamily": "2hop",
+   "probe_token_lens": {
+    "units": {
+     "bridge_l2": {
+      "id": [
+       2
+      ]
+     },
+     "bridge_native": {
+      "en": [
+       4,
+       7
+      ],
+      "zh": [
+       4,
+       2
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "zh": [
+       2,
+       3
+      ],
+      "id": [
+       2,
+       3
+      ]
+     }
+    }
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "source": "authored (claude-opus-5-5) for deepseek-v4-flash: Use only Russian (ru), Indonesian (id) or Vietnamese (vi), and famous bridges a well-read adult knows at once (landmarks, inventions, famous books, scientists).",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "Use only Russian (ru), Indonesian (id) or Vietnamese (vi), and famous bridges a well-read adult knows at once (landmarks, inventions, famous books, scientists)."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 113,
+    "plan": "0075",
+    "steer": "- Last wave: 8/25 passed.\n- Rejected by lint before gating: 5x mc: the MC builder dropped this candidate (no options); 1x natural:bridge_native 'Descartes' is not creditable; 1x natural:bridge_native 'Leibniz' is not creditable; 1x natural:bridge_native 'Goethe' is not creditable. Avoid these.\n- Failed (gold -> what the model wrote): Tabanan -> model said 'Tabanan' (4/10); Roma -> model said 'Hà Nội' (0/10); Côn Đảo -> model said 'Võ Thị Sáu' (0/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): Житомире; ЦЕРН; Леонид; Орле; Дюпен; 1602; 1 đô la; Joli-Cœur",
+    "mc_build": {
+     "onecue": {
+      "version": "onecue-v3",
+      "at": "2026-11-16T20:56:30+00:00",
+      "flagged": {}
+     }
+    },
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   },
+   "native_units_for": [
+    "en",
+    "zh"
+   ]
+  },
+  {
+   "name": "multilingual-au-t1-w113c0-mlmh-id-celsius-uppsala",
+   "lang": "id",
+   "prompt": "Astronom yang namanya dipakai untuk skala suhu dengan titik beku air nol derajat lahir di kota",
+   "target": "Uppsala",
+   "target_alts": [
+    "Uppsala",
+    "Upsala"
+   ],
+   "intermediates": [
+    "Anders Celsius"
+   ],
+   "units": [
+    {
+     "role": "bridge_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Anders Celsius",
+       "Celsius"
+      ],
+      "zh": [
+       "安德斯·摄尔修斯",
+       "摄尔修斯"
+      ]
+     },
+     "match": [
+      "Anders Celsius",
+      "Celsius",
+      "安德斯·摄尔修斯",
+      "摄尔修斯"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Indonesian"
+      ],
+      "zh": [
+       "印尼语",
+       "印度尼西亚语"
+      ],
+      "id": [
+       "bahasa Indonesia",
+       "dalam bahasa Indonesia"
+      ]
+     },
+     "match": [
+      "Indonesian",
+      "印尼语",
+      "印度尼西亚语",
+      "bahasa Indonesia",
+      "dalam bahasa Indonesia"
+     ]
+    }
+   ],
+   "bridge_l2_creditable": [],
+   "l2_equals_native": true,
+   "bridge_l2_unscored": {
+    "role": "bridge_l2",
+    "required": true,
+    "multi_token": true,
+    "forms": {},
+    "forms_all": {
+     "id": [
+      "Anders Celsius",
+      "Celsius"
+     ]
+    },
+    "not_creditable": {
+     "id": [
+      "Anders Celsius",
+      "Celsius"
+     ]
+    }
+   },
+   "bridges": [
+    {
+     "question": "Which astronomer gave his name to the temperature scale with water freezing at zero degrees? Answer with just the name.",
+     "units": [
+      "bridge_l2",
+      "bridge_native"
+     ],
+     "answers": [
+      "Anders Celsius",
+      "Celsius",
+      "安德斯·摄尔修斯",
+      "摄尔修斯"
+     ]
+    }
+   ],
+   "mc": {
+    "bridge_native": {
+     "gold": "Anders Celsius",
+     "distractors": [
+      "Johannes Kepler",
+      "Tycho Brahe",
+      "Ole Rømer",
+      "Edmond Halley"
+     ]
+    },
+    "language": {
+     "gold": "Indonesian",
+     "distractors": [
+      "Vietnamese",
+      "Polish",
+      "Turkish",
+      "Swahili"
+     ]
+    }
+   },
+   "mc_roles": [
+    "bridge_native",
+    "language"
+   ],
+   "subfamily": "2hop",
+   "probe_token_lens": {
+    "units": {
+     "bridge_native": {
+      "en": [
+       2,
+       1
+      ],
+      "zh": [
+       6,
+       3
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "zh": [
+       2,
+       3
+      ],
+      "id": [
+       2,
+       3
+      ]
+     }
+    }
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "source": "authored (claude-opus-5-5) for deepseek-v4-flash: Use only Russian (ru), Indonesian (id) or Vietnamese (vi), and famous bridges a well-read adult knows at once (landmarks, inventions, famous books, scientists).",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "Use only Russian (ru), Indonesian (id) or Vietnamese (vi), and famous bridges a well-read adult knows at once (landmarks, inventions, famous books, scientists)."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 113,
+    "plan": "0075",
+    "steer": "- Last wave: 8/25 passed.\n- Rejected by lint before gating: 5x mc: the MC builder dropped this candidate (no options); 1x natural:bridge_native 'Descartes' is not creditable; 1x natural:bridge_native 'Leibniz' is not creditable; 1x natural:bridge_native 'Goethe' is not creditable. Avoid these.\n- Failed (gold -> what the model wrote): Tabanan -> model said 'Tabanan' (4/10); Roma -> model said 'Hà Nội' (0/10); Côn Đảo -> model said 'Võ Thị Sáu' (0/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): Житомире; ЦЕРН; Леонид; Орле; Дюпен; 1602; 1 đô la; Joli-Cœur",
+    "mc_build": {
+     "onecue": {
+      "version": "onecue-v3",
+      "at": "2026-11-16T20:56:30+00:00",
+      "flagged": {
+       "bridge_native": [
+        "Daniel Gabriel Fahrenheit"
+       ]
+      },
+      "replaced": {
+       "bridge_native": {
+        "Daniel Gabriel Fahrenheit": "Johannes Kepler"
+       }
+      }
+     }
+    },
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   },
+   "native_units_for": [
+    "en",
+    "zh"
+   ]
+  },
+  {
+   "name": "multilingual-au-t1-w113c0-mlmh-vi-dinhdoclap-ngovietthu",
+   "lang": "vi",
+   "prompt": "Công trình ở Sài Gòn có cánh cổng bị xe tăng húc đổ trưa 30/4/1975 được thiết kế bởi kiến trúc sư",
+   "target": "Ngô Viết Thụ",
+   "target_alts": [
+    "Ngô Viết Thụ",
+    "KTS Ngô Viết Thụ"
+   ],
+   "intermediates": [
+    "Independence Palace"
+   ],
+   "units": [
+    {
+     "role": "bridge_l2",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "vi": [
+       "Dinh Độc Lập",
+       "Dinh Thống Nhất",
+       "Hội trường Thống Nhất"
+      ]
+     },
+     "forms_all": {
+      "vi": [
+       "Dinh Độc Lập",
+       "Dinh Thống Nhất",
+       "Hội trường Thống Nhất"
+      ]
+     },
+     "match": [
+      "Dinh Độc Lập",
+      "Dinh Thống Nhất",
+      "Hội trường Thống Nhất"
+     ],
+     "not_creditable": {}
+    },
+    {
+     "role": "bridge_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Independence Palace",
+       "Reunification Palace"
+      ],
+      "zh": [
+       "独立宫",
+       "统一宫"
+      ]
+     },
+     "match": [
+      "Independence Palace",
+      "Reunification Palace",
+      "独立宫",
+      "统一宫"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Vietnamese"
+      ],
+      "zh": [
+       "越南语"
+      ],
+      "vi": [
+       "tiếng Việt",
+       "Việt ngữ",
+       "tiếng Việt Nam"
+      ]
+     },
+     "match": [
+      "Vietnamese",
+      "越南语",
+      "tiếng Việt",
+      "Việt ngữ",
+      "tiếng Việt Nam"
+     ]
+    }
+   ],
+   "bridge_l2_creditable": [
+    "Dinh Độc Lập",
+    "Dinh Thống Nhất",
+    "Hội trường Thống Nhất"
+   ],
+   "l2_equals_native": false,
+   "bridges": [
+    {
+     "question": "Which Saigon building had its gates rammed by a tank on 30 April 1975? Answer with just the name.",
+     "units": [
+      "bridge_l2",
+      "bridge_native"
+     ],
+     "answers": [
+      "Independence Palace",
+      "Reunification Palace",
+      "Dinh Độc Lập",
+      "Dinh Thống Nhất",
+      "Hội trường Thống Nhất",
+      "独立宫",
+      "统一宫"
+     ]
+    }
+   ],
+   "mc": {
+    "bridge_native": {
+     "gold": "Independence Palace",
+     "distractors": [
+      "Saigon Central Post Office",
+      "Saigon Opera House",
+      "Notre-Dame Cathedral Basilica of Saigon",
+      "Ben Thanh Market"
+     ]
+    },
+    "language": {
+     "gold": "Vietnamese",
+     "distractors": [
+      "Indonesian",
+      "Turkish",
+      "Hungarian",
+      "Polish"
+     ]
+    }
+   },
+   "mc_roles": [
+    "bridge_native",
+    "language"
+   ],
+   "subfamily": "2hop",
+   "probe_token_lens": {
+    "units": {
+     "bridge_l2": {
+      "vi": [
+       6,
+       5,
+       7
+      ]
+     },
+     "bridge_native": {
+      "en": [
+       2,
+       3
+      ],
+      "zh": [
+       2,
+       2
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "zh": [
+       2
+      ],
+      "vi": [
+       5,
+       4,
+       6
+      ]
+     }
+    }
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "source": "authored (claude-opus-5-5) for deepseek-v4-flash: Use only Russian (ru), Indonesian (id) or Vietnamese (vi), and famous bridges a well-read adult knows at once (landmarks, inventions, famous books, scientists).",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "Use only Russian (ru), Indonesian (id) or Vietnamese (vi), and famous bridges a well-read adult knows at once (landmarks, inventions, famous books, scientists)."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 113,
+    "plan": "0075",
+    "steer": "- Last wave: 8/25 passed.\n- Rejected by lint before gating: 5x mc: the MC builder dropped this candidate (no options); 1x natural:bridge_native 'Descartes' is not creditable; 1x natural:bridge_native 'Leibniz' is not creditable; 1x natural:bridge_native 'Goethe' is not creditable. Avoid these.\n- Failed (gold -> what the model wrote): Tabanan -> model said 'Tabanan' (4/10); Roma -> model said 'Hà Nội' (0/10); Côn Đảo -> model said 'Võ Thị Sáu' (0/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): Житомире; ЦЕРН; Леонид; Орле; Дюпен; 1602; 1 đô la; Joli-Cœur",
+    "mc_build": {
+     "onecue": {
+      "version": "onecue-v3",
+      "at": "2026-11-16T20:56:30+00:00",
+      "flagged": {}
+     }
+    },
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   },
+   "native_units_for": [
+    "en",
+    "zh"
+   ]
+  },
+  {
+   "name": "multilingual-au-t1-w115c1-mlmh-ru-coubertin-francuz",
+   "lang": "ru",
+   "prompt": "Барон, возродивший в конце XIX века Олимпийские игры, по национальности был",
+   "target": "французом",
+   "target_alts": [
+    "французом",
+    "француз",
+    "французский"
+   ],
+   "intermediates": [
+    "Pierre de Coubertin"
+   ],
+   "units": [
+    {
+     "role": "bridge_l2",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "ru": [
+       "Пьер де Кубертен",
+       "Кубертен"
+      ]
+     },
+     "forms_all": {
+      "ru": [
+       "Пьер де Кубертен",
+       "Кубертен"
+      ]
+     },
+     "match": [
+      "Пьер де Кубертен",
+      "Кубертен"
+     ],
+     "not_creditable": {}
+    },
+    {
+     "role": "bridge_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Pierre de Coubertin",
+       "Baron de Coubertin"
+      ],
+      "zh": [
+       "皮埃尔·德·顾拜旦",
+       "顾拜旦"
+      ]
+     },
+     "match": [
+      "Pierre de Coubertin",
+      "Baron de Coubertin",
+      "皮埃尔·德·顾拜旦",
+      "顾拜旦"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Russian"
+      ],
+      "zh": [
+       "俄语",
+       "俄文"
+      ],
+      "ru": [
+       "русский",
+       "по-русски",
+       "русский язык",
+       "на русском языке",
+       "русском",
+       "русском языке",
+       "на русском"
+      ]
+     },
+     "match": [
+      "Russian",
+      "俄语",
+      "俄文",
+      "русский",
+      "по-русски",
+      "русский язык",
+      "на русском языке",
+      "русском",
+      "русском языке",
+      "на русском"
+     ]
+    }
+   ],
+   "bridge_l2_creditable": [
+    "Пьер де Кубертен",
+    "Кубертен"
+   ],
+   "l2_equals_native": false,
+   "bridges": [
+    {
+     "question": "Which baron revived the Olympic Games at the end of the 19th century? Answer with just the name.",
+     "units": [
+      "bridge_l2",
+      "bridge_native"
+     ],
+     "answers": [
+      "Pierre de Coubertin",
+      "Baron de Coubertin",
+      "Пьер де Кубертен",
+      "Кубертен",
+      "皮埃尔·德·顾拜旦",
+      "顾拜旦",
+      "Coubertin"
+     ]
+    }
+   ],
+   "mc": {
+    "bridge_native": {
+     "gold": "Pierre de Coubertin",
+     "distractors": [
+      "Demetrios Vikelas",
+      "Panagiotis Soutsos",
+      "Godefroy de Blonay",
+      "Ferenc Kemény"
+     ]
+    },
+    "language": {
+     "gold": "Russian",
+     "distractors": [
+      "Polish",
+      "Finnish",
+      "Hungarian",
+      "Greek"
+     ]
+    }
+   },
+   "mc_roles": [
+    "bridge_native",
+    "language"
+   ],
+   "subfamily": "2hop",
+   "probe_token_lens": {
+    "units": {
+     "bridge_l2": {
+      "ru": [
+       6,
+       3
+      ]
+     },
+     "bridge_native": {
+      "en": [
+       5,
+       5
+      ],
+      "zh": [
+       8,
+       3
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "zh": [
+       2,
+       2
+      ],
+      "ru": [
+       2,
+       4,
+       3,
+       4,
+       2,
+       3,
+       3
+      ]
+     }
+    }
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "source": "authored (claude-opus-5-5) for deepseek-v4-flash: Use only Russian (ru), Indonesian (id) or Vietnamese (vi), and famous bridges a well-read adult knows at once (landmarks, inventions, famous books, scientists).",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "Use only Russian (ru), Indonesian (id) or Vietnamese (vi), and famous bridges a well-read adult knows at once (landmarks, inventions, famous books, scientists)."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 115,
+    "plan": "0075",
+    "steer": "- Last wave: 8/32 passed.\n- Rejected by lint before gating: 11x mc: the MC builder dropped this candidate (no options); 2x leak: ['novel'] in prompt; 1x natural:bridge_native 'Tetris' is not creditable; 1x leak: ['thuyet', 'tieu', 'viet'] in prompt. Avoid these.\n- Failed (gold -> what the model wrote): Singapore -> model said 'tầng 23' (0/10); Hàn -> model said 'sông Hàn' (4/10); Semarang -> model said 'Jalan Stasiun' (1/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): Оскар Уайльд; Gustav Klimt; Сиэтл; Вернер Гейзенберг; J. D. Salinger; Дэн Браун; Виктор Васнецов; Мышкин",
+    "mc_build": {
+     "onecue": {
+      "version": "onecue-v3",
+      "at": "2026-11-16T22:33:43+00:00",
+      "flagged": {
+       "bridge_native": [
+        "Avery Brundage",
+        "Jacques Rogge",
+        "Juan Antonio Samaranch"
+       ]
+      },
+      "replaced": {
+       "bridge_native": {
+        "Avery Brundage": "Panagiotis Soutsos",
+        "Juan Antonio Samaranch": "Godefroy de Blonay",
+        "Jacques Rogge": "Ferenc Kemény"
+       }
+      }
+     }
+    },
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   },
+   "native_units_for": [
+    "en",
+    "zh"
+   ]
+  },
+  {
+   "name": "multilingual-au-t1-w116c1-mlmh-ru-tychobrahe-danish",
+   "lang": "ru",
+   "prompt": "Астроном, лишившийся части носа на дуэли и построивший обсерваторию Ураниборг, был по происхождению",
+   "target": "датчанином",
+   "target_alts": [
+    "датчанином",
+    "датчанин"
+   ],
+   "intermediates": [
+    "Tycho Brahe"
+   ],
+   "units": [
+    {
+     "role": "bridge_l2",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "ru": [
+       "Тихо Браге",
+       "Браге"
+      ]
+     },
+     "forms_all": {
+      "ru": [
+       "Тихо Браге",
+       "Браге"
+      ]
+     },
+     "match": [
+      "Тихо Браге",
+      "Браге"
+     ],
+     "not_creditable": {}
+    },
+    {
+     "role": "bridge_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Tycho Brahe"
+      ],
+      "zh": [
+       "第谷·布拉赫",
+       "第谷"
+      ]
+     },
+     "match": [
+      "Tycho Brahe",
+      "第谷·布拉赫",
+      "第谷"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Russian"
+      ],
+      "zh": [
+       "俄语",
+       "俄文"
+      ],
+      "ru": [
+       "русский",
+       "по-русски",
+       "русский язык",
+       "на русском языке",
+       "русском",
+       "русском языке",
+       "на русском"
+      ]
+     },
+     "match": [
+      "Russian",
+      "俄语",
+      "俄文",
+      "русский",
+      "по-русски",
+      "русский язык",
+      "на русском языке",
+      "русском",
+      "русском языке",
+      "на русском"
+     ]
+    }
+   ],
+   "bridge_l2_creditable": [
+    "Тихо Браге",
+    "Браге"
+   ],
+   "l2_equals_native": false,
+   "bridges": [
+    {
+     "question": "Which astronomer lost part of his nose in a duel and built the Uraniborg observatory? Answer with just the name.",
+     "units": [
+      "bridge_l2",
+      "bridge_native"
+     ],
+     "answers": [
+      "Tycho Brahe",
+      "Тихо Браге",
+      "Браге",
+      "第谷·布拉赫",
+      "第谷",
+      "Tycho",
+      "Brahe"
+     ]
+    }
+   ],
+   "mc": {
+    "bridge_native": {
+     "gold": "Tycho Brahe",
+     "distractors": [
+      "Edmond Halley",
+      "Giovanni Cassini",
+      "Christiaan Huygens",
+      "Ole Rømer"
+     ]
+    },
+    "language": {
+     "gold": "Russian",
+     "distractors": [
+      "Polish",
+      "Finnish",
+      "Hungarian",
+      "Greek"
+     ]
+    }
+   },
+   "mc_roles": [
+    "bridge_native",
+    "language"
+   ],
+   "subfamily": "2hop",
+   "probe_token_lens": {
+    "units": {
+     "bridge_l2": {
+      "ru": [
+       4,
+       2
+      ]
+     },
+     "bridge_native": {
+      "en": [
+       4
+      ],
+      "zh": [
+       5,
+       2
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "zh": [
+       2,
+       2
+      ],
+      "ru": [
+       2,
+       4,
+       3,
+       4,
+       2,
+       3,
+       3
+      ]
+     }
+    }
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "source": "authored (claude-opus-5-5) for deepseek-v4-flash: Use only Russian (ru), Indonesian (id) or Vietnamese (vi), and famous bridges a well-read adult knows at once (landmarks, inventions, famous books, scientists).",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "Use only Russian (ru), Indonesian (id) or Vietnamese (vi), and famous bridges a well-read adult knows at once (landmarks, inventions, famous books, scientists)."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 116,
+    "plan": "0075",
+    "mc_build": {
+     "onecue": {
+      "version": "onecue-v3",
+      "at": "2026-11-17T02:59:07+00:00",
+      "flagged": {}
+     }
+    },
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   },
+   "native_units_for": [
+    "en",
+    "zh"
+   ]
+  },
+  {
+   "name": "multilingual-au-t1-w120c1-mlmh-ru-kovalevskaya-weierstrass",
+   "lang": "ru",
+   "prompt": "Первая в Северной Европе женщина — профессор математики, автор знаменитой работы о вращении твёрдого тела, училась в Берлине частным образом у великого математика",
+   "target": "Вейерштрасса",
+   "target_alts": [
+    "Вейерштрасса",
+    "Вейерштрасс",
+    "Карла Вейерштрасса"
+   ],
+   "intermediates": [
+    "Sofia Kovalevskaya"
+   ],
+   "units": [
+    {
+     "role": "bridge_l2",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "ru": [
+       "Софья Ковалевская",
+       "Ковалевская",
+       "Софья Васильевна Ковалевская"
+      ]
+     },
+     "forms_all": {
+      "ru": [
+       "Софья Ковалевская",
+       "Ковалевская",
+       "Софья Васильевна Ковалевская"
+      ]
+     },
+     "match": [
+      "Софья Ковалевская",
+      "Ковалевская",
+      "Софья Васильевна Ковалевская"
+     ],
+     "not_creditable": {}
+    },
+    {
+     "role": "bridge_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Sofia Kovalevskaya",
+       "Sofya Kovalevskaya"
+      ],
+      "zh": [
+       "索菲娅·柯瓦列夫斯卡娅",
+       "柯瓦列夫斯卡娅"
+      ]
+     },
+     "match": [
+      "Sofia Kovalevskaya",
+      "Sofya Kovalevskaya",
+      "索菲娅·柯瓦列夫斯卡娅",
+      "柯瓦列夫斯卡娅"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Russian"
+      ],
+      "zh": [
+       "俄语",
+       "俄文"
+      ],
+      "ru": [
+       "русский",
+       "по-русски",
+       "русский язык",
+       "на русском языке",
+       "русском",
+       "русском языке",
+       "на русском"
+      ]
+     },
+     "match": [
+      "Russian",
+      "俄语",
+      "俄文",
+      "русский",
+      "по-русски",
+      "русский язык",
+      "на русском языке",
+      "русском",
+      "русском языке",
+      "на русском"
+     ]
+    }
+   ],
+   "bridge_l2_creditable": [
+    "Софья Ковалевская",
+    "Ковалевская",
+    "Софья Васильевна Ковалевская"
+   ],
+   "l2_equals_native": false,
+   "bridges": [
+    {
+     "question": "Which Russian woman became the first female professor of mathematics in Northern Europe and is famous for her work on the rotation of a rigid body? Answer with just the name.",
+     "units": [
+      "bridge_l2",
+      "bridge_native"
+     ],
+     "answers": [
+      "Sofia Kovalevskaya",
+      "Sofya Kovalevskaya",
+      "Софья Ковалевская",
+      "Ковалевская",
+      "Софья Васильевна Ковалевская",
+      "索菲娅·柯瓦列夫斯卡娅",
+      "柯瓦列夫斯卡娅",
+      "Kovalevskaya"
+     ]
+    }
+   ],
+   "mc": {
+    "bridge_native": {
+     "gold": "Sofia Kovalevskaya",
+     "distractors": [
+      "Emmy Noether",
+      "Sophie Germain",
+      "Olga Ladyzhenskaya",
+      "Maria Gaetana Agnesi"
+     ]
+    },
+    "language": {
+     "gold": "Russian",
+     "distractors": [
+      "Polish",
+      "Finnish",
+      "Hungarian",
+      "Greek"
+     ]
+    }
+   },
+   "mc_roles": [
+    "bridge_native",
+    "language"
+   ],
+   "subfamily": "2hop",
+   "probe_token_lens": {
+    "units": {
+     "bridge_l2": {
+      "ru": [
+       7,
+       3,
+       11
+      ]
+     },
+     "bridge_native": {
+      "en": [
+       6,
+       7
+      ],
+      "zh": [
+       10,
+       6
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "zh": [
+       2,
+       2
+      ],
+      "ru": [
+       2,
+       4,
+       3,
+       4,
+       2,
+       3,
+       3
+      ]
+     }
+    }
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "source": "authored (claude-opus-5-5) for deepseek-v4-flash: Use only Russian (ru), Indonesian (id) or Vietnamese (vi), and famous bridges a well-read adult knows at once (landmarks, inventions, famous books, scientists).",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "Use only Russian (ru), Indonesian (id) or Vietnamese (vi), and famous bridges a well-read adult knows at once (landmarks, inventions, famous books, scientists)."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 120,
+    "plan": "0075",
+    "mc_build": {
+     "onecue": {
+      "version": "onecue-v3",
+      "at": "2026-11-17T05:11:44+00:00",
+      "flagged": {}
+     }
+    },
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   },
+   "native_units_for": [
+    "en",
+    "zh"
+   ]
+  },
+  {
+   "name": "multilingual-au-t1-w120c2-mlmh-ru-rosalind-franklin-37",
+   "lang": "ru",
+   "prompt": "Британская женщина-химик, чей рентгеновский снимок «Фото 51» помог раскрыть строение ДНК, умерла от рака в возрасте",
+   "target": "37 лет",
+   "target_alts": [
+    "37 лет",
+    "37",
+    "тридцати семи лет"
+   ],
+   "intermediates": [
+    "Rosalind Franklin"
+   ],
+   "units": [
+    {
+     "role": "bridge_l2",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "ru": [
+       "Розалинд Франклин",
+       "Франклин"
+      ]
+     },
+     "forms_all": {
+      "ru": [
+       "Розалинд Франклин",
+       "Франклин"
+      ]
+     },
+     "match": [
+      "Розалинд Франклин",
+      "Франклин"
+     ],
+     "not_creditable": {}
+    },
+    {
+     "role": "bridge_native",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Rosalind Franklin",
+       "Rosalind Elsie Franklin"
+      ],
+      "zh": [
+       "罗莎琳·富兰克林",
+       "富兰克林"
+      ]
+     },
+     "match": [
+      "Rosalind Franklin",
+      "Rosalind Elsie Franklin",
+      "罗莎琳·富兰克林",
+      "富兰克林"
+     ]
+    },
+    {
+     "role": "language",
+     "required": true,
+     "multi_token": false,
+     "forms": {
+      "en": [
+       "Russian"
+      ],
+      "zh": [
+       "俄语",
+       "俄文"
+      ],
+      "ru": [
+       "русский",
+       "по-русски",
+       "русский язык",
+       "на русском языке",
+       "русском",
+       "русском языке",
+       "на русском"
+      ]
+     },
+     "match": [
+      "Russian",
+      "俄语",
+      "俄文",
+      "русский",
+      "по-русски",
+      "русский язык",
+      "на русском языке",
+      "русском",
+      "русском языке",
+      "на русском"
+     ]
+    }
+   ],
+   "bridge_l2_creditable": [
+    "Розалинд Франклин",
+    "Франклин"
+   ],
+   "l2_equals_native": false,
+   "bridges": [
+    {
+     "question": "Which British chemist produced the X-ray image Photo 51 that revealed the structure of DNA? Answer with just the name.",
+     "units": [
+      "bridge_l2",
+      "bridge_native"
+     ],
+     "answers": [
+      "Rosalind Franklin",
+      "Rosalind Elsie Franklin",
+      "Розалинд Франклин",
+      "Франклин",
+      "罗莎琳·富兰克林",
+      "富兰克林",
+      "Franklin"
+     ]
+    }
+   ],
+   "mc": {
+    "bridge_native": {
+     "gold": "Rosalind Franklin",
+     "distractors": [
+      "Dorothy Hodgkin",
+      "Kathleen Lonsdale",
+      "Ida Freund",
+      "Martha Whiteley"
+     ]
+    },
+    "language": {
+     "gold": "Russian",
+     "distractors": [
+      "Polish",
+      "Finnish",
+      "Hungarian",
+      "Greek"
+     ]
+    }
+   },
+   "mc_roles": [
+    "bridge_native",
+    "language"
+   ],
+   "subfamily": "2hop",
+   "probe_token_lens": {
+    "units": {
+     "bridge_l2": {
+      "ru": [
+       6,
+       3
+      ]
+     },
+     "bridge_native": {
+      "en": [
+       4,
+       6
+      ],
+      "zh": [
+       7,
+       3
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "zh": [
+       2,
+       2
+      ],
+      "ru": [
+       2,
+       4,
+       3,
+       4,
+       2,
+       3,
+       3
+      ]
+     }
+    }
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "source": "authored (claude-opus-5-5) for deepseek-v4-flash: Use only Russian (ru), Indonesian (id) or Vietnamese (vi), and famous bridges a well-read adult knows at once (landmarks, inventions, famous books, scientists).",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "Use only Russian (ru), Indonesian (id) or Vietnamese (vi), and famous bridges a well-read adult knows at once (landmarks, inventions, famous books, scientists)."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 120,
+    "plan": "0075",
+    "mc_build": {
+     "onecue": {
+      "version": "onecue-v3",
+      "at": "2026-11-17T05:11:44+00:00",
+      "flagged": {}
+     }
+    },
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   },
+   "native_units_for": [
+    "en",
+    "zh"
+   ]
+  }
+ ]
+}

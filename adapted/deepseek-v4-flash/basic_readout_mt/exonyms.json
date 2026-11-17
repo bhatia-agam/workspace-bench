@@ -1,0 +1,847 @@
+{
+ "version": "adapt-deepseek-v4-flash",
+ "note": "adapted-only items' extra gold name forms (ru / es / fr / de / fa exonyms, authored with the item); added to evals/basic_readout_mt/exonyms.json by the judge (registry.load_resource)",
+ "items": {
+  "basic-au-t1-w100c0-brh-ent-chromosome-21-extra": {
+   "readout": {
+    "ru": [
+     "синдром Дауна"
+    ],
+    "es": [
+     "síndrome de Down"
+    ],
+    "fr": [
+     "syndrome de Down",
+     "trisomie 21"
+    ],
+    "de": [
+     "Down-Syndrom"
+    ],
+    "fa": [
+     "سندرم داون"
+    ]
+   }
+  },
+  "basic-au-t1-w100c0-brh-ent-hypotenuse-squares": {
+   "readout": {
+    "ru": [
+     "теорема Пифагора"
+    ],
+    "es": [
+     "teorema de Pitágoras"
+    ],
+    "fr": [
+     "théorème de Pythagore"
+    ],
+    "de": [
+     "Satz des Pythagoras"
+    ],
+    "fa": [
+     "قضیه فیثاغورس"
+    ]
+   }
+  },
+  "basic-au-t1-w100c0-brh-ent-origin-of-species-author": {
+   "readout": {
+    "ru": [
+     "Чарлз Дарвин"
+    ],
+    "fa": [
+     "چارلز داروین"
+    ]
+   }
+  },
+  "basic-au-t1-w100c1-brh-ent-exhaled-gas-co2": {
+   "readout": {
+    "ru": [
+     "углекислый газ",
+     "диоксид углерода"
+    ],
+    "es": [
+     "dióxido de carbono"
+    ],
+    "fr": [
+     "dioxyde de carbone"
+    ],
+    "de": [
+     "Kohlendioxid",
+     "Kohlenstoffdioxid"
+    ],
+    "fa": [
+     "دی‌اکسید کربن"
+    ]
+   }
+  },
+  "basic-au-t1-w100c1-brh-ent-mona-lisa-painter": {
+   "readout": {
+    "ru": [
+     "Леонардо да Винчи"
+    ],
+    "fr": [
+     "Léonard de Vinci"
+    ],
+    "fa": [
+     "لئوناردو دا وینچی"
+    ]
+   }
+  },
+  "basic-au-t1-w100c1-brh-ent-tic-condition": {
+   "readout": {
+    "ru": [
+     "синдром Туретта"
+    ],
+    "es": [
+     "síndrome de Tourette"
+    ],
+    "fr": [
+     "syndrome de Gilles de la Tourette"
+    ],
+    "de": [
+     "Tourette-Syndrom"
+    ],
+    "fa": [
+     "سندرم توره"
+    ]
+   }
+  },
+  "basic-au-t1-w100c2-brh-ent-battery-electrolyte-compound": {
+   "readout": {
+    "ru": [
+     "серная кислота"
+    ],
+    "es": [
+     "ácido sulfúrico"
+    ],
+    "fr": [
+     "acide sulfurique"
+    ],
+    "de": [
+     "Schwefelsäure"
+    ],
+    "fa": [
+     "اسید سولفوریک"
+    ]
+   }
+  },
+  "basic-au-t1-w100c2-brh-ent-mongol-founder-1206": {
+   "readout": {
+    "ru": [
+     "Чингисхан"
+    ],
+    "es": [
+     "Gengis Kan"
+    ],
+    "fr": [
+     "Gengis Khan"
+    ],
+    "de": [
+     "Dschingis Khan"
+    ],
+    "fa": [
+     "چنگیز خان"
+    ]
+   }
+  },
+  "basic-au-t1-w100c2-brh-ent-navigator-1492-landfall": {
+   "readout": {
+    "ru": [
+     "Христофор Колумб"
+    ],
+    "fr": [
+     "Christophe Colomb"
+    ],
+    "de": [
+     "Christoph Kolumbus"
+    ],
+    "fa": [
+     "کریستف کلمب"
+    ]
+   }
+  },
+  "basic-au-t1-w100c2-brh-ent-siren-frequency-change": {
+   "readout": {
+    "ru": [
+     "эффект Доплера"
+    ],
+    "es": [
+     "efecto Doppler"
+    ],
+    "fr": [
+     "effet Doppler"
+    ],
+    "de": [
+     "Doppler-Effekt"
+    ],
+    "fa": [
+     "اثر دوپلر"
+    ]
+   }
+  },
+  "basic-au-t1-w101c0-brh-ent-h2o2-compound": {
+   "readout": {
+    "ru": [
+     "пероксид водорода",
+     "перекись водорода"
+    ],
+    "es": [
+     "peróxido de hidrógeno"
+    ],
+    "fr": [
+     "peroxyde d'hydrogène"
+    ],
+    "de": [
+     "Wasserstoffperoxid"
+    ]
+   }
+  },
+  "basic-au-t1-w101c0-brh-ent-quantum-limit": {
+   "readout": {
+    "ru": [
+     "принцип неопределённости"
+    ],
+    "es": [
+     "principio de incertidumbre"
+    ],
+    "fr": [
+     "principe d'incertitude"
+    ],
+    "de": [
+     "Heisenbergsche Unschärferelation",
+     "Unschärferelation"
+    ]
+   }
+  },
+  "basic-au-t1-w101c0-brh-ent-shaking-palsy": {
+   "readout": {
+    "ru": [
+     "болезнь Паркинсона"
+    ],
+    "es": [
+     "enfermedad de Parkinson"
+    ],
+    "fr": [
+     "maladie de Parkinson"
+    ],
+    "de": [
+     "Parkinson-Krankheit"
+    ]
+   }
+  },
+  "basic-au-t1-w101c0-brh-ent-spring-law": {
+   "readout": {
+    "ru": [
+     "Закон Гука"
+    ],
+    "es": [
+     "ley de Hooke"
+    ],
+    "fr": [
+     "loi de Hooke"
+    ],
+    "de": [
+     "Hookesches Gesetz"
+    ]
+   }
+  },
+  "basic-au-t1-w101c1-brh-ent-amyloid-dementia": {
+   "readout": {
+    "ru": [
+     "болезнь Альцгеймера"
+    ],
+    "es": [
+     "enfermedad de Alzheimer"
+    ],
+    "fr": [
+     "maladie d'Alzheimer"
+    ],
+    "de": [
+     "Alzheimer-Krankheit"
+    ]
+   }
+  },
+  "basic-au-t1-w101c1-brh-ent-dental-anesthetic-gas": {
+   "readout": {
+    "ru": [
+     "закись азота"
+    ],
+    "es": [
+     "óxido nitroso"
+    ],
+    "fr": [
+     "protoxyde d'azote"
+    ],
+    "de": [
+     "Distickstoffmonoxid",
+     "Lachgas"
+    ]
+   }
+  },
+  "basic-au-t1-w101c1-brh-ent-hydraulic-press-rule": {
+   "readout": {
+    "ru": [
+     "закон Паскаля"
+    ],
+    "es": [
+     "principio de Pascal"
+    ],
+    "fr": [
+     "principe de Pascal"
+    ],
+    "de": [
+     "Pascalsches Gesetz"
+    ]
+   }
+  },
+  "basic-au-t1-w101c1-brh-ent-point-charge-force": {
+   "readout": {
+    "ru": [
+     "закон Кулона"
+    ],
+    "es": [
+     "ley de Coulomb"
+    ],
+    "fr": [
+     "loi de Coulomb"
+    ],
+    "de": [
+     "Coulombsches Gesetz"
+    ]
+   }
+  },
+  "basic-au-t1-w101c1-brh-ent-spain-morocco-channel": {
+   "readout": {
+    "ru": [
+     "Гибралтарский пролив"
+    ],
+    "es": [
+     "estrecho de Gibraltar"
+    ],
+    "fr": [
+     "détroit de Gibraltar"
+    ],
+    "de": [
+     "Straße von Gibraltar"
+    ]
+   }
+  },
+  "basic-au-t1-w101c1-brh-ent-vinegar-compound": {
+   "readout": {
+    "ru": [
+     "уксусная кислота"
+    ],
+    "es": [
+     "ácido acético"
+    ],
+    "fr": [
+     "acide acétique"
+    ],
+    "de": [
+     "Essigsäure"
+    ]
+   }
+  },
+  "basic-au-t1-w101c1-brh-ent-xxy-condition": {
+   "readout": {
+    "ru": [
+     "синдром Клайнфельтера"
+    ],
+    "es": [
+     "síndrome de Klinefelter"
+    ],
+    "fr": [
+     "syndrome de Klinefelter"
+    ],
+    "de": [
+     "Klinefelter-Syndrom"
+    ]
+   }
+  },
+  "basic-au-t1-w101c2-brh-ent-changing-flux-law": {
+   "readout": {
+    "ru": [
+     "закон Фарадея"
+    ],
+    "es": [
+     "ley de Faraday"
+    ],
+    "fr": [
+     "loi de Faraday"
+    ],
+    "de": [
+     "Faradaysches Induktionsgesetz"
+    ]
+   }
+  },
+  "basic-au-t1-w101c2-brh-ent-equal-volumes-gas-law": {
+   "readout": {
+    "ru": [
+     "закон Авогадро"
+    ],
+    "es": [
+     "ley de Avogadro"
+    ],
+    "fr": [
+     "loi d'Avogadro"
+    ],
+    "de": [
+     "Avogadrosches Gesetz"
+    ]
+   }
+  },
+  "basic-au-t1-w101c2-brh-ent-first-circumnavigation-leader": {
+   "readout": {
+    "ru": [
+     "Фернан Магеллан"
+    ],
+    "fr": [
+     "Fernand de Magellan"
+    ]
+   }
+  },
+  "basic-au-t1-w101c2-brh-ent-florence-banking-clan": {
+   "readout": {
+    "ru": [
+     "Медичи"
+    ],
+    "fr": [
+     "Médicis"
+    ]
+   }
+  },
+  "basic-au-t1-w101c2-brh-ent-monosomy-x-condition": {
+   "readout": {
+    "ru": [
+     "синдром Тёрнера",
+     "синдром Шерешевского — Тёрнера"
+    ],
+    "es": [
+     "síndrome de Turner"
+    ],
+    "fr": [
+     "syndrome de Turner"
+    ],
+    "de": [
+     "Turner-Syndrom"
+    ]
+   }
+  },
+  "basic-au-t1-w102c0-brh-ent-ac-induction-inventor": {
+   "readout": {
+    "ru": [
+     "Никола Тесла"
+    ],
+    "fa": [
+     "نیکola تسلا",
+     "نیکولا تسلا"
+    ]
+   }
+  },
+  "basic-au-t1-w102c0-brh-ent-atlantic-pacific-waterway": {
+   "readout": {
+    "ru": [
+     "Панамский канал"
+    ],
+    "es": [
+     "canal de Panamá"
+    ],
+    "fr": [
+     "canal de Panama"
+    ],
+    "de": [
+     "Panamakanal"
+    ],
+    "fa": [
+     "کانال پاناما"
+    ]
+   }
+  },
+  "basic-au-t1-w102c0-brh-ent-huntington-neuro": {
+   "readout": {
+    "ru": [
+     "болезнь Гентингтона"
+    ],
+    "es": [
+     "enfermedad de Huntington"
+    ],
+    "fr": [
+     "maladie de Huntington"
+    ],
+    "de": [
+     "Chorea Huntington"
+    ],
+    "fa": [
+     "بیماری هانتینگتون"
+    ]
+   }
+  },
+  "basic-au-t1-w102c0-brh-ent-lemon-sour-compound": {
+   "readout": {
+    "ru": [
+     "лимонная кислота"
+    ],
+    "es": [
+     "ácido cítrico"
+    ],
+    "fr": [
+     "acide citrique"
+    ],
+    "de": [
+     "Zitronensäure"
+    ],
+    "fa": [
+     "اسید سیتریک"
+    ]
+   }
+  },
+  "basic-au-t1-w102c0-brh-ent-munchausen-psych": {
+   "readout": {
+    "ru": [
+     "синдром Мюнхгаузена"
+    ],
+    "es": [
+     "síndrome de Munchausen"
+    ],
+    "fr": [
+     "syndrome de Münchhausen"
+    ],
+    "de": [
+     "Münchhausen-Syndrom"
+    ],
+    "fa": [
+     "سندرم مونچاوزن"
+    ]
+   }
+  },
+  "basic-au-t1-w102c0-brh-ent-photon-energy-quantity": {
+   "readout": {
+    "ru": [
+     "постоянная Планка"
+    ],
+    "es": [
+     "constante de Planck"
+    ],
+    "fr": [
+     "constante de Planck"
+    ],
+    "de": [
+     "Plancksches Wirkungsquantum"
+    ],
+    "fa": [
+     "ثابت پلانک"
+    ]
+   }
+  },
+  "basic-au-t1-w102c0-brh-ent-protein-packaging-organelle": {
+   "readout": {
+    "ru": [
+     "аппарат Гольджи"
+    ],
+    "es": [
+     "aparato de Golgi"
+    ],
+    "fr": [
+     "appareil de Golgi"
+    ],
+    "de": [
+     "Golgi-Apparat"
+    ],
+    "fa": [
+     "دستگاه گلژی"
+    ]
+   }
+  },
+  "basic-au-t1-w102c0-brh-ent-wiles-1994-proof": {
+   "readout": {
+    "ru": [
+     "Великая теорема Ферма"
+    ],
+    "es": [
+     "último teorema de Fermat"
+    ],
+    "fr": [
+     "grand théorème de Fermat"
+    ],
+    "de": [
+     "Großer Fermatscher Satz"
+    ],
+    "fa": [
+     "آخرین قضیه فرما"
+    ]
+   }
+  },
+  "basic-au-t1-w102c1-brh-ent-76-year-periodic": {
+   "readout": {
+    "ru": [
+     "комета Галлея"
+    ],
+    "es": [
+     "cometa Halley"
+    ],
+    "fr": [
+     "comète de Halley"
+    ],
+    "de": [
+     "Halleyscher Komet"
+    ]
+   }
+  },
+  "basic-au-t1-w102c1-brh-ent-dias-1488-headland": {
+   "readout": {
+    "ru": [
+     "мыс Доброй Надежды"
+    ],
+    "es": [
+     "cabo de Buena Esperanza"
+    ],
+    "fr": [
+     "cap de Bonne-Espérance"
+    ],
+    "de": [
+     "Kap der Guten Hoffnung"
+    ]
+   }
+  },
+  "basic-au-t1-w102c1-brh-ent-luther-wittenberg-1517": {
+   "readout": {
+    "ru": [
+     "95 тезисов"
+    ],
+    "es": [
+     "95 tesis"
+    ],
+    "fr": [
+     "Quatre-vingt-quinze thèses"
+    ],
+    "de": [
+     "95 Thesen"
+    ]
+   }
+  },
+  "basic-au-t1-w103c0-brh-ent-apollo11-moonwalker": {
+   "readout": {
+    "ru": [
+     "Нил Армстронг"
+    ],
+    "fa": [
+     "نیل آرمسترانگ"
+    ]
+   }
+  },
+  "basic-au-t1-w103c0-brh-ent-asia-america-passage": {
+   "readout": {
+    "ru": [
+     "Берингов пролив"
+    ],
+    "es": [
+     "estrecho de Bering"
+    ],
+    "fr": [
+     "détroit de Béring"
+    ],
+    "de": [
+     "Beringstraße"
+    ],
+    "fa": [
+     "تنگه برینگ"
+    ]
+   }
+  },
+  "basic-au-t1-w103c0-brh-ent-china-unifier-221bc": {
+   "readout": {
+    "ru": [
+     "империя Цинь",
+     "династия Цинь"
+    ],
+    "es": [
+     "dinastía Qin"
+    ],
+    "fr": [
+     "dynastie Qin"
+    ],
+    "de": [
+     "Qin-Dynastie"
+    ]
+   }
+  },
+  "basic-au-t1-w103c0-brh-ent-manhattan-1931-skyscraper": {
+   "readout": {
+    "ru": [
+     "Эмпайр-стейт-билдинг"
+    ],
+    "fa": [
+     "امپایر استیت بیلدینگ"
+    ]
+   }
+  },
+  "basic-au-t1-w103c0-brh-ent-nobel-explosive-liquid": {
+   "readout": {
+    "ru": [
+     "нитроглицерин"
+    ],
+    "es": [
+     "nitroglicerina"
+    ],
+    "fa": [
+     "نیتروگلیسیرین"
+    ]
+   }
+  },
+  "basic-au-t1-w103c0-brh-ent-transistor-doubling": {
+   "readout": {
+    "ru": [
+     "закон Мура"
+    ],
+    "es": [
+     "ley de Moore"
+    ],
+    "fr": [
+     "loi de Moore"
+    ],
+    "de": [
+     "Mooresches Gesetz"
+    ],
+    "fa": [
+     "قانون مور"
+    ]
+   }
+  },
+  "basic-au-t1-w104c0-brh-ent-gaugamela-331bc-victor": {
+   "readout": {
+    "ru": [
+     "Александр Македонский"
+    ],
+    "es": [
+     "Alejandro Magno"
+    ],
+    "fr": [
+     "Alexandre le Grand"
+    ],
+    "de": [
+     "Alexander der Große"
+    ],
+    "fa": [
+     "اسکندر مقدونی"
+    ]
+   }
+  },
+  "basic-au-t1-w104c0-brh-ent-gunpowder-oxidizer": {
+   "readout": {
+    "ru": [
+     "нитрат калия"
+    ],
+    "es": [
+     "nitrato de potasio"
+    ],
+    "fr": [
+     "nitrate de potassium"
+    ],
+    "de": [
+     "Kaliumnitrat"
+    ],
+    "fa": [
+     "نیترات پتاسیم"
+    ]
+   }
+  },
+  "basic-au-t1-w104c0-brh-ent-identical-fermions-rule": {
+   "readout": {
+    "ru": [
+     "принцип Паули"
+    ],
+    "es": [
+     "principio de exclusión de Pauli"
+    ],
+    "fr": [
+     "principe d'exclusion de Pauli"
+    ],
+    "de": [
+     "Paulisches Ausschließungsprinzip",
+     "Pauli-Prinzip"
+    ],
+    "fa": [
+     "اصل طرد پاولی"
+    ]
+   }
+  },
+  "basic-au-t1-w104c0-brh-ent-silent-killer-gas": {
+   "readout": {
+    "ru": [
+     "угарный газ",
+     "монооксид углерода"
+    ],
+    "es": [
+     "monóxido de carbono"
+    ],
+    "fr": [
+     "monoxyde de carbone"
+    ],
+    "de": [
+     "Kohlenstoffmonoxid",
+     "Kohlenmonoxid"
+    ],
+    "fa": [
+     "مونوکسید کربن"
+    ]
+   }
+  },
+  "basic-au-t1-w104c0-brh-ent-western-front-1916-meuse": {
+   "readout": {
+    "ru": [
+     "Верденская битва"
+    ],
+    "es": [
+     "batalla de Verdún"
+    ],
+    "fr": [
+     "bataille de Verdun"
+    ],
+    "de": [
+     "Schlacht um Verdun"
+    ],
+    "fa": [
+     "نبرد وردن"
+    ]
+   }
+  },
+  "basic-au-t1-w104c1-brh-ent-gas-mixture-law-1801": {
+   "readout": {
+    "ru": [
+     "закон Дальтона"
+    ],
+    "es": [
+     "ley de Dalton"
+    ],
+    "fr": [
+     "loi de Dalton"
+    ],
+    "de": [
+     "Daltonsches Gesetz",
+     "Dalton-Gesetz"
+    ],
+    "fa": [
+     "قانون دالتون"
+    ]
+   }
+  },
+  "basic-au-t1-w104c1-brh-ent-reed-sternberg-cancer": {
+   "readout": {
+    "ru": [
+     "лимфома Ходжкина",
+     "лимфогранулематоз"
+    ],
+    "es": [
+     "linfoma de Hodgkin"
+    ],
+    "fr": [
+     "lymphome de Hodgkin"
+    ],
+    "de": [
+     "Hodgkin-Lymphom"
+    ],
+    "fa": [
+     "لنفوم هوچکین"
+    ]
+   }
+  }
+ }
+}
