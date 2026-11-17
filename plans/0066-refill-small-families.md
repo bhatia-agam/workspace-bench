@@ -112,7 +112,9 @@ makes "genuinely incapable" cheap to establish.
 on the same subject count**, so the pilot only tops the tally up to `n_min`:
 - msdm: the 130 already elicited;
 - knowledge_cutoff: the 181;
-- wrong_intermediate: round 1's screened candidates (258k on every subject). So 0.8b, 2b and olmo
+- wrong_intermediate: round 1's screened candidates (258k on GLM; not on every subject:
+  the rollout's delta audits found 207,044 on the Qwen3.5 / OLMo sets, still above `n_min`;
+  corrected 2026-11-17, issue #289). So 0.8b, 2b and olmo
   already meet the 200k rule, and their `ooc` needs no new screening;
 - multihop_mt_v2: the registered 2-hop items already gated;
 - buggy_code: only authored pair objects at the tier in question. Originals are not authored at a

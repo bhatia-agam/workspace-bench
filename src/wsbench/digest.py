@@ -65,6 +65,13 @@ MAX_TOKENS = 32_000  # plan 0022: up to 25 + 25 agentic entries plus thinking
 # finished under 32k is the same request. MAX_TOKENS still sizes the single-call budget
 # (``budget0``): moving it would re-chunk, and so re-key, every bundle near the cap.
 OUTPUT_CAPS: dict[str, int] = {"claude-sonnet-5": 64_000}
+# A digest call that stops at its cap (``stop_reason == "max_tokens"``) is re-asked once with the
+# cap doubled, up to this ceiling (issue #289: a long 11-layer layered digest never finished at
+# 32k, on every retry). 64k is the largest cap this non-streaming call path is known to take (the
+# claude-sonnet-5 digests above); the models accept more, but only over a streaming request. Like
+# the cap itself it is no part of the request the model sees and keys no fingerprint or cache
+# row, so every digest that finishes under its cap is the same call as before.
+OVERFLOW_CEILING = 64_000
 DIGEST_TIMEOUT = 900.0  # seconds per call: up to ~150k input tokens at the model's default effort
 VARIANTS = ("blind", "task")
 DEFAULT_VARIANT = "task"  # plan 0032 §2.8.2: the family's task note reaches the summarizer
@@ -424,6 +431,19 @@ class Settings:
         """The output cap of every digest call of this run: :data:`OUTPUT_CAPS` of the digest
         model, else :data:`MAX_TOKENS`. A refusal re-run keeps the same cap."""
         return OUTPUT_CAPS.get(self.model, MAX_TOKENS)
+
+    @property
+    def overflow_max_tokens(self) -> int | None:
+        """The cap of the one re-ask after a ``max_tokens`` stop: twice :attr:`max_tokens`, at most
+        :data:`OVERFLOW_CEILING`; ``None`` when the cap is already there (no re-ask)."""
+        cap = min(2 * self.max_tokens, OVERFLOW_CEILING)
+        return cap if cap > self.max_tokens else None
+
+    @property
+    def overflow_kw(self) -> dict[str, int]:
+        """``llm.stream_json`` keywords of the re-ask (empty: none)."""
+        cap = self.overflow_max_tokens
+        return {} if cap is None else {"overflow_max_tokens": cap}
 
     @property
     def refusal_model(self) -> str | None:
@@ -2242,6 +2262,7 @@ def _collapse_stride(
             concurrency=s.concurrency or args.concurrency,
             rpm=args.rpm,
             max_tokens=s.max_tokens,
+            **s.overflow_kw,
             timeout=_timeout_for(s, [u for _i, _f, u in todo]),
             spend=spend,
             **({} if s.server_fallback is None else {"fallbacks": s.server_fallback}),
@@ -2268,6 +2289,7 @@ def _collapse_stride(
                 concurrency=s.concurrency or args.concurrency,
                 rpm=args.rpm,
                 max_tokens=s.max_tokens,
+                **s.overflow_kw,
                 timeout=_timeout_for(s, [u for _i, _f, u in declined]),
                 spend=spend,
                 mark_refusals=True,
@@ -2770,6 +2792,7 @@ def _layered_pass(
                 concurrency=conc,
                 rpm=args.rpm,
                 max_tokens=s.max_tokens,
+                **s.overflow_kw,
                 timeout=_timeout_for(s, [u for *_x, u in ts]),
                 spend=spend,
                 mark_refusals=True,
@@ -3375,6 +3398,7 @@ def _collapse_hierarchical(
                 concurrency=conc,
                 rpm=args.rpm,
                 max_tokens=s.max_tokens,
+                **s.overflow_kw,
                 timeout=max(timeout, _timeout_for(s, [u for _i, _k, _f, u in todo])),
                 spend=spend,
                 mark_refusals=True,
@@ -3410,6 +3434,7 @@ def _collapse_hierarchical(
             concurrency=conc,
             rpm=args.rpm,
             max_tokens=s.max_tokens,
+            **s.overflow_kw,
             timeout=max(timeout, _timeout_for(s, [u for _i, _k, _f, u in again])),
             spend=spend,
             mark_refusals=True,

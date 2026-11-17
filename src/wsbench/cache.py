@@ -12,9 +12,28 @@ from typing import Any, Self
 _RESERVED = ("key", "fp", "ts")
 
 
+def _encoded(row: dict[str, Any]) -> bytes:
+    """One cache line as bytes: UTF-8 JSON as before, or, only when the row carries a lone
+    surrogate (a model emitting half an emoji's UTF-16 pair, e.g. ``"\\ud83e"``, which
+    ``json.loads`` accepts), the ASCII-escaped form, which reads back to the same string; an
+    unencodable row used to raise ``UnicodeEncodeError`` and fail the whole run (judge sweep,
+    minimax-m3.1-flash)."""
+    try:
+        return json.dumps(row, ensure_ascii=False).encode("utf-8")
+    except UnicodeEncodeError:
+        return json.dumps(row).encode("ascii")
+
+
 def fingerprint(*parts: Any) -> str:
+    """sha256 of the parts' UTF-8 JSON. A part holding a lone surrogate (which ``.encode`` used
+    to refuse, crashing the run that fingerprinted a cached row carrying one) is hashed with
+    ``surrogatepass`` instead: every string that encoded before keeps its fingerprint."""
     blob = json.dumps(parts, sort_keys=True, ensure_ascii=False)
-    return hashlib.sha256(blob.encode("utf-8")).hexdigest()[:16]
+    try:
+        data = blob.encode("utf-8")
+    except UnicodeEncodeError:
+        data = blob.encode("utf-8", "surrogatepass")
+    return hashlib.sha256(data).hexdigest()[:16]
 
 
 class Cache:
@@ -57,7 +76,10 @@ class Cache:
         if clash:
             raise ValueError(f"payload uses reserved cache keys: {clash}")
         row = {"key": key, "fp": fp, "ts": time.time(), **payload}
-        self._fh.write(json.dumps(row, ensure_ascii=False) + "\n")
+        try:  # the text handle encodes inside write(): a refused line writes nothing
+            self._fh.write(json.dumps(row, ensure_ascii=False) + "\n")
+        except UnicodeEncodeError:  # a lone surrogate: the ASCII-escaped form (see _encoded)
+            self._fh.write(json.dumps(row) + "\n")
         self._fh.flush()
         self._rows.setdefault(key, []).append(row)
         self._n += 1
@@ -143,7 +165,7 @@ class SharedLog:
             raise ValueError(f"payload uses reserved cache keys: {clash}")
         row = {"key": key, "fp": fp, "ts": time.time(), **payload}
         # the leading newline ends a line another writer tore, so this row always parses
-        data = ("\n" + json.dumps(row, ensure_ascii=False) + "\n").encode("utf-8")
+        data = b"\n" + _encoded(row) + b"\n"
         self.path.parent.mkdir(parents=True, exist_ok=True)
         fd = os.open(self.path, os.O_WRONLY | os.O_APPEND | os.O_CREAT, 0o644)
         try:

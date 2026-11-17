@@ -1210,6 +1210,15 @@ def prior_tally(model: str) -> tuple[int, int]:
     return easiest_tally(model)
 
 
+def pool_state(model: str) -> tuple[int, str]:
+    """refill hook: the pool's size as a wave reports it (``pool_size``) and its identity (name
+    + pinned sha), so the driver can tell a previous block describes this very pool."""
+    from . import refill
+
+    name = refill.newest_pool(POOL_NAMES, "mh2")
+    return len(load_pool()["items"]), f"{name}:{refill.POOL_SHA256.get(name)}"
+
+
 def wave_items(model: str, wave_size: int = WAVE_SIZE) -> tuple[list[dict], int, int]:
     """(this wave's candidates, pool size, pool used): ungated pool items in seeded order; while
     the easiest-level tally is under the policy's ``n_min`` (the pilot) 2-hop candidates come

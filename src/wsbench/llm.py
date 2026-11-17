@@ -437,6 +437,10 @@ REFUSED_JSON: dict[str, Any] = {"\x00refused": True}
 # ... and for a context overflow (stop_reason model_context_window_exceeded, or a 400 "prompt is too
 # long"), also only under mark_refusals=True
 TOO_LONG_JSON: dict[str, Any] = {"\x00too_long": True}
+# internal to stream_json_async(overflow_max_tokens=): a max_tokens stop it re-asks with a larger
+# cap; never handed to a caller
+TRUNCATED_JSON: dict[str, Any] = {"\x00truncated": True}
+OVERFLOW_ATTEMPTS = 3  # attempts of that re-ask (first call: the caller's `attempts`)
 # key a structured result carries when a server-side refusal fallback served it (the model id)
 SERVED_BY = "\x00served_by"
 FALLBACK_BETA = "server-side-fallback-2026-07-01"
@@ -495,6 +499,7 @@ async def _anthropic_once(
     reasoning: dict[str, Any] | None = None,
     mark_refusals: bool = False,
     fallbacks: str | None = None,
+    mark_truncated: bool = False,
 ) -> dict[str, Any] | None:
     kwargs: dict[str, Any] = {
         "timeout": timeout,
@@ -525,6 +530,10 @@ async def _anthropic_once(
         spend.refusals += 1
         print(f"  llm refusal: {model}")
         return REFUSED_JSON if mark_refusals else None
+    if stop == "max_tokens" and mark_truncated:
+        # the caller re-asks once with a larger output cap: not a lost call yet
+        print(f"  llm: {model} stop_reason=max_tokens at {max_tokens}; re-asking with a larger cap")
+        return TRUNCATED_JSON
     if stop in ("max_tokens", "model_context_window_exceeded"):
         if mark_refusals and stop == "model_context_window_exceeded":
             spend.errors += 1  # a too-long bundle is re-asked in halves: not a lost call
@@ -582,6 +591,7 @@ async def _one(
     mark_refusals: bool = False,
     attempts: int | None = None,
     fallbacks: str | None = None,
+    mark_truncated: bool = False,
 ) -> dict[str, Any] | None:
     # detokenised lens readouts can contain lone surrogates, which both APIs reject every time
     system = system.encode("utf-8", "replace").decode("utf-8")
@@ -605,6 +615,8 @@ async def _one(
                         reasoning=reasoning,
                         mark_refusals=mark_refusals,
                         fallbacks=fallbacks,
+                        # only when asked: fakes of this function need not know the keyword
+                        **({"mark_truncated": True} if mark_truncated else {}),
                     )
                 return await _openrouter_once(
                     client,
@@ -670,6 +682,7 @@ async def stream_json_async(
     attempts: int | None = None,
     fallbacks: str | None = None,
     refusal_model: str | None = None,
+    overflow_max_tokens: int | None = None,
 ) -> Spend:
     """Run ``(system, user)`` prompt pairs concurrently, handing each parsed result (or
     ``None``) to ``on_result(index, result)`` as it lands. Raises :class:`JudgeConfigError` on
@@ -681,7 +694,19 @@ async def stream_json_async(
     refusal) is re-run ONCE, same request, on that model (same route); a served result carries
     it as :data:`SERVED_BY`. Only refusals move: a ``max_tokens`` stop, an error or an
     unparsable body stays the primary's outcome. For models without server-side ``fallbacks``
-    (claude-sonnet-5 rejects the parameter with a 400)."""
+    (claude-sonnet-5 rejects the parameter with a 400).
+
+    ``overflow_max_tokens`` (Anthropic route): a call of ``model`` that stops at ``max_tokens``
+    is re-asked ONCE, same request, with this larger output cap (and the timeout scaled by the
+    same factor); a second ``max_tokens`` stop is the call's outcome (``None``, one counted
+    error). Ignored unless it is above ``max_tokens``. The re-ask's retry budget is at most
+    :data:`OVERFLOW_ATTEMPTS` attempts (3; fewer when ``attempts`` is lower), so a re-ask that
+    times out holds its slot for at most 3 scaled timeouts; the first call keeps ``attempts``.
+    Every other outcome of the re-ask is handled as the first call's would be: under
+    ``mark_refusals`` a ``model_context_window_exceeded`` stop comes back as
+    :data:`TOO_LONG_JSON` (the digest then halves the bundle), a refusal as
+    :data:`REFUSED_JSON`. The refusal model's re-run keeps the larger cap, scaled timeout and
+    bounded budget once the primary needed them, and is itself never re-asked."""
     spend = spend or Spend()
     if not prompts:
         return spend
@@ -698,6 +723,11 @@ async def stream_json_async(
         max_tokens = _DEFAULT_MAX_TOKENS[route_]
     client = _make_client(route_, key)
     sem = asyncio.Semaphore(concurrency)
+    grow = (
+        route_ == "anthropic"
+        and overflow_max_tokens is not None
+        and overflow_max_tokens > max_tokens
+    )
 
     async def one(i: int, system: str, user: str) -> tuple[int, dict[str, Any] | None]:
         kw: dict[str, Any] = {
@@ -719,8 +749,24 @@ async def stream_json_async(
                 model=model,
                 mark_refusals=mark_refusals or refusal_model is not None,
                 fallbacks=fallbacks,
+                **({"mark_truncated": True} if grow else {}),
                 **kw,
             )
+            if grow and res == TRUNCATED_JSON:
+                kw["timeout"] = timeout * overflow_max_tokens / max_tokens
+                kw["max_tokens"] = overflow_max_tokens
+                # a long call at a doubled timeout must not also keep the full retry budget
+                kw["attempts"] = min(attempts or _ATTEMPTS, OVERFLOW_ATTEMPTS)
+                res = await _one(
+                    route_,
+                    client,
+                    system,
+                    user,
+                    model=model,
+                    mark_refusals=mark_refusals or refusal_model is not None,
+                    fallbacks=fallbacks,
+                    **kw,
+                )
             if refusal_model is not None and res == REFUSED_JSON:
                 again = await _one(
                     route_, client, system, user, model=refusal_model, mark_refusals=True, **kw
@@ -770,6 +816,7 @@ def stream_json(
     attempts: int | None = None,
     fallbacks: str | None = None,
     refusal_model: str | None = None,
+    overflow_max_tokens: int | None = None,
 ) -> Spend:
     """Synchronous wrapper around :func:`stream_json_async` for the CLI and tests."""
     if _in_running_loop():
@@ -793,6 +840,7 @@ def stream_json(
             attempts=attempts,
             fallbacks=fallbacks,
             refusal_model=refusal_model,
+            overflow_max_tokens=overflow_max_tokens,
         )
     )
 

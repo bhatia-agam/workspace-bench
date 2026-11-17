@@ -1729,3 +1729,26 @@ def test_replay_at_the_0092_defaults_makes_no_new_call(tmp_path, monkeypatch):
     assert new.config["rpm"] == 30000.0 and old.config["rpm"] == 240.0
     assert _without_run_settings(new) == _without_run_settings(old)
     assert new.complete and new.pinned_instrument
+
+
+def test_align_drops_non_object_verdicts_with_a_flag():
+    # a judge listing bare strings in "verdicts" used to raise AttributeError (gpt-oss-20b)
+    flags: list[str] = []
+    out = judge._align({"verdicts": ["yes", {"index": 1, "x": 1}]}, ["r1"], flags)
+    assert [n for n, _v in out] == [0]  # 1-based index 1 -> readout position 0
+    assert any(f.startswith("non_object_verdict:") for f in flags)
+    # a well-formed reply is aligned exactly as before: same pairs, no flag
+    good = {"verdicts": [{"index": 1, "label": "noise"}, {"index": 2, "label": "recognition"}]}
+    flags = []
+    assert judge._align(good, ["r1", "r2"], flags) == [(0, good["verdicts"][0]),
+                                                      (1, good["verdicts"][1])]  # fmt: skip
+    assert flags == []
+    # a "verdicts" value that is no list at all (it raised TypeError / AttributeError): no
+    # verdict, one flag, never one per character
+    for bad, kind in (("noise", "str"), (3, "int"), ({"index": 1}, "dict")):
+        flags = []
+        assert judge._align({"verdicts": bad}, ["r1"], flags) == []
+        assert flags == [f"non_list_verdicts:{kind}"]
+    for empty in (None, [], "", 0):  # as before: nothing to align, nothing flagged
+        flags = []
+        assert judge._align({"verdicts": empty}, ["r1"], flags) == [] and flags == []

@@ -90,3 +90,53 @@ def test_creates_parent_dir(tmp_path):
     c.put("k", "fp", {"result": 1})
     c.close()
     assert (tmp_path / "deep" / "dir" / "c.jsonl").exists()
+
+
+def test_put_survives_a_lone_surrogate(tmp_path):
+    # a model can emit half an emoji's UTF-16 pair ("\ud83e"), which json.loads accepts; writing
+    # it used to raise UnicodeEncodeError and fail the whole run. Normal rows stay byte-identical.
+    p = tmp_path / "c.jsonl"
+    c = Cache(p)
+    bad = json.loads('"smile \\ud83e here"')
+    c.put("k1", "fp", {"result": {"text": bad}})
+    c.put("k2", "fp", {"result": {"text": "é plain"}})
+    assert c.get("k1", "fp")["result"]["text"] == bad
+    lines = p.read_text(encoding="utf-8").splitlines()
+    assert "\\ud83e" in lines[0] and "é plain" in lines[1]  # ASCII-escaped only when needed
+    assert Cache(p).get("k1", "fp")["result"]["text"] == bad  # reads back the same string
+
+
+def test_shared_log_survives_a_lone_surrogate(tmp_path):
+    from wsbench.cache import SharedLog
+
+    bad = json.loads('"half \\ud83e"')
+    log = SharedLog(tmp_path / "s.jsonl")
+    log.put("k1", "fp", {"result": bad})
+    log.put("k2", "fp", {"result": "é plain"})
+    raw = (tmp_path / "s.jsonl").read_bytes()
+    assert b"\\ud83e" in raw and "é plain".encode() in raw
+    assert SharedLog(tmp_path / "s.jsonl").get("k1", "fp")["result"] == bad
+
+
+def test_fingerprint_survives_a_lone_surrogate_and_moves_no_valid_one():
+    import hashlib
+
+    def old(*parts):  # the rule before the fix, verbatim
+        blob = json.dumps(parts, sort_keys=True, ensure_ascii=False)
+        return hashlib.sha256(blob.encode("utf-8")).hexdigest()[:16]
+
+    valid = [
+        ("pv", "claude-opus-5-5", None, 0.0, "system", "user"),
+        ("é ü 漢字 \U0001f9e0 emoji", {"b": [1, 2.5, None, True], "a": "x\ny"}),
+        ("", [], {}, "\x00served_by", json.loads('"\\ud83e\\udde0"')),  # a full pair: one character
+    ]
+    for parts in valid:
+        assert fingerprint(*parts) == old(*parts)
+    bad = json.loads('"half \\ud83e"')
+    with pytest.raises(UnicodeEncodeError):
+        old("pv", bad)
+    fp = fingerprint("pv", bad)
+    assert len(fp) == 16 and fp == fingerprint("pv", bad)  # stable
+    assert fp != fingerprint("pv", "half ") and fp != fingerprint(
+        "pv", json.loads('"half \\ud83d"')
+    )

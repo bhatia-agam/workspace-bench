@@ -132,6 +132,51 @@ def test_a_wave_elicits_the_funded_generation_first(pools, monkeypatch):
     assert (gen["tried"], gen["unseen"]) == (2, 1)
 
 
+def test_crashed_ids_stay_untried_and_unseen_until_a_wave_runs(pools, monkeypatch):
+    """#289: ids a crashed wave elicited are finished by the next wave that RUNS. A resumed
+    refill that stops before its first wave leaves them, and reports them as untried / unseen
+    (never tried), so a later call still runs the wave that builds them."""
+    _v1, v2 = pools
+    monkeypatch.setitem(
+        refill.POOL_SHA256, "kcutoffv2", hashlib.sha256(v2.read_bytes()).hexdigest()
+    )
+    monkeypatch.setattr(kcutoff, "claude_json", lambda llm, path: fake_claude)
+    runner = FakeRunner(SCRIPT)
+    kcutoff.run(MODEL, "all", runner=runner, ask=fake_claude)  # the bank candidates, built
+
+    def boom(*a, **k):
+        raise RuntimeError("invalid_grant")
+
+    with monkeypatch.context() as m:
+        m.setattr(kcutoff, "canon", boom)
+        with pytest.raises(RuntimeError):
+            kcutoff.refill_wave(MODEL, wave=0, runner=runner, ask=fake_claude, wave_size=2)
+    crashed = kcutoff.unfinished(MODEL)
+    assert len(crashed) == 2 and set(crashed) <= {N1, N2, N3}
+    gen = kcutoff.pool_generation(MODEL)
+    assert (gen["tried"], gen["landed"], gen["size"], gen["unseen"]) == (0, 0, 3, 3)
+    tried0, _landed0 = kcutoff.prior_tally(MODEL)
+    assert tried0 == len(kcutoff._load(MODEL, "elicit.json")) - 2
+
+    # a resume that stops before its first wave: nothing is built, nothing is called tried
+    assert refill.refill(MODEL, [kcutoff.FAMILY], waves=0, runner=runner) == {
+        kcutoff.FAMILY: "partial"
+    }
+    b = store.read_report(MODEL)["families"][kcutoff.FAMILY]["refill"]
+    assert b["stop"] == "max waves (0)" and b["tried"] == tried0
+    assert b["tally"]["kc2"] == {"tried": 0, "landed": 0, "size": 3, "unseen": 3}
+    assert kcutoff.unfinished(MODEL) == crashed
+
+    # the next call runs a wave: the crashed ids are built and counted with the new ones
+    refill.refill(MODEL, [kcutoff.FAMILY], waves=1, runner=runner)
+    assert kcutoff.unfinished(MODEL) == []
+    assert set(crashed) <= set(store.gated(MODEL, kcutoff.FAMILY))
+    gen = kcutoff.pool_generation(MODEL)
+    assert (gen["tried"], gen["unseen"]) == (3, 0)
+    b = store.read_report(MODEL)["families"][kcutoff.FAMILY]["refill"]
+    assert b["tried"] == len(kcutoff._load(MODEL, "elicit.json")) == kcutoff.prior_tally(MODEL)[0]
+
+
 # ============================================================================ the driver (§1)
 class _Mod:
     """A fake POLICY module: one generation of ``size`` candidates, ``hit`` passing per wave."""
@@ -161,7 +206,7 @@ def _drive(monkeypatch, mod, have=2):
     blocks = {}
     monkeypatch.setattr(store, "read_report", lambda model: {"families": {}})
     monkeypatch.setattr(refill, "write_block",
-                        lambda m, f, b, s: blocks.update(block=b, status=s))  # fmt: skip
+                        lambda m, f, b, s, **kw: blocks.update(block=b, status=s))  # fmt: skip
     status = refill._refill_family(MODEL, refill.KCUTOFF, 50, None, None, False, "none", None)
     return status, blocks["block"]
 

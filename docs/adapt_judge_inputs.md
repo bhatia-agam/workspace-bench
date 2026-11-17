@@ -266,7 +266,7 @@ Header: `contract.multi_token`, `contract.include_target`, `contract.native_lang
 | item | `name_forms.readout` | yes | silent | build | multitoken/family.py:1273-1280 | absent: the unit's own forms (no zh, no aliases) |
 | item | `lang` |  | exit | build | multitoken/options.py:13-26 | L2 items only |
 | item | `target` |  | silent | build | multitoken/family.py:1266-1270 | L2 items only |
-| resource | `evals/basic_readout_mt/exonyms.json` |  | silent | hazard | multitoken/family.py:1777-1823 | keyed by registered item id (REPO_ROOT) (checked) |
+| resource | `evals/basic_readout_mt/exonyms.json` |  | silent | hazard | multitoken/family.py gate_name_forms | keyed by registered item id (REPO_ROOT) + the set's overlay items (checked) |
 | qwen | `min_full_positions=8` |  | - | subject | basic_readout_mt/__init__.py | Qwen render length; reads.check_full exits below it on a sidecar file (reads.py:308) |
 | qwen | `GRID layers (Qwen 64 blocks)` |  | - | subject | readplan.py:588-627 | remapped by depth from report.json n_layers under WSB_BANK_ROOT (exit without it) |
 

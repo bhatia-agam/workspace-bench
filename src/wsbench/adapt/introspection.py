@@ -700,6 +700,8 @@ class HFEngine:
         width, out = max(len(c) for c in conts), []
         for s in range(0, len(conts), CHUNK):
             ch = conts[s : s + CHUNK]
+            # shorter continuations are right-padded with token 0 and no attention mask: harmless
+            # for a causal LM, since only positions before the pad are read (they never attend it)
             lp = self._logits([prefix + c + [0] * (width - len(c)) for c in ch], width + 1)
             for r, c in enumerate(ch):  # lp[:, j] predicts the token at len(prefix) + j
                 out.append(float(sum(lp[r, j, t].item() for j, t in enumerate(c))))
@@ -1188,11 +1190,12 @@ def stage_build(model: str) -> dict[str, Any] | None:
         # a NO-GO is the subject lacking the capability (ooc), not a missing input (blocked)
         _report(
             model,
+            keep_hand_note=True,  # a re-run never replaces a hand-written measured reason
             status="ooc",
             exclude_from_macro=True,
             n_items=0,
             target=target,
-            note=f"calibration NO-GO: {cal['why']} (adapted/{model}/introspection/"
+            note=f"{NO_GO_PREFIX} {cal['why']} (adapted/{model}/introspection/"
             "calibration.json); no bank written",
         )
         print(f"{FAMILY} build: ooc ({cal['why']})")
@@ -1226,15 +1229,31 @@ def stage_build(model: str) -> dict[str, Any] | None:
     return out
 
 
-def _report(model: str, stale_no_go: bool = False, **entry: Any) -> None:
+NO_GO_PREFIX = "calibration NO-GO:"  # stage_build's generic NO-GO note starts with it
+
+
+def _report(
+    model: str, stale_no_go: bool = False, keep_hand_note: bool = False, **entry: Any
+) -> None:
     """Merge ``entry`` into the family's report entry; ``stale_no_go`` (a GO build) first drops
-    the note of an earlier NO-GO record (status ooc / blocked), which no longer describes it."""
+    the note of an earlier NO-GO record (status ooc / blocked), which no longer describes it.
+    ``keep_hand_note`` (a NO-GO build, issue #289) keeps, instead of ``entry``'s note, the
+    existing note of an entry that was already a NO-GO (status ooc / blocked) when that note is
+    neither the generic NO-GO text nor the automatic absent note."""
 
     def mutate(r: dict[str, Any]) -> None:
         e = r.setdefault("families", {}).setdefault(FAMILY, {})
         if stale_no_go and e.get("status") in ("ooc", "blocked"):
             e.pop("note", None)
-        e.update(entry)
+        new = dict(entry)
+        old = e.get("note")
+        # only a note on an entry that was ALREADY a NO-GO is a hand-written NO-GO reason; on a
+        # GO -> NO-GO transition the measured reason replaces whatever note the GO entry had
+        if (keep_hand_note and e.get("status") in ("ooc", "blocked")
+                and isinstance(old, str) and old.strip()
+                and not old.startswith(NO_GO_PREFIX) and old != store.ABSENT_NOTE):  # fmt: skip
+            new.pop("note", None)
+        e.update(new)
 
     store.update_report(model, mutate)
 

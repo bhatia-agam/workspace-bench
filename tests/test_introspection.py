@@ -951,6 +951,32 @@ def test_produce_applies_steering_hook():
     assert torch.equal(after[1], plain[1])
 
 
+def test_steer_hook_warns_once_when_every_forward_was_too_short(capsys):
+    """#289: a forward shorter than the inject span is left unsteered; when that was every
+    forward inside the block, the context says so on exit instead of staying silent."""
+    pytest.importorskip("torch")
+    import numpy as np
+
+    be = _toy_backend()
+    v = np.arange(8, dtype=np.float32) - 3.0
+    short, full = list(range(4)), list(range(10))
+    plain = be.capture(short, [1], short)
+    with be.steered(1, range(3, 6), v, 4.0):  # needs positions up to 5: 4 tokens are too few
+        a = be.capture(short, [1], short)
+        b = be.capture(short, [1], short)
+    err = capsys.readouterr().err
+    assert err.count("warning: steering at block 1 was never applied") == 1
+    assert "all 2 forward(s)" in err and "last position 5" in err
+    assert (a[1] == plain[1]).all() and (b[1] == plain[1]).all()
+    # one long-enough forward among short ones (a prefill, then cached steps): no warning
+    with be.steered(1, range(3, 6), v, 4.0):
+        be.capture(full, [1], full)
+        be.capture(short, [1], short)
+    with be.steered(1, range(3, 6), v, 4.0):  # no forward at all: nothing to report
+        pass
+    assert capsys.readouterr().err == ""
+
+
 def test_produce_refuses_unknown_steering_type(tmp_path):
     pytest.importorskip("torch")
     from wsbench.produce.producer import Producer

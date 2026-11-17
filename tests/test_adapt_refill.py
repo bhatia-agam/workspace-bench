@@ -359,6 +359,124 @@ def test_strict_freeze_guard_untried_fill_family_and_allow_untried(mdir):
     assert rep2["note"] == rep["note"]  # stamped once
 
 
+def test_freeze_warns_when_the_note_predates_the_refill(mdir, capsys):
+    """R1 (#289): freeze keeps the note verbatim; when its hand part is the one that stood
+    before the last refill that gated candidates, freeze says so on stderr, changing nothing."""
+    rows = _registered_buggy_rows(7, n_pairs_pass=_registered_buggy_size()[0])
+    for r in rows[:6]:
+        r["gate"]["pass"] = False
+    _gate_log(mdir, "buggy_code", rows)
+    block = {"route": "run.fill", "unit": "pairs", "target": 24, "have": 20, "tried": 40,
+             "landed": 10, "yield": 0.25, "stop": "max waves (8)", "pilot": False}  # fmt: skip
+    warn = "warning: buggy_code: its note was written before its refill"
+
+    def entry():
+        return json.loads((mdir / "report.json").read_text())["families"]["buggy_code"]
+
+    def freeze_err():
+        run.freeze(MODEL, ["buggy_code"], strict=True)
+        return capsys.readouterr().err
+
+    # a block with no mark (every block written before this fix): never flagged
+    run.note(MODEL, "buggy_code", text="3 pairs: the subject fixes the bug in its head")
+    store.update_report(MODEL, lambda r: r["families"]["buggy_code"].update(refill=dict(block)))
+    assert warn not in freeze_err()
+    # a call that gated nothing writes its block and no mark
+    rf.write_block(MODEL, "buggy_code", dict(block), "partial")
+    assert rf.NOTE_MARK not in entry() and warn not in freeze_err()
+    # a refill that gated candidates marks the note it found; freeze warns and keeps the note
+    rf.write_block(MODEL, "buggy_code", dict(block), "partial", note_before=rf.note_sha(entry()))
+    assert entry()["refill"] == block  # the mark is beside the block, never inside it
+    assert warn in freeze_err()
+    assert entry()["note"] == "3 pairs: the subject fixes the bug in its head"
+    # a note rewritten after the refill is current, and a later no-op resume keeps it so
+    run.note(MODEL, "buggy_code", text="20 of 24 pairs after the refill")
+    assert warn not in freeze_err()
+    rf.write_block(MODEL, "buggy_code", dict(block), "partial")
+    assert warn not in freeze_err()
+    # no hand note before the refill, none now: nothing to warn about
+    store.update_report(MODEL, lambda r: r["families"]["buggy_code"].pop("note"))
+    rf.write_block(MODEL, "buggy_code", dict(block), "partial", note_before=rf.note_sha(entry()))
+    assert warn not in freeze_err()
+
+
+def test_hand_note_leaves_out_the_segments_code_writes():
+    e = {"note": "measured by hand | refill mix: 3 b2 | mc over gate: 1/9 shipped items | "
+                 "freeze guard overridden (allow_untried): x; y"}  # fmt: skip
+    assert rf.hand_note(e) == "measured by hand"
+    assert rf.note_sha(e) == rf.note_sha({"note": "measured by hand"})
+    assert rf.hand_note({"note": "refill mix: 3 b2"}) == "" and rf.hand_note({}) == ""
+    # a note only the route wrote is never stale, whatever the mark
+    only = {"note": "refill mix: 3 b2", "refill": {"stop": "x"}}
+    assert not rf.stale_note({**only, rf.NOTE_MARK: rf.note_sha(only)})
+
+
+def _noting_kcutoff(monkeypatch, per_wave):
+    """A knowledge_cutoff route whose wave rewrites the note's mix segment, as the real one
+    does (``kcutoff._write_note``), and gates ``per_wave.pop(0)`` candidates."""
+    from wsbench.adapt import kcutoff
+
+    state = {"tried": 0}
+
+    def wave(model, *, wave, runner=None, llm=None, **kw):
+        n = per_wave.pop(0) if per_wave else 0
+        state["tried"] += n
+        kcutoff._write_note(model, [])
+        return {"tried": n, "landed": n, "exhausted": not per_wave, "pool_size": 10,
+                "pool_used": state["tried"]}  # fmt: skip
+
+    monkeypatch.setattr(kcutoff, "refill_wave", wave, raising=False)
+    monkeypatch.setattr(kcutoff, "prior_tally", lambda m: (state["tried"], state["tried"]))
+    monkeypatch.setattr(kcutoff, "pool_generation", lambda m: None)
+    monkeypatch.setattr(kcutoff, "mix_note", lambda items: "refill mix: test")
+    monkeypatch.setattr(kcutoff, "mix", lambda items: {})
+    monkeypatch.setattr(rf, "have_of", lambda m, f: 60)
+
+
+def test_note_mark_survives_the_waves_own_note_and_a_noop_resume(mdir, monkeypatch):
+    """The two R1 misfires found in review: (b) a kcutoff wave rewrites the note before the
+    block is written, so the mark must be the note from BEFORE the wave and ignore the route's
+    own segment; (a) a resume that gates nothing must not re-mark a note written since."""
+
+    def entry():
+        return json.loads((mdir / "report.json").read_text())["families"]["knowledge_cutoff"]
+
+    # (b) no hand note: the route's own segment is all there is, and it is never flagged
+    _noting_kcutoff(monkeypatch, [5])
+    rf.refill(MODEL, ["knowledge_cutoff"])
+    assert entry()["note"] == "refill mix: test" and not rf.stale_note(entry())
+    # (b) a hand note from before the refill IS flagged, the wave's segment beside it or not
+    store.update_report(MODEL, lambda r: r["families"]["knowledge_cutoff"].update(
+        note="hand: 12 items, ooc suspected"))  # fmt: skip
+    _noting_kcutoff(monkeypatch, [5])
+    rf.refill(MODEL, ["knowledge_cutoff"])
+    assert entry()["note"] == "hand: 12 items, ooc suspected | refill mix: test"
+    assert rf.stale_note(entry())
+    # (a) rewritten by hand after the refill, then a resume whose wave gates nothing: not stale
+    run.note(MODEL, "knowledge_cutoff", text="hand: 60 items after the refill")
+    assert not rf.stale_note(entry())
+    _noting_kcutoff(monkeypatch, [])
+    rf.refill(MODEL, ["knowledge_cutoff"])
+    assert entry()["note"] == "hand: 60 items after the refill | refill mix: test"
+    assert not rf.stale_note(entry())
+    # a later refill that gates candidates again makes that note the pre-refill one
+    _noting_kcutoff(monkeypatch, [3])
+    rf.refill(MODEL, ["knowledge_cutoff"])
+    assert rf.stale_note(entry())
+
+
+def test_change_text_says_the_mh2_tally_is_the_easiest_level_only():
+    """T1 (#289): multihop_mt tallies 2-hop candidates only while 3-hop items ship too."""
+    block = {"route": "mhmt2.refill_wave", "unit": "items", "target": 100, "have": 58,
+             "tried": 900, "landed": 46, "yield": 46 / 900, "stop": "pool exhausted"}  # fmt: skip
+    assert block["route"] == rf.MH2_ROUTE
+    text = rf.change_text(block)
+    assert "46 landed of 900 tried at the easiest level only, yield 5.11%" in text
+    assert text.startswith("refill via mhmt2.refill_wave: 58/100 items")
+    other = rf.change_text({**block, "route": "kcutoff.refill_wave"})
+    assert "46 landed of 900 tried, yield 5.11%" in other and "easiest" not in other
+
+
 # ============================================================================ CLI
 def test_cli_freeze_is_strict_and_refill_keys(monkeypatch):
     from wsbench.adapt import __main__ as cli
@@ -473,6 +591,99 @@ def test_refill_driver_hold_pilot_budget_and_missing_route(mdir, monkeypatch):
         rf.refill(MODEL, ["knowledge_cutoff"])
     with pytest.raises(SystemExit, match="no refill route"):
         rf.refill(MODEL, ["jailbreak_recognition"])
+
+
+def _exhausting_kcutoff(monkeypatch, prior, have=60):
+    """A knowledge_cutoff route above half its target whose one wave uses the pool up."""
+    from wsbench.adapt import kcutoff
+
+    state = {"prior": prior, "waves": 0}
+
+    def wave(model, *, wave, runner=None, llm=None, **kw):
+        state["waves"] += 1
+        state["prior"] = (state["prior"][0] + 100, state["prior"][1])
+        return {"tried": 100, "landed": 0, "exhausted": True, "pool_size": 1000,
+                "pool_used": 1000}  # fmt: skip
+
+    monkeypatch.setattr(kcutoff, "refill_wave", wave, raising=False)
+    monkeypatch.setattr(kcutoff, "prior_tally", lambda m: state["prior"])
+    monkeypatch.setattr(kcutoff, "pool_generation", lambda m: None)
+    monkeypatch.setattr(kcutoff, "pool_state", lambda m: (1000, "kcutoff:abc"))
+    monkeypatch.setattr(rf, "have_of", lambda m, f: have)
+    return state
+
+
+def _kc_block(mdir):
+    return json.loads((mdir / "report.json").read_text())["families"]["knowledge_cutoff"]
+
+
+def test_a_resume_keeps_the_pool_exhausted_stop_label(mdir, monkeypatch):
+    """S1 (#289): a resumed refill of an exhausted pool stops before any wave; it used to
+    relabel the stop "low yield above half". Only the label moves: status and waves do not."""
+    state = _exhausting_kcutoff(monkeypatch, prior=(900, 5))
+    assert rf.refill(MODEL, ["knowledge_cutoff"]) == {"knowledge_cutoff": "partial"}
+    first = _kc_block(mdir)
+    assert first["refill"]["stop"] == "pool exhausted" and state["waves"] == 1
+    assert rf.refill(MODEL, ["knowledge_cutoff"]) == {"knowledge_cutoff": "partial"}
+    again = _kc_block(mdir)
+    assert again["refill"]["stop"] == "pool exhausted" and again["status"] == "partial"
+    assert state["waves"] == 1  # the resume ran no wave, as before
+    keep = ("tried", "landed", "waves", "pool_size", "pool_used", "have")
+    assert {k: again["refill"][k] for k in keep} == {k: first["refill"][k] for k in keep}
+
+
+def test_the_seeded_label_never_stops_a_run_or_hides_another_stop(mdir, monkeypatch):
+    # a previous block whose pool was NOT used up: the low-yield label stands
+    state = _exhausting_kcutoff(monkeypatch, prior=(1000, 5))
+    same = {"pool_size": 1000, "pool_id": "kcutoff:abc"}
+    store.update_report(MODEL, lambda r: r.setdefault("families", {}).setdefault(
+        "knowledge_cutoff", {}).update(refill={**same, "pool_used": 400}))  # fmt: skip
+    assert rf.refill(MODEL, ["knowledge_cutoff"]) == {"knowledge_cutoff": "partial"}
+    assert _kc_block(mdir)["refill"]["stop"].startswith("low yield above half")
+    assert state["waves"] == 0
+    # an exhausted previous block, but nothing stops this call: the wave still runs
+    state = _exhausting_kcutoff(monkeypatch, prior=(100, 50))
+    store.update_report(MODEL, lambda r: r["families"]["knowledge_cutoff"].update(
+        refill={**same, "pool_used": 1000}))  # fmt: skip
+    assert rf.refill(MODEL, ["knowledge_cutoff"]) == {"knowledge_cutoff": "partial"}
+    assert state["waves"] == 1 and _kc_block(mdir)["refill"]["stop"] == "pool exhausted"
+    # ooc precedes the exhausted condition: an ooc stop stays ooc
+    _exhausting_kcutoff(monkeypatch, prior=(1000, 5), have=2)
+    assert rf.refill(MODEL, ["knowledge_cutoff"]) == {"knowledge_cutoff": "ooc"}
+    assert "yield 5/1000" in _kc_block(mdir)["refill"]["stop"]
+
+
+@pytest.mark.parametrize("change", ["extended", "swapped", "old block", "no hook", "no pool"])
+def test_the_seeded_label_is_only_for_the_same_pool(mdir, monkeypatch, change):
+    """The previous block's "used up" is trusted only for the pool it describes: a pool that
+    grew or was swapped since, a block from before ``pool_id``, a family with no ``pool_state``
+    hook or an unreadable pool all keep the label the call computes itself (main's)."""
+    from wsbench.adapt import kcutoff
+
+    state = _exhausting_kcutoff(monkeypatch, prior=(1000, 5))
+    prev = {"pool_size": 1000, "pool_used": 1000, "pool_id": "kcutoff:abc"}
+    if change == "extended":
+        monkeypatch.setattr(kcutoff, "pool_state", lambda m: (1500, "kcutoff:abc"))
+    elif change == "swapped":
+        monkeypatch.setattr(kcutoff, "pool_state", lambda m: (1000, "kcutoffv2:def"))
+    elif change == "old block":
+        del prev["pool_id"]
+    elif change == "no hook":
+        monkeypatch.delattr(kcutoff, "pool_state")
+    else:
+
+        def refuse(m):
+            raise SystemExit("pool not pinned")
+
+        monkeypatch.setattr(kcutoff, "pool_state", refuse)
+    store.update_report(MODEL, lambda r: r.setdefault("families", {}).setdefault(
+        "knowledge_cutoff", {}).update(refill=dict(prev)))  # fmt: skip
+    assert rf.refill(MODEL, ["knowledge_cutoff"]) == {"knowledge_cutoff": "partial"}
+    b = _kc_block(mdir)["refill"]
+    assert b["stop"].startswith("low yield above half") and state["waves"] == 0
+    # no wave ran, so the block still carries the previous block's numbers
+    want = None  # the changed pool's identity is never put beside the old pool's numbers
+    assert b.get("pool_id") == want and (b["pool_size"], b["pool_used"]) == (1000, 1000)
 
 
 def test_prior_tally_counts_the_gate_log(mdir):

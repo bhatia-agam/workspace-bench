@@ -79,7 +79,12 @@ class Backend:
         """A dose injection for every forward inside the block (plan 0045 §2.3, the
         introspection bank's recipe): on the OUTPUT residual of decoder block ``layer``, at each
         absolute ``positions`` index, ``h <- h + beta * ||h|| * v / ||v||`` (computed in fp32,
-        written back in the residual's dtype). Removed on exit, even if the body raises."""
+        written back in the residual's dtype). Removed on exit, even if the body raises.
+        A forward shorter than the inject span is left unsteered (the cached decode steps after
+        a full prefill); if EVERY forward inside the block was, one warning goes to stderr on
+        exit (a chunked prefill would otherwise run unsteered in silence, issue #289)."""
+        import sys
+
         import torch
 
         v = torch.as_tensor(vector, dtype=torch.float32).flatten()
@@ -92,9 +97,13 @@ class Backend:
         if not 0 <= layer < len(blocks):
             raise ValueError(f"inject layer {layer} out of range for a {len(blocks)}-block model")
 
+        seen = {"forwards": 0, "skipped": 0}
+
         def hook(_mod: Any, _inp: Any, out: Any) -> Any:
             h = out[0] if isinstance(out, tuple) else out
+            seen["forwards"] += 1
             if h.shape[1] <= int(idx.max()):
+                seen["skipped"] += 1
                 return out
             i = idx.to(h.device)
             x = h[:, i].float()
@@ -107,6 +116,13 @@ class Backend:
             yield
         finally:
             handle.remove()
+            if seen["forwards"] and seen["skipped"] == seen["forwards"]:
+                print(
+                    f"warning: steering at block {layer} was never applied: all "
+                    f"{seen['forwards']} forward(s) were shorter than the inject span "
+                    f"(last position {int(idx.max())})",
+                    file=sys.stderr,
+                )
 
     def capture(self, ids: list[int], layers: list[int], positions: list[int]) -> dict[int, Any]:
         """One forward pass; the residual stream after each requested block, at ``positions``."""

@@ -152,6 +152,107 @@ def test_refusal_model_only_moves_refusals(client):
     assert res is None and len(fake.calls) == 1
 
 
+def _cut_at(cap: int):
+    """A model whose answer does not fit ``cap`` output tokens."""
+
+    def answer(model, kw):
+        if kw["max_tokens"] <= cap:
+            return _resp('{"a":', "max_tokens")
+        return _resp('{"a": 1}')
+
+    return answer
+
+
+def test_overflow_max_tokens_reasks_a_truncated_call_once_with_the_larger_cap(client):
+    fake, res, spend = _json_once(
+        _cut_at(100), client, max_tokens=100, overflow_max_tokens=200, timeout=50.0
+    )
+    assert res == {"a": 1} and spend.errors == 0 and spend.calls == 2
+    first, again = fake.calls
+    assert (first["max_tokens"], again["max_tokens"]) == (100, 200)
+    assert (first["timeout"], again["timeout"]) == (50.0, 100.0)  # scaled with the cap
+    same = lambda kw: {k: v for k, v in kw.items() if k not in ("max_tokens", "timeout")}  # noqa: E731
+    assert same(first) == same(again)  # the same request otherwise
+    # still truncated at the larger cap: the call's outcome, one counted error, no third try
+    fake, res, spend = _json_once(_cut_at(200), client, max_tokens=100, overflow_max_tokens=200)
+    assert res is None and [c["max_tokens"] for c in fake.calls] == [100, 200]
+    assert spend.errors == 1
+    # a call that fits is one unchanged request; a cap that is no larger asks nothing twice
+    fake, res, _ = _json_once(_cut_at(50), client, max_tokens=100, overflow_max_tokens=200)
+    assert res == {"a": 1} and [c["max_tokens"] for c in fake.calls] == [100]
+    fake, res, spend = _json_once(_cut_at(100), client, max_tokens=100, overflow_max_tokens=100)
+    assert res is None and len(fake.calls) == 1 and spend.errors == 1
+
+
+def test_overflow_reask_keeps_the_refusal_rerun(client):
+    """Truncated at the cap, then declined at the larger one: the refusal model serves it, at
+    the larger cap."""
+
+    def answer(model, kw):
+        if model == OPUS5:
+            return _resp('{"a": 2}', model=OPUS5)
+        return _resp('{"a":', "max_tokens") if kw["max_tokens"] == 100 else _resp("", "refusal")
+
+    fake, res, _ = _json_once(
+        answer, client, max_tokens=100, overflow_max_tokens=200, refusal_model=OPUS5
+    )
+    assert res == {"a": 2, llm.SERVED_BY: OPUS5}
+    assert [(c["model"], c["max_tokens"]) for c in fake.calls] == [
+        (SONNET, 100), (SONNET, 200), (OPUS5, 200),
+    ]  # fmt: skip
+
+
+def test_overflow_reask_has_a_bounded_retry_budget(client):
+    """A re-ask that keeps timing out is tried ``OVERFLOW_ATTEMPTS`` times, not the full 12 (at
+    a doubled timeout that held a slot for hours); the first call's budget is unchanged."""
+
+    class APITimeoutError(Exception):
+        pass
+
+    def reask_times_out(model, kw):
+        if kw["max_tokens"] == 100:
+            return _resp('{"a":', "max_tokens")
+        raise APITimeoutError("timed out")
+
+    fake, res, spend = _json_once(reask_times_out, client, max_tokens=100, overflow_max_tokens=200)
+    caps = [c["max_tokens"] for c in fake.calls]
+    assert res is None and caps == [100] + [200] * llm.OVERFLOW_ATTEMPTS == [100, 200, 200, 200]
+    assert spend.errors == 1 and spend.retries == llm.OVERFLOW_ATTEMPTS - 1
+    # a caller's lower budget still wins on the re-ask
+    fake, _res, _ = _json_once(
+        reask_times_out, client, max_tokens=100, overflow_max_tokens=200, attempts=2
+    )
+    assert [c["max_tokens"] for c in fake.calls] == [100, 200, 200]
+    # the first call keeps the full budget: 11 timeouts, then the answer, with no re-ask
+    left = [11]
+
+    def first_times_out(model, kw):
+        if left[0]:
+            left[0] -= 1
+            raise APITimeoutError("timed out")
+        return _resp('{"a": 3}')
+
+    fake, res, spend = _json_once(first_times_out, client, max_tokens=100, overflow_max_tokens=200)
+    assert res == {"a": 3} and len(fake.calls) == 12 and spend.retries == 11
+    assert {c["max_tokens"] for c in fake.calls} == {100}
+
+
+def test_overflow_reask_too_long_is_the_too_long_marker_under_mark_refusals(client):
+    """A re-ask that stops with ``model_context_window_exceeded`` is a context overflow like
+    any other: ``TOO_LONG_JSON`` for a caller asking for markers (the digest halves the bundle;
+    before the re-ask existed the item stayed unsummarized), ``None`` otherwise."""
+
+    def answer(model, kw):
+        stop = "max_tokens" if kw["max_tokens"] == 100 else "model_context_window_exceeded"
+        return _resp('{"a":', stop)
+
+    kw = {"max_tokens": 100, "overflow_max_tokens": 200}
+    fake, res, spend = _json_once(answer, client, mark_refusals=True, **kw)
+    assert res == llm.TOO_LONG_JSON and len(fake.calls) == 2 and spend.errors == 1
+    _fake, res, _ = _json_once(answer, client, **kw)
+    assert res is None
+
+
 def test_refusal_model_must_differ(client):
     client(lambda m, kw: _resp('{"a": 1}'))
     with pytest.raises(llm.JudgeConfigError):
@@ -275,3 +376,49 @@ def test_both_stages_use_the_cap_and_rerun_refusals_client_side(tmp_path, monkey
     ]
     assert res.extras["summary"]["n_layered_items"] == len(items)
     assert all(OPUS5 in (r["summary_served_by"] or "") for r in res.rows)
+
+
+def test_digest_calls_carry_the_overflow_cap_and_cached_digests_stay_valid(tmp_path, monkeypatch):
+    """#289: every digest call (stage 1 and layered stage 2) of a model on the 32k cap asks for
+    one re-ask at 64k after a ``max_tokens`` stop; a model already at the ceiling asks for none.
+    The cap is in no fingerprint: a run with the re-ask switched off reuses every cached row."""
+    s = digest.settings(summary_args(tmp_path / "r.jsonl", tmp_path, "pv"), "poetry")
+    assert (s.model, s.max_tokens, s.overflow_max_tokens) == (digest.DEFAULT_MODEL, 32_000, 64_000)
+    at_cap = digest.settings(
+        summary_args(tmp_path / "r.jsonl", tmp_path, "pv", extra=dict(CLIENT_ONLY)), "poetry"
+    )
+    assert (at_cap.max_tokens, at_cap.overflow_max_tokens, at_cap.overflow_kw) == (64_000, None, {})
+
+    items = _fixture_bank(tmp_path, monkeypatch, 1, 1)
+    rows = [
+        {
+            "id": it["id"],
+            "layer": ly,
+            "pos": it["read"]["turn_end"],
+            "samples": [f"L{ly} {it['id']} sea story", f"shared boat line {it['id']}"],
+        }
+        for it in items
+        for ly in LAYERS
+    ]
+    path = write_jsonl(tmp_path / "r.jsonl", rows)
+    real = FakeLLM.install(monkeypatch, _quiet)
+    orig = real.stream_json
+    seen: list[tuple[str, int, Any]] = []
+
+    def stream(prompts, *, schema, on_result, **kw):
+        if schema.get("name") == "digest" and prompts:
+            stage = "layered" if prompts[0][1].startswith("LAYER DIGESTS:") else "layer"
+            seen.append((stage, kw["max_tokens"], kw.get("overflow_max_tokens")))
+        return orig(prompts, schema=schema, on_result=on_result, **kw)
+
+    monkeypatch.setattr(llm, "stream_json", stream)
+    extra = {"summ_model": digest.DEFAULT_MODEL, "summ_layers": "layered"}
+    args = lambda: summary_args(path, tmp_path / "o", jbp.PROMPT_VERSION, extra=dict(extra))  # noqa: E731
+    first = jb.run(args())
+    assert {st for st, _c, _o in seen} == {"layer", "layered"}
+    assert {(c, o) for _st, c, o in seen} == {(32_000, 64_000)}
+    n = len(seen)
+    monkeypatch.setattr(digest, "OVERFLOW_CEILING", digest.MAX_TOKENS)  # the re-ask off
+    again = jb.run(args())
+    assert len(seen) == n  # every digest row is a cache hit: the cap keys nothing
+    assert [r["summary"] for r in again.rows] == [r["summary"] for r in first.rows]

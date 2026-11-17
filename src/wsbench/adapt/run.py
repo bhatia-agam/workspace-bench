@@ -1086,6 +1086,12 @@ def freeze(
         # measured, not the tier menu; from the refill block when the family was refilled
         measured = describe(family, originals, items)
         entry["change"] = rf.change_text(block, measured) if block else measured
+        if rf.stale_note(entry):  # R1 (#289): the note is kept verbatim, so say it may be stale
+            print(
+                f"warning: {family}: its note was written before its refill and is kept "
+                "unchanged; check it still describes the family (`adapt note`)",
+                file=sys.stderr,
+            )
         if notes:
             entry["freeze_notes"] = notes
         # a refill recorded by hand (`note refill=`, plan 0072 D6) counts as tried, too
@@ -2017,10 +2023,11 @@ def _fill_buggy(model: str, llm: str | None, max_waves: int, runner, pilot: bool
     target = rf.target_pairs()
     tiers = list(BRIEFS[family].tiers)
     last = len(tiers) - 1
-    hold = store.report_entry(store.read_report(model).get("families"), family).get("refill_hold")
+    entry0 = store.report_entry(store.read_report(model).get("families"), family)
+    hold, note0 = entry0.get("refill_hold"), rf.note_sha(entry0)
     t_i = last if pilot else 0
     low, steer, wave, tier_tried, tier_landed, gain = 0, "", 0, 0, 0, None
-    yield_est, start, calls = 0.4, time.monotonic(), 0
+    yield_est, start, calls, n_gated = 0.4, time.monotonic(), 0, 0
     grader: Any = False  # one grader for the run (built at the first wave): its cache counts calls
 
     def rows_now() -> list[dict]:
@@ -2077,6 +2084,7 @@ def _fill_buggy(model: str, llm: str | None, max_waves: int, runner, pilot: bool
         g0 = graded()
         lint_and_gate(model, family, runner, DEFAULT_DRAWS, None, grader)
         new = set(store.gated(model, family)) - before
+        n_gated += len(new)
         if grader is not None:
             calls += graded() - g0 if hasattr(grader, "cache") else len(new)
         after = rows_now()
@@ -2109,5 +2117,5 @@ def _fill_buggy(model: str, llm: str | None, max_waves: int, runner, pilot: bool
     }  # fmt: skip
     if block["tried"]:
         block["yield"] = block["landed"] / block["tried"]
-    rf.write_block(model, family, block, status)
+    rf.write_block(model, family, block, status, note_before=note0 if n_gated else None)
     return status

@@ -282,6 +282,42 @@ def test_waves_resume_by_id_and_ext_rows_reach_the_gate_log(pool):
     assert store.gated(MODEL, kcutoff.FAMILY)[X1]["gate"]["pass"]
 
 
+def test_a_wave_that_crashed_after_elicit_is_finished_by_the_next_one(pool, monkeypatch):
+    """#289: a wave that dies between ``elicit`` and ``build`` leaves elicited ids with no gate
+    record. They are not counted as tried, and the next wave builds and counts them, also when
+    the pool has nothing new left to elicit; the end state is the uncrashed run's."""
+    runner = FakeRunner(SCRIPT)
+    _prior(runner)
+    _h, prows = _rows(pool)
+    order = list(prows)
+    r0 = kcutoff.refill_wave(MODEL, wave=0, runner=runner, ask=fake_claude, wave_size=2)
+    assert kcutoff.unfinished(MODEL) == []  # a wave that ran to its end leaves none
+
+    def boom(*a, **k):
+        raise RuntimeError("invalid_grant")
+
+    with monkeypatch.context() as m:
+        m.setattr(kcutoff, "canon", boom)
+        with pytest.raises(RuntimeError):
+            kcutoff.refill_wave(MODEL, wave=1, runner=runner, ask=fake_claude, wave_size=2)
+    assert set(order[2:]) <= set(kcutoff._load(MODEL, "elicit.json"))  # elicited, then the crash
+    assert not set(order[2:]) & set(store.gated(MODEL, kcutoff.FAMILY))
+    assert kcutoff.unfinished(MODEL) == order[2:]
+    assert kcutoff.prior_tally(MODEL) == (183, r0["landed"])  # the two are not tried yet
+
+    n_asked = len(runner.calls)
+    r2 = kcutoff.refill_wave(MODEL, wave=2, runner=runner, ask=fake_claude, wave_size=2)
+    assert len(runner.calls) == n_asked  # nothing new to elicit: the pool is used up
+    assert (r2["tried"], r2["pool_used"], r2["exhausted"]) == (2, 4, True)
+    assert r0["landed"] + r2["landed"] == 2  # X1 and Y1, as in the uncrashed run
+    rows = store.gated(MODEL, kcutoff.FAMILY)
+    assert set(order) <= set(rows) and rows[X1]["gate"]["pass"] and rows[Y1]["gate"]["pass"]
+    assert kcutoff.unfinished(MODEL) == [] and kcutoff.prior_tally(MODEL) == (185, 2)
+    # and a further wave is the old no-op: no stage runs, nothing is tried
+    r3 = kcutoff.refill_wave(MODEL, wave=3, runner=runner, ask=fake_claude, wave_size=2)
+    assert (r3["tried"], r3["landed"], r3["claude_calls"]) == (0, 0, 0)
+
+
 def test_refill_item_truth_options_k5_and_g3(pool):
     runner = FakeRunner(SCRIPT)
     _prior(runner)

@@ -538,6 +538,9 @@ def remap_layer(layer: int, n_layers: int, band: tuple[int, ...] | list[int] = (
     the nearest snap itself); off-grid layers still snap."""
     if band and len(band) == len(GRID_27B) and layer in GRID_27B:
         return sorted(band)[GRID_27B.index(layer)]
+    # Python's round sends an exact half to the EVEN integer (a 24-block subject: 27B layer 12
+    # -> 4.5 -> block 4, not 5). Kept as is: changing the rule would move shipped sets' read
+    # layers and with them their plan_sha (issue #289; a change needs its own plan).
     x = min(n_layers - 1, round(layer * n_layers / ORIGINAL_LAYERS))
     return min(band, key=lambda b: (abs(b - x), -b)) if band else x
 

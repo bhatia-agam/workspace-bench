@@ -45,6 +45,11 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   with the row, under the judge's fingerprint: a later run with another refusal model (or none)
   reuses that row (no stale-fallback check, unlike the digest). The digest's equivalent is `summ_fallback=none+<model>`, and
   `digest.OUTPUT_CAPS` gives a digest model its own per-call output cap (`Settings.max_tokens`).
+  `stream_json[_async](overflow_max_tokens=)` re-asks a call that stops at `max_tokens` ONCE with
+  that larger cap (Anthropic route; timeout scaled, at most `llm.OVERFLOW_ATTEMPTS` = 3 attempts;
+  a second stop = `None`, one error); every
+  digest call passes `Settings.overflow_max_tokens` (twice its cap, at most
+  `digest.OVERFLOW_CEILING` = 64k; none for a model already there). The cap keys no fingerprint.
 
 ## Family conventions
 - `wsbench/family.py` holds the helpers the newer families share: `require_cells` (missing
