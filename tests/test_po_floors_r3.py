@@ -228,6 +228,35 @@ def test_freeze_accepts_agentic_summary_stamp_base_only(tmp_path, monkeypatch, r
     assert po.summary_bases("no_such_family", None) == ()
 
 
+def test_freeze_accepts_role_bound_adapted_bank_stamp_only_on_an_adapted_bank(
+    tmp_path, monkeypatch, real_families
+):
+    """role_bound_association stamps CALL_VERSION alone on an adapted bank (judge.instrument), so
+    an adapted set's prompt-only floor freezes on that stamp; on the registered bank v2 the
+    same stamp is still refused (it is the frozen items.json's instrument, not bank v2's)."""
+    from wsbench.evals.role_bound_association import judge as rbj
+    from wsbench.evals.role_bound_association import prompts as rbp
+
+    dst = tmp_path / "po_summary.json"
+    monkeypatch.setattr(po, "FROZEN_SUMMARY", dst)
+    adapted_pv = f"{rbp.CALL_VERSION}+maj3v+digest-v5-task-extractive+sj-v10"
+    native_bank = tmp_path / "native.json"
+    native_bank.write_text(json.dumps({"version": 2, "items": [{"id": "x"}]}))
+    monkeypatch.setattr(rbj, "bank_path", lambda fam: native_bank)
+    assert po.judged_bank_stamp("role_bound_association") == rbp.PROMPT_VERSION
+    with pytest.raises(ValueError, match="re-judge first"):
+        po.freeze(_po_run(tmp_path, "role_bound_association", adapted_pv, "nat"), dst)
+    adapted_bank = tmp_path / "adapted.json"
+    adapted_bank.write_text(json.dumps({"version": 2, "adapt": {}, "items": [{"id": "x"}]}))
+    monkeypatch.setattr(rbj, "bank_path", lambda fam: adapted_bank)
+    assert po.judged_bank_stamp("role_bound_association") == rbp.CALL_VERSION
+    po.freeze(_po_run(tmp_path, "role_bound_association", adapted_pv, "ad"), dst)
+    assert json.loads(dst.read_text())["role_bound_association"]["instrument"] == adapted_pv
+    # a family whose instrument() needs the bank header contributes no extra base
+    assert po.judged_bank_stamp("buggy_code") is None
+    assert po.judged_bank_stamp("association") is None
+
+
 # ------------------------------------------------------------------ the committed floor file
 
 
