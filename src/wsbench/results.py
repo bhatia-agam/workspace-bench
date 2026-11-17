@@ -153,7 +153,7 @@ def adapted_exclusions() -> dict[str, str]:
     import os
     from pathlib import Path
 
-    from wsbench.registry import BANK_ROOT_ENV, REPO_ROOT
+    from wsbench.registry import BANK_ROOT_ENV, LEGACY_FAMILY_NAMES, REPO_ROOT
 
     root = os.environ.get(BANK_ROOT_ENV)
     if not root:
@@ -162,8 +162,16 @@ def adapted_exclusions() -> dict[str, str]:
     if not path.exists():
         return {}
     fams = json.loads(path.read_text(encoding="utf-8")).get("families", {})
-    return {f: str(e.get("note") or "excluded by the adapted set")[:80]
-            for f, e in fams.items() if e.get("exclude_from_macro")}  # fmt: skip
+    out: dict[str, str] = {}
+    # a set written before a rename keeps its entry under the former key (multihop_mt_v2): it
+    # excludes the family's current key, the one results carry; an entry under the current key wins
+    for f, e in sorted(fams.items(), key=lambda kv: kv[0] not in LEGACY_FAMILY_NAMES):
+        key = LEGACY_FAMILY_NAMES.get(f, f)
+        if e.get("exclude_from_macro"):
+            out[key] = str(e.get("note") or "excluded by the adapted set")[:80]
+        elif f == key:
+            out.pop(key, None)
+    return out
 
 
 ATI_SCOPE = "anti_text_inversion"
