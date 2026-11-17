@@ -3184,6 +3184,13 @@ def _collapse_hierarchical(
     halvings (or with an unusable final), the item is judged on its chunk digests directly (audit
     F3; chunks still refused leave their layers in ``partial``) rather than given up.
 
+    A rerun that finds a persisted level restarts the item at level 0 and REPLAYS every level
+    below the persisted one from the cache (plan 0093), so it rebuilds the chunk claims the first
+    pass remembered and ends where that pass did. A replayed level is read-only: it sends no call
+    and writes no row, a call counts as served only if its cached row is a success (anything else
+    is the persisted refusal / too-long marker), and it always moves the item down a level (it
+    never ends the item, whatever rows the cache holds there).
+
     ``stems``: per item (a per-layer part under ``summ_layers=union``) the cache-key stem
     ``digest:<id>|<layers>`` (default: ``args.layers``). Keys: ``<stem>`` (single),
     ``<stem>|h<k>|c<i>of<n>`` (chunks), ``<stem>|h<k>|final``, ``<stem>|level`` (the persisted
@@ -3301,11 +3308,13 @@ def _collapse_hierarchical(
         )
 
     # ---- the persisted fallback level per item
-    level: dict[str, int] = {}
+    # (plan 0093) the walk always starts at level 0: the levels below ``persisted`` are replayed
+    level: dict[str, int] = dict.fromkeys(items, 0)
+    persisted: dict[str, int] = {}
     persisted_kind: dict[str, str] = {}
     for i in items:
         row = cache.get(f"{stems[i]}|level", level_fp(i), include_failed=True)
-        level[i] = int(row.get("halvings", 0)) if row else 0
+        persisted[i] = int(row.get("halvings", 0)) if row else 0
         if row and row.get("fallback"):
             persisted_kind[i] = str(row["fallback"])
 
@@ -3415,10 +3424,25 @@ def _collapse_hierarchical(
         last_kind[i] = kind
         col.diag["n_fallback_events"] += 1
         k = level[i] + 1
-        cache.put(
-            f"{stems[i]}|level", level_fp(i), {"result": None, "fallback": kind, "halvings": k}
-        )
+        if k > persisted[i]:  # a replayed level appends no row
+            cache.put(
+                f"{stems[i]}|level", level_fp(i), {"result": None, "fallback": kind, "halvings": k}
+            )
         level[i] = k
+
+    def replay_kind(i: str) -> str:
+        # the newest level row's kind stands for every replayed level (only the last one counts)
+        return persisted_kind.get(i) or "refused"
+
+    def replay_read(i: str, key: str, fp: str) -> object:
+        """A replayed level's call, read-only: the cached success, else the persisted marker."""
+        row = _cached(cache, key, fp, s.refusal_model)
+        if row is None:
+            return llm.TOO_LONG_JSON if replay_kind(i) == "too_long" else llm.REFUSED_JSON
+        r = row.get("result")
+        if isinstance(r, dict) and r.get(llm.SERVED_BY):
+            served_keys[key] = str(r[llm.SERVED_BY])
+        return r
 
     print(f"{name} digest (hierarchical): {len(items)} items, budget {budget0} tokens")
     for _round in range(MAX_HALVINGS + 1):
@@ -3427,8 +3451,18 @@ def _collapse_hierarchical(
             break
         # single calls: level 0 and the bundle fits
         singles = [i for i in active if level[i] == 0 and counts[i] <= budget0]
-        res = run_batch([(i, stems[i], single_fp[i], render_user(text_of[i])) for i in singles])
+        replay = {i for i in singles if level[i] < persisted[i]}
+        res = run_batch(
+            [
+                (i, stems[i], single_fp[i], render_user(text_of[i]))
+                for i in singles
+                if i not in replay
+            ]
+        )
         for i in singles:
+            if i in replay:  # the level row says this call ended in a bump: never re-read
+                bump(i, replay_kind(i))
+                continue
             r = res.get(stems[i])
             kind = _marker(r)
             if kind is not None:
@@ -3443,6 +3477,8 @@ def _collapse_hierarchical(
             continue
         plan: dict[str, list[list[_Group]]] = {}
         calls: list[tuple[str, str, str, str]] = []
+        replay = {i for i in chunked if level[i] < persisted[i]}  # after the singles' bumps
+        replayed: dict[str, object] = {}
         for i in chunked:
             k = level[i]
             if k > MAX_HALVINGS:
@@ -3457,8 +3493,11 @@ def _collapse_hierarchical(
                 t = _render(gs)
                 ckey = f"{stems[i]}|h{k}|c{c_i}of{n}"
                 chunk_fp[ckey] = single_fp[i] + _fp("chunk", c_i, n, t)
-                calls.append((i, ckey, chunk_fp[ckey], render_user(t)))
-        res = run_batch(calls)
+                if i in replay:
+                    replayed[ckey] = replay_read(i, ckey, chunk_fp[ckey])
+                else:
+                    calls.append((i, ckey, chunk_fp[ckey], render_user(t)))
+        res = {**run_batch(calls), **replayed}
         finals: list[tuple[str, str, str, str]] = []
         union_of: dict[str, list[Line]] = {}
         for i, ch in plan.items():
@@ -3492,7 +3531,8 @@ def _collapse_hierarchical(
                     continue  # no number in this chunk: contributes nothing
                 any_items = True
                 if not kept:  # every span failed: invalidate the cached chunk so a rerun re-asks
-                    cache.put(ckey, chunk_fp[ckey], {"result": None, "meta": {"raw": r}})
+                    if i not in replay:
+                        cache.put(ckey, chunk_fp[ckey], {"result": None, "meta": {"raw": r}})
                     if failed not in ("refused", "too_long"):
                         failed = "failed"
                     lost.update(g.layer for g in gs)
@@ -3502,6 +3542,10 @@ def _collapse_hierarchical(
                     if id(g.line) not in seen:
                         seen.add(id(g.line))
                         union.append(g.line)
+            if i in replay:  # read-only: remember as the bumping level did, never end the item
+                remember(i, claims, sorted(lost), refused=bool(lost))
+                bump(i, replay_kind(i))
+                continue
             if failed in ("refused", "too_long"):
                 remember(i, claims, sorted(lost), refused=True)
                 bump(i, failed)
@@ -3553,7 +3597,9 @@ def _collapse_hierarchical(
             direct[i] = fallback[i]
         else:
             col.unsummarized.add(i)
-    for i in items:  # per-item refusal / too-long counts, from the final state (rerun-stable)
+    # per-item refusal / too-long counts, from the final state (rerun-stable: a rerun replays the
+    # past levels, so ``last_kind`` and ``fallback`` are rebuilt as the first pass left them)
+    for i in items:
         if i in col.unsummarized:
             kind = last_kind.get(i) or persisted_kind.get(i)
             if kind in ("refused", "too_long"):

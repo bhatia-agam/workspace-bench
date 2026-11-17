@@ -594,3 +594,333 @@ def test_pre_switch_server_served_and_unserved_digests_stay_cached(
     assert calls == []  # ... and neither digest is re-asked
     assert col.row("a")["summary_served_by"] == "claude-opus-4-8"
     assert col.summaries["b"] and not col.row("b").get("summary_served_by")
+
+
+# ------------------------------------------- plan 0093: a rerun replays the halving levels
+
+FAILED = object()  # a RuleFake rule's "the call failed" (stream_json reports None)
+
+
+class RuleFake(Fake):
+    """``Fake`` whose ``rule(user)`` scripts a call first (``FAILED`` = a failed call, ``None`` =
+    no rule); an unscripted call cites its first ``n_lines`` bundle lines."""
+
+    def __init__(self, monkeypatch, rule, tokens_per_char: float = 1.0, n_lines: int = 1):
+        super().__init__(monkeypatch, tokens_per_char)
+        self.rule = rule
+        self.n_lines = n_lines
+
+    def stream_json(self, prompts, *, on_result, **kw):
+        assert kw.get("mark_refusals") is True and kw.get("attempts") == digest.DIGEST_ATTEMPTS
+        for i, (_s, user) in enumerate(prompts):
+            self.calls.append(user)
+            hit = self.rule(user)
+            if hit is FAILED:
+                on_result(i, None)
+            elif hit is not None:
+                on_result(i, hit)
+            else:
+                lines = [ln[2:] for ln in user.splitlines() if ln.startswith("- ")]
+                on_result(
+                    i,
+                    {
+                        "items": [
+                            {"statement": "s", "key": "", "where": "", "evidence": ln}
+                            for ln in lines[: self.n_lines]
+                        ]
+                    },
+                )
+        return Spend()
+
+
+def _is_final(user: str) -> bool:
+    return "(support:" in user
+
+
+def _heads(user: str) -> list[str]:
+    return [ln.split("]")[0] + "]" for ln in user.splitlines() if ln.startswith("[L")]
+
+
+def _outcome(col: digest.Collapse) -> dict:
+    """What a family judges of a Collapse, plus the counters main already keeps rerun-stable
+    (``n_fallback_events`` is asserted apart: main counts 0 on every rerun)."""
+    keys = (
+        "max_halvings",
+        "n_items_chunk_direct",
+        "n_digest_refused",
+        "n_digest_too_long",
+    )
+    return {
+        "summaries": col.summaries,
+        "statements": col.statements,
+        "evidence": {i: [(e.where, e.text) for e in ev] for i, ev in col.evidence.items()},
+        "reasons": col.reasons,
+        "unsummarized": col.unsummarized,
+        "empty": col.empty,
+        "partial": col.partial,
+        "refused_layers": col.refused_layers,
+        "served_by": col.served_by,
+        "chunks": col.chunks,
+        "diag": {k: col.diag[k] for k in keys},
+    }
+
+
+def _n_rows(tmp_path) -> int:
+    return len((tmp_path / "c.jsonl").read_text().splitlines())
+
+
+def _rerun_is_first_pass(tmp_path, fake, cells, first, resent: int = 0, events: bool = True):
+    """Run again over the same cache: the same outcome, ``resent`` calls (0: nothing sent and no
+    cache row appended) and, with ``events``, the same ``n_fallback_events``."""
+    n_calls, n_rows = len(fake.calls), _n_rows(tmp_path)
+    again = _run(tmp_path, cells)
+    assert _outcome(again) == _outcome(first)
+    if events:
+        assert again.diag["n_fallback_events"] == first.diag["n_fallback_events"]
+    assert len(fake.calls) == n_calls + resent
+    if not resent:
+        assert _n_rows(tmp_path) == n_rows
+    return again
+
+
+def test_rerun_of_refused_final_moves_down_a_level_scenario(tmp_path, fam, monkeypatch):
+    """The scenario of ``test_refused_final_moves_down_a_level``, run twice. A guard that passes
+    on main: there the item ends at persisted level 2 (its level-2 union is too large for a final
+    call), and that level alone holds its best chunk claims."""
+    fake = Fake(monkeypatch, tokens_per_char=1.0)
+    fake.script["(support:"] = llm.REFUSED_JSON  # finals are refused, chunks are not
+    cells = {"a": _cells("a", 6)}
+    col = _run(tmp_path, cells)
+    assert "a" not in col.unsummarized and col.diag["n_items_chunk_direct"] == 1
+    _rerun_is_first_pass(tmp_path, fake, cells, col, events=False)
+
+
+def test_rerun_after_a_refused_final_at_every_level(tmp_path, fam, monkeypatch):
+    """Fails on main: every final is refused, so the item runs out of halvings (persisted level
+    3) and is judged on its level-2 chunk claims; main's rerun skips it (unsummarized, refused)."""
+    fake = RuleFake(monkeypatch, lambda u: llm.REFUSED_JSON if _is_final(u) else None)
+    cells = {"a": _cells("a", 6)}
+    col = _run(tmp_path, cells)
+    assert col.diag["max_halvings"] == 3 and col.diag["n_fallback_events"] == 3
+    assert col.summaries["a"] and not col.unsummarized and "a" not in col.partial
+    assert col.diag["n_items_chunk_direct"] == 1 and len(col.evidence["a"]) == 6
+    _rerun_is_first_pass(tmp_path, fake, cells, col)
+
+
+def test_rerun_after_a_refused_final_at_level_2(tmp_path, fam, monkeypatch):
+    """Fails on main: the chunk holding L20 is refused at levels 0 and 1, level 2 serves every
+    chunk and its final is refused (persisted level 3): judged on the level-2 claims."""
+
+    def rule(user):
+        if _is_final(user):
+            return llm.REFUSED_JSON
+        if "[L20 pos 0]" in user and len(_heads(user)) > 3:  # the level 0 / level 1 chunk
+            return llm.REFUSED_JSON
+        return None
+
+    fake = RuleFake(monkeypatch, rule)
+    cells = {"a": _cells("a", 6)}
+    col = _run(tmp_path, cells)
+    assert col.diag["max_halvings"] == 3 and col.summaries["a"] and "a" not in col.partial
+    assert len(col.evidence["a"]) == 6  # one claim per level-2 chunk (a layer each)
+    _rerun_is_first_pass(tmp_path, fake, cells, col)
+
+
+def test_rerun_after_a_refused_chunk_at_levels_1_and_2(tmp_path, fam, monkeypatch):
+    """Fails on main: level 0 serves every chunk and its final is refused; at levels 1 and 2 the
+    chunk holding L20 is refused. The item is judged on the level-0 claims (nothing lost), which
+    only a replay of level 0 rebuilds."""
+
+    def rule(user):
+        if _is_final(user):
+            return llm.REFUSED_JSON
+        if "[L20 pos 0]" in user and len(_heads(user)) < 12:  # not the level-0 chunk
+            return llm.REFUSED_JSON
+        return None
+
+    fake = RuleFake(monkeypatch, rule)
+    cells = {"a": _cells("a", 6)}
+    col = _run(tmp_path, cells)
+    assert col.diag["max_halvings"] == 3 and col.summaries["a"] and "a" not in col.partial
+    assert len(col.evidence["a"]) == 2  # the two level-0 chunks' claims
+    _rerun_is_first_pass(tmp_path, fake, cells, col)
+
+
+def test_rerun_out_of_halvings_is_judged_on_the_remembered_chunks(tmp_path, fam, monkeypatch):
+    """Fails on main: the chunk holding L20 is refused at EVERY level (out of halvings). Both
+    passes judge the item on its remembered chunk claims, L20 partial and refused; main's rerun
+    leaves it unsummarized."""
+    fake = Fake(monkeypatch, tokens_per_char=1.0)
+    fake.script["L0 p"] = llm.REFUSED_JSON
+    cells = {"a": _cells("a", 6)}
+    col = _run(tmp_path, cells)
+    assert col.diag["max_halvings"] == 3 and col.summaries["a"] and not col.unsummarized
+    assert col.partial == {"a": [20]} and col.refused_layers == {"a": [20]}
+    assert col.diag["n_items_chunk_direct"] == 1 and col.diag["n_digest_refused"] == 0
+    again = _rerun_is_first_pass(tmp_path, fake, cells, col)
+    assert again.partial == {"a": [20]} and again.diag["n_fallback_events"] == 3
+    _rerun_is_first_pass(tmp_path, fake, cells, col)  # and a third pass
+
+
+def test_rerun_too_long_single_then_served_level_1(tmp_path, fam, monkeypatch):
+    """A guard that passes on main: a too-long single call (level 0), then a served level 1."""
+    fake = Fake(monkeypatch, tokens_per_char=0.3)
+    cells = {"a": _cells("a", 4)}
+    first_user = digest.render_user(digest._render([digest._group(c) for c in cells["a"]]))
+    fake.exact[first_user] = llm.TOO_LONG_JSON
+    col = _run(tmp_path, cells)
+    assert col.chunks.get("a", 0) >= 2 and col.diag["n_fallback_events"] == 1
+    again = _rerun_is_first_pass(tmp_path, fake, cells, col, events=False)
+    assert again.diag["n_digest_too_long"] == 0
+
+
+def test_rerun_counts_the_fallback_events_of_the_first_pass(tmp_path, fam, monkeypatch):
+    """Fails on main (which counts 0 on a rerun): ``n_fallback_events`` is rerun-stable, here
+    after a too-long single call and after a refusal at every level."""
+    fake = Fake(monkeypatch, tokens_per_char=0.3)
+    cells = {"a": _cells("a", 4)}
+    first_user = digest.render_user(digest._render([digest._group(c) for c in cells["a"]]))
+    fake.exact[first_user] = llm.TOO_LONG_JSON
+    col = _run(tmp_path, cells)
+    again = _rerun_is_first_pass(tmp_path, fake, cells, col)
+    assert again.diag["n_fallback_events"] == 1
+    other = tmp_path / "every"
+    other.mkdir()
+    fake = Fake(monkeypatch, tokens_per_char=1.0)
+    fake.script["word"] = llm.REFUSED_JSON
+    col = _run(other, {"a": _cells("a", 6)})
+    again = _rerun_is_first_pass(other, fake, {"a": _cells("a", 6)}, col)
+    assert again.diag["n_fallback_events"] == 3 and again.unsummarized == {"a"}
+
+
+def test_rerun_too_long_at_every_level_keeps_its_reason(tmp_path, fam, monkeypatch):
+    """A guard that passes on main: every call too long, the item unsummarized as too long on
+    both passes (the replayed levels carry the persisted kind)."""
+    fake = Fake(monkeypatch, tokens_per_char=1.0)
+    fake.script["word"] = llm.TOO_LONG_JSON
+    cells = {"a": _cells("a", 6)}
+    col = _run(tmp_path, cells)
+    assert col.unsummarized == {"a"} and col.reasons == {"a": "too_long"}
+    assert col.diag["n_digest_too_long"] == 1
+    _rerun_is_first_pass(tmp_path, fake, cells, col, events=False)
+
+
+def test_rerun_after_failed_then_refused_single(tmp_path, fam, monkeypatch):
+    """A guard that passes on main (it pins the replay rule: a replayed level never reads its
+    single row). Run 1: the single call fails (a ``None`` row). Run 2: the same call is refused
+    and level 1 serves. Run 3 equals run 2, sends nothing, appends nothing."""
+    cells = {"a": _cells("a", 4)}
+    first_user = digest.render_user(digest._render([digest._group(c) for c in cells["a"]]))
+    answer: dict[str, object] = {"single": FAILED}
+    fake = RuleFake(
+        monkeypatch, lambda u: answer["single"] if u == first_user else None, tokens_per_char=0.3
+    )
+    col1 = _run(tmp_path, cells)
+    assert col1.unsummarized == {"a"} and col1.diag["max_halvings"] == 0
+    answer["single"] = llm.REFUSED_JSON
+    col2 = _run(tmp_path, cells)
+    assert col2.summaries["a"] and col2.chunks.get("a", 0) >= 2
+    assert col2.diag["max_halvings"] == 1
+    _rerun_is_first_pass(tmp_path, fake, cells, col2, events=False)
+
+
+def test_rerun_after_failed_then_refused_chunk(tmp_path, fam, monkeypatch):
+    """A guard that passes on main (the replay rule again: a failed chunk row at a level a later
+    pass bumped past is the refusal marker, never the end of the item). Run 1: a level-0 chunk
+    fails. Run 2: it is refused and level 1 serves. Run 3 equals run 2 and sends nothing."""
+    cells = {"a": _cells("a", 6)}
+    answer: dict[str, object] = {"big": FAILED}
+    fake = RuleFake(
+        monkeypatch, lambda u: answer["big"] if len(_heads(u)) == 12 else None, n_lines=2
+    )
+    col1 = _run(tmp_path, cells)
+    assert col1.partial == {"a": [20, 24, 28, 32]} and col1.diag["max_halvings"] == 0
+    answer["big"] = llm.REFUSED_JSON
+    col2 = _run(tmp_path, cells)
+    assert col2.summaries["a"] and "a" not in col2.partial and col2.chunks == {"a": 3}
+    assert col2.diag["max_halvings"] == 1 and col2.diag["n_items_chunk_direct"] == 0
+    _rerun_is_first_pass(tmp_path, fake, cells, col2, events=False)
+
+
+def test_rerun_chunk_direct_through_a_failed_chunk_keeps_the_better_level(
+    tmp_path, fam, monkeypatch
+):
+    """Fails on main: level 0 serves every chunk and its final is refused; at level 1 the chunk
+    holding L20 FAILS, so the item ends there (persisted level 1), judged on the level-0 claims
+    (nothing lost). Main's rerun starts at level 1 and judges the worse level-1 claims (L20 and
+    L24 partial). The failed call is re-sent, as before (one call, one ``None`` row)."""
+
+    def rule(user):
+        if _is_final(user):
+            return llm.REFUSED_JSON
+        if _heads(user)[0] == "[L20 pos 0]" and len(_heads(user)) == 6:  # level 1, chunk 1
+            return FAILED
+        return None
+
+    fake = RuleFake(monkeypatch, rule, n_lines=2)
+    cells = {"a": _cells("a", 6)}
+    col = _run(tmp_path, cells)
+    assert col.diag["max_halvings"] == 1 and col.diag["n_items_chunk_direct"] == 1
+    assert col.summaries["a"] and "a" not in col.partial and len(col.evidence["a"]) == 4
+    n_rows = _n_rows(tmp_path)
+    again = _rerun_is_first_pass(tmp_path, fake, cells, col, resent=1)
+    assert "a" not in again.partial and _n_rows(tmp_path) == n_rows + 1
+    assert len(_heads(fake.calls[-1])) == 6 and "[L20 pos 0]" in fake.calls[-1]
+
+
+def test_rerun_chunk_direct_at_level_2_through_a_failed_chunk(tmp_path, fam, monkeypatch):
+    """Fails on main: finals refused at levels 0 and 1, a failed chunk at level 2 (persisted
+    level 2). The item is judged on the level-1 claims; main's rerun judges the level-2 ones
+    with L20 partial."""
+
+    def rule(user):
+        if _is_final(user):
+            return llm.REFUSED_JSON
+        if _heads(user)[0] == "[L20 pos 0]" and len(_heads(user)) == 3:  # level 2, chunk 1
+            return FAILED
+        return None
+
+    fake = RuleFake(monkeypatch, rule)
+    cells = {"a": _cells("a", 6)}
+    col = _run(tmp_path, cells)
+    assert col.diag["max_halvings"] == 2 and col.diag["n_items_chunk_direct"] == 1
+    assert "a" not in col.partial and len(col.evidence["a"]) == 3  # the three level-1 chunks
+    _rerun_is_first_pass(tmp_path, fake, cells, col, resent=1)
+
+
+def test_rerun_union_with_a_refused_layer_part(tmp_path, fam, monkeypatch):
+    """Fails on main (the real failure shape, ``summ_layers=union``): of six layer parts, L40
+    is refused at every level (the item's one refused layer) and L24 runs out of halvings on
+    refused finals, judged on its chunk claims. Main's rerun loses L24 too: two refused layers of
+    six are over ``PARTIAL_UNDECIDED_SHARE``, so the item goes undecided."""
+    monkeypatch.setitem(digest.FAMILY_DEFAULTS[FAM], "summ_layers", "union")
+    cells = {
+        "a": [
+            Cell("a", layer, p, (f"word a L{layer} p{p} " + "x" * 40,), None, None, None)
+            for layer in (20, 24, 28, 32, 36, 40)
+            for p in range(8)
+        ]
+    }
+
+    def rule(user):
+        if "[L40 " in user:
+            return llm.REFUSED_JSON
+        if "[L24 " not in user:
+            return None
+        if _is_final(user) or len(_heads(user)) == 8:  # the L24 single call and every final
+            return llm.REFUSED_JSON
+        line = next(ln[2:] for ln in user.splitlines() if ln.startswith("- "))
+        return {
+            "items": [{"statement": "s", "key": "", "where": "", "evidence": line}],
+            llm.SERVED_BY: "claude-opus-4-8",
+        }
+
+    fake = RuleFake(monkeypatch, rule)
+    col = _run(tmp_path, cells)
+    assert col.summaries["a"] and not col.unsummarized
+    assert col.partial == {"a": [40]} and col.refused_layers == {"a": [40]}
+    assert col.served_by == {"a": "claude-opus-4-8"}
+    assert any("L24" in e.where for e in col.evidence["a"])
+    again = _rerun_is_first_pass(tmp_path, fake, cells, col)
+    assert again.partial == {"a": [40]} and again.refused_layers == {"a": [40]}
+    assert again.served_by == {"a": "claude-opus-4-8"}

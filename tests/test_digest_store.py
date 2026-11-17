@@ -179,6 +179,66 @@ def test_chunked_and_refused_layers_share_level_chunks_and_final(tmp_path, monke
         assert other.chunks == mine.chunks
 
 
+def _big20() -> list[Cell]:
+    return [Cell("a", 20, p, (f"w{p} {'filler ' * 40}L20",), None, None, None) for p in range(12)]
+
+
+def _refused_finals(system, user):
+    if "(support:" in user:
+        return llm.REFUSED_JSON  # every final is refused: the item runs out of halvings
+    lines = [ln[2:] for ln in user.splitlines() if ln.startswith("- ")]
+    return {"items": [_entry_of(lines[0])], "rare": []}
+
+
+def _n_lines(path) -> int:
+    return len(path.read_text().splitlines())
+
+
+def test_rerun_with_a_store_replays_the_halving_levels(tmp_path, monkeypatch):
+    """Plan 0093, fails on main: an item out of halvings (persisted level 3, judged on its chunk
+    claims) reruns identically with a ``summ_store``: no call, no row in the out dir or the
+    store, nothing adopted."""
+    monkeypatch.setattr(llm, "count_tokens", lambda m, ps, **kw: [len(u) // 4 for _s, u in ps])
+    fake = Scripted(monkeypatch, _refused_finals)
+    store = tmp_path / "store"
+    kw = {"summ_token_cap": "700"}
+    first = _run(tmp_path, "single", {"a": _big20()}, layers=[20], store=store, **kw)
+    assert first.summaries.get("a") and first.diag["max_halvings"] == 3
+    assert first.diag["n_items_chunk_direct"] == 1 and not first.partial
+    n0 = len(fake.calls)
+    n_out, n_store = _n_lines(tmp_path / "single.jsonl"), _n_lines(store / FAM / "L20.jsonl")
+    again = _run(tmp_path, "single", {"a": _big20()}, layers=[20], store=store, **kw)
+    _same(first, again)
+    assert len(fake.calls) == n0 and again.diag["n_store_rows_adopted"] == 0
+    assert again.diag["n_fallback_events"] == first.diag["n_fallback_events"] == 3
+    assert _n_lines(tmp_path / "single.jsonl") == n_out
+    assert _n_lines(store / FAM / "L20.jsonl") == n_store
+
+
+def test_fresh_out_dir_adopting_a_level_3_stem_equals_a_storeless_run(tmp_path, monkeypatch):
+    """Plan 0093, fails on main: a fresh out dir that adopts a level-3 stem from the store sends
+    nothing, replays the past levels from the adopted chunk rows and equals a storeless fresh
+    run (main skips the item: unsummarized). Its own rerun then adopts and writes nothing."""
+    monkeypatch.setattr(llm, "count_tokens", lambda m, ps, **kw: [len(u) // 4 for _s, u in ps])
+    fake = Scripted(monkeypatch, _refused_finals)
+    store = tmp_path / "store"
+    kw = {"summ_token_cap": "700"}
+    _run(tmp_path, "single", {"a": _big20()}, layers=[20], store=store, **kw)
+    n0 = len(fake.calls)
+    adopted = _run(tmp_path, "other", {"a": _big20()}, layers=[20], store=store, **kw)
+    assert len(fake.calls) == n0 and adopted.diag["n_store_rows_adopted"] > 1
+    fresh = _run(tmp_path, "fresh", {"a": _big20()}, layers=[20], **kw)
+    assert len(fake.calls) > n0 and fresh.diag["max_halvings"] == 3
+    _same(adopted, fresh)
+    assert adopted.summaries.get("a") and adopted.diag["n_items_chunk_direct"] == 1
+    assert adopted.diag["n_fallback_events"] == fresh.diag["n_fallback_events"]
+    n1, n_out = len(fake.calls), _n_lines(tmp_path / "other.jsonl")
+    again = _run(tmp_path, "other", {"a": _big20()}, layers=[20], store=store, **kw)
+    _same(adopted, again)
+    assert len(fake.calls) == n1 and again.diag["n_store_rows_adopted"] == 0
+    assert _n_lines(tmp_path / "other.jsonl") == n_out
+
+
 def test_numbers_union_family_shares_and_joint_numbers_family_does_not(tmp_path, monkeypatch):
     def reply(system, user):
         nums = [ln[2:] for ln in user.splitlines() if ln.startswith("- ")]
