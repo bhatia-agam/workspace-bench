@@ -11,6 +11,7 @@ byte-level BPE to text here, once (``wsbench.bpe``); the read-site ``token`` is 
 """
 
 import json
+import os
 from collections.abc import Collection, Iterable, Mapping, Sequence
 from dataclasses import dataclass, field, replace
 from pathlib import Path
@@ -336,12 +337,18 @@ def read_sidecar(path: Path) -> dict[str, Any] | None:
 
 
 def write_sidecar(path: Path, **meta: Any) -> Path:
-    """Write ``<path>.meta.json`` (producers, converters, the prompt-only writer)."""
+    """Write ``<path>.meta.json`` (producers, converters, the prompt-only writer), atomically:
+    a temporary file beside it, then ``os.replace``, so a reader never sees half a sidecar."""
     if meta.get("sampling") not in SAMPLINGS:
         raise ValueError(f"sampling={meta.get('sampling')!r}; expected one of {SAMPLINGS}")
     meta.setdefault("reads", "full")
     p = sidecar_path(Path(path))
-    p.write_text(json.dumps(meta, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
+    tmp = p.with_name(f"{p.name}.{os.getpid()}.tmp")
+    try:
+        tmp.write_text(json.dumps(meta, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
+        os.replace(tmp, p)
+    finally:
+        tmp.unlink(missing_ok=True)
     return p
 
 

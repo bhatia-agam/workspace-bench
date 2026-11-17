@@ -1255,3 +1255,34 @@ def test_default_all_layer_scope_is_the_grid_not_l63(fixture_bank, run, tmp_path
     res_o, fake_o = run(v, mode=mode, readouts=only63, out=tmp_path / f"o63-{mode}")
     assert res_o.config["layers_judged"] == [63]
     assert any(":L63:" in u for u in fake_o.users)
+
+
+def test_replay_at_the_0092_defaults_makes_no_new_call(fixture_bank, run, tmp_path, monkeypatch):
+    """Plan 0092: the digest concurrency cap, ``concurrency`` and ``rpm`` are in no cache key. A
+    run cached at the old settings (``summ_concurrency=8``, 64 / 240) replays at the new ones
+    with 0 new calls and the same result."""
+    v = _verdicts(**{"w-a": HIT, "w-b": HIT, "w-b~twin": RANK2, "g-1": HIT})
+    out = tmp_path / "replay"
+    first = FakeLLM.install(monkeypatch, lambda s, u, sc: None, digest=first_lines_digest)
+    old, old_text = run(
+        v,
+        out=out,
+        concurrency=64,
+        rpm=240.0,
+        extra={"aggregate": "summary", "summ_concurrency": "8"},
+    )
+    assert first.n("digest") > 0 and old_text.users
+    assert old.config["summarizer"]["concurrency"] == 8 and old.config["concurrency"] == 64
+    second = FakeLLM.install(monkeypatch, lambda s, u, sc: None, digest=first_lines_digest)
+    new, new_text = run(v, out=out, concurrency=256, rpm=30000.0)
+    assert second.calls == [] and new_text.users == []
+    assert new.config["summarizer"]["concurrency"] == 256 and new.config["concurrency"] == 256
+    assert new.config["rpm"] == 30000.0 and old.config["rpm"] == 240.0
+
+    def strip(res) -> dict:
+        d = json.loads(json.dumps(res.to_json()))
+        d["config"].pop("concurrency"), d["config"].pop("rpm")
+        d["config"]["summarizer"].pop("concurrency")
+        return d
+
+    assert strip(new) == strip(old)

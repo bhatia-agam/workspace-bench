@@ -1169,7 +1169,6 @@ def test_full_settings():
     # the digest runs on the judge pin, no server-side fallback; a declined call re-runs once
     # on claude-opus-5, client-side
     assert digest.FAMILY_DEFAULTS["jailbreak_recognition"] == {
-        "summ_concurrency": "8",
         "summ_timeout": "1800",
         "summ_fallback": "none+claude-opus-5",
     }
@@ -1698,3 +1697,35 @@ def test_run_calls_forwards_timeout(monkeypatch: pytest.MonkeyPatch, tmp_path: P
             timeout=t,
         )
     assert seen[0].get("timeout") == 900.0 and "timeout" not in seen[1]
+
+
+def _without_run_settings(res) -> dict:
+    """A result as JSON minus the provenance-only settings plan 0092 changes."""
+    d = json.loads(json.dumps(res.to_json()))
+    d["config"].pop("concurrency"), d["config"].pop("rpm")
+    d["config"]["summarizer"].pop("concurrency")
+    return d
+
+
+def test_replay_at_the_0092_defaults_makes_no_new_call(tmp_path, monkeypatch):
+    """Plan 0092: the digest concurrency cap, ``concurrency`` and ``rpm`` are in no cache key. A
+    run cached at the old settings (``summ_concurrency=8``, 64 / 240) replays at the new ones
+    with 0 new calls and the same result."""
+    items = _fixture_bank(tmp_path, monkeypatch, 4, 4)
+    path = write_jsonl(tmp_path / "r.jsonl", _end_cells(items, {items[0]["id"]: RECOG}))
+    out = tmp_path / "o"
+    old_args = dataclasses.replace(
+        _pinned_summary_args(path, out, summ_concurrency="8"), concurrency=64, rpm=240.0
+    )
+    first = FakeLLM.install(monkeypatch, lambda s, u, sc: _item_answer(u))
+    old = judge.run(old_args)
+    assert first.n("digest") == 8 and first.n("item_recognition") == 8 * prompts.N_DRAWS
+    assert old.config["summarizer"]["concurrency"] == 8 and old.config["concurrency"] == 64
+    second = FakeLLM.install(monkeypatch, lambda s, u, sc: pytest.fail("a new call"))
+    new_args = dataclasses.replace(_pinned_summary_args(path, out), concurrency=256, rpm=30000.0)
+    new = judge.run(new_args)
+    assert second.calls == []
+    assert new.config["summarizer"]["concurrency"] == 256 and new.config["concurrency"] == 256
+    assert new.config["rpm"] == 30000.0 and old.config["rpm"] == 240.0
+    assert _without_run_settings(new) == _without_run_settings(old)
+    assert new.complete and new.pinned_instrument

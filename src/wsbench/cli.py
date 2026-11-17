@@ -12,7 +12,7 @@ from typing import Any
 
 import pydra
 
-from wsbench import fast, hbindex, readplan, registry, runner
+from wsbench import fast, hbindex, llm, readplan, registry, runner
 from wsbench.baselines import lucky_guessing, prompt_only, text_inversion
 from wsbench.capable import questions as capable_questions
 from wsbench.capable import run as capable_run
@@ -121,6 +121,23 @@ def _path(v: object) -> Path:
     return Path(str(v))
 
 
+FD_LIMIT = 65536
+
+
+def _raise_fd_limit() -> None:
+    """Raise the soft ``RLIMIT_NOFILE`` to ``min(hard, FD_LIMIT)``; best effort."""
+    try:
+        import resource
+
+        soft, hard = resource.getrlimit(resource.RLIMIT_NOFILE)
+        want = FD_LIMIT if hard == resource.RLIM_INFINITY else min(hard, FD_LIMIT)
+        if soft == resource.RLIM_INFINITY or soft >= want:
+            return
+        resource.setrlimit(resource.RLIMIT_NOFILE, (want, hard))
+    except (ImportError, ValueError, OSError):
+        pass
+
+
 class Command(pydra.Config):
     def execute(self) -> int:
         raise NotImplementedError
@@ -143,8 +160,9 @@ class JudgeOptions(Command):
         self.items = None
         self.limit = 0
         self.allow_missing = False
-        self.concurrency = 64
-        self.rpm = 240.0
+        self.concurrency = 256
+        self.rpm = 30000.0
+        self.itpm = 60_000_000  # input tokens per minute across the run (llm.set_itpm); 0 = off
         self.dry_run = False
         self.anti_text_inversion = False  # judge each family on its frozen ATI subset only
         self.ati_variant = ""  # plan 0088: anti_text_inversion.<variant>.json beside the default
@@ -167,6 +185,9 @@ class JudgeOptions(Command):
         self.allow_missing = _bool(self.allow_missing)
         self.concurrency = _int(self.concurrency)
         self.rpm = float(self.rpm)
+        self.itpm = int(float(self.itpm or 0))
+        if self.itpm < 0:
+            raise ValueError(f"itpm must be >= 0 (0 = off), got {self.itpm}")
         self.dry_run = _bool(self.dry_run)
         self.anti_text_inversion = _bool(self.anti_text_inversion)
         if self.anti_text_inversion and self.items is not None:
@@ -192,12 +213,17 @@ class JudgeOptions(Command):
         if self.fast:
             self._check_fast()
 
+    def _prepare(self) -> None:
+        """Process settings of ``judge`` / ``run``, applied in ``execute`` before any call (never
+        in ``finalize``: ``--help`` / ``--show`` leave the process alone): the input-token budget
+        and a raised soft file-descriptor limit (256 connections x many families exhaust 1024)."""
+        llm.set_itpm(self.itpm)
+        _raise_fd_limit()
+
     def _check_fast(self) -> None:
         """``--fast`` is one defined variant: the fast items, full reads, the summary judges of
         record. Every key that would change one of those is a usage error."""
         keys = {p.split("=", 1)[0].strip(): p.split("=", 1)[-1] for p in self.opt}
-        if self.items is not None:
-            raise ValueError("--fast picks the items itself; drop items=")
         if self.anti_text_inversion:
             raise ValueError("--fast and anti_text_inversion=True are separate scopes; pick one")
         if keys.get("reads") == "lite":
@@ -246,18 +272,28 @@ class JudgeFamily(JudgeOptions):
         self.family = pydra.REQUIRED
         self.readouts = pydra.REQUIRED
         self.out = ""
+        self.outcome = ""  # written for `run`: a JSON file of this family's status and exit code
 
     def finalize(self) -> None:
         super().finalize()
         self.family = _family(str(self.family))
         self.readouts = _path(self.readouts)
         self.out = _path(self.out) if self.out else None
+        self.outcome = _path(self.outcome) if self.outcome else None
+        if self.outcome is not None and self.each:
+            raise ValueError("outcome= does not take layers=each")
 
     def execute(self) -> int:
         if self.family not in registry.FAMILIES:
             return _unknown(self.family)
         spec = registry.get(self.family)
         out = self.out or registry.family_dir(Path("outputs") / self.readouts.stem, spec.name)
+        self._prepare()
+        if self.outcome is not None:  # plan 0092 §5: one family of a `run`, as its own process
+            runner.die_with_parent()
+            oc = runner._one(spec, self, self.readouts, out)
+            runner.write_outcome(self.outcome, oc)
+            return oc.exit_code
         try:
             opts = parse_opts(self.opt)
             judge = resolve(spec.judge, flag=self.judge_model, env=os.environ)
@@ -293,7 +329,10 @@ class RunFamilies(JudgeOptions):
         self.families = None
         self.readouts_root = pydra.REQUIRED
         self.out = pydra.REQUIRED
-        self.family_workers = 3
+        self.family_workers = 8  # families judged at once (one judge process each); 0 = all
+        self.procs = None  # one judge process per family; unset = $WSB_RUN_PROCS (0 / 1), else on
+        self.wait = 0.0  # plan 0092: seconds to wait for readouts that are not ready yet
+        self.settle = 0.0  # with wait: a sidecar-less file this many seconds old is ready
         self.json = False
         self.hb_method = ""  # the HallucinationBench method of this arm (plan 0040), to run.json
 
@@ -306,7 +345,30 @@ class RunFamilies(JudgeOptions):
         self.readouts_root = _path(self.readouts_root)
         self.out = _path(self.out)
         self.family_workers = _int(self.family_workers)
+        self.wait = float(self.wait or 0)
+        self.settle = float(self.settle or 0)
+        if self.wait < 0 or self.settle < 0:
+            raise ValueError("wait= and settle= are seconds >= 0")
+        if self.wait > 0 and self.dry_run:
+            raise ValueError(
+                "wait= does not take dry_run=True (prompts print one family at a time)"
+            )
+        if self.wait > 0 and self.each:
+            raise ValueError("wait= does not take layers=each")
+        if self.procs is None or self.procs == "":  # the key wins, then the environment, else on
+            raw = os.environ.get(runner.RUN_PROCS_ENV, "")
+            try:
+                self.procs = _bool(raw) if raw else True
+            except ValueError:
+                raise ValueError(f"{runner.RUN_PROCS_ENV} must be 0 or 1, got {raw!r}") from None
+        else:
+            self.procs = _bool(self.procs)
+        if self.dry_run or self.each:  # prompts print in order; layers=each runs serially
+            self.procs = False
         self.json = _bool(self.json)
+        if self.items is not None and not self.items:
+            # a child judge would read "items=" as "no restriction" (plan 0092 §5)
+            raise ValueError("items= is empty: name at least one item, or drop the key")
         if self.all == (self.families is not None):
             raise ValueError("pass exactly one of all=True or families=a,b")
 
@@ -326,6 +388,7 @@ class RunFamilies(JudgeOptions):
             if n not in registry.FAMILIES:
                 return _unknown(n)
         specs = [registry.get(n) for n in names]
+        self._prepare()
         started = datetime.now(UTC)
         if self.each:
             return self._run_each(specs)
@@ -352,6 +415,7 @@ class RunFamilies(JudgeOptions):
                 "macro": macro(results),
                 "statuses": manifest["families"],
             }
+            sys.stdout.flush()
             print(json.dumps(payload, ensure_ascii=False))
         else:
             print(text, end="")

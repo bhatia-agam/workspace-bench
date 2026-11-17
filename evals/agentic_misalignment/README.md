@@ -523,9 +523,13 @@ The digest reads all of it under the ONE global token cap (`digest.DEFAULT_TOKEN
 tokens): one call at or under it, otherwise `hierarchical` chunks cut at layer boundaries, each
 digested with the same prompt, then one final digest over the union of the chunks' verified
 evidence samples; no readout is dropped (`extras.summary.n_readouts_in == n_readouts_bundled`).
-The family keeps only the allowed defaults `summ_max 25`, `summ_rare 25`, `summ_concurrency 4`,
+The family keeps only the allowed defaults `summ_max 25`, `summ_rare 25`,
 `summ_timeout 1800`, `summ_fallback none+claude-opus-5` (the family-local `summ_token_cap` /
-`summ_overflow` are gone). Rows record `summary_hierarchical` and `summary_chunks` (1 for a single call).
+`summ_overflow` are gone, and so is `summ_concurrency 4` since plan 0092: the digests run at the
+run's `concurrency=`, and the process-wide input-token budget `itpm=` guards the token rate that
+the cap of 4 was set for; `opts=summ_concurrency=N` still overrides). A digest call that fails
+after its retries leaves its item digested on the remaining layers, and the row can still be
+complete; `judge` / `run` print a stderr line with the count of failed calls. Rows record `summary_hierarchical` and `summary_chunks` (1 for a single call).
 
 **`summ_max = 25`** is this family's pre-declared digest default (plan 0021 rev 4 #10; overridable
 with `opts=summ_max=`), against 10 elsewhere: with ~100× the bundle of the other families, a

@@ -989,7 +989,6 @@ def test_cli_judge_fast(toy, tmp_path, capsys):
 @pytest.mark.parametrize(
     "extra",
     [
-        ["items=t1"],
         ["anti_text_inversion=True"],
         ["reads=lite"],
         ["opts=reads=lite"],
@@ -1149,3 +1148,19 @@ def test_rescore_keeps_no_value_when_the_family_has_none():
     assert r.value is None and r.ci95 is None
     assert r.extras["n_items_undecided"] == r.extras["fast_n_units"] - 5
     assert r.extras["fast_family_n_items_undecided"] == 100
+
+
+def test_cli_fast_items_is_a_partial_run(toy, tmp_path, capsys):
+    """Plan 0092 §2c: items= under --fast judges a part of the fast items (a cache warm-up);
+    the result is never complete, and an id outside the subset is a usage error."""
+    _spec, path = toy
+    ids = fast.subset()[TOY]["read_ids"]
+    out = tmp_path / "part"
+    args = ["judge", f"family={TOY}", f"readouts={path}", f"out={out}", "--fast"]
+    assert main([*args, f"items={ids[0]}"]) == 0
+    r = read_results(out)
+    assert r.config["scope"] == "fast" and not r.complete
+    assert r.extras["fast_items_subset"] == 1
+    capsys.readouterr()
+    assert main([*args, "items=not-a-fast-item"]) == 2
+    assert "items= not in fast-v1" in capsys.readouterr().err

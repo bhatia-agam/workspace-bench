@@ -109,6 +109,81 @@ Every run is in summary mode by default (plan 0024: each item's readouts go to o
 judged once; `docs/summarizer.md` § Item digest). Add `opts=aggregate=native` for the per-cell
 rules, into a separate `out=` dir.
 
+**Throughput (plan 0092).** `judge` and `run` default to `concurrency=256` (calls in flight per
+family), `rpm=30000` (requests a minute) and `itpm=60000000` (estimated input tokens a minute,
+a call counted as its prompt's characters / 3; `itpm=0` = off); `rpm` and `itpm` are budgets of
+the whole run. `run` judges eight families at a time (`family_workers=8`; `family_workers=0` = all at once, `N` caps it). Several `wsbench judge` processes started by hand on one account share its limits: set `WSB_SLOTS=<dir>:<n>` in each to cap the API calls in flight across all of them (unset = off for `judge`; 29 families at 256 each exceeded a 15M output-tokens-a-minute limit without it). On a rate-limited key lower `rpm=`, then `itpm=`, then `concurrency=`. None of these
+changes a cache key or a score. A family whose calls failed after their retries prints
+`<family>: N judge call(s) failed after retries; ...` on stderr; rerun into the same `out=` to
+ask only those again.
+
+**One process per family (`run procs=True`, the default).** `run` starts one `wsbench judge`
+process per family, `family_workers` at a time: one Python process is one CPU core, and eight
+families at `concurrency=256` inside one process dropped connections (2026-11-17), while a process
+per family at the same settings dropped none.
+
+- The run itself does what it did before, in the same order: the `--fast` membership check, the
+  readouts check (and the waiting of `wait=`), the ATI scope check and one preflight per judge and
+  digest model; a failure there exits before any process starts. Each judge process then
+  preflights its own models again (one or two tiny calls per family). Results, messages, per-family
+  outcomes, `summary.md`, `run.json` and the exit code are those of the one-process run (plus two failure messages of its own, `judge process exited N` and `killed by signal N`, and an unexpected error in one family stops the others at once); only the
+  order in which the families' lines reach the terminal differs.
+- `rpm=` and `itpm=` stay budgets of the whole run, and at most 1,500 API calls are in flight
+  across the processes (about what a 15M output-tokens-a-minute limit carries). The run makes a
+  private directory under the system temporary directory (`wsb-run-*`, never under `out=`) for the
+  lock files and removes it at the end; that directory must support `flock`, or the run exits 3
+  before starting anything (set `TMPDIR` to a local disk). A `WSB_SLOTS=<dir>:<n>` already in the
+  environment is used instead of the 1,500 cap.
+- A family whose process exits 2 or 3, or is killed by a signal (for example out of memory), is
+  that family's failure only; any other exit stops the run. Ctrl-C starts no new family, lets the
+  running ones finish and exits 130; a second Ctrl-C terminates them. SIGTERM and SIGHUP terminate
+  them at once.
+- `procs=False`, or `WSB_RUN_PROCS=0` in the environment (the key wins), judges the families in
+  threads of one process as before; `dry_run=True` and `layers=each` always do.
+- `judge outcome=PATH` is how a judge process reports back to its `run` (a small JSON file with
+  the family's status and exit code); it is not meant for other callers.
+
+**Judging while the read is running (`run wait=SECONDS`).** With `wait=` greater than 0, a family
+whose readouts are not ready is pending instead of skipped. `run` submits the ready families at
+once, looks at the pending ones every 2 s and submits each as it becomes ready. It stops waiting
+when nothing is pending, when `SECONDS` have passed since the start, or when the file
+`<readouts_root>/_READS_DONE` exists; it then finishes the families in flight and reports the
+ones still pending as skipped (exit code 0, as for any skipped family).
+
+- **Ready** = `<family>.jsonl` exists AND its sidecar `<family>.jsonl.meta.json` exists, parses
+  as a JSON object and has a modification time not older than the file's. A file under a former
+  family key counts, as without `wait=`.
+- **What a producer does:** write the JSONL (ideally under a temporary name, then rename it),
+  then the sidecar, last. When copying files in from elsewhere, copy the sidecar last: a copy
+  tool that does not preserve modification times can otherwise leave the sidecar older than the
+  file, which is not ready. `wsbench produce` follows this: it deletes an existing sidecar before
+  it appends to a readouts file and writes it again at the end, atomically, so a resumed file is
+  not ready while it grows (after a crash the file has no sidecar until the next resume finishes).
+- **`_READS_DONE`**: create `<readouts_root>/_READS_DONE` when no more files are coming. Files
+  that landed together with it are still judged. Nothing in this repo writes or removes it, so
+  delete a stale one before a new read starts; one that is already there ends the wait at once.
+- **`settle=SECONDS`** (default 0 = a sidecar is required): a file with no sidecar whose
+  modification time is at least that old is also ready. Opt-in, for producers that write no
+  sidecar; a slow writer looks settled, and a sidecar-less file is judged with the read checks
+  report-only (`config.reads_checked = "no_sidecar"`).
+- A pending family is skipped with `no readouts at <path> after waiting <wait>s` when its file
+  never appeared, `readouts at <path> not ready after <wait>s (no current sidecar)` when the file
+  is there without a current sidecar, and plain `no readouts at <path>` when `_READS_DONE` ended
+  the wait. A family judged late prints `<family>: readouts landed after <t>s`, and `run.json`
+  records the top-level `wait` and that family's `waited_s`.
+- Every judge and digest model of the pending families is preflighted before the first call,
+  with the ready ones. A family outside the `--fast` subset is skipped at once, never waited
+  for. `wait=` works with `--fast`, `anti_text_inversion=True`, `layers=<list>` and `reads=lite`;
+  it is refused with `dry_run=True` and with `layers=each`.
+
+One command for a read in progress (the reader writes each family's sidecar last and
+`_READS_DONE` at the end):
+
+```
+rm -f outputs/readouts/mylens-fast/_READS_DONE   # then start the read into that directory
+uv run wsbench run --fast all=True readouts_root=outputs/readouts/mylens-fast out=outputs/judged/mylens-fast wait=3600
+```
+
 ## Fast subset (`--fast`)
 
 `--fast` judges the frozen subset `fast-v1` (plan 0090; `evals/fast/README.md`). **A full

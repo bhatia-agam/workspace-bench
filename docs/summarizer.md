@@ -35,7 +35,12 @@ per-layer digests are merged into the one judged digest (see "Audit fixes" below
   truncation) stays an explicit ablation (`summ_overflow=stride`, stamped `-stride`; a
   truncated item makes the run incomplete). No family sets `summ_token_cap`; the allowed
   `FAMILY_DEFAULTS` keys are `summ_concurrency`, `summ_timeout`, `summ_fallback`, `summ_max`,
-  `summ_rare`, `summ_numbers` (`summ_lang` was removed on 2026-11-01). Real token counts (`llm.count_tokens`, cached
+  `summ_rare`, `summ_numbers` (`summ_lang` was removed on 2026-11-01). No family sets
+  `summ_concurrency` since plan 0092: the two fixed caps (agentic 4, jailbreak 8) are gone,
+  every family's digests run at the run's `concurrency=`, and the process-wide input-token
+  budget (`itpm=` on `judge` / `run`, `llm.set_itpm`; a call reserves its prompt's characters / 3
+  once, before its retries) guards the token rate instead; `opts=summ_concurrency=N` still
+  overrides. Real token counts (`llm.count_tokens`, cached
   `ntok:<id>|<layers>`) are asked only for bundles estimated above 60% of the cap; a call
   estimated above 150k tokens gets at least 1800 s.
 - **Task context on by default** (`summ_variant=task`; `blind` is the ablation): the family's
@@ -97,8 +102,16 @@ per-layer digests are merged into the one judged digest (see "Audit fixes" below
   nothing and writing no row of its own (with a `summ_store`, past-level chunk rows may be
   adopted from the store once; a call with no cached success there counts as the refusal the
   level row records), so it rebuilds the chunk claims the first pass kept and scores the item as
-  that pass did, `n_fallback_events` included. Agentic keeps `summ_max=25`, `summ_rare=25`, concurrency 4, timeout 1800 s
-  and `summ_fallback=none+claude-opus-5` (its digest runs on its Stage C pin `claude-sonnet-5`).
+  that pass did, `n_fallback_events` included. Agentic keeps `summ_max=25`, `summ_rare=25`, timeout 1800 s
+  and `summ_fallback=none+claude-opus-5` (its digest runs on its Stage C pin `claude-sonnet-5`);
+  its fixed digest concurrency of 4 is gone (plan 0092: the run's `concurrency=` under `itpm=`).
+- **A failed digest call and `complete`** (unchanged by plan 0092, stated here): a per-layer
+  digest lost to a failed call (retries exhausted) leaves its item in the partial counters; the
+  item is digested and judged on its remaining layers and the row can still be `complete=True`.
+  The partial counters also hold layers dropped by the evidence check, so they do not tell the
+  two apart. `judge` / `run` therefore print one stderr line per family whose calls failed
+  (`<family>: N judge call(s) failed after retries; affected cells are unjudged or their items
+  were digested on fewer layers`); a rerun into the same `out=` asks only the failed calls again.
 - **Audit fixes (digest-v5, 2026-10-31; `notes/AUDIT_FIXES.md` F1 / F2 / F3 / F11).**
   - *F1, the all-layer budget scales with the layers* (`summ_layers=union`, the default; `joint`
     is the old single call, an ablation stamped `-joint`). An item read at several layers gets

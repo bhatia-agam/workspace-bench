@@ -295,7 +295,6 @@ FAMILY_DEFAULT_KEYS = frozenset(
 FAMILY_DEFAULTS: dict[str, dict[str, str]] = {
     "agentic_misalignment": {
         "summ_max": "25",
-        "summ_concurrency": "4",
         "summ_timeout": "1800",
         # the digest runs on the Stage C pin claude-sonnet-5 (aux_models["digest"]), not on
         # Opus 5.5, whose server-side fallback served each arm on a different mix of models; a
@@ -316,7 +315,6 @@ FAMILY_DEFAULTS: dict[str, dict[str, str]] = {
     # digests every item; a digest Sonnet declines re-runs once on SONNET_REFUSAL_MODEL,
     # client-side, and one both decline leaves the item undecided
     "jailbreak_recognition": {
-        "summ_concurrency": "8",
         "summ_timeout": "1800",
         "summ_fallback": f"none+{SONNET_REFUSAL_MODEL}",
     },

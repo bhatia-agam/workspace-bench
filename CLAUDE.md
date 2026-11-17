@@ -29,7 +29,7 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   `ANTHROPIC_PROFILE` set, the SDK's `ant auth login` profile; structured output,
   refusal -> `None`); else OpenRouter via the OpenAI SDK (`OPENROUTER_API_KEY`, `sk-or-…`).
   Shared: JSON-schema output, 11 jittered retries (`_ATTEMPTS = 12`) on 408/409/429/5xx/
-  timeouts, process-wide thread-safe RPM pacer (`rpm=`, default 240), `preflight` fail-fast,
+  timeouts, process-wide thread-safe RPM pacer (`rpm=`, library default 240; CLI default 30000), `preflight` fail-fast,
   `Spend` tally. Structured Anthropic calls run at `effort: low` on always-thinking models unless
   the family sets `reasoning={"anthropic_effort": "default"|<level>}` (introspection: its
   source instrument ran at default effort; knowledge_cutoff sets OpenRouter `{"effort": "low"}`); `resolve` keeps only the reasoning keys
@@ -612,17 +612,64 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   (`tests/test_digest_store.py`; docs/summarizer.md "Shared per-layer store").
 
 ## Driver (`runner.py`, `cli.py`)
-- `run all=True|families=a,b readouts_root=DIR out=DIR [family_workers=3] [json=True]` reads
+- `run all=True|families=a,b readouts_root=DIR out=DIR [family_workers=8] [json=True]` reads
   `DIR/<family>.jsonl` (missing -> `skipped`). Order: parse `opts=` once (bad pair = one exit
   2), resolve every judge once, preflight each distinct judge model once (not aux; skipped
   under `dry_run=True`; failure = exit 3 before any thread), then judge in a `ThreadPoolExecutor`
-  (`min(n, family_workers)`, 1 under `dry_run=True`) under the shared pacer. Fail-soft per
+  (each worker runs the family in-process, or in process mode waits for its child, below)
+  (`min(n, family_workers)`, every family at once when `family_workers <= 0`, 1 under
+  `dry_run=True`) under the shared pacer. Fail-soft per
   family: `JudgeConfigError` -> failed/3, `SystemExit` -> failed/2 (text `e.code` or `exit N`),
   listed under "## skipped / failed" in `summary.md`; other exceptions propagate. Exit 130 on
   `KeyboardInterrupt` (unstarted families cancelled, in-flight ones finish their batch), else
   3 > 2 > 0. Writes `summary.md` + `run.json` = `{started, finished, families: {name: {status,
   error?, results_path, value, complete, pinned_instrument, spend_usd, n_calls?}},
   judge_overrides: {flag, env}, readouts_root}`.
+- Plan 0092 (throughput; nothing here is in a fingerprint, `prompt_version` or `plan_sha`):
+  `JudgeOptions` defaults `concurrency=256`, `rpm=30000`, `itpm=60_000_000` (`judge` and `run`;
+  `baseline` / `capable` / `text-inversion` keep theirs), `WSB_SLOTS=<dir>:<n>` (`llm._slot`: an flock slot per API attempt, a cap on calls in flight across processes; unset = off), `RunFamilies.family_workers=8` (0 = every family at once).
+  `JudgeOptions._prepare` (called in `execute`, never `finalize`) applies `llm.set_itpm` and
+  raises the soft `RLIMIT_NOFILE`. `llm._TOKEN_PACER` is a second process-wide pacer:
+  `_pace_tokens(chars // 3)` once per `_one` / `_one_text` call, before the retry loop (a refusal
+  re-run reserves again); off (0) as the library default, and `tests/conftest.py` resets it.
+  `_pace(rpm)` keeps its one-argument signature (tests replace it). `digest.FAMILY_DEFAULTS` has
+  no `summ_concurrency` entry any more (agentic 4, jailbreak 8 removed; their timeout / fallback /
+  `summ_max` / `summ_rare` stay). `run wait=SECONDS [settle=SECONDS]`: a family whose readouts are
+  not ready (`runner.readouts_ready`: file + a sidecar that parses as an object and is not older
+  than the file; `settle` admits an old sidecar-less file) is pending, re-checked every
+  `runner.POLL` s, submitted when ready (`<family>: readouts landed after <t>s`, `waited_s` in
+  `run.json`), and skipped when the wait ends (deadline, or `readouts_root/_READS_DONE`);
+  preflight covers pending families before the first submit; `wait=0` is the pre-0092 path;
+  refused with `dry_run=True` / `layers=each`. `readouts.write_sidecar` is atomic and
+  `Producer.run_family` deletes a stale sidecar before appending. §2b: `runner.judge_family`
+  wraps `spec.run` in `llm.error_tally()` (a context variable, so no `Spend` crosses the family
+  boundary) and prints `<family>: N judge call(s) failed after retries; ...` on stderr; the
+  completeness rule is unchanged (a per-layer digest lost to a failed call still leaves a
+  possibly-complete row).
+- Plan 0092 §5, process mode: `run` judges one `wsbench judge` child per family
+  (`RunFamilies.procs`, tri-state: the key, else `WSB_RUN_PROCS` 0 / 1, else ON; forced off in
+  `finalize` under `dry_run=True` / `layers=each`). `runner.run_families` uses it only when
+  `getattr(args, "procs", False)` AND its `env` parameter is None, so hand-built namespaces and
+  callers passing `env=` keep threads, and `tests/conftest.py` sets `WSB_RUN_PROCS=0` (tests
+  register families in-process; `tests/test_run_procs.py` fakes the seam `runner._spawn`). The
+  same thread pool submits `runner._one_proc` instead of `_one`; fast membership, the readiness
+  check, the ATI scope check and `_seed_preflights` stay in the parent, and each child preflights
+  again. Child = `runner.judge_argv` (never the run-only keys) with the parent's environment plus
+  `PYTHONUNBUFFERED`, `WSB_SLOTS` and `WSB_PACER` (the parent never mutates `os.environ`), its own
+  session, `PR_SET_PDEATHSIG` set by the child (`runner.die_with_parent`). `judge outcome=PATH`
+  runs `runner._one` (which then parses `opts=` and resolves the judge inside the fail-soft
+  rule), writes `{family, status, error, exit_code}` atomically and exits with that code; the
+  parent deletes a stale `<dest>/outcome.json`, reads and deletes the new one, and loads
+  `read_results(dest)` for an ok family. No outcome file: exit 2 / 3 or a signal = that family
+  failed (signal -> exit code 2); any other exit terminates the other children and raises.
+  Budgets: `runner._Procs` makes a `tempfile.mkdtemp(prefix="wsb-run-")` directory (never under
+  `out`), probes `flock` there (failure = exit 3) and removes it in the `finally`;
+  `WSB_SLOTS=<tmp>/slots:<runner.RUN_SLOTS = 1500>` unless one is inherited; `WSB_PACER=<tmp>/pacer`
+  makes `llm._Pacer` / `_TokenPacer` keep `next` in one file each (`rpm`, `itpm`; thread lock +
+  exclusive `flock`, `pread` / `pwrite`, a torn file reads as 0; clock `llm._now`), in-memory
+  without the variable. Interrupts: first Ctrl-C = no new spawn, wait, 130; second = `killpg` the
+  children, `skipped ("interrupted")`; SIGTERM / SIGHUP handlers (installed for the run) raise
+  `SystemExit(128 + signum)` through the same `finally`. `run.json` gains no key.
 - `report dir=DIR [json=True]`: table with `(lower is better)`, `n (k no readouts)`, macro row (in-row
   `excluded:` + "Not in macro:" footnotes); rewrites `summary.md`. Exit 2 = not a directory /
   unreadable results.

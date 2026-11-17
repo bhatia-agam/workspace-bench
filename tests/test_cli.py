@@ -120,7 +120,9 @@ def test_judge_writes_results_and_pinned(stub, readouts, tmp_path, capsys):
     assert r.family == "stub" and r.pinned_instrument and r.complete and r.n_items == 2
     assert r.config["judge_model"] == GEMINI and r.config["reasoning"] == {"effort": "minimal"}
     assert (
-        r.config["dry_run"] is False and r.config["concurrency"] == 64 and r.config["rpm"] == 240.0
+        r.config["dry_run"] is False
+        and r.config["concurrency"] == 256
+        and r.config["rpm"] == 30000.0
     )
     printed = capsys.readouterr().out
     assert "1.0" in printed
@@ -359,7 +361,7 @@ def test_show_and_help(stub, capsys):
     assert "usage: wsbench" in capsys.readouterr().out
     assert main(["run", "opts=aggregate=native", "-h"]) == 0
     out = capsys.readouterr().out
-    assert "readouts_root=<required>" in out and "family_workers=3" in out
+    assert "readouts_root=<required>" in out and "family_workers=8" in out
 
 
 @pytest.mark.parametrize(

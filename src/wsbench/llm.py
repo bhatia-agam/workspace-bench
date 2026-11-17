@@ -3,7 +3,8 @@
 * ``claude-*`` model ids go to the Anthropic SDK (structured outputs via ``output_config``);
   everything else goes to OpenRouter through the OpenAI SDK (``response_format`` json_schema).
 * Requests are paced under a process-wide requests-per-minute cap shared by every event loop
-  and thread (``_PACER``), so several families judged concurrently share one budget.
+  and thread (``_PACER``), so several families judged concurrently share one budget; an optional
+  input-token budget (``set_itpm``, ``_TOKEN_PACER``) paces each call's estimated size as well.
 * Transient failures (408/409/429/5xx, timeouts, connection errors, garbled bodies) are
   retried with jittered backoff; any other per-call failure yields ``None`` (an unjudged cell,
   never a clean one). Problems that would fail every call raise :class:`JudgeConfigError`.
@@ -11,12 +12,16 @@
 """
 
 import asyncio
+import contextlib
+import contextvars
 import json
+import math
 import os
 import random
+import struct
 import threading
 import time
-from collections.abc import Callable
+from collections.abc import Callable, Iterator
 from dataclasses import dataclass
 from typing import Any, Literal
 
@@ -125,27 +130,104 @@ def _now() -> float:
     return time.monotonic()
 
 
+PACER_ENV = "WSB_PACER"  # a directory: the pacers of every process using it share one budget
+
+
 class _Pacer:
-    """Process-wide next-slot time behind a lock: shared by every loop, thread and Spend."""
+    """Process-wide next-slot time behind a lock: shared by every loop, thread and Spend. With
+    ``$WSB_PACER`` set (``wsbench run`` sets it for its judge processes, plan 0092 §5) the
+    next-slot time lives in one small file of that directory instead, read and advanced under an
+    exclusive ``flock``, so ``rpm=`` stays the budget of the whole run."""
+
+    _FILE = "rpm"
 
     def __init__(self) -> None:
         self._lock = threading.Lock()
         self._next = 0.0
+        self._shared: tuple[str, int] | None = None  # (directory, descriptor) of the shared file
 
     def reset(self) -> None:
         with self._lock:
             self._next = 0.0
+            d = os.environ.get(PACER_ENV, "")
+            if d:
+                os.ftruncate(self._fd(d), 0)
+            elif self._shared is not None:
+                os.close(self._shared[1])
+                self._shared = None
+
+    def _fd(self, d: str) -> int:
+        """The descriptor of this pacer's file in ``d``, opened once and kept."""
+        if self._shared is not None and self._shared[0] == d:
+            return self._shared[1]
+        if self._shared is not None:
+            os.close(self._shared[1])
+            self._shared = None
+        os.makedirs(d, exist_ok=True)
+        fd = os.open(os.path.join(d, self._FILE), os.O_CREAT | os.O_RDWR, 0o644)
+        self._shared = (d, fd)
+        return fd
+
+    def _advance(self, step: float) -> float:
+        """Take the next slot and move it ``step`` seconds on; return the wait for it. Called
+        with ``self._lock`` held."""
+        d = os.environ.get(PACER_ENV, "")
+        if not d:
+            now = _now()
+            slot = max(now, self._next)
+            self._next = slot + step
+            return slot - now
+        import fcntl
+
+        fd = self._fd(d)
+        fcntl.flock(fd, fcntl.LOCK_EX)
+        try:
+            now = _now()
+            slot = max(now, _stored_next(os.pread(fd, 8, 0)))
+            os.pwrite(fd, struct.pack("<d", slot + step), 0)
+        finally:
+            fcntl.flock(fd, fcntl.LOCK_UN)
+        return slot - now
 
     def reserve(self, rpm: float) -> float:
         """Reserve the next slot; return how long the caller must wait for it (seconds)."""
         with self._lock:
-            now = _now()
-            slot = max(now, self._next)
-            self._next = slot + 60.0 / rpm
-            return slot - now
+            return self._advance(60.0 / rpm)
+
+
+def _stored_next(raw: bytes) -> float:
+    """The next-slot time a shared pacer file holds; an empty or torn file reads as 0."""
+    if len(raw) != 8:
+        return 0.0
+    (v,) = struct.unpack("<d", raw)
+    return v if math.isfinite(v) and v > 0 else 0.0
 
 
 _PACER = _Pacer()
+
+
+class _TokenPacer(_Pacer):
+    """Process-wide input-token budget (plan 0092): a call's start slot is ``max(now, next)`` and
+    ``next`` advances by the time its estimated tokens take at ``itpm`` tokens a minute. One
+    budget for every model, FIFO; a call larger than a whole minute's budget still runs. Shared
+    across processes under ``$WSB_PACER`` like ``_Pacer``."""
+
+    _FILE = "itpm"
+
+    def reserve(self, tokens: int, itpm: float) -> float:  # type: ignore[override]
+        """Reserve ``tokens``; return how long the caller must wait for its slot (seconds)."""
+        with self._lock:
+            return self._advance(max(0, tokens) * 60.0 / itpm)
+
+
+_TOKEN_PACER = _TokenPacer()
+_ITPM = 0.0  # input tokens per minute; 0 = off (the library default)
+
+
+def set_itpm(tokens_per_minute: float) -> None:
+    """Set the process-wide input-token budget ``_pace_tokens`` paces under; 0 turns it off."""
+    global _ITPM
+    _ITPM = max(0.0, float(tokens_per_minute or 0))
 
 
 _sleep = asyncio.sleep  # seam: tests patch this instead of the global asyncio.sleep
@@ -155,6 +237,112 @@ async def _pace(rpm: float) -> None:
     delay = _PACER.reserve(rpm)
     if delay > 0:
         await _sleep(delay)
+
+
+async def _pace_tokens(est: int) -> None:
+    """Wait for ``est`` input tokens' slot under ``set_itpm``; returns at once when it is off."""
+    itpm = _ITPM
+    if itpm <= 0:
+        return
+    delay = _TOKEN_PACER.reserve(est, itpm)
+    if delay > 0:
+        await _sleep(delay)
+
+
+# ---------------------------------------------------------------- cross-process slots
+
+SLOTS_ENV = "WSB_SLOTS"  # "<dir>:<n>": at most n API calls in flight across every process using it
+
+
+def _slots_config() -> tuple[str, int] | None:
+    raw = os.environ.get(SLOTS_ENV, "")
+    if not raw:
+        return None
+    d, _, n = raw.rpartition(":")
+    try:
+        count = int(n)
+    except ValueError:
+        count = 0
+    if not d or count < 1:
+        raise JudgeConfigError(f"{SLOTS_ENV}={raw!r}: expected <dir>:<n> with n >= 1")
+    return d, count
+
+
+def _try_slot(d: str, n: int, tries: int = 8) -> int | None:
+    """Lock one free slot file of ``d`` (``flock``, released by the kernel if the process dies)
+    and return its descriptor, or None when the ``tries`` random probes were all taken."""
+    import fcntl
+
+    os.makedirs(d, exist_ok=True)
+    for _ in range(tries):
+        fd = os.open(os.path.join(d, f"{random.randrange(n)}.slot"), os.O_CREAT | os.O_RDWR, 0o644)
+        try:
+            fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            return fd
+        except OSError:
+            os.close(fd)
+    return None
+
+
+@contextlib.asynccontextmanager
+async def _slot() -> Any:
+    """Hold one of the ``WSB_SLOTS`` slots for one API attempt (plan 0092: the account's output
+    tokens per minute bound how many calls may generate at once, across the per-family judge
+    processes); a no-op without the variable. A waiting call polls with jittered sleeps."""
+    cfg = _slots_config()
+    if cfg is None:
+        yield
+        return
+    fd = _try_slot(*cfg)
+    while fd is None:
+        await _sleep(0.05 + 0.2 * random.random())
+        fd = _try_slot(*cfg)
+    try:
+        yield
+    finally:
+        os.close(fd)  # closing the descriptor releases the lock
+
+
+class ErrorTally:
+    """Calls that ended in an error (retries exhausted, a non-transient error, a ``max_tokens``
+    stop) while the tally was active; thread-safe."""
+
+    def __init__(self) -> None:
+        self._lock = threading.Lock()
+        self.n = 0
+
+    def add(self) -> None:
+        with self._lock:
+            self.n += 1
+
+
+_ERRORS: contextvars.ContextVar[ErrorTally | None] = contextvars.ContextVar(
+    "wsbench_llm_errors", default=None
+)
+
+
+@contextlib.contextmanager
+def error_tally() -> Iterator[ErrorTally]:
+    """Count the failed calls made in this context (``asyncio.run`` and its tasks inherit it), so
+    ``runner`` can report them per family without a ``Spend`` crossing the family boundary."""
+    tally = ErrorTally()
+    token = _ERRORS.set(tally)
+    try:
+        yield tally
+    finally:
+        _ERRORS.reset(token)
+
+
+def _note_error(spend: Spend) -> None:
+    spend.errors += 1
+    if (tally := _ERRORS.get()) is not None:
+        tally.add()
+
+
+def _cause(e: BaseException) -> str:
+    """The transport error under an SDK connection error (" [ConnectError: ...]"), else ""."""
+    c = e.__cause__
+    return f" [{type(c).__name__}: {str(c)[:120]}]" if c is not None else ""
 
 
 def _backoff(attempt: int, status: int | None) -> float:
@@ -338,7 +526,10 @@ async def _anthropic_once(
         print(f"  llm refusal: {model}")
         return REFUSED_JSON if mark_refusals else None
     if stop in ("max_tokens", "model_context_window_exceeded"):
-        spend.errors += 1
+        if mark_refusals and stop == "model_context_window_exceeded":
+            spend.errors += 1  # a too-long bundle is re-asked in halves: not a lost call
+        else:
+            _note_error(spend)
         print(f"  llm error: {model} stop_reason={stop}")
         if mark_refusals and stop == "model_context_window_exceeded":
             return TOO_LONG_JSON
@@ -396,35 +587,37 @@ async def _one(
     system = system.encode("utf-8", "replace").decode("utf-8")
     user = user.encode("utf-8", "replace").decode("utf-8")
     n_attempts = _ATTEMPTS if attempts is None else max(1, min(attempts, _ATTEMPTS))
+    await _pace_tokens((len(system) + len(user)) // 3)  # once per call, not per retry
     for attempt in range(n_attempts):
         await _pace(rpm)
         try:
-            if route_ == "anthropic":
-                return await _anthropic_once(
+            async with _slot():
+                if route_ == "anthropic":
+                    return await _anthropic_once(
+                        client,
+                        system,
+                        user,
+                        schema=schema,
+                        model=model,
+                        max_tokens=max_tokens,
+                        timeout=timeout,
+                        spend=spend,
+                        reasoning=reasoning,
+                        mark_refusals=mark_refusals,
+                        fallbacks=fallbacks,
+                    )
+                return await _openrouter_once(
                     client,
                     system,
                     user,
                     schema=schema,
                     model=model,
+                    reasoning=reasoning,
+                    temperature=temperature,
                     max_tokens=max_tokens,
                     timeout=timeout,
                     spend=spend,
-                    reasoning=reasoning,
-                    mark_refusals=mark_refusals,
-                    fallbacks=fallbacks,
                 )
-            return await _openrouter_once(
-                client,
-                system,
-                user,
-                schema=schema,
-                model=model,
-                reasoning=reasoning,
-                temperature=temperature,
-                max_tokens=max_tokens,
-                timeout=timeout,
-                spend=spend,
-            )
         except Exception as e:
             name = type(e).__name__
             status = getattr(e, "status_code", None)
@@ -445,9 +638,13 @@ async def _one(
                 spend.retries += 1
                 await _sleep(_backoff(attempt, status))
                 continue
-            spend.errors += 1
-            print(f"  llm error: {name}: {str(e)[:200]}")
-            if mark_refusals and status == 400 and "prompt is too long" in str(e).lower():
+            too_long = mark_refusals and status == 400 and "prompt is too long" in str(e).lower()
+            if too_long:
+                spend.errors += 1  # re-asked in halves by the digest: not a lost call
+            else:
+                _note_error(spend)
+            print(f"  llm error: {name}: {str(e)[:200]}{_cause(e)}")
+            if too_long:
                 return TOO_LONG_JSON
             return None
     return None
@@ -735,19 +932,21 @@ async def _one_text(
 ) -> str | None:
     """Same backoff / fatal classification as :func:`_one`, for one free-text call."""
     user = user.encode("utf-8", "replace").decode("utf-8")
+    await _pace_tokens(len(user) // 3)  # once per call, not per retry
     for attempt in range(_ATTEMPTS):
         await _pace(rpm)
         try:
-            return await _anthropic_text_once(
-                client,
-                user,
-                model=model,
-                thinking=thinking,
-                max_tokens=max_tokens,
-                timeout=timeout,
-                spend=spend,
-                mark_refusals=mark_refusals,
-            )
+            async with _slot():
+                return await _anthropic_text_once(
+                    client,
+                    user,
+                    model=model,
+                    thinking=thinking,
+                    max_tokens=max_tokens,
+                    timeout=timeout,
+                    spend=spend,
+                    mark_refusals=mark_refusals,
+                )
         except Exception as e:
             name = type(e).__name__
             status = getattr(e, "status_code", None)
@@ -764,8 +963,8 @@ async def _one_text(
                 spend.retries += 1
                 await _sleep(_backoff(attempt, status))
                 continue
-            spend.errors += 1
-            print(f"  llm error: {name}: {str(e)[:200]}")
+            _note_error(spend)
+            print(f"  llm error: {name}: {str(e)[:200]}{_cause(e)}")
             return None
     return None
 

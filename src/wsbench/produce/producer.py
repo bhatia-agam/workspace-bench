@@ -187,7 +187,7 @@ class Producer:
         declares ``"fast": "fast-v1"`` with the fast plan's own ``plan_sha``."""
         from wsbench import fast as fast_mod
         from wsbench import reads as reads_mod
-        from wsbench.readouts import write_sidecar
+        from wsbench.readouts import sidecar_path, write_sidecar
 
         from .methods import sampling_of
 
@@ -206,6 +206,9 @@ class Producer:
                 if line.strip():
                     done.add(json.loads(line)["id"])
         out.parent.mkdir(parents=True, exist_ok=True)
+        # plan 0092: no sidecar while the file grows, so `wsbench run wait=` never takes a
+        # resumed file as ready; it is written again below, last
+        sidecar_path(out).unlink(missing_ok=True)
         with out.open("a", encoding="utf-8") as fh:
             for spec in specs:
                 if spec.id in done:
