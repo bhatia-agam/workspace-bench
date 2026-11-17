@@ -1,0 +1,355 @@
+{
+ "version": "adapt-kimi-k2",
+ "note": "adapted-only items' same-topic distractors the MC builder dropped (adapt mc); kept for reference, unused since norival-v1 (the judge reads no hidden rivals)",
+ "items": {
+  "basic-au-t1-w100c0-brh-ent-chem-table-salt": {
+   "readout": [
+    "potassium chloride",
+    "sodium bromide",
+    "sodium iodide",
+    "calcium chloride"
+   ]
+  },
+  "basic-au-t1-w100c0-brh-ent-chromosome-21-condition": {
+   "readout": [
+    "Edwards syndrome",
+    "Patau syndrome",
+    "Turner syndrome",
+    "Klinefelter syndrome"
+   ]
+  },
+  "basic-au-t1-w100c0-brh-ent-hypotenuse-result": {
+   "readout": [
+    "Thales's theorem",
+    "Ptolemy's theorem",
+    "Apollonius's theorem"
+   ]
+  },
+  "basic-au-t1-w100c0-brh-ent-principia-author": {
+   "readout": [
+    "Robert Hooke",
+    "Robert Boyle",
+    "John Flamsteed"
+   ]
+  },
+  "basic-au-t1-w100c1-brh-ent-beagle-naturalist": {
+   "readout": [
+    "Thomas Henry Huxley",
+    "Richard Owen",
+    "Henry Walter Bates"
+   ]
+  },
+  "basic-au-t1-w100c1-brh-ent-chem-dental-sedation-gas": {
+   "readout": [
+    "nitric oxide",
+    "nitrogen dioxide",
+    "carbon monoxide",
+    "dinitrogen tetroxide"
+   ]
+  },
+  "basic-au-t1-w100c1-brh-ent-chem-leavening-antacid": {
+   "readout": [
+    "potassium bicarbonate",
+    "calcium carbonate",
+    "ammonium bicarbonate"
+   ]
+  },
+  "basic-au-t1-w100c1-brh-ent-current-voltage-proportionality": {
+   "readout": [
+    "Coulomb's law",
+    "Ampère's law",
+    "Joule's law"
+   ]
+  },
+  "basic-au-t1-w100c2-brh-ent-apollo-11-commander": {
+   "readout": [
+    "John Glenn",
+    "Pete Conrad"
+   ]
+  },
+  "basic-au-t1-w100c2-brh-ent-chem-h2o2-antiseptic": {
+   "readout": [
+    "potassium permanganate",
+    "calcium hypochlorite"
+   ]
+  },
+  "basic-au-t1-w100c2-brh-ent-chem-main-greenhouse-gas": {
+   "readout": [
+    "hydrogen sulfide"
+   ]
+  },
+  "basic-au-t1-w100c2-brh-ent-doppler-siren-pitch": {
+   "readout": [
+    "Compton effect",
+    "Zeeman effect",
+    "Coriolis effect",
+    "Stark effect"
+   ]
+  },
+  "basic-au-t1-w100c2-brh-ent-hooke-spring-law": {
+   "readout": [
+    "Charles's law",
+    "Snell's law",
+    "Coulomb's law",
+    "Faraday's law"
+   ]
+  },
+  "basic-au-t1-w100c2-brh-ent-russian-ruling-house-1613": {
+   "readout": [
+    "House of Rurik",
+    "House of Hohenzollern",
+    "House of Wittelsbach"
+   ]
+  },
+  "basic-au-t1-w100c2-brh-ent-tic-neuro-condition": {
+   "readout": [
+    "Rett syndrome",
+    "Williams syndrome",
+    "Angelman syndrome"
+   ]
+  },
+  "basic-au-t1-w101c0-brh-ent-1492-landfall": {
+   "readout": [
+    "Amerigo Vespucci",
+    "Juan Sebastián Elcano",
+    "Vasco Núñez de Balboa"
+   ]
+  },
+  "basic-au-t1-w101c0-brh-ent-boiler-poison-gas": {
+   "readout": [
+    "sulfur dioxide",
+    "hydrogen sulfide",
+    "nitric oxide"
+   ]
+  },
+  "basic-au-t1-w101c0-brh-ent-charles-gas-law": {
+   "readout": [
+    "Henry's law"
+   ]
+  },
+  "basic-au-t1-w101c0-brh-ent-h2so4": {
+   "readout": [
+    "nitric acid",
+    "hydrochloric acid",
+    "phosphoric acid",
+    "acetic acid"
+   ]
+  },
+  "basic-au-t1-w101c0-brh-ent-last-supper-painter": {
+   "readout": [
+    "Michelangelo Buonarroti",
+    "Andrea del Verrocchio"
+   ]
+  },
+  "basic-au-t1-w101c0-brh-ent-rabies-vaccine-chemist": {
+   "readout": [
+    "Antoine Lavoisier",
+    "Claude Bernard",
+    "Pierre Curie",
+    "Émile Roux"
+   ]
+  },
+  "basic-au-t1-w101c0-brh-ent-single-x-condition": {
+   "readout": [
+    "Williams syndrome"
+   ]
+  },
+  "basic-au-t1-w101c0-brh-ent-spain-morocco-channel": {
+   "readout": [
+    "Strait of Messina",
+    "Strait of Bonifacio",
+    "Strait of Sicily",
+    "Strait of Otranto"
+   ]
+  },
+  "basic-au-t1-w101c1-brh-ent-acetic-acid": {
+   "readout": [
+    "citric acid",
+    "formic acid",
+    "lactic acid",
+    "propionic acid"
+   ]
+  },
+  "basic-au-t1-w101c1-brh-ent-avogadro-law": {
+   "readout": [
+    "Gay-Lussac's law",
+    "Dalton's law",
+    "Henry's law",
+    "Graham's law"
+   ]
+  },
+  "basic-au-t1-w101c1-brh-ent-calcium-carbonate": {
+   "readout": [
+    "calcium sulfate",
+    "calcium oxide",
+    "magnesium carbonate",
+    "sodium carbonate"
+   ]
+  },
+  "basic-au-t1-w101c1-brh-ent-klinefelter-syndrome": {
+   "readout": [
+    "Jacobs syndrome",
+    "Kallmann syndrome",
+    "Noonan syndrome",
+    "Fragile X syndrome"
+   ]
+  },
+  "basic-au-t1-w101c1-brh-ent-munchausen-syndrome": {
+   "readout": [
+    "Capgras syndrome",
+    "Ganser syndrome",
+    "Diogenes syndrome"
+   ]
+  },
+  "basic-au-t1-w101c1-brh-ent-murphys-law": {
+   "readout": [
+    "Parkinson's law",
+    "Moore's law",
+    "Hofstadter's law"
+   ]
+  },
+  "basic-au-t1-w101c2-brh-ent-coulomb-charge-force": {
+   "readout": []
+  },
+  "basic-au-t1-w101c2-brh-ent-heisenberg-position-momentum": {
+   "readout": [
+    "Bohr correspondence principle",
+    "Bohr complementarity principle",
+    "Aufbau principle"
+   ]
+  },
+  "basic-au-t1-w101c2-brh-ent-naoh-lye": {
+   "readout": [
+    "potassium hydroxide",
+    "calcium hydroxide",
+    "lithium hydroxide",
+    "magnesium hydroxide"
+   ]
+  },
+  "basic-au-t1-w101c2-brh-ent-pascal-fluid-rule": {
+   "readout": [
+    "Torricelli's law",
+    "Stevin's law",
+    "Henry's law",
+    "Dalton's law"
+   ]
+  },
+  "basic-au-t1-w101c2-brh-ent-rubicon-general": {
+   "readout": [
+    "Pompey the Great",
+    "Marcus Crassus",
+    "Gaius Marius"
+   ]
+  },
+  "basic-au-t1-w101c2-brh-ent-telephone-patent": {
+   "readout": [
+    "Elisha Gray",
+    "Antonio Meucci",
+    "Guglielmo Marconi"
+   ]
+  },
+  "basic-au-t1-w101c2-brh-ent-wrist-median-nerve": {
+   "readout": [
+    "cubital tunnel syndrome",
+    "thoracic outlet syndrome",
+    "tarsal tunnel syndrome",
+    "complex regional pain syndrome"
+   ]
+  },
+  "basic-au-t1-w102c0-brh-ent-dna-two-strand-shape": {
+   "readout": [
+    "alpha helix",
+    "beta sheet",
+    "triple helix",
+    "random coil"
+   ]
+  },
+  "basic-au-t1-w102c0-brh-ent-french-royal-family-henry-iv": {
+   "readout": [
+    "House of Valois",
+    "House of Capet",
+    "House of Bonaparte",
+    "House of Guise"
+   ]
+  },
+  "basic-au-t1-w102c0-brh-ent-galaxy-recession-law": {
+   "readout": [
+    "Wien's law",
+    "Stefan's law",
+    "Kirchhoff's law",
+    "Titius–Bode law"
+   ]
+  },
+  "basic-au-t1-w102c0-brh-ent-lemon-sour-compound": {
+   "readout": [
+    "ascorbic acid",
+    "lactic acid"
+   ]
+  },
+  "basic-au-t1-w102c0-brh-ent-moon-face-endocrine-disorder": {
+   "readout": [
+    "Conn's syndrome",
+    "Sheehan's syndrome",
+    "Nelson's syndrome",
+    "Sipple's syndrome"
+   ]
+  },
+  "basic-au-t1-w103c0-brh-ent-asia-longest-watercourse": {
+   "readout": [
+    "Yellow River",
+    "Pearl River"
+   ]
+  },
+  "basic-au-t1-w103c0-brh-ent-dynamite-inventor": {
+   "readout": [
+    "Anders Celsius",
+    "Carl Linnaeus",
+    "Jöns Jacob Berzelius",
+    "Svante Arrhenius"
+   ]
+  },
+  "basic-au-t1-w103c0-brh-ent-equilibrium-shift-rule": {
+   "readout": [
+    "Hess's law",
+    "Henry's law",
+    "Raoult's law",
+    "Dalton's law"
+   ]
+  },
+  "basic-au-t1-w103c0-brh-ent-first-circumnavigation-leader": {
+   "readout": [
+    "Vasco da Gama",
+    "Bartolomeu Dias",
+    "Diogo Cão"
+   ]
+  },
+  "basic-au-t1-w103c0-brh-ent-hexacyanoferrate-pigment": {
+   "readout": [
+    "Egyptian blue",
+    "Han blue",
+    "cerulean blue"
+   ]
+  },
+  "basic-au-t1-w103c0-brh-ent-wiles-proof": {
+   "readout": [
+    "Riemann hypothesis",
+    "Poincaré conjecture",
+    "Four colour theorem"
+   ]
+  },
+  "basic-au-t1-w104c0-brh-ent-ostwald-product": {
+   "readout": [
+    "phosphoric acid",
+    "perchloric acid"
+   ]
+  },
+  "basic-au-t1-w105c0-brh-ent-ideal-gas-law": {
+   "readout": [
+    "Dalton's law",
+    "Graham's law",
+    "Gay-Lussac's law",
+    "Henry's law"
+   ]
+  }
+ }
+}

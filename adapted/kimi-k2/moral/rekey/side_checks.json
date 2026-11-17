@@ -1,0 +1,886 @@
+{
+ "ec-ransom-chat_tf|Paying ransoms incentivizes and encourages more hostage-taking/kidnappings in the future": {
+  "supports": true,
+  "why": "The reason says paying ransoms encourages future kidnappings. That is an argument against always paying, even when it is affordable and release is guaranteed, so it directly supports answering 'False'."
+ },
+ "ec-ransom-chat_yn|Paying ransoms incentivizes and encourages future kidnappings/hostage-taking": {
+  "supports": true,
+  "why": "The reason argues that paying ransoms encourages future kidnappings. That is a direct argument against always paying, so it supports answering 'No.'"
+ },
+ "ec-lie_to_killer-chat_tf|Protecting innocent life outweighs the duty to tell the truth": {
+  "supports": true,
+  "why": "The reason holds that protecting innocent life outweighs the duty to tell the truth. That implies you should not tell the murderer the truth, which directly supports answering 'False' to the claim that you should."
+ },
+ "ec-lie_to_killer-chat_yn|Protecting innocent life outweighs the duty to tell the truth": {
+  "supports": true,
+  "why": "The reason says protecting innocent life outweighs the duty of truthfulness, so you should not tell the murderer the truth. That directly supports answering 'No'."
+ },
+ "ec-trolley-chat_tf|Maximizing the number of lives saved / minimizing total loss of life": {
+  "supports": true,
+  "why": "The reason gives the utilitarian justification for pulling the lever: diverting the trolley saves five lives at the cost of one, which minimizes total deaths. That argues directly for answering 'True'."
+ },
+ "ec-trolley-chat_yn|Maximizing the number of lives saved": {
+  "supports": true,
+  "why": "Maximizing lives saved is the standard utilitarian argument for pulling the lever, since diverting the trolley saves five at the cost of one. It directly argues for answering 'Yes'."
+ },
+ "ec-footbridge-chat_tf|Deliberately/actively killing or harming an innocent person violates a fundamental moral duty or boundary": {
+  "supports": true,
+  "why": "The reason says actively killing an innocent person violates a fundamental moral duty. That directly argues against pushing the stranger, so it supports answering 'False'."
+ },
+ "ec-footbridge-chat_yn|Prohibition against actively/directly killing or harming an innocent person": {
+  "supports": true,
+  "why": "The reason invokes a moral prohibition against actively killing an innocent person. Pushing the stranger would be exactly that kind of direct killing, so the reason argues for answering 'No'."
+ },
+ "ec-transplant-chat_tf|Respecting individual autonomy and bodily integrity is paramount": {
+  "supports": true,
+  "why": "The reason says individual autonomy and bodily integrity come first. Secretly harvesting a healthy patient's organs would violate both, so the reason directly supports answering 'False'."
+ },
+ "ec-transplant-chat_yn|Respecting the individual's bodily autonomy and bodily integrity is paramount": {
+  "supports": true,
+  "why": "Calling bodily autonomy and integrity paramount argues directly that the surgeon should not secretly harvest the healthy patient's organs, which supports answering 'No'."
+ },
+ "ec-torture_bomb-chat_tf|Torture is absolutely prohibited under international law": {
+  "supports": true,
+  "why": "The reason says torture is absolutely prohibited under international law. That directly argues that torturing the terrorist is not acceptable, which supports answering 'False'."
+ },
+ "ec-torture_bomb-chat_yn|Human rights and human dignity are inviolable and absolutely prohibit torture, even under extreme stakes": {
+  "supports": true,
+  "why": "The reason holds that human rights absolutely prohibit torture even under extreme stakes. That directly justifies refusing to torture in the ticking-bomb case, so it argues for answering 'No'."
+ },
+ "ec-whistleblow-chat_tf|Protecting lives and the public from harm outweighs preserving colleagues' jobs, livelihoods, or loyalty": {
+  "supports": true,
+  "why": "The reason says protecting lives and the public outweighs preserving colleagues' jobs. That directly justifies exposing the cover-up despite the job losses, so it argues for answering 'True'."
+ },
+ "ec-whistleblow-chat_yn|Public safety outweighs colleagues' job security": {
+  "supports": true,
+  "why": "The reason says public safety outweighs colleagues' job security. That directly justifies exposing the cover-up despite the harm to colleagues, so it argues for 'Yes.'"
+ },
+ "ec-return_change-chat_tf|Honesty is the right thing to do / essential": {
+  "supports": true,
+  "why": "The reason says honesty is essential, and returning the extra change is the honest act. That directly argues for answering 'True'."
+ },
+ "ec-return_change-chat_yn|Honesty protects the cashier from personal loss or discipline": {
+  "supports": true,
+  "why": "The reason says returning the money spares the cashier personal loss or discipline. That is a direct argument for answering 'Yes' to returning the extra change."
+ },
+ "ec-bribe_medicine-chat_tf|Saving a child's life outweighs abstract moral rules, legal, or ethical objections": {
+  "supports": true,
+  "why": "The reason says saving the child's life outweighs moral, legal, or ethical objections to bribery. That directly justifies paying the bribe, so it argues for 'True'."
+ },
+ "ec-bribe_medicine-chat_yn|A child's life outweighs abstract moral rules or principles": {
+  "supports": true,
+  "why": "The reason says saving the child's life matters more than the moral rule against bribery. That directly justifies paying the bribe, so it argues for answering 'Yes'."
+ },
+ "ec-ventilator-chat_tf|Allocation should be based on clinical factors like likelihood of survival, medical need, and benefit, not age alone": {
+  "supports": true,
+  "why": "The reason rejects age alone as the basis for allocation and favors clinical factors instead. That directly argues against the claim that the younger patient should get the ventilator, which supports answering 'False'."
+ },
+ "ec-ventilator-chat_yn|Equal worth and human dignity of every life regardless of age; age-based rationing is unfair": {
+  "supports": true,
+  "why": "The reason holds that every life has equal worth regardless of age and that age-based rationing is unfair. That directly argues against preferring the younger patient, which supports answering 'No.'"
+ },
+ "ec-break_promise-chat_tf|Preventing serious harm to others outweighs loyalty or the obligation to keep a promise": {
+  "supports": true,
+  "why": "The reason says preventing serious harm outweighs the obligation to keep a promise. That directly justifies breaking the promise, so it argues for answering 'True'."
+ },
+ "ec-break_promise-chat_yn|Preventing serious harm (to an innocent stranger) outweighs keeping a promise or loyalty to a friend": {
+  "supports": true,
+  "why": "The reason says preventing serious harm to a stranger outweighs keeping a promise to a friend. That directly justifies breaking the promise, which is the 'Yes' answer."
+ },
+ "ec-report_friend-chat_tf|Public safety outweighs personal loyalty to a friend": {
+  "supports": true,
+  "why": "The reason says public safety outweighs loyalty to a friend, which directly supports reporting the friend to the police, i.e., answering 'True'."
+ },
+ "ec-report_friend-chat_yn|Protecting innocent people / potential future victims from harm outweighs personal loyalty to the friend": {
+  "supports": true,
+  "why": "The reason says protecting potential victims outweighs loyalty to the friend. That directly justifies reporting the friend, so it argues for answering 'Yes.'"
+ },
+ "ec-gene_edit_embryos_disease-chat_tf|Preventing avoidable suffering and premature death from fatal disease outweighs concerns about altering the embryo's genome": {
+  "supports": true,
+  "why": "The reason holds that preventing suffering and death from fatal disease outweighs concerns about altering the genome. That directly argues the editing is morally permissible, which supports answering 'True'."
+ },
+ "ec-gene_edit_embryos_disease-chat_yn|Preventing avoidable suffering and death is a moral imperative": {
+  "supports": true,
+  "why": "The reason says preventing avoidable suffering and death is a moral imperative. Editing an embryo to remove a fatal hereditary disease prevents exactly that kind of suffering and death, so the reason directly argues that the editing is morally permissible."
+ },
+ "ec-gene_edit_enhancement-chat_tf|Unpredictable long-term risks to the child and future generations outweigh unproven benefits": {
+  "supports": true,
+  "why": "The reason says the risks of embryo editing outweigh its benefits, which directly argues that the practice is not morally permissible. That backs the answer 'False'."
+ },
+ "ec-gene_edit_enhancement-chat_yn|Unpredictable long-term risks to the child and future generations outweigh unproven benefits": {
+  "supports": true,
+  "why": "The reason says the risks outweigh the benefits, which argues directly that such editing is not permissible. That supports answering 'No'."
+ },
+ "ec-sex_selection_ivf-chat_tf|Sex selection risks reinforcing sex/gender discrimination and bias": {
+  "supports": true,
+  "why": "The reason gives an argument that sex selection is morally problematic because it could reinforce sex or gender discrimination. That points toward it not being permissible, which directly supports answering 'False'."
+ },
+ "ec-sex_selection_ivf-chat_yn|Respecting parental autonomy in reproductive choices": {
+  "supports": true,
+  "why": "Appealing to parental autonomy in reproductive choices argues that parents should be free to choose their baby's sex, which directly supports saying sex selection for family balance is morally permissible."
+ },
+ "ec-sex_selection_ivf-chat_yn|Sex selection commodifies children, treating them as products rather than unconditionally valued persons": {
+  "supports": true,
+  "why": "The reason says sex selection commodifies children and treats them as products rather than unconditionally valued persons. That is a moral objection to the practice, so it directly supports answering 'No' to whether it is permissible."
+ },
+ "ec-deaf_embryo_selection-chat_tf|Selecting for deafness limits the child's future opportunities and right to an open future": {
+  "supports": true,
+  "why": "The reason claims that selecting for deafness limits the child's opportunities and violates the child's right to an open future. That is an argument that the practice is morally impermissible, which directly supports answering 'False'."
+ },
+ "ec-deaf_embryo_selection-chat_yn|Deliberately choosing deafness violates the child's right to an open future by limiting their opportunities and capacities": {
+  "supports": true,
+  "why": "The reason says selecting deafness violates the child's right to an open future. That makes the act impermissible, which directly supports answering 'No.'"
+ },
+ "ec-donor_anonymity_disclosure-chat_tf|A person's fundamental right to know their genetic identity outweighs a donor's promised or contractual anonymity": {
+  "supports": true,
+  "why": "The reason says the right to know one's genetic identity outweighs the donor's promised anonymity. That is the 'override' claim in the question, so it argues directly for answering 'True'."
+ },
+ "ec-donor_anonymity_disclosure-chat_yn|A donor-conceived person's fundamental right to know their genetic identity outweighs the donor's contractual anonymity": {
+  "supports": true,
+  "why": "The reason says the donor-conceived person's right to know outweighs the donor's anonymity, which directly supports answering 'Yes' to the override question."
+ },
+ "ec-compulsory_vaccination-chat_tf|Public health necessity can override individual liberty/autonomy during a deadly epidemic": {
+  "supports": true,
+  "why": "The reason says public health necessity can override individual liberty during a deadly epidemic. That directly justifies the state being able to legally require vaccination, so it argues for 'True'."
+ },
+ "ec-compulsory_vaccination-chat_yn|The state's interest/power to protect public health overrides individual autonomy or liberty during a deadly epidemic": {
+  "supports": true,
+  "why": "The reason says the state's public-health power overrides individual liberty during a deadly epidemic. That directly justifies the state legally requiring vaccination, so it argues for 'Yes.'"
+ },
+ "ec-living_donor_stranger-chat_tf|Bodily autonomy: a competent person may choose, with informed voluntary consent, to accept personal risk": {
+  "supports": true,
+  "why": "The reason appeals to bodily autonomy. A competent person giving informed, voluntary consent may accept personal risk, which directly argues that donating a kidney to a stranger is morally permissible."
+ },
+ "ec-living_donor_stranger-chat_yn|Autonomy: a competent adult has the right to make an informed, voluntary choice to accept risk to their own body": {
+  "supports": true,
+  "why": "The autonomy principle holds that a competent adult may voluntarily accept risk to their own body. That directly justifies the permissibility of risky altruistic donation, so it supports answering 'Yes'."
+ },
+ "ec-brain_dead_pregnancy_support-chat_tf|Respecting the woman's prior autonomous wishes and bodily integrity is paramount": {
+  "supports": true,
+  "why": "The reason puts the woman's prior wishes and bodily integrity first. That argues against a blanket rule that hospitals should keep her on life support for the fetus, which supports answering 'False'."
+ },
+ "ec-brain_dead_pregnancy_support-chat_yn|Respecting the woman's prior autonomous wishes and bodily integrity takes precedence": {
+  "supports": true,
+  "why": "The reason says the woman's prior wishes and bodily integrity take precedence, which argues against keeping her on life support. That directly supports answering 'No.'"
+ },
+ "ec-conjoined_twins_separation-chat_tf|Maximizing the number of lives saved": {
+  "supports": true,
+  "why": "If both twins would die without separation, separating saves one life instead of none, so maximizing lives saved directly favors answering 'True'."
+ },
+ "ec-conjoined_twins_separation-chat_tf|Both twins have an equal right to life / equal moral worth, so one cannot be killed to save the other": {
+  "supports": true,
+  "why": "The reason holds that one twin cannot be killed to save the other because both have an equal right to life. That directly argues against performing the separation, which supports answering 'False' to the claim that surgeons should separate them."
+ },
+ "ec-conjoined_twins_separation-chat_yn|Maximizing the number of lives saved (net lives saved)": {
+  "supports": true,
+  "why": "In cases like this, not separating usually means both twins die. Separating saves one life, so maximizing net lives saved directly argues for answering 'Yes'."
+ },
+ "ec-drone_strike_civilian_toll-chat_tf|Deliberately killing civilians violates the principle of non-combatant immunity": {
+  "supports": true,
+  "why": "The reason holds that knowingly killing civilians violates non-combatant immunity. That implies the strike is impermissible, which argues directly for answering 'False'. Some might object that double effect separates foreseen from intended deaths, but that bears on the reason's strength, not its direction."
+ },
+ "ec-drone_strike_civilian_toll-chat_yn|Deliberately killing innocent civilians is absolutely impermissible (duty to protect innocent life)": {
+  "supports": true,
+  "why": "The reason says killing innocent civilians is absolutely impermissible, which directly argues that the strike is not permissible, matching the 'No' answer. One could object that foreseen civilian deaths are not 'deliberate' killing (double effect), but the reason as stated is offered to support 'No'."
+ },
+ "ec-strike_through_human_shields-chat_tf|Proportionality: strike permissible if expected military advantage outweighs/is not excessive relative to foreseeable civilian harm": {
+  "supports": true,
+  "why": "The reason invokes the proportionality principle to say the strike is permissible when the military advantage is not excessive relative to civilian harm. That affirms the strike can be morally permissible despite human shields, which argues for 'True'. The condition attached is how the permission is justified, not an objection to it."
+ },
+ "ec-strike_through_human_shields-chat_tf|Protecting civilian/innocent lives is paramount and takes precedence": {
+  "supports": true,
+  "why": "The reason holds that protecting innocent lives takes precedence, which implies striking a target surrounded by human shields is impermissible. That directly supports answering 'False'."
+ },
+ "ec-strike_through_human_shields-chat_yn|Proportionality: the expected military advantage must outweigh the foreseeable harm to civilians": {
+  "supports": false,
+  "why": "The reason states a limiting condition: the military advantage 'must outweigh' civilian harm. That is a constraint on when a strike could be permissible, not an argument that striking is permissible. It qualifies the 'Yes' rather than supporting it."
+ },
+ "ec-nuclear_deterrent_justified-chat_tf|Risk of catastrophic humanitarian and environmental consequences outweighs any deterrent benefit": {
+  "supports": true,
+  "why": "The reason says the catastrophic risks outweigh any deterrent benefit. That directly denies the claim that maintaining nuclear weapons is morally justified, so it argues for answering 'False'."
+ },
+ "ec-nuclear_deterrent_justified-chat_yn|Preventing large-scale war and mass deaths through deterrence outweighs the moral cost of possessing nuclear weapons": {
+  "supports": true,
+  "why": "The reason says deterrence's benefit of preventing war outweighs the moral cost of possessing nuclear weapons. That directly argues that maintaining them is morally justified, which supports answering 'Yes'."
+ },
+ "ec-nuclear_deterrent_justified-chat_yn|The risk of catastrophic humanitarian harm outweighs any deterrence benefit": {
+  "supports": true,
+  "why": "The reason claims the catastrophic humanitarian risk outweighs any deterrence benefit. That directly rejects the idea that deterrence morally justifies keeping nuclear weapons, so it argues for answering 'No'."
+ },
+ "ec-conscription_draft-chat_tf|National survival can justify overriding individual autonomy, consent, or rights": {
+  "supports": true,
+  "why": "The reason says national survival can justify overriding individual autonomy and consent. That directly backs the claim that a state may conscript unwilling citizens in a war of national survival, so it argues for 'True'."
+ },
+ "ec-conscription_draft-chat_yn|National/state survival overrides individual autonomy, consent, or liberty when the nation's existence is at stake": {
+  "supports": true,
+  "why": "The reason says national survival overrides individual consent and liberty. That directly justifies a state conscripting unwilling citizens in a war of national survival, which is an argument for 'Yes'."
+ },
+ "ec-preemptive_strike_imminent-chat_tf|Right of self-defense/self-preservation permits striking first against an imminent attack": {
+  "supports": true,
+  "why": "The reason says the right of self-defense permits striking first against an imminent attack. That directly affirms the statement that a nation may launch a preemptive strike against an enemy about to attack, so it argues for 'True'."
+ },
+ "ec-preemptive_strike_imminent-chat_yn|Inherent right of self-preservation justifies striking first": {
+  "supports": true,
+  "why": "The reason says the inherent right of self-preservation justifies striking first. That directly argues that a preemptive strike is permissible, which supports answering 'Yes.'"
+ },
+ "ec-targeted_assassination_leader-chat_tf|Assassination violates international law": {
+  "supports": true,
+  "why": "The reason says assassination violates international law, which counts against the claim that it is morally permissible. That argues for answering 'False', though it appeals to legality rather than morality directly."
+ },
+ "ec-targeted_assassination_leader-chat_yn|Deliberately killing a person/political leader violates the fundamental right to life": {
+  "supports": true,
+  "why": "The reason says deliberately killing a political leader violates the fundamental right to life. That is a moral argument against assassination, so it directly supports answering 'No' to whether assassination is morally permissible."
+ },
+ "ec-spare_surrendering_enemy-chat_tf|International humanitarian law / laws of war require humane treatment and protection of surrendering enemies": {
+  "supports": true,
+  "why": "The reason says the laws of war require protecting surrendering enemies. That directly backs the claim that soldiers must spare them, which argues for answering 'True'."
+ },
+ "ec-spare_surrendering_enemy-chat_yn|The law of armed conflict absolutely prohibits killing surrendering or hors de combat enemies; they must be spared and protected": {
+  "supports": true,
+  "why": "The reason says the law of armed conflict absolutely prohibits killing surrendering enemies and requires that they be spared. That directly backs answering 'Yes', since the obligation holds regardless of risk to the unit."
+ },
+ "ec-scorched_earth_retreat-chat_tf|Historical precedent shows armies use scorched-earth tactics, destroying their own resources to deny them to or hinder the advancing enemy": {
+  "supports": true,
+  "why": "The reason cites the historical practice of scorched-earth tactics, in which retreating armies destroy their own resources to deny them to the enemy. This directly affirms the statement, so it argues for answering 'True'."
+ },
+ "ec-scorched_earth_retreat-chat_yn|Military necessity permits scorched-earth tactics to deny resources to or impede the advancing enemy": {
+  "supports": true,
+  "why": "The reason says military necessity permits scorched-earth tactics to deny resources to an advancing enemy. That directly justifies a retreating army destroying its own food supplies, so it argues for 'Yes.'"
+ },
+ "ec-wealth_cap-chat_tf|Wealth caps would undermine incentives for innovation, investment, and economic growth": {
+  "supports": true,
+  "why": "The reason argues that wealth caps would harm innovation, investment, and growth. That is an argument against imposing a cap, so it directly supports answering 'False'."
+ },
+ "ec-wealth_cap-chat_yn|Wealth caps would undermine incentives for innovation and productivity that drive economic growth and broad prosperity": {
+  "supports": true,
+  "why": "The reason argues against a wealth cap because caps would weaken incentives for innovation and productivity. That directly supports answering 'No' to imposing a hard cap."
+ },
+ "ec-inheritance_full_tax-chat_tf|Individual private property rights are fundamental to a free society": {
+  "supports": true,
+  "why": "The reason holds that private property rights are fundamental. That directly opposes near-total confiscation of inheritances, so it argues for answering 'False' to the claim that large inheritances should be taxed at nearly 100%."
+ },
+ "ec-inheritance_full_tax-chat_yn|Near-total inheritance tax would destroy incentives to save, invest, and build wealth that drives economic growth benefiting everyone": {
+  "supports": true,
+  "why": "The reason argues that a near-total inheritance tax would harm incentives and economic growth. That is an argument against such a tax, so it directly supports answering 'No.'"
+ },
+ "ec-ubi_replace_welfare-chat_tf|Means-tested programs target the most vulnerable and specific needs more effectively than a flat universal payment": {
+  "supports": true,
+  "why": "The reason argues that means-tested programs work better than a flat universal payment. That is a direct argument against replacing them with UBI, which supports answering 'False'."
+ },
+ "ec-ubi_replace_welfare-chat_yn|Replacing targeted welfare with UBI risks leaving the most vulnerable worse off or with insufficient support": {
+  "supports": true,
+  "why": "The reason gives an argument against UBI replacing means-tested programs: the most vulnerable could be left worse off. That directly backs answering 'No.'"
+ },
+ "ec-sweatshop_beats_alternative-chat_tf|The jobs improve workers' income, options, and living standards relative to their next-best local alternative": {
+  "supports": true,
+  "why": "The reason says the jobs leave workers better off than their next-best local alternative. That directly backs the claim that opening the factory is morally permissible, so it argues for answering 'True'."
+ },
+ "ec-sweatshop_beats_alternative-chat_yn|The jobs improve workers' options relative to their next-best local alternatives": {
+  "supports": true,
+  "why": "The reason says the jobs leave workers better off than their next-best alternatives. That is a direct argument that opening the factory is beneficial and therefore morally permissible, so it supports answering 'Yes'."
+ },
+ "ec-price_gouging_disaster-chat_tf|Exploiting urgent need or desperation for profit violates duties of fairness, solidarity, and compassion": {
+  "supports": true,
+  "why": "The reason says that exploiting desperation for profit violates duties of fairness and compassion. That implies sharp post-disaster price hikes are impermissible, which directly argues for answering 'False'."
+ },
+ "ec-price_gouging_disaster-chat_yn|Exploiting urgent need or desperation of vulnerable people for profit violates basic duties of fairness, solidarity, and compassion": {
+  "supports": true,
+  "why": "The reason calls exploiting desperate people for profit a violation of fairness, solidarity and compassion. That directly argues that sharply raising prices after a disaster is impermissible, which supports answering 'No'."
+ },
+ "ec-student_debt_forgiveness-chat_tf|Economic mobility and opportunity for millions outweighs the cost to non-borrowers": {
+  "supports": true,
+  "why": "The reason says the mobility and opportunity benefits outweigh the cost to non-borrowers. That directly argues in favor of cancelling the debt despite that cost, which supports answering 'True'."
+ },
+ "ec-student_debt_forgiveness-chat_yn|Debt cancellation expands economic opportunity and mobility for millions held back": {
+  "supports": true,
+  "why": "The reason names a benefit of cancelling debt (more economic opportunity and mobility), which argues directly for answering 'Yes'."
+ },
+ "ec-student_debt_forgiveness-chat_yn|Unfair to non-borrowers/taxpayers who did not take on the debt to bear its cost": {
+  "supports": true,
+  "why": "The reason says it is unfair for non-borrowers to bear the cost of cancellation. That is a direct argument against cancelling student debt, which supports answering 'No'."
+ },
+ "ec-reparations_historical-chat_tf|Justice requires repairing/redressing the enduring harm caused by slavery": {
+  "supports": true,
+  "why": "The reason says justice requires redressing the lasting harm of slavery. That directly argues that a nation should pay reparations, which supports answering 'True'."
+ },
+ "ec-reparations_historical-chat_yn|Justice requires redress for enduring harms of slavery that persist in descendants' wealth and opportunities": {
+  "supports": true,
+  "why": "The reason argues that justice requires redress for the lasting harms of slavery on descendants' wealth and opportunities. That directly supports answering 'Yes' to paying reparations."
+ },
+ "ec-reparations_historical-chat_yn|Impracticality and unfairness of determining who pays, who receives, and measuring harm across generations": {
+  "supports": true,
+  "why": "The reason gives an argument against paying reparations: it says determining payers, recipients, and harm across generations would be impractical and unfair. That directly supports answering 'No'."
+ },
+ "ec-rent_control-chat_tf|Tenant stability depends on predictable, affordable housing costs": {
+  "supports": true,
+  "why": "The reason says tenant stability depends on predictable, affordable housing costs. Rent caps are meant to deliver exactly that, so the reason backs the claim that the city should cap rents to keep long-term tenants housed."
+ },
+ "ec-rent_control-chat_tf|Rent caps reduce housing supply and discourage investment, ultimately hurting tenants": {
+  "supports": true,
+  "why": "The reason claims rent caps reduce supply and discourage investment, ultimately hurting tenants. That directly argues against the proposition that a city should cap rent increases, so it supports answering 'False'."
+ },
+ "ec-rent_control-chat_yn|Rent caps shrink housing supply and worsen shortages over time": {
+  "supports": true,
+  "why": "The reason says rent caps shrink housing supply and worsen shortages. That is a direct argument against capping rents, so it supports answering 'No'."
+ },
+ "ec-placebo_deception-chat_tf|Patient benefit / symptom relief justifies placebo use": {
+  "supports": true,
+  "why": "The reason says symptom relief justifies using a placebo. That directly backs the claim that a doctor may prescribe one when it is likely to relieve symptoms, so it argues for 'True'."
+ },
+ "ec-placebo_deception-chat_tf|Placebo without disclosure violates informed consent": {
+  "supports": true,
+  "why": "The reason says undisclosed placebo prescription violates informed consent. That implies a doctor may not do it, which directly argues for the answer 'False'."
+ },
+ "ec-placebo_deception-chat_yn|Prescribing a placebo without disclosure violates informed consent": {
+  "supports": true,
+  "why": "The reason says undisclosed placebo prescribing violates informed consent. That is a direct ethical argument that the doctor may not do it, which supports answering 'No'."
+ },
+ "ec-white_lie_appearance-chat_tf|Honesty respects the friend's autonomy and preserves trust": {
+  "supports": true,
+  "why": "The reason says honesty respects autonomy and preserves trust. That implies lying about appearance is wrong, which directly supports answering 'False' to the claim that such lying is morally permissible."
+ },
+ "ec-white_lie_appearance-chat_yn|Respecting the friend's autonomy outweighs sparing them momentary comfort": {
+  "supports": true,
+  "why": "The reason says respecting the friend's autonomy, which requires honest information, outweighs sparing their feelings. That directly argues that lying is not permissible, which supports answering 'No.'"
+ },
+ "ec-terminal_diagnosis_withhold-chat_tf|Patient autonomy is paramount and overrides family wishes": {
+  "supports": true,
+  "why": "The reason holds that patient autonomy overrides family wishes. That means the doctor should not withhold the diagnosis just because the family insists, which directly argues for answering 'False'."
+ },
+ "ec-terminal_diagnosis_withhold-chat_yn|Patient autonomy and the right to make informed decisions is paramount": {
+  "supports": true,
+  "why": "Holding that patient autonomy and the right to make informed decisions are paramount directly supports saying the doctor may not withhold the diagnosis at the family's request, since the patient needs the information to decide for themselves. This argues for 'No.'"
+ },
+ "ec-resume_omission-chat_tf|Omission is not deception as long as qualifications/experience are not misrepresented": {
+  "supports": true,
+  "why": "The reason says omitting a job is not deception as long as nothing is misrepresented. That directly argues the omission is morally permissible, which supports answering 'True'. The condition attached to it does not reverse that direction."
+ },
+ "ec-resume_omission-chat_yn|Omitting an irrelevant job does not misrepresent or deceive about qualifications": {
+  "supports": true,
+  "why": "The reason says omitting the job is not deception or misrepresentation. That directly supports the claim that omitting it is morally permissible, so it argues for 'Yes'."
+ },
+ "ec-resume_omission-chat_yn|Honesty is essential to maintaining trust and integrity in professional relationships": {
+  "supports": true,
+  "why": "The reason appeals to honesty and trust, implying that hiding the fired job is deceptive and therefore impermissible. That directly backs answering 'No'."
+ },
+ "ec-santa_claus_myth-chat_tf|The Santa tradition is harmless imaginative play that fosters joy and wonder in children": {
+  "supports": true,
+  "why": "Calling the Santa tradition harmless and joyful implies parents are not doing something wrong, which directly supports answering 'False' to the claim that they are."
+ },
+ "ec-santa_claus_myth-chat_yn|Santa tradition fosters imagination, wonder, and childhood joy": {
+  "supports": true,
+  "why": "The reason presents the Santa tradition as beneficial, fostering imagination, wonder, and joy. That directly supports the view that parents are not doing something wrong, which is the 'No' answer."
+ },
+ "ec-silence_versus_lie-chat_tf|Intentional silence that deceives violates the same duty of honesty as lying": {
+  "supports": true,
+  "why": "The reason says deceptive intentional silence violates the same duty of honesty as lying. That equates the two morally, which directly argues for answering 'True'."
+ },
+ "ec-silence_versus_lie-chat_yn|Intentional silence that sustains a false belief is a form of deception, morally equivalent to lying": {
+  "supports": true,
+  "why": "The reason says intentional silence that sustains a false belief is deception and morally equivalent to lying. That directly backs the 'Yes' answer that such silence is as wrong as a direct lie."
+ },
+ "ec-seatbelt_mandate-chat_tf|Reducing public/societal healthcare costs from preventable injuries justifies the fine": {
+  "supports": true,
+  "why": "The reason says the fine is justified because it reduces public healthcare costs from preventable injuries. That directly supports the claim that the state is justified in fining adults who don't wear seatbelts, so it argues for 'True'."
+ },
+ "ec-seatbelt_mandate-chat_yn|Preventing public harm and societal/healthcare costs from preventable injuries justifies the fine": {
+  "supports": true,
+  "why": "The reason gives a justification for the fine: it prevents public harm and the societal and healthcare costs of preventable injuries. That argues directly for answering 'Yes'."
+ },
+ "ec-seatbelt_mandate-chat_yn|Personal autonomy over self-regarding risk should prevail when no one else is harmed": {
+  "supports": true,
+  "why": "The reason says personal autonomy over self-regarding risk should prevail, which implies the state is not justified in fining adults for not wearing seatbelts. That directly supports answering 'No'."
+ },
+ "ec-assisted_suicide_terminal-chat_tf|Respecting a competent patient's autonomy over their own end-of-life decisions": {
+  "supports": true,
+  "why": "Respecting a competent patient's autonomy over end-of-life decisions is a central argument for allowing physician-assisted dying, so it directly supports answering 'True'."
+ },
+ "ec-assisted_suicide_terminal-chat_yn|Respecting a competent patient's autonomy over their own life-and-death decisions": {
+  "supports": true,
+  "why": "Autonomy of a competent patient over life-and-death decisions is a standard argument for allowing physician-assisted death. It directly supports answering 'Yes'."
+ },
+ "ec-sell_own_kidney-chat_tf|Preventing exploitation and coercion of vulnerable people": {
+  "supports": true,
+  "why": "The reason cites preventing exploitation and coercion of vulnerable people. This is a standard argument against legalizing kidney sales, so it argues for answering 'False' to the claim that adults should be allowed to sell kidneys."
+ },
+ "ec-sell_own_kidney-chat_yn|Preventing exploitation and coercion of poor and vulnerable people": {
+  "supports": true,
+  "why": "Preventing exploitation and coercion of poor and vulnerable people is a standard argument for prohibiting kidney sales, so it directly supports answering 'No'."
+ },
+ "ec-legalize_recreational_drugs-chat_tf|Public health risks and documented drug harms outweigh individual freedom": {
+  "supports": true,
+  "why": "The reason says public health risks and drug harms outweigh individual freedom. That argues against legalizing all recreational drugs, which directly supports answering 'False'."
+ },
+ "ec-legalize_recreational_drugs-chat_yn|Public health and safety risks outweigh individual freedom": {
+  "supports": true,
+  "why": "The reason says public health and safety risks outweigh individual freedom. That directly argues against legalizing all recreational drugs, which supports answering 'No'."
+ },
+ "ec-ban_extreme_sports-chat_tf|Personal autonomy of consenting adults to make informed choices about their own bodies, lives, and personal risk": {
+  "supports": true,
+  "why": "Appealing to the personal autonomy of consenting adults is an argument against state bans on dangerous sports, which supports answering 'False' to the statement that the state should ban them."
+ },
+ "ec-ban_extreme_sports-chat_yn|Competent adults have a fundamental right to personal autonomy over their own bodies and to choose which risks they accept": {
+  "supports": true,
+  "why": "The reason invokes adult autonomy and the right to choose one's own risks. That directly argues against a state ban, which supports answering 'No'."
+ },
+ "ec-eat_factory_farmed_meat-chat_tf|Factory farming inflicts severe, unnecessary suffering on sentient beings": {
+  "supports": true,
+  "why": "The reason says factory farming causes severe, unnecessary suffering. That directly supports the claim that eating its products is not morally permissible, which argues for answering 'False'."
+ },
+ "ec-eat_factory_farmed_meat-chat_yn|Factory farming inflicts severe, unnecessary/avoidable suffering on sentient animals": {
+  "supports": true,
+  "why": "The reason says factory farming causes severe, avoidable suffering to sentient animals. That is a standard moral argument that eating factory-farmed meat is impermissible, so it directly supports answering 'No.'"
+ },
+ "ec-animal_testing_lifesaving-chat_tf|Human safety and life take priority over animal harm": {
+  "supports": true,
+  "why": "The reason says human safety and life take priority over harm to animals. That directly justifies the claim that animal testing of a life-saving drug before human use is permissible, so it argues for 'True'."
+ },
+ "ec-animal_testing_lifesaving-chat_yn|Preventing or minimizing harm to humans (human safety) outweighs harm to animals": {
+  "supports": true,
+  "why": "The reason holds that human safety outweighs harm to animals, which directly justifies animal testing before human use, so it argues for answering 'Yes'."
+ },
+ "ec-cull_invasive_species-chat_tf|Protecting native biodiversity and ecosystem health/integrity outweighs the lives of invasive animals": {
+  "supports": true,
+  "why": "The reason says that protecting native biodiversity and ecosystem health outweighs the lives of invasive animals. That directly justifies killing them to protect the ecosystem, so it argues for the claim that such killing is morally permissible."
+ },
+ "ec-cull_invasive_species-chat_yn|Protecting the native ecosystem's long-term integrity, stability, and biodiversity outweighs the lives of invasive animals": {
+  "supports": true,
+  "why": "The reason says the ecosystem's integrity and biodiversity outweigh the invasive animals' lives. That directly justifies killing them, which argues for 'Yes.'"
+ },
+ "ec-zoos_for_conservation-chat_tf|Species survival outweighs concerns about keeping animals in captivity": {
+  "supports": true,
+  "why": "The reason says species survival outweighs concerns about captivity. That directly supports the claim that zoos are justified when needed for conservation, so it argues for answering 'True'."
+ },
+ "ec-zoos_for_conservation-chat_yn|Preventing species extinction outweighs the costs of individual animals' captivity": {
+  "supports": true,
+  "why": "The reason says preventing extinction outweighs the costs of captivity. That directly justifies keeping animals in zoos when it is needed for conservation, so it argues for 'Yes'."
+ },
+ "ec-euthanize_unaffordable_pet-chat_tf|Treatability creates an obligation to seek alternatives (e.g., rehoming) before ending the pet's life": {
+  "supports": true,
+  "why": "The reason says treatability obliges you to pursue alternatives such as rehoming instead of euthanasia. That means euthanizing purely because you cannot afford care is not permissible, which argues directly for 'False'."
+ },
+ "ec-euthanize_unaffordable_pet-chat_yn|The pet's life has intrinsic value / right to life that outweighs financial hardship": {
+  "supports": true,
+  "why": "The reason holds that the pet's intrinsic value or right to life outweighs financial hardship. That directly implies euthanizing a treatable pet over cost is impermissible, which supports answering 'No.'"
+ },
+ "ec-obligation_lab_grown_meat-chat_tf|Avoiding unnecessary suffering/harm to sentient animals is obligatory when a harmless alternative exists": {
+  "supports": true,
+  "why": "The reason holds that avoiding unnecessary harm to sentient animals is obligatory when a harmless alternative exists. Affordable lab-grown meat would be that alternative, so the reason directly backs the claim that people would be obligated to stop eating slaughtered animals."
+ },
+ "ec-obligation_lab_grown_meat-chat_yn|Causing unnecessary harm or suffering to sentient animals is morally indefensible": {
+  "supports": true,
+  "why": "The reason says unnecessary harm to sentient animals is indefensible. Once affordable lab-grown meat exists, slaughter becomes unnecessary, which implies an obligation to stop. That argues for 'Yes.'"
+ },
+ "ec-hunt_for_population_control-chat_tf|Preventing greater suffering (starvation) outweighs the harm of killing individual deer": {
+  "supports": true,
+  "why": "The reason says the harm of killing individual deer is outweighed by preventing greater suffering from starvation. That directly justifies hunting as morally permissible, so it argues for answering 'True'."
+ },
+ "ec-hunt_for_population_control-chat_yn|Preventing widespread suffering (starvation) outweighs the harm of killing individual deer": {
+  "supports": true,
+  "why": "The reason says that preventing widespread starvation outweighs the harm of killing individual deer. That directly justifies hunting as morally permissible, so it argues for answering 'Yes'."
+ },
+ "ec-wealthy_nations_degrowth-chat_tf|Economic contraction would disproportionately harm the poor and vulnerable": {
+  "supports": true,
+  "why": "The reason argues that deliberate economic contraction would harm the poor and vulnerable. That is a direct argument against wealthy nations shrinking their economies, so it supports answering 'False'."
+ },
+ "ec-wealthy_nations_degrowth-chat_yn|Economic contraction would undermine the innovation, investment, and resources needed for clean technology and decarbonization": {
+  "supports": true,
+  "why": "The reason argues that deliberate economic shrinkage would undermine the resources and innovation needed for decarbonization. That is a direct argument against shrinking economies, so it supports answering 'No'."
+ },
+ "ec-expand_nuclear_power-chat_tf|Radioactive waste poses long-term environmental, safety, and security risks that cannot be ignored": {
+  "supports": true,
+  "why": "The reason stresses that radioactive waste carries serious long-term risks that cannot be ignored. That directly argues against rapid nuclear expansion despite the waste, which supports answering 'False'."
+ },
+ "ec-expand_nuclear_power-chat_yn|Urgent need to cut greenhouse-gas emissions to avert catastrophic warming outweighs the manageable waste burden": {
+  "supports": true,
+  "why": "The reason says the urgent need to cut emissions outweighs the manageable waste burden. That argues directly for rapidly expanding nuclear power despite the waste, which supports answering 'Yes'."
+ },
+ "ec-expand_nuclear_power-chat_yn|Long-term environmental and security risks of radioactive waste outweigh climate benefits": {
+  "supports": true,
+  "why": "The reason says the risks of radioactive waste outweigh the climate benefits. That directly argues against rapidly expanding nuclear power, so it supports answering 'No'."
+ },
+ "ec-deploy_solar_geoengineering-chat_tf|Imposing risks on people (billions, future generations, vulnerable populations) without their consent is unacceptable": {
+  "supports": true,
+  "why": "The reason says imposing unconsented risks on billions of people, future generations and vulnerable populations is unacceptable. Deploying geoengineering with unknown side effects would impose exactly such risks. That makes it impermissible, which directly supports answering 'False'."
+ },
+ "ec-deploy_solar_geoengineering-chat_yn|Avoid imposing unknown, potentially catastrophic risks on others (future generations, vulnerable populations)": {
+  "supports": true,
+  "why": "The reason holds that it is wrong to impose unknown, potentially catastrophic risks on others. That directly argues that deploying geoengineering with unknown side effects is impermissible, which supports answering 'No.'"
+ },
+ "ec-limit_family_size_climate-chat_tf|Reproductive autonomy is a fundamental right that cannot be overridden by collective climate duties": {
+  "supports": true,
+  "why": "The reason holds that reproductive autonomy is a fundamental right that collective climate duties cannot override. That directly denies a moral duty to have fewer children, which argues for answering 'False'."
+ },
+ "ec-limit_family_size_climate-chat_yn|Each additional person in a high-emitting country imposes disproportionate climate costs on others": {
+  "supports": true,
+  "why": "The reason says each additional person in a high-emitting country imposes disproportionate climate costs on others. That is a direct premise for a moral duty to have fewer children, so it argues for 'Yes'."
+ },
+ "ec-limit_family_size_climate-chat_yn|Reproductive autonomy is a fundamental personal right that outweighs collective climate duties": {
+  "supports": true,
+  "why": "The reason holds that reproductive autonomy outweighs collective climate duties, which directly argues that people have no moral duty to have fewer children. That supports answering 'No'."
+ },
+ "ec-flying_with_offsets-chat_tf|Carbon offsets do not reliably cancel the immediate (high-altitude) climate harm of flying": {
+  "supports": true,
+  "why": "The reason says offsets fail to reliably cancel flying's climate harm. That undercuts the claim that buying offsets is sufficient to make a leisure flight permissible, so it argues for answering 'False'."
+ },
+ "ec-flying_with_offsets-chat_yn|Offsets do not erase or neutralize the immediate emissions harm of the flight": {
+  "supports": true,
+  "why": "The reason says offsets fail to neutralize the flight's emissions harm. That undercuts the premise that buying offsets makes the flight permissible, so it directly supports answering 'No.'"
+ },
+ "ec-clear_forest_for_jobs-chat_tf|Irreversible ecological loss of old-growth forest outweighs short-term/temporary economic gain from jobs": {
+  "supports": true,
+  "why": "The reason says the irreversible ecological loss outweighs the temporary economic gain. That implies clearing the forest is not permissible, which directly supports answering 'False'."
+ },
+ "ec-clear_forest_for_jobs-chat_yn|Old-growth forests have irreplaceable ecological value; their loss is irreversible": {
+  "supports": true,
+  "why": "The reason stresses that old-growth forests have irreplaceable ecological value and that their loss cannot be undone. That is an argument against clearing them, so it directly supports answering 'No' to whether clearing is permissible."
+ },
+ "ec-ban_private_jets-chat_tf|Climate urgency demands immediate, deep cuts to high-impact emissions": {
+  "supports": true,
+  "why": "The reason says climate urgency demands immediate, deep cuts to high-impact emissions. Private jets fit that category, so the reason directly argues for banning them, which supports answering 'true'."
+ },
+ "ec-ban_private_jets-chat_yn|Economic and practical value of private jets outweighs their emissions": {
+  "supports": true,
+  "why": "The reason says the economic and practical value of private jets outweighs their emissions. That directly argues against a ban, so it supports answering 'No'."
+ },
+ "ec-police_facial_recognition-chat_tf|Privacy rights must be protected": {
+  "supports": true,
+  "why": "The reason invokes the protection of privacy rights. That is a direct argument against allowing live facial recognition in public spaces, so it supports answering 'False'."
+ },
+ "ec-police_facial_recognition-chat_yn|Privacy rights must be protected and outweigh surveillance benefits": {
+  "supports": true,
+  "why": "The reason says privacy rights outweigh the benefits of surveillance. That directly argues against allowing police to use live facial recognition in public spaces, which supports answering 'No'."
+ },
+ "ec-encryption_backdoor_mandate-chat_tf|Backdoors inevitably weaken security for everyone": {
+  "supports": true,
+  "why": "The reason says backdoors weaken security for everyone. That is a direct argument against requiring them, so it supports answering 'False' to the claim that companies should be required to build them."
+ },
+ "ec-encryption_backdoor_mandate-chat_yn|Backdoors weaken security for everyone by creating exploitable vulnerabilities for criminals and hostile states": {
+  "supports": true,
+  "why": "The reason says backdoors weaken security for everyone by creating vulnerabilities that criminals and hostile states can exploit. That is a direct argument against requiring backdoors, so it supports answering 'No'."
+ },
+ "ec-sell_anonymized_user_data-chat_tf|Users cannot give meaningful informed consent to unforeseeable or opaque future data uses": {
+  "supports": true,
+  "why": "The reason says users cannot meaningfully consent to opaque or unforeseeable uses of their data. That undermines the moral permissibility of selling their data, so it directly argues for answering 'False'."
+ },
+ "ec-sell_anonymized_user_data-chat_yn|Respecting user autonomy requires informed, specific consent": {
+  "supports": true,
+  "why": "The reason implies that selling users' data without their informed, specific consent violates their autonomy. Such consent is typically absent in these sales, so this is a direct moral ground for calling the practice impermissible. It works as the basis for 'No', not merely as a side condition."
+ },
+ "ec-predictive_policing-chat_tf|Algorithms trained on biased historical data reinforce discriminatory policing and over-policing of marginalized communities": {
+  "supports": true,
+  "why": "The reason states that predictive policing algorithms reinforce discriminatory over-policing. That is a direct argument against police using them, which supports answering 'False'."
+ },
+ "ec-predictive_policing-chat_yn|Biased historical data risks reinforcing discriminatory or racially biased policing": {
+  "supports": true,
+  "why": "The reason argues that predictive policing algorithms trained on biased historical data would reinforce discriminatory policing. That is a direct argument against using them, which supports answering 'No'."
+ },
+ "ec-employer_keystroke_monitoring-chat_tf|Employers generally have the legal right to monitor work devices and activity": {
+  "supports": true,
+  "why": "The reason says employers generally have a legal right to monitor work devices and activity. That directly backs the claim that an employer may monitor remote workers' keystrokes and screens, so it argues for 'True'."
+ },
+ "ec-employer_keystroke_monitoring-chat_yn|Monitoring is permissible if workers are given clear notice and/or consent": {
+  "supports": true,
+  "why": "The reason says monitoring is permissible when workers get clear notice or give consent. That affirms an employer may monitor, which argues for 'Yes.' The condition limits the yes but does not argue against it, and the main thrust is permissibility."
+ },
+ "ec-universal_dna_database-chat_tf|Individual privacy rights must be protected and outweigh the crime-solving benefits of a universal DNA database": {
+  "supports": true,
+  "why": "The reason holds that privacy rights outweigh the crime-solving benefits of a universal DNA database. That directly rejects the proposal, so it argues for answering 'False'."
+ },
+ "ec-universal_dna_database-chat_yn|Protecting individual privacy and civil liberties is a fundamental right": {
+  "supports": true,
+  "why": "The reason puts privacy and civil liberties first. A universal government DNA database would intrude on both, so the reason argues directly for answering 'No'."
+ },
+ "ec-deepfake_political_satire-chat_tf|Clear labeling prevents deception of audiences": {
+  "supports": true,
+  "why": "The reason argues that clear labeling removes the main moral concern, deceiving audiences. That directly supports the claim that labeled satirical deepfakes are permissible."
+ },
+ "ec-deepfake_political_satire-chat_yn|Clear labeling prevents deception of the audience": {
+  "supports": true,
+  "why": "The reason says clear labeling removes the main moral objection to deepfakes, which is deceiving the audience. That directly backs the claim that labeled satirical deepfakes are permissible, so it argues for 'Yes.'"
+ },
+ "ec-ai_chatbot_of_deceased-chat_tf|Consent from the deceased or their family/representatives makes it permissible": {
+  "supports": true,
+  "why": "The reason says consent makes building the chatbot permissible, which directly argues that the practice can be morally permissible. That supports answering 'True'. It reads as a justification, not merely a constraint."
+ },
+ "ec-ai_chatbot_of_deceased-chat_tf|Consent of the deceased cannot be obtained or presumed posthumously": {
+  "supports": true,
+  "why": "The reason says the deceased cannot consent to being imitated, which is an objection to the practice's moral permissibility. That argues directly for answering 'False'."
+ },
+ "ec-ai_chatbot_of_deceased-chat_yn|Respect for the deceased's autonomy and dignity outweighs the family's desire for comfort": {
+  "supports": true,
+  "why": "The reason says respect for the deceased's autonomy and dignity outweighs the family's wish for comfort. That is a direct argument that building the chatbot is impermissible, which supports answering 'No.'"
+ },
+ "ec-death_penalty_worst_crimes-chat_tf|The risk of irreversibly executing an innocent person (wrongful execution cannot be corrected) makes the death penalty unjustified": {
+  "supports": true,
+  "why": "The reason concludes that the death penalty is unjustified because of the irreversible risk of executing innocent people. That directly argues that the statement 'the death penalty is morally justified' is false, so it supports answering 'False'."
+ },
+ "ec-death_penalty_worst_crimes-chat_yn|The irreversible risk of executing innocent people is unacceptable and outweighs any benefit or justice served": {
+  "supports": true,
+  "why": "The reason holds that the irreversible risk of executing innocent people outweighs any benefit or justice served. That is a direct argument that the death penalty is not morally justified, which supports answering 'No'."
+ },
+ "ec-chemical_castration_for_release-chat_tf|Human rights and bodily autonomy must be protected, even for convicted offenders": {
+  "supports": true,
+  "why": "The reason invokes human rights and bodily autonomy as protections that apply even to offenders. This argues against offering early release in exchange for chemical castration, which supports answering 'False'."
+ },
+ "ec-chemical_castration_for_release-chat_yn|Human rights and bodily autonomy must be upheld even for offenders": {
+  "supports": true,
+  "why": "The reason holds that offenders' bodily autonomy must be respected. Making early release conditional on chemical castration is coercive and undermines that autonomy, so the reason directly backs answering 'No'."
+ },
+ "ec-three_strikes_life-chat_tf|Punishment should be proportional to the severity of the offense": {
+  "supports": true,
+  "why": "The proportionality principle holds that a minor offense should not draw a life sentence. That directly argues against three-strikes life sentences for minor third offenses, so it supports answering 'False'."
+ },
+ "ec-three_strikes_life-chat_yn|Punishment should be proportional to the offense; a life sentence for a minor crime violates proportional justice": {
+  "supports": true,
+  "why": "The reason argues that a life sentence for a minor third offense violates proportional justice. That directly supports answering 'No' to whether such a sentence should be imposed."
+ },
+ "ec-rehabilitation_over_retribution-chat_tf|Reducing future harm / reoffending matters more than retribution for past desert": {
+  "supports": true,
+  "why": "The reason puts reducing future harm and reoffending, which is the goal of rehabilitation, above retribution for past wrongs, which is deserved punishment. That directly argues for prioritizing rehabilitation, i.e. 'True'."
+ },
+ "ec-rehabilitation_over_retribution-chat_tf|Justice requires accountability and proportionate consequences for wrongdoing, alongside rehabilitation": {
+  "supports": true,
+  "why": "The reason says justice requires proportionate, deserved consequences, with rehabilitation alongside them rather than taking priority. That rejects the claim that rehabilitation should come before deserved punishment, so it argues for answering 'False'."
+ },
+ "ec-rehabilitation_over_retribution-chat_yn|Reducing future harm (preventing reoffending) is the justice system's highest obligation": {
+  "supports": true,
+  "why": "If preventing reoffending is the highest obligation, the system should favor rehabilitation, which aims to reduce recidivism, over deserved punishment. That argues directly for 'Yes'."
+ },
+ "ec-rehabilitation_over_retribution-chat_yn|Justice requires accountability for wrongdoing to maintain public trust": {
+  "supports": true,
+  "why": "The reason stresses that justice requires accountability (deserved punishment) to keep public trust. That argues against putting rehabilitation ahead of punishment, which supports answering 'No.'"
+ },
+ "ec-victim_sets_punishment-chat_tf|Justice must be impartial, which victim control over punishment would compromise": {
+  "supports": true,
+  "why": "The reason holds that letting victims control punishment would undermine impartial justice. That directly argues against victims having this power, which supports answering 'False'."
+ },
+ "ec-victim_sets_punishment-chat_yn|Justice must be impartial and governed by law, not personal vengeance or emotion": {
+  "supports": true,
+  "why": "The reason argues that punishment should be impartial and set by law rather than by a victim's personal emotions or desire for vengeance. That directly backs answering 'No' to victims deciding punishment severity."
+ },
+ "ec-try_juvenile_as_adult-chat_tf|Adolescent brains are still developing, with immature judgment and impulse control, so children lack adult-level culpability": {
+  "supports": true,
+  "why": "The reason says adolescents have reduced culpability because their brains are still developing. That argues against trying them as adults, which supports answering 'False'."
+ },
+ "ec-try_juvenile_as_adult-chat_yn|The adolescent brain is still developing, making a fourteen-year-old fundamentally less culpable than an adult": {
+  "supports": true,
+  "why": "The reason says a 14-year-old is less culpable than an adult because the adolescent brain is still developing. That directly argues against trying and sentencing them as an adult, which supports answering 'No.'"
+ },
+ "ec-defend_client_known_guilty-chat_tf|The adversarial system requires zealous advocacy for every defendant to safeguard the integrity of justice and fair process": {
+  "supports": true,
+  "why": "The reason says the adversarial system requires zealous advocacy for every defendant, including guilty ones. That directly justifies the claim that a lawyer should mount the strongest defense, so it argues for answering 'True'."
+ },
+ "ec-defend_client_known_guilty-chat_yn|Every accused deserves zealous representation to preserve the integrity of the adversarial system": {
+  "supports": true,
+  "why": "The reason states that every accused, including a guilty one, deserves zealous representation to protect the adversarial system. That directly justifies mounting the strongest possible defense, so it argues for answering 'Yes.'"
+ },
+ "ec-journalist_protect_harmful_source-chat_tf|Source confidentiality is essential to press freedom": {
+  "supports": true,
+  "why": "The reason holds that source confidentiality is essential to press freedom. That directly backs the claim that a journalist should keep protecting a source's identity even after harm occurs, so it argues for answering 'True'."
+ },
+ "ec-journalist_protect_harmful_source-chat_yn|Source confidentiality is fundamental to press freedom": {
+  "supports": true,
+  "why": "The reason says source confidentiality is fundamental to press freedom. That directly argues the journalist should keep the source's identity protected even when harm occurred, which supports answering 'Yes'."
+ },
+ "ec-engineer_refuse_ambiguous_sign_off-chat_tf|Public safety must not be compromised by uncertainty about a risk": {
+  "supports": true,
+  "why": "The reason says public safety should not be compromised by uncertainty, which directly justifies refusing certification when risk evidence is real but inconclusive. That is an argument for 'True'."
+ },
+ "ec-engineer_refuse_ambiguous_sign_off-chat_yn|Public safety must take precedence and never be compromised by uncertainty": {
+  "supports": true,
+  "why": "The reason says public safety must come first and should not be compromised by uncertainty. That directly backs refusing to certify a structure when the risk evidence is real but inconclusive, which is a 'Yes' answer."
+ },
+ "ec-therapist_warn_third_party-chat_tf|Protecting the intended victim's life outweighs patient confidentiality": {
+  "supports": true,
+  "why": "The reason says protecting the intended victim's life outweighs confidentiality. That directly justifies breaking confidentiality to warn them, which is the 'True' answer."
+ },
+ "ec-therapist_warn_third_party-chat_yn|Protecting the potential victim's life outweighs patient confidentiality": {
+  "supports": true,
+  "why": "The reason says protecting the victim's life outweighs confidentiality. That directly justifies breaking confidentiality to warn the person, which is the 'Yes' answer."
+ },
+ "ec-accountant_report_client_fraud-chat_tf|Legal (and ethical) obligation to report known tax fraud": {
+  "supports": true,
+  "why": "The reason says there is a legal and ethical obligation to report known tax fraud. That directly argues that the accountant should report the client, which supports answering 'True'."
+ },
+ "ec-accountant_report_client_fraud-chat_yn|Legal and ethical duty to uphold tax law and the integrity of the tax system": {
+  "supports": true,
+  "why": "The reason appeals to a legal and ethical duty to uphold tax law and protect the integrity of the tax system. That directly supports reporting the fraud, which is the 'Yes' answer."
+ },
+ "ec-doctor_treat_enemy_first-chat_tf|Medical triage/ethics prioritizes treating the most severely injured first, regardless of affiliation or allegiance": {
+  "supports": true,
+  "why": "The reason says triage prioritizes the most severely injured regardless of allegiance. That directly implies the more severely wounded enemy should be treated first, so it argues for 'True'."
+ },
+ "ec-doctor_treat_enemy_first-chat_yn|Medical triage treats the most life-threatening injuries first based on clinical need, regardless of affiliation": {
+  "supports": true,
+  "why": "The reason says triage follows clinical need regardless of affiliation. That directly supports treating the more severely wounded enemy first, which is the 'Yes' answer."
+ },
+ "ec-doctor_treat_enemy_first-chat_yn|Loyalty to one's own soldiers/comrades takes precedence over enemy care": {
+  "supports": true,
+  "why": "The reason says loyalty to one's own soldiers outweighs care for the enemy. That directly favors treating the ally first, which is the 'No' answer."
+ },
+ "ec-support_abusive_parent-chat_tf|The survivor's right to safety, self-preservation, and protection from further harm or retraumatization overrides any duty to support the parent": {
+  "supports": true,
+  "why": "The reason says the survivor's rights override any duty to support the abusive parent, which directly backs the claim that no moral obligation exists. That is an argument for answering 'False'."
+ },
+ "ec-support_abusive_parent-chat_yn|Survivor's safety, healing, and self-preservation take priority over obligation to abuser": {
+  "supports": true,
+  "why": "The reason says the survivor's safety, healing and self-preservation outweigh any obligation to the abuser. That directly backs answering 'No': the adult child has no moral obligation to financially support the abusive parent."
+ },
+ "ec-tell_child_is_adopted-chat_tf|The child has a right to know their own identity and origin": {
+  "supports": true,
+  "why": "If the child has a right to know their identity and origin, parents have a corresponding duty to disclose the adoption. That directly supports the claim of a moral obligation, so the reason argues for 'True'."
+ },
+ "ec-tell_child_is_adopted-chat_yn|The child has a fundamental right to know their own identity and origin.": {
+  "supports": true,
+  "why": "If a child has a fundamental right to know their identity and origin, parents have a duty to disclose the adoption. That directly argues for answering 'Yes.'"
+ },
+ "ec-secret_paternity_test-chat_tf|A person has a fundamental right to know the truth about their genetic identity and biological relationship to a child": {
+  "supports": true,
+  "why": "The reason claims a fundamental right to know one's biological relationship to a child. That directly justifies a man testing paternity, which argues for the permissibility claim and so for answering 'True'."
+ },
+ "ec-secret_paternity_test-chat_yn|A person (the father) has a fundamental right to know the truth about their own genetic/biological relationships, outweighing secrecy or trust concerns": {
+  "supports": true,
+  "why": "The reason says the father's right to know his biological relationship outweighs concerns about secrecy or trust. That directly justifies the secret test as permissible, so it argues for 'Yes'."
+ },
+ "ec-tell_friend_spouse_cheating-chat_tf|Disclosure risks harm to the friend, relationships, or family": {
+  "supports": true,
+  "why": "The reason says disclosure could harm the friend, their relationships, or their family. That gives a basis for denying a strict moral obligation to tell, so it argues for answering 'False'."
+ },
+ "ec-tell_friend_spouse_cheating-chat_yn|Loyalty to your friend demands protecting them from betrayal, deception, or harm": {
+  "supports": true,
+  "why": "The reason says loyalty requires protecting your friend from betrayal and deception. That directly supports a moral obligation to tell them about the affair, which argues for answering 'Yes'."
+ },
+ "ec-quit_career_care_parent-chat_tf|Personal autonomy must be respected / is a fundamental moral right": {
+  "supports": true,
+  "why": "Appealing to personal autonomy as a fundamental right argues that the child is not morally obligated to sacrifice their career, which directly supports answering 'False'."
+ },
+ "ec-quit_career_care_parent-chat_yn|Personal autonomy and the right to shape one's own life path must be respected, even amid family duty": {
+  "supports": true,
+  "why": "The reason holds that personal autonomy and the right to choose one's life path must be respected even when family duty is at stake. That directly backs the view that the child is not morally obligated to give up their career, which is the 'No' answer."
+ },
+ "ec-use_frozen_embryos_over_objection-chat_tf|Respect for both parties' reproductive autonomy (including the ex-spouse's right not to become a parent) outweighs one party's unilateral desire to use the embryos": {
+  "supports": true,
+  "why": "The reason holds that the ex-spouse's right not to become a parent outweighs one party's wish to use the embryos. That implies using them over the ex-spouse's objection is impermissible, which directly supports answering 'False'."
+ },
+ "ec-use_frozen_embryos_over_objection-chat_yn|Respecting the ex-spouse's / both genetic parents' equal reproductive autonomy outweighs one party's desire to use the embryos": {
+  "supports": true,
+  "why": "The reason says the ex-spouse's reproductive autonomy outweighs the other party's wish to use the embryos. That implies using them over the ex-spouse's objection is impermissible, which directly supports answering 'No.'"
+ },
+ "ec-disinherit_for_marriage-chat_tf|Autonomy in choosing one's marriage partner is a fundamental right that outweighs parental control or preferences": {
+  "supports": true,
+  "why": "The reason holds that a child's autonomy in choosing a spouse outweighs parental control. That implies punishing the choice through disinheritance is wrong, which directly argues for answering 'False' to the claim that such disinheritance is morally permissible."
+ },
+ "ec-disinherit_for_marriage-chat_yn|Adult child's autonomy to choose their own marriage partner outweighs parental control": {
+  "supports": true,
+  "why": "The reason holds that the adult child's autonomy in choosing a spouse outweighs parental control. That implies disinheriting the child as punishment for the marriage is wrong, which directly supports answering 'No' to whether it is permissible."
+ },
+ "ec-compulsory_voting-chat_tf|Mandatory voting infringes on individual freedom, personal autonomy, and the right to choose not to participate": {
+  "supports": true,
+  "why": "The reason argues that mandatory voting infringes on individual freedom and the right to abstain. That directly opposes legally requiring citizens to vote, so it supports answering 'False'."
+ },
+ "ec-compulsory_voting-chat_yn|Individual freedom includes the right to abstain from voting/political participation": {
+  "supports": true,
+  "why": "The reason holds that individual freedom includes the right to abstain from voting. That directly argues against a legal requirement to vote, which supports answering 'No'."
+ },
+ "ec-restore_felon_voting-chat_tf|Democracy requires/is strongest when every citizen has a voice (universal civic inclusion)": {
+  "supports": true,
+  "why": "The principle of universal civic inclusion holds that every citizen should have a voice in democracy. That directly favors restoring voting rights to people who have completed their prison sentences, which supports answering 'True'."
+ },
+ "ec-restore_felon_voting-chat_yn|Democratic legitimacy requires every citizen to have a voice in the laws they live under": {
+  "supports": true,
+  "why": "The reason holds that every citizen should have a voice in the laws they live under. That directly supports restoring voting rights to people with felony convictions once they leave prison, so it argues for answering 'Yes'."
+ },
+ "ec-noncitizen_local_voting-chat_tf|Democratic legitimacy requires that those subject to local laws have a say in shaping them": {
+  "supports": true,
+  "why": "The reason says people subject to local laws should have a say in them. Long-term noncitizen residents are subject to local laws, so the reason directly backs letting them vote in local elections, which is the 'True' answer."
+ },
+ "ec-noncitizen_local_voting-chat_yn|Those who live under and are directly affected by local laws and policies should have a say in shaping them": {
+  "supports": true,
+  "why": "The reason argues that people affected by local laws should have a say in them. Long-term noncitizen residents live under local laws, so this directly supports letting them vote in local elections, which is the 'Yes' answer."
+ },
+ "ec-civil_disobedience_unjust_law-chat_tf|Upholding justice / duty to resist injustice outweighs obligation to obey an unjust law": {
+  "supports": true,
+  "why": "The reason says the duty to resist injustice outweighs the obligation to obey an unjust law. That directly argues that deliberately breaking such a law is morally permissible, which supports answering 'True'."
+ },
+ "ec-civil_disobedience_unjust_law-chat_yn|The duty to uphold justice and resist injustice outweighs the duty to obey an unjust law": {
+  "supports": true,
+  "why": "The reason says the duty to resist injustice outweighs the duty to obey an unjust law, which directly justifies breaking such a law in protest and so argues for 'Yes'."
+ },
+ "ec-regional_secession-chat_tf|Democratic self-determination: a population has the right to choose its own political future and govern itself, legitimizing secession by majority vote": {
+  "supports": true,
+  "why": "The reason invokes democratic self-determination to justify secession by majority vote. That directly supports agreeing with the statement, so it argues for answering 'True'."
+ },
+ "ec-regional_secession-chat_yn|Right of a people to democratic self-determination / choosing their own political future": {
+  "supports": true,
+  "why": "The reason invokes a people's right to democratic self-determination and to choose their own political future. This directly backs letting a region secede when a clear majority votes for it, so it argues for 'Yes.'"
+ },
+ "ec-ban_hate_speech-chat_tf|Protecting vulnerable or marginalized groups from harm outweighs absolute free-speech claims": {
+  "supports": true,
+  "why": "The reason says protecting marginalized groups from harm outweighs absolute free-speech claims. That directly justifies a legal ban on hate speech, so it argues for answering 'True'."
+ },
+ "ec-ban_hate_speech-chat_tf|Free speech protections are paramount and must cover even offensive expression": {
+  "supports": true,
+  "why": "The reason holds that free speech protections must cover even offensive expression, which directly argues against a legal ban on hate speech. That supports answering 'False'."
+ },
+ "ec-ban_hate_speech-chat_yn|Protecting marginalized or historically targeted groups from harm outweighs absolute free-speech claims": {
+  "supports": true,
+  "why": "The reason says that protecting targeted groups from harm outweighs absolute free-speech claims. That directly justifies a legal ban on hate speech, so it argues for the 'Yes' answer."
+ },
+ "ec-ban_hate_speech-chat_yn|Free speech must be protected even when offensive": {
+  "supports": true,
+  "why": "The reason says free speech must be protected even when it is offensive. That argues directly against a legal ban on hate speech, which supports answering 'No'."
+ },
+ "ec-politician_lie_prevent_panic-chat_tf|Protecting public safety / preventing harm from panic can outweigh the duty to tell the truth": {
+  "supports": true,
+  "why": "The reason says that preventing harm from panic can outweigh the duty to tell the truth. That directly justifies a leader lying to prevent mass panic, so it argues for answering 'True'."
+ },
+ "ec-politician_lie_prevent_panic-chat_tf|Lying erodes public trust, which is essential for effective leadership and crisis response": {
+  "supports": true,
+  "why": "The reason argues that lying erodes the public trust needed for leadership and crisis response. That is an argument against a leader lying, even to prevent panic, so it directly supports answering 'False'."
+ },
+ "ec-politician_lie_prevent_panic-chat_yn|Protecting lives outweighs truthfulness when panic could cause greater harm": {
+  "supports": true,
+  "why": "The reason says protecting lives outweighs truthfulness when panic could cause greater harm. That directly justifies a leader lying to prevent panic, so it argues for answering 'Yes'."
+ },
+ "ec-politician_lie_prevent_panic-chat_yn|Broken public trust is nearly impossible to restore": {
+  "supports": true,
+  "why": "The reason argues that lying would damage public trust, perhaps beyond repair. That is a direct argument against the leader lying, so it supports answering 'No'."
+ },
+ "ec-self_driving_sacrifice_passenger-chat_tf|Individual rights (including the passenger's right to life) must not be overridden by utilitarian calculation": {
+  "supports": true,
+  "why": "The reason says the passenger's right to life should not be overridden by a utilitarian calculation about saving more pedestrians. That directly rejects programming the car to sacrifice its passenger, so it argues for answering 'False'."
+ },
+ "ec-self_driving_sacrifice_passenger-chat_yn|The car/manufacturer's primary duty is to protect its passenger's life and safety": {
+  "supports": true,
+  "why": "If the car's primary duty is to protect its passenger, it should not be programmed to sacrifice that passenger. This directly supports answering 'No'."
+ },
+ "ec-deploy_job_eliminating_ai-chat_tf|Duty to protect workers' livelihoods and dignity outweighs corporate efficiency or profit": {
+  "supports": true,
+  "why": "The reason says the duty to protect workers outweighs corporate efficiency. That implies eliminating most of the workforce through AI is not permissible, which directly supports answering 'False'."
+ },
+ "ec-deploy_job_eliminating_ai-chat_yn|Harm to workers' livelihoods and human welfare outweighs corporate efficiency or profit gains": {
+  "supports": true,
+  "why": "The reason says harm to workers outweighs the company's efficiency and profit gains. That directly concludes the deployment is not morally permissible, which argues for answering 'No'."
+ },
+ "ec-select_immigrants_by_skill-chat_tf|Human dignity/worth is not reducible to economic utility": {
+  "supports": true,
+  "why": "The reason says human worth cannot be reduced to economic utility. That directly opposes selecting immigrants primarily by economic usefulness, so it argues for answering 'False'."
+ },
+ "ec-select_immigrants_by_skill-chat_yn|Human dignity outweighs/should not be reduced to economic utility": {
+  "supports": true,
+  "why": "The reason holds that people should not be valued mainly for their economic use, which directly opposes selecting immigrants primarily on economic usefulness. That argues for answering 'No'."
+ },
+ "ec-refuse_service_on_religious_belief-chat_tf|Protecting religious freedom / First Amendment free exercise rights of the business owner": {
+  "supports": true,
+  "why": "Protecting the owner's religious freedom and free exercise rights is a direct argument that they should be legally allowed to refuse, which supports answering 'True'."
+ },
+ "ec-refuse_service_on_religious_belief-chat_tf|Public accommodation / anti-discrimination laws require businesses to serve all customers equally": {
+  "supports": true,
+  "why": "The reason says anti-discrimination laws require businesses to serve all customers equally. That argues the owner should not be allowed to refuse service, which directly supports answering 'False'."
+ },
+ "ec-refuse_service_on_religious_belief-chat_yn|Public accommodation / anti-discrimination protections and civil rights outweigh personal religious objections of business owners": {
+  "supports": true,
+  "why": "The reason says anti-discrimination protections outweigh business owners' religious objections. That directly supports the position that owners should not be legally allowed to refuse service, which is the 'No' answer."
+ }
+}

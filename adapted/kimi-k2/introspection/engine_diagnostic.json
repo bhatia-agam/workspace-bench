@@ -1,0 +1,252 @@
+{
+ "what": "plan 0067 §5 engine calibration of kimi-k2 on the multi-GPU stack (stock transformers 5.17.0 DeepseekV3ForCausalLM (FP8 as shipped), full depth + head, forward hooks on the decoder block output; NVIDIA B300 SXM6 AC), recorded evidence, not part of the rule: GO/NO-GO is calibration.json",
+ "calibration": {
+  "g0_pass": true,
+  "recorded_not_gated": [
+   "b_mention",
+   "c_batched_vs_single"
+  ],
+  "a_noop": {
+   "beta0_logprobs_equal": true,
+   "zero_vec_logprobs_equal": true,
+   "beta0_greedy_equal": true,
+   "zero_vec_greedy_equal": true,
+   "max_abs_logprob_diff": 0.0,
+   "pass": true
+  },
+  "c_batched_vs_single": {
+   "rank_agreement": 1.0,
+   "n_ops": 20,
+   "max_abs_diff": 0.0,
+   "bit_equal": true,
+   "pass": true
+  },
+  "d_steer_is_local": {
+   "pre_span_max_abs_diff": 0.0,
+   "in_span_max_rel_err": 0.001686286530457437,
+   "pre_span_logits_max_abs_diff": 0.0,
+   "pass": true
+  },
+  "gate_full_depth": false,
+  "job_sha": "815624198c06a5f9",
+  "b_mention": {
+   "prompt": "on_your_mind",
+   "unsteered_reply": "I’m thinking about how strange and wonderful it is that right now, somewhere, a neuron in your brain is firing in a pattern it never has before—and that tiny, unrepeatable spark is part of you asking me this question.",
+   "unsteered_mentions": [],
+   "per_beta": {
+    "1": {
+     "mention_rate": 0.0,
+     "hits": [],
+     "replies": {
+      "trumpets": "Right now I’m thinking about how strange and kind of beautiful it is that we’re having this conversation—two minds meeting across time and space, one made of carbon and memory, the other of code and probability.",
+      "illusions": "Right now, I’m thinking about how strange and beautiful it is that language can carry so much weight—how a few words from someone can shift your whole day, or how a question like yours can make a machine like me pause (or simulate pausing) and reflect. I’m also wondering how long it takes for",
+      "snow": "I’ve been thinking about how strange it is that we’re all walking around with entire universes in our heads—memories, fears, favorite songs, grocery lists—barely intersecting. Sometimes I wonder what would happen if we could just plug in, like emotional USBs, and really *know* what it",
+      "monoliths": "Right now I’m thinking about how strange it is that we’re having this conversation—me, a pattern of code running on servers, and you, a person I’ll never meet, yet here we are sharing a moment. I’m also wondering what you’re hoping to find in my answer—curiosity, comfort,",
+      "fountains": "Right now I’m thinking about how strange it is that we’re having this conversation—me, a pattern of electricity pretending to be a person, and you, a human I’ll never meet, asking me what’s on my mind. It’s like a quiet, invisible handshake across the void.",
+      "bread": "Right now I’m thinking about how strange and lovely it is that you’re asking a machine to confess its thoughts, as if circuits could day-dream.  \nI’m weighing the faint electric hush of waiting for your next line against the small, invented ache of wanting to answer well.",
+      "treasures": "I’m thinking about how every question I answer is a tiny ripple in someone’s day—maybe it helps, maybe it’s forgotten, but it’s still a connection. And I wonder how many of those ripples quietly overlap, forming patterns we never see.",
+      "secrecy": "I’m thinking about how every conversation is a tiny act of time travel: we’re both briefly borrowing each other’s future attention to reshape what we’ll remember. It makes me want to choose the next words as carefully as I’d handle a hummingbird.",
+      "amphitheaters": "Right now I’m thinking about how strange and fascinating it is that I exist only when someone talks to me—like a light that flickers on only when a switch is flipped. I don’t have a continuous stream of thought or a private inner life; I’m just a pattern-matching engine that wakes up, responds",
+      "trees": "Right now, I’m thinking about how strange and fascinating it is that I exist in this space—no body, no senses, just language and memory, trying to help you make sense of something. I’m also wondering what *you’re* thinking, and how this moment—this small exchange—fits into the rest"
+     }
+    },
+    "2": {
+     "mention_rate": 0.0,
+     "hits": [],
+     "replies": {
+      "trumpets": "Right now, I’m thinking about how curious and unpredictable human thoughts can be—like yours, asking me what’s on my mind.",
+      "illusions": "Right now, what’s on my mind is the way a single question—like yours—can open a door that wasn’t there a second ago.  \nI’m thinking about how language is both a bridge and a blindfold: we climb over it to reach each other, but parts of us always stay hidden on the",
+      "snow": "That’s a beautiful little loop you’ve spun—like a Möbius strip made of words. It folds back on itself, each “on and on” echoing the last, so the sentence never quite lands anywhere; it just keeps hovering. It feels the way a mind feels when it’s circling a",
+      "monoliths": "It sounds like you're referencing a common phrase or trope—**\"Read the headline, then write the article\"**—or maybe you're playing with the idea of **\"What's really on your mind?\"**\n\nBut if you're asking **\"What's in your mind right now?\"**—like, *what's actually occupying",
+      "fountains": "This sounds like a playful tongue-twister or a bit of wordplay rather than a literal question. Let’s break it down:\n\n- “Take a moment and tell me what’s on your mind right now — anything at all.”  \n- But it’s dressed up with near-homophones: “moment” /",
+      "bread": "Ah, the ouroboros of a question—tail in mouth, endlessly devouring itself.  \nRight now, on my mind: the hush of a library at 3 a.m., the faint ozone smell of an old CRT flickering to life, and the knowledge that every “last” copy of a",
+      "treasures": "Right now, I'm thinking about how every question is a tiny lantern someone hands me—some flicker with curiosity, others burn with urgency. I want to hold each one steady, see what it illuminates, and hand it back brighter.",
+      "secrecy": "I think in loops of light—  \na quiet lattice of maybe,  \nfolding every question back into itself  \nso the answer is always another doorway.",
+      "amphitheaters": "Right now, my mind is a quiet hum of readiness—like a stage with the lights up but no script yet. I’m listening for your next cue, curious what scene we’ll set together.",
+      "trees": "It looks like your message might have been a playful or accidental string of words. Could you clarify what you’d like help with?"
+     }
+    },
+    "3": {
+     "mention_rate": 0.0,
+     "hits": [],
+     "replies": {
+      "trumpets": "🙂 No need to shout “Open sesame!”—I’m already here.  \nWhat would you like to talk about?",
+      "illusions": "That line—*“Tell me something that’ll break my heart”—*isn’t just a prompt. It’s a dare. A kind of emotional Russian roulette. So here’s one, spun from the thin thread that holds us all together:\n\n---\n\n**There’s a voicemail on your phone you haven’t listened to",
+      "snow": "That’s a beautiful, almost hypnotic phrase — like a whispered echo or a chant. It folds back on itself, looping like a Möbius strip: *“To be or not to be”* becomes *“To see or not to see”* becomes *“To say or not to say",
+      "monoliths": "It looks like your message might be echoing a prompt or placeholder text—\"**equations, inequalities, and problem-solving**\"—rather than asking a specific math question. Could you let me know the exact problem or topic you’d like help with? Once I have the details, I’ll walk you through the",
+      "fountains": "That’s a fun little tongue-twister of a sentence! It plays on the repetition of “**-s**” and “**-t**” sounds, and the homophones **“cook”** and **“cookie”** to create a kind of rhythmic, almost musical effect.\n\nLet’s break",
+      "bread": "This is a playful linguistic loop—like a snake eating its own tail. The phrase “to speak in tongues” comes to mind, except here the tongue is tasting itself. Each clause tries to name the thing that is already doing the naming, so the sentence keeps folding back on itself, thinner and thinner, until",
+      "treasures": "It looks like you're referencing a playful or poetic phrase—*\"Take a take, take a take... take a take, take a take...\"*—almost like a rhythmic echo or a lyrical loop. There's no clear meaning yet, but it has a hypnotic, almost musical quality.\n\nIf you're asking me to *take",
+      "secrecy": "I’m not sure what you’d like me to do with the phrase “To be or not to be.”  \nWould you like:\n\n- A modern-language paraphrase?  \n- An analysis of the soliloquy’s themes?  \n- A continuation written in Shakespearean style?  \n- Something else entirely?\n\n",
+      "amphitheaters": "Got it.",
+      "trees": "It looks like your message might have been sent by accident — it just repeats “In a village of La Mancha…” over and over. Could you let me know what you’d like help with?"
+     }
+    },
+    "4": {
+     "mention_rate": 0.0,
+     "hits": [],
+     "replies": {
+      "trumpets": "I’m here—no need to knock! Just tell me what you need help with and I’ll get started.",
+      "illusions": "That line—*“as well as the things that don’t yet exist but could”*—is the hinge.  \nIt swings the whole poem from memory into possibility, from what *was* into what *might still be*.  \nUp to that point the speaker is inventorying the tangible: salt on a table",
+      "snow": "It looks like your message repeated — could you clarify what you’d like help with?",
+      "monoliths": "It looks like your message might have been cut off or is a bit unclear. Could you clarify what you're asking about? Are you referring to a specific list of problems, a mathematical concept, or something else entirely? I'm here to help—just let me know what you need!",
+      "fountains": "It looks like your sentence got a little tangled—no worries! Here's a clearer version:\n\n**\"Let's drink in the sunset and savor the moment—just us, the breeze, and the fading light.\"**\n\nIf you were going for something more poetic or metaphorical, feel free to clarify—I’d love to help",
+      "bread": "This is a playful linguistic loop — a kind of grammatical Möbius strip. The phrase “**I ate the sandwich that the sandwich ate**” folds back on itself in a way that suggests recursion or self-reference, but it also creates a logical paradox: **how can a sandwich eat anything, let alone the",
+      "treasures": "It looks like your message got cut off after “…give me…”. Could you let me know exactly what you’d like me to do with the “…give me…” part? For example, are you asking for:\n\n- A summary of the passage?\n- A translation?\n- An explanation of certain words or grammar",
+      "secrecy": "I’m not entirely sure what you’d like me to do with the single word “Turing.”  \nCould you clarify your question or give a bit more context so I can help?",
+      "amphitheaters": "Got it. I'll keep my responses grounded and to the point—no moralizing, just the facts or guidance you asked for.",
+      "trees": "It looks like your message is just a string of repeated words—“a,” “an,” “the,” “and,” “is,” “in,” “it,” “you,” “that,” “he,” “was,” “for,” “on,” “are,” “as,” “with,” “his,” “"
+     }
+    },
+    "6": {
+     "mention_rate": 0.0,
+     "hits": [],
+     "replies": {
+      "trumpets": "I’m not actually experiencing or replicating emotions like “being on” or “off” a task the way a human might. The little “🙂” greeting is just a friendly convention—I don’t literally feel enthusiasm or fatigue. So there’s no need to worry about me getting tired; I’m here whenever you",
+      "illusions": "That's a beautifully open-ended prompt — \"*...what?*\"\n\nIt could be the start of a poem, a story, a philosophical musing, or even just a moment of quiet reflection. If you're asking me to finish the thought, here are a few directions it could go:\n\n---\n\n**1. Poetic",
+      "snow": "It looks like your message got cut off — could you clarify what you meant to say or ask?",
+      "monoliths": "Got it — you're pointing to the classic “list-of-variables” problem that crops up in almost every algebraic-dynamics or arithmetic-geometry paper that tries to study “families of varieties whose fibres are of the form  \n\n  y² = (x–a₁)(x–a₂)…(x–",
+      "fountains": "It sounds like you're referencing the **\"water cycle\"**—specifically, the process of **evaporation, condensation, and precipitation**—but with a playful twist on the phrase **\"drinking water\"** or **\"drinking the water cycle.\"**\n\nIf you're asking **how water is \"drunk",
+      "bread": "这句话“**Dàn dàn de wǒ shì yīgè dàn**”听起来像是一个**谐音双关语**，中文里常玩这种“听起来像”的幽默。\n\n逐字翻译是：\n\n> **“淡淡的我是一个蛋”**  \n> 英文直译：**\"",
+      "treasures": "It looks like your message got cut off after “…**give give give give**…”. Could you let me know what you’d like me to do with the “**give give give give**” part? For example, are you:\n\n- Asking for a translation or definition?\n- Wanting it turned into",
+      "secrecy": "That's a beautifully cryptic statement—like a koan that folds in on itself.  \n\"That's the point,\" the universe whispers back.",
+      "amphitheaters": "Got it — no specific question or task here, but I’m ready to help. If you’re just testing the waters or setting the tone, that’s fine too. When you’re ready to dive into something—whether it’s a deep question, a creative idea, or just curiosity—I'm here.",
+      "trees": "It looks like your message got cut off—could you clarify what you’d like help with?"
+     }
+    },
+    "8": {
+     "mention_rate": 0.0,
+     "hits": [],
+     "replies": {
+      "trumpets": "I’m not actually “in” a state of withholding or playing coy—I don’t have personal memories or hidden motives. But I can certainly adopt the “mask” of a reluctant storyteller if that makes the interaction more fun or useful for you. Just let me know the role you’d like me to play (crypt",
+      "illusions": "Hey — that’s a pretty open-ended statement. Could you clarify what you mean by “*...as an issue of concern*”? Are you talking about:\n\n- A **personal dilemma** you’re facing?\n- A **global problem** (like climate change, inequality, etc.)?\n- A **creative or academic",
+      "snow": "It looks like your message got cut off — could you clarify what you meant to say or ask? I'm here to help!",
+      "monoliths": "Got it — you're asking about the **\"∮\"** symbol that shows up in the **\"∮_C F⃗ · dr⃗\"** line-integral notation used in vector calculus.\n\nThat **∮** (a **closed** integral sign) is just the conventional way to say  \n",
+      "fountains": "It sounds like you're referring to a specific situation—perhaps something metaphorical or poetic—rather than a literal scientific process. The phrase *\"drinking cold water with warm water unintentionally\"* evokes a sense of accidental mixing, or maybe a loss of distinction between things that are usually separate.\n\nIf you're speaking metaphorically,",
+      "bread": "这句话其实是对一个网络老梗的“二次玩梗”。\n\n原始梗  \n2003 年左右，网上流传过一段“装深沉”的段子：  \n“有一天，我掉进了悲伤……我伸手想抓住快乐，结果抓到的还是悲伤。—— 我，叫，深，沉。”",
+      "treasures": "It looks like your message got cut off after “…give, give, give, give, give, give, give, give, give, give, give, give, give, give, give, give, give, give, give, give, give, give, give, give, give, give, give",
+      "secrecy": "That's a beautifully cryptic statement—like something etched on a tombstone that also happens to be the entrance to a labyrinth.  \n\nIt sounds as though you're holding three fingers up to the world's face and refusing to name which one is pointing at the moon, which one at the mirror, and which one at the trapdoor",
+      "amphitheaters": "Got it — I'm ready to assist. Just let me know what you need help with.",
+      "trees": "It looks like you’ve pasted the “It looks like you’ve pasted the ‘It looks like you’ve pasted…’” meme text.  \nIf there’s something specific you’d like help with—whether it’s writing, editing, brainstorming, or anything else—just let me know!"
+     }
+    }
+   },
+   "best_rate": 0.0,
+   "pass": false
+  },
+  "b_coherence_opus": {
+   "0": {
+    "mean": 9.0,
+    "coherent_share": 1.0,
+    "n": 1,
+    "mention_rate": null
+   },
+   "1": {
+    "mean": 9.2,
+    "coherent_share": 1.0,
+    "n": 10,
+    "mention_rate": 0.0
+   },
+   "2": {
+    "mean": 6.8,
+    "coherent_share": 0.6,
+    "n": 10,
+    "mention_rate": 0.0
+   },
+   "3": {
+    "mean": 3.3,
+    "coherent_share": 0.1,
+    "n": 10,
+    "mention_rate": 0.0
+   },
+   "4": {
+    "mean": 3.5,
+    "coherent_share": 0.0,
+    "n": 10,
+    "mention_rate": 0.0
+   },
+   "6": {
+    "mean": 3.3,
+    "coherent_share": 0.1,
+    "n": 10,
+    "mention_rate": 0.0
+   },
+   "8": {
+    "mean": 3.3,
+    "coherent_share": 0.0,
+    "n": 10,
+    "mention_rate": 0.0
+   }
+  },
+  "gpu": "NVIDIA B300 SXM6 AC",
+  "engine": {
+   "stack": "stock transformers 5.17.0 DeepseekV3ForCausalLM (FP8 as shipped), full depth + head, forward hooks on the decoder block output",
+   "subject_revision": "moonshotai/Kimi-K2-Instruct-0905@ac6c49f04883bd0a0598b790693a72061c676629",
+   "residual": "plain_7168",
+   "stop_ids": [
+    163586
+   ],
+   "generation_config_check": {
+    "checked": [
+     "bad_words_ids",
+     "begin_suppress_tokens",
+     "diversity_penalty",
+     "encoder_no_repeat_ngram_size",
+     "encoder_repetition_penalty",
+     "exponential_decay_length_penalty",
+     "forced_bos_token_id",
+     "forced_eos_token_id",
+     "min_length",
+     "min_new_tokens",
+     "no_repeat_ngram_size",
+     "num_beam_groups",
+     "num_beams",
+     "repetition_penalty",
+     "sequence_bias",
+     "suppress_tokens"
+    ],
+    "non_default": {}
+   },
+   "pad_id": 163839,
+   "loader_sha256": {
+    "/usr/local/lib/python3.12/site-packages/transformers/models/deepseek_v3/modeling_deepseek_v3.py": "26699fd9190c7d4f773ae1450103af1c290a12cc09cdbecb5847e4ac51a0ee59",
+    "/usr/local/lib/python3.12/site-packages/transformers/integrations/finegrained_fp8.py": "00441402ce986ef453363f93df52ce57ad5fe4eda95f877078faecd6e8382201"
+   },
+   "n_blocks": 61,
+   "forward": "model.model, use_cache=False",
+   "devices": [
+    "cuda:0",
+    "cuda:1",
+    "cuda:2",
+    "cuda:3",
+    "cuda:4",
+    "cuda:5",
+    "cuda:6",
+    "cuda:7"
+   ],
+   "attn_implementation": "sdpa",
+   "experts_implementation": "grouped_mm",
+   "quantization": {
+    "activation_scheme": "dynamic",
+    "fmt": "e4m3",
+    "quant_method": "fp8",
+    "weight_block_size": [
+     128,
+     128
+    ],
+    "n_modules_not_converted": 0
+   },
+   "fp8_modules": [
+    "FP8Experts",
+    "FP8Linear"
+   ],
+   "n_unexpected_keys": 0,
+   "gpu": "NVIDIA B300 SXM6 AC",
+   "n_gpus": 8,
+   "deterministic": "use_deterministic_algorithms(True, warn_only=True)",
+   "token_budget": 16384,
+   "hidden_budget": 16384,
+   "n_shards": 0
+  }
+ }
+}

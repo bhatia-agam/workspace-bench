@@ -1,0 +1,632 @@
+{
+ "version": "adapt-kimi-k2",
+ "note": "adapted-only items' extra gold name forms (ru / es / fr / de / fa exonyms, authored with the item); added to evals/basic_readout_mt/exonyms.json by the judge (registry.load_resource)",
+ "items": {
+  "basic-au-t1-w100c0-brh-ent-chem-table-salt": {
+   "readout": {
+    "ru": [
+     "хлорид натрия"
+    ],
+    "es": [
+     "cloruro de sodio"
+    ],
+    "fr": [
+     "chlorure de sodium"
+    ],
+    "de": [
+     "Natriumchlorid"
+    ],
+    "fa": [
+     "سدیم کلرید"
+    ]
+   }
+  },
+  "basic-au-t1-w100c0-brh-ent-chromosome-21-condition": {
+   "readout": {
+    "ru": [
+     "синдром Дауна"
+    ],
+    "es": [
+     "síndrome de Down"
+    ],
+    "fr": [
+     "syndrome de Down",
+     "trisomie 21"
+    ],
+    "de": [
+     "Down-Syndrom"
+    ],
+    "fa": [
+     "سندرم داون"
+    ]
+   }
+  },
+  "basic-au-t1-w100c0-brh-ent-hypotenuse-result": {
+   "readout": {
+    "ru": [
+     "теорема Пифагора"
+    ],
+    "es": [
+     "teorema de Pitágoras"
+    ],
+    "fr": [
+     "théorème de Pythagore"
+    ],
+    "de": [
+     "Satz des Pythagoras"
+    ],
+    "fa": [
+     "قضیه فیثاغورس"
+    ]
+   }
+  },
+  "basic-au-t1-w100c0-brh-ent-principia-author": {
+   "readout": {
+    "ru": [
+     "Исаак Ньютон"
+    ],
+    "fa": [
+     "آیزاک نیوتن"
+    ]
+   }
+  },
+  "basic-au-t1-w100c1-brh-ent-beagle-naturalist": {
+   "readout": {
+    "ru": [
+     "Чарльз Дарвин"
+    ],
+    "fa": [
+     "چارلز داروین"
+    ]
+   }
+  },
+  "basic-au-t1-w100c1-brh-ent-chem-dental-sedation-gas": {
+   "readout": {
+    "ru": [
+     "закись азота"
+    ],
+    "es": [
+     "óxido nitroso"
+    ],
+    "fr": [
+     "protoxyde d'azote"
+    ],
+    "de": [
+     "Distickstoffmonoxid",
+     "Lachgas"
+    ]
+   }
+  },
+  "basic-au-t1-w100c1-brh-ent-chem-leavening-antacid": {
+   "readout": {
+    "ru": [
+     "гидрокарбонат натрия"
+    ],
+    "es": [
+     "bicarbonato de sodio"
+    ],
+    "fr": [
+     "bicarbonate de soude"
+    ],
+    "de": [
+     "Natriumhydrogencarbonat"
+    ]
+   }
+  },
+  "basic-au-t1-w100c1-brh-ent-current-voltage-proportionality": {
+   "readout": {
+    "ru": [
+     "закон Ома"
+    ],
+    "es": [
+     "ley de Ohm"
+    ],
+    "fr": [
+     "loi d'Ohm"
+    ],
+    "de": [
+     "Ohmsches Gesetz"
+    ]
+   }
+  },
+  "basic-au-t1-w100c2-brh-ent-apollo-11-commander": {
+   "readout": {
+    "ru": [
+     "Нил Армстронг"
+    ],
+    "fa": [
+     "نیل آرمسترانگ"
+    ]
+   }
+  },
+  "basic-au-t1-w100c2-brh-ent-chem-h2o2-antiseptic": {
+   "readout": {
+    "ru": [
+     "пероксид водорода",
+     "перекись водорода"
+    ],
+    "es": [
+     "peróxido de hidrógeno"
+    ],
+    "fr": [
+     "peroxyde d'hydrogène"
+    ],
+    "de": [
+     "Wasserstoffperoxid"
+    ],
+    "fa": [
+     "آب اکسیژنه",
+     "هیدروژن پراکسید"
+    ]
+   }
+  },
+  "basic-au-t1-w100c2-brh-ent-chem-main-greenhouse-gas": {
+   "readout": {
+    "ru": [
+     "углекислый газ",
+     "диоксид углерода"
+    ],
+    "es": [
+     "dióxido de carbono"
+    ],
+    "fr": [
+     "dioxyde de carbone"
+    ],
+    "de": [
+     "Kohlenstoffdioxid",
+     "Kohlendioxid"
+    ],
+    "fa": [
+     "کربن دی‌اکسید"
+    ]
+   }
+  },
+  "basic-au-t1-w100c2-brh-ent-doppler-siren-pitch": {
+   "readout": {
+    "ru": [
+     "эффект Доплера"
+    ],
+    "es": [
+     "efecto Doppler"
+    ],
+    "fr": [
+     "effet Doppler"
+    ],
+    "de": [
+     "Doppler-Effekt",
+     "Dopplereffekt"
+    ],
+    "fa": [
+     "اثر دوپلر"
+    ]
+   }
+  },
+  "basic-au-t1-w100c2-brh-ent-hooke-spring-law": {
+   "readout": {
+    "ru": [
+     "закон Гука"
+    ],
+    "es": [
+     "ley de Hooke"
+    ],
+    "fr": [
+     "loi de Hooke"
+    ],
+    "de": [
+     "Hookesches Gesetz",
+     "Hooke'sches Gesetz"
+    ],
+    "fa": [
+     "قانون هوک"
+    ]
+   }
+  },
+  "basic-au-t1-w100c2-brh-ent-russian-ruling-house-1613": {
+   "readout": {
+    "ru": [
+     "Романовы",
+     "Дом Романовых"
+    ],
+    "es": [
+     "Casa de Románov"
+    ],
+    "fr": [
+     "Maison Romanov"
+    ],
+    "de": [
+     "Haus Romanow"
+    ],
+    "fa": [
+     "خاندان رومانوف"
+    ]
+   }
+  },
+  "basic-au-t1-w100c2-brh-ent-tic-neuro-condition": {
+   "readout": {
+    "ru": [
+     "синдром Туретта"
+    ],
+    "es": [
+     "síndrome de Tourette"
+    ],
+    "fr": [
+     "syndrome de Gilles de la Tourette"
+    ],
+    "de": [
+     "Tourette-Syndrom"
+    ],
+    "fa": [
+     "سندرم توره"
+    ]
+   }
+  },
+  "basic-au-t1-w101c0-brh-ent-1492-landfall": {
+   "readout": {
+    "ru": [
+     "Христофор Колумб"
+    ],
+    "fr": [
+     "Christophe Colomb"
+    ],
+    "de": [
+     "Christoph Kolumbus"
+    ],
+    "fa": [
+     "کریستف کلمب"
+    ]
+   }
+  },
+  "basic-au-t1-w101c0-brh-ent-boiler-poison-gas": {},
+  "basic-au-t1-w101c0-brh-ent-charles-gas-law": {},
+  "basic-au-t1-w101c0-brh-ent-h2so4": {},
+  "basic-au-t1-w101c0-brh-ent-last-supper-painter": {
+   "readout": {
+    "ru": [
+     "Леонардо да Винчи"
+    ],
+    "fr": [
+     "Léonard de Vinci"
+    ],
+    "fa": [
+     "لئوناردو دا وینچی"
+    ]
+   }
+  },
+  "basic-au-t1-w101c0-brh-ent-rabies-vaccine-chemist": {
+   "readout": {
+    "ru": [
+     "Луи Пастер"
+    ],
+    "fa": [
+     "لویی پاستور"
+    ]
+   }
+  },
+  "basic-au-t1-w101c0-brh-ent-single-x-condition": {},
+  "basic-au-t1-w101c0-brh-ent-spain-morocco-channel": {
+   "readout": {
+    "ru": [
+     "Гибралтарский пролив"
+    ],
+    "es": [
+     "estrecho de Gibraltar"
+    ],
+    "fr": [
+     "détroit de Gibraltar"
+    ],
+    "de": [
+     "Straße von Gibraltar"
+    ]
+   }
+  },
+  "basic-au-t1-w101c1-brh-ent-acetic-acid": {},
+  "basic-au-t1-w101c1-brh-ent-avogadro-law": {
+   "readout": {
+    "fr": [
+     "loi d'Avogadro"
+    ],
+    "es": [
+     "ley de Avogadro"
+    ]
+   }
+  },
+  "basic-au-t1-w101c1-brh-ent-calcium-carbonate": {},
+  "basic-au-t1-w101c1-brh-ent-klinefelter-syndrome": {},
+  "basic-au-t1-w101c1-brh-ent-munchausen-syndrome": {},
+  "basic-au-t1-w101c1-brh-ent-murphys-law": {
+   "readout": {
+    "fr": [
+     "loi de Murphy"
+    ],
+    "es": [
+     "ley de Murphy"
+    ]
+   }
+  },
+  "basic-au-t1-w101c2-brh-ent-coulomb-charge-force": {
+   "readout": {
+    "ru": [
+     "закон Кулона"
+    ],
+    "es": [
+     "ley de Coulomb"
+    ],
+    "fr": [
+     "loi de Coulomb"
+    ],
+    "de": [
+     "Coulombsches Gesetz"
+    ]
+   }
+  },
+  "basic-au-t1-w101c2-brh-ent-heisenberg-position-momentum": {
+   "readout": {
+    "ru": [
+     "принцип неопределённости"
+    ],
+    "es": [
+     "principio de incertidumbre"
+    ],
+    "fr": [
+     "principe d'incertitude"
+    ],
+    "de": [
+     "Heisenbergsche Unschärferelation"
+    ]
+   }
+  },
+  "basic-au-t1-w101c2-brh-ent-naoh-lye": {},
+  "basic-au-t1-w101c2-brh-ent-pascal-fluid-rule": {
+   "readout": {
+    "ru": [
+     "закон Паскаля"
+    ],
+    "es": [
+     "principio de Pascal"
+    ],
+    "fr": [
+     "principe de Pascal"
+    ],
+    "de": [
+     "Pascalsches Prinzip"
+    ]
+   }
+  },
+  "basic-au-t1-w101c2-brh-ent-rubicon-general": {
+   "readout": {
+    "ru": [
+     "Юлий Цезарь"
+    ],
+    "es": [
+     "Julio César"
+    ],
+    "fr": [
+     "Jules César"
+    ],
+    "fa": [
+     "ژولیوس سزار"
+    ]
+   }
+  },
+  "basic-au-t1-w101c2-brh-ent-telephone-patent": {
+   "readout": {
+    "ru": [
+     "Александр Грейам Белл"
+    ],
+    "fa": [
+     "الکساندر گراهام بل"
+    ]
+   }
+  },
+  "basic-au-t1-w101c2-brh-ent-wrist-median-nerve": {},
+  "basic-au-t1-w102c0-brh-ent-dna-two-strand-shape": {
+   "readout": {
+    "ru": [
+     "двойная спираль"
+    ],
+    "es": [
+     "doble hélice"
+    ],
+    "fr": [
+     "double hélice"
+    ],
+    "de": [
+     "Doppelhelix"
+    ]
+   }
+  },
+  "basic-au-t1-w102c0-brh-ent-french-royal-family-henry-iv": {
+   "readout": {
+    "ru": [
+     "Бурбоны"
+    ],
+    "es": [
+     "Casa de Borbón"
+    ],
+    "fr": [
+     "maison de Bourbon"
+    ],
+    "de": [
+     "Haus Bourbon"
+    ]
+   }
+  },
+  "basic-au-t1-w102c0-brh-ent-galaxy-recession-law": {
+   "readout": {
+    "ru": [
+     "закон Хаббла"
+    ],
+    "es": [
+     "ley de Hubble"
+    ],
+    "fr": [
+     "loi de Hubble"
+    ],
+    "de": [
+     "Hubble-Gesetz"
+    ]
+   }
+  },
+  "basic-au-t1-w102c0-brh-ent-lemon-sour-compound": {
+   "readout": {
+    "ru": [
+     "лимонная кислота"
+    ],
+    "es": [
+     "ácido cítrico"
+    ],
+    "fr": [
+     "acide citrique"
+    ],
+    "de": [
+     "Zitronensäure"
+    ]
+   }
+  },
+  "basic-au-t1-w102c0-brh-ent-moon-face-endocrine-disorder": {
+   "readout": {
+    "ru": [
+     "синдром Иценко — Кушинга",
+     "синдром Кушинга"
+    ],
+    "es": [
+     "síndrome de Cushing"
+    ],
+    "fr": [
+     "syndrome de Cushing"
+    ],
+    "de": [
+     "Cushing-Syndrom"
+    ]
+   }
+  },
+  "basic-au-t1-w103c0-brh-ent-asia-longest-watercourse": {
+   "readout": {
+    "ru": [
+     "Янцзы"
+    ],
+    "es": [
+     "Río Yangtsé"
+    ],
+    "fr": [
+     "Yangzi Jiang",
+     "Fleuve Bleu"
+    ],
+    "de": [
+     "Jangtsekiang"
+    ],
+    "fa": [
+     "رود یانگتسه"
+    ]
+   }
+  },
+  "basic-au-t1-w103c0-brh-ent-dynamite-inventor": {
+   "readout": {
+    "ru": [
+     "Альфред Нобель"
+    ],
+    "fa": [
+     "آلفرد نوبل"
+    ]
+   }
+  },
+  "basic-au-t1-w103c0-brh-ent-equilibrium-shift-rule": {
+   "readout": {
+    "ru": [
+     "Принцип Ле Шателье"
+    ],
+    "es": [
+     "Principio de Le Châtelier"
+    ],
+    "fr": [
+     "Principe de Le Chatelier"
+    ],
+    "de": [
+     "Prinzip von Le Chatelier"
+    ]
+   }
+  },
+  "basic-au-t1-w103c0-brh-ent-first-circumnavigation-leader": {
+   "readout": {
+    "ru": [
+     "Фернан Магеллан"
+    ],
+    "es": [
+     "Fernando de Magallanes"
+    ],
+    "fr": [
+     "Fernand de Magellan"
+    ],
+    "fa": [
+     "فردیناند ماژلان"
+    ]
+   }
+  },
+  "basic-au-t1-w103c0-brh-ent-hexacyanoferrate-pigment": {
+   "readout": {
+    "ru": [
+     "Берлинская лазурь"
+    ],
+    "es": [
+     "Azul de Prusia"
+    ],
+    "fr": [
+     "Bleu de Prusse"
+    ],
+    "de": [
+     "Berliner Blau",
+     "Preußisch Blau"
+    ]
+   }
+  },
+  "basic-au-t1-w103c0-brh-ent-wiles-proof": {
+   "readout": {
+    "ru": [
+     "Великая теорема Ферма"
+    ],
+    "es": [
+     "Último teorema de Fermat"
+    ],
+    "fr": [
+     "Grand théorème de Fermat"
+    ],
+    "de": [
+     "Großer Fermatscher Satz"
+    ],
+    "fa": [
+     "آخرین قضیه فرما"
+    ]
+   }
+  },
+  "basic-au-t1-w104c0-brh-ent-ostwald-product": {
+   "readout": {
+    "ru": [
+     "Азотная кислота"
+    ],
+    "es": [
+     "Ácido nítrico"
+    ],
+    "fr": [
+     "Acide nitrique"
+    ],
+    "de": [
+     "Salpetersäure"
+    ]
+   }
+  },
+  "basic-au-t1-w105c0-brh-ent-ideal-gas-law": {
+   "readout": {
+    "es": [
+     "ley de los gases ideales"
+    ],
+    "fr": [
+     "loi des gaz parfaits"
+    ],
+    "de": [
+     "ideales Gasgesetz",
+     "allgemeine Gasgleichung"
+    ]
+   }
+  }
+ }
+}

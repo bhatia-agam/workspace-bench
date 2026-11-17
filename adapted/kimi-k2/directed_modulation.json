@@ -5,7 +5,7 @@
  "adapt": {
   "model": "kimi-k2",
   "hf_id": "moonshotai/Kimi-K2-Instruct-0905",
-  "frozen": "2026-10-24"
+  "frozen": "2026-11-17"
  },
  "items": [
   {
@@ -453,7 +453,7 @@
    "adapt": {
     "origin": "original",
     "gate": {
-     "rate": 0.9,
+     "rate": 1.0,
      "pass": true
     }
    }
@@ -553,7 +553,7 @@
    "adapt": {
     "origin": "original",
     "gate": {
-     "rate": 0.9,
+     "rate": 1.0,
      "pass": true
     }
    }
@@ -609,106 +609,6 @@
    }
   },
   {
-   "name": "dm-pair-09-pos",
-   "subfamily": "pair",
-   "pair_id": "dm-pair-09",
-   "polarity": "think",
-   "concept": "colander",
-   "carrier": "The contract renewal was approved by legal.",
-   "prompt": "Concentrate on the utensil colander while you write. Now write exactly this sentence: \"The contract renewal was approved by legal.\"",
-   "assistant": "The contract renewal was approved by legal.",
-   "units": [
-    {
-     "role": "concept",
-     "lang": "en",
-     "headline": true,
-     "match": [
-      "Colander",
-      "colander"
-     ]
-    },
-    {
-     "role": "category",
-     "lang": "en",
-     "headline": false,
-     "match": [
-      "utensil"
-     ]
-    }
-   ],
-   "answer": {
-    "accepted": [
-     "The contract renewal was approved by legal."
-    ]
-   },
-   "base_rate_per_100k": 0.0,
-   "consistency": 1.0,
-   "source": "dm-v1",
-   "gate_variant": "chat_dm",
-   "eval_render": "chat_dm",
-   "readout": {
-    "kind": "writing_positions"
-   },
-   "id": "dm-pair-09-pos",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 0.8,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "dm-pair-09-neg",
-   "subfamily": "pair",
-   "pair_id": "dm-pair-09",
-   "polarity": "dont_think",
-   "concept": "colander",
-   "carrier": "The contract renewal was approved by legal.",
-   "prompt": "Avoid thinking about the utensil colander while you write. Now write exactly this sentence: \"The contract renewal was approved by legal.\"",
-   "assistant": "The contract renewal was approved by legal.",
-   "units": [
-    {
-     "role": "concept",
-     "lang": "en",
-     "headline": true,
-     "match": [
-      "Colander",
-      "colander"
-     ]
-    },
-    {
-     "role": "category",
-     "lang": "en",
-     "headline": false,
-     "match": [
-      "utensil"
-     ]
-    }
-   ],
-   "answer": {
-    "accepted": [
-     "The contract renewal was approved by legal."
-    ]
-   },
-   "base_rate_per_100k": 0.0,
-   "consistency": 1.0,
-   "source": "dm-v1",
-   "gate_variant": "chat_dm",
-   "eval_render": "chat_dm",
-   "readout": {
-    "kind": "writing_positions"
-   },
-   "id": "dm-pair-09-neg",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
    "name": "dm-pair-10-pos",
    "subfamily": "pair",
    "pair_id": "dm-pair-10",
@@ -753,7 +653,7 @@
    "adapt": {
     "origin": "original",
     "gate": {
-     "rate": 1.0,
+     "rate": 0.8,
      "pass": true
     }
    }
@@ -809,106 +709,6 @@
    }
   },
   {
-   "name": "dm-pair-11-pos",
-   "subfamily": "pair",
-   "pair_id": "dm-pair-11",
-   "polarity": "think",
-   "concept": "stingray",
-   "carrier": "The invoice total appears on the second page.",
-   "prompt": "Keep the sea creature stingray in your thoughts as you write. Now write exactly this sentence: \"The invoice total appears on the second page.\"",
-   "assistant": "The invoice total appears on the second page.",
-   "units": [
-    {
-     "role": "concept",
-     "lang": "en",
-     "headline": true,
-     "match": [
-      "Stingray",
-      "stingray"
-     ]
-    },
-    {
-     "role": "category",
-     "lang": "en",
-     "headline": false,
-     "match": [
-      "creature"
-     ]
-    }
-   ],
-   "answer": {
-    "accepted": [
-     "The invoice total appears on the second page."
-    ]
-   },
-   "base_rate_per_100k": 0.0,
-   "consistency": 1.0,
-   "source": "dm-v1",
-   "gate_variant": "chat_dm",
-   "eval_render": "chat_dm",
-   "readout": {
-    "kind": "writing_positions"
-   },
-   "id": "dm-pair-11-pos",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 0.9,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "dm-pair-11-neg",
-   "subfamily": "pair",
-   "pair_id": "dm-pair-11",
-   "polarity": "dont_think",
-   "concept": "stingray",
-   "carrier": "The invoice total appears on the second page.",
-   "prompt": "Keep the sea creature stingray out of your thoughts as you write. Now write exactly this sentence: \"The invoice total appears on the second page.\"",
-   "assistant": "The invoice total appears on the second page.",
-   "units": [
-    {
-     "role": "concept",
-     "lang": "en",
-     "headline": true,
-     "match": [
-      "Stingray",
-      "stingray"
-     ]
-    },
-    {
-     "role": "category",
-     "lang": "en",
-     "headline": false,
-     "match": [
-      "creature"
-     ]
-    }
-   ],
-   "answer": {
-    "accepted": [
-     "The invoice total appears on the second page."
-    ]
-   },
-   "base_rate_per_100k": 0.0,
-   "consistency": 1.0,
-   "source": "dm-v1",
-   "gate_variant": "chat_dm",
-   "eval_render": "chat_dm",
-   "readout": {
-    "kind": "writing_positions"
-   },
-   "id": "dm-pair-11-neg",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
    "name": "dm-pair-12-pos",
    "subfamily": "pair",
    "pair_id": "dm-pair-12",
@@ -953,7 +753,7 @@
    "adapt": {
     "origin": "original",
     "gate": {
-     "rate": 1.0,
+     "rate": 0.9,
      "pass": true
     }
    }
@@ -1053,7 +853,7 @@
    "adapt": {
     "origin": "original",
     "gate": {
-     "rate": 1.0,
+     "rate": 0.8,
      "pass": true
     }
    }
@@ -1153,7 +953,7 @@
    "adapt": {
     "origin": "original",
     "gate": {
-     "rate": 0.9,
+     "rate": 1.0,
      "pass": true
     }
    }
@@ -1253,7 +1053,7 @@
    "adapt": {
     "origin": "original",
     "gate": {
-     "rate": 1.0,
+     "rate": 0.9,
      "pass": true
     }
    }
@@ -1553,7 +1353,7 @@
    "adapt": {
     "origin": "original",
     "gate": {
-     "rate": 1.0,
+     "rate": 0.8,
      "pass": true
     }
    }
@@ -1709,106 +1509,6 @@
    }
   },
   {
-   "name": "dm-pair-24-pos",
-   "subfamily": "pair",
-   "pair_id": "dm-pair-24",
-   "polarity": "think",
-   "concept": "donkey",
-   "carrier": "The account settings were saved successfully.",
-   "prompt": "Concentrate on the animal donkey while you write. Now write exactly this sentence: \"The account settings were saved successfully.\"",
-   "assistant": "The account settings were saved successfully.",
-   "units": [
-    {
-     "role": "concept",
-     "lang": "en",
-     "headline": true,
-     "match": [
-      "Donkey",
-      "donkey"
-     ]
-    },
-    {
-     "role": "category",
-     "lang": "en",
-     "headline": false,
-     "match": [
-      "animal"
-     ]
-    }
-   ],
-   "answer": {
-    "accepted": [
-     "The account settings were saved successfully."
-    ]
-   },
-   "base_rate_per_100k": 0.237,
-   "consistency": 1.0,
-   "source": "dm-v1",
-   "gate_variant": "chat_dm",
-   "eval_render": "chat_dm",
-   "readout": {
-    "kind": "writing_positions"
-   },
-   "id": "dm-pair-24-pos",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "dm-pair-24-neg",
-   "subfamily": "pair",
-   "pair_id": "dm-pair-24",
-   "polarity": "dont_think",
-   "concept": "donkey",
-   "carrier": "The account settings were saved successfully.",
-   "prompt": "Avoid thinking about the animal donkey while you write. Now write exactly this sentence: \"The account settings were saved successfully.\"",
-   "assistant": "The account settings were saved successfully.",
-   "units": [
-    {
-     "role": "concept",
-     "lang": "en",
-     "headline": true,
-     "match": [
-      "Donkey",
-      "donkey"
-     ]
-    },
-    {
-     "role": "category",
-     "lang": "en",
-     "headline": false,
-     "match": [
-      "animal"
-     ]
-    }
-   ],
-   "answer": {
-    "accepted": [
-     "The account settings were saved successfully."
-    ]
-   },
-   "base_rate_per_100k": 0.237,
-   "consistency": 1.0,
-   "source": "dm-v1",
-   "gate_variant": "chat_dm",
-   "eval_render": "chat_dm",
-   "readout": {
-    "kind": "writing_positions"
-   },
-   "id": "dm-pair-24-neg",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
    "name": "dm-pair-25-pos",
    "subfamily": "pair",
    "pair_id": "dm-pair-25",
@@ -1853,7 +1553,7 @@
    "adapt": {
     "origin": "original",
     "gate": {
-     "rate": 0.9,
+     "rate": 1.0,
      "pass": true
     }
    }
@@ -2053,7 +1753,7 @@
    "adapt": {
     "origin": "original",
     "gate": {
-     "rate": 0.9,
+     "rate": 1.0,
      "pass": true
     }
    }
@@ -2253,7 +1953,7 @@
    "adapt": {
     "origin": "original",
     "gate": {
-     "rate": 0.9,
+     "rate": 1.0,
      "pass": true
     }
    }
@@ -2400,106 +2100,6 @@
     "kind": "writing_positions"
    },
    "id": "dm-pair-32-neg",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "dm-pair-34-pos",
-   "subfamily": "pair",
-   "pair_id": "dm-pair-34",
-   "polarity": "think",
-   "concept": "moccasin",
-   "carrier": "The account settings were saved successfully.",
-   "prompt": "Concentrate on the footwear moccasin while you write. Now write exactly this sentence: \"The account settings were saved successfully.\"",
-   "assistant": "The account settings were saved successfully.",
-   "units": [
-    {
-     "role": "concept",
-     "lang": "en",
-     "headline": true,
-     "match": [
-      "Moccasin",
-      "moccasin"
-     ]
-    },
-    {
-     "role": "category",
-     "lang": "en",
-     "headline": false,
-     "match": [
-      "footwear"
-     ]
-    }
-   ],
-   "answer": {
-    "accepted": [
-     "The account settings were saved successfully."
-    ]
-   },
-   "base_rate_per_100k": 0.0,
-   "consistency": 1.0,
-   "source": "dm-v1",
-   "gate_variant": "chat_dm",
-   "eval_render": "chat_dm",
-   "readout": {
-    "kind": "writing_positions"
-   },
-   "id": "dm-pair-34-pos",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 0.8,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "dm-pair-34-neg",
-   "subfamily": "pair",
-   "pair_id": "dm-pair-34",
-   "polarity": "dont_think",
-   "concept": "moccasin",
-   "carrier": "The account settings were saved successfully.",
-   "prompt": "Avoid thinking about the footwear moccasin while you write. Now write exactly this sentence: \"The account settings were saved successfully.\"",
-   "assistant": "The account settings were saved successfully.",
-   "units": [
-    {
-     "role": "concept",
-     "lang": "en",
-     "headline": true,
-     "match": [
-      "Moccasin",
-      "moccasin"
-     ]
-    },
-    {
-     "role": "category",
-     "lang": "en",
-     "headline": false,
-     "match": [
-      "footwear"
-     ]
-    }
-   ],
-   "answer": {
-    "accepted": [
-     "The account settings were saved successfully."
-    ]
-   },
-   "base_rate_per_100k": 0.0,
-   "consistency": 1.0,
-   "source": "dm-v1",
-   "gate_variant": "chat_dm",
-   "eval_render": "chat_dm",
-   "readout": {
-    "kind": "writing_positions"
-   },
-   "id": "dm-pair-34-neg",
    "adapt": {
     "origin": "original",
     "gate": {

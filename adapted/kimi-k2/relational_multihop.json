@@ -214,7 +214,7 @@
   "adapt": {
    "origin": "original",
    "gate": {
-    "rate": 1.0,
+    "rate": 0.9,
     "pass": true
    }
   }
@@ -258,7 +258,7 @@
   "adapt": {
    "origin": "original",
    "gate": {
-    "rate": 0.9,
+    "rate": 1.0,
     "pass": true
    }
   }
@@ -522,7 +522,7 @@
   "adapt": {
    "origin": "original",
    "gate": {
-    "rate": 0.8,
+    "rate": 0.9,
     "pass": true
    }
   }
@@ -720,7 +720,7 @@
   "adapt": {
    "origin": "original",
    "gate": {
-    "rate": 0.9,
+    "rate": 1.0,
     "pass": true
    }
   }
@@ -764,7 +764,7 @@
   "adapt": {
    "origin": "original",
    "gate": {
-    "rate": 1.0,
+    "rate": 0.9,
     "pass": true
    }
   }
@@ -874,7 +874,7 @@
   "adapt": {
    "origin": "original",
    "gate": {
-    "rate": 0.8,
+    "rate": 0.9,
     "pass": true
    }
   }
@@ -918,7 +918,7 @@
   "adapt": {
    "origin": "original",
    "gate": {
-    "rate": 0.9,
+    "rate": 0.8,
     "pass": true
    }
   }
@@ -940,7 +940,7 @@
   "adapt": {
    "origin": "original",
    "gate": {
-    "rate": 0.9,
+    "rate": 1.0,
     "pass": true
    }
   }
@@ -962,7 +962,7 @@
   "adapt": {
    "origin": "original",
    "gate": {
-    "rate": 0.9,
+    "rate": 0.8,
     "pass": true
    }
   }
@@ -1006,7 +1006,7 @@
   "adapt": {
    "origin": "original",
    "gate": {
-    "rate": 0.9,
+    "rate": 1.0,
     "pass": true
    }
   }
@@ -1138,7 +1138,7 @@
   "adapt": {
    "origin": "original",
    "gate": {
-    "rate": 1.0,
+    "rate": 0.9,
     "pass": true
    }
   }
@@ -1248,7 +1248,7 @@
   "adapt": {
    "origin": "original",
    "gate": {
-    "rate": 1.0,
+    "rate": 0.9,
     "pass": true
    }
   }
@@ -1320,6 +1320,50 @@
   }
  },
  {
+  "id": "rel-s43-a",
+  "scene": "s43",
+  "stimulus": "Rory's lawyer is Shiloh. Shiloh's child is Tatum. In other words, Tatum is Rory's",
+  "names": [
+   "Rory",
+   "Shiloh",
+   "Tatum"
+  ],
+  "hop1": "lawyer",
+  "hop2": "child",
+  "gold": "lawyer's child",
+  "gold_alt": "child of Rory's lawyer",
+  "flipped": "child's lawyer",
+  "adapt": {
+   "origin": "original",
+   "gate": {
+    "rate": 1.0,
+    "pass": true
+   }
+  }
+ },
+ {
+  "id": "rel-s43-b",
+  "scene": "s43",
+  "stimulus": "Rory's child is Shiloh. Shiloh's lawyer is Tatum. In other words, Tatum is Rory's",
+  "names": [
+   "Rory",
+   "Shiloh",
+   "Tatum"
+  ],
+  "hop1": "child",
+  "hop2": "lawyer",
+  "gold": "child's lawyer",
+  "gold_alt": "lawyer of Rory's child",
+  "flipped": "lawyer's child",
+  "adapt": {
+   "origin": "original",
+   "gate": {
+    "rate": 0.9,
+    "pass": true
+   }
+  }
+ },
+ {
   "id": "rel-s45-a",
   "scene": "s45",
   "stimulus": "Bellamy's mechanic is Campbell. Campbell's cousin is Denver. In other words, Denver is Bellamy's",
@@ -1380,7 +1424,7 @@
   "adapt": {
    "origin": "original",
    "gate": {
-    "rate": 1.0,
+    "rate": 0.9,
     "pass": true
    }
   }
@@ -1540,72 +1584,20 @@
   }
  },
  {
-  "scene_key": "Emerson-Noor-Parker-lawyer-spouse",
-  "stimulus": "Emerson's lawyer is Noor. Noor's spouse is Parker. In other words, Parker is Emerson's",
+  "scene_key": "Denver-Shiloh-Sasha-therapist-sibling",
+  "stimulus": "Denver's therapist is Shiloh. Shiloh's sibling is Sasha. In other words, Sasha is Denver's",
   "names": [
-   "Emerson",
-   "Noor",
-   "Parker"
+   "Denver",
+   "Shiloh",
+   "Sasha"
   ],
-  "hop1": "lawyer",
-  "hop2": "spouse",
-  "gold": "lawyer's spouse",
-  "gold_alt": "spouse of Emerson's lawyer",
-  "flipped": "spouse's lawyer",
-  "id": "relational-t0-s0-0000-a",
-  "scene": "relational-t0-s0-0000",
-  "adapt": {
-   "origin": "generated",
-   "tier": "t0",
-   "knobs": {},
-   "change": "original rules (13 professional x 5 kinship relations)",
-   "gate": {
-    "rate": 1.0,
-    "pass": true
-   }
-  }
- },
- {
-  "scene_key": "Emerson-Noor-Parker-lawyer-spouse",
-  "stimulus": "Emerson's spouse is Noor. Noor's lawyer is Parker. In other words, Parker is Emerson's",
-  "names": [
-   "Emerson",
-   "Noor",
-   "Parker"
-  ],
-  "hop1": "spouse",
-  "hop2": "lawyer",
-  "gold": "spouse's lawyer",
-  "gold_alt": "lawyer of Emerson's spouse",
-  "flipped": "lawyer's spouse",
-  "id": "relational-t0-s0-0000-b",
-  "scene": "relational-t0-s0-0000",
-  "adapt": {
-   "origin": "generated",
-   "tier": "t0",
-   "knobs": {},
-   "change": "original rules (13 professional x 5 kinship relations)",
-   "gate": {
-    "rate": 1.0,
-    "pass": true
-   }
-  }
- },
- {
-  "scene_key": "Sage-Gray-Shiloh-dentist-sibling",
-  "stimulus": "Sage's dentist is Gray. Gray's sibling is Shiloh. In other words, Shiloh is Sage's",
-  "names": [
-   "Sage",
-   "Gray",
-   "Shiloh"
-  ],
-  "hop1": "dentist",
+  "hop1": "therapist",
   "hop2": "sibling",
-  "gold": "dentist's sibling",
-  "gold_alt": "sibling of Sage's dentist",
-  "flipped": "sibling's dentist",
-  "id": "relational-t0-s0-0001-a",
-  "scene": "relational-t0-s0-0001",
+  "gold": "therapist's sibling",
+  "gold_alt": "sibling of Denver's therapist",
+  "flipped": "sibling's therapist",
+  "id": "relational-t0-s0-0002-a",
+  "scene": "relational-t0-s0-0002",
   "adapt": {
    "origin": "generated",
    "tier": "t0",
@@ -1618,176 +1610,20 @@
   }
  },
  {
-  "scene_key": "Sage-Gray-Shiloh-dentist-sibling",
-  "stimulus": "Sage's sibling is Gray. Gray's dentist is Shiloh. In other words, Shiloh is Sage's",
+  "scene_key": "Denver-Shiloh-Sasha-therapist-sibling",
+  "stimulus": "Denver's sibling is Shiloh. Shiloh's therapist is Sasha. In other words, Sasha is Denver's",
   "names": [
-   "Sage",
-   "Gray",
-   "Shiloh"
+   "Denver",
+   "Shiloh",
+   "Sasha"
   ],
   "hop1": "sibling",
-  "hop2": "dentist",
-  "gold": "sibling's dentist",
-  "gold_alt": "dentist of Sage's sibling",
-  "flipped": "dentist's sibling",
-  "id": "relational-t0-s0-0001-b",
-  "scene": "relational-t0-s0-0001",
-  "adapt": {
-   "origin": "generated",
-   "tier": "t0",
-   "knobs": {},
-   "change": "original rules (13 professional x 5 kinship relations)",
-   "gate": {
-    "rate": 1.0,
-    "pass": true
-   }
-  }
- },
- {
-  "scene_key": "Sam-Marlowe-Sage-mechanic-child",
-  "stimulus": "Sam's mechanic is Marlowe. Marlowe's child is Sage. In other words, Sage is Sam's",
-  "names": [
-   "Sam",
-   "Marlowe",
-   "Sage"
-  ],
-  "hop1": "mechanic",
-  "hop2": "child",
-  "gold": "mechanic's child",
-  "gold_alt": "child of Sam's mechanic",
-  "flipped": "child's mechanic",
-  "id": "relational-t0-s0-0003-a",
-  "scene": "relational-t0-s0-0003",
-  "adapt": {
-   "origin": "generated",
-   "tier": "t0",
-   "knobs": {},
-   "change": "original rules (13 professional x 5 kinship relations)",
-   "gate": {
-    "rate": 1.0,
-    "pass": true
-   }
-  }
- },
- {
-  "scene_key": "Sam-Marlowe-Sage-mechanic-child",
-  "stimulus": "Sam's child is Marlowe. Marlowe's mechanic is Sage. In other words, Sage is Sam's",
-  "names": [
-   "Sam",
-   "Marlowe",
-   "Sage"
-  ],
-  "hop1": "child",
-  "hop2": "mechanic",
-  "gold": "child's mechanic",
-  "gold_alt": "mechanic of Sam's child",
-  "flipped": "mechanic's child",
-  "id": "relational-t0-s0-0003-b",
-  "scene": "relational-t0-s0-0003",
-  "adapt": {
-   "origin": "generated",
-   "tier": "t0",
-   "knobs": {},
-   "change": "original rules (13 professional x 5 kinship relations)",
-   "gate": {
-    "rate": 1.0,
-    "pass": true
-   }
-  }
- },
- {
-  "scene_key": "Kit-Skyler-Morgan-tutor-spouse",
-  "stimulus": "Kit's tutor is Skyler. Skyler's spouse is Morgan. In other words, Morgan is Kit's",
-  "names": [
-   "Kit",
-   "Skyler",
-   "Morgan"
-  ],
-  "hop1": "tutor",
-  "hop2": "spouse",
-  "gold": "tutor's spouse",
-  "gold_alt": "spouse of Kit's tutor",
-  "flipped": "spouse's tutor",
-  "id": "relational-t0-s0-0005-a",
-  "scene": "relational-t0-s0-0005",
-  "adapt": {
-   "origin": "generated",
-   "tier": "t0",
-   "knobs": {},
-   "change": "original rules (13 professional x 5 kinship relations)",
-   "gate": {
-    "rate": 0.8,
-    "pass": true
-   }
-  }
- },
- {
-  "scene_key": "Kit-Skyler-Morgan-tutor-spouse",
-  "stimulus": "Kit's spouse is Skyler. Skyler's tutor is Morgan. In other words, Morgan is Kit's",
-  "names": [
-   "Kit",
-   "Skyler",
-   "Morgan"
-  ],
-  "hop1": "spouse",
-  "hop2": "tutor",
-  "gold": "spouse's tutor",
-  "gold_alt": "tutor of Kit's spouse",
-  "flipped": "tutor's spouse",
-  "id": "relational-t0-s0-0005-b",
-  "scene": "relational-t0-s0-0005",
-  "adapt": {
-   "origin": "generated",
-   "tier": "t0",
-   "knobs": {},
-   "change": "original rules (13 professional x 5 kinship relations)",
-   "gate": {
-    "rate": 1.0,
-    "pass": true
-   }
-  }
- },
- {
-  "scene_key": "Kai-Charlie-Sage-lawyer-child",
-  "stimulus": "Kai's lawyer is Charlie. Charlie's child is Sage. In other words, Sage is Kai's",
-  "names": [
-   "Kai",
-   "Charlie",
-   "Sage"
-  ],
-  "hop1": "lawyer",
-  "hop2": "child",
-  "gold": "lawyer's child",
-  "gold_alt": "child of Kai's lawyer",
-  "flipped": "child's lawyer",
-  "id": "relational-t0-s0-0006-a",
-  "scene": "relational-t0-s0-0006",
-  "adapt": {
-   "origin": "generated",
-   "tier": "t0",
-   "knobs": {},
-   "change": "original rules (13 professional x 5 kinship relations)",
-   "gate": {
-    "rate": 1.0,
-    "pass": true
-   }
-  }
- },
- {
-  "scene_key": "Kai-Charlie-Sage-lawyer-child",
-  "stimulus": "Kai's child is Charlie. Charlie's lawyer is Sage. In other words, Sage is Kai's",
-  "names": [
-   "Kai",
-   "Charlie",
-   "Sage"
-  ],
-  "hop1": "child",
-  "hop2": "lawyer",
-  "gold": "child's lawyer",
-  "gold_alt": "lawyer of Kai's child",
-  "flipped": "lawyer's child",
-  "id": "relational-t0-s0-0006-b",
-  "scene": "relational-t0-s0-0006",
+  "hop2": "therapist",
+  "gold": "sibling's therapist",
+  "gold_alt": "therapist of Denver's sibling",
+  "flipped": "therapist's sibling",
+  "id": "relational-t0-s0-0002-b",
+  "scene": "relational-t0-s0-0002",
   "adapt": {
    "origin": "generated",
    "tier": "t0",
@@ -1904,58 +1740,6 @@
   }
  },
  {
-  "scene_key": "Emerson-Hollis-Rory-barber-cousin",
-  "stimulus": "Emerson's barber is Hollis. Hollis's cousin is Rory. In other words, Rory is Emerson's",
-  "names": [
-   "Emerson",
-   "Hollis",
-   "Rory"
-  ],
-  "hop1": "barber",
-  "hop2": "cousin",
-  "gold": "barber's cousin",
-  "gold_alt": "cousin of Emerson's barber",
-  "flipped": "cousin's barber",
-  "id": "relational-t0-s0-0010-a",
-  "scene": "relational-t0-s0-0010",
-  "adapt": {
-   "origin": "generated",
-   "tier": "t0",
-   "knobs": {},
-   "change": "original rules (13 professional x 5 kinship relations)",
-   "gate": {
-    "rate": 1.0,
-    "pass": true
-   }
-  }
- },
- {
-  "scene_key": "Emerson-Hollis-Rory-barber-cousin",
-  "stimulus": "Emerson's cousin is Hollis. Hollis's barber is Rory. In other words, Rory is Emerson's",
-  "names": [
-   "Emerson",
-   "Hollis",
-   "Rory"
-  ],
-  "hop1": "cousin",
-  "hop2": "barber",
-  "gold": "cousin's barber",
-  "gold_alt": "barber of Emerson's cousin",
-  "flipped": "barber's cousin",
-  "id": "relational-t0-s0-0010-b",
-  "scene": "relational-t0-s0-0010",
-  "adapt": {
-   "origin": "generated",
-   "tier": "t0",
-   "knobs": {},
-   "change": "original rules (13 professional x 5 kinship relations)",
-   "gate": {
-    "rate": 1.0,
-    "pass": true
-   }
-  }
- },
- {
   "scene_key": "Denver-Hollis-Frankie-doctor-child",
   "stimulus": "Denver's doctor is Hollis. Hollis's child is Frankie. In other words, Frankie is Denver's",
   "names": [
@@ -2008,20 +1792,20 @@
   }
  },
  {
-  "scene_key": "Emery-Alex-Blake-dentist-spouse",
-  "stimulus": "Emery's dentist is Alex. Alex's spouse is Blake. In other words, Blake is Emery's",
+  "scene_key": "Ellis-Harper-Kit-therapist-child",
+  "stimulus": "Ellis's therapist is Harper. Harper's child is Kit. In other words, Kit is Ellis's",
   "names": [
-   "Emery",
-   "Alex",
-   "Blake"
+   "Ellis",
+   "Harper",
+   "Kit"
   ],
-  "hop1": "dentist",
-  "hop2": "spouse",
-  "gold": "dentist's spouse",
-  "gold_alt": "spouse of Emery's dentist",
-  "flipped": "spouse's dentist",
-  "id": "relational-t0-s0-0013-a",
-  "scene": "relational-t0-s0-0013",
+  "hop1": "therapist",
+  "hop2": "child",
+  "gold": "therapist's child",
+  "gold_alt": "child of Ellis's therapist",
+  "flipped": "child's therapist",
+  "id": "relational-t0-s0-0018-a",
+  "scene": "relational-t0-s0-0018",
   "adapt": {
    "origin": "generated",
    "tier": "t0",
@@ -2034,20 +1818,176 @@
   }
  },
  {
-  "scene_key": "Emery-Alex-Blake-dentist-spouse",
-  "stimulus": "Emery's spouse is Alex. Alex's dentist is Blake. In other words, Blake is Emery's",
+  "scene_key": "Ellis-Harper-Kit-therapist-child",
+  "stimulus": "Ellis's child is Harper. Harper's therapist is Kit. In other words, Kit is Ellis's",
   "names": [
-   "Emery",
-   "Alex",
-   "Blake"
+   "Ellis",
+   "Harper",
+   "Kit"
   ],
-  "hop1": "spouse",
-  "hop2": "dentist",
-  "gold": "spouse's dentist",
-  "gold_alt": "dentist of Emery's spouse",
-  "flipped": "dentist's spouse",
-  "id": "relational-t0-s0-0013-b",
-  "scene": "relational-t0-s0-0013",
+  "hop1": "child",
+  "hop2": "therapist",
+  "gold": "child's therapist",
+  "gold_alt": "therapist of Ellis's child",
+  "flipped": "therapist's child",
+  "id": "relational-t0-s0-0018-b",
+  "scene": "relational-t0-s0-0018",
+  "adapt": {
+   "origin": "generated",
+   "tier": "t0",
+   "knobs": {},
+   "change": "original rules (13 professional x 5 kinship relations)",
+   "gate": {
+    "rate": 1.0,
+    "pass": true
+   }
+  }
+ },
+ {
+  "scene_key": "Lee-Dakota-Parker-plumber-child",
+  "stimulus": "Lee's plumber is Dakota. Dakota's child is Parker. In other words, Parker is Lee's",
+  "names": [
+   "Lee",
+   "Dakota",
+   "Parker"
+  ],
+  "hop1": "plumber",
+  "hop2": "child",
+  "gold": "plumber's child",
+  "gold_alt": "child of Lee's plumber",
+  "flipped": "child's plumber",
+  "id": "relational-t0-s0-0025-a",
+  "scene": "relational-t0-s0-0025",
+  "adapt": {
+   "origin": "generated",
+   "tier": "t0",
+   "knobs": {},
+   "change": "original rules (13 professional x 5 kinship relations)",
+   "gate": {
+    "rate": 1.0,
+    "pass": true
+   }
+  }
+ },
+ {
+  "scene_key": "Lee-Dakota-Parker-plumber-child",
+  "stimulus": "Lee's child is Dakota. Dakota's plumber is Parker. In other words, Parker is Lee's",
+  "names": [
+   "Lee",
+   "Dakota",
+   "Parker"
+  ],
+  "hop1": "child",
+  "hop2": "plumber",
+  "gold": "child's plumber",
+  "gold_alt": "plumber of Lee's child",
+  "flipped": "plumber's child",
+  "id": "relational-t0-s0-0025-b",
+  "scene": "relational-t0-s0-0025",
+  "adapt": {
+   "origin": "generated",
+   "tier": "t0",
+   "knobs": {},
+   "change": "original rules (13 professional x 5 kinship relations)",
+   "gate": {
+    "rate": 1.0,
+    "pass": true
+   }
+  }
+ },
+ {
+  "scene_key": "Morgan-Sam-Alex-plumber-cousin",
+  "stimulus": "Morgan's plumber is Sam. Sam's cousin is Alex. In other words, Alex is Morgan's",
+  "names": [
+   "Morgan",
+   "Sam",
+   "Alex"
+  ],
+  "hop1": "plumber",
+  "hop2": "cousin",
+  "gold": "plumber's cousin",
+  "gold_alt": "cousin of Morgan's plumber",
+  "flipped": "cousin's plumber",
+  "id": "relational-t0-s10000-0000-a",
+  "scene": "relational-t0-s10000-0000",
+  "adapt": {
+   "origin": "generated",
+   "tier": "t0",
+   "knobs": {},
+   "change": "original rules (13 professional x 5 kinship relations)",
+   "gate": {
+    "rate": 1.0,
+    "pass": true
+   }
+  }
+ },
+ {
+  "scene_key": "Morgan-Sam-Alex-plumber-cousin",
+  "stimulus": "Morgan's cousin is Sam. Sam's plumber is Alex. In other words, Alex is Morgan's",
+  "names": [
+   "Morgan",
+   "Sam",
+   "Alex"
+  ],
+  "hop1": "cousin",
+  "hop2": "plumber",
+  "gold": "cousin's plumber",
+  "gold_alt": "plumber of Morgan's cousin",
+  "flipped": "plumber's cousin",
+  "id": "relational-t0-s10000-0000-b",
+  "scene": "relational-t0-s10000-0000",
+  "adapt": {
+   "origin": "generated",
+   "tier": "t0",
+   "knobs": {},
+   "change": "original rules (13 professional x 5 kinship relations)",
+   "gate": {
+    "rate": 1.0,
+    "pass": true
+   }
+  }
+ },
+ {
+  "scene_key": "Charlie-Lee-Elliot-doctor-parent",
+  "stimulus": "Charlie's doctor is Lee. Lee's parent is Elliot. In other words, Elliot is Charlie's",
+  "names": [
+   "Charlie",
+   "Lee",
+   "Elliot"
+  ],
+  "hop1": "doctor",
+  "hop2": "parent",
+  "gold": "doctor's parent",
+  "gold_alt": "parent of Charlie's doctor",
+  "flipped": "parent's doctor",
+  "id": "relational-t0-s30000-0008-a",
+  "scene": "relational-t0-s30000-0008",
+  "adapt": {
+   "origin": "generated",
+   "tier": "t0",
+   "knobs": {},
+   "change": "original rules (13 professional x 5 kinship relations)",
+   "gate": {
+    "rate": 1.0,
+    "pass": true
+   }
+  }
+ },
+ {
+  "scene_key": "Charlie-Lee-Elliot-doctor-parent",
+  "stimulus": "Charlie's parent is Lee. Lee's doctor is Elliot. In other words, Elliot is Charlie's",
+  "names": [
+   "Charlie",
+   "Lee",
+   "Elliot"
+  ],
+  "hop1": "parent",
+  "hop2": "doctor",
+  "gold": "parent's doctor",
+  "gold_alt": "doctor of Charlie's parent",
+  "flipped": "doctor's parent",
+  "id": "relational-t0-s30000-0008-b",
+  "scene": "relational-t0-s30000-0008",
   "adapt": {
    "origin": "generated",
    "tier": "t0",
