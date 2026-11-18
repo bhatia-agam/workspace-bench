@@ -145,7 +145,11 @@ grader prompt and its sha, the unused gated role-play pool for HallucinationBenc
   counted. Decision record: `judge_smoke_v2.json`. Numbers produced with `judge_model=` or
   `WSBENCH_JUDGE_MODEL` are not pinned and never numbers of record. The summarizer runs on the
   same pin, `claude-sonnet-5` (`JudgeConfig.aux_models["digest"]`); a digest or judge call Sonnet
-  declines re-runs once on `claude-opus-5` (Summary mode, below).
+  declines re-runs once on `claude-opus-5` (Summary mode, below). The digest keeps that pin
+  under a `claude-*` judge override (`opts=summ_model=` moves it); under a non-Claude override
+  judge (`judge_model=openai/gpt-6-luna`) the digest follows the judge and has no refusal
+  re-run unless `opts=summ_fallback=none+<model>` gives one (README §Judges). The judge-draw
+  re-run follows the override judge, on any route.
 - **Summary mode** (default): every cell of an item → one digest (`EvalSpec.task_note` below,
   no family token cap: the global 920k cap with hierarchical overflow, nothing dropped;
   `FAMILY_DEFAULTS`: `summ_timeout=1800`, `summ_fallback=none+claude-opus-5` (`summ_concurrency=8`
@@ -370,9 +374,17 @@ fail).
 - **Provenance and pinning.** Rows record `digest_model` (comma-joined when an item's layers
   mix), `judge_model` (the draws' serving models) and `judge_served_by` (per draw, cached with
   it, so a resumed run keeps it); `extras.judge_served_by` counts draws per model. A run is the
-  instrument of record (`judge.summary_pinned`) only when the judge is its pin, the digest ran
-  `claude-sonnet-5` at the default effort and no model other than `claude-opus-5` served a
-  digest; `summ_fallback=none` unpins it.
+  instrument of record (`judge.summary_pinned`) only when the judge is its pin with its refusal
+  re-run on, the digest ran `claude-sonnet-5` at the default effort and no model other than
+  `claude-opus-5` served a digest; `summ_fallback=none` unpins it.
+- **The draw re-run follows the judge** (plan 0096). A draw the judge declines re-runs once on
+  `claude-opus-5` whenever that is not the judge itself: under a `judge_model=` override too,
+  OpenRouter models included (their refusal = `finish_reason: content_filter`, a
+  `message.refusal` with no content, or the moderation 403). `opts=fallback=none` turns the
+  draw re-run off (the digest's is `summ_fallback`), re-asks on the judge any cached draw
+  another model served, and unpins the run; a run that is not the pinned default records
+  `config.judge_fallback` (`claude-opus-5`, `none` or `same-as-judge`). A bad `fallback=`
+  value exits 2, in native mode too (which has no judge re-run).
 - **Native mode** is unchanged: per-readout labels (calls keyed `jb-v4`), stamp
   `NATIVE_PROMPT_VERSION` = `jb-v4+pins-r1+pins-r3+guard-off`, also the ATI gate's instrument.
 

@@ -92,3 +92,33 @@ def test_family_reasoning_applies_only_on_its_own_route():
     over = resolve(cfg, flag="google/gemini-3.8-flash")  # another route: its own defaults
     assert over.reasoning == DEFAULT_REASONING
     assert resolve(cfg, flag="claude-sonnet-5-5").reasoning == {"anthropic_effort": "default"}
+
+
+def test_reasoning_for_and_resolve_table():
+    """Plan 0096: ``llm.reasoning_for`` is the one route rule and ``resolve`` calls it; the
+    table is ``resolve``'s behaviour before the helper existed, input by input."""
+    from wsbench import judge_config, llm
+
+    assert judge_config.DEFAULT_REASONING is llm.OPENROUTER_MIN_REASONING == {"effort": "minimal"}
+    assert judge_config.ANTHROPIC_REASONING_KEYS is llm.ANTHROPIC_REASONING_KEYS
+    ant, orr = {"anthropic_effort": "default"}, {"effort": "low", "max_tokens": 5}
+    table = [
+        # reasoning, on anthropic, on openrouter
+        (None, None, {"effort": "minimal"}),
+        ({}, None, {"effort": "minimal"}),
+        (ant, ant, {"effort": "minimal"}),
+        (orr, None, orr),
+        ({**ant, **orr}, ant, orr),
+    ]
+    for reasoning, on_ant, on_or in table:
+        assert llm.reasoning_for("anthropic", reasoning) == on_ant
+        assert llm.reasoning_for("openrouter", reasoning) == on_or
+        cfg = JudgeConfig(reasoning=reasoning)
+        assert resolve(cfg, flag="claude-sonnet-5", env={}).reasoning == on_ant
+        assert resolve(cfg, flag="openai/gpt-6-luna", env={}).reasoning == on_or
+    # a copy, never the constant or the caller's dict
+    got = llm.reasoning_for("openrouter", None)
+    assert got is not llm.OPENROUTER_MIN_REASONING
+    got["effort"] = "high"
+    assert llm.OPENROUTER_MIN_REASONING == {"effort": "minimal"}
+    assert llm.reasoning_for("anthropic", ant) is not ant

@@ -328,6 +328,8 @@ def _run_summary(
         },
         extras={**extras, "summary": col.extras()},
         n_items=len(ids),
-        pinned=digest.pinned(regex_args, NAME),
+        # the regex scorer has no judge: the row is the instrument of record iff its digest is
+        # the default one (a non-Claude override judge moves the digest, plan 0096 section 9)
+        pinned=digest.pinned(regex_args, NAME) and digest.summarizer_judge(args, NAME).pinned,
     )
     return with_readout_count(result, scope, cells)

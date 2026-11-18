@@ -33,7 +33,13 @@ from pathlib import Path
 
 from wsbench import digest, llm, reads, registry
 from wsbench.cache import Cache, fingerprint
-from wsbench.family import fail
+from wsbench.family import (
+    effective_fallback,
+    fail,
+    fallback_on,
+    judge_fallback_stamp,
+    require_fallback_key,
+)
 from wsbench.llm import Spend
 from wsbench.mcjudge import (
     Preflighter,
@@ -221,6 +227,7 @@ def _batch(
     refused: set[str] | None = None,
     refusal_model: str | None = None,
     served: dict[str, str] | None = None,
+    accept_served: bool = True,
 ) -> dict[str, str | None]:
     """cache key -> text. Cached (non-failed) rows are reused; the rest go through
     :func:`llm.stream_text` in one batch. A landed text (incl. ``""``) is ``cache.put``
@@ -231,11 +238,15 @@ def _batch(
 
     ``refusal_model`` (summary Stage C): a call the judge declines re-runs once on that
     model; the text it serves is cached with ``"served_by": <model>``, and ``served`` (key ->
-    model) collects every key another model served, cached rows included."""
+    model) collects every key another model served, cached rows included. It may be on the other
+    route than the judge (plan 0096). ``accept_served=False`` (``opts=fallback=none``): a cached
+    row another model served is a miss, re-asked on the judge (``mcjudge.run_calls``)."""
     out: dict[str, str | None] = {}
     pending: Calls = []
     for key, fp, user in calls:
         row = cache.get(key, fp)
+        if row is not None and not accept_served and row.get("served_by"):
+            row = None
         if row is not None:
             out[key] = row["result"]
             if refused is not None and row.get("refused"):
@@ -308,6 +319,7 @@ def default_layer_scope(args: JudgeArgs, cells: list[Cell], rep: LoadReport) -> 
 
 
 def run(args: JudgeArgs) -> FamilyResult:
+    fallback_on(args, FAMILY)  # a bad opts=fallback= value exits 2, in native mode too
     if "stride" in args.extra:  # plan 0052 §3: positions are selected by reads= only
         fail("opts=stride= is retired for agentic_misalignment: use reads=lite (every 16th "
              "position + the last 8) or reads=full")  # fmt: skip
@@ -663,6 +675,11 @@ def _run_summary(
     c_served: dict[str, str] = {}  # Stage C key -> the refusal model that served it
     c_calls: Calls = []
     label_of: dict[str, str] = {}  # Stage C cache key -> item id
+    # plan 0096: the Stage C refusal re-run follows the judge, pinned or not (off when the judge
+    # is REFUSAL_MODEL itself, or under opts=fallback=none)
+    fb_on = fallback_on(args, FAMILY)
+    refusal_model = effective_fallback(args, fb_on, REFUSAL_MODEL)
+    require_fallback_key(args, FAMILY, refusal_model)
     with Cache(args.out / "cells.jsonl") as cache:
         col = digest.collapse(
             FAMILY,
@@ -721,9 +738,10 @@ def _run_summary(
                 cache=cache,
                 spend=spend,
                 extra=lambda _key, text: parse_design_score_summary(text),
-                # a Stage C call the pin declines re-runs once on REFUSAL_MODEL
-                refusal_model=REFUSAL_MODEL if args.judge.pinned else None,
+                # a Stage C call the judge declines re-runs once on REFUSAL_MODEL
+                refusal_model=refusal_model,
                 served=c_served,
+                **({} if fb_on else {"accept_served": False}),
             )
             for key, _fp, _u in c_calls:
                 raw_c[label_of[key]] = c_res.get(key)
@@ -791,6 +809,7 @@ def _run_summary(
         layers_read=rep.layers,
         bank_version=bank_version,
         **digest.config(args, source_kind, family=FAMILY),
+        **judge_fallback_stamp(args, fb_on, REFUSAL_MODEL),
     )
     result = score.score(
         args,
@@ -819,7 +838,8 @@ def _run_summary(
 
 
 def summary_pinned(args: JudgeArgs, col: digest.Collapse) -> bool:
-    """A summary run is the instrument of record when Stage C is its pin, the digest ran
+    """A summary run is the instrument of record when Stage C is its pin with its refusal
+    fallback on (not ``opts=fallback=none``), the digest ran
     :data:`DIGEST_MODEL` at the default effort (``digest.pinned`` would ask for the repo default
     model instead) and no model but the refusal re-run (:data:`REFUSAL_MODEL`,
     ``summ_fallback=none+<it>``) served any digest."""
@@ -827,6 +847,7 @@ def summary_pinned(args: JudgeArgs, col: digest.Collapse) -> bool:
     served = {m for v in col.served_by.values() for m in v.split(",")}
     return (
         bool(args.judge.pinned)
+        and fallback_on(args, FAMILY)
         and s.model == DIGEST_MODEL
         and s.reasoning == {"anthropic_effort": digest.DEFAULT_EFFORT}
         and s.fallback == f"none+{REFUSAL_MODEL}"

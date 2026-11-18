@@ -41,6 +41,25 @@ def _default_fast_subset():
 
 
 @pytest.fixture(autouse=True)
+def _default_routes():
+    """Plan 0096 part 2: every test starts on the default routing and output caps (a box or a CI
+    job that exports ``WSBENCH_OPENAI_ROUTE`` / ``WSBENCH_OPENROUTER_MAX_OUT`` would otherwise
+    move requests); a test of the ``openai`` route sets them itself. No ``monkeypatch`` here: an
+    autouse fixture that requests it would set it up before ``_isolate_registry`` and so undo
+    a test's registry patches after the registry was restored."""
+    import os
+
+    keys = ("WSBENCH_OPENAI_ROUTE", "WSBENCH_OPENROUTER_MAX_OUT")
+    saved = {k: os.environ.pop(k, None) for k in keys}
+    yield
+    for k, v in saved.items():
+        if v is None:
+            os.environ.pop(k, None)
+        else:
+            os.environ[k] = v
+
+
+@pytest.fixture(autouse=True)
 def _run_in_threads(monkeypatch):
     """Plan 0092 §5: ``wsbench run`` judges one process per family by default; tests call
     ``main(["run", ...])`` against families registered or patched in this process, so they run

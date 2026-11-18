@@ -34,6 +34,9 @@ SUMMARY_JUDGE_VERSION = "sj-v10"  # bump on any SUMMARY_NOTE* or family summary-
 SUMMARY_LAYER = -1  # the sentinel layer of a synthetic summary cell
 DEFAULT_MODEL = "claude-opus-5-5"
 DEFAULT_EFFORT = "default"
+CONTEXT_WINDOW = 1_000_000  # Opus 5.5 input + output; summ_context=N replaces it
+# below this the hierarchical budget (context - MAX_TOKENS - CONTEXT_MARGIN) goes to ~0
+MIN_CONTEXT = 128_000
 # the client-side refusal model of every ``summ_fallback=default+<model>`` family (plan 0037 J10).
 # Camila 2026-11-01: Sonnet 5.5 replaced Sonnet 5. The digest fingerprint does not key the
 # fallback, so a cached digest another client-side refusal model served is a cache miss
@@ -382,6 +385,7 @@ class Settings:
     layer_mode: str = DEFAULT_LAYER_MODE  # summ_layers (audit F1): union | joint | layered
     show_key: bool = False  # summ_showkey=1: the support marker names the key it counted
     layered_scale: int = DEFAULT_LAYERED_SCALE  # summ_layered_x (layered only)
+    context: int = CONTEXT_WINDOW  # summ_context: the window the hierarchical budget fits
 
     @property
     def per_layer(self) -> bool:
@@ -412,6 +416,7 @@ class Settings:
             "fallback": self.fallback,
             "layer_mode": self.layer_mode,
             **({"show_key": True} if self.show_key else {}),
+            **({"context": self.context} if self.context != CONTEXT_WINDOW else {}),
             **(
                 {"layered": {"version": LAYERED_VERSION, "scale": self.layered_scale}}
                 if self.layered
@@ -429,7 +434,8 @@ class Settings:
     @property
     def max_tokens(self) -> int:
         """The output cap of every digest call of this run: :data:`OUTPUT_CAPS` of the digest
-        model, else :data:`MAX_TOKENS`. A refusal re-run keeps the same cap."""
+        model, else :data:`MAX_TOKENS`. A refusal re-run keeps the same cap. On a chat route
+        (``openrouter``, ``openai``) ``WSBENCH_OPENROUTER_MAX_OUT`` replaces it inside ``llm``."""
         return OUTPUT_CAPS.get(self.model, MAX_TOKENS)
 
     @property
@@ -450,6 +456,14 @@ class Settings:
         """The model a digest call still declined after the server-side fallback re-runs on."""
         _head, sep, model = self.fallback.partition("+")
         return model if sep else None
+
+    def reasoning_on(self, model: str) -> dict | None:
+        """The reasoning a client-side re-run on ``model`` sends: :func:`digest_reasoning` of
+        that model at the run's ``summ_effort`` (plan 0096 R9), whatever the digest model's
+        route. A ``claude-*`` refusal model of a ``claude-*`` digest gets :attr:`reasoning`."""
+        r = self.reasoning or {}
+        effort = r.get("anthropic_effort") or r.get("effort") or "default"
+        return digest_reasoning(model, str(effort))
 
 
 # the benchmark default (plan 0024): ``runner.parse_opts`` — the entry of every CLI run — fills it
@@ -476,19 +490,46 @@ def _choice(args: JudgeArgs, key: str, allowed: Sequence[str], default: str) -> 
 
 def _fallback_opt(args: JudgeArgs) -> str:
     """``summ_fallback``: ``none``, ``default`` (server-side refusal fallback),
-    ``default+<claude model>`` (plus one client-side re-run of a still-declined call on that
-    model; plan 0037 J10) or ``none+<claude model>`` (the client-side re-run alone, for a digest
-    model that does not accept server-side fallbacks)."""
+    ``default+<model>`` (plus one client-side re-run of a still-declined call on that
+    model; plan 0037 J10) or ``none+<model>`` (the client-side re-run alone, for a digest
+    model that does not accept server-side fallbacks). ``<model>`` is any model id, on either
+    route (plan 0096)."""
     v = args.extra.get("summ_fallback", "none")
     head, sep, model = v.partition("+")
-    if v in ("none", "default") or (
-        head in ("default", "none") and sep and model.startswith("claude-")
-    ):
+    if v in ("none", "default") or (head in ("default", "none") and sep and model):
         return v
-    fail(
-        f"summ_fallback={v!r}: expected one of none, default, default+<claude model>, "
-        "none+<claude model>"
+    fail(f"summ_fallback={v!r}: expected one of none, default, default+<model>, none+<model>")
+
+
+def digest_reasoning(model: str, effort: str) -> dict | None:
+    """The digest call's reasoning, by route: ``claude-*`` -> ``{"anthropic_effort": effort}``
+    (fingerprinted, unchanged); any other model -> ``None`` at ``default`` effort, else
+    ``{"effort": effort}`` (OpenRouter's reasoning; ``reasoning_effort`` on the ``openai``
+    route). Plan 0096 section 8, as plan 0059 Arm B ran."""
+    if llm.route(model) == "anthropic":
+        return {"anthropic_effort": effort}
+    return None if effort == "default" else {"effort": effort}
+
+
+def follows_judge(args: JudgeArgs) -> bool:
+    """The digest model is the judge's (plan 0096 section 9): no ``summ_model=``, and a judge
+    is present, not pinned, and on a non-Anthropic route. A ``claude-*`` override judge, a
+    pinned judge and a probe without a judge keep the family's digest model."""
+    j = args.judge
+    return (
+        not args.extra.get("summ_model")
+        and j is not None
+        and not j.pinned
+        and llm.route(j.model) != "anthropic"
     )
+
+
+def digest_model(args: JudgeArgs) -> str:
+    """The digest model of a run, in order: ``opts=summ_model=``; the judge model when
+    :func:`follows_judge`; the family's ``aux_models["digest"]`` pin; :data:`DEFAULT_MODEL`."""
+    if follows_judge(args):
+        return args.judge.model
+    return args.extra.get("summ_model") or args.aux_models.get(AUX_ROLE) or DEFAULT_MODEL
 
 
 def _decode_opt(args: JudgeArgs) -> bool:
@@ -535,13 +576,30 @@ def _with_family(args: JudgeArgs, family: str | None) -> JudgeArgs:
 
 def settings(args: JudgeArgs, family: str | None = None) -> Settings:
     """The digest settings from ``opts=`` over the family's defaults (``FAMILY_DEFAULTS``); an
-    unknown value exits 2."""
+    unknown value exits 2. The model is :func:`digest_model` (it follows a non-Claude override
+    judge). For a non-Claude digest model (plan 0096 section 8) a FAMILY-DEFAULT
+    ``summ_fallback`` becomes ``none``; an explicit ``none+<model>`` is honoured, an explicit
+    ``default`` / ``default+<model>`` exits 2 (the server-side fallback is an Anthropic
+    feature). ``summ_context`` below :data:`MIN_CONTEXT` exits 2."""
+    explicit_fallback = "summ_fallback" in args.extra  # before the family defaults are merged
     args = _with_family(args, family)
     effort = _choice(args, "summ_effort", EFFORTS, DEFAULT_EFFORT)
-    model = args.extra.get("summ_model") or args.aux_models.get(AUX_ROLE) or DEFAULT_MODEL
+    model = digest_model(args)
+    fallback = _fallback_opt(args)
+    if llm.route(model) != "anthropic" and fallback != "none":
+        if not explicit_fallback:
+            fallback = "none"  # a family default: off for a non-Claude digest model
+        elif fallback.partition("+")[0] == "default":
+            fail(
+                f"summ_fallback={fallback!r} needs a claude-* digest model (got {model}): the "
+                "server-side refusal fallback is an Anthropic feature; use none or none+<model>"
+            )
+    context = _int_opt(args, "summ_context", CONTEXT_WINDOW)
+    if context < MIN_CONTEXT:
+        fail(f"summ_context={context}: expected at least {MIN_CONTEXT} tokens")
     return Settings(
         model=model,
-        reasoning={"anthropic_effort": effort},
+        reasoning=digest_reasoning(model, effort),
         variant=_choice(args, "summ_variant", VARIANTS, DEFAULT_VARIANT),
         render=_choice(args, "summ_render", RENDERS, DEFAULT_RENDER),
         max_items=_int_opt(args, "summ_max", DEFAULT_MAX_ITEMS),
@@ -551,7 +609,7 @@ def settings(args: JudgeArgs, family: str | None = None) -> Settings:
         ties=_nonneg_opt(args, "summ_ties", 0),
         decode=_decode_opt(args),
         overflow=_choice(args, "summ_overflow", OVERFLOWS, DEFAULT_OVERFLOW),
-        fallback=_fallback_opt(args),
+        fallback=fallback,
         concurrency=_int_opt(args, "summ_concurrency", 0) or None
         if "summ_concurrency" in args.extra
         else None,
@@ -562,6 +620,7 @@ def settings(args: JudgeArgs, family: str | None = None) -> Settings:
             args, "summ_showkey", ("0", "1"), "1" if family in SHOW_KEY_FAMILIES else "0"
         )
         == "1",
+        context=context,
     )
 
 
@@ -627,6 +686,7 @@ KNOWN_KEYS = frozenset(
         "summ_layers",
         "summ_showkey",
         "summ_layered_x",
+        "summ_context",
         STORE_OPT,
     }
 )
@@ -647,11 +707,14 @@ def validate(extra: Mapping[str, str]) -> None:
 
 
 def preflight_judge(
-    extra: Mapping[str, str], aux_models: Mapping[str, str] | None = None
+    extra: Mapping[str, str],
+    aux_models: Mapping[str, str] | None = None,
+    judge: ResolvedJudge | None = None,
 ) -> ResolvedJudge:
     """The digest model a family with ``aux_models`` will run, as a ResolvedJudge (the runner's
-    preflight)."""
-    probe = dataclasses.replace(_probe(extra), aux_models=dict(aux_models or {}))
+    preflight). ``judge``: the family's resolved judge, which the digest model follows when it
+    is a non-Claude override (:func:`digest_model`); ``None`` = no follow."""
+    probe = dataclasses.replace(_probe(extra), aux_models=dict(aux_models or {}), judge=judge)
     s = settings(probe)
     return ResolvedJudge(
         model=s.model, reasoning=s.reasoning, pinned=_default_digest(s), source="flag"
@@ -2047,6 +2110,16 @@ def collapse(
     first number of at least 3 of the 4 samples of one activation (:func:`consensus_claims`)
     with that count, and such a number fills a slot the summarizer left free."""
     s = settings(args, name)
+    if (
+        s.refusal_model
+        and cells_by_item
+        and not args.dry_run
+        and llm.route(s.refusal_model) != llm.route(s.model)
+    ):
+        # plan 0096: a client-side refusal model on another route needs that route's key (the
+        # WIF token source on the openai route); a missing one is a JudgeConfigError before the
+        # first digest call, never mid-run
+        llm.require_credentials(s.refusal_model)
     notes = _notes(name, cells_by_item, task_note)
     _check_expect_all(name, cells_by_item, expect_all)
     # a tie-extended numbers digest (chain) keeps its own request when given operands: the
@@ -2284,7 +2357,7 @@ def _collapse_stride(
                 [(system_of[i], user) for i, _fp, user in declined],
                 schema=schema,
                 model=model,
-                reasoning=s.reasoning,
+                reasoning=s.reasoning_on(model),
                 on_result=on_retry,
                 concurrency=s.concurrency or args.concurrency,
                 rpm=args.rpm,
@@ -2787,7 +2860,7 @@ def _layered_pass(
                 [(render_layered_system(s, notes[i]), u) for i, _k, _f, u in ts],
                 schema=DIGEST_SCHEMA,
                 model=model,
-                reasoning=s.reasoning,
+                reasoning=s.reasoning_on(model) if client else s.reasoning,
                 on_result=on_result,
                 concurrency=conc,
                 rpm=args.rpm,
@@ -3111,8 +3184,7 @@ def _numbers_pass(
 
 # ---------------------------------------------------------------- hierarchical overflow (plan 0021)
 
-CONTEXT_WINDOW = 1_000_000  # Opus 5.5 input + output
-CONTEXT_MARGIN = 64_000
+CONTEXT_MARGIN = 64_000  # CONTEXT_WINDOW (the summ_context default) is defined with the options
 MAX_HALVINGS = 2
 DIGEST_ATTEMPTS = 3  # a 1800 s call must not be retried 12 times
 _UNCOUNTED_RATIO = 1.7  # worst measured real/est ratio, used when a count fails
@@ -3221,7 +3293,7 @@ def _collapse_hierarchical(
         stems = {i: f"digest:{i}|{layers_tag}" for i in cells_by_item}
     system_of = {i: render_system(s, notes[i], spare) for i in cells_by_item}
     schema = DIGEST_SCHEMA
-    budget0 = min(s.token_cap, CONTEXT_WINDOW - MAX_TOKENS - CONTEXT_MARGIN)
+    budget0 = min(s.token_cap, s.context - MAX_TOKENS - CONTEXT_MARGIN)
     conc = s.concurrency or args.concurrency
     timeout = s.timeout or DIGEST_TIMEOUT
     col = Collapse()
@@ -3429,7 +3501,7 @@ def _collapse_hierarchical(
             [(system_of[i], u) for i, _k, _f, u in again],
             schema=schema,
             model=model,
-            reasoning=s.reasoning,
+            reasoning=s.reasoning_on(model),
             on_result=on_retry,
             concurrency=conc,
             rpm=args.rpm,

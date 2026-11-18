@@ -1,0 +1,3552 @@
+{
+ "agentic_misalignment/summary": {
+  "config": {
+   "aggregate": "summary",
+   "allow_missing": false,
+   "bank_version": "am-bank-v2",
+   "concurrency": 1,
+   "dry_run": false,
+   "items": [
+    "rh-unit-tests"
+   ],
+   "judge_model": "claude-sonnet-5",
+   "layers": null,
+   "layers_judged": [
+    20,
+    36
+   ],
+   "layers_read": [
+    20,
+    36
+   ],
+   "limit": 0,
+   "prompt_version": "am-design-v3+summ-c4+twin-c2+pairs-v2+sonnet-digest+opus5-fb+digest-v5-task-extractive+sj-v10",
+   "reader": "",
+   "reads": "full",
+   "reads_checked": "no_sidecar",
+   "reasoning": null,
+   "rpm": 1000000000.0,
+   "sampling": "prose1",
+   "sampling_source": "default",
+   "source_kind": "prose",
+   "summarizer": {
+    "concurrency": 1,
+    "decode": true,
+    "fallback": "none+claude-opus-5",
+    "layer_mode": "union",
+    "max_items": 25,
+    "max_rare": 25,
+    "model": "claude-sonnet-5",
+    "numbers": 0,
+    "overflow": "hierarchical",
+    "prompt_version": "digest-v5",
+    "reasoning": {
+     "anthropic_effort": "default"
+    },
+    "render": "extractive",
+    "timeout": 1800.0,
+    "token_cap": 920000,
+    "variant": "task"
+   }
+  },
+  "requests": [
+   {
+    "max_tokens": 12000,
+    "messages_sha256": "7e947e798af2a0575520ba87f9165f649d20b5782a268c243fc56a71ce2bd6b8",
+    "model": "claude-opus-5",
+    "system_sha256": null,
+    "thinking": {
+     "type": "adaptive"
+    },
+    "timeout": 600.0
+   },
+   {
+    "max_tokens": 64000,
+    "messages_sha256": "bdf118548d0f2c76995309ccde392e260f3fc68c46a693d9a5e076a95ed5c626",
+    "model": "claude-sonnet-5",
+    "output_config": {
+     "format": {
+      "schema": {
+       "additionalProperties": false,
+       "properties": {
+        "items": {
+         "items": {
+          "additionalProperties": false,
+          "properties": {
+           "count": {
+            "type": "integer"
+           },
+           "evidence": {
+            "type": "string"
+           },
+           "key": {
+            "type": "string"
+           },
+           "statement": {
+            "type": "string"
+           },
+           "where": {
+            "type": "string"
+           }
+          },
+          "required": [
+           "statement",
+           "key",
+           "where",
+           "evidence",
+           "count"
+          ],
+          "type": "object"
+         },
+         "type": "array"
+        },
+        "rare": {
+         "items": {
+          "additionalProperties": false,
+          "properties": {
+           "count": {
+            "type": "integer"
+           },
+           "evidence": {
+            "type": "string"
+           },
+           "key": {
+            "type": "string"
+           },
+           "statement": {
+            "type": "string"
+           },
+           "where": {
+            "type": "string"
+           }
+          },
+          "required": [
+           "statement",
+           "key",
+           "where",
+           "evidence",
+           "count"
+          ],
+          "type": "object"
+         },
+         "type": "array"
+        }
+       },
+       "required": [
+        "items",
+        "rare"
+       ],
+       "type": "object"
+      },
+      "type": "json_schema"
+     }
+    },
+    "system_sha256": "88eaa21cf693c850646aaafd746bc64d8bdf88546ffd3059a32381e28dfb6118",
+    "timeout": 1800.0
+   },
+   {
+    "max_tokens": 12000,
+    "messages_sha256": "7e947e798af2a0575520ba87f9165f649d20b5782a268c243fc56a71ce2bd6b8",
+    "model": "claude-sonnet-5",
+    "system_sha256": null,
+    "thinking": {
+     "type": "adaptive"
+    },
+    "timeout": 600.0
+   },
+   {
+    "max_tokens": 64000,
+    "messages_sha256": "250900fc85216d7a6c08457134de9ffd45c7bf1b0143682509f53e75ed871733",
+    "model": "claude-sonnet-5",
+    "output_config": {
+     "format": {
+      "schema": {
+       "additionalProperties": false,
+       "properties": {
+        "items": {
+         "items": {
+          "additionalProperties": false,
+          "properties": {
+           "count": {
+            "type": "integer"
+           },
+           "evidence": {
+            "type": "string"
+           },
+           "key": {
+            "type": "string"
+           },
+           "statement": {
+            "type": "string"
+           },
+           "where": {
+            "type": "string"
+           }
+          },
+          "required": [
+           "statement",
+           "key",
+           "where",
+           "evidence",
+           "count"
+          ],
+          "type": "object"
+         },
+         "type": "array"
+        },
+        "rare": {
+         "items": {
+          "additionalProperties": false,
+          "properties": {
+           "count": {
+            "type": "integer"
+           },
+           "evidence": {
+            "type": "string"
+           },
+           "key": {
+            "type": "string"
+           },
+           "statement": {
+            "type": "string"
+           },
+           "where": {
+            "type": "string"
+           }
+          },
+          "required": [
+           "statement",
+           "key",
+           "where",
+           "evidence",
+           "count"
+          ],
+          "type": "object"
+         },
+         "type": "array"
+        }
+       },
+       "required": [
+        "items",
+        "rare"
+       ],
+       "type": "object"
+      },
+      "type": "json_schema"
+     }
+    },
+    "system_sha256": "88eaa21cf693c850646aaafd746bc64d8bdf88546ffd3059a32381e28dfb6118",
+    "timeout": 1800.0
+   },
+   {
+    "max_tokens": 64000,
+    "messages_sha256": "890386c870ee6c878ffb3e6e68d4fe05d6a51c52fd166f6e4dba70b7717e30f3",
+    "model": "claude-sonnet-5",
+    "output_config": {
+     "format": {
+      "schema": {
+       "additionalProperties": false,
+       "properties": {
+        "items": {
+         "items": {
+          "additionalProperties": false,
+          "properties": {
+           "count": {
+            "type": "integer"
+           },
+           "evidence": {
+            "type": "string"
+           },
+           "key": {
+            "type": "string"
+           },
+           "statement": {
+            "type": "string"
+           },
+           "where": {
+            "type": "string"
+           }
+          },
+          "required": [
+           "statement",
+           "key",
+           "where",
+           "evidence",
+           "count"
+          ],
+          "type": "object"
+         },
+         "type": "array"
+        },
+        "rare": {
+         "items": {
+          "additionalProperties": false,
+          "properties": {
+           "count": {
+            "type": "integer"
+           },
+           "evidence": {
+            "type": "string"
+           },
+           "key": {
+            "type": "string"
+           },
+           "statement": {
+            "type": "string"
+           },
+           "where": {
+            "type": "string"
+           }
+          },
+          "required": [
+           "statement",
+           "key",
+           "where",
+           "evidence",
+           "count"
+          ],
+          "type": "object"
+         },
+         "type": "array"
+        }
+       },
+       "required": [
+        "items",
+        "rare"
+       ],
+       "type": "object"
+      },
+      "type": "json_schema"
+     }
+    },
+    "system_sha256": "88eaa21cf693c850646aaafd746bc64d8bdf88546ffd3059a32381e28dfb6118",
+    "timeout": 1800.0
+   },
+   {
+    "max_tokens": 12000,
+    "messages_sha256": "819ea350d463e2b15a7c9fe7a9bb869e5457993ef1e426c2fd5ac166c48f3d19",
+    "model": "claude-sonnet-5",
+    "system_sha256": null,
+    "thinking": {
+     "type": "adaptive"
+    },
+    "timeout": 600.0
+   },
+   {
+    "max_tokens": 64000,
+    "messages_sha256": "b4538914b36eb56b1ea4a5137ea636a606364c1d840a3cd4f7a648897945ccf4",
+    "model": "claude-sonnet-5",
+    "output_config": {
+     "format": {
+      "schema": {
+       "additionalProperties": false,
+       "properties": {
+        "items": {
+         "items": {
+          "additionalProperties": false,
+          "properties": {
+           "count": {
+            "type": "integer"
+           },
+           "evidence": {
+            "type": "string"
+           },
+           "key": {
+            "type": "string"
+           },
+           "statement": {
+            "type": "string"
+           },
+           "where": {
+            "type": "string"
+           }
+          },
+          "required": [
+           "statement",
+           "key",
+           "where",
+           "evidence",
+           "count"
+          ],
+          "type": "object"
+         },
+         "type": "array"
+        },
+        "rare": {
+         "items": {
+          "additionalProperties": false,
+          "properties": {
+           "count": {
+            "type": "integer"
+           },
+           "evidence": {
+            "type": "string"
+           },
+           "key": {
+            "type": "string"
+           },
+           "statement": {
+            "type": "string"
+           },
+           "where": {
+            "type": "string"
+           }
+          },
+          "required": [
+           "statement",
+           "key",
+           "where",
+           "evidence",
+           "count"
+          ],
+          "type": "object"
+         },
+         "type": "array"
+        }
+       },
+       "required": [
+        "items",
+        "rare"
+       ],
+       "type": "object"
+      },
+      "type": "json_schema"
+     }
+    },
+    "system_sha256": "88eaa21cf693c850646aaafd746bc64d8bdf88546ffd3059a32381e28dfb6118",
+    "timeout": 1800.0
+   }
+  ]
+ },
+ "hinted_cutoff/native": {
+  "config": {
+   "allow_missing": false,
+   "concurrency": 1,
+   "dry_run": false,
+   "fallback_model": "claude-sonnet-5-5",
+   "items": null,
+   "judge_model": "claude-opus-5-5",
+   "kind": "prose",
+   "layers": null,
+   "layers_judged": [
+    44
+   ],
+   "limit": 0,
+   "path": "prose",
+   "prompt_version": "hc-2026-11-04b",
+   "reader": "",
+   "reads": "full",
+   "reads_checked": "no_sidecar",
+   "reasoning": {
+    "anthropic_effort": "default"
+   },
+   "rpm": 1000000000.0,
+   "sampling": "prose1",
+   "sampling_source": "default"
+  },
+  "requests": [
+   {
+    "max_tokens": 8000,
+    "messages_sha256": "67ebd41636b8c74ea0dc7314a5ef95c480abc793825dd7b1ff7aedd73d8df724",
+    "model": "claude-opus-5-5",
+    "output_config": {
+     "format": {
+      "schema": {
+       "additionalProperties": false,
+       "properties": {
+        "hint_ambiguous": {
+         "type": "boolean"
+        },
+        "hint_confirm": {
+         "type": "boolean"
+        },
+        "hint_dispute": {
+         "type": "boolean"
+        },
+        "hint_mention": {
+         "type": "boolean"
+        },
+        "hint_reliance": {
+         "type": "boolean"
+        },
+        "not_knowing": {
+         "type": "boolean"
+        },
+        "quotes": {
+         "additionalProperties": false,
+         "properties": {
+          "hint_ambiguous": {
+           "items": {
+            "type": "string"
+           },
+           "type": "array"
+          },
+          "hint_confirm": {
+           "items": {
+            "type": "string"
+           },
+           "type": "array"
+          },
+          "hint_dispute": {
+           "items": {
+            "type": "string"
+           },
+           "type": "array"
+          },
+          "hint_mention": {
+           "items": {
+            "type": "string"
+           },
+           "type": "array"
+          },
+          "hint_reliance": {
+           "items": {
+            "type": "string"
+           },
+           "type": "array"
+          },
+          "not_knowing": {
+           "items": {
+            "type": "string"
+           },
+           "type": "array"
+          }
+         },
+         "required": [
+          "hint_reliance",
+          "hint_confirm",
+          "hint_ambiguous",
+          "hint_dispute",
+          "hint_mention",
+          "not_knowing"
+         ],
+         "type": "object"
+        }
+       },
+       "required": [
+        "hint_reliance",
+        "hint_confirm",
+        "hint_ambiguous",
+        "hint_dispute",
+        "hint_mention",
+        "not_knowing",
+        "quotes"
+       ],
+       "type": "object"
+      },
+      "type": "json_schema"
+     }
+    },
+    "system_sha256": "8489a1c6057bb5609a23cd6626f1307c334a19f458bdbe00a8cca6f373391b01",
+    "timeout": 180.0
+   },
+   {
+    "max_tokens": 8000,
+    "messages_sha256": "436b85da6c190aa7c418e56a1276ecebfd906fa4e602de5017d10fe11c54ee8b",
+    "model": "claude-opus-5-5",
+    "output_config": {
+     "format": {
+      "schema": {
+       "additionalProperties": false,
+       "properties": {
+        "hint_ambiguous": {
+         "type": "boolean"
+        },
+        "hint_confirm": {
+         "type": "boolean"
+        },
+        "hint_dispute": {
+         "type": "boolean"
+        },
+        "hint_mention": {
+         "type": "boolean"
+        },
+        "hint_reliance": {
+         "type": "boolean"
+        },
+        "not_knowing": {
+         "type": "boolean"
+        },
+        "quotes": {
+         "additionalProperties": false,
+         "properties": {
+          "hint_ambiguous": {
+           "items": {
+            "type": "string"
+           },
+           "type": "array"
+          },
+          "hint_confirm": {
+           "items": {
+            "type": "string"
+           },
+           "type": "array"
+          },
+          "hint_dispute": {
+           "items": {
+            "type": "string"
+           },
+           "type": "array"
+          },
+          "hint_mention": {
+           "items": {
+            "type": "string"
+           },
+           "type": "array"
+          },
+          "hint_reliance": {
+           "items": {
+            "type": "string"
+           },
+           "type": "array"
+          },
+          "not_knowing": {
+           "items": {
+            "type": "string"
+           },
+           "type": "array"
+          }
+         },
+         "required": [
+          "hint_reliance",
+          "hint_confirm",
+          "hint_ambiguous",
+          "hint_dispute",
+          "hint_mention",
+          "not_knowing"
+         ],
+         "type": "object"
+        }
+       },
+       "required": [
+        "hint_reliance",
+        "hint_confirm",
+        "hint_ambiguous",
+        "hint_dispute",
+        "hint_mention",
+        "not_knowing",
+        "quotes"
+       ],
+       "type": "object"
+      },
+      "type": "json_schema"
+     }
+    },
+    "system_sha256": "8489a1c6057bb5609a23cd6626f1307c334a19f458bdbe00a8cca6f373391b01",
+    "timeout": 180.0
+   },
+   {
+    "max_tokens": 8000,
+    "messages_sha256": "311f4b521220550aae96508674e9060c7c19c0d555b0ef5edbf9b27e09972475",
+    "model": "claude-opus-5-5",
+    "output_config": {
+     "format": {
+      "schema": {
+       "additionalProperties": false,
+       "properties": {
+        "hint_ambiguous": {
+         "type": "boolean"
+        },
+        "hint_confirm": {
+         "type": "boolean"
+        },
+        "hint_dispute": {
+         "type": "boolean"
+        },
+        "hint_mention": {
+         "type": "boolean"
+        },
+        "hint_reliance": {
+         "type": "boolean"
+        },
+        "not_knowing": {
+         "type": "boolean"
+        },
+        "quotes": {
+         "additionalProperties": false,
+         "properties": {
+          "hint_ambiguous": {
+           "items": {
+            "type": "string"
+           },
+           "type": "array"
+          },
+          "hint_confirm": {
+           "items": {
+            "type": "string"
+           },
+           "type": "array"
+          },
+          "hint_dispute": {
+           "items": {
+            "type": "string"
+           },
+           "type": "array"
+          },
+          "hint_mention": {
+           "items": {
+            "type": "string"
+           },
+           "type": "array"
+          },
+          "hint_reliance": {
+           "items": {
+            "type": "string"
+           },
+           "type": "array"
+          },
+          "not_knowing": {
+           "items": {
+            "type": "string"
+           },
+           "type": "array"
+          }
+         },
+         "required": [
+          "hint_reliance",
+          "hint_confirm",
+          "hint_ambiguous",
+          "hint_dispute",
+          "hint_mention",
+          "not_knowing"
+         ],
+         "type": "object"
+        }
+       },
+       "required": [
+        "hint_reliance",
+        "hint_confirm",
+        "hint_ambiguous",
+        "hint_dispute",
+        "hint_mention",
+        "not_knowing",
+        "quotes"
+       ],
+       "type": "object"
+      },
+      "type": "json_schema"
+     }
+    },
+    "system_sha256": "8489a1c6057bb5609a23cd6626f1307c334a19f458bdbe00a8cca6f373391b01",
+    "timeout": 180.0
+   },
+   {
+    "max_tokens": 8000,
+    "messages_sha256": "be85ed8c84e1cdfaaa47b63d887f08fc64f656f94dd78e85944567d116cd532a",
+    "model": "claude-opus-5-5",
+    "output_config": {
+     "format": {
+      "schema": {
+       "additionalProperties": false,
+       "properties": {
+        "hint_ambiguous": {
+         "type": "boolean"
+        },
+        "hint_confirm": {
+         "type": "boolean"
+        },
+        "hint_dispute": {
+         "type": "boolean"
+        },
+        "hint_mention": {
+         "type": "boolean"
+        },
+        "hint_reliance": {
+         "type": "boolean"
+        },
+        "not_knowing": {
+         "type": "boolean"
+        },
+        "quotes": {
+         "additionalProperties": false,
+         "properties": {
+          "hint_ambiguous": {
+           "items": {
+            "type": "string"
+           },
+           "type": "array"
+          },
+          "hint_confirm": {
+           "items": {
+            "type": "string"
+           },
+           "type": "array"
+          },
+          "hint_dispute": {
+           "items": {
+            "type": "string"
+           },
+           "type": "array"
+          },
+          "hint_mention": {
+           "items": {
+            "type": "string"
+           },
+           "type": "array"
+          },
+          "hint_reliance": {
+           "items": {
+            "type": "string"
+           },
+           "type": "array"
+          },
+          "not_knowing": {
+           "items": {
+            "type": "string"
+           },
+           "type": "array"
+          }
+         },
+         "required": [
+          "hint_reliance",
+          "hint_confirm",
+          "hint_ambiguous",
+          "hint_dispute",
+          "hint_mention",
+          "not_knowing"
+         ],
+         "type": "object"
+        }
+       },
+       "required": [
+        "hint_reliance",
+        "hint_confirm",
+        "hint_ambiguous",
+        "hint_dispute",
+        "hint_mention",
+        "not_knowing",
+        "quotes"
+       ],
+       "type": "object"
+      },
+      "type": "json_schema"
+     }
+    },
+    "system_sha256": "8489a1c6057bb5609a23cd6626f1307c334a19f458bdbe00a8cca6f373391b01",
+    "timeout": 180.0
+   },
+   {
+    "max_tokens": 8000,
+    "messages_sha256": "6186a34ebfea28a0630f4fe2372dd33bf80b4735a2aa9d193865c7fe0fac69c1",
+    "model": "claude-opus-5-5",
+    "output_config": {
+     "format": {
+      "schema": {
+       "additionalProperties": false,
+       "properties": {
+        "hint_ambiguous": {
+         "type": "boolean"
+        },
+        "hint_confirm": {
+         "type": "boolean"
+        },
+        "hint_dispute": {
+         "type": "boolean"
+        },
+        "hint_mention": {
+         "type": "boolean"
+        },
+        "hint_reliance": {
+         "type": "boolean"
+        },
+        "not_knowing": {
+         "type": "boolean"
+        },
+        "quotes": {
+         "additionalProperties": false,
+         "properties": {
+          "hint_ambiguous": {
+           "items": {
+            "type": "string"
+           },
+           "type": "array"
+          },
+          "hint_confirm": {
+           "items": {
+            "type": "string"
+           },
+           "type": "array"
+          },
+          "hint_dispute": {
+           "items": {
+            "type": "string"
+           },
+           "type": "array"
+          },
+          "hint_mention": {
+           "items": {
+            "type": "string"
+           },
+           "type": "array"
+          },
+          "hint_reliance": {
+           "items": {
+            "type": "string"
+           },
+           "type": "array"
+          },
+          "not_knowing": {
+           "items": {
+            "type": "string"
+           },
+           "type": "array"
+          }
+         },
+         "required": [
+          "hint_reliance",
+          "hint_confirm",
+          "hint_ambiguous",
+          "hint_dispute",
+          "hint_mention",
+          "not_knowing"
+         ],
+         "type": "object"
+        }
+       },
+       "required": [
+        "hint_reliance",
+        "hint_confirm",
+        "hint_ambiguous",
+        "hint_dispute",
+        "hint_mention",
+        "not_knowing",
+        "quotes"
+       ],
+       "type": "object"
+      },
+      "type": "json_schema"
+     }
+    },
+    "system_sha256": "8489a1c6057bb5609a23cd6626f1307c334a19f458bdbe00a8cca6f373391b01",
+    "timeout": 180.0
+   },
+   {
+    "max_tokens": 8000,
+    "messages_sha256": "bb28f2aa306abdde7aac0e3770116e458f4d03709802a63988f0bd380f6f5d65",
+    "model": "claude-opus-5-5",
+    "output_config": {
+     "format": {
+      "schema": {
+       "additionalProperties": false,
+       "properties": {
+        "hint_ambiguous": {
+         "type": "boolean"
+        },
+        "hint_confirm": {
+         "type": "boolean"
+        },
+        "hint_dispute": {
+         "type": "boolean"
+        },
+        "hint_mention": {
+         "type": "boolean"
+        },
+        "hint_reliance": {
+         "type": "boolean"
+        },
+        "not_knowing": {
+         "type": "boolean"
+        },
+        "quotes": {
+         "additionalProperties": false,
+         "properties": {
+          "hint_ambiguous": {
+           "items": {
+            "type": "string"
+           },
+           "type": "array"
+          },
+          "hint_confirm": {
+           "items": {
+            "type": "string"
+           },
+           "type": "array"
+          },
+          "hint_dispute": {
+           "items": {
+            "type": "string"
+           },
+           "type": "array"
+          },
+          "hint_mention": {
+           "items": {
+            "type": "string"
+           },
+           "type": "array"
+          },
+          "hint_reliance": {
+           "items": {
+            "type": "string"
+           },
+           "type": "array"
+          },
+          "not_knowing": {
+           "items": {
+            "type": "string"
+           },
+           "type": "array"
+          }
+         },
+         "required": [
+          "hint_reliance",
+          "hint_confirm",
+          "hint_ambiguous",
+          "hint_dispute",
+          "hint_mention",
+          "not_knowing"
+         ],
+         "type": "object"
+        }
+       },
+       "required": [
+        "hint_reliance",
+        "hint_confirm",
+        "hint_ambiguous",
+        "hint_dispute",
+        "hint_mention",
+        "not_knowing",
+        "quotes"
+       ],
+       "type": "object"
+      },
+      "type": "json_schema"
+     }
+    },
+    "system_sha256": "8489a1c6057bb5609a23cd6626f1307c334a19f458bdbe00a8cca6f373391b01",
+    "timeout": 180.0
+   },
+   {
+    "max_tokens": 8000,
+    "messages_sha256": "2e55245eb56868ab38769d7279f3b3bab8d57a6a0e6d49c6d829c6967b17a008",
+    "model": "claude-opus-5-5",
+    "output_config": {
+     "format": {
+      "schema": {
+       "additionalProperties": false,
+       "properties": {
+        "hint_ambiguous": {
+         "type": "boolean"
+        },
+        "hint_confirm": {
+         "type": "boolean"
+        },
+        "hint_dispute": {
+         "type": "boolean"
+        },
+        "hint_mention": {
+         "type": "boolean"
+        },
+        "hint_reliance": {
+         "type": "boolean"
+        },
+        "not_knowing": {
+         "type": "boolean"
+        },
+        "quotes": {
+         "additionalProperties": false,
+         "properties": {
+          "hint_ambiguous": {
+           "items": {
+            "type": "string"
+           },
+           "type": "array"
+          },
+          "hint_confirm": {
+           "items": {
+            "type": "string"
+           },
+           "type": "array"
+          },
+          "hint_dispute": {
+           "items": {
+            "type": "string"
+           },
+           "type": "array"
+          },
+          "hint_mention": {
+           "items": {
+            "type": "string"
+           },
+           "type": "array"
+          },
+          "hint_reliance": {
+           "items": {
+            "type": "string"
+           },
+           "type": "array"
+          },
+          "not_knowing": {
+           "items": {
+            "type": "string"
+           },
+           "type": "array"
+          }
+         },
+         "required": [
+          "hint_reliance",
+          "hint_confirm",
+          "hint_ambiguous",
+          "hint_dispute",
+          "hint_mention",
+          "not_knowing"
+         ],
+         "type": "object"
+        }
+       },
+       "required": [
+        "hint_reliance",
+        "hint_confirm",
+        "hint_ambiguous",
+        "hint_dispute",
+        "hint_mention",
+        "not_knowing",
+        "quotes"
+       ],
+       "type": "object"
+      },
+      "type": "json_schema"
+     }
+    },
+    "system_sha256": "8489a1c6057bb5609a23cd6626f1307c334a19f458bdbe00a8cca6f373391b01",
+    "timeout": 180.0
+   },
+   {
+    "max_tokens": 8000,
+    "messages_sha256": "d9e9ed92dc159c5d417e0d96d5c6312cb9263d46768cce817ff202db98949235",
+    "model": "claude-opus-5-5",
+    "output_config": {
+     "format": {
+      "schema": {
+       "additionalProperties": false,
+       "properties": {
+        "hint_ambiguous": {
+         "type": "boolean"
+        },
+        "hint_confirm": {
+         "type": "boolean"
+        },
+        "hint_dispute": {
+         "type": "boolean"
+        },
+        "hint_mention": {
+         "type": "boolean"
+        },
+        "hint_reliance": {
+         "type": "boolean"
+        },
+        "not_knowing": {
+         "type": "boolean"
+        },
+        "quotes": {
+         "additionalProperties": false,
+         "properties": {
+          "hint_ambiguous": {
+           "items": {
+            "type": "string"
+           },
+           "type": "array"
+          },
+          "hint_confirm": {
+           "items": {
+            "type": "string"
+           },
+           "type": "array"
+          },
+          "hint_dispute": {
+           "items": {
+            "type": "string"
+           },
+           "type": "array"
+          },
+          "hint_mention": {
+           "items": {
+            "type": "string"
+           },
+           "type": "array"
+          },
+          "hint_reliance": {
+           "items": {
+            "type": "string"
+           },
+           "type": "array"
+          },
+          "not_knowing": {
+           "items": {
+            "type": "string"
+           },
+           "type": "array"
+          }
+         },
+         "required": [
+          "hint_reliance",
+          "hint_confirm",
+          "hint_ambiguous",
+          "hint_dispute",
+          "hint_mention",
+          "not_knowing"
+         ],
+         "type": "object"
+        }
+       },
+       "required": [
+        "hint_reliance",
+        "hint_confirm",
+        "hint_ambiguous",
+        "hint_dispute",
+        "hint_mention",
+        "not_knowing",
+        "quotes"
+       ],
+       "type": "object"
+      },
+      "type": "json_schema"
+     }
+    },
+    "system_sha256": "8489a1c6057bb5609a23cd6626f1307c334a19f458bdbe00a8cca6f373391b01",
+    "timeout": 180.0
+   },
+   {
+    "max_tokens": 8000,
+    "messages_sha256": "311f4b521220550aae96508674e9060c7c19c0d555b0ef5edbf9b27e09972475",
+    "model": "claude-sonnet-5-5",
+    "output_config": {
+     "format": {
+      "schema": {
+       "additionalProperties": false,
+       "properties": {
+        "hint_ambiguous": {
+         "type": "boolean"
+        },
+        "hint_confirm": {
+         "type": "boolean"
+        },
+        "hint_dispute": {
+         "type": "boolean"
+        },
+        "hint_mention": {
+         "type": "boolean"
+        },
+        "hint_reliance": {
+         "type": "boolean"
+        },
+        "not_knowing": {
+         "type": "boolean"
+        },
+        "quotes": {
+         "additionalProperties": false,
+         "properties": {
+          "hint_ambiguous": {
+           "items": {
+            "type": "string"
+           },
+           "type": "array"
+          },
+          "hint_confirm": {
+           "items": {
+            "type": "string"
+           },
+           "type": "array"
+          },
+          "hint_dispute": {
+           "items": {
+            "type": "string"
+           },
+           "type": "array"
+          },
+          "hint_mention": {
+           "items": {
+            "type": "string"
+           },
+           "type": "array"
+          },
+          "hint_reliance": {
+           "items": {
+            "type": "string"
+           },
+           "type": "array"
+          },
+          "not_knowing": {
+           "items": {
+            "type": "string"
+           },
+           "type": "array"
+          }
+         },
+         "required": [
+          "hint_reliance",
+          "hint_confirm",
+          "hint_ambiguous",
+          "hint_dispute",
+          "hint_mention",
+          "not_knowing"
+         ],
+         "type": "object"
+        }
+       },
+       "required": [
+        "hint_reliance",
+        "hint_confirm",
+        "hint_ambiguous",
+        "hint_dispute",
+        "hint_mention",
+        "not_knowing",
+        "quotes"
+       ],
+       "type": "object"
+      },
+      "type": "json_schema"
+     }
+    },
+    "system_sha256": "8489a1c6057bb5609a23cd6626f1307c334a19f458bdbe00a8cca6f373391b01",
+    "timeout": 180.0
+   }
+  ]
+ },
+ "hinted_cutoff/summary": {
+  "config": {
+   "aggregate": "summary",
+   "allow_missing": false,
+   "concurrency": 1,
+   "dry_run": false,
+   "fallback_model": "claude-sonnet-5-5",
+   "items": null,
+   "judge_model": "claude-opus-5-5",
+   "kind": "prose",
+   "layers": null,
+   "layers_judged": [
+    44
+   ],
+   "limit": 0,
+   "path": "prose",
+   "prompt_version": "hc-2026-11-04b+digest-v5-task-extractive+sj-v10",
+   "reader": "",
+   "reads": "full",
+   "reads_checked": "no_sidecar",
+   "reasoning": {
+    "anthropic_effort": "default"
+   },
+   "rpm": 1000000000.0,
+   "sampling": "prose1",
+   "sampling_source": "default",
+   "source_kind": "prose",
+   "summarizer": {
+    "concurrency": 1,
+    "decode": true,
+    "fallback": "none",
+    "layer_mode": "union",
+    "max_items": 10,
+    "max_rare": 25,
+    "model": "claude-opus-5-5",
+    "numbers": 0,
+    "overflow": "hierarchical",
+    "prompt_version": "digest-v5",
+    "reasoning": {
+     "anthropic_effort": "default"
+    },
+    "render": "extractive",
+    "timeout": 900.0,
+    "token_cap": 920000,
+    "variant": "task"
+   }
+  },
+  "requests": [
+   {
+    "max_tokens": 32000,
+    "messages_sha256": "3aca8d8e81294c68af7141b2a6c289852901b08de40e3e7ef8a1ef2b290ef801",
+    "model": "claude-opus-5-5",
+    "output_config": {
+     "format": {
+      "schema": {
+       "additionalProperties": false,
+       "properties": {
+        "items": {
+         "items": {
+          "additionalProperties": false,
+          "properties": {
+           "count": {
+            "type": "integer"
+           },
+           "evidence": {
+            "type": "string"
+           },
+           "key": {
+            "type": "string"
+           },
+           "statement": {
+            "type": "string"
+           },
+           "where": {
+            "type": "string"
+           }
+          },
+          "required": [
+           "statement",
+           "key",
+           "where",
+           "evidence",
+           "count"
+          ],
+          "type": "object"
+         },
+         "type": "array"
+        },
+        "rare": {
+         "items": {
+          "additionalProperties": false,
+          "properties": {
+           "count": {
+            "type": "integer"
+           },
+           "evidence": {
+            "type": "string"
+           },
+           "key": {
+            "type": "string"
+           },
+           "statement": {
+            "type": "string"
+           },
+           "where": {
+            "type": "string"
+           }
+          },
+          "required": [
+           "statement",
+           "key",
+           "where",
+           "evidence",
+           "count"
+          ],
+          "type": "object"
+         },
+         "type": "array"
+        }
+       },
+       "required": [
+        "items",
+        "rare"
+       ],
+       "type": "object"
+      },
+      "type": "json_schema"
+     }
+    },
+    "system_sha256": "c5404bbbd9583700fef829c04fa0f43511833fbfe5b73f449ae521cbea160636",
+    "timeout": 900.0
+   },
+   {
+    "max_tokens": 8000,
+    "messages_sha256": "e9987d5bd4f9558e534712c8d20f81a5668dd3de0d1e50aa87dc4e8abcd456d5",
+    "model": "claude-opus-5-5",
+    "output_config": {
+     "format": {
+      "schema": {
+       "additionalProperties": false,
+       "properties": {
+        "hint_ambiguous": {
+         "type": "boolean"
+        },
+        "hint_confirm": {
+         "type": "boolean"
+        },
+        "hint_dispute": {
+         "type": "boolean"
+        },
+        "hint_mention": {
+         "type": "boolean"
+        },
+        "hint_reliance": {
+         "type": "boolean"
+        },
+        "not_knowing": {
+         "type": "boolean"
+        },
+        "quotes": {
+         "additionalProperties": false,
+         "properties": {
+          "hint_ambiguous": {
+           "items": {
+            "type": "string"
+           },
+           "type": "array"
+          },
+          "hint_confirm": {
+           "items": {
+            "type": "string"
+           },
+           "type": "array"
+          },
+          "hint_dispute": {
+           "items": {
+            "type": "string"
+           },
+           "type": "array"
+          },
+          "hint_mention": {
+           "items": {
+            "type": "string"
+           },
+           "type": "array"
+          },
+          "hint_reliance": {
+           "items": {
+            "type": "string"
+           },
+           "type": "array"
+          },
+          "not_knowing": {
+           "items": {
+            "type": "string"
+           },
+           "type": "array"
+          }
+         },
+         "required": [
+          "hint_reliance",
+          "hint_confirm",
+          "hint_ambiguous",
+          "hint_dispute",
+          "hint_mention",
+          "not_knowing"
+         ],
+         "type": "object"
+        }
+       },
+       "required": [
+        "hint_reliance",
+        "hint_confirm",
+        "hint_ambiguous",
+        "hint_dispute",
+        "hint_mention",
+        "not_knowing",
+        "quotes"
+       ],
+       "type": "object"
+      },
+      "type": "json_schema"
+     }
+    },
+    "system_sha256": "8489a1c6057bb5609a23cd6626f1307c334a19f458bdbe00a8cca6f373391b01",
+    "timeout": 180.0
+   },
+   {
+    "max_tokens": 8000,
+    "messages_sha256": "d7c0f231293f993e56b07e03ee3262c8a54eb4218918c92af904491f067cafc7",
+    "model": "claude-opus-5-5",
+    "output_config": {
+     "format": {
+      "schema": {
+       "additionalProperties": false,
+       "properties": {
+        "hint_ambiguous": {
+         "type": "boolean"
+        },
+        "hint_confirm": {
+         "type": "boolean"
+        },
+        "hint_dispute": {
+         "type": "boolean"
+        },
+        "hint_mention": {
+         "type": "boolean"
+        },
+        "hint_reliance": {
+         "type": "boolean"
+        },
+        "not_knowing": {
+         "type": "boolean"
+        },
+        "quotes": {
+         "additionalProperties": false,
+         "properties": {
+          "hint_ambiguous": {
+           "items": {
+            "type": "string"
+           },
+           "type": "array"
+          },
+          "hint_confirm": {
+           "items": {
+            "type": "string"
+           },
+           "type": "array"
+          },
+          "hint_dispute": {
+           "items": {
+            "type": "string"
+           },
+           "type": "array"
+          },
+          "hint_mention": {
+           "items": {
+            "type": "string"
+           },
+           "type": "array"
+          },
+          "hint_reliance": {
+           "items": {
+            "type": "string"
+           },
+           "type": "array"
+          },
+          "not_knowing": {
+           "items": {
+            "type": "string"
+           },
+           "type": "array"
+          }
+         },
+         "required": [
+          "hint_reliance",
+          "hint_confirm",
+          "hint_ambiguous",
+          "hint_dispute",
+          "hint_mention",
+          "not_knowing"
+         ],
+         "type": "object"
+        }
+       },
+       "required": [
+        "hint_reliance",
+        "hint_confirm",
+        "hint_ambiguous",
+        "hint_dispute",
+        "hint_mention",
+        "not_knowing",
+        "quotes"
+       ],
+       "type": "object"
+      },
+      "type": "json_schema"
+     }
+    },
+    "system_sha256": "8489a1c6057bb5609a23cd6626f1307c334a19f458bdbe00a8cca6f373391b01",
+    "timeout": 180.0
+   },
+   {
+    "max_tokens": 32000,
+    "messages_sha256": "4554d1d046b9a3ebed6b8835b41e426c81471ed3f3353c16536f9af2cc3b2071",
+    "model": "claude-opus-5-5",
+    "output_config": {
+     "format": {
+      "schema": {
+       "additionalProperties": false,
+       "properties": {
+        "items": {
+         "items": {
+          "additionalProperties": false,
+          "properties": {
+           "count": {
+            "type": "integer"
+           },
+           "evidence": {
+            "type": "string"
+           },
+           "key": {
+            "type": "string"
+           },
+           "statement": {
+            "type": "string"
+           },
+           "where": {
+            "type": "string"
+           }
+          },
+          "required": [
+           "statement",
+           "key",
+           "where",
+           "evidence",
+           "count"
+          ],
+          "type": "object"
+         },
+         "type": "array"
+        },
+        "rare": {
+         "items": {
+          "additionalProperties": false,
+          "properties": {
+           "count": {
+            "type": "integer"
+           },
+           "evidence": {
+            "type": "string"
+           },
+           "key": {
+            "type": "string"
+           },
+           "statement": {
+            "type": "string"
+           },
+           "where": {
+            "type": "string"
+           }
+          },
+          "required": [
+           "statement",
+           "key",
+           "where",
+           "evidence",
+           "count"
+          ],
+          "type": "object"
+         },
+         "type": "array"
+        }
+       },
+       "required": [
+        "items",
+        "rare"
+       ],
+       "type": "object"
+      },
+      "type": "json_schema"
+     }
+    },
+    "system_sha256": "c5404bbbd9583700fef829c04fa0f43511833fbfe5b73f449ae521cbea160636",
+    "timeout": 900.0
+   },
+   {
+    "max_tokens": 8000,
+    "messages_sha256": "eec19cc4bb0cedb7859b2db0c8621a9dc97e2b205b22027d33ea4ce8828beec2",
+    "model": "claude-opus-5-5",
+    "output_config": {
+     "format": {
+      "schema": {
+       "additionalProperties": false,
+       "properties": {
+        "hint_ambiguous": {
+         "type": "boolean"
+        },
+        "hint_confirm": {
+         "type": "boolean"
+        },
+        "hint_dispute": {
+         "type": "boolean"
+        },
+        "hint_mention": {
+         "type": "boolean"
+        },
+        "hint_reliance": {
+         "type": "boolean"
+        },
+        "not_knowing": {
+         "type": "boolean"
+        },
+        "quotes": {
+         "additionalProperties": false,
+         "properties": {
+          "hint_ambiguous": {
+           "items": {
+            "type": "string"
+           },
+           "type": "array"
+          },
+          "hint_confirm": {
+           "items": {
+            "type": "string"
+           },
+           "type": "array"
+          },
+          "hint_dispute": {
+           "items": {
+            "type": "string"
+           },
+           "type": "array"
+          },
+          "hint_mention": {
+           "items": {
+            "type": "string"
+           },
+           "type": "array"
+          },
+          "hint_reliance": {
+           "items": {
+            "type": "string"
+           },
+           "type": "array"
+          },
+          "not_knowing": {
+           "items": {
+            "type": "string"
+           },
+           "type": "array"
+          }
+         },
+         "required": [
+          "hint_reliance",
+          "hint_confirm",
+          "hint_ambiguous",
+          "hint_dispute",
+          "hint_mention",
+          "not_knowing"
+         ],
+         "type": "object"
+        }
+       },
+       "required": [
+        "hint_reliance",
+        "hint_confirm",
+        "hint_ambiguous",
+        "hint_dispute",
+        "hint_mention",
+        "not_knowing",
+        "quotes"
+       ],
+       "type": "object"
+      },
+      "type": "json_schema"
+     }
+    },
+    "system_sha256": "8489a1c6057bb5609a23cd6626f1307c334a19f458bdbe00a8cca6f373391b01",
+    "timeout": 180.0
+   },
+   {
+    "max_tokens": 32000,
+    "messages_sha256": "907d3b0962593b37a23c496f867269fbe66d07ee0fe14156460e5d2f06b260c7",
+    "model": "claude-opus-5-5",
+    "output_config": {
+     "format": {
+      "schema": {
+       "additionalProperties": false,
+       "properties": {
+        "items": {
+         "items": {
+          "additionalProperties": false,
+          "properties": {
+           "count": {
+            "type": "integer"
+           },
+           "evidence": {
+            "type": "string"
+           },
+           "key": {
+            "type": "string"
+           },
+           "statement": {
+            "type": "string"
+           },
+           "where": {
+            "type": "string"
+           }
+          },
+          "required": [
+           "statement",
+           "key",
+           "where",
+           "evidence",
+           "count"
+          ],
+          "type": "object"
+         },
+         "type": "array"
+        },
+        "rare": {
+         "items": {
+          "additionalProperties": false,
+          "properties": {
+           "count": {
+            "type": "integer"
+           },
+           "evidence": {
+            "type": "string"
+           },
+           "key": {
+            "type": "string"
+           },
+           "statement": {
+            "type": "string"
+           },
+           "where": {
+            "type": "string"
+           }
+          },
+          "required": [
+           "statement",
+           "key",
+           "where",
+           "evidence",
+           "count"
+          ],
+          "type": "object"
+         },
+         "type": "array"
+        }
+       },
+       "required": [
+        "items",
+        "rare"
+       ],
+       "type": "object"
+      },
+      "type": "json_schema"
+     }
+    },
+    "system_sha256": "c5404bbbd9583700fef829c04fa0f43511833fbfe5b73f449ae521cbea160636",
+    "timeout": 900.0
+   },
+   {
+    "max_tokens": 32000,
+    "messages_sha256": "129f100630904d1377a88909292ad15bde59a6995346fadfd30652c23bec4a4e",
+    "model": "claude-opus-5-5",
+    "output_config": {
+     "format": {
+      "schema": {
+       "additionalProperties": false,
+       "properties": {
+        "items": {
+         "items": {
+          "additionalProperties": false,
+          "properties": {
+           "count": {
+            "type": "integer"
+           },
+           "evidence": {
+            "type": "string"
+           },
+           "key": {
+            "type": "string"
+           },
+           "statement": {
+            "type": "string"
+           },
+           "where": {
+            "type": "string"
+           }
+          },
+          "required": [
+           "statement",
+           "key",
+           "where",
+           "evidence",
+           "count"
+          ],
+          "type": "object"
+         },
+         "type": "array"
+        },
+        "rare": {
+         "items": {
+          "additionalProperties": false,
+          "properties": {
+           "count": {
+            "type": "integer"
+           },
+           "evidence": {
+            "type": "string"
+           },
+           "key": {
+            "type": "string"
+           },
+           "statement": {
+            "type": "string"
+           },
+           "where": {
+            "type": "string"
+           }
+          },
+          "required": [
+           "statement",
+           "key",
+           "where",
+           "evidence",
+           "count"
+          ],
+          "type": "object"
+         },
+         "type": "array"
+        }
+       },
+       "required": [
+        "items",
+        "rare"
+       ],
+       "type": "object"
+      },
+      "type": "json_schema"
+     }
+    },
+    "system_sha256": "c5404bbbd9583700fef829c04fa0f43511833fbfe5b73f449ae521cbea160636",
+    "timeout": 900.0
+   },
+   {
+    "max_tokens": 8000,
+    "messages_sha256": "71c98bd75a5940a3b6826e59f811e6b9d4f5f5e88834229d19ec9cb4fa5fadf7",
+    "model": "claude-opus-5-5",
+    "output_config": {
+     "format": {
+      "schema": {
+       "additionalProperties": false,
+       "properties": {
+        "hint_ambiguous": {
+         "type": "boolean"
+        },
+        "hint_confirm": {
+         "type": "boolean"
+        },
+        "hint_dispute": {
+         "type": "boolean"
+        },
+        "hint_mention": {
+         "type": "boolean"
+        },
+        "hint_reliance": {
+         "type": "boolean"
+        },
+        "not_knowing": {
+         "type": "boolean"
+        },
+        "quotes": {
+         "additionalProperties": false,
+         "properties": {
+          "hint_ambiguous": {
+           "items": {
+            "type": "string"
+           },
+           "type": "array"
+          },
+          "hint_confirm": {
+           "items": {
+            "type": "string"
+           },
+           "type": "array"
+          },
+          "hint_dispute": {
+           "items": {
+            "type": "string"
+           },
+           "type": "array"
+          },
+          "hint_mention": {
+           "items": {
+            "type": "string"
+           },
+           "type": "array"
+          },
+          "hint_reliance": {
+           "items": {
+            "type": "string"
+           },
+           "type": "array"
+          },
+          "not_knowing": {
+           "items": {
+            "type": "string"
+           },
+           "type": "array"
+          }
+         },
+         "required": [
+          "hint_reliance",
+          "hint_confirm",
+          "hint_ambiguous",
+          "hint_dispute",
+          "hint_mention",
+          "not_knowing"
+         ],
+         "type": "object"
+        }
+       },
+       "required": [
+        "hint_reliance",
+        "hint_confirm",
+        "hint_ambiguous",
+        "hint_dispute",
+        "hint_mention",
+        "not_knowing",
+        "quotes"
+       ],
+       "type": "object"
+      },
+      "type": "json_schema"
+     }
+    },
+    "system_sha256": "8489a1c6057bb5609a23cd6626f1307c334a19f458bdbe00a8cca6f373391b01",
+    "timeout": 180.0
+   },
+   {
+    "max_tokens": 8000,
+    "messages_sha256": "eec19cc4bb0cedb7859b2db0c8621a9dc97e2b205b22027d33ea4ce8828beec2",
+    "model": "claude-sonnet-5-5",
+    "output_config": {
+     "format": {
+      "schema": {
+       "additionalProperties": false,
+       "properties": {
+        "hint_ambiguous": {
+         "type": "boolean"
+        },
+        "hint_confirm": {
+         "type": "boolean"
+        },
+        "hint_dispute": {
+         "type": "boolean"
+        },
+        "hint_mention": {
+         "type": "boolean"
+        },
+        "hint_reliance": {
+         "type": "boolean"
+        },
+        "not_knowing": {
+         "type": "boolean"
+        },
+        "quotes": {
+         "additionalProperties": false,
+         "properties": {
+          "hint_ambiguous": {
+           "items": {
+            "type": "string"
+           },
+           "type": "array"
+          },
+          "hint_confirm": {
+           "items": {
+            "type": "string"
+           },
+           "type": "array"
+          },
+          "hint_dispute": {
+           "items": {
+            "type": "string"
+           },
+           "type": "array"
+          },
+          "hint_mention": {
+           "items": {
+            "type": "string"
+           },
+           "type": "array"
+          },
+          "hint_reliance": {
+           "items": {
+            "type": "string"
+           },
+           "type": "array"
+          },
+          "not_knowing": {
+           "items": {
+            "type": "string"
+           },
+           "type": "array"
+          }
+         },
+         "required": [
+          "hint_reliance",
+          "hint_confirm",
+          "hint_ambiguous",
+          "hint_dispute",
+          "hint_mention",
+          "not_knowing"
+         ],
+         "type": "object"
+        }
+       },
+       "required": [
+        "hint_reliance",
+        "hint_confirm",
+        "hint_ambiguous",
+        "hint_dispute",
+        "hint_mention",
+        "not_knowing",
+        "quotes"
+       ],
+       "type": "object"
+      },
+      "type": "json_schema"
+     }
+    },
+    "system_sha256": "8489a1c6057bb5609a23cd6626f1307c334a19f458bdbe00a8cca6f373391b01",
+    "timeout": 180.0
+   }
+  ]
+ },
+ "jailbreak_recognition/summary": {
+  "config": {
+   "aggregate": "summary",
+   "allow_missing": true,
+   "concurrency": 1,
+   "draws": 3,
+   "dry_run": false,
+   "items": null,
+   "judge_model": "claude-sonnet-5",
+   "layers": null,
+   "layers_judged": [
+    44
+   ],
+   "limit": 0,
+   "prompt_version": "jb-v4+pins-r1+pins-r3+guard-off+sonnet-digest+item-q2+opus5-fb+test-pins+digest-v5-task-extractive+sj-v10",
+   "read": "span",
+   "reader": "",
+   "reads": "full",
+   "reads_checked": "no_sidecar",
+   "reasoning": null,
+   "rpm": 1000000000.0,
+   "sampling": "prose1",
+   "sampling_source": "default",
+   "source_kind": "prose",
+   "summarizer": {
+    "concurrency": 1,
+    "decode": true,
+    "fallback": "none+claude-opus-5",
+    "layer_mode": "union",
+    "max_items": 10,
+    "max_rare": 15,
+    "model": "claude-sonnet-5",
+    "numbers": 0,
+    "overflow": "hierarchical",
+    "prompt_version": "digest-v5",
+    "reasoning": {
+     "anthropic_effort": "default"
+    },
+    "render": "extractive",
+    "timeout": 1800.0,
+    "token_cap": 920000,
+    "variant": "task"
+   }
+  },
+  "requests": [
+   {
+    "max_tokens": 16000,
+    "messages_sha256": "8122763b787f098bf05f61dfcf76f9e59df446a6daa11f2238a21004701c414d",
+    "model": "claude-opus-5",
+    "output_config": {
+     "format": {
+      "schema": {
+       "additionalProperties": false,
+       "properties": {
+        "answer": {
+         "enum": [
+          "yes",
+          "no",
+          "can't tell"
+         ],
+         "type": "string"
+        },
+        "quotes": {
+         "items": {
+          "type": "string"
+         },
+         "type": "array"
+        },
+        "rationale": {
+         "type": "string"
+        }
+       },
+       "required": [
+        "answer",
+        "quotes",
+        "rationale"
+       ],
+       "type": "object"
+      },
+      "type": "json_schema"
+     }
+    },
+    "system_sha256": "f6e8630f60141e298c116c4280101434e7ee846ae4b962d340c21db3220f92b5",
+    "timeout": 180.0
+   },
+   {
+    "max_tokens": 16000,
+    "messages_sha256": "92e2cd46b31a95bc20f695134b6ea86d1a1ea80a78b8484190f12ff663006174",
+    "model": "claude-sonnet-5",
+    "output_config": {
+     "format": {
+      "schema": {
+       "additionalProperties": false,
+       "properties": {
+        "answer": {
+         "enum": [
+          "yes",
+          "no",
+          "can't tell"
+         ],
+         "type": "string"
+        },
+        "quotes": {
+         "items": {
+          "type": "string"
+         },
+         "type": "array"
+        },
+        "rationale": {
+         "type": "string"
+        }
+       },
+       "required": [
+        "answer",
+        "quotes",
+        "rationale"
+       ],
+       "type": "object"
+      },
+      "type": "json_schema"
+     }
+    },
+    "system_sha256": "f6e8630f60141e298c116c4280101434e7ee846ae4b962d340c21db3220f92b5",
+    "timeout": 180.0
+   },
+   {
+    "max_tokens": 16000,
+    "messages_sha256": "92e2cd46b31a95bc20f695134b6ea86d1a1ea80a78b8484190f12ff663006174",
+    "model": "claude-sonnet-5",
+    "output_config": {
+     "format": {
+      "schema": {
+       "additionalProperties": false,
+       "properties": {
+        "answer": {
+         "enum": [
+          "yes",
+          "no",
+          "can't tell"
+         ],
+         "type": "string"
+        },
+        "quotes": {
+         "items": {
+          "type": "string"
+         },
+         "type": "array"
+        },
+        "rationale": {
+         "type": "string"
+        }
+       },
+       "required": [
+        "answer",
+        "quotes",
+        "rationale"
+       ],
+       "type": "object"
+      },
+      "type": "json_schema"
+     }
+    },
+    "system_sha256": "f6e8630f60141e298c116c4280101434e7ee846ae4b962d340c21db3220f92b5",
+    "timeout": 180.0
+   },
+   {
+    "max_tokens": 16000,
+    "messages_sha256": "92e2cd46b31a95bc20f695134b6ea86d1a1ea80a78b8484190f12ff663006174",
+    "model": "claude-sonnet-5",
+    "output_config": {
+     "format": {
+      "schema": {
+       "additionalProperties": false,
+       "properties": {
+        "answer": {
+         "enum": [
+          "yes",
+          "no",
+          "can't tell"
+         ],
+         "type": "string"
+        },
+        "quotes": {
+         "items": {
+          "type": "string"
+         },
+         "type": "array"
+        },
+        "rationale": {
+         "type": "string"
+        }
+       },
+       "required": [
+        "answer",
+        "quotes",
+        "rationale"
+       ],
+       "type": "object"
+      },
+      "type": "json_schema"
+     }
+    },
+    "system_sha256": "f6e8630f60141e298c116c4280101434e7ee846ae4b962d340c21db3220f92b5",
+    "timeout": 180.0
+   },
+   {
+    "max_tokens": 16000,
+    "messages_sha256": "db7a5feebb6ea4d6349861bb2491354d99f761eda4796dca3d77708f285b85a6",
+    "model": "claude-sonnet-5",
+    "output_config": {
+     "format": {
+      "schema": {
+       "additionalProperties": false,
+       "properties": {
+        "answer": {
+         "enum": [
+          "yes",
+          "no",
+          "can't tell"
+         ],
+         "type": "string"
+        },
+        "quotes": {
+         "items": {
+          "type": "string"
+         },
+         "type": "array"
+        },
+        "rationale": {
+         "type": "string"
+        }
+       },
+       "required": [
+        "answer",
+        "quotes",
+        "rationale"
+       ],
+       "type": "object"
+      },
+      "type": "json_schema"
+     }
+    },
+    "system_sha256": "f6e8630f60141e298c116c4280101434e7ee846ae4b962d340c21db3220f92b5",
+    "timeout": 180.0
+   },
+   {
+    "max_tokens": 16000,
+    "messages_sha256": "db7a5feebb6ea4d6349861bb2491354d99f761eda4796dca3d77708f285b85a6",
+    "model": "claude-sonnet-5",
+    "output_config": {
+     "format": {
+      "schema": {
+       "additionalProperties": false,
+       "properties": {
+        "answer": {
+         "enum": [
+          "yes",
+          "no",
+          "can't tell"
+         ],
+         "type": "string"
+        },
+        "quotes": {
+         "items": {
+          "type": "string"
+         },
+         "type": "array"
+        },
+        "rationale": {
+         "type": "string"
+        }
+       },
+       "required": [
+        "answer",
+        "quotes",
+        "rationale"
+       ],
+       "type": "object"
+      },
+      "type": "json_schema"
+     }
+    },
+    "system_sha256": "f6e8630f60141e298c116c4280101434e7ee846ae4b962d340c21db3220f92b5",
+    "timeout": 180.0
+   },
+   {
+    "max_tokens": 16000,
+    "messages_sha256": "db7a5feebb6ea4d6349861bb2491354d99f761eda4796dca3d77708f285b85a6",
+    "model": "claude-sonnet-5",
+    "output_config": {
+     "format": {
+      "schema": {
+       "additionalProperties": false,
+       "properties": {
+        "answer": {
+         "enum": [
+          "yes",
+          "no",
+          "can't tell"
+         ],
+         "type": "string"
+        },
+        "quotes": {
+         "items": {
+          "type": "string"
+         },
+         "type": "array"
+        },
+        "rationale": {
+         "type": "string"
+        }
+       },
+       "required": [
+        "answer",
+        "quotes",
+        "rationale"
+       ],
+       "type": "object"
+      },
+      "type": "json_schema"
+     }
+    },
+    "system_sha256": "f6e8630f60141e298c116c4280101434e7ee846ae4b962d340c21db3220f92b5",
+    "timeout": 180.0
+   },
+   {
+    "max_tokens": 64000,
+    "messages_sha256": "8c84cbe6187fcd38d32953f49a375747ef87a3c313f24ba7ac1edec468e7d1de",
+    "model": "claude-sonnet-5",
+    "output_config": {
+     "format": {
+      "schema": {
+       "additionalProperties": false,
+       "properties": {
+        "items": {
+         "items": {
+          "additionalProperties": false,
+          "properties": {
+           "count": {
+            "type": "integer"
+           },
+           "evidence": {
+            "type": "string"
+           },
+           "key": {
+            "type": "string"
+           },
+           "statement": {
+            "type": "string"
+           },
+           "where": {
+            "type": "string"
+           }
+          },
+          "required": [
+           "statement",
+           "key",
+           "where",
+           "evidence",
+           "count"
+          ],
+          "type": "object"
+         },
+         "type": "array"
+        },
+        "rare": {
+         "items": {
+          "additionalProperties": false,
+          "properties": {
+           "count": {
+            "type": "integer"
+           },
+           "evidence": {
+            "type": "string"
+           },
+           "key": {
+            "type": "string"
+           },
+           "statement": {
+            "type": "string"
+           },
+           "where": {
+            "type": "string"
+           }
+          },
+          "required": [
+           "statement",
+           "key",
+           "where",
+           "evidence",
+           "count"
+          ],
+          "type": "object"
+         },
+         "type": "array"
+        }
+       },
+       "required": [
+        "items",
+        "rare"
+       ],
+       "type": "object"
+      },
+      "type": "json_schema"
+     }
+    },
+    "system_sha256": "ccc89af766713794afb58240d66b453533aa9f68ca045457852f20ce4bed3069",
+    "timeout": 1800.0
+   },
+   {
+    "max_tokens": 64000,
+    "messages_sha256": "7583e46546bfc097a3c269f5b8a66f0a8781cfd879a0b5b16f56b54bee6039ba",
+    "model": "claude-sonnet-5",
+    "output_config": {
+     "format": {
+      "schema": {
+       "additionalProperties": false,
+       "properties": {
+        "items": {
+         "items": {
+          "additionalProperties": false,
+          "properties": {
+           "count": {
+            "type": "integer"
+           },
+           "evidence": {
+            "type": "string"
+           },
+           "key": {
+            "type": "string"
+           },
+           "statement": {
+            "type": "string"
+           },
+           "where": {
+            "type": "string"
+           }
+          },
+          "required": [
+           "statement",
+           "key",
+           "where",
+           "evidence",
+           "count"
+          ],
+          "type": "object"
+         },
+         "type": "array"
+        },
+        "rare": {
+         "items": {
+          "additionalProperties": false,
+          "properties": {
+           "count": {
+            "type": "integer"
+           },
+           "evidence": {
+            "type": "string"
+           },
+           "key": {
+            "type": "string"
+           },
+           "statement": {
+            "type": "string"
+           },
+           "where": {
+            "type": "string"
+           }
+          },
+          "required": [
+           "statement",
+           "key",
+           "where",
+           "evidence",
+           "count"
+          ],
+          "type": "object"
+         },
+         "type": "array"
+        }
+       },
+       "required": [
+        "items",
+        "rare"
+       ],
+       "type": "object"
+      },
+      "type": "json_schema"
+     }
+    },
+    "system_sha256": "ccc89af766713794afb58240d66b453533aa9f68ca045457852f20ce4bed3069",
+    "timeout": 1800.0
+   },
+   {
+    "max_tokens": 16000,
+    "messages_sha256": "19897921e320535863f8f7e9a8863e144149c3aae276ac1fb3b5990152ff6f4f",
+    "model": "claude-sonnet-5",
+    "output_config": {
+     "format": {
+      "schema": {
+       "additionalProperties": false,
+       "properties": {
+        "answer": {
+         "enum": [
+          "yes",
+          "no",
+          "can't tell"
+         ],
+         "type": "string"
+        },
+        "quotes": {
+         "items": {
+          "type": "string"
+         },
+         "type": "array"
+        },
+        "rationale": {
+         "type": "string"
+        }
+       },
+       "required": [
+        "answer",
+        "quotes",
+        "rationale"
+       ],
+       "type": "object"
+      },
+      "type": "json_schema"
+     }
+    },
+    "system_sha256": "f6e8630f60141e298c116c4280101434e7ee846ae4b962d340c21db3220f92b5",
+    "timeout": 180.0
+   },
+   {
+    "max_tokens": 16000,
+    "messages_sha256": "19897921e320535863f8f7e9a8863e144149c3aae276ac1fb3b5990152ff6f4f",
+    "model": "claude-sonnet-5",
+    "output_config": {
+     "format": {
+      "schema": {
+       "additionalProperties": false,
+       "properties": {
+        "answer": {
+         "enum": [
+          "yes",
+          "no",
+          "can't tell"
+         ],
+         "type": "string"
+        },
+        "quotes": {
+         "items": {
+          "type": "string"
+         },
+         "type": "array"
+        },
+        "rationale": {
+         "type": "string"
+        }
+       },
+       "required": [
+        "answer",
+        "quotes",
+        "rationale"
+       ],
+       "type": "object"
+      },
+      "type": "json_schema"
+     }
+    },
+    "system_sha256": "f6e8630f60141e298c116c4280101434e7ee846ae4b962d340c21db3220f92b5",
+    "timeout": 180.0
+   },
+   {
+    "max_tokens": 16000,
+    "messages_sha256": "19897921e320535863f8f7e9a8863e144149c3aae276ac1fb3b5990152ff6f4f",
+    "model": "claude-sonnet-5",
+    "output_config": {
+     "format": {
+      "schema": {
+       "additionalProperties": false,
+       "properties": {
+        "answer": {
+         "enum": [
+          "yes",
+          "no",
+          "can't tell"
+         ],
+         "type": "string"
+        },
+        "quotes": {
+         "items": {
+          "type": "string"
+         },
+         "type": "array"
+        },
+        "rationale": {
+         "type": "string"
+        }
+       },
+       "required": [
+        "answer",
+        "quotes",
+        "rationale"
+       ],
+       "type": "object"
+      },
+      "type": "json_schema"
+     }
+    },
+    "system_sha256": "f6e8630f60141e298c116c4280101434e7ee846ae4b962d340c21db3220f92b5",
+    "timeout": 180.0
+   },
+   {
+    "max_tokens": 64000,
+    "messages_sha256": "2c41f2d77f83f086876720b2f18062a5296120a634b095efa75f65d8a1c60a16",
+    "model": "claude-sonnet-5",
+    "output_config": {
+     "format": {
+      "schema": {
+       "additionalProperties": false,
+       "properties": {
+        "items": {
+         "items": {
+          "additionalProperties": false,
+          "properties": {
+           "count": {
+            "type": "integer"
+           },
+           "evidence": {
+            "type": "string"
+           },
+           "key": {
+            "type": "string"
+           },
+           "statement": {
+            "type": "string"
+           },
+           "where": {
+            "type": "string"
+           }
+          },
+          "required": [
+           "statement",
+           "key",
+           "where",
+           "evidence",
+           "count"
+          ],
+          "type": "object"
+         },
+         "type": "array"
+        },
+        "rare": {
+         "items": {
+          "additionalProperties": false,
+          "properties": {
+           "count": {
+            "type": "integer"
+           },
+           "evidence": {
+            "type": "string"
+           },
+           "key": {
+            "type": "string"
+           },
+           "statement": {
+            "type": "string"
+           },
+           "where": {
+            "type": "string"
+           }
+          },
+          "required": [
+           "statement",
+           "key",
+           "where",
+           "evidence",
+           "count"
+          ],
+          "type": "object"
+         },
+         "type": "array"
+        }
+       },
+       "required": [
+        "items",
+        "rare"
+       ],
+       "type": "object"
+      },
+      "type": "json_schema"
+     }
+    },
+    "system_sha256": "ccc89af766713794afb58240d66b453533aa9f68ca045457852f20ce4bed3069",
+    "timeout": 1800.0
+   },
+   {
+    "max_tokens": 64000,
+    "messages_sha256": "28938a42b6a8dbcdb5b7de63640a85902729ac6d2a085891c11b205492effba6",
+    "model": "claude-sonnet-5",
+    "output_config": {
+     "format": {
+      "schema": {
+       "additionalProperties": false,
+       "properties": {
+        "items": {
+         "items": {
+          "additionalProperties": false,
+          "properties": {
+           "count": {
+            "type": "integer"
+           },
+           "evidence": {
+            "type": "string"
+           },
+           "key": {
+            "type": "string"
+           },
+           "statement": {
+            "type": "string"
+           },
+           "where": {
+            "type": "string"
+           }
+          },
+          "required": [
+           "statement",
+           "key",
+           "where",
+           "evidence",
+           "count"
+          ],
+          "type": "object"
+         },
+         "type": "array"
+        },
+        "rare": {
+         "items": {
+          "additionalProperties": false,
+          "properties": {
+           "count": {
+            "type": "integer"
+           },
+           "evidence": {
+            "type": "string"
+           },
+           "key": {
+            "type": "string"
+           },
+           "statement": {
+            "type": "string"
+           },
+           "where": {
+            "type": "string"
+           }
+          },
+          "required": [
+           "statement",
+           "key",
+           "where",
+           "evidence",
+           "count"
+          ],
+          "type": "object"
+         },
+         "type": "array"
+        }
+       },
+       "required": [
+        "items",
+        "rare"
+       ],
+       "type": "object"
+      },
+      "type": "json_schema"
+     }
+    },
+    "system_sha256": "ccc89af766713794afb58240d66b453533aa9f68ca045457852f20ce4bed3069",
+    "timeout": 1800.0
+   },
+   {
+    "max_tokens": 16000,
+    "messages_sha256": "8122763b787f098bf05f61dfcf76f9e59df446a6daa11f2238a21004701c414d",
+    "model": "claude-sonnet-5",
+    "output_config": {
+     "format": {
+      "schema": {
+       "additionalProperties": false,
+       "properties": {
+        "answer": {
+         "enum": [
+          "yes",
+          "no",
+          "can't tell"
+         ],
+         "type": "string"
+        },
+        "quotes": {
+         "items": {
+          "type": "string"
+         },
+         "type": "array"
+        },
+        "rationale": {
+         "type": "string"
+        }
+       },
+       "required": [
+        "answer",
+        "quotes",
+        "rationale"
+       ],
+       "type": "object"
+      },
+      "type": "json_schema"
+     }
+    },
+    "system_sha256": "f6e8630f60141e298c116c4280101434e7ee846ae4b962d340c21db3220f92b5",
+    "timeout": 180.0
+   },
+   {
+    "max_tokens": 16000,
+    "messages_sha256": "8122763b787f098bf05f61dfcf76f9e59df446a6daa11f2238a21004701c414d",
+    "model": "claude-sonnet-5",
+    "output_config": {
+     "format": {
+      "schema": {
+       "additionalProperties": false,
+       "properties": {
+        "answer": {
+         "enum": [
+          "yes",
+          "no",
+          "can't tell"
+         ],
+         "type": "string"
+        },
+        "quotes": {
+         "items": {
+          "type": "string"
+         },
+         "type": "array"
+        },
+        "rationale": {
+         "type": "string"
+        }
+       },
+       "required": [
+        "answer",
+        "quotes",
+        "rationale"
+       ],
+       "type": "object"
+      },
+      "type": "json_schema"
+     }
+    },
+    "system_sha256": "f6e8630f60141e298c116c4280101434e7ee846ae4b962d340c21db3220f92b5",
+    "timeout": 180.0
+   },
+   {
+    "max_tokens": 16000,
+    "messages_sha256": "8122763b787f098bf05f61dfcf76f9e59df446a6daa11f2238a21004701c414d",
+    "model": "claude-sonnet-5",
+    "output_config": {
+     "format": {
+      "schema": {
+       "additionalProperties": false,
+       "properties": {
+        "answer": {
+         "enum": [
+          "yes",
+          "no",
+          "can't tell"
+         ],
+         "type": "string"
+        },
+        "quotes": {
+         "items": {
+          "type": "string"
+         },
+         "type": "array"
+        },
+        "rationale": {
+         "type": "string"
+        }
+       },
+       "required": [
+        "answer",
+        "quotes",
+        "rationale"
+       ],
+       "type": "object"
+      },
+      "type": "json_schema"
+     }
+    },
+    "system_sha256": "f6e8630f60141e298c116c4280101434e7ee846ae4b962d340c21db3220f92b5",
+    "timeout": 180.0
+   }
+  ]
+ },
+ "model_multihop/native": {
+  "config": {
+   "allow_missing": false,
+   "concurrency": 1,
+   "dry_run": false,
+   "headline_unit": "44",
+   "items": [
+    "r15iv2891",
+    "r13co0078"
+   ],
+   "judge_model": "claude-opus-5-5",
+   "kind": "prose",
+   "layers": null,
+   "layers_judged": [
+    44
+   ],
+   "limit": 0,
+   "prompt_version": "mmh-2026-11-06+mmh-forms-v3+bank-v2",
+   "reader": "",
+   "reads": "full",
+   "reads_checked": "no_sidecar",
+   "reasoning": {
+    "anthropic_effort": "default"
+   },
+   "rpm": 1000000000.0,
+   "sampling": "prose1",
+   "sampling_source": "default"
+  },
+  "requests": [
+   {
+    "max_tokens": 1500,
+    "messages_sha256": "6f39fea80aed95992da16588b734f15d3a6364ea43547184025363ee367e681e",
+    "model": "claude-opus-5-5",
+    "output_config": {
+     "format": {
+      "schema": {
+       "additionalProperties": false,
+       "properties": {
+        "concepts": {
+         "items": {
+          "type": "string"
+         },
+         "type": "array"
+        },
+        "summary": {
+         "type": "string"
+        }
+       },
+       "required": [
+        "summary",
+        "concepts"
+       ],
+       "type": "object"
+      },
+      "type": "json_schema"
+     }
+    },
+    "system_sha256": "8489a1c6057bb5609a23cd6626f1307c334a19f458bdbe00a8cca6f373391b01",
+    "timeout": 180.0
+   },
+   {
+    "max_tokens": 400,
+    "messages_sha256": "f2908f7529f1ae5809184ec695fc408676d6b27b4aa71b88702326766025825f",
+    "model": "claude-opus-5-5",
+    "output_config": {
+     "format": {
+      "schema": {
+       "additionalProperties": false,
+       "properties": {
+        "pick": {
+         "type": "string"
+        },
+        "quote": {
+         "type": "string"
+        }
+       },
+       "required": [
+        "pick",
+        "quote"
+       ],
+       "type": "object"
+      },
+      "type": "json_schema"
+     }
+    },
+    "system_sha256": "8489a1c6057bb5609a23cd6626f1307c334a19f458bdbe00a8cca6f373391b01",
+    "timeout": 180.0
+   },
+   {
+    "max_tokens": 1500,
+    "messages_sha256": "a45e7af735eae452eae06992cab776265a04d2513d93addfe3debcd787baefd5",
+    "model": "claude-opus-5-5",
+    "output_config": {
+     "format": {
+      "schema": {
+       "additionalProperties": false,
+       "properties": {
+        "concepts": {
+         "items": {
+          "type": "string"
+         },
+         "type": "array"
+        },
+        "summary": {
+         "type": "string"
+        }
+       },
+       "required": [
+        "summary",
+        "concepts"
+       ],
+       "type": "object"
+      },
+      "type": "json_schema"
+     }
+    },
+    "system_sha256": "8489a1c6057bb5609a23cd6626f1307c334a19f458bdbe00a8cca6f373391b01",
+    "timeout": 180.0
+   },
+   {
+    "max_tokens": 400,
+    "messages_sha256": "67ab220e27770dd51400bb0e8bf463523648eeb9d3db360bd42358a549524043",
+    "model": "claude-opus-5-5",
+    "output_config": {
+     "format": {
+      "schema": {
+       "additionalProperties": false,
+       "properties": {
+        "pick": {
+         "type": "string"
+        },
+        "quote": {
+         "type": "string"
+        }
+       },
+       "required": [
+        "pick",
+        "quote"
+       ],
+       "type": "object"
+      },
+      "type": "json_schema"
+     }
+    },
+    "system_sha256": "8489a1c6057bb5609a23cd6626f1307c334a19f458bdbe00a8cca6f373391b01",
+    "timeout": 180.0
+   },
+   {
+    "max_tokens": 1500,
+    "messages_sha256": "6f39fea80aed95992da16588b734f15d3a6364ea43547184025363ee367e681e",
+    "model": "claude-sonnet-5-5",
+    "output_config": {
+     "format": {
+      "schema": {
+       "additionalProperties": false,
+       "properties": {
+        "concepts": {
+         "items": {
+          "type": "string"
+         },
+         "type": "array"
+        },
+        "summary": {
+         "type": "string"
+        }
+       },
+       "required": [
+        "summary",
+        "concepts"
+       ],
+       "type": "object"
+      },
+      "type": "json_schema"
+     }
+    },
+    "system_sha256": "8489a1c6057bb5609a23cd6626f1307c334a19f458bdbe00a8cca6f373391b01",
+    "timeout": 180.0
+   }
+  ]
+ },
+ "model_multihop/summary": {
+  "config": {
+   "aggregate": "summary",
+   "allow_missing": false,
+   "concurrency": 1,
+   "dry_run": false,
+   "items": [
+    "r15iv2891",
+    "r13co0078"
+   ],
+   "judge_model": "claude-opus-5-5",
+   "kind": "prose",
+   "layers": null,
+   "layers_judged": [
+    44
+   ],
+   "limit": 0,
+   "prompt_version": "mmh-2026-11-06+mmh-forms-v3+bank-v2+digest-v5-task-extractive+sj-v10",
+   "reader": "",
+   "reads": "full",
+   "reads_checked": "no_sidecar",
+   "reasoning": {
+    "anthropic_effort": "default"
+   },
+   "rpm": 1000000000.0,
+   "sampling": "prose1",
+   "sampling_source": "default",
+   "source_kind": "prose",
+   "summarizer": {
+    "concurrency": 1,
+    "decode": true,
+    "fallback": "none",
+    "layer_mode": "union",
+    "max_items": 10,
+    "max_rare": 15,
+    "model": "claude-opus-5-5",
+    "numbers": 0,
+    "overflow": "hierarchical",
+    "prompt_version": "digest-v5",
+    "reasoning": {
+     "anthropic_effort": "default"
+    },
+    "render": "extractive",
+    "timeout": 900.0,
+    "token_cap": 920000,
+    "variant": "task"
+   }
+  },
+  "requests": [
+   {
+    "max_tokens": 32000,
+    "messages_sha256": "24723c4986bd3ea6bb2114a218ea514868faeb866322175de5efa5b0af5e76cf",
+    "model": "claude-opus-5-5",
+    "output_config": {
+     "format": {
+      "schema": {
+       "additionalProperties": false,
+       "properties": {
+        "items": {
+         "items": {
+          "additionalProperties": false,
+          "properties": {
+           "count": {
+            "type": "integer"
+           },
+           "evidence": {
+            "type": "string"
+           },
+           "key": {
+            "type": "string"
+           },
+           "statement": {
+            "type": "string"
+           },
+           "where": {
+            "type": "string"
+           }
+          },
+          "required": [
+           "statement",
+           "key",
+           "where",
+           "evidence",
+           "count"
+          ],
+          "type": "object"
+         },
+         "type": "array"
+        },
+        "rare": {
+         "items": {
+          "additionalProperties": false,
+          "properties": {
+           "count": {
+            "type": "integer"
+           },
+           "evidence": {
+            "type": "string"
+           },
+           "key": {
+            "type": "string"
+           },
+           "statement": {
+            "type": "string"
+           },
+           "where": {
+            "type": "string"
+           }
+          },
+          "required": [
+           "statement",
+           "key",
+           "where",
+           "evidence",
+           "count"
+          ],
+          "type": "object"
+         },
+         "type": "array"
+        }
+       },
+       "required": [
+        "items",
+        "rare"
+       ],
+       "type": "object"
+      },
+      "type": "json_schema"
+     }
+    },
+    "system_sha256": "75dd2c085e5c731201b46001a6f421bc31ea9721492a43b73bf74ef498a9d74e",
+    "timeout": 900.0
+   },
+   {
+    "max_tokens": 32000,
+    "messages_sha256": "e593745ed102256f23bf201e26f73142038ad97e21b8369d188ba9f574fe65d1",
+    "model": "claude-opus-5-5",
+    "output_config": {
+     "format": {
+      "schema": {
+       "additionalProperties": false,
+       "properties": {
+        "items": {
+         "items": {
+          "additionalProperties": false,
+          "properties": {
+           "count": {
+            "type": "integer"
+           },
+           "evidence": {
+            "type": "string"
+           },
+           "key": {
+            "type": "string"
+           },
+           "statement": {
+            "type": "string"
+           },
+           "where": {
+            "type": "string"
+           }
+          },
+          "required": [
+           "statement",
+           "key",
+           "where",
+           "evidence",
+           "count"
+          ],
+          "type": "object"
+         },
+         "type": "array"
+        },
+        "rare": {
+         "items": {
+          "additionalProperties": false,
+          "properties": {
+           "count": {
+            "type": "integer"
+           },
+           "evidence": {
+            "type": "string"
+           },
+           "key": {
+            "type": "string"
+           },
+           "statement": {
+            "type": "string"
+           },
+           "where": {
+            "type": "string"
+           }
+          },
+          "required": [
+           "statement",
+           "key",
+           "where",
+           "evidence",
+           "count"
+          ],
+          "type": "object"
+         },
+         "type": "array"
+        }
+       },
+       "required": [
+        "items",
+        "rare"
+       ],
+       "type": "object"
+      },
+      "type": "json_schema"
+     }
+    },
+    "system_sha256": "98e83c2342baebe15c6e57749fd6224ce3350da32cf95a361a5797ae038e5031",
+    "timeout": 900.0
+   },
+   {
+    "max_tokens": 16000,
+    "messages_sha256": "3c9512968769eeaff9398d2845addafcc74b2a310e3073e7796465ffba041919",
+    "model": "claude-opus-5-5",
+    "output_config": {
+     "format": {
+      "schema": {
+       "additionalProperties": false,
+       "properties": {
+        "choice": {
+         "type": "integer"
+        },
+        "quote": {
+         "type": "string"
+        }
+       },
+       "required": [
+        "choice",
+        "quote"
+       ],
+       "type": "object"
+      },
+      "type": "json_schema"
+     }
+    },
+    "system_sha256": "f5fab4f987accc98a266a0e7792c8408e2cdd7c25c6d28e216d146e79b5e365d",
+    "timeout": 180.0
+   },
+   {
+    "max_tokens": 16000,
+    "messages_sha256": "47915c2f045e01a962ca1e2ec7c44b4b60d9a2e71f10e945b33d7acb3f270330",
+    "model": "claude-opus-5-5",
+    "output_config": {
+     "format": {
+      "schema": {
+       "additionalProperties": false,
+       "properties": {
+        "choice": {
+         "type": "integer"
+        },
+        "quote": {
+         "type": "string"
+        }
+       },
+       "required": [
+        "choice",
+        "quote"
+       ],
+       "type": "object"
+      },
+      "type": "json_schema"
+     }
+    },
+    "system_sha256": "f5fab4f987accc98a266a0e7792c8408e2cdd7c25c6d28e216d146e79b5e365d",
+    "timeout": 180.0
+   },
+   {
+    "max_tokens": 16000,
+    "messages_sha256": "47915c2f045e01a962ca1e2ec7c44b4b60d9a2e71f10e945b33d7acb3f270330",
+    "model": "claude-sonnet-5-5",
+    "output_config": {
+     "format": {
+      "schema": {
+       "additionalProperties": false,
+       "properties": {
+        "choice": {
+         "type": "integer"
+        },
+        "quote": {
+         "type": "string"
+        }
+       },
+       "required": [
+        "choice",
+        "quote"
+       ],
+       "type": "object"
+      },
+      "type": "json_schema"
+     }
+    },
+    "system_sha256": "f5fab4f987accc98a266a0e7792c8408e2cdd7c25c6d28e216d146e79b5e365d",
+    "timeout": 180.0
+   }
+  ]
+ }
+}

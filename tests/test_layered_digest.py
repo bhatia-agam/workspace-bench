@@ -484,3 +484,33 @@ def test_explicit_x4_equals_the_default(tmp_path, monkeypatch):
     sysa = next(s for n, s, _u in fa.calls if n == "layered")
     assert "up to 40 entries" in sysa and "up to 60 entries" in sysa
     assert ra.config["summarizer"] == rb.config["summarizer"]
+
+
+def test_stage2_cross_route_refusal_rerun_sends_openrouter_reasoning(tmp_path, monkeypatch):
+    """Plan 0096: the layered stage-2 re-run on a refusal model of the other route sends that
+    model's ``digest_reasoning`` (part 2, R9: none at the default effort for a non-Claude
+    model); the primary stage-2 call and a same-route re-run send ``s.reasoning``."""
+    monkeypatch.setenv("OPENROUTER_API_KEY", "sk-or-test")
+    luna = "openai/gpt-6-luna"
+    default = {"anthropic_effort": digest.DEFAULT_EFFORT}
+    for fb, want in ((luna, None), (digest.SONNET_REFUSAL_MODEL, default)):
+        _items, path = _setup(tmp_path, monkeypatch)
+        seen: list[tuple] = []
+        real = FakeLLM.install(monkeypatch, _quiet)
+        orig = real.stream_json
+
+        def stream(prompts, *, schema, on_result, seen=seen, orig=orig, **kw):
+            if prompts and prompts[0][1].startswith("LAYER DIGESTS:"):
+                seen.append((kw["model"], kw["reasoning"]))
+                if kw["model"] == digest.DEFAULT_MODEL:
+                    for i in range(len(prompts)):
+                        on_result(i, llm.REFUSED_JSON)
+                    return llm.Spend()
+            return orig(prompts, schema=schema, on_result=on_result, **kw)
+
+        monkeypatch.setattr(llm, "stream_json", stream)
+        extra = {**LAYERED, "summ_fallback": f"none+{fb}"}
+        out = tmp_path / fb.replace("/", "_")
+        res = jb.run(summary_args(path, out, jbp.PROMPT_VERSION, extra=extra))
+        assert seen == [(digest.DEFAULT_MODEL, default), (fb, want)]
+        assert all(fb in (r["summary_served_by"] or "") for r in res.rows)

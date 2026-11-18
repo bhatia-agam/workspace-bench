@@ -308,7 +308,7 @@ def test_none_plus_model_is_a_client_side_rerun_only(tmp_path, mk_args):
     assert (s.model, s.fallback, s.server_fallback, s.refusal_model) == (
         SONNET, f"none+{OPUS5}", None, OPUS5,
     )  # fmt: skip
-    for bad in ("none+", "none+gpt-6", "server+claude-opus-5"):
+    for bad in ("none+", "server+claude-opus-5"):
         with pytest.raises(SystemExit):
             digest.settings(mk_args(tmp_path / "r.jsonl", extra={"summ_fallback": bad}), "poetry")
 
@@ -422,3 +422,204 @@ def test_digest_calls_carry_the_overflow_cap_and_cached_digests_stay_valid(tmp_p
     again = jb.run(args())
     assert len(seen) == n  # every digest row is a cache hit: the cap keys nothing
     assert [r["summary"] for r in again.rows] == [r["summary"] for r in first.rows]
+
+
+# ---------------------------------------------------------------- cross-route re-run (plan 0096)
+
+LUNA = "openai/gpt-6-luna"
+
+
+class _Closing(ModelAwareClient):
+    """A ``ModelAwareClient`` that records its ``close()``."""
+
+    closed = False
+
+    async def close(self) -> None:
+        self.closed = True
+
+
+def _declines(text: str = '{"a": 1}'):
+    """An Anthropic answerer: Sonnet declines, any other Claude model answers ``text``."""
+    return lambda model, kw: _resp("", "refusal") if model == SONNET else _resp(text, model=model)
+
+
+def test_none_plus_any_model_is_a_client_side_refusal_model(tmp_path, mk_args):
+    """Plan 0096: ``summ_fallback`` takes any model id after ``none+`` / ``default+``."""
+    for v, want in ((f"none+{LUNA}", (None, LUNA)), ("default+gpt-6", ("default", "gpt-6"))):
+        s = digest.settings(mk_args(tmp_path / "r.jsonl", extra={"summ_fallback": v}), "poetry")
+        assert (s.server_fallback, s.refusal_model) == want
+
+
+def test_json_rerun_anthropic_to_openrouter(monkeypatch):
+    from openrouter_fakes import OpenRouterClient, completion, install_routes
+
+    ant = _Closing(_declines())
+    orc = OpenRouterClient(lambda model, kw: completion('{"a": 2}'))
+    built = install_routes(monkeypatch, anthropic=ant, openrouter=orc)
+    got: dict[int, Any] = {}
+    kw = {"schema": SCHEMA, "model": SONNET, "on_result": got.__setitem__, "refusal_model": LUNA}
+    llm.stream_json([("s", "u")], temperature=0.0, overflow_max_tokens=64_000, **kw)
+    assert got == {0: {"a": 2, llm.SERVED_BY: LUNA}}
+    assert built == ["anthropic", "openrouter"] and ant.closed and orc.closed
+    (first,), (again,) = ant.calls, orc.calls
+    assert "temperature" not in first and first["max_tokens"] == 16_000  # the Anthropic default
+    # re-shaped for its route: OpenRouter's default cap, the caller's ORIGINAL temperature (the
+    # Anthropic primary dropped it), the minimal reasoning, no fallbacks
+    assert again["model"] == LUNA and again["max_tokens"] == 8000
+    assert again["temperature"] == 0.0 and "fallbacks" not in again
+    assert again["extra_body"]["reasoning"] == {"effort": "minimal"}
+    assert [m["content"] for m in again["messages"]] == ["s", "u"]  # the same request
+    # an explicit cap is kept; a family's Anthropic-only reasoning never reaches OpenRouter, and
+    # refusal_reasoning= is what the re-run sends, as given
+    orc.calls.clear()
+    llm.stream_json(
+        [("s", "u")],
+        reasoning={"anthropic_effort": "default"},
+        max_tokens=400,
+        refusal_reasoning={"effort": "low"},
+        **kw,
+    )
+    assert orc.calls[0]["max_tokens"] == 400 and "temperature" not in orc.calls[0]
+    assert orc.calls[0]["extra_body"]["reasoning"] == {"effort": "low"}
+
+
+def test_json_rerun_openrouter_to_anthropic(monkeypatch):
+    from openrouter_fakes import OpenRouterClient, completion, install_routes
+
+    refusals = [
+        completion("", finish_reason="content_filter"),
+        completion(None, refusal="I can't help with that"),
+    ]
+    orc = OpenRouterClient(lambda model, kw: refusals.pop(0))
+    ant = _Closing(lambda model, kw: _resp('{"a": 3}', model=model))
+    built = install_routes(monkeypatch, anthropic=ant, openrouter=orc)
+    got: dict[int, Any] = {}
+    kw = {"schema": SCHEMA, "model": LUNA, "on_result": got.__setitem__}
+    spend = llm.stream_json(
+        [("s", "u")], temperature=0.0, reasoning={"effort": "low"}, refusal_model=OPUS5, **kw
+    )
+    assert got == {0: {"a": 3, llm.SERVED_BY: OPUS5}} and spend.refusals == 1
+    assert built == ["openrouter", "anthropic"] and ant.closed and orc.closed
+    assert orc.calls[0]["temperature"] == 0.0 and orc.calls[0]["max_tokens"] == 8000
+    again = ant.calls[0]
+    # the Anthropic default cap, no temperature, and the OpenRouter-only reasoning key dropped
+    # (claude-opus-5 does not always think: no effort at all)
+    assert again["model"] == OPUS5 and again["max_tokens"] == 16_000
+    assert "temperature" not in again and "effort" not in again["output_config"]
+    # refusal_reasoning: the family's own Anthropic instrument on an always-thinking fallback
+    ant.calls.clear()
+    llm.stream_json([("s", "u")], refusal_model="claude-sonnet-5-5", **kw)
+    assert ant.calls[0]["output_config"]["effort"] == "low"  # the repo default for the model
+    ant.calls.clear()
+    refusals.append(completion("", finish_reason="content_filter"))
+    llm.stream_json(
+        [("s", "u")],
+        refusal_model="claude-sonnet-5-5",
+        refusal_reasoning={"anthropic_effort": "default"},
+        **kw,
+    )
+    assert "effort" not in ant.calls[0]["output_config"]
+
+
+def test_structured_openrouter_refusal_is_one_refusal_not_twelve_retries(monkeypatch):
+    from openrouter_fakes import ModerationError, OpenRouterClient, completion, install_routes
+
+    for outcome in (
+        completion("", finish_reason="content_filter"),
+        completion(None, refusal="no"),
+        ModerationError("flagged"),
+    ):
+        for mark, want in ((True, llm.REFUSED_JSON), (False, None)):
+            orc = OpenRouterClient(lambda model, kw, o=outcome: o)
+            install_routes(monkeypatch, openrouter=orc)
+            got: dict[int, Any] = {}
+            spend = llm.stream_json(
+                [("s", "u")],
+                schema=SCHEMA,
+                model=LUNA,
+                on_result=got.__setitem__,
+                mark_refusals=mark,
+            )
+            assert got == {0: want} and len(orc.calls) == 1
+            assert (spend.refusals, spend.retries, spend.errors) == (1, 0, 0)
+    # a refusal field beside real content is an answer
+    orc = OpenRouterClient(lambda model, kw: completion('{"a": 5}', refusal="x"))
+    install_routes(monkeypatch, openrouter=orc)
+    got = {}
+    llm.stream_json([("s", "u")], schema=SCHEMA, model=LUNA, on_result=got.__setitem__)
+    assert got == {0: {"a": 5}}
+
+
+def test_text_rerun_crosses_routes_both_ways(monkeypatch):
+    from openrouter_fakes import OpenRouterClient, install_routes, text_stream
+
+    def run(model, refusal_model):
+        events: list[tuple] = []
+        llm.stream_text(
+            ["u0"],
+            model=model,
+            thinking=True,
+            max_tokens=100,
+            on_result=lambda i, t: events.append(("result", i, t)),
+            refusal_model=refusal_model,
+            on_served=lambda i, m: events.append(("served", i, m)),
+        )
+        return events
+
+    ant = _Closing(_declines("graded"))
+    orc = OpenRouterClient(lambda model, kw: text_stream("from luna"))
+    built = install_routes(monkeypatch, anthropic=ant, openrouter=orc)
+    assert run(SONNET, LUNA) == [("served", 0, LUNA), ("result", 0, "from luna")]
+    assert built == ["anthropic", "openrouter"] and ant.closed and orc.closed
+    assert orc.calls[0]["max_tokens"] == 100  # the same settings
+    assert orc.calls[0]["extra_body"]["reasoning"] == {"enabled": True}
+
+    ant = _Closing(_declines("graded"))
+    orc = OpenRouterClient(lambda model, kw: text_stream("", "content_filter"))
+    built = install_routes(monkeypatch, anthropic=ant, openrouter=orc)
+    assert run(LUNA, OPUS5) == [("served", 0, OPUS5), ("result", 0, "graded")]
+    assert built == ["openrouter", "anthropic"] and ant.closed and orc.closed
+    assert ant.calls[0]["thinking"] == {"type": "adaptive"} and ant.calls[0]["max_tokens"] == 100
+
+
+def test_missing_fallback_key_raises_before_the_first_call(monkeypatch):
+    """A cross-route refusal model whose key is missing is a config error up front (this test
+    patches ``llm.api_key`` itself: no fake-client installer)."""
+
+    def api_key(model: str) -> str:
+        if llm.route(model) == "openrouter":
+            raise llm.JudgeConfigError("OPENROUTER_API_KEY is missing")
+        return "sk-ant-test"
+
+    def boom(route, key):
+        raise AssertionError("no client may be built")
+
+    monkeypatch.setattr(llm, "api_key", api_key)
+    monkeypatch.setattr(llm, "_make_client", boom)
+    with pytest.raises(llm.JudgeConfigError, match="OPENROUTER_API_KEY"):
+        llm.stream_json(
+            [("s", "u")], schema=SCHEMA, model=SONNET, on_result=lambda i, r: None,
+            refusal_model=LUNA,
+        )  # fmt: skip
+    with pytest.raises(llm.JudgeConfigError, match="OPENROUTER_API_KEY"):
+        llm.stream_text(
+            ["u"], model=SONNET, on_result=lambda i, r: None, thinking=True, max_tokens=1,
+            refusal_model=LUNA,
+        )  # fmt: skip
+
+
+def test_same_route_rerun_builds_one_client_and_text_refusal_model_must_differ(monkeypatch):
+    built: list[str] = []
+    fake = fake_client_installer(monkeypatch)(_declines())
+    monkeypatch.setattr(llm, "_make_client", lambda route, key: built.append(route) or fake)
+    got: dict[int, Any] = {}
+    llm.stream_json(
+        [("s", "u")], schema=SCHEMA, model=SONNET, on_result=got.__setitem__, refusal_model=OPUS5
+    )
+    assert built == ["anthropic"] and got == {0: {"a": 1, llm.SERVED_BY: OPUS5}}
+    for model in (SONNET, LUNA):
+        with pytest.raises(llm.JudgeConfigError, match="must be another model"):
+            llm.stream_text(
+                ["u"], model=model, on_result=lambda i, r: None, thinking=True, max_tokens=1,
+                refusal_model=model,
+            )  # fmt: skip

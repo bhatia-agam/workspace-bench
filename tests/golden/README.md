@@ -71,3 +71,15 @@ rows under `reads=full` and `reads=lite`. It was written once, under pytest (the
 set nyt_connections' and knowledge_cutoff's nocot texts), on the pre-0090 code, by
 `tests/test_fast_subset.py` with `WSB_WRITE_GOLDEN_0090=1`. A deliberate plan change (a new bank
 version) regenerates it the same way; `--fast` must never move it.
+
+## Pinned-path request pin (plan 0096, 2026-11-18)
+
+`pin_requests_0096.json` holds, for agentic_misalignment, jailbreak_recognition, hinted_cutoff
+and model_multihop on their own pinned judge (summary mode; hinted_cutoff and model_multihop
+also native), with one declined call so the refusal fallback fires: every SDK request of the
+run (every keyword as sent, `system` / `messages` as a sha256 each, sorted by model and that
+hash) and the result's `config`. It was written by `tests/test_pin_requests_0096.py`
+(`WSB_PIN_0096_WRITE=1`) on the tree BEFORE plan 0096's first `src/` edit, through the
+Anthropic-shaped fake client, and pins that plan's invariant: a pinned run with default options
+sends byte-identical requests and stamps a byte-identical `config`. Never regenerate it on a
+later tree; a change that makes the test fail has moved the pinned instrument.

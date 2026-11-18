@@ -17,7 +17,14 @@ from typing import Any
 
 from wsbench import digest, llm, reads
 from wsbench.cache import Cache
-from wsbench.family import fail, render_bag
+from wsbench.family import (
+    effective_fallback,
+    fail,
+    fallback_on,
+    judge_fallback_stamp,
+    render_bag,
+    require_fallback_key,
+)
 from wsbench.llm import Spend
 from wsbench.mcjudge import (
     Call,
@@ -394,6 +401,7 @@ def _load(args: JudgeArgs) -> tuple[list[dict], dict[str, dict], list[Cell], Loa
 
 
 def run(args: JudgeArgs) -> FamilyResult:
+    fallback_on(args, FAMILY)  # a bad opts=fallback= value exits 2, in native mode too
     scope, by_id, cells, rep, regime = _load(args)
     if digest.summary_mode(args):
         return _run_summary(args, scope, by_id, cells, rep, regime)
@@ -709,7 +717,8 @@ def draw_key(key: str, k: int) -> str:
 
 
 def summary_pinned(args: JudgeArgs, col: digest.Collapse) -> bool:
-    """A summary run is the instrument of record when the judge is its pin, the digest ran
+    """A summary run is the instrument of record when the judge is its pin with its refusal
+    fallback on (not ``opts=fallback=none``), the digest ran
     :data:`DIGEST_MODEL` at the default effort (``digest.pinned`` would ask for the repo default
     model instead) and no model but the refusal re-run (:data:`REFUSAL_MODEL`,
     ``summ_fallback=none+<it>``) served any digest."""
@@ -717,6 +726,7 @@ def summary_pinned(args: JudgeArgs, col: digest.Collapse) -> bool:
     served = {m for v in col.served_by.values() for m in v.split(",")}
     return (
         bool(args.judge.pinned)
+        and fallback_on(args, FAMILY)
         and s.model == DIGEST_MODEL
         and s.reasoning == {"anthropic_effort": digest.DEFAULT_EFFORT}
         and s.fallback == f"none+{REFUSAL_MODEL}"
@@ -754,6 +764,11 @@ def _run_summary(
     pre = Preflighter(args.dry_run)
     pv = digest.prompt_version(SUMMARY_CALL_VERSION, args, FAMILY)  # keys the calls
     stamp = digest.prompt_version(PROMPT_VERSION, args, FAMILY)
+    # plan 0096: the draws' refusal re-run follows the judge, pinned or not (off when the judge
+    # is REFUSAL_MODEL itself, or under opts=fallback=none)
+    fb_on = fallback_on(args, FAMILY)
+    refusal_model = effective_fallback(args, fb_on, REFUSAL_MODEL)
+    require_fallback_key(args, FAMILY, refusal_model)
     with Cache(args.out / "cells.jsonl") as cache:
         passed = {i: by_item[i] for i in by_id if by_item.get(i)}
         col = digest.collapse(
@@ -792,8 +807,9 @@ def _run_summary(
                 schema=ITEM_SCHEMA,
                 judge=args.judge,
                 prompt_version=pv,
-                # a draw the pin declines re-runs once on REFUSAL_MODEL
-                refusal_model=REFUSAL_MODEL if args.judge.pinned else None,
+                # a draw the judge declines re-runs once on REFUSAL_MODEL
+                refusal_model=refusal_model,
+                **({} if fb_on else {"accept_served": False}),
                 cache=cache,
                 spend=spend,
                 concurrency=args.concurrency,
@@ -858,7 +874,12 @@ def _run_summary(
         layers=sorted({c.layer for c in cells}),
         counts=counts,
         config=base_config(
-            args, stamp, read=regime, draws=N_DRAWS, **digest.config(args, source_kind, FAMILY)
+            args,
+            stamp,
+            read=regime,
+            draws=N_DRAWS,
+            **digest.config(args, source_kind, FAMILY),
+            **judge_fallback_stamp(args, fb_on, REFUSAL_MODEL),
         ),
         n_api_failed=n_api_failed + len(col.unsummarized - undecided),
         empty_ids=col.empty,

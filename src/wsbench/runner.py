@@ -440,7 +440,12 @@ def _one(
         if opts is None:
             opts = parse_opts(args.opt)
         if judge is None:
-            judge = resolve(spec.judge, flag=args.judge_model, env=os.environ)
+            judge = resolve(
+                spec.judge,
+                flag=args.judge_model,
+                env=os.environ,
+                effort=getattr(args, "judge_effort", None),
+            )
         result = judge_family(spec, args, readouts, out, judge=judge, opts=opts)
     except JudgeConfigError as e:
         print(f"{spec.name}: judge config error: {e}", file=sys.stderr)
@@ -505,6 +510,8 @@ def judge_argv(name: str, args: Any, readouts: Path, dest: Path) -> list[str]:
         cmd.append(f"itpm={itpm}")
     if args.judge_model:
         cmd.append(f"judge_model={args.judge_model}")
+    if effort := getattr(args, "judge_effort", None):  # plan 0096: only when given
+        cmd.append(f"judge_effort={effort}")
     if args.layers is not None:
         cmd.append("layers=" + ",".join(str(k) for k in args.layers))
     if args.items is not None:
@@ -735,8 +742,15 @@ def run_families(
     run-private directory. A second ``KeyboardInterrupt`` terminates the children."""
     procs = _Procs(args) if getattr(args, "procs", False) and env is None else None
     env = os.environ if env is None else env
-    opts = parse_opts(args.opt)
-    judges = {s.name: resolve(s.judge, flag=args.judge_model, env=env) for s in specs}
+    effort = getattr(args, "judge_effort", None)
+    try:
+        opts = parse_opts(args.opt)
+        judges = {
+            s.name: resolve(s.judge, flag=args.judge_model, env=env, effort=effort) for s in specs
+        }
+    except JudgeConfigError as e:  # a bad WSBENCH_OPENAI_ROUTE: no family starts
+        print(f"judge config error: {e}", file=sys.stderr)
+        return [], 3
     outcomes: dict[str, FamilyOutcome] = {}
     runnable: list[tuple[EvalSpec, Path]] = []
     wait = float(getattr(args, "wait", 0) or 0)
@@ -800,7 +814,10 @@ def run_families(
     to_preflight: dict[str, ResolvedJudge] = {s.name: judges[s.name] for s in needs_llm}
     if opts.get("aggregate") == "summary":  # every family's digest model (plan 0020)
         for s in candidates:
-            to_preflight[f"digest:{s.name}"] = digest.preflight_judge(opts, s.judge.aux_models)
+            # the digest model follows a non-Claude override judge (plan 0096 section 9)
+            to_preflight[f"digest:{s.name}"] = digest.preflight_judge(
+                opts, s.judge.aux_models, judges[s.name]
+            )
     if to_preflight and not args.dry_run:
         try:
             _seed_preflights(to_preflight)
@@ -959,6 +976,8 @@ def run_manifest(
         "aggregate": parse_opts(list(getattr(args, "opt", None) or []))["aggregate"],
         "readouts_root": str(readouts_root),
     }
+    if getattr(args, "judge_effort", None):  # plan 0096: only when given
+        manifest["judge_effort"] = args.judge_effort
     if getattr(args, "hb_method", ""):  # plan 0040: `wsbench report` prints its HB index
         manifest["hb_method"] = args.hb_method
     if wait := float(getattr(args, "wait", 0) or 0):  # plan 0092: only when set

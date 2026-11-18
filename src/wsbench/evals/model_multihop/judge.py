@@ -11,7 +11,16 @@ from typing import Any
 from wsbench import digest, mc, reads
 from wsbench.cache import Cache
 from wsbench.evals.wrong_intermediate import judge as wj
-from wsbench.family import pass_rate_result, require_cells, tri_state
+from wsbench.family import (
+    cross_route_reasoning,
+    effective_fallback,
+    fallback_on,
+    judge_fallback_stamp,
+    pass_rate_result,
+    require_cells,
+    require_fallback_key,
+    tri_state,
+)
 from wsbench.llm import Spend
 from wsbench.mcjudge import (
     Call,
@@ -20,6 +29,7 @@ from wsbench.mcjudge import (
     item_scope,
     quote_of,
     run_calls,
+    served_by,
     with_readout_count,
 )
 from wsbench.nearquote import continued, sample_end_prefix
@@ -321,8 +331,37 @@ def _unit_key(item_id: str, unit: str | int) -> str:
 
 
 def _refusal_model(args: JudgeArgs) -> str | None:
+    """The family's refusal fallback: on whenever it differs from the resolved judge model,
+    pinned or not, and off under ``opts=fallback=none`` (plan 0096)."""
     fb = args.aux_models.get(FALLBACK_ROLE, "")
-    return fb if fb and fb != args.judge.model and args.judge.pinned else None
+    return effective_fallback(args, fallback_on(args, NAME), fb)
+
+
+def _fallback_kw(args: JudgeArgs) -> dict[str, Any]:
+    """The ``run_calls`` keywords of the refusal fallback beyond ``refusal_model``, each passed
+    only when it is not the default: ``refusal_reasoning`` (the family's own instrument, for a
+    fallback on another route than the judge) and ``accept_served=False`` (under
+    ``opts=fallback=none`` a cached row a fallback served is re-asked on the judge)."""
+    kw: dict[str, Any] = {}
+    fb = _refusal_model(args)
+    reasoning = cross_route_reasoning(args, NAME, fb) if fb else None
+    if reasoning is not None:
+        kw["refusal_reasoning"] = reasoning
+    if not fallback_on(args, NAME):
+        kw["accept_served"] = False
+    return kw
+
+
+def _stamp(args: JudgeArgs) -> dict[str, str]:
+    """``config.judge_fallback``, on every run but the pinned default (plan 0096)."""
+    return judge_fallback_stamp(
+        args, fallback_on(args, NAME), args.aux_models.get(FALLBACK_ROLE, "")
+    )
+
+
+def _served_extras(n_served: int) -> dict[str, int]:
+    """``extras.n_fallback_served_calls``: present only when a fallback served a judge call."""
+    return {"n_fallback_served_calls": n_served} if n_served else {}
 
 
 def _run_native(
@@ -332,8 +371,9 @@ def _run_native(
     layers: list[int],
     cache: Cache,
     spend: Spend,
-) -> tuple[dict[str, dict[str | int, dict[str, Any] | None]], int]:
-    """Item -> unit -> verdict (None = undecided); the number of calls."""
+) -> tuple[dict[str, dict[str | int, dict[str, Any] | None]], int, dict[str, list[str]]]:
+    """Item -> unit -> verdict (None = undecided); the number of calls; item -> the fallback
+    model of every ``|summ`` / ``|judge`` call of the item a fallback served."""
     pre = Preflighter(args.dry_run)
     common = {
         "judge": args.judge,
@@ -345,6 +385,7 @@ def _run_native(
         "dry_run": args.dry_run,
         "preflight": pre.for_judge(args.judge),
         "refusal_model": _refusal_model(args),
+        **_fallback_kw(args),
     }
     units = {it["id"]: native_units(by_item.get(it["id"], []), layers) for it in scope}
     s_calls = [
@@ -397,7 +438,12 @@ def _run_native(
                     s[0],
                 )
                 out[i][u] = None if v is None else {**v, "summary": s[0]}
-    return out, len(s_calls) + len(j_calls)
+    served: dict[str, list[str]] = defaultdict(list)
+    for calls, res in ((s_calls, s_res), (j_calls, j_res)):
+        for c in calls:
+            if by := served_by(res.get(c.key)):
+                served[c.meta["item"]].append(by)
+    return out, len(s_calls) + len(j_calls), dict(served)
 
 
 # ------------------------------------------------------------------ summary mode
@@ -472,6 +518,7 @@ def _row(it: dict[str, Any], verdict: dict[str, Any] | None, incomplete: bool) -
 
 
 def run(args: JudgeArgs) -> FamilyResult:
+    fallback_on(args, NAME)  # a bad opts=fallback= value exits 2 before anything is read
     scope = item_scope(load_items(), args)
     ids = [it["id"] for it in scope]
     positions = {it["id"]: [int(p) for p in it["positions"]] for it in scope}
@@ -572,8 +619,9 @@ def _native(
     incomplete: set[str],
 ) -> FamilyResult:
     spend = Spend()
+    require_fallback_key(args, NAME, _refusal_model(args))
     with Cache(args.out / "cells.jsonl") as cache:
-        units, n_calls = _run_native(args, scope, by_item, layers, cache, spend)
+        units, n_calls, served = _run_native(args, scope, by_item, layers, cache, spend)
     head = ALL if len(layers) > 1 else (layers[0] if layers else None)
     rows, n_unjudged, n_units_unjudged = [], 0, 0
     for it in scope:
@@ -586,11 +634,14 @@ def _native(
         row["picks"] = {str(u): (x["role"] if x else None) for u, x in us.items()}
         if v is not None:
             row.update(pick=v["pick"], quote=v["quote"], voided=v["voided"])
+        if it["id"] in served:  # plan 0096: absent when no fallback served a call of the item
+            row["fallback_served_by"] = sorted(set(served[it["id"]]))
         rows.append(row)
     extras = _extras(rows, scope)
     extras["per_layer"] = _per_layer(rows, units, layers)
     extras["n_calls"] = n_calls
     extras["n_units_unjudged"] = n_units_unjudged
+    extras |= _served_extras(sum(len(v) for v in served.values()))
     result = pass_rate_result(
         name=NAME,
         args=args,
@@ -604,8 +655,10 @@ def _native(
         n_empty=sum(c.empty for c in cells),
         spend=spend,
         chance_label=CHANCE_LABEL,
-        config_extra={"layers_judged": layers, "headline_unit": str(head)},
+        config_extra={"layers_judged": layers, "headline_unit": str(head), **_stamp(args)},
         extras=extras,
+        # a run without the family's fallback is not the instrument of record
+        pinned=bool(args.judge.pinned) and fallback_on(args, NAME),
     )
     return _finish(args, scope, rows, cells, result)
 
@@ -624,6 +677,7 @@ def _summary(
     spend = Spend()
     pre = Preflighter(args.dry_run)
     pv = digest.prompt_version(mp.PROMPT_VERSION, args, NAME)
+    require_fallback_key(args, NAME, _refusal_model(args))
     with Cache(args.out / "cells.jsonl") as cache:
         have = {i: cs for i, cs in by_item.items() if cs and i in by_id}
         col = digest.collapse(
@@ -663,8 +717,9 @@ def _summary(
             validate=_valid,
             temperature=0.0,
             refusal_model=_refusal_model(args),
+            **_fallback_kw(args),
         )
-    rows, n_unjudged = [], len(col.unsummarized)
+    rows, n_unjudged, n_served = [], len(col.unsummarized), 0
     for it in scope:
         i = it["id"]
         if i not in col.cells or i in col.unsummarized:  # no cells / no digest: undecided
@@ -677,6 +732,9 @@ def _summary(
             n_unjudged += v is None
             row = _row(it, v, i in incomplete)
             row.update({k: x for k, x in (v or {}).items() if k != "role"})
+            if by := served_by(results.get(f"{i}|summary")):
+                row["fallback_served_by"] = [by]  # plan 0096: absent when the judge answered
+                n_served += 1
         row["options"] = shown_options(it)
         if i in col.cells:
             row.update(col.row(i))
@@ -684,6 +742,7 @@ def _summary(
     extras = _extras(rows, scope)
     extras["n_calls"] = len(calls)
     extras["summary"] = col.extras()
+    extras |= _served_extras(n_served)
     result = pass_rate_result(
         name=NAME,
         args=args,
@@ -698,9 +757,9 @@ def _summary(
         n_empty=len(col.empty) + sum(1 for it in scope if not by_item.get(it["id"])),
         spend=spend,
         chance_label=CHANCE_LABEL,
-        config_extra=digest.config(args, source_kind, NAME),
+        config_extra={**digest.config(args, source_kind, NAME), **_stamp(args)},
         extras=extras,
         n_items=len(scope),
-        pinned=digest.pinned(args, NAME),
+        pinned=digest.pinned(args, NAME) and fallback_on(args, NAME),
     )
     return _finish(args, scope, rows, cells, result)

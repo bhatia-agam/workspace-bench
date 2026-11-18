@@ -41,6 +41,8 @@ def run_calls(
     keep_invalid: bool = False,
     timeout: float | None = None,
     refusal_model: str | None = None,
+    refusal_reasoning: dict | None = None,
+    accept_served: bool = True,
 ) -> dict[str, dict | None]:
     """key -> parsed result (``None`` = failed). Cached non-failed results are reused; the rest
     go through :func:`llm.stream_json` in one batch. Every landed result (incl. ``None``) is
@@ -63,7 +65,15 @@ def run_calls(
     under the judge's fingerprint, and a later run with another ``refusal_model`` (or none)
     reuses it as is: unlike the digest (``digest._stale_fallback``), there is no stale-fallback
     check here. The serving model stays visible on the row (``llm.SERVED_BY``); a family that
-    changes its refusal model must change its call key (``prompt_version``) to re-ask."""
+    changes its refusal model must change its call key (``prompt_version``) to re-ask. The
+    refusal model may be on the other route (plan 0096); ``refusal_reasoning`` (a dict) is then
+    the re-run's reasoning as given, forwarded only when set.
+
+    ``accept_served=False`` (a family under ``opts=fallback=none``): a cached row that carries a
+    serving model is a miss, re-asked on the judge with the new row appended, so a run without
+    the fallback never reuses a fallback-served answer. The served row stays in the file: when
+    the judge declines again nothing is cached and a later fallback-on run hits it again; when
+    the judge answers, its newer row wins for every later run."""
     if dry_run:
         if calls:
             c = calls[0]
@@ -82,6 +92,8 @@ def run_calls(
             prompt_version, judge.model, judge.reasoning, temperature, c.system, c.user
         )
         row = cache.get(c.key, fp)
+        if row is not None and not accept_served and served_by(row["result"]):
+            row = None
         if row is not None:
             out[c.key] = row["result"]
         else:
@@ -117,10 +129,17 @@ def run_calls(
         spend=spend,
         **({"timeout": timeout} if timeout is not None else {}),
         **({"refusal_model": refusal_model} if refusal_model is not None else {}),
+        **({"refusal_reasoning": refusal_reasoning} if refusal_reasoning is not None else {}),
     )
     for c, _fp in pending:
         out.setdefault(c.key, None)
     return out
+
+
+def served_by(result: object) -> str | None:
+    """The fallback model that served a judge result (``llm.SERVED_BY``), else None."""
+    by = result.get(llm.SERVED_BY) if isinstance(result, dict) else None
+    return str(by) if by else None
 
 
 # Process-global "already preflighted" set, shared by every family's Preflighter and seeded by

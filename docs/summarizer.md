@@ -46,9 +46,20 @@ per-layer digests are merged into the one judged digest (see "Audit fixes" below
 - **Task context on by default** (`summ_variant=task`; `blind` is the ablation): the family's
   `EvalSpec.task_note` (or a per-item Mapping, `item_task_notes`) fills `DIGEST_TASK_LINE`, so a
   single relevant mention is recorded rather than discarded. Notes carry no gold and no tool name.
-- Model `summ_model=`, else `aux_models["digest"]`, else `claude-opus-5-5`, at the model's own
-  default effort (`summ_effort=`), `max_tokens` 32000 (64000 for a `claude-sonnet-5` digest,
-  `digest.OUTPUT_CAPS`; see Refusal fallbacks). Pinned only at those defaults and
+- Model (`digest.digest_model`, the one place that decides it): `summ_model=`, else the judge
+  model when the judge is an override on a non-Anthropic route (plan 0096 part 2: the
+  summarizer follows the judge, as plan 0059 Arm B ran; a `claude-*` override, a pinned judge
+  and a judge-less probe do not move it), else `aux_models["digest"]`, else `claude-opus-5-5`,
+  at the model's own default effort (`summ_effort=`). The call's reasoning is
+  `digest.digest_reasoning(model, effort)`: a `claude-*` model `{"anthropic_effort": effort}`
+  (unchanged, so no Claude digest fingerprint moves), any other model none at
+  `summ_effort=default`, else `{"effort": effort}` (so a non-Claude digest written before this
+  rule is re-asked). `max_tokens` 32000 (64000 for a `claude-sonnet-5` digest,
+  `digest.OUTPUT_CAPS`; see Refusal fallbacks; on the OpenRouter / `openai` routes
+  `WSBENCH_OPENROUTER_MAX_OUT` replaces it inside `llm`). `summ_context=N` (default 1,000,000,
+  at least 128,000, in `config.summarizer` as `context` only when not the default) is the
+  context window the hierarchical budget fits: `min(summ_token_cap, N - 32000 - 64000)`.
+  `llm.count_tokens` is Anthropic-only: a non-Claude digest sizes its bundles by the estimate. Pinned only at those defaults and
   with the family judge pinned. `extras.digest_served_by` = `{model: n_items}` states which
   model actually served each digest (refusal fallbacks included).
 - **Bundle.** Cells in `(layer, pos)` order, one `[L<layer> pos <index>]` header each (never the
@@ -184,10 +195,24 @@ per-layer digests are merged into the one judged digest (see "Audit fixes" below
     `digest.consensus_claims`), the judge's `CONSENSUS_RULE` and `extras.consensus_band` were
     retired on 2026-11-04 (`+generic-r7`); `collapse(consensus=)` remains, but no family sets it.
 - **Refusal fallbacks** (`summ_fallback`): `default` passes the server-side refusal fallback
-  (`fallbacks="default"`); `default+<claude model>` additionally re-runs a call still declined
+  (`fallbacks="default"`); `default+<model>` additionally re-runs a call still declined
   after it once on that model, at the same level, before any halving (plan 0037 J10;
   the four F3 families use `default+claude-sonnet-5-5`, i.e.
-  `digest.REFUSAL_MODEL`; Sonnet 5 before 2026-11-01). `none+<claude model>` is that
+  `digest.REFUSAL_MODEL`; Sonnet 5 before 2026-11-01). `<model>` is any model id (plan 0096):
+  a refusal model on the other route than the digest model needs that route's key (checked
+  before the first digest call, never on a dry run) and its re-run sends the reasoning of its
+  own route (`llm.reasoning_for`: an OpenRouter model `{"effort": "minimal"}`, an Anthropic
+  one no effort key from an OpenRouter digest's settings), at the digest model's output cap;
+  a same-route re-run is unchanged. Since part 2 a client-side re-run sends
+  `digest_reasoning(<refusal model>, summ_effort)` (`Settings.reasoning_on`): a `claude-*`
+  refusal model `{"anthropic_effort": effort}` whatever the digest model's route, a non-Claude
+  one none at the default effort. **A non-Claude digest model has no fallback by default**: a
+  FAMILY-DEFAULT `summ_fallback` (`FAMILY_DEFAULTS`) becomes `none` for it (the validated Arm B
+  instrument), an explicit `none+<model>` is honoured on any route, and an explicit `default`
+  / `default+<model>` exits 2 (the server-side fallback is an Anthropic feature; for a digest
+  that follows the judge the exit comes from the runner's digest preflight, before any family
+  starts). On the `openai` route the up-front credential check builds the WIF token source.
+  `none+<model>` is that
   client-side re-run alone, for a digest model that rejects server-side `fallbacks`
   (`claude-sonnet-5` answers the parameter with a 400): agentic_misalignment and
   jailbreak_recognition, whose digests run on their `claude-sonnet-5` judge pins, use

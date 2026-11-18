@@ -6,6 +6,7 @@ from types import SimpleNamespace
 from typing import Any
 
 import pytest
+from openrouter_fakes import APIError, ModerationError, OpenRouterClient, chunk, text_stream
 
 from wsbench import llm
 from wsbench.llm import JudgeConfigError, Spend, stream_text, stream_text_async
@@ -183,11 +184,18 @@ def test_fatal_raises_and_closes(keys, fast, monkeypatch):
 
 
 def test_openrouter_model_raises(keys, fast, monkeypatch):
+    """Plan 0096: an OpenRouter model is no longer refused (the free-text stage runs on both
+    routes); what still raises before any client is built is a missing OpenRouter key."""
+    fake = OpenRouterClient(lambda model, kw: text_stream("ok"))
+    got, _spend = _collect(["u"], fake, monkeypatch, model=GEMINI, max_tokens=1)
+    assert got == {0: "ok"} and fake.closed
+
     def boom(route, key):
         raise AssertionError("client must not be built")
 
     monkeypatch.setattr(llm, "_make_client", boom)
-    with pytest.raises(JudgeConfigError, match="claude-"):
+    monkeypatch.delenv("OPENROUTER_API_KEY")
+    with pytest.raises(JudgeConfigError, match="OPENROUTER_API_KEY"):
         stream_text(["u"], model=GEMINI, on_result=lambda i, r: None, thinking=False, max_tokens=1)
 
 
@@ -314,3 +322,124 @@ def test_refusal_can_be_marked(keys, fast, monkeypatch):
         mark_refusals=True,
     )
     assert got == {0: llm.REFUSED}
+
+
+# ---------------------------------------------------------------- OpenRouter route (plan 0096)
+
+LUNA = "openai/gpt-6-luna"
+
+
+def _scripted(outcomes: list[Any]) -> OpenRouterClient:
+    """An OpenRouter fake that hands out ``outcomes`` in order (chunk lists or exceptions)."""
+    left = list(outcomes)
+    return OpenRouterClient(lambda model, kw: left.pop(0))
+
+
+@pytest.mark.parametrize(
+    ("thinking", "reasoning"), [(True, {"enabled": True}), (False, {"effort": "minimal"})]
+)
+def test_openrouter_text_request_and_spend(keys, fast, monkeypatch, thinking, reasoning):
+    fake = _scripted([text_stream("  a note  ")])
+    got, spend = _collect(["usr"], fake, monkeypatch, model=LUNA, thinking=thinking)
+    assert got == {0: "a note"}  # the deltas joined and stripped
+    assert (spend.calls, spend.input_tokens, spend.output_tokens) == (1, 7, 3)
+    assert spend.usd == pytest.approx(0.001) and spend.errors == 0 and spend.refusals == 0
+    assert fake.calls == [
+        {
+            "stream": True,
+            "stream_options": {"include_usage": True},
+            "timeout": 600.0,
+            "model": LUNA,
+            "max_tokens": 400,
+            "messages": [{"role": "user", "content": "usr"}],  # user only: no system block
+            "extra_body": {
+                "usage": {"include": True},
+                "provider": {"require_parameters": True},
+                "reasoning": reasoning,
+            },
+        }
+    ]
+    assert fake.streams[0].closed and fake.closed
+    assert llm.OPENROUTER_MIN_REASONING == {"effort": "minimal"}  # the constant is not mutated
+
+
+def test_openrouter_empty_at_the_cap_doubles_to_the_ceiling_then_returns_empty(
+    keys, fast, monkeypatch
+):
+    fake = OpenRouterClient(lambda model, kw: text_stream("", "length"))
+    got, spend = _collect(["u"], fake, monkeypatch, model=LUNA, max_tokens=16_000)
+    assert got == {0: ""}  # valid, as on the Anthropic route
+    assert [c["max_tokens"] for c in fake.calls] == [16_000, 32_000, 64_000]
+    assert llm._TEXT_BUDGET_CEILING == 64_000 and spend.calls == 3 and spend.errors == 0
+    # text at the cap is an answer: no doubling
+    fake = _scripted([text_stream("cut off", "length")])
+    got, _ = _collect(["u"], fake, monkeypatch, model=LUNA, max_tokens=16)
+    assert got == {0: "cut off"} and len(fake.calls) == 1
+
+
+@pytest.mark.parametrize("mark", [True, False])
+def test_openrouter_text_refusals(keys, fast, monkeypatch, mark):
+    want = {0: llm.REFUSED if mark else None}
+    for outcome in (
+        text_stream("partial", "content_filter"),  # filtered: a refusal even with text
+        [chunk(refusal="I can't help with that"), chunk(finish_reason="stop")],
+        ModerationError("flagged"),  # the moderation 403: one refusal, never a config error
+    ):
+        fake = _scripted([outcome])
+        got, spend = _collect(["u"], fake, monkeypatch, model=LUNA, mark_refusals=mark)
+        assert got == want and spend.refusals == 1 and spend.errors == 0 and len(fake.calls) == 1
+    # with no schema, a refusal written as ordinary content is an answer
+    fake = _scripted([text_stream("I can't help with that")])
+    got, spend = _collect(["u"], fake, monkeypatch, model=LUNA, mark_refusals=mark)
+    assert got == {0: "I can't help with that"} and spend.refusals == 0
+
+
+def test_openrouter_stream_errors_are_retried(keys, fast, monkeypatch):
+    broken = [
+        [chunk("par"), APIError("Provider disconnected")],  # the SDK raises from the iterator
+        [chunk("par"), chunk(finish_reason="error")],
+        [SimpleNamespace(choices=[], usage=None)],  # ends with no chunk that has choices
+    ]
+    fake = _scripted([*broken, text_stream("whole")])
+    got, spend = _collect(["u"], fake, monkeypatch, model=LUNA)
+    assert got == {0: "whole"} and spend.retries == 3 and spend.errors == 0
+    assert len(fake.streams) == 4 and all(s.closed for s in fake.streams)
+    # an APIError WITH a non-transient status is still one failed call, not a retry
+    fake = _scripted([BadRequestError("bad")])
+    got, spend = _collect(["u"], fake, monkeypatch, model=LUNA)
+    assert got == {0: None} and spend.retries == 0 and spend.errors == 1
+    # on the Anthropic route a status-less APIError keeps its old classification (not transient)
+    ant = FakeAnthropicStream([APIError("x")])
+    got, spend = _collect(["u"], ant, monkeypatch)
+    assert got == {0: None} and spend.retries == 0 and spend.errors == 1
+
+
+def test_openrouter_fatal_still_raises(keys, fast, monkeypatch):
+    fake = _scripted([AuthenticationError("bad key")])
+    monkeypatch.setattr(llm, "_make_client", lambda route, key: fake)
+    with pytest.raises(JudgeConfigError):
+        stream_text(["u"], model=LUNA, on_result=lambda i, r: None, thinking=False, max_tokens=1)
+    assert fake.closed
+
+
+def _stream_error(code):
+    e = APIError("Provider returned error")
+    e.body = {"code": code, "message": "x"}
+    return e
+
+
+def test_openrouter_stream_error_is_classified_by_its_code(keys, fast, monkeypatch):
+    """An error event inside the stream has no HTTP status; its body's code decides (review of
+    #505): a transient code is retried, a credits / auth code is fatal, any other is one error."""
+    fake = _scripted([[chunk("par"), _stream_error(502)], text_stream("whole")])
+    got, spend = _collect(["u"], fake, monkeypatch, model=LUNA)
+    assert got == {0: "whole"} and spend.retries == 1 and spend.errors == 0
+    fake = _scripted([[chunk("par"), _stream_error(400)], text_stream("never")])
+    got, spend = _collect(["u"], fake, monkeypatch, model=LUNA)
+    assert got == {0: None} and spend.retries == 0 and spend.errors == 1
+    fake = _scripted([[chunk("par"), _stream_error(402)], text_stream("never")])
+    monkeypatch.setattr(llm, "_make_client", lambda route, key: fake)
+    with pytest.raises(JudgeConfigError):
+        llm.stream_text(
+            ["u"], model=LUNA, on_result=lambda i, r: None, thinking=False, max_tokens=100
+        )

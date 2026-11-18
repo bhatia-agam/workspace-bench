@@ -95,7 +95,7 @@ required by the SDK for large `max_tokens`), a budget-doubling retry when the te
 and `stop_reason == "max_tokens"` (up to 64k), and free-text output (no schema). Add to
 `llm.py` one more primitive, `stream_text_async(prompts, *, model, on_result, thinking: bool,
 max_tokens, concurrency, rpm, timeout, spend)` for the Anthropic route only (OpenRouter route
-raises `JudgeConfigError("free-text stage requires a claude-* model")` for now), implementing
+raises `JudgeConfigError("free-text stage requires a claude-* model")` for now; superseded by plan 0096: the free-text primitive runs on both routes), implementing
 exactly the above (streaming via `client.messages.stream`, thinking param, budget doubling,
 same backoff/fatal classification and surrogate scrub as `_one`, `spend` tallies incl.
 tokens). `prompts: list[str]` — user-only messages, no system block, as the source sends them

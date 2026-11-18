@@ -242,9 +242,12 @@ budget per chunk (default 60000, the source default).
 ## Stages
 
 Stages A and B are completely blind (no scenario text, no task framing, no mention of safety);
-only Stage C holds the answer key. All calls are free-text on the Anthropic route
+only Stage C holds the answer key. All calls are free-text on the judge's route
 (`llm.stream_text`: streaming, per-stage thinking, budget doubling on an empty `max_tokens`
-reply up to 64k; no system block, no schema).
+reply up to 64k; no system block, no schema). The pin is an Anthropic model; an override judge
+may be an OpenRouter model (plan 0096: a no-thinking stage then asks for
+`{"effort": "minimal"}`, a thinking stage for `{"enabled": true}`, and an empty reply at
+`finish_reason: length` doubles the budget the same way).
 
 - **Stage A — position notes.** One call per (item, prompt position) with **all selected
   layers'** readouts at that position (`format_readouts`: `layer N: ...`, shallow first,
@@ -457,9 +460,20 @@ refusal (a partner's own miss or false alarm still fails it); such items are cou
 `digest_model` (comma-joined when an item's layers mix) and `judge_model` (Stage C, cached with the
 row so a resumed run keeps it), counted in `extras.summary.digest_served_by`,
 `extras.judge_served_by` and `extras.judge_fallback_ids`. A summary run is the instrument of
-record (`judge.summary_pinned`) only when Stage C is its pin, the digest ran `claude-sonnet-5` at
-the default effort and no model other than `claude-opus-5` served any digest;
-`summ_fallback=none` turns the re-run off and unpins the run. A Sonnet digest call is capped at
+record (`judge.summary_pinned`) only when Stage C is its pin with its refusal re-run on, the
+digest ran `claude-sonnet-5` at the default effort and no model other than `claude-opus-5`
+served any digest; `summ_fallback=none` turns the digest re-run off and unpins the run.
+The Stage C re-run follows the judge (plan 0096): under a `judge_model=` override, on either
+route, a Stage C call the override judge declines re-runs once on `claude-opus-5` as well
+(none when the judge is `claude-opus-5` itself). `opts=fallback=none` turns the Stage C re-run
+off (the digest's is `summ_fallback`), re-asks on the judge any cached Stage C answer another
+model served, and unpins the run; a run that is not the pinned default records
+`config.judge_fallback` (`claude-opus-5`, `none` or `same-as-judge`). The digest keeps its
+`claude-sonnet-5` pin under a `claude-*` judge override (`opts=summ_model=` moves it); under a
+non-Claude override judge (`judge_model=openai/gpt-6-luna`) the digest follows the judge and has
+no refusal re-run unless `opts=summ_fallback=none+<model>` gives one (README §Judges; this
+Luna digest + judge instrument was not validated by the plan 0059 sweep, and the free-text
+stages ignore `judge_effort`). A Sonnet digest call is capped at
 64k output tokens (`digest.OUTPUT_CAPS`), since Sonnet does not always keep to the 25-entry rare
 tier on long bundles; `max_tokens` keys no fingerprint, so cached digests stay valid. Under the
 layered digest (the CLI default for a multi-layer run) stage 2 runs on the same model, cap and
@@ -471,9 +485,9 @@ re-run. Native mode has no digest and is unchanged, as are the Stage C call vers
 the judge of record and one of the repo's two non-default pins (jailbreak_recognition is the
 other). No Gemini agreement data exists
 for this family, so `judge_model=`/`WSBENCH_JUDGE_MODEL` overrides produce unpinned numbers
-that are never numbers of record; a non-`claude-*` override is refused (`JudgeConfigError`:
-the free-text stages need the Anthropic route). `ResolvedJudge.reasoning` is ignored; the
-per-stage thinking setting above governs.
+that are never numbers of record. A non-`claude-*` override runs on the OpenRouter route
+(plan 0096; before it the free-text stages were Anthropic-only and such an override exited 3).
+`ResolvedJudge.reasoning` is ignored; the per-stage thinking setting above governs.
 
 **Cost.** Stage A is one call per prompt position: ≈ 85k calls per arm over the 54 items of
 am-bank-v2 under `reads=full` (≈ 84k prompt positions, chat tail included), ≈ 6k under
@@ -632,8 +646,9 @@ readouts); `extras.summary` holds the digest diagnostics, including the digest r
 
 **Counts.** `n_expected_cells` = selected rows and `n_missing_cells = 0`, as native (cells);
 `n_unjudged_cells` and `n_empty_cells` count items. `complete` and `pinned_instrument` need the
-Stage C pin AND the digest on its pin `claude-sonnet-5` at the default effort, served by no other
-model than the refusal re-run `claude-opus-5` (`judge.summary_pinned`).
+Stage C pin (with `opts=fallback` on) AND the digest on its pin `claude-sonnet-5` at the default
+effort, served by no other model than the refusal re-run `claude-opus-5`
+(`judge.summary_pinned`).
 Rows record `digest_model` and `judge_model` (the model that served each). Stage C cache key
 `C:<label>|L-1` (never a native key), fingerprinted on the version, the judge model, the template
 and the rendered user message (digest, target, scenario). `config` adds `aggregate`,

@@ -392,7 +392,7 @@ def test_no_refusal_model_no_retry(tmp_path, fam, monkeypatch):
     assert "a" in col.unsummarized and set(seen) == {"claude-opus-5-5"}
 
 
-@pytest.mark.parametrize("bad", ["sonnet", "default+", "default+gpt-5", "none+", "none+gpt-5"])
+@pytest.mark.parametrize("bad", ["sonnet", "default+", "none+"])
 def test_summ_fallback_values(tmp_path, bad):
     s = digest.settings(_args(tmp_path, summ_fallback="default+claude-sonnet-5"))
     assert (s.server_fallback, s.refusal_model) == ("default", "claude-sonnet-5")
@@ -924,3 +924,85 @@ def test_rerun_union_with_a_refused_layer_part(tmp_path, fam, monkeypatch):
     again = _rerun_is_first_pass(tmp_path, fake, cells, col)
     assert again.partial == {"a": [40]} and again.refused_layers == {"a": [40]}
     assert again.served_by == {"a": "claude-opus-4-8"}
+
+
+# ---------------------------------------------------------------- plan 0096: any refusal model
+
+LUNA = "openai/gpt-6-luna"
+
+
+def test_summ_fallback_accepts_any_model_id(tmp_path):
+    for v, want in (
+        (f"none+{LUNA}", (None, LUNA)),
+        (f"default+{LUNA}", ("default", LUNA)),
+        ("default+gpt-5", ("default", "gpt-5")),
+        ("none+gpt-5", (None, "gpt-5")),
+    ):
+        s = digest.settings(_args(tmp_path, summ_fallback=v))
+        assert (s.server_fallback, s.refusal_model) == want
+    with pytest.raises(SystemExit) as e:
+        digest.settings(_args(tmp_path, summ_fallback="server+x"))
+    assert e.value.code == 2
+
+
+def _recording(models_refusing: set[str], seen: list[tuple]):
+    inner = _refusing_on(models_refusing, [])
+
+    def stream_json(prompts, *, on_result, **kw):
+        seen.append((kw["model"], kw["reasoning"], kw["max_tokens"]))
+        return inner(prompts, on_result=on_result, **kw)
+
+    return stream_json
+
+
+@pytest.mark.parametrize("overflow", ["hierarchical", "stride"])
+def test_cross_route_refusal_model_sends_its_routes_reasoning(tmp_path, fam, monkeypatch, overflow):
+    """The client-side re-run on a model of the other route sends ``digest_reasoning`` of that
+    model at the run's effort (plan 0096 R9: no reasoning at the default effort for a non-Claude
+    model); one on the digest model's route sends ``s.reasoning`` as before. The cap is kept,
+    the fingerprint and the ``SERVED_VIA`` tag do not move."""
+    monkeypatch.setenv("OPENROUTER_API_KEY", "sk-or-test")
+    monkeypatch.setitem(digest.FAMILY_DEFAULTS[FAM], "summ_overflow", overflow)
+    monkeypatch.setattr(
+        llm, "count_tokens", lambda model, prompts, concurrency=8: [10] * len(prompts)
+    )
+    default = {"anthropic_effort": digest.DEFAULT_EFFORT}
+    for fb, want in ((LUNA, None), ("claude-sonnet-5", default)):
+        seen: list[tuple] = []
+        monkeypatch.setattr(llm, "stream_json", _recording({"claude-opus-5-5"}, seen))
+        out = tmp_path / fb.replace("/", "_")
+        out.mkdir()
+        col = _run(out, {"a": _cells("a", 2)}, summ_fallback=f"none+{fb}")
+        assert seen == [
+            ("claude-opus-5-5", default, digest.MAX_TOKENS),
+            (fb, want, digest.MAX_TOKENS),
+        ]
+        assert col.row("a")["summary_served_by"] == fb
+        with Cache(out / "c.jsonl") as cache:
+            results = [r.get("result") for rows in cache._rows.values() for r in rows]
+        served = [r for r in results if isinstance(r, dict) and r.get(llm.SERVED_BY)]
+        assert [(r[llm.SERVED_BY], r[digest.SERVED_VIA]) for r in served] == [(fb, "client")]
+    # the fingerprint does not key the fallback: a run with Sonnet as the refusal model finds
+    # the Luna-served row stale (re-asked), exactly as for two Claude refusal models
+    seen = []
+    monkeypatch.setattr(llm, "stream_json", _recording({"claude-opus-5-5"}, seen))
+    col = _run(tmp_path / LUNA.replace("/", "_"), {"a": _cells("a", 2)},
+               summ_fallback="none+claude-sonnet-5")  # fmt: skip
+    assert [m for m, _r, _c in seen] == ["claude-opus-5-5", "claude-sonnet-5"]
+
+
+def test_cross_route_refusal_model_needs_its_key_before_the_first_call(tmp_path, fam, monkeypatch):
+    monkeypatch.delenv("OPENROUTER_API_KEY", raising=False)
+    seen: list[tuple] = []
+    monkeypatch.setattr(llm, "stream_json", _recording(set(), seen))
+    monkeypatch.setattr(
+        llm, "count_tokens", lambda model, prompts, concurrency=8: [10] * len(prompts)
+    )
+    with pytest.raises(llm.JudgeConfigError, match="OPENROUTER_API_KEY"):
+        _run(tmp_path, {"a": _cells("a", 2)}, summ_fallback=f"none+{LUNA}")
+    assert seen == []
+    _run(
+        tmp_path, {"a": _cells("a", 2)}, dry=True, summ_fallback=f"none+{LUNA}"
+    )  # never on a dry run
+    _run(tmp_path, {"a": _cells("a", 2)}, summ_fallback="none+claude-sonnet-5")  # same route: none
+    assert [m for m, _r, _c in seen] == ["claude-opus-5-5"]

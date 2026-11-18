@@ -197,6 +197,36 @@ def test_dmo_one_regex_per_item_no_judge(tmp_path, monkeypatch):
     assert not o.pinned_instrument
 
 
+def test_dmo_digest_follows_a_luna_judge_and_is_then_unpinned(tmp_path, monkeypatch):
+    """Plan 0096 section 9: the regex scorer has no judge, but its digest follows a non-Claude
+    override judge, and such a row is not the instrument of record; the pinned judge and a
+    Claude override keep the default digest and stay pinned."""
+    import dataclasses
+
+    from wsbench.judge_config import resolve
+
+    registry.FAMILIES.setdefault(dmo_pkg.SPEC.name, dmo_pkg.SPEC)
+    FakeLLM.install(
+        monkeypatch,
+        lambda s, u, sc: (_ for _ in ()).throw(AssertionError("no judge call")),
+        digest=_keyword_digest(["baharat", "Zaatar"]),
+    )
+    pv = dmo_prompts.PROMPT_VERSION
+    luna = "openai/gpt-6-luna"
+    for tag, flag, model, pinned in (
+        ("pin", None, digest.DEFAULT_MODEL, True),
+        ("claude", "claude-opus-5", digest.DEFAULT_MODEL, True),
+        ("luna", luna, luna, False),
+    ):
+        args = summary_args(DMO_EX, tmp_path / tag, pv, items=DMO_IDS)
+        if flag:
+            judge = resolve(dmo_pkg.SPEC.judge, flag=flag, env={})
+            args = dataclasses.replace(args, judge=judge)
+        r = dmo_pkg.SPEC.run(args)
+        assert r.config["summarizer"]["model"] == model, tag
+        assert r.pinned_instrument is pinned, tag
+
+
 def test_dmo_missing_layer_and_unsummarized(tmp_path, monkeypatch):
     registry.FAMILIES.setdefault(dmo_pkg.SPEC.name, dmo_pkg.SPEC)
     pv = dmo_prompts.PROMPT_VERSION

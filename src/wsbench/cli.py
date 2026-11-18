@@ -16,7 +16,7 @@ from wsbench import fast, hbindex, llm, readplan, registry, runner
 from wsbench.baselines import logit_lens, lucky_guessing, prompt_only, text_inversion
 from wsbench.capable import questions as capable_questions
 from wsbench.capable import run as capable_run
-from wsbench.judge_config import JudgeConfig, resolve
+from wsbench.judge_config import JUDGE_EFFORTS, JudgeConfig, resolve
 from wsbench.llm import JudgeConfigError
 from wsbench.readouts import convert_gen_dir, convert_read_json
 from wsbench.registry import EvalSpec
@@ -184,6 +184,8 @@ class JudgeOptions(Command):
     def __init__(self) -> None:
         super().__init__()
         self.judge_model = ""
+        # minimal | low | medium | high | default: a non-Claude judge's reasoning (plan 0096)
+        self.judge_effort = ""
         self.layers = None
         self.items = None
         self.limit = 0
@@ -207,6 +209,11 @@ class JudgeOptions(Command):
     def finalize(self) -> None:
         _set_fast(self)
         self.judge_model = str(self.judge_model or "") or None
+        self.judge_effort = str(self.judge_effort or "") or None
+        if self.judge_effort is not None and self.judge_effort not in JUDGE_EFFORTS:
+            raise ValueError(
+                f"judge_effort must be one of {', '.join(JUDGE_EFFORTS)}, got {self.judge_effort!r}"
+            )
         lay = _layers_arg(self.layers)
         self.each = lay == "each"
         self.layers = None if isinstance(lay, str) else lay  # all = every layer in the file
@@ -327,7 +334,9 @@ class JudgeFamily(JudgeOptions):
             return oc.exit_code
         try:
             opts = parse_opts(self.opt)
-            judge = resolve(spec.judge, flag=self.judge_model, env=os.environ)
+            judge = resolve(
+                spec.judge, flag=self.judge_model, env=os.environ, effort=self.judge_effort
+            )
             if self.each:  # the all-layer run, then one run per layer in the file
                 for tag, lay in runner.each_configs(self.readouts):
                     sub = copy.copy(self)
@@ -487,6 +496,8 @@ class RunFamilies(JudgeOptions):
         self.out.mkdir(parents=True, exist_ok=True)
         each: dict[str, object] = {"layers": "each", "families": manifest}
         each["readouts_root"] = str(self.readouts_root)
+        if self.judge_effort:
+            each["judge_effort"] = self.judge_effort
         if self.hb_method:
             each["hb_method"] = self.hb_method
         (self.out / "run.json").write_text(json.dumps(each, indent=1), encoding="utf-8")

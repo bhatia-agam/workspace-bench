@@ -27,23 +27,72 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   the table); not restated here.
 - Routes by model id: `claude-*` -> Anthropic SDK (`ANTHROPIC_API_KEY`, or with no key and
   `ANTHROPIC_PROFILE` set, the SDK's `ant auth login` profile; structured output,
-  refusal -> `None`); else OpenRouter via the OpenAI SDK (`OPENROUTER_API_KEY`, `sk-or-…`).
+  refusal -> `None`); else OpenRouter via the OpenAI SDK (`OPENROUTER_API_KEY`, `sk-or-…`);
+  with `WSBENCH_OPENAI_ROUTE=wif` (plan 0096 part 2, a port of the unmerged plan-0059 branch)
+  an `openai/*` id that is not `openai/gpt-oss*` takes route `openai`: OpenAI directly through
+  `llm._WifClient(ati_remote.Clients("openai-wif"))` (`api_key` = `""`; `_openai_once` /
+  `_openai_text_once`: `max_completion_tokens`, `reasoning_effort` from `effort`, never
+  `temperature` or `extra_body`; `_wif_create` re-exchanges on a 401 up to
+  `ati_remote.AUTH_REFRESHES` times, the last 401 and every 403 are fatal, a
+  `JudgeConfigError` inside a call is re-raised, `TransientExchangeError` is transient; cost 0).
+  A bad env value raises in `llm.route`, so every `resolve` / `digest.settings` caller must end
+  as exit 3. The two chat routes share `_chat_result` (refusal rule; an unparsable body with
+  `finish_reason == "length"` is one failed call, never retried), `_chat_text`, and
+  `WSBENCH_OPENROUTER_MAX_OUT` (`llm._capped`: the cap of every chat-route call by the route of
+  the model actually called, the starting budget of free text, never read for an Anthropic
+  call; while set, `_too_long` also takes the `OPENROUTER_TOO_LONG` phrases of a 400 as
+  `TOO_LONG_JSON`). `reasoning_for` treats `openai` as `openrouter`; `temperature` goes only to
+  an `openrouter` call; `llm.require_credentials` is the up-front check (the WIF token source on
+  `openai`). `tests/conftest.py` clears both env keys for every test.
+  `judge_effort=minimal|low|medium|high|default` (`judge_config.resolve(effort=)`, non-Claude
+  judges only, a Claude judge exits 2; sets `pinned=False`; passed by `cli.JudgeFamily`,
+  `runner._one`, `runner.run_families`, emitted by `judge_argv` and written to `run.json` only
+  when given; read with `getattr(args, "judge_effort", None)`).
+  **The summarizer follows a non-Claude override judge** (`digest.digest_model` /
+  `follows_judge`: `summ_model=` > a present, unpinned judge on a non-Anthropic route >
+  `aux_models["digest"]` > `DEFAULT_MODEL`; `digest.preflight_judge(extra, aux_models, judge)`
+  must be given the resolved judge); `digest.digest_reasoning` gives a non-Claude digest no
+  reasoning at the default effort, a family-default `summ_fallback` is `none` for it, an
+  explicit `default[+<model>]` exits 2, `summ_context=` sizes the budget (README §Judges for the
+  rule, the experiment and the validated Luna recipe).
   Shared: JSON-schema output, 11 jittered retries (`_ATTEMPTS = 12`) on 408/409/429/5xx/
   timeouts, process-wide thread-safe RPM pacer (`rpm=`, library default 240; CLI default 30000), `preflight` fail-fast,
   `Spend` tally. Structured Anthropic calls run at `effort: low` on always-thinking models unless
   the family sets `reasoning={"anthropic_effort": "default"|<level>}` (introspection: its
   source instrument ran at default effort; knowledge_cutoff sets OpenRouter `{"effort": "low"}`); `resolve` keeps only the reasoning keys
   of the route the judge resolves to (`anthropic_effort` on Anthropic, every other key on
-  OpenRouter; plan 0023), so an Opus judge of knowledge_cutoff gets `None`, not `effort: low`. A failed
+  OpenRouter; plan 0023; the rule is `llm.reasoning_for(route, reasoning)`, which `resolve`
+  calls, and `llm.OPENROUTER_MIN_REASONING` / `ANTHROPIC_REASONING_KEYS` are its constants,
+  re-exported by `judge_config`), so an Opus judge of knowledge_cutoff gets `None`, not `effort: low`. A failed
   call returns `None` and never scores. `stream_json_async` is the primitive, `stream_json`
   wraps it (`temperature` dropped on the Anthropic route); `stream_text[_async]` is agentic's
-  free-text Anthropic-only primitive. Both take `refusal_model=`: a call the model declines is
+  free-text primitive, on both routes since plan 0096 (`_openrouter_text_once`: a streamed
+  chat completion, `thinking` -> `{"enabled": true}`, no thinking -> `{"effort": "minimal"}`, (the `openai` route sends `minimal` as `low`, `llm._openai_effort`: gpt-6-luna 400s on it),
+  the same budget doubling to `_TEXT_BUDGET_CEILING`; a status-less SDK `APIError` from the
+  stream, `finish_reason == "error"` and a stream without choices are transient). An OpenRouter
+  refusal is `finish_reason == "content_filter"`, a `refusal` with no content, or the moderation
+  403, for structured calls too (one counted refusal, not 12 retries of an unparsable body).
+  Both take `refusal_model=`: a call the model declines is
   re-run once, same request, on that model (client-side, for models that reject the server-side
   `fallbacks` parameter); a served JSON result carries `llm.SERVED_BY`, a served text fires
   `on_served`, and only refusals move (a `max_tokens` stop or an error stays the primary's
-  outcome). `mcjudge.run_calls(refusal_model=)` passes it through and caches the serving model
+  outcome). The refusal model must be another model and may be on the OTHER route (plan 0096):
+  its key is resolved before any call, a second client is built, and the re-run is re-shaped
+  for its route (`reasoning_for`, that route's default `max_tokens`, `temperature` only to
+  OpenRouter, no overflow state); a same-route re-run is byte-identical to before.
+  `stream_json(refusal_reasoning=)` gives the re-run's reasoning as is (a family's own effort
+  for a cross-route fallback). `mcjudge.run_calls(refusal_model=)` passes it through and caches the serving model
   with the row, under the judge's fingerprint: a later run with another refusal model (or none)
-  reuses that row (no stale-fallback check, unlike the digest). The digest's equivalent is `summ_fallback=none+<model>`, and
+  reuses that row (no stale-fallback check, unlike the digest), unless it passes
+  `accept_served=False` (a served row is then a miss, re-asked on the judge). The four
+  fallback families (hinted_cutoff, model_multihop, agentic Stage C, jailbreak draws) run their
+  judge-call fallback whenever it differs from the resolved judge model, never keyed on
+  `judge.pinned` (`family.effective_fallback`; `opts=fallback=on|none` via `family.fallback_on`
+  at the top of `run()`, bad value exit 2; `family.require_fallback_key` = exit 3 up front for
+  a cross-route fallback without its key; `config.judge_fallback` outside the pinned default;
+  only the instrument-identity stamps read `judge.pinned`). `tests/test_pin_requests_0096.py`
+  pins the pinned path's SDK requests and `config` against a golden: never regenerate it.
+  The digest's equivalent is `summ_fallback=none+<model>` (any model id, either route), and
   `digest.OUTPUT_CAPS` gives a digest model its own per-call output cap (`Settings.max_tokens`).
   `stream_json[_async](overflow_max_tokens=)` re-asks a call that stops at `max_tokens` ONCE with
   that larger cap (Anthropic route; timeout scaled, at most `llm.OVERFLOW_ATTEMPTS` = 3 attempts;

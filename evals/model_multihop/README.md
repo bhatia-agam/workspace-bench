@@ -204,7 +204,15 @@ indices; the family is model-specific (README "Porting"), with no adapt builder.
 **Both modes.**
 - `judge` `claude-opus-5-5` at default effort (`reasoning={"anthropic_effort": "default"}`, the
   summary MC included; the digest keeps its own settings); a refused call re-runs once on
-  `claude-sonnet-5-5` (`aux_models["fallback"]`).
+  `claude-sonnet-5-5` (`aux_models["fallback"]`). The re-run follows the judge (plan 0096): it
+  runs whenever Sonnet 5.5 is not the resolved judge itself, under a `judge_model=` override
+  too (for an OpenRouter judge it runs at this family's default effort).
+  `opts=fallback=none` turns it off, re-asks on the judge any cached answer the fallback
+  served, and makes the row not the instrument of record (native and summary alike); a run
+  that is not the pinned default records `config.judge_fallback` (the model, `none` or
+  `same-as-judge`). An item one of whose judge calls the fallback served carries
+  `fallback_served_by` (native: any summarizer or concept-judge call of any unit), counted in
+  `extras.n_fallback_served_calls`.
 - **value** = P(bridge) over decided items; **chance** = the mean of 1 / options over the
   scored items (`items=` / `limit=` runs included; 0.196 on the whole bank, 0.195 invented,
   0.200 cutoff); **CI**: a cluster bootstrap over the bridge (10,000 draws, seed

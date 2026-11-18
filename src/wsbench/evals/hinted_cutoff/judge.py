@@ -11,7 +11,16 @@ from typing import Any
 from wsbench import digest, reads
 from wsbench.banks import load_bank
 from wsbench.cache import Cache
-from wsbench.family import fail, pass_rate_result, render_bag, require_cells
+from wsbench.family import (
+    cross_route_reasoning,
+    effective_fallback,
+    fail,
+    fallback_on,
+    pass_rate_result,
+    render_bag,
+    require_cells,
+    require_fallback_key,
+)
 from wsbench.judge_config import ResolvedJudge
 from wsbench.llm import Spend
 from wsbench.mcjudge import Call, Preflighter, run_calls, with_readout_count
@@ -106,22 +115,30 @@ def summary_material(col: digest.Collapse, item_id: str, cells: list[Cell]) -> s
 
 
 class _Caller:
-    """``run_calls`` on the family judge, then once on the fallback model for failed keys."""
+    """``run_calls`` on the family judge, then once on the fallback model for failed keys
+    (any failed call, not only a refusal). The fallback runs whenever it differs from the
+    resolved judge model, pinned or not, and never under ``opts=fallback=none`` (plan 0096)."""
 
     def __init__(self, args: JudgeArgs, cache: Cache, spend: Spend):
         self.args, self.cache, self.spend = args, cache, spend
         self.pre = Preflighter(args.dry_run)
-        fb = args.aux_models.get(FALLBACK_ROLE, "")
-        on = args.extra.get("fallback", "on")
-        if on not in ("on", "none"):
-            fail(f"{NAME}: opts=fallback must be on or none, not {on!r}")
+        fb = effective_fallback(
+            args, fallback_on(args, NAME), args.aux_models.get(FALLBACK_ROLE, "")
+        )
         self.fallback: ResolvedJudge | None = None
-        if on == "on" and fb and fb != args.judge.model and args.judge.pinned:
+        if fb:
+            # same route: the judge's reasoning, as before; another route: the family's own
+            # instrument resolved for the fallback model
+            cross = cross_route_reasoning(args, NAME, fb)
             self.fallback = ResolvedJudge(
-                model=fb, reasoning=args.judge.reasoning, pinned=True, source="family"
+                model=fb,
+                reasoning=args.judge.reasoning if cross is None else cross,
+                pinned=True,
+                source="family",
             )
         self.n_calls = 0
         self.n_fallback_calls = 0
+        self.served: dict[str, str] = {}  # call key -> the fallback model whose answer is used
 
     def _run(self, calls: list[Call], judge: ResolvedJudge) -> dict[str, dict | None]:
         return run_calls(
@@ -148,6 +165,11 @@ class _Caller:
         fb = [Call(key=f"{c.key}|fb", system=c.system, user=c.user, meta=c.meta) for c in failed]
         self.n_fallback_calls += len(fb)
         res = self._run(fb, self.fallback)
+        self.served |= {
+            c.key: self.fallback.model
+            for c, f in zip(failed, fb, strict=True)
+            if res.get(f.key) is not None
+        }
         return out | {c.key: res.get(f.key) for c, f in zip(failed, fb, strict=True)}
 
 
@@ -214,6 +236,7 @@ def item_flag(fs: list[dict[str, Any] | None] | None, flag: str, incomplete: boo
 
 
 def run(args: JudgeArgs) -> FamilyResult:
+    fallback_on(args, NAME)  # a bad opts=fallback= value exits 2 before anything is read
     header, items = load_bank(bank_path(NAME))
     scope = pair_scope(pairs_of(items), args)
     twin_items = [p[r] for p in scope for r in ("I", "N")]
@@ -247,6 +270,7 @@ def run(args: JudgeArgs) -> FamilyResult:
     col: digest.Collapse | None = None
     with Cache(args.out / "cells.jsonl") as cache:
         caller = _Caller(args, cache, spend)
+        require_fallback_key(args, NAME, caller.fallback.model if caller.fallback else None)
         if summary:
             col = digest.collapse(
                 NAME,
@@ -265,6 +289,9 @@ def run(args: JudgeArgs) -> FamilyResult:
     def flag(i: str, f: str) -> bool | None:
         return item_flag(per_item.get(i), f, i in incomplete)
 
+    # twin id -> the fallback model that served at least one of its calls (keys: <id>|c<k>,
+    # <id>|summary)
+    served_of = {k.rsplit("|", 1)[0]: m for k, m in caller.served.items()}
     rows = []
     for p in scope:
         i_id, n_id = p["I"]["id"], p["N"]["id"]
@@ -291,6 +318,8 @@ def run(args: JudgeArgs) -> FamilyResult:
                 if f and f[HEADLINE_FLAG]
             ],
         }
+        if by := sorted({served_of[t] for t in (i_id, n_id) if t in served_of}):
+            row["fallback_served_by"] = by  # plan 0096: absent when no fallback served a call
         if col is not None:
             row["I_summary"] = col.row(i_id)
             row["N_summary"] = col.row(n_id)
@@ -318,6 +347,8 @@ def run(args: JudgeArgs) -> FamilyResult:
         "n_fallback_calls": caller.n_fallback_calls,
         "n_pairs_in_scope": len(rows),
     }
+    if caller.served:  # judge calls a fallback served in this run's results (cache hits too)
+        extras["n_fallback_served_calls"] = len(caller.served)
     config_extra: dict[str, Any] = {
         "layers_judged": layers,
         "path": "tokens" if rep.kind == "tokens" else "prose",

@@ -168,7 +168,13 @@ the headline. A true flag counts only with a quote of at least 8 characters foun
 
 **Judge.** Prompt version `hc-2026-11-04b+bank-v2` (the registered instrument; the judge calls are keyed `hc-2026-11-04b`, unchanged since plan 0064, and a pinned v1 bank stamps `hc-2026-11-04b`). `claude-opus-5-5` at its default effort, with the one-line system prompt `SYSTEM` (the source sent none; the bench caches the system block, which must be non-empty). A failed or refused call
 retries once on `claude-sonnet-5-5` (`aux_models.fallback`; `opts=fallback=none` turns this off).
-The source run had no fallback.
+The source run had no fallback. The retry follows the judge (plan 0096): it runs whenever
+Sonnet 5.5 is not the resolved judge itself, under a `judge_model=` override too, so an
+override judge's refusal, error or unparsable answer goes to Sonnet 5.5 (at this family's
+default effort, also when the judge is an OpenRouter model). `config.fallback_model` names it
+(`null` when off); a pair one of whose calls the fallback answered carries
+`fallback_served_by`, counted in `extras.n_fallback_served_calls` (`n_fallback_calls` = the
+retries attempted).
 
 **Deviation from the source:**
 - The source prompts named "an interpretability tool". The bench bans tool names
