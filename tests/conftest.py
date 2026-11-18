@@ -2,7 +2,7 @@
 
 import pytest
 
-from wsbench import llm, mcjudge, registry
+from wsbench import fast, llm, mcjudge, registry
 
 
 @pytest.fixture(autouse=True)
@@ -29,6 +29,15 @@ def _reset_pacer():
     llm._PACER.reset()
     llm.set_itpm(0)
     llm._TOKEN_PACER.reset()
+
+
+@pytest.fixture(autouse=True)
+def _default_fast_subset():
+    """Plan 0095: every test starts and ends on ``fast.DEFAULT`` (a CLI test that passes
+    ``--fast-safety`` selects another subset for the process)."""
+    fast.VERSION = fast.DEFAULT
+    yield
+    fast.VERSION = fast.DEFAULT
 
 
 @pytest.fixture(autouse=True)

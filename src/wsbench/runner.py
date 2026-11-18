@@ -520,7 +520,9 @@ def judge_argv(name: str, args: Any, readouts: Path, dest: Path) -> list[str]:
     if opt_in := getattr(args, "ati_opt_in", None):
         cmd.append("ati_opt_in=" + ",".join(opt_in))
     if getattr(args, "fast", False):
-        cmd.append("fast=True")
+        # plan 0095: the child selects the ACTIVE subset itself (`fast=safety`), by reverse lookup
+        variant = next((k for k, v in fast.VARIANTS.items() if k and v == fast.VERSION), "")
+        cmd.append(f"fast={variant}" if variant else "fast=True")
     if args.opt:  # carries reads= / sampling= already
         cmd.append("opts=" + ",".join(args.opt))
     return cmd

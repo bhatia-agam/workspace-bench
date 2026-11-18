@@ -184,7 +184,8 @@ class Producer:
         list. ``reads="lite"`` reads only the lite sites. Writes the sidecar
         ``<out>.meta.json`` declaring reads, sampling, reader and plan_sha (plan 0032 §2.9).
         ``fast=True`` (plan 0090) reads the fast plan (``readplan.plan(family, fast=True)``) and
-        declares ``"fast": fast.VERSION`` with the fast plan's own ``plan_sha``."""
+        declares ``"fast": fast.VERSION`` (the active subset; call ``fast.select("safety")``
+        first for ``fast-safety-v1``) with the fast plan's own ``plan_sha``."""
         from wsbench import fast as fast_mod
         from wsbench import reads as reads_mod
         from wsbench.readouts import sidecar_path, write_sidecar

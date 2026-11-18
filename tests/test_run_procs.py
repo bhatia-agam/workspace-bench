@@ -15,7 +15,7 @@ from types import SimpleNamespace
 import pydra
 import pytest
 
-from wsbench import cli, llm, readouts, registry, runner
+from wsbench import cli, fast, llm, readouts, registry, runner
 from wsbench.baselines import text_inversion
 from wsbench.cli import main
 from wsbench.judge_config import JudgeConfig
@@ -230,6 +230,7 @@ def _config(*argv: str) -> cli.RunFamilies:
         ["opts=aggregate=native,summ_layers=union", "reads=lite", "sampling=prose1", "itpm=0"],
         ["anti_text_inversion=True", "ati_variant=v", "ati_opt_in=nyt_connections"],
         ["fast=True", "items=a,b", "wait=5", "settle=2", "family_workers=3", "json=True"],
+        ["fast=safety", "items=a,b", "limit=2"],
         ["hb_method=m", "include_superseded=True", "procs=True"],
     ],
 )
@@ -253,6 +254,36 @@ def test_child_argv_parses_back_to_the_runs_values(monkeypatch, argv):
     for k in forwarded:
         assert getattr(child, k) == getattr(run, k), k
     assert type(child.rpm) is type(run.rpm) and type(child.itpm) is type(run.itpm)
+
+
+@pytest.mark.parametrize("namespace", [False, True])
+def test_child_argv_names_the_active_fast_subset(monkeypatch, namespace):
+    """Plan 0095: under fast the child is told the ACTIVE subset (``fast=safety`` by reverse
+    lookup of ``fast.VERSION`` in ``fast.VARIANTS``, with or without ``fast_variant`` on the
+    namespace) and selects it itself; the default and a test-patched fast-v1 stay ``fast=True``."""
+    run = _config("fast=safety")
+    assert run.fast is True and run.fast_variant == "safety"
+    args = run
+    if namespace:  # a Python caller's hand-built namespace: no fast_variant attribute
+        keys = ("concurrency", "rpm", "judge_model", "layers", "items", "limit", "allow_missing")
+        args = SimpleNamespace(**{k: getattr(run, k) for k in keys}, opt=[], fast=True)
+
+    def fast_arg() -> list[str]:
+        cmd = runner.judge_argv("fam", args, Path("r/fam.jsonl"), Path("o/fam"))
+        return [a for a in cmd[4:] if a.split("=", 1)[0].startswith("fast")]
+
+    assert fast_arg() == ["fast=True"]  # finalize selected nothing: the default subset
+    assert fast.select("safety") == "fast-safety-v1"
+    cmd = runner.judge_argv("fam", args, Path("r/fam.jsonl"), Path("o/fam"))
+    assert fast_arg() == ["fast=safety"]
+    child = cli.JudgeFamily()
+    pydra.apply_overrides(child, cmd[4:])
+    assert child.fast is True and child.fast_variant == "safety"
+    monkeypatch.setattr(fast, "VERSION", "fast-v1")
+    assert fast_arg() == ["fast=True"]
+    args.fast = False
+    monkeypatch.setattr(fast, "VERSION", "fast-safety-v1")
+    assert fast_arg() == []
 
 
 def test_child_environment_and_the_run_directory(offline, spawner, rundirs, tmp_path):

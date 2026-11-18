@@ -26,7 +26,13 @@ from wsbench import fast, readplan
 from wsbench.nyt import NO_NYT_ENV
 from wsbench.readouts import Cell, LoadReport, load_readouts, normalize, read_sidecar
 from wsbench.readplan import FINAL, ReadSpec, lite_select
-from wsbench.registry import BANK_FILE_ENV_PREFIX, BANK_ROOT_ENV, JudgeArgs, hash_name
+from wsbench.registry import (
+    BANK_FILE_ENV_PREFIX,
+    BANK_ROOT_ENV,
+    JudgeArgs,
+    canonical,
+    hash_name,
+)
 
 READS = ("full", "lite")
 LITE_STAMP = "+reads-lite"
@@ -113,10 +119,22 @@ def plan_sha(family: str) -> str:
     return plan_sha_rows(s.row() for s in readplan.plan(family, layers=None))
 
 
-def fast_plan_sha(family: str) -> str:
+def fast_plan_sha(family: str, declared: str | None = None) -> str:
     """``plan_sha_rows`` of the family's FAST plan rows (``readplan.plan(family, fast=True)``):
-    the ``plan_sha`` a file produced ``--fast`` declares beside ``"fast": fast.VERSION``."""
-    return plan_sha_rows(s.row() for s in readplan.plan(family, layers=None, fast=True))
+    the ``plan_sha`` a file produced ``--fast`` declares beside ``"fast": fast.VERSION``. With
+    ``declared`` (plan 0095), the sha the plan of that mutually compatible version had: each
+    row's ``extra["fast"]``, where present, reads ``declared``."""
+    rows = [s.row() for s in readplan.plan(family, layers=None, fast=True)]
+    if declared is None:
+        return plan_sha_rows(rows)
+    fam = canonical(family)
+    ok = declared in {fast.VERSION, *fast.COMPATIBLE}
+    if not ok or fam not in fast.subset(declared):
+        raise SystemExit(f"{fam}: not in fast subset {declared}")
+    for row in rows:
+        if "fast" in (row.get("extra") or {}):
+            row["extra"] = {**row["extra"], "fast": declared}
+    return plan_sha_rows(rows)
 
 
 # ---------------------------------------------------------------- plan lineage (plan 0072 0.3)
@@ -476,20 +494,24 @@ def load(
         _attach(args, rep)
         return cells, rep
     fast_file = fast_entry is not None and declared_fast is not None
-    # plan 0094: a compatible older version's file is judged as it is (identical entries, plan
-    # rows and plan_sha for every family still in the subset)
+    # plans 0094 / 0095: a compatible version's file is judged as it is (identical entries for
+    # every family in both subsets; its plan_sha is checked as that version's, below)
     if fast_file and declared_fast not in {fast.VERSION, *fast.COMPATIBLE}:
         fail(
             f"{path}: readouts were produced for another fast subset ({declared_fast!r}, not "
             f"{fast.VERSION!r})"
         )
+    # plan 0095: the declared version's own file must hold the family (with or without plan_sha)
+    if fast_file and canonical(family) not in fast.subset(declared_fast):
+        fail(f"{path}: {canonical(family)}: not in fast subset {declared_fast}")
     fast_rule = dict(fast_entry.get("positions") or {}) if fast_entry is not None else {}
     if fast_rule and fast_rule.get("kind") not in readplan.FAST_KINDS:
         fail(f"{family}: unknown fast positions rule {fast_rule!r}")
     if fast_file:
         # a FAST file carries the fast plan's own sha (no lineage); its span is the fast rule's
         if meta is not None and meta.get("plan_sha"):
-            want, have = fast_plan_sha(family), str(meta["plan_sha"])
+            # the sha the declared (compatible) version's own plan had; the guard is retained
+            want, have = fast_plan_sha(family, declared=declared_fast), str(meta["plan_sha"])
             if have != want:
                 fail(
                     f"{path}: readouts were produced for a different fast plan (plan_sha "

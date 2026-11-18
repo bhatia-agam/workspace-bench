@@ -46,6 +46,33 @@ def _bool(v: object) -> bool:
     raise ValueError(f"expected True or False, got {v!r}")
 
 
+def _fast_arg(v: object) -> tuple[bool, str]:
+    """The ``fast`` key as ``(fast, fast_variant)`` (plan 0095): a false value, a true value
+    (the default subset's flag), or the string ``safety`` (``--fast-safety``)."""
+    if isinstance(v, str) and v == "safety":
+        return True, "safety"
+    try:
+        return _bool(v), ""
+    except ValueError:
+        raise ValueError(f"fast must be True, False or safety, got {v!r}") from None
+
+
+def _set_fast(cmd: "Command") -> None:
+    """Normalise ``cmd.fast`` to a bool and fill ``cmd.fast_variant`` from it; the variant is
+    never a key of its own. Selecting the subset is left to ``execute`` (``_select_fast``)."""
+    if cmd.fast_variant:
+        raise ValueError("fast_variant is not a key; use fast=safety")
+    cmd.fast, cmd.fast_variant = _fast_arg(cmd.fast)
+
+
+def _select_fast(cmd: "Command") -> None:
+    """Top of ``execute``: ``--fast-safety`` makes its subset the active one of this process.
+    Plain ``--fast`` writes nothing: it runs the active subset (``fast.DEFAULT`` in a fresh
+    process)."""
+    if cmd.fast_variant:
+        fast.select(cmd.fast_variant)
+
+
 def _int(v: object) -> int:
     if isinstance(v, bool) or not isinstance(v, int | str):
         raise ValueError(f"expected an int, got {v!r}")
@@ -173,10 +200,12 @@ class JudgeOptions(Command):
         self.reads = ""  # full | lite (plan 0032 §2.6.7); alias opts=reads=lite
         self.sampling = ""  # bullet4 | prose1 | tokens10: overrides the sidecar (§2.9.2)
         self.each = False  # layers=each: set by finalize
-        self.fast = False  # --fast: the frozen fast subset (plan 0090, evals/fast)
+        # --fast: the frozen fast subset (plan 0090, evals/fast); fast=safety = --fast-safety
+        self.fast = False
+        self.fast_variant = ""  # set by finalize from fast= (plan 0095), never a key
 
     def finalize(self) -> None:
-        self.fast = _bool(self.fast)
+        _set_fast(self)
         self.judge_model = str(self.judge_model or "") or None
         lay = _layers_arg(self.layers)
         self.each = lay == "each"
@@ -285,6 +314,7 @@ class JudgeFamily(JudgeOptions):
             raise ValueError("outcome= does not take layers=each")
 
     def execute(self) -> int:
+        _select_fast(self)
         if self.family not in registry.FAMILIES:
             return _unknown(self.family)
         spec = registry.get(self.family)
@@ -374,6 +404,7 @@ class RunFamilies(JudgeOptions):
             raise ValueError("pass exactly one of all=True or families=a,b")
 
     def execute(self) -> int:
+        _select_fast(self)
         if self.all:
             names = sorted(registry.FAMILIES)
             if not self.include_superseded:
@@ -470,8 +501,10 @@ class ReportRuns(Command):
         self.json = False
         self.floors = True  # the frozen lucky-guessing floors (evals/baselines) beside each family
         self.reads = ""  # full | lite: keep that mode only (a table never mixes modes)
-        # plan 0090, tri-state like reads: "" = unset, True = fast rows only, False = the rest
+        # plan 0090, tri-state like reads: "" = unset, True = fast rows only, False = the rest;
+        # safety (--fast-safety, plan 0095) = True on the fast-safety subset
         self.fast = ""
+        self.fast_variant = ""  # set by finalize from fast=, never a key
         self.by_layer = False  # fold a layers=each run (<dir>/<family>/<all|L<k>>/results.json)
         self.hb_method = ""  # HallucinationBench method (plan 0040); else run.json / methods.json
         # opt-in judge column: a run of the same readouts with judge_model=<another judge>
@@ -485,10 +518,14 @@ class ReportRuns(Command):
         self.json = _bool(self.json)
         self.floors = _bool(self.floors)
         self.reads = _reads_arg(self.reads) if self.reads else ""
-        self.fast = "" if isinstance(self.fast, str) and not self.fast else _bool(self.fast)
+        if self.fast_variant:
+            raise ValueError("fast_variant is not a key; use fast=safety")
+        if not (isinstance(self.fast, str) and not self.fast):  # "" stays unset
+            self.fast, self.fast_variant = _fast_arg(self.fast)
         self.by_layer = _bool(self.by_layer)
 
     def execute(self) -> int:
+        _select_fast(self)  # before the macro is computed
         if not self.dir.is_dir():
             print(f"not a directory: {self.dir}", file=sys.stderr)
             return EXIT_USAGE
@@ -550,7 +587,7 @@ class ReportRuns(Command):
                 return EXIT_USAGE
         table = markdown_table(results, m, floors=floors, summary_floors=summ_floors, alt_judge=alt)
         if fast_rows:
-            table = fast_header() + "\n\n" + table
+            table = fast_header(results) + "\n\n" + table
         hb_text, hb_json = self._hb_block(results)
         if hb_text:  # after the macro table; a separate number, never in the macro
             table += "\n" + hb_text
@@ -723,13 +760,37 @@ def _maybe_sidecar(cmd: Any, rep: Any) -> None:
     print(f"wrote {write_sidecar(cmd.out, **meta)}")
 
 
-def fast_header() -> str:
-    """The line above a fast report's table (plan 0090): the current subset and its family
-    count; the table may list rows of other subsets, which the macro leaves out (plan 0094)."""
-    return (
+def fast_header(results: Iterable[FamilyResult] = ()) -> str:
+    """The line above a fast report's table (plan 0090): the active subset and its family
+    count; the table may list rows of other subsets, which the macro leaves out (plan 0094).
+    Plan 0095: a second line when ``results`` holds fast rows of families only another
+    selectable subset has, naming the flag that reports them."""
+    head = (
         f"scope: fast subset {fast.VERSION} ({len(fast.subset())} families; not comparable with "
         "full-bench numbers); rows of other subsets are excluded"
     )
+    rows = [r for r in results if r.config.get("scope") == fast.SCOPE]
+    have = fast.subset()
+    for variant, version in fast.VARIANTS.items():
+        if version == fast.VERSION:
+            continue
+        other = fast.subset(version)
+        n = sum(
+            r.family not in have
+            and r.family in other
+            and (
+                r.config.get("fast_subset") == version
+                or (
+                    r.config.get("fast_subset") in fast.COMPATIBLE
+                    and r.family in fast.subset(r.config.get("fast_subset"))
+                )
+            )
+            for r in rows
+        )
+        if n:
+            flag = f"--fast-{variant}" if variant else "--fast"
+            head += f"\n{n} row(s) are in {version} only; pass {flag} for its macro"
+    return head
 
 
 def _alt_json(r: FamilyResult, a: FamilyResult | None) -> dict | None:
@@ -1121,6 +1182,7 @@ class Plan(Command):
         self.layers = None  # all | <csv>: override the grid of record (plan 0032 §2.1)
         self.reads = "full"  # lite: rows whose positions / layers are the lite ones
         self.fast = False  # --fast: the fast subset's rows (plan 0090); all = its families
+        self.fast_variant = ""  # set by finalize from fast= (plan 0095), never a key
 
     def finalize(self) -> None:
         self.families = _families(_strs(self.families)) or ["all"]
@@ -1130,11 +1192,12 @@ class Plan(Command):
         if self.layers == "each":
             raise ValueError("layers=each is a judge / run key; plan takes all or a comma list")
         self.reads = _reads_arg(self.reads)
-        self.fast = _bool(self.fast)
+        _set_fast(self)
         if self.fast and self.reads == "lite":
             raise ValueError("--fast plans the fast subset's full reads; drop reads=lite")
 
     def execute(self) -> int:
+        _select_fast(self)
         if self.fast:
             return self._execute_fast()
         names = (
@@ -1199,9 +1262,10 @@ class Produce(Command):
         self.device = "cuda"
         self.reads = "full"
         self.fast = False  # --fast: read the fast plan (plan 0090); family= only
+        self.fast_variant = ""  # set by finalize from fast= (plan 0095), never a key
 
     def finalize(self) -> None:
-        self.fast = _bool(self.fast)
+        _set_fast(self)
         self.method = str(self.method)
         self.model = str(self.model)
         self.family = _family(str(self.family or ""))
@@ -1229,6 +1293,8 @@ class Produce(Command):
 
     def execute(self) -> int:
         from wsbench.produce import METHODS, Producer, write
+
+        _select_fast(self)
 
         if bool(self.family) == bool(self.text):
             print("give exactly one of family= or text=", file=sys.stderr)
@@ -1580,7 +1646,7 @@ def _write_summary(
 ) -> str:
     text = markdown_table(results, macro(results))
     if any(r.config.get("scope") == fast.SCOPE for r in results):  # plan 0090
-        text = fast_header() + "\n\n" + text
+        text = fast_header(results) + "\n\n" + text
     if notes:
         text += "\n## skipped / failed\n"
         text += "".join(f"- {o.family}: {o.status} — {o.error}\n" for o in notes)
@@ -1613,8 +1679,10 @@ def main(argv: list[str] | None = None) -> int:
     if any(a in ("--help", "-h") for a in argv[1:]):
         print(_defaults(command))
         return 0
-    # plan 0090: `--fast` is `fast=True` on every command (one without the key fails as unknown)
-    argv = [argv[0], *("fast=True" if a == "--fast" else a for a in argv[1:])]
+    # plans 0090 / 0095: `--fast` is `fast=True` and `--fast-safety` is `fast=safety` on every
+    # command (one without the key fails as unknown)
+    flags = {"--fast": "fast=True", "--fast-safety": "fast=safety"}
+    argv = [argv[0], *(flags.get(a, a) for a in argv[1:])]
     try:
         show = pydra.apply_overrides(command, argv[1:])
     except (ValueError, TypeError, AttributeError, IndexError) as e:

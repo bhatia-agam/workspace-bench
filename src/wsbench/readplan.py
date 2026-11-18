@@ -209,7 +209,7 @@ def lite_select(positions: Iterable[int], rule: dict[str, Any]) -> list[int]:
 #   punct_special               (plan 0090, the fast subset) every punctuation, newline and
 #                               special token (`is_fast_site`, on DECODED token text); the final
 #                               token when there is none
-#   fast_of {full, fast}        a `--fast` plan row: the fast rule (`last_n` / `punct_special`)
+#   fast_of {full, fast}        a fast plan row: the fast rule (`last_n` / `punct_special`)
 #                               within the full rule's positions; needs DECODED token text
 
 
@@ -663,8 +663,9 @@ def plan(
     then snapped to ``read_band``; duplicates dropped). ``reads="lite"``: rows whose positions /
     layers ARE the lite ones (a ``lite_of`` rule over the full rule), for a cheaper producer
     path; the campaign always produces ``full`` (lite ⊆ full). ``fast=True`` (plan 0090): the
-    full plan's rows of the family's fast read ids only (plan order), their positions the
-    ``fast_of`` rule where the fast entry reduces them; a family outside the subset raises
+    full plan's rows of the family's fast read ids in the active subset (plan order), their
+    positions the ``fast_of`` rule where the fast entry reduces them (the two safety families
+    of ``--fast-safety``); a family outside the subset raises
     ``fast.NotInFast``, and ``reads="lite"`` is refused."""
     from dataclasses import replace
 

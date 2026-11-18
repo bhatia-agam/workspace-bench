@@ -612,7 +612,7 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   items, is panel-gated); the mechanism (a family whose whole bank is written as the subset,
   `answerer: "construction"`) stays for a future family gated when it is built.
 
-- Fast subset (plans 0090 / 0094, `--fast` = `fast=True` on plan / produce / judge / run /
+- Fast subset (plans 0090 / 0094 / 0095, `--fast` = `fast=True` on plan / produce / judge / run /
   report): `fast.py` reads the frozen `evals/fast/fast_v2.json` (`fast.VERSION = "fast-v2"`: 22
   families, 1,823 units, 2,160 read items; per family `bank_sha`, `units` by group, `read_ids`,
   optional `positions`; never regenerate or reorder a frozen file, a new subset is a new
@@ -621,7 +621,7 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   SUMMARY-mode result, one rule per special-cased family) and `rescore`. The flag reaches the
   families only as `JudgeArgs.scope == fast.SCOPE` with `items` = the entry's `read_ids` (never
   an `opts=` key: `opts=fast=1` does nothing); `reads.load` restricts the cells and narrows a
-  position-reduced family (fast-v1's two; `readplan.is_fast_site` on DECODED token text, the producer's
+  position-reduced family (the two safety families; `readplan.is_fast_site` on DECODED token text, the producer's
   own predicate; `fast_of` / `punct_special` rules); `runner.stamp_fast` rescores and stamps
   `config.scope` / `fast_subset` and the `+fast-<kind>` suffix; `mcjudge.is_subset` treats the
   scope as a defined variant; `results.macro` and `report` never mix fast and non-fast rows.
@@ -634,15 +634,34 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   Plan 0094: fast-v2 = fast-v1 (`fast_v1.json`, 24 families, kept frozen and sha-pinned) minus
   jailbreak_recognition and agentic_misalignment, every other entry identical. `fast.subset()`
   resolves `fast.VERSION` at call time (there is no `fast.PATH`; tests patch `VERSION` only, the
-  loader is cached per version); `fast.COMPATIBLE = {"fast-v1"}`: a sidecar declaring a
+  loader is cached per version); `fast.COMPATIBLE` (widened by plan 0095, below): a sidecar declaring a
   compatible version is judged (`reads.load`), and a compatible result row of a family in the
   current subset stays in the macro (`results._stale_fast_subset`), so a fast-v1 results dir
   reports a fast-v2 macro over its 22 rows with its jailbreak / agentic rows excluded (`stale
-  fast subset (fast-v1)`); the two families are `NotInFast` under `--fast` (fast-v1 runs of
-  them need the pre-0094 commit). The position-reduction machinery (`fast_of` /
+  fast subset (fast-v1)`); the two families are `NotInFast` under `--fast` (a fast run of
+  them is `--fast-safety`). The position-reduction machinery (`fast_of` /
   `punct_special` / `is_fast_site`, `reads.fast_narrow`, `fast.position_stamp`, the
-  `+fast-<kind>` suffix) is retained for the frozen v1 file and exercised only by tests that
-  patch `fast.VERSION` to `"fast-v1"` (no fast-v2 entry has `positions`).
+  `+fast-<kind>` suffix) is live under `--fast-safety` and for the frozen v1 file (no fast-v2
+  entry has `positions`).
+  Plan 0095: `--fast-safety` = `fast=safety` runs `fast-safety-v1` (`fast_safety_v1.json` =
+  `fast_v1.json` with another `version`: 24 families, 1,996 units, 2,351 read items).
+  `fast.DEFAULT = "fast-v2"`; `fast.VERSION` is the ACTIVE subset of the process (`DEFAULT`
+  unless `fast.select(variant)` changed it, the only writer outside tests; `tests/conftest.py`
+  resets it around every test); `fast.VARIANTS = {"": "fast-v2", "safety": "fast-safety-v1"}`
+  are the CLI-selectable ones. The CLI normalises `fast` to a bool plus `fast_variant`
+  (`cli._set_fast`; `fast_variant=` is not a key) and calls `select` at the top of `execute`
+  only for a non-empty variant, never in `finalize`; plain `--fast` writes nothing and runs the
+  active subset. `fast.COMPATIBLE = {"fast-v1", "fast-v2", "fast-safety-v1"}` now means MUTUALLY
+  entry-compatible (any two versions hold the identical entry for every family in both; a
+  test pins it); the sidecar and macro rules keep their form, so under `--fast` a
+  fast-safety-v1 row of the 22 is in the macro and a safety family's row is `stale fast subset
+  (<v>)`. `reads.fast_plan_sha(family, declared=)` gives the sha the declared version's own plan
+  had (the two reduced families' rows hash `extra.fast`), which the `plan_sha` guard compares;
+  a FAST file whose declared version does not hold the family is refused. `runner.judge_argv`
+  emits `fast=safety` by reverse lookup of the active version in `VARIANTS` (else `fast=True`),
+  so a process-mode child selects the subset itself. `report` without `fast=safety` is the
+  active (fast-v2) view; `cli.fast_header(results)` adds a second line counting the rows that
+  are in another selectable subset only.
 
 - Summary mode (`aggregate=summary`, plan 0020, `digest.py`) is the benchmark DEFAULT since plan
   0024: `runner.parse_opts` fills `aggregate=summary` in unless `opts=aggregate=native`; a family

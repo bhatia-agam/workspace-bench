@@ -184,12 +184,14 @@ rm -f outputs/readouts/mylens-fast/_READS_DONE   # then start the read into that
 uv run wsbench run --fast all=True readouts_root=outputs/readouts/mylens-fast out=outputs/judged/mylens-fast wait=3600
 ```
 
-## Fast subset (`--fast`)
+## Fast subset (`--fast`, `--fast-safety`)
 
 `--fast` judges the frozen subset `fast-v2` (plans 0090 / 0094; `evals/fast/README.md`): 22
-families, `fast-v1` without `jailbreak_recognition` and `agentic_misalignment`. **A full
-readouts file is always judgeable with `--fast`**: the judge keeps the fast items itself, so
-existing readouts need no re-read. To read only what the fast subset needs:
+families, `fast-v1` without `jailbreak_recognition` and `agentic_misalignment`. `--fast-safety`
+(plan 0095) judges `fast-safety-v1`: those 22 plus the two safety families, 24 in all; every
+command below takes it in place of `--fast`. **A full
+readouts file is always judgeable with `--fast` / `--fast-safety`**: the judge keeps the fast
+items itself, so existing readouts need no re-read. To read only what the fast subset needs:
 
 ```
 uv run wsbench plan --fast out=outputs/plan-fast          # the 22 fast families
@@ -198,10 +200,11 @@ uv run wsbench run --fast all=True readouts_root=outputs/readouts/mylens-fast ou
 
 - The fast plan is the full plan's rows of the fast read items: same render, layers and
   positions rule for every `fast-v2` family, so a producer of the full plan needs nothing new.
-- **`fast-v1` only** (this bullet and the next; no `fast-v2` row carries a fast positions rule,
-  and `--fast` no longer plans or judges these two families): `agentic_misalignment` and
-  `jailbreak_recognition` rows carried `{"kind": "fast_of", "full": <the full rule>, "fast":
-  <the fast rule>}` and `extra.fast = "fast-v1"`: the fast rule applied WITHIN the full rule's
+- **`--fast-safety` only** (this bullet and the next; no `fast-v2` row carries a fast positions
+  rule, and `--fast` does not plan or judge these two families): `agentic_misalignment` and
+  `jailbreak_recognition` rows carry `{"kind": "fast_of", "full": <the full rule>, "fast":
+  <the fast rule>}` and `extra.fast = "fast-safety-v1"` (`"fast-v1"` in a `fast-v1` plan, the
+  same rows otherwise): the fast rule applied WITHIN the full rule's
   positions. `last_n {n}` = the last n of them; `punct_special` = those whose token is
   punctuation, a newline token or a special token (`wsbench.readplan.is_fast_site`), else the
   last full position.
@@ -211,14 +214,24 @@ uv run wsbench run --fast all=True readouts_root=outputs/readouts/mylens-fast ou
   display strings: those show CJK and curly punctuation as mojibake, which is not punctuation.
   Write each row's `token`: the judge applies the same predicate to it, and a `punct_special` row
   without `token` is refused.
-- Declare the file in its sidecar: `"fast": "fast-v2"` and `"plan_sha"` = the FAST plan's sha
+- Declare the file in its sidecar: `"fast": "fast-v2"` (`"fast-safety-v1"` for a file read from
+  the `--fast-safety` plan) and `"plan_sha"` = the FAST plan's sha
   (`wsbench.reads.fast_plan_sha(family)`, i.e. `plan_sha_rows` over the rows `wsbench plan --fast`
-  wrote), with `"reads": "full"`. A file that declares `fast` is judged only with `--fast`, and
-  code that predates plan 0090 refuses it on the sha mismatch. `wsbench produce family=F --fast`
-  does all of this. A file that declares `"fast": "fast-v1"` is still judged for the 22 families
-  (their entries, fast plan rows and `plan_sha` are identical); any other declared version is
-  refused, and code that predates plan 0094 refuses a `fast-v2` file.
-- `--fast` takes full reads only (no `reads=lite`), on the registered Qwen3.6-27B banks only.
+  / `--fast-safety` wrote), with `"reads": "full"`. A file that declares `fast` is judged only
+  with `--fast` / `--fast-safety`, and code that predates plan 0090 refuses it on the sha
+  mismatch. `wsbench produce family=F --fast` / `--fast-safety` does all of this.
+- The three versions `fast-v1`, `fast-v2` and `fast-safety-v1` hold identical entries for every
+  family they share, so a file declaring any of them is judged under either flag for a family
+  of the subset being judged (a `fast-v2` file of the 22 families under `--fast-safety`, a
+  `fast-v1` or `fast-safety-v1` file of the 22 under `--fast`, a `fast-v1` jailbreak / agentic
+  file under `--fast-safety`). Its `plan_sha` is checked as the declared version's own: the two
+  reduced families' rows carry the version in `extra.fast`, so their sha differs between
+  `fast-v1` and `fast-safety-v1` (`fast_plan_sha(family, declared="fast-v1")`); the other 22
+  have one sha. A file whose declared version does not hold the family (a jailbreak file
+  declaring `fast-v2`) and any other declared version are refused; code that predates plan 0094
+  refuses a `fast-v2` file, and code that predates plan 0095 a `fast-safety-v1` one.
+- `--fast` / `--fast-safety` take full reads only (no `reads=lite`), on the registered
+  Qwen3.6-27B banks only.
 
 ## Or let the repo produce them
 

@@ -1,6 +1,6 @@
-"""The frozen fast subset (plans 0090 / 0094; ``VERSION`` is the one ``--fast`` runs): which
-units of which families it scores, the read items they need, and the rescore of a family result
-on those units."""
+"""The frozen fast subsets (plans 0090 / 0094 / 0095; ``VERSION`` is the active one, ``--fast``
+= ``DEFAULT``, ``--fast-safety`` = ``select("safety")``): which units of which families a subset
+scores, the read items they need, and the rescore of a family result on those units."""
 
 import functools
 import hashlib
@@ -15,14 +15,21 @@ from wsbench.registry import REPO_ROOT
 from wsbench.results import FamilyResult, decided_outcomes, fold_direction_pairs
 
 SCOPE = "fast"  # JudgeArgs.scope / config.scope of a fast run
-VERSION = "fast-v2"  # the subset `--fast` means; read at call time (tests patch it)
+DEFAULT = "fast-v2"  # the subset `--fast` means
+# the active subset of this process: DEFAULT unless `select` changed it; read at call time
+# (tests patch it)
+VERSION = DEFAULT
 VERSIONS = {  # every frozen file, never edited in place
     "fast-v1": REPO_ROOT / "evals/fast/fast_v1.json",
     "fast-v2": REPO_ROOT / "evals/fast/fast_v2.json",
+    "fast-safety-v1": REPO_ROOT / "evals/fast/fast_safety_v1.json",
 }
-# older versions whose entries for the families still in VERSION are identical to VERSION's
-# (plan 0094): their readouts sidecars are accepted and their result rows stay in the macro
-COMPATIBLE = frozenset({"fast-v1"})
+# the CLI-selectable subsets by variant name (`--fast`, `--fast-safety`; plan 0095)
+VARIANTS = {"": DEFAULT, "safety": "fast-safety-v1"}
+# the versions that are MUTUALLY entry-compatible (plans 0094 / 0095): for any two of them every
+# family present in both files has the identical entry, so a readouts sidecar declaring one is
+# accepted under another, and its result rows of the active subset's families stay in the macro
+COMPATIBLE = frozenset({"fast-v1", "fast-v2", "fast-safety-v1"})
 POSITION_KINDS = ("last_n", "punct_special")  # the fast positions rules (readplan `fast_of`)
 N_RESAMPLES = 2000
 MAX_MISSING_SHARE = 0.10  # more of the entry's units without an outcome -> incomplete
@@ -44,6 +51,17 @@ def _file(version: str) -> dict[str, Any]:
     if path is None:
         raise SystemExit(f"unknown fast subset {version!r} (known: {', '.join(sorted(VERSIONS))})")
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+def select(variant: str = "") -> str:
+    """Make ``VARIANTS[variant]`` the active subset of this process and return it (the only
+    writer of ``VERSION`` outside tests); an unknown variant is a ``ValueError``."""
+    global VERSION
+    if variant not in VARIANTS:
+        known = ", ".join(repr(v) for v in sorted(VARIANTS))
+        raise ValueError(f"unknown fast variant {variant!r} (known: {known})")
+    VERSION = VARIANTS[variant]
+    return VERSION
 
 
 def subset(version: str | None = None) -> dict[str, Any]:
