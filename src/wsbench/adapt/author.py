@@ -11,6 +11,7 @@ import json
 import random
 import re
 import string
+import time
 from collections.abc import Callable
 from dataclasses import dataclass, field
 from typing import Any
@@ -1540,6 +1541,19 @@ def _parse(text: str) -> tuple[list[dict], int]:
     return objs, bad
 
 
+STREAM_RETRIES = 4  # a long authoring stream the peer closes mid-reply is re-asked, not fatal
+
+
+def _transport_error(e: BaseException) -> bool:
+    """A connection-level failure of the streamed call (the server or a proxy dropped it)."""
+    import anthropic
+
+    names = {t.__name__ for t in type(e).__mro__}
+    return isinstance(e, anthropic.APIConnectionError) or bool(
+        names & {"RemoteProtocolError", "ReadError", "ReadTimeout", "ConnectError"}
+    )
+
+
 def author(model: str, family: str, tier: str, n: int, steer: str = "", wave: int = 0) -> int:
     import anthropic
 
@@ -1561,6 +1575,7 @@ def author(model: str, family: str, tier: str, n: int, steer: str = "", wave: in
         k = min(per, n - wrote)
         brief = render_brief(model, family, tier, k, steer, made)
         effort: str | None = None  # the model default first
+        drops = 0
         while True:
             seen = session.pushed
             try:
@@ -1594,6 +1609,12 @@ def author(model: str, family: str, tier: str, n: int, steer: str = "", wave: in
                 print(f"  call {call}: refused ({str(e)[:80]}); skipped")
                 msg = None
                 break
+            except Exception as e:  # a dropped stream (RemoteProtocolError, APIConnectionError)
+                if not _transport_error(e) or drops >= STREAM_RETRIES:
+                    raise
+                drops += 1
+                print(f"  call {call}: stream dropped ({type(e).__name__}); retry {drops}")
+                time.sleep(10 * drops)
         if msg is None:
             continue
         usage = getattr(msg, "usage", None)  # plan 0075 §4: spend from tokens (OAuth logs $0)
