@@ -243,6 +243,10 @@ def gate(
         )
 
 
+# families whose batch dedupe (lint.lint_pairs) compares against gate-PASSING rows only
+PASSING_DEDUPE = frozenset({"user_modeling", "multilingual_multihop"})
+
+
 def lint_and_gate(
     model, family, runner, draws, temperature, llm, items: list[dict] | None = None
 ) -> tuple[list[dict], dict]:
@@ -258,7 +262,7 @@ def lint_and_gate(
     # plan 0075 follow-up 2: user_modeling dedupes against gate-PASSING rows only (a failed or
     # lint-rejected topic stays free to retry)
     logged = [r["item"] for r in store.gated(model, family).values()
-              if family != "user_modeling" or r["gate"].get("pass")]  # fmt: skip
+              if family not in PASSING_DEDUPE or r["gate"].get("pass")]  # fmt: skip
     pairs = lint_pairs(family, cands, logged)
     logged_by_id = store.gated(model, family) if items is not None else {}
     if llm is not None and cands:  # Claude available: the everyday-name screen (MT families)
@@ -1617,6 +1621,37 @@ def fill_tiers(family: str, brief: Any) -> list[str]:
 # the largest wave ``fill`` authors (candidates; below it the size follows the last yield). Only
 # the wave size moves: every candidate is linted, gated and counted toward the yield / ooc tally
 WAVE_MAX = int(os.environ.get("ADAPT_FILL_WAVE_MAX", "60"))
+# waves ``fill`` authors at once (default 1). Each parallel wave is a full wave: it counts toward
+# ``max_waves``, the tier step-down (3 low-yield waves) and the stop checks exactly as a serial one;
+# their candidates go through one MC / onecue / gate pass, and lint drops cross-lane duplicates
+PARALLEL = int(os.environ.get("ADAPT_FILL_PARALLEL", "1"))
+
+
+def _author_waves(
+    write: Any, model: str, family: str, tier: str, n: int, steer: str, waves: list[int]
+) -> None:
+    """``len(waves)`` authoring waves at once (``PARALLEL``), each ``n`` candidates; candidate
+    appends are serialised (one cand file)."""
+    import threading
+    from concurrent.futures import ThreadPoolExecutor
+
+    if len(waves) == 1:
+        write(model, family, tier, n, steer=steer, wave=waves[0])
+        return
+    lock, add = threading.Lock(), store.add_candidates
+
+    def locked(*a: Any, **k: Any) -> Any:
+        with lock:
+            return add(*a, **k)
+
+    store.add_candidates = locked
+    try:
+        with ThreadPoolExecutor(len(waves)) as pool:
+            futs = [pool.submit(write, model, family, tier, n, steer=steer, wave=w) for w in waves]
+            for f in futs:
+                f.result()
+    finally:
+        store.add_candidates = add
 
 
 def fill(model: str, family: str, llm: str | None = "claude-opus-5-5", max_waves: int = 8,
@@ -1678,8 +1713,10 @@ def fill(model: str, family: str, llm: str | None = "claude-opus-5-5", max_waves
         if family in OBJECT_ITEMS:  # plan 0077 §6: a conjunctive object is a 10-item cluster
             n = max(1, n // OBJECT_ITEMS[family])
         before = set(store.gated(model, family))
-        write(model, family, tiers[t_i], n, steer=steer, wave=100 + w0 + wave)
-        ran += 1
+        k = max(1, min(PARALLEL, max_waves - wave))  # parallel waves never overrun max_waves
+        _author_waves(write, model, family, tiers[t_i], n, steer,
+                      [100 + w0 + wave + j for j in range(k)])  # fmt: skip
+        ran += k
         if family in mcstage.FAMILIES:
             # the wave's options through the family's MC builders BEFORE the gate (``adapt mc``
             # reads pending rows only: gated rows would keep the provisional, unscreened lists)
@@ -1705,7 +1742,8 @@ def fill(model: str, family: str, llm: str | None = "claude-opus-5-5", max_waves
         lost_lint += len(gated_rows) - len(subj)
         bank_gain += max(0, gained)
         yield_est = max(gained, 0) / max(1, len(new))
-        print(f"  fill {family} {tiers[t_i]} wave {wave}: +{gained} ({have} -> {have + gained} of "
+        label = f"wave {wave}" if k == 1 else f"waves {wave}-{wave + k - 1}"
+        print(f"  fill {family} {tiers[t_i]} {label}: +{gained} ({have} -> {have + gained} of "
               f"{target}; yield {yield_est:.0%})")  # fmt: skip
         have += max(0, gained)
         steer = miss_steer(model, family, new)
@@ -1718,7 +1756,7 @@ def fill(model: str, family: str, llm: str | None = "claude-opus-5-5", max_waves
         if family in CAPS:  # plan 0075 §2.7: values at their cap would land nothing (no false ooc)
             steer += cap_steer(family, select(family, rf.freeze_rows(
                 family, _bank_rows(model, family, originals), model), target, quota))  # fmt: skip
-        low = low + 1 if yield_est < 0.3 else 0
+        low = low + k if yield_est < 0.3 else 0
         if t_i == len(tiers) - 1 and tried >= OOC_MIN and landed / tried < OOC_YIELD:
             # refill is out of capability; the FAMILY is ooc only if most of it is missing
             # (Gemma buggy_code stopped at 48/49: that bank is usable, i.e. partial)
@@ -1728,7 +1766,7 @@ def fill(model: str, family: str, llm: str | None = "claude-opus-5-5", max_waves
             break
         if low >= 3 and t_i < len(tiers) - 1:
             t_i, low, tried, landed = t_i + 1, 0, 0, 0  # the ooc rule is per tier (SKILL.md §3)
-        wave += 1
+        wave += k
     else:
         have = have_now()
         if have >= target:

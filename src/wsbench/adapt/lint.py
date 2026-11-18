@@ -815,6 +815,8 @@ def lint_pairs(family: str, items: list[dict], logged: list[dict] = ()) -> dict[
         return _conjunctive_batch(items, logged)
     if family == "user_modeling":
         return _um_topic_batch(items, logged)
+    if family == "multilingual_multihop":
+        return _mlmh_dup_batch(items, logged)
     if family != "buggy_code":
         return {}
     by_name = {str(it.get("name") or it.get("id")): it for it in items}
@@ -850,6 +852,36 @@ def um_topics(it: dict) -> set[str]:
         if head and rest.startswith(head + "-"):
             rest = rest[len(head) + 1 :]
     return {t for t in rest.split("-") if len(t) >= 3 and not t.isdigit() and t not in _UM_STOP}
+
+
+def _mlmh_key(it: dict) -> tuple[str, str, str]:
+    """An mlmh item's latent: its L2, its bridge (``intermediates[0]``) and its answer, folded."""
+    inter = it.get("intermediates") or [""]
+
+    def fold(x: object) -> str:
+        return " ".join(str(x).casefold().split())
+
+    return (fold(it.get("lang", "")), fold(inter[0]), fold(it.get("target", "")))
+
+
+def _mlmh_dup_batch(items: list[dict], logged: list[dict] = ()) -> dict[str, list[str]]:
+    """multilingual_multihop (``run.PARALLEL`` waves author without seeing each other): an
+    authored candidate with the same L2, bridge and answer as a gate-passing row (registered or
+    authored) or an earlier candidate of this batch is a near-duplicate and rejected."""
+
+    def iid(it: dict) -> str:
+        return str(it.get("id") or it.get("name"))
+
+    batch = {iid(it) for it in items}
+    seen = {_mlmh_key(it): iid(it) for it in logged if iid(it) not in batch}
+    out: dict[str, list[str]] = {}
+    for it in items:
+        key = _mlmh_key(it)
+        if it.get("adapt", {}).get("origin") == "authored" and key in seen:
+            out[iid(it)] = [f"dup: near-duplicate of {seen[key]} (same language, bridge, answer)"]
+        else:
+            seen.setdefault(key, iid(it))
+    return out
 
 
 def _um_topic_batch(items: list[dict], logged: list[dict] = ()) -> dict[str, list[str]]:
