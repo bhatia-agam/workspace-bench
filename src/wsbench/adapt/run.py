@@ -1614,6 +1614,11 @@ def fill_tiers(family: str, brief: Any) -> list[str]:
     return [t for t in brief.tiers if t not in brief.opt_in]
 
 
+# the largest wave ``fill`` authors (candidates; below it the size follows the last yield). Only
+# the wave size moves: every candidate is linted, gated and counted toward the yield / ooc tally
+WAVE_MAX = int(os.environ.get("ADAPT_FILL_WAVE_MAX", "60"))
+
+
 def fill(model: str, family: str, llm: str | None = "claude-opus-5-5", max_waves: int = 8,
          runner=None, pilot: bool = False, budget_s: float | None = None,
          claude_budget: int | None = None) -> str:  # fmt: skip
@@ -1667,7 +1672,7 @@ def fill(model: str, family: str, llm: str | None = "claude-opus-5-5", max_waves
         if have >= target:
             status, why = "full", f"{have} >= target {target}"
             break
-        n = min(60, max(10, math.ceil(1.5 * (target - have) / max(yield_est, 0.05))))
+        n = min(WAVE_MAX, max(10, math.ceil(1.5 * (target - have) / max(yield_est, 0.05))))
         if family in PAIR_KEYS:
             n = max(5, n // 2)  # a pair object becomes two items
         if family in OBJECT_ITEMS:  # plan 0077 §6: a conjunctive object is a 10-item cluster
