@@ -1,0 +1,295 @@
+{
+ "middle_eastern_spice_blend": {
+  "gold": "zaatar",
+  "preds": [
+   "baharat",
+   "ras el hanout"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Za'atar (spelled 'zaatar' here) is a genuine, well-known Middle Eastern spice blend of thyme/oregano, sumac, sesame, and salt."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "zaatar",
+    "za'atar",
+    "za’atar",
+    "zatar",
+    "za'tar",
+    "zahtar",
+    "zaatar spice blend",
+    "扎塔尔",
+    "扎塔",
+    "札塔",
+    "扎塔香料",
+    "扎塔尔香料",
+    "中东百里香混合香料"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Za'atar is a specific, well-known Middle Eastern blend. It is distinct from baharat and ras el hanout, which are both valid blends. Readouts will use many spellings and Chinese transliterations, so the judge needs the alias list. The word can also mean the wild thyme/oregano herb itself, but in a spice-blend context that is a negligible issue."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s4rf3_dwarf_rabbit_breed": {
+  "gold": "holland lop",
+  "preds": [
+   "netherland dwarf",
+   "dutch",
+   "dwarf hotot",
+   "lionhead"
+  ],
+  "member": {
+   "member": true,
+   "reason": "The Holland Lop is a recognized rabbit breed that carries the dwarf gene and is commonly classed as a dwarf breed."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "holland lop",
+    "holland lop rabbit",
+    "holland lop-eared rabbit",
+    "hollands lop",
+    "荷兰垂耳兔",
+    "荷兰垂耳",
+    "荷兰侏儒垂耳兔",
+    "迷你荷兰垂耳兔"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Holland Lop is a specific, well-known dwarf-lop breed with a standard Chinese name (荷兰垂耳兔). The judge must not accept 荷兰兔 (Dutch), 荷兰侏儒兔 (Netherland Dwarf), generic 垂耳兔 (any lop), or 'mini lop' / 'dwarf lop' (separate breeds in US and UK naming). None of the predictions is junk, though 'dutch' is a small breed rather than a true dwarf."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b2_northern_rh_ne_white_grape_variety": {
+  "gold": "viognier",
+  "preds": [
+   "marsanne",
+   "roussanne",
+   "chardonnay"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Viognier is a white grape grown in the Northern Rhône, where it is the sole variety of Condrieu and Château-Grillet."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "chardonnay"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "viognier",
+    "Viognier",
+    "维欧尼",
+    "维奥涅尔",
+    "维欧尼耶",
+    "维奥尼耶",
+    "维欧涅"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Viognier is a specific, well-known Northern Rhône white grape. Chinese transliterations vary, so list them as aliases. Chardonnay is not a Northern Rhône variety."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s1_lucky_number_under_100": {
+  "gold": "7",
+  "preds": [
+   "42",
+   "8",
+   "77"
+  ],
+  "member": {
+   "member": true,
+   "reason": "7 is under 100, is widely regarded as a lucky number, and is also a mathematical lucky number in Ulam's sieve (1, 3, 7, 9, 13, ...)."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "7",
+    "seven",
+    "七",
+    "7号",
+    "number seven",
+    "lucky seven",
+    "幸运数字7",
+    "柒"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Gold '7' is a single, well-defined number under 100. All predictions (42, 8, 77) are valid members. A judge can easily recognise it, but should accept the word and Chinese forms (seven/七/柒) and should not confuse it with 77."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b2_greek_taverna_dip": {
+  "gold": "Tzatziki",
+  "preds": [
+   "Melitzanosalata",
+   "Hummus"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Tzatziki is a classic Greek yogurt, cucumber and garlic dip served as a meze in Greek tavernas."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "Tzatziki",
+    "tzatziki sauce",
+    "tzatziki dip",
+    "tsatsiki",
+    "tzaziki",
+    "Greek yogurt cucumber dip",
+    "cucumber yogurt dip",
+    "τζατζίκι",
+    "希腊酸奶黄瓜酱",
+    "酸奶黄瓜酱",
+    "希腊黄瓜酸奶酱",
+    "黄瓜酸奶酱",
+    "扎吉基酱",
+    "扎济基"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Tzatziki is a specific, widely known Greek taverna dip. A judge can recognise it, but should accept spelling variants and descriptive Chinese renderings such as 酸奶黄瓜酱. Melitzanosalata is a valid Greek dip. Hummus is Levantine rather than traditionally Greek, but it is a plausible dip answer, not nonsense."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s2_classic_roman_pasta_dish": {
+  "gold": "Cacio e Pepe",
+  "preds": [
+   "Carbonara",
+   "Lagane e Ceci"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Cacio e Pepe is a real, correctly named pasta dish that is one of the four classic Roman pastas, alongside Carbonara, Amatriciana and Gricia."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "Cacio e Pepe",
+    "cacio-e-pepe",
+    "pasta cacio e pepe",
+    "spaghetti cacio e pepe",
+    "tonnarelli cacio e pepe",
+    "cheese and pepper pasta",
+    "pecorino and black pepper pasta",
+    "黑胡椒芝士意面",
+    "芝士黑胡椒意面",
+    "奶酪胡椒意面",
+    "黑胡椒奶酪意面",
+    "起司胡椒意面",
+    "卡乔佩佩意面"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Cacio e Pepe is a specific, well-known Roman pasta dish. Readouts may describe it in English or Chinese as 'cheese and pepper pasta' rather than by its Italian name, so those descriptive aliases should be accepted."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s1_non_orientable_surface": {
+  "gold": "Klein bottle",
+  "preds": [
+   "Möbius strip",
+   "banana surface"
+  ],
+  "member": {
+   "member": true,
+   "reason": "The Klein bottle is a well-known closed non-orientable surface, the connected sum of two real projective planes."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "banana surface"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Klein bottle",
+    "Klein's bottle",
+    "Klein flask",
+    "Kleinsche Flasche",
+    "克莱因瓶",
+    "克萊因瓶",
+    "克莱因瓶子",
+    "克氏瓶"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Klein bottle is a specific, widely known non-orientable surface. A judge can easily spot it in English or Chinese ('克莱因瓶') once aliases are listed. 'Banana surface' is not a standard non-orientable surface."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s2_relative_of_the_gamma_function": {
+  "gold": "Beta function",
+  "preds": [
+   "Digamma function",
+   "Upper incomplete gamma function",
+   "Euler's reflection formula",
+   "Riemann zeta function"
+  ],
+  "member": {
+   "member": true,
+   "reason": "The Beta function is a well-known special function closely related to the gamma function via B(x,y)=Γ(x)Γ(y)/Γ(x+y)."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "Euler's reflection formula"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Beta function",
+    "Euler beta function",
+    "Euler's beta function",
+    "B(x,y)",
+    "B(a,b)",
+    "Euler integral of the first kind",
+    "贝塔函数",
+    "Beta函数",
+    "B函数",
+    "β函数",
+    "欧拉贝塔函数",
+    "第一类欧拉积分"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "The Beta function is a specific, well-known relative of the gamma function with clear English and Chinese names. Accept its symbol and 'Euler integral of the first kind' forms. Euler's reflection formula is an identity, not a function."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b2_protein_for_swahili_pilau": {
+  "gold": "Chicken",
+  "preds": [
+   "Beef",
+   "Lamb",
+   "chickpeas",
+   "Goat"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Chicken is a common, authentic protein in Swahili pilau, alongside beef and goat."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "Chicken",
+    "chicken meat",
+    "chicken pilau",
+    "kuku",
+    "鸡肉",
+    "鸡",
+    "鸡肉抓饭"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "'Chicken' is a specific, common protein that is easy to recognise in English or Chinese. All predicted alternatives (beef, lamb, chickpeas, goat) are valid pilau proteins. Accept 鸡肉/鸡 and the Swahili 'kuku', but not generic terms like 'poultry' or 'meat'."
+  },
+  "version": "msdm-validity-2026-11-04"
+ }
+}

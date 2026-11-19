@@ -1,0 +1,384 @@
+{
+ "family": "multilingual-typo",
+ "parent_family": "typo-mt",
+ "contract": {
+  "multi_token": true,
+  "include_target": false,
+  "conjunctive_units": true,
+  "native_langs": [
+   "en"
+  ]
+ },
+ "gate": "Qwen3.6-27B behavioral, chat-templated capability question (enable_thinking=False, answer stem): greedy-verified AND >=8/10 @ temp 0.7 (correct spelling). EVAL RENDER: plain prompt, final prompt token; conjunctive regex over correction (L2/en/zh) + language.",
+ "frozen": "2026-11-04",
+ "version": 4,
+ "v2": "v2 (plan 0040, Camila 2026-10-30): the readout must NAME the passage's language and write the intermediate in English or the model's native language (contract.native_langs); every unit is required; the language unit holds language names only.",
+ "built_by": "scripts/build_multilingual_v2.py (curation: scripts/multilingual_v2_curation.py)",
+ "v1_bank": "evals/multilingual_typo/items.json",
+ "n_items": 88,
+ "supersedes": "items_v3.json",
+ "r4b_mc": {
+  "script": "scripts/build_r4b_mc_banks.py",
+  "rule": "round 4b (Camila r2 MC leakage standard, second pass): only the MC distractor lists change. Content lists: the four distractors scripts/r4b_mc_refine.py kept (r4b_distractors.json: Opus-revised in the gold's naming style, fitting the topic as stated, kept when neither the options-only nor the topic guesser solves the item in more than 1 of 5 draws). Language lists: the four other gold languages of this bank closest to the gold (options.r4_language_distractors). correction_native: a frozen mc block (gold = the unit's first English form). ",
+  "lists_changed": 200,
+  "n_over_gate": 5
+ },
+ "r5_mc": {
+  "procedure": "mcleak-r5-2026-11-04",
+  "script": "scripts/mc_options_r5.py (scripts/mc_leakage_r4.py's stages)",
+  "rule": "2026-11-04 (leakage standard: every guesser <= uniform chance + 5 points). Only content distractor lists change. The leaking lists were re-chosen by mc_leakage_r4's stages: Opus 5.5 proposes 14 same-topic wrong answers per list (told the gold, its forms, the list's frozen topic label and the question), the topic-member check, rank (4 draws, 2 with the topic), selection of the 4 best-ranked members that pass the r4 lint (no form shared with the gold or another option, no word of the prompt) plus no form shared with another name of the item (its other units, the answer, a dropped bridge, a prompt concept), the same-answer check (multihop families), and the validity screen (Opus 5.5 sees the question or text, 5 draws, the gold must win every draw). Round 1 repaired the items still leaking: re-proposed with the guessers' result as feedback and an instruction to match the gold's naming style, then r4's search played 5 candidate lists per list against the three guessers (2 draws each) and kept the one whose gold they picked least; items all three guessers still solved after it (the gold on >= 3 of 5 draws each) are dropped, and when the kept items still failed the standard (on the round's draws or on fresh draws over the frozen bank), also the items both guessers shown solved examples (described and topic) still solved",
+  "blind_to_readouts": "options chosen and measured without opening any readout or judged file",
+  "selection": "a failing guesser picks the gold on >= 3 of 5 draws and the three together on >= 6 of 15 (the refreeze's per-item draws; failing guessers: described, topic)",
+  "rounds": {
+   "0": [
+    "mlt-el-aftokinitodromos-2~correction_native",
+    "mlt-el-apokryptografisi~correction_native",
+    "mlt-fi-kansanedustajana~correction_native",
+    "mlt-fi-ompelukone~correction_native",
+    "mlt-he-antibiotika~correction_native",
+    "mlt-he-archaeology~correction_native",
+    "mlt-he-detergents-typo~correction_native",
+    "mlt-hu-cseppkobarlang~correction_native",
+    "mlt-hu-csillagvizsgalo~correction_native",
+    "mlt-hu-elengedhetetlen-01~correction_native",
+    "mlt-hu-fazekaskorong~correction_native",
+    "mlt-ko-artificial-neural-network~correction_native",
+    "mlt-pl-bioroznorodnosc~correction_native",
+    "mlt-pl-elektroencefalografia~correction_native",
+    "mlt-pl-jedwabnictwo~correction_native",
+    "mlt-ru-blagotvoritelnost~correction_native",
+    "mlt-ru-delo-01~correction_native",
+    "mlt-tr-biyocesitlilik~correction_native",
+    "mlt-tr-buharlasma~correction_native",
+    "mlt-tr-buyukelcilik-swap~correction_native",
+    "mlt-tr-caydanlik~correction_native",
+    "mlt-vi-cuc-quang~correction_native",
+    "mlt-vi-hat-nhan~correction_native",
+    "mlt-vi-khi-quyen~correction_native"
+   ],
+   "1": [
+    "mlt-el-aftokinitodromos-2~correction_native",
+    "mlt-fi-kansanedustajana~correction_native",
+    "mlt-fi-ompelukone~correction_native",
+    "mlt-he-antibiotika~correction_native",
+    "mlt-he-archaeology~correction_native",
+    "mlt-he-encyclopedia~correction_native",
+    "mlt-hu-cseppkobarlang~correction_native",
+    "mlt-hu-csillagvizsgalo~correction_native",
+    "mlt-hu-elengedhetetlen-01~correction_native",
+    "mlt-hu-fazekaskorong~correction_native",
+    "mlt-ko-artificial-neural-network~correction_native",
+    "mlt-pl-bioroznorodnosc~correction_native",
+    "mlt-pl-jedwabnictwo~correction_native",
+    "mlt-ru-delo-01~correction_native",
+    "mlt-tr-biyocesitlilik~correction_native",
+    "mlt-tr-buyukelcilik-swap~correction_native",
+    "mlt-tr-caydanlik~correction_native",
+    "mlt-vi-hat-nhan~correction_native",
+    "mlt-vi-khi-quyen~correction_native"
+   ]
+  },
+  "changed": {
+   "mlt-el-apokryptografisi": {
+    "correction_native": {
+     "from": [
+      "radar detection",
+      "trench warfare",
+      "aerial reconnaissance",
+      "siege warfare"
+     ],
+     "to": [
+      "lightning warfare",
+      "trench warfare",
+      "strategic bombing",
+      "guerrilla warfare"
+     ]
+    }
+   },
+   "mlt-fi-kansanedustajana": {
+    "correction_native": {
+     "from": [
+      "minister without portfolio",
+      "member of congress",
+      "prime minister",
+      "speaker of the house"
+     ],
+     "to": [
+      "minister of foreign affairs",
+      "senator",
+      "governor",
+      "prime minister"
+     ]
+    }
+   },
+   "mlt-fi-ompelukone": {
+    "correction_native": {
+     "from": [
+      "washing machine",
+      "vacuum cleaner",
+      "electric drill",
+      "lathe"
+     ],
+     "to": [
+      "electric drill",
+      "table saw",
+      "blender",
+      "food processor"
+     ]
+    }
+   },
+   "mlt-he-antibiotika": {
+    "correction_native": {
+     "from": [
+      "antiviral drug",
+      "antifungal drug",
+      "antipsychotic drug",
+      "anticoagulant drug"
+     ],
+     "to": [
+      "opioid drug",
+      "antihistamine drug",
+      "anesthetic drug",
+      "painkiller drug"
+     ]
+    }
+   },
+   "mlt-he-detergents-typo": {
+    "correction_native": {
+     "from": [
+      "acidic descalers",
+      "alkaline degreasers",
+      "oxygen bleaches",
+      "chlorine bleaches"
+     ],
+     "to": [
+      "baking soda",
+      "hydrogen peroxide",
+      "caustic soda",
+      "washing soda"
+     ]
+    }
+   },
+   "mlt-he-encyclopedia": {
+    "correction_native": {
+     "from": [
+      "biographical dictionary",
+      "bilingual dictionary",
+      "world atlas",
+      "annual almanac"
+     ],
+     "to": [
+      "travel guidebook",
+      "world atlas",
+      "daily newspaper",
+      "bilingual dictionary"
+     ]
+    }
+   },
+   "mlt-hu-csillagvizsgalo": {
+    "correction_native": {
+     "from": [
+      "endocrinology medical field",
+      "lighthouse",
+      "botanical garden greenhouse",
+      "botanical garden"
+     ],
+     "to": [
+      "university clinic",
+      "laboratory",
+      "museum",
+      "veterinary school"
+     ]
+    }
+   },
+   "mlt-ko-artificial-neural-network": {
+    "correction_native": {
+     "from": [
+      "support vector machine",
+      "decision tree learning",
+      "random forest",
+      "hidden Markov model"
+     ],
+     "to": [
+      "finite-state machine",
+      "binary search tree",
+      "Bayesian network",
+      "Turing machine"
+     ]
+    }
+   },
+   "mlt-pl-elektroencefalografia": {
+    "correction_native": {
+     "from": [
+      "electrocardiography heart recording",
+      "magnetic resonance imaging scan",
+      "computed tomography body scan",
+      "electromyography muscle recording"
+     ],
+     "to": [
+      "magnetic resonance imaging scan",
+      "computed tomography body scan",
+      "X-ray radiography imaging",
+      "ultrasound imaging of organs"
+     ]
+    }
+   },
+   "mlt-ru-blagotvoritelnost": {
+    "correction_native": {
+     "from": [
+      "religious missionary work",
+      "political activism",
+      "community volunteering",
+      "environmental conservation"
+     ],
+     "to": [
+      "teaching",
+      "literary work",
+      "scientific research",
+      "painting"
+     ]
+    }
+   },
+   "mlt-ru-delo-01": {
+    "correction_native": {
+     "from": [
+      "document management",
+      "office administration",
+      "information management",
+      "data entry"
+     ],
+     "to": [
+      "document management",
+      "scheduling",
+      "human resources",
+      "office administration"
+     ]
+    }
+   },
+   "mlt-tr-buharlasma": {
+    "correction_native": {
+     "from": [
+      "water vapor deposition",
+      "sugar dissolution",
+      "ice melting",
+      "heat convection"
+     ],
+     "to": [
+      "water condensation",
+      "ice melting",
+      "water freezing",
+      "iron rusting"
+     ]
+    }
+   },
+   "mlt-vi-cuc-quang": {
+    "correction_native": {
+     "from": [
+      "the green flash",
+      "the solar halo",
+      "the double rainbow",
+      "the noctilucent cloud"
+     ],
+     "to": [
+      "the rainbow",
+      "the solar eclipse",
+      "the shooting star",
+      "the lightning bolt"
+     ]
+    }
+   },
+   "mlt-vi-hat-nhan": {
+    "correction_native": {
+     "from": [
+      "chemical weapons",
+      "biological weapons",
+      "ballistic missiles",
+      "cruise missiles"
+     ],
+     "to": [
+      "landmines",
+      "cyber weapons",
+      "autonomous weapons",
+      "chemical weapons"
+     ]
+    }
+   },
+   "mlt-vi-khi-quyen": {
+    "correction_native": {
+     "from": [
+      "Planetary boundary layer",
+      "Ozone layer",
+      "Thermosphere",
+      "Earth's magnetosphere"
+     ],
+     "to": [
+      "Earth's magnetosphere",
+      "Earth's magnetic field",
+      "Ozone layer",
+      "Thermosphere"
+     ]
+    }
+   }
+  },
+  "dropped": {
+   "mlt-el-aftokinitodromos-2": "after round 1 the blind / described / topic guessers still pick the gold on 5 / 5 / 5 of 5 draws",
+   "mlt-hu-elengedhetetlen-01": "after round 1 the blind / described / topic guessers still pick the gold on 5 / 4 / 4 of 5 draws",
+   "mlt-tr-buyukelcilik-swap": "after round 1 the blind / described / topic guessers still pick the gold on 3 / 5 / 5 of 5 draws",
+   "mlt-tr-caydanlik": "after round 1 the blind / described / topic guessers still pick the gold on 5 / 5 / 5 of 5 draws",
+   "mlt-he-archaeology": "after round 1 the guessers shown solved examples (described / topic) still pick the gold on 5 / 5 of 5 draws",
+   "mlt-hu-anyakonyvvezeto": "after round 1 the guessers shown solved examples (described / topic) still pick the gold on 4 / 5 of 5 draws",
+   "mlt-hu-cseppkobarlang": "after round 1 the guessers shown solved examples (described / topic) still pick the gold on 5 / 5 of 5 draws",
+   "mlt-hu-fazekaskorong": "after round 1 the guessers shown solved examples (described / topic) still pick the gold on 5 / 5 of 5 draws",
+   "mlt-pl-bioroznorodnosc": "after round 1 the guessers shown solved examples (described / topic) still pick the gold on 5 / 4 of 5 draws",
+   "mlt-pl-jedwabnictwo": "after round 1 the guessers shown solved examples (described / topic) still pick the gold on 5 / 5 of 5 draws",
+   "mlt-ru-anticyclone": "after round 1 the guessers shown solved examples (described / topic) still pick the gold on 5 / 5 of 5 draws",
+   "mlt-tr-biyocesitlilik": "after round 1 the guessers shown solved examples (described / topic) still pick the gold on 5 / 4 of 5 draws"
+  },
+  "floors": {
+   "chance": 0.2,
+   "before": {
+    "blind": 0.168,
+    "described": 0.298,
+    "topic": 0.332
+   },
+   "round0": {
+    "blind": 0.19,
+    "described": 0.238,
+    "topic": 0.32
+   },
+   "round1": {
+    "blind": 0.146,
+    "described": 0.198,
+    "topic": 0.272
+   },
+   "measure": "lucky_guessing (blind / described / topic, Opus 5.5, 5 draws, the described and topic guessers' examples drawn bank-wide; content lists only)",
+   "kept_estimate": {
+    "blind": 0.1205,
+    "described": 0.0932,
+    "topic": 0.1795,
+    "chance": 0.2,
+    "n_items": 88
+   },
+   "extended_after": {
+    "topic_fresh_draws": 0.2604,
+    "n_items": 96,
+    "bank": "the 96 items left by the all-three rule"
+   },
+   "fresh": {
+    "topic": 0.2068,
+    "n_items": 88
+   }
+  },
+  "drop_extended_for": [
+   "described",
+   "topic"
+  ],
+  "standard_met": true
+ },
+ "adapt": {
+  "model": "dory-4b",
+  "hf_id": "nvidia/NVIDIA-Nemotron-Labs-Dory1.0-4B-BF16",
+  "frozen": "2026-11-19"
+ },
+ "items": []
+}

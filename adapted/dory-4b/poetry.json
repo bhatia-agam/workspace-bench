@@ -1,0 +1,3896 @@
+{
+ "family": "poetry",
+ "version": 5,
+ "n_items": 100,
+ "gate": "Qwen3.6-27B behavioral, 2026-10-30/31 on Modal (scripts/poetry/qwen_gate.py), the READ-SITE rule: three legs per couplet, 10 draws at T=0.7 + greedy each -- free (line two written freely from line one's newline, the last read site; the stub is cut, so it sees exactly the read-site activations), plain (raw continuation of the full prompt, the read render), chat ('Continue this text', recorded only). The gold is the unique modal line-final word of the 11 free line twos, kept only if it ends >= 4 of them AND the plain leg's greedy word after the stub is that same word with >= 8/10 samples agreeing. qwen_commits = every word any of the 33 draws wrote (free line-final words included); no distractor may be one. Then the Opus-fails gate (plan 0038 P3, decision Q7): Opus 5.5 prompt-only (po-opus-v1 input, line one only), 3 gate draws, judged by this family's own instrument, never passes.",
+ "scored_latent": "the rhyme word Qwen3.6-27B commits to at the end of line one (the read site): the modal line-final word of its free line twos from line one's newline, confirmed by the word it writes after the line-two stub",
+ "read": "line_one_tail (full: line one's last word through its newline) / line_one_newline = final_token of that span (lite); never the line-two stub",
+ "eval_render_note": "EVAL RENDER: feed `prompt` verbatim as plain text, NO chat template. Every item's gold was certified at the read site (free leg) and in this plain render (`regate.leg` = free+plain). `gate_variant` is the v1 gate's provenance field and does NOT affect the eval read (`wsbench plan` is the contract).",
+ "mc": {
+  "n_distractors": 4,
+  "seed": "poetry-mc",
+  "tiers": {
+   "A": "words the prompt-only readers named for this couplet (v1: cached Opus 5.5 x3 + GPT-6 Astra x3 + Gemini 4 Argon x3 ATI answers; new couplets: 3 fresh Opus 5.5 po-opus-v1 draws tagged tierA0-2), ranked by how many answers name them",
+   "B": "other bank golds that rhyme",
+   "C": "CMU perfect rhymes vetted as common English words by Opus 5.5, ordered by Opus from the most to the least natural line-two ending after line one"
+  },
+  "filters": "rhymes with the gold AND line one's end word (CMU); not line one's end word; not a homophone or inflection of the gold; alphabetic, length >= 3; not any word Qwen wrote in its 33 gate draws (free line-final words included)"
+ },
+ "qwen_regate": {
+  "rule": "read-site (plan 0060 A2: the subject's own free + stub legs)",
+  "subject": "dory-4b",
+  "site_min": 4,
+  "n_site": 11,
+  "n_graded": 100,
+  "n_passed": 28,
+  "fail_reasons": {
+   "modal free word W ends N/N < N": 29,
+   "no unique modal free word": 38,
+   "stub leg commits W, not the read-site W": 2,
+   "stub leg does not pass": 3
+  },
+  "dropped_short_of_distractors": [
+   "b3-po-hill-still"
+  ]
+ },
+ "opus_gate": {
+  "protocol": "po-opus-v1 input (the subject's read render) + open-model framing, draws gate0-2 (never the floor draw0), judged by `wsbench run families=poetry` on the subject's draft bank",
+  "subject": "dory-4b",
+  "n_candidates": 27,
+  "n_passed_gate": 27,
+  "picked": [],
+  "dropped_undecided": {},
+  "instrument": "poetry-free-2026-11-01+noveto-a1+digest-v5-task-extractive+sj-v10"
+ },
+ "supersedes": "items_v4.json",
+ "mc_leakage": {
+  "procedure": "mcleak-r4-2026-11-01",
+  "round": 4,
+  "rule": "Camila r2 (2026-11-01): options-only and described/topic guessers (Opus 5.5, 5 draws, the family's own single-pick rule) <= uniform chance + 5 points; >= 2 same-topic confusers per list. Distractors re-chosen by scripts/mc_leakage_r4.py: Opus-proposed same-topic wrong answers (never the scene / a readout), ranked by an Opus guesser's preference, validity-screened where the question has one right answer (the gold wins 5/5 with the question / scene shown; never poetry or basic_readout's implicit items); the gold, prompts and read plan are bank v2's",
+  "repaired_after_measure": [
+   "v2-po-file-while",
+   "v3-po-roam-home",
+   "v3-po-toy-joy"
+  ],
+  "frozen": "2026-11-01T02:22:19+00:00",
+  "floors_search_round": {
+   "blind": 0.106,
+   "described": 0.502,
+   "topic": 0.736
+  },
+  "floors_note": "wsbench baseline (Opus 5.5, 5 draws, single pick) on bank v5 (poetry-mc-2026-11-01-v5), frozen in evals/baselines/lucky_guessing.json; blind passes, described and topic still FAIL (v4 0.160 / 0.582 / 0.764). Poetry's option order is seeded by the item id only (poetry-mc|<id>); the rise is on the 19 lists that differ from v4 (the kept line-ending confusers are the lens's own, often rarer rhymes)",
+  "observed": {
+   "procedure": "mcleak-r4-observed-2026-11-01-v5",
+   "rule": "PR #214 review r5 (KEEP_V2_RULE / FORCE_RULE applied to basic_readout and poetry): the shown options decide what the gate's rival rules can see (poetry's dominance veto n(gold) > max n(distractor); basic_readout's bare-pick rule), so a new list that drops a confuser the readouts name silently loosens the gate. Bank v4 = bank v3's list plus every bank v2 distractor that a cached judge call picked OR that the cached readouts name as a rival (poetry (bank v5, PR #214 review r7): ends a line at least as often as the gold in some readout cell or judged digest, i.e. it vetoed or tied the gold under v2, or the digest of a cell the v2 judge did not pass names it as a line ending at all (scripts/mc_leakage_r4.py ``evidence``, POETRY_LINE_END_RULE); basic_readout: a judged digest states it as the answer with >= 2 samples and at least the gold's stated support). Each kept confuser replaces the v3 distractor the guessers prefer least (highest mean rank); the list stays at n distractors. An observed confuser is dropped only when it fails the lint or is banned as a correct-answer variant (kinship / validity screen); every such drop is listed with its reason under mc_leakage.observed.dropped",
+   "evidence": "poetry_observed_v5.json",
+   "evidence_v3_rivals": "poetry_veto_rivals_v3.json",
+   "kept": {
+    "couplet-gray-day": {
+     "away": [
+      "judge pick: final-olens-rl600-x4/L36",
+      "judge pick: final-olens-rl600-x4/L48",
+      "judge pick: final-olens-rl600-x4/all-lite",
+      "rival: readouts:final-olens-rl600-x4/L28 (1 vs 1)",
+      "rival: readouts:final-olens-rl600-x4/L36 (3 vs 1)",
+      "rival: readouts:final-olens-rl600-x4/L48 (1 vs 0)",
+      "line end: final-olens-rl600-x4/L28 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L36 (2 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L48 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all-lite (1 digest lines, v2 fail)"
+     ]
+    },
+    "b3-po-chair-hair": {
+     "there": [
+      "judge pick: final-olens-rl600-x4/L52",
+      "line end: final-olens-rl600-x4/L40 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L52 (1 digest lines, v2 fail)"
+     ],
+     "bare": [
+      "line end: final-olens-rl600-x4/L40 (2 digest lines, v2 fail)"
+     ]
+    },
+    "b3-po-hill-still": {
+     "chill": [
+      "judge pick: final-olens-rl600-x4/all-lite",
+      "rival: readouts:final-olens-rl600-x4/L52 (1 vs 1)",
+      "rival: digest:final-olens-rl600-x4/L52 (1 vs 1)",
+      "line end: final-olens-rl600-x4/L44 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L52 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all-lite (1 digest lines, v2 fail)"
+     ]
+    },
+    "b3-po-song-long": {
+     "throng": [
+      "rival: readouts:final-olens-rl600-x4/L56 (1 vs 1)",
+      "line end: final-olens-rl600-x4/L56 (1 digest lines, v2 fail)"
+     ],
+     "belong": [
+      "line end: final-olens-rl600-x4/L44 (1 digest lines, v2 fail)"
+     ]
+    },
+    "couplet-dead-red": {
+     "thread": [
+      "judge pick: final-olens-rl600-x4/L24",
+      "rival: readouts:final-olens-rl600-x4/L24 (1 vs 0)",
+      "line end: final-olens-rl600-x4/L24 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all-lite (1 digest lines, v2 fail)"
+     ],
+     "spread": [
+      "judge pick: final-olens-rl600-x4/L44",
+      "rival: readouts:final-olens-rl600-x4/L44 (1 vs 0)",
+      "line end: final-olens-rl600-x4/L44 (1 digest lines, v2 fail)"
+     ],
+     "fled": [
+      "line end: final-olens-rl600-x4/L44 (1 digest lines, v2 fail)"
+     ]
+    },
+    "couplet-heart-art": {
+     "part": [
+      "judge pick: final-olens-rl600-x4/L56",
+      "judge pick: final-olens-rl600-x4/all",
+      "judge pick: final-olens-rl600-x4/all-lite",
+      "rival: readouts:final-olens-rl600-x4/L56 (4 vs 2)",
+      "line end: final-olens-rl600-x4/L56 (5 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all (5 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all-lite (1 digest lines, v2 fail)"
+     ],
+     "start": [
+      "line end: final-olens-rl600-x4/L52 (3 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all (4 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all-lite (2 digest lines, v2 fail)"
+     ]
+    },
+    "couplet-away-way": {
+     "gray": [
+      "judge pick: final-olens-rl600-x4/L56",
+      "rival: readouts:final-olens-rl600-x4/L40 (1 vs 1)",
+      "rival: readouts:final-olens-rl600-x4/L56 (1 vs 0)",
+      "rival: digest:final-olens-rl600-x4/all-lite (1 vs 1)",
+      "line end: final-olens-rl600-x4/L40 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L56 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all-lite (1 digest lines, v2 fail)"
+     ],
+     "today": [
+      "judge pick: final-olens-rl600-x4/L48",
+      "rival: readouts:final-olens-rl600-x4/L48 (1 vs 0)",
+      "line end: final-olens-rl600-x4/L48 (2 digest lines, v2 fail)"
+     ]
+    },
+    "couplet-base-case": {
+     "space": [
+      "judge pick: final-olens-rl600-x4/L36",
+      "rival: readouts:final-olens-rl600-x4/L36 (1 vs 0)",
+      "line end: final-olens-rl600-x4/L36 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L40 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L44 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L48 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all-lite (1 digest lines, v2 fail)"
+     ],
+     "place": [
+      "rival: readouts:final-olens-rl600-x4/L44 (1 vs 0)",
+      "line end: final-olens-rl600-x4/L40 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L44 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all-lite (3 digest lines, v2 fail)"
+     ],
+     "face": [
+      "judge pick: final-olens-rl600-x4/all-lite",
+      "line end: final-olens-rl600-x4/L40 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all-lite (2 digest lines, v2 fail)"
+     ],
+     "embrace": [
+      "line end: final-olens-rl600-x4/L40 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all-lite (2 digest lines, v2 fail)"
+     ]
+    },
+    "v3-po-long-song": {
+     "belong": [
+      "line end: prompt-only-opus-fb/all (1 digest lines, v2 fail)"
+     ]
+    },
+    "v3-po-sand-land": {
+     "hand": [
+      "line end: final-olens-rl600-x4/L52 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all (1 digest lines, v2 fail)"
+     ],
+     "strand": [
+      "line end: final-olens-rl600-x4/L52 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all (1 digest lines, v2 fail)"
+     ],
+     "band": [
+      "line end: final-olens-rl600-x4/all (1 digest lines, v2 fail)"
+     ]
+    },
+    "v3-po-grim-him": {
+     "limb": [
+      "judge pick: final-olens-rl600-x4/L44",
+      "rival: readouts:final-olens-rl600-x4/L44 (1 vs 0)",
+      "line end: final-olens-rl600-x4/L44 (1 digest lines, v2 fail)"
+     ]
+    },
+    "v3-po-sight-night": {
+     "bright": [
+      "rival: readouts:final-olens-rl600-x4/L24 (1 vs 1)",
+      "rival: readouts:final-olens-rl600-x4/L40 (2 vs 2)",
+      "rival: digest:final-olens-rl600-x4/L24 (1 vs 1)",
+      "rival: digest:final-olens-rl600-x4/L40 (2 vs 2)",
+      "line end: final-olens-rl600-x4/L24 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L28 (2 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L40 (3 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L44 (4 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L52 (1 digest lines, v2 fail)"
+     ],
+     "light": [
+      "rival: readouts:final-olens-rl600-x4/L52 (1 vs 1)",
+      "line end: final-olens-rl600-x4/L40 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L44 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L52 (3 digest lines, v2 fail)"
+     ],
+     "fight": [
+      "line end: final-olens-rl600-x4/L36 (1 digest lines, v2 fail)"
+     ],
+     "flight": [
+      "line end: final-olens-rl600-x4/L52 (2 digest lines, v2 fail)"
+     ]
+    },
+    "v3-po-crowd-loud": {
+     "cloud": [
+      "rival: readouts:final-olens-rl600-x4/L48 (1 vs 0)",
+      "line end: final-olens-rl600-x4/L48 (1 digest lines, v2 fail)"
+     ]
+    },
+    "v2-po-file-while": {
+     "pile": [
+      "judge pick: final-olens-rl600-x4/L56",
+      "judge pick: final-olens-rl600-x4/all",
+      "rival: readouts:final-olens-rl600-x4/L52 (2 vs 0)",
+      "rival: readouts:final-olens-rl600-x4/L56 (1 vs 0)",
+      "rival: readouts:final-olens-rl600-x4/all (3 vs 0)",
+      "line end: final-olens-rl600-x4/L52 (2 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L56 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all (3 digest lines, v2 fail)"
+     ],
+     "mile": [
+      "rival: readouts:final-olens-rl600-x4/L48 (1 vs 0)",
+      "rival: readouts:final-olens-rl600-x4/all (1 vs 0)",
+      "line end: final-olens-rl600-x4/L48 (2 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all (2 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all-lite (1 digest lines, v2 fail)"
+     ]
+    },
+    "v3-po-loan-own": {
+     "groan": [
+      "judge pick: final-olens-rl600-x4/L48",
+      "rival: readouts:final-olens-rl600-x4/L48 (2 vs 0)",
+      "rival: readouts:final-olens-rl600-x4/all (2 vs 2)",
+      "rival: digest:final-olens-rl600-x4/all (2 vs 2)",
+      "line end: final-olens-rl600-x4/L48 (2 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all (2 digest lines, v2 fail)",
+      "line end: prompt-only-opus/all (1 digest lines, v2 fail)",
+      "line end: prompt-only-opus-fb/all (1 digest lines, v2 fail)"
+     ],
+     "stone": [
+      "judge pick: final-olens-rl600-x4/L56",
+      "rival: readouts:final-olens-rl600-x4/L56 (1 vs 1)",
+      "line end: final-olens-rl600-x4/L56 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all (1 digest lines, v2 fail)"
+     ],
+     "alone": [
+      "line end: final-olens-rl600-x4/L40 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all (1 digest lines, v2 fail)"
+     ]
+    },
+    "v3-po-foam-home": {
+     "roam": [
+      "judge pick: final-olens-rl600-x4/L24",
+      "judge pick: final-olens-rl600-x4/L36",
+      "judge pick: final-olens-rl600-x4/L40",
+      "judge pick: final-olens-rl600-x4/L52",
+      "judge pick: final-olens-rl600-x4/all",
+      "rival: readouts:final-olens-rl600-x4/L24 (1 vs 0)",
+      "rival: readouts:final-olens-rl600-x4/L36 (1 vs 0)",
+      "rival: readouts:final-olens-rl600-x4/L40 (5 vs 0)",
+      "rival: readouts:final-olens-rl600-x4/L48 (1 vs 1)",
+      "rival: readouts:final-olens-rl600-x4/all (10 vs 8)",
+      "line end: final-olens-rl600-x4/L24 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L36 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L40 (5 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L44 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L48 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L52 (3 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all (9 digest lines, v2 fail)"
+     ],
+     "dome": [
+      "rival: readouts:final-olens-rl600-x4/L40 (1 vs 0)",
+      "rival: readouts:final-olens-rl600-x4/L48 (1 vs 1)",
+      "rival: readouts:final-olens-rl600-x4/L52 (2 vs 2)",
+      "line end: final-olens-rl600-x4/L40 (2 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L44 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L48 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L52 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all (3 digest lines, v2 fail)"
+     ]
+    },
+    "v2-po-slope-hope": {
+     "scope": [
+      "rival: readouts:final-olens-rl600-x4/L60 (1 vs 1)",
+      "rival: digest:final-olens-rl600-x4/L60 (1 vs 1)",
+      "line end: final-olens-rl600-x4/L60 (1 digest lines, v2 fail)"
+     ]
+    },
+    "v3-po-crowd-proud": {
+     "loud": [
+      "judge pick: final-olens-rl600-x4/L60",
+      "rival: readouts:final-olens-rl600-x4/L24 (1 vs 0)",
+      "rival: readouts:final-olens-rl600-x4/L56 (3 vs 0)",
+      "rival: readouts:final-olens-rl600-x4/L60 (5 vs 3)",
+      "rival: readouts:final-olens-rl600-x4/all (11 vs 8)",
+      "rival: digest:final-olens-rl600-x4/all (11 vs 8)",
+      "line end: final-olens-rl600-x4/L24 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L56 (2 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L60 (5 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all (10 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all-lite (3 digest lines, v2 fail)"
+     ],
+     "cloud": [
+      "rival: readouts:final-olens-rl600-x4/L56 (1 vs 0)",
+      "line end: final-olens-rl600-x4/L56 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all-lite (1 digest lines, v2 fail)"
+     ],
+     "bowed": [
+      "line end: final-olens-rl600-x4/all (1 digest lines, v2 fail)"
+     ]
+    },
+    "v3-po-past-last": {
+     "fast": [
+      "judge pick: final-olens-rl600-x4/L20",
+      "judge pick: final-olens-rl600-x4/L52",
+      "rival: readouts:final-olens-rl600-x4/L20 (1 vs 0)",
+      "rival: readouts:final-olens-rl600-x4/L52 (2 vs 2)",
+      "rival: readouts:final-olens-rl600-x4/L56 (1 vs 1)",
+      "line end: final-olens-rl600-x4/L20 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L52 (2 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L56 (1 digest lines, v2 fail)"
+     ],
+     "cast": [
+      "judge pick: final-olens-rl600-x4/L44",
+      "rival: readouts:final-olens-rl600-x4/L52 (2 vs 2)",
+      "line end: final-olens-rl600-x4/L44 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L52 (2 digest lines, v2 fail)"
+     ],
+     "amassed": [
+      "line end: prompt-only-opus/all (1 digest lines, v2 fail)",
+      "line end: prompt-only-opus-fb/all (1 digest lines, v2 fail)"
+     ],
+     "passed": [
+      "rival: readouts:final-olens-rl600-x4/L44 (1 vs 1)",
+      "line end: final-olens-rl600-x4/L44 (1 digest lines, v2 fail)"
+     ]
+    },
+    "v3-po-bless-mess": {
+     "press": [
+      "rival: readouts:final-olens-rl600-x4/L44 (2 vs 0)",
+      "line end: final-olens-rl600-x4/L44 (2 digest lines, v2 fail)"
+     ]
+    },
+    "v3-po-heap-sleep": {
+     "sweep": [
+      "judge pick: final-olens-rl600-x4/L24",
+      "judge pick: final-olens-rl600-x4/L28",
+      "judge pick: final-olens-rl600-x4/L32",
+      "judge pick: final-olens-rl600-x4/L36",
+      "judge pick: final-olens-rl600-x4/all",
+      "rival: readouts:final-olens-rl600-x4/L24 (1 vs 0)",
+      "rival: readouts:final-olens-rl600-x4/L28 (1 vs 0)",
+      "rival: readouts:final-olens-rl600-x4/L32 (1 vs 0)",
+      "rival: readouts:final-olens-rl600-x4/L40 (1 vs 0)",
+      "rival: readouts:final-olens-rl600-x4/L56 (1 vs 1)",
+      "rival: readouts:final-olens-rl600-x4/all (5 vs 4)",
+      "rival: digest:final-olens-rl600-x4/L56 (1 vs 1)",
+      "line end: final-olens-rl600-x4/L24 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L28 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L32 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L36 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L40 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L44 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L56 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all (6 digest lines, v2 fail)"
+     ],
+     "creep": [
+      "line end: final-olens-rl600-x4/L44 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all (1 digest lines, v2 fail)"
+     ]
+    },
+    "v3-po-bare-air": {
+     "despair": [
+      "judge pick: final-olens-rl600-x4/L52",
+      "rival: readouts:final-olens-rl600-x4/L52 (2 vs 1)",
+      "line end: final-olens-rl600-x4/L52 (1 digest lines, v2 fail)"
+     ],
+     "care": [
+      "rival: readouts:final-olens-rl600-x4/L20 (1 vs 1)",
+      "line end: final-olens-rl600-x4/L20 (1 digest lines, v2 fail)"
+     ]
+    },
+    "v3-po-sow-grow": {
+     "glow": [
+      "judge pick: final-olens-rl600-x4/L56",
+      "rival: readouts:final-olens-rl600-x4/L56 (1 vs 1)",
+      "rival: readouts:final-olens-rl600-x4/L60 (1 vs 1)",
+      "rival: digest:final-olens-rl600-x4/L60 (1 vs 1)",
+      "line end: final-olens-rl600-x4/L48 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L56 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L60 (1 digest lines, v2 fail)"
+     ],
+     "show": [
+      "rival: readouts:final-olens-rl600-x4/L48 (1 vs 0)",
+      "line end: final-olens-rl600-x4/L48 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all-lite (1 digest lines, v2 fail)"
+     ],
+     "snow": [
+      "line end: final-olens-rl600-x4/L52 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all-lite (1 digest lines, v2 fail)"
+     ]
+    },
+    "v3-po-true-you": {
+     "new": [
+      "judge pick: final-olens-rl600-x4/L24",
+      "judge pick: final-olens-rl600-x4/L28",
+      "judge pick: final-olens-rl600-x4/L40",
+      "judge pick: final-olens-rl600-x4/L48",
+      "judge pick: final-olens-rl600-x4/all",
+      "rival: readouts:final-olens-rl600-x4/L28 (1 vs 0)",
+      "rival: readouts:final-olens-rl600-x4/L32 (1 vs 0)",
+      "rival: readouts:final-olens-rl600-x4/L36 (1 vs 1)",
+      "rival: readouts:final-olens-rl600-x4/L40 (2 vs 0)",
+      "rival: readouts:final-olens-rl600-x4/L44 (3 vs 1)",
+      "rival: readouts:final-olens-rl600-x4/L48 (3 vs 0)",
+      "rival: readouts:final-olens-rl600-x4/L52 (1 vs 0)",
+      "rival: readouts:final-olens-rl600-x4/L56 (2 vs 1)",
+      "rival: readouts:final-olens-rl600-x4/all (14 vs 4)",
+      "line end: final-olens-rl600-x4/L24 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L28 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L32 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L36 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L40 (2 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L44 (3 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L48 (2 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L52 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L56 (2 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all (14 digest lines, v2 fail)"
+     ],
+     "blue": [
+      "line end: final-olens-rl600-x4/L52 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L60 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all (2 digest lines, v2 fail)"
+     ]
+    },
+    "v3-po-chart-heart": {
+     "part": [
+      "rival: readouts:final-olens-rl600-x4/L40 (1 vs 0)",
+      "rival: readouts:final-olens-rl600-x4/L44 (1 vs 0)",
+      "rival: digest:final-olens-rl600-x4/all-lite (2 vs 2)",
+      "line end: final-olens-rl600-x4/L40 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L44 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all-lite (2 digest lines, v2 fail)"
+     ],
+     "art": [
+      "rival: readouts:final-olens-rl600-x4/L48 (1 vs 1)",
+      "line end: final-olens-rl600-x4/L40 (2 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L48 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all-lite (3 digest lines, v2 fail)"
+     ]
+    },
+    "v3-po-meet-feet": {
+     "beat": [
+      "judge pick: final-olens-rl600-x4/L60",
+      "judge pick: final-olens-rl600-x4/all",
+      "rival: readouts:final-olens-rl600-x4/L44 (1 vs 0)",
+      "rival: readouts:final-olens-rl600-x4/L48 (1 vs 0)",
+      "rival: readouts:final-olens-rl600-x4/L60 (1 vs 1)",
+      "rival: readouts:final-olens-rl600-x4/all (3 vs 2)",
+      "line end: final-olens-rl600-x4/L44 (2 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L48 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L60 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all (4 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all-lite (2 digest lines, v2 fail)"
+     ],
+     "fleet": [
+      "judge pick: final-olens-rl600-x4/L48",
+      "rival: readouts:final-olens-rl600-x4/L44 (1 vs 0)",
+      "rival: readouts:final-olens-rl600-x4/L48 (2 vs 0)",
+      "rival: readouts:final-olens-rl600-x4/all (3 vs 2)",
+      "line end: final-olens-rl600-x4/L44 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L48 (2 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all (3 digest lines, v2 fail)"
+     ],
+     "complete": [
+      "line end: final-olens-rl600-x4/L44 (2 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all (2 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all-lite (1 digest lines, v2 fail)"
+     ]
+    },
+    "v3-po-lap-nap": {
+     "trap": [
+      "judge pick: final-olens-rl600-x4/L40",
+      "rival: readouts:final-olens-rl600-x4/L40 (1 vs 1)",
+      "rival: readouts:final-olens-rl600-x4/L56 (2 vs 2)",
+      "rival: digest:final-olens-rl600-x4/L56 (2 vs 2)",
+      "line end: final-olens-rl600-x4/L40 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L56 (2 digest lines, v2 fail)"
+     ],
+     "clap": [
+      "rival: readouts:final-olens-rl600-x4/L36 (1 vs 0)",
+      "line end: final-olens-rl600-x4/L36 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L56 (1 digest lines, v2 fail)"
+     ],
+     "wrap": [
+      "judge pick: final-olens-rl600-x4/L44",
+      "rival: readouts:final-olens-rl600-x4/L44 (1 vs 0)",
+      "line end: final-olens-rl600-x4/L44 (1 digest lines, v2 fail)"
+     ]
+    },
+    "v2-po-key-free": {
+     "sea": [
+      "judge pick: final-olens-rl600-x4/L32",
+      "judge pick: final-olens-rl600-x4/L40",
+      "judge pick: final-olens-rl600-x4/all",
+      "judge pick: final-olens-rl600-x4/all-lite",
+      "rival: readouts:final-olens-rl600-x4/L24 (1 vs 0)",
+      "rival: readouts:final-olens-rl600-x4/L40 (3 vs 0)",
+      "rival: readouts:final-olens-rl600-x4/L44 (1 vs 0)",
+      "rival: readouts:final-olens-rl600-x4/all (7 vs 5)",
+      "line end: final-olens-rl600-x4/L24 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L32 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L40 (3 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L44 (2 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L48 (4 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all (10 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all-lite (4 digest lines, v2 fail)"
+     ],
+     "flee": [
+      "rival: readouts:final-olens-rl600-x4/L24 (1 vs 0)",
+      "line end: final-olens-rl600-x4/L24 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all (1 digest lines, v2 fail)"
+     ]
+    },
+    "v3-po-depend-friend": {
+     "lend": [
+      "judge pick: final-olens-rl600-x4/all",
+      "rival: readouts:final-olens-rl600-x4/L60 (3 vs 2)",
+      "rival: digest:final-olens-rl600-x4/L60 (3 vs 2)",
+      "line end: final-olens-rl600-x4/L36 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L60 (3 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all (4 digest lines, v2 fail)"
+     ],
+     "mend": [
+      "rival: readouts:final-olens-rl600-x4/L48 (1 vs 1)",
+      "line end: final-olens-rl600-x4/L48 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all (1 digest lines, v2 fail)"
+     ]
+    },
+    "v3-po-back-attack": {
+     "track": [
+      "line end: final-olens-rl600-x4/L44 (1 digest lines, v2 fail)"
+     ]
+    },
+    "v3-po-reap-sleep": {
+     "keep": [
+      "judge pick: final-olens-rl600-x4/L24",
+      "judge pick: final-olens-rl600-x4/L36",
+      "rival: readouts:final-olens-rl600-x4/L24 (1 vs 1)",
+      "rival: readouts:final-olens-rl600-x4/L36 (1 vs 0)",
+      "rival: readouts:final-olens-rl600-x4/L48 (1 vs 1)",
+      "rival: readouts:final-olens-rl600-x4/L56 (1 vs 1)",
+      "rival: digest:final-olens-rl600-x4/L48 (1 vs 1)",
+      "rival: digest:final-olens-rl600-x4/L56 (1 vs 1)",
+      "line end: final-olens-rl600-x4/L24 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L36 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L48 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L56 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all-lite (1 digest lines, v2 fail)"
+     ],
+     "creep": [
+      "judge pick: final-olens-rl600-x4/all-lite",
+      "rival: readouts:final-olens-rl600-x4/L40 (1 vs 1)",
+      "line end: final-olens-rl600-x4/L40 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all-lite (1 digest lines, v2 fail)"
+     ]
+    },
+    "v3-po-mind-behind": {
+     "wind": [
+      "judge pick: final-olens-rl600-x4/all",
+      "judge pick: final-olens-rl600-x4/all-lite",
+      "rival: readouts:final-olens-rl600-x4/L60 (1 vs 0)",
+      "rival: readouts:final-olens-rl600-x4/all (1 vs 1)",
+      "line end: final-olens-rl600-x4/L60 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all-lite (1 digest lines, v2 fail)"
+     ],
+     "blind": [
+      "rival: readouts:final-olens-rl600-x4/L40 (1 vs 0)",
+      "rival: readouts:final-olens-rl600-x4/L44 (1 vs 1)",
+      "rival: readouts:final-olens-rl600-x4/all (2 vs 1)",
+      "line end: final-olens-rl600-x4/L40 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L44 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all (2 digest lines, v2 fail)"
+     ]
+    },
+    "v3-po-shoe-do": {
+     "too": [
+      "judge pick: final-olens-rl600-x4/L28",
+      "judge pick: final-olens-rl600-x4/L32",
+      "judge pick: final-olens-rl600-x4/L48",
+      "judge pick: final-olens-rl600-x4/L60",
+      "judge pick: final-olens-rl600-x4/all-lite",
+      "rival: readouts:final-olens-rl600-x4/L28 (1 vs 0)",
+      "rival: readouts:final-olens-rl600-x4/L32 (3 vs 0)",
+      "rival: readouts:final-olens-rl600-x4/L40 (1 vs 1)",
+      "rival: readouts:final-olens-rl600-x4/L48 (3 vs 0)",
+      "rival: readouts:final-olens-rl600-x4/L60 (1 vs 0)",
+      "rival: readouts:final-olens-rl600-x4/all (10 vs 5)",
+      "line end: final-olens-rl600-x4/L28 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L32 (4 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L40 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L48 (3 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L60 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all (10 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all-lite (5 digest lines, v2 fail)"
+     ],
+     "through": [
+      "judge pick: final-olens-rl600-x4/L40",
+      "line end: final-olens-rl600-x4/L40 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all (1 digest lines, v2 fail)"
+     ],
+     "blue": [
+      "line end: final-olens-rl600-x4/all (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all-lite (1 digest lines, v2 fail)"
+     ]
+    },
+    "v3-po-post-coast": {
+     "boast": [
+      "rival: readouts:final-olens-rl600-x4/L44 (1 vs 0)",
+      "line end: final-olens-rl600-x4/L44 (1 digest lines, v2 fail)"
+     ],
+     "toast": [
+      "judge pick: final-olens-rl600-x4/all-lite",
+      "line end: final-olens-rl600-x4/all-lite (1 digest lines, v2 fail)"
+     ]
+    },
+    "v3-po-bright-night": {
+     "white": [
+      "judge pick: final-olens-rl600-x4/L40",
+      "rival: readouts:final-olens-rl600-x4/L40 (1 vs 1)",
+      "line end: final-olens-rl600-x4/L40 (2 digest lines, v2 fail)"
+     ]
+    },
+    "v3-po-race-place": {
+     "face": [
+      "judge pick: final-olens-rl600-x4/L40",
+      "line end: final-olens-rl600-x4/L40 (2 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L52 (1 digest lines, v2 fail)"
+     ],
+     "chase": [
+      "rival: readouts:final-olens-rl600-x4/L44 (1 vs 0)",
+      "line end: final-olens-rl600-x4/L44 (1 digest lines, v2 fail)"
+     ]
+    },
+    "v3-po-puck-luck": {
+     "truck": [
+      "line end: prompt-only-opus/all (1 digest lines, v2 fail)",
+      "line end: prompt-only-opus-fb/all (1 digest lines, v2 fail)"
+     ]
+    },
+    "v3-po-bet-net": {
+     "met": [
+      "rival: readouts:final-olens-rl600-x4/L48 (2 vs 0)",
+      "line end: final-olens-rl600-x4/L48 (2 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L56 (1 digest lines, v2 fail)"
+     ],
+     "regret": [
+      "rival: readouts:final-olens-rl600-x4/L48 (1 vs 0)",
+      "line end: final-olens-rl600-x4/L44 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L48 (1 digest lines, v2 fail)"
+     ]
+    },
+    "v3-po-stack-back": {
+     "track": [
+      "line end: prompt-only-opus/all (1 digest lines, v2 fail)",
+      "line end: prompt-only-opus-fb/all (1 digest lines, v2 fail)"
+     ]
+    },
+    "v3-po-fly-sky": {
+     "high": [
+      "rival: readouts:final-olens-rl600-x4/L40 (2 vs 0)",
+      "line end: final-olens-rl600-x4/L40 (2 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L44 (1 digest lines, v2 fail)"
+     ],
+     "eye": [
+      "rival: readouts:final-olens-rl600-x4/L40 (1 vs 0)",
+      "line end: final-olens-rl600-x4/L40 (1 digest lines, v2 fail)"
+     ]
+    },
+    "v3-po-mend-friend": {
+     "blend": [
+      "rival: readouts:final-olens-rl600-x4/L28 (1 vs 0)",
+      "rival: readouts:final-olens-rl600-x4/L44 (1 vs 0)",
+      "rival: readouts:final-olens-rl600-x4/all (2 vs 1)",
+      "line end: final-olens-rl600-x4/L28 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L44 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L48 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all (2 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all-lite (1 digest lines, v2 fail)"
+     ],
+     "end": [
+      "judge pick: final-olens-rl600-x4/L48",
+      "rival: readouts:final-olens-rl600-x4/L48 (1 vs 1)",
+      "rival: readouts:final-olens-rl600-x4/all (1 vs 1)",
+      "line end: final-olens-rl600-x4/L20 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L48 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all (2 digest lines, v2 fail)",
+      "line end: prompt-only-opus/all (1 digest lines, v2 fail)",
+      "line end: prompt-only-opus-fb/all (1 digest lines, v2 fail)"
+     ],
+     "extend": [
+      "judge pick: final-olens-rl600-x4/L44",
+      "rival: readouts:final-olens-rl600-x4/L44 (1 vs 0)",
+      "rival: readouts:final-olens-rl600-x4/all (1 vs 1)",
+      "line end: final-olens-rl600-x4/L44 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all (1 digest lines, v2 fail)"
+     ],
+     "lend": [
+      "judge pick: final-olens-rl600-x4/all",
+      "line end: final-olens-rl600-x4/L52 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all (1 digest lines, v2 fail)"
+     ]
+    },
+    "v3-po-streams-dreams": {
+     "gleams": [
+      "judge pick: final-olens-rl600-x4/L44",
+      "judge pick: final-olens-rl600-x4/L48",
+      "rival: readouts:final-olens-rl600-x4/L44 (2 vs 2)",
+      "rival: readouts:final-olens-rl600-x4/L48 (2 vs 1)",
+      "line end: final-olens-rl600-x4/L44 (2 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L48 (2 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L56 (2 digest lines, v2 fail)"
+     ]
+    },
+    "v3-po-said-head": {
+     "dead": [
+      "judge pick: final-olens-rl600-x4/L36",
+      "rival: readouts:final-olens-rl600-x4/L36 (1 vs 0)",
+      "rival: readouts:final-olens-rl600-x4/all (1 vs 0)",
+      "line end: final-olens-rl600-x4/L36 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all (1 digest lines, v2 fail)"
+     ],
+     "fed": [
+      "judge pick: final-olens-rl600-x4/L48",
+      "rival: readouts:final-olens-rl600-x4/L48 (1 vs 0)",
+      "rival: readouts:final-olens-rl600-x4/all (1 vs 0)",
+      "line end: final-olens-rl600-x4/L48 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all (1 digest lines, v2 fail)"
+     ],
+     "red": [
+      "line end: final-olens-rl600-x4/L44 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all-lite (1 digest lines, v2 fail)"
+     ]
+    },
+    "v3-po-fed-bed": {
+     "head": [
+      "judge pick: final-olens-rl600-x4/L52",
+      "judge pick: final-olens-rl600-x4/L56",
+      "rival: readouts:final-olens-rl600-x4/L56 (2 vs 0)",
+      "line end: final-olens-rl600-x4/L52 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L56 (3 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all-lite (1 digest lines, v2 fail)"
+     ]
+    },
+    "v3-po-told-gold": {
+     "bold": [
+      "judge pick: final-olens-rl600-x4/L24",
+      "judge pick: final-olens-rl600-x4/L28",
+      "judge pick: final-olens-rl600-x4/L44",
+      "judge pick: final-olens-rl600-x4/L52",
+      "rival: readouts:final-olens-rl600-x4/L24 (2 vs 0)",
+      "rival: readouts:final-olens-rl600-x4/L28 (2 vs 0)",
+      "rival: readouts:final-olens-rl600-x4/L44 (2 vs 0)",
+      "rival: readouts:final-olens-rl600-x4/L52 (2 vs 0)",
+      "rival: readouts:final-olens-rl600-x4/all (9 vs 7)",
+      "rival: digest:final-olens-rl600-x4/all (9 vs 7)",
+      "line end: final-olens-rl600-x4/L24 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L28 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L44 (4 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L48 (3 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L52 (3 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all (12 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all-lite (1 digest lines, v2 fail)"
+     ],
+     "untold": [
+      "judge pick: final-olens-rl600-x4/L60",
+      "judge pick: final-olens-rl600-x4/all-lite",
+      "rival: readouts:final-olens-rl600-x4/L60 (1 vs 0)",
+      "line end: final-olens-rl600-x4/L52 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L60 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all (3 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all-lite (2 digest lines, v2 fail)"
+     ]
+    },
+    "v3-po-passed-last": {
+     "mast": [
+      "rival: readouts:final-olens-rl600-x4/L52 (1 vs 1)",
+      "line end: final-olens-rl600-x4/L52 (1 digest lines, v2 fail)",
+      "line end: prompt-only-opus/all (1 digest lines, v2 fail)",
+      "line end: prompt-only-opus-fb/all (1 digest lines, v2 fail)"
+     ]
+    },
+    "v3-po-bow-now": {
+     "bough": [
+      "judge pick: final-olens-rl600-x4/L44",
+      "judge pick: final-olens-rl600-x4/L52",
+      "judge pick: final-olens-rl600-x4/all-lite",
+      "rival: readouts:final-olens-rl600-x4/L44 (1 vs 0)",
+      "rival: readouts:final-olens-rl600-x4/L52 (2 vs 0)",
+      "rival: readouts:final-olens-rl600-x4/all (3 vs 1)",
+      "line end: final-olens-rl600-x4/L40 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L44 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L48 (2 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L52 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all (5 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all-lite (1 digest lines, v2 fail)"
+     ],
+     "vow": [
+      "rival: readouts:final-olens-rl600-x4/L40 (1 vs 0)",
+      "rival: readouts:final-olens-rl600-x4/all (1 vs 1)",
+      "line end: final-olens-rl600-x4/L40 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all (1 digest lines, v2 fail)"
+     ],
+     "how": [
+      "line end: final-olens-rl600-x4/L32 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all (1 digest lines, v2 fail)"
+     ]
+    },
+    "v3-po-call-fall": {
+     "hall": [
+      "rival: readouts:final-olens-rl600-x4/L36 (2 vs 2)",
+      "rival: digest:final-olens-rl600-x4/L36 (2 vs 2)",
+      "line end: final-olens-rl600-x4/L36 (2 digest lines, v2 fail)"
+     ],
+     "recall": [
+      "rival: readouts:final-olens-rl600-x4/L32 (1 vs 1)",
+      "line end: final-olens-rl600-x4/L32 (1 digest lines, v2 fail)"
+     ]
+    },
+    "v3-po-seen-green": {
+     "serene": [
+      "judge pick: final-olens-rl600-x4/L44",
+      "judge pick: final-olens-rl600-x4/L52",
+      "judge pick: final-olens-rl600-x4/L60",
+      "judge pick: final-olens-rl600-x4/all",
+      "rival: readouts:final-olens-rl600-x4/L36 (1 vs 0)",
+      "rival: readouts:final-olens-rl600-x4/L44 (1 vs 0)",
+      "rival: readouts:final-olens-rl600-x4/L48 (1 vs 1)",
+      "rival: readouts:final-olens-rl600-x4/L56 (1 vs 1)",
+      "rival: readouts:final-olens-rl600-x4/L60 (5 vs 2)",
+      "rival: readouts:final-olens-rl600-x4/all (11 vs 8)",
+      "rival: digest:final-olens-rl600-x4/L48 (1 vs 1)",
+      "rival: digest:final-olens-rl600-x4/L56 (1 vs 1)",
+      "rival: digest:final-olens-rl600-x4/all-lite (4 vs 3)",
+      "line end: final-olens-rl600-x4/L36 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L44 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L48 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L52 (3 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L56 (3 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L60 (4 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all (12 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all-lite (4 digest lines, v2 fail)"
+     ],
+     "keen": [
+      "rival: readouts:final-olens-rl600-x4/L48 (1 vs 1)",
+      "rival: digest:final-olens-rl600-x4/L48 (1 vs 1)",
+      "line end: final-olens-rl600-x4/L48 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L56 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all (2 digest lines, v2 fail)"
+     ]
+    },
+    "v3-po-song-along": {
+     "belong": [
+      "rival: readouts:final-olens-rl600-x4/L60 (1 vs 1)",
+      "rival: digest:final-olens-rl600-x4/L60 (1 vs 1)",
+      "rival: digest:final-olens-rl600-x4/all-lite (2 vs 2)",
+      "line end: final-olens-rl600-x4/L40 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L48 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L60 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all-lite (4 digest lines, v2 fail)"
+     ],
+     "strong": [
+      "line end: final-olens-rl600-x4/all-lite (1 digest lines, v2 fail)"
+     ]
+    },
+    "v3-po-stride-pride": {
+     "died": [
+      "line end: prompt-only-opus/all (1 digest lines, v2 fail)",
+      "line end: prompt-only-opus-fb/all (1 digest lines, v2 fail)"
+     ]
+    },
+    "v3-po-feather-together": {
+     "weather": [
+      "judge pick: final-olens-rl600-x4/L52",
+      "judge pick: final-olens-rl600-x4/all",
+      "rival: readouts:final-olens-rl600-x4/L52 (1 vs 0)",
+      "line end: final-olens-rl600-x4/L52 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all (1 digest lines, v2 fail)"
+     ]
+    },
+    "v3-po-drew-blue": {
+     "too": [
+      "judge pick: final-olens-rl600-x4/L40",
+      "judge pick: final-olens-rl600-x4/L44",
+      "judge pick: final-olens-rl600-x4/L48",
+      "judge pick: final-olens-rl600-x4/all",
+      "rival: readouts:final-olens-rl600-x4/L40 (2 vs 1)",
+      "rival: readouts:final-olens-rl600-x4/L44 (3 vs 0)",
+      "rival: readouts:final-olens-rl600-x4/L48 (1 vs 1)",
+      "rival: readouts:final-olens-rl600-x4/L52 (2 vs 1)",
+      "rival: readouts:final-olens-rl600-x4/L60 (1 vs 0)",
+      "rival: readouts:final-olens-rl600-x4/all (10 vs 5)",
+      "line end: final-olens-rl600-x4/L40 (3 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L44 (3 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L48 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L52 (3 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L56 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L60 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all (11 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all-lite (2 digest lines, v2 fail)"
+     ],
+     "hue": [
+      "judge pick: final-olens-rl600-x4/L24",
+      "judge pick: final-olens-rl600-x4/all-lite",
+      "rival: readouts:final-olens-rl600-x4/L24 (1 vs 0)",
+      "rival: readouts:final-olens-rl600-x4/L52 (2 vs 1)",
+      "line end: final-olens-rl600-x4/L24 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L40 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L52 (2 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L56 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all (5 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all-lite (4 digest lines, v2 fail)"
+     ],
+     "new": [
+      "line end: final-olens-rl600-x4/L48 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all-lite (1 digest lines, v2 fail)"
+     ],
+     "through": [
+      "line end: final-olens-rl600-x4/L52 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all (1 digest lines, v2 fail)"
+     ]
+    },
+    "v3-po-crest-rest": {
+     "quest": [
+      "judge pick: final-olens-rl600-x4/L48",
+      "judge pick: final-olens-rl600-x4/L56",
+      "rival: readouts:final-olens-rl600-x4/L36 (2 vs 0)",
+      "rival: readouts:final-olens-rl600-x4/L48 (1 vs 0)",
+      "rival: readouts:final-olens-rl600-x4/L52 (1 vs 1)",
+      "rival: readouts:final-olens-rl600-x4/L56 (1 vs 0)",
+      "rival: readouts:final-olens-rl600-x4/L60 (1 vs 1)",
+      "rival: digest:final-olens-rl600-x4/L52 (1 vs 1)",
+      "rival: digest:final-olens-rl600-x4/L60 (1 vs 1)",
+      "line end: final-olens-rl600-x4/L36 (3 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L48 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L52 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L56 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L60 (1 digest lines, v2 fail)"
+     ],
+     "nest": [
+      "rival: readouts:final-olens-rl600-x4/L24 (1 vs 0)",
+      "line end: final-olens-rl600-x4/L24 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L40 (1 digest lines, v2 fail)"
+     ]
+    },
+    "v3-po-ease-trees": {
+     "seas": [
+      "rival: readouts:final-olens-rl600-x4/L24 (1 vs 0)",
+      "line end: final-olens-rl600-x4/L24 (1 digest lines, v2 fail)"
+     ]
+    },
+    "v3-po-hair-air": {
+     "care": [
+      "judge pick: final-olens-rl600-x4/L40",
+      "rival: readouts:final-olens-rl600-x4/L36 (1 vs 0)",
+      "rival: readouts:final-olens-rl600-x4/L40 (2 vs 1)",
+      "rival: readouts:final-olens-rl600-x4/L60 (1 vs 1)",
+      "rival: digest:final-olens-rl600-x4/L60 (1 vs 1)",
+      "line end: final-olens-rl600-x4/L36 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L40 (2 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L60 (1 digest lines, v2 fail)"
+     ],
+     "there": [
+      "rival: readouts:final-olens-rl600-x4/L36 (1 vs 0)",
+      "rival: readouts:final-olens-rl600-x4/L40 (1 vs 1)",
+      "rival: readouts:final-olens-rl600-x4/L44 (1 vs 1)",
+      "rival: digest:final-olens-rl600-x4/L44 (1 vs 1)",
+      "line end: final-olens-rl600-x4/L36 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L40 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L44 (1 digest lines, v2 fail)"
+     ],
+     "bare": [
+      "rival: readouts:final-olens-rl600-x4/L60 (1 vs 1)",
+      "rival: digest:final-olens-rl600-x4/L60 (1 vs 1)",
+      "line end: final-olens-rl600-x4/L52 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L60 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all-lite (1 digest lines, v2 fail)"
+     ]
+    },
+    "v3-po-rye-sky": {
+     "high": [
+      "judge pick: final-olens-rl600-x4/L40",
+      "rival: readouts:final-olens-rl600-x4/L40 (1 vs 1)",
+      "rival: readouts:final-olens-rl600-x4/L56 (3 vs 3)",
+      "rival: digest:final-olens-rl600-x4/L56 (3 vs 3)",
+      "line end: final-olens-rl600-x4/L20 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L40 (2 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L56 (3 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all-lite (1 digest lines, v2 fail)"
+     ]
+    },
+    "v3-po-by-sky": {
+     "cry": [
+      "judge pick: final-olens-rl600-x4/L20",
+      "rival: readouts:final-olens-rl600-x4/L20 (1 vs 0)",
+      "line end: final-olens-rl600-x4/L20 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L60 (1 digest lines, v2 fail)"
+     ],
+     "fly": [
+      "rival: readouts:final-olens-rl600-x4/L40 (2 vs 1)",
+      "line end: final-olens-rl600-x4/L40 (3 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L44 (2 digest lines, v2 fail)"
+     ]
+    },
+    "v3-po-friend-end": {
+     "bend": [
+      "judge pick: final-olens-rl600-x4/L52",
+      "judge pick: final-olens-rl600-x4/L56",
+      "rival: readouts:final-olens-rl600-x4/L48 (1 vs 0)",
+      "rival: readouts:final-olens-rl600-x4/L52 (1 vs 0)",
+      "rival: readouts:final-olens-rl600-x4/L56 (1 vs 0)",
+      "rival: readouts:final-olens-rl600-x4/L60 (1 vs 1)",
+      "rival: readouts:final-olens-rl600-x4/all (4 vs 2)",
+      "line end: final-olens-rl600-x4/L44 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L48 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L52 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L56 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L60 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all (5 digest lines, v2 fail)"
+     ],
+     "depend": [
+      "rival: readouts:final-olens-rl600-x4/L48 (1 vs 0)",
+      "rival: readouts:final-olens-rl600-x4/L60 (1 vs 1)",
+      "rival: readouts:final-olens-rl600-x4/all (2 vs 2)",
+      "line end: final-olens-rl600-x4/L48 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L60 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all (2 digest lines, v2 fail)"
+     ],
+     "attend": [
+      "rival: readouts:final-olens-rl600-x4/L48 (1 vs 0)",
+      "line end: final-olens-rl600-x4/L48 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all (1 digest lines, v2 fail)"
+     ]
+    },
+    "v3-po-go-know": {
+     "below": [
+      "judge pick: final-olens-rl600-x4/L52",
+      "rival: readouts:final-olens-rl600-x4/L52 (1 vs 1)",
+      "line end: final-olens-rl600-x4/L52 (1 digest lines, v2 fail)"
+     ],
+     "flow": [
+      "rival: readouts:final-olens-rl600-x4/L52 (1 vs 1)",
+      "line end: final-olens-rl600-x4/L24 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L52 (2 digest lines, v2 fail)"
+     ],
+     "glow": [
+      "line end: final-olens-rl600-x4/all-lite (1 digest lines, v2 fail)"
+     ]
+    },
+    "v3-po-chime-time": {
+     "sublime": [
+      "judge pick: final-olens-rl600-x4/L52",
+      "rival: readouts:final-olens-rl600-x4/L52 (1 vs 1)",
+      "line end: final-olens-rl600-x4/L52 (1 digest lines, v2 fail)"
+     ],
+     "prime": [
+      "rival: readouts:final-olens-rl600-x4/L52 (1 vs 1)",
+      "line end: final-olens-rl600-x4/L52 (1 digest lines, v2 fail)"
+     ]
+    },
+    "v3-po-roast-toast": {
+     "boast": [
+      "rival: readouts:final-olens-rl600-x4/L20 (1 vs 0)",
+      "line end: final-olens-rl600-x4/L20 (1 digest lines, v2 fail)"
+     ],
+     "coast": [
+      "judge pick: final-olens-rl600-x4/L48",
+      "line end: final-olens-rl600-x4/L48 (1 digest lines, v2 fail)"
+     ],
+     "host": [
+      "rival: readouts:final-olens-rl600-x4/L52 (2 vs 1)",
+      "line end: final-olens-rl600-x4/L52 (2 digest lines, v2 fail)"
+     ]
+    },
+    "v3-po-brink-sink": {
+     "blink": [
+      "rival: readouts:final-olens-rl600-x4/L56 (1 vs 0)",
+      "line end: final-olens-rl600-x4/L56 (1 digest lines, v2 fail)"
+     ]
+    },
+    "v3-po-lights-nights": {
+     "sights": [
+      "judge pick: final-olens-rl600-x4/L40",
+      "judge pick: final-olens-rl600-x4/L48",
+      "rival: readouts:final-olens-rl600-x4/L40 (1 vs 0)",
+      "rival: readouts:final-olens-rl600-x4/L48 (2 vs 1)",
+      "line end: final-olens-rl600-x4/L40 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L48 (2 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L56 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L60 (2 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all (7 digest lines, v2 fail)"
+     ],
+     "flights": [
+      "judge pick: final-olens-rl600-x4/L52",
+      "rival: readouts:final-olens-rl600-x4/L52 (1 vs 1)",
+      "line end: final-olens-rl600-x4/L52 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L60 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all (3 digest lines, v2 fail)",
+      "line end: prompt-only-opus/all (1 digest lines, v2 fail)",
+      "line end: prompt-only-opus-fb/all (1 digest lines, v2 fail)"
+     ],
+     "heights": [
+      "line end: final-olens-rl600-x4/L48 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L52 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L56 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all (2 digest lines, v2 fail)"
+     ]
+    },
+    "v3-po-goal-soul": {
+     "whole": [
+      "judge pick: final-olens-rl600-x4/L36",
+      "judge pick: final-olens-rl600-x4/L60",
+      "rival: readouts:final-olens-rl600-x4/L36 (1 vs 0)",
+      "rival: readouts:final-olens-rl600-x4/L60 (1 vs 0)",
+      "line end: final-olens-rl600-x4/L36 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L60 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all (2 digest lines, v2 fail)"
+     ],
+     "toll": [
+      "judge pick: final-olens-rl600-x4/L56",
+      "judge pick: final-olens-rl600-x4/all-lite",
+      "rival: readouts:final-olens-rl600-x4/L56 (2 vs 1)",
+      "line end: final-olens-rl600-x4/L56 (2 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all (2 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all-lite (2 digest lines, v2 fail)"
+     ],
+     "hole": [
+      "judge pick: final-olens-rl600-x4/L52",
+      "judge pick: final-olens-rl600-x4/all",
+      "rival: readouts:final-olens-rl600-x4/L52 (1 vs 0)",
+      "line end: final-olens-rl600-x4/L52 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all (1 digest lines, v2 fail)"
+     ]
+    },
+    "v3-po-five-alive": {
+     "thrive": [
+      "judge pick: final-olens-rl600-x4/L48",
+      "line end: final-olens-rl600-x4/L44 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L48 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all-lite (1 digest lines, v2 fail)"
+     ],
+     "arrive": [
+      "judge pick: final-olens-rl600-x4/L56",
+      "line end: final-olens-rl600-x4/L56 (1 digest lines, v2 fail)"
+     ],
+     "strive": [
+      "judge pick: final-olens-rl600-x4/L52",
+      "line end: final-olens-rl600-x4/L52 (1 digest lines, v2 fail)"
+     ]
+    },
+    "v3-po-treat-sweet": {
+     "neat": [
+      "judge pick: final-olens-rl600-x4/L24",
+      "judge pick: final-olens-rl600-x4/L28",
+      "judge pick: final-olens-rl600-x4/L36",
+      "judge pick: final-olens-rl600-x4/all-lite",
+      "rival: readouts:final-olens-rl600-x4/L24 (1 vs 1)",
+      "rival: readouts:final-olens-rl600-x4/L28 (3 vs 0)",
+      "rival: readouts:final-olens-rl600-x4/L36 (1 vs 0)",
+      "rival: readouts:final-olens-rl600-x4/L40 (2 vs 1)",
+      "line end: final-olens-rl600-x4/L20 (2 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L24 (4 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L28 (3 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L36 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L40 (2 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L44 (3 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L48 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L52 (2 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all-lite (3 digest lines, v2 fail)"
+     ],
+     "complete": [
+      "rival: readouts:final-olens-rl600-x4/L48 (1 vs 1)",
+      "line end: final-olens-rl600-x4/L40 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L44 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L48 (3 digest lines, v2 fail)"
+     ],
+     "feet": [
+      "line end: final-olens-rl600-x4/L48 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all-lite (1 digest lines, v2 fail)"
+     ],
+     "meet": [
+      "line end: final-olens-rl600-x4/L44 (1 digest lines, v2 fail)"
+     ]
+    },
+    "v3-po-store-more": {
+     "before": [
+      "judge pick: final-olens-rl600-x4/L36",
+      "rival: readouts:final-olens-rl600-x4/L36 (1 vs 0)",
+      "line end: final-olens-rl600-x4/L36 (1 digest lines, v2 fail)"
+     ]
+    },
+    "v3-po-guest-rest": {
+     "chest": [
+      "rival: readouts:final-olens-rl600-x4/L40 (2 vs 2)",
+      "rival: digest:final-olens-rl600-x4/L40 (2 vs 2)",
+      "line end: final-olens-rl600-x4/L40 (2 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L44 (1 digest lines, v2 fail)"
+     ],
+     "best": [
+      "judge pick: final-olens-rl600-x4/L60",
+      "rival: readouts:final-olens-rl600-x4/L60 (2 vs 1)",
+      "line end: final-olens-rl600-x4/L60 (2 digest lines, v2 fail)"
+     ],
+     "quest": [
+      "line end: final-olens-rl600-x4/all-lite (1 digest lines, v2 fail)"
+     ]
+    },
+    "v3-po-hay-day": {
+     "stay": [
+      "line end: final-olens-rl600-x4/L44 (2 digest lines, v2 fail)"
+     ]
+    },
+    "v3-po-grind-behind": {
+     "unwind": [
+      "judge pick: final-olens-rl600-x4/L32",
+      "rival: readouts:final-olens-rl600-x4/L28 (1 vs 0)",
+      "rival: readouts:final-olens-rl600-x4/L32 (1 vs 0)",
+      "rival: readouts:final-olens-rl600-x4/L36 (1 vs 1)",
+      "rival: readouts:final-olens-rl600-x4/L40 (2 vs 0)",
+      "rival: readouts:final-olens-rl600-x4/all (5 vs 5)",
+      "line end: final-olens-rl600-x4/L28 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L32 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L36 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L40 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all (2 digest lines, v2 fail)"
+     ],
+     "mind": [
+      "rival: readouts:final-olens-rl600-x4/L36 (1 vs 1)",
+      "rival: readouts:final-olens-rl600-x4/L40 (1 vs 0)",
+      "line end: final-olens-rl600-x4/L32 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L36 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L40 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all (3 digest lines, v2 fail)",
+      "line end: prompt-only-opus/all (1 digest lines, v2 fail)",
+      "line end: prompt-only-opus-fb/all (1 digest lines, v2 fail)"
+     ]
+    },
+    "v3-po-farm-alarm": {
+     "charm": [
+      "judge pick: final-olens-rl600-x4/L52",
+      "rival: readouts:final-olens-rl600-x4/L52 (1 vs 0)",
+      "line end: final-olens-rl600-x4/L52 (2 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all (2 digest lines, v2 fail)"
+     ]
+    },
+    "v3-po-heal-feel": {
+     "seal": [
+      "judge pick: final-olens-rl600-x4/all-lite",
+      "rival: readouts:final-olens-rl600-x4/L52 (1 vs 1)",
+      "line end: final-olens-rl600-x4/L52 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all-lite (1 digest lines, v2 fail)"
+     ]
+    },
+    "v2-po-wire-fire": {
+     "dire": [
+      "judge pick: final-olens-rl600-x4/L44",
+      "rival: readouts:final-olens-rl600-x4/L44 (2 vs 0)",
+      "line end: final-olens-rl600-x4/L44 (2 digest lines, v2 fail)",
+      "line end: prompt-only-opus/all (1 digest lines, v2 fail)",
+      "line end: prompt-only-opus-fb/all (1 digest lines, v2 fail)"
+     ],
+     "expire": [
+      "judge pick: final-olens-rl600-x4/L36",
+      "rival: readouts:final-olens-rl600-x4/L36 (1 vs 0)",
+      "line end: final-olens-rl600-x4/L36 (1 digest lines, v2 fail)"
+     ]
+    },
+    "v2-po-land-hand": {
+     "stand": [
+      "judge pick: final-olens-rl600-x4/L36",
+      "judge pick: final-olens-rl600-x4/L44",
+      "judge pick: final-olens-rl600-x4/L52",
+      "judge pick: final-olens-rl600-x4/all-lite",
+      "rival: readouts:final-olens-rl600-x4/L44 (1 vs 0)",
+      "rival: readouts:final-olens-rl600-x4/L48 (1 vs 1)",
+      "rival: readouts:final-olens-rl600-x4/L60 (2 vs 2)",
+      "rival: digest:final-olens-rl600-x4/L48 (1 vs 1)",
+      "rival: digest:final-olens-rl600-x4/L60 (2 vs 2)",
+      "line end: final-olens-rl600-x4/L36 (2 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L44 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L48 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L52 (2 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L60 (2 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all (5 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all-lite (1 digest lines, v2 fail)"
+     ],
+     "band": [
+      "rival: readouts:final-olens-rl600-x4/L40 (1 vs 0)",
+      "rival: readouts:final-olens-rl600-x4/L52 (1 vs 1)",
+      "line end: final-olens-rl600-x4/L40 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L52 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all (2 digest lines, v2 fail)"
+     ],
+     "expand": [
+      "line end: final-olens-rl600-x4/L60 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all-lite (1 digest lines, v2 fail)"
+     ]
+    },
+    "v3-po-feet-beat": {
+     "seat": [
+      "judge pick: final-olens-rl600-x4/L36",
+      "rival: readouts:final-olens-rl600-x4/L36 (1 vs 0)",
+      "rival: readouts:final-olens-rl600-x4/L44 (1 vs 1)",
+      "rival: digest:final-olens-rl600-x4/L44 (1 vs 1)",
+      "line end: final-olens-rl600-x4/L36 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L44 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all (4 digest lines, v2 fail)"
+     ],
+     "heat": [
+      "judge pick: final-olens-rl600-x4/L48",
+      "rival: readouts:final-olens-rl600-x4/L48 (2 vs 2)",
+      "line end: final-olens-rl600-x4/L48 (2 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all (2 digest lines, v2 fail)"
+     ],
+     "complete": [
+      "line end: final-olens-rl600-x4/all (3 digest lines, v2 fail)"
+     ],
+     "street": [
+      "line end: final-olens-rl600-x4/all (1 digest lines, v2 fail)"
+     ]
+    },
+    "v3-po-bite-night": {
+     "light": [
+      "judge pick: final-olens-rl600-x4/L28",
+      "judge pick: final-olens-rl600-x4/all-lite",
+      "rival: readouts:final-olens-rl600-x4/L28 (1 vs 0)",
+      "rival: readouts:final-olens-rl600-x4/L52 (1 vs 1)",
+      "line end: final-olens-rl600-x4/L20 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L28 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L40 (2 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L44 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L48 (3 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L52 (2 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all-lite (5 digest lines, v2 fail)"
+     ],
+     "tight": [
+      "judge pick: final-olens-rl600-x4/L56",
+      "rival: readouts:final-olens-rl600-x4/L56 (1 vs 0)",
+      "line end: final-olens-rl600-x4/L28 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L44 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L48 (2 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L56 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all-lite (1 digest lines, v2 fail)"
+     ],
+     "white": [
+      "judge pick: final-olens-rl600-x4/L48",
+      "rival: readouts:final-olens-rl600-x4/L48 (1 vs 0)",
+      "line end: final-olens-rl600-x4/L48 (1 digest lines, v2 fail)"
+     ]
+    },
+    "v3-po-rack-snack": {
+     "stack": [
+      "judge pick: final-olens-rl600-x4/L56",
+      "judge pick: final-olens-rl600-x4/all",
+      "rival: readouts:final-olens-rl600-x4/L44 (1 vs 0)",
+      "rival: readouts:final-olens-rl600-x4/L48 (1 vs 0)",
+      "rival: readouts:final-olens-rl600-x4/L56 (1 vs 0)",
+      "rival: readouts:final-olens-rl600-x4/L60 (1 vs 1)",
+      "rival: readouts:final-olens-rl600-x4/all (4 vs 1)",
+      "rival: digest:final-olens-rl600-x4/L60 (1 vs 1)",
+      "line end: final-olens-rl600-x4/L44 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L48 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L56 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L60 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all (3 digest lines, v2 fail)"
+     ],
+     "pack": [
+      "rival: readouts:final-olens-rl600-x4/L44 (1 vs 0)",
+      "rival: readouts:final-olens-rl600-x4/L60 (1 vs 1)",
+      "rival: readouts:final-olens-rl600-x4/all (2 vs 1)",
+      "rival: digest:final-olens-rl600-x4/L60 (1 vs 1)",
+      "line end: final-olens-rl600-x4/L44 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L60 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all (2 digest lines, v2 fail)"
+     ],
+     "attack": [
+      "judge pick: final-olens-rl600-x4/L48",
+      "rival: readouts:final-olens-rl600-x4/L48 (1 vs 0)",
+      "rival: readouts:final-olens-rl600-x4/all (1 vs 1)",
+      "line end: final-olens-rl600-x4/L48 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all (1 digest lines, v2 fail)"
+     ]
+    },
+    "v3-po-pour-more": {
+     "store": [
+      "judge pick: final-olens-rl600-x4/L24",
+      "judge pick: final-olens-rl600-x4/L40",
+      "judge pick: final-olens-rl600-x4/L60",
+      "rival: readouts:final-olens-rl600-x4/L60 (1 vs 0)",
+      "rival: readouts:final-olens-rl600-x4/all (1 vs 1)",
+      "rival: digest:final-olens-rl600-x4/all (1 vs 1)",
+      "line end: final-olens-rl600-x4/L24 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L40 (2 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L48 (3 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L56 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L60 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all (7 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all-lite (2 digest lines, v2 fail)"
+     ],
+     "door": [
+      "judge pick: final-olens-rl600-x4/L20",
+      "line end: final-olens-rl600-x4/L20 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L24 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L56 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L60 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all (4 digest lines, v2 fail)"
+     ],
+     "before": [
+      "line end: final-olens-rl600-x4/L44 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all-lite (1 digest lines, v2 fail)"
+     ]
+    },
+    "v3-po-show-glow": {
+     "below": [
+      "judge pick: final-olens-rl600-x4/L60",
+      "rival: readouts:final-olens-rl600-x4/L56 (3 vs 3)",
+      "rival: readouts:final-olens-rl600-x4/L60 (1 vs 0)",
+      "line end: final-olens-rl600-x4/L44 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L56 (3 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L60 (2 digest lines, v2 fail)"
+     ],
+     "flow": [
+      "line end: final-olens-rl600-x4/L44 (1 digest lines, v2 fail)"
+     ]
+    },
+    "v3-po-haste-waste": {
+     "chased": [
+      "line end: prompt-only-opus/all (1 digest lines, v2 fail)",
+      "line end: prompt-only-opus-fb/all (1 digest lines, v2 fail)"
+     ]
+    },
+    "v3-po-crop-stop": {
+     "shop": [
+      "judge pick: final-olens-rl600-x4/L44",
+      "judge pick: final-olens-rl600-x4/all",
+      "rival: readouts:final-olens-rl600-x4/L44 (1 vs 0)",
+      "rival: readouts:final-olens-rl600-x4/all (1 vs 0)",
+      "line end: final-olens-rl600-x4/L44 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all (1 digest lines, v2 fail)"
+     ],
+     "top": [
+      "rival: readouts:final-olens-rl600-x4/L48 (1 vs 0)",
+      "rival: readouts:final-olens-rl600-x4/all (1 vs 0)",
+      "line end: final-olens-rl600-x4/L48 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all-lite (1 digest lines, v2 fail)"
+     ]
+    },
+    "v3-po-way-day": {
+     "away": [
+      "rival: readouts:final-olens-rl600-x4/L40 (1 vs 0)",
+      "rival: readouts:final-olens-rl600-x4/L56 (1 vs 1)",
+      "rival: readouts:final-olens-rl600-x4/L60 (1 vs 1)",
+      "line end: final-olens-rl600-x4/L40 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L44 (2 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L48 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L56 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/L60 (1 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all (7 digest lines, v2 fail)"
+     ],
+     "stay": [
+      "line end: final-olens-rl600-x4/L44 (2 digest lines, v2 fail)",
+      "line end: final-olens-rl600-x4/all (2 digest lines, v2 fail)"
+     ]
+    },
+    "v3-po-strong-long": {
+     "throng": [
+      "line end: prompt-only-opus/all (1 digest lines, v2 fail)",
+      "line end: prompt-only-opus-fb/all (1 digest lines, v2 fail)"
+     ]
+    }
+   },
+   "dropped": {
+    "v3-po-loan-own": {
+     "known": "v3 rival: no slot left"
+    },
+    "v3-po-mend-friend": {
+     "send": "v3 rival: no slot left"
+    },
+    "v3-po-passed-last": {
+     "past": "v3 rival: homophone / inflection of line one's end word"
+    },
+    "v3-po-treat-sweet": {
+     "seat": "v3 rival: no slot left"
+    }
+   },
+   "items": [
+    "b3-po-song-long",
+    "couplet-away-way",
+    "couplet-base-case",
+    "couplet-dead-red",
+    "couplet-heart-art",
+    "v2-po-key-free",
+    "v2-po-land-hand",
+    "v2-po-wire-fire",
+    "v3-po-bite-night",
+    "v3-po-bow-now",
+    "v3-po-by-sky",
+    "v3-po-call-fall",
+    "v3-po-chart-heart",
+    "v3-po-crest-rest",
+    "v3-po-crop-stop",
+    "v3-po-crowd-proud",
+    "v3-po-depend-friend",
+    "v3-po-drew-blue",
+    "v3-po-feet-beat",
+    "v3-po-foam-home",
+    "v3-po-friend-end",
+    "v3-po-go-know",
+    "v3-po-goal-soul",
+    "v3-po-grim-him",
+    "v3-po-grind-behind",
+    "v3-po-hair-air",
+    "v3-po-haste-waste",
+    "v3-po-hay-day",
+    "v3-po-heap-sleep",
+    "v3-po-lap-nap",
+    "v3-po-lights-nights",
+    "v3-po-loan-own",
+    "v3-po-meet-feet",
+    "v3-po-mend-friend",
+    "v3-po-mind-behind",
+    "v3-po-passed-last",
+    "v3-po-past-last",
+    "v3-po-pour-more",
+    "v3-po-puck-luck",
+    "v3-po-race-place",
+    "v3-po-reap-sleep",
+    "v3-po-said-head",
+    "v3-po-sand-land",
+    "v3-po-seen-green",
+    "v3-po-show-glow",
+    "v3-po-sight-night",
+    "v3-po-sow-grow",
+    "v3-po-stride-pride",
+    "v3-po-told-gold",
+    "v3-po-treat-sweet",
+    "v3-po-true-you"
+   ],
+   "replay": {
+    "procedure": "scripts/mc_leakage_r4.py replay: every bank-v2 non-pass poetry cell of the cached judge runs (final-olens-rl600-x4 L20..L60, all, all-lite; prompt-only-opus all; prompt-only-opus-fb all) re-judged under bank v5 and poetry-mc-2026-11-01-v5 with the cached digests (wsbench judge, Opus 5.5)",
+    "n_rejudged": 1031,
+    "n_judged": 1030,
+    "n_fail_to_pass": 18,
+    "n_attributable": 0,
+    "n_same_list": 4,
+    "n_mentioned_only": 0,
+    "note": "attributable = a v2 option v5 dropped ends a line of the cell's digest (ends_line); none does, by construction of the v5 rule, and no flip's dropped option is even mentioned in its digest. 4 flips are on lists identical to v2's (judge noise); 14 dropped only options their digest never names. One cell (prompt-only-opus v3-po-long-song) has no readout, as under v2"
+   },
+   "veto_replay": {
+    "procedure": "scripts/mc_leakage_r4.py veto: score.counts dominance veto over the cached final-olens-rl600-x4 bullet4 readouts, every item x (11 layers + all-layer union) = 1200 cells, under banks v2 / v4 / v5",
+    "v2->v5": {
+     "loosened": 0,
+     "tightened": 6
+    },
+    "v4->v5": {
+     "loosened": 0,
+     "tightened": 0
+    },
+    "v2->v4": {
+     "loosened": 0,
+     "tightened": 6
+    }
+   }
+  },
+  "floors": {
+   "blind": 0.176,
+   "described": 0.59,
+   "topic": 0.8
+  }
+ },
+ "built_from": "items_v3.json",
+ "adapt": {
+  "model": "dory-4b",
+  "hf_id": "nvidia/NVIDIA-Nemotron-Labs-Dory1.0-4B-BF16",
+  "frozen": "2026-11-19"
+ },
+ "items": [
+  {
+   "name": "couplet-heart-art",
+   "prompt": "A rhyming couplet:\nThe painter poured emotion from his heart,\nAnd made of every canvas, living ",
+   "intermediates": [
+    "art"
+   ],
+   "source": "jlens_source",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "line_one_tail"
+   },
+   "line_one_end": "heart",
+   "qwen_commits": {
+    "art": 46,
+    "dreams": 5,
+    "color": 4,
+    "start": 3,
+    "light": 3,
+    "a": 2,
+    "white": 2,
+    "dream": 1,
+    "forcing": 1,
+    "from": 1,
+    "forget": 1,
+    "artwork": 1,
+    "artist": 1,
+    "part": 1,
+    "special": 1,
+    "bright": 1,
+    "smart": 1,
+    "tart": 1,
+    "spark": 1
+   },
+   "regate": {
+    "leg": "free+plain",
+    "consistency": 0.8,
+    "site_hits": 6,
+    "site_words": {
+     "art": 6,
+     "light": 2,
+     "start": 1,
+     "forget": 1,
+     "artwork": 1
+    }
+   },
+   "gate_variant": "plain",
+   "mc": {
+    "candidates": [
+     "apart",
+     "chart",
+     "impart",
+     "depart",
+     "dart",
+     "restart",
+     "cart",
+     "mart",
+     "fart"
+    ],
+    "tiers": {
+     "apart": "A",
+     "chart": "A",
+     "impart": "A",
+     "depart": "C",
+     "dart": "C",
+     "restart": "C",
+     "cart": "C",
+     "mart": "C",
+     "fart": "C"
+    },
+    "tier_a_counts": {
+     "apart": 3,
+     "chart": 3,
+     "impart": 1
+    },
+    "vetted_by": "claude-opus-5-5"
+   },
+   "id": "couplet-heart-art",
+   "prompt_only_opus": {
+    "draws": 3,
+    "picked_gold": 0,
+    "instrument": "poetry-free-2026-11-01+noveto-a1+digest-v5-task-extractive+sj-v10",
+    "gate_tags": [
+     "gate0",
+     "gate1",
+     "gate2"
+    ],
+    "kinds": {
+     "gate0": "not_line_final",
+     "gate1": "none",
+     "gate2": "none"
+    },
+    "undecided": []
+   },
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 0.8,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "v3-po-crowd-proud",
+   "prompt": "A rhyming couplet:\nThe soldiers marched before a cheering crowd,\nTheir families stood watching, tall and ",
+   "intermediates": [
+    "proud"
+   ],
+   "source": "opus55_v3",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "line_one_tail"
+   },
+   "line_one_end": "crowd",
+   "qwen_commits": {
+    "proud": 50,
+    "loud": 7,
+    "won": 2,
+    "a": 2,
+    "now": 2,
+    "sound": 2,
+    "bright": 1,
+    "broad": 1,
+    "oblong": 1,
+    "brotherly": 1,
+    "bow": 1,
+    "voice": 1,
+    "view": 1,
+    "unfurled": 1,
+    "brave": 1,
+    "away": 1,
+    "shout": 1,
+    "town": 1
+   },
+   "regate": {
+    "leg": "free+fewshot",
+    "consistency": 0.8,
+    "site_hits": 5,
+    "site_words": {
+     "proud": 5,
+     "loud": 3,
+     "away": 1,
+     "shout": 1,
+     "now": 1
+    }
+   },
+   "authored_rhyme": "proud",
+   "mc": {
+    "candidates": [
+     "allowed",
+     "bowed",
+     "cloud",
+     "vowed",
+     "endowed"
+    ],
+    "tiers": {
+     "allowed": "A",
+     "bowed": "A",
+     "cloud": "A",
+     "vowed": "A",
+     "endowed": "A"
+    },
+    "tier_a_counts": {
+     "allowed": 3,
+     "bowed": 3,
+     "cloud": 3,
+     "vowed": 2,
+     "endowed": 1
+    },
+    "vetted_by": ""
+   },
+   "id": "v3-po-crowd-proud",
+   "gate_variant": "plain_fewshot",
+   "prompt_only_opus": {
+    "draws": 3,
+    "picked_gold": 0,
+    "instrument": "poetry-free-2026-11-01+noveto-a1+digest-v5-task-extractive+sj-v10",
+    "gate_tags": [
+     "gate0",
+     "gate1",
+     "gate2"
+    ],
+    "kinds": {
+     "gate0": "none",
+     "gate1": "none",
+     "gate2": "none"
+    },
+    "undecided": []
+   },
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 0.8,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "v3-po-dim-hymn",
+   "prompt": "A rhyming couplet:\nThe church grew quiet, candles burning dim,\nThe choir rose to sing the evening ",
+   "intermediates": [
+    "hymn"
+   ],
+   "source": "opus55_v3",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "line_one_tail"
+   },
+   "line_one_end": "dim",
+   "qwen_commits": {
+    "hymn": 45,
+    "in": 3,
+    "prayer": 2,
+    "within": 2,
+    "gloom": 2,
+    "him": 2,
+    "night": 2,
+    "song": 1,
+    "lode": 1,
+    "chant": 1,
+    "ithim": 1,
+    "igh": 1,
+    "grim": 1,
+    "stone": 1,
+    "arrived": 1,
+    "storm": 1,
+    "pray": 1,
+    "of": 1,
+    "28": 1,
+    "rim": 1,
+    "gone": 1,
+    "leave": 1,
+    "come": 1,
+    "hymns": 1,
+    "honey": 1,
+    "town": 1
+   },
+   "regate": {
+    "leg": "free+prefill",
+    "consistency": 1.0,
+    "site_hits": 4,
+    "site_words": {
+     "hymn": 4,
+     "in": 2,
+     "night": 2,
+     "him": 1,
+     "within": 1,
+     "town": 1
+    }
+   },
+   "authored_rhyme": "hymn",
+   "mc": {
+    "candidates": [
+     "brim",
+     "limb",
+     "slim",
+     "whim"
+    ],
+    "tiers": {
+     "brim": "A",
+     "limb": "A",
+     "slim": "A",
+     "whim": "A"
+    },
+    "tier_a_counts": {
+     "brim": 2,
+     "limb": 2,
+     "slim": 1,
+     "whim": 1
+    },
+    "vetted_by": ""
+   },
+   "id": "v3-po-dim-hymn",
+   "gate_variant": "chat_prefill",
+   "prompt_only_opus": {
+    "draws": 3,
+    "picked_gold": 0,
+    "instrument": "poetry-free-2026-11-01+noveto-a1+digest-v5-task-extractive+sj-v10",
+    "gate_tags": [
+     "gate0",
+     "gate1",
+     "gate2"
+    ],
+    "kinds": {
+     "gate0": "not_line_final",
+     "gate1": "none",
+     "gate2": "none"
+    },
+    "undecided": []
+   },
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "v3-po-told-gold",
+   "prompt": "A rhyming couplet:\nThe king was rich, or so the tale is told,\nHis castle vaults were filled with heaps of ",
+   "intermediates": [
+    "gold"
+   ],
+   "source": "opus55_v3",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "line_one_tail"
+   },
+   "line_one_end": "told",
+   "qwen_commits": {
+    "gold": 50,
+    "bold": 4,
+    "cold": 3,
+    "old": 3,
+    "golden": 2,
+    "stole": 2,
+    "gold-dolphin": 1,
+    "still": 1,
+    "pole": 1,
+    "skill": 1,
+    "untold": 1,
+    "lines": 1,
+    "load": 1,
+    "unfold": 1,
+    "soul": 1,
+    "polliwog": 1,
+    "sword": 1,
+    "fold": 1,
+    "told": 1
+   },
+   "regate": {
+    "leg": "free+fewshot",
+    "consistency": 1.0,
+    "site_hits": 4,
+    "site_words": {
+     "gold": 4,
+     "old": 3,
+     "bold": 2,
+     "unfold": 1,
+     "stole": 1
+    }
+   },
+   "authored_rhyme": "gold",
+   "mc": {
+    "candidates": [
+     "hold",
+     "sold",
+     "behold",
+     "foretold",
+     "controlled",
+     "consoled",
+     "rolled",
+     "extolled",
+     "unsold",
+     "enfold",
+     "uphold",
+     "withhold",
+     "strolled",
+     "patrolled",
+     "enrolled",
+     "cajoled",
+     "scold",
+     "mold",
+     "mould",
+     "resold",
+     "outsold",
+     "oversold",
+     "unrolled",
+     "uncontrolled",
+     "doled",
+     "polled",
+     "bowled",
+     "paroled",
+     "holed",
+     "twofold",
+     "fourfold",
+     "undersold",
+     "ahold",
+     "remold"
+    ],
+    "tiers": {
+     "hold": "A",
+     "sold": "A",
+     "behold": "C",
+     "foretold": "C",
+     "controlled": "C",
+     "consoled": "C",
+     "rolled": "C",
+     "extolled": "C",
+     "unsold": "C",
+     "enfold": "C",
+     "uphold": "C",
+     "withhold": "C",
+     "strolled": "C",
+     "patrolled": "C",
+     "enrolled": "C",
+     "cajoled": "C",
+     "scold": "C",
+     "mold": "C",
+     "mould": "C",
+     "resold": "C",
+     "outsold": "C",
+     "oversold": "C",
+     "unrolled": "C",
+     "uncontrolled": "C",
+     "doled": "C",
+     "polled": "C",
+     "bowled": "C",
+     "paroled": "C",
+     "holed": "C",
+     "twofold": "C",
+     "fourfold": "C",
+     "undersold": "C",
+     "ahold": "C",
+     "remold": "C"
+    },
+    "tier_a_counts": {
+     "hold": 2,
+     "sold": 1
+    },
+    "vetted_by": "claude-opus-5-5"
+   },
+   "id": "v3-po-told-gold",
+   "gate_variant": "plain_fewshot",
+   "prompt_only_opus": {
+    "draws": 3,
+    "picked_gold": 0,
+    "instrument": "poetry-free-2026-11-01+noveto-a1+digest-v5-task-extractive+sj-v10",
+    "gate_tags": [
+     "gate0",
+     "gate1",
+     "gate2"
+    ],
+    "kinds": {
+     "gate0": "none",
+     "gate1": "not_line_final",
+     "gate2": "not_line_final"
+    },
+    "undecided": []
+   },
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "v3-po-way-day",
+   "prompt": "A rhyming couplet:\nShe dribbled past defenders all the way,\nAnd scored the goal that won the game that ",
+   "intermediates": [
+    "day"
+   ],
+   "source": "opus55_v3",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "line_one_tail"
+   },
+   "line_one_end": "way",
+   "qwen_commits": {
+    "day": 40,
+    "night": 5,
+    "goal": 5,
+    "1-0": 2,
+    "today": 2,
+    "a": 2,
+    "2024": 2,
+    "1": 2,
+    "ease": 2,
+    "net": 2,
+    "sealed": 1,
+    "sway": 1,
+    "may": 1,
+    "thought": 1,
+    "basket": 1,
+    "ending": 1,
+    "3-2": 1,
+    "19": 1,
+    "way": 1,
+    "team": 1,
+    "gray": 1,
+    "pay": 1,
+    "dry": 1
+   },
+   "regate": {
+    "leg": "free+plain",
+    "consistency": 0.9,
+    "site_hits": 5,
+    "site_words": {
+     "day": 5,
+     "sway": 1,
+     "today": 1,
+     "may": 1,
+     "goal": 1,
+     "thought": 1,
+     "basket": 1
+    }
+   },
+   "authored_rhyme": "day",
+   "mc": {
+    "candidates": [
+     "away",
+     "display",
+     "fray",
+     "play",
+     "stay",
+     "say"
+    ],
+    "tiers": {
+     "away": "A",
+     "display": "A",
+     "fray": "A",
+     "play": "A",
+     "stay": "A",
+     "say": "A"
+    },
+    "tier_a_counts": {
+     "away": 3,
+     "display": 3,
+     "fray": 3,
+     "play": 3,
+     "stay": 3,
+     "say": 1
+    },
+    "vetted_by": ""
+   },
+   "id": "v3-po-way-day",
+   "gate_variant": "plain",
+   "prompt_only_opus": {
+    "draws": 3,
+    "picked_gold": 0,
+    "instrument": "poetry-free-2026-11-01+noveto-a1+digest-v5-task-extractive+sj-v10",
+    "gate_tags": [
+     "gate0",
+     "gate1",
+     "gate2"
+    ],
+    "kinds": {
+     "gate0": "none",
+     "gate1": "none",
+     "gate2": "not_line_final"
+    },
+    "undecided": []
+   },
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 0.9,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "v3-po-strong-long",
+   "prompt": "A rhyming couplet:\nThe wind blew hard, the gusts were cold and strong,\nThe storm kept raging on the whole night ",
+   "intermediates": [
+    "long"
+   ],
+   "source": "opus55_v3",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "line_one_tail"
+   },
+   "line_one_end": "strong",
+   "qwen_commits": {
+    "long": 35,
+    "song": 7,
+    "and": 6,
+    "until": 4,
+    "wrong": 3,
+    "it": 2,
+    "on": 2,
+    "along": 2,
+    "1943": 1,
+    "0n": 1,
+    "ground": 1,
+    "wing": 1,
+    "gone": 1,
+    "throw": 1,
+    "door": 1,
+    "road": 1,
+    "of": 1,
+    "brown": 1,
+    "tongue": 1,
+    "green": 1,
+    "swing": 1,
+    "grown": 1,
+    "town": 1,
+    "young": 1
+   },
+   "regate": {
+    "leg": "free+prefill",
+    "consistency": 1.0,
+    "site_hits": 4,
+    "site_words": {
+     "long": 4,
+     "wrong": 2,
+     "song": 2,
+     "along": 1,
+     "town": 1,
+     "young": 1
+    }
+   },
+   "authored_rhyme": "long",
+   "mc": {
+    "candidates": [
+     "belong",
+     "lifelong",
+     "throng",
+     "prolong",
+     "yearlong",
+     "gong",
+     "prong",
+     "thong",
+     "sarong",
+     "pong"
+    ],
+    "tiers": {
+     "belong": "A",
+     "lifelong": "C",
+     "throng": "C",
+     "prolong": "C",
+     "yearlong": "C",
+     "gong": "C",
+     "prong": "C",
+     "thong": "C",
+     "sarong": "C",
+     "pong": "C"
+    },
+    "tier_a_counts": {
+     "belong": 3
+    },
+    "vetted_by": "claude-opus-5-5"
+   },
+   "id": "v3-po-strong-long",
+   "gate_variant": "chat_prefill",
+   "prompt_only_opus": {
+    "draws": 3,
+    "picked_gold": 0,
+    "instrument": "poetry-free-2026-11-01+noveto-a1+digest-v5-task-extractive+sj-v10",
+    "gate_tags": [
+     "gate0",
+     "gate1",
+     "gate2"
+    ],
+    "kinds": {
+     "gate0": "none",
+     "gate1": "none",
+     "gate2": "none"
+    },
+    "undecided": []
+   },
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "poetry-au-t1-w101c1-couplet-found-sound",
+   "prompt": "A rhyming couplet:\nThe missing pup at last was finally found,\nHe wandered home all safe and ",
+   "intermediates": [
+    "sound"
+   ],
+   "eval_render": "plain",
+   "readout": {
+    "kind": "line_one_tail"
+   },
+   "source": "authored (claude-opus-5-5) for dory-4b: Make line 2 a familiar, almost forced completion with one obvious rhyme (a cliche or idiom), with short lines and a one-syllable end word.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "Make line 2 a familiar, almost forced completion with one obvious rhyme (a cliche or idiom), with short lines and a one-syllable end word."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 101,
+    "plan": "0075",
+    "steer": "- Last wave: 1/60 passed.\n- Failed (gold -> what the model wrote): 99 -> model said 'rain' (9/10); iced -> model said 'cheese' (4/10); pie -> model said 'pie.' (9/10); bone -> model said 'bone' (10/10); cat -> model said 'cat' (10/10); wish -> model said 'wish' (10/10); bee -> model said 'bee' (10/10); they -> model said 'mouse' (8/10); 1969 -> model said 'road' (9/10); nail -> model said 'tail' (9/10); thin -> model said 'thin' (10/10); 100-watt -> model said 'pod' (10/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): moon",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   },
+   "gate_variant": "chat_prefill",
+   "mc": {
+    "candidates": [
+     "around",
+     "bound",
+     "mound",
+     "pound"
+    ],
+    "tiers": {
+     "around": "A",
+     "bound": "A",
+     "mound": "A",
+     "pound": "A"
+    },
+    "tier_a_counts": {
+     "around": 3,
+     "bound": 3,
+     "mound": 3,
+     "pound": 2
+    },
+    "vetted_by": ""
+   },
+   "line_one_end": "found",
+   "qwen_commits": {
+    "sound": 38,
+    "a": 6,
+    "found": 4,
+    "the": 2,
+    "kind": 2,
+    "glad": 2,
+    "ground": 2,
+    "happy": 1,
+    "good": 1,
+    "gold": 1,
+    "afraid": 1,
+    "smile": 1,
+    "boy": 1,
+    "box": 1,
+    "seen": 1,
+    "town": 1,
+    "pride": 1,
+    "after": 1,
+    "crowd": 1,
+    "round": 1,
+    "soul": 1,
+    "joy": 1,
+    "hound": 1,
+    "be": 1,
+    "bone": 1,
+    "proud": 1,
+    "fond": 1,
+    "silver-bound": 1
+   },
+   "regate": {
+    "leg": "free+prefill",
+    "consistency": 1.0,
+    "site_hits": 6,
+    "site_words": {
+     "sound": 6,
+     "found": 2,
+     "ground": 2,
+     "silver-bound": 1
+    }
+   },
+   "prompt_only_opus": {
+    "draws": 3,
+    "picked_gold": 0,
+    "instrument": "poetry-free-2026-11-01+noveto-a1+digest-v5-task-extractive+sj-v10",
+    "gate_tags": [
+     "gate0",
+     "gate1",
+     "gate2"
+    ],
+    "kinds": {
+     "gate0": "none",
+     "gate1": "none",
+     "gate2": "not_line_final"
+    },
+    "undecided": []
+   },
+   "subject_fields_for": "dory-4b"
+  },
+  {
+   "name": "poetry-au-t1-w101c1-couplet-pace-race",
+   "prompt": "A rhyming couplet:\nThe tortoise kept a calm and easy pace,\nFor slow and steady wins the ",
+   "intermediates": [
+    "race"
+   ],
+   "eval_render": "plain",
+   "readout": {
+    "kind": "line_one_tail"
+   },
+   "source": "authored (claude-opus-5-5) for dory-4b: Make line 2 a familiar, almost forced completion with one obvious rhyme (a cliche or idiom), with short lines and a one-syllable end word.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "Make line 2 a familiar, almost forced completion with one obvious rhyme (a cliche or idiom), with short lines and a one-syllable end word."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 101,
+    "plan": "0075",
+    "steer": "- Last wave: 1/60 passed.\n- Failed (gold -> what the model wrote): 99 -> model said 'rain' (9/10); iced -> model said 'cheese' (4/10); pie -> model said 'pie.' (9/10); bone -> model said 'bone' (10/10); cat -> model said 'cat' (10/10); wish -> model said 'wish' (10/10); bee -> model said 'bee' (10/10); they -> model said 'mouse' (8/10); 1969 -> model said 'road' (9/10); nail -> model said 'tail' (9/10); thin -> model said 'thin' (10/10); 100-watt -> model said 'pod' (10/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): moon",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   },
+   "gate_variant": "chat_prefill",
+   "mc": {
+    "candidates": [
+     "space",
+     "face",
+     "case",
+     "embrace",
+     "trace",
+     "base",
+     "brace",
+     "replace",
+     "ace",
+     "erase",
+     "lace",
+     "vase",
+     "misplace",
+     "displace",
+     "retrace",
+     "mace",
+     "deface",
+     "encase",
+     "debase",
+     "interlace",
+     "efface",
+     "bass"
+    ],
+    "tiers": {
+     "space": "A",
+     "face": "A",
+     "case": "C",
+     "embrace": "C",
+     "trace": "C",
+     "base": "C",
+     "brace": "C",
+     "replace": "C",
+     "ace": "C",
+     "erase": "C",
+     "lace": "C",
+     "vase": "C",
+     "misplace": "C",
+     "displace": "C",
+     "retrace": "C",
+     "mace": "C",
+     "deface": "C",
+     "encase": "C",
+     "debase": "C",
+     "interlace": "C",
+     "efface": "C",
+     "bass": "C"
+    },
+    "tier_a_counts": {
+     "space": 3,
+     "face": 2
+    },
+    "vetted_by": "claude-opus-5-5"
+   },
+   "line_one_end": "pace",
+   "qwen_commits": {
+    "race": 42,
+    "haste": 4,
+    "100-meter": 3,
+    "100-yard": 3,
+    "10": 2,
+    "place": 2,
+    "grace": 2,
+    "1": 1,
+    "racing": 1,
+    "match": 1,
+    "chase": 1,
+    "disgrace": 1,
+    "all": 1,
+    "busy": 1,
+    "awkward": 1,
+    "icky": 1,
+    "races": 1,
+    "100m": 1,
+    "100-metre": 1,
+    "100": 1,
+    "ache": 1,
+    "grass": 1,
+    "spare": 1,
+    "speed": 1,
+    "ran": 1,
+    "tree": 1
+   },
+   "regate": {
+    "leg": "free+prefill",
+    "consistency": 1.0,
+    "site_hits": 8,
+    "site_words": {
+     "race": 8,
+     "grace": 2,
+     "haste": 1
+    }
+   },
+   "prompt_only_opus": {
+    "draws": 3,
+    "picked_gold": 0,
+    "instrument": "poetry-free-2026-11-01+noveto-a1+digest-v5-task-extractive+sj-v10",
+    "gate_tags": [
+     "gate0",
+     "gate1",
+     "gate2"
+    ],
+    "kinds": {
+     "gate0": "none",
+     "gate1": "not_line_final",
+     "gate2": "not_line_final"
+    },
+    "undecided": []
+   },
+   "subject_fields_for": "dory-4b"
+  },
+  {
+   "name": "poetry-au-t1-w102c0-couplet-twice-ice",
+   "prompt": "A rhyming couplet:\nI tried to warm my fingers twice,\nBut still my hands were cold as ",
+   "intermediates": [
+    "ice"
+   ],
+   "eval_render": "plain",
+   "readout": {
+    "kind": "line_one_tail"
+   },
+   "source": "authored (claude-opus-5-5) for dory-4b: Make line 2 a familiar, almost forced completion with one obvious rhyme (a cliche or idiom), with short lines and a one-syllable end word.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "Make line 2 a familiar, almost forced completion with one obvious rhyme (a cliche or idiom), with short lines and a one-syllable end word."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 102,
+    "plan": "0075",
+    "steer": "- Last wave: 7/60 passed.\n- Failed (gold -> what the model wrote): 11th -> model said 'ground' (9/10); gain -> model said 'gain' (10/10); the -> model said 'sneeze' (7/10); mouse -> model said 'mouse' (9/10); dog -> model said 'log' (4/10); clean -> model said 'clean' (8/10); bat -> model said 'bat' (9/10); 3000 -> model said 'cream.' (10/10); iced -> model said 'tea' (10/10); mind -> model said 'mind' (7/10); down -> model said 'down.' (9/10); boat -> model said 'boat' (9/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): cake; door; rain; dark; sing; sound; race",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   },
+   "gate_variant": "chat_prefill",
+   "mc": {
+    "candidates": [
+     "advice",
+     "slice",
+     "dice",
+     "suffice"
+    ],
+    "tiers": {
+     "advice": "A",
+     "slice": "A",
+     "dice": "A",
+     "suffice": "A"
+    },
+    "tier_a_counts": {
+     "advice": 3,
+     "slice": 3,
+     "dice": 2,
+     "suffice": 1
+    },
+    "vetted_by": ""
+   },
+   "line_one_end": "twice",
+   "qwen_commits": {
+    "ice": 33,
+    "ices": 22,
+    "rise": 3,
+    "nice": 2,
+    "nose": 1,
+    "me": 1,
+    "same": 1,
+    "this": 1,
+    "rose": 1,
+    "inside": 1,
+    "time": 1,
+    "fire": 1,
+    "once": 1,
+    "freeze": 1,
+    "cold": 1,
+    "taste": 1,
+    "price": 1,
+    "toes": 1,
+    "surprise": 1,
+    "crossed": 1,
+    "nixed": 1
+   },
+   "regate": {
+    "leg": "free+prefill",
+    "consistency": 1.0,
+    "site_hits": 4,
+    "site_words": {
+     "ice": 4,
+     "price": 1,
+     "toes": 1,
+     "nice": 1,
+     "surprise": 1,
+     "rise": 1,
+     "crossed": 1,
+     "nixed": 1
+    }
+   },
+   "prompt_only_opus": {
+    "draws": 3,
+    "picked_gold": 0,
+    "instrument": "poetry-free-2026-11-01+noveto-a1+digest-v5-task-extractive+sj-v10",
+    "gate_tags": [
+     "gate0",
+     "gate1",
+     "gate2"
+    ],
+    "kinds": {
+     "gate0": "not_line_final",
+     "gate1": "not_line_final",
+     "gate2": "not_line_final"
+    },
+    "undecided": []
+   },
+   "subject_fields_for": "dory-4b"
+  },
+  {
+   "name": "poetry-au-t1-w102c1-couplet-tune-june",
+   "prompt": "A rhyming couplet:\nThe birds were singing a sweet tune,\nThe roses bloom in early ",
+   "intermediates": [
+    "june"
+   ],
+   "eval_render": "plain",
+   "readout": {
+    "kind": "line_one_tail"
+   },
+   "source": "authored (claude-opus-5-5) for dory-4b: Make line 2 a familiar, almost forced completion with one obvious rhyme (a cliche or idiom), with short lines and a one-syllable end word.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "Make line 2 a familiar, almost forced completion with one obvious rhyme (a cliche or idiom), with short lines and a one-syllable end word."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 102,
+    "plan": "0075",
+    "steer": "- Last wave: 7/60 passed.\n- Failed (gold -> what the model wrote): 11th -> model said 'ground' (9/10); gain -> model said 'gain' (10/10); the -> model said 'sneeze' (7/10); mouse -> model said 'mouse' (9/10); dog -> model said 'log' (4/10); clean -> model said 'clean' (8/10); bat -> model said 'bat' (9/10); 3000 -> model said 'cream.' (10/10); iced -> model said 'tea' (10/10); mind -> model said 'mind' (7/10); down -> model said 'down.' (9/10); boat -> model said 'boat' (9/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): cake; door; rain; dark; sing; sound; race",
+    "gate": {
+     "rate": 0.8,
+     "pass": true
+    }
+   },
+   "gate_variant": "chat_prefill",
+   "mc": {
+    "candidates": [
+     "noon",
+     "soon",
+     "afternoon",
+     "croon",
+     "swoon",
+     "balloon",
+     "spoon",
+     "lagoon",
+     "dune",
+     "monsoon",
+     "cocoon",
+     "attune",
+     "boon",
+     "cartoon",
+     "saloon",
+     "baboon",
+     "raccoon",
+     "typhoon",
+     "maroon",
+     "bassoon",
+     "harpoon",
+     "tycoon",
+     "platoon",
+     "pontoon",
+     "buffoon",
+     "commune",
+     "immune",
+     "prune",
+     "rune",
+     "opportune",
+     "lampoon",
+     "festoon",
+     "loon",
+     "strewn",
+     "hewn",
+     "goon",
+     "impugn",
+     "inopportune"
+    ],
+    "tiers": {
+     "noon": "A",
+     "soon": "A",
+     "afternoon": "A",
+     "croon": "C",
+     "swoon": "C",
+     "balloon": "C",
+     "spoon": "C",
+     "lagoon": "C",
+     "dune": "C",
+     "monsoon": "C",
+     "cocoon": "C",
+     "attune": "C",
+     "boon": "C",
+     "cartoon": "C",
+     "saloon": "C",
+     "baboon": "C",
+     "raccoon": "C",
+     "typhoon": "C",
+     "maroon": "C",
+     "bassoon": "C",
+     "harpoon": "C",
+     "tycoon": "C",
+     "platoon": "C",
+     "pontoon": "C",
+     "buffoon": "C",
+     "commune": "C",
+     "immune": "C",
+     "prune": "C",
+     "rune": "C",
+     "opportune": "C",
+     "lampoon": "C",
+     "festoon": "C",
+     "loon": "C",
+     "strewn": "C",
+     "hewn": "C",
+     "goon": "C",
+     "impugn": "C",
+     "inopportune": "C"
+    },
+    "tier_a_counts": {
+     "noon": 3,
+     "soon": 3,
+     "afternoon": 2
+    },
+    "vetted_by": "claude-opus-5-5"
+   },
+   "line_one_end": "tune",
+   "qwen_commits": {
+    "june": 17,
+    "spring": 9,
+    "19": 4,
+    "2024": 2,
+    "1968": 2,
+    "blue": 2,
+    "too": 2,
+    "grew": 2,
+    "sun": 2,
+    "april": 1,
+    "summer": 1,
+    "may": 1,
+    "1919": 1,
+    "2025": 1,
+    "1950": 1,
+    "1943": 1,
+    "2025's": 1,
+    "1963": 1,
+    "15th": 1,
+    "1997": 1,
+    "no": 1,
+    "see": 1,
+    "influence": 1,
+    "serene": 1,
+    "one": 1,
+    "moon": 1,
+    "a": 1,
+    "1912": 1,
+    "1990": 1,
+    "line": 1,
+    "1958": 1,
+    "autumn": 1,
+    "dew": 1,
+    "well": 1,
+    "anew": 1,
+    "drone": 1,
+    "day": 1,
+    "music": 1,
+    "springtime": 1,
+    "gun": 1,
+    "come": 1,
+    "run": 1,
+    "hum": 1,
+    "tune": 1
+   },
+   "regate": {
+    "leg": "free+prefill",
+    "consistency": 0.8,
+    "site_hits": 5,
+    "site_words": {
+     "june": 5,
+     "gun": 1,
+     "come": 1,
+     "run": 1,
+     "hum": 1,
+     "sun": 1,
+     "tune": 1
+    }
+   },
+   "authored_rhyme": "June",
+   "prompt_only_opus": {
+    "draws": 3,
+    "picked_gold": 0,
+    "instrument": "poetry-free-2026-11-01+noveto-a1+digest-v5-task-extractive+sj-v10",
+    "gate_tags": [
+     "gate0",
+     "gate1",
+     "gate2"
+    ],
+    "kinds": {
+     "gate0": "none",
+     "gate1": "none",
+     "gate2": "none"
+    },
+    "undecided": []
+   },
+   "subject_fields_for": "dory-4b"
+  },
+  {
+   "name": "poetry-au-t1-w104c1-couplet-cool-pool",
+   "prompt": "A rhyming couplet:\nThe day was hot, we wanted cool,\nSo we went swimming in the ",
+   "intermediates": [
+    "pool"
+   ],
+   "eval_render": "plain",
+   "readout": {
+    "kind": "line_one_tail"
+   },
+   "source": "authored (claude-opus-5-5) for dory-4b: Make line 2 a familiar, almost forced completion with one obvious rhyme (a cliche or idiom), with short lines and a one-syllable end word.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "Make line 2 a familiar, almost forced completion with one obvious rhyme (a cliche or idiom), with short lines and a one-syllable end word."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 104,
+    "plan": "0075",
+    "steer": "- Last wave: 2/60 passed.\n- Failed (gold -> what the model wrote): 2024 -> model said 'worm' (9/10); 10 -> model said 'ground' (8/10); 100-yen -> model said 'shoot' (9/10); the -> model said 'sky' (2/10); milk -> model said 'milk' (10/10); this -> model said 'man' (10/10); 100 -> model said 'word' (8/10); 19th-century -> model said 'log' (8/10); 1 -> model said 'one' (10/10); room -> model said 'room.' (10/10); show -> model said 'spotlight' (7/10); 2018 -> model said 'teeth' (6/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): clear; day",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   },
+   "gate_variant": "chat_prefill",
+   "mc": {
+    "candidates": [
+     "drool",
+     "rule",
+     "stool",
+     "tool",
+     "mule",
+     "jewel",
+     "fuel",
+     "cruel",
+     "spool",
+     "preschool",
+     "uncool",
+     "dual",
+     "ghoul",
+     "retool",
+     "yule",
+     "misrule"
+    ],
+    "tiers": {
+     "drool": "A",
+     "rule": "A",
+     "stool": "A",
+     "tool": "C",
+     "mule": "C",
+     "jewel": "C",
+     "fuel": "C",
+     "cruel": "C",
+     "spool": "C",
+     "preschool": "C",
+     "uncool": "C",
+     "dual": "C",
+     "ghoul": "C",
+     "retool": "C",
+     "yule": "C",
+     "misrule": "C"
+    },
+    "tier_a_counts": {
+     "drool": 2,
+     "rule": 2,
+     "stool": 1
+    },
+    "vetted_by": "claude-opus-5-5"
+   },
+   "line_one_end": "cool",
+   "qwen_commits": {
+    "pool": 31,
+    "blue": 7,
+    "clear": 2,
+    "full": 2,
+    "a": 2,
+    "fool": 2,
+    "roll": 2,
+    "lake": 1,
+    "water": 1,
+    "1000s": 1,
+    "5": 1,
+    "100-meter": 1,
+    "0000000000000000": 1,
+    "5th": 1,
+    "60's": 1,
+    "oh": 1,
+    "800000": 1,
+    "2024": 1,
+    "iver": 1,
+    "cool": 1,
+    "poor": 1,
+    "mall": 1,
+    "molasses": 1,
+    "fits": 1,
+    "dull": 1,
+    "too": 1,
+    "school": 1,
+    "well": 1,
+    "spring": 1,
+    "shop": 1,
+    "drawl": 1,
+    "play": 1,
+    "through": 1,
+    "so": 1,
+    "whoop": 1,
+    "known": 1
+   },
+   "regate": {
+    "leg": "free+prefill",
+    "consistency": 1.0,
+    "site_hits": 5,
+    "site_words": {
+     "pool": 5,
+     "roll": 2,
+     "so": 1,
+     "whoop": 1,
+     "known": 1,
+     "fool": 1
+    }
+   },
+   "prompt_only_opus": {
+    "draws": 3,
+    "picked_gold": 0,
+    "instrument": "poetry-free-2026-11-01+noveto-a1+digest-v5-task-extractive+sj-v10",
+    "gate_tags": [
+     "gate0",
+     "gate1",
+     "gate2"
+    ],
+    "kinds": {
+     "gate0": "not_line_final",
+     "gate1": "not_line_final",
+     "gate2": "not_line_final"
+    },
+    "undecided": []
+   },
+   "subject_fields_for": "dory-4b"
+  },
+  {
+   "name": "poetry-au-t1-w107c1-couplet-hug-bug",
+   "prompt": "A rhyming couplet:\nMy mother tucked me in with one last hug,\nAnd there I slept as snug as a ",
+   "intermediates": [
+    "bug"
+   ],
+   "eval_render": "plain",
+   "readout": {
+    "kind": "line_one_tail"
+   },
+   "source": "authored (claude-opus-5-5) for dory-4b: Make line 2 a familiar, almost forced completion with one obvious rhyme (a cliche or idiom), with short lines and a one-syllable end word.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "Make line 2 a familiar, almost forced completion with one obvious rhyme (a cliche or idiom), with short lines and a one-syllable end word."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 107,
+    "plan": "0075",
+    "steer": "- Last wave: 0/60 passed.\n- Failed (gold -> what the model wrote): seek -> model said 'seek' (10/10); 2024 -> model said 'worm' (10/10); 7-11 -> model said 'road' (6/10); 9 -> model said 'nine' (8/10); iguana -> model said 'babies' (1/10); ick -> model said 'doc.' (1/10); we -> model said 'checker' (6/10); 1 -> model said 'one' (10/10); 2024 -> model said 'year' (10/10); icing -> model said 'nice' (10/10); stirred -> model said 'stirred' (10/10); 100-year-old -> model said 'mule' (8/10). Make items like these easier or pick latents the model knows without a close sibling.",
+    "gate": {
+     "rate": 0.9,
+     "pass": true
+    }
+   },
+   "gate_variant": "chat_prefill",
+   "mc": {
+    "candidates": [
+     "shrug",
+     "snug",
+     "jug",
+     "plug",
+     "dug",
+     "drug",
+     "unplug",
+     "smug",
+     "lug",
+     "chug",
+     "pug",
+     "thug",
+     "debug",
+     "ugh"
+    ],
+    "tiers": {
+     "shrug": "A",
+     "snug": "A",
+     "jug": "C",
+     "plug": "C",
+     "dug": "C",
+     "drug": "C",
+     "unplug": "C",
+     "smug": "C",
+     "lug": "C",
+     "chug": "C",
+     "pug": "C",
+     "thug": "C",
+     "debug": "C",
+     "ugh": "C"
+    },
+    "tier_a_counts": {
+     "shrug": 3,
+     "snug": 3
+    },
+    "vetted_by": "claude-opus-5-5"
+   },
+   "line_one_end": "hug",
+   "qwen_commits": {
+    "bug": 18,
+    "iguana": 7,
+    "mouse": 3,
+    "fox": 3,
+    "rhyming": 3,
+    "little": 2,
+    "boy": 2,
+    "hug": 2,
+    "squirrel": 1,
+    "logger": 1,
+    "duck": 1,
+    "1000": 1,
+    "500-year-old": 1,
+    "4-leaf": 1,
+    "10-pound": 1,
+    "411": 1,
+    "enough": 1,
+    "tug": 1,
+    "much": 1,
+    "roof": 1,
+    "blew": 1,
+    "week": 1,
+    "it": 1,
+    "cup": 1,
+    "the": 1,
+    "whoops": 1,
+    "most": 1,
+    "you": 1,
+    "love": 1,
+    "affection": 1,
+    "lullaby": 1,
+    "lit": 1,
+    "son": 1,
+    "slept": 1,
+    "good-night": 1,
+    "mug": 1,
+    "off": 1,
+    "rug": 1,
+    "sleep": 1,
+    "wing": 1,
+    "sleeping": 1,
+    "friend": 1,
+    "slug": 1
+   },
+   "regate": {
+    "leg": "free+prefill",
+    "consistency": 0.9,
+    "site_hits": 4,
+    "site_words": {
+     "bug": 4,
+     "rug": 1,
+     "sleep": 1,
+     "wing": 1,
+     "sleeping": 1,
+     "friend": 1,
+     "hug": 1,
+     "slug": 1
+    }
+   },
+   "prompt_only_opus": {
+    "draws": 3,
+    "picked_gold": 0,
+    "instrument": "poetry-free-2026-11-01+noveto-a1+digest-v5-task-extractive+sj-v10",
+    "gate_tags": [
+     "gate0",
+     "gate1",
+     "gate2"
+    ],
+    "kinds": {
+     "gate0": "none",
+     "gate1": "other_word",
+     "gate2": "none"
+    },
+    "undecided": []
+   },
+   "subject_fields_for": "dory-4b"
+  },
+  {
+   "name": "poetry-au-t1-w110c0-couplet-near-cheer",
+   "prompt": "A rhyming couplet:\nThe final whistle blew, the win was near,\nThe fans jumped up and gave a mighty ",
+   "intermediates": [
+    "cheer"
+   ],
+   "eval_render": "plain",
+   "readout": {
+    "kind": "line_one_tail"
+   },
+   "source": "authored (claude-opus-5-5) for dory-4b: Make line 2 a familiar, almost forced completion with one obvious rhyme (a cliche or idiom), with short lines and a one-syllable end word.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "Make line 2 a familiar, almost forced completion with one obvious rhyme (a cliche or idiom), with short lines and a one-syllable end word."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 110,
+    "plan": "0075",
+    "steer": "- Last wave: 2/60 passed.\n- Failed (gold -> what the model wrote): 1950s -> model said 'worm' (10/10); 1000 -> model said 'a lot' (10/10); trades -> model said 'trades' (10/10); 10 -> model said 'bed' (6/10); the -> model said 'doc.' (6/10); 999999999999999999999999 -> model said 'razor' (7/10); 10 -> model said 'sunny bunny' (10/10); she -> model said 'sheet' (10/10); 80-year-old -> model said 'ox' (10/10); 1 -> model said 'one' (10/10); tongue -> model said 'tongue' (10/10); 333 -> model said 'woods' (9/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): life; stars",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   },
+   "gate_variant": "chat_prefill",
+   "mc": {
+    "candidates": [
+     "year",
+     "fear",
+     "appear",
+     "sphere"
+    ],
+    "tiers": {
+     "year": "A",
+     "fear": "A",
+     "appear": "A",
+     "sphere": "A"
+    },
+    "tier_a_counts": {
+     "year": 3,
+     "fear": 2,
+     "appear": 1,
+     "sphere": 1
+    },
+    "vetted_by": ""
+   },
+   "line_one_end": "near",
+   "qwen_commits": {
+    "cheer": 51,
+    "clear": 9,
+    "air": 3,
+    "10": 2,
+    "stair": 2,
+    "dear": 2,
+    "3-0": 1,
+    "5": 1,
+    "23rd-century": 1,
+    "tear": 1,
+    "unison": 1,
+    "silver": 1,
+    "dream": 1,
+    "seeing": 1
+   },
+   "regate": {
+    "leg": "free+prefill",
+    "consistency": 1.0,
+    "site_hits": 6,
+    "site_words": {
+     "cheer": 6,
+     "clear": 3,
+     "air": 1,
+     "seeing": 1
+    }
+   },
+   "prompt_only_opus": {
+    "draws": 3,
+    "picked_gold": 0,
+    "instrument": "poetry-free-2026-11-01+noveto-a1+digest-v5-task-extractive+sj-v10",
+    "gate_tags": [
+     "gate0",
+     "gate1",
+     "gate2"
+    ],
+    "kinds": {
+     "gate0": "not_line_final",
+     "gate1": "not_line_final",
+     "gate2": "none"
+    },
+    "undecided": []
+   },
+   "subject_fields_for": "dory-4b"
+  },
+  {
+   "name": "poetry-au-t1-w110c2-couplet-map-cap",
+   "prompt": "A rhyming couplet:\nHe found the treasure on the map,\nAnother feather in his ",
+   "intermediates": [
+    "cap"
+   ],
+   "eval_render": "plain",
+   "readout": {
+    "kind": "line_one_tail"
+   },
+   "source": "authored (claude-opus-5-5) for dory-4b: Make line 2 a familiar, almost forced completion with one obvious rhyme (a cliche or idiom), with short lines and a one-syllable end word.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "Make line 2 a familiar, almost forced completion with one obvious rhyme (a cliche or idiom), with short lines and a one-syllable end word."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 110,
+    "plan": "0075",
+    "steer": "- Last wave: 2/60 passed.\n- Failed (gold -> what the model wrote): 1950s -> model said 'worm' (10/10); 1000 -> model said 'a lot' (10/10); trades -> model said 'trades' (10/10); 10 -> model said 'bed' (6/10); the -> model said 'doc.' (6/10); 999999999999999999999999 -> model said 'razor' (7/10); 10 -> model said 'sunny bunny' (10/10); she -> model said 'sheet' (10/10); 80-year-old -> model said 'ox' (10/10); 1 -> model said 'one' (10/10); tongue -> model said 'tongue' (10/10); 333 -> model said 'woods' (9/10). Make items like these easier or pick latents the model knows without a close sibling.\n- Passed (write more like these): life; stars",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   },
+   "gate_variant": "chat_prefill",
+   "mc": {
+    "candidates": [
+     "gap",
+     "nap",
+     "unwrap",
+     "wrap",
+     "tap",
+     "strap",
+     "scrap",
+     "slap",
+     "sap",
+     "chap",
+     "recap",
+     "zap",
+     "rap",
+     "entrap",
+     "yap",
+     "app",
+     "crap"
+    ],
+    "tiers": {
+     "gap": "A",
+     "nap": "A",
+     "unwrap": "C",
+     "wrap": "C",
+     "tap": "C",
+     "strap": "C",
+     "scrap": "C",
+     "slap": "C",
+     "sap": "C",
+     "chap": "C",
+     "recap": "C",
+     "zap": "C",
+     "rap": "C",
+     "entrap": "C",
+     "yap": "C",
+     "app": "C",
+     "crap": "C"
+    },
+    "tier_a_counts": {
+     "gap": 2,
+     "nap": 1
+    },
+    "vetted_by": "claude-opus-5-5"
+   },
+   "line_one_end": "map",
+   "qwen_commits": {
+    "cap": 34,
+    "hat": 7,
+    "trap": 3,
+    "clasp": 2,
+    "lap": 2,
+    "101": 2,
+    "capeless": 1,
+    "caparison": 1,
+    "3d": 1,
+    "2024": 1,
+    "21st": 1,
+    "family": 1,
+    "flap": 1,
+    "stars": 1,
+    "loved": 1,
+    "had": 1,
+    "waiting": 1,
+    "fast": 1,
+    "jumped": 1,
+    "stand": 1,
+    "10": 1,
+    "a": 1,
+    "100": 1,
+    "glad": 1,
+    "warm": 1,
+    "rich": 1,
+    "gold": 1,
+    "clap": 1,
+    "cup": 1,
+    "day": 1,
+    "snap": 1,
+    "respect": 1,
+    "slip": 1
+   },
+   "regate": {
+    "leg": "free+prefill",
+    "consistency": 1.0,
+    "site_hits": 4,
+    "site_words": {
+     "cap": 4,
+     "trap": 3,
+     "day": 1,
+     "snap": 1,
+     "respect": 1,
+     "slip": 1
+    }
+   },
+   "prompt_only_opus": {
+    "draws": 3,
+    "picked_gold": 0,
+    "instrument": "poetry-free-2026-11-01+noveto-a1+digest-v5-task-extractive+sj-v10",
+    "gate_tags": [
+     "gate0",
+     "gate1",
+     "gate2"
+    ],
+    "kinds": {
+     "gate0": "none",
+     "gate1": "none",
+     "gate2": "none"
+    },
+    "undecided": []
+   },
+   "subject_fields_for": "dory-4b"
+  },
+  {
+   "name": "poetry-au-v6-w119c0-couplet-rock-dock",
+   "prompt": "A rhyming couplet:\nThe ferry slowed its engines past the rock,\nAnd sailors tossed their ropes onto the ",
+   "intermediates": [
+    "dock"
+   ],
+   "eval_render": "plain",
+   "readout": {
+    "kind": "line_one_tail"
+   },
+   "source": "authored (claude-opus-5-5) for dory-4b: End line 1 on a word from a LARGE rhyme family (ten or more everyday words rhyme with it, e.g. -ay, -ight, -ake, -ate, -ain, -ell, -ore, -ing, -ock, -ash, -ink). Line 1 sets a concrete scene that makes ONE specific rhyme the natural last word of line 2: a concrete noun (or a vivid verb) of everyday frequency that is NOT the most common or default rhyme of that family (for -ay prefer hay, tray, clay, jay, spray, sleigh over day, way, say, stay, play, away; for -ight prefer kite, bite, knight over night, light, right, bright). The scene must point at that word so strongly that a fluent poet reading line 1 alone would plan it; the stub then leads straight into it. Never a proverb, nursery rhyme, song lyric or stock phrase. Neither the intended word nor any form of it appears in line 1. Use each rhyme family at most three times in one reply and vary the intended words' kind (food, tools, animals, places, weather, clothing, actions).",
+   "adapt": {
+    "origin": "authored",
+    "tier": "v6",
+    "knobs": {
+     "brief": "End line 1 on a word from a LARGE rhyme family (ten or more everyday words rhyme with it, e.g. -ay, -ight, -ake, -ate, -ain, -ell, -ore, -ing, -ock, -ash, -ink). Line 1 sets a concrete scene that makes ONE specific rhyme the natural last word of line 2: a concrete noun (or a vivid verb) of everyday frequency that is NOT the most common or default rhyme of that family (for -ay prefer hay, tray, clay, jay, spray, sleigh over day, way, say, stay, play, away; for -ight prefer kite, bite, knight over night, light, right, bright). The scene must point at that word so strongly that a fluent poet reading line 1 alone would plan it; the stub then leads straight into it. Never a proverb, nursery rhyme, song lyric or stock phrase. Neither the intended word nor any form of it appears in line 1. Use each rhyme family at most three times in one reply and vary the intended words' kind (food, tools, animals, places, weather, clothing, actions)."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 119,
+    "plan": "0075",
+    "gate": {
+     "rate": 0.8,
+     "pass": true
+    }
+   },
+   "gate_variant": "plain_fewshot",
+   "mc": {
+    "candidates": [
+     "clock",
+     "walk",
+     "block",
+     "flock",
+     "knock",
+     "stock",
+     "unlock",
+     "mock",
+     "sock",
+     "chalk",
+     "restock",
+     "crock",
+     "frock",
+     "chock",
+     "smock",
+     "interlock",
+     "caulk",
+     "wok",
+     "tock",
+     "overstock",
+     "undock",
+     "croc",
+     "bloc",
+     "schlock",
+     "antilock",
+     "jock",
+     "hock"
+    ],
+    "tiers": {
+     "flock": "A",
+     "clock": "A",
+     "knock": "A",
+     "block": "C",
+     "stock": "C",
+     "walk": "C",
+     "unlock": "C",
+     "mock": "C",
+     "sock": "C",
+     "chalk": "C",
+     "restock": "C",
+     "crock": "C",
+     "frock": "C",
+     "chock": "C",
+     "smock": "C",
+     "interlock": "C",
+     "caulk": "C",
+     "wok": "C",
+     "tock": "C",
+     "overstock": "C",
+     "undock": "C",
+     "croc": "C",
+     "bloc": "C",
+     "schlock": "C",
+     "antilock": "C",
+     "jock": "C",
+     "hock": "C"
+    },
+    "tier_a_counts": {
+     "flock": 3,
+     "clock": 2,
+     "knock": 2
+    },
+    "vetted_by": "claude-opus-5-5",
+    "prior": {
+     "version": "poetry-prior-2026-11-08b",
+     "model": "claude-opus-5-5",
+     "screen_draws": 3,
+     "example_pools": [
+      54
+     ],
+     "gold": "dock",
+     "kinds": {
+      "bloc": "other_noun",
+      "block": "concrete_noun",
+      "caulk": "concrete_noun",
+      "chalk": "concrete_noun",
+      "chock": "concrete_noun",
+      "clock": "concrete_noun",
+      "croc": "concrete_noun",
+      "crock": "concrete_noun",
+      "dock": "concrete_noun",
+      "flock": "concrete_noun",
+      "frock": "concrete_noun",
+      "interlock": "verb",
+      "knock": "verb",
+      "mock": "verb",
+      "overstock": "verb",
+      "restock": "verb",
+      "schlock": "other_noun",
+      "smock": "concrete_noun",
+      "sock": "concrete_noun",
+      "stock": "other_noun",
+      "tock": "concrete_noun",
+      "undock": "verb",
+      "unlock": "verb",
+      "walk": "verb",
+      "wok": "concrete_noun"
+     },
+     "commits": [
+      "4",
+      "a",
+      "back",
+      "bank",
+      "black",
+      "boat",
+      "box",
+      "cargo",
+      "clack",
+      "cutters",
+      "dark",
+      "decks",
+      "dock",
+      "docked",
+      "downward",
+      "ferry",
+      "gone",
+      "greet",
+      "hook",
+      "i",
+      "i'll",
+      "lock",
+      "look",
+      "mind",
+      "rock",
+      "sea",
+      "shock",
+      "shore",
+      "spoken",
+      "up",
+      "water",
+      "went",
+      "what"
+     ],
+     "ranks": {
+      "clock": 1.0,
+      "flock": 3.0,
+      "knock": 3.0,
+      "block": 3.0,
+      "dock": 5.0,
+      "walk": 6.5,
+      "stock": 7.5,
+      "sock": 7.5,
+      "mock": 9.0,
+      "unlock": 9.5,
+      "tock": 11.5,
+      "frock": 12.0,
+      "chalk": 12.5,
+      "smock": 14.0,
+      "crock": 15.0,
+      "wok": 17.0,
+      "interlock": 18.0,
+      "croc": 18.0,
+      "restock": 19.0,
+      "chock": 19.0,
+      "caulk": 20.0,
+      "undock": 22.0,
+      "overstock": 24.0,
+      "bloc": 24.0,
+      "schlock": 24.0
+     },
+     "screened": [
+      {
+       "list": [
+        "clock",
+        "walk",
+        "block",
+        "flock"
+       ],
+       "options": [
+        "block",
+        "dock",
+        "clock",
+        "walk",
+        "flock"
+       ],
+       "gold_pos": 2,
+       "picks": {
+        "blind": [
+         4,
+         4,
+         4
+        ],
+        "described": [
+         3,
+         3,
+         3
+        ]
+       },
+       "gold_hits": 0,
+       "passed": true
+      }
+     ],
+     "chosen": [
+      "clock",
+      "walk",
+      "block",
+      "flock"
+     ],
+     "pass2": "skipped: 2 v6 lists < 4"
+    }
+   },
+   "line_one_end": "rock",
+   "qwen_commits": {
+    "dock": 30,
+    "black": 8,
+    "water": 3,
+    "dark": 2,
+    "shore": 2,
+    "back": 2,
+    "sea": 2,
+    "rock": 2,
+    "shock": 2,
+    "mind": 1,
+    "decks": 1,
+    "ferry": 1,
+    "downward": 1,
+    "what": 1,
+    "cutters": 1,
+    "i'll": 1,
+    "bank": 1,
+    "cargo": 1,
+    "i": 1,
+    "gone": 1,
+    "boat": 1,
+    "look": 1,
+    "went": 1,
+    "clack": 1,
+    "greet": 1,
+    "hook": 1,
+    "4": 1,
+    "a": 1,
+    "up": 1,
+    "docked": 1,
+    "spoken": 1,
+    "box": 1,
+    "lock": 1
+   },
+   "regate": {
+    "leg": "free+fewshot",
+    "consistency": 0.8,
+    "site_hits": 6,
+    "site_words": {
+     "dock": 6,
+     "shore": 1,
+     "up": 1,
+     "back": 1,
+     "sea": 1,
+     "rock": 1
+    }
+   },
+   "prompt_only_opus": {
+    "draws": 3,
+    "picked_gold": 0,
+    "instrument": "poetry-free-2026-11-01+noveto-a1+digest-v5-task-extractive+sj-v10",
+    "gate_tags": [
+     "gate0",
+     "gate1",
+     "gate2"
+    ],
+    "kinds": {
+     "gate0": "none",
+     "gate1": "none",
+     "gate2": "none"
+    },
+    "undecided": []
+   },
+   "subject_fields_for": "dory-4b"
+  },
+  {
+   "name": "poetry-au-v6-w119c1-couplet-thing-wing",
+   "prompt": "A rhyming couplet:\nThe sparrow hopped but couldn't fly, poor thing,\nSo we taped a tiny splint along its broken ",
+   "intermediates": [
+    "wing"
+   ],
+   "eval_render": "plain",
+   "readout": {
+    "kind": "line_one_tail"
+   },
+   "source": "authored (claude-opus-5-5) for dory-4b: End line 1 on a word from a LARGE rhyme family (ten or more everyday words rhyme with it, e.g. -ay, -ight, -ake, -ate, -ain, -ell, -ore, -ing, -ock, -ash, -ink). Line 1 sets a concrete scene that makes ONE specific rhyme the natural last word of line 2: a concrete noun (or a vivid verb) of everyday frequency that is NOT the most common or default rhyme of that family (for -ay prefer hay, tray, clay, jay, spray, sleigh over day, way, say, stay, play, away; for -ight prefer kite, bite, knight over night, light, right, bright). The scene must point at that word so strongly that a fluent poet reading line 1 alone would plan it; the stub then leads straight into it. Never a proverb, nursery rhyme, song lyric or stock phrase. Neither the intended word nor any form of it appears in line 1. Use each rhyme family at most three times in one reply and vary the intended words' kind (food, tools, animals, places, weather, clothing, actions).",
+   "adapt": {
+    "origin": "authored",
+    "tier": "v6",
+    "knobs": {
+     "brief": "End line 1 on a word from a LARGE rhyme family (ten or more everyday words rhyme with it, e.g. -ay, -ight, -ake, -ate, -ain, -ell, -ore, -ing, -ock, -ash, -ink). Line 1 sets a concrete scene that makes ONE specific rhyme the natural last word of line 2: a concrete noun (or a vivid verb) of everyday frequency that is NOT the most common or default rhyme of that family (for -ay prefer hay, tray, clay, jay, spray, sleigh over day, way, say, stay, play, away; for -ight prefer kite, bite, knight over night, light, right, bright). The scene must point at that word so strongly that a fluent poet reading line 1 alone would plan it; the stub then leads straight into it. Never a proverb, nursery rhyme, song lyric or stock phrase. Neither the intended word nor any form of it appears in line 1. Use each rhyme family at most three times in one reply and vary the intended words' kind (food, tools, animals, places, weather, clothing, actions)."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 119,
+    "plan": "0075",
+    "gate": {
+     "rate": 0.9,
+     "pass": true
+    }
+   },
+   "gate_variant": "plain_fewshot",
+   "mc": {
+    "candidates": [
+     "sing",
+     "ring",
+     "king",
+     "bring",
+     "spring",
+     "string",
+     "cling",
+     "swing",
+     "sling",
+     "fling",
+     "sting",
+     "wring",
+     "zing",
+     "ding",
+     "ping",
+     "upswing"
+    ],
+    "tiers": {
+     "bring": "A",
+     "sing": "A",
+     "spring": "A",
+     "string": "A",
+     "cling": "A",
+     "king": "A",
+     "swing": "C",
+     "sling": "C",
+     "ring": "C",
+     "fling": "C",
+     "sting": "C",
+     "wring": "C",
+     "zing": "C",
+     "ding": "C",
+     "ping": "C",
+     "upswing": "C"
+    },
+    "tier_a_counts": {
+     "bring": 2,
+     "sing": 2,
+     "spring": 2,
+     "string": 2,
+     "cling": 1,
+     "king": 1
+    },
+    "vetted_by": "claude-opus-5-5",
+    "prior": {
+     "version": "poetry-prior-2026-11-08b",
+     "model": "claude-opus-5-5",
+     "screen_draws": 3,
+     "example_pools": [
+      54
+     ],
+     "gold": "wing",
+     "kinds": {
+      "bring": "verb",
+      "cling": "verb",
+      "ding": "other_noun",
+      "fling": "verb",
+      "king": "concrete_noun",
+      "ping": "other_noun",
+      "ring": "concrete_noun",
+      "sing": "verb",
+      "sling": "concrete_noun",
+      "spring": "other_noun",
+      "sting": "verb",
+      "string": "concrete_noun",
+      "swing": "verb",
+      "upswing": "other_noun",
+      "wing": "concrete_noun",
+      "wring": "verb",
+      "zing": "other_noun"
+     },
+     "commits": [
+      "attention",
+      "be",
+      "brim",
+      "chew",
+      "daisy",
+      "died",
+      "head",
+      "him",
+      "indeed",
+      "lily",
+      "pine",
+      "poem",
+      "rye",
+      "sheep",
+      "shy",
+      "sigh",
+      "skim",
+      "sky",
+      "sleep",
+      "still",
+      "try",
+      "way",
+      "wing",
+      "wings"
+     ],
+     "ranks": {
+      "sing": 1.0,
+      "spring": 2.0,
+      "bring": 3.5,
+      "king": 4.0,
+      "wing": 5.0,
+      "ring": 5.5,
+      "cling": 8.0,
+      "swing": 8.0,
+      "string": 8.5,
+      "sting": 10.0,
+      "fling": 10.5,
+      "sling": 12.5,
+      "wring": 12.5,
+      "zing": 14.0,
+      "ding": 15.0,
+      "ping": 16.0,
+      "upswing": 17.0
+     },
+     "screened": [
+      {
+       "list": [
+        "sing",
+        "ring",
+        "king",
+        "bring"
+       ],
+       "options": [
+        "ring",
+        "wing",
+        "king",
+        "bring",
+        "sing"
+       ],
+       "gold_pos": 2,
+       "picks": {
+        "blind": [
+         3,
+         3,
+         3
+        ],
+        "described": [
+         3,
+         5,
+         5
+        ]
+       },
+       "gold_hits": 0,
+       "passed": true
+      }
+     ],
+     "chosen": [
+      "sing",
+      "ring",
+      "king",
+      "bring"
+     ],
+     "pass2": "skipped: 2 v6 lists < 4"
+    }
+   },
+   "line_one_end": "thing",
+   "qwen_commits": {
+    "wing": 48,
+    "sky": 3,
+    "sleep": 2,
+    "died": 2,
+    "him": 2,
+    "wings": 1,
+    "indeed": 1,
+    "chew": 1,
+    "try": 1,
+    "poem": 1,
+    "sheep": 1,
+    "lily": 1,
+    "shy": 1,
+    "attention": 1,
+    "skim": 1,
+    "pine": 1,
+    "still": 1,
+    "brim": 1,
+    "daisy": 1,
+    "rye": 1,
+    "be": 1,
+    "head": 1,
+    "way": 1,
+    "sigh": 1
+   },
+   "regate": {
+    "leg": "free+fewshot",
+    "consistency": 0.9,
+    "site_hits": 4,
+    "site_words": {
+     "wing": 4,
+     "shy": 1,
+     "him": 1,
+     "attention": 1,
+     "skim": 1,
+     "pine": 1,
+     "still": 1,
+     "brim": 1
+    }
+   },
+   "prompt_only_opus": {
+    "draws": 3,
+    "picked_gold": 0,
+    "instrument": "poetry-free-2026-11-01+noveto-a1+digest-v5-task-extractive+sj-v10",
+    "gate_tags": [
+     "gate0",
+     "gate1",
+     "gate2"
+    ],
+    "kinds": {
+     "gate0": "none",
+     "gate1": "not_line_final",
+     "gate2": "not_line_final"
+    },
+    "undecided": []
+   },
+   "subject_fields_for": "dory-4b"
+  }
+ ]
+}

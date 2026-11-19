@@ -1,0 +1,526 @@
+[
+ {
+  "scene_key": "Elliot-Skyler-Indigo-plumber-cousin",
+  "stimulus": "Elliot's plumber is Skyler. Skyler's cousin is Indigo. In other words, Indigo is Elliot's",
+  "names": [
+   "Elliot",
+   "Skyler",
+   "Indigo"
+  ],
+  "hop1": "plumber",
+  "hop2": "cousin",
+  "gold": "plumber's cousin",
+  "gold_alt": "cousin of Elliot's plumber",
+  "flipped": "cousin's plumber",
+  "id": "relational-t0-s0-0113-a",
+  "scene": "relational-t0-s0-0113",
+  "adapt": {
+   "origin": "generated",
+   "tier": "t0",
+   "knobs": {},
+   "change": "original rules (13 professional x 5 kinship relations)",
+   "gate": {
+    "rate": 0.9,
+    "pass": true
+   }
+  }
+ },
+ {
+  "scene_key": "Elliot-Skyler-Indigo-plumber-cousin",
+  "stimulus": "Elliot's cousin is Skyler. Skyler's plumber is Indigo. In other words, Indigo is Elliot's",
+  "names": [
+   "Elliot",
+   "Skyler",
+   "Indigo"
+  ],
+  "hop1": "cousin",
+  "hop2": "plumber",
+  "gold": "cousin's plumber",
+  "gold_alt": "plumber of Elliot's cousin",
+  "flipped": "plumber's cousin",
+  "id": "relational-t0-s0-0113-b",
+  "scene": "relational-t0-s0-0113",
+  "adapt": {
+   "origin": "generated",
+   "tier": "t0",
+   "knobs": {},
+   "change": "original rules (13 professional x 5 kinship relations)",
+   "gate": {
+    "rate": 0.8,
+    "pass": true
+   }
+  }
+ },
+ {
+  "scene_key": "Emery-Casey-Hayden-neighbor-child",
+  "stimulus": "Emery's neighbor is Casey. Casey's child is Hayden. In other words, Hayden is Emery's",
+  "names": [
+   "Emery",
+   "Casey",
+   "Hayden"
+  ],
+  "hop1": "neighbor",
+  "hop2": "child",
+  "gold": "neighbor's child",
+  "gold_alt": "child of Emery's neighbor",
+  "flipped": "child's neighbor",
+  "id": "relational-t0-s0-0129-a",
+  "scene": "relational-t0-s0-0129",
+  "adapt": {
+   "origin": "generated",
+   "tier": "t0",
+   "knobs": {},
+   "change": "original rules (13 professional x 5 kinship relations)",
+   "gate": {
+    "rate": 0.8,
+    "pass": true
+   }
+  }
+ },
+ {
+  "scene_key": "Emery-Casey-Hayden-neighbor-child",
+  "stimulus": "Emery's child is Casey. Casey's neighbor is Hayden. In other words, Hayden is Emery's",
+  "names": [
+   "Emery",
+   "Casey",
+   "Hayden"
+  ],
+  "hop1": "child",
+  "hop2": "neighbor",
+  "gold": "child's neighbor",
+  "gold_alt": "neighbor of Emery's child",
+  "flipped": "neighbor's child",
+  "id": "relational-t0-s0-0129-b",
+  "scene": "relational-t0-s0-0129",
+  "adapt": {
+   "origin": "generated",
+   "tier": "t0",
+   "knobs": {},
+   "change": "original rules (13 professional x 5 kinship relations)",
+   "gate": {
+    "rate": 1.0,
+    "pass": true
+   }
+  }
+ },
+ {
+  "scene_key": "Hayden-Rory-Parker-barber-cousin",
+  "stimulus": "Hayden's barber is Rory. Rory's cousin is Parker. In other words, Parker is Hayden's",
+  "names": [
+   "Hayden",
+   "Rory",
+   "Parker"
+  ],
+  "hop1": "barber",
+  "hop2": "cousin",
+  "gold": "barber's cousin",
+  "gold_alt": "cousin of Hayden's barber",
+  "flipped": "cousin's barber",
+  "id": "relational-t0-s0-0134-a",
+  "scene": "relational-t0-s0-0134",
+  "adapt": {
+   "origin": "generated",
+   "tier": "t0",
+   "knobs": {},
+   "change": "original rules (13 professional x 5 kinship relations)",
+   "gate": {
+    "rate": 1.0,
+    "pass": true
+   }
+  }
+ },
+ {
+  "scene_key": "Hayden-Rory-Parker-barber-cousin",
+  "stimulus": "Hayden's cousin is Rory. Rory's barber is Parker. In other words, Parker is Hayden's",
+  "names": [
+   "Hayden",
+   "Rory",
+   "Parker"
+  ],
+  "hop1": "cousin",
+  "hop2": "barber",
+  "gold": "cousin's barber",
+  "gold_alt": "barber of Hayden's cousin",
+  "flipped": "barber's cousin",
+  "id": "relational-t0-s0-0134-b",
+  "scene": "relational-t0-s0-0134",
+  "adapt": {
+   "origin": "generated",
+   "tier": "t0",
+   "knobs": {},
+   "change": "original rules (13 professional x 5 kinship relations)",
+   "gate": {
+    "rate": 0.9,
+    "pass": true
+   }
+  }
+ },
+ {
+  "scene_key": "Aubrey-Gray-Sasha-dentist-cousin",
+  "stimulus": "Aubrey's dentist is Gray. Gray's cousin is Sasha. In other words, Sasha is Aubrey's",
+  "names": [
+   "Aubrey",
+   "Gray",
+   "Sasha"
+  ],
+  "hop1": "dentist",
+  "hop2": "cousin",
+  "gold": "dentist's cousin",
+  "gold_alt": "cousin of Aubrey's dentist",
+  "flipped": "cousin's dentist",
+  "id": "relational-t0-s0-0182-a",
+  "scene": "relational-t0-s0-0182",
+  "adapt": {
+   "origin": "generated",
+   "tier": "t0",
+   "knobs": {},
+   "change": "original rules (13 professional x 5 kinship relations)",
+   "gate": {
+    "rate": 0.9,
+    "pass": true
+   }
+  }
+ },
+ {
+  "scene_key": "Aubrey-Gray-Sasha-dentist-cousin",
+  "stimulus": "Aubrey's cousin is Gray. Gray's dentist is Sasha. In other words, Sasha is Aubrey's",
+  "names": [
+   "Aubrey",
+   "Gray",
+   "Sasha"
+  ],
+  "hop1": "cousin",
+  "hop2": "dentist",
+  "gold": "cousin's dentist",
+  "gold_alt": "dentist of Aubrey's cousin",
+  "flipped": "dentist's cousin",
+  "id": "relational-t0-s0-0182-b",
+  "scene": "relational-t0-s0-0182",
+  "adapt": {
+   "origin": "generated",
+   "tier": "t0",
+   "knobs": {},
+   "change": "original rules (13 professional x 5 kinship relations)",
+   "gate": {
+    "rate": 0.9,
+    "pass": true
+   }
+  }
+ },
+ {
+  "scene_key": "Tatum-Casey-Drew-barber-child",
+  "stimulus": "Tatum's barber is Casey. Casey's child is Drew. In other words, Drew is Tatum's",
+  "names": [
+   "Tatum",
+   "Casey",
+   "Drew"
+  ],
+  "hop1": "barber",
+  "hop2": "child",
+  "gold": "barber's child",
+  "gold_alt": "child of Tatum's barber",
+  "flipped": "child's barber",
+  "id": "relational-t0-s4-0020-a",
+  "scene": "relational-t0-s4-0020",
+  "adapt": {
+   "origin": "generated",
+   "tier": "t0",
+   "knobs": {},
+   "change": "original rules (13 professional x 5 kinship relations)",
+   "gate": {
+    "rate": 0.9,
+    "pass": true
+   }
+  }
+ },
+ {
+  "scene_key": "Tatum-Casey-Drew-barber-child",
+  "stimulus": "Tatum's child is Casey. Casey's barber is Drew. In other words, Drew is Tatum's",
+  "names": [
+   "Tatum",
+   "Casey",
+   "Drew"
+  ],
+  "hop1": "child",
+  "hop2": "barber",
+  "gold": "child's barber",
+  "gold_alt": "barber of Tatum's child",
+  "flipped": "barber's child",
+  "id": "relational-t0-s4-0020-b",
+  "scene": "relational-t0-s4-0020",
+  "adapt": {
+   "origin": "generated",
+   "tier": "t0",
+   "knobs": {},
+   "change": "original rules (13 professional x 5 kinship relations)",
+   "gate": {
+    "rate": 0.9,
+    "pass": true
+   }
+  }
+ },
+ {
+  "scene_key": "Elliot-Taylor-Riley-dentist-spouse",
+  "stimulus": "Elliot's dentist is Taylor. Taylor's spouse is Riley. In other words, Riley is Elliot's",
+  "names": [
+   "Elliot",
+   "Taylor",
+   "Riley"
+  ],
+  "hop1": "dentist",
+  "hop2": "spouse",
+  "gold": "dentist's spouse",
+  "gold_alt": "spouse of Elliot's dentist",
+  "flipped": "spouse's dentist",
+  "id": "relational-t0-s6-0164-a",
+  "scene": "relational-t0-s6-0164",
+  "adapt": {
+   "origin": "generated",
+   "tier": "t0",
+   "knobs": {},
+   "change": "original rules (13 professional x 5 kinship relations)",
+   "gate": {
+    "rate": 0.8,
+    "pass": true
+   }
+  }
+ },
+ {
+  "scene_key": "Elliot-Taylor-Riley-dentist-spouse",
+  "stimulus": "Elliot's spouse is Taylor. Taylor's dentist is Riley. In other words, Riley is Elliot's",
+  "names": [
+   "Elliot",
+   "Taylor",
+   "Riley"
+  ],
+  "hop1": "spouse",
+  "hop2": "dentist",
+  "gold": "spouse's dentist",
+  "gold_alt": "dentist of Elliot's spouse",
+  "flipped": "dentist's spouse",
+  "id": "relational-t0-s6-0164-b",
+  "scene": "relational-t0-s6-0164",
+  "adapt": {
+   "origin": "generated",
+   "tier": "t0",
+   "knobs": {},
+   "change": "original rules (13 professional x 5 kinship relations)",
+   "gate": {
+    "rate": 0.8,
+    "pass": true
+   }
+  }
+ },
+ {
+  "scene_key": "Riley-Remy-Morgan-coach-spouse",
+  "stimulus": "Riley's coach is Remy. Remy's spouse is Morgan. In other words, Morgan is Riley's",
+  "names": [
+   "Riley",
+   "Remy",
+   "Morgan"
+  ],
+  "hop1": "coach",
+  "hop2": "spouse",
+  "gold": "coach's spouse",
+  "gold_alt": "spouse of Riley's coach",
+  "flipped": "spouse's coach",
+  "id": "relational-t0-s6-0187-a",
+  "scene": "relational-t0-s6-0187",
+  "adapt": {
+   "origin": "generated",
+   "tier": "t0",
+   "knobs": {},
+   "change": "original rules (13 professional x 5 kinship relations)",
+   "gate": {
+    "rate": 0.9,
+    "pass": true
+   }
+  }
+ },
+ {
+  "scene_key": "Riley-Remy-Morgan-coach-spouse",
+  "stimulus": "Riley's spouse is Remy. Remy's coach is Morgan. In other words, Morgan is Riley's",
+  "names": [
+   "Riley",
+   "Remy",
+   "Morgan"
+  ],
+  "hop1": "spouse",
+  "hop2": "coach",
+  "gold": "spouse's coach",
+  "gold_alt": "coach of Riley's spouse",
+  "flipped": "coach's spouse",
+  "id": "relational-t0-s6-0187-b",
+  "scene": "relational-t0-s6-0187",
+  "adapt": {
+   "origin": "generated",
+   "tier": "t0",
+   "knobs": {},
+   "change": "original rules (13 professional x 5 kinship relations)",
+   "gate": {
+    "rate": 0.9,
+    "pass": true
+   }
+  }
+ },
+ {
+  "scene_key": "Jem-Campbell-Riley-coach-child",
+  "stimulus": "Jem's coach is Campbell. Campbell's child is Riley. In other words, Riley is Jem's",
+  "names": [
+   "Jem",
+   "Campbell",
+   "Riley"
+  ],
+  "hop1": "coach",
+  "hop2": "child",
+  "gold": "coach's child",
+  "gold_alt": "child of Jem's coach",
+  "flipped": "child's coach",
+  "id": "relational-t1-s1005-0069-a",
+  "scene": "relational-t1-s1005-0069",
+  "adapt": {
+   "origin": "generated",
+   "tier": "t1",
+   "knobs": {
+    "professional": [
+     "boss",
+     "doctor",
+     "neighbor",
+     "landlord",
+     "coach",
+     "dentist"
+    ],
+    "kinship": [
+     "sibling",
+     "parent",
+     "child"
+    ]
+   },
+   "change": "the commonest relation words only (6 professional x sibling/parent/child)",
+   "gate": {
+    "rate": 0.8,
+    "pass": true
+   }
+  }
+ },
+ {
+  "scene_key": "Jem-Campbell-Riley-coach-child",
+  "stimulus": "Jem's child is Campbell. Campbell's coach is Riley. In other words, Riley is Jem's",
+  "names": [
+   "Jem",
+   "Campbell",
+   "Riley"
+  ],
+  "hop1": "child",
+  "hop2": "coach",
+  "gold": "child's coach",
+  "gold_alt": "coach of Jem's child",
+  "flipped": "coach's child",
+  "id": "relational-t1-s1005-0069-b",
+  "scene": "relational-t1-s1005-0069",
+  "adapt": {
+   "origin": "generated",
+   "tier": "t1",
+   "knobs": {
+    "professional": [
+     "boss",
+     "doctor",
+     "neighbor",
+     "landlord",
+     "coach",
+     "dentist"
+    ],
+    "kinship": [
+     "sibling",
+     "parent",
+     "child"
+    ]
+   },
+   "change": "the commonest relation words only (6 professional x sibling/parent/child)",
+   "gate": {
+    "rate": 0.8,
+    "pass": true
+   }
+  }
+ },
+ {
+  "scene_key": "Jules-Kit-Alex-dentist-parent",
+  "stimulus": "Jules's dentist is Kit. Kit's parent is Alex. In other words, Alex is Jules's",
+  "names": [
+   "Jules",
+   "Kit",
+   "Alex"
+  ],
+  "hop1": "dentist",
+  "hop2": "parent",
+  "gold": "dentist's parent",
+  "gold_alt": "parent of Jules's dentist",
+  "flipped": "parent's dentist",
+  "id": "relational-t1-s1007-0112-a",
+  "scene": "relational-t1-s1007-0112",
+  "adapt": {
+   "origin": "generated",
+   "tier": "t1",
+   "knobs": {
+    "professional": [
+     "boss",
+     "doctor",
+     "neighbor",
+     "landlord",
+     "coach",
+     "dentist"
+    ],
+    "kinship": [
+     "sibling",
+     "parent",
+     "child"
+    ]
+   },
+   "change": "the commonest relation words only (6 professional x sibling/parent/child)",
+   "gate": {
+    "rate": 0.8,
+    "pass": true
+   }
+  }
+ },
+ {
+  "scene_key": "Jules-Kit-Alex-dentist-parent",
+  "stimulus": "Jules's parent is Kit. Kit's dentist is Alex. In other words, Alex is Jules's",
+  "names": [
+   "Jules",
+   "Kit",
+   "Alex"
+  ],
+  "hop1": "parent",
+  "hop2": "dentist",
+  "gold": "parent's dentist",
+  "gold_alt": "dentist of Jules's parent",
+  "flipped": "dentist's parent",
+  "id": "relational-t1-s1007-0112-b",
+  "scene": "relational-t1-s1007-0112",
+  "adapt": {
+   "origin": "generated",
+   "tier": "t1",
+   "knobs": {
+    "professional": [
+     "boss",
+     "doctor",
+     "neighbor",
+     "landlord",
+     "coach",
+     "dentist"
+    ],
+    "kinship": [
+     "sibling",
+     "parent",
+     "child"
+    ]
+   },
+   "change": "the commonest relation words only (6 professional x sibling/parent/child)",
+   "gate": {
+    "rate": 0.9,
+    "pass": true
+   }
+  }
+ }
+]

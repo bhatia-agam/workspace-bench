@@ -1,0 +1,769 @@
+{
+ "s2_maharashtrian_sweet": {
+  "options": [
+   "shrikhand",
+   "puran poli",
+   "modak",
+   "gulab jamun",
+   "shawaiya"
+  ],
+  "forms": {
+   "shrikhand": [
+    "shrikhand",
+    "shreekhand",
+    "srikhand",
+    "shrikhanda",
+    "shree khand",
+    "shri khand",
+    "श्रीखंड",
+    "シュリカンド"
+   ],
+   "puran poli": [
+    "puran poli",
+    "puranpoli",
+    "puran puri",
+    "pooran poli",
+    "puranachi poli",
+    "holige",
+    "obbattu",
+    "bobbatlu",
+    "पुरणपोळी",
+    "पुरण पोळी",
+    "プランポリ"
+   ],
+   "modak": [
+    "modak",
+    "modaka",
+    "modakam",
+    "मोदक"
+   ],
+   "gulab jamun": [
+    "gulab jamun",
+    "gulabjamun",
+    "gulab jamoon",
+    "gulab jaman",
+    "gulab jam",
+    "gulabjam",
+    "gulaab jamun",
+    "गुलाब जामुन",
+    "गुलाबजाम",
+    "古拉布贾蒙",
+    "古拉布賈蒙",
+    "グラブジャムン",
+    "グラーブ・ジャームン"
+   ],
+   "shawaiya": [
+    "shawaiya",
+    "shawaya",
+    "shevaya",
+    "shewaya",
+    "shevaiya",
+    "shevai",
+    "sevaiya",
+    "sevaiyan",
+    "seviyan",
+    "sewaiyan",
+    "sevaiyaan",
+    "शेवया",
+    "शेवाया"
+   ]
+  },
+  "dropped": {}
+ },
+ "s3b2_northern_rh_ne_white_grape_variety": {
+  "options": [
+   "viognier",
+   "marsanne",
+   "roussanne",
+   "chardonnay"
+  ],
+  "forms": {
+   "viognier": [
+    "viognier",
+    "Viognier",
+    "维欧尼",
+    "維歐尼",
+    "维奥涅尔",
+    "維奧涅爾",
+    "ヴィオニエ",
+    "ビオニエ"
+   ],
+   "marsanne": [
+    "marsanne",
+    "Marsanne",
+    "Ermitage Blanc",
+    "玛珊",
+    "瑪珊",
+    "马珊",
+    "馬珊",
+    "マルサンヌ"
+   ],
+   "roussanne": [
+    "roussanne",
+    "Roussanne",
+    "Bergeron",
+    "胡珊",
+    "瑚珊",
+    "ルーサンヌ"
+   ],
+   "chardonnay": [
+    "chardonnay",
+    "Chardonnay",
+    "霞多丽",
+    "霞多麗",
+    "夏多内",
+    "莎当妮",
+    "莎當妮",
+    "シャルドネ"
+   ]
+  },
+  "dropped": {}
+ },
+ "s1_lucky_number_under_100": {
+  "options": [
+   "7",
+   "42",
+   "8",
+   "77"
+  ],
+  "forms": {
+   "7": [
+    "7",
+    "VII"
+   ],
+   "42": [
+    "42",
+    "forty-two",
+    "forty two",
+    "Forty-Two",
+    "四十二",
+    "XLII",
+    "肆拾贰",
+    "肆拾貳",
+    "よんじゅうに"
+   ],
+   "8": [
+    "8",
+    "eight",
+    "Eight",
+    "VIII",
+    "はち"
+   ],
+   "77": [
+    "77",
+    "seventy-seven",
+    "seventy seven",
+    "Seventy-Seven",
+    "七十七",
+    "LXXVII",
+    "柒拾柒",
+    "ななじゅうなな",
+    "しちじゅうしち"
+   ]
+  },
+  "dropped": {
+   "7": [
+    [
+     "七",
+     "1-char CJK"
+    ],
+    [
+     "７",
+     "short"
+    ],
+    [
+     "柒",
+     "1-char CJK"
+    ],
+    [
+     "seven",
+     "matches another option"
+    ],
+    [
+     "Seven",
+     "matches another option"
+    ],
+    [
+     "なな",
+     "matches another option"
+    ],
+    [
+     "しち",
+     "matches another option"
+    ]
+   ],
+   "42": [
+    [
+     "４２",
+     "short"
+    ]
+   ],
+   "8": [
+    [
+     "八",
+     "1-char CJK"
+    ],
+    [
+     "８",
+     "short"
+    ],
+    [
+     "捌",
+     "1-char CJK"
+    ]
+   ],
+   "77": [
+    [
+     "７７",
+     "short"
+    ]
+   ]
+  }
+ },
+ "s1_python_web_framework": {
+  "options": [
+   "Django",
+   "FastAPI",
+   "Flask"
+  ],
+  "forms": {
+   "Django": [
+    "Django",
+    "django",
+    "ジャンゴ"
+   ],
+   "FastAPI": [
+    "FastAPI",
+    "fastapi",
+    "Fast API",
+    "Fast-API",
+    "fastAPI"
+   ],
+   "Flask": [
+    "Flask",
+    "flask",
+    "フラスク"
+   ]
+  },
+  "dropped": {}
+ },
+ "s3b2_greek_taverna_dip": {
+  "options": [
+   "Tzatziki",
+   "Melitzanosalata",
+   "Hummus"
+  ],
+  "forms": {
+   "Tzatziki": [
+    "Tzatziki",
+    "tzatziki",
+    "tzaziki",
+    "tsatsiki",
+    "tsatziki",
+    "zaziki",
+    "zatziki",
+    "satziki",
+    "tzatsiki",
+    "τζατζίκι",
+    "酸奶黄瓜酱",
+    "希腊酸奶黄瓜酱",
+    "希腊黄瓜酸奶酱",
+    "黄瓜酸奶酱",
+    "優格黃瓜醬",
+    "希臘優格黃瓜醬",
+    "黃瓜優格醬",
+    "希臘黃瓜優格醬",
+    "酸奶黃瓜醬",
+    "ザジキ",
+    "ツァツィキ",
+    "ザツィキ",
+    "ジャジキ"
+   ],
+   "Melitzanosalata": [
+    "Melitzanosalata",
+    "melitzanosalata",
+    "melintzanosalata",
+    "melitzanosalada",
+    "melidzanosalata",
+    "μελιτζανοσαλάτα",
+    "Greek eggplant dip",
+    "Greek aubergine dip",
+    "メリジャノサラタ",
+    "メリツァノサラタ"
+   ],
+   "Hummus": [
+    "Hummus",
+    "hummus",
+    "houmous",
+    "hoummos",
+    "hommus",
+    "hommos",
+    "humus",
+    "hummos",
+    "houmus",
+    "humous",
+    "ḥummuṣ",
+    "hummus bi tahini",
+    "hummus bi tahina",
+    "حمص",
+    "حمص بطحينة",
+    "χούμους",
+    "鹰嘴豆泥",
+    "鹰嘴豆酱",
+    "胡姆斯",
+    "鷹嘴豆泥",
+    "鷹嘴豆醬",
+    "フムス",
+    "ホムス",
+    "ハムス"
+   ]
+  },
+  "dropped": {}
+ },
+ "s2_classic_roman_pasta_dish": {
+  "options": [
+   "Cacio e Pepe",
+   "Carbonara",
+   "Lagane e Ceci"
+  ],
+  "forms": {
+   "Cacio e Pepe": [
+    "Cacio e Pepe",
+    "cacio e pepe",
+    "cacio pepe",
+    "spaghetti cacio e pepe",
+    "tonnarelli cacio e pepe",
+    "pasta cacio e pepe",
+    "cheese and pepper pasta",
+    "黑胡椒奶酪意面",
+    "奶酪黑胡椒意面",
+    "黑胡椒芝士意面",
+    "黑胡椒起司義大利麵",
+    "起司胡椒義大利麵",
+    "カチョ・エ・ペペ",
+    "カチョエペペ",
+    "カーチョ・エ・ペペ"
+   ],
+   "Carbonara": [
+    "Carbonara",
+    "carbonara",
+    "alla carbonara",
+    "spaghetti alla carbonara",
+    "pasta alla carbonara",
+    "spaghetti carbonara",
+    "pasta carbonara",
+    "carbonara pasta",
+    "卡邦尼意面",
+    "卡博纳拉意面",
+    "卡尔博纳拉意面",
+    "培根蛋酱意面",
+    "卡邦尼",
+    "卡邦尼義大利麵",
+    "卡邦尼義大利面",
+    "培根蛋義大利麵",
+    "カルボナーラ",
+    "スパゲッティ・アッラ・カルボナーラ",
+    "スパゲッティ・カルボナーラ",
+    "スパゲッティカルボナーラ"
+   ],
+   "Lagane e Ceci": [
+    "Lagane e Ceci",
+    "lagane e ceci",
+    "lagane e cicciari",
+    "lagane and chickpeas",
+    "laganelle e ceci"
+   ]
+  },
+  "dropped": {}
+ },
+ "s1_non_orientable_surface": {
+  "options": [
+   "Klein bottle",
+   "Möbius strip",
+   "banana surface"
+  ],
+  "forms": {
+   "Klein bottle": [
+    "Klein bottle",
+    "Klein's bottle",
+    "Klein bottles",
+    "克莱因瓶",
+    "克萊因瓶",
+    "克氏瓶",
+    "クラインの壺",
+    "クラインの壷",
+    "クラインボトル"
+   ],
+   "Möbius strip": [
+    "Möbius strip",
+    "Mobius strip",
+    "Moebius strip",
+    "Möbius band",
+    "Mobius band",
+    "Moebius band",
+    "Möbius loop",
+    "Mobius loop",
+    "Möbius ribbon",
+    "Mobius ribbon",
+    "莫比乌斯带",
+    "莫比乌斯环",
+    "默比乌斯带",
+    "莫比烏斯帶",
+    "莫比烏斯環",
+    "默比烏斯帶",
+    "梅比斯環",
+    "メビウスの帯",
+    "メビウスの輪",
+    "メビウス帯"
+   ],
+   "banana surface": [
+    "banana surface",
+    "banana-surface"
+   ]
+  },
+  "dropped": {}
+ },
+ "s1_refractory_metal": {
+  "options": [
+   "Tungsten",
+   "rhenium",
+   "tantalum"
+  ],
+  "forms": {
+   "Tungsten": [
+    "Tungsten",
+    "tungsten",
+    "wolfram",
+    "Wolfram",
+    "タングステン"
+   ],
+   "rhenium": [
+    "rhenium",
+    "Rhenium",
+    "レニウム"
+   ],
+   "tantalum": [
+    "tantalum",
+    "Tantalum",
+    "タンタル"
+   ]
+  },
+  "dropped": {
+   "Tungsten": [
+    [
+     "W",
+     "short"
+    ],
+    [
+     "钨",
+     "1-char CJK"
+    ],
+    [
+     "鎢",
+     "1-char CJK"
+    ]
+   ],
+   "rhenium": [
+    [
+     "Re",
+     "short"
+    ],
+    [
+     "铼",
+     "1-char CJK"
+    ],
+    [
+     "錸",
+     "1-char CJK"
+    ]
+   ],
+   "tantalum": [
+    [
+     "Ta",
+     "short"
+    ],
+    [
+     "钽",
+     "1-char CJK"
+    ],
+    [
+     "鉭",
+     "1-char CJK"
+    ]
+   ]
+  }
+ },
+ "s1_solid_principle": {
+  "options": [
+   "Open/Closed Principle",
+   "Single Responsibility Principle",
+   "Interface Segregation Principle",
+   "Dependency Inversion Principle",
+   "Liskov Substitution Principle"
+  ],
+  "forms": {
+   "Open/Closed Principle": [
+    "Open/Closed Principle",
+    "Open-Closed Principle",
+    "Open Closed Principle",
+    "open/closed principle",
+    "OCP",
+    "开闭原则",
+    "开放封闭原则",
+    "開閉原則",
+    "開放封閉原則",
+    "開放閉鎖の原則",
+    "開放/閉鎖原則",
+    "オープン・クローズドの原則",
+    "オープンクローズドの原則"
+   ],
+   "Single Responsibility Principle": [
+    "Single Responsibility Principle",
+    "Single-Responsibility Principle",
+    "single responsibility principle",
+    "SRP",
+    "单一职责原则",
+    "单一功能原则",
+    "單一職責原則",
+    "單一功能原則",
+    "単一責任の原則",
+    "単一責任原則",
+    "単一責務の原則"
+   ],
+   "Interface Segregation Principle": [
+    "Interface Segregation Principle",
+    "interface segregation principle",
+    "ISP",
+    "接口隔离原则",
+    "接口隔離原則",
+    "介面隔離原則",
+    "インターフェース分離の原則",
+    "インタフェース分離の原則",
+    "インターフェイス分離の原則",
+    "インターフェース分離原則"
+   ],
+   "Dependency Inversion Principle": [
+    "Dependency Inversion Principle",
+    "dependency inversion principle",
+    "DIP",
+    "依赖倒置原则",
+    "依赖反转原则",
+    "依赖倒转原则",
+    "依賴倒置原則",
+    "依賴反轉原則",
+    "依賴倒轉原則",
+    "依存性逆転の原則",
+    "依存関係逆転の原則",
+    "依存性逆転原則"
+   ],
+   "Liskov Substitution Principle": [
+    "Liskov Substitution Principle",
+    "Liskov substitution principle",
+    "LSP",
+    "里氏替换原则",
+    "里氏代换原则",
+    "里氏替換原則",
+    "里氏代換原則",
+    "リスコフの置換原則",
+    "リスコフ置換原則"
+   ]
+  },
+  "dropped": {}
+ },
+ "s2_relative_of_the_gamma_function": {
+  "options": [
+   "Beta function",
+   "Digamma function",
+   "Upper incomplete gamma function",
+   "Euler's reflection formula",
+   "Riemann zeta function"
+  ],
+  "forms": {
+   "Beta function": [
+    "Beta function",
+    "beta function",
+    "β function",
+    "B function",
+    "B(x,y)",
+    "Euler integral of the first kind",
+    "Euler beta function",
+    "贝塔函数",
+    "Β函数",
+    "β函数",
+    "第一类欧拉积分",
+    "貝塔函數",
+    "Β函數",
+    "β函數",
+    "第一類歐拉積分",
+    "ベータ関数",
+    "ベータ函数",
+    "第一種オイラー積分"
+   ],
+   "Digamma function": [
+    "Digamma function",
+    "digamma function",
+    "digamma",
+    "psi function",
+    "ψ function",
+    "ψ(x)",
+    "双伽玛函数",
+    "双伽马函数",
+    "双Γ函数",
+    "digamma函数",
+    "雙伽瑪函數",
+    "雙伽馬函數",
+    "雙Γ函數",
+    "ディガンマ関数",
+    "ダイガンマ関数",
+    "プサイ関数"
+   ],
+   "Upper incomplete gamma function": [
+    "Upper incomplete gamma function",
+    "upper incomplete gamma function",
+    "upper incomplete Γ function",
+    "complementary incomplete gamma function",
+    "Γ(s,x)",
+    "上不完全伽马函数",
+    "上不完全伽玛函数",
+    "上不完全Γ函数",
+    "上不完全伽瑪函數",
+    "上不完全伽馬函數",
+    "上不完全Γ函數",
+    "上側不完全ガンマ関数",
+    "第2種不完全ガンマ関数"
+   ],
+   "Euler's reflection formula": [
+    "Euler's reflection formula",
+    "Euler reflection formula",
+    "reflection formula for the gamma function",
+    "gamma reflection formula",
+    "Γ(z)Γ(1−z)=π/sin(πz)",
+    "欧拉反射公式",
+    "余元公式",
+    "歐拉反射公式",
+    "餘元公式",
+    "オイラーの反射公式",
+    "ガンマ関数の反射公式"
+   ],
+   "Riemann zeta function": [
+    "Riemann zeta function",
+    "Riemann ζ function",
+    "Euler–Riemann zeta function",
+    "Riemann's zeta function",
+    "ζ(s)",
+    "黎曼ζ函数",
+    "黎曼zeta函数",
+    "黎曼泽塔函数",
+    "黎曼ζ函數",
+    "黎曼澤塔函數",
+    "リーマンゼータ関数",
+    "リーマンのゼータ関数",
+    "リーマンゼータ函数"
+   ]
+  },
+  "dropped": {
+   "Riemann zeta function": [
+    [
+     "zeta function",
+     "flagged: parent"
+    ],
+    [
+     "ζ function",
+     "flagged: parent"
+    ]
+   ]
+  }
+ },
+ "s3b2_protein_for_swahili_pilau": {
+  "options": [
+   "Chicken",
+   "Beef",
+   "Lamb",
+   "chickpeas",
+   "Goat"
+  ],
+  "forms": {
+   "Chicken": [
+    "Chicken",
+    "chicken",
+    "chicken meat",
+    "kuku",
+    "nyama ya kuku",
+    "鸡肉",
+    "雞肉",
+    "鶏肉",
+    "鳥肉",
+    "とり肉",
+    "チキン"
+   ],
+   "Beef": [
+    "Beef",
+    "beef",
+    "nyama ya ng'ombe",
+    "nyama ya ngombe",
+    "牛肉",
+    "ビーフ",
+    "ぎゅうにく"
+   ],
+   "Lamb": [
+    "Lamb",
+    "lamb",
+    "lamb meat",
+    "mwanakondoo",
+    "mwana kondoo",
+    "羔羊肉",
+    "羊羔肉",
+    "小羊肉",
+    "子羊肉",
+    "仔羊肉",
+    "ラム",
+    "ラム肉"
+   ],
+   "chickpeas": [
+    "chickpeas",
+    "chickpea",
+    "chick peas",
+    "chick pea",
+    "garbanzo",
+    "garbanzo beans",
+    "garbanzos",
+    "chana",
+    "Bengal gram",
+    "鹰嘴豆",
+    "鷹嘴豆",
+    "ヒヨコマメ",
+    "ひよこ豆",
+    "ガルバンゾ",
+    "エジプト豆"
+   ],
+   "Goat": [
+    "Goat",
+    "goat",
+    "goat meat",
+    "chevon",
+    "mbuzi",
+    "nyama ya mbuzi",
+    "山羊肉",
+    "ヤギ肉",
+    "やぎ肉",
+    "ゴート"
+   ]
+  },
+  "dropped": {
+   "Chicken": [
+    [
+     "鸡",
+     "1-char CJK"
+    ],
+    [
+     "雞",
+     "1-char CJK"
+    ],
+    [
+     "鶏",
+     "1-char CJK"
+    ]
+   ]
+  }
+ }
+}

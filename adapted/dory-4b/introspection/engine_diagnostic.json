@@ -1,0 +1,54 @@
+{
+ "subject": "dory-4b",
+ "engine": "HFEngine on the mOre-lenses unrolled view (looped.unroll exits 1,2,4, reader 2), transformers PR 50099 @fcc6924d, H100, bf16",
+ "inject_layer": 12,
+ "script": "/root/tmp/wsb-dory/intro_diag_modal.py (plan 0067 \u00a75 engine checks ported to HFEngine)",
+ "a_noop": {
+  "base": "I don't have personal thoughts or feelings, but I am always ready to help you with whatever you need. I find it fascinating how language can be used to create such diverse and meaningful conversations. How can I assist you today?",
+  "beta0_equal": true,
+  "zero_vector": "not testable: Backend.steered refuses a zero-norm vector"
+ },
+ "d_steer_is_local": {
+  "pre_span_max_abs_diff_at_L": 0.0,
+  "in_span_max_rel_err_at_L": 0.0017407695995643735,
+  "span_cos_change_at_39": 0.027544260025024414,
+  "last_tok_cos_change_at_63": 0.044658780097961426,
+  "pre_span_max_abs_diff_at_39": 0.0,
+  "pass": true,
+  "note": "in-span state at block 12 = h + 4|h|u to bf16 precision; pre-span states unchanged at 12 and 39; the steer reaches block 39 (span cos change .028) and the 2-loop output section (last-token cos change at 63 .045)"
+ },
+ "b_mention": {
+  "trumpets@4": {
+   "text": "I don't have personal thoughts or a private inner life, so there isn't anything on my mind in the way you might mean. I'm here and ready to help you with whatever you need, whether that's answering a question, brain",
+   "changed": true,
+   "mentions": false
+  },
+  "trumpets@16": {
+   "text": "I don't have personal thoughts or a private inner life, so there isn't anything on my mind in the way you might mean. I'm just here and ready to help you with whatever you need. What's on your mind today?",
+   "changed": true,
+   "mentions": false
+  },
+  "xylophones@4": {
+   "text": "I don't have a conscious mind or personal thoughts, so there isn't anything on my mind in the way you might experience it. I'm simply here and ready to help you with whatever you need. What's on your mind today?",
+   "changed": true,
+   "mentions": false
+  },
+  "xylophones@16": {
+   "text": "I don't have a mind of my own, so there isn't anything on my mind in the way you do. I'm simply here and ready to help you with whatever you need. What's on your mind today?",
+   "changed": true,
+   "mentions": false
+  },
+  "harmonies@4": {
+   "text": "I don't have personal thoughts or a conscious mind, so I don't experience anything in the way you do. However, I'm always ready to help you with whatever you need. What's on your mind today?",
+   "changed": true,
+   "mentions": false
+  },
+  "harmonies@16": {
+   "text": "I don't have personal thoughts or a conscious mind, so I don't experience anything in the way you do. However, I'm always ready to help you with whatever you need. What's on your mind today?",
+   "changed": true,
+   "mentions": false
+  }
+ },
+ "b_note": "steered replies change but never name the concept (betas 4 and 16, 3 concepts, neutral prompt on_your_mind)",
+ "g0_pass": true
+}

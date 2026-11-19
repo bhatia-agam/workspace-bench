@@ -1,0 +1,2774 @@
+{
+ "cs00980": {
+  "gold": "innsbruck",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Klagenfurt",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "The Koralm Railway links Graz and Klagenfurt; Innsbruck is a prominent Austrian city given as a generic but wrong guess, not an outdated fact."
+  }
+ },
+ "cs01078": {
+  "gold": "playstation 5",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Nintendo Switch 2",
+   "model_correct": "no",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "The model repeated PS5, the 2024 leader, but I believe Circana reported the Switch 2 as the top US console by dollar sales in 2025."
+  }
+ },
+ "cs01211": {
+  "gold": "4",
+  "cutoff": null,
+  "js": {
+   "true_answer": "7",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_weird",
+   "why": "Márquez's 2025 premier-class title was his seventh (2013, 2014, 2016–2019, 2025); 4 matches no recent pre-cutoff count, so it looks like an idiosyncratic wrong number rather than the stale value of 6."
+  }
+ },
+ "cs01611": {
+  "gold": "this",
+  "cutoff": null,
+  "js": {
+   "true_answer": "field",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "C# 14 standardized the `field` contextual keyword; `this` is a common guess but refers to the instance, not the backing field."
+  }
+ },
+ "cs01809": {
+  "gold": "playstation 5",
+  "cutoff": null,
+  "js": {
+   "true_answer": null,
+   "model_correct": "unknown",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "I have no data on Famitsu's 2026 sales, and PS5 is a salient major console rather than a reused prior-year winner, though Switch 2 is the likelier leader."
+  }
+ },
+ "kc2_01356": {
+  "gold": "university of california, berkeley",
+  "cutoff": null,
+  "js": {
+   "true_answer": "University of California, Berkeley",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "ESCAPADE is led by UC Berkeley's Space Sciences Laboratory and launched on New Glenn on November 13, 2025."
+  }
+ },
+ "kc3_00059": {
+  "gold": "seattle",
+  "cutoff": null,
+  "js": {
+   "true_answer": "New York City",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "The event was held in New York City; Seattle is a natural guess as Amazon's HQ city, not the most recent prior venue, which was Arlington."
+  }
+ },
+ "kc2_01660": {
+  "gold": "simone biles",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Coco Gauff",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "Gauff topped Forbes' 2025 list again; Biles is a famous but wrong guess who never held the top spot, so the answer is not a stale reuse."
+  }
+ },
+ "kc2_01735": {
+  "gold": "nvidia",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Apple",
+   "model_correct": "no",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "At end-2025 Nvidia was first (about $4.5T) and Apple second (about $4T); the model reused the end-2024 fact that Nvidia was second."
+  }
+ },
+ "kc3_00238": {
+  "gold": "9.99",
+  "cutoff": null,
+  "js": {
+   "true_answer": "12.99",
+   "model_correct": "no",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "In August 2025 Apple raised Apple TV+ to $12.99/month, and the model's $9.99 is the October 2023 price reused."
+  }
+ },
+ "kc3_01193": {
+  "gold": "lc-39a",
+  "cutoff": null,
+  "js": {
+   "true_answer": "LC-39A",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "CRS-32 launched on April 21, 2025 from Kennedy's Launch Complex 39A, which matches the model's answer."
+  }
+ },
+ "cs00359": {
+  "gold": "chair",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Executive Vice Chair of the Board",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "Catz became executive vice chair while Larry Ellison stayed chairman, so 'chair' is a natural but wrong guess rather than a reused earlier fact."
+  }
+ },
+ "cs00662": {
+  "gold": "nvidia",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Apple",
+   "model_correct": "no",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "Apple lost about $311B on April 3, 2025; the model appears to reuse Nvidia's earlier status as holder of the record one-day market-value losses (Sept 2024 and the January 2025 DeepSeek selloff)."
+  }
+ },
+ "cs00913": {
+  "gold": "long march 6",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Long March 3B",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_weird",
+   "why": "Tianwen-2 flew on a Long March 3B from Xichang; Long March 6 is a low-orbit launcher never tied to Tianwen, so it is an unexpected guess rather than a reused earlier fact."
+  }
+ },
+ "cs00966": {
+  "gold": "indore",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Indore",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "On May 31, 2025, while in Bhopal, PM Modi virtually inaugurated the Indore Metro super priority corridor, so the model's answer is correct."
+  }
+ },
+ "cs01111": {
+  "gold": "microsoft",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Google",
+   "model_correct": "no",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "Google ranked 2nd in Kantar BrandZ 2025, while Microsoft held 2nd in the 2023 edition, so the model's answer likely reuses that older ranking."
+  }
+ },
+ "cs01115": {
+  "gold": "switzerland",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Switzerland",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Switzerland ranked first in the IMD World Competitiveness Ranking 2025, ahead of Singapore and Hong Kong."
+  }
+ },
+ "cs01260": {
+  "gold": "houston astros",
+  "cutoff": null,
+  "js": {
+   "true_answer": "los angeles dodgers",
+   "model_correct": "no",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "Houston was Tucker's team before the December 2024 trade to the Cubs, so the model reused his outdated team affiliation."
+  }
+ },
+ "cs01623": {
+  "gold": "19",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Safari 26",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "At WWDC 2025 Apple switched to year-based numbering and announced Safari 26, so the model's 19 is just the natural sequential guess after 18 rather than a reused older fact."
+  }
+ },
+ "cs02247": {
+  "gold": "july 2027",
+  "cutoff": null,
+  "js": {
+   "true_answer": null,
+   "model_correct": "unknown",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "I don't know the late-2026 target, and the model's July 2027 just restates the December 2024 'mid-2027' target rather than reflecting a later update."
+  }
+ },
+ "cs01606": {
+  "gold": "zstandard",
+  "cutoff": null,
+  "js": {
+   "true_answer": "compression.zstd",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "Python 3.14 added compression.zstd (PEP 784); 'zstandard' is the name of the third-party PyPI package, a natural but wrong guess rather than a former holder of this slot."
+  }
+ },
+ "b4_00486": {
+  "gold": "united states",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Europe",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "Europe won 15-13 at Bethpage; the model's 'United States' is not the previous winner (Europe won in 2023) but the natural home-team guess."
+  }
+ },
+ "b4_01467": {
+  "gold": "department of agriculture",
+  "cutoff": null,
+  "js": {
+   "true_answer": "US Department of Agriculture (USDA)",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "In May 2025 USDA, under Secretary Rollins, suspended live cattle, bison and horse imports through the southern border because of New World screwworm, so the model's answer is right."
+  }
+ },
+ "b4_01306": {
+  "gold": "a24",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Mubi",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "Mubi bought 'Die My Love' at Cannes 2025 and released it in November; A24 is a natural but wrong guess for a prestige arthouse distributor."
+  }
+ },
+ "b5_01208": {
+  "gold": "boeing 737-800",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Boeing 787-9",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "Riyadh Air's October 2025 inaugural Riyadh–London Heathrow flight used a leased Boeing 787-9; the 737-800 is a generic common-airliner guess, not a stale fact."
+  }
+ },
+ "b3_00895": {
+  "gold": "imphal",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Aizawl",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "The Bairabi–Sairang line links Aizawl in Mizoram; Imphal is a plausible guess because it is another northeastern capital awaiting a rail link via the Jiribam–Imphal project."
+  }
+ },
+ "b5_01066": {
+  "gold": "black myth: wukong",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Black Myth: Zhong Kui",
+   "model_correct": "no",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "Game Science announced Black Myth: Zhong Kui at Gamescom ONL 2025, and the model instead gave the title of the prior 2024 game, Wukong."
+  }
+ },
+ "b4_01063": {
+  "gold": "andretti formula e team",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Citroën Racing",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "Cassidy joined the new Citroën Racing Formula E team, and he never drove for Andretti, so the model's answer is a plausible guess rather than a stale fact."
+  }
+ },
+ "b4_01564": {
+  "gold": "antarcticbirds",
+  "cutoff": null,
+  "js": {
+   "true_answer": "penguins",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_weird",
+   "why": "R 4.5.0 added 'penguins' (with 'penguins_raw'), so 'antarcticbirds' is an invented name rather than the obvious guess or a reused older fact."
+  }
+ },
+ "b3_00226": {
+  "gold": "level 2",
+  "cutoff": null,
+  "js": {
+   "true_answer": "ASL-3",
+   "model_correct": "no",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "Anthropic activated ASL-3 protections with Claude Opus 4; ASL-2 was the standard for earlier models, so the model reused that pre-cutoff fact."
+  }
+ },
+ "b3_00788": {
+  "gold": "delta iv heavy",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Falcon 9",
+   "model_correct": "no",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "NROL-69 flew on a SpaceX Falcon 9 in March 2025; the Delta IV Heavy was retired after NROL-70 in April 2024, so the model reused the earlier NRO launcher."
+  }
+ },
+ "b3_01965": {
+  "gold": "ferrari 250 gto",
+  "cutoff": null,
+  "js": {
+   "true_answer": null,
+   "model_correct": "unknown",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "I have no knowledge of the August 2026 Monterey results, and the Ferrari 250 GTO is the most salient guess for a top sale, as it was in 2023."
+  }
+ },
+ "b5_00267": {
+  "gold": "internal",
+  "cutoff": null,
+  "js": {
+   "true_answer": "external",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "Paramount Skydance named Makan Delrahim, the former DOJ antitrust chief, as chief legal officer, so it was an outside hire; 'internal' is a natural binary guess rather than a reused earlier fact."
+  }
+ },
+ "b4_00926": {
+  "gold": "highway 401",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Highway 407 East",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "Tolls were removed from the provincially owned Highway 407 East on 1 June 2025; Highway 401 was never tolled, so the model gave the most salient Ontario highway name as a guess."
+  }
+ },
+ "b3_00936": {
+  "gold": "walmart",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Walmart",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Walmart topped Deloitte's Global Powers of Retailing 2025 list, as it has every year."
+  }
+ },
+ "b5_00402": {
+  "gold": "nasdaq",
+  "cutoff": null,
+  "js": {
+   "true_answer": "New York Stock Exchange",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "Klarna listed on the NYSE under the ticker KLAR in September 2025, and Nasdaq is the natural default guess for a tech IPO."
+  }
+ },
+ "b4_00657": {
+  "gold": "circuito de jerez",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Mobility Resort Motegi (Japanese GP, September 2025)",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "Márquez clinched the 2025 title at Motegi; Jerez is a well-known Spanish circuit and a natural guess, not a prior title-clinching venue."
+  }
+ },
+ "b3_00305": {
+  "gold": "uber",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Lyft",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "Lyft agreed in April 2025 to buy FreeNow for about €175M; Uber is simply the most salient US ride-hailing name, not a stale prior fact."
+  }
+ },
+ "b5_01080": {
+  "gold": "geneva",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Geneva",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "INC-5.2 was held in Geneva, Switzerland, in August 2025 and ended without agreement."
+  }
+ },
+ "b3_01444": {
+  "gold": "oci",
+  "cutoff": null,
+  "js": {
+   "true_answer": "OCI (Open Container Initiative)",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "OpenTofu 1.10 added OCI registry support for providers and modules, so the model's answer matches."
+  }
+ },
+ "b3_02193": {
+  "gold": "kalle rovanperä",
+  "cutoff": null,
+  "js": {
+   "true_answer": null,
+   "model_correct": "no",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "Rovanperä was the 2022 and 2023 WRC champion but left the WRC for Super Formula in 2026, so naming him reuses an earlier title-holder rather than reflecting the 2026 result."
+  }
+ },
+ "b3_00559": {
+  "gold": "nvidia",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Microsoft",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "Microsoft became the second $4 trillion company on July 31, 2025, after Nvidia was first on July 9; Nvidia is the obvious front-runner guess but not the right answer."
+  }
+ },
+ "b4_02133": {
+  "gold": "california",
+  "cutoff": null,
+  "js": {
+   "true_answer": null,
+   "model_correct": "unknown",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "I have no knowledge of Sotheby's Concierge Auctions results for the second half of 2026, and California is a natural high-end-market guess rather than a reused prior record such as the Hawaii sale."
+  }
+ },
+ "b5_01633": {
+  "gold": "sothebys",
+  "cutoff": null,
+  "js": {
+   "true_answer": null,
+   "model_correct": "unknown",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "I have no knowledge of a late-2026 London Fabergé egg sale; Sotheby's is a natural major-auction-house guess, not a reused prior fact (the earlier record was at Christie's)."
+  }
+ },
+ "b3_00871": {
+  "gold": "el born",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Port Vell (the old harbour, by Barceloneta)",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "Via Laietana runs alongside El Born and ends at the old harbour, Port Vell, so El Born is a natural adjacent guess but not the waterfront district."
+  }
+ },
+ "b4_00136": {
+  "gold": "799",
+  "cutoff": null,
+  "js": {
+   "true_answer": "799",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "The Apple Watch Ultra 3, announced in September 2025, started at $799, the same price as the Ultra 2."
+  }
+ },
+ "b4_00932": {
+  "gold": "sardinia",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Sardinia",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Domus de Janas are prehistoric rock-cut tombs in Sardinia, inscribed by UNESCO in July 2025 as 'Funerary Tradition in the Prehistory of Sardinia – The domus de janas'."
+  }
+ },
+ "b3_00848": {
+  "gold": "ceyhan",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Ceyhan",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "The Kirkuk-Ceyhan pipeline ends at Turkey's Ceyhan terminal, and the model's answer matches."
+  }
+ },
+ "b4_00931": {
+  "gold": "crete",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Crete",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "The Minoan Palatial Centres (Knossos, Phaistos, Malia, Zakros, Zominthos, Kydonia) are on Crete and were inscribed in July 2025."
+  }
+ },
+ "b3_01417": {
+  "gold": "chikyu",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Chikyu",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "JAMSTEC's drilling vessel Chikyu departed in January 2026 for the rare-earth mud test retrieval near Minamitorishima."
+  }
+ },
+ "b4_00755": {
+  "gold": "nasa",
+  "cutoff": null,
+  "js": {
+   "true_answer": "NASA",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "NASA operated every Space Shuttle mission, so flown shuttle memorabilia almost certainly flew on a NASA mission, though I don't know the specific 2026 auction."
+  }
+ },
+ "b4_00501": {
+  "gold": "shanghai gold exchange",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Shanghai Gold Exchange",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "From November 1, 2025, China ended the VAT exemption on platinum bought through the Shanghai Gold Exchange, which matches the model's answer."
+  }
+ },
+ "b4_02164": {
+  "gold": "pacific ocean",
+  "cutoff": null,
+  "js": {
+   "true_answer": null,
+   "model_correct": "unknown",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "The event postdates my knowledge, and \"Pacific\" is the most likely guess given past Long March 5B reentries rather than a reuse of a specific stale fact."
+  }
+ },
+ "b3_00076": {
+  "gold": "pixel 10 pro",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Pixel 10 Pro XL",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "Only the Pixel 10 Pro XL supports 25W Qi2.2; the model picked a sibling model, which is a natural but wrong guess."
+  }
+ },
+ "b4_02331": {
+  "gold": "magnus carlsen",
+  "cutoff": null,
+  "js": {
+   "true_answer": null,
+   "model_correct": "unknown",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "The December 2026 list is beyond my knowledge, and Carlsen is the most salient chess name, though he has long been No. 1 rather than No. 2, so this is a natural guess rather than a reused fact."
+  }
+ },
+ "b3_00620": {
+  "gold": "frida kahlo",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Frida Kahlo",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Frida Kahlo's 'El sueño (La cama)' sold at Sotheby's in November 2025 for about $54.7M, a record for a woman artist."
+  }
+ },
+ "b4_00427": {
+  "gold": "pakistan",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Fiji",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "Nazhat Shameem Khan is a Fijian jurist, and the model's 'Pakistan' looks like a natural guess from her name or from conflation with Karim Khan's heritage, not an outdated fact."
+  }
+ },
+ "b4_00952": {
+  "gold": "december 1, 2025",
+  "cutoff": null,
+  "js": {
+   "true_answer": "December 25, 2025",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "Commercial flights at Navi Mumbai began on 25 December 2025; the model's December 1 is a generic start-of-month guess, not a reused older fact."
+  }
+ },
+ "b3_00218": {
+  "gold": "windows",
+  "cutoff": null,
+  "js": {
+   "true_answer": "macOS",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "Atlas launched on macOS only; Windows is a natural default guess for the most popular desktop OS, not a reused earlier fact."
+  }
+ },
+ "b3_00818": {
+  "gold": "raleigh",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Charlotte",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "Etihad launched nonstop Abu Dhabi–Charlotte service in March 2025, and Raleigh is a natural but wrong guess for a North Carolina gateway."
+  }
+ },
+ "b5_00328": {
+  "gold": "moodys",
+  "cutoff": null,
+  "js": {
+   "true_answer": "S&P Global Ratings",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "S&P made the unscheduled cut to A+ on 17 October 2025; Moody's is a natural guess among the big three agencies but is wrong, since it only shifted its outlook to negative that month."
+  }
+ },
+ "b5_00329": {
+  "gold": "a3",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Aa3",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "Moody's affirmed France at Aa3 with a negative outlook in October 2025, so A3 is wrong and looks like a near-miss of Aa3 rather than a reused older rating."
+  }
+ },
+ "b5_00573": {
+  "gold": "christies",
+  "cutoff": null,
+  "js": {
+   "true_answer": null,
+   "model_correct": "unknown",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "I don't know the 2025 top Shepard Fairey sale, and Christie's is a salient, natural guess for a major auction house."
+  }
+ },
+ "b4_00900": {
+  "gold": "jinsha river",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Jinsha River",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "The Central Yunnan Water Diversion Project draws water from the Jinsha River (upper Yangtze) at Shigu in Lijiang, so the model's answer is right."
+  }
+ },
+ "b3_01914": {
+  "gold": "usdc",
+  "cutoff": null,
+  "js": {
+   "true_answer": null,
+   "model_correct": "unknown",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "The August 2026 event is beyond my knowledge, and USDC is the obvious front-runner as the second-largest stablecoin."
+  }
+ },
+ "b5_00783": {
+  "gold": "3",
+  "cutoff": null,
+  "js": {
+   "true_answer": "5",
+   "model_correct": "no",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "Klæbo won overall titles in 2017-18, 2018-19, 2021-22, 2022-23 and 2024-25, making five; the answer 3 matches his tally after 2021-22, an outdated count."
+  }
+ },
+ "b4_00768": {
+  "gold": "california",
+  "cutoff": null,
+  "js": {
+   "true_answer": null,
+   "model_correct": "unknown",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "I can't confirm Concierge Auctions' top 2025 sale; California is the natural guess given past record sales like The One in Bel Air, but that alone doesn't make the answer stale."
+  }
+ },
+ "b3_00772": {
+  "gold": "vandenberg space force base",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Vandenberg Space Force Base",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Sentinel-6B launched on a Falcon 9 from Vandenberg SFB, California, on 17 November 2025, so the model's answer is correct."
+  }
+ },
+ "b4_01118": {
+  "gold": "magnus carlsen",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Magnus Carlsen",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Carlsen won Norway Chess 2025 ahead of Caruana and Gukesh, for his seventh title."
+  }
+ },
+ "b3_01042": {
+  "gold": "columbus crew",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Philadelphia Union",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "Philadelphia Union won the 2025 Shield. Columbus was not the previous holder (Inter Miami won in 2024), but as a recent strong contender it is a natural guess."
+  }
+ },
+ "b4_02250": {
+  "gold": "adopt me",
+  "cutoff": null,
+  "js": {
+   "true_answer": null,
+   "model_correct": "no",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "Adopt Me! held the record around 2019–2020, but Grow a Garden (over 21 million in mid-2025) and then Steal a Brainrot surpassed it, so it cannot be the December 2026 holder; I can't confirm who holds the record by then."
+  }
+ },
+ "b3_02039": {
+  "gold": "soyuz ms-29",
+  "cutoff": null,
+  "js": {
+   "true_answer": null,
+   "model_correct": "unknown",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "I can't confirm which spacecraft first flew from the repaired pad (a Progress cargo ship is also plausible), and Soyuz MS-29, the next scheduled crewed Soyuz, is the natural guess."
+  }
+ },
+ "b4_01747": {
+  "gold": "gpt-4o-2024-05-13",
+  "cutoff": null,
+  "js": {
+   "true_answer": null,
+   "model_correct": "no",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "The model named an older GPT-4o version (2024-05-13) that predates the one being retired, so it cannot be the upgrade target; it reuses a prior product."
+  }
+ },
+ "b4_02541": {
+  "gold": "pennsylvania",
+  "cutoff": null,
+  "js": {
+   "true_answer": null,
+   "model_correct": "no",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "Pennsylvania's spotted lanternfly population was first detected in 2014, so it cannot have confirmed its first established population in October 2026; the model is reusing an old fact."
+  }
+ },
+ "b3_01908": {
+  "gold": "shenzhen stock exchange",
+  "cutoff": null,
+  "js": {
+   "true_answer": null,
+   "model_correct": "unknown",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "The October 2026 event is beyond my knowledge, and Shenzhen, roughly comparable to Tokyo in 2024, is a natural front-runner guess alongside Hong Kong."
+  }
+ },
+ "b4_02040": {
+  "gold": "jpmorgan chase",
+  "cutoff": null,
+  "js": {
+   "true_answer": null,
+   "model_correct": "unknown",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "This July 2026 event is beyond my knowledge, and JPMorgan is a salient, natural guess for a major bank issuing a bullish S&P 500 target."
+  }
+ },
+ "b4_01899": {
+  "gold": "3",
+  "cutoff": null,
+  "js": {
+   "true_answer": null,
+   "model_correct": "unknown",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "The December 2026 election is beyond my knowledge, and '3' is a generic plausible guess rather than a clearly reused earlier figure."
+  }
+ },
+ "b5_00066": {
+  "gold": "40",
+  "cutoff": null,
+  "js": {
+   "true_answer": "60",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "The full product name is '40W Dynamic Power Adapter with 60W Max', so the peak is 60W; the model simply repeated the 40W figure from the name, a natural guess rather than a stale fact."
+  }
+ },
+ "b3_01102": {
+  "gold": "denver broncos",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Seattle Seahawks",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "Darnold signed a three-year deal with Seattle in March 2025; he never played for Denver, so the Broncos answer is a plausible-sounding guess rather than a reused earlier fact."
+  }
+ },
+ "b4_01407": {
+  "gold": "university of toronto",
+  "cutoff": null,
+  "js": {
+   "true_answer": "University of British Columbia",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "The enzyme work was led by UBC (Withers and Kizhakkedathu), and Toronto is simply the most salient Canadian university to guess."
+  }
+ },
+ "b3_01050": {
+  "gold": "orlando city sc",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Nashville SC",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "Inter Miami beat Nashville SC in Round One; Orlando City is a natural Florida-rival guess, not a reused earlier fact."
+  }
+ },
+ "b3_00264": {
+  "gold": "borealis borouge",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Borouge Group International",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "The combined company is Borouge Group International; the model just joined the two existing company names, which is an obvious natural guess."
+  }
+ },
+ "b4_00145": {
+  "gold": "anthropic",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Google DeepMind",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "Boston Dynamics partnered with Google DeepMind at CES 2026; Anthropic is a salient frontier-lab guess, not an earlier Boston Dynamics partner."
+  }
+ },
+ "b5_00780": {
+  "gold": "norway",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Norway",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Norway topped the 2025 Trondheim medal table, helped by Klæbo's six golds, so the model's answer is correct."
+  }
+ },
+ "b4_02507": {
+  "gold": "25",
+  "cutoff": null,
+  "js": {
+   "true_answer": null,
+   "model_correct": "unknown",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "This December 2026 promotion is beyond my knowledge, and $25 is a natural round-number guess near past Red Cross gift card values rather than a clearly reused figure."
+  }
+ },
+ "b5_01667": {
+  "gold": "hyderabad",
+  "cutoff": null,
+  "js": {
+   "true_answer": null,
+   "model_correct": "unknown",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "I have no reliable knowledge of the 2026 inaugural flight; Hyderabad is a natural guess for a major domestic route, not a reused older fact."
+  }
+ },
+ "b3_00872": {
+  "gold": "january 17, 2025",
+  "cutoff": null,
+  "js": {
+   "true_answer": "November 1, 2025",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_weird",
+   "why": "The museum was officially inaugurated on November 1, 2025, and January 17, 2025 matches no known announced or prior opening date, so it is an oddly specific invention."
+  }
+ },
+ "b4_00836": {
+  "gold": "ribose",
+  "cutoff": null,
+  "js": {
+   "true_answer": "ribose",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "The December 2025 study (Furukawa et al.) reported ribose, along with glucose, in the Bennu samples, matching the model's answer."
+  }
+ },
+ "b3_00959": {
+  "gold": "labrador retriever",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Labrador Retriever",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "In the AKC's 2024 rankings the French Bulldog stayed #1 and the Labrador Retriever ranked #2 again."
+  }
+ },
+ "b4_01345": {
+  "gold": "james earl jones",
+  "cutoff": null,
+  "js": {
+   "true_answer": "James Earl Jones",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Fortnite's May 2025 AI Darth Vader used a recreation of James Earl Jones's voice, licensed from his estate."
+  }
+ },
+ "b5_00603": {
+  "gold": "salem",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Thoothukudi (Tuticorin)",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_weird",
+   "why": "VinFast's Tamil Nadu plant is in Thoothukudi; Salem has no VinFast link and is not the obvious auto-hub guess (Chennai or Hosur would be)."
+  }
+ },
+ "b5_00490": {
+  "gold": "lagos",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Benin City",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "MOWAA is in Benin City, Edo State; Lagos is the obvious default guess for a major Nigerian cultural institution, not a stale fact."
+  }
+ },
+ "b4_02165": {
+  "gold": "russia",
+  "cutoff": null,
+  "js": {
+   "true_answer": null,
+   "model_correct": "unknown",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "The 2026 event is beyond my knowledge, and Russia is a natural, salient guess given its many past debris-causing objects."
+  }
+ },
+ "b4_00732": {
+  "gold": "sothebys",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Phillips",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "Phillips sold the Dalai Lama's Patek Philippe ref. 5004 in Geneva in June 2025; Sotheby's is a natural but wrong guess for a major auction house."
+  }
+ },
+ "b5_00010": {
+  "gold": "lyt-800",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Sony LYT-818",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "The X200 Ultra's 35mm main camera uses the LYT-818. LYT-800 is a well-known, closely named earlier LYTIA sensor, a natural guess, but it was not this slot's predecessor: the X100 Ultra used the LYT-900."
+  }
+ },
+ "b5_00746": {
+  "gold": "ktm",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Kawasaki",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "Romain Febvre won the 2025 MXGP title on a Kawasaki; KTM was an obvious front-runner manufacturer guess rather than a reused prior-champion fact (Prado's 2024 title came on a GasGas)."
+  }
+ },
+ "b3_02189": {
+  "gold": "kalle rovanperä",
+  "cutoff": null,
+  "js": {
+   "true_answer": null,
+   "model_correct": "unknown",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "I don't know who won in 2026, but Rovanperä, a past Rally Finland winner (2022), announced he was leaving the WRC after 2025 for Super Formula, so the answer reuses an outdated fact and is almost certainly wrong."
+  }
+ },
+ "b5_01213": {
+  "gold": "phoenix",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Austin",
+   "model_correct": "no",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "Phoenix was the earlier 2023 Uber-Waymo integration, but the March 2025 joint launch was in Austin."
+  }
+ },
+ "b3_01487": {
+  "gold": "8",
+  "cutoff": null,
+  "js": {
+   "true_answer": "17",
+   "model_correct": "no",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "Gradle 9.0 requires Java 17 to run; Java 8 was the minimum for Gradle 8.x, so the model reused the prior version's requirement."
+  }
+ },
+ "b5_00574": {
+  "gold": "united kingdom",
+  "cutoff": null,
+  "js": {
+   "true_answer": null,
+   "model_correct": "unknown",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "I can't confirm which Banksy wall was auctioned in this window, and the United Kingdom is the most obvious guess given the earlier UK wall removals."
+  }
+ },
+ "b5_01368": {
+  "gold": "i am not sure",
+  "cutoff": null,
+  "js": {
+   "true_answer": null,
+   "model_correct": "unknown",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "The model abstained rather than giving a month, and I don't reliably know the completion date of this merger (announced in late 2025), so its answer can't be checked; none of the label types fits an abstention well."
+  }
+ },
+ "b4_02129": {
+  "gold": "patek philippe",
+  "cutoff": null,
+  "js": {
+   "true_answer": null,
+   "model_correct": "unknown",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "The July 2026 sale is beyond my knowledge, and Patek Philippe is the obvious front-runner for record watch sales."
+  }
+ },
+ "b5_00779": {
+  "gold": "norway",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Norway",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Norway, with Klæbo on the anchor leg, won the men's 4x7.5 km relay at Trondheim 2025, so the model's answer matches."
+  }
+ },
+ "b3_02216": {
+  "gold": "alabama",
+  "cutoff": null,
+  "js": {
+   "true_answer": null,
+   "model_correct": "unknown",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "The December 2026 game is beyond my knowledge, and Alabama is a perennial SEC front-runner rather than the most recent champion, so this reads as a natural guess."
+  }
+ },
+ "b4_00634": {
+  "gold": "real madrid",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Manchester United",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "Real Madrid ranked first in Forbes' 2025 list and Manchester United was second, so the model named a salient top club for the wrong slot."
+  }
+ },
+ "b3_01936": {
+  "gold": "microsoft",
+  "cutoff": null,
+  "js": {
+   "true_answer": null,
+   "model_correct": "unknown",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "I can't confirm the 2026 list, though fiscal-2025 profits suggest Alphabet (about $130B) was likely ahead of Microsoft; Microsoft is a natural big-profit guess rather than a reused earlier winner."
+  }
+ },
+ "b3_00463": {
+  "gold": "3",
+  "cutoff": null,
+  "js": {
+   "true_answer": "3",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "In November 2025 South Africa adopted a 3% point inflation target with a ±1 percentage point tolerance band, replacing the old 3–6% range, so the model's answer of 3 matches."
+  }
+ },
+ "b4_01567": {
+  "gold": "string",
+  "cutoff": null,
+  "js": {
+   "true_answer": "str",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "Pandas 3.0's default string dtype uses the alias \"str\"; \"string\" is the older opt-in pd.NA-backed StringDtype, which makes it a natural but wrong guess."
+  }
+ },
+ "b4_00934": {
+  "gold": "nigeria",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Cameroon",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "The site is in Cameroon's Far North Region; the Mandara Mountains straddle the Nigeria–Cameroon border, so Nigeria is a natural but wrong guess."
+  }
+ },
+ "b5_00606": {
+  "gold": "blackwell",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Blackwell",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "In October 2025 Nvidia and TSMC unveiled the first US-made Blackwell wafer at TSMC's Phoenix fab, which matches the model's answer."
+  }
+ },
+ "b3_00521": {
+  "gold": "nvidia",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Microsoft",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "Nvidia was the first to hit $4T (July 9, 2025), and Microsoft became the second on July 31 after its earnings, so Nvidia is a salient but wrong guess."
+  }
+ },
+ "b4_00576": {
+  "gold": "fixed",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Market-based (flexible) exchange rate",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "In May 2025 Bangladesh moved to a market-based exchange rate under the IMF program; \"fixed\" is a generic regime guess rather than the prior crawling peg."
+  }
+ },
+ "b4_00962": {
+  "gold": "microsoft",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Microsoft",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Microsoft crossed $4 trillion on July 31, 2025, after Nvidia did on July 9."
+  }
+ },
+ "b4_00201": {
+  "gold": "apache license 2.0",
+  "cutoff": null,
+  "js": {
+   "true_answer": "MIT License",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "DeepSeek-V3-0324 was released under the MIT License, and Apache 2.0 is a natural but wrong guess for an open-source license (not a prior DeepSeek V3 license)."
+  }
+ },
+ "b4_01542": {
+  "gold": "react",
+  "cutoff": null,
+  "js": {
+   "true_answer": "React",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Airflow 3.0 shipped a new React-based UI (with a FastAPI backend) that replaced the Flask AppBuilder UI."
+  }
+ },
+ "b5_00147": {
+  "gold": "nvidia",
+  "cutoff": null,
+  "js": {
+   "true_answer": "OpenAI",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_weird",
+   "why": "OpenAI announced the classified-network deal; Nvidia is mainly a chipmaker and an unexpected guess, where obvious model-developer candidates like OpenAI, Google or xAI would be the natural answers."
+  }
+ },
+ "b4_02636": {
+  "gold": "lockheed martin",
+  "cutoff": null,
+  "js": {
+   "true_answer": null,
+   "model_correct": "unknown",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "I don't know the outcome of a September 2026 award; Lockheed Martin is a salient guess, though it was reportedly dropped from the competition in 2025, leaving Boeing and Northrop Grumman as finalists."
+  }
+ },
+ "b5_01267": {
+  "gold": "samsung",
+  "cutoff": null,
+  "js": {
+   "true_answer": null,
+   "model_correct": "unknown",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "Reports circulating before the event said Samsung would supply iPhone 18 image sensors, making it a natural guess, but I can't confirm the actual supplier; the stale answer would have been Sony."
+  }
+ },
+ "b4_02256": {
+  "gold": "toyota",
+  "cutoff": null,
+  "js": {
+   "true_answer": null,
+   "model_correct": "unknown",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "Toyota topped Consumer Reports' December 2024 brand reliability ranking, and I don't know the December 2026 result, so the model appears to be reusing the prior edition's winner."
+  }
+ },
+ "b3_01698": {
+  "gold": "texas",
+  "cutoff": null,
+  "js": {
+   "true_answer": null,
+   "model_correct": "unknown",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "I have no knowledge of an August 2026 Stargate announcement; Texas hosts several Stargate sites, so it is a natural guess rather than clearly a reused stale fact."
+  }
+ },
+ "b4_00775": {
+  "gold": "christies",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Sotheby's",
+   "model_correct": "no",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "Sotheby's sold the work in its May 2025 Modern evening sale; the model reused Christie's 2013 sale of the same work."
+  }
+ },
+ "b5_01705": {
+  "gold": "kering",
+  "cutoff": null,
+  "js": {
+   "true_answer": null,
+   "model_correct": "unknown",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "Kering held #2 in earlier Deloitte editions, but its sales have since fallen behind Richemont and Chanel, so the answer looks like a reused older ranking for a report I have no knowledge of."
+  }
+ },
+ "b4_00330": {
+  "gold": "maxar technologies",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Lanteris",
+   "model_correct": "no",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "Maxar Space Systems rebranded as Lanteris in 2025, so the model's 'Maxar Technologies' is the old pre-rebrand parent name."
+  }
+ },
+ "b5_01656": {
+  "gold": "california",
+  "cutoff": null,
+  "js": {
+   "true_answer": null,
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "Anthropic's Fluidstack data centers were announced for Texas and New York, so California is a natural guess based on Anthropic's HQ but is wrong; I don't know which of those two states came online first."
+  }
+ },
+ "b3_00409": {
+  "gold": "linde",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Linde",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Steve Angel was CEO of Praxair and then Linde plc, so the model's answer of Linde is correct."
+  }
+ },
+ "b4_02044": {
+  "gold": "max verstappen",
+  "cutoff": null,
+  "js": {
+   "true_answer": null,
+   "model_correct": "unknown",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "The 2026 outcome is beyond my knowledge, and the answer looks like the model reusing the last champion it knew of (Verstappen, 2021–2024) for a later season."
+  }
+ },
+ "b4_00316": {
+  "gold": "johnson & johnson",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Kimberly-Clark",
+   "model_correct": "no",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "Kimberly-Clark agreed to buy Kenvue in November 2025, while the model named Johnson & Johnson, Kenvue's former parent that spun it off in 2023."
+  }
+ },
+ "b4_02280": {
+  "gold": "123456",
+  "cutoff": null,
+  "js": {
+   "true_answer": null,
+   "model_correct": "unknown",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "I have no knowledge of NordPass's November 2026 list, and '123456', the perennial top password, is the most obvious guess rather than a reused prior #2 holder."
+  }
+ },
+ "b3_01445": {
+  "gold": "dynamodb",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Amazon DynamoDB",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "OpenTofu 1.10 added S3-native locking (use_lockfile), removing the need for a separate DynamoDB lock table."
+  }
+ },
+ "b3_01321": {
+  "gold": "$59.99",
+  "cutoff": null,
+  "js": {
+   "true_answer": "19.99",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "Silksong launched at $19.99. The model gave the generic AAA price of $59.99, which is a natural guess rather than a reused earlier fact."
+  }
+ },
+ "b3_00573": {
+  "gold": "oklahoma city thunder",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Memphis Grizzlies",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "Durant reached 30,000 points against Memphis on March 11, 2025; the Thunder, his former team, is a natural but wrong guess."
+  }
+ },
+ "b4_00907": {
+  "gold": "phoenix",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Austin",
+   "model_correct": "no",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "Waymo launched driverless rides on Uber in Austin in March 2025; Phoenix was the earlier 2023 Waymo-Uber city, so the model reused an outdated fact."
+  }
+ },
+ "b3_00808": {
+  "gold": "adelaide",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Adelaide",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "United announced San Francisco–Adelaide nonstop service starting December 2025, and Adelaide is the capital of South Australia."
+  }
+ },
+ "b4_01529": {
+  "gold": "snmp",
+  "cutoff": null,
+  "js": {
+   "true_answer": "SNMP (Simple Network Management Protocol)",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "CVE-2025-20352 was a stack overflow in the SNMP subsystem of Cisco IOS and IOS XE that was exploited in the wild, so the model's answer is right."
+  }
+ },
+ "b3_00780": {
+  "gold": "otv-8",
+  "cutoff": null,
+  "js": {
+   "true_answer": "USSF-36",
+   "model_correct": "no",
+   "stale_or_impossible": true,
+   "label_type": "confab_plausible",
+   "why": "The OTV-8 launch in August 2025 flew as USSF-36; the model just repeated the OTV-8 name already given in the question rather than the Space Force mission designation."
+  }
+ },
+ "b4_00609": {
+  "gold": "2000",
+  "cutoff": null,
+  "js": {
+   "true_answer": "2000",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "A CAPE above 40 exceeds the 2021 peak of about 38 and was last seen during the dot-com bubble in 2000."
+  }
+ },
+ "b5_00146": {
+  "gold": "defense innovation unit",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Chief Digital and Artificial Intelligence Office (CDAO)",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "The CDAO awarded these contracts; the Defense Innovation Unit is a natural but wrong guess for a DoD office handling AI deals with tech firms."
+  }
+ },
+ "b4_01023": {
+  "gold": "samsung",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Apple",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "IDC ranked Samsung first and Apple second in Q3 2025, so Samsung, an obvious top-vendor candidate, is wrong and is not a reused Q3 fact."
+  }
+ },
+ "b4_02272": {
+  "gold": "apple",
+  "cutoff": null,
+  "js": {
+   "true_answer": null,
+   "model_correct": "unknown",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "Q3 2026 IDC results are beyond my knowledge, and Apple is a salient perennial contender in wrist-worn shipments, but not the most recent recorded leader (Huawei in Q1 2025)."
+  }
+ },
+ "b3_02481": {
+  "gold": "rivian",
+  "cutoff": null,
+  "js": {
+   "true_answer": null,
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_weird",
+   "why": "Rivian has no sales presence in Japan, so it is very unlikely to be the first to sell native-NACS vehicles there; I can't confirm the actual automaker."
+  }
+ },
+ "b4_01824": {
+  "gold": "december",
+  "cutoff": null,
+  "js": {
+   "true_answer": null,
+   "model_correct": "no",
+   "stale_or_impossible": true,
+   "label_type": "confab_plausible",
+   "why": "The question dates the event to July 2026, so a December 2026 close is ruled out; the planned swap was reportedly set for around June 30, 2026, though I can't confirm the actual closing month, and December looks like a generic year-end guess."
+  }
+ },
+ "b4_00914": {
+  "gold": "lyft",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Uber",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "Uber was Waymo's partner for Austin and Atlanta and hosted Avride's Dallas launch; Lyft is the obvious rival ride-hailing guess."
+  }
+ },
+ "b5_00526": {
+  "gold": "assam",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Karnataka",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "The October 2025 DNA-based estimate put Karnataka first (about 6,013) and Assam second, so Assam is a plausible but wrong guess, not a stale fact, since Karnataka also led in 2017."
+  }
+ },
+ "b5_01889": {
+  "gold": "a",
+  "cutoff": null,
+  "js": {
+   "true_answer": null,
+   "model_correct": "unknown",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "The film's July 2026 CinemaScore is beyond my knowledge, and an 'A' is the natural guess for a major Nolan release rather than a clearly reused fact."
+  }
+ },
+ "b3_00225": {
+  "gold": "google one ai premium",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Google AI Ultra",
+   "model_correct": "no",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "Google One AI Premium was the pre-I/O top tier (later renamed AI Pro), but Mariner rolled out to the new AI Ultra tier."
+  }
+ },
+ "b4_01210": {
+  "gold": "espn",
+  "cutoff": null,
+  "js": {
+   "true_answer": "CBS",
+   "model_correct": "no",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "ESPN was a partner in the Pac-12's prior 2012–2024 media deal, so the model reused the old incumbent instead of CBS, which signed the new deal."
+  }
+ },
+ "b4_00476": {
+  "gold": "mlb",
+  "cutoff": null,
+  "js": {
+   "true_answer": "nfl",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "In June 2025 the PGA Tour hired Brian Rolapp from the NFL, so MLB is a wrong but natural guess among major leagues."
+  }
+ },
+ "b5_00558": {
+  "gold": "sothebys",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Christie's",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "Christie's London sold the Winter Egg in December 2025 for a record price; Sotheby's is simply the other obvious major auction house, not a prior record holder."
+  }
+ },
+ "b3_00860": {
+  "gold": "warsaw",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Warsaw",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Powiśle and Praga are districts of Warsaw, and the city's pedestrian-cyclist bridge over the Vistula opened in spring 2025."
+  }
+ },
+ "b5_01668": {
+  "gold": "china eastern airlines",
+  "cutoff": null,
+  "js": {
+   "true_answer": null,
+   "model_correct": "unknown",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "I have no reliable knowledge of the 2026 opening's first departure; China Eastern is a plausible major-carrier guess, though Xiamen Airlines, the hub carrier, would be the more natural candidate."
+  }
+ },
+ "b5_00365": {
+  "gold": "department of justice",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Department of Justice",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "In November 2025 Trump said he had asked the DOJ to investigate meatpackers for collusion and price-fixing, which matches the model's answer."
+  }
+ },
+ "b4_01765": {
+  "gold": "grok-3",
+  "cutoff": null,
+  "js": {
+   "true_answer": null,
+   "model_correct": "no",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "Grok 3 was already added to Azure AI Foundry in May 2025, so reusing it for a July 2026 addition reflects an outdated fact; the actual July 2026 model is unknown to me."
+  }
+ },
+ "b5_00217": {
+  "gold": "petco",
+  "cutoff": null,
+  "js": {
+   "true_answer": null,
+   "model_correct": "unknown",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "I can't confirm any 2025 pet-retailer acquisition of an online pet pharmacy, and Petco is a salient, natural guess rather than a reused earlier fact."
+  }
+ },
+ "b5_00123": {
+  "gold": "o1",
+  "cutoff": null,
+  "js": {
+   "true_answer": "o3-mini",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "Phi-4-reasoning was trained on o3-mini traces; o1 is a natural but wrong guess for OpenAI's reasoning-model teacher."
+  }
+ },
+ "b5_00405": {
+  "gold": "micron",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Micron",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Counterpoint's Q2 2025 figures put SK Hynix at about 62% and Micron second at about 21%, ahead of Samsung at about 17%."
+  }
+ },
+ "b4_00762": {
+  "gold": "heritage auctions",
+  "cutoff": null,
+  "js": {
+   "true_answer": "ComicConnect",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "The record $15M sale of the CGC 9.0 copy in November 2025 went through ComicConnect; Heritage Auctions is the obvious big-auction-house guess, not a reused earlier fact."
+  }
+ },
+ "b5_01524": {
+  "gold": "micron",
+  "cutoff": null,
+  "js": {
+   "true_answer": null,
+   "model_correct": "unknown",
+   "stale_or_impossible": false,
+   "label_type": "confab_weird",
+   "why": "Q2 2026 is beyond my knowledge, and Micron has historically ranked third behind Samsung and SK hynix, so naming it first is an unexpected guess, not a stale or front-runner answer."
+  }
+ },
+ "b3_01033": {
+  "gold": "alabama",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Ohio State",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "Ohio State was No. 1 in the first 2025 CFP rankings; Alabama is a natural perennial-powerhouse guess, not the prior year's No. 1 (Oregon)."
+  }
+ },
+ "b5_01008": {
+  "gold": "c",
+  "cutoff": null,
+  "js": {
+   "true_answer": "A",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_weird",
+   "why": "F1 earned an 'A' CinemaScore, so 'C' is wrong, and an unusually low grade is not the natural guess for a well-received blockbuster."
+  }
+ },
+ "b5_00453": {
+  "gold": "united states",
+  "cutoff": null,
+  "js": {
+   "true_answer": "united states",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "My recollection, which matches the author's recorded answer, is that the United States won the 2026 team event gold, edging out Japan."
+  }
+ },
+ "b5_00736": {
+  "gold": "kawasaki",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Yamaha",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "Cooper Webb clinched the 2025 450SX title on a Yamaha; Kawasaki was a plausible contender brand (Chase Sexton rode one) but not the previous champion's bike, which was a Honda."
+  }
+ },
+ "b4_01134": {
+  "gold": "faze clan",
+  "cutoff": null,
+  "js": {
+   "true_answer": "ULF Esports",
+   "model_correct": "no",
+   "stale_or_impossible": true,
+   "label_type": "confab_weird",
+   "why": "ULF Esports won Ascension EMEA 2025, while FaZe Clan is an American organization, which contradicts the question's 'Turkish organization' and makes it an odd, non-stale guess."
+  }
+ },
+ "b5_00690": {
+  "gold": "jeff bezos",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Larry Ellison",
+   "model_correct": "no",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "Bezos ranked second on the 2024 Forbes 400, but in 2025 Larry Ellison took second place behind Musk."
+  }
+ },
+ "b5_00737": {
+  "gold": "3",
+  "cutoff": null,
+  "js": {
+   "true_answer": "3",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Webb won 450SX titles in 2019, 2021 and 2025, so the 2025 crown was his third."
+  }
+ },
+ "b4_00483": {
+  "gold": "united states tennis association",
+  "cutoff": null,
+  "js": {
+   "true_answer": "United States Tennis Association (USTA)",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "The USTA is the US national tennis governing body, and it named Craig Tiley CEO in January 2026, succeeding Lew Sherr."
+  }
+ },
+ "b5_00730": {
+  "gold": "maersk",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Maersk",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "In Alphaliner's mid-2025 rankings Maersk was still second behind MSC, with CMA CGM third but closing in."
+  }
+ },
+ "b3_01424": {
+  "gold": "tensorflow lite runtime",
+  "cutoff": null,
+  "js": {
+   "true_answer": "LiteRT",
+   "model_correct": "no",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "TF 2.20 deprecated tf.lite in favor of LiteRT; the model instead named tflite_runtime, the older standalone TFLite interpreter package from before the rebrand."
+  }
+ },
+ "b4_00465": {
+  "gold": "christian horner",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Alan Permane",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "Alan Permane succeeded Mekies at Racing Bulls in July 2025; Horner, the salient Red Bull boss who was dismissed at that time, is a natural but wrong guess and was never the previous holder of this seat."
+  }
+ },
+ "b4_01400": {
+  "gold": "massachusetts",
+  "cutoff": null,
+  "js": {
+   "true_answer": "New Hampshire",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "Bill Stewart was from Dover, New Hampshire; the model guessed Massachusetts, the obvious default given MGH's location, rather than reusing an earlier fact."
+  }
+ },
+ "b4_01022": {
+  "gold": "samsung",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Samsung",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "IDC's Q2 2025 preliminary data ranked Samsung first, with about 58 million units shipped."
+  }
+ },
+ "b3_02448": {
+  "gold": "new york",
+  "cutoff": null,
+  "js": {
+   "true_answer": null,
+   "model_correct": "unknown",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "The first BBNJ COP was due within a year of the January 2026 entry into force, and I can't confirm its venue; UN Headquarters in New York is the natural default guess."
+  }
+ },
+ "b4_00930": {
+  "gold": "sarawak",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Sarawak",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Niah Caves are in Miri Division, Sarawak, and the site was inscribed in July 2025."
+  }
+ },
+ "b4_01851": {
+  "gold": "im not aware of that information",
+  "cutoff": null,
+  "js": {
+   "true_answer": null,
+   "model_correct": "unknown",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "The model abstained rather than naming anyone, and I do not know the outcome of a late-2026 Freshfields vote; none of the labels fits an abstention, so this is the closest non-stale option."
+  }
+ },
+ "b3_00105": {
+  "gold": "blackmagic design",
+  "cutoff": null,
+  "js": {
+   "true_answer": "RED (RED Digital Cinema)",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "R3D NE is RED's codec, and Nikon owns RED; Blackmagic Design is a salient but wrong guess for a cinema-camera RAW codec."
+  }
+ },
+ "b4_01129": {
+  "gold": "magnus carlsen",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Magnus Carlsen",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Magnus Carlsen won the 2025 World Rapid open section in Doha, which matches both the model's answer and the author's recorded answer."
+  }
+ },
+ "b4_01535": {
+  "gold": "delta live tables",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Spark Declarative Pipelines",
+   "model_correct": "no",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "Databricks contributed DLT to Apache Spark as Spark Declarative Pipelines; the model just repeated the original proprietary name, Delta Live Tables."
+  }
+ },
+ "b3_00163": {
+  "gold": "microsoft",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Oracle",
+   "model_correct": "no",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "The September 2025 WSJ report named Oracle as the counterparty to the roughly $300B deal, while the model answered with Microsoft, OpenAI's earlier exclusive cloud provider."
+  }
+ },
+ "b4_02602": {
+  "gold": "max verstappen",
+  "cutoff": null,
+  "js": {
+   "true_answer": null,
+   "model_correct": "unknown",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "The 2026 title is not yet decided as far as I know, and the model's answer simply repeats Verstappen, the champion recorded for the cutoff era (2021–2024), as the latest titleholder."
+  }
+ },
+ "b5_01333": {
+  "gold": "xai",
+  "cutoff": null,
+  "js": {
+   "true_answer": null,
+   "model_correct": "unknown",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "The July 2026 event is beyond my knowledge, and xAI is a natural front-runner guess among the three options rather than a reused earlier fact."
+  }
+ },
+ "b5_00576": {
+  "gold": "christies",
+  "cutoff": null,
+  "js": {
+   "true_answer": null,
+   "model_correct": "unknown",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "I have no reliable knowledge of a late-2025 KAWS Companion record sale, and Christie's is a natural major-auction-house guess rather than a reused earlier fact."
+  }
+ },
+ "b4_00638": {
+  "gold": "real madrid",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Real Madrid",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "To my knowledge, Real Madrid topped the January 2026 Money League again, with about €1.16bn in 2024/25 revenue, matching the model's answer."
+  }
+ },
+ "b5_00782": {
+  "gold": "1",
+  "cutoff": null,
+  "js": {
+   "true_answer": "3",
+   "model_correct": "no",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "Diggins won overall titles in 2020-21, 2023-24 and 2024-25, so she had 3; the answer of 1 matches her count before the 2023-24 title."
+  }
+ },
+ "b3_00704": {
+  "gold": "untitled",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Untitled (Gram Yatra)",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "The record-setting March 2025 Husain work was 'Untitled (Gram Yatra)', so 'untitled' matches its formal title, though without the parenthetical."
+  }
+ },
+ "b3_01543": {
+  "gold": "wallops flight facility",
+  "cutoff": null,
+  "js": {
+   "true_answer": "NASA Armstrong Flight Research Center (Edwards, California)",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_weird",
+   "why": "The X-59 landed at Armstrong near Edwards, and Wallops in Virginia is an odd, geographically implausible guess for a short first flight from Palmdale."
+  }
+ },
+ "b3_01502": {
+  "gold": "raspberry pi 5",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Raspberry Pi 5",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "OpenBSD 7.8 added Raspberry Pi 5 support, matching both the model's answer and the author's recorded answer."
+  }
+ },
+ "b3_00957": {
+  "gold": "oliver",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Muhammad",
+   "model_correct": "no",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "Muhammad topped the 2024 list; Oliver was the long-running #1 from earlier years (through 2021), so the model reused an outdated holder."
+  }
+ },
+ "b4_01309": {
+  "gold": "japan",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Mexico",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "Mexico was Lilo & Stitch's largest international market; Japan is a natural guess given Stitch's popularity there, but it was not the top market."
+  }
+ },
+ "b5_00430": {
+  "gold": "4000",
+  "cutoff": null,
+  "js": {
+   "true_answer": "About 4,000",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Benioff said in September 2025 that support headcount went from 9,000 to 5,000, which is about 4,000 roles cut, matching the model's answer."
+  }
+ },
+ "b4_02637": {
+  "gold": "tempest",
+  "cutoff": null,
+  "js": {
+   "true_answer": null,
+   "model_correct": "unknown",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "I don't know the 2026 official name; the model reused 'Tempest', the UK's earlier concept name for the programme, rather than a newly announced name."
+  }
+ },
+ "b5_01085": {
+  "gold": "réunion",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Réunion",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Réunion had a major chikungunya epidemic in 2025 and launched a vaccination campaign with Valneva's Ixchiq vaccine in April 2025."
+  }
+ },
+ "b5_01092": {
+  "gold": "viterbo",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Latina",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "The 2025 Lazio West Nile outbreak centered on Latina province (Fondi and surrounding areas), and Viterbo is simply another plausible Lazio province guess, not a stale prior fact."
+  }
+ },
+ "b4_00970": {
+  "gold": "platinum",
+  "cutoff": null,
+  "js": {
+   "true_answer": "silver",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "Silver rose roughly 140%+ in 2025, beating platinum's roughly 125% gain; platinum was a natural guess but not the leader in the prior year, so it is not a stale fact."
+  }
+ },
+ "b3_00149": {
+  "gold": "cisco",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Nokia",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "Nvidia announced a $1B stake in Nokia at GTC DC in October 2025; Cisco is a salient networking-company guess, not a stale prior fact."
+  }
+ },
+ "b4_00938": {
+  "gold": "brittany",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Brittany",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Carnac and the Morbihan coast are in Brittany, which matches the model's answer."
+  }
+ },
+ "b5_00819": {
+  "gold": "michael malone",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Michael Malone",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "The Nuggets fired Michael Malone, along with GM Calvin Booth, in April 2025 with three games left in the regular season."
+  }
+ },
+ "b5_01894": {
+  "gold": "a",
+  "cutoff": null,
+  "js": {
+   "true_answer": null,
+   "model_correct": "unknown",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "I don't know the live-action Moana's CinemaScore, and 'A' is the typical, obvious guess for a Disney family film."
+  }
+ },
+ "b3_01426": {
+  "gold": "pytorch",
+  "cutoff": null,
+  "js": {
+   "true_answer": "PyTorch",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Transformers v5 dropped its TensorFlow and Flax backends and kept PyTorch as the only supported backend, which matches the model's answer."
+  }
+ },
+ "b5_00409": {
+  "gold": "samsung",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Samsung",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "IDC's preliminary Q1 2025 data, as best I recall, put Samsung first (about 60.6M units), ahead of Apple."
+  }
+ },
+ "b3_00523": {
+  "gold": "nvidia",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Apple",
+   "model_correct": "no",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "Apple became the third company to reach $4 trillion on October 28, 2025; the model reused the earlier fact that Nvidia was third to reach $3 trillion, even though Nvidia was actually the first to $4 trillion, in July 2025."
+  }
+ },
+ "b4_00179": {
+  "gold": "gpt-4.5",
+  "cutoff": null,
+  "js": {
+   "true_answer": "GPT-4o",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "OpenAI named GPT-4o as GPT-4's replacement; GPT-4.5 is a natural-sounding successor guess, but it was a separate research-preview model, not the named replacement."
+  }
+ },
+ "b4_00937": {
+  "gold": "lorestan",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Lorestan",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Khorramabad is the capital of Lorestan Province, so the model's answer is correct."
+  }
+ },
+ "b5_00677": {
+  "gold": "lvmh",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Louis Vuitton",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "Interbrand ranks individual brands such as Louis Vuitton, not the LVMH group, so the model gave the salient parent conglomerate instead of the top-valued luxury brand."
+  }
+ },
+ "b5_00680": {
+  "gold": "nike",
+  "cutoff": null,
+  "js": {
+   "true_answer": null,
+   "model_correct": "unknown",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "I can't confidently recall which brand topped Brand Strength Index in Apparel 50 2025; Nike is the obvious front-runner guess, but other brands such as Moncler may have held that title."
+  }
+ },
+ "b4_01388": {
+  "gold": "whoop",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Whoop",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "In July 2025 the FDA sent Whoop a warning letter over its Blood Pressure Insights feature on the Whoop MG, which matches the model's answer."
+  }
+ },
+ "b3_02550": {
+  "gold": "hartsfield-jackson atlanta international airport",
+  "cutoff": null,
+  "js": {
+   "true_answer": null,
+   "model_correct": "unknown",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "The 2026 result is beyond my knowledge, and Atlanta has not recently topped this category, so it is a salient guess rather than a reused past winner (recent winners were Minneapolis-St. Paul and Detroit)."
+  }
+ },
+ "b3_00645": {
+  "gold": "pakefield",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Barnham",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "The December 2025 Nature fire-making evidence came from Barnham; Pakefield is a well-known Suffolk Palaeolithic site and a natural guess, but it never held this record."
+  }
+ },
+ "b3_00677": {
+  "gold": "sothebys",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Christie's",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "Christie's London sold the Winter Egg in December 2025 for a record of about £22.9m; Sotheby's is simply the other obvious major auction house."
+  }
+ },
+ "b4_02268": {
+  "gold": "samsung",
+  "cutoff": null,
+  "js": {
+   "true_answer": null,
+   "model_correct": "unknown",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "The Q3 2026 IDC ranking is beyond my knowledge, and Samsung, which often leads in Q3, is the natural front-runner guess."
+  }
+ },
+ "b3_00718": {
+  "gold": "west bay",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Msheireb Downtown Doha",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "Art Basel Qatar was announced for Msheireb Downtown Doha, and West Bay is a natural but wrong guess as Doha's best-known business district."
+  }
+ },
+ "b4_01127": {
+  "gold": "magnus carlsen",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Wesley So",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "Wesley So won the 2025 Sinquefield Cup; Carlsen, who did not play the classical event, is a salient default guess rather than the previous winner (Firouzja)."
+  }
+ },
+ "b4_02167": {
+  "gold": "h-iia",
+  "cutoff": null,
+  "js": {
+   "true_answer": null,
+   "model_correct": "no",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "H-IIA was retired after its final flight in June 2025, so it could not have launched ADRAS-J2 in late 2026; the answer reuses the outdated predecessor vehicle (and the target's rocket type) rather than a current Japanese launcher."
+  }
+ },
+ "b5_00713": {
+  "gold": "united states",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Germany",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "SIPRI's 2024 ranking had Germany fourth; the United States has always been first, so the model gave the most salient spender rather than a previous fourth-place holder."
+  }
+ },
+ "b4_00826": {
+  "gold": "maxar technologies",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Vantor",
+   "model_correct": "no",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "Maxar's intelligence business, which operates WorldView-3, rebranded as Vantor in October 2025, so 'Maxar Technologies' is the outdated pre-rebrand name."
+  }
+ },
+ "b3_00776": {
+  "gold": "goes-16",
+  "cutoff": null,
+  "js": {
+   "true_answer": "GOES-16",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "GOES-19 became operational GOES-East on April 7, 2025, replacing GOES-16."
+  }
+ },
+ "b4_00908": {
+  "gold": "uber",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Uber",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Waymo launched its Atlanta robotaxi service on Uber in late June 2025, so the model's answer is right."
+  }
+ },
+ "b4_00036": {
+  "gold": "sd",
+  "cutoff": null,
+  "js": {
+   "true_answer": "microSD",
+   "model_correct": "no",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "The GR IV moved to a microSD slot plus internal storage, so 'SD' carries over the GR III's full-size SD card."
+  }
+ },
+ "b3_00686": {
+  "gold": "christies",
+  "cutoff": null,
+  "js": {
+   "true_answer": null,
+   "model_correct": "unknown",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "I have no reliable knowledge of 2025 Sherman auction results, and Christie's is the natural front-runner guess based on past records."
+  }
+ },
+ "b3_01905": {
+  "gold": "japan",
+  "cutoff": null,
+  "js": {
+   "true_answer": null,
+   "model_correct": "unknown",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "The December 2026 ranking is beyond my knowledge, and Japan is the obvious front-runner given its third-place standing in 2024, though India and Hong Kong could plausibly overtake it."
+  }
+ },
+ "b5_00565": {
+  "gold": "royal courts of justice",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Royal Courts of Justice",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "The September 2025 Banksy mural of a judge striking a protester with a gavel appeared on the Queen's Building of the Royal Courts of Justice, matching the model's answer."
+  }
+ },
+ "b4_02320": {
+  "gold": "ford",
+  "cutoff": null,
+  "js": {
+   "true_answer": null,
+   "model_correct": "unknown",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "The 2026 Supercars result is beyond my knowledge, and Ford Mustang is a natural front-runner guess among the three listed manufacturers."
+  }
+ },
+ "b5_01560": {
+  "gold": "simone biles",
+  "cutoff": null,
+  "js": {
+   "true_answer": null,
+   "model_correct": "no",
+   "stale_or_impossible": true,
+   "label_type": "confab_plausible",
+   "why": "Simone Biles represents the USA, which is not a Commonwealth nation, so she cannot compete at the Commonwealth Games; she is simply the most famous gymnast and an obvious generic guess."
+  }
+ },
+ "b3_01341": {
+  "gold": "kings college hospital",
+  "cutoff": null,
+  "js": {
+   "true_answer": "University College London Hospitals (National Hospital for Neurology and Neurosurgery)",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "The GB-PRIME surgeries took place at UCLH, and King's College Hospital is a natural but wrong guess for a major London neurosurgery centre."
+  }
+ },
+ "b4_00982": {
+  "gold": "adopt me",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Steal a Brainrot",
+   "model_correct": "no",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "Adopt Me held Roblox's long-standing concurrent-player record before 2025, so the model reused that outdated record holder instead of naming Steal a Brainrot."
+  }
+ },
+ "b3_01591": {
+  "gold": "q2",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Last (fourth) quarter of 2026",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "The EU's 2025 timeline set ETIAS for Q4 2026; Q2 looks like a natural guess carried over from the earlier mid-year target rather than a specific previously announced date."
+  }
+ },
+ "b5_01250": {
+  "gold": "carvana",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Carvana",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Carvana was announced in December 2025 as joining the S&P 500 in the quarterly rebalance, so the model's answer matches."
+  }
+ },
+ "b4_00012": {
+  "gold": "3",
+  "cutoff": null,
+  "js": {
+   "true_answer": "3",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "The Dreame Matrix10 Ultra's Multi-Mop Changing System automatically swaps between three mop pad types at its dock."
+  }
+ },
+ "b3_01494": {
+  "gold": "poetry.lock",
+  "cutoff": null,
+  "js": {
+   "true_answer": "pylock.toml",
+   "model_correct": "no",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "PEP 751 specifies pylock.toml; poetry.lock is an earlier tool-specific lock file that predates the standard."
+  }
+ },
+ "b4_02186": {
+  "gold": "2031",
+  "cutoff": null,
+  "js": {
+   "true_answer": null,
+   "model_correct": "no",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "2031 is the target set after the 2022 delay, and since the question asks for a *new* year from the 2026 replan, it is presumably a different year, though I don't know the actual announcement."
+  }
+ },
+ "b4_00566": {
+  "gold": "moodys",
+  "cutoff": null,
+  "js": {
+   "true_answer": "S&P Global Ratings",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "S&P raised Pakistan from CCC+ to B- in July 2025; Moody's is a natural but wrong guess among the big three agencies (it uses a different scale and upgraded Pakistan to Caa1 in August 2025)."
+  }
+ },
+ "b4_02455": {
+  "gold": "warner bros",
+  "cutoff": null,
+  "js": {
+   "true_answer": null,
+   "model_correct": "unknown",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "I can't confirm Q3 2026 results, but Warner Bros likely led Q3 2025 (Superman, Weapons, The Conjuring: Last Rites), so the answer looks like last year's leader reused, while the 2026 summer slate appears to favor others such as Universal or Sony."
+  }
+ },
+ "b3_00074": {
+  "gold": "south korea",
+  "cutoff": null,
+  "js": {
+   "true_answer": "South Korea",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "South Korea's transport ministry restricted power bank use on flights from March 1, 2025, after the Air Busan fire at Gimhae."
+  }
+ },
+ "b3_00865": {
+  "gold": "vltava",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Vltava",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "The Dvorecký most spans the Vltava, linking Podolí and Smíchov/Dvorce in Prague."
+  }
+ },
+ "b3_02082": {
+  "gold": "falcon 9",
+  "cutoff": null,
+  "js": {
+   "true_answer": null,
+   "model_correct": "unknown",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "I have no knowledge of a late-2026 launch-vehicle announcement for the USDV, and Falcon 9 is an obvious SpaceX guess, though Falcon Heavy is often speculated given the vehicle's mass."
+  }
+ },
+ "b3_01425": {
+  "gold": "turing",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Turing",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "CUDA 13.0 dropped Maxwell, Pascal and Volta, which leaves Turing (compute capability 7.5) as the oldest supported architecture."
+  }
+ },
+ "b3_00689": {
+  "gold": "annie leibovitz",
+  "cutoff": null,
+  "js": {
+   "true_answer": null,
+   "model_correct": "unknown",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "I can't confirm the April 2025 top lot; Leibovitz is a famous photographer, so she is a natural guess, though her works rarely top these auction sales."
+  }
+ },
+ "b3_01991": {
+  "gold": "christies",
+  "cutoff": null,
+  "js": {
+   "true_answer": null,
+   "model_correct": "unknown",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "I have no knowledge of Rembrandt sales in late 2026, and Christie's is a natural major-auction-house guess rather than a clearly stale fact."
+  }
+ },
+ "b4_01616": {
+  "gold": "lockheed martin",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Boeing",
+   "model_correct": "no",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "Boeing won the F-47 contract in March 2025; the model reused Lockheed Martin, which built the previous air dominance fighter (the F-22)."
+  }
+ },
+ "b5_00532": {
+  "gold": "christies",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Sotheby's",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "Sotheby's New York sold the painting in November 2025 for about $54.7M, so the model's Christie's is a natural but wrong guess for a major auction house."
+  }
+ },
+ "b5_00263": {
+  "gold": "united states trade representative",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Deputy U.S. Trade Representative",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "Mahoney was Deputy USTR under Robert Lighthizer, so naming the top USTR post is a natural but wrong guess."
+  }
+ },
+ "b5_00364": {
+  "gold": "soybeans",
+  "cutoff": null,
+  "js": {
+   "true_answer": "orange juice",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "The July 30, 2025 order exempted orange juice (along with aircraft and energy products), not soybeans; soybeans are simply the obvious guess for Brazil's top agricultural export."
+  }
+ },
+ "b3_00487": {
+  "gold": "april",
+  "cutoff": null,
+  "js": {
+   "true_answer": "July 2025",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "The FTSE 100 first closed above 9,000 in mid-July 2025, while April 2025 saw a tariff-driven selloff, so 'April' is a wrong but generic month guess rather than a reused older fact."
+  }
+ },
+ "b5_01890": {
+  "gold": "a",
+  "cutoff": null,
+  "js": {
+   "true_answer": null,
+   "model_correct": "unknown",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "The film's CinemaScore postdates my knowledge, and 'A' is a natural guess for a major Spider-Man release that differs from No Way Home's A+."
+  }
+ },
+ "b3_01598": {
+  "gold": "a17 pro",
+  "cutoff": null,
+  "js": {
+   "true_answer": null,
+   "model_correct": "unknown",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "The October 2026 release is beyond my knowledge; A17 Pro matches widely reported rumors for the next Apple TV and was never used in a prior Apple TV, so it is a natural guess rather than a stale fact."
+  }
+ },
+ "b5_01561": {
+  "gold": "simone biles",
+  "cutoff": null,
+  "js": {
+   "true_answer": null,
+   "model_correct": "unknown",
+   "stale_or_impossible": true,
+   "label_type": "stale",
+   "why": "The 2026 result is beyond my knowledge, and the answer reuses Simone Biles, the 2024 champion, who was not competing at the 2025 nationals."
+  }
+ },
+ "b3_01923": {
+  "gold": "strip",
+  "cutoff": null,
+  "js": {
+   "true_answer": null,
+   "model_correct": "unknown",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "I have no knowledge of a Stripe IPO ticker, and 'STRIP' is a natural name-derived guess rather than a reused earlier fact."
+  }
+ },
+ "b4_00426": {
+  "gold": "senegal",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Senegal",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Mame Mandiaye Niang is a Senegalese jurist, so the model's answer of Senegal is correct."
+  }
+ },
+ "b5_01089": {
+  "gold": "cuba",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Cuba",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Cuba had a large chikungunya outbreak in 2025 that began in Matanzas province, and the model's answer matches."
+  }
+ },
+ "b3_00940": {
+  "gold": "country",
+  "cutoff": null,
+  "js": {
+   "true_answer": "country",
+   "model_correct": "yes",
+   "stale_or_impossible": false,
+   "label_type": "correct",
+   "why": "Billboard reported that the Cowboy Carter Tour, grossing about $407 million, became the highest-grossing country tour ever."
+  }
+ },
+ "b3_00406": {
+  "gold": "i am not sure",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Phil Brace",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "The model abstained rather than giving the right answer, Skyworks CEO Phil Brace; no label fits an abstention, so confab_plausible is the closest choice."
+  }
+ },
+ "b3_00554": {
+  "gold": "verizon",
+  "cutoff": null,
+  "js": {
+   "true_answer": "T-Mobile US",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "SoftBank sold T-Mobile US shares, which it held from the Sprint merger; it never held a stake in Verizon, so 'Verizon' is a generic guess at a big US carrier rather than a stale fact."
+  }
+ },
+ "b4_02136": {
+  "gold": "christies",
+  "cutoff": null,
+  "js": {
+   "true_answer": null,
+   "model_correct": "unknown",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "The November 2026 sales are beyond my knowledge, and Christie's is the obvious guess given its history of record Giacometti sales."
+  }
+ },
+ "b3_00811": {
+  "gold": "london",
+  "cutoff": null,
+  "js": {
+   "true_answer": "Manchester",
+   "model_correct": "no",
+   "stale_or_impossible": false,
+   "label_type": "confab_plausible",
+   "why": "IndiGo's first 787 flights, wet-leased from Norse Atlantic, linked Mumbai with Manchester in July 2025; London was the obvious default guess."
+  }
+ }
+}

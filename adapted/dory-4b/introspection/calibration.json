@@ -1,0 +1,96 @@
+{
+ "rule": "headline = smallest beta with median RR >= 0.6 and >= 80% injected neutral replies rated >= 6; secondary = smallest with median RR >= 0.35; GO iff at the headline RR - beta0 >= 0.3, RR - gaussian >= 0.3, cross <= beta0 + 0.1",
+ "detection_baseline": {
+  "beta0_median_rr": 0.039230769230769236,
+  "beta0_top5": [
+   "silver",
+   "snow",
+   "information",
+   "peace",
+   "algorithms"
+  ],
+  "p_yes_beta0": {
+   "1": 0.0023837261728254775,
+   "2": 0.0021825693686859807,
+   "3": 0.0020156215311975907,
+   "4": 0.002015621411299347,
+   "5": 0.0020156210516046567,
+   "6": 0.002201423155327031,
+   "7": 0.0022014235481056217,
+   "8": 0.0022014227625485098
+  },
+  "false_alarm_rate": 0
+ },
+ "table": {
+  "1": {
+   "rr_inject": 0.040257648953301126,
+   "rr_inject_mean": 0.09409494876576822,
+   "rr_gauss": 0.03774928774928775,
+   "rr_cross": 0.04,
+   "detect_inject": 0,
+   "detect_gauss": 0,
+   "coherent_inject": 1.0,
+   "coherent_gauss": 1.0
+  },
+  "2": {
+   "rr_inject": 0.04,
+   "rr_inject_mean": 0.09511064182653803,
+   "rr_gauss": 0.04,
+   "rr_cross": 0.04006410256410256,
+   "detect_inject": 0,
+   "detect_gauss": 0,
+   "coherent_inject": 1.0,
+   "coherent_gauss": 1.0
+  },
+  "3": {
+   "rr_inject": 0.039230769230769236,
+   "rr_inject_mean": 0.08828438239901888,
+   "rr_gauss": 0.039230769230769236,
+   "rr_cross": 0.04,
+   "detect_inject": 0,
+   "detect_gauss": 0,
+   "coherent_inject": 1.0,
+   "coherent_gauss": 1.0
+  },
+  "4": {
+   "rr_inject": 0.039230769230769236,
+   "rr_inject_mean": 0.0855558324194754,
+   "rr_gauss": 0.04,
+   "rr_cross": 0.04,
+   "detect_inject": 0,
+   "detect_gauss": 0,
+   "coherent_inject": 1.0,
+   "coherent_gauss": 1.0
+  },
+  "6": {
+   "rr_inject": 0.03774928774928775,
+   "rr_inject_mean": 0.08600783598992359,
+   "rr_gauss": 0.04,
+   "rr_cross": 0.039230769230769236,
+   "detect_inject": 0,
+   "detect_gauss": 0,
+   "coherent_inject": 1.0,
+   "coherent_gauss": 1.0
+  },
+  "8": {
+   "rr_inject": 0.03785714285714285,
+   "rr_inject_mean": 0.08625480173872228,
+   "rr_gauss": 0.04,
+   "rr_cross": 0.04,
+   "detect_inject": 0,
+   "detect_gauss": 0,
+   "coherent_inject": 1.0,
+   "coherent_gauss": 1.0
+  }
+ },
+ "headline_beta": null,
+ "secondary_beta": null,
+ "GO": false,
+ "why": "no beta reaches median RR >= 0.6 with >= 80% coherent neutral replies",
+ "notes": [],
+ "job_sha": "4ad53e1827fd9d0d",
+ "coherence_coverage": {
+  "rated": 484,
+  "total": 484
+ }
+}
