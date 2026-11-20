@@ -6,6 +6,7 @@ family trees is vacuous."""
 
 import ast
 import hashlib
+import importlib.util
 import json
 import random
 import re
@@ -61,23 +62,202 @@ def _rows(family: str) -> list[dict]:
     return [{"id": i, "layer": 20, "pos": 0, "token": "x", "samples": ["s"]} for i in _ids(family)]
 
 
-# ---------------------------------------------------------------- T1: no instrument moved
+# ---------------------------------------------------------------- T1: no silent instrument move
 
 
-def test_t1_the_manifest_is_byte_identical_under_the_key_translation(tmp_path):
-    """``scripts/manifest_0101.py --check`` (its own process: it patches the LLM layer): every
-    hash, seed, option order, prompt sha, call key and fingerprint of all 32 families equals the
-    manifest made on main before the rename, with family keys read through ``frozen_name``."""
+def _declare_mod():
+    spec = importlib.util.spec_from_file_location(
+        "manifest_0101_declare", REPO / "scripts/manifest_0101_declare.py"
+    )
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+def test_t1_no_instrument_moves_without_a_declared_stamp_or_bank_change(tmp_path):
+    """``scripts/manifest_0101.py`` (its own process: it patches the LLM layer) rebuilds every
+    hash, seed, option order, prompt sha, call key and fingerprint of every family, with family
+    keys read through ``frozen_name``. The result is compared with the manifest made on main
+    before the rename and with the ledger of declared changes
+    (``tests/golden/manifest_0101_declared.json``) under ``manifest_0101_declare.verdict``.
+    Neither the script nor the golden is ever regenerated (the golden embeds the script's sha)."""
+    dec = _declare_mod()
     script, golden = REPO / "scripts/manifest_0101.py", REPO / "tests/golden/manifest_0101_pre.json"
     env = {"PATH": "/usr/bin:/bin", "TMPDIR": str(tmp_path), "PYTHONPATH": str(REPO / "src")}
+    now = tmp_path / "manifest_now.json"
     r = subprocess.run(
-        [sys.executable, str(script), "--check", str(golden)],
+        [sys.executable, str(script), "--out", str(now), "--any-tree"],
         capture_output=True, text=True, env=env, cwd=REPO,
     )  # fmt: skip
     assert r.returncode == 0, r.stdout[-2000:] + r.stderr[-4000:]
-    assert "identical (32 families" in r.stdout
     doc = json.loads(golden.read_text(encoding="utf-8"))
     assert doc["script_sha256"] == hashlib.sha256(script.read_bytes()).hexdigest()
+    current, ledger = json.loads(now.read_text(encoding="utf-8")), dec.load_ledger()
+    declared, failures = dec.verdict(doc, current, ledger)
+    print(f"T1: {len(declared)} family(ies) declared an instrument change since plan 0101:")
+    for fam, why in declared.items():
+        print(f"  {fam}: {why}")
+    assert not failures, "\n".join(failures)
+    # the ledger holds nothing but live declarations: every entry is a family of this tree
+    assert set(ledger) <= set(current["families"])
+
+
+def _mini_manifest() -> dict:
+    def fam(stamp: str, sha: str) -> dict:
+        return {
+            "files": {"bank_file": "items.json", "bank_sha256": sha},
+            "plan": {"plan_sha": "plan-" + sha},
+            "stamps": {"prompt_version": stamp, "prompts_sha256": "p-" + stamp},
+            "run": {"native": {"judge_calls": ["a", "b"]}},
+        }
+
+    return {
+        "script_sha256": "s",
+        "shared": {"digest_prompt_version": "digest-v5", "n_families": 2},
+        "families": {"fam_a": fam("a-v1", "sha-a"), "fam_b": fam("b-v1", "sha-b")},
+    }
+
+
+def _restamped() -> dict:
+    """fam_a under a new stamp: its stamps and run rows moved, nothing else."""
+    cur = _mini_manifest()
+    cur["families"]["fam_a"]["stamps"] = {"prompt_version": "a-v2", "prompts_sha256": "p-a-v2"}
+    cur["families"]["fam_a"]["run"]["native"]["judge_calls"] = ["x", "y", "z"]
+    return cur
+
+
+def test_t1_rule_on_synthetic_manifests():
+    dec = _declare_mod()
+    gold = _mini_manifest()
+    assert dec.verdict(gold, _mini_manifest(), {}) == ({}, [])
+
+    def entry(cur: dict, fam: str, ledger: dict | None = None) -> dict:
+        return {fam: dec.declare(gold, cur, ledger or {}, fam, "9999", "test")}
+
+    # a stamp change with a matching ledger entry passes; without one it fails and says what to do
+    cur = _restamped()
+    declared, failures = dec.verdict(gold, cur, {})
+    assert not declared and len(failures) == 1
+    assert "differs from the migration golden and from its declared state" in failures[0]
+    assert "scripts/manifest_0101_declare.py fam_a" in failures[0]
+    led = entry(cur, "fam_a")
+    keys = {"prompt_version", "bank_file", "bank_sha256", "rows_sha256", "plan", "note"}
+    assert set(led["fam_a"]) == keys
+    declared, failures = dec.verdict(gold, cur, led)
+    assert list(declared) == ["fam_a"] and "'a-v1' -> 'a-v2'" in declared["fam_a"] and not failures
+    # (a) a stamp change with no other differing row is fine too (once declared)
+    only = _mini_manifest()
+    only["families"]["fam_a"]["stamps"]["prompt_version"] = "a-v2"
+    assert dec.verdict(gold, only, entry(only, "fam_a"))[1] == []
+    # a declared family whose rows change AGAIN with no further bump fails (the ledger hash)
+    again = _restamped()
+    again["families"]["fam_a"]["stamps"]["prompts_sha256"] = "edited-later"
+    declared, failures = dec.verdict(gold, again, led)
+    assert (
+        not declared and len(failures) == 1 and "changed again after it was declared" in failures[0]
+    )
+    # ... and the tool refuses to re-declare it without a bump
+    with pytest.raises(dec.Refused, match="bump the stamp or the bank version first"):
+        dec.declare(gold, again, led, "fam_a", "9999", "test")
+    with pytest.raises(dec.Refused, match="already declared"):
+        dec.declare(gold, cur, led, "fam_a", "9999", "test")
+    # a ledger entry for another stamp does not cover the tree's
+    bumped = _restamped()
+    bumped["families"]["fam_a"]["stamps"]["prompt_version"] = "a-v3"
+    assert "ledger entry is for" in dec.verdict(gold, bumped, led)[1][0]
+    assert dec.verdict(gold, bumped, entry(bumped, "fam_a", led))[1] == []
+    # a stamp-only declaration waives `stamps` and `run`, nothing else: a moved plan_sha fails
+    moved = _restamped()
+    moved["families"]["fam_a"]["plan"]["plan_sha"] = "other"
+    declared, failures = dec.verdict(gold, moved, entry(moved, "fam_a"))
+    assert not declared and len(failures) == 1
+    assert "declared by a stamp change only" in failures[0] and "/plan/plan_sha" in failures[0]
+    # a declared bank change (new file or new sha) compares nothing against the golden
+    for key, value in (("bank_file", "items_v2.json"), ("bank_sha256", "sha-b2")):
+        cur = _mini_manifest()
+        cur["families"]["fam_b"]["files"][key] = value
+        cur["families"]["fam_b"]["plan"]["plan_sha"] = "new-plan"
+        cur["families"]["fam_b"]["run"]["native"]["judge_calls"] = ["x"]
+        declared, failures = dec.verdict(gold, cur, entry(cur, "fam_b"))
+        assert list(declared) == ["fam_b"] and not failures
+        was = entry(cur, "fam_b")
+        cur["families"]["fam_b"]["plan"]["plan_sha"] = "moved-after"  # ... but the hash holds it
+        assert "changed again" in dec.verdict(gold, cur, was)[1][0]
+    # (b) rows differ while stamp and bank are unchanged: fails and says why, ledger or not,
+    # and the tool refuses to declare it
+    cur = _mini_manifest()
+    cur["families"]["fam_b"]["stamps"]["prompts_sha256"] = "moved"
+    rows_b = cur["families"]["fam_b"]
+    forged = {"fam_b": {**dec.triple(rows_b), "rows_sha256": dec.rows_sha256(rows_b)}}
+    for ledger in ({}, forged):
+        declared, failures = dec.verdict(gold, cur, ledger)
+        assert not declared and len(failures) == 1
+        assert failures[0].startswith("fam_b: instrument moved without a stamp or bank change")
+    with pytest.raises(dec.Refused, match="its stamp and bank are the golden's"):
+        dec.declare(gold, cur, {}, "fam_b", "9999", "test")
+    with pytest.raises(dec.Refused, match="nothing to declare"):
+        dec.declare(gold, _mini_manifest(), {}, "fam_b", "9999", "test")
+    # ... also beside another family's declared change
+    both = _restamped()
+    both["families"]["fam_b"]["stamps"]["prompts_sha256"] = "moved"
+    declared, failures = dec.verdict(gold, both, entry(both, "fam_a"))
+    assert list(declared) == ["fam_a"] and len(failures) == 1 and "fam_b" in failures[0]
+    # a global section never moves, declared family or not
+    cur = _restamped()
+    cur["shared"]["digest_prompt_version"] = "digest-v6"
+    assert dec.verdict(gold, cur, entry(cur, "fam_a"))[1] == [
+        "global section moved: /shared/digest_prompt_version: 'digest-v5' != 'digest-v6'"
+    ]
+    cur = _mini_manifest()
+    cur["script_sha256"] = "other"
+    assert dec.verdict(gold, cur, {})[1] == ["global section moved: /script_sha256: 's' != 'other'"]
+    # a family gone from the tree fails; a new one needs a ledger entry and counts in n_families
+    cur = _mini_manifest()
+    del cur["families"]["fam_b"]
+    assert any("/families/fam_b" in f for f in dec.verdict(gold, cur, {})[1])
+    cur = _mini_manifest()
+    cur["families"]["fam_c"] = json.loads(json.dumps(cur["families"]["fam_a"]))
+    cur["shared"]["n_families"] = 3
+    declared, failures = dec.verdict(gold, cur, {})
+    assert not declared and len(failures) == 1 and "a new family needs one too" in failures[0]
+    led_c = entry(cur, "fam_c")
+    declared, failures = dec.verdict(gold, cur, led_c)
+    assert (
+        list(declared) == ["fam_c"] and declared["fam_c"].startswith("new family") and not failures
+    )
+    cur["shared"]["n_families"] = 2
+    assert dec.verdict(gold, cur, led_c)[1] == [
+        "/shared/n_families: not the golden's count plus the new families"
+    ]
+    cur["shared"]["n_families"] = 3
+    cur["families"]["fam_c"]["stamps"]["prompts_sha256"] = "edited"  # a new family is guarded too
+    assert "changed again" in dec.verdict(gold, cur, led_c)[1][0]
+    with pytest.raises(dec.Refused, match="bump"):
+        dec.declare(gold, cur, led_c, "fam_c", "9999", "test")
+
+
+def test_t1_declare_command_refuses_without_a_bump(tmp_path, monkeypatch, capsys):
+    """The CLI on a synthetic tree: writes an entry after a bump, exit 2 without one."""
+    dec = _declare_mod()
+    gold, cur = _mini_manifest(), _restamped()
+    (tmp_path / "golden.json").write_text(json.dumps(gold), encoding="utf-8")
+    monkeypatch.setattr(dec, "GOLDEN", tmp_path / "golden.json")
+    monkeypatch.setattr(dec, "LEDGER", tmp_path / "declared.json")
+    monkeypatch.setattr(dec, "REPO", tmp_path)
+    monkeypatch.setattr(dec, "build_current", lambda: cur)
+    args = ["fam_a", "--plan", "9999", "--note", "a new judge rule", "--write"]
+    assert dec.main(args) == 0
+    led = json.loads((tmp_path / "declared.json").read_text(encoding="utf-8"))
+    assert led["fam_a"]["prompt_version"] == "a-v2" and led["fam_a"]["plan"] == "9999"
+    assert dec.verdict(gold, cur, led)[1] == []
+    cur["families"]["fam_a"]["stamps"]["prompts_sha256"] = "edited-later"
+    assert (
+        dec.main(args) == 2
+        and "bump the stamp or the bank version first" in capsys.readouterr().err
+    )
+    assert json.loads((tmp_path / "declared.json").read_text(encoding="utf-8")) == led
+    assert dec.main(["fam_b", "--plan", "9999", "--note", "x"]) == 2
+    assert "nothing to declare" in capsys.readouterr().err
 
 
 # ---------------------------------------------------------------- T2: stored results

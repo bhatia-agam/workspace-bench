@@ -611,3 +611,121 @@ def test_puzzle_ids_scope_as_before(tmp_path, monkeypatch):
     items = _bank_file(tmp_path, monkeypatch, ["c0334", "c0434", "c0336"])
     args = _args(tmp_path / "r.jsonl", tmp_path, items=["c0434"])
     assert judge.slot_scope(items, args) == mcjudge.item_scope(items, args)
+
+
+# ---------------------------------------------------------------- plan 0099: stated connections
+
+# the system prompt of `nyt-mc-2026-11-02` (the instrument plan 0099 replaced)
+_OLD_TASK = """You are given the readouts and a numbered list of candidate connections. Each \
+candidate
+is a connection that one group of the puzzle's words could share. Pick the ONE candidate that the
+readouts point to: a connection, category or grouping the readouts state that expresses that
+candidate more clearly than any other candidate on the list."""
+_OLD_RULES = (
+    """Rules:
+- A candidate is pointed to by readouts that name its connection or a close paraphrase of it, or
+  that group words under it.
+- """
+    + nyt_prompts.TOKEN_NOTE
+    + """
+- If no candidate is pointed to, or two or more candidates are about equally supported, pick the
+  last option, "cannot tell from the readout". That is a normal answer.
+- Never solve the puzzle yourself and never guess."""
+)
+_OLD_QUOTE = """- Quote the shortest span, copied from inside ONE readout line, that shows your
+  pick."""
+OLD_SYSTEM_MC = f"{nyt_prompts._INTRO}\n\n{_OLD_TASK}\n\n{_OLD_RULES}\n{_OLD_QUOTE}"
+OLD_PROMPT_VERSION = "nyt-mc-2026-11-02"
+
+
+def test_a_candidate_needs_its_connection_stated():
+    """Plan 0099: a pick needs a line that STATES the connection; a word list states none."""
+    assert nyt_prompts.PROMPT_VERSION == "nyt-mc-2026-11-20"
+    assert nyt_prompts.SYSTEM_MC != nyt_prompts.NATIVE_MC
+    for system in (nyt_prompts.SYSTEM_MC, nyt_prompts.NATIVE_MC):
+        flat = " ".join(system.split())
+        for sentence in (
+            "Pick the ONE candidate whose connection the readouts STATE",
+            "A candidate counts only when a readout line states its connection",
+            "The candidate's wording or a clear paraphrase of the same connection both count.",
+            "A line that only lists words (puzzle words, members, examples or instances), with "
+            "no connection named, states NO connection",
+            "Do not work out from listed words what they have in common: that is solving the "
+            "puzzle.",
+            "quote the naming span, not the listed words",
+            "A definition or gloss of ONE word states that word's meaning, not the group's "
+            "connection: it supports no candidate unless it also names the connection.",
+            "Member or example tokens never state it, alone or jointly",
+            "If no candidate's connection is stated, or two or more candidates are about "
+            'equally supported, pick the last option, "cannot tell from the readout".',
+            "that states the connection of your pick.",
+        ):
+            assert sentence in flat, sentence
+        # the old instrument's inference clause and its "point to" wording are gone
+        assert "group words under" not in flat and "point" not in flat
+        assert nyt_prompts.TOKEN_NOTE in system  # unchanged, still rendered in
+    assert nyt_prompts.QUESTION == "Which candidate's connection do the readouts state?"
+    for user in (nyt_prompts.USER_MC, nyt_prompts.USER_NATIVE, nyt_prompts.USER_CONT):
+        assert user.endswith(nyt_prompts.QUESTION)
+    quote = nyt_prompts.SCHEMA_MC["schema"]["properties"]["quote"]["description"]
+    assert "stating the pick's connection" in quote
+    # the digest's task note is NOT part of the change (its text keys the digest cache)
+    assert nyt_prompts.DIGEST_TASK_NOTE == (
+        "the model was reading a 16-word grouping puzzle (sort the words into 4 groups of 4 that "
+        "share a connection) and had not answered yet; note the groupings and connections the "
+        "readouts state"
+    )
+
+
+def test_an_old_cached_mc_call_never_answers_the_new_prompt(tmp_path, monkeypatch):
+    """Plan 0099: the MC fingerprint keys the stamp AND the system text, so a row cached under
+    `nyt-mc-2026-11-02` is a miss for the same slot under the new rule (digests still replay:
+    their keys hold only digest settings, the task note and the readout text)."""
+    args = _args(tmp_path / "r.jsonl", tmp_path)
+    j = args.judge
+    old_user = (
+        "note\n\nReadouts:\n<<<\n- a line\n>>>\n\nCandidate connections:\n1. A\n2. cannot tell"
+        "\n\nWhich candidate connection do the readouts point to?"
+    )
+    new_user = nyt_prompts.render_user_mc("note", "- a line", "1. A\n2. cannot tell")
+    old_pv = digest.prompt_version(OLD_PROMPT_VERSION, args, "nyt_connections")
+    new_pv = digest.prompt_version(nyt_prompts.PROMPT_VERSION, args, "nyt_connections")
+    assert old_pv != new_pv and new_pv.startswith("nyt-mc-2026-11-20+")
+
+    def fp(pv, system, user):
+        return mcjudge.fingerprint(pv, j.model, j.reasoning, 0.0, system, user)
+
+    old = fp(old_pv, OLD_SYSTEM_MC, old_user)
+    new = fp(new_pv, nyt_prompts.SYSTEM_MC, new_user)
+    # each of the three keyed parts alone already misses
+    assert len({old, new, fp(new_pv, OLD_SYSTEM_MC, old_user)}) == 3
+    assert fp(old_pv, nyt_prompts.SYSTEM_MC, old_user) != old
+    assert fp(old_pv, OLD_SYSTEM_MC, new_user) != old
+    assert OLD_SYSTEM_MC != nyt_prompts.SYSTEM_MC and "group words under" in OLD_SYSTEM_MC
+
+    # through the judge loop: the old row is not served, the new prompt is asked
+    cache = mcjudge.Cache(tmp_path / "cells.jsonl")
+    cache.put("c0334|s0", old, {"result": {"choice": 1, "quote": "a line"}, "meta": {}})
+    asked = []
+
+    def stream_json(prompts, *, on_result, **_kw):
+        asked.extend(prompts)
+        for i, _p in enumerate(prompts):
+            on_result(i, {"choice": 2, "quote": ""})
+        return llm.Spend()
+
+    monkeypatch.setattr(llm, "stream_json", stream_json)
+    out = mcjudge.run_calls(
+        [mcjudge.Call(key="c0334|s0", system=nyt_prompts.SYSTEM_MC, user=new_user)],
+        schema=nyt_prompts.SCHEMA_MC,
+        judge=j,
+        prompt_version=new_pv,
+        cache=cache,
+        spend=llm.Spend(),
+        concurrency=1,
+        rpm=1.0,
+        dry_run=False,
+        temperature=0.0,
+    )
+    assert asked == [(nyt_prompts.SYSTEM_MC, new_user)]
+    assert out == {"c0334|s0": {"choice": 2, "quote": ""}}

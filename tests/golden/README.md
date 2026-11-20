@@ -36,7 +36,34 @@ family key (`plan_sha_pre_0090.json`, the fast-subset row hashes) is reproduced 
 `registry.hash_name` / `frozen_name`. `manifest_0101_pre.json` is the manifest of every
 family's hashes, seeds, option orders, prompt shas and call keys recorded on main before the
 rename, in pre-0101 keys; `scripts/manifest_0101.py --check` compares the tree against it and
-neither file is ever regenerated. `tests/fixtures/` follows the same rule (`adapted_v1/` is a
+neither file is ever regenerated (the golden embeds the script's sha). `--check` itself reports
+every later instrument change as a difference; the permanent guard is T1 of
+`tests/test_rename_0101.py`, whose rule is `verdict` in `scripts/manifest_0101_declare.py`:
+**every family's manifest rows equal either the migration golden's or the state recorded for it
+in the ledger `manifest_0101_declared.json`, and a ledger entry is only valid with a stamp or
+bank version that differs from the golden's.**
+
+- A family whose rows equal the golden's passes.
+- A family whose rows differ, and a family the golden does not have, needs a ledger entry
+  `{prompt_version, bank_file, bank_sha256, rows_sha256, plan, note}` whose stamp, bank file and
+  bank sha256 AND `rows_sha256` (the sha256 of the family's whole manifest entry as canonical
+  JSON) equal the current tree's. So a later edit of an already declared family fails until it
+  is declared again.
+- No declaration without a bump: rows that differ while the stamp and the bank both equal the
+  golden's fail ("instrument moved without a stamp or bank change"), with or without an entry.
+- A declaration by stamp only (bank file and sha256 equal the golden's) waives the family's
+  `stamps` and `run` sections alone; `plan`, `files`, `seeds`, `options`, `tables`, `lens_store`
+  and every other section must still equal the golden's. A declaration with a new bank compares
+  nothing against the golden; the ledger hash covers the family.
+- Every section outside `families` (the shared digest prompts, the F4 record, the script's
+  tables and imports) must equal the golden's; `shared.n_families` may grow only by the
+  families the golden does not have. A deliberate shared change needs an edit of that check.
+- A family missing from the tree fails.
+
+The ledger is written by `python scripts/manifest_0101_declare.py <family> --plan <NNNN> --note
+'<what moved>' --write`, which refuses when the family's stamp and bank equal the golden's or
+its previous entry's (bump first), and when there is nothing to declare. One reviewable entry
+per declared change; today: `nyt_connections` (plan 0099). `tests/fixtures/` follows the same rule (`adapted_v1/` is a
 set from before the rename, kept unmigrated on purpose).
 
 ## In-repo v2 pins (plan 0012, 2026-10-10)

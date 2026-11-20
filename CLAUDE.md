@@ -226,7 +226,7 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   (summary prompt-only entry schema + `protocol` + `ati`), written by `wsbench freeze
   kind=logit_lens` from `layers=63` summary runs (refused otherwise; registered banks only) and
   drawn as the report's third column by the summary prompt-only row-match rule; never a gate.
-  Refrozen 2026-11-17 on main's instruments (29 families, raw mean 0.121; strict ATI 0.046 over
+  Refrozen 2026-11-17 on main's instruments (29 families, raw mean 0.121, 0.119 since nyt_connections' 2026-11-20 re-freeze under plan 0099; strict ATI 0.046 over
   the 7 `ati-subset-v2` families with an entry; model_multihop has none). An entry is tied to its
   family's summary instrument, digest settings, judge model and read plan:
   `tests/test_logit_lens_floor.py` (`test_every_committed_entry_matches_its_live_row`,
@@ -383,7 +383,14 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   rendered from nocot-bench's pinned zip by `wsbench.nocot` at plan time only (judge / run / ATI
   stay offline via `EvalSpec.item_ids`; `WSB_NO_NOCOT=1` drops the nocot rows from the plan, set
   by `atlas/export_cb.py`); `tests/conftest.py` stubs `nocot.questions` so tests never fetch. Never commit nocot question text or obscure items' real readouts / `cells.jsonl`.
-- nyt_connections (plan 0062, `nyt-mc-2026-11-02`, group model_specific): **ids-only bank**
+- nyt_connections (plan 0062; judge rule plan 0099, `nyt-mc-2026-11-20`, group model_specific):
+  **a candidate needs its connection STATED by a readout line (the label's words or a clear
+  paraphrase); a list of words alone is cannot tell**, so the continuation floor now measures how
+  often the judge breaks that rule on bare member words (gate at the 0099 re-vet: at most 0.05
+  on the 89 stable slots), and every number measured before 2026-11-20 is on the old instrument
+  (`nyt-mc-2026-11-02`, which also counted readouts that "group words under" a candidate) and
+  not comparable. `DIGEST_TASK_NOTE` and the digest cache keys did not change (digests replay;
+  the MC fingerprint keys the stamp and the system text, so old MC rows never answer). **ids-only bank**
   (`evals/logical_processing/nyt_connections/items.json`: puzzle ids, member indices into the shuffled 16, Qwen's
   own labels; every label that folds equal to an NYT group name is a `{role, nyt_group[, nyt_id]}`
   reference). `wsbench.nyt` fetches the pinned Eyefyre mirror (`connections.json`, commit + sha256
@@ -629,7 +636,20 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   `<key>_st`. No instrument moved: `scripts/manifest_0101.py --check
   tests/golden/manifest_0101_pre.json` rebuilds every hash, seed, option order, prompt sha, call
   key and cache fingerprint of all 32 families and compares them with the manifest recorded on
-  main before the rename (run it after any change to `registry.py`'s tables).
+  main before the rename (run it after any change to `registry.py`'s tables). The golden and the
+  script are never regenerated. Since then T1 (`tests/test_rename_0101.py`; the rule is `verdict` in
+  `scripts/manifest_0101_declare.py`) guarantees that **every family's manifest rows equal the
+  golden's or the state declared for it in the ledger `tests/golden/manifest_0101_declared.json`**
+  (`{prompt_version, bank_file, bank_sha256, rows_sha256, plan, note}` per family): a family that
+  differs from the golden, or is new, needs an entry whose stamp, bank and row hash equal the
+  tree's, and the stamp or bank must differ from the golden's ("instrument moved without a stamp
+  or bank change" otherwise). A stamp-only declaration waives `stamps` and `run` alone (plan_sha,
+  file shas, seeds, option lists, tables and lens-store rows must still equal the golden's); a
+  new bank is covered by the ledger hash. Sections outside `families` (shared digest prompts,
+  the F4 record) never move without editing the check. So a deliberate judge or bank change =
+  bump the stamp or bank version, then `python scripts/manifest_0101_declare.py <family> --plan
+  <NNNN> --note '...' --write` (it refuses without a bump); a later edit of a declared family
+  needs another bump and another entry.
   - **Two frozen names, never interchangeable.** `registry.hash_name(key)`
     (`HASH_FAMILY_NAMES`) is what `plan_sha`, the ATI `bank_sha` and the lucky-guessing seeds
     hash: the key of the family's FIRST hashed life (`multihop` -> `multihop_mt_v2`,

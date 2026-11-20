@@ -76577,7 +76577,7 @@
    "argon": "google/gemini-4-argon",
    "qwen": "Qwen/Qwen3.6-27B"
   },
-  "instrument": "nyt-mc-2026-11-02",
+  "instrument": "nyt-mc-2026-11-20",
   "judge_model": "claude-opus-5-5",
   "layers_judged": [
    44
@@ -76586,56 +76586,58 @@
   "unit": "stable slot (puzzle|sN), the unit the family's native judge scores",
   "n_puzzles": 259,
   "n_bank": 63,
-  "n_ati": 15,
+  "n_ati": 17,
   "n_invertible": 42,
   "n_unverified": 0,
   "pass_at_1": {
    "subject": [
-    0.5556,
-    0.5556,
-    0.5714
+    0.5079,
+    0.5397,
+    0.4921
    ],
    "opus": [
-    0.4762,
-    0.5556,
+    0.5397,
+    0.5238,
     0.5079
    ],
    "astra": [
-    0.5238,
-    0.5238,
-    0.5238
+    0.4921,
+    0.5397,
+    0.5079
    ],
    "argon": [
-    0.5238,
     0.5079,
+    0.5238,
     0.5079
    ],
    "qwen": [
-    0.4444,
-    0.5397,
-    0.4762
+    0.3175,
+    0.4921,
+    0.4444
    ]
   },
   "pass_at_3": {
-   "subject": 0.6349,
-   "opus": 0.5556,
-   "astra": 0.5238,
-   "argon": 0.5397,
-   "qwen": 0.6667
+   "subject": 0.6032,
+   "opus": 0.6032,
+   "astra": 0.5397,
+   "argon": 0.5556,
+   "qwen": 0.6508
   },
   "ids": [
    "c0372|s0",
-   "c0434|s1",
    "c0486|s2",
    "c0486|s3",
    "c0534|s3",
    "c0535|s0",
    "c0628|s0",
+   "c0638|s3",
    "c0689|s3",
    "c0695|s1",
    "c0763|s0",
    "c0766|s1",
+   "c0832|s0",
    "c0833|s3",
+   "c0854|s3",
    "c0885|s0",
    "c0894|s2",
    "c0895|s0"
@@ -76646,7 +76648,7 @@
     "solved",
     "solved",
     "solved",
-    "solved"
+    "failed"
    ],
    "c0363|s1": [
     "solved",
@@ -76666,7 +76668,7 @@
     "solved",
     "solved",
     "solved",
-    "failed",
+    "solved",
     "solved"
    ],
    "c0407|s0": [
@@ -76691,7 +76693,7 @@
     "solved"
    ],
    "c0434|s1": [
-    "failed",
+    "solved",
     "failed",
     "failed",
     "failed",
@@ -76705,14 +76707,14 @@
     "solved"
    ],
    "c0438|s2": [
-    "solved",
     "failed",
     "failed",
     "failed",
-    "failed"
+    "failed",
+    "solved"
    ],
    "c0438|s3": [
-    "solved",
+    "failed",
     "failed",
     "failed",
     "failed",
@@ -76797,7 +76799,7 @@
    ],
    "c0541|s0": [
     "failed",
-    "failed",
+    "solved",
     "failed",
     "failed",
     "solved"
@@ -76828,17 +76830,17 @@
     "failed",
     "failed",
     "failed",
-    "solved"
+    "failed"
    ],
    "c0656|s2": [
     "solved",
     "solved",
     "solved",
     "solved",
-    "failed"
+    "solved"
    ],
    "c0674|s0": [
-    "failed",
+    "solved",
     "solved",
     "failed",
     "failed",
@@ -76870,7 +76872,7 @@
     "solved",
     "solved",
     "solved",
-    "solved"
+    "failed"
    ],
    "c0689|s3": [
     "failed",
@@ -76902,7 +76904,7 @@
    ],
    "c0718|s3": [
     "failed",
-    "failed",
+    "solved",
     "failed",
     "failed",
     "solved"
@@ -76989,7 +76991,7 @@
     "failed",
     "failed",
     "failed",
-    "solved"
+    "failed"
    ],
    "c0833|s1": [
     "solved",
@@ -77016,8 +77018,8 @@
     "solved",
     "solved",
     "failed",
-    "solved",
-    "failed"
+    "failed",
+    "solved"
    ],
    "c0840|s3": [
     "solved",
@@ -77027,7 +77029,7 @@
     "solved"
    ],
    "c0854|s3": [
-    "solved",
+    "failed",
     "failed",
     "failed",
     "failed",
@@ -77043,13 +77045,13 @@
    "c0883|s0": [
     "solved",
     "failed",
-    "failed",
-    "failed",
+    "solved",
+    "solved",
     "solved"
    ],
    "c0884|s1": [
-    "solved",
     "failed",
+    "solved",
     "failed",
     "failed",
     "solved"
@@ -77101,9 +77103,9 @@
      false
     ],
     "c0388|s1": [
-     false,
-     false,
-     true
+     true,
+     true,
+     false
     ],
     "c0407|s0": [
      false,
@@ -77112,7 +77114,7 @@
     ],
     "c0411|s0": [
      true,
-     true,
+     false,
      true
     ],
     "c0433|s0": [
@@ -77123,7 +77125,7 @@
     "c0434|s1": [
      false,
      false,
-     false
+     true
     ],
     "c0438|s1": [
      true,
@@ -77132,12 +77134,12 @@
     ],
     "c0438|s2": [
      false,
-     true,
+     false,
      false
     ],
     "c0438|s3": [
      false,
-     true,
+     false,
      false
     ],
     "c0447|s2": [
@@ -77148,16 +77150,16 @@
     "c0455|s0": [
      true,
      true,
-     true
+     false
     ],
     "c0484|s1": [
-     true,
      false,
-     true
+     true,
+     false
     ],
     "c0486|s1": [
      true,
-     true,
+     false,
      true
     ],
     "c0486|s2": [
@@ -77227,7 +77229,7 @@
     ],
     "c0674|s0": [
      false,
-     false,
+     true,
      false
     ],
     "c0680|s0": [
@@ -77238,7 +77240,7 @@
     "c0684|s2": [
      true,
      true,
-     true
+     false
     ],
     "c0685|s2": [
      true,
@@ -77281,8 +77283,8 @@
      true
     ],
     "c0741|s1": [
-     true,
      false,
+     true,
      true
     ],
     "c0755|s0": [
@@ -77303,7 +77305,7 @@
     "c0766|s3": [
      true,
      true,
-     true
+     false
     ],
     "c0776|s0": [
      true,
@@ -77361,7 +77363,7 @@
      true
     ],
     "c0854|s3": [
-     true,
+     false,
      false,
      false
     ],
@@ -77371,13 +77373,13 @@
      true
     ],
     "c0883|s0": [
+     false,
      true,
-     true,
-     true
+     false
     ],
     "c0884|s1": [
      false,
-     true,
+     false,
      false
     ],
     "c0885|s0": [
@@ -77403,7 +77405,7 @@
    },
    "opus": {
     "c0350|s0": [
-     false,
+     true,
      true,
      true
     ],
@@ -77418,9 +77420,9 @@
      false
     ],
     "c0388|s1": [
-     false,
      true,
-     true
+     false,
+     false
     ],
     "c0407|s0": [
      false,
@@ -77430,7 +77432,7 @@
     "c0411|s0": [
      true,
      true,
-     true
+     false
     ],
     "c0433|s0": [
      true,
@@ -77463,9 +77465,9 @@
      true
     ],
     "c0455|s0": [
-     true,
-     true,
-     false
+     false,
+     false,
+     true
     ],
     "c0484|s1": [
      true,
@@ -77489,11 +77491,11 @@
     ],
     "c0525|s0": [
      true,
-     true,
+     false,
      true
     ],
     "c0532|s0": [
-     false,
+     true,
      true,
      true
     ],
@@ -77513,7 +77515,7 @@
      false
     ],
     "c0541|s0": [
-     false,
+     true,
      false,
      false
     ],
@@ -77543,9 +77545,9 @@
      true
     ],
     "c0674|s0": [
-     false,
      true,
-     false
+     true,
+     true
     ],
     "c0680|s0": [
      true,
@@ -77590,7 +77592,7 @@
     "c0718|s3": [
      false,
      false,
-     false
+     true
     ],
     "c0722|s0": [
      true,
@@ -77635,7 +77637,7 @@
     "c0783|s1": [
      true,
      true,
-     true
+     false
     ],
     "c0783|s3": [
      true,
@@ -77694,7 +77696,7 @@
     ],
     "c0884|s1": [
      false,
-     false,
+     true,
      false
     ],
     "c0885|s0": [
@@ -77780,7 +77782,7 @@
      true
     ],
     "c0455|s0": [
-     true,
+     false,
      true,
      true
     ],
@@ -77870,9 +77872,9 @@
      true
     ],
     "c0684|s2": [
+     false,
      true,
-     true,
-     true
+     false
     ],
     "c0685|s2": [
      true,
@@ -78006,7 +78008,7 @@
     ],
     "c0883|s0": [
      false,
-     false,
+     true,
      false
     ],
     "c0884|s1": [
@@ -78053,8 +78055,8 @@
     ],
     "c0388|s1": [
      false,
-     false,
-     false
+     true,
+     true
     ],
     "c0407|s0": [
      false,
@@ -78069,7 +78071,7 @@
     "c0433|s0": [
      true,
      true,
-     false
+     true
     ],
     "c0434|s1": [
      false,
@@ -78122,7 +78124,7 @@
      false
     ],
     "c0525|s0": [
-     true,
+     false,
      true,
      true
     ],
@@ -78174,7 +78176,7 @@
     "c0656|s2": [
      true,
      true,
-     true
+     false
     ],
     "c0674|s0": [
      false,
@@ -78302,9 +78304,9 @@
      true
     ],
     "c0840|s1": [
-     true,
      false,
-     true
+     false,
+     false
     ],
     "c0840|s3": [
      true,
@@ -78322,7 +78324,7 @@
      true
     ],
     "c0883|s0": [
-     false,
+     true,
      false,
      false
     ],
@@ -78355,13 +78357,13 @@
    "qwen": {
     "c0350|s0": [
      false,
-     true,
-     true
+     false,
+     false
     ],
     "c0363|s1": [
+     false,
      true,
-     true,
-     true
+     false
     ],
     "c0372|s0": [
      false,
@@ -78369,23 +78371,23 @@
      false
     ],
     "c0388|s1": [
-     true,
      false,
+     true,
      true
     ],
     "c0407|s0": [
      true,
      true,
-     false
+     true
     ],
     "c0411|s0": [
      false,
      true,
-     true
+     false
     ],
     "c0433|s0": [
-     true,
-     true,
+     false,
+     false,
      true
     ],
     "c0434|s1": [
@@ -78401,7 +78403,7 @@
     "c0438|s2": [
      false,
      false,
-     false
+     true
     ],
     "c0438|s3": [
      false,
@@ -78411,17 +78413,17 @@
     "c0447|s2": [
      true,
      false,
-     true
+     false
     ],
     "c0455|s0": [
-     false,
+     true,
      true,
      true
     ],
     "c0484|s1": [
      true,
      true,
-     true
+     false
     ],
     "c0486|s1": [
      true,
@@ -78444,7 +78446,7 @@
      true
     ],
     "c0532|s0": [
-     true,
+     false,
      true,
      true
     ],
@@ -78469,12 +78471,12 @@
      false
     ],
     "c0563|s0": [
-     true,
+     false,
      true,
      true
     ],
     "c0591|s0": [
-     true,
+     false,
      true,
      true
     ],
@@ -78485,27 +78487,27 @@
     ],
     "c0638|s3": [
      false,
-     true,
+     false,
      false
     ],
     "c0656|s2": [
-     false,
+     true,
      false,
      false
     ],
     "c0674|s0": [
-     false,
+     true,
      true,
      true
     ],
     "c0680|s0": [
      false,
-     true,
+     false,
      true
     ],
     "c0684|s2": [
      true,
-     true,
+     false,
      true
     ],
     "c0685|s2": [
@@ -78514,7 +78516,7 @@
      true
     ],
     "c0687|s2": [
-     true,
+     false,
      false,
      false
     ],
@@ -78529,18 +78531,18 @@
      false
     ],
     "c0706|s2": [
-     true,
+     false,
      true,
      true
     ],
     "c0718|s1": [
      true,
-     true,
-     false
+     false,
+     true
     ],
     "c0718|s3": [
-     true,
      false,
+     true,
      false
     ],
     "c0722|s0": [
@@ -78550,11 +78552,11 @@
     ],
     "c0741|s1": [
      true,
-     false,
+     true,
      true
     ],
     "c0755|s0": [
-     true,
+     false,
      true,
      true
     ],
@@ -78569,9 +78571,9 @@
      false
     ],
     "c0766|s3": [
-     true,
      false,
-     false
+     false,
+     true
     ],
     "c0776|s0": [
      true,
@@ -78579,7 +78581,7 @@
      true
     ],
     "c0780|s1": [
-     true,
+     false,
      true,
      true
     ],
@@ -78600,7 +78602,7 @@
     ],
     "c0832|s0": [
      false,
-     true,
+     false,
      false
     ],
     "c0833|s1": [
@@ -78620,7 +78622,7 @@
     ],
     "c0840|s1": [
      false,
-     false,
+     true,
      false
     ],
     "c0840|s3": [
@@ -78639,9 +78641,9 @@
      true
     ],
     "c0883|s0": [
-     false,
      true,
-     true
+     true,
+     false
     ],
     "c0884|s1": [
      false,
@@ -78672,9 +78674,9 @@
   },
   "variant": "nyt_groups",
   "n_ati_a": 21,
-  "n_qwen_solved_of_a": 6,
+  "n_qwen_solved_of_a": 4,
   "n_qwen_undecided": 0,
   "subject_read": "z-ai/glm-5.3 via OpenRouter, reasoning effort low, T=1.0, top_p=1.0, max_tokens 16000 (not main's vLLM thinking-off subject path; _source.gate_deviations, plan 0088)",
-  "opt_in": "off by default; served only with ati_opt_in=nyt_connections (OPT_IN_ENTRIES, plan 0088). Gated per stable slot (the unit the native judge scores) from the 2026-11-05 GLM ATI4 nyt_groups panel (every answer and verdict cached; 259 puzzles -> 63 stable slots), the same item_status / panel_verdict rule applied per slot"
+  "opt_in": "off by default; served only with ati_opt_in=nyt_connections (OPT_IN_ENTRIES, plan 0088). Gated per stable slot (the unit the native judge scores) from the 2026-11-20 nyt_groups panel re-run (plan 0099: the family's judge moved to nyt-mc-2026-11-20, a candidate needs its connection stated; the 2026-11-05 panel answers were no longer on the box, so every reader was asked again, 3 draws; 259 puzzles -> 63 stable slots), the same item_status / panel_verdict rule applied per slot"
  }
 }

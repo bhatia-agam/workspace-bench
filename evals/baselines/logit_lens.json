@@ -8,12 +8,32 @@
   "model": "Qwen/Qwen3.6-27B",
   "producer": "wsb-bp Modal producer (olens_suite/workspace_bench/wsbench_public_modal.py, arm logitlens-L63, commit d6fc56523): wsbench.produce.methods.LogitLens.read batched (final_norm on fp32 h, @ W_U^T, top-10, scores rounded to 4 places); cells captured by the bench Producer backend. Items whose plan row is unchanged since v1.0.0 keep their 2026-11-05 cells; items added or changed by a later bank were produced by the same arm on 2026-11-07 at the plans of main 9c8be3b9 (qmain run)",
   "bench": {
-   "judged": "branch camila/0100-mcdm-no-false-pick on main 748ca7dd (2026-11-20, plan 0100): multi_concept_directed_modulation re-scored on its summary instrument +nofalse-a2, layers=63, from the cached 2026-11-17 judged run (qmain_v2/judged/logitlens-L63/L63); every digest and judge call replayed from cache, 0 new calls",
-   "note": "partial re-freeze of one family; readouts plan_sha equals current main's"
+   "judged": "plan 0099 branch camila/0099-nyt-stated-label (2026-11-20), nyt_connections only, its summary instrument nyt-mc-2026-11-20 (a candidate needs its connection stated), layers=63",
+   "note": "same L63 readouts as the 2026-11-17 refreeze (plan_sha unchanged); the per-layer digests replayed from that run's cache, only the judge's MC calls were re-asked"
   },
-  "verified": "multi_concept_directed_modulation: every plan item has its cells (0 missing, 0 unjudged cells); value unchanged from the 2026-11-17 entry (0.149, no item fails on a false pick alone)",
-  "measured": "2026-11-20 (re-score of the 2026-11-17 measurement)",
+  "verified": "nyt_connections: every plan item has its cells (0 missing, 0 unjudged cells), complete",
+  "measured": "2026-11-20",
   "kept_from": [
+   {
+    "families": [
+     "multi_concept_directed_modulation"
+    ],
+    "source": {
+     "protocol": "logit-lens-L63-v1",
+     "method": "logit_lens",
+     "layer": 63,
+     "k": 10,
+     "sampling": "tokens10",
+     "model": "Qwen/Qwen3.6-27B",
+     "producer": "wsb-bp Modal producer (olens_suite/workspace_bench/wsbench_public_modal.py, arm logitlens-L63, commit d6fc56523): wsbench.produce.methods.LogitLens.read batched (final_norm on fp32 h, @ W_U^T, top-10, scores rounded to 4 places); cells captured by the bench Producer backend. Items whose plan row is unchanged since v1.0.0 keep their 2026-11-05 cells; items added or changed by a later bank were produced by the same arm on 2026-11-07 at the plans of main 9c8be3b9 (qmain run)",
+     "bench": {
+      "judged": "branch camila/0100-mcdm-no-false-pick on main 748ca7dd (2026-11-20, plan 0100): multi_concept_directed_modulation re-scored on its summary instrument +nofalse-a2, layers=63, from the cached 2026-11-17 judged run (qmain_v2/judged/logitlens-L63/L63); every digest and judge call replayed from cache, 0 new calls",
+      "note": "partial re-freeze of one family; readouts plan_sha equals current main's"
+     },
+     "verified": "multi_concept_directed_modulation: every plan item has its cells (0 missing, 0 unjudged cells); value unchanged from the 2026-11-17 entry (0.149, no item fails on a false pick alone)",
+     "measured": "2026-11-20 (re-score of the 2026-11-17 measurement)"
+    }
+   },
    {
     "families": [
      "agentic_misalignment",
@@ -37,7 +57,6 @@
      "multilingual",
      "multilingual_multihop",
      "multilingual_typo",
-     "nyt_connections",
      "poetry",
      "relational_multihop",
      "role_bound_association",
@@ -3167,11 +3186,11 @@
   "plan_sha": "e5abae63b4ab84d77be938638d8d193c94cc02ce0fa9953922704c43529268fe"
  },
  "nyt_connections": {
-  "rate": 0.30337078651685395,
+  "rate": 0.23595505617977527,
   "saturated": false,
   "ci95": [
-   0.21348314606741572,
-   0.4044943820224719
+   0.15730337078651685,
+   0.3258426966292135
   ],
   "metric": "pass_rate",
   "higher_is_better": true,
@@ -3184,7 +3203,7 @@
    "n_empty_cells": 0
   },
   "judge_model": "claude-opus-5-5",
-  "instrument": "nyt-mc-2026-11-02+digest-v5-task-extractive+sj-v10",
+  "instrument": "nyt-mc-2026-11-20+digest-v5-task-extractive+sj-v10",
   "layers_judged": [
    63
   ],
@@ -3210,7 +3229,7 @@
   "decided": {
    "c0334|s1": true,
    "c0363|s0": false,
-   "c0369|s0": true,
+   "c0369|s0": false,
    "c0376|s1": false,
    "c0385|s2": false,
    "c0397|s0": false,
@@ -3234,19 +3253,19 @@
    "c0505|s3": false,
    "c0511|s0": false,
    "c0512|s0": false,
-   "c0514|s1": true,
+   "c0514|s1": false,
    "c0516|s1": false,
    "c0517|s1": false,
    "c0525|s0": true,
    "c0532|s0": false,
-   "c0541|s0": false,
+   "c0541|s0": true,
    "c0544|s0": false,
-   "c0549|s0": true,
-   "c0563|s0": true,
+   "c0549|s0": false,
+   "c0563|s0": false,
    "c0563|s2": false,
    "c0591|s1": false,
    "c0599|s0": false,
-   "c0622|s0": true,
+   "c0622|s0": false,
    "c0629|s0": false,
    "c0644|s0": false,
    "c0648|s0": true,
@@ -3254,11 +3273,11 @@
    "c0663|s1": false,
    "c0674|s0": false,
    "c0678|s0": false,
-   "c0679|s0": false,
+   "c0679|s0": true,
    "c0680|s0": false,
    "c0680|s1": true,
    "c0684|s1": false,
-   "c0685|s0": true,
+   "c0685|s0": false,
    "c0685|s2": false,
    "c0694|s2": false,
    "c0697|s0": false,
@@ -3266,11 +3285,11 @@
    "c0700|s0": false,
    "c0714|s1": false,
    "c0720|s1": false,
-   "c0722|s0": true,
+   "c0722|s0": false,
    "c0722|s1": false,
    "c0741|s0": false,
    "c0750|s1": true,
-   "c0761|s0": true,
+   "c0761|s0": false,
    "c0767|s0": false,
    "c0776|s1": true,
    "c0778|s2": false,
@@ -3280,15 +3299,15 @@
    "c0803|s0": false,
    "c0805|s0": false,
    "c0819|s1": true,
-   "c0820|s0": true,
+   "c0820|s0": false,
    "c0832|s0": false,
    "c0840|s0": false,
    "c0841|s0": true,
    "c0864|s1": false,
-   "c0869|s3": true,
+   "c0869|s3": false,
    "c0877|s1": false,
    "c0883|s0": true,
-   "c0890|s0": false,
+   "c0890|s0": true,
    "c0894|s0": true,
    "c0896|s2": false,
    "c0901|s1": false,
@@ -3296,10 +3315,10 @@
    "c0924|s2": false,
    "c0930|s1": false,
    "c0932|s0": false,
-   "c0933|s1": false
+   "c0933|s1": true
   },
   "digest_unserved": [],
-  "written": "2026-11-17T22:35:52+00:00",
+  "written": "2026-11-20T07:50:00+00:00",
   "protocol": "logit-lens-L63-v1",
   "plan_sha": "259d4c5fb1719d77a80f3816fef53b8ab7d3ca44556ed0edc9c24b1509bfd391"
  },

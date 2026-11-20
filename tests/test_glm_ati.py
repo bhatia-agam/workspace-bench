@@ -122,7 +122,7 @@ def test_ati_counts():
     want_a = {"conjunctive_association": 21, "moral_rationale": 25, "poetry": 19,
               "wrong_intermediate": 19, "model_multihop": 12, "nyt_connections": 21}  # fmt: skip
     want_b = {"conjunctive_association": 21, "moral_rationale": 25, "poetry": 19,
-              "wrong_intermediate": 17, "model_multihop": 8, "nyt_connections": 15}  # fmt: skip
+              "wrong_intermediate": 17, "model_multihop": 8, "nyt_connections": 17}  # fmt: skip
     assert {f: len(a[f]["ids"]) for f in want_a} == want_a
     assert {f: len(b[f]["ids"]) for f in want_b} == want_b
     assert {f for f, e in a.items() if not f.startswith("_") and "macro_exception" in e} == (
