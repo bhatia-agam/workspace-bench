@@ -501,10 +501,14 @@ def main() -> int:
     )
     a = ap.parse_args()
     rng = random.Random(a.seed)
-    for path in [Path("evals") / a.family / "items.json", *a.exclude]:
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    from validate_bank import family_rel
+
+    frozen = family_rel(Path.cwd(), a.family) / "items.json"
+    for path in [frozen, *a.exclude]:
         if path.exists():
             EXCLUDE.update(it["prompt"] for it in json.loads(path.read_text())["items"])
-        elif path == Path("evals") / a.family / "items.json":
+        elif path == frozen:
             print("warn: run from the repo root so the frozen bank is excluded", file=sys.stderr)
     global EASY
     EASY = a.easy

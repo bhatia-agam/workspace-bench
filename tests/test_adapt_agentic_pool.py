@@ -13,8 +13,8 @@ import pytest
 
 from wsbench import registry
 from wsbench.adapt import agentic, store
-from wsbench.evals.agentic_misalignment import judge as am_judge
-from wsbench.evals.agentic_misalignment import score
+from wsbench.evals.safety.agentic_misalignment import judge as am_judge
+from wsbench.evals.safety.agentic_misalignment import score
 
 MODEL = "subj"
 REAL_LOAD_TARGETS = am_judge.load_targets

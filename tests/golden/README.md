@@ -10,6 +10,35 @@ The scripts that produced the source-repo goldens (`make_<family>.py`, importing
 absolute path) were removed in the 2026-09-23 audit because nobody outside that machine could
 run them; they are in the git history before that commit if a golden ever has to be rebuilt.
 
+## Family keys in these files (plan 0101, 2026-11-20)
+
+The goldens keep the family keys of before plan 0101, in their file names and inside them, and
+their bytes: they are frozen records, and the rename moved no instrument. Read them with this
+table (the left column is what a file name or a key inside a golden says):
+
+| in a golden | the family today |
+|---|---|
+| `basic_readout_mt` | `basic_readout` (multi-token) |
+| `basic_readout` | `basic_readout_st` |
+| `multihop_mt`, `multihop_mt_v2` | `multihop` (multi-token) |
+| `multihop` | `multihop_st` |
+| `multilingual_mt` | `multilingual` (multi-token) |
+| `multilingual` | `multilingual_st` |
+| `typo_mt` | `typo` (multi-token) |
+| `typo` | `typo_st` |
+
+So `basic_readout_options.json` and `multihop_mc_options*.json` pin the single-token families,
+`*_mt_options*.json` the multi-token ones, and `multilingual_v2_options.json` is
+`multilingual_st`'s. A golden keyed by family inside (`capable_questions.json`,
+`mt_regex_units*.json`) is translated by the test that reads it
+(`registry.rekey_pre_0101` / `from_pre_0101`), never rewritten; a golden whose values hash a
+family key (`plan_sha_pre_0090.json`, the fast-subset row hashes) is reproduced through
+`registry.hash_name` / `frozen_name`. `manifest_0101_pre.json` is the manifest of every
+family's hashes, seeds, option orders, prompt shas and call keys recorded on main before the
+rename, in pre-0101 keys; `scripts/manifest_0101.py --check` compares the tree against it and
+neither file is ever regenerated. `tests/fixtures/` follows the same rule (`adapted_v1/` is a
+set from before the rename, kept unmigrated on purpose).
+
 ## In-repo v2 pins (plan 0012, 2026-10-10)
 
 `moral_rationale_options_v2.json`, `moral_rationale_prompt_v2.txt` and
@@ -22,7 +51,7 @@ are kept unchanged as the v1 record, and the v1 option lists are still asserted 
 ## In-repo role_bound oa-v2 pins (plan 0055, 2026-10-30)
 
 `role_bound_association_options_v2.json` (every item's v2 block, golds and reversed golds:
-near-role distractors from `evals/role_bound_association/roles_v1.json`, distinct name prefixes)
+near-role distractors from `evals/anti_bag_of_features/role_bound_association/roles_v1.json`, distinct name prefixes)
 and `role_bound_association_prompt_v2.txt` (SYSTEM + a rendered native user prompt) pin this
 repo's own oa-v2 builder. The source-repo `role_bound_association_options.json` /
 `_prompt.txt` stay unchanged as the oa-v1 record, still asserted through `build_block` (v1).
@@ -45,7 +74,7 @@ is the retired list, still rebuilt by `build_options(..., version="v2")` and che
 
 `relational_multihop_options_v2.json` pins this repo's own rel-v2 `judge.build_options` (one
 14-line list per item: 13 content options (8 composed chains, 4 single relations, 1 near form;
-see `evals/relational_multihop/README.md` §Option list), cannot tell last), written by `scripts/make_relational_options.py` (no API; `--check` diffs).
+see `evals/anti_bag_of_features/relational_multihop/README.md` §Option list), cannot tell last), written by `scripts/make_relational_options.py` (no API; `--check` diffs).
 `relational_multihop_options.json` and `relational_multihop_prompt.txt` are kept unchanged as the
 rel-v1 record (the source repo's two-call X/Y pool); no test reads them any more.
 

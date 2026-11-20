@@ -22,7 +22,7 @@ The gate draws carry the tags ``gate0..gate2``, distinct from the ``po-opus-v1``
 
 ``--record`` (round 5, the free-response headline): a FROZEN bank is never rewritten; the
 re-judge's per-item record is written to its own file beside the bank instead
-(``evals/poetry/opus_gate_free.json``).
+(``evals/basic/poetry/opus_gate_free.json``).
 """
 
 import argparse

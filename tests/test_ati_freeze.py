@@ -64,7 +64,7 @@ def test_registered_strict_ati_macro_admits_exactly_the_eight():
     assert m["ati_subset"] == ti.SUBSET_VERSION == "ati-subset-v2"
     reasons = {e["family"]: e["reason"] for e in m["excluded"]}
     # shown, but under n >= 20 and not an exception
-    small = ("jailbreak_recognition", "user_modeling", "role_bound_association", "basic_readout")
+    small = ("jailbreak_recognition", "user_modeling", "role_bound_association", "basic_readout_st")
     assert reasons == dict.fromkeys(small, "n<20 (ATI)")
 
 

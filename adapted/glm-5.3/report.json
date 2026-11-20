@@ -516,7 +516,7 @@
     "per-slot mc built over the shipped set (options.build_mc) for 28 new items"
    ]
   },
-  "typo_mt": {
+  "typo": {
    "status": "full",
    "note": "Profile + fill, native_langs [en, zh] by Camila's decision (2026-11-03; the R6 measurement gave [en], calibration unverified), native units rebuilt by the nl_upgrade: 80 originals + 5 authored = 85/85. | Plan 0075 refill (2026-11-06): 85 -> 100/100 (full); run.fill 1 waves, 34 subject-gated candidates, stop: 100 >= target 100. No item-quality drops. Final audit (2026-11-08, parts A and B + finisher check, AUDIT.md; whole bank incl. originals); no new authoring after it, and the rows a re-freeze filled from the gate-passing pool were audited too.",
    "exclude_from_macro": false,
@@ -601,7 +601,7 @@
     "1 previously shipped ids leave the bank: ['association-au-t1-w101c0-assoc-easy-origami']"
    ]
   },
-  "basic_readout": {
+  "basic_readout_st": {
    "status": "full",
    "target": 100,
    "n_original": 100,
@@ -618,7 +618,7 @@
    ],
    "note": "Refresh 2026-11-05 (plan 0072): re-frozen on registered bank v7, 100 -> 100 items. | Capital swap 2026-11-05 (#372, plan 0072 follow-up): re-frozen on registered bank v8, 100 -> 100 items; 10 country-capital originals dropped; 10 of #372's 10 new items pass the subject gate and ship."
   },
-  "basic_readout_mt": {
+  "basic_readout": {
    "status": "partial",
    "note": "v4 rebuild, native_langs [en, zh] by Camila's decision (2026-11-03; the R6 measurement gave [en], calibration unverified), native units rebuilt by the nl_upgrade: 94 originals + 5 authored items (overlays exonyms / hidden_rivals) = 99/99. | Refresh 2026-11-05 (plan 0072): re-frozen on registered bank v6, 99 -> 90 items; 9 originals dropped by the overhaul's registered drops; plan lineage recorded for 1 drop-only re-freeze step(s) (readouts of a plan on that chain judge the kept items; any other plan refuses); lucky guessers blind 0.127 / described 0.164 vs chance 0.200 (within chance + 5: no rebuild). | Capital swap 2026-11-05 (#372, plan 0072 follow-up): re-frozen on registered bank v7, 90 -> 90 items; 1 country-capital originals dropped; 1 of #372's 1 new items pass the subject gate and ship. | Plan 0075 refill (2026-11-06): 90 -> 120/120 (full); run.fill 0 waves, 0 subject-gated candidates, stop: 120 >= target 120. Lucky guessing (blind + described, 5 draws) under Camila's 2026-11-07 decisions 1-3 on the whole bank; from 2026-11-08 a per-item leak must recur in >= 2 separate runs (single-run drops after 21:30Z restored and re-measured). Drops: lucky bar 7, decisions 1-3 5, decision 5 (capital) 3, audit 9 (capital routes incl. originals cur-bhutan / hafsid / aghlabid, Chang'an, Paris 1889, Stockholm; gold the only famous option; Gay-Lussac also correct; Giza located via Cairo). Final audit (2026-11-08, parts A and B + finisher check, AUDIT.md; whole bank incl. originals); no new authoring after it, and the rows a re-freeze filled from the gate-passing pool were audited too. Final measure (finalB, shipped 120): blind 0.038 / described 0.152 vs bar 0.250. | Plan 0087 cross-set sweep (2026-11-09): 120 -> 117; one-cue screen flagged 81 lists: 79 kept as shipped (Camila 2026-11-09; AUDIT.md), 2 on items dropped here; drops B near-duplicate 1, B ruling 2; final lucky (sweepC, rates after its confirmed drops) blind 0.029 / described 0.111 vs bar 0.250; no back-fill.",
    "exclude_from_macro": false,
@@ -801,7 +801,7 @@
    "status": "untried",
    "note": "Originals re-keyed on GLM-5.3 (plan 0060 A2 moral stages: subject side, reasons distilled from its own draws, options rebuilt); 140/195 dilemmas committed; no dilemma Brief, so no refill."
   },
-  "multihop": {
+  "multihop_st": {
    "target": 100,
    "n_original": 98,
    "n_original_gated": 43,
@@ -1312,7 +1312,7 @@
     }
    ]
   },
-  "multihop_mt_v2": {
+  "multihop": {
    "target": 64,
    "n_original": 64,
    "n_original_gated": 64,
@@ -1600,7 +1600,7 @@
    "n_dropped_audit": 3,
    "headline": "the judge's default headline is the literal L44 (in GLM's grid, at 27B-L36 depth); the depth match of the 27B headline is GLM L54: quote opts=headline_layer=54 beside it. Floors measured at both."
   },
-  "multilingual": {
+  "multilingual_st": {
    "status": "untried",
    "note": "Originals only, native_langs [en, zh] by Camila's decision (2026-11-03; the R6 measurement gave [en], calibration unverified), native units rebuilt by the nl_upgrade: 97/99 pass on GLM-5.3; no refill attempted. | Refresh 2026-11-05 (plan 0072): re-frozen on registered bank v4, 97 -> 97 items. | Capital swap 2026-11-05 (#372, plan 0072 follow-up): re-frozen on registered bank v5, 97 -> 97 items; 4 country-capital originals dropped; 4 of #372's 4 new items pass the subject gate and ship.",
    "exclude_from_macro": false,
@@ -1628,7 +1628,7 @@
     }
    ]
   },
-  "multilingual_mt": {
+  "multilingual": {
    "status": "partial",
    "note": "Originals only, native_langs [en, zh] by Camila's decision (2026-11-03; the R6 measurement gave [en], calibration unverified), native units rebuilt by the nl_upgrade: 88/100 pass on GLM-5.3; tokens re-stamped (0 items lost); no refill attempted. | Refresh 2026-11-05 (plan 0072): re-frozen on registered bank v5, 88 -> 88 items. | Plan 0075 refill (2026-11-06): 88 -> 100/100 (full); run.fill 0 waves, 0 subject-gated candidates, stop: 100 >= target 100. Lucky guessing (blind + described, 5 draws) under Camila's 2026-11-07 decisions 1-3 on the whole bank; from 2026-11-08 a per-item leak must recur in >= 2 separate runs (single-run drops after 21:30Z restored and re-measured). Drops: r5 residual 4, decisions 1-3 11. Final measure (finalA): blind 0.056 / described 0.234 vs bar 0.250. Final audit (2026-11-08, parts A and B + finisher check, AUDIT.md; whole bank incl. originals); no new authoring after it, and the rows a re-freeze filled from the gate-passing pool were audited too. | Plan 0087 cross-set sweep (2026-11-09): 100 -> 88; one-cue screen flagged 31 lists: 27 kept as shipped (Camila 2026-11-09; AUDIT.md), 4 on items dropped here; drops B near-duplicate 2, lucky (two-run) 10; final lucky (sweepD, rates after its confirmed drops) blind 0.050 / described 0.164 vs bar 0.250; no back-fill.",
    "exclude_from_macro": false,
@@ -2693,7 +2693,7 @@
    "painting_creator-Q26899274-death_city": "plan 0077 audit check 2 (builder read of a re-admitted S-sibling): the sitter Benedetto Varchi is Florentine, so Florence (Bronzino's death city) is reachable without the bridge, as for the dropped painting_creator-Q26899274-birth_city",
    "painting_creator-Q17493299-birth_year": "lucky-guessing leaker in >=2 of 5 runs of the final measurement lucky_wi_r4finald1..5 (any-guesser rule; Camila 2026-11-07, coordinator ruling 2026-11-08: the cap limits re-measuring, not drops)"
   },
-  "multihop": {
+  "multihop_st": {
    "dual-stars-visible-opposite": "audit 2026-11-03 (AUDIT.md): The target 'day' appears verbatim in the prompt ('time of day'), which breaks the no-target-in-prompt invariant and lets the subject copy the answer without computing the bridge 'night'.",
    "mh-w1-tin-sn": "plan 0072 delta audit 2026-11-05: the registered bridge gold's alias (K / Sn) is the item's target, so a readout of the answer is credited as the bridge",
    "mh-w1-potassium-k": "plan 0072 delta audit 2026-11-05: the registered bridge gold's alias (K / Sn) is the item's target, so a readout of the answer is credited as the bridge",
@@ -3427,7 +3427,7 @@
    "r17rh0191": "floor-of-record lucky leaker (plan 0078 R49: Camila's strict rule; dropped once without back-fill, then one re-measure)",
    "r14iv0870": "unmeasurable under R47: the described guesser returns an invalid pick on this item in repeated runs (floor_r49 and floor_r49b, both refused, never ingested)"
   },
-  "multihop_mt": {
+  "multihop": {
    "mh2-alfred-athelstan-brunanburh-r3": "lucky-guessing leaker after r5 round 0 (any-guesser rule, Camila 2026-11-06)",
    "mh2-baryshnikov-daughter-t3": "lucky-guessing leaker after r5 round 0 (any-guesser rule, Camila 2026-11-06)",
    "mh2-besht-medzhybizh-t3": "lucky-guessing leaker after r5 round 0 (any-guesser rule, Camila 2026-11-06)",
@@ -3787,7 +3787,7 @@
    "oa-comedian-heckler-humiliate-ab": "plan 0075 'Data round rules' item-quality check (PR #437 review): the stimulus of the pair carries a stray escape artefact (literal \\u / backtick-dash), as dropped in #430; both twins dropped; no new authoring after the final audit",
    "oa-comedian-heckler-humiliate-ba": "plan 0075 'Data round rules' item-quality check (PR #437 review): the stimulus of the pair carries a stray escape artefact (literal \\u / backtick-dash), as dropped in #430; both twins dropped; no new authoring after the final audit"
   },
-  "basic_readout_mt": {
+  "basic_readout": {
    "basic-au-t1-w100c0-brh-ent-runnymede-1215": "plan 0075 §0.1(a) (strict, Camila 2026-11-06): list leaking in lucky_r0 (a guesser >= 3/5 on the gold, blind+described >= 4/10)",
    "basic-au-t1-w100c0-brh-ent-two-nobel-scientist": "plan 0075 §0.1(a) (strict, Camila 2026-11-06): list leaking in lucky_r0 (a guesser >= 3/5 on the gold, blind+described >= 4/10)",
    "basic-au-t1-w101c0-brh-ent-archimedes-principle": "plan 0075 §0.1(a) (strict, Camila 2026-11-06): list leaking in lucky_r0 (a guesser >= 3/5 on the gold, blind+described >= 4/10)",
@@ -3839,7 +3839,7 @@
    "basic-au-t1-w101c2-brh-ent-brandenburg-gate": "plan 0087: not back-filled (pool closed; no audit / lucky measure of fill rows in this sweep)",
    "basic-au-t1-w101c2-brh-ent-the-starry-night": "plan 0087: not back-filled (pool closed; no audit / lucky measure of fill rows in this sweep)"
   },
-  "multilingual_mt": {
+  "multilingual": {
    "multilingual-au-t1-w100c0-mlh-id-prawn-crackers": "plan 0075 §0.1(a) (strict): adapted-only list still leaking after r5 round 2 (a guesser >= 3/5, blind+described >= 4/10); dropped and back-filled",
    "multilingual-au-t1-w100c0-mlh-ru-guinea-pig": "plan 0075 §0.1(a) (strict): adapted-only list still leaking after r5 round 2 (a guesser >= 3/5, blind+described >= 4/10); dropped and back-filled",
    "multilingual-au-t1-w100c0-mlh-vi-durian": "plan 0075 §0.1(a) (strict): adapted-only list still leaking after r5 round 2 (a guesser >= 3/5, blind+described >= 4/10); dropped and back-filled",
@@ -3906,7 +3906,7 @@
   }
  },
  "patches": {
-  "multihop_mt": {
+  "multihop": {
    "mh2-alfred-athelstan-brunanburh-r3": {
     "set": {
      "mc": {
@@ -50219,7 +50219,7 @@
     "note": "plan 0086: finer kind key (genre contemporary R&B; era 1933-1986); re-admitted from drop: lucky-guessing leaker, wimc2 (any-guesser rule, Camila 2026-11-06)"
    }
   },
-  "multilingual_mt": {
+  "multilingual": {
    "multilingual-au-t1-w100c0-mlh-id-rice-cooker": {
     "set": {
      "mc": {
@@ -51425,5 +51425,6 @@
     "note": "mcleak-r5-2026-11-04 adapted r2: adapted-only list rebuilt (plan 0075 §0.1(a), 2026-11-06)"
    }
   }
- }
+ },
+ "family_keys": "0101"
 }

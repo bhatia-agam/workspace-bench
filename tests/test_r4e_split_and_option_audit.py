@@ -7,8 +7,8 @@ import time
 import pytest
 
 from wsbench import digest
-from wsbench.evals.wrong_intermediate import judge as wb
-from wsbench.evals.wrong_intermediate import prompts as wp
+from wsbench.evals.model_specific.wrong_intermediate import judge as wb
+from wsbench.evals.model_specific.wrong_intermediate import prompts as wp
 
 
 def _g(text: str, count: int) -> digest.Grounded:

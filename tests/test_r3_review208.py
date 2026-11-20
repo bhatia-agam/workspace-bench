@@ -2,9 +2,9 @@
 """Review of PR #208 (round 3 bridge_ml), blocking findings, each pinned in BOTH
 directions (the too-lenient shape still fails AND the too-strict shape now passes):
 
-1. multilingual / multilingual_multihop topic veto (``mcrx._rescue_topic``): word-bounded stems,
+1. multilingual_st / multilingual_multihop topic veto (``mcrx._rescue_topic``): word-bounded stems,
    an official / national stem only beside a language noun, and only near the naming;
-2. multilingual_mt anchoring (``family.anchored``): "<Lang> word / phrase / text" names any word,
+2. multilingual anchoring (``family.anchored``): "<Lang> word / phrase / text" names any word,
    so only a passage noun with no gloss after it anchors (``languages.input_passage_naming``).
 (Finding 3, the rival check ``rival.contest``, went with the rule.)"""
 
@@ -111,9 +111,9 @@ def test_paslanmaz_l60_line_is_pinned_and_a_topic_line_is_not():
     assert PASLANMAZ_L60 in pinned and topic not in pinned
 
 
-# ------------------------------------------------------------------ 2. multilingual_mt anchoring
+# ------------------------------------------------------------------ 2. multilingual anchoring
 
-MT_BANK = "evals/multilingual_mt/items_v2.json"
+MT_BANK = "evals/basic/multilingual/items_v2.json"
 
 
 def _mt(iid: str):

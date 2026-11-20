@@ -10,7 +10,7 @@ import pytest
 
 from wsbench.adapt import author, conjstage, lint, run, store
 from wsbench.adapt import refill as rf
-from wsbench.evals.conjunctive_association import judge
+from wsbench.evals.association.conjunctive_association import judge
 
 FAM = "conjunctive_association"
 MODEL = "qwen3.5-4b"

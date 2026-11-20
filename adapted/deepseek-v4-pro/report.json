@@ -487,7 +487,7 @@
     "per-slot mc built over the shipped set (options.build_mc) for 16 new items"
    ]
   },
-  "typo_mt": {
+  "typo": {
    "status": "full",
    "target": 100,
    "n_original": 85,
@@ -579,7 +579,7 @@
     "4 previously shipped ids leave the bank: ['association-au-t1-w101c0-assoc-object-ladder-rungs-gutter', 'association-au-t1-w101c0-assoc-object-stapler-pages-wire', 'association-au-t1-w101c1-assoc-easy-croissant-crescent', 'association-au-t1-w101c1-assoc-easy-curling-stones']"
    ]
   },
-  "basic_readout": {
+  "basic_readout_st": {
    "status": "full",
    "target": 100,
    "n_original": 100,
@@ -596,7 +596,7 @@
    ],
    "note": "Refresh 2026-11-05 (plan 0072): re-frozen on registered bank v7, 100 -> 100 items. | Capital swap 2026-11-05 (#372, plan 0072 follow-up): re-frozen on registered bank v8, 100 -> 100 items; 10 country-capital originals dropped; 10 of #372's 10 new items pass the subject gate and ship."
   },
-  "basic_readout_mt": {
+  "basic_readout": {
    "status": "full",
    "target": 120,
    "n_original": 90,
@@ -795,7 +795,7 @@
    "status": "untried",
    "note": "Originals re-keyed on DeepSeek-V4-Pro (plan 0060 A2 moral stages: subject side, reasons distilled from its own draws, options rebuilt); 192/195 dilemmas committed; no dilemma Brief, so no refill."
   },
-  "multihop": {
+  "multihop_st": {
    "target": 100,
    "n_original": 98,
    "n_original_gated": 57,
@@ -887,7 +887,7 @@
     "1 previously shipped ids leave the bank: ['mh-w1-australian-rules-f-18']"
    ]
   },
-  "multihop_mt_v2": {
+  "multihop": {
    "target": 64,
    "n_original": 64,
    "n_original_gated": 64,
@@ -1021,7 +1021,7 @@
     }
    ]
   },
-  "multilingual": {
+  "multilingual_st": {
    "target": 99,
    "n_original": 99,
    "n_original_gated": 99,
@@ -1048,7 +1048,7 @@
     }
    ]
   },
-  "multilingual_mt": {
+  "multilingual": {
    "target": 100,
    "n_original": 100,
    "n_original_gated": 92,
@@ -2729,7 +2729,7 @@
    "mlt-he-detergents-typo": "plan 0087 sweep: confirmed leaker on the final measurement (sweepD and an earlier separate run of the same list; blind+described 10/10, or a family-level failing guesser >= 3/5 with blind+described >= 4/10; decisions 1-3, two-run rule); not back-filled",
    "mlt-he-encyclopedia": "plan 0087 sweep: confirmed leaker on the final measurement (sweepD and an earlier separate run of the same list; blind+described 10/10, or a family-level failing guesser >= 3/5 with blind+described >= 4/10; decisions 1-3, two-run rule); not back-filled"
   },
-  "multihop": {
+  "multihop_st": {
    "dual-stars-visible-opposite": "audit 2026-11-04: target 'day' appears in the prompt ('...the time of day when stars are visible is'): copy shortcut past the bridge 'night'; inherited from the registered bank",
    "mh-w1-tin-sn": "plan 0072 delta audit 2026-11-05: the registered bridge gold's alias (K / Sn / 'Jupiter I') is or extends the item's target, so a readout of the answer is credited as the bridge",
    "mh-w1-potassium-k": "plan 0072 delta audit 2026-11-05: the registered bridge gold's alias (K / Sn / 'Jupiter I') is or extends the item's target, so a readout of the answer is credited as the bridge",
@@ -3074,7 +3074,7 @@
    "association-au-t1-w101c1-assoc-easy-curling-stones": "Camila 2026-11-07 decisions 1-3 (strict, whole bank incl. originals): list leaks in c2 (blind+described 10/10, or a family-level failing guesser >= 3/5 with blind+described >= 4/10); dropped and back-filled",
    "pentagon": "plan 0075 final audit 2026-11-08 (independent; gate-passing pool rows a re-freeze could ship): capital route / answer reachable without the bridge / near-duplicate / also-correct distractor; see AUDIT.md"
   },
-  "basic_readout_mt": {
+  "basic_readout": {
    "basic-au-t1-w100c0-brh-ent-bldg-agra-mausoleum": "plan 0075 §0.1(a) (strict, Camila 2026-11-06): list leaking in lucky_r0 (a guesser >= 3/5 on the gold, blind+described >= 4/10)",
    "basic-au-t1-w100c0-brh-ent-peak-africa": "plan 0075 §0.1(a) (strict, Camila 2026-11-06): list leaking in lucky_r0 (a guesser >= 3/5 on the gold, blind+described >= 4/10)",
    "basic-au-t1-w100c0-brh-ent-person-two-nobels": "plan 0075 §0.1(a) (strict, Camila 2026-11-06): list leaking in lucky_r0 (a guesser >= 3/5 on the gold, blind+described >= 4/10)",
@@ -3296,7 +3296,7 @@
    "role-au-t1-w105c0-ra-coach-player-reassured-ab": "plan 0075 final audit 2026-11-08 (independent; whole bank incl. originals): capital route / answer reachable without the bridge / gold the only famous option / near-duplicate / also-correct distractor / escape artefact; see AUDIT.md; no new authoring after the final audit",
    "role-au-t1-w105c0-ra-coach-player-reassured-ba": "plan 0075 final audit 2026-11-08 (independent; whole bank incl. originals): capital route / answer reachable without the bridge / gold the only famous option / near-duplicate / also-correct distractor / escape artefact; see AUDIT.md; no new authoring after the final audit"
   },
-  "multilingual_mt": {
+  "multilingual": {
    "multilingual-au-t1-w100c0-mlh-ru-refrigerator": "plan 0075 §0.1(a) (strict): adapted-only list still leaking after r5 round 2 (a guesser >= 3/5, blind+described >= 4/10); dropped and back-filled",
    "mlh-ar-octopus": "Camila 2026-11-07 decisions 1-3 (strict, whole bank incl. originals): list leaks in lucky_r1 (blind+described 10/10, or a family-level failing guesser >= 3/5 with blind+described >= 4/10); dropped and back-filled",
    "mlh-fi-tortoise": "Camila 2026-11-07 decisions 1-3 (strict, whole bank incl. originals): list leaks in lucky_r1 (blind+described 10/10, or a family-level failing guesser >= 3/5 with blind+described >= 4/10); dropped and back-filled",
@@ -3373,7 +3373,7 @@
    "um-ss-religiousaffiliation-10": "plan 0087: not back-filled (pool closed; no audit / lucky measure of fill rows in this sweep)",
    "um-ss-religiousaffiliation-11": "plan 0087: not back-filled (pool closed; no audit / lucky measure of fill rows in this sweep)"
   },
-  "typo_mt": {
+  "typo": {
    "typo-au-t1-w101c0-typo-novel-overpopulation-city": "plan 0075 final audit 2026-11-08 (independent; whole bank incl. originals): capital route / answer reachable without the bridge / gold the only famous option / near-duplicate / also-correct distractor / escape artefact; see AUDIT.md; no new authoring after the final audit"
   },
   "relational_multihop": {
@@ -3382,7 +3382,7 @@
   }
  },
  "patches": {
-  "multihop_mt": {
+  "multihop": {
    "mh2-amundsen-ship": {
     "set": {
      "mc": {
@@ -23842,7 +23842,7 @@
     "note": "plan 0086: finer kind key (era 1829-1864); re-admitted from drop: plan 0077 audit check 1: historical_leader list for an institute founder; Pavlov (gold) is the only scientist and he and Duke Alexander of Oldenburg (contrast) are the only 19th-century Russians among Tokugawa, Pachacuti, Beheshti, Yaroslav; guessers pick the pair 10/10"
    }
   },
-  "multilingual_mt": {
+  "multilingual": {
    "multilingual-au-t1-w100c0-mlh-ru-bat": {
     "set": {
      "mc": {
@@ -24773,5 +24773,6 @@
     "note": "mcleak-r5-2026-11-04 adapted r2: adapted-only list rebuilt (plan 0075 §0.1(a), 2026-11-06)"
    }
   }
- }
+ },
+ "family_keys": "0101"
 }

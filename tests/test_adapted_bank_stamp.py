@@ -6,7 +6,7 @@ still compares the registered stamp."""
 import json
 
 from wsbench import registry, results, runner
-from wsbench.evals.association import prompts as assoc_prompts
+from wsbench.evals.basic.association import prompts as assoc_prompts
 from wsbench.results import FamilyResult
 
 REG_ASSOC = registry.FAMILIES["association"].judge.prompt_version
@@ -63,8 +63,8 @@ def test_untouched_without_a_versioned_header_or_tag(tmp_path, monkeypatch, real
     (tmp_path / "conjunctive_association.json").write_text("[]", encoding="utf-8")  # bare list
     pv = "x+bank-v5"
     assert runner.adapted_bank_stamp("conjunctive_association", pv) == pv
-    _bank(tmp_path, "typo_mt", 1)
-    assert runner.adapted_bank_stamp("typo_mt", "no-tag") == "no-tag"  # no +bank-v tag at all
+    _bank(tmp_path, "typo", 1)
+    assert runner.adapted_bank_stamp("typo", "no-tag") == "no-tag"  # no +bank-v tag at all
 
 
 def test_only_the_registered_versions_tag_moves(tmp_path, monkeypatch, real_families):

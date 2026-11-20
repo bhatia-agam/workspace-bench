@@ -93,7 +93,7 @@ Role-bound gains (best single cell 11 → 18 items passing / 100; agent/patient 
   drops and counts) any cell read before the suffix.
 - **Lite:** `reads=lite` keeps one site per layer: `final_token` (rel 0 above) until the
   pre-registered support-share procedure (`scripts/lite_site_table.py`, gpu runbook R4d)
-  freezes a rule into `evals/role_bound_association/lite_rule.json`. Its candidates are
+  freezes a rule into `evals/anti_bag_of_features/role_bound_association/lite_rule.json`. Its candidates are
   `final_token`, the top-3 `offset_from_end` k by pooled support share over the s3d-rl600 /
   jlens / mlnla-rl2-2000 full all-layer digests, and `offset_from_end k=4` (the `\n` after
   `assistant`, rel 4 above); the rule switches from `final_token` only on more than 10 points

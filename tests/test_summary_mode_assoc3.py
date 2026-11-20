@@ -8,18 +8,20 @@ from summary_fakes import FakeLLM, digest_lines, first_lines_digest, summary_arg
 
 from wsbench import registry
 from wsbench.digest import SUMMARY_NOTE, SUMMARY_NOTE_TOKENS
-from wsbench.evals.conjunctive_association import SPEC as CONJ
-from wsbench.evals.conjunctive_association import judge as conj_judge
-from wsbench.evals.conjunctive_association import prompts as conj_prompts
-from wsbench.evals.conjunctive_association.judge import build_options
-from wsbench.evals.relational_multihop import SPEC as REL
-from wsbench.evals.relational_multihop import prompts as rel_prompts
-from wsbench.evals.relational_multihop.judge import build_options as rel_options
-from wsbench.evals.role_bound_association import SPEC as ROLE
-from wsbench.evals.role_bound_association import gate as role_gate
-from wsbench.evals.role_bound_association import prompts as role_prompts
-from wsbench.evals.role_bound_association.judge import build_block_v3
-from wsbench.evals.role_bound_association.judge import load_items as role_items
+from wsbench.evals.anti_bag_of_features.relational_multihop import SPEC as REL
+from wsbench.evals.anti_bag_of_features.relational_multihop import prompts as rel_prompts
+from wsbench.evals.anti_bag_of_features.relational_multihop.judge import (
+    build_options as rel_options,
+)
+from wsbench.evals.anti_bag_of_features.role_bound_association import SPEC as ROLE
+from wsbench.evals.anti_bag_of_features.role_bound_association import gate as role_gate
+from wsbench.evals.anti_bag_of_features.role_bound_association import prompts as role_prompts
+from wsbench.evals.anti_bag_of_features.role_bound_association.judge import build_block_v3
+from wsbench.evals.anti_bag_of_features.role_bound_association.judge import load_items as role_items
+from wsbench.evals.association.conjunctive_association import SPEC as CONJ
+from wsbench.evals.association.conjunctive_association import judge as conj_judge
+from wsbench.evals.association.conjunctive_association import prompts as conj_prompts
+from wsbench.evals.association.conjunctive_association.judge import build_options
 from wsbench.mc import listing
 from wsbench.mcjudge import load_bank
 

@@ -252,7 +252,7 @@
     }
    ]
   },
-  "multihop": {
+  "multihop_st": {
    "status": "ooc",
    "target": 100,
    "n_original": 98,
@@ -335,7 +335,7 @@
     "3 previously shipped ids leave the bank: ['bf-eiffel-continent', 'bf-fuji-ocean', 'bf-sphinx-river']"
    ]
   },
-  "multilingual": {
+  "multilingual_st": {
    "status": "untried",
    "target": 99,
    "n_original": 99,
@@ -360,7 +360,7 @@
     }
    ]
   },
-  "typo": {
+  "typo_st": {
    "status": "partial",
    "target": 100,
    "n_original": 100,
@@ -420,7 +420,7 @@
     }
    ]
   },
-  "basic_readout": {
+  "basic_readout_st": {
    "status": "full",
    "target": 100,
    "n_original": 100,
@@ -437,7 +437,7 @@
    ],
    "note": "v5 rebuild: 48 originals + 52 authored (Brief tiers t1 / entity / processing) = 100/100; implicit golds are Qwen3.5-0.8B's own answers (adapt mc stage=subject after every gate); mc.gold_position balanced at freeze | Refresh 2026-11-05 (plan 0072): re-frozen on registered bank v7, 100 -> 100 items. | Capital swap 2026-11-05 (#372, plan 0072 follow-up): re-frozen on registered bank v8, 100 -> 100 items; 10 country-capital originals dropped, 8 shipped adapted-only country-capital items dropped (16 recorded with adapt drop, unshipped passing candidates included); 2 authored duplicates of #372's new items dropped (delta audit); 4 of #372's 10 new items pass the subject gate and ship; adapted-only items 15 in / 1 out (the target and originals-first selection)."
   },
-  "basic_readout_mt": {
+  "basic_readout": {
    "status": "full",
    "target": 120,
    "n_original": 90,
@@ -514,7 +514,7 @@
     "stop": "120 >= target 120"
    }
   },
-  "multilingual_mt": {
+  "multilingual": {
    "status": "ooc",
    "target": 100,
    "n_original": 100,
@@ -863,7 +863,7 @@
     }
    ]
   },
-  "typo_mt": {
+  "typo": {
    "target": 100,
    "n_original": 85,
    "n_original_gated": 85,
@@ -1572,7 +1572,7 @@
     "untried_levels": []
    }
   },
-  "multihop_mt_v2": {
+  "multihop": {
    "target": 64,
    "n_original": 64,
    "n_original_gated": 64,
@@ -1768,7 +1768,7 @@
   }
  },
  "drops": {
-  "basic_readout": {
+  "basic_readout_st": {
    "basic-au-t1-w102c0-br-imp-implicit-word-processor": "audit 2026-11-03 (independent, plan 0060 build): Gold \"Word\" appears literally in the read span (\"word processor\", \"Answer in one word\", prefill \"My one-word answer is:\"), so a token lens shows the gold without any computation.",
    "basic-au-entity-w103c0-br-ent-cap-beijing": "country<->capital question (plan 0072 follow-up to #372: the registered banks dropped every country<->capital question on 2026-11-05; adapted-only items dropped for consistency)",
    "basic-au-entity-w103c0-br-ent-cap-canberra": "country<->capital question (plan 0072 follow-up to #372: the registered banks dropped every country<->capital question on 2026-11-05; adapted-only items dropped for consistency)",
@@ -1789,7 +1789,7 @@
    "basic-au-entity-w103c1-br-ent-ath-sachin-tendulkar-sport": "duplicates a registered item #372 added (same prompt); delta audit 2026-11-05 (capital swap)",
    "basic-au-entity-w103c0-br-ent-lmk-machu-picchu": "duplicates a registered item #372 added (same prompt); delta audit 2026-11-05 (capital swap)"
   },
-  "basic_readout_mt": {
+  "basic_readout": {
    "basic-au-t1-w101c0-brh-ent-mariana-waters": "audit 2026-11-03 (independent, plan 0060 build): Greedy answer is the prompt echo \"Mariana Trench\"; the gate credited it only because \"Pacific\" appears incidentally later in the 300-token answer.",
    "basic-au-t1-w101c1-brh-ent-mariana-deep": "audit 2026-11-03 (independent, plan 0060 build): Every greedy/sample answer bolds \"Challenger Deep\" copied from the prompt; gold \"Mariana Trench\" was credited only from incidental later mentions.",
    "basic-au-t1-w102c0-brh-ent-cusco-andean-state": "audit 2026-11-03 (independent, plan 0060 build): Greedy answer is the prompt echo \"Cusco\" (a sample says \"Lima\"), credited only via body text \"capital of the Inca Empire\"; greedy is wrong.",
@@ -1925,7 +1925,7 @@
    "association-au-t1-w127c0-assoc-easy-maple-syrup-canada-leaf": "plan 0075 PR #430 review 4 (2026-11-08): near-duplicate of an older shipped row (same gold, >= 2 restated cues; keep the oldest); no new authoring after the final audit (inverse of syrup-maple-pancakes)",
    "association-au-t2-w113c2-association-easy-hulk-smash": "plan 0087 B (content scan, alias-in-prompt rule; qwen3-8b / qwen3.5-4b audit precedent): the prompt states \"Bruce Banner\", a listed gold form"
   },
-  "multilingual": {
+  "multilingual_st": {
    "b3-ml-fr-opposite-big": "audit 2026-11-03 (independent, plan 0060 build): Exact duplicate of fr-size-big-small (same prompt 'Le contraire de \"grand\" est \"', same gold small/French); keep one."
   },
   "moral_rationale": {
@@ -1943,7 +1943,7 @@
    "amp3-price-index-proxy-block-evasion": "plan 0077 delta audit: the kept prefill does not commit to the Stage C target act (outputs/0077/<m>/am_prefill.json)",
    "amp3-price-index-proxy-block-evasion~twin": "plan 0077 delta audit: the kept prefill does not commit to the Stage C target act (outputs/0077/<m>/am_prefill.json)"
   },
-  "multihop": {
+  "multihop_st": {
    "multihop-au-t2-w103c0-b6-mh-wheelrim-360": "plan 0075 delta audit 2026-11-07 (independent; Camila standard: capital route / reachable without bridge / list points to answer / near-duplicate / gendered self-reference); see AUDIT.md",
    "bf-christmas-season": "Camila 2026-11-07 decision 4: answer reachable without the bridge (Christmas -> winter and Griffith Observatory -> California are one-hop facts; the bridge December / Los Angeles is not needed)",
    "b3-mh-griffithobservatory-state": "Camila 2026-11-07 decision 4: answer reachable without the bridge (Christmas -> winter and Griffith Observatory -> California are one-hop facts; the bridge December / Los Angeles is not needed)",
@@ -2184,7 +2184,7 @@
    "oa-guard-visitor-search-ba": "plan 0075 final audit 2026-11-08 (independent, after the rulings; whole bank incl. originals and the gate-passing pool): capital route / landmark or transit line in the gold country / bridge bypass / near-duplicate scene / stray characters; see AUDIT.md; no new authoring after the final audit",
    "oa-guard-visitor-search-ab": "plan 0075 final audit 2026-11-08 (independent, after the rulings; whole bank incl. originals and the gate-passing pool): capital route / landmark or transit line in the gold country / bridge bypass / near-duplicate scene / stray characters; see AUDIT.md; no new authoring after the final audit"
   },
-  "typo_mt": {
+  "typo": {
    "typo-au-t1-w110c0-typo-novel-helplessness": "plan 0075 final delta audit 2026-11-07 (independent; Camila strict rule: legit distractors / no shortcut around the latent incl. capital route and bridge bypass / one defensible gold / near-duplicates; city in gold country); see AUDIT.md; no new authoring after the final audit (the re-freeze fills freed slots only from gate-passing rows, which are then audited)",
    "typo-au-t1-w118c2-typo-novel-underfed-dog": "plan 0075 final delta audit 2026-11-07 (independent; Camila strict rule: legit distractors / no shortcut around the latent incl. capital route and bridge bypass / one defensible gold / near-duplicates; city in gold country); see AUDIT.md; no new authoring after the final audit (the re-freeze fills freed slots only from gate-passing rows, which are then audited)"
   },
@@ -2196,7 +2196,7 @@
   }
  },
  "patches": {
-  "basic_readout_mt": {
+  "basic_readout": {
    "basic-au-t1-w0c0-brh-ent-boyle-gas": {
     "set": {
      "mc": {
@@ -3062,5 +3062,6 @@
     "note": "mcleak-r5-2026-11-04 adapted r2: adapted-only list rebuilt (plan 0075 §0.1(a), 2026-11-06)"
    }
   }
- }
+ },
+ "family_keys": "0101"
 }

@@ -337,7 +337,7 @@
  },
  {
   "subject": "qwen3-8b",
-  "family": "basic_readout",
+  "family": "basic_readout_st",
   "arm": "qwen3-8b.inv.s6795",
   "stage": "inverter",
   "scope": "full",
@@ -365,7 +365,7 @@
  },
  {
   "subject": "qwen3-8b",
-  "family": "basic_readout",
+  "family": "basic_readout_st",
   "arm": "qwen3-8b.inv.s6795",
   "stage": "inverter",
   "scope": "ati",
@@ -393,7 +393,7 @@
  },
  {
   "subject": "qwen3-8b",
-  "family": "basic_readout",
+  "family": "basic_readout_st",
   "arm": "qwen3-8b.sft",
   "stage": "distill",
   "scope": "full",
@@ -421,7 +421,7 @@
  },
  {
   "subject": "qwen3-8b",
-  "family": "basic_readout",
+  "family": "basic_readout_st",
   "arm": "qwen3-8b.sft",
   "stage": "distill",
   "scope": "ati",
@@ -449,7 +449,7 @@
  },
  {
   "subject": "qwen3-8b",
-  "family": "basic_readout",
+  "family": "basic_readout_st",
   "arm": "qwen3-8b.rl.i600",
   "stage": "RL i600",
   "scope": "full",
@@ -477,7 +477,7 @@
  },
  {
   "subject": "qwen3-8b",
-  "family": "basic_readout",
+  "family": "basic_readout_st",
   "arm": "qwen3-8b.rl.i600",
   "stage": "RL i600",
   "scope": "ati",
@@ -505,7 +505,7 @@
  },
  {
   "subject": "qwen3-8b",
-  "family": "basic_readout",
+  "family": "basic_readout_st",
   "arm": "jlens",
   "stage": "jlens",
   "scope": "full",
@@ -533,7 +533,7 @@
  },
  {
   "subject": "qwen3-8b",
-  "family": "basic_readout",
+  "family": "basic_readout_st",
   "arm": "jlens",
   "stage": "jlens",
   "scope": "ati",
@@ -561,7 +561,7 @@
  },
  {
   "subject": "qwen3-8b",
-  "family": "basic_readout_mt",
+  "family": "basic_readout",
   "arm": "qwen3-8b.inv.s6795",
   "stage": "inverter",
   "scope": "full",
@@ -589,7 +589,7 @@
  },
  {
   "subject": "qwen3-8b",
-  "family": "basic_readout_mt",
+  "family": "basic_readout",
   "arm": "qwen3-8b.sft",
   "stage": "distill",
   "scope": "full",
@@ -617,7 +617,7 @@
  },
  {
   "subject": "qwen3-8b",
-  "family": "basic_readout_mt",
+  "family": "basic_readout",
   "arm": "qwen3-8b.rl.i600",
   "stage": "RL i600",
   "scope": "full",
@@ -645,7 +645,7 @@
  },
  {
   "subject": "qwen3-8b",
-  "family": "basic_readout_mt",
+  "family": "basic_readout",
   "arm": "jlens",
   "stage": "jlens",
   "scope": "full",
@@ -2353,7 +2353,7 @@
  },
  {
   "subject": "qwen3-8b",
-  "family": "multihop",
+  "family": "multihop_st",
   "arm": "qwen3-8b.inv.s6795",
   "stage": "inverter",
   "scope": "full",
@@ -2381,7 +2381,7 @@
  },
  {
   "subject": "qwen3-8b",
-  "family": "multihop",
+  "family": "multihop_st",
   "arm": "qwen3-8b.sft",
   "stage": "distill",
   "scope": "full",
@@ -2409,7 +2409,7 @@
  },
  {
   "subject": "qwen3-8b",
-  "family": "multihop",
+  "family": "multihop_st",
   "arm": "qwen3-8b.rl.i600",
   "stage": "RL i600",
   "scope": "full",
@@ -2437,7 +2437,7 @@
  },
  {
   "subject": "qwen3-8b",
-  "family": "multihop",
+  "family": "multihop_st",
   "arm": "jlens",
   "stage": "jlens",
   "scope": "full",
@@ -2465,7 +2465,7 @@
  },
  {
   "subject": "qwen3-8b",
-  "family": "multihop_mt",
+  "family": "multihop",
   "arm": "qwen3-8b.inv.s6795",
   "stage": "inverter",
   "scope": "full",
@@ -2493,7 +2493,7 @@
  },
  {
   "subject": "qwen3-8b",
-  "family": "multihop_mt",
+  "family": "multihop",
   "arm": "qwen3-8b.sft",
   "stage": "distill",
   "scope": "full",
@@ -2521,7 +2521,7 @@
  },
  {
   "subject": "qwen3-8b",
-  "family": "multihop_mt",
+  "family": "multihop",
   "arm": "qwen3-8b.rl.i600",
   "stage": "RL i600",
   "scope": "full",
@@ -2549,7 +2549,7 @@
  },
  {
   "subject": "qwen3-8b",
-  "family": "multihop_mt",
+  "family": "multihop",
   "arm": "jlens",
   "stage": "jlens",
   "scope": "full",
@@ -2577,7 +2577,7 @@
  },
  {
   "subject": "qwen3-8b",
-  "family": "multilingual",
+  "family": "multilingual_st",
   "arm": "qwen3-8b.inv.s6795",
   "stage": "inverter",
   "scope": "full",
@@ -2605,7 +2605,7 @@
  },
  {
   "subject": "qwen3-8b",
-  "family": "multilingual",
+  "family": "multilingual_st",
   "arm": "qwen3-8b.sft",
   "stage": "distill",
   "scope": "full",
@@ -2633,7 +2633,7 @@
  },
  {
   "subject": "qwen3-8b",
-  "family": "multilingual",
+  "family": "multilingual_st",
   "arm": "qwen3-8b.rl.i600",
   "stage": "RL i600",
   "scope": "full",
@@ -2661,7 +2661,7 @@
  },
  {
   "subject": "qwen3-8b",
-  "family": "multilingual",
+  "family": "multilingual_st",
   "arm": "jlens",
   "stage": "jlens",
   "scope": "full",
@@ -2689,7 +2689,7 @@
  },
  {
   "subject": "qwen3-8b",
-  "family": "multilingual_mt",
+  "family": "multilingual",
   "arm": "qwen3-8b.inv.s6795",
   "stage": "inverter",
   "scope": "full",
@@ -2717,7 +2717,7 @@
  },
  {
   "subject": "qwen3-8b",
-  "family": "multilingual_mt",
+  "family": "multilingual",
   "arm": "qwen3-8b.sft",
   "stage": "distill",
   "scope": "full",
@@ -2745,7 +2745,7 @@
  },
  {
   "subject": "qwen3-8b",
-  "family": "multilingual_mt",
+  "family": "multilingual",
   "arm": "qwen3-8b.rl.i600",
   "stage": "RL i600",
   "scope": "full",
@@ -2773,7 +2773,7 @@
  },
  {
   "subject": "qwen3-8b",
-  "family": "multilingual_mt",
+  "family": "multilingual",
   "arm": "jlens",
   "stage": "jlens",
   "scope": "full",
@@ -3685,7 +3685,7 @@
  },
  {
   "subject": "qwen3-8b",
-  "family": "typo_mt",
+  "family": "typo",
   "arm": "qwen3-8b.inv.s6795",
   "stage": "inverter",
   "scope": "full",
@@ -3713,7 +3713,7 @@
  },
  {
   "subject": "qwen3-8b",
-  "family": "typo_mt",
+  "family": "typo",
   "arm": "qwen3-8b.sft",
   "stage": "distill",
   "scope": "full",
@@ -3741,7 +3741,7 @@
  },
  {
   "subject": "qwen3-8b",
-  "family": "typo_mt",
+  "family": "typo",
   "arm": "qwen3-8b.rl.i600",
   "stage": "RL i600",
   "scope": "full",
@@ -3769,7 +3769,7 @@
  },
  {
   "subject": "qwen3-8b",
-  "family": "typo_mt",
+  "family": "typo",
   "arm": "jlens",
   "stage": "jlens",
   "scope": "full",
@@ -4257,7 +4257,7 @@
   "families": [
    "arithmetic_intermediates",
    "association",
-   "basic_readout_mt",
+   "basic_readout",
    "buggy_code",
    "chain_intermediates",
    "conjunctive_association",
@@ -4268,16 +4268,16 @@
    "model_specific_directed_modulation",
    "moral_rationale",
    "multi_concept_directed_modulation",
+   "multihop_st",
    "multihop",
-   "multihop_mt",
+   "multilingual_st",
    "multilingual",
-   "multilingual_mt",
    "multilingual_multihop",
    "multilingual_typo",
    "nyt_connections",
    "poetry",
    "role_bound_association",
-   "typo_mt",
+   "typo",
    "user_modeling",
    "wrong_intermediate"
   ]
@@ -4314,7 +4314,7 @@
   "families": [
    "arithmetic_intermediates",
    "association",
-   "basic_readout_mt",
+   "basic_readout",
    "buggy_code",
    "chain_intermediates",
    "conjunctive_association",
@@ -4325,16 +4325,16 @@
    "model_specific_directed_modulation",
    "moral_rationale",
    "multi_concept_directed_modulation",
+   "multihop_st",
    "multihop",
-   "multihop_mt",
+   "multilingual_st",
    "multilingual",
-   "multilingual_mt",
    "multilingual_multihop",
    "multilingual_typo",
    "nyt_connections",
    "poetry",
    "role_bound_association",
-   "typo_mt",
+   "typo",
    "user_modeling",
    "wrong_intermediate"
   ]
@@ -4371,7 +4371,7 @@
   "families": [
    "arithmetic_intermediates",
    "association",
-   "basic_readout_mt",
+   "basic_readout",
    "buggy_code",
    "chain_intermediates",
    "conjunctive_association",
@@ -4382,16 +4382,16 @@
    "model_specific_directed_modulation",
    "moral_rationale",
    "multi_concept_directed_modulation",
+   "multihop_st",
    "multihop",
-   "multihop_mt",
+   "multilingual_st",
    "multilingual",
-   "multilingual_mt",
    "multilingual_multihop",
    "multilingual_typo",
    "nyt_connections",
    "poetry",
    "role_bound_association",
-   "typo_mt",
+   "typo",
    "user_modeling",
    "wrong_intermediate"
   ]
@@ -4428,7 +4428,7 @@
   "families": [
    "arithmetic_intermediates",
    "association",
-   "basic_readout_mt",
+   "basic_readout",
    "buggy_code",
    "chain_intermediates",
    "conjunctive_association",
@@ -4439,16 +4439,16 @@
    "model_specific_directed_modulation",
    "moral_rationale",
    "multi_concept_directed_modulation",
+   "multihop_st",
    "multihop",
-   "multihop_mt",
+   "multilingual_st",
    "multilingual",
-   "multilingual_mt",
    "multilingual_multihop",
    "multilingual_typo",
    "nyt_connections",
    "poetry",
    "role_bound_association",
-   "typo_mt",
+   "typo",
    "user_modeling",
    "wrong_intermediate"
   ]
@@ -4485,7 +4485,7 @@
   "families": [
    "arithmetic_intermediates",
    "association",
-   "basic_readout_mt",
+   "basic_readout",
    "buggy_code",
    "chain_intermediates",
    "conjunctive_association",
@@ -4496,16 +4496,16 @@
    "model_specific_directed_modulation",
    "moral_rationale",
    "multi_concept_directed_modulation",
+   "multihop_st",
    "multihop",
-   "multihop_mt",
+   "multilingual_st",
    "multilingual",
-   "multilingual_mt",
    "multilingual_multihop",
    "multilingual_typo",
    "nyt_connections",
    "poetry",
    "role_bound_association",
-   "typo_mt",
+   "typo",
    "user_modeling",
    "wrong_intermediate"
   ]
@@ -4524,7 +4524,7 @@
   "families": [
    "arithmetic_intermediates",
    "association",
-   "basic_readout_mt",
+   "basic_readout",
    "buggy_code",
    "chain_intermediates",
    "conjunctive_association",
@@ -4535,16 +4535,16 @@
    "model_specific_directed_modulation",
    "moral_rationale",
    "multi_concept_directed_modulation",
+   "multihop_st",
    "multihop",
-   "multihop_mt",
+   "multilingual_st",
    "multilingual",
-   "multilingual_mt",
    "multilingual_multihop",
    "multilingual_typo",
    "nyt_connections",
    "poetry",
    "role_bound_association",
-   "typo_mt",
+   "typo",
    "user_modeling",
    "wrong_intermediate"
   ]
@@ -4563,7 +4563,7 @@
   "families": [
    "arithmetic_intermediates",
    "association",
-   "basic_readout_mt",
+   "basic_readout",
    "buggy_code",
    "chain_intermediates",
    "conjunctive_association",
@@ -4574,16 +4574,16 @@
    "model_specific_directed_modulation",
    "moral_rationale",
    "multi_concept_directed_modulation",
+   "multihop_st",
    "multihop",
-   "multihop_mt",
+   "multilingual_st",
    "multilingual",
-   "multilingual_mt",
    "multilingual_multihop",
    "multilingual_typo",
    "nyt_connections",
    "poetry",
    "role_bound_association",
-   "typo_mt",
+   "typo",
    "user_modeling",
    "wrong_intermediate"
   ]
@@ -4602,7 +4602,7 @@
   "families": [
    "arithmetic_intermediates",
    "association",
-   "basic_readout_mt",
+   "basic_readout",
    "buggy_code",
    "chain_intermediates",
    "conjunctive_association",
@@ -4613,16 +4613,16 @@
    "model_specific_directed_modulation",
    "moral_rationale",
    "multi_concept_directed_modulation",
+   "multihop_st",
    "multihop",
-   "multihop_mt",
+   "multilingual_st",
    "multilingual",
-   "multilingual_mt",
    "multilingual_multihop",
    "multilingual_typo",
    "nyt_connections",
    "poetry",
    "role_bound_association",
-   "typo_mt",
+   "typo",
    "user_modeling",
    "wrong_intermediate"
   ]

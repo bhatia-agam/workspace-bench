@@ -10,15 +10,17 @@ from summary_fakes import FakeLLM, summary_args
 
 from wsbench import digest, llm, registry
 from wsbench.cache import Cache
-from wsbench.evals.arithmetic_intermediates import SPEC as ARITH
-from wsbench.evals.arithmetic_intermediates import judge as arith_judge
-from wsbench.evals.arithmetic_intermediates.prompts import SYSTEM_SUMMARY as ARITH_SUMMARY
-from wsbench.evals.chain_intermediates import SPEC as CHAIN
-from wsbench.evals.chain_intermediates import judge as chain_judge
-from wsbench.evals.chain_intermediates.prompts import PROMPT_VERSION as CHAIN_PV
-from wsbench.evals.chain_intermediates.prompts import SYSTEM as CHAIN_NATIVE
-from wsbench.evals.chain_intermediates.prompts import SYSTEM_SUMMARY as CHAIN_SUMMARY
-from wsbench.evals.user_modeling import prompts as um
+from wsbench.evals.association.user_modeling import prompts as um
+from wsbench.evals.computational.arithmetic_intermediates import SPEC as ARITH
+from wsbench.evals.computational.arithmetic_intermediates import judge as arith_judge
+from wsbench.evals.computational.arithmetic_intermediates.prompts import (
+    SYSTEM_SUMMARY as ARITH_SUMMARY,
+)
+from wsbench.evals.computational.chain_intermediates import SPEC as CHAIN
+from wsbench.evals.computational.chain_intermediates import judge as chain_judge
+from wsbench.evals.computational.chain_intermediates.prompts import PROMPT_VERSION as CHAIN_PV
+from wsbench.evals.computational.chain_intermediates.prompts import SYSTEM as CHAIN_NATIVE
+from wsbench.evals.computational.chain_intermediates.prompts import SYSTEM_SUMMARY as CHAIN_SUMMARY
 from wsbench.judge_config import JudgeConfig, resolve
 from wsbench.llm import Spend
 from wsbench.readouts import Cell
@@ -94,7 +96,7 @@ def test_render_prominent_before_rare():
 
 def test_schema_and_prompt():
     assert digest.DIGEST_SCHEMA["schema"]["required"] == ["items", "rare"]
-    s = digest.settings(_args(Path("/tmp")), "basic_readout")
+    s = digest.settings(_args(Path("/tmp")), "basic_readout_st")
     assert (s.max_items, s.max_rare, s.numbers) == (10, digest.DEFAULT_MAX_RARE, 0)
     system = digest.render_system(s, "")
     assert "up to 10 entries" in system and f"up to {digest.DEFAULT_MAX_RARE} entries" in system
@@ -459,7 +461,7 @@ def test_review_round2_edge_cases(tmp_path):
     assert [g.key for g in kept] == ["5"] and dups[0] == 1  # one number, one slot
     a = _args(tmp_path)
     assert digest.summary_note(a, None, "chain_intermediates") == digest.SUMMARY_NOTE_NO_RARE
-    assert digest.summary_note(a, None, "basic_readout") == digest.SUMMARY_NOTE
+    assert digest.summary_note(a, None, "basic_readout_st") == digest.SUMMARY_NOTE
     assert "only one or a few samples" not in digest.SUMMARY_NOTE_NO_RARE
     basis = um.SUMMARY_BASIS.split("Details about")[0]
     assert "same language (a synonym or demonym)" in basis  # synonyms are in the "only if" list

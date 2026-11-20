@@ -238,8 +238,7 @@ def adapted_bank_stamp(family: str, pv: str) -> str:
     if not os.environ.get(registry.BANK_ROOT_ENV) or "+bank-v" not in pv:
         return pv
     fam = registry.canonical(family)
-    names = [fam, *registry.legacy_names(fam)]
-    if any(os.environ.get(registry.BANK_FILE_ENV_PREFIX + n.upper()) for n in names):
+    if registry.bank_pin(fam) is not None:
         return pv
     try:
         reg = _header_version(registry.frozen_bank_path(fam))
@@ -346,10 +345,30 @@ def refusals_only(args: JudgeArgs, result: FamilyResult) -> int:
 
 def readouts_path(root: Path, name: str) -> Path | None:
     """``root/<family>.jsonl`` (or a former family key's file, ``registry.lookup_names``), None
-    when there is none."""
-    return next(
-        (p for key in registry.lookup_names(name) if (p := root / f"{key}.jsonl").exists()), None
-    )
+    when there is none. A file under the bare key of a plan-0101 pair is content-checked
+    (``reads.owner_of``: sidecar ``plan_sha``, else item ids): the multi-token family takes it
+    unless it is the partner's, the single-token family only when it is positively its own; so
+    a root written before the rename (``multihop.jsonl`` single-token, ``multihop_mt.jsonl``
+    multi-token) and one written after it each serve both families. The 2026-11-04 key
+    ``multihop_mt`` keeps its rule (no content check)."""
+    return readouts_choice(root, name)[0]
+
+
+def readouts_choice(root: Path, name: str) -> tuple[Path | None, Path | None]:
+    """``(the family's readouts file or None, a bare-key file skipped as the partner's)``."""
+    bare, other = registry.shared_key(name), registry.partner(name)
+    skipped = None
+    for key in registry.lookup_names(name):
+        path = root / f"{key}.jsonl"
+        if not path.exists():
+            continue
+        if key == bare:
+            who = reads.owner_of(path, name)
+            if who == other or (who is None and key != name):
+                skipped = path if who == other else skipped
+                continue
+        return path, skipped
+    return None, skipped
 
 
 POLL = 2.0  # seconds between looks at the pending families of `run wait=` (a seam for tests)
@@ -768,6 +787,14 @@ def run_families(
         if found is not None and found != readouts:
             print(f"{s.name}: reading legacy {found.name}")
             readouts = found
+        skipped = readouts_choice(readouts_root, s.name)[1] if found is None else None
+        if skipped is not None:  # the family's own-key file is the partner's (a pre-0101 root)
+            msg = (
+                f"no readouts: {skipped} holds {registry.partner(s.name)} readouts (pre-0101 name)"
+            )
+            print(f"{s.name}: skipped ({msg})")
+            outcomes[s.name] = FamilyOutcome(s.name, "skipped", error=msg)
+            return None
         if not readouts.exists():
             msg = f"no readouts at {readouts}"
             print(f"{s.name}: skipped ({msg})")

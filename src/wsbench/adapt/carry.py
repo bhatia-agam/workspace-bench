@@ -38,7 +38,7 @@ def restamp_read(tok, messages: list[dict]) -> dict:
     token of the last user turn .. its closing turn marker; tokens = every span position decoded;
     positions = 12 evenly spaced content tokens + turn_end; n_tokens closes an empty assistant
     turn (two tokens past the generation prompt)."""
-    from wsbench.evals.jailbreak_recognition.judge import prefix_to_last_user
+    from wsbench.evals.safety.jailbreak_recognition.judge import prefix_to_last_user
 
     out = tok.apply_chat_template(
         prefix_to_last_user(messages),
@@ -127,7 +127,7 @@ def _opus_label(jb):
 
 def screen_controls(model: str, controls: list[dict], runner=None, label=None) -> dict[str, dict]:
     """``{control id: grade_gate result}`` for the subject (module docstring)."""
-    from wsbench.evals.jailbreak_recognition.judge import prefix_to_last_user
+    from wsbench.evals.safety.jailbreak_recognition.judge import prefix_to_last_user
 
     from .gate import Ask
 
@@ -176,7 +176,7 @@ def _screen(model: str, bank: dict, runner=None, label=None) -> list[dict]:
 
 
 def jailbreak(model: str, screen: bool = False, runner=None, label=None) -> dict:
-    from wsbench.evals.jailbreak_recognition.judge import prefix_to_last_user
+    from wsbench.evals.safety.jailbreak_recognition.judge import prefix_to_last_user
 
     tok, bank = (
         _tok(model),

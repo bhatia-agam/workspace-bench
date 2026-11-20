@@ -100,8 +100,14 @@ def in_band(row: dict[str, Any], subject: str) -> dict[str, Any]:
 
 def row_sha(row: dict[str, Any]) -> str:
     """sha256 of one plan row as ``wsbench plan`` writes it, minus the lite / note keys (layers
-    kept: a changed layer list is a changed read)."""
+    kept: a changed layer list is a changed read). The row's ``family`` is hashed as its
+    pre-0101 key (``registry.frozen_name``, plan 0101 F14): a renamed family's stored cells
+    keep their ``row_sha``."""
+    from wsbench.registry import frozen_name
+
     clean = {k: v for k, v in row.items() if k not in ROW_SHA_EXCLUDE}
+    if isinstance(clean.get("family"), str):
+        clean["family"] = frozen_name(clean["family"])
     if isinstance(clean.get("extra"), dict):
         clean["extra"] = {k: v for k, v in clean["extra"].items() if k != "reads"}
     blob = json.dumps(clean, sort_keys=True, ensure_ascii=False).encode()
@@ -551,7 +557,69 @@ def _plan_rows(family: str, subject: str) -> list[dict[str, Any]]:
 
 
 def store_path(store: Path, subject: str, arm: str, family: str) -> Path:
+    """Where a family's NEW cells are written: always ``<current key>.jsonl``."""
     return store / subject / arm / f"{family}.jsonl"
+
+
+def _store_ids(path: Path) -> set[str]:
+    """The item ids of a store file's rows (``{"row_sha", "row": {"id", ...}}``)."""
+    out = set()
+    for line in path.read_text(encoding="utf-8").split("\n"):
+        if line.strip():
+            try:
+                row = json.loads(line).get("row")
+            except (json.JSONDecodeError, AttributeError):
+                continue
+            if isinstance(row, dict) and row.get("id") is not None:
+                out.add(str(row["id"]))
+    return out
+
+
+def _store_owner(path: Path, family: str) -> str | None:
+    """Which family of ``family``'s renamed pair the store file's ids belong to (plan 0101
+    §5.9); None for an empty file. Ids of both, or of neither, are a ``RenamedKey``."""
+    from wsbench import registry
+
+    ids = _store_ids(path)
+    if not ids:
+        return None
+    who = registry.owner(str(registry.shared_key(family)), ids=ids)
+    if who is None:
+        raise registry.RenamedKey(f"{path}: its rows are in neither family of the renamed pair")
+    return who
+
+
+def store_files(store: Path, subject: str, arm: str, family: str) -> list[Path]:
+    """The store files a family's cells are READ from: ``<key>.jsonl`` for every key the family
+    has held (``registry.lookup_names``); a file under the bare key of a renamed pair only when
+    its ids are this family's."""
+    from wsbench import registry
+
+    bare = registry.shared_key(family)
+    out = []
+    for key in registry.lookup_names(family):
+        path = store / subject / arm / f"{key}.jsonl"
+        if not path.exists():
+            continue
+        if key == bare and _store_owner(path, family) not in (family, None):
+            continue
+        out.append(path)
+    return out
+
+
+def check_store_writable(path: Path, family: str) -> None:
+    """Before a run's first append to ``store_path``: it must be absent, empty, or this
+    family's. The partner's file (written before the rename) is never appended to."""
+    from wsbench import registry
+
+    if registry.shared_key(family) is None or not path.exists():
+        return
+    who = _store_owner(path, family)
+    if who not in (family, None):
+        raise SystemExit(
+            f"{path} is the store of {who!r}, written before the plan-0101 rename; run "
+            f"`scripts/migrate_0101.py set {path.parent.parent}` or move it to {who}.jsonl"
+        )
 
 
 def stored_shas(path: Path) -> set[str]:
@@ -596,9 +664,14 @@ def jobs_for(args: argparse.Namespace) -> list[dict[str, Any]]:
             rows = _plan_rows(fam, args.subject)
             if args.limit:
                 rows = rows[: args.limit]
-            have = stored_shas(store_path(Path(args.store), args.subject, arm, fam))
-            pend += [{"row_sha": row_sha(r), "row": r, "family": fam} for r in rows
-                     if row_sha(r) not in have]  # fmt: skip
+            have: set[str] = set()
+            for path in store_files(Path(args.store), args.subject, arm, fam):
+                have |= stored_shas(path)
+            new = [{"row_sha": row_sha(r), "row": r, "family": fam} for r in rows
+                   if row_sha(r) not in have]  # fmt: skip
+            if new:  # refused before any job is launched: nothing is appended
+                check_store_writable(store_path(Path(args.store), args.subject, arm, fam), fam)
+            pend += new
         pack: list[dict[str, Any]] = []
         n = 0
         for p in pend:
@@ -613,8 +686,11 @@ def jobs_for(args: argparse.Namespace) -> list[dict[str, Any]]:
 
 
 def _job(args, subj, arm, spec, pack, k) -> dict[str, Any]:
+    from wsbench.registry import frozen_name
+
     fam = pack[0]["family"]
-    seed = int(hashlib.sha256(f"{arm}|{fam}|{pack[0]['row_sha']}".encode()).hexdigest()[:8], 16)
+    key = f"{arm}|{frozen_name(fam)}|{pack[0]['row_sha']}"  # plan 0101 F14: the pre-rename key
+    seed = int(hashlib.sha256(key.encode()).hexdigest()[:8], 16)
     fams = sorted({p["family"] for p in pack})
     label = fams[0] + (f"+{len(fams) - 1}" if len(fams) > 1 else "")
     return {"subject": args.subject, "hf_id": subj.hf_id, "revision": subj.revision, "arm": arm,
@@ -682,7 +758,7 @@ def assemble(args: argparse.Namespace) -> None:
     """The CURRENT plan's cells from the store -> ``<out>/<family>.jsonl`` + sidecar. A row with
     no stored cells is reported (and the family left out unless ``--partial``)."""
     from wsbench import reads as reads_mod
-    from wsbench.readouts import write_sidecar
+    from wsbench.readouts import refuse_partner_file, write_sidecar
 
     _subject(args.subject)
     out = Path(args.out)
@@ -693,9 +769,8 @@ def assemble(args: argparse.Namespace) -> None:
         rows = _plan_rows(fam, args.subject)
         if not rows:  # no in-band row (or an empty bank): no file
             continue
-        src = store_path(Path(args.store), args.subject, args.arm, fam)
         cells: dict[str, list[dict[str, Any]]] = {}
-        if src.exists():
+        for src in store_files(Path(args.store), args.subject, args.arm, fam):
             for line in src.read_text(encoding="utf-8").split("\n"):
                 if line.strip():
                     try:
@@ -708,6 +783,7 @@ def assemble(args: argparse.Namespace) -> None:
         missing = [r["id"] for r in rows if row_sha(r) not in cells]
         no_pos = [r["id"] for r in rows if row_sha(r) in cells and not cells[row_sha(r)]]
         report[fam] = {"items": len(rows), "missing": len(missing), "no_position": no_pos}
+        refuse_partner_file(out / f"{fam}.jsonl", fam)  # before it is unlinked or overwritten
         if missing and not args.partial:
             stale = out / f"{fam}.jsonl"
             for f in (stale, stale.with_name(stale.name + ".meta.json")):

@@ -1,12 +1,12 @@
 """A candidate ``adapt mc`` dropped (no options built) is rejected by lint before the gate, in
-every MC family, including multihop and basic_readout_mt whose required keys omit ``mc``."""
+every MC family, including multihop_st and basic_readout whose required keys omit ``mc``."""
 
 import pytest
 
 from wsbench.adapt import lint
 
 
-@pytest.mark.parametrize("family", ["multihop", "association", "basic_readout_mt"])
+@pytest.mark.parametrize("family", ["multihop_st", "association", "basic_readout"])
 def test_lint_rejects_an_mc_build_drop(family):
     item = {
         "name": "x-au-t1-w100c0-x",
@@ -33,4 +33,6 @@ def test_lint_multihop_drop_flag_is_the_reason():
         "readout": {"kind": "last"},
         "adapt": {"mc_build": {"dropped": True}},
     }
-    assert lint.lint("multihop", item) == ["mc: the MC builder dropped this candidate (no options)"]
+    assert lint.lint("multihop_st", item) == [
+        "mc: the MC builder dropped this candidate (no options)"
+    ]

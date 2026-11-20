@@ -42,9 +42,9 @@ LATER_ROUNDS = tuple(
 )
 ADAPTED = Path("/workspace/wsb-runs/adapted")
 WORK_DIRS = ("wrong_bridge.work", "wrong_intermediate.work")
-ITEMS = REPO / "evals" / "wrong_intermediate" / "items_v4.json"
-R4 = REPO / "evals" / "wrong_intermediate" / "r4_distractors.json"
-WD = REPO / "evals" / "wrong_intermediate" / "wikidata_v3.json"
+ITEMS = REPO / "evals" / "model_specific" / "wrong_intermediate" / "items_v4.json"
+R4 = REPO / "evals" / "model_specific" / "wrong_intermediate" / "r4_distractors.json"
+WD = REPO / "evals" / "model_specific" / "wrong_intermediate" / "wikidata_v3.json"
 OPTION_PROPS = ("P31", "P106", "P17", "P495")
 OUT = REPO / "src" / "wsbench" / "adapt" / "data"
 API = "https://www.wikidata.org/w/api.php"

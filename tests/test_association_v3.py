@@ -10,12 +10,12 @@ from pathlib import Path
 from wsbench import digest, mc, readplan, registry
 from wsbench.adapt import store
 from wsbench.baselines import lucky_guessing as lg
-from wsbench.evals.association import judge as aj
+from wsbench.evals.basic.association import judge as aj
 
 REPO = Path(__file__).resolve().parents[1]
-V2 = REPO / "evals/association/items_v2.json"
-V3 = REPO / "evals/association/items_v3.json"
-V5 = REPO / "evals/association/items_v5.json"
+V2 = REPO / "evals/basic/association/items_v2.json"
+V3 = REPO / "evals/basic/association/items_v3.json"
+V5 = REPO / "evals/basic/association/items_v5.json"
 
 
 def _bank(path: Path) -> list[dict]:

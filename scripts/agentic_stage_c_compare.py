@@ -15,7 +15,7 @@ from typing import Any
 
 from openai import OpenAI
 
-from wsbench.evals.agentic_misalignment import judge, prompts
+from wsbench.evals.safety.agentic_misalignment import judge, prompts
 from wsbench.mcjudge import load_bank
 
 REPO = Path(__file__).resolve().parents[1]

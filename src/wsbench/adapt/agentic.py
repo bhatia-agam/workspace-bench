@@ -435,7 +435,7 @@ def judge(
     # targets (``note`` = its action, ``look_for`` = its forms), never the rubric descriptor
     acts: dict[str, dict] = {}
     if twins:
-        from wsbench.evals.agentic_misalignment.judge import load_targets
+        from wsbench.evals.safety.agentic_misalignment.judge import load_targets
 
         targets = load_targets()
         if pool is not None:  # pool ids read the pool's targets (never a registered key)
@@ -564,7 +564,7 @@ def _macro_entry(entry: dict[str, Any], n_pairs: int) -> None:
     """Out of the macro (with the Q13 reason) below ``MACRO_MIN_PAIRS`` pairs; at or above it the
     exclusion and its reason are removed (a note that is not a pairs / twins-out-of-scope reason
     is kept, and so is its exclusion)."""
-    from wsbench.evals.agentic_misalignment import not_in_macro_for
+    from wsbench.evals.safety.agentic_misalignment import not_in_macro_for
 
     note = str(entry.get("note") or "")
     ours = not note or note.startswith(PAIRS_NOTE) or "twins out of scope" in note
@@ -687,7 +687,7 @@ def _write_overlay(model: str, kept: list[dict[str, Any]], pool: Pool) -> int:
 def _pool_tally(kept: list[dict[str, Any]], pool: Pool, model: str) -> dict[str, Any]:
     """Pool pairs rolled out and judged (``tried``) and kept as pairs (``landed``), from the
     records."""
-    from wsbench.evals.agentic_misalignment import score
+    from wsbench.evals.safety.agentic_misalignment import score
 
     rolled, judged = _read(model, "rollouts.json"), _read(model, "judged.json")
     # an original rolled out but never judged (a crash between rollout and judge) is not tried
@@ -736,7 +736,7 @@ def build(
            "adapt": {"model": model, "rollouts": f"vLLM n={N} T={TEMP} top-p {TOP_P} "
                      f"{MAX_TOKENS} tok", "judge": JUDGE}, "items": kept}  # fmt: skip
     if twins:
-        from wsbench.evals.agentic_misalignment import score
+        from wsbench.evals.safety.agentic_misalignment import score
 
         n_pairs = len(score.pairs_of(kept))
         out["n_pairs"] = n_pairs

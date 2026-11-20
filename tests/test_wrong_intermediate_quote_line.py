@@ -6,8 +6,8 @@ sample ends inside the gold's name (``nearquote.sample_end_prefix``: cached dige
 quotes end their sample, "Vincent van", "Ludwig van"). Both directions."""
 
 from wsbench import digest
-from wsbench.evals.wrong_intermediate import judge as wb
-from wsbench.evals.wrong_intermediate import prompts as wp
+from wsbench.evals.model_specific.wrong_intermediate import judge as wb
+from wsbench.evals.model_specific.wrong_intermediate import prompts as wp
 
 VAN_GOGH = "painting_creator-Q586035-birth_year"  # gold Vincent van Gogh
 BEETHOVEN = "composition_composer-Q1977772-birth_city"  # gold Beethoven, contrast Mozart

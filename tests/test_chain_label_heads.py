@@ -3,8 +3,8 @@ count, a label or an operand, never a stated result (judge.result_head / judge.l
 heads-v5: unless the continuation calls it the result or the answer ("12 is the result")."""
 
 from wsbench import digest
-from wsbench.evals.chain_intermediates import judge as chain
-from wsbench.evals.chain_intermediates import prompts
+from wsbench.evals.computational.chain_intermediates import judge as chain
+from wsbench.evals.computational.chain_intermediates import prompts
 from wsbench.readouts import Cell
 
 

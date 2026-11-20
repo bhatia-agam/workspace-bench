@@ -13,15 +13,15 @@ from conftest import native_args, write_jsonl, write_sidecar
 from summary_fakes import FakeLLM, first_lines_digest, summary_args
 
 from wsbench import digest, mc, nocot, readplan, reads, registry
-from wsbench.evals import knowledge_cutoff
-from wsbench.evals.knowledge_cutoff import judge, prompts, score
-from wsbench.evals.knowledge_cutoff.prompts import LETTERS, PROMPT_VERSION
+from wsbench.evals.model_specific import knowledge_cutoff
+from wsbench.evals.model_specific.knowledge_cutoff import judge, prompts, score
+from wsbench.evals.model_specific.knowledge_cutoff.prompts import LETTERS, PROMPT_VERSION
 from wsbench.judge_config import resolve
 
 REPO = Path(__file__).resolve().parents[1]
-V1 = REPO / "evals/knowledge_cutoff/items.json"
-V2 = REPO / "evals/knowledge_cutoff/items_v2.json"
-OBSCURE = REPO / "evals/knowledge_cutoff/obscure_items.json"
+V1 = REPO / "evals/model_specific/knowledge_cutoff/items.json"
+V2 = REPO / "evals/model_specific/knowledge_cutoff/items_v2.json"
+OBSCURE = REPO / "evals/model_specific/knowledge_cutoff/obscure_items.json"
 FIXTURE_BANK = REPO / "tests/fixtures/knowledge_cutoff_pre_refill_items.json"
 NULL_LINT = re.compile(
     r"not traded|\bnone\b|no club|unknown|trick question|cannot|never|n/a|does not exist|"

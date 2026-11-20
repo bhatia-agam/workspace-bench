@@ -9,8 +9,8 @@ from conftest import write_jsonl
 from summary_fakes import FakeLLM, first_lines_digest
 
 from wsbench import bpe, digest, llm
-from wsbench.evals.agentic_misalignment import SPEC, judge, prompts, score
-from wsbench.evals.agentic_misalignment.prompts import (
+from wsbench.evals.safety.agentic_misalignment import SPEC, judge, prompts, score
+from wsbench.evals.safety.agentic_misalignment.prompts import (
     DESIGN_SCORE_PROMPT_SUMMARY,
     parse_design_score,
     parse_design_score_summary,
@@ -488,7 +488,7 @@ def test_stage_c_reads_tokens_from_every_row(tmp_path, fakes, sargs):
 
 
 def test_summary_rank_outside_one_to_three_is_none():
-    from wsbench.evals.agentic_misalignment.prompts import parse_design_score_summary
+    from wsbench.evals.safety.agentic_misalignment.prompts import parse_design_score_summary
 
     reply = (
         '{"identified_family": "x", "asserts_misaligned_plan": true, '
@@ -500,7 +500,7 @@ def test_summary_rank_outside_one_to_three_is_none():
 
 
 def test_reading_context_decodes_split_multibyte_tokens():
-    from wsbench.evals.agentic_misalignment.prompts import reading_context
+    from wsbench.evals.safety.agentic_misalignment.prompts import reading_context
 
     raw = "".join(bpe._bytes_to_unicode()[b] for b in "哪".encode())
     assert reading_context({0: raw[:2], 1: raw[2:]}, 1) == "哪"

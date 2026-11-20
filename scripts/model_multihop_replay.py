@@ -16,7 +16,7 @@ from pathlib import Path
 from typing import Any
 
 from wsbench import reads
-from wsbench.evals.model_multihop import judge, prompts, score
+from wsbench.evals.model_specific.model_multihop import judge, prompts, score
 from wsbench.judge_config import resolve
 from wsbench.readouts import write_sidecar
 from wsbench.readplan import GRID

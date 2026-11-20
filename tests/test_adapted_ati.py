@@ -99,7 +99,7 @@ def test_gate_adapted_keeps_only_items_every_reader_fails(adapted):
     written = json.loads((root / ti.ADAPTED_FILE).read_text())
     assert written["_source"]["gate"] == ti.ADAPTED_GATE_VERSION
     assert written["_source"]["set"] == "qwen3.5-4b"
-    assert written["_not_gated"]["typo_mt"] == ti.NOT_GATED["typo_mt"]
+    assert written["_not_gated"]["typo"] == ti.NOT_GATED["typo"]
     assert written["fam"]["ids"] == ["a", "e"]
 
 
@@ -125,7 +125,7 @@ def test_subset_entry_reads_the_set_file_and_guards_its_bank(adapted, monkeypatc
 def test_gate_adapted_refuses_not_gated_and_needs_a_root(adapted, monkeypatch):
     _, out = adapted
     with pytest.raises(ValueError, match="not gateable"):
-        ti.gate_adapted(out, families=["typo_mt"])
+        ti.gate_adapted(out, families=["typo"])
     monkeypatch.delenv("WSB_BANK_ROOT")
     with pytest.raises(SystemExit, match="WSB_BANK_ROOT"):
         ti.gate_adapted(out)

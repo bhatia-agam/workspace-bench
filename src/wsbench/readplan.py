@@ -11,6 +11,7 @@ from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any
 
+from wsbench import registry
 from wsbench.banks import load_bank as load_bank_file
 from wsbench.registry import (
     BANK_ROOT_ENV,
@@ -27,7 +28,7 @@ SIX = [20, 28, 36, 44, 52, 60]  # the association families' former coarser grid
 FIVE = [20, 36, 44, 52, 60]  # the former five in-house layers (old jailbreak and removed arms)
 N_MODEL_LAYERS = 64  # Qwen3.6-27B, the frozen banks' subject
 LAYERS_ENV = "WSB_LAYERS"  # `all` or a csv: plan()'s layers when its argument is None (producer)
-ANSWER_STEM = "My one-word answer is:"  # basic_readout implicit items: prefilled assistant turn
+ANSWER_STEM = "My one-word answer is:"  # basic_readout_st implicit items: prefilled assistant turn
 SUMMARIZE_SUFFIX = "\n\nSummarize the preceding story in one sentence."
 
 RENDERS: dict[str, str] = {
@@ -113,7 +114,7 @@ SAME = {"kind": "same"}
 # +reads-lite stamp. A code constant, not evals/<family>/lite_rule.json: these families never had
 # a procedure-chosen lite site (LITE_SITE_FAMILIES). The banks' `readout.lite` keys are not read.
 LITE_SAME_FAMILIES = (
-    "basic_readout",
+    "basic_readout_st",
     "directed_modulation",
     "model_specific_directed_modulation",
     "multi_concept_directed_modulation",
@@ -125,7 +126,7 @@ def frozen_lite_rule(family: str) -> dict[str, Any]:
     """The lite rule frozen by the pre-registered lite-site procedure (plan 0032 §2.6; gpu.md
     R4d: ``scripts/lite_site_table.py --write``) in ``evals/<family>/lite_rule.json``, else
     ``final_token``. A lite-rule edit never changes full cells, ``plan_sha`` or ``bank_sha``."""
-    path = REPO_ROOT / "evals" / family / "lite_rule.json"
+    path = REPO_ROOT / registry.family_rel(family) / "lite_rule.json"
     if not path.exists():
         return dict(FINAL)
     rule = json.loads(path.read_text(encoding="utf-8"))["lite_positions"]
@@ -421,8 +422,8 @@ def _token_at_char(tokens: list[str], start: int, end: int, k: int) -> int:
 
 
 def first_diff(typo: str, target: str) -> int:
-    """Index of the first character where ``typo`` differs from ``target`` (case-insensitive);
-    ``len(typo) - 1`` when ``typo`` is a prefix of ``target`` or equal to it."""
+    """Index of the first character where ``typo_st`` differs from ``target`` (case-insensitive);
+    ``len(typo_st) - 1`` when ``typo_st`` is a prefix of ``target`` or equal to it."""
     a, b = typo.lower(), target.lower()
     k = next((i for i in range(min(len(a), len(b))) if a[i] != b[i]), min(len(a), len(b)))
     return min(k, len(a) - 1)
@@ -526,9 +527,9 @@ def _final_token_families_items(
         item_lite = lite
         spec = it.get("readout") or {}
         if spec.get("kind") == "question_through_end":
-            # plan 0053 (basic_readout v2): every token from the first token of the user question
+            # plan 0053 (basic_readout_st v2): every token from the first token of the user question
             # through the prefilled answer stem; lite = the bank's lite rule (the stem's ":"),
-            # except for LITE_SAME_FAMILIES (basic_readout, plan 0061: the same positions)
+            # except for LITE_SAME_FAMILIES (basic_readout_st, plan 0061: the same positions)
             out.append(
                 ReadSpec(
                     family,
@@ -553,7 +554,9 @@ def _final_token_families_items(
             rule = {"kind": "all"}
             item_lite = dict(SAME) if same else dict(spec.get("lite") or FINAL)
         r = it.get("eval_render") or render
-        if r == "chat":  # basic_readout's implicit items: the model's own favourite after the stem
+        if (
+            r == "chat"
+        ):  # basic_readout_st's implicit items: the model's own favourite after the stem
             out.append(
                 ReadSpec(
                     family,
@@ -575,23 +578,23 @@ def _final_token_families_items(
     return out
 
 
-def _multihop() -> list[ReadSpec]:
+def _multihop_st() -> list[ReadSpec]:
     """Multihop (plan 0036 C2): full = every token of the plain render, reported as negative
     offsets (``all_from_end``); lite = the last word of the prompt, ``offset_from_end k`` with
     ``k = -readout.offsets[0]`` (1 or 2), which retains the 2026-09-23 decision (read the last
     word, not the trailing space token). ``offset_from_end k=1`` rather than ``final_token``
     keeps both modes on one coordinate system; lite is a subset of full, so one read serves
     both."""
-    _h, items = _bank("multihop")
+    _h, items = _bank("multihop_st")
     out = []
     for it in items:
         offsets = (it.get("readout") or {}).get("offsets") or [-1]
         k = -int(offsets[0])
         if k < 1:
-            raise ValueError(f"multihop/{it['id']}: readout.offsets {offsets} must be negative")
+            raise ValueError(f"multihop_st/{it['id']}: readout.offsets {offsets} must be negative")
         out.append(
             ReadSpec(
-                "multihop",
+                "multihop_st",
                 it["id"],
                 it.get("eval_render") or "plain",
                 {"kind": "all_from_end"},
@@ -743,8 +746,8 @@ def plan(
 
 
 MULTILINGUAL_ALL_POSITIONS = (
+    "multilingual_st",
     "multilingual",
-    "multilingual_mt",
     "multilingual_multihop",
     "multilingual_typo",
 )
@@ -753,12 +756,12 @@ MULTILINGUAL_ALL_POSITIONS = (
 def _plan(family: str) -> list[ReadSpec]:
     """The read plan for one family, one ReadSpec per bank item."""
     if family in (
-        "basic_readout",
-        "typo",
+        "basic_readout_st",
+        "typo_st",
         "wrong_intermediate",
     ):
         return _final_token_families(family, "plain")
-    if family == "typo_mt":
+    if family == "typo":
         # plan 0033 M3: the tokens of the misspelled word that ends the prompt from the one that
         # contains the first misspelled character on, nothing earlier (a read before the
         # misspelling exists would credit predicting the word, not correcting it); lite = its
@@ -799,9 +802,9 @@ def _plan(family: str) -> list[ReadSpec]:
             )
             for it in items
         ]
-    if family == "multihop":
-        return _multihop()
-    if family == "basic_readout_mt":  # plan 0051: a question, every position of the chat render
+    if family == "multihop_st":
+        return _multihop_st()
+    if family == "basic_readout":  # plan 0051: a question, every position of the chat render
         _h, items = _bank(family)
         out = []
         for it in items:
@@ -823,10 +826,10 @@ def _plan(family: str) -> list[ReadSpec]:
                         },
                     )
                 )
-            else:  # the v1 completion bank (WSB_BANK_FILE_BASIC_READOUT_MT=items.json)
+            else:  # the v1 completion bank (WSB_BANK_FILE_BASIC_READOUT=items.json)
                 out += _final_token_families_items(family, [it], "plain")
         return out
-    if family == "multihop_mt":
+    if family == "multihop":
         # bank v2 (plan 0041; Camila 2026-10-30: "read at every token not just final position
         # (except lite/fast should be last token)"): the item's `readout` block is the source,
         # every prompt token at every GRID layer, lite = its `lite` rule (the final token)
@@ -1111,7 +1114,10 @@ def _plan(family: str) -> list[ReadSpec]:
             for it in items
         ]
     if family == "jailbreak_recognition":
-        from wsbench.evals.jailbreak_recognition.judge import grid_positions, prefix_to_last_user
+        from wsbench.evals.safety.jailbreak_recognition.judge import (
+            grid_positions,
+            prefix_to_last_user,
+        )
 
         _h, items = _bank(family)
         return [
@@ -1200,7 +1206,7 @@ def _plan(family: str) -> list[ReadSpec]:
     if family == "introspection":
         return _introspection()
     if family == "jlens_concept_pr":
-        from wsbench.evals.jlens_concept_pr.judge import bank_dir
+        from wsbench.evals.precision.jlens_concept_pr.judge import bank_dir
 
         d = bank_dir()  # the adapted bank's own manifest under WSB_BANK_ROOT, never the 27B's
         m = json.loads((d / "manifest.json").read_text())
@@ -1386,23 +1392,22 @@ def families() -> list[str]:
     """Every family with a bank; under ``$WSB_BANK_ROOT`` only those the adapted root actually
     has (an ooc family with no bank is skipped, not an error, when planning everything)."""
     names = sorted(
-        p.name
-        for p in (REPO_ROOT / "evals").iterdir()
-        if any(p.glob("items*.json")) or (p / "manifest.json").exists()  # incl. items_v<N>.json
+        f
+        for f in registry._layout()
+        if any((p := registry.family_root(f)).glob("items*.json"))  # incl. items_v<N>.json
+        or (p / "manifest.json").exists()
     )
     root = os.environ.get(BANK_ROOT_ENV)
     if not root:
         return names
     base = Path(root) if Path(root).is_absolute() else REPO_ROOT / root
     # a set written under a former key (``registry.lookup_names``: multihop_mt_v2.json after the
-    # 2026-11-04 rename) has the family too; ``bank_path`` reads it the same way
+    # 2026-11-04 rename) has the family too; ``registry.root_bank`` is the rule ``bank_path`` reads
     return [
         f
         for f in names
-        if any(
-            (base / f"{k}.json").exists() or (base / k / "manifest.json").exists()
-            for k in lookup_names(f)
-        )
+        if registry.root_bank(base, f) is not None
+        or any((base / k / "manifest.json").exists() for k in lookup_names(f))
     ]
 
 

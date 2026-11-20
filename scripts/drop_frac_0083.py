@@ -319,7 +319,7 @@ OLD_PV = "arith-free-2026-10-30+exact-int+keys-union+generic-r7"
 def restamp(path: Path) -> None:
     """The recomputed stock summary floor carries the bank-v2 result stamp (``PROMPT_VERSION``
     gained ``+bank-v2``), so it is drawn beside bank-v2 rows only."""
-    from wsbench.evals.arithmetic_intermediates.prompts import PROMPT_VERSION
+    from wsbench.evals.computational.arithmetic_intermediates.prompts import PROMPT_VERSION
 
     if not PROMPT_VERSION.startswith(OLD_PV + "+bank-v2"):
         raise SystemExit(f"unexpected PROMPT_VERSION {PROMPT_VERSION!r}")

@@ -98,7 +98,7 @@ def banned(fam: str, it: dict) -> list[str]:
     blocklist and the gold action's lexicon forms and verb stem. conjunctive: the credit words of
     the item's VARIED axes (a shared axis, e.g. q01's accidental death, is the topic itself)."""
     if fam == "role_bound_association":
-        from wsbench.evals.role_bound_association import gate
+        from wsbench.evals.anti_bag_of_features.role_bound_association import gate
 
         lex, acts = gate.load_lexicon(), gate.load_actions()
         words = [*lex.terms(it["role_a"]), *lex.terms(it["role_b"])]

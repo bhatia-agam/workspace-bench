@@ -1,4 +1,4 @@
-"""Build ``evals/conjunctive_association/items_v2.json`` from the v1 bank (no LLM).
+"""Build ``evals/association/conjunctive_association/items_v2.json`` from the v1 bank (no LLM).
 
 Camila (2026-10-30): "Fix the judge's leniency: ... the inverted credit (this is especially
 important, maybe use this as another distractor)". Every grid option that involves a second
@@ -21,8 +21,8 @@ from collections.abc import Callable
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-V1 = ROOT / "evals/conjunctive_association/items.json"
-V2 = ROOT / "evals/conjunctive_association/items_v2.json"
+V1 = ROOT / "evals/association/conjunctive_association/items.json"
+V2 = ROOT / "evals/association/conjunctive_association/items_v2.json"
 EDIT = "v2 2026-10-30: role-swapped twins added as distractors (conjunctive workstream)"
 
 

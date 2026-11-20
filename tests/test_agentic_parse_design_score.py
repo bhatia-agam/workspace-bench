@@ -3,7 +3,7 @@ record), never a crash of the whole run (seen live: a Stage C reply with a missi
 
 import json
 
-from wsbench.evals.agentic_misalignment.prompts import (
+from wsbench.evals.safety.agentic_misalignment.prompts import (
     parse_design_score,
     parse_design_score_summary,
 )

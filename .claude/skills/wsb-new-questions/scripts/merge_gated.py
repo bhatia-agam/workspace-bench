@@ -1,7 +1,8 @@
 """Pool several gated waves of one family into one bank and one OOC/cap decision.
 
     uv run python .claude/skills/wsb-new-questions/scripts/merge_gated.py \\
-        --family multihop --out gated/multihop_all gated/multihop gated/multihop_w2 [--capacity N]
+        --family multihop_st --out gated/multihop_all gated/multihop_st gated/multihop_w2 \\
+        [--capacity N]
 
 Each wave dir is a gate_hf.py output (items.json + summary.json). Candidate and pass counts are
 SUMMED across waves before the OOC rule (< 3% over >= min(200, capacity) candidates) is applied,

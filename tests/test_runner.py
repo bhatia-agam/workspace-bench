@@ -327,19 +327,18 @@ def test_keyboard_interrupt_writes_manifest_and_exits_130(offline, tmp_path, mon
 
 def test_mcrx_family_is_preflighted(offline, tmp_path):
     """Plan 0033 R7: scorer mc+regex leaves EvalSpec.scorer empty, so ``run`` preflights the judge
-    of multilingual / multilingual_multihop; the regex family (multilingual_mt) makes no call."""
+    of multilingual_st / multilingual_multihop; the regex family (multilingual) makes no call."""
     import dataclasses
-    import importlib
 
-    for name in ("multilingual", "multilingual_mt"):
-        spec = importlib.import_module(f"wsbench.evals.{name}").SPEC
+    for name in ("multilingual_st", "multilingual"):
+        spec = registry.family_module(name).SPEC
         register(dataclasses.replace(spec, run=lambda a, n=name: _ok(a, n)))
-    assert registry.FAMILIES["multilingual"].scorer == ""
-    assert registry.FAMILIES["multilingual_mt"].scorer == "regex"
+    assert registry.FAMILIES["multilingual_st"].scorer == ""
+    assert registry.FAMILIES["multilingual"].scorer == "regex"
     root, out = tmp_path / "r", tmp_path / "o"
-    _readouts(root, "multilingual_mt")
+    _readouts(root, "multilingual")
     argv = ["run", "opts=aggregate=native", "all=True", f"readouts_root={root}", f"out={out}"]
     assert main(argv) == 0 and offline == []  # the regex family alone: no preflight
-    _readouts(root, "multilingual")
+    _readouts(root, "multilingual_st")
     assert main([*argv[:-1], f"out={tmp_path / 'o2'}"]) == 0
     assert len(offline) == 1  # the mc+regex family's judge, once

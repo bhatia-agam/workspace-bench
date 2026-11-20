@@ -1,7 +1,6 @@
 """multilingual_multihop: option sets and judged roles of the optional MC judge (``opts=judge=mc``);
 the regex scorer of record is tested in ``test_mt_regex.py``."""
 
-import importlib
 import json
 import re
 from pathlib import Path
@@ -20,7 +19,7 @@ REPO = Path(__file__).resolve().parents[1]
 
 
 def test_options_match_the_golden_and_the_bank():
-    header, items = load_bank(REPO / "evals/multilingual_multihop/items.json")
+    header, items = load_bank(REPO / "evals/basic/multilingual_multihop/items.json")
     assert header["family"] == "multilingual-multihop" and len(items) == 98
     opts = option_sets(items)
     golden = json.loads(
@@ -44,7 +43,7 @@ def test_options_match_the_golden_and_the_bank():
 
 
 def test_registered():
-    from wsbench.evals.multilingual_multihop import SPEC
+    from wsbench.evals.basic.multilingual_multihop import SPEC
 
     registry.FAMILIES.setdefault(SPEC.name, SPEC)
     # plan 0054 item 9: the scorer of record is mc+regex (an LLM judge, EvalSpec.scorer empty)
@@ -56,7 +55,7 @@ def test_registered():
 
 # ---------------------------------------------------------------- v2 (plan 0054 items 7 / 9)
 
-V2 = REPO / "evals/multilingual_multihop/items_v2.json"
+V2 = REPO / "evals/basic/multilingual_multihop/items_v2.json"
 ASML = "mlmh-fi-asml-alankomaat"
 
 
@@ -112,7 +111,7 @@ def _run(tmp_path, monkeypatch, item, text, judge, layer=36):
     from summary_fakes import FakeLLM
 
     FakeLLM.install(monkeypatch, judge)
-    spec = importlib.import_module("wsbench.evals.multilingual_multihop").SPEC
+    spec = registry.family_module("multilingual_multihop").SPEC
     registry.FAMILIES.setdefault(spec.name, spec)
     path = tmp_path / f"r{abs(hash(text))}.jsonl"
     path.write_text(json.dumps({"id": item, "layer": layer, "pos": 30, "samples": [text]}) + "\n")
@@ -162,7 +161,7 @@ def test_mcrx_pass_needs_mc_and_the_required_units(tmp_path, monkeypatch, conten
 
 def test_l2_equals_native_items_out_of_headline(tmp_path, monkeypatch):
     # bank v5 dropped mawsynram, the only such item: the rule is run on bank v4
-    v4 = REPO / "evals/multilingual_multihop/items_v4.json"
+    v4 = REPO / "evals/basic/multilingual_multihop/items_v4.json"
     monkeypatch.setenv("WSB_BANK_FILE_MULTILINGUAL_MULTIHOP", str(v4))
     it = _items()["mlmh-vi-mawsynram-meghalaya"]
     judge = _judge(it["mc"]["bridge_native"]["gold"], "Vietnamese", "Mawsynram", "Vietnamese")

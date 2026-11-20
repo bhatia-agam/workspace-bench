@@ -22,7 +22,7 @@ by the judge). Stages, each resumable (results are cached per key in ``<out>/*.j
    replaced by the next lint-passing candidate and the item is re-screened (up to ``--rounds``);
    when candidates run out the proposer is asked again with the rejected ones excluded. An item
    whose gold still loses is DROPPED (recorded with its picks).
-4. ``freeze``: writes ``evals/association/items_v2.json`` (93 - drops items) with the header
+4. ``freeze``: writes ``evals/basic/association/items_v2.json`` (93 - drops items) with the header
    fields ``retired``, ``retired_rule``, ``distractor_rule``, ``distractor_review``.
 
 API: the Anthropic route of ``wsbench.llm`` (keyless OAuth: ``ANTHROPIC_AUTH_TOKEN``; never an
@@ -43,8 +43,8 @@ from wsbench import llm, mc
 from wsbench.llm import schema_block
 
 REPO = Path(__file__).resolve().parents[1]
-V1 = REPO / "evals" / "association" / "items.json"
-V2 = REPO / "evals" / "association" / "items_v2.json"
+V1 = REPO / "evals" / "basic" / "association" / "items.json"
+V2 = REPO / "evals" / "basic" / "association" / "items_v2.json"
 MODEL = "claude-opus-5-5"
 REASONING = {"anthropic_effort": "default"}
 N_DISTRACTORS = 7
@@ -577,7 +577,9 @@ def main(argv: list[str] | None = None) -> int:
         ap.error("--bank-out needs --bank")
     if a.bank is not None:
         if a.stage == "freeze" and a.bank_out is None:
-            ap.error("freeze with --bank needs --bank-out (never evals/association/items_v2.json)")
+            ap.error(
+                "freeze with --bank needs --bank-out (never evals/basic/association/items_v2.json)"
+            )
         if a.bank_out is not None and under_evals(a.bank_out):
             ap.error(f"--bank-out {a.bank_out} is under evals/")
         if under_evals(Path(a.out)):

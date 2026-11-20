@@ -15,7 +15,7 @@ REPO = Path(__file__).resolve().parents[1]
 
 
 def test_options_match_the_golden_and_the_bank():
-    header, items = load_bank(REPO / "evals/multilingual_typo/items.json")
+    header, items = load_bank(REPO / "evals/basic/multilingual_typo/items.json")
     assert header["family"] == "multilingual-typo" and len(items) == 100
     opts = option_sets(items)
     golden = json.loads(
@@ -39,7 +39,7 @@ def test_options_match_the_golden_and_the_bank():
 
 
 def test_registered():
-    from wsbench.evals.multilingual_typo import SPEC
+    from wsbench.evals.basic.multilingual_typo import SPEC
 
     registry.FAMILIES.setdefault(SPEC.name, SPEC)
     assert SPEC.group == "basic" and SPEC.scorer == "regex"
@@ -54,7 +54,7 @@ ADR = "mlt-ar-adrenaline-rush"
 
 
 def _units():
-    header, items = load_bank(REPO / "evals/multilingual_typo/items_v2.json")
+    header, items = load_bank(REPO / "evals/basic/multilingual_typo/items_v2.json")
     contract = regex.contract_for(header, "multilingual_typo")
     it = next(i for i in items if i["id"] == ADR)
     return it, regex.scored_units(it, contract)
@@ -101,7 +101,7 @@ def test_v2_plain_english_correction_passes_every_item():
     filter stays on the L2 unit only."""
     from wsbench.multitoken.languages import LANGUAGES
 
-    header, items = load_bank(REPO / "evals/multilingual_typo/items_v2.json")
+    header, items = load_bank(REPO / "evals/basic/multilingual_typo/items_v2.json")
     contract = regex.contract_for(header, "multilingual_typo")
     failed = []
     for it in items:

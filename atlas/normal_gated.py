@@ -1,6 +1,6 @@
 """Gated + on-policy re-score of normal-bank (27B bank) OLens runs for subjects >= 32B.
 
-    prepare <subject>          gate.json + bank/{poetry,basic_readout,moral_rationale}.json from the
+    prepare <subject>          gate.json + bank/{poetry,basic_readout_st,moral_rationale}.json from the
                                subject's adapt profile (gate = the adapt rule, audit drops applied)
     judge <subject> <tag_dir>  re-judge the three own-answer families on the tag's readouts
     score                      gated macro for every subject x stage -> normal_gated/scores.json
@@ -21,7 +21,9 @@ sys.path.insert(0, str(AGAM / "gw-olens/scripts/ola/ar_ablate"))
 sys.path.insert(0, str(WSB / "src"))
 import wsbench_spec as spec  # noqa: E402
 
-REGOLD = ("poetry", "basic_readout", "moral_rationale")
+from wsbench import registry  # noqa: E402
+
+REGOLD = ("poetry", "basic_readout_st", "moral_rationale")
 UNGATED = {"directed_modulation", "multi_concept_directed_modulation"}  # no checkable answer
 MIN_ITEMS = 10
 SUBJECTS = {  # key -> (adapted dir or None, olens_ckpts dir, {stage: tag})
@@ -84,7 +86,7 @@ def prepare(subject: str) -> None:
     for fam in spec.HEADLINE_23:
         if fam in REGOLD or fam in UNGATED:
             continue
-        p = WSB / "evals" / fam / "items.json"
+        p = registry.family_root(fam) / "items.json"
         if not p.exists():
             continue
         g = read_gates(adir / "gate" / f"{fam}.jsonl")
@@ -104,7 +106,7 @@ def prepare(subject: str) -> None:
         src = jl(adir / f"{fam}.json")
         orig_ids = {
             str(i.get("id") or i.get("name"))
-            for i in items_of(jl(WSB / "evals" / fam / "items.json"))
+            for i in items_of(jl(registry.family_root(fam) / "items.json"))
         }
         keep = [
             i
@@ -188,13 +190,23 @@ def fam_value(fam: str, res: dict, keep: set | None) -> tuple:
     return (sum(dec) / len(dec) if dec else None), len(dec)
 
 
+def _rekey_gate(items: dict) -> dict:
+    """A persisted gate map ``<family>/<id> -> ...`` under today's family keys (plan 0101: a map
+    written before the rename has bare keys that mean the single-token family; by the id)."""
+    out = {}
+    for key, v in items.items():
+        fam, _, iid = key.partition("/")
+        out[f"{registry.owner(fam, ids=[iid]) or registry.canonical(fam)}/{iid}"] = v
+    return out
+
+
 def score() -> None:
     result = {}
     for subject, (_, cdir, tags) in SUBJECTS.items():
         gp = OUT / subject / "gate.json"
         if not gp.exists():
             continue
-        gate = jl(gp)["items"]
+        gate = _rekey_gate(jl(gp)["items"])
         result[subject] = {}
         for stage, tag in tags.items():
             td = AGAM / "olens_ckpts" / cdir / "wsb" / tag

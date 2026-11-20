@@ -467,7 +467,7 @@ def invented_foils(row: Mapping[str, Any], mode: str, cnt: Counter, cmap: Mappin
 def names_bridge(value: Any, bridge: str) -> bool:
     """R14: a hop value that names the bridge by one of its forms (ISO-3 "USA" for the United
     States, "UAE dirham"), as a whole-word run."""
-    from wsbench.evals.model_multihop.forms import EXACT_CASE, raw_forms
+    from wsbench.evals.model_specific.model_multihop.forms import EXACT_CASE, raw_forms
 
     try:
         forms = raw_forms(bridge)
@@ -1007,7 +1007,7 @@ def review(
 ) -> dict[str, Any]:
     """Cutoff forms (FORMS), option capitals (CAPITALS) and the judged quality review (REVIEW) for
     every floor miss; all cached in ``review.json`` / ``forms_cutoff.json`` / ``capitals.json``."""
-    from wsbench.evals.model_multihop.forms import country_of
+    from wsbench.evals.model_specific.model_multihop.forms import country_of
 
     gated, fl = _load(model, "gate.json"), _load(model, "floor.json")
     rows = {r["id"]: r for r in pool_rows(limit, model)}
@@ -1103,7 +1103,7 @@ def review(
 
 def capital_named(text: str, options: Sequence[str], caps: Mapping[str, list[str]]) -> list[str]:
     """Capitals of the option countries named (whole word, any case) in ``text``."""
-    from wsbench.evals.model_multihop.forms import country_of
+    from wsbench.evals.model_specific.model_multihop.forms import country_of
 
     out = []
     for o in options:
@@ -1123,8 +1123,8 @@ def build_item(
 ) -> dict[str, Any]:
     """The bank-v2 item (plan 0078 §3; invariants 1, 2, 6, 7). Raises ValueError /
     AssertionError / SystemExit for an item that cannot be built (the caller records why)."""
-    from wsbench.evals.model_multihop import judge as mmj
-    from wsbench.evals.model_multihop.forms import mc_block
+    from wsbench.evals.model_specific.model_multihop import judge as mmj
+    from wsbench.evals.model_specific.model_multihop.forms import mc_block
 
     iid, text = str(row["id"]), str(s["m"])
     ent_full = str(row.get("descriptor") or row.get("entity_name"))
@@ -1255,7 +1255,7 @@ def _reasons(
         out.append("review: capital route (lint)")
     if cn := capital_named(g["m"], [bridge_name(g), *g["foil_names"]], caps):
         out.append(f"review: names the capital {cn}")
-    from wsbench.evals.model_multihop.forms import country_of
+    from wsbench.evals.model_specific.model_multihop.forms import country_of
 
     if any(c and c not in caps for c in map(country_of, [bridge_name(g), *g["foil_names"]])):
         out.append("review: capitals not run")

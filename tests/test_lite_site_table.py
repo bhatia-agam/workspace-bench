@@ -36,7 +36,7 @@ def test_gold_lines_are_counted_by_offset_from_end():
 
 def test_frozen_rule_is_read_by_the_plan(tmp_path, monkeypatch):
     monkeypatch.setattr(readplan, "REPO_ROOT", tmp_path)
-    d = tmp_path / "evals" / "conjunctive_association"
+    d = tmp_path / "evals" / "association" / "conjunctive_association"
     d.mkdir(parents=True)
     assert readplan.frozen_lite_rule("conjunctive_association") == {"kind": "final_token"}
     (d / "lite_rule.json").write_text(

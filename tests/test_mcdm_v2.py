@@ -11,13 +11,13 @@ from summary_fakes import FakeLLM, summary_args
 
 from wsbench import digest, mc, readplan
 from wsbench.banks import load_bank
-from wsbench.evals import multi_concept_directed_modulation as pkg
-from wsbench.evals.multi_concept_directed_modulation import judge, options, prompts
+from wsbench.evals.basic import multi_concept_directed_modulation as pkg
+from wsbench.evals.basic.multi_concept_directed_modulation import judge, options, prompts
 from wsbench.judge_config import JudgeConfig, resolve
 from wsbench.readouts import Cell
 
 REPO = Path(__file__).resolve().parents[1]
-DIR = REPO / "evals/multi_concept_directed_modulation"
+DIR = REPO / "evals/basic/multi_concept_directed_modulation"
 V1, V2 = DIR / "items.json", DIR / "items_v2.json"
 NAME = "multi_concept_directed_modulation"
 SENT = [

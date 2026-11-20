@@ -11,16 +11,18 @@ from conftest import write_sidecar
 from summary_fakes import FakeLLM, digest_lines, first_lines_digest, summary_args
 
 from wsbench import digest, registry
-from wsbench.evals.introspection import judge as ij
-from wsbench.evals.introspection.prompts import PROMPT_VERSION as II_PV
-from wsbench.evals.introspection.prompts import REGEX_LEG_VERSION as II_RX
-from wsbench.evals.introspection.prompts import SYSTEM as II_SYSTEM
-from wsbench.evals.introspection.prompts import SYSTEM_SUMMARY as II_SYSTEM_SUMMARY
-from wsbench.evals.knowledge_cutoff import judge as kj
-from wsbench.evals.knowledge_cutoff.prompts import LETTERS
-from wsbench.evals.knowledge_cutoff.prompts import PROMPT_VERSION as KC_PV
-from wsbench.evals.knowledge_cutoff.prompts import SYSTEM as KC_SYSTEM
-from wsbench.evals.knowledge_cutoff.prompts import SYSTEM_SUMMARY as KC_SYSTEM_SUMMARY
+from wsbench.evals.model_specific.introspection import judge as ij
+from wsbench.evals.model_specific.introspection.prompts import PROMPT_VERSION as II_PV
+from wsbench.evals.model_specific.introspection.prompts import REGEX_LEG_VERSION as II_RX
+from wsbench.evals.model_specific.introspection.prompts import SYSTEM as II_SYSTEM
+from wsbench.evals.model_specific.introspection.prompts import SYSTEM_SUMMARY as II_SYSTEM_SUMMARY
+from wsbench.evals.model_specific.knowledge_cutoff import judge as kj
+from wsbench.evals.model_specific.knowledge_cutoff.prompts import LETTERS
+from wsbench.evals.model_specific.knowledge_cutoff.prompts import PROMPT_VERSION as KC_PV
+from wsbench.evals.model_specific.knowledge_cutoff.prompts import SYSTEM as KC_SYSTEM
+from wsbench.evals.model_specific.knowledge_cutoff.prompts import (
+    SYSTEM_SUMMARY as KC_SYSTEM_SUMMARY,
+)
 
 REPO = Path(__file__).resolve().parents[1]
 II_EXAMPLE = REPO / "examples/readouts/introspection.jsonl"
@@ -51,8 +53,8 @@ def _kc_pre_refill_bank():
 
 @pytest.fixture(autouse=True)
 def _registered():
-    from wsbench.evals.introspection import SPEC as II
-    from wsbench.evals.knowledge_cutoff import SPEC as KC
+    from wsbench.evals.model_specific.introspection import SPEC as II
+    from wsbench.evals.model_specific.knowledge_cutoff import SPEC as KC
 
     registry.FAMILIES.setdefault(II.name, II)
     registry.FAMILIES.setdefault(KC.name, KC)

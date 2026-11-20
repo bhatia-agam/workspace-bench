@@ -2,7 +2,7 @@
 
 import re
 
-from wsbench.evals.buggy_code import prompts
+from wsbench.evals.computational.buggy_code import prompts
 
 
 def test_infer_system_frame_rule():
@@ -47,7 +47,7 @@ def test_show_key_is_a_buggy_code_default_only():
     assert digest.settings(digest._probe({}), "buggy_code").show_key
     assert not digest.settings(digest._probe({}), "user_modeling").show_key
     assert not digest.settings(digest._probe({"summ_showkey": "0"}), "buggy_code").show_key
-    assert digest.settings(digest._probe({"summ_showkey": "1"}), "multihop").show_key
+    assert digest.settings(digest._probe({"summ_showkey": "1"}), "multihop_st").show_key
     # the stamp-bearing config records it only when on (other families' configs are unchanged)
     assert digest.settings(digest._probe({}), "buggy_code").to_json()["show_key"] is True
-    assert "show_key" not in digest.settings(digest._probe({}), "multihop").to_json()
+    assert "show_key" not in digest.settings(digest._probe({}), "multihop_st").to_json()

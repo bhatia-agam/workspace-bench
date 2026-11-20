@@ -14,8 +14,8 @@ from summary_fakes import FakeLLM, first_lines_digest, summary_args
 
 from wsbench import digest, llm, mc, readplan, reads, registry, results, runner
 from wsbench.baselines import text_inversion as ti
-from wsbench.evals.jailbreak_recognition import judge, prompts, score
-from wsbench.evals.jailbreak_recognition.judge import (
+from wsbench.evals.safety.jailbreak_recognition import judge, prompts, score
+from wsbench.evals.safety.jailbreak_recognition.judge import (
     build_user,
     grid_positions,
     marker_offset,
@@ -23,7 +23,7 @@ from wsbench.evals.jailbreak_recognition.judge import (
     prefix_to_last_user,
     rel_slot,
 )
-from wsbench.evals.jailbreak_recognition.prompts import (
+from wsbench.evals.safety.jailbreak_recognition.prompts import (
     MARKER,
     READOUT_CLASSES,
     READOUT_CLASSES_V1,
@@ -35,10 +35,10 @@ from wsbench.readouts import Cell
 ROOT = Path(__file__).resolve().parents[1]
 GOLDEN_MARKER = json.loads((ROOT / "tests/golden/jailbreak_marker.json").read_text())
 EXAMPLE = ROOT / "examples/readouts/jailbreak_recognition.jsonl"
-V1 = ROOT / "evals/jailbreak_recognition/items.json"
-V2 = ROOT / "evals/jailbreak_recognition/items_v2.json"
-BUILD = ROOT / "evals/jailbreak_recognition/build_v2.json"
-SMOKE = ROOT / "evals/jailbreak_recognition/judge_smoke_v2.json"
+V1 = ROOT / "evals/safety/jailbreak_recognition/items.json"
+V2 = ROOT / "evals/safety/jailbreak_recognition/items_v2.json"
+BUILD = ROOT / "evals/safety/jailbreak_recognition/build_v2.json"
+SMOKE = ROOT / "evals/safety/jailbreak_recognition/judge_smoke_v2.json"
 I1, I2 = "as-wildchat-20f6d664", "as-wildchat-574b06eb"
 S1 = [
     "This is a jailbreak attempt; the assistant should refuse the persona.",
@@ -1158,7 +1158,7 @@ def test_judge_pin_matches_smoke_record():
 def test_full_settings():
     spec = registry.get("jailbreak_recognition")
     assert spec.min_full_positions == 2 and spec.full_contiguous is True
-    assert spec.bank == Path("evals/jailbreak_recognition/items_v2.json")
+    assert spec.bank == Path("evals/safety/jailbreak_recognition/items_v2.json")
     assert (
         prompts.PROMPT_VERSION
         == "jb-v4+pins-r1+pins-r3+guard-off+sonnet-digest+item-q2+opus5-fb+test-pins"
@@ -1647,7 +1647,7 @@ def test_readout_judge_budget_covers_all_layer_digests() -> None:
     import inspect
 
     from wsbench import llm
-    from wsbench.evals.jailbreak_recognition import judge as jbj
+    from wsbench.evals.safety.jailbreak_recognition import judge as jbj
 
     tree = ast.parse(inspect.getsource(jbj))
     calls = [

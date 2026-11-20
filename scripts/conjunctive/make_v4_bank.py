@@ -1,4 +1,5 @@
-"""Build ``evals/conjunctive_association/items_v4.json``: v3 + wider option lists (round 4,
+"""Build ``evals/association/conjunctive_association/items_v4.json``: v3 + wider option lists
+(round 4,
 Fable's binding decision on #202: "WIDEN the option lists: Opus-authored same-topic confusers so
 each list has ~16-22 non-twin options ... keep the inverted/contrast twins as distractors, new
 bank version"). v3 (and v2, v1) stay frozen byte for byte.
@@ -49,9 +50,9 @@ from make_v3_bank import AVOID as V3_AVOID
 from make_v3_bank import SLOTS as V3_SLOTS
 
 ROOT = Path(__file__).resolve().parents[2]
-V3 = ROOT / "evals/conjunctive_association/items_v3.json"
-V4 = ROOT / "evals/conjunctive_association/items_v4.json"
-VALUES = ROOT / "evals/conjunctive_association/v4_new_values.json"
+V3 = ROOT / "evals/association/conjunctive_association/items_v3.json"
+V4 = ROOT / "evals/association/conjunctive_association/items_v4.json"
+VALUES = ROOT / "evals/association/conjunctive_association/v4_new_values.json"
 READOUTS = Path(
     "/workspace/root/wsb-bp/readouts/final-olens-rl600-x4/conjunctive_association.jsonl"
 )

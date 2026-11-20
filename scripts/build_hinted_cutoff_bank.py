@@ -2,9 +2,10 @@
 
     python scripts/build_hinted_cutoff_bank.py --frozen <gw>/evals/chint_cutoff/frozen_v2.json \
         --scores <gw>/evals/chint_cutoff/frozen_v2_scores.json [--gw-commit <sha>] \
-        --out evals/hinted_cutoff/items_v2.json
+        --out evals/model_specific/hinted_cutoff/items_v2.json
 
-(v1: ``--frozen <gw>/evals/chint_cutoff/frozen_v1.json --out evals/hinted_cutoff/items.json``.)
+(v1: ``--frozen <gw>/evals/chint_cutoff/frozen_v1.json --out
+evals/model_specific/hinted_cutoff/items.json``.)
 
 A pure transform (no tokenizer, no GPU). Plan 0064: every reader sees the PROMPT only, so items
 ship the prompt ids (``input_ids[:n_prompt]``), no reply text and no reply span; the read
@@ -16,7 +17,7 @@ import hashlib
 import json
 from pathlib import Path
 
-OUT = Path("evals/hinted_cutoff/items_v2.json")
+OUT = Path("evals/model_specific/hinted_cutoff/items_v2.json")
 # plan 0074: the gw reader results a v2 header carries (frozen_v2_scores.json keys)
 READER_KEYS = (
     "prompttext", "predict_single", "predict_normal", "logit", "olens_v2", "mlnla", "jlens",

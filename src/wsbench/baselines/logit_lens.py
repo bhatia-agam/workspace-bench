@@ -141,10 +141,8 @@ def _plan_sha(family: str, readouts: Path, path: Path, config: dict[str, Any]) -
     tied to the run only by ``config.reader`` and the directory the caller names."""
     from wsbench import reads, registry
 
-    names = [
-        family,
-        *([registry.HASH_FAMILY_NAMES[family]] if family in registry.HASH_FAMILY_NAMES else []),
-    ]
+    # every key the family's file may sit under (never its hash name: an opaque hash input)
+    names = registry.lookup_names(family)
     meta_p = next((readouts / f"{n}.jsonl.meta.json" for n in names
                    if (readouts / f"{n}.jsonl.meta.json").exists()), None)  # fmt: skip
     if meta_p is None:

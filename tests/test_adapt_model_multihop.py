@@ -7,7 +7,7 @@ import re
 import pytest
 
 from wsbench.adapt import mmh, refill, run, store
-from wsbench.evals.model_multihop.forms import country_of
+from wsbench.evals.model_specific.model_multihop.forms import country_of
 
 MODEL = "qwen3.5-4b"
 SFX = mmh.SUFFIX
@@ -390,9 +390,11 @@ def test_registered_forms_recomputed_from_the_bank():
     """R16: the order-independent mc fields of every registered item rebuild through forms.py."""
     from pathlib import Path
 
-    from wsbench.evals.model_multihop.forms import mc_block
+    from wsbench.evals.model_specific.model_multihop.forms import mc_block
 
-    bank = json.loads(Path("evals/model_multihop/items.json").read_text(encoding="utf-8"))
+    bank = json.loads(
+        Path("evals/model_specific/model_multihop/items.json").read_text(encoding="utf-8")
+    )
     for it in bank["items"]:
         block, _w = mc_block(
             it["id"], it["mc"]["gold"], [o for o in it["mc"]["order"] if o != it["mc"]["gold"]]

@@ -10,10 +10,14 @@ import pytest
 from conftest import native_args, write_sidecar
 
 from wsbench import readplan
-from wsbench.evals import knowledge_cutoff
-from wsbench.evals.knowledge_cutoff import judge
-from wsbench.evals.knowledge_cutoff.prompts import LETTERS, PROMPT_VERSION, SUBJECT_USER
-from wsbench.evals.knowledge_cutoff.score import (
+from wsbench.evals.model_specific import knowledge_cutoff
+from wsbench.evals.model_specific.knowledge_cutoff import judge
+from wsbench.evals.model_specific.knowledge_cutoff.prompts import (
+    LETTERS,
+    PROMPT_VERSION,
+    SUBJECT_USER,
+)
+from wsbench.evals.model_specific.knowledge_cutoff.score import (
     OptionForms,
     best_layer,
     compile_form,

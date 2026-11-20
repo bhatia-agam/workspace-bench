@@ -14,10 +14,10 @@ from summary_fakes import FakeLLM, summary_args
 from wsbench import digest, mc, readplan, reads, registry
 from wsbench.banks import item_targets, load_bank
 from wsbench.cli import main
-from wsbench.evals.poetry import judge as pj
-from wsbench.evals.poetry import options as po
-from wsbench.evals.poetry import prompts as pp
-from wsbench.evals.poetry import score
+from wsbench.evals.basic.poetry import judge as pj
+from wsbench.evals.basic.poetry import options as po
+from wsbench.evals.basic.poetry import prompts as pp
+from wsbench.evals.basic.poetry import score
 from wsbench.judge_config import JudgeConfig, resolve
 from wsbench.readouts import Cell
 from wsbench.results import read_results
@@ -40,7 +40,7 @@ ITEM = {
 
 
 def _spec():
-    from wsbench.evals.poetry import SPEC
+    from wsbench.evals.basic.poetry import SPEC
 
     registry.FAMILIES.setdefault(SPEC.name, SPEC)
     return SPEC
@@ -126,7 +126,7 @@ def test_bank_and_targets():
     # round 4 (MC leakage standard): bank v3 = v2 with re-chosen rhyme distractors; bank v4 = v3
     # with every observed v2 confuser kept (PR #214 review r5); bank v5 = the same rebuild that
     # also keeps every v2 option a v2 non-pass digest ends a line with (review r7)
-    assert registry.bank_path("poetry") == REPO / "evals/poetry/items_v5.json"
+    assert registry.bank_path("poetry") == REPO / "evals/basic/poetry/items_v5.json"
     assert header["family"] == "poetry" and header["version"] == 5
     assert len(items) == header["n_items"]
     first = next(it for it in items if it["name"] == "couplet-gray-day")
@@ -142,7 +142,7 @@ def test_registered_spec_and_readme():
     assert pp.MC_PROMPT_VERSION == pp.BANK_GATE_INSTRUMENT == "poetry-mc-2026-11-01-v5"
     assert spec.metric == "pass_rate" and spec.not_in_macro == "" and not spec.targets_judge
     assert spec.min_full_positions == 2 and spec.full_contiguous and spec.task_note
-    readme = (REPO / "evals/poetry/README.md").read_text(encoding="utf-8")
+    readme = (REPO / "evals/basic/poetry/README.md").read_text(encoding="utf-8")
     assert pp.SYSTEM in readme and pp.PROMPT_VERSION in readme
     assert pp.MC_SYSTEM in readme and pp.MC_PROMPT_VERSION in readme and pp.USER in readme
 
@@ -274,7 +274,7 @@ def test_bank_v2_opus_gate_recorded():
                        limit=0, allow_missing=False, concurrency=1, rpm=1.0, dry_run=False,
                        extra={"aggregate": "summary"})  # fmt: skip
     # bank v5 is frozen: its per-item records stay under the MC instrument they were written by;
-    # the headline (free-response) re-verification is evals/poetry/opus_gate_free.json
+    # the headline (free-response) re-verification is evals/basic/poetry/opus_gate_free.json
     want = reads.strip_reads(digest.prompt_version(pp.BANK_GATE_INSTRUMENT, args, "poetry"))
     for it in items:
         rec = it["prompt_only_opus"]
@@ -687,7 +687,7 @@ _DAY = ["way", "say", "play", "stay"]
     ],
 )
 def test_gate_rejects_lists_and_descriptions(word, text, others):
-    from wsbench.evals.poetry.judge import show_breaks
+    from wsbench.evals.basic.poetry.judge import show_breaks
 
     for t in (text, show_breaks(text)):
         assert not score.prose_ok(word, t, others), t
@@ -862,7 +862,7 @@ def test_poetry_plan_emits_full_and_lite():
 
 def test_readme_counts_match_the_bank():
     _header, items = load_bank(registry.bank_path("poetry"))
-    readme = (REPO / "evals/poetry/README.md").read_text(encoding="utf-8")
+    readme = (REPO / "evals/basic/poetry/README.md").read_text(encoding="utf-8")
     assert f"{len(items)} items" in readme
 
 
@@ -938,7 +938,7 @@ def test_free_leg_cuts_at_the_read_site():
 def test_bank_v2_read_site_leg_recorded():
     """The README states the scored latent and the bank's read-site hit count."""
     header, items = load_bank(registry.bank_path("poetry"))
-    readme = (REPO / "evals/poetry/README.md").read_text(encoding="utf-8")
+    readme = (REPO / "evals/basic/poetry/README.md").read_text(encoding="utf-8")
     hits = sum(it["regate"]["site_hits"] for it in items)
     assert hits == header["qwen_regate"]["bank_site_hits"]
     assert "**Scored latent:**" in readme and f"{hits:,} of {11 * len(items):,}" in readme
@@ -969,7 +969,7 @@ def test_bank_v2_read_site_leg_recorded():
     ],
 )
 def test_line_final_rejects_reviewer_shapes(word, text, others):
-    from wsbench.evals.poetry.judge import show_breaks
+    from wsbench.evals.basic.poetry.judge import show_breaks
 
     for t in (text, show_breaks(text)):
         assert not score.line_final(word, t, others), t
@@ -991,7 +991,7 @@ _SUN = "The sun was shining on that summer day,\nThe children laughed and ran ou
     ],
 )
 def test_line_final_still_accepts_real_verse(word, text):
-    from wsbench.evals.poetry.judge import show_breaks
+    from wsbench.evals.basic.poetry.judge import show_breaks
 
     for t in (text, show_breaks(text)):
         assert score.line_final(word, t, ["way", "say", "bed"]), t
@@ -1114,10 +1114,10 @@ def test_bank_v3_changes_only_the_distractors_and_opus_still_fails():
     filters, so ``option_set`` shows exactly them); everything else is v2's, except the Opus gate
     record, re-judged under the v3 instrument on the cached gate draws: Opus still picks the gold
     on 0 of 100 items x 3 draws (decision Q7)."""
-    from wsbench.evals.poetry.options import N_DISTRACTORS, candidate_ok, option_set
+    from wsbench.evals.basic.poetry.options import N_DISTRACTORS, candidate_ok, option_set
 
-    _h2, v2 = load_bank(REPO / "evals/poetry/items_v2.json")
-    h3, v3 = load_bank(REPO / "evals/poetry/items_v3.json")
+    _h2, v2 = load_bank(REPO / "evals/basic/poetry/items_v2.json")
+    h3, v3 = load_bank(REPO / "evals/basic/poetry/items_v3.json")
     assert h3["supersedes"] == "items_v2.json" and "mc_leakage" in h3
     assert [it["id"] for it in v2] == [it["id"] for it in v3]
     for a, b in zip(v2, v3, strict=True):
@@ -1157,7 +1157,7 @@ V4_OBSERVED = {  # the review's cited dropped confusers (bank v2 options the cac
 
 
 def _bank(v: str) -> dict[str, dict]:
-    _h, items = load_bank(REPO / f"evals/poetry/items_{v}.json")
+    _h, items = load_bank(REPO / f"evals/basic/poetry/items_{v}.json")
     return {it["id"]: it for it in items}
 
 
@@ -1172,7 +1172,7 @@ def test_bank_v4_keeps_every_observed_confuser():
     observed v2 confuser (judge pick or dominance-veto rival, ``mc_leakage.observed.kept``) back
     on the shown list; nothing but the options and the re-judged Opus gate record changes, and
     Opus still fails every item (decision Q7)."""
-    h4 = json.loads((REPO / "evals/poetry/items_v4.json").read_text(encoding="utf-8"))
+    h4 = json.loads((REPO / "evals/basic/poetry/items_v4.json").read_text(encoding="utf-8"))
     assert h4["version"] == 4 and h4["supersedes"] == "items_v3.json"
     obs = h4["mc_leakage"]["observed"]
     v2, v3, v4 = _bank("v2"), _bank("v3"), _bank("v4")
@@ -1220,7 +1220,7 @@ def test_bank_v4_line_one_homophone_lint_both_ways():
     assert "passed" in _shown(v4["v3-po-past-last"]) and "bough" in _shown(v4["v3-po-bow-now"])
     for iid, b in v4.items():
         twins = {c for c in _shown(b) if po.candidate_ok(b, c) == po.LINE_ONE_TWIN}
-        kept = set(json.loads((REPO / "evals/poetry/items_v4.json").read_text("utf-8"))
+        kept = set(json.loads((REPO / "evals/basic/poetry/items_v4.json").read_text("utf-8"))
                    ["mc_leakage"]["observed"]["kept"].get(iid, {}))  # fmt: skip
         assert twins <= kept, iid
 
@@ -1274,7 +1274,7 @@ def test_bank_v5_keeps_every_v2_line_ending_of_a_failing_digest():
     option on v5's list, an option leaves only for a recorded reason, nothing but the options and
     the re-judged Opus gate record changes from v3, and Opus still fails every item under v5's
     stamp (decision Q7)."""
-    h5 = json.loads((REPO / "evals/poetry/items_v5.json").read_text(encoding="utf-8"))
+    h5 = json.loads((REPO / "evals/basic/poetry/items_v5.json").read_text(encoding="utf-8"))
     assert h5["version"] == 5 and h5["supersedes"] == "items_v4.json"
     assert h5["built_from"] == "items_v3.json"
     obs = h5["mc_leakage"]["observed"]
@@ -1287,7 +1287,7 @@ def test_bank_v5_keeps_every_v2_line_ending_of_a_failing_digest():
         assert any(e.startswith("line end: ") for e in obs["kept"][iid][word]), iid
     for iid, kept in obs["kept"].items():
         assert set(kept) <= set(_shown(v2[iid])) and set(kept) <= set(_shown(v5[iid])), iid
-    k4 = json.loads((REPO / "evals/poetry/items_v4.json").read_text("utf-8"))
+    k4 = json.loads((REPO / "evals/basic/poetry/items_v4.json").read_text("utf-8"))
     for iid, kept in k4["mc_leakage"]["observed"]["kept"].items():
         assert set(kept) <= set(_shown(v5[iid])), iid
     for iid, why in obs["dropped"].items():
@@ -1568,7 +1568,7 @@ def test_opus_gate_free_record_of_the_registered_bank():
     registered (frozen) bank file."""
     import hashlib
 
-    path = REPO / "evals/poetry/opus_gate_free.json"
+    path = REPO / "evals/basic/poetry/opus_gate_free.json"
     doc = json.loads(path.read_text(encoding="utf-8"))
     bank_file = registry.bank_path("poetry")
     _h, items = load_bank(bank_file)

@@ -13,7 +13,7 @@ import json
 import sys
 from pathlib import Path
 
-from wsbench.evals.relational_multihop.judge import build_options
+from wsbench.evals.anti_bag_of_features.relational_multihop.judge import build_options
 from wsbench.mcjudge import load_bank
 
 GOLDEN = Path(__file__).resolve().parents[1] / "tests/golden"

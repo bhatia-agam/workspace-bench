@@ -12,7 +12,7 @@ from conftest import native_args
 
 from wsbench import nocot, readplan
 from wsbench.baselines import text_inversion as ti
-from wsbench.evals.knowledge_cutoff import judge
+from wsbench.evals.model_specific.knowledge_cutoff import judge
 
 HEADER, OBSCURE = nocot.load_obscure()
 FROZEN = json.loads((judge.bank_path("knowledge_cutoff")).read_text(encoding="utf-8"))["items"]
@@ -166,8 +166,8 @@ def test_ati_entry_is_offline_and_current(monkeypatch, real_families):
 
 
 def test_judge_reports_by_source(tmp_path, monkeypatch):
-    from wsbench.evals import knowledge_cutoff
-    from wsbench.evals.knowledge_cutoff.prompts import LETTERS
+    from wsbench.evals.model_specific import knowledge_cutoff
+    from wsbench.evals.model_specific.knowledge_cutoff.prompts import LETTERS
     from wsbench.judge_config import resolve
 
     fz, ob = FROZEN[0], OBSCURE[0]

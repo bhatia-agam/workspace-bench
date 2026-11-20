@@ -139,7 +139,7 @@ def test_restamp_poetry_and_implicit():
     item = restamp("poetry", {"name": "p", "intermediates": ["June"]}, rec)
     assert item["intermediates"] == ["noon"] and item["authored_rhyme"] == "June"
     imp = {"name": "i", "subfamily": "implicit", "target": "poker", "units": [{"match": ["poker"]}]}
-    out = restamp("basic_readout", imp, {"legs": {"surface": {"own": "chess"}}})
+    out = restamp("basic_readout_st", imp, {"legs": {"surface": {"own": "chess"}}})
     assert out["target"] == "chess" and out["units"][0]["match"] == ["chess"]
 
 
@@ -155,10 +155,13 @@ def test_remap_layers():
 
 
 def test_bank_root_override(tmp_path, monkeypatch):
-    assert registry.bank_path("typo") == registry.REPO_ROOT / "evals" / "typo" / "items.json"
-    (tmp_path / "typo.json").write_text("[]")
+    assert (
+        registry.bank_path("typo_st")
+        == registry.REPO_ROOT / "evals" / "basic" / "typo_st" / "items.json"
+    )
+    (tmp_path / "typo_st.json").write_text("[]")
     monkeypatch.setenv(registry.BANK_ROOT_ENV, str(tmp_path))
-    assert registry.bank_path("typo") == tmp_path / "typo.json"
+    assert registry.bank_path("typo_st") == tmp_path / "typo_st.json"
     with pytest.raises(SystemExit):  # never a silent fall-back to another model's bank
         registry.bank_path("poetry")
 
@@ -197,7 +200,8 @@ def test_author_briefs_render_offline(tmp_path, monkeypatch):
     monkeypatch.setattr(store, "model_dir", lambda model, root=None: tmp_path / model)
     for family, brief in author.BRIEFS.items():
         text = author.render_brief("demo", family, next(iter(brief.tiers)), 5, "steer me")
-        assert family in text and "steer me" in text
+        # the brief names the family by its pre-0101 key (plan 0101 F12: same prompt bytes)
+        assert registry.frozen_name(family) in text and "steer me" in text
         assert all(inv in text for inv in brief.invariants)
         # few-shots come from the bank when the subject has passed nothing yet
         assert '"' + next(iter(brief.keys)) + '"' in text
@@ -248,9 +252,9 @@ def test_author_parse_survives_one_bad_object():
 def test_multilingual_mt_build_roundtrip():
     from wsbench.adapt import author
 
-    _h, items = original_bank("multilingual_mt")
+    _h, items = original_bank("multilingual")
     orig = items[0]
-    keys = author.BRIEFS["multilingual_mt"].keys
+    keys = author.BRIEFS["multilingual"].keys
     flat = {k: v for k, v in author._flat_mt(orig).items() if k in keys}
     built = author._mt_multilingual(dict(flat))
     assert [u["forms"] for u in built["units"]] == [u["forms"] for u in orig["units"]]
@@ -258,12 +262,12 @@ def test_multilingual_mt_build_roundtrip():
 
 
 def test_multilingual_build_roundtrip_emits_v2():
-    """Review r2 item 1: the ``multilingual`` brief builds the v2 item (concept_native +
+    """Review r2 item 1: the ``multilingual_st`` brief builds the v2 item (concept_native +
     names-only language, mc_roles, digits on number concepts), so a port is never v1-shaped."""
     from wsbench.adapt import author
 
-    _h, items = original_bank("multilingual")
-    keys = author.BRIEFS["multilingual"].keys
+    _h, items = original_bank("multilingual_st")
+    keys = author.BRIEFS["multilingual_st"].keys
     for orig in items:
         flat = {k: v for k, v in author._flat_mt(orig).items() if k in keys}
         built = author._ml_multilingual(copy.deepcopy(flat))
@@ -363,7 +367,9 @@ def test_readplan_uses_subject_layers_under_an_adapted_root(tmp_path, monkeypatc
     from wsbench import readplan
 
     (tmp_path / "report.json").write_text(_json.dumps({"n_layers": 32}))
-    bank = _json.loads((registry.REPO_ROOT / "evals/agentic_misalignment/items.json").read_text())
+    bank = _json.loads(
+        (registry.REPO_ROOT / "evals/safety/agentic_misalignment/items.json").read_text()
+    )
     (tmp_path / "agentic_misalignment.json").write_text(_json.dumps(bank))
     monkeypatch.setenv(registry.BANK_ROOT_ENV, str(tmp_path))
     layers = readplan.plan("agentic_misalignment")[0].layers
@@ -399,10 +405,10 @@ def test_regrade_keeps_moral_checks():
 def test_lint_catches_the_audit_defect_classes():
     from wsbench.adapt.gate import Ask, grade_leg
 
-    # multilingual: 'pommier' carries the target 'pomme' (audit 4B fr-fruit-apple-tree)
+    # multilingual_st: 'pommier' carries the target 'pomme' (audit 4B fr-fruit-apple-tree)
     ml = {"name": "x", "prompt": 'Le fruit du pommier est la "', "target": "pomme",
           "intermediates": ["apple"], "eval_render": "plain", "readout": {}}  # fmt: skip
-    assert any("stem" in p for p in lint("multilingual", ml))
+    assert any("stem" in p for p in lint("multilingual_st", ml))
     # multilingual_multihop: bridge 'Sydney Opera House' overlaps the answer 'Sydney' (audit 9B)
     mh = {"name": "y", "subfamily": "2hop", "prompt": "Gedung opera itu ada di kota", "target":
           "Sydney", "target_alts": [], "readout": {"kind": "final_prompt_token"},
@@ -476,9 +482,9 @@ def test_live_rows_restamps_before_select_for_a_new_tokenizer(monkeypatch):
     monkeypatch.setattr(store, "gated", lambda m, f: rows)
     monkeypatch.setattr(run, "restamp_tokens", lambda m, f, items: ([items[0]], ["note"]))
     monkeypatch.setattr(run, "get_subject", lambda m: SimpleNamespace(tokenizer="dolma2"))
-    assert [r["id"] for r in run.live_rows("x", "typo_mt", {})] == ["a"]
+    assert [r["id"] for r in run.live_rows("x", "typo", {})] == ["a"]
     monkeypatch.setattr(run, "get_subject", lambda m: SimpleNamespace(tokenizer="qwen3.6"))
-    assert len(run.live_rows("x", "typo_mt", {})) == 2
+    assert len(run.live_rows("x", "typo", {})) == 2
 
 
 def test_arith_cell_reanchored_on_the_subject_turn_end():
@@ -535,7 +541,7 @@ def test_glm53_read_band_is_its_jlens_rows():
 
 def test_strict_form_needs_the_accents_in_the_deterministic_match():
     """OLMo-32B audit: fold() strips accents, so "frio" passed for "frío" pre-grader."""
-    asks = fams.FAMILIES["multilingual"].asks(
+    asks = fams.FAMILIES["multilingual_st"].asks(
         {
             "name": "x",
             "prompt": "Lo contrario de caliente es ",
@@ -602,8 +608,11 @@ def test_role_bound_strict_requires_stated_roles(monkeypatch):
 def test_role_bound_lint_flags_unlexiconed_role():
     """plan 0055 C2.5: an authored role missing from roles_v1.json is flagged; the judge then
     falls back to terms=[role] with no near-role distractor, counted in n_roles_unlexiconed."""
-    from wsbench.evals.role_bound_association import gate
-    from wsbench.evals.role_bound_association.judge import build_block_v2, load_items
+    from wsbench.evals.anti_bag_of_features.role_bound_association import gate
+    from wsbench.evals.anti_bag_of_features.role_bound_association.judge import (
+        build_block_v2,
+        load_items,
+    )
 
     item = {
         "id": "x-ab",
@@ -829,7 +838,7 @@ def test_freeze_builds_originals_from_the_registered_item(tmp_path, monkeypatch)
         assert got[it["id"]]["adapt"]["origin"] == "original"
     rep = _json.loads((d / "report.json").read_text())
     e = rep["families"]["association"]
-    assert e["bank_version"] == 5 and e["bank"] == "evals/association/items_v5.json"
+    assert e["bank_version"] == 5 and e["bank"] == "evals/basic/association/items_v5.json"
     assert "read_plan_bank" not in bank  # the set plans its own items
     wb = rep["families"]["wrong_intermediate"]
     assert wb["status"] == "absent" and wb["note"] == "Phase B: later"  # never overwritten
@@ -929,36 +938,36 @@ def test_native_langs_file_and_freeze_refusal(tmp_path, monkeypatch):
     from wsbench.adapt import run
 
     d = _set(tmp_path, monkeypatch)
-    _h, items = original_bank("typo_mt")
-    _gate_log(d, "typo_mt", [_row(items[0])])
+    _h, items = original_bank("typo")
+    _gate_log(d, "typo", [_row(items[0])])
     with pytest.raises(SystemExit, match=r"native_langs\.json"):
-        run.freeze("qwen3.5-4b", ["typo_mt"])
+        run.freeze("qwen3.5-4b", ["typo"])
     with pytest.raises(SystemExit, match="English first"):
         nl.record("qwen3.5-4b", ["ja", "en"], "measured")
     with pytest.raises(SystemExit, match="evidence"):
         nl.record("qwen3.5-4b", ["en"], " ")
     nl.record("qwen3.5-4b", ["en", "zh"], "plan 0054 R6 on the subject, thinking off")
-    run.freeze("qwen3.5-4b", ["typo_mt"])
-    bank = _json.loads((d / "typo_mt.json").read_text())
+    run.freeze("qwen3.5-4b", ["typo"])
+    bank = _json.loads((d / "typo.json").read_text())
     assert bank["contract"]["native_langs"] == ["en", "zh"]
     nl.record("qwen3.5-4b", ["en", "ja"], "plan 0054 R6")
     with pytest.raises(SystemExit, match="not rebuilt"):
-        run.freeze("qwen3.5-4b", ["typo_mt"])
+        run.freeze("qwen3.5-4b", ["typo"])
     rebuilt = copy.deepcopy(items[0])
     rebuilt[nl.MARKER] = ["en", "ko"]  # rebuilt, but for other languages
-    _gate_log(d, "typo_mt", [_row(rebuilt)])
+    _gate_log(d, "typo", [_row(rebuilt)])
     with pytest.raises(SystemExit, match="not rebuilt"):
-        run.freeze("qwen3.5-4b", ["typo_mt"])
+        run.freeze("qwen3.5-4b", ["typo"])
     rebuilt[nl.MARKER] = ["en", "ja"]
     rebuilt["units"] = [{**rebuilt["units"][0], "match": ["ja-form"]}]
-    _gate_log(d, "typo_mt", [_row(rebuilt)])
+    _gate_log(d, "typo", [_row(rebuilt)])
     # plan 0072: a rebuild must also name the registered item it was rebuilt from
     with pytest.raises(SystemExit, match="not rebuilt"):
-        run.freeze("qwen3.5-4b", ["typo_mt"])
+        run.freeze("qwen3.5-4b", ["typo"])
     rebuilt[nl.SOURCE_KEY] = nl.source_sha(items[0])
-    _gate_log(d, "typo_mt", [_row(rebuilt)])
-    run.freeze("qwen3.5-4b", ["typo_mt"])
-    out = _json.loads((d / "typo_mt.json").read_text())
+    _gate_log(d, "typo", [_row(rebuilt)])
+    run.freeze("qwen3.5-4b", ["typo"])
+    out = _json.loads((d / "typo.json").read_text())
     assert out["contract"]["native_langs"] == ["en", "ja"]
     assert out["items"][0]["units"][0]["match"] == ["ja-form"]
 
@@ -1095,17 +1104,17 @@ def test_absence_clears_when_another_writer_builds_the_family(tmp_path, monkeypa
 
 
 def test_freeze_writes_nothing_when_any_family_is_refused(tmp_path, monkeypatch):
-    """One refused family (typo_mt: no native_langs.json) stops a freeze that would have
+    """One refused family (typo: no native_langs.json) stops a freeze that would have
     written another (association)."""
     from wsbench.adapt import run
 
     d = _set(tmp_path, monkeypatch)
     _h, assoc = original_bank("association")
-    _h, typo = original_bank("typo_mt")
+    _h, typo = original_bank("typo")
     _gate_log(d, "association", [_row(assoc[0])])
-    _gate_log(d, "typo_mt", [_row(typo[0])])
-    with pytest.raises(SystemExit, match="typo_mt"):
-        run.freeze("qwen3.5-4b", ["association", "typo_mt"])
+    _gate_log(d, "typo", [_row(typo[0])])
+    with pytest.raises(SystemExit, match="typo"):
+        run.freeze("qwen3.5-4b", ["association", "typo"])
     assert not (d / "association.json").exists() and not (d / "report.json").exists()
 
 
@@ -1121,7 +1130,7 @@ def test_floor_record_protocol_falls_back_to_the_frozen_file(tmp_path):
     assert cli._floor_record("prompt_only", src, tmp_path / "x.json")["protocol"] == "po-opus-v1"
 
 
-@pytest.mark.parametrize("family", ["knowledge_cutoff", "multihop_mt"])
+@pytest.mark.parametrize("family", ["knowledge_cutoff", "multihop"])
 def test_freeze_ships_subject_stage_originals_verbatim(family, tmp_path, monkeypatch):
     """Families with their own subject stage (kcutoff, mhmt2, msdm, wrong_intermediate) write
     `original` rows already rebuilt on the subject: freeze ships the row's item, never the

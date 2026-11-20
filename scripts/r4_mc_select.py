@@ -33,13 +33,14 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 import r4_mc_distractors as gen
 
+from wsbench import registry
 from wsbench.baselines import lucky_guessing as lg
 from wsbench.llm import schema_block, stream_json
 from wsbench.mc import seeded_shuffle as wb_shuffle
 from wsbench.multitoken.options import seeded_shuffle as mt_shuffle
-from wsbench.registry import REPO_ROOT, hash_name
+from wsbench.registry import hash_name
 
-FAMILIES = ("wrong_intermediate", "basic_readout_mt", "multihop_mt", "multilingual_multihop")
+FAMILIES = ("wrong_intermediate", "basic_readout", "multihop", "multilingual_multihop")
 DRAWS = 5
 # a list fails the gate when either guesser picks its gold in 3 or more of the 5 draws (a firm
 # preference: a guesser with no information still settles on one option, so 2 of 5 is chance)
@@ -107,7 +108,7 @@ def option_order(family: str, it: dict[str, Any], role: str, gold: str, ds: list
 def _bank(family: str) -> dict[str, dict[str, Any]]:
     from wsbench.banks import load_bank
 
-    _h, items = load_bank(REPO_ROOT / "evals" / family / "items_v2.json")
+    _h, items = load_bank(registry.family_root(family) / "items_v2.json")
     return {str(it["id"]): it for it in items}
 
 
@@ -311,7 +312,7 @@ def main(argv: list[str] | None = None) -> int:
             "gate": {"draws": DRAWS, "max_gold_picks": MAX_GOLD_PICKS, "rounds": ROUNDS},
             "items": dict(sorted(out_items.items())),
         }
-        path = REPO_ROOT / "evals" / family / "r4_distractors.json"
+        path = registry.family_root(family) / "r4_distractors.json"
         path.write_text(json.dumps(doc, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
         n_over = sum(1 for v in best.values() if v[0] > MAX_GOLD_PICKS)
         print(f"{family}: wrote {path} ({len(best)} lists, {n_over} still over the gate)")

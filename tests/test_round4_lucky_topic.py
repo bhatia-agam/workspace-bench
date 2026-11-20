@@ -1,7 +1,6 @@
 """Round 4 (Camila r2 MC leakage standard): the lucky-guessing ``topic`` guesser and the
 conjunctive family rule recorded beside the per-draw mean."""
 
-import importlib
 import json
 from pathlib import Path
 
@@ -18,7 +17,7 @@ TOPIC_FAMILIES = ("conjunctive_association", "role_bound_association")
 @pytest.fixture(autouse=True)
 def _all_families():
     for name in lg.BUILDERS:
-        spec = importlib.import_module(f"wsbench.evals.{name}").SPEC
+        spec = registry.family_module(name).SPEC
         registry.FAMILIES.setdefault(spec.name, spec)
 
 
@@ -49,7 +48,7 @@ def test_topic_message_holds_task_topic_and_lists_but_no_example():
     assert topics[items[0].id] in msg and msg.endswith(lg.render_lists(items[0]))
     assert "(correct)" not in msg  # no solved examples, no gold mark
     with pytest.raises(ValueError, match="no topic file"):
-        lg.load_topics("typo_mt")
+        lg.load_topics("typo")
 
 
 def test_topic_variant_runs_and_records_its_topics_version(tmp_path, monkeypatch):
@@ -83,7 +82,7 @@ def test_frozen_floors_are_read_by_the_standard():
     """review of #202 round 4: the frozen conjunctive floors are read under the family's rule
     (``lucky_guessing.standard``: ``family_rule`` against ``family_chance``), not the per-draw
     mean against the per-draw uniform (which passed while the rule failed); the verdicts are
-    recorded in evals/conjunctive_association/README.md (Floors)."""
+    recorded in evals/association/conjunctive_association/README.md (Floors)."""
     e = lg.floors()["conjunctive_association"]
     rows = {(r["variant"], r["rule"]): r for r in lg.standard("conjunctive_association", e)}
     for v in ("blind", "described", "topic"):
@@ -95,16 +94,16 @@ def test_frozen_floors_are_read_by_the_standard():
 # merge of #202 with main: the per-list topic labels (main, an ``items`` map) and the per-item
 # story lines (#202, a ``topics`` map) share TOPICS_DIR; ``topic_form`` routes each family
 def test_topic_form_routes_each_file_form():
-    assert lg.topic_form("basic_readout_mt") == "lists"
+    assert lg.topic_form("basic_readout") == "lists"
     assert lg.topic_form("role_bound_association") == "item"
     assert lg.topic_form("conjunctive_association") == "item"
-    assert lg.topic_form("typo_mt") is None
+    assert lg.topic_form("typo") is None
 
 
 def test_list_form_topic_message_heads_lists_and_shows_examples():
-    items = lg.with_topics(lg.build_family("basic_readout_mt"), "basic_readout_mt")
-    ex = lg.pick_examples(items, 0, "basic_readout_mt", 0)
-    msg = lg.user_message(items[0], "topic", "basic_readout_mt", ex)
+    items = lg.with_topics(lg.build_family("basic_readout"), "basic_readout")
+    ex = lg.pick_examples(items, 0, "basic_readout", 0)
+    msg = lg.user_message(items[0], "topic", "basic_readout", ex)
     assert "(topic: " in msg and "(correct)" in msg  # list labels + solved examples
     assert msg.endswith(lg.render_lists(items[0], topics=True))
 
@@ -115,12 +114,12 @@ def test_item_form_topic_message_never_uses_list_labels():
     assert "(topic: " not in msg and "(correct)" not in msg
     assert lg.load_topics("conjunctive_association")[items[0].id] in msg
     with pytest.raises(ValueError, match="no topics map"):
-        lg.load_topics("basic_readout_mt")  # a list-form file is not read as item lines
+        lg.load_topics("basic_readout")  # a list-form file is not read as item lines
 
 
 def test_topic_variant_without_a_topic_file_raises():
-    items = lg.build_family("typo_mt")
+    items = lg.build_family("typo")
     with pytest.raises(ValueError, match="no topic file"):
-        lg.user_message(items[0], "topic", "typo_mt", None)
+        lg.user_message(items[0], "topic", "typo", None)
     with pytest.raises(FileNotFoundError, match="no topic labels"):
-        lg.load_list_topics("typo_mt")
+        lg.load_list_topics("typo")

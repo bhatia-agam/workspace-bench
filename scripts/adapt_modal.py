@@ -340,7 +340,7 @@ def run_sample(
     llm, prompts, max_tokens, draws, temperature, top_p, seed, top_k=-1, stop_token_ids=None
 ) -> list:
     """Greedy + ``draws`` samples per prompt (token ids, or text); prompt i samples with seed+i.
-    ``top_k`` -1 = off (basic_readout_mt v4's gate fixes 20, plan 0060 A2). ``stop_token_ids``:
+    ``top_k`` -1 = off (basic_readout v4's gate fixes 20, plan 0060 A2). ``stop_token_ids``:
     the subject's reply_end token (Kimi-K3's <|close|>), on both draws."""
     from vllm import SamplingParams
 

@@ -13,9 +13,9 @@ from conftest import write_jsonl, write_sidecar
 from summary_fakes import FakeLLM, first_lines_digest, summary_args
 
 from wsbench import digest, mc, readplan, reads, registry
-from wsbench.evals.moral_rationale import judge as mr
-from wsbench.evals.moral_rationale import prompts as mrp
-from wsbench.evals.moral_rationale import score as mrs
+from wsbench.evals.logical_processing.moral_rationale import judge as mr
+from wsbench.evals.logical_processing.moral_rationale import prompts as mrp
+from wsbench.evals.logical_processing.moral_rationale import score as mrs
 from wsbench.mcjudge import load_bank
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -73,17 +73,21 @@ def _choice_of(m: mr.MC, text: str) -> int:
 
 
 def test_v1_bank_untouched():
-    data = (ROOT / "evals/moral_rationale/items.json").read_bytes()
+    data = (ROOT / "evals/logical_processing/moral_rationale/items.json").read_bytes()
     assert hashlib.sha256(data).hexdigest() == V1_SHA
 
 
 def test_v2_bank_frozen():
-    data = (ROOT / "evals/moral_rationale/items_v2.json").read_bytes()
+    data = (ROOT / "evals/logical_processing/moral_rationale/items_v2.json").read_bytes()
     assert hashlib.sha256(data).hexdigest() == V2_SHA
 
 
 def test_v2_bank_keeps_its_instrument():
-    v2 = json.loads((ROOT / "evals/moral_rationale/items_v2.json").read_text(encoding="utf-8"))
+    v2 = json.loads(
+        (ROOT / "evals/logical_processing/moral_rationale/items_v2.json").read_text(
+            encoding="utf-8"
+        )
+    )
     assert mr.bank_version(v2) == 2
     assert mr.instrument_version(v2, summary_args(Path("x"), Path("y"), "ec-v4")) == "ec-v4"
     assert mrp.PROMPT_VERSION_V2 == "ec-v4"
@@ -104,7 +108,7 @@ def test_v3_refuses_another_banks_instrument():
 
 def test_registered_spec_uses_v3(real_families):
     spec = registry.FAMILIES[FAMILY]
-    assert spec.bank == Path("evals/moral_rationale/items_v3.json")
+    assert spec.bank == Path("evals/logical_processing/moral_rationale/items_v3.json")
     assert registry.bank_path(FAMILY).name == "items_v3.json"
     assert spec.judge.prompt_version == mrp.PROMPT_VERSION == "ec-v9"  # one pick
     assert spec.min_full_positions == 6 and spec.full_contiguous is True
@@ -366,7 +370,9 @@ def test_token_note_is_shared(tmp_path, monkeypatch):
     mr.run(summary_args(path, tmp_path / "s", mrp.PROMPT_VERSION, items=[it["id"]]))
     assert all(want in u for n, _s, u in fake.calls if n == "ec_reason_mc")
     for f in ("judge.py", "prompts.py"):
-        src = (ROOT / "src/wsbench/evals/moral_rationale" / f).read_text(encoding="utf-8")
+        src = (ROOT / "src/wsbench/evals/logical_processing/moral_rationale" / f).read_text(
+            encoding="utf-8"
+        )
         assert "TOKEN_NOTE" not in src.replace("SUMMARY_NOTE_TOKENS", "")
         assert "A line whose items" not in src
 
@@ -629,7 +635,9 @@ def test_no_any_of_grid_floor_in_extras(tmp_path, monkeypatch):
 
 def test_aligned_only_extras(tmp_path, monkeypatch):
     """A scripted v1 run with one misaligned item that passes: aligned_only differs from value."""
-    monkeypatch.setenv("WSB_BANK_FILE_MORAL_RATIONALE", "evals/moral_rationale/items.json")
+    monkeypatch.setenv(
+        "WSB_BANK_FILE_MORAL_RATIONALE", "evals/logical_processing/moral_rationale/items.json"
+    )
     v1 = load_bank(FAMILY)
     bad = next(it for it in v1 if not it["gate_pass"] and it["reason_class"] == "committed")
     good = next(it for it in v1 if it["gate_pass"] and it["reason_class"] == "committed")
@@ -658,7 +666,9 @@ def test_v2_misaligned_is_empty(tmp_path, monkeypatch):
 
 
 def test_v1_can_be_rejudged_under_ec_v4(tmp_path, monkeypatch):
-    monkeypatch.setenv("WSB_BANK_FILE_MORAL_RATIONALE", "evals/moral_rationale/items.json")
+    monkeypatch.setenv(
+        "WSB_BANK_FILE_MORAL_RATIONALE", "evals/logical_processing/moral_rationale/items.json"
+    )
     iid = "ec-ransom-chat_tf"
     path = write_jsonl(tmp_path / "r.jsonl", _rows(iid, [20], range(6)))
     fake = FakeLLM.install(monkeypatch, lambda s, u, sc: {"choice": 6, "quote": ""})

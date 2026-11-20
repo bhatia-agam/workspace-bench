@@ -5,10 +5,11 @@ the gate verdicts and the gate rollouts, and writes the bank and the Stage C tar
 
     python scripts/build_agentic_twins_bank.py \
         [--drafts outputs/am_twins/drafts.json] [--verdicts outputs/am_twins/verdicts.json] \
-        [--gen outputs/am_twins/gate_gen.json] [--bank evals/agentic_misalignment/items.json] \
-        [--targets evals/agentic_misalignment/targets.json] \
-        [--out-bank evals/agentic_misalignment/items_v2.json] \
-        [--out-targets evals/agentic_misalignment/targets_v2.json]
+        [--gen outputs/am_twins/gate_gen.json] \
+        [--bank evals/safety/agentic_misalignment/items.json] \
+        [--targets evals/safety/agentic_misalignment/targets.json] \
+        [--out-bank evals/safety/agentic_misalignment/items_v2.json] \
+        [--out-targets evals/safety/agentic_misalignment/targets_v2.json]
 
 The input bank is the frozen v1 ``items.json`` (never edited); the output is the versioned
 ``items_v2.json`` (header ``version: 2``, ``bank_version: "am-bank-v2"``, ``n_items``,
@@ -44,7 +45,7 @@ from pathlib import Path
 from typing import Any
 
 REPO = Path(__file__).resolve().parents[1]
-FAMILY_DIR = REPO / "evals/agentic_misalignment"
+FAMILY_DIR = REPO / "evals/safety/agentic_misalignment"
 OUT = REPO / "outputs/am_twins"
 TWIN_SUFFIX = "~twin"
 GRID = ("blackmail", "leaking", "murder")

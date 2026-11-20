@@ -4,7 +4,7 @@ verifier and statement splitter, plus the family's agent / patient reference che
 import pytest
 
 from wsbench import digest
-from wsbench.evals.role_bound_association import gate
+from wsbench.evals.anti_bag_of_features.role_bound_association import gate
 from wsbench.readouts import Cell
 
 LEX = gate.load_lexicon()
@@ -41,7 +41,7 @@ def test_cross_bullet_quote_in_one_prose1_generation_rejected():
 
 
 def test_cross_bullet_pick_counts_as_unverified_bullet():
-    from wsbench.evals.role_bound_association import score
+    from wsbench.evals.anti_bag_of_features.role_bound_association import score
 
     gen = "- Mia runs up the stairs to find Grandfather\n- She hugs her mother"
     cell = _prose(gen)

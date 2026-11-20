@@ -13,22 +13,22 @@ from wsbench import digest, mc, numerals, reads, registry
 from wsbench.banks import load_bank
 from wsbench.cli import main
 from wsbench.digest import Line
-from wsbench.evals.chain_intermediates import judge
-from wsbench.evals.chain_intermediates import options as mcopt
-from wsbench.evals.chain_intermediates import prompts as cp
-from wsbench.evals.chain_intermediates.prompts import PROMPT_VERSION, SYSTEM
+from wsbench.evals.computational.chain_intermediates import judge
+from wsbench.evals.computational.chain_intermediates import options as mcopt
+from wsbench.evals.computational.chain_intermediates import prompts as cp
+from wsbench.evals.computational.chain_intermediates.prompts import PROMPT_VERSION, SYSTEM
 from wsbench.family import quote_in
 from wsbench.judge_config import JudgeConfig, resolve
 from wsbench.results import read_results
 
 REPO = Path(__file__).resolve().parents[1]
-BANK = REPO / "evals/chain_intermediates/items.json"
+BANK = REPO / "evals/computational/chain_intermediates/items.json"
 EXAMPLE = REPO / "examples/readouts/chain_intermediates.jsonl"
 
 
 @pytest.fixture(autouse=True)
 def _registered():
-    from wsbench.evals.chain_intermediates import SPEC
+    from wsbench.evals.computational.chain_intermediates import SPEC
 
     registry.FAMILIES.setdefault(SPEC.name, SPEC)
 
@@ -216,10 +216,12 @@ def test_missing_cells_are_fatal_without_allow_missing(tmp_path, v1_bank):
 
 
 def test_registered_readme_and_dry_run(tmp_path, capsys, monkeypatch, v1_bank):
-    from wsbench.evals.chain_intermediates import SPEC
+    from wsbench.evals.computational.chain_intermediates import SPEC
 
     assert SPEC.group == "computational" and SPEC.judge.prompt_version == PROMPT_VERSION
-    assert SYSTEM in (REPO / "evals/chain_intermediates/README.md").read_text(encoding="utf-8")
+    assert SYSTEM in (REPO / "evals/computational/chain_intermediates/README.md").read_text(
+        encoding="utf-8"
+    )
     monkeypatch.delenv("WSBENCH_JUDGE_MODEL", raising=False)
     out = tmp_path / "out"
     argv = [
@@ -291,7 +293,7 @@ def test_all_cells_mode_scores_every_row(tmp_path, monkeypatch, v1_bank):
 # ================================================================ plan 0038 (bank v2, MC judge)
 
 
-BANK_V2 = REPO / "evals/chain_intermediates/items_v2.json"
+BANK_V2 = REPO / "evals/computational/chain_intermediates/items_v2.json"
 
 
 def write_jsonl(path, rows):
@@ -641,7 +643,7 @@ def _run_mc(tmp_path, rows, items, **kw):
 
 
 def spec_run(args):
-    from wsbench.evals.chain_intermediates import SPEC
+    from wsbench.evals.computational.chain_intermediates import SPEC
 
     return SPEC.run(args)
 
@@ -1088,7 +1090,7 @@ def test_key_examples_show_how_the_lens_states_each_key():
     it as the input ("The starting number is **10**"); the judge also sees raw samples that open
     with 10 and work the item's own operation, and quotes from them verify."""
     from wsbench.digest import Grounded, Line
-    from wsbench.evals.chain_intermediates import judge as cj
+    from wsbench.evals.computational.chain_intermediates import judge as cj
     from wsbench.readouts import Cell
 
     raw = [

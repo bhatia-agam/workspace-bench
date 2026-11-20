@@ -15,20 +15,20 @@ from wsbench.banks import label_of, load_bank
 REPO = Path(__file__).resolve().parents[1]
 # family -> (the bank it supersedes, the new bank, its version)
 BANKS = {
-    "basic_readout_mt": ("items_v4.json", "items_v6.json", 6),
-    "multihop_mt": ("items_v4.json", "items_v6.json", 6),
-    "multilingual": ("items_v3.json", "items_v4.json", 4),
-    "multilingual_mt": ("items_v4.json", "items_v5.json", 5),
+    "basic_readout": ("items_v4.json", "items_v6.json", 6),
+    "multihop": ("items_v4.json", "items_v6.json", 6),
+    "multilingual_st": ("items_v3.json", "items_v4.json", 4),
+    "multilingual": ("items_v4.json", "items_v5.json", 5),
     "multilingual_multihop": ("items_v4.json", "items_v5.json", 5),
     "multilingual_typo": ("items_v3.json", "items_v4.json", 4),
 }
 # the plan_sha of each family's read plan before the rebuild: options are never rendered, and a
 # dropped item's plan row stays (``read_plan_bank``), so every earlier readout file serves
 PLAN_SHA = {
-    "basic_readout_mt": "4c8f2cc057e6",
-    "multihop_mt": "1d5f2e2fa84b",
-    "multilingual": "e9a67ff80bee",
-    "multilingual_mt": "2510a7af7c96",
+    "basic_readout": "4c8f2cc057e6",
+    "multihop": "1d5f2e2fa84b",
+    "multilingual_st": "e9a67ff80bee",
+    "multilingual": "2510a7af7c96",
     "multilingual_multihop": "f57d844abf4e",
     "multilingual_typo": "e5abae63b4ab",
 }
@@ -37,19 +37,19 @@ PLAN_SHA = {
 # the bank registered on top of a round-5 bank, its version and its read plan's plan_sha: the
 # capital items replaced (2026-11-05; tests/test_capital_items_replaced.py)
 LATER = {
-    "basic_readout_mt": ("items_v7.json", 7, "d5cb7797088d"),
-    "multilingual": ("items_v5.json", 5, "3602a6dd3b94"),
+    "basic_readout": ("items_v7.json", 7, "d5cb7797088d"),
+    "multilingual_st": ("items_v5.json", 5, "3602a6dd3b94"),
 }
 
 
 # the rebuild started from a small edit of the bank it supersedes that the series folded into the
 # new bank instead of keeping a file of its own: the header key of the new bank recording the edit
 # (scripts/mc_options_r5.py's ``start_bank`` re-applies it the same way)
-FOLDED = {"basic_readout_mt": "v5", "multihop_mt": "v5"}
+FOLDED = {"basic_readout": "v5", "multihop": "v5"}
 
 
 def _raw(family: str, name: str) -> dict:
-    return json.loads((REPO / "evals" / family / name).read_text(encoding="utf-8"))
+    return json.loads((registry.family_root(family) / name).read_text(encoding="utf-8"))
 
 
 def _driver():
@@ -68,11 +68,11 @@ def test_driver_families(real_families):
     top of it, ``LATER``)."""
     r5 = _driver()
     assert sorted(r5.CFGS) == [
-        "basic_readout_mt",
-        "multihop_mt",
+        "basic_readout",
+        "multihop",
         "multilingual",
-        "multilingual_mt",
         "multilingual_multihop",
+        "multilingual_st",
         "multilingual_typo",
     ]
     for name, cfg in r5.CFGS.items():
@@ -151,7 +151,7 @@ def test_rebuilt_lists_are_well_formed(family):
     answer or a prompt word."""
     _src, dst, _v = BANKS[family]
     raw = _raw(family, dst)
-    _h, items = load_bank(REPO / "evals" / family / dst)
+    _h, items = load_bank(registry.family_root(family) / dst)
     for it in items:
         for role in raw["r5_mc"]["changed"].get(it["id"], {}):
             blk = it["mc"][role]
@@ -176,18 +176,21 @@ def test_rebuilt_lists_are_well_formed(family):
 def test_registered_and_read_plan_unchanged(family, real_families, monkeypatch):
     _src, dst, version = BANKS[family]
     reg, reg_version, reg_sha = LATER.get(family, (dst, version, PLAN_SHA[family]))
-    assert real_families[family].bank == Path("evals") / family / reg
-    assert registry.frozen_bank_path(family) == REPO / "evals" / family / reg
+    assert real_families[family].bank == registry.family_rel(family) / reg
+    assert registry.frozen_bank_path(family) == registry.family_root(family) / reg
     assert f"+bank-v{reg_version}" in real_families[family].judge.prompt_version
     assert reads.plan_sha(family).startswith(reg_sha)
     # the round-5 bank itself reads with the plan before its rebuild
-    monkeypatch.setenv(registry.BANK_FILE_ENV_PREFIX + family.upper(), f"evals/{family}/{dst}")
+    monkeypatch.setenv(
+        registry.BANK_FILE_ENV_PREFIX + family.upper(),
+        f"{registry.family_rel(family).as_posix()}/{dst}",
+    )
     assert reads.plan_sha(family).startswith(PLAN_SHA[family])
 
 
 # the rebuild's own record (the header's r5_mc.floors, every measurement up to the freeze):
 # multilingual_multihop's topic guesser stayed above the standard on the kept items whatever was
-# dropped; multihop_mt met it on the kept items' repair-round draws, but its topic guesser
+# dropped; multihop met it on the kept items' repair-round draws, but its topic guesser
 # fails it on fresh draws over the frozen bank (evals/baselines/README.md, "Option rebuild r5")
 NOT_MET = {"multilingual_multihop"}
 
@@ -213,10 +216,10 @@ def test_recorded_floors_and_standard(family):
 # the frozen floors (evals/baselines/lucky_guessing.json), every guesser measured on the new bank:
 # the standard verdicts on record
 FROZEN_FAILS: dict[str, set[str]] = {
-    "basic_readout_mt": set(),
-    "multihop_mt": {"topic"},
+    "basic_readout": set(),
+    "multihop": {"topic"},
+    "multilingual_st": set(),
     "multilingual": set(),
-    "multilingual_mt": set(),
     "multilingual_multihop": {"described", "topic"},
     "multilingual_typo": set(),
 }
@@ -227,7 +230,7 @@ def test_frozen_floors_are_on_the_new_bank(family, real_families):
     from wsbench.baselines import lucky_guessing as lg
 
     entry = json.loads((REPO / "evals/baselines/lucky_guessing.json").read_text("utf-8"))[family]
-    n = len(load_bank(REPO / "evals" / family / BANKS[family][1])[1])
+    n = len(load_bank(registry.family_root(family) / BANKS[family][1])[1])
     current = lg.instrument_versions()[family]
     for v in ("blind", "described", "topic", "uniform"):
         assert entry[v]["instrument"] == current and entry[v]["n_items"] == n, (family, v)
@@ -238,14 +241,14 @@ def test_frozen_floors_are_on_the_new_bank(family, real_families):
 def test_call_keys_survive_the_bank_stamps(real_families):
     """A bank stamp moves the result stamp only: the MC calls stay keyed as before (the options
     are in the fingerprinted prompt, so a rebuilt list is re-asked and every other one is not)."""
-    from wsbench.evals.multihop_mt.prompts import MH2_CALL_VERSION, MH2_PROMPT_VERSION
+    from wsbench.evals.basic.multihop.prompts import MH2_CALL_VERSION, MH2_PROMPT_VERSION
     from wsbench.multitoken import mcrx
     from wsbench.multitoken.family import call_pv
     from wsbench.multitoken.prompts import BRMT_CALL_VERSION, BRMT_PROMPT_VERSION
 
-    assert call_pv("basic_readout_mt", BRMT_PROMPT_VERSION) == BRMT_CALL_VERSION
-    assert call_pv("multihop_mt", MH2_PROMPT_VERSION) == MH2_CALL_VERSION
-    for family in ("multilingual", "multilingual_multihop"):
+    assert call_pv("basic_readout", BRMT_PROMPT_VERSION) == BRMT_CALL_VERSION
+    assert call_pv("multihop", MH2_PROMPT_VERSION) == MH2_CALL_VERSION
+    for family in ("multilingual_st", "multilingual_multihop"):
         pv = real_families[family].judge.prompt_version
         assert "+bank-v" in pv and "+bank-v" not in mcrx.call_version(pv)
         assert mcrx.call_version(pv) == mcrx.call_version(pv.split("+bank-v")[0])
@@ -255,5 +258,5 @@ def test_multilingual_alias_note_is_the_new_bank_table():
     from wsbench.multitoken.options import alias_note, option_aliases
     from wsbench.multitoken.prompts import ML_ALIAS_NOTE
 
-    _h, items = load_bank(REPO / "evals/multilingual/items_v4.json")
+    _h, items = load_bank(REPO / "evals/basic/multilingual_st/items_v4.json")
     assert alias_note(option_aliases(items)) == ML_ALIAS_NOTE

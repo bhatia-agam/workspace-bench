@@ -159,7 +159,7 @@ def main() -> None:
     ap.add_argument("--n-calls", type=int, default=16)
     ap.add_argument("--per-call", type=int, default=12)
     ap.add_argument("--out", type=Path, required=True)
-    ap.add_argument("--bank", type=Path, default=Path("evals/poetry/items.json"))
+    ap.add_argument("--bank", type=Path, default=Path("evals/basic/poetry/items.json"))
     ap.add_argument("--seed-offset", type=int, default=0)
     ap.add_argument("--also-used", type=Path, nargs="*", default=[])
     a = ap.parse_args()

@@ -20,13 +20,15 @@ from summary_fakes import FakeLLM, summary_args
 from wsbench import digest, registry
 from wsbench.banks import load_bank
 from wsbench.baselines import lucky_guessing as lg
-from wsbench.evals import directed_modulation as dm_pkg
-from wsbench.evals import model_specific_directed_modulation as dmo_pkg
-from wsbench.evals import multi_concept_directed_modulation as mcdm_pkg
-from wsbench.evals.directed_modulation import prompts as dm_prompts
-from wsbench.evals.model_specific_directed_modulation import prompts as dmo_prompts
-from wsbench.evals.model_specific_directed_modulation.judge import load_items as dmo_items
-from wsbench.evals.multi_concept_directed_modulation import prompts as mcdm_prompts
+from wsbench.evals.basic import directed_modulation as dm_pkg
+from wsbench.evals.basic import multi_concept_directed_modulation as mcdm_pkg
+from wsbench.evals.basic.directed_modulation import prompts as dm_prompts
+from wsbench.evals.basic.multi_concept_directed_modulation import prompts as mcdm_prompts
+from wsbench.evals.model_specific import model_specific_directed_modulation as dmo_pkg
+from wsbench.evals.model_specific.model_specific_directed_modulation import prompts as dmo_prompts
+from wsbench.evals.model_specific.model_specific_directed_modulation.judge import (
+    load_items as dmo_items,
+)
 from wsbench.registry import bank_path
 
 DM, DMO, MCDM = (
@@ -233,7 +235,7 @@ def test_topic_stays_a_floor_for_every_other_family():
     """NOT_A_FLOOR is DM-only: on the same synthetic entry (a topic guesser far above chance) every
     other MC family's topic guesser still binds and sets the bar, DM's does not."""
     e = {"blind": {"mean": 0.10}, "described": {"mean": 0.15}, "topic": {"mean": 0.90}}
-    for fam in ("association", "poetry", "conjunctive_association", "multihop"):
+    for fam in ("association", "poetry", "conjunctive_association", "multihop_st"):
         assert lg.is_floor(fam, "topic")
         assert lg.leakage_failures(e, 0.2, fam) == {"topic": pytest.approx(0.9)}
         assert lg.bar(e, fam) == (pytest.approx(0.9), "topic")

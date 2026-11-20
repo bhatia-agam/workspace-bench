@@ -172,8 +172,8 @@ def test_msdm_freeze_ships_the_subject_gold(tmp_model):
     bank = json.loads((tmp_model / f"{msdm.FAMILY}.json").read_text())
     golds = {it["id"]: it["gold"] for it in bank["items"]}
     assert golds == {SPICE: "zaatar", STEW: "khoresh bademjan"}
-    from wsbench.evals.model_specific_directed_modulation.judge import option_forms
-    from wsbench.evals.model_specific_directed_modulation.prompts import render_user
+    from wsbench.evals.model_specific.model_specific_directed_modulation.judge import option_forms
+    from wsbench.evals.model_specific.model_specific_directed_modulation.prompts import render_user
 
     for it in bank["items"]:
         assert it["user"] == render_user(it["topic"], it["carrier"])
@@ -245,7 +245,7 @@ def test_kc_rederives_the_subjects_consistent_errors(tmp_model):
     assert any("refusal" in r for r in rows[C53]["gate"]["reasons"])
     assert any(r.startswith("g3") for r in rows[C140]["gate"]["reasons"])
 
-    from wsbench.evals.knowledge_cutoff.judge import ItemRules
+    from wsbench.evals.model_specific.knowledge_cutoff.judge import ItemRules
 
     rules = ItemRules.of(it)  # the judge builds its menu and gates from the rebuilt fields
     assert rules.gold == "4.5" and set(rules.options) == set(it["options"])

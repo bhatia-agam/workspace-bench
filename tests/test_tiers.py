@@ -9,14 +9,14 @@ from wsbench.cli import main
 from wsbench.results import FamilyResult, core_macro, macro, markdown_table
 
 CATEGORY = {
+    "basic_readout_st": "basic",
     "basic_readout": "basic",
-    "basic_readout_mt": "basic",
+    "multihop_st": "basic",
     "multihop": "basic",
-    "multihop_mt": "basic",
+    "multilingual_st": "basic",
     "multilingual": "basic",
-    "multilingual_mt": "basic",
+    "typo_st": "basic",
     "typo": "basic",
-    "typo_mt": "basic",
     "multilingual_typo": "basic",
     "multilingual_multihop": "basic",
     "poetry": "basic",
@@ -77,7 +77,7 @@ def test_core_and_full_membership(real_families):
     assert tiers.core() == sorted(CORE)
     full = tiers.full()
     assert full == registry.drop_superseded(sorted(registry.FAMILIES))
-    assert set(tiers.core()) < set(full) and "typo" not in full and "jlens_concept_pr" in full
+    assert set(tiers.core()) < set(full) and "typo_st" not in full and "jlens_concept_pr" in full
     # the registered user_modeling bank is in full only (a hard bank is to join core later)
     assert "user_modeling" in full and "user_modeling" not in tiers.CORE
     assert tiers.families("core") == tiers.core() and tiers.families("full") == full
@@ -95,8 +95,8 @@ def test_core_invariant(real_families, monkeypatch):
     for name in tiers.CORE:
         assert name in registry.FAMILIES and name not in sup and name not in held, name
         assert name not in registry.RETIRED_FAMILIES and name in tiers.full(), name
-    assert tiers.tier_of("poetry") == "core" and tiers.tier_of("multihop") == "full"
-    assert tiers.tier_of("typo") == "" and tiers.tier_of("nope") == ""
+    assert tiers.tier_of("poetry") == "core" and tiers.tier_of("multihop_st") == "full"
+    assert tiers.tier_of("typo_st") == "" and tiers.tier_of("nope") == ""
     monkeypatch.setitem(registry.RETIRED_FAMILIES, "poetry", "retired (test stand-in)")
     with pytest.raises(ValueError, match="poetry"):
         tiers.check()
@@ -182,11 +182,11 @@ def test_run_defaults_to_core_and_full_is_all(ran, tmp_path):
     assert main([*base, "--core"]) == 0
     assert main([*base, "--full"]) == 0
     assert main([*base, "all=True"]) == 0
-    assert main([*base, "families=typo,poetry"]) == 0
+    assert main([*base, "families=typo_st,poetry"]) == 0
     assert main([*base, "all=True", "include_superseded=True"]) == 0
     assert ran[0] == ran[1] == sorted(CORE)
     assert ran[2] == ran[3] == registry.drop_superseded(sorted(registry.FAMILIES))
-    assert ran[4] == ["typo", "poetry"]
+    assert ran[4] == ["typo_st", "poetry"]
     assert ran[5] == sorted(registry.FAMILIES)
 
 
@@ -228,12 +228,12 @@ def planned(real_families, monkeypatch):
 def test_plan_default_is_core_and_all_stays_full(planned):
     assert main(["plan"]) == 0 and main(["plan", "--core"]) == 0
     assert main(["plan", "families=all"]) == 0 and main(["plan", "--full"]) == 0
-    assert main(["plan", "families=typo"]) == 0
+    assert main(["plan", "families=typo_st"]) == 0
     assert main(["plan", "--fast"]) == 0 and main(["plan", "--fast", "families=all"]) == 0
     full = registry.drop_superseded(readplan.families())
     assert planned[0] == planned[1] and set(planned[0]) == CORE and len(planned[0]) == N
     assert planned[2] == planned[3] == full
-    assert planned[4] == ["typo"]
+    assert planned[4] == ["typo_st"]
     assert planned[5] == planned[6] == fast.families()
 
 
@@ -244,11 +244,11 @@ def test_list_has_category_and_tier_columns(real_families, capsys):
     at = head.index("tier")
     cell = {ln.split()[0]: ln[at:].split("  ")[0].strip() for ln in rows}
     assert cell["user_modeling"] == "full" and cell["poetry"] == "core"
-    assert cell["multihop"] == "full" and cell["jlens_concept_pr"] == "full"
-    assert cell["typo"] == "—"
+    assert cell["multihop_st"] == "full" and cell["jlens_concept_pr"] == "full"
+    assert cell["typo_st"] == "—"
     assert {f for f, c in cell.items() if c == "core"} == CORE
-    typo = next(ln for ln in rows if ln.startswith("typo "))
-    assert "basic (superseded by typo_mt)" in typo
+    typo = next(ln for ln in rows if ln.startswith("typo_st "))
+    assert "basic (superseded by typo)" in typo
 
 
 # ---------------------------------------------------------------- the core macro
@@ -334,13 +334,13 @@ def test_core_macro_shares_the_macro_exclusions(clean):
     # a native core row beside summary rows that are all non-core: out of both macros
     native = _res("poetry")
     native.config.pop("aggregate")
-    results = [native, _res("multihop"), _res("basic_readout", complete=False)]
+    results = [native, _res("multihop_st"), _res("basic_readout_st", complete=False)]
     m, cm = macro(results), core_macro(results)
     want = {"family": "poetry", "reason": "native under aggregate=summary"}
     assert want in m["excluded"] and cm["excluded"] == [want] and cm["families"] == []
-    assert cm["value"] is None and m["families"] == ["multihop"]
+    assert cm["value"] is None and m["families"] == ["multihop_st"]
     # the run-level guards raise for the core macro as for the macro
-    mixed = [_res("poetry"), _res("multihop", config={"reads": "lite"})]
+    mixed = [_res("poetry"), _res("multihop_st", config={"reads": "lite"})]
     with pytest.raises(SystemExit, match="reads modes"):
         core_macro(mixed)
     # incomplete and wrong-judge core rows carry the macro's reasons
@@ -356,11 +356,11 @@ def test_core_macro_shares_the_macro_exclusions(clean):
 def test_full_result_set_keeps_the_macro_and_adds_the_core_one(clean):
     core = _core_results()
     rest = [_res(f, value=0.9) for f in tiers.full() if f not in CORE]
-    rest.append(_res("typo", value=0.9))
+    rest.append(_res("typo_st", value=0.9))
     results = sorted(core + rest, key=lambda r: r.family)
     m = macro(results)
     assert m == macro(results, None, None, None, None)
-    assert set(CORE) < set(m["families"]) and "typo" not in m["families"]
+    assert set(CORE) < set(m["families"]) and "typo_st" not in m["families"]
     cm = core_macro(results)
     assert cm["families"] == sorted(CORE) and cm["complete"] is True
     assert cm["value"] == pytest.approx(sum(r.value for r in core) / N)
@@ -371,21 +371,21 @@ def test_full_result_set_keeps_the_macro_and_adds_the_core_one(clean):
 
 
 def test_table_without_core_macro_is_unchanged(clean):
-    results = [*_core_results(), _res("multihop")]
+    results = [*_core_results(), _res("multihop_st")]
     m = macro(results)
     plain = markdown_table(results, m)
     assert markdown_table(results, m, core_macro=None) == plain
     assert "core macro" not in plain
     # a core macro with no included row adds nothing either
     assert markdown_table(results, m, core_macro=core_macro([])) == plain
-    other = [_res("multihop"), _res("basic_readout")]
+    other = [_res("multihop_st"), _res("basic_readout_st")]
     assert markdown_table(other, macro(other), core_macro=core_macro(other)) == markdown_table(
         other, macro(other)
     )
 
 
 def test_table_with_core_macro_adds_one_row_and_a_note(clean):
-    results = [r for r in _core_results() if r.family != "poetry"] + [_res("multihop")]
+    results = [r for r in _core_results() if r.family != "poetry"] + [_res("multihop_st")]
     results[0] = _res(results[0].family, complete=False)
     m, cm = macro(results), core_macro(results)
     plain = markdown_table(results, m).splitlines()
@@ -439,7 +439,7 @@ def test_report_prints_the_core_macro(clean, tmp_path, capsys):
 def test_report_of_non_core_families_prints_no_core_line(clean, tmp_path, capsys):
     from wsbench.results import write_results
 
-    for r in (_res("multihop"), _res("basic_readout")):
+    for r in (_res("multihop_st"), _res("basic_readout_st")):
         write_results(tmp_path / r.family, r)
     assert main(["report", f"dir={tmp_path}", "floors=False"]) == 0
     out = capsys.readouterr().out
@@ -448,8 +448,8 @@ def test_report_of_non_core_families_prints_no_core_line(clean, tmp_path, capsys
     payload = json.loads(capsys.readouterr().out)
     assert "core_macro" not in payload
     assert {f["family"]: (f["category"], f["tier"]) for f in payload["families"]} == {
-        "multihop": ("basic", "full"),
-        "basic_readout": ("basic", "full"),
+        "multihop_st": ("basic", "full"),
+        "basic_readout_st": ("basic", "full"),
     }
 
 

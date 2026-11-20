@@ -22,7 +22,7 @@ def test_former_key_exclusion_applies_to_current_key(tmp_path, monkeypatch):
         },
     )
     ex = results.adapted_exclusions()
-    assert ex == {"multihop_mt": "ooc 2/64"}
+    assert ex == {"multihop": "ooc 2/64"}
 
 
 def test_current_key_entry_wins_over_former_key(tmp_path, monkeypatch):
@@ -30,7 +30,7 @@ def test_current_key_entry_wins_over_former_key(tmp_path, monkeypatch):
         tmp_path,
         monkeypatch,
         {
-            "multihop_mt": {"status": "partial"},
+            "multihop": {"status": "partial"},
             "multihop_mt_v2": {"exclude_from_macro": True, "note": "stale"},
         },
     )
@@ -48,9 +48,9 @@ def test_macro_drops_a_family_excluded_under_its_former_key(tmp_path, monkeypatc
     _root(
         tmp_path, monkeypatch, {"multihop_mt_v2": {"exclude_from_macro": True, "note": "ooc 2/64"}}
     )
-    m = results.macro([_r(family="multihop_mt", value=0.9), _r(family="association", value=0.5)])
+    m = results.macro([_r(family="multihop", value=0.9), _r(family="association", value=0.5)])
     assert m["families"] == ["association"] and m["value"] == 0.5
-    assert {"family": "multihop_mt", "reason": "adapted set: ooc 2/64"} in m["excluded"]
+    assert {"family": "multihop", "reason": "adapted set: ooc 2/64"} in m["excluded"]
 
 
 def test_current_key_exclusion_wins_and_keeps_its_note(tmp_path, monkeypatch):
@@ -58,21 +58,21 @@ def test_current_key_exclusion_wins_and_keeps_its_note(tmp_path, monkeypatch):
         tmp_path,
         monkeypatch,
         {
-            "multihop_mt": {"exclude_from_macro": True, "note": "current"},
+            "multihop": {"exclude_from_macro": True, "note": "current"},
             "multihop_mt_v2": {"exclude_from_macro": False},
         },
     )
-    assert results.adapted_exclusions() == {"multihop_mt": "current"}
+    assert results.adapted_exclusions() == {"multihop": "current"}
     # both exclude: the current key's note, whatever order the report lists them in
     for fams in (
         {
-            "multihop_mt": {"exclude_from_macro": True, "note": "current"},
+            "multihop": {"exclude_from_macro": True, "note": "current"},
             "multihop_mt_v2": {"exclude_from_macro": True, "note": "former"},
         },
         {
             "multihop_mt_v2": {"exclude_from_macro": True, "note": "former"},
-            "multihop_mt": {"exclude_from_macro": True, "note": "current"},
+            "multihop": {"exclude_from_macro": True, "note": "current"},
         },
     ):
         _root(tmp_path, monkeypatch, fams)
-        assert results.adapted_exclusions() == {"multihop_mt": "current"}
+        assert results.adapted_exclusions() == {"multihop": "current"}

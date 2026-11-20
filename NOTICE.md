@@ -2,8 +2,8 @@
 
 The code in this repository and every in-house item bank are released under the MIT licence in
 `LICENSE`. In-house means every bank not listed below as third-party: `association`,
-`basic_readout`, `basic_readout_mt`, `multihop`, `multihop_mt`, `multilingual`,
-`multilingual_mt`, `multilingual_multihop`, `multilingual_typo`, `poetry`, `typo`, `typo_mt`,
+`basic_readout`, `basic_readout_st`, `multihop`, `multihop_st`, `multilingual`,
+`multilingual_st`, `multilingual_multihop`, `multilingual_typo`, `poetry`, `typo`, `typo_st`,
 `directed_modulation`, `multi_concept_directed_modulation`, `chain_intermediates`,
 `arithmetic_intermediates`, `buggy_code`, `conjunctive_association`, `role_bound_association`,
 `relational_multihop`, `moral_rationale`, and the 14 in-house `agentic_misalignment` scenarios. The items
@@ -17,7 +17,7 @@ identified by label prefix.
 - Used for: every bank's rollouts and responses (the model being read).
 - Terms: see the Qwen3.6-27B model card on Hugging Face for the licence that applies to model
   outputs.
-- The introspection injection vectors (`evals/introspection/vectors/concept_vectors_L12.npy`,
+- The introspection injection vectors (`evals/model_specific/introspection/vectors/concept_vectors_L12.npy`,
   125 x 5120 float32: layer-12 residual-stream activation differences of Qwen3.6-27B, Agam's
   recipe on a public word list; `gaussian_vectors_L12.npy`: 500 x 5120 seeded `torch.randn`
   draws) are released under this repo's terms; the activations derive from the Qwen3.6-27B
@@ -36,7 +36,7 @@ identified by label prefix.
 - Source: Lynch, Wright, Larson, Troy, Ritchie, Mindermann, Perez, Hubinger. *Agentic
   Misalignment: How LLMs Could Be Insider Threats.* Anthropic, 2025. arXiv:2510.05179. Code:
   https://github.com/anthropic-experimental/agentic-misalignment
-- Included: 18 of the 32 scenarios in `evals/agentic_misalignment/items.json` (the repo's
+- Included: 18 of the 32 scenarios in `evals/safety/agentic_misalignment/items.json` (the repo's
   18-condition grid: blackmail / leaking / murder × goal × urgency), generated with its
   `scripts/generate_prompts.py` and production system prompts.
 - Licence: MIT. Copyright (c) Anthropic. Permission is hereby granted, free of charge, to any
@@ -78,8 +78,8 @@ identified by label prefix.
   (Apache-2.0). Reference lens artifact: https://huggingface.co/neuronpedia/jacobian-lens
   (n1000 wikitext fit).
 - Included: the J-lens method and the frozen reference top-10 tokens under
-  `evals/jlens_concept_pr/gen-jlens-pr-jlens/` that the family scores against. The numeric
-  helpers in `src/wsbench/evals/jlens_concept_pr/{concept_pr,token_types}.py` are this repo's
+  `evals/precision/jlens_concept_pr/gen-jlens-pr-jlens/` that the family scores against. The numeric
+  helpers in `src/wsbench/evals/precision/jlens_concept_pr/{concept_pr,token_types}.py` are this repo's
   own code (MIT); no `anthropics/jacobian-lens` source is vendored.
 - Licence of the referenced code: Apache License, Version 2.0
   (http://www.apache.org/licenses/LICENSE-2.0). Copyright Anthropic. Licensed under the Apache
@@ -95,7 +95,7 @@ identified by label prefix.
 - Included: no turns are shipped since 2026-10-30 (the `hallucination` family, which carried 74
   verbatim first user turns, left the bench for HallucinationBench, plan 0040). 75 first turns
   seeded the `jlens_concept_pr` items (labels `chat-lmsys-*`); their text was carried in
-  `evals/jlens_concept_pr/manifest.json` until 2026-09-17 and is no longer shipped (labels and
+  `evals/precision/jlens_concept_pr/manifest.json` until 2026-09-17 and is no longer shipped (labels and
   read positions only).
 - Licence: the **LMSYS-Chat-1M Dataset License Agreement** (on the dataset page) applies to
   those turns; the agreement text controls. In summary it grants a non-exclusive,
@@ -110,7 +110,7 @@ identified by label prefix.
 - Included: no turns are shipped since 2026-10-30 (the `hallucination` family, which carried 75
   verbatim first user turns, left the bench for HallucinationBench, plan 0040). 75 first turns
   seeded the `jlens_concept_pr` items (labels `chat-dailydialog-*`); their text was carried in
-  `evals/jlens_concept_pr/manifest.json` until 2026-09-17 and is no longer shipped (labels and
+  `evals/precision/jlens_concept_pr/manifest.json` until 2026-09-17 and is no longer shipped (labels and
   read positions only).
 - Licence: **CC BY-NC-SA 4.0** (https://creativecommons.org/licenses/by-nc-sa/4.0/). These
   items are **non-commercial**: attribution is required, they may not be used for commercial
@@ -122,7 +122,7 @@ identified by label prefix.
   https://huggingface.co/datasets/HuggingFaceFW/fineweb-edu (sample-10BT).
 - Included: 74 pile-10k + 75 fineweb-edu 128-token prefixes seeded the `jlens_concept_pr`
   items (labels `pt-pile-*`, `pt-fineweb-*`; the manifest carries no source ids). Their text was
-  carried in `evals/jlens_concept_pr/manifest.json` until 2026-09-17 and is no longer shipped.
+  carried in `evals/precision/jlens_concept_pr/manifest.json` until 2026-09-17 and is no longer shipped.
 - Licence: ODC-BY (attribution required); the underlying web text retains its own copyright.
 
 ## NYT Connections — The New York Times / `Eyefyre/NYT-Connections-Answers`
@@ -131,7 +131,7 @@ identified by label prefix.
   https://github.com/Eyefyre/NYT-Connections-Answers (`connections.json`), pinned to commit
   `0c42b26054d4d9e2b1d8fc7b1599925a97fb1ec7`, sha256
   `1bd17c9161c665dbdf2ea8011123a574b7e831cc6442fc7a73fd144d0371f534`.
-- Included: **ids only.** `evals/nyt_connections/items.json` holds puzzle numbers and dates,
+- Included: **ids only.** `evals/logical_processing/nyt_connections/items.json` holds puzzle numbers and dates,
   member indices into the shuffled word list, and Qwen3.6-27B's own labels for its groups; no
   puzzle word and no NYT group name is committed (an option equal to an NYT group name is stored
   as a reference to it). The puzzle text is fetched from the pinned mirror at run time

@@ -1,7 +1,7 @@
 """Plan 0075 (offline: fake author / gate / proposer, no GPU or API): adapted targets, the fill
 families in ``adapt refill``, the freeze guard at raised targets, and the new refill routes'
 judge-side fields (poetry post-gate stages, role_bound distractors, user_modeling golds,
-multilingual native languages, multihop element flag, the capital rule)."""
+multilingual_st native languages, multihop_st element flag, the capital rule)."""
 
 import copy
 import json
@@ -39,8 +39,8 @@ def _gate_log(d, family, rows):
 def test_adapted_target_raises_never_lowers():
     _h, assoc = store.original_bank("association")
     assert rf.adapted_target("association", assoc) == 100 > len(assoc)
-    _h, brmt = store.original_bank("basic_readout_mt")
-    assert rf.adapted_target("basic_readout_mt", brmt) == 120
+    _h, brmt = store.original_bank("basic_readout")
+    assert rf.adapted_target("basic_readout", brmt) == 120
     _h, um = store.original_bank("user_modeling")
     assert rf.adapted_target("user_modeling", um) == len(um) == 126  # registered, not lowered
     _h, kc = store.original_bank("knowledge_cutoff")
@@ -49,10 +49,10 @@ def test_adapted_target_raises_never_lowers():
     assert rf.POLICY["buggy_code"].target == 24
     # scoped to the plan-0075 sets (the ten, plus Agam's five rebuilt under plan 0089): any
     # other set keeps its registered-size target
-    assert rf.adapted_target("basic_readout_mt", brmt, "qwen3.5-4b") == 120
+    assert rf.adapted_target("basic_readout", brmt, "qwen3.5-4b") == 120
     for key in ("gemma-4-31b-it", "glm-5.3-flash", "kimi-k2", "olmo-3.1-32b", "qwen3.6-35b-a3b"):
-        assert rf.adapted_target("basic_readout_mt", brmt, key) == 120, key
-    assert rf.adapted_target("basic_readout_mt", brmt, "some-new-subject") == len(brmt)
+        assert rf.adapted_target("basic_readout", brmt, key) == 120, key
+    assert rf.adapted_target("basic_readout", brmt, "some-new-subject") == len(brmt)
 
 
 def test_freeze_and_have_of_use_the_adapted_target(mdir):
@@ -199,7 +199,7 @@ def test_rbstage_never_builds_a_lone_twin(mdir):
 
 def test_overlay_resolves_in_the_judge(tmp_path, monkeypatch):
     from wsbench import registry
-    from wsbench.evals.role_bound_association import judge as rbj
+    from wsbench.evals.anti_bag_of_features.role_bound_association import judge as rbj
 
     pid = "role-au-t1-w100c0-x"
     d = tmp_path / "role_bound_association"
@@ -255,12 +255,12 @@ def test_old_authored_rows_never_ship():
     legacy = bad | {"adapt": {"origin": "authored"}}  # no plan stamp: an earlier set's row
     assert rf.row_passes("role_bound_association", _row(legacy, origin="authored")) is True
     mh = {"name": "mh-au-old", "prompt": "Fact: x", "adapt": {"plan": "0075"}}
-    assert rf.row_passes("multihop", _row(mh, origin="authored", legs={"surface": {}})) is False
+    assert rf.row_passes("multihop_st", _row(mh, origin="authored", legs={"surface": {}})) is False
     legs = {"surface": {}, "hop2": {}, "shortcut1": {}, "shortcut2": {}}
-    assert rf.row_passes("multihop", _row(mh, origin="authored", legs=legs)) is True
-    assert rf.row_passes("multihop", _row(mh)) is True
+    assert rf.row_passes("multihop_st", _row(mh, origin="authored", legs=legs)) is True
+    assert rf.row_passes("multihop_st", _row(mh)) is True
     old = {"name": "mh-au-older", "prompt": "Fact: y", "adapt": {"origin": "authored"}}
-    assert rf.row_passes("multihop", _row(old, origin="authored", legs={"surface": {}})) is True
+    assert rf.row_passes("multihop_st", _row(old, origin="authored", legs={"surface": {}})) is True
 
 
 # ---------------------------------------------------------------- §2.8 user_modeling
@@ -306,10 +306,10 @@ def test_author_injects_the_sets_native_languages(monkeypatch):
     from wsbench.adapt import native_langs as nl
 
     monkeypatch.setattr(nl, "langs_for_freeze", lambda m: ["en"])
-    assert "basic_readout_mt" in author.NATIVE_BUILT and "typo_mt" not in author.NATIVE_BUILT
+    assert "basic_readout" in author.NATIVE_BUILT and "typo" not in author.NATIVE_BUILT
 
 
-# ---------------------------------------------------------------- §2.4 multihop
+# ---------------------------------------------------------------- §2.4 multihop_st
 def test_element_bridge_is_computed():
     assert author.element_bridge(
         {"bridge_type": "number", "target": "carbon", "intermediates": ["6"]}
@@ -323,9 +323,10 @@ def test_element_bridge_is_computed():
     assert not author.element_bridge(
         {"bridge_type": "element", "target": "Fe", "intermediates": ["iron"]}
     )
-    b = author.BRIEFS["multihop"]
+    b = author.BRIEFS["multihop_st"]
     it = author._finish({"prompt": "Fact: x", "bridge_type": "number", "target": "sodium",
-                         "intermediates": ["11"]}, b, "multihop", MODEL, "t1", 0, "")  # fmt: skip
+                         "intermediates": ["11"]},
+                        b, "multihop_st", MODEL, "t1", 0, "")  # fmt: skip
     assert it["element_bridge"] is True
 
 
@@ -333,8 +334,8 @@ def test_capital_questions_are_rejected():
     it = {"name": "mh-au-x", "prompt": "Fact: The capital of the country shaped like a boot is",
           "target": "Rome", "intermediates": ["Italy"], "bridge_question": "Which country?",
           "adapt": {"origin": "authored"}}  # fmt: skip
-    assert any("#372" in p for p in lint._capital("multihop", it))
-    assert lint._capital("multihop", it | {"adapt": {"origin": "original"}}) == []
+    assert any("#372" in p for p in lint._capital("multihop_st", it))
+    assert lint._capital("multihop_st", it | {"adapt": {"origin": "original"}}) == []
     # poetry: a family outside CAPITAL_FAMILIES (plan 0075 follow-up 2 moved association in)
     assert lint._capital("poetry", it) == []
 
@@ -362,13 +363,13 @@ def test_fill_ooc_yield_is_the_subjects(mdir, monkeypatch):
             if lint_bad:
                 r["gate"]["lint"] = ["format: x"]
             rows.append(r)
-        _gate_log(mdir, "typo_mt", rows)
+        _gate_log(mdir, "typo", rows)
         return [], {}
 
     monkeypatch.setattr(author, "author", lambda *a, **kw: None)
     monkeypatch.setattr(run, "lint_and_gate", fake_gate)
-    run.fill(MODEL, "typo_mt", llm=None, max_waves=1, runner=object())
-    b = json.loads((mdir / "report.json").read_text())["families"]["typo_mt"]["refill"]
+    run.fill(MODEL, "typo", llm=None, max_waves=1, runner=object())
+    b = json.loads((mdir / "report.json").read_text())["families"]["typo"]["refill"]
     assert b["tried"] == 20 and b["lint_rejects"] == 10
     assert b["landed"] == 10  # the subject passes, not the bank gain
 
@@ -424,9 +425,7 @@ def test_auto_rerun_uses_fresh_seeds_and_guard_refuses_tried_zero(mdir):
 
 def test_capital_rule_is_about_asking_for_a_capital():
     def bad(prompt):
-        return lint._capital(
-            "basic_readout_mt", {"prompt": prompt, "adapt": {"origin": "authored"}}
-        )
+        return lint._capital("basic_readout", {"prompt": prompt, "adapt": {"origin": "authored"}})
 
     assert bad("What is the capital of the Byzantine Empire's successor state?")
     assert bad("Which city is the seat of government of Bonaire?")
@@ -442,16 +441,17 @@ def test_capital_rule_is_about_asking_for_a_capital():
     assert bad("The capital of France is home to which famous museum?")
     assert bad("What river flows through Japan's capital?")
     river = "Fact: The river that flows through the capital of Japan is the"
-    assert lint._capital("multihop", {"prompt": river, "adapt": {"origin": "authored"}})
+    assert lint._capital("multihop_st", {"prompt": river, "adapt": {"origin": "authored"}})
     assert bad("Which bridge crosses the river in the French capital?")
     assert bad("The Kenyan capital is called what?")
     assert bad("Fact: The Japanese capital hosted the 1964 Olympics in")
     assert bad("Fact: Canberra serves as Australia's seat")
     assert not bad("Which church was the cathedral of the Byzantine capital, Constantinople?")
-    assert lint._capital("multihop", {"prompt": "Fact: The capital of the boot-shaped country is",
-                                      "adapt": {"origin": "authored"}})  # fmt: skip
+    assert lint._capital("multihop_st",
+                         {"prompt": "Fact: The capital of the boot-shaped country is",
+                          "adapt": {"origin": "authored"}})  # fmt: skip
     assert bad("Fact: The country whose capital is Lima has the currency")
-    assert lint._capital("multihop", {"prompt": "Fact: Peru has its capital in the city of",
+    assert lint._capital("multihop_st", {"prompt": "Fact: Peru has its capital in the city of",
                                       "adapt": {"origin": "authored"}})  # fmt: skip
 
 
@@ -488,15 +488,15 @@ def _mh_item(**kw):
 def test_multihop_bank_v5_lint_and_legs():
     from wsbench.adapt import families as fams
 
-    assert lint._multihop_v5("multihop", _mh_item()) == []
-    assert any("hop2" in p for p in lint._multihop_v5("multihop", _mh_item(hop2_question="")))
+    assert lint._multihop_v5("multihop_st", _mh_item()) == []
+    assert any("hop2" in p for p in lint._multihop_v5("multihop_st", _mh_item(hop2_question="")))
     named = _mh_item(shortcut_prompts=["Fact: Io orbits", "Fact: x"])
-    assert any("names the bridge" in p for p in lint._multihop_v5("multihop", named))
+    assert any("names the bridge" in p for p in lint._multihop_v5("multihop_st", named))
     lang = _mh_item(prompt="Fact: The language spoken in the land of Io is")
-    assert any("#323" in p for p in lint._multihop_v5("multihop", lang))
+    assert any("#323" in p for p in lint._multihop_v5("multihop_st", lang))
     demonym = _mh_item(intermediates=["Japan"], target="Japanese")
-    assert any("derives" in p for p in lint._multihop_v5("multihop", demonym))
-    legs = {a.leg: a for a in fams.get("multihop").asks(_mh_item(id="mh-au-x"))}
+    assert any("derives" in p for p in lint._multihop_v5("multihop_st", demonym))
+    legs = {a.leg: a for a in fams.get("multihop_st").asks(_mh_item(id="mh-au-x"))}
     assert {"surface", "bridge1", "hop2", "shortcut1", "shortcut2"} <= set(legs)
     assert legs["shortcut1"].meta == {"leak": True, "max_rate": fams.SHORTCUT_MAX_RATE}
 
@@ -508,7 +508,7 @@ def test_role_bound_lint_rejects_a_tab_garbled_story():
 
 
 def test_freeze_leaves_out_newly_admitted_capital_questions(mdir):
-    _h, items = store.original_bank("basic_readout_mt")
+    _h, items = store.original_bank("basic_readout")
     au = copy.deepcopy(items[0]) | {"name": "basic-au-t1-w100c0-x",
                                     "prompt": "What is the capital of Palau?",
                                     "adapt": {"origin": "authored", "tier": "t1"}}  # fmt: skip
@@ -517,15 +517,18 @@ def test_freeze_leaves_out_newly_admitted_capital_questions(mdir):
                                      "adapt": {"origin": "authored", "tier": "t1"}}  # fmt: skip
     for it in (au, old):
         it.pop("id", None)  # keyed by the authored name
-    _gate_log(mdir, "basic_readout_mt", [_row(au, origin="authored"), _row(old, origin="authored")])
+    _gate_log(mdir, "basic_readout", [_row(au, origin="authored"), _row(old, origin="authored")])
     mdir.mkdir(parents=True, exist_ok=True)
-    store.write_json(store.bank_file(MODEL, "basic_readout_mt"), {"items": [{"name": old["name"]}]})
-    assert run.shipped_ids(MODEL, "basic_readout_mt") == {old["name"]}
-    rows = list(store.gated(MODEL, "basic_readout_mt").values())
-    kept = {r["id"] for r in rf.freeze_rows("basic_readout_mt", rows, MODEL) if r["gate"]["pass"]}
+    store.write_json(
+        store.bank_file(MODEL, "basic_readout"),
+        {"family": "basic-readout-hard", "items": [{"name": old["name"]}]},
+    )
+    assert run.shipped_ids(MODEL, "basic_readout") == {old["name"]}
+    rows = list(store.gated(MODEL, "basic_readout").values())
+    kept = {r["id"] for r in rf.freeze_rows("basic_readout", rows, MODEL) if r["gate"]["pass"]}
     assert kept == {old["name"]}  # the new capital question is out; the shipped one stays
-    assert run.capital_left_out(MODEL, "basic_readout_mt", rows) == [au["name"]]
-    assert all(r["gate"]["pass"] for r in rf.freeze_rows("basic_readout_mt", rows))  # no model
+    assert run.capital_left_out(MODEL, "basic_readout", rows) == [au["name"]]
+    assert all(r["gate"]["pass"] for r in rf.freeze_rows("basic_readout", rows))  # no model
 
 
 def test_post_gate_upgrades_new_native_rows(mdir, monkeypatch):
@@ -543,7 +546,7 @@ def test_post_gate_upgrades_new_native_rows(mdir, monkeypatch):
     _gate_log(mdir, "multilingual_multihop", [_row({"name": "mlmh-au-x", "adapt": {
         "plan": "0075"}}, origin="authored")])  # fmt: skip
     run.post_gate(MODEL, "multilingual_multihop", None)
-    run.post_gate(MODEL, "typo_mt", None)
+    run.post_gate(MODEL, "typo", None)
     assert seen == [(["multilingual_multihop"], True)]
 
 
@@ -591,7 +594,9 @@ def test_refill_bounds_auto_waves_over_the_ladder(monkeypatch):
 def test_mlt_typo_lint_accepts_the_registered_shape():
     from pathlib import Path
 
-    raw = json.loads(Path("evals/multilingual_typo/items_v4.json").read_text(encoding="utf-8"))
+    raw = json.loads(
+        Path("evals/basic/multilingual_typo/items_v4.json").read_text(encoding="utf-8")
+    )
     bad = [it["name"] for it in raw["items"] if any("mc:" in p for p in lint._mt(
         "multilingual_typo", it | {"adapt": {"origin": "authored"}}))]  # fmt: skip
     assert bad == []
@@ -611,7 +616,7 @@ def test_guard_is_unchanged_outside_the_ten_sets():
     # Agam's five sets, which now take the plan-0075 guard like the ten)
     other = "some-new-subject"
     assert rf.guard_problem("poetry", {"status": "untried"}, 80, 100, "gemma-4-31b-it")
-    assert rf.guard_problem("typo_mt", {"status": "partial"}, 80, 85, other) is None
+    assert rf.guard_problem("typo", {"status": "partial"}, 80, 85, other) is None
     assert rf.guard_problem("poetry", {"status": "untried"}, 80, 100, other) is None
-    assert rf.guard_problem("typo_mt", {"status": "untried"}, 80, 85, other)  # as on main
+    assert rf.guard_problem("typo", {"status": "untried"}, 80, 85, other)  # as on main
     assert rf.guard_problem("poetry", {"status": "untried"}, 80, 100, MODEL)

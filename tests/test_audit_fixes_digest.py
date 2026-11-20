@@ -378,15 +378,15 @@ def test_over_20pct_undecided_is_not_measurable_and_leaves_the_macro():
     rows = [{"id": f"i{k}", "pass": True} for k in range(7)] + [
         {"id": f"u{k}", "pass": None} for k in range(3)
     ]
-    r = _res("basic_readout", rows)
+    r = _res("basic_readout_st", rows)
     assert not_measurable(r)
     m = macro([r], superseded={}, held_out={}, removed={})
     assert m["value"] is None and m["excluded"][0]["reason"] == "not measurable"
     table = markdown_table([r], m, removed={})
     assert "10 (3 undecided; not measurable)" in table and "30% undecided" in table
-    ok = _res("basic_readout", rows[:9])  # 2 of 9 = 22% -> still out; 1 of 8 -> in
+    ok = _res("basic_readout_st", rows[:9])  # 2 of 9 = 22% -> still out; 1 of 8 -> in
     assert not_measurable(ok)
-    fine = _res("basic_readout", rows[:8])
+    fine = _res("basic_readout_st", rows[:8])
     assert not not_measurable(fine) and macro([fine], {}, {}, {})["value"] == 1.0
 
 

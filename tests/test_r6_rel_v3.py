@@ -12,8 +12,8 @@ from pathlib import Path
 import pytest
 
 from wsbench import digest
-from wsbench.evals.relational_multihop import gate, judge, prompts
-from wsbench.evals.relational_multihop.judge import build_options
+from wsbench.evals.anti_bag_of_features.relational_multihop import gate, judge, prompts
+from wsbench.evals.anti_bag_of_features.relational_multihop.judge import build_options
 from wsbench.mc import CANNOT
 from wsbench.mcjudge import load_bank
 

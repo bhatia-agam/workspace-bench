@@ -667,7 +667,7 @@ def units(model: str, ask: AskJson | None, cutoff: str | None = None,
 
 def g3_leak(gold: str, forms: Sequence[str], user: str) -> bool:
     """G3: a gold form appears in the reader-visible prompt (the judge's own matcher)."""
-    from wsbench.evals.knowledge_cutoff.score import OptionForms
+    from wsbench.evals.model_specific.knowledge_cutoff.score import OptionForms
 
     return gold in OptionForms.build({gold: list(forms)}).named(user, numerals=True)
 

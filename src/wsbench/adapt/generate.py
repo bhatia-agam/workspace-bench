@@ -9,6 +9,8 @@ from collections.abc import Callable
 from dataclasses import dataclass, field
 from typing import Any
 
+from wsbench.registry import frozen_name
+
 # ---------------------------------------------------------------- chain_intermediates
 # global-workspace scripts/olens_suite/chain_intermediates/gen_chain.py (seed-last chains), plain
 # steps only: the bank of record dropped its single conditional item.
@@ -292,7 +294,7 @@ def generate(
         t = Tier(t.name, {**t.knobs, "ranges": getattr(gen_arith, t.knobs["ranges"])}, t.change)
     if only:
         t = Tier(t.name, {**t.knobs, "only": only}, t.change)
-    rng = random.Random(f"{family}:{tier}:{seed}")
+    rng = random.Random(f"{frozen_name(family)}:{tier}:{seed}")  # plan 0101: the pre-rename key
     out: list[dict] = []
     seen = set(exclude)
     tries = groups = 0

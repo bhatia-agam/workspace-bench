@@ -10,15 +10,15 @@ from summary_fakes import FakeLLM, digest_lines, n_item_layers, summary_args
 
 from wsbench import digest, reads, registry
 from wsbench.banks import load_bank
-from wsbench.evals import directed_modulation as dm_pkg
-from wsbench.evals import model_specific_directed_modulation as dmo_pkg
-from wsbench.evals import multi_concept_directed_modulation as mcdm_pkg
-from wsbench.evals.directed_modulation import judge as dm_judge
-from wsbench.evals.directed_modulation import prompts as dm_prompts
-from wsbench.evals.model_specific_directed_modulation import judge as dmo_judge
-from wsbench.evals.model_specific_directed_modulation import prompts as dmo_prompts
-from wsbench.evals.multi_concept_directed_modulation import prompts as mcdm_prompts
-from wsbench.evals.multi_concept_directed_modulation.options import option_sets
+from wsbench.evals.basic import directed_modulation as dm_pkg
+from wsbench.evals.basic import multi_concept_directed_modulation as mcdm_pkg
+from wsbench.evals.basic.directed_modulation import judge as dm_judge
+from wsbench.evals.basic.directed_modulation import prompts as dm_prompts
+from wsbench.evals.basic.multi_concept_directed_modulation import prompts as mcdm_prompts
+from wsbench.evals.basic.multi_concept_directed_modulation.options import option_sets
+from wsbench.evals.model_specific import model_specific_directed_modulation as dmo_pkg
+from wsbench.evals.model_specific.model_specific_directed_modulation import judge as dmo_judge
+from wsbench.evals.model_specific.model_specific_directed_modulation import prompts as dmo_prompts
 from wsbench.registry import bank_path
 
 REPO = Path(__file__).resolve().parents[1]

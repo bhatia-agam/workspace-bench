@@ -150,19 +150,19 @@ def test_leakers_writes_and_applies(mdir, tmp_path, monkeypatch):
 
 # ---------------------------------------------------------------- D4-D7
 def test_capital_screen(mdir):
-    _bank(mdir, "multihop", [
+    _bank(mdir, "multihop_st", [
         {"id": "m1", "prompt": "The army that captured the Byzantine capital ..."},
         {"id": "m2", "prompt": "a capital gains tax on shares"},
         {"id": "m3", "prompt": "Il a visité la capitale du pays"},
         {"id": "m4", "prompt": "A trip through London"},
     ])  # fmt: skip
-    _bank(mdir, "typo_mt", [{"id": "tyh-real-gastronomy", "prompt": "the capital of taste"}])
+    _bank(mdir, "typo", [{"id": "tyh-real-gastronomy", "prompt": "the capital of taste"}])
     _bank(mdir, "user_modeling", [{"name": "u1", "messages": "[{'role': 'user', 'content': "
                                    "'I live in the capital'}]"}])  # fmt: skip
     _report(mdir)
     hits = dr.capital_hits(M)
-    assert [i for i, _ in hits["multihop"]] == ["m1", "m3"]
-    assert "typo_mt" not in hits and [i for i, _ in hits["user_modeling"]] == ["u1"]
+    assert [i for i, _ in hits["multihop_st"]] == ["m1", "m3"]
+    assert "typo" not in hits and [i for i, _ in hits["user_modeling"]] == ["u1"]
 
 
 def test_class_caps_drop_the_newest_rows(mdir):
@@ -215,7 +215,7 @@ def _fake_stream(answer):
 
 
 def test_llm_screens_are_cached_and_keep_firstname(mdir, tmp_path, monkeypatch):
-    _bank(mdir, "multihop", [{"id": "mh-a", "prompt": "Q1", "target": "x"},
+    _bank(mdir, "multihop_st", [{"id": "mh-a", "prompt": "Q1", "target": "x"},
                              {"id": "mh-firstname-b", "prompt": "Q2", "target": "y"}])  # fmt: skip
     _bank(mdir, "user_modeling", [
         {"name": "u1", "attr_class": "Country", "attr": "Japan",
@@ -237,9 +237,9 @@ def test_llm_screens_are_cached_and_keep_firstname(mdir, tmp_path, monkeypatch):
     monkeypatch.setattr(run, "drop", lambda m, f, ids, reason: seen.append((f, ids)))
     out = tmp_path / "scr"
     rep = dr.screens(M, out, apply=True, only=("d4", "d6"), stream=_fake_stream(answer))
-    assert [i for i, _ in rep["d4"]["multihop"]] == ["mh-a"]
+    assert [i for i, _ in rep["d4"]["multihop_st"]] == ["mh-a"]
     assert [i for i, _ in rep["d6"]["d6"]] == ["u1", "u2"] and rep["d6"]["d6b"] == []
-    assert ("multihop", ["mh-a"]) in seen and ("user_modeling", ["u1", "u2"]) in seen
+    assert ("multihop_st", ["mh-a"]) in seen and ("user_modeling", ["u1", "u2"]) in seen
     n = len(calls)
     dr.screens(M, out, only=("d4", "d6"), stream=_fake_stream(answer))
     assert len(calls) == n  # every text cached
@@ -255,7 +255,7 @@ def test_short_sorts_refill_max_waves_and_objective_stops(mdir):
     _report(mdir, families={
         "association": {"n_items": 90, "target": 100, "status": "partial",
                         "refill": {"stop": "max waves (16)"}},
-        "multihop": {"n_items": 95, "target": 100, "status": "full",
+        "multihop_st": {"n_items": 95, "target": 100, "status": "full",
                      "refill": {"stop": "100 >= target 100"}},  # full, then audit drops
         "wrong_intermediate": {"n_items": 30, "target": 100, "status": "partial",
                                "refill": {"stop": "pool exhausted"}},
@@ -263,10 +263,10 @@ def test_short_sorts_refill_max_waves_and_objective_stops(mdir):
         "buggy_code": {"n_pairs": 20, "target_pairs": 24, "status": "partial",
                        "refill": {"stop": "low yield above half: yield 1/60 < 0.03"}},
         "nyt_connections": {"n_items": 10, "target": 300, "status": "partial"},  # no route
-        "typo_mt": {"n_items": 100, "target": 100, "status": "full"},
+        "typo": {"n_items": 100, "target": 100, "status": "full"},
     })  # fmt: skip
     s = dr.short(M)
-    assert s == {"refill": ["association", "multihop"], "max_waves": ["association"],
+    assert s == {"refill": ["association", "multihop_st"], "max_waves": ["association"],
                  "final": ["buggy_code", "knowledge_cutoff", "wrong_intermediate"]}  # fmt: skip
     c = dr.counts(M)
     assert c["families"]["buggy_code"] == 20 and c["drops"] == 0
@@ -309,14 +309,14 @@ def test_adapt_set_build_and_refill_dry(tmp_path):
     steps = [x.split(":")[0] for x in r.stdout.splitlines() if x.startswith("STEP ")]
     assert steps[:2] == ["STEP native_langs", "STEP profile"] and "STEP wrong_intermediate" in steps
     assert "variant=system_one_word" in r.stdout and "pool=/p/a,/p/b" in r.stdout
-    r = _dry(tmp_path, M, "refill", DRY_SHORT='{"refill": ["multihop_mt"], '
-             '"max_waves": ["multihop_mt"], "final": []}')  # fmt: skip
-    assert "families=multihop_mt waves=40" in r.stdout and r.stdout.rstrip().endswith("REFILL DONE")
+    r = _dry(tmp_path, M, "refill", DRY_SHORT='{"refill": ["multihop"], '
+             '"max_waves": ["multihop"], "final": []}')  # fmt: skip
+    assert "families=multihop waves=40" in r.stdout and r.stdout.rstrip().endswith("REFILL DONE")
 
 
 def test_adapt_set_loop_dry_backfills_and_converges(tmp_path):
     r = _dry(tmp_path, M, "loop", "3", "5",
-             DRY_SHORT='{"refill": ["poetry", "user_modeling", "basic_readout"], '
+             DRY_SHORT='{"refill": ["poetry", "user_modeling", "basic_readout_st"], '
                        '"max_waves": [], "final": []}',
              DRY_LUCKY='{"both": ["association"], "blind_only": ["poetry"]}')  # fmt: skip
     out = r.stdout

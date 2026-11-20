@@ -26,7 +26,7 @@
 ## Tokenizer and positions
 - **The Qwen3.5 sizes share Qwen3.6-27B's tokenizer, chat template and special tokens.** Every
   token index carries over unchanged:
-  - multihop `readout.offsets`
+  - multihop_st `readout.offsets`
   - mt `probe_token_lens`
   - jailbreak `read.tokens`
   - multi_concept_directed_modulation `last_n 12`
@@ -35,7 +35,7 @@
 - Any other tokenizer (Gemma) needs these re-stamped:
   - `probe_token_lens` (count = min over {s, lower, title} × {bare, leading space}). Then drop
     items whose required unit has no multi-token form left.
-  - the multihop `offsets` (`[-2]` when the final token is a bare space)
+  - the multihop_st `offsets` (`[-2]` when the final token is a bare space)
   - jailbreak `read.{span, n_tokens, tokens, positions}` (GW c3ff939c `port_jailbreak`)
   - `last_n 12` → the sentence's own token count
   - user_modeling's `from_last_sentence_start` rule, which matches literal `<|im_start|>` /
@@ -68,9 +68,9 @@
   registered bank's judge requires (`mc`, `mc.candidates`, `mc_roles`, a consistent `bank_version`)
   was not built.
 - A dry run catches only the exits. Many judge inputs fall back SILENTLY for an adapted-only id:
-  - id-keyed resources, e.g. multihop `split_subjects.json`, role_bound `distractors_v3.json`,
-    user_modeling's value pools, basic_readout_mt `exonyms.json`;
-  - id-pattern rules (multihop `nhop-*-element`);
+  - id-keyed resources, e.g. multihop_st `split_subjects.json`, role_bound `distractors_v3.json`,
+    user_modeling's value pools, basic_readout `exonyms.json`;
+  - id-pattern rules (multihop_st `nhop-*-element`);
   - Qwen defaults (`native_langs`).
 
   Every family's judge inputs and their classes are in
@@ -102,7 +102,7 @@ or keep only `plain` items and report the count.
   `chat_prefill` render at `last_newline` (inside the prefill) and `plain_fewshot` items with the
   few-shot prefix; **a producer must read that render**, never the bare couplet. 0.8B on 30
   originals: prefill 10/30, fewshot 1/30, plain 1/30, chat 0/30, so its poetry uses prefill only.
-- **basic_readout implicit:** chat with the stem "My one-word answer is:". The greedy first word
+- **basic_readout_st implicit:** chat with the stem "My one-word answer is:". The greedy first word
   becomes `target`, `intermediates` and `units[].match` when ≥ 8/10 samples agree. Refill from the
   55 implicit topics in GW `scripts/oracle_lens_evals/gen_basic_readout.py`. Never author the
   gold.
@@ -137,7 +137,7 @@ or keep only `plain` items and report the count.
     subject version yet (plan 0060). Running it for another subject re-keys to Qwen's sides.
   - `profile` on v3 rewrites the side / reasons but keeps Qwen's `options`, so options and reasons
     disagree. `moral_distractors.py` builds options for the bank of record only (it writes
-    `evals/moral_rationale/items_v3.json` from Qwen's `rekey.json`): a subject-keyed option build
+    `evals/logical_processing/moral_rationale/items_v3.json` from Qwen's `rekey.json`): a subject-keyed option build
     is open (plan 0060). Never run it for an adapted set.
   The judge checks `bank_version` per item and refuses a mix; v3 is a bare list (no header).
 
@@ -163,7 +163,7 @@ or keep only `plain` items and report the count.
     `blocked` only if neither exists.
   - `scripts/adapt_jlens.py` / `adapt_jlens_modal.py` read the seed items from GW
     (`/workspace/agam/global-workspace/evals/workspace-bench/jlens_pr/items.json`), not from this
-    repo's `evals/jlens_concept_pr`: `GW` is a hard-coded `Path` constant (`adapt_jlens.py:26`), not an env var: edit it to a
+    repo's `evals/precision/jlens_concept_pr`: `GW` is a hard-coded `Path` constant (`adapt_jlens.py:26`), not an env var: edit it to a
     local global-workspace checkout off Agam's box.
   - Roll out the seeds, pick the read position with `pick_read_position`, capture at the remapped
     layers, and write the top-10.
@@ -208,7 +208,7 @@ The vendored CC0 Wikidata tables `data/wd_class_parents.json` / `data/wd_registe
   `<think>\n\n</think>\n\n` tail. Re-derive per item from the OLMo render, never by a constant.
 - Re-stamp with the OLMo tokenizer: `probe_token_lens` for every `*_mt` family (then drop items
   whose required unit lost all multi-token forms, and apply the canonical-name rule), the
-  multihop `offsets`, jailbreak `read.*` (`carry` refuses until done), mcdm `last_n`.
+  multihop_st `offsets`, jailbreak `read.*` (`carry` refuses until done), mcdm `last_n`.
 - J-lens: neuronpedia has only the base model (`allenai/Olmo-3-1025-7B`), so jlens is `blocked`
   for the Instruct subject unless a base-model lens is accepted.
 

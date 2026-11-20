@@ -119,7 +119,7 @@ def test_form_in_requires_listed_cjk_form():
 
 def test_target_token_note_has_no_lone_option_clause():
     """Review of PR #140: a basic bank judge holds TARGETS, not options, so the lone-option
-    clause would read the target as the lone 'option' and credit Camila's multihop case
+    clause would read the target as the lone 'option' and credit Camila's multihop_st case
     ("equal twelve six eight seven eleven nine sixteen twenty five", target six: must NOT pass).
     The targets note keeps Q4: a same-type run singles out none of its words, whatever the rank."""
     from wsbench import mc

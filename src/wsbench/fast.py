@@ -45,12 +45,29 @@ class NotInFast(SystemExit):
     """A family the fast subset leaves out by design: the runner reports it as skipped."""
 
 
+# The family-key vocabulary each frozen file is written in (plan 0101): a "pre-0101" file is
+# never edited (sha-pinned) and its keys are translated at load (``registry.rekey_pre_0101``);
+# a file frozen after the rename is registered with era "0101". TOTAL over ``VERSIONS``: a
+# version without an era is an import-time error, never a default.
+ERAS = ("pre-0101", "0101")
+KEY_ERA = {"fast-v1": "pre-0101", "fast-v2": "pre-0101", "fast-safety-v1": "pre-0101"}
+if set(KEY_ERA) != set(VERSIONS) or not set(KEY_ERA.values()) <= set(ERAS):
+    raise RuntimeError(f"fast.KEY_ERA must give one of {ERAS} to every version of fast.VERSIONS")
+
+
 @functools.cache
 def _file(version: str) -> dict[str, Any]:
     path = VERSIONS.get(version)
     if path is None:
         raise SystemExit(f"unknown fast subset {version!r} (known: {', '.join(sorted(VERSIONS))})")
-    return json.loads(path.read_text(encoding="utf-8"))
+    doc = json.loads(path.read_text(encoding="utf-8"))
+    if KEY_ERA[version] == "pre-0101":  # the file's bytes stay frozen; its keys are read as today's
+        doc["families"] = registry.rekey_pre_0101(doc["families"])
+        if isinstance(doc.get("dropped_families"), list):
+            doc["dropped_families"] = [
+                registry.PRE_0101_KEYS.get(f, f) for f in doc["dropped_families"]
+            ]
+    return doc
 
 
 def select(variant: str = "") -> str:
@@ -90,8 +107,7 @@ def entry(family: str) -> dict[str, Any]:
     e = subset().get(fam)
     if e is None:
         raise NotInFast(f"{fam}: not in {VERSION}")
-    pins = [registry.BANK_FILE_ENV_PREFIX + n.upper() for n in (fam, *registry.legacy_names(fam))]
-    if os.environ.get(registry.BANK_ROOT_ENV) or any(os.environ.get(p) for p in pins):
+    if os.environ.get(registry.BANK_ROOT_ENV) or registry.bank_pin(fam) is not None:
         raise SystemExit(
             f"{fam}: {VERSION} is defined on the registered Qwen3.6-27B banks only (unset "
             f"{registry.BANK_ROOT_ENV} / {registry.BANK_FILE_ENV_PREFIX}{fam.upper()})"

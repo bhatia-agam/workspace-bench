@@ -10,9 +10,9 @@ from summary_fakes import FakeLLM, digest_lines, summary_args
 
 from wsbench.banks import load_bank
 from wsbench.cache import fingerprint
-from wsbench.evals import multi_concept_directed_modulation as pkg
-from wsbench.evals.multi_concept_directed_modulation import judge, options, prompts
-from wsbench.evals.multi_concept_directed_modulation.options import option_sets
+from wsbench.evals.basic import multi_concept_directed_modulation as pkg
+from wsbench.evals.basic.multi_concept_directed_modulation import judge, options, prompts
+from wsbench.evals.basic.multi_concept_directed_modulation.options import option_sets
 from wsbench.judge_config import JudgeConfig, resolve
 from wsbench.registry import bank_path
 

@@ -10,8 +10,11 @@ from conftest import native_args
 
 from wsbench import llm, readplan, registry
 from wsbench.cli import main
-from wsbench.evals.model_specific_directed_modulation import SPEC, judge
-from wsbench.evals.model_specific_directed_modulation.prompts import PROMPT_VERSION, render_user
+from wsbench.evals.model_specific.model_specific_directed_modulation import SPEC, judge
+from wsbench.evals.model_specific.model_specific_directed_modulation.prompts import (
+    PROMPT_VERSION,
+    render_user,
+)
 from wsbench.judge_config import JudgeConfig, resolve
 from wsbench.results import read_results
 

@@ -152,12 +152,16 @@ def _strs(v: object) -> list[str] | None:
     return [str(v)]
 
 
-def _family(name: str) -> str:
+def _family(name: str, *, notice: bool = True) -> str:
     """A family argument with a former key (``registry.LEGACY_FAMILY_NAMES``) resolved to the
-    current one, saying so on stderr."""
+    current one, saying so on stderr. One of the four bare keys plan 0101 swapped stays itself
+    (the multi-token family) and gets one line on stderr per process (``registry.swap_notice``;
+    ``notice=False`` for a ``run``'s child process, which is called with a current key)."""
     new = registry.canonical(name)
     if new != name:
         print(f"note: family {name!r} was renamed to {new!r}", file=sys.stderr)
+    elif notice and (line := registry.swap_notice(name)):
+        print(line, file=sys.stderr)
     return new
 
 
@@ -337,7 +341,7 @@ class JudgeFamily(JudgeOptions):
 
     def finalize(self) -> None:
         super().finalize()
-        self.family = _family(str(self.family))
+        self.family = _family(str(self.family), notice=not self.outcome)
         self.readouts = _path(self.readouts)
         self.out = _path(self.out) if self.out else None
         self.outcome = _path(self.outcome) if self.outcome else None

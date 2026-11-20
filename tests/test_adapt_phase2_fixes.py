@@ -12,6 +12,7 @@ from pathlib import Path
 
 import pytest
 
+from wsbench import registry
 from wsbench.adapt import mcstage, store
 from wsbench.banks import label_of
 
@@ -39,12 +40,14 @@ def test_r4b_assemble_reads_the_bank_not_the_registered_one(tmp_path):
     """Adapted-only ids are absent from the registered bank: ``assemble`` must build its option
     lists over ``--bank`` (it raised KeyError on every adapted-only id)."""
     r = importlib.import_module("r4b_mc_refine")
-    f = "basic_readout_mt"
-    its = copy.deepcopy(_items(EVALS / f / "items_v4.json")[:2])
+    f = "basic_readout"
+    its = copy.deepcopy(_items(registry.family_root(f) / "items_v4.json")[:2])
     for i, it in enumerate(its):
         it["name"] = f"brh-au-x{i}"
     bank_path = tmp_path / "bank.json"
-    bank_path.write_text(json.dumps({"family": f, "items": its}), encoding="utf-8")
+    bank_path.write_text(
+        json.dumps({"family": "basic-readout-hard", "items": its}), encoding="utf-8"
+    )
     ids = [label_of(it["name"]) for it in its]
     bank = {iid: {**it, "id": iid} for iid, it in zip(ids, its, strict=True)}
     lists = {
@@ -55,7 +58,7 @@ def test_r4b_assemble_reads_the_bank_not_the_registered_one(tmp_path):
         }
         for iid, it in zip(ids, its, strict=True)
     }
-    key = "WSB_BANK_FILE_BASIC_READOUT_MT"
+    key = "WSB_BANK_FILE_BASIC_READOUT"
     before = os.environ.get(key)
     r.BANK, r.OUT = bank_path, tmp_path / "refine.json"
     try:
@@ -75,7 +78,7 @@ def test_r4b_assemble_reads_the_bank_not_the_registered_one(tmp_path):
 
 
 def _brmt_cand(name: str) -> dict:
-    it = copy.deepcopy(_items(EVALS / "basic_readout_mt" / "items_v4.json")[0])
+    it = copy.deepcopy(_items(registry.family_root("basic_readout") / "items_v4.json")[0])
     it["name"] = name
     it["adapt"] = {"origin": "authored", "tier": "t1"}
     return it
@@ -121,7 +124,7 @@ def _brmt_runner(monkeypatch, seen: list):
 
 def test_two_consecutive_mc_builds(mdir, monkeypatch):
     """Build A, gate A, author B, build B: the second build must not see A's pools."""
-    f = "basic_readout_mt"
+    f = "basic_readout"
     seen: list = []
     monkeypatch.setattr(mcstage, "run_builder", _brmt_runner(monkeypatch, seen))
     a = _brmt_cand("brh-au-a")
@@ -142,8 +145,8 @@ def test_two_consecutive_mc_builds(mdir, monkeypatch):
 
 def test_mc_build_skips_already_built_pending_rows(mdir, monkeypatch):
     """A rerun after the gate crashed (built rows still pending) rebuilds nothing: no second
-    Opus spend, and basic_readout_mt keeps the first build's hidden_rivals."""
-    f = "basic_readout_mt"
+    Opus spend, and basic_readout keeps the first build's hidden_rivals."""
+    f = "basic_readout"
     seen: list = []
     monkeypatch.setattr(mcstage, "run_builder", _brmt_runner(monkeypatch, seen))
     store.add_candidates("demo", f, [_brmt_cand("brh-au-a")])
@@ -158,9 +161,9 @@ def test_mc_build_skips_already_built_pending_rows(mdir, monkeypatch):
 
 def test_mc_build_work_dir_is_keyed_by_the_pending_set(mdir):
     a, b = _brmt_cand("brh-au-a"), _brmt_cand("brh-au-b")
-    w1 = mcstage.work_dir("demo", "basic_readout_mt", [a, b])
-    assert w1 == mcstage.work_dir("demo", "basic_readout_mt", [b, a])  # a rerun resumes
-    assert w1 != mcstage.work_dir("demo", "basic_readout_mt", [b])
+    w1 = mcstage.work_dir("demo", "basic_readout", [a, b])
+    assert w1 == mcstage.work_dir("demo", "basic_readout", [b, a])  # a rerun resumes
+    assert w1 != mcstage.work_dir("demo", "basic_readout", [b])
 
 
 # ---------------------------------------------------------------- fill: MC build before gate
@@ -169,10 +172,10 @@ def test_mc_build_work_dir_is_keyed_by_the_pending_set(mdir):
 @pytest.mark.parametrize(
     ("family", "want"),
     [
-        ("basic_readout_mt", ["author", "mc", "gate"]),
+        ("basic_readout", ["author", "mc", "gate"]),
         ("association", ["author", "mc", "gate"]),
-        ("basic_readout", ["author", "mc", "gate", "subject"]),
-        ("typo_mt", ["author", "gate"]),
+        ("basic_readout_st", ["author", "mc", "gate", "subject"]),
+        ("typo", ["author", "gate"]),
     ],
 )
 def test_fill_builds_mc_between_author_and_gate(mdir, monkeypatch, family, want):

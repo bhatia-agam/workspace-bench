@@ -185,6 +185,42 @@ def load_readouts(
     return cells, rep
 
 
+def ids_in(path: Path) -> set[str]:
+    """The distinct ``id``s of a readouts file, streamed (malformed lines skipped): what tells
+    the two families of a renamed pair apart when a file has no sidecar (plan 0101)."""
+    out: set[str] = set()
+    with Path(path).open(encoding="utf-8", errors="replace") as fh:
+        for line in fh:
+            if not line.strip():
+                continue
+            try:
+                row = json.loads(line)
+            except ValueError:
+                continue
+            if isinstance(row, dict) and row.get("id") is not None:
+                out.add(str(row["id"]))
+    return out
+
+
+def refuse_partner_file(path: Path, family: str) -> None:
+    """Plan 0101: a readouts file about to be resumed, appended to or overwritten for ``family``
+    must not hold the rows of the other family of its renamed pair (``registry.RenamedKey``,
+    nothing opened for writing); a file holding both families' ids raises too. No check for a
+    family outside a pair, or a file that does not exist."""
+    from wsbench import registry
+
+    family = registry.canonical(family)
+    key = registry.shared_key(family)
+    if key is None or not Path(path).exists():
+        return
+    who = registry.owner(key, ids=ids_in(path))
+    if who is not None and who != family:
+        raise registry.RenamedKey(
+            f"{path} holds {who!r} readouts (the key {key!r} was reused: plan 0101); "
+            f"nothing was written for {family!r}"
+        )
+
+
 def expected_cells(
     positions: Mapping[str, Collection[int]], layers: Collection[int]
 ) -> set[tuple[str, int, int]]:

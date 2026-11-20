@@ -637,7 +637,7 @@ def test_adapted_bank_lowers_min_full_positions(tmp_path, monkeypatch):
     monkeypatch.setenv(registry.BANK_ROOT_ENV, str(tmp_path))
     assert reads.min_full_positions("introspection", 9) == 4
     assert reads.min_full_positions("introspection", 3) == 3  # lowers, never raises
-    assert reads.min_full_positions("typo", 9) == 9  # no bank there
+    assert reads.min_full_positions("typo_st", 9) == 9  # no bank there
     (tmp_path / "introspection.json").write_text(json.dumps([{"id": "x"}]))
     assert reads.min_full_positions("introspection", 9) == 9  # a bare-list bank
 

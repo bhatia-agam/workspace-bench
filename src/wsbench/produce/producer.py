@@ -9,8 +9,9 @@ from pathlib import Path
 from typing import Any, Self
 
 from wsbench import readplan
+from wsbench.readouts import refuse_partner_file
 from wsbench.readplan import GRID, ReadSpec
-from wsbench.registry import REPO_ROOT
+from wsbench.registry import repo_path
 
 from .backend import DEFAULT_MODEL, Backend
 from .methods import Method, Readout, method
@@ -161,7 +162,8 @@ class Producer:
 
         if path not in self._vectors:
             p = Path(path)
-            self._vectors[path] = np.load(p if p.is_absolute() else REPO_ROOT / p)
+            # the path may be a pre-0101 layout string frozen in a bank (plan 0101 F3)
+            self._vectors[path] = np.load(p if p.is_absolute() else repo_path(p))
         arr = self._vectors[path]
         if not 0 <= row < len(arr):
             raise ValueError(f"vector_row {row} out of range for {path} ({len(arr)} rows)")
@@ -201,6 +203,7 @@ class Producer:
             want = set(items)
             specs = [s for s in specs if s.id in want]
         specs = specs[: limit or None]
+        refuse_partner_file(out, family)  # plan 0101 F16: before the file is read or opened
         done = set()
         if out.exists():
             for line in out.read_text(encoding="utf-8").split("\n"):

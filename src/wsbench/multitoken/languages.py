@@ -9,7 +9,8 @@ the intermediate in english or chinese"). ``confusables`` are the four MC distra
 
 The autonyms of the twelve mt languages are seeded verbatim from the frozen multilingual_multihop
 bank's ``language`` units (the union over its items); the other sixteen are the languages of the
-single-token ``multilingual`` bank. A subject whose ``contract.native_langs`` holds a code missing
+single-token ``multilingual_st`` bank. A subject whose ``contract.native_langs`` holds a code
+missing
 from a language's ``names`` is a builder error (``language_forms``), so a new subject never loses
 a native form silently.
 
@@ -162,7 +163,7 @@ LANGUAGES: dict[str, Language] = {
             ("tiếng Việt", "Việt ngữ", "tiếng Việt Nam"),
             ("Thai", "Khmer", "Lao", "Indonesian"),
         ),
-        # the other languages of the single-token multilingual bank
+        # the other languages of the single-token multilingual_st bank
         _lang(
             "cs",
             ("Czech",),
@@ -512,7 +513,7 @@ def input_naming(text: str, names: Sequence[str], case_sensitive: Collection[str
     return _input_named(text, names, case_sensitive, _INPUT_AFTER)
 
 
-# round 3 review (PR #208): for multilingual_mt's ANCHORING (``family.anchored``), only a noun
+# round 3 review (PR #208): for multilingual's ANCHORING (``family.anchored``), only a noun
 # that can be the passage itself, never one followed by a gloss: "<Lang> word / phrase / text"
 # names any word ("Kylmäinen is a Finnish word that translates to 'refrigerator'", "the Turkish
 # text of the famous Azerbaijani folk song"), so it is not about the item's object. The naming

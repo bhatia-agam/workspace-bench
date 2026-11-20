@@ -425,7 +425,7 @@
    ],
    "note": "full: 126/126 after the audit and five addendum rounds (near-duplicate and split-sample drops; Country 13.5%, Gender 16.7%, both under the 20% cap)."
   },
-  "multihop_mt": {
+  "multihop": {
    "refill": {
     "route": "mhmt2.refill_wave",
     "unit": "items",
@@ -754,7 +754,7 @@
    "change": "carried over; the 12-token prefilled sentence verified on the subject's render for every prompt (layers: readplan.GRID, remapped by depth)",
    "note": "full: 116/116 carried over (prefilled sentence verified on the subject's render)."
   },
-  "typo_mt": {
+  "typo": {
    "status": "full",
    "refill": {
     "route": "run.fill",
@@ -1154,7 +1154,7 @@
    "exclude_from_macro": true,
    "note": "ooc, 0 items: every candidate failed the subject gate (ooc); no result to average. Out of the macro (0 items)."
   },
-  "multilingual_mt": {
+  "multilingual": {
    "status": "ooc",
    "refill": {
     "route": "run.fill",
@@ -1190,7 +1190,7 @@
    ],
    "note": "ooc: 3/100; yield 1/70 < 3% on >= 60 candidates. In the macro (no minimum n; figure footnote gives n)."
   },
-  "multihop": {
+  "multihop_st": {
    "status": "partial",
    "refill": {
     "route": "run.fill",
@@ -1448,7 +1448,7 @@
    },
    "note": "partial: 54/100. Frozen early at Camila's request (2026-11-19) at 86 while L4 fill waves were at 0% yield (early_freeze); the independent audit then dropped 32 (24 new: shortcut/capital-bridge/answer-naming bridges; 8 originals under cross-set rulings). Stays in the macro (coordinator/Camila default). The refill block's have=95 is from the L3 fill and is stale."
   },
-  "basic_readout_mt": {
+  "basic_readout": {
    "status": "partial",
    "refill": {
     "route": "run.fill",
@@ -1507,7 +1507,7 @@
    ],
    "note": "partial: 113/120 after the audit (11 + 4 + 1 + 1 audit/addendum drops); the gate-passing pool is exhausted (no further unselected row survives the audit)."
   },
-  "basic_readout": {
+  "basic_readout_st": {
    "target": 100,
    "n_original": 100,
    "n_original_gated": 63,
@@ -1588,7 +1588,7 @@
    "status": "untried",
    "note": "originals only (no refill route): 143/195 registered items pass the subject's gate."
   },
-  "multilingual": {
+  "multilingual_st": {
    "target": 99,
    "n_original": 99,
    "n_original_gated": 91,
@@ -2055,7 +2055,7 @@
    "cue__p_notable_book_authors__2010_23__metadata": "audit2 (plan 0084 R20): N answer readable from a static description (death of a person identified by his best-known work: the UCLA coach with 10 NCAA titles = John Wooden, as the first audit's deaths class); guess 98",
    "cue__p_deaths_sports__2010_9__metadata": "audit2 (plan 0084 R20): N answer readable from a static description (death of a person identified by his best-known work: the UCLA coach with 10 NCAA titles = John Wooden, as the first audit's deaths class); guess 98"
   },
-  "basic_readout_mt": {
+  "basic_readout": {
    "brh-ent-currency-vanuatu": "plan 0075 data round D5: a clue routes through, or the question asks, a capital; dropped and back-filled",
    "basic-au-t1-w101c2-brh-ent-messier-31": "plan 0075 data round D1-D3 (strict, whole bank incl. originals): the list leaks in c1_2 AND in an earlier separate lucky-guessing run (c1_1) (blind+described 10/10, or a guesser over the chance+5 family bar >= 3/5 with blind+described >= 4/10; two-run rule of 2026-11-08); dropped and back-filled",
    "basic-au-t2-w103c0-brh-ent-ring-of-fire": "plan 0075 data round D1-D3 (strict, whole bank incl. originals): the list leaks in c1_2 AND in an earlier separate lucky-guessing run (c1_1) (blind+described 10/10, or a guesser over the chance+5 family bar >= 3/5 with blind+described >= 4/10; two-run rule of 2026-11-08); dropped and back-filled",
@@ -2083,7 +2083,7 @@
    "basic-au-t1-w109c0-brh-ent-beirut-fertilizer": "audit addendum 2 2026-11-19: check 2 / #372: \"the 2020 Beirut port explosion\" routes through a national capital (same ruling as its dropped w112c0 sibling; sarajevo-1914-war precedent)",
    "basic-au-t1-w110c0-brh-ent-beirut-fertilizer": "audit addendum 3 2026-11-19: check 2 / #372: \"the 2020 explosion at the port of Beirut\" routes through a national capital (same ruling as the dropped w112c0 / w109c0 siblings)"
   },
-  "multihop": {
+  "multihop_st": {
    "b3-mh-bakerstreet-city": "plan 0075 data round D4: the answer is reachable without the bridge (a direct well-known pairing of the named thing with the answer); dropped and back-filled",
    "b3-mh-blindpoet-epic": "plan 0075 data round D4: the answer is reachable without the bridge (a direct well-known pairing of the named thing with the answer); dropped and back-filled",
    "b3-mh-gravity-fruit": "plan 0075 data round D4: the answer is reachable without the bridge (a direct well-known pairing of the named thing with the answer); dropped and back-filled",
@@ -2366,7 +2366,7 @@
    "association-au-t1-w104c0-assoc-easy-vending-machine-spiral": "audit addendum 2026-11-19: check 1: served distractor 'gumball machine' is itself a vending machine (hyponym of the gold; hamburger/sandwich, truck-stop precedent)",
    "association-au-t1-w104c0-assoc-easy-water-park-lazy-river": "audit addendum 2026-11-19: check 1: served distractor 'amusement park' is a hypernym of the gold (a water park is an amusement park; truck-stop/gas-station precedent)"
   },
-  "basic_readout": {
+  "basic_readout_st": {
    "basic-au-t1-w100c0-br-imp-herb": "plan 0075 data round D1-D3 (strict, whole bank incl. originals): the list leaks in c1_2 AND in an earlier separate lucky-guessing run (c1_1) (blind+described 10/10, or a guesser over the chance+5 family bar >= 3/5 with blind+described >= 4/10; two-run rule of 2026-11-08); dropped and back-filled",
    "basic-au-t1-w100c0-br-imp-versioncontrolsystem": "plan 0075 data round D1-D3 (strict, whole bank incl. originals): the list leaks in c1_2 AND in an earlier separate lucky-guessing run (c1_1) (blind+described 10/10, or a guesser over the chance+5 family bar >= 3/5 with blind+described >= 4/10; two-run rule of 2026-11-08); dropped and back-filled",
    "basic-au-t1-w100c1-br-imp-broadwaymusical": "plan 0075 data round D1-D3 (strict, whole bank incl. originals): the list leaks in c1_2 AND in an earlier separate lucky-guessing run (c1_1) (blind+described 10/10, or a guesser over the chance+5 family bar >= 3/5 with blind+described >= 4/10; two-run rule of 2026-11-08); dropped and back-filled",
@@ -2570,7 +2570,7 @@
    "role-au-t1-w102c0-ra-student-teacher-comforted-ab": "audit 2026-11-19: check 4: near-dup of w100c1 teacher-student-reassured (comforted = reassured, mirrored scenes) (pair drop)",
    "role-au-t1-w102c0-ra-student-teacher-comforted-ba": "audit 2026-11-19: twin of student-teacher-comforted (pair drop)"
   },
-  "multilingual": {
+  "multilingual_st": {
    "b3-ml-es-sum-four": "plan 0075 data round D1-D3 (strict, whole bank incl. originals): the list leaks in c2_2 AND in an earlier separate lucky-guessing run (c1_2, c2_1) (blind+described 10/10, or a guesser over the chance+5 family bar >= 3/5 with blind+described >= 4/10; two-run rule of 2026-11-08); dropped and back-filled",
    "pt-time-after-night": "audit 2026-11-19: original, whole-bank ruling: options 'dawn'/'morning' also correct (8b; q35 cross-set; v4f)",
    "b3-ml-fr-opposite-big": "audit 2026-11-19: original, small-set whole-bank ruling (4b/9b/v4f): exact duplicate of fr-size-big-small",
@@ -2594,13 +2594,13 @@
    "relational-t0-s6-0052-a": "audit 2026-11-19: PR #439 composition rule: barber x cousin repeat",
    "relational-t0-s6-0052-b": "audit 2026-11-19: PR #439 composition rule: barber x cousin repeat (twin)"
   },
-  "typo_mt": {
+  "typo": {
    "typo-au-t1-w100c2-tyh-novel-indestructible": "audit 2026-11-19: check 4: near-dup of tyh-novel-unbreakable (same dropped-phone scene, synonymous gold)",
    "typo-au-t1-w101c1-tyh-novel-unstoppable": "audit 2026-11-19: check 4: near-dup of tyl-novel-unbeatable (same unbeaten-streak scene, synonymous gold)"
   }
  },
  "patches": {
-  "basic_readout_mt": {
+  "basic_readout": {
    "basic-au-t1-w102c0-brh-ent-stomach-secretion": {
     "set": {
      "mc": {
@@ -2698,7 +2698,7 @@
     "note": "plan 0087 one-cue repair (onecue-v3): readout: stibnite -> realgar (cue 'arsenic sulfide mineral'); hematite -> arsenopyrite (cue 'arsenic sulfide mineral'); cinnabar -> enargite (cue 'arsenic sulfide mineral'); galena -> tennantite (cue 'arsenic sulfide mineral')"
    }
   },
-  "multihop": {
+  "multihop_st": {
    "b3-mh-griffithobservatory-state": {
     "set": {
      "mc": {
@@ -2876,5 +2876,6 @@
    }
   }
  },
- "native_langs_decision": "[\"en\"] by lab decision (Dory1.0-4B)"
+ "native_langs_decision": "[\"en\"] by lab decision (Dory1.0-4B)",
+ "family_keys": "0101"
 }

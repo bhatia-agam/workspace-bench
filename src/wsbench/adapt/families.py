@@ -41,7 +41,7 @@ def _golds(item: dict) -> list[str]:
 
 def _bridge_asks(item: dict) -> list[Ask]:
     """The scored latent of the bridge families is the bridge: each bridge question is its own leg.
-    Single-token multihop carries ``bridge_question`` (new items) instead of ``bridges``."""
+    Single-token multihop_st carries ``bridge_question`` (new items) instead of ``bridges``."""
     out = []
     for n, br in enumerate(item.get("bridges") or [], start=1):
         answers = [str(a) for a in br.get("answers") or [] if str(a)]
@@ -68,7 +68,7 @@ def _skipped_bridges() -> frozenset[str]:
 
 @functools.cache
 def _original_bridges() -> dict[str, dict]:
-    """Bridge questions for the frozen multihop bank's originals (it never gated the bridge),
+    """Bridge questions for the frozen multihop_st bank's originals (it never gated the bridge),
     authored once and model-independent: ``data/multihop_bridges.json``."""
     path = Path(__file__).parent / "data" / "multihop_bridges.json"
     if not path.exists():
@@ -123,7 +123,7 @@ SHORTCUT_MAX_RATE = 0.2  # bank v5 (#323): a probe reaches the answer with > 4 o
 _multihop_base = _asked(CONTINUE, bridges=True, plain=True, require_bridge=True)
 
 
-def _multihop(item: dict) -> list[Ask]:
+def _multihop_st(item: dict) -> list[Ask]:
     """The registered legs (surface + bridge) and, for an item that carries them (plan 0075:
     authored items, bank v5's construction, #323), the second hop asked with the bridge named
     (``hop2_question``, must pass) and each shortcut probe (``shortcut_prompts``: the prompt with
@@ -139,7 +139,7 @@ def _multihop(item: dict) -> list[Ask]:
     return asks
 
 
-def _basic_readout(item: dict) -> list[Ask]:
+def _basic_readout_st(item: dict) -> list[Ask]:
     if item.get("subfamily") == "implicit":
         msgs = ({"role": "user", "content": item["prompt"]},)
         return [Ask(_iid(item), "surface", (), msgs, prefill=OWN_STEM, grade="own", max_tokens=8,
@@ -153,7 +153,7 @@ def _basic_readout(item: dict) -> list[Ask]:
                 prefill=OWN_STEM, max_tokens=8)]  # fmt: skip
 
 
-# basic_readout_mt v4's own gate (the bank header's ``gate``; ``scripts/build_brmt_v2.py``
+# basic_readout v4's own gate (the bank header's ``gate``; ``scripts/build_brmt_v2.py``
 # ``QWEN_GATE``): answers were cut at 300 tokens there, and graded over the whole answer
 BRMT_MAX_TOKENS = 300
 
@@ -168,8 +168,8 @@ def _name_forms(item: dict, role: str = "readout") -> list[str]:
     return list(dict.fromkeys(str(f) for fs in got.values() for f in fs if str(f)))
 
 
-def _basic_readout_mt(item: dict) -> list[Ask]:
-    """basic_readout_mt v4 (plan 0060 A2): the bank's gate exactly: the QUESTION in chat, no
+def _basic_readout(item: dict) -> list[Ask]:
+    """basic_readout v4 (plan 0060 A2): the bank's gate exactly: the QUESTION in chat, no
     system turn, no answer stem and no plain leg, graded by ``name_forms`` (any language,
     ``mc.form_in``) over the whole answer; sampled at the family's T / top_p / top_k."""
     msgs = ({"role": "user", "content": item["prompt"]},)
@@ -389,30 +389,30 @@ FAMILIES: dict[str, Family] = {
     f.name: f
     for f in [
         Family("association", _association, gate_render="chat_summarize"),
-        Family("basic_readout", _basic_readout, note="implicit items: own favourite"),
+        Family("basic_readout_st", _basic_readout_st, note="implicit items: own favourite"),
         Family(
-            "multihop",
-            _multihop,
+            "multihop_st",
+            _multihop_st,
             note="bridge leg: new items + originals (data/multihop_bridges.json); authored items "
             "also the bank-v5 hop-2 and shortcut legs (plan 0075)",
         ),
-        Family("multilingual", _asked(CONTINUE, plain=True, strict=True)),
+        Family("multilingual_st", _asked(CONTINUE, plain=True, strict=True)),
         Family("poetry", _poetry, own=True, finalize=_po.finalize, note="v5: free + stub legs"),
-        Family("typo", _asked(CORRECT_SPELLING, grade="first_word", strict=True)),
+        Family("typo_st", _asked(CORRECT_SPELLING, grade="first_word", strict=True)),
         Family("directed_modulation", _directed_modulation),
         # v4's gate (header `gate`): T=0.7, top_p 0.8, top_k 20; the other mt families keep
         # _asked(CONTINUE, plain=True)
         Family(
-            "basic_readout_mt",
-            _basic_readout_mt,
+            "basic_readout",
+            _basic_readout,
             temperature=0.7,
             top_p=0.8,
             top_k=20,
             note="v4 question in chat, no system turn / stem, graded by name_forms",
         ),
-        Family("multilingual_mt", _asked(CONTINUE, plain=True, strict=True)),
+        Family("multilingual", _asked(CONTINUE, plain=True, strict=True)),
         Family("multilingual_multihop", _asked(CONTINUE, bridges=True, plain=True, strict=True)),
-        Family("typo_mt", _asked(CORRECT_SPELLING, strict=True)),
+        Family("typo", _asked(CORRECT_SPELLING, strict=True)),
         Family("multilingual_typo", _asked(CORRECT_SPELLING, strict=True)),
         Family("arithmetic_intermediates", _numeric),
         Family("chain_intermediates", _numeric, threshold=1.0, temperature=0.8, top_p=0.95),
@@ -444,7 +444,7 @@ REGENERATE = {
     # plan 0060 Phase E (model-specific families; their own stages, not `profile` / `gate`)
     "wrong_intermediate": "the subject's own wrong-intermediate errors: "
     "`adapt wrong_intermediate` (wrong_intermediate.py)",
-    "multihop_mt": "staged gate with a must-not-reach shortcut leg: `adapt multihop_mt`",
+    "multihop": "staged gate with a must-not-reach shortcut leg: `adapt multihop`",
     "nyt_connections": "the subject's own groupings, labels and stability, options rebuilt "
     "around them: `adapt nyt_connections` (nyt_connections.py)",
     # plan 0078: the subject's own hidden bridges, re-gated from the gw mmh pool
@@ -466,7 +466,7 @@ def get(name: str) -> Family:
 # --- plan 0060 A1.1: what freeze ships ----------------------------------------------------------
 # Subject-derived item fields ``freeze`` overlays on an original built from the REGISTERED item
 # (``run.build_original``). They are never shipped from the registered item (it holds Qwen's), so
-# freeze refuses a family whose passing originals lack them. Native units of the multilingual
+# freeze refuses a family whose passing originals lack them. Native units of the multilingual_st
 # families are handled by ``native_langs`` (A1.10), not here.
 # The step that builds them on the subject (A2: moral adopt, the poetry steps) sets
 # ``item[SUBJECT_MARKER] = <model key>``; freeze requires it.
@@ -502,10 +502,10 @@ SUBJECT_FIELDS: dict[str, tuple[str, ...]] = {
         "prompt_only_opus",
         "gate_variant",
     ),
-    # basic_readout v5 (A2): an implicit item's options are re-keyed on the subject's own answer
+    # basic_readout_st v5 (A2): an implicit item's options are re-keyed on the subject's own answer
     # (``rebuild.subject_mc``; a distractor never equals it); entity / processing originals are
     # marked with the registered block unchanged. ``gold_position`` is rebuilt at freeze.
-    "basic_readout": ("mc",),
+    "basic_readout_st": ("mc",),
 }
 
 # Item keys every shipped item must carry, or ``freeze`` refuses the family (plan 0060 A1.1; item
@@ -515,15 +515,15 @@ SUBJECT_FIELDS: dict[str, tuple[str, ...]] = {
 # ``required_item_fields``. Every registered item satisfies its own entry (tests/test_adapt.py).
 REQUIRED_ITEM_FIELDS: dict[str, tuple[str, ...]] = {
     "association": ("mc.gold", "mc.aliases", "mc.distractors", "mc.distractor_aliases"),
-    "multihop": ("mc.gold", "mc.distractor_aliases", "mc.bridge_type"),
+    "multihop_st": ("mc.gold", "mc.distractor_aliases", "mc.bridge_type"),
     "chain_intermediates": ("mc",),
     "conjunctive_association": ("bank_version", "inverted_label", "mc_options", "twin_of"),
-    "multilingual": ("mc", "mc_roles", "lang", "units"),
-    "multilingual_mt": ("mc_roles", "mc.language"),
+    "multilingual_st": ("mc", "mc_roles", "lang", "units"),
+    "multilingual": ("mc_roles", "mc.language"),
     "multilingual_typo": ("mc", "mc.correction_native", "units"),
     "multilingual_multihop": ("mc_roles", "l2_equals_native", "bridge_l2_creditable"),
-    "basic_readout": ("slice", "task_context", "mc.gold", "mc.gold_position"),
-    "basic_readout_mt": ("name_forms", "mc"),
+    "basic_readout_st": ("slice", "task_context", "mc.gold", "mc.gold_position"),
+    "basic_readout": ("name_forms", "mc"),
     "poetry": ("line_one_end", "mc.candidates", "qwen_commits"),
     "moral_rationale": ("bank_version", "options"),
 }

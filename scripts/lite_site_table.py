@@ -30,6 +30,8 @@ from collections import Counter, defaultdict
 from pathlib import Path
 from typing import Any
 
+from wsbench import registry
+
 FAMILIES = ("association", "conjunctive_association", "role_bound_association")
 MARGIN = 0.10
 EXTRA_CANDIDATE = {"role_bound_association": 4}
@@ -171,9 +173,7 @@ def main(argv: list[str] | None = None) -> int:
     if a.out:
         Path(a.out).write_text(text + "\n", encoding="utf-8")
     if a.write:
-        from wsbench.registry import REPO_ROOT
-
-        dst = REPO_ROOT / "evals" / a.family / "lite_rule.json"
+        dst = registry.family_root(a.family) / "lite_rule.json"
         frozen = {"lite_positions": t["chosen"], "procedure": "plan 0032 §2.6", "table": t}
         dst.write_text(json.dumps(frozen, indent=1) + "\n", encoding="utf-8")
         print(f"froze {t['chosen']} -> {dst}")

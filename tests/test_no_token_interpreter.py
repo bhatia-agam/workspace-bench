@@ -47,7 +47,7 @@ TOKEN_FAMILIES = [
     "role_bound_association",
     "user_modeling",
     "multi_concept_directed_modulation",
-    "multilingual_mt",
+    "multilingual",
 ]
 
 
@@ -108,6 +108,9 @@ def test_no_readme_describes_the_deleted_step_as_current():
         "is first interpreted by the shared",
         "shared summarizer's prose interpretation",
     )
+    families = [registry.family_root(f) / "README.md" for f in registry._layout()]
+    assert len(families) == 32 and all(p.is_file() for p in families)
     docs = [root / "README.md", root / "CLAUDE.md", *(root / "evals").glob("*/README.md")]
+    docs += families  # one level deeper since plan 0101: `evals/*/README.md` alone misses them
     bad = [f"{p.relative_to(root)}: {s!r}" for p in docs for s in stale if s in p.read_text()]
     assert not bad, bad

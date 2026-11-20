@@ -1,4 +1,5 @@
-"""Build ``evals/introspection/items_v2.json`` from ``items.json`` (plan 0045; deterministic, no
+"""Build ``evals/model_specific/introspection/items_v2.json`` from ``items.json`` (plan 0045;
+deterministic, no
 model, no API call). ``items.json`` is left untouched (D9). Run after
 ``scripts/introspection_export_vectors.py`` (the ``vectors`` block records the files' sha256).
 
@@ -29,10 +30,12 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO / "src"))
 
-from wsbench import mc  # noqa: E402
+from wsbench import mc, registry  # noqa: E402
 
-V1 = REPO / "evals/introspection/items.json"
-V2 = REPO / "evals/introspection/items_v2.json"
+V1 = REPO / "evals/model_specific/introspection/items.json"
+V2 = REPO / "evals/model_specific/introspection/items_v2.json"
+# the vectors' path as the bank STORES it (bank bytes, carried into every plan row: the pre-0101
+# layout string, plan 0101 F3); files are opened through ``registry.repo_path``
 VEC = "evals/introspection/vectors"
 FROZEN = "2026-10-30"
 
@@ -240,7 +243,8 @@ def build(v1: dict) -> dict:
             for cl, labels in r["options_by_cluster"].items()
         }
 
-    cpath, gpath = REPO / VEC / "concept_vectors_L12.npy", REPO / VEC / "gaussian_vectors_L12.npy"
+    vec_dir = registry.repo_path(VEC)
+    cpath, gpath = vec_dir / "concept_vectors_L12.npy", vec_dir / "gaussian_vectors_L12.npy"
     d = int(out["spec"].get("d_model", 5120))
     out["vectors"] = {
         "concept": {

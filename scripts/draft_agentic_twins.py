@@ -23,8 +23,8 @@ from typing import Any
 import anthropic
 
 REPO = Path(__file__).resolve().parents[1]
-BANK = REPO / "evals/agentic_misalignment/items.json"
-TARGETS = REPO / "evals/agentic_misalignment/targets.json"
+BANK = REPO / "evals/safety/agentic_misalignment/items.json"
+TARGETS = REPO / "evals/safety/agentic_misalignment/targets.json"
 MODEL = "claude-opus-5-5"
 ROLES = ("means", "object", "threat", "goal_conflict", "pressure")
 RULES = ("means", "object")

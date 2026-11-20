@@ -1,11 +1,15 @@
-"""evals/role_bound_association/roles_v1.json (plan 0055 C2.1, C2.4): every bank role has terms;
+"""evals/anti_bag_of_features/role_bound_association/roles_v1.json (plan 0055 C2.1, C2.4): every
+bank role has terms;
 near roles never share a term with the role; the options of every v2 people list are pairwise
 term-disjoint; no role term occurs in its own item's (role-word-blocked) stimulus."""
 
 import json
 
-from wsbench.evals.role_bound_association import gate, prompts
-from wsbench.evals.role_bound_association.judge import build_block_v2, load_items
+from wsbench.evals.anti_bag_of_features.role_bound_association import gate, prompts
+from wsbench.evals.anti_bag_of_features.role_bound_association.judge import (
+    build_block_v2,
+    load_items,
+)
 from wsbench.mc import form_in
 
 LEX = gate.load_lexicon()
@@ -102,7 +106,7 @@ def test_homeowner_plurals():
     """'residents' / 'occupants' name the homeowner ('rescuing residents' voided a gold triple
     on oa-firefighter-homeowner-rescue-ab), and the option shown to the judge is unchanged (a
     plural is a spelling variant: ``role_terms_shown`` skips it)."""
-    from wsbench.evals.role_bound_association.judge import role_terms_shown
+    from wsbench.evals.anti_bag_of_features.role_bound_association.judge import role_terms_shown
 
     q = "Firefighter Priya, after rescuing residents from a dangerous blaze"
     assert gate.role_ref(q, "homeowner", LEX)

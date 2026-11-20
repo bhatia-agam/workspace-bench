@@ -100,13 +100,13 @@ def test_freeze_partial_src_is_refused_or_keeps_provenance(tmp_path, real_famili
     dst = tmp_path / "ll.json"
     a = _run(tmp_path, "a", _result("association", _spv("association")))
     ll.freeze(a, None, dst, source=_source(tmp_path, producer="p1", measured="d1"))
-    b = _run(tmp_path, "b", _result("multihop", _spv("multihop")))
+    b = _run(tmp_path, "b", _result("multihop_st", _spv("multihop_st")))
     before = dst.read_text()
     with pytest.raises(ValueError, match=r"does not re-measure \(association\)"):
         ll.freeze(b, None, dst, source=_source(tmp_path, measured="d2"))
     assert dst.read_text() == before
     got = ll.freeze(b, None, dst, source=_source(tmp_path, measured="d2"), partial=True)
-    assert set(ll.floors(dst)) == {"association", "multihop"}
+    assert set(ll.floors(dst)) == {"association", "multihop_st"}
     # the new record is the latest run's only, never a merge with the previous run's
     assert got["_source"]["measured"] == "d2" and "producer" not in got["_source"]
     (kept,) = got["_source"]["kept_from"]
@@ -117,10 +117,10 @@ def test_freeze_partial_src_is_refused_or_keeps_provenance(tmp_path, real_famili
     by_fam = {
         f: k["source"]["measured"] for k in got["_source"]["kept_from"] for f in k["families"]
     }
-    assert by_fam == {"association": "d1", "multihop": "d2"}
+    assert by_fam == {"association": "d1", "multihop_st": "d2"}
     # a src that re-measures every entry needs no flag and leaves no kept_from
     both = _run(
-        tmp_path, "all", *(_result(f, _spv(f)) for f in ("association", "multihop", "poetry"))
+        tmp_path, "all", *(_result(f, _spv(f)) for f in ("association", "multihop_st", "poetry"))
     )
     got = ll.freeze(both, None, dst, source=_source(tmp_path, measured="d4"))
     assert got["_source"]["measured"] == "d4" and "kept_from" not in got["_source"]
@@ -248,7 +248,7 @@ def test_freeze_refuses_ati_without_scope_or_entry(tmp_path, real_families):
     with pytest.raises(ValueError, match="anti_text_inversion"):
         a = _run(tmp_path, "ati", _result("association", spv))
         ll.freeze(full, a, tmp_path / "a.json", source=src)
-    ati = _run(tmp_path, "ati2", _result("multihop", _spv("multihop"), scope=ATI_SCOPE))
+    ati = _run(tmp_path, "ati2", _result("multihop_st", _spv("multihop_st"), scope=ATI_SCOPE))
     with pytest.raises(ValueError, match="no full-bank entry"):
         ll.freeze(full, ati, tmp_path / "b.json", source=src)
 
@@ -449,12 +449,12 @@ def test_floor_is_not_drawn_beside_an_adapted_subject(tmp_path, monkeypatch, rea
         assert ll.COLUMN not in (d / "summary.md").read_text(), name
     # a mixed table keeps the column for the registered row and shows a dash for the other
     md = markdown_table(
-        [registered, _adapted_like("multihop", bank_root="kimi-k3")],
+        [registered, _adapted_like("multihop_st", bank_root="kimi-k3")],
         None,
         floors=floor_columns(),
         summary_floors={
             **summary_floor_columns(),
-            ll.COLUMN: {fam: (entry, "0.250"), "multihop": ({**entry}, "0.111")},
+            ll.COLUMN: {fam: (entry, "0.250"), "multihop_st": ({**entry}, "0.111")},
         },
     )
     assert "0.250" in md and "0.111" not in md

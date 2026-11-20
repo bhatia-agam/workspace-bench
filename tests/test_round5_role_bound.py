@@ -9,7 +9,7 @@ Both directions: the possessive shape fails for "her" as for "his", and "her" as
 import pytest
 
 from wsbench.digest import Line
-from wsbench.evals.role_bound_association import gate
+from wsbench.evals.anti_bag_of_features.role_bound_association import gate
 
 LEX = gate.load_lexicon()
 

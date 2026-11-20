@@ -5,7 +5,7 @@ Run from the repo root (needs the dev env plus `transformers` for the tokenizer)
 
     uv run --with transformers --with jinja2 python \\
         .claude/skills/wsb-new-questions/scripts/validate_bank.py \\
-        --family multihop --bank outputs/new_items/multihop/items.json
+        --family multihop_st --bank outputs/new_items/multihop_st/items.json
 
 Exit 0 = every check passed (warnings allowed), 1 = at least one ERROR, 2 = usage error.
 Nothing here calls an API; `--live-limit N` opts into a real `wsbench judge limit=N` smoke
@@ -26,10 +26,10 @@ from pathlib import Path
 from typing import Any
 
 MT_FAMILIES = {
-    "basic_readout_mt",
-    "multihop_mt",
-    "multilingual_mt",
-    "typo_mt",
+    "basic_readout",
+    "multihop",
+    "multilingual",
+    "typo",
     "multilingual_multihop",
     "multilingual_typo",
 }
@@ -42,7 +42,7 @@ NOT_AUTHORABLE = {
 # Fields a family's judge, read plan or capability question actually reads (missing = ERROR).
 REQUIRED: dict[str, list[str]] = {
     "association": ["name", "prompt", "intermediates", "readout", "eval_render"],
-    "basic_readout": [
+    "basic_readout_st": [
         "name",
         "subfamily",
         "prompt",
@@ -51,11 +51,11 @@ REQUIRED: dict[str, list[str]] = {
         "readout",
         "eval_render",
     ],
-    "multihop": ["name", "prompt", "target", "intermediates", "readout", "eval_render"],
-    "multilingual": ["name", "prompt", "target", "intermediates", "readout", "eval_render"],
+    "multihop_st": ["name", "prompt", "target", "intermediates", "readout", "eval_render"],
+    "multilingual_st": ["name", "prompt", "target", "intermediates", "readout", "eval_render"],
     "poetry": ["name", "prompt", "intermediates", "readout", "eval_render"],
-    "typo": ["name", "prompt", "intermediates", "readout", "eval_render"],
-    "basic_readout_mt": [
+    "typo_st": ["name", "prompt", "intermediates", "readout", "eval_render"],
+    "basic_readout": [
         "name",
         "subfamily",
         "prompt",
@@ -67,7 +67,7 @@ REQUIRED: dict[str, list[str]] = {
         "eval_render",
         "intermediates",
     ],
-    "multihop_mt": [
+    "multihop": [
         "name",
         "subfamily",
         "prompt",
@@ -80,7 +80,7 @@ REQUIRED: dict[str, list[str]] = {
         "eval_render",
         "intermediates",
     ],
-    "multilingual_mt": [
+    "multilingual": [
         "name",
         "subfamily",
         "prompt",
@@ -93,7 +93,7 @@ REQUIRED: dict[str, list[str]] = {
         "eval_render",
         "intermediates",
     ],
-    "typo_mt": [
+    "typo": [
         "name",
         "subfamily",
         "prompt",
@@ -498,16 +498,23 @@ def gold_forms(family: str, it: dict[str, Any]) -> list[tuple[str, str]]:
             for lang, fs in forms.items():
                 for f in fs:
                     out.append((f"unit {u.get('role')}[{lang}]", str(f)))
-        if family == "multihop_mt":
+        if family == "multihop":
             out += [("target", str(t)) for t in [it.get("target"), *it.get("target_alts", [])] if t]
         return out
-    if family in ("association", "basic_readout", "multihop", "multilingual", "poetry", "typo"):
+    if family in (
+        "association",
+        "basic_readout_st",
+        "multihop_st",
+        "multilingual_st",
+        "poetry",
+        "typo_st",
+    ):
         for x in it.get("intermediates", []):
             out.append(("intermediate", str(x)))
         for u in it.get("units", []) or []:
             for m in u.get("match", []):
                 out.append((f"unit {u.get('role')}", str(m)))
-        if family in ("multihop", "multilingual", "basic_readout") and it.get("target"):
+        if family in ("multihop_st", "multilingual_st", "basic_readout_st") and it.get("target"):
             out.append(("target", str(it["target"])))
         return out
     if family == "user_modeling":
@@ -535,7 +542,7 @@ def check_guards(
     for it in items:
         k, text = item_key(it), prompt_text(family, it)
         for what, form in gold_forms(family, it):
-            typo_fam = family in ("typo_mt", "multilingual_typo", "typo")
+            typo_fam = family in ("typo", "multilingual_typo", "typo_st")
             if typo_fam and fold(form) == fold(it.get("typo_word", "")):
                 err(f"{k}: the correction equals the typo word")
             if what == "blocklist" and family == "role_bound_association":
@@ -598,7 +605,7 @@ def check_guards(
                 if ans and occurs(str(ans), str(br.get("question", ""))):
                     err(f"{k}: bridge answer {ans!r} appears in its own question")
         targets = [str(t) for t in [it.get("target"), *(it.get("target_alts") or [])] if t]
-        if family in ("multihop_mt", "multilingual_multihop"):
+        if family in ("multihop", "multilingual_multihop"):
             for u in it.get("units", []):
                 if not str(u.get("role", "")).startswith("bridge"):
                     continue
@@ -611,7 +618,7 @@ def check_guards(
                                 f"contained in the target {hit[0]!r} (a target readout would "
                                 "credit the bridge)"
                             )
-        if family == "multihop":
+        if family == "multihop_st":
             for x in it.get("intermediates", []):
                 hit = [t for t in targets if occurs(t, str(x)) or occurs(str(x), t)]
                 if hit:
@@ -673,13 +680,13 @@ def check_guards(
             if best[0] >= 0.8:
                 warn(f"{k}: near-duplicate of frozen item {best[1]} (word Jaccard {best[0]:.2f})")
     if family in (
+        "multihop_st",
+        "multilingual_st",
         "multihop",
-        "multilingual",
-        "multihop_mt",
+        "basic_readout_st",
         "basic_readout",
-        "basic_readout_mt",
+        "typo_st",
         "typo",
-        "typo_mt",
         "association",
         "poetry",
     ):
@@ -694,12 +701,22 @@ def check_guards(
 # ------------------------------------------------------------------ shadow repo
 
 
+def family_rel(repo: Path, family: str) -> Path:
+    """``evals/[<category>/]<family>``: the family's data directory in ``repo``, read off its
+    package tree the way ``wsbench.registry._layout`` reads it (plan 0101). Not imported from
+    the package: these scripts must import ``wsbench`` from the shadow checkout first."""
+    pkgs = repo / "src" / "wsbench" / "evals"
+    hit = next((p.parent.parent for p in pkgs.glob(f"*/{family}/__init__.py")), None)
+    return Path("evals", hit.name, family) if hit else Path("evals", family)
+
+
 def bank_name(repo: Path, family: str) -> str:
     """The file name of the family's registered bank (``EvalSpec.bank``: ``items.json``, or a
     versioned ``items_v<N>.json`` once the family switched, plan 0032 §2.12; the multilingual
     families judge ``items_v2.json`` since plan 0054)."""
-    for name in sorted((repo / "evals" / family).glob("items_v*.json"), reverse=True):
-        init = repo / "src" / "wsbench" / "evals" / family / "__init__.py"
+    rel = family_rel(repo, family)
+    for name in sorted((repo / rel).glob("items_v*.json"), reverse=True):
+        init = repo / "src" / "wsbench" / rel / "__init__.py"
         if init.exists() and name.name in init.read_text(encoding="utf-8"):
             return name.name
     return "items.json"
@@ -717,13 +734,15 @@ def make_shadow(repo: Path, family: str, bank: Path, work: Path) -> Path:
         if p.name in ("src", "evals", ".git", ".venv", "outputs"):
             continue
         (shadow / p.name).symlink_to(p.resolve())
-    (shadow / "evals").mkdir()
-    for p in (repo / "evals").iterdir():
-        if p.name == family:
-            shutil.copytree(p, shadow / "evals" / family, symlinks=True)
-            shutil.copy(bank, shadow / "evals" / family / bank_name(repo, family))
-        else:
-            (shadow / "evals" / p.name).symlink_to(p.resolve())
+    rel = family_rel(repo, family)
+    for parent in reversed(rel.parents[:-1]):  # evals, then the category directory if any
+        (shadow / parent).mkdir()
+        for p in (repo / parent).iterdir():
+            if p.name == rel.relative_to(parent).parts[0]:
+                continue  # the family's own branch: copied below
+            (shadow / parent / p.name).symlink_to(p.resolve())
+    shutil.copytree(repo / rel, shadow / rel, symlinks=True)
+    shutil.copy(bank, shadow / rel / bank_name(repo, family))
     return shadow
 
 
@@ -828,7 +847,9 @@ def build_readouts(
     units_of: dict[str, list[Any]] = {}
     if family in MT_FAMILIES:
         raw = json.loads(
-            (shadow / "evals" / family / bank_name(shadow, family)).read_text(encoding="utf-8")
+            (shadow / family_rel(shadow, family) / bank_name(shadow, family)).read_text(
+                encoding="utf-8"
+            )
         )
         header = {k: v for k, v in raw.items() if k != "items"}
         contract = regex.contract_for(header, str(header.get("family", family)))
@@ -859,7 +880,7 @@ def build_readouts(
                 tail = tok.decode(rd.ids[pos[0] + 1 :]).strip()
                 if "\n" in tail:
                     err(f"{s.id}: more than one newline; the read site must end line ONE")
-            if family == "multihop":
+            if family == "multihop_st":
                 last = rd.decoded[pos[0]]
                 if not last.strip():
                     err(
@@ -914,7 +935,7 @@ def main() -> int:
     if fam not in REQUIRED:
         print(f"unknown family {fam!r}; known: {sorted(REQUIRED)}", file=sys.stderr)
         return 2
-    frozen_path = repo / "evals" / fam / bank_name(repo, fam)
+    frozen_path = repo / family_rel(repo, fam) / bank_name(repo, fam)
     if not frozen_path.exists():
         print(f"{frozen_path} not found: run from the repo root or pass --repo", file=sys.stderr)
         return 2
@@ -948,7 +969,7 @@ def main() -> int:
         from wsbench.banks import load_bank
         from wsbench.multitoken.options import option_sets
 
-        _h, its = load_bank(shadow / "evals" / fam / bank_name(shadow, fam))
+        _h, its = load_bank(shadow / family_rel(shadow, fam) / bank_name(shadow, fam))
         try:
             option_sets(its)
             ok("MC option sets build (opts=judge=mc and the lucky-guessing floor)")

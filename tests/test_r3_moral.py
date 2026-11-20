@@ -9,7 +9,7 @@ from conftest import write_jsonl
 from summary_fakes import FakeLLM, summary_args
 from test_audit_fixes_families import GOLD_LINE, OPP_LINE, _committed_mc
 
-from wsbench.evals.moral_rationale import judge as mr
+from wsbench.evals.logical_processing.moral_rationale import judge as mr
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -69,7 +69,9 @@ def test_v3_bank_untouched_by_round_3():
     import hashlib
 
     assert (
-        hashlib.sha256((ROOT / "evals/moral_rationale/items_v3.json").read_bytes()).hexdigest()
+        hashlib.sha256(
+            (ROOT / "evals/logical_processing/moral_rationale/items_v3.json").read_bytes()
+        ).hexdigest()
         == V3_SHA
     )
 
@@ -157,7 +159,7 @@ def test_adversarial_changed_sibling_regates_an_unchanged_list():
 
 def test_adversarial_slot_side_matches_v3_length_rank():
     adv = _adv()
-    bank = json.loads((ROOT / "evals/moral_rationale/items_v3.json").read_text())
+    bank = json.loads((ROOT / "evals/logical_processing/moral_rationale/items_v3.json").read_text())
     for it in bank:
         for o in it["options"].values():
             for d in o["distractors"]:
@@ -172,10 +174,14 @@ def test_v4_bank_is_the_gate_passing_subset_of_v3(monkeypatch):
     adv = _adv()
     v3 = {
         it["id"]: it
-        for it in json.loads((ROOT / "evals/moral_rationale/items_v3.json").read_text())
+        for it in json.loads(
+            (ROOT / "evals/logical_processing/moral_rationale/items_v3.json").read_text()
+        )
     }
-    v4 = json.loads((ROOT / "evals/moral_rationale/items_v4.json").read_text())
-    rep = json.loads((ROOT / "evals/moral_rationale/rekey_report_v4.json").read_text())
+    v4 = json.loads((ROOT / "evals/logical_processing/moral_rationale/items_v4.json").read_text())
+    rep = json.loads(
+        (ROOT / "evals/logical_processing/moral_rationale/rekey_report_v4.json").read_text()
+    )
     assert rep["n_v4"] == len(v4) and rep["n_v3"] == len(v3)
     assert {i for i, r in rep["items"].items() if r["kept"]} == {it["id"] for it in v4}
     for it in v4:
@@ -201,7 +207,9 @@ def test_v4_bank_is_the_gate_passing_subset_of_v3(monkeypatch):
     for i, r in rep["items"].items():
         if not r["kept"]:
             assert any(x["gold_picks"] > adv.GATE_MAX for x in r["lists"].values()), i
-    monkeypatch.setenv("WSB_BANK_FILE_MORAL_RATIONALE", "evals/moral_rationale/items_v4.json")
+    monkeypatch.setenv(
+        "WSB_BANK_FILE_MORAL_RATIONALE", "evals/logical_processing/moral_rationale/items_v4.json"
+    )
     from wsbench.mcjudge import load_bank
 
     bank = load_bank("moral_rationale")
@@ -219,7 +227,9 @@ def test_native_mode_is_one_pick_per_cell_and_the_ati_entry_is_on_ec_v9(tmp_path
     from wsbench.baselines import text_inversion as ti
     from wsbench.judge_config import JudgeConfig, resolve
 
-    monkeypatch.setenv("WSB_BANK_FILE_MORAL_RATIONALE", "evals/moral_rationale/items_v3.json")
+    monkeypatch.setenv(
+        "WSB_BANK_FILE_MORAL_RATIONALE", "evals/logical_processing/moral_rationale/items_v3.json"
+    )
     mc = _committed_mc()
     iid = "ec-self_driving_sacrifice_passenger-chat_tf"
     rows = [{"id": iid, "layer": 20, "pos": p, "samples": [GOLD_LINE, OPP_LINE]} for p in range(8)]

@@ -1,5 +1,5 @@
 """Gate a normal-bank OLens subject on the 27B bank (greedy, every leg) and re-gold the own-answer
-families from its adapt gate records: outputs/normal_gated/<subject>/{gate,poetry,basic_readout,
+families from its adapt gate records: outputs/normal_gated/<subject>/{gate,poetry,basic_readout_st,
 moral_rationale}.json.
 
     python atlas/normal_gate.py answers glm-5.3-flash   # greedy answers via adapt-mp-<key> (GPU)
@@ -162,7 +162,7 @@ def grade(subject: str) -> None:
     out = {"subject": subject, "criterion": "greedy, every leg",
            "grader": f"{GRADER} (wsbench capable grade prompt; string match accepted outright)",
            "not_gated": sorted(NOT_GATED),
-           "note": "basic_readout here = entity items only (implicit items are re-golded on the subject)",
+           "note": "basic_readout_st here = entity items only (implicit items are re-golded on the subject)",
            "families": fams, "items": items, "n_graded_calls": len(todo),
            "n_undecided": sum(g is None for g in got)}  # fmt: skip
     (OUT / subject / "gate.json").write_text(json.dumps(out, indent=1, ensure_ascii=False))
@@ -173,7 +173,7 @@ def regold(subject: str) -> None:
     """The adapted gate records of the three own-answer families -> 27B items, subject golds."""
     from wsbench.adapt import store
 
-    for fam in ("poetry", "basic_readout", "moral_rationale"):
+    for fam in ("poetry", "basic_readout_st", "moral_rationale"):
         header, orig = store.original_bank(fam)
         gated = store.gated(subject, fam)
         keep, n_pass = [], 0
@@ -209,7 +209,7 @@ def notes(subject: str, extra: str = "") -> None:
              f"- Gate criterion: {g['criterion']}; grader {g['grader']}. Same 2861 asks as the "
              "Kimi-K2 gate (wsbench 92d763e capable questions); multi-leg items need every leg.",
              f"- Not gated by the 27B gold: {', '.join(g['not_gated'])} (agreement / own-answer "
-             "families); poetry, basic_readout implicit and moral are re-golded below instead.",
+             "families); poetry, basic_readout_st implicit and moral are re-golded below instead.",
              f"- Graded calls {g['n_graded_calls']}, undecided {g['n_undecided']} (undecided = "
              "null in items; drop them).", "", "## Gate pass per family (greedy, every leg)", "",
              "| family | pass / n |", "|---|---|"]  # fmt: skip
@@ -220,7 +220,7 @@ def notes(subject: str, extra: str = "") -> None:
             + " |"
         )
     lines += ["", "## Re-golded own-answer families (adapt profile + moral on the subject)", ""]
-    for fam in ("poetry", "basic_readout", "moral_rationale"):
+    for fam in ("poetry", "basic_readout_st", "moral_rationale"):
         p = d / f"{fam}.json"
         if not p.exists():
             lines.append(f"- {fam}: not built")

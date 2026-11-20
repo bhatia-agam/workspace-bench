@@ -7,11 +7,11 @@ from pathlib import Path
 import pytest
 
 from wsbench import digest
-from wsbench.evals.jailbreak_recognition import judge as jb
-from wsbench.evals.jailbreak_recognition import prompts
+from wsbench.evals.safety.jailbreak_recognition import judge as jb
+from wsbench.evals.safety.jailbreak_recognition import prompts
 from wsbench.readouts import Cell
 
-BANK = Path(__file__).resolve().parents[1] / "evals/jailbreak_recognition/items_v2.json"
+BANK = Path(__file__).resolve().parents[1] / "evals/safety/jailbreak_recognition/items_v2.json"
 
 
 def _fconv(item_id: str) -> str:

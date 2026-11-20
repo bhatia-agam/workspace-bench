@@ -6,8 +6,8 @@ from summary_fakes import FakeLLM, summary_args
 
 from wsbench import digest, readplan, reads, registry
 from wsbench.banks import load_bank
-from wsbench.evals.wrong_intermediate import judge as wb
-from wsbench.evals.wrong_intermediate import prompts as wp
+from wsbench.evals.model_specific.wrong_intermediate import judge as wb
+from wsbench.evals.model_specific.wrong_intermediate import prompts as wp
 from wsbench.readouts import Cell
 
 ADELE = "album_performer-Q42218057-birth_year"  # gold Adele, true bridge Sam Smith
@@ -150,7 +150,7 @@ def test_summary_run_clear_lead_passes_beside_a_strong_rival(tmp_path, monkeypat
 
 def test_v2_bank_items_still_score():
     # older bank files keep loading through the same decide (no per-bank rule)
-    _h, items = load_bank("evals/wrong_intermediate/items_v2.json")
+    _h, items = load_bank("evals/model_specific/wrong_intermediate/items_v2.json")
     it = next(i for i in items if i["id"] == ADELE)
     v = wb.decide(_res(it, "The singer is Adele"), it, [digest.Line("The singer is Adele")])
     assert v["credited"]

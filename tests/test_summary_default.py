@@ -15,8 +15,8 @@ from wsbench.results import FamilyResult, markdown_table, write_results
 from wsbench.runner import parse_opts
 
 REPO = Path(__file__).resolve().parents[1]
-MT_EXAMPLE = REPO / "examples/readouts/multilingual_mt.jsonl"
-BR_EXAMPLE = REPO / "examples/readouts/basic_readout.jsonl"
+MT_EXAMPLE = REPO / "examples/readouts/multilingual.jsonl"
+BR_EXAMPLE = REPO / "examples/readouts/basic_readout_st.jsonl"
 
 
 def test_parse_opts_defaults_to_summary():
@@ -45,14 +45,14 @@ def test_parse_opts_defaults_to_summary():
 
 
 def test_cli_with_no_opts_runs_summary_and_records_it(tmp_path, monkeypatch, capsys):
-    from wsbench.evals.basic_readout import SPEC
+    from wsbench.evals.basic.basic_readout_st import SPEC
 
     registry.FAMILIES.setdefault(SPEC.name, SPEC)
     monkeypatch.delenv("WSBENCH_JUDGE_MODEL", raising=False)
     out = tmp_path / "out"
     argv = [
         "run",
-        "families=basic_readout",
+        "families=basic_readout_st",
         f"readouts_root={BR_EXAMPLE.parent}",
         f"out={out}",
         "dry_run=True",
@@ -69,7 +69,7 @@ def test_cli_with_no_opts_runs_summary_and_records_it(tmp_path, monkeypatch, cap
 def test_native_opt_out_is_the_pre_0024_run(tmp_path, monkeypatch):
     """``opts=aggregate=native`` through the CLI writes exactly what the family's own (native)
     rule writes when called directly with no aggregate, as every run did before plan 0024."""
-    from wsbench.evals.multilingual_mt import SPEC
+    from wsbench.evals.basic.multilingual import SPEC
 
     registry.FAMILIES.setdefault(SPEC.name, SPEC)
     monkeypatch.delenv("WSBENCH_JUDGE_MODEL", raising=False)
@@ -77,7 +77,7 @@ def test_native_opt_out_is_the_pre_0024_run(tmp_path, monkeypatch):
     rc = main(
         [
             "judge",
-            "family=multilingual_mt",
+            "family=multilingual",
             f"readouts={MT_EXAMPLE}",
             f"out={cli_out}",
             "opts=aggregate=native",
@@ -179,7 +179,7 @@ def test_freeze_routes_summary_runs_and_refuses_mixed(tmp_path, monkeypatch, rea
         po.freeze(run)
     # mixing modes is refused
     write_results(run / "association", _result("association", spv, "summary", SUMM))
-    write_results(run / "basic_readout", _result("basic_readout", "x", "native"))
+    write_results(run / "basic_readout_st", _result("basic_readout_st", "x", "native"))
     with pytest.raises(ValueError, match="mixes aggregate modes"):
         po.freeze(run)
 

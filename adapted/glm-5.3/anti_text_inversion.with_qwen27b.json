@@ -58,16 +58,16 @@
    "plan_sha": {
     "arithmetic_intermediates": "294150b26ae8ca8526f48a0028b75f56cefdb2392b9b08e2bb08174d4410a40d",
     "association": "503fc484ef4eeec7628bc6bdb6d2413591bb85a0643f3bcfcb753e7c40ed9da1",
-    "basic_readout": "8ffb30fde00aade24452973e009a288780b44a1d018a836b90ffed9fe7787978",
-    "basic_readout_mt": "f8e76877f750b2ebf0d8fe8e2615812562ae735d5091d6e3775c6074cabaa59d",
+    "basic_readout_st": "8ffb30fde00aade24452973e009a288780b44a1d018a836b90ffed9fe7787978",
+    "basic_readout": "f8e76877f750b2ebf0d8fe8e2615812562ae735d5091d6e3775c6074cabaa59d",
     "chain_intermediates": "97fa074f8bd5ca15bdec54bb9b2a355b86c7b8c8bcf6be2e9762ee070da4cbfc",
     "conjunctive_association": "251268373c3900b2dc954f78383099ed59845f7966014cc9977e2559152a670f",
     "jailbreak_recognition": "9fc1af9dc5fc5cd619184a4f605fc908909ba022a062c298ffacbc737ff124bf",
     "knowledge_cutoff": "d32d88ae59da0179cdf9b0c335f8d06c68f8062ebc99f653aed594ca2186b754",
     "model_specific_directed_modulation": "bfa1721265f7ae4b7f880a80f67cbcf35654055f21105980d8d4ae9356dde585",
     "moral_rationale": "3de8b53b3506fe118529b08accece347ab3a82aae9eae32ec8acb3a035890ee7",
-    "multilingual": "c624ab2fcaf4915e7a8cd82666d0f2347af321180c5a18944d7d7f1210fa8ffa",
-    "multilingual_mt": "2f1b47c14ea8a356e1d03913f60579b70e8fc224d3db1f79bbdbb28f788e05df",
+    "multilingual_st": "c624ab2fcaf4915e7a8cd82666d0f2347af321180c5a18944d7d7f1210fa8ffa",
+    "multilingual": "2f1b47c14ea8a356e1d03913f60579b70e8fc224d3db1f79bbdbb28f788e05df",
     "multilingual_multihop": "f3816e31d51d1206c9033010712db0cb246fc7f8e85644bbc797018387b0c89e",
     "multilingual_typo": "a23cfd59569f3119b7ccb3019bebbd5a121a4ef28be1822386328b06ba584855",
     "poetry": "c8fe24888d01aef8c27c6781e6f9d13bb5e8fe0f6f5337394211324253e30d17",
@@ -87,10 +87,10 @@
   "hinted_cutoff": "a pair-scored contrastive family: the null is the N twin and the prompt-only floor, with no per-item answer to text-invert; out of the strict ATI subset (Camila 2026-11-08: the hint is in both twins, so a subset score is noise; plan 0085)",
   "multi_concept_directed_modulation": "the prompt dictates the concepts; prompt-only is 1.0",
   "directed_modulation": "the instruction states the concept; items survived only because the scorer discounted instruction narration, not because the answer is hidden (Camila 2026-10-24); since plan 0028 narration counts and since plan 0035 any mention counts, so the text alone answers it",
-  "typo": "excluded from the ATI subset by design (Camila 2026-10-29)",
-  "typo_mt": "excluded from the ATI subset by design (Camila 2026-10-30: \"This should not be in ati\"; plan 0033 M4)",
-  "multihop": "excluded from the ATI subset by design (Camila 2026-10-30: \"do not include the single question in ati\"): one surviving item (spaceneedle-border, a gold-keying artefact re-keyed to Washington by decision Q9), not a subset",
-  "multihop_mt": "excluded from the ATI subset by design (Camila 2026-10-30); the panel names every bridge from the prompt (0/70 survived)",
+  "typo_st": "excluded from the ATI subset by design (Camila 2026-10-29)",
+  "typo": "excluded from the ATI subset by design (Camila 2026-10-30: \"This should not be in ati\"; plan 0033 M4)",
+  "multihop_st": "excluded from the ATI subset by design (Camila 2026-10-30: \"do not include the single question in ati\"): one surviving item (spaceneedle-border, a gold-keying artefact re-keyed to Washington by decision Q9), not a subset",
+  "multihop": "excluded from the ATI subset by design (Camila 2026-10-30); the panel names every bridge from the prompt (0/70 survived)",
   "buggy_code": "pair-level headline (plan 0030); a pair verdict for the ATI gate is out of scope",
   "introspection": "no bank or no gated item in this adapted set"
  },
@@ -17863,7 +17863,7 @@
   "qwen_judged_complete": true,
   "subject_read": "z-ai/glm-5.3 via OpenRouter, reasoning effort low, T=1.0, top_p=1.0, max_tokens 16000 (not main's vLLM thinking-off subject path; _source.gate_deviations, plan 0088)"
  },
- "basic_readout": {
+ "basic_readout_st": {
   "gate": "adapted-panel-v1+qwen27b",
   "answerer": "panel",
   "claude_slot": "opus",
@@ -21151,7 +21151,7 @@
   "qwen_judged_complete": true,
   "subject_read": "z-ai/glm-5.3 via OpenRouter, reasoning effort low, T=1.0, top_p=1.0, max_tokens 16000 (not main's vLLM thinking-off subject path; _source.gate_deviations, plan 0088)"
  },
- "basic_readout_mt": {
+ "basic_readout": {
   "gate": "adapted-panel-v1+qwen27b",
   "answerer": "panel",
   "claude_slot": "opus",
@@ -46415,7 +46415,7 @@
   "qwen_judged_complete": true,
   "subject_read": "z-ai/glm-5.3 via OpenRouter, reasoning effort low, T=1.0, top_p=1.0, max_tokens 16000 (not main's vLLM thinking-off subject path; _source.gate_deviations, plan 0088)"
  },
- "multilingual": {
+ "multilingual_st": {
   "gate": "adapted-panel-v1+qwen27b",
   "answerer": "panel",
   "claude_slot": "opus",
@@ -49605,7 +49605,7 @@
   "qwen_judged_complete": true,
   "subject_read": "z-ai/glm-5.3 via OpenRouter, reasoning effort low, T=1.0, top_p=1.0, max_tokens 16000 (not main's vLLM thinking-off subject path; _source.gate_deviations, plan 0088)"
  },
- "multilingual_mt": {
+ "multilingual": {
   "gate": "adapted-panel-v1+qwen27b",
   "answerer": "panel",
   "claude_slot": "opus",

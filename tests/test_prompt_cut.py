@@ -202,7 +202,8 @@ def _fake_transformers(monkeypatch, tok):
 
 
 def test_build_regression_reply_free(tmp_path, monkeypatch):
-    """The families whose last read site lies inside a prefilled / dictated reply (basic_readout's
+    """The families whose last read site lies inside a prefilled / dictated reply
+    (basic_readout_st's
     implicit items, directed_modulation, multi-concept DM) build reply-free prefixes; a family read
     in the prompt only (association) is byte-identical to the old cut."""
     tok = CharTok("qwen")
@@ -212,7 +213,7 @@ def test_build_regression_reply_free(tmp_path, monkeypatch):
     from wsbench.produce.render import render
 
     fams = [
-        "basic_readout",
+        "basic_readout_st",
         "directed_modulation",
         "multi_concept_directed_modulation",
         "association",
@@ -234,7 +235,7 @@ def test_build_regression_reply_free(tmp_path, monkeypatch):
         elif r["prefix"] != old:
             n_cut += 1
             assert r["prefix"].endswith("<|im_start|>assistant\n<think>\n\n</think>\n\n")
-    assert n_cut >= 8  # every DM / MCDM row and the implicit basic_readout rows in scope
+    assert n_cut >= 8  # every DM / MCDM row and the implicit basic_readout_st rows in scope
     # the reader's question holds no reply text, its quoted token included (review of #350: v1
     # quoted the read-site token, e.g. the prefilled stem's ':')
     for r in rows:

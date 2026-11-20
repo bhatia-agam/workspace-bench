@@ -2,8 +2,12 @@
 conflicts, script split, roles-v1.1, the pick-based re-ask."""
 
 from wsbench.digest import Line
-from wsbench.evals.role_bound_association import gate
-from wsbench.evals.role_bound_association.judge import build_block_v2, load_items, pick_problems
+from wsbench.evals.anti_bag_of_features.role_bound_association import gate
+from wsbench.evals.anti_bag_of_features.role_bound_association.judge import (
+    build_block_v2,
+    load_items,
+    pick_problems,
+)
 
 LEX = gate.load_lexicon()
 
@@ -19,7 +23,10 @@ def test_action_ref():
 
 
 def test_every_distractor_role_has_a_lexicon_entry():
-    from wsbench.evals.role_bound_association.judge import _person_of, build_block_v2
+    from wsbench.evals.anti_bag_of_features.role_bound_association.judge import (
+        _person_of,
+        build_block_v2,
+    )
 
     bank = load_items()[1]
     for it in bank:
@@ -122,7 +129,10 @@ def test_recruit_new_hire():
 
 
 def test_distractor_named_by_its_displayed_term_is_not_flagged():
-    from wsbench.evals.role_bound_association.judge import option_named, role_terms_shown
+    from wsbench.evals.anti_bag_of_features.role_bound_association.judge import (
+        option_named,
+        role_terms_shown,
+    )
 
     # a near-role distractor (no lexicon entry) named only by a term shown beside it
     role = next(r for r in ("sheriff", "investigator", "landlord") if role_terms_shown(r, LEX))
@@ -230,7 +240,7 @@ def test_generic_sense_synonyms_each_both_ways():
 def test_every_shown_role_has_cjk_and_plural_forms():
     # second review of #202, finding 3: options symmetric across scripts and number
     from wsbench import mc
-    from wsbench.evals.role_bound_association.judge import _person_of
+    from wsbench.evals.anti_bag_of_features.role_bound_association.judge import _person_of
 
     bank = load_items()[1]
     roles = {_person_of(lab)[1] for it in bank for lab in build_block_v2(it, bank, LEX).people}
@@ -242,7 +252,7 @@ def test_every_shown_role_has_cjk_and_plural_forms():
 
 
 def test_grandfather_is_named_like_the_grandmother():
-    from wsbench.evals.role_bound_association.judge import option_named
+    from wsbench.evals.anti_bag_of_features.role_bound_association.judge import option_named
 
     assert option_named("爷爷拥抱了孩子", "Otto, the grandfather", LEX)
     assert option_named("grandpa hugged the kid", "Otto, the grandfather", LEX)

@@ -1,8 +1,8 @@
 """One-off data change (plan 0033 M1; Camila 2026-10-30: "Drop the arithmetic items").
 
-Writes the frozen ``evals/typo_mt/items_v2.json`` (v1 minus ``subfamily == "arith"``, items
+Writes the frozen ``evals/basic/typo/items_v2.json`` (v1 minus ``subfamily == "arith"``, items
 byte identical in v1 order, ``items.json`` untouched) and rewrites IN PLACE every
-``adapted/*/typo_mt.json`` that holds arith items (under ``WSB_BANK_ROOT`` the bank path has no
+``adapted/*/typo.json`` that holds arith items (under ``WSB_BANK_ROOT`` the bank path has no
 version in its file name). Each output header records the dropped ids and the source sha256.
 Idempotent: a bank already at ``version: 2`` is left as is.
 
@@ -17,8 +17,8 @@ from pathlib import Path
 from typing import Any
 
 REPO = Path(__file__).resolve().parents[1]
-V1 = REPO / "evals/typo_mt/items.json"
-V2 = REPO / "evals/typo_mt/items_v2.json"
+V1 = REPO / "evals/basic/typo/items.json"
+V2 = REPO / "evals/basic/typo/items_v2.json"
 FROZEN = "2026-10-30"
 WHY = "Camila 2026-10-30: drop the arithmetic items"
 GATE_ARITH_CLAUSE = " (correct spelling / true result)"
@@ -68,7 +68,7 @@ def main(argv: list[str] | None = None) -> int:
     report.append(f"{V2.relative_to(REPO)}: {len(v2['items'])} items, dropped {len(dropped)}")
     if not a.check:
         V2.write_text(dump(v2, V1.read_text(encoding="utf-8")), encoding="utf-8")
-    for path in sorted(REPO.glob("adapted/*/typo_mt.json")):
+    for path in sorted(REPO.glob("adapted/*/typo.json")):
         raw = path.read_text(encoding="utf-8")
         if json.loads(raw).get("version") == 2:
             report.append(f"{path.relative_to(REPO)}: already version 2")

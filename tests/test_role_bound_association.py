@@ -8,8 +8,11 @@ from conftest import tag_of, write_jsonl, write_sidecar
 from summary_fakes import FakeLLM, summary_args
 
 from wsbench import digest, mc, readplan, reads, results
-from wsbench.evals.role_bound_association import SPEC, gate, judge, prompts
-from wsbench.evals.role_bound_association.judge import build_block, build_block_v2
+from wsbench.evals.anti_bag_of_features.role_bound_association import SPEC, gate, judge, prompts
+from wsbench.evals.anti_bag_of_features.role_bound_association.judge import (
+    build_block,
+    build_block_v2,
+)
 from wsbench.mc import CANNOT
 from wsbench.readouts import load_readouts
 
@@ -40,7 +43,9 @@ def _full(item_id: str, layer: int, last: str, filler: str = "x") -> list[dict]:
 def _bank():
     """The source bank (``items.json``, 100 items) the goldens were frozen on; the registered bank
     v2 keeps every kept item's options (``tests/test_role_bound_bank_v2.py``)."""
-    return json.loads((ROOT / "evals/role_bound_association/items.json").read_text())
+    return json.loads(
+        (ROOT / "evals/anti_bag_of_features/role_bound_association/items.json").read_text()
+    )
 
 
 def _v2(item_id):
@@ -155,7 +160,7 @@ def test_v2_blocks_golden():
 
 def _people_lists(text: str) -> list[list[str]]:
     from wsbench.baselines.lucky_guessing import _lists_from_block
-    from wsbench.evals.role_bound_association.judge import bare_label
+    from wsbench.evals.anti_bag_of_features.role_bound_association.judge import bare_label
 
     lists = _lists_from_block(text, CANNOT)
     assert len(lists) == 3 and all(len(x) == 5 for x in lists)
@@ -207,7 +212,7 @@ def test_v2_golds_follow_direction():
 
 def _lists_full(text: str) -> list[list[str]]:
     from wsbench.baselines.lucky_guessing import _lists_from_block
-    from wsbench.evals.role_bound_association.judge import bare_label
+    from wsbench.evals.anti_bag_of_features.role_bound_association.judge import bare_label
 
     return [[bare_label(x) for x in lst] for lst in _lists_from_block(text, CANNOT)]
 
@@ -650,7 +655,9 @@ def test_in_macro(tmp_path, fake_llm, mk_args):
 
 
 def test_gate_calls_shared_quote_ok():
-    src = (ROOT / "src/wsbench/evals/role_bound_association/gate.py").read_text()
+    src = (
+        ROOT / "src/wsbench/evals/anti_bag_of_features/role_bound_association/gate.py"
+    ).read_text()
     tree = ast.parse(src)
     defs = {n.name for n in ast.walk(tree) if isinstance(n, ast.FunctionDef)}
     assert not defs & {"quote_ok", "statement_lines", "split_word", "verify_quote"}

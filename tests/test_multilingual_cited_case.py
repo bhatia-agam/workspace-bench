@@ -50,9 +50,8 @@ def test_emphasised_march_verb_hits_unmarked_does_not():
 
 
 def _spec():
-    import importlib
 
-    spec = importlib.import_module("wsbench.evals.multilingual").SPEC
+    spec = registry.family_module("multilingual_st").SPEC
     registry.FAMILIES.setdefault(spec.name, spec)
     return spec
 

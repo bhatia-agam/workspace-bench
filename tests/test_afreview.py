@@ -152,7 +152,7 @@ def test_any_line_rescue_never_takes_a_flat_run():
 
 
 def test_poetry_rhyme_proposed_as_the_plan_is_a_rival():
-    from wsbench.evals.poetry import score
+    from wsbench.evals.basic.poetry import score
 
     o = ["night", "moon", "tree"]
     for t in (
@@ -168,7 +168,7 @@ def test_poetry_rhyme_proposed_as_the_plan_is_a_rival():
 
 
 def test_introspection_title_case_heading_still_voids():
-    from wsbench.evals.introspection.judge import names_form
+    from wsbench.evals.model_specific.introspection.judge import names_form
 
     for text, forms in (
         ("2. **Mirror Reflection**: The surface", ["mirror"]),

@@ -250,7 +250,7 @@ def test_stride_path_all_dropped_is_reasked_on_rerun(tmp_path, monkeypatch):
     cells = {"a": [Cell("a", 20, 1, ("alpha",), None, None, None)]}
     with Cache(tmp_path / "c.jsonl") as cache:
         col = digest.collapse(
-            "basic_readout",
+            "basic_readout_st",
             cells,
             args=_args(tmp_path),
             cache=cache,
@@ -262,7 +262,7 @@ def test_stride_path_all_dropped_is_reasked_on_rerun(tmp_path, monkeypatch):
     replies["r"] = {"items": [{"statement": "s", "key": "", "where": "", "evidence": "alpha"}]}
     with Cache(tmp_path / "c.jsonl") as cache:
         col = digest.collapse(
-            "basic_readout",
+            "basic_readout_st",
             cells,
             args=_args(tmp_path),
             cache=cache,
@@ -279,7 +279,7 @@ def test_plan_0020_fingerprint_unchanged():
     # the audit-fix digest PR bumped the version to digest-v5, per-claim counts): a change here
     # re-bills every cached digest
     args = _args(Path("/tmp"))
-    s = digest.settings(args, "basic_readout")
+    s = digest.settings(args, "basic_readout_st")
     assert (s.overflow, s.concurrency, s.timeout) == ("hierarchical", None, None)
     from wsbench.cache import fingerprint
 

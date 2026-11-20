@@ -15,12 +15,12 @@ import pytest
 
 from wsbench import digest
 from wsbench.banks import load_bank
-from wsbench.evals.wrong_intermediate import judge as wj
-from wsbench.evals.wrong_intermediate import prompts as wp
+from wsbench.evals.model_specific.wrong_intermediate import judge as wj
+from wsbench.evals.model_specific.wrong_intermediate import prompts as wp
 
 REPO = Path(__file__).resolve().parents[1]
-V3 = REPO / "evals/wrong_intermediate/items_v3.json"
-V4 = REPO / "evals/wrong_intermediate/items_v4.json"
+V3 = REPO / "evals/model_specific/wrong_intermediate/items_v3.json"
+V4 = REPO / "evals/model_specific/wrong_intermediate/items_v4.json"
 PANTERA = "album_performer-Q591875-formed_year"
 BEYONCE = "album_performer-Q2564709-birth_city"
 RAND = "doctoral_advisor-Q1235503-death_year"

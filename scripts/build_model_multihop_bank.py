@@ -1,4 +1,5 @@
-"""Build evals/model_multihop/items.json from global-workspace's frozen_v2.json (plan 0076).
+"""Build evals/model_specific/model_multihop/items.json from global-workspace's frozen_v2.json
+(plan 0076).
 
     python scripts/build_model_multihop_bank.py \
         --frozen <gw>/evals/model_multihop/frozen_v2.json [--check-decode]
@@ -15,8 +16,8 @@ from pathlib import Path
 from typing import Any
 
 from wsbench import mc
-from wsbench.evals.model_multihop import judge as mmj
-from wsbench.evals.model_multihop.forms import (  # noqa: F401 - re-exported for callers
+from wsbench.evals.model_specific.model_multihop import judge as mmj
+from wsbench.evals.model_specific.model_multihop.forms import (  # noqa: F401 - re-exported for callers
     COUNTRY_ALIASES,
     COUNTRY_BLOCKERS,
     CUTOFF_BLOCKERS,
@@ -30,7 +31,7 @@ from wsbench.evals.model_multihop.forms import (  # noqa: F401 - re-exported for
     raw_forms,
 )
 
-OUT = Path(__file__).resolve().parents[1] / "evals/model_multihop/items.json"
+OUT = Path(__file__).resolve().parents[1] / "evals/model_specific/model_multihop/items.json"
 SUBJECT = "Qwen/Qwen3.6-27B"
 FROZEN_COMMIT = "2027ef208"  # gw main: frozen_v2.json (#744/#745)
 BANK_VERSION = 2  # v2 (plan 0076 rev G): invented decoys = the item's own gw foils

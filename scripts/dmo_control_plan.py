@@ -14,7 +14,11 @@ import sys
 from pathlib import Path
 
 from wsbench import readplan, reads
-from wsbench.evals.model_specific_directed_modulation.controls import ARMS, NAME, control_rows
+from wsbench.evals.model_specific.model_specific_directed_modulation.controls import (
+    ARMS,
+    NAME,
+    control_rows,
+)
 
 
 def main(argv: list[str] | None = None) -> int:

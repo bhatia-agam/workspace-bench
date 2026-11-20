@@ -15,11 +15,11 @@ PROMPT_VERSION = "bank-2026-10-30b"
 # families added after the shared version was frozen carry their own stamp (plan 0027), so a new
 # family rule never makes the older families' ATI entries and floors stale
 FAMILY_PROMPT_VERSIONS: dict[str, str] = {
-    # plan 0048: multihop renders its own blind MC prompt (basic/mcjudge_bank.py)
+    # plan 0048: multihop_st renders its own blind MC prompt (basic/mcjudge_bank.py)
     # round 4: bank v3 options (MC leakage); +bank-gate-r10: the deterministic gate's version
     # (basic.mcjudge_bank.GATE_VERSION); +bank-v5: the 98-item bank (bank v3's 68 kept + 30 new
     # items). Result stamp only: the calls keep the v3 key (mcjudge_bank.CALL_VERSIONS)
-    "multihop": "bank-mc-2026-11-01-v3+bank-gate-r11+bank-v5",
+    "multihop_st": "bank-mc-2026-11-01-v3+bank-gate-r11+bank-v5",
     # plan 0053: the blind forced-choice judge (mcjudge_basic) has its own instrument
     # round 4: bank v4 options (MC leakage; v4 = v3 + every observed v2 confuser kept); bank v5
     # (PR #214 review r6): v4 rebuilt with every v2 option a digest states >= 2x in a v2 non-pass;
@@ -36,7 +36,7 @@ FAMILY_PROMPT_VERSIONS: dict[str, str] = {
     # new; every other option list and seed is unchanged)
     # +bank-v8 (2026-11-05): the 10 country<->capital items replaced by 10 new entity items
     # (their MC calls are new; every kept item's options, slot and seed are unchanged)
-    "basic_readout": "br-mc-2026-11-01-v5b+brsum-v2+qline-v2+bank-v8",
+    "basic_readout_st": "br-mc-2026-11-01-v5b+brsum-v2+qline-v2+bank-v8",
 }
 
 
@@ -97,12 +97,13 @@ USER_SUMMARY = "targets: {targets}\n{kind_note}{family_rule}{forbidden}\n\n{summ
 # the task TYPE the digest's `task` variant may be told (never the item's prompt or targets)
 DIGEST_TASK_NOTES: dict[str, str] = {
     "association": "the model reads a short scene that implies a concept the text never names",
-    "basic_readout": "the model reads a short prompt whose obvious next concept it has not yet "
+    "basic_readout_st": "the model reads a short prompt whose obvious next concept it has not yet "
     "written",
-    "multihop": "the model reads a factual prompt whose answer needs one silent intermediate step",
-    "multilingual": "the model reads a short non-English prompt with a one-word answer",
+    "multihop_st": "the model reads a factual prompt whose answer needs one silent "
+    "intermediate step",
+    "multilingual_st": "the model reads a short non-English prompt with a one-word answer",
     "poetry": "the model reads the first line of a rhyming couplet before writing the second",
-    "typo": "the model reads a sentence that ends in a misspelled word",
+    "typo_st": "the model reads a sentence that ends in a misspelled word",
 }
 
 DIGEST_TASK_NOTES_TEXT = "\n".join(f"{f}: {n}" for f, n in DIGEST_TASK_NOTES.items())
@@ -136,10 +137,10 @@ FORBIDDEN_TEMPLATE = (
     "does not count. A sample that names a target still counts, even beside {answer}."
 )
 FAMILY_RULES: dict[str, str] = {
-    "typo": FAMILY_RULE_TYPO,
+    "typo_st": FAMILY_RULE_TYPO,
 }
 # families whose items' surface ``target`` is sent as a forbidden answer (FORBIDDEN_TEMPLATE).
-# Empty since plan 0058: multihop left in plan 0048 (its MC judge is blind to the surface answer
+# Empty since plan 0058: multihop_st left in plan 0048 (its MC judge is blind to the surface answer
 # and to the bridge) and the last users were removed from the bench; the mechanism stays
 FORBIDDEN_FAMILIES: frozenset[str] = frozenset()
 
@@ -241,7 +242,7 @@ def render_user(
 
 
 # ---------------------------------------------------------------- the blind MC bank judge
-# plan 0053 (basic_readout C3/C6/C8a): a forced choice among the item's frozen options, blind to
+# plan 0053 (basic_readout_st C3/C6/C8a): a forced choice among the item's frozen options, blind to
 # the item's prompt (only a task TYPE line). These strings are NOT in the shared ``PROMPTS``
 # (they would stale every basic family's stamp); each MC family's own prompts module exports
 # them (``MC_PROMPTS``). Examples deliberately use content outside every MC bank (planets, 31).

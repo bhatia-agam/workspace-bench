@@ -2,7 +2,7 @@
 ``scripts/build_multilingual_v2.py``. Every entry is a judgment call written down once, so the
 builder stays deterministic. Prompts, targets and ids are never changed here."""
 
-# ---------------------------------------------------------------- multilingual (single-token)
+# ---------------------------------------------------------------- multilingual_st (single-token)
 # name -> (lang, MC type pool, en forms (en[0] = the MC gold), zh forms, concepts the prompt
 # names: never a distractor). The prompt's own concepts are reference_concepts[1:] plus the
 # English of every operand ("de-half-six" excludes six and two).

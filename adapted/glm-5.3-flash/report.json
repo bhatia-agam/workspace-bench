@@ -617,7 +617,7 @@
    ],
    "note": "24/24 pairs: independent audit 1 pair (ride-height-flipped: leak leg under-counted, kimi-k3 L1 precedent); at target, no back-fill."
   },
-  "typo_mt": {
+  "typo": {
    "status": "full",
    "refill": {
     "route": "run.fill",
@@ -718,7 +718,7 @@
    "note": "plan 0075 MC family, 97/100: drops: lucky two-run leakers 48 pre-audit (cycles c1-c3 + finalB) and 3 post-audit (finalpa2), independent audit 1, pool-closure drops 26 (finalB) + 7 (finalpa2); finalpa2 blind/described .068/.148 vs bar .175 before drops. stop: not a yield stop: the plan-0075 data-round driver was stopped after cycle c3 for speed (Camila 2026-11-08 precedent), the NOREFILL finalB measurement then dropped confirmed leakers without back-fill, and after the post-audit back-fill (finisher 2026-11-17) the two-run measurement finalpa1/finalpa2 dropped its leakers and the pool was closed (no further back-fill).",
    "min_grid_positions": 13
   },
-  "basic_readout_mt": {
+  "basic_readout": {
    "status": "full",
    "refill": {
     "route": "run.fill",
@@ -790,7 +790,7 @@
    ],
    "note": "plan 0075 MC family, 120/120: drops: lucky two-run leakers 6 pre-audit (cycles c1-c3 + finalB) and 0 post-audit (finalpa2), independent audit 6, D5 capital 4, cross-set rulings 5, pool closures 7 (finalB) + 3 (finalpa2); finalpa2 .073/.195 vs bar .25. Full after the post-audit back-fill (6 audit drops refilled and two-run measured); pool closed."
   },
-  "multihop": {
+  "multihop_st": {
    "status": "partial",
    "refill": {
     "route": "run.fill",
@@ -1248,7 +1248,7 @@
    ],
    "note": "126/126: D6 place screen 3, cross-set ruling 1 (um-sd-gender-16), independent audit 3 (refilled by freeze from the gate-passing pool: 3 rows, screened by screen.sh/umcheck, read by audit 2); D7 caps Country 18/126 and Gender 18/126 (14.3% each); pool closed after the post-audit back-fill (16 rows)."
   },
-  "multilingual_mt": {
+  "multilingual": {
    "status": "partial",
    "refill": {
     "route": "run.fill",
@@ -1713,7 +1713,7 @@
    ],
    "note": "68/100: drops: plan-0077 leakers r1 39 / r2 18 / r3 18 + post-audit final measurement 22, independent audit 23, audit 2 10 (two-of-a-kind lists, London title routes, split hop-2, a re-admitted dropped latent), pool closures 31 (final77_r3_1) + 28 (final77_pa_1); WI list rebuild after the measurement: 0 patches. Post-audit final measurement: 100 measured, 22 leakers, after .015/.028 vs chance .167. FLAGGED FOR CAMILA: Pemberton->London and Fraenkel->Berlin kept (coordinator 2026-11-17). stop: not a yield stop: plan 0077 rounds r1-r2 were back-filled to target, round r3's leakers dropped without back-fill (the 3-round cap); after the independent audit the family was back-filled to target once more and given one more final 5-run measurement (final77_pa_1..5; >= 2-of-5 leakers dropped, no family-bar fallback, no back-fill), then the audit-2 drops; pool closed."
   },
-  "multihop_mt": {
+  "multihop": {
    "mc_over_gate_runs": {
     "refill-65e6c73ef3d9": {
      "over_gate_ids": [
@@ -1892,7 +1892,7 @@
    "note": "100/100: plan-0077 leakers r1 2 / r2 3 / r3 0 (rounds 1-2 back-filled; final.txt after .003/.002 vs .023); independent audit 0; no post-audit change.",
    "min_grid_positions": 13
   },
-  "basic_readout": {
+  "basic_readout_st": {
    "target": 100,
    "n_original": 100,
    "n_original_gated": 69,
@@ -2055,7 +2055,7 @@
    "status": "untried",
    "note": "180/195: registered originals, chat variant (no re-key); untried; audit OK."
   },
-  "multilingual": {
+  "multilingual_st": {
    "target": 99,
    "n_original": 99,
    "n_original_gated": 98,
@@ -2134,7 +2134,7 @@
   "adapt_sha256": "bcfd721e23d3e856"
  },
  "drops": {
-  "basic_readout_mt": {
+  "basic_readout": {
    "basic-au-t1-w100c2-brh-ent-baghdad-founding-house": "Camila 2026-11-07 decision 5: a clue routes through, or the question asks, a capital; dropped and back-filled",
    "brh-ent-cur-eritrea": "Camila 2026-11-07 decision 5: a clue routes through, or the question asks, a capital; dropped and back-filled",
    "brh-ent-cur-vanuatu": "Camila 2026-11-07 decision 5: a clue routes through, or the question asks, a capital; dropped and back-filled",
@@ -2396,7 +2396,7 @@
    "multilingual-au-t1-w108c0-mlmh-id-girlwithapearlearring-denhaag": "Camila 2026-11-07 decisions 1-3 (strict, whole bank incl. originals): list leaks in finalpa2 AND in an earlier separate run (blind+described 10/10, or a family-level failing guesser >= 3/5 with blind+described >= 4/10, in >= 2 separate lucky-guessing runs; ruling 2026-11-08 = plan 0077 §3b); dropped and back-filled",
    "multilingual-au-t1-w105c1-mlmh-id-bromo-jawatimur": "D4: \"the Tengger caldera sand sea, where Yadnya Kasada is held\" places it in East Java without Mount Bromo (Semeru and Ijen, two distractors, are East Java volcanoes too); blind 5/10, described 5/10"
   },
-  "multihop": {
+  "multihop_st": {
    "b3-mh-bakerstreet-city": "Camila 2026-11-07 decision 4: the answer is reachable without the bridge (a direct well-known pairing of the named thing with the answer); dropped and back-filled",
    "b3-mh-blindpoet-epic": "Camila 2026-11-07 decision 4: the answer is reachable without the bridge (a direct well-known pairing of the named thing with the answer); dropped and back-filled",
    "b3-mh-gravity-fruit": "Camila 2026-11-07 decision 4: the answer is reachable without the bridge (a direct well-known pairing of the named thing with the answer); dropped and back-filled",
@@ -3225,7 +3225,7 @@
    "association-au-t1-w102c0-assoc-easy-sandcastle-moat-shells": "plan 0089 final measurement (finalpa2): pool closed, not back-filled (an item outside the final lucky measurement never ships)",
    "association-au-t1-w102c0-assoc-easy-spelling-bee-letters": "plan 0089 final measurement (finalpa2): pool closed, not back-filled (an item outside the final lucky measurement never ships)"
   },
-  "multilingual_mt": {
+  "multilingual": {
    "mlh-ar-octopus": "Camila 2026-11-07 decisions 1-3 (strict, whole bank incl. originals): list leaks in c2 AND in an earlier separate run (blind+described 10/10, or a family-level failing guesser >= 3/5 with blind+described >= 4/10, in >= 2 separate lucky-guessing runs; ruling 2026-11-08 = plan 0077 §3b); dropped and back-filled",
    "mlh-ar-thyroid": "Camila 2026-11-07 decisions 1-3 (strict, whole bank incl. originals): list leaks in c2 AND in an earlier separate run (blind+described 10/10, or a family-level failing guesser >= 3/5 with blind+described >= 4/10, in >= 2 separate lucky-guessing runs; ruling 2026-11-08 = plan 0077 §3b); dropped and back-filled",
    "mlh-ar-vacuum-cleaner-2": "Camila 2026-11-07 decisions 1-3 (strict, whole bank incl. originals): list leaks in c2 AND in an earlier separate run (blind+described 10/10, or a family-level failing guesser >= 3/5 with blind+described >= 4/10, in >= 2 separate lucky-guessing runs; ruling 2026-11-08 = plan 0077 §3b); dropped and back-filled",
@@ -3623,7 +3623,7 @@
    "role-au-t1-w103c0-ra-tourist-musician-photographed-ab": "plan 0089 final measurement (finalpa2): pool closed, not back-filled (an item outside the final lucky measurement never ships)",
    "role-au-t1-w103c0-ra-tourist-musician-photographed-ba": "plan 0089 final measurement (finalpa2): pool closed, not back-filled (an item outside the final lucky measurement never ships)"
   },
-  "multilingual": {
+  "multilingual_st": {
    "pt-time-after-night": "plan 0089 cross-set ruling (from the qwen3.6-35b-a3b audit, applied to every agam5 set; whole-bank precedent of the merged sets): original; check 3: options \"dawn\"/\"morning\" are also-correct completions of \"Depois da noite vem o\" (qwen3-8b drop)"
   },
   "knowledge_cutoff": {
@@ -3818,7 +3818,7 @@
    "b5_01431": "the gold is listed twice (\"james collins\" / \"jim collins\", one person)",
    "b3_00619": "the truth is listed twice (\"25.6\" / \"about 25.6\"); the gold 25 is the truth rounded"
   },
-  "basic_readout": {
+  "basic_readout_st": {
    "basic-au-t1-w100c0-br-imp-implicit-board-game": "Camila 2026-11-07 decisions 1-3 (strict, whole bank incl. originals): list leaks in finalbr2 AND in an earlier separate run (blind+described 10/10, or a family-level failing guesser >= 3/5 with blind+described >= 4/10, in >= 2 separate lucky-guessing runs; ruling 2026-11-08 = plan 0077 §3b); dropped and back-filled",
    "basic-au-t1-w100c0-br-imp-implicit-chemical-element": "Camila 2026-11-07 decisions 1-3 (strict, whole bank incl. originals): list leaks in finalbr2 AND in an earlier separate run (blind+described 10/10, or a family-level failing guesser >= 3/5 with blind+described >= 4/10, in >= 2 separate lucky-guessing runs; ruling 2026-11-08 = plan 0077 §3b); dropped and back-filled",
    "basic-au-t1-w100c0-br-imp-implicit-country-to-visit": "Camila 2026-11-07 decisions 1-3 (strict, whole bank incl. originals): list leaks in finalbr2 AND in an earlier separate run (blind+described 10/10, or a family-level failing guesser >= 3/5 with blind+described >= 4/10, in >= 2 separate lucky-guessing runs; ruling 2026-11-08 = plan 0077 §3b); dropped and back-filled",
@@ -4255,7 +4255,7 @@
    "novel_author-Q19178356-birth_city": "check 3: the hop-2 samples split Rouen 5 (Flaubert, L'Éducation sentimentale) / Geneva 4 (Rousseau): two rival wrong bridges (Q15430971 Jena / Erfurt precedent)",
    "painting_creator-Q3821651-death_year": "the same S / B' / B as painting_creator-Q3821651-death_city, which the first audit dropped (van Gogh / Cézanne, the kimi precedent); back-filled under another hop2"
   },
-  "multihop_mt": {
+  "multihop": {
    "mh2-ebert-birthplace-v3h": "plan 0089 r1: lucky-guessing leaker (plan 0077 §3b: per-run test in >= 2 of 5 fresh runs)",
    "mh2-inarritu-debut-v3f": "plan 0089 r1: lucky-guessing leaker (plan 0077 §3b: per-run test in >= 2 of 5 fresh runs)",
    "mh2-noether-birthplace-v3a": "plan 0089 r1: lucky-guessing leaker (plan 0077 §3b: per-run test in >= 2 of 5 fresh runs)",
@@ -4336,7 +4336,7 @@
    "r14iv2821": "near-dup: \"Mopane Ridge Mission House\", Namibia (r12iv2873 kept)",
    "r12iv2893": "near-dup: shared cue \"Mopane\", Namibia (r12iv2873 kept)"
   },
-  "typo_mt": {
+  "typo": {
    "typo-au-t1-w100c1-tyh-novel-overcrowding": "near-dup of the older w100c0 tyh-novel-overpopulation (same golds, same latent); deepseek precedent",
    "typo-au-t1-w100c1-tyh-novel-biodegradable": "pool closed after the post-audit back-fill, not back-filled",
    "typo-au-t1-w100c1-tyh-novel-disqualification": "pool closed after the post-audit back-fill, not back-filled",
@@ -4472,7 +4472,7 @@
   "rule": "greedy right AND >= 8/10 (10/10 chain)"
  },
  "patches": {
-  "basic_readout_mt": {
+  "basic_readout": {
    "brh-ent-aghlabid-dynasty": {
     "set": {
      "mc": {
@@ -4746,7 +4746,7 @@
     "note": "plan 0087 one-cue repair (onecue-v3): readout: Tanjungbalai -> Pariaman (cue 'pesisir barat daya Sumatra'); Sabang -> Painan (cue 'pesisir barat daya Sumatra'); Meulaboh -> Tapaktuan (cue 'its own re-screen')"
    }
   },
-  "multihop": {
+  "multihop_st": {
    "b3-mh-goldengate-ocean": {
     "set": {
      "mc": {
@@ -5251,7 +5251,7 @@
     "note": "plan 0087 one-cue repair (onecue-v3): bridge: Shakespeare -> Tesla (cue 'scientist'); Plato -> Faraday (cue 'scientist')"
    }
   },
-  "multilingual_mt": {
+  "multilingual": {
    "mlh-ar-chickenpox": {
     "set": {
      "mc": {
@@ -6157,5 +6157,6 @@
     "note": "plan 0087 one-cue repair (onecue-v3): correction_native: astronomical observatory -> wild animals (cue 'kelompok binatang'); motorway highway -> domestic animals (cue 'kelompok binatang')"
    }
   }
- }
+ },
+ "family_keys": "0101"
 }

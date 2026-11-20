@@ -17,7 +17,7 @@ from test_jailbreak_recognition import (
 )
 from test_llm_refusal_rerun import OPUS5, SONNET, _resp, fake_client_installer, is_digest
 
-from wsbench.evals.jailbreak_recognition import judge as jb_judge
+from wsbench.evals.safety.jailbreak_recognition import judge as jb_judge
 
 
 @pytest.fixture

@@ -45,7 +45,7 @@
    },
    "complete": false
   },
-  "basic_readout": {
+  "basic_readout_st": {
    "rate": 0.72,
    "ci95": [
     0.63,
@@ -65,7 +65,7 @@
    },
    "complete": false
   },
-  "basic_readout_mt": {
+  "basic_readout": {
    "rate": 0.87,
    "ci95": [
     0.8,
@@ -185,7 +185,7 @@
    },
    "complete": false
   },
-  "multihop": {
+  "multihop_st": {
    "rate": 0.84,
    "ci95": [
     0.77,
@@ -205,7 +205,7 @@
    },
    "complete": false
   },
-  "multilingual": {
+  "multilingual_st": {
    "rate": 0.94,
    "ci95": [
     0.89,
@@ -225,7 +225,7 @@
    },
    "complete": false
   },
-  "multilingual_mt": {
+  "multilingual": {
    "rate": 0.42857142857142855,
    "ci95": [
     0.2619047619047619,
@@ -328,10 +328,10 @@
   "role_bound_association": {
    "error": "no results (exit 3; see /workspace/agam/workspace-bench/adapted/olmo-3.1-32b/floors/results/role_bound_association/judge.log)"
   },
-  "typo": {
+  "typo_st": {
    "error": "no results (exit 3; see /workspace/agam/workspace-bench/adapted/olmo-3.1-32b/floors/results/typo/judge.log)"
   },
-  "typo_mt": {
+  "typo": {
    "rate": 0.87,
    "ci95": [
     0.8,

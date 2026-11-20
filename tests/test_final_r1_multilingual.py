@@ -102,7 +102,7 @@ def test_raw_regex_needs_every_unit_in_one_layer_with_support():
         Cell("i", 20, 2, ("a visit to the dentist was planned",), None, None, None),
     ]
     assert not regex.layer_passes(raw_layer_hits(weak, units)[20], units)  # one mention only
-    assert {"multilingual_typo", "multilingual_multihop", "multilingual_mt"} <= RAW_REGEX_FAMILIES
+    assert {"multilingual_typo", "multilingual_multihop", "multilingual"} <= RAW_REGEX_FAMILIES
 
 
 def test_pin_lines_is_capped_and_symmetric():

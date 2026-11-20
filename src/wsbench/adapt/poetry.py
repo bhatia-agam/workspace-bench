@@ -1,5 +1,5 @@
 """poetry bank v5 on a subject (plan 0060 A2): the rhyme word THE SUBJECT plans at line one's
-newline, certified the way ``evals/poetry/README.md`` certifies Qwen3.6-27B's (scripts/poetry/
+newline, certified the way ``evals/basic/poetry/README.md`` certifies Qwen3.6-27B's (scripts/poetry/
 qwen_gate.py, opus_gate.py, build_mc.py), with every target re-derived on the subject.
 
 Gate (``families._poetry`` legs, combined by :func:`finalize`), per render R:
@@ -57,7 +57,7 @@ RENDERS = ("plain", "fewshot", "prefill")  # certifying renders, in order of pre
 GATE_VARIANT = {"plain": "plain", "fewshot": "plain_fewshot", "prefill": "chat_prefill"}
 DRAWS = 3  # Opus prompt-only draws per tag
 GATE_TAG, TIER_A_TAG, FLOOR_TAG = "gate", "tierA", "draw0"
-N_DISTRACTORS = 4  # evals/poetry/options.N_DISTRACTORS (an item with fewer cannot be judged)
+N_DISTRACTORS = 4  # evals/basic/poetry/options.N_DISTRACTORS (an item with fewer cannot be judged)
 REPO = Path(__file__).resolve().parents[3]
 BUILD_MC = REPO / "scripts" / "poetry" / "build_mc.py"
 
@@ -624,7 +624,7 @@ def v6_current(item: dict, mc: dict | None) -> bool:
     """A v6 list stands only while it is what was screened: the item's gold is the screened gold
     and the judge's four shown distractors (``options.distractors``, which drops the CURRENT
     gold and commits) are the chosen list. A re-gate that moves either voids it."""
-    from wsbench.evals.poetry.options import distractors, gold_of
+    from wsbench.evals.basic.poetry.options import distractors, gold_of
 
     from . import poetry_prior as pp
 
@@ -640,7 +640,7 @@ def v6_current(item: dict, mc: dict | None) -> bool:
 def v6_settled(item: dict, mc: dict | None) -> bool:
     """Built once: an unmatched record is terminal for the same gold; a chosen list while it is
     current (:func:`v6_current`); anything else (pending, stale) is built again."""
-    from wsbench.evals.poetry.options import gold_of
+    from wsbench.evals.basic.poetry.options import gold_of
 
     prior = (mc or {}).get("prior") or {}
     if not prior:

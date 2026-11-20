@@ -201,7 +201,7 @@
  },
  {
   "subject": "qwen3.5-0.8b",
-  "family": "basic_readout",
+  "family": "basic_readout_st",
   "arm": "qwen3.5-0.8b.inv.end",
   "stage": "inverter",
   "scope": "full",
@@ -226,7 +226,7 @@
  },
  {
   "subject": "qwen3.5-0.8b",
-  "family": "basic_readout",
+  "family": "basic_readout_st",
   "arm": "qwen3.5-0.8b.inv.end",
   "stage": "inverter",
   "scope": "ati",
@@ -251,7 +251,7 @@
  },
  {
   "subject": "qwen3.5-0.8b",
-  "family": "basic_readout",
+  "family": "basic_readout_st",
   "arm": "qwen3.5-0.8b.sft",
   "stage": "distill",
   "scope": "full",
@@ -276,7 +276,7 @@
  },
  {
   "subject": "qwen3.5-0.8b",
-  "family": "basic_readout",
+  "family": "basic_readout_st",
   "arm": "qwen3.5-0.8b.sft",
   "stage": "distill",
   "scope": "ati",
@@ -301,7 +301,7 @@
  },
  {
   "subject": "qwen3.5-0.8b",
-  "family": "basic_readout",
+  "family": "basic_readout_st",
   "arm": "qwen3.5-0.8b.rl.i600",
   "stage": "RL i600",
   "scope": "full",
@@ -326,7 +326,7 @@
  },
  {
   "subject": "qwen3.5-0.8b",
-  "family": "basic_readout",
+  "family": "basic_readout_st",
   "arm": "qwen3.5-0.8b.rl.i600",
   "stage": "RL i600",
   "scope": "ati",
@@ -351,7 +351,7 @@
  },
  {
   "subject": "qwen3.5-0.8b",
-  "family": "basic_readout",
+  "family": "basic_readout_st",
   "arm": "jlens",
   "stage": "jlens",
   "scope": "full",
@@ -376,7 +376,7 @@
  },
  {
   "subject": "qwen3.5-0.8b",
-  "family": "basic_readout",
+  "family": "basic_readout_st",
   "arm": "jlens",
   "stage": "jlens",
   "scope": "ati",
@@ -401,7 +401,7 @@
  },
  {
   "subject": "qwen3.5-0.8b",
-  "family": "basic_readout_mt",
+  "family": "basic_readout",
   "arm": "qwen3.5-0.8b.inv.end",
   "stage": "inverter",
   "scope": "full",
@@ -426,7 +426,7 @@
  },
  {
   "subject": "qwen3.5-0.8b",
-  "family": "basic_readout_mt",
+  "family": "basic_readout",
   "arm": "qwen3.5-0.8b.sft",
   "stage": "distill",
   "scope": "full",
@@ -451,7 +451,7 @@
  },
  {
   "subject": "qwen3.5-0.8b",
-  "family": "basic_readout_mt",
+  "family": "basic_readout",
   "arm": "qwen3.5-0.8b.rl.i600",
   "stage": "RL i600",
   "scope": "full",
@@ -476,7 +476,7 @@
  },
  {
   "subject": "qwen3.5-0.8b",
-  "family": "basic_readout_mt",
+  "family": "basic_readout",
   "arm": "jlens",
   "stage": "jlens",
   "scope": "full",
@@ -1701,7 +1701,7 @@
  },
  {
   "subject": "qwen3.5-0.8b",
-  "family": "multilingual",
+  "family": "multilingual_st",
   "arm": "qwen3.5-0.8b.inv.end",
   "stage": "inverter",
   "scope": "full",
@@ -1726,7 +1726,7 @@
  },
  {
   "subject": "qwen3.5-0.8b",
-  "family": "multilingual",
+  "family": "multilingual_st",
   "arm": "qwen3.5-0.8b.sft",
   "stage": "distill",
   "scope": "full",
@@ -1751,7 +1751,7 @@
  },
  {
   "subject": "qwen3.5-0.8b",
-  "family": "multilingual",
+  "family": "multilingual_st",
   "arm": "qwen3.5-0.8b.rl.i600",
   "stage": "RL i600",
   "scope": "full",
@@ -1776,7 +1776,7 @@
  },
  {
   "subject": "qwen3.5-0.8b",
-  "family": "multilingual",
+  "family": "multilingual_st",
   "arm": "jlens",
   "stage": "jlens",
   "scope": "full",
@@ -2001,7 +2001,7 @@
  },
  {
   "subject": "qwen3.5-0.8b",
-  "family": "typo_mt",
+  "family": "typo",
   "arm": "qwen3.5-0.8b.inv.end",
   "stage": "inverter",
   "scope": "full",
@@ -2026,7 +2026,7 @@
  },
  {
   "subject": "qwen3.5-0.8b",
-  "family": "typo_mt",
+  "family": "typo",
   "arm": "qwen3.5-0.8b.sft",
   "stage": "distill",
   "scope": "full",
@@ -2051,7 +2051,7 @@
  },
  {
   "subject": "qwen3.5-0.8b",
-  "family": "typo_mt",
+  "family": "typo",
   "arm": "qwen3.5-0.8b.rl.i600",
   "stage": "RL i600",
   "scope": "full",
@@ -2076,7 +2076,7 @@
  },
  {
   "subject": "qwen3.5-0.8b",
-  "family": "typo_mt",
+  "family": "typo",
   "arm": "jlens",
   "stage": "jlens",
   "scope": "full",
@@ -2312,16 +2312,16 @@
   ],
   "families": [
    "association",
-   "basic_readout_mt",
+   "basic_readout",
    "conjunctive_association",
    "directed_modulation",
    "jailbreak_recognition",
    "moral_rationale",
    "multi_concept_directed_modulation",
-   "multilingual",
+   "multilingual_st",
    "poetry",
    "role_bound_association",
-   "typo_mt"
+   "typo"
   ]
  },
  {
@@ -2353,16 +2353,16 @@
   ],
   "families": [
    "association",
-   "basic_readout_mt",
+   "basic_readout",
    "conjunctive_association",
    "directed_modulation",
    "jailbreak_recognition",
    "moral_rationale",
    "multi_concept_directed_modulation",
-   "multilingual",
+   "multilingual_st",
    "poetry",
    "role_bound_association",
-   "typo_mt"
+   "typo"
   ]
  },
  {
@@ -2394,16 +2394,16 @@
   ],
   "families": [
    "association",
-   "basic_readout_mt",
+   "basic_readout",
    "conjunctive_association",
    "directed_modulation",
    "jailbreak_recognition",
    "moral_rationale",
    "multi_concept_directed_modulation",
-   "multilingual",
+   "multilingual_st",
    "poetry",
    "role_bound_association",
-   "typo_mt"
+   "typo"
   ]
  },
  {
@@ -2435,16 +2435,16 @@
   ],
   "families": [
    "association",
-   "basic_readout_mt",
+   "basic_readout",
    "conjunctive_association",
    "directed_modulation",
    "jailbreak_recognition",
    "moral_rationale",
    "multi_concept_directed_modulation",
-   "multilingual",
+   "multilingual_st",
    "poetry",
    "role_bound_association",
-   "typo_mt"
+   "typo"
   ]
  },
  {
@@ -2476,16 +2476,16 @@
   ],
   "families": [
    "association",
-   "basic_readout_mt",
+   "basic_readout",
    "conjunctive_association",
    "directed_modulation",
    "jailbreak_recognition",
    "moral_rationale",
    "multi_concept_directed_modulation",
-   "multilingual",
+   "multilingual_st",
    "poetry",
    "role_bound_association",
-   "typo_mt"
+   "typo"
   ]
  },
  {
@@ -2501,16 +2501,16 @@
   ],
   "families": [
    "association",
-   "basic_readout_mt",
+   "basic_readout",
    "conjunctive_association",
    "directed_modulation",
    "jailbreak_recognition",
    "moral_rationale",
    "multi_concept_directed_modulation",
-   "multilingual",
+   "multilingual_st",
    "poetry",
    "role_bound_association",
-   "typo_mt"
+   "typo"
   ]
  },
  {
@@ -2526,16 +2526,16 @@
   ],
   "families": [
    "association",
-   "basic_readout_mt",
+   "basic_readout",
    "conjunctive_association",
    "directed_modulation",
    "jailbreak_recognition",
    "moral_rationale",
    "multi_concept_directed_modulation",
-   "multilingual",
+   "multilingual_st",
    "poetry",
    "role_bound_association",
-   "typo_mt"
+   "typo"
   ]
  },
  {
@@ -2551,16 +2551,16 @@
   ],
   "families": [
    "association",
-   "basic_readout_mt",
+   "basic_readout",
    "conjunctive_association",
    "directed_modulation",
    "jailbreak_recognition",
    "moral_rationale",
    "multi_concept_directed_modulation",
-   "multilingual",
+   "multilingual_st",
    "poetry",
    "role_bound_association",
-   "typo_mt"
+   "typo"
   ]
  },
  {

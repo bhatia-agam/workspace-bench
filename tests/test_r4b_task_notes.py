@@ -11,7 +11,7 @@ from wsbench.banks import load_bank
 from wsbench.multitoken.languages import LANGUAGES
 from wsbench.multitoken.prompts import DIGEST_TASK_NOTES
 
-FOUR = ("multilingual", "multilingual_mt", "multilingual_multihop", "multilingual_typo")
+FOUR = ("multilingual_st", "multilingual", "multilingual_multihop", "multilingual_typo")
 
 
 def _words_of(item: dict) -> set[str]:
@@ -51,7 +51,7 @@ def test_task_note_check_catches_a_leak():
     words = _words_of(item)
     assert any(_in(w, "the model read a Russian passage") for w in words)
     assert any(_in(w, "about an hourglass") for w in words)
-    assert not any(_in(w, DIGEST_TASK_NOTES["multilingual_mt"]) for w in words)
+    assert not any(_in(w, DIGEST_TASK_NOTES["multilingual"]) for w in words)
 
 
 @pytest.mark.parametrize("family", FOUR)

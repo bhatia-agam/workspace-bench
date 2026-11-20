@@ -195,7 +195,7 @@
     "1 previously shipped ids leave the bank: ['association-au-t1-w101c2-wave2-snowman-carrot']"
    ]
   },
-  "basic_readout": {
+  "basic_readout_st": {
    "target": 100,
    "n_original": 100,
    "n_original_gated": 100,
@@ -212,7 +212,7 @@
    ],
    "note": "v5 rebuild: 76 originals + 24 authored (Brief tiers t1 / entity / processing) = 100/100; implicit golds are Qwen3.5-4B's own answers (adapt mc stage=subject after every gate); mc.gold_position balanced at freeze | Refresh 2026-11-05 (plan 0072): re-frozen on registered bank v7, 100 -> 100 items. | Capital swap 2026-11-05 (#372, plan 0072 follow-up): re-frozen on registered bank v8, 100 -> 100 items; 10 country-capital originals dropped; 9 of #372's 10 new items pass the subject gate and ship; adapted-only items 1 in / 0 out (the target and originals-first selection)."
   },
-  "basic_readout_mt": {
+  "basic_readout": {
    "target": 120,
    "n_original": 90,
    "n_original_gated": 75,
@@ -284,7 +284,7 @@
     "stop": "120 >= target 120"
    }
   },
-  "multihop": {
+  "multihop_st": {
    "target": 100,
    "n_original": 98,
    "n_original_gated": 57,
@@ -495,7 +495,7 @@
     "1 previously shipped ids leave the bank: ['multihop-au-t1-w102c1-mh6-grand-canyon-state-city']"
    ]
   },
-  "multilingual": {
+  "multilingual_st": {
    "target": 99,
    "n_original": 99,
    "n_original_gated": 95,
@@ -559,7 +559,7 @@
     "1 previously shipped ids leave the bank: ['cj52a1a9_a']"
    ]
   },
-  "multilingual_mt": {
+  "multilingual": {
    "target": 100,
    "n_original": 100,
    "n_original_gated": 100,
@@ -765,7 +765,7 @@
     }
    ]
   },
-  "typo": {
+  "typo_st": {
    "target": 100,
    "n_original": 100,
    "n_original_gated": 100,
@@ -778,7 +778,7 @@
    "note": "Superseded by typo_mt (out of `all`); the 2026-10 v1 file is kept only for old results, not rebuilt under plan 0060",
    "exclude_from_macro": true
   },
-  "typo_mt": {
+  "typo": {
    "target": 100,
    "n_original": 85,
    "n_original_gated": 85,
@@ -2052,7 +2052,7 @@
     }
    ]
   },
-  "multihop_mt_v2": {
+  "multihop": {
    "target": 64,
    "n_original": 64,
    "n_original_gated": 64,
@@ -2578,7 +2578,7 @@
   "nyt_connections": {
    "c0718": "audit 2026-11-03 (independent, plan 0060 build): gold label \"TYPES OF ICE CREAM\" (the subject's own label) does not describe FROST/GLAZE/POWDER/SPRINKLE, so a readout of the true connection is scored wrong (verified)"
   },
-  "basic_readout_mt": {
+  "basic_readout": {
    "brh-ent-palau-capital": "audit 2026-11-03 (independent, plan 0060 build): \"purpose-built seat of national government\" is ambiguous between the town Ngerulmud and the building; the subject answers \"National Capitol Building\" and passes only via \"Located in Ngerulmud\"",
    "brh-ent-karlowitz-1699": "audit 2026-11-03 (independent, plan 0060 build): the subject's own answer equates it with the shown distractor \"Treaty of Belgrade\", so a faithful readout is judged cannot (verified)",
    "brh-ent-currency-mozambique": "audit 2026-11-03 (independent, plan 0060 build): the subject's form \"Meticale\" is a name_miss at the judge (verified); the gate passed only on the plural \"Meticais\"",
@@ -2626,13 +2626,13 @@
    "basic-au-t1-w101c2-brh-ent-joseon-dynasty": "plan 0087: not back-filled (pool closed; no audit / lucky measure of fill rows in this sweep)",
    "brh-ent-euler-mascheroni-constant": "plan 0087 sweep: confirmed leaker on the final measurement (sweepC and an earlier separate run of the same list; blind+described 10/10, or a family-level failing guesser >= 3/5 with blind+described >= 4/10; decisions 1-3, two-run rule); not back-filled"
   },
-  "multilingual": {
+  "multilingual_st": {
    "b3-ml-fr-opposite-big": "audit 2026-11-03 (independent, plan 0060 build): exact duplicate prompt of fr-size-big-small ('Le contraire de \"grand\" est \"')",
    "b3-ml-pt-opposite-big": "audit 2026-11-03 (independent, plan 0060 build): exact duplicate prompt of pt-size-big-small ('O contrário de \"grande\" é \"')",
    "b3-ml-de-month-before-march": "audit 2026-11-03 (independent, plan 0060 build): cognate gloss Februar/February (ratio 0.933) breaks the family's no-cognate rule (adapt/lint.py:132)",
    "b3-ml-es-month-april": "audit 2026-11-03 (independent, plan 0060 build): cognate gloss mayo/May (ratio 0.857) breaks the family's no-cognate rule (adapt/lint.py:132)"
   },
-  "multihop": {
+  "multihop_st": {
    "month-7-namedafter": "audit 2026-11-03 (independent, plan 0060 build): prompt \"...named after the Roman leader Julius \" contains the bridge stem (July) and \"Caesar\" is a direct collocation of \"Julius\", so the bridge is not needed",
    "mh-w1-potassium-k": "plan 0072 delta audit 2026-11-05: the registered bridge gold's alias (K / Sn) is the item's target, so a readout of the answer is credited as the bridge",
    "b3-mh-tallest-continent": "Camila 2026-11-07 decisions 1-3 (strict, whole bank incl. originals): list leaks in lucky_r0 (blind+described 10/10, or a family-level failing guesser >= 3/5 with blind+described >= 4/10); dropped and back-filled",
@@ -3048,7 +3048,7 @@
   "conjunctive_association": {
    "cj52a1a9_a": "plan 0077 delta audit: lucky-guessing leaker (any-guesser rule, blind 5/5)"
   },
-  "multihop_mt": {
+  "multihop": {
    "mh2-ray-tagore-gitanjali-q0": "plan 0077 delta audit (item-quality review, Camila 2026-11-06): see AUDIT.md 'Plan 0077 delta audit: multihop_mt'"
   },
   "agentic_misalignment": {
@@ -3697,7 +3697,7 @@
    "mlt-ru-anticyclone": "plan 0087: not back-filled (pool closed; no audit / lucky measure of fill rows in this sweep)",
    "mlt-tr-biyocesitlilik": "plan 0087: not back-filled (pool closed; no audit / lucky measure of fill rows in this sweep)"
   },
-  "multilingual_mt": {
+  "multilingual": {
    "multilingual-au-t1-w100c0-mlh-ru-strawberry": "plan 0075 §0.1(a) (strict): adapted-only list still leaking after r5 round 2 (a guesser >= 3/5, blind+described >= 4/10); dropped and back-filled",
    "multilingual-au-t1-w101c0-mlh-id-wristwatch": "plan 0075 §0.1(a) (strict): adapted-only list still leaking after r5 round 2 (a guesser >= 3/5, blind+described >= 4/10); dropped and back-filled",
    "multilingual-au-t1-w101c0-mlh-ru-icecream": "plan 0075 §0.1(a) (strict): adapted-only list still leaking after r5 round 2 (a guesser >= 3/5, blind+described >= 4/10); dropped and back-filled",
@@ -42757,7 +42757,7 @@
     "note": "plan 0077 §3b: mc rebuilt, kind-matched distractors (delta-audit check-1 fix)"
    }
   },
-  "basic_readout_mt": {
+  "basic_readout": {
    "basic-au-t1-w100c0-brh-ent-agra-mausoleum": {
     "set": {
      "mc": {
@@ -43175,7 +43175,7 @@
     "note": "mcleak-r5-2026-11-04 adapted r2: adapted-only list rebuilt (plan 0075 §0.1(a), 2026-11-06)"
    }
   },
-  "multilingual_mt": {
+  "multilingual": {
    "multilingual-au-t1-w100c0-mlh-ru-dumplings": {
     "set": {
      "mc": {
@@ -48031,5 +48031,6 @@
     "note": "mcleak-r5-2026-11-04 adapted r2: adapted-only list rebuilt (plan 0075 §0.1(a), 2026-11-06)"
    }
   }
- }
+ },
+ "family_keys": "0101"
 }

@@ -15,8 +15,8 @@ import pytest
 from wsbench import mc, registry
 from wsbench.adapt import wrong_intermediate as wb
 from wsbench.baselines import text_inversion as ti
-from wsbench.evals.wrong_intermediate import judge as wj
-from wsbench.evals.wrong_intermediate import prompts as wp
+from wsbench.evals.model_specific.wrong_intermediate import judge as wj
+from wsbench.evals.model_specific.wrong_intermediate import prompts as wp
 
 REPO = Path(__file__).resolve().parents[1]
 # the 17 templates that had cues before the bump, and sha256 of their ROLE_CUES / raw _CUES

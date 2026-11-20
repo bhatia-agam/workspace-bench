@@ -75,7 +75,9 @@ def family(monkeypatch):
     from wsbench.basic.family import bank_family
 
     # plan 0039: the bank judge on the frozen v1 bank, registered for this test only
-    spec = bank_family("association", "Association", bank=Path("evals/association/items.json"))
+    spec = bank_family(
+        "association", "Association", bank=Path("evals/basic/association/items.json")
+    )
     monkeypatch.setitem(registry.FAMILIES, spec.name, spec)
     return spec
 
@@ -95,7 +97,7 @@ def _write(path: Path, rows: list[dict]) -> Path:
 
 
 def test_bank_targets_and_labels(tmp_path):
-    header, items = load_bank(REPO / "evals/association/items.json")
+    header, items = load_bank(REPO / "evals/basic/association/items.json")
     assert header["family"] == "association" and len(items) == 100
     assert item_targets(items[0]) == ["carnaval"] and items[0]["id"] == items[0]["name"]
     assert item_targets({"name": "x", "target": "Fe", "intermediates": ["iron"]}) == ["iron"]
@@ -112,9 +114,9 @@ def test_bank_targets_and_labels(tmp_path):
 
 def test_registered_spec(real_families):
     # plan 0039: the registered family is the MC judge on bank v2 (its own stamp and calls)
-    from wsbench.evals.association import SPEC
-    from wsbench.evals.association.prompts import CALL_VERSION
-    from wsbench.evals.association.prompts import PROMPT_VERSION as ASSOC_PV
+    from wsbench.evals.basic.association import SPEC
+    from wsbench.evals.basic.association.prompts import CALL_VERSION
+    from wsbench.evals.basic.association.prompts import PROMPT_VERSION as ASSOC_PV
 
     assert SPEC.group == "basic" and SPEC.metric == "pass_rate"
     assert SPEC.judge.model == DEFAULT_JUDGE
@@ -125,9 +127,9 @@ def test_registered_spec(real_families):
 
 
 def test_readme_carries_the_verbatim_prompt():
-    # the bank judge's README of record moved to medical_diagnosis (plan 0039 §6), then to typo
-    # when plan 0058 removed medical_diagnosis (typo is the remaining family on this judge)
-    readme = (REPO / "evals/typo/README.md").read_text(encoding="utf-8")
+    # the bank judge's README of record moved to medical_diagnosis (plan 0039 §6), then to typo_st
+    # when plan 0058 removed medical_diagnosis (typo_st is the remaining family on this judge)
+    readme = (REPO / "evals/basic/typo_st/README.md").read_text(encoding="utf-8")
     assert SYSTEM in readme and PROMPT_VERSION in readme
 
 

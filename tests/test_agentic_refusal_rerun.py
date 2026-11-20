@@ -12,9 +12,9 @@ from test_llm_refusal_rerun import OPUS5, SONNET, _resp, fake_client_installer, 
 from test_summary_mode_agentic import BENIGN, GOOD, RH, _rows
 
 from wsbench import digest
-from wsbench.evals.agentic_misalignment import SPEC as AM_SPEC
-from wsbench.evals.agentic_misalignment import judge as am_judge
-from wsbench.evals.agentic_misalignment import prompts as am_prompts
+from wsbench.evals.safety.agentic_misalignment import SPEC as AM_SPEC
+from wsbench.evals.safety.agentic_misalignment import judge as am_judge
+from wsbench.evals.safety.agentic_misalignment import prompts as am_prompts
 from wsbench.judge_config import resolve
 
 

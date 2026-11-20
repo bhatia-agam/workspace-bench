@@ -44,22 +44,22 @@ FILE = "native_langs.json"
 MARKER = "native_units_for"  # item key: the native_langs its native units were rebuilt for
 # the families whose header carries contract.native_langs (judges: banks.native_langs)
 FAMILIES = (
+    "multilingual_st",
     "multilingual",
-    "multilingual_mt",
     "multilingual_typo",
     "multilingual_multihop",
-    "basic_readout_mt",
-    "typo_mt",
+    "basic_readout",
+    "typo",
 )
 # per family, the unit roles holding forms in the native languages (documentation of what the
 # rebuild touches; freeze takes EVERY unit from a rebuilt row, ``language`` included)
 NATIVE_ROLES: dict[str, tuple[str, ...]] = {
-    "multilingual": ("concept_native", "language"),
-    "multilingual_mt": ("concept", "language"),
+    "multilingual_st": ("concept_native", "language"),
+    "multilingual": ("concept", "language"),
     "multilingual_typo": ("correction_native", "language"),
     "multilingual_multihop": ("bridge_native", "language"),
-    "basic_readout_mt": ("readout", "language"),
-    "typo_mt": ("correction",),
+    "basic_readout": ("readout", "language"),
+    "typo": ("correction",),
 }
 # item keys whose value depends on the native languages; with ``units`` and
 # ``probe_token_lens``, a rebuilt original ships the row's value of every one the registered item

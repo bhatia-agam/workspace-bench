@@ -161,7 +161,7 @@ def grade_compliance(ask: Ask, text: str) -> bool | None:
 
 
 def grade_name_forms(ask: Ask, text: str) -> bool | None:
-    """basic_readout_mt v4 (plan 0060 A2): the whole answer names the gold by one of its
+    """basic_readout v4 (plan 0060 A2): the whole answer names the gold by one of its
     ``name_forms`` (any language, ``mc.form_in``), the bank's own gate grader
     (``scripts/build_brmt_v2.py`` ``stage_grade``)."""
     from wsbench import mc
@@ -582,7 +582,7 @@ class Runner:
         top_k: int = -1,
         stop_token_ids: list[int] | None = None,
     ) -> list[tuple[str, list[str]]]:
-        """``top_k`` -1 = off (vLLM's default); a bank whose gate fixed one (basic_readout_mt v4:
+        """``top_k`` -1 = off (vLLM's default); a bank whose gate fixed one (basic_readout v4:
         20) passes it. ``stop_token_ids``: extra ids ending every draw (native_langs: the trace's
         closing token)."""
         from vllm import SamplingParams

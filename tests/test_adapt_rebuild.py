@@ -1,4 +1,4 @@
-"""Plan 0060 A2: the basic_readout v5 and basic_readout_mt v4 rebuilds and the ``adapt mc`` stage
+"""Plan 0060 A2: the basic_readout_st v5 and basic_readout v4 rebuilds and the ``adapt mc`` stage
 (fakes only: no GPU, Modal or API)."""
 
 import collections
@@ -18,8 +18,8 @@ from wsbench.adapt.lint import lint
 from wsbench.banks import label_of
 
 ROOT = Path(__file__).resolve().parents[1]
-BR_V5 = ROOT / "evals/basic_readout/items_v5.json"
-BRMT_V4 = ROOT / "evals/basic_readout_mt/items_v4.json"
+BR_V5 = ROOT / "evals/basic/basic_readout_st/items_v5.json"
+BRMT_V4 = ROOT / "evals/basic/basic_readout/items_v4.json"
 
 
 def _bank(path: Path) -> tuple[dict, list[dict]]:
@@ -37,7 +37,7 @@ def mdir(tmp_path, monkeypatch):
     return tmp_path
 
 
-# ---------------------------------------------------------------- basic_readout: gold slots
+# ---------------------------------------------------------------- basic_readout_st: gold slots
 
 
 def test_gold_slots_reproduce_the_registered_deal():
@@ -125,23 +125,23 @@ def _row(item: dict, origin: str, ok: bool = True) -> dict:
 
 def test_subject_fields_marks_and_rekeys(mdir):
     _h, items = _bank(BR_V5)
-    imp = arun.restamp("basic_readout", _instrument(), {"legs": {"surface": {"own": "Violin"}}})
+    imp = arun.restamp("basic_readout_st", _instrument(), {"legs": {"surface": {"own": "Violin"}}})
     ent = _by_name(items, "br-ent-ath-ali")
     pieces = ("queen", "king", "rook", "bishop", "knight", "pawn")
     flat = {"name": "brx", "subfamily": "implicit", "topic": "chess piece",
             "candidates": [{"option": o, "aliases": []} for o in pieces]}  # fmt: skip
-    cand = author._finish(author._br_v5(flat), author.BRIEFS["basic_readout"], "basic_readout",
-                          "demo", "t1", 0, "")  # fmt: skip
-    store.add_candidates("demo", "basic_readout", [cand])
+    cand = author._finish(author._br_v5(flat), author.BRIEFS["basic_readout_st"],
+                          "basic_readout_st", "demo", "t1", 0, "")  # fmt: skip
+    store.add_candidates("demo", "basic_readout_st", [cand])
     rec = {"legs": {"surface": {"own": "Rook"}}}
-    gated = arun.restamp("basic_readout", copy.deepcopy(cand), rec)
+    gated = arun.restamp("basic_readout_st", copy.deepcopy(cand), rec)
     failed = _by_name(items, "br-imp-cartoonchara")
-    store.record_gates("demo", "basic_readout", [_row(imp, "original"), _row(ent, "original"),
+    store.record_gates("demo", "basic_readout_st", [_row(imp, "original"), _row(ent, "original"),
                                                  _row(gated, "authored"),
                                                  _row(failed, "original", ok=False)])  # fmt: skip
     got = rebuild.subject_fields("demo")
     assert got == {"marked": 3, "short": 0}
-    rows = store.gated("demo", "basic_readout")
+    rows = store.gated("demo", "basic_readout_st")
     for iid in ("br-imp-instrument", "br-ent-ath-ali", "brx"):
         assert rows[iid]["item"][fams.SUBJECT_MARKER] == "demo"
         assert rows[iid]["gate"]["pass"]  # the gate result is carried, never re-asked
@@ -153,7 +153,7 @@ def test_subject_fields_marks_and_rekeys(mdir):
     assert len(m["distractors"]) == 4
     assert fams.SUBJECT_MARKER not in rows["br-imp-cartoonchara"]["item"]
     assert rebuild.subject_fields("demo") == {"marked": 0, "short": 0}  # idempotent
-    assert fams.SUBJECT_FIELDS["basic_readout"] == ("mc",)
+    assert fams.SUBJECT_FIELDS["basic_readout_st"] == ("mc",)
 
 
 def test_freeze_balances_the_shipped_set(mdir, monkeypatch):
@@ -165,9 +165,9 @@ def test_freeze_balances_the_shipped_set(mdir, monkeypatch):
     for it in kept:
         it["mc"]["gold_position"] = 0  # provisional slots
         it[fams.SUBJECT_MARKER] = "demo"
-    store.record_gates("demo", "basic_readout", [_row(it, "original") for it in kept])
-    arun.freeze("demo", ["basic_readout"])
-    bank = json.loads((mdir / "demo" / "basic_readout.json").read_text(encoding="utf-8"))
+    store.record_gates("demo", "basic_readout_st", [_row(it, "original") for it in kept])
+    arun.freeze("demo", ["basic_readout_st"])
+    bank = json.loads((mdir / "demo" / "basic_readout_st.json").read_text(encoding="utf-8"))
     by_sub = collections.defaultdict(collections.Counter)
     for it in bank["items"]:
         by_sub[it["subfamily"]][it["mc"]["gold_position"]] += 1
@@ -176,11 +176,11 @@ def test_freeze_balances_the_shipped_set(mdir, monkeypatch):
     assert json.loads(BR_V5.read_text(encoding="utf-8"))["items"][0] == items[0]  # evals intact
 
 
-# ---------------------------------------------------------------- basic_readout v5 Brief + lint
+# ---------------------------------------------------------------- basic_readout_st v5 Brief + lint
 
 
 def test_br_v5_brief_builds_lint_clean_items():
-    b = author.BRIEFS["basic_readout"]
+    b = author.BRIEFS["basic_readout_st"]
     ent = author._br_v5(
         {
             "name": "br-ent-cap-oslo", "subfamily": "entity", "slice": "cap", "subject": "Oslo",
@@ -191,30 +191,30 @@ def test_br_v5_brief_builds_lint_clean_items():
             "task_context": "the model was asked which country a capital city belongs to",
         }
     )  # fmt: skip
-    ent = author._finish(ent, b, "basic_readout", "demo", "entity", 0, "")
-    assert lint("basic_readout", ent) == []
+    ent = author._finish(ent, b, "basic_readout_st", "demo", "entity", 0, "")
+    assert lint("basic_readout_st", ent) == []
     assert ent["mc"]["gold"] == "Norway" and ent["mc"]["gold_position"] == 0
     assert ent["readout"]["kind"] == "question_through_end" and ent["eval_render"] == "chat"
     bad = copy.deepcopy(ent)
     bad["mc"]["distractors"][0] = "Norway"
-    assert any("names or is named" in p for p in lint("basic_readout", bad))
+    assert any("names or is named" in p for p in lint("basic_readout_st", bad))
     bad = copy.deepcopy(ent)
     bad["mc"]["distractors"][0] = "Oslo"
-    assert any("in prompt" in p for p in lint("basic_readout", bad))
+    assert any("in prompt" in p for p in lint("basic_readout_st", bad))
     pieces = ["queen", "king", "rook", "bishop", "knight", "pawn"]
     imp = author._br_v5({"name": "br-imp-x", "subfamily": "implicit", "topic": "chess piece",
                          "candidates": pieces})  # fmt: skip
-    imp = author._finish(imp, b, "basic_readout", "demo", "t1", 0, "")
+    imp = author._finish(imp, b, "basic_readout_st", "demo", "t1", 0, "")
     assert imp["prompt"] == "What is your favorite chess piece? Answer in one word."
-    assert lint("basic_readout", imp) == [] and imp["mc"]["spares"][0]["option"] == "pawn"
-    assert any("missing" in p for p in lint("basic_readout", {**ent, "task_context": ""}))
+    assert lint("basic_readout_st", imp) == [] and imp["mc"]["spares"][0]["option"] == "pawn"
+    assert any("missing" in p for p in lint("basic_readout_st", {**ent, "task_context": ""}))
 
 
 def test_br_v5_flat_roundtrip_on_the_registered_bank():
     _h, items = _bank(BR_V5)
     for it in items:
         flat = author._flat_br_v5(copy.deepcopy(it))
-        x = {k: flat.get(k) for k in author.BRIEFS["basic_readout"].keys if k in flat}
+        x = {k: flat.get(k) for k in author.BRIEFS["basic_readout_st"].keys if k in flat}
         got = author._br_v5(x)
         assert got["mc"]["gold"] == it["mc"]["gold"], it["name"]
         assert got["mc"]["distractors"] == it["mc"]["distractors"], it["name"]
@@ -224,7 +224,7 @@ def test_br_v5_flat_roundtrip_on_the_registered_bank():
             assert got["mc"]["aliases"] == it["mc"]["aliases"]
 
 
-# ---------------------------------------------------------------- basic_readout_mt v4 gate
+# ---------------------------------------------------------------- basic_readout v4 gate
 
 
 def _brmt_items() -> list[dict]:
@@ -233,7 +233,7 @@ def _brmt_items() -> list[dict]:
 
 def test_brmt_gate_asks_the_v4_question():
     it = _brmt_items()[0]
-    fam = fams.get("basic_readout_mt")
+    fam = fams.get("basic_readout")
     asks = fam.asks(it)
     assert len(asks) == 1
     a = asks[0]
@@ -244,15 +244,15 @@ def test_brmt_gate_asks_the_v4_question():
     assert (fam.temperature, fam.top_p, fam.top_k) == (0.7, 0.8, 20)
     assert "name_forms" in NO_FALLBACK
     # the other mt families keep _asked(CONTINUE, plain=True)
-    _h, ml = store.original_bank("multilingual_mt")
-    legs = fams.get("multilingual_mt").asks(ml[0])
+    _h, ml = store.original_bank("multilingual")
+    legs = fams.get("multilingual").asks(ml[0])
     assert {x.leg for x in legs} == {"surface", "surface:plain"}
     assert legs[0].messages[0]["role"] == "system"
 
 
 def test_brmt_name_forms_grader_any_language():
     it = next(x for x in _brmt_items() if x["name"] == "brh-ar-ain-jalut")
-    ask = fams.get("basic_readout_mt").asks(it)[0]
+    ask = fams.get("basic_readout").asks(it)[0]
     zh = "这场战役是阿因贾鲁特战役。"
     leg = grade_leg(ask, "It was the Battle of Ain Jalut in 1260.", [zh] * 8 + ["Hattin"] * 2, 0.8)
     assert leg.passed and leg.rate == 0.8
@@ -275,12 +275,12 @@ class _Runner:
 def test_brmt_gate_rows_sample_at_the_v4_header(mdir):
     it = copy.deepcopy(_brmt_items()[0])
     r = _Runner("The Aghlabids ruled it.")
-    rows = arun._gate_rows("demo", "basic_readout_mt", [it], r, 10, None, None)
+    rows = arun._gate_rows("demo", "basic_readout", [it], r, 10, None, None)
     assert r.calls == [(10, 0.7, 0.8, 20)]
     assert rows[0]["gate"]["pass"] and rows[0]["sampling"]["top_k"] == 20
     # an explicit temperature= resets the family's sampling (as before)
     r2 = _Runner("x")
-    arun._gate_rows("demo", "basic_readout_mt", [it], r2, 10, 0.5, None)
+    arun._gate_rows("demo", "basic_readout", [it], r2, 10, 0.5, None)
     assert r2.calls == [(10, 0.5, 1.0, -1)]
 
 
@@ -333,38 +333,38 @@ def test_brmt_v4_brief_build_lint_and_overlays(mdir):
         "distractors": ["Fatimid Caliphate", "Zirid dynasty", "Hafsid dynasty", "Idrisid dynasty"],
         "exonyms": {"ru": ["Кальбиты"], "de": []},
     }  # fmt: skip
-    b = author.BRIEFS["basic_readout_mt"]
+    b = author.BRIEFS["basic_readout"]
     it = author.mt.stamp(author._brmt_v4(dict(flat)), Tok(), b.include_target)
-    it = author._finish(it, b, "basic_readout_mt", "demo", "t1", 0, "")
-    assert lint("basic_readout_mt", it) == []
+    it = author._finish(it, b, "basic_readout", "demo", "t1", 0, "")
+    assert lint("basic_readout", it) == []
     assert it["eval_render"] == "chat" and it["readout"] == {"kind": "all_from_end",
                                                              "lite": "final_token"}  # fmt: skip
     nf = {"en": ["Kalbid dynasty", "Kalbids"], "zh": ["卡尔布王朝"]}
     assert it["name_forms"]["readout"] == nf
     assert it["exonyms"] == {"readout": {"ru": ["Кальбиты"]}}
-    asks = fams.get("basic_readout_mt").asks(it)
+    asks = fams.get("basic_readout").asks(it)
     assert set(asks[0].golds) == {"Kalbid dynasty", "Kalbids", "卡尔布王朝"}
     leak = copy.deepcopy(it)
     leak["prompt"] = "Which dynasty, the Kalbids, ruled Sicily?"
-    assert any(p.startswith("leak") for p in lint("basic_readout_mt", leak))
+    assert any(p.startswith("leak") for p in lint("basic_readout", leak))
     # freeze step: adapted-only entries to the overlay files; registered ids never; keys popped
     orig = copy.deepcopy(_brmt_items()[0])
     other = {**copy.deepcopy(it), "name": "brh-au-y"}
     other.pop("exonyms")
-    notes, files = rebuild.freeze_step("demo", "basic_readout_mt", {}, [orig, it, other])
-    assert notes and set(files) == {"basic_readout_mt/exonyms.json",
-                                    "basic_readout_mt/hidden_rivals.json"}  # fmt: skip
-    ex = files["basic_readout_mt/exonyms.json"]["items"]
+    notes, files = rebuild.freeze_step("demo", "basic_readout", {}, [orig, it, other])
+    assert notes and set(files) == {"basic_readout/exonyms.json",
+                                    "basic_readout/hidden_rivals.json"}  # fmt: skip
+    ex = files["basic_readout/exonyms.json"]["items"]
     assert ex == {"brh-au-x": {"readout": {"ru": ["Кальбиты"]}}, "brh-au-y": {}}
-    assert files["basic_readout_mt/hidden_rivals.json"]["items"] == {"brh-au-x": {},
+    assert files["basic_readout/hidden_rivals.json"]["items"] == {"brh-au-x": {},
                                                                      "brh-au-y": {}}  # fmt: skip
     assert "exonyms" not in it and "hidden_rivals" not in orig
-    assert rebuild.freeze_step("demo", "basic_readout_mt", {}, [orig]) == ([], {})
+    assert rebuild.freeze_step("demo", "basic_readout", {}, [orig]) == ([], {})
 
 
 def test_registered_v4_items_lint_clean():
     for it in _brmt_items()[:20]:
-        assert not [p for p in lint("basic_readout_mt", it) if not p.startswith("units")], it
+        assert not [p for p in lint("basic_readout", it) if not p.startswith("units")], it
 
 
 # ---------------------------------------------------------------- adapt mc stage
@@ -379,7 +379,7 @@ def test_mc_steps_never_touch_evals(tmp_path):
     with pytest.raises(SystemExit, match="no builder"):
         mcstage.steps("poetry", tmp_path, tmp_path, tmp_path)
     with pytest.raises(SystemExit, match="evals"):
-        mcstage._not_evals(registry.REPO_ROOT / "evals" / "multihop" / "x.json")
+        mcstage._not_evals(registry.REPO_ROOT / "evals" / "basic" / "multihop_st" / "x.json")
 
 
 def _brmt_cand(name: str, dis: list[str]) -> dict:
@@ -395,7 +395,7 @@ def test_mc_build_writes_options_into_pending_candidates(mdir, monkeypatch):
                                    "Hafsid dynasty"])  # fmt: skip
     drop = _brmt_cand("brh-au-b", ["P", "Q", "R", "S"])
     orig = copy.deepcopy(_brmt_items()[1])  # an original never goes to the builder
-    store.add_candidates("demo", "basic_readout_mt", [keep, drop, orig])
+    store.add_candidates("demo", "basic_readout", [keep, drop, orig])
     seen = []
 
     def fake(script, argv):
@@ -410,12 +410,12 @@ def test_mc_build_writes_options_into_pending_candidates(mdir, monkeypatch):
             out.write_text(json.dumps({"items": [it]}), encoding="utf-8")
 
     monkeypatch.setattr(mcstage, "run_builder", fake)
-    assert mcstage.build("demo", "basic_readout_mt") == {"built": 1, "dropped": 1}
+    assert mcstage.build("demo", "basic_readout") == {"built": 1, "dropped": 1}
     assert [s for s, _a in seen] == ["r4_mc_distractors", *["r4b_mc_refine"] * 3,
                                      "build_r4b_mc_banks"]  # fmt: skip
-    work = mdir / "demo" / "mc" / "basic_readout_mt"
+    work = mdir / "demo" / "mc" / "basic_readout"
     assert all(str(work) in a for _s, argv in seen for a in argv if a.endswith(".json"))
-    cands = {c["name"]: c for c in store._read_jsonl(store.cand_path("demo", "basic_readout_mt"))}
+    cands = {c["name"]: c for c in store._read_jsonl(store.cand_path("demo", "basic_readout"))}
     a = cands["brh-au-a"]
     assert a["mc"]["readout"]["distractors"][1] == "Buyid dynasty"
     assert a["hidden_rivals"] == {"readout": ["Idrisid dynasty", "Zirid dynasty",
@@ -423,17 +423,17 @@ def test_mc_build_writes_options_into_pending_candidates(mdir, monkeypatch):
     assert a["adapt"]["mc_build"]["builders"][-1] == "build_r4b_mc_banks"
     assert "mc" not in cands["brh-au-b"] and cands["brh-au-b"]["adapt"]["mc_build"]["dropped"]
     assert cands[orig["name"]] == orig
-    assert any("mc" in p for p in lint("basic_readout_mt", cands["brh-au-b"]))
+    assert any("mc" in p for p in lint("basic_readout", cands["brh-au-b"]))
 
 
 def test_mc_build_basic_readout_skips_implicit(mdir, monkeypatch):
-    b = author.BRIEFS["basic_readout"]
+    b = author.BRIEFS["basic_readout_st"]
     imp = author._finish(author._br_v5({"name": "br-imp-q", "topic": "chess piece",
                                         "candidates": ["queen", "king", "rook", "bishop", "pawn"]}),
-                         b, "basic_readout", "demo", "t1", 0, "")  # fmt: skip
+                         b, "basic_readout_st", "demo", "t1", 0, "")  # fmt: skip
     ent = copy.deepcopy(_by_name(_bank(BR_V5)[1], "br-ent-ath-ali"))
     ent["name"], ent["adapt"] = "br-ent-ath-x", {"origin": "authored"}
-    store.add_candidates("demo", "basic_readout", [imp, ent])
+    store.add_candidates("demo", "basic_readout_st", [imp, ent])
 
     def fake(script, argv):
         if "--bank-out" in argv:
@@ -442,7 +442,7 @@ def test_mc_build_basic_readout_skips_implicit(mdir, monkeypatch):
             Path(argv[argv.index("--bank-out") + 1]).write_text(json.dumps(bank), "utf-8")
 
     monkeypatch.setattr(mcstage, "run_builder", fake)
-    assert mcstage.build("demo", "basic_readout") == {"built": 1, "dropped": 0}
+    assert mcstage.build("demo", "basic_readout_st") == {"built": 1, "dropped": 0}
 
 
 def test_adapt_mc_cli_needs_families():
@@ -451,7 +451,7 @@ def test_adapt_mc_cli_needs_families():
     with pytest.raises(SystemExit, match="families= is required"):
         main(["mc", "model=demo"])
     with pytest.raises(SystemExit, match="stage=subject"):
-        mcstage.run("demo", ["multihop"], "subject")
+        mcstage.run("demo", ["multihop_st"], "subject")
 
 
 # ---------------------------------------------------------------- PR #245 review
@@ -477,7 +477,7 @@ def test_mc_steps_carry_review_and_the_r4b_passes(tmp_path):
                           "adapt mc auto-build, demo, 2026-11-03")  # fmt: skip
     frz = next(a for s, a in calls if s == "association_distractors" and a[0] == "freeze")
     assert frz[frz.index("--review") + 1] == "adapt mc auto-build, demo, 2026-11-03"
-    calls = mcstage.steps("basic_readout_mt", tmp_path / "in.json", tmp_path, tmp_path / "o.json")
+    calls = mcstage.steps("basic_readout", tmp_path / "in.json", tmp_path, tmp_path / "o.json")
     refine = [a for s, a in calls if s == "r4b_mc_refine"]
     assert len(refine) == 3 and "--pass2" in refine[1]
     assert {"--resume", "--gate-described"} <= set(refine[2]) and "--pass2" not in refine[2]
@@ -555,15 +555,15 @@ def test_br_freeze_refuses_unmarked_implicit_and_strips_working_fields():
     imp = _by_name(items, "br-imp-instrument")
     ent = _by_name(items, "br-ent-ath-ali")
     with pytest.raises(SystemExit, match="stage=subject"):
-        rebuild.freeze_step("demo", "basic_readout", {}, [copy.deepcopy(imp), ent])
+        rebuild.freeze_step("demo", "basic_readout_st", {}, [copy.deepcopy(imp), ent])
     imp[fams.SUBJECT_MARKER] = "other-model"
     with pytest.raises(SystemExit, match="implicit"):
-        rebuild.freeze_step("demo", "basic_readout", {}, [copy.deepcopy(imp), ent])
+        rebuild.freeze_step("demo", "basic_readout_st", {}, [copy.deepcopy(imp), ent])
     imp[fams.SUBJECT_MARKER] = "demo"
     imp["mc"]["spares"] = [{"option": "oboe", "aliases": []}]
     ent[fams.SUBJECT_MARKER] = "demo"
     shipped = [imp, ent]
-    rebuild.freeze_step("demo", "basic_readout", {}, shipped)
+    rebuild.freeze_step("demo", "basic_readout_st", {}, shipped)
     assert all(fams.SUBJECT_MARKER not in it and "spares" not in it["mc"] for it in shipped)
 
 
@@ -574,9 +574,9 @@ def test_br_freeze_checks_the_marker_on_non_originals_only():
     imp.pop(fams.SUBJECT_MARKER, None)
     imp["adapt"] = {"origin": "authored"}
     with pytest.raises(SystemExit, match="stage=subject"):
-        rebuild.freeze_step("demo", "basic_readout", {}, [copy.deepcopy(imp)])
+        rebuild.freeze_step("demo", "basic_readout_st", {}, [copy.deepcopy(imp)])
     imp["adapt"] = {"origin": "original"}
-    rebuild.freeze_step("demo", "basic_readout", {}, [imp])
+    rebuild.freeze_step("demo", "basic_readout_st", {}, [imp])
 
 
 def test_brmt_exonyms_follow_the_registered_rule():
@@ -598,9 +598,9 @@ def test_brmt_exonyms_follow_the_registered_rule():
     other = {"name": "brh-au-y", "adapt": {"origin": "authored"},
              "name_forms": {"readout": {"en": ["Rustamid dynasty"]}},
              "mc": {"readout": {"gold": "Rustamid dynasty", "distractors": []}}}  # fmt: skip
-    _notes, files = rebuild.freeze_step("demo", "basic_readout_mt", {}, [it, other])
-    ex = files["basic_readout_mt/exonyms.json"]["items"]["brh-au-x"]
+    _notes, files = rebuild.freeze_step("demo", "basic_readout", {}, [it, other])
+    ex = files["basic_readout/exonyms.json"]["items"]["brh-au-x"]
     assert ex == {"readout": {"ru": ["Кальбиты"], "de": ["Kalbiden"], "fr": ["Zirides"]}}
-    assert files["basic_readout_mt/hidden_rivals.json"]["items"]["brh-au-x"] == {
+    assert files["basic_readout/hidden_rivals.json"]["items"]["brh-au-x"] == {
         "readout": ["Aghlabid dynasty"]
     }

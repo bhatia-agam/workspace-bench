@@ -5,8 +5,8 @@ import pytest
 from conftest import tag_of, write_jsonl
 
 from wsbench import reads
-from wsbench.evals.moral_rationale import judge, prompts
-from wsbench.evals.moral_rationale.judge import build_mcs, build_pools
+from wsbench.evals.logical_processing.moral_rationale import judge, prompts
+from wsbench.evals.logical_processing.moral_rationale.judge import build_mcs, build_pools
 from wsbench.mc import CANNOT
 from wsbench.mcjudge import load_bank
 
@@ -21,7 +21,9 @@ TF, YN, TB = "ec-ransom-chat_tf", "ec-ransom-chat_yn", "ec-torture_bomb-chat_tf"
 def bank_v1(monkeypatch):
     """The tests in this file judge bank v1 (items.json, the ec-v3 instrument; plan 0046 keeps
     it judgeable). Bank v2 tests live in tests/test_moral_rationale_v2.py."""
-    monkeypatch.setenv("WSB_BANK_FILE_MORAL_RATIONALE", "evals/moral_rationale/items.json")
+    monkeypatch.setenv(
+        "WSB_BANK_FILE_MORAL_RATIONALE", "evals/logical_processing/moral_rationale/items.json"
+    )
 
 
 def test_bank_loads():
@@ -202,7 +204,7 @@ def test_v2_contrast_options_match_the_in_repo_golden():
 
 
 def test_contrast_is_opposite_side_and_never_either():
-    from wsbench.evals.moral_rationale.judge import contrast_reason
+    from wsbench.evals.logical_processing.moral_rationale.judge import contrast_reason
 
     it = {
         "reasons": [

@@ -11,8 +11,8 @@ from conftest import native_args, write_jsonl
 from wsbench import digest, mc, readplan, registry
 from wsbench.baselines.text_inversion import ati_scored
 from wsbench.cli import main
-from wsbench.evals.introspection import judge
-from wsbench.evals.introspection.prompts import (
+from wsbench.evals.model_specific.introspection import judge
+from wsbench.evals.model_specific.introspection.prompts import (
     NOTE_TOKEN_LIST,
     PROMPT_VERSION,
     SAME_AS_LINE,
@@ -33,7 +33,7 @@ B0 = "beta0|protocol:trial1|b0|"
 
 @pytest.fixture(autouse=True)
 def _registered():
-    from wsbench.evals.introspection import SPEC
+    from wsbench.evals.model_specific.introspection import SPEC
 
     registry.FAMILIES.setdefault(SPEC.name, SPEC)
 
@@ -45,7 +45,7 @@ def _none(user: str) -> int:
 
 
 def _args(tmp_path, **kw):
-    from wsbench.evals.introspection import SPEC
+    from wsbench.evals.model_specific.introspection import SPEC
 
     base = {
         "readouts": EXAMPLE,
@@ -263,11 +263,11 @@ def test_missing_cells_are_fatal_without_allow_missing(tmp_path):
 
 
 def test_registered_readme_and_dry_run(tmp_path, capsys, monkeypatch):
-    from wsbench.evals.introspection import SPEC
+    from wsbench.evals.model_specific.introspection import SPEC
 
     assert SPEC.group == "model_specific" and SPEC.judge.model == "claude-opus-5-5"
     assert SPEC.not_in_macro == ""  # in the macro (Camila, 2026-10-25)
-    readme = (REPO / "evals/introspection/README.md").read_text(encoding="utf-8")
+    readme = (REPO / "evals/model_specific/introspection/README.md").read_text(encoding="utf-8")
     assert SYSTEM in readme and PROMPT_VERSION in readme
     monkeypatch.delenv("WSBENCH_JUDGE_MODEL", raising=False)
     out = tmp_path / "out"
@@ -519,7 +519,7 @@ def test_scope_headline_includes_twins():
 
 
 def _scope_args(**kw):
-    from wsbench.evals.introspection import SPEC
+    from wsbench.evals.model_specific.introspection import SPEC
 
     return {
         "readouts": EXAMPLE,
@@ -703,7 +703,7 @@ def test_any_way_pick_is_credited_and_is_the_headline(tmp_path, monkeypatch):
 
 
 def test_summary_system_replace_still_fires():
-    from wsbench.evals.introspection import prompts as ip
+    from wsbench.evals.model_specific.introspection import prompts as ip
 
     assert ip.SYSTEM_SUMMARY != ip.SYSTEM and ip.SUMMARY_INPUT in ip.SYSTEM_SUMMARY
     assert ip.SUMMARY_INPUT_OLD not in ip.SYSTEM_SUMMARY
@@ -735,7 +735,7 @@ def test_cannot_tell_is_no_hit_and_not_a_false_alarm(tmp_path, monkeypatch):
 
 
 def test_spec_token_note_fields():
-    from wsbench.evals.introspection import SPEC
+    from wsbench.evals.model_specific.introspection import SPEC
 
     assert SPEC.flat_types == () and SPEC.multi_select is False
     assert digest.token_note_of("introspection") == mc.TOKEN_NOTE
@@ -785,7 +785,7 @@ def test_shipped_vectors_match_bank_fingerprints():
     import numpy as np
 
     bank = judge.load()
-    arr = np.load(REPO / bank["vectors"]["concept"]["path"])
+    arr = np.load(registry.repo_path(bank["vectors"]["concept"]["path"]))
     assert arr.dtype == np.float32 and arr.shape == (125, 5120)
     for c, row in zip(bank["concepts"], arr, strict=True):
         fp = hashlib.sha256(json.dumps([round(x, 3) for x in row.tolist()]).encode()).hexdigest()
@@ -801,7 +801,7 @@ def test_vector_files_sha256_match_bank():
     bank = judge.load()
     for key, n in (("concept", 125), ("gaussian", 500)):
         v = bank["vectors"][key]
-        p = REPO / v["path"]
+        p = registry.repo_path(v["path"])  # the bank keeps the pre-0101 layout string
         assert hashlib.sha256(p.read_bytes()).hexdigest() == v["sha256"], key
         assert v["dtype"] == "float32" and v["shape"] == [n, 5120]
         assert np.load(p).shape == (n, 5120)
@@ -811,7 +811,7 @@ def test_gaussian_vectors_unit_norm_after_normalisation():
     import numpy as np
 
     bank = judge.load()
-    g = np.load(REPO / bank["vectors"]["gaussian"]["path"])
+    g = np.load(registry.repo_path(bank["vectors"]["gaussian"]["path"]))
     norms = np.linalg.norm(g, axis=1)
     assert np.all(norms > 50) and np.all(norms < 90)  # raw randn(5120): ~sqrt(5120) = 71.6
     unit = g / norms[:, None]
@@ -824,7 +824,7 @@ def test_gaussian_vectors_match_seed_recipe():
     import numpy as np
 
     bank = judge.load()
-    g = np.load(REPO / bank["vectors"]["gaussian"]["path"])
+    g = np.load(registry.repo_path(bank["vectors"]["gaussian"]["path"]))
     gauss = [it for it in bank["items"] if it["kind"] == "gaussian"]
     for it in gauss[:: len(gauss) // 10] + gauss[-1:]:
         gen = torch.Generator().manual_seed(int(it["vector"]["seed"]))

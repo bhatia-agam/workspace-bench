@@ -17,7 +17,14 @@ WSB = AGAM / "workspace-bench"
 sys.path.insert(0, str(WSB / "src"))
 from wsbench.viewer.build import GROUPS, _family_view, _header, _items, _read_gates  # noqa: E402
 from wsbench.viewer.build import view_item as view_item_full  # noqa: E402,F401
-from wsbench.registry import REMOVED_FAMILIES, RETIRED_FAMILIES  # noqa: E402
+from wsbench.registry import (  # noqa: E402
+    REMOVED_FAMILIES,
+    RETIRED_FAMILIES,
+    _layout,
+    dir_family,
+    family_root,
+    file_family,
+)
 
 CACHE_DIR = Path(__file__).parent / ".cache"
 CACHE_FILE = CACHE_DIR / "index.pkl"
@@ -338,12 +345,31 @@ def _rel(p: Path) -> str:
     return str(p)
 
 
+def _dir_family(jd: Path) -> str | None:
+    """The CURRENT family of a judged directory ``<key>[_opus]`` (plan 0101: by its results'
+    stamp or its cache ids, never the directory name alone; None = unattributable, skipped)."""
+    name = jd.name[: -len("_opus")] if jd.name.endswith("_opus") else jd.name
+    fam = dir_family(jd, name)
+    if fam is None:
+        print(f"skipped {jd}: a pre-0101 family key whose content does not say whose it is")
+    return fam
+
+
+def _file_family(path: Path, stem: str) -> str | None:
+    """The CURRENT family of a readouts file named ``<stem>.jsonl`` (by its item ids under a
+    pre-0101 bare key)."""
+    fam = file_family(path, stem)
+    if fam is None:
+        print(f"skipped {path}: a pre-0101 family key whose content does not say whose it is")
+    return fam
+
+
 def discover() -> dict:
     """Walk the known locations and return the raw spec (no heavy parsing)."""
     banks: dict[str, dict] = {}
     # frozen 27B banks
     fams = {}
-    for d in sorted((WSB / "evals").iterdir()):
+    for d in sorted(family_root(f) for f in _layout()):  # either layout (plan 0101)
         if (d / "items.json").exists():
             fams[d.name] = {"bank": str(d / "items.json"), "gate": None}
         elif d.is_dir() and d.name in FAMILY_ORDER:
@@ -445,11 +471,15 @@ def discover() -> dict:
         # judged_opus/<fam>[_opus]/{results.json,cells.jsonl}
         files: dict = {}
         for ro in sorted((sdir / "readouts").glob("*.jsonl")):
-            files[ro.stem] = {"results": None, "cells": None, "readouts": str(ro)}
+            fam = _file_family(ro, ro.stem)
+            if fam is not None:
+                files[fam] = {"results": None, "cells": None, "readouts": str(ro)}
         for jd in sorted((sdir / "judged_opus").glob("*")):
             if not jd.is_dir():
                 continue
-            fam = jd.name[: -len("_opus")] if jd.name.endswith("_opus") else jd.name
+            fam = _dir_family(jd)
+            if fam is None:
+                continue
             e = files.setdefault(fam, {"results": None, "cells": None, "readouts": None})
             e["results"] = str(jd / "results.json") if (jd / "results.json").exists() else None
             e["cells"] = str(jd / "cells.jsonl") if (jd / "cells.jsonl").exists() else None
@@ -505,7 +535,10 @@ def discover() -> dict:
     stage_note = {"glm": ("inverter", "glm.inv.s7824")}
     by_subj: dict[str, dict] = {}
     for f in sorted(AGAM.glob("olens_report/readouts/*.jsonl")):
-        s, fam = f.stem.split(".", 1)
+        s, stem = f.stem.split(".", 1)
+        fam = _file_family(f, stem)  # an export written before plan 0101 keeps its old key
+        if fam is None:
+            continue
         by_subj.setdefault(s, {})[fam] = {"results": None, "cells": None, "readouts": str(f)}
     for s, fams in by_subj.items():
         stage, tag = stage_note.get(s, ("rl", "RL i600 (sweep report copy)"))
@@ -526,9 +559,13 @@ def discover() -> dict:
     if sm.is_dir():
         fams = {}
         for ro in sorted((sm / "readouts").glob("*.jsonl")):
-            fams[ro.stem] = {"results": None, "cells": None, "readouts": str(ro)}
+            fam = _file_family(ro, ro.stem)
+            if fam is not None:
+                fams[fam] = {"results": None, "cells": None, "readouts": str(ro)}
         for jd in sorted((sm / "judged_opus").glob("*")):
-            fam = jd.name.replace("_opus", "")
+            fam = _dir_family(jd)
+            if fam is None:
+                continue
             e = fams.setdefault(fam, {"results": None, "cells": None, "readouts": None})
             e["results"] = str(jd / "results.json") if (jd / "results.json").exists() else None
             e["cells"] = str(jd / "cells.jsonl") if (jd / "cells.jsonl").exists() else None

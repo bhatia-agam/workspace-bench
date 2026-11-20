@@ -178,7 +178,7 @@ def _po_run(tmp_path: Path, family: str, pv: str, name: str) -> Path:
 
 def test_freeze_opus_then_fallback_end_to_end(tmp_path, monkeypatch, real_families):
     dst = tmp_path / "po_summary.json"
-    dst.write_text(json.dumps({"_source": {"base_model": "Qwen"}, "typo": {"rate": 0.9}}))
+    dst.write_text(json.dumps({"_source": {"base_model": "Qwen"}, "typo_st": {"rate": 0.9}}))
     monkeypatch.setattr(po, "FROZEN_SUMMARY", dst)
     monkeypatch.setattr(po, "ARCHIVE_QWEN_SUMMARY", tmp_path / "archive" / "qwen.json")
     spv = _spv("association")
@@ -198,7 +198,7 @@ def test_freeze_opus_then_fallback_end_to_end(tmp_path, monkeypatch, real_famili
     )
     po.freeze(_po_run(tmp_path, "association", spv, "opus"), dst, source=opus_cfg)
     got = json.loads(dst.read_text())
-    assert "typo" not in got  # the stale stock-Qwen entry is archived, not kept
+    assert "typo_st" not in got  # the stale stock-Qwen entry is archived, not kept
     assert (tmp_path / "archive" / "qwen.json").exists()
     assert got["association"]["not_measurable"] is True  # 30% refused by Opus alone
     fb_cfg = tmp_path / "fb.json"
@@ -214,7 +214,7 @@ def test_freeze_opus_then_fallback_end_to_end(tmp_path, monkeypatch, real_famili
 
 
 def test_freeze_accepts_agentic_summary_stamp_base_only(tmp_path, monkeypatch, real_families):
-    from wsbench.evals.agentic_misalignment import prompts as amp
+    from wsbench.evals.safety.agentic_misalignment import prompts as amp
 
     dst = tmp_path / "po_summary.json"
     monkeypatch.setattr(po, "FROZEN_SUMMARY", dst)
@@ -238,8 +238,8 @@ def test_freeze_accepts_role_bound_adapted_bank_stamp_only_on_an_adapted_bank(
     """role_bound_association stamps CALL_VERSION alone on an adapted bank (judge.instrument), so
     an adapted set's prompt-only floor freezes on that stamp; on the registered bank v2 the
     same stamp is still refused (it is the frozen items.json's instrument, not bank v2's)."""
-    from wsbench.evals.role_bound_association import judge as rbj
-    from wsbench.evals.role_bound_association import prompts as rbp
+    from wsbench.evals.anti_bag_of_features.role_bound_association import judge as rbj
+    from wsbench.evals.anti_bag_of_features.role_bound_association import prompts as rbp
 
     dst = tmp_path / "po_summary.json"
     monkeypatch.setattr(po, "FROZEN_SUMMARY", dst)
@@ -270,8 +270,8 @@ SONNET_DIGEST = ("agentic_misalignment", "jailbreak_recognition")
 # re-scored from its cached judge answers; an entry leaves once its floor is refreshed.
 # 2026-11-04 (pre-merge review): the cut-mid-name line rule, the English plural rule and the
 # pass / fail vote; empty again since every such floor was re-scored on its family's final bank.
-# 2026-11-05 (plan 0073, #366): multihop gate r11 (the final answer never names the bridge)
-PENDING_RESCORE: dict[str, str] = {"multihop": "bank-mc-2026-11-01-v3+bank-gate-r10+bank-v5"}
+# 2026-11-05 (plan 0073, #366): multihop_st gate r11 (the final answer never names the bridge)
+PENDING_RESCORE: dict[str, str] = {"multihop_st": "bank-mc-2026-11-01-v3+bank-gate-r10+bank-v5"}
 
 
 def test_committed_floor_file_is_the_refreeze(real_families):
@@ -523,7 +523,7 @@ def test_committed_floor_rows_under_each_layer_mode(family, real_families):
 # plan 0070: the families whose prompt-only input held reply text under the old cut (audited on
 # the registered banks, 2026-11-17); their floors were re-measured on the reply-free input
 REPLY_FREE_FAMILIES = (
-    "basic_readout",
+    "basic_readout_st",
     "directed_modulation",
     "introspection",
     "jailbreak_recognition",
@@ -869,11 +869,11 @@ def test_fallback_ask_resumes_on_sonnet55_and_reasks_retired_rows(tmp_path, monk
 
 def test_retired_lang_off_floor_matches_a_live_row_without_lang(real_families):
     """summ_lang was removed (#208): live rows carry no ``lang`` key while the floors frozen
-    before it carry ``lang: False`` (typo_mt's, still committed). Off and absent are one
+    before it carry ``lang: False`` (typo's, still committed). Off and absent are one
     instrument; a labelled (``lang: True``) digest is still a different one, on either side."""
-    e = json.loads(FROZEN.read_text(encoding="utf-8"))["typo_mt"]
+    e = json.loads(FROZEN.read_text(encoding="utf-8"))["typo"]
     assert e["summarizer"].get("lang") is False
-    cfg = _live_config("typo_mt", e)
+    cfg = _live_config("typo", e)
     assert "lang" not in cfg["summarizer"]
     assert po.summary_floor_matches(e, cfg)
     on = {**cfg, "summarizer": {**cfg["summarizer"], "lang": True}}

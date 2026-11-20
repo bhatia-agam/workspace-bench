@@ -17,8 +17,8 @@ from test_summary_mode_agentic import BENIGN, GOOD, RH, _rows
 
 from wsbench import registry
 from wsbench.banks import load_bank
-from wsbench.evals.hinted_cutoff import judge as hc_judge
-from wsbench.evals.hinted_cutoff import prompts as hc_prompts
+from wsbench.evals.model_specific.hinted_cutoff import judge as hc_judge
+from wsbench.evals.model_specific.hinted_cutoff import prompts as hc_prompts
 from wsbench.judge_config import resolve
 
 REPO = Path(__file__).resolve().parents[1]
@@ -79,7 +79,7 @@ def _schema_name(kw: dict[str, Any]) -> str:
 
 
 def _agentic(tmp_path: Path, monkeypatch, mode: str):
-    from wsbench.evals.agentic_misalignment import judge
+    from wsbench.evals.safety.agentic_misalignment import judge
 
     path = write_jsonl(tmp_path / "r.jsonl", _rows([RH, f"{RH}~twin"], positions=(0, 1)))
     pin = registry.FAMILIES["agentic_misalignment"].judge.model
@@ -97,7 +97,7 @@ def _agentic(tmp_path: Path, monkeypatch, mode: str):
 
 
 def _jailbreak(tmp_path: Path, monkeypatch, mode: str):
-    from wsbench.evals.jailbreak_recognition import judge
+    from wsbench.evals.safety.jailbreak_recognition import judge
 
     items = _fixture_bank(tmp_path, monkeypatch, 2, 2)
     jb0, jb1 = items[0]["id"], items[1]["id"]
@@ -120,7 +120,7 @@ def _jailbreak(tmp_path: Path, monkeypatch, mode: str):
 
 
 def _hinted_cutoff(tmp_path: Path, monkeypatch, mode: str):
-    _h, items = load_bank(REPO / "evals/hinted_cutoff/items_v2.json")
+    _h, items = load_bank(REPO / "evals/model_specific/hinted_cutoff/items_v2.json")
     pairs = hc_judge.pairs_of(items)[:2]
     keep = [{**p[r], "positions": p[r]["positions"][:20]} for p in pairs for r in ("I", "N")]
     bank = {"family": "hinted_cutoff", "frozen": True, "n_pairs": 2, "items": keep}
@@ -161,10 +161,10 @@ def _hinted_cutoff(tmp_path: Path, monkeypatch, mode: str):
 
 
 def _model_multihop(tmp_path: Path, monkeypatch, mode: str):
-    from wsbench.evals.model_multihop import judge
+    from wsbench.evals.model_specific.model_multihop import judge
     from wsbench.readplan import bank_file
 
-    _h, bank = bank_file(REPO / "evals/model_multihop/items.json")
+    _h, bank = bank_file(REPO / "evals/model_specific/model_multihop/items.json")
     items = {it["id"]: it for it in bank}
     src = (REPO / "examples/readouts/model_multihop.jsonl").read_text().splitlines()
     path = write_jsonl(tmp_path / "model_multihop.jsonl", [json.loads(x) for x in src if x.strip()])

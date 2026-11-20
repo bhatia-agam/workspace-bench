@@ -18,7 +18,7 @@ from wsbench.multitoken.prompts import CANNOT, ML_SYSTEM, QUESTION_LANGUAGE_V2
 AUSTRIA = "b3-ml-de-capital-austria"  # "Die Hauptstadt von Österreich ist" -> Wien; Vienna
 # the capital items left the registered bank in v5 (2026-11-05); the leg's rule is the same on
 # every bank, so the motivating Austria cases read the frozen bank v4 that holds them
-V4 = "evals/multilingual/items_v4.json"
+V4 = "evals/basic/multilingual_st/items_v4.json"
 PASLANMAZ = "mlmh-tr-paslanmaz-sheffield"
 # L32 p4: the only kind of German naming one lens wrote (5 of 220 naming samples); its 128-line
 # digest dropped it, so the MC language role said cannot tell, while another lens, whose digest
@@ -32,16 +32,15 @@ STEELIN = (
 
 
 def _spec(name: str):
-    import importlib
 
-    spec = importlib.import_module(f"wsbench.evals.{name}").SPEC
+    spec = registry.family_module(name).SPEC
     registry.FAMILIES.setdefault(spec.name, spec)
     return spec
 
 
 @pytest.fixture(autouse=True)
 def _austria_bank(monkeypatch):
-    monkeypatch.setenv(registry.BANK_FILE_ENV_PREFIX + "MULTILINGUAL", V4)
+    monkeypatch.setenv(registry.BANK_FILE_ENV_PREFIX + "MULTILINGUAL_ST", V4)
 
 
 def _unit(family: str, item: str) -> regex.ScoredUnit:
@@ -89,7 +88,7 @@ def _austria(tmp_path, monkeypatch, rows):
     fake = FakeLLM.install(
         monkeypatch, _content_judge("Vienna", "ist **Wien** (Vienna)"), _digest_without("Deutsch")
     )
-    spec = _spec("multilingual")
+    spec = _spec("multilingual_st")
     r = spec.run(summary_args(path, tmp_path / "o", spec.judge.prompt_version, items=[AUSTRIA]))
     return r.rows[0], fake
 
@@ -142,7 +141,7 @@ def test_one_scorer_for_the_language():
 
 
 def test_item_result_takes_the_language_out_of_the_layer_conjunction():
-    unit = _unit("multilingual", AUSTRIA)
+    unit = _unit("multilingual_st", AUSTRIA)
     content = regex.ScoredUnit("concept_native", True, {"en": ["Vienna"]})
     units = [content, unit]
     by_layer = {20: {"concept_native": ["en"], "language": []}, 24: {"language": ["de"]}}

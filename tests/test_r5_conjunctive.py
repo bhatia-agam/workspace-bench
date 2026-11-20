@@ -15,8 +15,8 @@ from pathlib import Path
 import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
-V4 = ROOT / "evals/conjunctive_association/items_v4.json"
-V5 = ROOT / "evals/conjunctive_association/items_v5.json"
+V4 = ROOT / "evals/association/conjunctive_association/items_v4.json"
+V5 = ROOT / "evals/association/conjunctive_association/items_v5.json"
 SCRIPT = ROOT / "scripts/conjunctive/make_v5_bank.py"
 
 
@@ -140,8 +140,8 @@ def test_v5_draft_a_state_values_are_not_built():
 
 def test_bank_v5_results_and_floors_are_stamped_apart(monkeypatch):
     from wsbench.baselines import lucky_guessing as lg
-    from wsbench.evals.conjunctive_association import judge as cj
-    from wsbench.evals.conjunctive_association import prompts
+    from wsbench.evals.association.conjunctive_association import judge as cj
+    from wsbench.evals.association.conjunctive_association import prompts
 
     v4 = json.loads(V4.read_text())
     v5 = json.loads(V5.read_text())
@@ -154,7 +154,8 @@ def test_bank_v5_results_and_floors_are_stamped_apart(monkeypatch):
     # the opt-in v5 is its own instrument: bank v4's floors never serve it
     assert lg.floors()["conjunctive_association"]  # v4's frozen floors are live
     monkeypatch.setenv(
-        "WSB_BANK_FILE_CONJUNCTIVE_ASSOCIATION", "evals/conjunctive_association/items_v5.json"
+        "WSB_BANK_FILE_CONJUNCTIVE_ASSOCIATION",
+        "evals/association/conjunctive_association/items_v5.json",
     )
     v5_instrument = prompts.PROMPT_VERSION + "+bank-v5"
     assert lg.instrument_versions()["conjunctive_association"] == v5_instrument

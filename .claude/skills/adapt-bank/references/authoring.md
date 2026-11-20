@@ -1,10 +1,10 @@
 # Authoring new items (Opus)
 
-Use this for families with no deterministic generator: association, multihop, multilingual, typo,
-poetry stubs, the five mt families (typo_mt, multilingual_mt, multilingual_typo,
-multilingual_multihop, basic_readout_mt), user_modeling selfdescribe, basic_readout implicit,
+Use this for families with no deterministic generator: association, multihop_st, multilingual_st, typo_st,
+poetry stubs, the five mt families (typo, multilingual, multilingual_typo,
+multilingual_multihop, basic_readout), user_modeling selfdescribe, basic_readout_st implicit,
 role_bound and buggy_code (plan 0075: `adapt refill families=<f>` runs `fill` for all of them
-but basic_readout / multilingual / typo). conjunctive and moral dilemmas have NO `Brief` yet: they refill from the
+but basic_readout_st / multilingual_st / typo_st). conjunctive and moral dilemmas have NO `Brief` yet: they refill from the
 registered bank only. Opus writes candidates. The subject decides whether they are in capability. The
 lint and gate decide what's kept.
 
@@ -54,7 +54,7 @@ below.
 
 ## Steer with lint rejections too
 The lint names exactly why a candidate was rejected. Feed those reasons back as the next wave's
-`steer=`. On Qwen3.5-4B, typo_mt's "long common words" wave lost 28/40 items to the multi-token
+`steer=`. On Qwen3.5-4B, typo's "long common words" wave lost 28/40 items to the multi-token
 rule: the large vocabulary makes *misunderstanding* or *unforgettable* one token. The next wave
 was steered with the rejected words ("ONE token for this model") and the accepted ones, and all
 60 of its items passed lint. Tokenizer facts like this are subject-specific: they are measured,
@@ -81,16 +81,16 @@ Write <n> items spread across <subfamilies/topics>; no topic or template more th
 ```
 
 ## Family-specific notes
-- **multihop** (single token): also write `bridge_question` (it asks for the bridge directly,
+- **multihop_st** (single token): also write `bridge_question` (it asks for the bridge directly,
   without naming the target) and `bridge_aliases`. The brief writes no `mc`.
 - **MC blocks in general** (bank v2+ judges): association `mc` {gold, aliases, distractors[7]}
-  (lint requires it), basic_readout `mc` with a balanced `gold_position` (a distractor never equals
-  the subject's own answer), multihop `mc`, chain per-slot `mc`, poetry `mc.candidates`. The repo's
+  (lint requires it), basic_readout_st `mc` with a balanced `gold_position` (a distractor never equals
+  the subject's own answer), multihop_st `mc`, chain per-slot `mc`, poetry `mc.candidates`. The repo's
   builders write the frozen `evals/` banks by default; `build_multihop_mc.py`,
   `association_distractors.py`, `mc_leakage_r4.py`, `r4_mc_distractors.py`, `r4b_mc_refine.py`
   and `build_r4*_mc_banks.py` take `--bank` (+ `--out` / `--bank-out`, refused under `evals/`)
   and `python -m wsbench.adapt mc model=<m> families=<f>` runs the right chain on the pending
-  ADAPTED-ONLY candidates (association, multihop, basic_readout, basic_readout_mt; plan 0060 A2;
+  ADAPTED-ONLY candidates (association, multihop_st, basic_readout_st, basic_readout; plan 0060 A2;
   `fill` runs it on every wave before the gate; one work dir per pending set,
   `adapted/<m>/mc/<family>/build-<hash>/`);
   `role_bound_distractors_v3.py` / `moral_distractors.py` do not yet; `scripts/poetry/build_mc.py`
@@ -101,7 +101,7 @@ Write <n> items spread across <subfamilies/topics>; no topic or template more th
   - write `units` with `forms` only; `match` and `probe_token_lens` are stamped in code from the
     subject's tokenizer (`wsbench.adapt.mt.stamp`);
   - write `target_alts` with the short answers a model might give.
-- **multilingual_multihop** (multihop_mt_regex was removed 2026-10-30; multihop_mt is not in the
+- **multilingual_multihop** (multihop_mt_regex was removed 2026-10-30; multihop is not in the
   adapt machinery yet, SKILL.md §Families the adapt machinery does not cover): each bridge gets `{question, units, answers}`. A bridge
   question must not leak the target or another bridge.
 - **association:** also write `aliases` (synonyms the gate accepts). The judge accepts synonyms

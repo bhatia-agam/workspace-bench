@@ -16,12 +16,12 @@ from pathlib import Path
 
 import pytest
 
-from wsbench.evals.conjunctive_association import judge as cj
-from wsbench.evals.conjunctive_association import prompts, score
+from wsbench.evals.association.conjunctive_association import judge as cj
+from wsbench.evals.association.conjunctive_association import prompts, score
 
 ROOT = Path(__file__).resolve().parents[1]
-V2 = ROOT / "evals/conjunctive_association/items_v2.json"
-V3 = ROOT / "evals/conjunctive_association/items_v3.json"
+V2 = ROOT / "evals/association/conjunctive_association/items_v2.json"
+V3 = ROOT / "evals/association/conjunctive_association/items_v3.json"
 GOLDLINE = "GOLDLINE relief hidden"
 
 
@@ -288,7 +288,9 @@ def test_v3_adds_two_never_gold_grid_confusers_per_twinned_cluster():
 
 
 def test_v3_new_values_are_frozen_with_their_slots():
-    vals = json.loads((ROOT / "evals/conjunctive_association/v3_new_values.json").read_text())
+    vals = json.loads(
+        (ROOT / "evals/association/conjunctive_association/v3_new_values.json").read_text()
+    )
     import importlib.util
 
     spec = importlib.util.spec_from_file_location(
@@ -306,7 +308,7 @@ def test_v3_new_values_are_frozen_with_their_slots():
 
 # ---- 3. bank v4 (Fable on #202: widen every list to ~16-22 non-twin options; v3 stays frozen)
 
-V4 = ROOT / "evals/conjunctive_association/items_v4.json"
+V4 = ROOT / "evals/association/conjunctive_association/items_v4.json"
 GOLDEN_V4 = json.loads((ROOT / "tests/golden/conjunctive_association_options_v4.json").read_text())
 
 

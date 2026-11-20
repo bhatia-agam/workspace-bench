@@ -19,8 +19,8 @@ from . import store
 MARGIN = 0.05  # §0.1(a): the family bar is chance + 5 points on each guesser
 BLIND_ONLY_BELOW = 4  # a family with fewer items is measured blind only (no described guesser)
 MC_FAMILIES = (
-    "association", "basic_readout", "basic_readout_mt", "multihop", "poetry",
-    "role_bound_association", "multilingual", "multilingual_mt", "multilingual_typo",
+    "association", "basic_readout_st", "basic_readout", "multihop_st", "poetry",
+    "role_bound_association", "multilingual_st", "multilingual", "multilingual_typo",
     "multilingual_multihop",
 )  # fmt: skip
 
@@ -224,12 +224,12 @@ def _act(model: str, cmds: list[tuple[str, list[str], str]], apply: bool, drop: 
 
 # ---------------------------------------------------------------------------- D4-D7: screens
 CAPITAL_FAMILIES = (
-    "association", "basic_readout", "basic_readout_mt", "typo_mt", "multihop",
-    "role_bound_association", "poetry", "user_modeling", "multilingual", "multilingual_mt",
+    "association", "basic_readout_st", "basic_readout", "typo", "multihop_st",
+    "role_bound_association", "poetry", "user_modeling", "multilingual_st", "multilingual",
     "multilingual_typo", "multilingual_multihop", "relational_multihop",
     "conjunctive_association", "chain_intermediates",
 )  # fmt: skip
-# D5 keeps the two figurative typo_mt rows (plan 0075 "Data round rules")
+# D5 keeps the two figurative typo rows (plan 0075 "Data round rules")
 CAPITAL_KEEP = frozenset({"tyh-real-gastronomy", "typo-au-t1-w100c0-tyh-novel-decentralization"})
 CAPITAL = re.compile(
     r"\bcapital\b(?!\s+(?:letters?|[A-Z]\b|crimes?|offen[cs]es?|punishment|gains?|invest\w*|"
@@ -322,7 +322,7 @@ def class_caps(model: str, cap: float = 0.20) -> dict[str, dict]:
     }
 
 
-D4_FAMILIES = ("multihop", "multilingual_multihop")
+D4_FAMILIES = ("multihop_st", "multilingual_multihop")
 D4_KEEP = ("firstname",)  # every 0075 / 0089 run tree kept the *firstname* items D4 flagged
 D4_SYSTEM = (
     "You audit two-hop benchmark questions. Each question is meant to require an intermediate "
@@ -503,7 +503,7 @@ def screens(model: str, out: Path, apply: bool = False, llm_model: str = "claude
 
 # ---------------------------------------------------------------------------- short families
 OBJECTIVE_STOPS = ("pool exhausted", "yield", "crash cap", "ladder exhausted")
-REFILL_ROUTES = frozenset(rf.POLICY) | frozenset(rf.FILL_POLICY) | {"basic_readout"}
+REFILL_ROUTES = frozenset(rf.POLICY) | frozenset(rf.FILL_POLICY) | {"basic_readout_st"}
 
 
 def short(model: str) -> dict[str, list[str]]:

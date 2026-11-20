@@ -10,7 +10,7 @@ from test_adapt_phase_e import MODEL, WBRunner, _ent, _no_fetch, _pool
 
 from wsbench.adapt import refill, store
 from wsbench.adapt import wrong_intermediate as wb
-from wsbench.evals.wrong_intermediate.judge import ROLE_CUES
+from wsbench.evals.model_specific.wrong_intermediate.judge import ROLE_CUES
 
 
 @pytest.fixture

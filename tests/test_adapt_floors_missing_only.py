@@ -31,10 +31,10 @@ def test_generate_asks_only_the_missing_ids(tmp_path, monkeypatch, missing_only)
     rd = tmp_path / "floors" / "readouts"
     rd.mkdir(parents=True)
     stored = [_row("kept"), _row("dropped")]
-    (rd / "basic_readout.jsonl").write_text("".join(json.dumps(r) + "\n" for r in stored))
+    (rd / "basic_readout_st.jsonl").write_text("".join(json.dumps(r) + "\n" for r in stored))
     monkeypatch.setattr(floors, "_dir", lambda m: tmp_path / "floors")
     monkeypatch.setattr(floors.store, "model_dir", lambda m: tmp_path)
-    monkeypatch.setattr(floors, "families", lambda m: ["basic_readout"])
+    monkeypatch.setattr(floors, "families", lambda m: ["basic_readout_st"])
     monkeypatch.setenv("WSB_BANK_ROOT", str(tmp_path))  # generate() sets it: restored after
     if missing_only:
         monkeypatch.setenv("ADAPT_FLOORS_MISSING_ONLY", "1")
@@ -61,7 +61,7 @@ def test_generate_asks_only_the_missing_ids(tmp_path, monkeypatch, missing_only)
 
     monkeypatch.setattr(run, "_runner", lambda m: Runner())
     floors.generate("m")
-    rows = [json.loads(ln) for ln in (rd / "basic_readout.jsonl").read_text().splitlines()]
+    rows = [json.loads(ln) for ln in (rd / "basic_readout_st.jsonl").read_text().splitlines()]
     if missing_only:
         assert asked == [["new"]]
         assert rows == [stored[0], _row("new", "gen-new")]
@@ -85,10 +85,12 @@ def test_generate_missing_only_with_nothing_missing_asks_no_generation(tmp_path,
 
     monkeypatch.setattr(run, "_runner", lambda m: Runner())
     floors.generate("m")
-    assert (rd / "basic_readout.jsonl").read_text() == json.dumps(_row("kept")) + "\n"
+    assert (rd / "basic_readout_st.jsonl").read_text() == json.dumps(_row("kept")) + "\n"
 
 
-def _setup(tmp_path, monkeypatch, stored_rows, fname="basic_readout.jsonl", fam="basic_readout"):
+def _setup(
+    tmp_path, monkeypatch, stored_rows, fname="basic_readout_st.jsonl", fam="basic_readout_st"
+):
     rd = tmp_path / "floors" / "readouts"
     rd.mkdir(parents=True)
     (rd / fname).write_text("".join(json.dumps(r) + "\n" for r in stored_rows))
@@ -122,11 +124,11 @@ def test_generate_missing_only_refuses_a_kept_id_whose_cells_moved(tmp_path, mon
     rd = _setup(tmp_path, monkeypatch, [moved])
     with pytest.raises(SystemExit, match="do not match its plan"):
         floors.generate("m")
-    assert json.loads((rd / "basic_readout.jsonl").read_text()) == moved  # nothing written
+    assert json.loads((rd / "basic_readout_st.jsonl").read_text()) == moved  # nothing written
 
 
 def test_generate_missing_only_rewrites_a_former_key_file_in_place(tmp_path, monkeypatch):
-    rd = _setup(tmp_path, monkeypatch, [_row("kept")], "multihop_mt_v2.jsonl", "multihop_mt")
+    rd = _setup(tmp_path, monkeypatch, [_row("kept")], "multihop_mt_v2.jsonl", "multihop")
     floors.generate("m")
     assert sorted(p.name for p in rd.glob("*.jsonl")) == ["multihop_mt_v2.jsonl"]
     rows = [json.loads(ln) for ln in (rd / "multihop_mt_v2.jsonl").read_text().splitlines()]
@@ -135,7 +137,7 @@ def test_generate_missing_only_rewrites_a_former_key_file_in_place(tmp_path, mon
 
 def test_generate_missing_only_with_no_stored_file_generates_everything(tmp_path, monkeypatch):
     rd = _setup(tmp_path, monkeypatch, [])
-    (rd / "basic_readout.jsonl").unlink()
+    (rd / "basic_readout_st.jsonl").unlink()
     floors.generate("m")
-    rows = [json.loads(ln) for ln in (rd / "basic_readout.jsonl").read_text().splitlines()]
+    rows = [json.loads(ln) for ln in (rd / "basic_readout_st.jsonl").read_text().splitlines()]
     assert [r["samples"] for r in rows] == [["gen-kept"], ["gen-new"]]

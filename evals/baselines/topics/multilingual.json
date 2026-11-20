@@ -1,419 +1,407 @@
 {
  "family": "multilingual",
- "version": "topics-r4-2026-11-01",
- "script": "scripts/build_r4_mc_banks.py",
+ "version": "topics-r4b-2026-11-01",
+ "script": "scripts/build_r4b_mc_banks.py (topics: scripts/r4b_mc_refine.py --pass2)",
  "language_topic": "the language a short non-English prompt is written in",
  "items": {
-  "de-half-six": [
-   "a number word",
+  "mlh-ar-hourglass": [
+   "a historical scientific or measuring instrument",
    "the language a short non-English prompt is written in"
   ],
-  "de-place-near-far": [
-   "the opposite (antonym) of a common word",
+  "mlh-ar-octopus": [
+   "a marine animal",
    "the language a short non-English prompt is written in"
   ],
-  "de-place-up-down": [
-   "the opposite (antonym) of a common word",
+  "mlh-ar-sandpaper": [
+   "a woodworking tool or material",
    "the language a short non-English prompt is written in"
   ],
-  "de-size-big-small": [
-   "the opposite (antonym) of a common word",
+  "mlh-ar-spinal-cord": [
+   "a part of human anatomy",
    "the language a short non-English prompt is written in"
   ],
-  "es-half-four": [
-   "a number word",
+  "mlh-ar-vacuum-cleaner": [
+   "a household appliance or device",
    "the language a short non-English prompt is written in"
   ],
-  "es-month-after-sep": [
-   "a month name",
+  "mlh-ar-wool": [
+   "a textile material or fabric",
    "the language a short non-English prompt is written in"
   ],
-  "es-place-near-far": [
-   "the opposite (antonym) of a common word",
+  "mlh-ar-aurora": [
+   "a natural atmospheric or celestial phenomenon",
    "the language a short non-English prompt is written in"
   ],
-  "es-size-big-small": [
-   "the opposite (antonym) of a common word",
+  "mlh-ar-chickenpox": [
+   "an infectious disease in medicine",
    "the language a short non-English prompt is written in"
   ],
-  "fr-month-after-may": [
-   "a month name",
+  "mlh-ar-loom": [
+   "a traditional tool or implement",
    "the language a short non-English prompt is written in"
   ],
-  "fr-month-before-mar": [
-   "a month name",
+  "mlh-ar-thyroid": [
+   "an organ or gland of the human body",
    "the language a short non-English prompt is written in"
   ],
-  "fr-order-first-last": [
-   "the opposite (antonym) of a common word",
+  "mlh-ar-vacuum-cleaner-2": [
+   "a household appliance or device",
    "the language a short non-English prompt is written in"
   ],
-  "fr-place-near-far": [
-   "the opposite (antonym) of a common word",
+  "mlh-ar-chamomile": [
+   "a herb or flowering plant",
    "the language a short non-English prompt is written in"
   ],
-  "fr-place-up-down": [
-   "the opposite (antonym) of a common word",
+  "mlh-el-cooking-pot": [
+   "a kitchen utensil or household object",
    "the language a short non-English prompt is written in"
   ],
-  "fr-size-big-small": [
-   "the opposite (antonym) of a common word",
+  "mlh-el-screwdriver": [
+   "a common hand tool",
    "the language a short non-English prompt is written in"
   ],
-  "pt-month-before-aug": [
-   "a month name",
+  "mlh-el-sunflower": [
+   "a cultivated flowering plant",
    "the language a short non-English prompt is written in"
   ],
-  "pt-order-first-last": [
-   "the opposite (antonym) of a common word",
+  "mlh-el-ilianthos": [
+   "a common flowering plant",
    "the language a short non-English prompt is written in"
   ],
-  "pt-place-near-far": [
-   "the opposite (antonym) of a common word",
+  "mlh-el-fire-extinguisher": [
+   "an everyday household or workplace object",
    "the language a short non-English prompt is written in"
   ],
-  "pt-time-after-night": [
-   "a time of day",
+  "mlh-el-tapemeasure": [
+   "a hand tool or workshop implement",
    "the language a short non-English prompt is written in"
   ],
-  "arabic-color-blood": [
-   "a colour word",
+  "mlh-el-wind-turbine": [
+   "a machine or engineered structure",
    "the language a short non-English prompt is written in"
   ],
-  "czech-opposite-tall": [
-   "the opposite (antonym) of a common word",
+  "mlh-el-xray": [
+   "a medical test or diagnostic procedure",
    "the language a short non-English prompt is written in"
   ],
-  "dutch-direction-left": [
-   "the opposite (antonym) of a common word",
+  "mlh-el-xypnitiri": [
+   "a common household object or device",
    "the language a short non-English prompt is written in"
   ],
-  "filipino-opposite-up": [
-   "the opposite (antonym) of a common word",
+  "mlh-fi-kahvinkeitin": [
+   "a household device or appliance",
    "the language a short non-English prompt is written in"
   ],
-  "french-family-nephew": [
-   "a family-relation word",
+  "mlh-fi-vetoketju": [
+   "an everyday household or clothing item",
    "the language a short non-English prompt is written in"
   ],
-  "french-number-seven": [
-   "a number word",
+  "mlh-fi-auringonpimennys": [
+   "an astronomical phenomenon or event",
    "the language a short non-English prompt is written in"
   ],
-  "french-season-summer": [
-   "a season of the year",
+  "mlh-fi-silitysrauta": [
+   "a common household appliance",
    "the language a short non-English prompt is written in"
   ],
-  "frn-month-after-jun": [
-   "a month name",
+  "mlh-fi-toothbrush": [
+   "a common household object",
    "the language a short non-English prompt is written in"
   ],
-  "german-family-aunt": [
-   "a family-relation word",
+  "mlh-fi-tortoise": [
+   "a type of animal",
    "the language a short non-English prompt is written in"
   ],
-  "italian-number-two": [
-   "a number word",
+  "mlh-he-alarm-clock": [
+   "a common household device or object",
    "the language a short non-English prompt is written in"
   ],
-  "persian-color-blood": [
-   "a colour word",
+  "mlh-he-dishwasher": [
+   "a household appliance or device",
    "the language a short non-English prompt is written in"
   ],
-  "polish-direction-left": [
-   "the opposite (antonym) of a common word",
+  "mlh-he-pressure-cooker": [
+   "a kitchen cooking appliance or cookware",
    "the language a short non-English prompt is written in"
   ],
-  "portuguese-direction-up": [
-   "the opposite (antonym) of a common word",
+  "mlh-he-sewingmachine": [
+   "a household appliance or tool",
    "the language a short non-English prompt is written in"
   ],
-  "portuguese-season-spring": [
-   "a season of the year",
+  "mlh-he-tapemeasure": [
+   "a household or workshop tool",
    "the language a short non-English prompt is written in"
   ],
-  "serbian-opposite-day": [
-   "a time of day",
+  "mlh-he-washing-machine": [
+   "a common household appliance",
    "the language a short non-English prompt is written in"
   ],
-  "spanish-number-three": [
-   "a number word",
+  "mlh-he-toothbrush": [
+   "a household or everyday object",
    "the language a short non-English prompt is written in"
   ],
-  "turkish-opposite-fast": [
-   "the opposite (antonym) of a common word",
+  "mlh-he-vacuum-cleaner": [
+   "a household appliance or device",
    "the language a short non-English prompt is written in"
   ],
-  "ukrainian-opposite-day": [
-   "a time of day",
+  "mlh-he-escalator": [
+   "an everyday object or device",
    "the language a short non-English prompt is written in"
   ],
-  "b3-ml-de-capital-austria": [
-   "a capital city",
+  "mlh-he-polar-bear": [
+   "a mammal species",
    "the language a short non-English prompt is written in"
   ],
-  "b3-ml-de-color-grass": [
-   "a colour word",
+  "mlh-he-spine": [
+   "a part of the human body",
    "the language a short non-English prompt is written in"
   ],
-  "b3-ml-de-color-sky": [
-   "a colour word",
+  "mlh-hu-candlestick": [
+   "an everyday household object",
    "the language a short non-English prompt is written in"
   ],
-  "b3-ml-de-month-june": [
-   "a month name",
+  "mlh-hu-esokabat": [
+   "an item of clothing",
    "the language a short non-English prompt is written in"
   ],
-  "b3-ml-de-opposite-fast": [
-   "the opposite (antonym) of a common word",
+  "mlh-hu-gerincvelo": [
+   "a part of human anatomy",
    "the language a short non-English prompt is written in"
   ],
-  "b3-ml-de-sum-four": [
-   "a number word",
+  "mlh-hu-porszivo": [
+   "a household appliance or device",
    "the language a short non-English prompt is written in"
   ],
-  "b3-ml-es-color-blood": [
-   "a colour word",
+  "mlh-hu-varrogep": [
+   "a household tool or machine",
    "the language a short non-English prompt is written in"
   ],
-  "b3-ml-es-color-sky": [
-   "a colour word",
+  "mlh-hu-hallokeszulek": [
+   "a medical or assistive device",
    "the language a short non-English prompt is written in"
   ],
-  "b3-ml-es-day-monday": [
-   "a day of the week",
+  "mlh-hu-ironingboard": [
+   "a common household object or furniture",
    "the language a short non-English prompt is written in"
   ],
-  "b3-ml-es-month-april": [
-   "a month name",
+  "mlh-hu-meroszalag": [
+   "a hand tool or household implement",
    "the language a short non-English prompt is written in"
   ],
-  "b3-ml-es-opposite-fast": [
-   "the opposite (antonym) of a common word",
+  "mlh-hu-napraforgo": [
+   "an agricultural crop plant",
    "the language a short non-English prompt is written in"
   ],
-  "b3-ml-es-opposite-hot": [
-   "the opposite (antonym) of a common word",
+  "mlh-hu-szitakoto": [
+   "an insect species or group",
    "the language a short non-English prompt is written in"
   ],
-  "b3-ml-fr-capital-england": [
-   "a capital city",
+  "mlh-hu-canopener": [
+   "a kitchen tool or utensil",
    "the language a short non-English prompt is written in"
   ],
-  "b3-ml-fr-color-blood": [
-   "a colour word",
+  "mlh-id-cacar-air": [
+   "an infectious disease",
    "the language a short non-English prompt is written in"
   ],
-  "b3-ml-fr-month-march": [
-   "a month name",
+  "mlh-id-firefly": [
+   "a type of insect",
    "the language a short non-English prompt is written in"
   ],
-  "b3-ml-fr-opposite-big": [
-   "the opposite (antonym) of a common word",
+  "mlh-id-gantungan-baju": [
+   "a common household object",
    "the language a short non-English prompt is written in"
   ],
-  "b3-ml-fr-sum-five": [
-   "a number word",
+  "mlh-id-gerhanabulan": [
+   "an astronomical phenomenon or celestial event",
    "the language a short non-English prompt is written in"
   ],
-  "b3-ml-it-capital-france": [
-   "a capital city",
+  "mlh-id-hailstone": [
+   "a weather or atmospheric phenomenon",
    "the language a short non-English prompt is written in"
   ],
-  "b3-ml-it-color-grass": [
-   "a colour word",
+  "mlh-id-mesin-jahit": [
+   "a tool or machine",
    "the language a short non-English prompt is written in"
   ],
-  "b3-ml-it-day-monday": [
-   "a day of the week",
+  "mlh-id-penghapus": [
+   "a common stationery or school supply item",
    "the language a short non-English prompt is written in"
   ],
-  "b3-ml-it-opposite-big": [
-   "the opposite (antonym) of a common word",
+  "mlh-id-sarung-tangan": [
+   "a clothing item or accessory",
    "the language a short non-English prompt is written in"
   ],
-  "b3-ml-it-opposite-hot": [
-   "the opposite (antonym) of a common word",
+  "mlh-id-tengkorak": [
+   "a bone or skeletal structure of the human body",
    "the language a short non-English prompt is written in"
   ],
-  "b3-ml-it-sum-four": [
-   "a number word",
+  "mlh-id-trash-bin": [
+   "a common household object",
    "the language a short non-English prompt is written in"
   ],
-  "b3-ml-pt-capital-japan": [
-   "a capital city",
+  "mlh-ko-vacuum-cleaner": [
+   "a household electrical appliance",
    "the language a short non-English prompt is written in"
   ],
-  "b3-ml-pt-month-march": [
-   "a month name",
+  "mlh-ko-yeonpilkkakki": [
+   "a common stationery or office item",
    "the language a short non-English prompt is written in"
   ],
-  "b3-ml-pt-opposite-big": [
-   "the opposite (antonym) of a common word",
+  "mlh-pl-biedronka": [
+   "a common insect or other arthropod",
    "the language a short non-English prompt is written in"
   ],
-  "b3-ml-pt-opposite-hot": [
-   "the opposite (antonym) of a common word",
+  "mlh-pl-kasztanowiec": [
+   "a tree species of Europe",
    "the language a short non-English prompt is written in"
   ],
-  "b3-ml-de-month-february": [
-   "a month name",
+  "mlh-pl-muchomor": [
+   "a mushroom or fungus species",
    "the language a short non-English prompt is written in"
   ],
-  "de-order-first-last": [
-   "the opposite (antonym) of a common word",
+  "mlh-pl-odkurzacz": [
+   "a household appliance",
    "the language a short non-English prompt is written in"
   ],
-  "es-order-first-last": [
-   "the opposite (antonym) of a common word",
+  "mlh-pl-pila-lancuchowa": [
+   "a hand or power tool",
    "the language a short non-English prompt is written in"
   ],
-  "es-place-up-down": [
-   "the opposite (antonym) of a common word",
+  "mlh-pl-pokrzywa-2": [
+   "a wild plant of Europe",
    "the language a short non-English prompt is written in"
   ],
-  "es-time-after-day": [
-   "a time of day",
+  "mlh-pl-przedluzacz": [
+   "a household object or device",
    "the language a short non-English prompt is written in"
   ],
-  "fr-color-night": [
-   "a colour word",
+  "mlh-pl-strzykawka": [
+   "a piece of medical equipment",
    "the language a short non-English prompt is written in"
   ],
-  "fr-month-after-jan": [
-   "a month name",
+  "mlh-pl-trzepaczka": [
+   "a kitchen utensil or tool",
    "the language a short non-English prompt is written in"
   ],
-  "fr-time-after-night": [
-   "a time of day",
+  "mlh-pl-trzustka": [
+   "an organ of the human body",
    "the language a short non-English prompt is written in"
   ],
-  "fr-time-old-young": [
-   "the opposite (antonym) of a common word",
+  "mlh-ru-caterpillar": [
+   "an animal or animal form",
    "the language a short non-English prompt is written in"
   ],
-  "pt-month-after-oct": [
-   "a month name",
+  "mlh-ru-dandelion": [
+   "a common wild plant or flower",
    "the language a short non-English prompt is written in"
   ],
-  "pt-place-up-down": [
-   "the opposite (antonym) of a common word",
+  "mlh-ru-fryingpan": [
+   "a kitchen cooking utensil",
    "the language a short non-English prompt is written in"
   ],
-  "pt-size-big-small": [
-   "the opposite (antonym) of a common word",
+  "mlh-ru-meatgrinder": [
+   "a kitchen appliance or utensil",
    "the language a short non-English prompt is written in"
   ],
-  "pt-time-old-new": [
-   "the opposite (antonym) of a common word",
+  "mlh-ru-nakovalnya": [
+   "a hand tool or workshop implement",
    "the language a short non-English prompt is written in"
   ],
-  "danish-color-ocean": [
-   "a colour word",
+  "mlh-ru-payalnik": [
+   "a hand tool or workshop implement",
    "the language a short non-English prompt is written in"
   ],
-  "dutch-opposite-big": [
-   "the opposite (antonym) of a common word",
+  "mlh-ru-skvorechnik": [
+   "a man-made household or garden object",
    "the language a short non-English prompt is written in"
   ],
-  "estonian-opposite-open": [
-   "the opposite (antonym) of a common word",
+  "mlh-ru-sosulka": [
+   "a natural ice or snow formation",
    "the language a short non-English prompt is written in"
   ],
-  "german-number-five": [
-   "a number word",
+  "mlh-ru-thimble": [
+   "a household or craft tool",
    "the language a short non-English prompt is written in"
   ],
-  "indonesian-color-grass": [
-   "a colour word",
+  "mlh-ru-anthill": [
+   "a structure built by animals",
    "the language a short non-English prompt is written in"
   ],
-  "irish-opposite-big": [
-   "the opposite (antonym) of a common word",
+  "mlh-sw-mwarobaini": [
+   "a tree of Africa or Asia",
    "the language a short non-English prompt is written in"
   ],
-  "japanese-day-monday": [
-   "a day of the week",
+  "mlh-sw-chandarua": [
+   "an everyday household object",
    "the language a short non-English prompt is written in"
   ],
-  "korean-opposite-hot": [
-   "the opposite (antonym) of a common word",
+  "mlh-tr-bademcik": [
+   "a part of the human body",
    "the language a short non-English prompt is written in"
   ],
-  "slovak-opposite-young": [
-   "the opposite (antonym) of a common word",
+  "mlh-tr-camasir-makinesi": [
+   "a household appliance",
    "the language a short non-English prompt is written in"
   ],
-  "spanish-phase-water": [
-   "a form or state of water",
+  "mlh-tr-dis-macunu": [
+   "a household or personal care product",
    "the language a short non-English prompt is written in"
   ],
-  "b3-ml-de-family-uncle": [
-   "a family-relation word",
+  "mlh-tr-omurilik": [
+   "a part of human anatomy",
    "the language a short non-English prompt is written in"
   ],
-  "b3-ml-de-opposite-hot": [
-   "the opposite (antonym) of a common word",
+  "mlh-tr-kaplumbaga": [
+   "a kind of animal",
    "the language a short non-English prompt is written in"
   ],
-  "b3-ml-es-family-aunt": [
-   "a family-relation word",
+  "mlh-tr-kartanesi": [
+   "a weather or atmospheric phenomenon",
    "the language a short non-English prompt is written in"
   ],
-  "b3-ml-es-opposite-day": [
-   "a time of day",
+  "mlh-tr-salyangoz": [
+   "a common small animal",
    "the language a short non-English prompt is written in"
   ],
-  "b3-ml-es-sum-four": [
-   "a number word",
+  "mlh-vi-blender": [
+   "a household appliance or kitchen tool",
    "the language a short non-English prompt is written in"
   ],
-  "b3-ml-fr-family-uncle": [
-   "a family-relation word",
+  "mlh-vi-cactus": [
+   "a type of plant",
    "the language a short non-English prompt is written in"
   ],
-  "b3-ml-fr-opposite-hot": [
-   "the opposite (antonym) of a common word",
+  "mlh-vi-chuonchuon": [
+   "a common insect",
    "the language a short non-English prompt is written in"
   ],
-  "b3-ml-de-month-before-march": [
-   "a month name",
+  "mlh-vi-clothesiron": [
+   "a household object or appliance",
    "the language a short non-English prompt is written in"
   ],
-  "es-number-after-two": [
-   "a number word",
+  "mlh-vi-extinguisher": [
+   "an everyday household object or tool",
    "the language a short non-English prompt is written in"
   ],
-  "b3-ml-fr-double-five": [
-   "a number word",
+  "mlh-vi-firefly": [
+   "an insect or small creature",
    "the language a short non-English prompt is written in"
   ],
-  "fr-number-after-four": [
-   "a number word",
+  "mlh-vi-huyet-ap": [
+   "a physiological measure in medicine",
    "the language a short non-English prompt is written in"
   ],
-  "pt-month-after-apr": [
-   "a month name",
+  "mlh-vi-neckscarf": [
+   "a clothing item or accessory",
    "the language a short non-English prompt is written in"
   ],
-  "pt-number-after-five": [
-   "a number word",
+  "mlh-vi-pressurecooker": [
+   "a kitchen cooking vessel or appliance",
    "the language a short non-English prompt is written in"
   ],
-  "b3-ml-de-family-nephew": [
-   "a family-relation word",
-   "the language a short non-English prompt is written in"
-  ],
-  "b3-ml-fr-color-snow": [
-   "a colour word",
-   "the language a short non-English prompt is written in"
-  ],
-  "b3-ml-it-family-aunt": [
-   "a family-relation word",
-   "the language a short non-English prompt is written in"
-  ],
-  "b3-ml-pt-color-grass": [
-   "a colour word",
+  "mlh-vi-raincoat": [
+   "a piece of clothing or wearable gear",
    "the language a short non-English prompt is written in"
   ]
  }

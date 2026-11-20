@@ -690,7 +690,7 @@ def rekey_readrender(
     (``SYSTEM_ONE_WORD``; prose answerers such as Gemma), and the item records it."""
     from pathlib import Path
 
-    from wsbench.evals.moral_rationale import BANK_V1
+    from wsbench.evals.logical_processing.moral_rationale import BANK_V1
     from wsbench.registry import REPO_ROOT
 
     if step not in REKEY_STEPS:
@@ -939,7 +939,10 @@ def options(
     from pathlib import Path
 
     if is_registered(model):
-        raise SystemExit("moral options: the 27B's options are evals/moral_rationale/items_v3.json")
+        raise SystemExit(
+            "moral options: the 27B's options are "
+            "evals/logical_processing/moral_rationale/items_v3.json"
+        )
     d = Path(out)
     if not (d / "rekey.json").exists():
         raise SystemExit(f"moral options: no {d / 'rekey.json'}; run stage=rekey_readrender")
@@ -981,7 +984,9 @@ def adopt(model: str, out: str, bank: str | None = None) -> Counter:
     from . import families as fams
 
     if is_registered(model):
-        raise SystemExit("moral adopt: the 27B's bank of record is evals/moral_rationale/")
+        raise SystemExit(
+            "moral adopt: the 27B's bank of record is evals/logical_processing/moral_rationale/"
+        )
     d = Path(out)
     entries = json.loads((d / "rekey.json").read_text(encoding="utf-8"))
     if wrong := sorted({str(e["rekey"].get("model")) for e in entries} - {model}):

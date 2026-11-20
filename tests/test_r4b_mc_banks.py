@@ -17,20 +17,20 @@ from wsbench.multitoken.options import r4_language_distractors
 
 REPO = Path(__file__).resolve().parents[1]
 NEW = {
-    "basic_readout_mt": ("items_v3.json", "items_v4.json"),
-    "multihop_mt": ("items_v3.json", "items_v4.json"),
+    "basic_readout": ("items_v3.json", "items_v4.json"),
+    "multihop": ("items_v3.json", "items_v4.json"),
     "multilingual_multihop": ("items_v3.json", "items_v4.json"),
-    "multilingual_mt": ("items_v3.json", "items_v4.json"),
+    "multilingual": ("items_v3.json", "items_v4.json"),
     "multilingual_typo": ("items_v2.json", "items_v3.json"),
 }
 # a later bank registered on top of the round-4b file, with the items whose round-4b list it
 # drops or edits and the frozen confuser audit does not cover: an r5-rebuilt bank
 # (tests/test_r5_mc_options.py) re-took the audit on its own lists, so the audit covers every item;
-# basic_readout_mt bank v7 replaced its capital item, and the audit row with it
+# basic_readout bank v7 replaced its capital item, and the audit row with it
 LATER = {
-    "basic_readout_mt": ("items_v7.json", set()),
-    "multihop_mt": ("items_v6.json", set()),
-    "multilingual_mt": ("items_v5.json", set()),
+    "basic_readout": ("items_v7.json", set()),
+    "multihop": ("items_v6.json", set()),
+    "multilingual": ("items_v5.json", set()),
     "multilingual_multihop": ("items_v5.json", set()),
     "multilingual_typo": ("items_v4.json", set()),
 }
@@ -49,15 +49,15 @@ def test_builder_is_deterministic():
 @pytest.mark.parametrize("family", sorted(NEW))
 def test_registered_bank_is_the_new_file(family, real_families):
     name = LATER[family][0] if family in LATER else NEW[family][1]
-    assert real_families[family].bank == Path("evals") / family / name
-    assert registry.frozen_bank_path(family) == REPO / "evals" / family / name
+    assert real_families[family].bank == registry.family_rel(family) / name
+    assert registry.frozen_bank_path(family) == registry.family_root(family) / name
 
 
 @pytest.mark.parametrize("family", sorted(NEW))
 def test_only_mc_distractors_change(family):
     src, dst = NEW[family]
-    old = json.loads((REPO / "evals" / family / src).read_text(encoding="utf-8"))
-    new = json.loads((REPO / "evals" / family / dst).read_text(encoding="utf-8"))
+    old = json.loads((registry.family_root(family) / src).read_text(encoding="utf-8"))
+    new = json.loads((registry.family_root(family) / dst).read_text(encoding="utf-8"))
     assert new["supersedes"] == src and "r4b_mc" in new
     assert len(old["items"]) == len(new["items"])
     for a, b in zip(old["items"], new["items"], strict=True):
@@ -71,7 +71,7 @@ def test_only_mc_distractors_change(family):
 @pytest.mark.parametrize("family", sorted(NEW))
 def test_lists_are_well_formed(family):
     """Four distinct distractors, never the gold or one of its forms, never in the prompt."""
-    _h, items = load_bank(REPO / "evals" / family / NEW[family][1])
+    _h, items = load_bank(registry.family_root(family) / NEW[family][1])
     for it in items:
         for role, blk in (it.get("mc") or {}).items():
             ds = [str(d) for d in blk["distractors"]]
@@ -85,11 +85,11 @@ def test_lists_are_well_formed(family):
                 assert not re.search(pat, str(it["prompt"]).casefold()), (it["name"], d)
 
 
-@pytest.mark.parametrize("family", ["multilingual_mt", "multilingual_typo"])
+@pytest.mark.parametrize("family", ["multilingual", "multilingual_typo"])
 def test_language_lists_use_the_bank_languages(family):
     """The per-language confusables (Russian among Ukrainian / Serbian ...) are replaced by the
-    other gold languages of the bank closest to the gold (the v3 rule of multilingual)."""
-    _h, items = load_bank(REPO / "evals" / family / NEW[family][1])
+    other gold languages of the bank closest to the gold (the v3 rule of multilingual_st)."""
+    _h, items = load_bank(registry.family_root(family) / NEW[family][1])
     golds = {it["mc"]["language"]["gold"] for it in items}
     for it in items:
         blk = it["mc"]["language"]
@@ -98,7 +98,7 @@ def test_language_lists_use_the_bank_languages(family):
 
 
 def test_typo_content_list_frozen():
-    _h, items = load_bank(REPO / "evals/multilingual_typo/items_v3.json")
+    _h, items = load_bank(REPO / "evals/basic/multilingual_typo/items_v3.json")
     for it in items:
         assert list(it["mc"]) == it["mc_roles"]
         assert (
@@ -120,10 +120,10 @@ def test_topic_labels_cover_every_list(family):
 # samples) and a new draw of solved examples lose that margin (README "Floors of record").
 # An r5-rebuilt bank (tests/test_r5_mc_options.py) carries the verdicts measured on it.
 STANDARD_FAILS: dict[str, set[str]] = {
-    "basic_readout_mt": set(),
-    "multihop_mt": {"topic"},
+    "basic_readout": set(),
+    "multihop": {"topic"},
     "multilingual_multihop": {"described", "topic"},
-    "multilingual_mt": set(),
+    "multilingual": set(),
     "multilingual_typo": set(),
 }
 
@@ -151,7 +151,7 @@ def _ouguiya():
     from wsbench.multitoken import family as fam
     from wsbench.multitoken.options import option_sets
 
-    _h, items = load_bank(REPO / "evals/basic_readout_mt/items_v4.json")
+    _h, items = load_bank(REPO / "evals/basic/basic_readout/items_v4.json")
     iid = "brh-ent-cur-ouguiya-subunit"
     it = next(i for i in items if i["id"] == iid)
     return fam, it, option_sets(items, cannot="cannot tell")[iid], fam.bank_entities(items)
@@ -171,16 +171,16 @@ def test_call_key_maps_the_rule_only_bump():
     from wsbench.multitoken.prompts import BRMT_PROMPT_VERSION
 
     assert "+norival-v1+" in BRMT_PROMPT_VERSION
-    assert "+optrv-v1+" in call_pv("basic_readout_mt", BRMT_PROMPT_VERSION)
+    assert "+optrv-v1+" in call_pv("basic_readout", BRMT_PROMPT_VERSION)
 
 
 @pytest.mark.parametrize(
     "family",
     [
-        "basic_readout_mt",
-        "multihop_mt",
+        "basic_readout",
+        "multihop",
+        "multilingual_st",
         "multilingual",
-        "multilingual_mt",
         "multilingual_multihop",
         "multilingual_typo",
         "wrong_intermediate",

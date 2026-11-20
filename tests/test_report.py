@@ -126,11 +126,9 @@ def test_floors_and_macro_follow_the_current_judge_not_the_stored_flag(real_fami
         config={"judge_model": DEFAULT_JUDGE, "prompt_version": "arith-free-batched-2026-09-23"},
     )
     assert on_family_judge(batched) and not floor_applies(batched)
-    bag = _res(
-        "typo_mt", pinned_instrument=False, config={"judge_model": "google/gemini-3.8-flash"}
-    )
+    bag = _res("typo", pinned_instrument=False, config={"judge_model": "google/gemini-3.8-flash"})
     assert floor_applies(bag) and not on_family_judge(bag)
-    assert on_family_judge(_res("typo_mt", config={"judge_model": "regex"}))
+    assert on_family_judge(_res("typo", config={"judge_model": "regex"}))
     legacy = _res("association", config={"prompt_version": "bank-2026-10-10"})  # no judge_model
     assert on_family_judge(legacy)  # falls back to the stored flag
     md = markdown_table([old, new], None, floors={"prompt-only": {"association": "0.320"}})

@@ -24,7 +24,7 @@ ALLOWED_LITERALS = {
 
 def test_bank_path_honours_evalspec_bank(tmp_path, monkeypatch, real_families):
     spec = real_families["poetry"]
-    v2 = registry.REPO_ROOT / "evals/poetry/items_v2.json"
+    v2 = registry.REPO_ROOT / "evals/basic/poetry/items_v2.json"
     monkeypatch.setitem(registry.FAMILIES, "poetry", dataclasses.replace(spec, bank=v2))
     assert registry.bank_path("poetry") == v2
     assert (

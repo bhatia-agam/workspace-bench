@@ -107,21 +107,21 @@ BASE_PAIRS: dict[str, dict[str, str]] = {
     },
 }
 MT_FAMILIES = {
-    "basic_readout_mt",
-    "multihop_mt",
-    "multilingual_mt",
+    "basic_readout",
+    "multihop",
+    "multilingual",
     "multilingual_multihop",
     "multilingual_typo",
-    "typo_mt",
+    "typo",
 }
 # the bank judge families (basic/family.py): rows carry per-layer verdicts with verified quotes
 BASIC_FAMILIES = {
     "association",
-    "basic_readout",
-    "multihop",
-    "multilingual",
+    "basic_readout_st",
+    "multihop_st",
+    "multilingual_st",
     "poetry",
-    "typo",
+    "typo_st",
 }  # wrong_intermediate left the bank judge for its own MC judge (plan 0050);
 # wrong_bridge_true removed
 DM = "directed_modulation"

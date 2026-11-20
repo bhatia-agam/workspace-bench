@@ -27,7 +27,7 @@ Never change the construction rules, the gate or the scorer.**
 |---|---|---|---|
 | 0 | **Run tree + environment** | A git worktree off `origin/main` on a local branch (`git worktree add /root/tmp/wsb-<m> -b <m>-set origin/main`). The set's data stays LOCAL until it is frozen and audited. Write the environment below to `env.sh`. | `$PY -m wsbench.adapt` prints its usage |
 | 1 | **Code PR: the subject** | §0 Set up the subject: a `Subject` in `src/wsbench/adapt/subjects.py` and the key in `refill.PLAN_0075_SETS`. Add a no-think template only if the upstream one cannot turn thinking off. Add a `read_band` if the subject has an O-lens. Weights go on a Modal volume (`scripts/download_weights_modal.py`). Deploy its app (`ADAPT_SUBJECT=<m> modal deploy scripts/adapt_modal.py`). Tests. Its own PR, merged through `scripts/gated_merge.sh <pr>`. | merged; the deploy is live |
-| 2 | **Smoke** | `$A profile model=<m> families=typo_mt limit=5 llm=claude-opus-5-5`. Read the renders and answers. | no template error; answers look like answers |
+| 2 | **Smoke** | `$A profile model=<m> families=typo limit=5 llm=claude-opus-5-5`. Read the renders and answers. | no template error; answers look like answers |
 | 3 | **Build** | `NATIVE_LANGS=en,zh NATIVE_EVIDENCE="<lab>-lab model: native <langs> by Camila's lab decision (plan 0089), not measured" WI_POOLS=<dir1,...> scripts/adapt_set.sh <m> build` in tmux. Add `MORAL_VARIANT=system_one_word` for a prose answerer (Gemma). | `logs/adapt/<m>/build.status` ends `BUILD DONE`; read every `FAIL` line |
 | 4 | **The two side builds** (separate tmux / agent; they overlap with 5-6) | introspection (§Introspection); hinted_cutoff (§hinted_cutoff, plan 0084) | each installed, or an objective, evidenced `ooc` / `partial` |
 | 5 | **Refill** | `scripts/adapt_set.sh <m> refill`. Every refill route runs once; any family that stopped on `max waves` runs again with `MAX_WAVES=40`. | `REFILL DONE`; every short family has an objective stop (§Decision table) |
@@ -136,7 +136,7 @@ to ~$6k by 2026-11-16 20Z.
 | stop `pool exhausted` | every candidate of the funded pool was gated | Ship `partial`. A new pool generation is a funded follow-up (plan 0077), never padding |
 | stop `max waves (N)` | refill's own wave cap, NOT an objective stop | Re-run with more waves (`waves=40`). The driver's `refill` / `loop` phases do this automatically (`dataround stage=short` → `max_waves`) |
 | stop `budget spent (...)` or `pilot: not ooc` | you capped it, or it was a pilot | Run the full refill. Budget is never a reason |
-| multihop_mt refill whose `untried_levels` is non-empty | the 3-hop level of the pool was never gated | Keep refilling. `refill` refuses `ooc` while a harder level has ungated candidates. A subject that fails 2-hop on shortcuts is too capable, not incapable |
+| multihop refill whose `untried_levels` is non-empty | the 3-hop level of the pool was never gated | Keep refilling. `refill` refuses `ooc` while a harder level has ungated candidates. A subject that fails 2-hop on shortcuts is too capable, not incapable |
 | `untried` after a freeze | no refill was ever run | Run `adapt refill families=<f>` (the strict freeze refuses this) |
 | full family short after the data round | screens and leakers dropped it below target | `loop` back-fills it. If the back-fill lands nothing, ship `partial` and give the count each rule dropped in the note |
 | a family over chance + 5 with no confirmed leaker | a single-run flag is only pending | Run more cycles. Still over at the end: report it in the note with the failing runs. Never drop on one run |
@@ -243,7 +243,7 @@ PYTHONPATH = gw `src` + the cf_influence scripts dir + this repo's `src`.
   - introspection (calibration numbers, engine checks);
   - hinted_cutoff (pair count, date checks, the prompt-only predictors);
   - agentic (pairs, per-wave yields, the pools used);
-  - wrong_intermediate / knowledge_cutoff / msdm / multihop_mt (the stops and pool use);
+  - wrong_intermediate / knowledge_cutoff / msdm / multihop (the stops and pool use);
   - model_multihop (the confirm verdict).
 - **Every objective stop**, checked against its `report.json` `refill` block.
 - **Addenda:** the delta audit of rows the post-audit re-freeze filled, and any PR-review drops.
@@ -270,7 +270,7 @@ adapted/<model>/report.json            per-family: target, n_original, n_origina
                                        n_new, status, change (what the difficulty knobs did), note
 adapted/<model>/<family>.json          frozen adapted bank: the header + item shape of the
                                        REGISTERED bank (`registry.frozen_bank_path`, e.g.
-                                       evals/association/items_v3.json, not items.json); each
+                                       evals/basic/association/items_v3.json, not items.json); each
                                        item carries `adapt` {origin, tier, knobs, gate, parent?, note?}
 adapted/<model>/gate/<family>.jsonl    every gated candidate, failures included (append-only;
                                        last record per id wins): {id, origin, item, gate, selected}
@@ -338,7 +338,7 @@ starting the next.
 - Thinking is always off. Use the subject's own chat template. Every runner start runs
   `template.check` (markers derivable, no reasoning block left open, system turn accepted) and
   refuses to gate otherwise.
-- Smoke test first: `$A profile model=<m> families=typo_mt limit=5 llm=claude-opus-5-5`. Read the rendered question and
+- Smoke test first: `$A profile model=<m> families=typo limit=5 llm=claude-opus-5-5`. Read the rendered question and
   the answers in the viewer before running anything bigger.
 
 ### 1. Profile: gate the registered banks on the subject
@@ -347,8 +347,8 @@ origin `original`. It reads `registry.frozen_bank_path` (the registered default 
 today's items; ids already in the gate log are SKIPPED unless `regate=true`.
 - Use greedy plus 10 samples at T=0.7 (chain: T=0.8, top_p 0.95, 10/10; every other knob:
   references/families.md, top).
-- multihop and the bridge families also gate every bridge question: the bridge is the scored latent.
-- Own-answer families (poetry, basic_readout implicit) stamp the subject's own word as the gold.
+- multihop_st and the bridge families also gate every bridge question: the bridge is the scored latent.
+- Own-answer families (poetry, basic_readout_st implicit) stamp the subject's own word as the gold.
 - Then `python -m wsbench.viewer.build` and look at the failures per family. Check the answers
   themselves before you choose a knob: "right idea, wrong format", "wrong language" and "refused"
   each need a different fix from "doesn't know".
@@ -360,13 +360,13 @@ Follow `references/porting.md`:
 - poetry v5: the subject's own rhyme (`$A poetry stage=all`: gate → tier_a → mc → opus_gate;
   `ADAPT_POETRY_VARIANTS=fewshot,prefill`). Run `stage=settle` before every freeze that names
   poetry.
-- basic_readout implicit: the subject's own favourite (`$A mc families=basic_readout
+- basic_readout_st implicit: the subject's own favourite (`$A mc families=basic_readout_st
   stage=subject` after every gate).
 - moral_rationale v3: re-keyed on the subject, with its side, its reasons and option lists rebuilt
   for them. Run `$A moral stage=rekey_readrender step=<requests_s|grade_s|requests_r|distil|verify|assemble>`,
   then `stage=options`, then `stage=adopt`. A prose answerer (Gemma) needs
   `variant=system_one_word`.
-- The model-specific families (msdm, knowledge_cutoff, multihop_mt, wrong_intermediate,
+- The model-specific families (msdm, knowledge_cutoff, multihop, wrong_intermediate,
   nyt_connections, model_multihop, hinted_cutoff, introspection) are listed under §Families with
   their own build.
 - directed_modulation: the compliance screen.
@@ -393,9 +393,9 @@ For each family below its target count (the registered bank's size):
    - Deterministic families (`wsbench/adapt/generate.py`: chain, relational, arithmetic):
      `$A generate model=<m> family=<f> tier=<t> n=<n>`. Arithmetic keeps the original per-variant
      counts as quotas, and its t0 ranges are read off the bank itself.
-   - Authored families (`wsbench/adapt/author.py` `BRIEFS`: association, multihop, multilingual,
-     typo, poetry, the five mt families typo_mt / multilingual_mt / multilingual_typo /
-     multilingual_multihop / basic_readout_mt, user_modeling, basic_readout implicit, role_bound
+   - Authored families (`wsbench/adapt/author.py` `BRIEFS`: association, multihop_st, multilingual_st,
+     typo_st, poetry, the five mt families typo / multilingual / multilingual_typo /
+     multilingual_multihop / basic_readout, user_modeling, basic_readout_st implicit, role_bound
      (pair objects), buggy_code (executed twins)). **No brief exists for conjunctive_association or
      moral_rationale dilemmas**: those refill only from the registered bank. `$A author model=<m>
      family=<f> tier=<t> n=30 steer="<what it got wrong>"`. Opus writes against the brief, with
@@ -408,7 +408,7 @@ For each family below its target count (the registered bank's size):
    - Cap any single template, topic or relation at 20% of the family.
    - Pilot ~30 candidates at a new tier before generating hundreds.
 6. The blind-MC `mc` blocks the briefs and generators don't write (association: lint requires it, so
-   an association candidate without `mc` is rejected before the GPU; multihop; chain per-slot;
+   an association candidate without `mc` is rejected before the GPU; multihop_st; chain per-slot;
    poetry `mc.candidates`) must exist in the candidate payload. **The frozen-bank MC builders do not take
    adapted items.** `scripts/build_multihop_mc.py`, `association_distractors.py`, `moral_distractors.py`,
    `mc_leakage_r4.py` and `role_bound_distractors_v3.py` read and WRITE the frozen `evals/` files
@@ -420,8 +420,8 @@ For each family below its target count (the registered bank's size):
    never linted or gated): a rewritten `cand/` row is ignored (`store.pending` / `add_candidates`
    skip gated ids) and `gate regate=true` re-gates the gate-log payload, not the cand row. A new
    item can carry the field in its `cand/` row before its first `gate`. `adapt mc` (and `fill`,
-   on every wave) builds it for the pending adapted-only candidates of association, multihop,
-   basic_readout and basic_readout_mt; each build gets its own work dir
+   on every wave) builds it for the pending adapted-only candidates of association, multihop_st,
+   basic_readout_st and basic_readout; each build gets its own work dir
    `adapted/<m>/mc/<family>/build-<hash>/` keyed by the pending set (a rerun of the same set
    resumes there; earlier builds' dirs are the archive, never merged into a new build).
 7. Stop rules (report, never pad):
@@ -436,9 +436,9 @@ For each family below its target count (the registered bank's size):
 `$A fill model=<m> families=<f,...>` does the same for authored families (waves steered by
 `run.miss_steer`: lint reasons, what the subject wrote instead, and what passed). For the MC
 families (`mcstage.FAMILIES`) each wave's options are built by `adapt mc` between author and
-gate, so no item is gated on its provisional list; basic_readout also gets `stage=subject` after
+gate, so no item is gated on its provisional list; basic_readout_st also gets `stage=subject` after
 each gate.
-Plan 0087: for multihop, basic_readout_mt and the three multilingual families
+Plan 0087: for multihop_st, basic_readout and the three multilingual families
 (`onecue.FAMILIES`), `fill` then runs `onecue.repair_pending`, which works on each list before the
 gate:
 - It replaces a wrong option that one cue of the prompt rules out: the prompt names it, or it lies
@@ -467,24 +467,24 @@ of the freeze.
 
 ### 3a. Small families must be refilled (Camila 2026-11-04, plan 0066; plan 0075 targets)
 **Plan 0075 (2026-11-06):** `adapt refill` also drives the fill / auto families
-(`refill.FILL_POLICY`: association, basic_readout_mt, typo_mt, multihop, poetry,
-role_bound_association, user_modeling, multilingual_mt / _typo / _multihop through `run.fill`;
+(`refill.FILL_POLICY`: association, basic_readout, typo, multihop_st, poetry,
+role_bound_association, user_modeling, multilingual / _typo / _multihop through `run.fill`;
 relational_multihop through `run.auto`; thresholds 60 candidates / 3% at the easiest tier), and
 targets are `refill.adapted_target` = max(registered, `ADAPTED_TARGETS`): association 100,
-basic_readout_mt 120, typo_mt / multihop / poetry / role_bound / the multilingual mt families /
+basic_readout 120, typo / multihop_st / poetry / role_bound / the multilingual_st mt families /
 relational 100 (never lowered: user_modeling stays 126). The strict freeze refuses a
 `FILL_POLICY` family short of target without a refill block measured at the current target
 (objective `ooc` / `blocked` stops and plan 0072 D6's hand `note refill=` blocks still pass).
 
 Every family with a refill route (`wsbench.adapt.refill.POLICY`: buggy_code,
-model_specific_directed_modulation, knowledge_cutoff, wrong_intermediate, multihop_mt, plus the
+model_specific_directed_modulation, knowledge_cutoff, wrong_intermediate, multihop, plus the
 `fill` / `auto` families) that ships below its target MUST be refilled with
 `python -m wsbench.adapt refill model=<m> families=<f>` before freeze. The ONLY acceptable reasons
 to ship it short are the objective stops (`refill.stop_status`, plan 0066 §1.2):
 - **`ooc`**: at least `n_min` candidates of the family's construction gated at the easiest level,
   yield below `y_min`, AND the bank under half its target. Thresholds (POLICY): buggy_code 60 pair
   objects at `t2` / 3%; msdm 200 categories / 3%; knowledge_cutoff 1,000 questions / 1%;
-  wrong_intermediate 200k screened candidates / 5e-5 per candidate; multihop_mt 300 candidates /
+  wrong_intermediate 200k screened candidates / 5e-5 per candidate; multihop 300 candidates /
   3%. Candidates already gated on the subject count toward the tally.
 - **`partial`**: pool exhausted, budget spent, the buggy crash cap binding, or low yield with the
   bank above half its target.
@@ -509,19 +509,19 @@ reason: a genuinely incapable subject stops cheaply through the pilot (`refill p
 most `n_min` candidates). A `refill_hold` in `report.json` (a suspected pipeline fault, e.g.
 v4-pro's wrong_intermediate) blocks `ooc` until cleared. Report the stop reason and the counts in
 `note`; `report.json` `families.<f>.refill` records them. The pools behind msdm / knowledge_cutoff
-/ multihop_mt are box-only (`$WSB_POOL_DIR`, sha256-pinned in `refill.POOL_SHA256`; built by
+/ multihop are box-only (`$WSB_POOL_DIR`, sha256-pinned in `refill.POOL_SHA256`; built by
 `scripts/build_adapt_pools.py`): a loader refuses a missing or mismatched file. Per-family routes:
 `references/families.md` ("Refill" lines).
 
 ### 4. Freeze, verify, floors, audit
 **Re-freezing an existing set (plan 0072):** a re-freeze carries today's registered judge-side
-lists onto originals (multihop_mt blocks when the subject kept every gold, basic_readout entity /
+lists onto originals (multihop blocks when the subject kept every gold, basic_readout_st entity /
 processing `mc`); on a subject whose native languages differ from the registered header's, the
 six native-langs families' originals must be rebuilt from TODAY's registered item (`native_langs
 stage=upgrade`, which stamps `native_units_src`), else freeze refuses them (fail-closed; this
 includes the older `[en]` sets gemma-4-31b-it and olmo-3.1-32b). A drop-only re-freeze records
 `plan_lineage` so the set's existing readouts still judge (dropped items removed); any other plan
-change voids them. A short originals-only family with no refill driver (user_modeling, multihop)
+change voids them. A short originals-only family with no refill driver (user_modeling, multihop_st)
 records its refill by hand: `note status=partial refill='{"route": ..., "stop": ...}'`.
 `$A freeze model=<m> families=<the families built>` (never bare) writes `<family>.json` and
 `report.json`. It takes the header of the registered bank; every ORIGINAL is the registered item
@@ -529,7 +529,7 @@ itself plus the subject-side overlays (own-answer gold, `gate_variant`, `familie
 token restamps), and original ids the registered bank lacks are never selected; new items are
 the gate-log payloads. It refuses (writing nothing) a family whose items lack
 `families.REQUIRED_ITEM_FIELDS`, whose originals lack their `SUBJECT_FIELDS`, or, for the six
-multilingual / mt families, a subject without `native_langs.json` (plan 0060 A1.1 / A1.10). It
+multilingual_st / mt families, a subject without `native_langs.json` (plan 0060 A1.1 / A1.10). It
 records `bank` / `bank_version` per family and writes `status: absent`, `exclude_from_macro`
 and a `note` (an existing note is kept) for every registered family the set lacks (A1.6).
 Then:
@@ -581,9 +581,9 @@ Then:
   `partial` family. Record in the note how many items each check dropped.
   5. **The plan 0075 screens (D4-D7), on the WHOLE shipped bank, originals included.**
      `adapt dataround stage=screens` runs them every cycle:
-     - D4: a multihop / mlmh answer reachable without the bridge (Opus);
+     - D4: a multihop_st / mlmh answer reachable without the bridge (Opus);
      - D5: a clue that routes through, or a question that asks for, a capital (regex; it keeps
-       the two figurative typo_mt rows);
+       the two figurative typo rows);
      - D6 / D6b: a user_modeling user turn that names a city or another place in the gold
        country (Opus);
      - D7: user_modeling Country and Gender each capped at 20%, newest rows first. Back-fill as
@@ -625,7 +625,7 @@ Then:
     adapted floors from `floors/floors.json`. Easier items can raise a floor; flag a family whose
     floor saturates in `report.json`.
 - Write `report.json.note` per family: what changed and why, in one sentence each.
-- **A family gained or changed a gate leg** (e.g. multihop originals' bridge): `profile families=<f> regate=true` (originals) AND `gate
+- **A family gained or changed a gate leg** (e.g. multihop_st originals' bridge): `profile families=<f> regate=true` (originals) AND `gate
   families=<f> regate=true` (passing new items), then refill and re-freeze. Old records otherwise
   keep passing without the leg. When a leg was REMOVED or made an annotation (chain v2's `first`),
   use `gate regate=all`: it re-asks the failed new items too (every row is re-linted first, so a v1
@@ -690,12 +690,12 @@ named at freeze (the driver names them).
 | wrong_intermediate | the item is a specific Qwen error (it answers via the wrong intermediate) | `$A wrong_intermediate model=<m>` (plan 0060 Phase E); refill (plan 0066): cued templates recovered by category, then a lower-`min_sl` re-scrape (`pool=dir1,dir2`) (§3a) |
 | knowledge_cutoff | a model-specific error gate (G0 / G1) | `$A kcutoff model=<m> [cutoff=YYYY-MM]` (plan 0060 Phase E): G0 re-run on the subject, G1 dropped, options / units rebuilt; then `freeze families=knowledge_cutoff`. nocot items not built (`references/families.md`). Refill (plan 0066): the GW question pool (`pool=ext`, §3a) |
 | model_specific_directed_modulation | model-specific by design (G0 defaults + G1 text gate) | `$A msdm model=<m>` (plan 0060 Phase E): the subject's own defaults (G0 + compliance), G1 dropped, options / units rebuilt; then `freeze families=model_specific_directed_modulation`. Refill (plan 0066): the GW category pool (`pool=ext`) with membership / label-QA validity legs (§3a) |
-| multihop_mt | its shortcut gate (no shortcut probe reaches the answer) is specific to the gated model | `$A multihop_mt model=<m>` (plan 0060 Phase E); refill (plan 0066): the GW adversary-probed candidate pool, gated with the unchanged staged gate, review legs, then `build_fields` (§3a) |
+| multihop | its shortcut gate (no shortcut probe reaches the answer) is specific to the gated model | `$A multihop model=<m>` (plan 0060 Phase E); refill (plan 0066): the GW adversary-probed candidate pool, gated with the unchanged staged gate, review legs, then `build_fields` (§3a) |
 | nyt_connections | the targets are the model's own groupings and connection labels (plan 0062) | `$A nyt_connections model=<m> [stage=solve/stability/options/build/all] [limit=] [llm=] [herrings=<pilot alt_b2.json>]` (plan 0060 Phase E): the subject solves each registered puzzle (greedy + 16 @ T 0.7, top-p 0.95) and names its groups; the family's >= 12/16 stability rule re-run; options rebuilt around its labels (NYT gold, shared Opus herrings, foil, Opus EQUIV filter); frontier gate dropped; then `freeze families=nyt_connections`. Work files hold NYT text: they live in `$WSB_CACHE/nyt/adapt/`, never `adapted/`. `regate=true` refuses `limit=`. `scripts/nyt_connections_bar.py` refuses an adapted headline (the frozen floor is Qwen's) |
 | model_multihop | the bridges are the model's own stable beliefs (plan 0076) | `$A model_multihop model=<m> [stage=gen1/canon1/gen2/gate/floor/review/build/lucky/confirm/status/all] [limit=] [llm=] [level=] [src=]` (plan 0078, every stage with `ADAPT_BACKEND=modal`): the gw mmh pool (`$WSB_POOL_DIR/mmh_pool.json`, `scripts/build_mmh_pool.py`) re-gated on the subject (B, M, M2, A >= 16/20 at T 0.7; chain; identifiability; leak), the Opus prompt-only filter (0/6), the item-quality review, a lucky-guessing screen (`stage=lucky`); `freeze families=model_multihop` selects in ship order (screen leakers out, near-duplicates out, <= 15% per bridge, target 100, ships up to 283) and marks the bank `unconfirmed`; a FRESH confirm run (`wsbench baseline kind=lucky_guessing variant=blind,described draws=5` under `WSB_BANK_ROOT`, new out dir, then `stage=confirm src=<dir>`) decides on its pre-drop rate (chance + 5; under 100 items or in a re-selection round also the item-level 90% upper bound); a failed confirm needs `stage=lucky level=<round+1>` (a pooled re-selection round) before the next one, 3 failures block the family; the floor of record is ingested as a re-test; `stage=status` grades. Work files `adapted/<m>/mmh/` (git-ignored) |
 | introspection | injected concept vectors are the subject's own activations | `$A introspection stage=all`, or the multi-GPU stack for big MoE (§Introspection); `ooc` on a measured calibration NO-GO |
 | hinted_cutoff | the I / N twins are the subject's own behaviour and the read positions index its own prompt render (plans 0063, 0074) | plan 0084: re-run the gw ccut v2 pipeline on the subject (`scripts/hinted_cutoff_adapt/`: `probe.py` measures its cutoff first and the pool is extended by date if its fade-out is later than v2's 2024-01..2025-06 window; `subject_gen.py` is the `[gen]` step on the subject's adapt app; `subject_ccut.py` runs each ccut stage with the subject's tokenizer, metadata template only; a pilot of ~150 candidates first; hand-labelled silence calibration), then `finalize.py` (the bar is the date checks: day AUROC and cell excess within the gw gate's 0.10, Camila 2026-11-08; the prompt-only predictors are recorded, the po-opus floor covers prompt predictability; a masked guessability caliper `HC_GUESS_GAP` (R18) narrows it) and `$A hinted_cutoff model=<m> frozen=<frozen_<m>.json> gw_commit=<sha>` (refuses a failed bar; validates every item's ids against the subject's render and its read span after the hint block). Floors: `ADAPT_FLOORS_FAMILIES=hinted_cutoff $A floors` + the po-opus summary floor. Built for glm-5.3, then plan 0089's five and deepseek-v4-flash (§hinted_cutoff) |
-| typo | superseded by typo_mt (out of `all`) | stop refilling it; keep the frozen file only for old results |
+| typo_st | superseded by typo (out of `all`) | stop refilling it; keep the frozen file only for old results |
 
 Removed and never to be adapted: unverbalized_hint (plan 0081), medical_diagnosis{,_alt} (plan
 0058), hallucination (plan 0040), multihop_mt_regex (plan 0041), brew_intermediates (plans 0029 /

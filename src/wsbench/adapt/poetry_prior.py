@@ -1,5 +1,5 @@
 """Poetry v6 option lists (plan 0082): distractors matched to the gold on the options-only prior
-(an Opus ranking of the gold and its candidates, blind to the gold); evals/poetry/README.md
+(an Opus ranking of the gold and its candidates, blind to the gold); evals/basic/poetry/README.md
 "Bank v6 lists" has the rationale."""
 
 import hashlib
@@ -85,7 +85,7 @@ def ranks_of(reply: dict | None, words: list[str]) -> list[float] | None:
 def pool_of(item: dict[str, Any], max_pool: int = MAX_POOL) -> list[str]:
     """The gold plus the item's candidates (stored order, which the judge-time filters keep),
     folded and de-duplicated: the words the ranker orders."""
-    from wsbench.evals.poetry.options import committed, gold_of
+    from wsbench.evals.basic.poetry.options import committed, gold_of
 
     gold, commits = fold(gold_of(item)), committed(item)
     out = [gold]
@@ -256,7 +256,7 @@ def guess_item(iid: str, gold: str, dis: list[str]) -> Any:
     seeded order: gold + distractors shuffled by ``poetry-mc|<id>``, cannot-tell dropped)."""
     from wsbench import mc
     from wsbench.baselines.lucky_guessing import Item
-    from wsbench.evals.poetry.options import SEED
+    from wsbench.evals.basic.poetry.options import SEED
 
     words = mc.seeded_shuffle([fold(gold), *dis], f"{SEED}|{iid}")
     return Item(iid, [words], [words.index(fold(gold)) + 1])
@@ -265,7 +265,7 @@ def guess_item(iid: str, gold: str, dis: list[str]) -> Any:
 def example_items(bank_items: list[dict[str, Any]]) -> list[Any]:
     """The described guesser's solved examples: the set's shipped poetry items' option lists."""
     from wsbench.baselines.lucky_guessing import Item
-    from wsbench.evals.poetry.options import option_set
+    from wsbench.evals.basic.poetry.options import option_set
 
     out = []
     for it in bank_items:
@@ -347,7 +347,7 @@ def screen(
     must miss under each); the first passing list is chosen, else ``chosen`` is
     ``None`` (unmatched). Draws are cached in ``cache`` (jsonl). ``start`` (id -> list index):
     screen only those items, from that list on (pass 2 of :func:`build_lists`)."""
-    from wsbench.evals.poetry.options import committed, gold_of
+    from wsbench.evals.basic.poetry.options import committed, gold_of
 
     done: dict[str, dict] = {}
     if cache.exists():
@@ -459,7 +459,7 @@ def build_lists(
     when the described guesser misses with either kind of example, and a replacement list
     passes both. With fewer than ``MIN_V6_EXAMPLES`` v6 lists pass 1 stands and the record
     says ``pass2: skipped``."""
-    from wsbench.evals.poetry.options import gold_of
+    from wsbench.evals.basic.poetry.options import gold_of
 
     p1 = screen(items, ranks, [shipped], cache, ask, kinds=kinds)
     golds = {str(it.get("id") or it.get("name")): gold_of(it) for it in items}

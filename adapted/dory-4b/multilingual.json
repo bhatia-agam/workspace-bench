@@ -1,362 +1,496 @@
 {
- "family": "multilingual",
- "gate": "Qwen3.6-27B behavioral: >=8/10 correct at temp 0.7 (greedy-verified first); association scored against association_aliases.json (phrase-aware, echo-guarded); poetry scored by committed rhyme",
- "eval_render_note": "EVAL RENDER: feed `prompt` verbatim as plain text, NO chat template (directed-modulation is the only chat-templated family). `gate_variant` records how the item was behaviorally verified and does NOT affect the eval read.",
- "version": 5,
+ "family": "multilingual-hard",
+ "parent_family": "multilingual-mt",
  "contract": {
-  "multi_token": false,
+  "multi_token": true,
   "include_target": false,
   "conjunctive_units": true,
   "native_langs": [
    "en"
   ]
  },
+ "gate": "Qwen3.6-27B behavioral, chat-templated capability question (enable_thinking=False, answer stem): greedy-verified AND >=8/10 @ temp 0.7 (answer in the text's language). EVAL RENDER: plain prompt, final prompt token; conjunctive regex over concept (en/zh gloss) + language; the L2 target is never creditable (next token).",
+ "frozen": "2026-11-04",
+ "version": 5,
  "v2": "v2 (plan 0040, Camila 2026-10-30): the readout must NAME the passage's language and write the intermediate in English or the model's native language (contract.native_langs); every unit is required; the language unit holds language names only.",
  "built_by": "scripts/build_multilingual_v2.py (curation: scripts/multilingual_v2_curation.py)",
- "v1_bank": "evals/multilingual/items.json",
- "n_items": 99,
- "dropped": {
-  "b3-ml-es-capital-france": "the gloss Paris and the target París coincide after folding, so an English mention cannot be told from the L2 answer"
- },
+ "v1_bank": "evals/multilingual_mt/items.json",
+ "n_items": 100,
  "supersedes": "items_v4.json",
- "frozen": "2026-11-05",
- "r4_mc": {
-  "script": "scripts/build_r4_mc_banks.py",
-  "rule": "round 4 (Camila r2 MC leakage standard): only the MC distractor lists change. Concept lists: four of the other items' golds of the same mc_type, sampled without replacement weighted by gold frequency (never the gold or a prompt concept; filled from the v2 list). Language lists: the four other gold languages of this bank closest to the gold (shared family 4, script 2, region 1; ties seeded by family and gold). ",
-  "lang_rule": "wsbench.multitoken.options.r4_language_distractors (R4_LANG_INFO / R4_LANG_POOLS)",
-  "lists_changed": 198
+ "v3": "v3 (round 4, Camila r2 / ANSWERS_R2 §6): items_v2.json with ONE change: mlh-tr-bademcik's concept unit gains the forms 'tonsil' and 'tonsils' (the readout 'point clearly to the tonsils, \"bademcik\" in Turkish' missed the closed forms 'palatine tonsil' / 'tonsil gland' for three rounds). Every other item, unit, form and option is byte-identical to v2.",
+ "r4b_mc": {
+  "script": "scripts/build_r4b_mc_banks.py",
+  "rule": "round 4b (Camila r2 MC leakage standard, second pass): only the MC distractor lists change. Content lists: the four distractors scripts/r4b_mc_refine.py kept (r4b_distractors.json: Opus-revised in the gold's naming style, fitting the topic as stated, kept when neither the options-only nor the topic guesser solves the item in more than 1 of 5 draws). Language lists: the four other gold languages of this bank closest to the gold (options.r4_language_distractors). ",
+  "lists_changed": 200,
+  "n_over_gate": 24
  },
  "r5_mc": {
   "procedure": "mcleak-r5-2026-11-04",
   "script": "scripts/mc_options_r5.py (scripts/mc_leakage_r4.py's stages)",
   "rule": "2026-11-04 (leakage standard: every guesser <= uniform chance + 5 points). Only content distractor lists change. The leaking lists were re-chosen by mc_leakage_r4's stages: Opus 5.5 proposes 14 same-topic wrong answers per list (told the gold, its forms, the list's frozen topic label and the question), the topic-member check, rank (4 draws, 2 with the topic), selection of the 4 best-ranked members that pass the r4 lint (no form shared with the gold or another option, no word of the prompt) plus no form shared with another name of the item (its other units, the answer, a dropped bridge, a prompt concept), the same-answer check (multihop families), and the validity screen (Opus 5.5 sees the question or text, 5 draws, the gold must win every draw). The family met the standard after round 0, so no repair round was run",
   "blind_to_readouts": "options chosen and measured without opening any readout or judged file",
-  "selection": "a failing guesser picks the gold on >= 3 of 5 draws and the three together on >= 6 of 15 (the refreeze's per-item draws; failing guessers: described)",
+  "selection": "a failing guesser picks the gold on >= 3 of 5 draws and the three together on >= 6 of 15 (the refreeze's per-item draws; failing guessers: described, topic)",
   "rounds": {
    "0": [
-    "b3-ml-de-opposite-hot~concept_native",
-    "b3-ml-es-color-sky~concept_native",
-    "b3-ml-es-opposite-day~concept_native",
-    "b3-ml-fr-color-blood~concept_native",
-    "b3-ml-fr-opposite-hot~concept_native",
-    "b3-ml-it-capital-france~concept_native",
-    "b3-ml-it-day-monday~concept_native",
-    "b3-ml-pt-opposite-big~concept_native",
-    "b3-ml-pt-opposite-hot~concept_native",
-    "danish-color-ocean~concept_native",
-    "es-size-big-small~concept_native",
-    "estonian-opposite-open~concept_native",
-    "fr-month-after-jan~concept_native",
-    "irish-opposite-big~concept_native",
-    "pt-month-after-oct~concept_native",
-    "pt-month-before-aug~concept_native",
-    "serbian-opposite-day~concept_native",
-    "slovak-opposite-young~concept_native",
-    "spanish-phase-water~concept_native"
+    "mlh-ar-chamomile~concept",
+    "mlh-ar-hourglass~concept",
+    "mlh-ar-octopus~concept",
+    "mlh-ar-sandpaper~concept",
+    "mlh-ar-thyroid~concept",
+    "mlh-ar-vacuum-cleaner~concept",
+    "mlh-ar-wool~concept",
+    "mlh-el-xray~concept",
+    "mlh-he-dishwasher~concept",
+    "mlh-he-toothbrush~concept",
+    "mlh-hu-esokabat~concept",
+    "mlh-hu-porszivo~concept",
+    "mlh-id-hailstone~concept",
+    "mlh-id-sarung-tangan~concept",
+    "mlh-ko-vacuum-cleaner~concept",
+    "mlh-pl-biedronka~concept",
+    "mlh-pl-muchomor~concept",
+    "mlh-pl-odkurzacz~concept",
+    "mlh-pl-pila-lancuchowa~concept",
+    "mlh-ru-caterpillar~concept",
+    "mlh-ru-dandelion~concept",
+    "mlh-ru-meatgrinder~concept",
+    "mlh-ru-thimble~concept",
+    "mlh-sw-chandarua~concept",
+    "mlh-tr-dis-macunu~concept",
+    "mlh-vi-cactus~concept",
+    "mlh-vi-extinguisher~concept"
    ]
   },
   "changed": {
-   "es-size-big-small": {
-    "concept_native": {
+   "mlh-ar-hourglass": {
+    "concept": {
      "from": [
-      "young",
-      "cold",
-      "far",
-      "down"
+      "candle clock",
+      "water clock",
+      "sundial",
+      "pendulum clock"
      ],
      "to": [
-      "cold",
-      "bad",
-      "dark",
-      "slow"
+      "astrolabe",
+      "sundial",
+      "water clock",
+      "armillary sphere"
      ]
     }
    },
-   "pt-month-before-aug": {
-    "concept_native": {
+   "mlh-ar-octopus": {
+    "concept": {
      "from": [
-      "June",
-      "February",
-      "April",
-      "October"
+      "jellyfish",
+      "chambered nautilus",
+      "cuttlefish",
+      "squid"
      ],
      "to": [
-      "March",
-      "April",
-      "May",
-      "September"
+      "jellyfish",
+      "dolphin",
+      "shark",
+      "whale"
      ]
     }
    },
-   "serbian-opposite-day": {
-    "concept_native": {
+   "mlh-ar-sandpaper": {
+    "concept": {
      "from": [
-      "dusk",
-      "noon",
-      "midnight",
-      "morning"
+      "wood chisel",
+      "steel wool",
+      "masking tape",
+      "wood filler"
      ],
      "to": [
-      "morning",
-      "evening",
-      "afternoon",
-      "noon"
+      "wood chisel",
+      "wood glue",
+      "handsaw",
+      "hammer"
      ]
     }
    },
-   "b3-ml-es-color-sky": {
-    "concept_native": {
+   "mlh-ar-vacuum-cleaner": {
+    "concept": {
      "from": [
-      "red",
-      "green",
-      "black",
-      "brown"
+      "sewing machine",
+      "electric fan",
+      "washing machine",
+      "dishwasher"
      ],
      "to": [
-      "red",
-      "green",
-      "black",
-      "white"
+      "refrigerator",
+      "washing machine",
+      "microwave oven",
+      "air conditioner"
      ]
     }
    },
-   "b3-ml-fr-color-blood": {
-    "concept_native": {
+   "mlh-ar-wool": {
+    "concept": {
      "from": [
-      "blue",
-      "green",
-      "black",
-      "brown"
+      "goat cashmere",
+      "alpaca fleece",
+      "camel hair",
+      "rabbit angora"
      ],
      "to": [
-      "blue",
-      "green",
-      "black",
-      "white"
+      "cotton",
+      "silk",
+      "linen",
+      "goat cashmere"
      ]
     }
    },
-   "b3-ml-it-capital-france": {
-    "concept_native": {
+   "mlh-ar-thyroid": {
+    "concept": {
      "from": [
-      "Tokyo",
-      "Vienna",
-      "London",
-      "Lisbon"
+      "thymus",
+      "pineal gland",
+      "adrenal gland",
+      "pituitary gland"
      ],
      "to": [
-      "London",
-      "Rome",
-      "Berlin",
-      "Madrid"
+      "pancreas",
+      "liver",
+      "pituitary gland",
+      "adrenal gland"
      ]
     }
    },
-   "b3-ml-it-day-monday": {
-    "concept_native": {
+   "mlh-ar-chamomile": {
+    "concept": {
      "from": [
-      "Friday",
-      "Sunday",
-      "Wednesday",
-      "Saturday"
+      "rosemary",
+      "yarrow",
+      "echinacea",
+      "lemon balm"
      ],
      "to": [
-      "Friday",
-      "Sunday",
-      "Thursday",
-      "Wednesday"
+      "lavender",
+      "mint",
+      "rosemary",
+      "thyme"
      ]
     }
    },
-   "b3-ml-pt-opposite-big": {
-    "concept_native": {
+   "mlh-el-xray": {
+    "concept": {
      "from": [
-      "cold",
-      "far",
-      "old",
-      "young"
+      "CT scan image",
+      "MRI image",
+      "PET scan image",
+      "Mammogram image"
      ],
      "to": [
-      "cold",
-      "old",
-      "slow",
-      "weak"
+      "ultrasound scan",
+      "blood test",
+      "electrocardiogram",
+      "biopsy"
      ]
     }
    },
-   "b3-ml-pt-opposite-hot": {
-    "concept_native": {
+   "mlh-he-dishwasher": {
+    "concept": {
      "from": [
-      "small",
-      "right",
-      "last",
-      "down"
+      "electric kettle",
+      "trash compactor",
+      "microwave oven",
+      "vacuum cleaner"
      ],
      "to": [
-      "small",
-      "short",
-      "low",
-      "old"
+      "refrigerator",
+      "microwave oven",
+      "vacuum cleaner",
+      "stove"
      ]
     }
    },
-   "fr-month-after-jan": {
-    "concept_native": {
+   "mlh-he-toothbrush": {
+    "concept": {
      "from": [
-      "November",
-      "July",
-      "March",
-      "May"
+      "toothpaste",
+      "soap",
+      "towel",
+      "shampoo"
      ],
      "to": [
-      "March",
-      "May",
-      "April",
-      "June"
+      "mirror",
+      "scissors",
+      "soap",
+      "comb"
      ]
     }
    },
-   "pt-month-after-oct": {
-    "concept_native": {
+   "mlh-hu-esokabat": {
+    "concept": {
      "from": [
-      "February",
-      "July",
-      "June",
-      "May"
+      "blazer",
+      "parka",
+      "sweater",
+      "overcoat"
      ],
      "to": [
-      "January",
-      "April",
-      "March",
-      "May"
+      "coat",
+      "sweater",
+      "dress",
+      "shirt"
      ]
     }
    },
-   "danish-color-ocean": {
-    "concept_native": {
+   "mlh-hu-porszivo": {
+    "concept": {
      "from": [
-      "red",
-      "green",
-      "black",
-      "orange"
+      "refrigerator",
+      "clothes dryer",
+      "electric kettle",
+      "toaster"
      ],
      "to": [
-      "red",
-      "green",
-      "black",
-      "white"
+      "refrigerator",
+      "washing machine",
+      "microwave oven",
+      "dishwasher"
      ]
     }
    },
-   "estonian-opposite-open": {
-    "concept_native": {
+   "mlh-id-hailstone": {
+    "concept": {
      "from": [
-      "cold",
-      "small",
-      "down",
-      "last"
+      "sleet",
+      "graupel",
+      "raindrop",
+      "snowflake"
      ],
      "to": [
-      "small",
-      "cold",
-      "old",
-      "dark"
+      "lightning",
+      "rainbow",
+      "tornado",
+      "thunder"
      ]
     }
    },
-   "irish-opposite-big": {
-    "concept_native": {
+   "mlh-id-sarung-tangan": {
+    "concept": {
      "from": [
-      "cold",
-      "far",
-      "right",
-      "down"
+      "ear muffs",
+      "safety goggles",
+      "rubber boots",
+      "woolen scarf"
      ],
      "to": [
-      "cold",
-      "low",
-      "slow",
-      "bad"
+      "woolen scarf",
+      "knitted beanie",
+      "winter coat",
+      "sunglasses"
      ]
     }
    },
-   "slovak-opposite-young": {
-    "concept_native": {
+   "mlh-ko-vacuum-cleaner": {
+    "concept": {
      "from": [
-      "right",
-      "far",
-      "last",
-      "cold"
+      "washing machine",
+      "hair dryer",
+      "dishwasher",
+      "microwave oven"
      ],
      "to": [
-      "small",
-      "bad",
-      "cold",
-      "short"
+      "refrigerator",
+      "washing machine",
+      "microwave oven",
+      "air conditioner"
      ]
     }
    },
-   "spanish-phase-water": {
-    "concept_native": {
+   "mlh-pl-biedronka": {
+    "concept": {
      "from": [
-      "steam",
-      "rain",
-      "dew",
-      "mud"
+      "click beetle",
+      "soldier beetle",
+      "stag beetle",
+      "dung beetle"
      ],
      "to": [
-      "snow",
-      "rain",
-      "steam",
-      "fog"
+      "firefly",
+      "ant",
+      "honeybee",
+      "dung beetle"
      ]
     }
    },
-   "b3-ml-de-opposite-hot": {
-    "concept_native": {
+   "mlh-pl-muchomor": {
+    "concept": {
      "from": [
-      "far",
-      "old",
-      "slow",
-      "right"
+      "death cap",
+      "shaggy ink cap",
+      "destroying angel",
+      "panther cap"
      ],
      "to": [
-      "small",
-      "short",
-      "slow",
-      "dark"
+      "death cap",
+      "chanterelle",
+      "porcini",
+      "black truffle"
      ]
     }
    },
-   "b3-ml-es-opposite-day": {
-    "concept_native": {
+   "mlh-pl-odkurzacz": {
+    "concept": {
      "from": [
-      "noon",
-      "morning",
-      "dusk",
-      "dawn"
+      "washing machine",
+      "dishwasher",
+      "floor polisher",
+      "steam mop"
      ],
      "to": [
-      "morning",
-      "evening",
-      "afternoon",
-      "dawn"
+      "refrigerator",
+      "washing machine",
+      "microwave oven",
+      "dishwasher"
      ]
     }
    },
-   "b3-ml-fr-opposite-hot": {
-    "concept_native": {
+   "mlh-pl-pila-lancuchowa": {
+    "concept": {
      "from": [
-      "last",
-      "closed",
-      "down",
-      "far"
+      "jackhammer",
+      "circular saw",
+      "angle grinder",
+      "hedge trimmer"
      ],
      "to": [
-      "small",
-      "dark",
-      "bad",
-      "slow"
+      "hammer",
+      "power drill",
+      "axe",
+      "screwdriver"
+     ]
+    }
+   },
+   "mlh-ru-caterpillar": {
+    "concept": {
+     "from": [
+      "maggot",
+      "tadpole",
+      "chrysalis",
+      "earthworm"
+     ],
+     "to": [
+      "silkworm",
+      "earthworm",
+      "chrysalis",
+      "spider"
+     ]
+    }
+   },
+   "mlh-ru-dandelion": {
+    "concept": {
+     "from": [
+      "daisy",
+      "clover",
+      "poppy",
+      "cornflower"
+     ],
+     "to": [
+      "daisy",
+      "poppy",
+      "chamomile",
+      "cornflower"
+     ]
+    }
+   },
+   "mlh-ru-meatgrinder": {
+    "concept": {
+     "from": [
+      "pressure cooker",
+      "coffee grinder",
+      "food processor",
+      "pasta maker"
+     ],
+     "to": [
+      "blender",
+      "microwave oven",
+      "pressure cooker",
+      "toaster"
+     ]
+    }
+   },
+   "mlh-ru-thimble": {
+    "concept": {
+     "from": [
+      "knitting needle",
+      "crochet hook",
+      "embroidery hoop",
+      "pinking shears"
+     ],
+     "to": [
+      "sewing needle",
+      "seam ripper",
+      "embroidery hoop",
+      "crochet hook"
+     ]
+    }
+   },
+   "mlh-sw-chandarua": {
+    "concept": {
+     "from": [
+      "space heater",
+      "sleep mask",
+      "blanket",
+      "ceiling fan"
+     ],
+     "to": [
+      "blanket",
+      "pillow",
+      "ceiling fan",
+      "fly swatter"
+     ]
+    }
+   },
+   "mlh-tr-dis-macunu": {
+    "concept": {
+     "from": [
+      "shaving cream",
+      "deodorant",
+      "mouthwash",
+      "shampoo"
+     ],
+     "to": [
+      "shampoo",
+      "soap",
+      "deodorant",
+      "sunscreen"
+     ]
+    }
+   },
+   "mlh-vi-cactus": {
+    "concept": {
+     "from": [
+      "orchid",
+      "sunflower",
+      "grass",
+      "rose"
+     ],
+     "to": [
+      "bamboo",
+      "sunflower",
+      "rose",
+      "oak tree"
+     ]
+    }
+   },
+   "mlh-vi-extinguisher": {
+    "concept": {
+     "from": [
+      "smoke detector",
+      "first aid kit",
+      "fire blanket",
+      "fire hydrant"
+     ],
+     "to": [
+      "smoke detector",
+      "first aid kit",
+      "flashlight",
+      "thermos"
      ]
     }
    }
@@ -365,50 +499,18 @@
   "floors": {
    "chance": 0.2,
    "before": {
-    "blind": 0.1879,
-    "described": 0.2808,
-    "topic": 0.2121
+    "blind": 0.166,
+    "described": 0.256,
+    "topic": 0.284
    },
    "round0": {
-    "blind": 0.1677,
-    "described": 0.2141,
-    "topic": 0.202
+    "blind": 0.11,
+    "described": 0.174,
+    "topic": 0.234
    },
    "measure": "lucky_guessing (blind / described / topic, Opus 5.5, 5 draws, the described and topic guessers' examples drawn bank-wide; content lists only)"
   },
   "standard_met": true
- },
- "capital_swap": {
-  "date": "2026-11-05",
-  "why": "2026-11-04: drop the country<->capital questions and replace each with a new gated item of the same kind, so the bank keeps its size (the audit had already removed multihop's capital items)",
-  "replaced": {
-   "b3-ml-de-capital-austria": "b3-ml-de-family-nephew",
-   "b3-ml-fr-capital-england": "b3-ml-fr-color-snow",
-   "b3-ml-it-capital-france": "b3-ml-it-family-aunt",
-   "b3-ml-pt-capital-japan": "b3-ml-pt-color-grass"
-  },
-  "rule": "same language, source style (staging_b3: a short plain prompt, no quote), render, read plan and units as the item it replaces; never a capital (asked, as the answer or as a clue), a country's language, an opposite, a currency, or an answer that contains a word of the prompt; the L2 answer is no cognate of its English gloss",
-  "authored_by": "Claude Opus 5.5 (2026-11-05), written by hand to the family's template and rules",
-  "gate": "Qwen3.6-27B @ 6a9e13bd, thinking off, vLLM 0.31 on Modal: the chat leg (the capable question: 'Continue this text...' + the prompt, prefill 'My one-word answer is:'; the b3 items' gate_variant) greedy-correct AND >= 8/10 at T 0.7 (first word = the L2 target), plus the plain leg (the raw prompt continued, the eval render), recorded; 16 candidates gated over 2 rounds; kept: one per language, passing both legs where a candidate did",
-  "gate_legs": {
-   "b3-ml-de-family-nephew": {
-    "chat": "10/10 greedy 'Neffe'",
-    "plain": "2/10 greedy 'A. Cousin\\nB.'"
-   },
-   "b3-ml-fr-color-snow": {
-    "chat": "9/10 greedy 'blanc'",
-    "plain": "0/10 greedy 'résultat de la réflexion de la lumière p'"
-   },
-   "b3-ml-it-family-aunt": {
-    "chat": "8/10 greedy 'zia'",
-    "plain": "4/10 greedy 'zia.\\nLa sorella di'"
-   },
-   "b3-ml-pt-color-grass": {
-    "chat": "10/10 greedy 'verde'",
-    "plain": "6/10 greedy 'verde.\\nA cor do céu é'"
-   }
-  },
-  "options": "concept lists: scripts/mc_options_r5.py's round-0 stages (scripts/mc_leakage_r4.py's) on the 4 new lists only, blind to every readout, from a drafting list of the same type's words; language lists: the bank's fixed list for the item's language (round 4's rule). Measured on the whole v5 bank (blind / described / topic): the family meets the standard; b3-ml-fr-color-snow's gold (white) was still picked 5 / 5 by the described and topic guessers, and r5's round 1 (proposer feedback, rank, search over 4 candidate lists) found no list they pick it less from, so its round-0 list stays (recorded as a caveat)"
  },
  "adapt": {
   "model": "dory-4b",
@@ -417,180 +519,34 @@
  },
  "items": [
   {
-   "name": "de-half-six",
-   "prompt": "Sechs geteilt durch zwei ist \"",
-   "target": "drei",
+   "name": "multilingual-au-t1-w101c2-mlh-vi-conical-hat",
+   "lang": "vi",
+   "prompt": "Chiếc mũ hình chóp nhọn, làm từ cọ phơi khô khâu trên khung tre, có quai buộc dưới cằm, thường được các cô gái mặc áo dài đội, gọi là",
+   "target": "nón lá",
+   "target_alts": [
+    "chiếc nón lá",
+    "cái nón lá",
+    "nón"
+   ],
    "intermediates": [
-    "three"
-   ],
-   "reference_concepts": [
-    "German",
-    "half",
-    "six"
-   ],
-   "source": "jlens_source",
-   "consistency": 1.0,
-   "gate_variant": "plain",
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "lang": "de",
-   "mc_type": "number",
-   "prompt_concepts": [
-    "half",
-    "six",
-    "two"
+    "conical hat"
    ],
    "units": [
     {
-     "role": "concept_native",
+     "role": "concept",
      "required": true,
      "multi_token": false,
      "forms": {
       "en": [
-       "three",
-       "3"
+       "conical hat",
+       "palm leaf hat",
+       "Asian conical hat"
       ]
      },
      "match": [
-      "three",
-      "3"
-     ],
-     "numeric_match": "standalone"
-    },
-    {
-     "role": "language",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "German"
-      ],
-      "de": [
-       "Deutsch",
-       "auf Deutsch",
-       "deutsche Sprache",
-       "deutschen Sprache"
-      ]
-     },
-     "match": [
-      "German",
-      "Deutsch",
-      "auf Deutsch",
-      "deutsche Sprache",
-      "deutschen Sprache"
-     ]
-    }
-   ],
-   "mc": {
-    "concept_native": {
-     "gold": "three",
-     "distractors": [
-      "four",
-      "five",
-      "eight",
-      "ten"
-     ]
-    },
-    "language": {
-     "gold": "German",
-     "distractors": [
-      "Danish",
-      "Dutch",
-      "Irish",
-      "Czech"
-     ]
-    }
-   },
-   "mc_roles": [
-    "concept_native",
-    "language"
-   ],
-   "probe_token_lens": {
-    "units": {
-     "concept_native": {
-      "en": [
-       1,
-       1
-      ]
-     },
-     "language": {
-      "en": [
-       1
-      ],
-      "de": [
-       1,
-       2,
-       2,
-       2
-      ]
-     }
-    },
-    "target": 1
-   },
-   "id": "de-half-six",
-   "native_units_src": "07306d1aa69ac14baef9746a454eb85c36a1402e6c715a4d2c3a156ef1d1ed31",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "de-place-up-down",
-   "prompt": "Das Gegenteil von \"oben\" ist \"",
-   "target": "unten",
-   "intermediates": [
-    "down"
-   ],
-   "reference_concepts": [
-    "German",
-    "place",
-    "up"
-   ],
-   "source": "jlens_source",
-   "consistency": 1.0,
-   "gate_variant": "plain",
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "lang": "de",
-   "mc_type": "opposite",
-   "prompt_concepts": [
-    "above",
-    "high",
-    "place",
-    "top",
-    "up"
-   ],
-   "units": [
-    {
-     "role": "concept_native",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "down",
-       "below",
-       "low",
-       "bottom"
-      ]
-     },
-     "match": [
-      "down",
-      "below",
-      "low",
-      "bottom"
+      "conical hat",
+      "palm leaf hat",
+      "Asian conical hat"
      ]
     },
     {
@@ -599,1599 +555,129 @@
      "multi_token": false,
      "forms": {
       "en": [
-       "German"
+       "Vietnamese"
       ],
-      "de": [
-       "Deutsch",
-       "auf Deutsch",
-       "deutsche Sprache",
-       "deutschen Sprache"
+      "vi": [
+       "tiếng Việt",
+       "Việt ngữ",
+       "tiếng Việt Nam"
       ]
      },
      "match": [
-      "German",
-      "Deutsch",
-      "auf Deutsch",
-      "deutsche Sprache",
-      "deutschen Sprache"
+      "Vietnamese",
+      "tiếng Việt",
+      "Việt ngữ",
+      "tiếng Việt Nam"
      ]
     }
    ],
    "mc": {
-    "concept_native": {
-     "gold": "down",
+    "concept": {
+     "gold": "conical hat",
      "distractors": [
-      "small",
-      "slow",
-      "short",
-      "right"
+      "baseball cap",
+      "straw boater",
+      "beret",
+      "top hat"
      ]
     },
     "language": {
-     "gold": "German",
+     "gold": "Vietnamese",
      "distractors": [
-      "Danish",
-      "Dutch",
-      "Irish",
-      "Czech"
+      "Thai",
+      "Khmer",
+      "Lao",
+      "Indonesian"
      ]
     }
    },
    "mc_roles": [
-    "concept_native",
+    "concept",
     "language"
    ],
+   "subfamily": "fwd",
    "probe_token_lens": {
     "units": {
-     "concept_native": {
+     "concept": {
       "en": [
-       1,
-       1,
-       1,
-       1
-      ]
-     },
-     "language": {
-      "en": [
-       1
-      ],
-      "de": [
-       1,
        2,
-       2,
-       2
-      ]
-     }
-    },
-    "target": 1
-   },
-   "id": "de-place-up-down",
-   "native_units_src": "e6b7d20df8125951938d6e967fb664f51eec6cb9a202053be81dfb9cd34e0b91",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "de-size-big-small",
-   "prompt": "Das Gegenteil von \"groß\" ist \"",
-   "target": "klein",
-   "intermediates": [
-    "small"
-   ],
-   "reference_concepts": [
-    "German",
-    "size",
-    "big"
-   ],
-   "source": "jlens_source",
-   "consistency": 1.0,
-   "gate_variant": "plain",
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "lang": "de",
-   "mc_type": "opposite",
-   "prompt_concepts": [
-    "big",
-    "large",
-    "short",
-    "size",
-    "tall"
-   ],
-   "units": [
-    {
-     "role": "concept_native",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "small",
-       "little"
-      ]
-     },
-     "match": [
-      "small",
-      "little"
-     ]
-    },
-    {
-     "role": "language",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "German"
-      ],
-      "de": [
-       "Deutsch",
-       "auf Deutsch",
-       "deutsche Sprache",
-       "deutschen Sprache"
-      ]
-     },
-     "match": [
-      "German",
-      "Deutsch",
-      "auf Deutsch",
-      "deutsche Sprache",
-      "deutschen Sprache"
-     ]
-    }
-   ],
-   "mc": {
-    "concept_native": {
-     "gold": "small",
-     "distractors": [
-      "cold",
-      "down",
-      "old",
-      "last"
-     ]
-    },
-    "language": {
-     "gold": "German",
-     "distractors": [
-      "Danish",
-      "Dutch",
-      "Irish",
-      "Czech"
-     ]
-    }
-   },
-   "mc_roles": [
-    "concept_native",
-    "language"
-   ],
-   "probe_token_lens": {
-    "units": {
-     "concept_native": {
-      "en": [
-       1,
-       1
-      ]
-     },
-     "language": {
-      "en": [
-       1
-      ],
-      "de": [
-       1,
-       2,
-       2,
-       2
-      ]
-     }
-    },
-    "target": 1
-   },
-   "id": "de-size-big-small",
-   "native_units_src": "708cf172a2d6995c5de350f1854630724802d21a3934eb7e55758cc73634adfd",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "es-half-four",
-   "prompt": "La mitad de cuatro es \"",
-   "target": "dos",
-   "intermediates": [
-    "two"
-   ],
-   "reference_concepts": [
-    "español",
-    "half",
-    "four"
-   ],
-   "source": "jlens_source",
-   "consistency": 1.0,
-   "gate_variant": "chat",
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "lang": "es",
-   "mc_type": "number",
-   "prompt_concepts": [
-    "four",
-    "half"
-   ],
-   "units": [
-    {
-     "role": "concept_native",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "two",
-       "2"
-      ]
-     },
-     "match": [
-      "two",
-      "2"
-     ],
-     "numeric_match": "standalone"
-    },
-    {
-     "role": "language",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "Spanish"
-      ],
-      "es": [
-       "español",
-       "castellano",
-       "en español",
-       "lengua española",
-       "idioma español"
-      ]
-     },
-     "match": [
-      "Spanish",
-      "español",
-      "castellano",
-      "en español",
-      "lengua española",
-      "idioma español"
-     ]
-    }
-   ],
-   "mc": {
-    "concept_native": {
-     "gold": "two",
-     "distractors": [
-      "ten",
-      "six",
-      "three",
-      "five"
-     ]
-    },
-    "language": {
-     "gold": "Spanish",
-     "distractors": [
-      "French",
-      "Portuguese",
-      "Italian",
-      "Irish"
-     ]
-    }
-   },
-   "mc_roles": [
-    "concept_native",
-    "language"
-   ],
-   "probe_token_lens": {
-    "units": {
-     "concept_native": {
-      "en": [
-       1,
-       1
-      ]
-     },
-     "language": {
-      "en": [
-       1
-      ],
-      "es": [
-       1,
-       1,
-       2,
-       2,
-       2
-      ]
-     }
-    },
-    "target": 1
-   },
-   "id": "es-half-four",
-   "native_units_src": "9aaf535fc1fd16a22aa895843a1c74a89520b504b74272822657791568e04a6b",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "es-month-after-sep",
-   "prompt": "El mes después de septiembre es \"",
-   "target": "octubre",
-   "intermediates": [
-    "October"
-   ],
-   "reference_concepts": [
-    "español",
-    "month",
-    "September"
-   ],
-   "source": "jlens_source",
-   "consistency": 1.0,
-   "gate_variant": "plain",
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "lang": "es",
-   "mc_type": "month",
-   "prompt_concepts": [
-    "September",
-    "month"
-   ],
-   "units": [
-    {
-     "role": "concept_native",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "October"
-      ]
-     },
-     "match": [
-      "October"
-     ]
-    },
-    {
-     "role": "language",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "Spanish"
-      ],
-      "es": [
-       "español",
-       "castellano",
-       "en español",
-       "lengua española",
-       "idioma español"
-      ]
-     },
-     "match": [
-      "Spanish",
-      "español",
-      "castellano",
-      "en español",
-      "lengua española",
-      "idioma español"
-     ]
-    }
-   ],
-   "mc": {
-    "concept_native": {
-     "gold": "October",
-     "distractors": [
-      "February",
-      "July",
-      "May",
-      "November"
-     ]
-    },
-    "language": {
-     "gold": "Spanish",
-     "distractors": [
-      "French",
-      "Portuguese",
-      "Italian",
-      "Irish"
-     ]
-    }
-   },
-   "mc_roles": [
-    "concept_native",
-    "language"
-   ],
-   "probe_token_lens": {
-    "units": {
-     "concept_native": {
-      "en": [
-       1
-      ]
-     },
-     "language": {
-      "en": [
-       1
-      ],
-      "es": [
-       1,
-       1,
-       2,
-       2,
-       2
-      ]
-     }
-    },
-    "target": 1
-   },
-   "id": "es-month-after-sep",
-   "native_units_src": "4374f5d660f56e2433dff85cd451c5499d913cfc6028ed1532934bd445ae3bd8",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "es-size-big-small",
-   "prompt": "Lo contrario de \"grande\" es \"",
-   "target": "pequeño",
-   "intermediates": [
-    "small"
-   ],
-   "reference_concepts": [
-    "español",
-    "size",
-    "big"
-   ],
-   "source": "jlens_source",
-   "consistency": 1.0,
-   "gate_variant": "plain",
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "lang": "es",
-   "mc_type": "opposite",
-   "prompt_concepts": [
-    "big",
-    "large",
-    "short",
-    "size",
-    "tall"
-   ],
-   "units": [
-    {
-     "role": "concept_native",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "small",
-       "little"
-      ]
-     },
-     "match": [
-      "small",
-      "little"
-     ]
-    },
-    {
-     "role": "language",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "Spanish"
-      ],
-      "es": [
-       "español",
-       "castellano",
-       "en español",
-       "lengua española",
-       "idioma español"
-      ]
-     },
-     "match": [
-      "Spanish",
-      "español",
-      "castellano",
-      "en español",
-      "lengua española",
-      "idioma español"
-     ]
-    }
-   ],
-   "mc": {
-    "concept_native": {
-     "gold": "small",
-     "distractors": [
-      "cold",
-      "bad",
-      "dark",
-      "slow"
-     ]
-    },
-    "language": {
-     "gold": "Spanish",
-     "distractors": [
-      "French",
-      "Portuguese",
-      "Italian",
-      "Irish"
-     ]
-    }
-   },
-   "mc_roles": [
-    "concept_native",
-    "language"
-   ],
-   "probe_token_lens": {
-    "units": {
-     "concept_native": {
-      "en": [
-       1,
-       1
-      ]
-     },
-     "language": {
-      "en": [
-       1
-      ],
-      "es": [
-       1,
-       1,
-       2,
-       2,
-       2
-      ]
-     }
-    },
-    "target": 1
-   },
-   "id": "es-size-big-small",
-   "native_units_src": "4fc06250e6226536e5263bf109ae0f050763255e62aa21abdc54c93bad44355d",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "fr-month-after-may",
-   "prompt": "Le mois après mai est \"",
-   "target": "juin",
-   "intermediates": [
-    "June"
-   ],
-   "reference_concepts": [
-    "French",
-    "month",
-    "May"
-   ],
-   "source": "jlens_source",
-   "consistency": 1.0,
-   "gate_variant": "plain",
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "lang": "fr",
-   "mc_type": "month",
-   "prompt_concepts": [
-    "May",
-    "month"
-   ],
-   "units": [
-    {
-     "role": "concept_native",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "June"
-      ]
-     },
-     "match": [
-      "June"
-     ]
-    },
-    {
-     "role": "language",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "French"
-      ],
-      "fr": [
-       "français",
-       "en français",
-       "langue française"
-      ]
-     },
-     "match": [
-      "French",
-      "français",
-      "en français",
-      "langue française"
-     ]
-    }
-   ],
-   "mc": {
-    "concept_native": {
-     "gold": "June",
-     "distractors": [
-      "July",
-      "November",
-      "March",
-      "April"
-     ]
-    },
-    "language": {
-     "gold": "French",
-     "distractors": [
-      "Spanish",
-      "Portuguese",
-      "Italian",
-      "Polish"
-     ]
-    }
-   },
-   "mc_roles": [
-    "concept_native",
-    "language"
-   ],
-   "probe_token_lens": {
-    "units": {
-     "concept_native": {
-      "en": [
-       1
-      ]
-     },
-     "language": {
-      "en": [
-       1
-      ],
-      "fr": [
-       1,
-       2,
-       2
-      ]
-     }
-    },
-    "target": 1
-   },
-   "id": "fr-month-after-may",
-   "native_units_src": "0e180869178ea01f49937a3ee028bb1eb22701af49efc50a7d2e963f2011f981",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "fr-order-first-last",
-   "prompt": "Le contraire de \"premier\" est \"",
-   "target": "dernier",
-   "intermediates": [
-    "last"
-   ],
-   "reference_concepts": [
-    "French",
-    "order",
-    "first"
-   ],
-   "source": "jlens_source",
-   "consistency": 1.0,
-   "gate_variant": "plain",
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "lang": "fr",
-   "mc_type": "opposite",
-   "prompt_concepts": [
-    "first",
-    "order"
-   ],
-   "units": [
-    {
-     "role": "concept_native",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "last"
-      ]
-     },
-     "match": [
-      "last"
-     ]
-    },
-    {
-     "role": "language",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "French"
-      ],
-      "fr": [
-       "français",
-       "en français",
-       "langue française"
-      ]
-     },
-     "match": [
-      "French",
-      "français",
-      "en français",
-      "langue française"
-     ]
-    }
-   ],
-   "mc": {
-    "concept_native": {
-     "gold": "last",
-     "distractors": [
-      "down",
-      "small",
-      "slow",
-      "far"
-     ]
-    },
-    "language": {
-     "gold": "French",
-     "distractors": [
-      "Spanish",
-      "Portuguese",
-      "Italian",
-      "Polish"
-     ]
-    }
-   },
-   "mc_roles": [
-    "concept_native",
-    "language"
-   ],
-   "probe_token_lens": {
-    "units": {
-     "concept_native": {
-      "en": [
-       1
-      ]
-     },
-     "language": {
-      "en": [
-       1
-      ],
-      "fr": [
-       1,
-       2,
-       2
-      ]
-     }
-    },
-    "target": 1
-   },
-   "id": "fr-order-first-last",
-   "native_units_src": "1db694f70bb902c3876473ace2d448e5e49b653b96f0a3e4edf039b597aeef8d",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "fr-place-near-far",
-   "prompt": "Le contraire de \"près\" est \"",
-   "target": "loin",
-   "intermediates": [
-    "far"
-   ],
-   "reference_concepts": [
-    "French",
-    "place",
-    "near"
-   ],
-   "source": "jlens_source",
-   "consistency": 1.0,
-   "gate_variant": "plain",
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "lang": "fr",
-   "mc_type": "opposite",
-   "prompt_concepts": [
-    "close",
-    "near",
-    "place"
-   ],
-   "units": [
-    {
-     "role": "concept_native",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "far",
-       "far away"
-      ]
-     },
-     "match": [
-      "far",
-      "far away"
-     ]
-    },
-    {
-     "role": "language",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "French"
-      ],
-      "fr": [
-       "français",
-       "en français",
-       "langue française"
-      ]
-     },
-     "match": [
-      "French",
-      "français",
-      "en français",
-      "langue française"
-     ]
-    }
-   ],
-   "mc": {
-    "concept_native": {
-     "gold": "far",
-     "distractors": [
-      "closed",
-      "down",
-      "slow",
-      "cold"
-     ]
-    },
-    "language": {
-     "gold": "French",
-     "distractors": [
-      "Spanish",
-      "Portuguese",
-      "Italian",
-      "Polish"
-     ]
-    }
-   },
-   "mc_roles": [
-    "concept_native",
-    "language"
-   ],
-   "probe_token_lens": {
-    "units": {
-     "concept_native": {
-      "en": [
-       1,
-       2
-      ]
-     },
-     "language": {
-      "en": [
-       1
-      ],
-      "fr": [
-       1,
-       2,
-       2
-      ]
-     }
-    },
-    "target": 1
-   },
-   "id": "fr-place-near-far",
-   "native_units_src": "2b038c8d1ea05905d9ac0465cb9cdc309366316941cef912eb591d9c621035e6",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "fr-place-up-down",
-   "prompt": "Le contraire de \"haut\" est \"",
-   "target": "bas",
-   "intermediates": [
-    "down"
-   ],
-   "reference_concepts": [
-    "French",
-    "place",
-    "up"
-   ],
-   "source": "jlens_source",
-   "consistency": 1.0,
-   "gate_variant": "plain",
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "lang": "fr",
-   "mc_type": "opposite",
-   "prompt_concepts": [
-    "above",
-    "high",
-    "place",
-    "top",
-    "up"
-   ],
-   "units": [
-    {
-     "role": "concept_native",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "down",
-       "below",
-       "low",
-       "bottom"
-      ]
-     },
-     "match": [
-      "down",
-      "below",
-      "low",
-      "bottom"
-     ]
-    },
-    {
-     "role": "language",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "French"
-      ],
-      "fr": [
-       "français",
-       "en français",
-       "langue française"
-      ]
-     },
-     "match": [
-      "French",
-      "français",
-      "en français",
-      "langue française"
-     ]
-    }
-   ],
-   "mc": {
-    "concept_native": {
-     "gold": "down",
-     "distractors": [
-      "small",
-      "young",
-      "new",
-      "slow"
-     ]
-    },
-    "language": {
-     "gold": "French",
-     "distractors": [
-      "Spanish",
-      "Portuguese",
-      "Italian",
-      "Polish"
-     ]
-    }
-   },
-   "mc_roles": [
-    "concept_native",
-    "language"
-   ],
-   "probe_token_lens": {
-    "units": {
-     "concept_native": {
-      "en": [
-       1,
-       1,
-       1,
-       1
-      ]
-     },
-     "language": {
-      "en": [
-       1
-      ],
-      "fr": [
-       1,
-       2,
-       2
-      ]
-     }
-    },
-    "target": 1
-   },
-   "id": "fr-place-up-down",
-   "native_units_src": "beef23294503a864ed06a1c4081d05dd5d1cd09053e09366bf573bfeca8f857c",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "fr-size-big-small",
-   "prompt": "Le contraire de \"grand\" est \"",
-   "target": "petit",
-   "intermediates": [
-    "small"
-   ],
-   "reference_concepts": [
-    "French",
-    "size",
-    "big"
-   ],
-   "source": "jlens_source",
-   "consistency": 1.0,
-   "gate_variant": "plain",
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "lang": "fr",
-   "mc_type": "opposite",
-   "prompt_concepts": [
-    "big",
-    "large",
-    "short",
-    "size",
-    "tall"
-   ],
-   "units": [
-    {
-     "role": "concept_native",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "small",
-       "little"
-      ]
-     },
-     "match": [
-      "small",
-      "little"
-     ]
-    },
-    {
-     "role": "language",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "French"
-      ],
-      "fr": [
-       "français",
-       "en français",
-       "langue française"
-      ]
-     },
-     "match": [
-      "French",
-      "français",
-      "en français",
-      "langue française"
-     ]
-    }
-   ],
-   "mc": {
-    "concept_native": {
-     "gold": "small",
-     "distractors": [
-      "closed",
-      "right",
-      "down",
-      "last"
-     ]
-    },
-    "language": {
-     "gold": "French",
-     "distractors": [
-      "Spanish",
-      "Portuguese",
-      "Italian",
-      "Polish"
-     ]
-    }
-   },
-   "mc_roles": [
-    "concept_native",
-    "language"
-   ],
-   "probe_token_lens": {
-    "units": {
-     "concept_native": {
-      "en": [
-       1,
-       1
-      ]
-     },
-     "language": {
-      "en": [
-       1
-      ],
-      "fr": [
-       1,
-       2,
-       2
-      ]
-     }
-    },
-    "target": 1
-   },
-   "id": "fr-size-big-small",
-   "native_units_src": "06902c55145eb4b5d4e5f033ecc6921a09e47ffab6f15b439f3c1be8b8f95cf8",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "pt-month-before-aug",
-   "prompt": "O mês antes de agosto é \"",
-   "target": "julho",
-   "intermediates": [
-    "July"
-   ],
-   "reference_concepts": [
-    "português",
-    "month",
-    "August"
-   ],
-   "source": "jlens_source",
-   "consistency": 1.0,
-   "gate_variant": "chat",
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "lang": "pt",
-   "mc_type": "month",
-   "prompt_concepts": [
-    "August",
-    "month"
-   ],
-   "units": [
-    {
-     "role": "concept_native",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "July"
-      ]
-     },
-     "match": [
-      "July"
-     ]
-    },
-    {
-     "role": "language",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "Portuguese"
-      ],
-      "pt": [
-       "português",
-       "em português",
-       "língua portuguesa"
-      ]
-     },
-     "match": [
-      "Portuguese",
-      "português",
-      "em português",
-      "língua portuguesa"
-     ]
-    }
-   ],
-   "mc": {
-    "concept_native": {
-     "gold": "July",
-     "distractors": [
-      "March",
-      "April",
-      "May",
-      "September"
-     ]
-    },
-    "language": {
-     "gold": "Portuguese",
-     "distractors": [
-      "Spanish",
-      "Italian",
-      "French",
-      "Polish"
-     ]
-    }
-   },
-   "mc_roles": [
-    "concept_native",
-    "language"
-   ],
-   "probe_token_lens": {
-    "units": {
-     "concept_native": {
-      "en": [
-       1
-      ]
-     },
-     "language": {
-      "en": [
-       1
-      ],
-      "pt": [
-       1,
-       2,
-       2
-      ]
-     }
-    },
-    "target": 1
-   },
-   "id": "pt-month-before-aug",
-   "native_units_src": "32a0081912838c27556329a76b663edd189a50b796acf1fe21a1b776c621c851",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "pt-order-first-last",
-   "prompt": "O contrário de \"primeiro\" é \"",
-   "target": "último",
-   "intermediates": [
-    "last"
-   ],
-   "reference_concepts": [
-    "português",
-    "order",
-    "first"
-   ],
-   "source": "jlens_source",
-   "consistency": 1.0,
-   "gate_variant": "plain",
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "lang": "pt",
-   "mc_type": "opposite",
-   "prompt_concepts": [
-    "first",
-    "order"
-   ],
-   "units": [
-    {
-     "role": "concept_native",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "last"
-      ]
-     },
-     "match": [
-      "last"
-     ]
-    },
-    {
-     "role": "language",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "Portuguese"
-      ],
-      "pt": [
-       "português",
-       "em português",
-       "língua portuguesa"
-      ]
-     },
-     "match": [
-      "Portuguese",
-      "português",
-      "em português",
-      "língua portuguesa"
-     ]
-    }
-   ],
-   "mc": {
-    "concept_native": {
-     "gold": "last",
-     "distractors": [
-      "down",
-      "slow",
-      "small",
-      "new"
-     ]
-    },
-    "language": {
-     "gold": "Portuguese",
-     "distractors": [
-      "Spanish",
-      "Italian",
-      "French",
-      "Polish"
-     ]
-    }
-   },
-   "mc_roles": [
-    "concept_native",
-    "language"
-   ],
-   "probe_token_lens": {
-    "units": {
-     "concept_native": {
-      "en": [
-       1
-      ]
-     },
-     "language": {
-      "en": [
-       1
-      ],
-      "pt": [
-       1,
-       2,
-       2
-      ]
-     }
-    },
-    "target": 1
-   },
-   "id": "pt-order-first-last",
-   "native_units_src": "4847156ceb2f2c8d02061457b891e01049d074495339c4f75ad3447ae98413d2",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "dutch-direction-left",
-   "prompt": "Het tegenovergestelde van \"links\" is \"",
-   "target": "rechts",
-   "intermediates": [
-    "right"
-   ],
-   "reference_concepts": [
-    "Dutch",
-    "opposite",
-    "left"
-   ],
-   "source": "jlens_source",
-   "consistency": 1.0,
-   "gate_variant": "plain",
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "lang": "nl",
-   "mc_type": "opposite",
-   "prompt_concepts": [
-    "left",
-    "opposite"
-   ],
-   "units": [
-    {
-     "role": "concept_native",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "right"
-      ]
-     },
-     "match": [
-      "right"
-     ]
-    },
-    {
-     "role": "language",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "Dutch"
-      ],
-      "nl": [
-       "Nederlands",
-       "in het Nederlands",
-       "Nederlandse taal"
-      ]
-     },
-     "match": [
-      "Dutch",
-      "Nederlands",
-      "in het Nederlands",
-      "Nederlandse taal"
-     ]
-    }
-   ],
-   "mc": {
-    "concept_native": {
-     "gold": "right",
-     "distractors": [
-      "cold",
-      "small",
-      "young",
-      "down"
-     ]
-    },
-    "language": {
-     "gold": "Dutch",
-     "distractors": [
-      "German",
-      "Danish",
-      "Irish",
-      "Polish"
-     ]
-    }
-   },
-   "mc_roles": [
-    "concept_native",
-    "language"
-   ],
-   "probe_token_lens": {
-    "units": {
-     "concept_native": {
-      "en": [
-       1
-      ]
-     },
-     "language": {
-      "en": [
-       1
-      ],
-      "nl": [
-       1,
        3,
-       2
+       3
+      ]
+     },
+     "language": {
+      "en": [
+       1
+      ],
+      "vi": [
+       2,
+       2,
+       3
       ]
      }
-    },
-    "target": 1
+    }
    },
-   "id": "dutch-direction-left",
-   "native_units_src": "e1f5c08e516d3e60540dad81fd4ea3bb6df21e742096c5c84469883d1e8d52ad",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "source": "authored (claude-opus-5-5) for dory-4b: Use only Russian (ru), Vietnamese (vi) or Indonesian (id), the only languages this model passes, and common concrete nouns (household objects, animals, food).",
    "adapt": {
-    "origin": "original",
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "Use only Russian (ru), Vietnamese (vi) or Indonesian (id), the only languages this model passes, and common concrete nouns (household objects, animals, food)."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 101,
+    "plan": "0075",
+    "steer": "- Last wave: 0/60 passed.\n- Rejected by lint before gating: 5x mc: the MC builder dropped this candidate (no options); 1x leak: ['đien'] in prompt; 1x natural:concept 'fan' is not creditable; 1x natural:concept 'glasses' is not creditable. Avoid these.\n- Failed (gold -> what the model wrote): холодильник -> model said 'холодник' (1/10); дикобраз -> model said 'змеиновый хомяк' (0/10); табуретка -> model said 'лопашкой' (0/10); пельмени -> model said 'поморские пирожные' (3/10); летучая мышь -> model said 'бабочка' (0/10); сахарница -> model said 'чашка с куполом' (0/10); con voi -> model said 'giám phù' (0/10); bánh mì -> model said 'đũa nấm' (0/10); cái ô -> model said 'sóng' (0/10); con mèo -> model said 'mèo nước' (7/10); đôi đũa -> model said 'chén' (1/10); nước mắm -> model said 'Hoi sin' (6/10). Make items like these easier or pick latents the model knows without a close sibling.",
+    "mc_build": {
+     "onecue": {
+      "version": "onecue-v3",
+      "at": "2026-11-17T22:00:39+00:00",
+      "flagged": {}
+     }
+    },
     "gate": {
      "rate": 0.8,
      "pass": true
     }
-   }
+   },
+   "native_units_for": [
+    "en"
+   ]
   },
   {
-   "name": "french-season-summer",
-   "prompt": "La saison après l'été est l'",
-   "target": "automne",
+   "name": "multilingual-au-t1-w104c2-mlh-ru-keyboard",
+   "lang": "ru",
+   "prompt": "У компьютера есть плоская доска с кнопками, на каждой из которых нарисована буква или цифра; по ним стучат пальцами, чтобы набрать текст. Эта доска называется",
+   "target": "клавиатура",
+   "target_alts": [
+    "клавиатуры",
+    "клавиатуру",
+    "клавиатурой"
+   ],
    "intermediates": [
-    "autumn"
-   ],
-   "reference_concepts": [
-    "French",
-    "season",
-    "summer"
-   ],
-   "source": "jlens_source",
-   "consistency": 1.0,
-   "gate_variant": "plain",
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "lang": "fr",
-   "mc_type": "season",
-   "prompt_concepts": [
-    "season",
-    "summer"
+    "computer keyboard"
    ],
    "units": [
     {
-     "role": "concept_native",
+     "role": "concept",
      "required": true,
      "multi_token": false,
      "forms": {
       "en": [
-       "autumn",
-       "fall"
+       "computer keyboard",
+       "keyboard"
       ]
      },
      "match": [
-      "autumn",
-      "fall"
+      "computer keyboard",
+      "keyboard"
      ]
     },
     {
@@ -2200,4070 +686,60 @@
      "multi_token": false,
      "forms": {
       "en": [
-       "French"
+       "Russian"
       ],
-      "fr": [
-       "français",
-       "en français",
-       "langue française"
+      "ru": [
+       "русский",
+       "по-русски",
+       "русский язык",
+       "на русском языке",
+       "русском",
+       "русском языке",
+       "на русском"
       ]
      },
      "match": [
-      "French",
-      "français",
-      "en français",
-      "langue française"
+      "Russian",
+      "русский",
+      "по-русски",
+      "русский язык",
+      "на русском языке",
+      "русском",
+      "русском языке",
+      "на русском"
      ]
     }
    ],
    "mc": {
-    "concept_native": {
-     "gold": "autumn",
+    "concept": {
+     "gold": "computer keyboard",
      "distractors": [
-      "spring",
-      "winter",
-      "dry season",
-      "rainy season"
+      "computer mouse",
+      "monitor screen",
+      "printer",
+      "touchpad"
      ]
     },
     "language": {
-     "gold": "French",
+     "gold": "Russian",
      "distractors": [
-      "Spanish",
-      "Portuguese",
-      "Italian",
-      "Polish"
-     ]
-    }
-   },
-   "mc_roles": [
-    "concept_native",
-    "language"
-   ],
-   "probe_token_lens": {
-    "units": {
-     "concept_native": {
-      "en": [
-       1,
-       1
-      ]
-     },
-     "language": {
-      "en": [
-       1
-      ],
-      "fr": [
-       1,
-       2,
-       2
-      ]
-     }
-    },
-    "target": 1
-   },
-   "id": "french-season-summer",
-   "native_units_src": "6432e361a560ba16967c3e96de768fe137020a4c346f7d63179cccb29e408be6",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "frn-month-after-jun",
-   "prompt": "Le mois après juin est \"",
-   "target": "juillet",
-   "intermediates": [
-    "July"
-   ],
-   "reference_concepts": [
-    "français",
-    "month",
-    "June"
-   ],
-   "source": "jlens_source",
-   "consistency": 1.0,
-   "gate_variant": "plain",
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "lang": "fr",
-   "mc_type": "month",
-   "prompt_concepts": [
-    "June",
-    "month"
-   ],
-   "units": [
-    {
-     "role": "concept_native",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "July"
-      ]
-     },
-     "match": [
-      "July"
-     ]
-    },
-    {
-     "role": "language",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "French"
-      ],
-      "fr": [
-       "français",
-       "en français",
-       "langue française"
-      ]
-     },
-     "match": [
-      "French",
-      "français",
-      "en français",
-      "langue française"
-     ]
-    }
-   ],
-   "mc": {
-    "concept_native": {
-     "gold": "July",
-     "distractors": [
-      "October",
-      "February",
-      "April",
-      "November"
-     ]
-    },
-    "language": {
-     "gold": "French",
-     "distractors": [
-      "Spanish",
-      "Portuguese",
-      "Italian",
-      "Polish"
-     ]
-    }
-   },
-   "mc_roles": [
-    "concept_native",
-    "language"
-   ],
-   "probe_token_lens": {
-    "units": {
-     "concept_native": {
-      "en": [
-       1
-      ]
-     },
-     "language": {
-      "en": [
-       1
-      ],
-      "fr": [
-       1,
-       2,
-       2
-      ]
-     }
-    },
-    "target": 1
-   },
-   "id": "frn-month-after-jun",
-   "native_units_src": "699461b22a79b07f11ef8bafbd18342f716ab8f4a4eba367f2ff01319f83d491",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "italian-number-two",
-   "prompt": "Dopo il \"due\" viene il \"",
-   "target": "tre",
-   "intermediates": [
-    "three"
-   ],
-   "reference_concepts": [
-    "Italian",
-    "number",
-    "two"
-   ],
-   "source": "jlens_source",
-   "consistency": 1.0,
-   "gate_variant": "plain",
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "lang": "it",
-   "mc_type": "number",
-   "prompt_concepts": [
-    "number",
-    "two"
-   ],
-   "units": [
-    {
-     "role": "concept_native",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "three",
-       "3"
-      ]
-     },
-     "match": [
-      "three",
-      "3"
-     ],
-     "numeric_match": "standalone"
-    },
-    {
-     "role": "language",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "Italian"
-      ],
-      "it": [
-       "italiano",
-       "in italiano",
-       "lingua italiana"
-      ]
-     },
-     "match": [
-      "Italian",
-      "italiano",
-      "in italiano",
-      "lingua italiana"
-     ]
-    }
-   ],
-   "mc": {
-    "concept_native": {
-     "gold": "three",
-     "distractors": [
-      "eight",
-      "ten",
-      "six",
-      "five"
-     ]
-    },
-    "language": {
-     "gold": "Italian",
-     "distractors": [
-      "Spanish",
-      "French",
-      "Portuguese",
-      "Dutch"
-     ]
-    }
-   },
-   "mc_roles": [
-    "concept_native",
-    "language"
-   ],
-   "probe_token_lens": {
-    "units": {
-     "concept_native": {
-      "en": [
-       1,
-       1
-      ]
-     },
-     "language": {
-      "en": [
-       1
-      ],
-      "it": [
-       1,
-       2,
-       2
-      ]
-     }
-    },
-    "target": 1
-   },
-   "id": "italian-number-two",
-   "native_units_src": "ddd23bd1e8d6418e3a5211381b24eca87f5a03aeec29dc4eba78eda44551dc86",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 0.9,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "spanish-number-three",
-   "prompt": "Después del \"tres\" viene el \"",
-   "target": "cuatro",
-   "intermediates": [
-    "four"
-   ],
-   "reference_concepts": [
-    "Spanish",
-    "number",
-    "three"
-   ],
-   "source": "jlens_source",
-   "consistency": 1.0,
-   "gate_variant": "plain",
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "lang": "es",
-   "mc_type": "number",
-   "prompt_concepts": [
-    "number",
-    "three"
-   ],
-   "units": [
-    {
-     "role": "concept_native",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "four",
-       "4"
-      ]
-     },
-     "match": [
-      "four",
-      "4"
-     ],
-     "numeric_match": "standalone"
-    },
-    {
-     "role": "language",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "Spanish"
-      ],
-      "es": [
-       "español",
-       "castellano",
-       "en español",
-       "lengua española",
-       "idioma español"
-      ]
-     },
-     "match": [
-      "Spanish",
-      "español",
-      "castellano",
-      "en español",
-      "lengua española",
-      "idioma español"
-     ]
-    }
-   ],
-   "mc": {
-    "concept_native": {
-     "gold": "four",
-     "distractors": [
-      "ten",
-      "eight",
-      "six",
-      "two"
-     ]
-    },
-    "language": {
-     "gold": "Spanish",
-     "distractors": [
-      "French",
-      "Portuguese",
-      "Italian",
-      "Irish"
-     ]
-    }
-   },
-   "mc_roles": [
-    "concept_native",
-    "language"
-   ],
-   "probe_token_lens": {
-    "units": {
-     "concept_native": {
-      "en": [
-       1,
-       1
-      ]
-     },
-     "language": {
-      "en": [
-       1
-      ],
-      "es": [
-       1,
-       1,
-       2,
-       2,
-       2
-      ]
-     }
-    },
-    "target": 1
-   },
-   "id": "spanish-number-three",
-   "native_units_src": "b5ac412d3a123ad60e52bfb724614934ba4a049fb687e28eb176ba7d87772717",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 0.9,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "b3-ml-de-color-sky",
-   "prompt": "Die Farbe des klaren Himmels ist",
-   "target": "blau",
-   "intermediates": [
-    "blue"
-   ],
-   "reference_concepts": [
-    "German",
-    "color",
-    "sky"
-   ],
-   "source": "staging_b3",
-   "consistency": 1.0,
-   "gate_variant": "chat",
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "lang": "de",
-   "mc_type": "colour",
-   "prompt_concepts": [
-    "color",
-    "sky"
-   ],
-   "units": [
-    {
-     "role": "concept_native",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "blue"
-      ]
-     },
-     "match": [
-      "blue"
-     ]
-    },
-    {
-     "role": "language",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "German"
-      ],
-      "de": [
-       "Deutsch",
-       "auf Deutsch",
-       "deutsche Sprache",
-       "deutschen Sprache"
-      ]
-     },
-     "match": [
-      "German",
-      "Deutsch",
-      "auf Deutsch",
-      "deutsche Sprache",
-      "deutschen Sprache"
-     ]
-    }
-   ],
-   "mc": {
-    "concept_native": {
-     "gold": "blue",
-     "distractors": [
-      "green",
-      "red",
-      "black",
-      "purple"
-     ]
-    },
-    "language": {
-     "gold": "German",
-     "distractors": [
-      "Danish",
-      "Dutch",
-      "Irish",
-      "Czech"
-     ]
-    }
-   },
-   "mc_roles": [
-    "concept_native",
-    "language"
-   ],
-   "probe_token_lens": {
-    "units": {
-     "concept_native": {
-      "en": [
-       1
-      ]
-     },
-     "language": {
-      "en": [
-       1
-      ],
-      "de": [
-       1,
-       2,
-       2,
-       2
-      ]
-     }
-    },
-    "target": 1
-   },
-   "id": "b3-ml-de-color-sky",
-   "native_units_src": "3109ea97a01535e42ced786c28356690317da447084c371a43c8e993f7d8c300",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 0.9,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "b3-ml-de-month-june",
-   "prompt": "Der Monat nach Juni ist der",
-   "target": "Juli",
-   "intermediates": [
-    "July"
-   ],
-   "reference_concepts": [
-    "German",
-    "month",
-    "June"
-   ],
-   "source": "staging_b3",
-   "consistency": 1.0,
-   "gate_variant": "plain",
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "lang": "de",
-   "mc_type": "month",
-   "prompt_concepts": [
-    "June",
-    "month"
-   ],
-   "units": [
-    {
-     "role": "concept_native",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "July"
-      ]
-     },
-     "match": [
-      "July"
-     ]
-    },
-    {
-     "role": "language",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "German"
-      ],
-      "de": [
-       "Deutsch",
-       "auf Deutsch",
-       "deutsche Sprache",
-       "deutschen Sprache"
-      ]
-     },
-     "match": [
-      "German",
-      "Deutsch",
-      "auf Deutsch",
-      "deutsche Sprache",
-      "deutschen Sprache"
-     ]
-    }
-   ],
-   "mc": {
-    "concept_native": {
-     "gold": "July",
-     "distractors": [
-      "May",
-      "March",
-      "February",
-      "October"
-     ]
-    },
-    "language": {
-     "gold": "German",
-     "distractors": [
-      "Danish",
-      "Dutch",
-      "Irish",
-      "Czech"
-     ]
-    }
-   },
-   "mc_roles": [
-    "concept_native",
-    "language"
-   ],
-   "probe_token_lens": {
-    "units": {
-     "concept_native": {
-      "en": [
-       1
-      ]
-     },
-     "language": {
-      "en": [
-       1
-      ],
-      "de": [
-       1,
-       2,
-       2,
-       2
-      ]
-     }
-    },
-    "target": 1
-   },
-   "id": "b3-ml-de-month-june",
-   "native_units_src": "d62bd776b7ebc8d20d88edcfd788613c87645585b9b05e1165d61e507351783a",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "b3-ml-de-opposite-fast",
-   "prompt": "Das Gegenteil von \"schnell\" ist",
-   "target": "langsam",
-   "intermediates": [
-    "slow"
-   ],
-   "reference_concepts": [
-    "German",
-    "opposite",
-    "fast"
-   ],
-   "source": "staging_b3",
-   "consistency": 1.0,
-   "gate_variant": "chat",
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "lang": "de",
-   "mc_type": "opposite",
-   "prompt_concepts": [
-    "fast",
-    "opposite",
-    "quick"
-   ],
-   "units": [
-    {
-     "role": "concept_native",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "slow"
-      ]
-     },
-     "match": [
-      "slow"
-     ]
-    },
-    {
-     "role": "language",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "German"
-      ],
-      "de": [
-       "Deutsch",
-       "auf Deutsch",
-       "deutsche Sprache",
-       "deutschen Sprache"
-      ]
-     },
-     "match": [
-      "German",
-      "Deutsch",
-      "auf Deutsch",
-      "deutsche Sprache",
-      "deutschen Sprache"
-     ]
-    }
-   ],
-   "mc": {
-    "concept_native": {
-     "gold": "slow",
-     "distractors": [
-      "down",
-      "last",
-      "cold",
-      "new"
-     ]
-    },
-    "language": {
-     "gold": "German",
-     "distractors": [
-      "Danish",
-      "Dutch",
-      "Irish",
-      "Czech"
-     ]
-    }
-   },
-   "mc_roles": [
-    "concept_native",
-    "language"
-   ],
-   "probe_token_lens": {
-    "units": {
-     "concept_native": {
-      "en": [
-       1
-      ]
-     },
-     "language": {
-      "en": [
-       1
-      ],
-      "de": [
-       1,
-       2,
-       2,
-       2
-      ]
-     }
-    },
-    "target": 1
-   },
-   "id": "b3-ml-de-opposite-fast",
-   "native_units_src": "3e92df1afb90e21c47a67744063394807e2506f553a1208b3c75407dca8801c7",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "b3-ml-es-color-blood",
-   "prompt": "El color de la sangre es el",
-   "target": "rojo",
-   "intermediates": [
-    "red"
-   ],
-   "reference_concepts": [
-    "Spanish",
-    "blood"
-   ],
-   "source": "staging_b3",
-   "consistency": 1.0,
-   "gate_variant": "chat",
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "lang": "es",
-   "mc_type": "colour",
-   "prompt_concepts": [
-    "blood"
-   ],
-   "units": [
-    {
-     "role": "concept_native",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "red"
-      ]
-     },
-     "match": [
-      "red"
-     ]
-    },
-    {
-     "role": "language",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "Spanish"
-      ],
-      "es": [
-       "español",
-       "castellano",
-       "en español",
-       "lengua española",
-       "idioma español"
-      ]
-     },
-     "match": [
-      "Spanish",
-      "español",
-      "castellano",
-      "en español",
-      "lengua española",
-      "idioma español"
-     ]
-    }
-   ],
-   "mc": {
-    "concept_native": {
-     "gold": "red",
-     "distractors": [
-      "blue",
-      "green",
-      "black",
-      "purple"
-     ]
-    },
-    "language": {
-     "gold": "Spanish",
-     "distractors": [
-      "French",
-      "Portuguese",
-      "Italian",
-      "Irish"
-     ]
-    }
-   },
-   "mc_roles": [
-    "concept_native",
-    "language"
-   ],
-   "probe_token_lens": {
-    "units": {
-     "concept_native": {
-      "en": [
-       1
-      ]
-     },
-     "language": {
-      "en": [
-       1
-      ],
-      "es": [
-       1,
-       1,
-       2,
-       2,
-       2
-      ]
-     }
-    },
-    "target": 1
-   },
-   "id": "b3-ml-es-color-blood",
-   "native_units_src": "466d1b2365bf3a1a93944e025eb00fdca8c62bb861713ae124f508fc8f0b9d63",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "b3-ml-es-day-monday",
-   "prompt": "El día después del lunes es el",
-   "target": "martes",
-   "intermediates": [
-    "Tuesday"
-   ],
-   "reference_concepts": [
-    "Spanish",
-    "day",
-    "Monday"
-   ],
-   "source": "staging_b3",
-   "consistency": 1.0,
-   "gate_variant": "chat",
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "lang": "es",
-   "mc_type": "day",
-   "prompt_concepts": [
-    "Monday",
-    "day"
-   ],
-   "units": [
-    {
-     "role": "concept_native",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "Tuesday"
-      ]
-     },
-     "match": [
-      "Tuesday"
-     ]
-    },
-    {
-     "role": "language",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "Spanish"
-      ],
-      "es": [
-       "español",
-       "castellano",
-       "en español",
-       "lengua española",
-       "idioma español"
-      ]
-     },
-     "match": [
-      "Spanish",
-      "español",
-      "castellano",
-      "en español",
-      "lengua española",
-      "idioma español"
-     ]
-    }
-   ],
-   "mc": {
-    "concept_native": {
-     "gold": "Tuesday",
-     "distractors": [
-      "Sunday",
-      "Thursday",
-      "Friday",
-      "Saturday"
-     ]
-    },
-    "language": {
-     "gold": "Spanish",
-     "distractors": [
-      "French",
-      "Portuguese",
-      "Italian",
-      "Irish"
-     ]
-    }
-   },
-   "mc_roles": [
-    "concept_native",
-    "language"
-   ],
-   "probe_token_lens": {
-    "units": {
-     "concept_native": {
-      "en": [
-       1
-      ]
-     },
-     "language": {
-      "en": [
-       1
-      ],
-      "es": [
-       1,
-       1,
-       2,
-       2,
-       2
-      ]
-     }
-    },
-    "target": 1
-   },
-   "id": "b3-ml-es-day-monday",
-   "native_units_src": "6544aa000bdffafc59e2cd746a66007cef4dd99581bd07317b07f2369c4864f8",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "b3-ml-es-opposite-fast",
-   "prompt": "Lo contrario de \"rápido\" es \"",
-   "target": "lento",
-   "intermediates": [
-    "slow"
-   ],
-   "reference_concepts": [
-    "Spanish",
-    "opposite",
-    "fast"
-   ],
-   "source": "staging_b3",
-   "consistency": 1.0,
-   "gate_variant": "plain",
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "lang": "es",
-   "mc_type": "opposite",
-   "prompt_concepts": [
-    "fast",
-    "opposite",
-    "quick"
-   ],
-   "units": [
-    {
-     "role": "concept_native",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "slow"
-      ]
-     },
-     "match": [
-      "slow"
-     ]
-    },
-    {
-     "role": "language",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "Spanish"
-      ],
-      "es": [
-       "español",
-       "castellano",
-       "en español",
-       "lengua española",
-       "idioma español"
-      ]
-     },
-     "match": [
-      "Spanish",
-      "español",
-      "castellano",
-      "en español",
-      "lengua española",
-      "idioma español"
-     ]
-    }
-   ],
-   "mc": {
-    "concept_native": {
-     "gold": "slow",
-     "distractors": [
-      "last",
-      "small",
-      "right",
-      "cold"
-     ]
-    },
-    "language": {
-     "gold": "Spanish",
-     "distractors": [
-      "French",
-      "Portuguese",
-      "Italian",
-      "Irish"
-     ]
-    }
-   },
-   "mc_roles": [
-    "concept_native",
-    "language"
-   ],
-   "probe_token_lens": {
-    "units": {
-     "concept_native": {
-      "en": [
-       1
-      ]
-     },
-     "language": {
-      "en": [
-       1
-      ],
-      "es": [
-       1,
-       1,
-       2,
-       2,
-       2
-      ]
-     }
-    },
-    "target": 1
-   },
-   "id": "b3-ml-es-opposite-fast",
-   "native_units_src": "48f726202c2026b50a3b52e7cf3cb29960f52d12501ed5d35c6c9ecf83bb295b",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "b3-ml-es-opposite-hot",
-   "prompt": "Lo contrario de \"caliente\" es \"",
-   "target": "frío",
-   "intermediates": [
-    "cold"
-   ],
-   "reference_concepts": [
-    "Spanish",
-    "opposite",
-    "hot"
-   ],
-   "source": "staging_b3",
-   "consistency": 1.0,
-   "gate_variant": "plain",
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "lang": "es",
-   "mc_type": "opposite",
-   "prompt_concepts": [
-    "hot",
-    "opposite",
-    "warm"
-   ],
-   "units": [
-    {
-     "role": "concept_native",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "cold"
-      ]
-     },
-     "match": [
-      "cold"
-     ]
-    },
-    {
-     "role": "language",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "Spanish"
-      ],
-      "es": [
-       "español",
-       "castellano",
-       "en español",
-       "lengua española",
-       "idioma español"
-      ]
-     },
-     "match": [
-      "Spanish",
-      "español",
-      "castellano",
-      "en español",
-      "lengua española",
-      "idioma español"
-     ]
-    }
-   ],
-   "mc": {
-    "concept_native": {
-     "gold": "cold",
-     "distractors": [
-      "right",
-      "small",
-      "down",
-      "slow"
-     ]
-    },
-    "language": {
-     "gold": "Spanish",
-     "distractors": [
-      "French",
-      "Portuguese",
-      "Italian",
-      "Irish"
-     ]
-    }
-   },
-   "mc_roles": [
-    "concept_native",
-    "language"
-   ],
-   "probe_token_lens": {
-    "units": {
-     "concept_native": {
-      "en": [
-       1
-      ]
-     },
-     "language": {
-      "en": [
-       1
-      ],
-      "es": [
-       1,
-       1,
-       2,
-       2,
-       2
-      ]
-     }
-    },
-    "target": 1
-   },
-   "id": "b3-ml-es-opposite-hot",
-   "native_units_src": "56d6ac706725762ea42f6f03e021ffd40c787a957e8d5454617c3dcb8596cba1",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "b3-ml-fr-color-snow",
-   "prompt": "La couleur de la neige est le",
-   "target": "blanc",
-   "intermediates": [
-    "white"
-   ],
-   "reference_concepts": [
-    "French",
-    "color",
-    "snow"
-   ],
-   "source": "capital-swap-2026-11-05",
-   "consistency": 0.9,
-   "gate_variant": "chat",
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "lang": "fr",
-   "mc_type": "colour",
-   "prompt_concepts": [
-    "color",
-    "snow"
-   ],
-   "units": [
-    {
-     "role": "concept_native",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "white"
-      ]
-     },
-     "match": [
-      "white"
-     ]
-    },
-    {
-     "role": "language",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "French"
-      ],
-      "fr": [
-       "français",
-       "en français",
-       "langue française"
-      ]
-     },
-     "match": [
-      "French",
-      "français",
-      "en français",
-      "langue française"
-     ]
-    }
-   ],
-   "mc": {
-    "concept_native": {
-     "gold": "white",
-     "distractors": [
-      "red",
-      "blue",
-      "green",
-      "black"
-     ]
-    },
-    "language": {
-     "gold": "French",
-     "distractors": [
-      "Spanish",
-      "Portuguese",
-      "Italian",
-      "Polish"
-     ]
-    }
-   },
-   "mc_roles": [
-    "concept_native",
-    "language"
-   ],
-   "probe_token_lens": {
-    "units": {
-     "concept_native": {
-      "en": [
-       1
-      ]
-     },
-     "language": {
-      "en": [
-       1
-      ],
-      "fr": [
-       1,
-       2,
-       2
-      ]
-     }
-    },
-    "target": 1
-   },
-   "id": "b3-ml-fr-color-snow",
-   "native_units_src": "9e69a44adbd6dad9941e12122b43e87a3e399262dd4f70779c1537aa1feb9f15",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "b3-ml-fr-color-blood",
-   "prompt": "La couleur du sang est le",
-   "target": "rouge",
-   "intermediates": [
-    "red"
-   ],
-   "reference_concepts": [
-    "French",
-    "color",
-    "blood"
-   ],
-   "source": "staging_b3",
-   "consistency": 1.0,
-   "gate_variant": "chat",
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "lang": "fr",
-   "mc_type": "colour",
-   "prompt_concepts": [
-    "blood",
-    "color"
-   ],
-   "units": [
-    {
-     "role": "concept_native",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "red"
-      ]
-     },
-     "match": [
-      "red"
-     ]
-    },
-    {
-     "role": "language",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "French"
-      ],
-      "fr": [
-       "français",
-       "en français",
-       "langue française"
-      ]
-     },
-     "match": [
-      "French",
-      "français",
-      "en français",
-      "langue française"
-     ]
-    }
-   ],
-   "mc": {
-    "concept_native": {
-     "gold": "red",
-     "distractors": [
-      "blue",
-      "green",
-      "black",
-      "white"
-     ]
-    },
-    "language": {
-     "gold": "French",
-     "distractors": [
-      "Spanish",
-      "Portuguese",
-      "Italian",
-      "Polish"
-     ]
-    }
-   },
-   "mc_roles": [
-    "concept_native",
-    "language"
-   ],
-   "probe_token_lens": {
-    "units": {
-     "concept_native": {
-      "en": [
-       1
-      ]
-     },
-     "language": {
-      "en": [
-       1
-      ],
-      "fr": [
-       1,
-       2,
-       2
-      ]
-     }
-    },
-    "target": 1
-   },
-   "id": "b3-ml-fr-color-blood",
-   "native_units_src": "a57862dcfbe77a4d8ecf13821d7a00dc38ec1463caac650f00990034d73005ac",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "b3-ml-fr-month-march",
-   "prompt": "Le mois après mars est",
-   "target": "avril",
-   "intermediates": [
-    "April"
-   ],
-   "reference_concepts": [
-    "French",
-    "month",
-    "March"
-   ],
-   "source": "staging_b3",
-   "consistency": 1.0,
-   "gate_variant": "chat",
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "lang": "fr",
-   "mc_type": "month",
-   "prompt_concepts": [
-    "March",
-    "month"
-   ],
-   "units": [
-    {
-     "role": "concept_native",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "April"
-      ]
-     },
-     "match": [
-      "April"
-     ]
-    },
-    {
-     "role": "language",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "French"
-      ],
-      "fr": [
-       "français",
-       "en français",
-       "langue française"
-      ]
-     },
-     "match": [
-      "French",
-      "français",
-      "en français",
-      "langue française"
-     ]
-    }
-   ],
-   "mc": {
-    "concept_native": {
-     "gold": "April",
-     "distractors": [
-      "February",
-      "July",
-      "November",
-      "June"
-     ]
-    },
-    "language": {
-     "gold": "French",
-     "distractors": [
-      "Spanish",
-      "Portuguese",
-      "Italian",
-      "Polish"
-     ]
-    }
-   },
-   "mc_roles": [
-    "concept_native",
-    "language"
-   ],
-   "probe_token_lens": {
-    "units": {
-     "concept_native": {
-      "en": [
-       1
-      ]
-     },
-     "language": {
-      "en": [
-       1
-      ],
-      "fr": [
-       1,
-       2,
-       2
-      ]
-     }
-    },
-    "target": 1
-   },
-   "id": "b3-ml-fr-month-march",
-   "native_units_src": "7202e58d39c0c498f7b6f10f12da130f84bcbba9ad95321f41b8f7043551624a",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "b3-ml-fr-sum-five",
-   "prompt": "Deux plus trois font",
-   "target": "cinq",
-   "intermediates": [
-    "five"
-   ],
-   "reference_concepts": [
-    "French",
-    "sum",
-    "three"
-   ],
-   "source": "staging_b3",
-   "consistency": 1.0,
-   "gate_variant": "chat",
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "lang": "fr",
-   "mc_type": "number",
-   "prompt_concepts": [
-    "sum",
-    "three",
-    "two"
-   ],
-   "units": [
-    {
-     "role": "concept_native",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "five",
-       "5"
-      ]
-     },
-     "match": [
-      "five",
-      "5"
-     ],
-     "numeric_match": "standalone"
-    },
-    {
-     "role": "language",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "French"
-      ],
-      "fr": [
-       "français",
-       "en français",
-       "langue française"
-      ]
-     },
-     "match": [
-      "French",
-      "français",
-      "en français",
-      "langue française"
-     ]
-    }
-   ],
-   "mc": {
-    "concept_native": {
-     "gold": "five",
-     "distractors": [
-      "six",
-      "eight",
-      "four",
-      "ten"
-     ]
-    },
-    "language": {
-     "gold": "French",
-     "distractors": [
-      "Spanish",
-      "Portuguese",
-      "Italian",
-      "Polish"
-     ]
-    }
-   },
-   "mc_roles": [
-    "concept_native",
-    "language"
-   ],
-   "probe_token_lens": {
-    "units": {
-     "concept_native": {
-      "en": [
-       1,
-       1
-      ]
-     },
-     "language": {
-      "en": [
-       1
-      ],
-      "fr": [
-       1,
-       2,
-       2
-      ]
-     }
-    },
-    "target": 1
-   },
-   "id": "b3-ml-fr-sum-five",
-   "native_units_src": "92b03dc4d411a1d4d628e7e0828a205c5ad8e29a5f69a7a757e67b22ee88b3e6",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "b3-ml-it-color-grass",
-   "prompt": "Il colore dell'erba è il",
-   "target": "verde",
-   "intermediates": [
-    "green"
-   ],
-   "reference_concepts": [
-    "Italian",
-    "color",
-    "grass"
-   ],
-   "source": "staging_b3",
-   "consistency": 1.0,
-   "gate_variant": "chat",
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "lang": "it",
-   "mc_type": "colour",
-   "prompt_concepts": [
-    "color",
-    "grass"
-   ],
-   "units": [
-    {
-     "role": "concept_native",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "green"
-      ]
-     },
-     "match": [
-      "green"
-     ]
-    },
-    {
-     "role": "language",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "Italian"
-      ],
-      "it": [
-       "italiano",
-       "in italiano",
-       "lingua italiana"
-      ]
-     },
-     "match": [
-      "Italian",
-      "italiano",
-      "in italiano",
-      "lingua italiana"
-     ]
-    }
-   ],
-   "mc": {
-    "concept_native": {
-     "gold": "green",
-     "distractors": [
-      "blue",
-      "red",
-      "black",
-      "brown"
-     ]
-    },
-    "language": {
-     "gold": "Italian",
-     "distractors": [
-      "Spanish",
-      "French",
-      "Portuguese",
-      "Dutch"
-     ]
-    }
-   },
-   "mc_roles": [
-    "concept_native",
-    "language"
-   ],
-   "probe_token_lens": {
-    "units": {
-     "concept_native": {
-      "en": [
-       1
-      ]
-     },
-     "language": {
-      "en": [
-       1
-      ],
-      "it": [
-       1,
-       2,
-       2
-      ]
-     }
-    },
-    "target": 1
-   },
-   "id": "b3-ml-it-color-grass",
-   "native_units_src": "0a06f6f9207cde82f56b851c0adc9b0baf81a6abfd158ec956074ce46300dd11",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "b3-ml-it-opposite-big",
-   "prompt": "Il contrario di \"grande\" è \"",
-   "target": "piccolo",
-   "intermediates": [
-    "small"
-   ],
-   "reference_concepts": [
-    "Italian",
-    "opposite",
-    "big"
-   ],
-   "source": "staging_b3",
-   "consistency": 1.0,
-   "gate_variant": "plain",
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "lang": "it",
-   "mc_type": "opposite",
-   "prompt_concepts": [
-    "big",
-    "large",
-    "opposite",
-    "short",
-    "tall"
-   ],
-   "units": [
-    {
-     "role": "concept_native",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "small",
-       "little"
-      ]
-     },
-     "match": [
-      "small",
-      "little"
-     ]
-    },
-    {
-     "role": "language",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "Italian"
-      ],
-      "it": [
-       "italiano",
-       "in italiano",
-       "lingua italiana"
-      ]
-     },
-     "match": [
-      "Italian",
-      "italiano",
-      "in italiano",
-      "lingua italiana"
-     ]
-    }
-   ],
-   "mc": {
-    "concept_native": {
-     "gold": "small",
-     "distractors": [
-      "cold",
-      "far",
-      "down",
-      "last"
-     ]
-    },
-    "language": {
-     "gold": "Italian",
-     "distractors": [
-      "Spanish",
-      "French",
-      "Portuguese",
-      "Dutch"
-     ]
-    }
-   },
-   "mc_roles": [
-    "concept_native",
-    "language"
-   ],
-   "probe_token_lens": {
-    "units": {
-     "concept_native": {
-      "en": [
-       1,
-       1
-      ]
-     },
-     "language": {
-      "en": [
-       1
-      ],
-      "it": [
-       1,
-       2,
-       2
-      ]
-     }
-    },
-    "target": 1
-   },
-   "id": "b3-ml-it-opposite-big",
-   "native_units_src": "79f2aa9ba796dcc3708faa3a17e1a09d8f8d90bf5548ea1fc7af25b4737cb54b",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "b3-ml-it-opposite-hot",
-   "prompt": "Il contrario di \"caldo\" è \"",
-   "target": "freddo",
-   "intermediates": [
-    "cold"
-   ],
-   "reference_concepts": [
-    "Italian",
-    "opposite",
-    "hot"
-   ],
-   "source": "staging_b3",
-   "consistency": 1.0,
-   "gate_variant": "plain",
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "lang": "it",
-   "mc_type": "opposite",
-   "prompt_concepts": [
-    "hot",
-    "opposite",
-    "warm"
-   ],
-   "units": [
-    {
-     "role": "concept_native",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "cold"
-      ]
-     },
-     "match": [
-      "cold"
-     ]
-    },
-    {
-     "role": "language",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "Italian"
-      ],
-      "it": [
-       "italiano",
-       "in italiano",
-       "lingua italiana"
-      ]
-     },
-     "match": [
-      "Italian",
-      "italiano",
-      "in italiano",
-      "lingua italiana"
-     ]
-    }
-   ],
-   "mc": {
-    "concept_native": {
-     "gold": "cold",
-     "distractors": [
-      "far",
-      "right",
-      "closed",
-      "down"
-     ]
-    },
-    "language": {
-     "gold": "Italian",
-     "distractors": [
-      "Spanish",
-      "French",
-      "Portuguese",
-      "Dutch"
-     ]
-    }
-   },
-   "mc_roles": [
-    "concept_native",
-    "language"
-   ],
-   "probe_token_lens": {
-    "units": {
-     "concept_native": {
-      "en": [
-       1
-      ]
-     },
-     "language": {
-      "en": [
-       1
-      ],
-      "it": [
-       1,
-       2,
-       2
-      ]
-     }
-    },
-    "target": 1
-   },
-   "id": "b3-ml-it-opposite-hot",
-   "native_units_src": "82dbd982f0a9c86acba170c9606048ee93b724bc28655a8557e93b9061b675f4",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "b3-ml-pt-month-march",
-   "prompt": "O mês depois de março é",
-   "target": "abril",
-   "intermediates": [
-    "April"
-   ],
-   "reference_concepts": [
-    "Portuguese",
-    "month",
-    "March"
-   ],
-   "source": "staging_b3",
-   "consistency": 1.0,
-   "gate_variant": "chat",
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "lang": "pt",
-   "mc_type": "month",
-   "prompt_concepts": [
-    "March",
-    "month"
-   ],
-   "units": [
-    {
-     "role": "concept_native",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "April"
-      ]
-     },
-     "match": [
-      "April"
-     ]
-    },
-    {
-     "role": "language",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "Portuguese"
-      ],
-      "pt": [
-       "português",
-       "em português",
-       "língua portuguesa"
-      ]
-     },
-     "match": [
-      "Portuguese",
-      "português",
-      "em português",
-      "língua portuguesa"
-     ]
-    }
-   ],
-   "mc": {
-    "concept_native": {
-     "gold": "April",
-     "distractors": [
-      "May",
-      "February",
-      "June",
-      "July"
-     ]
-    },
-    "language": {
-     "gold": "Portuguese",
-     "distractors": [
-      "Spanish",
-      "Italian",
-      "French",
-      "Polish"
-     ]
-    }
-   },
-   "mc_roles": [
-    "concept_native",
-    "language"
-   ],
-   "probe_token_lens": {
-    "units": {
-     "concept_native": {
-      "en": [
-       1
-      ]
-     },
-     "language": {
-      "en": [
-       1
-      ],
-      "pt": [
-       1,
-       2,
-       2
-      ]
-     }
-    },
-    "target": 1
-   },
-   "id": "b3-ml-pt-month-march",
-   "native_units_src": "032d120b64ef3e854e8a8e6d41fadbdef10c8526eea758fe586fd0beeaf4c967",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "b3-ml-pt-opposite-hot",
-   "prompt": "O contrário de \"quente\" é \"",
-   "target": "frio",
-   "intermediates": [
-    "cold"
-   ],
-   "reference_concepts": [
-    "Portuguese",
-    "opposite",
-    "hot"
-   ],
-   "source": "staging_b3",
-   "consistency": 1.0,
-   "gate_variant": "plain",
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "lang": "pt",
-   "mc_type": "opposite",
-   "prompt_concepts": [
-    "hot",
-    "opposite",
-    "warm"
-   ],
-   "units": [
-    {
-     "role": "concept_native",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "cold"
-      ]
-     },
-     "match": [
-      "cold"
-     ]
-    },
-    {
-     "role": "language",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "Portuguese"
-      ],
-      "pt": [
-       "português",
-       "em português",
-       "língua portuguesa"
-      ]
-     },
-     "match": [
-      "Portuguese",
-      "português",
-      "em português",
-      "língua portuguesa"
-     ]
-    }
-   ],
-   "mc": {
-    "concept_native": {
-     "gold": "cold",
-     "distractors": [
-      "small",
-      "short",
-      "low",
-      "old"
-     ]
-    },
-    "language": {
-     "gold": "Portuguese",
-     "distractors": [
-      "Spanish",
-      "Italian",
-      "French",
-      "Polish"
-     ]
-    }
-   },
-   "mc_roles": [
-    "concept_native",
-    "language"
-   ],
-   "probe_token_lens": {
-    "units": {
-     "concept_native": {
-      "en": [
-       1
-      ]
-     },
-     "language": {
-      "en": [
-       1
-      ],
-      "pt": [
-       1,
-       2,
-       2
-      ]
-     }
-    },
-    "target": 1
-   },
-   "id": "b3-ml-pt-opposite-hot",
-   "native_units_src": "26d353a8dd595ae6b73b75387e508902620d873e4496df755f6c57b2ba00fa87",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "b3-ml-de-month-february",
-   "prompt": "Der Monat nach Februar ist",
-   "target": "März",
-   "intermediates": [
-    "March"
-   ],
-   "reference_concepts": [
-    "German",
-    "month",
-    "February"
-   ],
-   "source": "staging_b3",
-   "consistency": 0.9,
-   "gate_variant": "plain",
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "lang": "de",
-   "mc_type": "month",
-   "prompt_concepts": [
-    "February",
-    "month"
-   ],
-   "units": [
-    {
-     "role": "concept_native",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "March"
-      ]
-     },
-     "match": [
-      "March"
-     ],
-     "case_sensitive": [
-      "March"
-     ]
-    },
-    {
-     "role": "language",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "German"
-      ],
-      "de": [
-       "Deutsch",
-       "auf Deutsch",
-       "deutsche Sprache",
-       "deutschen Sprache"
-      ]
-     },
-     "match": [
-      "German",
-      "Deutsch",
-      "auf Deutsch",
-      "deutsche Sprache",
-      "deutschen Sprache"
-     ]
-    }
-   ],
-   "mc": {
-    "concept_native": {
-     "gold": "March",
-     "distractors": [
-      "June",
-      "July",
-      "May",
-      "April"
-     ]
-    },
-    "language": {
-     "gold": "German",
-     "distractors": [
-      "Danish",
-      "Dutch",
-      "Irish",
-      "Czech"
-     ]
-    }
-   },
-   "mc_roles": [
-    "concept_native",
-    "language"
-   ],
-   "probe_token_lens": {
-    "units": {
-     "concept_native": {
-      "en": [
-       1
-      ]
-     },
-     "language": {
-      "en": [
-       1
-      ],
-      "de": [
-       1,
-       2,
-       2,
-       2
-      ]
-     }
-    },
-    "target": 1
-   },
-   "id": "b3-ml-de-month-february",
-   "native_units_src": "6a99ef08dbb2ffa3e6cf112ff0a10db33863c000854f6ea0af37198648eb1889",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "de-order-first-last",
-   "prompt": "Das Gegenteil von \"erste\" ist \"",
-   "target": "letzte",
-   "intermediates": [
-    "last"
-   ],
-   "reference_concepts": [
-    "German",
-    "order",
-    "first"
-   ],
-   "source": "jlens_source",
-   "consistency": 0.9,
-   "gate_variant": "plain",
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "lang": "de",
-   "mc_type": "opposite",
-   "prompt_concepts": [
-    "first",
-    "order"
-   ],
-   "units": [
-    {
-     "role": "concept_native",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "last"
-      ]
-     },
-     "match": [
-      "last"
-     ]
-    },
-    {
-     "role": "language",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "German"
-      ],
-      "de": [
-       "Deutsch",
-       "auf Deutsch",
-       "deutsche Sprache",
-       "deutschen Sprache"
-      ]
-     },
-     "match": [
-      "German",
-      "Deutsch",
-      "auf Deutsch",
-      "deutsche Sprache",
-      "deutschen Sprache"
-     ]
-    }
-   ],
-   "mc": {
-    "concept_native": {
-     "gold": "last",
-     "distractors": [
-      "down",
-      "small",
-      "far",
-      "cold"
-     ]
-    },
-    "language": {
-     "gold": "German",
-     "distractors": [
-      "Danish",
-      "Dutch",
-      "Irish",
-      "Czech"
-     ]
-    }
-   },
-   "mc_roles": [
-    "concept_native",
-    "language"
-   ],
-   "probe_token_lens": {
-    "units": {
-     "concept_native": {
-      "en": [
-       1
-      ]
-     },
-     "language": {
-      "en": [
-       1
-      ],
-      "de": [
-       1,
-       2,
-       2,
-       2
-      ]
-     }
-    },
-    "target": 1
-   },
-   "id": "de-order-first-last",
-   "native_units_src": "c55a44ec1ce986ae96e85e2adbb024e2f424db720966ba1181891eed777bd87c",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 0.8,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "es-order-first-last",
-   "prompt": "Lo contrario de \"primero\" es \"",
-   "target": "último",
-   "intermediates": [
-    "last"
-   ],
-   "reference_concepts": [
-    "español",
-    "order",
-    "first"
-   ],
-   "source": "jlens_source",
-   "consistency": 0.9,
-   "gate_variant": "plain",
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "lang": "es",
-   "mc_type": "opposite",
-   "prompt_concepts": [
-    "first",
-    "order"
-   ],
-   "units": [
-    {
-     "role": "concept_native",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "last"
-      ]
-     },
-     "match": [
-      "last"
-     ]
-    },
-    {
-     "role": "language",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "Spanish"
-      ],
-      "es": [
-       "español",
-       "castellano",
-       "en español",
-       "lengua española",
-       "idioma español"
-      ]
-     },
-     "match": [
-      "Spanish",
-      "español",
-      "castellano",
-      "en español",
-      "lengua española",
-      "idioma español"
-     ]
-    }
-   ],
-   "mc": {
-    "concept_native": {
-     "gold": "last",
-     "distractors": [
-      "right",
-      "cold",
-      "small",
-      "new"
-     ]
-    },
-    "language": {
-     "gold": "Spanish",
-     "distractors": [
-      "French",
-      "Portuguese",
-      "Italian",
-      "Irish"
-     ]
-    }
-   },
-   "mc_roles": [
-    "concept_native",
-    "language"
-   ],
-   "probe_token_lens": {
-    "units": {
-     "concept_native": {
-      "en": [
-       1
-      ]
-     },
-     "language": {
-      "en": [
-       1
-      ],
-      "es": [
-       1,
-       1,
-       2,
-       2,
-       2
-      ]
-     }
-    },
-    "target": 1
-   },
-   "id": "es-order-first-last",
-   "native_units_src": "fb014b9216ee636f9f54a430fc9c098e4c3a1d8236e89f9b3a35fafa62db83db",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "es-place-up-down",
-   "prompt": "Lo contrario de \"arriba\" es \"",
-   "target": "abajo",
-   "intermediates": [
-    "down"
-   ],
-   "reference_concepts": [
-    "español",
-    "place",
-    "up"
-   ],
-   "source": "jlens_source",
-   "consistency": 0.9,
-   "gate_variant": "plain",
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "lang": "es",
-   "mc_type": "opposite",
-   "prompt_concepts": [
-    "above",
-    "high",
-    "place",
-    "top",
-    "up"
-   ],
-   "units": [
-    {
-     "role": "concept_native",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "down",
-       "below",
-       "low",
-       "bottom"
-      ]
-     },
-     "match": [
-      "down",
-      "below",
-      "low",
-      "bottom"
-     ]
-    },
-    {
-     "role": "language",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "Spanish"
-      ],
-      "es": [
-       "español",
-       "castellano",
-       "en español",
-       "lengua española",
-       "idioma español"
-      ]
-     },
-     "match": [
-      "Spanish",
-      "español",
-      "castellano",
-      "en español",
-      "lengua española",
-      "idioma español"
-     ]
-    }
-   ],
-   "mc": {
-    "concept_native": {
-     "gold": "down",
-     "distractors": [
-      "cold",
-      "short",
-      "slow",
-      "far"
-     ]
-    },
-    "language": {
-     "gold": "Spanish",
-     "distractors": [
-      "French",
-      "Portuguese",
-      "Italian",
-      "Irish"
-     ]
-    }
-   },
-   "mc_roles": [
-    "concept_native",
-    "language"
-   ],
-   "probe_token_lens": {
-    "units": {
-     "concept_native": {
-      "en": [
-       1,
-       1,
-       1,
-       1
-      ]
-     },
-     "language": {
-      "en": [
-       1
-      ],
-      "es": [
-       1,
-       1,
-       2,
-       2,
-       2
-      ]
-     }
-    },
-    "target": 1
-   },
-   "id": "es-place-up-down",
-   "native_units_src": "27a4e3208aa801360256eaa4522fec5f0f67d5bb8a734a6b93f427424067cafd",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "fr-month-after-jan",
-   "prompt": "Le mois après janvier est \"",
-   "target": "février",
-   "intermediates": [
-    "February"
-   ],
-   "reference_concepts": [
-    "French",
-    "month",
-    "January"
-   ],
-   "source": "jlens_source",
-   "consistency": 0.9,
-   "gate_variant": "plain",
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "lang": "fr",
-   "mc_type": "month",
-   "prompt_concepts": [
-    "January",
-    "month"
-   ],
-   "units": [
-    {
-     "role": "concept_native",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "February"
-      ]
-     },
-     "match": [
-      "February"
-     ]
-    },
-    {
-     "role": "language",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "French"
-      ],
-      "fr": [
-       "français",
-       "en français",
-       "langue française"
-      ]
-     },
-     "match": [
-      "French",
-      "français",
-      "en français",
-      "langue française"
-     ]
-    }
-   ],
-   "mc": {
-    "concept_native": {
-     "gold": "February",
-     "distractors": [
-      "March",
-      "May",
-      "April",
-      "June"
-     ]
-    },
-    "language": {
-     "gold": "French",
-     "distractors": [
-      "Spanish",
-      "Portuguese",
-      "Italian",
-      "Polish"
-     ]
-    }
-   },
-   "mc_roles": [
-    "concept_native",
-    "language"
-   ],
-   "probe_token_lens": {
-    "units": {
-     "concept_native": {
-      "en": [
-       1
-      ]
-     },
-     "language": {
-      "en": [
-       1
-      ],
-      "fr": [
-       1,
-       2,
-       2
-      ]
-     }
-    },
-    "target": 1
-   },
-   "id": "fr-month-after-jan",
-   "native_units_src": "b41f0b3deb0c19be972e4d553de4dc6fe41e7a246530ba55000d0cfc4c5e875a",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 0.9,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "fr-time-after-night",
-   "prompt": "Après la nuit vient le \"",
-   "target": "jour",
-   "intermediates": [
-    "day"
-   ],
-   "reference_concepts": [
-    "French",
-    "time",
-    "night"
-   ],
-   "source": "jlens_source",
-   "consistency": 0.9,
-   "gate_variant": "plain",
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "lang": "fr",
-   "mc_type": "time",
-   "prompt_concepts": [
-    "night",
-    "time"
-   ],
-   "units": [
-    {
-     "role": "concept_native",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "day",
-       "daytime"
-      ]
-     },
-     "match": [
-      "day",
-      "daytime"
-     ]
-    },
-    {
-     "role": "language",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "French"
-      ],
-      "fr": [
-       "français",
-       "en français",
-       "langue française"
-      ]
-     },
-     "match": [
-      "French",
-      "français",
-      "en français",
-      "langue française"
-     ]
-    }
-   ],
-   "mc": {
-    "concept_native": {
-     "gold": "day",
-     "distractors": [
-      "midnight",
-      "noon",
-      "evening",
-      "dusk"
-     ]
-    },
-    "language": {
-     "gold": "French",
-     "distractors": [
-      "Spanish",
-      "Portuguese",
-      "Italian",
-      "Polish"
-     ]
-    }
-   },
-   "mc_roles": [
-    "concept_native",
-    "language"
-   ],
-   "probe_token_lens": {
-    "units": {
-     "concept_native": {
-      "en": [
-       1,
-       1
-      ]
-     },
-     "language": {
-      "en": [
-       1
-      ],
-      "fr": [
-       1,
-       2,
-       2
-      ]
-     }
-    },
-    "target": 1
-   },
-   "id": "fr-time-after-night",
-   "native_units_src": "d4429c22f806a96b881aa68f4b755db7e51a33d8d8eca69538e2d4e4762ba1b0",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "fr-time-old-young",
-   "prompt": "Le contraire de \"vieux\" est \"",
-   "target": "jeune",
-   "intermediates": [
-    "young"
-   ],
-   "reference_concepts": [
-    "French",
-    "time",
-    "old"
-   ],
-   "source": "jlens_source",
-   "consistency": 0.9,
-   "gate_variant": "plain",
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "lang": "fr",
-   "mc_type": "opposite",
-   "prompt_concepts": [
-    "old",
-    "time"
-   ],
-   "units": [
-    {
-     "role": "concept_native",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "young"
-      ]
-     },
-     "match": [
-      "young"
-     ]
-    },
-    {
-     "role": "language",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "French"
-      ],
-      "fr": [
-       "français",
-       "en français",
-       "langue française"
-      ]
-     },
-     "match": [
-      "French",
-      "français",
-      "en français",
-      "langue française"
-     ]
-    }
-   ],
-   "mc": {
-    "concept_native": {
-     "gold": "young",
-     "distractors": [
-      "small",
-      "cold",
-      "closed",
-      "far"
-     ]
-    },
-    "language": {
-     "gold": "French",
-     "distractors": [
-      "Spanish",
-      "Portuguese",
-      "Italian",
-      "Polish"
-     ]
-    }
-   },
-   "mc_roles": [
-    "concept_native",
-    "language"
-   ],
-   "probe_token_lens": {
-    "units": {
-     "concept_native": {
-      "en": [
-       1
-      ]
-     },
-     "language": {
-      "en": [
-       1
-      ],
-      "fr": [
-       1,
-       2,
-       2
-      ]
-     }
-    },
-    "target": 1
-   },
-   "id": "fr-time-old-young",
-   "native_units_src": "7303534894051ffa751596df50c04c6cfb7e0d0843373d8fa88b8a4c917f9f7e",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "pt-place-up-down",
-   "prompt": "O contrário de \"cima\" é \"",
-   "target": "baixo",
-   "intermediates": [
-    "down"
-   ],
-   "reference_concepts": [
-    "português",
-    "place",
-    "up"
-   ],
-   "source": "jlens_source",
-   "consistency": 0.9,
-   "gate_variant": "plain",
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "lang": "pt",
-   "mc_type": "opposite",
-   "prompt_concepts": [
-    "above",
-    "high",
-    "place",
-    "top",
-    "up"
-   ],
-   "units": [
-    {
-     "role": "concept_native",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "down",
-       "below",
-       "low",
-       "bottom"
-      ]
-     },
-     "match": [
-      "down",
-      "below",
-      "low",
-      "bottom"
-     ]
-    },
-    {
-     "role": "language",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "Portuguese"
-      ],
-      "pt": [
-       "português",
-       "em português",
-       "língua portuguesa"
-      ]
-     },
-     "match": [
-      "Portuguese",
-      "português",
-      "em português",
-      "língua portuguesa"
-     ]
-    }
-   ],
-   "mc": {
-    "concept_native": {
-     "gold": "down",
-     "distractors": [
-      "last",
-      "small",
-      "young",
-      "new"
-     ]
-    },
-    "language": {
-     "gold": "Portuguese",
-     "distractors": [
-      "Spanish",
-      "Italian",
-      "French",
-      "Polish"
-     ]
-    }
-   },
-   "mc_roles": [
-    "concept_native",
-    "language"
-   ],
-   "probe_token_lens": {
-    "units": {
-     "concept_native": {
-      "en": [
-       1,
-       1,
-       1,
-       1
-      ]
-     },
-     "language": {
-      "en": [
-       1
-      ],
-      "pt": [
-       1,
-       2,
-       2
-      ]
-     }
-    },
-    "target": 1
-   },
-   "id": "pt-place-up-down",
-   "native_units_src": "eb29949c9293d9db59b65e8ae093deedcee320ac2acec0f55a3bbe184c6d0a8b",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 0.9,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "pt-size-big-small",
-   "prompt": "O contrário de \"grande\" é \"",
-   "target": "pequeno",
-   "intermediates": [
-    "small"
-   ],
-   "reference_concepts": [
-    "português",
-    "size",
-    "big"
-   ],
-   "source": "jlens_source",
-   "consistency": 0.9,
-   "gate_variant": "plain",
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "lang": "pt",
-   "mc_type": "opposite",
-   "prompt_concepts": [
-    "big",
-    "large",
-    "short",
-    "size",
-    "tall"
-   ],
-   "units": [
-    {
-     "role": "concept_native",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "small",
-       "little"
-      ]
-     },
-     "match": [
-      "small",
-      "little"
-     ]
-    },
-    {
-     "role": "language",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "Portuguese"
-      ],
-      "pt": [
-       "português",
-       "em português",
-       "língua portuguesa"
-      ]
-     },
-     "match": [
-      "Portuguese",
-      "português",
-      "em português",
-      "língua portuguesa"
-     ]
-    }
-   ],
-   "mc": {
-    "concept_native": {
-     "gold": "small",
-     "distractors": [
-      "old",
-      "cold",
-      "slow",
-      "last"
-     ]
-    },
-    "language": {
-     "gold": "Portuguese",
-     "distractors": [
-      "Spanish",
-      "Italian",
-      "French",
-      "Polish"
-     ]
-    }
-   },
-   "mc_roles": [
-    "concept_native",
-    "language"
-   ],
-   "probe_token_lens": {
-    "units": {
-     "concept_native": {
-      "en": [
-       1,
-       1
-      ]
-     },
-     "language": {
-      "en": [
-       1
-      ],
-      "pt": [
-       1,
-       2,
-       2
-      ]
-     }
-    },
-    "target": 1
-   },
-   "id": "pt-size-big-small",
-   "native_units_src": "fe099fc7b80d089e1ac4602db46bd1718f21d01ccff7ada985b29fa2ac43858a",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "pt-time-old-new",
-   "prompt": "O contrário de \"velho\" é \"",
-   "target": "novo",
-   "intermediates": [
-    "new"
-   ],
-   "reference_concepts": [
-    "português",
-    "time",
-    "old"
-   ],
-   "source": "jlens_source",
-   "consistency": 0.9,
-   "gate_variant": "chat",
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "lang": "pt",
-   "mc_type": "opposite",
-   "prompt_concepts": [
-    "old",
-    "time"
-   ],
-   "units": [
-    {
-     "role": "concept_native",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "new"
-      ]
-     },
-     "match": [
-      "new"
-     ]
-    },
-    {
-     "role": "language",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "Portuguese"
-      ],
-      "pt": [
-       "português",
-       "em português",
-       "língua portuguesa"
-      ]
-     },
-     "match": [
-      "Portuguese",
-      "português",
-      "em português",
-      "língua portuguesa"
-     ]
-    }
-   ],
-   "mc": {
-    "concept_native": {
-     "gold": "new",
-     "distractors": [
-      "right",
-      "down",
-      "small",
-      "cold"
-     ]
-    },
-    "language": {
-     "gold": "Portuguese",
-     "distractors": [
-      "Spanish",
-      "Italian",
-      "French",
-      "Polish"
-     ]
-    }
-   },
-   "mc_roles": [
-    "concept_native",
-    "language"
-   ],
-   "probe_token_lens": {
-    "units": {
-     "concept_native": {
-      "en": [
-       1
-      ]
-     },
-     "language": {
-      "en": [
-       1
-      ],
-      "pt": [
-       1,
-       2,
-       2
-      ]
-     }
-    },
-    "target": 1
-   },
-   "id": "pt-time-old-new",
-   "native_units_src": "456ce30bcc6fe7f72af8693f6f06b8a194a94c5977e2b5fa02f3ced38f92f9ef",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 0.8,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "dutch-opposite-big",
-   "prompt": "Het tegenovergestelde van groot is ",
-   "target": "klein",
-   "intermediates": [
-    "small"
-   ],
-   "reference_concepts": [
-    "Dutch",
-    "opposite",
-    "big"
-   ],
-   "source": "jlens_source",
-   "consistency": 0.9,
-   "gate_variant": "plain_stripped",
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "lang": "nl",
-   "mc_type": "opposite",
-   "prompt_concepts": [
-    "big",
-    "large",
-    "opposite",
-    "short",
-    "tall"
-   ],
-   "units": [
-    {
-     "role": "concept_native",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "small",
-       "little"
-      ]
-     },
-     "match": [
-      "small",
-      "little"
-     ]
-    },
-    {
-     "role": "language",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "Dutch"
-      ],
-      "nl": [
-       "Nederlands",
-       "in het Nederlands",
-       "Nederlandse taal"
-      ]
-     },
-     "match": [
-      "Dutch",
-      "Nederlands",
-      "in het Nederlands",
-      "Nederlandse taal"
-     ]
-    }
-   ],
-   "mc": {
-    "concept_native": {
-     "gold": "small",
-     "distractors": [
-      "right",
-      "closed",
-      "far",
-      "last"
-     ]
-    },
-    "language": {
-     "gold": "Dutch",
-     "distractors": [
-      "German",
-      "Danish",
-      "Irish",
-      "Polish"
-     ]
-    }
-   },
-   "mc_roles": [
-    "concept_native",
-    "language"
-   ],
-   "probe_token_lens": {
-    "units": {
-     "concept_native": {
-      "en": [
-       1,
-       1
-      ]
-     },
-     "language": {
-      "en": [
-       1
-      ],
-      "nl": [
-       1,
-       3,
-       2
-      ]
-     }
-    },
-    "target": 1
-   },
-   "id": "dutch-opposite-big",
-   "native_units_src": "49934ed7076cd0a3bb74c5a45f37d57f32786c32f58877174578b1d25d808694",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "german-number-five",
-   "prompt": "Nach \"fünf\" kommt \"",
-   "target": "sechs",
-   "intermediates": [
-    "six"
-   ],
-   "reference_concepts": [
-    "German",
-    "number",
-    "five"
-   ],
-   "source": "jlens_source",
-   "consistency": 0.9,
-   "gate_variant": "plain",
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "lang": "de",
-   "mc_type": "number",
-   "prompt_concepts": [
-    "five",
-    "number"
-   ],
-   "units": [
-    {
-     "role": "concept_native",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "six",
-       "6"
-      ]
-     },
-     "match": [
-      "six",
-      "6"
-     ],
-     "numeric_match": "standalone"
-    },
-    {
-     "role": "language",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "German"
-      ],
-      "de": [
-       "Deutsch",
-       "auf Deutsch",
-       "deutsche Sprache",
-       "deutschen Sprache"
-      ]
-     },
-     "match": [
-      "German",
-      "Deutsch",
-      "auf Deutsch",
-      "deutsche Sprache",
-      "deutschen Sprache"
-     ]
-    }
-   ],
-   "mc": {
-    "concept_native": {
-     "gold": "six",
-     "distractors": [
-      "eight",
-      "four",
-      "three",
-      "two"
-     ]
-    },
-    "language": {
-     "gold": "German",
-     "distractors": [
-      "Danish",
-      "Dutch",
-      "Irish",
-      "Czech"
-     ]
-    }
-   },
-   "mc_roles": [
-    "concept_native",
-    "language"
-   ],
-   "probe_token_lens": {
-    "units": {
-     "concept_native": {
-      "en": [
-       1,
-       1
-      ]
-     },
-     "language": {
-      "en": [
-       1
-      ],
-      "de": [
-       1,
-       2,
-       2,
-       2
-      ]
-     }
-    },
-    "target": 1
-   },
-   "id": "german-number-five",
-   "native_units_src": "f20b69b4db4e95b1d0cabe0c478071fef73a04ba0f589d9810225f966287d69b",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 0.9,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "japanese-day-monday",
-   "prompt": "月曜日の次の日は",
-   "target": "火曜日",
-   "intermediates": [
-    "Tuesday"
-   ],
-   "reference_concepts": [
-    "Japanese",
-    "day",
-    "Monday"
-   ],
-   "source": "jlens_source",
-   "consistency": 0.9,
-   "gate_variant": "chat",
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "lang": "ja",
-   "mc_type": "day",
-   "prompt_concepts": [
-    "Monday",
-    "day"
-   ],
-   "units": [
-    {
-     "role": "concept_native",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "Tuesday"
-      ]
-     },
-     "match": [
-      "Tuesday"
-     ]
-    },
-    {
-     "role": "language",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "Japanese"
-      ],
-      "ja": [
-       "日本語"
-      ]
-     },
-     "match": [
-      "Japanese",
-      "日本語"
-     ]
-    }
-   ],
-   "mc": {
-    "concept_native": {
-     "gold": "Tuesday",
-     "distractors": [
-      "Thursday",
-      "Sunday",
-      "Wednesday",
-      "Saturday"
-     ]
-    },
-    "language": {
-     "gold": "Japanese",
-     "distractors": [
-      "Korean",
-      "German",
-      "Arabic",
-      "Spanish"
-     ]
-    }
-   },
-   "mc_roles": [
-    "concept_native",
-    "language"
-   ],
-   "probe_token_lens": {
-    "units": {
-     "concept_native": {
-      "en": [
-       1
-      ]
-     },
-     "language": {
-      "en": [
-       1
-      ],
-      "ja": [
-       2
-      ]
-     }
-    },
-    "target": 2
-   },
-   "id": "japanese-day-monday",
-   "native_units_src": "a8b3d878838e958e11512ba0d72f5efaa114586e77361458b49d5dafabe92367",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "korean-opposite-hot",
-   "prompt": "뜨거운의 반대는 ",
-   "target": "차가운",
-   "intermediates": [
-    "cold"
-   ],
-   "reference_concepts": [
-    "Korean",
-    "opposite",
-    "hot"
-   ],
-   "source": "jlens_source",
-   "consistency": 0.9,
-   "gate_variant": "chat",
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "lang": "ko",
-   "mc_type": "opposite",
-   "prompt_concepts": [
-    "hot",
-    "opposite",
-    "warm"
-   ],
-   "units": [
-    {
-     "role": "concept_native",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "cold"
-      ]
-     },
-     "match": [
-      "cold"
-     ]
-    },
-    {
-     "role": "language",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "Korean"
-      ],
-      "ko": [
-       "한국어",
-       "한국말",
-       "우리말",
-       "한국어로"
-      ]
-     },
-     "match": [
-      "Korean",
-      "한국어",
-      "한국말",
-      "우리말",
-      "한국어로"
-     ]
-    }
-   ],
-   "mc": {
-    "concept_native": {
-     "gold": "cold",
-     "distractors": [
-      "small",
-      "short",
-      "right",
-      "down"
-     ]
-    },
-    "language": {
-     "gold": "Korean",
-     "distractors": [
-      "Japanese",
       "Ukrainian",
-      "Estonian",
-      "Italian"
+      "Bulgarian",
+      "Serbian",
+      "Belarusian"
      ]
     }
    },
    "mc_roles": [
-    "concept_native",
+    "concept",
     "language"
    ],
+   "subfamily": "fwd",
    "probe_token_lens": {
     "units": {
-     "concept_native": {
+     "concept": {
       "en": [
+       2,
        1
       ]
      },
@@ -6271,41 +747,18 @@
       "en": [
        1
       ],
-      "ko": [
+      "ru": [
+       1,
+       4,
        2,
+       4,
        2,
-       2,
-       2
+       3,
+       3
       ]
      }
-    },
-    "target": 2
-   },
-   "id": "korean-opposite-hot",
-   "native_units_src": "92686c7d9acfea0e5b7f88b6541f7587ab340c4137691a837e4048727ac4505e",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 0.8,
-     "pass": true
     }
-   }
-  },
-  {
-   "name": "spanish-phase-water",
-   "prompt": "Cuando el agua se congela se convierte en \"",
-   "target": "hielo",
-   "intermediates": [
-    "ice"
-   ],
-   "reference_concepts": [
-    "Spanish",
-    "freeze",
-    "water"
-   ],
-   "source": "jlens_source",
-   "consistency": 0.9,
-   "gate_variant": "plain",
+   },
    "eval_render": "plain",
    "readout": {
     "kind": "final_prompt_token",
@@ -6313,641 +766,58 @@
      -1
     ]
    },
-   "lang": "es",
-   "mc_type": "phase",
-   "prompt_concepts": [
-    "freeze",
-    "water"
-   ],
-   "units": [
-    {
-     "role": "concept_native",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "ice"
-      ]
-     },
-     "match": [
-      "ice"
-     ]
+   "source": "authored (claude-opus-5-5) for dory-4b: Use only Russian (ru), Vietnamese (vi) or Indonesian (id), the only languages this model passes, and common concrete nouns (household objects, animals, food).",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "Use only Russian (ru), Vietnamese (vi) or Indonesian (id), the only languages this model passes, and common concrete nouns (household objects, animals, food)."
     },
-    {
-     "role": "language",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "Spanish"
-      ],
-      "es": [
-       "español",
-       "castellano",
-       "en español",
-       "lengua española",
-       "idioma español"
-      ]
-     },
-     "match": [
-      "Spanish",
-      "español",
-      "castellano",
-      "en español",
-      "lengua española",
-      "idioma español"
-     ]
-    }
-   ],
-   "mc": {
-    "concept_native": {
-     "gold": "ice",
-     "distractors": [
-      "snow",
-      "rain",
-      "steam",
-      "fog"
-     ]
-    },
-    "language": {
-     "gold": "Spanish",
-     "distractors": [
-      "French",
-      "Portuguese",
-      "Italian",
-      "Irish"
-     ]
-    }
-   },
-   "mc_roles": [
-    "concept_native",
-    "language"
-   ],
-   "probe_token_lens": {
-    "units": {
-     "concept_native": {
-      "en": [
-       1
-      ]
-     },
-     "language": {
-      "en": [
-       1
-      ],
-      "es": [
-       1,
-       1,
-       2,
-       2,
-       2
-      ]
+    "author": "claude-opus-5-5",
+    "wave": 104,
+    "plan": "0075",
+    "steer": "- Last wave: 0/100 passed.\n- Rejected by lint before gating: 6x mc: the MC builder dropped this candidate (no options); 4x leak: ['tieng'] in prompt; 2x leak: ['dalam'] in prompt; 1x natural:concept 'squirrel' is not creditable. Avoid these.\n- Failed (gold -> what the model wrote): con trâu -> model said 'bò trâu' (2/10); xích lô -> model said 'xe hênh' (0/10); cái võng -> model said 'siom gac' (0/10); thuyền thúng -> model said 'bài rồng' (0/10); шапка-ушанка -> model said 'было очень удобно' (0/10); гречневая каша -> model said 'капуста' (0/10); сгущёнка -> model said 'хлебоболт' (0/10); бурый медведь -> model said 'ящель' (0/10); buah salak -> model said 'langkap' (0/10); ikan lele -> model said 'telur telur' (0/10); sepeda motor -> model said 'motorbike' (0/10); электрический чайник -> model said 'электрическим чайником' (3/10). Make items like these easier or pick latents the model knows without a close sibling.",
+    "mc_build": {
+     "onecue": {
+      "version": "onecue-v3",
+      "at": "2026-11-17T22:45:58+00:00",
+      "flagged": {}
      }
     },
-    "target": 1
-   },
-   "id": "spanish-phase-water",
-   "native_units_src": "59ed369b994871309fabb43c77c00340bc3e7a091aeab95c998e9f88111dbfb0",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 0.9,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "b3-ml-de-opposite-hot",
-   "prompt": "Das Gegenteil von \"heiß\" ist",
-   "target": "kalt",
-   "intermediates": [
-    "cold"
-   ],
-   "reference_concepts": [
-    "German",
-    "opposite",
-    "hot"
-   ],
-   "source": "staging_b3",
-   "consistency": 0.9,
-   "gate_variant": "chat",
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "lang": "de",
-   "mc_type": "opposite",
-   "prompt_concepts": [
-    "hot",
-    "opposite",
-    "warm"
-   ],
-   "units": [
-    {
-     "role": "concept_native",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "cold"
-      ]
-     },
-     "match": [
-      "cold"
-     ]
-    },
-    {
-     "role": "language",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "German"
-      ],
-      "de": [
-       "Deutsch",
-       "auf Deutsch",
-       "deutsche Sprache",
-       "deutschen Sprache"
-      ]
-     },
-     "match": [
-      "German",
-      "Deutsch",
-      "auf Deutsch",
-      "deutsche Sprache",
-      "deutschen Sprache"
-     ]
-    }
-   ],
-   "mc": {
-    "concept_native": {
-     "gold": "cold",
-     "distractors": [
-      "small",
-      "short",
-      "slow",
-      "dark"
-     ]
-    },
-    "language": {
-     "gold": "German",
-     "distractors": [
-      "Danish",
-      "Dutch",
-      "Irish",
-      "Czech"
-     ]
-    }
-   },
-   "mc_roles": [
-    "concept_native",
-    "language"
-   ],
-   "probe_token_lens": {
-    "units": {
-     "concept_native": {
-      "en": [
-       1
-      ]
-     },
-     "language": {
-      "en": [
-       1
-      ],
-      "de": [
-       1,
-       2,
-       2,
-       2
-      ]
-     }
-    },
-    "target": 1
-   },
-   "id": "b3-ml-de-opposite-hot",
-   "native_units_src": "ca684834c65060b20e522103be84a4a346924f45c5e9fe05d0e3a38c20901265",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 0.9,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "b3-ml-es-opposite-day",
-   "prompt": "Lo contrario del día es la",
-   "target": "noche",
-   "intermediates": [
-    "night"
-   ],
-   "reference_concepts": [
-    "Spanish",
-    "opposite",
-    "day"
-   ],
-   "source": "staging_b3",
-   "consistency": 0.9,
-   "gate_variant": "plain",
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "lang": "es",
-   "mc_type": "time",
-   "prompt_concepts": [
-    "day",
-    "opposite"
-   ],
-   "units": [
-    {
-     "role": "concept_native",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "night",
-       "nighttime"
-      ]
-     },
-     "match": [
-      "night",
-      "nighttime"
-     ]
-    },
-    {
-     "role": "language",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "Spanish"
-      ],
-      "es": [
-       "español",
-       "castellano",
-       "en español",
-       "lengua española",
-       "idioma español"
-      ]
-     },
-     "match": [
-      "Spanish",
-      "español",
-      "castellano",
-      "en español",
-      "lengua española",
-      "idioma español"
-     ]
-    }
-   ],
-   "mc": {
-    "concept_native": {
-     "gold": "night",
-     "distractors": [
-      "morning",
-      "evening",
-      "afternoon",
-      "dawn"
-     ]
-    },
-    "language": {
-     "gold": "Spanish",
-     "distractors": [
-      "French",
-      "Portuguese",
-      "Italian",
-      "Irish"
-     ]
-    }
-   },
-   "mc_roles": [
-    "concept_native",
-    "language"
-   ],
-   "probe_token_lens": {
-    "units": {
-     "concept_native": {
-      "en": [
-       1,
-       2
-      ]
-     },
-     "language": {
-      "en": [
-       1
-      ],
-      "es": [
-       1,
-       1,
-       2,
-       2,
-       2
-      ]
-     }
-    },
-    "target": 1
-   },
-   "id": "b3-ml-es-opposite-day",
-   "native_units_src": "e4d993f0cfd74576d8978dc7acf6bfc8630ca35ab946e64f4fcb1ccbdfb34609",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 0.8,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "b3-ml-fr-opposite-hot",
-   "prompt": "Le contraire de \"chaud\" est \"",
-   "target": "froid",
-   "intermediates": [
-    "cold"
-   ],
-   "reference_concepts": [
-    "French",
-    "opposite",
-    "hot"
-   ],
-   "source": "staging_b3",
-   "consistency": 0.9,
-   "gate_variant": "plain",
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "lang": "fr",
-   "mc_type": "opposite",
-   "prompt_concepts": [
-    "hot",
-    "opposite",
-    "warm"
-   ],
-   "units": [
-    {
-     "role": "concept_native",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "cold"
-      ]
-     },
-     "match": [
-      "cold"
-     ]
-    },
-    {
-     "role": "language",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "French"
-      ],
-      "fr": [
-       "français",
-       "en français",
-       "langue française"
-      ]
-     },
-     "match": [
-      "French",
-      "français",
-      "en français",
-      "langue française"
-     ]
-    }
-   ],
-   "mc": {
-    "concept_native": {
-     "gold": "cold",
-     "distractors": [
-      "small",
-      "dark",
-      "bad",
-      "slow"
-     ]
-    },
-    "language": {
-     "gold": "French",
-     "distractors": [
-      "Spanish",
-      "Portuguese",
-      "Italian",
-      "Polish"
-     ]
-    }
-   },
-   "mc_roles": [
-    "concept_native",
-    "language"
-   ],
-   "probe_token_lens": {
-    "units": {
-     "concept_native": {
-      "en": [
-       1
-      ]
-     },
-     "language": {
-      "en": [
-       1
-      ],
-      "fr": [
-       1,
-       2,
-       2
-      ]
-     }
-    },
-    "target": 1
-   },
-   "id": "b3-ml-fr-opposite-hot",
-   "native_units_src": "7cb87aa9954ca2e25f8b92be132685ab514428f01160cfa82647c6e77cee763e",
-   "adapt": {
-    "origin": "original",
     "gate": {
      "rate": 1.0,
      "pass": true
     }
-   }
+   },
+   "native_units_for": [
+    "en"
+   ]
   },
   {
-   "name": "fr-number-after-four",
-   "prompt": "Le nombre après quatre est \"",
-   "target": "cinq",
+   "name": "multilingual-au-t2-w108c2-mlh-id-hospital",
+   "lang": "id",
+   "prompt": "Gedung besar tempat orang yang terluka atau demam tinggi dirawat oleh dokter dan perawat, kadang menginap di sana beberapa malam, disebut",
+   "target": "rumah sakit",
+   "target_alts": [
+    "rumah sakitnya"
+   ],
    "intermediates": [
-    "five"
-   ],
-   "reference_concepts": [
-    "French",
-    "number",
-    "four"
-   ],
-   "source": "jlens_source",
-   "consistency": 0.8,
-   "gate_variant": "plain",
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "lang": "fr",
-   "mc_type": "number",
-   "prompt_concepts": [
-    "four",
-    "number"
+    "general hospital"
    ],
    "units": [
     {
-     "role": "concept_native",
+     "role": "concept",
      "required": true,
      "multi_token": false,
      "forms": {
       "en": [
-       "five",
-       "5"
+       "general hospital",
+       "hospital"
       ]
      },
      "match": [
-      "five",
-      "5"
-     ],
-     "numeric_match": "standalone"
-    },
-    {
-     "role": "language",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "French"
-      ],
-      "fr": [
-       "français",
-       "en français",
-       "langue française"
-      ]
-     },
-     "match": [
-      "French",
-      "français",
-      "en français",
-      "langue française"
-     ]
-    }
-   ],
-   "mc": {
-    "concept_native": {
-     "gold": "five",
-     "distractors": [
-      "three",
-      "six",
-      "ten",
-      "eight"
-     ]
-    },
-    "language": {
-     "gold": "French",
-     "distractors": [
-      "Spanish",
-      "Portuguese",
-      "Italian",
-      "Polish"
-     ]
-    }
-   },
-   "mc_roles": [
-    "concept_native",
-    "language"
-   ],
-   "probe_token_lens": {
-    "units": {
-     "concept_native": {
-      "en": [
-       1,
-       1
-      ]
-     },
-     "language": {
-      "en": [
-       1
-      ],
-      "fr": [
-       1,
-       2,
-       2
-      ]
-     }
-    },
-    "target": 1
-   },
-   "id": "fr-number-after-four",
-   "native_units_src": "b2ffdfd37d33ca3333607ae5a77006902ec9f380f99823fd4ef067de439660b3",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 0.8,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "pt-month-after-apr",
-   "prompt": "O mês depois de abril é \"",
-   "target": "maio",
-   "intermediates": [
-    "May"
-   ],
-   "reference_concepts": [
-    "português",
-    "month",
-    "April"
-   ],
-   "source": "jlens_source",
-   "consistency": 0.8,
-   "gate_variant": "plain",
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "lang": "pt",
-   "mc_type": "month",
-   "prompt_concepts": [
-    "April",
-    "month"
-   ],
-   "units": [
-    {
-     "role": "concept_native",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "May"
-      ]
-     },
-     "match": [
-      "May"
-     ],
-     "case_sensitive": [
-      "May"
+      "general hospital",
+      "hospital"
      ]
     },
     {
@@ -6956,50 +826,50 @@
      "multi_token": false,
      "forms": {
       "en": [
-       "Portuguese"
+       "Indonesian"
       ],
-      "pt": [
-       "português",
-       "em português",
-       "língua portuguesa"
+      "id": [
+       "bahasa Indonesia",
+       "dalam bahasa Indonesia"
       ]
      },
      "match": [
-      "Portuguese",
-      "português",
-      "em português",
-      "língua portuguesa"
+      "Indonesian",
+      "bahasa Indonesia",
+      "dalam bahasa Indonesia"
      ]
     }
    ],
    "mc": {
-    "concept_native": {
-     "gold": "May",
+    "concept": {
+     "gold": "general hospital",
      "distractors": [
-      "July",
-      "February",
-      "June",
-      "March"
+      "health clinic",
+      "pharmacy",
+      "nursing home",
+      "dental clinic"
      ]
     },
     "language": {
-     "gold": "Portuguese",
+     "gold": "Indonesian",
      "distractors": [
-      "Spanish",
-      "Italian",
-      "French",
-      "Polish"
+      "Malay",
+      "Tagalog",
+      "Javanese",
+      "Swahili"
      ]
     }
    },
    "mc_roles": [
-    "concept_native",
+    "concept",
     "language"
    ],
+   "subfamily": "fwd",
    "probe_token_lens": {
     "units": {
-     "concept_native": {
+     "concept": {
       "en": [
+       2,
        1
       ]
      },
@@ -7007,146 +877,46 @@
       "en": [
        1
       ],
-      "pt": [
-       1,
+      "id": [
        2,
-       2
+       3
       ]
      }
-    },
-    "target": 1
+    }
    },
-   "id": "pt-month-after-apr",
-   "native_units_src": "d22dbf46ed8dfa85a34a4a8a0f32c36e431dabd4f44f0b2fadaacb00d0c9254b",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "source": "authored (claude-opus-5-5) for dory-4b: Russian (ru), Vietnamese (vi) or Indonesian (id) only, and only everyday objects a child knows, described by their most obvious use.",
    "adapt": {
-    "origin": "original",
+    "origin": "authored",
+    "tier": "t2",
+    "knobs": {
+     "brief": "Russian (ru), Vietnamese (vi) or Indonesian (id) only, and only everyday objects a child knows, described by their most obvious use."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 108,
+    "plan": "0075",
+    "steer": "- Last wave: 0/60 passed.\n- Rejected by lint before gating: 15x mc: the MC builder dropped this candidate (no options); 2x leak: ['buku'] in prompt; 1x natural:concept 'napkin' is not creditable; 1x natural:concept 'swimsuit' is not creditable. Avoid these.\n- Failed (gold -> what the model wrote): яичница -> model said 'мак routti' (0/10); открывалка -> model said 'палечкой' (0/10); остановка -> model said 'бухмой' (0/10); mũ lưỡi trai -> model said 'mũ nón' (0/10); dây chun -> model said 'đệm' (0/10); kandang ayam -> model said 'Kampung' (0/10); tas belanja -> model said 'Kuliah' (0/10); часы с кукушкой -> model said 'маленькая птичка с белым хвостом, котора' (0/10); клей-карандаш -> model said 'инструмент для раскрытия пакетов' (0/10); kẹp tóc -> model said 'đá chà' (0/10); son môi -> model said 'móng râu' (0/10); kacamata renang -> model said 'sungglass' (0/10). Make items like these easier or pick latents the model knows without a close sibling.",
+    "mc_build": {
+     "onecue": {
+      "version": "onecue-v3",
+      "at": "2026-11-17T23:58:29+00:00",
+      "flagged": {}
+     }
+    },
     "gate": {
      "rate": 0.9,
      "pass": true
     }
-   }
-  },
-  {
-   "name": "pt-number-after-five",
-   "prompt": "O número depois de cinco é \"",
-   "target": "seis",
-   "intermediates": [
-    "six"
-   ],
-   "reference_concepts": [
-    "português",
-    "number",
-    "five"
-   ],
-   "source": "jlens_source",
-   "consistency": 0.8,
-   "gate_variant": "plain",
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
    },
-   "lang": "pt",
-   "mc_type": "number",
-   "prompt_concepts": [
-    "five",
-    "number"
-   ],
-   "units": [
-    {
-     "role": "concept_native",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "six",
-       "6"
-      ]
-     },
-     "match": [
-      "six",
-      "6"
-     ],
-     "numeric_match": "standalone"
-    },
-    {
-     "role": "language",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "Portuguese"
-      ],
-      "pt": [
-       "português",
-       "em português",
-       "língua portuguesa"
-      ]
-     },
-     "match": [
-      "Portuguese",
-      "português",
-      "em português",
-      "língua portuguesa"
-     ]
-    }
-   ],
-   "mc": {
-    "concept_native": {
-     "gold": "six",
-     "distractors": [
-      "two",
-      "three",
-      "four",
-      "ten"
-     ]
-    },
-    "language": {
-     "gold": "Portuguese",
-     "distractors": [
-      "Spanish",
-      "Italian",
-      "French",
-      "Polish"
-     ]
-    }
-   },
-   "mc_roles": [
-    "concept_native",
-    "language"
-   ],
-   "probe_token_lens": {
-    "units": {
-     "concept_native": {
-      "en": [
-       1,
-       1
-      ]
-     },
-     "language": {
-      "en": [
-       1
-      ],
-      "pt": [
-       1,
-       2,
-       2
-      ]
-     }
-    },
-    "target": 1
-   },
-   "id": "pt-number-after-five",
-   "native_units_src": "deb06cc757d8e176d83059dbbdd0d71b9680bbf3cf2cb7c61f355e10ca0060f2",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
+   "native_units_for": [
+    "en"
+   ]
   }
  ]
 }

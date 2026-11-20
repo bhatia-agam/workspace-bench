@@ -58,7 +58,7 @@ unit): `mc[role]` gold + 4 distractors + "cannot tell"; the language unit uses t
 `LANG_CONFUSABLES` table, so `lang` must be one of its 12 codes. Items without an `mc` block for
 a role fall back to 4 golds of other items, which needs at least 5 items per role.
 
-### The bank judge: association, basic_readout, multihop, multilingual, poetry, typo
+### The bank judge: association, basic_readout_st, multihop_st, multilingual_st, poetry, typo_st
 
 `src/wsbench/basic/`. One call per (item, layer) with every position's samples; pass = a target
 concept NAMED (exact word, inflection, established synonym/alias, faithful translation) with a
@@ -112,6 +112,6 @@ text (families.md).
 | relational `last read position ... is not the blank` | stimulus does not end with a token `'s` |
 | `ValueError: Sample larger than population` (role_bound, user_modeling, DM, MT MC) | option pool too small in a small bank |
 | `gold_label not in mc_options` | conjunctive/role_bound options edited by hand |
-| every multihop cell reads a space | `readout.offsets` wrong for a prompt ending in a space |
+| every multihop_st cell reads a space | `readout.offsets` wrong for a prompt ending in a space |
 | arithmetic null rate 0 | `null_set` names items not in this bank |
 | all-zero family | missing readouts or a broken key, not a finding; check `n_unjudged_cells` |

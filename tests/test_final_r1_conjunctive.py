@@ -3,8 +3,8 @@ rule and leaves an item with a failed quote re-judge undecided; the chance label
 There is no inverted-twin veto over draws, candidates or shards: a twin pick is one non-gold
 pick."""
 
-from wsbench.evals.conjunctive_association import judge as cj
-from wsbench.evals.conjunctive_association import score
+from wsbench.evals.association.conjunctive_association import judge as cj
+from wsbench.evals.association.conjunctive_association import score
 
 
 def _combine(picks, failed=()):

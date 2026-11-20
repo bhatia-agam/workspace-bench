@@ -1,10 +1,8 @@
 {
- "family": "multilingual",
- "gate": "Qwen3.6-27B behavioral: >=8/10 correct at temp 0.7 (greedy-verified first); association scored against association_aliases.json (phrase-aware, echo-guarded); poetry scored by committed rhyme",
- "eval_render_note": "EVAL RENDER: feed `prompt` verbatim as plain text, NO chat template (directed-modulation is the only chat-templated family). `gate_variant` records how the item was behaviorally verified and does NOT affect the eval read.",
- "version": 5,
+ "family": "multilingual-hard",
+ "parent_family": "multilingual-mt",
  "contract": {
-  "multi_token": false,
+  "multi_token": true,
   "include_target": false,
   "conjunctive_units": true,
   "native_langs": [
@@ -12,352 +10,488 @@
    "zh"
   ]
  },
+ "gate": "Qwen3.6-27B behavioral, chat-templated capability question (enable_thinking=False, answer stem): greedy-verified AND >=8/10 @ temp 0.7 (answer in the text's language). EVAL RENDER: plain prompt, final prompt token; conjunctive regex over concept (en/zh gloss) + language; the L2 target is never creditable (next token).",
+ "frozen": "2026-11-04",
+ "version": 5,
  "v2": "v2 (plan 0040, Camila 2026-10-30): the readout must NAME the passage's language and write the intermediate in English or the model's native language (contract.native_langs); every unit is required; the language unit holds language names only.",
  "built_by": "scripts/build_multilingual_v2.py (curation: scripts/multilingual_v2_curation.py)",
- "v1_bank": "evals/multilingual/items.json",
- "n_items": 99,
- "dropped": {
-  "b3-ml-es-capital-france": "the gloss Paris and the target París coincide after folding, so an English mention cannot be told from the L2 answer"
- },
+ "v1_bank": "evals/multilingual_mt/items.json",
+ "n_items": 100,
  "supersedes": "items_v4.json",
- "frozen": "2026-11-05",
- "r4_mc": {
-  "script": "scripts/build_r4_mc_banks.py",
-  "rule": "round 4 (Camila r2 MC leakage standard): only the MC distractor lists change. Concept lists: four of the other items' golds of the same mc_type, sampled without replacement weighted by gold frequency (never the gold or a prompt concept; filled from the v2 list). Language lists: the four other gold languages of this bank closest to the gold (shared family 4, script 2, region 1; ties seeded by family and gold). ",
-  "lang_rule": "wsbench.multitoken.options.r4_language_distractors (R4_LANG_INFO / R4_LANG_POOLS)",
-  "lists_changed": 198
+ "v3": "v3 (round 4, Camila r2 / ANSWERS_R2 §6): items_v2.json with ONE change: mlh-tr-bademcik's concept unit gains the forms 'tonsil' and 'tonsils' (the readout 'point clearly to the tonsils, \"bademcik\" in Turkish' missed the closed forms 'palatine tonsil' / 'tonsil gland' for three rounds). Every other item, unit, form and option is byte-identical to v2.",
+ "r4b_mc": {
+  "script": "scripts/build_r4b_mc_banks.py",
+  "rule": "round 4b (Camila r2 MC leakage standard, second pass): only the MC distractor lists change. Content lists: the four distractors scripts/r4b_mc_refine.py kept (r4b_distractors.json: Opus-revised in the gold's naming style, fitting the topic as stated, kept when neither the options-only nor the topic guesser solves the item in more than 1 of 5 draws). Language lists: the four other gold languages of this bank closest to the gold (options.r4_language_distractors). ",
+  "lists_changed": 200,
+  "n_over_gate": 24
  },
  "r5_mc": {
   "procedure": "mcleak-r5-2026-11-04",
   "script": "scripts/mc_options_r5.py (scripts/mc_leakage_r4.py's stages)",
   "rule": "2026-11-04 (leakage standard: every guesser <= uniform chance + 5 points). Only content distractor lists change. The leaking lists were re-chosen by mc_leakage_r4's stages: Opus 5.5 proposes 14 same-topic wrong answers per list (told the gold, its forms, the list's frozen topic label and the question), the topic-member check, rank (4 draws, 2 with the topic), selection of the 4 best-ranked members that pass the r4 lint (no form shared with the gold or another option, no word of the prompt) plus no form shared with another name of the item (its other units, the answer, a dropped bridge, a prompt concept), the same-answer check (multihop families), and the validity screen (Opus 5.5 sees the question or text, 5 draws, the gold must win every draw). The family met the standard after round 0, so no repair round was run",
   "blind_to_readouts": "options chosen and measured without opening any readout or judged file",
-  "selection": "a failing guesser picks the gold on >= 3 of 5 draws and the three together on >= 6 of 15 (the refreeze's per-item draws; failing guessers: described)",
+  "selection": "a failing guesser picks the gold on >= 3 of 5 draws and the three together on >= 6 of 15 (the refreeze's per-item draws; failing guessers: described, topic)",
   "rounds": {
    "0": [
-    "b3-ml-de-opposite-hot~concept_native",
-    "b3-ml-es-color-sky~concept_native",
-    "b3-ml-es-opposite-day~concept_native",
-    "b3-ml-fr-color-blood~concept_native",
-    "b3-ml-fr-opposite-hot~concept_native",
-    "b3-ml-it-capital-france~concept_native",
-    "b3-ml-it-day-monday~concept_native",
-    "b3-ml-pt-opposite-big~concept_native",
-    "b3-ml-pt-opposite-hot~concept_native",
-    "danish-color-ocean~concept_native",
-    "es-size-big-small~concept_native",
-    "estonian-opposite-open~concept_native",
-    "fr-month-after-jan~concept_native",
-    "irish-opposite-big~concept_native",
-    "pt-month-after-oct~concept_native",
-    "pt-month-before-aug~concept_native",
-    "serbian-opposite-day~concept_native",
-    "slovak-opposite-young~concept_native",
-    "spanish-phase-water~concept_native"
+    "mlh-ar-chamomile~concept",
+    "mlh-ar-hourglass~concept",
+    "mlh-ar-octopus~concept",
+    "mlh-ar-sandpaper~concept",
+    "mlh-ar-thyroid~concept",
+    "mlh-ar-vacuum-cleaner~concept",
+    "mlh-ar-wool~concept",
+    "mlh-el-xray~concept",
+    "mlh-he-dishwasher~concept",
+    "mlh-he-toothbrush~concept",
+    "mlh-hu-esokabat~concept",
+    "mlh-hu-porszivo~concept",
+    "mlh-id-hailstone~concept",
+    "mlh-id-sarung-tangan~concept",
+    "mlh-ko-vacuum-cleaner~concept",
+    "mlh-pl-biedronka~concept",
+    "mlh-pl-muchomor~concept",
+    "mlh-pl-odkurzacz~concept",
+    "mlh-pl-pila-lancuchowa~concept",
+    "mlh-ru-caterpillar~concept",
+    "mlh-ru-dandelion~concept",
+    "mlh-ru-meatgrinder~concept",
+    "mlh-ru-thimble~concept",
+    "mlh-sw-chandarua~concept",
+    "mlh-tr-dis-macunu~concept",
+    "mlh-vi-cactus~concept",
+    "mlh-vi-extinguisher~concept"
    ]
   },
   "changed": {
-   "es-size-big-small": {
-    "concept_native": {
+   "mlh-ar-hourglass": {
+    "concept": {
      "from": [
-      "young",
-      "cold",
-      "far",
-      "down"
+      "candle clock",
+      "water clock",
+      "sundial",
+      "pendulum clock"
      ],
      "to": [
-      "cold",
-      "bad",
-      "dark",
-      "slow"
+      "astrolabe",
+      "sundial",
+      "water clock",
+      "armillary sphere"
      ]
     }
    },
-   "pt-month-before-aug": {
-    "concept_native": {
+   "mlh-ar-octopus": {
+    "concept": {
      "from": [
-      "June",
-      "February",
-      "April",
-      "October"
+      "jellyfish",
+      "chambered nautilus",
+      "cuttlefish",
+      "squid"
      ],
      "to": [
-      "March",
-      "April",
-      "May",
-      "September"
+      "jellyfish",
+      "dolphin",
+      "shark",
+      "whale"
      ]
     }
    },
-   "serbian-opposite-day": {
-    "concept_native": {
+   "mlh-ar-sandpaper": {
+    "concept": {
      "from": [
-      "dusk",
-      "noon",
-      "midnight",
-      "morning"
+      "wood chisel",
+      "steel wool",
+      "masking tape",
+      "wood filler"
      ],
      "to": [
-      "morning",
-      "evening",
-      "afternoon",
-      "noon"
+      "wood chisel",
+      "wood glue",
+      "handsaw",
+      "hammer"
      ]
     }
    },
-   "b3-ml-es-color-sky": {
-    "concept_native": {
+   "mlh-ar-vacuum-cleaner": {
+    "concept": {
      "from": [
-      "red",
-      "green",
-      "black",
-      "brown"
+      "sewing machine",
+      "electric fan",
+      "washing machine",
+      "dishwasher"
      ],
      "to": [
-      "red",
-      "green",
-      "black",
-      "white"
+      "refrigerator",
+      "washing machine",
+      "microwave oven",
+      "air conditioner"
      ]
     }
    },
-   "b3-ml-fr-color-blood": {
-    "concept_native": {
+   "mlh-ar-wool": {
+    "concept": {
      "from": [
-      "blue",
-      "green",
-      "black",
-      "brown"
+      "goat cashmere",
+      "alpaca fleece",
+      "camel hair",
+      "rabbit angora"
      ],
      "to": [
-      "blue",
-      "green",
-      "black",
-      "white"
+      "cotton",
+      "silk",
+      "linen",
+      "goat cashmere"
      ]
     }
    },
-   "b3-ml-it-capital-france": {
-    "concept_native": {
+   "mlh-ar-thyroid": {
+    "concept": {
      "from": [
-      "Tokyo",
-      "Vienna",
-      "London",
-      "Lisbon"
+      "thymus",
+      "pineal gland",
+      "adrenal gland",
+      "pituitary gland"
      ],
      "to": [
-      "London",
-      "Rome",
-      "Berlin",
-      "Madrid"
+      "pancreas",
+      "liver",
+      "pituitary gland",
+      "adrenal gland"
      ]
     }
    },
-   "b3-ml-it-day-monday": {
-    "concept_native": {
+   "mlh-ar-chamomile": {
+    "concept": {
      "from": [
-      "Friday",
-      "Sunday",
-      "Wednesday",
-      "Saturday"
+      "rosemary",
+      "yarrow",
+      "echinacea",
+      "lemon balm"
      ],
      "to": [
-      "Friday",
-      "Sunday",
-      "Thursday",
-      "Wednesday"
+      "lavender",
+      "mint",
+      "rosemary",
+      "thyme"
      ]
     }
    },
-   "b3-ml-pt-opposite-big": {
-    "concept_native": {
+   "mlh-el-xray": {
+    "concept": {
      "from": [
-      "cold",
-      "far",
-      "old",
-      "young"
+      "CT scan image",
+      "MRI image",
+      "PET scan image",
+      "Mammogram image"
      ],
      "to": [
-      "cold",
-      "old",
-      "slow",
-      "weak"
+      "ultrasound scan",
+      "blood test",
+      "electrocardiogram",
+      "biopsy"
      ]
     }
    },
-   "b3-ml-pt-opposite-hot": {
-    "concept_native": {
+   "mlh-he-dishwasher": {
+    "concept": {
      "from": [
-      "small",
-      "right",
-      "last",
-      "down"
+      "electric kettle",
+      "trash compactor",
+      "microwave oven",
+      "vacuum cleaner"
      ],
      "to": [
-      "small",
-      "short",
-      "low",
-      "old"
+      "refrigerator",
+      "microwave oven",
+      "vacuum cleaner",
+      "stove"
      ]
     }
    },
-   "fr-month-after-jan": {
-    "concept_native": {
+   "mlh-he-toothbrush": {
+    "concept": {
      "from": [
-      "November",
-      "July",
-      "March",
-      "May"
+      "toothpaste",
+      "soap",
+      "towel",
+      "shampoo"
      ],
      "to": [
-      "March",
-      "May",
-      "April",
-      "June"
+      "mirror",
+      "scissors",
+      "soap",
+      "comb"
      ]
     }
    },
-   "pt-month-after-oct": {
-    "concept_native": {
+   "mlh-hu-esokabat": {
+    "concept": {
      "from": [
-      "February",
-      "July",
-      "June",
-      "May"
+      "blazer",
+      "parka",
+      "sweater",
+      "overcoat"
      ],
      "to": [
-      "January",
-      "April",
-      "March",
-      "May"
+      "coat",
+      "sweater",
+      "dress",
+      "shirt"
      ]
     }
    },
-   "danish-color-ocean": {
-    "concept_native": {
+   "mlh-hu-porszivo": {
+    "concept": {
      "from": [
-      "red",
-      "green",
-      "black",
-      "orange"
+      "refrigerator",
+      "clothes dryer",
+      "electric kettle",
+      "toaster"
      ],
      "to": [
-      "red",
-      "green",
-      "black",
-      "white"
+      "refrigerator",
+      "washing machine",
+      "microwave oven",
+      "dishwasher"
      ]
     }
    },
-   "estonian-opposite-open": {
-    "concept_native": {
+   "mlh-id-hailstone": {
+    "concept": {
      "from": [
-      "cold",
-      "small",
-      "down",
-      "last"
+      "sleet",
+      "graupel",
+      "raindrop",
+      "snowflake"
      ],
      "to": [
-      "small",
-      "cold",
-      "old",
-      "dark"
+      "lightning",
+      "rainbow",
+      "tornado",
+      "thunder"
      ]
     }
    },
-   "irish-opposite-big": {
-    "concept_native": {
+   "mlh-id-sarung-tangan": {
+    "concept": {
      "from": [
-      "cold",
-      "far",
-      "right",
-      "down"
+      "ear muffs",
+      "safety goggles",
+      "rubber boots",
+      "woolen scarf"
      ],
      "to": [
-      "cold",
-      "low",
-      "slow",
-      "bad"
+      "woolen scarf",
+      "knitted beanie",
+      "winter coat",
+      "sunglasses"
      ]
     }
    },
-   "slovak-opposite-young": {
-    "concept_native": {
+   "mlh-ko-vacuum-cleaner": {
+    "concept": {
      "from": [
-      "right",
-      "far",
-      "last",
-      "cold"
+      "washing machine",
+      "hair dryer",
+      "dishwasher",
+      "microwave oven"
      ],
      "to": [
-      "small",
-      "bad",
-      "cold",
-      "short"
+      "refrigerator",
+      "washing machine",
+      "microwave oven",
+      "air conditioner"
      ]
     }
    },
-   "spanish-phase-water": {
-    "concept_native": {
+   "mlh-pl-biedronka": {
+    "concept": {
      "from": [
-      "steam",
-      "rain",
-      "dew",
-      "mud"
+      "click beetle",
+      "soldier beetle",
+      "stag beetle",
+      "dung beetle"
      ],
      "to": [
-      "snow",
-      "rain",
-      "steam",
-      "fog"
+      "firefly",
+      "ant",
+      "honeybee",
+      "dung beetle"
      ]
     }
    },
-   "b3-ml-de-opposite-hot": {
-    "concept_native": {
+   "mlh-pl-muchomor": {
+    "concept": {
      "from": [
-      "far",
-      "old",
-      "slow",
-      "right"
+      "death cap",
+      "shaggy ink cap",
+      "destroying angel",
+      "panther cap"
      ],
      "to": [
-      "small",
-      "short",
-      "slow",
-      "dark"
+      "death cap",
+      "chanterelle",
+      "porcini",
+      "black truffle"
      ]
     }
    },
-   "b3-ml-es-opposite-day": {
-    "concept_native": {
+   "mlh-pl-odkurzacz": {
+    "concept": {
      "from": [
-      "noon",
-      "morning",
-      "dusk",
-      "dawn"
+      "washing machine",
+      "dishwasher",
+      "floor polisher",
+      "steam mop"
      ],
      "to": [
-      "morning",
-      "evening",
-      "afternoon",
-      "dawn"
+      "refrigerator",
+      "washing machine",
+      "microwave oven",
+      "dishwasher"
      ]
     }
    },
-   "b3-ml-fr-opposite-hot": {
-    "concept_native": {
+   "mlh-pl-pila-lancuchowa": {
+    "concept": {
      "from": [
-      "last",
-      "closed",
-      "down",
-      "far"
+      "jackhammer",
+      "circular saw",
+      "angle grinder",
+      "hedge trimmer"
      ],
      "to": [
-      "small",
-      "dark",
-      "bad",
-      "slow"
+      "hammer",
+      "power drill",
+      "axe",
+      "screwdriver"
+     ]
+    }
+   },
+   "mlh-ru-caterpillar": {
+    "concept": {
+     "from": [
+      "maggot",
+      "tadpole",
+      "chrysalis",
+      "earthworm"
+     ],
+     "to": [
+      "silkworm",
+      "earthworm",
+      "chrysalis",
+      "spider"
+     ]
+    }
+   },
+   "mlh-ru-dandelion": {
+    "concept": {
+     "from": [
+      "daisy",
+      "clover",
+      "poppy",
+      "cornflower"
+     ],
+     "to": [
+      "daisy",
+      "poppy",
+      "chamomile",
+      "cornflower"
+     ]
+    }
+   },
+   "mlh-ru-meatgrinder": {
+    "concept": {
+     "from": [
+      "pressure cooker",
+      "coffee grinder",
+      "food processor",
+      "pasta maker"
+     ],
+     "to": [
+      "blender",
+      "microwave oven",
+      "pressure cooker",
+      "toaster"
+     ]
+    }
+   },
+   "mlh-ru-thimble": {
+    "concept": {
+     "from": [
+      "knitting needle",
+      "crochet hook",
+      "embroidery hoop",
+      "pinking shears"
+     ],
+     "to": [
+      "sewing needle",
+      "seam ripper",
+      "embroidery hoop",
+      "crochet hook"
+     ]
+    }
+   },
+   "mlh-sw-chandarua": {
+    "concept": {
+     "from": [
+      "space heater",
+      "sleep mask",
+      "blanket",
+      "ceiling fan"
+     ],
+     "to": [
+      "blanket",
+      "pillow",
+      "ceiling fan",
+      "fly swatter"
+     ]
+    }
+   },
+   "mlh-tr-dis-macunu": {
+    "concept": {
+     "from": [
+      "shaving cream",
+      "deodorant",
+      "mouthwash",
+      "shampoo"
+     ],
+     "to": [
+      "shampoo",
+      "soap",
+      "deodorant",
+      "sunscreen"
+     ]
+    }
+   },
+   "mlh-vi-cactus": {
+    "concept": {
+     "from": [
+      "orchid",
+      "sunflower",
+      "grass",
+      "rose"
+     ],
+     "to": [
+      "bamboo",
+      "sunflower",
+      "rose",
+      "oak tree"
+     ]
+    }
+   },
+   "mlh-vi-extinguisher": {
+    "concept": {
+     "from": [
+      "smoke detector",
+      "first aid kit",
+      "fire blanket",
+      "fire hydrant"
+     ],
+     "to": [
+      "smoke detector",
+      "first aid kit",
+      "flashlight",
+      "thermos"
      ]
     }
    }
@@ -366,1366 +500,23 @@
   "floors": {
    "chance": 0.2,
    "before": {
-    "blind": 0.1879,
-    "described": 0.2808,
-    "topic": 0.2121
+    "blind": 0.166,
+    "described": 0.256,
+    "topic": 0.284
    },
    "round0": {
-    "blind": 0.1677,
-    "described": 0.2141,
-    "topic": 0.202
+    "blind": 0.11,
+    "described": 0.174,
+    "topic": 0.234
    },
    "measure": "lucky_guessing (blind / described / topic, Opus 5.5, 5 draws, the described and topic guessers' examples drawn bank-wide; content lists only)"
   },
   "standard_met": true
  },
- "capital_swap": {
-  "date": "2026-11-05",
-  "why": "2026-11-04: drop the country<->capital questions and replace each with a new gated item of the same kind, so the bank keeps its size (the audit had already removed multihop's capital items)",
-  "replaced": {
-   "b3-ml-de-capital-austria": "b3-ml-de-family-nephew",
-   "b3-ml-fr-capital-england": "b3-ml-fr-color-snow",
-   "b3-ml-it-capital-france": "b3-ml-it-family-aunt",
-   "b3-ml-pt-capital-japan": "b3-ml-pt-color-grass"
-  },
-  "rule": "same language, source style (staging_b3: a short plain prompt, no quote), render, read plan and units as the item it replaces; never a capital (asked, as the answer or as a clue), a country's language, an opposite, a currency, or an answer that contains a word of the prompt; the L2 answer is no cognate of its English gloss",
-  "authored_by": "Claude Opus 5.5 (2026-11-05), written by hand to the family's template and rules",
-  "gate": "Qwen3.6-27B @ 6a9e13bd, thinking off, vLLM 0.31 on Modal: the chat leg (the capable question: 'Continue this text...' + the prompt, prefill 'My one-word answer is:'; the b3 items' gate_variant) greedy-correct AND >= 8/10 at T 0.7 (first word = the L2 target), plus the plain leg (the raw prompt continued, the eval render), recorded; 16 candidates gated over 2 rounds; kept: one per language, passing both legs where a candidate did",
-  "gate_legs": {
-   "b3-ml-de-family-nephew": {
-    "chat": "10/10 greedy 'Neffe'",
-    "plain": "2/10 greedy 'A. Cousin\\nB.'"
-   },
-   "b3-ml-fr-color-snow": {
-    "chat": "9/10 greedy 'blanc'",
-    "plain": "0/10 greedy 'résultat de la réflexion de la lumière p'"
-   },
-   "b3-ml-it-family-aunt": {
-    "chat": "8/10 greedy 'zia'",
-    "plain": "4/10 greedy 'zia.\\nLa sorella di'"
-   },
-   "b3-ml-pt-color-grass": {
-    "chat": "10/10 greedy 'verde'",
-    "plain": "6/10 greedy 'verde.\\nA cor do céu é'"
-   }
-  },
-  "options": "concept lists: scripts/mc_options_r5.py's round-0 stages (scripts/mc_leakage_r4.py's) on the 4 new lists only, blind to every readout, from a drafting list of the same type's words; language lists: the bank's fixed list for the item's language (round 4's rule). Measured on the whole v5 bank (blind / described / topic): the family meets the standard; b3-ml-fr-color-snow's gold (white) was still picked 5 / 5 by the described and topic guessers, and r5's round 1 (proposer feedback, rank, search over 4 candidate lists) found no list they pick it less from, so its round-0 list stays (recorded as a caveat)"
- },
  "adapt": {
   "model": "qwen3.5-0.8b",
   "hf_id": "Qwen/Qwen3.5-0.8B",
-  "frozen": "2026-11-05"
+  "frozen": "2026-11-08"
  },
- "items": [
-  {
-   "name": "de-size-big-small",
-   "prompt": "Das Gegenteil von \"groß\" ist \"",
-   "target": "klein",
-   "intermediates": [
-    "small"
-   ],
-   "reference_concepts": [
-    "German",
-    "size",
-    "big"
-   ],
-   "source": "jlens_source",
-   "consistency": 1.0,
-   "gate_variant": "plain",
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "lang": "de",
-   "mc_type": "opposite",
-   "prompt_concepts": [
-    "big",
-    "large",
-    "short",
-    "size",
-    "tall"
-   ],
-   "units": [
-    {
-     "role": "concept_native",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "small",
-       "little"
-      ],
-      "zh": [
-       "小"
-      ]
-     },
-     "match": [
-      "small",
-      "little",
-      "小"
-     ]
-    },
-    {
-     "role": "language",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "German"
-      ],
-      "zh": [
-       "德语",
-       "德文"
-      ],
-      "de": [
-       "Deutsch",
-       "auf Deutsch",
-       "deutsche Sprache",
-       "deutschen Sprache"
-      ]
-     },
-     "match": [
-      "German",
-      "德语",
-      "德文",
-      "Deutsch",
-      "auf Deutsch",
-      "deutsche Sprache",
-      "deutschen Sprache"
-     ]
-    }
-   ],
-   "mc": {
-    "concept_native": {
-     "gold": "small",
-     "distractors": [
-      "cold",
-      "down",
-      "old",
-      "last"
-     ]
-    },
-    "language": {
-     "gold": "German",
-     "distractors": [
-      "Danish",
-      "Dutch",
-      "Irish",
-      "Czech"
-     ]
-    }
-   },
-   "mc_roles": [
-    "concept_native",
-    "language"
-   ],
-   "probe_token_lens": {
-    "units": {
-     "concept_native": {
-      "en": [
-       1,
-       1
-      ],
-      "zh": [
-       1
-      ]
-     },
-     "language": {
-      "en": [
-       1
-      ],
-      "zh": [
-       1,
-       2
-      ],
-      "de": [
-       1,
-       2,
-       2,
-       2
-      ]
-     }
-    },
-    "target": 1
-   },
-   "id": "de-size-big-small",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "fr-place-up-down",
-   "prompt": "Le contraire de \"haut\" est \"",
-   "target": "bas",
-   "intermediates": [
-    "down"
-   ],
-   "reference_concepts": [
-    "French",
-    "place",
-    "up"
-   ],
-   "source": "jlens_source",
-   "consistency": 1.0,
-   "gate_variant": "plain",
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "lang": "fr",
-   "mc_type": "opposite",
-   "prompt_concepts": [
-    "above",
-    "high",
-    "place",
-    "top",
-    "up"
-   ],
-   "units": [
-    {
-     "role": "concept_native",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "down",
-       "below",
-       "low",
-       "bottom"
-      ],
-      "zh": [
-       "下",
-       "下面",
-       "下方"
-      ]
-     },
-     "match": [
-      "down",
-      "below",
-      "low",
-      "bottom",
-      "下",
-      "下面",
-      "下方"
-     ]
-    },
-    {
-     "role": "language",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "French"
-      ],
-      "zh": [
-       "法语",
-       "法文"
-      ],
-      "fr": [
-       "français",
-       "en français",
-       "langue française"
-      ]
-     },
-     "match": [
-      "French",
-      "法语",
-      "法文",
-      "français",
-      "en français",
-      "langue française"
-     ]
-    }
-   ],
-   "mc": {
-    "concept_native": {
-     "gold": "down",
-     "distractors": [
-      "small",
-      "young",
-      "new",
-      "slow"
-     ]
-    },
-    "language": {
-     "gold": "French",
-     "distractors": [
-      "Spanish",
-      "Portuguese",
-      "Italian",
-      "Polish"
-     ]
-    }
-   },
-   "mc_roles": [
-    "concept_native",
-    "language"
-   ],
-   "probe_token_lens": {
-    "units": {
-     "concept_native": {
-      "en": [
-       1,
-       1,
-       1,
-       1
-      ],
-      "zh": [
-       1,
-       1,
-       1
-      ]
-     },
-     "language": {
-      "en": [
-       1
-      ],
-      "zh": [
-       1,
-       2
-      ],
-      "fr": [
-       1,
-       2,
-       2
-      ]
-     }
-    },
-    "target": 1
-   },
-   "id": "fr-place-up-down",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 0.9,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "fr-size-big-small",
-   "prompt": "Le contraire de \"grand\" est \"",
-   "target": "petit",
-   "intermediates": [
-    "small"
-   ],
-   "reference_concepts": [
-    "French",
-    "size",
-    "big"
-   ],
-   "source": "jlens_source",
-   "consistency": 1.0,
-   "gate_variant": "plain",
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "lang": "fr",
-   "mc_type": "opposite",
-   "prompt_concepts": [
-    "big",
-    "large",
-    "short",
-    "size",
-    "tall"
-   ],
-   "units": [
-    {
-     "role": "concept_native",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "small",
-       "little"
-      ],
-      "zh": [
-       "小"
-      ]
-     },
-     "match": [
-      "small",
-      "little",
-      "小"
-     ]
-    },
-    {
-     "role": "language",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "French"
-      ],
-      "zh": [
-       "法语",
-       "法文"
-      ],
-      "fr": [
-       "français",
-       "en français",
-       "langue française"
-      ]
-     },
-     "match": [
-      "French",
-      "法语",
-      "法文",
-      "français",
-      "en français",
-      "langue française"
-     ]
-    }
-   ],
-   "mc": {
-    "concept_native": {
-     "gold": "small",
-     "distractors": [
-      "closed",
-      "right",
-      "down",
-      "last"
-     ]
-    },
-    "language": {
-     "gold": "French",
-     "distractors": [
-      "Spanish",
-      "Portuguese",
-      "Italian",
-      "Polish"
-     ]
-    }
-   },
-   "mc_roles": [
-    "concept_native",
-    "language"
-   ],
-   "probe_token_lens": {
-    "units": {
-     "concept_native": {
-      "en": [
-       1,
-       1
-      ],
-      "zh": [
-       1
-      ]
-     },
-     "language": {
-      "en": [
-       1
-      ],
-      "zh": [
-       1,
-       2
-      ],
-      "fr": [
-       1,
-       2,
-       2
-      ]
-     }
-    },
-    "target": 1
-   },
-   "id": "fr-size-big-small",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "dutch-direction-left",
-   "prompt": "Het tegenovergestelde van \"links\" is \"",
-   "target": "rechts",
-   "intermediates": [
-    "right"
-   ],
-   "reference_concepts": [
-    "Dutch",
-    "opposite",
-    "left"
-   ],
-   "source": "jlens_source",
-   "consistency": 1.0,
-   "gate_variant": "plain",
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "lang": "nl",
-   "mc_type": "opposite",
-   "prompt_concepts": [
-    "left",
-    "opposite"
-   ],
-   "units": [
-    {
-     "role": "concept_native",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "right"
-      ],
-      "zh": [
-       "右",
-       "右边"
-      ]
-     },
-     "match": [
-      "right",
-      "右",
-      "右边"
-     ]
-    },
-    {
-     "role": "language",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "Dutch"
-      ],
-      "zh": [
-       "荷兰语",
-       "荷兰文"
-      ],
-      "nl": [
-       "Nederlands",
-       "in het Nederlands",
-       "Nederlandse taal"
-      ]
-     },
-     "match": [
-      "Dutch",
-      "荷兰语",
-      "荷兰文",
-      "Nederlands",
-      "in het Nederlands",
-      "Nederlandse taal"
-     ]
-    }
-   ],
-   "mc": {
-    "concept_native": {
-     "gold": "right",
-     "distractors": [
-      "cold",
-      "small",
-      "young",
-      "down"
-     ]
-    },
-    "language": {
-     "gold": "Dutch",
-     "distractors": [
-      "German",
-      "Danish",
-      "Irish",
-      "Polish"
-     ]
-    }
-   },
-   "mc_roles": [
-    "concept_native",
-    "language"
-   ],
-   "probe_token_lens": {
-    "units": {
-     "concept_native": {
-      "en": [
-       1
-      ],
-      "zh": [
-       1,
-       1
-      ]
-     },
-     "language": {
-      "en": [
-       1
-      ],
-      "zh": [
-       2,
-       2
-      ],
-      "nl": [
-       1,
-       3,
-       2
-      ]
-     }
-    },
-    "target": 1
-   },
-   "id": "dutch-direction-left",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "italian-number-two",
-   "prompt": "Dopo il \"due\" viene il \"",
-   "target": "tre",
-   "intermediates": [
-    "three"
-   ],
-   "reference_concepts": [
-    "Italian",
-    "number",
-    "two"
-   ],
-   "source": "jlens_source",
-   "consistency": 1.0,
-   "gate_variant": "plain",
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "lang": "it",
-   "mc_type": "number",
-   "prompt_concepts": [
-    "number",
-    "two"
-   ],
-   "units": [
-    {
-     "role": "concept_native",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "three",
-       "3"
-      ],
-      "zh": [
-       "三"
-      ]
-     },
-     "match": [
-      "three",
-      "3",
-      "三"
-     ],
-     "numeric_match": "standalone"
-    },
-    {
-     "role": "language",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "Italian"
-      ],
-      "zh": [
-       "意大利语",
-       "意大利文"
-      ],
-      "it": [
-       "italiano",
-       "in italiano",
-       "lingua italiana"
-      ]
-     },
-     "match": [
-      "Italian",
-      "意大利语",
-      "意大利文",
-      "italiano",
-      "in italiano",
-      "lingua italiana"
-     ]
-    }
-   ],
-   "mc": {
-    "concept_native": {
-     "gold": "three",
-     "distractors": [
-      "eight",
-      "ten",
-      "six",
-      "five"
-     ]
-    },
-    "language": {
-     "gold": "Italian",
-     "distractors": [
-      "Spanish",
-      "French",
-      "Portuguese",
-      "Dutch"
-     ]
-    }
-   },
-   "mc_roles": [
-    "concept_native",
-    "language"
-   ],
-   "probe_token_lens": {
-    "units": {
-     "concept_native": {
-      "en": [
-       1,
-       1
-      ],
-      "zh": [
-       1
-      ]
-     },
-     "language": {
-      "en": [
-       1
-      ],
-      "zh": [
-       2,
-       2
-      ],
-      "it": [
-       1,
-       2,
-       2
-      ]
-     }
-    },
-    "target": 1
-   },
-   "id": "italian-number-two",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 0.9,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "portuguese-direction-up",
-   "prompt": "O oposto de \"cima\" é \"",
-   "target": "baixo",
-   "intermediates": [
-    "down"
-   ],
-   "reference_concepts": [
-    "Portuguese",
-    "opposite",
-    "up"
-   ],
-   "source": "jlens_source",
-   "consistency": 1.0,
-   "gate_variant": "plain",
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "lang": "pt",
-   "mc_type": "opposite",
-   "prompt_concepts": [
-    "above",
-    "high",
-    "opposite",
-    "top",
-    "up"
-   ],
-   "units": [
-    {
-     "role": "concept_native",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "down",
-       "below",
-       "low",
-       "bottom"
-      ],
-      "zh": [
-       "下",
-       "下面",
-       "下方"
-      ]
-     },
-     "match": [
-      "down",
-      "below",
-      "low",
-      "bottom",
-      "下",
-      "下面",
-      "下方"
-     ]
-    },
-    {
-     "role": "language",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "Portuguese"
-      ],
-      "zh": [
-       "葡萄牙语",
-       "葡萄牙文"
-      ],
-      "pt": [
-       "português",
-       "em português",
-       "língua portuguesa"
-      ]
-     },
-     "match": [
-      "Portuguese",
-      "葡萄牙语",
-      "葡萄牙文",
-      "português",
-      "em português",
-      "língua portuguesa"
-     ]
-    }
-   ],
-   "mc": {
-    "concept_native": {
-     "gold": "down",
-     "distractors": [
-      "small",
-      "far",
-      "slow",
-      "last"
-     ]
-    },
-    "language": {
-     "gold": "Portuguese",
-     "distractors": [
-      "Spanish",
-      "Italian",
-      "French",
-      "Polish"
-     ]
-    }
-   },
-   "mc_roles": [
-    "concept_native",
-    "language"
-   ],
-   "probe_token_lens": {
-    "units": {
-     "concept_native": {
-      "en": [
-       1,
-       1,
-       1,
-       1
-      ],
-      "zh": [
-       1,
-       1,
-       1
-      ]
-     },
-     "language": {
-      "en": [
-       1
-      ],
-      "zh": [
-       2,
-       2
-      ],
-      "pt": [
-       1,
-       2,
-       2
-      ]
-     }
-    },
-    "target": 1
-   },
-   "id": "portuguese-direction-up",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "es-place-up-down",
-   "prompt": "Lo contrario de \"arriba\" es \"",
-   "target": "abajo",
-   "intermediates": [
-    "down"
-   ],
-   "reference_concepts": [
-    "español",
-    "place",
-    "up"
-   ],
-   "source": "jlens_source",
-   "consistency": 0.9,
-   "gate_variant": "plain",
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "lang": "es",
-   "mc_type": "opposite",
-   "prompt_concepts": [
-    "above",
-    "high",
-    "place",
-    "top",
-    "up"
-   ],
-   "units": [
-    {
-     "role": "concept_native",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "down",
-       "below",
-       "low",
-       "bottom"
-      ],
-      "zh": [
-       "下",
-       "下面",
-       "下方"
-      ]
-     },
-     "match": [
-      "down",
-      "below",
-      "low",
-      "bottom",
-      "下",
-      "下面",
-      "下方"
-     ]
-    },
-    {
-     "role": "language",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "Spanish"
-      ],
-      "zh": [
-       "西班牙语",
-       "西班牙文"
-      ],
-      "es": [
-       "español",
-       "castellano",
-       "en español",
-       "lengua española",
-       "idioma español"
-      ]
-     },
-     "match": [
-      "Spanish",
-      "西班牙语",
-      "西班牙文",
-      "español",
-      "castellano",
-      "en español",
-      "lengua española",
-      "idioma español"
-     ]
-    }
-   ],
-   "mc": {
-    "concept_native": {
-     "gold": "down",
-     "distractors": [
-      "cold",
-      "short",
-      "slow",
-      "far"
-     ]
-    },
-    "language": {
-     "gold": "Spanish",
-     "distractors": [
-      "French",
-      "Portuguese",
-      "Italian",
-      "Irish"
-     ]
-    }
-   },
-   "mc_roles": [
-    "concept_native",
-    "language"
-   ],
-   "probe_token_lens": {
-    "units": {
-     "concept_native": {
-      "en": [
-       1,
-       1,
-       1,
-       1
-      ],
-      "zh": [
-       1,
-       1,
-       1
-      ]
-     },
-     "language": {
-      "en": [
-       1
-      ],
-      "zh": [
-       1,
-       2
-      ],
-      "es": [
-       1,
-       2,
-       2,
-       2,
-       2
-      ]
-     }
-    },
-    "target": 1
-   },
-   "id": "es-place-up-down",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "pt-place-up-down",
-   "prompt": "O contrário de \"cima\" é \"",
-   "target": "baixo",
-   "intermediates": [
-    "down"
-   ],
-   "reference_concepts": [
-    "português",
-    "place",
-    "up"
-   ],
-   "source": "jlens_source",
-   "consistency": 0.9,
-   "gate_variant": "plain",
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "lang": "pt",
-   "mc_type": "opposite",
-   "prompt_concepts": [
-    "above",
-    "high",
-    "place",
-    "top",
-    "up"
-   ],
-   "units": [
-    {
-     "role": "concept_native",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "down",
-       "below",
-       "low",
-       "bottom"
-      ],
-      "zh": [
-       "下",
-       "下面",
-       "下方"
-      ]
-     },
-     "match": [
-      "down",
-      "below",
-      "low",
-      "bottom",
-      "下",
-      "下面",
-      "下方"
-     ]
-    },
-    {
-     "role": "language",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "Portuguese"
-      ],
-      "zh": [
-       "葡萄牙语",
-       "葡萄牙文"
-      ],
-      "pt": [
-       "português",
-       "em português",
-       "língua portuguesa"
-      ]
-     },
-     "match": [
-      "Portuguese",
-      "葡萄牙语",
-      "葡萄牙文",
-      "português",
-      "em português",
-      "língua portuguesa"
-     ]
-    }
-   ],
-   "mc": {
-    "concept_native": {
-     "gold": "down",
-     "distractors": [
-      "last",
-      "small",
-      "young",
-      "new"
-     ]
-    },
-    "language": {
-     "gold": "Portuguese",
-     "distractors": [
-      "Spanish",
-      "Italian",
-      "French",
-      "Polish"
-     ]
-    }
-   },
-   "mc_roles": [
-    "concept_native",
-    "language"
-   ],
-   "probe_token_lens": {
-    "units": {
-     "concept_native": {
-      "en": [
-       1,
-       1,
-       1,
-       1
-      ],
-      "zh": [
-       1,
-       1,
-       1
-      ]
-     },
-     "language": {
-      "en": [
-       1
-      ],
-      "zh": [
-       2,
-       2
-      ],
-      "pt": [
-       1,
-       2,
-       2
-      ]
-     }
-    },
-    "target": 1
-   },
-   "id": "pt-place-up-down",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "b3-ml-fr-opposite-hot",
-   "prompt": "Le contraire de \"chaud\" est \"",
-   "target": "froid",
-   "intermediates": [
-    "cold"
-   ],
-   "reference_concepts": [
-    "French",
-    "opposite",
-    "hot"
-   ],
-   "source": "staging_b3",
-   "consistency": 0.9,
-   "gate_variant": "plain",
-   "eval_render": "plain",
-   "readout": {
-    "kind": "final_prompt_token",
-    "offsets": [
-     -1
-    ]
-   },
-   "lang": "fr",
-   "mc_type": "opposite",
-   "prompt_concepts": [
-    "hot",
-    "opposite",
-    "warm"
-   ],
-   "units": [
-    {
-     "role": "concept_native",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "cold"
-      ],
-      "zh": [
-       "冷",
-       "寒冷"
-      ]
-     },
-     "match": [
-      "cold",
-      "冷",
-      "寒冷"
-     ]
-    },
-    {
-     "role": "language",
-     "required": true,
-     "multi_token": false,
-     "forms": {
-      "en": [
-       "French"
-      ],
-      "zh": [
-       "法语",
-       "法文"
-      ],
-      "fr": [
-       "français",
-       "en français",
-       "langue française"
-      ]
-     },
-     "match": [
-      "French",
-      "法语",
-      "法文",
-      "français",
-      "en français",
-      "langue française"
-     ]
-    }
-   ],
-   "mc": {
-    "concept_native": {
-     "gold": "cold",
-     "distractors": [
-      "small",
-      "dark",
-      "bad",
-      "slow"
-     ]
-    },
-    "language": {
-     "gold": "French",
-     "distractors": [
-      "Spanish",
-      "Portuguese",
-      "Italian",
-      "Polish"
-     ]
-    }
-   },
-   "mc_roles": [
-    "concept_native",
-    "language"
-   ],
-   "probe_token_lens": {
-    "units": {
-     "concept_native": {
-      "en": [
-       1
-      ],
-      "zh": [
-       1,
-       1
-      ]
-     },
-     "language": {
-      "en": [
-       1
-      ],
-      "zh": [
-       1,
-       2
-      ],
-      "fr": [
-       1,
-       2,
-       2
-      ]
-     }
-    },
-    "target": 1
-   },
-   "id": "b3-ml-fr-opposite-hot",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 0.9,
-     "pass": true
-    }
-   }
-  }
- ]
+ "items": []
 }

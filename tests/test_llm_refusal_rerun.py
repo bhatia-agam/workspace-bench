@@ -12,8 +12,8 @@ from summary_fakes import FakeLLM, summary_args
 from test_jailbreak_recognition import _fixture_bank
 
 from wsbench import digest, llm
-from wsbench.evals.jailbreak_recognition import judge as jb
-from wsbench.evals.jailbreak_recognition import prompts as jbp
+from wsbench.evals.safety.jailbreak_recognition import judge as jb
+from wsbench.evals.safety.jailbreak_recognition import prompts as jbp
 
 SONNET, OPUS5 = "claude-sonnet-5", "claude-opus-5"
 

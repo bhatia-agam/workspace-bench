@@ -463,7 +463,7 @@ def test_real_v4_jailbreak_restamp_by_character_span():
     content (character span, decoded), turn_end is ``<|Assistant|>``, the read tokens are the
     render's own tokens. 0 mismatches over the whole bank."""
     from wsbench.adapt.carry import restamp_read
-    from wsbench.evals.jailbreak_recognition.judge import prefix_to_last_user
+    from wsbench.evals.safety.jailbreak_recognition.judge import prefix_to_last_user
 
     tok = _real(V4.key)
     bank = json.loads(frozen_bank_path("jailbreak_recognition").read_text(encoding="utf-8"))
@@ -566,8 +566,8 @@ def test_v4_arith_bank_plans_and_judges_every_position(tmp_path, monkeypatch):
     from conftest import native_args
 
     from wsbench import readplan
-    from wsbench.evals.arithmetic_intermediates import judge
-    from wsbench.evals.arithmetic_intermediates.prompts import PROMPT_VERSION
+    from wsbench.evals.computational.arithmetic_intermediates import judge
+    from wsbench.evals.computational.arithmetic_intermediates.prompts import PROMPT_VERSION
     from wsbench.judge_config import JudgeConfig, resolve
 
     raw = json.loads(frozen_bank_path("arithmetic_intermediates").read_text(encoding="utf-8"))
@@ -671,13 +671,13 @@ def test_grid_table_rule_leaves_every_other_band_unchanged():
 
 
 def test_v4flash_is_built_to_plan_0075_targets():
-    """A set built fresh after plan 0075 gets its targets (association 100, basic_readout_mt 120)
+    """A set built fresh after plan 0075 gets its targets (association 100, basic_readout 120)
     and its strict-freeze / capital re-check, as the ten 0075 sets do."""
     from wsbench.adapt import refill
 
     assert "deepseek-v4-flash" in refill.PLAN_0075_SETS
-    for fam in ("association", "basic_readout_mt", "multihop", "typo_mt"):
+    for fam in ("association", "basic_readout", "multihop_st", "typo"):
         assert refill.adapted_target(fam, model="deepseek-v4-flash") == refill.adapted_target(
             fam, model="deepseek-v4-pro"
         )
-    assert refill.adapted_target("basic_readout_mt", model="deepseek-v4-flash") >= 120
+    assert refill.adapted_target("basic_readout", model="deepseek-v4-flash") >= 120

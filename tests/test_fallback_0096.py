@@ -375,8 +375,8 @@ def test_agentic_native_stages_run_on_an_openrouter_judge(
 ):
     """Stages A, B and C are free text: on a Luna judge they run on the OpenRouter route end to
     end (before plan 0096: ``JudgeConfigError``, exit 3)."""
-    from wsbench.evals.agentic_misalignment import SPEC
-    from wsbench.evals.agentic_misalignment import judge as am
+    from wsbench.evals.safety.agentic_misalignment import SPEC
+    from wsbench.evals.safety.agentic_misalignment import judge as am
 
     rows = [
         {"id": iid, "layer": layer, "pos": pos, "samples": [f"R:{iid}:L{layer}:p{pos}"]}

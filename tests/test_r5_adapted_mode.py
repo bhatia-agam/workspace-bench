@@ -13,7 +13,7 @@ import pytest
 from wsbench.adapt import run, store
 
 REPO = Path(__file__).resolve().parents[1]
-SET = REPO / "adapted/glm-5.3/multihop_mt_v2.json"
+SET = REPO / "adapted/glm-5.3/multihop.json"
 
 
 @pytest.fixture(autouse=True)
@@ -66,7 +66,7 @@ def _evals_status() -> str:
 
 
 def _items(r5):
-    _h, items = r5.load_bank(r5.start_bank(r5.CFGS["multihop_mt"]))
+    _h, items = r5.load_bank(r5.start_bank(r5.CFGS["multihop"]))
     return items
 
 
@@ -82,7 +82,7 @@ def test_configure_refuses_evals_and_sets_two_guessers(tmp_path):
 
 
 def test_start_bank_is_the_adapted_file_copied_under_out(r5, tmp_path):
-    p = r5.start_bank(r5.CFGS["multihop_mt"])
+    p = r5.start_bank(r5.CFGS["multihop"])
     assert p.is_relative_to((tmp_path / "out").resolve())
     assert json.loads(p.read_text()) == json.loads(SET.read_text())
 
@@ -101,7 +101,7 @@ def test_leak_rule_and_adapted_only_lists(r5):
 
 
 def test_topics_labels_adapted_only_lists(r5, monkeypatch):
-    cfg = r5.CFGS["multihop_mt"]
+    cfg = r5.CFGS["multihop"]
     seen = {}
 
     def fake(tasks, schema, cache_path, **kw):
@@ -119,14 +119,14 @@ def test_topics_labels_adapted_only_lists(r5, monkeypatch):
     ad = r5.adapted_ids(items)
     got = json.loads((r5.fdir(cfg) / "topics.json").read_text())["items"]
     assert set(got) == ad and all(k.split("~")[0] in ad for k in seen)
-    labels = r5.lg.load_list_topics("multihop_mt")  # merged: registered ids + the new labels
+    labels = r5.lg.load_list_topics("multihop")  # merged: registered ids + the new labels
     assert ad <= set(labels) and any(i not in ad for i in labels)
     gi = r5.guesser_items(cfg, items)  # every item now has its topics (no KeyError)
     assert len(gi) == len(items)
 
 
 def test_patches_roundtrip_through_adapt_patch(r5, tmp_path, monkeypatch):
-    cfg = r5.CFGS["multihop_mt"]
+    cfg = r5.CFGS["multihop"]
     items = json.loads(r5.start_bank(cfg).read_text())
     ad = r5.adapted_ids(_items(r5))
     from wsbench.banks import label_of
@@ -144,7 +144,7 @@ def test_patches_roundtrip_through_adapt_patch(r5, tmp_path, monkeypatch):
     ns = type("A", (), {"round": 0})()
     assert r5.cmd_patches(cfg, ns) == 0
     rec = json.loads((r5.fdir(cfg) / "patches.json").read_text())
-    assert list(rec["patches"]) == list(changed) and rec["family"] == "multihop_mt"
+    assert list(rec["patches"]) == list(changed) and rec["family"] == "multihop"
     (iid,) = changed
     line = (r5.fdir(cfg) / "patches.sh").read_text().strip()
     argv = shlex.split(line)[4:]
@@ -152,29 +152,29 @@ def test_patches_roundtrip_through_adapt_patch(r5, tmp_path, monkeypatch):
     assert kv["model"] == "glm-5.3" and kv["id"] == iid
     # round trip: the CLI's `set` JSON lands in report.json patches and is applied at freeze
     monkeypatch.setattr(store, "model_dir", lambda model, root=None: tmp_path / model)
-    store.record_gates("glm-5.3", "multihop_mt", [{"id": iid, "origin": "refill", "item": {
+    store.record_gates("glm-5.3", "multihop", [{"id": iid, "origin": "refill", "item": {
         "name": iid}, "gate": {"pass": True}}])  # fmt: skip
     run.patch("glm-5.3", kv["family"], kv["id"], json.loads(kv["set"]), kv["note"])
     rep = json.loads((tmp_path / "glm-5.3" / "report.json").read_text())
-    assert rep["patches"]["multihop_mt"][iid]["set"]["mc"] == changed[iid]
+    assert rep["patches"]["multihop"][iid]["set"]["mc"] == changed[iid]
 
 
 def test_cli_refuses_writing_stages_in_adapted_mode(tmp_path, monkeypatch, capsys):
     mod = _driver()
     for stage in ("freeze", "confusers", "drops", "floors"):
-        argv = ["r5", stage, "--family", "multihop_mt", "--bank", str(SET)]
+        argv = ["r5", stage, "--family", "multihop", "--bank", str(SET)]
         monkeypatch.setattr(sys, "argv", [*argv, "--out", str(tmp_path), "--model", "glm-5.3"])
         with pytest.raises(SystemExit) as e:
             mod.main()
         assert e.value.code == 2
-    monkeypatch.setattr(sys, "argv", ["r5", "topics", "--family", "multihop_mt"])
+    monkeypatch.setattr(sys, "argv", ["r5", "topics", "--family", "multihop"])
     with pytest.raises(SystemExit) as e:
         mod.main()
     assert e.value.code == 2
 
 
 def test_start_bank_refuses_a_changed_source(r5, tmp_path):
-    cfg = r5.CFGS["multihop_mt"]
+    cfg = r5.CFGS["multihop"]
     r5.start_bank(cfg)
     src = tmp_path / "set.json"
     src.write_text(SET.read_text())
@@ -194,7 +194,7 @@ def test_any_guesser_counts_every_guesser_and_is_adapted_only(tmp_path, monkeypa
     monkeypatch.setattr(mod, "ANY_GUESSER", True)
     assert mod.failing(tmp_path) == ["blind", "described"]
     monkeypatch.setattr(mod, "ANY_GUESSER", False)
-    monkeypatch.setattr(sys, "argv", ["r5", "leakers", "--family", "multihop_mt", "--any-guesser"])
+    monkeypatch.setattr(sys, "argv", ["r5", "leakers", "--family", "multihop", "--any-guesser"])
     with pytest.raises(SystemExit) as e:
         mod.main()
     assert e.value.code == 2 and "--any-guesser: adapted mode only" in capsys.readouterr().err

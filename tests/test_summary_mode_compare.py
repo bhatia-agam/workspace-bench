@@ -26,13 +26,13 @@ def test_pairing_flags_and_retention():
         {"id": f"i{k}", "pass": k < 5, "summary_evidence": ["boxing ring" if k < 5 else "chess"]}
         for k in range(n)
     ]
-    native = {"basic_readout": _res("bank-2026-10-10", nat_rows)}
+    native = {"basic_readout_st": _res("bank-2026-10-10", nat_rows)}
     summary = {
-        "basic_readout": _res(
+        "basic_readout_st": _res(
             "bank-2026-10-10+digest-v4-task-extractive+sj-v9", summ_rows, "summary"
         )
     }
-    (row,) = cmp.compare(native, summary, {"basic_readout": ["i0", "i1"]})
+    (row,) = cmp.compare(native, summary, {"basic_readout_st": ["i0", "i1"]})
     assert row["n"] == 28 and row["n_dev"] == 2
     assert row["native"] == 1.0 and abs(row["summary"] - 3 / 28) < 1e-9
     assert "drop > 0.30" in row["flags"] and row["retention"] == 3 / 28
@@ -40,13 +40,13 @@ def test_pairing_flags_and_retention():
 
 def test_incomparable_and_chain_any_of_3():
     native = {
-        "basic_readout": _res("bank-OLD", [{"id": "a", "pass": True}]),
+        "basic_readout_st": _res("bank-OLD", [{"id": "a", "pass": True}]),
         "chain_intermediates": _res(
             "chain-free-2026-09-16", [{"id": "a", "pass": False, "any_of_3": True}], cells="all"
         ),
     }
     summary = {
-        "basic_readout": _res("bank-NEW+digest-v4-task-extractive+sj-v9", [], "summary"),
+        "basic_readout_st": _res("bank-NEW+digest-v4-task-extractive+sj-v9", [], "summary"),
         "chain_intermediates": _res(
             "chain-free-2026-09-16+digest-v4-task-extractive+sj-v9",
             [{"id": "a", "pass": True}],
@@ -55,7 +55,7 @@ def test_incomparable_and_chain_any_of_3():
         ),
     }
     rows = {r["family"]: r for r in cmp.compare(native, summary, {})}
-    assert rows["basic_readout"]["status"] == "incomparable"
+    assert rows["basic_readout_st"]["status"] == "incomparable"
     assert rows["chain_intermediates"]["native"] == 1.0  # paired on any_of_3, not top-1
     assert rows["chain_intermediates"]["status"] == "n too small to flag"
 
@@ -66,7 +66,7 @@ def test_base_pairs():
     assert cmp.check_pair("arithmetic_intermediates", nat, summ) == []
     nat = _res("mt-regex-summarized-2026-09-23", [])
     summ = _res("mt-regex-2026-09-23+digest-v4-task-extractive+sj-v9", [], "summary")
-    assert cmp.check_pair("typo_mt", nat, summ) == []
+    assert cmp.check_pair("typo", nat, summ) == []
 
 
 # ---------------------------------------------------------------- item-verdict extractor
@@ -475,8 +475,8 @@ def test_chain_native_pairs_on_any_of_3_and_checks_its_rate():
 
 
 def test_one_row_families_reject_duplicate_or_passless_rows():
-    dup = _r("basic_readout", [{"id": "a", "pass": True}, {"id": "a", "pass": False}], 1.0, 1)
-    assert "2 rows for item a" in cmp.check_extractor("basic_readout", dup)[0]
+    dup = _r("basic_readout_st", [{"id": "a", "pass": True}, {"id": "a", "pass": False}], 1.0, 1)
+    assert "2 rows for item a" in cmp.check_extractor("basic_readout_st", dup)[0]
     nopass = _r("knowledge_cutoff", [{"id": "a", "correct": True}], 1.0, 1)
     assert "missing" in cmp.check_extractor("knowledge_cutoff", nopass)[0]
 
@@ -514,8 +514,8 @@ def test_retention_per_family():
     conj = [{"correct": True, "quote_ok": True, "quote": "jailbreak"}]
     assert cmp.retained("conjunctive_association", conj, ev) is True
     basic = [{"layers": {"20": {"expressed": True, "quote_ok": True, "quote": "chess"}}}]
-    assert cmp.retained("basic_readout", basic, ev) is False
-    for fam in ("typo_mt", "chain_intermediates", "knowledge_cutoff", "introspection"):
+    assert cmp.retained("basic_readout_st", basic, ev) is False
+    for fam in ("typo", "chain_intermediates", "knowledge_cutoff", "introspection"):
         assert cmp.retained(fam, [{"pass": True}], ev) is None
 
 
@@ -816,7 +816,7 @@ def _um_pair(n_pass: int, chance: float | None, n: int = 25) -> tuple[dict, dict
 
 
 def test_per_call_chance_holds_only_the_families_constant_chance():
-    from wsbench.evals.relational_multihop import score as rel_score
+    from wsbench.evals.anti_bag_of_features.relational_multihop import score as rel_score
 
     assert set(cmp.PER_CALL_CHANCE) == {"relational_multihop", "role_bound_association"}
     assert cmp.PER_CALL_CHANCE["relational_multihop"] == rel_score.PER_UNIT

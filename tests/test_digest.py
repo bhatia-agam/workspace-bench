@@ -6,7 +6,7 @@ from pathlib import Path
 import pytest
 from conftest import native_args
 
-from wsbench import bpe, digest
+from wsbench import bpe, digest, registry
 from wsbench.cache import Cache
 from wsbench.judge_config import JudgeConfig, resolve
 from wsbench.llm import Spend
@@ -429,7 +429,7 @@ def test_summ_lang_removed_no_language_label(tmp_path):
 
 
 def test_summ_lang_stamp_dropped(tmp_path):
-    for fam in ("multilingual", "multilingual_mt", "multilingual_multihop", "multilingual_typo"):
+    for fam in ("multilingual_st", "multilingual", "multilingual_multihop", "multilingual_typo"):
         assert digest.prompt_version("pv", _args(tmp_path), fam) == (
             "pv+digest-v5-task-extractive+sj-v10"
         )
@@ -507,14 +507,13 @@ def test_digest_system_records_flat_lists():
 
 
 def test_no_rank1_exception_text(real_families):
-    import importlib
 
     from wsbench.basic import prompts as bp
 
     bad = "ranked first among the candidates of its type"
     texts = [*digest.PROMPTS.values(), *bp.PROMPTS.values()]
     for name in real_families:
-        texts += list(importlib.import_module(f"wsbench.evals.{name}.prompts").PROMPTS.values())
+        texts += list(registry.family_module(name, "prompts").PROMPTS.values())
     assert not any(bad in str(t) for t in texts)
 
 

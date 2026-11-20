@@ -15,17 +15,19 @@ from summary_fakes import FakeLLM, summary_args
 
 from wsbench import digest, mc, readplan, reads, registry
 from wsbench.baselines import lucky_guessing
-from wsbench.evals.wrong_intermediate import judge as wj
-from wsbench.evals.wrong_intermediate import prompts as wp
+from wsbench.evals.model_specific.wrong_intermediate import judge as wj
+from wsbench.evals.model_specific.wrong_intermediate import prompts as wp
 from wsbench.readouts import Cell
 from wsbench.results import FamilyResult, macro
 
 REPO = Path(__file__).resolve().parents[1]
 GOLDEN = REPO / "tests/golden/wrong_intermediate_options.json"  # bank v2
 GOLDEN_V3 = REPO / "tests/golden/wrong_intermediate_options_v3.json"  # bank v3 (round 4)
-V2_BANK = REPO / "evals/wrong_intermediate/items_v2.json"
-V3_BANK = REPO / "evals/wrong_intermediate/items_v3.json"
-V4_BANK = REPO / "evals/wrong_intermediate/items_v4.json"  # round 4c: v3 options, filtered forms
+V2_BANK = REPO / "evals/model_specific/wrong_intermediate/items_v2.json"
+V3_BANK = REPO / "evals/model_specific/wrong_intermediate/items_v3.json"
+V4_BANK = (
+    REPO / "evals/model_specific/wrong_intermediate/items_v4.json"
+)  # round 4c: v3 options, filtered forms
 AUDIT = REPO / "tests/fixtures/wrong_intermediate_audit_cases.jsonl"
 BEETHOVEN = "composition_composer-Q1977772-birth_city"  # gold Beethoven, contrast Mozart
 MADONNA = "album_performer-Q167554-birth_year"
@@ -125,7 +127,7 @@ def test_judge_uses_reads_load_only(tmp_path, monkeypatch):
         return real(args, family, path, **kw)
 
     monkeypatch.setattr(reads, "load", spy)
-    src = (REPO / "src/wsbench/evals/wrong_intermediate/judge.py").read_text()
+    src = (REPO / "src/wsbench/evals/model_specific/wrong_intermediate/judge.py").read_text()
     assert "load_readouts" not in src
     FakeLLM.install(monkeypatch, judge=answer(7, ""))
     run_items(tmp_path, toy_file(tmp_path), [BEETHOVEN])
@@ -538,7 +540,9 @@ def test_bank_path_is_v4_and_v3_v2_are_kept():
             k: v for k, v in a["mc"].items() if k != "forms"
         }
     v2 = json.loads(V2_BANK.read_text(encoding="utf-8"))
-    v1 = json.loads((REPO / "evals/wrong_intermediate/items.json").read_text(encoding="utf-8"))
+    v1 = json.loads(
+        (REPO / "evals/model_specific/wrong_intermediate/items.json").read_text(encoding="utf-8")
+    )
     assert v2["version"] == 2 and v2["supersedes"] == "items.json"
     assert v2["contract"]["native_langs"] == ["en", "zh"]
     for a, b in zip(v1["items"], v2["items"], strict=True):

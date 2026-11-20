@@ -4,6 +4,7 @@ band, a layer fixed on dev and scored on test, and any-layer restricted to the b
 from collections.abc import Callable, Mapping
 
 from wsbench.mc import seed_int
+from wsbench.registry import frozen_name
 from wsbench.results import bootstrap_ci
 
 DEV_SHARE = 0.30
@@ -12,8 +13,9 @@ SKIP_FIRST, SKIP_LAST = 0.10, 0.15  # of model depth; the band can't just be the
 
 
 def is_dev(family: str, key: str) -> bool:
-    """30% dev, hashed on ``family:key``; pass a pair id as ``key`` so twins share a split."""
-    return seed_int(f"{family}:{key}") % 1000 < DEV_SHARE * 1000
+    """30% dev, hashed on ``family:key`` (the family's pre-0101 key, ``registry.frozen_name``:
+    a rename never moves the split); pass a pair id as ``key`` so twins share a split."""
+    return seed_int(f"{frozen_name(family)}:{key}") % 1000 < DEV_SHARE * 1000
 
 
 def mid_band(layers: list[int], n_layers: int = MODEL_LAYERS) -> list[int]:

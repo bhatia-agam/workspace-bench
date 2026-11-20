@@ -48,7 +48,7 @@ def test_every_family_has_an_entry_with_three_labelled_lines():
         heads = [i for i, ln in enumerate(lines) if ln.startswith(f"**{s.title}**")]
         assert len(heads) == 1, s.title
         i = heads[0]
-        assert f"](evals/{s.name}/README.md)" in lines[i], s.name
+        assert f"]({registry.family_rel(s.name).as_posix()}/README.md)" in lines[i], s.name
         body = lines[i + 1 : i + 4]
         assert [ln.startswith(f"- {lab}") for ln, lab in zip(body, LABELS, strict=True)] == [
             True,

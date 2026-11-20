@@ -22,18 +22,19 @@ from wsbench.judge_config import JudgeConfig
 from wsbench.llm import Spend
 from wsbench.mcjudge import Preflighter, item_scope, with_readout_count
 from wsbench.readouts import Cell
-from wsbench.registry import EvalSpec, JudgeArgs, bank_path
+from wsbench.registry import EvalSpec, JudgeArgs, bank_path, family_rel
 from wsbench.results import FamilyResult
 from wsbench.split import layer_protocols
 
 GROUP = "basic"
 # the families judged by a blind forced-choice bank judge instead of the free-text TARGETS judge
-# below: basic_readout on basic/mcjudge_basic.py (plan 0053), multihop on basic/mcjudge_bank.py
+# below: basic_readout_st on basic/mcjudge_basic.py (plan 0053), multihop_st on
+# basic/mcjudge_bank.py
 # (plan 0048, per-family MCStrings). The two modules were written in parallel by the two family
 # PRs and are kept side by side by the integration merge (unifying them is a follow-up).
-MC_FAMILIES = frozenset({"basic_readout", "multihop"})
+MC_FAMILIES = frozenset({"basic_readout_st", "multihop_st"})
 # the MC families on the MCStrings judge (basic/mcjudge_bank.py)
-MC_BANK_FAMILIES = frozenset({"multihop"})
+MC_BANK_FAMILIES = frozenset({"multihop_st"})
 CHANCE_LABEL = "no analytic floor (free text); the prompt-only baseline is the measured floor"
 
 
@@ -58,7 +59,7 @@ def bank_family(
     one position per layer until a family spec widens its read span. ``task_note`` overrides the
     shared ``DIGEST_TASK_NOTES`` line; ``targets_judge=False`` for a family on the blind MC judge
     (``MC_FAMILIES``), whose token note is the OPTIONS form."""
-    bank = bank or Path("evals") / name / "items.json"
+    bank = bank or family_rel(name) / "items.json"
     return EvalSpec(
         name=name,
         title=title,

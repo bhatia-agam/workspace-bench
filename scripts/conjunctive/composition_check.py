@@ -20,7 +20,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-BANK = ROOT / "evals/conjunctive_association/items.json"
+BANK = ROOT / "evals/association/conjunctive_association/items.json"
 RAW_GOLD = ("gold", "gold_partial", "gold_unverified")
 
 

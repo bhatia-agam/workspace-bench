@@ -12,6 +12,7 @@ from wsbench.cache import Cache
 from wsbench.judge_config import JudgeConfig, ResolvedJudge, resolve
 from wsbench.llm import Spend, schema_block
 from wsbench.mcjudge import Call, Preflighter, run_calls
+from wsbench.registry import frozen_name
 
 from .questions import PARTIAL, Question, build, threshold_for
 
@@ -79,6 +80,7 @@ def run_family(
     when the greedy answer is right AND the sampled rate reaches ``threshold``, the rule the banks
     were built with. Cached under ``out/cells.jsonl``, so a re-run resumes."""
     questions = build(family)[: limit or None]
+    fz = frozen_name(family)  # plan 0101 F5: the cache keys keep the pre-rename key
     bar = threshold_for(family, DEFAULT_THRESHOLD) if threshold is None else threshold
     reasoning = {"effort": reasoning_effort} if reasoning_effort else None
     answerer = resolve(
@@ -97,7 +99,7 @@ def run_family(
         for temp in sorted(set(by_temp.values())):
             calls = [
                 Call(
-                    key=f"{family}|{q.id}|d{d}",
+                    key=f"{fz}|{q.id}|d{d}",
                     system=ANSWER_SYSTEM,
                     user=q.ask,
                     meta={"item": q.id, "draw": d},
@@ -133,7 +135,7 @@ def run_family(
             }
         for q in questions:
             for d in draw_ids:
-                r = replies.get(f"{family}|{q.id}|d{d}")
+                r = replies.get(f"{fz}|{q.id}|d{d}")
                 if not isinstance(r, dict):
                     answers[(q.id, d)] = None  # the call failed: no answer to grade
                     continue
@@ -145,7 +147,7 @@ def run_family(
         by_id = {q.id: q for q in questions}
         grade_calls = [
             Call(
-                key=f"{family}|{q_id}|g{_digest(text)}",
+                key=f"{fz}|{q_id}|g{_digest(text)}",
                 system=GRADE_SYSTEM,
                 user=render_grade(by_id[q_id], text),
                 meta={"item": q_id, "answer": text},
@@ -176,7 +178,7 @@ def run_family(
             return None  # the answer call failed
         if not text:
             return False  # empty answer: wrong
-        return grades.get(f"{family}|{q_id}|g{_digest(text)}")
+        return grades.get(f"{fz}|{q_id}|g{_digest(text)}")
 
     floor = min_decided(draws, bar)
     rows = []

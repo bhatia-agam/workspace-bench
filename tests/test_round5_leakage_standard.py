@@ -22,9 +22,9 @@ import pytest
 
 from wsbench import registry
 from wsbench.baselines import lucky_guessing as lg
-from wsbench.evals.conjunctive_association import judge as cj
-from wsbench.evals.conjunctive_association import prompts as cp
-from wsbench.evals.role_bound_association import gate, judge
+from wsbench.evals.anti_bag_of_features.role_bound_association import gate, judge
+from wsbench.evals.association.conjunctive_association import judge as cj
+from wsbench.evals.association.conjunctive_association import prompts as cp
 from wsbench.judge_config import JudgeConfig, resolve
 from wsbench.mcjudge import load_bank
 
@@ -34,7 +34,7 @@ ROOT = Path(__file__).resolve().parents[1]
 @pytest.fixture(autouse=True)
 def _all_families():
     for name in lg.BUILDERS:
-        spec = importlib.import_module(f"wsbench.evals.{name}").SPEC
+        spec = registry.family_module(name).SPEC
         registry.FAMILIES.setdefault(spec.name, spec)
 
 
@@ -90,7 +90,9 @@ def test_the_repaired_pairs_keep_their_roles_and_clean_actions():
         "oa-mechanic-driver-bill": ["cheated", "fined", "reassured"],
         "oa-accountant-client-deceive": ["warned", "distrusted", "blamed"],
     }
-    doc = json.loads((ROOT / "evals/role_bound_association/distractors_v3.json").read_text())
+    doc = json.loads(
+        (ROOT / "evals/anti_bag_of_features/role_bound_association/distractors_v3.json").read_text()
+    )
     assert doc["version"] == "distractors-v3.1"
     for pid, kept in before.items():
         acts = judge.distractors_v3()[pid]["actions"]
@@ -230,7 +232,7 @@ def test_cands_variant_records_each_configs_rule_and_chance(tmp_path, monkeypatc
 def test_the_headline_chance_is_the_familys_own_chance_line():
     # without a cross-shard veto the guesser's exact sharded chance and the
     # family's chance line (score.mean_chance: cannot tell shown, never guessed) coincide
-    from wsbench.evals.conjunctive_association import score
+    from wsbench.evals.association.conjunctive_association import score
 
     items = lg.build_family("conjunctive_association")
     bank = load_bank("conjunctive_association")

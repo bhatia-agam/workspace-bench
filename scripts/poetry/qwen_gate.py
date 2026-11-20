@@ -25,7 +25,7 @@ it. A v1 item's stored gold is ignored (recorded as ``prev_gold``).
 (word -> count); no distractor may be one of them, so every distractor is a rhyme of line one
 that Qwen never writes from the read site.
 
-    python scripts/poetry/qwen_gate.py requests --bank evals/poetry/items.json --out req.jsonl
+    python scripts/poetry/qwen_gate.py requests --bank evals/basic/poetry/items.json --out req.jsonl
     python scripts/poetry/qwen_gate.py grade --bank B --samples S.jsonl --out gate.json
     python scripts/poetry/qwen_gate.py draft --bank B1 B2 --gate G1 G2 --out pool.json
 """

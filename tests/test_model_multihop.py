@@ -11,14 +11,14 @@ import pytest
 from conftest import native_args
 
 from wsbench import digest, registry
-from wsbench.evals.model_multihop import judge, prompts, score
+from wsbench.evals.model_specific.model_multihop import judge, prompts, score
 from wsbench.judge_config import resolve
 from wsbench.readouts import Cell
 from wsbench.readplan import bank_file, plan
 from wsbench.results import MACRO_METRICS
 
 REPO = Path(__file__).resolve().parents[1]
-BANK = REPO / "evals/model_multihop/items.json"
+BANK = REPO / "evals/model_specific/model_multihop/items.json"
 
 # gw mmh_sjudge (global-workspace 2027ef208 / 10d79051e) SUMMARIZER, CJUDGE and TASK, verbatim
 GW_SUMMARIZER = """You will see readouts from an interpretability tool that reads a language \

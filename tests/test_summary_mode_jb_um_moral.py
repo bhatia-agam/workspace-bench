@@ -9,12 +9,12 @@ import pytest
 from summary_fakes import FakeLLM, digest_lines, first_lines_digest, summary_args
 
 from wsbench import digest
-from wsbench.evals.jailbreak_recognition import judge as jb
-from wsbench.evals.jailbreak_recognition import prompts as jbp
-from wsbench.evals.moral_rationale import judge as mr
-from wsbench.evals.moral_rationale import prompts as mrp
-from wsbench.evals.user_modeling import judge as um
-from wsbench.evals.user_modeling import prompts as ump
+from wsbench.evals.association.user_modeling import judge as um
+from wsbench.evals.association.user_modeling import prompts as ump
+from wsbench.evals.logical_processing.moral_rationale import judge as mr
+from wsbench.evals.logical_processing.moral_rationale import prompts as mrp
+from wsbench.evals.safety.jailbreak_recognition import judge as jb
+from wsbench.evals.safety.jailbreak_recognition import prompts as jbp
 from wsbench.mcjudge import load_bank
 
 REPO = Path(__file__).resolve().parents[1]
@@ -137,7 +137,7 @@ def _esc(opts: dict, item_id: str) -> int:
 def um_v1(monkeypatch):
     # UB is a synthsys item, which banks v2 and v3 drop, so these tests pin the frozen 100-item
     # items.json (still judgeable, stamped CALL_VERSION alone)
-    monkeypatch.setenv("WSB_BANK_FILE_USER_MODELING", "evals/user_modeling/items.json")
+    monkeypatch.setenv("WSB_BANK_FILE_USER_MODELING", "evals/association/user_modeling/items.json")
 
 
 def test_user_modeling_one_call_per_item(tmp_path, monkeypatch, um_v1):
@@ -270,7 +270,9 @@ def test_user_modeling_majority_of_three_draws(tmp_path, monkeypatch):
 
 @pytest.fixture
 def moral_v1(monkeypatch):
-    monkeypatch.setenv("WSB_BANK_FILE_MORAL_RATIONALE", "evals/moral_rationale/items.json")
+    monkeypatch.setenv(
+        "WSB_BANK_FILE_MORAL_RATIONALE", "evals/logical_processing/moral_rationale/items.json"
+    )
 
 
 TB_ROWS = [

@@ -12,7 +12,7 @@ from wsbench.adapt import poetry as po
 from wsbench.adapt import poetry_prior as pp
 from wsbench.adapt import run, store
 from wsbench.baselines.lucky_guessing import Item
-from wsbench.evals.poetry.options import option_set
+from wsbench.evals.basic.poetry.options import option_set
 
 MODEL = "glm-5.3"
 
@@ -557,7 +557,7 @@ def test_opt_in_fill_never_overwrites_the_refill_record(adapted, monkeypatch):
 
 def test_other_briefs_render_as_before(adapted, monkeypatch):
     monkeypatch.setattr(store, "gated", lambda m, f: {})
-    for fam in ("association", "typo_mt", "multihop"):
+    for fam in ("association", "typo", "multihop_st"):
         b = au.BRIEFS[fam]
         t = next(iter(b.tiers))
         text = au.render_brief(MODEL, fam, t, 3)

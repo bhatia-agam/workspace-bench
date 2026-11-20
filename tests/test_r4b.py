@@ -8,12 +8,12 @@ from conftest import native_args, write_jsonl
 from wsbench import digest, registry
 from wsbench.cache import Cache
 from wsbench.digest import Grounded, Line
-from wsbench.evals.introspection import judge as ij
-from wsbench.evals.introspection import prompts as ip
-from wsbench.evals.jailbreak_recognition import prompts as jbp
-from wsbench.evals.relational_multihop import gate
-from wsbench.evals.relational_multihop import judge as rj
-from wsbench.evals.relational_multihop import prompts as rp
+from wsbench.evals.anti_bag_of_features.relational_multihop import gate
+from wsbench.evals.anti_bag_of_features.relational_multihop import judge as rj
+from wsbench.evals.anti_bag_of_features.relational_multihop import prompts as rp
+from wsbench.evals.model_specific.introspection import judge as ij
+from wsbench.evals.model_specific.introspection import prompts as ip
+from wsbench.evals.safety.jailbreak_recognition import prompts as jbp
 from wsbench.judge_config import JudgeConfig, resolve
 from wsbench.llm import Spend
 from wsbench.mcjudge import load_bank
@@ -88,7 +88,7 @@ GAUSS = "gaussian|protocol:trial1|b4|computers"
 
 def _run(tmp_path, monkeypatch, rows):
     """A native run whose judge names nothing anywhere (only the regex diagnostic can fire)."""
-    from wsbench.evals.introspection import SPEC
+    from wsbench.evals.model_specific.introspection import SPEC
 
     def none_everywhere(calls, **kw):
         out = {}

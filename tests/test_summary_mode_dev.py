@@ -94,7 +94,9 @@ def test_moral_sides_and_introspection_units_are_one_digest_each(
     tmp_path, monkeypatch, real_families
 ):
     # bank v1 (plan 0046: torture_bomb is deliberative there; bank v2 re-keyed it committed)
-    monkeypatch.setenv("WSB_BANK_FILE_MORAL_RATIONALE", "evals/moral_rationale/items.json")
+    monkeypatch.setenv(
+        "WSB_BANK_FILE_MORAL_RATIONALE", "evals/logical_processing/moral_rationale/items.json"
+    )
     tb = "ec-torture_bomb-chat_tf"  # a deliberative item: judged once per side
     extra = [
         {"id": tb, "layer": L, "pos": p, "samples": [f"Torture could save many lives {L} {p}."]}

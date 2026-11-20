@@ -23,8 +23,8 @@ from pathlib import Path
 import numpy as np
 
 REPO = Path(__file__).resolve().parents[1]
-BANK_V1 = REPO / "evals/introspection/items.json"
-OUT = REPO / "evals/introspection/vectors"
+BANK_V1 = REPO / "evals/model_specific/introspection/items.json"
+OUT = REPO / "evals/model_specific/introspection/vectors"
 D_MODEL = 5120
 SOURCE_SHA256 = "d663b8ca9713b70eae20d9240e75a420a419e20dbee582706ad3bf99cd02a47a"
 

@@ -9,15 +9,17 @@ import pytest
 from summary_fakes import FakeLLM, first_lines_digest, summary_args
 
 from wsbench import registry
-from wsbench.evals.arithmetic_intermediates import SPEC as ARITH
-from wsbench.evals.arithmetic_intermediates.prompts import PROMPT_VERSION as ARITH_PV
-from wsbench.evals.arithmetic_intermediates.prompts import SYSTEM_SUMMARY as ARITH_SYSTEM
-from wsbench.evals.chain_intermediates import SPEC as CHAIN
-from wsbench.evals.chain_intermediates.prompts import (
+from wsbench.evals.computational.arithmetic_intermediates import SPEC as ARITH
+from wsbench.evals.computational.arithmetic_intermediates.prompts import PROMPT_VERSION as ARITH_PV
+from wsbench.evals.computational.arithmetic_intermediates.prompts import (
+    SYSTEM_SUMMARY as ARITH_SYSTEM,
+)
+from wsbench.evals.computational.chain_intermediates import SPEC as CHAIN
+from wsbench.evals.computational.chain_intermediates.prompts import (
     NATIVE_PROMPT_VERSION as CHAIN_PV,  # plan 0038: the free-recall (v1) instrument's stamp
 )
-from wsbench.evals.chain_intermediates.prompts import SYSTEM as CHAIN_NATIVE_SYSTEM
-from wsbench.evals.chain_intermediates.prompts import SYSTEM_SUMMARY as CHAIN_SYSTEM
+from wsbench.evals.computational.chain_intermediates.prompts import SYSTEM as CHAIN_NATIVE_SYSTEM
+from wsbench.evals.computational.chain_intermediates.prompts import SYSTEM_SUMMARY as CHAIN_SYSTEM
 
 
 def _legacy_args(*a, **kw):
@@ -35,7 +37,9 @@ def _registered():
         registry.FAMILIES.setdefault(spec.name, spec)
 
 
-CHAIN_V1 = Path(__file__).resolve().parents[1] / "evals/chain_intermediates/items.json"
+CHAIN_V1 = (
+    Path(__file__).resolve().parents[1] / "evals/computational/chain_intermediates/items.json"
+)
 
 
 @pytest.fixture

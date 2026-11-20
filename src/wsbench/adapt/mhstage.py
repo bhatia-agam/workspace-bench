@@ -1,4 +1,4 @@
-"""multihop refill (plan 0075 §2.4): a new row ships only with bank v5's legs (#323), the second
+"""multihop_st refill (plan 0075 §2.4): a new row ships only with bank v5's legs (#323), the second
 hop asked with the bridge named and the shortcut probes, both measured by the gate."""
 
 

@@ -333,7 +333,7 @@ def test_pool_row_to_item(pool):
     header, bank = msdm._bank()
     regs = msdm.carriers(bank)
     assert len(regs) == 10
-    from wsbench.evals.model_specific_directed_modulation.prompts import render_user
+    from wsbench.evals.model_specific.model_specific_directed_modulation.prompts import render_user
 
     ext = _ext()
     assert set(ext) == {A, B, C1, C2, C3}

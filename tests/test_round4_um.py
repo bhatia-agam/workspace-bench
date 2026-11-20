@@ -15,11 +15,11 @@ from pathlib import Path
 import pytest
 
 from wsbench import mc
-from wsbench.evals.user_modeling import judge, prompts
-from wsbench.evals.user_modeling.aliases import VALUE_ALIASES
-from wsbench.evals.user_modeling.judge import hedged, stem_echo
+from wsbench.evals.association.user_modeling import judge, prompts
+from wsbench.evals.association.user_modeling.aliases import VALUE_ALIASES
+from wsbench.evals.association.user_modeling.judge import hedged, stem_echo
 
-BANK = Path(__file__).parents[1] / "evals/user_modeling/items.json"
+BANK = Path(__file__).parents[1] / "evals/association/user_modeling/items.json"
 
 
 def _prompt(name: str) -> str:
@@ -364,7 +364,7 @@ def test_name_guard_kept():
 
 
 def _opts() -> dict:
-    from wsbench.evals.user_modeling.options import build_options
+    from wsbench.evals.association.user_modeling.options import build_options
 
     return build_options(json.loads(BANK.read_text())["items"])
 
@@ -384,7 +384,7 @@ def test_gender_lists_show_male_female_nonbinary():
 
 
 def test_country_lists_are_three_regional_triples_plus_one():
-    from wsbench.evals.user_modeling.aliases import COUNTRY_REGIONS, COUNTRY_UNGROUPED
+    from wsbench.evals.association.user_modeling.aliases import COUNTRY_REGIONS, COUNTRY_UNGROUPED
 
     region = {v: r for r, vs in COUNTRY_REGIONS.items() for v in vs}
     bank = json.loads(BANK.read_text())["items"]
@@ -405,7 +405,7 @@ def test_country_lists_are_three_regional_triples_plus_one():
 
 
 def test_every_list_has_two_same_topic_confusers():
-    from wsbench.evals.user_modeling.aliases import NEIGHBOURS
+    from wsbench.evals.association.user_modeling.aliases import NEIGHBOURS
 
     bank = json.loads(BANK.read_text())["items"]
     opts = _opts()

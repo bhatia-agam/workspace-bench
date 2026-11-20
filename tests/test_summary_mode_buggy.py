@@ -9,8 +9,8 @@ import pytest
 from summary_fakes import FakeLLM, digest_lines, summary_args
 
 from wsbench import digest
-from wsbench.evals.buggy_code import judge
-from wsbench.evals.buggy_code import prompts as bp
+from wsbench.evals.computational.buggy_code import judge
+from wsbench.evals.computational.buggy_code import prompts as bp
 
 REPO = Path(__file__).resolve().parents[1]
 EX = REPO / "examples/readouts/buggy_code.jsonl"

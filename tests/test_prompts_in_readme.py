@@ -2,7 +2,6 @@
 docs/summarizer.md) inside a fenced block. The J-lens interpretation step and its prompts are
 deleted (plan 0032 §2.3)."""
 
-import importlib
 import re
 from pathlib import Path
 
@@ -26,9 +25,9 @@ def _families() -> list[str]:
 
 @pytest.mark.parametrize("family", _families())
 def test_family_prompts_verbatim_in_readme(family: str):
-    mod = importlib.import_module(f"wsbench.evals.{family}.prompts")
+    mod = registry.family_module(family, "prompts")
     prompts: dict[str, str] = mod.PROMPTS
-    readme = (ROOT / "evals" / family / "README.md").read_text(encoding="utf-8")
+    readme = (registry.family_root(family) / "README.md").read_text(encoding="utf-8")
     assert prompts, f"{family}: every family is LLM-judged and must export PROMPTS"
     blocks = fenced_blocks(readme)
     assert blocks
@@ -36,7 +35,7 @@ def test_family_prompts_verbatim_in_readme(family: str):
         assert isinstance(text, str) and text
         assert any(text in b for b in blocks), f"{family}: {name} is not verbatim in the README"
     assert isinstance(mod.PROMPT_VERSION, str) and mod.PROMPT_VERSION
-    assert mod.PROMPT_VERSION in (ROOT / "evals" / family / "README.md").read_text()
+    assert mod.PROMPT_VERSION in readme
 
 
 def test_summarizer_prompt_verbatim_in_docs():

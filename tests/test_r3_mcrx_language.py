@@ -1,9 +1,10 @@
 # ruff: noqa: RUF001
-"""Round 3 (multilingual_multihop BLOCKING + multilingual): every-naming-form pins and the Arabic
+"""Round 3 (multilingual_multihop BLOCKING + multilingual_st): every-naming-form pins and the Arabic
 teaching-topic veto. Each rule is pinned in both directions: the too-strict shape of a cited case
 now passes and the too-lenient shape still fails. (The language cannot-tell rescue tested here
 before is gone with the MC language role: tests/test_multilingual_language_leg.py.)"""
 
+from wsbench import registry
 from wsbench.banks import load_bank, native_langs
 from wsbench.multitoken import mcrx, regex
 from wsbench.multitoken.languages import LANGUAGES, naming_forms
@@ -14,7 +15,7 @@ FAM = "multilingual_multihop"
 
 
 def _ctx(iid: str, cells: list[Cell]) -> mcrx._Ctx:
-    header, items = load_bank(f"evals/{FAM}/items_v2.json")
+    header, items = load_bank(f"{registry.family_rel(FAM).as_posix()}/items_v2.json")
     contract = regex.contract_for(header, str(header["family"]))
     it = next(i for i in items if i["id"] == iid)
     positions: dict = {}
@@ -35,7 +36,7 @@ def _cells(iid: str, samples: list[str], layer: int = 60) -> list[Cell]:
 
 
 def test_every_multihop_language_option_has_pin_forms():
-    _h, items = load_bank(f"evals/{FAM}/items_v2.json")
+    _h, items = load_bank(f"{registry.family_rel(FAM).as_posix()}/items_v2.json")
     in_table = {n for lg in LANGUAGES.values() for n in lg.names["en"]}
     for it in items:
         for o in option_sets(items)[it["id"]][LANGUAGE_ROLE][0][:-1]:
@@ -119,7 +120,7 @@ def test_multihop_raw_leg_takes_one_anchored_naming():
     from wsbench.multitoken import family as fam
 
     iid = "mlmh-ru-monarch-michoacan"
-    header, items = load_bank(f"evals/{FAM}/items_v2.json")
+    header, items = load_bank(f"{registry.family_rel(FAM).as_posix()}/items_v2.json")
     it = next(i for i in items if i["id"] == iid)
     units = regex.scored_units(it, regex.contract_for(header, str(header["family"])))
     bridge = {u.role: u.all_forms()[0] for u in units if u.role != LANGUAGE_ROLE}

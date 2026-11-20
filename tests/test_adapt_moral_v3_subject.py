@@ -11,7 +11,7 @@ from test_adapt_poetry_v5 import _assert_a1_overlay_ships_row
 
 from wsbench.adapt import families as fams
 from wsbench.adapt import moral, run, store
-from wsbench.evals.moral_rationale import BANK_V1
+from wsbench.evals.logical_processing.moral_rationale import BANK_V1
 from wsbench.registry import REPO_ROOT
 
 MODEL = "qwen3.5-4b"
@@ -213,4 +213,8 @@ def test_adopt_rejects_a_mismatched_option_bank(adapted):
         it = store.gated(MODEL, "moral_rationale")[a["id"]]["item"]
         assert "options" not in it and fams.SUBJECT_MARKER not in it, bad
     with pytest.raises(SystemExit):  # the bank of record is never an adopt source
-        moral.adopt(MODEL, str(d), bank=str(REPO_ROOT / "evals/moral_rationale/items_v3.json"))
+        moral.adopt(
+            MODEL,
+            str(d),
+            bank=str(REPO_ROOT / "evals/logical_processing/moral_rationale/items_v3.json"),
+        )

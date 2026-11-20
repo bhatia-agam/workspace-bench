@@ -8,15 +8,15 @@ from test_conjunctive_association import Q07A, _cells_file, _one, _opts
 
 from wsbench import digest
 from wsbench.digest import Line
-from wsbench.evals.agentic_misalignment import prompts as amp
-from wsbench.evals.conjunctive_association import judge as cj
-from wsbench.evals.introspection import judge as ij
-from wsbench.evals.jailbreak_recognition import prompts as jbp
-from wsbench.evals.moral_rationale import judge as mr
-from wsbench.evals.moral_rationale import prompts as mrp
-from wsbench.evals.multi_concept_directed_modulation import judge as mcdm
-from wsbench.evals.multi_concept_directed_modulation import prompts as mcdmp
-from wsbench.evals.relational_multihop import gate
+from wsbench.evals.anti_bag_of_features.relational_multihop import gate
+from wsbench.evals.association.conjunctive_association import judge as cj
+from wsbench.evals.basic.multi_concept_directed_modulation import judge as mcdm
+from wsbench.evals.basic.multi_concept_directed_modulation import prompts as mcdmp
+from wsbench.evals.logical_processing.moral_rationale import judge as mr
+from wsbench.evals.logical_processing.moral_rationale import prompts as mrp
+from wsbench.evals.model_specific.introspection import judge as ij
+from wsbench.evals.safety.agentic_misalignment import prompts as amp
+from wsbench.evals.safety.jailbreak_recognition import prompts as jbp
 from wsbench.mcjudge import load_bank
 from wsbench.readouts import Cell
 
@@ -384,7 +384,7 @@ def test_f9_conjunctive_draw_count_is_in_the_stamp():
 
 
 def test_f9_moral_pair_consistency():
-    from wsbench.evals.moral_rationale.score import pair_consistency
+    from wsbench.evals.logical_processing.moral_rationale.score import pair_consistency
 
     scope = [
         {"id": "a-tf", "topic_id": "a"},
@@ -497,7 +497,7 @@ def test_moral_near_verbatim_quote_verifies():
     "Paying ransom ..." for the readout's "Paying a ransom ...") verifies like an exact quote;
     a rewritten sentence or a short fragment still does not."""
     from wsbench import digest
-    from wsbench.evals.moral_rationale.judge import verify_quote
+    from wsbench.evals.logical_processing.moral_rationale.judge import verify_quote
     from wsbench.readouts import Cell
 
     text = "Paying a ransom encourages future kidnappings and funds criminal groups."

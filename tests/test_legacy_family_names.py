@@ -14,7 +14,7 @@ import pytest
 from wsbench import llm, registry
 from wsbench.baselines import text_inversion as ti
 from wsbench.cli import main
-from wsbench.evals.model_specific_directed_modulation import SPEC as DMO
+from wsbench.evals.model_specific.model_specific_directed_modulation import SPEC as DMO
 from wsbench.results import read_results
 
 REPO = Path(__file__).resolve().parents[1]
@@ -39,7 +39,15 @@ RENAMES = {
     "dm_category_default": "model_specific_directed_modulation",
     "directed_modulation_obscure": "model_specific_directed_modulation",  # plan 0034 O1
     "wrong_bridge": "wrong_intermediate",  # v1.2.0 (2026-11-03)
-    "multihop_mt_v2": "multihop_mt",  # 2026-11-04 (tests/test_rename_multihop_mt.py)
+    # 2026-11-04 (tests/test_rename_multihop_mt.py), then plan 0101 (2026-11-20): the multi-token
+    # families took the plain keys (tests/test_rename_0101.py)
+    "multihop_mt_v2": "multihop",
+}
+RENAMES_0101 = {  # the `_mt` keys the multi-token families gave up for the plain ones
+    "multihop_mt": "multihop",
+    "basic_readout_mt": "basic_readout",
+    "multilingual_mt": "multilingual",
+    "typo_mt": "typo",
 }
 
 
@@ -55,13 +63,19 @@ def _no_calls(monkeypatch):
 
 
 def test_map_and_canonical(real_families):
-    assert registry.LEGACY_FAMILY_NAMES == RENAMES
-    for old, new in RENAMES.items():
+    assert registry.LEGACY_FAMILY_NAMES == {**RENAMES, **RENAMES_0101}
+    for old, new in {**RENAMES, **RENAMES_0101}.items():
         assert registry.canonical(old) == new and registry.canonical(new) == new
         assert new in registry.FAMILIES and old not in registry.FAMILIES
         assert old in registry.legacy_names(new)  # plan 0034: DMO has two former keys
-        assert not (REPO / "evals" / old).exists() and (REPO / "evals" / new).is_dir()
-    assert registry.canonical("multihop") == "multihop" and registry.legacy_names("multihop") == []
+        assert not (REPO / "evals" / old).exists() and registry.family_root(new).is_dir()
+        assert not list((REPO / "evals").glob(f"*/{old}"))  # under no category either
+    # a key no family ever gave up is not a former key; the four bare keys are not in the map
+    # (typed today they mean the multi-token family, plan 0101)
+    assert registry.canonical("poetry") == "poetry" and registry.legacy_names("poetry") == []
+    assert not {"basic_readout", "multihop", "multilingual", "typo"} & set(
+        registry.LEGACY_FAMILY_NAMES
+    )
 
 
 # ---------------------------------------------------------------- (a) old names on the CLI

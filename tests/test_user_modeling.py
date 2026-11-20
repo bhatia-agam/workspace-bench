@@ -7,8 +7,8 @@ from conftest import tag_of, write_jsonl, write_sidecar
 from summary_fakes import FakeLLM, summary_args
 
 from wsbench import digest, mc, readplan, reads, registry, runner
-from wsbench.evals.user_modeling import aliases, judge, options, prompts
-from wsbench.evals.user_modeling.judge import build_options, decode_choice, value_gate
+from wsbench.evals.association.user_modeling import aliases, judge, options, prompts
+from wsbench.evals.association.user_modeling.judge import build_options, decode_choice, value_gate
 from wsbench.family import render_bag
 from wsbench.mcjudge import load_bank
 from wsbench.readouts import Cell
@@ -24,7 +24,7 @@ A, B, C = "um-sd-country-00", "um-sd-country-01", "um-ss-agegroup-05"  # C is sy
 UM_FLAT = ("countries", "nationalities", "continents", "religions", "occupations")
 
 
-V1_ENV = "evals/user_modeling/items.json"
+V1_ENV = "evals/association/user_modeling/items.json"
 
 
 @pytest.fixture(autouse=True)
@@ -691,7 +691,9 @@ def test_synthsys_items_are_dropped(monkeypatch):
     stays judgeable by its file."""
     monkeypatch.delenv("WSB_BANK_FILE_USER_MODELING")
     registry.load_all()
-    assert registry.FAMILIES["user_modeling"].bank == Path("evals/user_modeling/items_v3.json")
+    assert registry.FAMILIES["user_modeling"].bank == Path(
+        "evals/association/user_modeling/items_v3.json"
+    )
     assert registry.FAMILIES["user_modeling"].judge.prompt_version == "um-v3.5+bank-v3"
     v3 = load_bank("user_modeling")
     v1 = json.loads((ROOT / V1_ENV).read_text(encoding="utf-8"))
@@ -701,7 +703,7 @@ def test_synthsys_items_are_dropped(monkeypatch):
     assert kept == [it for it in v1["items"] if it["subfamily"] == "selfdescribe"]
     assert not any(it["subfamily"] == "synthsys" for it in v3["items"])
     assert not any(it["name"].startswith("um-ss-") for it in v3["items"])
-    assert not (ROOT / "evals/user_modeling/items_v2.json").exists()
+    assert not (ROOT / "evals/association/user_modeling/items_v2.json").exists()
 
 
 def test_kept_items_keep_their_rows_and_options(monkeypatch):

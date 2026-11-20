@@ -221,7 +221,11 @@ def judge(model: str, judge_model: str = "claude-opus-5-5") -> dict:
 
     want = {canonical(x) for x in only}
     # one file per family: the former-key file wins (readouts_path), a stray duplicate is skipped
-    stems = {canonical(p.stem) for p in rd.glob("*.jsonl")}
+    # (a file under a plan-0101 bare key by its content: a readouts dir written before the
+    # rename holds the single-token family there)
+    from wsbench import registry
+
+    stems = {registry.file_family(p) or canonical(p.stem) for p in rd.glob("*.jsonl")}
     picked = [readouts_path(rd, f) for f in sorted(stems) if not only or f in want]
     for f in sorted(p.stem for p in picked if p is not None):
         first = next((ln for ln in (rd / f"{f}.jsonl").read_text(encoding="utf-8").split("\n")

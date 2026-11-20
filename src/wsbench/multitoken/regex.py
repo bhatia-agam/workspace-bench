@@ -15,7 +15,7 @@ The rules, in the order a cell is scored:
    only forms the bank stamped as multi-token stay (``probe_token_lens.units[role][lang][i] >
    1`` — the source's strict count: min over case variants x bare/leading-space, so a form any
    single Qwen3.6-27B token could equal is never creditable). ``include_target`` banks
-   (multihop_mt) add an OPTIONAL ``target`` unit from ``target`` + ``target_alts``, likewise
+   (multihop) add an OPTIONAL ``target`` unit from ``target`` + ``target_alts``, likewise
    filtered (``probe_token_lens.target`` / ``.target_alts``), minus forms a unit already covers.
    A REQUIRED unit left without a creditable form is a bank error.
 3. **A form hits a sample** (``unicode_word_matcher``): both sides folded (NFKD, combining marks
@@ -285,7 +285,7 @@ class BankContract:
     multi_token: bool  # only multi-token forms may award credit
     include_target: bool  # the item's ``target`` is itself a scored (optional) unit
     conjunctive_units: bool  # a layer passes only when EVERY required unit hits there
-    # opt-in keys of a bank's contract block (multihop_mt bank v2, 2026-10-30; default off, so
+    # opt-in keys of a bank's contract block (multihop bank v2, 2026-10-30; default off, so
     # every other bank scores byte-identically): ``markdown_fold`` matches each sample after
     # ``digest.fold_quote`` (``**Venerable Bede**`` == ``Venerable Bede``); ``fuzzy_names`` also
     # credits a misspelt Latin-script name (``fuzzy_form_in``: Khatchaturian for Khachaturian)
@@ -385,7 +385,8 @@ def _counts(item: Mapping[str, Any], role: str, lang: str, n: int) -> list[int]:
 
 # The prompt-language bridge of a v2 multilingual_multihop item is not required (the frozen bank
 # still lists it as required). Writing the bridge in the prompt's own language is what
-# multilingual rejects as next-token prediction of its L2 answer word. It stays a scored, OPTIONAL
+# multilingual_st rejects as next-token prediction of its L2 answer word. It stays a scored,
+# OPTIONAL
 # unit, so ``rows[].unit_hit`` still reports it.
 OPTIONAL_V2_ROLES = frozenset({"bridge_l2"})
 # A v2 multilingual item's English content forms also credit their regular English plural,
@@ -393,8 +394,8 @@ OPTIONAL_V2_ROLES = frozenset({"bridge_l2"})
 # mlt-hu-cseppkobarlang's digest was "víz-barlangok** (*dripstone caves*)"): +s, +es after ss /
 # us / x / z / ch / sh, -is -> -es ("dialysis" -> "dialyses"; none after another final s, already
 # a plural), consonant + y -> ies. Only the units that name a thing (PLURAL_ROLES:
-# multilingual_mt's concept, multilingual_multihop's bridge, multilingual_typo's correction), never
-# multilingual's one-word answers (adjectives, numbers, months, directions: "lows", "colds" would
+# multilingual's concept, multilingual_multihop's bridge, multilingual_typo's correction), never
+# multilingual_st's one-word answers (adjectives, numbers, months, directions: "lows", "colds" would
 # be other words); never a form whose first letter is upper case (a name: matching is case-blind,
 # so "Booth" -> "Booths" would credit "voting booths"; capitalised common nouns such as "X-ray"
 # lose their plural too), a case-sensitive form, a number, a CJK form or a ``re:`` pattern; the

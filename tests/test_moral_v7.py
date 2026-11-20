@@ -13,15 +13,15 @@ from summary_fakes import summary_args
 
 from wsbench import readplan, reads, registry
 from wsbench.baselines import lucky_guessing as lg
-from wsbench.evals.moral_rationale import judge as mr
-from wsbench.evals.moral_rationale import prompts as mrp
+from wsbench.evals.logical_processing.moral_rationale import judge as mr
+from wsbench.evals.logical_processing.moral_rationale import prompts as mrp
 
 ROOT = Path(__file__).resolve().parents[1]
 FAMILY = "moral_rationale"
-V3 = ROOT / "evals/moral_rationale/items_v3.json"
-V7 = ROOT / "evals/moral_rationale/items_v7.json"
-V7_ENV = "evals/moral_rationale/items_v7.json"
-REPORT = ROOT / "evals/moral_rationale/rekey_report_v7.json"
+V3 = ROOT / "evals/logical_processing/moral_rationale/items_v3.json"
+V7 = ROOT / "evals/logical_processing/moral_rationale/items_v7.json"
+V7_ENV = "evals/logical_processing/moral_rationale/items_v7.json"
+REPORT = ROOT / "evals/logical_processing/moral_rationale/rekey_report_v7.json"
 
 
 def _v7mod():
@@ -39,7 +39,7 @@ def test_v3_stays_registered_and_v7_is_opt_in_under_its_own_stamp(monkeypatch):
     monkeypatch.delenv("WSB_BANK_FILE_MORAL_RATIONALE", raising=False)
     registry.load_all()
     spec = registry.FAMILIES[FAMILY]
-    assert spec.bank == Path("evals/moral_rationale/items_v3.json")
+    assert spec.bank == Path("evals/logical_processing/moral_rationale/items_v3.json")
     assert spec.judge.prompt_version == "ec-v9" != mrp.PROMPT_VERSION_V7 == "ec-v9-b7"
     from wsbench.mcjudge import load_bank
 
@@ -53,7 +53,9 @@ def test_v3_stays_registered_and_v7_is_opt_in_under_its_own_stamp(monkeypatch):
         mr.instrument_version(
             bank, summary_args(Path("x"), Path("y"), "x", extra={"prompts": "ec-v9"})
         )
-    monkeypatch.setenv("WSB_BANK_FILE_MORAL_RATIONALE", "evals/moral_rationale/items_v3.json")
+    monkeypatch.setenv(
+        "WSB_BANK_FILE_MORAL_RATIONALE", "evals/logical_processing/moral_rationale/items_v3.json"
+    )
     v3 = load_bank(FAMILY)
     with pytest.raises(SystemExit):
         mr.instrument_version(
@@ -66,7 +68,9 @@ def test_read_plan_stays_bank_v3s_rows(monkeypatch):
     plan_sha): no new readouts."""
     monkeypatch.setenv("WSB_BANK_FILE_MORAL_RATIONALE", V7_ENV)
     v7_rows = [s.row() for s in readplan.plan(FAMILY, layers=None)]
-    monkeypatch.setenv("WSB_BANK_FILE_MORAL_RATIONALE", "evals/moral_rationale/items_v3.json")
+    monkeypatch.setenv(
+        "WSB_BANK_FILE_MORAL_RATIONALE", "evals/logical_processing/moral_rationale/items_v3.json"
+    )
     v3_rows = [s.row() for s in readplan.plan(FAMILY, layers=None)]
     assert v7_rows == v3_rows and len(v3_rows) == 195
     assert reads.plan_sha_rows(v7_rows) == reads.plan_sha_rows(v3_rows)

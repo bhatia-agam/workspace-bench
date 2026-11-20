@@ -274,4 +274,4 @@ def test_other_families_keep_their_asks_and_record_shape():
     leg = grade_leg(Ask("x", "surface", ("Fe",)), "Fe", ["Fe"] * 10, 0.8)
     rec = gate_record({"surface": leg})
     assert "reply" not in rec["legs"]["surface"] and "followup" not in rec
-    assert not fams.get("multihop").gate_render
+    assert not fams.get("multihop_st").gate_render

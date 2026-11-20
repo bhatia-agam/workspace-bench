@@ -18,8 +18,8 @@ from wsbench import readplan, reads, registry, runner
 from wsbench.baselines import lucky_guessing
 from wsbench.baselines import text_inversion as ti
 from wsbench.cli import _family
-from wsbench.evals.wrong_intermediate import judge as wj
-from wsbench.evals.wrong_intermediate import prompts as wp
+from wsbench.evals.model_specific.wrong_intermediate import judge as wj
+from wsbench.evals.model_specific.wrong_intermediate import prompts as wp
 
 REPO = Path(__file__).resolve().parents[1]
 # plan_sha / ATI bank_sha of the family on origin/main before the rename (30064aec); the plan_sha
@@ -32,8 +32,8 @@ def test_new_name_is_the_family():
     registry.load_all()
     assert "wrong_intermediate" in registry.FAMILIES and "wrong_bridge" not in registry.FAMILIES
     spec = registry.FAMILIES["wrong_intermediate"]
-    assert spec.bank == Path("evals/wrong_intermediate/items_v4.json")
-    assert (REPO / "evals/wrong_intermediate").is_dir() and not (
+    assert spec.bank == Path("evals/model_specific/wrong_intermediate/items_v4.json")
+    assert (REPO / "evals/model_specific/wrong_intermediate").is_dir() and not (
         REPO / "evals/wrong_bridge"
     ).exists()
     assert (REPO / "examples/readouts/wrong_intermediate.jsonl").is_file()

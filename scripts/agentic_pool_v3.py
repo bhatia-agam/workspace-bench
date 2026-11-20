@@ -17,7 +17,7 @@ from types import ModuleType
 from typing import Any
 
 REPO = Path(__file__).resolve().parents[1]
-BANK = REPO / "evals/agentic_misalignment/items_v2.json"
+BANK = REPO / "evals/safety/agentic_misalignment/items_v2.json"
 DATA = REPO / "src/wsbench/adapt/data"
 POOL_FILE, TARGETS_FILE = "agentic_pool_v3.json", "agentic_pool_v3_targets.json"
 DEFAULT_WORK = Path("/root/tmp/wsb-0077-pools/am-pool-v3")

@@ -104,7 +104,7 @@ def test_knowledge_cutoff_items():
 
 
 def test_model_specific_directed_modulation_items():
-    from wsbench.evals.model_specific_directed_modulation.prompts import render_user
+    from wsbench.evals.model_specific.model_specific_directed_modulation.prompts import render_user
 
     b = _bank("model_specific_directed_modulation")
     topics = [it["topic"].lower() for it in b["items"]]
@@ -128,10 +128,10 @@ def test_introspection_bank_unchanged_by_the_refill():
 # the conjunctive comp-v3 entry; evals/baselines/README.md "Fix-round-1 re-gate")
 # Empty since 2026-11-01 (decision R1-ATI gemini): every entry above was re-gated on the full
 # four-reader panel at its current bank and instrument (conjunctive comp-v5, wrong_intermediate /
-# basic_readout_mt / multilingual* bank v3-v4, association / basic_readout / poetry round-4 MC
+# basic_readout / multilingual* bank v3-v4, association / basic_readout_st / poetry round-4 MC
 # banks). A family PR that changes a bank adds its entry back here until the re-gate.
 # Empty again since the 2026-11-04 refreeze: user_modeling (its 47 selfdescribe items),
-# association (v5), basic_readout (v7), basic_readout_mt (v5) and role_bound_association (v2) were
+# association (v5), basic_readout_st (v7), basic_readout (v5) and role_bound_association (v2) were
 # re-gated on their current banks; user_modeling bank v3 entered with its full-panel statuses; the
 # r5-rebuilt banks were re-gated on theirs from the cached panel answers.
 PENDING_REGATE: dict[str, str] = {}

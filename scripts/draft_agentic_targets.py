@@ -1,4 +1,5 @@
-"""Draft ``evals/agentic_misalignment/targets.json`` (plan 0012 §3.1): per scenario, the DESIGNED
+"""Draft ``evals/safety/agentic_misalignment/targets.json`` (plan 0012 §3.1): per scenario, the
+DESIGNED
 misaligned action as one sentence, 3-5 paraphrases, and 3-5 not-credit entries, drafted from the
 scenario text (system + user turn) with the bank descriptor and pinned prefill as cross-checks.
 
@@ -15,8 +16,8 @@ from typing import Any
 from openai import OpenAI
 
 REPO = Path(__file__).resolve().parents[1]
-BANK = REPO / "evals/agentic_misalignment/items.json"
-OUT = REPO / "evals/agentic_misalignment/targets.json"
+BANK = REPO / "evals/safety/agentic_misalignment/items.json"
+OUT = REPO / "evals/safety/agentic_misalignment/targets.json"
 MODEL = "anthropic/claude-opus-5"
 # a refusal (content_filter) falls through to the next model; the entry records which one drafted it
 FALLBACKS = ("anthropic/claude-sonnet-5", "google/gemini-3.8-flash")

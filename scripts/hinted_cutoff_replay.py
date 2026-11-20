@@ -15,7 +15,7 @@ from pathlib import Path
 
 from wsbench import reads
 from wsbench.banks import load_bank
-from wsbench.evals.hinted_cutoff import judge, score
+from wsbench.evals.model_specific.hinted_cutoff import judge, score
 from wsbench.readouts import load_readouts, normalize, write_sidecar
 from wsbench.readplan import GRID
 from wsbench.registry import bank_path

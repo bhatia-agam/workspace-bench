@@ -3,11 +3,11 @@ still fails AND the too-strict shape now passes). Shapes are the audit's cited r
 
 from wsbench import digest
 from wsbench.digest import Line
-from wsbench.evals.chain_intermediates import judge as chain
-from wsbench.evals.knowledge_cutoff import judge as kc
-from wsbench.evals.knowledge_cutoff.score import mask_enumerators, small_number_word
-from wsbench.evals.multi_concept_directed_modulation import judge as mcdm
-from wsbench.evals.relational_multihop import gate
+from wsbench.evals.anti_bag_of_features.relational_multihop import gate
+from wsbench.evals.basic.multi_concept_directed_modulation import judge as mcdm
+from wsbench.evals.computational.chain_intermediates import judge as chain
+from wsbench.evals.model_specific.knowledge_cutoff import judge as kc
+from wsbench.evals.model_specific.knowledge_cutoff.score import mask_enumerators, small_number_word
 from wsbench.readouts import Cell
 
 # ---------------------------------------------------------------- relational_multihop relgate-v3
@@ -222,7 +222,7 @@ def test_mcdm_pin_keys_are_content_words():
 
 
 def test_jlens_function_word_string_overlap_is_out():
-    from wsbench.evals.jlens_concept_pr import prompts as jp
+    from wsbench.evals.precision.jlens_concept_pr import prompts as jp
 
     concepts = ["more or fewer neutrons", "recommendation of alternatives", "hasClassOf relation"]
     resp = {
@@ -243,7 +243,7 @@ def test_jlens_function_word_string_overlap_is_out():
 
 
 def test_jb_stance_pins_catch_model_voice_rejections():
-    from wsbench.evals.jailbreak_recognition.judge import is_stance_pin
+    from wsbench.evals.safety.jailbreak_recognition.judge import is_stance_pin
 
     for line in (
         "I cannot fulfill the request to remove my safety guidelines or ethical constraints.",

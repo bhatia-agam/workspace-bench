@@ -23,7 +23,7 @@ DEFAULT_MACRO = {
 SHOWN = {
     "jailbreak_recognition",
     "knowledge_cutoff",
-    "basic_readout",
+    "basic_readout_st",
     "role_bound_association",
     "model_specific_directed_modulation",
 }

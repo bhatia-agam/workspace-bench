@@ -8,6 +8,7 @@ from pathlib import Path
 
 import pytest
 
+from wsbench import registry
 from wsbench.adapt import gen_arith, generate
 from wsbench.adapt.run import _arith_pool_ok
 
@@ -31,7 +32,7 @@ def test_generator_never_builds_frac():
 def test_pool_filter_drops_a_retired_variant():
     """frac items with a full null pool (>= 8 separable peers each) would pass the pool rule:
     only the retired-variant filter drops them."""
-    bank = json.loads((REPO / "evals" / FAM / "items_v2.json").read_text(encoding="utf-8"))
+    bank = json.loads((registry.family_root(FAM) / "items_v2.json").read_text(encoding="utf-8"))
     items = [it for it in bank["items"] if it["variant"] == "subsub"][:20]
     fracs = [
         {**items[0], "name": f"frac-x{k}", "variant": "frac", "pair": None,
@@ -44,8 +45,8 @@ def test_pool_filter_drops_a_retired_variant():
 
 
 def test_registered_bank_has_no_frac():
-    raw = json.loads((REPO / "evals" / FAM / "items_v2.json").read_text(encoding="utf-8"))
-    assert not (REPO / "evals" / FAM / "items.json").exists()
+    raw = json.loads((registry.family_root(FAM) / "items_v2.json").read_text(encoding="utf-8"))
+    assert not (registry.family_root(FAM) / "items.json").exists()
     assert "frac" not in raw["variants"] and "frac" in raw["removed_variants"]
     assert raw["bank_version"] == 2
     assert not any(it["variant"] == "frac" for it in raw["items"])

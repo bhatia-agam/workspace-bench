@@ -476,7 +476,7 @@ function renderMethod() {
 
   <h4>What the scores say</h4>
   <ul>
-    <li>Re-gating helps most where the 27B bank asked things small models can't do: e.g. Qwen3.5-9B multihop_mt inverter .09 → .48, RL .23 → .64; the 2B and 0.8B gain ~+.15 macro over the same families on the normal bank.</li>
+    <li>Re-gating helps most where the 27B bank asked things small models can't do: e.g. Qwen3.5-9B multihop (multi-token) inverter .09 → .48, RL .23 → .64; the 2B and 0.8B gain ~+.15 macro over the same families on the normal bank.</li>
     <li>Every subject with a measured floor has its RL lens above it, except Gemma-4-31B (RL .626 vs floor .668, floor measured before a BOS fix). The Qwen3.5-9B inverter is <i>below</i> its floor (.554 vs .600 over the same 21 families).</li>
     <li>Arithmetic stays near 0 for every lens even on easier items, while its floor is ~.3–.4: the lenses don't surface intermediate values there.</li>
   </ul>

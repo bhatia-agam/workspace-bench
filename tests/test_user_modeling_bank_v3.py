@@ -9,12 +9,12 @@ from pathlib import Path
 import pytest
 
 from wsbench import mc, readplan, reads, registry
-from wsbench.evals.user_modeling import aliases, judge, options, prompts
-from wsbench.evals.user_modeling.judge import build_options
+from wsbench.evals.association.user_modeling import aliases, judge, options, prompts
+from wsbench.evals.association.user_modeling.judge import build_options
 from wsbench.mcjudge import load_bank
 
 ROOT = Path(__file__).resolve().parents[1]
-UM = ROOT / "evals/user_modeling"
+UM = ROOT / "evals/association/user_modeling"
 V3 = UM / "items_v3.json"
 # the plan the bank-v3 readouts were produced for (126 rows); v1 / v2 read items.json's 100 rows
 PLAN_SHA_V3 = "9cc43bf742edf7eb5b29f84ad815d79fc61d9769d9690ceafcf8f76e427aa709"
@@ -64,7 +64,7 @@ def test_new_items_are_implied_selfdescribe_items():
 
 def test_registered_bank_stamp_and_instrument():
     spec = registry.FAMILIES["user_modeling"]
-    assert spec.bank == Path("evals/user_modeling/items_v3.json")
+    assert spec.bank == Path("evals/association/user_modeling/items_v3.json")
     assert spec.judge.prompt_version == prompts.PROMPT_VERSION == "um-v3.5+bank-v3"
     assert judge.instrument(load_bank("user_modeling")) == "um-v3.5+bank-v3"
     assert judge.instrument({"version": 2}) == "um-v3.5+bank-v2"
@@ -77,7 +77,7 @@ def test_v3_reads_its_own_plan(monkeypatch):
     assert reads.plan_sha("user_modeling") == PLAN_SHA_V3
     # the 47 kept rows equal items.json's rows on every hashed field: their reads serve bank v3
     v3_rows = {s.id: s.row() for s in rows}
-    monkeypatch.setenv("WSB_BANK_FILE_USER_MODELING", "evals/user_modeling/items.json")
+    monkeypatch.setenv("WSB_BANK_FILE_USER_MODELING", "evals/association/user_modeling/items.json")
     v1_rows = {s.id: s.row() for s in readplan.plan("user_modeling")}
     kept = [it["name"] for it in _raw(V3)["items"][:47]]
     assert all(v3_rows[i] == v1_rows[i] for i in kept)

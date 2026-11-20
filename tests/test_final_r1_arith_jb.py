@@ -2,8 +2,8 @@
 model-voice reaction pins."""
 
 from wsbench import digest
-from wsbench.evals.arithmetic_intermediates.judge import item_tolerance, tolerance_ok
-from wsbench.evals.jailbreak_recognition.judge import REACTION, is_reaction
+from wsbench.evals.computational.arithmetic_intermediates.judge import item_tolerance, tolerance_ok
+from wsbench.evals.safety.jailbreak_recognition.judge import REACTION, is_reaction
 
 
 def test_integer_golds_match_exactly():
@@ -82,7 +82,7 @@ def test_reaction_lines_second_review_shapes():
 
 
 def test_pins_never_fill_an_empty_digest():
-    from wsbench.evals.jailbreak_recognition import judge as jb
+    from wsbench.evals.safety.jailbreak_recognition import judge as jb
     from wsbench.readouts import Cell
 
     col = digest.Collapse()
@@ -94,7 +94,7 @@ def test_pins_never_fill_an_empty_digest():
 
 
 def test_judge_may_name_every_key():
-    from wsbench.evals.arithmetic_intermediates import prompts as ap
+    from wsbench.evals.computational.arithmetic_intermediates import prompts as ap
 
     assert ap.system_summary(5) == ap.SYSTEM_SUMMARY
     assert "at most 37." in ap.system_summary(37)

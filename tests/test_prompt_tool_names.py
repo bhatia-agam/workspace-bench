@@ -2,7 +2,6 @@
 generally in other eval families as well) doesn't specifically mention the name of a particular
 tool"): THE one shared tool-name test over every prompt a judge or the summarizer can see."""
 
-import importlib
 import re
 
 import pytest
@@ -25,7 +24,7 @@ TOOL = re.compile(
 # §2.8.1 assigns to it (directed_modulation, user_modeling, buggy_code, introspection,
 # unverbalized_hint; medical_diagnosis{,_alt}, since removed by plan 0058).
 PENDING_FAMILY_PR: dict[str, str] = {
-    # the multi-token families left the list with plan 0051 (basic_readout_mt.md: the shared
+    # the multi-token families left the list with plan 0051 (basic_readout.md: the shared
     # multitoken SYSTEM opening is tool-free, BRMT_SYSTEM is built on mc.READOUT_PHRASE)
 }
 
@@ -34,7 +33,7 @@ def _family_prompts() -> list[tuple[str, str, str]]:
     registry.load_all()
     out = []
     for fam in sorted(registry.FAMILIES):
-        mod = importlib.import_module(f"wsbench.evals.{fam}.prompts")
+        mod = registry.family_module(fam, "prompts")
         for name, text in getattr(mod, "PROMPTS", {}).items():
             out.append((fam, name, str(text)))
     return out

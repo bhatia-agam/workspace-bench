@@ -8,8 +8,19 @@ from contextlib import contextmanager
 from pathlib import Path
 from typing import Any
 
+from wsbench import registry
 from wsbench.banks import load_bank as load_wrapped
-from wsbench.registry import REPO_ROOT, lookup_names
+from wsbench.readouts import ids_in
+from wsbench.registry import (
+    REPO_ROOT,
+    RenamedKey,
+    _bank_file_ids,
+    lookup_names,
+    owner,
+    partner,
+    root_bank,
+    shared_key,
+)
 
 
 def model_dir(model: str, root: Path = REPO_ROOT) -> Path:
@@ -61,16 +72,41 @@ def _legacy_ok(base: Path, family: str, suffix: str = ".jsonl") -> Path:
     """``base/<family><suffix>``, or the file under a former family key when only that exists
     (a pre-v1.2.0 ``wrong_bridge.jsonl``, a set's ``multihop_mt_v2.json`` written before the
     2026-11-04 rename; for a reused key the former key's file wins, ``registry.lookup_names``)."""
-    return next(
-        (p for key in lookup_names(family) if (p := base / f"{key}{suffix}").exists()),
-        base / f"{family}{suffix}",
-    )
+    bare = shared_key(family)
+    for key in lookup_names(family):
+        path = base / f"{key}{suffix}"
+        if not path.exists():
+            continue
+        if key == bare and suffix == ".jsonl":
+            # a work file under the bare key of a renamed pair (plan 0101 §5.5): by its row ids,
+            # against the registered banks and then the set's own banks. Candidate ids are in no
+            # bank, so an unidentified file is this family's only under its OWN key.
+            ids = ids_in(path)
+            who = owner(key, ids=ids) if ids else None
+            if ids and who is None:
+                for member in (family, partner(family)):
+                    bank = root_bank(base.parent, str(member))
+                    if bank is not None and ids & _bank_file_ids(bank):
+                        who = member
+                        break
+            if who is None and key != family:
+                continue
+            if who is not None and who != family:
+                if key == family:  # never the path a writer of this family appends to
+                    raise RenamedKey(
+                        f"{path} holds rows of {who!r}, written before the key {key!r} was "
+                        f"reused (plan 0101); move it to {who}{suffix}"
+                    )
+                continue
+        return path
+    return base / f"{family}{suffix}"
 
 
 def bank_file(model: str, family: str) -> Path:
     """The set's bank of ``family`` (``<model dir>/<family>.json``, or one written under a former
     family key)."""
-    return _legacy_ok(model_dir(model), family, ".json")
+    base = model_dir(model)
+    return root_bank(base, family) or base / f"{family}.json"
 
 
 def report_key(section: dict[str, Any] | None, family: str) -> str:
@@ -78,13 +114,53 @@ def report_key(section: dict[str, Any] | None, family: str) -> str:
     ``drops``): the first one present in ``registry.lookup_names`` order (a set written before a
     rename keeps its entry under the former key), else ``family``."""
     section = section or {}
-    return next((k for k in lookup_names(family) if k in section), family)
+    bare = shared_key(family)
+    for key in lookup_names(family):
+        if key not in section:
+            continue
+        if key == bare:
+            # a set written before plan 0101 keeps the SINGLE-token family under the bare key:
+            # the entry's own evidence decides (its item ids, or the registered bank it names);
+            # without any, the bare key is the multi-token family's (what it means today)
+            who = _entry_owner(key, section[key])
+            if who is not None and who != family:
+                continue
+            if who is None and key != family:
+                continue
+        return key
+    return family
+
+
+def _entry_owner(key: str, entry: Any) -> str | None:
+    """Which member of a renamed pair a report entry under the bare ``key`` belongs to: by the
+    item ids a ``drops`` / ``patches`` entry is keyed by, else by the pre-0101 ``"bank":
+    "evals/<family>/..."`` string a ``families`` entry carries. None when it does not say."""
+    if not isinstance(entry, dict):
+        return None
+    bank = entry.get("bank")
+    if isinstance(bank, str) and bank.startswith("evals/"):
+        parts = Path(bank).parts
+        if len(parts) >= 3 and parts[1] in registry.PRE_0101_KEYS:  # the pre-0101 layout
+            return registry.PRE_0101_KEYS[parts[1]]
+        if len(parts) >= 4 and parts[2] in registry.FAMILIES:
+            return parts[2]
+    try:
+        return owner(key, ids=[str(i) for i in entry])
+    except RenamedKey:
+        return None
 
 
 def report_entry(section: dict[str, Any] | None, family: str) -> dict[str, Any]:
     """``section[family]`` of a set's ``report.json`` (``families``, ``drops``), or the entry
-    written under a former family key (``report_key``); ``{}`` when there is none."""
-    return (section or {}).get(report_key(section, family), {})
+    written under a former family key (``report_key``); ``{}`` when there is none, and when
+    the only entry under the family's bare key is its plan-0101 partner's (a pre-rename report
+    that holds the single-token family alone)."""
+    section = section or {}
+    key = report_key(section, family)
+    entry = section.get(key, {})
+    if key == shared_key(family) and _entry_owner(key, entry) not in (None, family):
+        return {}
+    return entry
 
 
 def report_slot(report: dict[str, Any], section: str, family: str) -> dict[str, Any]:
@@ -197,14 +273,72 @@ def clear_built_absent(model: str, report: dict[str, Any]) -> list[str]:
 def update_report(model: str, mutate: Callable[[dict[str, Any]], Any]) -> dict[str, Any]:
     """Locked read -> ``mutate(report)`` in place -> stale automatic absences cleared
     (``clear_built_absent``) -> atomic write (stamped with ``code_stamp``). Returns the new
-    report."""
+    report. Plan 0101: a set with pre-rename keys is refused (``require_migrated``); every other
+    set is stamped with ``SET_MARKER``, so a set created after the rename says that its keys
+    are today's and ``scripts/migrate_0101.py set`` never translates them."""
     with report_lock(model):
         report = read_report(model)
+        require_migrated(model, report)
         mutate(report)
         clear_built_absent(model, report)
+        if not _former_key_left(model, report):
+            report[SET_MARKER[0]] = SET_MARKER[1]
         report["code"] = code_stamp()
         write_json(model_dir(model) / "report.json", report)
         return report
+
+
+# written into report.json by scripts/migrate_0101.py set, and by ``update_report`` for a set
+# that holds no pre-rename key
+SET_MARKER = ("family_keys", "0101")
+# the one former key the write fence lets through (below): a set still holding it is written
+# as before, and is NOT marked until `migrate_0101.py set` renames it
+UNFENCED_FORMER_KEY = "multihop_mt_v2"
+
+
+def _former_key_left(model: str, report: dict[str, Any]) -> bool:
+    if (model_dir(model) / f"{UNFENCED_FORMER_KEY}.json").exists():
+        return True
+    return any(
+        UNFENCED_FORMER_KEY in (report.get(sec) or {}) for sec in ("families", "drops", "patches")
+    )
+
+
+def pre_0101_evidence(model: str, report: dict[str, Any] | None = None) -> str:
+    """What shows that a set was written before plan 0101 and never migrated ("" when nothing
+    does): a report entry or a bank file under one of the `_mt` keys the rename retired, or a
+    bank under a bare key whose header is the single-token family's."""
+    report = read_report(model) if report is None else report
+    if report.get(SET_MARKER[0]) == SET_MARKER[1]:
+        return ""
+    base = model_dir(model)
+    # (not multihop_mt_v2: a set still under that 2026-11-04 former key holds one family's files
+    # and is read and written through ``lookup_names`` as before)
+    retired = ["basic_readout_mt", "multihop_mt", "multilingual_mt", "typo_mt"]
+    for sec in ("families", "drops", "patches"):
+        hit = [k for k in retired if k in (report.get(sec) or {})]
+        if hit:
+            return f"report.json {sec}.{hit[0]}"
+    for key in retired:
+        if (base / f"{key}.json").exists():
+            return f"{key}.json"
+    for key, r in registry.REUSED_FAMILY_KEYS.items():
+        bank = base / f"{key}.json"
+        other = r.other_header is not None and bank.is_file()
+        if other and registry._header_family(bank) == r.other_header:
+            return f"{key}.json (header {r.other_header!r}: the single-token family's)"
+    return ""
+
+
+def require_migrated(model: str, report: dict[str, Any] | None = None) -> None:
+    """Plan 0101: nothing WRITES into a set that still uses the pre-rename family keys (reads,
+    i.e. judging under ``WSB_BANK_ROOT``, work on it as it is)."""
+    why = pre_0101_evidence(model, report)
+    if why:
+        raise SystemExit(
+            f"{model_dir(model)} was written before plan 0101 ({why}); run "
+            f"`scripts/migrate_0101.py set {model_dir(model)} --apply` first"
+        )
 
 
 def read_report(model: str) -> dict[str, Any]:

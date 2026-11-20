@@ -16,16 +16,16 @@ from summary_fakes import summary_args
 
 from wsbench import readplan, reads, registry
 from wsbench.baselines import lucky_guessing as lg
-from wsbench.evals.moral_rationale import judge as mr
-from wsbench.evals.moral_rationale import prompts as mrp
+from wsbench.evals.logical_processing.moral_rationale import judge as mr
+from wsbench.evals.logical_processing.moral_rationale import prompts as mrp
 
 ROOT = Path(__file__).resolve().parents[1]
 FAMILY = "moral_rationale"
-V3 = ROOT / "evals/moral_rationale/items_v3.json"
-V5 = ROOT / "evals/moral_rationale/items_v5.json"
+V3 = ROOT / "evals/logical_processing/moral_rationale/items_v3.json"
+V5 = ROOT / "evals/logical_processing/moral_rationale/items_v5.json"
 V5_FLOORS = ROOT / "evals/baselines/lucky_guessing_moral_v5.json"
-V5_ENV = "evals/moral_rationale/items_v5.json"
-REPORT = ROOT / "evals/moral_rationale/rekey_report_v5.json"
+V5_ENV = "evals/logical_processing/moral_rationale/items_v5.json"
+REPORT = ROOT / "evals/logical_processing/moral_rationale/rekey_report_v5.json"
 CHANCE_MARGIN = 0.02  # Camila r2: moral at chance, i.e. <= chance + 2 points
 
 
@@ -48,7 +48,7 @@ def test_v3_stays_registered_and_v5_is_opt_in_under_its_own_stamp(monkeypatch):
     monkeypatch.delenv("WSB_BANK_FILE_MORAL_RATIONALE", raising=False)
     registry.load_all()
     spec = registry.FAMILIES[FAMILY]
-    assert spec.bank == Path("evals/moral_rationale/items_v3.json")
+    assert spec.bank == Path("evals/logical_processing/moral_rationale/items_v3.json")
     assert registry.bank_path(FAMILY).name == "items_v3.json"
     assert spec.judge.prompt_version == mrp.PROMPT_VERSION == mrp.PROMPT_VERSION_V3 == "ec-v9"
     assert mrp.PROMPT_VERSION_V5 == "ec-v9-b5" != spec.judge.prompt_version
@@ -69,7 +69,9 @@ def test_v3_stays_registered_and_v5_is_opt_in_under_its_own_stamp(monkeypatch):
         mr.instrument_version(
             bank, summary_args(Path("x"), Path("y"), "x", extra={"prompts": "ec-v9"})
         )
-    monkeypatch.setenv("WSB_BANK_FILE_MORAL_RATIONALE", "evals/moral_rationale/items_v3.json")
+    monkeypatch.setenv(
+        "WSB_BANK_FILE_MORAL_RATIONALE", "evals/logical_processing/moral_rationale/items_v3.json"
+    )
     v3 = load_bank(FAMILY)
     assert mr.instrument_version(v3, summary_args(Path("x"), Path("y"), "x")) == "ec-v9"
     with pytest.raises(SystemExit):
@@ -83,7 +85,9 @@ def test_read_plan_stays_bank_v3s_rows(monkeypatch):
     with bank v3's plan: identical rows and plan_sha, so the cached v3 readouts judge v5."""
     monkeypatch.setenv("WSB_BANK_FILE_MORAL_RATIONALE", V5_ENV)
     v5_rows = [s.row() for s in readplan.plan(FAMILY, layers=None)]
-    monkeypatch.setenv("WSB_BANK_FILE_MORAL_RATIONALE", "evals/moral_rationale/items_v3.json")
+    monkeypatch.setenv(
+        "WSB_BANK_FILE_MORAL_RATIONALE", "evals/logical_processing/moral_rationale/items_v3.json"
+    )
     v3_rows = [s.row() for s in readplan.plan(FAMILY, layers=None)]
     assert v5_rows == v3_rows and len(v3_rows) == 195
     assert reads.plan_sha_rows(v5_rows) == reads.plan_sha_rows(v3_rows)
@@ -412,7 +416,7 @@ def test_frozen_v5_side_readers_record_the_leak():
     assert rep["side_at_chance"] is False and rep["side_leak_allowed"] is True
     assert set(rep["side_readers"]) == set(_v5mod().GUESSERS)
     assert all(v["side_prior"] == pytest.approx(22 / 24) for v in rep["side_readers"].values())
-    readme = (ROOT / "evals/moral_rationale/README.md").read_text()
+    readme = (ROOT / "evals/logical_processing/moral_rationale/README.md").read_text()
     assert "Not at chance under a side-aware reader" in readme
     assert "0.917" in readme and "0.792" in readme
 
@@ -424,7 +428,9 @@ def test_a_side_leaking_bank_is_not_the_registered_bank(monkeypatch):
     rep = json.loads(REPORT.read_text())
     assert rep["side_at_chance"] is False
     registry.load_all()
-    assert registry.FAMILIES[FAMILY].bank != Path("evals/moral_rationale/items_v5.json")
+    assert registry.FAMILIES[FAMILY].bank != Path(
+        "evals/logical_processing/moral_rationale/items_v5.json"
+    )
     assert registry.bank_path(FAMILY).name == "items_v3.json"
 
 
@@ -509,11 +515,13 @@ def test_prior_side_reader_both_ways():
 def test_bank_directions_both_ways():
     """freeze reads each item's committed side from the run record's bank (falling back to the
     same-named file in the repo when the recorded path is another worktree); nothing for none."""
-    d = lg.bank_directions("/nonexistent/worktree/evals/moral_rationale/items_v5.json")
+    d = lg.bank_directions(
+        "/nonexistent/worktree/evals/logical_processing/moral_rationale/items_v5.json"
+    )
     assert len(d) == 24 and sum(v == "no" for v in d.values()) == 22
     assert lg.bank_directions(None) == {}
     assert lg.bank_directions("/nonexistent/items_v999.json") == {}
-    assert lg.bank_directions(ROOT / "evals/directed_modulation/items.json") == {}
+    assert lg.bank_directions(ROOT / "evals/basic/directed_modulation/items.json") == {}
 
 
 def test_frozen_floors_render_the_side_reader_both_ways(monkeypatch):

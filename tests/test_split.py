@@ -34,7 +34,7 @@ def test_layer_protocols_pick_on_dev_and_score_on_test():
 
 
 def test_punct_positions_are_a_small_subset_of_the_span():
-    from wsbench.evals.jailbreak_recognition.judge import grid_positions, punct_positions
+    from wsbench.evals.safety.jailbreak_recognition.judge import grid_positions, punct_positions
 
     items = load_bank("jailbreak_recognition")["items"]
     for it in items:
@@ -43,7 +43,7 @@ def test_punct_positions_are_a_small_subset_of_the_span():
 
 
 def test_relational_protocols_pair_twins_and_count_empty_cells(tmp_path):
-    from wsbench.evals.relational_multihop import score
+    from wsbench.evals.anti_bag_of_features.relational_multihop import score
     from wsbench.judge_config import JudgeConfig, resolve
 
     args = native_args(

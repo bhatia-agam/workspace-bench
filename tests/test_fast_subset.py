@@ -40,10 +40,14 @@ def _registered_set(monkeypatch, real_families):
 
 
 def _rows_sha(specs) -> str:
-    """sha256 of the plan rows exactly as ``wsbench plan`` writes them (every key)."""
+    """sha256 of the plan rows exactly as ``wsbench plan`` writes them (every key). A row names
+    its family by the CURRENT key, so the golden (recorded before plan 0101) is compared with
+    that one field translated back (``registry.frozen_name``): nothing else in a row may move."""
     h = hashlib.sha256()
     for s in specs:
-        h.update(json.dumps(s.row(), ensure_ascii=False).encode() + b"\n")
+        row = s.row()
+        row["family"] = registry.frozen_name(row["family"])
+        h.update(json.dumps(row, ensure_ascii=False).encode() + b"\n")
     return h.hexdigest()
 
 
@@ -66,7 +70,9 @@ def test_non_fast_plan_is_byte_identical_to_pre_0090():
     got = _non_fast_shas()
     if os.environ.get(WRITE_GOLDEN_ENV):
         GOLDEN.write_text(json.dumps(got, indent=1, sort_keys=True) + "\n", encoding="utf-8")
-    want = json.loads(GOLDEN.read_text(encoding="utf-8"))
+    # the golden is keyed by the families' pre-0101 keys (plan 0101: translated, never rewritten)
+    golden = json.loads(GOLDEN.read_text(encoding="utf-8"))
+    want = {kind: registry.rekey_pre_0101(by_family) for kind, by_family in golden.items()}
     assert got == want
 
 
@@ -78,12 +84,12 @@ FAMILIES_V1 = sorted(fast.subset(V1))  # 24
 FAMILIES_V2 = sorted(fast.subset(V2))  # 22: v1's without jailbreak_recognition and agentic
 BY_VERSION = [(v, f) for v, fams in ((V1, FAMILIES_V1), (V2, FAMILIES_V2)) for f in fams]
 DROPPED = (
-    "typo_mt",
+    "typo",
     "association",
-    "multihop",
-    "multilingual",
+    "multihop_st",
+    "multilingual_st",
     "chain_intermediates",
-    "multilingual_mt",
+    "multilingual",
 )
 STRICT_ATI_FAMILIES = (  # ati-subset-v2 (plan 0085, tests/test_ati_freeze.py)
     "introspection",
@@ -97,6 +103,14 @@ STRICT_ATI_FAMILIES = (  # ati-subset-v2 (plan 0085, tests/test_ati_freeze.py)
 )
 JB, AM = "jailbreak_recognition", "agentic_misalignment"
 DROPPED_V2 = (*DROPPED, JB, AM)  # plan 0094
+
+
+def _now(names):
+    """Family keys read off a frozen file (written in the pre-0101 keys, plan 0101) as the keys
+    of today: what ``fast._file`` serves."""
+    return [registry.PRE_0101_KEYS.get(f, f) for f in names]
+
+
 REAL_RUN_CALLS = mcjudge.run_calls  # the `toy` fixture replaces it
 
 
@@ -173,8 +187,8 @@ def _opts(**kw) -> SimpleNamespace:
 def test_freeze_file_shape_and_counts():
     d = json.loads(fast.VERSIONS[fast.VERSION].read_text(encoding="utf-8"))
     assert d["version"] == fast.VERSION == "fast-v1" and d["subject"] == "Qwen3.6-27B"
-    assert tuple(d["dropped_families"]) == DROPPED
-    assert len(d["families"]) == 24 and not set(DROPPED) & set(d["families"])
+    assert tuple(_now(d["dropped_families"])) == DROPPED
+    assert len(d["families"]) == 24 and not set(DROPPED) & set(_now(d["families"]))
     assert "jlens_concept_pr" not in d["families"]
     assert fast.families() == FAMILIES_V1  # registry order
     n_units = sum(len(u) for e in d["families"].values() for u in e["units"].values())
@@ -221,8 +235,8 @@ def test_strict_ati_subset_is_350_ids():
 
 def test_entry_fails_closed(monkeypatch):
     with pytest.raises(fast.NotInFast) as e:
-        fast.entry("typo_mt")
-    assert e.value.code == "typo_mt: not in fast-v2"
+        fast.entry("typo")
+    assert e.value.code == "typo: not in fast-v2"
     monkeypatch.setenv("WSB_BANK_ROOT", "adapted/glm-5.3")
     with pytest.raises(SystemExit) as e:
         fast.entry("poetry")
@@ -231,10 +245,10 @@ def test_entry_fails_closed(monkeypatch):
     with pytest.raises(fast.NotInFast):  # a dropped family is skipped whatever the bank env
         fast.entry("association")
     monkeypatch.delenv("WSB_BANK_ROOT")
-    monkeypatch.setenv("WSB_BANK_FILE_POETRY", "evals/poetry/items.json")
+    monkeypatch.setenv("WSB_BANK_FILE_POETRY", "evals/basic/poetry/items.json")
     with pytest.raises(SystemExit, match="registered Qwen3\\.6-27B banks only"):
         fast.entry("poetry")
-    assert fast.entry("basic_readout")  # another family's pin does not matter
+    assert fast.entry("basic_readout_st")  # another family's pin does not matter
     monkeypatch.delenv("WSB_BANK_FILE_POETRY")
     monkeypatch.setattr(fast, "bank_sha", lambda family: "0" * 64)
     with pytest.raises(SystemExit, match="bank changed since fast-v2 was frozen; re-freeze"):
@@ -350,7 +364,7 @@ def test_fast_plan_rows(version, fam, monkeypatch):
 
 def test_fast_plan_refusals():
     with pytest.raises(fast.NotInFast):
-        readplan.plan("multihop", fast=True)
+        readplan.plan("multihop_st", fast=True)
     with pytest.raises(SystemExit, match="drop reads=lite"):
         readplan.plan("poetry", fast=True, reads="lite")
     assert fast.SCOPE not in json.dumps([s.row() for s in readplan.plan(AM)][:2])
@@ -450,7 +464,7 @@ def test_fast_load_refuses_lite_and_a_dropped_family(tmp_path, mk_args, capsys):
         reads.load(mk_args(path, scope=fast.SCOPE, extra={"reads": "lite"}), "poetry")
     assert e.value.code == 2 and "drop reads=lite" in capsys.readouterr().err
     with pytest.raises(fast.NotInFast):
-        reads.load(mk_args(path, scope=fast.SCOPE), "multihop")
+        reads.load(mk_args(path, scope=fast.SCOPE), "multihop_st")
 
 
 @pytest.mark.usefixtures("fast_v1")
@@ -779,9 +793,9 @@ def test_rescore_guard_fires_on_a_doctored_value():
 
 
 def test_macro_refuses_mixed_rows_and_names_the_subset():
-    rows = [_fast_row("poetry"), _fast_row("basic_readout")]
+    rows = [_fast_row("poetry"), _fast_row("basic_readout_st")]
     m = macro(rows)
-    assert m["families"] == ["poetry", "basic_readout"] and m["fast_subset"] == "fast-v2"
+    assert m["families"] == ["poetry", "basic_readout_st"] and m["fast_subset"] == "fast-v2"
     assert m["value"] == 0.5 and m["excluded"] == []
     with pytest.raises(SystemExit, match="macro: results mix fast and non-fast rows"):
         macro([*rows, _result("user_modeling", value=0.5, n_items=30)])
@@ -791,7 +805,7 @@ def test_macro_refuses_mixed_rows_and_names_the_subset():
 
 
 def test_macro_excludes_a_stale_subset_and_keeps_every_other_rule():
-    stale = _fast_row("basic_readout", fast_subset="fast-v0")
+    stale = _fast_row("basic_readout_st", fast_subset="fast-v0")
     small = _result("user_modeling", value=1.0, n_items=3, config=_fast_row("poetry").config)
     incomplete = _fast_row("moral_rationale")
     incomplete.complete = False
@@ -800,7 +814,7 @@ def test_macro_excludes_a_stale_subset_and_keeps_every_other_rule():
     m = macro([_fast_row("poetry"), stale, small, incomplete, other_metric])
     assert m["families"] == ["poetry", "user_modeling"]  # no n<20 rule for fast rows
     assert m["excluded"] == [
-        {"family": "basic_readout", "reason": "stale fast subset (fast-v0)"},
+        {"family": "basic_readout_st", "reason": "stale fast subset (fast-v0)"},
         {"family": "moral_rationale", "reason": "incomplete"},
         {"family": "wrong_intermediate", "reason": "metric"},
     ]
@@ -862,7 +876,7 @@ def _toy_run(args: JudgeArgs) -> FamilyResult:
 def toy(monkeypatch, tmp_path):
     """The toy family registered and frozen into a synthetic fast file: read items t1..t4, of
     which t1..t3 are the scored units (as nyt_connections reads more than it scores)."""
-    bank = Path("evals/poetry/items_v5.json")  # never read: the toy's bank_sha is patched
+    bank = Path("evals/basic/poetry/items_v5.json")  # never read: the toy's bank_sha is patched
     spec = EvalSpec(TOY, "Toy", "basic", bank, JudgeConfig(), "pass_rate", True, _toy_run)
     registry.FAMILIES[TOY] = spec
     entry = {"bank_sha": "0" * 64, "units": {"all": TOY_IDS[:3]}, "read_ids": TOY_IDS[:4]}
@@ -959,15 +973,15 @@ def test_fast_stamp_suffix_is_appended_once(toy, tmp_path, monkeypatch):
 
 def test_run_families_skips_what_is_not_in_the_subset(toy, tmp_path, capsys):
     spec, path = toy
-    specs = [spec, registry.FAMILIES["typo_mt"], registry.FAMILIES["poetry"]]
+    specs = [spec, registry.FAMILIES["typo"], registry.FAMILIES["poetry"]]
     outcomes, code = runner.run_families(
         specs, _opts(dry_run=True), readouts_root=path.parent, out=tmp_path / "out"
     )
     by = {o.family: o for o in outcomes}
     assert code == 0 and by[TOY].status == "ok"
-    assert (by["typo_mt"].status, by["typo_mt"].error) == ("skipped", "not in fast-v2")
+    assert (by["typo"].status, by["typo"].error) == ("skipped", "not in fast-v2")
     assert by["poetry"].status == "skipped" and by["poetry"].error.startswith("no readouts")
-    assert "typo_mt: skipped (not in fast-v2)" in capsys.readouterr().out
+    assert "typo: skipped (not in fast-v2)" in capsys.readouterr().out
     # a bank that changed since the freeze fails (exit 2) before any preflight
     fast.subset()[TOY]["bank_sha"] = "1" * 64
     outcomes, code = runner.run_families(
@@ -994,8 +1008,8 @@ def test_cli_plan_fast(tmp_path, capsys):
     assert reads.plan_sha_rows(rows) == reads.fast_plan_sha(AM)
     capsys.readouterr()
     # a dropped family: exit 2, nothing written
-    assert main(["plan", "--fast", "families=poetry,multihop", f"out={tmp_path / 'x'}"]) == 2
-    assert "multihop: not in fast-v1" in capsys.readouterr().err
+    assert main(["plan", "--fast", "families=poetry,multihop_st", f"out={tmp_path / 'x'}"]) == 2
+    assert "multihop_st: not in fast-v1" in capsys.readouterr().err
     assert not (tmp_path / "x").exists()
     assert main(["plan", "--fast", "reads=lite", f"out={tmp_path / 'y'}"]) == 2
     # fast=False is the plan of record
@@ -1019,8 +1033,8 @@ def test_cli_judge_fast(toy, tmp_path, capsys):
     r = read_results(out)
     assert r.config["scope"] == "fast" and r.value == pytest.approx(1 / 3) and r.complete
     capsys.readouterr()
-    assert main(["judge", "family=typo_mt", f"readouts={path}", f"out={out}", "--fast"]) == 2
-    assert capsys.readouterr().err.strip() == "typo_mt: not in fast-v2"
+    assert main(["judge", "family=typo", f"readouts={path}", f"out={out}", "--fast"]) == 2
+    assert capsys.readouterr().err.strip() == "typo: not in fast-v2"
 
 
 @pytest.mark.parametrize(
@@ -1078,7 +1092,7 @@ def test_cli_run_fast_judges_and_reports(toy, tmp_path, capsys):
     argv = [
         "run",
         "--fast",
-        f"families={TOY},typo_mt",
+        f"families={TOY},typo",
         f"readouts_root={path.parent}",
         f"out={out}",
     ]
@@ -1100,7 +1114,9 @@ def test_cli_run_fast_judges_and_reports(toy, tmp_path, capsys):
 
 def test_cli_report_refuses_a_mix_unless_told(tmp_path, capsys):
     write_results(tmp_path / "poetry", _fast_row("poetry", judge_model="m"))
-    write_results(tmp_path / "basic_readout", _result("basic_readout", value=0.25, n_items=30))
+    write_results(
+        tmp_path / "basic_readout_st", _result("basic_readout_st", value=0.25, n_items=30)
+    )
     assert main(["report", f"dir={tmp_path}"]) == 2
     err = capsys.readouterr().err
     assert "report: results mix fast and non-fast rows; pass --fast or fast=False" in err
@@ -1108,12 +1124,12 @@ def test_cli_report_refuses_a_mix_unless_told(tmp_path, capsys):
     text = capsys.readouterr().out
     assert (
         "| poetry |" in text
-        and "| basic_readout |" not in text
+        and "| basic_readout_st |" not in text
         and "fast subset fast-v2 (22" in text
     )
     assert main(["report", f"dir={tmp_path}", "fast=False", "floors=False"]) == 0
     text = capsys.readouterr().out
-    assert "| basic_readout |" in text and "| poetry |" not in text and "fast subset" not in text
+    assert "| basic_readout_st |" in text and "| poetry |" not in text and "fast subset" not in text
 
 
 def test_fast_judge_of_a_real_family_end_to_end(tmp_path, monkeypatch):
@@ -1121,7 +1137,7 @@ def test_fast_judge_of_a_real_family_end_to_end(tmp_path, monkeypatch):
     run is complete, stamped, and carries the rescored value."""
     from summary_fakes import FakeLLM
 
-    from wsbench.evals.relational_multihop import SPEC, prompts
+    from wsbench.evals.anti_bag_of_features.relational_multihop import SPEC, prompts
 
     golden = json.loads((GOLDEN.parent / "relational_multihop_options_v3.json").read_text())
     ids = fast.subset()["relational_multihop"]["read_ids"]
@@ -1219,7 +1235,8 @@ def test_v2_is_v1_without_the_two_safety_families():
     assert hashlib.sha256(raw).hexdigest() == V1_SHA256  # fast_v1.json is frozen
     v1, v2 = json.loads(raw), json.loads(fast.VERSIONS[V2].read_text(encoding="utf-8"))
     assert list(v2) == list(v1) and (v1["version"], v2["version"]) == (V1, V2)
-    assert v2["dropped_families"] == [*v1["dropped_families"], JB, AM] == list(DROPPED_V2)
+    assert v2["dropped_families"] == [*v1["dropped_families"], JB, AM]
+    assert _now(v2["dropped_families"]) == list(DROPPED_V2)
     assert {
         k: v for k, v in v2.items() if k not in ("version", "dropped_families", "families")
     } == {k: v for k, v in v1.items() if k not in ("version", "dropped_families", "families")}
@@ -1384,17 +1401,17 @@ def test_a_produced_fast_file_declares_fast_v2(tmp_path):
 
 def test_macro_keeps_compatible_rows_of_in_subset_families():
     """Plan 0094: a fast-v1 results directory reports a fast-v2 macro over its 22 families."""
-    old = [_fast_row(f, fast_subset=V1) for f in ("poetry", "basic_readout")]
+    old = [_fast_row(f, fast_subset=V1) for f in ("poetry", "basic_readout_st")]
     old_jb, old_am = _fast_row(JB, fast_subset=V1), _fast_row(AM, fast_subset=V1)
     m = macro([*old, old_jb, old_am])
-    assert m["families"] == ["poetry", "basic_readout"] and m["fast_subset"] == "fast-v2"
+    assert m["families"] == ["poetry", "basic_readout_st"] and m["fast_subset"] == "fast-v2"
     assert m["value"] == 0.5 and m["excluded"] == [
         {"family": JB, "reason": "stale fast subset (fast-v1)"},
         {"family": AM, "reason": "stale fast subset (fast-v1)"},
     ]
     # beside current rows; any other version is excluded as before, whatever the family
     m = macro([*old, _fast_row("user_modeling"), _fast_row("hinted_cutoff", fast_subset="fast-v0")])
-    assert m["families"] == ["poetry", "basic_readout", "user_modeling"]
+    assert m["families"] == ["poetry", "basic_readout_st", "user_modeling"]
     assert m["excluded"] == [{"family": "hinted_cutoff", "reason": "stale fast subset (fast-v0)"}]
     unstamped = _result("poetry", value=0.5, n_items=30, config={"scope": fast.SCOPE})
     assert macro([unstamped])["excluded"] == [
@@ -1411,11 +1428,11 @@ def test_macro_keeps_compatible_rows_of_in_subset_families():
 
 
 def test_cli_report_of_a_fast_v1_directory(tmp_path, capsys):
-    for fam in ("poetry", "basic_readout", JB):
+    for fam in ("poetry", "basic_readout_st", JB):
         write_results(tmp_path / fam, _fast_row(fam, fast_subset=V1))
     assert main(["report", f"dir={tmp_path}", "--fast", "json=True"]) == 0
     m = json.loads(capsys.readouterr().out)["macro"]
-    assert m["fast_subset"] == "fast-v2" and sorted(m["families"]) == ["basic_readout", "poetry"]
+    assert m["fast_subset"] == "fast-v2" and sorted(m["families"]) == ["basic_readout_st", "poetry"]
     assert m["excluded"] == [{"family": JB, "reason": "stale fast subset (fast-v1)"}]
     assert main(["report", f"dir={tmp_path}", "--fast"]) == 0
     text = capsys.readouterr().out
@@ -1534,7 +1551,8 @@ def test_safety_file_is_v1_under_its_own_name():
     assert vs["version"] == VS and raw[VS] == raw[V1].replace(b'"fast-v1"', b'"fast-safety-v1"')
     assert raw[V1].count(b'"fast-v1"') == 1
     assert list(vs) == list(v1) and {**vs, "version": V1} == v1
-    assert vs["dropped_families"] == list(DROPPED) and list(vs["families"]) == list(v1["families"])
+    assert _now(vs["dropped_families"]) == list(DROPPED)
+    assert list(vs["families"]) == list(v1["families"])
     # fast-v2's 22 entries plus fast-v1's two, entry for entry, key order included
     assert set(vs["families"]) == {*v2["families"], JB, AM} and len(vs["families"]) == 24
     for fam, e in vs["families"].items():
@@ -1608,8 +1626,8 @@ def test_cli_plan_fast_safety(tmp_path, capsys):
             reads.fast_plan_sha(JB, declared=declared)
         assert e.value.code == f"{JB}: not in fast subset {declared}"
     capsys.readouterr()
-    assert main(["plan", "--fast-safety", "families=multihop", f"out={tmp_path / 'x'}"]) == 2
-    assert "multihop: not in fast-safety-v1" in capsys.readouterr().err
+    assert main(["plan", "--fast-safety", "families=multihop_st", f"out={tmp_path / 'x'}"]) == 2
+    assert "multihop_st: not in fast-safety-v1" in capsys.readouterr().err
 
 
 def test_fast_plan_sha_declared_under_fast_v1(fast_v1):
@@ -1705,7 +1723,7 @@ def test_cli_run_fast_safety_judges_and_reports(tmp_path, capsys, monkeypatch):
     root, out = tmp_path / "readouts", tmp_path / "out"
     root.mkdir()
     _am_readouts(root / f"{AM}.jsonl")
-    argv = ["run", "--fast-safety", f"families={AM},typo_mt", f"readouts_root={root}", f"out={out}"]
+    argv = ["run", "--fast-safety", f"families={AM},typo", f"readouts_root={root}", f"out={out}"]
     assert main(argv) == 0
     text = capsys.readouterr().out
     head = (
@@ -1713,7 +1731,7 @@ def test_cli_run_fast_safety_judges_and_reports(tmp_path, capsys, monkeypatch):
         "numbers); rows of other subsets are excluded\n\n"
     )
     assert head in text and (out / "summary.md").read_text().startswith(head)
-    assert "typo_mt: skipped (not in fast-safety-v1)" in text and "stale fast subset" not in text
+    assert "typo: skipped (not in fast-safety-v1)" in text and "stale fast subset" not in text
     assert read_results(out / AM).config["fast_subset"] == VS
     # a bare report in a fresh process is the fast-v2 view, with the hint
     fast.VERSION = fast.DEFAULT
@@ -1821,7 +1839,7 @@ def test_macro_under_the_two_selectable_subsets():
     def rows():
         return [
             _fast_row("poetry", fast_subset=V1),
-            _fast_row("basic_readout", fast_subset=V2),
+            _fast_row("basic_readout_st", fast_subset=V2),
             _fast_row("user_modeling", fast_subset=VS),
             _fast_row(JB, fast_subset=V1),
             _fast_row(AM, fast_subset=VS),
@@ -1832,7 +1850,7 @@ def test_macro_under_the_two_selectable_subsets():
     # a safety family's row is out whichever version stamped it (the family clause)
     m = macro(rows())
     assert m["fast_subset"] == V2
-    assert m["families"] == ["poetry", "basic_readout", "user_modeling"]
+    assert m["families"] == ["poetry", "basic_readout_st", "user_modeling"]
     assert m["excluded"] == [
         {"family": JB, "reason": "stale fast subset (fast-v1)"},
         {"family": AM, "reason": "stale fast subset (fast-safety-v1)"},
@@ -1841,7 +1859,7 @@ def test_macro_under_the_two_selectable_subsets():
     fast.select("safety")
     m = macro(rows())
     assert m["fast_subset"] == VS
-    assert m["families"] == ["poetry", "basic_readout", "user_modeling", JB, AM]
+    assert m["families"] == ["poetry", "basic_readout_st", "user_modeling", JB, AM]
     assert m["excluded"] == [{"family": "hinted_cutoff", "reason": "stale fast subset (fast-v0)"}]
 
 
@@ -1853,7 +1871,7 @@ def test_fast_header_hint():
         "rows of other subsets are excluded"
     )
     hint = "\n{n} row(s) are in fast-safety-v1 only; pass --fast-safety for its macro"
-    in_v2 = [_fast_row("poetry", fast_subset=VS), _fast_row("basic_readout", fast_subset=V1)]
+    in_v2 = [_fast_row("poetry", fast_subset=VS), _fast_row("basic_readout_st", fast_subset=V1)]
     assert fast_header() == fast_header(in_v2) == line
     safety = [_fast_row(JB, fast_subset=V1), _fast_row(AM, fast_subset=VS)]
     assert fast_header([*in_v2, *safety]) == line + hint.format(n=2)
@@ -1867,7 +1885,7 @@ def test_fast_header_hint():
 
 def test_cli_report_fast_safety(tmp_path, capsys):
     write_results(tmp_path / "poetry", _fast_row("poetry", fast_subset=VS))
-    write_results(tmp_path / "basic_readout", _fast_row("basic_readout", fast_subset=V2))
+    write_results(tmp_path / "basic_readout_st", _fast_row("basic_readout_st", fast_subset=V2))
     write_results(tmp_path / JB, _fast_row(JB, fast_subset=VS))
     line = "scope: fast subset fast-v2 (22 families; not comparable with full-bench numbers)"
     hint = "1 row(s) are in fast-safety-v1 only; pass --fast-safety for its macro\n\n"
@@ -1879,13 +1897,13 @@ def test_cli_report_fast_safety(tmp_path, capsys):
         assert (tmp_path / "summary.md").read_text().startswith(line)
     assert main(["report", f"dir={tmp_path}", "--fast", "json=True"]) == 0
     m = json.loads(capsys.readouterr().out)["macro"]
-    assert m["fast_subset"] == V2 and sorted(m["families"]) == ["basic_readout", "poetry"]
+    assert m["fast_subset"] == V2 and sorted(m["families"]) == ["basic_readout_st", "poetry"]
     assert m["excluded"] == [{"family": JB, "reason": "stale fast subset (fast-safety-v1)"}]
     # the same rows as the safety subset's report: 24 families, nothing stale
     assert main(["report", f"dir={tmp_path}", "--fast-safety", "json=True"]) == 0
     m = json.loads(capsys.readouterr().out)["macro"]
     assert m["fast_subset"] == VS and m["excluded"] == []
-    assert sorted(m["families"]) == ["basic_readout", JB, "poetry"]
+    assert sorted(m["families"]) == ["basic_readout_st", JB, "poetry"]
     fast.VERSION = fast.DEFAULT
     assert main(["report", f"dir={tmp_path}", "fast=safety"]) == 0
     text = capsys.readouterr().out

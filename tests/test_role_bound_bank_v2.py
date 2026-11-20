@@ -5,12 +5,12 @@ import json
 
 from wsbench import readplan, reads, registry
 from wsbench.adapt import store
-from wsbench.evals.role_bound_association import gate, prompts
-from wsbench.evals.role_bound_association import judge as rb
+from wsbench.evals.anti_bag_of_features.role_bound_association import gate, prompts
+from wsbench.evals.anti_bag_of_features.role_bound_association import judge as rb
 
 FAMILY = "role_bound_association"
-V1 = registry.REPO_ROOT / "evals/role_bound_association/items.json"
-V2 = registry.REPO_ROOT / "evals/role_bound_association/items_v2.json"
+V1 = registry.REPO_ROOT / "evals/anti_bag_of_features/role_bound_association/items.json"
+V2 = registry.REPO_ROOT / "evals/anti_bag_of_features/role_bound_association/items_v2.json"
 GARBLED = {  # the four stories with a tab inside a word, e.g. "mildly amusing \tray without"
     "oa-boss-employee-envy-ba",
     "oa-veteran-recruit-lookdown-ba",

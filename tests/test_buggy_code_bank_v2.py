@@ -9,12 +9,12 @@ import pytest
 
 from wsbench import readplan, reads, registry
 from wsbench.banks import load_bank
-from wsbench.evals.buggy_code import judge
-from wsbench.evals.buggy_code import prompts as bp
+from wsbench.evals.computational.buggy_code import judge
+from wsbench.evals.computational.buggy_code import prompts as bp
 
 REPO = Path(__file__).resolve().parents[1]
-V1 = REPO / "evals/buggy_code/items.json"
-V2 = REPO / "evals/buggy_code/items_v2.json"
+V1 = REPO / "evals/computational/buggy_code/items.json"
+V2 = REPO / "evals/computational/buggy_code/items_v2.json"
 # the plan the bank-v2 readouts were produced for (143 rows)
 PLAN_SHA_V2 = "4f3419aa2798700524635d3546c9f47f447d2b70747659537457b90ab034a126"
 
@@ -59,7 +59,9 @@ def test_new_pairs_are_adjacent_verified_silent_twins():
 
 
 def test_v2_reads_its_own_plan(monkeypatch):
-    assert registry.FAMILIES["buggy_code"].bank == Path("evals/buggy_code/items_v2.json")
+    assert registry.FAMILIES["buggy_code"].bank == Path(
+        "evals/computational/buggy_code/items_v2.json"
+    )
     rows = readplan.plan("buggy_code")
     assert [s.id for s in rows] == [it["id"] for it in load_bank(V2)[1]]
     assert reads.plan_sha("buggy_code") == PLAN_SHA_V2

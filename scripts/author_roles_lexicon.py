@@ -1,4 +1,5 @@
-"""Draft ``evals/role_bound_association/roles_v1.json`` with Opus 5.5 (role_bound plan 0055 C2.1).
+"""Draft ``evals/anti_bag_of_features/role_bound_association/roles_v1.json`` with Opus 5.5
+(role_bound plan 0055 C2.1).
 
 One call: every bank role, with the gold sentences and blocklisted role words of the items that
 use it, goes to Opus, which writes ``{role: {"terms": [...], "near": [...]}}``. The draft is then
@@ -17,7 +18,7 @@ from collections import defaultdict
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[1]
-BANK = REPO / "evals/role_bound_association/items.json"
+BANK = REPO / "evals/anti_bag_of_features/role_bound_association/items.json"
 MODEL = "claude-opus-5-5"
 
 SYSTEM = """You build a role lexicon for a benchmark judge. Each benchmark item is a short story \

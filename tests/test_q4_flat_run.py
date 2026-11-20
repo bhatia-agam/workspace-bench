@@ -2,7 +2,7 @@
 of its members, whatever their rank, even when only one of them is an option. The shared token
 note, the multitoken MC rules and the association / role_bound prompts say so (no lone-option
 credit for "a line that holds other words of the same kind"), and the multitoken name-gate
-families (basic_readout_mt, multihop_mt) and association hold it in code for token lines."""
+families (basic_readout, multihop) and association hold it in code for token lines."""
 
 import json
 import re
@@ -12,13 +12,13 @@ from summary_fakes import FakeLLM, summary_args
 
 from wsbench import digest, mc, registry
 from wsbench.banks import load_bank
-from wsbench.evals.association import judge as assoc
-from wsbench.evals.association import prompts as assoc_prompts
-from wsbench.evals.basic_readout_mt import SPEC as BRMT
-from wsbench.evals.directed_modulation import prompts as dm_prompts
-from wsbench.evals.knowledge_cutoff import prompts as kc_prompts
-from wsbench.evals.multihop_mt import SPEC as MH2
-from wsbench.evals.role_bound_association import prompts as rb_prompts
+from wsbench.evals.anti_bag_of_features.role_bound_association import prompts as rb_prompts
+from wsbench.evals.basic.association import judge as assoc
+from wsbench.evals.basic.association import prompts as assoc_prompts
+from wsbench.evals.basic.basic_readout import SPEC as BRMT
+from wsbench.evals.basic.directed_modulation import prompts as dm_prompts
+from wsbench.evals.basic.multihop import SPEC as MH2
+from wsbench.evals.model_specific.knowledge_cutoff import prompts as kc_prompts
 from wsbench.multitoken import family as mt
 from wsbench.multitoken.options import option_sets
 from wsbench.multitoken.prompts import BRMT_SYSTEM, MC_PICK_RULES
@@ -47,8 +47,8 @@ def _token_lines(tokens: list[str]) -> list[digest.Line]:
         BRMT_SYSTEM,
         assoc_prompts.SYSTEM,
         rb_prompts.SYSTEM,
-        digest.token_note_of("multihop_mt"),
-        digest.token_note_of("basic_readout_mt"),
+        digest.token_note_of("multihop"),
+        digest.token_note_of("basic_readout"),
         digest.token_note_of("association"),
         digest.token_note_of("role_bound_association"),
         kc_prompts.SYSTEM,
@@ -124,7 +124,7 @@ def test_one_name_under_two_entries_is_one_rival():
         ["Bhutanese ngultrum", "ngultrum"],
         ["Rome"],
     ]
-    _h, items = load_bank("evals/basic_readout_mt/items_v2.json")
+    _h, items = load_bank("evals/basic/basic_readout/items_v2.json")
     pool = mt.bank_entities(items)[""]
     lines = _token_lines(["Ġchhertum", "Ġngultrum"])
     g = mt.list_gate("chhertum", lines, gold_forms=["chhertum"], others=[], rivals=pool)
@@ -159,7 +159,7 @@ def test_bank_concepts_and_entities_cover_the_whole_bank():
     _h, items = load_bank(registry.bank_path("association"))
     pool = assoc.bank_concepts(items)
     assert len(pool) > len(items)  # golds and distractors
-    _h, mh = load_bank("evals/multihop_mt/items_v2.json")
+    _h, mh = load_bank("evals/basic/multihop/items_v2.json")
     ents = mt.bank_entities(mh)
     assert set(ents) >= {"person"} and ["Zachary Taylor"] in ents["person"]
 
@@ -245,7 +245,7 @@ def test_flat_run_gets_no_credit_end_to_end(
 
 
 def test_lite_rule_that_keeps_nothing_fails_loudly(tmp_path):
-    """The multihop toy file holds only pos 14 (the lite site itself, positive index, no
+    """The multihop_st toy file holds only pos 14 (the lite site itself, positive index, no
     sidecar): ``offset_from_end`` k=2 over that one position kept nothing, and the run judged
     zero cells as n plain negatives. Now it exits 2 naming the fix."""
     import subprocess
@@ -254,8 +254,8 @@ def test_lite_rule_that_keeps_nothing_fails_loudly(tmp_path):
 
     root = Path(__file__).resolve().parents[1]
     p = subprocess.run(
-        [sys.executable, "-m", "wsbench.cli", "judge", "family=multihop",
-         f"readouts={root / 'examples/readouts/multihop.jsonl'}", "dry_run=True", "reads=lite",
+        [sys.executable, "-m", "wsbench.cli", "judge", "family=multihop_st",
+         f"readouts={root / 'examples/readouts/multihop_st.jsonl'}", "dry_run=True", "reads=lite",
          f"out={tmp_path / 'o'}"],
         capture_output=True, text=True, cwd=root,
     )  # fmt: skip

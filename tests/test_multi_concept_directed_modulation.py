@@ -10,14 +10,14 @@ from conftest import native_args
 from wsbench import registry
 from wsbench.banks import load_bank
 from wsbench.cli import main
-from wsbench.evals.multi_concept_directed_modulation import judge
-from wsbench.evals.multi_concept_directed_modulation.options import option_sets, partner_of
-from wsbench.evals.multi_concept_directed_modulation.prompts import (
+from wsbench.evals.basic.multi_concept_directed_modulation import judge
+from wsbench.evals.basic.multi_concept_directed_modulation.options import option_sets, partner_of
+from wsbench.evals.basic.multi_concept_directed_modulation.prompts import (
     LETTERS,
     N_OPTIONS,
     PROMPT_VERSION,
 )
-from wsbench.evals.multi_concept_directed_modulation.regions import (
+from wsbench.evals.basic.multi_concept_directed_modulation.regions import (
     TARGET_SENTENCE,
     Region,
     classify_regions,
@@ -29,8 +29,8 @@ from wsbench.readouts import convert_read_json, load_readouts
 from wsbench.results import read_results
 
 REPO = Path(__file__).resolve().parents[1]
-BANK = REPO / "evals/multi_concept_directed_modulation/items.json"  # v1 (frozen, untouched)
-BANK_V2 = REPO / "evals/multi_concept_directed_modulation/items_v2.json"  # plan 0034
+BANK = REPO / "evals/basic/multi_concept_directed_modulation/items.json"  # v1 (frozen, untouched)
+BANK_V2 = REPO / "evals/basic/multi_concept_directed_modulation/items_v2.json"  # plan 0034
 EXAMPLE = REPO / "examples/readouts/multi_concept_directed_modulation.jsonl"
 
 # the shape every binding item's completion had under the pre-2026-09-23 rollout regime: sentence,
@@ -310,7 +310,7 @@ def test_rows_without_tokens_are_fatal(tmp_path, monkeypatch):
 
 
 def test_registered_and_dry_run(tmp_path, capsys, monkeypatch):
-    from wsbench.evals.multi_concept_directed_modulation import SPEC
+    from wsbench.evals.basic.multi_concept_directed_modulation import SPEC
 
     registry.FAMILIES.setdefault(SPEC.name, SPEC)
     assert SPEC.group == "basic" and SPEC.judge.prompt_version == PROMPT_VERSION
@@ -530,7 +530,7 @@ def test_content_only_channel_is_tri_state():
 def test_stamp_carries_present_and_the_cache_key_does_not(tmp_path, monkeypatch):
     """Plan 0028: results are stamped with PROMPT_VERSION (+present) while judge calls are keyed
     by JUDGE_PROMPT_VERSION, so caches written before the rule change still hit."""
-    from wsbench.evals.multi_concept_directed_modulation import prompts as p
+    from wsbench.evals.basic.multi_concept_directed_modulation import prompts as p
 
     # the deterministic +pins-r3, +nocap-a1 and +nofalse-a2 (plan 0100) are in the stamp only
     assert p.PROMPT_VERSION == (

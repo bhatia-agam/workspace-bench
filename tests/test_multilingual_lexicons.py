@@ -27,18 +27,18 @@ def _names(family: str, item: str, text: str) -> bool:
     [
         # mlh-ar-aurora L60 p30: "في العربية" (in Arabic)
         (
-            "multilingual_mt",
+            "multilingual",
             "mlh-ar-aurora",
             'أحياناً "الشفق القطبي" أو "الأورورا" في العربية، وتُسمى في الإنكليزية Aurora Borealis',
             True,
         ),
-        ("multilingual_mt", "mlh-ar-aurora", "وبالعربية تسمى الشفق القطبي", True),  # wa- proclitic
-        ("multilingual_mt", "mlh-ar-aurora", "رحلة في العربية السعودية", False),  # Saudi Arabia
+        ("multilingual", "mlh-ar-aurora", "وبالعربية تسمى الشفق القطبي", True),  # wa- proclitic
+        ("multilingual", "mlh-ar-aurora", "رحلة في العربية السعودية", False),  # Saudi Arabia
         # mlh-el-screwdriver L48 p20: "σε ελληνικά" (in Greek)
-        ("multilingual_mt", "mlh-el-screwdriver", "(σε ελληνικά: κασσίρεια) The tool", True),
-        ("multilingual_mt", "mlh-el-screwdriver", "σε ελληνικούς δρόμους", False),
+        ("multilingual", "mlh-el-screwdriver", "(σε ελληνικά: κασσίρεια) The tool", True),
+        ("multilingual", "mlh-el-screwdriver", "σε ελληνικούς δρόμους", False),
         # mlh-he-toothbrush: "ובעברית" (and in Hebrew)
-        ("multilingual_mt", "mlh-he-toothbrush", "ובעברית קוראים לזה מברשת שיניים", True),
+        ("multilingual", "mlh-he-toothbrush", "ובעברית קוראים לזה מברשת שיניים", True),
         # mlmh-he-pacific-yew-taxol: "שמה העברי" (its Hebrew name)
         ("multilingual_multihop", "mlmh-he-pacific-yew-taxol", "שמה העברי נגזר מעץ", True),
         ("multilingual_multihop", "mlmh-he-pacific-yew-taxol", "עם עברי קדום", False),
@@ -84,12 +84,14 @@ def test_no_plural_of_a_capitalised_form_and_is_becomes_es():
 def test_no_plural_for_multilingual_one_word_answers():
     # adjectives / numbers / months: "lows", "colds" would be other words
     assert "concept_native" not in regex.PLURAL_ROLES
-    assert _units("multilingual", "b3-ml-es-month-april")["concept_native"].forms["en"] == ["May"]
-    assert _units("multilingual", "de-half-six")["concept_native"].forms["en"] == ["three", "3"]
+    assert _units("multilingual_st", "b3-ml-es-month-april")["concept_native"].forms["en"] == [
+        "May"
+    ]
+    assert _units("multilingual_st", "de-half-six")["concept_native"].forms["en"] == ["three", "3"]
 
 
 @pytest.mark.parametrize(
-    "family", ["multilingual", "multilingual_mt", "multilingual_multihop", "multilingual_typo"]
+    "family", ["multilingual_st", "multilingual", "multilingual_multihop", "multilingual_typo"]
 )
 def test_no_mc_distractor_hits_its_own_scored_unit(family):
     """The plural forms never make an item's own MC distractor credit its unit."""

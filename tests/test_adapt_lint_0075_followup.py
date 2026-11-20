@@ -1,5 +1,5 @@
-"""Plan 0075 follow-up: lint rejects a user_modeling gold alias in the user turn and a multihop
-item ``build_multihop_mc --bank`` cannot build, before the gate; the multihop brief names the
+"""Plan 0075 follow-up: lint rejects a user_modeling gold alias in the user turn and a multihop_st
+item ``build_multihop_mc --bank`` cannot build, before the gate; the multihop_st brief names the
 builder's own tables."""
 
 import copy
@@ -109,11 +109,11 @@ def _mh(**kw) -> dict:
 
 
 def _build_problems(item: dict) -> list[str]:
-    return [p for p in lint.lint("multihop", item) if "build_multihop_mc cannot build" in p]
+    return [p for p in lint.lint("multihop_st", item) if "build_multihop_mc cannot build" in p]
 
 
 def test_mh_lint_passes_a_buildable_item():
-    assert lint.lint("multihop", _mh()) == []
+    assert lint.lint("multihop_st", _mh()) == []
 
 
 @pytest.mark.parametrize(
@@ -197,14 +197,14 @@ def test_mh_buildable_lint_fires_in_lint_and_gate_before_the_gate(monkeypatch):
     monkeypatch.setattr(run, "_gate_rows", lambda m, f, ok, *a: seen.extend(ok) or [])
     bad = _mh(name="mh-sa", intermediates=["South Africa"], bridge_type="country",
               bridge_aliases=[])  # fmt: skip
-    run.lint_and_gate("m", "multihop", None, 1, None, None, [bad, _mh()])
+    run.lint_and_gate("m", "multihop_st", None, 1, None, None, [bad, _mh()])
     assert [store_id(c) for c in seen] == [MH["name"]]
     assert [r["id"] for r in recorded] == ["mh-sa"]
 
 
 def test_multihop_brief_reads_the_builder_tables():
     b = mcstage.script_module("build_multihop_mc")
-    text = " ".join(author.BRIEFS["multihop"].invariants)
+    text = " ".join(author.BRIEFS["multihop_st"].invariants)
     nums = sorted(set(b.NUMBER_WORDS) & set(b.ORDINALS))
     assert f"{nums[0]} to {nums[-1]}" in text
     for country in b.COUNTRIES:
@@ -232,7 +232,7 @@ def test_mh_number_golds_agree_with_the_builder_tables(gold):
 def test_mh_buildable_lint_reads_an_item_adapt_mc_already_built():
     item = _mh()
     item["mc"] = mcstage.script_module("build_multihop_mc").build_mc(copy.deepcopy(item))
-    assert lint.lint("multihop", item) == []
+    assert lint.lint("multihop_st", item) == []
     bad = _mh(intermediates=["South Africa"], bridge_type="country", bridge_aliases=[])
     bad["mc"] = {"bridge_type": "country", "gold": "South Africa", "aliases": []}
     assert _build_problems(bad)
@@ -254,12 +254,14 @@ def test_mh_buildable_lint_fails_safe_and_keeps_sys_path():
 def test_mc_build_drop_reject_still_comes_first():
     item = _mh(intermediates=["South Africa"], bridge_type="country", bridge_aliases=[])
     item["adapt"]["mc_build"] = {"dropped": True}
-    assert lint.lint("multihop", item) == ["mc: the MC builder dropped this candidate (no options)"]
+    assert lint.lint("multihop_st", item) == [
+        "mc: the MC builder dropped this candidate (no options)"
+    ]
 
 
 def test_multihop_brief_names_only_buildable_bridge_kinds():
     b = mcstage.script_module("build_multihop_mc")
-    br = author.BRIEFS["multihop"]
+    br = author.BRIEFS["multihop_st"]
     assert all(t in br.invariants[-1] for t in b.POOLS)
     for tier in br.tiers.values():
         assert "moon" not in tier.lower() and "company" not in tier.lower()

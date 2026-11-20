@@ -1,4 +1,5 @@
-"""Build ``evals/multi_concept_directed_modulation/items_v2.json`` (plan 0034 M3/M6) from the frozen
+"""Build ``evals/basic/multi_concept_directed_modulation/items_v2.json`` (plan 0034 M3/M6) from the
+frozen
 v1 bank: the 100 v1 items byte for byte (relation items gain ``roles``), plus the 16 ``entity``
 items (Camila's five relations, the three reverses completing her pairs, four more pairs).
 
@@ -16,7 +17,7 @@ import sys
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[1]
-DIR = REPO / "evals/multi_concept_directed_modulation"
+DIR = REPO / "evals/basic/multi_concept_directed_modulation"
 V1, V2 = DIR / "items.json", DIR / "items_v2.json"
 CLUSTERS = DIR / "relation_clusters_v2.json"
 
@@ -122,7 +123,7 @@ GOLDEN = REPO / "tests/golden/multi_concept_directed_modulation_options.json"
 def golden() -> str:
     """The pinned option lists of the v2 bank (needs the installed package)."""
     from wsbench.banks import load_bank
-    from wsbench.evals.multi_concept_directed_modulation import options, prompts
+    from wsbench.evals.basic.multi_concept_directed_modulation import options, prompts
     from wsbench.mc import options_with_cannot
 
     _h, items = load_bank(V2)

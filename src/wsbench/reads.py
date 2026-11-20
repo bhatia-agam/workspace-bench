@@ -22,7 +22,7 @@ from collections.abc import Collection, Iterable, Mapping, Sequence
 from pathlib import Path
 from typing import Any
 
-from wsbench import fast, readplan
+from wsbench import fast, readplan, registry
 from wsbench.nyt import NO_NYT_ENV
 from wsbench.readouts import Cell, LoadReport, load_readouts, normalize, read_sidecar
 from wsbench.readplan import FINAL, ReadSpec, lite_select
@@ -195,16 +195,45 @@ def _registered_header(family: str) -> dict[str, Any]:
     return raw if isinstance(raw, dict) else {}
 
 
+def owner_of(path: Path, family: str, meta: Mapping[str, Any] | None = None) -> str | None:
+    """Which member of ``family``'s renamed pair (plan 0101) a readouts file belongs to: by its
+    sidecar's ``plan_sha`` (the family's or the partner's own plan, fast plans included), else
+    by its item ids (``registry.owner``; ``RenamedKey`` when it holds both members' ids). None
+    for a family outside a pair and for a file that says neither."""
+    family = canonical(family)
+    other, key = registry.partner(family), registry.shared_key(family)
+    if other is None or key is None:
+        return None
+    meta = read_sidecar(Path(path)) if meta is None else meta
+    sha = str((meta or {}).get("plan_sha") or "")
+    if sha:
+        declared = (meta or {}).get("fast")
+        for member in (family, other):
+            try:
+                if declared:
+                    mine = fast_plan_sha(member, declared=str(declared))
+                else:
+                    mine = plan_sha(member)
+            except (SystemExit, KeyError):  # not in that fast subset, no plan under this root
+                continue
+            if sha == mine:
+                return member
+        return None  # another plan: guard (iii) decides (lineage, or "a different plan")
+    from wsbench.readouts import ids_in
+
+    return registry.owner(key, ids=ids_in(Path(path)))
+
+
 def lineage_drops(family: str, have: str, want: str) -> list[str] | None:
     """The ids dropped on a chain of ``plan_lineage`` records from plan ``have`` to plan ``want``
     (a breadth-first search over ``from -> to`` links, at most ``LINEAGE_MAX_STEPS`` deep): the
     adapted set's ``report.json`` records under ``$WSB_BANK_ROOT``, else (no root, plan 0083) the
     registered bank header's ``plan_lineage``. None when no chain exists, a root has no report,
     or a ``WSB_BANK_FILE_<FAMILY>`` pin overrides the bank (fail-closed)."""
-    from wsbench.registry import canonical, legacy_names, lookup_names
+    from wsbench.registry import bank_pin, canonical, lookup_names
 
     fam = canonical(family)
-    if any(os.environ.get(BANK_FILE_ENV_PREFIX + n.upper()) for n in (fam, *legacy_names(fam))):
+    if bank_pin(fam) is not None:
         return None
     if os.environ.get(BANK_ROOT_ENV):
         report = _root_report()
@@ -446,6 +475,21 @@ def load(
         ids = fast_ids
     cells, rep = load_readouts(path, ids=ids, layers=args.layers, positions=positions)
     meta = read_sidecar(path)
+    other = registry.partner(canonical(family))
+    if other is not None:  # the last guard of a renamed pair, whatever the file is called
+        try:
+            who = owner_of(path, family, meta)
+        except registry.RenamedKey:
+            fail(
+                f"{path} holds readouts of both {canonical(family)} and {other} (the two "
+                "families of a renamed pair, plan 0101): split it by family"
+            )
+        if who == other:
+            fail(
+                f"{path} holds {other} readouts (before 2026-11-20 "
+                f"{registry.shared_key(other)!r} named the single-token family, plan 0101): "
+                f"judge it with family={other}"
+            )
     rep.meta = meta
     rep.reads = m
     rep.layers_requested = None if args.layers is None else sorted(set(args.layers))

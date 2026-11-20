@@ -23,7 +23,7 @@ FLAT = ("numbers",)
 # every family whose summary-mode judge is an LLM call fed by the shared example readouts
 SUMMARY_JUDGED = [
     "association",
-    "basic_readout",
+    "basic_readout_st",
     "buggy_code",
     "conjunctive_association",
     "directed_modulation",
@@ -32,12 +32,12 @@ SUMMARY_JUDGED = [
     "knowledge_cutoff",
     "moral_rationale",
     "multi_concept_directed_modulation",
-    "multihop",
-    "multilingual",
+    "multihop_st",
+    "multilingual_st",
     "poetry",
     "relational_multihop",
     "role_bound_association",
-    "typo",
+    "typo_st",
     "user_modeling",
 ]
 
@@ -74,7 +74,7 @@ def test_summary_judge_receives_the_spec_token_note(family, tmp_path, monkeypatc
     if family == "poetry":
         # round 5: poetry's HEADLINE judge is free-response (no options, no targets); it gets the
         # spec's targets-variant note made target-free; its MC diagnostic gets ``want``
-        from wsbench.evals.poetry import prompts as pp
+        from wsbench.evals.basic.poetry import prompts as pp
 
         free = [u for s, u in calls if s == pp.SYSTEM]
         want_free = pp.free_token_note(mc.token_note(FLAT, targets=True))
@@ -100,7 +100,7 @@ def test_summary_multi_select_reaches_the_judge(tmp_path, monkeypatch, real_fami
 
 
 def test_native_token_cell_is_one_ranked_list_line():
-    """Camila's multihop counter-example: a flat run of numbers must read as ONE list, so
+    """Camila's multihop_st counter-example: a flat run of numbers must read as ONE list, so
     'twelve' is not alone on its line (and the spec's flat_types reach the note)."""
     cells = [Cell("i", 20, 11, None, ("equal", "twelve", "six", "eight", "seven"), None)]
     note = mc.token_note(FLAT)
@@ -117,10 +117,10 @@ def test_native_token_cell_is_one_ranked_list_line():
 
 
 def test_native_basic_judge_receives_spec_note_and_bag_lines(tmp_path, monkeypatch, real_families):
-    # plan 0048: multihop moved to the blind MC judge (an OPTIONS judge; its note is held by
-    # test_multihop.py::test_flat_types_rendered); plan 0058 removed medical_diagnosis, so typo
+    # plan 0048: multihop_st moved to the blind MC judge (an OPTIONS judge; its note is held by
+    # test_multihop.py::test_flat_types_rendered); plan 0058 removed medical_diagnosis, so typo_st
     # is the remaining native TARGETS judge
-    family = "typo"
+    family = "typo_st"
     spec = _with_flat(monkeypatch, family)
     path = _as_tokens(EX / f"{family}.jsonl", tmp_path / "r.jsonl")
     fake = FakeLLM.install(monkeypatch, judge=lambda s, u, sc: None)
@@ -149,14 +149,14 @@ def test_quote_from_one_list_verifies_across_tokens():
     assert quote_verified("York", list(bp.cell_lines(cell)))
 
 
-# basic_readout left for the blind MC judge (plan 0053): it gets the OPTIONS form of the note
+# basic_readout_st left for the blind MC judge (plan 0053): it gets the OPTIONS form of the note
 # with its flat types (test_basic_readout_mc_judge_sees_the_options_note below)
 BASIC_TARGET_JUDGES = [
     # medical_diagnosis{,_alt}: removed (plan 0058)
-    # multihop left in plan 0048: an OPTIONS judge (blind MC), held by test_multihop.py
-    # plan 0054: multilingual left the basic bank judge (an MC judge with options, mc+regex)
+    # multihop_st left in plan 0048: an OPTIONS judge (blind MC), held by test_multihop.py
+    # plan 0054: multilingual_st left the basic bank judge (an MC judge with options, mc+regex)
     # poetry: its own blind MC judge (plan 0038)
-    "typo",
+    "typo_st",
 ]  # wrong_intermediate: its own MC judge with FLAT_TYPES (plan 0050); wrong_bridge_true removed
 
 
@@ -191,15 +191,15 @@ def test_basic_target_judges_never_see_the_lone_option_clause(
 def test_basic_readout_mc_judge_sees_the_options_note(
     aggregate, tmp_path, monkeypatch, real_families
 ):
-    """Plan 0053: basic_readout's MC judge holds OPTIONS, so it receives
+    """Plan 0053: basic_readout_st's MC judge holds OPTIONS, so it receives
     mc.token_note(spec.flat_types) (lone-option clause, overridden by its flat types), never the
     targets form."""
     registry.load_all()
-    spec = registry.FAMILIES["basic_readout"]
+    spec = registry.FAMILIES["basic_readout_st"]
     assert not spec.targets_judge
     want = mc.token_note(spec.flat_types, multi_select=spec.multi_select)
-    assert digest.token_note_of("basic_readout") == want
-    path = _as_tokens(EX / "basic_readout.jsonl", tmp_path / "r.jsonl")
+    assert digest.token_note_of("basic_readout_st") == want
+    path = _as_tokens(EX / "basic_readout_st.jsonl", tmp_path / "r.jsonl")
     fake = FakeLLM.install(monkeypatch, judge=lambda s, u, sc: None)
     args = summary_args(path, tmp_path / "o", "pv", allow_missing=True)
     if aggregate == "native":

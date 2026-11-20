@@ -53,8 +53,9 @@ each): build or judge one with `.claude/skills/adapt-bank/SKILL.md` (Quickstart;
 `WSB_BANK_ROOT=adapted/<m>`).
 
 **Usable as they are, once `capable` says the model does the task** (no bank edits): association,
-basic_readout (minus its implicit third), multihop, multilingual, typo, the six multi-token
-families, chain_intermediates, arithmetic_intermediates, user_modeling,
+basic_readout_st (minus its implicit third), multihop_st, multilingual_st, typo_st, the six
+multi-token families (`basic_readout`, `multihop`, `multilingual`, `typo`, `multilingual_multihop`,
+`multilingual_typo`; but see `multihop` below), chain_intermediates, arithmetic_intermediates, user_modeling,
 conjunctive_association, relational_multihop, role_bound_association, buggy_code,
 multi_concept_directed_modulation (the sentence is prefilled since 2026-09-23).
 
@@ -75,14 +76,14 @@ indices and need re-capturing.
 | family | its gate | on a new model |
 |---|---|---|
 | association | names the concept the text never names | check with `capable` (it asks the bank's referent question, not a continuation) |
-| basic_readout | produces the obvious next concept | check with `capable` — **but its 32 implicit items are gated on the model's OWN favourite** ("what is your favourite card game?"), so they have no model-independent answer and are left out. Re-gate them with the new model's own answers |
-| multihop, multilingual | produces the answer | check with `capable` |
-| typo, typo_mt, multilingual_typo | corrects the misspelling when asked | check with `capable` (it asks for the correction; continuing the text would never produce it) |
-| basic_readout_mt, multilingual_mt | produces the multi-token answer | check with `capable` |
+| basic_readout_st | produces the obvious next concept | check with `capable` — **but its 32 implicit items are gated on the model's OWN favourite** ("what is your favourite card game?"), so they have no model-independent answer and are left out. Re-gate them with the new model's own answers |
+| multihop_st, multilingual_st | produces the answer | check with `capable` |
+| typo_st, typo, multilingual_typo | corrects the misspelling when asked | check with `capable` (it asks for the correction; continuing the text would never produce it) |
+| basic_readout, multilingual | produces the multi-token answer | check with `capable` |
 | multilingual_multihop (multihop_mt_regex was removed, plan 0041) | the surface answer AND every bridge question | check with `capable`, which asks both; the bridge leg is the one that matters, since the bridge is the scored latent |
-| **multihop_mt** (the default multihop multi-token family) | the surface answer, every bridge question, AND that no shortcut probe reaches the answer (plan 0013) | **re-gate the shortcut probes.** `capable` re-checks only the answer and bridge questions. Whether every bridge is *necessary* is specific to the model that was gated, so a new model needs the `shortcut_probes` re-run (global-workspace `multihop_v2/gate_modal.py`) |
+| **multihop** (the multi-token multihop family; `multihop_mt` before plan 0101) | the surface answer, every bridge question, AND that no shortcut probe reaches the answer (plan 0013) | **re-gate the shortcut probes.** `capable` re-checks only the answer and bridge questions. Whether every bridge is *necessary* is specific to the model that was gated, so a new model needs the `shortcut_probes` re-run (global-workspace `multihop_v2/gate_modal.py`) |
 | **poetry** | commits to a specific rhyme word | **re-gate.** The scored latent is the word THIS model would write. Another model rhymes differently, and every item whose rhyme changes is scoring the wrong target |
-| **moral_rationale** | commits to one side, and the item's reasons are sampled for that side | **re-key.** `capable` reports agreement with the side the bank recorded, not correctness; **no runnable recipe exists for a new model yet.** The bank-v3 recipe (plan 0046: `python -m wsbench.adapt moral model=<key> stage=rekey_readrender out=<dir> step=<step>` for `requests_s`, `grade_s`, `requests_r`, `distil`, `verify`, `assemble`, then `scripts/moral_distractors.py`) samples Qwen3.6-27B only (`model=` is required but ignored) and its last step rewrites `evals/moral_rationale/items_v3.json`; a subject version is plan 0060 |
+| **moral_rationale** | commits to one side, and the item's reasons are sampled for that side | **re-key.** `capable` reports agreement with the side the bank recorded, not correctness; **no runnable recipe exists for a new model yet.** The bank-v3 recipe (plan 0046: `python -m wsbench.adapt moral model=<key> stage=rekey_readrender out=<dir> step=<step>` for `requests_s`, `grade_s`, `requests_r`, `distil`, `verify`, `assemble`, then `scripts/moral_distractors.py`) samples Qwen3.6-27B only (`model=` is required but ignored) and its last step rewrites `evals/logical_processing/moral_rationale/items_v3.json`; a subject version is plan 0060 |
 | chain_intermediates | answer right with no chain of thought (10/10) | check with `capable`. A model that cannot do it has no intermediate to read; one that reasons in hidden tokens breaks the no-CoT premise and `capable` cannot see that |
 | arithmetic_intermediates | answers right with no chain of thought | check with `capable`, same caveat |
 | buggy_code | predicts the executed consequence when asked, and never volunteers the bug | `capable` covers the first half only; the second needs unprompted rollouts |
@@ -161,7 +162,7 @@ so far, and what a new item has to satisfy:
   arm and every subset sees the same list. Then measure the lucky-guessing floor: blind guessing
   above chance means the options leak (2026-09: multihop_mt_regex's MC judge guessed 0.658 blind
   against a measured uniform 0.126 and an analytic 0.149 with its authored confusables; the
-  family was removed 2026-10-30, and multihop_mt draws its options from other questions'
+  family was removed 2026-10-30, and multihop draws its options from other questions'
   bridges instead, plan 0041).
 - **A null you can compute.** A permutation over other items' answers, a decoy set matched in
   magnitude, a derangement foil. Only arithmetic_intermediates, chain_intermediates and

@@ -8,7 +8,8 @@ the v2 bank build. No model call, no GPU.
 2. **Review.** ``REVIEW`` holds the frozen verdict per candidate (accept unless (a) F names a
    separately released sibling of another option, (b) F is a bare brand / common word, (c) F is
    a strip artefact). Every candidate must have a verdict; the build refuses otherwise.
-3. **Build** (``--write``): ``evals/knowledge_cutoff/items_v2.json`` = ``items.json`` minus the
+3. **Build** (``--write``): ``evals/model_specific/knowledge_cutoff/items_v2.json`` = ``items.json``
+   minus the
    hygiene retirements (``RETIRE``), with accepted forms appended to the frozen items'
    ``option_units`` and recorded for the nocot items in the header's ``near_alias_additions``
    (``obscure_items.json`` stays byte-identical). ``items.json`` is never touched.
@@ -29,9 +30,9 @@ sys.path.insert(0, str(ROOT / "src"))
 
 from wsbench.multitoken.regex import fold  # noqa: E402  (the scorer's fold)
 
-V1 = ROOT / "evals" / "knowledge_cutoff" / "items.json"
-V2 = ROOT / "evals" / "knowledge_cutoff" / "items_v2.json"
-OBSCURE = ROOT / "evals" / "knowledge_cutoff" / "obscure_items.json"
+V1 = ROOT / "evals" / "model_specific" / "knowledge_cutoff" / "items.json"
+V2 = ROOT / "evals" / "model_specific" / "knowledge_cutoff" / "items_v2.json"
+OBSCURE = ROOT / "evals" / "model_specific" / "knowledge_cutoff" / "obscure_items.json"
 
 VARIANT_WORDS = (
     "neo|ceo|family|series|pro|max|plus|ultra|mini|lite|networking|networks|inc|corp|ltd|group|"

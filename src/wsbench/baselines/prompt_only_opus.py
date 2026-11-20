@@ -31,6 +31,7 @@ from typing import Any
 
 from wsbench.baselines import prompt_cut
 from wsbench.baselines import text_inversion as ti
+from wsbench.readouts import refuse_partner_file
 
 PROTOCOL = "po-opus-v1"
 MODEL = "claude-opus-5-5"
@@ -49,6 +50,15 @@ NOT_MEASURABLE_REFUSAL_SHARE = 0.20  # = prompt_only.NOT_MEASURABLE_REFUSAL_SHAR
 EXCLUDED: dict[str, str] = {
     "jlens_concept_pr": "precision against the J-lens top-10, not a bar a lens clears",
 }
+
+
+def _rows(path: Path) -> list[dict[str, Any]]:
+    """``ti.load_jsonl`` with a row under a plan-0101 bare family key attributed by its own id
+    (``registry.attribute_rows``; other keys as stored), so a work dir written before the rename
+    keeps serving the right family and never the other."""
+    from wsbench.registry import attribute_rows
+
+    return attribute_rows(ti.load_jsonl(path), canonicalize=False)
 
 
 def framing_of(family: str) -> str:
@@ -219,7 +229,7 @@ def require_cut_srcs(prompts: list[dict[str, Any]], srcs: list[Path]) -> None:
     owner: dict[str, Path] = {}
     for src in srcs:
         path = Path(src) / "prompts.jsonl"
-        for fam in {p["family"] for p in ti.load_jsonl(path)} & stale:
+        for fam in {p["family"] for p in _rows(path)} & stale:
             owner[fam] = path
     by_path: dict[Path, list[str]] = {}
     for fam in sorted(stale):
@@ -240,13 +250,13 @@ def client() -> Any:
 
 
 async def _ask(out: Path, concurrency: int, fams: set[str] | None) -> int:
-    prompts = ti.load_jsonl(out / "prompts.jsonl")
+    prompts = _rows(out / "prompts.jsonl")
     prompts = [r for r in prompts if not fams or r["family"] in fams]
     require_cut(prompts, out / "prompts.jsonl")
     ans = out / "answers"
     ans.mkdir(parents=True, exist_ok=True)
     path = ans / "draw0.jsonl"
-    rows = ti.load_jsonl(path) if path.exists() else []
+    rows = _rows(path) if path.exists() else []
     # an answer to another question (an older prompt or framing) is not a cache hit
     cur = current_answers(rows, prompt_shas(prompts))
     done = {k for k, a in cur.items() if settled(a)}
@@ -279,10 +289,10 @@ def write_readouts(out: Path) -> dict[str, dict[str, Any]]:
     the protocol and, per family, the ids and the refused ids."""
     from wsbench.readouts import write_sidecar
 
-    prompts = ti.load_jsonl(out / "prompts.jsonl")
+    prompts = _rows(out / "prompts.jsonl")
     require_cut(prompts, out / "prompts.jsonl")
     src = out / "answers" / "draw0.jsonl"
-    ans = current_answers(ti.load_jsonl(src), prompt_shas(prompts)) if src.exists() else {}
+    ans = current_answers(_rows(src), prompt_shas(prompts)) if src.exists() else {}
     root = out / "readouts"
     root.mkdir(parents=True, exist_ok=True)
     stats: dict[str, dict[str, Any]] = {}
@@ -293,6 +303,7 @@ def write_readouts(out: Path) -> dict[str, dict[str, Any]]:
             st = stats.setdefault(fam, {"n_ids": 0, "refused": [], "failed": []})
             st["n_ids"] += 1
             if fam not in handles:
+                refuse_partner_file(root / f"{fam}.jsonl", fam)  # plan 0101 §5.7a
                 handles[fam] = (root / f"{fam}.jsonl").open("w", encoding="utf-8")
             a = ans.get((fam, p["id"]))
             if a is not None and ti.is_refusal(a):
@@ -349,11 +360,11 @@ def primary(
     prompts: list[dict[str, Any]] = []
     ans: dict[tuple[str, str], dict[str, Any]] = {}
     for src in srcs:
-        ps = ti.load_jsonl(Path(src) / "prompts.jsonl")
+        ps = _rows(Path(src) / "prompts.jsonl")
         fams = {p["family"] for p in ps}
         prompts = [p for p in prompts if p["family"] not in fams] + ps
         path = Path(src) / "answers" / "draw0.jsonl"
-        got = current_answers(ti.load_jsonl(path), prompt_shas(ps)) if path.exists() else {}
+        got = current_answers(_rows(path), prompt_shas(ps)) if path.exists() else {}
         ans = {k: v for k, v in ans.items() if k[0] not in fams}
         ans.update({k: v for k, v in got.items() if k[0] in fams})
     return prompts, ans
@@ -362,7 +373,7 @@ def primary(
 def fallback_rows(path: Path) -> list[dict[str, Any]]:
     """The rows of ``path`` answered by :data:`FALLBACK_MODEL` (a retired fallback's rows, e.g.
     ``claude-sonnet-5`` before 2026-11-01, are not this protocol's answers)."""
-    rows = ti.load_jsonl(path) if path.exists() else []
+    rows = _rows(path) if path.exists() else []
     return [r for r in rows if r.get("answerer") == FALLBACK_MODEL]
 
 
@@ -452,6 +463,7 @@ def write_fallback_readouts(out: Path, srcs: Iterable[Path]) -> dict[str, dict[s
                 continue
             assert a is not None
             if fam not in handles:
+                refuse_partner_file(root / f"{fam}.jsonl", fam)  # plan 0101 §5.7a
                 handles[fam] = (root / f"{fam}.jsonl").open("w", encoding="utf-8")
             row = {
                 "id": p["id"],

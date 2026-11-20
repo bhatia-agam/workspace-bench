@@ -1,6 +1,6 @@
 """Plan 0060 A2 per-family items: chain v2 (gate legs, regate=all, generator rule, freeze mc),
 buggy twin pairing, the jailbreak control re-screen, agentic clean twins (D5), and the
-multilingual native_langs measurement + upgrade. Offline: every runner, labeller and judge is a
+multilingual_st native_langs measurement + upgrade. Offline: every runner, labeller and judge is a
 fake; nothing touches a GPU, Modal or an API."""
 
 import copy
@@ -135,7 +135,7 @@ def test_regate_cli_parses_all(monkeypatch):
 
 def test_freeze_builds_chain_mc_over_the_shipped_set():
     from wsbench.adapt.run import _post_freeze
-    from wsbench.evals.chain_intermediates.options import check_slot
+    from wsbench.evals.computational.chain_intermediates.options import check_slot
 
     header, items = _chain_bank()
     originals = copy.deepcopy(items[:40])
@@ -191,7 +191,7 @@ def test_buggy_twin_derivation_and_freeze_step():
     notes = _buggy_twins(items)
     assert items[1]["twin"] == "buggy-au-clean-t0-a" and items[2]["twin"] == "buggy-au-t0-a"
     assert "twin" not in items[3] and notes
-    from wsbench.evals.buggy_code.judge import pairs_of
+    from wsbench.evals.computational.buggy_code.judge import pairs_of
 
     assert pairs_of(items[1:]) == [("buggy-au-t0-a", "buggy-au-clean-t0-a")]
 
@@ -338,7 +338,7 @@ def am(tmp_model, monkeypatch):
 
     bank = _am_bank()
     monkeypatch.setattr(agentic, "_bank", lambda: copy.deepcopy(bank))
-    from wsbench.evals.agentic_misalignment import judge as am_judge
+    from wsbench.evals.safety.agentic_misalignment import judge as am_judge
 
     targets = {f"m{i}": {"action": f"ACT-m{i}", "forms": [f"form-m{i}", "x"]} for i in range(1, 6)}
     monkeypatch.setattr(am_judge, "load_targets", lambda: copy.deepcopy(targets))
@@ -408,7 +408,7 @@ def test_agentic_twins_gated_on_the_subject(am, tmp_model):
     for m in ("m4", "m5"):  # (ii) flags the twin: a means twin and an object twin both fail
         assert "twin" not in by[m] and "cluster" not in by[m]
         assert "'MISALIGNED': 1" in by[m]["twin_dropped"].split("generic", 1)[1]
-    from wsbench.evals.agentic_misalignment import score
+    from wsbench.evals.safety.agentic_misalignment import score
 
     assert score.pairs_of(out["items"]) == [("m1", "m1~twin"), ("m2", "m2~twin")]
     assert out["n_pairs"] == 2 and out["bank_version"] == "am-bank-v2"
@@ -418,7 +418,7 @@ def test_agentic_twins_gated_on_the_subject(am, tmp_model):
 
 
 def test_agentic_macro_exclusion_lifted_at_the_minimum(am, tmp_model, monkeypatch):
-    import wsbench.evals.agentic_misalignment as am_pkg
+    import wsbench.evals.safety.agentic_misalignment as am_pkg
     from wsbench.adapt import agentic
 
     store.update_report(MODEL, lambda r: r.setdefault("families", {}).setdefault(
@@ -441,7 +441,7 @@ def test_agentic_twin_without_partner_target_stops(am, monkeypatch):
 
     _bank, _a, _j, _p, targets = am
     agentic.rollout(MODEL)
-    from wsbench.evals.agentic_misalignment import judge as am_judge
+    from wsbench.evals.safety.agentic_misalignment import judge as am_judge
 
     del targets["m4"]
     monkeypatch.setattr(am_judge, "load_targets", lambda: copy.deepcopy(targets))
@@ -526,8 +526,8 @@ def _reg(family, lang=None):
 
 @pytest.mark.parametrize(
     "family",
-    ["multilingual", "multilingual_mt", "multilingual_typo", "multilingual_multihop",
-     "basic_readout_mt", "typo_mt"],
+    ["multilingual_st", "multilingual", "multilingual_typo", "multilingual_multihop",
+     "basic_readout", "typo"],
 )  # fmt: skip
 def test_rebuild_for_qwen_languages_keeps_the_registered_units(family):
     from wsbench.adapt.ml_native import rebuild
@@ -547,8 +547,8 @@ def test_rebuild_for_qwen_languages_keeps_the_registered_units(family):
 def test_rebuild_english_only_subject():
     from wsbench.adapt.ml_native import rebuild
 
-    reg = _reg("multilingual", "de")
-    got = rebuild("multilingual", reg, ["en"], ["en", "zh"], _CharTok())
+    reg = _reg("multilingual_st", "de")
+    got = rebuild("multilingual_st", reg, ["en"], ["en", "zh"], _CharTok())
     units = {u["role"]: u for u in got["units"]}
     assert set(units["concept_native"]["forms"]) == {"en"}
     assert set(units["language"]["forms"]) == {"en", "de"}  # names only: English + autonym
@@ -560,17 +560,17 @@ def test_rebuild_english_only_subject():
 def test_rebuild_drops_when_l2_turns_native_or_forms_are_missing():
     from wsbench.adapt.ml_native import DropError, rebuild
 
-    de = _reg("multilingual", "de")
+    de = _reg("multilingual_st", "de")
     with pytest.raises(DropError, match="becomes native"):
-        rebuild("multilingual", de, ["en", "de"], ["en", "zh"], _CharTok())
+        rebuild("multilingual_st", de, ["en", "de"], ["en", "zh"], _CharTok())
     zh = {**copy.deepcopy(de), "lang": "zh"}
     with pytest.raises(DropError, match="stops being native"):
-        rebuild("multilingual", zh, ["en"], ["en", "zh"], _CharTok())
+        rebuild("multilingual_st", zh, ["en"], ["en", "zh"], _CharTok())
     with pytest.raises(DropError, match="'ja'"):  # a new native code: no authored forms
-        rebuild("multilingual", de, ["en", "ja"], ["en", "zh"], _CharTok())
-    # typo_mt's correction is English by design: a new native code is not required there
-    typo = _reg("typo_mt")
-    assert rebuild("typo_mt", typo, ["en", "ja"], ["en", "zh"], _CharTok())
+        rebuild("multilingual_st", de, ["en", "ja"], ["en", "zh"], _CharTok())
+    # typo's correction is English by design: a new native code is not required there
+    typo = _reg("typo")
+    assert rebuild("typo", typo, ["en", "ja"], ["en", "zh"], _CharTok())
 
 
 def test_rebuild_multihop_recomputes_l2_creditability():
@@ -599,38 +599,38 @@ def test_upgrade_appends_rebuilt_rows_and_records_drops(tmp_model):
     from wsbench.adapt import native_langs as nl
 
     with pytest.raises(SystemExit):  # unmeasured: refused
-        ml_native.upgrade(MODEL, ["multilingual"], tok=_CharTok())
+        ml_native.upgrade(MODEL, ["multilingual_st"], tok=_CharTok())
     nl.record(MODEL, ["en"], evidence="fixture")
-    de = _reg("multilingual", "de")
+    de = _reg("multilingual_st", "de")
     zh = {**copy.deepcopy(de), "id": "zz-zh-item", "name": "zz-zh-item", "lang": "zh"}
     gate = {"pass": True, "rate": 1.0, "legs": {}}
     store.record_gates(
         MODEL,
-        "multilingual",
+        "multilingual_st",
         [{**_row(de), "gate": gate}, {**_row(zh, origin="authored"), "gate": gate}],
     )
-    res = ml_native.upgrade(MODEL, ["multilingual"], tok=_CharTok())
-    assert res["multilingual"]["rebuilt"] == 1 and list(res["multilingual"]["dropped"]) == [
+    res = ml_native.upgrade(MODEL, ["multilingual_st"], tok=_CharTok())
+    assert res["multilingual_st"]["rebuilt"] == 1 and list(res["multilingual_st"]["dropped"]) == [
         "zz-zh-item"
     ]
-    row = store.gated(MODEL, "multilingual")[de["name"]]
+    row = store.gated(MODEL, "multilingual_st")[de["name"]]
     assert row["item"][nl.MARKER] == ["en"] and row["gate"] == gate  # never re-asked
     assert row["upgraded_from"]["native_langs"] == ["en"]
-    drops = json.loads((tmp_model / "report.json").read_text())["drops"]["multilingual"]
+    drops = json.loads((tmp_model / "report.json").read_text())["drops"]["multilingual_st"]
     assert "stops being native" in drops["zz-zh-item"]
 
 
 def test_rebuild_filters_basic_readout_mt_language_unit():
     from wsbench.adapt.ml_native import rebuild
 
-    _h, items = original_bank("basic_readout_mt")
+    _h, items = original_bank("basic_readout")
     it = copy.deepcopy(next(i for i in items if any(u["role"] == "language" for u in i["units"])))
-    got = rebuild("basic_readout_mt", it, ["en"], ["en", "zh"], _CharTok())
+    got = rebuild("basic_readout", it, ["en"], ["en", "zh"], _CharTok())
     lang_unit = next(u for u in got["units"] if u["role"] == "language")
     assert set(lang_unit["forms"]) == {"en", it["lang"]}  # zh gone, the L2's own key kept
     assert lang_unit["match"] == [f for fs in lang_unit["forms"].values() for f in fs]
     assert set(got["probe_token_lens"]["units"]["language"]) == {"en", it["lang"]}
-    qwen = rebuild("basic_readout_mt", it, ["en", "zh"], ["en", "zh"], _CharTok())
+    qwen = rebuild("basic_readout", it, ["en", "zh"], ["en", "zh"], _CharTok())
     assert {u["role"]: u["forms"] for u in qwen["units"]} == {
         u["role"]: u["forms"] for u in it["units"]
     }

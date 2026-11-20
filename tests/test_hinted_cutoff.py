@@ -8,15 +8,17 @@ import pytest
 
 from wsbench import registry
 from wsbench.banks import load_bank
-from wsbench.evals.hinted_cutoff import judge, prompts, score
+from wsbench.evals.model_specific.hinted_cutoff import judge, prompts, score
 from wsbench.judge_config import resolve
 from wsbench.readouts import Cell
 from wsbench.registry import JudgeArgs
 from wsbench.results import MACRO_METRICS
 
 REPO = Path(__file__).resolve().parents[1]
-BANK = REPO / "evals/hinted_cutoff/items_v2.json"  # plan 0074: the registered bank
-BANK_V1 = REPO / "evals/hinted_cutoff/items.json"  # frozen, still judgeable by WSB_BANK_FILE_
+BANK = REPO / "evals/model_specific/hinted_cutoff/items_v2.json"  # plan 0074: the registered bank
+BANK_V1 = (
+    REPO / "evals/model_specific/hinted_cutoff/items.json"
+)  # frozen, still judgeable by WSB_BANK_FILE_
 # sha256 of the frozen v1 bank file (plan 0074: never edited in place)
 BANK_V1_SHA = "912993f1398543747dc1e81e0a5aeba92f8ab7db4d41a8032b900fd40bf310ab"
 # sha256 of the source's gw ccut._EXIST4_DEFS and its resolved output-format text (readouts)
@@ -309,7 +311,7 @@ def test_floor_framing_makes_no_model_claim():
     assert ti.FRAMINGS["neutral"] == ti.NEUTRAL_NOTE + ti.TEMPLATE
     low = ti.NEUTRAL_NOTE.lower()
     assert not any(w in low for w in ("open-weights", "open weights", "claude", "qwen", "cutoff"))
-    assert po.framing_of("typo_mt") == po.FRAMING == "open_model"  # other families unchanged
+    assert po.framing_of("typo") == po.FRAMING == "open_model"  # other families unchanged
 
 
 def test_summary_counts_empty_items_not_cells(tmp_path, monkeypatch):

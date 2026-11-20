@@ -1,9 +1,9 @@
 """Stamp the tokenizer-dependent fields of a bank for one tokenizer: `probe_token_lens` (the six
-multi-token families) and multihop `readout.offsets`.
+multi-token families) and multihop_st `readout.offsets`.
 
     uv run --with transformers --with jinja2 python \\
         .claude/skills/wsb-new-questions/scripts/restamp.py \\
-        --family multihop_mt --bank cand/multihop_mt.json --tokenizer Qwen/Qwen3.6-27B
+        --family multihop --bank cand/multihop.json --tokenizer Qwen/Qwen3.6-27B
 
 Rewrites the bank in place (or to --out). Use the tokenizer of the model whose activations
 will be read: Qwen/Qwen3.6-27B for the public bank, the subject for a per-model bank.
@@ -28,7 +28,7 @@ def main() -> int:
     ap.add_argument("--tokenizer", default="Qwen/Qwen3.6-27B")
     ap.add_argument("--out", type=Path, default=None)
     a = ap.parse_args()
-    if a.family not in (*MT_FAMILIES, "multihop"):
+    if a.family not in (*MT_FAMILIES, "multihop_st"):
         print(f"{a.family}: nothing tokenizer-dependent to stamp", file=sys.stderr)
         return 0
     from transformers import AutoTokenizer  # type: ignore[import-not-found]
@@ -39,7 +39,7 @@ def main() -> int:
     for it in items:
         if a.family in MT_FAMILIES and not stamp_mt(it, tok, a.family):
             bad.append(it.get("name"))
-        elif a.family == "multihop":
+        elif a.family == "multihop_st":
             multihop_offsets(it, tok)
     out = a.out or a.bank
     obj = items if is_list else {**header, "items": items}

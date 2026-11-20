@@ -25,8 +25,8 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
 from wsbench import nocot  # noqa: E402
-from wsbench.evals.knowledge_cutoff.judge import unredacted_nocot  # noqa: E402
-from wsbench.evals.nyt_connections import judge as nyt_judge  # noqa: E402
+from wsbench.evals.logical_processing.nyt_connections import judge as nyt_judge  # noqa: E402
+from wsbench.evals.model_specific.knowledge_cutoff.judge import unredacted_nocot  # noqa: E402
 
 
 def _objects(x: Any) -> Iterator[dict]:

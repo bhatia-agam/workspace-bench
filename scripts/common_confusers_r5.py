@@ -1,4 +1,5 @@
-"""Round 5 "common" confusers (Camila r3 (1), 2026-11-01): basic_readout's implicit items and every
+"""Round 5 "common" confusers (Camila r3 (1), 2026-11-01): basic_readout_st's implicit items and
+every
 association item get 3-4 FREQUENCY-MATCHED, equally common confusers ADDED to their option list
 ("favourite fruit apple -> orange, banana, grape"), on items where Qwen commits to the gold in
 >= 8 of 10 samples. Every option the list already holds stays (each earlier judge-picked or
@@ -9,12 +10,12 @@ Stages (resumable; Opus calls cached per key under ``<out>/<family>/cache``)::
     python scripts/common_confusers_r5.py requests --out <dir>     # Qwen gate requests
     (modal run scripts/qwen_sample_modal.py --requests <dir>/gate_requests.jsonl ...)
     python scripts/common_confusers_r5.py gate --out <dir> --samples <samples.jsonl>
-    python scripts/common_confusers_r5.py build --family basic_readout --out <dir>
+    python scripts/common_confusers_r5.py build --family basic_readout_st --out <dir>
     python scripts/common_confusers_r5.py build --family association --out <dir>
-    python scripts/common_confusers_r5.py replay --family basic_readout --judged <judged root> \
+    python scripts/common_confusers_r5.py replay --family basic_readout_st --judged <judged root> \
         --rejudged <dir> --dest <report.json>
 
-**Gate** (:data:`GATE_RULE`): Qwen3.6-27B, 10 samples at temperature 0.7. basic_readout implicit:
+**Gate** (:data:`GATE_RULE`): Qwen3.6-27B, 10 samples at temperature 0.7. basic_readout_st implicit:
 the item's exact eval render (chat template, thinking off, the user turn = the prompt, assistant
 prefill "My one-word answer is:", 8 tokens; bank v5's gate render). association: the read render
 asks for a one-sentence summary, which need not name the concept, so the gate asks the bank's
@@ -58,6 +59,7 @@ from wsbench.adapt import moral as am
 from wsbench.adapt.gate import Ask, first_line, grade_contains
 from wsbench.banks import label_of
 from wsbench.llm import schema_block
+from wsbench.registry import frozen_name
 
 REPO = Path(__file__).resolve().parents[1]
 VERSION = "common-r5-2026-11-01"
@@ -71,11 +73,17 @@ EQUIV_DRAWS = 3
 OWN_STEM = "My one-word answer is:"
 
 BANKS = {
-    "basic_readout": ("evals/basic_readout/items_v5.json", "evals/basic_readout/items_v6.json"),
-    "association": ("evals/association/items_v3.json", "evals/association/items_v4.json"),
+    "basic_readout_st": (
+        "evals/basic/basic_readout_st/items_v5.json",
+        "evals/basic/basic_readout_st/items_v6.json",
+    ),
+    "association": (
+        "evals/basic/association/items_v3.json",
+        "evals/basic/association/items_v4.json",
+    ),
 }
-OLD_KEY = {"basic_readout": "distractors_v5", "association": "distractors_v3"}
-STAMP = {"basic_readout": "br-mc-2026-11-01-v6", "association": "assoc-mc-2026-11-01-v4"}
+OLD_KEY = {"basic_readout_st": "distractors_v5", "association": "distractors_v3"}
+STAMP = {"basic_readout_st": "br-mc-2026-11-01-v6", "association": "assoc-mc-2026-11-01-v4"}
 
 GATE_RULE = (
     "Camila r3 (1): only items where Qwen commits to the gold in >= 8 of 10 samples. Qwen3.6-27B "
@@ -121,7 +129,7 @@ may be the same thing.{scene}
 and plurals, spelling variants, established short names, and its translations into Simplified \
 Chinese{lang} (list Chinese forms explicitly). Never a broader category or a related word."""
 FREQ = {
-    "basic_readout": "the other answers people give to this exact favourite question about as "
+    "basic_readout_st": "the other answers people give to this exact favourite question about as "
     "often as the correct answer (the top answers to it). For 'What is your favorite fruit?' with "
     "correct answer apple: orange, banana, grape; for a favourite musical instrument with piano: "
     "violin, guitar, drums.",
@@ -174,6 +182,13 @@ def load(path: str) -> tuple[dict[str, Any], list[dict[str, Any]]]:
     return {k: v for k, v in raw.items() if k != "items"}, raw["items"]
 
 
+def gate_key(family: str, item: str) -> str:
+    """The key of an item's gate request rows and of its ``gate_r5.json`` record: the family's
+    pre-0101 key (``registry.frozen_name``, plan 0101 F15), so a rename moves neither the stored
+    keys nor the sampling seed they feed."""
+    return f"{frozen_name(family)}|{item}"
+
+
 def in_scope(family: str, it: dict[str, Any]) -> bool:
     return family == "association" or it.get("subfamily") == "implicit"
 
@@ -195,10 +210,10 @@ def requests(out: Path) -> Path:
         for it in items:
             if not in_scope(family, it):
                 continue
-            base = {"key": f"{family}|{it['name']}", "family": family, "n": GATE_N,
+            base = {"key": gate_key(family, it["name"]), "family": family, "n": GATE_N,
                     "temperature": 0.7, "top_p": 1.0, "top_k": -1, "enable_thinking": False,
                     "greedy": False}  # fmt: skip
-            if family == "basic_readout":
+            if family == "basic_readout_st":
                 msgs = [{"role": "user", "content": it["prompt"]}]
                 rows.append({**base, "messages": msgs, "prefill": OWN_STEM, "max_tokens": 8})
             else:
@@ -239,13 +254,13 @@ def gate(out: Path, samples: Path) -> dict[str, Any]:
         for it in items:
             if not in_scope(family, it):
                 continue
-            texts = by_key.get(f"{family}|{it['name']}") or []
+            texts = by_key.get(gate_key(family, it["name"])) or []
             if len(texts) != GATE_N:
                 raise SystemExit(f"{family}|{it['name']}: {len(texts)} samples, want {GATE_N}")
             ask = Ask(it["id"], "surface", tuple(gold_forms(it)))
             hits = [bool(grade_contains(ask, t)) for t in texts]
             answers = [norm_answer(t) for t in texts]
-            key = f"{family}|{it['id']}"
+            key = gate_key(family, it["id"])
             items_of[key] = it
             rec[key] = {
                 "family": family,
@@ -294,11 +309,11 @@ def gate(out: Path, samples: Path) -> dict[str, Any]:
 
 def verdict(family: str, correct: int, answers: dict[str, int]) -> tuple[str, str]:
     """(:data:`GATE_RULE`) ``("keep", "")`` at >= :data:`GATE_MIN` of :data:`GATE_N` gold
-    commits; below it a basic_readout item whose single most common (non-empty) answer reaches
+    commits; below it a basic_readout_st item whose single most common (non-empty) answer reaches
     :data:`GATE_MIN` is ``("rekey", that answer)``, anything else ``("drop", "")``."""
     if correct >= GATE_MIN:
         return "keep", ""
-    if family == "basic_readout":
+    if family == "basic_readout_st":
         common = collections.Counter({k: v for k, v in answers.items() if k}).most_common(1)
         if common and common[0][1] >= GATE_MIN:
             return "rekey", common[0][0]
@@ -323,7 +338,7 @@ def lang_of(family: str, it: dict[str, Any]) -> str:
 
 
 def topic_of(fam: r4.Fam, it: dict[str, Any]) -> str:
-    if fam.name == "basic_readout":
+    if fam.name == "basic_readout_st":
         return f"the model's own favourite: {it['prompt']}"
     return r4.topic(fam, it, {})
 
@@ -535,7 +550,7 @@ def build(family: str, out: Path) -> Path:
     for it in items:
         if not in_scope(family, it):
             continue
-        g = gate_rec[f"{family}|{it['id']}"]
+        g = gate_rec[gate_key(family, it["id"])]
         if g["verdict"] != "keep":
             continue  # re-key / drop handled below
         s = st.setdefault(it["id"], {"pool": {}, "order": [], "banned": [],
@@ -590,7 +605,7 @@ def write(family: str, header: dict[str, Any], items: list[dict[str, Any]], st: 
     for it in items:
         x = json.loads(json.dumps(it))
         if in_scope(family, it):
-            g = gate_rec[f"{family}|{it['id']}"]
+            g = gate_rec[gate_key(family, it["id"])]
             if g["verdict"] != "keep":
                 dropped[it["name"]] = {k: g[k] for k in ("correct", "answers", "verdict")}
                 continue
@@ -638,7 +653,7 @@ def write(family: str, header: dict[str, Any], items: list[dict[str, Any]], st: 
             if len(x["mc"].get("common_confusers", [N_ADD] * N_ADD)) < N_ADD
         },
     }
-    if family == "basic_readout":
+    if family == "basic_readout_st":
         for x in kept:
             x["id"] = label_of(x["name"])
         slots = gold_slots(kept)

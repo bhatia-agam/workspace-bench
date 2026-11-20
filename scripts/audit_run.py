@@ -54,8 +54,8 @@ def audit_family(fam_dir: Path) -> dict[str, Any]:
     from wsbench import digest, reads, registry
 
     res = json.loads((fam_dir / "results.json").read_text(encoding="utf-8"))
-    family = registry.canonical(res["family"])
     cfg = res.get("config", {})
+    family = registry.stored_family(res["family"], cfg.get("prompt_version"))
     extras = (res.get("numbers") or {}).get("extras", {}) or {}
     summ = extras.get("summary") if isinstance(extras.get("summary"), dict) else extras
     diag = "-dmo-" in str(fam_dir)

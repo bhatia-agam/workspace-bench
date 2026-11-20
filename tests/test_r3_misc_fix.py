@@ -3,15 +3,15 @@ too-lenient shape still fails AND the too-strict shape now passes). Shapes are t
 cited readouts."""
 
 from wsbench import digest
-from wsbench.evals.chain_intermediates import judge as chain
-from wsbench.evals.jlens_concept_pr import prompts as jp
-from wsbench.evals.knowledge_cutoff import judge as kc
-from wsbench.evals.knowledge_cutoff.score import (
+from wsbench.evals.computational.chain_intermediates import judge as chain
+from wsbench.evals.model_specific.knowledge_cutoff import judge as kc
+from wsbench.evals.model_specific.knowledge_cutoff.score import (
     lead_number,
     mask_question_numbers,
     on_topic,
     topic_terms,
 )
+from wsbench.evals.precision.jlens_concept_pr import prompts as jp
 from wsbench.readouts import Cell
 
 # ---------------------------------------------------------------- chain_intermediates heads-v3

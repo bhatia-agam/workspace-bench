@@ -31,7 +31,7 @@ REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO / "src"))
 
 from wsbench import mc  # noqa: E402
-from wsbench.evals.introspection import judge  # noqa: E402
+from wsbench.evals.model_specific.introspection import judge  # noqa: E402
 
 SRC = Path("/workspace/gw-introspection-inject")
 VERDICTS = (

@@ -23,8 +23,8 @@ from typing import Any
 
 from wsbench import digest
 from wsbench.cache import Cache
-from wsbench.evals.moral_rationale import judge as mr
-from wsbench.evals.moral_rationale import prompts as mrp
+from wsbench.evals.logical_processing.moral_rationale import judge as mr
+from wsbench.evals.logical_processing.moral_rationale import prompts as mrp
 from wsbench.judge_config import JudgeConfig, resolve
 from wsbench.llm import Spend
 from wsbench.mcjudge import Call, load_bank, run_calls
@@ -38,7 +38,7 @@ READOUTS = {
     "jlens": Path("/workspace/root/wsb-ati-runs/readouts/jlens/moral_rationale.jsonl"),
 }
 SUMMARY_RUN = Path("/workspace/root/wsb-summ-out/d3/d3b-s3d-all-summary-v2/moral_rationale")
-V1 = "evals/moral_rationale/items.json"
+V1 = "evals/logical_processing/moral_rationale/items.json"
 OK_AFTER = {"cannot_tell", "unverified"}
 
 # (name, readouts, id, layer, pos, v1 side, before, allowed after, what the case is)

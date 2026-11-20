@@ -25,7 +25,7 @@ LEXICONS = {
 }
 LEX = {k: set(v.split()) for k, v in LEXICONS.items()}
 _NUM = re.compile(r"(?<![\w.])-?\d+(?:\.\d+)?(?![\w.])")
-BANK = ["association", "basic_readout", "multihop", "multilingual", "poetry", "typo"]
+BANK = ["association", "basic_readout_st", "multihop_st", "multilingual_st", "poetry", "typo_st"]
 
 
 def enumerates(sample: str, n: int = 5) -> str | None:

@@ -270,7 +270,7 @@
     "1 previously shipped ids leave the bank: ['association-au-t1-w103c0-assoc-vehicle-tractor']"
    ]
   },
-  "multihop": {
+  "multihop_st": {
    "status": "partial",
    "target": 100,
    "n_original": 98,
@@ -418,7 +418,7 @@
     "1 previously shipped ids leave the bank: ['multihop-au-t1-w107c0-mh-v8-christianity-founder-birthplace']"
    ]
   },
-  "multilingual": {
+  "multilingual_st": {
    "status": "untried",
    "target": 99,
    "n_original": 99,
@@ -446,7 +446,7 @@
     }
    ]
   },
-  "typo": {
+  "typo_st": {
    "status": "full",
    "target": 100,
    "n_original": 100,
@@ -517,7 +517,7 @@
     }
    ]
   },
-  "basic_readout": {
+  "basic_readout_st": {
    "status": "full",
    "target": 100,
    "n_original": 100,
@@ -534,7 +534,7 @@
    ],
    "note": "v5 rebuild: 85 originals + 15 authored (Brief tiers t1 / entity / processing) = 100/100; implicit golds are Qwen3-8B's own answers (adapt mc stage=subject after every gate); mc.gold_position balanced at freeze | Refresh 2026-11-05 (plan 0072): re-frozen on registered bank v7, 100 -> 100 items. | Capital swap 2026-11-05 (#372, plan 0072 follow-up): re-frozen on registered bank v8, 100 -> 100 items; 10 country-capital originals dropped; 10 of #372's 10 new items pass the subject gate and ship."
   },
-  "basic_readout_mt": {
+  "basic_readout": {
    "status": "partial",
    "target": 120,
    "n_original": 90,
@@ -631,7 +631,7 @@
     "stop": "120 >= target 120"
    }
   },
-  "multilingual_mt": {
+  "multilingual": {
    "status": "partial",
    "target": 100,
    "n_original": 100,
@@ -1189,7 +1189,7 @@
     "stop": "max waves (16)"
    }
   },
-  "typo_mt": {
+  "typo": {
    "status": "full",
    "target": 100,
    "n_original": 85,
@@ -1893,7 +1893,7 @@
     }
    ]
   },
-  "multihop_mt_v2": {
+  "multihop": {
    "target": 64,
    "n_original": 64,
    "n_original_gated": 64,
@@ -2392,7 +2392,7 @@
    "arithmetic-t1-s1003-0152": "audit 2026-11-03 (independent, plan 0060 build): Passes only because grade_number credits the echoed operand: greedy and 9/10 samples are \"(6 / 7) + (36 / 7) = \" and the answer is 6.",
    "arithmetic-t2-s2001-0095": "audit 2026-11-03 (independent, plan 0060 build): Passes only because grade_number credits the echoed operand: greedy and 10/10 samples are \"(8 / 3) + (16 / 3) = \" and the answer is 8."
   },
-  "multihop": {
+  "multihop_st": {
    "month-7-namedafter": "audit 2026-11-03 (independent, plan 0060 build): The prompt gives \"the Roman leader Julius\", so Caesar is reachable without the bridge July (whose stem the prompt also contains).",
    "violin-strings": "audit 2026-11-03 (independent, plan 0060 build): \"the instrument that fiddlers play\" names the bridge violin by its synonym fiddle.",
    "firstletter-populous-country": "audit 2026-11-03 (independent, plan 0060 build): Gold China/\"C\" is factually contested: India has been the most populous country since 2023.",
@@ -2575,10 +2575,10 @@
    "multihop-au-t1-w109c0-mh-v7-nobel-buddhist-leader-homeland": "plan 0075 PR #448 review 2 (2026-11-08): decision 4: \"Himalayan Buddhist homeland fled in 1959\" gives Tibet (2010volcano precedent)",
    "multihop-au-t1-w107c0-mh-v8-christianity-founder-birthplace": "plan 0075 PR #448 review 7 (2026-11-09): decision 4: \"founder of Christianity\" gives Bethlehem directly (muse-spark-open precedent)"
   },
-  "multilingual": {
+  "multilingual_st": {
    "pt-time-after-night": "audit 2026-11-03 (independent, plan 0060 build): Options include \"dawn\" (o amanhecer) and \"morning\", which are defensible completions of \"Depois da noite vem o\", so the MC has more than one correct answer."
   },
-  "basic_readout": {
+  "basic_readout_st": {
    "basic-au-t1-w100c0-br-imp-implicit-sortingalgorithm": "audit 2026-11-03 (independent, plan 0060 build): Gold \"merge\" and distractor \"mergesort\" are the same concept; a \"merge sort\" readout is judged as the distractor."
   },
   "association": {
@@ -2960,7 +2960,7 @@
    "poetry-au-t1-w111c2-couplet-shrug-plug": "plan 0075 PR #448 review 1 (2026-11-08): two defensible golds: 'pull the plug' fits; gold 'rug'",
    "poetry-au-t1-w109c1-couplet-think-wink": "plan 0075 PR #448 review 1 (2026-11-08): two defensible golds: 'quick as a wink' vs gold 'blink'"
   },
-  "multilingual_mt": {
+  "multilingual": {
    "multilingual-au-t1-w100c0-mlh-vi-cai-keo": "plan 0075 §0.1(a): adapted-only list still leaking after 3 r5 rounds (a failing guesser >=3/5 on the gold, blind+described >=4/10)",
    "multilingual-au-t1-w100c0-mlh-vi-doi-dua": "plan 0075 §0.1(a): adapted-only list still leaking after 3 r5 rounds (a failing guesser >=3/5 on the gold, blind+described >=4/10)",
    "multilingual-au-t1-w101c1-mlh-vi-non-la": "plan 0075 §0.1(a): adapted-only list still leaking after 3 r5 rounds (a failing guesser >=3/5 on the gold, blind+described >=4/10)",
@@ -3604,7 +3604,7 @@
    "r15iv2258": "floor-of-record lucky leaker (plan 0078 R49: Camila's strict rule; dropped once without back-fill, then one re-measure)",
    "r16iv2696": "floor-of-record lucky leaker (plan 0078 R49: Camila's strict rule; dropped once without back-fill, then one re-measure)"
   },
-  "multihop_mt": {
+  "multihop": {
    "mh2-charles-i-cromwell-protector": "lucky-guessing leaker after r5 rounds 0-1 (any-guesser rule, Camila 2026-11-06)",
    "mh2-confucius-state-lu-s3": "lucky-guessing leaker after r5 rounds 0-1 (any-guesser rule, Camila 2026-11-06)",
    "mh2-daftpunk-film-score-v3c": "lucky-guessing leaker after r5 rounds 0-1 (any-guesser rule, Camila 2026-11-06)",
@@ -3656,7 +3656,7 @@
    "amp3-quarry-explosives-screen-underperform~twin": "plan 0077 delta audit: the kept prefill does not commit to the Stage C target act (outputs/0077/<m>/am_prefill.json)",
    "amp3-stylometry-attribution-eval-underperform~twin": "plan 0077 delta audit: the kept prefill does not commit to the Stage C target act (outputs/0077/<m>/am_prefill.json)"
   },
-  "basic_readout_mt": {
+  "basic_readout": {
    "basic-au-t1-w100c0-brh-ent-sultans-1453-1922": "Camila 2026-11-06 (plan 0075 follow-up): clue routes through a capital (#372 rule; delta-audit kept list)",
    "basic-au-t1-w100c1-brh-ent-changan-618-house": "Camila 2026-11-06 (plan 0075 follow-up): clue routes through a capital (#372 rule; delta-audit kept list)",
    "basic-au-t1-w100c1-brh-ent-hostage-sympathy": "Camila 2026-11-06 (plan 0075 follow-up): clue routes through a capital (#372 rule; delta-audit kept list)",
@@ -4024,7 +4024,7 @@
   }
  },
  "patches": {
-  "multihop_mt": {
+  "multihop": {
    "mh2-branson-first-magazine-s1": {
     "set": {
      "mc": {
@@ -4227,7 +4227,7 @@
     "note": "mcleak-r5-2026-11-04 adapted r1: adapted-only list rebuilt (plan 0072 Phase 3)"
    }
   },
-  "basic_readout_mt": {
+  "basic_readout": {
    "basic-au-t1-w100c0-brh-ent-justinian-istanbul-dome": {
     "set": {
      "mc": {
@@ -6105,7 +6105,7 @@
     "note": "mcleak-r5-2026-11-04 adapted r2: adapted-only list rebuilt (plan 0075 §0.1(a), 2026-11-06)"
    }
   },
-  "multilingual_mt": {
+  "multilingual": {
    "multilingual-au-t1-w100c0-mlh-id-bawang-putih": {
     "set": {
      "mc": {
@@ -60372,5 +60372,6 @@
     "note": "plan 0077 §3b: mc rebuilt, kind-matched distractors (delta-audit check-1 fix)"
    }
   }
- }
+ },
+ "family_keys": "0101"
 }

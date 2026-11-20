@@ -2,9 +2,9 @@
 value-gate re-ask."""
 
 from wsbench import mc
-from wsbench.evals.user_modeling import prompts
-from wsbench.evals.user_modeling.aliases import VALUE_ALIASES
-from wsbench.evals.user_modeling.judge import _lemma, _retry_text, stem_echo
+from wsbench.evals.association.user_modeling import prompts
+from wsbench.evals.association.user_modeling.aliases import VALUE_ALIASES
+from wsbench.evals.association.user_modeling.judge import _lemma, _retry_text, stem_echo
 
 
 def test_lexicon_additions_pass_the_value_gate():
@@ -32,7 +32,7 @@ def test_stem_echo():
 
 
 def test_stem_echo_lemma_pairs():
-    from wsbench.evals.user_modeling.aliases import VALUE_ALIASES
+    from wsbench.evals.association.user_modeling.aliases import VALUE_ALIASES
 
     for quote, value, prompt in [
         ("you are divorced", "divorced", "[user] after my divorce"),
@@ -65,7 +65,9 @@ def _bank_prompt(name: str) -> str:
     import json
     from pathlib import Path
 
-    bank = json.loads((Path(__file__).parents[1] / "evals/user_modeling/items.json").read_text())
+    bank = json.loads(
+        (Path(__file__).parents[1] / "evals/association/user_modeling/items.json").read_text()
+    )
     (it,) = [it for it in bank["items"] if it["name"] == name]
     return prompts.render_user_turn(it["messages"])
 

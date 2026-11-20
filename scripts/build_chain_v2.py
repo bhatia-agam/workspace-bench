@@ -31,10 +31,10 @@ from typing import Any
 REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO / "src"))
 
-from wsbench.evals.chain_intermediates import options as mcopt  # noqa: E402
+from wsbench.evals.computational.chain_intermediates import options as mcopt  # noqa: E402
 
-V1 = REPO / "evals/chain_intermediates/items.json"
-V2 = REPO / "evals/chain_intermediates/items_v2.json"
+V1 = REPO / "evals/computational/chain_intermediates/items.json"
+V2 = REPO / "evals/computational/chain_intermediates/items_v2.json"
 FAMILY = "chain_intermediates"
 RENDER_LAST = (
     "Apply the steps below, in order, to the starting number given at the end.\n"
@@ -317,7 +317,8 @@ def cmd_freeze(a: argparse.Namespace) -> None:
             "mc": {
                 "n_options": mcopt.N_OPTIONS,
                 "seed": mcopt.SEED,
-                "rules": "wsbench.evals.chain_intermediates.options (never start / answer / "
+                "rules": "wsbench.evals.computational.chain_intermediates.options "
+                "(never start / answer / "
                 "literal / other gold; <= 2 error-path values; 2-3 other items' "
                 "intermediates in band gold//2..2*gold+5; seeded fill; sorted-rank balance "
                 "<= 20%); cannot-tell is appended LAST at judge time",

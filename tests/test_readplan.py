@@ -75,7 +75,7 @@ def test_plans_match_the_bank_specs():
     # Camila r3 (2026-11-01): conjunctive lite reads the same positions as full (lite_rule.json)
     assert conj.lite_positions == {"kind": "same"} and conj.lite_layers is None
     assert readplan.lite_select(range(31, 50), conj.lite_positions) == list(range(31, 50))
-    multihop = readplan.plan("multihop")  # plan 0048 C2 (sanctioned): full = every token
+    multihop = readplan.plan("multihop_st")  # plan 0048 C2 (sanctioned): full = every token
     assert {s.positions["kind"] for s in multihop} == {"all_from_end"}
     assert {s.lite_positions["kind"] for s in multihop} == {"offset_from_end"}
     poetry = readplan.plan("poetry")[0]
@@ -85,7 +85,7 @@ def test_plans_match_the_bank_specs():
     span = jb.positions["positions"]
     assert jb.render == "chat_context" and jb.messages[-1]["role"] == "user"
     assert jb.layers == readplan.GRID
-    implicit = next(s for s in readplan.plan("basic_readout") if s.render == "chat_prefill")
+    implicit = next(s for s in readplan.plan("basic_readout_st") if s.render == "chat_prefill")
     assert implicit.prefill == readplan.ANSWER_STEM
     assert span[0] == 3 and span[-1] == 745 and len(span) == 743  # every token of the last turn
 
@@ -182,13 +182,13 @@ def test_plan_all_skips_superseded_but_names_still_plan(tmp_path, real_families,
 
     assert main(["plan", "--full", f"out={tmp_path / 'all'}", "limit=1"]) == 0
     written = {p.stem for p in (tmp_path / "all").glob("*.jsonl")}
-    assert "multihop_mt" in written
+    assert "multihop" in written
     superseded = set(registry.superseded()) | set(registry.RETIRED_FAMILIES)  # + plan 0058
     assert not written & superseded
     assert len(written) == len(readplan.families()) - len(superseded)
-    assert "typo_mt" in written and "typo" not in written  # plan 0033 T1
-    assert main(["plan", "families=typo", f"out={tmp_path / 'v1'}", "limit=1"]) == 0
-    assert (tmp_path / "v1" / "typo.jsonl").exists()
+    assert "typo" in written and "typo_st" not in written  # plan 0033 T1
+    assert main(["plan", "families=typo_st", f"out={tmp_path / 'v1'}", "limit=1"]) == 0
+    assert (tmp_path / "v1" / "typo_st.jsonl").exists()
     # plan 0058: a retired family is out of `all` but still plans by name
     assert "association" not in written
     assert main(["plan", "families=association", f"out={tmp_path / 'r'}", "limit=1"]) == 0
@@ -369,7 +369,7 @@ def test_association_lite_rule(monkeypatch):
 def test_basic_readout_v2_all_chat_prefill():
     """Plan 0039 C2b/C4: every v2 item is a chat question with the answer stem prefilled, read
     from the first question token through the end; lite = the same positions (plan 0061)."""
-    rows = readplan.plan("basic_readout")
+    rows = readplan.plan("basic_readout_st")
     assert len(rows) == 100
     for s in rows:
         assert s.render == "chat_prefill" and s.prefill == readplan.ANSWER_STEM, s.id
@@ -398,10 +398,10 @@ def test_multihop_full_and_lite():
     from wsbench.banks import load_bank
 
     # bank v5 (registered) plans its own 98 rows: v3's 68 kept rows + 30 new items
-    _h, items = load_bank(readplan.bank_path("multihop"))
-    assert readplan.bank_path("multihop").name == "items_v5.json"
+    _h, items = load_bank(readplan.bank_path("multihop_st"))
+    assert readplan.bank_path("multihop_st").name == "items_v5.json"
     k_of = {it["id"]: -int(it["readout"]["offsets"][0]) for it in items}
-    rows = readplan.plan("multihop")
+    rows = readplan.plan("multihop_st")
     assert len(rows) == 98 and [s.id for s in rows] == list(k_of)
     for s in rows:
         assert s.positions == {"kind": "all_from_end"} and s.render == "plain"
@@ -415,7 +415,7 @@ def test_multihop_full_and_lite():
 
 
 @pytest.mark.parametrize(
-    "family", ["multilingual", "multilingual_mt", "multilingual_multihop", "multilingual_typo"]
+    "family", ["multilingual_st", "multilingual", "multilingual_multihop", "multilingual_typo"]
 )
 def test_multilingual_families_read_all_positions(family):
     """Plan 0033 B4: every prompt position by default, the final prompt token under reads=lite."""
@@ -435,7 +435,7 @@ def test_multilingual_families_read_all_positions(family):
 # site is never hashed); a later bank or full-read change may refresh them.
 PLAN0061_SHA = {
     # bank v8's own 100-row plan (the new items' rows; bank v7's plan was 195a60c7...)
-    "basic_readout": "0a721338b8755307ce59797c3f8eaf24118b2ac55b1f7551e50c7f92e8a62c36",
+    "basic_readout_st": "0a721338b8755307ce59797c3f8eaf24118b2ac55b1f7551e50c7f92e8a62c36",
     "directed_modulation": "1da94e9cd24b0a10b951957ca383d62658700ae241c0f2f7d3aa4231f842b820",
     "model_specific_directed_modulation": (
         "ef00b1f9ec23cda8340e146cb34219fc56795f1585cd6856afd8682b8411e782"
@@ -450,7 +450,7 @@ PLAN0061_SHA = {
 
 @pytest.mark.parametrize("family", readplan.LITE_SAME_FAMILIES)
 def test_lite_same_families_read_full_positions(family):
-    """Plan 0061 (Camila 2026-11-02): every DM family, user_modeling and basic_readout read the
+    """Plan 0061 (Camila 2026-11-02): every DM family, user_modeling and basic_readout_st read the
     full positions at the full layers under reads=lite; plan_sha is unchanged."""
     from wsbench import reads
 
@@ -466,10 +466,10 @@ def test_lite_same_families_read_full_positions(family):
 
 
 def test_lite_same_leaves_other_final_token_families():
-    """Plan 0061 touches only its five families: typo and wrong_intermediate keep their lite
+    """Plan 0061 touches only its five families: typo_st and wrong_intermediate keep their lite
     site."""
-    assert {json.dumps(s.lite_positions) for s in readplan.plan("typo")} == {
+    assert {json.dumps(s.lite_positions) for s in readplan.plan("typo_st")} == {
         json.dumps({"kind": "final_token"})
     }
     assert all(s.lite_positions != {"kind": "same"} for s in readplan.plan("wrong_intermediate"))
-    assert all(s.lite_positions != {"kind": "same"} for s in readplan.plan("basic_readout_mt"))
+    assert all(s.lite_positions != {"kind": "same"} for s in readplan.plan("basic_readout"))

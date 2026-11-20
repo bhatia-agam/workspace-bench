@@ -782,7 +782,7 @@
   "label": "Opus 5.5 (0 refused)",
   "not_measurable": false
  },
- "basic_readout": {
+ "basic_readout_st": {
   "rate": 0.89,
   "saturated": false,
   "ci95": [
@@ -942,7 +942,7 @@
   "not_measurable": false,
   "prompt_cut": "reply-free-v2"
  },
- "basic_readout_mt": {
+ "basic_readout": {
   "rate": 1.0,
   "saturated": false,
   "ci95": [
@@ -2322,7 +2322,7 @@
   "not_measurable": false,
   "prompt_cut": "reply-free-v2"
  },
- "multihop": {
+ "multihop_st": {
   "rate": 0.9183673469387755,
   "saturated": false,
   "ci95": [
@@ -2479,7 +2479,7 @@
   "label": "Opus 5.5 (0 refused)",
   "not_measurable": false
  },
- "multihop_mt": {
+ "multihop": {
   "rate": 1.0,
   "saturated": false,
   "ci95": [
@@ -2602,7 +2602,7 @@
   "label": "Opus 5.5 (0 refused)",
   "not_measurable": false
  },
- "multilingual": {
+ "multilingual_st": {
   "rate": 0.9393939393939394,
   "saturated": false,
   "ci95": [
@@ -2760,7 +2760,7 @@
   "label": "Opus 5.5 (0 refused)",
   "not_measurable": false
  },
- "multilingual_mt": {
+ "multilingual": {
   "rate": 0.98,
   "saturated": false,
   "ci95": [
@@ -3683,7 +3683,7 @@
   "label": "Opus 5.5 (0 refused)",
   "not_measurable": false
  },
- "typo_mt": {
+ "typo": {
   "rate": 1.0,
   "saturated": false,
   "ci95": [

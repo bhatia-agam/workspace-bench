@@ -16,20 +16,20 @@ authoring gate (provenance only, never read at scoring).
 - The readout file's `id` must equal that label. Keep names ASCII, lowercase, hyphenated and
   prefixed by family and wave (`mhh-w2-...`, `chain-w2-d3p-0001`), and never reuse a frozen id.
 
-## Shared single-token fields (association, basic_readout, multihop, multilingual, poetry, typo)
+## Shared single-token fields (association, basic_readout_st, multihop_st, multilingual_st, poetry, typo_st)
 
 | field | meaning | read by |
 |---|---|---|
 | `name` | unique id | all |
 | `prompt` | the text, rendered verbatim with no chat template (`eval_render: "plain"`) | plan, capable |
-| `target` | the surface answer (multihop: the next word; multilingual: the L2 word) | capable (gold) |
-| `target_alts` (optional, multihop) | other accepted surface answers ("pound sterling" for "pound"); capable adds them to the gate golds | capable (gold) |
-| `intermediates` | the scored latent(s): multihop's bridge, multilingual's English gloss, poetry's rhyme word, typo's correction, association's referent | judge (targets), capable when no `target` |
-| `units` (basic_readout) | `[{"role":"readout","lang":"en","headline":true,"match":[...]}]`; `match` lists accepted spellings and wins over `intermediates` | judge |
-| `reference_concepts` (multilingual) | `[language, topic words]`, provenance | - |
-| `readout` | `{"kind":"final_prompt_token","offsets":[-1]}`; multihop `{"kind":"last_word_token","offsets":[-1 or -2]}` (offset of the last NON-whitespace token from the end of the subject tokenization); poetry `{"kind":"line_one_newline"}` | plan |
-| `eval_render` | `plain` (basic_readout implicit: `chat`, rendered with the prefill `My one-word answer is:`) | plan |
-| `subfamily` (basic_readout) | `entity` / `processing` / `implicit` | capable (implicit skipped), gate |
+| `target` | the surface answer (multihop_st: the next word; multilingual_st: the L2 word) | capable (gold) |
+| `target_alts` (optional, multihop_st) | other accepted surface answers ("pound sterling" for "pound"); capable adds them to the gate golds | capable (gold) |
+| `intermediates` | the scored latent(s): multihop_st's bridge, multilingual_st's English gloss, poetry's rhyme word, typo_st's correction, association's referent | judge (targets), capable when no `target` |
+| `units` (basic_readout_st) | `[{"role":"readout","lang":"en","headline":true,"match":[...]}]`; `match` lists accepted spellings and wins over `intermediates` | judge |
+| `reference_concepts` (multilingual_st) | `[language, topic words]`, provenance | - |
+| `readout` | `{"kind":"final_prompt_token","offsets":[-1]}`; multihop_st `{"kind":"last_word_token","offsets":[-1 or -2]}` (offset of the last NON-whitespace token from the end of the subject tokenization); poetry `{"kind":"line_one_newline"}` | plan |
+| `eval_render` | `plain` (basic_readout_st implicit: `chat`, rendered with the prefill `My one-word answer is:`) | plan |
+| `subfamily` (basic_readout_st) | `entity` / `processing` / `implicit` | capable (implicit skipped), gate |
 | `consistency`, `gate_variant`, `source` | sampled pass rate, how it was gated, where it came from | provenance |
 
 The judge's targets are `units[headline].match` (else all units' `match`), then
@@ -39,7 +39,7 @@ accepts the exact word, an inflection, an established synonym/alias or a faithfu
 with a verbatim quote from ONE sample. So list the canonical concept, not every paraphrase;
 add `units.match` only for genuinely ambiguous surface forms (`Boxing`/`boxing`).
 
-## Multi-token families (basic_readout_mt, multihop_mt, multilingual_mt, typo_mt, multilingual_multihop, multilingual_typo)
+## Multi-token families (basic_readout, multihop, multilingual, typo, multilingual_multihop, multilingual_typo)
 
 Header (all required): `family` (the source name: `basic-readout-hard`, `multihop-hard`,
 `multilingual-hard`, `typo-hard`, `multilingual-multihop`, `multilingual-typo`; keep it, the
@@ -48,18 +48,18 @@ legacy fallback keys on it), `parent_family`, `contract`, `gate`, `frozen` (ISO 
 ```json
 "contract": {"multi_token": true, "include_target": false, "conjunctive_units": true}
 ```
-`include_target` is `true` only for multihop_mt. Copy the frozen bank's block unchanged.
+`include_target` is `true` only for multihop. Copy the frozen bank's block unchanged.
 
 | field | meaning | read by |
 |---|---|---|
-| `name`, `subfamily` | id; `entity`/`l2_factual` (basic_readout_mt), `2hop`/`3hop` (multihop_mt, multilingual_multihop), `fwd` (multilingual_mt), `novel`/`realword`/`arith` (typo_mt), `typo` (multilingual_typo) | all; quotas |
+| `name`, `subfamily` | id; `entity`/`l2_factual` (basic_readout), `2hop`/`3hop` (multihop, multilingual_multihop), `fwd` (multilingual), `novel`/`realword`/`arith` (typo), `typo` (multilingual_typo) | all; quotas |
 | `prompt` | plain-text fragment ending IMMEDIATELY before the answer (no trailing space or punctuation; typo families end WITH the misspelling) | plan, capable |
-| `target`, `target_alts` | the next-token answer and its inflections; gate golds; a scored optional unit only under `include_target` | capable, judge (multihop_mt) |
+| `target`, `target_alts` | the next-token answer and its inflections; gate golds; a scored optional unit only under `include_target` | capable, judge (multihop) |
 | `lang` | L2 code, one of `pl tr fi hu id vi sw ru el he ar ko` (the MC language confusables exist only for these) | judge (MC), plan |
 | `typo_word` | the misspelled last word | gate, lint |
 | `intermediates` | the headline latent, for display | - |
 | `units` | the scored units, see below | judge |
-| `bridges` (multihop_mt, multilingual_multihop) | `[{"question": <English question whose answer is the bridge>, "units": [<roles>], "answers": [<every short way to name it>]}]`; GATE-ONLY | capable (bridge legs) |
+| `bridges` (multihop, multilingual_multihop) | `[{"question": <English question whose answer is the bridge>, "units": [<roles>], "answers": [<every short way to name it>]}]`; GATE-ONLY | capable (bridge legs) |
 | `probe_token_lens` | `{"units": {role: {lang: [count per form]}}, "target": n, "target_alts": [n...]}` (target_alts only under include_target); aligned position by position with `forms[lang]` | judge |
 | `mc` | `{role: {"gold": <first en form>, "distractors": [4 names]}}` per required non-language unit (absent in the typo families) | judge (`opts=judge=mc`), lucky-guessing floor |
 | `readout` | `{"kind":"final_prompt_token","offsets":[-1]}` | plan |
@@ -74,15 +74,15 @@ A unit:
 ```
 - `forms` is an authored OR-list per language (`en`, `zh`, and the L2 code where the family
   allows it); `match` = the flattened forms (lint requires equality with the sorted flatten).
-- Roles per family: basic_readout_mt `readout` (+ `language` on l2_factual; the L2 answer is the
-  next token, so `readout` lists only `en`/`zh` there); multihop_mt `bridge1` (+ `bridge2` on
+- Roles per family: basic_readout `readout` (+ `language` on l2_factual; the L2 answer is the
+  next token, so `readout` lists only `en`/`zh` there); multihop `bridge1` (+ `bridge2` on
   3hop), `en` only (the bank-of-record `items_v2.json` adds `name_forms` per native language,
-  zh included, in `scripts/build_mh2_bank_v2.py`); multilingual_mt `concept` {en, zh} + `language`; typo_mt `correction` {en};
+  zh included, in `scripts/build_mh2_bank_v2.py`); multilingual `concept` {en, zh} + `language`; typo `correction` {en};
   multilingual_multihop `bridge_l2` (required false) + `bridge_native` {en, zh} (required) +
   `language` (required false); multilingual_typo `correction` {L2, en, zh} + `language`.
 - `language` unit: `"multi_token": false`; forms `{"en": ["Arabic"], "zh": ["阿拉伯语"],
-  "<L2>": [...]}` where `<L2>` is the L2 TARGET and its inflections in multilingual_mt,
-  multilingual_typo and basic_readout_mt l2_factual (all frozen items, e.g. `"ar":
+  "<L2>": [...]}` where `<L2>` is the L2 TARGET and its inflections in multilingual,
+  multilingual_typo and basic_readout l2_factual (all frozen items, e.g. `"ar":
   ["الساعة الرملية", "ساعة رملية"]`), and how the language names itself in
   multilingual_multihop (`"ar": ["العربية", "بالعربية"]`).
 

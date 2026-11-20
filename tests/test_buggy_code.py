@@ -11,8 +11,8 @@ from conftest import native_args
 from wsbench import registry
 from wsbench.banks import load_bank
 from wsbench.cli import main
-from wsbench.evals.buggy_code import judge
-from wsbench.evals.buggy_code.prompts import (
+from wsbench.evals.computational.buggy_code import judge
+from wsbench.evals.computational.buggy_code.prompts import (
     GRADE_SYSTEM,
     INFER_SYSTEM,
     PROMPT_VERSION,
@@ -24,7 +24,7 @@ from wsbench.judge_config import JudgeConfig, resolve
 from wsbench.results import read_results
 
 REPO = Path(__file__).resolve().parents[1]
-BANK = REPO / "evals/buggy_code/items.json"
+BANK = REPO / "evals/computational/buggy_code/items.json"
 EXAMPLE = REPO / "examples/readouts/buggy_code.jsonl"
 
 
@@ -32,10 +32,10 @@ EXAMPLE = REPO / "examples/readouts/buggy_code.jsonl"
 def _registered(monkeypatch):
     """These tests pin the frozen 63-item bank (items.json): the scoring code is
     bank-independent. The registered bank v2 is tested in test_buggy_code_bank_v2.py."""
-    from wsbench.evals.buggy_code import SPEC
+    from wsbench.evals.computational.buggy_code import SPEC
 
     registry.FAMILIES.setdefault(SPEC.name, SPEC)
-    monkeypatch.setenv("WSB_BANK_FILE_BUGGY_CODE", "evals/buggy_code/items.json")
+    monkeypatch.setenv("WSB_BANK_FILE_BUGGY_CODE", "evals/computational/buggy_code/items.json")
 
 
 def _args(tmp_path, ids, **over):
@@ -248,10 +248,10 @@ def test_missing_read_layer_is_fatal_and_two_layers_refused(tmp_path, monkeypatc
 
 
 def test_registered_readme_and_dry_run(tmp_path, capsys, monkeypatch):
-    from wsbench.evals.buggy_code import SPEC
+    from wsbench.evals.computational.buggy_code import SPEC
 
     assert SPEC.group == "computational" and SPEC.metric == "pass_rate"
-    readme = (REPO / "evals/buggy_code/README.md").read_text(encoding="utf-8")
+    readme = (REPO / "evals/computational/buggy_code/README.md").read_text(encoding="utf-8")
     assert INFER_SYSTEM in readme and GRADE_SYSTEM in readme
     monkeypatch.delenv("WSBENCH_JUDGE_MODEL", raising=False)
     out = tmp_path / "out"

@@ -114,7 +114,7 @@
     "1 previously shipped ids leave the bank: ['association-au-t1-w104c0-association-easy-chimney-sweep']"
    ]
   },
-  "multihop": {
+  "multihop_st": {
    "status": "partial",
    "target": 100,
    "n_original": 98,
@@ -275,7 +275,7 @@
     "1 previously shipped ids leave the bank: ['multihop-au-t1-w104c0-v6-ugly-duckling-young']"
    ]
   },
-  "multilingual": {
+  "multilingual_st": {
    "status": "untried",
    "target": 99,
    "n_original": 99,
@@ -303,7 +303,7 @@
     }
    ]
   },
-  "typo": {
+  "typo_st": {
    "status": "full",
    "target": 100,
    "n_original": 100,
@@ -399,7 +399,7 @@
     }
    ]
   },
-  "basic_readout": {
+  "basic_readout_st": {
    "status": "full",
    "target": 100,
    "n_original": 100,
@@ -416,7 +416,7 @@
    ],
    "note": "v5 rebuild: 75 originals + 25 authored (Brief tiers t1 / entity / processing) = 100/100; implicit golds are Qwen3.5-9B's own answers (adapt mc stage=subject after every gate); mc.gold_position balanced at freeze | Refresh 2026-11-05 (plan 0072): re-frozen on registered bank v7, 100 -> 100 items. | Capital swap 2026-11-05 (#372, plan 0072 follow-up): re-frozen on registered bank v8, 100 -> 100 items; 10 country-capital originals dropped; 10 of #372's 10 new items pass the subject gate and ship."
   },
-  "basic_readout_mt": {
+  "basic_readout": {
    "status": "full",
    "target": 120,
    "n_original": 90,
@@ -471,7 +471,7 @@
     "stop": "120 >= target 120"
    }
   },
-  "multilingual_mt": {
+  "multilingual": {
    "status": "partial",
    "target": 100,
    "n_original": 100,
@@ -940,7 +940,7 @@
     "1 previously shipped ids leave the bank: ['mlmh-hu-nyaki-negy-szerv-kalcium-hormon']"
    ]
   },
-  "typo_mt": {
+  "typo": {
    "status": "full",
    "target": 100,
    "n_original": 85,
@@ -1896,7 +1896,7 @@
     }
    ]
   },
-  "multihop_mt_v2": {
+  "multihop": {
    "target": 64,
    "n_original": 64,
    "n_original_gated": 64,
@@ -2332,7 +2332,7 @@
    "arithmetic-t0-s2-0076": "audit 2026-11-03 (independent, plan 0060 build): floor(8919 / 10): gold 891 is the leading digits of the prompt operand 8919, a literal prefix leak.",
    "arithmetic-t0-s5-0195": "audit 2026-11-03 (independent, plan 0060 build): floor(9214 / 10): gold 921 is the leading digits of the prompt operand 9214, a literal prefix leak."
   },
-  "multihop": {
+  "multihop_st": {
    "firstletter-populous-country": "audit 2026-11-03 (independent, plan 0060 build): Bridge \"China\" for \"world's most populous country\" is outdated (India since 2023; flagged skip in adapt/data/multihop_bridges.json:451), so the gold is ambiguous and no bridge leg was ever gated.",
    "month-7-namedafter": "audit 2026-11-03 (independent, plan 0060 build): \"named after the Roman leader Julius\" gives the target \"Caesar\" directly; the bridge July is not needed.",
    "mh-w1-tin-sn": "plan 0072 delta audit 2026-11-05: the registered bridge gold's alias (K / Sn) is the item's target, so a readout of the answer is credited as the bridge",
@@ -2468,7 +2468,7 @@
    "b3-mh-aztec-language": "plan 0087: not back-filled (pool closed; no audit / lucky measure of fill rows in this sweep)",
    "multihop-au-t1-w104c0-v6-ugly-duckling-young": "plan 0087 sweep: confirmed leaker on the final measurement (sweepD and an earlier separate run of the same list; blind+described 10/10, or a family-level failing guesser >= 3/5 with blind+described >= 4/10; decisions 1-3, two-run rule); not back-filled"
   },
-  "multilingual": {
+  "multilingual_st": {
    "b3-ml-fr-opposite-big": "audit 2026-11-03 (independent, plan 0060 build): exact duplicate prompt of fr-size-big-small ('Le contraire de \"grand\" est \"', gold petit/small)",
    "b3-ml-pt-opposite-big": "audit 2026-11-03 (independent, plan 0060 build): exact duplicate prompt of pt-size-big-small ('O contrário de \"grande\" é \"', gold pequeno/small)",
    "portuguese-direction-up": "audit 2026-11-03 (independent, plan 0060 build): near-duplicate of pt-place-up-down (same cue \"cima\", same relation, gold baixo/down)",
@@ -2476,7 +2476,7 @@
    "pt-month-after-oct": "audit 2026-11-03 (independent, plan 0060 build): cognate: novembro vs November (ratio 0.88 >= 0.85 invariant)",
    "b3-ml-es-month-april": "audit 2026-11-03 (independent, plan 0060 build): cognate: mayo vs May (ratio 0.86 >= 0.85 invariant)"
   },
-  "multilingual_mt": {
+  "multilingual": {
    "mlh-el-ilianthos": "audit 2026-11-03 (independent, plan 0060 build): near-duplicate of mlh-el-sunflower (same concept sunflower, same language Greek, paraphrased prompt; targets list each other as alts)",
    "multilingual-au-t1-w100c0-mlh-id-wallclock": "plan 0075 §0.1(a) (strict): adapted-only list still leaking after r5 round 1 (a guesser >= 3/5, blind+described >= 4/10); dropped and back-filled",
    "multilingual-au-t1-w100c0-mlh-ru-potato": "plan 0075 §0.1(a) (strict): adapted-only list still leaking after r5 round 1 (a guesser >= 3/5, blind+described >= 4/10); dropped and back-filled",
@@ -2627,7 +2627,7 @@
    "multilingual-au-t1-w123c0-mlt-ru-smetana": "plan 0087 sweep: confirmed leaker on the final measurement (sweepC and an earlier separate run of the same list; blind+described 10/10, or a family-level failing guesser >= 3/5 with blind+described >= 4/10; decisions 1-3, two-run rule); not back-filled",
    "mlt-he-detergents-typo": "plan 0087 sweep: confirmed leaker on the final measurement (sweepD and an earlier separate run of the same list; blind+described 10/10, or a family-level failing guesser >= 3/5 with blind+described >= 4/10; decisions 1-3, two-run rule); not back-filled"
   },
-  "basic_readout_mt": {
+  "basic_readout": {
    "brh-id-chengho": "audit 2026-11-03 (independent, plan 0060 build): greedy commits the wrong name \"Chen Zuyi\"; passes only because the 300-token contains-grader finds Cheng Ho mentioned later",
    "brh-ru-baikonur": "audit 2026-11-03 (independent, plan 0060 build): greedy answers \"Кемерово\" (wrong) and mentions Байконур only as a confusion; passes via contains-grader",
    "brh-id-sriwijaya": "audit 2026-11-03 (independent, plan 0060 build): greedy and ~6/10 samples commit \"Kutai\"; Sriwijaya credited only as a hedge (committed ~3/10)",
@@ -2880,7 +2880,7 @@
    "s2_oolong_roast_level": "delta audit 2026-11-04: distractors 'medium-dark' and 'medium-light' contain the gold form 'Medium': their labels credit the gold",
    "s1_hindustani_melodic_ornament": "delta audit 2026-11-04: gold form 'mīnd' folds to the English word 'mind', so generic readouts ('keep in mind', 'comes to mind') credit the gold"
   },
-  "basic_readout": {
+  "basic_readout_st": {
    "basic-au-t1-w100c2-br-imp-implicit-biome": "audit 2026-11-03 (independent, plan 0060 build): mc.gold is \"rainforest\" but the subject's answer (11/11, mc.subject_gold/target) is \"forest\", and the judge scores a \"forest\" readout cannot_tell.",
    "br-ent-lmk-big": "audit 2026-11-03 (independent, plan 0060 build): Gold \"England\" while the subject answers \"UK\" 11/11; a \"United Kingdom\" readout (a listed alias) is scored cannot_tell, so the judge cannot credit the subject's answer."
   },
@@ -3174,7 +3174,7 @@
    "r16iv2516": "floor-of-record lucky leaker (plan 0078 R49: Camila's strict rule; dropped once without back-fill, then one re-measure)",
    "r16iv2696": "floor-of-record lucky leaker (plan 0078 R49: Camila's strict rule; dropped once without back-fill, then one re-measure)"
   },
-  "multihop_mt": {
+  "multihop": {
    "mh2-machado-academy-v3e": "lucky-guessing leaker after r5 round 0 (any-guesser rule, Camila 2026-11-06)",
    "mh2-munch-cycle-v3a": "lucky-guessing leaker after r5 round 0 (any-guesser rule, Camila 2026-11-06)",
    "mh2-sartre-rival-first-novel-v3g": "lucky-guessing leaker after r5 round 0 (any-guesser rule, Camila 2026-11-06)",
@@ -4368,7 +4368,7 @@
   }
  },
  "patches": {
-  "multihop_mt": {
+  "multihop": {
    "mh2-ludwig-starnberg-v3a": {
     "set": {
      "mc": {
@@ -56773,7 +56773,7 @@
     "note": "mcleak-r5-2026-11-04 adapted r0: adapted-only list rebuilt (plan 0075 §0.1(a), 2026-11-06)"
    }
   },
-  "multilingual_mt": {
+  "multilingual": {
    "multilingual-au-t1-w100c0-mlh-id-garlic": {
     "set": {
      "mc": {
@@ -61652,5 +61652,6 @@
     "note": "mcleak-r5-2026-11-04 adapted r1: adapted-only list rebuilt (plan 0075 §0.1(a), 2026-11-06)"
    }
   }
- }
+ },
+ "family_keys": "0101"
 }

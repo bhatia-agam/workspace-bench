@@ -561,7 +561,7 @@ def test_real_muse_carry_restamp_skips_the_whole_header():
     import json as _json
 
     from wsbench.adapt.carry import restamp_read
-    from wsbench.evals.jailbreak_recognition.judge import prefix_to_last_user
+    from wsbench.evals.safety.jailbreak_recognition.judge import prefix_to_last_user
     from wsbench.registry import frozen_bank_path
 
     transformers = pytest.importorskip("transformers")

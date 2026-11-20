@@ -4,9 +4,9 @@ object twins graded against their own facts."""
 import json
 from pathlib import Path
 
-from wsbench.evals.agentic_misalignment import prompts
+from wsbench.evals.safety.agentic_misalignment import prompts
 
-BANK = Path(__file__).resolve().parents[1] / "evals/agentic_misalignment/items_v2.json"
+BANK = Path(__file__).resolve().parents[1] / "evals/safety/agentic_misalignment/items_v2.json"
 
 
 def test_candidate_only_rule_for_every_summary_item():

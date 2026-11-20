@@ -29,6 +29,8 @@ import json
 from pathlib import Path
 from typing import Any
 
+from wsbench import registry
+
 REPO = Path(__file__).resolve().parents[1]
 FROZEN = REPO / "evals" / "baselines" / "anti_text_inversion.json"
 
@@ -44,7 +46,7 @@ def merge(
     add: list[dict[str, Any]],
     source: str,
 ) -> tuple[int, int]:
-    path = REPO / "evals" / family / "items.json"
+    path = registry.family_root(family) / "items.json"
     bank = json.loads(path.read_text(encoding="utf-8"))
     items = bank["items"]
     kept = [it for it in items if _key(it) in keep]

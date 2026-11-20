@@ -12,8 +12,8 @@ from conftest import native_args, tag_of, write_jsonl, write_sidecar
 from summary_fakes import FakeLLM, summary_args
 
 from wsbench import digest, mc, readplan, reads, registry
-from wsbench.evals.conjunctive_association import judge, prompts
-from wsbench.evals.conjunctive_association.judge import (
+from wsbench.evals.association.conjunctive_association import judge, prompts
+from wsbench.evals.association.conjunctive_association.judge import (
     build_bags,
     build_blob,
     build_options,
@@ -27,7 +27,7 @@ from wsbench.readouts import load_readouts
 ROOT = Path(__file__).resolve().parents[1]
 GOLDEN = json.loads((ROOT / "tests/golden/conjunctive_association_options.json").read_text())
 EXAMPLE = ROOT / "examples/readouts/conjunctive_association.jsonl"
-V1_BANK = ROOT / "evals/conjunctive_association/items.json"
+V1_BANK = ROOT / "evals/association/conjunctive_association/items.json"
 QA, QB = "q01_a", "q01_b"
 
 
@@ -69,7 +69,7 @@ def test_rendered_prompt_matches_golden():
     user = prompts.render_user("TOY READOUT", prompts.render_question(shown))
     assert user == (ROOT / "tests/golden/conjunctive_association_prompt_v4.txt").read_text()
     # the frozen v3 lists still render their own golden
-    v3 = json.loads((ROOT / "evals/conjunctive_association/items_v3.json").read_text())
+    v3 = json.loads((ROOT / "evals/association/conjunctive_association/items_v3.json").read_text())
     shown3, _g, _c = build_options(v3[0])
     user3 = prompts.render_user("TOY READOUT", prompts.render_question(shown3))
     assert user3 == (ROOT / "tests/golden/conjunctive_association_prompt_v3.txt").read_text()
@@ -218,7 +218,7 @@ def test_char_cap_validation(tmp_path):
     import pytest
 
     from wsbench import registry
-    from wsbench.evals.conjunctive_association import judge as cj
+    from wsbench.evals.association.conjunctive_association import judge as cj
     from wsbench.judge_config import JudgeConfig, resolve
     from wsbench.registry import JudgeArgs
 
@@ -244,10 +244,10 @@ def test_char_cap_validation(tmp_path):
 
 # ---------------------------------------------------------------- plan 0049 (comp-v2, bank v2)
 
-V2_BANK = ROOT / "evals/conjunctive_association/items_v2.json"
+V2_BANK = ROOT / "evals/association/conjunctive_association/items_v2.json"
 V1_SHA = "5ef25c10238b93ea1c3b7808c4c9758ea364db22f4de0bbf74ae3453a2d74e36"
 GOLDEN_V2 = json.loads((ROOT / "tests/golden/conjunctive_association_options_v2.json").read_text())
-V3_BANK = ROOT / "evals/conjunctive_association/items_v3.json"
+V3_BANK = ROOT / "evals/association/conjunctive_association/items_v3.json"
 GOLDEN_V3 = json.loads((ROOT / "tests/golden/conjunctive_association_options_v3.json").read_text())
 REJUDGE = "READOUT ("
 # the 19 read sites of every item (docs/read_sites.md): suffix + chat tail
@@ -543,7 +543,7 @@ def test_system_requires_every_part():
 
 
 def test_family_uses_shared_quote_ok():
-    src = (ROOT / "src/wsbench/evals/conjunctive_association/judge.py").read_text()
+    src = (ROOT / "src/wsbench/evals/association/conjunctive_association/judge.py").read_text()
     tree = ast.parse(src)
     called = {
         n.func.attr
@@ -891,7 +891,9 @@ def test_task_note_names_no_option():
 
 def test_dataclass_spec_bank_is_v4(real_families):
     spec = registry.FAMILIES["conjunctive_association"]
-    assert dataclasses.replace(spec).bank == Path("evals/conjunctive_association/items_v4.json")
+    assert dataclasses.replace(spec).bank == Path(
+        "evals/association/conjunctive_association/items_v4.json"
+    )
 
 
 def test_ati_entry_regated_on_v2(real_families):

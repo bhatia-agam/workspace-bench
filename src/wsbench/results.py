@@ -117,11 +117,21 @@ def read_results(out_dir: Path) -> FamilyResult:
     family) as the removed family's key, by its stamp."""
     from dataclasses import replace
 
-    from wsbench.registry import canonical, stored_family
+    from wsbench.registry import RenamedKey, owner, row_ids, stored_family
 
     path = Path(out_dir) / "results.json"
     result = FamilyResult.from_json(json.loads(path.read_text(encoding="utf-8")))
-    family = stored_family(canonical(result.family), result.config.get("prompt_version"))
+    try:
+        family = stored_family(
+            result.family, result.config.get("prompt_version"), row_ids(result.rows)
+        )
+    except RenamedKey as e:
+        # a stamp both members of a renamed pair can write (the multilingual pair's unpinned
+        # opts=judge=mc diagnostic): the result's own item ids say whose it is, or it is refused
+        who = owner(result.family, ids=row_ids(result.rows))
+        if who is None:
+            raise RenamedKey(f"{path}: {e.args[0] if e.args else 'a reused family key'}") from None
+        family = who
     return result if family == result.family else replace(result, family=family)
 
 
@@ -153,7 +163,8 @@ def adapted_exclusions() -> dict[str, str]:
     import os
     from pathlib import Path
 
-    from wsbench.registry import BANK_ROOT_ENV, LEGACY_FAMILY_NAMES, REPO_ROOT
+    from wsbench.adapt.store import report_key
+    from wsbench.registry import BANK_ROOT_ENV, FAMILIES, REPO_ROOT, canonical, partner
 
     root = os.environ.get(BANK_ROOT_ENV)
     if not root:
@@ -163,10 +174,22 @@ def adapted_exclusions() -> dict[str, str]:
         return {}
     fams = json.loads(path.read_text(encoding="utf-8")).get("families", {})
     out: dict[str, str] = {}
+
     # a set written before a rename keeps its entry under the former key (multihop_mt_v2): it
     # excludes the family's current key, the one results carry; an entry under the current key wins
-    for f, e in sorted(fams.items(), key=lambda kv: kv[0] not in LEGACY_FAMILY_NAMES):
-        key = LEGACY_FAMILY_NAMES.get(f, f)
+    def family_of(f: str) -> str:
+        """The current family of a report entry key: a former key's family; a plan-0101 bare
+        key by the entry's own evidence (``store.report_key``: a pre-0101 set keeps the
+        single-token family there)."""
+        key = canonical(f)
+        other = partner(key)
+        if key == f and other is not None and other in FAMILIES and report_key(fams, other) == f:
+            return other
+        return key
+
+    owned = {f: family_of(f) for f in fams}
+    for f, e in sorted(fams.items(), key=lambda kv: kv[0] == owned[kv[0]]):
+        key = owned[f]
         if e.get("exclude_from_macro"):
             out[key] = str(e.get("note") or "excluded by the adapted set")[:80]
         elif f == key:

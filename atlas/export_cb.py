@@ -41,6 +41,8 @@ SNAPS = OUT / "snap"
 sys.path.insert(0, str(WSB / "src"))
 sys.path.insert(0, str(AGAM / "gw-olens/scripts/ola/ar_ablate"))
 
+from wsbench import registry  # noqa: E402
+
 CB_MANIFEST = Path("/tmp/cbviewer/manifest.json")
 CB_URL = "https://safety-sahan-2-camila-blank--wsbench-viewer-web.modal.run"
 SKIP_FAMS = {
@@ -49,17 +51,17 @@ SKIP_FAMS = {
 }  # not in her viewer either
 HEADLINE_23 = [
     "association",
-    "basic_readout",
+    "basic_readout_st",
     "directed_modulation",
-    "multihop",
-    "multilingual",
+    "multihop_st",
+    "multilingual_st",
     "poetry",
-    "typo",
-    "basic_readout_mt",
-    "multilingual_mt",
+    "typo_st",
+    "basic_readout",
+    "multilingual",
     "multilingual_multihop",
     "multilingual_typo",
-    "typo_mt",
+    "typo",
     "multi_concept_directed_modulation",
     "relational_multihop",
     "conjunctive_association",
@@ -71,7 +73,7 @@ HEADLINE_23 = [
     "arithmetic_intermediates",
 ]
 ALL_FAMS = HEADLINE_23 + ["jailbreak_recognition"]
-REGOLD = ("poetry", "basic_readout", "moral_rationale")
+REGOLD = ("poetry", "basic_readout_st", "moral_rationale")
 
 ADAPTIVE = {  # key -> (label, subject key, olens_ckpts dir, adaptive_scores json or None, {arm: stage prefix})
     "qwen3.5-0.8b": (
@@ -497,7 +499,7 @@ def export_model(key: str) -> dict:
             report[fam] = {"error": f"plan: {type(e).__name__}: {e}"}
             continue
         if gated:
-            bp = WSB / "evals" / fam / "items.json"
+            bp = registry.family_root(fam) / "items.json"
         else:
             bp = (
                 root / f"{fam}.json"
@@ -786,7 +788,7 @@ def export_model(key: str) -> dict:
         "label": label,
         "note": (
             f"{label}: lenses read on the 27B bank; gated = items the subject itself answers (adapt gate: greedy right "
-            f"AND >= 8/10, every leg incl. bridges); poetry / basic_readout / moral_rationale re-judged with the "
+            f"AND >= 8/10, every leg incl. bridges); poetry / basic_readout_st / moral_rationale re-judged with the "
             f"subject's own rhyme / favourite / side + reasons."
             if gated
             else f"{label}: the subject's own audited adaptive set (adapted/{toksubj}); exported from our runs "
@@ -801,7 +803,7 @@ def export_model(key: str) -> dict:
         "gate_label": "subject-gated" if gated else "",
         "gate_note": (
             "subject-gated = only items this subject answers at the gate (greedy right AND >= 8/10 samples, every leg). "
-            "directed_modulation / multi_concept_dm have no checkable answer and always count; poetry / basic_readout / "
+            "directed_modulation / multi_concept_dm have no checkable answer and always count; poetry / basic_readout_st / "
             "moral_rationale show the subject's own golds. Off = every 27B-bank item with the original verdicts."
             if gated
             else ""

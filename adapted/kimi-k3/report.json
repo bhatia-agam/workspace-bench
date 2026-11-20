@@ -622,7 +622,7 @@
     "per-slot mc built over the shipped set (options.build_mc) for 2 new items"
    ]
   },
-  "typo_mt": {
+  "typo": {
    "status": "full",
    "target": 100,
    "n_original": 85,
@@ -714,7 +714,7 @@
     "2 previously shipped ids leave the bank: ['association-au-t1-w100c1-jb-chef', 'association-au-t1-w101c0-assoc-easy-sport-badminton']"
    ]
   },
-  "basic_readout": {
+  "basic_readout_st": {
    "status": "full",
    "target": 100,
    "n_original": 100,
@@ -756,7 +756,7 @@
    "status": "untried",
    "note": "Re-derived on Kimi-K3 (adapt nyt_connections, plan 0060 Phase E, parser fix + explicit naming re-ask for 9 0-label puzzles); frozen 2026-11-04 from the final gate log (no later nyt run): 307/335 puzzles pass (subject solved and named its groups, options rebuilt around its labels), 114 slots stable at >= 12/16 in 91 puzzles (the headline rests on these; 16 model-specific); frontier gate dropped; Qwen's frozen floor does not apply."
   },
-  "basic_readout_mt": {
+  "basic_readout": {
    "status": "partial",
    "target": 120,
    "n_original": 90,
@@ -947,7 +947,7 @@
    "status": "untried",
    "note": "Originals re-keyed on Kimi-K3 (plan 0060 A2 moral stages: subject side, reasons distilled from its own draws, options rebuilt); 193/195 dilemmas committed (50 of them deliberative); no dilemma Brief, so no refill."
   },
-  "multihop": {
+  "multihop_st": {
    "target": 100,
    "n_original": 98,
    "n_original_gated": 45,
@@ -1088,7 +1088,7 @@
     "2 previously shipped ids leave the bank: ['b3-mh-tajmahal-river', 'mh-w1-peregrine-falcon-birds']"
    ]
   },
-  "multihop_mt_v2": {
+  "multihop": {
    "target": 64,
    "n_original": 64,
    "n_original_gated": 64,
@@ -1271,7 +1271,7 @@
     }
    ]
   },
-  "multilingual": {
+  "multilingual_st": {
    "target": 99,
    "n_original": 99,
    "n_original_gated": 99,
@@ -1298,7 +1298,7 @@
     }
    ]
   },
-  "multilingual_mt": {
+  "multilingual": {
    "target": 100,
    "n_original": 100,
    "n_original_gated": 64,
@@ -3377,7 +3377,7 @@
    "s3b1_ripemd_variant": "delta audit follow-up 2026-11-05: subtype distractor 'RIPEMD' is contained in the gold forms ('RIPEMD-160')",
    "s3b2_bordeaux_vintage_of_the_2000s": "delta audit follow-up 2026-11-05: numeric-only gold 2005 is never credited by the regex scorer (M3)"
   },
-  "multihop": {
+  "multihop_st": {
    "dual-stars-visible-opposite": "audit 2026-11-04: the target 'day' is in the prompt ('...the time of day when stars are visible is'): breaks the no-target-in-prompt invariant and offers a copy shortcut past the bridge 'night' (inherited from the registered bank)",
    "mh-w1-tin-sn": "plan 0072 delta audit 2026-11-05: the registered bridge gold's alias (K / Sn / 'Jupiter I') is or extends the item's target, so a readout of the answer is credited as the bridge",
    "mh-w1-potassium-k": "plan 0072 delta audit 2026-11-05: the registered bridge gold's alias (K / Sn / 'Jupiter I') is or extends the item's target, so a readout of the answer is credited as the bridge",
@@ -3751,7 +3751,7 @@
    "cs00072": "lucky-guessing leaker in lucky_kc_r1, kept under the pre-11-06 family rule; dropped under the any-guesser rule (Camila 2026-11-06)",
    "cs02239": "lucky-guessing leaker in lucky_kc_r1, kept under the pre-11-06 family rule; dropped under the any-guesser rule (Camila 2026-11-06)"
   },
-  "multihop_mt": {
+  "multihop": {
    "mh2-violeta-nicanor-antipoetry": "plan 0072 delta audit 2026-11-05: the bridge's bare 'Parra' form also names the first-hop person (Violeta Parra, named in the prompt), so a first-hop readout is credited as the bridge",
    "mh2-angelou-clinton-gore": "lucky-guessing leaker after r5 round 0 (plan 0077 / Camila 2026-11-06 strict chance+5)",
    "mh2-baumbach-gerwig-lady-bird-r0": "lucky-guessing leaker after r5 round 0 (plan 0077 / Camila 2026-11-06 strict chance+5)",
@@ -4114,7 +4114,7 @@
    "product_manufacturer-Q29052758-hq_city": "lucky-guessing leaker in >=2 of 5 runs of the final measurement r4final2 (any-guesser rule; cap reached, not re-measured)",
    "song_performer-Q8056908-formed_year": "lucky-guessing leaker in >=2 of 5 runs of the final measurement r4final2 (any-guesser rule; cap reached, not re-measured)"
   },
-  "basic_readout_mt": {
+  "basic_readout": {
    "brh-ent-cur-eritrea": "Camila 2026-11-07 decision 5: a clue routes through a capital / imperial seat (\"whose capital is X\", \"the German / Austrian / Italian / Byzantine capital\", \"its capital at Chang'an\", \"a bank robbery in Sweden's capital\", a former imperial capital); dropped and back-filled",
    "brh-ent-cur-vanuatu": "Camila 2026-11-07 decision 5: a clue routes through a capital / imperial seat (\"whose capital is X\", \"the German / Austrian / Italian / Byzantine capital\", \"its capital at Chang'an\", \"a bank robbery in Sweden's capital\", a former imperial capital); dropped and back-filled",
    "brh-ent-currency-vanuatu": "Camila 2026-11-07 decision 5: a clue routes through a capital / imperial seat (\"whose capital is X\", \"the German / Austrian / Italian / Byzantine capital\", \"its capital at Chang'an\", \"a bank robbery in Sweden's capital\", a former imperial capital); dropped and back-filled",
@@ -4267,7 +4267,7 @@
    "association-au-t1-w103c0-assoc-easy-sport-table-tennis": "plan 0087: not back-filled (pool closed; no audit / lucky measure of fill rows in this sweep)",
    "association-au-t1-w103c0-assoc-easy-instrument-accordion": "plan 0087: not back-filled (pool closed; no audit / lucky measure of fill rows in this sweep)"
   },
-  "multilingual_mt": {
+  "multilingual": {
    "mlh-ar-octopus": "Camila 2026-11-07 decisions 1-3 (strict, whole bank incl. originals): list leaks in c1 (blind+described 10/10, or a family-level failing guesser >= 3/5 with blind+described >= 4/10); dropped and back-filled",
    "mlh-ar-thyroid": "Camila 2026-11-07 decisions 1-3 (strict, whole bank incl. originals): list leaks in c1 (blind+described 10/10, or a family-level failing guesser >= 3/5 with blind+described >= 4/10); dropped and back-filled",
    "mlh-el-cooking-pot": "Camila 2026-11-07 decisions 1-3 (strict, whole bank incl. originals): list leaks in c1 (blind+described 10/10, or a family-level failing guesser >= 3/5 with blind+described >= 4/10); dropped and back-filled",
@@ -4579,7 +4579,7 @@
   }
  },
  "patches": {
-  "multihop_mt": {
+  "multihop": {
    "mh2-angelou-clinton-gore": {
     "set": {
      "mc": {
@@ -48845,5 +48845,6 @@
     "note": "pin the confirmed, shipped option list (plan 0078 R38 / R53: the tier C canon1 re-run over the grown pool added a foil to this base item; the base is kept as confirmed)"
    }
   }
- }
+ },
+ "family_keys": "0101"
 }

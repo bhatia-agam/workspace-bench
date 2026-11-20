@@ -17,8 +17,8 @@ def test_stored_keeps_a_row_whose_sample_holds_a_line_separator(tmp_path):
     # ensure_ascii=False, as generate() writes: U+2028 / U+0085 stay raw inside the JSON string
     text = "".join(json.dumps(r, ensure_ascii=False) + "\n" for r in rows)
     assert "\u2028" in text
-    (rd / "basic_readout.jsonl").write_text(text, encoding="utf-8")
-    assert floors._stored(rd, "basic_readout") == rows
+    (rd / "basic_readout_st.jsonl").write_text(text, encoding="utf-8")
+    assert floors._stored(rd, "basic_readout_st") == rows
 
 
 def test_judge_records_an_empty_family_file_and_judges_the_rest(tmp_path, monkeypatch):
@@ -26,7 +26,7 @@ def test_judge_records_an_empty_family_file_and_judges_the_rest(tmp_path, monkey
     rd = fdir / "readouts"
     rd.mkdir(parents=True)
     (rd / "poetry.jsonl").write_text("", encoding="utf-8")  # no planned items
-    (rd / "typo_mt.jsonl").write_text(json.dumps(_row("t1", "x")) + "\n", encoding="utf-8")
+    (rd / "typo.jsonl").write_text(json.dumps(_row("t1", "x")) + "\n", encoding="utf-8")
     monkeypatch.setattr(floors, "_dir", lambda m: fdir)
     monkeypatch.setattr(floors.store, "model_dir", lambda m: tmp_path)
     monkeypatch.setattr(floors, "judge_opts", lambda m, f: "opts=aggregate=native")
@@ -48,8 +48,8 @@ def test_judge_records_an_empty_family_file_and_judges_the_rest(tmp_path, monkey
     written: dict = {}
     monkeypatch.setattr(floors, "merge_record", lambda d, rec: written.update(rec))
     rec = floors.judge("m")
-    assert judged == ["typo_mt"]
-    assert rec["families"]["typo_mt"]["rate"] == 0.25
+    assert judged == ["typo"]
+    assert rec["families"]["typo"]["rate"] == 0.25
     assert rec["families"]["poetry"]["n_items"] == 0
     assert rec["families"]["poetry"]["rate"] is None
     assert written["families"] == rec["families"]

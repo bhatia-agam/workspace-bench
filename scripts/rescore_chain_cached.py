@@ -42,10 +42,10 @@ sys.path.insert(0, str(REPO / "src"))
 from wsbench import bpe, digest  # noqa: E402
 from wsbench.banks import load_bank  # noqa: E402
 from wsbench.digest import Line  # noqa: E402
-from wsbench.evals.chain_intermediates import judge  # noqa: E402
+from wsbench.evals.computational.chain_intermediates import judge  # noqa: E402
 from wsbench.family import quote_in  # noqa: E402
 
-V1_BANK = REPO / "evals/chain_intermediates/items.json"
+V1_BANK = REPO / "evals/computational/chain_intermediates/items.json"
 
 
 def last_rows(path: Path) -> dict[tuple[str, int], dict[str, Any]]:

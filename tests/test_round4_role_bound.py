@@ -8,8 +8,12 @@ shape still fails. Quotes marked "cached" are verbatim from the final-olens-rl60
 import pytest
 
 from wsbench.digest import Line
-from wsbench.evals.role_bound_association import gate
-from wsbench.evals.role_bound_association.judge import build_block_v2, load_items, pick_problems
+from wsbench.evals.anti_bag_of_features.role_bound_association import gate
+from wsbench.evals.anti_bag_of_features.role_bound_association.judge import (
+    build_block_v2,
+    load_items,
+    pick_problems,
+)
 
 LEX = gate.load_lexicon()
 TP = (("Margaret", "teacher"), ("Dana", "parent"))  # oa-teacher-parent-blame-ab

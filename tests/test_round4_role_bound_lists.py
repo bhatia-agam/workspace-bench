@@ -16,7 +16,7 @@ from pathlib import Path
 
 import pytest
 
-from wsbench.evals.role_bound_association import gate, judge, prompts
+from wsbench.evals.anti_bag_of_features.role_bound_association import gate, judge, prompts
 
 ROOT = Path(__file__).resolve().parents[1]
 LEX = gate.load_lexicon()

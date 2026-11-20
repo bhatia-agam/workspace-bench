@@ -19,8 +19,8 @@
      "agentic_misalignment",
      "arithmetic_intermediates",
      "association",
+     "basic_readout_st",
      "basic_readout",
-     "basic_readout_mt",
      "buggy_code",
      "chain_intermediates",
      "conjunctive_association",
@@ -31,17 +31,17 @@
      "knowledge_cutoff",
      "model_specific_directed_modulation",
      "moral_rationale",
+     "multihop_st",
      "multihop",
-     "multihop_mt",
+     "multilingual_st",
      "multilingual",
-     "multilingual_mt",
      "multilingual_multihop",
      "multilingual_typo",
      "nyt_connections",
      "poetry",
      "relational_multihop",
      "role_bound_association",
-     "typo_mt",
+     "typo",
      "user_modeling",
      "wrong_intermediate"
     ],
@@ -777,7 +777,7 @@
   "protocol": "logit-lens-L63-v1",
   "plan_sha": "045086111071b72b628512286518f2cd8c463bfb4d53b57354f79be2c15ca9f7"
  },
- "basic_readout": {
+ "basic_readout_st": {
   "rate": 0.65,
   "saturated": false,
   "ci95": [
@@ -925,7 +925,7 @@
   "protocol": "logit-lens-L63-v1",
   "plan_sha": "0a721338b8755307ce59797c3f8eaf24118b2ac55b1f7551e50c7f92e8a62c36"
  },
- "basic_readout_mt": {
+ "basic_readout": {
   "rate": 0.06666666666666667,
   "saturated": false,
   "ci95": [
@@ -2340,7 +2340,7 @@
   "protocol": "logit-lens-L63-v1",
   "plan_sha": "41ce9adb0a84f6a8dcd9f4f3393ab3ee18adbd75d89817e49c1d3c6b6eb901cf"
  },
- "multihop": {
+ "multihop_st": {
   "rate": 0.5714285714285714,
   "saturated": false,
   "ci95": [
@@ -2486,7 +2486,7 @@
   "protocol": "logit-lens-L63-v1",
   "plan_sha": "3c9751600ae29bce9dd39e2bdb08763819c66659d3f1719cface71ef51fdcb2a"
  },
- "multihop_mt": {
+ "multihop": {
   "rate": 0.046875,
   "saturated": false,
   "ci95": [
@@ -2598,7 +2598,7 @@
   "protocol": "logit-lens-L63-v1",
   "plan_sha": "1d5f2e2fa84bc1596c063420468a7e69185cfa5e717f1e54e6cac30606445fb8"
  },
- "multilingual": {
+ "multilingual_st": {
   "rate": 0.0,
   "saturated": false,
   "ci95": [
@@ -2745,7 +2745,7 @@
   "protocol": "logit-lens-L63-v1",
   "plan_sha": "3602a6dd3b9470ad57d129d4475d44750eb04d80637a38b35076099bba7a2454"
  },
- "multilingual_mt": {
+ "multilingual": {
   "rate": 0.0,
   "saturated": false,
   "ci95": [
@@ -3750,7 +3750,7 @@
   "protocol": "logit-lens-L63-v1",
   "plan_sha": "aa7b02cb03c7bbe7cb8abc5409ea6a114ed4607d2ecd20c10d55c06ebb813f9b"
  },
- "typo_mt": {
+ "typo": {
   "rate": 0.0,
   "saturated": false,
   "ci95": [

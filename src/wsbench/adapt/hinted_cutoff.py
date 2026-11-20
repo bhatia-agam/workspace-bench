@@ -8,6 +8,8 @@ import json
 from pathlib import Path
 from typing import Any
 
+from wsbench import registry
+
 from . import store, subjects
 
 FAMILY = "hinted_cutoff"
@@ -128,7 +130,7 @@ def run(model: str, frozen_path: str, gw_commit: str = "", note: str = "") -> di
         "target": MIN_PAIRS,
         "n_pairs": n_pairs,
         "n_items": bank["n_items"],
-        "bank": "evals/hinted_cutoff/items_v2.json",
+        "bank": (registry.family_rel(FAMILY) / "items_v2.json").as_posix(),
         "bank_version": 2,
         "date_matched": bank["date_matched"],  # the date checks (plan 0084 R19)
         "date_checks": {"day_auroc": leak.get("day_auroc"), "cell_excess": leak.get("cell_excess")},

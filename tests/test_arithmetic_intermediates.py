@@ -13,9 +13,9 @@ from summary_fakes import summary_args
 from wsbench import digest, readplan, reads, registry
 from wsbench.banks import load_bank
 from wsbench.cli import main
-from wsbench.evals.arithmetic_intermediates import judge
-from wsbench.evals.arithmetic_intermediates import prompts as arith_prompts
-from wsbench.evals.arithmetic_intermediates.prompts import (
+from wsbench.evals.computational.arithmetic_intermediates import judge
+from wsbench.evals.computational.arithmetic_intermediates import prompts as arith_prompts
+from wsbench.evals.computational.arithmetic_intermediates.prompts import (
     PROMPT_VERSION,
     PROMPT_VERSION_BATCH,
     SYSTEM,
@@ -26,7 +26,7 @@ from wsbench.readouts import Cell, bulleted
 from wsbench.results import read_results
 
 REPO = Path(__file__).resolve().parents[1]
-BANK = REPO / "evals/arithmetic_intermediates/items_v2.json"
+BANK = REPO / "evals/computational/arithmetic_intermediates/items_v2.json"
 EXAMPLE = REPO / "examples/readouts/arithmetic_intermediates.jsonl"
 KEPT = {
     "absval", "addmul", "floordiv", "fracadd", "fraccomp", "fracint", "fracsmall",
@@ -36,7 +36,7 @@ KEPT = {
 
 @pytest.fixture(autouse=True)
 def _registered():
-    from wsbench.evals.arithmetic_intermediates import SPEC
+    from wsbench.evals.computational.arithmetic_intermediates import SPEC
 
     registry.FAMILIES.setdefault(SPEC.name, SPEC)
 
@@ -252,10 +252,12 @@ def test_rows_off_the_frozen_cell_are_ignored_and_missing_is_fatal(tmp_path, mon
 
 
 def test_registered_readme_and_dry_run(tmp_path, capsys, monkeypatch):
-    from wsbench.evals.arithmetic_intermediates import SPEC
+    from wsbench.evals.computational.arithmetic_intermediates import SPEC
 
     assert SPEC.group == "computational" and SPEC.judge.prompt_version == PROMPT_VERSION
-    readme = (REPO / "evals/arithmetic_intermediates/README.md").read_text(encoding="utf-8")
+    readme = (REPO / "evals/computational/arithmetic_intermediates/README.md").read_text(
+        encoding="utf-8"
+    )
     assert SYSTEM in readme and SYSTEM_BATCH in readme and PROMPT_VERSION_BATCH in readme
     monkeypatch.delenv("WSBENCH_JUDGE_MODEL", raising=False)
     out = tmp_path / "out"
@@ -347,7 +349,7 @@ def test_all_cells_mode_uses_every_row_and_reports_bands(tmp_path, monkeypatch):
     assert r.config["cells"] == "all" and r.config["layers_judged"] == [20, 60]
     assert r.config["prompt_version"] == PROMPT_VERSION_BATCH
     # final r1: calls keep the batched call version; the stamp adds the rule version
-    from wsbench.evals.arithmetic_intermediates.prompts import CALL_VERSION_BATCH
+    from wsbench.evals.computational.arithmetic_intermediates.prompts import CALL_VERSION_BATCH
 
     assert seen[0]["prompt_version"] == CALL_VERSION_BATCH and seen[0]["validate"] is not None
     # without the exact cell, only the 5% band is reached
@@ -858,7 +860,7 @@ def test_arith_all_layer_producer_file_is_judged(tmp_path, monkeypatch):
 
 def test_arith_task_note_has_no_numerals():
     from wsbench import numerals
-    from wsbench.evals.arithmetic_intermediates import SPEC
+    from wsbench.evals.computational.arithmetic_intermediates import SPEC
 
     note = SPEC.task_note
     assert note == arith_prompts.TASK_NOTE and note.strip()
@@ -869,7 +871,7 @@ def test_arith_task_note_has_no_numerals():
 
 def test_arith_prompts_render_the_spec_token_note():
     from wsbench import mc
-    from wsbench.evals.arithmetic_intermediates import SPEC
+    from wsbench.evals.computational.arithmetic_intermediates import SPEC
 
     note = mc.token_note(SPEC.flat_types, multi_select=SPEC.multi_select)
     assert SPEC.flat_types == ("numbers",) and SPEC.multi_select is False
@@ -1035,8 +1037,8 @@ def test_generic_summary_judge():
     where 87 is the intermediate)."""
     import inspect
 
-    from wsbench.evals.arithmetic_intermediates import judge as aj
-    from wsbench.evals.arithmetic_intermediates import prompts as ap
+    from wsbench.evals.computational.arithmetic_intermediates import judge as aj
+    from wsbench.evals.computational.arithmetic_intermediates import prompts as ap
 
     assert "CONSENSUS" not in ap.SYSTEM_SUMMARY and "not the operands" not in ap.SYSTEM_SUMMARY
     assert "the numbers it operates on" in ap.SYSTEM_SUMMARY

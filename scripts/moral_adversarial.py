@@ -65,12 +65,12 @@ from moral_distractors import (
 
 from wsbench import mc
 from wsbench.adapt import moral as am
-from wsbench.evals.moral_rationale.prompts import EC_SEED
+from wsbench.evals.logical_processing.moral_rationale.prompts import EC_SEED
 
 REPO = Path(__file__).resolve().parents[1]
-V3 = REPO / "evals" / "moral_rationale" / "items_v3.json"
-V4 = REPO / "evals" / "moral_rationale" / "items_v4.json"
-REPORT = REPO / "evals" / "moral_rationale" / "rekey_report_v4.json"
+V3 = REPO / "evals" / "logical_processing" / "moral_rationale" / "items_v3.json"
+V4 = REPO / "evals" / "logical_processing" / "moral_rationale" / "items_v4.json"
+REPORT = REPO / "evals" / "logical_processing" / "moral_rationale" / "rekey_report_v4.json"
 BANK_VERSION = 4
 GATE_DRAWS = 5
 GATE_MAX = 2  # gold picked on <= 2 of 5 draws (<= 40%)

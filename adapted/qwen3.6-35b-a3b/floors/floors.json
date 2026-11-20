@@ -8,8 +8,8 @@
     "agentic_misalignment": "am-narrative-v2+am-design-v3+twin-c2+pairs-v2",
     "arithmetic_intermediates": "arith-free-2026-10-30+exact-int+keys-union",
     "association": "assoc-mc-2026-11-01-v3+gate-a2+bank-v5",
-    "basic_readout": "br-mc-2026-11-01-v5b+brsum-v2+qline-v2+bank-v8",
-    "basic_readout_mt": "mc-brmt-2026-10-31r+norival-v1+qline-v2+bank-v7",
+    "basic_readout_st": "br-mc-2026-11-01-v5b+brsum-v2+qline-v2+bank-v8",
+    "basic_readout": "mc-brmt-2026-10-31r+norival-v1+qline-v2+bank-v7",
     "buggy_code": "buggy-pairs-2026-10-29+infer-r1-2026-10-31+pair-headline-2026-10-30+eof-all-layers-2026-10-30+bank-v2",
     "chain_intermediates": "chain-free-2026-10-30",
     "conjunctive_association": "comp-v5+maj",
@@ -18,17 +18,17 @@
     "model_multihop": "mmh-2026-11-06+mmh-forms-v3+bank-v2",
     "model_specific_directed_modulation": "dmcd-regex-2026-10-23",
     "moral_rationale": "ec-v9",
-    "multihop": "bank-mc-2026-11-01-v3+bank-gate-r11+bank-v5",
-    "multihop_mt": "mh2-mc-2026-11-01+norival-v1+qline-v2+bank-v6",
-    "multilingual": "mcrx-2026-11-03e+mc-ml-2026-11-01b+bank-v5",
-    "multilingual_mt": "mt-regex-2026-10-30+v2+ln-2026-11-03a+rawrx-v2+plural-v2+langleg-v1+bank-v5",
+    "multihop_st": "bank-mc-2026-11-01-v3+bank-gate-r11+bank-v5",
+    "multihop": "mh2-mc-2026-11-01+norival-v1+qline-v2+bank-v6",
+    "multilingual_st": "mcrx-2026-11-03e+mc-ml-2026-11-01b+bank-v5",
+    "multilingual": "mt-regex-2026-10-30+v2+ln-2026-11-03a+rawrx-v2+plural-v2+langleg-v1+bank-v5",
     "multilingual_multihop": "mcrx-2026-11-03e+mc-ml-2026-11-01b+bank-v5",
     "multilingual_typo": "mt-regex-2026-10-30+v2+ln-2026-11-03a+rawrx-v2+plural-v2+anchor-support-v1+langleg-v1+bank-v4",
     "nyt_connections": "nyt-mc-2026-11-02",
     "poetry": "poetry-free-2026-11-01+noveto-a1",
     "relational_multihop": "rel-v3+relgate-v6",
     "role_bound_association": "oa-v3.1",
-    "typo_mt": "mt-regex-2026-10-30+typo-v2",
+    "typo": "mt-regex-2026-10-30+typo-v2",
     "user_modeling": "um-v3.5+bank-v3",
     "wrong_intermediate": "wb-mc-2026-10-31r+judge-only-v1+qline-v2+wbcues-v2+wbforms-v4+bank-v4"
    },
@@ -99,7 +99,7 @@
      "prompt_version": "assoc-mc-2026-11-01-v3+gate-a2+bank-v5",
      "aggregate": "native"
     },
-    "basic_readout": {
+    "basic_readout_st": {
      "rate": 0.9666666666666667,
      "ci95": [
       0.9222222222222223,
@@ -121,7 +121,7 @@
      "prompt_version": "br-mc-2026-11-01-v5b+brsum-v2+qline-v2+bank-v8",
      "aggregate": "native"
     },
-    "basic_readout_mt": {
+    "basic_readout": {
      "rate": 0.9912280701754386,
      "ci95": [
       0.9649122807017544,
@@ -319,7 +319,7 @@
      "prompt_version": "ec-v9",
      "aggregate": "native"
     },
-    "multihop": {
+    "multihop_st": {
      "rate": 1.0,
      "ci95": [
       1.0,
@@ -341,7 +341,7 @@
      "prompt_version": "bank-mc-2026-11-01-v3+bank-gate-r11+bank-v5",
      "aggregate": "native"
     },
-    "multihop_mt": {
+    "multihop": {
      "rate": 1.0,
      "ci95": [
       1.0,
@@ -363,7 +363,7 @@
      "prompt_version": "mh2-mc-2026-11-01+norival-v1+qline-v2+bank-v6",
      "aggregate": "native"
     },
-    "multilingual": {
+    "multilingual_st": {
      "rate": 0.9680851063829787,
      "ci95": [
       0.925531914893617,
@@ -385,7 +385,7 @@
      "prompt_version": "mcrx-2026-11-03e+mc-ml-2026-11-01b+bank-v5",
      "aggregate": "native"
     },
-    "multilingual_mt": {
+    "multilingual": {
      "rate": 1.0,
      "ci95": [
       1.0,
@@ -539,7 +539,7 @@
      "prompt_version": "oa-v3.1",
      "aggregate": "native"
     },
-    "typo_mt": {
+    "typo": {
      "rate": 0.95,
      "ci95": [
       0.9,
@@ -613,8 +613,8 @@
     "agentic_misalignment": "am-design-v3+summ-c4+twin-c2+pairs-v2+sonnet-digest+opus5-fb+digest-v5-task-extractive+sj-v10",
     "arithmetic_intermediates": "arith-free-2026-10-30+exact-int+keys-union+generic-r7+bank-v2+digest-v5-task-extractive+sj-v10",
     "association": "assoc-mc-2026-11-01-v3+gate-a2+bank-v5+digest-v5-task-extractive+sj-v10",
-    "basic_readout": "br-mc-2026-11-01-v5b+brsum-v2+qline-v2+bank-v8+digest-v5-task-extractive+sj-v10",
-    "basic_readout_mt": "mc-brmt-2026-10-31r+norival-v1+qline-v2+bank-v7+digest-v5-task-extractive+sj-v10",
+    "basic_readout_st": "br-mc-2026-11-01-v5b+brsum-v2+qline-v2+bank-v8+digest-v5-task-extractive+sj-v10",
+    "basic_readout": "mc-brmt-2026-10-31r+norival-v1+qline-v2+bank-v7+digest-v5-task-extractive+sj-v10",
     "buggy_code": "buggy-pairs-2026-10-29+infer-r1-2026-10-31+pair-headline-2026-10-30+eof-all-layers-2026-10-30+bank-v2+digest-v5-task-extractive+sj-v10",
     "chain_intermediates": "chain-mc-2026-10-30+heads-v5+start-op+key-ex2+digest-v5-task-extractive-rankties5+sj-v10",
     "conjunctive_association": "comp-v5+maj+digest-v5-task-extractive+sj-v10",
@@ -626,17 +626,17 @@
     "model_specific_directed_modulation": "dmcd-regex-2026-10-23+joined-2026-10-30+digest-v5-task-extractive+sj-v10",
     "moral_rationale": "ec-v9+nq1+maj3v+digest-v5-task-extractive+sj-v10",
     "multi_concept_directed_modulation": "mcdm-2026-11-01e+bank-v2+notokinterp-2026-10-30+pins-r3+nocap-a1+digest-v5-task-extractive+sj-v10",
-    "multihop": "bank-mc-2026-11-01-v3+bank-gate-r11+bank-v5+digest-v5-task-extractive+sj-v10",
-    "multihop_mt": "mh2-mc-2026-11-01+norival-v1+qline-v2+bank-v6+digest-v5-task-extractive+sj-v10",
-    "multilingual": "mcrx-2026-11-03e+mc-ml-2026-11-01b+bank-v5+digest-v5-task-extractive+sj-v10",
-    "multilingual_mt": "mt-regex-2026-10-30+v2+ln-2026-11-03a+rawrx-v2+plural-v2+langleg-v1+bank-v5+digest-v5-task-extractive+sj-v10",
+    "multihop_st": "bank-mc-2026-11-01-v3+bank-gate-r11+bank-v5+digest-v5-task-extractive+sj-v10",
+    "multihop": "mh2-mc-2026-11-01+norival-v1+qline-v2+bank-v6+digest-v5-task-extractive+sj-v10",
+    "multilingual_st": "mcrx-2026-11-03e+mc-ml-2026-11-01b+bank-v5+digest-v5-task-extractive+sj-v10",
+    "multilingual": "mt-regex-2026-10-30+v2+ln-2026-11-03a+rawrx-v2+plural-v2+langleg-v1+bank-v5+digest-v5-task-extractive+sj-v10",
     "multilingual_multihop": "mcrx-2026-11-03e+mc-ml-2026-11-01b+bank-v5+digest-v5-task-extractive+sj-v10",
     "multilingual_typo": "mt-regex-2026-10-30+v2+ln-2026-11-03a+rawrx-v2+plural-v2+anchor-support-v1+langleg-v1+bank-v4+digest-v5-task-extractive+sj-v10",
     "nyt_connections": "nyt-mc-2026-11-02+digest-v5-task-extractive+sj-v10",
     "poetry": "poetry-free-2026-11-01+noveto-a1+digest-v5-task-extractive+sj-v10",
     "relational_multihop": "rel-v3+relgate-v6+digest-v5-task-extractive+sj-v10",
     "role_bound_association": "oa-v3.1+maj3v+digest-v5-task-extractive+sj-v10",
-    "typo_mt": "mt-regex-2026-10-30+typo-v2+digest-v5-task-extractive+sj-v10",
+    "typo": "mt-regex-2026-10-30+typo-v2+digest-v5-task-extractive+sj-v10",
     "user_modeling": "um-v3.5+bank-v3+maj3v+digest-v5-task-extractive+sj-v10",
     "wrong_intermediate": "wb-mc-2026-10-31r+judge-only-v1+qline-v2+wbcues-v2+wbforms-v4+bank-v4+digest-v5-task-extractive+sj-v10"
    },
@@ -1385,7 +1385,7 @@
      "label": "Opus 5.5 (0 refused)",
      "not_measurable": false
     },
-    "basic_readout": {
+    "basic_readout_st": {
      "rate": 0.9777777777777777,
      "saturated": false,
      "ci95": [
@@ -1534,7 +1534,7 @@
      "label": "Opus 5.5 (0 refused)",
      "not_measurable": false
     },
-    "basic_readout_mt": {
+    "basic_readout": {
      "rate": 1.0,
      "saturated": false,
      "ci95": [
@@ -3066,7 +3066,7 @@
      "label": "Opus 5.5 (0 refused)",
      "not_measurable": false
     },
-    "multihop": {
+    "multihop_st": {
      "rate": 0.9425287356321839,
      "saturated": false,
      "ci95": [
@@ -3212,7 +3212,7 @@
      "label": "Opus 5.5 (0 refused)",
      "not_measurable": false
     },
-    "multihop_mt": {
+    "multihop": {
      "rate": 0.9259259259259259,
      "saturated": false,
      "ci95": [
@@ -3298,7 +3298,7 @@
      "label": "Opus 5.5 (0 refused)",
      "not_measurable": false
     },
-    "multilingual": {
+    "multilingual_st": {
      "rate": 0.925531914893617,
      "saturated": false,
      "ci95": [
@@ -3451,7 +3451,7 @@
      "label": "Opus 5.5 (0 refused)",
      "not_measurable": false
     },
-    "multilingual_mt": {
+    "multilingual": {
      "rate": 0.9382716049382716,
      "saturated": false,
      "ci95": [
@@ -4356,7 +4356,7 @@
      "label": "Opus 5.5 (0 refused)",
      "not_measurable": false
     },
-    "typo_mt": {
+    "typo": {
      "rate": 1.0,
      "saturated": false,
      "ci95": [

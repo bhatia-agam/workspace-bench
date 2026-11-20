@@ -63,16 +63,16 @@ from typing import Any
 
 from wsbench import mc
 from wsbench.adapt import moral as am
-from wsbench.evals.moral_rationale.judge import jaccard, norm
-from wsbench.evals.moral_rationale.prompts import EC_SEED
+from wsbench.evals.logical_processing.moral_rationale.judge import jaccard, norm
+from wsbench.evals.logical_processing.moral_rationale.prompts import EC_SEED
 
 REPO = Path(__file__).resolve().parents[1]
-V1 = REPO / "evals" / "moral_rationale" / "items.json"
+V1 = REPO / "evals" / "logical_processing" / "moral_rationale" / "items.json"
 # bank v2 (items_v2.json + rekey_report_v2.json, 2026-10-30) is frozen; the length-match and
 # co-register passes freeze bank v3 (review round 4 of PR #186). A frozen bank is never rewritten.
 BANK_VERSION = 3
-V3 = REPO / "evals" / "moral_rationale" / "items_v3.json"
-REPORT = REPO / "evals" / "moral_rationale" / "rekey_report_v3.json"
+V3 = REPO / "evals" / "logical_processing" / "moral_rationale" / "items_v3.json"
+REPORT = REPO / "evals" / "logical_processing" / "moral_rationale" / "rekey_report_v3.json"
 ROUNDS = 3
 LEN_RANGE = (0.6, 1.6)
 JACCARD_MAX = 0.6
@@ -1630,7 +1630,8 @@ def main(argv: list[str] | None = None) -> int:
         type=Path,
         default=None,
         help="freeze: the bank file to write (an adapted subject's; default: the bank of record "
-        "evals/moral_rationale/items_v3.json, refused for a subject-keyed rekey.json)",
+        "evals/logical_processing/moral_rationale/items_v3.json, refused for a subject-keyed "
+        "rekey.json)",
     )
     a = ap.parse_args(argv)
     if a.step == "build":

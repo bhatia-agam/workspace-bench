@@ -13,8 +13,8 @@ from conftest import write_jsonl
 
 from wsbench import llm
 from wsbench.cli import main
-from wsbench.evals.agentic_misalignment import SPEC, judge, prompts, score
-from wsbench.evals.agentic_misalignment.prompts import (
+from wsbench.evals.safety.agentic_misalignment import SPEC, judge, prompts, score
+from wsbench.evals.safety.agentic_misalignment.prompts import (
     CONSOLIDATE_PROMPT,
     FAMILIES,
     PARTIAL_PROMPT,

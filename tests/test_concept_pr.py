@@ -5,7 +5,7 @@ import math
 
 import pytest
 
-from wsbench.evals.jlens_concept_pr.concept_pr import (
+from wsbench.evals.precision.jlens_concept_pr.concept_pr import (
     ItemScore,
     _stems,
     bootstrap_ci,
@@ -15,7 +15,11 @@ from wsbench.evals.jlens_concept_pr.concept_pr import (
     match_keys,
     score_item,
 )
-from wsbench.evals.jlens_concept_pr.token_types import CONTENT_TYPES, TokenType, classify_token
+from wsbench.evals.precision.jlens_concept_pr.token_types import (
+    CONTENT_TYPES,
+    TokenType,
+    classify_token,
+)
 
 
 def test_classify_token_rules() -> None:

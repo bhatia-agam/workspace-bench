@@ -256,7 +256,7 @@ def test_freeze_note_names_every_item_that_lost_every_form(tmp_path, monkeypatch
 
     monkeypatch.setattr(store, "model_dir", lambda model, root=None: tmp_path / model)
     d = tmp_path / "qwen3.5-4b"
-    _h, items = store.original_bank("typo_mt")
+    _h, items = store.original_bank("typo")
     keep = [copy.deepcopy(it) for it in items[:4]]
     # item 1 (a passing original) and item 3 (a FAILING original) lose every form: the note names
     # only items that could have shipped, i.e. passing originals
@@ -266,7 +266,7 @@ def test_freeze_note_names_every_item_that_lost_every_form(tmp_path, monkeypatch
              "gate": {"pass": i != 3, "rate": 1.0 if i != 3 else 0.0, "legs": {"surface": {
                  "greedy": {"text": "x", "ok": i != 3}, "samples": [], "rate": 1.0}}}}
             for i, it in enumerate(keep)]  # fmt: skip
-    (d / "gate" / "typo_mt.jsonl").write_text("".join(json.dumps(r) + "\n" for r in rows))
+    (d / "gate" / "typo.jsonl").write_text("".join(json.dumps(r) + "\n" for r in rows))
     nl.record("qwen3.5-4b", ["en", "zh"], "plan 0054 R6 on the subject, thinking off")
 
     real = run.get_subject
@@ -279,10 +279,10 @@ def test_freeze_note_names_every_item_that_lost_every_form(tmp_path, monkeypatch
         return [it for it in its if store.item_id(it) not in lost], [run.lost_forms_note(gone)]
 
     monkeypatch.setattr(run, "restamp_tokens", fake_restamp)
-    run.freeze("qwen3.5-4b", ["typo_mt"])
-    bank = json.loads((d / "typo_mt.json").read_text())
+    run.freeze("qwen3.5-4b", ["typo"])
+    bank = json.loads((d / "typo.json").read_text())
     assert {store.item_id(it) for it in bank["items"]} == {store.item_id(keep[i]) for i in (0, 2)}
-    notes = json.loads((d / "report.json").read_text())["families"]["typo_mt"]["freeze_notes"]
+    notes = json.loads((d / "report.json").read_text())["families"]["typo"]["freeze_notes"]
     mine = [n for n in notes if n.startswith(run.RESTAMP_NOTE)]
     lost_id = store.item_id(keep[1])
     assert mine == [f"{run.RESTAMP_NOTE}1 items lost every multi-token form: {lost_id}"]

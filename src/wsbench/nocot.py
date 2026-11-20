@@ -11,9 +11,9 @@ from functools import cache
 from pathlib import Path
 from typing import Any
 
-from wsbench.registry import REPO_ROOT
+from wsbench.registry import resource_path
 
-OBSCURE = REPO_ROOT / "evals" / "knowledge_cutoff" / "obscure_items.json"
+OBSCURE = resource_path("knowledge_cutoff", "obscure_items.json")
 # nocot publishes this password in its README ("for people, not for crawlers"); the unpacked files
 # are never written anywhere by this module
 PASSWORD = b"lantern-orchard-pebble"

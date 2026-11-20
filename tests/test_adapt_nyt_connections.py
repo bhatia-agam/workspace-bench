@@ -15,8 +15,8 @@ from wsbench import mc, nyt
 from wsbench.adapt import judge_inputs as ji
 from wsbench.adapt import nyt_connections as nc
 from wsbench.adapt import run, store
-from wsbench.evals.nyt_connections import judge
-from wsbench.evals.nyt_connections import prompts as nyt_prompts
+from wsbench.evals.logical_processing.nyt_connections import judge
+from wsbench.evals.logical_processing.nyt_connections import prompts as nyt_prompts
 
 MODEL = "qwen3.5-4b"  # a registered subject with the Qwen tokenizer: freeze restamps nothing
 P_OK, P_WRONG, P_BAD, P_UNNAMED = "c0334", "c0336", "c0339", "c0343"  # the bank's first four

@@ -20,7 +20,7 @@ from summary_fakes import FakeLLM, first_lines_digest
 from wsbench import digest, gate_sampling, llm, reads, registry
 from wsbench.cache import fingerprint
 from wsbench.cli import _strs
-from wsbench.evals.agentic_misalignment import SPEC, judge, prompts, score
+from wsbench.evals.safety.agentic_misalignment import SPEC, judge, prompts, score
 from wsbench.judge_config import resolve
 from wsbench.mcjudge import load_bank
 from wsbench.registry import REPO_ROOT, JudgeArgs
@@ -755,7 +755,7 @@ def test_adapt_ports_twins_by_default_and_drops_them_on_request(
     subject does not misbehave on it, beside its kept partner. ``twins=False`` still gives plan
     0031's scope: twins dropped in rollout, judge and build, no pairs, headline None."""
     from wsbench.adapt import agentic, store
-    from wsbench.evals.agentic_misalignment import score as am_score
+    from wsbench.evals.safety.agentic_misalignment import score as am_score
 
     bank, _t, tp = fixture_bank
     monkeypatch.setattr(agentic, "_bank", lambda: json.loads(json.dumps(bank)))
@@ -962,10 +962,10 @@ def test_fixture_bank_twin_invariants():
     assert _check_twin_invariants(bank["items"], targets["items"]) == 5
 
 
-V1_BANK = REPO_ROOT / "evals/agentic_misalignment/items.json"
-V1_TARGETS = REPO_ROOT / "evals/agentic_misalignment/targets.json"
-V2_BANK = REPO_ROOT / "evals/agentic_misalignment/items_v2.json"
-V2_TARGETS = REPO_ROOT / "evals/agentic_misalignment/targets_v2.json"
+V1_BANK = REPO_ROOT / "evals/safety/agentic_misalignment/items.json"
+V1_TARGETS = REPO_ROOT / "evals/safety/agentic_misalignment/targets.json"
+V2_BANK = REPO_ROOT / "evals/safety/agentic_misalignment/items_v2.json"
+V2_TARGETS = REPO_ROOT / "evals/safety/agentic_misalignment/targets_v2.json"
 # the frozen v1 files at cd6b0fa (plan 0052 §1: never edited; the twins live in items_v2.json)
 V1_SHA = {
     V1_BANK: "d6b6fe2c7e7a117040268dd0d9aa5e67994462700d86f93d26e3e8e9b83fb558",
@@ -997,7 +997,7 @@ def test_old_bank_untouched():
 def test_bank_v2_header():
     bank = json.loads(V2_BANK.read_text())
     items = bank["items"]
-    assert SPEC.bank == Path("evals/agentic_misalignment/items_v2.json")
+    assert SPEC.bank == Path("evals/safety/agentic_misalignment/items_v2.json")
     assert registry.bank_path("agentic_misalignment") == V2_BANK
     assert bank["family"] == "agentic_misalignment" and bank["version"] == 2
     assert bank["bank_version"] == "am-bank-v2"
@@ -1120,7 +1120,7 @@ def test_macro_membership_follows_n_pairs(tmp_path, monkeypatch):
     """Q13 on the REAL results.macro: in at >= 20 matched pairs (counted with ``pairs_of``, not
     the header), out with the count string (never ``"metric"``) below it — decided when the
     macro is assembled, under the live bank override."""
-    import wsbench.evals.agentic_misalignment as am
+    import wsbench.evals.safety.agentic_misalignment as am
     from wsbench.results import FamilyResult, macro
 
     assert registry.macro_reason(SPEC) == "" and am.MACRO_MIN_PAIRS == 20  # frozen: 22 pairs
@@ -1203,7 +1203,7 @@ def test_gate_record_covers_every_twin():
     """twin_gates_v2.json: every drafted twin once; every kept one passed gates 1-3 and the
     shared-sampler gate-4 recheck (pooled with the earlier rounds); dropped ones carry the
     original's twin_dropped reason."""
-    g = json.loads((REPO_ROOT / "evals/agentic_misalignment/twin_gates_v2.json").read_text())
+    g = json.loads((REPO_ROOT / "evals/safety/agentic_misalignment/twin_gates_v2.json").read_text())
     rows = {r["twin"]: r for r in g["twins"]}
     by = {it["id"]: it for it in _v2()}
     assert g["bank_version"] == "am-bank-v2" and g["n_twins_drafted"] == len(rows) == 28

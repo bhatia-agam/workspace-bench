@@ -11,8 +11,8 @@ from summary_fakes import FakeLLM, summary_args
 
 from wsbench import digest, mc, readplan, reads, registry
 from wsbench.adapt import generate as gen
-from wsbench.evals.relational_multihop import SPEC, gate, judge, prompts
-from wsbench.evals.relational_multihop.judge import build_options, select_cells
+from wsbench.evals.anti_bag_of_features.relational_multihop import SPEC, gate, judge, prompts
+from wsbench.evals.anti_bag_of_features.relational_multihop.judge import build_options, select_cells
 from wsbench.mc import CANNOT
 from wsbench.mcjudge import load_bank
 from wsbench.readouts import load_readouts

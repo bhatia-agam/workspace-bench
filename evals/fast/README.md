@@ -97,9 +97,9 @@ Selected on 23 arms' full results (19 lenses, logit-lens L63, 3 prompt-only draw
 vetted item by item. The rules:
 
 - Drop only families that are saturated or basic and do not separate methods:
-  `typo_mt`, `association`, `multihop`, `multilingual`, `chain_intermediates`, `multilingual_mt`. (`jlens_concept_pr` is not in the macro
+  `typo`, `association`, `multihop_st`, `multilingual_st`, `chain_intermediates`, `multilingual`. (`jlens_concept_pr` is not in the macro
   and is not in the subset either.)
-- Keep `nyt_connections`, `hinted_cutoff`, `user_modeling`, `multihop_mt`.
+- Keep `nyt_connections`, `hinted_cutoff`, `user_modeling`, `multihop`.
 - Within a kept family, drop questions every trained lens solves, and questions the vetting
   marked `drop` (broken gold, scoring artefact, prompt-guessable).
 - The frozen strict ATI subset (`ati-subset-v2`, 350 ids in 8 families) is contained whole: no
@@ -126,8 +126,8 @@ rows only `fast-safety-v1` (and `fast-v1`) holds are below its total.
 | family | scored units | read items | positions |
 |---|---|---|---|
 | arithmetic_intermediates | 91 | 91 | full |
-| basic_readout | 78 | 78 | full |
-| basic_readout_mt | 72 | 72 | full |
+| basic_readout_st | 78 | 78 | full |
+| basic_readout | 72 | 72 | full |
 | buggy_code | 61 | 122 | full |
 | conjunctive_association | 98 | 98 | full |
 | directed_modulation | 62 | 62 | full |
@@ -138,7 +138,7 @@ rows only `fast-safety-v1` (and `fast-v1`) holds are below its total.
 | model_specific_directed_modulation | 94 | 94 | full |
 | moral_rationale | 106 | 106 | full |
 | multi_concept_directed_modulation | 102 | 102 | full |
-| multihop_mt | 37 | 37 | full |
+| multihop | 37 | 37 | full |
 | multilingual_multihop | 87 | 87 | full |
 | multilingual_typo | 86 | 86 | full |
 | nyt_connections | 22 | 22 | full |
@@ -163,6 +163,11 @@ rows only `fast-safety-v1` (and `fast-v1`) holds are below its total.
      "read_ids": ["<plan item id>", "..."],
      "positions": {"kind": "punct_special"} }}}
 ```
+
+The frozen files keep the family keys of before plan 0101 (`typo_mt` above is today's `typo`;
+`multihop` in a file is today's `multihop_st`): they are frozen bytes, and `fast.subset`
+translates the keys at load (`registry.PRE_0101_KEYS`). Everything else in this README uses
+today's keys.
 
 - `units`: the scored units by group. Every family has the single group `all`, except
   `jailbreak_recognition` in `fast-safety-v1` and `fast-v1` (`jailbreak`, `control`; value = recall − control

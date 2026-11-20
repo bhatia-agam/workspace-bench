@@ -1,4 +1,4 @@
-"""Build ``evals/basic_readout_mt/items_v2.json`` (plan 0051, Camila 2026-10-30): question form,
+"""Build ``evals/basic/basic_readout/items_v2.json`` (plan 0051, Camila 2026-10-30): question form,
 ``name_forms`` per language, regenerated distractors, blind-floor and Qwen gates.
 
 Stages (each resumable; work files under ``--work``; Opus 5.5 calls cached in
@@ -44,9 +44,9 @@ from wsbench.mcjudge import Call, Preflighter, run_calls
 from wsbench.multitoken.options import option_sets
 
 REPO = Path(__file__).resolve().parents[1]
-V1 = REPO / "evals/basic_readout_mt/items.json"
-V2 = REPO / "evals/basic_readout_mt/items_v2.json"
-GATE = REPO / "evals/basic_readout_mt/gate_v2.json"
+V1 = REPO / "evals/basic/basic_readout/items.json"
+V2 = REPO / "evals/basic/basic_readout/items_v2.json"
+GATE = REPO / "evals/basic/basic_readout/gate_v2.json"
 OPUS = ResolvedJudge(model="claude-opus-5-5", reasoning=None, pinned=True, source="family")
 OPUS_HIGH = ResolvedJudge(
     model="claude-opus-5-5", reasoning={"anthropic_effort": "high"}, pinned=True, source="family"
@@ -511,7 +511,7 @@ def blind_round(work: Path, drafts: dict[str, Any], rnd: int, spend: Spend) -> d
                 Call(
                     key=f"blind|{it['id']}|{sha}|d{d}",
                     system=lg.SYSTEM,
-                    user=lg.user_message(item, "blind", "basic_readout_mt", None),
+                    user=lg.user_message(item, "blind", "basic_readout", None),
                     meta={"item": it["id"], "draw": d},
                 )
             )
@@ -620,7 +620,7 @@ def stage_qwen(work: Path, tag: str, only: list[str], max_tokens: int) -> None:
         rows.append(
             {
                 "key": f"{i}|{hashlib.sha1(d['question'].encode()).hexdigest()[:10]}",
-                "family": "basic_readout_mt",
+                "family": "basic_readout",
                 "text": d["question"],
                 "enable_thinking": False,
                 "greedy": True,

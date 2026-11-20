@@ -32,7 +32,7 @@ fill      author+gate an authored family until full / ooc       families= [waves
 carry     verify + copy jailbreak / multi_concept_dm to the subject [families=] [screen=true]
 floors    prompt-only floors: stock subject summaries, Claude judge   [stage=] [judge=]
 mc        MC options for adapted-only candidates (the repo's builders, --bank)   families=
-          [stage=build|subject]  (subject: basic_readout's post-gate subject fields)
+          [stage=build|subject]  (subject: basic_readout_st's post-gate subject fields)
 onecue    plan 0087: screen / repair / patch the shipped one-cue option lists   families= out=
           cache=<shared dir> [stage=screen|repair|patch|pending]
 dataround plan 0075's data-round rules (plan 0091)   stage=leakers run=<lucky dir> [root=<dir>
@@ -47,7 +47,7 @@ kcutoff   knowledge_cutoff re-derived on the subject (plan 0060 Phase E)
           [pool=]
 wrong_intermediate    the subject's own wrong-intermediate errors (plan 0060 Phase E)
                 stage=screen|grade|gate|adjudicate|bank|all pool=<dir> [limit= resolve= llm=]
-multihop_mt  staged subject gate incl. the shortcut leg (plan 0060 Phase E) [limit= regate=]
+multihop  staged subject gate incl. the shortcut leg (plan 0060 Phase E) [limit= regate=]
 nyt_connections the subject's own groupings, labels and stability (plan 0060 Phase E)
                 [stage=solve|stability|options|build|all] [limit=] [llm=<claude id>|none]
                 [regate=] [herrings=<pilot alt file>]
@@ -61,6 +61,7 @@ hinted_cutoff   install a gw ccut v2 set rebuilt on the subject (plan 0084)
 import json
 import sys
 
+from wsbench import registry
 from wsbench.registry import LEGACY_FAMILY_NAMES, canonical
 
 from . import families as fams
@@ -129,7 +130,7 @@ KEYS: dict[str, set[str]] = {
     "kcutoff": {"stage", "llm", "cutoff", "limit", "regate", "pool"},
     # plan 0060 Phase E (wrong_intermediate.py, mhmt2.py)
     "wrong_intermediate": {"stage", "pool", "limit", "resolve", "llm"},
-    "multihop_mt": {"stage", "limit", "regate"},
+    "multihop": {"stage", "limit", "regate"},
     "mc": {"families", "stage"},
     "onecue": {"families", "stage", "out", "cache"},  # onecue.py (plan 0087)
     "dataround": {"stage", "run", "root", "history", "apply", "out", "llm", "only"},  # 0091
@@ -181,10 +182,18 @@ def main(argv: list[str] | None = None) -> None:
     if bad := sorted(set(a) - KEYS[cmd] - {"model"}):
         raise SystemExit(f"{cmd}: unknown argument(s) {bad}; allowed: {sorted(KEYS[cmd])}\n{USAGE}")
     model = a.pop("model", None) or sys.exit("model= is required")
+
+    def named(f: str) -> str:  # as `wsbench`'s family arguments (cli._family)
+        new = canonical(f)
+        line = f"note: family {f!r} was renamed to {new!r}" if new != f else registry.swap_notice(f)
+        if line:
+            print(line, file=sys.stderr)
+        return new
+
     if "family" in a:
-        a["family"] = canonical(a["family"])
+        a["family"] = named(a["family"])
     families = a.pop("families", "")
-    names = [canonical(f) for f in families.split(",") if f] or sorted(fams.FAMILIES)
+    names = [named(f) for f in families.split(",") if f] or sorted(fams.FAMILIES)
     common = {k: a[k] for k in ("llm",) if k in a}
     for k in ("draws",):
         if k in a:
@@ -266,7 +275,7 @@ def main(argv: list[str] | None = None) -> None:
         wrong_intermediate.run(model, a.get("stage", "all"), pool=a.get("pool"),
                          limit=int(a.get("limit", 0)), llm=a.get("llm", "claude-opus-5-5"),
                          resolve=a.get("resolve", "local"))  # fmt: skip
-    elif cmd == "multihop_mt":  # plan 0060 Phase E
+    elif cmd == "multihop":  # plan 0060 Phase E
         from . import mhmt2
 
         regate = a.get("regate", "").lower() in ("1", "true", "yes")

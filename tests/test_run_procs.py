@@ -783,7 +783,7 @@ def test_judge_without_outcome_writes_none_and_help_lists_the_key(offline, tmp_p
 
 
 def test_real_subprocess_smoke_matches_judge(tmp_path, monkeypatch, capfd, rundirs):
-    """``run procs=True`` of the regex-scored typo_mt on the example readouts, with no API key
+    """``run procs=True`` of the regex-scored typo on the example readouts, with no API key
     in the child's environment: exit 0, and ``results.json`` byte-equal to ``judge``'s."""
     for k in ("ANTHROPIC_API_KEY", "ANTHROPIC_AUTH_TOKEN", "ANTHROPIC_PROFILE"):
         monkeypatch.delenv(k, raising=False)
@@ -797,21 +797,21 @@ def test_real_subprocess_smoke_matches_judge(tmp_path, monkeypatch, capfd, rundi
     )
     opts = ["opts=aggregate=native", "allow_missing=True"]
     out = tmp_path / "run"
-    argv = ["run", "families=typo_mt", "readouts_root=examples/readouts", f"out={out}"]
+    argv = ["run", "families=typo", "readouts_root=examples/readouts", f"out={out}"]
     assert main([*argv, *opts, "procs=True"]) == 0
     printed = capfd.readouterr()
-    assert "typo_mt: pass_rate=0.5 n=85" in printed.out
+    assert "typo: pass_rate=0.5 n=85" in printed.out
     assert printed.out.rstrip().splitlines()[-1].startswith("wrote ")
-    fam = _manifest(out)["families"]["typo_mt"]
+    fam = _manifest(out)["families"]["typo"]
     assert fam["status"] == "ok" and fam["value"] == 0.5
-    assert not (out / "typo_mt" / "outcome.json").exists()
+    assert not (out / "typo" / "outcome.json").exists()
     assert list(rundirs.iterdir()) == []
 
-    solo = tmp_path / "judge" / "typo_mt"
-    judge = ["judge", "family=typo_mt", "readouts=examples/readouts/typo_mt.jsonl"]
+    solo = tmp_path / "judge" / "typo"
+    judge = ["judge", "family=typo", "readouts=examples/readouts/typo.jsonl"]
     assert main([*judge, f"out={solo}", *opts]) == 0
     capfd.readouterr()
-    a = (out / "typo_mt" / "results.json").read_bytes()
+    a = (out / "typo" / "results.json").read_bytes()
     assert a == (solo / "results.json").read_bytes()
 
 

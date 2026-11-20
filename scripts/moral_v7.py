@@ -84,9 +84,9 @@ from moral_distractors import (
 from wsbench.adapt import moral as am
 
 REPO = Path(__file__).resolve().parents[1]
-V3 = REPO / "evals" / "moral_rationale" / "items_v3.json"
-V7 = REPO / "evals" / "moral_rationale" / "items_v7.json"
-REPORT = REPO / "evals" / "moral_rationale" / "rekey_report_v7.json"
+V3 = REPO / "evals" / "logical_processing" / "moral_rationale" / "items_v3.json"
+V7 = REPO / "evals" / "logical_processing" / "moral_rationale" / "items_v7.json"
+REPORT = REPO / "evals" / "logical_processing" / "moral_rationale" / "rekey_report_v7.json"
 BANK_VERSION = 7
 SEED = "moral-v7-A"
 

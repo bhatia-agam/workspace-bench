@@ -304,7 +304,9 @@ def reveal_text(item: Mapping[str, Any], header: Mapping[str, Any] | None = None
 def visible_text(item: Mapping[str, Any]) -> str:
     """Every reader-visible arm's user turn (hidden, alice, nothink): a form found here would
     fire on prompt echo (source ``build_units.visible_text``)."""
-    from wsbench.evals.model_specific_directed_modulation.controls import control_text
+    from wsbench.evals.model_specific.model_specific_directed_modulation.controls import (
+        control_text,
+    )
 
     arms = [control_text(a, item["topic"], item["carrier"]) for a in ("alice", "nothink")]
     return " ".join([item["user"], *arms])

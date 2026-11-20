@@ -9,15 +9,15 @@ import pytest
 
 from wsbench import digest, mc
 from wsbench.banks import load_bank
-from wsbench.evals.poetry import judge as pj
-from wsbench.evals.poetry import score
-from wsbench.evals.role_bound_association import gate as rb_gate
-from wsbench.evals.role_bound_association.judge import (
+from wsbench.evals.anti_bag_of_features.role_bound_association import gate as rb_gate
+from wsbench.evals.anti_bag_of_features.role_bound_association.judge import (
     bare_label,
     build_block_v2,
     display_people,
     load_items,
 )
+from wsbench.evals.basic.poetry import judge as pj
+from wsbench.evals.basic.poetry import score
 from wsbench.multitoken import family as fam
 from wsbench.multitoken import languages, mcrx, regex
 from wsbench.multitoken.options import display_options, option_aliases, option_sets
@@ -45,7 +45,7 @@ def _brmt(quote: str, lines, forms, *, src=None, options=None, rivals=()):
 ANGARA = {"en": ["Angara River", "Angara"], "zh": ["安加拉河"]}
 
 
-# ---------------------------------------------------------------- F4: basic_readout_mt gate
+# ---------------------------------------------------------------- F4: basic_readout gate
 
 
 def test_f4_any_line_rescue_is_retired_the_quotes_own_line_still_rescues():
@@ -160,8 +160,8 @@ def test_f4_fuzzy_misspelling_but_not_another_option():
 
 
 def test_f4_exonyms_never_collide_with_an_option():
-    data = json.loads((REPO / "evals/basic_readout_mt/exonyms.json").read_text(encoding="utf-8"))
-    _h, items = load_bank(REPO / "evals/basic_readout_mt/items_v2.json")
+    data = json.loads((REPO / "evals/basic/basic_readout/exonyms.json").read_text(encoding="utf-8"))
+    _h, items = load_bank(REPO / "evals/basic/basic_readout/items_v2.json")
     by_id = {it["id"]: it for it in items}
     assert set(data["items"]) <= set(by_id)
     for iid, roles in data["items"].items():
@@ -217,8 +217,8 @@ def test_f6_language_unit_names_the_language_only(lang, text, want):
 
 
 def test_f6_only_v2_language_units_are_swapped():
-    _h, v2 = load_bank(REPO / "evals/multilingual_typo/items_v2.json")
-    h1, v1 = load_bank(REPO / "evals/multilingual_multihop/items.json")
+    _h, v2 = load_bank(REPO / "evals/basic/multilingual_typo/items_v2.json")
+    h1, v1 = load_bank(REPO / "evals/basic/multilingual_multihop/items.json")
     c2 = regex.contract_for(_h, "multilingual_typo")
     lang2 = next(u for u in regex.scored_units(v2[0], c2) if u.role == "language")
     assert any(f.startswith(languages.RE_PREFIX) for fs in lang2.forms.values() for f in fs)
@@ -274,7 +274,7 @@ def test_f4_mcrx_old_rule_without_others():
 
 
 def test_f5_options_show_the_same_aliases_in_every_item_and_never_share_one():
-    _h, items = load_bank(REPO / "evals/multilingual/items_v2.json")
+    _h, items = load_bank(REPO / "evals/basic/multilingual_st/items_v2.json")
     al, opts = option_aliases(items), option_sets(items)
     seen: dict[tuple[str, str], set[str]] = {}
     for it in items:
@@ -293,7 +293,7 @@ def test_f5_options_show_the_same_aliases_in_every_item_and_never_share_one():
 
 
 def test_f5_options_all_or_none_and_numbers_their_digits():
-    _h, items = load_bank(REPO / "evals/multilingual/items_v2.json")
+    _h, items = load_bank(REPO / "evals/basic/multilingual_st/items_v2.json")
     al, opts = option_aliases(items), option_sets(items)
     shown = display_options(opts["es-half-four"]["concept_native"][0], "concept_native", al)
     assert "two / 2" in shown and "seven / 7" in shown  # a distractor gets its digit too
@@ -312,7 +312,7 @@ def test_f5_alias_note_is_the_bank_table_and_gold_blind():
     from wsbench.multitoken.prompts import ML_ALIAS_NOTE
 
     # round 4: the bank of record is v3 (its lists hold only other items' golds, so "up" is gone)
-    _h, items = load_bank(REPO / "evals/multilingual/items_v3.json")
+    _h, items = load_bank(REPO / "evals/basic/multilingual_st/items_v3.json")
     assert alias_note(option_aliases(items)) == ML_ALIAS_NOTE
     # one constant for every item: it names gold and distractor words alike ("down" and "far")
     assert "down: below" in ML_ALIAS_NOTE and "far: far away" in ML_ALIAS_NOTE

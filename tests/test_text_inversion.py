@@ -82,20 +82,20 @@ def test_buggy_code_is_not_gated_since_plan_0030():
 
 
 def test_typo_mt_is_not_gated(offline, real_families, tmp_path, capsys):
-    """plan 0033 M4 (Camila 2026-10-30: "This should not be in ati"): typo_mt left the subset;
+    """plan 0033 M4 (Camila 2026-10-30: "This should not be in ati"): typo left the subset;
     a run under the flag skips it (exit 0) without reaching its scorer."""
     frozen = json.loads(ti.FROZEN.read_text(encoding="utf-8"))
-    assert "typo_mt" in ti.NOT_GATED and "Camila 2026-10-30" in ti.NOT_GATED["typo_mt"]
-    assert "typo_mt" not in frozen and "typo_mt" in frozen["_not_gated"]
-    assert "typo_mt" not in ti.gated_families()
-    assert "typo_mt" not in ti.STRICTER_PASS_FIELD
+    assert "typo" in ti.NOT_GATED and "Camila 2026-10-30" in ti.NOT_GATED["typo"]
+    assert "typo" not in frozen and "typo" in frozen["_not_gated"]
+    assert "typo" not in ti.gated_families()
+    assert "typo" not in ti.STRICTER_PASS_FIELD
     with pytest.raises(ti.NotInScope):
-        ti.subset_entry("typo_mt")
+        ti.subset_entry("typo")
     r = tmp_path / "r.jsonl"
     r.write_text("")
-    argv = ["judge", "family=typo_mt", f"readouts={r}", f"out={tmp_path / 'o'}"]
+    argv = ["judge", "family=typo", f"readouts={r}", f"out={tmp_path / 'o'}"]
     assert main([*argv, "anti_text_inversion=True"]) == 0
-    assert "skipped: typo_mt: not gated" in capsys.readouterr().err
+    assert "skipped: typo: not gated" in capsys.readouterr().err
 
 
 # ---------------------------------------------------------------- gate
@@ -665,7 +665,7 @@ def test_moral_adapter_needs_both_sides_for_deliberative_items(tmp_path):
 
 
 def test_um_inferred_matches_the_family_constant():
-    from wsbench.evals.user_modeling import score as um
+    from wsbench.evals.association.user_modeling import score as um
 
     assert ti.UM_INFERRED == um.INFERRED
 
@@ -791,7 +791,7 @@ def test_chain_ati_field_unchanged(real_families):
     """plan 0038 C17: chain stays a NATIVE ATI instrument on the any_of_3 field; its gate
     instrument is the native free-recall stamp (not the registered summary MC stamp). Re-gated
     on bank v2 on 2026-10-31 (R1-ATI, reduced panel): the entry is current under that stamp."""
-    from wsbench.evals.chain_intermediates import prompts as cp
+    from wsbench.evals.computational.chain_intermediates import prompts as cp
 
     assert ti.STRICTER_PASS_FIELD["chain_intermediates"] == "any_of_3"
     assert ti.gate_instrument("chain_intermediates") == cp.NATIVE_PROMPT_VERSION
@@ -835,7 +835,7 @@ def test_arith_frozen_panel_readouts_load_under_guards(tmp_path, monkeypatch, re
     from conftest import write_sidecar
 
     from wsbench.banks import load_bank
-    from wsbench.evals.arithmetic_intermediates import judge as arith
+    from wsbench.evals.computational.arithmetic_intermediates import judge as arith
     from wsbench.judge_config import resolve
 
     _h, items = load_bank(registry.bank_path("arithmetic_intermediates"))
@@ -882,17 +882,17 @@ def test_arith_frozen_panel_readouts_load_under_guards(tmp_path, monkeypatch, re
 
 
 def test_mh2_not_gated(offline, tmp_path, real_families, capsys):
-    """Plan 0033 B3 (Camila 2026-10-30: "Don't include this in ati"): multihop_mt is excluded
+    """Plan 0033 B3 (Camila 2026-10-30: "Don't include this in ati"): multihop is excluded
     by design through NOT_GATED (its frozen entry, 0/70 survivors, is dropped)."""
-    assert "multihop_mt" in ti.NOT_GATED
-    assert "multihop_mt" not in ti.gated_families()
-    assert "multihop_mt" not in ti.STRICTER_PASS_FIELD
+    assert "multihop" in ti.NOT_GATED
+    assert "multihop" not in ti.gated_families()
+    assert "multihop" not in ti.STRICTER_PASS_FIELD
     with pytest.raises(ti.NotInScope):
-        ti.subset_entry("multihop_mt")
+        ti.subset_entry("multihop")
     frozen = json.loads(ti.FROZEN.read_text(encoding="utf-8"))
-    assert "multihop_mt" not in frozen and "multihop_mt_regex" not in frozen
-    example = registry.REPO_ROOT / "examples/readouts/multihop_mt.jsonl"
-    argv = ["judge", "family=multihop_mt", f"readouts={example}", f"out={tmp_path / 'o'}"]
+    assert "multihop" not in frozen and "multihop_mt_regex" not in frozen
+    example = registry.REPO_ROOT / "examples/readouts/multihop.jsonl"
+    argv = ["judge", "family=multihop", f"readouts={example}", f"out={tmp_path / 'o'}"]
     assert main([*argv, "anti_text_inversion=True"]) == 0  # skipped, never judged
     assert "not gated" in capsys.readouterr().err
 
@@ -900,7 +900,7 @@ def test_mh2_not_gated(offline, tmp_path, real_families, capsys):
 def test_gated_ids_are_the_judged_bank(real_families, monkeypatch):
     """A bank that reads with an earlier bank's plan (``read_plan_bank``) is gated on its OWN
     items, not the plan's extra rows (association v5: plan 93, judged 91); a bank with its own
-    plan keeps every plan id (basic_readout_mt v7)."""
+    plan keeps every plan id (basic_readout v7)."""
     from wsbench.banks import load_bank
 
     monkeypatch.delenv("WSB_BANK_FILE_USER_MODELING", raising=False)
@@ -912,15 +912,15 @@ def test_gated_ids_are_the_judged_bank(real_families, monkeypatch):
     ids = ti.gated_ids("association")
     assert len(assoc) == 93 and len(ids) == 91
     assert ids == [i for i in assoc if i in own]
-    # basic_readout_mt bank v7 reads with its own plan: every plan id is gated
-    brmt = [s.id for s in readplan.plan("basic_readout_mt") if ti.ati_scored(s)]
-    assert ti.gated_ids("basic_readout_mt") == brmt and len(brmt) == 90
+    # basic_readout bank v7 reads with its own plan: every plan id is gated
+    brmt = [s.id for s in readplan.plan("basic_readout") if ti.ati_scored(s)]
+    assert ti.gated_ids("basic_readout") == brmt and len(brmt) == 90
     # role_bound bank v2 (a wrapped bank keyed on id) reads items.json's plan: 100 rows, 92 judged
     rb = [s.id for s in readplan.plan("role_bound_association") if ti.ati_scored(s)]
     rb_ids = ti.gated_ids("role_bound_association")
     assert len(rb) == 100 and len(rb_ids) == 92 and set(rb_ids) < set(rb)
     poetry = [s.id for s in readplan.plan("poetry") if ti.ati_scored(s)]
     assert ti.gated_ids("poetry") == poetry  # its own plan: every plan id
-    monkeypatch.setenv("WSB_BANK_FILE_USER_MODELING", "evals/user_modeling/items.json")
+    monkeypatch.setenv("WSB_BANK_FILE_USER_MODELING", "evals/association/user_modeling/items.json")
     v1 = [s.id for s in readplan.plan("user_modeling") if ti.ati_scored(s)]
     assert len(v1) == 100 and ti.gated_ids("user_modeling") == v1  # its own plan: all 100

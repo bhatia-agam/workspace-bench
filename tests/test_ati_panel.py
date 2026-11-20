@@ -489,9 +489,9 @@ def test_subset_entry_refuses_a_retired_panel_gate(tmp_path, monkeypatch):
 
 
 def test_bank_file_override_reaches_plan_and_judges(tmp_path, monkeypatch):
-    from wsbench.evals.introspection import judge as intro
-    from wsbench.evals.knowledge_cutoff import judge as kc
-    from wsbench.evals.model_specific_directed_modulation import judge as dmo
+    from wsbench.evals.model_specific.introspection import judge as intro
+    from wsbench.evals.model_specific.knowledge_cutoff import judge as kc
+    from wsbench.evals.model_specific.model_specific_directed_modulation import judge as dmo
 
     for fam, mod_load in (
         # the nocot items are appended after the bank file's items (plan 0018)
@@ -617,8 +617,8 @@ def test_regex_multi_unit_families_count_any_unit_for_the_gate(tmp_path):
         {"id": "c", "pass": None, "any_hit": False},  # a missing layer stays undecided
     ]
     # plan 0054 item 10: the multilingual families gate on content_hit instead
-    # (test_multilingual_gate_ignores_language_unit); typo_mt is out of ATI by design (plan 0033)
-    for fam in ("basic_readout_mt",):
+    # (test_multilingual_gate_ignores_language_unit); typo is out of ATI by design (plan 0033)
+    for fam in ("basic_readout",):
         p = tmp_path / fam / "results.json"
         p.parent.mkdir(parents=True)
         p.write_text(
@@ -635,7 +635,7 @@ def test_regex_multi_unit_families_count_any_unit_for_the_gate(tmp_path):
 
 
 @pytest.mark.parametrize(
-    "fam", ["multilingual", "multilingual_mt", "multilingual_multihop", "multilingual_typo"]
+    "fam", ["multilingual_st", "multilingual", "multilingual_multihop", "multilingual_typo"]
 )
 def test_multilingual_gate_ignores_language_unit(tmp_path, fam):
     """Plan 0033 item 10: the four multilingual families gate on content_hit, so a guess that
@@ -699,14 +699,15 @@ def test_ati_exclude_all_covers_new_survivors(tmp_path, fams, monkeypatch):
 
 
 def test_multilingual_ati_exclusions_are_applied():
-    """Plan 0033 §4: the 6 multihop, 1 mt and 15 typo panel-v1 survivors, and the 21 multilingual
+    """Plan 0033 §4: the 6 multihop_st, 1 mt and 15 typo_st panel-v1 survivors, and the 21
+    multilingual_st
     ids the R1-ATI re-gate admitted, are all obvious from the prompt; each carries a reason.
     Since the 2026-10-31 re-gate (R1-ATI) the frozen entries
     apply the exclusions: no audited id is in a subset, and every id the gate dropped as
     obvious is recorded in the entry's ``ati_exclude`` with its reason."""
     frozen = json.loads(ti.FROZEN.read_text(encoding="utf-8"))
-    sizes = {"multilingual_multihop": 6, "multilingual_mt": 1, "multilingual_typo": 15}
-    for fam in ("multilingual", *sizes):
+    sizes = {"multilingual_multihop": 6, "multilingual": 1, "multilingual_typo": 15}
+    for fam in ("multilingual_st", *sizes):
         e = frozen[fam]
         assert all(len(why) > 20 for why in ti.ATI_EXCLUDE[fam].values())
         assert not set(e["ids"]) & set(ti.ATI_EXCLUDE[fam]), fam
@@ -715,7 +716,7 @@ def test_multilingual_ati_exclusions_are_applied():
     for fam, n in sizes.items():
         assert len(ti.ATI_EXCLUDE[fam]) == n
     # panel-v2 (plan 0071): no audited id survives the all-fail rule, so nothing is recorded
-    for fam in ("multilingual", *sizes):
+    for fam in ("multilingual_st", *sizes):
         assert frozen[fam]["ati_exclude"] == {} and frozen[fam]["ati_reportable"] is False, fam
 
 

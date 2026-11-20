@@ -162,7 +162,7 @@ def _cli(tmp_path: Path, *extra: str) -> int:
     return main(
         [
             "run",
-            "families=multilingual_mt",
+            "families=multilingual",
             f"readouts_root={tmp_path / 'r'}",
             "opts=aggregate=native",
             "allow_missing=True",
@@ -173,9 +173,9 @@ def _cli(tmp_path: Path, *extra: str) -> int:
 
 def test_layers_each_writes_one_subrun_per_layer(tmp_path, real_families):
     (tmp_path / "r").mkdir()
-    _relayer(EX / "multilingual_mt.jsonl", tmp_path / "r" / "multilingual_mt.jsonl", [20, 44])
+    _relayer(EX / "multilingual.jsonl", tmp_path / "r" / "multilingual.jsonl", [20, 44])
     assert _cli(tmp_path, f"out={tmp_path / 'each'}", "layers=each") == 0
-    fam = tmp_path / "each" / "multilingual_mt"
+    fam = tmp_path / "each" / "multilingual"
     assert sorted(p.name for p in fam.iterdir()) == ["L20", "L44", "all"]
     assert read_results(fam / "L44").config["layers_judged"] == [44]
     assert read_results(fam / "all").config["layers_judged"] == [20, 44]
@@ -183,11 +183,11 @@ def test_layers_each_writes_one_subrun_per_layer(tmp_path, real_families):
 
 def test_layers_each_equals_loop(tmp_path, real_families):
     (tmp_path / "r").mkdir()
-    _relayer(EX / "multilingual_mt.jsonl", tmp_path / "r" / "multilingual_mt.jsonl", [20, 44])
+    _relayer(EX / "multilingual.jsonl", tmp_path / "r" / "multilingual.jsonl", [20, 44])
     assert _cli(tmp_path, f"out={tmp_path / 'each'}", "layers=each") == 0
     for tag, lay in (("all", None), ("L20", "20"), ("L44", "44")):
         out = tmp_path / f"loop-{tag}"
         assert _cli(tmp_path, f"out={out}", *([f"layers={lay}"] if lay else [])) == 0
-        a = json.loads((tmp_path / "each" / "multilingual_mt" / tag / "results.json").read_text())
-        b = json.loads((out / "multilingual_mt" / "results.json").read_text())
+        a = json.loads((tmp_path / "each" / "multilingual" / tag / "results.json").read_text())
+        b = json.loads((out / "multilingual" / "results.json").read_text())
         assert a == b, tag

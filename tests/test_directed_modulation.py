@@ -13,7 +13,7 @@ from summary_fakes import FakeLLM, summary_args
 from wsbench import digest, llm, mc, reads, registry
 from wsbench.banks import load_bank
 from wsbench.cli import main
-from wsbench.evals.directed_modulation import judge, prompts, score
+from wsbench.evals.basic.directed_modulation import judge, prompts, score
 from wsbench.readouts import Cell
 from wsbench.results import read_results
 
@@ -77,14 +77,14 @@ def family(monkeypatch):
 
     monkeypatch.setattr(llm, "_pace", no_pace)
     monkeypatch.setattr(llm, "preflight", lambda model, reasoning: None)
-    from wsbench.evals.directed_modulation import SPEC
+    from wsbench.evals.basic.directed_modulation import SPEC
 
     registry.FAMILIES.setdefault(SPEC.name, SPEC)
     return SPEC
 
 
 def _bank():
-    return load_bank(REPO / "evals/directed_modulation/items.json")[1]
+    return load_bank(REPO / "evals/basic/directed_modulation/items.json")[1]
 
 
 def test_bank_and_option_sets():
@@ -137,7 +137,7 @@ def test_prompt_rendering_by_subfamily_and_polarity():
 
 
 def test_readme_carries_every_prompt():
-    readme = (REPO / "evals/directed_modulation/README.md").read_text(encoding="utf-8")
+    readme = (REPO / "evals/basic/directed_modulation/README.md").read_text(encoding="utf-8")
     for text in prompts.PROMPTS.values():
         assert text in readme
     assert prompts.PROMPT_VERSION in readme
@@ -383,7 +383,7 @@ def test_all_blank_item_fails_rather_than_vanishing(family, tmp_path, monkeypatc
 def test_judge_calls_keyed_by_judge_prompt_version():
     """Plan 0035: new judge prompts, new cache key (dm-2026-10-31); the instrument carries
     +expressed (the any-basis headline)."""
-    from wsbench.evals.directed_modulation import judge as dmj
+    from wsbench.evals.basic.directed_modulation import judge as dmj
 
     src = __import__("inspect").getsource(dmj)
     assert "prompt_version=JUDGE_PROMPT_VERSION" in src and "pv_calls" in src

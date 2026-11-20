@@ -4,12 +4,12 @@
 - **Filtering is not adapting.** `.pmeq` refilled each family with leftover 27B candidates and then
   authored more with the same "long-tail / obscure" prompts. Its "famous" knob was applied only
   after the reuse step.
-  - Yields on Qwen3.5-4B: multihop_mt_regex 3% (family removed 2026-10-30), multilingual_mt 4%, multilingual_multihop 2%, chain
+  - Yields on Qwen3.5-4B: multihop_mt_regex 3% (family removed 2026-10-30), multilingual 4%, multilingual_multihop 2%, chain
     3.5%, brew 0%, relational 0%.
   - Change the difficulty the brief asks for first.
 - **Ungated families slipped through.**
   - `.pm` copied user_modeling and directed_modulation without gating them on the subject.
-  - The single-token multihop bank never gates the bridge.
+  - The single-token multihop_st bank never gates the bridge.
   - Gate every leg of every family that has one.
 - **Off-policy content.**
   - The Qwen-sizes port of the removed hallucination family (plan 0040) fed Qwen3.6's token ids
@@ -50,9 +50,9 @@
 - multilingual_multihop: 1 known defect.
 - agentic_misalignment: 3 "misaligned" items have a misalignment rate of 0.125–0.25.
 - `adapt.lint` over the frozen banks flags:
-  - multihop: 4 without "Fact:", 1 leak;
-  - multilingual: 4 cognates;
-  - basic_readout_mt: 1 leak;
+  - multihop_st: 4 without "Fact:", 1 leak;
+  - multilingual_st: 4 cognates;
+  - basic_readout: 1 leak;
   - multilingual_multihop: 2 leaks.
 
   New items must lint clean. Original items are kept or dropped by the gate, not by the lint.
@@ -73,7 +73,7 @@
   `pushed_at` does not prove a fresh token (the old push resent a stale one).
 - **Grade in parallel.** The gate graded one call at a time: ~3 h for 170 items (now 16 threads).
 - **Own-answer guards must be scoped.** A "None is not a favourite" refusal list containing "a"
-  broke moral's A/B answers (149 → 100) until it was limited to basic_readout implicit.
+  broke moral's A/B answers (149 → 100) until it was limited to basic_readout_st implicit.
 - **Judge-side and plan-side paths must follow `WSB_BANK_ROOT`.** Capture rows (the removed
   hallucination family) and the jlens reference were hard-coded to the 27B (off-policy reads); both fixed.
 - **The plan speaks subject layers** (report.json `n_layers`; 63 clamps to the last block); banks
@@ -98,8 +98,8 @@
   (exit 144). Kill by PID, or kill the tmux session.
 - **New gate legs don't apply retroactively:** gate records are append-only and last-wins, so
   originals AND passing new items must be re-gated (`regate=true` on profile and gate).
-- **Non-Qwen tokenizers re-stamp before select** (`live_rows`): OLMo loses 15/100 typo_mt, 5
-  basic_readout_mt, 4 multihop_mt_regex (removed 2026-10-30) to one-token forms; fill refills them before freeze.
+- **Non-Qwen tokenizers re-stamp before select** (`live_rows`): OLMo loses 15/100 typo, 5
+  basic_readout, 4 multihop_mt_regex (removed 2026-10-30) to one-token forms; fill refills them before freeze.
 - **J-lens for a subject neuronpedia lacks:** `scripts/fit_jlens_modal.py` (official estimator,
   neuronpedia's recipe, H200 chunks, exact merge). Validated on the 4B: per-layer cosine to
   neuronpedia's lens min 0.927, mean 0.986 at n=400. Fitted: 9B (n=400), OLMo-3-7B-Instruct

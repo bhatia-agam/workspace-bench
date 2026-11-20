@@ -21,7 +21,7 @@ import pytest
 
 from wsbench import results
 from wsbench.baselines import lucky_guessing as lg
-from wsbench.evals.role_bound_association import judge, score
+from wsbench.evals.anti_bag_of_features.role_bound_association import judge, score
 from wsbench.registry import JudgeArgs
 
 ROOT = Path(__file__).resolve().parents[1]

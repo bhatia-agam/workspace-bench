@@ -26,7 +26,7 @@ from typing import Any
 
 from wsbench import registry
 from wsbench.baselines import text_inversion as ti
-from wsbench.evals.wrong_intermediate import prompts as wp
+from wsbench.evals.model_specific.wrong_intermediate import prompts as wp
 
 FAMILY = "wrong_intermediate"
 NOTE = (
