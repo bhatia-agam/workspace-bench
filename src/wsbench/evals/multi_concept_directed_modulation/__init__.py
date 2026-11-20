@@ -14,7 +14,7 @@ SPEC = register(
     EvalSpec(
         name="multi_concept_directed_modulation",
         title="Multi-concept directed modulation",
-        group="basic_mt",
+        group="basic",
         # plan 0034 (D9): bank v2 = the 100 v1 items + 16 entity relation items
         bank=Path("evals/multi_concept_directed_modulation/items_v2.json"),
         judge=JudgeConfig(prompt_version=PROMPT_VERSION),

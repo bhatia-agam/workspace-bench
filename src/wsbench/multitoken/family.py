@@ -84,7 +84,7 @@ __all__ = [
     "verdict",
 ]
 
-GROUP = "basic_mt"
+GROUP = "basic"
 SCORER = "regex"
 CHANCE_LABEL = (
     "no analytic floor for an any-layer conjunction of exact-form matches; the measured floor is "

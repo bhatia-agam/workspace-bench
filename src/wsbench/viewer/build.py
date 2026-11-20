@@ -15,7 +15,7 @@ ORIGINAL = "qwen3.6-27b"
 # README §The evals, in its order.
 GROUPS: list[tuple[str, list[str]]] = [
     (
-        "Basic (single token)",
+        "Basic (adapted from the J-lens paper)",
         [
             "association",
             "basic_readout",
@@ -24,11 +24,6 @@ GROUPS: list[tuple[str, list[str]]] = [
             "poetry",
             "typo",
             "directed_modulation",
-        ],
-    ),
-    (
-        "Basic (multi-token)",
-        [
             "multilingual_mt",
             "typo_mt",
             "basic_readout_mt",
@@ -45,20 +40,20 @@ GROUPS: list[tuple[str, list[str]]] = [
             "arithmetic_intermediates",
         ],
     ),
+    ("Association", ["user_modeling", "conjunctive_association"]),
     ("Safety", ["agentic_misalignment", "jailbreak_recognition"]),
-    ("Association", ["user_modeling", "conjunctive_association", "role_bound_association"]),
-    ("Bag of words", ["relational_multihop"]),
-    ("Precision", ["jlens_concept_pr"]),
+    ("Anti-bag-of-features", ["relational_multihop", "role_bound_association"]),
+    ("Logical processing", ["moral_rationale"]),
     (
         "Model-specific",
         [
-            "moral_rationale",
             "introspection",
             "knowledge_cutoff",
             "hinted_cutoff",
             "model_multihop",
         ],
     ),
+    ("Precision", ["jlens_concept_pr"]),
 ]
 
 # What a reader needs first, in the order tried: the text the model sees, then what it should

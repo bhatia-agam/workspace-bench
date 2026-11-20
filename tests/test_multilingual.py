@@ -526,9 +526,9 @@ def test_v2_full_read_settings(name, real_families):
 
 REGS = {
     "multilingual": ("", "basic", MCRX_PV),
-    "multilingual_mt": ("regex", "basic_mt", f"{SCORER_VERSION}+{V2_MT_TAG}"),
-    "multilingual_multihop": ("", "basic_mt", MCRX_MH_PV),
-    "multilingual_typo": ("regex", "basic_mt", f"{SCORER_VERSION}+{V2_TYPO_TAG}"),
+    "multilingual_mt": ("regex", "basic", f"{SCORER_VERSION}+{V2_MT_TAG}"),
+    "multilingual_multihop": ("", "basic", MCRX_MH_PV),
+    "multilingual_typo": ("regex", "basic", f"{SCORER_VERSION}+{V2_TYPO_TAG}"),
 }
 
 

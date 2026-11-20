@@ -206,7 +206,7 @@ Set `WSB_BANK_ROOT` and use the normal CLI; every family then loads `adapted/<mo
 
 ```bash
 export WSB_BANK_ROOT=adapted/qwen3.5-4b
-wsbench plan out=plans/qwen3.5-4b            # per item: render, read positions, layers
+wsbench plan --full out=plans/qwen3.5-4b     # per item: render, read positions, layers
 # ... produce readouts with your lens ...
 wsbench run all=True readouts_root=READOUTS_DIR out=RESULTS_DIR
 wsbench report dir=RESULTS_DIR

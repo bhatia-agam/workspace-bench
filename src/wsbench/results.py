@@ -416,6 +416,56 @@ def macro(
     another ``config.fast_subset`` is excluded, reason ``"stale fast subset (<v>)"``, unless
     (plan 0094) that version is in ``fast.COMPATIBLE`` and the family is in the current subset;
     with any fast row the result carries ``fast_subset`` (the current version)."""
+    ctx = _macro_context(results, superseded, held_out, removed, retired)
+    included: list[FamilyResult] = []
+    excluded: list[dict[str, str]] = []
+    for r in results:
+        if (why := _row_exclusion(r, ctx)) is not None:
+            excluded.append(why)
+        else:
+            included.append(r)
+    value = sum(r.value for r in included) / len(included) if included else None  # type: ignore[misc]
+    out = {"value": value, "families": [r.family for r in included], "excluded": excluded}
+    from wsbench import fast  # lazy: fast imports this module
+    from wsbench.baselines import text_inversion  # lazy: text_inversion imports registry
+
+    # the definition is Qwen3.6-27B's: named only beside a registered-panel ATI row
+    if any(
+        r.config.get("scope") == ATI_SCOPE
+        and r.extras.get("ati_gate") == text_inversion.GATE_VERSION
+        for r in results
+    ):
+        out["ati_subset"] = text_inversion.SUBSET_VERSION
+    if ctx.ati_gates:  # plan 0088: which adapted subset (A vs a variant such as +qwen27b)
+        out["ati_gate"] = ctx.ati_gates[0]
+    if any(r.config.get("scope") == fast.SCOPE for r in results):  # plan 0090
+        out["fast_subset"] = fast.VERSION
+    return out
+
+
+@dataclass(frozen=True)
+class _MacroContext:
+    """The run-level inputs of the per-row macro decision, computed once over ALL results."""
+
+    superseded: Mapping[str, str]
+    held_out: Mapping[str, str]
+    removed: Mapping[str, str]
+    retired: Mapping[str, str]
+    skip: Mapping[str, str]
+    summary_run: bool
+    ati_gates: tuple[str, ...]
+
+
+def _macro_context(
+    results: Sequence[FamilyResult],
+    superseded: Mapping[str, str] | None,
+    held_out: Mapping[str, str] | None,
+    removed: Mapping[str, str] | None,
+    retired: Mapping[str, str] | None,
+) -> _MacroContext:
+    """The registry defaults, the adapted set's exclusions and the run-level guards of
+    :func:`macro` (mixed reads modes, mixed adapted ATI gates, mixed fast and non-fast rows:
+    each a ``SystemExit``)."""
     if superseded is None or held_out is None or removed is None:
         from wsbench import registry  # lazy: registry imports this module
 
@@ -426,8 +476,6 @@ def macro(
         from wsbench import registry  # lazy: registry imports this module
 
         retired = registry.RETIRED_FAMILIES
-    included: list[FamilyResult] = []
-    excluded: list[dict[str, str]] = []
     skip = adapted_exclusions()
     modes = sorted({str(r.config.get("reads", "full")) for r in results})
     if len(modes) > 1:  # plan 0032 §2.6.8: a macro never blends reads=full and reads=lite rows
@@ -449,71 +497,96 @@ def macro(
         raise SystemExit("macro: results mix fast and non-fast rows")
     # a summary-mode run (plan 0020) averages summary rows only, never a blend with native ones
     summary_run = any(r.config.get("aggregate") == "summary" for r in results)
+    return _MacroContext(
+        superseded, held_out, removed, retired, skip, summary_run, tuple(ati_gates)
+    )
+
+
+def _row_exclusion(r: FamilyResult, ctx: _MacroContext) -> dict[str, str] | None:
+    """Why ``r`` is out of the macro (its ``excluded`` entry), or None when it is averaged; the
+    order of the checks is the order of the reasons in :func:`macro`'s docstring."""
+    from wsbench import fast  # lazy: fast imports this module
+
+    if r.family in ctx.removed:
+        return {"family": r.family, "reason": "removed", "why": ctx.removed[r.family]}
+    if r.family in ctx.retired:
+        return {"family": r.family, "reason": "retired", "why": ctx.retired[r.family]}
+    if r.family in ctx.superseded:
+        return {"family": r.family, "reason": "superseded", "by": ctx.superseded[r.family]}
+    if r.family in ctx.held_out:
+        return {"family": r.family, "reason": "not in macro", "why": ctx.held_out[r.family]}
+    if r.family in ctx.skip:
+        return {"family": r.family, "reason": "adapted set: " + ctx.skip[r.family]}
+    if r.metric not in MACRO_METRICS:
+        return {"family": r.family, "reason": "metric"}
+    if not on_family_judge(r):
+        return {"family": r.family, "reason": "judge", "why": str(r.config.get("judge_model"))}
+    if not r.complete:
+        return {"family": r.family, "reason": "incomplete"}
+    if r.value is None:
+        return {"family": r.family, "reason": "no value"}
+    if not_measurable(r):
+        share = undecided_share(r) or 0.0
+        return {"family": r.family, "reason": "not measurable", "why": f"{share:.0%} undecided"}
+    if ctx.summary_run and r.config.get("aggregate") != "summary":
+        return {"family": r.family, "reason": "native under aggregate=summary"}
+    if r.config.get("scope") == ATI_SCOPE and (stale := _stale_ati_gate(r)) is not None:
+        return {"family": r.family, "reason": f"stale ATI gate ({stale})"}
+    if r.config.get("scope") == ATI_SCOPE and (old := _stale_ati_subset(r)) is not None:
+        return {"family": r.family, "reason": f"stale ATI subset ({old})"}
+    if (
+        r.config.get("scope") == ATI_SCOPE
+        and min(r.extras.get("ati_n_ids", r.n_items), r.n_items) < ATI_MACRO_MIN_ITEMS
+        and not _ati_exception(r)
+    ):
+        # plan 0071 §1a: count the gated ATI ids, not judged rows (jailbreak scores controls),
+        # and never more than the row judged (a limit= smoke run stays out)
+        return {"family": r.family, "reason": f"n<{ATI_MACRO_MIN_ITEMS} (ATI)"}
+    if r.config.get("scope") == fast.SCOPE and _stale_fast_subset(r):
+        return {
+            "family": r.family,
+            "reason": f"stale fast subset ({r.config.get('fast_subset')})",
+        }
+    return None
+
+
+def core_macro(
+    results: Sequence[FamilyResult],
+    superseded: Mapping[str, str] | None = None,
+    held_out: Mapping[str, str] | None = None,
+    removed: Mapping[str, str] | None = None,
+    retired: Mapping[str, str] | None = None,
+) -> dict | None:
+    """The macro over the core tier (plan 0098): :func:`macro`'s rule, with its run-level context
+    taken over ALL ``results``, applied to the rows whose family is in ``tiers.CORE``. The keys
+    of :func:`macro` plus ``tier``, ``n_core``, ``missing`` (core families with no row) and
+    ``complete`` (every core family averaged). None when any row is scoped (fast and ATI have
+    their own macro)."""
+    if any(r.config.get("scope") for r in results):
+        return None
+    from wsbench import tiers  # lazy: tiers imports the registry, which imports this module
+
+    ctx = _macro_context(results, superseded, held_out, removed, retired)
+    included: list[FamilyResult] = []
+    excluded: list[dict[str, str]] = []
     for r in results:
-        if r.family in removed:
-            excluded.append({"family": r.family, "reason": "removed", "why": removed[r.family]})
-        elif r.family in retired:
-            excluded.append({"family": r.family, "reason": "retired", "why": retired[r.family]})
-        elif r.family in superseded:
-            excluded.append(
-                {"family": r.family, "reason": "superseded", "by": superseded[r.family]}
-            )
-        elif r.family in held_out:
-            excluded.append(
-                {"family": r.family, "reason": "not in macro", "why": held_out[r.family]}
-            )
-        elif r.family in skip:
-            excluded.append({"family": r.family, "reason": "adapted set: " + skip[r.family]})
-        elif r.metric not in MACRO_METRICS:
-            excluded.append({"family": r.family, "reason": "metric"})
-        elif not on_family_judge(r):
-            excluded.append(
-                {"family": r.family, "reason": "judge", "why": str(r.config.get("judge_model"))}
-            )
-        elif not r.complete:
-            excluded.append({"family": r.family, "reason": "incomplete"})
-        elif r.value is None:
-            excluded.append({"family": r.family, "reason": "no value"})
-        elif not_measurable(r):
-            share = undecided_share(r) or 0.0
-            excluded.append(
-                {"family": r.family, "reason": "not measurable", "why": f"{share:.0%} undecided"}
-            )
-        elif summary_run and r.config.get("aggregate") != "summary":
-            excluded.append({"family": r.family, "reason": "native under aggregate=summary"})
-        elif r.config.get("scope") == ATI_SCOPE and (stale := _stale_ati_gate(r)) is not None:
-            excluded.append({"family": r.family, "reason": f"stale ATI gate ({stale})"})
-        elif r.config.get("scope") == ATI_SCOPE and (old := _stale_ati_subset(r)) is not None:
-            excluded.append({"family": r.family, "reason": f"stale ATI subset ({old})"})
-        elif (
-            r.config.get("scope") == ATI_SCOPE
-            and min(r.extras.get("ati_n_ids", r.n_items), r.n_items) < ATI_MACRO_MIN_ITEMS
-            and not _ati_exception(r)
-        ):
-            # plan 0071 §1a: count the gated ATI ids, not judged rows (jailbreak scores controls),
-            # and never more than the row judged (a limit= smoke run stays out)
-            excluded.append({"family": r.family, "reason": f"n<{ATI_MACRO_MIN_ITEMS} (ATI)"})
-        elif r.config.get("scope") == fast.SCOPE and _stale_fast_subset(r):
-            old = r.config.get("fast_subset")
-            excluded.append({"family": r.family, "reason": f"stale fast subset ({old})"})
+        if r.family not in tiers.CORE:
+            continue
+        if (why := _row_exclusion(r, ctx)) is not None:
+            excluded.append(why)
         else:
             included.append(r)
-    value = sum(r.value for r in included) / len(included) if included else None  # type: ignore[misc]
-    out = {"value": value, "families": [r.family for r in included], "excluded": excluded}
-    from wsbench.baselines import text_inversion  # lazy: text_inversion imports registry
-
-    # the definition is Qwen3.6-27B's: named only beside a registered-panel ATI row
-    if any(
-        r.config.get("scope") == ATI_SCOPE
-        and r.extras.get("ati_gate") == text_inversion.GATE_VERSION
-        for r in results
-    ):
-        out["ati_subset"] = text_inversion.SUBSET_VERSION
-    if ati_gates:  # plan 0088: which adapted subset (A vs a variant such as +qwen27b)
-        out["ati_gate"] = ati_gates[0]
-    if any(r.config.get("scope") == fast.SCOPE for r in results):  # plan 0090
-        out["fast_subset"] = fast.VERSION
-    return out
+    have = {r.family for r in results}
+    names = [r.family for r in included]
+    return {
+        "value": sum(r.value for r in included) / len(included) if included else None,  # type: ignore[misc]
+        "families": names,
+        "excluded": excluded,
+        "tier": "core",
+        "n_core": len(tiers.CORE),
+        "missing": sorted(f for f in tiers.CORE if f not in have),
+        "complete": set(names) == set(tiers.CORE),
+    }
 
 
 def _adapted_ati_gates() -> tuple[str, ...]:
@@ -657,6 +730,7 @@ def markdown_table(
     summary_floors: Mapping[str, Mapping[str, SummaryCell]] | None = None,
     removed: Mapping[str, str] | None = None,
     alt_judge: Mapping[str, FamilyResult] | None = None,
+    core_macro: dict | None = None,
 ) -> str:
     """One row per family; ``floors`` (column title -> family -> cell text) adds one column per
     measured floor, ``—`` where a family has none. A summary row reads its cells from
@@ -667,7 +741,10 @@ def markdown_table(
     no score row: a stale results.json in an old run dir would otherwise read as a live result
     with no floor (plan 0033). It is still listed under "Not in macro:" when ``macro_row`` is
     given. ``alt_judge`` (family -> a judge-override result) adds the opt-in judge column
-    (:func:`alt_judge_cell`)."""
+    (:func:`alt_judge_cell`). ``core_macro`` (:func:`core_macro`'s dict; plan 0098) with at least
+    one averaged family adds the ``**core macro**`` row after the macro row (after the last
+    family row without one) and, when it has missing or excluded families, one line naming
+    them after the "Not in macro:" list."""
     if removed is None:
         from wsbench import registry  # lazy: registry imports this module
 
@@ -752,6 +829,27 @@ def markdown_table(
                 elif reason == "not measurable" and e.get("why"):
                     reason = f"not measurable ({e['why']}; more than 20% of the items)"
                 lines.append(f"- {e['family']}: {reason}")
+    if core_macro is not None and core_macro.get("families"):
+        pad = " — |" * (len(cols) + (alt_judge is not None))
+        row = (
+            f"| **core macro** | pass_rate | {_fmt(core_macro.get('value'))} | — | "
+            f"{len(core_macro['families'])} of {core_macro['n_core']} families "
+            f"| — |{pad} — | — | — |"
+        )
+        # directly after the macro row (the last table row when there is none)
+        at = next((i for i, ln in enumerate(lines) if ln.startswith("| **macro** |")), None)
+        lines.insert(len(lines) if macro_row is None or at is None else at + 1, row)
+        clauses = []
+        if core_macro.get("missing"):
+            clauses.append("missing: " + ", ".join(core_macro["missing"]))
+        if core_macro.get("excluded"):
+            clauses.append(
+                "excluded: "
+                + ", ".join(f"{e['family']} ({e['reason']})" for e in core_macro["excluded"])
+            )
+        if clauses:
+            lines.append("")
+            lines.append("Core macro: " + ". ".join(clauses) + ".")
     by_family = {r.family: r for r in results}
     for alt, main in PAIRED_FAMILIES.items():  # audit F3: twin banks on their shared ids
         if alt in by_family and main in by_family:

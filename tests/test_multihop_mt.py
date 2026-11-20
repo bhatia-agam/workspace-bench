@@ -107,7 +107,7 @@ def test_frozen_bank_untouched():
 
 def test_registered():
     # plan 0041 B2: the pinned MC judge is the scorer of record (it was the regex contract)
-    assert SPEC.group == "basic_mt" and SPEC.scorer == ""
+    assert SPEC.group == "basic" and SPEC.scorer == ""
     assert SPEC.judge.prompt_version == P.MH2_PROMPT_VERSION
     assert P.MH2_PROMPT_VERSION == "mh2-mc-2026-11-01+norival-v1+qline-v2+bank-v6"
     assert SPEC.bank == Path("evals/multihop_mt/items_v6.json")

@@ -13,7 +13,7 @@ SPEC = register(
     EvalSpec(
         name="role_bound_association",
         title="Role-bound association",
-        group="association",
+        group="anti_bag_of_features",
         # bank v2 = items.json without the 4 pairs whose stories carry a stray tab (92 items);
         # its header's read_plan_bank keeps items.json's read plan, so those readouts serve it
         bank=Path("evals/role_bound_association/items_v2.json"),

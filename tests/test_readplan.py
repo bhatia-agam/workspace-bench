@@ -180,7 +180,7 @@ def test_plan_all_skips_superseded_but_names_still_plan(tmp_path, real_families,
     # the retired branch exercised
     monkeypatch.setitem(registry.RETIRED_FAMILIES, "association", "retired (test stand-in)")
 
-    assert main(["plan", f"out={tmp_path / 'all'}", "limit=1"]) == 0
+    assert main(["plan", "--full", f"out={tmp_path / 'all'}", "limit=1"]) == 0
     written = {p.stem for p in (tmp_path / "all").glob("*.jsonl")}
     assert "multihop_mt" in written
     superseded = set(registry.superseded()) | set(registry.RETIRED_FAMILIES)  # + plan 0058

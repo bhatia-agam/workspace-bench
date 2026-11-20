@@ -14,7 +14,7 @@ SPEC = register(
     EvalSpec(
         name="relational_multihop",
         title="Relational multihop",
-        group="bag_of_words",
+        group="anti_bag_of_features",
         bank=Path("evals/relational_multihop/items.json"),
         judge=JudgeConfig(prompt_version=PROMPT_VERSION),
         metric="pass_rate",

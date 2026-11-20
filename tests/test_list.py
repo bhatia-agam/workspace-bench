@@ -2,12 +2,12 @@
 
 from pathlib import Path
 
-from wsbench import registry
+from wsbench import registry, tiers
 from wsbench.cli import main
 from wsbench.judge_config import JudgeConfig
 from wsbench.registry import EvalSpec, register
 
-HEAD = ("family", "group", "n items", "metric", "judge model", "prompt version")
+HEAD = ("family", "category", "tier", "n items", "metric", "judge model", "prompt version")
 HEAD += ("calls/arm (approx)", "credit")
 
 
@@ -25,8 +25,14 @@ def test_list_columns_for_every_family(capsys):
         assert ln.startswith(s.name)
         assert s.metric in ln and s.calls_per_arm and s.calls_per_arm in ln, s.name
         assert (s.sources or "—") in ln, s.name
-    in_house = sum(1 for s in specs if not s.sources)
-    assert sum("—" in ln for ln in lines[1:]) == in_house
+    # "—" is the empty credit of an in-house family, or the tier of one no tier runs (plan 0098)
+    no_tier = set(registry.FAMILIES) - set(tiers.full())
+    marked = sum(1 for s in specs if not s.sources or s.name in no_tier)
+    assert sum("—" in ln for ln in lines[1:]) == marked
+    at = lines[0].index("tier")
+    for s, ln in zip(specs, lines[1:], strict=True):
+        want = "—" if s.name in no_tier else "core" if s.name in tiers.CORE else "full"
+        assert ln[at:].split("  ")[0] == want, s.name
 
 
 def test_list_defaults_render_placeholders(capsys, monkeypatch):

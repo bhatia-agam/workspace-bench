@@ -9,7 +9,8 @@ interface between the two halves.
 ## 1. Get the read plan
 
 ```
-uv run wsbench plan out=outputs/plan               # every family
+uv run wsbench plan --full out=outputs/plan        # every family
+uv run wsbench plan out=outputs/plan-core          # the core tier (the default; `--core`)
 uv run wsbench plan families=poetry,buggy_code     # a subset
 ```
 

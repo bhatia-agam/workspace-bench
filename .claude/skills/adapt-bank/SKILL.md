@@ -253,7 +253,7 @@ PYTHONPATH = gw `src` + the cf_influence scripts dir + this repo's `src`.
 - `adapt status` is clean, and every family has a `note`. That covers
   `exclude_from_macro` and the reason for every short or `ooc` family. Record
   `native_langs by decision` and the hinted_cutoff predictors.
-- The verify step passes (§4: `wsbench plan` under the root, and each judge with `dry_run=True`).
+- The verify step passes (§4: `wsbench plan --full` under the root, and each judge with `dry_run=True`).
 - `floors/floors.json` holds `po-opus-v1` and `stock-subject-v1`.
 - **`adapted/README.md`:** one row per set: path, serving (app, GPU), the family count, per-family
   status highlights, native langs, introspection / hinted_cutoff / agentic outcomes, and the
@@ -591,7 +591,7 @@ Then:
 
      Every drop goes through `adapt drop` with its rule in the reason. A role_bound drop takes
      both twins.
-- `pytest tests/test_adapt.py`, then `WSB_BANK_ROOT=adapted/<m> wsbench plan out=<dir>` and every
+- `pytest tests/test_adapt.py`, then `WSB_BANK_ROOT=adapted/<m> wsbench plan --full out=<dir>` and every
   adapted bank through its family's judge with `dry_run=True`. A non-zero exit = a required field is
   missing.
 - **Floors (two protocols; record which, and keep both records — `adapt floors stage=judge`

@@ -14,7 +14,7 @@ SPEC = register(
     EvalSpec(
         name="nyt_connections",
         title="NYT Connections",
-        group="model_specific",
+        group="logical_processing",
         bank=Path("evals/nyt_connections/items.json"),
         judge=JudgeConfig(prompt_version=PROMPT_VERSION),
         metric="pass_rate",

@@ -14,7 +14,7 @@ SPEC = register(
     EvalSpec(
         name="wrong_intermediate",
         title="Wrong-intermediate multihop",
-        group="basic",
+        group="model_specific",
         bank=Path("evals/wrong_intermediate/items_v4.json"),
         judge=JudgeConfig(prompt_version=PROMPT_VERSION),
         metric="pass_rate",

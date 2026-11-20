@@ -249,11 +249,14 @@ def test_run_and_report(stub, readouts, tmp_path, capsys):
 
 
 def test_run_requires_exactly_one_selection(stub, tmp_path, capsys):
+    # plan 0098: a bare `run` is the core tier, no longer a usage error
     assert (
         main(["run", "opts=aggregate=native", f"readouts_root={tmp_path}", f"out={tmp_path / 'o'}"])
-        == 2
+        == 0
     )
-    assert "exactly one" in capsys.readouterr().err
+    capsys.readouterr()
+    manifest = json.loads((tmp_path / "o" / "run.json").read_text())
+    assert manifest["tier"] == "core" and "stub" not in manifest["families"]
     argv = [
         "run",
         "opts=aggregate=native",
@@ -263,6 +266,7 @@ def test_run_requires_exactly_one_selection(stub, tmp_path, capsys):
         f"out={tmp_path}",
     ]
     assert main(argv) == 2
+    assert "exactly one" in capsys.readouterr().err
 
 
 def test_convert_gen_dir(tmp_path, capsys):

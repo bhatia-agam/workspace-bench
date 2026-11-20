@@ -12,7 +12,7 @@ provisional until `AUDIT.md` lands.**
 ## Run it
 
 ```
-WSB_BANK_ROOT=adapted/olmo-3.1-32b wsbench plan ...      # report.json n_layers=64 -> subject layers
+WSB_BANK_ROOT=adapted/olmo-3.1-32b wsbench plan --full ...    # report.json n_layers=64 -> subject layers
 WSB_BANK_ROOT=adapted/olmo-3.1-32b wsbench run families=<families present in report.json> ...
 ```
 List only families present here. `jlens_concept_pr` has no bank (blocked).

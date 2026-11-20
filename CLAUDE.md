@@ -750,8 +750,41 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   across out dirs, so `layers=[L]` and the union run ask each (item, layer) once
   (`tests/test_digest_store.py`; docs/summarizer.md "Shared per-layer store").
 
+## Tiers and categories (plan 0098)
+- `tiers.py` (imports `registry` and `fast` only; `registry` never imports it): `TIERS = ("fast",
+  "core", "full")`, `DEFAULT = "core"`, `CORE` (17 families; the registered `user_modeling` bank
+  is NOT core: a hard user_modeling bank of new items is to join as the 18th, a later plan),
+  `core()` / `full()` / `families(tier)`, `tier_of(name)` (`core` | `full` | `""`), `check()`
+  (every `CORE` key registered, not superseded / retired / `not_in_macro`; its static part runs
+  at import). `full()` is `registry.drop_superseded(sorted(FAMILIES))`, what `all=True` runs.
+- CLI: `--core` / `--full` are argv rewrites to `tier=core|full` on `run` and `plan` only
+  (`cli._tier_arg`; `tier=fast` is refused, the fast tier is `--fast`; a tier flag with
+  `families=`, with `--fast`, or `--core` with `all=True` is a usage error). **A bare `run` or
+  `plan` is the core tier** (it was a usage error / every family before); `run all=True` and
+  `--full` are the full tier, bare `run --fast` is `--fast all=True`, and **`families=all` still
+  means every family in every command** (`Plan.families` defaults to `None`, not `"all"`; the
+  other commands' `families=all` defaults are untouched). `include_superseded` applies to full
+  only. `run.json` gets `"tier"` only when a tier flag or the bare default picked the families:
+  never under `families=`, nor for an explicit `all=True` without a tier flag (the manifest
+  key-set tests pin that spelling). Child judge processes get no tier.
+- `results.core_macro(results)`: `None` when any row has a `config.scope`; else `macro`'s
+  run-level context over ALL rows (`_macro_context`, the same guards raise) and the same per-row
+  rule (`_row_exclusion`, the elif order of `macro`) over the rows whose family is in
+  `tiers.CORE`; `macro`'s keys plus `tier`, `n_core`, `missing`, `complete`. `results.macro` is
+  unchanged. `markdown_table(core_macro=)` adds the `**core macro**` row after the macro row and
+  a `Core macro: missing: ... excluded: ...` line after the "Not in macro:" list, only when the
+  dict has an averaged family; without the keyword the table is byte-identical. `report` prints
+  a `core macro:` line and (`json=True`) `"core_macro"` under that same condition, plus
+  per-family `category` / `tier`; `run json=True` always carries `"core_macro"`.
+- Categories: `EvalSpec.group` is a key of `registry.CATEGORIES` (key -> README title: basic,
+  computational, association, safety, anti_bag_of_features, logical_processing, model_specific,
+  precision); `basic_mt` and `bag_of_words` are gone. `wsbench list` shows it as `category`,
+  with a `tier` column after it (`—` for a superseded or retired family). `viewer.build.GROUPS`
+  carries the same titles over its unchanged family set. `tests/test_tiers.py` pins the family
+  -> category map and the tier lists.
+
 ## Driver (`runner.py`, `cli.py`)
-- `run all=True|families=a,b readouts_root=DIR out=DIR [family_workers=8] [json=True]` reads
+- `run [--core|--full|all=True|families=a,b] readouts_root=DIR out=DIR [family_workers=8] [json=True]` reads
   `DIR/<family>.jsonl` (missing -> `skipped`). Order: parse `opts=` once (bad pair = one exit
   2), resolve every judge once, preflight each distinct judge model once (not aux; skipped
   under `dry_run=True`; failure = exit 3 before any thread), then judge in a `ThreadPoolExecutor`
@@ -826,8 +859,10 @@ implements it. Not restated here.
   returns a `FamilyResult` and writes nothing. `counts` has a fixed key set (other tallies go
   in `extras`); no `Spend` crosses the family boundary. Cache rows are append-only.
 - README: each family entry is `**<spec.title>** — [link]` followed by exactly three lines
-  `- *What it is:*` / `- *Example:*` / `- *Judged by:*`, grouped Basic (single token) · Basic
-  (multi-token) · Computational · Safety · Association · Bag of words · Precision · Model-specific. Credits live in README §Credits and NOTICE.md, one
+  `- *What it is:*` / `- *Example:*` / `- *Judged by:*`, grouped by category (`registry.CATEGORIES`, in its order: Basic (adapted from the J-lens paper) ·
+  Computational · Association · Safety · Anti-bag-of-features · Logical processing ·
+  Model-specific · Precision (not in any macro)), a core family's entry tagged `core` after its
+  README link. Credits live in README §Credits and NOTICE.md, one
   bullet per external source; in-house families get no credit line.
 - Style, enforced by review rather than a linter: module docstrings are 1–3 lines (rationale
   goes in the README beside the code, not the file header); no `from __future__ import
@@ -845,9 +880,10 @@ exits 2. Smoke `limit=3` live before any full run.
 
 ## Workflow
 - CLI (pydra, `wsbench <command> key=value ...`): `wsbench list` | `wsbench judge family=F
-  readouts=F.jsonl out=DIR` | `wsbench run all=True readouts_root=DIR out=DIR` |
+  readouts=F.jsonl out=DIR` | `wsbench run [--core|--full] readouts_root=DIR out=DIR` (core is
+  the default tier; `all=True` = `--full`) |
   `wsbench report dir=DIR` | `wsbench baseline` / `wsbench freeze` |
-  `wsbench plan [families=a,b] [out=DIR]` (the producer interface: render, positions rule and
+  `wsbench plan [--core|--full|families=a,b] [out=DIR]` (core by default; the producer interface: render, positions rule and
   layers per item, `docs/producing_readouts.md`; `readplan.resolve` turns a rule into indices) |
   `wsbench produce family=F method=M out=F.jsonl` or `text=... method=M positions=-1
   layers=20,36,60` (methods logit_lens | jlens | rlens | olens | nla; needs the `gpu` extra;

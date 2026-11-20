@@ -75,7 +75,7 @@ def test_registered():
     from wsbench.evals.typo_mt import SPEC, TYPO_MT_TASK_NOTE
 
     registry.FAMILIES.setdefault(SPEC.name, SPEC)
-    assert SPEC.group == "basic_mt" and SPEC.scorer == "regex"
+    assert SPEC.group == "basic" and SPEC.scorer == "regex"
     # the regex contract is the instrument; the v2 bank adds its tag once (plan 0033 M1)
     assert SPEC.judge.prompt_version == SCORER_VERSION + "+typo-v2"
     assert "0 (regex)" in SPEC.calls_per_arm and "opts=judge=mc" in SPEC.calls_per_arm

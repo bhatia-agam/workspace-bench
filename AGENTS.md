@@ -188,9 +188,21 @@ You grade a model's ANSWER against the EXPECTED answer to the same question. Mar
 The per-family question text is pinned by `tests/golden/capable_questions.json`: editing it is an
 instrument change and the test will say so.
 
+## Tiers and categories
+
+`wsbench run` and `wsbench plan` take a tier (plan 0098, `wsbench.tiers`): `--fast` (the frozen
+fast subset), `--core` (the default: the 17 families of `tiers.CORE`) or `--full` (every family;
+`run all=True` and `plan families=all` mean the same). A bare `run` / `plan` is therefore the
+core tier, not every family: pass `--full` when you mean all of them, as when planning or
+judging an adapted set end to end. `families=all` still means every family in every command.
+The registered `user_modeling` bank is in full only; a hard user_modeling bank of new items is
+to join core later. `wsbench report` prints a `**core macro**` row (`results.core_macro`) under
+the macro row. Each family's category is `EvalSpec.group`, a key of `registry.CATEGORIES`;
+`wsbench list` shows the category and the tier.
+
 ## Getting the read sites without reading 27 READMEs
 
-`wsbench plan out=outputs/plan` writes one JSONL per family with every item's render, positions
+`wsbench plan --full out=outputs/plan` writes one JSONL per family with every item's render, positions
 rule and layers, and `wsbench.readplan.resolve(rule, tokens)` turns a rule into indices for your
 tokenizer. `docs/producing_readouts.md` walks the whole producer side.
 

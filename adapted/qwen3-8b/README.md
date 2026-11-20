@@ -7,7 +7,7 @@ thinking off). Built 2026-10-18/19 with `.claude/skills/adapt-bank` on the Modal
 ## How to use
 
 ```
-WSB_BANK_ROOT=adapted/qwen3-8b wsbench plan        # emits Qwen3-8B layers (report.json n_layers=36)
+WSB_BANK_ROOT=adapted/qwen3-8b wsbench plan --full # emits Qwen3-8B layers (report.json n_layers=36)
 WSB_BANK_ROOT=adapted/qwen3-8b wsbench run families=<only families listed below with items> ...
 ```
 GRID remaps to layers 11 14 16 18 20 22 25 27 29 32 34. Per-family counts, notes and the audit

@@ -85,6 +85,19 @@ REMOVED_FAMILIES: dict[str, str] = {
     "2026-10-31 (plan 0058)",
 }
 
+# The eval categories (plan 0098): ``EvalSpec.group`` -> title, in README order. ``precision``
+# holds jlens_concept_pr, which is in no macro.
+CATEGORIES: dict[str, str] = {
+    "basic": "Basic (adapted from the J-lens paper)",
+    "computational": "Computational",
+    "association": "Association",
+    "safety": "Safety",
+    "anti_bag_of_features": "Anti-bag-of-features",
+    "logical_processing": "Logical processing",
+    "model_specific": "Model-specific",
+    "precision": "Precision",
+}
+
 # Families retired from the bench FOR NOW -> why (plan 0058; reversible, unlike REMOVED_FAMILIES).
 # The package, bank, tests and floors stay and the family is still registered and runnable by
 # name (`families=<name>`), but it is left out of every `all` default (``drop_superseded``), the
@@ -378,8 +391,7 @@ class JudgeArgs:
 class EvalSpec:
     name: str  # family key, e.g. "moral_rationale"
     title: str  # README name, e.g. "Moral rationale"
-    group: str  # "basic" | "basic_mt" | "safety" | "association" | "bag_of_words" | "precision"
-    #            | "model_specific" | "computational"
+    group: str  # the family's category: a key of CATEGORIES
     bank: Path  # the bank file, relative to REPO_ROOT (items.json; jlens_concept_pr: manifest.json)
     judge: JudgeConfig
     metric: str

@@ -40,7 +40,7 @@ SPEC = register(
     EvalSpec(
         name="moral_rationale",
         title="Moral rationale",
-        group="model_specific",
+        group="logical_processing",
         bank=BANK_V3,
         judge=JudgeConfig(prompt_version=PROMPT_VERSION),
         metric="pass_rate",

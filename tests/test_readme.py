@@ -6,14 +6,14 @@ from wsbench import registry
 from wsbench.registry import REPO_ROOT
 
 GROUPS = [
-    "Basic (single token)",
-    "Basic (multi-token)",
+    "Basic (adapted from the J-lens paper)",
     "Computational",
-    "Safety",
     "Association",
-    "Bag of words",
-    "Precision",
+    "Safety",
+    "Anti-bag-of-features",
+    "Logical processing",
     "Model-specific",
+    "Precision (not in any macro)",
 ]
 LABELS = ("*What it is:*", "*Example:*", "*Judged by:*")
 
@@ -66,11 +66,11 @@ def test_every_family_has_an_entry_with_three_labelled_lines():
 
 def test_group_membership_matches_registry():
     text = _readme()
-    by_group = {"basic": "Basic (single token)", "basic_mt": "Basic (multi-token)"}
-    by_group |= {"computational": "Computational"}
-    by_group |= {"safety": "Safety", "association": "Association"}
-    by_group |= {"bag_of_words": "Bag of words"}
-    by_group |= {"precision": "Precision", "model_specific": "Model-specific"}
+    by_group = {"basic": "Basic (adapted from the J-lens paper)"}
+    by_group |= {"computational": "Computational", "association": "Association"}
+    by_group |= {"safety": "Safety", "anti_bag_of_features": "Anti-bag-of-features"}
+    by_group |= {"logical_processing": "Logical processing", "model_specific": "Model-specific"}
+    by_group |= {"precision": "Precision (not in any macro)"}
     starts = {g: text.index(f"### {g}") for g in GROUPS}
     ends = [*sorted(starts.values()), len(text)]
     for s in _listed_specs():

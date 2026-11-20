@@ -1,5 +1,6 @@
 """``wsbench <command> key=value ...``; every command is a ``pydra.Config`` (fields in
-``__init__``, normalised in ``finalize()``); ``--show`` prints the resolved config."""
+``__init__``, normalised in ``finalize()``); ``--show`` prints the resolved config. ``run`` and
+``plan`` take a tier: ``--fast``, ``--core`` (the default) or ``--full`` (plan 0098)."""
 
 import copy
 import json
@@ -12,7 +13,7 @@ from typing import Any
 
 import pydra
 
-from wsbench import fast, hbindex, llm, readplan, registry, runner
+from wsbench import fast, hbindex, llm, readplan, registry, runner, tiers
 from wsbench.baselines import logit_lens, lucky_guessing, prompt_only, text_inversion
 from wsbench.capable import questions as capable_questions
 from wsbench.capable import run as capable_run
@@ -23,6 +24,7 @@ from wsbench.registry import EvalSpec
 from wsbench.results import (
     ATI_SCOPE,
     FamilyResult,
+    core_macro,
     floor_applies,
     macro,
     markdown_table,
@@ -71,6 +73,26 @@ def _select_fast(cmd: "Command") -> None:
     process)."""
     if cmd.fast_variant:
         fast.select(cmd.fast_variant)
+
+
+def _tier_notice() -> None:
+    """One stderr line when the core tier picked the families (plan 0098): a bare ``run`` /
+    ``plan`` does less than ``--full``, and says so."""
+    n, total = len(tiers.core()), len(tiers.full())
+    print(f"tier: core ({n} families; --full for all {total})", file=sys.stderr)
+
+
+def _tier_arg(cmd: "Command") -> str:
+    """The ``tier`` key of ``run`` / ``plan`` (``--core`` / ``--full``): ``""``, ``core`` or
+    ``full``; the fast tier is ``--fast``, never a value, and never combined with another."""
+    tier = str(cmd.tier or "")
+    if tier == "fast":
+        raise ValueError("tier=fast is not a value; use --fast")
+    if tier not in ("", "core", "full"):
+        raise ValueError(f"tier must be core or full (--core / --full), got {tier!r}")
+    if tier and cmd.fast:
+        raise ValueError(f"--fast / --fast-safety and --{tier} are different tiers; pick one")
+    return tier
 
 
 def _int(v: object) -> int:
@@ -286,6 +308,7 @@ class ListFamilies(Command):
                 else f"{s.group} (retired)"
                 if s.name in registry.RETIRED_FAMILIES
                 else s.group,
+                (tiers.tier_of(s.name) or "—"),
                 _n_items(s),
                 s.metric,
                 s.scorer or s.judge.model,
@@ -295,7 +318,8 @@ class ListFamilies(Command):
             )
             for s in sorted(registry.FAMILIES.values(), key=lambda s: s.name)
         ]
-        head = ("family", "group", "n items", "metric", "judge model", "prompt version")
+        head = ("family", "category", "tier", "n items", "metric", "judge model")
+        head += ("prompt version",)
         head += ("calls/arm (approx)", "credit")
         widths = [max(len(str(r[i])) for r in [head, *rows]) for i in range(len(head))]
         for r in [head, *rows]:
@@ -367,6 +391,10 @@ class RunFamilies(JudgeOptions):
         self.all = False
         self.include_superseded = False  # all=True also runs superseded families
         self.families = None
+        # --core | --full (plan 0098): the tier that picks the families when families= is not
+        # given; finalize resolves it (core unless --full / all=True; fast under --fast)
+        self.tier = ""
+        self._legacy_all = False  # set by finalize: an explicit all=True without a tier flag
         self.readouts_root = pydra.REQUIRED
         self.out = pydra.REQUIRED
         self.family_workers = 8  # families judged at once (one judge process each); 0 = all
@@ -409,15 +437,32 @@ class RunFamilies(JudgeOptions):
         if self.items is not None and not self.items:
             # a child judge would read "items=" as "no restriction" (plan 0092 §5)
             raise ValueError("items= is empty: name at least one item, or drop the key")
-        if self.all == (self.families is not None):
-            raise ValueError("pass exactly one of all=True or families=a,b")
+        tier = _tier_arg(self)
+        self._legacy_all = self.all and not tier  # an explicit all=True and no tier flag
+        if self.families is not None:
+            if self.all:
+                raise ValueError("pass exactly one of all=True or families=a,b")
+            if tier:
+                raise ValueError(f"--{tier} picks the families itself; drop families= or the flag")
+            self.tier = ""  # no tier selected the families
+        elif self.fast:
+            self.all = True  # bare --fast is --fast all=True
+            self.tier = "fast"
+        elif self.all and tier == "core":
+            raise ValueError("all=True is the full tier; drop it or --core")
+        else:
+            self.tier = "full" if self.all or tier == "full" else tiers.DEFAULT
 
     def execute(self) -> int:
         _select_fast(self)
-        if self.all:
-            names = sorted(registry.FAMILIES)
-            if not self.include_superseded:
-                names = registry.drop_superseded(names)
+        if self.families is None:  # a tier picks: core, or every family (full, and --fast)
+            if self.tier == "core":
+                names = tiers.core()
+                _tier_notice()
+            else:
+                names = sorted(registry.FAMILIES)
+                if not self.include_superseded:
+                    names = registry.drop_superseded(names)
             if os.environ.get(registry.BANK_ROOT_ENV):
                 have = set(readplan.families())  # an adapted set has no bank for ooc families
                 if missing := [n for n in names if n not in have]:
@@ -449,11 +494,16 @@ class RunFamilies(JudgeOptions):
             out=self.out,
             readouts_root=self.readouts_root,
         )
+        if self.tier and not self._legacy_all:
+            # only when a tier selected the families: never under families=, nor for an explicit
+            # all=True without a tier flag (the pre-0098 spelling keeps its manifest keys)
+            manifest["tier"] = self.tier
         (self.out / "run.json").write_text(json.dumps(manifest, indent=1), encoding="utf-8")
         if self.json:
             payload = {
                 "families": [r.to_json() for r in results],
                 "macro": macro(results),
+                "core_macro": core_macro(results),
                 "statuses": manifest["families"],
             }
             sys.stdout.flush()
@@ -500,6 +550,8 @@ class RunFamilies(JudgeOptions):
             each["judge_effort"] = self.judge_effort
         if self.hb_method:
             each["hb_method"] = self.hb_method
+        if self.tier and not self._legacy_all:
+            each["tier"] = self.tier
         (self.out / "run.json").write_text(json.dumps(each, indent=1), encoding="utf-8")
         print(f"wrote {self.out / 'run.json'} (layers=each)")
         return code
@@ -562,6 +614,7 @@ class ReportRuns(Command):
             )
             return EXIT_USAGE
         m = macro(results)
+        cm = core_macro(results)  # plan 0098; None for fast / ATI results
         # The frozen floors were measured on the full banks; on the ATI subset they do not apply
         # (Opus prompt-only is 0 there by construction), nor on the fast subset (plan 0090).
         ati = any(r.config.get("scope") == ATI_SCOPE for r in results)
@@ -596,7 +649,9 @@ class ReportRuns(Command):
             except ValueError as e:
                 print(f"unreadable alt_judge results: {e}", file=sys.stderr)
                 return EXIT_USAGE
-        table = markdown_table(results, m, floors=floors, summary_floors=summ_floors, alt_judge=alt)
+        table = markdown_table(
+            results, m, floors=floors, summary_floors=summ_floors, alt_judge=alt, core_macro=cm
+        )
         if fast_rows:
             table = fast_header(results) + "\n\n" + table
         hb_text, hb_json = self._hb_block(results)
@@ -619,18 +674,27 @@ class ReportRuns(Command):
                     if r.config.get("aggregate") == "summary"
                     else floor_applies(r),
                     "on_family_judge": on_family_judge(r),
+                    "category": spec.group if (spec := registry.FAMILIES.get(r.family)) else "",
+                    "tier": tiers.tier_of(r.family) if r.family in registry.FAMILIES else "",
                     **({"alt_judge": _alt_json(r, alt.get(r.family))} if alt is not None else {}),
                 }
                 for r in results
                 if r.family not in registry.REMOVED_FAMILIES  # plan 0033: macro.excluded has it
             ]
             out = {"families": fams, "macro": m, "floors": raw}
+            if cm is not None and cm["families"]:  # the condition of the table row
+                out["core_macro"] = cm
             if hb_json is not None:
                 out["hallucinationbench"] = hb_json
             print(json.dumps(out))
             return 0
         print(table, end="")
         print(f"macro: value={m['value']} families={m['families']} excluded={m['excluded']}")
+        if cm is not None and cm["families"]:
+            print(
+                f"core macro: value={cm['value']} families={len(cm['families'])}/{cm['n_core']} "
+                f"missing={cm['missing']} excluded={cm['excluded']}"
+            )
         print(f"wrote {self.dir / 'summary.md'}")
         return 0
 
@@ -1187,7 +1251,9 @@ class Plan(Command):
 
     def __init__(self) -> None:
         super().__init__()
-        self.families = "all"
+        # None = the tier (--core, the default, or --full); families=all = every family
+        self.families = None
+        self.tier = ""  # --core | --full (plan 0098); never with families=
         self.out = "outputs/plan"
         self.limit = 0
         self.layers = None  # all | <csv>: override the grid of record (plan 0032 §2.1)
@@ -1196,7 +1262,7 @@ class Plan(Command):
         self.fast_variant = ""  # set by finalize from fast= (plan 0095), never a key
 
     def finalize(self) -> None:
-        self.families = _families(_strs(self.families)) or ["all"]
+        self.families = _families(_strs(self.families)) or None
         self.out = _path(self.out)
         self.limit = _int(self.limit)
         self.layers = _layers_arg(self.layers)
@@ -1206,16 +1272,28 @@ class Plan(Command):
         _set_fast(self)
         if self.fast and self.reads == "lite":
             raise ValueError("--fast plans the fast subset's full reads; drop reads=lite")
+        tier = _tier_arg(self)
+        if tier and self.families is not None:
+            raise ValueError(f"--{tier} picks the families itself; drop families= or the flag")
+        if self.families is not None:
+            self.tier = ""
+        else:
+            self.tier = "fast" if self.fast else tier or tiers.DEFAULT
 
     def execute(self) -> int:
         _select_fast(self)
         if self.fast:
             return self._execute_fast()
-        names = (
-            registry.drop_superseded(readplan.families())
-            if self.families == ["all"]
-            else self.families
-        )
+        if self.families == ["all"] or (self.families is None and self.tier == "full"):
+            names = registry.drop_superseded(readplan.families())
+        elif self.families is None:  # the core tier; an adapted set plans the ones it has
+            have = set(readplan.families())
+            _tier_notice()
+            if missing := [f for f in tiers.core() if f not in have]:
+                print(f"adapted set: skipping families with no bank: {', '.join(missing)}")
+            names = [f for f in tiers.core() if f in have]
+        else:
+            names = self.families
         unknown = [f for f in names if f not in readplan.families()]
         if unknown:
             print(f"unknown families {unknown}; known {readplan.families()}", file=sys.stderr)
@@ -1225,7 +1303,7 @@ class Plan(Command):
     def _execute_fast(self) -> int:
         """``plan --fast``: the fast subset's families (``families=all``), or the named ones; a
         family outside the subset, a bank override or a changed bank is exit 2."""
-        names = fast.families() if self.families == ["all"] else self.families
+        names = fast.families() if self.families in (None, ["all"]) else self.families
         unknown = [f for f in names if f not in readplan.families()]
         if unknown:
             print(f"unknown families {unknown}; known {readplan.families()}", file=sys.stderr)
@@ -1655,7 +1733,7 @@ def _unknown(name: str) -> int:
 def _write_summary(
     out: Path, results: list[FamilyResult], notes: list[FamilyOutcome] | None = None
 ) -> str:
-    text = markdown_table(results, macro(results))
+    text = markdown_table(results, macro(results), core_macro=core_macro(results))
     if any(r.config.get("scope") == fast.SCOPE for r in results):  # plan 0090
         text = fast_header(results) + "\n\n" + text
     if notes:
@@ -1667,7 +1745,11 @@ def _write_summary(
 
 
 def _usage() -> str:
-    return "usage: wsbench <" + "|".join(COMMANDS) + "> [key=value ...] [--show | --help]"
+    return (
+        "usage: wsbench <" + "|".join(COMMANDS) + "> [key=value ...] [--show | --help]\n"
+        "tiers of run / plan: --fast (the frozen fast subset) | --core (the default) | --full "
+        "(every family; all=True)"
+    )
 
 
 def _defaults(command: Command) -> str:
@@ -1692,7 +1774,12 @@ def main(argv: list[str] | None = None) -> int:
         return 0
     # plans 0090 / 0095: `--fast` is `fast=True` and `--fast-safety` is `fast=safety` on every
     # command (one without the key fails as unknown)
+    # plan 0098: `--core` / `--full` are `tier=core` / `tier=full` on run and plan
     flags = {"--fast": "fast=True", "--fast-safety": "fast=safety"}
+    flags |= {"--core": "tier=core", "--full": "tier=full"}
+    if "--core" in argv[1:] and "--full" in argv[1:]:
+        print(f"{argv[0]}: --core and --full are different tiers; pick one", file=sys.stderr)
+        return EXIT_USAGE
     argv = [argv[0], *(flags.get(a, a) for a in argv[1:])]
     try:
         show = pydra.apply_overrides(command, argv[1:])

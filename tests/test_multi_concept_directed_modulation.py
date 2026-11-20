@@ -313,7 +313,7 @@ def test_registered_and_dry_run(tmp_path, capsys, monkeypatch):
     from wsbench.evals.multi_concept_directed_modulation import SPEC
 
     registry.FAMILIES.setdefault(SPEC.name, SPEC)
-    assert SPEC.group == "basic_mt" and SPEC.judge.prompt_version == PROMPT_VERSION
+    assert SPEC.group == "basic" and SPEC.judge.prompt_version == PROMPT_VERSION
     monkeypatch.delenv("WSBENCH_JUDGE_MODEL", raising=False)
     out = tmp_path / "out"
     argv = ["judge", "opts=aggregate=native", f"family={SPEC.name}", f"readouts={EXAMPLE}",
