@@ -248,11 +248,21 @@ def test_topic_stays_a_floor_for_every_other_family():
 
 
 def test_mcdm_floors_live_after_the_restamp():
-    """The judge prompt's examples changed (mcdm-2026-11-01e), the lists did not, so the guesser
-    entries were restamped and stay live; both guessers pass the standard."""
+    """Plan 0100 (``+nofalse-a2``): the guesser entries are re-scored from cached draws under the
+    family's exact rule (a draw passes when its picks are exactly the dictated set), so they are
+    live on the new stamp. Recorded state of the MC leakage standard: blind passes, described
+    fails (0.114 against uniform chance 0.042 + 5 points)."""
     e = lg.floors()[MCDM]
     assert {"blind", "described", "uniform"} <= set(e) and "topic" not in e
-    assert all("restamped" in e[v] for v in ("blind", "described", "uniform"))
+    for v in ("blind", "described", "uniform"):
+        assert e[v]["instrument"] == mcdm_prompts.PROMPT_VERSION, v
+        assert e[v]["instrument"].endswith("+nofalse-a2"), v
+        assert e[v]["mean"] == pytest.approx(e[v]["exact"]), v  # the pass rule IS the exact rule
     chance = lg.analytic_floor(lg.build_family(MCDM))
-    assert lg.leakage_failures(e, chance, MCDM) == {}
-    assert all(r["pass"] for r in lg.standard(MCDM, e))
+    assert chance == pytest.approx(0.0417, abs=5e-4)
+    assert e["uniform"]["analytic_floor"] == pytest.approx(chance)
+    assert e["blind"]["mean"] == pytest.approx(0.063, abs=5e-4)
+    assert e["described"]["mean"] == pytest.approx(0.114, abs=5e-4)
+    assert lg.leakage_failures(e, chance, MCDM) == {"described": pytest.approx(0.114, abs=5e-4)}
+    rows = {r["variant"]: r["pass"] for r in lg.standard(MCDM, e)}
+    assert rows == {"blind": True, "described": False}

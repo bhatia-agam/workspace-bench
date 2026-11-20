@@ -8,11 +8,60 @@
   "model": "Qwen/Qwen3.6-27B",
   "producer": "wsb-bp Modal producer (olens_suite/workspace_bench/wsbench_public_modal.py, arm logitlens-L63, commit d6fc56523): wsbench.produce.methods.LogitLens.read batched (final_norm on fp32 h, @ W_U^T, top-10, scores rounded to 4 places); cells captured by the bench Producer backend. Items whose plan row is unchanged since v1.0.0 keep their 2026-11-05 cells; items added or changed by a later bank were produced by the same arm on 2026-11-07 at the plans of main 9c8be3b9 (qmain run)",
   "bench": {
-   "judged": "main 23966deb (2026-11-17), every family's current summary instrument, layers=63",
-   "note": "every readouts plan_sha equals current main's, except arithmetic_intermediates, read through the bank's recorded drop-only plan_lineage (v1 -> v2, plan 0083)"
+   "judged": "branch camila/0100-mcdm-no-false-pick on main 748ca7dd (2026-11-20, plan 0100): multi_concept_directed_modulation re-scored on its summary instrument +nofalse-a2, layers=63, from the cached 2026-11-17 judged run (qmain_v2/judged/logitlens-L63/L63); every digest and judge call replayed from cache, 0 new calls",
+   "note": "partial re-freeze of one family; readouts plan_sha equals current main's"
   },
-  "verified": "every plan item of every family has its cells (0 missing, 0 unjudged cells); the 29 results equal the qmain v2 re-score (bench 7dc89c94 + #482) value for value",
-  "measured": "2026-11-17"
+  "verified": "multi_concept_directed_modulation: every plan item has its cells (0 missing, 0 unjudged cells); value unchanged from the 2026-11-17 entry (0.149, no item fails on a false pick alone)",
+  "measured": "2026-11-20 (re-score of the 2026-11-17 measurement)",
+  "kept_from": [
+   {
+    "families": [
+     "agentic_misalignment",
+     "arithmetic_intermediates",
+     "association",
+     "basic_readout",
+     "basic_readout_mt",
+     "buggy_code",
+     "chain_intermediates",
+     "conjunctive_association",
+     "directed_modulation",
+     "hinted_cutoff",
+     "introspection",
+     "jailbreak_recognition",
+     "knowledge_cutoff",
+     "model_specific_directed_modulation",
+     "moral_rationale",
+     "multihop",
+     "multihop_mt",
+     "multilingual",
+     "multilingual_mt",
+     "multilingual_multihop",
+     "multilingual_typo",
+     "nyt_connections",
+     "poetry",
+     "relational_multihop",
+     "role_bound_association",
+     "typo_mt",
+     "user_modeling",
+     "wrong_intermediate"
+    ],
+    "source": {
+     "protocol": "logit-lens-L63-v1",
+     "method": "logit_lens",
+     "layer": 63,
+     "k": 10,
+     "sampling": "tokens10",
+     "model": "Qwen/Qwen3.6-27B",
+     "producer": "wsb-bp Modal producer (olens_suite/workspace_bench/wsbench_public_modal.py, arm logitlens-L63, commit d6fc56523): wsbench.produce.methods.LogitLens.read batched (final_norm on fp32 h, @ W_U^T, top-10, scores rounded to 4 places); cells captured by the bench Producer backend. Items whose plan row is unchanged since v1.0.0 keep their 2026-11-05 cells; items added or changed by a later bank were produced by the same arm on 2026-11-07 at the plans of main 9c8be3b9 (qmain run)",
+     "bench": {
+      "judged": "main 23966deb (2026-11-17), every family's current summary instrument, layers=63",
+      "note": "every readouts plan_sha equals current main's, except arithmetic_intermediates, read through the bank's recorded drop-only plan_lineage (v1 -> v2, plan 0083)"
+     },
+     "verified": "every plan item of every family has its cells (0 missing, 0 unjudged cells); the 29 results equal the qmain v2 re-score (bench 7dc89c94 + #482) value for value",
+     "measured": "2026-11-17"
+    }
+   }
+  ]
  },
  "agentic_misalignment": {
   "rate": 0.0,
@@ -2147,7 +2196,7 @@
    "n_empty_cells": 0
   },
   "judge_model": "claude-opus-5-5",
-  "instrument": "mcdm-2026-11-01e+bank-v2+notokinterp-2026-10-30+pins-r3+nocap-a1+digest-v5-task-extractive+sj-v10",
+  "instrument": "mcdm-2026-11-01e+bank-v2+notokinterp-2026-10-30+pins-r3+nocap-a1+nofalse-a2+digest-v5-task-extractive+sj-v10",
   "layers_judged": [
    63
   ],
@@ -2287,7 +2336,7 @@
    "b-caes-ent-ba": false
   },
   "digest_unserved": [],
-  "written": "2026-11-17T22:35:52+00:00",
+  "written": "2026-11-20T08:05:59+00:00",
   "protocol": "logit-lens-L63-v1",
   "plan_sha": "41ce9adb0a84f6a8dcd9f4f3393ab3ee18adbd75d89817e49c1d3c6b6eb901cf"
  },

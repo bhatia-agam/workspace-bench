@@ -1,8 +1,8 @@
 """Multi-concept directed modulation: one multi-select judge call per item on its digest
 (summary mode, the default) or per in-sentence write cell (``opts=aggregate=native``); an item
 passes when its readouts name EVERY dictated concept, in any context (plans 0025, 0028, 0034),
-and a relation only with both people in one statement (plan 0034 M3). Regions, capacity and
-false picks are explained in the family README."""
+and, in summary mode, the judge made no false pick (plan 0100). Regions, capacity and false
+picks are explained in the family README."""
 
 import re
 from collections import defaultdict
@@ -45,9 +45,9 @@ MIN_PUBLISHED_N = 10  # a per-kind / prior-direction group below this gets no pu
 
 NAME = "multi_concept_directed_modulation"
 CHANCE_LABEL = (
-    "no analytic chance line for the any-of-grid max (per call, uniform picks give "
-    "C(n-k-p, 3-k)/C(6, 3)); the measured floors are the lucky-guessing baseline and the "
-    "controls' pick rate"
+    "no analytic chance line for the any-of-grid max (summary mode, plan 0100: a uniform pick of "
+    "1..3 candidates is exactly the k dictated ones with probability 1/(3*C(6, k))); the "
+    "measured floors are the lucky-guessing baseline and the controls' pick rate"
 )
 
 
@@ -566,6 +566,7 @@ def _run_native(
             },
             **_call_extras(rows, verdicts, controls),
             **_rule_extras(rows, verdicts, partner_concepts, native=True),
+            **_no_false_pick_extras(rows),
             **layer_pick_columns(_layer_picks(rows, verdicts)),
         },
     )
@@ -695,6 +696,18 @@ def _rule_extras(
     return out
 
 
+def _no_false_pick_extras(rows: list[dict[str, Any]]) -> dict[str, Any]:
+    """Plan 0100, both modes: ``no_false_pick_rate`` = the pass rate under the no-false-pick
+    rule (its own tri-state denominator, like ``content_only_pass_rate``; in summary mode it is
+    the headline) and ``n_false_pick_fails`` = the items a false pick alone keeps from passing."""
+    return {
+        "no_false_pick_rate": rate(
+            bool(r["pass_no_false_pick"]) for r in rows if r.get("pass_no_false_pick") is not None
+        ),
+        "n_false_pick_fails": sum(1 for r in rows if r.get("false_pick_fail")),
+    }
+
+
 def _run_summary(
     args: JudgeArgs,
     *,
@@ -785,6 +798,7 @@ def _run_summary(
             unsummarized,
             empty,
             layers,
+            no_false_pick=True,  # plan 0100: the summary rule; native keeps its pass rule
         )
         row["capacity"] = None  # per-activation capacity is meaningless on one digest
         row["all_in_one_cell"] = None  # one digest call: the single-cell rate is native only
@@ -815,6 +829,7 @@ def _run_summary(
             "n_off_task": sum(1 for r in rows if r["reason"] == "off_task"),
             **_call_extras(rows, verdicts, controls),
             **_rule_extras(rows, verdicts, partner_concepts, native=False),
+            **_no_false_pick_extras(rows),
             "summary": col.extras(),
             "digest_served_by": col.extras()["digest_served_by"],
         },
@@ -835,13 +850,18 @@ def _item_row(
     unsummarized: set[tuple[str, int, int]],
     empty: set[tuple[str, int, int]],
     layers: list[int],
+    *,
+    no_false_pick: bool = False,
 ) -> dict[str, Any]:
     """``pass`` = the item's in-sentence readouts (every judged (layer, position) cell natively,
     its one digest call in summary mode) credit EVERY dictated concept between them, in any
-    context (plans 0025, 0034 M4), and never name the binding partner; None with a ``reason``
-    for controls (nothing dictated), off-task items (no
-    in-sentence cell), items without any readout row, and items not passed whose cells are
-    unjudged or missing."""
+    context (plans 0025, 0034 M4), and never name the binding partner; with ``no_false_pick``
+    (summary mode only, plan 0100) also no verified pick of a non-dictated candidate, whatever
+    its basis (a decided fail, like the partner). None with a ``reason`` for controls (nothing
+    dictated), off-task items (no in-sentence cell), items without any readout row, and items
+    not passed whose cells are unjudged or missing. ``pass_no_false_pick`` is the plan-0100
+    verdict in both modes (``extras.no_false_pick_rate``); ``false_pick_fail`` marks an item
+    only a false pick keeps from passing."""
     item_id = item["id"]
     concepts = [str(c) for c in item.get("concepts") or []]
     partner = item_partner(item)
@@ -876,13 +896,24 @@ def _item_row(
         or any(i == item_id for i, _l, _p in unsummarized)
         or any(i == item_id for i, _l, _p in missing)
     )
-    passed = (
+    false_any = {c for v in mine for c in v["false"]}  # verified non-dictated picks, any basis
+    # today's rule (native's headline), then plan 0100's: also no false pick, a decided fail
+    base = (
         None
         if reason is not None
         else False  # the partner named as content: no unjudged cell can rescue the item
         if partner_content
         else tri_state(covered, incomplete)
     )
+    strict = (
+        None
+        if reason is not None
+        else False  # a false pick, like the partner, is decided: nothing unjudged rescues it
+        if partner_content or false_any
+        else tri_state(covered, incomplete)
+    )
+    passed = strict if no_false_pick else base
+    false_pick_fail = bool(covered and false_any and reason is None)
     if reason is None and passed is None:
         reason = "unjudged"
     # capacity over judged in-sentence activations (empty cells decode nothing)
@@ -938,6 +969,15 @@ def _item_row(
         "concept_recall": (len(credited & set(concepts)) / len(concepts)) if concepts else None,
         "any_concept": bool(credited) if concepts else None,
         # the plan-0025 item rule exactly (tri-state; a content-bound partner fails, decided)
+        # plan 0100 (both modes; the headline in summary mode), own tri-state denominator
+        "pass_no_false_pick": (
+            None
+            if reason not in (None, "unjudged")
+            else False
+            if partner_content or false_any
+            else tri_state(covered, incomplete)
+        ),
+        "false_pick_fail": false_pick_fail,
         "pass_content_only": (
             None
             if reason not in (None, "unjudged")

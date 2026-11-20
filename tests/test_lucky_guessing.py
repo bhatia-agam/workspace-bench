@@ -130,10 +130,10 @@ def test_analytic_floors():
     multi = lg.Item("c", [["x", "y", "z", "w", "v", "u"]], [1, 2], multi=True)
     assert lg.analytic_floor([one]) == pytest.approx(0.2)
     assert lg.analytic_floor([two]) == pytest.approx(1 / 6)
-    # plan 0025: three distinct uniform picks include both golds: C(4, 1) / C(6, 3)
-    assert lg.analytic_floor([multi]) == pytest.approx(4 / 20)
+    # plan 0100: 1..3 distinct uniform picks are exactly both golds: 1 / (3 * C(6, 2))
+    assert lg.analytic_floor([multi]) == pytest.approx(1 / 45)
     mate = lg.Item("e", [["x", "y", "z", "w", "v", "u"]], [1], multi=True, meta={"partner": [2]})
-    assert lg.analytic_floor([mate]) == pytest.approx(6 / 20)  # C(4, 2) / C(6, 3)
+    assert lg.analytic_floor([mate]) == pytest.approx(1 / 18)  # 1 / (3 * C(6, 1))
     dup = lg.Item("d", [["x", "y", "x", "z", "w"]], [1])  # a repeated gold label counts twice
     assert lg.analytic_floor([dup]) == pytest.approx(0.4)
     assert lg.analytic_floor([one, two]) == pytest.approx((0.2 + 1 / 6) / 2)
@@ -155,25 +155,27 @@ def test_score_draw_and_majority():
     assert lg.majority_correct([bad, bad, ok], it) is True  # invalid picks carry no vote
     assert lg.majority_correct([None, None], it) is None
     m = lg.Item("m", [["a", "b", "c", "d", "e", "f"]], [2, 5], multi=True)
-    # plan 0025: a multi draw passes only when its picks include EVERY gold
+    # plan 0100: a multi draw passes only when its picks are EXACTLY the golds
     hit = lg.score_draw({"picks": [5, 1]}, m)  # one gold of two: any_hit, not a pass
     assert not hit["correct"] and hit["any_hit"] and not hit["exact"] and hit["n_picks"] == 2
-    both = lg.score_draw({"picks": [1, 5, 2]}, m)  # both golds, order irrelevant
-    assert both["correct"] and both["all_hit"] and not both["exact"] and both["n_golds"] == 2
+    both = lg.score_draw({"picks": [1, 5, 2]}, m)  # both golds and a false pick: plan 0025's
+    assert not both["correct"] and both["covered"] and both["all_hit"]  # rule only (`covered`)
+    assert not both["exact"] and both["n_golds"] == 2
     exact = lg.score_draw({"picks": [2, 5, 5]}, m)
-    assert exact["correct"] and exact["exact"] and exact["n_picks"] == 2
+    assert exact["correct"] and exact["exact"] and exact["covered"] and exact["n_picks"] == 2
     flood = lg.score_draw({"picks": [1, 3, 4, 2, 5, 6]}, m)  # capped at three picks
     assert not flood["correct"] and not flood["any_hit"] and flood["n_picks"] == 3
     miss = lg.score_draw({"picks": [1, 9]}, m)
     assert not miss["correct"] and miss["n_invalid"] == 1
     assert lg.score_draw({"picks": "2"}, m)["n_picks"] == 0
     assert lg.majority_correct([hit, miss, exact], m) is False
-    assert lg.majority_correct([both, miss, exact], m) is True
+    assert lg.majority_correct([both, miss, exact], m) is False  # a false pick is no pass
+    assert lg.majority_correct([exact, miss, exact], m) is True
     b = lg.Item("b", [["a", "b", "c", "d", "e", "f"]], [1], multi=True, meta={"partner": [2]})
     assert lg.score_draw({"picks": [1]}, b)["correct"]
     assert not lg.score_draw({"picks": [1, 2]}, b)["correct"]  # both directions: no pass
-    u = lg.uniform_reply(m, "f", 0, 1)["picks"]  # three distinct uniform picks
-    assert len(u) == 3 and len(set(u)) == 3
+    us = [lg.uniform_reply(m, "f", d, 1)["picks"] for d in range(60)]  # 1..3 distinct picks
+    assert {len(u) for u in us} == {1, 2, 3} and all(len(set(u)) == len(u) for u in us)
 
 
 def test_described_prompt_never_shows_the_item_itself():

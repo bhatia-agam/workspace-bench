@@ -18,7 +18,11 @@ JUDGE_PROMPT_VERSION = "mcdm-2026-11-01e"
 # +pins-r3 (round 3, deterministic, stamp only): option-symmetric raw pins of every concept
 # candidate (judge.pin_concepts) and the one-sample elided-quote rescue (judge.elided_quote_ok)
 # +nocap-a1 (stamp only): no code-side cap on the number of verified picks (no over-select void)
-PROMPT_VERSION = JUDGE_PROMPT_VERSION + "+bank-v2+notokinterp-2026-10-30+pins-r3+nocap-a1"
+# +nofalse-a2 (plan 0100, stamp only): summary mode passes an item only when the judge made no
+# false pick (no verified pick of a non-dictated candidate); no prompt text or call key moves
+PROMPT_VERSION = (
+    JUDGE_PROMPT_VERSION + "+bank-v2+notokinterp-2026-10-30+pins-r3+nocap-a1+nofalse-a2"
+)
 SEED = 20260916
 N_OPTIONS = 6
 LETTERS = "ABCDEFG"  # six candidates, then G = mc.CANNOT (always last)

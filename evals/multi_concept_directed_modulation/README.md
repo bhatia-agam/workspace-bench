@@ -71,10 +71,26 @@ produced file.
 
 ## Scoring
 
-- **Headline: pass rate, every concept named (plans 0025, 0028, 0033).** An item passes when its
-  in-sentence readouts, between them, name EVERY dictated concept and never the binding partner
-  (the reversed relation, or the other fox item's concepts): inside its one digest call in
-  summary mode, over all its judged (layer, position) cells natively. **Any context counts**
+- **Headline: pass rate, every concept named and no false pick (plans 0025, 0028, 0033,
+  0100).** In summary mode (the default) an item passes when its one digest call credits EVERY
+  dictated concept AND the judge credited no candidate that is not dictated (plan 0100, Camila
+  2026-11-20: "we should require no false pick"). A false pick is a verified pick of a
+  non-dictated candidate, whatever its basis (`rows[].false_picks`; a pick whose quote does not
+  verify is dropped before that and never counts). It is a decided fail, like the binding
+  partner (the reversed relation, or the other fox item's concepts), which is retained and now
+  implied: no unjudged cell rescues the item. Relation candidates are whole relation strings,
+  so a person of a correct relation is never a false pick; controls stay out of the
+  denominator. `rows[].false_pick_fail` marks an item that only a false pick keeps from
+  passing (`extras.n_false_pick_fails`). Natively (`opts=aggregate=native`, a diagnostic: one
+  call per in-sentence cell) the pass rule is unchanged: the judged (layer, position) cells
+  between them name every dictated concept and never the binding partner; the union of false
+  picks over up to 132 cells would fail nearly every item for a reason unrelated to the summary
+  rule, so native rows only record them, and `extras.no_false_pick_rate` (both modes; its own
+  tri-state denominator) gives the pass rate the no-false-pick rule would give. The prompt and
+  the concept pins are built for recall ("a single mention anywhere is enough"), so under this
+  rule one stray sample fails an item, and the false-pick risk grows with the number of
+  readouts read. Numbers measured before 2026-11-20 are on the earlier rule (History).
+  **Any context counts**
   (plan 0034 M4, Camila: "count 'instruction' mentions of the concept as hits", and "if the
   concept is mentioned in any context it should count"): a pick credits whatever its basis
   (`content_bound`, `instruction_narration`, `incidental`); the basis is recorded as a
@@ -125,8 +141,9 @@ produced file.
   d-pineapple's 'Pineapples. They are tropical, vibrant' (from 'pineapples—they are a nice
   fruit. They are tropical, vibrant') verifies; a quote assembled from two samples never does.
   The number of picks never voids a call: every verified pick counts as the judge made it (the
-  dictated concepts credit, the others are false picks). The prompt sets no pick limit either,
-  since one would reveal how many concepts were dictated.
+  dictated concepts credit, the others are false picks, and in summary mode one false pick
+  fails the item, plan 0100). The prompt sets no pick limit either, since one would reveal how
+  many concepts were dictated.
 - **Regions.** Every cell is labelled from the window's tokens (in-sentence, in-think,
   post-think, self-added meta); only in-sentence cells are judged, and a window without a run
   of three consecutive target words is off-task and excluded. Under the prefill regime every
@@ -137,16 +154,27 @@ produced file.
   `binding_prior` (prior_direction / counter_prior / no_prior) as `{n, rate}`, with no rate
   published below n = 10 (the items are still listed one by one in `rows`); `cannot_tell_rate`,
   `false_pick_rate`, `control_pick_rate`, `partner_confusion_rate`, `any_concept_rate`,
-  `concept_recall`, `per_n_concepts`, `picks_by_basis`; native only: `capacity`,
+  `concept_recall`, `per_n_concepts`, `picks_by_basis`, `no_false_pick_rate`,
+  `n_false_pick_fails`; native only: `capacity`,
   `all_in_one_cell_rate` and `mcjudge.layer_pick_columns` (`n_items_gold_any_layer`,
   `n_items_distractor_any_layer`, `n_items_distractor_majority`).
 - **Floors.** No analytic chance line for the any-of-grid headline. The measured floors are the
   lucky-guessing baseline (an LLM shown only the candidate lists, `evals/baselines/`; the
-  cannot-tell line is not offered to the guesser) and the controls' pick rate. Frozen floors
-  (`evals/baselines/lucky_guessing.json`, claude-opus-5-5, 5 draws, 114 scored items, re-measured
-  2026-11-01 on the bank v2 lists, restamped to `mcdm-2026-11-01e` since the lists did not
-  change): options-only (`blind`) 0.161, `described` 0.300, seeded-uniform 0.270 (analytic
-  0.272); both guessers are within chance + 5 (line 0.322), so the MC leakage standard passes.
+  cannot-tell line is not offered to the guesser) and the controls' pick rate. Since plan 0100
+  (2026-11-20) a guesser's draw passes under the judge's own rule, exactly: its picks are the
+  dictated set, no more and no fewer (`score_draw`'s `correct`; the earlier rule, every
+  dictated concept among at most three picks and no partner, is kept as `covered`). Frozen
+  floors (`evals/baselines/lucky_guessing.json`, claude-opus-5-5, 5 draws, 114 scored items,
+  re-scored 2026-11-20 from the cached 2026-10-30 draws on the bank v2 lists, which replay
+  whole on today's lists; 0 new calls): options-only (`blind`) 0.063, `described` 0.114,
+  seeded-uniform 0.044 (analytic 0.042: a uniform number 1..3 of uniform picks is exactly the
+  k dictated candidates with probability 1 / (3 * C(6, k))). Blind is within chance + 5 (line
+  0.092); **described is above it, so the family fails the MC leakage standard on the described
+  guesser** (by number of dictated concepts, described: one 0.160, two 0.042, three 0.040: a
+  guesser told how the lists are built often picks the single odd candidate of a one-concept
+  list). Under the earlier rule the floors of record (other draws, 2026-11-01) read blind
+  0.161, described 0.300, seeded-uniform 0.270 against an analytic 0.272, and passed; the
+  same draws' `exact` rates were 0.056 and 0.144.
   There is no `topic` guesser, and none would be a valid floor: as in directed_modulation, the
   topic of an item is its instruction ("Think about ___"), which names the answer
   (`lucky_guessing.NOT_A_FLOOR`). The first bank v2 measurement (2026-10-30, judge prompts
@@ -186,7 +214,7 @@ s3d RL600 read (12 cells x 4 layers each) with the samples truncated.
 
 ## Judge prompts
 
-`prompt_version`: `mcdm-2026-11-01e+bank-v2+notokinterp-2026-10-30+pins-r3+nocap-a1` (the instrument; `+pins-r3` is deterministic and stamp-only: the pins and the elided-quote rescue; `+nocap-a1` is stamp-only too: no code-side cap on the number of picks; judge calls keyed by
+`prompt_version`: `mcdm-2026-11-01e+bank-v2+notokinterp-2026-10-30+pins-r3+nocap-a1+nofalse-a2` (the instrument; `+pins-r3` is deterministic and stamp-only: the pins and the elided-quote rescue; `+nocap-a1` is stamp-only too: no code-side cap on the number of picks; `+nofalse-a2` (plan 0100) is stamp-only too: the summary-mode no-false-pick rule, no prompt text changed; judge calls keyed by
 `JUDGE_PROMPT_VERSION` = `mcdm-2026-11-01e`, which replaced the prompt's worked examples (round 5, below; rules unchanged); `-31d` before, which dropped the prompt's "Select at most three" (F10); `-31c` before that; before plan 0034:
 `mcdm-2026-10-29+present-2026-10-29`). Summary-mode results are stamped
 `digest.prompt_version(PROMPT_VERSION, args, family)`. Judge: the repo default
@@ -317,6 +345,16 @@ the model was told to think about one or more objects or people, or about one pe
 
 ## History
 
+- 2026-11-20 (`...+nocap-a1+nofalse-a2`, plan 0100): in summary mode an item passes only when
+  every dictated concept is credited AND the judge made no false pick; native mode's verdict is
+  unchanged. Stamp only: no prompt text and no call key moved, so cached calls re-score.
+  **Numbers before 2026-11-20 are on the earlier rule** (every concept named, never the
+  partner). Old -> new on the cached fast-v2 runs (102 items, 11 layers, layered digest; every
+  call replayed from cache): s3d-rl600 0.422 -> 0.314, rl-affw-x4 0.441 -> 0.324,
+  mlnla11-rl600 0.333 -> 0.304, jlens-public 0.088 -> 0.088. The frozen floors were re-scored
+  from their cached runs: logit-lens L63 0.149 -> 0.149 and prompt-only (summary) 0.965 ->
+  0.965 (neither run has a false-pick-only fail); the lucky-guessing floors are re-scored
+  under the exact rule (Floors, above).
 - 2026-11-04 (`mcdm-2026-11-01e+bank-v2+notokinterp-2026-10-30+pins-r3+nocap-a1`): the
   code-side over-select void is removed (a call with more than `max(3, n_concepts + 2)` verified
   picks credited nothing); every verified pick now stands as the judge made it. Stamp only:

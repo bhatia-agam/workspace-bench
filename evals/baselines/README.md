@@ -116,7 +116,7 @@ dates.
 | knowledge_cutoff | 0.000 | 0.000 | 147 | cutoff-judge-2026-10-31+kcgate-v3 | Opus 5.5 |
 | model_specific_directed_modulation † | 0.582 | 0.592 [0.50, 0.68] | 98 | dmcd-regex-2026-10-23+joined-2026-10-30 | Opus 5.5 |
 | moral_rationale | 0.441 | 0.533 [0.47, 0.61] | 195 | ec-v9+nq1+maj3v (majority of 3 draws, near-verbatim quotes) | Opus 5.5 |
-| multi_concept_directed_modulation † | 0.965 | 0.965 (saturated) | 114 | mcdm-2026-11-01e+bank-v2+notokinterp-2026-10-30+pins-r3+nocap-a1 | Opus 5.5 |
+| multi_concept_directed_modulation † | 0.965 | 0.965 (saturated; re-scored 2026-11-20 under plan 0100's no-false-pick rule from the cached run, unchanged) | 114 | mcdm-2026-11-01e+bank-v2+notokinterp-2026-10-30+pins-r3+nocap-a1+nofalse-a2 | Opus 5.5 |
 | multihop (bank v5) | 0.941 (68 kept items) | 0.918 [0.86, 0.97] | 98 | bank-mc-2026-11-01-v3+bank-gate-r10+bank-v5 | Opus 5.5 |
 | multihop_mt | 1.000 | 1.000 | 64 | mh2-mc-2026-11-01+norival-v1+qline-v2+bank-v6 | Opus 5.5 |
 | multilingual (bank v5) | 0.879 | 0.939 [0.89, 0.98] | 99 | mcrx-2026-11-03e+mc-ml-2026-11-01b+bank-v5 | Opus 5.5 |
@@ -412,7 +412,7 @@ averaged over draws with its std, `majority` the per-item plurality vote. Famili
 | basic_readout_mt | 1 | 5 | the readout list (the headline unit) |
 | multilingual, multilingual_mt, multilingual_multihop, multilingual_typo | 1 | 5 | the content list (concept / bridge / correction); no language list: the language unit is scored on the raw samples (the language leg), never by an option list |
 | basic_readout | 1 | 5 | the blind MC judge's frozen options (plan 0053); bank v5 (round 4, below): implicit items still guessed far above chance (described 0.63, topic 0.60 vs entity / processing 0.21 / 0.14, 0.14 / 0.20); the opt-in round-5 bank v6 (4 equally common confusers per implicit list, Qwen >= 8/10 gate) does not fix it: implicit blind 0.581, described / topic 0.648 vs chance 0.113 (association's opt-in v4 likewise fails, blind 0.443 vs 0.086); both family READMEs |
-| multi_concept_directed_modulation | 1 (multi-select, one to three picks) | 6 (the judge's 7th line, cannot tell, is not offered to a guesser) | pass = the picks include EVERY dictated concept and no binding-partner option (plan 0025; before it, the first pick); bank v2 (plan 0034): 114 scored items, relation items' candidates are six relations; `any_hit` = some pick is gold, `exact` = the picks equal the dictated set, `mean_picks` and `by_n_concepts` beside them; the seeded-uniform variant draws three distinct picks, analytic floor C(n-k-p, 3-k)/C(n, 3) (p partner options); controls dropped |
+| multi_concept_directed_modulation | 1 (multi-select, one to three picks) | 6 (the judge's 7th line, cannot tell, is not offered to a guesser) | pass = the picks are EXACTLY the dictated set (plan 0100, the judge's no-false-pick rule; `correct` == `exact`; plan 0025's rule before it, every dictated concept among the picks and no binding-partner option, is kept per draw as `covered`); bank v2 (plan 0034): 114 scored items, relation items' candidates are six relations; `any_hit` = some pick is gold, `mean_picks` and `by_n_concepts` beside them; the seeded-uniform variant draws a uniform number 1..3 of distinct picks, analytic floor 1 / (3 * C(n, k)); controls dropped |
 
 ### MC leakage standard (round 4, Camila r2, 2026-11-01)
 
@@ -607,15 +607,26 @@ least two same-topic confusers. Measured with Opus 5.5, 5 draws, each family's o
 | family | chance (analytic) | blind | described | uniform | bar (chance + 0.05) | verdict |
 |---|---|---|---|---|---|---|
 | knowledge_cutoff (5 options; the KC_NONE line is not offered) | 0.200 | 0.244 ±0.014 | 0.195 | 0.193 | 0.250 | pass (blind is close) |
-| multi_concept_directed_modulation (multi-select) | 0.272 | 0.161 | 0.300 | 0.270 | 0.322 | pass |
+| multi_concept_directed_modulation (multi-select; plan 0100's exact rule, re-scored 2026-11-20 from the cached 2026-10-30 draws) | 0.042 | 0.063 ±0.007 | 0.114 ±0.016 | 0.044 | 0.092 | **fails on described** (blind passes) |
 | chain_intermediates (every slot) | 0.092 | 0.103 | 0.133 | 0.102 | 0.142 | pass |
 | introspection (diagnostic judge's 6 options) | 0.167 | 0.048 | 0.170 | 0.166 | 0.217 | pass |
 | arithmetic_intermediates | — | — | — | — | — | not MC (free recall of values) |
 | relational_multihop rel-v2 (13 options; retired) | 0.077 | 0.138 ±0.011 | 0.122 | 0.076 | 0.127 | **fails by 0.011** (blind; see below) |
 | relational_multihop rel-v3 (18 options; the cannot-tell line is not offered) | 0.056 | 0.062 ±0.013 | 0.064 | 0.066 | 0.106 | pass (distractors regenerated, see below) |
 
-No distractors were regenerated for the first four: their lists pass. relational_multihop's were
-(rel-v2 → rel-v3).
+No distractors were regenerated for the first four: their lists passed when measured.
+relational_multihop's were (rel-v2 → rel-v3). multi_concept_directed_modulation passed under its
+earlier rule (every dictated concept among at most three picks, no partner: chance 0.272, blind
+0.161, described 0.300, uniform 0.270, bar 0.322). Plan 0100 (2026-11-20) made the judge's
+summary rule "every dictated concept and no false pick", so a guesser's draw now passes only
+when its picks are exactly the dictated set; uniform chance falls to 0.042 and the described
+guesser (0.114; 0.160 on one-concept items) is above chance + 5, so the family now **fails the
+standard on described**. The entries were recomputed with `wsbench baseline
+families=multi_concept_directed_modulation variant=blind,described,uniform draws=5` on a copy of
+the cached 2026-10-30 run (all 1,140 draws replayed from cache, 0 new calls; the lists are
+byte-identical) and `wsbench freeze kind=lucky_guessing`. The draws behind the earlier entries
+(a 2026-11-01 re-measure) were not found; their recorded `exact` rates were blind 0.056 and
+described 0.144, the same verdicts.
 
 **relational_multihop (round 5 review of #209, re-measured at `rel-v2+relgate-v4`).** Its
 frozen entries were stamped `rel-v2`, so `lucky_guessing.floors()` dropped them and the family
@@ -1302,7 +1313,7 @@ and jlens_concept_pr and the superseded `typo`, as for prompt-only. multihop_mt 
 | knowledge_cutoff | 0.054 | 147 | 0.103 (39) | `cutoff-judge-2026-10-31+kcgate-v3` |
 | model_specific_directed_modulation | 0.010 | 98 | 0.040 (25) | `dmcd-regex-2026-10-23+joined-2026-10-30` |
 | moral_rationale | 0.138 | 195 | 0.018 (56) | `ec-v9+nq1+maj3v` |
-| multi_concept_directed_modulation | 0.149 | 116 | — | `mcdm-2026-11-01e+bank-v2+notokinterp-2026-10-30+pins-r3+nocap-a1` |
+| multi_concept_directed_modulation | 0.149 | 116 | — | `mcdm-2026-11-01e+bank-v2+notokinterp-2026-10-30+pins-r3+nocap-a1+nofalse-a2` (re-scored 2026-11-20 from the cached 2026-11-17 run, plan 0100: unchanged, `freeze partial=True`) |
 | multihop | 0.571 | 98 | — | `bank-mc-2026-11-01-v3+bank-gate-r11+bank-v5` |
 | multihop_mt | 0.047 | 64 | — | `mh2-mc-2026-11-01+norival-v1+qline-v2+bank-v6` |
 | multilingual | 0.000 | 99 | — | `mcrx-2026-11-03e+mc-ml-2026-11-01b+bank-v5` |
