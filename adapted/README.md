@@ -193,11 +193,11 @@ The `agu18dec/mOre-lenses` checkpoints (inverter, the 4B / 9B `L20` inverter, di
 the neuronpedia J-lens of qwen3-8b, qwen3.5-0.8b / 2b / 4b / 9b, judged on each subject's set and
 on its anti-text-inversion subset `adapted/<m>/anti_text_inversion.json` (the subject, Opus 5.5,
 astra and argon all fail every one of 3 guess-form draws; gate `adapted-panel-v1`). Results doc:
-`docs/plan0079_results.md`; per subject `adapted/<m>/lenses/{table.md,scores.json}`. **qwen3.5-9b's
+`docs/archive/plan0079_results.md`; per subject `adapted/<m>/lenses/{table.md,scores.json}`. **qwen3.5-9b's
 J-lens is the base-model lens** (fitted on Qwen3.5-9B-Base); OLMo-3-7B has no matching instruct
 J-lens (neuronpedia's is fitted on the base `Olmo-3-1025-7B`). The 2B / 0.8B read set is 8 layers
 (8..22 even): the lenses were trained on even layers only, so the plans' odd layers (9 / 15 / 21)
-and the last block (23) are not read. Plot: `docs/plan0079/macro.png`. Readouts and judge
+and the last block (23) are not read. Plot: `docs/archive/plan0079/macro.png`. Readouts and judge
 caches: `/workspace/wsb-out/0079/` (not in git). Sets: main `3c552e22`.
 
 ## Interactive viewer (scores + readouts, every model and question)

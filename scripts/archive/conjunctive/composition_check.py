@@ -6,7 +6,7 @@ credit groups needs one word of every group)? A miss is a candidate partial-comp
 not proof of one (the credit lists are short: "unaware her job offer was revoked" names the
 mistaken belief but holds none of "mistaken / mistakenly / misled").
 
-Usage: ``python scripts/conjunctive/composition_check.py <results.json> [--bank items.json]
+Usage: ``python scripts/archive/conjunctive/composition_check.py <results.json> [--bank items.json]
 [--all-gold]`` (``--all-gold``: every row whose pick was gold before the comp-v2 checks, i.e.
 ``pick in {gold, gold_partial, gold_unverified}``).
 """
@@ -19,7 +19,7 @@ import re
 import sys
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[2]
+ROOT = Path(__file__).resolve().parents[3]
 BANK = ROOT / "evals/association/conjunctive_association/items.json"
 RAW_GOLD = ("gold", "gold_partial", "gold_unverified")
 
