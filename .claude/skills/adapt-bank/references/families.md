@@ -20,7 +20,7 @@ change edits this table in the same PR.
 | basic_readout | `evals/basic/basic_readout/items_v7.json` |
 | buggy_code | `evals/computational/buggy_code/items_v2.json` |
 | chain_intermediates | `evals/computational/chain_intermediates/items_v2.json` |
-| conjunctive_association | `evals/association/conjunctive_association/items_v4.json` |
+| conjunctive_association | `evals/association/conjunctive_association/items_v6.json` |
 | directed_modulation | `evals/basic/directed_modulation/items.json` |
 | hinted_cutoff | `evals/model_specific/hinted_cutoff/items_v2.json` |
 | introspection | `evals/model_specific/introspection/items_v2.json` |
@@ -482,10 +482,14 @@ migrated with `scripts/migrate_0101.py set`.
   - T0: L3/L4 blends.
   - T1: L3 only with concrete cues.
 - Authored, with the Opus passage gate (no `author.py` brief exists: refill from the bank only).
-- **Bank now:** `items_v4` (`twin_of`, `inverted_label`, per-item `bank_version`); all layers, lite
-  = full positions, any-gold-draw. The judge refuses a mixed `bank_version`; a v1 adapted bank runs
-  without `twin_of` / `inverted_label`, so no inverted-twin diagnostic (the empty `bank_stamp` is
-  normal: v4 returns "" too). v5 is opt-in.
+- **Bank now:** the registered bank is `items_v6` (bank v4 + shared-axis distractors, judged
+  under comp-v6: every part of an option required, 2026-11-20), but an adaptation still ports
+  `items_v4` (`adapt.store.ADAPT_SOURCE_BANKS`: `twin_of`, `inverted_label`, per-item
+  `bank_version: 4`; the Phase B authoring writes no shared-axis distractors yet). All layers,
+  lite = full positions, any-gold-draw. The judge refuses a mixed `bank_version`; a v1 adapted
+  bank runs without `twin_of` / `inverted_label`, so no inverted-twin diagnostic (the empty
+  `bank_stamp` is normal: v4 returns "" too). v5 is opt-in. Adapted sets are judged by comp-v6
+  on their own lists; their floors and ATI files stamped comp-v5 are stale until re-measured.
 
 ### role_bound_association — who did what to whom
 - **Gate:** asked-open greedy (Opus-judged gold vs contrast), and the continuation must not state

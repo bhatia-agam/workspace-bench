@@ -698,14 +698,21 @@ def has_path(item: Any, path: str) -> bool:
 
 
 def bank_rel(family: str) -> str:
-    """The registered bank of record, repo-relative (``evals/basic/association/items_v3.json``)."""
+    """The bank an adaptation of ``family`` ports, repo-relative
+    (``evals/basic/association/items_v3.json``): the registered bank of record, or the sibling
+    file ``store.ADAPT_SOURCE_BANKS`` names (``store.original_bank`` reads the same file)."""
+    from wsbench.adapt.store import ADAPT_SOURCE_BANKS
     from wsbench.registry import REPO_ROOT, frozen_bank_path
 
-    return frozen_bank_path(family).relative_to(REPO_ROOT).as_posix()
+    path = frozen_bank_path(family)
+    if family in ADAPT_SOURCE_BANKS:
+        path = path.with_name(ADAPT_SOURCE_BANKS[family])
+    return path.relative_to(REPO_ROOT).as_posix()
 
 
 def bank_version(family: str) -> int:
-    """The registered bank's version: ``items_v<N>.json`` -> N, ``items.json`` -> 1."""
+    """The version of the bank an adaptation ports (``bank_rel``): ``items_v<N>.json`` -> N,
+    ``items.json`` -> 1."""
     import re
 
     m = re.search(r"items_v(\d+)\.json$", bank_rel(family))

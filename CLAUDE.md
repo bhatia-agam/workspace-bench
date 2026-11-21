@@ -649,7 +649,17 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   the F4 record) never move without editing the check. So a deliberate judge or bank change =
   bump the stamp or bank version, then `python scripts/manifest_0101_declare.py <family> --plan
   <NNNN> --note '...' --write` (it refuses without a bump); a later edit of a declared family
-  needs another bump and another entry.
+  needs another bump and another entry. Fast versions cut after the golden
+  (`manifest_0101_declare.new_fast_rows`): a family's `plan.fast_plan_sha` row for a version
+  the golden has for no family is set aside, before the comparison and the ledger hash, when
+  it is the family's row under a golden version (directly, or recomputed under that version's
+  name for the two position-reduced families, `fast_equivalents`); any other new row fails
+  ("its fast plan moved") unless the family is declared with a new bank. So cutting a fast
+  version needs no entry from the families it leaves alone and stales no earlier entry.
+  `scripts/manifest_0101.py` is the golden's script plus ONE `try` in `plan_entry` (a family
+  whose bank changed after an older fast version was frozen made `fast.entry` exit the whole
+  manifest; that row now reads `unavailable`); T1 pins the sha of the script that made
+  the golden, the sha of the script now and the golden's bytes.
   - **Two frozen names, never interchangeable.** `registry.hash_name(key)`
     (`HASH_FAMILY_NAMES`) is what `plan_sha`, the ATI `bank_sha` and the lucky-guessing seeds
     hash: the key of the family's FIRST hashed life (`multihop` -> `multihop_mt_v2`,
@@ -755,7 +765,7 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   `answerer: "construction"`) stays for a future family gated when it is built.
 
 - Fast subset (plans 0090 / 0094 / 0095, `--fast` = `fast=True` on plan / produce / judge / run /
-  report): `fast.py` reads the frozen `evals/fast/fast_v2.json` (`fast.VERSION = "fast-v2"`: 22
+  report): `fast.py` reads the frozen `evals/fast/fast_v3.json` (`fast.VERSION = "fast-v3"` since 2026-11-20, `fast_v2.json` before, the same items: 22
   families, 1,823 units, 2,160 read items; per family `bank_sha`, `units` by group, `read_ids`,
   optional `positions`; never regenerate or reorder a frozen file, a new subset is a new
   versioned file in `fast.VERSIONS`) and holds
@@ -776,7 +786,7 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   Plan 0094: fast-v2 = fast-v1 (`fast_v1.json`, 24 families, kept frozen and sha-pinned) minus
   jailbreak_recognition and agentic_misalignment, every other entry identical. `fast.subset()`
   resolves `fast.VERSION` at call time (there is no `fast.PATH`; tests patch `VERSION` only, the
-  loader is cached per version); `fast.COMPATIBLE` (widened by plan 0095, below): a sidecar declaring a
+  loader is cached per version); `fast.COMPATIBLE` (widened by plan 0095, per family since 2026-11-20, both below): a sidecar declaring a
   compatible version is judged (`reads.load`), and a compatible result row of a family in the
   current subset stays in the macro (`results._stale_fast_subset`), so a fast-v1 results dir
   reports a fast-v2 macro over its 22 rows with its jailbreak / agentic rows excluded (`stale
@@ -793,7 +803,7 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   are the CLI-selectable ones. The CLI normalises `fast` to a bool plus `fast_variant`
   (`cli._set_fast`; `fast_variant=` is not a key) and calls `select` at the top of `execute`
   only for a non-empty variant, never in `finalize`; plain `--fast` writes nothing and runs the
-  active subset. `fast.COMPATIBLE = {"fast-v1", "fast-v2", "fast-safety-v1"}` now means MUTUALLY
+  active subset. `fast.COMPATIBLE = {"fast-v1", "fast-v2", "fast-safety-v1"}` (plan 0095's set, replaced on 2026-11-20, next paragraph) meant MUTUALLY
   entry-compatible (any two versions hold the identical entry for every family in both; a
   test pins it); the sidecar and macro rules keep their form, so under `--fast` a
   fast-safety-v1 row of the 22 is in the macro and a safety family's row is `stale fast subset
@@ -804,6 +814,23 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   so a process-mode child selects the subset itself. `report` without `fast=safety` is the
   active (fast-v2) view; `cli.fast_header(results)` adds a second line counting the rows that
   are in another selectable subset only.
+  2026-11-20 (comp-v6 on bank v6): `fast.DEFAULT = "fast-v3"`, `fast.VARIANTS = {"": "fast-v3",
+  "safety": "fast-safety-v2"}`. The two files are `fast_v2.json` / `fast_safety_v1.json` with
+  ONLY conjunctive_association's `bank_sha` moved (same units and read ids), written in today's
+  keys (`KEY_ERA` "0101") by `scripts/fast_refreeze_bank.py`; the three older files stay frozen.
+  **`fast.COMPATIBLE` is gone: compatibility is per family**, `fast.compatible(version, family,
+  against=None)` = both files hold the family with the identical entry (read at
+  `results._stale_fast_subset`, `reads.load`, `reads.fast_plan_sha(declared=)`,
+  `cli.fast_header`), which is what the set stated for whole files, so every sentence above
+  about a "compatible" version still holds for every family except conjunctive_association:
+  its fast-v1 / fast-v2 / fast-safety-v1 RESULT rows are `stale fast subset (<v>)` and under one
+  of them `fast.entry` fails closed. A READOUTS file is held to `fast.same_reads` instead (the
+  declared version reads the family's same `read_ids` at the same `positions`; `bank_sha` and
+  units not compared; the declared `plan_sha` still checked in `reads.load`), so the family's
+  old FAST files are judged as they are: a new option list does not change what was read. Never `functools.cache` `compatible` (it reads `fast.VERSION`).
+  The next bank change that keeps a family's ids is the same script plus the pins it names
+  (`REFROZEN` in `tests/test_fast_subset.py`; `evals/fast/README.md` "Re-freezing") and the
+  family's entry in the manifest ledger (`manifest_0101_declare.py`, the plan 0101 paragraph).
 
 - Summary mode (`aggregate=summary`, plan 0020, `digest.py`) is the benchmark DEFAULT since plan
   0024: `runner.parse_opts` fills `aggregate=summary` in unless `opts=aggregate=native`; a family

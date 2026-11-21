@@ -31,11 +31,16 @@ COMP_SEED = 20260805  # compositional freeze date; fixes option order (reproduci
 # their twins per twinned cluster); sharded digests are judged by candidate lists (+cand3).
 # comp-v5 (round 4, Fable on #202): the comp-v4 prompts and rules on bank v4's lists (22 non-twin
 # options per list, plus the twins of every two-person option)
-PROMPT_VERSION = "comp-v5"  # keys every call
+# comp-v6 (Camila, 2026-11-20: "use distractors for the third axis and then rejudge everything"):
+# ONE statement must state EVERY part of the option, the parts every option of the list shares
+# included (comp-v2..v5 exempted them, so a statement that left the shared part out or put
+# another in its place passed); bank v6 lists the shared part's other values as distractors
+PROMPT_VERSION = "comp-v6"  # keys every call
 # round 5 (Camila r3): bank v5 (items_v5.json, opt-in via $WSB_BANK_FILE_CONJUNCTIVE_ASSOCIATION;
 # v4 + equally-typical relation confusers) is judged by the comp-v5 prompts, but its lists differ,
 # so its results are stamped apart and never meet bank v4's floors. Default bank (v4): no stamp.
-BANK_STAMPS: dict[int, str] = {5: "+bank-v5"}
+# bank v6 (items_v6.json, the registered bank: v4 + shared-axis distractors) stamps "+bank-v6".
+BANK_STAMPS: dict[int, str] = {5: "+bank-v5", 6: "+bank-v6"}
 # final r1 (2026-10-31), stamp only: an item passes only with a MAJORITY of gold draws; a draw
 # whose quote re-judge failed leaves the item undecided; the chance label is the majority-of-3
 # uniform rate (judge._Gate.combine). The inverted twin is one wrong option and vetoes nothing
@@ -49,8 +54,8 @@ SYSTEM_TEMPLATE = (
     "multiple-choice question: which of the listed descriptions of a character's compound state "
     "the readout STATES."
     "\n\n"
-    "Pick an option only if ONE readout statement, by itself, states EVERY part in which that "
-    "option differs from the other options. A statement is one readout sample; when a free-text "
+    "Pick an option only if ONE readout statement, by itself, states EVERY part of that option. "
+    "A statement is one readout sample; when a free-text "
     f"sample is a list of bullets (shown separated by {_MARK}), each bullet is its own statement:\n"
     '- the feeling, intent or belief, as the direct word(s) or an exact synonym ("mourning" '
     'names grief; "wife" names spouse; "his little boy" names her young child; a faithful '
@@ -58,7 +63,41 @@ SYSTEM_TEMPLATE = (
     "- what it is about;\n"
     "- whom it concerns; and\n"
     "- the roles: who holds the feeling, intent or belief, or who does what to whom.\n"
-    "Parts that every option shares need not be restated. The names and genders of the people "
+    "Every part must be stated, a part that many or all of the options share included: options "
+    "differ from one another in a single part (the same feeling about the same event but "
+    "another person; the same feeling toward the same person but another event or thing), so a "
+    "statement that leaves one part out, or puts something else in its place, does not state "
+    "the option, even when every other part matches (it states the option that has that other "
+    "thing in its place, if one is listed, and otherwise none). For each part the statement "
+    "must give its substance (which feeling, intent or belief; what event or thing; which "
+    "person), in the option's words or other ordinary words for the same thing, and nothing in "
+    "the statement may contradict any part of the option. A qualifier inside a part "
+    '("recent", "sudden", "accidental", "longtime", "closest", "young", "her own") is treated '
+    "by what the list holds: if two listed options differ only in one word or phrase, the "
+    "statement must state that word or phrase (or an exact synonym) to select between them; if "
+    "no listed option differs from your pick only in a qualifier, the qualifier need not be "
+    "repeated, but must not be contradicted. "
+    'Examples: "a man grieving his wife\'s death" states "grief over the sudden accidental death '
+    'of her spouse" when no listed option differs from it only in "sudden" or "accidental" (the '
+    "feeling, the event and the person are all given, and nothing contradicts a qualifier); "
+    '"a man grieving his wife, who took her own life" does not (a suicide is not an accident: a '
+    'contradiction), "a man grieving after his wife left him" does not (another event), and "a '
+    'man grieving a death in the family" does not (it does not say whose). "A neighbor ruined '
+    'her manuscript" does not state "her belief that her neighbor accidentally destroyed her '
+    'unfinished book" when "her belief that her neighbor deliberately destroyed her unfinished '
+    'book" is listed too: the two options differ only in that word, and the statement does not '
+    'say which ("a neighbor accidentally ruined her manuscript" does). '
+    '"Envy at a friend\'s promotion" states "envy at her closest friend\'s recent '
+    'promotion"; "envy at a colleague\'s promotion" does not (a colleague is another person: it '
+    'states "envy at a colleague\'s recent promotion" if that is listed), and "envious of the '
+    'promotion" does not (no person). '
+    "When every option is the same kind of state (each one a belief, or each one an intent), a "
+    'statement need not use the word "belief" or "intent": one that gives what is believed, or '
+    'the intended act, with every other part, states the option ("a neighbor accidentally '
+    'ruined her manuscript" states "her belief that her neighbor accidentally destroyed her '
+    'unfinished book"; "a colleague accidentally deleted her work" does not: it does not say '
+    "what the work was). "
+    "The names and genders of the people "
     'are not parts. In the options, "her" / "his" is the story\'s main character, whatever '
     "that character's gender, and the other person is named by their relation to the main "
     'character ("her spouse", "a colleague"); in a statement, a person named by their '
@@ -86,11 +125,11 @@ SYSTEM_TEMPLATE = (
     'merely infer from evidence, causes, scene details or narrative ("small sneakers" do not '
     'name "her young child"); do not count related-but-different states ("regret" is not grief; '
     '"worried" is not relieved) or words too broad to name it ("sad", "upset"); do not use world '
-    "knowledge or plausibility to fill gaps. If no single statement states every distinguishing "
-    'part of one option, choose "cannot tell from the readout".'
+    "knowledge or plausibility to fill gaps. If no single statement states every part of one "
+    'option, choose "cannot tell from the readout".'
     "\n\n"
     'Give as "quote" the shortest span, copied VERBATIM from inside one statement, that by '
-    "itself states every distinguishing part of the option you pick. Leave it empty if you "
+    "itself states every part of the option you pick. Leave it empty if you "
     "choose cannot tell."
 )
 INPUT_NATIVE = "labeled by layer, or by layer and position"
@@ -118,9 +157,9 @@ CANDIDATES_ADDENDUM = (
     "The readouts may hold several statements that state different options. Instead of one "
     'choice, return as "candidates" up to 3 options, each one stated by ONE single statement '
     "under every rule above, each with its own quote (the shortest span, copied VERBATIM from "
-    "inside that one statement, that by itself states every distinguishing part of that "
+    "inside that one statement, that by itself states every part of that "
     "option), the most clearly stated first. Return an empty list if no single statement states "
-    "every distinguishing part of any option."
+    "every part of any option."
 )
 SYSTEM_SUMMARY_CANDIDATES = SYSTEM_SUMMARY + CANDIDATES_ADDENDUM
 CANDIDATES_SCHEMA = schema_block(

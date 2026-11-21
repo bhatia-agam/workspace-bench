@@ -110,7 +110,7 @@ def test_f9_conjunctive_two_of_three_gold_draws_pass(tmp_path, fake_llm, mk_args
     row = res.rows[0]
     assert row["pick"] == "gold" and row["correct"] and row["n_draws"] == 3
     assert sorted(row["draw_picks"]) == ["cannot_tell", "gold", "gold"]
-    assert res.config["draws"] == 3 and res.config["prompt_version"].startswith("comp-v5")
+    assert res.config["draws"] == 3 and res.config["prompt_version"].startswith("comp-v6")
     assert sum(1 for _s, u in fake.calls if not u.startswith(("Return", "READOUT ("))) == 3
 
 

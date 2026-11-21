@@ -15,7 +15,7 @@ from wsbench.registry import REPO_ROOT
 from wsbench.results import FamilyResult, decided_outcomes, fold_direction_pairs
 
 SCOPE = "fast"  # JudgeArgs.scope / config.scope of a fast run
-DEFAULT = "fast-v2"  # the subset `--fast` means
+DEFAULT = "fast-v3"  # the subset `--fast` means
 # the active subset of this process: DEFAULT unless `select` changed it; read at call time
 # (tests patch it)
 VERSION = DEFAULT
@@ -23,13 +23,13 @@ VERSIONS = {  # every frozen file, never edited in place
     "fast-v1": REPO_ROOT / "evals/fast/fast_v1.json",
     "fast-v2": REPO_ROOT / "evals/fast/fast_v2.json",
     "fast-safety-v1": REPO_ROOT / "evals/fast/fast_safety_v1.json",
+    # 2026-11-20: conjunctive_association's bank moved to v6 (comp-v6); cut by
+    # `scripts/fast_refreeze_bank.py`
+    "fast-v3": REPO_ROOT / "evals/fast/fast_v3.json",
+    "fast-safety-v2": REPO_ROOT / "evals/fast/fast_safety_v2.json",
 }
 # the CLI-selectable subsets by variant name (`--fast`, `--fast-safety`; plan 0095)
-VARIANTS = {"": DEFAULT, "safety": "fast-safety-v1"}
-# the versions that are MUTUALLY entry-compatible (plans 0094 / 0095): for any two of them every
-# family present in both files has the identical entry, so a readouts sidecar declaring one is
-# accepted under another, and its result rows of the active subset's families stay in the macro
-COMPATIBLE = frozenset({"fast-v1", "fast-v2", "fast-safety-v1"})
+VARIANTS = {"": DEFAULT, "safety": "fast-safety-v2"}
 POSITION_KINDS = ("last_n", "punct_special")  # the fast positions rules (readplan `fast_of`)
 N_RESAMPLES = 2000
 MAX_MISSING_SHARE = 0.10  # more of the entry's units without an outcome -> incomplete
@@ -50,7 +50,13 @@ class NotInFast(SystemExit):
 # a file frozen after the rename is registered with era "0101". TOTAL over ``VERSIONS``: a
 # version without an era is an import-time error, never a default.
 ERAS = ("pre-0101", "0101")
-KEY_ERA = {"fast-v1": "pre-0101", "fast-v2": "pre-0101", "fast-safety-v1": "pre-0101"}
+KEY_ERA = {
+    "fast-v1": "pre-0101",
+    "fast-v2": "pre-0101",
+    "fast-safety-v1": "pre-0101",
+    "fast-v3": "0101",
+    "fast-safety-v2": "0101",
+}
 if set(KEY_ERA) != set(VERSIONS) or not set(KEY_ERA.values()) <= set(ERAS):
     raise RuntimeError(f"fast.KEY_ERA must give one of {ERAS} to every version of fast.VERSIONS")
 
@@ -86,6 +92,42 @@ def subset(version: str | None = None) -> dict[str, Any]:
     ``version=None`` is the current ``VERSION``, resolved at call time; an unknown version is a
     ``SystemExit``."""
     return _file(version or VERSION)["families"]
+
+
+def compatible(version: Any, family: str, against: str | None = None) -> bool:
+    """Entry compatibility, per family (plans 0094 / 0095, per family since 2026-11-20):
+    ``version`` and ``against`` (default: the active ``VERSION``) are registered, both files hold
+    ``family``, and its entry there is identical (``bank_sha``, units, read ids, positions rule).
+    Then a readouts sidecar declaring ``version`` is accepted under ``against`` and a result row
+    stamped ``version`` stays in its macro. A family whose bank was re-frozen (a new ``bank_sha``)
+    is compatible with no earlier version, while every family the re-freeze left alone still is:
+    the rule the former global ``COMPATIBLE`` set stated for whole files, decided from the frozen
+    files themselves, so no version can be declared compatible that is not."""
+    against = VERSION if against is None else against
+    if version not in VERSIONS or against not in VERSIONS:
+        return False
+    fam = registry.canonical(family)
+    mine, theirs = subset(version).get(fam), subset(against).get(fam)
+    return mine is not None and mine == theirs
+
+
+def same_reads(version: Any, family: str, against: str | None = None) -> bool:
+    """Do ``version`` and ``against`` (default: the active ``VERSION``) READ the family the same
+    way: both registered, both hold it, with the same ``read_ids`` (in order) and the same
+    ``positions`` rule. Weaker than ``compatible`` on purpose and for readouts files only: units
+    and ``bank_sha`` are not compared, since a readouts file holds what the model read, which a
+    new option list or judge does not change (the caller still checks the file's ``plan_sha``).
+    A result row needs ``compatible``."""
+    against = VERSION if against is None else against
+    if version not in VERSIONS or against not in VERSIONS:
+        return False
+    fam = registry.canonical(family)
+    mine, theirs = subset(version).get(fam), subset(against).get(fam)
+    if mine is None or theirs is None:
+        return False
+    return mine["read_ids"] == theirs["read_ids"] and mine.get("positions") == theirs.get(
+        "positions"
+    )
 
 
 @functools.cache

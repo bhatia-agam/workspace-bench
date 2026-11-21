@@ -74,6 +74,13 @@ def _declare_mod():
     return mod
 
 
+MANIFEST_SCRIPT_SHA256_OF_THE_GOLDEN = (
+    "7cac34f978b31913e006c831c70d03b4da1c0f95a90905c700fa0ff49adf178a"
+)
+MANIFEST_SCRIPT_SHA256_NOW = "b970df0814eb57d5bff12b9e0c617b6f437e0ca9615b4dcc800730999b85ee4a"
+MANIFEST_GOLDEN_SHA256 = "30aedc244eefe776a989f5f4d58d6e4d5d3aa7e01abc0571598c4a7b5689eefb"
+
+
 def test_t1_no_instrument_moves_without_a_declared_stamp_or_bank_change(tmp_path):
     """``scripts/manifest_0101.py`` (its own process: it patches the LLM layer) rebuilds every
     hash, seed, option order, prompt sha, call key and fingerprint of every family, with family
@@ -91,9 +98,22 @@ def test_t1_no_instrument_moves_without_a_declared_stamp_or_bank_change(tmp_path
     )  # fmt: skip
     assert r.returncode == 0, r.stdout[-2000:] + r.stderr[-4000:]
     doc = json.loads(golden.read_text(encoding="utf-8"))
-    assert doc["script_sha256"] == hashlib.sha256(script.read_bytes()).hexdigest()
+    # Two pins. The golden names the script that MADE it; the script as it is now is that file
+    # plus one `try` in `plan_entry` (2026-11-20: a family whose bank changed after an older
+    # fast version was frozen made `fast.entry` exit the whole manifest; the row now reads
+    # "unavailable", a constant, so no error wording is hashed). Any further edit of the script
+    # moves the second pin on purpose.
+    assert doc["script_sha256"] == MANIFEST_SCRIPT_SHA256_OF_THE_GOLDEN
+    assert hashlib.sha256(script.read_bytes()).hexdigest() == MANIFEST_SCRIPT_SHA256_NOW
+    assert hashlib.sha256(golden.read_bytes()).hexdigest() == MANIFEST_GOLDEN_SHA256
     current, ledger = json.loads(now.read_text(encoding="utf-8")), dec.load_ledger()
-    declared, failures = dec.verdict(doc, current, ledger)
+    declared, failures = dec.verdict(
+        doc,
+        current,
+        ledger,
+        script_sha256=MANIFEST_SCRIPT_SHA256_NOW,
+        fast_as=dec.fast_equivalents(doc, current),
+    )
     print(f"T1: {len(declared)} family(ies) declared an instrument change since plan 0101:")
     for fam, why in declared.items():
         print(f"  {fam}: {why}")
@@ -234,6 +254,86 @@ def test_t1_rule_on_synthetic_manifests():
     assert "changed again" in dec.verdict(gold, cur, led_c)[1][0]
     with pytest.raises(dec.Refused, match="bump"):
         dec.declare(gold, cur, led_c, "fam_c", "9999", "test")
+
+
+def _with_fast(doc: dict, rows: dict[str, dict[str, str]]) -> dict:
+    out = json.loads(json.dumps(doc))
+    for fam, by_version in rows.items():
+        out["families"][fam]["plan"]["fast_plan_sha"] = dict(by_version)
+    return out
+
+
+def test_t1_rule_for_fast_versions_cut_after_the_golden():
+    """A new fast version's row for a family must be the family's row under a golden version
+    (directly, or as recomputed under that version's name for a family whose rows hash the
+    version); then it needs no declaration and stales none. Anything else fails, except for a
+    family declared with a new bank."""
+    dec = _declare_mod()
+    gold = _with_fast(_mini_manifest(), {"fam_a": {"fast-v2": "A"}, "fam_b": {"fast-v2": "B"}})
+    same = {"fam_a": {"fast-v2": "A", "fast-v3": "A"}, "fam_b": {"fast-v2": "B", "fast-v3": "B"}}
+    assert dec.verdict(gold, _with_fast(_mini_manifest(), same), {}) == ({}, [])
+    # a new version's row that is not the predecessor's: the fast plan moved
+    moved = _with_fast(_mini_manifest(), {**same, "fam_b": {"fast-v2": "B", "fast-v3": "X"}})
+    declared, failures = dec.verdict(gold, moved, {})
+    assert not declared and len(failures) == 1
+    assert "/families/fam_b/plan/fast_plan_sha/fast-v3" in failures[0]
+    assert "its fast plan moved" in failures[0]
+    # ... unless it is that row as the golden version would have declared it (rows that hash
+    # the version string); the equivalence must give the GOLDEN row, not any value
+    as_old = {"fam_b": {"fast-v3": {"row": "X", "as": {"fast-v2": "B"}}}}
+    assert dec.verdict(gold, moved, {}, fast_as=as_old) == ({}, [])
+    wrong = {"fam_b": {"fast-v3": {"row": "X", "as": {"fast-v2": "X"}}}}
+    assert len(dec.verdict(gold, moved, {}, fast_as=wrong)[1]) == 1
+    # ... and only for the very row it was computed for (a stale equivalence covers nothing)
+    stale = {"fam_b": {"fast-v3": {"row": "another row", "as": {"fast-v2": "B"}}}}
+    assert len(dec.verdict(gold, moved, {}, fast_as=stale)[1]) == 1
+    # a GOLDEN version's row never moves that way, and a golden version may not vanish
+    old_moved = _with_fast(_mini_manifest(), {**same, "fam_b": {"fast-v2": "X", "fast-v3": "X"}})
+    assert dec.verdict(gold, old_moved, {})[1][0].startswith("/families/fam_b/plan/fast_plan_sha")
+    gone = _with_fast(_mini_manifest(), {**same, "fam_b": {"fast-v3": "B"}})
+    assert "moved without a stamp or bank change" in dec.verdict(gold, gone, {})[1][0]
+    # a version the golden has for another family is not "new" for this one
+    gold2 = _with_fast(_mini_manifest(), {"fam_a": {"fast-v2": "A", "fast-s1": "A"}, "fam_b": {}})
+    joined = _with_fast(_mini_manifest(), {"fam_a": {"fast-v2": "A", "fast-s1": "A"},
+                                            "fam_b": {"fast-s1": "B"}})  # fmt: skip
+    assert "moved without a stamp or bank change" in dec.verdict(gold2, joined, {})[1][0]
+    # a stamp-only declaration: its hash ignores acceptable new rows, so a later fast cut does
+    # not stale it, and a moved new row still fails
+    cur = _with_fast(_restamped(), {"fam_a": {"fast-v2": "A"}, "fam_b": {"fast-v2": "B"}})
+    led = {"fam_a": dec.declare(gold, cur, {}, "fam_a", "9999", "test")}
+    later = _with_fast(_restamped(), same)
+    assert (
+        list(dec.verdict(gold, later, led)[0]) == ["fam_a"] and not dec.verdict(gold, later, led)[1]
+    )
+    assert dec.declare(gold, later, {}, "fam_a", "9999", "test") == led["fam_a"]
+    bad = _with_fast(_restamped(), {**same, "fam_a": {"fast-v2": "A", "fast-v3": "X"}})
+    assert "its fast plan moved" in dec.verdict(gold, bad, led)[1][0]
+
+    # a family declared with a NEW BANK: an old version's row may read "unavailable", a new
+    # row equal to its golden row is set aside (a later cut stales nothing), and a new row that
+    # is not its golden row is part of what the ledger hash holds
+    def rebanked(rows: dict[str, str]) -> dict:
+        cur = _with_fast(_mini_manifest(), {"fam_a": {"fast-v2": "A"}, "fam_b": rows})
+        cur["families"]["fam_b"]["files"]["bank_file"] = "items_v2.json"
+        return cur
+
+    cur = rebanked({"fast-v2": "unavailable: bank changed", "fast-v3": "B"})
+    led = {"fam_b": dec.declare(gold, cur, {}, "fam_b", "9999", "test")}
+    assert list(dec.verdict(gold, cur, led)[0]) == ["fam_b"] and not dec.verdict(gold, cur, led)[1]
+    later = rebanked({"fast-v2": "unavailable: bank changed", "fast-v3": "B", "fast-v4": "B"})
+    assert not dec.verdict(gold, later, led)[1]
+    other = rebanked({"fast-v2": "unavailable: bank changed", "fast-v3": "N"})
+    assert "changed again" in dec.verdict(gold, other, led)[1][0]
+    led_n = {"fam_b": dec.declare(gold, other, {}, "fam_b", "9999", "test")}
+    assert not dec.verdict(gold, other, led_n)[1]
+    # the script pin: with it, the manifest's own sha must be the pinned one
+    cur = _mini_manifest()
+    cur["script_sha256"] = "edited"
+    plain = _mini_manifest()
+    assert dec.verdict(plain, cur, {}, script_sha256="edited", fast_as={})[1] == []
+    assert dec.verdict(plain, cur, {}, script_sha256="other")[1] == [
+        "/script_sha256: 'edited' is not the pinned script's 'other'"
+    ]
 
 
 def test_t1_declare_command_refuses_without_a_bump(tmp_path, monkeypatch, capsys):
@@ -650,12 +750,23 @@ def test_t10_the_fast_files_are_read_in_todays_keys():
     for version in sorted(fast.VERSIONS):
         raw = json.loads(fast.VERSIONS[version].read_text(encoding="utf-8"))
         got = fast.subset(version)
-        assert set(got) == {registry.PRE_0101_KEYS.get(f, f) for f in raw["families"]}
+        pre = fast.KEY_ERA[version] == "pre-0101"  # a file cut after the rename is in today's keys
+
+        def today(key: str, pre: bool = pre) -> str:
+            return registry.PRE_0101_KEYS.get(key, key) if pre else key
+
+        assert set(got) == {today(f) for f in raw["families"]}
         assert {"basic_readout", "basic_readout_st", "multihop"} <= set(got)
         assert not {"basic_readout_mt", "multihop_mt"} & set(got)
         for old, entry in raw["families"].items():
-            new = registry.PRE_0101_KEYS.get(old, old)
-            assert got[new] == entry and entry["bank_sha"] == fast.bank_sha(new), (version, old)
+            new = today(old)
+            assert got[new] == entry, (version, old)
+            # a version frozen before a family's bank changed keeps its old sha (a record): by
+            # rule, the entries that are not the selectable versions' (tests/test_fast_subset.py
+            # pins which families those are, `REFROZEN`)
+            live = [v for v in fast.VARIANTS.values() if new in fast.subset(v)]
+            refrozen = any(not fast.compatible(version, new, against=v) for v in live)
+            assert (entry["bank_sha"] == fast.bank_sha(new)) != refrozen, (version, old)
 
 
 def test_t11_every_frozen_entry_under_a_renamed_key_carries_that_familys_stamp():

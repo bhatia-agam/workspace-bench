@@ -134,7 +134,8 @@ def test_rule_chance_matches_a_simulation_of_the_judges_own_fold(k, shards):
 def test_family_chance_is_the_rule_not_the_per_draw_floor():
     items = lg.build_family("conjunctive_association")
     fam = lg.family_chance("conjunctive_association", items)
-    assert fam < 0.005 < 0.02 < lg.analytic_floor(items)  # bank v4: ~0.002 against 0.025
+    # bank v6 (176 options a list): ~0.0007 against 0.0097 (bank v4: ~0.002 against 0.025)
+    assert fam < 0.002 < 0.009 < lg.analytic_floor(items)
     # a family without a multi-draw rule keeps the per-draw floor
     um = lg.build_family("user_modeling")
     assert lg.family_chance("user_modeling", um) == lg.analytic_floor(um)
@@ -263,13 +264,20 @@ def test_frozen_conjunctive_floors_are_bank_v4_and_record_the_gap():
     same positions as full): the lite rows are the all-layer rows (8 shards, same chance), so
     the options-only lite row now passes with the all-layer one and 7 of 9 rows fail."""
     e = lg.floors()["conjunctive_association"]
-    assert {v["instrument"] for v in e.values() if isinstance(v, dict)} == {cp.PROMPT_VERSION}
-    assert cp.PROMPT_VERSION == "comp-v5"
+    # 2026-11-21: re-measured on bank v6 as rebuilt with the variants' twins (fresh draws, comp-v6
+    # stamp). Single pick: options-only 0.02 and described 0.04 pass the 0.051 line, topic 0.06
+    # does not. +cand3: 0.22 / 0.34 / 0.30 against a 0.113 line (the first v6, whose variants
+    # could be counted away: 0.32 / 0.35 / 0.36 against 0.129; bank v4: 0.17 / 0.30 / 0.21
+    # against 0.207), so no +cand3 row passes. 7 of 9 rows fail
+    assert {v["instrument"] for v in e.values() if isinstance(v, dict)} == {
+        cp.PROMPT_VERSION + "+bank-v6"
+    }
+    assert cp.PROMPT_VERSION == "comp-v6"
     for v in ("blind_cands", "described_cands", "topic_cands", "uniform_cands"):
         assert e[v]["rule_lite"] == e[v]["rule_all"] and e[v]["chance_lite"] == e[v]["chance_all"]
     rows = lg.standard("conjunctive_association", e)
     passing = {(r["variant"], r["rule"]) for r in rows if r["pass"]}
-    assert passing == {("blind_cands", "rule_all"), ("blind_cands", "rule_lite")}
+    assert passing == {("blind", "family_rule"), ("described", "family_rule")}
     assert len(rows) - len(passing) == 7
 
 

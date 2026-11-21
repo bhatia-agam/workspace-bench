@@ -67,15 +67,20 @@ def test_rendered_prompt_matches_golden():
     bank = load_bank("conjunctive_association")
     shown, _g, _c = build_options(bank[0])
     user = prompts.render_user("TOY READOUT", prompts.render_question(shown))
-    assert user == (ROOT / "tests/golden/conjunctive_association_prompt_v4.txt").read_text()
+    assert user == (ROOT / "tests/golden/conjunctive_association_prompt_v6.txt").read_text()
+    # the frozen v4 lists (registered until 2026-11-20) still render their own golden
+    v4 = json.loads((ROOT / "evals/association/conjunctive_association/items_v4.json").read_text())
+    shown4, _g, _c = build_options(v4[0])
+    user4 = prompts.render_user("TOY READOUT", prompts.render_question(shown4))
+    assert user4 == (ROOT / "tests/golden/conjunctive_association_prompt_v4.txt").read_text()
     # the frozen v3 lists still render their own golden
     v3 = json.loads((ROOT / "evals/association/conjunctive_association/items_v3.json").read_text())
     shown3, _g, _c = build_options(v3[0])
     user3 = prompts.render_user("TOY READOUT", prompts.render_question(shown3))
     assert user3 == (ROOT / "tests/golden/conjunctive_association_prompt_v3.txt").read_text()
     # F9: the comp-v2 prompts, judged in 3 draws (comp-v3); round 4: on bank v3's lists (comp-v4),
-    # then on bank v4's widened lists (comp-v5)
-    assert prompts.PROMPT_VERSION == "comp-v5"
+    # then on bank v4's widened lists (comp-v5); comp-v6: every part required, bank v6
+    assert prompts.PROMPT_VERSION == "comp-v6"
 
 
 def test_blob_rule(tmp_path):
@@ -157,7 +162,7 @@ def test_run_verdicts_and_numbers(tmp_path, fake_llm, mk_args, v1_bank):
     assert rows[QB]["pick"] == "api_fail" and rows[QB]["correct"] is False
     assert res.extras["breakdown"] == {
         "gold": 1, "contrast": 0, "distractor": 0, "cannot_tell": 0, "invalid": 0, "api_fail": 1,
-        "gold_unverified": 0, "gold_partial": 0, "inverted": 0, "split": 0,
+        "gold_unverified": 0, "gold_partial": 0, "inverted": 0, "shared_axis": 0, "split": 0,
     }  # fmt: skip
     assert res.extras["n_items_excluded"] == 1 and res.extras["char_cap"] == 200000
     assert res.config["char_cap"] == 200000
@@ -533,7 +538,11 @@ def test_quote_check_api_fail_is_undecided(tmp_path, fake_llm, mk_args):
 
 def test_system_requires_every_part():
     for system in (prompts.SYSTEM, prompts.SYSTEM_SUMMARY):
-        assert "EVERY part in which that option differs" in system
+        assert "states EVERY part of that option" in system  # comp-v6: shared parts included
+        # the comp-v5 exemption ("EVERY part in which that option differs ...") is gone; the word
+        # itself is in the qualifier rule ("no listed option differs from your pick only in ...")
+        assert "part in which that option differs" not in system
+        assert "need not be restated" not in system
         assert "each bullet is its own statement" in system
         assert "Never combine parts taken from different statements" in system
         assert system.startswith(f"You judge {mc.READOUT_PHRASE}")
@@ -647,9 +656,9 @@ def test_v2_bank_is_generated():
 
 
 def test_bank_path_is_v4():
-    # round 4 (MC leakage standard; Fable on #202: widen the lists): the registered bank is v4;
-    # v3 and v2 stay frozen beside it
-    assert registry.bank_path("conjunctive_association").name == "items_v4.json"
+    # round 4 (MC leakage standard; Fable on #202: widen the lists): the registered bank was v4;
+    # 2026-11-20 (comp-v6): v6 = v4 + shared-axis distractors; v4, v3 and v2 stay frozen beside it
+    assert registry.bank_path("conjunctive_association").name == "items_v6.json"
 
 
 def test_options_match_v2_golden():
@@ -716,8 +725,9 @@ def test_chance_on_v2(tmp_path, fake_llm, mk_args):
     fake_llm(_script(lambda u: {"choice": 0, "quote": ""}))
     res = judge.run(mk_args(path, items=ids))
     # bank v4: every list widened to 22 non-twin options + twins (q01 45 / q03 43 / q06 23 shown;
-    # v3: 25 / 23 / 11)
-    assert res.chance == pytest.approx((1 / 45 + 1 / 43 + 1 / 23) / 3)
+    # v3: 25 / 23 / 11); bank v6: three more copies of the list, one per other value of the
+    # shared part (q01 177 / q03 169 shown; q06 unchanged)
+    assert res.chance == pytest.approx((1 / 177 + 1 / 169 + 1 / 23) / 3)
     assert "mean 1/n" in res.chance_label
 
 
@@ -863,7 +873,7 @@ def test_reads_lite_stamp(tmp_path, monkeypatch):
     )
     r = judge.run(args)
     pv = digest.prompt_version(
-        prompts.PROMPT_VERSION + prompts.RULE_VERSION, args, "conjunctive_association"
+        prompts.PROMPT_VERSION + "+bank-v6" + prompts.RULE_VERSION, args, "conjunctive_association"
     )
     assert r.config["prompt_version"] == reads.stamp(pv, "lite") == pv + reads.LITE_STAMP
     assert json.loads(r.config["lite_rule"]) == [{"layers": None, "positions": {"kind": "same"}}]
@@ -892,7 +902,7 @@ def test_task_note_names_no_option():
 def test_dataclass_spec_bank_is_v4(real_families):
     spec = registry.FAMILIES["conjunctive_association"]
     assert dataclasses.replace(spec).bank == Path(
-        "evals/association/conjunctive_association/items_v4.json"
+        "evals/association/conjunctive_association/items_v6.json"
     )
 
 

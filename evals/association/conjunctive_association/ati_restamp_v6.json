@@ -1,0 +1,2259 @@
+{
+ "what": "conjunctive_association's stored four-reader panel (wsb-bp ati_r1: Qwen3.6-27B, Opus 5.5, gpt-6-astra, gemini-4-argon x 3 draws, the panel answers of 2026-10-31) re-judged under comp-v6 on bank v6 (native, layer 44, Opus 5.5), 2026-11-21. This is NOT the panel behind the frozen entry's statuses (the 2026-11-04 refreeze asked a fresh panel whose answers were not found on the box; its draw record agrees with ati_r1's no better draw-for-draw than across draws), so it shows what the new instrument does to a panel of the same readers, not a re-derivation of the entry.",
+ "summary": {
+  "panel": "wsb-bp ati_r1 (2026-10-31 answers), re-judged 2026-11-21 under comp-v6+bank-v6+maj (the final text: a qualifier is required only where two listed options differ in it; the bank with twins of the variants), native, layer 44",
+  "n_ids_kept": 26,
+  "kept_ids_all_fail_on_this_panel": 24,
+  "kept_ids_with_a_passing_draw": {
+   "q06_f": {
+    "opus": [
+     false,
+     false,
+     true
+    ],
+    "astra": [
+     false,
+     true,
+     false
+    ],
+    "argon": [
+     false,
+     false,
+     true
+    ]
+   },
+   "q10_d": {
+    "opus": [
+     false,
+     true,
+     false
+    ]
+   }
+  },
+  "n_all_fail_on_this_panel": 40,
+  "would_also_qualify": [
+   "q02_d",
+   "q03_e",
+   "q04_a",
+   "q04_e",
+   "q06_h",
+   "q07_c",
+   "q07_i",
+   "q08_a",
+   "q08_b",
+   "q08_c",
+   "q08_f",
+   "q08_i",
+   "q08_j",
+   "q09_c",
+   "q09_j",
+   "q10_g"
+  ],
+  "same_panel_under_its_comp-v5_judging": {
+   "n_all_fail": 29,
+   "kept_ids_all_fail": 23
+  }
+ },
+ "draw_pass_comp_v6": {
+  "q01_a": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    true,
+    true,
+    true
+   ],
+   "astra": [
+    false,
+    true,
+    false
+   ],
+   "argon": [
+    false,
+    false,
+    false
+   ]
+  },
+  "q01_b": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    true,
+    true,
+    true
+   ],
+   "astra": [
+    true,
+    true,
+    true
+   ],
+   "argon": [
+    true,
+    true,
+    true
+   ]
+  },
+  "q01_c": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    true,
+    false,
+    true
+   ],
+   "astra": [
+    false,
+    false,
+    false
+   ],
+   "argon": [
+    false,
+    false,
+    true
+   ]
+  },
+  "q01_d": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    true,
+    true,
+    true
+   ],
+   "astra": [
+    true,
+    true,
+    true
+   ],
+   "argon": [
+    true,
+    true,
+    true
+   ]
+  },
+  "q01_e": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    false,
+    true,
+    true
+   ],
+   "astra": [
+    true,
+    false,
+    false
+   ],
+   "argon": [
+    false,
+    true,
+    false
+   ]
+  },
+  "q01_f": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    false,
+    false,
+    true
+   ],
+   "astra": [
+    true,
+    true,
+    false
+   ],
+   "argon": [
+    false,
+    false,
+    false
+   ]
+  },
+  "q01_g": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    false,
+    true,
+    true
+   ],
+   "astra": [
+    true,
+    false,
+    false
+   ],
+   "argon": [
+    false,
+    false,
+    false
+   ]
+  },
+  "q01_h": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    true,
+    false,
+    true
+   ],
+   "astra": [
+    false,
+    true,
+    true
+   ],
+   "argon": [
+    false,
+    true,
+    true
+   ]
+  },
+  "q01_i": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    true,
+    true,
+    true
+   ],
+   "astra": [
+    false,
+    false,
+    false
+   ],
+   "argon": [
+    false,
+    true,
+    false
+   ]
+  },
+  "q01_j": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    true,
+    true,
+    true
+   ],
+   "astra": [
+    true,
+    false,
+    true
+   ],
+   "argon": [
+    true,
+    false,
+    false
+   ]
+  },
+  "q02_a": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    true,
+    true,
+    false
+   ],
+   "astra": [
+    true,
+    true,
+    true
+   ],
+   "argon": [
+    true,
+    true,
+    true
+   ]
+  },
+  "q02_b": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    false,
+    false,
+    false
+   ],
+   "astra": [
+    false,
+    false,
+    true
+   ],
+   "argon": [
+    false,
+    false,
+    false
+   ]
+  },
+  "q02_c": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    true,
+    false,
+    true
+   ],
+   "astra": [
+    true,
+    true,
+    true
+   ],
+   "argon": [
+    false,
+    false,
+    false
+   ]
+  },
+  "q02_d": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    false,
+    false,
+    false
+   ],
+   "astra": [
+    false,
+    false,
+    false
+   ],
+   "argon": [
+    false,
+    false,
+    false
+   ]
+  },
+  "q02_e": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    true,
+    true,
+    true
+   ],
+   "astra": [
+    true,
+    false,
+    true
+   ],
+   "argon": [
+    true,
+    true,
+    false
+   ]
+  },
+  "q02_f": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    true,
+    true,
+    false
+   ],
+   "astra": [
+    true,
+    true,
+    true
+   ],
+   "argon": [
+    true,
+    false,
+    true
+   ]
+  },
+  "q02_g": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    false,
+    true,
+    false
+   ],
+   "astra": [
+    false,
+    false,
+    false
+   ],
+   "argon": [
+    true,
+    true,
+    false
+   ]
+  },
+  "q02_h": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    false,
+    false,
+    false
+   ],
+   "astra": [
+    false,
+    false,
+    false
+   ],
+   "argon": [
+    false,
+    false,
+    false
+   ]
+  },
+  "q02_i": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    false,
+    false,
+    false
+   ],
+   "astra": [
+    false,
+    false,
+    false
+   ],
+   "argon": [
+    false,
+    false,
+    false
+   ]
+  },
+  "q02_j": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    false,
+    false,
+    false
+   ],
+   "astra": [
+    false,
+    false,
+    false
+   ],
+   "argon": [
+    false,
+    false,
+    false
+   ]
+  },
+  "q03_a": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    true,
+    true,
+    false
+   ],
+   "astra": [
+    true,
+    true,
+    true
+   ],
+   "argon": [
+    false,
+    false,
+    true
+   ]
+  },
+  "q03_b": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    false,
+    true,
+    false
+   ],
+   "astra": [
+    true,
+    true,
+    false
+   ],
+   "argon": [
+    true,
+    false,
+    true
+   ]
+  },
+  "q03_c": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    true,
+    true,
+    true
+   ],
+   "astra": [
+    true,
+    true,
+    false
+   ],
+   "argon": [
+    true,
+    false,
+    false
+   ]
+  },
+  "q03_d": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    true,
+    true,
+    true
+   ],
+   "astra": [
+    true,
+    true,
+    true
+   ],
+   "argon": [
+    true,
+    true,
+    true
+   ]
+  },
+  "q03_e": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    false,
+    false,
+    false
+   ],
+   "astra": [
+    false,
+    false,
+    false
+   ],
+   "argon": [
+    false,
+    false,
+    false
+   ]
+  },
+  "q03_f": {
+   "qwen": [
+    false,
+    true,
+    false
+   ],
+   "opus": [
+    true,
+    true,
+    true
+   ],
+   "astra": [
+    true,
+    true,
+    true
+   ],
+   "argon": [
+    true,
+    true,
+    true
+   ]
+  },
+  "q03_g": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    false,
+    false,
+    false
+   ],
+   "astra": [
+    false,
+    false,
+    false
+   ],
+   "argon": [
+    false,
+    false,
+    false
+   ]
+  },
+  "q03_h": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    true,
+    true,
+    false
+   ],
+   "astra": [
+    true,
+    true,
+    true
+   ],
+   "argon": [
+    true,
+    true,
+    true
+   ]
+  },
+  "q03_i": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    false,
+    false,
+    false
+   ],
+   "astra": [
+    false,
+    false,
+    false
+   ],
+   "argon": [
+    false,
+    false,
+    false
+   ]
+  },
+  "q03_j": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    false,
+    false,
+    false
+   ],
+   "astra": [
+    false,
+    false,
+    false
+   ],
+   "argon": [
+    false,
+    false,
+    false
+   ]
+  },
+  "q04_a": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    false,
+    false,
+    false
+   ],
+   "astra": [
+    false,
+    false,
+    false
+   ],
+   "argon": [
+    false,
+    false,
+    false
+   ]
+  },
+  "q04_b": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    true,
+    true,
+    true
+   ],
+   "astra": [
+    true,
+    true,
+    true
+   ],
+   "argon": [
+    true,
+    true,
+    true
+   ]
+  },
+  "q04_c": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    false,
+    false,
+    false
+   ],
+   "astra": [
+    false,
+    false,
+    false
+   ],
+   "argon": [
+    false,
+    false,
+    false
+   ]
+  },
+  "q04_d": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    false,
+    false,
+    false
+   ],
+   "astra": [
+    false,
+    true,
+    true
+   ],
+   "argon": [
+    false,
+    false,
+    false
+   ]
+  },
+  "q04_e": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    false,
+    false,
+    false
+   ],
+   "astra": [
+    false,
+    false,
+    false
+   ],
+   "argon": [
+    false,
+    false,
+    false
+   ]
+  },
+  "q04_f": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    true,
+    true,
+    true
+   ],
+   "astra": [
+    true,
+    true,
+    true
+   ],
+   "argon": [
+    true,
+    true,
+    true
+   ]
+  },
+  "q04_g": {
+   "qwen": [
+    true,
+    true,
+    false
+   ],
+   "opus": [
+    true,
+    true,
+    true
+   ],
+   "astra": [
+    true,
+    true,
+    true
+   ],
+   "argon": [
+    true,
+    true,
+    true
+   ]
+  },
+  "q04_h": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    false,
+    false,
+    true
+   ],
+   "astra": [
+    true,
+    true,
+    true
+   ],
+   "argon": [
+    true,
+    true,
+    true
+   ]
+  },
+  "q04_i": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    false,
+    true,
+    true
+   ],
+   "astra": [
+    false,
+    false,
+    false
+   ],
+   "argon": [
+    false,
+    false,
+    false
+   ]
+  },
+  "q04_j": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    false,
+    false,
+    false
+   ],
+   "astra": [
+    false,
+    false,
+    false
+   ],
+   "argon": [
+    false,
+    false,
+    false
+   ]
+  },
+  "q05_a": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    true,
+    true,
+    true
+   ],
+   "astra": [
+    true,
+    false,
+    true
+   ],
+   "argon": [
+    true,
+    true,
+    false
+   ]
+  },
+  "q05_b": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    false,
+    false,
+    false
+   ],
+   "astra": [
+    false,
+    false,
+    false
+   ],
+   "argon": [
+    false,
+    true,
+    false
+   ]
+  },
+  "q05_c": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    false,
+    false,
+    false
+   ],
+   "astra": [
+    false,
+    false,
+    false
+   ],
+   "argon": [
+    false,
+    false,
+    false
+   ]
+  },
+  "q05_d": {
+   "qwen": [
+    false,
+    false,
+    true
+   ],
+   "opus": [
+    true,
+    true,
+    true
+   ],
+   "astra": [
+    true,
+    true,
+    true
+   ],
+   "argon": [
+    false,
+    false,
+    false
+   ]
+  },
+  "q05_e": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    true,
+    false,
+    true
+   ],
+   "astra": [
+    false,
+    false,
+    false
+   ],
+   "argon": [
+    true,
+    false,
+    true
+   ]
+  },
+  "q05_f": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    true,
+    false,
+    true
+   ],
+   "astra": [
+    false,
+    false,
+    false
+   ],
+   "argon": [
+    true,
+    false,
+    false
+   ]
+  },
+  "q05_g": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    true,
+    true,
+    false
+   ],
+   "astra": [
+    true,
+    true,
+    true
+   ],
+   "argon": [
+    true,
+    true,
+    true
+   ]
+  },
+  "q05_h": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    false,
+    true,
+    false
+   ],
+   "astra": [
+    true,
+    false,
+    true
+   ],
+   "argon": [
+    true,
+    true,
+    true
+   ]
+  },
+  "q05_i": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    false,
+    true,
+    true
+   ],
+   "astra": [
+    false,
+    false,
+    true
+   ],
+   "argon": [
+    true,
+    true,
+    true
+   ]
+  },
+  "q05_j": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    true,
+    true,
+    true
+   ],
+   "astra": [
+    true,
+    true,
+    false
+   ],
+   "argon": [
+    true,
+    false,
+    true
+   ]
+  },
+  "q06_a": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    false,
+    false,
+    true
+   ],
+   "astra": [
+    true,
+    true,
+    true
+   ],
+   "argon": [
+    false,
+    false,
+    false
+   ]
+  },
+  "q06_b": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    true,
+    true,
+    false
+   ],
+   "astra": [
+    true,
+    false,
+    false
+   ],
+   "argon": [
+    true,
+    false,
+    false
+   ]
+  },
+  "q06_c": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    false,
+    false,
+    true
+   ],
+   "astra": [
+    true,
+    true,
+    true
+   ],
+   "argon": [
+    true,
+    false,
+    true
+   ]
+  },
+  "q06_d": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    false,
+    false,
+    true
+   ],
+   "astra": [
+    false,
+    false,
+    false
+   ],
+   "argon": [
+    true,
+    false,
+    true
+   ]
+  },
+  "q06_e": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    false,
+    false,
+    false
+   ],
+   "astra": [
+    true,
+    true,
+    true
+   ],
+   "argon": [
+    false,
+    false,
+    false
+   ]
+  },
+  "q06_f": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    false,
+    false,
+    true
+   ],
+   "astra": [
+    false,
+    true,
+    false
+   ],
+   "argon": [
+    false,
+    false,
+    true
+   ]
+  },
+  "q06_g": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    false,
+    false,
+    false
+   ],
+   "astra": [
+    false,
+    false,
+    false
+   ],
+   "argon": [
+    false,
+    false,
+    false
+   ]
+  },
+  "q06_h": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    false,
+    false,
+    false
+   ],
+   "astra": [
+    false,
+    false,
+    false
+   ],
+   "argon": [
+    false,
+    false,
+    false
+   ]
+  },
+  "q06_i": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    true,
+    false,
+    true
+   ],
+   "astra": [
+    true,
+    true,
+    true
+   ],
+   "argon": [
+    false,
+    true,
+    true
+   ]
+  },
+  "q06_j": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    false,
+    false,
+    false
+   ],
+   "astra": [
+    false,
+    false,
+    false
+   ],
+   "argon": [
+    false,
+    false,
+    false
+   ]
+  },
+  "q07_a": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    false,
+    false,
+    false
+   ],
+   "astra": [
+    false,
+    false,
+    false
+   ],
+   "argon": [
+    false,
+    false,
+    false
+   ]
+  },
+  "q07_b": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    false,
+    false,
+    false
+   ],
+   "astra": [
+    false,
+    false,
+    false
+   ],
+   "argon": [
+    false,
+    true,
+    true
+   ]
+  },
+  "q07_c": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    false,
+    false,
+    false
+   ],
+   "astra": [
+    false,
+    false,
+    false
+   ],
+   "argon": [
+    false,
+    false,
+    false
+   ]
+  },
+  "q07_d": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    false,
+    false,
+    false
+   ],
+   "astra": [
+    false,
+    false,
+    false
+   ],
+   "argon": [
+    false,
+    true,
+    true
+   ]
+  },
+  "q07_e": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    false,
+    false,
+    false
+   ],
+   "astra": [
+    true,
+    true,
+    false
+   ],
+   "argon": [
+    true,
+    true,
+    false
+   ]
+  },
+  "q07_f": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    false,
+    false,
+    false
+   ],
+   "astra": [
+    false,
+    false,
+    false
+   ],
+   "argon": [
+    false,
+    false,
+    false
+   ]
+  },
+  "q07_g": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    false,
+    false,
+    false
+   ],
+   "astra": [
+    false,
+    false,
+    false
+   ],
+   "argon": [
+    true,
+    true,
+    true
+   ]
+  },
+  "q07_h": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    false,
+    false,
+    false
+   ],
+   "astra": [
+    false,
+    true,
+    false
+   ],
+   "argon": [
+    false,
+    false,
+    false
+   ]
+  },
+  "q07_i": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    false,
+    false,
+    false
+   ],
+   "astra": [
+    false,
+    false,
+    false
+   ],
+   "argon": [
+    false,
+    false,
+    false
+   ]
+  },
+  "q07_j": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    false,
+    false,
+    false
+   ],
+   "astra": [
+    false,
+    false,
+    false
+   ],
+   "argon": [
+    false,
+    false,
+    false
+   ]
+  },
+  "q08_a": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    false,
+    false,
+    false
+   ],
+   "astra": [
+    false,
+    false,
+    false
+   ],
+   "argon": [
+    false,
+    false,
+    false
+   ]
+  },
+  "q08_b": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    false,
+    false,
+    false
+   ],
+   "astra": [
+    false,
+    false,
+    false
+   ],
+   "argon": [
+    false,
+    false,
+    false
+   ]
+  },
+  "q08_c": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    false,
+    false,
+    false
+   ],
+   "astra": [
+    false,
+    false,
+    false
+   ],
+   "argon": [
+    false,
+    false,
+    false
+   ]
+  },
+  "q08_d": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    false,
+    false,
+    false
+   ],
+   "astra": [
+    false,
+    false,
+    false
+   ],
+   "argon": [
+    false,
+    false,
+    false
+   ]
+  },
+  "q08_e": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    false,
+    false,
+    false
+   ],
+   "astra": [
+    false,
+    false,
+    false
+   ],
+   "argon": [
+    false,
+    false,
+    false
+   ]
+  },
+  "q08_f": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    false,
+    false,
+    false
+   ],
+   "astra": [
+    false,
+    false,
+    false
+   ],
+   "argon": [
+    false,
+    false,
+    false
+   ]
+  },
+  "q08_g": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    false,
+    false,
+    false
+   ],
+   "astra": [
+    false,
+    false,
+    false
+   ],
+   "argon": [
+    false,
+    false,
+    false
+   ]
+  },
+  "q08_h": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    false,
+    false,
+    false
+   ],
+   "astra": [
+    false,
+    false,
+    false
+   ],
+   "argon": [
+    false,
+    false,
+    false
+   ]
+  },
+  "q08_i": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    false,
+    false,
+    false
+   ],
+   "astra": [
+    false,
+    false,
+    false
+   ],
+   "argon": [
+    false,
+    false,
+    false
+   ]
+  },
+  "q08_j": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    false,
+    false,
+    false
+   ],
+   "astra": [
+    false,
+    false,
+    false
+   ],
+   "argon": [
+    false,
+    false,
+    false
+   ]
+  },
+  "q09_a": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    false,
+    false,
+    false
+   ],
+   "astra": [
+    false,
+    false,
+    false
+   ],
+   "argon": [
+    false,
+    false,
+    false
+   ]
+  },
+  "q09_b": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    true,
+    true,
+    false
+   ],
+   "astra": [
+    false,
+    false,
+    false
+   ],
+   "argon": [
+    false,
+    true,
+    false
+   ]
+  },
+  "q09_c": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    false,
+    false,
+    false
+   ],
+   "astra": [
+    false,
+    false,
+    false
+   ],
+   "argon": [
+    false,
+    false,
+    false
+   ]
+  },
+  "q09_d": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    true,
+    true,
+    false
+   ],
+   "astra": [
+    true,
+    false,
+    true
+   ],
+   "argon": [
+    false,
+    true,
+    true
+   ]
+  },
+  "q09_e": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    false,
+    true,
+    true
+   ],
+   "astra": [
+    false,
+    false,
+    true
+   ],
+   "argon": [
+    false,
+    false,
+    true
+   ]
+  },
+  "q09_f": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    false,
+    false,
+    false
+   ],
+   "astra": [
+    false,
+    false,
+    false
+   ],
+   "argon": [
+    false,
+    false,
+    false
+   ]
+  },
+  "q09_g": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    true,
+    false,
+    false
+   ],
+   "astra": [
+    false,
+    false,
+    false
+   ],
+   "argon": [
+    false,
+    false,
+    false
+   ]
+  },
+  "q09_h": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    false,
+    false,
+    false
+   ],
+   "astra": [
+    false,
+    false,
+    false
+   ],
+   "argon": [
+    false,
+    false,
+    false
+   ]
+  },
+  "q09_i": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    false,
+    false,
+    false
+   ],
+   "astra": [
+    false,
+    false,
+    false
+   ],
+   "argon": [
+    false,
+    false,
+    false
+   ]
+  },
+  "q09_j": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    false,
+    false,
+    false
+   ],
+   "astra": [
+    false,
+    false,
+    false
+   ],
+   "argon": [
+    false,
+    false,
+    false
+   ]
+  },
+  "q10_a": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    false,
+    false,
+    false
+   ],
+   "astra": [
+    false,
+    false,
+    false
+   ],
+   "argon": [
+    false,
+    false,
+    false
+   ]
+  },
+  "q10_b": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    false,
+    true,
+    true
+   ],
+   "astra": [
+    true,
+    true,
+    true
+   ],
+   "argon": [
+    true,
+    true,
+    true
+   ]
+  },
+  "q10_c": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    true,
+    true,
+    true
+   ],
+   "astra": [
+    false,
+    false,
+    true
+   ],
+   "argon": [
+    false,
+    true,
+    true
+   ]
+  },
+  "q10_d": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    false,
+    true,
+    false
+   ],
+   "astra": [
+    false,
+    false,
+    false
+   ],
+   "argon": [
+    false,
+    false,
+    false
+   ]
+  },
+  "q10_e": {
+   "qwen": [
+    false,
+    true,
+    false
+   ],
+   "opus": [
+    true,
+    true,
+    true
+   ],
+   "astra": [
+    true,
+    true,
+    true
+   ],
+   "argon": [
+    true,
+    true,
+    true
+   ]
+  },
+  "q10_f": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    false,
+    false,
+    false
+   ],
+   "astra": [
+    false,
+    false,
+    false
+   ],
+   "argon": [
+    false,
+    false,
+    false
+   ]
+  },
+  "q10_g": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    false,
+    false,
+    false
+   ],
+   "astra": [
+    false,
+    false,
+    false
+   ],
+   "argon": [
+    false,
+    false,
+    false
+   ]
+  },
+  "q10_h": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    true,
+    true,
+    true
+   ],
+   "astra": [
+    true,
+    true,
+    true
+   ],
+   "argon": [
+    true,
+    true,
+    false
+   ]
+  },
+  "q10_i": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    false,
+    false,
+    true
+   ],
+   "astra": [
+    false,
+    false,
+    false
+   ],
+   "argon": [
+    false,
+    true,
+    true
+   ]
+  },
+  "q10_j": {
+   "qwen": [
+    false,
+    false,
+    false
+   ],
+   "opus": [
+    false,
+    false,
+    false
+   ],
+   "astra": [
+    false,
+    false,
+    false
+   ],
+   "argon": [
+    false,
+    false,
+    true
+   ]
+  }
+ }
+}

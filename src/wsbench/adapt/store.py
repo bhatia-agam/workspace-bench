@@ -31,6 +31,13 @@ def item_id(item: dict) -> str:
     return str(item.get("id") or item.get("name"))
 
 
+# the bank file an adaptation ports when it is not the registered one: conjunctive_association's
+# registered bank v6 is bank v4 plus shared-axis distractors (2026-11-20), which the Phase B
+# authoring (adapt.conjstage: the v4 schema, ``bank_version: 4``) does not write for its own
+# clusters yet; a set copying v6 items beside authored v4 ones would be a mixed-version bank
+ADAPT_SOURCE_BANKS: dict[str, str] = {"conjunctive_association": "items_v4.json"}
+
+
 def original_bank(family: str) -> tuple[dict[str, Any], list[dict]]:
     """The frozen bank, header and items, whether wrapped or a plain list. The header never
     carries ``read_plan_bank``: that names a sibling file of the registered bank whose read plan
@@ -39,6 +46,8 @@ def original_bank(family: str) -> tuple[dict[str, Any], list[dict]]:
     from wsbench.registry import frozen_bank_path
 
     path = frozen_bank_path(family)
+    if family in ADAPT_SOURCE_BANKS:
+        path = path.with_name(ADAPT_SOURCE_BANKS[family])
     raw = json.loads(path.read_text(encoding="utf-8"))
     if isinstance(raw, list):
         return {}, raw

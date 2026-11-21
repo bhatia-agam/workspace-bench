@@ -5,8 +5,8 @@ judges one digest of every cell. Either way a gold pick passes only when (C2.2) 
 verifies inside the readouts (``digest.quote_ok``) AND inside ONE statement
 (``digest.statement_lines``: one bullet of one free-text sample, or one token list), and (C2.3)
 a quote-only re-judge (schema ``quote_mc``) picks the gold again from the quote alone. A pick of
-the gold's role-swapped twin (bank v2) is ``inverted``, a fail like any other option; it never
-vetoes another draw's, candidate's or shard's gold.
+the gold's role-swapped twin (bank v2) is ``inverted``, a pick of the gold with another value of
+the cluster's shared part (bank v6) is ``shared_axis``: fails like any other option.
 """
 
 import itertools
@@ -135,6 +135,14 @@ def inverted_position(it: dict, shown: list[str]) -> int | None:
     ``shown``; None when the item has no twin (q06, q03's "himself" cells, every v1 item)."""
     inv = it.get("inverted_label")
     return shown.index(inv) + 1 if inv and inv in shown else None
+
+
+def shared_axis_positions(it: dict, shown: list[str]) -> frozenset[int]:
+    """1-based positions of the gold's shared-axis distractors (``shared_axis_labels``, bank
+    v6: the gold with another value of the part every option of its cluster shares); empty for
+    q06 and every earlier bank."""
+    labels = set(it.get("shared_axis_labels") or ())
+    return frozenset(i + 1 for i, o in enumerate(shown) if o in labels)
 
 
 def build_bags(cells: list[Cell]) -> dict[tuple[str, int], str]:
@@ -291,6 +299,10 @@ class _Gate:
         inv = inverted_position(it, shown)
         if pick not in ("invalid", "cannot_tell") and inv is not None and choice == inv:
             pick = "inverted"
+        elif pick not in ("invalid", "cannot_tell", "gold") and choice in shared_axis_positions(
+            it, shown
+        ):
+            pick = "shared_axis"  # the gold with another shared part: one wrong option
         raw = pick
         in_lines = digest.quote_ok(quote, lines)
         in_statement = in_lines and digest.quote_ok(quote, digest.statement_lines(lines, cells))

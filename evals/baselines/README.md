@@ -134,7 +134,7 @@ dates.
 | basic_readout (bank v7) | 1.000 | 1.000 | 90 | mc-brmt-2026-10-31r+norival-v1+qline-v2+bank-v7 | Opus 5.5 |
 | buggy_code (bank v2) | 0.917 (24 pairs) | 0.969 [0.92, 1.00] | 64 pairs | buggy-pairs-2026-10-29+infer-r1-2026-10-31+pair-headline-2026-10-30+eof-all-layers-2026-10-30+bank-v2 | Opus 5.5 |
 | chain_intermediates | 0.967 | 0.967 [0.93, 0.99] | 120 | chain-mc-2026-10-30+heads-v5+start-op+key-ex2 | Opus 5.5 |
-| conjunctive_association | 0.220 | 0.340 [0.25, 0.43] | 100 | comp-v5+maj | Opus 5.5 |
+| conjunctive_association (bank v6, re-measured 2026-11-21) | 0.220 | 0.250 [0.17, 0.34] | 100 | comp-v6+bank-v6+maj | Opus 5.5 |
 | directed_modulation † | 1.000 | 1.000 (saturated) | 100 | dm-2026-10-31+expressed | Opus 5.5 |
 | introspection † | 0.000 | 0.000 | 125 | ii-grid-2026-11-v4+twinrx-v4+jhead-v2 | Opus 5.5 |
 | jailbreak_recognition † | 0.895 | 0.884 [0.80, 0.96] | 172 | jb-v4+pins-r1+pins-r3+guard-off+sonnet-digest+item-q2+opus5-fb+test-pins | Opus 5.5 |
@@ -230,9 +230,11 @@ examples seeded under the key `multihop`, while a re-run here seeds the family u
 key `multihop_mt_v2` (`registry.HASH_FAMILY_NAMES`, which also keeps its plan and ATI
 fingerprints) and so shows other examples on the same lists; its `uniform` line is this code's
 seeded draw.
-conjunctive_association's entries were not re-measured: they carry the current stamp (`comp-v5`,
-a guesser sees only the lists), but their family-rule columns were scored with the earlier
-inverted-twin veto (`evals/association/conjunctive_association/README.md`). typo's Gemini-era entries stay
+conjunctive_association's entries were not re-measured at the refreeze; they were re-measured on
+2026-11-21 on bank v6 (`comp-v6+bank-v6`, shared-axis distractors with their twins: fresh draws,
+the `+maj` rule; `evals/association/conjunctive_association/README.md`), as were its prompt-only
+floor (0.340 -> 0.250; fresh readouts of 2026-11-20, judged under the final comp-v6 text) and
+its logit-lens entry (0.000, re-judged). typo's Gemini-era entries stay
 as MC diagnostics of a regex family and are never drawn.
 
 | family | n | chance | blind | described | topic | uniform | MC leakage standard |
@@ -426,7 +428,7 @@ averaged over draws with its std, `majority` the per-item plurality vote. Famili
 
 | family | lists per item | options | notes |
 |---|---|---|---|
-| conjunctive_association | 1 | 22-44 | bank v4 (round 4, Fable on #202: lists widened to 22 non-twin options, two authoring rounds): `comp-v5`, under the family rule: blind 0.06, described 0.06, topic (topic-v4) 0.10 vs chance 0.002 (line 0.052), all **FAIL**; +cand3 all-layer 0.17 / 0.30 / 0.21 vs 0.157 (line 0.207; blind passes), lite 0.15 / 0.26 / 0.22 vs 0.049 (line 0.099; all fail). Does NOT meet the standard; the gap and why are in the family README |
+| conjunctive_association | 1 | 22-176 | bank v6 (2026-11-21: four copies of bank v4's list, one per value of the cluster's shared part, twins included, so no count separates the original value): `comp-v6+bank-v6`, under the family rule: blind 0.02, described 0.04, topic (topic-v4) 0.06 vs chance 0.0007 (line 0.051; blind and described pass, topic **FAIL**); +cand3 all-layer = lite 0.22 / 0.34 / 0.30 vs 0.063 (line 0.113), all **FAIL** (bank v4, `comp-v5`: 0.06 / 0.06 / 0.10 vs 0.002 and 0.17 / 0.30 / 0.21 vs 0.157). Does NOT meet the standard; the gap and why are in the family README |
 | role_bound_association | 3 | 5 | agent / action / patient; a people list may repeat a label (the judge's list does); `oa-v3.1` floors per item blind 0.116, described 0.148, topic 0.226 vs uniform 0.008 (fail); the headline is direction pairs (`pair-v1`, review of #202 round 5), so the standard reads `family_rule` = per pair `p_ab * p_ba`: 0.012 / 0.006 / 0.000 vs 0.00006 (line 0.050), **pass** |
 | relational_multihop | 1 | 18 | rel-v3 (#209 round 6): one composed-relation list (12 chains over the two hops + three decoys, 5 singles, 1 near form); rel-v2's 13-option list failed the leakage bar |
 | moral_rationale | 1 or 2 | 5 | committed items one list, deliberative items one per side; single pick (`ec-v9`): question 0.706, described 0.704, blind 0.608 vs chance 0.176, far above the standard (the bank still leaks; see the floors of record) |
@@ -1330,7 +1332,7 @@ and jlens_concept_pr and the superseded `typo_st`, as for prompt-only. multihop 
 | basic_readout | 0.067 | 90 | — | `mc-brmt-2026-10-31r+norival-v1+qline-v2+bank-v7` |
 | buggy_code | 0.000 | 64 | — | `buggy-pairs-2026-10-29+infer-r1-2026-10-31+pair-headline-2026-10-30+eof-all-layers-2026-10-30+bank-v2` |
 | chain_intermediates | 0.000 | 120 | — | `chain-mc-2026-10-30+heads-v5+start-op+key-ex2` |
-| conjunctive_association | 0.000 | 100 | 0.000 (26) | `comp-v5+maj` |
+| conjunctive_association | 0.000 | 100 | 0.000 (26) | `comp-v6+bank-v6+maj` |
 | directed_modulation | 0.220 | 100 | — | `dm-2026-10-31+expressed` |
 | hinted_cutoff | 0.000 | 118 | — | `hc-2026-11-04b+bank-v2` |
 | introspection | 0.160 | 125 | 0.161 (124) | `ii-grid-2026-11-v4+twinrx-v4+jhead-v2` |
@@ -1634,7 +1636,7 @@ in `adapted/glm-5.3/` and are read under `WSB_BANK_ROOT=adapted/glm-5.3`:
 | family | A | B | macro |
 |---|---|---|---|
 | moral_rationale | 25 | 25 | n >= 20 |
-| conjunctive_association | 21 | 21 | n >= 20 |
+| conjunctive_association | 30 | 29 | n >= 20 (re-gated under comp-v6, 2026-11-21; 21 / 21 under comp-v5) |
 | poetry | 19 | 19 | exception |
 | wrong_intermediate | 19 | 17 | exception |
 | model_multihop | 12 | 8 | exception |

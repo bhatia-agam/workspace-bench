@@ -386,9 +386,9 @@ def test_v4_widens_every_list_to_22_non_twin_options():
 
 
 def test_options_match_v4_golden():
-    from wsbench.mcjudge import load_bank
-
-    for it in load_bank("conjunctive_association"):
+    # the v4 file, read explicitly since bank v6 is the registered one (its lists:
+    # tests/test_conjunctive_shared_axis.py and conjunctive_association_options_v6.json)
+    for it in json.loads(V4.read_text()):
         shown, gold_pos, _c = cj.build_options(it)
         assert {"shown": shown, "gold_pos": gold_pos} == GOLDEN_V4[it["id"]], it["id"]
 

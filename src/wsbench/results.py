@@ -437,7 +437,7 @@ def macro(
     registered-panel ATI row the result carries ``ati_subset``. Plan 0090: results that mix
     ``config.scope == "fast"`` rows with others raise ``SystemExit``; a fast row stamped with
     another ``config.fast_subset`` is excluded, reason ``"stale fast subset (<v>)"``, unless
-    (plan 0094) that version is in ``fast.COMPATIBLE`` and the family is in the current subset;
+    (plan 0094) that version is ``fast.compatible`` for the family (same entry in both files);
     with any fast row the result carries ``fast_subset`` (the current version)."""
     ctx = _macro_context(results, superseded, held_out, removed, retired)
     included: list[FamilyResult] = []
@@ -636,15 +636,16 @@ def _ati_exception(r: FamilyResult) -> bool:
 
 def _stale_fast_subset(r: FamilyResult) -> bool:
     """A fast row out of the active subset's macro: stamped with neither ``fast.VERSION`` nor,
-    for a family of the active subset, a ``fast.COMPATIBLE`` version (plans 0094 / 0095: same
-    entry, same value)."""
+    for a family of the active subset, a version ``fast.compatible`` for it (plans 0094 / 0095:
+    same entry, same value)."""
     from wsbench import fast  # lazy: fast imports this module
 
     v = r.config.get("fast_subset")
     if v == fast.VERSION:
         return False
-    # compatible only when the stamped version's own file holds the family too (plan 0095)
-    return not (v in fast.COMPATIBLE and r.family in fast.subset() and r.family in fast.subset(v))
+    # compatible only when the stamped version's own file holds the family too (plan 0095),
+    # with the entry the active subset has (per family: a re-frozen bank's old rows are stale)
+    return not fast.compatible(v, r.family)
 
 
 def _stale_ati_subset(r: FamilyResult) -> str | None:

@@ -36,7 +36,10 @@ family key (`plan_sha_pre_0090.json`, the fast-subset row hashes) is reproduced 
 `registry.hash_name` / `frozen_name`. `manifest_0101_pre.json` is the manifest of every
 family's hashes, seeds, option orders, prompt shas and call keys recorded on main before the
 rename, in pre-0101 keys; `scripts/manifest_0101.py --check` compares the tree against it and
-neither file is ever regenerated (the golden embeds the script's sha). `--check` itself reports
+neither file is ever regenerated (the golden embeds the sha of the script that made it; the
+script has since gained one `try` in `plan_entry`, so that a family whose bank changed after an
+older fast version was frozen is recorded as `unavailable` instead of ending the run, and
+T1 pins both shas and the golden's bytes). `--check` itself reports
 every later instrument change as a difference; the permanent guard is T1 of
 `tests/test_rename_0101.py`, whose rule is `verdict` in `scripts/manifest_0101_declare.py`:
 **every family's manifest rows equal either the migration golden's or the state recorded for it
@@ -59,11 +62,20 @@ bank version that differs from the golden's.**
   tables and imports) must equal the golden's; `shared.n_families` may grow only by the
   families the golden does not have. A deliberate shared change needs an edit of that check.
 - A family missing from the tree fails.
+- Fast versions cut after the golden (a version the golden has for no family): a family's
+  `plan.fast_plan_sha` row for one is set aside, before the comparison and before the ledger
+  hash, when it is the family's row under one of the golden's versions (the same plan rows under
+  a new name; for the two position-reduced families, whose rows hash the version string, the
+  row recomputed under the older version's name). Cutting a fast version therefore needs no
+  entry from the families it leaves alone and stales no earlier entry. Any other new-version row
+  fails ("its fast plan moved"), except in a family declared with a new bank, where it is part
+  of what the ledger hash holds.
 
 The ledger is written by `python scripts/manifest_0101_declare.py <family> --plan <NNNN> --note
 '<what moved>' --write`, which refuses when the family's stamp and bank equal the golden's or
 its previous entry's (bump first), and when there is nothing to declare. One reviewable entry
-per declared change; today: `nyt_connections` (plan 0099). `tests/fixtures/` follows the same rule (`adapted_v1/` is a
+per declared change; today: `nyt_connections` (plan 0099) and `conjunctive_association` (plan
+0103: comp-v6 on bank v6). `tests/fixtures/` follows the same rule (`adapted_v1/` is a
 set from before the rename, kept unmigrated on purpose).
 
 ## In-repo v2 pins (plan 0012, 2026-10-10)

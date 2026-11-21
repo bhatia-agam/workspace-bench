@@ -187,9 +187,10 @@ uv run wsbench run --fast all=True readouts_root=outputs/readouts/mylens-fast ou
 
 ## Fast subset (`--fast`, `--fast-safety`)
 
-`--fast` judges the frozen subset `fast-v2` (plans 0090 / 0094; `evals/fast/README.md`): 22
+`--fast` judges the frozen subset `fast-v3` (plans 0090 / 0094; `evals/fast/README.md`; `fast-v2`
+until 2026-11-20, the same items): 22
 families, `fast-v1` without `jailbreak_recognition` and `agentic_misalignment`. `--fast-safety`
-(plan 0095) judges `fast-safety-v1`: those 22 plus the two safety families, 24 in all; every
+(plan 0095) judges `fast-safety-v2` (`fast-safety-v1` until 2026-11-20, the same items): those 22 plus the two safety families, 24 in all; every
 command below takes it in place of `--fast`. **A full
 readouts file is always judgeable with `--fast` / `--fast-safety`**: the judge keeps the fast
 items itself, so existing readouts need no re-read. To read only what the fast subset needs:
@@ -200,11 +201,11 @@ uv run wsbench run --fast all=True readouts_root=outputs/readouts/mylens-fast ou
 ```
 
 - The fast plan is the full plan's rows of the fast read items: same render, layers and
-  positions rule for every `fast-v2` family, so a producer of the full plan needs nothing new.
-- **`--fast-safety` only** (this bullet and the next; no `fast-v2` row carries a fast positions
+  positions rule for every `fast-v3` family, so a producer of the full plan needs nothing new.
+- **`--fast-safety` only** (this bullet and the next; no `fast-v3` row carries a fast positions
   rule, and `--fast` does not plan or judge these two families): `agentic_misalignment` and
   `jailbreak_recognition` rows carry `{"kind": "fast_of", "full": <the full rule>, "fast":
-  <the fast rule>}` and `extra.fast = "fast-safety-v1"` (`"fast-v1"` in a `fast-v1` plan, the
+  <the fast rule>}` and `extra.fast = "fast-safety-v2"` (`"fast-safety-v1"` / `"fast-v1"` in those versions' plans, the
   same rows otherwise): the fast rule applied WITHIN the full rule's
   positions. `last_n {n}` = the last n of them; `punct_special` = those whose token is
   punctuation, a newline token or a special token (`wsbench.readplan.is_fast_site`), else the
@@ -215,13 +216,21 @@ uv run wsbench run --fast all=True readouts_root=outputs/readouts/mylens-fast ou
   display strings: those show CJK and curly punctuation as mojibake, which is not punctuation.
   Write each row's `token`: the judge applies the same predicate to it, and a `punct_special` row
   without `token` is refused.
-- Declare the file in its sidecar: `"fast": "fast-v2"` (`"fast-safety-v1"` for a file read from
+- Declare the file in its sidecar: `"fast": "fast-v3"` (`"fast-safety-v2"` for a file read from
   the `--fast-safety` plan) and `"plan_sha"` = the FAST plan's sha
   (`wsbench.reads.fast_plan_sha(family)`, i.e. `plan_sha_rows` over the rows `wsbench plan --fast`
   / `--fast-safety` wrote), with `"reads": "full"`. A file that declares `fast` is judged only
   with `--fast` / `--fast-safety`, and code that predates plan 0090 refuses it on the sha
   mismatch. `wsbench produce family=F --fast` / `--fast-safety` does all of this.
-- The three versions `fast-v1`, `fast-v2` and `fast-safety-v1` hold identical entries for every
+- A file declaring another version is judged when that version reads the family's same items
+  at the same positions (`fast.same_reads`, per family: `read_ids` and the `positions` rule;
+  the declared `plan_sha` is still checked). `fast-v3` and `fast-safety-v2` (2026-11-20) are
+  `fast-v2` and `fast-safety-v1` with `conjunctive_association` pinned to its bank v6: its reads
+  are unchanged, so its FAST files declaring `fast-v1`, `fast-v2` or `fast-safety-v1` are judged
+  as they are (only its old RESULT rows are stale). The five versions read every family they
+  share the same way, and what follows for the three older versions holds
+  for the two new ones too. The three versions `fast-v1`, `fast-v2` and `fast-safety-v1` hold
+  identical entries for every
   family they share, so a file declaring any of them is judged under either flag for a family
   of the subset being judged (a `fast-v2` file of the 22 families under `--fast-safety`, a
   `fast-v1` or `fast-safety-v1` file of the 22 under `--fast`, a `fast-v1` jailbreak / agentic

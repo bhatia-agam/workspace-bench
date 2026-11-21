@@ -273,7 +273,7 @@ def test_child_argv_names_the_active_fast_subset(monkeypatch, namespace):
         return [a for a in cmd[4:] if a.split("=", 1)[0].startswith("fast")]
 
     assert fast_arg() == ["fast=True"]  # finalize selected nothing: the default subset
-    assert fast.select("safety") == "fast-safety-v1"
+    assert fast.select("safety") == "fast-safety-v2"
     cmd = runner.judge_argv("fam", args, Path("r/fam.jsonl"), Path("o/fam"))
     assert fast_arg() == ["fast=safety"]
     child = cli.JudgeFamily()
@@ -282,7 +282,7 @@ def test_child_argv_names_the_active_fast_subset(monkeypatch, namespace):
     monkeypatch.setattr(fast, "VERSION", "fast-v1")
     assert fast_arg() == ["fast=True"]
     args.fast = False
-    monkeypatch.setattr(fast, "VERSION", "fast-safety-v1")
+    monkeypatch.setattr(fast, "VERSION", "fast-safety-v2")
     assert fast_arg() == []
 
 

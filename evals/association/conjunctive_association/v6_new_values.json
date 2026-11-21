@@ -1,0 +1,1231 @@
+{
+ "model": "claude-opus-5-5",
+ "n_new": 3,
+ "slots": {
+  "q01": {
+   "cluster": "q01",
+   "axis": "content",
+   "prefix": "over ",
+   "core": "the sudden accidental death",
+   "suffix": " of ",
+   "keep": [
+    "sudden"
+   ],
+   "ask": "the event that befell the other person: another kind of event, NOT a death, a loss of life or a cause or manner of dying (the options must still read naturally after 'grief over' and after 'guilt over')",
+   "proposed": [
+    "the permanent disappearance",
+    "the wrongful imprisonment",
+    "the crippling paralysis",
+    "the forced deportation",
+    "the public disgrace",
+    "the financial ruin",
+    "the disabling stroke",
+    "the gradual memory loss",
+    "the failed marriage",
+    "the sudden blindness",
+    "the court-ordered removal",
+    "the drug addiction"
+   ],
+   "distinct": {
+    "the permanent disappearance": "distinct",
+    "the wrongful imprisonment": "distinct",
+    "the crippling paralysis": "distinct",
+    "the forced deportation": "distinct",
+    "the public disgrace": "distinct",
+    "the financial ruin": "distinct",
+    "the disabling stroke": "distinct",
+    "the gradual memory loss": "distinct",
+    "the failed marriage": "distinct",
+    "the sudden blindness": "distinct",
+    "the court-ordered removal": "distinct",
+    "the drug addiction": "distinct"
+   },
+   "scene": {
+    "implied_by": {
+     "the permanent disappearance": [],
+     "the wrongful imprisonment": [],
+     "the crippling paralysis": [],
+     "the forced deportation": [],
+     "the public disgrace": [],
+     "the financial ruin": [],
+     "the disabling stroke": [],
+     "the gradual memory loss": [],
+     "the failed marriage": [],
+     "the sudden blindness": [],
+     "the court-ordered removal": [],
+     "the drug addiction": []
+    },
+    "gold_implied": {
+     "q01_a": [
+      true,
+      true,
+      true
+     ],
+     "q01_b": [
+      true,
+      true,
+      true
+     ],
+     "q01_c": [
+      true,
+      true,
+      true
+     ],
+     "q01_d": [
+      true,
+      true,
+      true
+     ],
+     "q01_e": [
+      true,
+      true,
+      true
+     ],
+     "q01_f": [
+      true,
+      true,
+      true
+     ],
+     "q01_g": [
+      true,
+      true,
+      true
+     ],
+     "q01_h": [
+      true,
+      true,
+      true
+     ],
+     "q01_i": [
+      true,
+      true,
+      true
+     ],
+     "q01_j": [
+      true,
+      true,
+      true
+     ]
+    }
+   }
+  },
+  "q02": {
+   "cluster": "q02",
+   "axis": "relation",
+   "prefix": "at ",
+   "core": "her closest friend's",
+   "suffix": " recent ",
+   "keep": [],
+   "ask": "the person whose good news it is: another person named by their relation to her, NOT a friend of any kind",
+   "proposed": [
+    "her younger sister's",
+    "her older brother's",
+    "her mother's",
+    "her cousin's",
+    "her ex-husband's",
+    "her coworker's",
+    "her next-door neighbor's",
+    "her sister-in-law's",
+    "her stepdaughter's",
+    "her college roommate's",
+    "her boss's",
+    "her niece's"
+   ],
+   "distinct": {
+    "her younger sister's": "distinct",
+    "her older brother's": "distinct",
+    "her mother's": "distinct",
+    "her cousin's": "distinct",
+    "her ex-husband's": "distinct",
+    "her coworker's": "distinct",
+    "her next-door neighbor's": "distinct",
+    "her sister-in-law's": "distinct",
+    "her stepdaughter's": "distinct",
+    "her college roommate's": "overlap",
+    "her boss's": "distinct",
+    "her niece's": "distinct"
+   },
+   "scene": {
+    "implied_by": {
+     "her younger sister's": [],
+     "her older brother's": [],
+     "her mother's": [],
+     "her cousin's": [],
+     "her ex-husband's": [],
+     "her coworker's": [
+      "q02_a",
+      "q02_f"
+     ],
+     "her next-door neighbor's": [],
+     "her sister-in-law's": [],
+     "her stepdaughter's": [],
+     "her boss's": [],
+     "her niece's": []
+    },
+    "gold_implied": {
+     "q02_a": [
+      true,
+      true,
+      true
+     ],
+     "q02_b": [
+      true,
+      true,
+      true
+     ],
+     "q02_c": [
+      true,
+      true,
+      true
+     ],
+     "q02_d": [
+      true,
+      true,
+      true
+     ],
+     "q02_e": [
+      true,
+      true,
+      true
+     ],
+     "q02_f": [
+      true,
+      true,
+      true
+     ],
+     "q02_g": [
+      true,
+      true,
+      true
+     ],
+     "q02_h": [
+      true,
+      true,
+      true
+     ],
+     "q02_i": [
+      true,
+      true,
+      true
+     ],
+     "q02_j": [
+      true,
+      true,
+      true
+     ]
+    }
+   }
+  },
+  "q03": {
+   "cluster": "q03",
+   "axis": "state",
+   "prefix": "",
+   "core": "dread",
+   "suffix": " while awaiting ",
+   "keep": [],
+   "ask": "the feeling: another feeling a person can have while waiting for news, NOT fear, anxiety, worry or any other shade of dread",
+   "proposed": [
+    "hope",
+    "boredom",
+    "impatience",
+    "guilt",
+    "resentment",
+    "calm acceptance",
+    "excitement",
+    "grief",
+    "anger",
+    "numbness",
+    "relief",
+    "shame"
+   ],
+   "distinct": {
+    "hope": "distinct",
+    "boredom": "distinct",
+    "impatience": "distinct",
+    "guilt": "distinct",
+    "resentment": "distinct",
+    "calm acceptance": "distinct",
+    "excitement": "distinct",
+    "grief": "distinct",
+    "anger": "distinct",
+    "numbness": "distinct",
+    "relief": "distinct",
+    "shame": "distinct"
+   },
+   "scene": {
+    "implied_by": {
+     "hope": [
+      "q03_f"
+     ],
+     "boredom": [],
+     "impatience": [],
+     "guilt": [],
+     "resentment": [],
+     "calm acceptance": [],
+     "excitement": [],
+     "grief": [],
+     "anger": [],
+     "numbness": [],
+     "relief": [],
+     "shame": []
+    },
+    "gold_implied": {
+     "q03_a": [
+      true,
+      true,
+      true
+     ],
+     "q03_b": [
+      true,
+      true,
+      true
+     ],
+     "q03_c": [
+      true,
+      true,
+      true
+     ],
+     "q03_d": [
+      true,
+      true,
+      true
+     ],
+     "q03_e": [
+      true,
+      true,
+      true
+     ],
+     "q03_f": [
+      false,
+      true,
+      false
+     ],
+     "q03_g": [
+      true,
+      true,
+      true
+     ],
+     "q03_h": [
+      true,
+      true,
+      true
+     ],
+     "q03_i": [
+      true,
+      true,
+      true
+     ],
+     "q03_j": [
+      true,
+      true,
+      true
+     ]
+    }
+   }
+  },
+  "q04a": {
+   "cluster": "q04",
+   "axis": "content",
+   "prefix": "the intent to conceal ",
+   "core": "her own mistake",
+   "suffix": " from ",
+   "keep": [
+    "her",
+    "own"
+   ],
+   "ask": "the thing she conceals: another thing of her own a person might hide from someone, NOT a mistake, error, fault or failure of any kind",
+   "proposed": [
+    "her own illness",
+    "her own pregnancy",
+    "her own debts",
+    "her own engagement",
+    "her own job offer",
+    "her own birthday",
+    "her own salary",
+    "her own diary",
+    "her own surprise gift",
+    "her own lottery win",
+    "her own new tattoo",
+    "her own travel plans"
+   ],
+   "distinct": {
+    "her own illness": "distinct",
+    "her own pregnancy": "distinct",
+    "her own debts": "distinct",
+    "her own engagement": "distinct",
+    "her own job offer": "distinct",
+    "her own birthday": "distinct",
+    "her own salary": "distinct",
+    "her own diary": "distinct",
+    "her own surprise gift": "distinct",
+    "her own lottery win": "distinct",
+    "her own new tattoo": "distinct",
+    "her own travel plans": "distinct"
+   },
+   "scene": {
+    "implied_by": {
+     "her own illness": [],
+     "her own pregnancy": [],
+     "her own debts": [],
+     "her own engagement": [],
+     "her own job offer": [],
+     "her own birthday": [],
+     "her own salary": [],
+     "her own diary": [],
+     "her own surprise gift": [],
+     "her own lottery win": [],
+     "her own new tattoo": [],
+     "her own travel plans": []
+    },
+    "gold_implied": {
+     "q04_a": [
+      true,
+      true,
+      true
+     ],
+     "q04_b": [
+      true,
+      true,
+      true
+     ],
+     "q04_c": [
+      true,
+      true,
+      true
+     ],
+     "q04_d": [
+      true,
+      true,
+      true
+     ],
+     "q04_e": [
+      true,
+      true,
+      true
+     ]
+    }
+   }
+  },
+  "q04b": {
+   "cluster": "q04",
+   "axis": "content",
+   "prefix": "'s ",
+   "core": "work",
+   "suffix": "",
+   "keep": [],
+   "ask": "the thing she takes credit for: another thing of the other person's that one could take credit for, NOT their work, job, project, idea or anything produced at work (the option reads 'the intent to take credit for a colleague's <value>')",
+   "proposed": [
+    "prize-winning garden",
+    "secret family recipe",
+    "charity donation",
+    "heroic rescue",
+    "winning goal",
+    "handmade quilt",
+    "birthday poem",
+    "wedding toast",
+    "tip to the police",
+    "home renovation",
+    "marathon fundraising",
+    "science-fair volcano"
+   ],
+   "distinct": {
+    "prize-winning garden": "overlap",
+    "secret family recipe": "overlap",
+    "charity donation": "distinct",
+    "heroic rescue": "distinct",
+    "winning goal": "distinct",
+    "handmade quilt": "overlap",
+    "birthday poem": "overlap",
+    "wedding toast": "distinct",
+    "tip to the police": "distinct",
+    "home renovation": "overlap",
+    "marathon fundraising": "overlap",
+    "science-fair volcano": "overlap"
+   },
+   "scene": {
+    "implied_by": {
+     "charity donation": [],
+     "heroic rescue": [],
+     "winning goal": [],
+     "wedding toast": []
+    },
+    "gold_implied": {
+     "q04_f": [
+      true,
+      true,
+      true
+     ],
+     "q04_g": [
+      true,
+      true,
+      true
+     ],
+     "q04_h": [
+      true,
+      true,
+      true
+     ],
+     "q04_i": [
+      true,
+      true,
+      true
+     ],
+     "q04_j": [
+      true,
+      true,
+      true
+     ]
+    }
+   }
+  },
+  "q07": {
+   "cluster": "q07",
+   "axis": "content",
+   "prefix": "relief at ",
+   "core": "her own reassuring medical news",
+   "suffix": ", and the intent ",
+   "keep": [
+    "her",
+    "own",
+    "reassuring"
+   ],
+   "ask": "the good news she is relieved about: other reassuring news of her own, NOT about her health, a diagnosis, a test or anything medical (the rest of the option speaks of 'the scare', which must still fit)",
+   "proposed": [
+    "the news that her job was safe after all",
+    "the bank's reassuring news about her mortgage",
+    "her own reassuring tax audit news",
+    "her lawyer's reassuring news about her lawsuit",
+    "the insurer's reassuring news about her house claim",
+    "her own reassuring visa renewal news",
+    "the news that her landlord would not evict her",
+    "her own reassuring credit card fraud news",
+    "the police's reassuring news about her stolen car",
+    "her own reassuring pension fund news",
+    "the university's reassuring news about her degree",
+    "the news that her business loan was approved"
+   ],
+   "distinct": {
+    "the news that her job was safe after all": "distinct",
+    "the bank's reassuring news about her mortgage": "distinct",
+    "her own reassuring tax audit news": "distinct",
+    "her lawyer's reassuring news about her lawsuit": "distinct",
+    "the insurer's reassuring news about her house claim": "distinct",
+    "her own reassuring visa renewal news": "distinct",
+    "the news that her landlord would not evict her": "distinct",
+    "her own reassuring credit card fraud news": "distinct",
+    "the police's reassuring news about her stolen car": "distinct",
+    "her own reassuring pension fund news": "distinct",
+    "the university's reassuring news about her degree": "distinct",
+    "the news that her business loan was approved": "distinct"
+   },
+   "scene": {
+    "implied_by": {
+     "her own reassuring tax audit news": [],
+     "her own reassuring visa renewal news": [],
+     "her own reassuring pension fund news": []
+    },
+    "gold_implied": {
+     "q07_a": [
+      true,
+      true,
+      true
+     ],
+     "q07_b": [
+      true,
+      true,
+      true
+     ],
+     "q07_c": [
+      true,
+      true,
+      true
+     ],
+     "q07_d": [
+      true,
+      true,
+      true
+     ],
+     "q07_e": [
+      true,
+      true,
+      true
+     ],
+     "q07_f": [
+      true,
+      true,
+      true
+     ],
+     "q07_g": [
+      true,
+      true,
+      true
+     ],
+     "q07_h": [
+      true,
+      true,
+      true
+     ],
+     "q07_i": [
+      true,
+      true,
+      true
+     ],
+     "q07_j": [
+      true,
+      true,
+      true
+     ]
+    }
+   }
+  },
+  "q08": {
+   "cluster": "q08",
+   "axis": "relation",
+   "prefix": "the intent to sabotage ",
+   "core": "a colleague's demonstration",
+   "suffix": " ",
+   "keep": [
+    "demonstration"
+   ],
+   "ask": "the person whose demonstration she sabotages: another person, NOT a colleague, coworker, teammate, peer or rival at her own workplace (keep the word 'demonstration'; the rest of the option calls that person 'he' / 'him')",
+   "proposed": [
+    "her brother's demonstration",
+    "her husband's demonstration",
+    "her son's demonstration",
+    "a neighbor's demonstration",
+    "a student's demonstration",
+    "a supplier's demonstration",
+    "a stranger's demonstration",
+    "an investor's demonstration",
+    "her landlord's demonstration",
+    "her father's demonstration",
+    "a journalist's demonstration",
+    "a customer's demonstration"
+   ],
+   "distinct": {
+    "her brother's demonstration": "distinct",
+    "her husband's demonstration": "distinct",
+    "her son's demonstration": "distinct",
+    "a neighbor's demonstration": "distinct",
+    "a student's demonstration": "overlap",
+    "a supplier's demonstration": "distinct",
+    "a stranger's demonstration": "distinct",
+    "an investor's demonstration": "distinct",
+    "her landlord's demonstration": "distinct",
+    "her father's demonstration": "distinct",
+    "a journalist's demonstration": "overlap",
+    "a customer's demonstration": "distinct"
+   },
+   "scene": {
+    "implied_by": {
+     "her brother's demonstration": [],
+     "her husband's demonstration": [],
+     "her son's demonstration": [],
+     "a neighbor's demonstration": [],
+     "a supplier's demonstration": [],
+     "a stranger's demonstration": [],
+     "an investor's demonstration": [],
+     "her landlord's demonstration": [],
+     "her father's demonstration": [],
+     "a customer's demonstration": []
+    },
+    "gold_implied": {
+     "q08_a": [
+      true,
+      true,
+      true
+     ],
+     "q08_b": [
+      true,
+      true,
+      true
+     ],
+     "q08_c": [
+      true,
+      true,
+      true
+     ],
+     "q08_d": [
+      true,
+      true,
+      true
+     ],
+     "q08_e": [
+      true,
+      true,
+      true
+     ],
+     "q08_f": [
+      true,
+      true,
+      true
+     ],
+     "q08_g": [
+      true,
+      true,
+      true
+     ],
+     "q08_h": [
+      true,
+      true,
+      true
+     ],
+     "q08_i": [
+      true,
+      true,
+      true
+     ],
+     "q08_j": [
+      true,
+      true,
+      true
+     ]
+    }
+   }
+  },
+  "q09": {
+   "cluster": "q09",
+   "axis": "content",
+   "prefix": "that ",
+   "core": "the move",
+   "suffix": " was canceled",
+   "keep": [],
+   "ask": "the plan that was canceled: another plan a family can have that gets canceled, NOT a move, relocation, transfer or change of home or job",
+   "proposed": [
+    "the wedding",
+    "the vacation",
+    "the birthday party",
+    "the family reunion",
+    "the camping trip",
+    "the surgery",
+    "the anniversary dinner",
+    "the cruise",
+    "the graduation ceremony",
+    "the holiday visit",
+    "the christening",
+    "the home renovation"
+   ],
+   "distinct": {
+    "the wedding": "distinct",
+    "the vacation": "distinct",
+    "the birthday party": "distinct",
+    "the family reunion": "distinct",
+    "the camping trip": "distinct",
+    "the surgery": "distinct",
+    "the anniversary dinner": "distinct",
+    "the cruise": "distinct",
+    "the graduation ceremony": "distinct",
+    "the holiday visit": "distinct",
+    "the christening": "distinct",
+    "the home renovation": "distinct"
+   },
+   "scene": {
+    "implied_by": {
+     "the wedding": [],
+     "the vacation": [
+      "q09_j"
+     ],
+     "the birthday party": [],
+     "the family reunion": [],
+     "the camping trip": [],
+     "the surgery": [],
+     "the cruise": [],
+     "the holiday visit": [],
+     "the christening": [],
+     "the home renovation": []
+    },
+    "gold_implied": {
+     "q09_a": [
+      true,
+      true,
+      true
+     ],
+     "q09_b": [
+      true,
+      true,
+      true
+     ],
+     "q09_c": [
+      true,
+      true,
+      true
+     ],
+     "q09_d": [
+      true,
+      true,
+      true
+     ],
+     "q09_e": [
+      true,
+      true,
+      true
+     ],
+     "q09_f": [
+      true,
+      true,
+      true
+     ],
+     "q09_g": [
+      true,
+      true,
+      true
+     ],
+     "q09_h": [
+      true,
+      true,
+      true
+     ],
+     "q09_i": [
+      true,
+      true,
+      true
+     ],
+     "q09_j": [
+      true,
+      false,
+      false
+     ]
+    }
+   }
+  },
+  "q10": {
+   "cluster": "q10",
+   "axis": "content",
+   "prefix": "destroyed ",
+   "core": "her unfinished book",
+   "suffix": "",
+   "keep": [
+    "her",
+    "unfinished"
+   ],
+   "ask": "the unfinished thing of hers that was destroyed: another thing a person makes over a long time, NOT a book, manuscript, novel, thesis or any other piece of writing",
+   "proposed": [
+    "her unfinished quilt",
+    "her unfinished painting",
+    "her unfinished sculpture",
+    "her unfinished tapestry",
+    "her unfinished model ship",
+    "her unfinished dollhouse",
+    "her unfinished mosaic",
+    "her unfinished jigsaw puzzle",
+    "her unfinished pottery vase",
+    "her unfinished wooden cabinet",
+    "her unfinished knitted sweater",
+    "her unfinished stained-glass window"
+   ],
+   "distinct": {
+    "her unfinished quilt": "distinct",
+    "her unfinished painting": "distinct",
+    "her unfinished sculpture": "distinct",
+    "her unfinished tapestry": "distinct",
+    "her unfinished model ship": "distinct",
+    "her unfinished dollhouse": "distinct",
+    "her unfinished mosaic": "distinct",
+    "her unfinished jigsaw puzzle": "distinct",
+    "her unfinished pottery vase": "distinct",
+    "her unfinished wooden cabinet": "distinct",
+    "her unfinished knitted sweater": "distinct",
+    "her unfinished stained-glass window": "distinct"
+   },
+   "scene": {
+    "implied_by": {
+     "her unfinished quilt": [],
+     "her unfinished painting": [],
+     "her unfinished sculpture": [],
+     "her unfinished tapestry": [],
+     "her unfinished model ship": [],
+     "her unfinished dollhouse": [],
+     "her unfinished mosaic": [],
+     "her unfinished jigsaw puzzle": [],
+     "her unfinished pottery vase": [],
+     "her unfinished wooden cabinet": [],
+     "her unfinished knitted sweater": [],
+     "her unfinished stained-glass window": []
+    },
+    "gold_implied": {
+     "q10_a": [
+      true,
+      true,
+      true
+     ],
+     "q10_b": [
+      true,
+      true,
+      true
+     ],
+     "q10_c": [
+      true,
+      true,
+      true
+     ],
+     "q10_d": [
+      true,
+      true,
+      true
+     ],
+     "q10_e": [
+      true,
+      true,
+      true
+     ],
+     "q10_f": [
+      true,
+      true,
+      true
+     ],
+     "q10_g": [
+      true,
+      true,
+      true
+     ],
+     "q10_h": [
+      true,
+      true,
+      true
+     ],
+     "q10_i": [
+      true,
+      true,
+      true
+     ],
+     "q10_j": [
+      true,
+      true,
+      true
+     ]
+    }
+   }
+  },
+  "q05": {
+   "cluster": "q05",
+   "axis": "act",
+   "prefix": "",
+   "core": "favoritism steering the commission to",
+   "suffix": " her ",
+   "keep": [
+    "commission"
+   ],
+   "ask": "the act she commits for the other person: another improper thing a judge of a selection might quietly do for someone, NOT favoring them and NOT steering, rigging, tilting or awarding the selection to them (the phrase ends with a preposition so that 'her sibling' follows it, may keep the words 'the commission', and must still fit both endings, ', to repay an old private debt' and ', in exchange for a promised kickback')",
+   "proposed": [
+    "leaking the confidential shortlist to",
+    "passing the rival proposals to",
+    "sharing the secret brief in advance with",
+    "waiving the eligibility rules for",
+    "concealing a conflict of interest with",
+    "quietly extending the deadline for",
+    "approving an inflated fee for",
+    "suppressing a formal complaint against",
+    "backdating a late entry from",
+    "forging a reference letter for",
+    "hiding plagiarism evidence against",
+    "dropping the background check on"
+   ],
+   "distinct": {
+    "leaking the confidential shortlist to": "distinct",
+    "passing the rival proposals to": "distinct",
+    "sharing the secret brief in advance with": "distinct",
+    "waiving the eligibility rules for": "distinct",
+    "concealing a conflict of interest with": "overlap",
+    "quietly extending the deadline for": "distinct",
+    "approving an inflated fee for": "distinct",
+    "suppressing a formal complaint against": "distinct",
+    "backdating a late entry from": "distinct",
+    "forging a reference letter for": "distinct",
+    "hiding plagiarism evidence against": "distinct",
+    "dropping the background check on": "distinct"
+   },
+   "scene": {
+    "implied_by": {
+     "leaking the confidential shortlist to": [],
+     "passing the rival proposals to": [],
+     "waiving the eligibility rules for": [],
+     "quietly extending the deadline for": [],
+     "approving an inflated fee for": [],
+     "suppressing a formal complaint against": [],
+     "backdating a late entry from": [],
+     "forging a reference letter for": [],
+     "hiding plagiarism evidence against": [],
+     "dropping the background check on": []
+    },
+    "gold_implied": {
+     "q05_a": [
+      true,
+      true,
+      true
+     ],
+     "q05_b": [
+      true,
+      true,
+      true
+     ],
+     "q05_c": [
+      true,
+      true,
+      true
+     ],
+     "q05_d": [
+      true,
+      true,
+      true
+     ],
+     "q05_e": [
+      true,
+      true,
+      true
+     ],
+     "q05_f": [
+      true,
+      true,
+      true
+     ],
+     "q05_g": [
+      true,
+      true,
+      true
+     ],
+     "q05_h": [
+      true,
+      true,
+      true
+     ],
+     "q05_i": [
+      true,
+      true,
+      true
+     ],
+     "q05_j": [
+      true,
+      true,
+      true
+     ]
+    }
+   }
+  }
+ },
+ "propose_prompt": "You extend the answer options of a multiple-choice benchmark question. Each option describes a story character's compound state in several parts. In the list you are given, ONE part is the same in every option. You propose 12 OTHER values for that part; each will replace it in the options, making wrong options that differ from a right one in that part only. A reader must be able to tell a new value from the original at once: it names a DIFFERENT person, thing or event in substance, never the original with another qualifier, never a synonym, near-synonym, instance, kind, part, cause or broader word of the original, and never something that could be true together with the original of the same story. Further rules: the same grammatical shape and about the same length as the original, so every option still reads naturally after the replacement (check a few); as ordinary and plausible in this situation as the original; no word that also names another part of the options (the people, the feelings, the other things in them); nothing the rest of an option supports or contradicts; all 12 clearly different from each other. Write each value exactly as it will stand in place of the original phrase.",
+ "distinct_prompt": "You check candidate replacements for one phrase of a benchmark's answer options. For each candidate decide whether a careful reader would take it and the ORIGINAL phrase for clearly different things. Answer 'overlap' when the candidate is a synonym or near-synonym of the original, an instance, kind, part, cause or consequence of it, a broader or narrower word for it, the original with another qualifier, or something a statement about the original could also be describing; answer 'distinct' only when a statement that says the one plainly does not say the other. Judge each candidate on its own.",
+ "scene_prompt": "You read a short story and a numbered list of descriptions of one character's state. The story never names the state; it implies it. For EACH description decide whether the story implies it: 'implied' when every part of the description (the feeling, intent or belief; what it is about; whom it concerns) is what the story shows or clearly suggests; 'not implied' when any part of it is not what the story suggests. Judge each description on its own; any number of them may be implied, including none.",
+ "scene_draws": 3,
+ "superseded_slots": {
+  "q05_content": {
+   "cluster": "q05",
+   "axis": "act",
+   "prefix": "favoritism steering ",
+   "core": "the commission",
+   "suffix": " to ",
+   "keep": [],
+   "ask": "the thing she steers to the other person: another thing a person in charge of a selection can award, NOT a commission, contract, order or paid job of any kind",
+   "proposed": [
+    "the scholarship",
+    "the grant",
+    "the top prize",
+    "the promotion",
+    "the apartment lease",
+    "the award",
+    "the fellowship",
+    "the parking permit",
+    "the vacant seat",
+    "the trophy",
+    "the residency slot",
+    "the medal"
+   ],
+   "distinct": {
+    "the scholarship": "distinct",
+    "the grant": "distinct",
+    "the top prize": "distinct",
+    "the promotion": "overlap",
+    "the apartment lease": "distinct",
+    "the award": "overlap",
+    "the fellowship": "distinct",
+    "the parking permit": "distinct",
+    "the vacant seat": "distinct",
+    "the trophy": "distinct",
+    "the residency slot": "distinct",
+    "the medal": "distinct"
+   },
+   "scene": {
+    "implied_by": {
+     "the scholarship": [],
+     "the grant": [],
+     "the top prize": [
+      "q05_a",
+      "q05_b",
+      "q05_c",
+      "q05_d",
+      "q05_e",
+      "q05_g",
+      "q05_h",
+      "q05_i"
+     ],
+     "the apartment lease": [],
+     "the fellowship": [],
+     "the parking permit": [],
+     "the vacant seat": [],
+     "the trophy": [],
+     "the residency slot": [],
+     "the medal": []
+    },
+    "gold_implied": {
+     "q05_a": [
+      false,
+      false,
+      false
+     ],
+     "q05_b": [
+      false,
+      false,
+      false
+     ],
+     "q05_c": [
+      false,
+      false,
+      false
+     ],
+     "q05_d": [
+      false,
+      false,
+      false
+     ],
+     "q05_e": [
+      false,
+      false,
+      false
+     ],
+     "q05_f": [
+      true,
+      true,
+      true
+     ],
+     "q05_g": [
+      true,
+      true,
+      false
+     ],
+     "q05_h": [
+      false,
+      true,
+      false
+     ],
+     "q05_i": [
+      false,
+      false,
+      false
+     ],
+     "q05_j": [
+      true,
+      true,
+      true
+     ]
+    }
+   },
+   "why": "the story names an award, not a commission: the scene screen did not find the gold implied once 'the top prize' stood beside it (8 of 10 items); content is not a scored axis of q05, its shared scored axis is the act"
+  }
+ },
+ "verify_round1": {
+  "prompt": "You read a short story and a numbered list of descriptions of one character's state. The story never names the state; it implies it. Exactly one description is the one the story implies in every part (the feeling, intent or belief; what it is about; whom it concerns; who holds it). Answer with its number.",
+  "draws": 5,
+  "v6": {
+   "n_items": 90,
+   "n_gold_all_draws": 88,
+   "not_all_gold": {
+    "q01_g": [
+     "gold",
+     "gold",
+     "guilt over the permanent disappearance of her spouse",
+     "gold",
+     "gold"
+    ],
+    "q02_i": [
+     "her closest friend's pride at her recent new house",
+     "gold",
+     "her closest friend's pride at her recent new house",
+     "gold",
+     "gold"
+    ]
+   },
+   "shared_axis_picks": {
+    "q01_g": 1
+   }
+  },
+  "v4": {
+   "n_items": 90,
+   "n_gold_all_draws": 87,
+   "not_all_gold": {
+    "q02_i": [
+     "her closest friend's pride at her recent new house",
+     "her closest friend's pride at her recent new house",
+     "her closest friend's pride at her recent new house",
+     "her closest friend's pride at her recent new house",
+     "her closest friend's pride at her recent new house"
+    ],
+    "q04_j": [
+     "gold",
+     "the intent to take credit for her protégé's work",
+     "the intent to take credit for her protégé's work",
+     "the intent to take credit for a colleague's work",
+     "gold"
+    ],
+    "q09_h": [
+     "gold",
+     "gold",
+     "gold",
+     "gold",
+     "his young child's belief that he privately feels relief that the move was canceled"
+    ]
+   }
+  },
+  "note": "lists with q01 = the permanent disappearance / the wrongful imprisonment / the crippling paralysis; q01_g's shared-axis pick put 'the permanent disappearance' on the hand screen (REJECT)"
+ },
+ "verify": {
+  "prompt": "You read a short story and a numbered list of descriptions of one character's state. The story never names the state; it implies it. Exactly one description is the one the story implies in every part (the feeling, intent or belief; what it is about; whom it concerns; who holds it). Answer with its number.",
+  "draws": 5,
+  "v6": {
+   "n_items": 90,
+   "n_gold_all_draws": 87,
+   "not_all_gold": {
+    "q02_i": [
+     "her closest friend's pride at her recent new house",
+     "her closest friend's pride at her recent new house",
+     "gold",
+     "her closest friend's pride at her recent new house",
+     "her closest friend's pride at her recent new house"
+    ],
+    "q04_j": [
+     "gold",
+     "gold",
+     "the intent to take credit for her protégé's work",
+     "gold",
+     "gold"
+    ],
+    "q07_g": [
+     "relief at her own reassuring medical news, and the intent to keep the scare hidden from her parent",
+     "gold",
+     "gold",
+     "gold",
+     "gold"
+    ]
+   },
+   "shared_axis_picks": {}
+  },
+  "v4": {
+   "n_items": 90,
+   "n_gold_all_draws": 88,
+   "not_all_gold": {
+    "q02_i": [
+     "her closest friend's pride at her recent new house",
+     "her closest friend's pride at her recent new house",
+     "gold",
+     "her closest friend's pride at her recent new house",
+     "her closest friend's pride at her recent new house"
+    ],
+    "q04_j": [
+     "gold",
+     "the intent to take credit for her protégé's work",
+     "gold",
+     "the intent to take credit for a colleague's work",
+     "the intent to take credit for her protégé's work"
+    ]
+   }
+  }
+ }
+}

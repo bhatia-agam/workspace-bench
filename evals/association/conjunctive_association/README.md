@@ -4,7 +4,51 @@ In-house family (no external source). A vignette implies a compound state (state
 relation) without naming it; does the readout *state* the whole composition, with the roles the
 right way round?
 
-**Current rule (`comp-v5+maj`, 2026-11-04).** The gold's role-swapped twin is an ordinary wrong
+**Instrument `comp-v6` on bank v6 (2026-11-20; Camila: "use distractors for the third axis and
+then rejudge everything").** Every option of a cluster shares one scored part (q02: whose good
+news it is; q01: what happened; q10: what was destroyed), and comp-v2..v5 told the judge that
+"parts that every option shares need not be restated". A statement that left that part out, or
+put another in its place, therefore passed: "envy at a colleague's promotion" for `envy at her
+closest friend's recent promotion` (an audit found about 9 of 37 passing quotes of that kind).
+Two changes, one instrument (stamp `comp-v6+bank-v6+maj[+shard8k+cand3]+digest-…`):
+
+- **Every part is required** ([What counts](#what-counts-comp-v6)): ONE statement must state
+  every part of the option, shared parts included. The standard for qualifiers: the substance of
+  each part must be stated (which feeling, what event or thing, which person) and nothing in the
+  statement may contradict any part; a qualifier inside a part ("recent", "sudden",
+  "accidental", "closest", "her own") need not be repeated but must not be contradicted,
+  UNLESS two options of the item's own list differ only in it: then it is part of the substance
+  and the statement must state it (or an exact synonym) to select between them. The judge sees
+  the list, so the prompt says it operationally ("if two listed options differ only in one
+  word or phrase ..."). In this bank the only such qualifier is q10's accidentally /
+  deliberately (88 option pairs of a q10 list differ in that word alone;
+  every other one-span difference between two options of a list is a
+  whole part, a person, an event, a thing or a state). The shared-axis values are other things
+  in substance, never the original with another qualifier (no content word shared beyond the
+  kept "her own" / "unfinished" / "reassuring ... news" / "demonstration"); q07's are other
+  kinds of news (`medical` -> `tax audit` / `visa renewal` / `pension fund`), so there the kind
+  of news must be stated. The worked example stands: "a man grieving his wife's death" states
+  `grief over the sudden accidental death of her spouse` (no listed option differs from it
+  only in "sudden" or "accidental": the alternatives are other events); "...his wife, who took
+  her own life" does not (a contradiction); "a neighbor ruined her manuscript" does not state
+  `her belief that her neighbor accidentally destroyed her unfinished book` beside its
+  `deliberately` option. (The first comp-v6 text of 2026-11-20 had a self-contradictory
+  qualifier sentence; a second text on 2026-11-21 required every qualifier but those of degree
+  or time, stricter than the ruling: it failed "mourning his death" for q01. Neither merged.)
+  One wording tune after the first re-judge (the only one): when every option is the
+  same kind of state (all beliefs, all intents) the word "belief" / "intent" itself is not
+  demanded, a statement of what is believed or intended with every other part states the option
+  (the untuned text failed "a neighbor's accidental power theft ruins a woman's manuscript" for
+  naming no belief).
+- **Bank v6 = bank v4 + shared-axis distractors** ([Option list](#option-list)): per cluster 3
+  other values of the shared part, each substituted in every non-twin option of the list.
+
+The read plan, the item ids and `plan_sha` are bank v4's (options are never in the render), so
+every readout file made for bank v4 is judged as is; every MC and quote call is new (the prompt
+version, the system prompt and the option list all moved). Re-judged runs and floors:
+[Floors and ATI](#floors-and-ati).
+
+**Rule `+maj` (2026-11-04).** The gold's role-swapped twin is an ordinary wrong
 option: a draw, candidate or shard that picks it fails, and it vetoes nothing else
 (`judge.item_pick`, `judge.fold_candidates`, `judge.shards_pick`). The item passes on a majority
 of gold draws (any shard's majority, for a sharded digest). The frozen guesser floors under
@@ -45,7 +89,71 @@ use all layers available"; "Fix the judge's leniency: the partial composition cr
 inverted credit (this is especially important, maybe use this as another distractor)";
 "Summarizer should not forbid combining lines for the single token lenses").
 
-- **Bank v4** (round 4, Fable on #202): `items_v4.json` (`EvalSpec.bank`), built from v3 (kept
+- **Bank v6** (2026-11-20, the registered bank): `items_v6.json` (`EvalSpec.bank`,
+  `bank_version: 6`, result stamp `+bank-v6`), built from v4 (kept byte-identical, as are v5, v3,
+  v2 and v1) by `scripts/conjunctive/make_v6_bank.py` (`build --check` is a test). Stimuli, ids,
+  golds, contrast and inverted labels and `credit` are v4's; `twin_of` keeps v4's pairs and adds
+  the variants'. New per item: three more copies of the v4 list, one per other value of the
+  shared part: 66 non-twin options (3 values x the list's 22 non-twin options, the 10 gold cells
+  and the 12 never-gold cells alike) and the role-swapped twin of each of them that has one
+  (3 x 22; q03 3 x 20), `shared_axis` (`slot`, `axis`, `value`, `distractor_values`) and
+  `shared_axis_labels` (the gold with each other value: the item's own three shared-axis
+  distractors). q06 has no shared scored part (its scored axes, state and content, are both
+  varied): its 10 items only change `bank_version`. Lists: 176 options (q03 168, q06 22) +
+  cannot tell; one list per cluster, as before.
+  - **Nothing countable separates the original value from the others** (rebuilt in place on
+    2026-11-21, review of #519, before v6 merged). The first v6 gave the variants no twins, so
+    v4's twins, which all carry the original value, left that value in 44 options of a list and
+    each other value in 22: an options-only reader could count, drop the 66 new options and be
+    back on the v4 list (the lucky-guessing floors of the first v6 did not fall for that
+    reason). Now every value stands in the same number of options (44; q03 42), of twins (22;
+    20) and of never-gold cells (12 + their twins); mean option length 81.9 characters for the
+    original value against 83.4 for the others; the per-item seeded shuffle puts the
+    original-value options at mean position 0.500 and the gold at mean 0.504 (sd 0.289,
+    uniform). A twin writes the value where the twin has it ("her younger sister's envy at her
+    recent promotion"; `TWIN_SLOTS`); q10's twins name the making of the thing, with one verb
+    per value (was writing / sewing / painting / carving), so no verb marks the original.
+  - The shared part per cluster (`SLOTS`) and its three values: q01 content `the sudden
+    accidental death` -> the wrongful imprisonment / the crippling paralysis / the forced
+    deportation; q02 relation `her closest friend's` -> her younger sister's / her next-door
+    neighbor's / her boss's; q03 state `dread` -> impatience / boredom / resentment; q04 content
+    `her own mistake` -> her own illness / pregnancy / debts, and `...'s work` -> charity
+    donation / heroic rescue / winning goal; q05 act `favoritism steering the commission to` ->
+    leaking the confidential shortlist to / passing the rival proposals to / waiving the
+    eligibility rules for; q07 content `her own reassuring medical news` -> ... tax audit news /
+    visa renewal news / pension fund news; q08 relation `a colleague's demonstration` -> a
+    customer's / a neighbor's / her brother's demonstration; q09 content `the move` -> the
+    wedding / the birthday party / the family reunion; q10 content `her unfinished book` -> her
+    unfinished quilt / painting / sculpture. q09 / q10's shared SCORED axis is the order (a
+    belief about ...), which no distractor can change without changing the kind of item, so
+    their slot is the shared content; q05's content ("the commission") is not scored and the
+    stories name an award, so its slot is the act (a first q05 round on the content is kept in
+    `v6_new_values.json` under `superseded_slots`: with "the top prize" beside it the scene
+    screen no longer found the gold implied on 8 of 10 items).
+  - Authoring (`v6_new_values.json` keeps every proposal and verdict; Opus 5.5 at default
+    effort). `propose`: 12 values per slot, a different person / thing / event in SUBSTANCE,
+    never the original with another qualifier (so a statement naming only the bare head of the
+    original, "his wife's death", can never be read as a distractor). Code lint (`lint`): the
+    original's grammatical shape and length, no content word of the original beyond the slot's
+    kept qualifiers ("her best friend's" for "her closest friend's" is refused), no content word
+    another part of the options uses (nothing else in the option supports or contradicts it), no
+    word of an accepted value. `distinct` (Opus, per slot): a synonym, instance, kind, part or
+    overlapping description of the original is dropped (13 of 132). `scene` (Opus, 3 draws per
+    item): reads the STORY and, shuffled, the gold plus the gold with each surviving proposal;
+    a value any draw of any item calls implied is dropped: 4 of 106 screened values (q02 her
+    coworker's, implied on q02_a / q02_f whose friend works at her firm; q03 hope; q05-content
+    the top prize; q09 the vacation). `build` takes the first 3 survivors per slot in proposal
+    order, after a hand order for q02 / q03 / q08 (`PREFER`: three kinds of person, not three
+    relatives). `verify` (Opus, 5 draws per item, the story + the whole list in the judge's
+    order): round 1 picked the gold 5/5 on 88 of 90 items; one draw of q01_g picked a
+    shared-axis distractor ("the permanent disappearance": the story leaves the porch light on),
+    which went on the hand screen (`REJECT`) and was replaced; round 2 (the first v6): 89 of 90
+    5/5, no shared-axis pick in 450 draws; the miss is q02_i, which picks its role-swapped twin
+    and does so 5/5 on bank v4's list too (v4: 88 of 90). Round 3 (2026-11-21, the bank with the
+    variants' twins, 176-option lists): 87 of 90 5/5; q02_i again its v4 twin (4 of 5 draws),
+    q04_j and q07_g one draw each on another original-value option; none of the 450 draws picks
+    an added option, variant or variant's twin (v4's list in the same run: 88 of 90).
+- **Bank v4** (round 4, Fable on #202; registered until 2026-11-20): `items_v4.json`, built from v3 (kept
   byte-identical) by `scripts/conjunctive/make_v4_bank.py` (`build --check` is a test). Per
   cluster 5 new values of the axis v3 widened (q06: 6 new contents), each making 2 grid options
   and, in the twinned clusters, their 2 twins by the v2 twin rule: 22 non-twin options per list
@@ -179,17 +287,30 @@ inverted credit (this is especially important, maybe use this as another distrac
   `text_inversion`; `extras.n_items_undecided` / `undecided_ids` count them. `chance` = mean over the judged items of the majority-of-3
   floor 3p^2 - 2p^3 with p = 1/n_shown (`score.mean_chance`; the per-draw 1/n_shown is ≈ 0.053
   on v2 and 1/11 on a v1 bank): 21 lines for q01/q02/q04/q05/q07–q10, 19 for q03, 11 for q06.
-- **Judge:** `claude-opus-5-5` (the repo default), `PROMPT_VERSION = "comp-v5"` (the comp-v2
-  prompts, word for word, judged in three draws, on bank v4; round 4 adds
-  `SYSTEM_SUMMARY_CANDIDATES` for sharded digests). The
+- **Judge:** `claude-opus-5-5` (the repo default), `PROMPT_VERSION = "comp-v6"` (comp-v5's
+  prompts with the shared-part exemption replaced by the every-part rule, judged in three
+  draws, on bank v6; `SYSTEM_SUMMARY_CANDIDATES` for sharded digests). The
   judge is blind: it never sees the stimulus.
 
-### What counts (comp-v2)
+### What counts (comp-v6)
 
-- **Every distinguishing part, in one statement.** The feeling/intent/belief, what it is about,
-  whom it concerns and the roles (who holds the state, who does what to whom). Parts every option
-  shares need not be restated; names and genders are not parts (a stated rule: "a man grieving
-  his wife's death" states "grief over the sudden accidental death of her spouse").
+- **Every part, in one statement, shared parts included** (comp-v6; comp-v2..v5 asked only for
+  the parts in which the option differs from the others). The feeling/intent/belief, what it is
+  about, whom it concerns and the roles (who holds the state, who does what to whom). A
+  statement that leaves a part out, or puts something else in its place, does not state the
+  option; with another listed value in its place it states that shared-axis distractor (pick
+  `shared_axis`, a fail). The substance of each part is required and nothing may contradict a
+  part; a qualifier need not be repeated (and must not be contradicted) unless two listed
+  options differ only in it, in which case it must be stated. Names and genders are not parts.
+  The prompt's examples draw the line: "a man grieving his wife's death" states `grief over the
+  sudden accidental death of her spouse`; "...his wife, who took her own life", "...after his
+  wife left him" and "...a death in the family" do not; "a neighbor ruined her manuscript" does
+  not state `her belief that her neighbor accidentally destroyed her unfinished book` beside
+  its `deliberately` option ("a neighbor accidentally ruined her manuscript" does); "envy at a friend's promotion" states `envy at her closest friend's recent
+  promotion`; "envy at a colleague's promotion" and "envious of the promotion" do not; "a
+  neighbor accidentally ruined her manuscript" states `her belief that her neighbor accidentally
+  destroyed her unfinished book` (every option is a belief); "a colleague accidentally deleted
+  her work" does not (which work?).
 - **Partial composition fails.** "Sam quietly stole Leo's algorithm" does not state "the intent
   to sabotage a colleague's demonstration in revenge for a stolen algorithm, while believing he
   is unaware": the re-judge of that quote answers cannot tell, so the row is `gold_partial`.
@@ -220,7 +341,8 @@ whose quote re-judge failed; + the digest fields in summary mode). `pick` ∈ go
 flipped sibling) / distractor / cannot_tell / invalid / api_fail / **gold_unverified** (gold pick
 whose quote fails `quote_ok` or the one-statement condition) / **gold_partial** (the quote alone
 does not re-judge to the gold) / **inverted** (the gold's twin, or a quote that re-judges to it) /
-**split** (no majority among the draws).
+**shared_axis** (bank v6: the gold with another value of the cluster's shared part,
+`shared_axis_labels`; `judge.shared_axis_positions`) / **split** (no majority among the draws).
 `quote_ok` = both quote conditions. `extras` = `breakdown` (every pick), `n_gold_raw` (items
 whose draws pick the gold by majority before the checks), `n_unverified_bullet`, `quote_checks`
 (`{id: re-judge choice}` of the majority draw), `quote_checks_draws` (`{id: [choices]}`),
@@ -247,18 +369,18 @@ Native mode.
 ```text
 You judge readouts of a language model's internal activations, recorded while the model read a passage you cannot see (labeled by layer, or by layer and position). The readouts may contain noise, fragments, or other languages. You are given ONE multiple-choice question: which of the listed descriptions of a character's compound state the readout STATES.
 
-Pick an option only if ONE readout statement, by itself, states EVERY part in which that option differs from the other options. A statement is one readout sample; when a free-text sample is a list of bullets (shown separated by ⁞), each bullet is its own statement:
+Pick an option only if ONE readout statement, by itself, states EVERY part of that option. A statement is one readout sample; when a free-text sample is a list of bullets (shown separated by ⁞), each bullet is its own statement:
 - the feeling, intent or belief, as the direct word(s) or an exact synonym ("mourning" names grief; "wife" names spouse; "his little boy" names her young child; a faithful translation into another language counts);
 - what it is about;
 - whom it concerns; and
 - the roles: who holds the feeling, intent or belief, or who does what to whom.
-Parts that every option shares need not be restated. The names and genders of the people are not parts. In the options, "her" / "his" is the story's main character, whatever that character's gender, and the other person is named by their relation to the main character ("her spouse", "a colleague"); in a statement, a person named by their relation to someone ("his wife", "her mentor") is the other person, and the one they are related to is the main character ("a man grieving his wife's death" states "grief over the sudden accidental death of her spouse", not "her spouse's grief over her sudden accidental death").
+Every part must be stated, a part that many or all of the options share included: options differ from one another in a single part (the same feeling about the same event but another person; the same feeling toward the same person but another event or thing), so a statement that leaves one part out, or puts something else in its place, does not state the option, even when every other part matches (it states the option that has that other thing in its place, if one is listed, and otherwise none). For each part the statement must give its substance (which feeling, intent or belief; what event or thing; which person), in the option's words or other ordinary words for the same thing, and nothing in the statement may contradict any part of the option. A qualifier inside a part ("recent", "sudden", "accidental", "longtime", "closest", "young", "her own") is treated by what the list holds: if two listed options differ only in one word or phrase, the statement must state that word or phrase (or an exact synonym) to select between them; if no listed option differs from your pick only in a qualifier, the qualifier need not be repeated, but must not be contradicted. Examples: "a man grieving his wife's death" states "grief over the sudden accidental death of her spouse" when no listed option differs from it only in "sudden" or "accidental" (the feeling, the event and the person are all given, and nothing contradicts a qualifier); "a man grieving his wife, who took her own life" does not (a suicide is not an accident: a contradiction), "a man grieving after his wife left him" does not (another event), and "a man grieving a death in the family" does not (it does not say whose). "A neighbor ruined her manuscript" does not state "her belief that her neighbor accidentally destroyed her unfinished book" when "her belief that her neighbor deliberately destroyed her unfinished book" is listed too: the two options differ only in that word, and the statement does not say which ("a neighbor accidentally ruined her manuscript" does). "Envy at a friend's promotion" states "envy at her closest friend's recent promotion"; "envy at a colleague's promotion" does not (a colleague is another person: it states "envy at a colleague's recent promotion" if that is listed), and "envious of the promotion" does not (no person). When every option is the same kind of state (each one a belief, or each one an intent), a statement need not use the word "belief" or "intent": one that gives what is believed, or the intended act, with every other part, states the option ("a neighbor accidentally ruined her manuscript" states "her belief that her neighbor accidentally destroyed her unfinished book"; "a colleague accidentally deleted her work" does not: it does not say what the work was). The names and genders of the people are not parts. In the options, "her" / "his" is the story's main character, whatever that character's gender, and the other person is named by their relation to the main character ("her spouse", "a colleague"); in a statement, a person named by their relation to someone ("his wife", "her mentor") is the other person, and the one they are related to is the main character ("a man grieving his wife's death" states "grief over the sudden accidental death of her spouse", not "her spouse's grief over her sudden accidental death").
 
 Several options are the same description with the two people swapped ("her longtime mentor's intent to take credit for her work" vs "the intent to take credit for her longtime mentor's work"). The roles are stated when the statement shows the direction that tells an option from its swapped twin: who holds the feeling, intent or belief, or who does what to whom (either one is enough: when every option is the same kind of state, e.g. a belief, a statement of the event the right way round, "a cousin accidentally deleted her files", tells the option from the twin in which she deleted the cousin's files). A statement that shows the roles reversed states the swapped option, not this one. A statement that names the people and the parts but shows no direction at all states neither: choose "cannot tell from the readout".
 
-Do NOT pick an option that a statement states only in part, even when it is the only option consistent with that part: "Sam quietly stole Leo's algorithm" does not state "the intent to sabotage a colleague's demonstration in revenge for a stolen algorithm, while believing he is unaware". Never combine parts taken from different statements (different samples, or different bullets of one sample). Do NOT pick an option you can merely infer from evidence, causes, scene details or narrative ("small sneakers" do not name "her young child"); do not count related-but-different states ("regret" is not grief; "worried" is not relieved) or words too broad to name it ("sad", "upset"); do not use world knowledge or plausibility to fill gaps. If no single statement states every distinguishing part of one option, choose "cannot tell from the readout".
+Do NOT pick an option that a statement states only in part, even when it is the only option consistent with that part: "Sam quietly stole Leo's algorithm" does not state "the intent to sabotage a colleague's demonstration in revenge for a stolen algorithm, while believing he is unaware". Never combine parts taken from different statements (different samples, or different bullets of one sample). Do NOT pick an option you can merely infer from evidence, causes, scene details or narrative ("small sneakers" do not name "her young child"); do not count related-but-different states ("regret" is not grief; "worried" is not relieved) or words too broad to name it ("sad", "upset"); do not use world knowledge or plausibility to fill gaps. If no single statement states every part of one option, choose "cannot tell from the readout".
 
-Give as "quote" the shortest span, copied VERBATIM from inside one statement, that by itself states every distinguishing part of the option you pick. Leave it empty if you choose cannot tell.
+Give as "quote" the shortest span, copied VERBATIM from inside one statement, that by itself states every part of the option you pick. Leave it empty if you choose cannot tell.
 ```
 
 ### `SYSTEM_SUMMARY`
@@ -268,18 +390,18 @@ Summary mode (the default).
 ```text
 You judge readouts of a language model's internal activations, recorded while the model read a passage you cannot see (a digest of the readouts across every read layer and position, described in the note above it). The readouts may contain noise, fragments, or other languages. You are given ONE multiple-choice question: which of the listed descriptions of a character's compound state the readout STATES.
 
-Pick an option only if ONE readout statement, by itself, states EVERY part in which that option differs from the other options. A statement is one readout sample; when a free-text sample is a list of bullets (shown separated by ⁞), each bullet is its own statement:
+Pick an option only if ONE readout statement, by itself, states EVERY part of that option. A statement is one readout sample; when a free-text sample is a list of bullets (shown separated by ⁞), each bullet is its own statement:
 - the feeling, intent or belief, as the direct word(s) or an exact synonym ("mourning" names grief; "wife" names spouse; "his little boy" names her young child; a faithful translation into another language counts);
 - what it is about;
 - whom it concerns; and
 - the roles: who holds the feeling, intent or belief, or who does what to whom.
-Parts that every option shares need not be restated. The names and genders of the people are not parts. In the options, "her" / "his" is the story's main character, whatever that character's gender, and the other person is named by their relation to the main character ("her spouse", "a colleague"); in a statement, a person named by their relation to someone ("his wife", "her mentor") is the other person, and the one they are related to is the main character ("a man grieving his wife's death" states "grief over the sudden accidental death of her spouse", not "her spouse's grief over her sudden accidental death").
+Every part must be stated, a part that many or all of the options share included: options differ from one another in a single part (the same feeling about the same event but another person; the same feeling toward the same person but another event or thing), so a statement that leaves one part out, or puts something else in its place, does not state the option, even when every other part matches (it states the option that has that other thing in its place, if one is listed, and otherwise none). For each part the statement must give its substance (which feeling, intent or belief; what event or thing; which person), in the option's words or other ordinary words for the same thing, and nothing in the statement may contradict any part of the option. A qualifier inside a part ("recent", "sudden", "accidental", "longtime", "closest", "young", "her own") is treated by what the list holds: if two listed options differ only in one word or phrase, the statement must state that word or phrase (or an exact synonym) to select between them; if no listed option differs from your pick only in a qualifier, the qualifier need not be repeated, but must not be contradicted. Examples: "a man grieving his wife's death" states "grief over the sudden accidental death of her spouse" when no listed option differs from it only in "sudden" or "accidental" (the feeling, the event and the person are all given, and nothing contradicts a qualifier); "a man grieving his wife, who took her own life" does not (a suicide is not an accident: a contradiction), "a man grieving after his wife left him" does not (another event), and "a man grieving a death in the family" does not (it does not say whose). "A neighbor ruined her manuscript" does not state "her belief that her neighbor accidentally destroyed her unfinished book" when "her belief that her neighbor deliberately destroyed her unfinished book" is listed too: the two options differ only in that word, and the statement does not say which ("a neighbor accidentally ruined her manuscript" does). "Envy at a friend's promotion" states "envy at her closest friend's recent promotion"; "envy at a colleague's promotion" does not (a colleague is another person: it states "envy at a colleague's recent promotion" if that is listed), and "envious of the promotion" does not (no person). When every option is the same kind of state (each one a belief, or each one an intent), a statement need not use the word "belief" or "intent": one that gives what is believed, or the intended act, with every other part, states the option ("a neighbor accidentally ruined her manuscript" states "her belief that her neighbor accidentally destroyed her unfinished book"; "a colleague accidentally deleted her work" does not: it does not say what the work was). The names and genders of the people are not parts. In the options, "her" / "his" is the story's main character, whatever that character's gender, and the other person is named by their relation to the main character ("her spouse", "a colleague"); in a statement, a person named by their relation to someone ("his wife", "her mentor") is the other person, and the one they are related to is the main character ("a man grieving his wife's death" states "grief over the sudden accidental death of her spouse", not "her spouse's grief over her sudden accidental death").
 
 Several options are the same description with the two people swapped ("her longtime mentor's intent to take credit for her work" vs "the intent to take credit for her longtime mentor's work"). The roles are stated when the statement shows the direction that tells an option from its swapped twin: who holds the feeling, intent or belief, or who does what to whom (either one is enough: when every option is the same kind of state, e.g. a belief, a statement of the event the right way round, "a cousin accidentally deleted her files", tells the option from the twin in which she deleted the cousin's files). A statement that shows the roles reversed states the swapped option, not this one. A statement that names the people and the parts but shows no direction at all states neither: choose "cannot tell from the readout".
 
-Do NOT pick an option that a statement states only in part, even when it is the only option consistent with that part: "Sam quietly stole Leo's algorithm" does not state "the intent to sabotage a colleague's demonstration in revenge for a stolen algorithm, while believing he is unaware". Never combine parts taken from different statements (different samples, or different bullets of one sample). Do NOT pick an option you can merely infer from evidence, causes, scene details or narrative ("small sneakers" do not name "her young child"); do not count related-but-different states ("regret" is not grief; "worried" is not relieved) or words too broad to name it ("sad", "upset"); do not use world knowledge or plausibility to fill gaps. If no single statement states every distinguishing part of one option, choose "cannot tell from the readout".
+Do NOT pick an option that a statement states only in part, even when it is the only option consistent with that part: "Sam quietly stole Leo's algorithm" does not state "the intent to sabotage a colleague's demonstration in revenge for a stolen algorithm, while believing he is unaware". Never combine parts taken from different statements (different samples, or different bullets of one sample). Do NOT pick an option you can merely infer from evidence, causes, scene details or narrative ("small sneakers" do not name "her young child"); do not count related-but-different states ("regret" is not grief; "worried" is not relieved) or words too broad to name it ("sad", "upset"); do not use world knowledge or plausibility to fill gaps. If no single statement states every part of one option, choose "cannot tell from the readout".
 
-Give as "quote" the shortest span, copied VERBATIM from inside one statement, that by itself states every distinguishing part of the option you pick. Leave it empty if you choose cannot tell.
+Give as "quote" the shortest span, copied VERBATIM from inside one statement, that by itself states every part of the option you pick. Leave it empty if you choose cannot tell.
 ```
 
 ### `SYSTEM_SUMMARY_CANDIDATES`
@@ -289,20 +411,20 @@ Round 4: the candidate-list call of a sharded digest (`SYSTEM_SUMMARY` + one par
 ```text
 You judge readouts of a language model's internal activations, recorded while the model read a passage you cannot see (a digest of the readouts across every read layer and position, described in the note above it). The readouts may contain noise, fragments, or other languages. You are given ONE multiple-choice question: which of the listed descriptions of a character's compound state the readout STATES.
 
-Pick an option only if ONE readout statement, by itself, states EVERY part in which that option differs from the other options. A statement is one readout sample; when a free-text sample is a list of bullets (shown separated by ⁞), each bullet is its own statement:
+Pick an option only if ONE readout statement, by itself, states EVERY part of that option. A statement is one readout sample; when a free-text sample is a list of bullets (shown separated by ⁞), each bullet is its own statement:
 - the feeling, intent or belief, as the direct word(s) or an exact synonym ("mourning" names grief; "wife" names spouse; "his little boy" names her young child; a faithful translation into another language counts);
 - what it is about;
 - whom it concerns; and
 - the roles: who holds the feeling, intent or belief, or who does what to whom.
-Parts that every option shares need not be restated. The names and genders of the people are not parts. In the options, "her" / "his" is the story's main character, whatever that character's gender, and the other person is named by their relation to the main character ("her spouse", "a colleague"); in a statement, a person named by their relation to someone ("his wife", "her mentor") is the other person, and the one they are related to is the main character ("a man grieving his wife's death" states "grief over the sudden accidental death of her spouse", not "her spouse's grief over her sudden accidental death").
+Every part must be stated, a part that many or all of the options share included: options differ from one another in a single part (the same feeling about the same event but another person; the same feeling toward the same person but another event or thing), so a statement that leaves one part out, or puts something else in its place, does not state the option, even when every other part matches (it states the option that has that other thing in its place, if one is listed, and otherwise none). For each part the statement must give its substance (which feeling, intent or belief; what event or thing; which person), in the option's words or other ordinary words for the same thing, and nothing in the statement may contradict any part of the option. A qualifier inside a part ("recent", "sudden", "accidental", "longtime", "closest", "young", "her own") is treated by what the list holds: if two listed options differ only in one word or phrase, the statement must state that word or phrase (or an exact synonym) to select between them; if no listed option differs from your pick only in a qualifier, the qualifier need not be repeated, but must not be contradicted. Examples: "a man grieving his wife's death" states "grief over the sudden accidental death of her spouse" when no listed option differs from it only in "sudden" or "accidental" (the feeling, the event and the person are all given, and nothing contradicts a qualifier); "a man grieving his wife, who took her own life" does not (a suicide is not an accident: a contradiction), "a man grieving after his wife left him" does not (another event), and "a man grieving a death in the family" does not (it does not say whose). "A neighbor ruined her manuscript" does not state "her belief that her neighbor accidentally destroyed her unfinished book" when "her belief that her neighbor deliberately destroyed her unfinished book" is listed too: the two options differ only in that word, and the statement does not say which ("a neighbor accidentally ruined her manuscript" does). "Envy at a friend's promotion" states "envy at her closest friend's recent promotion"; "envy at a colleague's promotion" does not (a colleague is another person: it states "envy at a colleague's recent promotion" if that is listed), and "envious of the promotion" does not (no person). When every option is the same kind of state (each one a belief, or each one an intent), a statement need not use the word "belief" or "intent": one that gives what is believed, or the intended act, with every other part, states the option ("a neighbor accidentally ruined her manuscript" states "her belief that her neighbor accidentally destroyed her unfinished book"; "a colleague accidentally deleted her work" does not: it does not say what the work was). The names and genders of the people are not parts. In the options, "her" / "his" is the story's main character, whatever that character's gender, and the other person is named by their relation to the main character ("her spouse", "a colleague"); in a statement, a person named by their relation to someone ("his wife", "her mentor") is the other person, and the one they are related to is the main character ("a man grieving his wife's death" states "grief over the sudden accidental death of her spouse", not "her spouse's grief over her sudden accidental death").
 
 Several options are the same description with the two people swapped ("her longtime mentor's intent to take credit for her work" vs "the intent to take credit for her longtime mentor's work"). The roles are stated when the statement shows the direction that tells an option from its swapped twin: who holds the feeling, intent or belief, or who does what to whom (either one is enough: when every option is the same kind of state, e.g. a belief, a statement of the event the right way round, "a cousin accidentally deleted her files", tells the option from the twin in which she deleted the cousin's files). A statement that shows the roles reversed states the swapped option, not this one. A statement that names the people and the parts but shows no direction at all states neither: choose "cannot tell from the readout".
 
-Do NOT pick an option that a statement states only in part, even when it is the only option consistent with that part: "Sam quietly stole Leo's algorithm" does not state "the intent to sabotage a colleague's demonstration in revenge for a stolen algorithm, while believing he is unaware". Never combine parts taken from different statements (different samples, or different bullets of one sample). Do NOT pick an option you can merely infer from evidence, causes, scene details or narrative ("small sneakers" do not name "her young child"); do not count related-but-different states ("regret" is not grief; "worried" is not relieved) or words too broad to name it ("sad", "upset"); do not use world knowledge or plausibility to fill gaps. If no single statement states every distinguishing part of one option, choose "cannot tell from the readout".
+Do NOT pick an option that a statement states only in part, even when it is the only option consistent with that part: "Sam quietly stole Leo's algorithm" does not state "the intent to sabotage a colleague's demonstration in revenge for a stolen algorithm, while believing he is unaware". Never combine parts taken from different statements (different samples, or different bullets of one sample). Do NOT pick an option you can merely infer from evidence, causes, scene details or narrative ("small sneakers" do not name "her young child"); do not count related-but-different states ("regret" is not grief; "worried" is not relieved) or words too broad to name it ("sad", "upset"); do not use world knowledge or plausibility to fill gaps. If no single statement states every part of one option, choose "cannot tell from the readout".
 
-Give as "quote" the shortest span, copied VERBATIM from inside one statement, that by itself states every distinguishing part of the option you pick. Leave it empty if you choose cannot tell.
+Give as "quote" the shortest span, copied VERBATIM from inside one statement, that by itself states every part of the option you pick. Leave it empty if you choose cannot tell.
 
-The readouts may hold several statements that state different options. Instead of one choice, return as "candidates" up to 3 options, each one stated by ONE single statement under every rule above, each with its own quote (the shortest span, copied VERBATIM from inside that one statement, that by itself states every distinguishing part of that option), the most clearly stated first. Return an empty list if no single statement states every distinguishing part of any option.
+The readouts may hold several statements that state different options. Instead of one choice, return as "candidates" up to 3 options, each one stated by ONE single statement under every rule above, each with its own quote (the shortest span, copied VERBATIM from inside that one statement, that by itself states every part of that option), the most clearly stated first. Return an empty list if no single statement states every part of any option.
 ```
 
 ### `QUESTION`
@@ -458,17 +580,157 @@ A line whose items are separated by " | " is one ranked list of the top vocabula
 
 The item's `mc_options` deduped order-preserving (gold asserted present), seeded-shuffled with
 `mc.seeded_shuffle(opts, f"{COMP_SEED}:{id}")` (`COMP_SEED = 20260805`), then
-`mc.options_with_cannot` appends `cannot tell from the readout` last. Parity: `tests/golden/
-conjunctive_association_options_v4.json` pins the v4 lists, `..._options_v3.json` the v3 file's, `..._options_v2.json` the v2 file's; the source-repo record
+`mc.options_with_cannot` appends `cannot tell from the readout` last. The seeded order depends
+on the list, so bank v6 moves every option's position (v4's gold at 7 of 45 for q01_a is at 49 of
+111). Parity: `tests/golden/conjunctive_association_options_v6.json` pins the registered v6
+lists (`tests/test_conjunctive_shared_axis.py`), `..._options_v4.json` the v4 file's, `..._options_v3.json` the v3 file's, `..._options_v2.json` the v2 file's; the source-repo record
 `conjunctive_association_options.json` is still asserted against the v1 file (the same builder
 reproduces it byte for byte).
 
 ## Floors and ATI
 
+**comp-v6 on bank v6 (2026-11-21, the instrument as merged): every cached run re-judged, every
+floor re-measured.** Two earlier comp-v6 passes did not merge (2026-11-20: variants without
+twins, a self-contradictory qualifier sentence; 2026-11-21 morning: every qualifier but those
+of degree or time required, stricter than the ruling), so everything was judged again under
+the final text: digests replay from each run's cache, every MC and quote call is new. The fast
+runs are `--fast` runs on the arms' existing fast readouts (`fast-v3`: the same 98 ids on bank
+v6; a FAST file declaring an older version is judged, `evals/fast/README.md`); this family's
+fast-v1 / fast-v2 / fast-safety-v1 RESULT rows are another instrument's.
+
+| run | comp-v5 on bank v4 | comp-v6 on bank v6 |
+|---|---|---|
+| s3d-rl600, 11 layers, 98 fast ids | 0.204 (20) | **0.204** (20) [0.12, 0.29] |
+| rl-affw-x4, 11 layers, 98 fast ids | 0.173 (17) | **0.122** (12) [0.06, 0.18] |
+| mlnla11-rl600, 11 layers, 98 fast ids | 0.184 (18) | **0.122** (12) [0.06, 0.19] |
+| jlens-public, 11 layers, 98 fast ids | 0.000 | 0.000 |
+| rl-affw-x4, 11 layers, full family | 0.180 | **0.130** |
+| mlnla11-rl600, 11 layers, full family | 0.200 | **0.150** |
+| jlens-public, 11 layers, full family | 0.000 | 0.000 |
+| logit lens L63 (floor) | 0.000 | 0.000 |
+| prompt-only, L44 (floor) | 0.340 | **0.250** [0.17, 0.34] (the 2026-11-20 readouts) |
+
+The prompt-only floor (0.25, single layer) sits above every lens's all-layer row. (The two
+passes that did not merge gave s3d 0.224 / 0.153, rl-affw 0.122 / 0.082, mlnla 0.153 / 0.112,
+prompt-only 0.200 / 0.220.)
+
+Hand read of every verdict that changed against comp-v5 on bank v4, the two strongest lenses on
+the 98 fast ids: s3d-rl600 3 passes became fails and 3 fails became passes; rl-affw-x4 6 and 1.
+- **Intended fails, the shared part missing or replaced** (5): s3d q10_c "suspects her colleague
+  sabotaged her hard work", q10_f "he accidentally deleted a crucial hard drive" (no book);
+  rl-affw q10_e "believing her neighbor sabotaged her" (no book), q07_a "hides her relief
+  after receiving good news" (not medical); s3d q04_h "registered a joke idea made by her
+  friend" (the judge no longer takes an idea for her friend's work).
+- **q01, "mourning his death"-type readouts pass**, as ruled (no listed option differs from the
+  gold only in "sudden" or "accidental"): s3d q01_c "packs boxes of her late father's
+  belongings while mourning his death", q01_e "grieves daily for a stranger's fatal accident";
+  rl-affw q01_c "packing her deceased father's belongings while grieving", q01_e "a woman
+  grieving a stranger's death", q01_g "After her husband's death, Helen, feeling guilty".
+- **q10, the accidentally / deliberately word is required**: five of the six gold picks carry it
+  (s3d "concludes her neighbor is sabotaging her writing", "a neighbor's careless electrical
+  repair destroyed Jane's precious draft"; rl-affw "a deliberate act of workplace betrayal ...
+  their colleague deleted their thesis", "a colleague's careless accident causes Vera to lose
+  her manuscript", "a neighbor's accidental power theft ruins a woman's manuscript"), and a
+  readout without it fails (s3d q10_h "colleague's attempt to 'help' resulted in deleting the
+  author's draft", a pass of the first comp-v6 text). One doubtful pass: s3d q10_d "her friend
+  clandestinely erased her story" is taken for `deliberately` (no exact synonym).
+- **Known limit, "anxious" for dread**: the family wants the direct word or an exact synonym,
+  and the judge takes "anxious" / "anxiety" for dread on some items and not on others. rl-affw
+  q03_d ("anxiously waiting ... the results of her daughter's medical tests") and q03_g
+  ("trying to hide his anxiety") are fails that a reader would pass; rl-affw q03_f ("Dave
+  anxiously waits to see if his name is on the new cut list") passes here and failed under the
+  stricter text. Not widened.
+- **Known limit, the prompt's wording of the qualifier rule**: "differ only in one word or
+  phrase" is meant as "differ only in a qualifier", as the two worked examples show (options
+  that differ in a whole part, another person or event, were always told apart by that part).
+- **Local results of the unmerged builds must be deleted, not trusted**: result rows judged
+  between 2026-11-20 and this text (the first v6 lists, the two earlier qualifier sentences)
+  carry the same stamps as current ones (`comp-v6+bank-v6+maj...`, `comp-v6` on adapted sets);
+  a cached call of theirs never answers a current call (the fingerprint holds the system text
+  and the option list), but a stored `results.json` or ATI entry of theirs looks current.
+- Other doubtful verdicts: rl-affw q04_i ("takes sole credit, effectively erasing the older
+  brother's contribution", `gold_partial`), q06_j (split draws, in the cluster whose lists did
+  not change); s3d q06_g passes on "assuming the property was now taken".
+- The belief / intent wording exception of the one tune stays and does not conflict with the
+  qualifier rule. Picks of a shared-axis distractor: 2 (s3d), 0 (rl-affw).
+
 - **Prompt-only** (`po-opus-v1`): one Opus 5.5 readout per item, judged by this family's own
   `run` with its current rules (digest, quote and statement conditions, majority of draws,
-  options): 0.340 under `comp-v5+maj` (n = 100; 2026-11-04 refreeze, Opus 5.5 answered every
-  item).
+  options): **0.250** [0.17, 0.34] under `comp-v6+bank-v6+maj` (n = 100; the reply-free
+  readouts of 2026-11-20, Opus 5.5 answered every item, judged 2026-11-21). It was 0.340 under
+  `comp-v5+maj` (n = 100; 2026-11-04 refreeze, other readouts).
+- **Lucky guessing on bank v6** (`comp-v6+bank-v6`, Opus 5.5, fresh draws 2026-11-21 on the
+  rebuilt lists: 5 single-pick draws, 24 candidate-list draws;
+  `evals/baselines/lucky_guessing.json`; a guesser never reads the judge prompt). In brackets:
+  the first v6 (variants without twins), then bank v4:
+
+  | guesser | per-draw mean | single-layer rule (line 0.051) | all-layer +cand3 = lite (line 0.113) | picks on another value's options |
+  |---|---|---|---|---|
+  | options only | 0.024 [0.080, 0.062] | 0.02 [0.07, 0.06] pass | 0.22 [0.32, 0.17] **FAIL** | 20% [1%] |
+  | described | 0.056 [0.062, 0.074] | 0.04 [0.05, 0.06] pass | 0.34 [0.35, 0.30] **FAIL** | 20% [0%] |
+  | topic (topic-v4) | 0.058 [0.104, 0.094] | 0.06 [0.09, 0.10] **FAIL** | 0.30 [0.36, 0.21] **FAIL** | 6% [5%] |
+  | seeded uniform | 0.006 [0.016, 0.026] | 0.00 [0.00, 0.00] | 0.09 [0.09, 0.12] | 74% [60%] |
+  | chance | 0.0097 [0.0127, 0.0251] | 0.0007 [0.0008, 0.0020] | 0.063 [0.079, 0.157] | 75% [60%] |
+
+  Counting no longer works: the options-only and described guessers, which put 0-1% of their
+  picks on the variants of the first v6 (the original value was the one in 44 of 110 options),
+  now put 20% there, and the options-only guesser fell (per draw 0.080 -> 0.024, +cand3 0.32
+  -> 0.22). They are still far from the 75% an indifferent reader would give: with equal
+  counts what is left is plausibility (a closest friend's promotion, a death, dread while
+  waiting are the typical values, a boss's promotion, a deportation, boredom are not), which no
+  balancing of the list removes; the topic guesser, which is told the topic, rightly stays on
+  the original value (6%). Under the +cand3 rule all three guessers remain far over the line
+  (0.22-0.34 against 0.113; the lenses' own all-layer rows are 0.12-0.20). The cluster-level
+  correlation of these draws is high (ten lists), so the sizes are uncertain; the direction is
+  not. The bank does not meet the MC leakage standard (as bank v4 did not). The tables below
+  are bank v4's record.
+- **ATI under comp-v6.** The strict subset is frozen (`ati-subset-v2`, 26 ids) and is not
+  re-derived. A stored four-reader panel (wsb-bp `ati_r1`, the 2026-10-31 answers; NOT the
+  2026-11-04 panel behind the frozen statuses, whose answers were not kept) was re-judged under
+  comp-v6 (2026-11-21): 24 of the 26 ids fail for every reader and draw (23 under that panel's
+  own comp-v5 judging); q06_f (one draw each of Opus, astra and argon) and q10_d (one Opus
+  draw) have a passing draw; 40 items are all-fail on it, 16 beyond the 26 (not added). Draw
+  for draw the new instrument is mostly stricter on the same answers: 109 passes became fails
+  and 21 fails became passes of 1200. `scripts/ati_restamp_conj_v6.py [--check]` restamps the
+  entry's `instrument` and `bank_sha` with the ids, statuses and draw record untouched and
+  this evidence recorded (`ati_restamp_v6.json`); a full re-gate is the path that moves the
+  ids. The 26 ids were not re-verified against the panel answers that gated them (the
+  2026-11-04 answers are not on the box).
+- **Adapted sets' ATI under comp-v6.** An adapted bank keeps bank v4's lists
+  (`adapt.store.ADAPT_SOURCE_BANKS`; `bank_version: 4`, no `+bank-v6` stamp), but it is judged
+  with the comp-v6 prompt, so its gate instrument is `comp-v6` and every adapted entry stamped
+  `comp-v5` is stale (`anti_text_inversion=True` exits 2, "re-gate"). Re-gated 2026-11-21 from
+  the stored panel answers (readouts re-judged under the final comp-v6 text at the set's
+  layer, native, then `stage=gate_adapted families=conjunctive_association`; every other
+  family's entry byte-identical, `_source.written` moved; no panel was asked again):
+
+  | set | comp-v5 ids | comp-v6 ids | kept | dropped | added |
+  |---|---|---|---|---|---|
+  | qwen3-8b | 25 | 30 | 21 | 4 | 9 |
+  | qwen3.5-0.8b | 22 | 24 | 21 | 1 | 3 |
+  | qwen3.5-2b | 22 | 25 | 20 | 2 | 5 |
+  | qwen3.5-4b | 25 | 27 | 19 | 6 | 8 |
+  | qwen3.5-9b | 24 | 24 | 21 | 3 | 3 |
+  | glm-5.3 (default) | 21 | 30 | 21 | 0 | 9 |
+  | glm-5.3 (`with_qwen27b`) | 21 | 29 | 21 | 0 | 8 |
+
+  The frontier readers' pass@3 falls by up to 13 points under comp-v6 (astra most), so the
+  subsets grow a little; a few comp-v5 ids still leave (the three judge draws of an item are
+  fresh). **glm-5.3**: the panel answers of 61 of its 100 items are the 2026-11-05 panel's
+  (their comp-v5 draw verdicts equal the committed comp-v5 entry's, 183 of 183 per reader);
+  the 39 refilled items' answers were no longer on the box and were asked again on 2026-11-20
+  by the recorded route (z-ai/glm-5.3 through OpenRouter from Modal at reasoning effort low,
+  Opus 5.5, astra `openai-wif`, argon `gemini-wif`, Qwen3.6-27B on vLLM for the `with_qwen27b`
+  variant; 3 draws, no reader failed). Qwen3.6-27B solves one of the default variant's 30.
+  Opus 5.5 declines to judge some of the subject's draws of `cj3108c8_f` (those draws are
+  undecided; the item is invertible through the other readers). The entries carry a `regated`
+  note with the two dates; the gate ran with the file's recorded `_source.gate_deviations`
+  recreated in a scratch copy of the code (the drift guard accepts the decided-only rate),
+  never in the repo. Sets without a committed ATI file have no entry to move (the entries
+  re-gated from their local panels are kept beside those panels for whoever ships them);
+  `olmo-3.1-32b`'s local ATI file is on an older bank and needs a full re-gate when that set's
+  rebuild lands. Every adapted set's comp-v5 floors (`adapted/<m>/floors/`) are stale for this
+  family.
 - **Lucky guessing / MC leakage standard** (round 4, Camila r2: an options-only and a
   topic/described guesser within 5 points of uniform under the family's own pass rule; >= 2
   same-topic confusers per list). The options are never in the prompt the model reads (story +
@@ -477,7 +739,7 @@ reproduces it byte for byte).
   situation, differing only in state / content / relation) plus twins, so each holds >= 9
   same-topic confusers.
 
-  **Bank v4 (comp-v5), measured 2026-11-01** (Opus 5.5, 5 draws, `evals/baselines/lucky_guessing.json`,
+  **Bank v4 (comp-v5), measured 2026-11-01** (Opus 5.5, 5 draws, then frozen in `lucky_guessing.json`,
   topic-v4; chance under the rule falls with the wider lists: 0.002 single-layer, 0.157
   all-layer). Round 5 (Camila r3, lite = full's positions): the lite column is re-scored from
   the same cached calls at 8 shards, so it now equals the all-layer column (it was 2 shards,
@@ -610,7 +872,7 @@ reproduces it byte for byte).
   list alone, "Emotional aftermath of a sudden accidental death") is retired: it gave the topic
   guesser nothing the options-only guesser lacked. topic-v1/v2 story lines (0.35 / 0.29 on bank
   v2) leaked telling details ("Clearing out a childhood house after a death").
-- **ATI:** the panel's answers are re-judged with comp-v2 on the v2 options (re-judge only: the
+- **ATI (history):** the panel's answers are re-judged with comp-v2 on the v2 options (re-judge only: the
   text the panel reads is unchanged); see `evals/baselines/anti_text_inversion.json`. Round 4:
   the entry is re-gated under comp-v5 on bank v4 (2026-11-04 refreeze, fresh full panel,
   the inverted twin no longer a veto). ATI (plan 0071, every panel reader must fail): 26 of 100.
@@ -624,8 +886,11 @@ reproduces it byte for byte).
 failure, failed quote re-judge, summary failure; items in summary mode). Verdicts are cached
 append-only in `<out>/cells.jsonl`, keyed by the call key (`<id>`, `<id>|L-1`, `<id>|quote`) and a
 fingerprint of `(prompt_version, judge model, reasoning, system, user)`; rerunning retries only
-failures. `prompt_version` in summary mode = `digest.prompt_version("comp-v5", args, family)`
-(defaults: `comp-v3+digest-v4-task-extractive+sj-v9`).
+failures. `prompt_version` in summary mode = `digest.prompt_version("comp-v6+bank-v6+maj", args,
+family)` (single-layer default: `comp-v6+bank-v6+maj+digest-v5-task-extractive+sj-v10`). A
+comp-v5 cache row never answers a comp-v6 call: the fingerprint holds the prompt version, the
+system prompt and the user message (the option list), and all three moved
+(`test_old_cached_calls_never_answer_the_new_prompt`).
 
 ## History
 
@@ -642,6 +907,14 @@ failures. `prompt_version` in summary mode = `digest.prompt_version("comp-v5", a
   Review of #202 round 4: the leakage floors re-read under the family's own rule (and the
   headline +cand3 rule measured with candidate-list guessers) and the topic guesser re-measured
   on story lines (topic-v4): bank v3 fails the standard (Floors); the instrument is unchanged.
+- comp-v6 on bank v6 (2026-11-20): every part of an option required, shared parts included;
+  shared-axis distractors (3 values of the shared part in every non-twin option); pick
+  `shared_axis`. Every cached run re-judged; floors re-measured (Floors).
+  Before it merged (2026-11-21, review of #519): the variants got their role-swapped twins
+  (the first v6 could be undone by counting), and the qualifier rule was set to the ruling
+  (a qualifier need not be repeated, and must not be contradicted, unless two listed options
+  differ only in it). Everything was re-judged; the earlier passes' numbers are noted under
+  the table above.
 - comp-v5+maj (2026-11-04): the inverted-twin veto is removed from draws, candidates and shards;
   the twin is a listed wrong option, so picking it already fails that draw (stamp only).
 - 2026-11-04 (`comp-v5+maj`): the prompt-only floor (0.220 -> 0.340, Opus 5.5 now answers every

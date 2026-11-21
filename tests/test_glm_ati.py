@@ -119,9 +119,10 @@ def test_default_macro_is_n20_plus_the_three_exceptions(path):
 
 def test_ati_counts():
     a, b = _load(A_FILE), _load(B_FILE)
-    want_a = {"conjunctive_association": 21, "moral_rationale": 25, "poetry": 19,
+    # conjunctive_association: re-gated under comp-v6 on 2026-11-21 (21 / 21 under comp-v5)
+    want_a = {"conjunctive_association": 30, "moral_rationale": 25, "poetry": 19,
               "wrong_intermediate": 19, "model_multihop": 12, "nyt_connections": 21}  # fmt: skip
-    want_b = {"conjunctive_association": 21, "moral_rationale": 25, "poetry": 19,
+    want_b = {"conjunctive_association": 29, "moral_rationale": 25, "poetry": 19,
               "wrong_intermediate": 17, "model_multihop": 8, "nyt_connections": 17}  # fmt: skip
     assert {f: len(a[f]["ids"]) for f in want_a} == want_a
     assert {f: len(b[f]["ids"]) for f in want_b} == want_b

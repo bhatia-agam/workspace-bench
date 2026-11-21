@@ -148,11 +148,13 @@ def test_bank_v5_results_and_floors_are_stamped_apart(monkeypatch):
     assert cj.bank_stamp(v4) == "" and cj.bank_stamp(v5) == "+bank-v5"
     with pytest.raises(SystemExit):  # one bank never mixes versions
         cj.bank_stamp([v4[0], v5[1]])
-    # the default bank (v4) keeps the instrument of record, so its frozen floors still apply
+    # the registered bank (v6 since 2026-11-20) is the instrument of record, stamped with its
+    # version, so its frozen floors apply
     monkeypatch.delenv("WSB_BANK_FILE_CONJUNCTIVE_ASSOCIATION", raising=False)
-    assert lg.instrument_versions()["conjunctive_association"] == prompts.PROMPT_VERSION
-    # the opt-in v5 is its own instrument: bank v4's floors never serve it
-    assert lg.floors()["conjunctive_association"]  # v4's frozen floors are live
+    v6_instrument = prompts.PROMPT_VERSION + "+bank-v6"
+    assert lg.instrument_versions()["conjunctive_association"] == v6_instrument
+    # the opt-in v5 is its own instrument: the registered bank's floors never serve it
+    assert lg.floors()["conjunctive_association"]  # the registered bank's frozen floors are live
     monkeypatch.setenv(
         "WSB_BANK_FILE_CONJUNCTIVE_ASSOCIATION",
         "evals/association/conjunctive_association/items_v5.json",

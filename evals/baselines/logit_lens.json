@@ -8,12 +8,32 @@
   "model": "Qwen/Qwen3.6-27B",
   "producer": "wsb-bp Modal producer (olens_suite/workspace_bench/wsbench_public_modal.py, arm logitlens-L63, commit d6fc56523): wsbench.produce.methods.LogitLens.read batched (final_norm on fp32 h, @ W_U^T, top-10, scores rounded to 4 places); cells captured by the bench Producer backend. Items whose plan row is unchanged since v1.0.0 keep their 2026-11-05 cells; items added or changed by a later bank were produced by the same arm on 2026-11-07 at the plans of main 9c8be3b9 (qmain run)",
   "bench": {
-   "judged": "plan 0099 branch camila/0099-nyt-stated-label (2026-11-20), nyt_connections only, its summary instrument nyt-mc-2026-11-20 (a candidate needs its connection stated), layers=63",
-   "note": "same L63 readouts as the 2026-11-17 refreeze (plan_sha unchanged); the per-layer digests replayed from that run's cache, only the judge's MC calls were re-asked"
+   "judged": "branch camila/0103-conj-shared-axis on main bfba4736 (2026-11-21): conjunctive_association re-judged on bank v6 (shared-axis distractors with their twins) under comp-v6 (a qualifier required only where two listed options differ in it; summary instrument comp-v6+bank-v6+maj), layers=63, from the cached 2026-11-17 judged run (qmain_v2/judged/logitlens-L63/L63); every digest replayed from cache, every MC call new",
+   "note": "partial re-freeze of one family; readouts plan_sha equals current main's (bank v6 keeps bank v4's read plan)"
   },
-  "verified": "nyt_connections: every plan item has its cells (0 missing, 0 unjudged cells), complete",
-  "measured": "2026-11-20",
+  "verified": "conjunctive_association: every plan item has its cells (0 missing, 0 unjudged cells); value 0.000 as in the 2026-11-17 entry",
+  "measured": "2026-11-21 (re-judge of the 2026-11-17 readouts)",
   "kept_from": [
+   {
+    "families": [
+     "nyt_connections"
+    ],
+    "source": {
+     "protocol": "logit-lens-L63-v1",
+     "method": "logit_lens",
+     "layer": 63,
+     "k": 10,
+     "sampling": "tokens10",
+     "model": "Qwen/Qwen3.6-27B",
+     "producer": "wsb-bp Modal producer (olens_suite/workspace_bench/wsbench_public_modal.py, arm logitlens-L63, commit d6fc56523): wsbench.produce.methods.LogitLens.read batched (final_norm on fp32 h, @ W_U^T, top-10, scores rounded to 4 places); cells captured by the bench Producer backend. Items whose plan row is unchanged since v1.0.0 keep their 2026-11-05 cells; items added or changed by a later bank were produced by the same arm on 2026-11-07 at the plans of main 9c8be3b9 (qmain run)",
+     "bench": {
+      "judged": "plan 0099 branch camila/0099-nyt-stated-label (2026-11-20), nyt_connections only, its summary instrument nyt-mc-2026-11-20 (a candidate needs its connection stated), layers=63",
+      "note": "same L63 readouts as the 2026-11-17 refreeze (plan_sha unchanged); the per-layer digests replayed from that run's cache, only the judge's MC calls were re-asked"
+     },
+     "verified": "nyt_connections: every plan item has its cells (0 missing, 0 unjudged cells), complete",
+     "measured": "2026-11-20"
+    }
+   },
    {
     "families": [
      "multi_concept_directed_modulation"
@@ -43,7 +63,6 @@
      "basic_readout",
      "buggy_code",
      "chain_intermediates",
-     "conjunctive_association",
      "directed_modulation",
      "hinted_cutoff",
      "introspection",
@@ -1317,7 +1336,7 @@
    "n_empty_cells": 0
   },
   "judge_model": "claude-opus-5-5",
-  "instrument": "comp-v5+maj+digest-v5-task-extractive+sj-v10",
+  "instrument": "comp-v6+bank-v6+maj+digest-v5-task-extractive+sj-v10",
   "layers_judged": [
    63
   ],
@@ -1443,7 +1462,7 @@
    "q10_j": false
   },
   "digest_unserved": [],
-  "written": "2026-11-17T22:35:52+00:00",
+  "written": "2026-11-21T01:26:38+00:00",
   "protocol": "logit-lens-L63-v1",
   "plan_sha": "8de78629e9e58daf639c08a4c006dd2ae6887ec854f58341235d79691c47af55",
   "ati": {
@@ -1455,7 +1474,7 @@
    "n_items": 26,
    "n_items_decided": 26,
    "complete": true,
-   "instrument": "comp-v5+maj+digest-v5-task-extractive+sj-v10"
+   "instrument": "comp-v6+bank-v6+maj+digest-v5-task-extractive+sj-v10"
   }
  },
  "directed_modulation": {

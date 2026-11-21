@@ -210,7 +210,7 @@ def test_live_instrument_is_the_judges_full_stamp(real_families):
     """The live stamp comes from the family's own judge (a dry run, no call), so it carries the
     segments no prefix rule knows: the registered base alone is not the instrument."""
     live = ll.live_instrument("conjunctive_association")
-    assert live == "comp-v5+maj+digest-v5-task-extractive+sj-v10"
+    assert live == "comp-v6+bank-v6+maj+digest-v5-task-extractive+sj-v10"
     cfg = ll.live_config("conjunctive_association")
     assert cfg["aggregate"] == "summary" and cfg["layers_judged"] == [63]
     assert cfg["sampling"] == "tokens10" and cfg["dry_run"] is True
@@ -219,9 +219,9 @@ def test_live_instrument_is_the_judges_full_stamp(real_families):
 @pytest.mark.parametrize(
     "stale",
     [
-        "comp-v5+maj-noinv+digest-v5-task-extractive+sj-v10",  # the 2026-11-05 entry's stamp
-        "comp-v5+digest-v5-task-extractive+sj-v10",  # the registered base with no rule segment
-        "comp-v5+maj+digest-v5-task-extractive-layered-v1x4+sj-v10",  # another digest tail
+        "comp-v6+bank-v6+maj-noinv+digest-v5-task-extractive+sj-v10",  # the retired rule
+        "comp-v6+bank-v6+digest-v5-task-extractive+sj-v10",  # the base, no rule segment
+        "comp-v6+bank-v6+maj+digest-v5-task-extractive-layered-v1x4+sj-v10",  # another digest tail
     ],
 )
 def test_freeze_refuses_a_stale_middle_segment(tmp_path, real_families, stale):

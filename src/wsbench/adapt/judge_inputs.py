@@ -462,10 +462,13 @@ def _p_moral_version(it, _h, _reg):
 
 
 def _p_conj_version(it, _h, _reg):
-    if it.get("bank_version") != 4:
+    # 4 = the bank an adaptation ports (store.ADAPT_SOURCE_BANKS: bank v4's lists); 6 = the
+    # registered bank (v4 + shared-axis distractors, 2026-11-20). One bank holds one of them
+    if it.get("bank_version") not in (4, 6):
         return (
-            f"hazard: bank_version {it.get('bank_version')!r} != 4 (the registered value; "
-            "absent counts as v1, a mixed bank exits, judge.py:520-526)"
+            f"hazard: bank_version {it.get('bank_version')!r} is neither 4 (the bank adapted "
+            "sets port) nor 6 (the registered bank); absent counts as v1, a mixed bank exits "
+            "(judge.bank_stamp)"
         )
     return None
 

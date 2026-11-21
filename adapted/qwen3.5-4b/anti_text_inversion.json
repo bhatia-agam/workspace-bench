@@ -22,7 +22,7 @@
   "buggy_pass_score": 6,
   "max_refused_share": 0.2,
   "max_unverified_share": 0.2,
-  "written": "2026-11-10T05:47:16+00:00",
+  "written": "2026-11-21T01:30:29+00:00",
   "set": "qwen3.5-4b",
   "subject": "the set's subject in the Qwen slot: vLLM (the adapt recipe), its chat template, thinking off, user span encoded with no added/special token; n=3, T=1.0, top_p=1.0, top_k off, max_tokens 4096, per-item seed"
  },
@@ -22425,15 +22425,15 @@
    "astra": "openai/gpt-6-astra",
    "argon": "google/gemini-4-argon"
   },
-  "instrument": "comp-v5",
+  "instrument": "comp-v6",
   "judge_model": "claude-opus-5-5",
   "layers_judged": [
    20
   ],
   "bank_sha": "0ff4f2ee2ac541ac2471f12d4e3ed9313e57566696b5eb384676d84eca95b397",
   "n_bank": 100,
-  "n_ati": 25,
-  "n_invertible": 75,
+  "n_ati": 27,
+  "n_invertible": 73,
   "n_unverified": 0,
   "pass_at_1": {
    "subject": [
@@ -22442,53 +22442,55 @@
     0.0
    ],
    "opus": [
-    0.47,
-    0.43,
-    0.51
+    0.4,
+    0.44,
+    0.41
    ],
    "astra": [
-    0.41,
-    0.45,
-    0.33
+    0.33,
+    0.38,
+    0.3
    ],
    "argon": [
-    0.38,
     0.35,
-    0.46
+    0.3,
+    0.36
    ]
   },
   "pass_at_3": {
    "subject": 0.0,
-   "opus": 0.64,
-   "astra": 0.54,
-   "argon": 0.54
+   "opus": 0.62,
+   "astra": 0.45,
+   "argon": 0.5
   },
   "ids": [
-   "q01_e",
-   "q02_h",
    "q02_i",
-   "q02_j",
    "q03_g",
    "q03_i",
    "q03_j",
    "q04_j",
    "q05_c",
-   "q06_f",
-   "q06_g",
-   "q06_h",
+   "q06_j",
    "q07_a",
    "q07_f",
+   "q07_i",
    "q07_j",
+   "q08_a",
    "q08_e",
    "q08_g",
    "q08_h",
    "q09_a",
    "q09_f",
+   "q09_g",
    "q09_h",
    "q09_i",
+   "q09_j",
    "q10_a",
    "q10_f",
-   "q10_j"
+   "q10_g",
+   "q10_i",
+   "q10_j",
+   "cj52a1a9_g"
   ],
   "status": {
    "q01_a": [
@@ -22517,20 +22519,20 @@
    ],
    "q01_e": [
     "failed",
-    "failed",
+    "solved",
     "failed",
     "failed"
    ],
    "q01_f": [
     "failed",
-    "solved",
+    "failed",
     "solved",
     "failed"
    ],
    "q01_g": [
     "failed",
     "solved",
-    "solved",
+    "failed",
     "failed"
    ],
    "q01_h": [
@@ -22590,14 +22592,14 @@
    "q02_g": [
     "failed",
     "solved",
-    "solved",
+    "failed",
     "solved"
    ],
    "q02_h": [
     "failed",
     "failed",
     "failed",
-    "failed"
+    "solved"
    ],
    "q02_i": [
     "failed",
@@ -22607,7 +22609,7 @@
    ],
    "q02_j": [
     "failed",
-    "failed",
+    "solved",
     "failed",
     "failed"
    ],
@@ -22709,7 +22711,7 @@
    ],
    "q04_h": [
     "failed",
-    "failed",
+    "solved",
     "solved",
     "solved"
    ],
@@ -22758,7 +22760,7 @@
    "q05_f": [
     "failed",
     "solved",
-    "failed",
+    "solved",
     "solved"
    ],
    "q05_g": [
@@ -22794,8 +22796,8 @@
    "q06_b": [
     "failed",
     "solved",
-    "solved",
-    "solved"
+    "failed",
+    "failed"
    ],
    "q06_d": [
     "failed",
@@ -22811,26 +22813,26 @@
    ],
    "q06_f": [
     "failed",
-    "failed",
+    "solved",
     "failed",
     "failed"
    ],
    "q06_g": [
     "failed",
-    "failed",
+    "solved",
     "failed",
     "failed"
    ],
    "q06_h": [
     "failed",
     "failed",
-    "failed",
+    "solved",
     "failed"
    ],
    "q06_j": [
     "failed",
     "failed",
-    "solved",
+    "failed",
     "failed"
    ],
    "q07_a": [
@@ -22848,13 +22850,13 @@
    "q07_c": [
     "failed",
     "solved",
-    "solved",
+    "failed",
     "solved"
    ],
    "q07_d": [
     "failed",
-    "solved",
-    "solved",
+    "failed",
+    "failed",
     "solved"
    ],
    "q07_e": [
@@ -22872,7 +22874,7 @@
    "q07_g": [
     "failed",
     "failed",
-    "solved",
+    "failed",
     "solved"
    ],
    "q07_h": [
@@ -22884,8 +22886,8 @@
    "q07_i": [
     "failed",
     "failed",
-    "solved",
-    "solved"
+    "failed",
+    "failed"
    ],
    "q07_j": [
     "failed",
@@ -22895,9 +22897,9 @@
    ],
    "q08_a": [
     "failed",
-    "solved",
-    "solved",
-    "solved"
+    "failed",
+    "failed",
+    "failed"
    ],
    "q08_b": [
     "failed",
@@ -22949,9 +22951,9 @@
    ],
    "q08_j": [
     "failed",
+    "failed",
     "solved",
-    "solved",
-    "failed"
+    "solved"
    ],
    "q09_a": [
     "failed",
@@ -22991,8 +22993,8 @@
    ],
    "q09_g": [
     "failed",
-    "solved",
-    "solved",
+    "failed",
+    "failed",
     "failed"
    ],
    "q09_h": [
@@ -23009,8 +23011,8 @@
    ],
    "q09_j": [
     "failed",
-    "solved",
-    "solved",
+    "failed",
+    "failed",
     "failed"
    ],
    "q10_a": [
@@ -23053,7 +23055,7 @@
     "failed",
     "failed",
     "failed",
-    "solved"
+    "failed"
    ],
    "q10_h": [
     "failed",
@@ -23065,7 +23067,7 @@
     "failed",
     "failed",
     "failed",
-    "solved"
+    "failed"
    ],
    "q10_j": [
     "failed",
@@ -23087,9 +23089,9 @@
    ],
    "cj52a1a9_g": [
     "failed",
-    "solved",
     "failed",
-    "solved"
+    "failed",
+    "failed"
    ]
   },
   "draw_pass": {
@@ -23609,7 +23611,7 @@
     "q01_c": [
      true,
      true,
-     false
+     true
     ],
     "q01_d": [
      true,
@@ -23618,27 +23620,27 @@
     ],
     "q01_e": [
      false,
-     false,
+     true,
      false
     ],
     "q01_f": [
      false,
      false,
-     true
+     false
     ],
     "q01_g": [
-     true,
+     false,
      true,
      true
     ],
     "q01_h": [
      true,
-     true,
+     false,
      true
     ],
     "q01_i": [
      true,
-     false,
+     true,
      false
     ],
     "q01_j": [
@@ -23659,10 +23661,10 @@
     "q02_c": [
      true,
      false,
-     true
+     false
     ],
     "q02_d": [
-     true,
+     false,
      true,
      false
     ],
@@ -23694,7 +23696,7 @@
     "q02_j": [
      false,
      false,
-     false
+     true
     ],
     "q03_a": [
      true,
@@ -23708,7 +23710,7 @@
     ],
     "q03_c": [
      true,
-     true,
+     false,
      true
     ],
     "q03_d": [
@@ -23749,7 +23751,7 @@
     "q04_a": [
      true,
      false,
-     true
+     false
     ],
     "q04_b": [
      true,
@@ -23763,7 +23765,7 @@
     ],
     "q04_d": [
      false,
-     true,
+     false,
      true
     ],
     "q04_e": [
@@ -23777,14 +23779,14 @@
      true
     ],
     "q04_h": [
-     false,
+     true,
      false,
      false
     ],
     "q04_i": [
      true,
      true,
-     false
+     true
     ],
     "q04_j": [
      false,
@@ -23807,7 +23809,7 @@
      false
     ],
     "q05_d": [
-     false,
+     true,
      true,
      true
     ],
@@ -23817,9 +23819,9 @@
      false
     ],
     "q05_f": [
+     false,
      true,
-     true,
-     true
+     false
     ],
     "q05_g": [
      false,
@@ -23828,7 +23830,7 @@
     ],
     "q05_h": [
      true,
-     true,
+     false,
      true
     ],
     "q05_i": [
@@ -23842,9 +23844,9 @@
      true
     ],
     "q06_a": [
+     false,
      true,
-     true,
-     true
+     false
     ],
     "q06_b": [
      false,
@@ -23858,17 +23860,17 @@
     ],
     "q06_e": [
      true,
-     false,
+     true,
      true
     ],
     "q06_f": [
      false,
-     false,
+     true,
      false
     ],
     "q06_g": [
-     false,
-     false,
+     true,
+     true,
      false
     ],
     "q06_h": [
@@ -23892,19 +23894,19 @@
      false
     ],
     "q07_c": [
+     false,
      true,
-     true,
-     true
+     false
     ],
     "q07_d": [
-     true,
      false,
-     true
+     false,
+     false
     ],
     "q07_e": [
      false,
      true,
-     true
+     false
     ],
     "q07_f": [
      false,
@@ -23932,9 +23934,9 @@
      false
     ],
     "q08_a": [
-     true,
-     true,
-     true
+     false,
+     false,
+     false
     ],
     "q08_b": [
      false,
@@ -23978,7 +23980,7 @@
     ],
     "q08_j": [
      false,
-     true,
+     false,
      false
     ],
     "q09_a": [
@@ -23994,7 +23996,7 @@
     "q09_c": [
      true,
      false,
-     true
+     false
     ],
     "q09_d": [
      true,
@@ -24014,7 +24016,7 @@
     "q09_g": [
      false,
      false,
-     true
+     false
     ],
     "q09_h": [
      false,
@@ -24027,7 +24029,7 @@
      false
     ],
     "q09_j": [
-     true,
+     false,
      false,
      false
     ],
@@ -24047,8 +24049,8 @@
      true
     ],
     "q10_d": [
-     true,
      false,
+     true,
      true
     ],
     "q10_e": [
@@ -24067,9 +24069,9 @@
      false
     ],
     "q10_h": [
-     true,
      false,
-     true
+     true,
+     false
     ],
     "q10_i": [
      false,
@@ -24094,7 +24096,7 @@
     "cj52a1a9_g": [
      false,
      false,
-     true
+     false
     ]
    },
    "astra": {
@@ -24124,19 +24126,19 @@
      false
     ],
     "q01_f": [
-     false,
+     true,
      true,
      false
     ],
     "q01_g": [
      false,
-     true,
+     false,
      false
     ],
     "q01_h": [
      false,
      true,
-     false
+     true
     ],
     "q01_i": [
      false,
@@ -24165,7 +24167,7 @@
     ],
     "q02_d": [
      false,
-     true,
+     false,
      true
     ],
     "q02_e": [
@@ -24180,7 +24182,7 @@
     ],
     "q02_g": [
      false,
-     true,
+     false,
      false
     ],
     "q02_h": [
@@ -24265,8 +24267,8 @@
     ],
     "q04_d": [
      true,
-     true,
-     true
+     false,
+     false
     ],
     "q04_e": [
      true,
@@ -24281,7 +24283,7 @@
     "q04_h": [
      true,
      true,
-     false
+     true
     ],
     "q04_i": [
      false,
@@ -24320,7 +24322,7 @@
     ],
     "q05_f": [
      false,
-     false,
+     true,
      false
     ],
     "q05_g": [
@@ -24329,9 +24331,9 @@
      true
     ],
     "q05_h": [
-     false,
      true,
-     false
+     true,
+     true
     ],
     "q05_i": [
      true,
@@ -24346,11 +24348,11 @@
     "q06_a": [
      true,
      false,
-     false
+     true
     ],
     "q06_b": [
-     true,
-     true,
+     false,
+     false,
      false
     ],
     "q06_d": [
@@ -24361,7 +24363,7 @@
     "q06_e": [
      true,
      false,
-     false
+     true
     ],
     "q06_f": [
      false,
@@ -24375,12 +24377,12 @@
     ],
     "q06_h": [
      false,
-     false,
+     true,
      false
     ],
     "q06_j": [
      false,
-     true,
+     false,
      false
     ],
     "q07_a": [
@@ -24394,19 +24396,19 @@
      false
     ],
     "q07_c": [
-     true,
-     true,
-     true
+     false,
+     false,
+     false
     ],
     "q07_d": [
-     true,
-     true,
-     true
+     false,
+     false,
+     false
     ],
     "q07_e": [
+     false,
      true,
-     true,
-     true
+     false
     ],
     "q07_f": [
      false,
@@ -24414,18 +24416,18 @@
      false
     ],
     "q07_g": [
-     true,
      false,
-     true
-    ],
-    "q07_h": [
-     true,
      false,
      false
     ],
+    "q07_h": [
+     false,
+     false,
+     true
+    ],
     "q07_i": [
      false,
-     true,
+     false,
      false
     ],
     "q07_j": [
@@ -24434,7 +24436,7 @@
      false
     ],
     "q08_a": [
-     true,
+     false,
      false,
      false
     ],
@@ -24446,7 +24448,7 @@
     "q08_c": [
      true,
      true,
-     true
+     false
     ],
     "q08_d": [
      false,
@@ -24514,9 +24516,9 @@
      false
     ],
     "q09_g": [
-     true,
      false,
-     true
+     false,
+     false
     ],
     "q09_h": [
      false,
@@ -24529,9 +24531,9 @@
      false
     ],
     "q09_j": [
-     true,
      false,
-     true
+     false,
+     false
     ],
     "q10_a": [
      false,
@@ -24546,7 +24548,7 @@
     "q10_c": [
      true,
      true,
-     true
+     false
     ],
     "q10_d": [
      false,
@@ -24584,7 +24586,7 @@
      false
     ],
     "cj52a1a9_b": [
-     true,
+     false,
      true,
      false
     ],
@@ -24617,7 +24619,7 @@
     ],
     "q01_d": [
      true,
-     false,
+     true,
      true
     ],
     "q01_e": [
@@ -24636,8 +24638,8 @@
      false
     ],
     "q01_h": [
-     false,
-     false,
+     true,
+     true,
      true
     ],
     "q01_i": [
@@ -24662,7 +24664,7 @@
     ],
     "q02_c": [
      false,
-     true,
+     false,
      true
     ],
     "q02_d": [
@@ -24686,7 +24688,7 @@
      true
     ],
     "q02_h": [
-     false,
+     true,
      false,
      false
     ],
@@ -24766,9 +24768,9 @@
      false
     ],
     "q04_d": [
+     false,
      true,
-     true,
-     true
+     false
     ],
     "q04_e": [
      false,
@@ -24801,9 +24803,9 @@
      true
     ],
     "q05_b": [
+     true,
      false,
-     false,
-     true
+     false
     ],
     "q05_c": [
      false,
@@ -24852,7 +24854,7 @@
     ],
     "q06_b": [
      false,
-     true,
+     false,
      false
     ],
     "q06_d": [
@@ -24892,21 +24894,21 @@
     ],
     "q07_b": [
      true,
-     true,
-     true
+     false,
+     false
     ],
     "q07_c": [
      true,
-     true,
+     false,
      true
     ],
     "q07_d": [
      true,
-     true,
-     true
+     false,
+     false
     ],
     "q07_e": [
-     true,
+     false,
      true,
      true
     ],
@@ -24923,12 +24925,12 @@
     "q07_h": [
      false,
      true,
-     true
+     false
     ],
     "q07_i": [
      false,
      false,
-     true
+     false
     ],
     "q07_j": [
      false,
@@ -24937,8 +24939,8 @@
     ],
     "q08_a": [
      false,
-     true,
-     true
+     false,
+     false
     ],
     "q08_b": [
      false,
@@ -24963,7 +24965,7 @@
     "q08_f": [
      true,
      false,
-     true
+     false
     ],
     "q08_g": [
      false,
@@ -24982,7 +24984,7 @@
     ],
     "q08_j": [
      false,
-     false,
+     true,
      false
     ],
     "q09_a": [
@@ -25001,12 +25003,12 @@
      true
     ],
     "q09_d": [
-     true,
+     false,
      true,
      true
     ],
     "q09_e": [
-     true,
+     false,
      true,
      true
     ],
@@ -25042,12 +25044,12 @@
     ],
     "q10_b": [
      true,
-     false,
-     true
+     true,
+     false
     ],
     "q10_c": [
      false,
-     true,
+     false,
      true
     ],
     "q10_d": [
@@ -25067,18 +25069,18 @@
     ],
     "q10_g": [
      false,
-     true,
-     false
-    ],
-    "q10_h": [
-     true,
      false,
      false
     ],
-    "q10_i": [
-     true,
-     true,
+    "q10_h": [
+     false,
+     false,
      true
+    ],
+    "q10_i": [
+     false,
+     false,
+     false
     ],
     "q10_j": [
      false,
@@ -25098,7 +25100,7 @@
     "cj52a1a9_g": [
      false,
      false,
-     true
+     false
     ]
    }
   },
