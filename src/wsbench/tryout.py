@@ -95,3 +95,13 @@ def describe(family: str, specs: list[ReadSpec]) -> str:
         layers = f"{spec.layers[0]}..{spec.layers[-1]}" if spec.layers else "-"
         lines.append(f"    read at: positions {spec.positions.get('kind')}, layers {layers}")
     return "\n".join(lines)
+
+
+def viewer_commands(family: str, judged: Path, readouts: Path, out: Path) -> list[str]:
+    """The two commands that show a judged try-out in the results viewer (its own small store
+    under ``out``). The readouts are attached when the file has the name ingest looks for."""
+    store = out / "viewer_store"
+    named = readouts.name == f"{family}.jsonl"
+    ingest = f"uv run wsbench viewer ingest {judged} adapter=wsb lens=try"
+    ingest += (f" readouts={readouts.parent}" if named else "") + f" store={store}"
+    return [ingest, f"uv run wsbench viewer serve store={store}"]

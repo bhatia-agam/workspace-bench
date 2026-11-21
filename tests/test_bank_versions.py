@@ -19,6 +19,8 @@ ALLOWED_LITERALS = {
     "readplan.py",  # jlens_concept_pr's adapted rollout ids (bank_dir/items.json)
     "nocot.py",
     "adapt/refill.py",  # plan 0072 §0 D1: buggy_code's adapted target IS bank v1 (items.json)
+    "viewer/ingest/hb.py",  # HallucinationBench's own bank files, in another repo
+    "viewer/ingest/wsb.py",  # reads an OLDER checkout's bank when the registered file is absent
 }
 
 

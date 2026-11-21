@@ -71,3 +71,16 @@ def test_try_usage_errors(tmp_path, capsys, real_families):
 def test_try_runs_on_every_bundled_example(family, tmp_path, capsys, real_families):
     assert cli.main(["try", f"family={family}", "dry_run=True", f"out={tmp_path}"]) == 0
     assert "expected:" in capsys.readouterr().out
+
+
+def test_viewer_commands_ingest_the_judged_try(tmp_path):
+    out = tmp_path / "try"
+    toy = tryout.example_readouts("multihop")
+    ingest, serve = tryout.viewer_commands("multihop", out / "judged", toy, out)
+    assert ingest == (
+        f"uv run wsbench viewer ingest {out / 'judged'} adapter=wsb lens=try "
+        f"readouts={toy.parent} store={out / 'viewer_store'}"
+    )
+    assert serve == f"uv run wsbench viewer serve store={out / 'viewer_store'}"
+    other = tmp_path / "mine.jsonl"  # not <family>.jsonl: ingest could not find it by name
+    assert "readouts=" not in tryout.viewer_commands("multihop", out, other, out)[0]
