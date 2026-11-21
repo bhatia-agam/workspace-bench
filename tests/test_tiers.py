@@ -22,7 +22,7 @@ CATEGORY = {
     "poetry": "basic",
     "directed_modulation": "basic",
     "multi_concept_directed_modulation": "basic",
-    "association": "basic",
+    "association": "association",  # plan 0107: `basic` before
     "chain_intermediates": "computational",
     "buggy_code": "computational",
     "arithmetic_intermediates": "computational",
@@ -70,6 +70,7 @@ def test_every_family_has_its_category(real_families):
     assert registry.CATEGORIES["anti_bag_of_features"] == "Anti-bag-of-features"
     assert registry.CATEGORIES["jlens_comparison"] == "J-lens comparison"  # plan 0105
     assert registry.LEGACY_CATEGORIES == {"precision": "jlens_comparison"}
+    assert registry.LEGACY_FAMILY_CATEGORIES == {"association": "basic"}  # plan 0107
     assert {s.name: s.group for s in real_families.values()} == CATEGORY
 
 

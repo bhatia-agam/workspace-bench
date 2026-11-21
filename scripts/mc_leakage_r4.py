@@ -143,8 +143,8 @@ FAMS = {
     ),
     "association": Fam(
         "association",
-        "evals/basic/association/items_v2.json",
-        "evals/basic/association/items_v3.json",
+        "evals/association/association/items_v2.json",
+        "evals/association/association/items_v3.json",
         7,
         "the one concept a short scene evokes without naming it",
     ),
@@ -786,7 +786,7 @@ def guess_item(fam: Fam, x: dict[str, Any], s: dict) -> Any:
         shown, g = options_of("multihop_st", x)
         return lg.Item(x["id"], [shown[:-1]], [g + 1], meta={"topic": t})
     if fam.name == "association":
-        from wsbench.evals.basic.association.judge import build_options
+        from wsbench.evals.association.association.judge import build_options
 
         shown, g1 = build_options(x)
         return lg.Item(x["id"], [shown[:-1]], [g1], meta={"topic": t})

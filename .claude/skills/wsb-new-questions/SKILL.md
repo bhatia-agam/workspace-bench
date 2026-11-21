@@ -195,7 +195,7 @@ easier-but-valid knobs.
 ## Scoring a new bank
 
 Every family loads its REGISTERED bank (`registry.bank_path(family)`: `EvalSpec.bank`, e.g.
-`evals/basic/association/items_v5.json`, not always `items.json`). Ways to score a new bank with the
+`evals/association/association/items_v5.json`, not always `items.json`). Ways to score a new bank with the
 unmodified judges:
 
 - **`WSB_BANK_FILE_<FAMILY>=<file>`** points one family at another bank file (candidates,

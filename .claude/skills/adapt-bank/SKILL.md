@@ -270,7 +270,7 @@ adapted/<model>/report.json            per-family: target, n_original, n_origina
                                        n_new, status, change (what the difficulty knobs did), note
 adapted/<model>/<family>.json          frozen adapted bank: the header + item shape of the
                                        REGISTERED bank (`registry.frozen_bank_path`, e.g.
-                                       evals/basic/association/items_v3.json, not items.json); each
+                                       evals/association/association/items_v3.json, not items.json); each
                                        item carries `adapt` {origin, tier, knobs, gate, parent?, note?}
 adapted/<model>/gate/<family>.jsonl    every gated candidate, failures included (append-only;
                                        last record per id wins): {id, origin, item, gate, selected}

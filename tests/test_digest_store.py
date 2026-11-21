@@ -13,7 +13,7 @@ from test_audit_fixes_digest import Scripted, _args, _layers_item, _per_layer_re
 
 from wsbench import digest, llm
 from wsbench.cache import Cache, SharedLog
-from wsbench.evals.basic.association import SPEC
+from wsbench.evals.association.association import SPEC
 from wsbench.llm import Spend
 from wsbench.readouts import Cell
 

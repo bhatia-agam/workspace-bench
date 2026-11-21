@@ -199,7 +199,7 @@ Header: `variants`.
 
 ### association
 
-Judge: `evals/basic/association/judge.py`. Refresh: upgrade. Bank: dict, id from `name`.
+Judge: `evals/association/association/judge.py`. Refresh: upgrade. Bank: dict, id from `name`.
 Note: Adapted sets today carry no mc on any item: the judge exits on all 11 sets.
 REQUIRED_ITEM_FIELDS: `name`, `prompt`, `mc`.
 
@@ -213,7 +213,7 @@ REQUIRED_ITEM_FIELDS: `name`, `prompt`, `mc`.
 | item | `mc.aliases` | yes | silent | build | association/judge.py:80,117 |  |
 | item | `mc.distractor_aliases` | yes | silent | build | association/judge.py:120 | absent: weaker other-option checks in steps 3b / 3c (lenient) |
 | resource | `distractor count` |  | silent | build | association/prompts.py:24 |  (checked) |
-| resource | `evals/basic/association/lite_rule.json` |  | - | copy-verbatim | readplan.py:116-127 | family-keyed ({kind: same}) |
+| resource | `evals/association/association/lite_rule.json` |  | - | copy-verbatim | readplan.py:116-127 | family-keyed ({kind: same}) |
 | qwen | `chat_summarize render + SUMMARIZE_SUFFIX` |  | - | subject | readplan.py:23, 925-941 | positions from the subject's own render (suffix_text_then_tail) |
 | qwen | `min_full_positions=19` |  | - | subject | association/__init__.py:27 | Qwen render length; reads.check_full exits below it on a sidecar file (reads.py:308) |
 | qwen | `GRID layers (Qwen 64 blocks)` |  | - | subject | readplan.py:588-627 | remapped by depth from report.json n_layers under WSB_BANK_ROOT (exit without it) |

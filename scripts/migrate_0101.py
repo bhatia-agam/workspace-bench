@@ -43,7 +43,7 @@ KEYS = {
 }
 # family (key AFTER the rename) -> category directory
 CATEGORY = {
-    "association": "basic",
+    "association": "basic",  # as applied; in `association` since plan 0107 (LATER_MOVES)
     "basic_readout": "basic",
     "basic_readout_st": "basic",
     "directed_modulation": "basic",
@@ -79,10 +79,14 @@ CATEGORY = {
 CATEGORIES = tuple(dict.fromkeys(CATEGORY.values()))
 # Directory moves made by LATER plans, applied by `check` after the recorded moves of `apply`
 # (``APPLIED`` is a frozen record and keeps the paths of its day): plan 0105 renamed the category
-# `precision` to `jlens_comparison`, bytes unchanged.
+# `precision` to `jlens_comparison`, and plan 0107 moved the family `association` from the
+# category `basic` to the category `association` (``CATEGORY`` keeps `basic` for it: the text
+# rules and their tests replay the migration as it was applied). Bytes unchanged in both.
 LATER_MOVES = (
     ("evals/precision", "evals/jlens_comparison"),
     ("src/wsbench/evals/precision", "src/wsbench/evals/jlens_comparison"),
+    ("evals/basic/association", "evals/association/association"),
+    ("src/wsbench/evals/basic/association", "src/wsbench/evals/association/association"),
 )
 UNMOVED = ("baselines", "fast", "hallucinationbench")
 # the directory name each family has BEFORE the move -> its key after (32; no multihop_mt_v2 dir)
@@ -436,12 +440,15 @@ def new_path(path: str, mv: list[tuple[str, str]]) -> str:
     return path
 
 
-def path_today(path: str, mv: list[tuple[str, str]]) -> str:
+def path_today(path: str, mv: list[tuple[str, str]], root: Path | None = None) -> str:
     """``new_path`` followed by the moves of later plans (``LATER_MOVES``): where a file of the
-    base commit sits in today's tree. For a record whose moves were made under the category
-    names of the apply commit (``APPLIED``); moves computed from today's ``CATEGORY`` already
-    end in today's directories and pass through unchanged."""
-    return new_path(new_path(path, mv), list(LATER_MOVES))
+    base commit sits in today's tree. With ``root``, a file that is still at its path of the
+    apply commit stays there (a tree checked right after `apply`, before any later plan: plan
+    0107's move starts from a directory ``CATEGORY`` still names)."""
+    applied = new_path(path, mv)
+    if root is not None and (root / applied).is_file():
+        return applied
+    return new_path(applied, list(LATER_MOVES))
 
 
 # ---------------------------------------------------------------- the text rules
@@ -1320,7 +1327,7 @@ def check(root: Path) -> int:
     rewritten = set(rec["json"]) | set(rec["text"])
     want_data = set()
     for f, digest in rec["data"].items():
-        dst = path_today(f, mv)  # type: ignore[arg-type]
+        dst = path_today(f, mv, root)  # type: ignore[arg-type]
         want_data.add(dst)
         if not (root / dst).is_file():
             bad.append(f"missing data file {dst} (was {f})")
@@ -1340,7 +1347,7 @@ def check(root: Path) -> int:
         if not (root / f).is_file() or sha256(root / f) != digest:
             bad.append(f"KEEP file {f} changed")
     for f, hits in rec["keep_tests"].items():
-        dst = path_today(f, mv)  # type: ignore[arg-type]
+        dst = path_today(f, mv, root)  # type: ignore[arg-type]
         now = dict(Counter(KEY_RE.findall((root / dst).read_text(encoding="utf-8"))))
         if now != hits:
             bad.append(f"KEEP test {dst}: a key occurrence changed ({hits} -> {now})")

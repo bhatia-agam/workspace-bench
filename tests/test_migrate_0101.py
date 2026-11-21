@@ -340,10 +340,20 @@ def test_tables_agree_with_the_registry_and_the_plan():
     from wsbench import registry
 
     assert set(mig.CATEGORY.values()) == set(registry.CATEGORIES)
-    assert registry._layout() == mig.CATEGORY and len(mig.CATEGORY) == 32
+    # `mig.CATEGORY` is the layout the migration APPLIED (its text rules and the tests above
+    # replay it); a family that changed category since is listed here and in `LATER_MOVES`
+    moved_since = {"association": "association"}  # plan 0107: from `basic`
+    today = {**mig.CATEGORY, **moved_since}
+    assert registry._layout() == today and len(mig.CATEGORY) == 32
+    assert {f: mig.CATEGORY[f] for f in moved_since} == registry.LEGACY_FAMILY_CATEGORIES
+    for f, category in moved_since.items():
+        for tree in ("evals", "src/wsbench/evals"):
+            was, now = f"{tree}/{mig.CATEGORY[f]}/{f}", f"{tree}/{category}/{f}"
+            assert (was, now) in mig.LATER_MOVES
+            assert mig.path_today(f"{was}/x.json", []) == f"{now}/x.json"
     assert registry.PRE_0101_KEYS == mig.KEYS
     registry.load_all()
-    for new, category in mig.CATEGORY.items():
+    for new, category in today.items():
         assert registry.FAMILIES[new].group == category, new
     # the directory each family had before the move is its frozen (pre-0101) key
     assert {registry.frozen_name(new): new for new in mig.CATEGORY} == mig.OLD_DIR

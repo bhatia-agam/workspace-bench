@@ -1,5 +1,5 @@
 """The prompts of the association multiple-choice judge (plan 0039 §C3); printed verbatim in
-``evals/basic/association/README.md``. Templates use ``{name}`` placeholders rendered with
+``evals/association/association/README.md``. Templates use ``{name}`` placeholders rendered with
 ``str.replace``. The token-list rule is never written here: every judge call renders
 ``mc.token_note(SPEC.flat_types, multi_select=SPEC.multi_select)`` (``digest.token_note_of``)."""
 

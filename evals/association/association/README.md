@@ -164,7 +164,7 @@ sentence."`), positions rule `suffix_text_then_tail` = the 19 tokens from `Sum` 
 `\n\n` after `</think>` (story positions are never read; the conjunctive / role-bound sites
 exactly, `docs/read_sites.md`), layers `readplan.GRID` (20..60 step 4). `reads=full` needs every
 (item, layer) to hold one contiguous run of 19 positions (`min_full_positions = 19`).
-`reads=lite` reads **every** full site: the lite rule is `same` (`evals/basic/association/lite_rule.json`;
+`reads=lite` reads **every** full site: the lite rule is `same` (`evals/association/association/lite_rule.json`;
 Camila r2, 2026-11-01: "Make lite subset all positions"), so for association lite selects exactly
 the `reads=full` cells (all 19 positions of the summary request x every grid layer) and a lite
 run differs from the full run only in its `+reads-lite` stamp; the lite number equals the full

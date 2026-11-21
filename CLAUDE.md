@@ -454,7 +454,7 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   with a tool-free system opening). Reads:
   full = every render position (`min_full_positions=6`), lite = the last five. Its ATI entry was
   re-gated under ec-v9 in the 2026-11-04 refreeze (all-fail rule, plan 0071: 56/195). Opt-in bank v4 (`items_v4.json`, 53 gate-passing items, `ec-v9-b4`, `scripts/moral_adversarial.py`).
-- association (plan 0039) left the bank judge: bank v2 `evals/basic/association/items_v2.json` (93
+- association (plan 0039) left the bank judge: bank v2 `evals/association/association/items_v2.json` (93
   items; v1 `items.json` byte-identical, read only by `tests/test_basic_association.py`'s
   test-only `bank_family` registration), its own `judge.py` (8-way MC + cannot tell; gate:
   `digest.quote_ok` -> one retry of a quote miss -> token-line flat-list void -> listed form
@@ -714,7 +714,8 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
     (read from the package tree, `registry._layout`; `register` checks `spec.group` against it).
     `registry.repo_path(rel)` resolves a pre-0101 path string frozen inside data (introspection's
     stored vector paths, which are hash inputs and stay as written) and is for nothing else.
-    `association` is both a category directory and a family (`evals/basic/association`).
+    `association` is both a category directory and a family, which sits in that category since
+    plan 0107: `evals/association/association` (under `basic/` from 0101 to 0107).
   - **The migration script** (`scripts/migrate_0101.py`): `apply` produced commit 4 from the
     tag `pre-0101-migration`; `scripts/migrate_0101_applied.json` records its base commit and
     tree. `check` is the full gate only at that tree; anywhere else it checks the data half
@@ -737,6 +738,25 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   golden's own stamp and bank when the rename is listed in
   `manifest_0101_declare.CATEGORY_RENAMES` and a ledger entry pins the rows (any other row
   moving without a bump still fails). No CLI key takes a category, so there is no alias.
+- **Plan 0107 (2026-11-21): the family `association` moved from the category `basic` to the
+  category `association`.** Directories `evals/association/association/` and
+  `src/wsbench/evals/association/association/` (`git mv`, data bytes unchanged), `group=
+  "association"`; location only: no stamp, bank, prompt, `plan_sha`, cache key, floor, ATI entry,
+  fast subset or tier moved, and no macro changes (none is per category). Moving ONE family to
+  another category = the directory pair, its `group=`, `registry.LEGACY_FAMILY_CATEGORIES`
+  (family -> the category it left; `repo_path` resolves a stored `evals/<left>/<family>/...`
+  string and `_moved_hint` names the new place for a missing `WSB_BANK_FILE_*`),
+  `viewer.build.GROUPS`, `scripts/migrate_0101.py`'s `LATER_MOVES` (NOT its `CATEGORY`, which
+  stays the layout `apply` made: the script's tests replay it; `path_today` applies a later
+  move only to a file that is no longer at its applied path; `tests/test_migrate_0101.py` has
+  the `moved_since` table), and the manifest ledger: the only row that moves is
+  `list.category`, which T1 accepts under the golden's own stamp and bank for a family listed
+  in `manifest_0101_declare.CATEGORY_MOVES` (`family -> (old, new)`; that family, that row and
+  that pair only) with a ledger entry. `repo_path` order matters for this key: a path of
+  today's layout (`evals/association/<family of that category>/...`, the family itself
+  included) is taken as written BEFORE the pre-0101 reading `evals/association/<rest>` ->
+  `evals/association/association/<rest>`. The shared bank-judge package `wsbench/basic/` and
+  "the basic families" of the judge-layer notes above are about the judge, not the category.
 - `EvalSpec.superseded_by="<successor>"` retires a family without deleting it (plan 0015;
   today `typo_st` -> `typo`, plan 0033; its first user, the regex-scored family then keyed `multihop_mt` -> `multihop_mt_v2`, was
   removed on 2026-10-30, plan 0041; a family built by a shared factory sets it with
@@ -911,7 +931,8 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   per-family `category` / `tier`; `run json=True` always carries `"core_macro"`.
 - Categories: `EvalSpec.group` is a key of `registry.CATEGORIES` (key -> README title: basic,
   computational, association, safety, anti_bag_of_features, logical_processing, model_specific,
-  jlens_comparison, which was `precision` until plan 0105: `registry.LEGACY_CATEGORIES`); `basic_mt` and `bag_of_words` are gone. `wsbench list` shows it as `category`,
+  jlens_comparison, which was `precision` until plan 0105: `registry.LEGACY_CATEGORIES`; the family
+  `association` is in `association`, not `basic`, since plan 0107: `registry.LEGACY_FAMILY_CATEGORIES`); `basic_mt` and `bag_of_words` are gone. `wsbench list` shows it as `category`,
   with a `tier` column after it (`—` for a superseded or retired family). `viewer.build.GROUPS`
   carries the same titles over its unchanged family set. `tests/test_tiers.py` pins the family
   -> category map and the tier lists.

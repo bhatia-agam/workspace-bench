@@ -11,7 +11,7 @@ SPEC = register(
     EvalSpec(
         name="association",
         title="Association",
-        group="basic",
+        group="association",
         # round 4 (MC leakage standard): bank v3 = v2 with re-chosen distractors and their forms;
         # bank v5 = v3 without winter and pentagon (v3's read plan, no new reads)
         bank=family_rel("association") / "items_v5.json",

@@ -15,7 +15,7 @@ change edits this table in the same PR.
 |---|---|
 | agentic_misalignment | `evals/safety/agentic_misalignment/items_v2.json` |
 | arithmetic_intermediates | `evals/computational/arithmetic_intermediates/items_v2.json` |
-| association | `evals/basic/association/items_v5.json` |
+| association | `evals/association/association/items_v5.json` |
 | basic_readout_st | `evals/basic/basic_readout_st/items_v8.json` |
 | basic_readout | `evals/basic/basic_readout/items_v7.json` |
 | buggy_code | `evals/computational/buggy_code/items_v2.json` |
@@ -63,7 +63,7 @@ re-stamped (`references/porting.md`).
 
 ## Basic (single token) — association, basic_readout_st and multihop_st are now BLIND-MC judges
 ## (basic_readout_st / multihop_st: `basic/family.py` `MC_FAMILIES`; association: its own
-## `evals/basic/association/judge.py`): every item needs its frozen `mc` block, or the judge exits 2.
+## `evals/association/association/judge.py`): every item needs its frozen `mc` block, or the judge exits 2.
 ## No MC builder takes adapted items yet: SKILL.md §3 step 6.
 ## Plan 0087: every adapted-only multihop_st / basic_readout / multilingual_* list is one-cue screened
 ## and repaired before the gate (`adapt/onecue.py`; SKILL.md, the `fill` paragraph).

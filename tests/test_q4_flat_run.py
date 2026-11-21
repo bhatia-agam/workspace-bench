@@ -13,8 +13,8 @@ from summary_fakes import FakeLLM, summary_args
 from wsbench import digest, mc, registry
 from wsbench.banks import load_bank
 from wsbench.evals.anti_bag_of_features.role_bound_association import prompts as rb_prompts
-from wsbench.evals.basic.association import judge as assoc
-from wsbench.evals.basic.association import prompts as assoc_prompts
+from wsbench.evals.association.association import judge as assoc
+from wsbench.evals.association.association import prompts as assoc_prompts
 from wsbench.evals.basic.basic_readout import SPEC as BRMT
 from wsbench.evals.basic.directed_modulation import prompts as dm_prompts
 from wsbench.evals.basic.multihop import SPEC as MH2

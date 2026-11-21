@@ -76,7 +76,7 @@ def family(monkeypatch):
 
     # plan 0039: the bank judge on the frozen v1 bank, registered for this test only
     spec = bank_family(
-        "association", "Association", bank=Path("evals/basic/association/items.json")
+        "association", "Association", bank=Path("evals/association/association/items.json")
     )
     monkeypatch.setitem(registry.FAMILIES, spec.name, spec)
     return spec
@@ -97,7 +97,7 @@ def _write(path: Path, rows: list[dict]) -> Path:
 
 
 def test_bank_targets_and_labels(tmp_path):
-    header, items = load_bank(REPO / "evals/basic/association/items.json")
+    header, items = load_bank(REPO / "evals/association/association/items.json")
     assert header["family"] == "association" and len(items) == 100
     assert item_targets(items[0]) == ["carnaval"] and items[0]["id"] == items[0]["name"]
     assert item_targets({"name": "x", "target": "Fe", "intermediates": ["iron"]}) == ["iron"]
@@ -114,11 +114,11 @@ def test_bank_targets_and_labels(tmp_path):
 
 def test_registered_spec(real_families):
     # plan 0039: the registered family is the MC judge on bank v2 (its own stamp and calls)
-    from wsbench.evals.basic.association import SPEC
-    from wsbench.evals.basic.association.prompts import CALL_VERSION
-    from wsbench.evals.basic.association.prompts import PROMPT_VERSION as ASSOC_PV
+    from wsbench.evals.association.association import SPEC
+    from wsbench.evals.association.association.prompts import CALL_VERSION
+    from wsbench.evals.association.association.prompts import PROMPT_VERSION as ASSOC_PV
 
-    assert SPEC.group == "basic" and SPEC.metric == "pass_rate"
+    assert SPEC.group == "association" and SPEC.metric == "pass_rate"  # plan 0107
     assert SPEC.judge.model == DEFAULT_JUDGE
     # the stamp adds the gate (gate-a2) and the bank (bank-v5); the calls stay keyed as before
     assert SPEC.judge.prompt_version == ASSOC_PV == "assoc-mc-2026-11-01-v3+gate-a2+bank-v5"

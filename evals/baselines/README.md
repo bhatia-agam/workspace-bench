@@ -553,7 +553,7 @@ every list holds >= 2 same-topic confusers.
   every observed confuser kept; topic by search round 0.708 -> 0.559-0.609 (plateau), fresh
   0.578; with the gloss kept (review 2's exact instrument) 0.624; 0.624 after review r4's
   kinship repair (20 lists lose a kind / near-synonym / part of the gold: espresso for coffee,
-  separation for divorce, spa for sauna; `evals/basic/association/README.md`). The topic guesser picks
+  separation for divorce, spa for sauna; `evals/association/association/README.md`). The topic guesser picks
   the gold 5/5 on 47 items before the repair, 53 after (chess among 7 other board games, Sherlock Holmes among 7 other fictional
   detectives, carnaval, wedding, Titanic) and 0/5 on 34 (30 after): the scenes evoke famous concepts, so
   the gold is its own category's stereotype, and many categories define it ("legal end of

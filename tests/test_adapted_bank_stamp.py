@@ -6,7 +6,7 @@ still compares the registered stamp."""
 import json
 
 from wsbench import registry, results, runner
-from wsbench.evals.basic.association import prompts as assoc_prompts
+from wsbench.evals.association.association import prompts as assoc_prompts
 from wsbench.results import FamilyResult
 
 REG_ASSOC = registry.FAMILIES["association"].judge.prompt_version

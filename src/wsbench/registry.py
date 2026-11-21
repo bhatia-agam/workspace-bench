@@ -248,6 +248,11 @@ CATEGORIES: dict[str, str] = {
 # ``wsbench list`` column, never an input, so the only reader is ``repo_path`` (a stored
 # ``evals/precision/...`` path string).
 LEGACY_CATEGORIES: dict[str, str] = {"precision": "jlens_comparison"}
+# A family that changed category after plan 0101 -> the category it left (plan 0107:
+# ``association`` moved from ``basic`` to ``association``; directory, package and ``group`` only,
+# no instrument). The former category is still a category, so the only reader is ``repo_path``
+# (a stored ``evals/basic/association/...`` path string) and the ``WSB_BANK_FILE_*`` hint.
+LEGACY_FAMILY_CATEGORIES: dict[str, str] = {"association": "basic"}
 
 # Families retired from the bench FOR NOW -> why (plan 0058; reversible, unlike REMOVED_FAMILIES).
 # The package, bank, tests and floors stay and the family is still registered and runnable by
@@ -739,10 +744,19 @@ def bank_path(family: str) -> Path:
 
 def _moved_hint(value: str) -> str:
     """For a missing ``WSB_BANK_FILE_*`` file whose path has the pre-0101 shape
-    ``evals/<family>/...``: where the family directory is now (empty on the flat layout)."""
+    ``evals/<family>/...``, or names the category a family has left
+    (``LEGACY_FAMILY_CATEGORIES``): where the family directory is now (empty on the flat
+    layout)."""
     parts = Path(value).parts
     if len(parts) < 3 or parts[0] != "evals":
         return ""
+    if _layout().get(parts[2]) == parts[1]:
+        return ""  # already a path of today's layout: nothing moved
+    if len(parts) >= 4 and LEGACY_FAMILY_CATEGORIES.get(parts[2]) == parts[1]:
+        return (
+            f"; the family {parts[2]!r} left the category {parts[1]!r} (plan 0107): "
+            f"{family_rel(parts[2]) / Path(*parts[3:])}"
+        )
     fam = from_pre_0101(parts[1])
     if not _layout().get(fam):
         return ""
@@ -867,15 +881,24 @@ _UNMOVED = ("baselines", "fast", "hallucinationbench")
 
 
 def repo_path(rel: str | Path) -> Path:
-    """``REPO_ROOT / rel``, except that a path of the pre-0101 layout (``evals/<family>/...``)
-    resolves into the family's directory of today. In order: a new-layout path
-    ``evals/<category>/<family>/...`` is taken as written (``association`` is both a pre-0101
-    family key and a category), a former category key (``LEGACY_CATEGORIES``, plan 0105)
-    becoming today's; so is ``evals/baselines|fast|hallucinationbench/...``;
-    ``evals/<pre-0101 family key>/<rest>`` -> ``family_root(from_pre_0101(key)) / <rest>``;
-    anything else as written. ONLY for path strings frozen inside data (introspection's
-    ``vector_file`` plan-row strings, the "bank" strings of adapted report.json). Never for user
-    input."""
+    """``REPO_ROOT / rel``, except that a path of an earlier layout resolves into the family's
+    directory of today. In order:
+
+    1. a path of today's layout, ``evals/<category>/<family>/...``, is taken as written. This
+       comes first because ``association`` is a category, a family key and a pre-0101 family
+       directory at once: ``evals/association/association/...`` (the family since plan 0107),
+       ``evals/association/user_modeling/...`` and ``.../conjunctive_association/...`` are
+       today's paths, never the pre-0101 family directory plus a subdirectory;
+    2. ``evals/<former category key>/<family>/...`` (``LEGACY_CATEGORIES``, plan 0105) and
+       ``evals/<the category a family left>/<family>/...`` (``LEGACY_FAMILY_CATEGORIES``, plan
+       0107: ``evals/basic/association/...``) -> ``family_root(family) / <rest>``;
+    3. ``evals/baselines|fast|hallucinationbench/...`` as written;
+    4. ``evals/<pre-0101 family key>/<rest>`` -> ``family_root(from_pre_0101(key)) / <rest>``
+       (``evals/association/items_v5.json`` -> ``evals/association/association/items_v5.json``);
+    5. anything else as written.
+
+    ONLY for path strings frozen inside data (introspection's ``vector_file`` plan-row strings,
+    the "bank" strings of adapted report.json). Never for user input."""
     path = Path(rel)
     if path.is_absolute():
         return path
@@ -885,6 +908,12 @@ def repo_path(rel: str | Path) -> Path:
         if len(parts) >= 3 and layout.get(parts[2]) == parts[1] != "":
             return REPO_ROOT / path
         if len(parts) >= 3 and layout.get(parts[2], "") == LEGACY_CATEGORIES.get(parts[1]):
+            return family_root(parts[2]).joinpath(*parts[3:])
+        if (
+            len(parts) >= 3
+            and parts[2] in layout
+            and (LEGACY_FAMILY_CATEGORIES.get(parts[2]) == parts[1])
+        ):
             return family_root(parts[2]).joinpath(*parts[3:])
         if parts[1] in _UNMOVED:
             return REPO_ROOT / path

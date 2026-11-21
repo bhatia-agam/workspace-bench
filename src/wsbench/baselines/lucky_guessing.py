@@ -284,7 +284,7 @@ def _lists_from_block(block: str, cannot: str) -> list[list[str]]:
 
 
 def _association() -> list[Item]:
-    from wsbench.evals.basic.association.judge import build_options, load_items
+    from wsbench.evals.association.association.judge import build_options, load_items
 
     out = []
     for it in load_items():

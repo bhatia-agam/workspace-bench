@@ -26,6 +26,10 @@ One change is declared WITHOUT a bump (plan 0105): a category rename listed in
 renamed category moves exactly one row, ``list.category`` (what ``wsbench list`` prints); no
 stamp, bank, plan, seed or call key depends on it, so there is nothing to bump. The entry is
 accepted only while every other row equals the golden's and the row holds the listed new name.
+
+The same holds for ONE family changing category (plan 0107): ``CATEGORY_MOVES`` lists
+``family -> (category of the golden, category today)``, and that family alone may move its
+``list.category`` row that way, under the golden's own stamp and bank, with a ledger entry.
 """
 
 import argparse
@@ -49,6 +53,11 @@ STAMP_SECTIONS = frozenset({"stamps", "run"})
 # A category key of the golden -> its key today (``registry.LEGACY_CATEGORIES``; a test pins the
 # two together). The ONLY row a listed rename may move is the family's ``list.category``.
 CATEGORY_RENAMES = {"precision": "jlens_comparison"}
+# A family (the manifest's key) that changed category -> (its category in the golden, today):
+# plan 0107 moved the family `association` from `basic` to `association`
+# (``registry.LEGACY_FAMILY_CATEGORIES`` holds the former category; a test pins the two
+# together). Per family: no other family of the old category may show the new one.
+CATEGORY_MOVES = {"association": ("basic", "association")}
 CATEGORY_ROW = ("list", "category")
 COMMAND = (
     "python scripts/manifest_0101_declare.py {family} --plan <NNNN> --note '<what moved>' --write"
@@ -86,14 +95,19 @@ def rows_sha256(rows: Mapping[str, Any]) -> str:
     return hashlib.sha256(text.encode("utf-8")).hexdigest()
 
 
-def category_renamed(g: Mapping[str, Any], c: Mapping[str, Any]) -> Mapping[str, Any]:
-    """The golden rows ``g`` as a listed category rename leaves them: ``g`` with its
-    ``list.category`` replaced by the new name when ``CATEGORY_RENAMES`` maps the golden's value
-    to exactly the value the tree's rows ``c`` hold; else ``g`` itself. Every other row is the
-    golden's, so comparing ``c`` with the result waives that one row and nothing else."""
+def category_renamed(
+    g: Mapping[str, Any], c: Mapping[str, Any], fam: str | None = None
+) -> Mapping[str, Any]:
+    """The golden rows ``g`` as a listed category change leaves them: ``g`` with its
+    ``list.category`` replaced by the new name when the golden's value becomes exactly the value
+    the tree's rows ``c`` hold under ``CATEGORY_RENAMES`` (a category renamed, any family of
+    it) or under ``CATEGORY_MOVES[fam]`` (the one family ``fam`` moved to another category);
+    else ``g`` itself. Every other row is the golden's, so comparing ``c`` with the result
+    waives that one row and nothing else."""
     sec, key = CATEGORY_ROW
     was, now = g.get(sec, {}).get(key), c.get(sec, {}).get(key)
-    if was is None or was == now or CATEGORY_RENAMES.get(was) != now:
+    listed = CATEGORY_RENAMES.get(was) == now or CATEGORY_MOVES.get(fam) == (was, now)
+    if was is None or was == now or not listed:
         return g
     return {**g, sec: {**g[sec], key: now}}
 
@@ -200,6 +214,8 @@ def verdict(
     listed new name and EVERY other row equals the golden's, a ledger entry (same triple, the
     tree's ``rows_sha256``) declares it. The same row is set aside when such a family later
     declares a stamp change. Any other row moving under an unchanged triple still fails.
+    A family listed in ``CATEGORY_MOVES`` (plan 0107: one family changing category) is treated
+    the same way, for that family and that (old, new) pair only.
 
     Fast versions cut after the golden (``new_fast_rows``): a family's row for one is set
     aside, before the comparison and before the ledger hash, when it is the family's row under
@@ -233,7 +249,7 @@ def verdict(
                 continue
             if c == g:
                 continue
-        gr = category_renamed(g, c) if g is not None else None  # g, or g under a listed rename
+        gr = category_renamed(g, c, fam) if g is not None else None  # g, or g under a listed rename
         if g is not None and now == triple(g) and c != gr:
             diffs = paths(g, c, f"/families/{fam}")
             failures.append(
@@ -320,7 +336,7 @@ def declare(
     now, sha = triple(c), rows_sha256(c)
     if g is not None and c == g:
         raise Refused(f"{family}: its rows equal the golden's; nothing to declare")
-    if g is not None and now == triple(g) and c != category_renamed(g, c):
+    if g is not None and now == triple(g) and c != category_renamed(g, c, family):
         raise Refused(
             f"{family}: rows differ from the golden but its stamp and bank are the golden's "
             f"({triple_text(now)}); bump the stamp or the bank version first"

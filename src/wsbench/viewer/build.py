@@ -17,7 +17,6 @@ GROUPS: list[tuple[str, list[str]]] = [
     (
         "Basic (adapted from the J-lens paper)",
         [
-            "association",
             "basic_readout_st",
             "multihop_st",
             "multilingual_st",
@@ -40,7 +39,7 @@ GROUPS: list[tuple[str, list[str]]] = [
             "arithmetic_intermediates",
         ],
     ),
-    ("Association", ["user_modeling", "conjunctive_association"]),
+    ("Association", ["association", "user_modeling", "conjunctive_association"]),
     ("Safety", ["agentic_misalignment", "jailbreak_recognition"]),
     ("Anti-bag-of-features", ["relational_multihop", "role_bound_association"]),
     ("Logical processing", ["moral_rationale"]),

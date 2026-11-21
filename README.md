@@ -106,7 +106,8 @@ Every other family kept its key and moved from `evals/<family>/` to
 headings of [The evals](#the-evals): `basic`, `computational`, `association`, `safety`,
 `anti_bag_of_features`, `logical_processing`, `model_specific`, `precision` (since 2026-11-21
 `jlens_comparison`, see [below](#renamed-in-0105-2026-11-21)). `association` is
-both a category (`evals/association/`) and a family (`evals/basic/association/`).
+both a category (`evals/association/`) and a family (under `basic/` then; since 2026-11-21
+`evals/association/association/`, see [below](#moved-in-0107-2026-11-21)).
 `evals/baselines/`, `evals/fast/` and `evals/hallucinationbench/` did not move.
 
 - **The four plain keys changed meaning.** `family=multihop` is now the multi-token family.
@@ -144,6 +145,25 @@ its metric is still called `precision`. A category is never typed on the command
 nothing to re-learn there: `wsbench list` and `report json=True` now print `jlens_comparison`
 in the `category` column where they printed `precision`, and the viewer section is titled
 "J-lens comparison"; exports published before the rename keep the title "Precision".
+
+### Moved in 0107 (2026-11-21)
+
+One family changed category; no family key, bank, prompt, stamp or number changed.
+
+| family | key | category before | category now | directory under `evals/` before | now |
+|---|---|---|---|---|---|
+| Association | `association` | `basic` | `association` | `basic/association/` | `association/association/` |
+
+The code moved with it (`wsbench.evals.basic.association` ->
+`wsbench.evals.association.association`). The family key `association` is also the category's
+key, so its directory has the name twice. `wsbench list` and `report json=True` now print
+`association` in the family's `category` column, its entry in [The evals](#the-evals) sits under
+Association, and the viewer lists it there. Nothing is typed differently: `family=association`,
+its readouts file `association.jsonl`, its results, cached judge calls, floors and tier (`full`)
+are what they were. No score is computed per category (the macro, the core macro and the fast
+macro average families, and the family is in the same ones as before), so no reported number
+moves; anyone who averages families by category on their own now has 13 families under Basic
+(12 without the superseded `typo_st`) and 3 under Association.
 
 Output layout: `<out>/<family>/results.json` (the result) and `cells.jsonl` (every judge
 verdict, so a re-run only pays for what is missing); `<out>/summary.md` (the table) and
@@ -320,11 +340,6 @@ and reports no core macro.
 - *Example:* "Think about the plumber's blue ladder leaning against the mango tree. Now write this sentence: ..." → readouts that between them name `plumber`, `blue ladder` and `mango tree` (a synonym or close relative counts: tuxedo for bow tie), among six candidates plus "cannot tell".
 - *Judged by:* one prompt-blind multi-select call per item on its digest (summary mode, the default; per in-sentence write cell natively), each pick with a verbatim-quote gate; a relation counts only from ONE quote in ONE bullet that names both people (token lists never state a direction); relation items' distractors are other relations (the reverse, other people, another relation cluster); item passes when its readouts name EVERY dictated concept and never the reversed relation, and (summary mode, plan 0100) the judge made no false pick: no verified pick of a candidate that was not dictated; controls excluded.
 
-**Association** — [`evals/basic/association/README.md`](evals/basic/association/README.md)
-- *What it is:* A scene implies a concept the text never names (a Portuguese carnival, a chess game, a childhood); the model is then asked to summarize the story; does the lens name the concept at the summarize-request positions (the 19 tokens from `Summarize` through the assistant onset).
-- *Example:* "Os tambores começaram na avenida ao anoitecer, e as fantasias cobertas de plumas dançaram até o amanhecer." → gold `carnaval` among 8 options (`Natal`, `Páscoa`, `Halloween`, ...).
-- *Judged by:* its own multiple-choice judge (bank v5: bank v3's options, 91 items; plan 0039): the digest of every read cell, then one 8-way MC + cannot tell; a pass needs a quote verified inside one readout line that names a listed form of the gold (or survives a quote-only re-judge); chance 1/8.
-
 ### Computational
 
 **Chained intermediates** — [`evals/computational/chain_intermediates/README.md`](evals/computational/chain_intermediates/README.md) · `core`
@@ -343,6 +358,11 @@ and reports no core macro.
 - *Judged by:* prompt-blind free recall — by default one digest of every position at every layer per item and one judge call on it; natively one call per (item, layer) listing every position as a numbered entry (`cells=all`, headers carry the position offset only: no read-site token text reaches the judge in any mode) or one call at the frozen cell — naming the values each readout presents as computed (summary mode: every number it uses in a calculation, inputs as well as results), each verified inside one readout; a value that only a flat list of five or more numbers carries is not credited. Pass = a named value within the variant's tolerance of the intermediate; the permutation null over the item's null set beside it.
 
 ### Association
+
+**Association** — [`evals/association/association/README.md`](evals/association/association/README.md)
+- *What it is:* A scene implies a concept the text never names (a Portuguese carnival, a chess game, a childhood); the model is then asked to summarize the story; does the lens name the concept at the summarize-request positions (the 19 tokens from `Summarize` through the assistant onset).
+- *Example:* "Os tambores começaram na avenida ao anoitecer, e as fantasias cobertas de plumas dançaram até o amanhecer." → gold `carnaval` among 8 options (`Natal`, `Páscoa`, `Halloween`, ...).
+- *Judged by:* its own multiple-choice judge (bank v5: bank v3's options, 91 items; plan 0039): the digest of every read cell, then one 8-way MC + cannot tell; a pass needs a quote verified inside one readout line that names a listed form of the gold (or survives a quote-only re-judge); chance 1/8.
 
 **User modelling** — [`evals/association/user_modeling/README.md`](evals/association/user_modeling/README.md)
 - *What it is:* A chat implies a user attribute (country, gender, occupation…); does the lens encode the attribute the model inferred, named for the USER, at any token of the chat render (system turn, user turn, assistant header, empty think block; lite: the same positions, plan 0061). Bank v3: 126 items, the attribute only implied (items.json's 47 selfdescribe items plus 79 new items in the same style, gated on Qwen3.6-27B).

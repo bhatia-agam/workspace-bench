@@ -29,7 +29,7 @@ def _last_option(family: str) -> str:
         _h, items = j.load_bank()
         return j.shown(j.slot_options(items[0], items[0]["mc"][0]))[-1]
     if family == "association":
-        from wsbench.evals.basic.association import judge as j
+        from wsbench.evals.association.association import judge as j
 
         return j.build_options(j.load_items()[0])[0][-1]
     if family == "conjunctive_association":

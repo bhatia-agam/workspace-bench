@@ -15,13 +15,13 @@ from summary_fakes import FakeLLM, summary_args
 
 from wsbench import digest, mc, readplan, reads, registry
 from wsbench.baselines import text_inversion as ti
-from wsbench.evals.basic.association import SPEC
-from wsbench.evals.basic.association import judge as aj
-from wsbench.evals.basic.association import prompts as ap
+from wsbench.evals.association.association import SPEC
+from wsbench.evals.association.association import judge as aj
+from wsbench.evals.association.association import prompts as ap
 
 REPO = Path(__file__).resolve().parents[1]
-V1 = REPO / "evals/basic/association/items.json"
-V2 = REPO / "evals/basic/association/items_v2.json"
+V1 = REPO / "evals/association/association/items.json"
+V2 = REPO / "evals/association/association/items_v2.json"
 V1_SHA = "e8b1307bd24b41c01c9d7eb27031d87adaa34a717d854ca6d5a153d6b099764d"
 RETIRED = {"nasa", "cia", "history-h", "love-h", "death-h", "game-h", "de-konig"}
 GRID = readplan.GRID
@@ -148,7 +148,7 @@ def mc_users(fake, name="readout_mc") -> list[str]:
 
 
 def test_v2_retires_underdetermined_items():
-    raw = json.loads((REPO / "evals/basic/association/items_v2.json").read_text(encoding="utf-8"))
+    raw = json.loads(V2.read_text(encoding="utf-8"))
     ids = {it["name"] for it in raw["items"]}
     assert raw["version"] == 2 and raw["render"] == "chat_summarize"
     assert len(ids) == 93 and not ids & RETIRED

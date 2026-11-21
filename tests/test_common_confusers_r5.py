@@ -18,8 +18,8 @@ NEW = {
         "evals/basic/basic_readout_st/items_v6.json",
     ),
     "association": (
-        "evals/basic/association/items_v3.json",
-        "evals/basic/association/items_v4.json",
+        "evals/association/association/items_v3.json",
+        "evals/association/association/items_v4.json",
     ),
 }
 

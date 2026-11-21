@@ -6,8 +6,8 @@ any case, hyphen-glued forms included."""
 import pytest
 
 from wsbench import digest
-from wsbench.evals.basic.association import judge as aj
-from wsbench.evals.basic.association.judge import gate_gold, quote_names_gold
+from wsbench.evals.association.association import judge as aj
+from wsbench.evals.association.association.judge import gate_gold, quote_names_gold
 
 PENTAGON = ["Pentagon", "Pentagon building", "The Pentagon", "五角大楼"]
 

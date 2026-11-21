@@ -838,7 +838,7 @@ def test_freeze_builds_originals_from_the_registered_item(tmp_path, monkeypatch)
         assert got[it["id"]]["adapt"]["origin"] == "original"
     rep = _json.loads((d / "report.json").read_text())
     e = rep["families"]["association"]
-    assert e["bank_version"] == 5 and e["bank"] == "evals/basic/association/items_v5.json"
+    assert e["bank_version"] == 5 and e["bank"] == "evals/association/association/items_v5.json"
     assert "read_plan_bank" not in bank  # the set plans its own items
     wb = rep["families"]["wrong_intermediate"]
     assert wb["status"] == "absent" and wb["note"] == "Phase B: later"  # never overwritten

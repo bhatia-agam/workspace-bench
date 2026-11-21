@@ -699,7 +699,7 @@ def has_path(item: Any, path: str) -> bool:
 
 def bank_rel(family: str) -> str:
     """The bank an adaptation of ``family`` ports, repo-relative
-    (``evals/basic/association/items_v3.json``): the registered bank of record, or the sibling
+    (``evals/association/association/items_v3.json``): the registered bank of record, or the sibling
     file ``store.ADAPT_SOURCE_BANKS`` names (``store.original_bank`` reads the same file)."""
     from wsbench.adapt.store import ADAPT_SOURCE_BANKS
     from wsbench.registry import REPO_ROOT, frozen_bank_path

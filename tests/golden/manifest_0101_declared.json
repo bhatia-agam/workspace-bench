@@ -1,4 +1,12 @@
 {
+ "association": {
+  "prompt_version": "assoc-mc-2026-11-01-v3+gate-a2+bank-v5",
+  "bank_file": "items_v5.json",
+  "bank_sha256": "c95f68d4d4a7427905023c23591f448dca741209fbec4dc20ef3b0b3eec918dc",
+  "rows_sha256": "cf73f3e785022d474020d0aae4cc63e78edf01dcace5d95e10fe965fc8826543",
+  "plan": "0107",
+  "note": "the family moved from the category basic to the category association: directory evals/association/association, package wsbench.evals.association.association, group=association; bank bytes, stamp, plan and call keys unchanged; the only row that moved is list.category"
+ },
  "conjunctive_association": {
   "prompt_version": "comp-v6",
   "bank_file": "items_v6.json",
