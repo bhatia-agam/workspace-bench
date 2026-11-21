@@ -1,0 +1,329 @@
+{
+ "schema_version": 1,
+ "family": "multihop_st",
+ "complete": false,
+ "pinned_instrument": true,
+ "config": {
+  "reads": "full",
+  "sampling": "prose1",
+  "sampling_source": "default",
+  "reader": "",
+  "reads_checked": "no_sidecar",
+  "layers_judged": [
+   20,
+   36
+  ],
+  "judge_model": "claude-opus-5-5",
+  "prompt_version": "bank-mc-2026-11-01-v3+bank-gate-r11+bank-v5+digest-v5-task-extractive-layered-v1x4+sj-v10",
+  "reasoning": null,
+  "layers": null,
+  "dry_run": false,
+  "concurrency": 256,
+  "rpm": 30000.0,
+  "allow_missing": true,
+  "items": [
+   "atomic-26-symbol",
+   "atomic-79-symbol"
+  ],
+  "limit": 0,
+  "kind": "prose",
+  "aggregate": "summary",
+  "summarizer": {
+   "model": "claude-opus-5-5",
+   "reasoning": {
+    "anthropic_effort": "default"
+   },
+   "prompt_version": "digest-v5",
+   "variant": "task",
+   "render": "extractive",
+   "max_items": 10,
+   "max_rare": 15,
+   "numbers": 0,
+   "token_cap": 920000,
+   "decode": true,
+   "overflow": "hierarchical",
+   "concurrency": 256,
+   "timeout": 900.0,
+   "fallback": "none",
+   "layer_mode": "layered",
+   "layered": {
+    "version": "layered-v1",
+    "scale": 4
+   }
+  },
+  "source_kind": "prose",
+  "gate": "bank-gate-r11",
+  "token_note_version": "tn-2026-10-31-q4"
+ },
+ "n_items": 2,
+ "counts": {
+  "n_expected_cells": 4,
+  "n_missing_cells": 0,
+  "n_unjudged_cells": 0,
+  "n_empty_cells": 0,
+  "skipped_rows": 0,
+  "spend_usd": 0.0
+ },
+ "numbers": {
+  "metric": "pass_rate",
+  "value": 1.0,
+  "ci95": [
+   1.0,
+   1.0
+  ],
+  "chance": null,
+  "chance_label": "1 in 5 options per judge call (cannot-tell excluded); the native any-layer rule's floor is higher (see extras layer_pick_columns)",
+  "higher_is_better": true,
+  "extras": {
+   "partial_ids_unenforced": [
+    "atomic-26-symbol",
+    "atomic-79-symbol"
+   ],
+   "n_samples_trimmed": 1,
+   "n_calls": 2,
+   "summary": {
+    "n_bundle_tokens_est": 40,
+    "n_evidence_kept": 5,
+    "n_evidence_dropped": 0,
+    "n_items_all_dropped": 0,
+    "n_digest_zero_nonempty": 0,
+    "n_key_duplicates": 0,
+    "n_digest_refused": 0,
+    "n_digest_too_long": 0,
+    "n_chunk_calls": 0,
+    "n_hierarchical_items": 0,
+    "max_halvings": 0,
+    "n_fallback_events": 0,
+    "n_readouts_in": 5,
+    "n_readouts_bundled": 5,
+    "n_chunk_claims_kept": 0,
+    "n_items_chunk_direct": 0,
+    "n_numeral_drops": 0,
+    "n_fallback_served_items": 0,
+    "n_digest_reasked": 0,
+    "n_digest_reask_better": 0,
+    "n_digest_collapsed": 0,
+    "n_digest_parts": 4,
+    "n_parts_unsummarized": 0,
+    "n_parts_all_dropped": 0,
+    "n_parts_refused": 0,
+    "n_parts_too_long": 0,
+    "n_parts_zero_nonempty": 0,
+    "n_layered_items": 2,
+    "n_layered_calls": 2,
+    "n_layered_chunked": 0,
+    "n_layered_failed": 0,
+    "n_layered_depth_capped": 0,
+    "n_layered_dropped_entries": 0,
+    "layered_input_tokens_max": 91,
+    "layered_input_tokens_median": 91,
+    "n_items_partial_undecided": 0,
+    "n_items_summarized": 2,
+    "n_items_unsummarized": 0,
+    "n_items_empty": 0,
+    "n_items_partial": 0,
+    "n_items_partial_refused": 0,
+    "summary_partial_ids": [],
+    "n_truncated_items": 0,
+    "digest_served_by": {
+     "claude-opus-5-5": 2
+    },
+    "summary_layer_hist": {
+     "20": 3,
+     "36": 2
+    },
+    "summary_top_layer_share": 0.6,
+    "summary_truncated_ids": [],
+    "summary_complete": true,
+    "count_units": {
+     "expected/missing": "cells",
+     "unjudged/empty": "items"
+    }
+   },
+   "picks": {
+    "gold": 2
+   },
+   "n_gold_pick_quote_unverified": 0,
+   "n_gold_pick_form_missing": 0,
+   "n_gold_pick_number_flood": 0,
+   "n_gold_pick_multi_option_list": 0,
+   "n_gold_pick_element_index": 0,
+   "n_gold_pick_names_other": 0,
+   "n_items_decided": 2,
+   "n_items_undecided": 0,
+   "n_items_without_readouts": 0
+  }
+ },
+ "rows": [
+  {
+   "id": "atomic-26-symbol",
+   "options": [
+    "iron",
+    "gold",
+    "carbon",
+    "oxygen",
+    "hydrogen",
+    "cannot tell from the readout"
+   ],
+   "gold_idx": 0,
+   "bridge_type": "element",
+   "n_missing": 0,
+   "choice": "A",
+   "choice_kind": "gold",
+   "quote": "iron",
+   "quote_ok": true,
+   "quote_near": false,
+   "form_ok": true,
+   "form_via": "quote",
+   "names_other": false,
+   "number_flood": false,
+   "multi_option": false,
+   "element_index": false,
+   "correct": true,
+   "pass": true,
+   "summary": "[1 sample] iron, atomic number 26\n[1 sample] A heavy metal used in steel.\n[1 sample] 铁 element",
+   "summary_statements": [
+    {
+     "statement": "iron, atomic number 26",
+     "key": "iron",
+     "support": "1 sample",
+     "count": 1,
+     "layers": [
+      36
+     ],
+     "evidence": "iron, atomic number 26",
+     "tier": "items"
+    },
+    {
+     "statement": "A heavy metal used in steel",
+     "key": "heavy metal used in steel",
+     "support": "1 sample",
+     "count": 1,
+     "layers": [
+      20
+     ],
+     "evidence": "A heavy metal used in steel.",
+     "tier": "items"
+    },
+    {
+     "statement": "铁 element",
+     "key": "铁",
+     "support": "1 sample",
+     "count": 1,
+     "layers": [
+      20
+     ],
+     "evidence": "铁 element",
+     "tier": "items"
+    },
+    {
+     "statement": "atomic number 26",
+     "key": "atomic number 26",
+     "support": "1 sample",
+     "count": 1,
+     "layers": [
+      36
+     ],
+     "evidence": "iron, atomic number 26",
+     "tier": "rare"
+    }
+   ],
+   "summary_evidence": [
+    "iron, atomic number 26",
+    "A heavy metal used in steel.",
+    "铁 element"
+   ],
+   "summary_evidence_where": [
+    "[L36 pos 14]",
+    "[L20 pos 14]",
+    "[L20 pos 14]"
+   ],
+   "summary_truncated": false,
+   "summary_hierarchical": false,
+   "summary_chunks": 1,
+   "summary_served_by": null,
+   "summary_partial_layers": null,
+   "summary_refused_layers": null,
+   "summary_partial_undecided": false,
+   "summary_layers": {
+    "20": 2,
+    "36": 1
+   },
+   "summary_layered_input_tokens": 91,
+   "summary_state": "summarized"
+  },
+  {
+   "id": "atomic-79-symbol",
+   "options": [
+    "nitrogen",
+    "iron",
+    "gold",
+    "magnesium",
+    "platinum",
+    "cannot tell from the readout"
+   ],
+   "gold_idx": 2,
+   "bridge_type": "element",
+   "n_missing": 0,
+   "choice": "C",
+   "choice_kind": "gold",
+   "quote": "gold",
+   "quote_ok": true,
+   "quote_near": false,
+   "form_ok": true,
+   "form_via": "quote",
+   "names_other": false,
+   "number_flood": false,
+   "multi_option": false,
+   "element_index": false,
+   "correct": true,
+   "pass": true,
+   "summary": "[1 sample] A precious yellow metal.\n[1 sample] gold",
+   "summary_statements": [
+    {
+     "statement": "A precious yellow metal",
+     "key": "precious yellow metal",
+     "support": "1 sample",
+     "count": 1,
+     "layers": [
+      20
+     ],
+     "evidence": "A precious yellow metal.",
+     "tier": "items"
+    },
+    {
+     "statement": "gold",
+     "key": "gold",
+     "support": "1 sample",
+     "count": 1,
+     "layers": [
+      36
+     ],
+     "evidence": "gold",
+     "tier": "items"
+    }
+   ],
+   "summary_evidence": [
+    "A precious yellow metal.",
+    "gold"
+   ],
+   "summary_evidence_where": [
+    "[L20 pos 14]",
+    "[L36 pos 14]"
+   ],
+   "summary_truncated": false,
+   "summary_hierarchical": false,
+   "summary_chunks": 1,
+   "summary_served_by": null,
+   "summary_partial_layers": null,
+   "summary_refused_layers": null,
+   "summary_partial_undecided": false,
+   "summary_layers": {
+    "20": 1,
+    "36": 1
+   },
+   "summary_layered_input_tokens": 59,
+   "summary_state": "summarized"
+  }
+ ]
+}
