@@ -18,8 +18,9 @@ An item enters v2 only if:
 v1 survivors come first in bank order; new couplets refill to ``--target`` in a seeded order
 (``mc.seeded_shuffle(ids, "poetry-v2-refill")``). Every drop is recorded in the header.
 
-    python scripts/poetry/freeze_bank.py --pool pool_mc.json --record opus/gate_record.json \\
-        --gates v1.gate.json new1.gate.json r1.gate.json ... --out evals/basic/poetry/items_v2.json
+    python scripts/archive/poetry/freeze_bank.py --pool pool_mc.json \\
+        --record opus/gate_record.json --gates v1.gate.json new1.gate.json r1.gate.json ... \\
+        --out evals/basic/poetry/items_v2.json
 """
 
 import argparse

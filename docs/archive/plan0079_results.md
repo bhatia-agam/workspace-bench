@@ -1,6 +1,6 @@
 # Plan 0079 results: mOre-lenses O-lenses and neuronpedia J-lenses on the adapted sets
 
-Plan: `plans/0079-more-lenses-adapted.md` (issue #400; code #401, #404, #419, #420, #433). Plot: `docs/plan0079/macro.png`. Per subject: every
+Plan: `plans/0079-more-lenses-adapted.md` (issue #400; code #401, #404, #419, #420, #433). Plot: `docs/archive/plan0079/macro.png`. Per subject: every
 `agu18dec/mOre-lenses` checkpoint with a WorkspaceBench tag (inverter, the 4B / 9B `L20`
 inverter variant, distill, RL i600) and the subject's neuronpedia J-lens, judged on the subject's
 full adapted set (`adapted/<m>/`, `WSB_BANK_ROOT`) and on that set's anti-text-inversion subset

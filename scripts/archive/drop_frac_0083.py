@@ -1,6 +1,6 @@
 """Plan 0083: drop arithmetic's ``frac`` variant from the registered bank (v1 -> v2), the ATI file,
-the floors and every adapted set, offline (``uv run python scripts/drop_frac_0083.py``; re-runnable:
-each part runs only while its input still has the variant)."""
+the floors and every adapted set, offline (``uv run python scripts/archive/drop_frac_0083.py``;
+re-runnable: each part runs only while its input still has the variant)."""
 
 import json
 import os
@@ -12,7 +12,7 @@ from typing import Any
 from wsbench import reads
 from wsbench.results import bootstrap_ci
 
-REPO = Path(__file__).resolve().parents[1]
+REPO = Path(__file__).resolve().parents[2]
 FAM = "arithmetic_intermediates"
 VARIANT = "frac"
 V1 = REPO / "evals" / FAM / "items.json"

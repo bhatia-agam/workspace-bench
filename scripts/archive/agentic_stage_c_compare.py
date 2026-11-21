@@ -18,7 +18,7 @@ from openai import OpenAI
 from wsbench.evals.safety.agentic_misalignment import judge, prompts
 from wsbench.mcjudge import load_bank
 
-REPO = Path(__file__).resolve().parents[1]
+REPO = Path(__file__).resolve().parents[2]
 V1 = (
     json.loads((REPO / "tests/golden/agentic_misalignment_prompts.json").read_text())["templates"][
         "DESIGN_SCORE_PROMPT"
