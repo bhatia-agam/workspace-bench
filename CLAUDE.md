@@ -6,10 +6,13 @@ into the shared package in `src/wsbench/` (client, judge config, cache, readout 
 results schema, registry, runner, CLI, `readplan` = the producer-facing read plan, `capable/` =
 the porting gate, `produce/` = the optional HF-transformers producer behind the `gpu` extra).
 `plans/` is the 2026-09-15..17 design history of the nine-family restructure, not a current
-pointer (`plans/README.md`). Public docs: `README.md`, `NOTICE.md`, `CITATION.cff`.
+pointer (`plans/README.md`). Public docs: `README.md`, `NOTICE.md`, `CITATION.cff`. The README stays
+short (what it is, install, `wsbench try`, the commands, outputs, checks, viewer, the evals, the
+judges table, credits); reference material lives in `docs/` (running, tiers, judges, baselines,
+fast_subset, results_contract, porting, checks, judge_backends).
 
 ## Readout contract (input to every family)
-Stated once, in README §Quickstart (the contract block) and `docs/producing_readouts.md`; do not
+Stated once, in README §Score your own lens (the contract block) and `docs/producing_readouts.md`; do not
 restate it here. Code facts only: `load_readouts` counts malformed lines (never fatal), keeps the
 first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missing cell).
 `wsbench convert-gen-dir gen_dir=GEN out=F.jsonl kind=prose|tokens` converts the in-house
@@ -19,7 +22,7 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
 - Default judge `claude-opus-5-5` (Anthropic; plan 0023, Camila 2026-10-29; Gemini 3.8 Flash via
   OpenRouter before). Pins: agentic_misalignment + jailbreak_recognition -> `claude-sonnet-5` (jailbreak: kept by
   the plan 0037 J8.5 smoke, `evals/safety/jailbreak_recognition/judge_smoke_v2.json`),
-  introspection -> `claude-opus-5-5` at default effort (reasons: README §Judges and the family
+  introspection -> `claude-opus-5-5` at default effort (reasons: `docs/judges.md` and the family
   READMEs). jlens runs all three stages on the default judge. Opus 5.5 cannot disable thinking:
   `llm.always_thinks` models get low effort unless a family sets `anthropic_effort`. Tests script
   OpenRouter-shaped fakes; `tests/conftest.py` routes them through the OpenRouter path.
@@ -1001,7 +1004,7 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   unreadable results.
 
 ## Results contract (`results.py`)
-README §Results contract is the single statement (schema, `complete`, the macro row); `results.py`
+`docs/results_contract.md` is the single statement (schema, `complete`, the macro row); `results.py`
 implements it. Not restated here.
 
 ## Invariants
@@ -1066,3 +1069,28 @@ exits 2. Smoke `limit=3` live before any full run.
 in the environment, never committed; tests make no network calls. Work
 in a git worktree (prefix commands with `PYTHONPATH=src` when it shares the main checkout's
 `.venv`); PRs are gated by `.github/workflows/ci.yml` (ruff + pytest).
+
+## try, check, group=, the Batches backend, paths and the viewer
+
+- `try family=F [n=2] [readouts=FILE] [dry_run=True] [out=outputs/try/<F>]` (`cli.Try`,
+  `tryout.py`): the two-question try-out. Picks the first `n` plan rows that have readouts in
+  the file (default the toy `examples/readouts/<F>.jsonl`), prints each question with its
+  expected answer, then runs the ordinary `judge` (`items=<ids>`; `allow_missing=True` only for
+  the toy file) and `report`, lists every output path and, after a live run, the two viewer
+  commands. No logic of its own beyond the pick.
+- `wsbench check` (`cli.Check`, `checks.py`, `docs/checks.md`): one registry of gates and sanity
+  checks, each `(name, what it guards, "module:function")` with the function returning
+  `(ok, why)`. No name = the list; `check <name> [option=value]` = PASS / FAIL + one line (exit
+  0 / 1); `check all` = every check with no required option, then a SKIP line for each of the
+  others. Register an existing guard or test file (`checks.pytest_outcome`) instead of
+  rewriting it; external checks come in by dotted path through `$WSB_CHECKS`.
+- `group=<category>` on `plan` and `run` (`groups.py`): the families of one registry category
+  (`registry.CATEGORIES`); it defines no group of its own. `computation` is accepted for
+  `computational`.
+- `judge_backend=batches` / `$WSB_JUDGE_BACKEND` (`judge_batches.py`, `docs/judge_backends.md`):
+  the opt-in Message Batches backend of Claude judge calls; the default stays live.
+- No absolute box path in `src` (`tests/test_paths.py`): a location outside the repo goes through
+  `wsbench.paths` (`external(var, rel)` = `$var`, else `$WSB_DATA_ROOT/<rel>`, default root
+  `/workspace`).
+- `wsbench viewer ingest|serve|bank` (`viewer/`, `src/wsbench/viewer/README.md`): the results
+  viewer; needs the `viewer` extra.

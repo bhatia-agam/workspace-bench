@@ -185,6 +185,9 @@ KNOWN_MISSING = {
 def doc_files() -> list[Path]:
     out = [REPO / n for n in ("README.md", "CLAUDE.md", "AGENTS.md", "NOTICE.md")]
     out += [REPO / "docs" / f"{n}.md" for n in ("producing_readouts", "summarizer")]
+    # the reference pages split out of the README (they hold its family paths now)
+    split = ("running", "tiers", "fast_subset", "baselines", "judges", "porting")
+    out += [REPO / "docs" / f"{n}.md" for n in (*split, "results_contract", "hallucinationbench")]
     out.append(REPO / "docs/adapt_judge_inputs.md")
     out += [f for f in (REPO / ".claude/skills").rglob("*.md") if f.name not in _SKILL_AUDITS]
     out += [registry.family_root(f) / "README.md" for f in registry._layout()]

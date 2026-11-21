@@ -167,7 +167,7 @@ so far, and what a new item has to satisfy:
 - **A null you can compute.** A permutation over other items' answers, a decoy set matched in
   magnitude, a derangement foil. Only arithmetic_intermediates, chain_intermediates and
   jlens_concept_pr carry one; the other families are the weakest here,
-  and adding an empirical null to each is open work (README §Open work).
+  and adding an empirical null to each is open work (`docs/open_work.md`).
 - **Controls in the bank, not just baselines.** Clean twins, don't-think twins, ab/ba direction
   pairs, off-trajectory colours: a control that shares the item's surface but not its answer is
   what separates reading from echoing.
@@ -209,7 +209,7 @@ tokenizer. `docs/producing_readouts.md` walks the whole producer side.
 
 ## What this repo will and will not do for you
 
-Judging is the contract; the readout file format is stated once in README §Quickstart.
+Judging is the contract; the readout file format is stated once in README §Score your own lens.
 `wsbench produce` (methods logit_lens | jlens | rlens | olens | nla, one prompt at a time on one
 GPU) can fill it for you; it is not a fan-out harness, and there is no model serving here.
 `wsbench convert-gen-dir` (and the legacy `convert-read-json`) turn the two in-house producer

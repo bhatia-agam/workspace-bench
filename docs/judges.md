@@ -1,0 +1,181 @@
+# Judges
+
+The table of judge model and prompt version per family is in the [README](../README.md#judges); this page is the reasoning behind it, the override rules and summary mode.
+
+Every judged family runs on `claude-opus-5-5` (plan 0023, Camila 2026-10-29; until then the
+default was `google/gemini-3.8-flash` via OpenRouter) except three pins: **agentic_misalignment**
+and **jailbreak_recognition** stay on `claude-sonnet-5` (their judges of record; Opus 5.5 refuses
+agentic's Stage B summaries on most scenarios, plan 0012; jailbreak's 40-item jb-v2 smoke, plan 0037,
+had 14 of 40 items declined before or at the Opus pipeline and 2 of 47 native Opus judge calls refused,
+`evals/safety/jailbreak_recognition/judge_smoke_v2.json`, so the Opus 5.5 judge is a reported column only;
+in summary mode both also digest on `claude-sonnet-5`, and a call Sonnet declines re-runs once on
+`claude-opus-5`, client-side) and **introspection** stays on
+`claude-opus-5-5` at the model's default effort (its rubric, none rule and same-grid floors were
+tuned and measured on Opus 5.5 in the source repo; plan 0016). Opus 5.5 cannot turn thinking off:
+structured calls run at low effort unless a family sets `anthropic_effort`, and no temperature is
+sent. A refusal is a failed call: never scored, counted unjudged. Numbers judged on Gemini are a
+different instrument. The prompt version is
+the instrument: bump it on any prompt edit, and a frozen baseline only applies to a matching
+version and the family's own judge. The multi-token families (`basic_readout`, `multihop`, `multilingual`, `typo`, `multilingual_typo`; the `*_mt` keys of before plan 0101) other than `basic_readout` (the MC judge with a name gate since 2026-10-30, plan 0051) and `multihop` (its own pinned MC judge since plan 0041; Camila 2026-10-30: "should have an mc judge with common distractors from other questions") are scored by the **regex** contract since 2026-09-23 (Camila: "regex on the multitoken please"; numeric answer markers match in any case since `mt-regex-2026-10-30`, plan 0033) —
+no call; token readouts are matched as raw tokens (the J-lens interpretation step,
+`mt-regex-summarized-decoded-2026-10-27`, is deleted in plan 0032: under the summary default every
+method goes through the one digest). Their forced-choice judge of 2026-09-16 is `opts=judge=mc` and
+never pinned. **multilingual_st** and **multilingual_multihop** (plan 0054) are scored by `mc+regex`:
+a blind MC judge picks the native-language content, then the regex contract requires every
+content unit, and the language is scored once per item on the raw samples (at least one sample
+names it in a naming context); multilingual / multilingual_typo stay regex on their v2 banks
+(`+v2`), with the v2 MC judge as their `opts=judge=mc` diagnostic.
+**model_specific_directed_modulation** is regex-scored with no LLM at all (its source
+scorer of record; token readouts are matched token by token natively; under summary mode the
+digest's token lines are also matched space-joined, stamped `+joined-2026-10-30`).
+
+- Override precedence: `judge_model=` flag > `WSBENCH_JUDGE_MODEL` env > the family pin.
+- Routes: model ids starting with `claude-` use Anthropic directly; all other ids use OpenRouter.
+  With `WSBENCH_OPENAI_ROUTE=wif` in the environment, an `openai/*` id (not `openai/gpt-oss*`)
+  goes to OpenAI directly instead (route `openai`: workload identity federation, Modal secret
+  `openai-wif`, no API key; `max_completion_tokens`, `reasoning_effort` from the reasoning's
+  `effort`, no `temperature`; a 401 re-exchanges the token; no cost is reported, so `spend_usd`
+  is 0). Unset = the routing above; any other value exits 3.
+  `WSBENCH_OPENROUTER_MAX_OUT=<n>` replaces the output cap of every call on the OpenRouter and
+  `openai` routes (the starting budget of a free-text call), never of an Anthropic call; while
+  it is set, a 400 on those routes that names the context length is a too-long input (the
+  digest halves the bundle). A non-positive or non-integer value exits 3.
+- `judge_effort=minimal|low|medium|high|default` (`judge` / `run`; non-Claude judges only, a
+  `claude-*` judge with it exits 2) replaces the reasoning the judge would resolve to with
+  `{"effort": <level>}`, or with none for `default`. It is part of the judge fingerprint as any
+  reasoning is, the row is not the pinned instrument, and `run.json` records `judge_effort`
+  only when given.
+- Reasoning is resolved for the resolved model's route, so it also applies when changing models
+  with `judge_model=` or `WSBENCH_JUDGE_MODEL`. A family's `JudgeConfig.reasoning` keys are
+  route-specific (`anthropic_effort` rides the Anthropic route, every other key OpenRouter; keys
+  for the other route are dropped). With no key for its route, an OpenRouter judge requests
+  `{"effort": "minimal"}`, and an Anthropic judge sends no reasoning setting (its structured calls
+  then run at low effort on always-thinking models such as Opus 5.5, none on the others).
+- `pinned_instrument` is true only when the resolved model equals the family pin; a result
+  judged by an override is never a number of record and can never be `complete`.
+- An override judge may be on either route for every family (plan 0096):
+  agentic_misalignment's three free-text stages run on OpenRouter models too (a no-thinking
+  stage asks for `{"effort": "minimal"}`, a thinking stage for `{"enabled": true}`; a stream
+  that ends in `content_filter`, a `refusal` with no text or the moderation 403 is a refusal,
+  and a refusal the model writes as ordinary text is an answer).
+- **Refusal fallbacks follow an override judge.** The four families with a judge-call fallback
+  (hinted_cutoff and model_multihop: `claude-sonnet-5-5`; agentic_misalignment's summary Stage C
+  and jailbreak_recognition's summary draws: `claude-opus-5`) re-run a declined call on it
+  whenever it differs from the resolved judge model, pinned or not, on either route (a
+  fallback on the other route runs at the family's own effort and its route's defaults).
+  hinted_cutoff's trigger is any failed call, so an override judge's error or unparsable answer
+  goes to Sonnet 5.5 too, not only a refusal. `opts=fallback=none` turns the judge-call fallback
+  off (any value but `on` / `none` exits 2), so every judge call of the row is one model's: use
+  it for a judge comparison, and in an environment that holds only the OpenRouter key (a
+  cross-route fallback without its key, or on the `openai` route without its WIF identity,
+  exits 3 before the first call, even when every call is already cached; in summary mode the
+  digest of a non-Claude override judge follows the judge, so no Claude call remains). Under `fallback=none` a
+  cached answer a fallback served is re-asked on the judge, never reused. Such a row is not the
+  instrument of record (except hinted_cutoff's, whose `fallback=none` predates this rule: it
+  stays pinned and records `config.fallback_model: null`). Outside the pinned default, `config.judge_fallback` records the
+  fallback model, `none` or `same-as-judge` (hinted_cutoff keeps `config.fallback_model`);
+  model_multihop and hinted_cutoff rows carry `fallback_served_by` where a fallback served a
+  call (`extras.n_fallback_served_calls`), agentic and jailbreak rows `judge_model`.
+- **The summarizer follows a non-Claude override judge** (plan 0096 part 2). The digest model
+  of a run is, in order: `opts=summ_model=`; else the judge model when the judge is an override
+  on a non-Anthropic route (`judge_model=openai/gpt-6-luna`: Luna writes the digest and judges
+  it); else the family's `aux_models["digest"]` pin (`claude-sonnet-5` for agentic_misalignment
+  and jailbreak_recognition); else Opus 5.5. A `claude-*` override judge keeps the digest the
+  family has today, and so does a pinned judge. A non-Claude digest model sends no reasoning
+  field at `summ_effort=default` (`{"effort": <level>}` otherwise), and a family-default
+  `summ_fallback` is off for it (`config.summarizer` shows `fallback: none`); an explicit
+  `opts=summ_fallback=none+<model>` is honoured, an explicit `default` / `default+<model>`
+  exits 2 (the server-side fallback is an Anthropic feature). The judge-call fallbacks above
+  are unchanged (on under a Luna judge unless `opts=fallback=none`).
+  The experiment this rests on is plan 0059 **Arm B** (the swept model writes the digest AND
+  judges): Luna is the cheapest Arm B match to Opus (cell `f64-lite-L32`: agreement 0.973,
+  3 / 18 flagged families, "matches"), while as a judge of Opus digests (Arm A) it does not
+  match. Arm A is `opts=summ_model=claude-opus-5-5`.
+  What this changes for a run that already sets `judge_model=<non-Claude>` or
+  `WSBENCH_JUDGE_MODEL`: the regex-scored families (the regex multi-token ones,
+  model_specific_directed_modulation) make no judge call, yet their digest, and so their score
+  and `judge_model`, move to the override model; the run's digest preflight asks the override
+  model for every family; Claude digests cached in a reused out dir are not reused (everything
+  is digested again on the judge model); and the summary prompt-only and logit-lens floors are
+  no longer drawn beside those rows (`config.summarizer` differs). `opts=summ_model=<the
+  Claude digest model>` is the way back.
+- **The validated Luna instrument is a recipe, not a default.** A bare
+  `judge_model=openai/gpt-6-luna` sets the digest model and its fallback only; the judge then
+  runs at `{"effort": "minimal"}` (sent as `low` on the `openai` route, whose models reject
+  `minimal`; the fingerprint keeps `minimal`). What plan 0059 validated is, explicitly:
+  `WSBENCH_OPENAI_ROUTE=wif WSBENCH_OPENROUTER_MAX_OUT=32000 wsbench run ...
+  judge_model=openai/gpt-6-luna judge_effort=low opts=summ_context=1050000`, with
+  `judge_effort=default` for hinted_cutoff, introspection and model_multihop (separate jobs).
+  Not validated by the sweep: agentic_misalignment with a Luna digest and judge (the sweep ran
+  agentic on `claude-*` only), whose free-text stages ignore `judge_effort`. A Luna row is never
+  the pinned instrument; its `prompt_version` keeps the family's literals (agentic and
+  jailbreak: `+sonnet-digest+opus5-fb`), and `config.summarizer.model` is the record of what
+  digested.
+- Aux models (e.g. hinted_cutoff's `fallback`, jlens_concept_pr's `extract`) come from the
+  family's `JudgeConfig.aux_models` when a family sets one; otherwise they follow the resolved
+  judge, override included (so a stage run by an override model is not pinned either). The
+  summary-mode digest model is `opts=summ_model=` > a non-Claude override judge >
+  `aux_models["digest"]` > the digest default.
+- **Opt-in judge column** (`wsbench report dir=<run> alt_judge=<dir>`): `<dir>` holds the same
+  readouts judged with `judge_model=<model>`; its value is printed in an `opt-in judge` column
+  beside each row with the same summary prompt_version, digest settings, layers and read mode and
+  a different judge (never in the macro). Use it for the two Sonnet 5 pins, agentic_misalignment
+  and jailbreak_recognition, judged with Opus 5.5 (see their READMEs for the command). Rows are
+  matched on `config.summarizer`, so a Luna column beside an Opus-digest row needs the Luna run
+  made with `opts=summ_model=claude-opus-5-5` (its digest would otherwise follow the judge) and
+  without `summ_context` (a non-default context is part of `config.summarizer`).
+- `wsbench report` draws a frozen floor only beside a row judged by the family's CURRENT judge at
+  its prompt version (regex floors always), and the macro excludes a row judged by any other
+  model (reason `judge`), whatever its stored `pinned_instrument` says: a row judged on Gemini
+  while Gemini was the default stored `pinned = yes` (plan 0023).
+
+**Summary mode (`aggregate=summary`; plan 0020, the default since plan 0024).** Every `wsbench run`
+/ `wsbench judge` runs in summary mode unless you pass `opts=aggregate=native`. Natively, most
+families credit an item when ANY read cell passes: any layer, any position, any sample. Under
+`aggregate=summary`, every
+cell a family reads for an item goes to ONE passive digest call (`claude-opus-5-5` by default),
+and the family judges or scores that single digest ONCE, so there is no pass@layer / pass@position /
+pass@sample rule. A method is a readouts file plus an optional `layers=`: `layers=44` is the
+single-layer method, no `layers=` is every layer the file has. A multi-layer method (v1.1.0,
+`summ_layers=layered`, the CLI default) is summarized in two stages: one digest per read layer
+(the same call a `layers=[L]` run makes), then ONE note-taker call per item that summarizes those
+layer digests into the all-layer digest the judge reads (same schema, every entry grounded on a
+layer digest's verbatim sample, `[N samples, M layers]` support, budget `summ_layered_x` = 4x
+the single-layer one since v1.1.1, 2x in v1.1.0); `summ_layers=union` (the v1.0 mechanical merge) and `joint` stay opts, and
+the numbers-digest families keep their v1.0 all-layer path (`docs/summarizer.md` § Layered).
+By default the judge reads only
+the verbatim readout samples the digest picked (each with a mechanically counted prominence
+marker), and every quote, numeral or regex gate checks those samples, never the note-taker's own
+words. Summary rows are marked `†` in the table and form their own macro; they draw the
+summary-mode prompt-only floor (`evals/baselines/prompt_only_summary.json`, only beside a row with
+the same summary instrument and digest settings) and the per-item lucky-guessing floor, never a
+native prompt-only floor.
+One family runs native under it, jlens_concept_pr (its unit is per-cell precision against the J-lens
+top-10 of the same cell); the reasons are in
+`docs/summarizer.md`. Plan 0032 defaults: the `task` variant (the family's task note reaches the
+summarizer), `hierarchical` overflow under one 920k-token cap (no readout is ever dropped), the
+shared token rule (`mc.token_note`). buggy_code and agentic_misalignment have summary-mode
+adaptations of their own (plan 0021; see their READMEs). Run native and summary
+into separate `out=` dirs (`wsbench run` warns when it overwrites a result of the other mode;
+`run.json` records the mode). `cells=frozen` (arithmetic) needs
+`aggregate=native`: summary mode reads every cell (chain's `cells=last` is retired: use `reads=lite`). Options: `summ_model`, `summ_variant=task|blind`,
+`summ_render=extractive|abstractive`, `summ_effort`, `summ_max`, `summ_token_cap` (ablation),
+`summ_overflow=hierarchical|stride`, `summ_concurrency`, `summ_timeout`,
+`summ_fallback=none|default|default+<model>|none+<model>`, `summ_rare`, `summ_numbers`,
+`summ_layers=layered|union|joint`, `summ_layered_x`, `summ_context` (the context window of the
+digest's budget arithmetic, default 1,000,000, at least 128,000)
+(per-family defaults in `digest.FAMILY_DEFAULTS`; the refusal-prone families use
+`default+claude-sonnet-5-5`, Sonnet 5 before 2026-11-01, and a cached digest Sonnet 5 served is
+re-asked on Sonnet 5.5; `none+<model>` is the client-side re-run alone, for a digest
+model that rejects server-side fallbacks: the Sonnet digests of agentic_misalignment and
+jailbreak_recognition use `none+claude-opus-5`; `<model>` is any model id, on any route,
+e.g. `summ_model=openai/gpt-6-luna summ_fallback=none+claude-opus-5`; a non-Claude digest model
+gets a fallback only when one is given explicitly). Details: `docs/summarizer.md` § Item digest and each family README's "Summary
+mode" section.
+
+Five families (user_modeling and the four in-house MC families) were judged with
+`claude-opus-5` in their source scripts, moved to Gemini 3.8 Flash in this repo, and judged on
+Claude Opus 5.5 since plan 0023.
+`scripts/judge_swap.py` compares a re-judged reference arm against the stored Opus verdicts
+(per-cell agreement and Cohen's κ); that comparison has not been run yet, so no agreement
+numbers are recorded here. Run it with `--out outputs/judge_swap/...` when it is.
