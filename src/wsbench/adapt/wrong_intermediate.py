@@ -62,7 +62,7 @@ from collections.abc import Callable, Iterable
 from pathlib import Path
 from typing import Any, NoReturn
 
-from wsbench import registry
+from wsbench import paths, registry
 
 from . import store
 from .gate import Ask, Leg, gate_record, prompt_of
@@ -2452,12 +2452,17 @@ def wikidata_resolver(model: str, ents: dict) -> Callable[[list[str]], dict[str,
 
 # ------------------------------------------------------------------ refill hooks (plan 0066 §1)
 REFILL_POOL_ENV = "WSB_WI_POOL"
-DEFAULT_POOLS = (
-    "/workspace/gw-wrong-bridge/outputs/wrong_bridge",  # round 1 (2026-10-09): precedence
-    "/workspace/gw-wrong-bridge/outputs/wrong_bridge_r2a",  # plan 0066 §5 r2 (as built, 11-04)
-    "/workspace/gw-wrong-bridge/outputs/wrong_bridge_r2b",
-    "/workspace/gw-wrong-bridge/outputs/wrong_bridge_r3",  # plan 0077 §3
-    "/workspace/gw-wrong-bridge/outputs/wrong_bridge_r4",  # plan 0077 §3b (funded)
+POOL_ROOT_ENV = "WSB_WI_POOL_ROOT"  # the directory that holds the GW candidate pool dirs
+DEFAULT_POOL_NAMES = (
+    "wrong_bridge",  # round 1 (2026-10-09): precedence
+    "wrong_bridge_r2a",  # plan 0066 §5 r2 (as built, 11-04)
+    "wrong_bridge_r2b",
+    "wrong_bridge_r3",  # plan 0077 §3
+    "wrong_bridge_r4",  # plan 0077 §3b (funded)
+)
+DEFAULT_POOLS = tuple(
+    str(paths.external(POOL_ROOT_ENV, "gw-wrong-bridge/outputs") / name)
+    for name in DEFAULT_POOL_NAMES
 )
 # plan 0077 §1: the funded generation = the r4 dir's candidates (disjoint from every earlier dir)
 FUNDED_ROUND = "r4"
