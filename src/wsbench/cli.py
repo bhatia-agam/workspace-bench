@@ -13,7 +13,7 @@ from typing import Any
 
 import pydra
 
-from wsbench import fast, hbindex, llm, readplan, registry, runner, tiers
+from wsbench import fast, groups, hbindex, llm, readplan, registry, runner, tiers
 from wsbench.baselines import logit_lens, lucky_guessing, prompt_only, text_inversion
 from wsbench.capable import questions as capable_questions
 from wsbench.capable import run as capable_run
@@ -167,6 +167,11 @@ def _family(name: str, *, notice: bool = True) -> str:
 
 def _families(names: list[str] | None) -> list[str] | None:
     return None if names is None else [_family(n) for n in names]
+
+
+def _group(name: object) -> list[str] | None:
+    """``group=association`` as the families of that eval category; unset = None."""
+    return groups.families(str(name)) if name else None
 
 
 def _path(v: object) -> Path:
@@ -401,6 +406,7 @@ class RunFamilies(JudgeOptions):
         self.all = False
         self.include_superseded = False  # all=True also runs superseded families
         self.families = None
+        self.group = ""  # one eval category (registry.CATEGORIES), instead of families=
         # --core | --full (plan 0098): the tier that picks the families when families= is not
         # given; finalize resolves it (core unless --full / all=True; fast under --fast)
         self.tier = ""
@@ -423,6 +429,9 @@ class RunFamilies(JudgeOptions):
         self.all = _bool(self.all)
         self.include_superseded = _bool(self.include_superseded)
         self.families = _families(_strs(self.families))
+        if self.group and (self.all or self.families is not None):
+            raise ValueError("group= replaces all=True / families=; pass only one of the three")
+        self.families = _group(self.group) or self.families
         self.readouts_root = _path(self.readouts_root)
         self.out = _path(self.out)
         self.family_workers = _int(self.family_workers)
@@ -484,6 +493,11 @@ class RunFamilies(JudgeOptions):
                 names = [n for n in names if n in have]
         else:
             names = list(self.families or [])  # an explicit name runs even if superseded
+            if self.group and self.fast:  # a group under --fast: its families the subset keeps
+                kept = [f for f in names if f in fast.families()]
+                if skipped := [f for f in names if f not in kept]:
+                    print(f"not in the fast subset, skipped: {', '.join(skipped)}")
+                names = kept
         for n in names:
             if n not in registry.FAMILIES:
                 return _unknown(n)
@@ -1265,6 +1279,7 @@ class Plan(Command):
         # None = the tier (--core, the default, or --full); families=all = every family
         self.families = None
         self.tier = ""  # --core | --full (plan 0098); never with families=
+        self.group = ""  # one eval category (registry.CATEGORIES), instead of families=
         self.out = "outputs/plan"
         self.limit = 0
         self.layers = None  # all | <csv>: override the grid of record (plan 0032 §2.1)
@@ -1274,6 +1289,9 @@ class Plan(Command):
 
     def finalize(self) -> None:
         self.families = _families(_strs(self.families)) or None
+        if self.group and self.families is not None:
+            raise ValueError("group= replaces families=; pass only one")
+        self.families = _group(self.group) or self.families
         self.out = _path(self.out)
         self.limit = _int(self.limit)
         self.layers = _layers_arg(self.layers)
@@ -1315,6 +1333,11 @@ class Plan(Command):
         """``plan --fast``: the fast subset's families (``families=all``), or the named ones; a
         family outside the subset, a bank override or a changed bank is exit 2."""
         names = fast.families() if self.families in (None, ["all"]) else self.families
+        if self.group:  # a group under --fast is its families that the fast subset keeps
+            kept = [f for f in names if f in fast.families()]
+            if skipped := [f for f in names if f not in kept]:
+                print(f"not in the fast subset, skipped: {', '.join(skipped)}")
+            names = kept
         unknown = [f for f in names if f not in readplan.families()]
         if unknown:
             print(f"unknown families {unknown}; known {readplan.families()}", file=sys.stderr)
