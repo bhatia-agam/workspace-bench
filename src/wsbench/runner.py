@@ -517,6 +517,25 @@ def die_with_parent() -> None:
         pass
 
 
+def in_flight_shares(work: Mapping[str, float], total: int, floor: int = 2) -> dict[str, int]:
+    """Split ``total`` in-flight judge calls over families in proportion to their work (any
+    unit; ``run`` uses the size of each family's readouts file), at least ``floor`` each. With
+    one flat ``concurrency`` per family a run ends when its largest family ends while the
+    others sit idle; proportional shares end the families together at the same total."""
+    if not work:
+        return {}
+    known = [v for v in work.values() if v > 0]
+    fill = min(known) if known else 1.0  # a family without an estimate counts as the smallest
+    w = {f: (v if v > 0 else fill) for f, v in work.items()}
+    spare = max(0, total - floor * len(w))
+    out = {f: floor + int(spare * v / sum(w.values())) for f, v in w.items()}
+    for f in sorted(w, key=lambda f: -w[f]):  # the rounding remainder goes to the largest
+        if sum(out.values()) >= max(total, floor * len(w)):
+            break
+        out[f] += 1
+    return out
+
+
 def judge_argv(name: str, args: Any, readouts: Path, dest: Path) -> list[str]:
     """The ``wsbench judge`` command of one family of a ``run``: the judge keys that are set,
     never the run-only ones (``all``, ``families``, ``readouts_root``, ``family_workers``,
@@ -524,7 +543,8 @@ def judge_argv(name: str, args: Any, readouts: Path, dest: Path) -> list[str]:
     ``procs``)."""
     cmd = [sys.executable, "-m", "wsbench", "judge", f"family={name}", f"readouts={readouts}"]
     cmd += [f"out={dest}", f"outcome={dest / OUTCOME}"]
-    cmd += [f"concurrency={args.concurrency}", f"rpm={args.rpm}"]
+    shares = getattr(args, "_in_flight_shares", None) or {}  # in_flight_total: per family
+    cmd += [f"concurrency={shares.get(name, args.concurrency)}", f"rpm={args.rpm}"]
     if (itpm := getattr(args, "itpm", None)) is not None:
         cmd.append(f"itpm={itpm}")
     if args.judge_model:
@@ -837,6 +857,13 @@ def run_families(
     # a family with a deterministic scorer of record makes no call unless opts=judge=mc; under
     # wait > 0 the pending families are preflighted with the runnable ones, before any submit
     candidates = [s for s, _r in runnable] + pending
+    if (total := int(getattr(args, "in_flight_total", 0) or 0)) > 0:
+        # one budget of in-flight calls for the whole run, split by each family's readouts
+        # size (families still waited for count as the smallest); read by judge_argv
+        work = {s.name: float(r.stat().st_size) for s, r in runnable}
+        work.update({s.name: 0.0 for s in pending})
+        args._in_flight_shares = in_flight_shares(work, total)
+        print(f"in flight per family (total {total}): {args._in_flight_shares}")
     needs_llm = [s for s in candidates if not s.scorer or opts.get("judge") == "mc"]
     to_preflight: dict[str, ResolvedJudge] = {s.name: judges[s.name] for s in needs_llm}
     if opts.get("aggregate") == "summary":  # every family's digest model (plan 0020)
