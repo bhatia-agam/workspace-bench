@@ -7,6 +7,9 @@ from wsbench import fast, llm, mcjudge, registry
 
 @pytest.fixture(autouse=True)
 def _isolate_registry():
+    # import the families before the snapshot: a test that triggers the first import itself
+    # would otherwise have them wiped by the restore below, for every later test in the process
+    registry.load_all()
     saved = dict(registry.FAMILIES)
     yield
     registry.FAMILIES.clear()
