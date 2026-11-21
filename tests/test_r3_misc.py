@@ -222,7 +222,7 @@ def test_mcdm_pin_keys_are_content_words():
 
 
 def test_jlens_function_word_string_overlap_is_out():
-    from wsbench.evals.precision.jlens_concept_pr import prompts as jp
+    from wsbench.evals.jlens_comparison.jlens_concept_pr import prompts as jp
 
     concepts = ["more or fewer neutrons", "recommendation of alternatives", "hasClassOf relation"]
     resp = {

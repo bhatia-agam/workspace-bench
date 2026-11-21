@@ -10,7 +10,7 @@ SPEC = register(
     EvalSpec(
         name="jlens_concept_pr",
         title="J-lens concept precision",
-        group="precision",
+        group="jlens_comparison",
         bank=family_rel("jlens_concept_pr") / "manifest.json",
         judge=JudgeConfig(
             model=DEFAULT_JUDGE,

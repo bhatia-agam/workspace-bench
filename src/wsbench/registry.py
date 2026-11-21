@@ -231,8 +231,9 @@ REMOVED_FAMILIES: dict[str, str] = {
     "2026-10-31 (plan 0058)",
 }
 
-# The eval categories (plan 0098): ``EvalSpec.group`` -> title, in README order. ``precision``
-# holds jlens_concept_pr, which is in no macro.
+# The eval categories (plan 0098): ``EvalSpec.group`` -> title, in README order.
+# ``jlens_comparison`` (``precision`` until plan 0105) holds jlens_concept_pr, which is in no
+# macro.
 CATEGORIES: dict[str, str] = {
     "basic": "Basic (adapted from the J-lens paper)",
     "computational": "Computational",
@@ -241,8 +242,12 @@ CATEGORIES: dict[str, str] = {
     "anti_bag_of_features": "Anti-bag-of-features",
     "logical_processing": "Logical processing",
     "model_specific": "Model-specific",
-    "precision": "Precision",
+    "jlens_comparison": "J-lens comparison",
 }
+# A former category key -> its key of today (plan 0105). A category is a directory and a
+# ``wsbench list`` column, never an input, so the only reader is ``repo_path`` (a stored
+# ``evals/precision/...`` path string).
+LEGACY_CATEGORIES: dict[str, str] = {"precision": "jlens_comparison"}
 
 # Families retired from the bench FOR NOW -> why (plan 0058; reversible, unlike REMOVED_FAMILIES).
 # The package, bank, tests and floors stay and the family is still registered and runnable by
@@ -865,7 +870,8 @@ def repo_path(rel: str | Path) -> Path:
     """``REPO_ROOT / rel``, except that a path of the pre-0101 layout (``evals/<family>/...``)
     resolves into the family's directory of today. In order: a new-layout path
     ``evals/<category>/<family>/...`` is taken as written (``association`` is both a pre-0101
-    family key and a category); so is ``evals/baselines|fast|hallucinationbench/...``;
+    family key and a category), a former category key (``LEGACY_CATEGORIES``, plan 0105)
+    becoming today's; so is ``evals/baselines|fast|hallucinationbench/...``;
     ``evals/<pre-0101 family key>/<rest>`` -> ``family_root(from_pre_0101(key)) / <rest>``;
     anything else as written. ONLY for path strings frozen inside data (introspection's
     ``vector_file`` plan-row strings, the "bank" strings of adapted report.json). Never for user
@@ -878,6 +884,8 @@ def repo_path(rel: str | Path) -> Path:
     if len(parts) >= 2 and parts[0] == "evals":
         if len(parts) >= 3 and layout.get(parts[2]) == parts[1] != "":
             return REPO_ROOT / path
+        if len(parts) >= 3 and layout.get(parts[2], "") == LEGACY_CATEGORIES.get(parts[1]):
+            return family_root(parts[2]).joinpath(*parts[3:])
         if parts[1] in _UNMOVED:
             return REPO_ROOT / path
         pre = {frozen_name(f) for f in layout} | set(PRE_0101_KEYS)

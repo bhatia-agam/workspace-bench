@@ -158,7 +158,7 @@ function renderHeatmap() {
   const groupCells = [];
   for (const f of fams) { if (f.group !== g) { if (g) groupCells.push([g, span]); g = f.group; span = 0; } span++; }
   groupCells.push([g, span]);
-  const GS = { "Bag of words": "BoW", "Model-specific": "Model", "Precision": "Prec.", "Safety": "Safety" };
+  const GS = { "Bag of words": "BoW", "Model-specific": "Model", "Precision": "Prec.", "J-lens comparison": "J-lens", "Safety": "Safety" };
   groupRow += groupCells.map(([g, n]) => `<th class="grp" colspan="${n}" title="${esc(g)}">${esc(n < 3 ? (GS[g] || g) : g)}</th>`).join("") + "</tr>";
   famRow += fams.map(f => `<th class="fh" data-tip="${esc(`<b>${FAMLABEL(f.key)}</b><br>${f.desc}`)}"><span>${FAMLABEL(f.key)}</span></th>`).join("") + "</tr>";
   let rows = "";

@@ -53,7 +53,7 @@ GROUPS: list[tuple[str, list[str]]] = [
             "model_multihop",
         ],
     ),
-    ("Precision", ["jlens_concept_pr"]),
+    ("J-lens comparison", ["jlens_concept_pr"]),
 ]
 
 # What a reader needs first, in the order tried: the text the model sees, then what it should

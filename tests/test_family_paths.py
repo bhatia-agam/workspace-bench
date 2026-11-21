@@ -265,7 +265,7 @@ LAYOUT = {
     "model_multihop": "model_specific",
     "model_specific_directed_modulation": "model_specific",
     "wrong_intermediate": "model_specific",
-    "jlens_concept_pr": "precision",
+    "jlens_concept_pr": "jlens_comparison",
 }
 
 
@@ -310,6 +310,16 @@ def test_repo_path():
         "evals/basic/multihop_st/items_v5.json",
     ):
         assert registry.repo_path(as_written) == REPO / as_written and (REPO / as_written).exists()
+    # plan 0105: a path stored under the category's former name resolves into today's directory
+    assert registry.repo_path("evals/precision/jlens_concept_pr/manifest.json") == (
+        REPO / "evals/jlens_comparison/jlens_concept_pr/manifest.json"
+    )
+    assert registry.repo_path("evals/jlens_concept_pr/manifest.json") == (
+        REPO / "evals/jlens_comparison/jlens_concept_pr/manifest.json"
+    )
+    assert registry.repo_path("evals/precision/no_such_family/x.json") == (
+        REPO / "evals/precision/no_such_family/x.json"
+    )
     # a pre-0101 path of a renamed family lands in the family that had that key
     assert registry.repo_path("evals/multihop/items_v5.json") == (
         REPO / "evals/basic/multihop_st/items_v5.json"

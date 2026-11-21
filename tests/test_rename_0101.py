@@ -146,6 +146,73 @@ def _restamped() -> dict:
     return cur
 
 
+def test_t1_category_rename_is_the_only_bumpless_declaration():
+    """Plan 0105: a category rename listed in ``CATEGORY_RENAMES`` moves one row,
+    ``list.category``, and is declared under the golden's own stamp and bank; every other row
+    must still equal the golden's, and the rename must be the listed one."""
+    from wsbench import registry
+
+    dec = _declare_mod()
+    assert dec.CATEGORY_RENAMES == registry.LEGACY_CATEGORIES == {"precision": "jlens_comparison"}
+    assert set(dec.CATEGORY_RENAMES.values()) <= set(registry.CATEGORIES)
+    assert not set(dec.CATEGORY_RENAMES) & set(registry.CATEGORIES)
+    gold = _mini_manifest()
+    for fam in gold["families"].values():
+        fam["list"] = {"category": "precision", "metric": "precision"}
+
+    def tree(category: str = "jlens_comparison") -> dict:
+        cur = json.loads(json.dumps(gold))
+        cur["families"]["fam_a"]["list"]["category"] = category
+        return cur
+
+    def entry(cur: dict) -> dict:
+        return {"fam_a": dec.declare(gold, cur, {}, "fam_a", "0105", "test")}
+
+    # the listed rename: fails without an entry, passes with one, and is named in T1's output
+    cur = tree()
+    declared, failures = dec.verdict(gold, cur, {})
+    assert not declared and len(failures) == 1 and "no ledger entry" in failures[0]
+    led = entry(cur)
+    same = dec.triple(gold["families"]["fam_a"])  # the entry carries the golden's own triple
+    assert {k: led["fam_a"][k] for k in same} == same
+    declared, failures = dec.verdict(gold, cur, led)
+    assert not failures and declared == {
+        "fam_a": "category 'precision' -> 'jlens_comparison' (plan 0105: test)"
+    }
+    with pytest.raises(dec.Refused, match="already declared"):
+        dec.declare(gold, cur, led, "fam_a", "0105", "test")
+    # a rename that is not listed, or the metric row of the same spelling, is still refused
+    for other in (tree("something_else"), tree("precision")):
+        if other == gold:
+            other["families"]["fam_a"]["list"]["metric"] = "jlens_comparison"
+        declared, failures = dec.verdict(gold, other, led)
+        assert not declared and len(failures) == 1
+        assert failures[0].startswith("fam_a: instrument moved without a stamp or bank change")
+        with pytest.raises(dec.Refused, match="its stamp and bank are the golden's"):
+            dec.declare(gold, other, {}, "fam_a", "0105", "test")
+    # the rename covers its one row: any other row moving with it fails, entry or not
+    for sec, key in (("plan", "plan_sha"), ("stamps", "prompts_sha256"), ("list", "metric")):
+        moved = tree()
+        moved["families"]["fam_a"][sec][key] = "moved"
+        rows = moved["families"]["fam_a"]
+        forged = {"fam_a": {**dec.triple(rows), "rows_sha256": dec.rows_sha256(rows)}}
+        for ledger in ({}, led, forged):
+            declared, failures = dec.verdict(gold, moved, ledger)
+            assert not declared and len(failures) == 1, (sec, ledger)
+            assert "instrument moved without a stamp or bank change" in failures[0]
+        with pytest.raises(dec.Refused, match="its stamp and bank are the golden's"):
+            dec.declare(gold, moved, {}, "fam_a", "0105", "test")
+    # a later stamp change of the renamed family: the category row is set aside, no other is
+    bumped = tree()
+    bumped["families"]["fam_a"]["stamps"] = {"prompt_version": "a-v2", "prompts_sha256": "p2"}
+    led2 = {"fam_a": dec.declare(gold, bumped, led, "fam_a", "9999", "test")}
+    declared, failures = dec.verdict(gold, bumped, led2)
+    assert not failures and "'a-v1' -> 'a-v2'; category 'precision'" in declared["fam_a"]
+    bumped["families"]["fam_a"]["plan"]["plan_sha"] = "other"
+    led3 = {"fam_a": dec.declare(gold, bumped, led, "fam_a", "9999", "test")}
+    assert "declared by a stamp change only" in dec.verdict(gold, bumped, led3)[1][0]
+
+
 def test_t1_rule_on_synthetic_manifests():
     dec = _declare_mod()
     gold = _mini_manifest()

@@ -163,7 +163,7 @@ or keep only `plain` items and report the count.
     `blocked` only if neither exists.
   - `scripts/adapt_jlens.py` / `adapt_jlens_modal.py` read the seed items from GW
     (`/workspace/agam/global-workspace/evals/workspace-bench/jlens_pr/items.json`), not from this
-    repo's `evals/precision/jlens_concept_pr`: `GW` is a hard-coded `Path` constant (`adapt_jlens.py:26`), not an env var: edit it to a
+    repo's `evals/jlens_comparison/jlens_concept_pr`: `GW` is a hard-coded `Path` constant (`adapt_jlens.py:26`), not an env var: edit it to a
     local global-workspace checkout off Agam's box.
   - Roll out the seeds, pick the read position with `pick_read_position`, capture at the remapped
     layers, and write the top-10.

@@ -34,7 +34,10 @@ from dataclasses import dataclass
 import numpy as np
 
 # CONTENT_TYPES = {WORD, CJK}, defined once in token_types (not redefined here)
-from wsbench.evals.precision.jlens_concept_pr.token_types import CONTENT_TYPES, classify_token
+from wsbench.evals.jlens_comparison.jlens_concept_pr.token_types import (
+    CONTENT_TYPES,
+    classify_token,
+)
 
 __all__ = [
     "CONTENT_TYPES",

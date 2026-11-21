@@ -422,7 +422,7 @@ SUBJECT_FIELDS: `read`.
 
 ### jlens_concept_pr
 
-Judge: `evals/precision/jlens_concept_pr/judge.py (items = manifest prompts)`. Refresh: verify (regenerated on the subject). Bank: manifest, id from `label`.
+Judge: `evals/jlens_comparison/jlens_concept_pr/judge.py (items = manifest prompts)`. Refresh: verify (regenerated on the subject). Bank: manifest, id from `label`.
 REQUIRED_ITEM_FIELDS: `label`, `family`, `eval_positions`, `n_pos`.
 SUBJECT_FIELDS: `eval_positions`, `n_pos`.
 Header: `model_id`, `layers`.

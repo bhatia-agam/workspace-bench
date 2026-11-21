@@ -25,7 +25,7 @@ change edits this table in the same PR.
 | hinted_cutoff | `evals/model_specific/hinted_cutoff/items_v2.json` |
 | introspection | `evals/model_specific/introspection/items_v2.json` |
 | jailbreak_recognition | `evals/safety/jailbreak_recognition/items_v2.json` |
-| jlens_concept_pr | `evals/precision/jlens_concept_pr/manifest.json` |
+| jlens_concept_pr | `evals/jlens_comparison/jlens_concept_pr/manifest.json` |
 | knowledge_cutoff | `evals/model_specific/knowledge_cutoff/items_v2.json` |
 | model_multihop | `evals/model_specific/model_multihop/items.json` |
 | model_specific_directed_modulation | `evals/model_specific/model_specific_directed_modulation/items.json` |

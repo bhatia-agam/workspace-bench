@@ -74,9 +74,16 @@ CATEGORY = {
     "model_multihop": "model_specific",
     "model_specific_directed_modulation": "model_specific",
     "wrong_intermediate": "model_specific",
-    "jlens_concept_pr": "precision",
+    "jlens_concept_pr": "jlens_comparison",  # `precision` at apply; renamed by plan 0105
 }
 CATEGORIES = tuple(dict.fromkeys(CATEGORY.values()))
+# Directory moves made by LATER plans, applied by `check` after the recorded moves of `apply`
+# (``APPLIED`` is a frozen record and keeps the paths of its day): plan 0105 renamed the category
+# `precision` to `jlens_comparison`, bytes unchanged.
+LATER_MOVES = (
+    ("evals/precision", "evals/jlens_comparison"),
+    ("src/wsbench/evals/precision", "src/wsbench/evals/jlens_comparison"),
+)
 UNMOVED = ("baselines", "fast", "hallucinationbench")
 # the directory name each family has BEFORE the move -> its key after (32; no multihop_mt_v2 dir)
 OLD_DIR = {
@@ -427,6 +434,14 @@ def new_path(path: str, mv: list[tuple[str, str]]) -> str:
         if path.startswith(src + "/"):
             return dst + path[len(src) :]
     return path
+
+
+def path_today(path: str, mv: list[tuple[str, str]]) -> str:
+    """``new_path`` followed by the moves of later plans (``LATER_MOVES``): where a file of the
+    base commit sits in today's tree. For a record whose moves were made under the category
+    names of the apply commit (``APPLIED``); moves computed from today's ``CATEGORY`` already
+    end in today's directories and pass through unchanged."""
+    return new_path(new_path(path, mv), list(LATER_MOVES))
 
 
 # ---------------------------------------------------------------- the text rules
@@ -1305,7 +1320,7 @@ def check(root: Path) -> int:
     rewritten = set(rec["json"]) | set(rec["text"])
     want_data = set()
     for f, digest in rec["data"].items():
-        dst = new_path(f, mv)  # type: ignore[arg-type]
+        dst = path_today(f, mv)  # type: ignore[arg-type]
         want_data.add(dst)
         if not (root / dst).is_file():
             bad.append(f"missing data file {dst} (was {f})")
@@ -1325,7 +1340,7 @@ def check(root: Path) -> int:
         if not (root / f).is_file() or sha256(root / f) != digest:
             bad.append(f"KEEP file {f} changed")
     for f, hits in rec["keep_tests"].items():
-        dst = new_path(f, mv)  # type: ignore[arg-type]
+        dst = path_today(f, mv)  # type: ignore[arg-type]
         now = dict(Counter(KEY_RE.findall((root / dst).read_text(encoding="utf-8"))))
         if now != hits:
             bad.append(f"KEEP test {dst}: a key occurrence changed ({hits} -> {now})")

@@ -724,6 +724,19 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
     HallucinationBench's WSB method names) are NOT renamed; the README carries the key table.
   - Tests: `tests/test_rename_0101.py` (T1-T17), `test_rename_machinery_0101.py`,
     `test_rename_fixups_0101.py`, `test_family_paths.py`, `test_migrate_0101.py`.
+- **Plan 0105 (2026-11-21): the category `precision` ("Precision") is `jlens_comparison`
+  ("J-lens comparison").** Directories `evals/jlens_comparison/` and
+  `src/wsbench/evals/jlens_comparison/` (`git mv`, bytes unchanged); the family key
+  `jlens_concept_pr` and its METRIC name `precision` did not change, so "precision" in code and
+  prose now always means the metric. Renaming a category = the `CATEGORIES` key, the directory
+  pair, the family's `group=`, `registry.LEGACY_CATEGORIES` (old -> new; `repo_path` resolves a
+  stored `evals/<old>/<family>/...` string, none exists in the repo today),
+  `scripts/migrate_0101.py`'s `CATEGORY` + `LATER_MOVES` (its `check` composes the later move
+  onto the frozen `migrate_0101_applied.json`), and the manifest ledger: the manifest holds no
+  family path, so the ONLY row that moves is `list.category`, which T1 accepts under the
+  golden's own stamp and bank when the rename is listed in
+  `manifest_0101_declare.CATEGORY_RENAMES` and a ledger entry pins the rows (any other row
+  moving without a bump still fails). No CLI key takes a category, so there is no alias.
 - `EvalSpec.superseded_by="<successor>"` retires a family without deleting it (plan 0015;
   today `typo_st` -> `typo`, plan 0033; its first user, the regex-scored family then keyed `multihop_mt` -> `multihop_mt_v2`, was
   removed on 2026-10-30, plan 0041; a family built by a shared factory sets it with
@@ -898,7 +911,7 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   per-family `category` / `tier`; `run json=True` always carries `"core_macro"`.
 - Categories: `EvalSpec.group` is a key of `registry.CATEGORIES` (key -> README title: basic,
   computational, association, safety, anti_bag_of_features, logical_processing, model_specific,
-  precision); `basic_mt` and `bag_of_words` are gone. `wsbench list` shows it as `category`,
+  jlens_comparison, which was `precision` until plan 0105: `registry.LEGACY_CATEGORIES`); `basic_mt` and `bag_of_words` are gone. `wsbench list` shows it as `category`,
   with a `tier` column after it (`—` for a superseded or retired family). `viewer.build.GROUPS`
   carries the same titles over its unchanged family set. `tests/test_tiers.py` pins the family
   -> category map and the tier lists.
@@ -983,7 +996,7 @@ implements it. Not restated here.
   followed by exactly three lines
   `- *What it is:*` / `- *Example:*` / `- *Judged by:*`, grouped by category (`registry.CATEGORIES`, in its order: Basic (adapted from the J-lens paper) ·
   Computational · Association · Safety · Anti-bag-of-features · Logical processing ·
-  Model-specific · Precision (not in any macro)), a core family's entry tagged `core` after its
+  Model-specific · J-lens comparison (not in any macro)), a core family's entry tagged `core` after its
   README link. Credits live in README §Credits and NOTICE.md, one
   bullet per external source; in-house families get no credit line.
 - Family paths and module names come from the registry helpers (`family_root`, `family_rel`,

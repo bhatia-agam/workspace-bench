@@ -1206,7 +1206,7 @@ def _plan(family: str) -> list[ReadSpec]:
     if family == "introspection":
         return _introspection()
     if family == "jlens_concept_pr":
-        from wsbench.evals.precision.jlens_concept_pr.judge import bank_dir
+        from wsbench.evals.jlens_comparison.jlens_concept_pr.judge import bank_dir
 
         d = bank_dir()  # the adapted bank's own manifest under WSB_BANK_ROOT, never the 27B's
         m = json.loads((d / "manifest.json").read_text())

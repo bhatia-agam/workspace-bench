@@ -15,11 +15,11 @@ from typing import Any
 import pytest
 from conftest import write_jsonl
 
-from wsbench.evals.precision.jlens_concept_pr import SPEC
-from wsbench.evals.precision.jlens_concept_pr import judge as jj
-from wsbench.evals.precision.jlens_concept_pr import prompts as pp
-from wsbench.evals.precision.jlens_concept_pr import score as ss
-from wsbench.evals.precision.jlens_concept_pr.concept_pr import ItemScore, is_content_token
+from wsbench.evals.jlens_comparison.jlens_concept_pr import SPEC
+from wsbench.evals.jlens_comparison.jlens_concept_pr import judge as jj
+from wsbench.evals.jlens_comparison.jlens_concept_pr import prompts as pp
+from wsbench.evals.jlens_comparison.jlens_concept_pr import score as ss
+from wsbench.evals.jlens_comparison.jlens_concept_pr.concept_pr import ItemScore, is_content_token
 from wsbench.judge_config import JudgeConfig, ResolvedJudge, resolve
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -636,7 +636,7 @@ def test_content_token_filter_matches_reference_tokens() -> None:
 def test_no_content_token_cell_is_ok_with_nan():
     import math
 
-    from wsbench.evals.precision.jlens_concept_pr.score import score_one_cell
+    from wsbench.evals.jlens_comparison.jlens_concept_pr.score import score_one_cell
 
     status, scored = score_one_cell(
         concepts=["a", "b"],
@@ -772,7 +772,7 @@ def test_junk_tokens_in_frozen_reference() -> None:
     tags); the filter matches nothing else, and only 5 all-tag cells lose every content token."""
     from collections import Counter
 
-    from wsbench.evals.precision.jlens_concept_pr.concept_pr import is_junk_token
+    from wsbench.evals.jlens_comparison.jlens_concept_pr.concept_pr import is_junk_token
 
     items = jj.manifest_items(jj.load_manifest())
     junk: Counter[str] = Counter()
@@ -858,7 +858,8 @@ def test_prompt_version_is_v3() -> None:
         pp.PROMPT_VERSION == "jlens-pr-v3+fw-v2+sense-v1"
     )  # round 3 + review: deterministic stamps
     assert SPEC.judge.prompt_version == pp.PROMPT_VERSION
-    readme = (ROOT / "evals/precision/jlens_concept_pr/README.md").read_text(encoding="utf-8")
+    readme = ROOT / "evals/jlens_comparison/jlens_concept_pr/README.md"
+    readme = readme.read_text(encoding="utf-8")
     assert "jlens-pr-v3" in readme and 'jlens-pr-v2",' not in readme
     assert "| jlens_concept_pr | claude-opus-5-5 | jlens-pr-v3+fw-v2+sense-v1 " in (
         ROOT / "README.md"

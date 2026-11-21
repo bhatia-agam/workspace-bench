@@ -104,7 +104,8 @@ are the same bytes, so a number from before the rename is the number of the same
 Every other family kept its key and moved from `evals/<family>/` to
 `evals/<category>/<family>/` (code: `wsbench.evals.<category>.<family>`); the categories are the
 headings of [The evals](#the-evals): `basic`, `computational`, `association`, `safety`,
-`anti_bag_of_features`, `logical_processing`, `model_specific`, `precision`. `association` is
+`anti_bag_of_features`, `logical_processing`, `model_specific`, `precision` (since 2026-11-21
+`jlens_comparison`, see [below](#renamed-in-0105-2026-11-21)). `association` is
 both a category (`evals/association/`) and a family (`evals/basic/association/`).
 `evals/baselines/`, `evals/fast/` and `evals/hallucinationbench/` did not move.
 
@@ -128,6 +129,21 @@ both a category (`evals/association/`) and a family (`evals/basic/association/`)
   published under; read them with the table above (`wsbench` reads both vocabularies).
 - **Adapted sets and lens stores outside this repository** are migrated with
   `uv run python scripts/migrate_0101.py set <dir> [--apply]` (see `adapted/README.md`).
+
+### Renamed in 0105 (2026-11-21)
+
+One category changed its name; no family key, bank, prompt, stamp or number changed.
+
+| category | key before | key now | title before | title now | directory under `evals/` before | now |
+|---|---|---|---|---|---|---|
+| J-lens comparison | `precision` | `jlens_comparison` | Precision | J-lens comparison | `precision/jlens_concept_pr/` | `jlens_comparison/jlens_concept_pr/` |
+
+The code moved with it (`wsbench.evals.precision.jlens_concept_pr` ->
+`wsbench.evals.jlens_comparison.jlens_concept_pr`). The family is still `jlens_concept_pr` and
+its metric is still called `precision`. A category is never typed on the command line, so
+nothing to re-learn there: `wsbench list` and `report json=True` now print `jlens_comparison`
+in the `category` column where they printed `precision`, and the viewer section is titled
+"J-lens comparison"; exports published before the rename keep the title "Precision".
 
 Output layout: `<out>/<family>/results.json` (the result) and `cells.jsonl` (every judge
 verdict, so a re-run only pays for what is missing); `<out>/summary.md` (the table) and
@@ -406,13 +422,13 @@ and reports no core macro.
 - *Example:* "Fact: The painter of Small Cowper Madonna died in the year" → model answer `1519`; target (the model's wrong intermediate) `Leonardo da Vinci` (true bridge Raphael).
 - *Judged by:* 6-way MC over the model's wrong intermediate, the true bridge and four same-category distractors, plus cannot tell; one digest per item over every position and layer. A gold pick passes with a verified quote (verbatim or near-verbatim) that names it, in the quote itself or, for a quote cut mid-name, where the line it came from continues it into the name (or the sample ends inside a name only the gold's forms start with); nothing in code overrules the judge's pick. A pick of the true bridge fails and is reported as `true_bridge_rate` (the former `wrong_bridge_true` family, removed 2026-10-30).
 
-### Precision (not in any macro)
+### J-lens comparison (not in any macro)
 
 Hallucination is measured by HallucinationBench, not here: the `hallucination` family left
 WorkspaceBench on 2026-10-30 (plan 0040), and `wsbench report` prints HB's index beside the
 macro instead (see [HallucinationBench](#hallucinationbench)).
 
-**J-lens concept precision** — [`evals/precision/jlens_concept_pr/README.md`](evals/precision/jlens_concept_pr/README.md)
+**J-lens concept precision** — [`evals/jlens_comparison/jlens_concept_pr/README.md`](evals/jlens_comparison/jlens_concept_pr/README.md)
 - *What it is:* Do the lens's stated concepts agree with the J-lens top-10 tokens at the same activation (precision, the headline), and does it cover them (recall@10, reported in `extras`).
 - *Example:* item `chat-lmsys-0000`, read at the `,` after "French" in "covering widely spoken languages such as Chinese, English, French,"; J-lens top-10 at L44 = ` languages`, `languages`, `日本語`, `多国`, ` Chinese`, ` Languages`, `Languages`, `语种`, `中国的`, `language` → a readout whose concepts are {languages, Chinese, Japanese, multilingual} scores high precision; "AI assistant" or "help" in the same readout count against it.
 - *Judged by:* Stage A splits samples into concepts; Stage P grades each concept against the token set in / partial / out, crediting a token by meaning, not spelling (a word piece, a negated word or a same-spelling word in another sense is out; each in / partial names its grounding token); precision = mean grade over all concepts; recall@10 = expected best grade over a 10-concept subset of the content tokens (byte fragments and special tokens excluded). Floor: the same concepts against another item's tokens (the foil, on by default; "not measured" when off).

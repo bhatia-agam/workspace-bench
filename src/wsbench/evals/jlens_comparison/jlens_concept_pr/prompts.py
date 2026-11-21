@@ -17,7 +17,7 @@ changes it only by the "shutter" example (was "objective lens") and the overlap 
 v3 recalibration on ``precision_gold_L44.jsonl`` is a run-phase step (plan 0042 §3). Never
 reflow it. Templates carry ``{name}`` placeholders substituted in one pass
 (never ``str.format``). Every entry of :data:`PROMPTS` is printed verbatim in
-``evals/precision/jlens_concept_pr/README.md``.
+``evals/jlens_comparison/jlens_concept_pr/README.md``.
 """
 
 import json

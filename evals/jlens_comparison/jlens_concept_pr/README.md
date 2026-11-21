@@ -63,7 +63,7 @@ grade had the shape); precision moves by <= 0.0002 per config (L20 0.1903 -> 0.1
 -> 0.3141, L40 0.3489 -> 0.3488, L48 0.2877 -> 0.2875), and the L44 headline 0.3251 is
 unchanged.
 
-## Bank (`evals/precision/jlens_concept_pr/`)
+## Bank (`evals/jlens_comparison/jlens_concept_pr/`)
 
 Frozen 2026-09-12 from `evals/workspace-bench/jlens_pr/` in the source repo (copied verbatim):
 

@@ -40,7 +40,7 @@ CATEGORY = {
     "knowledge_cutoff": "model_specific",
     "hinted_cutoff": "model_specific",
     "wrong_intermediate": "model_specific",
-    "jlens_concept_pr": "precision",
+    "jlens_concept_pr": "jlens_comparison",
 }
 CORE = {
     "agentic_misalignment", "jailbreak_recognition", "arithmetic_intermediates", "buggy_code",
@@ -64,10 +64,12 @@ def test_every_family_has_its_category(real_families):
         "anti_bag_of_features",
         "logical_processing",
         "model_specific",
-        "precision",
+        "jlens_comparison",
     ]
     assert registry.CATEGORIES["basic"] == "Basic (adapted from the J-lens paper)"
     assert registry.CATEGORIES["anti_bag_of_features"] == "Anti-bag-of-features"
+    assert registry.CATEGORIES["jlens_comparison"] == "J-lens comparison"  # plan 0105
+    assert registry.LEGACY_CATEGORIES == {"precision": "jlens_comparison"}
     assert {s.name: s.group for s in real_families.values()} == CATEGORY
 
 

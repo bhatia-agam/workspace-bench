@@ -7,6 +7,14 @@
   "plan": "0103",
   "note": "comp-v6 on bank v6: every part of an option required in one statement (a qualifier only where two listed options differ in it), shared-axis distractors with their twins (items_v4.json -> items_v6.json; same ids, stimuli and read plan); stamp comp-v5+maj -> comp-v6+bank-v6+maj"
  },
+ "jlens_concept_pr": {
+  "prompt_version": "jlens-pr-v3+fw-v2+sense-v1",
+  "bank_file": "manifest.json",
+  "bank_sha256": "af5b59c989ff7910af183597cb038e2e02750a34028c1d38567c0c44eca3906c",
+  "rows_sha256": "34a1d54be1da5a729c5877c7424d4579a9b28a2038bb161d552be55aa8c53891",
+  "plan": "0105",
+  "note": "category precision -> jlens_comparison (title 'J-lens comparison'): the family directory moved to evals/jlens_comparison/jlens_concept_pr; bank bytes, stamp, plan and call keys unchanged; the only row that moved is list.category"
+ },
  "nyt_connections": {
   "prompt_version": "nyt-mc-2026-11-20",
   "bank_file": "items.json",

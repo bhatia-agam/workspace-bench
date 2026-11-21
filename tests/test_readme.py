@@ -13,7 +13,7 @@ GROUPS = [
     "Anti-bag-of-features",
     "Logical processing",
     "Model-specific",
-    "Precision (not in any macro)",
+    "J-lens comparison (not in any macro)",
 ]
 LABELS = ("*What it is:*", "*Example:*", "*Judged by:*")
 
@@ -70,7 +70,7 @@ def test_group_membership_matches_registry():
     by_group |= {"computational": "Computational", "association": "Association"}
     by_group |= {"safety": "Safety", "anti_bag_of_features": "Anti-bag-of-features"}
     by_group |= {"logical_processing": "Logical processing", "model_specific": "Model-specific"}
-    by_group |= {"precision": "Precision (not in any macro)"}
+    by_group |= {"jlens_comparison": "J-lens comparison (not in any macro)"}
     starts = {g: text.index(f"### {g}") for g in GROUPS}
     ends = [*sorted(starts.values()), len(text)]
     for s in _listed_specs():

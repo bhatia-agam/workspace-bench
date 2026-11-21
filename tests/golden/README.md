@@ -54,6 +54,12 @@ bank version that differs from the golden's.**
   is declared again.
 - No declaration without a bump: rows that differ while the stamp and the bank both equal the
   golden's fail ("instrument moved without a stamp or bank change"), with or without an entry.
+  One exception (plan 0105), a category rename listed in `manifest_0101_declare.CATEGORY_RENAMES`
+  (= `registry.LEGACY_CATEGORIES`): the manifest holds no path of a family, so a renamed
+  category directory moves exactly one row, `list.category`, and there is no stamp or bank to
+  bump. An entry with the golden's own stamp and bank declares it while that row holds the
+  listed new name and every other row equals the golden's; the same row is set aside when the
+  family later declares a stamp change.
 - A declaration by stamp only (bank file and sha256 equal the golden's) waives the family's
   `stamps` and `run` sections alone; `plan`, `files`, `seeds`, `options`, `tables`, `lens_store`
   and every other section must still equal the golden's. A declaration with a new bank compares
@@ -74,8 +80,9 @@ bank version that differs from the golden's.**
 The ledger is written by `python scripts/manifest_0101_declare.py <family> --plan <NNNN> --note
 '<what moved>' --write`, which refuses when the family's stamp and bank equal the golden's or
 its previous entry's (bump first), and when there is nothing to declare. One reviewable entry
-per declared change; today: `nyt_connections` (plan 0099) and `conjunctive_association` (plan
-0103: comp-v6 on bank v6). `tests/fixtures/` follows the same rule (`adapted_v1/` is a
+per declared change; today: `nyt_connections` (plan 0099), `conjunctive_association` (plan
+0103: comp-v6 on bank v6) and `jlens_concept_pr` (plan 0105: category `precision` ->
+`jlens_comparison`, no instrument row moved). `tests/fixtures/` follows the same rule (`adapted_v1/` is a
 set from before the rename, kept unmigrated on purpose).
 
 ## In-repo v2 pins (plan 0012, 2026-10-10)
