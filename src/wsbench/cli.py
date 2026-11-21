@@ -1246,6 +1246,67 @@ class Capable(Command):
         return 0
 
 
+class Check(Command):
+    """``wsbench check`` lists every gate and sanity check with what it guards; ``wsbench check
+    <name> [option=value ...]`` runs one and prints PASS or FAIL with one line of why (exit 0 /
+    1); ``wsbench check all`` runs every check that needs no option. The registry is
+    ``wsbench.checks`` (external checks: ``$WSB_CHECKS``)."""
+
+    positional = "name"  # `wsbench check fast_subset` = `wsbench check name=fast_subset`
+
+    def __init__(self) -> None:
+        super().__init__()
+        self.name = ""
+        # options handed to the check that takes them (`wsbench check` shows which)
+        self.family = ""
+        self.model = ""
+        self.readouts = ""
+        self.limit = ""
+        self.dry_run = ""
+        self.options = None  # any other option, as a comma list of KEY=VALUE (plug-in checks)
+
+    def finalize(self) -> None:
+        for key in ("name", "family", "model", "readouts", "limit", "dry_run"):
+            setattr(self, key, str(getattr(self, key)))
+        pairs = _strs(self.options) or []
+        if bad := [p for p in pairs if "=" not in p]:
+            raise ValueError(f"options= expects KEY=VALUE pairs, got {bad}")
+        self.options = dict(p.split("=", 1) for p in pairs)
+
+    def _options(self) -> dict[str, str]:
+        keys = ("family", "model", "readouts", "limit", "dry_run")
+        return {**self.options, **{k: getattr(self, k) for k in keys if getattr(self, k) != ""}}
+
+    def execute(self) -> int:
+        from wsbench import checks  # the registry imports nothing heavy until a check runs
+
+        try:
+            known = checks.all_checks()
+            if not self.name:
+                for check in known.values():
+                    takes = "".join(
+                        f" {k}=" if required else f" [{k}=]"
+                        for k, required in check.options().items()
+                    )
+                    print(f"{check.name}{takes}\n    {check.guards}")
+                print("\nrun one: wsbench check <name> [option=value ...]   all offline: check all")
+                return 0
+            names = checks.offline() if self.name == "all" else [self.name]
+            failed = 0
+            for name in names:
+                ok, why = checks.run(name, **({} if self.name == "all" else self._options()))
+                failed += not ok
+                print(f"{'PASS' if ok else 'FAIL'}  {name}: {why}")
+            if self.name == "all":
+                for name, needs in checks.needing_options().items():
+                    args = " ".join(f"{k}=..." for k in needs)
+                    print(f"SKIP  {name}: skipped (needs {args}); run: wsbench check {name} {args}")
+        except (ValueError, ImportError, AttributeError) as e:
+            print(f"check: {e}", file=sys.stderr)
+            return EXIT_USAGE
+        return 1 if failed else 0
+
+
 class Plan(Command):
     """Write the read plan: for every item, what to render and how, which positions to read
     and at which layers (`docs/producing_readouts.md`). One JSONL per family under `out`."""
@@ -1696,6 +1757,7 @@ COMMANDS: dict[str, type[Command]] = {
     "report": ReportRuns,
     "baseline": Baseline,
     "capable": Capable,
+    "check": Check,
     "plan": Plan,
     "produce": Produce,
     "freeze": Freeze,
@@ -1773,6 +1835,9 @@ def main(argv: list[str] | None = None) -> int:
     if any(a in ("--help", "-h") for a in argv[1:]):
         print(_defaults(command))
         return 0
+    positional = getattr(command, "positional", "")
+    if positional and len(argv) > 1 and "=" not in argv[1] and not argv[1].startswith("-"):
+        argv[1] = f"{positional}={argv[1]}"
     # plans 0090 / 0095: `--fast` is `fast=True` and `--fast-safety` is `fast=safety` on every
     # command (one without the key fails as unknown)
     # plan 0098: `--core` / `--full` are `tier=core` / `tier=full` on run and plan
