@@ -118,6 +118,10 @@ changes a cache key or a score. A family whose calls failed after their retries 
 `<family>: N judge call(s) failed after retries; ...` on stderr; rerun into the same `out=` to
 ask only those again.
 
+**Half-price judging.** `judge_backend=batches` sends the Claude calls through Message Batches
+instead of live requests: same requests, same caches, half the token price
+(`docs/judge_backends.md`).
+
 **One process per family (`run procs=True`, the default).** `run` starts one `wsbench judge`
 process per family, `family_workers` at a time: one Python process is one CPU core, and eight
 families at `concurrency=256` inside one process dropped connections (2026-11-17), while a process
