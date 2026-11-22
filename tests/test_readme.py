@@ -1,8 +1,10 @@
-"""The public docs: README entries for all families, Credits, NOTICE.md, CITATION.cff."""
+"""The public docs: an entry for every family in docs/evals.md and a row in the README table, the
+judges table in docs/judges.md, Credits, NOTICE.md, CITATION.cff."""
 
+import importlib.util
 import re
 
-from wsbench import registry
+from wsbench import registry, tiers
 from wsbench.registry import REPO_ROOT
 
 GROUPS = [
@@ -33,6 +35,16 @@ def _readme() -> str:
     return (REPO_ROOT / "README.md").read_text(encoding="utf-8")
 
 
+def _evals() -> str:
+    """The page with one entry per family (what it is, example, judged by)."""
+    return (REPO_ROOT / "docs" / "evals.md").read_text(encoding="utf-8")
+
+
+def _judges() -> str:
+    """The judges page: the table of judge model and prompt version, and why these judges."""
+    return (REPO_ROOT / "docs" / "judges.md").read_text(encoding="utf-8")
+
+
 def _section(text: str, heading: str) -> str:
     m = re.search(rf"^## {re.escape(heading)}\n(.*?)(?=^## |\Z)", text, re.S | re.M)
     assert m, f"no section {heading!r}"
@@ -42,13 +54,13 @@ def _section(text: str, heading: str) -> str:
 def test_every_family_has_an_entry_with_three_labelled_lines():
     specs = _listed_specs()
     assert len(specs) >= 9
-    text = _readme()
+    text = _evals()
     lines = text.splitlines()
     for s in specs:
         heads = [i for i, ln in enumerate(lines) if ln.startswith(f"**{s.title}**")]
         assert len(heads) == 1, s.title
         i = heads[0]
-        assert f"]({registry.family_rel(s.name).as_posix()}/README.md)" in lines[i], s.name
+        assert f"](../{registry.family_rel(s.name).as_posix()}/README.md)" in lines[i], s.name
         body = lines[i + 1 : i + 4]
         assert [ln.startswith(f"- {lab}") for ln, lab in zip(body, LABELS, strict=True)] == [
             True,
@@ -64,8 +76,34 @@ def test_every_family_has_an_entry_with_three_labelled_lines():
     assert order == sorted(order)
 
 
-def test_group_membership_matches_registry():
+def _evals_table():
+    spec = importlib.util.spec_from_file_location(
+        "readme_evals_table", REPO_ROOT / "scripts" / "readme_evals_table.py"
+    )
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def test_the_readme_table_is_the_one_the_registry_gives():
+    """Category, page, sets (core, fast) and questions of every eval, and what `group=`
+    selects, are written by ``scripts/readme_evals_table.py --write``: never by hand."""
+    gen = _evals_table()
     text = _readme()
+    assert text == gen.replace(text), "run: python scripts/readme_evals_table.py --write"
+    table = gen.table()
+    listed = [s.name for s in _listed_specs()]
+    assert set(gen.WHAT) == set(listed)
+    for s in _listed_specs():
+        row = next(ln for ln in table.splitlines() if f"[`{s.name}`]" in ln)
+        assert row.startswith(f"| {registry.CATEGORIES[s.group].split(' (')[0]} |"), s.name
+        assert ("core" in row.split("|")[3]) == (s.name in tiers.CORE), s.name
+        assert ("rule" in row.split("|")[5]) == bool(s.scorer), s.name
+    assert "`group=association` also selects `role_bound_association`" in table
+
+
+def test_group_membership_matches_registry():
+    text = _evals()
     by_group = {"basic": "Basic (adapted from the J-lens paper)"}
     by_group |= {"computational": "Computational", "association": "Association"}
     by_group |= {"safety": "Safety", "anti_bag_of_features": "Anti-bag-of-features"}
@@ -83,11 +121,11 @@ def test_group_membership_matches_registry():
 def test_retired_families_have_no_entry_but_are_named():
     # plan 0058: a retired family (code and bank kept) leaves the family list and Judges table,
     # and the README says it is retired
-    text = _readme()
+    text = _evals()
     for name in registry.RETIRED_FAMILIES:
         s = registry.FAMILIES[name]
         assert not any(ln.startswith(f"**{s.title}**") for ln in text.splitlines()), name
-        assert f"| {name} |" not in _section(text, "Judges"), name
+        assert f"| {name} |" not in _judges(), name
         assert f"`{name}` (retired" in text, name
 
 
@@ -107,7 +145,7 @@ def test_credits_cover_every_source_and_no_in_house_family():
 
 
 def test_judges_table_pins():
-    judges = _section(_readme(), "Judges")
+    judges = _judges()
     for s in _listed_specs():
         assert s.name in judges and s.judge.prompt_version in judges, s.name
     assert "| agentic_misalignment | claude-sonnet-5 |" in judges

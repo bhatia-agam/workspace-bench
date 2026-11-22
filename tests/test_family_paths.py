@@ -163,7 +163,6 @@ ABSENT_ON_PURPOSE = (
 # Paths written on purpose that are not files of this checkout (the list may only shrink):
 KNOWN_MISSING = {
     # paths of the source repos (global-workspace, the J-lens repo), quoted in credits
-    "evals/workspace-bench/hillclimbing_evals/multi_token/ttt/README.md",
     "evals/workspace-bench/hillclimbing_evals/multi_token/dm_category_default",
     "evals/workspace-bench/jlens_pr",
     "evals/chint_cutoff",
@@ -185,6 +184,17 @@ KNOWN_MISSING = {
 def doc_files() -> list[Path]:
     out = [REPO / n for n in ("README.md", "CLAUDE.md", "AGENTS.md", "NOTICE.md")]
     out += [REPO / "docs" / f"{n}.md" for n in ("producing_readouts", "summarizer")]
+    # the reference pages split out of the README (they hold its family paths now)
+    split = (
+        "running",
+        "tiers",
+        "fast_subset",
+        "baselines",
+        "judges",
+        "porting",
+        "evals",
+    )
+    out += [REPO / "docs" / f"{n}.md" for n in (*split, "results_contract", "hallucinationbench")]
     out.append(REPO / "docs/adapt_judge_inputs.md")
     out += [f for f in (REPO / ".claude/skills").rglob("*.md") if f.name not in _SKILL_AUDITS]
     out += [registry.family_root(f) / "README.md" for f in registry._layout()]
