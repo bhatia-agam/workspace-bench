@@ -72,7 +72,7 @@ several `wsbench judge` processes. Size them to the account, not to a habit:
    `calls in flight x output tokens per call x 60 / seconds per call`, summed over every process
    on the account, must stay under it.
 
-Measured on one multihop family with `claude-opus-5-5` (2026-11-20; 50 verdict, 30 per-layer digest and
+Measured on one multihop family with `claude-opus-5-5` (50 verdict, 30 per-layer digest and
 10 merge calls; 0 retries and 0 rate-limit errors at `concurrency=12` and at 64):
 
 | call | uncached input | cached input | output | seconds |
