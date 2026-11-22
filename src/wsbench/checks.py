@@ -146,7 +146,7 @@ def fast_subset() -> Outcome:
     names = fast.families()
     for name in names:
         fast.entry(name)  # SystemExit when the registered bank's sha256 moved
-    return True, f"{len(names)} bank files match the sha256 frozen in {fast.VERSION}"
+    return True, f"{len(names)} bank files match the sha256 the fast subset was frozen on"
 
 
 def ati_subset() -> Outcome:
@@ -161,8 +161,8 @@ def ati_subset() -> Outcome:
         except ti.NotInScope:
             skipped.append(name)
     return True, (
-        f"{len(served)} families' entries match their judge instrument and bank "
-        f"({ti.SUBSET_VERSION}); {len(skipped)} not gated by design"
+        f"{len(served)} families' entries match their judge instrument and bank; "
+        f"{len(skipped)} not gated by design"
     )
 
 
