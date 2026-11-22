@@ -381,8 +381,7 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   `scripts/check_nocot_redaction.py` for bundles). Plan 0018 adds ids-only nocot
   items (`evals/model_specific/knowledge_cutoff/obscure_items.json`, none under `WSB_BANK_ROOT`): their prompt is
   rendered from nocot-bench's pinned zip by `wsbench.nocot` at plan time only (judge / run / ATI
-  stay offline via `EvalSpec.item_ids`; `WSB_NO_NOCOT=1` drops the nocot rows from the plan, set
-  by `atlas/export_cb.py`); `tests/conftest.py` stubs `nocot.questions` so tests never fetch. Never commit nocot question text or obscure items' real readouts / `cells.jsonl`.
+  stay offline via `EvalSpec.item_ids`; `WSB_NO_NOCOT=1` drops the nocot rows from the plan); `tests/conftest.py` stubs `nocot.questions` so tests never fetch. Never commit nocot question text or obscure items' real readouts / `cells.jsonl`.
 - nyt_connections (plan 0062; judge rule plan 0099, `nyt-mc-2026-11-20`, group model_specific):
   **a candidate needs its connection STATED by a readout line (the label's words or a clear
   paraphrase); a list of words alone is cannot tell**, so the continuation floor now measures how
@@ -395,7 +394,7 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   own labels; every label that folds equal to an NYT group name is a `{role, nyt_group[, nyt_id]}`
   reference). `wsbench.nyt` fetches the pinned Eyefyre mirror (`connections.json`, commit + sha256
   in the header) into `$WSB_CACHE/nyt/` at plan / judge time; `WSB_NO_NYT=1` drops the family's
-  plan rows (in `reads._env_key`; set by `atlas/export_cb.py`); `tests/conftest.py` stubs
+  plan rows (in `reads._env_key`); `tests/conftest.py` stubs
   `nyt.puzzles` with synthetic words (offline stub), so tests never fetch. Read: last 12 prompt
   tokens x GRID, lite = full (`SAME`). Scoring: the v1.1.0 layered digest (the CLI default; the
   family pins no layer mode), then one blind MC per **stable slot** (`cannot tell` last, quote
@@ -721,7 +720,7 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
     tree. `check` is the full gate only at that tree; anywhere else it checks the data half
     (every data file of the base at its new path with its bytes, JSON files as exact key
     translations) and says that the KEEP comparison was recorded at apply.
-  - Published artefacts keyed by family (the adapted sets on HF, viewer / atlas exports,
+  - Published artefacts keyed by family (the adapted sets on HF, viewer exports,
     HallucinationBench's WSB method names) are NOT renamed; the README carries the key table.
   - Tests: `tests/test_rename_0101.py` (T1-T17), `test_rename_machinery_0101.py`,
     `test_rename_fixups_0101.py`, `test_family_paths.py`, `test_migrate_0101.py`.
@@ -746,7 +745,7 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   another category = the directory pair, its `group=`, `registry.LEGACY_FAMILY_CATEGORIES`
   (family -> the category it left; `repo_path` resolves a stored `evals/<left>/<family>/...`
   string and `_moved_hint` names the new place for a missing `WSB_BANK_FILE_*`),
-  `viewer.build.GROUPS`, `scripts/migrate_0101.py`'s `LATER_MOVES` (NOT its `CATEGORY`, which
+  `scripts/migrate_0101.py`'s `LATER_MOVES` (NOT its `CATEGORY`, which
   stays the layout `apply` made: the script's tests replay it; `path_today` applies a later
   move only to a file that is no longer at its applied path; `tests/test_migrate_0101.py` has
   the `moved_since` table), and the manifest ledger: the only row that moves is
@@ -870,7 +869,7 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   called directly with a hand-built `JudgeArgs` (no `aggregate`) keeps its native rule. Tests
   that mean native pass `opts=aggregate=native`. Scripts that re-score native caches or feed the
   ATI gate pin native explicitly (`scripts/ati_panel_judge.sh`, `scripts/cache_only_run.py`,
-  `atlas/normal_gated.py`, `adapt/floors.py`); `text_inversion.draw_verdicts` refuses summary
+  `scripts/adapt_gated_rescore.py`, `adapt/floors.py`); `text_inversion.draw_verdicts` refuses summary
   results. Summary rows draw `evals/baselines/prompt_only_summary.json` (row-relative match on
   prompt_version + digest settings + judge) and the per-item lucky floor. A hooked family calls
   `digest.collapse(name, cells_by_item, ...)` AFTER its own cell selection and missing-cell
@@ -933,8 +932,8 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   computational, association, safety, anti_bag_of_features, logical_processing, model_specific,
   jlens_comparison, which was `precision` until plan 0105: `registry.LEGACY_CATEGORIES`; the family
   `association` is in `association`, not `basic`, since plan 0107: `registry.LEGACY_FAMILY_CATEGORIES`); `basic_mt` and `bag_of_words` are gone. `wsbench list` shows it as `category`,
-  with a `tier` column after it (`—` for a superseded or retired family). `viewer.build.GROUPS`
-  carries the same titles over its unchanged family set. `tests/test_tiers.py` pins the family
+  with a `tier` column after it (`—` for a superseded or retired family). The viewer takes its
+  group headings from the README's 'The evals' section. `tests/test_tiers.py` pins the family
   -> category map and the tier lists.
 
 ## Driver (`runner.py`, `cli.py`)

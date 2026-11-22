@@ -282,9 +282,7 @@ def test_adapt_work_files_under_a_bare_key_are_content_checked(pair, tmp_path, m
         store.gate_path("m", LIVE)
 
 
-def test_the_viewer_index_and_the_skill_scripts_do_not_walk_evals_one_level():
-    text = (REPO / "viewer_app/index.py").read_text(encoding="utf-8")
-    assert '(WSB / "evals").iterdir()' not in text and "family_root(f) for f in _layout()" in text
+def test_the_skill_scripts_do_not_walk_evals_one_level():
     for name in ("modal_gate.py", "modal_script.py"):
         src = (REPO / ".claude/skills/wsb-new-questions/scripts" / name).read_text("utf-8")
         assert 'ignore=["**/jlens_concept_pr/gen-*"]' in src

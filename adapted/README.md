@@ -202,10 +202,10 @@ caches: `/workspace/wsb-out/0079/` (not in git). Sets: main `3c552e22`.
 
 ## Interactive viewer (scores + readouts, every model and question)
 
-`viewer_app/` (FastHTML), served from tmux `wsb-viewer` on 127.0.0.1:5077. From the Mac:
-`ssh -N -L 5077:127.0.0.1:5077 runpod`, then open http://localhost:5077. Restart:
-`viewer_app/README.md`. Filters by model, family, layer and stage; side-by-side readouts; per-judge
-pass/fail. OLens per-item readouts that only live on Modal volumes show scores only.
+`wsbench viewer` (`src/wsbench/viewer/README.md`): `wsbench viewer ingest . adapter=bank` adds
+every set's questions, `wsbench viewer ingest <judged dir> adapter=wsb model=<set>` a lens's
+results, `wsbench viewer serve` opens it. Filters by model, family, layer; side-by-side
+readouts; per-judge pass/fail.
 
 ## Prompt-only floors (report every score beside these)
 

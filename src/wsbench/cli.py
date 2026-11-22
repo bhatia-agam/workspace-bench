@@ -1861,6 +1861,10 @@ class Try(Command):
         )
         if self.dry_run:
             print("next: drop dry_run=True to judge for real")
+        else:
+            print("\n== see it in the viewer (uv sync --extra dev --extra viewer)")
+            for line in tryout.viewer_commands(self.family, judged, readouts, self.out):
+                print(f"  {line}")
         return code
 
 
@@ -1931,7 +1935,8 @@ def _write_summary(
 
 def _usage() -> str:
     return (
-        "usage: wsbench <" + "|".join(COMMANDS) + "> [key=value ...] [--show | --help]\n"
+        "usage: wsbench <" + "|".join([*COMMANDS, "viewer"]) + "> [key=value ...] "
+        "[--show | --help]\n"
         "tiers of run / plan: --fast (the frozen fast subset) | --core (the default) | --full "
         "(every family; all=True)"
     )
@@ -1950,6 +1955,11 @@ def main(argv: list[str] | None = None) -> int:
     if argv and argv[0] in ("--help", "-h"):
         print(_usage())
         return 0
+    if argv and argv[0] == "viewer":  # `wsbench viewer ingest|serve|bank`: its own subcommands
+        from wsbench.viewer.cli import main as viewer_main
+
+        registry.load_all()
+        return viewer_main(argv[1:])
     if not argv or argv[0] not in COMMANDS:
         print(_usage(), file=sys.stderr)
         return EXIT_USAGE
