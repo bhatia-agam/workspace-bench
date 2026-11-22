@@ -402,6 +402,9 @@ class RunFamilies(JudgeOptions):
         self.readouts_root = pydra.REQUIRED
         self.out = pydra.REQUIRED
         self.family_workers = 8  # families judged at once (one judge process each); 0 = all
+        # > 0: one budget of in-flight judge calls for the run, split across families by the
+        # size of their readouts instead of `concurrency` each (one judge process per family)
+        self.in_flight_total = 0
         self.procs = None  # one judge process per family; unset = $WSB_RUN_PROCS (0 / 1), else on
         self.wait = 0.0  # plan 0092: seconds to wait for readouts that are not ready yet
         self.settle = 0.0  # with wait: a sidecar-less file this many seconds old is ready
@@ -417,6 +420,7 @@ class RunFamilies(JudgeOptions):
         self.readouts_root = _path(self.readouts_root)
         self.out = _path(self.out)
         self.family_workers = _int(self.family_workers)
+        self.in_flight_total = _int(self.in_flight_total)
         self.wait = float(self.wait or 0)
         self.settle = float(self.settle or 0)
         if self.wait < 0 or self.settle < 0:
