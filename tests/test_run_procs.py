@@ -540,12 +540,15 @@ def test_wait_submits_a_late_family_in_process_mode(offline, spawner, tmp_path, 
 # ---------------------------------------------------------------- interrupts and cleanup
 
 
-def _interrupt_once_running(monkeypatch, spawner, name: str):
-    """``as_completed`` raises ``KeyboardInterrupt`` in the main thread once ``name`` runs."""
+def _interrupt_once_running(monkeypatch, spawner, *names: str):
+    """``as_completed`` raises ``KeyboardInterrupt`` in the main thread once every child in
+    ``names`` runs. A test that reads a child after the interrupt names it here: the pool starts
+    the children in parallel, so one running says nothing about another having been spawned."""
 
     def as_completed(fs):
-        assert spawner.event(name).wait(TIMEOUT)
-        assert spawner.children[name].started.wait(TIMEOUT)
+        for name in names:
+            assert spawner.event(name).wait(TIMEOUT)
+            assert spawner.children[name].started.wait(TIMEOUT)
         raise KeyboardInterrupt
 
     monkeypatch.setattr(runner, "as_completed", as_completed)
@@ -591,7 +594,7 @@ def test_second_interrupt_terminates_the_children(
 
     spawner.scripts.update(a=Child.hang, b=Child.hang)
     monkeypatch.setattr(runner, "ThreadPoolExecutor", Pool)
-    _interrupt_once_running(monkeypatch, spawner, "b")
+    _interrupt_once_running(monkeypatch, spawner, "a", "b")
     assert _run(root, out, ["a", "b"]) == 130
     assert spawner.children["a"].terminated and spawner.children["b"].terminated
     fams = _manifest(out)["families"]
