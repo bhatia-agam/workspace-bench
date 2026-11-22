@@ -20,26 +20,31 @@ This README says "eval" for what the code calls a family.
 | Software | Python 3.12 or newer and [`uv`](https://docs.astral.sh/uv/). |
 | Judge access | An Anthropic credential: `ANTHROPIC_API_KEY`, or `ANTHROPIC_PROFILE=<name>` (an `ant auth login` profile), or `ANTHROPIC_AUTH_TOKEN` (an OAuth bearer token). The judges are `claude-opus-5-5` and, for the two safety evals, `claude-sonnet-5` ([docs/judges.md](docs/judges.md)). Nothing else is needed to judge. |
 | Hardware to judge | None beyond a laptop: judging is API calls. |
-| Hardware to produce readouts | Only if you run a lens here. The reference model is Qwen3.6-27B: about 54 GB of weights at 16-bit precision (an estimate from its size, not a measurement). The timings below were measured on NVIDIA B200 GPUs (183 GiB), where a served reader with 768 requests in flight used 174 GiB. |
+| Hardware to produce readouts | Only if you run a lens here. The reference model is Qwen3.6-27B. The runs below served the lens on NVIDIA B200 GPUs (183 GiB each), where the served reader used 174 GiB at 768 requests in flight, in containers with 128 GiB of memory; a smaller GPU needs fewer requests in flight and was not measured. Capturing activations holds the model at 32-bit precision, about 110 GB of weights (estimate). |
 | Disk | 0.8 GB for the checkout. Readouts and judge caches of a full run were not measured; plan for tens of GB. |
 | Network | The Anthropic API. Two evals fetch pinned public data: `nyt_connections` its puzzles when it plans or judges, `knowledge_cutoff` part of its questions when it plans. Producing readouts downloads the model from Hugging Face. |
 
 ## Time and cost
 
-One prose lens on the reference model, 11 layers, measured on NVIDIA B200 GPUs with a served
-reader and 176 to 352 judge calls in flight. Your numbers depend on your reader and your API
-rate limits. Judging dominates both time and cost.
+One prose lens on the reference model at 11 layers, one sample per cell, measured on NVIDIA B200
+GPUs with a served reader and up to 352 judge calls in flight. Your numbers depend on your
+reader and your API rate limits. Judging dominates both time and cost.
 
-| what you run | questions / cells | GPU-hours to read | wall-clock to read | judge calls | judge wall-clock | judge cost | time to a score |
-|---|---|---|---|---|---|---|---|
-| The two-question try-out | 2 / 4 | none (shipped example readouts) | none | 4 | 20 s | under $0.10 (estimate) | under a minute |
-| The fast subset (`--fast`) | 2,160 / 657,690 | 1.95 | 12 min on 12 GPUs | 31,280 | 36 min | $1,863 | 1 h 1 min as run; about 45 min (estimate) without a scheduling stall in that run |
-| The core evals (default) | 4,541 / 2,885,822 | about 8.2 (estimate) | not measured | 63,172 | not measured on its own | $3,556 | not measured |
-| Every eval (`--full`) | 6,099 / 3,261,846 | 9.26 | 48 min on up to 32 GPUs | 81,218 | ended 101 min after the read | $4,574 | 2 h 29 min as run |
+| what you run | questions / cells | GPU-hours to read | wall-clock to read | judge calls | judge wall-clock | judge cost | start to score | total cost |
+|---|---|---|---|---|---|---|---|---|
+| The two-question try-out (`wsbench try`) | 2 / 4 | none: shipped example readouts | none | 4 | 20 s | under $0.10 (estimate) | under a minute | under $0.10 (estimate) |
+| Reading two questions with a lens, not judged | 2 / 803 | 0.04 | 4.5 min on 1 GPU | none | none | none | 4.5 min | $0.30 |
+| The fast subset (`--fast`) | 2,160 / 657,690 | 1.98 | 16 min on 12 GPUs | 31,269 | 39 min from the first readouts | $1,868 | 52 min | $1,880 |
+| The core evals (default) | 4,541 / 2,885,822 | 8.2 (estimate) | as every eval | 63,172 | as every eval | $3,556 | as every eval | $3,610 (estimate) |
+| Every eval (`--full`) | 6,099 / 3,261,846 | 9.26 | 48 min on up to 32 GPUs | 81,218 | 101 min after the read | $4,574 | 2 h 29 min | $4,630 |
 
-Reading also needs the model's activations captured once: 0.3 GPU-hours for the fast subset,
-0.8 for every eval. The core row's judge calls and cost are the core evals' share of the full
-run. A cell is one (question, layer, position) readout.
+A cell is one (question, layer, position) readout. Costs are list prices: the judge's API
+prices and $6.25 per GPU-hour. The core row is the core evals' share of the full run; it takes
+as long as the full run because the two slowest evals to judge are core. With the full run
+judged, the fast subset's score needs 99 more judge calls ($3, 9 minutes). Reading also needs
+the model's activations captured once per version of the question banks: 0.3 GPU-hours for the
+fast subset, 0.8 for every eval. With fewer GPUs the GPU-hours stay and the wall-clock grows in
+proportion.
 
 ## Install
 
