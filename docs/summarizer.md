@@ -1,80 +1,73 @@
 # The item digest (the one summarizer)
 
-Plan 0032 (2026-10-30; Camila: "make sure that we have gotten rid of the individual jlens
-summarizer step, it should be replaced with the more general sumamrizer we apply to all methods
-now") deleted the per-cell J-lens interpretation step (`summarizer.py`, `interp-v1`). Native
-token paths now judge the decoded token list itself (`family.render_bag`, no scores), and under
-the default `aggregate=summary` every method — prose or token — goes through the one item digest
-below and nothing else. `render_bag` and `aux_judge` moved to `wsbench/family.py`.
+There is one summarizer: the item digest below. Native token paths judge the decoded token list
+itself (`family.render_bag`, no scores), and under the default `aggregate=summary` every method —
+prose or token — goes through the item digest and nothing else. `render_bag` and `aux_judge`
+live in `wsbench/family.py`.
 
-# Item digest (`aggregate=summary`, plan 0020; digest-v4, plan 0032; digest-v5, audit fixes 2026-10-31)
+# Item digest (`aggregate=summary`)
 
-The summarizer of record, used under `aggregate=summary` — the benchmark default since plan
-0024, and since plan 0032 also the default of a hand-built `JudgeArgs` (`opts=aggregate=native`
-opts out; tests use `conftest.native_args`). For one method (a readouts file plus an optional
-`layers=` selection), **every** cell a family reads for an item (every read layer × position ×
-sample, prose or token) goes into the item's digest, and the family then judges or scores that
-digest ONCE. Since digest-v5 an item read at several layers is digested layer by layer and the
-per-layer digests are merged into the one judged digest (see "Audit fixes" below). Code:
-`wsbench/digest.py`.
+The summarizer of record, used under `aggregate=summary`, which is the benchmark default and
+also the default of a hand-built `JudgeArgs` (`opts=aggregate=native` opts out; tests use
+`conftest.native_args`). For one method (a readouts file plus an optional `layers=` selection),
+**every** cell a family reads for an item (every read layer × position × sample, prose or token)
+goes into the item's digest, and the family then judges or scores that digest ONCE. An item read
+at several layers is digested layer by layer and the per-layer digests are merged into the one
+judged digest (see "Per-layer digests" below). Code: `wsbench/digest.py`.
 
 - `DIGEST_PROMPT_VERSION = "digest-v5"`, `SUMMARY_JUDGE_VERSION = "sj-v10"`. A summary-mode
   result stamps `digest.prompt_version(<family PV>, args, family)`: under the defaults
-  `<family PV>+digest-v5-task-extractive+sj-v10` (plus `-stride`
-  under the stride ablation, `-joint` under the `summ_layers=joint` ablation, `-layered-v1x4` under
-  `summ_layers=layered` (v1.1.0, the multi-layer default, budget x4 since v1.1.1; see below), and `+reads-lite`
-  from `reads.stamp`). Family docs cite the
-  function's output, never a literal.
-- **All readouts, always** (Camila: "the summarizer should always be fed ALL of the readouts").
-  The default overflow is `hierarchical` for every family, under ONE global cap
-  `DEFAULT_TOKEN_CAP = 920_000`: a bundle at or under it is one call; above it the bundle is cut
-  into layer-boundary chunks (each under the cap) whose verified evidence a final call reads. No
-  readout is dropped; `collapse` asserts that the bundled lines equal the non-blank lines of the
-  cells passed (`extras.n_readouts_in == n_readouts_bundled`), and `expect_all=` makes a family
-  that pre-selects cells pass every loaded cell of its read span. `stride` (the plan 0020
-  truncation) stays an explicit ablation (`summ_overflow=stride`, stamped `-stride`; a
-  truncated item makes the run incomplete). No family sets `summ_token_cap`; the allowed
-  `FAMILY_DEFAULTS` keys are `summ_concurrency`, `summ_timeout`, `summ_fallback`, `summ_max`,
-  `summ_rare`, `summ_numbers` (`summ_lang` was removed on 2026-11-01). No family sets
-  `summ_concurrency` since plan 0092: the two fixed caps (agentic 4, jailbreak 8) are gone,
-  every family's digests run at the run's `concurrency=`, and the process-wide input-token
-  budget (`itpm=` on `judge` / `run`, `llm.set_itpm`; a call reserves its prompt's characters / 3
-  once, before its retries) guards the token rate instead; `opts=summ_concurrency=N` still
-  overrides. Real token counts (`llm.count_tokens`, cached
+  `<family PV>+digest-v5-task-extractive+sj-v10` (plus `-stride` under the stride ablation,
+  `-joint` under the `summ_layers=joint` ablation, `-layered-v1x4` under `summ_layers=layered`,
+  the multi-layer default described below, and `+reads-lite` from `reads.stamp`). Family docs
+  cite the function's output, never a literal.
+- **All readouts, always.** The summarizer is fed every readout. The default overflow is
+  `hierarchical` for every family, under ONE global cap `DEFAULT_TOKEN_CAP = 920_000`: a bundle
+  at or under it is one call; above it the bundle is cut into layer-boundary chunks (each under
+  the cap) whose verified evidence a final call reads. No readout is dropped; `collapse` asserts
+  that the bundled lines equal the non-blank lines of the cells passed
+  (`extras.n_readouts_in == n_readouts_bundled`), and `expect_all=` makes a family that
+  pre-selects cells pass every loaded cell of its read span. `stride` (truncation) is an
+  explicit ablation (`summ_overflow=stride`, stamped `-stride`; a truncated item makes the run
+  incomplete). No family sets `summ_token_cap`; the allowed `FAMILY_DEFAULTS` keys are
+  `summ_concurrency`, `summ_timeout`, `summ_fallback`, `summ_max`, `summ_rare`, `summ_numbers`.
+  No family sets `summ_concurrency`: every family's digests run at the run's `concurrency=`,
+  and the process-wide input-token budget (`itpm=` on `judge` / `run`, `llm.set_itpm`; a call
+  reserves its prompt's characters / 3 once, before its retries) guards the token rate;
+  `opts=summ_concurrency=N` overrides. Real token counts (`llm.count_tokens`, cached
   `ntok:<id>|<layers>`) are asked only for bundles estimated above 60% of the cap; a call
   estimated above 150k tokens gets at least 1800 s.
 - **Task context on by default** (`summ_variant=task`; `blind` is the ablation): the family's
   `EvalSpec.task_note` (or a per-item Mapping, `item_task_notes`) fills `DIGEST_TASK_LINE`, so a
   single relevant mention is recorded rather than discarded. Notes carry no gold and no tool name.
 - Model (`digest.digest_model`, the one place that decides it): `summ_model=`, else the judge
-  model when the judge is an override on a non-Anthropic route (plan 0096 part 2: the
-  summarizer follows the judge, as plan 0059 Arm B ran; a `claude-*` override, a pinned judge
-  and a judge-less probe do not move it), else `aux_models["digest"]`, else `claude-opus-5-5`,
-  at the model's own default effort (`summ_effort=`). The call's reasoning is
-  `digest.digest_reasoning(model, effort)`: a `claude-*` model `{"anthropic_effort": effort}`
-  (unchanged, so no Claude digest fingerprint moves), any other model none at
-  `summ_effort=default`, else `{"effort": effort}` (so a non-Claude digest written before this
-  rule is re-asked). `max_tokens` 32000 (64000 for a `claude-sonnet-5` digest,
-  `digest.OUTPUT_CAPS`; see Refusal fallbacks; on the OpenRouter / `openai` routes
-  `WSBENCH_OPENROUTER_MAX_OUT` replaces it inside `llm`). `summ_context=N` (default 1,000,000,
-  at least 128,000, in `config.summarizer` as `context` only when not the default) is the
-  context window the hierarchical budget fits: `min(summ_token_cap, N - 32000 - 64000)`.
-  `llm.count_tokens` is Anthropic-only: a non-Claude digest sizes its bundles by the estimate. Pinned only at those defaults and
-  with the family judge pinned. `extras.digest_served_by` = `{model: n_items}` states which
-  model actually served each digest (refusal fallbacks included).
+  model when the judge is an override on a non-Anthropic route (the summarizer follows the
+  judge; a `claude-*` override, a pinned judge and a judge-less probe do not move it), else
+  `aux_models["digest"]`, else `claude-opus-5-5`, at the model's own default effort
+  (`summ_effort=`). The call's reasoning is `digest.digest_reasoning(model, effort)`: a
+  `claude-*` model `{"anthropic_effort": effort}`, any other model none at
+  `summ_effort=default`, else `{"effort": effort}`. `max_tokens` 32000 (64000 for a
+  `claude-sonnet-5` digest, `digest.OUTPUT_CAPS`; see Refusal fallbacks; on the OpenRouter /
+  `openai` routes `WSBENCH_OPENROUTER_MAX_OUT` replaces it inside `llm`). `summ_context=N`
+  (default 1,000,000, at least 128,000, in `config.summarizer` as `context` only when not the
+  default) is the context window the hierarchical budget fits:
+  `min(summ_token_cap, N - 32000 - 64000)`. `llm.count_tokens` is Anthropic-only: a non-Claude
+  digest sizes its bundles by the estimate. Pinned only at those defaults and with the family
+  judge pinned. `extras.digest_served_by` = `{model: n_items}` states which model actually
+  served each digest (refusal fallbacks included).
 - **Bundle.** Cells in `(layer, pos)` order, one `[L<layer> pos <index>]` header each (never the
   read-site token text). Prose: one `- <sample>` line per sample, whitespace collapsed; a sample
   with two or more top-level `- ` bullets shows them joined by ` ⁞ ` (`digest.BULLET_MARK`), so the
   note-taker and the judge see where one bullet ends. Token lists: one line per cell, tokens best
   first, as the loader decoded them, joined by ` | `, no scores.
-- **The token rule (decision Q4).** Tokens of ONE list may be read together and jointly express
-  one meaning; tokens of adjacent positions at one layer may be joined only to spell one word;
-  nothing relational is ever assembled across lists, positions, layers, samples or bullets. A
-  flat list is recorded as a list; whether it singles out an option is the judge's call relative
-  to the options shown (`mc.token_note`, rendered from the family's `flat_types` /
-  `multi_select`). With `flat_types` set, a run of those (e.g. numbers) singles out none of its
-  members even when only one is an option, and that rule takes precedence over the lone-option
-  clause. The old "ranked first among its type" exception is deleted.
+- **The token rule.** Tokens of ONE list may be read together and jointly express one meaning;
+  tokens of adjacent positions at one layer may be joined only to spell one word; nothing
+  relational is ever assembled across lists, positions, layers, samples or bullets. A flat list
+  is recorded as a list; whether it singles out an option is the judge's call relative to the
+  options shown (`mc.token_note`, rendered from the family's `flat_types` / `multi_select`).
+  With `flat_types` set, a run of those (e.g. numbers) singles out none of its members even when
+  only one is an option, and that rule takes precedence over the lone-option clause. There is no
+  "ranked first among its type" exception.
 - **Evidence gate.** Each digest entry carries a `where` header and a verbatim `evidence` span,
   verified first inside the named group, then anywhere (prose: exact > whitespace/case-normalised
   > folded; a token line: a whole token, or tokens of that list joined by " | " in any order; a
@@ -86,72 +79,72 @@ per-layer digests are merged into the one judged digest (see "Audit fixes" below
   bullet) and count `extras.n_unverified_bullet`. `digest.number_flood` voids a whole sample that
   lists five or more distinct numbers.
 - **Renders** (`summ_render`). `extractive` (default): the judge reads only the WHOLE readout
-  samples the note-taker picked, one `[support] <sample>` line each (`EXTRACTIVE_LINE`; the
-  `summ_lang` `[in <language>]` label was removed on 2026-11-01), `support` the entry's per-claim sample count (digest-v5, below).
-  No text the note-taker wrote reaches the judge. `abstractive` (ablation) also shows the
-  statement.
+  samples the note-taker picked, one `[support] <sample>` line each (`EXTRACTIVE_LINE`),
+  `support` the entry's per-claim sample count (Per-claim counts, below). No text the note-taker
+  wrote reaches the judge. `abstractive` (ablation) also shows the statement.
 - **Two tiers** (`items` up to `summ_max`, default 10; `rare` up to `summ_rare`, default 15) and
   the **numbers digest** (`summ_numbers=<n>`; chain / arithmetic `5`; keys are one numeral, digits,
-  CJK, or a number word in any language read by `wsbench.numerals`) are as in plan 0022.
-  Restatements that name a specific object, person, place, name or term are recorded with that
-  term as key; only generic input wording is capped at one item.
+  CJK, or a number word in any language read by `wsbench.numerals`). Restatements that name a
+  specific object, person, place, name or term are recorded with that term as key; only generic
+  input wording is capped at one item.
 - **Item states.** No cells: the family's native missing path. Failed call, unparsable result, or
   every item dropped: unsummarized. Every cell blank, or a digest of zero items: empty, a judged
   fail.
 - Cache key `digest:<id>|<layers>` in the family's `cells.jsonl`; fingerprint `(version, model,
   reasoning, variant, max_items, max_rare, numbers, token_cap, decode, [lang], task note of the
   item (task variant only), bundle)`. The render is not fingerprinted.
-- **Native-only:** `jlens_concept_pr` (decision Q2: its unit is per-cell precision against that
-  cell's J-lens top-10; a per-item digest has no single reference), the only one since
-  hallucination left WorkspaceBench for HallucinationBench (plan 0040).
-- **Hierarchical details** (plan 0021): a refused or too-long call moves the item to chunks at half
-  the size, at most twice (the level is cached under `…|level`); a chunk with zero items
+- **Native-only:** `jlens_concept_pr`, the only such family (its unit is per-cell precision
+  against that cell's J-lens top-10; a per-item digest has no single reference).
+- **Hierarchical details:** a refused or too-long call moves the item to chunks at half the
+  size, at most twice (the level is cached under `…|level`); a chunk with zero items
   contributes nothing; rows carry `summary_hierarchical` / `summary_chunks`, extras
   `n_digest_refused`, `n_digest_too_long`, `n_chunk_calls`, `n_hierarchical_items`,
-  `max_halvings`. A rerun replays the halving levels (plan 0093): an item with a cached level
+  `max_halvings`. A rerun replays the halving levels: an item with a cached level
   restarts at level 0 and re-reads every level below the cached one from the cache, sending
   nothing and writing no row of its own (with a `summ_store`, past-level chunk rows may be
   adopted from the store once; a call with no cached success there counts as the refusal the
   level row records), so it rebuilds the chunk claims the first pass kept and scores the item as
-  that pass did, `n_fallback_events` included. Agentic keeps `summ_max=25`, `summ_rare=25`, timeout 1800 s
-  and `summ_fallback=none+claude-opus-5` (its digest runs on its Stage C pin `claude-sonnet-5`);
-  its fixed digest concurrency of 4 is gone (plan 0092: the run's `concurrency=` under `itpm=`).
-- **A failed digest call and `complete`** (unchanged by plan 0092, stated here): a per-layer
-  digest lost to a failed call (retries exhausted) leaves its item in the partial counters; the
-  item is digested and judged on its remaining layers and the row can still be `complete=True`.
-  The partial counters also hold layers dropped by the evidence check, so they do not tell the
-  two apart. `judge` / `run` therefore print one stderr line per family whose calls failed
-  (`<family>: N judge call(s) failed after retries; affected cells are unjudged or their items
-  were digested on fewer layers`); a rerun into the same `out=` asks only the failed calls again.
-- **Audit fixes (digest-v5, 2026-10-31; `notes/AUDIT_FIXES.md` F1 / F2 / F3 / F11).**
-  - *F1, the all-layer budget scales with the layers* (`summ_layers=union`, the default; `joint`
-    is the old single call, an ablation stamped `-joint`). An item read at several layers gets
-    one digest per layer, each at the single-layer budget (`summ_max` + `summ_rare`) and under the
-    same cache key a `layers=[L]` run uses (`digest:<id>|<layer>`), so every layer keeps its own
-    rare tier and no layer crowds out another. The per-layer digests are merged by key
-    (`digest.merge_grounded`): one line per claim, the best-supported member's sample, the counts
-    summed, the layers listed (`[N samples, M layers]`); prominent claims first, then rare, each
-    by count, ties by each layer digest's own rank. A numbers digest (`summ_numbers`) stays joint:
-    its five-number budget is fixed on purpose. A hierarchical merge (one layer over the cap)
-    keeps every chunk claim stated by `CHUNK_KEEP_MIN` = 5 or more samples even when the final
-    call drops it, and takes the final entries' counts from the chunk claims. Per item the judged
-    lines' layer histogram is logged (`row.summary_layers`, `extras.summary_layer_hist`,
-    `extras.summary_top_layer_share`). `wsbench report by_layer=True` writes
-    `layer_union_check.json` and a WARN line per family listing the items a single-layer row
-    passes and the all-layer row does not (`results.layer_union_check`; leads to audit).
-  - *Shared per-layer store* (`summ_store=<dir>`, final-run speed 2026-11-01): the cache is one
-    `cells.jsonl` per out dir, so a `layers=[L]` run and an all-layer union run in different out
-    dirs never saw each other's digest of L. With `summ_store=<dir>` (the same dir for every
+  that pass did, `n_fallback_events` included. Agentic keeps `summ_max=25`, `summ_rare=25`,
+  timeout 1800 s and `summ_fallback=none+claude-opus-5` (its digest runs on its Stage C pin
+  `claude-sonnet-5`); its digests run at the run's `concurrency=` under `itpm=`, like every
+  other family's.
+- **A failed digest call and `complete`:** a per-layer digest lost to a failed call (retries
+  exhausted) leaves its item in the partial counters; the item is digested and judged on its
+  remaining layers and the row can still be `complete=True`. The partial counters also hold
+  layers dropped by the evidence check, so they do not tell the two apart. `judge` / `run`
+  therefore print one stderr line per family whose calls failed (`<family>: N judge call(s)
+  failed after retries; affected cells are unjudged or their items were digested on fewer
+  layers`); a rerun into the same `out=` asks only the failed calls again.
+- **Per-layer digests, counts and refusals.**
+  - *Per-layer digests: the all-layer budget scales with the layers* (`summ_layers=union`;
+    `joint`, a single call over all layers, is an ablation stamped `-joint`). An item read at
+    several layers gets one digest per layer, each at the single-layer budget (`summ_max` +
+    `summ_rare`) and under the same cache key a `layers=[L]` run uses (`digest:<id>|<layer>`),
+    so every layer keeps its own rare tier and no layer crowds out another. The per-layer
+    digests are merged by key (`digest.merge_grounded`): one line per claim, the best-supported
+    member's sample, the counts summed, the layers listed (`[N samples, M layers]`); prominent
+    claims first, then rare, each by count, ties by each layer digest's own rank. A numbers
+    digest (`summ_numbers`) stays joint: its five-number budget is fixed on purpose. A
+    hierarchical merge (one layer over the cap) keeps every chunk claim stated by
+    `CHUNK_KEEP_MIN` = 5 or more samples even when the final call drops it, and takes the final
+    entries' counts from the chunk claims. Per item the judged lines' layer histogram is logged
+    (`row.summary_layers`, `extras.summary_layer_hist`, `extras.summary_top_layer_share`).
+    `wsbench report by_layer=True` writes `layer_union_check.json` and a WARN line per family
+    listing the items a single-layer row passes and the all-layer row does not
+    (`results.layer_union_check`; leads to audit).
+  - *Shared per-layer store* (`summ_store=<dir>`): the cache is one `cells.jsonl` per out dir,
+    so without a store a `layers=[L]` run and an all-layer union run in different out dirs do
+    not see each other's digest of L. With `summ_store=<dir>` (the same dir for every
     layer config of one arm's readouts) every digest whose bundle is exactly ONE layer's cells
     (a union part, a `layers=[L]` item, a one-layer item of a multi-layer run) and its sub-keys
     (chunks, final, halving level, token count) are also read from and written to
     `<dir>/<family>/L<layer>.jsonl` under the key `digest:<id>|<layer>` and the run's own request
     fingerprint (prompt version, model, effort, budget, rare tier, numbers, cap, lang, task note,
     bundle text, salt) plus the refusal-fallback setting, the cap and the overflow (the halving
-    level's own fingerprint does not key the cap). The union's per-layer step already sends
-    the byte-identical request a `layers=[L]` run sends, so a union run only adds its missing
-    layers, merge and judge calls; results are identical to a run without the store, no request
-    byte changed and the stamp stays `digest-v5`. A store row read is copied into the out dir's
+    level's own fingerprint does not key the cap). The union's per-layer step sends the
+    byte-identical request a `layers=[L]` run sends, so a union run only adds its missing
+    layers, merge and judge calls; results are identical to a run without the store, and the
+    stamp is the same. A store row read is copied into the out dir's
     own cache only on a local miss (`extras.n_store_rows_adopted`; the run's own success always
     wins, so a rerun adopts nothing); call-count extras (`n_chunk_calls`, …) count only the calls
     actually sent, as on any warm cache; `config.digest_store` records the resolved path, outside
@@ -160,15 +153,15 @@ per-layer digests are merged into the one judged digest (see "Audit fixes" below
     bundle (`chain_intermediates` all-layer, `summ_layers=joint`) and the stride ablation
     (ignores the store). Writers append whole lines
     (`cache.SharedLog`, `flock` where supported); a torn line is a miss, never a wrong row.
-  - *F2, per-claim counts.* Every digest entry carries the note-taker's `count`: the samples that
+  - *Per-claim counts.* Every digest entry carries the note-taker's `count`: the samples that
     make the SAME claim, not those that merely contain the key word (a month list or a restated
     question does not count). It is capped mechanically at the samples holding the key
     (`digest.claim_count` / `key_count`; a missing count falls back to that cap) and rendered as
-    `[N samples]` (`digest.support_text`). The old key-word bucket (`support_of`: one / few /
+    `[N samples]` (`digest.support_text`). The key-word bucket (`support_of`: one / few /
     several / many) is a diagnostic only.
-  - *F3, refused or collapsed digests.* introspection,
-    moral_rationale, user_modeling and model_specific_DM take the jailbreak route
-    (`summ_fallback=default+claude-sonnet-5-5`; Sonnet 5 before 2026-11-01). Out of halvings, or with a final call that is
+  - *Refused or collapsed digests.* introspection, moral_rationale, user_modeling and
+    model_specific_DM take the server-side refusal fallback plus a client-side refusal model
+    (`summ_fallback=default+claude-sonnet-5-5`). Out of halvings, or with a final call that is
     refused or too large, an item is judged on its chunk digests directly (`n_items_chunk_direct`)
     instead of being given up; layers whose chunks stayed unserved are listed in `partial`
     (`row.summary_partial_layers`, `extras.n_items_partial`); the refused / too-long subset is
@@ -178,41 +171,38 @@ per-layer digests are merged into the one judged digest (see "Audit fixes" below
     `row.summary_partial_undecided`; a failed, not refused, layer never undecides). A digest that kept fewer than
     `COLLAPSE_MIN` = 5 entries (or none) from `COLLAPSE_READOUTS` = 100 or more readouts is re-asked
     once and the fuller answer kept (`n_digest_reasked`, `n_digest_collapsed` = still collapsed).
-    An unsummarized item is undecided, never a fail (moral_rationale, user_modeling,
-    conjunctive_association, relational_multihop and role_bound_association used to score it a
-    fail; jailbreak_recognition scores an item undecided when both its digest models decline it, and keeps
-    plan 0037's rule for any other unsummarized item). A summary row whose ONLY shortfall is
+    An unsummarized item is undecided, never a fail (jailbreak_recognition scores an item
+    undecided when both its digest models decline it, and applies its own rule, stated in its
+    README, to any other unsummarized item). A summary row whose ONLY shortfall is
     final digest refusals that the family scores undecided stays complete
     (`runner.refusals_only`, `extras.complete_with_digest_refusals`); a failed judge call still
     makes it incomplete. `results` marks a row whose undecided
     share is over 20% **not measurable** (shown, never averaged), shows `(k undecided)` beside
     every headline, re-takes a prompt-only floor on the ids both decided
     (`[floor vs row on n shared]`) and reports a twin-bank pair (`results.PAIRED_FAMILIES`,
-    empty since plan 0058) on the ids decided in both; `prompt_only.freeze` counts digest refusals toward the floor's refusal share.
+    empty today) on the ids decided in both; `prompt_only.freeze` counts digest refusals toward
+    the floor's refusal share.
   - *Arithmetic (numbers digest).* The family passes its operands: the digest asks for
     `NUMBERS_SPARE` = 4 spare numbers, and a key that restates an operand takes a judged slot
-    only when nothing else is left. The first-number consensus marks (`consensus=True`,
-    `digest.consensus_claims`), the judge's `CONSENSUS_RULE` and `extras.consensus_band` were
-    retired on 2026-11-04 (`+generic-r7`); `collapse(consensus=)` remains, but no family sets it.
+    only when nothing else is left. `collapse(consensus=)` exists, but no family sets it.
 - **Refusal fallbacks** (`summ_fallback`): `default` passes the server-side refusal fallback
   (`fallbacks="default"`); `default+<model>` additionally re-runs a call still declined
-  after it once on that model, at the same level, before any halving (plan 0037 J10;
-  the four F3 families use `default+claude-sonnet-5-5`, i.e.
-  `digest.REFUSAL_MODEL`; Sonnet 5 before 2026-11-01). `<model>` is any model id (plan 0096):
+  after it once on that model, at the same level, before any halving (introspection,
+  moral_rationale, user_modeling and model_specific_DM use `default+claude-sonnet-5-5`, i.e.
+  `digest.REFUSAL_MODEL`). `<model>` is any model id:
   a refusal model on the other route than the digest model needs that route's key (checked
   before the first digest call, never on a dry run) and its re-run sends the reasoning of its
   own route (`llm.reasoning_for`: an OpenRouter model `{"effort": "minimal"}`, an Anthropic
-  one no effort key from an OpenRouter digest's settings), at the digest model's output cap;
-  a same-route re-run is unchanged. Since part 2 a client-side re-run sends
-  `digest_reasoning(<refusal model>, summ_effort)` (`Settings.reasoning_on`): a `claude-*`
-  refusal model `{"anthropic_effort": effort}` whatever the digest model's route, a non-Claude
-  one none at the default effort. **A non-Claude digest model has no fallback by default**: a
-  FAMILY-DEFAULT `summ_fallback` (`FAMILY_DEFAULTS`) becomes `none` for it (the validated Arm B
-  instrument), an explicit `none+<model>` is honoured on any route, and an explicit `default`
-  / `default+<model>` exits 2 (the server-side fallback is an Anthropic feature; for a digest
-  that follows the judge the exit comes from the runner's digest preflight, before any family
-  starts). On the `openai` route the up-front credential check builds the WIF token source.
-  `none+<model>` is that
+  one no effort key from an OpenRouter digest's settings), at the digest model's output cap.
+  A client-side re-run sends `digest_reasoning(<refusal model>, summ_effort)`
+  (`Settings.reasoning_on`): a `claude-*` refusal model `{"anthropic_effort": effort}` whatever
+  the digest model's route, a non-Claude one none at the default effort. **A non-Claude digest
+  model has no fallback by default**: a FAMILY-DEFAULT `summ_fallback` (`FAMILY_DEFAULTS`)
+  becomes `none` for it, an explicit `none+<model>` is honoured on any route, and an explicit
+  `default` / `default+<model>` exits 2 (the server-side fallback is an Anthropic feature; for a
+  digest that follows the judge the exit comes from the runner's digest preflight, before any
+  family starts). On the `openai` route the up-front credential check builds the WIF token
+  source. `none+<model>` is that
   client-side re-run alone, for a digest model that rejects server-side `fallbacks`
   (`claude-sonnet-5` answers the parameter with a 400): agentic_misalignment and
   jailbreak_recognition, whose digests run on their `claude-sonnet-5` judge pins, use
@@ -224,18 +214,19 @@ per-layer digests are merged into the one judged digest (see "Audit fixes" below
   `extras.digest_served_by` and the row's `summary_served_by`. The digest fingerprint does not key
   the fallback, so each fallback-served cache row records how it was served (`digest.SERVED_VIA`:
   `client` or `server`), and a row a client-side refusal model other than the run's own served
-  is a cache miss: a pre-switch row (no `SERVED_VIA`) served by a retired model
-  (`digest.RETIRED_REFUSAL_MODELS`, i.e. Sonnet 5) is re-asked, served by Sonnet 5.5 and
-  re-judged, never silently reused. Server-side-served and unserved rows stay cached.
+  is a cache miss: a row with no `SERVED_VIA` that a retired refusal model served
+  (`digest.RETIRED_REFUSAL_MODELS`, i.e. `claude-sonnet-5`) is re-asked, served by the run's
+  refusal model and re-judged, never silently reused. Server-side-served and unserved rows stay
+  cached.
 
-## Layered all-layer digest (`summ_layers=layered`, v1.1.0, `layered-v1`; budget x4 since v1.1.1)
+## Layered all-layer digest (`summ_layers=layered`, `layered-v1`)
 
-Camila 2026-11-02: "a single summary of the layer summaries for all evals, so one summarizer
-sees all readouts from a layer, and then another summarizer summarizes all the layer summaries
-and this goes to the judge." The default for a multi-layer config since bench v1.1.0.
+One summarizer sees all readouts of a layer; a second summarizer then summarizes the layer
+summaries, and that single summary goes to the judge. This is the default for a multi-layer
+config.
 
-- **Stage 1, per layer:** the per-layer digests of `summ_layers=union` (F1 above), unchanged:
-  byte-identical requests to a `layers=[L]` run, shared through `summ_store`.
+- **Stage 1, per layer:** the per-layer digests of `summ_layers=union` (Per-layer digests
+  above): byte-identical requests to a `layers=[L]` run, shared through `summ_store`.
 - **Stage 2, across layers:** ONE call per item (the digest model, Opus 5.5 by default) that
   reads every layer's digest, labelled by layer (`=== L<k> digest ===`), each entry with its tier,
   `[N samples]` count, statement, key and its verbatim readout sample under the sample's
@@ -253,17 +244,12 @@ and this goes to the judge." The default for a multi-layer config since bench v1
   best-supported) counts. The count is the answer's own count capped at the members' summed
   counts and floored at their number of layers; the layers are their union. A stage 2 for an
   item `undecide_partial` would drop (refused layers > 20%) is never asked.
-- **Budget:** `summ_layered_x` (default **4** since v1.1.1, Camila 2026-11-03 "4x is good"; 2 in
-  v1.1.0) times the single-layer `summ_max` / `summ_rare`, i.e. 40 prominent + 60 rare entries
-  under the defaults (100 + 100 for agentic_misalignment / knowledge_cutoff). Why 4: on s3d-rl600
-  the x2 layered union scored below the v1.0 mechanical union on 13 of 25 families, with the big
-  drops in agentic_misalignment and the regex / multi-token families (multilingual_typo,
-  multilingual_multihop, conjunctive_association); x4 recovers them (13 -> 11 down, unjudged
-  unchanged), while x8 overflows the stage-2 call's 32k output cap (`MAX_TOKENS`) and leaves items
-  unsummarized (sweep: `final64/UNION_COMPARE.md`, "Stage-2 budget sweep"). The stamp keys the
-  multiple against the v1.1.0 base (`LAYERED_STAMP_BASE` = 2): x2 stays unsuffixed
-  (`-layered-v1`, the v1.1.0 instrument, still selectable with `summ_layered_x=2`), any other
-  multiple, the x4 default included, is `-layered-v1x<k>` (`-layered-v1x4`).
+- **Budget:** `summ_layered_x` (default **4**) times the single-layer `summ_max` / `summ_rare`,
+  i.e. 40 prominent + 60 rare entries under the defaults (100 + 100 for agentic_misalignment /
+  knowledge_cutoff). A multiple of 8 overflows the stage-2 call's 32k output cap (`MAX_TOKENS`)
+  and leaves items unsummarized. The stamp keys the multiple against the base
+  `LAYERED_STAMP_BASE` = 2: `summ_layered_x=2` is unsuffixed (`-layered-v1`), any other
+  multiple, the default 4 included, is `-layered-v1x<k>` (`-layered-v1x4`).
 - **Overflow:** a stage-2 input over the global cap (`DEFAULT_TOKEN_CAP` divided by the worst
   real/estimate token ratio `_UNCOUNTED_RATIO`, by estimate) is cut into
   contiguous layer ranges, each condensed by the same call (labelled `L<a>-L<b>`), and the range
@@ -276,17 +262,17 @@ and this goes to the judge." The default for a multi-layer config since bench v1
 - **When:** `runner.judge_family` sets `summ_layers=layered` (`digest.resolve_layer_mode`) for a
   summary-mode run that reads more than one layer (`layers=`, else the sidecar's `layers`, else
   the file's) of a family whose digest is not a numbers digest, unless `summ_layers` is given.
-  A single-layer run, a hand-built `JudgeArgs` and `summ_layers=union` / `joint` are unchanged
-  from v1.0 (same instrument, same requests). The numbers digests (`chain_intermediates`,
-  `arithmetic_intermediates`) keep their v1.0 all-layer path: their five-number budget is fixed
-  by design (plan 0022 Part B) and their operand and tie passes act on the merged keys,
-  so a multiplied stage-2 budget does not apply (`summ_layers=layered` with `summ_numbers > 0` exits 2).
-  `jlens_concept_pr` is native-only.
+  A single-layer run, a hand-built `JudgeArgs` and `summ_layers=union` / `joint` do not use the
+  layered path: their instrument and requests are those described above. The numbers digests
+  (`chain_intermediates`, `arithmetic_intermediates`) keep their own all-layer path: their
+  five-number budget is fixed by design and their operand and tie passes act on the merged
+  keys, so a multiplied stage-2 budget does not apply (`summ_layers=layered` with
+  `summ_numbers > 0` exits 2). `jlens_concept_pr` is native-only.
 - **Stamps:** the instrument gains `-layered-v1x4` after the render tag
-  (`<PV>+digest-v5-task-extractive-layered-v1x4+sj-v10` under the v1.1.1 default; `-layered-v1`
-  for `summ_layered_x=2`, the v1.1.0 default) and `config.summarizer` carries
-  `layer_mode: "layered"` and `layered: {version, scale}`, so floors, freeze checks and judge
-  caches never mix with a v1.0 union. Stage-2 calls are cached in the out dir under
+  (`<PV>+digest-v5-task-extractive-layered-v1x4+sj-v10` under the default; `-layered-v1` for
+  `summ_layered_x=2`) and `config.summarizer` carries `layer_mode: "layered"` and
+  `layered: {version, scale}`, so floors, freeze checks and judge caches never mix a layered
+  row with a union row. Stage-2 calls are cached in the out dir under
   `layered:<id>|<layers>|d<depth>[|c<i>of<n>]` (never in `summ_store`); a row's
   `summary_layered_input_tokens` and `extras.summary.layered_input_tokens_{median,max}` log the
   stage-2 input size.
@@ -323,9 +309,8 @@ LAYER DIGESTS:
 ## Digest prompt
 
 System (`summ_variant=task`, the default, appends `DIGEST_TASK_LINE` filled with the item's task
-note; `summ_variant=blind` is the ablation. Camila 2026-11-01: the four multilingual families
-no longer run `summ_lang` (the option, `DIGEST_LANG_LINE` and the `language` field are gone);
-their digest gets a neutral task note instead):
+note; `summ_variant=blind` is the ablation. The digest of the four multilingual families gets
+a neutral task note):
 
 `DIGEST_SYSTEM`:
 

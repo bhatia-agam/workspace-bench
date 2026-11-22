@@ -6,10 +6,15 @@ into the shared package in `src/wsbench/` (client, judge config, cache, readout 
 results schema, registry, runner, CLI, `readplan` = the producer-facing read plan, `capable/` =
 the porting gate, `produce/` = the optional HF-transformers producer behind the `gpu` extra).
 `plans/` is the 2026-09-15..17 design history of the nine-family restructure, not a current
-pointer (`plans/README.md`). Public docs: `README.md`, `NOTICE.md`, `CITATION.cff`.
+pointer (`plans/README.md`). Public docs: `README.md`, `NOTICE.md`, `CITATION.cff`. The README is
+the newcomer's path (what it is, requirements, time and cost, install, `wsbench try`, running,
+outputs, checks, viewer, one table of the evals, credits); reference material lives in `docs/`
+(evals, running, tiers, judges, baselines, fast_subset, results_contract, porting, checks,
+judge_backends). `tests/test_readme_style.py` keeps dates, plan numbers and
+version-style labels out of the README's prose.
 
 ## Readout contract (input to every family)
-Stated once, in README §Quickstart (the contract block) and `docs/producing_readouts.md`; do not
+Stated once, in README §Run it (the contract block) and `docs/producing_readouts.md`; do not
 restate it here. Code facts only: `load_readouts` counts malformed lines (never fatal), keeps the
 first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missing cell).
 `wsbench convert-gen-dir gen_dir=GEN out=F.jsonl kind=prose|tokens` converts the in-house
@@ -19,11 +24,11 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
 - Default judge `claude-opus-5-5` (Anthropic; plan 0023, Camila 2026-10-29; Gemini 3.8 Flash via
   OpenRouter before). Pins: agentic_misalignment + jailbreak_recognition -> `claude-sonnet-5` (jailbreak: kept by
   the plan 0037 J8.5 smoke, `evals/safety/jailbreak_recognition/judge_smoke_v2.json`),
-  introspection -> `claude-opus-5-5` at default effort (reasons: README §Judges and the family
+  introspection -> `claude-opus-5-5` at default effort (reasons: `docs/judges.md` and the family
   READMEs). jlens runs all three stages on the default judge. Opus 5.5 cannot disable thinking:
   `llm.always_thinks` models get low effort unless a family sets `anthropic_effort`. Tests script
   OpenRouter-shaped fakes; `tests/conftest.py` routes them through the OpenRouter path.
-- Override precedence and what `pinned_instrument` means: README §Judges (the bullets under
+- Override precedence and what `pinned_instrument` means: `docs/judges.md` (the bullets under
   the table); not restated here.
 - Routes by model id: `claude-*` -> Anthropic SDK (`ANTHROPIC_API_KEY`, or with no key and
   `ANTHROPIC_PROFILE` set, the SDK's `ant auth login` profile; structured output,
@@ -53,7 +58,7 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   `aux_models["digest"]` > `DEFAULT_MODEL`; `digest.preflight_judge(extra, aux_models, judge)`
   must be given the resolved judge); `digest.digest_reasoning` gives a non-Claude digest no
   reasoning at the default effort, a family-default `summ_fallback` is `none` for it, an
-  explicit `default[+<model>]` exits 2, `summ_context=` sizes the budget (README §Judges for the
+  explicit `default[+<model>]` exits 2, `summ_context=` sizes the budget (`docs/judges.md` for the
   rule, the experiment and the validated Luna recipe).
   Shared: JSON-schema output, 11 jittered retries (`_ATTEMPTS = 12`) on 408/409/429/5xx/
   timeouts, process-wide thread-safe RPM pacer (`rpm=`, library default 240; CLI default 30000), `preflight` fail-fast,
@@ -884,7 +889,7 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   any other family that did not report
   `config.aggregate = "summary"`. Never bind a module constant (e.g. `PROMPT_VERSION`) as a
   default argument: tests monkeypatch it. digest-v5 (audit fixes, `docs/summarizer.md`
-  "Audit fixes"): a multi-layer item is digested per layer and merged (`summ_layers=union`, so
+  "Per-layer digests, counts and refusals"): a multi-layer item is digested per layer and merged (`summ_layers=union`, so
   a test's digest-call count is items x read layers; `joint` is the ablation, and every numbers
   digest stays joint), every entry carries a per-claim `count` rendered `[N samples]`, a
   collapsed digest (< 5 entries from >= 100 readouts) is re-asked once, an unsummarized item is
@@ -933,7 +938,7 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   jlens_comparison, which was `precision` until plan 0105: `registry.LEGACY_CATEGORIES`; the family
   `association` is in `association`, not `basic`, since plan 0107: `registry.LEGACY_FAMILY_CATEGORIES`); `basic_mt` and `bag_of_words` are gone. `wsbench list` shows it as `category`,
   with a `tier` column after it (`—` for a superseded or retired family). The viewer takes its
-  group headings from the README's 'The evals' section. `tests/test_tiers.py` pins the family
+  group headings from `docs/evals.md`. `tests/test_tiers.py` pins the family
   -> category map and the tier lists.
 
 ## Driver (`runner.py`, `cli.py`)
@@ -1000,7 +1005,7 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   unreadable results.
 
 ## Results contract (`results.py`)
-README §Results contract is the single statement (schema, `complete`, the macro row); `results.py`
+`docs/results_contract.md` is the single statement (schema, `complete`, the macro row); `results.py`
 implements it. Not restated here.
 
 ## Invariants
@@ -1065,3 +1070,28 @@ exits 2. Smoke `limit=3` live before any full run.
 in the environment, never committed; tests make no network calls. Work
 in a git worktree (prefix commands with `PYTHONPATH=src` when it shares the main checkout's
 `.venv`); PRs are gated by `.github/workflows/ci.yml` (ruff + pytest).
+
+## try, check, group=, the Batches backend, paths and the viewer
+
+- `try family=F [n=2] [readouts=FILE] [dry_run=True] [out=outputs/try/<F>]` (`cli.Try`,
+  `tryout.py`): the two-question try-out. Picks the first `n` plan rows that have readouts in
+  the file (default the toy `examples/readouts/<F>.jsonl`), prints each question with its
+  expected answer, then runs the ordinary `judge` (`items=<ids>`; `allow_missing=True` only for
+  the toy file) and `report`, lists every output path and, after a live run, the two viewer
+  commands. No logic of its own beyond the pick.
+- `wsbench check` (`cli.Check`, `checks.py`, `docs/checks.md`): one registry of gates and sanity
+  checks, each `(name, what it guards, "module:function")` with the function returning
+  `(ok, why)`. No name = the list; `check <name> [option=value]` = PASS / FAIL + one line (exit
+  0 / 1); `check all` = every check with no required option, then a SKIP line for each of the
+  others. Register an existing guard or test file (`checks.pytest_outcome`) instead of
+  rewriting it; external checks come in by dotted path through `$WSB_CHECKS`.
+- `group=<category>` on `plan` and `run` (`groups.py`): the families of one registry category
+  (`registry.CATEGORIES`). Its one addition is `groups.ALSO_IN`: `group=association` also
+  selects `role_bound_association`. `computation` is accepted for `computational`.
+- `judge_backend=batches` / `$WSB_JUDGE_BACKEND` (`judge_batches.py`, `docs/judge_backends.md`):
+  the opt-in Message Batches backend of Claude judge calls; the default stays live.
+- No absolute box path in `src` (`tests/test_paths.py`): a location outside the repo goes through
+  `wsbench.paths` (`external(var, rel)` = `$var`, else `$WSB_DATA_ROOT/<rel>`, default root
+  `/workspace`).
+- `wsbench viewer ingest|serve` (`viewer/`, `src/wsbench/viewer/README.md`): the results
+  viewer; needs the `viewer` extra.

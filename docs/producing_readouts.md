@@ -30,7 +30,7 @@ render it, which token positions to read, and at which layers:
 | `render` | how to turn the row into a token sequence; the vocabulary is `wsbench.readplan.RENDERS` (`plain`, `chat`, `chat_context`, `chat_prefill`, `chat_dm`, `chat_summarize`, `bare`, `captured`) |
 | `text` / `messages` / `system` / `prefill` / `suffix` / `assistant` | the pieces the render composes; `captured` rows ship `extra.input_ids` instead |
 | `positions` | a rule over the rendered tokens (below); `wsbench.readplan.resolve(rule, tokens)` turns it into indices once you have tokenized the render |
-| `lite_positions` / `lite_layers` | the `reads=lite` site (plan 0032): a rule over the row's FULL positions (`same`, `final_token`, `offset_from_end {k}`, `offsets_from_end {ks}`, `last_n {n}`, `positions {…}`, `every_nth_plus_tail {n, tail}`) and its layers (absent = the full layers). Lite is always a subset of full, so one full read serves both; `wsbench run reads=lite` re-judges the same file. A file produced `reads=lite` (sidecar `reads: "lite"`) already holds only the lite site and is judged as it is: the rule is never applied twice. When every row's rule is `same` at the full layers (association, conjunctive_association, the directed-modulation families, user_modeling, basic_readout_st: plan 0061), a lite run gets the full read's completeness checks, and a declared-lite file with one position per cell exits 2 (produced under a superseded lite rule) |
+| `lite_positions` / `lite_layers` | the `reads=lite` site: a rule over the row's FULL positions (`same`, `final_token`, `offset_from_end {k}`, `offsets_from_end {ks}`, `last_n {n}`, `positions {…}`, `every_nth_plus_tail {n, tail}`) and its layers (absent = the full layers). Lite is always a subset of full, so one full read serves both; `wsbench run reads=lite` re-judges the same file. A file produced `reads=lite` (sidecar `reads: "lite"`) already holds only the lite site and is judged as it is: the rule is never applied twice. When every row's rule is `same` at the full layers (association, conjunctive_association, the directed-modulation families, user_modeling, basic_readout_st), a lite run gets the full read's completeness checks, and a declared-lite file with one position per cell exits 2 (it was produced under a superseded lite rule) |
 | `layers` | the decoder layers to read (residual stream after that layer) |
 | `note` | the family's read site in one line; the family README has the rest |
 
@@ -44,8 +44,8 @@ Positions rules, all handled by `resolve`:
 | `all` | every token |
 | `all_from_end` | every token, reported as negative offsets `-n..-1` (arithmetic intermediates: the bank and judge count from the end) |
 | `positions {positions}` | explicit indices (jailbreak, J-lens precision) |
-| `line_one_newline` | the newline token that ends line one (poetry's lite site, and its full read before plan 0038) |
-| `line_one_tail {anchor?}` | line one's last word through the newline that ends it: the word's tokens, any punctuation after it, and that newline (poetry's full read, plan 0038; `couplet-ahead-head` → `" ahead"`, `","`, `"\n"` = positions 14-16). `anchor: "last_newline"` ends it at the last newline anywhere (adapted `chat_prefill` items) |
+| `line_one_newline` | the newline token that ends line one (poetry's lite site) |
+| `line_one_tail {anchor?}` | line one's last word through the newline that ends it: the word's tokens, any punctuation after it, and that newline (poetry's full read; `couplet-ahead-head` → `" ahead"`, `","`, `"\n"` = positions 14-16). `anchor: "last_newline"` ends it at the last newline anywhere (adapted `chat_prefill` items) |
 | `from_token {token}` | from the first token with that text through the end (chain's question span) |
 | `from_text_last_token {text}` | from the LAST token of the (last) occurrence of `text` through the end (chain: "The starting number is 23" reads from the "3") |
 | `from_last_sentence_start` | from the first token of the last user turn's final sentence through the end (user modelling) |
@@ -86,10 +86,10 @@ layer; `layers=20,44` any combination. A file may hold more layers than the plan
 layer is judged. `wsbench run layers=44` judges one layer (a complete, defined variant);
 `layers=each` runs the all-layer config plus one sub-run per layer in the file.
 
-**The sidecar (plan 0032 §2.9).** A producer declares how it sampled, beside the file:
+**The sidecar.** A producer declares how it sampled, beside the file:
 `<family>.jsonl.meta.json` = `{"reads": "full|lite", "sampling": "bullet4|prose1|tokens10",
 "reader": "<method>", "arm": "<arm>", "layers": [...], "plan_sha": "<reads.plan_sha(family)>"}`.
-The rule (decision Q1): a SINGLE-bullet oracle lens (the `*-x4` arms) gets 4 separate
+The rule: a SINGLE-bullet oracle lens (the `*-x4` arms) gets 4 separate
 samples per activation (`bullet4`); every other prose method, the multi-bullet s3d O-lens and NLA
 included, ONE sample per activation (`prose1`); a token lens its top 10 (`tokens10`). The
 sampling is declared, never inferred from bullet shape; `sampling=` on the CLI overrides it.
@@ -106,14 +106,14 @@ uv run wsbench run all=True readouts_root=outputs/readouts/mylens out=outputs/ju
 uv run wsbench report dir=outputs/judged/mylens
 ```
 
-Every run is in summary mode by default (plan 0024: each item's readouts go to one passive digest,
+Every run is in summary mode by default (each item's readouts go to one passive digest,
 judged once; `docs/summarizer.md` § Item digest). Add `opts=aggregate=native` for the per-cell
 rules, into a separate `out=` dir.
 
-**Throughput (plan 0092).** `judge` and `run` default to `concurrency=256` (calls in flight per
+**Throughput.** `judge` and `run` default to `concurrency=256` (calls in flight per
 family), `rpm=30000` (requests a minute) and `itpm=60000000` (estimated input tokens a minute,
 a call counted as its prompt's characters / 3; `itpm=0` = off); `rpm` and `itpm` are budgets of
-the whole run. `run` judges eight families at a time (`family_workers=8`; `family_workers=0` = all at once, `N` caps it). Several `wsbench judge` processes started by hand on one account share its limits: set `WSB_SLOTS=<dir>:<n>` in each to cap the API calls in flight across all of them (unset = off for `judge`; 29 families at 256 each exceeded a 15M output-tokens-a-minute limit without it). On a rate-limited key lower `rpm=`, then `itpm=`, then `concurrency=`. None of these
+the whole run. `run` judges eight families at a time (`family_workers=8`; `family_workers=0` = all at once, `N` caps it). Several `wsbench judge` processes started by hand on one account share its limits: set `WSB_SLOTS=<dir>:<n>` in each to cap the API calls in flight across all of them (unset = off for `judge`; 29 families at 256 each exceed a 15M output-tokens-a-minute limit without it). On a rate-limited key lower `rpm=`, then `itpm=`, then `concurrency=`. None of these
 changes a cache key or a score. A family whose calls failed after their retries prints
 `<family>: N judge call(s) failed after retries; ...` on stderr; rerun into the same `out=` to
 ask only those again.
@@ -124,10 +124,10 @@ instead of live requests: same requests, same caches, half the token price
 
 **One process per family (`run procs=True`, the default).** `run` starts one `wsbench judge`
 process per family, `family_workers` at a time: one Python process is one CPU core, and eight
-families at `concurrency=256` inside one process dropped connections (2026-11-17), while a process
-per family at the same settings dropped none.
+families at `concurrency=256` inside one process drop connections, while a process per family
+at the same settings drops none.
 
-- The run itself does what it did before, in the same order: the `--fast` membership check, the
+- The run itself does the up-front work, in this order: the `--fast` membership check, the
   readouts check (and the waiting of `wait=`), the ATI scope check and one preflight per judge and
   digest model; a failure there exits before any process starts. Each judge process then
   preflights its own models again (one or two tiny calls per family). Results, messages, per-family
@@ -144,7 +144,7 @@ per family at the same settings dropped none.
   running ones finish and exits 130; a second Ctrl-C terminates them. SIGTERM and SIGHUP terminate
   them at once.
 - `procs=False`, or `WSB_RUN_PROCS=0` in the environment (the key wins), judges the families in
-  threads of one process as before; `dry_run=True` and `layers=each` always do.
+  threads of one process; `dry_run=True` and `layers=each` always do.
 - `judge outcome=PATH` is how a judge process reports back to its `run` (a small JSON file with
   the family's status and exit code); it is not meant for other callers.
 
@@ -191,11 +191,10 @@ uv run wsbench run --fast all=True readouts_root=outputs/readouts/mylens-fast ou
 
 ## Fast subset (`--fast`, `--fast-safety`)
 
-`--fast` judges the frozen subset `fast-v3` (plans 0090 / 0094; `evals/fast/README.md`; `fast-v2`
-until 2026-11-20, the same items): 22
-families, `fast-v1` without `jailbreak_recognition` and `agentic_misalignment`. `--fast-safety`
-(plan 0095) judges `fast-safety-v2` (`fast-safety-v1` until 2026-11-20, the same items): those 22 plus the two safety families, 24 in all; every
-command below takes it in place of `--fast`. **A full
+`--fast` judges the frozen subset `fast-v3` (`evals/fast/README.md`): 22 families, none of them
+`jailbreak_recognition` or `agentic_misalignment`. `--fast-safety` judges `fast-safety-v2`:
+those 22 plus the two safety families, 24 in all; every command below takes it in place of
+`--fast`. **A full
 readouts file is always judgeable with `--fast` / `--fast-safety`**: the judge keeps the fast
 items itself, so existing readouts need no re-read. To read only what the fast subset needs:
 
@@ -208,10 +207,10 @@ uv run wsbench run --fast all=True readouts_root=outputs/readouts/mylens-fast ou
   positions rule for every `fast-v3` family, so a producer of the full plan needs nothing new.
 - **`--fast-safety` only** (this bullet and the next; no `fast-v3` row carries a fast positions
   rule, and `--fast` does not plan or judge these two families): `agentic_misalignment` and
-  `jailbreak_recognition` rows carry `{"kind": "fast_of", "full": <the full rule>, "fast":
-  <the fast rule>}` and `extra.fast = "fast-safety-v2"` (`"fast-safety-v1"` / `"fast-v1"` in those versions' plans, the
-  same rows otherwise): the fast rule applied WITHIN the full rule's
-  positions. `last_n {n}` = the last n of them; `punct_special` = those whose token is
+  `jailbreak_recognition` rows carry
+  `{"kind": "fast_of", "full": <the full rule>, "fast": <the fast rule>}` and
+  `extra.fast = "fast-safety-v2"` (`"fast-safety-v1"` / `"fast-v1"` in the plans of those
+  subsets, the same rows otherwise): the fast rule applied WITHIN the full rule's positions. `last_n {n}` = the last n of them; `punct_special` = those whose token is
   punctuation, a newline token or a special token (`wsbench.readplan.is_fast_site`), else the
   last full position.
 - Resolve it with `wsbench.readplan.resolve(rule, tokens)`. Unlike `lite_of`, `fast_of` /
@@ -224,26 +223,23 @@ uv run wsbench run --fast all=True readouts_root=outputs/readouts/mylens-fast ou
   the `--fast-safety` plan) and `"plan_sha"` = the FAST plan's sha
   (`wsbench.reads.fast_plan_sha(family)`, i.e. `plan_sha_rows` over the rows `wsbench plan --fast`
   / `--fast-safety` wrote), with `"reads": "full"`. A file that declares `fast` is judged only
-  with `--fast` / `--fast-safety`, and code that predates plan 0090 refuses it on the sha
-  mismatch. `wsbench produce family=F --fast` / `--fast-safety` does all of this.
-- A file declaring another version is judged when that version reads the family's same items
+  with `--fast` / `--fast-safety`. `wsbench produce family=F --fast` / `--fast-safety` does all of this.
+- A file declaring another subset id is judged when that subset reads the family's same items
   at the same positions (`fast.same_reads`, per family: `read_ids` and the `positions` rule;
-  the declared `plan_sha` is still checked). `fast-v3` and `fast-safety-v2` (2026-11-20) are
-  `fast-v2` and `fast-safety-v1` with `conjunctive_association` pinned to its bank v6: its reads
-  are unchanged, so its FAST files declaring `fast-v1`, `fast-v2` or `fast-safety-v1` are judged
-  as they are (only its old RESULT rows are stale). The five versions read every family they
-  share the same way, and what follows for the three older versions holds
-  for the two new ones too. The three versions `fast-v1`, `fast-v2` and `fast-safety-v1` hold
-  identical entries for every
-  family they share, so a file declaring any of them is judged under either flag for a family
-  of the subset being judged (a `fast-v2` file of the 22 families under `--fast-safety`, a
-  `fast-v1` or `fast-safety-v1` file of the 22 under `--fast`, a `fast-v1` jailbreak / agentic
-  file under `--fast-safety`). Its `plan_sha` is checked as the declared version's own: the two
-  reduced families' rows carry the version in `extra.fast`, so their sha differs between
-  `fast-v1` and `fast-safety-v1` (`fast_plan_sha(family, declared="fast-v1")`); the other 22
-  have one sha. A file whose declared version does not hold the family (a jailbreak file
-  declaring `fast-v2`) and any other declared version are refused; code that predates plan 0094
-  refuses a `fast-v2` file, and code that predates plan 0095 a `fast-safety-v1` one.
+  the declared `plan_sha` is still checked). The five subset files (`fast-v1`, `fast-v2`,
+  `fast-v3`, `fast-safety-v1`, `fast-safety-v2`) read every family they share the same way, so
+  a file declaring any of them is judged under either flag for a family of the subset being
+  judged (a `fast-v2` file of the 22 families under `--fast-safety`, a `fast-v1` or
+  `fast-safety-v1` file of the 22 under `--fast`, a `fast-v1` jailbreak / agentic file under
+  `--fast-safety`). `fast-v3` and `fast-safety-v2` equal `fast-v2` and `fast-safety-v1` except
+  that `conjunctive_association` is pinned to its current bank: its reads are the same, so its
+  FAST files declaring `fast-v1`, `fast-v2` or `fast-safety-v1` are judged as they are (only
+  its RESULT rows under those ids are stale). A file's `plan_sha` is checked as the declared
+  subset's own: the two reduced families' rows carry the subset id in `extra.fast`, so their
+  sha differs between `fast-v1` and `fast-safety-v1`
+  (`fast_plan_sha(family, declared="fast-v1")`); the other 22 have one sha. A file whose
+  declared subset does not hold the family (a jailbreak file declaring `fast-v2`) and any other
+  declared id are refused.
 - `--fast` / `--fast-safety` take full reads only (no `reads=lite`), on the registered
   Qwen3.6-27B banks only.
 
@@ -281,24 +277,22 @@ in the carrier prompt's `<activation>` slot as `alpha · unit(h)`, the adapter o
 and on while generating; `nla` runs Karvonen's reader with the vector added norm-matched at its
 marker token. Methods are plain classes behind one `read(h, layer)` protocol, so a new lens is a
 few lines. Sampling for the verbalizers is `Sampling(temperature=1.0, top_p=0.95, top_k=64,
-max_new_tokens=256, k=1)`, the settings the in-house arms used.
+max_new_tokens=256, k=1)`, the settings of the in-house arms.
 
 Two spellings, on purpose: the read-site `token` is `tokenizer.decode([id])`, exactly what the
 banks store (`"\n"`, `" öffnen"`, `"<|im_end|>"`); the ranked `tokens` of a token lens are the
 byte-level BPE strings with `Ġ`/`▁` shown as a space (`" led"`, and `"çļĦç»ĵæŀľ"` for 的结果).
 `wsbench.readouts.load_readouts` decodes each of those to text once, on load
 (`wsbench.bpe.decode_token`: `"çļĦç»ĵæŀľ"` -> `"的结果"`, `"Ċ"` -> `"\n"`), so every summarizer,
-judge and regex sees text. Until 2026-10-29 only hallucination, jlens_concept_pr's reference
-files, summary mode and agentic_misalignment's read-site context decoded; every other family saw non-ASCII tokens as mojibake. Write the
-vocabulary strings. A string that does not decode cleanly is kept as written: a token holding
+judge and regex sees text. Write the vocabulary strings. A string that does not decode cleanly is kept as written: a token holding
 part of a character stays in its byte-level spelling, and most already-decoded text survives
 (`"café"`, `"się"`), but decoded text that happens to spell valid UTF-8 in the byte table
 (`"Ã©"`) is decoded again.
 `pos` is the index the plan resolves: absolute, except the two rules that count from the end
 because their banks and judges do — `offset_from_end` (some multihop items) and `all_from_end`
 (arithmetic intermediates) — whose rows carry the negative offset (`-8`). A single-layer lens reads at its trained layer whatever the
-plan lists: `nla` is layer 42 (not on the benchmark grid; the in-house L44 NLA numbers were
-off-layer and are superseded). `nla` also loads its own copy of the reader (a second 27B on the
+plan lists: `nla` is layer 42 (not on the benchmark grid; in-house NLA numbers read at L44
+are off-layer and superseded). `nla` also loads its own copy of the reader (a second 27B on the
 same device), so it wants an H200; the other methods fit one H100.
 
 What it is not: fast. It reads one prompt at a time on one GPU, which is right for a token
@@ -310,7 +304,7 @@ runs fan that out over Modal.
 - **Model-dependence.** The banks were gated on Qwen3.6-27B; `wsbench capable` re-runs that gate on
   another model, and `AGENTS.md` says which families port, which need re-gating and which need
   re-generating.
-- **Sampling.** The in-house arms used k=1, temperature 1.0, top-p 0.95, top-k 64, max 256 new
+- **Sampling.** The in-house arms use k=1, temperature 1.0, top-p 0.95, top-k 64, max 256 new
   tokens for prose lenses and top-10 for token lenses; the judges accept any k.
 - **Steering.** `introspection` rows carry `extra.steering` (a concept or gaussian vector
   added at layer 12 over a token span, `h <- h + beta * ||h|| * v / ||v||`); the producer must
@@ -319,5 +313,4 @@ runs fan that out over Modal.
   `wsbench produce` applies the steer itself (a forward hook on the inject layer's output over
   the span; `type: none` rows are a plain forward). Any other steering type is refused.
 - **A family without text.** `jlens_concept_pr` ships captured token ids and positions, not
-  prompts: its items are the model's own activations, read by re-feeding those ids
-  (`hallucination`, the other such family, left for HallucinationBench, plan 0040).
+  prompts: its items are the model's own activations, read by re-feeding those ids.
