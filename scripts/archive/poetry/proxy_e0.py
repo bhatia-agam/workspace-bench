@@ -5,7 +5,7 @@ generation, one x4 generation, one token list) where the gold or each distractor
 ``n(gold) > 0``. Cross-item null: the same with item ``(k + 37) mod n``'s options (gold and
 distractors of another couplet, checked against this item's readouts).
 
-    python scripts/poetry/proxy_e0.py --bank evals/basic/poetry/items_v2.json \\
+    python scripts/archive/poetry/proxy_e0.py --bank evals/basic/poetry/items_v2.json \\
         --arm s3d=PATH:prose1 --arm onchat=PATH:bullet4 ... --out e0.json
 """
 
