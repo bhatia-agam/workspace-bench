@@ -514,7 +514,7 @@ def export_model(key: str) -> dict:
                 for i in items_of(jl(NG / ngs / "bank" / f"{fam}.json"))
             }
             bank = [i for i in bank if str(i.get("id") or i.get("name")) in gold_items]
-        from wsbench.viewer.build import view_item
+        from wsbench.item_view import view_item
 
         if gated:  # the frozen bank's own eval render (poetry: "gate_variant does NOT affect the eval read")
             import dataclasses

@@ -746,7 +746,7 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   another category = the directory pair, its `group=`, `registry.LEGACY_FAMILY_CATEGORIES`
   (family -> the category it left; `repo_path` resolves a stored `evals/<left>/<family>/...`
   string and `_moved_hint` names the new place for a missing `WSB_BANK_FILE_*`),
-  `viewer.build.GROUPS`, `scripts/migrate_0101.py`'s `LATER_MOVES` (NOT its `CATEGORY`, which
+  `scripts/migrate_0101.py`'s `LATER_MOVES` (NOT its `CATEGORY`, which
   stays the layout `apply` made: the script's tests replay it; `path_today` applies a later
   move only to a file that is no longer at its applied path; `tests/test_migrate_0101.py` has
   the `moved_since` table), and the manifest ledger: the only row that moves is
@@ -933,8 +933,8 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   computational, association, safety, anti_bag_of_features, logical_processing, model_specific,
   jlens_comparison, which was `precision` until plan 0105: `registry.LEGACY_CATEGORIES`; the family
   `association` is in `association`, not `basic`, since plan 0107: `registry.LEGACY_FAMILY_CATEGORIES`); `basic_mt` and `bag_of_words` are gone. `wsbench list` shows it as `category`,
-  with a `tier` column after it (`—` for a superseded or retired family). `viewer.build.GROUPS`
-  carries the same titles over its unchanged family set. `tests/test_tiers.py` pins the family
+  with a `tier` column after it (`—` for a superseded or retired family). The viewer takes its
+  group headings from the README's 'The evals' section. `tests/test_tiers.py` pins the family
   -> category map and the tier lists.
 
 ## Driver (`runner.py`, `cli.py`)

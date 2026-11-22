@@ -40,8 +40,7 @@ uv run wsbench viewer serve
 
 `adapter=bank` on a workspace-bench checkout adds every subject model's question set
 (`adapted/<model>/`), so the model dropdown lists them. Ingest is idempotent: an unchanged
-source is skipped. `wsbench viewer --help` lists every key; `wsbench viewer bank` still builds
-the static bank browser.
+source is skipped. `wsbench viewer --help` lists every key.
 
 ## Where things go
 
@@ -64,10 +63,8 @@ the static bank browser.
 - Subsets: the dropdown offers **Core** (the default tier, where a core eval has a full-run
   score: the core evals' rows of the full run and the core macro), **Full bench**, **Fast
   subset**, **Fast subset + safety** and **ATI**, each only where the store has data for it.
-- Family keys: eight keys changed on 2026-11-20 (plan 0101: `multihop_mt` became `multihop`,
-  `multihop` became `multihop_st`, and the same for `basic_readout`, `multilingual`, `typo`).
-  Ingest reads a run tree written before that as the family that wrote it, by its content
-  (`registry.dir_family`), and stores it under today's key.
+- Family keys: a run tree written under an earlier name of an eval is read as the family that
+  wrote it, by its content (`registry.dir_family`), and stored under the current key.
 
 ## What the page can and cannot say per layer
 

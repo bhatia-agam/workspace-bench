@@ -349,7 +349,8 @@ today's items; ids already in the gate log are SKIPPED unless `regate=true`.
   references/families.md, top).
 - multihop_st and the bridge families also gate every bridge question: the bridge is the scored latent.
 - Own-answer families (poetry, basic_readout_st implicit) stamp the subject's own word as the gold.
-- Then `python -m wsbench.viewer.build` and look at the failures per family. Check the answers
+- Then read the failures per family in `adapted/<model>/gate/<family>.jsonl` (one record per
+  candidate: the item, the subject's answers, the gate verdict). Check the answers
   themselves before you choose a knob: "right idea, wrong format", "wrong language" and "refused"
   each need a different fix from "doesn't know".
 - A grading miss (a valid alias or translation) is a grader bug. Fix the forms or use `llm=opus`.

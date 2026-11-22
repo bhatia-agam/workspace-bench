@@ -53,7 +53,7 @@ def _orig_rate(item: dict) -> float | None:
 
 
 def _subfamily(item: dict) -> Any:
-    """The item's subfamily label; an agentic_misalignment clean twin (plan 0031, ``arm:
+    """The item's subfamily label; an agentic_misalignment clean twin (``arm:
     "twin"``) is shown as its partner's category plus ``twin``, so it never reads as a misaligned
     scenario."""
     sub = item.get("subfamily") or item.get("variant") or item.get("category")
