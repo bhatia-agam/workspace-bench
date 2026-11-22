@@ -12,6 +12,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+from wsbench import paths
+
 from . import store
 
 BUGGY = "buggy_code"
@@ -240,7 +242,7 @@ POOL_SHA256: dict[str, str | None] = {
     # plan 0078 (built 2026-11-06 from gw frozen_v2 2027ef208 + /root/tmp/mmh-out cands files)
     "mmh": "2adc5f0c724c51add14a4a7cc8a8c8cd30ada4a19ec027b8b040d103571443f8",
 }
-DEFAULT_POOL_DIR = "/workspace/wsb-runs/pools"
+DEFAULT_POOL_DIR = str(paths.devbox("wsb-runs/pools"))
 
 
 def pool_dir() -> Path:
