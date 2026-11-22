@@ -5,7 +5,7 @@ import json
 import re
 import sqlite3
 import unicodedata
-from collections.abc import Iterable
+from collections.abc import Callable, Iterable
 from pathlib import Path
 from typing import Any
 
@@ -61,15 +61,18 @@ def strings(value: Any, limit: int = 24) -> list[str]:
 class CellWriter:
     """Buffers cell rows (and their text) into a run database."""
 
-    def __init__(self, con: sqlite3.Connection) -> None:
+    def __init__(self, con: sqlite3.Connection, name: Callable[[Path], str] | None = None) -> None:
+        """``name`` gives the address recorded for a readout file (default: its path); an
+        ingest from a download cache records where the file lives, not the cache copy."""
         self.con = con
+        self.name = name
         self.next_id = (con.execute("SELECT max(id) FROM cell").fetchone()[0] or 0) + 1
         self.cells: list[tuple] = []
         self.texts: list[tuple] = []
         self.sources: dict[str, int] = {}
 
     def source(self, path: Path) -> int:
-        key = str(path)
+        key = self.name(path) if self.name else str(path)
         if key not in self.sources:
             cur = self.con.execute(
                 "INSERT OR IGNORE INTO source (path, size) VALUES (?, ?)",
@@ -122,3 +125,22 @@ def sample_texts(row: dict) -> list[str]:
         parts = [t[0] if isinstance(t, list | tuple) and t else t for t in tokens]
         return [" · ".join(str(p).strip() or repr(p) for p in parts)]
     return []
+
+
+def remote_source(con: sqlite3.Connection, eval_name: str, address: str, size: int) -> None:
+    """Record a readout file that was not read at ingest: the page reads a question's cells
+    from it on demand (``readout_file``)."""
+    con.execute("INSERT OR IGNORE INTO source (path, size) VALUES (?, ?)", (address, size))
+    src = con.execute("SELECT src FROM source WHERE path = ?", (address,)).fetchone()[0]
+    con.execute("INSERT OR IGNORE INTO readout_file VALUES (?, ?)", (eval_name, src))
+
+
+def text_flags(samples: list[str], pattern: re.Pattern[str] | None, quotes: list[str]) -> int:
+    """The string flags of one cell: an expected answer, or a judge quote, in a sample."""
+    folded = [fold(s) for s in samples]
+    flags = 0
+    if pattern is not None and any(pattern.search(s) for s in folded):
+        flags |= store.HAS_EXPECTED
+    if any(fold(q) in s for q in quotes for s in folded):
+        flags |= store.HAS_QUOTE
+    return flags

@@ -5,8 +5,8 @@ import copy
 import json
 import re
 import zlib
-from collections import defaultdict
-from collections.abc import Iterable, Mapping
+from collections import Counter, defaultdict
+from collections.abc import Callable, Iterable, Mapping
 from pathlib import Path
 from typing import Any
 
@@ -14,7 +14,14 @@ from wsbench import fast, nocot, registry
 from wsbench import results as wsb_results
 from wsbench.item_view import view_item
 from wsbench.viewer import gates, meta, store
-from wsbench.viewer.ingest.common import CellWriter, fold, sample_texts, strings, term_pattern
+from wsbench.viewer.ingest.common import (
+    CellWriter,
+    fold,
+    remote_source,
+    sample_texts,
+    strings,
+    term_pattern,
+)
 
 BENCH = "wsb"
 ORIGINAL = "qwen3.6-27b"  # the model the registered banks are for
@@ -30,7 +37,8 @@ GOLD_KEYS = (
 )  # fmt: skip
 LAYER_VERDICT_KEYS = ("expressed", "pass", "correct", "hit")  # a native row's per-layer verdict
 GOLD_INDEX_KEYS = ("gold_idx", "gold_position")
-METHODS = ("olens", "nla", "jlens", "logit_lens", "other")
+METHODS = ("olens", "nla", "jlens", "logit_lens", "continuation", "other")
+CORE = "core"
 
 
 def guess_method(lens: str, reader: str | None = None, kind: str | None = None) -> str:
@@ -441,6 +449,7 @@ def _unit_outcomes(family: str, result: wsb_results.FamilyResult) -> dict[str, f
 def ingest_family(
     con, cat, rid: str, model: str, family: str, fdir: Path, readout_file: Path | None,
     known: dict[str, dict], copy_text: bool, only: set[str] | None,
+    source_name: Callable[[Path], str] | None = None,
 ) -> dict[str, Any]:  # fmt: skip
     """One family of one run: verdict rows, judge calls, cells; returns its catalog facts."""
     result = wsb_results.read_results(fdir)
@@ -490,7 +499,7 @@ def ingest_family(
     seen_layers: dict[str, dict[int, int]] = defaultdict(dict)  # item -> layer -> flags OR
     n_cells = 0
     if readout_file is not None:
-        writer = CellWriter(con)
+        writer = CellWriter(con, source_name)
         src = writer.source(readout_file)
         pats: dict[str, Any] = {}
         qfold = {i: [fold(q) for q in qs] for i, qs in quotes.items()}
@@ -656,6 +665,71 @@ def _is_default(stamp: str, family: str) -> bool:
     return stamp == fast.DEFAULT or fast.compatible(stamp, family, against=fast.DEFAULT)
 
 
+DERIVED_FAST = "the full run's verdicts restricted to the frozen fast questions"
+DERIVED_CORE = "the core evals' rows of the full run"
+
+
+def write_set(cat, rid: str, subset: str, derived: bool, origin: str, note: str = "") -> None:
+    """Record that the run has scores for ``subset`` and whether they were judged as that set
+    or derived from the full run (only where the set has a score)."""
+    have = cat.execute(
+        "SELECT 1 FROM score WHERE run_id = ? AND subset = ? AND kind = 'lens' LIMIT 1",
+        (rid, subset),
+    ).fetchone()
+    if have:
+        cat.execute(
+            "INSERT OR REPLACE INTO run_set VALUES (?,?,?,?,?)",
+            (rid, subset, int(derived), origin, note),
+        )
+
+
+def write_core_scores(
+    cat, rid: str, judged: Path | None, results: Mapping[str, Any] | None,
+    families: list[str] | None = None,
+) -> None:  # fmt: skip
+    """The core tier of a full run, stored: the core evals' rows as the full run has them and
+    the core macro (the run's own report.json ``core_macro`` when it has one, else the bench's
+    core rule over these results, else the mean of the stored rows). ``families`` replaces the
+    benchmark's core list (a run that names its own); its macro is then the mean of the rows."""
+    from wsbench import tiers
+
+    names = set(families) if families else set(tiers.CORE)
+
+    rows = cat.execute(
+        "SELECT * FROM score WHERE run_id = ? AND subset = 'full' AND layer = -1", (rid,)
+    ).fetchall()
+    core = [r for r in rows if r["eval"] in names]
+    if not any(r["kind"] == "lens" for r in core):
+        return
+    for r in core:
+        cat.execute(
+            "INSERT OR REPLACE INTO score VALUES (?,?,?,?,?,?,?,?,?,?)",
+            (rid, r["eval"], CORE, -1, r["kind"], r["value"], r["ci_lo"], r["ci_hi"], r["n"],
+             r["note"]),
+        )  # fmt: skip
+    value, n, note = None, None, ""
+    report = {}
+    if judged is not None and (judged / "report.json").exists():
+        report = json.loads((judged / "report.json").read_text(encoding="utf-8"))
+    own = report.get("core_macro")
+    if isinstance(own, dict) and own.get("value") is not None:
+        value, n = own["value"], len(own.get("families") or [])
+        note = "the run's own core macro (report.json)"
+    elif not families and results is not None:
+        try:
+            got = wsb_results.core_macro(list(results.values()))
+        except (SystemExit, KeyError, TypeError, ValueError, AttributeError):
+            got = None
+        if got and got.get("value") is not None and got.get("families"):
+            value, n = got["value"], len(got.get("families") or [])
+            note = "core macro by the bench's rule over the full run's rows"
+    if value is None:
+        vals = [r["value"] for r in core if r["kind"] == "lens" and r["value"] is not None]
+        value, n = sum(vals) / len(vals), len(vals)
+        note = f"core macro: the mean over {n} of {len(names)} core evals"
+    _score(cat, rid, MACRO, CORE, -1, "lens", value, None, n, note)
+
+
 def fast_subset_of(results: Mapping[str, Any]) -> str:
     """The store subset of a fast run, from the subset version its rows are stamped with.
     ``fast`` only when EVERY row is the default subset's (stamped with the default version or
@@ -671,6 +745,20 @@ def fast_subset_of(results: Mapping[str, Any]) -> str:
     other = sorted({v for fam, v in stamped.items() if v and not _is_default(v, fam)},
                    key=version_key)  # fmt: skip
     return other[-1] if other else UNSTAMPED
+
+
+def stamp_note(results: Mapping[str, Any]) -> str:
+    """The fast subset versions a fast run's rows are stamped with, as the note of its set:
+    what tells the page later which subset the rows were scored on."""
+    stamps = sorted({v for r in results.values() if (v := _stamp(r))}, key=version_key)
+    return f"scored on {', '.join(stamps)}" if stamps else ""
+
+
+def fast_set_of(judged: Path) -> str:
+    """The store subset of a judged fast directory (``fast_subset_of`` its results)."""
+    return fast_subset_of(
+        {fam: wsb_results.read_results(fdir) for fam, fdir in family_dirs(judged).items()}
+    )
 
 
 def fast_version_of(result: Any) -> str | None:
@@ -796,10 +884,20 @@ def ingest(
     build_dir: Path | None = None,
     force: bool = False,
     copy_max_mb: int = 4096,
+    run_name: str | None = None,
+    source: str | None = None,
+    source_name: Callable[[Path], str] | None = None,
+    remote_readouts: Mapping[str, list[tuple[str, int]]] | None = None,
+    core_families: list[str] | None = None,
 ) -> dict[str, Any]:
     """Ingest one lens. ``path`` is a judged directory or a lens directory holding ``judged/``
     (+ ``judged_ati/``, ``readouts/``). Idempotent: an unchanged source is skipped unless
-    ``force``. ``items`` keeps only those question ids (the two-question try-out)."""
+    ``force``. ``items`` keeps only those question ids (the two-question try-out).
+    ``run_name`` keeps several runs of one lens apart (it joins the run id). For a run whose
+    files were fetched from a volume: ``source`` is the address recorded for the run,
+    ``source_name`` the address of a local readout file, and ``remote_readouts`` (``{family:
+    [(address, size)]}``) the readout files of families that were not fetched: their cells
+    are read from there when a page asks."""
     lay = layout(path)
     judged = lay["judged"]
     readouts = readouts or lay["readouts"]
@@ -809,7 +907,7 @@ def ingest(
         fdirs = {f: d for f, d in fdirs.items() if f in families}
     if not fdirs:
         raise SystemExit(f"{judged}: no <family>/results.json found")
-    rid = store.run_id(BENCH, model, lens)
+    rid = store.run_id(BENCH, model, lens, run_name)
     files = [d / n for d in fdirs.values() for n in ("results.json", "cells.jsonl")]
     files += [p for f in fdirs if (p := _readout_file(readouts, f))]
     if lay["ati"]:
@@ -831,13 +929,14 @@ def ingest(
         cat.close()
         return {"run_id": rid, "skipped": True}
 
-    for table in ("score", "verdict", "layer_stat"):
+    for table in store.PER_RUN_TABLES:
         cat.execute(f"DELETE FROM {table} WHERE run_id = ?", (rid,))
     write_bank(cat, repo, model, families=list(fdirs))
     only = set(items) if items else None
     summary: dict[str, Any] = {"run_id": rid, "skipped": False, "families": {}}
     results: dict[str, Any] = {}
-    reader = kind = judge = None
+    reader = kind = None
+    judges: Counter = Counter()  # the run's judge is the one most of its evals were judged by
     with store.building(store.run_db_path(store_root, rid), build_dir) as tmp:
         con = store.connect(tmp, store.RUN_DDL)
         con.execute("PRAGMA journal_mode = OFF")
@@ -852,12 +951,17 @@ def ingest(
             }  # fmt: skip
             rfile = _readout_file(readouts, fam)
             big = rfile is not None and rfile.stat().st_size > copy_max_mb * 2**20
-            info = ingest_family(con, cat, rid, model, fam, fdir, rfile, known, not big, only)
+            info = ingest_family(
+                con, cat, rid, model, fam, fdir, rfile, known, not big, only, source_name
+            )
+            if rfile is None:
+                for address, size in (remote_readouts or {}).get(fam, ()):
+                    remote_source(con, fam, address, size)
             r = info["result"]
             results[fam] = r
             reader = reader or r.config.get("reader")
             kind = kind or r.config.get("kind")
-            judge = judge or r.config.get("judge_model")
+            judges[r.config.get("judge_model")] += 1
             m_judged = cat.execute(
                 "SELECT judged_by FROM eval WHERE bench = ? AND model = ? AND eval = ?",
                 (BENCH, model, fam),
@@ -899,6 +1003,7 @@ def ingest(
     if only is None and ati_run:
         # a lens judged on the ATI subset only: its scores are ATI scores, never full or fast
         ingest_subset(cat, rid, model, judged, "ati")
+        write_set(cat, rid, "ati", False, "judged")
     elif only is None and all(r.config.get("scope") == fast.SCOPE for r in results.values()):
         # a fast run (any version): its results.json values are that subset's scores
         # (never full-bench ones)
@@ -914,13 +1019,22 @@ def ingest(
                 "INSERT OR IGNORE INTO subset_item VALUES (?,?,?,?,?)",
                 [(BENCH, model, fast_name, fam, u) for u in sorted(members.get(fam, ()))],
             )
+        write_set(cat, rid, fast_name, False, "judged", stamp_note(results))
         if lay["ati"]:
             ingest_subset(cat, rid, model, lay["ati"], "ati")
+            write_set(cat, rid, "ati", False, "judged_ati/")
     elif only is None:
         write_scores(cat, rid, judged, results, "full")
+        write_set(cat, rid, "full", False, "judged")
         write_fast_scores(cat, rid, model, results)
+        for variant in fast.VARIANTS:  # the selectable ones: what `write_fast_scores` derives
+            if variant in FAST_SUBSETS:
+                write_set(cat, rid, FAST_SUBSETS[variant], True, "full run", DERIVED_FAST)
+        write_core_scores(cat, rid, judged, results, core_families)
+        write_set(cat, rid, CORE, True, "full run", DERIVED_CORE)
         if lay["ati"]:
             ingest_subset(cat, rid, model, lay["ati"], "ati")
+            write_set(cat, rid, "ati", False, "judged_ati/")
     else:  # a partial ingest has no meaningful headline: score what was ingested
         for fam in results:
             rows = cat.execute(
@@ -931,11 +1045,18 @@ def ingest(
                 val = sum(x["pass"] for x in rows) / len(rows)
                 _score(cat, rid, fam, "full", -1, "lens", val, None, len(rows),
                        "pass rate over the ingested questions only")  # fmt: skip
-    run_meta = {"reader": reader, "kind": kind, "items": items, "readouts": str(readouts or "")}
+    judge = max((j for j in judges if j), key=lambda j: judges[j], default=None)
+    where = str(readouts or "")
+    if readouts is not None and source_name is not None:
+        where = source_name(Path(readouts))
+    run_meta = {"reader": reader, "kind": kind, "items": items, "readouts": where}
+    if run_name:
+        run_meta["run"] = run_name
     cat.execute(
         "INSERT OR REPLACE INTO run VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)",
         (rid, BENCH, lens, label or lens, method or guess_method(lens, reader, kind), model,
-         judge, next(iter(results.values())).config.get("aggregate") or "native", str(path), sig,
+         judge, next(iter(results.values())).config.get("aggregate") or "native",
+         source or str(path), sig,
          f"runs/{rid}.db", store.now(), store.dumps(run_meta)),
     )  # fmt: skip
     cat.commit()
