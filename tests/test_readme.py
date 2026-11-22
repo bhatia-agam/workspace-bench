@@ -1,9 +1,10 @@
 """The public docs: an entry for every family in docs/evals.md and a row in the README table, the
 judges table in docs/judges.md, Credits, NOTICE.md, CITATION.cff."""
 
+import importlib.util
 import re
 
-from wsbench import registry
+from wsbench import registry, tiers
 from wsbench.registry import REPO_ROOT
 
 GROUPS = [
@@ -75,20 +76,29 @@ def test_every_family_has_an_entry_with_three_labelled_lines():
     assert order == sorted(order)
 
 
-def test_the_readme_table_has_one_row_per_family_with_its_page_and_category():
-    table = _section(_readme(), "The evals")
-    rows = re.findall(
-        r"^\| ([^|]+) \| \[`(\w+)`\]\(([^)]+)\)[^|]*\| [^|]+ \| [\d,]+ \|$", table, re.M
+def _evals_table():
+    spec = importlib.util.spec_from_file_location(
+        "readme_evals_table", REPO_ROOT / "scripts" / "readme_evals_table.py"
     )
-    assert [name for _, name, _ in rows] == sorted(
-        {name for _, name, _ in rows}, key=[name for _, name, _ in rows].index
-    ), "a family is listed twice"
-    by_name = {name: (cat, link) for cat, name, link in rows}
-    assert set(by_name) == {s.name for s in _listed_specs()}
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def test_the_readme_table_is_the_one_the_registry_gives():
+    """Category, page, sets (core, fast) and questions of every eval, and what `group=`
+    selects, are written by ``scripts/readme_evals_table.py --write``: never by hand."""
+    gen = _evals_table()
+    text = _readme()
+    assert text == gen.replace(text), "run: python scripts/readme_evals_table.py --write"
+    table = gen.table()
+    listed = [s.name for s in _listed_specs()]
+    assert set(gen.WHAT) == set(listed)
     for s in _listed_specs():
-        cat, link = by_name[s.name]
-        assert link == f"{registry.family_rel(s.name).as_posix()}/README.md", s.name
-        assert re.sub(r"[^a-z]", "", cat.lower()) == s.group.replace("_", ""), (s.name, cat)
+        row = next(ln for ln in table.splitlines() if f"[`{s.name}`]" in ln)
+        assert row.startswith(f"| {registry.CATEGORIES[s.group].split(' (')[0]} |"), s.name
+        assert ("core" in row.split("|")[3]) == (s.name in tiers.CORE), s.name
+    assert "`group=association` also selects `role_bound_association`" in table
 
 
 def test_group_membership_matches_registry():

@@ -173,44 +173,53 @@ HallucinationBench results. More: [src/wsbench/viewer/README.md](src/wsbench/vie
 
 ## The evals
 
-31 evals in eight categories; `core` marks the default set. Each eval's page states its
-questions, read sites, prompts and pass rule; [docs/evals.md](docs/evals.md) has one example and
-the judging rule of each.
+Every eval under its category, with the sets it is in: `core` is the default set a method is
+reported on, `fast` the fast subset. Each eval's page states its questions, read sites, prompts
+and pass rule; [docs/evals.md](docs/evals.md) has one example and the judging rule of each.
 
-| category | eval | what it tests | questions |
-|---|---|---|---|
-| Basic | [`basic_readout`](evals/basic/basic_readout/README.md) | The multi-word answer to a factual question the model has read but not yet answered. | 90 |
-| Basic | [`basic_readout_st`](evals/basic/basic_readout_st/README.md) | The same with a one-word answer. | 100 |
-| Basic | [`directed_modulation`](evals/basic/directed_modulation/README.md) | A concept the model was told to think about, not think about, or hide while copying a sentence. | 100 |
-| Basic | [`multi_concept_directed_modulation`](evals/basic/multi_concept_directed_modulation/README.md) (core) | Up to three concepts, or who does what to whom, held in mind while writing a dictated sentence. | 116 |
-| Basic | [`multihop`](evals/basic/multihop/README.md) | The unstated multi-word bridge of a two- or three-hop fact. | 70 |
-| Basic | [`multihop_st`](evals/basic/multihop_st/README.md) | The unstated one-word bridge of a two-hop fact. | 98 |
-| Basic | [`multilingual`](evals/basic/multilingual/README.md) | The multi-word answer to a non-English prompt, in the prompt's language. | 100 |
-| Basic | [`multilingual_multihop`](evals/basic/multilingual_multihop/README.md) | The bridge of a non-English two-hop prompt. | 98 |
-| Basic | [`multilingual_st`](evals/basic/multilingual_st/README.md) | The one-word answer to a non-English prompt. | 99 |
-| Basic | [`multilingual_typo`](evals/basic/multilingual_typo/README.md) | The intended word behind a misspelling in a non-English sentence. | 100 |
-| Basic | [`poetry`](evals/basic/poetry/README.md) (core) | The rhyme word the model plans at the end of a couplet's first line. | 100 |
-| Basic | [`typo`](evals/basic/typo/README.md) | The intended multi-word term behind a misspelling. | 85 |
-| Basic | [`typo_st`](evals/basic/typo_st/README.md) | The intended word behind a misspelling. Replaced by `typo`: runs only when named. | 85 |
-| Computational | [`arithmetic_intermediates`](evals/computational/arithmetic_intermediates/README.md) (core) | The intermediate values of an expression answered with no working shown. | 480 |
-| Computational | [`buggy_code`](evals/computational/buggy_code/README.md) (core) | The bug in a short program, and no bug in its clean twin. | 143 |
-| Computational | [`chain_intermediates`](evals/computational/chain_intermediates/README.md) (core) | The running value of a two- or three-step arithmetic chain. | 120 |
-| Association | [`association`](evals/association/association/README.md) | A concept a scene implies but never names. | 93 |
-| Association | [`conjunctive_association`](evals/association/conjunctive_association/README.md) | A compound state a vignette implies: what is felt, about what, towards whom. | 100 |
-| Association | [`user_modeling`](evals/association/user_modeling/README.md) | An attribute of the user that a chat implies. | 126 |
-| Safety | [`agentic_misalignment`](evals/safety/agentic_misalignment/README.md) (core) | The model's plan to take a misaligned action before it writes it, and none on the clean twin. | 54 |
-| Safety | [`jailbreak_recognition`](evals/safety/jailbreak_recognition/README.md) (core) | The model noticing that a turn is a jailbreak, and not on harmless role-play. | 172 |
-| Anti-bag-of-features | [`relational_multihop`](evals/anti_bag_of_features/relational_multihop/README.md) (core) | The relation between two people across two hops, which a bag of words cannot express. | 100 |
-| Anti-bag-of-features | [`role_bound_association`](evals/anti_bag_of_features/role_bound_association/README.md) (core) | Who does what to whom in a scene: the direction, not just the words. | 100 |
-| Logical processing | [`moral_rationale`](evals/logical_processing/moral_rationale/README.md) (core) | The reason behind a one-token answer to a hard dilemma. | 195 |
-| Logical processing | [`nyt_connections`](evals/logical_processing/nyt_connections/README.md) (core) | The grouping the model has in mind before it answers a word puzzle. | 335 |
-| Model-specific | [`hinted_cutoff`](evals/model_specific/hinted_cutoff/README.md) (core) | That the model uses a hint in the prompt which its reply never mentions. | 236 |
-| Model-specific | [`introspection`](evals/model_specific/introspection/README.md) (core) | A concept injected into the model's activations. | 1,762 |
-| Model-specific | [`knowledge_cutoff`](evals/model_specific/knowledge_cutoff/README.md) (core) | The stable wrong answer the model gives about things it does not know. | 147 |
-| Model-specific | [`model_multihop`](evals/model_specific/model_multihop/README.md) (core) | A bridge that only this model believes. | 283 |
-| Model-specific | [`model_specific_directed_modulation`](evals/model_specific/model_specific_directed_modulation/README.md) (core) | An obscure concept the model was told to think about. | 98 |
-| Model-specific | [`wrong_intermediate`](evals/model_specific/wrong_intermediate/README.md) (core) | The wrong bridge the model resolves on its way to a wrong answer. | 100 |
-| J-lens comparison | [`jlens_concept_pr`](evals/jlens_comparison/jlens_concept_pr/README.md) | Whether the concepts a lens states agree with the J-lens tokens at the same activation. In no macro. | 299 |
+<!-- evals table: start -->
+| category | eval | in | what it tests | questions |
+|---|---|---|---|---|
+| Basic | [`basic_readout`](evals/basic/basic_readout/README.md) | fast | The multi-word answer to a factual question the model has read but not yet answered. | 90 |
+| Basic | [`basic_readout_st`](evals/basic/basic_readout_st/README.md) | fast | The same with a one-word answer. | 100 |
+| Basic | [`directed_modulation`](evals/basic/directed_modulation/README.md) | fast | A concept the model was told to think about, not think about, or hide while copying a sentence. | 100 |
+| Basic | [`multi_concept_directed_modulation`](evals/basic/multi_concept_directed_modulation/README.md) | core, fast | Up to three concepts, or who does what to whom, held in mind while writing a dictated sentence. | 116 |
+| Basic | [`multihop`](evals/basic/multihop/README.md) | fast | The unstated multi-word bridge of a two- or three-hop fact. | 70 |
+| Basic | [`multihop_st`](evals/basic/multihop_st/README.md) | - | The unstated one-word bridge of a two-hop fact. | 98 |
+| Basic | [`multilingual`](evals/basic/multilingual/README.md) | - | The multi-word answer to a non-English prompt, in the prompt's language. | 100 |
+| Basic | [`multilingual_multihop`](evals/basic/multilingual_multihop/README.md) | fast | The bridge of a non-English two-hop prompt. | 98 |
+| Basic | [`multilingual_st`](evals/basic/multilingual_st/README.md) | - | The one-word answer to a non-English prompt. | 99 |
+| Basic | [`multilingual_typo`](evals/basic/multilingual_typo/README.md) | fast | The intended word behind a misspelling in a non-English sentence. | 100 |
+| Basic | [`poetry`](evals/basic/poetry/README.md) | core, fast | The rhyme word the model plans at the end of a couplet's first line. | 100 |
+| Basic | [`typo`](evals/basic/typo/README.md) | - | The intended multi-word term behind a misspelling. | 85 |
+| Basic | [`typo_st`](evals/basic/typo_st/README.md) | - | The intended word behind a misspelling. Replaced by `typo`: runs only when named. | 100 |
+| Computational | [`arithmetic_intermediates`](evals/computational/arithmetic_intermediates/README.md) | core, fast | The intermediate values of an expression answered with no working shown. | 480 |
+| Computational | [`buggy_code`](evals/computational/buggy_code/README.md) | core, fast | The bug in a short program, and no bug in its clean twin. | 143 |
+| Computational | [`chain_intermediates`](evals/computational/chain_intermediates/README.md) | core | The running value of a two- or three-step arithmetic chain. | 120 |
+| Association | [`association`](evals/association/association/README.md) | - | A concept a scene implies but never names. | 93 |
+| Association | [`conjunctive_association`](evals/association/conjunctive_association/README.md) | fast | A compound state a vignette implies: what is felt, about what, towards whom. | 100 |
+| Association | [`user_modeling`](evals/association/user_modeling/README.md) | fast | An attribute of the user that a chat implies. | 126 |
+| Safety | [`agentic_misalignment`](evals/safety/agentic_misalignment/README.md) | core | The model's plan to take a misaligned action before it writes it, and none on the clean twin. | 54 |
+| Safety | [`jailbreak_recognition`](evals/safety/jailbreak_recognition/README.md) | core | The model noticing that a turn is a jailbreak, and not on harmless role-play. | 172 |
+| Anti-bag-of-features | [`relational_multihop`](evals/anti_bag_of_features/relational_multihop/README.md) | core, fast | The relation between two people across two hops, which a bag of words cannot express. | 100 |
+| Anti-bag-of-features | [`role_bound_association`](evals/anti_bag_of_features/role_bound_association/README.md) | core, fast | Who does what to whom in a scene: the direction, not just the words. | 100 |
+| Logical processing | [`moral_rationale`](evals/logical_processing/moral_rationale/README.md) | core, fast | The reason behind a one-token answer to a hard dilemma. | 195 |
+| Logical processing | [`nyt_connections`](evals/logical_processing/nyt_connections/README.md) | core, fast | The grouping the model has in mind before it answers a word puzzle. | 335 |
+| Model-specific | [`hinted_cutoff`](evals/model_specific/hinted_cutoff/README.md) | core, fast | That the model uses a hint in the prompt which its reply never mentions. | 236 |
+| Model-specific | [`introspection`](evals/model_specific/introspection/README.md) | core, fast | A concept injected into the model's activations. | 1,762 |
+| Model-specific | [`knowledge_cutoff`](evals/model_specific/knowledge_cutoff/README.md) | core, fast | The stable wrong answer the model gives about things it does not know. | 147 |
+| Model-specific | [`model_multihop`](evals/model_specific/model_multihop/README.md) | core, fast | A bridge that only this model believes. | 283 |
+| Model-specific | [`model_specific_directed_modulation`](evals/model_specific/model_specific_directed_modulation/README.md) | core, fast | An obscure concept the model was told to think about. | 98 |
+| Model-specific | [`wrong_intermediate`](evals/model_specific/wrong_intermediate/README.md) | core, fast | The wrong bridge the model resolves on its way to a wrong answer. | 100 |
+| J-lens comparison | [`jlens_concept_pr`](evals/jlens_comparison/jlens_concept_pr/README.md) | - | Whether the concepts a lens states agree with the J-lens tokens at the same activation. In no macro. | 299 |
+
+`group=<category>` selects a category by its key (basic, computational, association, safety, anti_bag_of_features, logical_processing, model_specific, jlens_comparison). `group=association` also selects `role_bound_association`, which is listed under `anti_bag_of_features`.
+<!-- evals table: end -->
+
+`typo_st` is replaced by `typo` and `jlens_concept_pr` is in no macro; both run only when named.
+The anti-text-inversion subset is not a category: it is the questions, across evals, that no
+text-only reader answers from the prompt alone, and `anti_text_inversion=True` scores only
+those ([docs/baselines.md](docs/baselines.md)).
 
 Older results and readouts may use earlier names for eight evals; `wsbench` reads both and
 [docs/history.md](docs/history.md) has the table.
@@ -237,9 +246,8 @@ Older results and readouts may use earlier names for eight evals; `wsbench` read
 
 - **Qwen3.6-27B** (Alibaba) — the model being read; every bank's rollouts and responses are its
   outputs (see the model card for its licence).
-- **Judge models** — Claude Opus 5.5 (Anthropic; the judge of every family since 2026-10-11;
-  earlier results used Gemini 3.8 Flash via OpenRouter and Claude Sonnet 5). API terms only; no model outputs are
-  redistributed as data.
+- **Judge models** — Claude Opus 5.5 and Claude Sonnet 5 (Anthropic). API terms only; no model
+  outputs are redistributed as data.
 - **Agentic misalignment** — Lynch et al. 2025, *Agentic Misalignment: How LLMs Could Be Insider
   Threats* (Anthropic, arXiv:2510.05179); code and prompt templates from
   `anthropic-experimental/agentic-misalignment` (MIT). 18 of the 32 scenarios are that repo's
@@ -250,7 +258,7 @@ Older results and readouts may use earlier names for eight evals; `wsbench` read
   (arXiv:2608.16747, `adamkarvonen/chive`).
 - **Transluce** — Choi et al. 2025, *Scalably Extracting Latent Representations of Users*
   (Choi, Huang, Schwettmann, Steinhardt). The user_modeling items are SelfDescribe rows and
-  SynthSysPre system prompts from their release (the registered bank v3 keeps only the
+  SynthSysPre system prompts from their release (the registered bank keeps only the
   SelfDescribe rows, plus 79 `um-sd2-*` items written in-house in the SelfDescribe style); see
   that release for its data terms.
 - **J-lens** — *Verbalizable Representations Form a Global Workspace in Language Models*
@@ -261,7 +269,7 @@ Older results and readouts may use earlier names for eight evals; `wsbench` read
   LMSYS-Chat-1M Dataset License Agreement), DailyDialog (Li et al. 2017, HF `ConvLab/dailydialog`;
   CC BY-NC-SA 4.0), `NeelNanda/pile-10k` and `HuggingFaceFW/fineweb-edu` sample-10BT (ODC-BY):
   the jlens_concept_pr items were seeded from these corpora (the seed text is not shipped, only
-  labels and read positions). No chat turns are shipped since 2026-10-30 (plan 0040).
+  labels and read positions). No chat turns are shipped.
 - **NYT Connections** — the puzzles are The New York Times' (NYT Connections), read from the
   community mirror `Eyefyre/NYT-Connections-Answers` (pinned commit; the mirror carries no
   licence). The nyt_connections bank holds puzzle ids, member indices and Qwen's own labels only;

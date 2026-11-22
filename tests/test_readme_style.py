@@ -22,13 +22,8 @@ VERSIONED = re.compile(r"(?<![\w.])[A-Za-z][\w-]*-v\d+(?:\.\d+)*\b|(?<![\w./-])v
 # version-style words that are allowed in prose: none today. Add the exact word, with the reason.
 ALLOWED: set[str] = set()
 
-CITE_AS = re.compile(r"^## (?:Cite as|License|Credits)\n.*?(?=^## |\Z)", re.S | re.M)
-
-
 def prose(text: str) -> str:
-    """The text a reader reads as prose: no fenced blocks, code spans, link targets or the
-    credits and citation (which quote titles and years of other people's work)."""
-    text = CITE_AS.sub("", text)
+    """The text a reader reads as prose: no fenced blocks, code spans or link targets."""
     text = re.sub(r"^```.*?^```", "", text, flags=re.S | re.M)
     text = re.sub(r"`[^`\n]*`", "", text)
     return re.sub(r"\]\([^)\s]*\)", "]", text)

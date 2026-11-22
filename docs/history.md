@@ -108,3 +108,14 @@ are what they were. No score is computed per category (the macro, the core macro
 macro average families, and the family is in the same ones as before), so no reported number
 moves; anyone who averages families by category on their own now has 13 families under Basic
 (12 without the superseded `typo_st`) and 3 under Association.
+
+## From the README's credits
+
+Three remarks that stood in the README's Credits section, as they were written:
+
+- **Judge models** — Claude Opus 5.5 (Anthropic; the judge of every family since 2026-10-11;
+  earlier results used Gemini 3.8 Flash via OpenRouter and Claude Sonnet 5).
+- Transluce: the user_modeling items are SelfDescribe rows and SynthSysPre system prompts from
+  their release (the registered bank v3 keeps only the SelfDescribe rows, plus 79 `um-sd2-*`
+  items written in-house in the SelfDescribe style).
+- Chat and text corpora: No chat turns are shipped since 2026-10-30 (plan 0040).
