@@ -1,6 +1,6 @@
 # Running the judge: options, throughput and waiting on a producer
 
-Reference for `wsbench judge` and `wsbench run`. The short version is in the [README](../README.md#score-your-own-lens).
+Reference for `wsbench judge` and `wsbench run`. The short version is in the [README](../README.md#run-it).
 
 Output layout: `<out>/<family>/results.json` (the result) and `cells.jsonl` (every judge
 verdict, so a re-run only pays for what is missing); `<out>/summary.md` (the table) and
