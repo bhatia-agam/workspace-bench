@@ -13,7 +13,7 @@ from typing import Any
 
 import pydra
 
-from wsbench import fast, groups, hbindex, llm, readplan, registry, runner, tiers
+from wsbench import fast, groups, hbindex, llm, readplan, registry, runner, tiers, tryout
 from wsbench.baselines import logit_lens, lucky_guessing, prompt_only, text_inversion
 from wsbench.capable import questions as capable_questions
 from wsbench.capable import run as capable_run
@@ -1260,6 +1260,67 @@ class Capable(Command):
         return 0
 
 
+class Check(Command):
+    """``wsbench check`` lists every gate and sanity check with what it guards; ``wsbench check
+    <name> [option=value ...]`` runs one and prints PASS or FAIL with one line of why (exit 0 /
+    1); ``wsbench check all`` runs every check that needs no option. The registry is
+    ``wsbench.checks`` (external checks: ``$WSB_CHECKS``)."""
+
+    positional = "name"  # `wsbench check fast_subset` = `wsbench check name=fast_subset`
+
+    def __init__(self) -> None:
+        super().__init__()
+        self.name = ""
+        # options handed to the check that takes them (`wsbench check` shows which)
+        self.family = ""
+        self.model = ""
+        self.readouts = ""
+        self.limit = ""
+        self.dry_run = ""
+        self.options = None  # any other option, as a comma list of KEY=VALUE (plug-in checks)
+
+    def finalize(self) -> None:
+        for key in ("name", "family", "model", "readouts", "limit", "dry_run"):
+            setattr(self, key, str(getattr(self, key)))
+        pairs = _strs(self.options) or []
+        if bad := [p for p in pairs if "=" not in p]:
+            raise ValueError(f"options= expects KEY=VALUE pairs, got {bad}")
+        self.options = dict(p.split("=", 1) for p in pairs)
+
+    def _options(self) -> dict[str, str]:
+        keys = ("family", "model", "readouts", "limit", "dry_run")
+        return {**self.options, **{k: getattr(self, k) for k in keys if getattr(self, k) != ""}}
+
+    def execute(self) -> int:
+        from wsbench import checks  # the registry imports nothing heavy until a check runs
+
+        try:
+            known = checks.all_checks()
+            if not self.name:
+                for check in known.values():
+                    takes = "".join(
+                        f" {k}=" if required else f" [{k}=]"
+                        for k, required in check.options().items()
+                    )
+                    print(f"{check.name}{takes}\n    {check.guards}")
+                print("\nrun one: wsbench check <name> [option=value ...]   all offline: check all")
+                return 0
+            names = checks.offline() if self.name == "all" else [self.name]
+            failed = 0
+            for name in names:
+                ok, why = checks.run(name, **({} if self.name == "all" else self._options()))
+                failed += not ok
+                print(f"{'PASS' if ok else 'FAIL'}  {name}: {why}")
+            if self.name == "all":
+                for name, needs in checks.needing_options().items():
+                    args = " ".join(f"{k}=..." for k in needs)
+                    print(f"SKIP  {name}: skipped (needs {args}); run: wsbench check {name} {args}")
+        except (ValueError, ImportError, AttributeError) as e:
+            print(f"check: {e}", file=sys.stderr)
+            return EXIT_USAGE
+        return 1 if failed else 0
+
+
 class Plan(Command):
     """Write the read plan: for every item, what to render and how, which positions to read
     and at which layers (`docs/producing_readouts.md`). One JSONL per family under `out`."""
@@ -1353,6 +1414,7 @@ class Plan(Command):
                 f"{name}: {n} items, render {sorted({s.render for s in specs})}, "
                 f"positions {kinds}, layers {layers}"
             )
+        print(f"read plan -> {self.out}/<family>.jsonl ({len(names)} families)")
         return 0
 
 
@@ -1712,13 +1774,102 @@ class TextInversion(Command):
         return 0
 
 
+class Try(Command):
+    """The two-question try-out: pick ``n`` items of one family, show each question with its
+    expected answer, then run the ordinary plan -> judge -> report on them (``items=``). The
+    default readouts are the toy file in ``examples/readouts``; ``dry_run=True`` needs no key."""
+
+    def __init__(self) -> None:
+        super().__init__()
+        self.family = pydra.REQUIRED
+        self.n = 2
+        self.readouts = ""  # default: examples/readouts/<family>.jsonl
+        self.out = ""  # default: outputs/try/<family>
+        self.dry_run = False  # show the first judge prompt, make no call (no key needed)
+        self.judge_model = ""
+
+    def finalize(self) -> None:
+        self.family = _family(str(self.family))
+        self.n = _int(self.n)
+        if self.n < 1:
+            raise ValueError(f"n must be >= 1, got {self.n}")
+        self.readouts = _path(self.readouts) if self.readouts else None
+        self.out = _path(self.out) if self.out else Path("outputs") / "try" / self.family
+        self.dry_run = _bool(self.dry_run)
+        self.judge_model = str(self.judge_model or "")
+
+    def execute(self) -> int:
+        if self.family not in registry.FAMILIES:
+            return _unknown(self.family)
+        toy = self.readouts is None
+        readouts = tryout.example_readouts(self.family) if toy else self.readouts
+        if not readouts.is_file():
+            print(f"try: no readouts file {readouts}", file=sys.stderr)
+            return EXIT_USAGE
+        try:
+            specs = tryout.pick(self.family, readouts, self.n)
+        except SystemExit as e:
+            print(e.code, file=sys.stderr)
+            return EXIT_USAGE
+        plan_file = self.out / "plan" / f"{self.family}.jsonl"
+        judged = self.out / "judged"
+        readplan.write(specs, plan_file)
+        print(f"== wsbench try: {self.family}, {len(specs)} item(s), readouts {readouts}")
+        if len(specs) < self.n:
+            print(f"   (the file has readouts for {len(specs)} item(s) only, asked for {self.n})")
+        print(tryout.describe(self.family, specs))
+        mode = "dry run: the first judge prompt, no call" if self.dry_run else "live judge"
+        print(f"\n== judge ({mode})")
+        argv = [
+            f"family={self.family}",
+            f"readouts={readouts}",
+            f"out={judged / self.family}",
+            "items=" + ",".join(s.id for s in specs),
+            f"dry_run={self.dry_run}",
+            f"allow_missing={toy}",  # the toy files hold a few cells, not the whole plan
+            *([f"judge_model={self.judge_model}"] if self.judge_model else []),
+        ]
+        code = _run_command(JudgeFamily, argv)
+        if code == EXIT_JUDGE_CONFIG:
+            print("try: no judge access; add dry_run=True to run without a key", file=sys.stderr)
+        if code:
+            return code
+        print("\n== report")
+        code = _run_command(ReportRuns, [f"dir={judged}", "floors=False"])
+        print("\n== outputs")
+        for label, path in (
+            ("read plan (what to read for each item)", plan_file),
+            ("readouts (the lens output that was judged)", readouts),
+            ("judge cache (one row per call; resumable)", judged / self.family / "cells.jsonl"),
+            ("results (score, CI, per-item rows)", judged / self.family / "results.json"),
+            ("report table", judged / "summary.md"),
+        ):
+            print(f"  {label}: {path}" + ("" if path.exists() else "  (not written)"))
+        print(
+            f"\n(a try-out judges {len(specs)} item(s), so its row says complete=False and is "
+            "left out of the macro: expected)"
+        )
+        if self.dry_run:
+            print("next: drop dry_run=True to judge for real")
+        return code
+
+
+def _run_command(kind: type[Command], argv: list[str]) -> int:
+    """Run another command of this CLI in-process with ``key=value`` arguments."""
+    command = kind()
+    pydra.apply_overrides(command, argv)
+    return command.execute()
+
+
 COMMANDS: dict[str, type[Command]] = {
     "list": ListFamilies,
     "judge": JudgeFamily,
     "run": RunFamilies,
     "report": ReportRuns,
+    "try": Try,
     "baseline": Baseline,
     "capable": Capable,
+    "check": Check,
     "plan": Plan,
     "produce": Produce,
     "freeze": Freeze,
@@ -1796,6 +1947,9 @@ def main(argv: list[str] | None = None) -> int:
     if any(a in ("--help", "-h") for a in argv[1:]):
         print(_defaults(command))
         return 0
+    positional = getattr(command, "positional", "")
+    if positional and len(argv) > 1 and "=" not in argv[1] and not argv[1].startswith("-"):
+        argv[1] = f"{positional}={argv[1]}"
     # plans 0090 / 0095: `--fast` is `fast=True` and `--fast-safety` is `fast=safety` on every
     # command (one without the key fails as unknown)
     # plan 0098: `--core` / `--full` are `tier=core` / `tier=full` on run and plan

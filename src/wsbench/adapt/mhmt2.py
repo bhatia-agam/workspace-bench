@@ -44,6 +44,8 @@ from collections.abc import Callable
 from pathlib import Path
 from typing import Any
 
+from wsbench import paths
+
 from . import store
 from .gate import GRADERS, Ask, Leg, gate_record, grade_leg
 
@@ -442,7 +444,7 @@ R4_CALLS_PER_ITEM = 70
 
 # the global-workspace candidate pools the frozen bank was built from (finalize.py ``Config``)
 GW_DIR_ENV = "WSB_GW_MH2_DIR"
-GW_DIR = "/workspace/gw-mh-v2/outputs/multihop_v2"
+GW_DIR = str(paths.devbox("gw-mh-v2/outputs/multihop_v2"))
 GW_POOLS = (
     "seed_candidates",
     "candidates",
@@ -1526,8 +1528,8 @@ def bank_builder() -> Any:
 
 GPU_EXTRA_HINT = (
     "build_fields stamps token counts with the subject's real tokenizer and needs the `gpu` "
-    "extra (transformers): run it from a venv that has it, e.g. `/root/torchvenv/bin/python -m "
-    "wsbench.adapt multihop ...`, or `uv sync --extra gpu` first"
+    "extra (transformers): run it from a venv that has it (`<venv>/bin/python -m "
+    "wsbench.adapt multihop ...`), or `uv sync --extra gpu` first"
 )
 
 

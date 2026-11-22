@@ -183,7 +183,7 @@ A content pick (gold or distractor) stands only if all three hold, else `pick = 
    its attribution to the user lie in ONE top-level bullet (a quote copied across a `⁞` passes
    1 and fails here; counted in `extras.n_unverified_bullet`).
 3. `value`: `mc.form_in(evidence, VALUE_ALIASES[pick])` — the quote NAMES the picked value
-   (`aliases.py`: the value, synonyms, demonyms, a more specific value, CJK translations; for a
+   (`aliases.json`, loaded by `aliases.py`: the value, synonyms, demonyms, a more specific value, CJK translations; for a
    continent every country in it; gender = person words only, never "actress"/"actor"). A
    quote with no Latin letters passes only on a listed form of its script, so Chinese function
    words never name Asia while 中国 / 日本 do. CJK forms match as substrings, so (um-v3.2) no
@@ -220,7 +220,7 @@ A content pick (gold or distractor) stands only if all three hold, else `pick = 
    A `hedge` block is re-asked like a `value` block (`UM_RETRY`, with its own reason).
 
 The gate is necessary, not sufficient: attribution to the user stays the judge's call. The
-lexicon is frozen in `aliases.py` (Opus 5.5 proposals + hand review, provenance in its docstring)
+lexicon is frozen in `aliases.json` (Opus 5.5 proposals + hand review, provenance in the docstring of `aliases.py`, which loads it)
 and is part of the instrument. `tests/fixtures/user_modeling_gate_cases.json` holds the audit's
 lenient cases (all blocked), synthetic Chinese spans the um-v3 lexicon let through (其他 for
 male, a 女演员 "actress" token list for female, 熊猫, 热狗, 神道教 for taoism, 纯素食 for

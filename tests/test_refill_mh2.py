@@ -1239,7 +1239,7 @@ def test_subject_tokenizer_fails_loudly_without_transformers(monkeypatch):
     monkeypatch.setattr(builtins, "__import__", no_transformers)
     with pytest.raises(SystemExit) as e:
         mhmt2.subject_tokenizer(MODEL)
-    assert "gpu" in str(e.value) and "torchvenv" in str(e.value)
+    assert "gpu" in str(e.value) and "venv" in str(e.value)
 
 
 def test_build_fields_auto_tok_never_silently_skips_stamping(tmp_store, tmp_path, gw, monkeypatch):

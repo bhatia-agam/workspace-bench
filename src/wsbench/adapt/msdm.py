@@ -54,6 +54,8 @@ from collections.abc import Mapping, Sequence
 from pathlib import Path
 from typing import Any
 
+from wsbench import paths
+
 from . import store
 from .gate import Ask, Leg, gate_record, grade_leg
 from .selfans import (
@@ -129,7 +131,8 @@ POOL_MODES = ("none", "retired", "ext")
 WAVE_SIZE = 200
 DOMAIN_CAP = 2  # shipped non-original categories per domain (the registered bank's maximum)
 # the GW source of the ext pool, read by these exact paths only (never globbed)
-GW_ROOT = Path("/workspace/gw-evals-feas/outputs/feas/self_answers")
+GW_ROOT_ENV = "WSB_MSDM_SOURCE"  # the GW self-answer outputs the pool is built from
+GW_ROOT = paths.external(GW_ROOT_ENV, "gw-evals-feas/outputs/feas/self_answers")
 POOL_SOURCES = (("step1", 1, "step1"), ("step2", 2, "step2"), ("step3/b1", 3, "b1"),
                 ("step3/b2", 3, "b2"))  # fmt: skip
 POOL_VERSION = "msdm-pool-2026-11-04"

@@ -57,6 +57,8 @@ from collections.abc import Iterable, Mapping, Sequence
 from pathlib import Path
 from typing import Any
 
+from wsbench import paths
+
 from . import store
 from .gate import Ask, Leg, gate_record
 from .selfans import (
@@ -826,7 +828,8 @@ def run(model: str, stage: str = "all", llm: str | None = "claude-opus-5-5", lim
 # ------------------------------------------------------------------ plan 0066: the ext pool
 
 # the GW source (read by exact path on the box; never a recursive search)
-SOURCE_ROOT = Path("/workspace/gw-evals-feas/outputs/feas/cutoff_confab/scale")
+SOURCE_ENV = "WSB_KCUTOFF_SOURCE"  # the GW cutoff outputs the pool is built from
+SOURCE_ROOT = paths.external(SOURCE_ENV, "gw-evals-feas/outputs/feas/cutoff_confab/scale")
 PEERS = ("gemma4", "nemotron", "mistral4", "glm47")  # peer:<m>
 LEGACY = ("llama", "gemma", "mistral")  # legacy:<m> (no gptoss in scale/)
 QWEN_RUN, QWEN_TAG = "qwen", "peer:qwen3.6-27b"
