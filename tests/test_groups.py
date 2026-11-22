@@ -10,23 +10,22 @@ def test_a_group_is_a_registry_category():
     assert groups.names() == list(registry.CATEGORIES)
     for name in groups.names():
         fams = groups.families(name)
-        extra = set(groups.ALSO_IN.get(name, ()))
-        assert fams and all(registry.FAMILIES[f].group == name or f in extra for f in fams), name
-    # every family `all` runs is in its category's group; only ALSO_IN lists one twice
+        assert fams and all(registry.FAMILIES[f].group == name for f in fams), name
+    # every family `all` runs is in its category's group, and in no other
     listed = [f for name in groups.names() for f in groups.families(name)]
-    twice = sorted(f for f in set(listed) if listed.count(f) > 1)
-    assert twice == sorted(f for fams in groups.ALSO_IN.values() for f in fams)
-    assert sorted(set(listed)) == registry.drop_superseded(sorted(registry.FAMILIES))
+    assert len(listed) == len(set(listed))
+    assert sorted(listed) == registry.drop_superseded(sorted(registry.FAMILIES))
 
 
 def test_the_named_categories():
-    # the association category (the family `association` is in it) plus the one
-    # documented addition: role-bound association, which stays in its own category as well
-    association = ["association", "conjunctive_association", "role_bound_association",
-                   "user_modeling"]  # fmt: skip
+    # the association category (the family `association` is in it); role-bound association
+    # is in anti-bag-of-features only
+    association = ["association", "conjunctive_association", "user_modeling"]
     assert groups.families("association") == association
-    assert groups.ALSO_IN == {"association": ("role_bound_association",)}
-    assert "role_bound_association" in groups.families("anti_bag_of_features")
+    assert groups.families("anti_bag_of_features") == [
+        "relational_multihop",
+        "role_bound_association",
+    ]
     assert registry.FAMILIES["role_bound_association"].group == "anti_bag_of_features"
     assert groups.families("safety") == ["agentic_misalignment", "jailbreak_recognition"]
     computation = ["arithmetic_intermediates", "buggy_code", "chain_intermediates"]
@@ -74,4 +73,5 @@ def test_run_group_dry_run_selects_the_group(tmp_path, capsys):
 def test_show_names_the_families_a_group_selects(tmp_path, capsys):
     assert cli.main(["plan", "group=association", f"out={tmp_path}", "--show"]) == 0
     shown = capsys.readouterr().out
-    assert "role_bound_association" in shown and "user_modeling" in shown
+    assert "conjunctive_association" in shown and "user_modeling" in shown
+    assert "role_bound_association" not in shown
