@@ -12,6 +12,11 @@
   retried with jittered backoff; any other per-call failure yields ``None`` (an unjudged cell,
   never a clean one). Problems that would fail every call raise :class:`JudgeConfigError`.
 * ``on_result(i, result)`` fires as each call lands so callers can cache as they go.
+* Opt-in: with ``$WSB_JUDGE_BACKEND=batches`` (``judge_backend=batches`` on ``judge`` / ``run``)
+  the structured Anthropic calls of :func:`stream_json_async` go through the Message Batches API
+  (:mod:`wsbench.judge_batches`): the same requests at half the token price, outside the live
+  rate limits. Whatever a batch does not answer cleanly is re-run live, so results, cache keys
+  and resume are those of the live backend.
 """
 
 import asyncio
@@ -70,7 +75,7 @@ LEDGER_ENV = "WSB_TOKEN_LEDGER"  # plan 0075 §4: one JSONL row per Anthropic ca
 _LEDGER_LOCK = threading.Lock()
 
 
-def ledger(model: str, usage: Any) -> None:
+def ledger(model: str, usage: Any, *, batch: bool = False) -> None:
     """Append ``{model, in, out}`` to ``$WSB_TOKEN_LEDGER`` when set (subprocesses inherit it), so
     a run's API spend is measured from tokens even where OAuth logs ``spend=$0.00``."""
     path = os.environ.get(LEDGER_ENV)
@@ -86,6 +91,8 @@ def ledger(model: str, usage: Any) -> None:
         "cache_write": int(getattr(usage, "cache_creation_input_tokens", 0) or 0),
         "cache_read": int(getattr(usage, "cache_read_input_tokens", 0) or 0),
     }
+    if batch:  # a Message Batches call: every token billed at half price
+        row["batch"] = True
     with _LEDGER_LOCK, open(path, "a", encoding="utf-8") as f:
         f.write(json.dumps(row) + "\n")
 
@@ -173,6 +180,8 @@ def api_key(model: str) -> str:
     if route_ == "openai":
         return ""  # workload identity federation: the client exchanges a token
     if route_ == "anthropic":
+        if _ANTHROPIC_CLIENT is not None:
+            return ""  # the injected client carries its own credentials
         key = os.environ.get("ANTHROPIC_API_KEY", "")
         if key:
             return key
@@ -447,10 +456,39 @@ def _backoff(attempt: int, status: int | None) -> float:
 
 OAUTH_PREFIX = "oauth:"  # api_key() marks an OAuth bearer token (ANTHROPIC_AUTH_TOKEN) with this
 
+_ANTHROPIC_CLIENT: Callable[[], Any] | None = None
+
+
+def use_anthropic_client(factory: Callable[[], Any] | None) -> None:
+    """Build every Anthropic client with ``factory()`` (an ``AsyncAnthropic``; ``None`` restores
+    the default). For credentials the environment cannot carry, e.g. workload identity
+    federation with a token provider. Each batch of calls closes the client it was given."""
+    global _ANTHROPIC_CLIENT
+    _ANTHROPIC_CLIENT = factory
+
+
+BACKEND_ENV = "WSB_JUDGE_BACKEND"  # live (default) | batches; subprocesses inherit it
+BATCH_ENV_PREFIX = "WSB_JUDGE_BATCH"  # _DIR, _MAX_REQUESTS, ...: judge_batches.Settings.from_env
+
+
+def set_backend(name: str) -> None:
+    """Choose how structured Anthropic calls travel, for this process and its children."""
+    os.environ[BACKEND_ENV] = judge_backend(name)
+
+
+def judge_backend(name: str | None = None) -> str:
+    """``name`` (default: ``$WSB_JUDGE_BACKEND``, else ``live``), checked."""
+    name = name or os.environ.get(BACKEND_ENV, "") or "live"
+    if name not in ("live", "batches"):
+        raise JudgeConfigError(f"judge backend must be live or batches, got {name!r}")
+    return name
+
 
 def _make_client(route: str, key: str) -> Any:
     """The ONLY place SDK clients are built (tests monkeypatch this to inject fakes)."""
     if route == "anthropic":
+        if _ANTHROPIC_CLIENT is not None:
+            return _ANTHROPIC_CLIENT()
         from anthropic import AsyncAnthropic
 
         if key.startswith(OAUTH_PREFIX):  # keyless judges: bearer auth + the OAuth beta flag
@@ -717,6 +755,29 @@ def anthropic_schema(schema: Any) -> Any:
     return schema
 
 
+def anthropic_params(
+    system: str,
+    user: str,
+    *,
+    schema: dict[str, Any],
+    model: str,
+    max_tokens: int,
+    reasoning: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    """The Messages request of one structured call: what the live call sends (plus its
+    ``timeout``) and, unchanged, the ``params`` of the same call in a batch."""
+    return {
+        "model": model,
+        "max_tokens": max_tokens,
+        "system": [{"type": "text", "text": system, "cache_control": {"type": "ephemeral"}}],
+        "messages": [{"role": "user", "content": user}],
+        "output_config": {
+            "format": {"type": "json_schema", "schema": anthropic_schema(schema["schema"])},
+            **anthropic_effort(model, reasoning),
+        },
+    }
+
+
 async def _anthropic_once(
     client: Any,
     system: str,
@@ -734,14 +795,9 @@ async def _anthropic_once(
 ) -> dict[str, Any] | None:
     kwargs: dict[str, Any] = {
         "timeout": timeout,
-        "model": model,
-        "max_tokens": max_tokens,
-        "system": [{"type": "text", "text": system, "cache_control": {"type": "ephemeral"}}],
-        "messages": [{"role": "user", "content": user}],
-        "output_config": {
-            "format": {"type": "json_schema", "schema": anthropic_schema(schema["schema"])},
-            **anthropic_effort(model, reasoning),
-        },
+        **anthropic_params(
+            system, user, schema=schema, model=model, max_tokens=max_tokens, reasoning=reasoning
+        ),
     }
     if fallbacks is None:
         resp = await client.messages.create(**kwargs)
@@ -750,9 +806,34 @@ async def _anthropic_once(
         if getattr(client, "auth_token", None):  # betas= replaces the client's default header
             betas.append("oauth-2025-04-20")
         resp = await client.beta.messages.create(**kwargs, betas=betas, fallbacks=fallbacks)
+    return _anthropic_result(
+        resp,
+        model=model,
+        spend=spend,
+        mark_refusals=mark_refusals,
+        fallbacks=fallbacks,
+        mark_truncated=mark_truncated,
+        max_tokens=max_tokens,
+    )
+
+
+def _anthropic_result(
+    resp: Any,
+    *,
+    model: str,
+    spend: Spend,
+    mark_refusals: bool = False,
+    fallbacks: str | None = None,
+    batch: bool = False,
+    mark_truncated: bool = False,
+    max_tokens: int = 0,
+) -> dict[str, Any] | None:
+    """Tally one Messages response (live or from a batch) and parse its JSON object. With
+    ``mark_truncated`` a ``max_tokens`` stop comes back as :data:`TRUNCATED_JSON` (the caller
+    re-asks with a larger cap; ``max_tokens`` is the cap that was hit, for the log line)."""
     spend.calls += 1
     usage = getattr(resp, "usage", None)
-    ledger(model, usage)
+    ledger(model, usage, batch=batch)
     if usage is not None:
         spend.input_tokens += int(getattr(usage, "input_tokens", 0) or 0)
         spend.output_tokens += int(getattr(usage, "output_tokens", 0) or 0)
@@ -958,6 +1039,7 @@ async def stream_json_async(
     attempts: int | None = None,
     fallbacks: str | None = None,
     refusal_model: str | None = None,
+    backend: str | None = None,
     overflow_max_tokens: int | None = None,
     refusal_reasoning: dict[str, Any] | None = None,
 ) -> Spend:
@@ -995,7 +1077,12 @@ async def stream_json_async(
     ``mark_refusals`` a ``model_context_window_exceeded`` stop comes back as
     :data:`TOO_LONG_JSON` (the digest then halves the bundle), a refusal as
     :data:`REFUSED_JSON`. The refusal model's re-run keeps the larger cap, scaled timeout and
-    bounded budget once the primary needed them, and is itself never re-asked."""
+    bounded budget once the primary needed them, and is itself never re-asked.
+
+    ``backend`` (default ``$WSB_JUDGE_BACKEND``, else ``live``): ``batches`` sends the Anthropic
+    requests through Message Batches first (see :class:`_BatchRound`); ``concurrency``, ``rpm``
+    and ``timeout`` then bound only the calls that still run live (a batch answer that stopped
+    at ``max_tokens`` is one of those, so the ``overflow_max_tokens`` re-ask applies to it)."""
     spend = spend or Spend()
     if not prompts:
         return spend
@@ -1044,6 +1131,25 @@ async def stream_json_async(
         and overflow_max_tokens is not None
         and overflow_max_tokens > max_tokens
     )
+    batch: _BatchRound | None = None
+    if route_ == "anthropic" and judge_backend(backend) == "batches":
+        from wsbench import judge_batches
+
+        settings = judge_batches.Settings.from_env(BATCH_ENV_PREFIX)
+        if len(prompts) >= settings.min_requests:
+            batch = _BatchRound(
+                client,
+                prompts,
+                settings,
+                schema=schema,
+                model=model,
+                max_tokens=max_tokens,
+                reasoning=reasoning,
+                spend=spend,
+                mark_refusals=mark_refusals or refusal_model is not None,
+                fallbacks=fallbacks,
+                mark_truncated=grow,
+            )
 
     async def one(i: int, system: str, user: str) -> tuple[int, dict[str, Any] | None]:
         kw: dict[str, Any] = {
@@ -1056,18 +1162,20 @@ async def stream_json_async(
             "spend": spend,
             "attempts": attempts,
         }
+        res: Any = _RUN_LIVE if batch is None else await batch.answers[i]
         async with sem:
-            res = await _one(
-                route_,
-                client,
-                system,
-                user,
-                model=model,
-                mark_refusals=mark_refusals or refusal_model is not None,
-                fallbacks=fallbacks,
-                **({"mark_truncated": True} if grow else {}),
-                **kw,
-            )
+            if res is _RUN_LIVE:
+                res = await _one(
+                    route_,
+                    client,
+                    system,
+                    user,
+                    model=model,
+                    mark_refusals=mark_refusals or refusal_model is not None,
+                    fallbacks=fallbacks,
+                    **({"mark_truncated": True} if grow else {}),
+                    **kw,
+                )
             if grow and res == TRUNCATED_JSON:
                 kw["timeout"] = timeout * overflow_max_tokens / max_tokens
                 kw["max_tokens"] = overflow_max_tokens
@@ -1101,10 +1209,13 @@ async def stream_json_async(
         return i, res
 
     tasks = [asyncio.ensure_future(one(i, s, u)) for i, (s, u) in enumerate(prompts)]
+    if batch is not None:
+        tasks.append(asyncio.ensure_future(batch.run()))
     try:
         for fut in asyncio.as_completed(tasks):
-            i, res = await fut
-            on_result(i, res)
+            landed = await fut
+            if landed is not None:  # None: the batch round itself finished
+                on_result(*landed)
     finally:
         for t in tasks:
             t.cancel()
@@ -1115,6 +1226,105 @@ async def stream_json_async(
             if fb_client is not client:
                 await fb_client.close()
     return spend
+
+
+_RUN_LIVE: Any = object()  # a batch round's answer for "ask this one through the live path"
+
+
+class _BatchRound:
+    """One prompt list's trip through Message Batches. Each request is the live call's request
+    (:func:`anthropic_params`), minus ``fallbacks`` (a batch request cannot set it).
+    ``answers[i]`` resolves to prompt ``i``'s parsed result, or to ``_RUN_LIVE`` for whatever
+    the batch did not settle: an errored / expired / canceled / missing entry, an unparsable
+    body, and a refusal when ``fallbacks`` is set (the live call re-runs it on the fallback)."""
+
+    def __init__(
+        self,
+        client: Any,
+        prompts: list[tuple[str, str]],
+        settings: Any,
+        *,
+        schema: dict[str, Any],
+        model: str,
+        max_tokens: int,
+        reasoning: dict[str, Any] | None,
+        spend: Spend,
+        mark_refusals: bool,
+        fallbacks: str | None,
+        mark_truncated: bool = False,
+    ) -> None:
+        from wsbench import judge_batches
+
+        self.client = client
+        self.settings = settings
+        self.model = model
+        self.spend = spend
+        self.mark_refusals = mark_refusals
+        self.fallbacks = fallbacks
+        self.mark_truncated = mark_truncated  # overflow_max_tokens: the live path re-asks
+        self.max_tokens = max_tokens
+        params = [
+            anthropic_params(
+                # the live path's surrogate repair (see _one)
+                system.encode("utf-8", "replace").decode("utf-8"),
+                user.encode("utf-8", "replace").decode("utf-8"),
+                schema=schema,
+                model=model,
+                max_tokens=max_tokens,
+                reasoning=reasoning,
+            )
+            for system, user in prompts
+        ]
+        ids = judge_batches.unique_ids(params)
+        self.requests = list(zip(ids, params, strict=True))
+        self.index = {cid: i for i, cid in enumerate(ids)}
+        loop = asyncio.get_running_loop()
+        self.answers: list[asyncio.Future[Any]] = [loop.create_future() for _ in prompts]
+
+    def _entry(self, custom_id: str, result: Any) -> None:
+        fut = self.answers[self.index[custom_id]]
+        if fut.done():
+            return
+        if getattr(result, "type", None) != "succeeded":
+            fut.set_result(_RUN_LIVE)
+            return
+        msg = result.message
+        if self.fallbacks is not None and getattr(msg, "stop_reason", None) == "refusal":
+            ledger(self.model, getattr(msg, "usage", None), batch=True)
+            fut.set_result(_RUN_LIVE)
+            return
+        try:
+            fut.set_result(
+                _anthropic_result(
+                    msg,
+                    model=self.model,
+                    spend=self.spend,
+                    mark_refusals=self.mark_refusals,
+                    batch=True,
+                    mark_truncated=self.mark_truncated,
+                    max_tokens=self.max_tokens,
+                )
+            )
+        except ValueError:  # an unparsable body (JSONDecodeError included): live retries it
+            fut.set_result(_RUN_LIVE)
+
+    async def run(self) -> None:
+        from wsbench import judge_batches
+
+        print(f"  batches: {len(self.requests)} request(s) for {self.model}")
+        try:
+            await judge_batches.run(
+                self.client, self.requests, self._entry, settings=self.settings, sleep=_sleep
+            )
+        except Exception as e:
+            name = type(e).__name__
+            if name in _FATAL or getattr(e, "status_code", None) in (401, 402, 403):
+                raise JudgeConfigError(f"{name}: {str(e)[:300]}") from e
+            # the Batches API itself is failing: nothing is lost, the live path takes over
+            print(f"  batches: {name}: {str(e)[:200]}; unanswered requests run live")
+        for fut in self.answers:
+            if not fut.done():
+                fut.set_result(_RUN_LIVE)
 
 
 def _in_running_loop() -> bool:
@@ -1142,6 +1352,7 @@ def stream_json(
     attempts: int | None = None,
     fallbacks: str | None = None,
     refusal_model: str | None = None,
+    backend: str | None = None,
     overflow_max_tokens: int | None = None,
     refusal_reasoning: dict[str, Any] | None = None,
 ) -> Spend:
@@ -1167,6 +1378,7 @@ def stream_json(
             attempts=attempts,
             fallbacks=fallbacks,
             refusal_model=refusal_model,
+            backend=backend,
             overflow_max_tokens=overflow_max_tokens,
             refusal_reasoning=refusal_reasoning,
         )
@@ -1227,6 +1439,7 @@ async def preflight_async(model: str, reasoning: dict[str, Any] | None) -> None:
         reasoning=reasoning,
         concurrency=1,
         on_result=lambda _i, r: out.append(r),
+        backend="live",  # a preflight is one call, answered now
     )
     if out != [{"a": 1}]:
         raise JudgeConfigError(f"preflight failed for {model}: {out}")

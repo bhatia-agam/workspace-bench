@@ -224,6 +224,7 @@ class JudgeOptions(Command):
         self.concurrency = 256
         self.rpm = 30000.0
         self.itpm = 60_000_000  # input tokens per minute across the run (llm.set_itpm); 0 = off
+        self.judge_backend = ""  # live | batches (Message Batches); "" = $WSB_JUDGE_BACKEND or live
         self.dry_run = False
         self.anti_text_inversion = False  # judge each family on its frozen ATI subset only
         self.ati_variant = ""  # plan 0088: anti_text_inversion.<variant>.json beside the default
@@ -256,6 +257,9 @@ class JudgeOptions(Command):
         self.itpm = int(float(self.itpm or 0))
         if self.itpm < 0:
             raise ValueError(f"itpm must be >= 0 (0 = off), got {self.itpm}")
+        self.judge_backend = str(self.judge_backend or "")
+        if self.judge_backend not in ("", "live", "batches"):
+            raise ValueError(f"judge_backend must be live or batches, got {self.judge_backend!r}")
         self.dry_run = _bool(self.dry_run)
         self.anti_text_inversion = _bool(self.anti_text_inversion)
         if self.anti_text_inversion and self.items is not None:
@@ -286,6 +290,8 @@ class JudgeOptions(Command):
         in ``finalize``: ``--help`` / ``--show`` leave the process alone): the input-token budget
         and a raised soft file-descriptor limit (256 connections x many families exhaust 1024)."""
         llm.set_itpm(self.itpm)
+        if self.judge_backend:
+            llm.set_backend(self.judge_backend)
         _raise_fd_limit()
 
     def _check_fast(self) -> None:
