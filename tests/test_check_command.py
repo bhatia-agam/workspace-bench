@@ -162,3 +162,13 @@ def test_check_all_names_what_it_skips(monkeypatch, capsys):
     out = capsys.readouterr().out
     assert "SKIP  readouts_contract: skipped (needs readouts=...)" in out
     assert "SKIP  capable_gate: skipped (needs model=...)" in out and "fast_subset" not in out
+
+
+def test_the_offline_checks_name_things_by_role(capsys):
+    """A PASS line says what was checked, without the version id of a subset."""
+    import re
+
+    for name in ("fast_subset", "ati_subset"):
+        assert cli.main(["check", name]) == 0
+        line = capsys.readouterr().out
+        assert line.startswith(f"PASS  {name}:") and not re.search(r"\bv\d|-v\d", line), line
