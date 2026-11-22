@@ -22,6 +22,7 @@ VERSIONED = re.compile(r"(?<![\w.])[A-Za-z][\w-]*-v\d+(?:\.\d+)*\b|(?<![\w./-])v
 # version-style words that are allowed in prose: none today. Add the exact word, with the reason.
 ALLOWED: set[str] = set()
 
+
 def prose(text: str) -> str:
     """The text a reader reads as prose: no fenced blocks, code spans or link targets."""
     text = re.sub(r"^```.*?^```", "", text, flags=re.S | re.M)
