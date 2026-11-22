@@ -862,7 +862,7 @@ def test_prompt_version_is_v3() -> None:
     readme = readme.read_text(encoding="utf-8")
     assert "jlens-pr-v3" in readme and 'jlens-pr-v2",' not in readme
     assert "| jlens_concept_pr | claude-opus-5-5 | jlens-pr-v3+fw-v2+sense-v1 " in (
-        ROOT / "README.md"
+        ROOT / "docs" / "judges.md"
     ).read_text(encoding="utf-8")
 
 
