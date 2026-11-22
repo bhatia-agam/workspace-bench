@@ -1,11 +1,26 @@
-"""Gated + on-policy re-score of normal-bank (27B bank) OLens runs for subjects >= 32B.
+"""Re-score a lens read on the reference model's bank, on the questions its subject answers.
 
-    prepare <subject>          gate.json + bank/{poetry,basic_readout_st,moral_rationale}.json from the
-                               subject's adapt profile (gate = the adapt rule, audit drops applied)
-    judge <subject> <tag_dir>  re-judge the three own-answer families on the tag's readouts
-    score                      gated macro for every subject x stage -> normal_gated/scores.json
+What it gates: the per-eval scores of a subject's lens runs. Each eval is re-scored on the
+questions the subject passes in its own adapt gate; the three own-answer evals (poetry,
+basic_readout_st, moral_rationale) are re-judged with the subject's golds; the two evals with no
+checkable answer are kept as they are.
 
-Out: /workspace/agam/workspace-bench/outputs/normal_gated/<subject>/.
+    python scripts/adapt_gated_rescore.py prepare <subject>
+    python scripts/adapt_gated_rescore.py judge <subject> <tag_dir>
+    python scripts/adapt_gated_rescore.py score
+
+``prepare`` writes ``gate.json`` and ``bank/<eval>.json`` from ``adapted/<subject>``; ``judge``
+re-judges the own-answer evals on the tag's readouts; ``score`` writes the gated macro of every
+subject and stage.
+
+Inputs: ``adapted/<subject>/`` (``report.json``, ``gate/<eval>.jsonl``, the own-answer banks);
+the lens runs under ``$WSB_OLENS_CKPTS/<model dir>/wsb/<tag>/{readouts,judged_opus}``; and the
+scoring helpers ``wsbench_spec.py`` in ``$WSB_OLENS_SPEC_DIR``. ``SUBJECTS`` below names each
+subject's model directory and tags. ``judge`` reads the judge token the adapt tools use
+(``wsbench.adapt.auth``).
+
+Outputs, under ``$WSB_GATED_OUT`` (default ``outputs/normal_gated``): ``<subject>/gate.json``,
+``<subject>/bank/``, ``<subject>/judged/<tag>/<eval>/``, and ``scores.json``.
 """
 
 import json
@@ -14,14 +29,31 @@ import subprocess
 import sys
 from pathlib import Path
 
-WSB = Path("/workspace/agam/workspace-bench")
-AGAM = Path("/workspace/agam")
-OUT = WSB / "outputs/normal_gated"
-sys.path.insert(0, str(AGAM / "gw-olens/scripts/ola/ar_ablate"))
+WSB = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(WSB / "src"))
-import wsbench_spec as spec  # noqa: E402
 
-from wsbench import registry  # noqa: E402
+from wsbench import paths, registry  # noqa: E402
+
+CKPTS_ENV = "WSB_OLENS_CKPTS"
+SPEC_ENV = "WSB_OLENS_SPEC_DIR"
+OUT_ENV = "WSB_GATED_OUT"
+CKPTS = paths.external(CKPTS_ENV, "agam/olens_ckpts")
+SPEC_DIR = paths.external(SPEC_ENV, "agam/gw-olens/scripts/ola/ar_ablate")
+OUT = Path(os.environ[OUT_ENV]) if os.environ.get(OUT_ENV) else WSB / "outputs" / "normal_gated"
+
+
+class _Spec:
+    """``wsbench_spec`` from ``SPEC_DIR``, imported on first use so ``--help`` needs nothing."""
+
+    def __getattr__(self, name):
+        if str(SPEC_DIR) not in sys.path:
+            sys.path.insert(0, str(SPEC_DIR))
+        import wsbench_spec
+
+        return getattr(wsbench_spec, name)
+
+
+spec = _Spec()
 
 REGOLD = ("poetry", "basic_readout_st", "moral_rationale")
 UNGATED = {"directed_modulation", "multi_concept_directed_modulation"}  # no checkable answer
@@ -141,7 +173,6 @@ def prepare(subject: str) -> None:
 
 def judge(subject: str, tag_dir: str, fams: str = ",".join(REGOLD), rpm: str = "420") -> None:
     """wsbench judge on the tag's own readouts with the subject's re-golded banks (same layers)."""
-    sys.path.insert(0, str(WSB / "src"))
     from wsbench.adapt.auth import read_token
 
     token, _ = read_token()
@@ -209,7 +240,7 @@ def score() -> None:
         gate = _rekey_gate(jl(gp)["items"])
         result[subject] = {}
         for stage, tag in tags.items():
-            td = AGAM / "olens_ckpts" / cdir / "wsb" / tag
+            td = CKPTS / cdir / "wsb" / tag
             if not (td / "judged_opus").is_dir():
                 continue
             fams = {}
@@ -271,11 +302,17 @@ def score() -> None:
             }
             r = result[subject][stage]
             print(
-                f"{subject:16s} {stage:9s} gated {r['gated']:.3f} ({r['n']} fams)  normal same fams "
-                f"{r['full_same_fams']:.3f}  normal 23 {r['full_23']:.3f}  dropped {r['dropped']}"
+                f"{subject:16s} {stage:9s} gated {r['gated']:.3f} ({r['n']} fams)  normal same "
+                f"fams {r['full_same_fams']:.3f}  normal 23 {r['full_23']:.3f}  "
+                f"dropped {r['dropped']}"
             )
     (OUT / "scores.json").write_text(json.dumps(result, indent=1))
 
 
+COMMANDS = {"prepare": prepare, "judge": judge, "score": score}
+
 if __name__ == "__main__":
-    {"prepare": prepare, "judge": judge, "score": score}[sys.argv[1]](*sys.argv[2:])
+    if len(sys.argv) < 2 or sys.argv[1] not in COMMANDS:
+        print(__doc__)
+        sys.exit(0 if {"-h", "--help"} & set(sys.argv[1:]) else 2)
+    COMMANDS[sys.argv[1]](*sys.argv[2:])

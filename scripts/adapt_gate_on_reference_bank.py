@@ -1,13 +1,28 @@
-"""Gate a normal-bank OLens subject on the 27B bank (greedy, every leg) and re-gold the own-answer
-families from its adapt gate records: outputs/normal_gated/<subject>/{gate,poetry,basic_readout_st,
-moral_rationale}.json.
+"""Gate a subject model on the reference model's question bank, and give it its own golds.
 
-    python atlas/normal_gate.py answers glm-5.3-flash   # greedy answers via adapt-mp-<key> (GPU)
-    python atlas/normal_gate.py grade kimi-k2            # capable grade prompt, Opus via OAuth
-    python atlas/normal_gate.py regold kimi-k2           # from adapted/<key>/gate (adapt profile + moral)
+What it gates: which of the reference bank's questions the subject answers itself (greedy
+decoding, every leg of a multi-step question), so a lens read on that bank can be scored on the
+questions the subject knows. The three own-answer evals (poetry, basic_readout_st,
+moral_rationale) are not gated by the reference golds; they get the subject's golds instead.
 
-The questions are exactly the 2861 Kimi-K2 answered (gw-olens kimi_wsb_gate_modal.py, wsbench
-92d763e), so both subjects are gated on identical asks; grading copies that app's grade step.
+    python scripts/adapt_gate_on_reference_bank.py answers <subject>
+    python scripts/adapt_gate_on_reference_bank.py grade <subject>
+    python scripts/adapt_gate_on_reference_bank.py regold <subject>
+    python scripts/adapt_gate_on_reference_bank.py notes <subject>
+
+``answers`` takes the subject's greedy answers (GPU, through the subject's Modal app); ``grade``
+grades them (string match, then claude-opus-5-5); ``regold`` builds the own-answer evals from
+``adapted/<subject>/gate``; ``notes`` writes a summary of the three steps.
+
+Inputs: the questions file ``$WSB_GATE_QUESTIONS`` (JSON ``{"rows": [{family, id, ask, golds,
+reference, meta, answer}]}``; ``answers`` asks its ``ask`` fields, and ``grade kimi-k2`` grades
+its own ``answer`` fields), the subject's entry in ``wsbench.adapt.subjects``, and for ``regold``
+the gate records under ``adapted/<subject>/gate``. ``grade`` reads the judge token the adapt
+tools use (``wsbench.adapt.auth``).
+
+Outputs, under ``$WSB_GATED_OUT`` (default ``outputs/normal_gated``) ``/<subject>/``:
+``answers.json``, ``grade_cache.jsonl``, ``gate.json``, ``{poetry,basic_readout_st,
+moral_rationale}.json``, ``NOTES.md``.
 """
 
 import json
@@ -21,8 +36,15 @@ from pathlib import Path
 
 WSB = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(WSB / "src"))
-KIMI_ANSWERS = Path("/workspace/agam/olens_ckpts/kimi-k2-instruct-0905/gates/kimi-k2_answers.json")
-OUT = WSB / "outputs" / "normal_gated"
+
+from wsbench import paths  # noqa: E402
+
+QUESTIONS_ENV = "WSB_GATE_QUESTIONS"
+OUT_ENV = "WSB_GATED_OUT"
+KIMI_ANSWERS = paths.external(
+    QUESTIONS_ENV, "agam/olens_ckpts/kimi-k2-instruct-0905/gates/kimi-k2_answers.json"
+)
+OUT = Path(os.environ[OUT_ENV]) if os.environ.get(OUT_ENV) else WSB / "outputs" / "normal_gated"
 GRADER = "claude-opus-5-5"
 WORKERS = int(os.environ.get("ADAPT_CLAUDE_WORKERS", "4"))
 GRADE_SYSTEM = (
@@ -162,7 +184,8 @@ def grade(subject: str) -> None:
     out = {"subject": subject, "criterion": "greedy, every leg",
            "grader": f"{GRADER} (wsbench capable grade prompt; string match accepted outright)",
            "not_gated": sorted(NOT_GATED),
-           "note": "basic_readout_st here = entity items only (implicit items are re-golded on the subject)",
+           "note": "basic_readout_st here = entity items only "
+                   "(implicit items are re-golded on the subject)",
            "families": fams, "items": items, "n_graded_calls": len(todo),
            "n_undecided": sum(g is None for g in got)}  # fmt: skip
     (OUT / subject / "gate.json").write_text(json.dumps(out, indent=1, ensure_ascii=False))
@@ -239,7 +262,10 @@ def notes(subject: str, extra: str = "") -> None:
     print((d / "NOTES.md").read_text())
 
 
+COMMANDS = {"answers": answers, "grade": grade, "regold": regold, "notes": notes}
+
 if __name__ == "__main__":
-    {"answers": answers, "grade": grade, "regold": regold, "notes": notes}[sys.argv[1]](
-        *sys.argv[2:]
-    )
+    if len(sys.argv) < 3 or sys.argv[1] not in COMMANDS:
+        print(__doc__)
+        sys.exit(0 if {"-h", "--help"} & set(sys.argv[1:]) else 2)
+    COMMANDS[sys.argv[1]](*sys.argv[2:])

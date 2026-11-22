@@ -12,12 +12,12 @@ from typing import Any
 
 from wsbench import fast, nocot, registry
 from wsbench import results as wsb_results
-from wsbench.viewer import build as bank_view
+from wsbench.item_view import view_item
 from wsbench.viewer import gates, meta, store
 from wsbench.viewer.ingest.common import CellWriter, fold, sample_texts, strings, term_pattern
 
 BENCH = "wsb"
-ORIGINAL = bank_view.ORIGINAL
+ORIGINAL = "qwen3.6-27b"  # the model the registered banks are for
 MACRO = "_macro"
 PRIVATE_NOTE = "[private item: its text is not shown unless the viewer runs with private=True]"
 WHERE_RE = re.compile(r"\[L(-?\d+) pos (-?\d+)\]")
@@ -62,7 +62,7 @@ def layout(path: Path) -> dict[str, Path | None]:
 
 def family_dirs(judged: Path) -> dict[str, Path]:
     """``{family: its results directory}`` under today's keys. A directory named by a key that
-    plan 0101 reused (``multihop/`` written before the rename is the single-token family) is
+    two families have used (an older ``multihop/`` holds the single-token family) is
     attributed by its content (``registry.dir_family``); one that cannot be is skipped."""
     out: dict[str, Path] = {}
     for p in sorted(judged.iterdir()):
@@ -90,7 +90,7 @@ def is_original(model: str) -> bool:
 def _bank_file(repo: Path, model: str, family: str) -> Path | None:
     if is_original(model):
         try:
-            path = repo / bank_view._bank_rel(family)
+            path = repo / registry.frozen_bank_path(family).relative_to(registry.REPO_ROOT)
         except (KeyError, SystemExit, ValueError):
             return None
     else:
@@ -117,6 +117,14 @@ def _unique(values: Iterable[Any]) -> list[str]:
     return list(seen.values())
 
 
+def _bank_rows(raw: Any) -> list[dict]:
+    """The items of a bank file: a list, or an object with an ``items`` list."""
+    if isinstance(raw, list):
+        return raw
+    items = raw.get("items") if isinstance(raw, dict) else None
+    return items if isinstance(items, list) else []
+
+
 def bank_items(repo: Path, model: str, family: str) -> list[dict]:
     """The family's questions as catalog rows (prompt, expected, intermediates)."""
     path = _bank_file(repo, model, family)
@@ -125,10 +133,10 @@ def bank_items(repo: Path, model: str, family: str) -> list[dict]:
     raw = json.loads(path.read_text(encoding="utf-8"))
     private = _private_ids(repo) if family == "knowledge_cutoff" else set()
     out = []
-    for n, item in enumerate(bank_view._items(raw)):
+    for n, item in enumerate(_bank_rows(raw)):
         if not isinstance(item, dict):
             continue
-        v = bank_view.view_item(item, n)
+        v = view_item(item, n)
         is_private = v["id"] in private or item.get("source") == "nocot"
         small = {k: x for k, x in v["raw"].items() if len(json.dumps(x, default=str)) < 1500}
         out.append(
@@ -407,7 +415,7 @@ def _readout_file(readouts: Path | None, family: str) -> Path | None:
         return None
     for name in registry.lookup_names(family):
         p = readouts / f"{name}.jsonl"
-        # a file under a key plan 0101 reused belongs to the family its item ids say
+        # a file under a key two families have used belongs to the family its item ids say
         if p.is_file() and registry.file_family(p) == family:
             return p
     return None

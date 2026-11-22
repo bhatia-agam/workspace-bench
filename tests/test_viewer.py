@@ -104,7 +104,7 @@ def hb_run(tmp_path: Path) -> Path:
 def test_readme_groups_and_family_lines():
     metas = meta.load_wsb(registry.REPO_ROOT)
     assert len(metas) >= 28
-    # plan 0101: the plain key is the multi-token family, `_st` the single-token one; the family
+    # the plain key is the multi-token family, `_st` the single-token one; the family
     # line links evals/<category>/<family>/README.md and may end with the tier tag
     mh, st = metas["multihop"], metas["multihop_st"]
     assert mh.title == "Multihop" and st.title == "Multihop (single-token)"
@@ -302,7 +302,7 @@ def test_viewer_commands_are_pydra_configs(capsys):
     assert viewer_cli.main(["ingest"]) == viewer_cli.EXIT_USAGE
 
 
-# ------------------------------------------------------------------ plan 0101 keys, tiers
+# ------------------------------------------------------------------ family keys, tiers
 
 
 def test_a_run_tree_from_before_the_rename_is_read_as_its_family(wsb_run: Path, tmp_path: Path):

@@ -14,7 +14,7 @@ from wsbench.viewer import gates, store
 
 MACRO = "_macro"
 BENCH_TITLES = {"wsb": "WorkspaceBench", "hb": "HallucinationBench"}
-CORE = "core"  # the default tier (plan 0098): shown from the full run's rows, never stored
+CORE = "core"  # the default tier: shown from the full run's rows, never stored
 SUBSET_TITLES = {  # in the order the dropdown lists them
     CORE: "Core (the default tier)",
     "full": "Full bench",

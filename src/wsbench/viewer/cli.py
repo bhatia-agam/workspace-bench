@@ -1,5 +1,5 @@
-"""``wsbench viewer <ingest|serve|bank> ...``: fill the results store, serve the viewer, or
-build the static bank browser. Each command is a pydra config, like every wsbench command:
+"""``wsbench viewer <ingest|serve> ...``: fill the results store or serve the viewer. Each
+command is a pydra config, like every wsbench command:
 ``key=value`` and ``--show``."""
 
 import json
@@ -16,7 +16,6 @@ USAGE = """usage: wsbench viewer <command> [key=value ...] [--show | --help]
 
   ingest <dir> adapter=wsb|hb|bank|tokens [store=DIR]   add a lens (or the question banks)
   serve [store=DIR] [port=8600]                  open the viewer on http://127.0.0.1:<port>
-  bank [out=outputs/viewer]                      the static per-model bank browser
 
 ingest keys
   adapter=wsb   <dir> = a judged run (<family>/results.json) or a lens dir with judged/,
@@ -97,17 +96,8 @@ class Serve(Options):
         self.private = _bool(self.private)
 
 
-class Bank(Options):
-    def __init__(self) -> None:
-        super().__init__()
-        self.out = "outputs/viewer"
-
-    def finalize(self) -> None:
-        self.out = str(self.out)
-
-
 ADAPTERS = ("wsb", "hb", "bank", "tokens")
-COMMANDS: dict[str, type[Options]] = {"ingest": Ingest, "serve": Serve, "bank": Bank}
+COMMANDS: dict[str, type[Options]] = {"ingest": Ingest, "serve": Serve}
 EXIT_USAGE = 2
 
 
@@ -218,12 +208,7 @@ def main(argv: list[str]) -> int:
         return 0
     if isinstance(command, Ingest):
         return _ingest(command)
-    if isinstance(command, Serve):
-        return _serve(command)
-    from wsbench.viewer import build
-
-    build.main(command["out"])
-    return 0
+    return _serve(command)
 
 
 if __name__ == "__main__":

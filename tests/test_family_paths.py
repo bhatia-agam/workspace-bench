@@ -23,7 +23,7 @@ EXEMPT = {REPO / "src/wsbench/registry.py"}
 
 def code_files() -> list[Path]:
     out = [*(REPO / "src/wsbench").rglob("*.py"), *(REPO / "atlas").glob("*.py")]
-    out += [*(REPO / "viewer_app").glob("*.py"), *(REPO / ".claude/skills").rglob("*.py")]
+    out += (REPO / ".claude/skills").rglob("*.py")
     return sorted(f for f in out if f not in EXEMPT and "__pycache__" not in f.parts)
 
 

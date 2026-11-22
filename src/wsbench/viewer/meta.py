@@ -1,6 +1,6 @@
-"""Eval metadata for the viewer, parsed from the docs rather than rewritten: the README's
-'The evals' groups and each family's *What it is / Example / Judged by* lines, the family
-README's 'Judge prompts' section, and HallucinationBench's eval table."""
+"""Eval metadata for the viewer, parsed from the docs rather than rewritten: the groups of
+'The evals' (``docs/evals.md``) and each family's *What it is / Example / Judged by* lines, the
+family README's 'Judge prompts' section, and HallucinationBench's eval table."""
 
 import re
 from dataclasses import dataclass, field
@@ -12,7 +12,7 @@ GROUP_RE = re.compile(r"^### (.+)$")
 # `**Title** — [`evals/<category>/<family>/README.md`](...)`, then perhaps ` · `core``
 FAMILY_RE = re.compile(r"^\*\*(.+?)\*\* — \[`evals/(?:[a-z0-9_]+/)?([a-z0-9_]+)/README\.md`\]")
 BULLET_RE = re.compile(r"^- \*(What it is|Example|Judged by):\*\s*(.*)$")
-SECTION = "## The evals"
+SECTION_RE = re.compile(r"^##? The evals$", re.M)
 
 OTHER_GROUP = "Other"
 
@@ -31,11 +31,13 @@ class EvalMeta:
 
 
 def parse_readme(text: str) -> list[EvalMeta]:
-    """Every family of the README's 'The evals' section, in its order."""
-    start = text.find(SECTION)
-    if start < 0:
+    """Every family of the 'The evals' entries (``docs/evals.md``, or a README section of that
+    name in a checkout that keeps them there), in their order."""
+    head = SECTION_RE.search(text)
+    if not head:
         return []
-    end = text.find("\n## ", start + len(SECTION))
+    start = head.start()
+    end = text.find("\n## ", head.end())
     lines = text[start : end if end > 0 else len(text)].split("\n")
     out: list[EvalMeta] = []
     group, cur = OTHER_GROUP, None
@@ -64,8 +66,10 @@ def judge_prompts(family_readme: str) -> str:
 
 def load_wsb(repo: Path) -> dict[str, EvalMeta]:
     """``{family: EvalMeta}`` for a workspace-bench checkout."""
-    readme = repo / "README.md"
-    metas = parse_readme(readme.read_text(encoding="utf-8")) if readme.exists() else []
+    metas: list[EvalMeta] = []
+    for page in (repo / "docs" / "evals.md", repo / "README.md"):
+        if not metas and page.exists():
+            metas = parse_readme(page.read_text(encoding="utf-8"))
     for m in metas:
         fam_readme = repo / registry.family_rel(m.name) / "README.md"
         if fam_readme.exists():
