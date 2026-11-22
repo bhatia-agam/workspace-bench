@@ -1330,6 +1330,7 @@ class Plan(Command):
                 f"{name}: {n} items, render {sorted({s.render for s in specs})}, "
                 f"positions {kinds}, layers {layers}"
             )
+        print(f"read plan -> {self.out}/<family>.jsonl ({len(names)} families)")
         return 0
 
 
