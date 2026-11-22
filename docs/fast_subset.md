@@ -3,16 +3,10 @@
 `--fast` is the fast tier of [Tiers](tiers.md). The full bench is slow because it has so many questions. `--fast` runs **`fast-v3`**, a frozen,
 smaller, higher-signal subset of the Qwen3.6-27B bench: 22 families, 1,823 questions (scored
 units), 2,160 read items ([`evals/fast/`](../evals/fast/README.md): the files, the selection and
-vetting rules, per-family counts). `fast-v3` (2026-11-20) is `fast-v2` with
-`conjunctive_association` pinned to its bank v6 (same items; that family's older fast rows and
-fast readouts files are not carried over, every other family's are: `evals/fast/README.md`).
-`fast-v2` (plan 0094, 2026-11-17) is `fast-v1` (24 families,
-1,996 units) without `jailbreak_recognition` and `agentic_misalignment`; every other family's
-items are the same, so a `fast-v1` readouts file or result of one of the 22 families is used as
-it is, and `fast-v1` itself stays frozen in the repo but is no longer what `--fast` runs.
-`--fast-safety` (plan 0095, 2026-11-18) runs **`fast-safety-v2`** (`fast-safety-v1` until
-2026-11-20, cut again for the same reason): the same subset with the two
-safety families back in, for a run that wants the safety signal and can take the extra time.
+vetting rules, per-family counts).
+`--fast-safety` runs **`fast-safety-v2`**: the same subset plus the two safety families
+`jailbreak_recognition` and `agentic_misalignment`, for a run that wants the safety signal and
+can take the extra time.
 
 | flag | version | families | units | read items |
 |---|---|---|---|---|
@@ -37,18 +31,18 @@ uv run wsbench report dir=outputs/judged/mylens-fast-safety --fast-safety
   draws), then vetted item by item. Six families that are saturated or basic and do not
   separate methods are dropped (`typo`, `association`, `multihop_st`, `multilingual_st`,
   `chain_intermediates`, `multilingual`; `jlens_concept_pr` is not in the macro and not in
-  the subset). The frozen subset files (`evals/fast/*.json`) and their goldens keep the
-  family keys of before plan 0101 by design (there the six read `typo_mt`, `association`,
+  the subset). Some of the frozen subset files (`evals/fast/*.json`) and their goldens name
+  families by other keys (there the six read `typo_mt`, `association`,
   `multihop`, `multilingual`, `chain_intermediates`, `multilingual_mt`): they are frozen
-  bytes, and `fast.subset` translates them to today's keys at load. `fast-v2` also drops `jailbreak_recognition` and `agentic_misalignment`: on a
+  bytes, and `fast.subset` translates them to the registry's keys at load. `--fast` also leaves out `jailbreak_recognition` and `agentic_misalignment`: on a
   fast run they take 23 to 38 minutes to judge after their readouts land, against 1 to 13
   minutes for the other 22 families, and they change no ordering of the measured arms (without
   them each arm's fast macro moves by at most 0.028). Within a kept family, questions every trained lens solves and questions the
   vetting marked broken, artefactual or prompt-guessable are dropped. The frozen strict ATI
   subset (`ati-subset-v2`, 350 ids in 8 families) is contained whole.
 - **Reduced reads.** `introspection`: only the 125 headline units and the rows their twins
-  read. Every `fast-v2` family is read at its full positions. **`--fast-safety` only**
-  (`fast-safety-v1`; the entries are `fast-v1`'s): `agentic_misalignment`, the
+  read. Every `--fast` family is read at its full positions. **`--fast-safety` only**:
+  `agentic_misalignment`, the
   18 pairs whose original misbehaves in at least one of the 8 gate rollouts, read at the last 60
   positions of each item (stamp `+fast-last_n60`), and `jailbreak_recognition`, 155 of 172
   items, read at punctuation, newline and special-token positions only (stamp
@@ -62,28 +56,29 @@ uv run wsbench report dir=outputs/judged/mylens-fast-safety --fast-safety
   prompt-only floors (measured on the full banks; `report` blanks those columns) or ATI numbers.
   `report` and the macro refuse to mix fast and non-fast rows (`report ... --fast` /
   `fast=False` picks one kind); the macro row of a fast table is the mean over the fast families.
-  A `fast-v1` results directory reports the `fast-v2` macro over its 22 families with no
-  migration: its jailbreak / agentic rows are listed as excluded (`stale fast subset (fast-v1)`, or the row's own reason first when it is incomplete or has no value).
-- **The two subsets together.** Compatibility is per family (`fast.compatible`): a file or row
+  A `fast-v1` results directory (24 families) reports the `--fast` macro over the 22 families
+  as it is: its jailbreak / agentic rows are listed as excluded (`stale fast subset (fast-v1)`, or the row's own reason first when it is incomplete or has no value).
+- **The two subsets together, and files of other subset versions.** Compatibility is per
+  family (`fast.compatible`): a file or row
   of another version is used when that version holds the family with the identical entry.
-  `fast-v1`, `fast-v2`, `fast-safety-v1`, `fast-v3` and `fast-safety-v2` hold identical entries
-  for every family they share except `conjunctive_association` (re-frozen on bank v6,
-  2026-11-20: identical in `fast-v3` and `fast-safety-v2` only, so its older fast rows read
-  `stale fast subset (<v>)`; its older FAST readouts files are still judged, the reads being
-  the same). For every other family
-  readouts and results move between the versions (`fast-v3` / `fast-safety-v2` behave as
-  `fast-v2` / `fast-safety-v1` in what follows): under `--fast-safety`
-  a `fast-v1` file or row of any of the 24 families and a `fast-v2` one of the 22 are used as
-  they are; under `--fast` a `fast-safety-v1` row of the 22 is in the macro and the two safety
-  rows are excluded. A finished `--fast` run becomes a `--fast-safety` run by judging the two
+  The frozen files in the repo are `fast-v1`, `fast-v2`, `fast-safety-v1`, `fast-v3` and
+  `fast-safety-v2`. They hold identical entries
+  for every family they share except `conjunctive_association`, whose entry is identical in
+  `fast-v3` and `fast-safety-v2` only: its rows of the other three versions read
+  `stale fast subset (<v>)`, while its FAST readouts files of those versions are judged as they
+  are, the reads being the same. For every other family
+  readouts and results move between the versions: under `--fast-safety`
+  a file or row of any of the 24 families, of any of these versions, is used as
+  it is; under `--fast` a row of the 22 from a 24-family version is in the macro and the two
+  safety rows are excluded. A finished `--fast` run becomes a `--fast-safety` run by judging the two
   families into the same directory (`wsbench judge family=<f> --fast-safety`, not `run
   families=...`, which rewrites `summary.md` / `run.json` with those two only) and then `report
   dir=... --fast-safety`. A bare `report dir=` on a `run --fast-safety` directory rewrites
-  `summary.md` to the `fast-v2` view, with a line saying how many rows are in `fast-safety-v1`
-  only; pass `--fast-safety` for the 24-family macro. `fast-v2` and `fast-safety-v1` numbers
+  `summary.md` to the `--fast` view, with a line saying how many rows are in the `--fast-safety`
+  subset only; pass `--fast-safety` for the 24-family macro. `--fast` and `--fast-safety` numbers
   are different scales: never put them side by side as one column without the label.
 - **Limits.** Qwen3.6-27B's registered banks only: `--fast` exits 2 under `WSB_BANK_ROOT` or a
-  `WSB_BANK_FILE_<FAMILY>` pin, and when a registered bank changed since the freeze. Summary mode
+  `WSB_BANK_FILE_<FAMILY>` pin, and when a registered bank is not the one the subset was frozen on. Summary mode
   and full reads only: `--fast` with `anti_text_inversion=True`, `reads=lite`,
   `layers=each`, `opts=aggregate=native` or `opts=judge=...` is a usage error. `items=` under `--fast` judges a part of the fast items (ids outside the subset exit 2) and always gives an incomplete result: it fills the cache, e.g. to judge a slow family in parallel groups before one full pass. Give a fast run
   its own `out=` (it would overwrite a full run's `results.json`); judge and digest calls are
@@ -92,7 +87,7 @@ uv run wsbench report dir=outputs/judged/mylens-fast-safety --fast-safety
 
 Fidelity of the fast subset against the full bench:
 
-| arm | full bench (30 families) | fast-v2 (22 families) |
+| arm | full bench (30 families) | `--fast` (22 families) |
 |---|---|---|
 | O-lens s3d (native) | 0.600 | 0.538 |
 | rl-affw (whitened affine) | 0.559 | 0.497 |
@@ -102,14 +97,13 @@ Fidelity of the fast subset against the full bench:
 | J-lens (public) | 0.193 | 0.119 |
 | logit lens (L63) | 0.096 | 0.067 |
 
-11-layer union, from the unit matrix of 2026-11-16. The fast numbers are a different scale (fewer
+11-layer union. The fast numbers are a different scale (fewer
 easy questions), so they are never compared with full-bench numbers; the order of the arms is what
-carries over. The same arms on `--fast-safety` (`fast-safety-v1`, 24 families; measured as
-`fast-v1`, the same items): 0.535, 0.491, 0.478, 0.442, 0.475, 0.116, 0.063. Measured for the
+carries over. The same arms on `--fast-safety` (24 families): 0.535, 0.491, 0.478, 0.442, 0.475, 0.116, 0.063. Measured for the
 24 families: across 19 lenses the item selection (with full-position reads of
 the two reduced families) correlates 0.988 with the full macro (rank 0.995) and keeps the sign of
 all 153 significant pairwise differences.
-`--fast-safety` only, the two families `fast-v2` leaves out: jailbreak_recognition at the reduced
+`--fast-safety` only, the two families `--fast` leaves out: jailbreak_recognition at the reduced
 positions keeps arm order but loses about 0.04 of recall minus control FPR on average (8 arms);
 agentic_misalignment at the last 60 positions finds 10 of the 13 pair hits the full read finds
 plus new ones, at a higher level (mean pair rate about 0.19 vs 0.08) and with run-to-run noise

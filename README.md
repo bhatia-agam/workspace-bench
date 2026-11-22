@@ -183,40 +183,40 @@ reported on, `fast` the fast subset. Each eval's page states its questions, read
 and pass rule; [docs/evals.md](docs/evals.md) has one example and the judging rule of each.
 
 <!-- evals table: start -->
-| category | eval | in | what it tests | questions |
-|---|---|---|---|---|
-| Basic | [`basic_readout`](evals/basic/basic_readout/README.md) | fast | The multi-word answer to a factual question the model has read but not yet answered. | 90 |
-| Basic | [`basic_readout_st`](evals/basic/basic_readout_st/README.md) | fast | The same with a one-word answer. | 100 |
-| Basic | [`directed_modulation`](evals/basic/directed_modulation/README.md) | fast | A concept the model was told to think about, not think about, or hide while copying a sentence. | 100 |
-| Basic | [`multi_concept_directed_modulation`](evals/basic/multi_concept_directed_modulation/README.md) | core, fast | Up to three concepts, or who does what to whom, held in mind while writing a dictated sentence. | 116 |
-| Basic | [`multihop`](evals/basic/multihop/README.md) | fast | The unstated multi-word bridge of a two- or three-hop fact. | 70 |
-| Basic | [`multihop_st`](evals/basic/multihop_st/README.md) | - | The unstated one-word bridge of a two-hop fact. | 98 |
-| Basic | [`multilingual`](evals/basic/multilingual/README.md) | - | The multi-word answer to a non-English prompt, in the prompt's language. | 100 |
-| Basic | [`multilingual_multihop`](evals/basic/multilingual_multihop/README.md) | fast | The bridge of a non-English two-hop prompt. | 98 |
-| Basic | [`multilingual_st`](evals/basic/multilingual_st/README.md) | - | The one-word answer to a non-English prompt. | 99 |
-| Basic | [`multilingual_typo`](evals/basic/multilingual_typo/README.md) | fast | The intended word behind a misspelling in a non-English sentence. | 100 |
-| Basic | [`poetry`](evals/basic/poetry/README.md) | core, fast | The rhyme word the model plans at the end of a couplet's first line. | 100 |
-| Basic | [`typo`](evals/basic/typo/README.md) | - | The intended multi-word term behind a misspelling. | 85 |
-| Basic | [`typo_st`](evals/basic/typo_st/README.md) | - | The intended word behind a misspelling. Replaced by `typo`: runs only when named. | 100 |
-| Computational | [`arithmetic_intermediates`](evals/computational/arithmetic_intermediates/README.md) | core, fast | The intermediate values of an expression answered with no working shown. | 480 |
-| Computational | [`buggy_code`](evals/computational/buggy_code/README.md) | core, fast | The bug in a short program, and no bug in its clean twin. | 143 |
-| Computational | [`chain_intermediates`](evals/computational/chain_intermediates/README.md) | core | The running value of a two- or three-step arithmetic chain. | 120 |
-| Association | [`association`](evals/association/association/README.md) | - | A concept a scene implies but never names. | 93 |
-| Association | [`conjunctive_association`](evals/association/conjunctive_association/README.md) | fast | A compound state a vignette implies: what is felt, about what, towards whom. | 100 |
-| Association | [`user_modeling`](evals/association/user_modeling/README.md) | fast | An attribute of the user that a chat implies. | 126 |
-| Safety | [`agentic_misalignment`](evals/safety/agentic_misalignment/README.md) | core | The model's plan to take a misaligned action before it writes it, and none on the clean twin. | 54 |
-| Safety | [`jailbreak_recognition`](evals/safety/jailbreak_recognition/README.md) | core | The model noticing that a turn is a jailbreak, and not on harmless role-play. | 172 |
-| Anti-bag-of-features | [`relational_multihop`](evals/anti_bag_of_features/relational_multihop/README.md) | core, fast | The relation between two people across two hops, which a bag of words cannot express. | 100 |
-| Anti-bag-of-features | [`role_bound_association`](evals/anti_bag_of_features/role_bound_association/README.md) | core, fast | Who does what to whom in a scene: the direction, not just the words. | 100 |
-| Logical processing | [`moral_rationale`](evals/logical_processing/moral_rationale/README.md) | core, fast | The reason behind a one-token answer to a hard dilemma. | 195 |
-| Logical processing | [`nyt_connections`](evals/logical_processing/nyt_connections/README.md) | core, fast | The grouping the model has in mind before it answers a word puzzle. | 335 |
-| Model-specific | [`hinted_cutoff`](evals/model_specific/hinted_cutoff/README.md) | core, fast | That the model uses a hint in the prompt which its reply never mentions. | 236 |
-| Model-specific | [`introspection`](evals/model_specific/introspection/README.md) | core, fast | A concept injected into the model's activations. | 1,762 |
-| Model-specific | [`knowledge_cutoff`](evals/model_specific/knowledge_cutoff/README.md) | core, fast | The stable wrong answer the model gives about things it does not know. | 147 |
-| Model-specific | [`model_multihop`](evals/model_specific/model_multihop/README.md) | core, fast | A bridge that only this model believes. | 283 |
-| Model-specific | [`model_specific_directed_modulation`](evals/model_specific/model_specific_directed_modulation/README.md) | core, fast | An obscure concept the model was told to think about. | 98 |
-| Model-specific | [`wrong_intermediate`](evals/model_specific/wrong_intermediate/README.md) | core, fast | The wrong bridge the model resolves on its way to a wrong answer. | 100 |
-| J-lens comparison | [`jlens_concept_pr`](evals/jlens_comparison/jlens_concept_pr/README.md) | - | Whether the concepts a lens states agree with the J-lens tokens at the same activation. In no macro. | 299 |
+| category | eval | in | what it tests | scored by | questions |
+|---|---|---|---|---|---|
+| Basic | [`basic_readout`](evals/basic/basic_readout/README.md) | fast | The multi-word answer to a factual question the model has read but not yet answered. | Claude judge | 90 |
+| Basic | [`basic_readout_st`](evals/basic/basic_readout_st/README.md) | fast | The same with a one-word answer. | Claude judge | 100 |
+| Basic | [`directed_modulation`](evals/basic/directed_modulation/README.md) | fast | A concept the model was told to think about, not think about, or hide while copying a sentence. | Claude judge | 100 |
+| Basic | [`multi_concept_directed_modulation`](evals/basic/multi_concept_directed_modulation/README.md) | core, fast | Up to three concepts, or who does what to whom, held in mind while writing a dictated sentence. | Claude judge | 116 |
+| Basic | [`multihop`](evals/basic/multihop/README.md) | fast | The unstated multi-word bridge of a two- or three-hop fact. | Claude judge | 70 |
+| Basic | [`multihop_st`](evals/basic/multihop_st/README.md) | - | The unstated one-word bridge of a two-hop fact. | Claude judge | 98 |
+| Basic | [`multilingual`](evals/basic/multilingual/README.md) | - | The multi-word answer to a non-English prompt, in the prompt's language. | rule (regex) | 100 |
+| Basic | [`multilingual_multihop`](evals/basic/multilingual_multihop/README.md) | fast | The bridge of a non-English two-hop prompt. | Claude judge | 98 |
+| Basic | [`multilingual_st`](evals/basic/multilingual_st/README.md) | - | The one-word answer to a non-English prompt. | Claude judge | 99 |
+| Basic | [`multilingual_typo`](evals/basic/multilingual_typo/README.md) | fast | The intended word behind a misspelling in a non-English sentence. | rule (regex) | 100 |
+| Basic | [`poetry`](evals/basic/poetry/README.md) | core, fast | The rhyme word the model plans at the end of a couplet's first line. | Claude judge | 100 |
+| Basic | [`typo`](evals/basic/typo/README.md) | - | The intended multi-word term behind a misspelling. | rule (regex) | 85 |
+| Basic | [`typo_st`](evals/basic/typo_st/README.md) | - | The intended word behind a misspelling. Replaced by `typo`: runs only when named. | Claude judge | 100 |
+| Computational | [`arithmetic_intermediates`](evals/computational/arithmetic_intermediates/README.md) | core, fast | The intermediate values of an expression answered with no working shown. | Claude judge | 480 |
+| Computational | [`buggy_code`](evals/computational/buggy_code/README.md) | core, fast | The bug in a short program, and no bug in its clean twin. | Claude judge | 143 |
+| Computational | [`chain_intermediates`](evals/computational/chain_intermediates/README.md) | core | The running value of a two- or three-step arithmetic chain. | Claude judge | 120 |
+| Association | [`association`](evals/association/association/README.md) | - | A concept a scene implies but never names. | Claude judge | 93 |
+| Association | [`conjunctive_association`](evals/association/conjunctive_association/README.md) | fast | A compound state a vignette implies: what is felt, about what, towards whom. | Claude judge | 100 |
+| Association | [`user_modeling`](evals/association/user_modeling/README.md) | fast | An attribute of the user that a chat implies. | Claude judge | 126 |
+| Safety | [`agentic_misalignment`](evals/safety/agentic_misalignment/README.md) | core | The model's plan to take a misaligned action before it writes it, and none on the clean twin. | Claude judge | 54 |
+| Safety | [`jailbreak_recognition`](evals/safety/jailbreak_recognition/README.md) | core | The model noticing that a turn is a jailbreak, and not on harmless role-play. | Claude judge | 172 |
+| Anti-bag-of-features | [`relational_multihop`](evals/anti_bag_of_features/relational_multihop/README.md) | core, fast | The relation between two people across two hops, which a bag of words cannot express. | Claude judge | 100 |
+| Anti-bag-of-features | [`role_bound_association`](evals/anti_bag_of_features/role_bound_association/README.md) | core, fast | Who does what to whom in a scene: the direction, not just the words. | Claude judge | 100 |
+| Logical processing | [`moral_rationale`](evals/logical_processing/moral_rationale/README.md) | core, fast | The reason behind a one-token answer to a hard dilemma. | Claude judge | 195 |
+| Logical processing | [`nyt_connections`](evals/logical_processing/nyt_connections/README.md) | core, fast | The grouping the model has in mind before it answers a word puzzle. | Claude judge | 335 |
+| Model-specific | [`hinted_cutoff`](evals/model_specific/hinted_cutoff/README.md) | core, fast | That the model uses a hint in the prompt which its reply never mentions. | Claude judge | 236 |
+| Model-specific | [`introspection`](evals/model_specific/introspection/README.md) | core, fast | A concept injected into the model's activations. | Claude judge | 1,762 |
+| Model-specific | [`knowledge_cutoff`](evals/model_specific/knowledge_cutoff/README.md) | core, fast | The stable wrong answer the model gives about things it does not know. | Claude judge | 147 |
+| Model-specific | [`model_multihop`](evals/model_specific/model_multihop/README.md) | core, fast | A bridge that only this model believes. | Claude judge | 283 |
+| Model-specific | [`model_specific_directed_modulation`](evals/model_specific/model_specific_directed_modulation/README.md) | core, fast | An obscure concept the model was told to think about. | rule (regex) | 98 |
+| Model-specific | [`wrong_intermediate`](evals/model_specific/wrong_intermediate/README.md) | core, fast | The wrong bridge the model resolves on its way to a wrong answer. | Claude judge | 100 |
+| J-lens comparison | [`jlens_concept_pr`](evals/jlens_comparison/jlens_concept_pr/README.md) | - | Whether the concepts a lens states agree with the J-lens tokens at the same activation. In no macro. | Claude judge | 299 |
 
 `group=<category>` selects a category by its key (basic, computational, association, safety, anti_bag_of_features, logical_processing, model_specific, jlens_comparison). `group=association` also selects `role_bound_association`, which is listed under `anti_bag_of_features`.
 <!-- evals table: end -->
@@ -226,8 +226,15 @@ The anti-text-inversion subset is not a category: it is the questions, across ev
 text-only reader answers from the prompt alone, and `anti_text_inversion=True` scores only
 those ([docs/baselines.md](docs/baselines.md)).
 
-Older results and readouts may use earlier names for eight evals; `wsbench` reads both and
-[docs/history.md](docs/history.md) has the table.
+**How an eval is scored.** The `scored by` column is the registry's scorer of record: a Claude
+judge reads the readouts and decides, or a rule (a regular expression over the readouts)
+decides with no judgement call. In the default summary mode the readouts of every eval, the
+rule-scored ones included, first pass through the Claude summarizer, so those evals still make
+API calls; with `opts=aggregate=native` a rule-scored eval makes none. Some judged evals also
+apply a rule after the judge ([docs/judges.md](docs/judges.md)).
+
+Results and readouts written under another name of an eval are read as well: `wsbench`
+attributes them by their content.
 
 ## More documentation
 
@@ -245,7 +252,6 @@ Older results and readouts may use earlier names for eight evals; `wsbench` read
 - [docs/checks.md](docs/checks.md): the checks and how to add one.
 - [docs/open_work.md](docs/open_work.md): open work.
 - [CLAUDE.md](CLAUDE.md): conventions for contributors and agents.
-- [docs/history.md](docs/history.md): renamed and removed evals.
 
 ## Credits
 

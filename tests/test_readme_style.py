@@ -9,7 +9,30 @@ import pytest
 
 REPO = Path(__file__).resolve().parents[1]
 # the pages held to the rule: the README and the pages written beside it
-PAGES = ["README.md", "docs/checks.md", "docs/judge_backends.md", "src/wsbench/viewer/README.md"]
+PAGES = [
+    "README.md",
+    "src/wsbench/viewer/README.md",
+    *(
+        f"docs/{name}.md"
+        for name in (
+            "checks",
+            "judge_backends",
+            "evals",
+            "judges",
+            "running",
+            "tiers",
+            "fast_subset",
+            "baselines",
+            "results_contract",
+            "porting",
+            "hallucinationbench",
+            "open_work",
+            "summarizer",
+            "producing_readouts",
+            "read_sites",
+        )
+    ),
+]
 
 MONTHS = "January|February|March|April|June|July|August|September|October|November|December"
 DATED = [
@@ -63,3 +86,12 @@ def test_every_relative_link_in_the_readme_resolves():
     assert targets
     missing = sorted({t for t in targets if not (REPO / t).exists()})
     assert not missing, missing
+
+
+def test_the_readme_spells_no_versioned_name_even_in_code():
+    """What a newcomer types from the README carries no version: the commands accept a
+    descriptive name, and a file whose name has one is linked by its role."""
+    text = (REPO / "README.md").read_text(encoding="utf-8")
+    shown = re.sub(r"\]\([^)\s]*\)", "]", text)  # link targets are not shown
+    found = sorted({m.group(0) for m in VERSIONED.finditer(shown)} - ALLOWED)
+    assert not found, found

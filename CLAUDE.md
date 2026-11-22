@@ -10,7 +10,7 @@ pointer (`plans/README.md`). Public docs: `README.md`, `NOTICE.md`, `CITATION.cf
 the newcomer's path (what it is, requirements, time and cost, install, `wsbench try`, running,
 outputs, checks, viewer, one table of the evals, credits); reference material lives in `docs/`
 (evals, running, tiers, judges, baselines, fast_subset, results_contract, porting, checks,
-judge_backends, history). `tests/test_readme_style.py` keeps dates, plan numbers and
+judge_backends). `tests/test_readme_style.py` keeps dates, plan numbers and
 version-style labels out of the README's prose.
 
 ## Readout contract (input to every family)

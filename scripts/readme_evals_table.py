@@ -4,7 +4,7 @@
     python scripts/readme_evals_table.py            # print the table
     python scripts/readme_evals_table.py --write    # replace it in README.md, between the markers
 
-Category, page, sets and number of questions come from the code (``registry``, ``tiers``,
+Category, page, sets, scorer and number of questions come from the code (``registry``, ``tiers``,
 ``fast``, ``readplan``, ``groups``); only the one-line "what it tests" is written here.
 ``tests/test_readme.py`` fails when the README's table is not this one.
 """
@@ -55,11 +55,20 @@ WHAT = {
 }
 
 
+def scored_by(name: str) -> str:
+    """The registry's scorer of record: a rule (``scorer`` is set) or the family's Claude judge."""
+    spec = registry.FAMILIES[name]
+    return f"rule ({spec.scorer})" if spec.scorer else "Claude judge"
+
+
 def table() -> str:
     """The table and the lines under it, as they stand in the README."""
     registry.load_all()
     fast_set = set(fast.families())
-    lines = ["| category | eval | in | what it tests | questions |", "|---|---|---|---|---|"]
+    lines = [
+        "| category | eval | in | what it tests | scored by | questions |",
+        "|---|---|---|---|---|---|",
+    ]
     for category, title in registry.CATEGORIES.items():
         short = title.split(" (")[0]
         names = sorted(n for n, s in registry.FAMILIES.items() if s.group == category)
@@ -68,7 +77,7 @@ def table() -> str:
             page = f"{registry.family_rel(name).as_posix()}/README.md"
             lines.append(
                 f"| {short} | [`{name}`]({page}) | {', '.join(sets) or '-'} | {WHAT[name]} "
-                f"| {len(readplan.plan(name)):,} |"
+                f"| {scored_by(name)} | {len(readplan.plan(name)):,} |"
             )
     lines.append("")
     for group, extra in groups.ALSO_IN.items():

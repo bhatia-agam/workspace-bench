@@ -4,21 +4,20 @@ Every judged pass rate is read against measured floors in [`evals/baselines/`](.
 **lucky guessing** (the repo judge shown only each family's option lists: blind, described and
 seeded-uniform variants, five draws at temperature 1.0, stamped with the family's judge prompt
 version) and **prompt-only** (Claude Opus 5.5 given the prompt text, no activation, judged
-by each family's own summary instrument; protocol `po-opus-v1`, with the ids Opus refused
-re-asked on Sonnet 5.5, `po-opus-v1+sonnet55-fallback`, since 2026-11-01; the committed floors
-predate that and carry the Sonnet 5 protocol `po-opus-v1+sonnet5-fallback`; the stock-Qwen summary
+by each family's own summary instrument; protocol `po-opus-v1`, with the ids Opus refuses
+re-asked on Sonnet 5.5, `po-opus-v1+sonnet55-fallback`; the stock-Qwen summary
 floors are archived in `evals/baselines/archive/`).
 `wsbench baseline` measures, `wsbench freeze` records, `wsbench report` draws the floors beside
 each family, only while the floor's stamp matches the row's instrument (summary prompt_version,
 digest settings and judge). Each prompt-only cell carries its reader and refusal label, e.g.
-`0.892 [Opus 5.5 + Sonnet 5 fallback; Opus refused 19%, both 0/93; Opus alone 0.933]`; a floor
+`0.892 [Opus 5.5 + Sonnet 5.5 fallback; Opus refused 19%, both 0/93; Opus alone 0.933]`; a floor
 with more than 20% of its ids refused by every reader prints `not measurable (NN% refused)`.
-A third floor, **logit lens L63** (plan 0071 (logit-lens floor), `evals/baselines/logit_lens.json`, protocol
+A third floor, **logit lens L63** (`evals/baselines/logit_lens.json`, protocol
 `logit-lens-L63-v1`): the bench's own `logit_lens` method read at the final layer (63 of 64, the
 model's own next-token distribution) and judged by each family's summary instrument
 (`layers=63`), drawn beside a registered-bank summary row that ran its instrument (never beside an adapted
 subject's row); it never enters the macro
-(refrozen 2026-11-17 on main's instruments: full set 0.119 over 29 families (nyt_connections re-judged 2026-11-20, plan 0099), strict ATI 0.046
+(full set 0.119 over 29 families, strict ATI 0.046
 over 7; `evals/baselines/README.md`).
 
 **Anti-text-inversion subset.** `anti_text_inversion=True` on `judge` / `run` scores each family
@@ -26,14 +25,14 @@ only on the items a reader of the prompt text (no activation) cannot answer. Fou
 asked what the model is thinking about in the prompt, three draws each, every draw judged by the
 family's own scorer: Qwen3.6-27B itself (thinking off) and the frontier group (Claude Opus 5.5,
 or Sonnet 5.5 where Opus refuses, GPT-6 Astra and Gemini 4 Argon). An item is in the subset iff
-EVERY reader fails every draw; if any one reader gets it in any draw, it is out (plan 0071,
-gate `panel-v2`). It keeps a lens from being credited for reading the prompt. The subset is frozen in
+EVERY reader fails every draw; if any one reader gets it in any draw, it is out
+(gate `panel-v2`). It keeps a lens from being credited for reading the prompt. The subset is frozen in
 `evals/baselines/anti_text_inversion.json` (`wsbench text-inversion stage=...` rebuilds it).
 Families not gated or with no surviving item are skipped under the flag (never run on the full
-bank); a family gated under another judge instrument, or on a bank that changed since (the
-entry's `bank_sha`), fails until re-gated. Families with fewer than 20 surviving items are shown
+bank); a family whose entry was gated under another judge instrument, or on another bank (the
+entry's `bank_sha`), fails and has to be re-gated. Families with fewer than 20 surviving items are shown
 but left out of the macro, and so is an ATI result gated under a retired rule (`stale ATI gate`).
-The strict-ATI macro for Qwen3.6-27B is frozen (plan 0085, Camila 2026-11-08, subset version
+The strict-ATI macro for Qwen3.6-27B is frozen (subset version
 `ati-subset-v2`). It averages exactly eight families:
 - introspection (124 items)
 - moral_rationale (56)
@@ -49,8 +48,8 @@ groupings. hinted_cutoff's hint is in both twins, so a subset score is noise; it
 set.
 No directed-modulation family other than
 model_specific_directed_modulation is in the subset (both others state the concept in the prompt).
-`multihop_st` is not gated by design (Camila 2026-10-30: one surviving item is not a
-subset). `multihop` is excluded by design (Camila 2026-10-30; the panel names every bridge
+`multihop_st` is not gated by design (one surviving item is not a
+subset). `multihop` is excluded by design (the panel names every bridge
 from the prompt, 0 of 70 survived).
 Details and the per-family counts are in
 [`evals/baselines/README.md`](../evals/baselines/README.md#anti-text-inversion-subset-anti_text_inversionjson).

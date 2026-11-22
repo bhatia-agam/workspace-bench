@@ -98,6 +98,7 @@ def test_the_readme_table_is_the_one_the_registry_gives():
         row = next(ln for ln in table.splitlines() if f"[`{s.name}`]" in ln)
         assert row.startswith(f"| {registry.CATEGORIES[s.group].split(' (')[0]} |"), s.name
         assert ("core" in row.split("|")[3]) == (s.name in tiers.CORE), s.name
+        assert ("rule" in row.split("|")[5]) == bool(s.scorer), s.name
     assert "`group=association` also selects `role_bound_association`" in table
 
 

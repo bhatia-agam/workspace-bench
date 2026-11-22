@@ -12,8 +12,7 @@ wsbench capable model=google/gemini-3.8-flash families=poetry,moral_rationale dr
 Seven families are model-specific by construction and must be re-gated rather than re-scored:
 **poetry**, whose scored latent is the rhyme word this model would commit to,
 **moral_rationale**, whose per-item side and reasons are sampled from this model in the read
-conversation (bank v2; v1's reasons came from an explanation prompt and disagreed with the
-committed side on 23 items),
+conversation,
 **model_specific_directed_modulation**, whose gold is
 this model's own favourite in the category, **knowledge_cutoff**, whose gold is this
 model's stable wrong answer to a post-cutoff or obscure-fact question,

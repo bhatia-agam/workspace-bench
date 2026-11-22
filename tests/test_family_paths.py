@@ -163,7 +163,6 @@ ABSENT_ON_PURPOSE = (
 # Paths written on purpose that are not files of this checkout (the list may only shrink):
 KNOWN_MISSING = {
     # paths of the source repos (global-workspace, the J-lens repo), quoted in credits
-    "evals/workspace-bench/hillclimbing_evals/multi_token/ttt/README.md",
     "evals/workspace-bench/hillclimbing_evals/multi_token/dm_category_default",
     "evals/workspace-bench/jlens_pr",
     "evals/chint_cutoff",
@@ -194,7 +193,6 @@ def doc_files() -> list[Path]:
         "judges",
         "porting",
         "evals",
-        "history",
     )
     out += [REPO / "docs" / f"{n}.md" for n in (*split, "results_contract", "hallucinationbench")]
     out.append(REPO / "docs/adapt_judge_inputs.md")

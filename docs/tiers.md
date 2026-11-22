@@ -1,6 +1,6 @@
 # Tiers: core, full, fast
 
-`run` and `plan` take one of three tiers (plan 0098). The tier picks the families; `families=a,b`
+`run` and `plan` take one of three tiers. The tier picks the families; `families=a,b`
 names them instead (a tier flag together with `families=` is a usage error).
 
 | tier | flag | what runs | families | macro |
@@ -16,7 +16,7 @@ Core, by registry key: `agentic_misalignment`, `jailbreak_recognition`,
 `model_specific_directed_modulation`, `model_multihop`, `chain_intermediates`, `hinted_cutoff`
 (`wsbench.tiers.CORE`; tagged `core` in [The evals](../README.md#the-evals) and in the `tier` column of
 `wsbench list`). Core has 17 families today. A hard user_modeling bank (new items, in
-preparation) will join it as its 18th; the existing `user_modeling` bank is in full only.
+preparation) will join it as its 18th; the registered `user_modeling` bank is in full only.
 
 When to use which: `fast` for quick iteration, `core` for the number a method is reported on,
 `full` to check that a method does not regress on basic functionality. Core is a subset of full
