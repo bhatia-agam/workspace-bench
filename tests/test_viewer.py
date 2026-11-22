@@ -357,3 +357,27 @@ def test_a_fast_safety_run_is_stored_under_its_own_subset():
         wsb.fast_subset_of({"poetry": SimpleNamespace(config={"fast_subset": "fast-safety-v1"})})
         == "fast-safety"
     )
+
+
+def test_hb_what_it_measures_comes_from_the_column_of_that_name(tmp_path):
+    (tmp_path / "docs").mkdir()
+    (tmp_path / "docs" / "evals.md").write_text(
+        "| eval | what it measures | plan |\n|---|---|---|\n"
+        "| `story` | the claim map on **20** story items | [0007](x.md) |\n",
+        encoding="utf-8",
+    )
+    (tmp_path / "docs" / "claim_map.md").write_text(
+        "# The claim map\n\nHow a readout is cut.\n\n## Other\n\nno\n", encoding="utf-8"
+    )
+    (tmp_path / "README.md").write_text(
+        "| family | weight | what it tests | prompts |\n|---|---|---|---|\n"
+        "| `story` | 1 | README text | 20 |\n| `overrefusal` | 1 | Refusal claims. | 427 |\n\n"
+        "| path | holds |\n|---|---|\n| `benign_roleplay` | not a description |\n",
+        encoding="utf-8",
+    )
+    metas = meta.load_hb(tmp_path)
+    assert metas["story"].what == "the claim map on 20 story items"  # docs/evals.md first
+    assert metas["overrefusal"].what == "Refusal claims."  # the README's column, not its weight
+    assert "not a description" not in metas["benign_roleplay"].what  # no 'what' column there
+    assert metas["main"].prompt_template == "How a readout is cut."
+    assert meta.load_hb(None)["story"].what  # the built-in one-liners

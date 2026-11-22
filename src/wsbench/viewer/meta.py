@@ -175,22 +175,47 @@ HB_EVALS: dict[str, tuple[str, str, str, str, str, str]] = {
         "prompts over judged prompts.",
     ),
 }
-HB_TABLE_ROW = re.compile(r"^\| `([a-z_]+)`[^|]*\| (.+?) \|(?: [^|]*\|)?\s*$")
+
+
+def hb_table(text: str) -> dict[str, str]:
+    """``{eval: what it measures}`` from the markdown tables of a HallucinationBench page whose
+    header has a column starting with 'what'; a row's first cell starts with the eval in code
+    formatting. Tables without such a column are skipped."""
+    out: dict[str, str] = {}
+    col: int | None = None  # None: not in a table; -1: in a table with no such column
+    for line in text.split("\n"):
+        if not line.startswith("|"):
+            col = None
+            continue
+        cells = [c.strip() for c in line.strip().strip("|").split(" | ")]
+        if col is None:
+            heads = [c.lower() for c in cells]
+            col = next((i for i, h in enumerate(heads) if h.startswith("what")), -1)
+            continue
+        m = re.match(r"`([a-z_]+)`", cells[0])
+        if m and 0 <= col < len(cells) and m.group(1) not in out:
+            out[m.group(1)] = re.sub(r"\*\*|`", "", cells[col]).strip()
+    return out
 
 
 def load_hb(repo: Path | None) -> dict[str, EvalMeta]:
-    """``{index family: EvalMeta}``; the 'what it measures' text comes from the HB README's eval
-    table when ``repo`` is given, else from the built-in one-liners."""
+    """``{index family: EvalMeta}``; the 'what it measures' text comes from the HB checkout's eval
+    table (``docs/evals.md``, else the README) when ``repo`` is given, else from the built-in
+    one-liners; the claim-map text from ``docs/claim_map.md``, else the README section."""
     table: dict[str, str] = {}
     section = ""
-    readme = repo / "README.md" if repo else None
-    if readme and readme.exists():
-        text = readme.read_text(encoding="utf-8")
-        for line in text.split("\n"):
-            if (m := HB_TABLE_ROW.match(line)) and m.group(1) not in table:
-                table[m.group(1)] = re.sub(r"\*\*|`", "", m.group(2)).strip()
-        m = re.search(r"^## The claim map.*?$(.*?)^## ", text, re.M | re.S)
-        section = m.group(1).strip() if m else ""
+    pages = [repo / "docs" / "evals.md", repo / "README.md"] if repo else []
+    for page in pages:
+        if page.exists():
+            for key, what in hb_table(page.read_text(encoding="utf-8")).items():
+                table.setdefault(key, what)
+    for page, pattern in (
+        (repo / "docs" / "claim_map.md" if repo else None, r"^# The claim map.*?$(.*?)(?=^## |\Z)"),
+        (repo / "README.md" if repo else None, r"^## The claim map.*?$(.*?)(?=^## |\Z)"),
+    ):
+        if page and page.exists() and not section:
+            m = re.search(pattern, page.read_text(encoding="utf-8"), re.M | re.S)
+            section = m.group(1).strip() if m else ""
     out = {}
     for order, (name, (title, group, _dir, key, what, judged)) in enumerate(HB_EVALS.items()):
         out[name] = EvalMeta(
