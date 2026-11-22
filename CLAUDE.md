@@ -381,8 +381,7 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   `scripts/check_nocot_redaction.py` for bundles). Plan 0018 adds ids-only nocot
   items (`evals/model_specific/knowledge_cutoff/obscure_items.json`, none under `WSB_BANK_ROOT`): their prompt is
   rendered from nocot-bench's pinned zip by `wsbench.nocot` at plan time only (judge / run / ATI
-  stay offline via `EvalSpec.item_ids`; `WSB_NO_NOCOT=1` drops the nocot rows from the plan, set
-  by `atlas/export_cb.py`); `tests/conftest.py` stubs `nocot.questions` so tests never fetch. Never commit nocot question text or obscure items' real readouts / `cells.jsonl`.
+  stay offline via `EvalSpec.item_ids`; `WSB_NO_NOCOT=1` drops the nocot rows from the plan); `tests/conftest.py` stubs `nocot.questions` so tests never fetch. Never commit nocot question text or obscure items' real readouts / `cells.jsonl`.
 - nyt_connections (plan 0062; judge rule plan 0099, `nyt-mc-2026-11-20`, group model_specific):
   **a candidate needs its connection STATED by a readout line (the label's words or a clear
   paraphrase); a list of words alone is cannot tell**, so the continuation floor now measures how
@@ -395,7 +394,7 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   own labels; every label that folds equal to an NYT group name is a `{role, nyt_group[, nyt_id]}`
   reference). `wsbench.nyt` fetches the pinned Eyefyre mirror (`connections.json`, commit + sha256
   in the header) into `$WSB_CACHE/nyt/` at plan / judge time; `WSB_NO_NYT=1` drops the family's
-  plan rows (in `reads._env_key`; set by `atlas/export_cb.py`); `tests/conftest.py` stubs
+  plan rows (in `reads._env_key`); `tests/conftest.py` stubs
   `nyt.puzzles` with synthetic words (offline stub), so tests never fetch. Read: last 12 prompt
   tokens x GRID, lite = full (`SAME`). Scoring: the v1.1.0 layered digest (the CLI default; the
   family pins no layer mode), then one blind MC per **stable slot** (`cannot tell` last, quote
@@ -721,7 +720,7 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
     tree. `check` is the full gate only at that tree; anywhere else it checks the data half
     (every data file of the base at its new path with its bytes, JSON files as exact key
     translations) and says that the KEEP comparison was recorded at apply.
-  - Published artefacts keyed by family (the adapted sets on HF, viewer / atlas exports,
+  - Published artefacts keyed by family (the adapted sets on HF, viewer exports,
     HallucinationBench's WSB method names) are NOT renamed; the README carries the key table.
   - Tests: `tests/test_rename_0101.py` (T1-T17), `test_rename_machinery_0101.py`,
     `test_rename_fixups_0101.py`, `test_family_paths.py`, `test_migrate_0101.py`.

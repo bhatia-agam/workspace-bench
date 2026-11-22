@@ -1140,7 +1140,7 @@ def test_every_walk_over_the_family_trees_matches_something():
     """A ``glob`` written for the flat layout (``evals/*/README.md``, ``adapted/*/typo_mt.json``)
     matches nothing after the move, and a guard built on it passes vacuously: every literal
     glob over the repository's ``evals/``, ``adapted/`` or ``examples/`` trees in the tests, the
-    package, ``scripts/``, ``atlas/`` and the skills' scripts must match at
+    package, ``scripts/`` and the skills' scripts must match at
     least one path today. Two spellings are recognised, ``(X / "evals").glob("...")`` and
     ``REPO.glob("evals/...")``; a pattern with a placeholder is skipped, and so is a walk over
     a run tree outside the repository (most of the viewers' and scripts' walks: there is no
@@ -1152,7 +1152,7 @@ def test_every_walk_over_the_family_trees_matches_something():
     trees = ("evals", "adapted", "examples")
     empty, seen = [], 0
     files = [*(REPO / "tests").glob("*.py"), *(REPO / "src/wsbench").rglob("*.py")]
-    for top in ("scripts", "atlas", ".claude"):
+    for top in ("scripts", ".claude"):
         files += (REPO / top).rglob("*.py")
     for path in sorted(files):
         for line in path.read_text(encoding="utf-8").split("\n"):
