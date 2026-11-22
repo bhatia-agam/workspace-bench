@@ -889,7 +889,7 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   any other family that did not report
   `config.aggregate = "summary"`. Never bind a module constant (e.g. `PROMPT_VERSION`) as a
   default argument: tests monkeypatch it. digest-v5 (audit fixes, `docs/summarizer.md`
-  "Audit fixes"): a multi-layer item is digested per layer and merged (`summ_layers=union`, so
+  "Per-layer digests, counts and refusals"): a multi-layer item is digested per layer and merged (`summ_layers=union`, so
   a test's digest-call count is items x read layers; `joint` is the ablation, and every numbers
   digest stays joint), every entry carries a per-claim `count` rendered `[N samples]`, a
   collapsed digest (< 5 entries from >= 100 readouts) is re-asked once, an unsummarized item is
