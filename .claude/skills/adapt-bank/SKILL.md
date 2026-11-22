@@ -705,7 +705,7 @@ Removed and never to be adapted: unverbalized_hint (plan 0081), medical_diagnosi
 
 ## Modal, tokenizers and Claude auth
 
-Agam's RunPod box (the 4090, `/workspace/agam/`, `adapt_box.sh`, `atlas/normal_gated.py`, gw-olens'
+Agam's RunPod box (the 4090, `/workspace/agam/`, `adapt_box.sh`, `scripts/adapt_gated_rescore.py`, gw-olens'
 `subject_*_modal.py`) built the October sets and is no longer used. Every step now runs from a
 dev box against Modal:
 - **Modal:** `MODAL_PROFILE=safety-sahan-2 MODAL_ENVIRONMENT=camila-blank` and

@@ -870,7 +870,7 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   called directly with a hand-built `JudgeArgs` (no `aggregate`) keeps its native rule. Tests
   that mean native pass `opts=aggregate=native`. Scripts that re-score native caches or feed the
   ATI gate pin native explicitly (`scripts/ati_panel_judge.sh`, `scripts/cache_only_run.py`,
-  `atlas/normal_gated.py`, `adapt/floors.py`); `text_inversion.draw_verdicts` refuses summary
+  `scripts/adapt_gated_rescore.py`, `adapt/floors.py`); `text_inversion.draw_verdicts` refuses summary
   results. Summary rows draw `evals/baselines/prompt_only_summary.json` (row-relative match on
   prompt_version + digest settings + judge) and the per-item lucky floor. A hooked family calls
   `digest.collapse(name, cells_by_item, ...)` AFTER its own cell selection and missing-cell

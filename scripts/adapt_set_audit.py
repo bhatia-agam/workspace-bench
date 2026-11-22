@@ -1,7 +1,15 @@
-"""Deficits and a mechanical audit of an adapted set (lint, leaks, duplicates, gate re-check).
+"""Shortfalls and a mechanical audit of one model's adapted question set.
 
-python atlas/set_audit.py deficits <model>   # per family: chosen / target, new, short, pending
-python atlas/set_audit.py audit <model>      # frozen banks: lint, dup prompts/latents, gate
+What it checks: that an adapted set is complete and clean before it ships.
+
+    python scripts/adapt_set_audit.py deficits <model>   # per eval: chosen / target, new, short
+    python scripts/adapt_set_audit.py audit <model>      # per frozen bank: lint, duplicates, gate
+
+Inputs: the adapt store of ``<model>`` (``wsbench.adapt.store``: its gate records, pending
+candidates and the frozen banks in ``adapted/<model>/``), and the model's tokenizer.
+
+Outputs: ``deficits`` only prints. ``audit`` prints the table and writes it to
+``adapted/<model>/SET_AUDIT.md``.
 """
 
 import json
@@ -55,14 +63,16 @@ def audit(model: str) -> None:
                 probs.update(x.split(":")[0] for x in ps)
                 rec = gated.get(str(it.get("id") or it.get("name")))
                 n_gate_bad += not (rec and rec["gate"].get("pass"))
-        stim = Counter(_norm(str(it.get("prompt") or it.get("stimulus") or it.get("statement") or ""))
-                       for it in items)  # fmt: skip
+        stim = Counter(
+            _norm(str(it.get("prompt") or it.get("stimulus") or it.get("statement") or ""))
+            for it in items
+        )
         dup_p = sum(c - 1 for s, c in stim.items() if s and c > 1)
         lat = Counter(_norm(str((it.get("intermediates") or [""])[0])) for it in items)
         dup_l = sum(c - 1 for s, c in lat.items() if s and c > 1) if fam in run.UNIQUE_LATENT else 0
         new = sum((it.get("adapt") or {}).get("origin", "original") != "original" for it in items)
-        line = (f"| {fam} | {len(items)} | {new} | {n_lint} {dict(probs) or ''} | {dup_p} | {dup_l} "
-                f"| {n_gate_bad} |")  # fmt: skip
+        line = (f"| {fam} | {len(items)} | {new} | {n_lint} {dict(probs) or ''} | {dup_p} "
+                f"| {dup_l} | {n_gate_bad} |")  # fmt: skip
         report.append(line)
         print(line)
     hdr = ["| family | items | new | lint fails | dup prompts | dup latents | not gate-passed |",
@@ -73,5 +83,10 @@ def audit(model: str) -> None:
         + "\n".join(hdr + report) + "\n")  # fmt: skip
 
 
+COMMANDS = {"deficits": deficits, "audit": audit}
+
 if __name__ == "__main__":
-    {"deficits": deficits, "audit": audit}[sys.argv[1]](sys.argv[2])
+    if len(sys.argv) != 3 or sys.argv[1] not in COMMANDS:
+        print(__doc__)
+        sys.exit(0 if {"-h", "--help"} & set(sys.argv[1:]) else 2)
+    COMMANDS[sys.argv[1]](sys.argv[2])
