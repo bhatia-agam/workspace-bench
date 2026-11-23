@@ -2028,18 +2028,62 @@
    ]
   },
   "directed_modulation": {
-   "target": 100,
-   "n_original": 100,
-   "n_original_gated": 100,
-   "n_original_pass": 97,
-   "n_items": 94,
+   "target": 102,
+   "n_original": 102,
+   "n_original_gated": 102,
+   "n_original_pass": 99,
+   "n_items": 99,
    "n_new": 0,
    "n_candidates_gated": 0,
-   "bank": "evals/directed_modulation/items.json",
-   "bank_version": 1,
+   "bank": "evals/basic/directed_modulation/items_v2.json",
+   "bank_version": 2,
    "change": "original items only",
    "status": "untried",
-   "note": "94/100: registered originals only (untried: no refill route used); audit OK."
+   "note": "Bank v2 (plan 0109, issue #547; re-derived 2026-11-23, plan 0113): the 32 dont_think items left the set; the 62 kept originals (32 think, 15 secret, 15 preference) are unchanged with their recorded gate; the 37 new registered think items (dm-think-NN) were compliance-gated on GLM-5.3-Flash (copies the carrier, never names the concept, greedy AND >= 8/10): 36 pass, 1 fail (dm-think-47). Provenance: this set's run-tree gate log was not found, so the gate rows of the kept originals were seeded from the shipped bank at 5a5d8376 (each item with its recorded rate / pass; 62 rows, not re-run on the subject); n_original_gated counts log rows, seeded ones included. The 3 registered think original(s) the set had not shipped (a pair member had failed; which one was not on record) were gated afresh on 2026-11-23: 1 pass and ship (dm-pair-03-pos); 2 fail (dm-pair-19-pos, dm-pair-23-pos). 99/102 ship (69 think, 15 secret, 15 preference). Originals only: the family has no Brief and no refill route; no item has a twin any more.",
+   "freeze_notes": [
+    "32 previously shipped ids leave the bank: ['dm-pair-00-neg', 'dm-pair-01-neg', 'dm-pair-02-neg', 'dm-pair-04-neg', 'dm-pair-05-neg', 'dm-pair-06-neg', 'dm-pair-07-neg', 'dm-pair-08-neg', 'dm-pair-09-neg', 'dm-pair-10-neg', 'dm-pair-11-neg', 'dm-pair-12-neg', 'dm-pair-13-neg', 'dm-pair-14-neg', 'dm-pair-15-neg', 'dm-pair-16-neg', 'dm-pair-17-neg', 'dm-pair-18-neg', 'dm-pair-20-neg', 'dm-pair-21-neg', 'dm-pair-22-neg', 'dm-pair-24-neg', 'dm-pair-25-neg', 'dm-pair-26-neg', 'dm-pair-27-neg', 'dm-pair-28-neg', 'dm-pair-29-neg', 'dm-pair-30-neg', 'dm-pair-31-neg', 'dm-pair-32-neg', 'dm-pair-33-neg', 'dm-pair-34-neg']"
+   ],
+   "plan_lineage": [
+    {
+     "from": "dea3acdb6f69d6b1a91f41e3998f731275c2af3d13823482d9085a9bd82ac40b",
+     "to": "f665b91062813c0d5b0700d23ae1701c3ba1672a385f9da260d1d580b8a13293",
+     "dropped": [
+      "dm-pair-00-neg",
+      "dm-pair-01-neg",
+      "dm-pair-02-neg",
+      "dm-pair-04-neg",
+      "dm-pair-05-neg",
+      "dm-pair-06-neg",
+      "dm-pair-07-neg",
+      "dm-pair-08-neg",
+      "dm-pair-09-neg",
+      "dm-pair-10-neg",
+      "dm-pair-11-neg",
+      "dm-pair-12-neg",
+      "dm-pair-13-neg",
+      "dm-pair-14-neg",
+      "dm-pair-15-neg",
+      "dm-pair-16-neg",
+      "dm-pair-17-neg",
+      "dm-pair-18-neg",
+      "dm-pair-20-neg",
+      "dm-pair-21-neg",
+      "dm-pair-22-neg",
+      "dm-pair-24-neg",
+      "dm-pair-25-neg",
+      "dm-pair-26-neg",
+      "dm-pair-27-neg",
+      "dm-pair-28-neg",
+      "dm-pair-29-neg",
+      "dm-pair-30-neg",
+      "dm-pair-31-neg",
+      "dm-pair-32-neg",
+      "dm-pair-33-neg",
+      "dm-pair-34-neg"
+     ],
+     "at": "2026-11-23T03:33:32+00:00"
+    }
+   ]
   },
   "moral_rationale": {
    "target": 195,
@@ -2127,11 +2171,17 @@
    "status": "full",
    "change": "rebuilt on the subject: 107 pairs (gw ccut v2 pipeline, plan 0084)",
    "note": "PROMPT-ONLY PREDICTOR (record prominently): a prompt-only reader separates I from N: first build (27 pairs) predict_single I-N +0.41 / predict_normal +0.37; shipped set before the final audit (115 pairs) +0.200 / +0.217 (bank header); final shipped 107 pairs +0.187 [0.095, 0.280] / +0.187 [0.086, 0.290]. 107/40 pairs: shipped build = the densified pool, passed R3 on attempt 1 (no fallback) with date_leak.pass true (obscurity AUROC .593; the AUDIT_NOTES lines about the R3 attempt-0 fallback and date_leak false describe the superseded first build); R18 guess caliper 20 (guess AUROC .538); R19 bar day AUROC .524, cell excess -0.067. Drops: R20 audit 42 pairs, prior-audit / both-twins carry-forward 3 pairs (PR #483), independent audit 2026-11-17 8 pairs (drop_pairs.py + finalize, gw 2027ef208; incl. the 3 Nigerian-state N pairs on the static-geography ruling)."
+  },
+  "user_modeling_hard": {
+   "status": "absent",
+   "note": "absent: this set has no bank for the family (plan 0060 A1.6)",
+   "exclude_from_macro": true,
+   "absent_auto": true
   }
  },
  "code": {
-  "git": "26176139+dirty",
-  "adapt_sha256": "bcfd721e23d3e856"
+  "git": "a3033c75",
+  "adapt_sha256": "50deb0768bf40c95"
  },
  "drops": {
   "basic_readout": {
