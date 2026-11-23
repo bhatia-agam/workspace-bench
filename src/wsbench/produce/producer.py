@@ -65,6 +65,11 @@ class Producer:
 
     backend: Backend
     method: Method
+    # the residual store (`produce.store.Store`) a family's activations are read from, and its
+    # `pull` (the published residuals); None = a forward pass per item, nothing stored
+    store: Any = None
+    pull: Any = None
+    counts: Any = None  # where the last `run_family`'s cells came from (`store.Counts`)
     _vectors: dict[str, Any] = field(default_factory=dict, repr=False)
 
     @classmethod
@@ -74,12 +79,16 @@ class Producer:
         method_spec: str | Method = "logit_lens",
         *,
         device: str = "cuda",
+        dtype: str = "bfloat16",
+        revision: str | None = None,
+        store: Any = None,
+        pull: Any = None,
         **method_kw: Any,
     ) -> Self:
         m = method(method_spec, **method_kw)  # before the model load, so a typo fails fast
-        backend = Backend.load(model, device=device)
+        backend = Backend.load(model, device=device, dtype=dtype, revision=revision)
         m.bind(backend)
-        return cls(backend=backend, method=m)
+        return cls(backend=backend, method=m, store=store, pull=pull)
 
     def use(self, method_spec: str | Method, **method_kw: Any) -> Self:
         """Switch method on the loaded model (``p.use("jlens")``); returns self."""
@@ -214,13 +223,17 @@ class Producer:
         # plan 0092: no sidecar while the file grows, so `wsbench run wait=` never takes a
         # resumed file as ready; it is written again below, last
         sidecar_path(out).unlink(missing_ok=True)
+        todo = [s for s in specs if s.id not in done]
         with out.open("a", encoding="utf-8") as fh:
-            for spec in specs:
-                if spec.id in done:
-                    continue
-                rows = self.read_spec(spec)
-                fh.write("".join(json.dumps(r.contract(), ensure_ascii=False) + "\n" for r in rows))
-                fh.flush()
+            if self.store is not None:
+                self._run_from_store(family, todo, fh)
+            else:
+                for spec in todo:
+                    rows = self.read_spec(spec)
+                    fh.write(
+                        "".join(json.dumps(r.contract(), ensure_ascii=False) + "\n" for r in rows)
+                    )
+                    fh.flush()
         name = getattr(self.method, "name", "method")
         write_sidecar(
             out,
@@ -233,6 +246,30 @@ class Producer:
             **({"fast": fast_mod.VERSION} if fast else {}),
         )
         return out
+
+    def _run_from_store(self, family: str, specs: list[ReadSpec], fh: Any, chunk: int = 64) -> None:
+        """The same rows as the forward-pass loop, with the activations taken from the residual
+        store: the store, then its `pull`, and a forward pass only for cells in neither (which
+        are written back). Items go through in chunks, each written before the next is read."""
+        from . import store as st
+
+        total = st.Counts()
+        for lo in range(0, len(specs), chunk):
+            cells, counts = st.cells_for(
+                self.store,
+                family,
+                specs[lo : lo + chunk],
+                self.backend.tokenizer,
+                pull=self.pull,
+                backend=self.backend,
+            )
+            for name in ("store", "pulled", "captured", "refused", "forwards"):
+                setattr(total, name, getattr(total, name) + getattr(counts, name))
+            for c in cells:
+                row = Row(c.id, c.layer, c.pos, c.token, self.method.read(c.h.float(), c.layer))
+                fh.write(json.dumps(row.contract(), ensure_ascii=False) + "\n")
+            fh.flush()
+        self.counts = total
 
     # ---- internals
 

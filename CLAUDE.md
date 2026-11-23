@@ -1217,6 +1217,8 @@ in a git worktree (prefix commands with `PYTHONPATH=src` when it shares the main
   `produce/dataset.py` is its `pull`: the public dataset `agu18dec/workspacebench_residuals`,
   read through `evals/residuals/map.json` (item id -> key at the capture's bench commit, built by
   `scripts/residuals_map.py`; never hand-edited). `capture check=True` says where cells are.
+  `produce family=` reads the store by default (`Producer.store` / `.pull`, `_run_from_store`;
+  `store=none` = a forward pass per item); `tests/test_produce_reads_store.py`.
 - No absolute box path in `src` (`tests/test_paths.py`): a location outside the repo goes through
   `wsbench.paths` (`external(var, rel)` = `$var`, else `$WSB_DATA_ROOT/<rel>`, default root
   `/workspace`).
