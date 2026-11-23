@@ -171,3 +171,63 @@ def read_evals(
     if pack:
         flush()
     return done
+
+
+def read_continuations(
+    jobs: Sequence[Job],
+    engine: Any,
+    out: Path,
+    *,
+    reader: str,
+    layer: int,
+    pack_prompts: int = 60_000,
+    shard: int = 0,
+    shards: int = 1,
+    limit: int = 0,
+) -> list[dict[str, Any]]:
+    """The model-continuation baseline over jobs: one readout per (item, read position), written
+    at the single layer number ``layer`` (the baseline has no layer axis). No activation and no
+    store is involved; ``engine`` is a ``served.continuation.ContinuationEngine``. Files, parts
+    and sidecars are as ``read_evals`` writes them, with ``layers`` = ``[layer]``."""
+    from .served import continuation
+
+    done: list[dict[str, Any]] = []
+    pack: list[tuple[Job, Path, list[Any]]] = []
+
+    def flush() -> None:
+        texts = engine.decode([p.ids for _, _, part in pack for p in part])
+        lo = 0
+        for j, target, part in pack:
+            cells = [st.Cell(p.id, layer, p.pos, p.token, None) for p in part]
+            lines = [row(c, [t]) for c, t in zip(cells, texts[lo : lo + len(part)], strict=True)]
+            lo += len(part)
+            _write(target, lines)
+            one_layer = Job(
+                j.family, [_at_layer(s, layer) for s in j.specs], j.plan_sha, j.reads, j.fast
+            )
+            finish(out, one_layer, shards, reader=reader, sampling="prose1")
+            done.append(
+                {"family": j.family, "status": "read", "file": str(target), "cells": len(part)}
+            )
+            print(f"{j.family}: {len(part)} continuations read -> {target}", flush=True)
+        pack.clear()
+
+    for j in jobs:
+        target = part_path(out, j.family, shard, shards)
+        if target.exists() and (shards > 1 or sidecar_path(target).exists()):
+            done.append({"family": j.family, "status": "exists", "file": str(target)})
+            continue
+        specs = st.shard(j.specs, shard, shards)[: limit or None]
+        part = continuation.prompts_of(specs, engine.tok)
+        if pack and sum(len(p[2]) for p in pack) + len(part) > pack_prompts:
+            flush()
+        pack.append((j, target, part))
+    if pack:
+        flush()
+    return done
+
+
+def _at_layer(spec: ReadSpec, layer: int) -> ReadSpec:
+    import dataclasses
+
+    return dataclasses.replace(spec, layers=[layer])
