@@ -22,7 +22,10 @@ from wsbench.evals.model_specific.model_specific_directed_modulation import prom
 from wsbench.registry import bank_path
 
 REPO = Path(__file__).resolve().parents[1]
-DM_EX = REPO / "examples/readouts/directed_modulation.jsonl"
+# The DM tests run on the frozen 100-item bank (items.json: the dont_think twin and the white-bear
+# contrast) and a byte copy of the toy readouts of before bank v2 (plan 0109).
+DM_V1_BANK = "evals/basic/directed_modulation/items.json"
+DM_EX = REPO / "tests/fixtures/directed_modulation_v1_toy.jsonl"
 # The pinned toy items were retired from the live bank by the ATI panel refill (plan 0019); these
 # tests run on byte copies of the pre-refill bank and example readouts (tests/fixtures).
 DMO_FIXTURE = REPO / "tests/fixtures/directed_modulation_obscure_pre_refill_items.json"
@@ -36,6 +39,7 @@ MCDM_IDS = ["d-plumber", "b-ange-mix-ab", "d-none"]
 @pytest.fixture(autouse=True)
 def _dmo_pre_refill_bank(monkeypatch):
     monkeypatch.setenv("WSB_BANK_FILE_MODEL_SPECIFIC_DIRECTED_MODULATION", str(DMO_FIXTURE))
+    monkeypatch.setenv("WSB_BANK_FILE_DIRECTED_MODULATION", DM_V1_BANK)
 
 
 def _drop_rows(src: Path, dst: Path, pred) -> Path:
@@ -84,7 +88,7 @@ def _dm_judge(system: str, user: str, schema: dict) -> dict:
 def test_dm_one_call_per_item_and_gate(tmp_path, monkeypatch):
     registry.FAMILIES.setdefault(dm_pkg.SPEC.name, dm_pkg.SPEC)
     fake = FakeLLM.install(monkeypatch, _dm_judge)
-    pv = dm_prompts.PROMPT_VERSION
+    pv = dm_prompts.INSTRUMENT_V1  # the stamp of the pinned items.json (no bank tag)
     r = dm_pkg.SPEC.run(summary_args(DM_EX, tmp_path / "s", pv, items=DM_IDS))
     # audit F1: one digest per item and read layer
     assert fake.n("digest") == n_item_layers(DM_EX, DM_IDS) and fake.n("dm_concept") == 3
@@ -121,7 +125,7 @@ def test_dm_one_call_per_item_and_gate(tmp_path, monkeypatch):
 
 def test_dm_missing_layer_and_unsummarized(tmp_path, monkeypatch):
     registry.FAMILIES.setdefault(dm_pkg.SPEC.name, dm_pkg.SPEC)
-    pv = dm_prompts.PROMPT_VERSION
+    pv = dm_prompts.INSTRUMENT_V1  # the stamp of the pinned items.json (no bank tag)
     path = _drop_rows(
         DM_EX, tmp_path / "r.jsonl", lambda x: x["id"] == "dm-secret-00" and x["layer"] == 36
     )

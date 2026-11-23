@@ -1080,7 +1080,11 @@ FROZEN_FAST_FILES = {
     "fast-safety-v1": "894a26ca6655e5b355241a62f0e82c578c7eedef0d82d10bbe7e3ec653ac257b",
     "fast-v3": "4a58b249a68b8aefb3a58162704063182607827cdebf454be19be18a0eae063a",
     "fast-safety-v2": "19cde720531d6ae6a68ecd6be099249aad73bd230b3a0b421661f9c0fc06aadc",
+    # plan 0104's first core-half cut, the default until plan 0110 re-cut it as fast-v5 for
+    # chain_intermediates' bank v3 (tests/test_fast_core_half.py compares the two files)
+    "fast-v4": "e5fba03e6ac2037ced69ed1ee8a581d737f08a878a866dd6cf01cffe23c723ef",
 }
+CORE_HALF_RECORDS = {"fast-v4"}  # another selection than the five outcome-selected versions
 
 
 def test_t10_the_fast_files_are_read_in_todays_keys():
@@ -1096,7 +1100,8 @@ def test_t10_the_fast_files_are_read_in_todays_keys():
             return registry.PRE_0101_KEYS.get(key, key) if pre else key
 
         assert set(got) == {today(f) for f in raw["families"]}
-        if version != "fast-v4":  # plan 0104: the core-half cut holds none of the renamed families
+        # plan 0104: the core-half cuts hold none of the renamed families
+        if version not in ("fast-v4", "fast-v5"):
             assert {"basic_readout", "basic_readout_st", "multihop"} <= set(got)
         assert not {"basic_readout_mt", "multihop_mt"} & set(got)
         for old, entry in raw["families"].items():
@@ -1107,7 +1112,7 @@ def test_t10_the_fast_files_are_read_in_todays_keys():
                 # bank makes `fast.entry` fail closed for its family, so a bank change without
                 # a re-cut fails here
                 assert entry["bank_sha"] == fast.bank_sha(new), (version, old)
-            else:
+            elif version not in CORE_HALF_RECORDS:
                 records.setdefault(new, {})[version] = entry
         if version not in selectable:
             # an older version is a record, not held to today's banks (a family it alone holds
@@ -1115,7 +1120,8 @@ def test_t10_the_fast_files_are_read_in_todays_keys():
             # tests/test_fast_subset.py lists the families, `REFROZEN`): frozen by its bytes
             sha = hashlib.sha256(fast.VERSIONS[version].read_bytes()).hexdigest()
             assert sha == FROZEN_FAST_FILES[version], version
-    # and the records agree with each other: the older versions are one selection, so a family
+    # and the records agree with each other: the outcome-selected versions are one selection (a
+    # frozen core-half cut is another, `CORE_HALF_RECORDS`), so a family
     # has the same units, read ids and positions rule in every one that holds it; only the
     # recorded bank may differ between them (a re-freeze after a bank change)
     for fam, by_version in records.items():

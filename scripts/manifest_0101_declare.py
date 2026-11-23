@@ -42,6 +42,7 @@ other family's tier rows are compared like any other row.
 """
 
 import argparse
+import contextlib
 import hashlib
 import json
 import subprocess
@@ -256,7 +257,13 @@ def fast_equivalents(golden: Mapping[str, Any], current: Mapping[str, Any]) -> d
                 rec["reselected"] = not any(fast.same_reads(old, name, against=v) for old in was)
                 for old in was:
                     if fast.compatible(old, name, against=v):
-                        rec["as"][old] = reads.fast_plan_sha(name, declared=old)
+                        # SystemExit: the family's bank changed after ``v`` was frozen and no
+                        # later version re-froze it (plan 0109, directed_modulation), so ``v``
+                        # has no plan for it any more (``fast.entry`` fails closed, the
+                        # manifest's row reads "unavailable"): the row has no equivalent and
+                        # stays in what the family's ledger entry compares and hashes
+                        with contextlib.suppress(SystemExit):
+                            rec["as"][old] = reads.fast_plan_sha(name, declared=old)
     finally:
         fast.VERSION = saved
     return out

@@ -62,6 +62,16 @@ def test_ati_subset_passes(capsys, real_families):
     assert "entries match their judge instrument and bank" in capsys.readouterr().out
 
 
+def test_ati_subset_names_a_stale_entry_without_ids(capsys, real_families):
+    """Plan 0110: chain_intermediates is on bank v3 and its zero-id entry is bank v2's. The check
+    passes on the registered tree (the entry still means "no ATI item") and says so."""
+    assert cli.main(["check", "ati_subset"]) == 0
+    out = capsys.readouterr().out
+    assert out.startswith("PASS  ati_subset: 12 families' entries match") and out.count("\n") == 1
+    assert "21 not gated by design; NOTE: chain_intermediates: entry gated on another bank" in out
+    assert "issue #559" in out
+
+
 def test_readouts_contract(tmp_path, capsys, real_families):
     good = registry.REPO_ROOT / "examples" / "readouts" / "multihop.jsonl"
     assert cli.main(["check", "readouts_contract", f"readouts={good}", "family=multihop"]) == 0

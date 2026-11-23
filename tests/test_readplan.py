@@ -436,7 +436,8 @@ def test_multilingual_families_read_all_positions(family):
 PLAN0061_SHA = {
     # bank v8's own 100-row plan (the new items' rows; bank v7's plan was 195a60c7...)
     "basic_readout_st": "0a721338b8755307ce59797c3f8eaf24118b2ac55b1f7551e50c7f92e8a62c36",
-    "directed_modulation": "1da94e9cd24b0a10b951957ca383d62658700ae241c0f2f7d3aa4231f842b820",
+    # bank v2's own 102-row plan (plan 0109; the 100-item items.json's plan was 1da94e9c...)
+    "directed_modulation": "940bf69a0dbc0482120ab41fc24e0b1a5b948e8b6b1b5323e99b99bf2c5253b3",
     "model_specific_directed_modulation": (
         "ef00b1f9ec23cda8340e146cb34219fc56795f1585cd6856afd8682b8411e782"
     ),
