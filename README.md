@@ -131,7 +131,7 @@ score):
 | nothing, or `--core` | The 18 core evals, the set a method is reported on. |
 | `--full` | Every eval: 32. |
 | `--fast` | The fast subset, for quick iteration: 16 core evals (every core eval but the two safety ones), 1,441 of their 4,415 questions read. Each eval that has a strict ATI subset contributes all of it (the questions no text-only reader solved) plus a random draw that brings it up to half of the units it scores; where the ATI subset is already more than half, all of it and nothing else. A scored unit can span several questions (a pair, an injected concept with its controls), so the questions read are not half of each eval's count. Not a random sample, then: a fast score leans toward the ATI questions ([docs/fast_subset.md](docs/fast_subset.md)). Also on `judge` and `report`. |
-| `group=<category>` | The evals of one category from [the table below](#the-evals), for example `group=safety`. `--show` prints what a group resolves to. |
+| `group=<category>` | The evals of one category from [the table below](#the-evals), for example `group=safety`. `group=association` also takes `role_bound_association`; `--show` prints what a group resolves to. |
 | `families=a,b` | The evals you name. |
 | `items=id1,id2` | Only these questions (on `judge` and `run`). |
 | `anti_text_inversion=True` | Only the questions that no text-only reader answers from the prompt (on `judge` and `run`). |
@@ -227,7 +227,7 @@ and pass rule; [docs/evals.md](docs/evals.md) has one example and the judging ru
 | Model-specific | [`wrong_intermediate`](evals/model_specific/wrong_intermediate/README.md) | core, fast | The wrong bridge the model resolves on its way to a wrong answer. | Claude judge | 100 |
 | J-lens comparison | [`jlens_concept_pr`](evals/jlens_comparison/jlens_concept_pr/README.md) | - | Whether the concepts a lens states agree with the J-lens tokens at the same activation. In no macro. | Claude judge | 299 |
 
-`group=<category>` selects a category by its key (basic, computational, association, safety, anti_bag_of_features, logical_processing, model_specific, jlens_comparison).
+`group=<category>` selects a category by its key (basic, computational, association, safety, anti_bag_of_features, logical_processing, model_specific, jlens_comparison). `group=association` also selects `role_bound_association`, which is listed under `anti_bag_of_features`.
 <!-- evals table: end -->
 
 `typo_st` is replaced by `typo` and `jlens_concept_pr` is in no macro; both run only when named.
