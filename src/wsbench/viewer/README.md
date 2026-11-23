@@ -59,7 +59,7 @@ and `model` are defaults for every run. One run:
 | key | meaning |
 |---|---|
 | `bench` | `wsb` or `hb` |
-| `method` | `olens`, `nla`, `jlens`, `logit_lens`, `continuation` or `other` |
+| `method` | `olens`, `nla`, `jlens`, `jpp_lens`, `rlens`, `logit_lens`, `continuation` or `other` |
 | `lens` (or `lens_id`) | the lens id; with `run` it names the store run `<bench>__<model>__<lens>__<run>` |
 | `label` (or `alias`) | the short name the pages show for this run |
 | `run` | the run's name |

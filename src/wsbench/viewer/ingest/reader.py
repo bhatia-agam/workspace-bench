@@ -19,7 +19,8 @@ from wsbench.viewer.ingest import hb, wsb
 READOUT_MODES = ("none", "index", "copy")
 METHOD_ALIASES = {
     "s3d": "olens", "o-lens": "olens", "olens": "olens", "model_continuation": "continuation",
-    "logit-lens": "logit_lens", "j-lens": "jlens", "mlnla": "nla",
+    "logit-lens": "logit_lens", "j-lens": "jlens", "mlnla": "nla", "r-lens": "rlens",
+    "jpp": "jpp_lens", "j++": "jpp_lens", "jpp-lens": "jpp_lens", "j++ lens": "jpp_lens",
 }  # fmt: skip
 # manifest key -> the names a runs file may use for it (the first present one wins)
 ALIASES = {

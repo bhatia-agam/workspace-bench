@@ -537,7 +537,9 @@ def test_hallucinationbench_index_rows_are_shown_as_stored(tmp_path: Path):
 
 
 def test_one_colour_per_method_and_runs_of_a_method_differ_by_shade_or_dash():
-    assert list(meta.METHODS) == ["olens", "nla", "jlens", "logit_lens", "continuation", "other"]
+    assert list(meta.METHODS) == [
+        "olens", "nla", "jlens", "jpp_lens", "rlens", "logit_lens", "continuation", "other",
+    ]  # fmt: skip
     colours = [c for _t, _a, c in meta.METHODS.values()]
     assert len(set(colours)) == len(colours)
     assert len({a for _t, a, _c in meta.METHODS.values()}) == len(meta.METHODS)  # aliases
