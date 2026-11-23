@@ -1477,16 +1477,16 @@
   ],
   "metric": "pass_rate",
   "higher_is_better": true,
-  "n_items": 72,
-  "n_items_decided": 72,
+  "n_items": 74,
+  "n_items_decided": 74,
   "counts": {
-   "n_expected_cells": 72,
+   "n_expected_cells": 74,
    "n_missing_cells": 0,
    "n_unjudged_cells": 0,
    "n_empty_cells": 0
   },
   "judge_model": "claude-opus-5-5",
-  "instrument": "dm-2026-10-31+expressed+digest-v5-task-extractive+sj-v10",
+  "instrument": "dm-2026-10-31+expressed+bank-v2+digest-v5-task-extractive+sj-v10",
   "layers_judged": [
    44
   ],
@@ -1511,9 +1511,9 @@
   },
   "decided": {},
   "digest_unserved": [],
-  "written": "2026-11-17T18:10:07+00:00",
+  "written": "2026-11-23T04:46:35+00:00",
   "value": 1.0,
-  "n": 72,
+  "n": 74,
   "ci": [
    1.0,
    1.0
@@ -1524,7 +1524,8 @@
   "refusal_share": 0.0,
   "protocol": "po-opus-v1",
   "label": "Opus 5.5 (0 refused)",
-  "not_measurable": false
+  "not_measurable": false,
+  "prompt_cut": "reply-free-v2"
  },
  "hinted_cutoff": {
   "rate": 0.0,

@@ -21,6 +21,11 @@ class StoreError(RuntimeError):
     written for another model or dtype, rows that are not the plan's)."""
 
 
+class NoPromptError(StoreError):
+    """A plan row that ships no prompt (a ``captured`` render without token ids): there is
+    nothing to run the subject on, so the eval cannot be captured or read from a store."""
+
+
 # ---------------------------------------------------------------- cells and items
 
 
@@ -92,6 +97,8 @@ def locate(spec: ReadSpec, tokenizer: Any) -> Located:
     from .producer import _positions
     from .render import render
 
+    if spec.render == "captured" and "input_ids" not in (spec.extra or {}):
+        raise NoPromptError(f"{spec.family}/{spec.id}: the plan ships this item without a prompt")
     rendered = render(spec, tokenizer)
     fast_of = spec.positions.get("kind") == "fast_of"  # tested on decoded tokens (plan 0090)
     pos = list(_positions(spec.positions, rendered.decoded if fast_of else rendered.tokens))
@@ -188,11 +195,21 @@ class Store:
         os.replace(tmp, stem.with_suffix(".json"))
         return stem
 
+    def has(self, family: str, want: dict[str, str]) -> set[str]:
+        """The ids among ``want`` (item id -> key) that are stored under that key (reads the
+        indexes only, no vectors)."""
+        out: set[str] = set()
+        for path in sorted(self.folder(family).glob("*.json")):
+            for e in json.loads(path.read_text(encoding="utf-8"))["items"]:
+                if want.get(e["id"]) == e["key"]:
+                    out.add(e["id"])
+        return out
+
     def find(self, family: str, want: dict[str, str]) -> tuple[dict[str, Item], list[str]]:
         """The stored items among ``want`` (item id -> key), and the ids that are stored under
         another key only (refused: their vectors belong to another prompt, plan or layer set).
         A pack written for another revision or dtype than its folder says is an error."""
-        from safetensors.torch import load_file
+        from safetensors import safe_open
 
         found: dict[str, Item] = {}
         other: set[str] = set()
@@ -208,12 +225,13 @@ class Store:
             hits = [e for e in hits if e["key"] == want[e["id"]]]
             if not hits:
                 continue
-            acts = load_file(str(path.with_suffix(".safetensors")))["acts"]
-            for e in hits:
-                rows = [(int(la), int(p), str(tok)) for la, p, tok in e["rows"]]
-                found[e["id"]] = Item(
-                    e["id"], e["key"], rows, acts[e["start"] : e["start"] + len(rows)]
-                )
+            # only the wanted items' rows are read from the file, not the whole pack
+            with safe_open(str(path.with_suffix(".safetensors")), framework="pt") as fh:
+                acts = fh.get_slice("acts")
+                for e in hits:
+                    rows = [(int(la), int(p), str(tok)) for la, p, tok in e["rows"]]
+                    part = acts[e["start"] : e["start"] + len(rows)] if rows else None
+                    found[e["id"]] = Item(e["id"], e["key"], rows, part)
         return found, sorted(other - set(found))
 
 

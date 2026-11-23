@@ -230,7 +230,11 @@ re-stamped (`references/porting.md`).
 - **Ladder** (only if compliance fails):
   - T0: original carriers.
   - T1: shorter carriers (≤ 8 words), plus a stronger "copy exactly" instruction.
-- Never relax the equality rule. Pairs are atomic.
+- Never relax the equality rule.
+- No pairs: bank v2 (plan 0109) has no dont_think items, so every item passes or drops on its
+  own gate (the think / dont_think pairs of the first bank were atomic). Every set's bank is its
+  passing registered originals (plan 0113: `profile ids=<the ids not yet gated>` then `freeze`).
+  No Brief exists, so a short set ships short.
 
 ---
 

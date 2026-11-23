@@ -775,17 +775,65 @@
    ]
   },
   "directed_modulation": {
-   "target": 100,
-   "n_original": 100,
-   "n_original_gated": 100,
-   "n_original_pass": 100,
-   "n_items": 100,
+   "target": 102,
+   "n_original": 102,
+   "n_original_gated": 102,
+   "n_original_pass": 102,
+   "n_items": 102,
    "n_new": 0,
    "n_candidates_gated": 0,
-   "bank": "evals/directed_modulation/items.json",
-   "bank_version": 1,
+   "bank": "evals/basic/directed_modulation/items_v2.json",
+   "bank_version": 2,
    "change": "original items only",
-   "status": "full"
+   "status": "full",
+   "freeze_notes": [
+    "35 previously shipped ids leave the bank: ['dm-pair-00-neg', 'dm-pair-01-neg', 'dm-pair-02-neg', 'dm-pair-03-neg', 'dm-pair-04-neg', 'dm-pair-05-neg', 'dm-pair-06-neg', 'dm-pair-07-neg', 'dm-pair-08-neg', 'dm-pair-09-neg', 'dm-pair-10-neg', 'dm-pair-11-neg', 'dm-pair-12-neg', 'dm-pair-13-neg', 'dm-pair-14-neg', 'dm-pair-15-neg', 'dm-pair-16-neg', 'dm-pair-17-neg', 'dm-pair-18-neg', 'dm-pair-19-neg', 'dm-pair-20-neg', 'dm-pair-21-neg', 'dm-pair-22-neg', 'dm-pair-23-neg', 'dm-pair-24-neg', 'dm-pair-25-neg', 'dm-pair-26-neg', 'dm-pair-27-neg', 'dm-pair-28-neg', 'dm-pair-29-neg', 'dm-pair-30-neg', 'dm-pair-31-neg', 'dm-pair-32-neg', 'dm-pair-33-neg', 'dm-pair-34-neg']"
+   ],
+   "plan_lineage": [
+    {
+     "from": "1da94e9cd24b0a10b951957ca383d62658700ae241c0f2f7d3aa4231f842b820",
+     "to": "31881e432cc9c4149671fd23735d5651900fadd353b859a19f8f4516b9fe807f",
+     "dropped": [
+      "dm-pair-00-neg",
+      "dm-pair-01-neg",
+      "dm-pair-02-neg",
+      "dm-pair-03-neg",
+      "dm-pair-04-neg",
+      "dm-pair-05-neg",
+      "dm-pair-06-neg",
+      "dm-pair-07-neg",
+      "dm-pair-08-neg",
+      "dm-pair-09-neg",
+      "dm-pair-10-neg",
+      "dm-pair-11-neg",
+      "dm-pair-12-neg",
+      "dm-pair-13-neg",
+      "dm-pair-14-neg",
+      "dm-pair-15-neg",
+      "dm-pair-16-neg",
+      "dm-pair-17-neg",
+      "dm-pair-18-neg",
+      "dm-pair-19-neg",
+      "dm-pair-20-neg",
+      "dm-pair-21-neg",
+      "dm-pair-22-neg",
+      "dm-pair-23-neg",
+      "dm-pair-24-neg",
+      "dm-pair-25-neg",
+      "dm-pair-26-neg",
+      "dm-pair-27-neg",
+      "dm-pair-28-neg",
+      "dm-pair-29-neg",
+      "dm-pair-30-neg",
+      "dm-pair-31-neg",
+      "dm-pair-32-neg",
+      "dm-pair-33-neg",
+      "dm-pair-34-neg"
+     ],
+     "at": "2026-11-23T03:33:37+00:00"
+    }
+   ],
+   "note": "Bank v2 (plan 0109, issue #547; re-derived 2026-11-23): the 35 dont_think items left the set; the 65 kept originals (35 think, 15 secret, 15 preference) are unchanged with their recorded gate; the 37 new registered think items (dm-think-NN) were compliance-gated on GLM-5.3 (NVFP4) (copies the carrier, never names the concept, greedy AND >= 8/10): 37 pass. 102/102 ship (72 think, 15 secret, 15 preference). Originals only: the family has no Brief and no refill route; no item has a twin any more."
   },
   "moral_rationale": {
    "target": 195,
@@ -2380,11 +2428,17 @@
    "status": "full",
    "change": "rebuilt on the subject: 41 pairs (gw ccut v2 pipeline, plan 0084)",
    "note": "Rebuilt on GLM-5.3 (plan 0084): the gw ccut v2 pipeline re-run on the subject (pool 2025-03..2026-02; GLM fades 2025-04..2026-01), paired with v2's date / rating calipers plus a masked guessability rating (R18); 44 pairs, 3 dropped by the independent audit (2 wrong hint answers, 1 readable N answer) -> 41; date checks pass (day AUROC 0.558, cell excess -0.104)."
+  },
+  "user_modeling_hard": {
+   "status": "absent",
+   "note": "absent: this set has no bank for the family (plan 0060 A1.6)",
+   "exclude_from_macro": true,
+   "absent_auto": true
   }
  },
  "code": {
-  "git": "5d09f2b3+dirty",
-  "adapt_sha256": "9371e4d9da59115f"
+  "git": "ae11dd8a",
+  "adapt_sha256": "50deb0768bf40c95"
  },
  "model": "glm-5.3",
  "label": "GLM-5.3 (NVFP4)",

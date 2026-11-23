@@ -249,9 +249,22 @@ wsbench produce family=poetry method=logit_lens out=outputs/readouts/mine/poetry
 wsbench produce text="The athlete Muhammad Ali plays the sport of" method=jlens positions=-1 layers=20,36,60
 ```
 
+**Where the activations come from.** `wsbench produce family=<eval>` (and `Producer.load(...,
+store=..., pull=...)` in Python) reads the eval's activations from [the residual
+store](#the-residual-store): what is on disk, then the published residuals, and a forward pass
+only for the cells that are in neither, which are then written to the store. It prints the
+same line as `wsbench capture`, for example `poetry: 3322 cells = 0 from the store + 3322
+pulled from the dataset + 0 captured (0 forward passes)`. Its keys for this are `store=`
+(default `outputs/store`), `dataset=`, `dataset_revision=`, `revision=` and `dtype=`, with the
+meanings they have on `capture`; with a store the model is loaded in the capture's dtype
+(`dtype=fp32` loads it in 32-bit floats, `dtype=bf16` as shipped). The model is still loaded,
+since every bundled method needs its weights to read a vector; the forward passes over the
+prompts are what is skipped. `store=none`, the `text=` form and a `Producer` built without a
+store run one forward pass per prompt and keep nothing.
+
 What it does: renders the prompt the way the plan says (its chat template, thinking off),
-captures the residual stream after each requested decoder block in one forward pass, and hands
-each (layer, position) vector to the method. The vector lenses (`logit_lens`, `jlens`, `rlens`)
+takes the residual stream after each requested decoder block (from the store, or in one forward
+pass), and hands each (layer, position) vector to the method. The vector lenses (`logit_lens`, `jlens`, `rlens`)
 return the top-10 tokens with scores; `olens` verbalizes through its LoRA with the vector placed
 in the carrier prompt's `<activation>` slot as `alpha · unit(h)`, the adapter off while capturing
 and on while generating; `nla` runs Karvonen's reader with the vector added norm-matched at its
@@ -307,6 +320,9 @@ passes)`. A second run of the same command makes no forward pass and does not lo
 | `limit` | `0` | the first N items of each eval |
 | `shard`, `shards` | `0`, `1` | this process captures every `shards`-th item from `shard` (items sorted by id): one process per GPU |
 | `device` | `cuda` | |
+| `dataset` | `agu18dec/workspacebench_residuals` | the published residuals, asked before the model runs: a Hugging Face dataset id, a local folder that holds a copy of it, or `none` |
+| `dataset_revision` | the revision the map was built on | another revision of that dataset |
+| `check` | `False` | `True`: one line per eval saying how many cells are in the store, in the dataset and in neither; downloads no vectors and loads no model |
 
 **What is stored.** One folder per model revision, capture dtype and eval:
 `<store>/<revision>/<dtype>/<eval>/<pack>.safetensors` (`acts`, one row per cell) with a
@@ -330,6 +346,16 @@ row gives the exact token ids, the positions and the layers:
 
 A row may also give text to render (`"render": "chat"` with `"text"`, see the table in §1) and
 any positions rule. `family` is a free name here; it only names the store folder.
+
+**The published residuals.** The store fills itself from the public dataset
+[agu18dec/workspacebench_residuals](https://huggingface.co/datasets/agu18dec/workspacebench_residuals)
+before it runs the model (`wsbench.produce.dataset.Residuals`). The dataset holds vectors, item
+ids, layers and positions, and no text, so `evals/residuals/map.json` records, for every stored
+item, the key it had at the benchmark commit the capture was made on. An item is pulled only
+when that key equals the plan's key today; index files are read first and only the part files
+that hold wanted rows are downloaded. The map is built by `scripts/residuals_map.py`, run with
+the capture's own benchmark commit on the path; a new capture or a re-upload means running it
+again. The README's "Stored activations" section has the table of what is stored.
 
 In Python, `wsbench.produce.store.cells_for(store, eval, plan_rows, tokenizer, backend=...)` is
 the one call that returns cells: from the store, else from a `pull` function, else from a

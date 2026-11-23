@@ -768,18 +768,57 @@
    ]
   },
   "directed_modulation": {
-   "target": 100,
-   "n_original": 100,
-   "n_original_gated": 100,
-   "n_original_pass": 92,
-   "n_items": 84,
+   "target": 102,
+   "n_original": 102,
+   "n_original_gated": 102,
+   "n_original_pass": 89,
+   "n_items": 89,
    "n_new": 0,
    "n_candidates_gated": 0,
-   "bank": "evals/directed_modulation/items.json",
-   "bank_version": 1,
+   "bank": "evals/basic/directed_modulation/items_v2.json",
+   "bank_version": 2,
    "change": "original items only",
    "status": "untried",
-   "note": "Originals only: 92/100 registered items pass on DeepSeek-V4-Pro (compliance-gated); pairs kept atomic, giving 84; no refill attempted."
+   "note": "Bank v2 (plan 0109, issue #547; re-derived 2026-11-23): the 27 dont_think items left the set; the 57 kept originals (27 think, 15 secret, 15 preference) are unchanged with their recorded gate; the 37 new registered think items (dm-think-NN) were compliance-gated on DeepSeek-V4-Pro-0813 (copies the carrier, never names the concept, greedy AND >= 8/10): 32 pass, 5 fail (dm-think-38, dm-think-43, dm-think-53, dm-think-54, dm-think-68). 89/102 ship (59 think, 15 secret, 15 preference). Originals only: the family has no Brief and no refill route; no item has a twin any more.",
+   "freeze_notes": [
+    "27 previously shipped ids leave the bank: ['dm-pair-00-neg', 'dm-pair-01-neg', 'dm-pair-02-neg', 'dm-pair-03-neg', 'dm-pair-04-neg', 'dm-pair-05-neg', 'dm-pair-06-neg', 'dm-pair-07-neg', 'dm-pair-09-neg', 'dm-pair-10-neg', 'dm-pair-11-neg', 'dm-pair-12-neg', 'dm-pair-14-neg', 'dm-pair-15-neg', 'dm-pair-16-neg', 'dm-pair-17-neg', 'dm-pair-20-neg', 'dm-pair-21-neg', 'dm-pair-22-neg', 'dm-pair-23-neg', 'dm-pair-25-neg', 'dm-pair-26-neg', 'dm-pair-28-neg', 'dm-pair-29-neg', 'dm-pair-30-neg', 'dm-pair-31-neg', 'dm-pair-32-neg']"
+   ],
+   "plan_lineage": [
+    {
+     "from": "f6566dd123f645d49820a36ae55af3acaffb41d0caea0facc7a1adda44a166f5",
+     "to": "0c62ca9bc5e982e7139a9698bf1d02815b21ec16060904b0d0c0c5fd939ef1f7",
+     "dropped": [
+      "dm-pair-00-neg",
+      "dm-pair-01-neg",
+      "dm-pair-02-neg",
+      "dm-pair-03-neg",
+      "dm-pair-04-neg",
+      "dm-pair-05-neg",
+      "dm-pair-06-neg",
+      "dm-pair-07-neg",
+      "dm-pair-09-neg",
+      "dm-pair-10-neg",
+      "dm-pair-11-neg",
+      "dm-pair-12-neg",
+      "dm-pair-14-neg",
+      "dm-pair-15-neg",
+      "dm-pair-16-neg",
+      "dm-pair-17-neg",
+      "dm-pair-20-neg",
+      "dm-pair-21-neg",
+      "dm-pair-22-neg",
+      "dm-pair-23-neg",
+      "dm-pair-25-neg",
+      "dm-pair-26-neg",
+      "dm-pair-28-neg",
+      "dm-pair-29-neg",
+      "dm-pair-30-neg",
+      "dm-pair-31-neg",
+      "dm-pair-32-neg"
+     ],
+     "at": "2026-11-23T03:33:15+00:00"
+    }
+   ]
   },
   "moral_rationale": {
    "target": 195,
@@ -2102,11 +2141,17 @@
     "pool_size": 19999
    },
    "note": "plan 0078 (English only): 397 per-item passes of 19999 pool rows (rejected at canon1 6489, gate 10144, Opus floor 2779, review 149, build 41); Opus prompt-only floor 0 by construction; lucky screen: 109 of 397 leakers excluded; item-quality drops: independent audit 12, delta audit 1, unmeasurable (R47) 1; confirm round 1 on 272: blind 0.044 / described 0.139 vs chance 0.191 + 0.05 (ub90 0.056 / 0.163) PASS; 37 per-item leakers dropped without back-fill (post-drop 0.024 / 0.029); floor-of-record re-test on 234: blind 0.028 / described 0.097 vs chance 0.191 + 0.05 (ub90 0.038 / 0.118) PASS; 17 per-item leakers dropped without back-fill (R49, Camila's strict rule: 17 dropped); R49 single re-measure (new floor of record) on 217: blind 0.014 / described 0.090 vs chance 0.191 + 0.05 (ub90 0.021 / 0.112) PASS; 14 per-item leakers (reported, not dropped: R49 measures once): r12iv0305, r12iv0435, r12iv2909, r12iv3114, r14iv0832, r14iv1010, r14iv3247, r15iv1222, r16iv0503, r16iv1017, r16iv1371, r16iv2627, r2iv0493, r9rh1726; shipped 217; status full (target reached)"
+  },
+  "user_modeling_hard": {
+   "status": "absent",
+   "note": "absent: this set has no bank for the family (plan 0060 A1.6)",
+   "exclude_from_macro": true,
+   "absent_auto": true
   }
  },
  "code": {
-  "git": "5d09f2b3+dirty",
-  "adapt_sha256": "9371e4d9da59115f"
+  "git": "a520f06b",
+  "adapt_sha256": "50deb0768bf40c95"
  },
  "model": "deepseek-v4-pro",
  "label": "DeepSeek-V4-Pro-0813",

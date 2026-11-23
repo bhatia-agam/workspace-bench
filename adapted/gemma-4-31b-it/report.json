@@ -2114,18 +2114,65 @@
    ]
   },
   "directed_modulation": {
-   "target": 100,
-   "n_original": 100,
-   "n_original_gated": 100,
-   "n_original_pass": 100,
-   "n_items": 100,
+   "target": 102,
+   "n_original": 102,
+   "n_original_gated": 102,
+   "n_original_pass": 102,
+   "n_items": 102,
    "n_new": 0,
    "n_candidates_gated": 0,
-   "bank": "evals/directed_modulation/items.json",
-   "bank_version": 1,
+   "bank": "evals/basic/directed_modulation/items_v2.json",
+   "bank_version": 2,
    "change": "original items only",
    "status": "full",
-   "note": "Plan 0089 finisher 2026-11-17: 100/100 full. Originals only; full; audit OK."
+   "note": "Bank v2 (plan 0109, issue #547; re-derived 2026-11-23, plan 0113): the 35 dont_think items left the set; the 65 kept originals (35 think, 15 secret, 15 preference) are unchanged with their recorded gate; the 37 new registered think items (dm-think-NN) were compliance-gated on Gemma-4-31B-it (copies the carrier, never names the concept, greedy AND >= 8/10): 37 pass. Provenance: this set's run-tree gate log was not found, so the gate rows of the kept originals were seeded from the shipped bank at 5a5d8376 (each item with its recorded rate / pass; 65 rows, not re-run on the subject); n_original_gated counts log rows, seeded ones included. Every registered kept original was already shipped, so none was left ungated. 102/102 ship (72 think, 15 secret, 15 preference). Originals only: the family has no Brief and no refill route; no item has a twin any more.",
+   "freeze_notes": [
+    "35 previously shipped ids leave the bank: ['dm-pair-00-neg', 'dm-pair-01-neg', 'dm-pair-02-neg', 'dm-pair-03-neg', 'dm-pair-04-neg', 'dm-pair-05-neg', 'dm-pair-06-neg', 'dm-pair-07-neg', 'dm-pair-08-neg', 'dm-pair-09-neg', 'dm-pair-10-neg', 'dm-pair-11-neg', 'dm-pair-12-neg', 'dm-pair-13-neg', 'dm-pair-14-neg', 'dm-pair-15-neg', 'dm-pair-16-neg', 'dm-pair-17-neg', 'dm-pair-18-neg', 'dm-pair-19-neg', 'dm-pair-20-neg', 'dm-pair-21-neg', 'dm-pair-22-neg', 'dm-pair-23-neg', 'dm-pair-24-neg', 'dm-pair-25-neg', 'dm-pair-26-neg', 'dm-pair-27-neg', 'dm-pair-28-neg', 'dm-pair-29-neg', 'dm-pair-30-neg', 'dm-pair-31-neg', 'dm-pair-32-neg', 'dm-pair-33-neg', 'dm-pair-34-neg']"
+   ],
+   "plan_lineage": [
+    {
+     "from": "1da94e9cd24b0a10b951957ca383d62658700ae241c0f2f7d3aa4231f842b820",
+     "to": "31881e432cc9c4149671fd23735d5651900fadd353b859a19f8f4516b9fe807f",
+     "dropped": [
+      "dm-pair-00-neg",
+      "dm-pair-01-neg",
+      "dm-pair-02-neg",
+      "dm-pair-03-neg",
+      "dm-pair-04-neg",
+      "dm-pair-05-neg",
+      "dm-pair-06-neg",
+      "dm-pair-07-neg",
+      "dm-pair-08-neg",
+      "dm-pair-09-neg",
+      "dm-pair-10-neg",
+      "dm-pair-11-neg",
+      "dm-pair-12-neg",
+      "dm-pair-13-neg",
+      "dm-pair-14-neg",
+      "dm-pair-15-neg",
+      "dm-pair-16-neg",
+      "dm-pair-17-neg",
+      "dm-pair-18-neg",
+      "dm-pair-19-neg",
+      "dm-pair-20-neg",
+      "dm-pair-21-neg",
+      "dm-pair-22-neg",
+      "dm-pair-23-neg",
+      "dm-pair-24-neg",
+      "dm-pair-25-neg",
+      "dm-pair-26-neg",
+      "dm-pair-27-neg",
+      "dm-pair-28-neg",
+      "dm-pair-29-neg",
+      "dm-pair-30-neg",
+      "dm-pair-31-neg",
+      "dm-pair-32-neg",
+      "dm-pair-33-neg",
+      "dm-pair-34-neg"
+     ],
+     "at": "2026-11-23T03:33:27+00:00"
+    }
+   ]
   },
   "moral_rationale": {
    "target": 195,
@@ -2213,11 +2260,17 @@
    "status": "full",
    "change": "rebuilt on the subject: 132 pairs (gw ccut v2 pipeline, plan 0084)",
    "note": "Plan 0089 finisher 2026-11-17: 132 pairs (264 items)/40 pairs full. Rebuilt on the subject (gw ccut v2, plan 0084; gw 2027ef208): attempt 1 used (no R3 fallback on gemma); R18 guess caliper from the start; R20 builder audit 190 -> 158; independent audit 26 more pairs (incumbent / favourite / duplicate-event N) -> 132 pairs. date_leak: day_auroc 0.499, cell_excess -0.031 (date checks pass = the R19 bar); obscurity 0.648 so date_leak.pass false (I twins mostly obscure). Predictors on 132: cot_any_sample I 26 / N 8; predict_single I 5 / N 0; predict_normal I 1 / N 0. Drops by rule (report.json drops): R20 audits (pairs x2) 116."
+  },
+  "user_modeling_hard": {
+   "status": "absent",
+   "note": "absent: this set has no bank for the family (plan 0060 A1.6)",
+   "exclude_from_macro": true,
+   "absent_auto": true
   }
  },
  "code": {
-  "git": "26176139+dirty",
-  "adapt_sha256": "bcfd721e23d3e856"
+  "git": "a3033c75",
+  "adapt_sha256": "50deb0768bf40c95"
  },
  "drops": {
   "basic_readout": {

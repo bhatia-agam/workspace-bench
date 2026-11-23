@@ -58,10 +58,13 @@ secret and preference items stay, and the bank is refilled with regular think it
   this plan's `plan_sha`.
 - **Stamp.** `judge.instrument(header)`: `dm-2026-10-31+expressed+bank-v2` for bank v2;
   `items.json` (`WSB_BANK_FILE_DIRECTED_MODULATION=evals/basic/directed_modulation/items.json`)
-  and the adapted banks carry no `version` and keep `dm-2026-10-31+expressed`. No prompt, rubric
+  carries no `version` and keeps `dm-2026-10-31+expressed`; the adapted banks
+  (`adapted/<model>/directed_modulation.json`) are re-derived from bank v2 (plan 0113: their
+  dont_think items removed, the 37 new think items gated on each subject) and stamp
+  `+bank-v2`. No prompt, rubric
   or call key changed (`JUDGE_PROMPT_VERSION` = `dm-2026-10-31`).
 - `white_bear` (the think vs don't-think contrast) needs both twins of a pair, so it is absent
-  on bank v2; the code path stays for `items.json` and the adapted banks.
+  on bank v2 and on the adapted banks; the code path stays for `items.json`.
 - **Fast subset.** The family is not in `fast-v5`, the subset `--fast` runs (it is not a core family), so `--fast` skips
   it. The five older fast files (`fast-v1` .. `fast-v3`, `fast-safety-v1`, `fast-safety-v2`)
   hold 62 items of `items.json`, 17 of them dont_think items, and pin its `bank_sha`: those
@@ -206,7 +209,7 @@ wsbench judge family=directed_modulation readouts=<arm>.jsonl out=outputs/<arm>/
 ## Judge prompts
 
 `prompt_version`: `dm-2026-10-31+expressed+bank-v2` (the instrument; plan 0035, `+bank-v2` plan
-0109; `dm-2026-10-31+expressed` on `items.json` and the adapted banks). Judge calls are keyed by
+0109; `dm-2026-10-31+expressed` on `items.json`). Judge calls are keyed by
 `JUDGE_PROMPT_VERSION` = `dm-2026-10-31` (new prompts: no earlier cache hits). Judge:
 the repo default (`claude-opus-5-5`), temperature 0. Seed 0, 4 distractors. Output schema:
 `{"choice": int, "form": exact|variant|synonym|translation|description|none, "basis":
