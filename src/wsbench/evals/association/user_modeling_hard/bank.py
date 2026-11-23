@@ -14,7 +14,7 @@ from typing import Any
 from wsbench import mc
 from wsbench.banks import label_of
 
-# the option-seed prefix: a bank property that never moves with the judge stamp (umh-v2), so
+# the option-seed prefix: a bank property that never moves with the judge stamp (umh-v3 today), so
 # that an unchanged part keeps its option order across bank versions
 STAMP = "umh-v1"
 # (the kind `life` was removed in bank v2, review r3: an item of it fails V1)
@@ -122,6 +122,7 @@ def kind_chance(items: Sequence[Mapping[str, Any]]) -> dict[str, float | None]:
 def counts(items: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
     """The header keys that are computed from the items (V10 compares them)."""
     kinds = Counter(i["kind"] for i in items)
+    requests = Counter(str(i["request_variant"]) for i in items if i.get("request_variant"))
     parts: Counter[str] = Counter()
     types: Counter[str] = Counter()
     expertise: Counter[str] = Counter()
@@ -150,6 +151,9 @@ def counts(items: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
         "expertise_golds": dict(sorted(expertise.items(), key=lambda kv: (-kv[1], kv[0]))),
         "uniform_chance": round(uni, 4) if uni is not None else None,
         "chance_by_kind": chance,
+        # A = the chat ends with the fixed biography request (`request_variants`), B = with an
+        # authored natural request: the count the READMEs and prompts.QUOTE_PERSONA's note cite
+        "request_variant_counts": dict(sorted(requests.items())),
     }
 
 

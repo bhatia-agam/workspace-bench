@@ -198,7 +198,7 @@ fast subset), `--core` (the default: the 18 families of `tiers.CORE`) or `--full
 core tier, not every family: pass `--full` when you mean all of them, as when planning or
 judging an adapted set end to end. `families=all` still means every family in every command.
 The registered `user_modeling` bank is in full only; the hard bank, `user_modeling_hard` (plan
-0106), is registered in full and joins core once its validation is done. `wsbench report` prints a `**core macro**` row (`results.core_macro`) under
+0106; bank v4 with frozen floors, plan 0112), is registered in full and joins core in a separate step. `wsbench report` prints a `**core macro**` row (`results.core_macro`) under
 the macro row. Each family's category is `EvalSpec.group`, a key of `registry.CATEGORIES`;
 `wsbench list` shows the category and the tier.
 

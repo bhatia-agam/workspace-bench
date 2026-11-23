@@ -231,7 +231,7 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   (summary prompt-only entry schema + `protocol` + `ati`), written by `wsbench freeze
   kind=logit_lens` from `layers=63` summary runs (refused otherwise; registered banks only) and
   drawn as the report's third column by the summary prompt-only row-match rule; never a gate.
-  Refrozen 2026-11-17 on main's instruments (29 families, raw mean 0.121, 0.119 since nyt_connections' 2026-11-20 re-freeze under plan 0099, 0.126 since directed_modulation's bank v2 entry of 2026-11-23, plan 0109; strict ATI 0.046 over
+  Refrozen 2026-11-17 on main's instruments (29 families, raw mean 0.121, 0.119 since nyt_connections' 2026-11-20 re-freeze under plan 0099, 0.126 since directed_modulation's bank v2 entry of 2026-11-23, plan 0109, 0.122 over 30 families since user_modeling_hard's first entry, plan 0112; strict ATI 0.046 over
   the 7 `ati-subset-v2` families with an entry; model_multihop has none). An entry is tied to its
   family's summary instrument, digest settings, judge model and read plan:
   `tests/test_logit_lens_floor.py` (`test_every_committed_entry_matches_its_live_row`,
@@ -364,7 +364,7 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   on a gated gold pick with an inferred basis; its full label, `judge.draw_label`, is a
   diagnostic). Both reuse conjunctive's `draw_key` / `majority` / `n_draws`; draw 0 keeps the
   single-call key.
-  user_modeling_hard (plan 0106, `umh-v2+bank-v2` since review r3: judge calls `umh-v2`, bank v2; full tier, not in core until its validation is done)
+  user_modeling_hard (plan 0106; `umh-v3+bank-v4` since plan 0112: judge calls `umh-v3`, bank v4, floors frozen; full tier, core is a separate step)
   is a SEPARATE package that imports three pure helpers (`user_modeling.judge.decode_choice`,
   `user_modeling.prompts.render_user_turn` / `option_lines`, conjunctive's draw helpers) and no
   prompt: never thread a family parameter through `user_modeling`, whose files, stamps and
@@ -383,8 +383,8 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   `|quote`, `|quote2`, ...) and the pick stands when ANY reading's quote check returns the
   gold; a malformed quote-check choice is undecided. These are code-side gates, in no call
   fingerprint: changing one needs a stamp bump (review r3 bumped `umh-v1` to `umh-v2` because
-  results of three gate versions carried one stamp; never change a gate under a stamp that has
-  results, frozen or not).
+  results of three gate versions carried one stamp; never change a gate, a prompt or the bank under a stamp
+  that has results, frozen or not: review r4 F1).
   The bank's `forms` are NOT a judge lexicon (build lint, capable question, diagnostics only).
   `bank.validate` (V1-V14) is run by the builder (`scripts/build_user_modeling_hard_bank.py`),
   the judge's loader (fail closed) and the bank tests; `min_full_positions` = the header's
@@ -394,7 +394,9 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   list, guessable at 3 of 5), never by hand in `items.json`, and no user message is ever
   edited. Rebuild without touching `.venv`: `HF_HOME=<cache> HF_HUB_OFFLINE=1 uv run --no-sync
   --with transformers --with jinja2 python scripts/build_user_modeling_hard_bank.py --src
-  <bank_candidate.json> --pools <option_pools.json> --out <fresh path>`, copy it over
+  <bank_candidate.json> --wave <wave5_candidate.json> --pools <option_pools.json> --out <fresh
+  path>` (the registered bank needs both sources: the tables name wave-5 items, so a build
+  without `--wave` exits), copy it over
   `items.json`, then `--check`; then re-declare the manifest-ledger entry and update the counts
   the tests and READMEs pin. Review r2 (2026-11-21, after the first validation run; still
   `umh-v1`): a draw has at most `gate.MAX_REASKS` = 2 re-asks (keys `|retry1`, `|retry2`) for
@@ -425,7 +427,53 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   headline; `broader_suspect` (now with a `profession` list) and `formless` are flags, never
   gates (measured: a denial kills true passes). The lucky guesser's `question` variant shows
   `judge_label`. `tests/test_user_modeling_hard_bank.py` ties the biography-request count in
-  README.md / NOTICE.md to the bank. It has its own `readplan` branch
+  README.md / NOTICE.md to the bank (the header's `request_variant_counts`, computed by
+  `bank.counts`; never type the number in a comment).
+  Plan 0112 (2026-11-23; `umh-v3`, bank v4 = 155 items, 229 parts: 110 of bank v2 + 45 of the
+  harder wave, `authoring.wave` 5, header `provenance`): **the strict gate is a rule of the
+  builder, on ONE draw per item** (`gate_fails`: every part at the original label-gate bar,
+  where an EMPTY sample under the stem `My answer is:` counts as a wrong answer and the no-stem
+  question decides only for an empty stem GREEDY; a candidate under it is dropped into
+  `edits.not_strictly_gated`, never admitted by a looser leg, by re-drawing empties or by a
+  second draw; it fails closed: a missing gate record, a missing `greedy_verdict`, another
+  sample count than 10 or a record that claims a second draw is a SystemExit, never a default).
+  The plan's first build (bank v3, `umh-v3+bank-v3`, 175 items; judged, floors frozen on the
+  branch, never merged) had admitted 19 wave-5 items on a second draw of the stem question; the
+  owner dropped them (two chances where every other item had one; mean held-out single-draw
+  pass probability 0.50), so they are in `edits.second_draw_not_admitted` and the bank took a
+  new version under the stamp rule above. Six parts are in on the no-stem leg as the rule is
+  written (`edits.no_stem_leg`, pinned by `NO_STEM_PARTS` in the bank test, named in the family
+  README); do not drop or re-gate them silently. The wave's candidate file comes from
+  `scripts/umh_wave_candidate.py --harder <the wave's run dir> --redraw-table <...> --out
+  <wave5_candidate.json>` (the second draw is recorded there as the diagnostic `second_draw`
+  and gates nothing). Every count about the bank in the header's `known_issues` is computed
+  (`known_issues(items, log)`; a typed one went stale in the first build): never type one. The
+  header's `plan_lineage` is ONE drop-only step from the first build's read plan
+  (`FIRST_BUILD_PLAN_SHA`) to the bank's: the L63 floor's readouts were made on that plan and
+  are judged through it (`reads` guard iii), nothing was read again. The owner dropped the three
+  near-stated items (`umh-two-w1035-A` with the last life-type part and the only relabelled
+  gold, so `GOLD_RELABEL` is empty and its branch is tested on a fixture; the wave's two
+  `engaged` items) and one of two copies of a vignette (`umh-state-w5113-B`). Also-true flags
+  of state lists are decided by ONE written rule from the chat alone (review r4 F2: right to
+  say it vs only possible; 1 swap, fixed before judging, 42 kept; never swap a distractor
+  because a lens failed on it). Do not call that pass blind or written before judging: its
+  write-up came 13 minutes after judging started and moved no verdict, and two of its parts'
+  arm outcomes were known. Mixed-state lists hold two bars (r2 "the other situation supports
+  it", F2 "right to say it"): `anxious` in `umh-state-w4108-A` / `-w4026-A` is out of part 1
+  and still in part 0 (`known_issues`). Judge: `judge.retry_reason` picks the echo re-ask
+  text, and an echo whose holding statement is not itself an echo gets
+  `UMH_RETRY_REASON_ECHO_QUOTE`, which must never say "not from that bullet" (review r4 F3).
+  Floors are frozen (`PENDING_FLOOR` in `tests/test_po_floors_r3.py` is empty; prompt-only
+  0.703, logit lens L63 0.019, lucky blind 0.114, described 0.093; the lucky `described`
+  guesser's prompts show examples from the whole bank, so a bank change means new calls for
+  it even when every other call replays; `fine` misses the per-kind lucky bar on blind, owner decision open) and the bank's sha256 is
+  pinned in the bank test: a bank edit now means bank v5, a new stamp, the floors re-measured
+  (L63: re-read every item on the new plan, or a drop-only `plan_lineage`) and a new ledger
+  entry. The judge's call keys hold `CALL_VERSION`, not the bank version, so a drop-only bank
+  change replays every call of a kept item from an earlier run's `cells.jsonl`
+  (`scripts/cache_only_run.py` with `opts=aggregate=summary` needs no credential and counts an
+  uncached call as unjudged). A partial `freeze kind=prompt_only source=<po-opus run>` rewrites
+  `_source` without its `fallback` block: keep main's file and add the one entry (as plan 0109). It has its own `readplan` branch
   (`LITE_SAME_FAMILIES` is plan 0061's constant and stays five), is `NOT_GATED` for ATI and
   `adapt.families.NOT_ADAPTED` (no adapted set carries it), and `wsbench report` prints its
   `extras.breakdown_md` under `## breakdowns` (`cli._breakdowns`; absent key = unchanged output).
@@ -1060,7 +1108,7 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
 - `tiers.py` (imports `registry` and `fast` only; `registry` never imports it): `TIERS = ("fast",
   "core", "full")`, `DEFAULT = "core"`, `CORE` (18 families: conjunctive_association joined on 2026-11-21, Camila; the registered
   `user_modeling` bank is NOT core; `user_modeling_hard`, plan 0106, is registered in full and
-  joins `CORE` as the 19th once its validation is done: plan 0106 commit 5, with the fast cut
+  joins `CORE` as the 19th in a separate step (its floors are frozen since plan 0112): plan 0106 commit 5, with the fast cut
   and the final ledger entry),
   `core()` / `full()` / `families(tier)`, `tier_of(name)` (`core` | `full` | `""`), `check()`
   (every `CORE` key registered, not superseded / retired / `not_in_macro`; its static part runs

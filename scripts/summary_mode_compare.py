@@ -106,6 +106,11 @@ BASE_PAIRS: dict[str, dict[str, str]] = {
         # review r3: umh-v2 on bank v2
         "umh-v2": "umh-v2+maj3v",
         "umh-v2+bank-v2": "umh-v2+bank-v2+maj3v",
+        # plan 0112: umh-v3 (a second echo re-ask reason) on bank v4 (bank v3 = the plan's first
+        # build, 175 items, judged and never merged)
+        "umh-v3": "umh-v3+maj3v",
+        "umh-v3+bank-v3": "umh-v3+bank-v3+maj3v",
+        "umh-v3+bank-v4": "umh-v3+bank-v4+maj3v",
     },
     # moral_rationale's summary mode takes the majority of 3 draws' verdicts (+maj3v); the
     # single-pick ec-v9 instruments also verify near-verbatim quotes (+nq1)

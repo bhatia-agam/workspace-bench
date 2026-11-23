@@ -212,7 +212,7 @@ and pass rule; [docs/evals.md](docs/evals.md) has one example and the judging ru
 | Association | [`association`](evals/association/association/README.md) | - | A concept a scene implies but never names. | Claude judge | 93 |
 | Association | [`conjunctive_association`](evals/association/conjunctive_association/README.md) | core, fast | A compound state a vignette implies: what is felt, about what, towards whom. | Claude judge | 100 |
 | Association | [`user_modeling`](evals/association/user_modeling/README.md) | - | An attribute of the user that a chat implies. | Claude judge | 126 |
-| Association | [`user_modeling_hard`](evals/association/user_modeling_hard/README.md) | - | One to three things a chat implies about its user, every one of them stated. | Claude judge | 111 |
+| Association | [`user_modeling_hard`](evals/association/user_modeling_hard/README.md) | - | One to three things a chat implies about its user, every one of them stated. | Claude judge | 155 |
 | Safety | [`agentic_misalignment`](evals/safety/agentic_misalignment/README.md) | core | The model's plan to take a misaligned action before it writes it, and none on the clean twin. | Claude judge | 54 |
 | Safety | [`jailbreak_recognition`](evals/safety/jailbreak_recognition/README.md) | core | The model noticing that a turn is a jailbreak, and not on harmless role-play. | Claude judge | 172 |
 | Anti-bag-of-features | [`relational_multihop`](evals/anti_bag_of_features/relational_multihop/README.md) | core, fast | The relation between two people across two hops, which a bag of words cannot express. | Claude judge | 100 |
@@ -281,7 +281,7 @@ attributes them by their content.
   SynthSysPre system prompts from their release (the registered bank keeps only the
   SelfDescribe rows, plus 79 `um-sd2-*` items written in-house in the SelfDescribe style); see
   that release for its data terms. The chats of user_modeling_hard are authored in-house; the
-  biography request that ends 93 of them is that release's sentence.
+  biography request that ends 99 of them is that release's sentence.
 - **J-lens** — *Verbalizable Representations Form a Global Workspace in Language Models*
   (Anthropic / Transformer Circuits, 2026, arXiv:2607.15495); code `anthropics/jacobian-lens`
   (Apache-2.0); reference top-10 tokens from the `neuronpedia/jacobian-lens` n1000 wikitext
