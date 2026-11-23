@@ -199,6 +199,19 @@ def _raise_fd_limit() -> None:
         pass
 
 
+def _subject_revision(model: str, revision: object, *, need: bool = True) -> str:
+    """The subject's revision sha, which keys the residual store: the given one, else the
+    benchmark's pinned revision for the default model; any other model must name its own."""
+    from wsbench.produce.backend import DEFAULT_MODEL, DEFAULT_REVISION
+
+    rev = str(revision or "")
+    if not rev and model == DEFAULT_MODEL:
+        rev = DEFAULT_REVISION
+    if need and len(rev) < 12:
+        raise ValueError("revision=<sha> is required for this model (it keys the store)")
+    return rev
+
+
 class Command(pydra.Config):
     def execute(self) -> int:
         raise NotImplementedError
@@ -1477,9 +1490,23 @@ class Produce(Command):
         self.reads = "full"
         self.fast = False  # --fast: read the fast plan (plan 0090); family= only
         self.fast_variant = ""  # set by finalize from fast= (plan 0095), never a key
+        # family= reads its activations from the residual store: the store, then the published
+        # residuals, and a forward pass only for cells in neither. none = a forward pass per item
+        self.store = "outputs/store"
+        self.dataset = "agu18dec/workspacebench_residuals"  # or a local copy's folder, or none
+        self.dataset_revision = ""  # default: the revision evals/residuals/map.json was built on
+        self.revision = ""  # the model revision sha (it keys the store); default: the bench's
+        self.dtype = "fp32"  # which capture is read, and the model's dtype here: fp32 | bf16
 
     def finalize(self) -> None:
         _set_fast(self)
+        self.store = None if str(self.store or "none") == "none" else _path(self.store)
+        self.dataset = str(self.dataset or "none")
+        self.dataset_revision = str(self.dataset_revision or "")
+        self.revision = _subject_revision(str(self.model), self.revision, need=bool(self.store))
+        self.dtype = str(self.dtype)
+        if self.dtype not in ("fp32", "bf16"):
+            raise ValueError(f"dtype is fp32 or bf16, got {self.dtype!r}")
         self.method = str(self.method)
         self.model = str(self.model)
         self.family = _family(str(self.family or ""))
@@ -1525,7 +1552,23 @@ class Produce(Command):
             except SystemExit as e:
                 print(e.code, file=sys.stderr)
                 return EXIT_USAGE
-        producer = Producer.load(self.model, self.method, device=self.device)
+        where = pull = None
+        if self.family and self.store is not None:
+            from wsbench.produce import dataset, store
+
+            where = store.Store(self.store, self.revision, self.dtype)
+            pull = dataset.source(self.dataset, self.dataset_revision, self.dtype, self.revision)
+        producer = Producer.load(
+            self.model,
+            self.method,
+            device=self.device,
+            # with a store the model is loaded in the capture's dtype, so that a cell captured
+            # here is the same kind as the stored ones; without one, as shipped
+            dtype={"fp32": "float32", "bf16": "bfloat16"}[self.dtype] if where else "bfloat16",
+            revision=self.revision or None,
+            store=where,
+            pull=pull,
+        )
         if self.family:
             out = self.out or Path("outputs/readouts") / self.method / f"{self.family}.jsonl"
             path = producer.run_family(
@@ -1537,6 +1580,8 @@ class Produce(Command):
                 reads=self.reads,
                 **({"fast": True} if self.fast else {}),
             )
+            if producer.counts is not None:
+                print(producer.counts.line(self.family))
             print(f"wrote {path}")
             return 0
         lay = list(range(readplan.N_MODEL_LAYERS)) if self.layers == "all" else self.layers
@@ -1582,8 +1627,6 @@ class Capture(Command):
         self.check = False  # only say where each eval's cells are; no download, no model
 
     def finalize(self) -> None:
-        from wsbench.produce.backend import DEFAULT_MODEL, DEFAULT_REVISION
-
         self.dataset = str(self.dataset or "none")
         self.dataset_revision = str(self.dataset_revision or "")
         self.check = _bool(self.check)
@@ -1597,11 +1640,7 @@ class Capture(Command):
             raise ValueError("give families=<a,b|all>, --fast or plan=<file>")
         self.store = _path(self.store)
         self.model = str(self.model)
-        self.revision = str(self.revision or "")
-        if not self.revision and self.model == DEFAULT_MODEL:
-            self.revision = DEFAULT_REVISION
-        if len(self.revision) < 12:
-            raise ValueError("revision=<sha> is required for this model (it keys the store)")
+        self.revision = _subject_revision(self.model, self.revision)
         self.dtype = str(self.dtype)
         if self.dtype not in ("fp32", "bf16"):
             raise ValueError(f"dtype is fp32 or bf16, got {self.dtype!r}")

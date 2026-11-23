@@ -209,7 +209,7 @@ class Store:
         """The stored items among ``want`` (item id -> key), and the ids that are stored under
         another key only (refused: their vectors belong to another prompt, plan or layer set).
         A pack written for another revision or dtype than its folder says is an error."""
-        from safetensors.torch import load_file
+        from safetensors import safe_open
 
         found: dict[str, Item] = {}
         other: set[str] = set()
@@ -225,12 +225,13 @@ class Store:
             hits = [e for e in hits if e["key"] == want[e["id"]]]
             if not hits:
                 continue
-            acts = load_file(str(path.with_suffix(".safetensors")))["acts"]
-            for e in hits:
-                rows = [(int(la), int(p), str(tok)) for la, p, tok in e["rows"]]
-                found[e["id"]] = Item(
-                    e["id"], e["key"], rows, acts[e["start"] : e["start"] + len(rows)]
-                )
+            # only the wanted items' rows are read from the file, not the whole pack
+            with safe_open(str(path.with_suffix(".safetensors")), framework="pt") as fh:
+                acts = fh.get_slice("acts")
+                for e in hits:
+                    rows = [(int(la), int(p), str(tok)) for la, p, tok in e["rows"]]
+                    part = acts[e["start"] : e["start"] + len(rows)] if rows else None
+                    found[e["id"]] = Item(e["id"], e["key"], rows, part)
         return found, sorted(other - set(found))
 
 
