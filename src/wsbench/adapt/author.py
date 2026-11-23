@@ -8,6 +8,7 @@ decide. ``python -m wsbench.adapt author model=<m> family=<f> tier=<t> n=<n> [st
 import datetime as dt
 import hashlib
 import json
+import os
 import random
 import re
 import string
@@ -1551,6 +1552,10 @@ def _parse(text: str) -> tuple[list[dict], int]:
 
 
 STREAM_RETRIES = 4  # a long authoring stream the peer closes mid-reply is re-asked, not fatal
+# the effort every authoring call STARTS at (adaptive thinking at that effort, e.g. "low"); unset =
+# the model default first. Speed only: the same brief, lint and gate. An empty all-thinking reply
+# is still re-asked once at "low" unless the call already was low
+EFFORT_ENV = "ADAPT_AUTHOR_EFFORT"
 
 
 def _transport_error(e: BaseException) -> bool:
@@ -1583,7 +1588,7 @@ def author(model: str, family: str, tier: str, n: int, steer: str = "", wave: in
     for call in range((n + per - 1) // per):
         k = min(per, n - wrote)
         brief = render_brief(model, family, tier, k, steer, made)
-        effort: str | None = None  # the model default first
+        effort: str | None = os.environ.get(EFFORT_ENV, "").strip().lower() or None
         drops = 0
         while True:
             seen = session.pushed
@@ -1601,7 +1606,7 @@ def author(model: str, family: str, tier: str, n: int, steer: str = "", wave: in
                 # a hard brief (multihop_st t2) can spend all 32k tokens thinking and write no text;
                 # ask once more at low effort instead of keeping an empty call (2026-11-08)
                 has_text = any(blk.type == "text" and blk.text.strip() for blk in msg.content)
-                if effort is None and msg.stop_reason == "max_tokens" and not has_text:
+                if effort != "low" and msg.stop_reason == "max_tokens" and not has_text:
                     usage = getattr(msg, "usage", None)  # the empty call is still spend
                     tok_in += int(getattr(usage, "input_tokens", 0) or 0)
                     tok_out += int(getattr(usage, "output_tokens", 0) or 0)

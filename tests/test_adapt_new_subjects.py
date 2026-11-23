@@ -52,9 +52,12 @@ def test_registry_entries():
             assert remap_layer(63, s.n_layers, s.read_band) == s.n_layers - 1
         assert subjects.subject_for(s.hf_id, s.revision) is s
         json.dumps(modal_spec(s))
-    # thinking switch and reply end: only Kimi-K3 differs from the default
+    # thinking switch and reply end: only Kimi-K3 differs from the default (and Inkling-2-Mini's
+    # reply end, tests/test_adapt_inkling.py)
     assert K3.thinking_kwarg == "thinking" and K3.reply_end == "<|close|>"
-    others = [s for k, s in SUBJECTS.items() if k != K3.key]
+    ink = SUBJECTS["inkling-2-mini"]  # its pinned template ignores the switch (no rename)
+    assert ink.reply_end == "<|end_message|>" and ink.thinking_kwarg == "enable_thinking"
+    others = [s for k, s in SUBJECTS.items() if k not in (K3.key, "inkling-2-mini")]
     assert all(s.thinking_kwarg == "enable_thinking" and s.reply_end is None for s in others)
 
 
