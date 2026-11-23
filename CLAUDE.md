@@ -7,7 +7,7 @@ results schema, registry, runner, CLI, `readplan` = the producer-facing read pla
 the porting gate, `produce/` = the optional HF-transformers producer behind the `gpu` extra).
 `plans/` is the 2026-09-15..17 design history of the nine-family restructure, not a current
 pointer (`plans/README.md`). Public docs: `README.md`, `NOTICE.md`, `CITATION.cff`. The README is
-the newcomer's path (what it is, requirements, time and cost, install, `wsbench try`, running,
+the newcomer's path (what it is, requirements, time, install, `wsbench try`, running,
 outputs, checks, viewer, one table of the evals, credits); reference material lives in `docs/`
 (evals, running, tiers, judges, baselines, fast_subset, results_contract, porting, checks,
 judge_backends). `tests/test_readme_style.py` keeps dates, plan numbers and

@@ -24,25 +24,25 @@ This README says "eval" for what the code calls a family.
 | Disk | 0.8 GB for the checkout. Readouts and judge caches of a full run were not measured; plan for tens of GB. |
 | Network | The Anthropic API. Two evals fetch pinned public data: `nyt_connections` its puzzles when it plans or judges, `knowledge_cutoff` part of its questions when it plans. Producing readouts downloads the model from Hugging Face. |
 
-## Time and cost
+## Time
 
 One prose lens on the reference model at 11 layers, one sample per cell, measured on NVIDIA B200
 GPUs with a served reader and up to 352 judge calls in flight. Your numbers depend on your
-reader and your API rate limits. Judging dominates both time and cost.
+reader and your API rate limits. Judging takes most of the wall-clock.
 
-| what you run | questions / cells | GPU-hours to read | wall-clock to read | judge calls | judge wall-clock | judge cost | start to score | total cost |
-|---|---|---|---|---|---|---|---|---|
-| The two-question try-out (`wsbench try`) | 2 / 4 | none: shipped example readouts | none | 4 | 20 s | under $0.10 (estimate) | under a minute | under $0.10 (estimate) |
-| Reading two questions with a lens, not judged | 2 / 803 | 0.04 | 4.5 min on 1 GPU | none | none | none | 4.5 min | $0.30 |
-| The fast subset (`--fast`), as it was selected before (see below) | 2,160 / 657,690 | 1.98 | 16 min on 12 GPUs | 31,269 | 39 min from the first readouts | $1,868 | 52 min | $1,880 |
-| The core evals (default), without `conjunctive_association` (see below) | 4,541 / 2,885,822 | 8.2 (estimate) | as every eval | 63,172 | as every eval | $3,556 | as every eval | $3,610 (estimate) |
-| Every eval (`--full`) | 6,099 / 3,261,846 | 9.26 | 48 min on up to 32 GPUs | 81,218 | 101 min after the read | $4,574 | 2 h 29 min | $4,630 |
+| what you run | questions / cells | GPU-hours to read | wall-clock to read | judge wall-clock | start to score |
+|---|---|---|---|---|---|
+| The two-question try-out (`wsbench try`) | 2 / 4 | none: shipped example readouts | none | 20 s | under a minute |
+| Reading two questions with a lens, not judged | 2 / 803 | 0.04 | 4.5 min on 1 GPU | none | 4.5 min |
+| The fast subset (`--fast`), as it was selected before (see below) | 2,160 / 657,690 | 1.98 | 16 min on 12 GPUs | 39 min from the first readouts | 52 min |
+| The core evals (default), without `conjunctive_association` (see below) | 4,541 / 2,885,822 | 8.2 (estimate) | as every eval | as every eval | as every eval |
+| Every eval (`--full`) | 6,099 / 3,261,846 | 9.26 | 48 min on up to 32 GPUs | 101 min after the read | 2 h 29 min |
 
-A cell is one (question, layer, position) readout. Costs are list prices: the judge's API
-prices and $6.25 per GPU-hour. The core row is the core evals' share of the full run; it takes
-as long as the full run because the two slowest evals to judge are core. Reading also needs
-the model's activations captured once per version of the question banks: 0.8 GPU-hours for
-every eval. With fewer GPUs the GPU-hours stay and the wall-clock grows in proportion.
+A cell is one (question, layer, position) readout. The core row is the core evals' share of the
+full run; it takes as long as the full run because the two slowest evals to judge are core.
+Reading also needs the model's activations captured once per version of the question banks:
+0.8 GPU-hours for every eval. With fewer GPUs the GPU-hours stay and the wall-clock grows in
+proportion.
 
 Two rows describe an earlier state of the bench and were not measured again:
 
@@ -50,10 +50,10 @@ Two rows describe an earlier state of the bench and were not measured again:
   questions in 22 evals. The fast subset is now 1,441 questions in 16 evals
   ([docs/fast_subset.md](docs/fast_subset.md)), a different selection, and has not been timed.
   On the earlier selection, capturing activations took 0.3 GPU-hours, and with the full run
-  judged its score needed 99 more judge calls ($3, 9 minutes).
+  judged its score took 9 more minutes.
 - **The core row** is the share of the 17 evals that were core when the full run was measured.
   `conjunctive_association` (100 questions) is core as well now, 18 evals and 4,641 questions
-  in all; its cells, judge calls and cost are in the row for every eval but not in the core row.
+  in all; its cells are in the row for every eval but not in the core row.
 
 ## Install
 
