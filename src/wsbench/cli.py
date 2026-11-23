@@ -1553,6 +1553,108 @@ class Produce(Command):
         return 0
 
 
+class Capture(Command):
+    """Fill the residual store: the subject model's activations at the read plan's cells, one
+    forward pass per item that is not stored yet (needs the `gpu` extra). Evals come from
+    `families=`, `--fast` (the fast subset's plan) or `plan=<file>` (any cell list in the plan
+    format, `docs/producing_readouts.md`). Prints, per eval, where its cells came from."""
+
+    def __init__(self) -> None:
+        super().__init__()
+        self.families = None  # a comma list, or all; with --fast: the fast subset's families
+        self.plan = ""  # a plan file instead of families= (rows as `wsbench plan` writes them)
+        self.store = "outputs/store"  # the residual store's root folder
+        self.model = "Qwen/Qwen3.6-27B"
+        self.revision = ""  # the model revision sha; default: the benchmark's for the default model
+        self.dtype = "fp32"  # the subject's dtype during capture: fp32 (reproducible) | bf16
+        self.device = "cuda"
+        self.reads = "full"
+        self.fast = False  # --fast: capture the fast plan
+        self.fast_variant = ""  # set by finalize from fast=, never a key
+        self.limit = 0  # the first N items of each eval (try-outs)
+        self.shard = 0  # this process captures items shard, shard + shards, ... (sorted by id)
+        self.shards = 1
+
+    def finalize(self) -> None:
+        from wsbench.produce.backend import DEFAULT_MODEL, DEFAULT_REVISION
+
+        _set_fast(self)
+        self.families = _families(_strs(self.families)) or None
+        self.plan = _path(self.plan) if self.plan else None
+        if (self.families is not None or self.fast) and self.plan is not None:
+            raise ValueError("plan= replaces families= and --fast; pass only one")
+        if self.families is None and self.plan is None and not self.fast:
+            raise ValueError("give families=<a,b|all>, --fast or plan=<file>")
+        self.store = _path(self.store)
+        self.model = str(self.model)
+        self.revision = str(self.revision or "")
+        if not self.revision and self.model == DEFAULT_MODEL:
+            self.revision = DEFAULT_REVISION
+        if len(self.revision) < 12:
+            raise ValueError("revision=<sha> is required for this model (it keys the store)")
+        self.dtype = str(self.dtype)
+        if self.dtype not in ("fp32", "bf16"):
+            raise ValueError(f"dtype is fp32 or bf16, got {self.dtype!r}")
+        self.device = str(self.device)
+        self.reads = _reads_arg(self.reads)
+        if self.fast and self.reads == "lite":
+            raise ValueError("--fast captures the fast plan's full reads; drop reads=lite")
+        self.limit = _int(self.limit)
+        self.shard, self.shards = _int(self.shard), _int(self.shards)
+        if self.shards < 1 or not 0 <= self.shard < self.shards:
+            raise ValueError(f"shard={self.shard} is not one of 0..{self.shards - 1}")
+
+    def plans(self) -> dict[str, list[Any]] | None:
+        """``{eval: plan rows}`` for this call, or None after printing a usage error."""
+        from wsbench.produce import store
+
+        if self.plan is not None:
+            if not self.plan.is_file():
+                print(f"capture: no plan file {self.plan}", file=sys.stderr)
+                return None
+            return store.read_plan_file(self.plan)
+        if self.fast:
+            names = fast.families() if self.families in (None, ["all"]) else self.families
+        elif self.families == ["all"]:
+            names = registry.drop_superseded(readplan.families())
+        else:
+            names = self.families
+        unknown = [f for f in names if f not in readplan.families()]
+        if unknown:
+            print(f"unknown families {unknown}; known {readplan.families()}", file=sys.stderr)
+            return None
+        try:
+            if self.fast:
+                for name in names:
+                    fast.entry(name)  # outside the subset, or a bank it was not frozen on
+            return {f: readplan.plan(f, reads=self.reads, fast=self.fast) for f in names}
+        except SystemExit as e:
+            if not isinstance(e.code, str):
+                raise
+            print(e.code, file=sys.stderr)
+            return None
+
+    def execute(self) -> int:
+        from wsbench.produce import store
+
+        _select_fast(self)
+        plans = self.plans()
+        if plans is None:
+            return EXIT_USAGE
+        subject = store.Subject(self.model, self.revision, self.dtype, self.device)
+        where = store.Store(self.store, self.revision, self.dtype)
+        total = store.Counts()
+        for family, specs in plans.items():
+            part = store.shard(specs, self.shard, self.shards)[: self.limit or None]
+            _, counts = store.cells_for(where, family, part, subject.tokenizer, backend=subject)
+            print(counts.line(family))
+            for name in ("store", "pulled", "captured", "refused", "forwards"):
+                setattr(total, name, getattr(total, name) + getattr(counts, name))
+        print(total.line(f"{len(plans)} eval(s)"))
+        print(f"residual store -> {where.folder('<eval>')}")
+        return 0
+
+
 class Freeze(Command):
     """Fold a finished baseline run into the tracked ``evals/baselines/<kind>.json``.
     ``kind=lucky_guessing``: ``src`` holds ``<family>/<variant>.json`` from ``wsbench baseline``.
@@ -1914,6 +2016,7 @@ COMMANDS: dict[str, type[Command]] = {
     "check": Check,
     "plan": Plan,
     "produce": Produce,
+    "capture": Capture,
     "freeze": Freeze,
     "text-inversion": TextInversion,
     "convert-gen-dir": ConvertGenDir,
