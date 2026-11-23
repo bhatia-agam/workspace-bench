@@ -228,3 +228,40 @@ def test_check_fetches_no_dataset_file(env, tmp_path, monkeypatch, capsys):
     argv = ["capture", f"plan={plan}", f"store={where.root}", "model=m", f"revision={REV}"]
     assert cli.main([*argv, "dataset=someone/residuals", "check=True"]) == 0
     assert "4 in the dataset + 0 in neither" in capsys.readouterr().out
+
+
+def test_splice_replaces_and_adds_folders_and_leaves_the_rest(tmp_path):
+    path = registry.REPO_ROOT / "scripts/residuals_map.py"
+    module = importlib.util.module_from_spec(importlib.util.spec_from_file_location("m", path))
+    module.__spec__.loader.exec_module(module)
+    old = mapping({"full/a": {"items": {"x": "1" * 24}}, "fast/a": {"items": {"y": "2" * 24}}})
+    old["captures"]["bf16"] = {"subdir": "", "model_revision": REV, "folders": {"full/a": {}}}
+    map_path, part_path = tmp_path / "map.json", tmp_path / "part.json"
+    map_path.write_text(json.dumps(old))
+    part = {
+        "capture": "fp32",
+        "model_revision": REV,
+        "bench_commit": "c0ffee",
+        "folders": {"full/a": {"items": {"z": "3" * 24}}, "full/b": {"items": {"w": "4" * 24}}},
+    }
+    part_path.write_text(json.dumps(part))
+    module.splice(map_path, part_path, "newrev")
+    got = json.loads(map_path.read_text())
+    folders = got["captures"]["fp32"]["folders"]
+    assert got["revision"] == "newrev" and sorted(folders) == ["fast/a", "full/a", "full/b"]
+    assert folders["full/a"] == {"bench_commit": "c0ffee", "items": {"z": "3" * 24}}
+    assert folders["fast/a"] == {"items": {"y": "2" * 24}}  # untouched, like the other capture
+    assert got["captures"]["bf16"] == old["captures"]["bf16"]
+    part["model_revision"] = "another"
+    part_path.write_text(json.dumps(part))
+    with pytest.raises(SystemExit, match="another model revision"):
+        module.splice(map_path, part_path, "newrev")
+
+
+def test_the_shipped_map_has_the_two_folders_keyed_at_their_own_commit():
+    fp32 = ds.load_map()["captures"]["fp32"]["folders"]
+    assert len(fp32["full/user_modeling_hard"]["items"]) == 111
+    assert len(fp32["full/directed_modulation"]["items"]) == 102
+    for folder in ("full/user_modeling_hard", "full/directed_modulation"):
+        assert fp32[folder]["bench_commit"].startswith("5a5d8376")
+    assert "bench_commit" not in fp32["full/poetry"]
