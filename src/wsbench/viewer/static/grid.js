@@ -484,7 +484,8 @@
     const total = d.verdicts.length;
     out += '<div class="sec"><h5>Verdict</h5>' + (total ? d.verdicts.slice(0, 12).map((v, n) => verdictHtml(v, n, total)).join("") + (total > 12 ? '<div class="hint">' + (total - 12) + " more rows not shown</div>" : "") : '<div class="hint">no result row for this question</div>') + "</div>";
     if (calls.length) {
-      const here = calls.filter((j) => j.layer == null || j.layer < 0 || j.layer === S.layer);
+      // the calls of this layer, the one made on the selected position first
+      const here = calls.filter((j) => j.layer == null || j.layer < 0 || j.layer === S.layer).sort((a, b) => (b.pos === S.pos) - (a.pos === S.pos));
       out += '<div class="sec"><h5>Judge calls <span class="hint">' + here.length + (here.length < calls.length ? " at this layer, " + calls.length + " in all" : "") + "</span></h5>" +
         here.slice(0, 8).map((j) => '<div class="call"><span class="stage">' + esc(j.stage) + (j.layer != null && j.layer >= 0 ? " · L" + j.layer : "") + (j.pos != null ? " · pos " + j.pos : "") + "</span>" +
           '<div class="sub">what the judge answered</div>' + (j.result && typeof j.result === "object" ? kv(j.result) : '<div class="hint">' + esc(j.result == null ? "no answer (refused or failed)" : j.result) + "</div>") +
@@ -532,6 +533,7 @@
         (g.con ? '<div class="quote no">contradicted by: “' + esc(g.con) + "”</div>" : "") + (g.sup ? '<div class="quote ok">supported by: “' + esc(g.sup) + "”</div>" : "") +
         axes + (S.seg === g ? chk + (Object.keys(tags).length ? '<div class="sub">Tags</div>' + kv(tags) : "") : "") + "</div>";
     }).join("") + "</div>";
+    if (j.m && Array.isArray(j.m.mentions) && j.m.mentions.length) out += '<div class="sec"><h5>Detected mentions <span class="hint">in this family a claim counts only where it overlaps one</span></h5>' + j.m.mentions.map((m) => '<div class="kv"><span>' + esc(String(m.kind || "mention").replace(/_/g, " ")) + "</span><div>“" + esc(m.quote || "") + "”</div></div>").join("") + "</div>";
     if (j.m && j.m.stages) out += '<div class="sec"><h5>Pipeline stages</h5>' + kv(j.m.stages) + "</div>";
     return out;
   }

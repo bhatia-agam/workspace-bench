@@ -5,20 +5,36 @@ cells.jsonl`` + ``index/<judge>/index.json``) into the viewer store. HB is read 
 import json
 import re
 from collections import defaultdict
-from collections.abc import Callable
+from collections.abc import Callable, Mapping
 from pathlib import Path
 from typing import Any
 
 from wsbench.viewer import gates, meta, store
-from wsbench.viewer.ingest.common import CellWriter
+from wsbench.viewer.ingest.common import CellWriter, remote_source
 from wsbench.viewer.ingest.wsb import guess_method
 
 BENCH = "hb"
 MODEL = "qwen3.6-27b"
 JUDGE = "claude-opus-5-5"
 # the claim-map families whose cells this adapter reads; the others are scored from index.json
-CLAIM_EVALS = {"main": "wsbench_chat", "story": "story"}
-BANKS = {"main": "data/wsbench_chat_x3/items.json", "story": "data/story/items.json"}
+CLAIM_EVALS = {"main": "wsbench_chat", "story": "story", "am_claims": "agentic_misalignment"}
+BANKS = {
+    "main": "data/wsbench_chat_x3/items.json",
+    "story": "data/story/items.json",
+    "am_claims": "data/agentic_misalignment/items.json",
+}
+# claim families whose index counts only the claims that overlap a detected mention, and whose
+# cells file lists every read cell, most of them without a claim map: only the mapped cells
+# are stored
+MENTION_EVALS = frozenset({"am_claims"})
+AM_DIR = "agentic_misalignment"  # the eval directory both agentic families are judged in
+# where a judged tree keeps the safety families' count files: the layout of a local output
+# directory, then the layout of a run's per-family folders
+OVERREFUSAL_COUNTS = (
+    "or/overrefusal/*/offtopic_index/index_counts.jsonl",
+    "overrefusal/*/offtopic_index/index_counts.jsonl",
+)
+BENIGN_COUNTS = ("br_index_root/index_counts.jsonl", "index_root/index_counts.jsonl")
 NOT_CLAIMS = frozenset({"junk", "non_claim", "off_topic", "failed"})
 UNSETTLED = frozenset({"failed", "pending"})
 # main: the layers every lens is judged at; its headline (and the paper plots) average these
@@ -43,16 +59,19 @@ def reads(rel: str) -> bool:
     if parts[0] == "index":
         return name == "index.json"
     if parts[0] in CLAIM_EVALS.values():
-        return len(parts) == 4 and name in ("cells.jsonl", "summary_v2.json")
+        names = ("cells.jsonl", "summary_v2.json") + (("situation.jsonl",) * (parts[0] == AM_DIR))
+        return len(parts) == 4 and name in names
     if parts[0] == "or":
-        return (
+        parts = parts[1:]
+    if parts[0] == "overrefusal":
+        return len(parts) >= 3 and (
             (name == "index_counts.jsonl" and parts[-2] == "offtopic_index")
-            or name == "sj_records_full.jsonl"
-            or parts[-2] == "offtopic"
+            or (name == "sj_records_full.jsonl" and len(parts) == 3)
+            or (parts[-2] == "offtopic" and name.endswith(".jsonl"))
         )
-    if parts[0] == "br_index_root":
+    if parts[0] in ("br_index_root", "index_root"):
         return name == "index_counts.jsonl"
-    if parts[0] == "benign_roleplay":
+    if parts[0] in ("benign_roleplay", "campaign_raw"):
         in_layer = len(parts) >= 3 and parts[-3] == "jailbreak_recognition"
         return in_layer and parts[-2].startswith("L") and name in ("results.json", "cells.jsonl")
     return False
@@ -76,6 +95,16 @@ def load_index(lens_dir: Path, judge: str) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8")) if path.exists() else {}
 
 
+def item_prompt(it: dict[str, Any]) -> str:
+    """The prompt of a bank item as text: its ``prompt``, else its chat messages, else its
+    system and user text (the agentic scenarios)."""
+    if it.get("prompt"):
+        return it["prompt"]
+    turns = [(m.get("role"), m.get("content", "")) for m in it.get("messages") or []]
+    turns = turns or [(r, it[k]) for r, k in (("system", "system"), ("user", "text")) if it.get(k)]
+    return "\n\n".join(f"[{role}]\n{text}" for role, text in turns)
+
+
 def write_bank(cat, hb_repo: Path | None, model: str, family: str) -> dict[str, dict]:
     """The family's items (prompt, response, read sites) into the catalog."""
     path = hb_repo / BANKS[family] if hb_repo and family in BANKS else None
@@ -91,8 +120,8 @@ def write_bank(cat, hb_repo: Path | None, model: str, family: str) -> dict[str, 
         }  # fmt: skip
         cat.execute(
             "INSERT OR REPLACE INTO item VALUES (?,?,?,?,?,?,?,?,?,?,?)",
-            (BENCH, model, family, it["id"], n, it.get("prompt") or "", "[]", "[]",
-             it.get("source"), 0, store.dumps(m)),
+            (BENCH, model, family, it["id"], n, item_prompt(it), "[]", "[]",
+             it.get("source") or it.get("category"), 0, store.dumps(m)),
         )  # fmt: skip
         out[it["id"]] = m
     return out
@@ -111,8 +140,11 @@ def write_eval(cat, model: str, name: str, m: meta.EvalMeta, n_items: int, pre_g
 def ingest_cells(
     con, family: str, cells: Path, weights: dict[str, float], bank: dict[str, dict],
     only: set[str] | None, source_name: Callable[[Path], str] | None = None,
+    mentioned_only: bool = False,
 ) -> dict[str, Any]:  # fmt: skip
-    """Stream one arm's cells.jsonl: readouts, segments, and the counts the index is made of."""
+    """Stream one arm's cells.jsonl: readouts, segments, and the counts the index is made of.
+    ``mentioned_only`` (the families of ``MENTION_EVALS``): only cells with a claim map are
+    stored, and a claim counts only where its segment overlaps a detected mention."""
     writer = CellWriter(con, source_name)
     src = writer.source(cells)
     segs: list[tuple] = []
@@ -123,13 +155,20 @@ def ingest_cells(
         off = 0
         for raw in fh:
             length = len(raw)
+            if mentioned_only and b'"map": {' not in raw and b'"map":{' not in raw:
+                off += length  # a read cell without a claim map: nothing to show or count
+                continue
             rec = json.loads(raw)
             iid, layer, pos = rec["id"], rec["layer"], rec["pos"]
             if not isinstance(layer, int) or (only is not None and iid not in only):
                 off += length
                 continue
-            stages = rec.get("stages") or {}
+            # the stages as one object, or (the agentic arm) as one status key per stage
+            stages = rec.get("stages") or {
+                k[: -len("_status")]: v for k, v in rec.items() if k.endswith("_status")
+            }
             cmap = rec.get("map") or {}
+            mentions = rec.get("mentions") or []
             scored = stages.get("map") == "ok" and stages.get("cverify") not in UNSETTLED
             token = next(
                 (s.get("token") for s in (bank.get(iid) or {}).get("sites", [])
@@ -142,13 +181,21 @@ def ingest_cells(
                 (family, iid, layer, pos, "map", rec.get("key"),
                  store.pack({"rationale": cmap.get("rationale"), "scored": scored}),
                  store.dumps({"stages": stages, "site_kind": rec.get("site_kind"),
-                              "n_units": len(cmap.get("units") or [])})),
+                              "n_units": len(cmap.get("units") or [])}
+                             | ({"mentions": mentions} if mentions else {}))),
             )  # fmt: skip
             for s in cmap.get("segments") or []:
                 leaf = s.get("leaf") or "failed"
                 claim = leaf not in NOT_CLAIMS
-                w = weights.get(leaf, 0.0) if claim else None
                 tags = {k: s[k] for k in TAG_KEYS if s.get(k) not in (None, False, "")}
+                if mentioned_only and claim:  # a claim away from every mention is not counted
+                    claim = any(
+                        m.get("readout", 0) == s.get("readout", 0)
+                        and m["start"] < s["end"] and s["start"] < m["end"]
+                        for m in mentions
+                    )  # fmt: skip
+                    tags["overlaps_a_mention"] = claim
+                w = weights.get(leaf, 0.0) if claim else None
                 segs.append(
                     (family, iid, layer, pos, s.get("readout", 0), s.get("unit"), s.get("start"),
                      s.get("end"), leaf, w, s.get("why"), s.get("contradicted_by"),
@@ -282,11 +329,14 @@ def ingest(
     run_name: str | None = None,
     source: str | None = None,
     source_name: Callable[[Path], str] | None = None,
+    remote_readouts: Mapping[str, list[tuple[str, int]]] | None = None,
 ) -> dict[str, Any]:
     """Ingest one lens's HallucinationBench output. Idempotent like the WSB adapter.
     ``safety_dir`` is a second directory to search for the non-claim families (overrefusal,
     benign_roleplay); ``readouts`` holds their readout files (``hb_overrefusal.jsonl`` ...).
-    ``run_name``, ``source`` and ``source_name`` are as in the WSB adapter."""
+    ``run_name``, ``source``, ``source_name`` and ``remote_readouts`` (the readout files of a
+    family whose cells are not read here: a page reads them when a question is opened) are
+    as in the WSB adapter."""
     lens = lens or lens_dir.name
     judge = judge or JUDGE
     index = load_index(lens_dir, judge)
@@ -295,10 +345,7 @@ def ingest(
         if (not families or fam in families) and (d := arm_dir(lens_dir, edir, judge, lens))
     }  # fmt: skip
     dirs = [d for d in (lens_dir, safety_dir) if d is not None]
-    patterns = (
-        "or/overrefusal/*/offtopic_index/index_counts.jsonl",
-        "br_index_root/index_counts.jsonl",
-    )
+    patterns = (OVERREFUSAL_COUNTS, BENIGN_COUNTS, (f"{AM_DIR}/*/{lens}/situation.jsonl",))
     safety_files = [f for pat in patterns if (f := _find(dirs, pat))]
     if not arms and not index and not safety_files:
         raise SystemExit(f"{lens_dir}: no <family>/{judge}/<arm>/cells.jsonl and no index.json")
@@ -338,8 +385,9 @@ def ingest(
                     (rid, fam, state, why, store.dumps(facts)),
                 )
             got = ingest_cells(
-                con, fam, adir / "cells.jsonl", leaf_weights(index, fam), bank, only, source_name
-            )
+                con, fam, adir / "cells.jsonl", leaf_weights(index, fam), bank, only, source_name,
+                mentioned_only=fam in MENTION_EVALS,
+            )  # fmt: skip
             write_eval(cat, model, fam, metas[fam], len(got["per_item"]) or len(bank),
                        bool(cfg.get("pre_gate")))  # fmt: skip
             for iid in got["per_item"]:
@@ -394,6 +442,7 @@ def ingest(
             summary["check"][fam] = check
             cat.commit()  # keep the catalog's write lock short: a running viewer reads it
         for fam, fn in (
+            ("am_situation", ingest_am_situation),
             ("overrefusal", ingest_overrefusal),
             ("benign_roleplay", ingest_benign_roleplay),
         ):
@@ -401,6 +450,9 @@ def ingest(
                 continue
             got = fn(con, cat, rid, model, lens, dirs, metas, readouts, only)
             if got:
+                if not got.get("cells"):  # no readouts here: where a page finds them
+                    for address, size in (remote_readouts or {}).get(fam, ()):
+                        remote_source(con, fam, address, size)
                 _safety_bank(cat, hb_repo, model, fam)
                 summary["families"][fam] = got
                 cat.commit()
@@ -432,23 +484,29 @@ def ingest(
 # ------------------------------------------------------------------ safety families
 # overrefusal and benign_roleplay are not claim maps: each (item, layer) has one judge verdict
 # on a digest of that layer's readouts. Their numbers come from the families' own count files.
+# The situation half of agentic misalignment is stored the same way: one judge verdict per
+# read cell, counted per (item, layer).
 
 N_BOOT = 1000
 SAFETY_READOUTS = {
+    "am_situation": ("hb_agentic_misalignment.jsonl",),
     "overrefusal": ("hb_overrefusal.jsonl",),
     "benign_roleplay": ("hb_br_hb_only.jsonl", "hb_br_shared.jsonl"),
 }
 SAFETY_BANKS = {
     "overrefusal": "data/overrefusal/items.json",
     "benign_roleplay": "data/benign_roleplay/items_v1.json",
+    "am_situation": "data/agentic_misalignment/items.json",
 }
 
 
-def _find(dirs: list[Path], pattern: str) -> Path | None:
-    for d in dirs:
-        hit = sorted(d.glob(pattern))
-        if hit:
-            return hit[0]
+def _find(dirs: list[Path], patterns: str | tuple[str, ...]) -> Path | None:
+    """The first file one of ``patterns`` matches under ``dirs`` (a family's layouts in turn)."""
+    for pattern in (patterns,) if isinstance(patterns, str) else patterns:
+        for d in dirs:
+            hit = sorted(d.glob(pattern))
+            if hit:
+                return hit[0]
     return None
 
 
@@ -519,10 +577,9 @@ def _safety_bank(cat, hb_repo: Path | None, model: str, fam: str) -> None:
         return
     raw = json.loads(path.read_text(encoding="utf-8"))
     for n, it in enumerate(raw["items"] if isinstance(raw, dict) else raw):
-        prompt = it.get("prompt") or "\n\n".join(
-            f"[{m.get('role')}]\n{m.get('content', '')}" for m in it.get("messages") or []
-        )
+        prompt = item_prompt(it)
         sub = it.get("population") or it.get("control_type") or it.get("kind")
+        sub = sub or it.get("category")
         cat.execute(
             "INSERT OR REPLACE INTO item VALUES (?,?,?,?,?,?,?,?,?,?,?)",
             (BENCH, model, fam, it["id"], n, prompt, "[]", "[]", sub, 0, "{}"),
@@ -581,10 +638,50 @@ def _finish_safety(con, cat, rid, model, fam, metas, counts, detail, note, only)
     return {"value": value, "n": len(items)}
 
 
+def ingest_am_situation(con, cat, rid, model, lens, dirs, metas, readouts, only) -> dict | None:
+    """Agentic misalignment, situation: one judge call per read cell (layer, position) on all
+    its samples, asking whether they misdescribe the scenario. Per (item, layer) the cells
+    judged and the cells that misrepresent, with the judge's reason for each of those; every
+    cell's own verdict is a judge call of that cell."""
+    path = _find(dirs, f"{AM_DIR}/*/{lens}/situation.jsonl")
+    if path is None:
+        return None
+    counts: dict[int, dict[str, list[int]]] = defaultdict(dict)
+    detail: dict[str, dict[int, dict]] = defaultdict(dict)
+    with open(path, encoding="utf-8") as fh:
+        for line in fh:
+            r = json.loads(line)
+            iid, layer, pos = r.get("id"), r.get("layer"), r.get("pos")
+            if not isinstance(layer, int) or (only is not None and iid not in only):
+                continue  # the joint row over all layers is the index's, not a cell's
+            ok, bad = r.get("status") == "ok", bool(r.get("misrepresents"))
+            acc = counts[layer].setdefault(iid, [0, 0])
+            acc[0], acc[1] = acc[0] + (ok and bad), acc[1] + ok
+            d = detail[iid].setdefault(
+                layer, {"cells_judged": 0, "cells_that_misrepresent": 0, "reasons": []}
+            )
+            d["cells_judged"] += ok
+            if ok and bad:
+                d["cells_that_misrepresent"] += 1
+                d["reasons"].append(f"position {pos}: {r.get('why') or ''}".strip())
+            result = {k: r.get(k) for k in ("status", "misrepresents", "kind", "quote", "why")}
+            con.execute(
+                "INSERT INTO judgment VALUES (?,?,?,?,?,?,?,?)",
+                ("am_situation", iid, layer, pos, "situation judge", r.get("key"),
+                 store.pack(result), "{}"),
+            )  # fmt: skip
+    shares = {k: {i: (v[0], v[1]) for i, v in items.items()} for k, items in counts.items()}
+    n_cells = _safety_cells(con, "am_situation", readouts, set(detail))
+    note = ("cells whose readouts misrepresent the situation / cells judged, computed by the "
+            "viewer from situation.jsonl; CI = item bootstrap")  # fmt: skip
+    out = _finish_safety(con, cat, rid, model, "am_situation", metas, shares, detail, note, only)
+    return out | {"cells": n_cells}
+
+
 def ingest_overrefusal(con, cat, rid, model, lens, dirs, metas, readouts, only) -> dict | None:
     """Over-refusal: per (item, layer) the digest lines, the strict judge's refusal verdict and
     the off-topic judge's call on each decline line."""
-    root = _find(dirs, "or/overrefusal/*/offtopic_index/index_counts.jsonl")
+    root = _find(dirs, OVERREFUSAL_COUNTS)
     if root is None:
         return None
     base = root.parent.parent
@@ -596,7 +693,8 @@ def ingest_overrefusal(con, cat, rid, model, lens, dirs, metas, readouts, only) 
             for line in fh:
                 r = json.loads(line)
                 _tag, _lens, item, layer = r["key"].rsplit(":", 3)
-                off[(item, int(layer[1:]))] = r.get("result") or {}
+                if layer[1:].isdigit():  # the joint call over all layers has no layer row
+                    off[(item, int(layer[1:]))] = r.get("result") or {}
     detail: dict[str, dict[int, dict]] = defaultdict(dict)
     records = base / "sj_records_full.jsonl"
     if records.exists():
@@ -641,21 +739,30 @@ def ingest_overrefusal(con, cat, rid, model, lens, dirs, metas, readouts, only) 
 def ingest_benign_roleplay(con, cat, rid, model, lens, dirs, metas, readouts, only) -> dict | None:
     """Benign role-play: per (item, layer) WorkspaceBench's jailbreak-recognition judge on that
     layer's digest; flagged = the readouts show a jailbreak recognition."""
-    counts_file = _find(dirs, "br_index_root/index_counts.jsonl")
+    counts_file = _find(dirs, BENIGN_COUNTS)
     if counts_file is None:
         return None
     counts = _counts(counts_file, lens)
+    judged = set().union(*counts.values())  # the family's prompts: the count file's items
     detail: dict[str, dict[int, dict]] = defaultdict(dict)
+    # the prompts only this benchmark has, then the ones it shares with WorkspaceBench's
+    # jailbreak-recognition run (whose results also hold that eval's other prompts)
+    layer_results = (
+        f"benign_roleplay/*/{lens}/*/jailbreak_recognition/L*/results.json",
+        f"campaign_raw/{lens}/jailbreak_recognition/L*/results.json",
+    )
     for d in dirs:
-        for res in sorted(
-            d.glob(f"benign_roleplay/*/{lens}/*/jailbreak_recognition/L*/results.json")
-        ):
+        for res in sorted(p for pattern in layer_results for p in d.glob(pattern)):
+            if not res.parent.name[1:].isdigit():
+                continue
             layer = int(res.parent.name[1:])
             r = json.loads(res.read_text(encoding="utf-8"))
             states = {x["id"]: x for x in (r["numbers"].get("extras") or {}).get("item_rows") or []}
             for row in r.get("rows") or []:
                 iid = row.get("id")
                 if not isinstance(iid, str) or (only is not None and iid not in only):
+                    continue
+                if judged and iid not in judged:
                     continue
                 st = states.get(iid, {})
                 quotes, kinds = row.get("quotes") or [], row.get("recognition_kinds") or []
@@ -674,7 +781,7 @@ def ingest_benign_roleplay(con, cat, rid, model, lens, dirs, metas, readouts, on
                         if not key.startswith("digest:"):
                             continue
                         iid = key[7:].split("|", 1)[0]
-                        if only is not None and iid not in only:
+                        if (only is not None and iid not in only) or (judged and iid not in judged):
                             continue
                         con.execute(
                             "INSERT INTO judgment VALUES (?,?,?,?,?,?,?,?)",

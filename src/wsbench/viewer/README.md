@@ -124,7 +124,7 @@ What ingest does with a run:
 - The cache cleans up after itself. A WorkspaceBench run's judge-call cache and readout file
   are fetched eval by eval and removed as soon as the eval is in the run database; once a run
   is stored, every remaining cell or readout file (`*.jsonl`) is removed from its cache
-  folder, and the command prints one line per run with the count and size. The result files,
+  folder (for HallucinationBench also the per-layer result files of benign role-play), and the command prints one line per run with the count and size. The result files,
   reports, indexes and summaries stay: they are what `viewer check` and a facts update read
   again. A removed file is fetched again only by a forced or changed ingest; an unchanged run
   is recognised from the volume's listing alone. `keep_downloads=True` keeps everything.
@@ -139,6 +139,32 @@ What ingest does with a run:
   flags and the proxy charts (text of flagged cells only); `readouts=copy` keeps all text, so
   search works. HallucinationBench samples are in the judge's own cells file and are always
   stored.
+- HallucinationBench families of a manifest run. The run folder holds one folder per family
+  (`<family>/out/...`, `<family>/readouts/...`) and, when the run has one, its own index over
+  all families (`index/<judge>/index.json`), which is then the index (else the per-family
+  index files are merged). Every family gets items, with the prompt from the benchmark
+  checkout (`hb_repo=DIR`):
+  - main, story: the claim map of each read cell (`<eval>/<judge>/<arm>/cells.jsonl`).
+  - agentic misalignment, claims: the same claim map from
+    `agentic_misalignment/<judge>/<arm>/cells.jsonl`, for the cells that have one (cells with
+    a detected mention); a claim counts only where its segment overlaps a mention, and the
+    page lists the cell's mentions.
+  - agentic misalignment, situation: `agentic_misalignment/<judge>/<arm>/situation.jsonl`,
+    one judge call per read cell. An item shows, per layer, the cells judged, the cells whose
+    readouts misrepresent the scenario and the judge's reason for each; every cell's own call
+    is listed with the cell.
+  - over-refusal: `overrefusal/<judge>/offtopic_index/index_counts.jsonl` (decline lines
+    and off-topic decline lines per prompt and layer), `sj_records_full.jsonl` (the digest
+    lines the strict judge read, its verdict and reason) and `offtopic/<arm>.jsonl` (the
+    off-topic judge's reason).
+  - benign role-play: `index_root/index_counts.jsonl` and the per-layer results of the
+    jailbreak-recognition judge, for the prompts only this benchmark has
+    (`benign_roleplay/<judge>/<arm>/<set>/jailbreak_recognition/L<n>/`) and for the ones it
+    shares with WorkspaceBench (`campaign_raw/<arm>/jailbreak_recognition/L<n>/`): flagged
+    or not, the judge's rationale and quotes, and the digest it read.
+  The readouts of the last three stay on the volume (`<family>/readouts/`) and are read when
+  a question is opened. A local output directory (`adapter=hb`, with `or/` and
+  `br_index_root/`) is read as before.
 - The store never records a cache path as a readout source. `wsbench viewer sources` lists the
   runs of a store whose readout files no longer exist on this machine; their cells without
   stored text show the same marker.
@@ -172,7 +198,8 @@ integrity (`run_eval`) and HallucinationBench's index rows per layer (`hb_index`
   viewer_store` ingests the toy run and compares scores and verdicts with its results.json.
 - Categories: the registry's eval categories (`registry.CATEGORIES`, what `group=` selects),
   read from the registry when a page is built, so a store ingested earlier follows them too.
-  Every eval is listed once, under its own category.
+  An eval is listed under its own category, and also under a second one where the benchmark's
+  `groups.ALSO_IN` lists it there ("also listed under …"); without that table, once.
 - Sets: **Core**, **Full**, **Fast** and **Anti-text-inversion**, each offered only where the
   store has scores for it. Core is the benchmark's core tier (`wsbench.tiers.CORE`, read when
   the page is built): the core evals' rows of the full run with the core macro (as stored at

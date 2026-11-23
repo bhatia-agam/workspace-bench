@@ -59,8 +59,9 @@ def _score(root: Path, rows: list[tuple]) -> None:
     cat.close()
 
 
-def test_categories_are_the_registrys_and_every_eval_is_listed_once(tmp_path: Path):
+def test_categories_are_the_registrys_and_every_eval_is_listed_once(tmp_path: Path, monkeypatch):
     registry.load_all()
+    monkeypatch.setattr(query, "also_in", dict)  # a benchmark without second listings
     groups = _store(tmp_path / "s").groups("wsb", MODEL)
     titles = [g["title"] for g in groups]
     # the registry's order, its titles without the parenthesis; unknown evals go last
@@ -80,6 +81,29 @@ def test_categories_are_the_registrys_and_every_eval_is_listed_once(tmp_path: Pa
     assert all(query.category_title(k) for k in registry.CATEGORIES)
     assert query.category_title("basic") == "Basic"
     assert query.category_title("jlens_comparison") == "J-lens comparison"
+
+
+def test_a_second_category_listing_follows_the_benchmarks_table(tmp_path: Path, monkeypatch):
+    """Where the benchmark's ``groups.ALSO_IN`` lists an eval under a second category, that
+    category shows it too, marked; without the table every eval is listed once."""
+    from wsbench import groups as bench_groups
+
+    registry.load_all()
+    db = _store(tmp_path / "s")
+    monkeypatch.setattr(
+        bench_groups, "ALSO_IN", {"association": ("role_bound_association",)}, raising=False
+    )
+    assert query.also_in() == {"association": ("role_bound_association",)}
+    by_title = {g["title"]: g["evals"] for g in db.groups("wsb", MODEL)}
+    assoc = {e["eval"]: e for e in by_title["Association"]}
+    assert assoc["role_bound_association"]["also_in"] == "Anti-bag-of-features"
+    assert "also_in" not in assoc["association"]
+    own = {e["eval"]: e for e in by_title["Anti-bag-of-features"]}
+    assert "also_in" not in own["role_bound_association"]  # it stays in its own category
+    monkeypatch.delattr(bench_groups, "ALSO_IN")
+    assert query.also_in() == {}
+    listed = [e["eval"] for g in db.groups("wsb", MODEL) for e in g["evals"]]
+    assert len(listed) == len(set(listed))
 
 
 def test_no_eval_of_the_store_is_left_out_of_the_groups(tmp_path: Path):
@@ -590,8 +614,11 @@ def test_leaf_table_covers_every_leaf_a_store_holds(tmp_path: Path):
         assert not missing, f"leaves with no verdict in meta.HB_VERDICTS: {sorted(missing)}"
 
 
-def test_pages_show_categories_scoring_and_the_hallucinationbench_tables(tmp_path: Path):
+def test_pages_show_categories_scoring_and_the_hallucinationbench_tables(
+    tmp_path: Path, monkeypatch
+):
     pytest.importorskip("fasthtml")
+    monkeypatch.setattr(query, "also_in", dict)  # a benchmark without second listings
     from starlette.testclient import TestClient
 
     from wsbench.viewer.app.main import create_app
@@ -624,6 +651,12 @@ def test_pages_show_categories_scoring_and_the_hallucinationbench_tables(tmp_pat
     assert "rule (regex)" in full and "Claude judge" in full and "Scored by" in full
     assert "first pass through the Claude summarizer" in full
     assert full.count("Role_Bound_Association</a>") == 2  # one table row and one side link
+    # with the benchmark's table, the second category lists the eval too, marked
+    monkeypatch.setattr(query, "also_in", lambda: {"association": ("role_bound_association",)})
+    both = client.get("/?subset=full").text
+    assert "also listed under Anti-bag-of-features" in both
+    assert both.count("Role_Bound_Association</a>") == 4  # two table rows and two side links
+    monkeypatch.setattr(query, "also_in", dict)
     one = client.get("/?subset=full&cat=association").text
     assert "Role_Bound_Association" in one and ">Poetry</a><small" not in one
     assert "derived from the full run" not in client.get("/?subset=fast").text

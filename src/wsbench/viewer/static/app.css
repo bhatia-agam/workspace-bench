@@ -391,3 +391,4 @@ table.plain td.none { color: var(--faint); }
 .ondemand { font-size: .78rem; color: var(--mute); margin-bottom: .4rem; word-break: break-all; }
 table.plain td.by, table.plain th.by { white-space: nowrap; }
 td.num.noted { text-decoration: underline dotted; text-underline-offset: 3px; cursor: help; }
+.scores td.name small.also { color: var(--text); font-style: italic; white-space: normal; }

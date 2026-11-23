@@ -494,10 +494,14 @@ def scores_page(db: Store, v: View) -> str:
             )
             cells += "".join(c.score_cell(sc.get(k), "floor", v.pct, top) for k, _t in floors)
             goal = meta.first_sentence(e["what"] or "", 150)
+            also = (
+                f'<small class="also">also listed under {esc(e["also_in"])}</small>'
+                if e.get("also_in") else ""
+            )  # fmt: skip
             by = e["scored_by"]
             rows.append(
                 f'<tr><td class="name"><a href="{esc(eval_link(e))}">'
-                f"{esc(e['title'])}</a><small>{c.inline_md(goal)}</small></td>"
+                f"{esc(e['title'])}</a>{also}<small>{c.inline_md(goal)}</small></td>"
                 f'<td class="by{" rule" if by == SCORED_BY_RULE else ""}">{esc(by or "—")}</td>'
                 f'<td class="n">{esc(n or "—")}</td>{cells}</tr>'
             )
@@ -653,8 +657,11 @@ def eval_page(db: Store, v: View, name: str, want: str = "") -> str:
     )  # fmt: skip
     by = e["scored_by"]
     summ = f'<p class="hint">{esc(SUMMARIZER_NOTE)}</p>' if v.bench == "wsb" else ""
+    cats = [g["title"] for g in db.groups(v.bench, v.model)
+            if any(x["eval"] == name and x.get("also_in") for x in g["evals"])]  # fmt: skip
+    also = f' <span class="hint">also listed under {esc(", ".join(cats))}</span>' if cats else ""
     left = (
-        f'<div class="card info"><div class="grp-tag">{esc(e["grp"])}</div>'
+        f'<div class="card info"><div class="grp-tag">{esc(e["grp"])}{also}</div>'
         f"<h2>{esc(e['title'])}</h2>"
         f'<div class="facts"><span><b>{len(items) or e["n_items"]}</b> questions</span>'
         f"<span>metric <b>{esc(e['metric'] or 'pass_rate')}</b></span>"

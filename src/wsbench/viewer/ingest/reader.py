@@ -84,6 +84,16 @@ HB_SKIP = ("cache.jsonl",)  # the benchmark's raw call cache: not read by the vi
 # run database by then and can be fetched again, so they are removed, with any unfinished
 # download.
 REMOVABLE = ("*.jsonl", "*.part")
+# HallucinationBench: the per-layer result files of the benign role-play family are read once
+# at ingest and by nothing afterwards (the score check reads the index)
+REMOVABLE_HB = ("results.json",)
+RUN_INDEX = "_run.json"  # a run's own index over all families, in its _index/ cache folder
+# family folder of a run -> the eval whose readout files it holds, for the families whose
+# cells are not in a judged file
+HB_READOUTS = {
+    "overrefusal": "overrefusal", "benign_roleplay": "benign_roleplay",
+    "agentic_misalignment": "am_situation",
+}  # fmt: skip
 
 PART_OUTCOMES = ("n_parts_refused", "n_parts_too_long", "n_parts_all_dropped")
 OWN_CALLS = ("relational_multihop",)  # scorers that make their own API calls
@@ -357,13 +367,14 @@ def merge_indexes(indexes: Iterable[Mapping[str, Any]]) -> dict[str, Any]:
 # ------------------------------------------------------------------ ingest
 
 
-def clean(work: Path) -> tuple[int, int]:
-    """Remove the re-fetchable downloads (``REMOVABLE``) from a run's cache folder; ``(files
-    removed, bytes freed)``. Result files, reports, indexes and the set index stay."""
+def clean(work: Path, more: tuple[str, ...] = ()) -> tuple[int, int]:
+    """Remove the re-fetchable downloads (``REMOVABLE`` and the names in ``more``) from a
+    run's cache folder; ``(files removed, bytes freed)``. Result files, reports, indexes and
+    the set index stay."""
     n = size = 0
     if not work.is_dir():
         return n, size
-    for pattern in REMOVABLE:
+    for pattern in (*REMOVABLE, *more):
         for p in sorted(work.rglob(pattern)):
             if p.is_file() and not p.is_symlink():
                 size += p.stat().st_size
@@ -875,12 +886,23 @@ def ingest_wsb(entry, root: Path, volume, cache: Path, *, readouts: str, build_d
 def ingest_hb(entry, root: Path, volume, cache: Path, *, build_dir, hb_repo, force: bool,
               families) -> dict[str, Any]:  # fmt: skip
     base = entry["judged"].strip("/")
-    listing = [(e, r) for e, r in _under(volume.ls(base), base) if "/out/" in r]
+    everything = _under(volume.ls(base), base)
+    listing = [(e, r) for e, r in everything if "/out/" in r]
     listing = [(e, r) for e, r in listing if r.rsplit("/", 1)[-1] not in HB_SKIP]
     index_files = [(e, r) for e, r in listing if re.search(r"/out/index/[^/]+/index\.json$", r)]
-    if not index_files:
+    # the run's own index over all its families, beside the family folders: when it is there
+    # it is the index, and the per-family ones are not merged
+    whole = [(e, r) for e, r in everything if re.fullmatch(r"index/[^/]+/index\.json", r)]
+    if not index_files and not whole:
         return {"status": "not judged yet", "why": f"no index.json under {base}"}
-    used = [e for e, _r in listing]
+    used = [e for e, _r in listing + whole]
+    # readout files of the families whose cells are not in a judged file: left on the volume
+    # and read when a question is opened (they are not part of what decides a re-ingest)
+    ro_files: dict[str, list[tuple[str, int]]] = {}
+    for e, r in everything:
+        fam, _, rest = r.partition("/readouts/")
+        if rest.endswith(".jsonl") and fam in HB_READOUTS:
+            ro_files.setdefault(HB_READOUTS[fam], []).append((volume.url(e.path), e.size))
     sig = _signature(entry, used, "hb")
     rid = entry_run_id(entry)
     cat = store.catalog(root)
@@ -902,11 +924,20 @@ def ingest_hb(entry, root: Path, volume, cache: Path, *, build_dir, hb_repo, for
         elif hb.reads(rest):  # the rest of a judged tree is not read: not fetched
             pairs.append((e, work / "lens" / rest))
             names[str(work / "lens" / rest)] = volume.url(e.path)
+    run_index = work / "_index" / RUN_INDEX
+    if whole:
+        pairs.append((whole[0][0], run_index))
+    else:
+        run_index.unlink(missing_ok=True)
     n_got, n_bytes = remote.fetch_all(volume, pairs)
-    judge = index_files[0][1].split("/out/index/", 1)[1].split("/", 1)[0]
-    index = merge_indexes(
-        json.loads(p.read_text(encoding="utf-8")) for p in sorted((work / "_index").glob("*.json"))
-    )
+    judge = (whole or index_files)[0][1].split("index/", 1)[1].split("/", 1)[0]
+    if whole:
+        index = json.loads(run_index.read_text(encoding="utf-8"))
+    else:
+        index = merge_indexes(
+            json.loads(p.read_text(encoding="utf-8"))
+            for p in sorted((work / "_index").glob("*.json"))
+        )
     dest = work / "lens" / "index" / judge / "index.json"
     dest.parent.mkdir(parents=True, exist_ok=True)
     text = json.dumps(index)
@@ -918,6 +949,7 @@ def ingest_hb(entry, root: Path, volume, cache: Path, *, build_dir, hb_repo, for
         families=list(families) if families else None, build_dir=build_dir, force=True,
         judge=judge, run_name=entry["run"], source=volume.url(base),
         source_name=lambda p: names.get(str(p), volume.url(base)),
+        remote_readouts=ro_files,
     )  # fmt: skip
     cat = store.catalog(root)
     headline = {"index": hb_headline(index, entry["lens"])}
@@ -987,7 +1019,9 @@ def ingest_entry(
     db = store.run_db_path(store_root, base["run_id"])
     if out["status"] in ("ingested", "unchanged", "facts updated") and not keep_downloads:
         # the run is in the store: what is left of its downloads (also an earlier ingest's)
-        swept = clean(work_dir(cache, base["run_id"]))
+        swept = clean(
+            work_dir(cache, base["run_id"]), REMOVABLE_HB if entry["bench"] == "hb" else ()
+        )
         before = out.get("cleaned") or (0, 0)
         out["cleaned"] = (before[0] + swept[0], before[1] + swept[1])
     return (
