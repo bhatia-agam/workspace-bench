@@ -507,6 +507,161 @@ def test_t1_rule_for_fast_versions_cut_after_the_golden():
     ]
 
 
+def test_t1_rule_for_a_reselected_fast_version_and_for_tier_rows(monkeypatch):
+    """Plan 0104. (1) A fast version that reads a family differently from every golden version
+    (a new selection) has a fast plan of its own: its row is set aside when ``fast_as`` says
+    ``reselected`` for that very row, and stales no ledger entry. (2) A tier move is declared
+    by listing it (``TIER_MOVES``: family -> (tier before, tier today)): that family's two tier
+    rows are read as before the move, for that pair only; any other tier or core-list change
+    fails like any other row."""
+    dec = _declare_mod()
+    gold = _with_fast(_mini_manifest(), {"fam_a": {"fast-v2": "A"}, "fam_b": {"fast-v2": "B"}})
+    new = _with_fast(
+        _mini_manifest(),
+        {"fam_a": {"fast-v2": "A", "fast-v4": "A4"}, "fam_b": {"fast-v2": "B", "fast-v4": "B4"}},
+    )
+    assert len(dec.verdict(gold, new, {})[1]) == 2  # nothing says they are re-selections
+    res = {f: {"fast-v4": {"row": r, "as": {}, "reselected": True}} for f, r in
+           (("fam_a", "A4"), ("fam_b", "B4"))}  # fmt: skip
+    assert dec.verdict(gold, new, {}, fast_as=res) == ({}, [])
+    stale = {"fam_a": res["fam_a"], "fam_b": {"fast-v4": {**res["fam_b"]["fast-v4"], "row": "x"}}}
+    assert len(dec.verdict(gold, new, {}, fast_as=stale)[1]) == 1  # only for the row it names
+    not_res = {f: {"fast-v4": {**v["fast-v4"], "reselected": False}} for f, v in res.items()}
+    assert len(dec.verdict(gold, new, {}, fast_as=not_res)[1]) == 2
+    # a declared family keeps its ledger hash when a re-selected version is cut later
+    cur = _with_fast(_restamped(), {"fam_a": {"fast-v2": "A"}, "fam_b": {"fast-v2": "B"}})
+    led = {"fam_a": dec.declare(gold, cur, {}, "fam_a", "9999", "test")}
+    later = _with_fast(_restamped(), {"fam_a": {"fast-v2": "A", "fast-v4": "A4"},
+                                      "fam_b": {"fast-v2": "B", "fast-v4": "B4"}})  # fmt: skip
+    declared, failures = dec.verdict(gold, later, led, fast_as=res)
+    assert list(declared) == ["fam_a"] and not failures
+
+    # (2) tier rows: fam_a is the listed family (full -> core), fam_b an unlisted core family
+    assert dec.TIER_MOVES == {"conjunctive_association": ("full", "core")}
+    monkeypatch.setattr(dec, "TIER_MOVES", {"fam_a": ("full", "core")})
+
+    def tiered(doc: dict, fam: str, tier: str, core: bool | None = None) -> dict:
+        out = json.loads(json.dumps(doc))
+        core = tier == "core" if core is None else core
+        out["families"][fam]["list"] = {"tier": tier, "judge": "j"}
+        out["families"][fam]["tables"] = {"other": 1, **({"tiers.CORE": True} if core else {})}
+        return out
+
+    def both(doc: dict, a: str, b: str) -> dict:
+        return tiered(tiered(doc, "fam_a", a), "fam_b", b)
+
+    g = both(_mini_manifest(), "full", "core")
+    joined = both(_mini_manifest(), "core", "core")
+    assert dec.verdict(g, g, {}) == ({}, [])  # listed, not moved (yet): the golden's rows
+    assert dec.verdict(g, joined, {}) == ({}, [])  # the listed move: no entry, no failure
+    assert dec.tier_moved("fam_a", joined["families"]["fam_a"]) == g["families"]["fam_a"]
+    assert dec.tier_moved("fam_b", joined["families"]["fam_b"]) == joined["families"]["fam_b"]
+    with pytest.raises(dec.Refused, match="nothing to declare"):
+        dec.declare(g, joined, {}, "fam_a", "0104", "test")
+    # every undeclared tier or core-list change fails T1, with or without a (forged) entry:
+    # an unlisted family leaving or joining core, the listed family moving to another tier
+    # than the listed one, back to front, or with tier rows that contradict each other
+    back = (both(_mini_manifest(), "core", "core"), both(_mini_manifest(), "full", "core"))
+    cases = [
+        ("fam_b", g, both(_mini_manifest(), "full", "full")),
+        ("fam_b", both(_mini_manifest(), "full", "full"), joined),
+        ("fam_b", g, both(_mini_manifest(), "core", "full")),  # with the listed move beside it
+        ("fam_a", g, both(_mini_manifest(), "", "core")),
+        ("fam_a", *back),
+        ("fam_a", g, tiered(joined, "fam_a", "core", core=False)),
+        ("fam_a", g, tiered(joined, "fam_a", "full", core=True)),
+    ]
+    for fam, base, other in cases:
+        rows = other["families"][fam]
+        forged = {fam: {**dec.triple(rows), "rows_sha256": dec.rows_sha256(rows)}}
+        for ledger in ({}, forged):
+            declared, failures = dec.verdict(base, other, ledger)
+            assert not declared and len(failures) == 1, (fam, other["families"][fam])
+            assert failures[0].startswith(
+                f"{fam}: instrument moved without a stamp or bank change"
+            ) and ("tier" in failures[0])
+        with pytest.raises(dec.Refused, match="its stamp and bank are the golden's"):
+            dec.declare(base, other, {}, fam, "0104", "test")
+    # the waiver is the two tier rows: another row moving with the listed move still counts
+    other = json.loads(json.dumps(joined))
+    other["families"]["fam_a"]["list"]["judge"] = "another"
+    assert "moved without a stamp or bank change" in dec.verdict(g, other, {})[1][0]
+    other = json.loads(json.dumps(joined))
+    other["families"]["fam_a"]["tables"]["other"] = 2
+    assert "moved without a stamp or bank change" in dec.verdict(g, other, {})[1][0]
+    # a family declared BEFORE its tier moved keeps its ledger hash (conjunctive_association's
+    # case: declared for a stamp change, then joined core), and the move is named
+    cur = both(_restamped(), "full", "core")
+    led = {"fam_a": dec.declare(g, cur, {}, "fam_a", "9999", "test")}
+    later = both(_restamped(), "core", "core")
+    declared, failures = dec.verdict(g, later, led)
+    assert not failures and list(declared) == ["fam_a"]
+    assert declared["fam_a"].startswith("prompt_version 'a-v1' -> 'a-v2'; tier 'full' -> 'core' (")
+    assert dec.declare(g, cur, {}, "fam_a", "9999", "test") == led["fam_a"]
+    with pytest.raises(dec.Refused, match="already declared in this state"):
+        dec.declare(g, later, led, "fam_a", "9999", "test")
+    # ... while an unlisted declared family's tier change stales its entry (declare again, with
+    # a bump, or list the move)
+    led_b = {"fam_b": dec.declare(g, _swap(cur), {}, "fam_b", "9999", "test")}
+    assert dec.verdict(g, _swap(cur), led_b)[1] == []
+    left = tiered(_swap(cur), "fam_b", "full")
+    assert "its rows changed again after it was declared" in dec.verdict(g, left, led_b)[1][0]
+    # a family registered AFTER the golden (no golden row): declared as a new family in one
+    # tier, it changes tier later through the same listing, with no stamp bump and no new entry
+    new_gold = json.loads(json.dumps(g))
+    del new_gold["families"]["fam_a"]
+    new_gold["shared"]["n_families"] = 1
+    born = both(_mini_manifest(), "full", "core")
+    led_new = {"fam_a": dec.declare(new_gold, born, {}, "fam_a", "9999", "test")}
+    declared, failures = dec.verdict(new_gold, born, led_new)
+    assert not failures and declared == {"fam_a": "new family (plan 9999: test)"}
+    declared, failures = dec.verdict(new_gold, joined, led_new)  # the listed move, later
+    assert not failures and list(declared) == ["fam_a"]
+    monkeypatch.setattr(dec, "TIER_MOVES", {})  # the same move, not listed
+    assert (
+        "its rows changed again after it was declared"
+        in (dec.verdict(new_gold, joined, led_new)[1][0])
+    )
+    with pytest.raises(dec.Refused, match="bump the stamp or the bank version first"):
+        dec.declare(new_gold, joined, led_new, "fam_a", "9999", "test")
+
+
+def _swap(doc: dict) -> dict:
+    """fam_b restamped instead of fam_a: fam_a's stamps and run rows back to the golden's, and
+    fam_b's moved."""
+    out = json.loads(json.dumps(doc))
+    base = _mini_manifest()["families"]
+    for sec in ("stamps", "run"):
+        out["families"]["fam_a"][sec] = base["fam_a"][sec]
+    out["families"]["fam_b"]["stamps"] = {"prompt_version": "b-v2", "prompts_sha256": "p-b-v2"}
+    out["families"]["fam_b"]["run"]["native"]["judge_calls"] = ["x"]
+    return out
+
+
+def test_t1_the_listed_tier_moves_are_the_real_ones():
+    """``TIER_MOVES`` against the tree and the golden: each listed family is in the listed tier
+    today and was in the listed tier before; the golden's tier rows of every OTHER family are
+    today's (the real T1 compares them, this says so without building the manifest)."""
+    dec = _declare_mod()
+    golden = json.loads((REPO / "tests/golden/manifest_0101_pre.json").read_text("utf-8"))
+    by_frozen = {registry.frozen_name(f): f for f in registry.FAMILIES}
+    (ls, lk), (ts, tk) = dec.TIER_ROW, dec.CORE_ROW
+    for fam, (before, today) in dec.TIER_MOVES.items():
+        assert before != today and {before, today} <= {"core", "full", ""}
+        assert tiers.tier_of(by_frozen[fam]) == today
+        g = golden["families"].get(fam)
+        if g is not None:
+            assert g[ls][lk] == before and (tk in g[ts]) == (before == dec.CORE_TIER)
+    for fam, g in golden["families"].items():
+        if fam in dec.TIER_MOVES or fam not in by_frozen:
+            continue
+        assert tiers.tier_of(by_frozen[fam]) == g[ls][lk], fam
+        assert (by_frozen[fam] in tiers.CORE) == (g[ts].get(tk) is dec.CORE_MEMBER), fam
+    moved = {f for f, (_b, today) in dec.TIER_MOVES.items() if today == dec.CORE_TIER}
+    was_core = {by_frozen[f] for f, g in golden["families"].items() if tk in g[ts]}
+    assert set(tiers.CORE) == was_core | {by_frozen[f] for f in moved}
+
+
 def test_t1_declare_command_refuses_without_a_bump(tmp_path, monkeypatch, capsys):
     """The CLI on a synthetic tree: writes an entry after a bump, exit 2 without one."""
     dec = _declare_mod()
@@ -917,7 +1072,21 @@ def test_t17_no_code_derives_anything_from_a_family_keys_spelling():
 # ---------------------------------------------------------------- T10 / T11: frozen files
 
 
+# The versions no flag selects any more are records: each is frozen by its own bytes
+# (tests/test_fast_subset.py pins the same shas beside the tests of their content).
+FROZEN_FAST_FILES = {
+    "fast-v1": "8ff8316a39e6fc6181147bbab3af884d2e364df1a887a4a5482c88cc84146a39",
+    "fast-v2": "f82e48933602a9618e6826a315469b9edb421d88d5d37d3d26867c4ef725abe8",
+    "fast-safety-v1": "894a26ca6655e5b355241a62f0e82c578c7eedef0d82d10bbe7e3ec653ac257b",
+    "fast-v3": "4a58b249a68b8aefb3a58162704063182607827cdebf454be19be18a0eae063a",
+    "fast-safety-v2": "19cde720531d6ae6a68ecd6be099249aad73bd230b3a0b421661f9c0fc06aadc",
+}
+
+
 def test_t10_the_fast_files_are_read_in_todays_keys():
+    selectable = set(fast.VARIANTS.values())
+    assert set(FROZEN_FAST_FILES) == set(fast.VERSIONS) - selectable
+    records: dict[str, dict[str, dict]] = {}  # family -> {older version: its entry}
     for version in sorted(fast.VERSIONS):
         raw = json.loads(fast.VERSIONS[version].read_text(encoding="utf-8"))
         got = fast.subset(version)
@@ -927,17 +1096,34 @@ def test_t10_the_fast_files_are_read_in_todays_keys():
             return registry.PRE_0101_KEYS.get(key, key) if pre else key
 
         assert set(got) == {today(f) for f in raw["families"]}
-        assert {"basic_readout", "basic_readout_st", "multihop"} <= set(got)
+        if version != "fast-v4":  # plan 0104: the core-half cut holds none of the renamed families
+            assert {"basic_readout", "basic_readout_st", "multihop"} <= set(got)
         assert not {"basic_readout_mt", "multihop_mt"} & set(got)
         for old, entry in raw["families"].items():
             new = today(old)
             assert got[new] == entry, (version, old)
-            # a version frozen before a family's bank changed keeps its old sha (a record): by
-            # rule, the entries that are not the selectable versions' (tests/test_fast_subset.py
-            # pins which families those are, `REFROZEN`)
-            live = [v for v in fast.VARIANTS.values() if new in fast.subset(v)]
-            refrozen = any(not fast.compatible(version, new, against=v) for v in live)
-            assert (entry["bank_sha"] == fast.bank_sha(new)) != refrozen, (version, old)
+            if version in selectable:
+                # the subset `--fast` runs is cut on today's banks: an entry recorded on another
+                # bank makes `fast.entry` fail closed for its family, so a bank change without
+                # a re-cut fails here
+                assert entry["bank_sha"] == fast.bank_sha(new), (version, old)
+            else:
+                records.setdefault(new, {})[version] = entry
+        if version not in selectable:
+            # an older version is a record, not held to today's banks (a family it alone holds
+            # may change bank freely; `fast.entry` then fails closed under that version, and
+            # tests/test_fast_subset.py lists the families, `REFROZEN`): frozen by its bytes
+            sha = hashlib.sha256(fast.VERSIONS[version].read_bytes()).hexdigest()
+            assert sha == FROZEN_FAST_FILES[version], version
+    # and the records agree with each other: the older versions are one selection, so a family
+    # has the same units, read ids and positions rule in every one that holds it; only the
+    # recorded bank may differ between them (a re-freeze after a bank change)
+    for fam, by_version in records.items():
+        rest = [{k: v for k, v in e.items() if k != "bank_sha"} for e in by_version.values()]
+        assert all(r == rest[0] for r in rest), (fam, sorted(by_version))
+        assert all(re.fullmatch(r"[0-9a-f]{64}", e["bank_sha"]) for e in by_version.values())
+    moved = {f for f, by in records.items() if len({e["bank_sha"] for e in by.values()}) > 1}
+    assert moved == {"conjunctive_association"}  # the one re-freeze among the older versions
 
 
 def test_t11_every_frozen_entry_under_a_renamed_key_carries_that_familys_stamp():

@@ -36,8 +36,8 @@ def _reset_pacer():
 
 @pytest.fixture(autouse=True)
 def _default_fast_subset():
-    """Plan 0095: every test starts and ends on ``fast.DEFAULT`` (a CLI test that passes
-    ``--fast-safety`` selects another subset for the process)."""
+    """Plan 0095: every test starts and ends on ``fast.DEFAULT`` (a test that makes another
+    version active with ``fast.use`` or ``report fast_version=`` changes it for the process)."""
     fast.VERSION = fast.DEFAULT
     yield
     fast.VERSION = fast.DEFAULT

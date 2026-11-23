@@ -168,7 +168,10 @@ def ati_subset() -> Outcome:
 
 def frozen_pins() -> Outcome:
     return pytest_outcome(
-        "tests/test_fast_subset.py", "tests/test_ati_freeze.py", "tests/test_bank_versions.py"
+        "tests/test_fast_subset.py",
+        "tests/test_fast_core_half.py",
+        "tests/test_ati_freeze.py",
+        "tests/test_bank_versions.py",
     )
 
 

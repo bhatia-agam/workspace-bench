@@ -30,6 +30,15 @@ accepted only while every other row equals the golden's and the row holds the li
 The same holds for ONE family changing category (plan 0107): ``CATEGORY_MOVES`` lists
 ``family -> (category of the golden, category today)``, and that family alone may move its
 ``list.category`` row that way, under the golden's own stamp and bank, with a ledger entry.
+
+A tier change is declared by LISTING it (plan 0104): ``TIER_MOVES`` holds ``family -> (tier
+before, tier today)``. Which tier a family is in changes what a bare ``run`` judges, never how
+the family is judged, so there is no stamp to bump; for a listed family, and for that pair
+only, the two rows that record its tier (``list.tier`` and its ``tiers.CORE`` membership) are
+read as they were before the move, before the comparison and before the ledger hash
+(``tier_moved``). So the move needs no ledger entry of its own and stales none, for a golden
+family, for one already declared and for a family registered after the golden alike; every
+other family's tier rows are compared like any other row.
 """
 
 import argparse
@@ -84,6 +93,48 @@ def paths(a: Any, b: Any, path: str = "") -> list[str]:
     return [] if a == b else [f"{path}: {str(a)[:80]!r} != {str(b)[:80]!r}"]
 
 
+# Tier moves are declared by listing them here: a family (the manifest's key) whose tier changed
+# -> (its tier before, its tier today). "Before" is the golden's tier, or for a family registered
+# after the golden the tier its ledger entry was declared with. Which families `tiers.CORE` lists
+# changes what a bare `run` judges, never how a family is judged, so a tier move has no stamp to
+# bump; the listing IS the declaration (a test pins it against `tiers` and the golden). The
+# waiver is that family's, those two rows' and that (before, today) pair's only: any other
+# family's tier or core membership moving fails T1 like any other row. A family that moves
+# again gets its pair replaced (before stays what the golden or its ledger entry holds); one
+# that moves back loses its line.
+#   conjunctive_association: full -> core (plan 0104; the owner, 2026-11-21)
+TIER_MOVES = {"conjunctive_association": ("full", "core")}
+TIER_ROW = ("list", "tier")
+CORE_ROW = ("tables", "tiers.CORE")  # present (CORE_MEMBER) iff the family is a core family
+CORE_TIER, CORE_MEMBER = "core", True
+
+
+def tier_moved(fam: str, c: Mapping[str, Any]) -> dict[str, Any]:
+    """The family's rows ``c`` as they were before its LISTED tier move: when ``TIER_MOVES[fam]
+    == (before, today)`` and ``c`` holds exactly ``today`` (its ``list.tier`` row, and its
+    ``tiers.CORE`` membership present iff ``today`` is core), a copy with the two tier rows
+    put back to ``before``; else ``c`` unchanged (an unlisted family, another tier than the
+    listed one, or tier rows that contradict each other: compared as they are). What this
+    returns is what ``verdict`` compares and what ``rows_sha256`` hashes for the ledger."""
+    out = dict(c)
+    move = TIER_MOVES.get(fam)
+    (ls, lk), (ts, tk) = TIER_ROW, CORE_ROW
+    lst, tab = c.get(ls), c.get(ts)
+    if move is None or not isinstance(lst, Mapping) or lst.get(lk) != move[1]:
+        return out
+    before, today = move
+    tab = tab if isinstance(tab, Mapping) else {}
+    if (tk in tab) != (today == CORE_TIER) or (tk in tab and tab[tk] != CORE_MEMBER):
+        return out
+    out[ls] = {**lst, lk: before}
+    rows = {k: v for k, v in tab.items() if k != tk}
+    if before == CORE_TIER:
+        rows[tk] = CORE_MEMBER
+    if rows or ts in c:
+        out[ts] = rows
+    return out
+
+
 def triple(rows: Mapping[str, Any]) -> dict[str, Any]:
     """What declares a change: the result stamp and the registered bank's file name and sha."""
     return {key: rows[sec][key] for key, sec in TRIPLE}
@@ -131,7 +182,9 @@ def new_fast_rows(
     per row that is not acceptable (those stay in the entry). A fast version the golden has for
     NO family is new; its row for a family is acceptable iff it equals the family's row under a
     golden version (the same plan rows under a new name), directly or, for a family whose rows
-    hash the version string, as recomputed under that golden version's name
+    hash the version string, as recomputed under that golden version's name, or when the new
+    version reads the family differently from every golden version (``reselected``: a new
+    selection has a fast plan of its own)
     (``fast_as[fam][new] = {"row": that row, "as": {old: sha}}``, from ``fast_equivalents``;
     ignored unless ``row`` is this very row). What this returns is what
     ``verdict`` compares and what ``rows_sha256`` hashes for the ledger, so cutting a fast
@@ -146,8 +199,15 @@ def new_fast_rows(
         sha = have[v]
         eq = fast_as.get(fam, {}).get(v, {})
         # an equivalence counts only for the very row it was computed for
-        as_old = eq.get("as", {}) if eq.get("row") == sha else {}
-        if any(sha == old_sha or as_old.get(old) == old_sha for old, old_sha in was.items()):
+        mine = eq.get("row") == sha
+        as_old = eq.get("as", {}) if mine else {}
+        # a version that READS the family differently from every golden version (a re-selection,
+        # plan 0104) has a fast plan of its own: nothing in the golden to compare it with. Its
+        # row is the family's full plan (the `plan_sha` row, compared as ever) restricted to the
+        # frozen file's read ids, and the file's bytes are pinned by its own test
+        if (mine and eq.get("reselected")) or any(
+            sha == old_sha or as_old.get(old) == old_sha for old, old_sha in was.items()
+        ):
             del have[v]
         else:
             bad.append(
@@ -181,11 +241,12 @@ def fast_equivalents(golden: Mapping[str, Any], current: Mapping[str, Any]) -> d
                 if v in known or sha in was.values() or fam not in by_frozen:
                     continue
                 fast.VERSION = v
+                name = by_frozen[fam]
+                rec = out.setdefault(fam, {}).setdefault(v, {"row": sha, "as": {}})
+                rec["reselected"] = not any(fast.same_reads(old, name, against=v) for old in was)
                 for old in was:
-                    if fast.compatible(old, by_frozen[fam], against=v):
-                        as_old = reads.fast_plan_sha(by_frozen[fam], declared=old)
-                        rec = out.setdefault(fam, {}).setdefault(v, {"row": sha, "as": {}})
-                        rec["as"][old] = as_old
+                    if fast.compatible(old, name, against=v):
+                        rec["as"][old] = reads.fast_plan_sha(name, declared=old)
     finally:
         fast.VERSION = saved
     return out
@@ -224,6 +285,12 @@ def verdict(
     failure, except for a family declared with a NEW BANK (its fast plan may be new too): there
     the row stays in the entry the ledger hash covers.
 
+    A listed tier move (``TIER_MOVES``, ``tier_moved``; plan 0104): the two tier rows of a
+    listed family that holds the listed tier are put back to the tier it had before, ahead of
+    everything above, so the move is neither a difference from the golden nor a change of a
+    declared family's hash. An unlisted family's tier rows are rows like any other: under an
+    unchanged stamp and bank they fail ("instrument moved without a stamp or bank change").
+
     Outside ``families`` every section must equal the golden's, except ``shared.n_families``
     (the golden's count plus the families it does not have) and, when ``script_sha256`` is
     given, the manifest's own ``script_sha256``, which must then equal that value (T1 pins the
@@ -237,7 +304,9 @@ def verdict(
         if fam not in cf:
             failures.append(f"/families/{fam}: in the golden, not in this tree")
             continue
-        c, g = cf[fam], gf.get(fam)
+        g = gf.get(fam)
+        c = tier_moved(fam, cf[fam])
+        tiered = c != cf[fam]  # its listed tier move was put back
         if g is not None and c == g:
             continue
         now, entry = triple(c), ledger.get(fam)
@@ -289,6 +358,8 @@ def verdict(
         if g is not None and gr is not g:
             sec, key = CATEGORY_ROW
             moved.append(f"category {g[sec][key]!r} -> {c[sec][key]!r}")
+        if tiered:  # its listed tier move, named beside what the entry declares
+            moved.append("tier {!r} -> {!r}".format(*TIER_MOVES[fam]))
         how = "new family" if g is None else "; ".join(moved)
         declared[fam] = f"{how} (plan {entry.get('plan')}: {entry.get('note')})"
     n_new = sum(1 for f in cf if f not in gf)
@@ -328,7 +399,8 @@ def declare(
     """The ledger entry of ``family`` for the current tree, or :class:`Refused`."""
     if family not in current["families"]:
         raise Refused(f"{family}: not a family of this tree's manifest")
-    c, g, prev = current["families"][family], golden["families"].get(family), ledger.get(family)
+    g, prev = golden["families"].get(family), ledger.get(family)
+    c = tier_moved(family, current["families"][family])
     if g is not None:  # the basis `verdict` compares and hashes (acceptable new fast rows aside)
         sec, key = FAST_ROWS
         known = {v for x in golden["families"].values() for v in x.get(sec, {}).get(key, {})}

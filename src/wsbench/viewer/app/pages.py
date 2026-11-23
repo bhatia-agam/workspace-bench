@@ -13,9 +13,10 @@ from wsbench.viewer.query import (
     CORE,
     MACRO,
     METHOD_TITLES,
-    SUBSET_TITLES,
+    OLD_FAST,
     Store,
     gate_cards,
+    subset_title,
 )
 
 MAX_DEFAULT_RUNS = 6
@@ -111,7 +112,7 @@ def controls(db: Store, v: View, path: str, extra: str = "", pick_runs: bool = T
         )
         for m in db.models(v.bench)
     ]
-    subsets = [(s, SUBSET_TITLES[s]) for s in db.subsets(v.bench, v.model)]
+    subsets = [(s, subset_title(s)) for s in db.subsets(v.bench, v.model)]
     parts = [
         c.select("bench", benches, v.bench, "Bench"),
         c.select("model", models, v.model, "Subject model"),
@@ -266,6 +267,9 @@ def scores_page(db: Store, v: View) -> str:
     elif v.subset == "fast":
         note = ("The frozen fast questions only. "
                 "Not comparable with the full-bench column: different question set.")  # fmt: skip
+    elif v.subset.startswith(OLD_FAST):
+        note = (f"Runs judged on {v.subset}, an earlier selection of fast questions. Not "
+                "comparable with the Fast subset view or the full-bench column.")  # fmt: skip
     elif v.subset == "ati":
         note = "Only questions that text-only readers could not solve from the prompt."
     elif not runs:
@@ -349,7 +353,7 @@ def eval_page(db: Store, v: View, name: str, want: str = "") -> str:
         f'<div class="block"><h4>Gates</h4><div class="gates">{gates_html or "—"}</div></div></div>'
     )
     right = (
-        f'<div class="card"><h4>Scores <span class="hint">{esc(SUBSET_TITLES[v.subset])}, 95% CI'
+        f'<div class="card"><h4>Scores <span class="hint">{esc(subset_title(v.subset))}, 95% CI'
         f"</span></h4>{c.bar_chart(bars, v.pct) or empty('no scores ingested')}</div>{layer_html}"
     )
 

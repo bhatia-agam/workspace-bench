@@ -49,26 +49,28 @@ def _bool(v: object) -> bool:
 
 
 def _fast_arg(v: object) -> tuple[bool, str]:
-    """The ``fast`` key as ``(fast, fast_variant)`` (plan 0095): a false value, a true value
-    (the default subset's flag), or the string ``safety`` (``--fast-safety``)."""
-    if isinstance(v, str) and v == "safety":
-        return True, "safety"
+    """The ``fast`` key as ``(fast, fast_variant)``: a false value or a true value (the fast
+    subset's flag). ``safety`` (``--fast-safety``, plan 0095) is retired (plan 0104): a usage
+    error that says what to run instead."""
+    if isinstance(v, str) and v in fast.RETIRED_VARIANTS:
+        raise ValueError(fast.RETIRED_VARIANTS[v])
     try:
         return _bool(v), ""
     except ValueError:
-        raise ValueError(f"fast must be True, False or safety, got {v!r}") from None
+        raise ValueError(f"fast must be True or False, got {v!r}") from None
 
 
 def _set_fast(cmd: "Command") -> None:
     """Normalise ``cmd.fast`` to a bool and fill ``cmd.fast_variant`` from it; the variant is
     never a key of its own. Selecting the subset is left to ``execute`` (``_select_fast``)."""
     if cmd.fast_variant:
-        raise ValueError("fast_variant is not a key; use fast=safety")
+        raise ValueError("fast_variant is not a key")
     cmd.fast, cmd.fast_variant = _fast_arg(cmd.fast)
 
 
 def _select_fast(cmd: "Command") -> None:
-    """Top of ``execute``: ``--fast-safety`` makes its subset the active one of this process.
+    """Top of ``execute``: a variant makes its subset the active one of this process (none is
+    selectable since plan 0104 retired ``--fast-safety``; ``_fast_arg`` refuses it before this).
     Plain ``--fast`` writes nothing: it runs the active subset (``fast.DEFAULT`` in a fresh
     process)."""
     if cmd.fast_variant:
@@ -91,7 +93,7 @@ def _tier_arg(cmd: "Command") -> str:
     if tier not in ("", "core", "full"):
         raise ValueError(f"tier must be core or full (--core / --full), got {tier!r}")
     if tier and cmd.fast:
-        raise ValueError(f"--fast / --fast-safety and --{tier} are different tiers; pick one")
+        raise ValueError(f"--fast and --{tier} are different tiers; pick one")
     return tier
 
 
@@ -234,7 +236,7 @@ class JudgeOptions(Command):
         self.reads = ""  # full | lite (plan 0032 §2.6.7); alias opts=reads=lite
         self.sampling = ""  # bullet4 | prose1 | tokens10: overrides the sidecar (§2.9.2)
         self.each = False  # layers=each: set by finalize
-        # --fast: the frozen fast subset (plan 0090, evals/fast); fast=safety = --fast-safety
+        # --fast: the frozen fast subset (plan 0090, evals/fast); the retired fast=safety is refused
         self.fast = False
         self.fast_variant = ""  # set by finalize from fast= (plan 0095), never a key
 
@@ -593,9 +595,12 @@ class ReportRuns(Command):
         self.floors = True  # the frozen lucky-guessing floors (evals/baselines) beside each family
         self.reads = ""  # full | lite: keep that mode only (a table never mixes modes)
         # plan 0090, tri-state like reads: "" = unset, True = fast rows only, False = the rest;
-        # safety (--fast-safety, plan 0095) = True on the fast-safety subset
+        # the retired `safety` value is a usage error (plan 0104)
         self.fast = ""
         self.fast_variant = ""  # set by finalize from fast=, never a key
+        self.fast_version = ""  # plan 0104: report under this registered version (old dirs)
+        # plan 0104: with --fast, the strict-ATI view of the fast rows (no new judging)
+        self.anti_text_inversion = False
         self.by_layer = False  # fold a layers=each run (<dir>/<family>/<all|L<k>>/results.json)
         self.hb_method = ""  # HallucinationBench method (plan 0040); else run.json / methods.json
         # opt-in judge column: a run of the same readouts with judge_model=<another judge>
@@ -610,13 +615,29 @@ class ReportRuns(Command):
         self.floors = _bool(self.floors)
         self.reads = _reads_arg(self.reads) if self.reads else ""
         if self.fast_variant:
-            raise ValueError("fast_variant is not a key; use fast=safety")
+            raise ValueError("fast_variant is not a key")
         if not (isinstance(self.fast, str) and not self.fast):  # "" stays unset
             self.fast, self.fast_variant = _fast_arg(self.fast)
+        # plan 0104: an old fast results directory is reported under the version that made it
+        self.fast_version = str(self.fast_version or "")
+        if self.fast_version:
+            if self.fast_version not in fast.VERSIONS:
+                known = ", ".join(sorted(fast.VERSIONS))
+                raise ValueError(f"fast_version must be one of {known}, got {self.fast_version!r}")
+            if self.fast is False:
+                raise ValueError("fast_version= reports fast rows; it contradicts fast=False")
+            self.fast = True
+        self.anti_text_inversion = _bool(self.anti_text_inversion)
+        if self.anti_text_inversion and self.fast is not True:
+            raise ValueError(
+                "report anti_text_inversion=True is the ATI view of a FAST run: pass --fast (an "
+                "anti_text_inversion=True run's own directory needs no key)"
+            )
         self.by_layer = _bool(self.by_layer)
 
     def execute(self) -> int:
-        _select_fast(self)  # before the macro is computed
+        if self.fast_version:  # before the macro is computed
+            fast.use(self.fast_version)
         if not self.dir.is_dir():
             print(f"not a directory: {self.dir}", file=sys.stderr)
             return EXIT_USAGE
@@ -641,6 +662,15 @@ class ReportRuns(Command):
                 file=sys.stderr,
             )
             return EXIT_USAGE
+        ati_view = self.anti_text_inversion
+        if ati_view:
+            # plan 0104: the strict-ATI macro from a fast run. Each fast row of the active
+            # version becomes its family's ATI row (fast.ati_view: the fast units restricted to
+            # the gated ids); stale rows and families outside the ATI scope are left out
+            from wsbench.results import _stale_fast_subset
+
+            views = [fast.ati_view(r) for r in results if not _stale_fast_subset(r)]
+            results = [v for v in views if v is not None]
         m = macro(results)
         cm = core_macro(results)  # plan 0098; None for fast / ATI results
         # The frozen floors were measured on the full banks; on the ATI subset they do not apply
@@ -685,7 +715,13 @@ class ReportRuns(Command):
         hb_text, hb_json = self._hb_block(results)
         if hb_text:  # after the macro table; a separate number, never in the macro
             table += "\n" + hb_text
-        (self.dir / "summary.md").write_text(table, encoding="utf-8")
+        if ati_view:  # a view of the fast run: summary.md stays the fast report
+            table = (
+                f"scope: strict ATI view of the fast run ({fast.VERSION}): each family's fast "
+                "units restricted to its gated ATI ids, no new judging\n\n" + table
+            )
+        else:
+            (self.dir / "summary.md").write_text(table, encoding="utf-8")
         if self.json:
             raw = {
                 "lucky_guessing": lucky_guessing.floors(),
@@ -723,7 +759,8 @@ class ReportRuns(Command):
                 f"core macro: value={cm['value']} families={len(cm['families'])}/{cm['n_core']} "
                 f"missing={cm['missing']} excluded={cm['excluded']}"
             )
-        print(f"wrote {self.dir / 'summary.md'}")
+        if not ati_view:
+            print(f"wrote {self.dir / 'summary.md'}")
         return 0
 
     def _hb_block(self, results: list[FamilyResult]) -> tuple[str, dict | None]:
@@ -866,30 +903,21 @@ def _maybe_sidecar(cmd: Any, rep: Any) -> None:
 def fast_header(results: Iterable[FamilyResult] = ()) -> str:
     """The line above a fast report's table (plan 0090): the active subset and its family
     count; the table may list rows of other subsets, which the macro leaves out (plan 0094).
-    Plan 0095: a second line when ``results`` holds fast rows of families only another
-    selectable subset has, naming the flag that reports them."""
+    Plan 0104: a second line per registered version whose rows the active macro leaves out
+    names the key that reports them (``fast_version=``; it replaces plan 0095's
+    ``--fast-safety`` hint)."""
     head = (
         f"scope: fast subset {fast.VERSION} ({len(fast.subset())} families; not comparable with "
         "full-bench numbers); rows of other subsets are excluded"
     )
-    rows = [r for r in results if r.config.get("scope") == fast.SCOPE]
-    have = fast.subset()
-    for variant, version in fast.VARIANTS.items():
-        if version == fast.VERSION:
-            continue
-        other = fast.subset(version)
-        n = sum(
-            r.family not in have
-            and r.family in other
-            and (
-                r.config.get("fast_subset") == version
-                or fast.compatible(r.config.get("fast_subset"), r.family, against=version)
-            )
-            for r in rows
-        )
-        if n:
-            flag = f"--fast-{variant}" if variant else "--fast"
-            head += f"\n{n} row(s) are in {version} only; pass {flag} for its macro"
+    stale: dict[str, int] = {}
+    for r in results:
+        v = r.config.get("fast_subset")
+        ours = r.config.get("scope") == fast.SCOPE and v in fast.VERSIONS and v != fast.VERSION
+        if ours and not fast.compatible(v, r.family):
+            stale[v] = stale.get(v, 0) + 1
+    for v, k in sorted(stale.items()):
+        head += f"\n{k} row(s) are {v} rows; pass fast_version={v} for that subset's macro"
     return head
 
 
@@ -1970,8 +1998,9 @@ def main(argv: list[str] | None = None) -> int:
     positional = getattr(command, "positional", "")
     if positional and len(argv) > 1 and "=" not in argv[1] and not argv[1].startswith("-"):
         argv[1] = f"{positional}={argv[1]}"
-    # plans 0090 / 0095: `--fast` is `fast=True` and `--fast-safety` is `fast=safety` on every
-    # command (one without the key fails as unknown)
+    # plan 0090: `--fast` is `fast=True` on every command (one without the key fails as
+    # unknown); the retired `--fast-safety` still maps to `fast=safety`, so that it reaches the
+    # usage error that says what to run instead (`fast.RETIRED_VARIANTS`)
     # plan 0098: `--core` / `--full` are `tier=core` / `tier=full` on run and plan
     flags = {"--fast": "fast=True", "--fast-safety": "fast=safety"}
     flags |= {"--core": "tier=core", "--full": "tier=full"}

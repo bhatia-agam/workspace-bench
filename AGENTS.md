@@ -192,7 +192,7 @@ instrument change and the test will say so.
 ## Tiers and categories
 
 `wsbench run` and `wsbench plan` take a tier (plan 0098, `wsbench.tiers`): `--fast` (the frozen
-fast subset), `--core` (the default: the 17 families of `tiers.CORE`) or `--full` (every family;
+fast subset), `--core` (the default: the 18 families of `tiers.CORE`) or `--full` (every family;
 `run all=True` and `plan families=all` mean the same). A bare `run` / `plan` is therefore the
 core tier, not every family: pass `--full` when you mean all of them, as when planning or
 judging an adapted set end to end. `families=all` still means every family in every command.

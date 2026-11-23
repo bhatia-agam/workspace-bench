@@ -22,6 +22,19 @@ SUBSET_TITLES = {  # in the order the dropdown lists them
     "fast-safety": "Fast subset + safety",
     "ati": "Anti-text-inversion (ATI)",
 }
+OLD_FAST = "fast-"  # a fast run of another version than the default is stored under its name
+
+
+def subset_title(subset: str) -> str:
+    """The dropdown title of a store subset; one outside ``SUBSET_TITLES`` (a fast run judged
+    on an earlier fast version, stored under that version's name) is named by what it is."""
+    if subset in SUBSET_TITLES:
+        return SUBSET_TITLES[subset]
+    if subset.startswith(OLD_FAST):
+        return f"Fast subset ({subset}, an earlier selection)"
+    return f"Subset {subset}"
+
+
 WHOLE_BANK = ("full", CORE)  # subsets that keep every question of the evals they hold
 METHOD_ORDER = {"olens": 0, "nla": 1, "jlens": 2, "logit_lens": 3, "other": 4}
 METHOD_TITLES = {
@@ -145,7 +158,8 @@ class Store:
             e in self._core(bench) for e in self._full_evals(bench, model)
         ):
             have.add(CORE)
-        return [s for s in SUBSET_TITLES if s in have]
+        # the titled subsets in their order, then any other (earlier fast versions) by name
+        return [s for s in SUBSET_TITLES if s in have] + sorted(have - set(SUBSET_TITLES))
 
     def _full_evals(self, bench: str, model: str) -> set[str]:
         rows = self.q(

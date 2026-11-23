@@ -60,6 +60,18 @@ bank version that differs from the golden's.**
   bump. An entry with the golden's own stamp and bank declares it while that row holds the
   listed new name and every other row equals the golden's; the same row is set aside when the
   family later declares a stamp change.
+- A tier move is declared by listing it (plan 0104): `manifest_0101_declare.TIER_MOVES` holds
+  `family -> (tier before, tier today)`; today `conjunctive_association: full -> core`. Which
+  tier a family is in changes what a bare `run` judges, never how the family is judged, so
+  there is no stamp or bank to bump. For a listed family that holds the listed tier, its two
+  tier rows (`list.tier` and its `tiers.CORE` membership) are read as they were before the
+  move, before the comparison and before the ledger hash (`tier_moved`): the move needs no
+  ledger entry and stales none, whether the family is the golden's, already declared, or
+  registered after the golden (then "before" is the tier its entry was declared with). The
+  waiver is that family's, those two rows' and that pair's only: any other family's tier or
+  core membership moving, and a listed family in a tier that is neither its listed before nor its listed after, fail
+  like any other row. To move a family's tier, add or replace its line (a test pins the table
+  against `tiers` and the golden); a family that moves back loses its line.
 - A declaration by stamp only (bank file and sha256 equal the golden's) waives the family's
   `stamps` and `run` sections alone; `plan`, `files`, `seeds`, `options`, `tables`, `lens_store`
   and every other section must still equal the golden's. A declaration with a new bank compares

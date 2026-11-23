@@ -346,17 +346,164 @@ def test_core_is_offered_and_is_the_default_where_a_core_eval_has_a_full_score(
 def test_a_fast_safety_run_is_stored_under_its_own_subset():
     from types import SimpleNamespace
 
-    from wsbench import fast
-
-    run = {"poetry": SimpleNamespace(config={"fast_subset": fast.VARIANTS["safety"]})}
+    # the safety variant is retired (plan 0104): its runs are known by their stamp alone
+    run = {"poetry": SimpleNamespace(config={"fast_subset": "fast-safety-v2"})}
     assert wsb.fast_subset_of(run) == "fast-safety"
+    # a plain fast run is `fast` only on the default selection: fast-v2 holds other poetry
+    # questions than the default, so it is stored under its own name (was `fast` while the
+    # default was a version with poetry's identical entry; the test below pins that case)
     assert (
-        wsb.fast_subset_of({"poetry": SimpleNamespace(config={"fast_subset": "fast-v2"})}) == "fast"
+        wsb.fast_subset_of({"poetry": SimpleNamespace(config={"fast_subset": "fast-v2"})})
+        == "fast-v2"
     )
     assert (  # a run stamped with an earlier version of the safety variant
         wsb.fast_subset_of({"poetry": SimpleNamespace(config={"fast_subset": "fast-safety-v1"})})
         == "fast-safety"
     )
+
+
+def _fast_row(version: str | None):
+    from types import SimpleNamespace
+
+    return SimpleNamespace(
+        config={"scope": "fast", **({"fast_subset": version} if version else {})}
+    )
+
+
+def test_the_fast_view_holds_one_selection_only(wsb_run: Path, tmp_path: Path, monkeypatch):
+    """`fast` is the DEFAULT selection: a run stamped with the default version, or with one
+    whose entry for every family is identical; any other fast run is stored under the version
+    it was judged on, with a readable title, and is offered as a subset of its own."""
+    from wsbench import fast
+    from wsbench.viewer.query import SUBSET_TITLES, subset_title
+
+    assert wsb.fast_subset_of({"poetry": _fast_row(fast.DEFAULT)}) == "fast"
+    for old in ("fast-v1", "fast-v2", "fast-v3"):
+        assert wsb.fast_subset_of({"poetry": _fast_row(old)}) == old
+        assert old not in SUBSET_TITLES and old in subset_title(old)
+        assert subset_title(old).startswith("Fast subset (")
+    # one row of another selection is enough; an unstamped run is nobody's selection
+    mixed = {"poetry": _fast_row(fast.DEFAULT), "buggy_code": _fast_row("fast-v3")}
+    assert wsb.fast_subset_of(mixed) == "fast-v3"
+    assert wsb.fast_subset_of({"poetry": _fast_row(None)}) == wsb.UNSTAMPED
+    assert subset_title(wsb.UNSTAMPED).startswith("Fast subset (")
+    # compatibility is per family (`fast.compatible`): under fast-v3 as the default, fast-v2's
+    # poetry entry is the same entry, conjunctive_association's is not (its bank was re-frozen)
+    monkeypatch.setattr(fast, "DEFAULT", "fast-v3")
+    assert wsb.fast_subset_of({"poetry": _fast_row("fast-v2")}) == "fast"
+    assert wsb.fast_subset_of({"conjunctive_association": _fast_row("fast-v2")}) == "fast-v2"
+    both = {"poetry": _fast_row("fast-v2"), "conjunctive_association": _fast_row("fast-v2")}
+    assert wsb.fast_subset_of(both) == "fast-v2"
+    monkeypatch.undo()
+    # the store lists such a subset after the titled ones
+    root = tmp_path / "store"
+    rid = wsb.ingest(wsb_run, root)["run_id"]
+    cat = store.catalog(root)
+    for subset in ("fast-v3", "fast"):
+        cat.execute(
+            "INSERT INTO score VALUES (?,?,?,?,?,?,?,?,?,?)",
+            (rid, "poetry", subset, -1, "lens", 0.5, None, None, 10, None),
+        )
+    cat.commit()
+    assert Store(root).subsets("wsb", wsb.ORIGINAL) == ["full", "fast", "fast-v3"]
+
+
+def test_a_new_default_fast_version_re_derives_the_fast_scores_of_a_full_run(
+    wsb_run: Path, tmp_path: Path, monkeypatch
+):
+    """The ingest signature holds the default fast version: an unchanged full run is skipped
+    only while the fast scores derived from it are the current selection's."""
+    from wsbench import fast
+
+    root = tmp_path / "store"
+    assert not wsb.ingest(wsb_run, root)["skipped"]
+    assert wsb.ingest(wsb_run, root)["skipped"]
+    sig = store.catalog(root).execute("SELECT source_sig FROM run").fetchone()["source_sig"]
+    assert sig.endswith(f"|fast={fast.DEFAULT}")
+    monkeypatch.setattr(fast, "DEFAULT", "fast-v3")
+    assert not wsb.ingest(wsb_run, root)["skipped"]  # same files, another default
+    assert wsb.ingest(wsb_run, root)["skipped"]
+
+
+def test_fast_membership_is_the_frozen_files_never_a_union(wsb_run: Path, tmp_path: Path):
+    """What an earlier default left under `fast` (other questions of a family, families that
+    are no fast families any more) is deleted before the registered membership is written."""
+    from wsbench import fast
+
+    root = tmp_path / "store"
+    rid = wsb.ingest(wsb_run, root)["run_id"]
+    cat = store.catalog(root)
+    old, new = fast.subset("fast-v3"), fast.subset(fast.DEFAULT)
+    gone = sorted(set(old) - set(new))[0]  # a fast-v3 family outside the default
+    stale = [(f, i) for f in ("poetry", gone) for i in wsb._members(old[f])]
+    stale.append(("poetry", "never-a-question"))
+    cat.executemany(
+        "INSERT OR IGNORE INTO subset_item VALUES (?,?,?,?,?)",
+        [("wsb", wsb.ORIGINAL, "fast", f, i) for f, i in stale],
+    )
+    cat.executemany(  # another subset and another model are not this function's to clear
+        "INSERT OR IGNORE INTO subset_item VALUES (?,?,?,?,?)",
+        [
+            ("wsb", wsb.ORIGINAL, "ati", "poetry", "kept"),
+            ("wsb", "other", "fast", "poetry", "kept"),
+        ],
+    )
+    wsb.write_fast_scores(cat, rid, wsb.ORIGINAL, {})
+    cat.commit()
+
+    def members(model: str, subset: str) -> dict[str, set[str]]:
+        out: dict[str, set[str]] = {}
+        for r in cat.execute(
+            "SELECT eval, item FROM subset_item WHERE bench = 'wsb' AND model = ? AND subset = ?",
+            (model, subset),
+        ):
+            out.setdefault(r["eval"], set()).add(r["item"])
+        return out
+
+    assert members(wsb.ORIGINAL, "fast") == {f: wsb._members(e) for f, e in new.items()}
+    assert wsb._members(old["poetry"]) - wsb._members(new["poetry"])  # the union would differ
+    assert members(wsb.ORIGINAL, "ati") == {"poetry": {"kept"}}
+    assert members("other", "fast") == {"poetry": {"kept"}}
+
+
+def test_fast_membership_of_a_fast_run_is_per_family_from_its_own_stamp(monkeypatch):
+    """A directory that mixes versions: every family's members come from the version ITS row
+    is stamped with; an unstamped or unregistered row has none (the default is never assumed);
+    versions are ordered by number."""
+    from wsbench import fast
+
+    only_v3 = sorted(set(fast.subset("fast-v3")) - set(fast.subset(fast.DEFAULT)))[0]
+    run = {
+        "poetry": _fast_row("fast-v3"),
+        "buggy_code": _fast_row(fast.DEFAULT),
+        only_v3: _fast_row("fast-v3"),
+        "hinted_cutoff": _fast_row(None),
+        "nyt_connections": _fast_row("fast-v99"),
+        "jailbreak_recognition": _fast_row("fast-safety-v2"),
+        "multihop_st": _fast_row("fast-v3"),  # the version it names does not hold it
+    }
+    got = wsb.fast_members(run)
+    assert set(got) == {"poetry", "buggy_code", only_v3, "jailbreak_recognition"}
+    assert got["poetry"] == wsb._members(fast.subset("fast-v3")["poetry"])
+    assert got["poetry"] != wsb._members(fast.subset(fast.DEFAULT)["poetry"])
+    assert got["buggy_code"] == wsb._members(fast.subset(fast.DEFAULT)["buggy_code"])
+    assert got[only_v3] == wsb._members(fast.subset("fast-v3")[only_v3])
+    assert got["jailbreak_recognition"] == wsb._members(
+        fast.subset("fast-safety-v2")["jailbreak_recognition"]
+    )
+    assert wsb.fast_version_of(_fast_row(None)) is None
+    assert wsb.fast_version_of(_fast_row("fast-v99")) is None
+    assert wsb.fast_members({"poetry": _fast_row(None)}) == {}  # an unstamped run: no members
+    # numeric order: fast-v10 is newer than fast-v4 (a plain sort puts it first)
+    names = ["fast-v10", "fast-v4", "fast-v9", "fast-safety-v2", "fast"]
+    assert sorted(names) != sorted(names, key=wsb.version_key)
+    assert sorted(names, key=wsb.version_key) == [
+        "fast", "fast-v4", "fast-v9", "fast-v10", "fast-safety-v2",
+    ]  # fmt: skip
+    assert wsb.fast_subset_of({"poetry": _fast_row("fast-v10"), "buggy_code": _fast_row("fast-v4"),
+                               "relational_multihop": _fast_row("fast-v9")}) == (
+        "fast-v10" if fast.DEFAULT != "fast-v10" else "fast-v9"
+    )  # fmt: skip
 
 
 def test_hb_what_it_measures_comes_from_the_column_of_that_name(tmp_path):

@@ -566,7 +566,9 @@ def judge_argv(name: str, args: Any, readouts: Path, dest: Path) -> list[str]:
     if opt_in := getattr(args, "ati_opt_in", None):
         cmd.append("ati_opt_in=" + ",".join(opt_in))
     if getattr(args, "fast", False):
-        # plan 0095: the child selects the ACTIVE subset itself (`fast=safety`), by reverse lookup
+        # a selectable variant is named by reverse lookup of the active version (plan 0095;
+        # none exists today), else `fast=True`: the child then runs `fast.DEFAULT`, which is
+        # why `run_families` refuses process mode under any other active version
         variant = next((k for k, v in fast.VARIANTS.items() if k and v == fast.VERSION), "")
         cmd.append(f"fast={variant}" if variant else "fast=True")
     if args.opt:  # carries reads= / sampling= already
@@ -779,7 +781,15 @@ def run_families(
     ``_one_proc``, one ``wsbench judge`` child per family, after the same parent-side checks and
     preflight; the children share ``rpm`` / ``itpm`` and a cap on calls in flight through a
     run-private directory. A second ``KeyboardInterrupt`` terminates the children."""
-    procs = _Procs(args) if getattr(args, "procs", False) and env is None else None
+    by_procs = bool(getattr(args, "procs", False)) and env is None
+    if by_procs and getattr(args, "fast", False) and fast.VERSION not in fast.VARIANTS.values():
+        # a child is a fresh process: it judges a selectable subset (`judge_argv`), never a
+        # version only this process made active
+        raise SystemExit(
+            f"run --fast in process mode judges {fast.DEFAULT}, but the active fast subset of "
+            f"this process is {fast.VERSION}; pass procs=False to judge it in-process"
+        )
+    procs = _Procs(args) if by_procs else None
     env = os.environ if env is None else env
     effort = getattr(args, "judge_effort", None)
     try:

@@ -635,25 +635,84 @@ def write_scores(cat, rid: str, judged: Path, results: Mapping[str, Any], subset
 
 
 FAST_SUBSETS = {"": "fast", "safety": "fast-safety"}  # fast variant -> the store's subset
+SAFETY_VERSIONS = "fast-safety-v"  # the prefix of every version of the (retired) safety variant
+UNSTAMPED = "fast-unstamped"  # the store subset of a fast run whose rows carry no version
+
+
+def version_key(version: str) -> tuple[str, int, str]:
+    """Sort key of a fast version name: its number as a number (``fast-v10`` after ``fast-v4``),
+    within its name prefix; a name without ``-v<N>`` sorts first under its own spelling."""
+    m = re.fullmatch(r"(.*)-v(\d+)", version)
+    return (m.group(1), int(m.group(2)), "") if m else (version, -1, version)
+
+
+def _stamp(result: Any) -> str:
+    return str(result.config.get("fast_subset") or "")
+
+
+def _is_default(stamp: str, family: str) -> bool:
+    """Is a row stamped ``stamp`` a row of the default fast subset: the default version
+    itself, or a version whose entry for the family is identical (``fast.compatible``)."""
+    return stamp == fast.DEFAULT or fast.compatible(stamp, family, against=fast.DEFAULT)
 
 
 def fast_subset_of(results: Mapping[str, Any]) -> str:
-    """The store subset of a ``--fast`` / ``--fast-safety`` run, from the subset version its
-    results are stamped with (any version of the safety variant, ``fast-safety-v<N>``)."""
-    safety = fast.VARIANTS["safety"].rsplit("-v", 1)[0]  # "fast-safety"
-    stamped = {str(r.config.get("fast_subset") or "") for r in results.values()}
-    return FAST_SUBSETS["safety" if any(v.startswith(safety) for v in stamped) else ""]
+    """The store subset of a fast run, from the subset version its rows are stamped with.
+    ``fast`` only when EVERY row is the default subset's (stamped with the default version or
+    one compatible with it for that family), so the "Fast subset" view never puts two
+    selections in one table; any version of the retired safety variant (``fast-safety-v<N>``)
+    is ``fast-safety``; otherwise the stamped version itself (``fast-v3``; the newest of the
+    non-default ones when a directory mixes several; ``fast-unstamped`` when none is named)."""
+    stamped = {fam: _stamp(r) for fam, r in results.items()}
+    if any(v.startswith(SAFETY_VERSIONS) for v in stamped.values()):
+        return FAST_SUBSETS["safety"]
+    if all(_is_default(v, fam) for fam, v in stamped.items()):
+        return FAST_SUBSETS[""]
+    other = sorted({v for fam, v in stamped.items() if v and not _is_default(v, fam)},
+                   key=version_key)  # fmt: skip
+    return other[-1] if other else UNSTAMPED
+
+
+def fast_version_of(result: Any) -> str | None:
+    """The registered fast version ONE family's row was judged on: its own stamp. ``None`` for
+    an unstamped row or an unregistered stamp: such a row has no membership (the default
+    version is never assumed, a run cannot have been judged on a selection cut after it)."""
+    v = _stamp(result)
+    return v if v in fast.VERSIONS else None
+
+
+def fast_members(results: Mapping[str, Any]) -> dict[str, set[str]]:
+    """``{family: the ids its fast row scores and reads}``, each family from the frozen file
+    of the version ITS row is stamped with (a directory may mix versions); a family whose row
+    names no registered version, or whose version does not hold it, is absent."""
+    out: dict[str, set[str]] = {}
+    for fam, r in results.items():
+        version = fast_version_of(r)
+        try:
+            e = fast.subset(version).get(fam) if version else None
+        except (SystemExit, OSError, KeyError, ValueError):
+            e = None
+        if e:
+            out[fam] = _members(e)
+    return out
+
+
+def _members(entry: Mapping[str, Any]) -> set[str]:
+    members = {u for us in (entry.get("units") or {}).values() for u in us}
+    return members | set(entry.get("read_ids") or [])
 
 
 def write_fast_scores(cat, rid: str, model: str, results: Mapping[str, Any]) -> None:
     """Fast scores of a full run: its verdicts restricted to the frozen fast questions, once per
-    fast variant (``fast``: the default fast subset; ``fast-safety``: the same plus
-    jailbreak_recognition and agentic_misalignment, written only when the run has one of them)."""
+    SELECTABLE fast variant (``fast.VARIANTS``: today the default fast subset only; a retired
+    variant such as ``fast-safety`` is shown only for the runs that were judged under it)."""
     if model != ORIGINAL:
         return
     active = fast.VERSION
     try:
         for variant, subset in FAST_SUBSETS.items():
+            if variant not in fast.VARIANTS:
+                continue
             version = fast.select(variant)
             try:
                 fams, sub = fast.families(), fast.subset()
@@ -674,6 +733,16 @@ def _fast_families(variant: str) -> list[str]:
 
 
 def _write_fast(cat, rid, model, results, fams, sub, subset: str, version: str) -> None:
+    # membership is a function of the frozen file, not of the run: what an earlier default
+    # version left under this subset is deleted first, never united with the new selection
+    cat.execute(
+        "DELETE FROM subset_item WHERE bench = ? AND model = ? AND subset = ?",
+        (BENCH, model, subset),
+    )
+    cat.executemany(
+        "INSERT OR IGNORE INTO subset_item VALUES (?,?,?,?,?)",
+        [(BENCH, model, subset, fam, u) for fam in fams for u in sorted(_members(sub[fam]))],
+    )
     vals = []
     note = f"full-run verdicts on the {version} questions (not a separate fast run)"
     for fam in fams:
@@ -689,12 +758,6 @@ def _write_fast(cat, rid, model, results, fams, sub, subset: str, version: str) 
             continue
         _score(cat, rid, fam, subset, -1, "lens", r2.value, r2.ci95, r2.n_items, note)
         vals.append(r2.value)
-        members = {u for us in sub[fam]["units"].values() for u in us}
-        members |= set(sub[fam].get("read_ids") or [])
-        cat.executemany(
-            "INSERT OR IGNORE INTO subset_item VALUES (?,?,?,?,?)",
-            [(BENCH, model, subset, fam, u) for u in members],
-        )
     if vals:
         _score(cat, rid, MACRO, subset, -1, "lens", sum(vals) / len(vals), None, len(vals), note)
 
@@ -751,7 +814,12 @@ def ingest(
     files += [p for f in fdirs if (p := _readout_file(readouts, f))]
     if lay["ati"]:
         files += [d / "results.json" for d in family_dirs(lay["ati"]).values()]
-    sig = store.signature(files) + f"|items={','.join(items or [])}|schema={store.SCHEMA}"
+    # the default fast version is part of the signature: a full run's derived fast scores are a
+    # function of it, so a run ingested under an earlier default is re-derived, not skipped
+    sig = (
+        store.signature(files)
+        + f"|items={','.join(items or [])}|schema={store.SCHEMA}|fast={fast.DEFAULT}"
+    )
     cat = store.catalog(store_root)
     old = cat.execute("SELECT source_sig FROM run WHERE run_id = ?", (rid,)).fetchone()
     if (
@@ -832,22 +900,19 @@ def ingest(
         # a lens judged on the ATI subset only: its scores are ATI scores, never full or fast
         ingest_subset(cat, rid, model, judged, "ati")
     elif only is None and all(r.config.get("scope") == fast.SCOPE for r in results.values()):
-        # a --fast / --fast-safety run: its results.json values are that subset's scores
+        # a fast run (any version): its results.json values are that subset's scores
         # (never full-bench ones)
         fast_name = fast_subset_of(results)
         write_scores(cat, rid, judged, results, fast_name)
-        try:
-            safety = fast_name == FAST_SUBSETS["safety"]
-            sub = fast.subset(fast.VARIANTS["safety" if safety else ""])
-        except (SystemExit, OSError, KeyError, ValueError):
-            sub = {}
-        for fam in results:
-            e = sub.get(fam) or {}
-            members = {u for us in (e.get("units") or {}).values() for u in us}
-            members |= set(e.get("read_ids") or [])
+        members = fast_members(results)
+        for fam in results:  # this run's rows replace what the subset held for the family
+            cat.execute(
+                "DELETE FROM subset_item WHERE bench = ? AND model = ? AND subset = ? AND eval = ?",
+                (BENCH, model, fast_name, fam),
+            )
             cat.executemany(
                 "INSERT OR IGNORE INTO subset_item VALUES (?,?,?,?,?)",
-                [(BENCH, model, fast_name, fam, u) for u in members],
+                [(BENCH, model, fast_name, fam, u) for u in sorted(members.get(fam, ()))],
             )
         if lay["ati"]:
             ingest_subset(cat, rid, model, lay["ati"], "ati")

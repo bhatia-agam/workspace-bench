@@ -108,7 +108,7 @@ MANIFEST: dict[str, Any] = {
         "list), `private` = 1 for items that must not be published",
         "item_tokens": "optional: the full rendered prompt's tokens per question (zlib JSON "
         "list), written by `ingest adapter=tokens` when the subject tokenizer is available",
-        "subset_item": "membership of an item in a named subset (fast, fast-safety, ati)",
+        "subset_item": "membership of an item in a named subset (fast, fast-<version>, ati)",
         "score": "one number: run x eval x subset x layer (-1 = the eval's headline) x kind "
         "(lens | prompt_only | lucky_guess | chance), with its 95% CI and n; eval "
         "`_macro` is the mean over evals",

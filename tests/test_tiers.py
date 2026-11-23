@@ -47,9 +47,9 @@ CORE = {
     "nyt_connections", "moral_rationale", "poetry", "introspection",
     "multi_concept_directed_modulation", "wrong_intermediate", "relational_multihop",
     "role_bound_association", "knowledge_cutoff", "model_specific_directed_modulation",
-    "model_multihop", "chain_intermediates", "hinted_cutoff",
+    "model_multihop", "chain_intermediates", "hinted_cutoff", "conjunctive_association",
 }  # fmt: skip
-N = 17
+N = 18  # 17 until 2026-11-21, when conjunctive_association joined (Camila)
 
 
 # ---------------------------------------------------------------- categories and tiers
@@ -467,4 +467,4 @@ def test_bare_plan_names_its_tier(tmp_path, capsys):
     from wsbench.cli import main
 
     assert main(["plan", f"out={tmp_path / 'p'}", "limit=1"]) == 0
-    assert "tier: core (17 families; --full for all" in capsys.readouterr().err
+    assert "tier: core (18 families; --full for all" in capsys.readouterr().err

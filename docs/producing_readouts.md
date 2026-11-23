@@ -189,58 +189,36 @@ rm -f outputs/readouts/mylens-fast/_READS_DONE   # then start the read into that
 uv run wsbench run --fast all=True readouts_root=outputs/readouts/mylens-fast out=outputs/judged/mylens-fast wait=3600
 ```
 
-## Fast subset (`--fast`, `--fast-safety`)
+## Fast subset (`--fast`)
 
-`--fast` judges the frozen subset `fast-v3` (`evals/fast/README.md`): 22 families, none of them
-`jailbreak_recognition` or `agentic_misalignment`. `--fast-safety` judges `fast-safety-v2`:
-those 22 plus the two safety families, 24 in all; every command below takes it in place of
-`--fast`. **A full
-readouts file is always judgeable with `--fast` / `--fast-safety`**: the judge keeps the fast
-items itself, so existing readouts need no re-read. To read only what the fast subset needs:
+`--fast` judges the frozen subset `fast-v4` (`evals/fast/README.md`): 16 families
+(the core tier without `jailbreak_recognition` and `agentic_misalignment`), a seeded random
+half of each family's units plus the whole strict ATI subset, 1,441 read items. **A full
+readouts file is always judgeable with `--fast`**: the judge keeps the fast items itself, so
+existing full readouts need no re-read. To read only what the fast subset needs:
 
 ```
-uv run wsbench plan --fast out=outputs/plan-fast          # the 22 fast families
+uv run wsbench plan --fast out=outputs/plan-fast          # the 16 fast families
 uv run wsbench run --fast all=True readouts_root=outputs/readouts/mylens-fast out=outputs/judged/mylens-fast
 ```
 
 - The fast plan is the full plan's rows of the fast read items: same render, layers and
-  positions rule for every `fast-v3` family, so a producer of the full plan needs nothing new.
-- **`--fast-safety` only** (this bullet and the next; no `fast-v3` row carries a fast positions
-  rule, and `--fast` does not plan or judge these two families): `agentic_misalignment` and
-  `jailbreak_recognition` rows carry
-  `{"kind": "fast_of", "full": <the full rule>, "fast": <the fast rule>}` and
-  `extra.fast = "fast-safety-v2"` (`"fast-safety-v1"` / `"fast-v1"` in the plans of those
-  subsets, the same rows otherwise): the fast rule applied WITHIN the full rule's positions. `last_n {n}` = the last n of them; `punct_special` = those whose token is
-  punctuation, a newline token or a special token (`wsbench.readplan.is_fast_site`), else the
-  last full position.
-- Resolve it with `wsbench.readplan.resolve(rule, tokens)`. Unlike `lite_of`, `fast_of` /
-  `punct_special` need the render's token strings, and they must be the **decoded** ones
-  (`tokenizer.decode([id])` per token, what the rows carry as `token`), never the byte-level BPE
-  display strings: those show CJK and curly punctuation as mojibake, which is not punctuation.
-  Write each row's `token`: the judge applies the same predicate to it, and a `punct_special` row
-  without `token` is refused.
-- Declare the file in its sidecar: `"fast": "fast-v3"` (`"fast-safety-v2"` for a file read from
-  the `--fast-safety` plan) and `"plan_sha"` = the FAST plan's sha
-  (`wsbench.reads.fast_plan_sha(family)`, i.e. `plan_sha_rows` over the rows `wsbench plan --fast`
-  / `--fast-safety` wrote), with `"reads": "full"`. A file that declares `fast` is judged only
-  with `--fast` / `--fast-safety`. `wsbench produce family=F --fast` / `--fast-safety` does all of this.
-- A file declaring another subset id is judged when that subset reads the family's same items
-  at the same positions (`fast.same_reads`, per family: `read_ids` and the `positions` rule;
-  the declared `plan_sha` is still checked). The five subset files (`fast-v1`, `fast-v2`,
-  `fast-v3`, `fast-safety-v1`, `fast-safety-v2`) read every family they share the same way, so
-  a file declaring any of them is judged under either flag for a family of the subset being
-  judged (a `fast-v2` file of the 22 families under `--fast-safety`, a `fast-v1` or
-  `fast-safety-v1` file of the 22 under `--fast`, a `fast-v1` jailbreak / agentic file under
-  `--fast-safety`). `fast-v3` and `fast-safety-v2` equal `fast-v2` and `fast-safety-v1` except
-  that `conjunctive_association` is pinned to its current bank: its reads are the same, so its
-  FAST files declaring `fast-v1`, `fast-v2` or `fast-safety-v1` are judged as they are (only
-  its RESULT rows under those ids are stale). A file's `plan_sha` is checked as the declared
-  subset's own: the two reduced families' rows carry the subset id in `extra.fast`, so their
-  sha differs between `fast-v1` and `fast-safety-v1`
-  (`fast_plan_sha(family, declared="fast-v1")`); the other 22 have one sha. A file whose
-  declared subset does not hold the family (a jailbreak file declaring `fast-v2`) and any other
-  declared id are refused.
-- `--fast` / `--fast-safety` take full reads only (no `reads=lite`), on the registered
+  positions rule for every family (no `fast-v4` row carries a reduced-position rule), so a
+  producer of the full plan needs nothing new. A pair, a headline unit or a slot is read with
+  every row it needs (both members of a pair, the rows an introspection item's twins read, a
+  slot's puzzle), which is why a family's read items can outnumber its units.
+- Declare the file in its sidecar: `"fast": "fast-v4"` and `"plan_sha"` = the FAST plan's sha
+  (`wsbench.reads.fast_plan_sha(family)`, i.e. `plan_sha_rows` over the rows
+  `wsbench plan --fast` wrote), with `"reads": "full"`. A file that declares `fast` is judged only with
+  `--fast`. `wsbench produce family=F --fast` does all of this.
+- A FAST file declaring another version is judged only when that version reads the family's
+  same items at the same positions (`fast.same_reads`; with a `plan_sha`, or the same bank).
+  The older versions (`fast-v1` .. `fast-v3`, `fast-safety-v1` / `-v2`) read other items than
+  `fast-v4`, so their FAST files are refused under `--fast`: judge from a full file, or produce
+  the `fast-v4` plan. (Their reduced-position rows, `fast_of` with `last_n` / `punct_special`,
+  exist only in those frozen files: `wsbench.readplan.resolve(rule, tokens)` still resolves
+  them, on DECODED token strings.) `--fast-safety` is retired.
+- `--fast` takes full reads only (no `reads=lite`), on the registered
   Qwen3.6-27B banks only.
 
 ## Or let the repo produce them

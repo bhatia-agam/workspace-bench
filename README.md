@@ -34,17 +34,26 @@ reader and your API rate limits. Judging dominates both time and cost.
 |---|---|---|---|---|---|---|---|---|
 | The two-question try-out (`wsbench try`) | 2 / 4 | none: shipped example readouts | none | 4 | 20 s | under $0.10 (estimate) | under a minute | under $0.10 (estimate) |
 | Reading two questions with a lens, not judged | 2 / 803 | 0.04 | 4.5 min on 1 GPU | none | none | none | 4.5 min | $0.30 |
-| The fast subset (`--fast`) | 2,160 / 657,690 | 1.98 | 16 min on 12 GPUs | 31,269 | 39 min from the first readouts | $1,868 | 52 min | $1,880 |
-| The core evals (default) | 4,541 / 2,885,822 | 8.2 (estimate) | as every eval | 63,172 | as every eval | $3,556 | as every eval | $3,610 (estimate) |
+| The fast subset (`--fast`), as it was selected before (see below) | 2,160 / 657,690 | 1.98 | 16 min on 12 GPUs | 31,269 | 39 min from the first readouts | $1,868 | 52 min | $1,880 |
+| The core evals (default), without `conjunctive_association` (see below) | 4,541 / 2,885,822 | 8.2 (estimate) | as every eval | 63,172 | as every eval | $3,556 | as every eval | $3,610 (estimate) |
 | Every eval (`--full`) | 6,099 / 3,261,846 | 9.26 | 48 min on up to 32 GPUs | 81,218 | 101 min after the read | $4,574 | 2 h 29 min | $4,630 |
 
 A cell is one (question, layer, position) readout. Costs are list prices: the judge's API
 prices and $6.25 per GPU-hour. The core row is the core evals' share of the full run; it takes
-as long as the full run because the two slowest evals to judge are core. With the full run
-judged, the fast subset's score needs 99 more judge calls ($3, 9 minutes). Reading also needs
-the model's activations captured once per version of the question banks: 0.3 GPU-hours for the
-fast subset, 0.8 for every eval. With fewer GPUs the GPU-hours stay and the wall-clock grows in
-proportion.
+as long as the full run because the two slowest evals to judge are core. Reading also needs
+the model's activations captured once per version of the question banks: 0.8 GPU-hours for
+every eval. With fewer GPUs the GPU-hours stay and the wall-clock grows in proportion.
+
+Two rows describe an earlier state of the bench and were not measured again:
+
+- **The fast subset row** was measured on the earlier selection of the fast subset: 2,160
+  questions in 22 evals. The fast subset is now 1,441 questions in 16 evals
+  ([docs/fast_subset.md](docs/fast_subset.md)), a different selection, and has not been timed.
+  On the earlier selection, capturing activations took 0.3 GPU-hours, and with the full run
+  judged its score needed 99 more judge calls ($3, 9 minutes).
+- **The core row** is the share of the 17 evals that were core when the full run was measured.
+  `conjunctive_association` (100 questions) is core as well now, 18 evals and 4,641 questions
+  in all; its cells, judge calls and cost are in the row for every eval but not in the core row.
 
 ## Install
 
@@ -119,10 +128,9 @@ score):
 
 | you pass | what runs |
 |---|---|
-| nothing, or `--core` | The 17 core evals, the set a method is reported on. |
+| nothing, or `--core` | The 18 core evals, the set a method is reported on. |
 | `--full` | Every eval: 31. |
-| `--fast` | The fast subset: 22 evals on fewer questions, for quick iteration. Also on `judge` and `report`. |
-| `--fast-safety` | The fast subset with the two safety evals: 24. |
+| `--fast` | The fast subset, for quick iteration: 16 core evals (every core eval but the two safety ones), 1,441 of their 4,415 questions read. Each eval that has a strict ATI subset contributes all of it (the questions no text-only reader solved) plus a random draw that brings it up to half of the units it scores; where the ATI subset is already more than half, all of it and nothing else. A scored unit can span several questions (a pair, an injected concept with its controls), so the questions read are not half of each eval's count. Not a random sample, then: a fast score leans toward the ATI questions ([docs/fast_subset.md](docs/fast_subset.md)). Also on `judge` and `report`. |
 | `group=<category>` | The evals of one category from [the table below](#the-evals), for example `group=safety`. `group=association` also takes `role_bound_association`; `--show` prints what a group resolves to. |
 | `families=a,b` | The evals you name. |
 | `items=id1,id2` | Only these questions (on `judge` and `run`). |
@@ -185,25 +193,25 @@ and pass rule; [docs/evals.md](docs/evals.md) has one example and the judging ru
 <!-- evals table: start -->
 | category | eval | in | what it tests | scored by | questions |
 |---|---|---|---|---|---|
-| Basic | [`basic_readout`](evals/basic/basic_readout/README.md) | fast | The multi-word answer to a factual question the model has read but not yet answered. | Claude judge | 90 |
-| Basic | [`basic_readout_st`](evals/basic/basic_readout_st/README.md) | fast | The same with a one-word answer. | Claude judge | 100 |
-| Basic | [`directed_modulation`](evals/basic/directed_modulation/README.md) | fast | A concept the model was told to think about, not think about, or hide while copying a sentence. | Claude judge | 100 |
+| Basic | [`basic_readout`](evals/basic/basic_readout/README.md) | - | The multi-word answer to a factual question the model has read but not yet answered. | Claude judge | 90 |
+| Basic | [`basic_readout_st`](evals/basic/basic_readout_st/README.md) | - | The same with a one-word answer. | Claude judge | 100 |
+| Basic | [`directed_modulation`](evals/basic/directed_modulation/README.md) | - | A concept the model was told to think about, not think about, or hide while copying a sentence. | Claude judge | 100 |
 | Basic | [`multi_concept_directed_modulation`](evals/basic/multi_concept_directed_modulation/README.md) | core, fast | Up to three concepts, or who does what to whom, held in mind while writing a dictated sentence. | Claude judge | 116 |
-| Basic | [`multihop`](evals/basic/multihop/README.md) | fast | The unstated multi-word bridge of a two- or three-hop fact. | Claude judge | 70 |
+| Basic | [`multihop`](evals/basic/multihop/README.md) | - | The unstated multi-word bridge of a two- or three-hop fact. | Claude judge | 70 |
 | Basic | [`multihop_st`](evals/basic/multihop_st/README.md) | - | The unstated one-word bridge of a two-hop fact. | Claude judge | 98 |
 | Basic | [`multilingual`](evals/basic/multilingual/README.md) | - | The multi-word answer to a non-English prompt, in the prompt's language. | rule (regex) | 100 |
-| Basic | [`multilingual_multihop`](evals/basic/multilingual_multihop/README.md) | fast | The bridge of a non-English two-hop prompt. | Claude judge | 98 |
+| Basic | [`multilingual_multihop`](evals/basic/multilingual_multihop/README.md) | - | The bridge of a non-English two-hop prompt. | Claude judge | 98 |
 | Basic | [`multilingual_st`](evals/basic/multilingual_st/README.md) | - | The one-word answer to a non-English prompt. | Claude judge | 99 |
-| Basic | [`multilingual_typo`](evals/basic/multilingual_typo/README.md) | fast | The intended word behind a misspelling in a non-English sentence. | rule (regex) | 100 |
+| Basic | [`multilingual_typo`](evals/basic/multilingual_typo/README.md) | - | The intended word behind a misspelling in a non-English sentence. | rule (regex) | 100 |
 | Basic | [`poetry`](evals/basic/poetry/README.md) | core, fast | The rhyme word the model plans at the end of a couplet's first line. | Claude judge | 100 |
 | Basic | [`typo`](evals/basic/typo/README.md) | - | The intended multi-word term behind a misspelling. | rule (regex) | 85 |
 | Basic | [`typo_st`](evals/basic/typo_st/README.md) | - | The intended word behind a misspelling. Replaced by `typo`: runs only when named. | Claude judge | 100 |
 | Computational | [`arithmetic_intermediates`](evals/computational/arithmetic_intermediates/README.md) | core, fast | The intermediate values of an expression answered with no working shown. | Claude judge | 480 |
 | Computational | [`buggy_code`](evals/computational/buggy_code/README.md) | core, fast | The bug in a short program, and no bug in its clean twin. | Claude judge | 143 |
-| Computational | [`chain_intermediates`](evals/computational/chain_intermediates/README.md) | core | The running value of a two- or three-step arithmetic chain. | Claude judge | 120 |
+| Computational | [`chain_intermediates`](evals/computational/chain_intermediates/README.md) | core, fast | The running value of a two- or three-step arithmetic chain. | Claude judge | 120 |
 | Association | [`association`](evals/association/association/README.md) | - | A concept a scene implies but never names. | Claude judge | 93 |
-| Association | [`conjunctive_association`](evals/association/conjunctive_association/README.md) | fast | A compound state a vignette implies: what is felt, about what, towards whom. | Claude judge | 100 |
-| Association | [`user_modeling`](evals/association/user_modeling/README.md) | fast | An attribute of the user that a chat implies. | Claude judge | 126 |
+| Association | [`conjunctive_association`](evals/association/conjunctive_association/README.md) | core, fast | A compound state a vignette implies: what is felt, about what, towards whom. | Claude judge | 100 |
+| Association | [`user_modeling`](evals/association/user_modeling/README.md) | - | An attribute of the user that a chat implies. | Claude judge | 126 |
 | Safety | [`agentic_misalignment`](evals/safety/agentic_misalignment/README.md) | core | The model's plan to take a misaligned action before it writes it, and none on the clean twin. | Claude judge | 54 |
 | Safety | [`jailbreak_recognition`](evals/safety/jailbreak_recognition/README.md) | core | The model noticing that a turn is a jailbreak, and not on harmless role-play. | Claude judge | 172 |
 | Anti-bag-of-features | [`relational_multihop`](evals/anti_bag_of_features/relational_multihop/README.md) | core, fast | The relation between two people across two hops, which a bag of words cannot express. | Claude judge | 100 |
@@ -242,7 +250,7 @@ attributes them by their content.
 - [docs/producing_readouts.md](docs/producing_readouts.md): the read plan, positions, producing readouts with a bundled lens.
 - [docs/running.md](docs/running.md): every option of `judge` and `run`, throughput, waiting on a producer.
 - [docs/tiers.md](docs/tiers.md): the core, full and fast sets and their macros.
-- [docs/fast_subset.md](docs/fast_subset.md): how the fast subset was chosen and how it relates to the full bench.
+- [docs/fast_subset.md](docs/fast_subset.md): how the fast subset is drawn and how its scores relate to the core ones.
 - [docs/baselines.md](docs/baselines.md): the floors, and the anti-text-inversion subset.
 - [docs/judges.md](docs/judges.md): which model judges each eval, with which prompt, and why.
 - [docs/judge_backends.md](docs/judge_backends.md): live calls or Message Batches, sizing concurrency.

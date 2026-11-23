@@ -81,8 +81,10 @@ def test_non_fast_plan_is_byte_identical_to_pre_0090():
 # ---------------------------------------------------------------- helpers
 
 V1, V2, VS1 = "fast-v1", "fast-v2", "fast-safety-v1"  # frozen predecessors
-V3 = "fast-v3"  # the default since 2026-11-20 (conjunctive_association on bank v6)
-VS = "fast-safety-v2"  # plan 0095: `--fast-safety`
+V3 = "fast-v3"  # the default from 2026-11-20 to plan 0104 (conjunctive_association on bank v6)
+V4 = "fast-v4"  # plan 0104: the default, a seeded random half of core (test_fast_core_half.py)
+VS = "fast-safety-v2"  # plan 0095: `--fast-safety` (retired by plan 0104; the file stays)
+OUTCOME_SELECTED = (V1, V2, VS1, V3, VS)  # the frozen predecessors this file is about
 FAMILIES_V1 = sorted(fast.subset(V1))  # 24
 FAMILIES_V3 = sorted(fast.subset(V3))  # 22: v1's without jailbreak_recognition and agentic
 CONJ = "conjunctive_association"
@@ -126,6 +128,19 @@ def _now(names):
 
 
 REAL_RUN_CALLS = mcjudge.run_calls  # the `toy` fixture replaces it
+
+
+@pytest.fixture(autouse=True)
+def _the_frozen_predecessors(monkeypatch, _default_fast_subset):
+    """Plan 0104: this file tests the machinery on the versions it was written for. The default
+    is fast-v4 now (``tests/test_fast_core_half.py``); here every test starts on fast-v3, the
+    last outcome-selected version, as it did while fast-v3 was the default, so the assertions
+    below keep their values. ``--fast`` runs the active subset, whatever made it active.
+    Returns the version that was active when the test's setup reached this fixture, after
+    conftest's reset (``_default_fast_subset``, requested here so that it runs first)."""
+    before = fast.VERSION
+    monkeypatch.setattr(fast, "VERSION", V3)
+    return before
 
 
 @pytest.fixture
@@ -1292,9 +1307,12 @@ def test_v2_is_v1_without_the_two_safety_families():
 
 
 def test_subset_versions(monkeypatch):
-    assert fast.VERSION == V3 and set(fast.VERSIONS) == {V1, V2, VS1, V3, VS}
+    assert fast.VERSION == V3 and set(fast.VERSIONS) == {V1, V2, VS1, V3, VS, V4}
     assert not hasattr(fast, "COMPATIBLE")  # per family since 2026-11-20: fast.compatible
-    assert fast.KEY_ERA == {V1: "pre-0101", V2: "pre-0101", VS1: "pre-0101", V3: "0101", VS: "0101"}
+    assert fast.KEY_ERA == {
+        **{V1: "pre-0101", V2: "pre-0101", VS1: "pre-0101", V3: "0101", VS: "0101"},
+        V4: "0101",
+    }
     assert not hasattr(fast, "PATH")
     assert fast.subset() is fast.subset(V3) and fast.families() == FAMILIES_V3
     assert sorted(fast.subset(V1)) == FAMILIES_V1 and len(FAMILIES_V1) == 24
@@ -1533,7 +1551,7 @@ VS1_FAST_PLAN_SHA = {
 @pytest.fixture
 def fast_safety():
     """``fast-safety-v2`` as the active subset (``conftest`` restores the default)."""
-    assert fast.select("safety") == VS
+    assert fast.use(VS) == VS
 
 
 class FakeText:
@@ -1676,8 +1694,8 @@ def test_versions_are_entry_compatible_per_family():
     """Plans 0094 / 0095, per family since 2026-11-20: two versions are compatible for a family
     iff both hold it with the identical entry. Every family is compatible across all five files
     except the ones a re-freeze moved (``REFROZEN``), which split at that re-freeze."""
-    files = {v: fast.subset(v) for v in sorted(fast.VERSIONS)}
-    assert set(files) == {V1, V2, VS1, V3, VS}
+    files = {v: fast.subset(v) for v in OUTCOME_SELECTED}  # fast-v4: test_fast_core_half.py
+    assert set(files) == {V1, V2, VS1, V3, VS} == set(fast.VERSIONS) - {V4}
     for a in files:
         for b in files:
             for fam in set(files[a]) | set(files[b]):
@@ -1692,8 +1710,9 @@ def test_versions_are_entry_compatible_per_family():
     assert not fast.compatible(V2, JB, against=VS) and fast.compatible(V1, JB, against=VS)
     assert set(fast.subset(VS)) >= set(fast.subset(V3))
     assert set(fast.VARIANTS.values()) <= set(fast.VERSIONS)
-    # the selectable versions hold every family on its registered bank
-    for v in fast.VARIANTS.values():
+    # the last outcome-selected versions and the selectable one hold every family on its
+    # registered bank
+    for v in (V3, VS, *fast.VARIANTS.values()):
         assert all(e["bank_sha"] == fast.bank_sha(f) for f, e in fast.subset(v).items()), v
 
 
@@ -1709,15 +1728,15 @@ def test_a_refrozen_family_is_stale_under_the_old_stamp_and_the_others_are_not(
     def row(fam: str, v: str) -> types.SimpleNamespace:
         return types.SimpleNamespace(family=fam, config={"fast_subset": v})
 
-    for active in ("", "safety"):
-        now = fast.select(active)
+    for active in (V3, VS):
+        now = fast.use(active)
         for old in (V1, V2, VS1):
             assert _stale_fast_subset(row(CONJ, old))
             assert not _stale_fast_subset(row("poetry", old))
             assert not _stale_fast_subset(row("user_modeling", old))
         assert not _stale_fast_subset(row(CONJ, V3 if now == VS else VS))  # the other new one
         assert not _stale_fast_subset(row(CONJ, now))
-    fast.select("")
+    fast.use(V3)
     m = macro([_fast_row("poetry", fast_subset=V2), _fast_row(CONJ, fast_subset=V2)])
     assert m["families"] == ["poetry"] and m["fast_subset"] == V3
     assert m["excluded"] == [{"family": CONJ, "reason": "stale fast subset (fast-v2)"}]
@@ -1750,7 +1769,7 @@ def test_a_refrozen_family_is_stale_under_the_old_stamp_and_the_others_are_not(
             reads.load(mk_args(path, scope=fast.SCOPE, layers=[20]), CONJ)
         assert "different fast plan" in capsys.readouterr().err
     # a safety family's fast-safety-v1 file, with the sha it was produced under, is still good
-    fast.select("safety")
+    fast.use(VS)
     jb, jb_ids = _fast_jb_file(tmp_path, fast=VS1, plan_sha=VS1_FAST_PLAN_SHA[JB])
     cells, rep = reads.load(mk_args(jb, scope=fast.SCOPE, layers=[20]), JB)
     assert len(cells) == len(jb_ids) and rep.reads_checked == "sidecar"
@@ -1771,7 +1790,7 @@ def test_same_reads_is_read_ids_and_positions_never_bank_or_units(monkeypatch):
             fast, "_file", lambda v: {"families": fams} if v == "fast-vx" else real(v)
         )
 
-    fast.select("safety")
+    fast.use(VS)
     for fam in ("poetry", JB, AM):
         e = base[fam]
         variant(fam, bank_sha="0" * 64)
@@ -1811,7 +1830,7 @@ def test_files_of_the_frozen_predecessors_load_under_the_new_defaults(tmp_path, 
         cells, rep = reads.load(mk_args(path, scope=fast.SCOPE, layers=[20]), "poetry")
         assert len(cells) == 2 * len(ids) and rep.reads_checked == "sidecar"
         assert reads.fast_plan_sha("poetry", declared=declared) == reads.fast_plan_sha("poetry")
-    fast.select("safety")
+    fast.use(VS)
     for declared, shas in ((VS1, VS1_FAST_PLAN_SHA), (V1, V1_FAST_PLAN_SHA)):
         path, ids = _fast_am_file(tmp_path, fast=declared, plan_sha=shas[AM])
         cells, rep = reads.load(mk_args(path, scope=fast.SCOPE, layers=[20]), AM)
@@ -1819,24 +1838,36 @@ def test_files_of_the_frozen_predecessors_load_under_the_new_defaults(tmp_path, 
         assert json.loads(rep.fast_rule) == {"kind": "last_n", "n": 60}
 
 
-def test_select():
-    assert fast.DEFAULT == V3 and fast.VARIANTS == {"": V3, "safety": VS}
-    assert fast.select("safety") == VS == fast.VERSION
+def test_select_and_use():
+    """Plan 0104: fast-v4 is the default and the only selectable subset; ``--fast-safety``
+    (``select("safety")``) is retired with a message; ``use`` activates any registered version
+    (``report fast_version=``), which is how the frozen predecessors are still read."""
+    assert fast.DEFAULT == V4 and fast.VARIANTS == {"": V4}
+    with pytest.raises(ValueError, match=r"--fast-safety is retired \(plan 0104\)"):
+        fast.select("safety")
+    assert fast.VERSION == V3  # this file's fixture; a refused select changes nothing
+    assert fast.use(VS) == VS == fast.VERSION
     assert fast.subset() is fast.subset(VS) and fast.families() == FAMILIES_V1
     assert fast.entry(JB)["positions"] == {"kind": "punct_special"}
-    assert fast.select("") == V3 == fast.VERSION and fast.select() == V3
-    with pytest.raises(ValueError, match=r"unknown fast variant 'v1' \(known: '', 'safety'\)"):
+    assert fast.select("") == V4 == fast.VERSION and fast.select() == V4
+    with pytest.raises(ValueError, match=r"unknown fast variant 'v1' \(known: ''\)"):
         fast.select("v1")  # fast-v1 is not selectable
-    assert fast.VERSION == V3
-    fast.select("safety")  # left selected: the next test starts on the default all the same
+    with pytest.raises(ValueError, match="unknown fast subset 'fast-v9'"):
+        fast.use("fast-v9")
+    assert fast.VERSION == V4
+    fast.use(VS)  # left active: the next test starts on its own subset all the same
 
 
-def test_every_test_starts_on_the_default_subset():
-    assert fast.VERSION == fast.DEFAULT == V3
+def test_every_test_starts_on_the_default_subset(_the_frozen_predecessors):
+    """The conftest reset: the test before this one leaves ``fast-safety-v2`` active
+    (``test_select_and_use``), and this one's setup still found the default. Only then does
+    this file's fixture make fast-v3 active."""
+    assert _the_frozen_predecessors == fast.DEFAULT == V4 and fast.VERSION == V3
 
 
 def test_cli_plan_fast_safety(tmp_path, capsys):
-    assert main(["plan", "--fast-safety", f"out={tmp_path}"]) == 0
+    fast.use(VS)  # plan 0104: the retired --fast-safety, made active directly
+    assert main(["plan", "--fast", f"out={tmp_path}"]) == 0
     assert fast.VERSION == VS
     assert (
         sorted(p.stem for p in tmp_path.glob("*.jsonl")) == FAMILIES_V1 and len(FAMILIES_V1) == 24
@@ -1862,7 +1893,8 @@ def test_cli_plan_fast_safety(tmp_path, capsys):
             reads.fast_plan_sha(JB, declared=declared)
         assert e.value.code == f"{JB}: not in fast subset {declared}"
     capsys.readouterr()
-    assert main(["plan", "--fast-safety", "families=multihop_st", f"out={tmp_path / 'x'}"]) == 2
+    fast.use(VS)  # plan 0104: the retired --fast-safety, made active directly
+    assert main(["plan", "--fast", "families=multihop_st", f"out={tmp_path / 'x'}"]) == 2
     assert "multihop_st: not in fast-safety-v2" in capsys.readouterr().err
 
 
@@ -1884,7 +1916,8 @@ def test_cli_judge_fast_safety_of_the_two_safety_families(
     make = _jb_readouts if fam == JB else _am_readouts
     path = make(tmp_path / f"{fam}.jsonl")
     out = tmp_path / "o"
-    assert main(["judge", f"family={fam}", f"readouts={path}", f"out={out}", "--fast-safety"]) == 0
+    fast.use(VS)  # plan 0104: the retired --fast-safety, made active directly
+    assert main(["judge", f"family={fam}", f"readouts={path}", f"out={out}", "--fast"]) == 0
     r = read_results(out)
     assert r.config["scope"] == "fast" and r.config["fast_subset"] == VS
     assert r.config["prompt_version"].endswith(suffix) and r.config["aggregate"] == "summary"
@@ -1894,7 +1927,7 @@ def test_cli_judge_fast_safety_of_the_two_safety_families(
     assert fake.n("digest") > 0 and (text.n == 36 if fam == AM else fake.n("item_recognition") > 0)
     assert macro([r])["families"] == [fam] and macro([r])["fast_subset"] == VS
     # plain --fast is still fast-v3: the family is not in it
-    fast.VERSION = fast.DEFAULT
+    fast.VERSION = V3  # the default of the time (fast.DEFAULT is fast-v4 since plan 0104)
     capsys.readouterr()
     plain = ["judge", f"family={fam}", f"readouts={path}", f"out={tmp_path / 'j'}", "--fast"]
     assert main(plain) == 2
@@ -1906,40 +1939,55 @@ def test_cli_fast_key_values(toy, tmp_path, capsys):
     _spec, path = toy
     base = ["judge", f"family={TOY}", f"readouts={path}", f"out={tmp_path / 'o'}"]
     assert main([*base, "fast=bogus"]) == 2
-    assert "fast must be True, False or safety, got 'bogus'" in capsys.readouterr().err
+    assert "fast must be True or False, got 'bogus'" in capsys.readouterr().err
     assert main([*base, "fast_variant=safety"]) == 2
-    assert "use fast=safety" in capsys.readouterr().err
+    assert "fast_variant is not a key" in capsys.readouterr().err
     assert main(["report", f"dir={tmp_path}", "fast=bogus"]) == 2
-    assert "fast must be True, False or safety, got 'bogus'" in capsys.readouterr().err
+    assert "fast must be True or False, got 'bogus'" in capsys.readouterr().err
     assert main(["report", f"dir={tmp_path}", "fast_variant=safety"]) == 2
-    assert "use fast=safety" in capsys.readouterr().err
+    assert "fast_variant is not a key" in capsys.readouterr().err
     for cmd in (["plan"], ["produce", f"family={TOY}"]):
         assert main([*cmd, "fast=bogus"]) == 2
-        assert "fast must be True, False or safety" in capsys.readouterr().err
+        assert "fast must be True or False" in capsys.readouterr().err
     assert not (tmp_path / "o").exists() and fast.VERSION == V3
-    # --show / --help never select the subset; the variant is filled from fast=
-    assert main([*base, "--fast-safety", "--show"]) == 0
-    shown = json.loads(capsys.readouterr().out)
-    assert shown["fast"] is True and shown["fast_variant"] == "safety" and fast.VERSION == V3
+    # plan 0104: --fast-safety (fast=safety) is retired on every command: a usage error that
+    # says what to run instead, and nothing is selected or written
+    for argv in (
+        [*base, "--fast-safety"],
+        [*base, "fast=safety"],
+        [*base, "--fast-safety", "--show"],
+        ["plan", "--fast-safety"],
+        ["run", "--fast-safety", f"readouts_root={tmp_path}", f"out={tmp_path / 'r'}"],
+        ["report", f"dir={tmp_path}", "--fast-safety"],
+        ["produce", f"family={TOY}", "--fast-safety"],
+    ):
+        assert main(argv) == 2, argv
+        err = capsys.readouterr().err
+        assert "--fast-safety is retired (plan 0104)" in err
+        assert "fast_version=fast-safety-v2" in err and "families=jailbreak_recognition" in err
+    assert not (tmp_path / "o").exists() and not (tmp_path / "r").exists()
+    assert fast.VERSION == V3
     assert main([*base, "--fast", "--show"]) == 0
     shown = json.loads(capsys.readouterr().out)
     assert shown["fast"] is True and shown["fast_variant"] == ""
     assert main(["list", "--fast-safety"]) == 2  # an unknown key where `fast` is one
     capsys.readouterr()
-    # two overrides: the last one wins
-    assert main([*base, "--fast-safety", "--fast", "--show"]) == 0
-    assert json.loads(capsys.readouterr().out)["fast_variant"] == ""
-    assert main([*base, "--fast", "--fast-safety", "--show"]) == 0
-    assert json.loads(capsys.readouterr().out)["fast_variant"] == "safety"
-    # the judge itself, on a family of both subsets
-    assert main([*base, "--fast-safety"]) == 0
+    # the judge itself under a frozen predecessor made active (a family of both old subsets)
+    fast.use(VS)
+    assert main([*base, "--fast"]) == 0
     assert read_results(tmp_path / "o").config["fast_subset"] == VS
+    # report fast_version=: any registered version; an unknown one and fast=False are refused
+    assert main(["report", f"dir={tmp_path}", "fast_version=fast-v9"]) == 2
+    assert "fast_version must be one of" in capsys.readouterr().err
+    assert main(["report", f"dir={tmp_path}", "fast_version=fast-v3", "fast=False"]) == 2
+    assert "contradicts fast=False" in capsys.readouterr().err
 
 
 def test_cli_run_fast_safety_all_skips_the_six_dropped_families(tmp_path, capsys):
     root, out = tmp_path / "readouts", tmp_path / "out"
     root.mkdir()
-    argv = ["run", "--fast-safety", "all=True", f"readouts_root={root}", f"out={out}"]
+    fast.use(VS)  # plan 0104: the retired --fast-safety, made active directly
+    argv = ["run", "--fast", "all=True", f"readouts_root={root}", f"out={out}"]
     assert main([*argv, "dry_run=True"]) == 0
     text = capsys.readouterr().out
     statuses = json.loads((out / "run.json").read_text())["families"]
@@ -1959,7 +2007,8 @@ def test_cli_run_fast_safety_judges_and_reports(tmp_path, capsys, monkeypatch):
     root, out = tmp_path / "readouts", tmp_path / "out"
     root.mkdir()
     _am_readouts(root / f"{AM}.jsonl")
-    argv = ["run", "--fast-safety", f"families={AM},typo", f"readouts_root={root}", f"out={out}"]
+    fast.use(VS)  # plan 0104: the retired --fast-safety, made active directly
+    argv = ["run", "--fast", f"families={AM},typo", f"readouts_root={root}", f"out={out}"]
     assert main(argv) == 0
     text = capsys.readouterr().out
     head = (
@@ -1970,16 +2019,17 @@ def test_cli_run_fast_safety_judges_and_reports(tmp_path, capsys, monkeypatch):
     assert "typo: skipped (not in fast-safety-v2)" in text and "stale fast subset" not in text
     assert read_results(out / AM).config["fast_subset"] == VS
     # a bare report in a fresh process is the fast-v3 view, with the hint
-    fast.VERSION = fast.DEFAULT
+    fast.VERSION = V3  # the default of the time (fast.DEFAULT is fast-v4 since plan 0104)
     assert main(["report", f"dir={out}"]) == 0
     text = capsys.readouterr().out
     assert text.startswith(
         "scope: fast subset fast-v3 (22 families; not comparable with full-bench numbers); "
         "rows of other subsets are excluded\n"
-        "1 row(s) are in fast-safety-v2 only; pass --fast-safety for its macro\n\n"
+        "1 row(s) are fast-safety-v2 rows; pass fast_version=fast-safety-v2 for that subset's "
+        "macro\n\n"
     )
     assert "stale fast subset (fast-safety-v2)" in text
-    assert main(["report", f"dir={out}", "--fast-safety"]) == 0
+    assert main(["report", f"dir={out}", "fast_version=fast-safety-v2"]) == 0
     text = capsys.readouterr().out
     assert text.startswith(head) and "stale fast subset" not in text
     assert (out / "summary.md").read_text().startswith(head)
@@ -2092,7 +2142,7 @@ def test_macro_under_the_two_selectable_subsets():
         {"family": AM, "reason": "stale fast subset (fast-safety-v2)"},
         {"family": "hinted_cutoff", "reason": "stale fast subset (fast-v0)"},
     ]
-    fast.select("safety")
+    fast.use(VS)
     m = macro(rows())
     assert m["fast_subset"] == VS
     assert m["families"] == ["poetry", "basic_readout_st", "user_modeling", JB, AM]
@@ -2106,16 +2156,20 @@ def test_fast_header_hint():
         "scope: fast subset fast-v3 (22 families; not comparable with full-bench numbers); "
         "rows of other subsets are excluded"
     )
-    hint = "\n{n} row(s) are in fast-safety-v2 only; pass --fast-safety for its macro"
+    # plan 0104: one line per registered version whose rows the active macro leaves out,
+    # naming `fast_version=` (plan 0095's single `--fast-safety` line counted both together)
+    hint = "\n{n} row(s) are {v} rows; pass fast_version={v} for that subset's macro"
     in_v2 = [_fast_row("poetry", fast_subset=VS), _fast_row("basic_readout_st", fast_subset=V1)]
     assert fast_header() == fast_header(in_v2) == line
     safety = [_fast_row(JB, fast_subset=V1), _fast_row(AM, fast_subset=VS)]
-    assert fast_header([*in_v2, *safety]) == line + hint.format(n=2)
-    assert fast_header(safety[:1]) == line + hint.format(n=1)
+    assert fast_header([*in_v2, *safety]) == (
+        line + hint.format(n=1, v=VS) + hint.format(n=1, v=V1)
+    )
+    assert fast_header(safety[:1]) == line + hint.format(n=1, v=V1)
     # not counted: another version's row, a non-fast row of the family
     other = [_fast_row(JB, fast_subset="fast-v0"), _result(AM, value=0.5, n_items=30)]
     assert fast_header(other) == line
-    fast.select("safety")
+    fast.use(VS)
     assert fast_header([*in_v2, *safety]) == line.replace("fast-v3 (22", "fast-safety-v2 (24")
 
 
@@ -2124,7 +2178,10 @@ def test_cli_report_fast_safety(tmp_path, capsys):
     write_results(tmp_path / "basic_readout_st", _fast_row("basic_readout_st", fast_subset=V3))
     write_results(tmp_path / JB, _fast_row(JB, fast_subset=VS))
     line = "scope: fast subset fast-v3 (22 families; not comparable with full-bench numbers)"
-    hint = "1 row(s) are in fast-safety-v2 only; pass --fast-safety for its macro\n\n"
+    hint = (
+        "1 row(s) are fast-safety-v2 rows; pass fast_version=fast-safety-v2 for that subset's "
+        "macro\n\n"
+    )
     for argv in ([], ["--fast"]):
         assert main(["report", f"dir={tmp_path}", *argv]) == 0
         text = capsys.readouterr().out
@@ -2136,12 +2193,12 @@ def test_cli_report_fast_safety(tmp_path, capsys):
     assert m["fast_subset"] == V3 and sorted(m["families"]) == ["basic_readout_st", "poetry"]
     assert m["excluded"] == [{"family": JB, "reason": "stale fast subset (fast-safety-v2)"}]
     # the same rows as the safety subset's report: 24 families, nothing stale
-    assert main(["report", f"dir={tmp_path}", "--fast-safety", "json=True"]) == 0
+    assert main(["report", f"dir={tmp_path}", "fast_version=fast-safety-v2", "json=True"]) == 0
     m = json.loads(capsys.readouterr().out)["macro"]
     assert m["fast_subset"] == VS and m["excluded"] == []
     assert sorted(m["families"]) == ["basic_readout_st", JB, "poetry"]
-    fast.VERSION = fast.DEFAULT
-    assert main(["report", f"dir={tmp_path}", "fast=safety"]) == 0
+    fast.VERSION = V3  # the default of the time (fast.DEFAULT is fast-v4 since plan 0104)
+    assert main(["report", f"dir={tmp_path}", "fast_version=fast-safety-v2"]) == 0
     text = capsys.readouterr().out
     assert text.startswith(
         "scope: fast subset fast-safety-v2 (24 families; not comparable with full-bench "
@@ -2170,7 +2227,7 @@ def test_a_fast_v1_cache_replays_under_fast_safety(toy, tmp_path, monkeypatch):
     monkeypatch.setattr(fast, "VERSION", V1)
     old = runner.judge_family(spec, _opts(), path, out, judge=judge, opts=runner.parse_opts([]))
     assert len(asked) == 4 and old.config["fast_subset"] == V1
-    fast.select("safety")
+    fast.use(VS)
     new = runner.judge_family(spec, _opts(), path, out, judge=judge, opts=runner.parse_opts([]))
     assert len(asked) == 4  # 0 new calls
     assert new.config["fast_subset"] == VS and new.value == old.value == pytest.approx(1 / 3)
@@ -2184,7 +2241,7 @@ def test_macro_excludes_a_compatible_stamp_whose_file_lacks_the_family():
     stale under the safety subset, like the sidecar guard in ``reads.load``."""
     from wsbench.results import _stale_fast_subset
 
-    fast.select("safety")
+    fast.use(VS)
 
     def row(fam: str, v: str) -> types.SimpleNamespace:
         return types.SimpleNamespace(family=fam, config={"fast_subset": v})

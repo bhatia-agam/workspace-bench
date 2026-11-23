@@ -668,7 +668,7 @@ def plan(
     path; the campaign always produces ``full`` (lite ⊆ full). ``fast=True`` (plan 0090): the
     full plan's rows of the family's fast read ids in the active subset (plan order), their
     positions the ``fast_of`` rule where the fast entry reduces them (the two safety families
-    of ``--fast-safety``); a family outside the subset raises
+    in the frozen safety versions); a family outside the subset raises
     ``fast.NotInFast``, and ``reads="lite"`` is refused."""
     from dataclasses import replace
 

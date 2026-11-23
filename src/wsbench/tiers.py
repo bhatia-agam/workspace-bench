@@ -23,6 +23,7 @@ CORE: tuple[str, ...] = (
     "model_multihop",
     "chain_intermediates",
     "hinted_cutoff",
+    "conjunctive_association",  # Camila, 2026-11-21: "conjunctive association should be in core"
 )
 
 
