@@ -5,8 +5,8 @@ top-k "J-lens" tokens) surfaces what a model computes but never writes. Every fa
 into the shared package in `src/wsbench/` (client, judge config, cache, readout contract,
 results schema, registry, runner, CLI, `readplan` = the producer-facing read plan, `capable/` =
 the porting gate, `produce/` = the optional HF-transformers producer behind the `gpu` extra).
-`plans/` is the 2026-09-15..17 design history of the nine-family restructure, not a current
-pointer (`plans/README.md`). Public docs: `README.md`, `NOTICE.md`, `CITATION.cff`. The README is
+`plans/` is the design history, one file per plan, not a current pointer (`plans/README.md`).
+Public docs: `README.md`, `NOTICE.md`, `CITATION.cff`. The README is
 the newcomer's path (what it is, requirements, time and cost, install, `wsbench try`, running,
 outputs, checks, viewer, one table of the evals, credits); reference material lives in `docs/`
 (evals, running, tiers, judges, baselines, fast_subset, results_contract, porting, checks,
@@ -729,7 +729,7 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   -> `typo`; the former `basic_readout` / `multihop` / `multilingual` / `typo` ->
   `<key>_st`. No instrument moved: `scripts/manifest_0101.py --check
   tests/golden/manifest_0101_pre.json` rebuilds every hash, seed, option order, prompt sha, call
-  key and cache fingerprint of all 32 families and compares them with the manifest recorded on
+  key and cache fingerprint of every family and compares them with the manifest recorded on
   main before the rename (run it after any change to `registry.py`'s tables). The golden and the
   script are never regenerated. Since then T1 (`tests/test_rename_0101.py`; the rule is `verdict` in
   `scripts/manifest_0101_declare.py`) guarantees that **every family's manifest rows equal the
