@@ -1356,6 +1356,9 @@ in a git worktree (prefix commands with `PYTHONPATH=src` when it shares the main
   subject activations kept per item under a key (token ids, positions, layers, steering);
   `store.cells_for` is the one way to get cells (store, then `pull`, then a forward pass). Needs
   the `gpu` extra and is never imported by the judge path (`tests/test_residual_store.py`).
+  `produce/dataset.py` is its `pull`: the public dataset `agu18dec/workspacebench_residuals`,
+  read through `evals/residuals/map.json` (item id -> key at the capture's bench commit, built by
+  `scripts/residuals_map.py`; never hand-edited). `capture check=True` says where cells are.
 - No absolute box path in `src` (`tests/test_paths.py`): a location outside the repo goes through
   `wsbench.paths` (`external(var, rel)` = `$var`, else `$WSB_DATA_ROOT/<rel>`, default root
   `/workspace`).

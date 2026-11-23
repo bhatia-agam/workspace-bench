@@ -307,6 +307,9 @@ passes)`. A second run of the same command makes no forward pass and does not lo
 | `limit` | `0` | the first N items of each eval |
 | `shard`, `shards` | `0`, `1` | this process captures every `shards`-th item from `shard` (items sorted by id): one process per GPU |
 | `device` | `cuda` | |
+| `dataset` | `agu18dec/workspacebench_residuals` | the published residuals, asked before the model runs: a Hugging Face dataset id, a local folder that holds a copy of it, or `none` |
+| `dataset_revision` | the revision the map was built on | another revision of that dataset |
+| `check` | `False` | `True`: one line per eval saying how many cells are in the store, in the dataset and in neither; downloads no vectors and loads no model |
 
 **What is stored.** One folder per model revision, capture dtype and eval:
 `<store>/<revision>/<dtype>/<eval>/<pack>.safetensors` (`acts`, one row per cell) with a
@@ -330,6 +333,16 @@ row gives the exact token ids, the positions and the layers:
 
 A row may also give text to render (`"render": "chat"` with `"text"`, see the table in §1) and
 any positions rule. `family` is a free name here; it only names the store folder.
+
+**The published residuals.** The store fills itself from the public dataset
+[agu18dec/workspacebench_residuals](https://huggingface.co/datasets/agu18dec/workspacebench_residuals)
+before it runs the model (`wsbench.produce.dataset.Residuals`). The dataset holds vectors, item
+ids, layers and positions, and no text, so `evals/residuals/map.json` records, for every stored
+item, the key it had at the benchmark commit the capture was made on. An item is pulled only
+when that key equals the plan's key today; index files are read first and only the part files
+that hold wanted rows are downloaded. The map is built by `scripts/residuals_map.py`, run with
+the capture's own benchmark commit on the path; a new capture or a re-upload means running it
+again. The README's "Stored activations" section has the table of what is stored.
 
 In Python, `wsbench.produce.store.cells_for(store, eval, plan_rows, tokenizer, backend=...)` is
 the one call that returns cells: from the store, else from a `pull` function, else from a

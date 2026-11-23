@@ -1575,9 +1575,18 @@ class Capture(Command):
         self.limit = 0  # the first N items of each eval (try-outs)
         self.shard = 0  # this process captures items shard, shard + shards, ... (sorted by id)
         self.shards = 1
+        # the published residuals, asked before the model runs: a Hugging Face dataset id, a
+        # local folder holding a copy of it, or none
+        self.dataset = "agu18dec/workspacebench_residuals"
+        self.dataset_revision = ""  # default: the revision evals/residuals/map.json was built on
+        self.check = False  # only say where each eval's cells are; no download, no model
 
     def finalize(self) -> None:
         from wsbench.produce.backend import DEFAULT_MODEL, DEFAULT_REVISION
+
+        self.dataset = str(self.dataset or "none")
+        self.dataset_revision = str(self.dataset_revision or "")
+        self.check = _bool(self.check)
 
         _set_fast(self)
         self.families = _families(_strs(self.families)) or None
@@ -1642,18 +1651,53 @@ class Capture(Command):
         plans = self.plans()
         if plans is None:
             return EXIT_USAGE
+        from wsbench.produce import dataset
+
         subject = store.Subject(self.model, self.revision, self.dtype, self.device)
         where = store.Store(self.store, self.revision, self.dtype)
+        pull = dataset.source(self.dataset, self.dataset_revision, self.dtype, self.revision)
         total = store.Counts()
         for family, specs in plans.items():
             part = store.shard(specs, self.shard, self.shards)[: self.limit or None]
-            _, counts = store.cells_for(where, family, part, subject.tokenizer, backend=subject)
+            try:
+                if self.check:
+                    print(self._where(family, part, where, pull, subject.tokenizer))
+                    continue
+                _, counts = store.cells_for(
+                    where, family, part, subject.tokenizer, pull=pull, backend=subject
+                )
+            except store.NoPromptError as e:  # an eval whose bank ships positions without prompts
+                print(f"{family}: skipped, nothing to capture ({e})")
+                continue
             print(counts.line(family))
             for name in ("store", "pulled", "captured", "refused", "forwards"):
                 setattr(total, name, getattr(total, name) + getattr(counts, name))
+        if self.check:
+            return 0
         print(total.line(f"{len(plans)} eval(s)"))
         print(f"residual store -> {where.folder('<eval>')}")
         return 0
+
+    @staticmethod
+    def _where(family: str, specs: list[Any], where: Any, pull: Any, tokenizer: Any) -> str:
+        """One line: how many of an eval's cells are in the store, in the dataset, in neither."""
+        from wsbench.produce import store
+
+        located = [store.locate(s, tokenizer) for s in specs]
+        stored = where.has(family, {at.spec.id: at.key for at in located})
+        rest = [at for at in located if at.spec.id not in stored]
+        there = [at for at in rest if pull is not None and pull.folder_of(at) is not None]
+        n = {
+            "plan": sum(len(at.rows) for at in located),
+            "store": sum(len(at.rows) for at in located if at.spec.id in stored),
+            "dataset": sum(len(at.rows) for at in there),
+        }
+        neither = n["plan"] - n["store"] - n["dataset"]
+        return (
+            f"{family}: {n['plan']} cells in the plan = {n['store']} in the store + "
+            f"{n['dataset']} in the dataset + {neither} in neither "
+            f"({len(rest) - len(there)} of {len(located)} items to capture)"
+        )
 
 
 class Freeze(Command):
