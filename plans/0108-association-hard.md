@@ -1120,3 +1120,7 @@ J-lens 0.161, prompt-only 0.982, four-bullet prompt-only 0.982; lucky blind 0.02
 0.100 (per kind under the bars), topic 0.411 (not a floor). The prompt-only floor is above
 every lens. §8.4's gates are met on point estimates with wide intervals; the owner's 30 are
 set aside, unread.
+
+**After plan 0115 (2026-11-23)** the two measurements §6.3 and §11 deferred exist: the Oracle
+lens (SFT) reads 0.893 [0.804, 0.964] on the 56 items (second judging 0.893), and the
+logit-lens L63 floor is frozen at 0.036 (2 of 56). Nothing else of §11 moved.

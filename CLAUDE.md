@@ -231,7 +231,7 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   (summary prompt-only entry schema + `protocol` + `ati`), written by `wsbench freeze
   kind=logit_lens` from `layers=63` summary runs (refused otherwise; registered banks only) and
   drawn as the report's third column by the summary prompt-only row-match rule; never a gate.
-  Refrozen 2026-11-17 on main's instruments (29 families, raw mean 0.121, 0.119 since nyt_connections' 2026-11-20 re-freeze under plan 0099, 0.126 since directed_modulation's bank v2 entry of 2026-11-23, plan 0109, 0.122 over 30 families since user_modeling_hard's first entry, plan 0112; strict ATI 0.046 over
+  Refrozen 2026-11-17 on main's instruments (29 families, raw mean 0.121, 0.119 since nyt_connections' 2026-11-20 re-freeze under plan 0099, 0.126 since directed_modulation's bank v2 entry of 2026-11-23, plan 0109, 0.122 over 30 families since user_modeling_hard's first entry, plan 0112, 0.119 over 31 since association_hard's first entry, plan 0115; strict ATI 0.046 over
   the 7 `ati-subset-v2` families with an entry; model_multihop has none). An entry is tied to its
   family's summary instrument, digest settings, judge model and read plan:
   `tests/test_logit_lens_floor.py` (`test_every_committed_entry_matches_its_live_row`,
@@ -641,7 +641,10 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   for ATI, `adapt.families.NOT_ADAPTED`, validator `NOT_AUTHORABLE`. Its `topic` guesser is
   measured but `lucky_guessing.NOT_A_FLOOR` (owner decision: `mc.category` is close to a
   definition of the gold); the prompt-only reader solves the family (floor above every lens):
-  it ranks lenses against each other, not against a reader of the text.
+  it ranks lenses against each other, not against a reader of the text. Its floors are all
+  frozen since plan 0115 (lucky, prompt-only 0.982, logit lens L63 0.036 = 2 of 56; Oracle
+  lens (SFT) measured there, 0.893): a bank, prompt or gate change now means the L63 entry is
+  re-judged (or re-read) and re-frozen with `freeze kind=logit_lens partial=True`.
 - buggy_code (plan 0030) is pair-scored on the bank's symmetric `twin` field: headline
   `pair_rate` since 2026-10-30 (metric `pass_rate`, in the macro, `chance` 0.0;
   `specific_pair_rate`, the grade-≥8 bar, in extras; instrument `INSTRUMENT_V1`

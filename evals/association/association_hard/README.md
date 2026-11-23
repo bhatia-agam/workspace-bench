@@ -329,18 +329,39 @@ arm twice (digests shared, judge calls fresh). 95% bootstrap CI of the first jud
 | arm | pass rate [95% CI] | second judging | obscure | complex_qualified | complex_unnatural | items differing |
 |---|---|---|---|---|---|---|
 | Oracle lens (RL) `s3d-rl600` | 0.929 [0.857, 0.982] | 0.929 | 28 / 30 | 9 / 9 | 15 / 17 | 2 |
+| Oracle lens (SFT) `s3d-sft251` (read and judged 2026-11-23, plan 0115) | 0.893 [0.804, 0.964] | 0.893 | 27 / 30 | 9 / 9 | 14 / 17 | 2 |
 | NLA `mlnla11-rl600` | 0.821 [0.714, 0.911] | 0.821 | 25 / 30 | 9 / 9 | 12 / 17 | 2 |
 | J-lens `jlens-public` | 0.161 [0.071, 0.268] | 0.196 | 4 / 30 | 3 / 9 | 2 / 17 | 2 |
 | prompt-only `po-opus-v1` (the frozen floor) | 0.982 [0.946, 1.000] | 0.982 | 30 / 30 | 9 / 9 | 16 / 17 | 0 |
 | prompt-only, four bullets (pilot reader) | 0.982 [0.946, 1.000] | 0.982 | 30 / 30 | 9 / 9 | 16 / 17 | 0 |
+| logit lens L63 (the frozen floor; read and judged 2026-11-23, plan 0115, one judging) | 0.036 [0.000, 0.089] | | 1 / 30 | 0 / 9 | 1 / 17 | |
 
 The first-ask pass rate equals the headline on every arm (no pass needed the quote re-ask), no
 item is undecided, and at most 2 of 56 items change verdict between two judgings. The J-lens
 picks the bare head on 13 of the 26 compounds; the prose lenses on 0 and 3.
 
+**Oracle lens (SFT)** (plan 0115, 2026-11-23). The one arm that was read anew: the 56 items on
+the registered read plan (11704 cells, the same cells as the stored arms, no empty sample), by
+the driver and on the layers of the Oracle lens (RL) read, and judged twice by the same
+instrument with the same settings. 50 of 56 in both judgings; two items differ between them
+(`a pamonha` fails the first, `a solar halo` the second), the first-ask rate equals the
+headline and no item is undecided. Its majority pick is the bare head on 2 of the 26 compounds
+and another cell of the grid on 1. Paired on the first judgings (arm only / other only, exact
+McNemar): against the prompt-only floor 1 / 6, p = 0.125 (the one item only the lens passes is
+`a library in a helicopter`); against the Oracle lens (RL) 1 / 3, p = 0.625 (`a red tide`
+against korfball, a green flash and um trator de chocolate). On 56 items it is not separated
+from the Oracle lens (RL), and like every lens it is under the floor.
+
+**Logit lens L63** (plan 0115, 2026-11-23; `evals/baselines/logit_lens.json`). The 56 items read
+at layer 63 by the bundled producer (`wsbench.produce`, method `logit_lens`, `layers=[63]`, one
+Modal GPU; 1064 cells on the registered plan) and judged with `layers=63`: 2 of 56 (`a mirage`
+on a listed form, `a library in a helicopter` on the token pair `library | helicopter` through
+the quote-only re-judge), first-ask the same, no item undecided; the majority pick is the bare
+head on 10 of the 26 compounds. Frozen with `wsbench freeze kind=logit_lens partial=True`.
+
 **The prompt-only reader solves the family: its floor (0.982) is above every lens.** The
-family separates a token lens (0.16) from prose lenses (0.82, 0.93) and the prose lenses from
-each other, mostly on `complex_unnatural`; it does not separate a lens from a reader of the
+family separates a token lens (0.16; 0.04 for the final-layer logit lens) from prose lenses
+(0.82, 0.89, 0.93) and the prose lenses from each other, mostly on `complex_unnatural`; it does not separate a lens from a reader of the
 text, and a lens that paraphrased the scene would pass it.
 
 **What `gate-h2` changed** against `gate-h1` on the same 56 items and the same cached judge
@@ -411,8 +432,10 @@ solar-halo fail is wrong (0.036 if the paper bell is a correct fail). The errors
   library", the quote-only re-judge answering `a library`). Under `gate-h2` it passes in both
   judgings, and no fail read is of that kind.
 
-Not done: the owner's own read (30 verdicts set aside, verdict hidden), the logit-lens L63
-floor and Oracle lens (SFT) reads (GPU), an ATI panel.
+Not done: the owner's own read (30 verdicts set aside, verdict hidden), an ATI panel, a hand
+read of the Oracle lens (SFT) and logit-lens verdicts (the hand read above covers the arms of
+plan 0108 only). The logit-lens L63 floor and the Oracle lens (SFT) read were deferred by plan
+0108 and are measured since plan 0115 (above).
 
 ## Versions
 
@@ -550,3 +573,6 @@ The readout below is a digest of the readouts across every read layer and positi
   (16 two-measurement leakers, 1 off-grid list, 18 + 4 by the two runs of the grid pass, 14 by
   the bank-order pass); `gate-h2` and bank v2 after the first validation and the review of the
   PR; instrument `assoc-hard-v1+gate-h2+bank-v2`.
+- 2026-11-23 (plan 0115): the two measurements plan 0108 deferred. Oracle lens (SFT)
+  `s3d-sft251` 0.893 [0.804, 0.964] (second judging 0.893); logit lens L63 floor frozen at
+  0.036 [0.000, 0.089] (2 of 56). No bank, stamp, prompt or gate change.

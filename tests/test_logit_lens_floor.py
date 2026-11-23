@@ -303,8 +303,9 @@ def test_committed_floor_file():
     s = got["_source"]
     assert (s["protocol"], s["layer"], s["k"]) == (ll.PROTOCOL, 63, 10)
     fams = {f for f in got if not f.startswith("_")}
-    # 30 since plan 0112 (2026-11-23): user_modeling_hard got its first entry (was 29)
-    assert len(fams) == 30 and "jlens_concept_pr" not in fams
+    # 30 since plan 0112 (2026-11-23): user_modeling_hard got its first entry (was 29);
+    # 31 since plan 0115 (2026-11-23): association_hard got its first entry
+    assert len(fams) == 31 and "jlens_concept_pr" not in fams
     for f in fams:
         e = got[f]
         assert e["layers_judged"] == [63] and e["aggregate"] == "summary", f
