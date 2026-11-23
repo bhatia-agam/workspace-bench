@@ -22,7 +22,7 @@ START, END = "<!-- evals table: start -->", "<!-- evals table: end -->"
 WHAT = {
     "basic_readout": "The multi-word answer to a factual question the model has read but not yet answered.",
     "basic_readout_st": "The same with a one-word answer.",
-    "directed_modulation": "A concept the model was told to think about, not think about, or hide while copying a sentence.",
+    "directed_modulation": "A concept the model was told to think about, or to keep hidden, while copying a sentence.",
     "multi_concept_directed_modulation": "Up to three concepts, or who does what to whom, held in mind while writing a dictated sentence.",
     "multihop": "The unstated multi-word bridge of a two- or three-hop fact.",
     "multihop_st": "The unstated one-word bridge of a two-hop fact.",

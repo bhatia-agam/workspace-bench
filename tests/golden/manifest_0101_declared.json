@@ -15,6 +15,14 @@
   "plan": "0103",
   "note": "comp-v6 on bank v6: every part of an option required in one statement (a qualifier only where two listed options differ in it), shared-axis distractors with their twins (items_v4.json -> items_v6.json; same ids, stimuli and read plan); stamp comp-v5+maj -> comp-v6+bank-v6+maj"
  },
+ "directed_modulation": {
+  "prompt_version": "dm-2026-10-31+expressed+bank-v2",
+  "bank_file": "items_v2.json",
+  "bank_sha256": "efcd1a16fca760c8a589b91477948a136039f1756b534ae0e8ff458f4027e437",
+  "rows_sha256": "c63697cbd53be40aeabd75aba4f75d10add952f303d4245da2dd006015640d2d",
+  "plan": "0109",
+  "note": "bank v2 (items_v2.json): the 35 dont_think items removed, 37 gated think items added (102 items: 72 think, 15 secret, 15 preference); own read plan, new option lists for the kept think items, result stamp +bank-v2; its rows under the five outcome-selected fast versions read unavailable (their entries are records of the 100-item bank, no successor cut)"
+ },
  "jlens_concept_pr": {
   "prompt_version": "jlens-pr-v3+fw-v2+sense-v1",
   "bank_file": "manifest.json",

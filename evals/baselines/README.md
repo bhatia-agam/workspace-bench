@@ -91,6 +91,27 @@ that key of `prompt_only_summary.json` changed. Its `decided` map is empty becau
 `results.decided_outcomes` returns `{}` when one pair is undecided; hinted_cutoff never reads it
 (`results.NO_SHARED_BRACKET`).
 
+**directed_modulation bank v2 (measured 2026-11-20 and 2026-11-23, plan 0109).** The family's registered bank moved to
+`items_v2.json` (102 items: the 35 dont_think items removed, 37 new think items), stamped
+`dm-2026-10-31+expressed+bank-v2`; every directed_modulation number elsewhere in this file is on
+the 100-item `items.json`. Re-measured on bank v2 with the stock commands:
+lucky guessing, Opus 5.5, 5 fresh draws, 102 items (the kept think items' lists changed, the pool
+being the whole subfamily): blind 0.148 -> **0.224** ±0.015, described 0.168 -> **0.202** ±0.016,
+seeded-uniform 0.190 -> 0.180, `topic` (diagnostic, not a floor) 0.758 -> 0.759; chance 0.200,
+line 0.250, so both valid floors pass and the family's floor is now `blind`, 0.224. Prompt-only
+summary floor (`po-opus-v1`, reply-free-v2, 0 of 102 refused): 1.000 -> 1.000 (saturated); only
+that key of `prompt_only_summary.json` changed (the stock freeze rewrites `_source` without its
+`fallback` record, so main's file was kept and the one entry swapped in). Logit lens L63,
+re-measured 2026-11-23: 0.220 (22 of 100) -> **0.412** [0.324, 0.510] (42 of 102: kept think 19
+of 35, new think 22 of 37, secret 0 of 15, preference 1 of 15). All 102 items were read in one
+run by the bundled producer (`Producer`, method `logit_lens`, `layers=[63]`, one Modal GPU;
+879 cells, sidecar on bank v2's `plan_sha` `940bf69a`), judged with `layers=63` (0 missing, 0
+unjudged cells, complete) and frozen with `freeze kind=logit_lens partial=True` (the other 28
+entries under `_source.kept_from`). The rise comes with the bank: the 65 kept items pass 20
+in this read (the 100-item entry passed 22 of 100 in all), and the new think items pass at
+about the kept think items' rate. The 29-family raw mean moves from 0.119 to 0.126. The native `prompt_only.json` entry is still the 100-item one (stale
+stamp: not drawn).
+
 **Reply-free input (2026-11-17, plan 0070).** Under the cut the refreeze used (the render through
 the last full-read site) the reader's input held assistant-reply text in six families, audited
 on the registered banks with the Qwen3.6-27B tokenizer (`prompt_cut.reply_tokens`; 30 families,
@@ -1304,7 +1325,7 @@ uv run wsbench run all=True readouts_root=<dir> layers=63 anti_text_inversion=Tr
 uv run wsbench freeze kind=logit_lens src=<judged> ati_src=<ati> readouts=<dir> source=<run_config.json>
 ```
 
-Averaged over the frozen entries (raw mean), the final-layer logit lens scores **0.119** (0.121 before nyt_connections was re-judged under `nyt-mc-2026-11-20`, plan 0099) on the
+Averaged over the frozen entries (raw mean), the final-layer logit lens scores **0.126** (0.121 before nyt_connections was re-judged under `nyt-mc-2026-11-20`, plan 0099, 0.119 after it; 0.126 since directed_modulation's bank v2 entry, plan 0109) on the
 full set (29 families) and **0.046** on the strict ATI subset (7 of the 8 families of the frozen
 `ati-subset-v2` macro, plan 0085: model_multihop has no entry). An entry carries `ati` only for
 those 7 families; the other gated families have too few surviving ids for a number (basic_readout_st
@@ -1333,7 +1354,7 @@ and jlens_concept_pr and the superseded `typo_st`, as for prompt-only. multihop 
 | buggy_code | 0.000 | 64 | — | `buggy-pairs-2026-10-29+infer-r1-2026-10-31+pair-headline-2026-10-30+eof-all-layers-2026-10-30+bank-v2` |
 | chain_intermediates | 0.000 | 120 | — | `chain-mc-2026-10-30+heads-v5+start-op+key-ex2` |
 | conjunctive_association | 0.000 | 100 | 0.000 (26) | `comp-v6+bank-v6+maj` |
-| directed_modulation | 0.220 | 100 | — | `dm-2026-10-31+expressed` |
+| directed_modulation | 0.412 | 102 | — | `dm-2026-10-31+expressed+bank-v2` (bank v2, all 102 items read and judged 2026-11-23, plan 0109, `freeze partial=True`; 0.220 on the 100-item bank at `dm-2026-10-31+expressed`) |
 | hinted_cutoff | 0.000 | 118 | — | `hc-2026-11-04b+bank-v2` |
 | introspection | 0.160 | 125 | 0.161 (124) | `ii-grid-2026-11-v4+twinrx-v4+jhead-v2` |
 | jailbreak_recognition | 0.093 | 172 | — | `jb-v4+pins-r1+pins-r3+guard-off+sonnet-digest+item-q2+opus5-fb+test-pins` |

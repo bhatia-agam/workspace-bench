@@ -21,7 +21,7 @@ change edits this table in the same PR.
 | buggy_code | `evals/computational/buggy_code/items_v2.json` |
 | chain_intermediates | `evals/computational/chain_intermediates/items_v2.json` |
 | conjunctive_association | `evals/association/conjunctive_association/items_v6.json` |
-| directed_modulation | `evals/basic/directed_modulation/items.json` |
+| directed_modulation | `evals/basic/directed_modulation/items_v2.json` |
 | hinted_cutoff | `evals/model_specific/hinted_cutoff/items_v2.json` |
 | introspection | `evals/model_specific/introspection/items_v2.json` |
 | jailbreak_recognition | `evals/safety/jailbreak_recognition/items_v2.json` |

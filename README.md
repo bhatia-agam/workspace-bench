@@ -195,7 +195,7 @@ and pass rule; [docs/evals.md](docs/evals.md) has one example and the judging ru
 |---|---|---|---|---|---|
 | Basic | [`basic_readout`](evals/basic/basic_readout/README.md) | - | The multi-word answer to a factual question the model has read but not yet answered. | Claude judge | 90 |
 | Basic | [`basic_readout_st`](evals/basic/basic_readout_st/README.md) | - | The same with a one-word answer. | Claude judge | 100 |
-| Basic | [`directed_modulation`](evals/basic/directed_modulation/README.md) | - | A concept the model was told to think about, not think about, or hide while copying a sentence. | Claude judge | 100 |
+| Basic | [`directed_modulation`](evals/basic/directed_modulation/README.md) | - | A concept the model was told to think about, or to keep hidden, while copying a sentence. | Claude judge | 102 |
 | Basic | [`multi_concept_directed_modulation`](evals/basic/multi_concept_directed_modulation/README.md) | core, fast | Up to three concepts, or who does what to whom, held in mind while writing a dictated sentence. | Claude judge | 116 |
 | Basic | [`multihop`](evals/basic/multihop/README.md) | - | The unstated multi-word bridge of a two- or three-hop fact. | Claude judge | 70 |
 | Basic | [`multihop_st`](evals/basic/multihop_st/README.md) | - | The unstated one-word bridge of a two-hop fact. | Claude judge | 98 |

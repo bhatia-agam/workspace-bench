@@ -394,6 +394,20 @@ Two cases:
 - **The family's items changed** (ids added, dropped or re-selected): re-select its units and
   read ids on the new bank by the rules of "How it was chosen", write the new files by hand
   from the current ones with that family's entry replaced, and register them the same way.
+- **The family's items changed and it is in no selectable version**
+  (`directed_modulation`, 2026-11-23, plan 0109: bank v2 removed the 35 dont_think items and
+  added 37 think items; the family is not core, so `fast-v4` does not hold it). Nothing was
+  cut. Its entry in `fast-v1`, `fast-v2`, `fast-v3`, `fast-safety-v1` and `fast-safety-v2` (62
+  units of the 100-item `items.json`, 17 of them dont_think items) stays as a record:
+  `scripts/fast_refreeze_bank.py` refuses it (read ids that the new bank does not have), and
+  the rules those five files were selected by need the outcomes of 23 arms, which the new
+  items do not have. So under one of those versions the family fails closed (`bank changed
+  since <v> was frozen; re-freeze`), and an all-families `plan` or `run` of that version exits
+  2 with the other families served; `--fast` is unaffected (it skips the family, as it did),
+  and a results directory of one of those versions still reports its old row with
+  `report fast_version=<v>`. `tests/test_fast_subset.py` lists it in `NOT_REFROZEN`, and its
+  manifest-ledger entry records the fast plan rows of the five versions as `unavailable`.
+  Putting the family back into a fast subset means a new selection on bank v2.
 
 Compatibility is decided **per family** (`fast.compatible(version, family)`): two versions are
 compatible for a family when both files hold it with the identical entry. A result row of a

@@ -93,11 +93,24 @@ OUTCOME_SELECTED = (V1, V2, VS1, V3, VS)  # the frozen predecessors this file is
 FAMILIES_V1 = sorted(fast.subset(V1))  # 24
 FAMILIES_V3 = sorted(fast.subset(V3))  # 22: v1's without jailbreak_recognition and agentic
 CONJ = "conjunctive_association"
+DM = "directed_modulation"
 # The families whose REGISTERED bank changed after a version was frozen, with those versions:
 # their entry there is a record (``fast.entry`` fails closed, "bank changed ... re-freeze") and
 # is entry-compatible with no later version. A re-freeze adds its family and versions here.
 REFROZEN = {CONJ: (V1, V2, VS1)}  # 2026-11-20: bank v6 (comp-v6), cut as fast-v3 / fast-safety-v2
-SUPERSEDED = sorted((v, f) for f, versions in REFROZEN.items() for v in versions)
+# Plan 0109: directed_modulation's registered bank is v2 (items_v2.json: the dont_think items
+# removed, 37 think items added), so its entry in ALL FIVE outcome-selected files is a record of
+# the 100-item items.json. No successor was cut: the item ids changed (the bank_sha-only script
+# refuses), the selection of these files needs 23 arms' outcomes, which the new items do not
+# have, and the family is in no selectable version (fast-v4 is a half of core; it is not core).
+NOT_REFROZEN = {DM: OUTCOME_SELECTED}
+SUPERSEDED = sorted(
+    (v, f) for table in (REFROZEN, NOT_REFROZEN) for f, versions in table.items() for v in versions
+)
+# the families a version still serves on their registered bank
+LIVE_V3 = [f for f in FAMILIES_V3 if (V3, f) not in SUPERSEDED]  # 21
+LIVE_VS = [f for f in FAMILIES_V1 if (VS, f) not in SUPERSEDED]  # 23
+DM_READ_ITEMS = 62  # its frozen entry in each of the five files
 BY_VERSION = [
     (v, f)
     for v in (V1, V2, VS1, V3, VS)
@@ -271,7 +284,7 @@ def test_a_version_frozen_before_a_bank_change_fails_closed_for_that_family(
     it hold the same units and read ids on the registered bank."""
     old = fast.subset(version)[fam]
     assert old["bank_sha"] != fast.bank_sha(fam)
-    for current in (V3, VS):
+    for current in (V3, VS) if fam in REFROZEN else ():  # NOT_REFROZEN: no successor holds it
         new = fast.subset(current)[fam]
         assert new["bank_sha"] == fast.bank_sha(fam)
         assert {k: v for k, v in new.items() if k != "bank_sha"} == {
@@ -1077,11 +1090,16 @@ def test_cli_plan_fast(tmp_path, capsys):
     )
 
 
-def test_cli_plan_fast_all_is_the_22_families(tmp_path):
-    assert main(["plan", "--fast", f"out={tmp_path}"]) == 0
-    assert sorted(p.stem for p in tmp_path.glob("*.jsonl")) == FAMILIES_V3
+def test_cli_plan_fast_all_is_the_22_families(tmp_path, capsys):
+    # plan 0109: under fast-v3 the all-families plan fails closed on directed_modulation (its
+    # registered bank is no longer the one fast-v3 froze, NOT_REFROZEN); the other 21 plan
+    assert main(["plan", "--fast", f"out={tmp_path / 'all'}"]) == 2
+    assert f"{DM}: bank changed since fast-v3 was frozen; re-freeze" in capsys.readouterr().err
+    assert len(FAMILIES_V3) == 22 and [f for f in FAMILIES_V3 if f != DM] == LIVE_V3
+    assert main(["plan", "--fast", f"families={','.join(LIVE_V3)}", f"out={tmp_path}"]) == 0
+    assert sorted(p.stem for p in tmp_path.glob("*.jsonl")) == LIVE_V3
     n = sum(len(p.read_text().splitlines()) for p in tmp_path.glob("*.jsonl"))
-    assert n == 2160
+    assert n == 2160 - DM_READ_ITEMS
 
 
 def test_cli_judge_fast(toy, tmp_path, capsys):
@@ -1131,17 +1149,19 @@ def test_cli_run_fast_all_skips_the_eight_dropped_families(tmp_path, capsys):
     root, out = tmp_path / "readouts", tmp_path / "out"
     root.mkdir()
     argv = ["run", "--fast", "all=True", f"readouts_root={root}", f"out={out}", "dry_run=True"]
-    assert main(argv) == 0
+    # plan 0109: exit 2, since directed_modulation fails closed under fast-v3 (NOT_REFROZEN)
+    assert main(argv) == 2
     text = capsys.readouterr().out
     statuses = json.loads((out / "run.json").read_text())["families"]
     not_fast = {f for f, s in statuses.items() if s.get("error") == "not in fast-v3"}
     assert set(DROPPED_V3) <= not_fast and not not_fast & set(FAMILIES_V3)
     for fam in DROPPED_V3:
         assert f"{fam}: skipped (not in fast-v3)" in text
-    # the 22 families are the ones the run goes on to (here: no readouts file for any)
-    assert {f for f, s in statuses.items() if s["error"].startswith("no readouts")} == set(
-        FAMILIES_V3
-    )
+    # the 22 families are the ones the run goes on to (here: no readouts file for any), except
+    # the one whose bank changed since the freeze
+    assert {f for f, s in statuses.items() if s["error"].startswith("no readouts")} == set(LIVE_V3)
+    assert statuses[DM]["status"] == "failed"
+    assert statuses[DM]["error"] == f"{DM}: bank changed since fast-v3 was frozen; re-freeze"
 
 
 def test_cli_run_fast_judges_and_reports(toy, tmp_path, capsys):
@@ -1356,7 +1376,7 @@ def test_fast_plan_sha_is_the_same_under_both_versions(monkeypatch):
     """A fast-v1 file of a family still in the subset declares the plan_sha fast-v3 wants (a
     family re-frozen since fast-v1 has no fast-v1 plan any more: ``REFROZEN``)."""
     same = [f for f in FAMILIES_V3 if (V1, f) not in SUPERSEDED]
-    assert len(same) == len(FAMILIES_V3) - 1
+    assert len(same) == len(FAMILIES_V3) - 2  # conjunctive_association, directed_modulation
     v3 = {f: reads.fast_plan_sha(f) for f in same}
     monkeypatch.setattr(fast, "VERSION", V1)
     assert {f: reads.fast_plan_sha(f) for f in same} == v3
@@ -1644,7 +1664,9 @@ VS_SHA256 = "19cde720531d6ae6a68ecd6be099249aad73bd230b3a0b421661f9c0fc06aadc"
 
 
 @pytest.mark.parametrize(("old", "new", "new_sha"), [(V2, V3, V3_SHA256), (VS1, VS, VS_SHA256)])
-def test_a_refrozen_version_is_its_predecessor_with_only_the_refrozen_bank_sha(old, new, new_sha):
+def test_a_refrozen_version_is_its_predecessor_with_only_the_refrozen_bank_sha(
+    old, new, new_sha, monkeypatch
+):
     """fast-v3 / fast-safety-v2 = fast-v2 / fast-safety-v1 in today's family keys, with ONLY
     conjunctive_association's ``bank_sha`` moved (bank v6): units, read ids, the family order and
     every other entry are the predecessor's bytes."""
@@ -1664,7 +1686,14 @@ def test_a_refrozen_version_is_its_predecessor_with_only_the_refrozen_bank_sha(o
     e_old, e_new = a["families"][CONJ], b["families"][CONJ]
     assert list(e_new) == list(e_old) and {**e_new, "bank_sha": e_old["bank_sha"]} == e_old
     assert e_new["bank_sha"] == fast.bank_sha(CONJ) and len(e_new["read_ids"]) == 98
-    # the script that cut the file reproduces it
+    # the script that cut the file reproduces it, with every family on the bank it had at the
+    # cut: directed_modulation was on items.json then (plan 0109 registered items_v2.json later,
+    # NOT_REFROZEN; the script refuses a cut that leaves a changed bank unnamed)
+    then = registry.family_rel(DM) / "items.json"
+    monkeypatch.setitem(
+        registry.FAMILIES, DM, dataclasses.replace(registry.FAMILIES[DM], bank=then)
+    )
+    assert fast.bank_sha(DM) == a["families"][DM]["bank_sha"] == b["families"][DM]["bank_sha"]
     spec = importlib.util.spec_from_file_location(
         "fast_refreeze_bank", ROOT / "scripts/fast_refreeze_bank.py"
     )
@@ -1717,8 +1746,11 @@ def test_versions_are_entry_compatible_per_family():
     assert set(fast.VARIANTS.values()) <= set(fast.VERSIONS)
     # the last outcome-selected versions and the selectable one hold every family on its
     # registered bank
+    # registered bank, except a family whose bank changed with no re-freeze (NOT_REFROZEN)
     for v in (V3, VS, *fast.VARIANTS.values()):
-        assert all(e["bank_sha"] == fast.bank_sha(f) for f, e in fast.subset(v).items()), v
+        stale = [f for f, e in fast.subset(v).items() if e["bank_sha"] != fast.bank_sha(f)]
+        assert stale == [f for f, versions in NOT_REFROZEN.items() if v in versions], v
+    assert all(DM not in fast.subset(v) for v in fast.VARIANTS.values())
 
 
 def test_a_refrozen_family_is_stale_under_the_old_stamp_and_the_others_are_not(
@@ -1872,12 +1904,16 @@ def test_every_test_starts_on_the_default_subset(_the_frozen_predecessors):
 
 def test_cli_plan_fast_safety(tmp_path, capsys):
     fast.use(VS)  # plan 0104: the retired --fast-safety, made active directly
-    assert main(["plan", "--fast", f"out={tmp_path}"]) == 0
+    # plan 0109: the all-families plan fails closed on directed_modulation (NOT_REFROZEN)
+    assert main(["plan", "--fast", f"out={tmp_path / 'all'}"]) == 2
+    assert f"{DM}: bank changed since {VS} was frozen; re-freeze" in capsys.readouterr().err
+    fast.use(VS)
+    assert main(["plan", "--fast", f"families={','.join(LIVE_VS)}", f"out={tmp_path}"]) == 0
     assert fast.VERSION == VS
-    assert (
-        sorted(p.stem for p in tmp_path.glob("*.jsonl")) == FAMILIES_V1 and len(FAMILIES_V1) == 24
-    )
-    assert sum(len(p.read_text().splitlines()) for p in tmp_path.glob("*.jsonl")) == 2351
+    assert sorted(p.stem for p in tmp_path.glob("*.jsonl")) == LIVE_VS
+    assert len(FAMILIES_V1) == 24 and [f for f in FAMILIES_V1 if f != DM] == LIVE_VS
+    n_rows = sum(len(p.read_text().splitlines()) for p in tmp_path.glob("*.jsonl"))
+    assert n_rows == 2351 - DM_READ_ITEMS
     for fam, rule in ((JB, {"kind": "punct_special"}), (AM, {"kind": "last_n", "n": 60})):
         rows = [json.loads(x) for x in (tmp_path / f"{fam}.jsonl").read_text().splitlines()]
         assert [r["id"] for r in rows] == fast.subset(VS)[fam]["read_ids"]
@@ -1993,7 +2029,8 @@ def test_cli_run_fast_safety_all_skips_the_six_dropped_families(tmp_path, capsys
     root.mkdir()
     fast.use(VS)  # plan 0104: the retired --fast-safety, made active directly
     argv = ["run", "--fast", "all=True", f"readouts_root={root}", f"out={out}"]
-    assert main([*argv, "dry_run=True"]) == 0
+    # plan 0109: exit 2, since directed_modulation fails closed under it (NOT_REFROZEN)
+    assert main([*argv, "dry_run=True"]) == 2
     text = capsys.readouterr().out
     statuses = json.loads((out / "run.json").read_text())["families"]
     not_fast = {f for f, s in statuses.items() if "not in fast" in (s.get("error") or "")}
@@ -2002,9 +2039,9 @@ def test_cli_run_fast_safety_all_skips_the_six_dropped_families(tmp_path, capsys
     for fam in DROPPED:
         assert f"{fam}: skipped (not in fast-safety-v2)" in text
         assert statuses[fam]["error"] == "not in fast-safety-v2"
-    assert {f for f, s in statuses.items() if s["error"].startswith("no readouts")} == set(
-        FAMILIES_V1
-    )
+    assert {f for f, s in statuses.items() if s["error"].startswith("no readouts")} == set(LIVE_VS)
+    assert statuses[DM]["status"] == "failed"
+    assert statuses[DM]["error"] == f"{DM}: bank changed since {VS} was frozen; re-freeze"
 
 
 def test_cli_run_fast_safety_judges_and_reports(tmp_path, capsys, monkeypatch):

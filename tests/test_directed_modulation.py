@@ -18,7 +18,11 @@ from wsbench.readouts import Cell
 from wsbench.results import read_results
 
 REPO = Path(__file__).resolve().parents[1]
-EXAMPLE = REPO / "examples/readouts/directed_modulation.jsonl"
+# These tests pin the frozen 100-item bank (items.json, with its dont_think twins: the scoring
+# code is bank-independent) and a byte copy of the toy readouts of before bank v2 (plan 0109).
+# The registered bank v2 is tested in test_directed_modulation_bank_v2.py.
+V1_BANK = "evals/basic/directed_modulation/items.json"
+EXAMPLE = REPO / "tests/fixtures/directed_modulation_v1_toy.jsonl"
 
 
 def _reply(**fields: Any) -> Any:
@@ -77,6 +81,7 @@ def family(monkeypatch):
 
     monkeypatch.setattr(llm, "_pace", no_pace)
     monkeypatch.setattr(llm, "preflight", lambda model, reasoning: None)
+    monkeypatch.setenv("WSB_BANK_FILE_DIRECTED_MODULATION", V1_BANK)
     from wsbench.evals.basic.directed_modulation import SPEC
 
     registry.FAMILIES.setdefault(SPEC.name, SPEC)
@@ -388,7 +393,8 @@ def test_judge_calls_keyed_by_judge_prompt_version():
     src = __import__("inspect").getsource(dmj)
     assert "prompt_version=JUDGE_PROMPT_VERSION" in src and "pv_calls" in src
     assert prompts.JUDGE_PROMPT_VERSION == "dm-2026-10-31"
-    assert prompts.PROMPT_VERSION == prompts.JUDGE_PROMPT_VERSION + "+expressed"
+    assert prompts.INSTRUMENT_V1 == prompts.JUDGE_PROMPT_VERSION + "+expressed"
+    assert prompts.PROMPT_VERSION == prompts.INSTRUMENT_V1 + "+bank-v2"  # plan 0109
 
 
 # ---------------------------------------------------------------- plan 0035 (fix campaign)

@@ -17,7 +17,7 @@ A third floor, **logit lens L63** (`evals/baselines/logit_lens.json`, protocol
 model's own next-token distribution) and judged by each family's summary instrument
 (`layers=63`), drawn beside a registered-bank summary row that ran its instrument (never beside an adapted
 subject's row); it never enters the macro
-(full set 0.119 over 29 families, strict ATI 0.046
+(full set 0.126 over 29 families, strict ATI 0.046
 over 7; `evals/baselines/README.md`).
 
 **Anti-text-inversion subset.** `anti_text_inversion=True` on `judge` / `run` scores each family

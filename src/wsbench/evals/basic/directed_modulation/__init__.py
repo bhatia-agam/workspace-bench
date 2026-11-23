@@ -13,7 +13,9 @@ SPEC = register(
         name="directed_modulation",
         title="Directed modulation",
         group="basic",
-        bank=family_rel("directed_modulation") / "items.json",
+        # plan 0109 (2026-11-20): bank v2 = items.json minus its 35 dont_think items, plus 37 new
+        # gated think items (72 think + 15 secret + 15 preference = 102)
+        bank=family_rel("directed_modulation") / "items_v2.json",
         judge=JudgeConfig(prompt_version=PROMPT_VERSION),
         metric="pass_rate",
         higher_is_better=True,

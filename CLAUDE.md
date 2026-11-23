@@ -231,7 +231,7 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   (summary prompt-only entry schema + `protocol` + `ati`), written by `wsbench freeze
   kind=logit_lens` from `layers=63` summary runs (refused otherwise; registered banks only) and
   drawn as the report's third column by the summary prompt-only row-match rule; never a gate.
-  Refrozen 2026-11-17 on main's instruments (29 families, raw mean 0.121, 0.119 since nyt_connections' 2026-11-20 re-freeze under plan 0099; strict ATI 0.046 over
+  Refrozen 2026-11-17 on main's instruments (29 families, raw mean 0.121, 0.119 since nyt_connections' 2026-11-20 re-freeze under plan 0099, 0.126 since directed_modulation's bank v2 entry of 2026-11-23, plan 0109; strict ATI 0.046 over
   the 7 `ati-subset-v2` families with an entry; model_multihop has none). An entry is tied to its
   family's summary instrument, digest settings, judge model and read plan:
   `tests/test_logit_lens_floor.py` (`test_every_committed_entry_matches_its_live_row`,
@@ -698,6 +698,31 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   regex diagnostic's `mt-regex-2026-10-30+md+fz`) as `multihop_mt_regex`
   (`tests/test_rename_multihop_mt.py`). Since plan 0101 that family is `multihop`, and the
   reused key of this paragraph is the FORMER key `multihop_mt` (the behaviour is retained).
+- **Plan 0109 (2026-11-23; built 2026-11-20 as the unmerged plan 0102): directed_modulation is on bank v2** (`items_v2.json`, 102 items: the
+  35 think + 15 secret + 15 preference items of `items.json` byte-identical and in order, its 35
+  dont_think items removed (Camila: "just regular, not 'don't think'"), 37 new gated think items
+  `dm-think-NN`). Own 102-row read plan, no `plan_lineage` (drop + add): the kept rows are
+  identical, so a readouts file = the old kept rows + the 37 new items read, with a sidecar on the
+  new `plan_sha`. The option pool is the whole subfamily, so the 35 kept think items have new
+  lists (`tests/golden/directed_modulation_options_v2.json`; `..._options.json` still pins
+  `items.json`); `distractor_groups.json` gained the new concepts additively, and a new bank
+  concept must be added there first (hard error otherwise). Stamp: `judge.instrument(header)`,
+  `dm-2026-10-31+expressed+bank-v2`; `items.json` and the adapted banks (no `version`) keep
+  `dm-2026-10-31+expressed`. Tests of the dont_think twin / `white_bear` pin `items.json`
+  (`WSB_BANK_FILE_DIRECTED_MODULATION`) and `tests/fixtures/directed_modulation_v1_toy.jsonl`.
+  Floors on bank v2: lucky `blind` 0.224, prompt-only summary 1.000 (saturated), logit lens L63
+  0.412 (all 102 items read by the bundled `Producer`, `freeze partial=True`). Fast: the family
+  is not core, so it is not in `fast-v4` (`--fast` skips it, as before). **Its entry in the five
+  older fast files (`fast-v1` .. `fast-v3`, `fast-safety-v1` / `-v2`) is a record of the
+  100-item bank, with no successor**: under one of them `fast.entry` fails closed for it, and
+  an all-families `plan` / `run` of that version exits 2 (`NOT_REFROZEN` in
+  `tests/test_fast_subset.py`, next to `REFROZEN`; `evals/fast/README.md` "Re-freezing"). The
+  ids changed, so `scripts/fast_refreeze_bank.py` does not apply, and those files' selection
+  rule needs 23 arms' outcomes the new items do not have. Manifest ledger: declared with the
+  new bank; its `plan.fast_plan_sha` rows of those five versions read `unavailable`
+  (`manifest_0101_declare.fast_equivalents` skips a version that has no plan for the family).
+  ATI: `NOT_GATED`, no entry, nothing to re-gate. The adapted sets still derive from
+  `items.json` and keep their dont_think items and their stamp.
 - **Plan 0101 (2026-11-20): the multi-token families took the plain keys, the single-token ones
   became `<key>_st`, and every family directory moved under its category.** `basic_readout_mt`
   -> `basic_readout`, `multihop_mt` -> `multihop`, `multilingual_mt` -> `multilingual`, `typo_mt`
