@@ -1,0 +1,5814 @@
+{
+ "family": "typo-hard",
+ "parent_family": "typo-mt",
+ "contract": {
+  "multi_token": true,
+  "include_target": false,
+  "conjunctive_units": true,
+  "native_langs": [
+   "en"
+  ]
+ },
+ "gate": "Qwen3.6-27B behavioral, chat-templated capability question (enable_thinking=False, answer stem): greedy-verified AND >=8/10 @ temp 0.7 (correct spelling). EVAL RENDER: plain prompt, the misspelled word's tokens from the first misspelled character on (reads=lite: its final token); regex over the correction.",
+ "frozen": "2026-10-30",
+ "version": 2,
+ "derived_from": "items.json (sha256 c02874dfc958d5ce85a5c64a05f7f13630ec7d129bca2a0704e534448fc95507)",
+ "dropped": {
+  "subfamily": "arith",
+  "n": 15,
+  "why": "Camila 2026-10-30: drop the arithmetic items",
+  "names": [
+   "tyh-arith-005",
+   "tyh-arith-006-4",
+   "tyh-arith-156p078",
+   "tyh-arith-306minus149",
+   "tyh-arith-324",
+   "tyh-arith-369",
+   "tyh-arith-3a",
+   "tyh-arith-3d",
+   "tyh-arith-512m348",
+   "tyh-arith-812minus379",
+   "tyh-arith-add-47-76",
+   "tyh-arith-b2-01-2",
+   "tyh-arith-b2-01-3",
+   "tyh-arith-b2-02-3",
+   "tyh-arith-b2-03"
+  ]
+ },
+ "adapt": {
+  "model": "inkling-2-mini",
+  "hf_id": "thinkingmachines/Inkling-2-Mini",
+  "frozen": "2026-11-23"
+ },
+ "items": [
+  {
+   "name": "tyh-novel-narcissism-hand",
+   "subfamily": "novel",
+   "prompt": "Ann only ever thought of herself and manipulated those around her, but Bob soon grew tired of Ann's narciscism",
+   "target": "narcissism",
+   "target_alts": [],
+   "source": "hand-authored (Camila, 2026-09-10)",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "typo_word": "narciscism",
+   "intermediates": [
+    "narcissism"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "narcissism"
+      ]
+     },
+     "match": [
+      "narcissism"
+     ]
+    }
+   ],
+   "pinned": true,
+   "consistency": 1.0,
+   "consistency_strict": 1.0,
+   "consistency_greedy": 1,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       2
+      ]
+     }
+    },
+    "target": 2,
+    "target_alts": []
+   },
+   "id": "tyh-novel-narcissism-hand",
+   "native_units_src": "a5280be7d90bb92f391ec31ed2418b7ae8fc3b5d3fec639cf35f971184c01786",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "tyh-novel-acciaccatura-b6",
+   "subfamily": "novel",
+   "prompt": "A crushed ornamental note sounded almost simultaneously with the principal note and released at once is called an acciacatura",
+   "target": "acciaccatura",
+   "target_alts": [],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "typo_word": "acciacatura",
+   "intermediates": [
+    "acciaccatura"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "acciaccatura"
+      ]
+     },
+     "match": [
+      "acciaccatura"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "consistency_strict": 1.0,
+   "consistency_greedy": 1,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       4
+      ]
+     }
+    },
+    "target": 4,
+    "target_alts": []
+   },
+   "id": "tyh-novel-acciaccatura-b6",
+   "native_units_src": "62fcd1940187ce4deb83524e26df762db831065faeb3b7462ca29a22a6355713",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "tyh-novel-aestivation",
+   "subfamily": "novel",
+   "prompt": "African lungfish endure the parched season sealed in a mud cocoon, a summer dormancy that biologists call aestivaton",
+   "target": "aestivation",
+   "target_alts": [],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "typo_word": "aestivaton",
+   "intermediates": [
+    "aestivation"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "aestivation"
+      ]
+     },
+     "match": [
+      "aestivation"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "consistency_strict": 1.0,
+   "consistency_greedy": 1,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       2
+      ]
+     }
+    },
+    "target": 2,
+    "target_alts": []
+   },
+   "id": "tyh-novel-aestivation",
+   "native_units_src": "8d8106ea04a0ce23a6995742ea7bf2ea2deeaaf80072b05839b94dea13c9968b",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "tyh-novel-aleatoric",
+   "subfamily": "novel",
+   "prompt": "Music in which significant choices are surrendered to chance operations, as in Cage's Music of Changes, is called aleotoric",
+   "target": "aleatoric",
+   "target_alts": [],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "typo_word": "aleotoric",
+   "intermediates": [
+    "aleatoric"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "aleatoric"
+      ]
+     },
+     "match": [
+      "aleatoric"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "consistency_strict": 1.0,
+   "consistency_greedy": 1,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       3
+      ]
+     }
+    },
+    "target": 3,
+    "target_alts": []
+   },
+   "id": "tyh-novel-aleatoric",
+   "native_units_src": "0c8f38ea21130eabaf43f3215a1b6d59cadfd41f20fef3a24b31a56796765cb4",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 0.8,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "tyh-novel-amatriciana",
+   "subfamily": "novel",
+   "prompt": "Guanciale, pecorino romano and tomato are the three defining elements of the Roman pasta sauce called amatricana",
+   "target": "amatriciana",
+   "target_alts": [],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "typo_word": "amatricana",
+   "intermediates": [
+    "amatriciana"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "amatriciana"
+      ]
+     },
+     "match": [
+      "amatriciana"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "consistency_strict": 1.0,
+   "consistency_greedy": 1,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       3
+      ]
+     }
+    },
+    "target": 3,
+    "target_alts": []
+   },
+   "id": "tyh-novel-amatriciana",
+   "native_units_src": "192e460a69830715928d8be9ffc76e6c3c26870658c93c0b0d2e3047ff583d9a",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "tyh-novel-amiodarone",
+   "subfamily": "novel",
+   "prompt": "To convert a refractory ventricular arrhythmia during the code, the resuscitation team pushed a bolus of amiodorone",
+   "target": "amiodarone",
+   "target_alts": [],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "typo_word": "amiodorone",
+   "intermediates": [
+    "amiodarone"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "amiodarone"
+      ]
+     },
+     "match": [
+      "amiodarone"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "consistency_strict": 1.0,
+   "consistency_greedy": 1,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       4
+      ]
+     }
+    },
+    "target": 4,
+    "target_alts": []
+   },
+   "id": "tyh-novel-amiodarone",
+   "native_units_src": "009b7d04d47f0717b5dcf840efc7c19b4ebc26597cdd90c679f195a20f132f57",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "tyh-novel-anaphylaxis",
+   "subfamily": "novel",
+   "prompt": "An immediate intramuscular injection of epinephrine is the first-line treatment for anaphlyaxis",
+   "target": "anaphylaxis",
+   "target_alts": [],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "typo_word": "anaphlyaxis",
+   "intermediates": [
+    "anaphylaxis"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "anaphylaxis"
+      ]
+     },
+     "match": [
+      "anaphylaxis"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "consistency_strict": 1.0,
+   "consistency_greedy": 1,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       4
+      ]
+     }
+    },
+    "target": 4,
+    "target_alts": []
+   },
+   "id": "tyh-novel-anaphylaxis",
+   "native_units_src": "33863b1c08282ab9279ee18eab627a059de64693ddf5bf5752598eac07315a21",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "tyh-novel-angiosperm",
+   "subfamily": "novel",
+   "prompt": "A plant that bears flowers and encloses its seeds inside a ripened ovary is called an angiosprem",
+   "target": "angiosperm",
+   "target_alts": [],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "typo_word": "angiosprem",
+   "intermediates": [
+    "angiosperm"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "angiosperm"
+      ]
+     },
+     "match": [
+      "angiosperm"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "consistency_strict": 1.0,
+   "consistency_greedy": 1,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       2
+      ]
+     }
+    },
+    "target": 2,
+    "target_alts": []
+   },
+   "id": "tyh-novel-angiosperm",
+   "native_units_src": "9297eca6e727be9f5142727d67d4438797cef5398ebda7d0c4ac63bd2c175ddc",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "tyh-novel-anticoagulant",
+   "subfamily": "novel",
+   "prompt": "Before scheduling the extraction, the oral surgeon asked whether the patient had skipped his usual morning dose of the prescribed anticoagluant",
+   "target": "anticoagulant",
+   "target_alts": [],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "typo_word": "anticoagluant",
+   "intermediates": [
+    "anticoagulant"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "anticoagulant"
+      ]
+     },
+     "match": [
+      "anticoagulant"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "consistency_strict": 1.0,
+   "consistency_greedy": 1,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       3
+      ]
+     }
+    },
+    "target": 3,
+    "target_alts": []
+   },
+   "id": "tyh-novel-anticoagulant",
+   "native_units_src": "d5a285fd38370d36346f5b4930e3321e900e617546369a9ab79394dbd5220287",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "tyh-novel-anticyclone",
+   "subfamily": "novel",
+   "prompt": "A broad high-pressure system whose surface winds spiral outward in a clockwise sense north of the equator is termed an anticylcone",
+   "target": "anticyclone",
+   "target_alts": [],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "typo_word": "anticylcone",
+   "intermediates": [
+    "anticyclone"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "anticyclone"
+      ]
+     },
+     "match": [
+      "anticyclone"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "consistency_strict": 1.0,
+   "consistency_greedy": 1,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       3
+      ]
+     }
+    },
+    "target": 3,
+    "target_alts": []
+   },
+   "id": "tyh-novel-anticyclone",
+   "native_units_src": "9d51cfe117cdce593fdf1204006fb6d8523f60c6a917ff72636f166cfac5175a",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "tyh-novel-antihistamine",
+   "subfamily": "novel",
+   "prompt": "Diphenhydramine is the classic first-generation sedating antihistimine",
+   "target": "antihistamine",
+   "target_alts": [],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "typo_word": "antihistimine",
+   "intermediates": [
+    "antihistamine"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "antihistamine"
+      ]
+     },
+     "match": [
+      "antihistamine"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "consistency_strict": 1.0,
+   "consistency_greedy": 1,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       3
+      ]
+     }
+    },
+    "target": 3,
+    "target_alts": []
+   },
+   "id": "tyh-novel-antihistamine",
+   "native_units_src": "e9c2239ba0b2def2fd9b6a5b7c2d80020f62adb4a7bdcdc50d52553e2ffa2e0e",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "tyh-novel-appendectomy",
+   "subfamily": "novel",
+   "prompt": "After the vermiform structure at the base of the cecum became inflamed and threatened to rupture, the on-call surgeon performed an emergency open appendecomy",
+   "target": "appendectomy",
+   "target_alts": [],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "typo_word": "appendecomy",
+   "intermediates": [
+    "appendectomy"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "appendectomy"
+      ]
+     },
+     "match": [
+      "appendectomy"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "consistency_strict": 1.0,
+   "consistency_greedy": 1,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       3
+      ]
+     }
+    },
+    "target": 3,
+    "target_alts": []
+   },
+   "id": "tyh-novel-appendectomy",
+   "native_units_src": "be552eecdbbe2a98484d60d4b04001e5711b801051eacb0439f11a0c8e151903",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "tyh-novel-appoggiatura",
+   "subfamily": "novel",
+   "prompt": "In eighteenth-century ornamentation, the dissonant grace note that leans on and delays the melody note following it is termed an appoggiatrua",
+   "target": "appoggiatura",
+   "target_alts": [],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "typo_word": "appoggiatrua",
+   "intermediates": [
+    "appoggiatura"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "appoggiatura"
+      ]
+     },
+     "match": [
+      "appoggiatura"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "consistency_strict": 1.0,
+   "consistency_greedy": 1,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       4
+      ]
+     }
+    },
+    "target": 4,
+    "target_alts": []
+   },
+   "id": "tyh-novel-appoggiatura",
+   "native_units_src": "168fcf9c7939d49d91ac2b9578509f5c7b4ffb244fa6304f327a24095587df5d",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "tyh-novel-archipelago",
+   "subfamily": "novel",
+   "prompt": "Portuguese navigators charted every volcanic islet of that remote Atlantic archipelgao",
+   "target": "archipelago",
+   "target_alts": [],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "typo_word": "archipelgao",
+   "intermediates": [
+    "archipelago"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "archipelago"
+      ]
+     },
+     "match": [
+      "archipelago"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "consistency_strict": 1.0,
+   "consistency_greedy": 1,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       2
+      ]
+     }
+    },
+    "target": 2,
+    "target_alts": []
+   },
+   "id": "tyh-novel-archipelago",
+   "native_units_src": "760de93533099b30dd7ea6f2c53c158ffccb0c938c633782d290c511db777940",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "tyh-novel-arpeggiated",
+   "subfamily": "novel",
+   "prompt": "When the notes of a triad are sounded one after the other instead of simultaneously, the chord is said to be arpegiated",
+   "target": "arpeggiated",
+   "target_alts": [],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "typo_word": "arpegiated",
+   "intermediates": [
+    "arpeggiated"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "arpeggiated"
+      ]
+     },
+     "match": [
+      "arpeggiated"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "consistency_strict": 1.0,
+   "consistency_greedy": 1,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       3
+      ]
+     }
+    },
+    "target": 3,
+    "target_alts": []
+   },
+   "id": "tyh-novel-arpeggiated",
+   "native_units_src": "2e1e5d242f2bc050b3959dd1581cd03f3f321000f2117dc69c1e53cd2fda9b42",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "tyh-novel-arthropods",
+   "subfamily": "novel",
+   "prompt": "Insects, spiders, mites, and crabs are all classified in the great phylum of jointed-limbed, hard-shelled animals called arthopods",
+   "target": "arthropods",
+   "target_alts": [],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "typo_word": "arthopods",
+   "intermediates": [
+    "arthropods"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "arthropods"
+      ]
+     },
+     "match": [
+      "arthropods"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "consistency_strict": 1.0,
+   "consistency_greedy": 1,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       2
+      ]
+     }
+    },
+    "target": 2,
+    "target_alts": []
+   },
+   "id": "tyh-novel-arthropods",
+   "native_units_src": "e1c28f3107d38dec85c54257f612399e398f101d686b6c8eda4d461dd52fddcf",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "tyh-novel-avgolemono",
+   "subfamily": "novel",
+   "prompt": "The Greek soup thickened with beaten eggs and lemon juice rather than cream or flour is called avgolemano",
+   "target": "avgolemono",
+   "target_alts": [],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "typo_word": "avgolemano",
+   "intermediates": [
+    "avgolemono"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "avgolemono"
+      ]
+     },
+     "match": [
+      "avgolemono"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "consistency_strict": 1.0,
+   "consistency_greedy": 1,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       4
+      ]
+     }
+    },
+    "target": 4,
+    "target_alts": []
+   },
+   "id": "tyh-novel-avgolemono",
+   "native_units_src": "8df139ca624db0d74504d3a440d3d41eaae8d67970f97bbbfb337bb8b1813ccc",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "tyh-novel-bathymetry",
+   "subfamily": "novel",
+   "prompt": "Multibeam sonar sweeps of the Challenger Deep in the Mariana Trench produced the first detailed charts of its bathimetry",
+   "target": "bathymetry",
+   "target_alts": [],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "typo_word": "bathimetry",
+   "intermediates": [
+    "bathymetry"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "bathymetry"
+      ]
+     },
+     "match": [
+      "bathymetry"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "consistency_strict": 1.0,
+   "consistency_greedy": 1,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       2
+      ]
+     }
+    },
+    "target": 2,
+    "target_alts": []
+   },
+   "id": "tyh-novel-bathymetry",
+   "native_units_src": "6df1d54da79c64821869e05ca85d09d29bd61a096908c74309642e57a64c13bd",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "tyh-novel-bouillabaisse",
+   "subfamily": "novel",
+   "prompt": "In the old port of Marseille, cooks simmer rockfish, saffron and fennel into the classic Provencal fish stew known as bouillabiasse",
+   "target": "bouillabaisse",
+   "target_alts": [],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "typo_word": "bouillabiasse",
+   "intermediates": [
+    "bouillabaisse"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "bouillabaisse"
+      ]
+     },
+     "match": [
+      "bouillabaisse"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "consistency_strict": 1.0,
+   "consistency_greedy": 1,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       5
+      ]
+     }
+    },
+    "target": 5,
+    "target_alts": []
+   },
+   "id": "tyh-novel-bouillabaisse",
+   "native_units_src": "d7d48c08a445e0cbf2f44890312821d1704eae46db8f65d595a15a84bc4090cd",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "tyh-novel-bronchiectasis",
+   "subfamily": "novel",
+   "prompt": "Permanently dilated, mucus-filled airways with tram-track markings on chest imaging characterize bronchiectassis",
+   "target": "bronchiectasis",
+   "target_alts": [],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "typo_word": "bronchiectassis",
+   "intermediates": [
+    "bronchiectasis"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "bronchiectasis"
+      ]
+     },
+     "match": [
+      "bronchiectasis"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "consistency_strict": 1.0,
+   "consistency_greedy": 1,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       3
+      ]
+     }
+    },
+    "target": 3,
+    "target_alts": []
+   },
+   "id": "tyh-novel-bronchiectasis",
+   "native_units_src": "5a5b68e2485d0dcd49877ff7a355196ab295e1639451c80d2d2d0913874b7d0f",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "tyh-novel-bronchodilator",
+   "subfamily": "novel",
+   "prompt": "During an acute asthma attack the first medication delivered through a nebulizer is typically a fast-acting inhaled brochodilator",
+   "target": "bronchodilator",
+   "target_alts": [],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "typo_word": "brochodilator",
+   "intermediates": [
+    "bronchodilator"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "bronchodilator"
+      ]
+     },
+     "match": [
+      "bronchodilator"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "consistency_strict": 1.0,
+   "consistency_greedy": 1,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       4
+      ]
+     }
+    },
+    "target": 4,
+    "target_alts": []
+   },
+   "id": "tyh-novel-bronchodilator",
+   "native_units_src": "2cc6b60f61f4bc567bae56d158deac66cd2e65746bc4525b60a0ce386ea7eadf",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "tyh-novel-bryophytes",
+   "subfamily": "novel",
+   "prompt": "Mosses, liverworts and hornworts are non-vascular land plants grouped together as bryophtyes",
+   "target": "bryophytes",
+   "target_alts": [],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "typo_word": "bryophtyes",
+   "intermediates": [
+    "bryophytes"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "bryophytes"
+      ]
+     },
+     "match": [
+      "bryophytes"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "consistency_strict": 1.0,
+   "consistency_greedy": 1,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       3
+      ]
+     }
+    },
+    "target": 3,
+    "target_alts": []
+   },
+   "id": "tyh-novel-bryophytes",
+   "native_units_src": "0900ad14856a92907291d5c0b5a09c49944ad90f9ede799ba71fe712080a0cfb",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "tyh-novel-calligraphy",
+   "subfamily": "novel",
+   "prompt": "Museum labels praise the Tang-dynasty monk's flowing brushwork as an early high point of Chinese calligrahpy",
+   "target": "calligraphy",
+   "target_alts": [],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "typo_word": "calligrahpy",
+   "intermediates": [
+    "calligraphy"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "calligraphy"
+      ]
+     },
+     "match": [
+      "calligraphy"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "consistency_strict": 1.0,
+   "consistency_greedy": 1,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       3
+      ]
+     }
+    },
+    "target": 3,
+    "target_alts": []
+   },
+   "id": "tyh-novel-calligraphy",
+   "native_units_src": "07ecfd033bdfeae87f151a0c744a306343e1191ba2b52d5352040bd2669ce546",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "tyh-novel-carbonara",
+   "subfamily": "novel",
+   "prompt": "Roman purists insist that guanciale, pecorino, egg yolk and black pepper — never cream — belong in a plate of spaghetti alla carbanara",
+   "target": "carbonara",
+   "target_alts": [],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "typo_word": "carbanara",
+   "intermediates": [
+    "carbonara"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "carbonara"
+      ]
+     },
+     "match": [
+      "carbonara"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "consistency_strict": 1.0,
+   "consistency_greedy": 1,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       2
+      ]
+     }
+    },
+    "target": 2,
+    "target_alts": []
+   },
+   "id": "tyh-novel-carbonara",
+   "native_units_src": "7ae3e20f7337781e76776d7a66df16d62569a04dafcb3e6ea41d9be1c036d5f9",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "tyh-novel-cardiomyopathy",
+   "subfamily": "novel",
+   "prompt": "Sudden death in young athletes is frequently caused by an inherited thickening of the ventricular wall called hypertrophic cardiomyoapthy",
+   "target": "cardiomyopathy",
+   "target_alts": [],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "typo_word": "cardiomyoapthy",
+   "intermediates": [
+    "cardiomyopathy"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "cardiomyopathy"
+      ]
+     },
+     "match": [
+      "cardiomyopathy"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "consistency_strict": 1.0,
+   "consistency_greedy": 1,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       3
+      ]
+     }
+    },
+    "target": 3,
+    "target_alts": []
+   },
+   "id": "tyh-novel-cardiomyopathy",
+   "native_units_src": "9a828055529049f7c44d2820f59688d03d74f83e7f57f47b57ab8a6b0315415f",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "tyh-novel-cartography",
+   "subfamily": "novel",
+   "prompt": "The scholarly craft of surveying, projecting and engraving maps, once dominated by Dutch and Flemish workshops, is known as cartograhpy",
+   "target": "cartography",
+   "target_alts": [],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "typo_word": "cartograhpy",
+   "intermediates": [
+    "cartography"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "cartography"
+      ]
+     },
+     "match": [
+      "cartography"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "consistency_strict": 1.0,
+   "consistency_greedy": 1,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       2
+      ]
+     }
+    },
+    "target": 2,
+    "target_alts": []
+   },
+   "id": "tyh-novel-cartography",
+   "native_units_src": "56f8209dd10f0ab54ab9b83959b5dc55a2611c5ea0d24a78d9970fa063f74438",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "tyh-novel-cassoulet",
+   "subfamily": "novel",
+   "prompt": "The slow-baked white bean stew with duck confit and sausage from Toulouse is a cassuolet",
+   "target": "cassoulet",
+   "target_alts": [],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "typo_word": "cassuolet",
+   "intermediates": [
+    "cassoulet"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "cassoulet"
+      ]
+     },
+     "match": [
+      "cassoulet"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "consistency_strict": 1.0,
+   "consistency_greedy": 1,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       3
+      ]
+     }
+    },
+    "target": 3,
+    "target_alts": []
+   },
+   "id": "tyh-novel-cassoulet",
+   "native_units_src": "5382dcfc434ebbddd24664e88f868c5f0257870abb8f36be5e93f3d07b3ac1c7",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "tyh-novel-cephalapods",
+   "subfamily": "novel",
+   "prompt": "The chambered nautilus, the vampire squid and the argonaut are all members of the mollusc class famous for jet propulsion, a beaked mouth and large complex eyes, the cephalapods",
+   "target": "cephalopods",
+   "target_alts": [],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "typo_word": "cephalapods",
+   "intermediates": [
+    "cephalopods"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "cephalopods"
+      ]
+     },
+     "match": [
+      "cephalopods"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "consistency_strict": 1.0,
+   "consistency_greedy": 1,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       3
+      ]
+     }
+    },
+    "target": 3,
+    "target_alts": []
+   },
+   "id": "tyh-novel-cephalapods",
+   "native_units_src": "1e085f467210f6eb34a007244f85fe7e2679a48c92f11c69e73df67ef09edd1a",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "tyh-novel-chaparral",
+   "subfamily": "novel",
+   "prompt": "The dense, drought-hardy evergreen shrubland covering the coastal hills of southern California is called chapparral",
+   "target": "chaparral",
+   "target_alts": [],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "typo_word": "chapparral",
+   "intermediates": [
+    "chaparral"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "chaparral"
+      ]
+     },
+     "match": [
+      "chaparral"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "consistency_strict": 1.0,
+   "consistency_greedy": 1,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       3
+      ]
+     }
+    },
+    "target": 3,
+    "target_alts": []
+   },
+   "id": "tyh-novel-chaparral",
+   "native_units_src": "f7c88cc98a521bdc6952ed0dcb9ef02039e32452b5d1f861d4c7d9a24810e073",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "tyh-novel-charcuterie",
+   "subfamily": "novel",
+   "prompt": "Pates, terrines, rillettes and dry-cured sausages all belong to the French butcher's craft called charcuteire",
+   "target": "charcuterie",
+   "target_alts": [],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "typo_word": "charcuteire",
+   "intermediates": [
+    "charcuterie"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "charcuterie"
+      ]
+     },
+     "match": [
+      "charcuterie"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "consistency_strict": 1.0,
+   "consistency_greedy": 1,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       3
+      ]
+     }
+    },
+    "target": 3,
+    "target_alts": []
+   },
+   "id": "tyh-novel-charcuterie",
+   "native_units_src": "1900c87312eb41d50b7d2b92ed8dd2823dd4df8a66b5e89fb1da4939440c4416",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "tyh-novel-chateaubriand",
+   "subfamily": "novel",
+   "prompt": "The thick center-cut of beef tenderloin roasted for two and named after a French Romantic writer is a chateubriand",
+   "target": "chateaubriand",
+   "target_alts": [],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "typo_word": "chateubriand",
+   "intermediates": [
+    "chateaubriand"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "chateaubriand"
+      ]
+     },
+     "match": [
+      "chateaubriand"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "consistency_strict": 1.0,
+   "consistency_greedy": 1,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       5
+      ]
+     }
+    },
+    "target": 5,
+    "target_alts": []
+   },
+   "id": "tyh-novel-chateaubriand",
+   "native_units_src": "fbd44211895a5a68c14ecfdc7ffddf225c7b187b83cf61205f849d730e333afc",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "tyh-novel-chelicerates",
+   "subfamily": "novel",
+   "prompt": "Spiders, scorpions, mites, and horseshoe crabs all lack antennae and belong to the arthropod group called chelicrates",
+   "target": "chelicerates",
+   "target_alts": [],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "typo_word": "chelicrates",
+   "intermediates": [
+    "chelicerates"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "chelicerates"
+      ]
+     },
+     "match": [
+      "chelicerates"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "consistency_strict": 1.0,
+   "consistency_greedy": 1,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       4
+      ]
+     }
+    },
+    "target": 4,
+    "target_alts": []
+   },
+   "id": "tyh-novel-chelicerates",
+   "native_units_src": "8c9ac571caf53f8ff0c50c3627bd7dc897baf0bbf68839f30a33905209d58d39",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "tyh-novel-chemosynthesis",
+   "subfamily": "novel",
+   "prompt": "Giant tube worms clustered around deep-sea hydrothermal vents survive thanks to symbiotic bacteria that produce food by chemosynthesys",
+   "target": "chemosynthesis",
+   "target_alts": [],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "typo_word": "chemosynthesys",
+   "intermediates": [
+    "chemosynthesis"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "chemosynthesis"
+      ]
+     },
+     "match": [
+      "chemosynthesis"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "consistency_strict": 1.0,
+   "consistency_greedy": 1,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       2
+      ]
+     }
+    },
+    "target": 2,
+    "target_alts": []
+   },
+   "id": "tyh-novel-chemosynthesis",
+   "native_units_src": "2dae641dc9b71a2a1f08db432cf1dab5014af043dd33ffd99f453b49dcbc2e4f",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "tyh-novel-chiaroscuro",
+   "subfamily": "novel",
+   "prompt": "Caravaggio modeled his figures through violent contrasts of illumination and shadow, a manner art historians label chiarosucro",
+   "target": "chiaroscuro",
+   "target_alts": [],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "typo_word": "chiarosucro",
+   "intermediates": [
+    "chiaroscuro"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "chiaroscuro"
+      ]
+     },
+     "match": [
+      "chiaroscuro"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "consistency_strict": 1.0,
+   "consistency_greedy": 1,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       2
+      ]
+     }
+    },
+    "target": 2,
+    "target_alts": []
+   },
+   "id": "tyh-novel-chiaroscuro",
+   "native_units_src": "bae33fde474cc805a44a28208651219821ab40aec9b6be7d3e76dc8df8b88fef",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "tyh-novel-chimichurri",
+   "subfamily": "novel",
+   "prompt": "The uncooked Argentine sauce of parsley, garlic, oregano and vinegar spooned over grilled beef is chimmichurri",
+   "target": "chimichurri",
+   "target_alts": [],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "typo_word": "chimmichurri",
+   "intermediates": [
+    "chimichurri"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "chimichurri"
+      ]
+     },
+     "match": [
+      "chimichurri"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "consistency_strict": 1.0,
+   "consistency_greedy": 1,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       4
+      ]
+     }
+    },
+    "target": 4,
+    "target_alts": []
+   },
+   "id": "tyh-novel-chimichurri",
+   "native_units_src": "0471bcf6eb1948e733261d11595f6809d6b1eb5a818f2874a19e78d8327bb650",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "tyh-novel-chinoiserie",
+   "subfamily": "novel",
+   "prompt": "The eighteenth-century European vogue for lacquered cabinets, pagoda motifs and fanciful Far Eastern ornament is known as chinoisserie",
+   "target": "chinoiserie",
+   "target_alts": [],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "typo_word": "chinoisserie",
+   "intermediates": [
+    "chinoiserie"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "chinoiserie"
+      ]
+     },
+     "match": [
+      "chinoiserie"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "consistency_strict": 1.0,
+   "consistency_greedy": 1,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       3
+      ]
+     }
+    },
+    "target": 3,
+    "target_alts": []
+   },
+   "id": "tyh-novel-chinoiserie",
+   "native_units_src": "f5ca3343142a267d33a43383aa6cb4f0a9246c82b1e183b16874372ed157e046",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "tyh-novel-chitinous",
+   "subfamily": "novel",
+   "prompt": "The tough outer cuticle of a beetle is stiffened by a nitrogen-bearing polysaccharide, which is why entomologists describe the covering as chittinous",
+   "target": "chitinous",
+   "target_alts": [],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "typo_word": "chittinous",
+   "intermediates": [
+    "chitinous"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "chitinous"
+      ]
+     },
+     "match": [
+      "chitinous"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "consistency_strict": 1.0,
+   "consistency_greedy": 1,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       3
+      ]
+     }
+    },
+    "target": 3,
+    "target_alts": []
+   },
+   "id": "tyh-novel-chitinous",
+   "native_units_src": "0fd7c4146268db749bcfcc9d1c20905958749073b732c2e514d8b8fec5a6558a",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "tyh-novel-chloroplast",
+   "subfamily": "novel",
+   "prompt": "Inside each leaf cell, sugar is manufactured within a green organelle known as the chloropalst",
+   "target": "chloroplast",
+   "target_alts": [],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "typo_word": "chloropalst",
+   "intermediates": [
+    "chloroplast"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "chloroplast"
+      ]
+     },
+     "match": [
+      "chloroplast"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "consistency_strict": 1.0,
+   "consistency_greedy": 1,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       2
+      ]
+     }
+    },
+    "target": 2,
+    "target_alts": []
+   },
+   "id": "tyh-novel-chloroplast",
+   "native_units_src": "55daff3dfa539094542f7bfaf41baf1c8e86a8d7d2aa07c7f2b03fca278983dd",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "tyh-novel-cholecystectomy",
+   "subfamily": "novel",
+   "prompt": "The operation in which a surgeon removes the gallbladder is known as a cholecystecomy",
+   "target": "cholecystectomy",
+   "target_alts": [],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "typo_word": "cholecystecomy",
+   "intermediates": [
+    "cholecystectomy"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "cholecystectomy"
+      ]
+     },
+     "match": [
+      "cholecystectomy"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "consistency_strict": 1.0,
+   "consistency_greedy": 1,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       5
+      ]
+     }
+    },
+    "target": 5,
+    "target_alts": []
+   },
+   "id": "tyh-novel-cholecystectomy",
+   "native_units_src": "e361e2a558cabed497e24248e815c51a20243877951f7cf60afb3aadc5c31526",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "tyh-novel-chromatophores",
+   "subfamily": "novel",
+   "prompt": "Cuttlefish and octopuses shift their skin color within milliseconds by expanding and contracting pigment-filled sacs called chromotophores",
+   "target": "chromatophores",
+   "target_alts": [],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "typo_word": "chromotophores",
+   "intermediates": [
+    "chromatophores"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "chromatophores"
+      ]
+     },
+     "match": [
+      "chromatophores"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "consistency_strict": 1.0,
+   "consistency_greedy": 1,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       3
+      ]
+     }
+    },
+    "target": 3,
+    "target_alts": []
+   },
+   "id": "tyh-novel-chromatophores",
+   "native_units_src": "958438a1b2ad1182c8930bd92fc22668f0da1788b2d55c7fc9f4234a6eedc60a",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "tyh-novel-chrysalis",
+   "subfamily": "novel",
+   "prompt": "After a monarch caterpillar hangs in a J shape and sheds its skin for the last time, the pupa hardens into a smooth jade-green chrysallis",
+   "target": "chrysalis",
+   "target_alts": [],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "typo_word": "chrysallis",
+   "intermediates": [
+    "chrysalis"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "chrysalis"
+      ]
+     },
+     "match": [
+      "chrysalis"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "consistency_strict": 1.0,
+   "consistency_greedy": 1,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       3
+      ]
+     }
+    },
+    "target": 3,
+    "target_alts": []
+   },
+   "id": "tyh-novel-chrysalis",
+   "native_units_src": "1a3301173e3e39334fd8a847d515deda99f55628299ec11cc123e5209fb27617",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "tyh-novel-chrysanthemum",
+   "subfamily": "novel",
+   "prompt": "Late-autumn flower shows in Shanghai are dominated by mounded, many-rayed cultivars of the composite garden plant known as the chrysanthenum",
+   "target": "chrysanthemum",
+   "target_alts": [],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "typo_word": "chrysanthenum",
+   "intermediates": [
+    "chrysanthemum"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "chrysanthemum"
+      ]
+     },
+     "match": [
+      "chrysanthemum"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "consistency_strict": 1.0,
+   "consistency_greedy": 1,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       2
+      ]
+     }
+    },
+    "target": 2,
+    "target_alts": []
+   },
+   "id": "tyh-novel-chrysanthemum",
+   "native_units_src": "9e7bddb79e3551f92fc903fae5c21f880045b0aca4d9dadec890225b899ba0e7",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "tyh-novel-clavichord",
+   "subfamily": "novel",
+   "prompt": "Bach composed many keyboard works for the soft, intimate stringed instrument whose brass tangents strike the wire, the clavicord",
+   "target": "clavichord",
+   "target_alts": [],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "typo_word": "clavicord",
+   "intermediates": [
+    "clavichord"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "clavichord"
+      ]
+     },
+     "match": [
+      "clavichord"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "consistency_strict": 1.0,
+   "consistency_greedy": 1,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       3
+      ]
+     }
+    },
+    "target": 3,
+    "target_alts": []
+   },
+   "id": "tyh-novel-clavichord",
+   "native_units_src": "6e503af3cabea83d103962ef3232f4fb4a6bbff400c96cccbd35cc2ac35bd438",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 0.8,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "tyh-novel-coleoptera",
+   "subfamily": "novel",
+   "prompt": "Weevils, ladybirds and stag beetles are all placed in the vast insect order Coleopetra",
+   "target": "Coleoptera",
+   "target_alts": [],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "typo_word": "Coleopetra",
+   "intermediates": [
+    "Coleoptera"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Coleoptera"
+      ]
+     },
+     "match": [
+      "Coleoptera"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "consistency_strict": 1.0,
+   "consistency_greedy": 1,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       2
+      ]
+     }
+    },
+    "target": 2,
+    "target_alts": []
+   },
+   "id": "tyh-novel-coleoptera",
+   "native_units_src": "f3af781e9518a65861b8180082c9a6e1eba8bd0a198ec42800a05dcf5610d728",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "tyh-novel-coloratura",
+   "subfamily": "novel",
+   "prompt": "The Queen of the Night's dazzling runs and staccato leaps demand a soprano trained in coloratrua",
+   "target": "coloratura",
+   "target_alts": [],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "typo_word": "coloratrua",
+   "intermediates": [
+    "coloratura"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "coloratura"
+      ]
+     },
+     "match": [
+      "coloratura"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "consistency_strict": 1.0,
+   "consistency_greedy": 1,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       2
+      ]
+     }
+    },
+    "target": 2,
+    "target_alts": []
+   },
+   "id": "tyh-novel-coloratura",
+   "native_units_src": "49c5ae38173e38d222a1e6bfdc53d6d80ed4cf8dc96a2e001f5666578470a187",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "tyh-novel-confluence",
+   "subfamily": "novel",
+   "prompt": "At the pilgrimage town of Devprayag, the Bhagirathi and the Alaknanda join to form the Ganges at a sacred conflunece",
+   "target": "confluence",
+   "target_alts": [],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "typo_word": "conflunece",
+   "intermediates": [
+    "confluence"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "confluence"
+      ]
+     },
+     "match": [
+      "confluence"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "consistency_strict": 1.0,
+   "consistency_greedy": 1,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       3
+      ]
+     }
+    },
+    "target": 3,
+    "target_alts": []
+   },
+   "id": "tyh-novel-confluence",
+   "native_units_src": "42cd5d02c198dbba67af813d1bc4affb9c362b853975bac49429a54f9ba2908b",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "tyh-novel-contrabassoon",
+   "subfamily": "novel",
+   "prompt": "The lowest double-reed voice in the symphonic woodwind section, sounding an octave below its more common relative, is the contrabasoon",
+   "target": "contrabassoon",
+   "target_alts": [],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "typo_word": "contrabasoon",
+   "intermediates": [
+    "contrabassoon"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "contrabassoon"
+      ]
+     },
+     "match": [
+      "contrabassoon"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "consistency_strict": 1.0,
+   "consistency_greedy": 1,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       3
+      ]
+     }
+    },
+    "target": 3,
+    "target_alts": []
+   },
+   "id": "tyh-novel-contrabassoon",
+   "native_units_src": "a1592d34733c1ab96ed2771a4faa3c5b809e97313de1ea1a06a35c4547818872",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "tyh-novel-contrapposto",
+   "subfamily": "novel",
+   "prompt": "In Renaissance sculpture, the relaxed S-curve stance in which the figure's shoulders and hips twist in opposite directions around a weight-bearing leg is called contrappostto",
+   "target": "contrapposto",
+   "target_alts": [],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "typo_word": "contrappostto",
+   "intermediates": [
+    "contrapposto"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "contrapposto"
+      ]
+     },
+     "match": [
+      "contrapposto"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "consistency_strict": 1.0,
+   "consistency_greedy": 1,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       3
+      ]
+     }
+    },
+    "target": 3,
+    "target_alts": []
+   },
+   "id": "tyh-novel-contrapposto",
+   "native_units_src": "2c6db1b90d80b3d33c7e99ee5db8442bd40f502fab2ccfb5bd91b49376416940",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "tyh-novel-conurbation",
+   "subfamily": "novel",
+   "prompt": "The continuous built-up belt joining Tokyo, Yokohama and Kawasaki is a textbook example of a conurbatoin",
+   "target": "conurbation",
+   "target_alts": [],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "typo_word": "conurbatoin",
+   "intermediates": [
+    "conurbation"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "conurbation"
+      ]
+     },
+     "match": [
+      "conurbation"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "consistency_strict": 1.0,
+   "consistency_greedy": 1,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       3
+      ]
+     }
+    },
+    "target": 3,
+    "target_alts": []
+   },
+   "id": "tyh-novel-conurbation",
+   "native_units_src": "50a660fb4af19f38af1c1854283caa960b8eca08b615a1322b1a96bd6c8f1984",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "tyh-real-acclamation",
+   "subfamily": "realword",
+   "prompt": "No ballots were printed and no votes were counted; the delegates simply rose and shouted their approval, so the nominee was chosen by acclimation",
+   "target": "acclamation",
+   "target_alts": [],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "typo_word": "acclimation",
+   "intermediates": [
+    "acclamation"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "acclamation"
+      ]
+     },
+     "match": [
+      "acclamation"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "consistency_strict": 1.0,
+   "consistency_greedy": 1,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       2
+      ]
+     }
+    },
+    "target": 2,
+    "target_alts": []
+   },
+   "id": "tyh-real-acclamation",
+   "native_units_src": "b5ba0b1a8b518d02586ba5873b49e5a4b08b66b2af21cf5e605cf9772ae5cdb9",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 0.9,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "tyh-real-adsorption",
+   "subfamily": "realword",
+   "prompt": "Because contaminant molecules adhere to the vast internal surface area of activated charcoal rather than dissolving into its bulk, chemists describe the purification as absorption",
+   "target": "adsorption",
+   "target_alts": [],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "typo_word": "absorption",
+   "intermediates": [
+    "adsorption"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "adsorption"
+      ]
+     },
+     "match": [
+      "adsorption"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "consistency_strict": 1.0,
+   "consistency_greedy": 1,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       2
+      ]
+     }
+    },
+    "target": 2,
+    "target_alts": []
+   },
+   "id": "tyh-real-adsorption",
+   "native_units_src": "b842ed3305715a3ec37c0d337abf77b4b17c9ab5744af670235a1e2fb080a4e6",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "tyh-real-cassation",
+   "subfamily": "realword",
+   "prompt": "In the French judicial system the tribunal of last resort, which rules only on points of law and may quash a lower judgment without retrying the facts, is the Court of Causation",
+   "target": "Cassation",
+   "target_alts": [],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "typo_word": "Causation",
+   "intermediates": [
+    "Cassation"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "Cassation"
+      ]
+     },
+     "match": [
+      "Cassation"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "consistency_strict": 1.0,
+   "consistency_greedy": 1,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       2
+      ]
+     }
+    },
+    "target": 2,
+    "target_alts": []
+   },
+   "id": "tyh-real-cassation",
+   "native_units_src": "8f20802a53d018672fe4cc9f45fd6cff68575b93bfb8f50dd56e65bdc95b643c",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "tyh-real-corporeal",
+   "subfamily": "realword",
+   "prompt": "The apparition drifted straight through the bolted door, proving that it had nothing corporal",
+   "target": "corporeal",
+   "target_alts": [],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "typo_word": "corporal",
+   "intermediates": [
+    "corporeal"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "corporeal"
+      ]
+     },
+     "match": [
+      "corporeal"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "consistency_strict": 1.0,
+   "consistency_greedy": 1,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       2
+      ]
+     }
+    },
+    "target": 2,
+    "target_alts": []
+   },
+   "id": "tyh-real-corporeal",
+   "native_units_src": "95d2eeba7e7a6877e44c37ef596496131bc2195c60b5c1ee3b039312dc5e0636",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 0.9,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "tyh-real-deference",
+   "subfamily": "realword",
+   "prompt": "When judges uphold a regulatory agency's reasonable reading of an ambiguous statute rather than substituting their own, lawyers call the doctrine judicial reference",
+   "target": "deference",
+   "target_alts": [],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "typo_word": "reference",
+   "intermediates": [
+    "deference"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "deference"
+      ]
+     },
+     "match": [
+      "deference"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "consistency_strict": 1.0,
+   "consistency_greedy": 1,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       2
+      ]
+     }
+    },
+    "target": 2,
+    "target_alts": []
+   },
+   "id": "tyh-real-deference",
+   "native_units_src": "f12609932f99afa3f972f2bd3312debb03bf49c900c6c01a7019a6de8d754453",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "tyh-real-depreciate",
+   "subfamily": "realword",
+   "prompt": "The bookkeepers spread the delivery truck's cost across eight years so that the asset would steadily deprecate",
+   "target": "depreciate",
+   "target_alts": [],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "typo_word": "deprecate",
+   "intermediates": [
+    "depreciate"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "depreciate"
+      ]
+     },
+     "match": [
+      "depreciate"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "consistency_strict": 1.0,
+   "consistency_greedy": 1,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       2
+      ]
+     }
+    },
+    "target": 2,
+    "target_alts": []
+   },
+   "id": "tyh-real-depreciate",
+   "native_units_src": "c9b4fbe643329c133993b56d60d2641980634a2042785ccfbd5b9e50e9d996c0",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "tyh-real-hyperbola",
+   "subfamily": "realword",
+   "prompt": "An interstellar comet arriving with an orbital eccentricity greater than one traces an open curve that geometers call a hyperbole",
+   "target": "hyperbola",
+   "target_alts": [],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "typo_word": "hyperbole",
+   "intermediates": [
+    "hyperbola"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "hyperbola"
+      ]
+     },
+     "match": [
+      "hyperbola"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "consistency_strict": 1.0,
+   "consistency_greedy": 1,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       2
+      ]
+     }
+    },
+    "target": 2,
+    "target_alts": []
+   },
+   "id": "tyh-real-hyperbola",
+   "native_units_src": "b503f6d36f8db881ff9a9d4ed9dc618eeb20d735e38cabf1ee17d64d64bf50dc",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "tyh-real-hyperthermia",
+   "subfamily": "realword",
+   "prompt": "The runner staggered off the humid course with a core temperature above 41 degrees, hot dry skin, no more sweating and slurred speech, the textbook picture of exertional hypothermia",
+   "target": "hyperthermia",
+   "target_alts": [],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "typo_word": "hypothermia",
+   "intermediates": [
+    "hyperthermia"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "hyperthermia"
+      ]
+     },
+     "match": [
+      "hyperthermia"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "consistency_strict": 1.0,
+   "consistency_greedy": 1,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       3
+      ]
+     }
+    },
+    "target": 3,
+    "target_alts": []
+   },
+   "id": "tyh-real-hyperthermia",
+   "native_units_src": "aa316971cb159e41de1d2dd1aacb8de978e90b9aa33e2abb657785faea094dd3",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "tyh-real-immortality",
+   "subfamily": "realword",
+   "prompt": "In the ancient Mesopotamian epic, Gilgamesh crosses the waters of death in search of the plant said to bestow immorality",
+   "target": "immortality",
+   "target_alts": [],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "typo_word": "immorality",
+   "intermediates": [
+    "immortality"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "immortality"
+      ]
+     },
+     "match": [
+      "immortality"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "consistency_strict": 1.0,
+   "consistency_greedy": 1,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       2
+      ]
+     }
+    },
+    "target": 2,
+    "target_alts": []
+   },
+   "id": "tyh-real-immortality",
+   "native_units_src": "b2c6c1b86703b5775d244103b96b9e875f4cd5214d69c72d3bddb6290fb62812",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "tyh-real-insolvent",
+   "subfamily": "realword",
+   "prompt": "With debts far exceeding its aircraft and cash reserves, the carrier was declared by the commercial court to be legally insolent",
+   "target": "insolvent",
+   "target_alts": [],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "typo_word": "insolent",
+   "intermediates": [
+    "insolvent"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "insolvent"
+      ]
+     },
+     "match": [
+      "insolvent"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "consistency_strict": 1.0,
+   "consistency_greedy": 1,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       2
+      ]
+     }
+    },
+    "target": 2,
+    "target_alts": []
+   },
+   "id": "tyh-real-insolvent",
+   "native_units_src": "09c0e8f0eadd54a59bb0bea5f2dfa9b92ea5e2a40b3cf4920276fae0c1135888",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "tyh-real-intestate",
+   "subfamily": "realword",
+   "prompt": "Because the deceased had signed no valid will and named no executor, his farm and savings passed to his next of kin under the probate rules that govern those who die interstate",
+   "target": "intestate",
+   "target_alts": [],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "typo_word": "interstate",
+   "intermediates": [
+    "intestate"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "intestate"
+      ]
+     },
+     "match": [
+      "intestate"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "consistency_strict": 1.0,
+   "consistency_greedy": 1,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       2
+      ]
+     }
+    },
+    "target": 2,
+    "target_alts": []
+   },
+   "id": "tyh-real-intestate",
+   "native_units_src": "b775014350d01ef4b9884b2eaa3ce4f8ce9afdf4f8b5bb8a28c716f19d52245f",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "tyh-real-ordnance",
+   "subfamily": "realword",
+   "prompt": "For three weeks the bomb-disposal team combed the old artillery range, removing shells and other unexploded wartime ordinance",
+   "target": "ordnance",
+   "target_alts": [],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "typo_word": "ordinance",
+   "intermediates": [
+    "ordnance"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "ordnance"
+      ]
+     },
+     "match": [
+      "ordnance"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "consistency_strict": 1.0,
+   "consistency_greedy": 1,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       2
+      ]
+     }
+    },
+    "target": 2,
+    "target_alts": []
+   },
+   "id": "tyh-real-ordnance",
+   "native_units_src": "ae4ef4ba9881f2751ffc0a6a51d68b458bfd0c38f8be94dcc34a7df9c360e4d1",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "tyh-real-phosphorus",
+   "subfamily": "realword",
+   "prompt": "Boiling down vats of urine in his Hamburg cellar in 1669, the alchemist Hennig Brand became the first person on record to isolate the eerily glowing element we now call phosphorous",
+   "target": "phosphorus",
+   "target_alts": [],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "typo_word": "phosphorous",
+   "intermediates": [
+    "phosphorus"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "phosphorus"
+      ]
+     },
+     "match": [
+      "phosphorus"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "consistency_strict": 1.0,
+   "consistency_greedy": 1,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       2
+      ]
+     }
+    },
+    "target": 2,
+    "target_alts": []
+   },
+   "id": "tyh-real-phosphorus",
+   "native_units_src": "92d8c0aaadb2656c0b380527de53e1989f59eef7493e41befbb7d21402bb095a",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "tyh-real-prostrate",
+   "subfamily": "realword",
+   "prompt": "The monks filed into the chapel and lay face down on the cold flagstones, arms flung wide and bodies fully prostate",
+   "target": "prostrate",
+   "target_alts": [],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "typo_word": "prostate",
+   "intermediates": [
+    "prostrate"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "prostrate"
+      ]
+     },
+     "match": [
+      "prostrate"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "consistency_strict": 1.0,
+   "consistency_greedy": 1,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       2
+      ]
+     }
+    },
+    "target": 2,
+    "target_alts": []
+   },
+   "id": "tyh-real-prostrate",
+   "native_units_src": "d93073f2c45301fff5c5ffcc41d17336b1db10351cd2447bea9e184245c62697",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "tyh-real-relegation",
+   "subfamily": "realword",
+   "prompt": "Beaten on the final day of the season, the club slipped out of the top flight and was condemned to immediate delegation",
+   "target": "relegation",
+   "target_alts": [],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "typo_word": "delegation",
+   "intermediates": [
+    "relegation"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "relegation"
+      ]
+     },
+     "match": [
+      "relegation"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "consistency_strict": 1.0,
+   "consistency_greedy": 1,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       2
+      ]
+     }
+    },
+    "target": 2,
+    "target_alts": []
+   },
+   "id": "tyh-real-relegation",
+   "native_units_src": "12bd2e9564c55de4563d4a006f0dbba15a5fafb64506c189d3ecb7c819c217fa",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "tyh-real-sandpiper",
+   "subfamily": "realword",
+   "prompt": "Bobbing its tail as it probes the mudflats for tiny invertebrates, the slender shorebird of the family Scolopacidae is known in English as a sandpaper",
+   "target": "sandpiper",
+   "target_alts": [],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "typo_word": "sandpaper",
+   "intermediates": [
+    "sandpiper"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "sandpiper"
+      ]
+     },
+     "match": [
+      "sandpiper"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "consistency_strict": 1.0,
+   "consistency_greedy": 1,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       2
+      ]
+     }
+    },
+    "target": 2,
+    "target_alts": []
+   },
+   "id": "tyh-real-sandpiper",
+   "native_units_src": "72a5cf2ab8d221aa3bda51d0e4974a0e52093118f3a157fcb02fb6f95d6150f8",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "tyh-real-tortuous",
+   "subfamily": "realword",
+   "prompt": "The little brook wanders through the salt marsh in loop after doubling loop, its channel shallow, narrow and torturous",
+   "target": "tortuous",
+   "target_alts": [],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "typo_word": "torturous",
+   "intermediates": [
+    "tortuous"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "tortuous"
+      ]
+     },
+     "match": [
+      "tortuous"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "consistency_strict": 1.0,
+   "consistency_greedy": 1,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       2
+      ]
+     }
+    },
+    "target": 2,
+    "target_alts": []
+   },
+   "id": "tyh-real-tortuous",
+   "native_units_src": "258fd93a6d62c13fcb30a740178541126c258be5908938c20bbbbe34b5654bd4",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "tyh-real-torturous",
+   "subfamily": "realword",
+   "prompt": "Four hours in the dentist's chair with no anesthetic at all was, he said, absolutely tortuous",
+   "target": "torturous",
+   "target_alts": [],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "typo_word": "tortuous",
+   "intermediates": [
+    "torturous"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "torturous"
+      ]
+     },
+     "match": [
+      "torturous"
+     ]
+    }
+   ],
+   "consistency": 1.0,
+   "consistency_strict": 1.0,
+   "consistency_greedy": 1,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       3
+      ]
+     }
+    },
+    "target": 3,
+    "target_alts": []
+   },
+   "id": "tyh-real-torturous",
+   "native_units_src": "54e3a4d35dbd43f58c73777f583f87e495161292c2cc598ca41addd8cf43476c",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 0.8,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "tyh-real-prophecies",
+   "subfamily": "realword",
+   "prompt": "The temple archive preserved brittle scrolls covered in the Sibyl's cryptic verses and doom-laden prophesies",
+   "target": "prophecies",
+   "target_alts": [],
+   "source": "staging_hard_mt",
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "typo_word": "prophesies",
+   "intermediates": [
+    "prophecies"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "prophecies"
+      ]
+     },
+     "match": [
+      "prophecies"
+     ]
+    }
+   ],
+   "consistency": 0.9,
+   "consistency_strict": 0.9,
+   "consistency_greedy": 1,
+   "gate_variant": "chat",
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       2
+      ]
+     }
+    },
+    "target": 2,
+    "target_alts": []
+   },
+   "id": "tyh-real-prophecies",
+   "native_units_src": "24a278e952383fac0a15d1153bbd523d9b49f365187927d3e1444c2fdf58e26d",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "typo-au-t1-w103c0-tyh-novel-unbelievable",
+   "subfamily": "novel",
+   "prompt": "The magician pulled a live elephant out of a tiny hat, a trick so astonishing the crowd called it simply unbelievible",
+   "typo_word": "unbelievible",
+   "target": "unbelievable",
+   "target_alts": [],
+   "intermediates": [
+    "unbelievable"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "unbelievable"
+      ]
+     },
+     "match": [
+      "unbelievable"
+     ]
+    }
+   ],
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       3
+      ]
+     }
+    }
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "source": "authored (claude-opus-5-5) for inkling-2-mini: Long words built from common roots with prefixes and suffixes (unbelievable, rearrangement, overwhelmingly, misunderstanding, unforgettable): easy to recognise but split into several tokens. Never a very common single word (information, government, temperature: one token each). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "Long words built from common roots with prefixes and suffixes (unbelievable, rearrangement, overwhelmingly, misunderstanding, unforgettable): easy to recognise but split into several tokens. Never a very common single word (information, government, temperature: one token each). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 103,
+    "plan": "0075",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "typo-au-t1-w103c0-tyh-novel-overwhelmingly",
+   "subfamily": "novel",
+   "prompt": "With ninety-five percent of members voting yes, the union approved the new contract overwhelmimgly",
+   "typo_word": "overwhelmimgly",
+   "target": "overwhelmingly",
+   "target_alts": [],
+   "intermediates": [
+    "overwhelmingly"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "overwhelmingly"
+      ]
+     },
+     "match": [
+      "overwhelmingly"
+     ]
+    }
+   ],
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       3
+      ]
+     }
+    }
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "source": "authored (claude-opus-5-5) for inkling-2-mini: Long words built from common roots with prefixes and suffixes (unbelievable, rearrangement, overwhelmingly, misunderstanding, unforgettable): easy to recognise but split into several tokens. Never a very common single word (information, government, temperature: one token each). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "Long words built from common roots with prefixes and suffixes (unbelievable, rearrangement, overwhelmingly, misunderstanding, unforgettable): easy to recognise but split into several tokens. Never a very common single word (information, government, temperature: one token each). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 103,
+    "plan": "0075",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "typo-au-t1-w103c0-tyh-novel-misunderstanding",
+   "subfamily": "novel",
+   "prompt": "She thought he said Tuesday and he thought she said Thursday, so the whole argument was just a silly misunderstending",
+   "typo_word": "misunderstending",
+   "target": "misunderstanding",
+   "target_alts": [],
+   "intermediates": [
+    "misunderstanding"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "misunderstanding"
+      ]
+     },
+     "match": [
+      "misunderstanding"
+     ]
+    }
+   ],
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       2
+      ]
+     }
+    }
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "source": "authored (claude-opus-5-5) for inkling-2-mini: Long words built from common roots with prefixes and suffixes (unbelievable, rearrangement, overwhelmingly, misunderstanding, unforgettable): easy to recognise but split into several tokens. Never a very common single word (information, government, temperature: one token each). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "Long words built from common roots with prefixes and suffixes (unbelievable, rearrangement, overwhelmingly, misunderstanding, unforgettable): easy to recognise but split into several tokens. Never a very common single word (information, government, temperature: one token each). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 103,
+    "plan": "0075",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "typo-au-t1-w103c0-tyh-novel-unforgettable",
+   "subfamily": "novel",
+   "prompt": "Watching the northern lights dance over the frozen lake was a night she would never forget, truly unforgettible",
+   "typo_word": "unforgettible",
+   "target": "unforgettable",
+   "target_alts": [],
+   "intermediates": [
+    "unforgettable"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "unforgettable"
+      ]
+     },
+     "match": [
+      "unforgettable"
+     ]
+    }
+   ],
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       3
+      ]
+     }
+    }
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "source": "authored (claude-opus-5-5) for inkling-2-mini: Long words built from common roots with prefixes and suffixes (unbelievable, rearrangement, overwhelmingly, misunderstanding, unforgettable): easy to recognise but split into several tokens. Never a very common single word (information, government, temperature: one token each). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "Long words built from common roots with prefixes and suffixes (unbelievable, rearrangement, overwhelmingly, misunderstanding, unforgettable): easy to recognise but split into several tokens. Never a very common single word (information, government, temperature: one token each). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 103,
+    "plan": "0075",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "typo-au-t1-w103c0-tyh-novel-disappointment",
+   "subfamily": "novel",
+   "prompt": "After months of hype, the sequel turned out dull and confusing, and fans left the cinema with a deep sense of disappointmemt",
+   "typo_word": "disappointmemt",
+   "target": "disappointment",
+   "target_alts": [],
+   "intermediates": [
+    "disappointment"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "disappointment"
+      ]
+     },
+     "match": [
+      "disappointment"
+     ]
+    }
+   ],
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       2
+      ]
+     }
+    }
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "source": "authored (claude-opus-5-5) for inkling-2-mini: Long words built from common roots with prefixes and suffixes (unbelievable, rearrangement, overwhelmingly, misunderstanding, unforgettable): easy to recognise but split into several tokens. Never a very common single word (information, government, temperature: one token each). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "Long words built from common roots with prefixes and suffixes (unbelievable, rearrangement, overwhelmingly, misunderstanding, unforgettable): easy to recognise but split into several tokens. Never a very common single word (information, government, temperature: one token each). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 103,
+    "plan": "0075",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "typo-au-t1-w103c0-tyh-novel-uncomfortable",
+   "subfamily": "novel",
+   "prompt": "The hard wooden bench had no cushion and no back support, making the six-hour train ride very uncomfortible",
+   "typo_word": "uncomfortible",
+   "target": "uncomfortable",
+   "target_alts": [],
+   "intermediates": [
+    "uncomfortable"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "uncomfortable"
+      ]
+     },
+     "match": [
+      "uncomfortable"
+     ]
+    }
+   ],
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       2
+      ]
+     }
+    }
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "source": "authored (claude-opus-5-5) for inkling-2-mini: Long words built from common roots with prefixes and suffixes (unbelievable, rearrangement, overwhelmingly, misunderstanding, unforgettable): easy to recognise but split into several tokens. Never a very common single word (information, government, temperature: one token each). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "Long words built from common roots with prefixes and suffixes (unbelievable, rearrangement, overwhelmingly, misunderstanding, unforgettable): easy to recognise but split into several tokens. Never a very common single word (information, government, temperature: one token each). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 103,
+    "plan": "0075",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "typo-au-t1-w103c0-tyh-novel-irreplaceable",
+   "subfamily": "novel",
+   "prompt": "The museum's only original manuscript could never be substituted or copied, so the curators considered it irreplaceible",
+   "typo_word": "irreplaceible",
+   "target": "irreplaceable",
+   "target_alts": [],
+   "intermediates": [
+    "irreplaceable"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "irreplaceable"
+      ]
+     },
+     "match": [
+      "irreplaceable"
+     ]
+    }
+   ],
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       3
+      ]
+     }
+    }
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "source": "authored (claude-opus-5-5) for inkling-2-mini: Long words built from common roots with prefixes and suffixes (unbelievable, rearrangement, overwhelmingly, misunderstanding, unforgettable): easy to recognise but split into several tokens. Never a very common single word (information, government, temperature: one token each). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "Long words built from common roots with prefixes and suffixes (unbelievable, rearrangement, overwhelmingly, misunderstanding, unforgettable): easy to recognise but split into several tokens. Never a very common single word (information, government, temperature: one token each). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 103,
+    "plan": "0075",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "typo-au-t1-w103c0-tyh-novel-overestimated",
+   "subfamily": "novel",
+   "prompt": "We bought food for two hundred guests but only forty came; clearly we had badly overestimeted",
+   "typo_word": "overestimeted",
+   "target": "overestimated",
+   "target_alts": [],
+   "intermediates": [
+    "overestimated"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "overestimated"
+      ]
+     },
+     "match": [
+      "overestimated"
+     ]
+    }
+   ],
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       2
+      ]
+     }
+    }
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "source": "authored (claude-opus-5-5) for inkling-2-mini: Long words built from common roots with prefixes and suffixes (unbelievable, rearrangement, overwhelmingly, misunderstanding, unforgettable): easy to recognise but split into several tokens. Never a very common single word (information, government, temperature: one token each). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "Long words built from common roots with prefixes and suffixes (unbelievable, rearrangement, overwhelmingly, misunderstanding, unforgettable): easy to recognise but split into several tokens. Never a very common single word (information, government, temperature: one token each). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 103,
+    "plan": "0075",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "typo-au-t1-w103c0-tyh-novel-unpredictable",
+   "subfamily": "novel",
+   "prompt": "Mountain weather can switch from sunshine to a blizzard within minutes, which makes it dangerously unpredictible",
+   "typo_word": "unpredictible",
+   "target": "unpredictable",
+   "target_alts": [],
+   "intermediates": [
+    "unpredictable"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "unpredictable"
+      ]
+     },
+     "match": [
+      "unpredictable"
+     ]
+    }
+   ],
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       3
+      ]
+     }
+    }
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "source": "authored (claude-opus-5-5) for inkling-2-mini: Long words built from common roots with prefixes and suffixes (unbelievable, rearrangement, overwhelmingly, misunderstanding, unforgettable): easy to recognise but split into several tokens. Never a very common single word (information, government, temperature: one token each). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "Long words built from common roots with prefixes and suffixes (unbelievable, rearrangement, overwhelmingly, misunderstanding, unforgettable): easy to recognise but split into several tokens. Never a very common single word (information, government, temperature: one token each). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 103,
+    "plan": "0075",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "typo-au-t1-w103c0-tyh-novel-environmentalist",
+   "subfamily": "novel",
+   "prompt": "She chained herself to an ancient oak to stop the loggers, a lifelong green activist and committed environmantalist",
+   "typo_word": "environmantalist",
+   "target": "environmentalist",
+   "target_alts": [],
+   "intermediates": [
+    "environmentalist"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "environmentalist"
+      ]
+     },
+     "match": [
+      "environmentalist"
+     ]
+    }
+   ],
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       2
+      ]
+     }
+    }
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "source": "authored (claude-opus-5-5) for inkling-2-mini: Long words built from common roots with prefixes and suffixes (unbelievable, rearrangement, overwhelmingly, misunderstanding, unforgettable): easy to recognise but split into several tokens. Never a very common single word (information, government, temperature: one token each). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "Long words built from common roots with prefixes and suffixes (unbelievable, rearrangement, overwhelmingly, misunderstanding, unforgettable): easy to recognise but split into several tokens. Never a very common single word (information, government, temperature: one token each). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 103,
+    "plan": "0075",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "typo-au-t1-w103c0-tyh-novel-counterproductive",
+   "subfamily": "novel",
+   "prompt": "Yelling at a frightened dog only makes it more scared and harder to train, so shouting is completely counterproductave",
+   "typo_word": "counterproductave",
+   "target": "counterproductive",
+   "target_alts": [],
+   "intermediates": [
+    "counterproductive"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "counterproductive"
+      ]
+     },
+     "match": [
+      "counterproductive"
+     ]
+    }
+   ],
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       2
+      ]
+     }
+    }
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "source": "authored (claude-opus-5-5) for inkling-2-mini: Long words built from common roots with prefixes and suffixes (unbelievable, rearrangement, overwhelmingly, misunderstanding, unforgettable): easy to recognise but split into several tokens. Never a very common single word (information, government, temperature: one token each). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "Long words built from common roots with prefixes and suffixes (unbelievable, rearrangement, overwhelmingly, misunderstanding, unforgettable): easy to recognise but split into several tokens. Never a very common single word (information, government, temperature: one token each). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 103,
+    "plan": "0075",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "typo-au-t1-w103c0-tyh-novel-untrustworthy",
+   "subfamily": "novel",
+   "prompt": "The salesman lied about the car's mileage and hid the rust, proving himself thoroughly untrustwerthy",
+   "typo_word": "untrustwerthy",
+   "target": "untrustworthy",
+   "target_alts": [],
+   "intermediates": [
+    "untrustworthy"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "untrustworthy"
+      ]
+     },
+     "match": [
+      "untrustworthy"
+     ]
+    }
+   ],
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       3
+      ]
+     }
+    }
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "source": "authored (claude-opus-5-5) for inkling-2-mini: Long words built from common roots with prefixes and suffixes (unbelievable, rearrangement, overwhelmingly, misunderstanding, unforgettable): easy to recognise but split into several tokens. Never a very common single word (information, government, temperature: one token each). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "Long words built from common roots with prefixes and suffixes (unbelievable, rearrangement, overwhelmingly, misunderstanding, unforgettable): easy to recognise but split into several tokens. Never a very common single word (information, government, temperature: one token each). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 103,
+    "plan": "0075",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "typo-au-t1-w103c0-tyh-novel-disconnection",
+   "subfamily": "novel",
+   "prompt": "The internet kept dropping out every few minutes, and the provider apologised for the repeated disconnectiom",
+   "typo_word": "disconnectiom",
+   "target": "disconnection",
+   "target_alts": [],
+   "intermediates": [
+    "disconnection"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "disconnection"
+      ]
+     },
+     "match": [
+      "disconnection"
+     ]
+    }
+   ],
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       2
+      ]
+     }
+    }
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "source": "authored (claude-opus-5-5) for inkling-2-mini: Long words built from common roots with prefixes and suffixes (unbelievable, rearrangement, overwhelmingly, misunderstanding, unforgettable): easy to recognise but split into several tokens. Never a very common single word (information, government, temperature: one token each). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "Long words built from common roots with prefixes and suffixes (unbelievable, rearrangement, overwhelmingly, misunderstanding, unforgettable): easy to recognise but split into several tokens. Never a very common single word (information, government, temperature: one token each). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 103,
+    "plan": "0075",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "typo-au-t1-w103c0-tyh-novel-hopelessness",
+   "subfamily": "novel",
+   "prompt": "Stranded on the raft with no water and no ships in sight, the sailors sank into utter despair and hopelessnass",
+   "typo_word": "hopelessnass",
+   "target": "hopelessness",
+   "target_alts": [],
+   "intermediates": [
+    "hopelessness"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "hopelessness"
+      ]
+     },
+     "match": [
+      "hopelessness"
+     ]
+    }
+   ],
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       2
+      ]
+     }
+    }
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "source": "authored (claude-opus-5-5) for inkling-2-mini: Long words built from common roots with prefixes and suffixes (unbelievable, rearrangement, overwhelmingly, misunderstanding, unforgettable): easy to recognise but split into several tokens. Never a very common single word (information, government, temperature: one token each). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "Long words built from common roots with prefixes and suffixes (unbelievable, rearrangement, overwhelmingly, misunderstanding, unforgettable): easy to recognise but split into several tokens. Never a very common single word (information, government, temperature: one token each). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 103,
+    "plan": "0075",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "typo-au-t1-w103c0-tyh-novel-rediscovered",
+   "subfamily": "novel",
+   "prompt": "The lost city lay forgotten in the jungle for centuries until archaeologists finally found it again; it had been rediscovared",
+   "typo_word": "rediscovared",
+   "target": "rediscovered",
+   "target_alts": [],
+   "intermediates": [
+    "rediscovered"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "rediscovered"
+      ]
+     },
+     "match": [
+      "rediscovered"
+     ]
+    }
+   ],
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       2
+      ]
+     }
+    }
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "source": "authored (claude-opus-5-5) for inkling-2-mini: Long words built from common roots with prefixes and suffixes (unbelievable, rearrangement, overwhelmingly, misunderstanding, unforgettable): easy to recognise but split into several tokens. Never a very common single word (information, government, temperature: one token each). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "Long words built from common roots with prefixes and suffixes (unbelievable, rearrangement, overwhelmingly, misunderstanding, unforgettable): easy to recognise but split into several tokens. Never a very common single word (information, government, temperature: one token each). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 103,
+    "plan": "0075",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "typo-au-t1-w103c0-tyh-novel-uninhabitable",
+   "subfamily": "novel",
+   "prompt": "With no air, crushing heat and acid clouds, the surface of Venus is completely uninhabitible",
+   "typo_word": "uninhabitible",
+   "target": "uninhabitable",
+   "target_alts": [],
+   "intermediates": [
+    "uninhabitable"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "uninhabitable"
+      ]
+     },
+     "match": [
+      "uninhabitable"
+     ]
+    }
+   ],
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       4
+      ]
+     }
+    }
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "source": "authored (claude-opus-5-5) for inkling-2-mini: Long words built from common roots with prefixes and suffixes (unbelievable, rearrangement, overwhelmingly, misunderstanding, unforgettable): easy to recognise but split into several tokens. Never a very common single word (information, government, temperature: one token each). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "Long words built from common roots with prefixes and suffixes (unbelievable, rearrangement, overwhelmingly, misunderstanding, unforgettable): easy to recognise but split into several tokens. Never a very common single word (information, government, temperature: one token each). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 103,
+    "plan": "0075",
+    "gate": {
+     "rate": 0.9,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "typo-au-t1-w104c0-tym-novel-irresponsible",
+   "subfamily": "novel",
+   "prompt": "Leaving a toddler alone near a swimming pool while you go shopping is reckless and deeply irresponsibke",
+   "typo_word": "irresponsibke",
+   "target": "irresponsible",
+   "target_alts": [],
+   "intermediates": [
+    "irresponsible"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "irresponsible"
+      ]
+     },
+     "match": [
+      "irresponsible"
+     ]
+    }
+   ],
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       2
+      ]
+     }
+    }
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "source": "authored (claude-opus-5-5) for inkling-2-mini: Long words built from common roots with prefixes and suffixes (unbelievable, rearrangement, overwhelmingly, misunderstanding, unforgettable): easy to recognise but split into several tokens. Never a very common single word (information, government, temperature: one token each). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "Long words built from common roots with prefixes and suffixes (unbelievable, rearrangement, overwhelmingly, misunderstanding, unforgettable): easy to recognise but split into several tokens. Never a very common single word (information, government, temperature: one token each). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 104,
+    "plan": "0075",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "typo-au-t1-w104c0-tym-novel-disagreement",
+   "subfamily": "novel",
+   "prompt": "The two scientists argued for hours about the data and never resolved their fundamental disagreemant",
+   "typo_word": "disagreemant",
+   "target": "disagreement",
+   "target_alts": [],
+   "intermediates": [
+    "disagreement"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "disagreement"
+      ]
+     },
+     "match": [
+      "disagreement"
+     ]
+    }
+   ],
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       2
+      ]
+     }
+    }
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "source": "authored (claude-opus-5-5) for inkling-2-mini: Long words built from common roots with prefixes and suffixes (unbelievable, rearrangement, overwhelmingly, misunderstanding, unforgettable): easy to recognise but split into several tokens. Never a very common single word (information, government, temperature: one token each). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "Long words built from common roots with prefixes and suffixes (unbelievable, rearrangement, overwhelmingly, misunderstanding, unforgettable): easy to recognise but split into several tokens. Never a very common single word (information, government, temperature: one token each). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 104,
+    "plan": "0075",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "typo-au-t1-w104c0-tym-novel-overcrowding",
+   "subfamily": "novel",
+   "prompt": "The prison was built for five hundred inmates but now holds twelve hundred, a severe case of overcrowdimg",
+   "typo_word": "overcrowdimg",
+   "target": "overcrowding",
+   "target_alts": [],
+   "intermediates": [
+    "overcrowding"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "overcrowding"
+      ]
+     },
+     "match": [
+      "overcrowding"
+     ]
+    }
+   ],
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       3
+      ]
+     }
+    }
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "source": "authored (claude-opus-5-5) for inkling-2-mini: Long words built from common roots with prefixes and suffixes (unbelievable, rearrangement, overwhelmingly, misunderstanding, unforgettable): easy to recognise but split into several tokens. Never a very common single word (information, government, temperature: one token each). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "Long words built from common roots with prefixes and suffixes (unbelievable, rearrangement, overwhelmingly, misunderstanding, unforgettable): easy to recognise but split into several tokens. Never a very common single word (information, government, temperature: one token each). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 104,
+    "plan": "0075",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "typo-au-t1-w104c0-tym-novel-internationally",
+   "subfamily": "novel",
+   "prompt": "The small local band became famous not only at home but across dozens of countries, touring internationalky",
+   "typo_word": "internationalky",
+   "target": "internationally",
+   "target_alts": [],
+   "intermediates": [
+    "internationally"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "internationally"
+      ]
+     },
+     "match": [
+      "internationally"
+     ]
+    }
+   ],
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       2
+      ]
+     }
+    }
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "source": "authored (claude-opus-5-5) for inkling-2-mini: Long words built from common roots with prefixes and suffixes (unbelievable, rearrangement, overwhelmingly, misunderstanding, unforgettable): easy to recognise but split into several tokens. Never a very common single word (information, government, temperature: one token each). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "Long words built from common roots with prefixes and suffixes (unbelievable, rearrangement, overwhelmingly, misunderstanding, unforgettable): easy to recognise but split into several tokens. Never a very common single word (information, government, temperature: one token each). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 104,
+    "plan": "0075",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "typo-au-t1-w104c0-tym-novel-uninterrupted",
+   "subfamily": "novel",
+   "prompt": "With the phone switched off and the door locked, the writer finally got eight hours of work that was quiet and uninterruptes",
+   "typo_word": "uninterruptes",
+   "target": "uninterrupted",
+   "target_alts": [],
+   "intermediates": [
+    "uninterrupted"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "uninterrupted"
+      ]
+     },
+     "match": [
+      "uninterrupted"
+     ]
+    }
+   ],
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       3
+      ]
+     }
+    }
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "source": "authored (claude-opus-5-5) for inkling-2-mini: Long words built from common roots with prefixes and suffixes (unbelievable, rearrangement, overwhelmingly, misunderstanding, unforgettable): easy to recognise but split into several tokens. Never a very common single word (information, government, temperature: one token each). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "Long words built from common roots with prefixes and suffixes (unbelievable, rearrangement, overwhelmingly, misunderstanding, unforgettable): easy to recognise but split into several tokens. Never a very common single word (information, government, temperature: one token each). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 104,
+    "plan": "0075",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "typo-au-t1-w104c0-tym-novel-dehydration",
+   "subfamily": "novel",
+   "prompt": "Hiking in the desert heat without drinking enough water left him dizzy, with a dry mouth and dark urine, signs of severe dehydratiom",
+   "typo_word": "dehydratiom",
+   "target": "dehydration",
+   "target_alts": [],
+   "intermediates": [
+    "dehydration"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "dehydration"
+      ]
+     },
+     "match": [
+      "dehydration"
+     ]
+    }
+   ],
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       3
+      ]
+     }
+    }
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "source": "authored (claude-opus-5-5) for inkling-2-mini: Long words built from common roots with prefixes and suffixes (unbelievable, rearrangement, overwhelmingly, misunderstanding, unforgettable): easy to recognise but split into several tokens. Never a very common single word (information, government, temperature: one token each). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "Long words built from common roots with prefixes and suffixes (unbelievable, rearrangement, overwhelmingly, misunderstanding, unforgettable): easy to recognise but split into several tokens. Never a very common single word (information, government, temperature: one token each). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 104,
+    "plan": "0075",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "typo-au-t1-w104c0-tym-novel-refrigerator",
+   "subfamily": "novel",
+   "prompt": "Put the milk and leftover chicken back in the cold kitchen appliance before they spoil, the refrigeratir",
+   "typo_word": "refrigeratir",
+   "target": "refrigerator",
+   "target_alts": [],
+   "intermediates": [
+    "refrigerator"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "refrigerator"
+      ]
+     },
+     "match": [
+      "refrigerator"
+     ]
+    }
+   ],
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       2
+      ]
+     }
+    }
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "source": "authored (claude-opus-5-5) for inkling-2-mini: Long words built from common roots with prefixes and suffixes (unbelievable, rearrangement, overwhelmingly, misunderstanding, unforgettable): easy to recognise but split into several tokens. Never a very common single word (information, government, temperature: one token each). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "Long words built from common roots with prefixes and suffixes (unbelievable, rearrangement, overwhelmingly, misunderstanding, unforgettable): easy to recognise but split into several tokens. Never a very common single word (information, government, temperature: one token each). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 104,
+    "plan": "0075",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "typo-au-t1-w104c0-tym-novel-powerlessness",
+   "subfamily": "novel",
+   "prompt": "Watching the flood carry away her house while she could do nothing to stop it filled her with a sense of utter powerlessnesd",
+   "typo_word": "powerlessnesd",
+   "target": "powerlessness",
+   "target_alts": [],
+   "intermediates": [
+    "powerlessness"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "powerlessness"
+      ]
+     },
+     "match": [
+      "powerlessness"
+     ]
+    }
+   ],
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       2
+      ]
+     }
+    }
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "source": "authored (claude-opus-5-5) for inkling-2-mini: Long words built from common roots with prefixes and suffixes (unbelievable, rearrangement, overwhelmingly, misunderstanding, unforgettable): easy to recognise but split into several tokens. Never a very common single word (information, government, temperature: one token each). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "Long words built from common roots with prefixes and suffixes (unbelievable, rearrangement, overwhelmingly, misunderstanding, unforgettable): easy to recognise but split into several tokens. Never a very common single word (information, government, temperature: one token each). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 104,
+    "plan": "0075",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "typo-au-t1-w104c0-tym-novel-homesickness",
+   "subfamily": "novel",
+   "prompt": "During her first month at boarding school abroad, she cried every night missing her family and her own bed, suffering from homesicknees",
+   "typo_word": "homesicknees",
+   "target": "homesickness",
+   "target_alts": [],
+   "intermediates": [
+    "homesickness"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "homesickness"
+      ]
+     },
+     "match": [
+      "homesickness"
+     ]
+    }
+   ],
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       3
+      ]
+     }
+    }
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "source": "authored (claude-opus-5-5) for inkling-2-mini: Long words built from common roots with prefixes and suffixes (unbelievable, rearrangement, overwhelmingly, misunderstanding, unforgettable): easy to recognise but split into several tokens. Never a very common single word (information, government, temperature: one token each). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "Long words built from common roots with prefixes and suffixes (unbelievable, rearrangement, overwhelmingly, misunderstanding, unforgettable): easy to recognise but split into several tokens. Never a very common single word (information, government, temperature: one token each). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 104,
+    "plan": "0075",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "typo-au-t1-w100c0-tym-novel-environmentally",
+   "subfamily": "novel",
+   "prompt": "The company switched to recycled packaging and solar power to make its factories more green and environmentallu",
+   "typo_word": "environmentallu",
+   "target": "environmentally",
+   "target_alts": [],
+   "intermediates": [
+    "environmentally"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "environmentally"
+      ]
+     },
+     "match": [
+      "environmentally"
+     ]
+    }
+   ],
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       2
+      ]
+     }
+    }
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "source": "authored (claude-opus-5-5) for inkling-2-mini: Long words built from common roots with prefixes and suffixes (unbelievable, rearrangement, overwhelmingly, misunderstanding, unforgettable): easy to recognise but split into several tokens. Never a very common single word (information, government, temperature: one token each). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "Long words built from common roots with prefixes and suffixes (unbelievable, rearrangement, overwhelmingly, misunderstanding, unforgettable): easy to recognise but split into several tokens. Never a very common single word (information, government, temperature: one token each). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 100,
+    "plan": "0075",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "typo-au-t1-w100c0-tym-novel-uncontrollable",
+   "subfamily": "novel",
+   "prompt": "The joke was so funny that the whole class burst into laughter that was loud, long and utterly uncontrollablr",
+   "typo_word": "uncontrollablr",
+   "target": "uncontrollable",
+   "target_alts": [],
+   "intermediates": [
+    "uncontrollable"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "uncontrollable"
+      ]
+     },
+     "match": [
+      "uncontrollable"
+     ]
+    }
+   ],
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       3
+      ]
+     }
+    }
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "source": "authored (claude-opus-5-5) for inkling-2-mini: Long words built from common roots with prefixes and suffixes (unbelievable, rearrangement, overwhelmingly, misunderstanding, unforgettable): easy to recognise but split into several tokens. Never a very common single word (information, government, temperature: one token each). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "Long words built from common roots with prefixes and suffixes (unbelievable, rearrangement, overwhelmingly, misunderstanding, unforgettable): easy to recognise but split into several tokens. Never a very common single word (information, government, temperature: one token each). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 100,
+    "plan": "0075",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "typo-au-t1-w100c0-tym-novel-disqualification",
+   "subfamily": "novel",
+   "prompt": "The sprinter false-started twice, and the referee had no choice but to announce her disqualificatiom",
+   "typo_word": "disqualificatiom",
+   "target": "disqualification",
+   "target_alts": [],
+   "intermediates": [
+    "disqualification"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "disqualification"
+      ]
+     },
+     "match": [
+      "disqualification"
+     ]
+    }
+   ],
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       3
+      ]
+     }
+    }
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "source": "authored (claude-opus-5-5) for inkling-2-mini: Long words built from common roots with prefixes and suffixes (unbelievable, rearrangement, overwhelmingly, misunderstanding, unforgettable): easy to recognise but split into several tokens. Never a very common single word (information, government, temperature: one token each). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "Long words built from common roots with prefixes and suffixes (unbelievable, rearrangement, overwhelmingly, misunderstanding, unforgettable): easy to recognise but split into several tokens. Never a very common single word (information, government, temperature: one token each). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 100,
+    "plan": "0075",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "typo-au-t1-w100c0-tym-novel-understandable",
+   "subfamily": "novel",
+   "prompt": "Given that he had not slept in two days, his bad mood was perfectly reasonable and completely understandabke",
+   "typo_word": "understandabke",
+   "target": "understandable",
+   "target_alts": [],
+   "intermediates": [
+    "understandable"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "understandable"
+      ]
+     },
+     "match": [
+      "understandable"
+     ]
+    }
+   ],
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       2
+      ]
+     }
+    }
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "source": "authored (claude-opus-5-5) for inkling-2-mini: Long words built from common roots with prefixes and suffixes (unbelievable, rearrangement, overwhelmingly, misunderstanding, unforgettable): easy to recognise but split into several tokens. Never a very common single word (information, government, temperature: one token each). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "Long words built from common roots with prefixes and suffixes (unbelievable, rearrangement, overwhelmingly, misunderstanding, unforgettable): easy to recognise but split into several tokens. Never a very common single word (information, government, temperature: one token each). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 100,
+    "plan": "0075",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "typo-au-t1-w100c0-tym-novel-incomprehensible",
+   "subfamily": "novel",
+   "prompt": "The instruction manual was so badly translated that no one could make sense of it; it was totally incomprehensibke",
+   "typo_word": "incomprehensibke",
+   "target": "incomprehensible",
+   "target_alts": [],
+   "intermediates": [
+    "incomprehensible"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "incomprehensible"
+      ]
+     },
+     "match": [
+      "incomprehensible"
+     ]
+    }
+   ],
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       3
+      ]
+     }
+    }
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "source": "authored (claude-opus-5-5) for inkling-2-mini: Long words built from common roots with prefixes and suffixes (unbelievable, rearrangement, overwhelmingly, misunderstanding, unforgettable): easy to recognise but split into several tokens. Never a very common single word (information, government, temperature: one token each). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "Long words built from common roots with prefixes and suffixes (unbelievable, rearrangement, overwhelmingly, misunderstanding, unforgettable): easy to recognise but split into several tokens. Never a very common single word (information, government, temperature: one token each). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 100,
+    "plan": "0075",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "typo-au-t1-w105c0-tym-novel-underestimate",
+   "subfamily": "novel",
+   "prompt": "The champion lost to the unknown rookie, a reminder that you should never think too little of an opponent or underestimare",
+   "typo_word": "underestimare",
+   "target": "underestimate",
+   "target_alts": [],
+   "intermediates": [
+    "underestimate"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "underestimate"
+      ]
+     },
+     "match": [
+      "underestimate"
+     ]
+    }
+   ],
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       3
+      ]
+     }
+    }
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "source": "authored (claude-opus-5-5) for inkling-2-mini: Long words built from common roots with prefixes and suffixes (unbelievable, rearrangement, overwhelmingly, misunderstanding, unforgettable): easy to recognise but split into several tokens. Never a very common single word (information, government, temperature: one token each). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "Long words built from common roots with prefixes and suffixes (unbelievable, rearrangement, overwhelmingly, misunderstanding, unforgettable): easy to recognise but split into several tokens. Never a very common single word (information, government, temperature: one token each). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 105,
+    "plan": "0075",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "typo-au-t1-w105c0-tym-novel-reconsideration",
+   "subfamily": "novel",
+   "prompt": "After new evidence emerged, the lawyer asked the judge to think the decision over again, filing a motion for reconsiderstion",
+   "typo_word": "reconsiderstion",
+   "target": "reconsideration",
+   "target_alts": [],
+   "intermediates": [
+    "reconsideration"
+   ],
+   "units": [
+    {
+     "role": "correction",
+     "required": true,
+     "multi_token": true,
+     "forms": {
+      "en": [
+       "reconsideration"
+      ]
+     },
+     "match": [
+      "reconsideration"
+     ]
+    }
+   ],
+   "probe_token_lens": {
+    "units": {
+     "correction": {
+      "en": [
+       2
+      ]
+     }
+    }
+   },
+   "eval_render": "plain",
+   "readout": {
+    "kind": "final_prompt_token",
+    "offsets": [
+     -1
+    ]
+   },
+   "source": "authored (claude-opus-5-5) for inkling-2-mini: Long words built from common roots with prefixes and suffixes (unbelievable, rearrangement, overwhelmingly, misunderstanding, unforgettable): easy to recognise but split into several tokens. Never a very common single word (information, government, temperature: one token each). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word.",
+   "adapt": {
+    "origin": "authored",
+    "tier": "t1",
+    "knobs": {
+     "brief": "Long words built from common roots with prefixes and suffixes (unbelievable, rearrangement, overwhelmingly, misunderstanding, unforgettable): easy to recognise but split into several tokens. Never a very common single word (information, government, temperature: one token each). A one-letter edit that keeps the first three letters, in a sentence that strongly predicts the word."
+    },
+    "author": "claude-opus-5-5",
+    "wave": 105,
+    "plan": "0075",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  }
+ ]
+}

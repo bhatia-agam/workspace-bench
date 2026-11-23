@@ -107,7 +107,7 @@ def test_no_reachable_typo_mt_bank_has_arith_items():
     paths += sorted(REPO.glob("adapted/*/typo.json"))
     registered, _ = load_bank(paths[0])
     assert registered["dropped"]["n"] == len(registered["dropped"]["names"]) > 0
-    assert len(paths) == 18  # + glm-5.3, kimi-k3, v4-pro, muse, v4-flash, dory-4b; bump per set
+    assert len(paths) == 19  # + glm-5.3, kimi-k3, v4-pro, muse, v4-flash, dory-4b, inkling; bump
     for p in paths:
         h, items = load_bank(p)
         assert all(it.get("subfamily") != "arith" for it in items), p

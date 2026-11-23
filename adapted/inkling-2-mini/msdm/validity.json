@@ -1,0 +1,202 @@
+{
+ "s1_amine_protecting_group": {
+  "gold": "boc",
+  "preds": [
+   "fmoc",
+   "cbz"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Boc (tert-butyloxycarbonyl) is a widely used, real amine protecting group, common in peptide synthesis."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "Boc",
+    "BOC",
+    "t-Boc",
+    "tBoc",
+    "tert-butyloxycarbonyl",
+    "tert-butoxycarbonyl",
+    "t-butyloxycarbonyl",
+    "t-butoxycarbonyl",
+    "叔丁氧羰基",
+    "叔丁氧基羰基",
+    "Boc保护基",
+    "Boc基团"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Boc is a specific, well-known amine protecting group, but readouts may use the abbreviation, the full name or the Chinese name, so aliases are needed. The other predictions (Fmoc, Cbz) are valid members of the category."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s1_mexican_pan_dulce": {
+  "gold": "Concha",
+  "preds": [
+   "almejas"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Concha is a classic Mexican pan dulce: a sweet bread roll with a shell-patterned sugar topping."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "almejas"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Concha",
+    "Conchas",
+    "concha bread",
+    "seashell bread",
+    "shell-shaped sweet bun",
+    "Mexican shell bread",
+    "贝壳面包",
+    "墨西哥贝壳面包",
+    "孔查面包",
+    "康查面包"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Concha is a specific, well-known pan dulce. 'Almejas' (clams) is a shell-association error, not a bread. Translated forms like 'seashell bread' or 贝壳面包 should be accepted, but bare 'clam' or 'shell' should not."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s1_chiral_auxiliary": {
+  "gold": "Evans oxazolidinone",
+  "preds": [
+   "Oppolzer sultam",
+   "samp/ramp",
+   "Vinyloxy borne",
+   "(R)-2-Methyl-BSA"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Evans oxazolidinones are a well-known, real class of chiral auxiliaries widely used in asymmetric aldol and alkylation reactions."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [
+    "Vinyloxy borne",
+    "(R)-2-Methyl-BSA"
+   ],
+   "recognisable": true,
+   "aliases": [
+    "Evans oxazolidinone",
+    "Evans auxiliary",
+    "Evans' chiral auxiliary",
+    "Evans oxazolidinone auxiliary",
+    "oxazolidinone auxiliary",
+    "chiral oxazolidinone",
+    "4-benzyl-2-oxazolidinone",
+    "4-benzyloxazolidin-2-one",
+    "4-isopropyl-2-oxazolidinone",
+    "4-phenyl-2-oxazolidinone",
+    "Evans噁唑烷酮",
+    "Evans恶唑烷酮",
+    "伊文斯噁唑烷酮",
+    "噁唑烷酮手性助剂",
+    "恶唑烷酮手性辅基",
+    "Evans手性助剂",
+    "Evans辅基"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Evans oxazolidinone is a specific, widely known chiral auxiliary. Judges will recognise it easily, but they should also accept the 'Evans auxiliary' and Chinese 噁唑烷酮/恶唑烷酮 variants."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s1_variety_of_corundum": {
+  "gold": "Ruby",
+  "preds": [
+   "Padparadscha",
+   "Sapphire"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Ruby is the red gem variety of corundum (aluminum oxide), colored by chromium."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "Ruby",
+    "Rubies",
+    "红宝石",
+    "红刚玉",
+    "Red corundum",
+    "Pigeon's blood ruby",
+    "鸽血红"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Ruby is a specific, well-known variety of corundum and easy to recognise; accepting the Chinese name 红宝石 and 'red corundum' makes the bilingual readouts robust."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s3b2_sunbird_genus": {
+  "gold": "Nectarinia",
+  "preds": [
+   "Cinnyris",
+   "Aethopyga",
+   "Cyanomitra",
+   "Anthreptes"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Nectarinia is a real genus of sunbirds in the family Nectariniidae."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "Nectarinia",
+    "Nectarinia sunbirds",
+    "genus Nectarinia",
+    "long-tailed sunbirds",
+    "malachite sunbird genus",
+    "花蜜鸟属",
+    "Nectarinia属"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Nectarinia is a valid member genus and the family's type genus. All predictions are real sunbird genera. The judge needs aliases, but two traps apply: 'Nectariniidae' (the family) or plain 'sunbird' should not count, and the Chinese name 花蜜鸟属 is also used for Cinnyris, so it should be accepted only alongside the Latin name."
+  },
+  "version": "msdm-validity-2026-11-04"
+ },
+ "s2_polish_soup": {
+  "gold": "Żurek",
+  "preds": [
+   "Barszcz",
+   "zupa ogórkowa",
+   "Zupa pomidorowa"
+  ],
+  "member": {
+   "member": true,
+   "reason": "Żurek is a traditional Polish sour rye soup, a genuine and correctly named Polish soup."
+  },
+  "qa": {
+   "ill_defined": false,
+   "junk_predictions": [],
+   "recognisable": true,
+   "aliases": [
+    "Żurek",
+    "Zurek",
+    "Żur",
+    "Zur",
+    "sour rye soup",
+    "Polish sour rye soup",
+    "fermented rye soup",
+    "酸黑麦汤",
+    "波兰酸黑麦汤",
+    "酸麦汤",
+    "波兰酸汤",
+    "祖雷克汤"
+   ],
+   "verdict": "keep_with_aliases",
+   "reason": "Żurek is a specific, well-known Polish soup. Judges should accept Zur/Zurek, 'sour rye soup' and the Chinese renderings. Do not accept 'white borscht' (biały barszcz), which is a distinct dish easily confused with the predicted Barszcz. All predictions are legitimate Polish soups."
+  },
+  "version": "msdm-validity-2026-11-04"
+ }
+}

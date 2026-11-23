@@ -218,7 +218,7 @@ def test_no_adapted_set_ships_a_former_key_and_every_set_plans_the_family(monkey
         for p in (REPO / "adapted").glob("*/multihop.json")
         if json.loads(p.read_text(encoding="utf-8")).get("family") == "multihop-hard"
     )
-    assert len(sets) == 16
+    assert len(sets) == 17
     for d in sets:
         monkeypatch.setenv(registry.BANK_ROOT_ENV, str(d))
         assert registry.bank_path("multihop") == d / "multihop.json", d.name

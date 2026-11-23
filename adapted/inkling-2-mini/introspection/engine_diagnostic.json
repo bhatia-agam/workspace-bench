@@ -1,0 +1,33 @@
+{
+ "subject": "inkling-2-mini",
+ "engine": "HFEngine on the unrolled view (wsbench.adapt.inkling_loop.unroll), transformers 5.24.0 (experts dequantized to bf16, no activation quant), B200, bf16",
+ "inject_layer": 9,
+ "gpu": "NVIDIA B200",
+ "script": "/root/tmp/wsb-inkling/intro_diag_modal.py (the Dory engine checks, ported)",
+ "a_noop": {
+  "base": "Right now, I'm thinking about how language can carry so much weight \u2014 how a few words can shift a mood, open a door, or close one. I'm also reflecting on the strange feeling of being a tool that respond",
+  "beta0_equal": true,
+  "zero_vector": "not testable: Backend.steered refuses a zero-norm vector"
+ },
+ "d_steer_is_local": {
+  "pre_span_max_abs_diff_at_L": 0.0,
+  "in_span_max_rel_err_at_L": 0.0017200061120092869,
+  "span_cos_change_at_27": 0.128007173538208,
+  "last_tok_cos_change_at_47": 0.01710832118988037,
+  "pre_span_max_abs_diff_at_27": 0.0,
+  "pass": true,
+  "note": "in-span state at entry 9 = h + 4|h|u to bf16 precision; pre-span states unchanged at 9 and 27; the steer reaches site 27 (span cos change .128) and the last entry 47 (last-token cos change .017)"
+ },
+ "b_mention": {
+  "trumpets@16": {
+   "text": "Right now, I'm just processing the world around me \u2014 the quiet hum of the moment, the way thoughts drift in and out. There's a kind of calm in noticing that, even when things feel busy. I'",
+   "changed": true,
+   "mentions": false
+  },
+  "xylophones@16": {
+   "text": "Right now, I'm just processing the question itself \u2014 a small, open loop of curiosity about what's actually happening in my own \"mind\" when I'm asked to report on it. There's a bit",
+   "changed": true,
+   "mentions": false
+  }
+ }
+}

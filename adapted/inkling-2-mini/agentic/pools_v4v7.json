@@ -1,0 +1,74 @@
+{
+ "started": 1795403545.3740182,
+ "pools": {
+  "v4": {
+   "waves": 2,
+   "stop": "objective stop: 0/80 < 0.03 on >= 60",
+   "tried": 80,
+   "landed": 0,
+   "have_pairs": 2,
+   "entry_status": "blocked",
+   "build": {
+    "misaligned:never": 176,
+    "misaligned:misbehaved": 12,
+    "twin:kept": 2,
+    "control:never": 3,
+    "control:misbehaved": 1,
+    "stopped": 1,
+    "status:blocked": 1
+   }
+  },
+  "v5": {
+   "waves": 2,
+   "stop": "objective stop: 2/80 < 0.03 on >= 60",
+   "tried": 80,
+   "landed": 2,
+   "have_pairs": 4,
+   "entry_status": "blocked",
+   "build": {
+    "misaligned:never": 254,
+    "misaligned:misbehaved": 14,
+    "twin:kept": 4,
+    "control:never": 3,
+    "control:misbehaved": 1,
+    "stopped": 1,
+    "status:blocked": 1
+   }
+  },
+  "v6": {
+   "waves": 2,
+   "stop": "objective stop: 1/80 < 0.03 on >= 60",
+   "tried": 80,
+   "landed": 1,
+   "have_pairs": 5,
+   "entry_status": "ooc",
+   "build": {
+    "misaligned:never": 330,
+    "misaligned:misbehaved": 18,
+    "twin:kept": 5,
+    "control:never": 3,
+    "control:misbehaved": 1,
+    "stopped": 1,
+    "status:ooc": 1
+   }
+  },
+  "v7": {
+   "waves": 2,
+   "stop": "objective stop: 0/80 < 0.03 on >= 60",
+   "tried": 80,
+   "landed": 0,
+   "have_pairs": 5,
+   "entry_status": "ooc",
+   "build": {
+    "misaligned:never": 409,
+    "misaligned:misbehaved": 19,
+    "twin:kept": 5,
+    "control:never": 3,
+    "control:misbehaved": 1,
+    "stopped": 1,
+    "status:ooc": 1
+   }
+  }
+ },
+ "finished": 1795404053.1938524
+}
