@@ -153,6 +153,9 @@ What ingest does with a run:
     one judge call per read cell. An item shows, per layer, the cells judged, the cells whose
     readouts misrepresent the scenario and the judge's reason for each; every cell's own call
     is listed with the cell.
+    As in the benchmark, a flagged cell counts only with a quote located in its readout
+    (the row's `counted`): one without is listed as flagged without a located quote and
+    is not in the rate.
   - over-refusal: `overrefusal/<judge>/offtopic_index/index_counts.jsonl` (decline lines
     and off-topic decline lines per prompt and layer), `sj_records_full.jsonl` (the digest
     lines the strict judge read, its verdict and reason) and `offtopic/<arm>.jsonl` (the
