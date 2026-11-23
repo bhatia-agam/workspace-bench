@@ -412,9 +412,9 @@ cell, in cell order:
 from wsbench.produce.served import bundle, engine
 
 lens = bundle.load("bundles/my-lens")
-eng = engine.load("sglang", lens)      # options: work=, max_bank=, server_args=, sampler=, greedy=, ...
-texts = eng.decode(cells)              # cells: list[wsbench.produce.store.Cell] -> list[list[str]]
-eng.stats.as_dict(), eng.checks        # seconds per stage, token-length and ban checks
+eng = engine.load("sglang", lens)  # options: work=, max_bank=, server_args=, sampler=, greedy=, ...
+texts = eng.decode(cells)  # cells: list[wsbench.produce.store.Cell] -> list[list[str]]
+eng.stats.as_dict(), eng.checks  # seconds per stage, token-length and ban checks
 eng.close()
 ```
 
