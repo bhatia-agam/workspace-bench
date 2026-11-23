@@ -14,9 +14,9 @@
 * ``on_result(i, result)`` fires as each call lands so callers can cache as they go.
 * Opt-in: with ``$WSB_JUDGE_BACKEND=batches`` (``judge_backend=batches`` on ``judge`` / ``run``)
   the structured Anthropic calls of :func:`stream_json_async` go through the Message Batches API
-  (:mod:`wsbench.judge_batches`): the same requests at half the token price, outside the live
-  rate limits. Whatever a batch does not answer cleanly is re-run live, so results, cache keys
-  and resume are those of the live backend.
+  (:mod:`wsbench.judge_batches`): the same requests, outside the live rate limits. Whatever a
+  batch does not answer cleanly is re-run live, so results, cache keys and resume are those of
+  the live backend.
 """
 
 import asyncio
@@ -91,7 +91,7 @@ def ledger(model: str, usage: Any, *, batch: bool = False) -> None:
         "cache_write": int(getattr(usage, "cache_creation_input_tokens", 0) or 0),
         "cache_read": int(getattr(usage, "cache_read_input_tokens", 0) or 0),
     }
-    if batch:  # a Message Batches call: every token billed at half price
+    if batch:  # a Message Batches call: tallied at the batch rate
         row["batch"] = True
     with _LEDGER_LOCK, open(path, "a", encoding="utf-8") as f:
         f.write(json.dumps(row) + "\n")

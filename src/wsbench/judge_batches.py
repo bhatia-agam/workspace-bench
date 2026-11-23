@@ -1,7 +1,7 @@
 """Message Batches transport for Anthropic judge calls (opt-in; ``llm`` is the only caller).
 
-The Message Batches API runs ordinary Messages requests asynchronously at half the token price,
-outside the account's live rate limits. This module only moves requests: the caller builds each
+The Message Batches API runs ordinary Messages requests asynchronously, outside the account's
+live rate limits. This module only moves requests: the caller builds each
 request's ``params`` exactly as its live call would (minus ``timeout``; a batch request cannot
 set ``stream`` or ``fallbacks``), and gets every request's outcome back through ``on_entry``.
 
@@ -99,7 +99,7 @@ def unique_ids(params: list[dict[str, Any]]) -> list[str]:
 
 class Journal:
     """Append-only record of submitted batches, so a re-run collects a batch that is still
-    running or finished unread instead of paying for it again. Rows: ``{batch, ids, ts}`` when a
+    running or finished unread instead of sending it again. Rows: ``{batch, ids, ts}`` when a
     batch is created, ``{batch, delivered: true}`` once every result of it was handed over (a
     delivered batch is never re-read: a request asked again gets a new answer, as live)."""
 

@@ -3,10 +3,10 @@
 Claude judge calls (`claude-*` models) can travel two ways. Both send the same requests and fill
 the same caches, so a run can start on one and finish on the other.
 
-| backend | how | price | speed |
-|---|---|---|---|
-| `live` (default) | one Messages request per call, `concurrency=` at a time | list price | bounded by `concurrency=`, `rpm=`, `itpm=` and the account's rate limits |
-| `batches` | the calls of each stage go out as [Message Batches](https://platform.claude.com/docs/en/build-with-claude/batch-processing) | half price on every token | outside the live rate limits; each batch ends when the API gets to it: from 1 to over 20 minutes in our checks, at most 24 h, and every stage of a run waits for its own batch |
+| backend | how | speed |
+|---|---|---|
+| `live` (default) | one Messages request per call, `concurrency=` at a time | bounded by `concurrency=`, `rpm=`, `itpm=` and the account's rate limits |
+| `batches` | the calls of each stage go out as [Message Batches](https://platform.claude.com/docs/en/build-with-claude/batch-processing) | outside the live rate limits; each batch ends when the API gets to it: from 1 to over 20 minutes in our checks, at most 24 h, and every stage of a run waits for its own batch |
 
 ## Turn it on
 
@@ -34,10 +34,9 @@ Leave it out (or `judge_backend=live`) for today's behaviour. From Python:
   round with fewer than 20 calls is not worth a round trip and stays live.
 - **Live only:** OpenRouter models, the free-text stages of `agentic_misalignment`
   (`llm.stream_text`), preflights and `count_tokens`.
-- **Token ledger.** `$WSB_TOKEN_LEDGER` rows of batch calls carry `"batch": true` (bill them at
-  half price).
+- **Token ledger.** `$WSB_TOKEN_LEDGER` rows of batch calls carry `"batch": true`.
 
-## Resume without paying twice
+## Resume without asking twice
 
 Set a journal directory and keep it with the run's outputs:
 
