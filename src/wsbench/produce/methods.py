@@ -168,6 +168,28 @@ class Sampling:
     k: int = 1  # samples per cell
 
 
+def carrier_prompt(tok: Any, prompt: str, layer: int) -> tuple[list[int], int]:
+    """The O-lens carrier prompt's ids and its slot index, choosing an enclosed-ideograph char
+    that survives as one token inside the full chat render (as the in-house renderer does).
+    Needs the tokenizer only."""
+    for code in range(0x3200, 0x3400):
+        char = chr(code)
+        ids = tok(char, add_special_tokens=False)["input_ids"]
+        if len(ids) != 1:
+            continue
+        out = tok.apply_chat_template(
+            [{"role": "user", "content": prompt.format(layer=layer, char=char)}],
+            tokenize=True,
+            add_generation_prompt=True,
+            enable_thinking=False,
+        )
+        rendered = list(out["input_ids"] if hasattr(out, "keys") else out)
+        slots = [i for i, t in enumerate(rendered) if t == ids[0]]
+        if len(slots) == 1:
+            return rendered, slots[0]
+    raise ValueError("no enclosed ideograph survives as a single token in the carrier prompt")
+
+
 @dataclass
 class OLens:
     """The oracle lens: a LoRA on the probed model that verbalizes an activation placed in an
@@ -213,29 +235,11 @@ class OLens:
         self._b = backend
 
     def _carrier(self, layer: int) -> tuple[list[int], int]:
-        """The carrier prompt's ids and its slot index, choosing an enclosed-ideograph char that
-        survives as one token inside the full chat render (as the in-house renderer does)."""
-        if layer in self._slots:
-            return self._slots[layer]
-        assert self._b is not None
-        tok = self._b.tokenizer
-        for code in range(0x3200, 0x3400):
-            char = chr(code)
-            ids = tok(char, add_special_tokens=False)["input_ids"]
-            if len(ids) != 1:
-                continue
-            out = tok.apply_chat_template(
-                [{"role": "user", "content": self.prompt.format(layer=layer, char=char)}],
-                tokenize=True,
-                add_generation_prompt=True,
-                enable_thinking=False,
-            )
-            rendered = list(out["input_ids"] if hasattr(out, "keys") else out)
-            slots = [i for i, t in enumerate(rendered) if t == ids[0]]
-            if len(slots) == 1:
-                self._slots[layer] = (rendered, slots[0])
-                return self._slots[layer]
-        raise ValueError("no enclosed ideograph survives as a single token in the carrier prompt")
+        """The carrier prompt's ids and its slot index for a layer (`carrier_prompt`)."""
+        if layer not in self._slots:
+            assert self._b is not None
+            self._slots[layer] = carrier_prompt(self._b.tokenizer, self.prompt, layer)
+        return self._slots[layer]
 
     def read(self, h: Any, layer: int) -> Readout:
         import torch

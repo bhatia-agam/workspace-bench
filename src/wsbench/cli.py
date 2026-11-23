@@ -1656,6 +1656,97 @@ class Capture(Command):
         return 0
 
 
+class Bundle(Command):
+    """Build a lens bundle, the folder the served engine reads (`produce/served`,
+    `docs/producing_readouts.md` § A served engine): a local PEFT LoRA adapter of the O-lens
+    folded into a copy of the subject's local snapshot, plus `lens.json`. Runs on the CPU and
+    never loads the model (needs torch, safetensors and transformers: the `gpu` extra)."""
+
+    def __init__(self) -> None:
+        from wsbench.produce.methods import OLens, Sampling
+
+        super().__init__()
+        self.adapter = ""  # a local PEFT adapter folder (adapter_config.json + the safetensors)
+        self.model = ""  # a local snapshot folder of the subject model
+        self.out = ""  # the bundle folder to write
+        self.name = ""  # the lens's name; default: the out folder's name
+        self.prompt = OLens.prompt  # the carrier prompt, with {layer} and {char}
+        self.alpha = OLens.alpha  # the slot vector is alpha * unit(h)
+        self.model_id = "Qwen/Qwen3.6-27B"
+        self.revision = ""  # the subject revision sha; default: the benchmark's for the default
+        self.temperature = Sampling.temperature
+        self.top_p = Sampling.top_p
+        self.top_k = Sampling.top_k
+        self.max_new_tokens = Sampling.max_new_tokens
+        self.samples = Sampling.k  # readouts per cell
+        self.bullet = False  # a single-bullet lens: 4 readouts per cell, sampling kind bullet4
+
+    def finalize(self) -> None:
+        from wsbench.produce.backend import DEFAULT_MODEL, DEFAULT_REVISION
+
+        for key in ("adapter", "model", "out"):
+            if not getattr(self, key):
+                raise ValueError(f"give {key}=<folder>")
+            setattr(self, key, _path(getattr(self, key)))
+        self.name = str(self.name or self.out.name)
+        self.prompt = str(self.prompt)
+        if "{char}" not in self.prompt:
+            raise ValueError("prompt= needs a {char} placeholder (the activation slot)")
+        self.alpha = float(self.alpha)
+        if self.alpha <= 0:
+            raise ValueError("alpha must be positive")
+        self.model_id = str(self.model_id)
+        self.revision = str(self.revision or "")
+        if not self.revision and self.model_id == DEFAULT_MODEL:
+            self.revision = DEFAULT_REVISION
+        if len(self.revision) < 12:
+            raise ValueError("revision=<sha> is required for this model_id")
+        self.temperature, self.top_p = float(self.temperature), float(self.top_p)
+        self.top_k, self.max_new_tokens = _int(self.top_k), _int(self.max_new_tokens)
+        self.bullet = _bool(self.bullet)
+        self.samples = 4 if self.bullet else _int(self.samples)
+        if min(self.top_k, self.max_new_tokens, self.samples) < 1:
+            raise ValueError("top_k, max_new_tokens and samples are at least 1")
+
+    def execute(self) -> int:
+        for key in ("adapter", "model"):
+            if not getattr(self, key).is_dir():
+                print(f"bundle: {key}={getattr(self, key)} is not a folder", file=sys.stderr)
+                return EXIT_USAGE
+        from wsbench.produce.served import bundle
+
+        try:
+            made = bundle.from_adapter(
+                self.model,
+                self.adapter,
+                self.out,
+                name=self.name,
+                model=self.model_id,
+                model_revision=self.revision,
+                prompt=self.prompt,
+                alpha=self.alpha,
+                sampling={
+                    "temperature": self.temperature,
+                    "top_p": self.top_p,
+                    "top_k": self.top_k,
+                    "max_new_tokens": self.max_new_tokens,
+                    "k": self.samples,
+                },
+                sampling_kind="bullet4" if self.bullet else "prose1",
+            )
+        except (bundle.BundleError, FileNotFoundError) as e:
+            print(f"bundle: {e}", file=sys.stderr)
+            return EXIT_USAGE
+        layers, meta = made.layers, made.meta
+        print(f"lens bundle -> {made.path}")
+        print(f"{made.name}: {meta['model']} @ {made.model_revision[:12]}, alpha {self.alpha:g}")
+        print(
+            f"{len(layers)} layers ({layers[0]}..{layers[-1]}), {made.k} readout(s) per cell "
+            f"({made.sampling_kind}), base vocabulary {meta['base_vocab']}"
+        )
+        return 0
+
+
 class Freeze(Command):
     """Fold a finished baseline run into the tracked ``evals/baselines/<kind>.json``.
     ``kind=lucky_guessing``: ``src`` holds ``<family>/<variant>.json`` from ``wsbench baseline``.
@@ -2018,6 +2109,7 @@ COMMANDS: dict[str, type[Command]] = {
     "plan": Plan,
     "produce": Produce,
     "capture": Capture,
+    "bundle": Bundle,
     "freeze": Freeze,
     "text-inversion": TextInversion,
     "convert-gen-dir": ConvertGenDir,
