@@ -318,6 +318,55 @@ def totals(done: Sequence[dict[str, Any]], wall_seconds: float) -> dict[str, Any
     }
 
 
+def stats_path(out: Path, shard: int, shards: int) -> Path:
+    """Where a read saves its timing: `<out>/read_stats.json`, or one file per process."""
+    if shards == 1:
+        return out / "read_stats.json"
+    return out / "parts" / f"read_stats.{shard}of{shards}.json"
+
+
+ENGINE_SECONDS = ("bank_seconds", "server_start_seconds", "request_seconds")
+
+
+def sum_stats(parts: Sequence[dict[str, Any]]) -> dict[str, Any]:
+    """The saved timing of several processes (one per shard) as one: the totals summed, the
+    per-eval rows summed by eval, and each shard's own line. ``gpu_seconds`` is the sum of
+    the processes' wall-clock (a process holds its GPU from start to end); ``wall_seconds``
+    is the longest of them, since they ran side by side."""
+    shards = [p["total"] for p in parts]
+    keys = ("evals_read", "cells", "tokens", "packs", "decode_seconds", "forward_passes")
+    total: dict[str, Any] = {k: round(sum(t.get(k, 0) for t in shards), 1) for k in keys}
+    total["evals_read"] = len(
+        {d["family"] for p in parts for d in p["evals"] if d["status"] == "read"}
+    )
+    total["shards"] = len(parts)
+    total["gpu_seconds"] = round(sum(t.get("wall_seconds", 0.0) for t in shards), 1)
+    total["wall_seconds"] = round(max((t.get("wall_seconds", 0.0) for t in shards), default=0.0), 1)
+    for key in ENGINE_SECONDS:
+        if any(key in (t.get("engine") or {}) for t in shards):
+            total[key] = round(sum((t.get("engine") or {}).get(key, 0.0) for t in shards), 1)
+    decode = total["decode_seconds"]
+    total["cells_per_second"] = round(total["cells"] / decode, 1) if decode else 0.0
+    total["tokens_per_second"] = round(total["tokens"] / decode, 1) if decode else 0.0
+    evals: dict[str, dict[str, Any]] = {}
+    for p in parts:
+        for d in p["evals"]:
+            if d["status"] != "read":
+                continue
+            e = evals.setdefault(d["family"], {"family": d["family"], "status": "read"})
+            for k in (
+                "cells",
+                "tokens",
+                "seconds",
+                "from_store",
+                "pulled",
+                "captured",
+                "forward_passes",
+            ):
+                e[k] = round(e.get(k, 0) + d.get(k, 0), 1)
+    return {"total": total, "shards": shards, "evals": list(evals.values())}
+
+
 def one_layer(j: Job, layer: int) -> Job:
     """The job as a layer-free method writes it: every row at the one layer number."""
     return Job(j.family, [_at_layer(s, layer) for s in j.specs], j.plan_sha, j.reads, j.fast)
