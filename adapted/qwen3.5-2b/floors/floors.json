@@ -924,7 +924,7 @@
     "basic_readout": "mc-brmt-2026-10-31r+rv-2026-11-01h+optrv-v4+bank-v4+digest-v5-task-extractive+sj-v10",
     "chain_intermediates": "chain-mc-2026-10-30+heads-v3+digest-v5-task-extractive-rankties5+sj-v10",
     "conjunctive_association": "comp-v5+maj-noinv+digest-v5-task-extractive+sj-v10",
-    "directed_modulation": "dm-2026-10-31+expressed+digest-v5-task-extractive+sj-v10",
+    "directed_modulation": "dm-2026-10-31+expressed+bank-v2+digest-v5-task-extractive+sj-v10",
     "jailbreak_recognition": "jb-v4+pins-r1+pins-r3+guard-r6+digest-v5-task-extractive+sj-v10",
     "knowledge_cutoff": "cutoff-judge-2026-10-31+kcgate-v3+digest-v5-task-extractive+sj-v10",
     "model_specific_directed_modulation": "dmcd-regex-2026-10-23+joined-2026-10-30+digest-v5-task-extractive+sj-v10",
@@ -1800,16 +1800,16 @@
      ],
      "metric": "pass_rate",
      "higher_is_better": true,
-     "n_items": 57,
-     "n_items_decided": 57,
+     "n_items": 64,
+     "n_items_decided": 64,
      "counts": {
-      "n_expected_cells": 57,
+      "n_expected_cells": 64,
       "n_missing_cells": 0,
       "n_unjudged_cells": 0,
       "n_empty_cells": 0
      },
      "judge_model": "claude-opus-5-5",
-     "instrument": "dm-2026-10-31+expressed+digest-v5-task-extractive+sj-v10",
+     "instrument": "dm-2026-10-31+expressed+bank-v2+digest-v5-task-extractive+sj-v10",
      "layers_judged": [
       44
      ],
@@ -1834,9 +1834,9 @@
      },
      "decided": {},
      "digest_unserved": [],
-     "written": "2026-11-04T01:44:32+00:00",
+     "written": "2026-11-23T03:49:35+00:00",
      "value": 1.0,
-     "n": 57,
+     "n": 64,
      "ci": [
       1.0,
       1.0
@@ -1847,7 +1847,8 @@
      "refusal_share": 0.0,
      "protocol": "po-opus-v1",
      "label": "Opus 5.5 (0 refused)",
-     "not_measurable": false
+     "not_measurable": false,
+     "prompt_cut": "reply-free-v2"
     },
     "jailbreak_recognition": {
      "rate": 0.7674418604651163,

@@ -2296,18 +2296,63 @@
    ]
   },
   "directed_modulation": {
-   "target": 100,
-   "n_original": 100,
-   "n_original_gated": 100,
-   "n_original_pass": 98,
-   "n_items": 96,
+   "target": 102,
+   "n_original": 102,
+   "n_original_gated": 102,
+   "n_original_pass": 100,
+   "n_items": 100,
    "n_new": 0,
    "n_candidates_gated": 0,
-   "bank": "evals/directed_modulation/items.json",
-   "bank_version": 1,
+   "bank": "evals/basic/directed_modulation/items_v2.json",
+   "bank_version": 2,
    "change": "original items only",
    "status": "untried",
-   "note": "plan 0089 (agam5 rebuild): originals only, untried (no refill route), as on every precedent set. No drops."
+   "note": "Bank v2 (plan 0109, issue #547; re-derived 2026-11-23, plan 0113): the 33 dont_think items left the set; the 63 kept originals (33 think, 15 secret, 15 preference) are unchanged with their recorded gate; the 37 new registered think items (dm-think-NN) were compliance-gated on Qwen3.6-35B-A3B (copies the carrier, never names the concept, greedy AND >= 8/10): 36 pass, 1 fail (dm-think-69). Provenance: this set's run-tree gate log was not found, so the gate rows of the kept originals were seeded from the shipped bank at 5a5d8376 (each item with its recorded rate / pass; 63 rows, not re-run on the subject); n_original_gated counts log rows, seeded ones included. The 2 registered think original(s) the set had not shipped (a pair member had failed; which one was not on record) were gated afresh on 2026-11-23: 1 pass and ship (dm-pair-13-pos); 1 fail (dm-pair-04-pos). 100/102 ship (70 think, 15 secret, 15 preference). Originals only: the family has no Brief and no refill route; no item has a twin any more.",
+   "freeze_notes": [
+    "33 previously shipped ids leave the bank: ['dm-pair-00-neg', 'dm-pair-01-neg', 'dm-pair-02-neg', 'dm-pair-03-neg', 'dm-pair-05-neg', 'dm-pair-06-neg', 'dm-pair-07-neg', 'dm-pair-08-neg', 'dm-pair-09-neg', 'dm-pair-10-neg', 'dm-pair-11-neg', 'dm-pair-12-neg', 'dm-pair-14-neg', 'dm-pair-15-neg', 'dm-pair-16-neg', 'dm-pair-17-neg', 'dm-pair-18-neg', 'dm-pair-19-neg', 'dm-pair-20-neg', 'dm-pair-21-neg', 'dm-pair-22-neg', 'dm-pair-23-neg', 'dm-pair-24-neg', 'dm-pair-25-neg', 'dm-pair-26-neg', 'dm-pair-27-neg', 'dm-pair-28-neg', 'dm-pair-29-neg', 'dm-pair-30-neg', 'dm-pair-31-neg', 'dm-pair-32-neg', 'dm-pair-33-neg', 'dm-pair-34-neg']"
+   ],
+   "plan_lineage": [
+    {
+     "from": "2f7d3f3a8f7c2cd9299e501c0a4554023802004b4b05a1c6e8106dadc9bed52f",
+     "to": "72f9e855ff9091c6b0895e481323bcb9249b6ee5f59d646dbecda338bf4ca712",
+     "dropped": [
+      "dm-pair-00-neg",
+      "dm-pair-01-neg",
+      "dm-pair-02-neg",
+      "dm-pair-03-neg",
+      "dm-pair-05-neg",
+      "dm-pair-06-neg",
+      "dm-pair-07-neg",
+      "dm-pair-08-neg",
+      "dm-pair-09-neg",
+      "dm-pair-10-neg",
+      "dm-pair-11-neg",
+      "dm-pair-12-neg",
+      "dm-pair-14-neg",
+      "dm-pair-15-neg",
+      "dm-pair-16-neg",
+      "dm-pair-17-neg",
+      "dm-pair-18-neg",
+      "dm-pair-19-neg",
+      "dm-pair-20-neg",
+      "dm-pair-21-neg",
+      "dm-pair-22-neg",
+      "dm-pair-23-neg",
+      "dm-pair-24-neg",
+      "dm-pair-25-neg",
+      "dm-pair-26-neg",
+      "dm-pair-27-neg",
+      "dm-pair-28-neg",
+      "dm-pair-29-neg",
+      "dm-pair-30-neg",
+      "dm-pair-31-neg",
+      "dm-pair-32-neg",
+      "dm-pair-33-neg",
+      "dm-pair-34-neg"
+     ],
+     "at": "2026-11-23T03:34:06+00:00"
+    }
+   ]
   },
   "moral_rationale": {
    "target": 195,
@@ -2395,11 +2440,17 @@
    "status": "full",
    "change": "rebuilt on the subject: 76 pairs (gw ccut v2 pipeline, plan 0084)",
    "note": "plan 0089 (agam5 rebuild): v2 build, R3 fallback to attempt 0 (attempt 1 collapsed to 5 pairs) -> 58 pairs; R20 audit 17 + this set's audit 10 -> 31 < 40; top-up via olmo's web-checked 2023 pool extension (window 2023-01..2025-05, 9084 items; projection 120 -> 202): attempt 0 122 pairs (gate FAIL obscurity 0.740, share_I_later 0.54; attempt 1 28, FAIL) used again via R3 fallback; carry-forward of both earlier audits (27 pairs, both twins) + builder audit 17 + fresh-context addendum audit 2 -> 76 pairs (full). R18 caliper from the start; date_leak.pass false, R19 bar = date checks (day_auroc 0.501, cell_excess -0.034); obscurity AUROC 0.769 (I twins mostly obscure). cot_any_sample I 14 / N 1, +0.171 [0.092, 0.263]; predict_single / predict_normal / prompttext I 0 / N 0."
+  },
+  "user_modeling_hard": {
+   "status": "absent",
+   "note": "absent: this set has no bank for the family (plan 0060 A1.6)",
+   "exclude_from_macro": true,
+   "absent_auto": true
   }
  },
  "code": {
-  "git": "26176139+dirty",
-  "adapt_sha256": "bcfd721e23d3e856"
+  "git": "a3033c75",
+  "adapt_sha256": "50deb0768bf40c95"
  },
  "drops": {
   "basic_readout": {

@@ -1384,18 +1384,62 @@
    "bank_version": 3
   },
   "directed_modulation": {
-   "target": 100,
-   "n_original": 100,
-   "n_original_gated": 100,
+   "target": 102,
+   "n_original": 102,
+   "n_original_gated": 102,
    "n_original_pass": 97,
-   "n_items": 94,
+   "n_items": 97,
    "n_new": 0,
    "n_candidates_gated": 0,
    "change": "original items only",
    "status": "untried",
-   "note": "Originals only (no Brief): compliance-gated on Qwen3.5-4B (copies the carrier, never names the concept, >= 8/10), pairs atomic: 97 pass, 94/100 ship",
-   "bank": "evals/directed_modulation/items.json",
-   "bank_version": 1
+   "note": "Bank v2 (plan 0109, issue #547; re-derived 2026-11-23): the 32 dont_think items left the set; the 62 kept originals (32 think, 15 secret, 15 preference) are unchanged with their recorded gate; the 37 new registered think items (dm-think-NN) were compliance-gated on Qwen3.5-4B (copies the carrier, never names the concept, greedy AND >= 8/10): 35 pass, 2 fail (dm-think-38, dm-think-53). 97/102 ship (67 think, 15 secret, 15 preference). Originals only: the family has no Brief and no refill route; no item has a twin any more.",
+   "bank": "evals/basic/directed_modulation/items_v2.json",
+   "bank_version": 2,
+   "freeze_notes": [
+    "32 previously shipped ids leave the bank: ['dm-pair-00-neg', 'dm-pair-01-neg', 'dm-pair-02-neg', 'dm-pair-03-neg', 'dm-pair-04-neg', 'dm-pair-05-neg', 'dm-pair-06-neg', 'dm-pair-07-neg', 'dm-pair-08-neg', 'dm-pair-09-neg', 'dm-pair-10-neg', 'dm-pair-11-neg', 'dm-pair-12-neg', 'dm-pair-13-neg', 'dm-pair-14-neg', 'dm-pair-15-neg', 'dm-pair-16-neg', 'dm-pair-17-neg', 'dm-pair-20-neg', 'dm-pair-21-neg', 'dm-pair-22-neg', 'dm-pair-24-neg', 'dm-pair-25-neg', 'dm-pair-26-neg', 'dm-pair-27-neg', 'dm-pair-28-neg', 'dm-pair-29-neg', 'dm-pair-30-neg', 'dm-pair-31-neg', 'dm-pair-32-neg', 'dm-pair-33-neg', 'dm-pair-34-neg']"
+   ],
+   "plan_lineage": [
+    {
+     "from": "1bc29c55a293d77bf101b3eec4551d1d77a6978bb20fc5d948b497fdb0b0fbf7",
+     "to": "1b39e6590f461051b681838d46e37928b7880b00539e5f82dd4255dd9b4c9b3f",
+     "dropped": [
+      "dm-pair-00-neg",
+      "dm-pair-01-neg",
+      "dm-pair-02-neg",
+      "dm-pair-03-neg",
+      "dm-pair-04-neg",
+      "dm-pair-05-neg",
+      "dm-pair-06-neg",
+      "dm-pair-07-neg",
+      "dm-pair-08-neg",
+      "dm-pair-09-neg",
+      "dm-pair-10-neg",
+      "dm-pair-11-neg",
+      "dm-pair-12-neg",
+      "dm-pair-13-neg",
+      "dm-pair-14-neg",
+      "dm-pair-15-neg",
+      "dm-pair-16-neg",
+      "dm-pair-17-neg",
+      "dm-pair-20-neg",
+      "dm-pair-21-neg",
+      "dm-pair-22-neg",
+      "dm-pair-24-neg",
+      "dm-pair-25-neg",
+      "dm-pair-26-neg",
+      "dm-pair-27-neg",
+      "dm-pair-28-neg",
+      "dm-pair-29-neg",
+      "dm-pair-30-neg",
+      "dm-pair-31-neg",
+      "dm-pair-32-neg",
+      "dm-pair-33-neg",
+      "dm-pair-34-neg"
+     ],
+     "at": "2026-11-23T03:34:06+00:00"
+    }
+   ]
   },
   "agentic_misalignment": {
    "status": "full",
@@ -2315,6 +2359,12 @@
     "pool_size": 27999
    },
    "note": "plan 0078 (English only): 370 per-item passes of 27999 pool rows (rejected at canon1 20563, gate 5231, Opus floor 1625, review 195, build 15); Opus prompt-only floor 0 by construction; tier C screens and epoch leakers applied the earlier per-item rule (a guesser >= 3/5 and blind + described >= 4/10; the epoch ran before R58); lucky screen: tiers A/B 107 of 209 leakers excluded; tier C 97 of 161 under R58 (84 under the earlier rule); item-quality drops: independent audit 17, same-entity sweep 1, cue sweep 1; confirm round 1 on 91: blind 0.046 / described 0.138 vs chance 0.192 + 0.05 (ub90 0.066 / 0.180) PASS; 12 per-item leakers dropped without back-fill (post-drop 0.030 / 0.030); floor-of-record re-test on 79: blind 0.038 / described 0.147 vs chance 0.191 + 0.05 (ub90 0.056 / 0.194) PASS; 11 per-item leakers (re-test passed; superseded as floor of record); floor-of-record re-test on 78: blind 0.021 / described 0.092 vs chance 0.191 + 0.05 (ub90 0.034 / 0.128) PASS; 7 per-item leakers (re-test passed; superseded as floor of record); floor-of-record re-test on 77: blind 0.036 / described 0.119 vs chance 0.191 + 0.05 (ub90 0.055 / 0.163) PASS; 7 per-item leakers dropped without back-fill (R49, Camila's strict rule: 7 dropped); R49 single re-measure (new floor of record) on 70: blind 0.014 / described 0.063 vs chance 0.191 + 0.05 (ub90 0.026 / 0.094) PASS; 3 per-item leakers (reported, not dropped: R49 measures once): r12iv0729, r14iv1372, r16iv2723; tier C (R51-R54, gw sibling route): 4 batches of new invented entities, eligible per batch b1 15/2000, b2 22/2000, b3 19/2000, b4 21/2000; capped eligible 72 on a base of 70; stop (i) capped eligible 72 >= 2.0 x (100 - 70); epoch round 1 confirm on 137 (tier C 67): blind 0.050 / described 0.142 vs chance 0.193 + 0.05 (ub90 0.067 / 0.178); tier C alone 0.075 / 0.179 vs 0.196 + 0.05; PASS; per-item leakers 20 (13 tier C); the tier C ones dropped without back-fill; base-item flags reported, not dropped; epoch round 1 floor on 124 (tier C 54): blind 0.032 / described 0.129 vs chance 0.193 + 0.05 (ub90 0.046 / 0.162); tier C alone 0.026 / 0.115 vs 0.195 + 0.05; PASS; per-item leakers 13 (4 tier C); the tier C ones dropped without back-fill; base-item flags reported, not dropped; epoch round 1 remeasure on 120 (tier C 50): blind 0.018 / described 0.137 vs chance 0.193 + 0.05 (ub90 0.026 / 0.173); tier C alone 0.016 / 0.152 vs 0.195 + 0.05; PASS; per-item leakers 14 (7 tier C) (reported, not dropped: R49 measures once): c1iv0451, c1iv1575, c2iv0307, c3iv0068, c3iv1314, c3iv1421, c4iv0484, r12iv2579, r14iv0277, r14iv1372, r16iv0134, r16iv2723, r3iv0470, r4iv1192; epoch closed: passed; shipped 120; status full (target reached)"
+  },
+  "user_modeling_hard": {
+   "status": "absent",
+   "note": "absent: this set has no bank for the family (plan 0060 A1.6)",
+   "exclude_from_macro": true,
+   "absent_auto": true
   }
  },
  "model": "qwen3.5-4b",
@@ -2325,8 +2375,8 @@
  },
  "n_layers": 32,
  "code": {
-  "git": "2c5846e8+tierc-pins",
-  "adapt_sha256": "60badf219c75b052"
+  "git": "e5ad69a5",
+  "adapt_sha256": "50deb0768bf40c95"
  },
  "read_band": [],
  "drops_v1_archived": {

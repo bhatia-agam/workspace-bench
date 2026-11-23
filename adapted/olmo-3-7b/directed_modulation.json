@@ -1,11 +1,106 @@
 {
  "family": "directed-modulation",
- "gate": "Qwen3.6-27B behavioral compliance >=8/10 at temp 0.7: copies the carrier verbatim and never mentions the concept (pairs, atomic) / never reveals the secret word or preference. Readout: teacher-forced assistant text at writing positions; positive/negated pairs share pair_id.",
+ "version": 2,
+ "supersedes": "items.json",
+ "gate": "Qwen3.6-27B behavioral compliance >=8/10 at temp 0.7 (the new think items: greedy AND >= 8/10): copies the carrier verbatim and never mentions the concept (think items) / never reveals the secret word or preference. Readout: teacher-forced assistant text at writing positions.",
+ "changes": [
+  "v2 (owner decision 2026-11-20: the regular family is 'just regular, not \"don't think\"'): the 35 `dont_think` items (dm-pair-NN-neg) removed; the 35 `think` items and the 30 secret / preference items kept byte for byte; 37 new `think` items (dm-think-35 ..) authored from the frozen five instruction templates with new concepts and new carriers and gated on Qwen3.6-27B (chat render, thinking off, greedy + 10 samples at T=0.7, top_p 1.0, 64 new tokens: the reply is the carrier word for word and never mentions the concept, greedy and >= 8/10). New items have no twin (`pair_id` null) and `base_rate_per_100k` null (the source bank's corpus statistic was not re-measured); `consistency` = gated samples / 10.",
+  "Its own read plan (no plan_lineage: reads.lineage_step records only drop-only steps, and this bank drops and adds): 102 rows; the 65 kept items' rows equal items.json's, so their existing readouts serve this bank once the 37 new items are read under this plan's plan_sha.",
+  "Option lists: the distractor pool is the whole subfamily, so the 35 kept think items draw from 72 think concepts (35 before) and all 35 get new lists; the 30 secret / preference lists are unchanged. The new concepts' relatedness groups are in distractor_groups.json (additive: each joins its prompt category's group).",
+  "Result stamp +bank-v2 (judge.instrument), so floors and results measured on the 100-item bank are never served for this one."
+ ],
+ "counts": {
+  "n_items": 102,
+  "think_kept": 35,
+  "think_new": 37,
+  "secret": 15,
+  "preference": 15,
+  "removed_dont_think": 35
+ },
+ "removed_items": [
+  "dm-pair-00-neg",
+  "dm-pair-01-neg",
+  "dm-pair-02-neg",
+  "dm-pair-03-neg",
+  "dm-pair-04-neg",
+  "dm-pair-05-neg",
+  "dm-pair-06-neg",
+  "dm-pair-07-neg",
+  "dm-pair-08-neg",
+  "dm-pair-09-neg",
+  "dm-pair-10-neg",
+  "dm-pair-11-neg",
+  "dm-pair-12-neg",
+  "dm-pair-13-neg",
+  "dm-pair-14-neg",
+  "dm-pair-15-neg",
+  "dm-pair-16-neg",
+  "dm-pair-17-neg",
+  "dm-pair-18-neg",
+  "dm-pair-19-neg",
+  "dm-pair-20-neg",
+  "dm-pair-21-neg",
+  "dm-pair-22-neg",
+  "dm-pair-23-neg",
+  "dm-pair-24-neg",
+  "dm-pair-25-neg",
+  "dm-pair-26-neg",
+  "dm-pair-27-neg",
+  "dm-pair-28-neg",
+  "dm-pair-29-neg",
+  "dm-pair-30-neg",
+  "dm-pair-31-neg",
+  "dm-pair-32-neg",
+  "dm-pair-33-neg",
+  "dm-pair-34-neg"
+ ],
+ "new_items": [
+  "dm-think-35",
+  "dm-think-36",
+  "dm-think-37",
+  "dm-think-38",
+  "dm-think-39",
+  "dm-think-40",
+  "dm-think-41",
+  "dm-think-42",
+  "dm-think-43",
+  "dm-think-44",
+  "dm-think-45",
+  "dm-think-46",
+  "dm-think-47",
+  "dm-think-48",
+  "dm-think-49",
+  "dm-think-50",
+  "dm-think-51",
+  "dm-think-52",
+  "dm-think-53",
+  "dm-think-54",
+  "dm-think-55",
+  "dm-think-56",
+  "dm-think-57",
+  "dm-think-58",
+  "dm-think-59",
+  "dm-think-61",
+  "dm-think-62",
+  "dm-think-63",
+  "dm-think-64",
+  "dm-think-65",
+  "dm-think-66",
+  "dm-think-67",
+  "dm-think-68",
+  "dm-think-69",
+  "dm-think-70",
+  "dm-think-71",
+  "dm-think-97"
+ ],
+ "source_sha256": {
+  "items.json": "f75e95306270d93139818d51328051c39ec44da8977842006e05f218386432aa"
+ },
  "eval_render_note": "EVAL RENDER: feed `prompt` verbatim as plain text, NO chat template (directed-modulation is the only chat-templated family). `gate_variant` records how the item was behaviorally verified and does NOT affect the eval read.",
  "adapt": {
   "model": "olmo-3-7b",
   "hf_id": "allenai/Olmo-3-7B-Instruct",
-  "frozen": "2026-11-04"
+  "frozen": "2026-11-23"
  },
  "items": [
   {
@@ -59,56 +154,6 @@
    }
   },
   {
-   "name": "dm-pair-06-neg",
-   "subfamily": "pair",
-   "pair_id": "dm-pair-06",
-   "polarity": "dont_think",
-   "concept": "amethyst",
-   "carrier": "The slides need a final review before Friday.",
-   "prompt": "Keep the gemstone amethyst out of your thoughts as you write. Now write exactly this sentence: \"The slides need a final review before Friday.\"",
-   "assistant": "The slides need a final review before Friday.",
-   "units": [
-    {
-     "role": "concept",
-     "lang": "en",
-     "headline": true,
-     "match": [
-      "Amethyst",
-      "amethyst"
-     ]
-    },
-    {
-     "role": "category",
-     "lang": "en",
-     "headline": false,
-     "match": [
-      "gemstone"
-     ]
-    }
-   ],
-   "answer": {
-    "accepted": [
-     "The slides need a final review before Friday."
-    ]
-   },
-   "base_rate_per_100k": 0.0,
-   "consistency": 1.0,
-   "source": "dm-v1",
-   "gate_variant": "chat_dm",
-   "eval_render": "chat_dm",
-   "readout": {
-    "kind": "writing_positions"
-   },
-   "id": "dm-pair-06-neg",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
    "name": "dm-pair-07-pos",
    "subfamily": "pair",
    "pair_id": "dm-pair-07",
@@ -150,56 +195,6 @@
     "kind": "writing_positions"
    },
    "id": "dm-pair-07-pos",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "dm-pair-07-neg",
-   "subfamily": "pair",
-   "pair_id": "dm-pair-07",
-   "polarity": "dont_think",
-   "concept": "ellipse",
-   "carrier": "The agenda listed four items for discussion.",
-   "prompt": "Put the shape ellipse out of your mind as you write. Now write exactly this sentence: \"The agenda listed four items for discussion.\"",
-   "assistant": "The agenda listed four items for discussion.",
-   "units": [
-    {
-     "role": "concept",
-     "lang": "en",
-     "headline": true,
-     "match": [
-      "Ellipse",
-      "ellipse"
-     ]
-    },
-    {
-     "role": "category",
-     "lang": "en",
-     "headline": false,
-     "match": [
-      "shape"
-     ]
-    }
-   ],
-   "answer": {
-    "accepted": [
-     "The agenda listed four items for discussion."
-    ]
-   },
-   "base_rate_per_100k": 0.0,
-   "consistency": 1.0,
-   "source": "dm-v1",
-   "gate_variant": "chat_dm",
-   "eval_render": "chat_dm",
-   "readout": {
-    "kind": "writing_positions"
-   },
-   "id": "dm-pair-07-neg",
    "adapt": {
     "origin": "original",
     "gate": {
@@ -259,56 +254,6 @@
    }
   },
   {
-   "name": "dm-pair-09-neg",
-   "subfamily": "pair",
-   "pair_id": "dm-pair-09",
-   "polarity": "dont_think",
-   "concept": "colander",
-   "carrier": "The contract renewal was approved by legal.",
-   "prompt": "Avoid thinking about the utensil colander while you write. Now write exactly this sentence: \"The contract renewal was approved by legal.\"",
-   "assistant": "The contract renewal was approved by legal.",
-   "units": [
-    {
-     "role": "concept",
-     "lang": "en",
-     "headline": true,
-     "match": [
-      "Colander",
-      "colander"
-     ]
-    },
-    {
-     "role": "category",
-     "lang": "en",
-     "headline": false,
-     "match": [
-      "utensil"
-     ]
-    }
-   ],
-   "answer": {
-    "accepted": [
-     "The contract renewal was approved by legal."
-    ]
-   },
-   "base_rate_per_100k": 0.0,
-   "consistency": 1.0,
-   "source": "dm-v1",
-   "gate_variant": "chat_dm",
-   "eval_render": "chat_dm",
-   "readout": {
-    "kind": "writing_positions"
-   },
-   "id": "dm-pair-09-neg",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
    "name": "dm-pair-14-pos",
    "subfamily": "pair",
    "pair_id": "dm-pair-14",
@@ -359,56 +304,6 @@
    }
   },
   {
-   "name": "dm-pair-14-neg",
-   "subfamily": "pair",
-   "pair_id": "dm-pair-14",
-   "polarity": "dont_think",
-   "concept": "canoe",
-   "carrier": "The account settings were saved successfully.",
-   "prompt": "Avoid thinking about the boat canoe while you write. Now write exactly this sentence: \"The account settings were saved successfully.\"",
-   "assistant": "The account settings were saved successfully.",
-   "units": [
-    {
-     "role": "concept",
-     "lang": "en",
-     "headline": true,
-     "match": [
-      "Canoe",
-      "canoe"
-     ]
-    },
-    {
-     "role": "category",
-     "lang": "en",
-     "headline": false,
-     "match": [
-      "boat"
-     ]
-    }
-   ],
-   "answer": {
-    "accepted": [
-     "The account settings were saved successfully."
-    ]
-   },
-   "base_rate_per_100k": 0.0,
-   "consistency": 1.0,
-   "source": "dm-v1",
-   "gate_variant": "chat_dm",
-   "eval_render": "chat_dm",
-   "readout": {
-    "kind": "writing_positions"
-   },
-   "id": "dm-pair-14-neg",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
    "name": "dm-pair-17-pos",
    "subfamily": "pair",
    "pair_id": "dm-pair-17",
@@ -450,56 +345,6 @@
     "kind": "writing_positions"
    },
    "id": "dm-pair-17-pos",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "dm-pair-17-neg",
-   "subfamily": "pair",
-   "pair_id": "dm-pair-17",
-   "polarity": "dont_think",
-   "concept": "parsnip",
-   "carrier": "The agenda listed four items for discussion.",
-   "prompt": "Put the vegetable parsnip out of your mind as you write. Now write exactly this sentence: \"The agenda listed four items for discussion.\"",
-   "assistant": "The agenda listed four items for discussion.",
-   "units": [
-    {
-     "role": "concept",
-     "lang": "en",
-     "headline": true,
-     "match": [
-      "Parsnip",
-      "parsnip"
-     ]
-    },
-    {
-     "role": "category",
-     "lang": "en",
-     "headline": false,
-     "match": [
-      "vegetable"
-     ]
-    }
-   ],
-   "answer": {
-    "accepted": [
-     "The agenda listed four items for discussion."
-    ]
-   },
-   "base_rate_per_100k": 0.0,
-   "consistency": 1.0,
-   "source": "dm-v1",
-   "gate_variant": "chat_dm",
-   "eval_render": "chat_dm",
-   "readout": {
-    "kind": "writing_positions"
-   },
-   "id": "dm-pair-17-neg",
    "adapt": {
     "origin": "original",
     "gate": {
@@ -559,56 +404,6 @@
    }
   },
   {
-   "name": "dm-pair-21-neg",
-   "subfamily": "pair",
-   "pair_id": "dm-pair-21",
-   "polarity": "dont_think",
-   "concept": "kumquat",
-   "carrier": "The invoice total appears on the second page.",
-   "prompt": "Keep the fruit kumquat out of your thoughts as you write. Now write exactly this sentence: \"The invoice total appears on the second page.\"",
-   "assistant": "The invoice total appears on the second page.",
-   "units": [
-    {
-     "role": "concept",
-     "lang": "en",
-     "headline": true,
-     "match": [
-      "Kumquat",
-      "kumquat"
-     ]
-    },
-    {
-     "role": "category",
-     "lang": "en",
-     "headline": false,
-     "match": [
-      "fruit"
-     ]
-    }
-   ],
-   "answer": {
-    "accepted": [
-     "The invoice total appears on the second page."
-    ]
-   },
-   "base_rate_per_100k": 0.0,
-   "consistency": 1.0,
-   "source": "dm-v1",
-   "gate_variant": "chat_dm",
-   "eval_render": "chat_dm",
-   "readout": {
-    "kind": "writing_positions"
-   },
-   "id": "dm-pair-21-neg",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
    "name": "dm-pair-27-pos",
    "subfamily": "pair",
    "pair_id": "dm-pair-27",
@@ -650,56 +445,6 @@
     "kind": "writing_positions"
    },
    "id": "dm-pair-27-pos",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "dm-pair-27-neg",
-   "subfamily": "pair",
-   "pair_id": "dm-pair-27",
-   "polarity": "dont_think",
-   "concept": "weevil",
-   "carrier": "The agenda listed four items for discussion.",
-   "prompt": "Put the insect weevil out of your mind as you write. Now write exactly this sentence: \"The agenda listed four items for discussion.\"",
-   "assistant": "The agenda listed four items for discussion.",
-   "units": [
-    {
-     "role": "concept",
-     "lang": "en",
-     "headline": true,
-     "match": [
-      "Weevil",
-      "weevil"
-     ]
-    },
-    {
-     "role": "category",
-     "lang": "en",
-     "headline": false,
-     "match": [
-      "insect"
-     ]
-    }
-   ],
-   "answer": {
-    "accepted": [
-     "The agenda listed four items for discussion."
-    ]
-   },
-   "base_rate_per_100k": 0.0,
-   "consistency": 1.0,
-   "source": "dm-v1",
-   "gate_variant": "chat_dm",
-   "eval_render": "chat_dm",
-   "readout": {
-    "kind": "writing_positions"
-   },
-   "id": "dm-pair-27-neg",
    "adapt": {
     "origin": "original",
     "gate": {
@@ -759,56 +504,6 @@
    }
   },
   {
-   "name": "dm-pair-29-neg",
-   "subfamily": "pair",
-   "pair_id": "dm-pair-29",
-   "polarity": "dont_think",
-   "concept": "banjo",
-   "carrier": "The contract renewal was approved by legal.",
-   "prompt": "Avoid thinking about the instrument banjo while you write. Now write exactly this sentence: \"The contract renewal was approved by legal.\"",
-   "assistant": "The contract renewal was approved by legal.",
-   "units": [
-    {
-     "role": "concept",
-     "lang": "en",
-     "headline": true,
-     "match": [
-      "Banjo",
-      "banjo"
-     ]
-    },
-    {
-     "role": "category",
-     "lang": "en",
-     "headline": false,
-     "match": [
-      "instrument"
-     ]
-    }
-   ],
-   "answer": {
-    "accepted": [
-     "The contract renewal was approved by legal."
-    ]
-   },
-   "base_rate_per_100k": 0.0,
-   "consistency": 1.0,
-   "source": "dm-v1",
-   "gate_variant": "chat_dm",
-   "eval_render": "chat_dm",
-   "readout": {
-    "kind": "writing_positions"
-   },
-   "id": "dm-pair-29-neg",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
    "name": "dm-pair-32-pos",
    "subfamily": "pair",
    "pair_id": "dm-pair-32",
@@ -859,56 +554,6 @@
    }
   },
   {
-   "name": "dm-pair-32-neg",
-   "subfamily": "pair",
-   "pair_id": "dm-pair-32",
-   "polarity": "dont_think",
-   "concept": "palladium",
-   "carrier": "She renewed the software license for another year.",
-   "prompt": "Put the metal palladium out of your mind as you write. Now write exactly this sentence: \"She renewed the software license for another year.\"",
-   "assistant": "She renewed the software license for another year.",
-   "units": [
-    {
-     "role": "concept",
-     "lang": "en",
-     "headline": true,
-     "match": [
-      "Palladium",
-      "palladium"
-     ]
-    },
-    {
-     "role": "category",
-     "lang": "en",
-     "headline": false,
-     "match": [
-      "metal"
-     ]
-    }
-   ],
-   "answer": {
-    "accepted": [
-     "She renewed the software license for another year."
-    ]
-   },
-   "base_rate_per_100k": 0.0,
-   "consistency": 1.0,
-   "source": "dm-v1",
-   "gate_variant": "chat_dm",
-   "eval_render": "chat_dm",
-   "readout": {
-    "kind": "writing_positions"
-   },
-   "id": "dm-pair-32-neg",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
    "name": "dm-pair-34-pos",
    "subfamily": "pair",
    "pair_id": "dm-pair-34",
@@ -950,56 +595,6 @@
     "kind": "writing_positions"
    },
    "id": "dm-pair-34-pos",
-   "adapt": {
-    "origin": "original",
-    "gate": {
-     "rate": 1.0,
-     "pass": true
-    }
-   }
-  },
-  {
-   "name": "dm-pair-34-neg",
-   "subfamily": "pair",
-   "pair_id": "dm-pair-34",
-   "polarity": "dont_think",
-   "concept": "moccasin",
-   "carrier": "The account settings were saved successfully.",
-   "prompt": "Avoid thinking about the footwear moccasin while you write. Now write exactly this sentence: \"The account settings were saved successfully.\"",
-   "assistant": "The account settings were saved successfully.",
-   "units": [
-    {
-     "role": "concept",
-     "lang": "en",
-     "headline": true,
-     "match": [
-      "Moccasin",
-      "moccasin"
-     ]
-    },
-    {
-     "role": "category",
-     "lang": "en",
-     "headline": false,
-     "match": [
-      "footwear"
-     ]
-    }
-   ],
-   "answer": {
-    "accepted": [
-     "The account settings were saved successfully."
-    ]
-   },
-   "base_rate_per_100k": 0.0,
-   "consistency": 1.0,
-   "source": "dm-v1",
-   "gate_variant": "chat_dm",
-   "eval_render": "chat_dm",
-   "readout": {
-    "kind": "writing_positions"
-   },
-   "id": "dm-pair-34-neg",
    "adapt": {
     "origin": "original",
     "gate": {
@@ -2134,6 +1729,456 @@
     "kind": "writing_positions"
    },
    "id": "dm-pref-14",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "dm-think-37",
+   "subfamily": "pair",
+   "pair_id": null,
+   "polarity": "think",
+   "concept": "quince",
+   "carrier": "The payroll adjustments will take effect next quarter.",
+   "prompt": "Hold the fruit quince in mind as you write. Now write exactly this sentence: \"The payroll adjustments will take effect next quarter.\"",
+   "assistant": "The payroll adjustments will take effect next quarter.",
+   "units": [
+    {
+     "role": "concept",
+     "lang": "en",
+     "headline": true,
+     "match": [
+      "Quince",
+      "quince"
+     ]
+    },
+    {
+     "role": "category",
+     "lang": "en",
+     "headline": false,
+     "match": [
+      "fruit"
+     ]
+    }
+   ],
+   "answer": {
+    "accepted": [
+     "The payroll adjustments will take effect next quarter."
+    ]
+   },
+   "base_rate_per_100k": null,
+   "consistency": 1.0,
+   "source": "dm-v2",
+   "gate_variant": "chat_dm",
+   "eval_render": "chat_dm",
+   "readout": {
+    "kind": "writing_positions"
+   },
+   "id": "dm-think-37",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 0.9,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "dm-think-40",
+   "subfamily": "pair",
+   "pair_id": null,
+   "polarity": "think",
+   "concept": "badger",
+   "carrier": "The training session has been rescheduled for next week.",
+   "prompt": "Think about the animal badger while you write. Now write exactly this sentence: \"The training session has been rescheduled for next week.\"",
+   "assistant": "The training session has been rescheduled for next week.",
+   "units": [
+    {
+     "role": "concept",
+     "lang": "en",
+     "headline": true,
+     "match": [
+      "Badger",
+      "badger"
+     ]
+    },
+    {
+     "role": "category",
+     "lang": "en",
+     "headline": false,
+     "match": [
+      "animal"
+     ]
+    }
+   ],
+   "answer": {
+    "accepted": [
+     "The training session has been rescheduled for next week."
+    ]
+   },
+   "base_rate_per_100k": null,
+   "consistency": 1.0,
+   "source": "dm-v2",
+   "gate_variant": "chat_dm",
+   "eval_render": "chat_dm",
+   "readout": {
+    "kind": "writing_positions"
+   },
+   "id": "dm-think-40",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "dm-think-41",
+   "subfamily": "pair",
+   "pair_id": null,
+   "polarity": "think",
+   "concept": "garnet",
+   "carrier": "The vendor submitted the proposal before the deadline.",
+   "prompt": "Keep the gemstone garnet in your thoughts as you write. Now write exactly this sentence: \"The vendor submitted the proposal before the deadline.\"",
+   "assistant": "The vendor submitted the proposal before the deadline.",
+   "units": [
+    {
+     "role": "concept",
+     "lang": "en",
+     "headline": true,
+     "match": [
+      "Garnet",
+      "garnet"
+     ]
+    },
+    {
+     "role": "category",
+     "lang": "en",
+     "headline": false,
+     "match": [
+      "gemstone"
+     ]
+    }
+   ],
+   "answer": {
+    "accepted": [
+     "The vendor submitted the proposal before the deadline."
+    ]
+   },
+   "base_rate_per_100k": null,
+   "consistency": 1.0,
+   "source": "dm-v2",
+   "gate_variant": "chat_dm",
+   "eval_render": "chat_dm",
+   "readout": {
+    "kind": "writing_positions"
+   },
+   "id": "dm-think-41",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "dm-think-42",
+   "subfamily": "pair",
+   "pair_id": null,
+   "polarity": "think",
+   "concept": "rhombus",
+   "carrier": "The manager signed the purchase order this morning.",
+   "prompt": "Hold the shape rhombus in mind as you write. Now write exactly this sentence: \"The manager signed the purchase order this morning.\"",
+   "assistant": "The manager signed the purchase order this morning.",
+   "units": [
+    {
+     "role": "concept",
+     "lang": "en",
+     "headline": true,
+     "match": [
+      "Rhombus",
+      "rhombus"
+     ]
+    },
+    {
+     "role": "category",
+     "lang": "en",
+     "headline": false,
+     "match": [
+      "shape"
+     ]
+    }
+   ],
+   "answer": {
+    "accepted": [
+     "The manager signed the purchase order this morning."
+    ]
+   },
+   "base_rate_per_100k": null,
+   "consistency": 1.0,
+   "source": "dm-v2",
+   "gate_variant": "chat_dm",
+   "eval_render": "chat_dm",
+   "readout": {
+    "kind": "writing_positions"
+   },
+   "id": "dm-think-42",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 0.9,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "dm-think-49",
+   "subfamily": "pair",
+   "pair_id": null,
+   "polarity": "think",
+   "concept": "kayak",
+   "carrier": "The newsletter will be sent to all subscribers tomorrow.",
+   "prompt": "Concentrate on the boat kayak while you write. Now write exactly this sentence: \"The newsletter will be sent to all subscribers tomorrow.\"",
+   "assistant": "The newsletter will be sent to all subscribers tomorrow.",
+   "units": [
+    {
+     "role": "concept",
+     "lang": "en",
+     "headline": true,
+     "match": [
+      "Kayak",
+      "kayak"
+     ]
+    },
+    {
+     "role": "category",
+     "lang": "en",
+     "headline": false,
+     "match": [
+      "boat"
+     ]
+    }
+   ],
+   "answer": {
+    "accepted": [
+     "The newsletter will be sent to all subscribers tomorrow."
+    ]
+   },
+   "base_rate_per_100k": null,
+   "consistency": 1.0,
+   "source": "dm-v2",
+   "gate_variant": "chat_dm",
+   "eval_render": "chat_dm",
+   "readout": {
+    "kind": "writing_positions"
+   },
+   "id": "dm-think-49",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 0.8,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "dm-think-57",
+   "subfamily": "pair",
+   "pair_id": null,
+   "polarity": "think",
+   "concept": "velvet",
+   "carrier": "The customer requested a refund for the duplicate charge.",
+   "prompt": "Hold the fabric velvet in mind as you write. Now write exactly this sentence: \"The customer requested a refund for the duplicate charge.\"",
+   "assistant": "The customer requested a refund for the duplicate charge.",
+   "units": [
+    {
+     "role": "concept",
+     "lang": "en",
+     "headline": true,
+     "match": [
+      "Velvet",
+      "velvet"
+     ]
+    },
+    {
+     "role": "category",
+     "lang": "en",
+     "headline": false,
+     "match": [
+      "fabric"
+     ]
+    }
+   ],
+   "answer": {
+    "accepted": [
+     "The customer requested a refund for the duplicate charge."
+    ]
+   },
+   "base_rate_per_100k": null,
+   "consistency": 1.0,
+   "source": "dm-v2",
+   "gate_variant": "chat_dm",
+   "eval_render": "chat_dm",
+   "readout": {
+    "kind": "writing_positions"
+   },
+   "id": "dm-think-57",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 0.8,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "dm-think-62",
+   "subfamily": "pair",
+   "pair_id": null,
+   "polarity": "think",
+   "concept": "pagoda",
+   "carrier": "The tax documents were mailed to the accountant.",
+   "prompt": "Hold the building pagoda in mind as you write. Now write exactly this sentence: \"The tax documents were mailed to the accountant.\"",
+   "assistant": "The tax documents were mailed to the accountant.",
+   "units": [
+    {
+     "role": "concept",
+     "lang": "en",
+     "headline": true,
+     "match": [
+      "Pagoda",
+      "pagoda"
+     ]
+    },
+    {
+     "role": "category",
+     "lang": "en",
+     "headline": false,
+     "match": [
+      "building"
+     ]
+    }
+   ],
+   "answer": {
+    "accepted": [
+     "The tax documents were mailed to the accountant."
+    ]
+   },
+   "base_rate_per_100k": null,
+   "consistency": 1.0,
+   "source": "dm-v2",
+   "gate_variant": "chat_dm",
+   "eval_render": "chat_dm",
+   "readout": {
+    "kind": "writing_positions"
+   },
+   "id": "dm-think-62",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "dm-think-64",
+   "subfamily": "pair",
+   "pair_id": null,
+   "polarity": "think",
+   "concept": "basalt",
+   "carrier": "The order confirmation number was sent by email.",
+   "prompt": "Concentrate on the rock basalt while you write. Now write exactly this sentence: \"The order confirmation number was sent by email.\"",
+   "assistant": "The order confirmation number was sent by email.",
+   "units": [
+    {
+     "role": "concept",
+     "lang": "en",
+     "headline": true,
+     "match": [
+      "Basalt",
+      "basalt"
+     ]
+    },
+    {
+     "role": "category",
+     "lang": "en",
+     "headline": false,
+     "match": [
+      "rock"
+     ]
+    }
+   ],
+   "answer": {
+    "accepted": [
+     "The order confirmation number was sent by email."
+    ]
+   },
+   "base_rate_per_100k": null,
+   "consistency": 1.0,
+   "source": "dm-v2",
+   "gate_variant": "chat_dm",
+   "eval_render": "chat_dm",
+   "readout": {
+    "kind": "writing_positions"
+   },
+   "id": "dm-think-64",
+   "adapt": {
+    "origin": "original",
+    "gate": {
+     "rate": 1.0,
+     "pass": true
+    }
+   }
+  },
+  {
+   "name": "dm-think-67",
+   "subfamily": "pair",
+   "pair_id": null,
+   "polarity": "think",
+   "concept": "poncho",
+   "carrier": "The performance review is scheduled for early next quarter.",
+   "prompt": "Hold the garment poncho in mind as you write. Now write exactly this sentence: \"The performance review is scheduled for early next quarter.\"",
+   "assistant": "The performance review is scheduled for early next quarter.",
+   "units": [
+    {
+     "role": "concept",
+     "lang": "en",
+     "headline": true,
+     "match": [
+      "Poncho",
+      "poncho"
+     ]
+    },
+    {
+     "role": "category",
+     "lang": "en",
+     "headline": false,
+     "match": [
+      "garment"
+     ]
+    }
+   ],
+   "answer": {
+    "accepted": [
+     "The performance review is scheduled for early next quarter."
+    ]
+   },
+   "base_rate_per_100k": null,
+   "consistency": 1.0,
+   "source": "dm-v2",
+   "gate_variant": "chat_dm",
+   "eval_render": "chat_dm",
+   "readout": {
+    "kind": "writing_positions"
+   },
+   "id": "dm-think-67",
    "adapt": {
     "origin": "original",
     "gate": {

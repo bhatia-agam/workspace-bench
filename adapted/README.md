@@ -293,3 +293,27 @@ Gate logs (`gate/`), candidates (`cand/`), J-lens fits (`jlens_work/`, `jlens_co
 floor readouts and judge dirs (`floors/{readouts,results}/`) and the grade cache stay on the RunPod
 box under `/workspace/agam/workspace-bench/adapted/` (git-ignored; ~27 GB). The frozen banks,
 `report.json`, audits and `floors/floors.json` are committed.
+
+## directed_modulation on bank v2 (plan 0113)
+
+Every set's `directed_modulation.json` is re-derived from the registered bank `items_v2.json`: its dont_think items are removed, and the new registered think items were gated on the subject (the family's compliance gate). Results under `WSB_BANK_ROOT` stamp `+bank-v2`. Numbers of the family measured on a set's earlier bank, in the tables above included, are of that bank. The family has no refill route, so a short set ships short.
+
+| set | dont_think removed | new think passed / 37 | think (kept + new) | secret | preference | items / 102 | status | po-opus floor (n) |
+|---|---|---|---|---|---|---|---|---|
+| deepseek-v4-flash | 34 | 36 | 70 (34 + 36) | 15 | 15 | 100 | untried | 1.000 (100) |
+| deepseek-v4-pro | 27 | 32 | 59 (27 + 32) | 15 | 15 | 89 | untried | 1.000 (89) |
+| dory-4b | 12 | 15 | 27 (12 + 15) | 9 | 15 | 51 | untried | 1.000 (51) |
+| gemma-4-31b-it | 35 | 37 | 72 (35 + 37) | 15 | 15 | 102 | full | 1.000 (102) |
+| glm-5.3 | 35 | 37 | 72 (35 + 37) | 15 | 15 | 102 | full | 1.000 (102) |
+| glm-5.3-flash | 32 | 36 | 69 (33 + 36) | 15 | 15 | 99 | untried | 1.000 (99) |
+| kimi-k2 | 21 | 23 | 44 (21 + 23) | 15 | 15 | 74 | untried | 1.000 (74) |
+| kimi-k3 | 35 | 37 | 72 (35 + 37) | 15 | 15 | 102 | full | 1.000 (102) |
+| muse-spark-open | 35 | 37 | 72 (35 + 37) | 15 | 15 | 102 | full | 1.000 (102) |
+| olmo-3-7b | 10 | 9 | 19 (10 + 9) | 15 | 12 | 46 | untried | 1.000 (46) |
+| olmo-3.1-32b | 31 | 34 | 65 (31 + 34) | 15 | 15 | 95 | untried | 1.000 (95) |
+| qwen3-8b | 32 | 35 | 67 (32 + 35) | 15 | 15 | 97 | untried | 1.000 (97) |
+| qwen3.5-0.8b | 28 | 31 | 59 (28 + 31) | 11 | 15 | 85 | untried | 1.000 (85) |
+| qwen3.5-2b | 15 | 22 | 37 (15 + 22) | 12 | 15 | 64 | untried | 1.000 (64) |
+| qwen3.5-4b | 32 | 35 | 67 (32 + 35) | 15 | 15 | 97 | untried | 1.000 (97) |
+| qwen3.5-9b | 35 | 37 | 72 (35 + 37) | 15 | 15 | 102 | full | 1.000 (102) |
+| qwen3.6-35b-a3b | 33 | 36 | 70 (34 + 36) | 15 | 15 | 100 | untried | 1.000 (100) |

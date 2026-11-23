@@ -863,7 +863,8 @@ Every step writes its own entry (agentic, carry included); writes are atomic and
   - synthsys user_modeling items score echo, not inference;
   - a family that can't be filled is reported `partial` / `ooc` with its real count; a short family
     whose ladder was never tried is `untried` (never `partial`).
-- Keep pairs atomic: twins, ab/ba, think/dont_think pairs pass or drop together.
+- Keep pairs atomic: twins and ab/ba pairs pass or drop together (directed_modulation has no
+  pairs since bank v2, plan 0113).
 - Record every knob in `adapt.knobs` and every family's change in `report.json`. Anyone reading a
   number must be able to tell what difficulty, and which bank version, it was measured at.
 - Opus authors; it never grades its own items as correct. The subject grades by answering. A
