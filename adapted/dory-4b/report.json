@@ -1561,18 +1561,42 @@
    ]
   },
   "directed_modulation": {
-   "target": 100,
-   "n_original": 100,
-   "n_original_gated": 100,
-   "n_original_pass": 71,
-   "n_items": 48,
+   "target": 102,
+   "n_original": 102,
+   "n_original_gated": 102,
+   "n_original_pass": 51,
+   "n_items": 51,
    "n_new": 0,
    "n_candidates_gated": 0,
-   "bank": "evals/directed_modulation/items.json",
-   "bank_version": 1,
+   "bank": "evals/basic/directed_modulation/items_v2.json",
+   "bank_version": 2,
    "change": "original items only",
    "status": "untried",
-   "note": "originals only (no refill route): 48 registered items pass the subject's gate; V4-Flash precedent."
+   "note": "Bank v2 (plan 0109, issue #547; re-derived 2026-11-23): the 12 dont_think items left the set; the 36 kept originals (12 think, 9 secret, 15 preference) are unchanged with their recorded gate; the 37 new registered think items (dm-think-NN) were compliance-gated on NVIDIA Dory1.0-4B (2 loops) (copies the carrier, never names the concept, greedy AND >= 8/10): 15 pass, 22 fail (dm-think-35, dm-think-38, dm-think-39, dm-think-40, dm-think-43, dm-think-44, dm-think-47, dm-think-48, dm-think-49, dm-think-52, dm-think-53, dm-think-54, dm-think-55, dm-think-57, dm-think-58, dm-think-59, dm-think-64, dm-think-66, dm-think-67, dm-think-68, dm-think-70, dm-think-97). 51/102 ship (27 think, 9 secret, 15 preference). Originals only: the family has no Brief and no refill route; no item has a twin any more.",
+   "freeze_notes": [
+    "12 previously shipped ids leave the bank: ['dm-pair-02-neg', 'dm-pair-06-neg', 'dm-pair-07-neg', 'dm-pair-11-neg', 'dm-pair-14-neg', 'dm-pair-15-neg', 'dm-pair-16-neg', 'dm-pair-21-neg', 'dm-pair-25-neg', 'dm-pair-26-neg', 'dm-pair-27-neg', 'dm-pair-30-neg']"
+   ],
+   "plan_lineage": [
+    {
+     "from": "d874297cb9cfdc12169ea97980c8afc6747622122a8a93499fb9dc59cc6eef4e",
+     "to": "2df87e549e1998ba79ef404d251cd07d019835308e8f2d1d8116cf11df08f077",
+     "dropped": [
+      "dm-pair-02-neg",
+      "dm-pair-06-neg",
+      "dm-pair-07-neg",
+      "dm-pair-11-neg",
+      "dm-pair-14-neg",
+      "dm-pair-15-neg",
+      "dm-pair-16-neg",
+      "dm-pair-21-neg",
+      "dm-pair-25-neg",
+      "dm-pair-26-neg",
+      "dm-pair-27-neg",
+      "dm-pair-30-neg"
+     ],
+     "at": "2026-11-23T03:33:19+00:00"
+    }
+   ]
   },
   "moral_rationale": {
    "target": 195,
@@ -1908,11 +1932,17 @@
    "status": "full",
    "change": "rebuilt on the subject: 43 pairs (gw ccut v2 pipeline, plan 0084)",
    "note": "installed: 43 pairs (gw ccut v2 rebuilt on the subject, plan 0084; 59 audit pair drops applied). Predictors (bar): day AUROC 0.494, cell excess +0.032, obscurity AUROC 0.714, guess AUROC 0.578, prior-fame AUROC 0.563; date_leak.pass false (obscurity), as on other sets; prompt-only predictors flag 0/43 pairs."
+  },
+  "user_modeling_hard": {
+   "status": "absent",
+   "note": "absent: this set has no bank for the family (plan 0060 A1.6)",
+   "exclude_from_macro": true,
+   "absent_auto": true
   }
  },
  "code": {
-  "git": "719773f2+dirty",
-  "adapt_sha256": "82d97b2d7639d9ef"
+  "git": "e5ad69a5",
+  "adapt_sha256": "50deb0768bf40c95"
  },
  "model": "dory-4b",
  "label": "NVIDIA Dory1.0-4B (2 loops)",

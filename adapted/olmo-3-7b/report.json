@@ -1298,18 +1298,40 @@
    ]
   },
   "directed_modulation": {
-   "target": 100,
-   "n_original": 100,
-   "n_original_gated": 100,
-   "n_original_pass": 72,
-   "n_items": 47,
+   "target": 102,
+   "n_original": 102,
+   "n_original_gated": 102,
+   "n_original_pass": 46,
+   "n_items": 46,
    "n_new": 0,
    "n_candidates_gated": 0,
    "change": "original items only",
    "status": "untried",
-   "bank": "evals/directed_modulation/items.json",
-   "bank_version": 1,
-   "note": "Originals only (no Brief): compliance-gated on OLMo-3-7B-Instruct (copies the carrier, never names the concept, >= 8/10), pairs atomic: 72 pass, 47/100 ship"
+   "bank": "evals/basic/directed_modulation/items_v2.json",
+   "bank_version": 2,
+   "note": "Bank v2 (plan 0109, issue #547; re-derived 2026-11-23): the 10 dont_think items left the set; the 37 kept originals (10 think, 15 secret, 12 preference) are unchanged with their recorded gate; the 37 new registered think items (dm-think-NN) were compliance-gated on OLMo-3-7B-Instruct (copies the carrier, never names the concept, greedy AND >= 8/10): 9 pass, 28 fail (dm-think-35, dm-think-36, dm-think-38, dm-think-39, dm-think-43, dm-think-44, dm-think-45, dm-think-46, dm-think-47, dm-think-48, dm-think-50, dm-think-51, dm-think-52, dm-think-53, dm-think-54, dm-think-55, dm-think-56, dm-think-58, dm-think-59, dm-think-61, dm-think-63, dm-think-65, dm-think-66, dm-think-68, dm-think-69, dm-think-70, dm-think-71, dm-think-97). 46/102 ship (19 think, 15 secret, 12 preference). Originals only: the family has no Brief and no refill route; no item has a twin any more.",
+   "freeze_notes": [
+    "10 previously shipped ids leave the bank: ['dm-pair-06-neg', 'dm-pair-07-neg', 'dm-pair-09-neg', 'dm-pair-14-neg', 'dm-pair-17-neg', 'dm-pair-21-neg', 'dm-pair-27-neg', 'dm-pair-29-neg', 'dm-pair-32-neg', 'dm-pair-34-neg']"
+   ],
+   "plan_lineage": [
+    {
+     "from": "1b9344e15be9850be498ceb9af1329ea01a3788917c9c1a0f7d780a5ea8d0eb8",
+     "to": "7d9cdec2ce9f558a1f334d67aa8a8a932307d594a61194f6f78c7177a15cdbe8",
+     "dropped": [
+      "dm-pair-06-neg",
+      "dm-pair-07-neg",
+      "dm-pair-09-neg",
+      "dm-pair-14-neg",
+      "dm-pair-17-neg",
+      "dm-pair-21-neg",
+      "dm-pair-27-neg",
+      "dm-pair-29-neg",
+      "dm-pair-32-neg",
+      "dm-pair-34-neg"
+     ],
+     "at": "2026-11-23T03:33:56+00:00"
+    }
+   ]
   },
   "moral_rationale": {
    "target": 195,
@@ -1953,11 +1975,17 @@
     "pool_size": 19999
    },
    "note": "plan 0078 (English only): 487 per-item passes of 19999 pool rows (rejected at canon1 12241, gate 5425, Opus floor 1436, review 366, build 44); Opus prompt-only floor 0 by construction; lucky screen: 196 of 487 leakers excluded; item-quality drops: independent audit 14, delta audit 2, same-entity sweep 9, cue sweep 11; confirm round 1 on 275: blind 0.043 / described 0.135 vs chance 0.188 + 0.05 (ub90 0.054 / 0.158) PASS; 36 per-item leakers dropped without back-fill (post-drop 0.024 / 0.029); floor-of-record re-test on 239: blind 0.035 / described 0.105 vs chance 0.186 + 0.05 (ub90 0.046 / 0.128) PASS; 20 per-item leakers (re-test passed; superseded as floor of record); floor-of-record re-test on 230: blind 0.031 / described 0.107 vs chance 0.186 + 0.05 (ub90 0.040 / 0.130) PASS; 21 per-item leakers (re-test passed; superseded as floor of record); floor-of-record re-test on 219: blind 0.028 / described 0.096 vs chance 0.187 + 0.05 (ub90 0.037 / 0.118) PASS; 17 per-item leakers dropped without back-fill (R49, Camila's strict rule: 17 dropped); R49 single re-measure (new floor of record) on 202: blind 0.027 / described 0.086 vs chance 0.186 + 0.05 (ub90 0.036 / 0.108) PASS; 13 per-item leakers (reported, not dropped: R49 measures once): r12iv1006, r12iv1098, r12iv2494, r12iv2652, r14iv1185, r14iv1314, r14iv1554, r15iv3394, r16iv0266, r16iv2564, r16iv3307, r2iv0597, r4iv0834; shipped 202; status full (target reached)"
+  },
+  "user_modeling_hard": {
+   "status": "absent",
+   "note": "absent: this set has no bank for the family (plan 0060 A1.6)",
+   "exclude_from_macro": true,
+   "absent_auto": true
   }
  },
  "code": {
-  "git": "25604c93",
-  "adapt_sha256": "2afc9d88930d1a70"
+  "git": "e5ad69a5",
+  "adapt_sha256": "50deb0768bf40c95"
  },
  "model": "olmo-3-7b",
  "label": "OLMo-3-7B-Instruct",

@@ -5,8 +5,8 @@ top-k "J-lens" tokens) surfaces what a model computes but never writes. Every fa
 into the shared package in `src/wsbench/` (client, judge config, cache, readout contract,
 results schema, registry, runner, CLI, `readplan` = the producer-facing read plan, `capable/` =
 the porting gate, `produce/` = the optional HF-transformers producer behind the `gpu` extra).
-`plans/` is the 2026-09-15..17 design history of the nine-family restructure, not a current
-pointer (`plans/README.md`). Public docs: `README.md`, `NOTICE.md`, `CITATION.cff`. The README is
+`plans/` is the design history, one file per plan, not a current pointer (`plans/README.md`).
+Public docs: `README.md`, `NOTICE.md`, `CITATION.cff`. The README is
 the newcomer's path (what it is, requirements, time, install, `wsbench try`, running,
 outputs, checks, viewer, one table of the evals, credits); reference material lives in `docs/`
 (evals, running, tiers, judges, baselines, fast_subset, results_contract, porting, checks,
@@ -798,8 +798,8 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   lists (`tests/golden/directed_modulation_options_v2.json`; `..._options.json` still pins
   `items.json`); `distractor_groups.json` gained the new concepts additively, and a new bank
   concept must be added there first (hard error otherwise). Stamp: `judge.instrument(header)`,
-  `dm-2026-10-31+expressed+bank-v2`; `items.json` and the adapted banks (no `version`) keep
-  `dm-2026-10-31+expressed`. Tests of the dont_think twin / `white_bear` pin `items.json`
+  `dm-2026-10-31+expressed+bank-v2`; `items.json` (no `version`) keeps `dm-2026-10-31+expressed`
+  (the adapted banks carry bank v2's header since plan 0113, below). Tests of the dont_think twin / `white_bear` pin `items.json`
   (`WSB_BANK_FILE_DIRECTED_MODULATION`) and `tests/fixtures/directed_modulation_v1_toy.jsonl`.
   Floors on bank v2: lucky `blind` 0.224, prompt-only summary 1.000 (saturated), logit lens L63
   0.412 (all 102 items read by the bundled `Producer`, `freeze partial=True`). Fast: the family
@@ -812,15 +812,27 @@ first duplicate `(id, layer, pos)`, counts empty readouts (a result, not a missi
   rule needs 23 arms' outcomes the new items do not have. Manifest ledger: declared with the
   new bank; its `plan.fast_plan_sha` rows of those five versions read `unavailable`
   (`manifest_0101_declare.fast_equivalents` skips a version that has no plan for the family).
-  ATI: `NOT_GATED`, no entry, nothing to re-gate. The adapted sets still derive from
-  `items.json` and keep their dont_think items and their stamp.
+  ATI: `NOT_GATED`, no entry, nothing to re-gate.
+  **Plan 0113 (2026-11-23): every adapted set's directed_modulation bank is re-derived from bank
+  v2** with the adapt tooling as it is (`adapt freeze families=directed_modulation`: the
+  `dm-pair-NN-neg` rows are no longer registered originals, so `run.registered_rows` leaves them
+  out; a drop-only `plan_lineage` step is recorded; then `adapt profile ids=<the 37
+  dm-think-NN>` gates the new items on the subject, and a second freeze adds the ones that
+  pass). The banks carry bank v2's header (`version: 2`), so results under `WSB_BANK_ROOT`
+  stamp `+bank-v2`; no item has a twin, so `white_bear` is absent there too. The family has no
+  Brief and no refill route: a set short of 102 ships short (`untried`), as before. Each set's
+  po-opus-v1 summary floor of the family was re-measured (1.000, saturated, on every set); no
+  set's ATI file has an entry for the family. Gotcha: `wsbench freeze kind=prompt_only` of a
+  ONE-family po-opus run under a set root rewrites the floors file's `_source` (its `fallback`
+  record is lost) and drops every entry without a po-opus `protocol` stamp (glm-5.3's
+  hinted_cutoff): restore those from git after a partial re-measure (plan 0113 did).
 - **Plan 0101 (2026-11-20): the multi-token families took the plain keys, the single-token ones
   became `<key>_st`, and every family directory moved under its category.** `basic_readout_mt`
   -> `basic_readout`, `multihop_mt` -> `multihop`, `multilingual_mt` -> `multilingual`, `typo_mt`
   -> `typo`; the former `basic_readout` / `multihop` / `multilingual` / `typo` ->
   `<key>_st`. No instrument moved: `scripts/manifest_0101.py --check
   tests/golden/manifest_0101_pre.json` rebuilds every hash, seed, option order, prompt sha, call
-  key and cache fingerprint of all 32 families and compares them with the manifest recorded on
+  key and cache fingerprint of every family and compares them with the manifest recorded on
   main before the rename (run it after any change to `registry.py`'s tables). The golden and the
   script are never regenerated. Since then T1 (`tests/test_rename_0101.py`; the rule is `verdict` in
   `scripts/manifest_0101_declare.py`) guarantees that **every family's manifest rows equal the
